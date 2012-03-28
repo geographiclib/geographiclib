@@ -5,34 +5,34 @@
 # $Id$
 
 MATLAB_INTERFACE = \
-geodesicdirect.cpp \
-geodesicinverse.cpp \
-geodesicline.cpp \
-geoidheight.cpp \
-mgrsforward.cpp \
-mgrsreverse.cpp \
-utmupsforward.cpp \
-utmupsreverse.cpp \
-geocentricforward.cpp \
-geocentricreverse.cpp \
-localcartesianforward.cpp \
-localcartesianreverse.cpp \
-polygonarea.cpp
+$(srcdir)/geodesicdirect.cpp \
+$(srcdir)/geodesicinverse.cpp \
+$(srcdir)/geodesicline.cpp \
+$(srcdir)/geoidheight.cpp \
+$(srcdir)/mgrsforward.cpp \
+$(srcdir)/mgrsreverse.cpp \
+$(srcdir)/utmupsforward.cpp \
+$(srcdir)/utmupsreverse.cpp \
+$(srcdir)/geocentricforward.cpp \
+$(srcdir)/geocentricreverse.cpp \
+$(srcdir)/localcartesianforward.cpp \
+$(srcdir)/localcartesianreverse.cpp \
+$(srcdir)/polygonarea.cpp
 
 MATLAB_DOC = \
-geodesicdirect.m \
-geodesicinverse.m \
-geodesicline.m \
-geoidheight.m \
-mgrsforward.m \
-mgrsreverse.m \
-utmupsforward.m \
-utmupsreverse.m \
-geocentricforward.m \
-geocentricreverse.m \
-localcartesianforward.m \
-localcartesianreverse.m \
-polygonarea.m
+$(srcdir)/geodesicdirect.m \
+$(srcdir)/geodesicinverse.m \
+$(srcdir)/geodesicline.m \
+$(srcdir)/geoidheight.m \
+$(srcdir)/mgrsforward.m \
+$(srcdir)/mgrsreverse.m \
+$(srcdir)/utmupsforward.m \
+$(srcdir)/utmupsreverse.m \
+$(srcdir)/geocentricforward.m \
+$(srcdir)/geocentricreverse.m \
+$(srcdir)/localcartesianforward.m \
+$(srcdir)/localcartesianreverse.m \
+$(srcdir)/polygonarea.m
 
 MATLAB_COMPILESCRIPT = geographiclibinterface.m
 
