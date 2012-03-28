@@ -1,19 +1,19 @@
 #  $Id$
 
-EXTRAFILES = tmseries30.html geodseries30.html
+EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html
 
 SCRIPTDRIVERS = \
-scripts/geod-calc.html \
-scripts/geod-google.html \
-scripts/geod-google-instructions.html
+$(srcdir)/scripts/geod-calc.html \
+$(srcdir)/scripts/geod-google.html \
+$(srcdir)/scripts/geod-google-instructions.html
 
 JSSCRIPTS = \
-scripts/GeographicLib/Math.js \
-scripts/GeographicLib/Geodesic.js \
-scripts/GeographicLib/GeodesicLine.js \
-scripts/GeographicLib/PolygonArea.js \
-scripts/GeographicLib/DMS.js \
-scripts/GeographicLib/Interface.js
+$(srcdir)/scripts/GeographicLib/Math.js \
+$(srcdir)/scripts/GeographicLib/Geodesic.js \
+$(srcdir)/scripts/GeographicLib/GeodesicLine.js \
+$(srcdir)/scripts/GeographicLib/PolygonArea.js \
+$(srcdir)/scripts/GeographicLib/DMS.js \
+$(srcdir)/scripts/GeographicLib/Interface.js
 
 HPPFILES = \
 $(top_srcdir)/include/GeographicLib/Accumulator.hpp \
