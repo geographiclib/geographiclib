@@ -55,7 +55,7 @@ usage: $(USAGE)
 htmlman: $(HTMLMAN)
 
 .pod.usage:
-	sh makeusage.sh $< > $*.usage
+	sh $(srcdir)/makeusage.sh $< > $*.usage
 
 .pod.1:
 	pod2html --noindex $^ | $(PODFIX) > $*.1.html

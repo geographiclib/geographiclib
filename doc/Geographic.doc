@@ -3275,6 +3275,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
  - Version 1.21 (released 2012-mm-dd)
   - Work around optimization BUG in GeographicLib::Geodesic::Inverse
     with tdm mingw g++ version 4.6.1.
+  - Document out-of-sources builds for autoconf.
+  - Ensure right Config.h is loaded with out-of-source builds.
 
  - Version 1.20 (released 2012-03-23)
   - cmake tweaks:
