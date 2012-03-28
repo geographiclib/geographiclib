@@ -90,7 +90,7 @@ html/index.html: Doxyfile Geographic.doc \
 	if test -d html; then rm -rf html/*; else mkdir html; fi
 	cp -p $(EXTRAFILES) $(MANPAGES) $(top_srcdir)/maxima/*.mac \
 	$(top_srcdir)/LICENSE.txt html/
-	sed "s%\.\./%$(top_srcdir)/%g" $(srcdir)/Doxyfile | doxygen
+	sed "s%\.\./%$(top_srcdir)/%g" $(srcdir)/Doxyfile | doxygen -
 
 maintainer-clean-local:
 	rm -rf html
