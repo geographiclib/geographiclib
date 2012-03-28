@@ -188,11 +188,32 @@ Then pick one of the first five options below:
 - \ref maintainer.  This describes addition tasks of interest only to
   the maintainers of this code.
 .
-This section documents only how to install the software.  If you wish to
-use %GeographicLib to evaluate geoid heights or the earth's
+This section documents only how to install the <i>software</i>.  If you
+wish to use %GeographicLib to evaluate geoid heights or the earth's
 gravitational or magnetic fields, then you must also install the
 relevant data files.  See \ref geoidinst, \ref gravityinst, and \ref
 magneticinst for instructions.
+
+The first two installation methods use two important techniques which
+make software maintanence simpler
+- <b>Out-of-source builds:</b>  This means that you create a separate
+  directory for compiling the code.  In the description here the
+  directories are called BUILD and are located in the top-level of the
+  source tree.  You might want to use a suffix to denote the type of
+  build, e.g., BUILD-vc9 for Visual Studio 9, or BUILD-shared for a
+  build which creates a shared library.  The advantages of out-of-source
+  builds are:
+  - You don't mess up the source tree, so it's easy to "clean up".
+    Indeed the source tree might be on a read-only file system.
+  - Builds for multiple platforms or compilers don't interfere with each
+    other.
+- <b>The library is installed:</b> After compilation, there is a
+  separate <i>install</i> step which copies the headers, libraries,
+  tools, and documentation to a "central" location.  You may at this
+  point delete the source and build directories.  If you have
+  administrative privileges, you can install %GeographicLib for the use
+  of all users (e.g., in /usr/local).  Otherwise, you can install it for
+  your personal use (e.g., in $HOME/packages).
 
 \section cmake Installation with cmake
 
@@ -227,8 +248,8 @@ Here are the steps to compile and install %GeographicLib:
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD\endverbatim
-- Run cmake, pointing it to the parent directory (..).  On Linux,
-  Unix, and MacOSX systems, the command is \verbatim
+- Run cmake, pointing it to the source directory (..).  On Linux, Unix,
+  and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically one of \verbatim
   cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib ..
@@ -236,7 +257,7 @@ Here are the steps to compile and install %GeographicLib:
   cmake -G "Visual Studio 8 2005" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc8/GeographicLib ..
 \endverbatim
   Instead of setting CMAKE_INSTALL_PREFIX, you can (on Windows) set
-  CMAKE_PREFIX_PATH to point to the parent directory, e.g., \verbatim
+  CMAKE_PREFIX_PATH to point to its parent directory, e.g., \verbatim
   cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 ..
 \endverbatim
   The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
@@ -318,11 +339,15 @@ Here are the steps to compile and install %GeographicLib:
   tar xfpz GeographicLib-1.20.tar.gz \endverbatim
   then enter the directory created \verbatim
   cd GeographicLib-1.20 \endverbatim
-- Configure the software with \verbatim
-  ./configure \endverbatim
+- Create a separate build directory and enter it, for example, \verbatim
+  mkdir BUILD
+  cd BUILD\endverbatim
+- Configure the software, specifing the path of the source directory,
+  with \verbatim
+  ../configure \endverbatim
 - By default %GeographicLib will be installed under /usr/local.
   You can change this with, for example \verbatim
-  ./configure --prefix=/tmp/geographic \endverbatim
+  ../configure --prefix=/tmp/geographic \endverbatim
 - Compile and install the software with \verbatim
   make
   make install \endverbatim
@@ -465,13 +490,13 @@ in the top level directory.  Provided you are running on a system with
 doxygen, pod2man, and pod2html installed, then you can create the
 documentation and the man pages by building the system using cmake (the
 <code>MAINTAINER</code> configuration variable set to ON, if the
-necessary tools are found) or configure.   In the
-case of cmake, you must in addition run \verbatim
+necessary tools are found) or configure.
+
+In the case of cmake, you then run \verbatim
   make dist \endverbatim
 which will copy the documentation and man pages from the build directory
 back into the source tree and package the resulting source tree for
-distribution as
-\verbatim
+distribution as \verbatim
   GeographicLib-1.20.tar.gz
   GeographicLib-1.20.zip \endverbatim
 Finally, \verbatim
@@ -479,6 +504,12 @@ Finally, \verbatim
 or building PACKAGE in Visual Studio will create a binary installer for
 %GeographicLib.  For Windows, this requires in the installation of
 <a href="http://nsis.sourceforge.net">NSIS</a>.
+
+With configure, run \verbatim
+  make dist-gzip \endverbatim
+which will create the additional files and packages the results ready
+for distribution as \verbatim
+  geographiclib-1.20.tar.gz \endverbatim
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
