@@ -710,6 +710,10 @@ $Id$
    http://handle.dtic.mil/100.2/AD650520 [[BR]]
    clean copy:
    http://geographiclib.sf.net/geodesic-papers/bagratuni67.pdf
+ * E. M. Sodano and T. A. Robinson,[[BR]]
+   ''Direct and Inverse Solutions of Geodesics'',
+   Tech. Rep. 7 Rev. (Army Map Service, 1963).[[BR]]
+   http://handle.dtic.mil/100.2/AD657591 [[BR]]
  * E. A. Lewis,[[BR]]
    ''Parametric Formulas for Geodesic Curves and Distances on a
    Slightly Oblate Earth'',
