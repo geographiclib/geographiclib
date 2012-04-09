@@ -589,6 +589,17 @@ $Id$
    http://adsabs.harvard.edu/full/1879AN.....95..223W [[BR]]
    http://adsabs.harvard.edu/full/1879AN.....95..239W [[BR]]
    http://adsabs.harvard.edu/full/1879AN.....95..271W
+ * A. v. Braunmühl,[[BR]]
+   ''Ueber Enveloppen geodätischer Linien
+   [The envelopes of geodesic lines]'',
+   Math. Ann. '''14''', 557--566 (1879).[[BR]]
+   http://books.google.com/books?id=CwgPAAAAIAAJ&pg=PA557
+ * A. v. Braunmühl,[[BR]]
+   ''Geodätische Linien und ihre Enveloppen auf dreiaxigen Flächen
+   zweiten Grades [Geodesic lines and their envelopes on
+   three-dimensional surfaces of second order]'',
+   Math. Ann. '''20''', 557--586 (1882).[[BR]]
+   http://books.google.com/books?id=YQkPAAAAIAAJ&pg=PA557
  * F. R. Helmert,[[BR]]
    ''Die geodätische Uebertragung geographischer Coordinaten
    [The geodesic applied to geographic coordinates]'',
