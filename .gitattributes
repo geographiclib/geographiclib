@@ -1,0 +1,6 @@
+Makefile* eol=lf
+configure* eol=lf
+*.sh eol=lf
+*.sln eol=crlf
+*.vcproj eol=crlf
+*.vcxproj eol=crlf
