@@ -287,7 +287,30 @@ namespace GeographicLib {
      * with 2 digits.
      **********************************************************************/
     static std::string Encode(real angle, component trailing, unsigned prec,
-                              flag ind = NONE, char dmssep = '\0');
+                              flag ind, char dmssep);
+
+    /**
+     * Convert angle (in degrees) into a DMS string (using d, ', and &quot;).
+     *
+     * @param[in] angle input angle (degrees)
+     * @param[in] trailing DMS::component value indicating the trailing units
+     *   on the string and this is given as a decimal number if necessary.
+     * @param[in] prec the number of digits after the decimal point for the
+     *   trailing component.
+     * @param[in] ind DMS::flag value indicated additional formatting.
+     * @return formatted string
+     *
+     * <b>COMPATIBILITY NOTE:</b> This function calls
+     * Encode(real, component, unsigned, flag, char) with a 5th
+     * argument of char(0).  At some point,
+     * Encode(real, component, unsigned, flag) and will be withdrawn
+     * and the interface to
+     * Encode(real, component, unsigned, flag, char) changed so that
+     * its 4th and 5th arguments have default values.  This will
+     * preserve source-level compatibility.
+     **********************************************************************/
+    static std::string Encode(real angle, component trailing, unsigned prec,
+                              flag ind = NONE);
 
     /**
      * Convert angle into a DMS string (using d, ', and &quot;) selecting the

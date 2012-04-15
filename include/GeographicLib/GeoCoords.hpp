@@ -373,8 +373,26 @@ namespace GeographicLib {
      * - prec = 1, 0.01&quot;
      * - prec = 10 (max), 10<sup>-11</sup>&quot;
      **********************************************************************/
-    std::string DMSRepresentation(int prec = 0, bool swaplatlong = false,
-				  char dmssep = char(0)) const;
+    std::string DMSRepresentation(int prec, bool swaplatlong, char dmssep)
+      const;
+
+    /**
+     * String representation with latitude and longitude as degrees, minutes,
+     * seconds, and hemisphere.
+     *
+     * @param[in] prec precision (relative to about 1m)
+     * @param[in] swaplatlong if true give longitude first (default = false)
+     * @return DMS latitude/longitude string representation.
+     *
+     * <b>COMPATIBILITY NOTE:</b> This function calls
+     * DMSRepresentation(int, bool, char) const with a 3rd argument of
+     * char(0).  At some point, DMSRepresentation(int, bool) const and
+     * will be withdrawn and the interface to
+     * DMSRepresentation(int, bool, char) const changed so that its
+     * arguments have default values.  This will preserve source-level
+     * compatibility.
+     **********************************************************************/
+    std::string DMSRepresentation(int prec = 0, bool swaplatlong = false) const;
 
     /**
      * MGRS string.
