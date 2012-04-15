@@ -224,7 +224,7 @@ way.
 
 The magnetic field from WMM2010 in Timbuktu on 2012-01-01
 
-    echo 2012-01-01 "16d46'33N" "3d00'34W" 300 | MagneticField -r
+    echo 2012-01-01 16:46:33N 3:00:34W 300 | MagneticField -r
     => -2.55 12.43 33771.0 33737.6 -1500.5 7446.0 34582.1
        0.10 -0.07 34.3 36.8 54.4 -35.3 25.9
 

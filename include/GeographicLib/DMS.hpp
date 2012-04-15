@@ -191,6 +191,7 @@ namespace GeographicLib {
     static Math::real Decode(real d, real m = 0, real s = 0) throw()
     { return d + (m + s/real(60))/real(60); }
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b> (use Utility::num, instead).
      * Convert a string to a real number.
@@ -198,9 +199,8 @@ namespace GeographicLib {
      * @param[in] str string input.
      * @return decoded number.
      **********************************************************************/
-    static Math::real Decode(const std::string& str) {
-      return Utility::num<real>(str);
-    }
+    static Math::real Decode(const std::string& str)
+    { return Utility::num<real>(str); }
 
     /**
      * <b>DEPRECATED</b> (use Utility::fract, instead).
@@ -210,9 +210,9 @@ namespace GeographicLib {
      * @param[in] str string input.
      * @return decoded number.
      **********************************************************************/
-    static Math::real DecodeFraction(const std::string& str) {
-      return Utility::fract<real>(str);
-    }
+    static Math::real DecodeFraction(const std::string& str)
+    { return Utility::fract<real>(str); }
+    /// \endcond
 
     /**
      * Convert a pair of strings to latitude and longitude.
@@ -269,6 +269,8 @@ namespace GeographicLib {
      * @param[in] prec the number of digits after the decimal point for the
      *   trailing component.
      * @param[in] ind DMS::flag value indicated additional formatting.
+     * @param[in] dmssep if non-null, use as the DMS separator character
+     *   (instead of d, ', &quot; delimiters).
      * @return formatted string
      *
      * The interpretation of \e ind is as follows:
@@ -285,7 +287,7 @@ namespace GeographicLib {
      * with 2 digits.
      **********************************************************************/
     static std::string Encode(real angle, component trailing, unsigned prec,
-                              flag ind = NONE);
+                              flag ind = NONE, char dmssep = '\0');
 
     /**
      * Convert angle into a DMS string (using d, ', and &quot;) selecting the
@@ -294,6 +296,8 @@ namespace GeographicLib {
      * @param[in] angle input angle (degrees)
      * @param[in] prec the precision relative to 1 degree.
      * @param[in] ind DMS::flag value indicated additional formatting.
+     * @param[in] dmssep if non-null, use as the DMS separator character
+     *   (instead of d, ', &quot; delimiters).
      * @return formatted string
      *
      * \e prec indicates the precision relative to 1 degree, e.g., \e prec = 3
@@ -302,12 +306,13 @@ namespace GeographicLib {
      * facility that DMS::NUMBER represents \e angle as a number in fixed
      * format with precision \e prec.
      **********************************************************************/
-    static std::string Encode(real angle, unsigned prec, flag ind = NONE) {
+    static std::string Encode(real angle, unsigned prec, flag ind = NONE,
+			      char dmssep = char(0)) {
       return ind == NUMBER ? Utility::str<real>(angle, int(prec)) :
         Encode(angle,
                prec < 2 ? DEGREE : (prec < 4 ? MINUTE : SECOND),
                prec < 2 ? prec : (prec < 4 ? prec - 2 : prec - 4),
-               ind);
+               ind, dmssep);
     }
 
     /**

@@ -3308,6 +3308,11 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     with tdm mingw g++ version 4.6.1.
   - Document out-of-sources builds for autoconf.
   - Ensure right Config.h is loaded with out-of-source builds.
+  - Support doxygen under Windows (to do).
+  - Change examples to use : separators to indicate degrees,
+    minutes, seconds.
+  - Update DMS to use : separators to indication degrees, minutes,
+    seconds.
 
  - Version 1.20 (released 2012-03-23)
   - cmake tweaks:

@@ -85,12 +85,13 @@ namespace GeographicLib {
     return os.str();
   }
 
-  string GeoCoords::DMSRepresentation(int prec, bool swaplatlong) const {
+  string GeoCoords::DMSRepresentation(int prec, bool swaplatlong,
+				      char dmssep) const {
     prec = max(0, min(10, prec) + 5);
     return DMS::Encode(swaplatlong ? _long : _lat, unsigned(prec),
-                       swaplatlong ? DMS::LONGITUDE : DMS::LATITUDE) +
+                       swaplatlong ? DMS::LONGITUDE : DMS::LATITUDE, dmssep) +
       " " + DMS::Encode(swaplatlong ? _lat : _long, unsigned(prec),
-                        swaplatlong ? DMS::LATITUDE : DMS::LONGITUDE);
+                        swaplatlong ? DMS::LATITUDE : DMS::LONGITUDE, dmssep);
   }
 
   string GeoCoords::MGRSRepresentation(int prec) const {

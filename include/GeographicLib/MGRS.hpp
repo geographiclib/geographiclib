@@ -271,14 +271,16 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     static Math::real Flattening() throw() { return UTMUPS::Flattening(); }
+    ///@}
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      **********************************************************************/
     static Math::real InverseFlattening() throw()
     { return UTMUPS::InverseFlattening(); }
-    ///@}
+    /// \endcond
   };
 
 } // namespace GeographicLib

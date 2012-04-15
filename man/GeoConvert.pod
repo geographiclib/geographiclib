@@ -6,8 +6,8 @@ GeoConvert -- convert geographic coordinates
 
 =head1 SYNOPSIS
 
-B<GeoConvert> [ B<-g> | B<-d> | B<-u> | B<-m> | B<-c> ] [ B<-p> I<prec> ]
-[ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ] [ B<-w> ]
+B<GeoConvert> [ B<-g> | B<-d> | B<-:> | B<-u> | B<-m> | B<-c> ]
+[ B<-p> I<prec> ] [ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ] [ B<-w> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -28,7 +28,7 @@ is used (I<a> = 6378137 m, I<f> = 1/298.257223563).
 
 =item B<geographic>
 
-2 tokens (output options B<-g> or B<-d>) given as I<latitude>
+2 tokens (output options B<-g>, B<-d>, or B<-:>) given as I<latitude>
 I<longitude> using decimal degrees or degrees minutes seconds.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  (See L<QUOTING|quoting> for how to
@@ -80,6 +80,11 @@ output latitude and longitude using decimal degrees.  Default output mode.
 =item B<-d>
 
 output latitude and longitude using degrees, minutes, and seconds (DMS).
+
+=item B<-:>
+
+like B<-d>, except use : as a separator instead of the d, ', and "
+delimiters.
 
 =item B<-u>
 
@@ -267,7 +272,7 @@ file C<input.txt> should just contain the plain coordinates.
 =head1 EXAMPLES
 
    echo 38SMB4488 | GeoConvert         => 33.33424 44.40363
-   echo 38SMB4488 | GeoConvert -d -p 1 => 33d20'03.25"N 044d24'13.06"E
+   echo 38SMB4488 | GeoConvert -: -p 1 => 33:20:03.25N 044:2413.06E
    echo 38SMB4488 | GeoConvert -u      => 38N 444500 3688500
    echo E44d24 N33d20 | GeoConvert -m -p -3 => 38SMB4488
 

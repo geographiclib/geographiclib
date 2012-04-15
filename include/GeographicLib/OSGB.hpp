@@ -194,11 +194,13 @@ namespace GeographicLib {
     static Math::real Flattening() throw()
     { return real(20923713 - 20853810) / real(20923713); }
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the Airy 1830 ellipsoid.
      **********************************************************************/
     static Math::real InverseFlattening() throw() { return 1/Flattening(); }
+    /// \endcond
 
     /**
      * @return \e k0 central scale for the OSGB projection (0.9996012717).

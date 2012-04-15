@@ -284,7 +284,7 @@ level.)
 
 The height of the EGM96 geoid at Timbuktu
 
-    echo "16d46'33N" "3d00'34W" | GeoidEval
+    echo 16:46:33N 3:00:34W | GeoidEval
     => 28.7068 -0.02e-6 -1.73e-6
 
 The first number returned is the height of the geoid and the 2nd and 3rd

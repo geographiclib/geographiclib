@@ -258,7 +258,8 @@ namespace GeographicLib {
     return azi;
   }
 
-  string DMS::Encode(real angle, component trailing, unsigned prec, flag ind) {
+  string DMS::Encode(real angle, component trailing, unsigned prec, flag ind,
+		     char dmssep) {
     // Assume check on range of input angle has been made by calling
     // routine (which might be able to offer a better diagnostic).
     if (!Math::isfinite(angle))
@@ -310,16 +311,20 @@ namespace GeographicLib {
     default:
       if (ind != NONE)
         s << setw(1 + min(int(ind), 2));
-      s << setprecision(0) << pieces[0] << char(tolower(dmsindicators_[0]));
+      s << setprecision(0) << pieces[0]
+	<< (dmssep ? dmssep : char(tolower(dmsindicators_[0])));
       switch (trailing) {
       case MINUTE:
-        s << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec)
-          << pieces[1] << char(tolower(dmsindicators_[1]));
+        s << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec) << pieces[1];
+	if (!dmssep)
+	  s << char(tolower(dmsindicators_[1]));
         break;
       case SECOND:
-        s << setw(2) << pieces[1] << char(tolower(dmsindicators_[1]))
-          << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec)
-          << pieces[2] << char(tolower(dmsindicators_[2]));
+        s << setw(2)
+	  << pieces[1] << (dmssep ? dmssep : char(tolower(dmsindicators_[1])))
+          << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec) << pieces[2];
+	if (!dmssep)
+	  s << char(tolower(dmsindicators_[2]));
         break;
       default:
         break;

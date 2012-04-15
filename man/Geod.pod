@@ -7,7 +7,7 @@ Geod -- perform geodesic calculations
 =head1 SYNOPSIS
 
 B<Geod> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi1> ] [ B<-a> ] [ B<-e> I<a> I<f> ]
-[ B<-d> ] [ B<-b> ] [ B<-f> ] [ B<-p> I<prec> ]
+[ B<-d> | B<-:> ] [ B<-b> ] [ B<-f> ] [ B<-p> I<prec> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -76,6 +76,11 @@ I<f> = 1/298.257223563.
 =item B<-d>
 
 output angles as degrees, minutes, seconds instead of decimal degrees.
+
+=item B<-:>
+
+like B<-d>, except use : as a separator instead of the d, ', and "
+delimiters.
 
 =item B<-b>
 
@@ -212,25 +217,25 @@ will be converted.
 
 Route from JFK Airport to Singapore Changi Airport:
 
-   echo "40d38'23N" "073d46'44W" "01d21'33N" "103d59'22E" |
-   Geod -i -d -p 0
+   echo 40:38:23N 073:46:44W 01:21:33N 103:59:22E |
+   Geod -i -: -p 0
 
-   003d18'29.9" 177d29'09.2" 15347628 4302458
+   003:18:29.9 177:29:09.2 15347628
 
 Waypoints on the route at intervals of 2000km:
 
    for ((i = 0; i <= 16; i += 2)); do echo ${i}000000;done |
-   Geod -l "40d38'23N" "073d46'44W" "003d18'29.9" -d -p 0
+   Geod -l 40:38:23N 073:46:44W 003:18:29.9 -: -p 0
 
-   40d38'23.0"N 073d46'44.0"W 003d18'29.9" 0
-   58d34'45.1"N 071d49'36.7"W 004d48'48.8" 1967419
-   76d22'28.4"N 065d32'17.8"W 010d41'38.4" 3743642
-   84d50'28.0"N 075d04'39.2"E 150d55'00.9" 5156905
-   67d26'20.3"N 098d00'51.2"E 173d27'20.3" 6070415
-   49d33'03.2"N 101d06'52.6"E 176d07'54.3" 6394568
-   31d34'16.5"N 102d30'46.3"E 177d03'08.4" 6095725
-   13d31'56.0"N 103d26'50.7"E 177d24'55.0" 5200700
-   04d32'05.7"S 104d14'48.7"E 177d28'43.6" 3795596
+   40:38:23.0N 073:46:44.0W 003:18:29.9
+   58:34:45.1N 071:49:36.7W 004:48:48.8
+   76:22:28.4N 065:32:17.8W 010:41:38.4
+   84:50:28.0N 075:04:39.2E 150:55:00.9
+   67:26:20.3N 098:00:51.2E 173:27:20.3
+   49:33:03.2N 101:06:52.6E 176:07:54.3
+   31:34:16.5N 102:30:46.3E 177:03:08.4
+   13:31:56.0N 103:26:50.7E 177:24:55.0
+   04:32:05.7S 104:14:48.7E 177:28:43.6
 
 =head1 SEE ALSO
 

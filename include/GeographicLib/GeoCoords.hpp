@@ -103,7 +103,8 @@ namespace GeographicLib {
      * - Latitude and Longitude
      *   -  33.44      43.27
      *   -  N33d26.4'  E43d16.2'
-     *   -  43d16'12"E 33d26'24"N
+     *   -  43d16'12&quot;E 33d26'24&quot;N
+     *   -  43:16:12E  33:26:24
      * - MGRS
      *   -  38SLC301
      *   -  38SLC391014
@@ -124,13 +125,17 @@ namespace GeographicLib {
      * - 75W 40N
      * - E-75 -40S
      * .
-     * are all the same position.  The coordinates may be given in decimal
-     * degrees, degrees and decimal minutes, degrees, minutes, seconds, etc.
-     * Use d, ', and " to make off the degrees, minutes and seconds.  Thus
-     * - 40d30'30"
+     * are all the same position.  The coordinates may be given in
+     * decimal degrees, degrees and decimal minutes, degrees, minutes,
+     * seconds, etc.  Use d, ', and &quot; to mark off the degrees,
+     * minutes and seconds.  Alternatively, use : to separate these
+     * components.  Thus
+     * - 40d30'30&quot;
      * - 40d30'30
      * - 40d30.5'
      * - 40d30.5
+     * - 40:30:30
+     * - 40:30.5
      * - 40.508333333
      * .
      * all specify the same angle.  The leading sign applies to all components
@@ -354,6 +359,8 @@ namespace GeographicLib {
      *
      * @param[in] prec precision (relative to about 1m)
      * @param[in] swaplatlong if true give longitude first (default = false)
+     * @param[in] dmssep if non-null, use as the DMS separator character
+     *   (instead of d, ', &quot; delimiters).
      * @return DMS latitude/longitude string representation.
      *
      * Precision specifies accuracy of representation as follows:
@@ -361,12 +368,13 @@ namespace GeographicLib {
      * - prec = -4, 0.1d
      * - prec = -3, 1'
      * - prec = -2, 0.1'
-     * - prec = -1, 1"
-     * - prec = 0, 0.1" (about 3m)
-     * - prec = 1, 0.01"
-     * - prec = 10 (max), 10<sup>-11</sup>"
+     * - prec = -1, 1&quot;
+     * - prec = 0, 0.1&quot; (about 3m)
+     * - prec = 1, 0.01&quot;
+     * - prec = 10 (max), 10<sup>-11</sup>&quot;
      **********************************************************************/
-    std::string DMSRepresentation(int prec = 0, bool swaplatlong = false) const;
+    std::string DMSRepresentation(int prec = 0, bool swaplatlong = false,
+				  char dmssep = char(0)) const;
 
     /**
      * MGRS string.
@@ -436,14 +444,16 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     Math::real Flattening() const throw() { return UTMUPS::Flattening(); }
+    ///@}
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the WGS84 ellipsoid.
+     * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return UTMUPS::InverseFlattening(); }
-    ///@}
+    /// \endcond
   };
 
 } // namespace GeographicLib

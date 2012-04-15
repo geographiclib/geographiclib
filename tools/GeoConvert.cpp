@@ -41,15 +41,19 @@ int main(int argc, char* argv[]) {
     int zone = UTMUPS::MATCH;
     bool centerp = true, swaplatlong = false;
     std::string istring, ifile, ofile, cdelim;
-    char lsep = ';';
+    char lsep = ';', dmssep = char(0);
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
       if (arg == "-g")
         outputmode = GEOGRAPHIC;
-      else if (arg == "-d")
+      else if (arg == "-d") {
         outputmode = DMS;
-      else if (arg == "-u")
+	dmssep = '\0';
+      } else if (arg == "-:") {
+        outputmode = DMS;
+	dmssep = ':';
+      } else if (arg == "-u")
         outputmode = UTMUPS;
       else if (arg == "-m")
         outputmode = MGRS;
@@ -180,7 +184,7 @@ int main(int argc, char* argv[]) {
           os = p.GeoRepresentation(prec, swaplatlong);
           break;
         case DMS:
-          os = p.DMSRepresentation(prec, swaplatlong);
+          os = p.DMSRepresentation(prec, swaplatlong, dmssep);
           break;
         case UTMUPS:
           os = p.AltUTMUPSRepresentation(prec);

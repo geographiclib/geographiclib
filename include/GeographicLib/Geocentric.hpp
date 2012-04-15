@@ -251,14 +251,16 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const throw()
     { return Init() ? _f : Math::NaN<real>(); }
+    ///@}
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return Init() ? 1/_f : Math::NaN<real>(); }
-    ///@}
+    /// \endcond
 
     /**
      * A global instantiation of Geocentric with the parameters for the WGS84
