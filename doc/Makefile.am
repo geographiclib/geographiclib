@@ -85,12 +85,14 @@ MANPAGES = \
 
 doc: html/index.html
 
-html/index.html: Doxyfile Geographic.doc \
+html/index.html: doxyfile.in Geographic.doc \
 	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(MANPAGES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi
 	cp -p $(EXTRAFILES) $(MANPAGES) $(top_srcdir)/maxima/*.mac \
 	$(top_srcdir)/LICENSE.txt html/
-	sed "s%\.\./%$(top_srcdir)/%g" $(srcdir)/Doxyfile | doxygen -
+	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
+	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	$(srcdir)/doxyfile.in | doxygen -
 
 maintainer-clean-local:
 	rm -rf html

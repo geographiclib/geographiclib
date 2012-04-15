@@ -28,6 +28,9 @@ endforeach ()
 # is needed.
 
 if (MAINTAINER)
+  configure_file (
+      "${CMAKE_CURRENT_SOURCE_DIR}/doxyfile.in"
+      "${CMAKE_CURRENT_BINARY_DIR}/doxyfile" )
   file (GLOB SOURCES
     ../src/*.cpp ../include/GeographicLib/*.hpp
     ../tools/*.cpp ../examples/*.cpp)
@@ -37,13 +40,12 @@ if (MAINTAINER)
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxygen.log)
   add_dependencies (doc htmlman)
   add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doxygen.log
-    DEPENDS Doxyfile Geographic.doc ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxyfile
+      Geographic.doc ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
     COMMAND rm -rf html && mkdir html
     COMMAND
       cp -p ${EXTRA_FILES} ${HTMLMAN} html/
-    COMMAND
-      sed \"s%\\.\\./%${PROJECT_SOURCE_DIR}/%g\"
-        ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile | doxygen - > doxygen.log
+    COMMAND ${DOXYGEN_EXECUTABLE} doxyfile > doxygen.log
     COMMENT "Generating html documentation tree")
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
     DESTINATION share/doc/GeographicLib)

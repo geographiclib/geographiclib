@@ -28,7 +28,9 @@ html/index.html: Doxyfile Geographic.doc \
 	if test -d html; then rm -rf html/*; else mkdir html; fi
 	cp -p $(MAXIMASOURCES) $(EXTRAFILES) $(HTMLMANPAGES) \
 	../LICENSE.txt html/
-	doxygen
+	sed -e "s%@PROJECT_SOURCE_DIR@%..%g" \
+	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	$(srcdir)/doxyfile.in | doxygen -
 
 PREFIX = /usr/local
 DEST = $(PREFIX)/share/doc/GeographicLib

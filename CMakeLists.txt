@@ -11,7 +11,7 @@ set (GeographicLib_VERSION
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.2.5)
+set (LIBVERSIONFULL 9.3.0)
 
 # Set CMAKE_INSTALL_PREFIX from first element of CMAKE_PREFIX_PATH
 if (WIN32)
@@ -70,12 +70,15 @@ configure_file (
 # therefore only done in "MAINTAINER" mode.  The maintainer runs "make
 # distrib-all" which installs the transformed documentation files into
 # the source tree.
+set (DOXYGEN_SKIP_DOT ON)
+find_package (Doxygen)
+
 if (NOT WIN32)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
   find_program (HAVE_DOXYGEN doxygen)
 endif ()
-if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_DOXYGEN)
+if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND DOXYGEN_FOUND)
   set (MAINTAINER ON CACHE BOOL "Allow build of additional components")
 else ()
   set (MAINTAINER OFF CACHE BOOL "Allow build of additional components")

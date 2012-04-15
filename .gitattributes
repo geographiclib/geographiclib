@@ -1,13 +1,16 @@
 AUTHORS ident text
 INSTALL ident text
 NEWS ident text
-Doxyfile ident text
+MANIFEST.in ident text
 *.bib ident text
 *.cgi ident text
 *.cmake ident text
+*.cmake.in ident text
+doxyfile.in ident text
 *.cpp ident text
 *.h ident text
 *.hpp ident text
+*.h.in ident text
 *.htaccess text
 *.html ident text
 *.iss ident text
@@ -19,13 +22,9 @@ Doxyfile ident text
 *.pod ident text
 *.tex ident text
 *.txt ident text
-makefile-admin ident eol=lf
+[Mm]akefile* ident eol=lf
 *.ac ident eol=lf
 *.am ident eol=lf
-*.in ident eol=lf
-*.h.in ident text
-*.cmake.in ident text
-*.mk ident eol=lf
 *.sh ident eol=lf
 *.eps -text
 *.pdf -text
