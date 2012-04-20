@@ -395,7 +395,7 @@ namespace GeographicLib {
           for (int j = 0; j < n; ++j)
             // fix endian-ness and cast to IntT
             array[i++] = IntT(bigendp == Math::bigendian ? buffer[j] :
-                              Math::swab<IntT>(buffer[j]));
+                              Math::swab<ExtT>(buffer[j]));
           k -= n;
         }
       }
@@ -418,6 +418,64 @@ namespace GeographicLib {
       static inline void readarray(std::istream& str,
                                    std::vector<IntT>& array) {
       readarray<ExtT, IntT, bigendp>(str, &array[0], array.size());
+    }
+
+    /**
+     * Write data in an array of type IntT as type ExtT to a binary stream.
+     * The data in the file is in (bigendp ? big : little)-endian format.
+     *
+     * @tparam ExtT the type of the objects in the binary stream (external).
+     * @tparam IntT the type of the objects in the array (internal).
+     * @tparam bigendp true if the external storage format is big-endian.
+     * @param[out] str the output stream for the data of type ExtT (external).
+     * @param[in] array the input array of type IntT (internal).
+     * @param[in] num the size of the array.
+     **********************************************************************/
+    template<typename ExtT, typename IntT, bool bigendp>
+      static inline void writearray(std::ostream& str,
+                                   const IntT array[], size_t num) {
+      if (sizeof(IntT) == sizeof(ExtT) &&
+          std::numeric_limits<IntT>::is_integer ==
+          std::numeric_limits<ExtT>::is_integer &&
+          bigendp == Math::bigendian) {
+        // Data is compatible (including endian-ness).
+        str.write(reinterpret_cast<const char *>(array), num * sizeof(ExtT));
+        if (!str.good())
+          throw GeographicErr("Failure writing data");
+      } else {
+        const int bufsize = 1024; // write this many values at a time
+        ExtT buffer[bufsize];     // temporary buffer
+        int k = int(num);         // data values left to write
+        int i = 0;                // index into output array
+        while (k) {
+          int n = (std::min)(k, bufsize);
+          for (int j = 0; j < n; ++j)
+            // cast to ExtT and fix endian-ness
+            buffer[j] = bigendp == Math::bigendian ? ExtT(array[i++]) :
+              Math::swab<ExtT>(ExtT(array[i++]));
+          str.write(reinterpret_cast<const char *>(buffer), n * sizeof(ExtT));
+          if (!str.good())
+            throw GeographicErr("Failure writing data");
+          k -= n;
+        }
+      }
+      return;
+    }
+
+    /**
+     * Write data in an array of type IntT as type ExtT to a binary stream.
+     * The data in the file is in (bigendp ? big : little)-endian format.
+     *
+     * @tparam ExtT the type of the objects in the binary stream (external).
+     * @tparam IntT the type of the objects in the array (internal).
+     * @tparam bigendp true if the external storage format is big-endian.
+     * @param[out] str the output stream for the data of type ExtT (external).
+     * @param[in] array the input vector of type IntT (internal).
+     **********************************************************************/
+    template<typename ExtT, typename IntT, bool bigendp>
+      static inline void writearray(std::ostream& str,
+                                   std::vector<IntT>& array) {
+      writearray<ExtT, IntT, bigendp>(str, &array[0], array.size());
     }
 
     /**

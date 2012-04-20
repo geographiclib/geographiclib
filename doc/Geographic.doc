@@ -3304,15 +3304,17 @@ Older versions are in
 http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
  - Version 1.21 (released 2012-mm-dd)
+  - Support for colon-separated DMS output:
+    - GeographicLib::DMS::Encode and
+      GeographicLib::GeoCoords::DMSRepresentation generalized,
+    - <a href="Geod.1.html">GeoConvert</a> and
+      <a href="Geod.1.html">Geod</a> accept a -: option.
   - Work around optimization BUG in GeographicLib::Geodesic::Inverse
     with tdm mingw g++ version 4.6.1.
-  - Document out-of-sources builds for autoconf.
-  - Ensure right Config.h is loaded with out-of-source builds.
-  - Support doxygen under Windows (to do).
-  - Change examples to use : separators to indicate degrees,
-    minutes, seconds.
-  - Update DMS to use : separators to indication degrees, minutes,
-    seconds.
+  - Various fixes to ensure that that out-of-sources builds work
+    correctly with autoconf.
+  - cmake tweaks:
+    - Support doxygen under Windows.
 
  - Version 1.20 (released 2012-03-23)
   - cmake tweaks:
@@ -3350,7 +3352,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
  - Version 1.16 (released 2011-12-07)
   - Add calculation of the earth's gravitational field:
     - add GeographicLib::NormalGravity GeographicLib::GravityModel and
-      GeographicLib::GravityCircle classes;
+       GeographicLib::GravityCircle classes;
     - add command line utility
       <a href="Gravity.1.html">Gravity</a>;
     - add \ref gravity;
@@ -3452,8 +3454,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Fix (innocuous) unassigned variable in Geodesic::GenInverse.
   - Geodesic routines in Matlab return a12 as first column of aux return
     value (incompatible change).
-  - A couple of code changes to enable compilation with Visual Studio
-    2003.
+  - A couple of code changes to enable compilation with Visual
+    Studio 2003.
 
  - Version 1.11 (released 2011-06-27)
   - Changes to <a href="Planimeter.1.html">Planimeter</a>:

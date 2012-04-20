@@ -95,7 +95,7 @@ namespace GeographicLib {
   }
 
   string GeoCoords::DMSRepresentation(int prec, bool swaplatlong) const
-  { return DMSRepresentation(int prec, bool swaplatlong, char(0)); }
+  { return DMSRepresentation(prec, swaplatlong, char(0)); }
 
   string GeoCoords::MGRSRepresentation(int prec) const {
     // Max precision is um
