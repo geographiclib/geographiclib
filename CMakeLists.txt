@@ -34,8 +34,9 @@ else ()
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" ON)
 endif ()
 
-# (2) Try to compile the Matlab interfaces?
-option (ENABLE_MATLAB "Try to compile matlab/octave interface" OFF)
+# (2) Compiler the Matlab interfaces?  Skip Matlab compilation if OFF
+option (MATLAB_COMPILER
+  "Compiler for matlab/octave interface: mex or mkoctfile or OFF" OFF)
 
 # (3) Where to look for data files.  Various classes look in the geoids,
 # gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
@@ -88,26 +89,31 @@ if (MAINTAINER)
   add_dependencies (distrib-all distrib-man distrib-doc)
 endif ()
 
-# Look for the tool to compile the Matlab interfaces.  On Linux systems,
-# octave is used, since I couldn't find a version of Matlab that
-# supported sufficiently recent versions of g++.
-if (ENABLE_MATLAB)
-  if (NOT WIN32)
-    find_program (HAVE_MEX mkoctfile)
-    if (HAVE_MEX)
-      set (MEX "mkoctfile")
-      set (MEXEXT "mex")
-    endif ()
+# Look for the tool to compile the Matlab interfaces.
+if (MATLAB_COMPILER)
+  if (WIN32)
+    set (MATLAB_COMPILER_EXT ".bat")
   else ()
-    find_program (HAVE_MEX mex.bat)
-    if (HAVE_MEX)
-      set (MEX "mex")
-      execute_process (COMMAND mexext.bat
-        OUTPUT_VARIABLE MEXEXT OUTPUT_STRIP_TRAILING_WHITESPACE)
-    endif ()
+    set (MATLAB_COMPILER_EXT "")
   endif ()
-else ()
-  set (HAVE_MEX OFF)
+  find_program (MEX "${MATLAB_COMPILER}${MATLAB_COMPILER_EXT}")
+  if (MATLAB_COMPILER MATCHES "mex")
+    get_filename_component (MATLABDIR "${MEX}" REALPATH)
+    get_filename_component (MATLABDIR "${MATLABDIR}" PATH)
+    find_program (MEXEXTPROG "mexext${MATLAB_COMPILER_EXT}"
+      PATHS "${MATLABDIR}")
+    execute_process (COMMAND "${MEXEXTPROG}"
+      OUTPUT_VARIABLE MEXEXT OUTPUT_STRIP_TRAILING_WHITESPACE)
+  else ()
+    set (MEXEXT "mex")
+  endif ()
+  if (NOT MEX)
+    message (WARNING
+      "Cannot find Matlab compiler ${MATLAB_COMPILER}${MATLAB_COMPILER_EXT}")
+  else if (NOT MEXEXT)
+    set (MEX OFF)
+    message (WARNING "Cannot determine extension for Matlab compiled code")
+  endif ()
 endif ()
 
 # Set a default build type for single-configuration cmake generators if
