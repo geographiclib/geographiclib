@@ -2,7 +2,7 @@
  * \file Geoid.cpp
  * \brief Implementation for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -217,7 +217,7 @@ namespace GeographicLib {
   {
     if (_dir.empty())
       _dir = DefaultGeoidPath();
-    _filename = _dir + "/" + _name + ".pgm";
+    _filename = _dir + "/" + _name + (pixel_size_ != 4 ? ".pgm" : ".pgm4");
     _file.open(_filename.c_str(), ios::binary);
     if (!(_file.good()))
       throw GeographicErr("File not readable " + _filename);
@@ -266,8 +266,8 @@ namespace GeographicLib {
       unsigned maxval;
       if (!(_file >> maxval))
         throw GeographicErr("Error reading maxval " + _filename);
-      if (maxval != 0xffffu)
-        throw GeographicErr("Maxval not equal to 2^16-1 " + _filename);
+      if (maxval != pixel_max_)
+        throw GeographicErr("Incorrect value of maxval " + _filename);
       // Add 1 for whitespace after maxval
       _datastart = (unsigned long long)(_file.tellg()) + 1ULL;
       _swidth = (unsigned long long)(_width);
@@ -289,7 +289,7 @@ namespace GeographicLib {
       throw GeographicErr("Raster height is even " + _filename);
     _file.seekg(0, ios::end);
     if (!_file.good() ||
-        _datastart + 2ULL * _swidth * (unsigned long long)(_height) !=
+        _datastart + pixel_size_ * _swidth * (unsigned long long)(_height) !=
         (unsigned long long)(_file.tellg()))
       // Possibly this test should be "<" because the file contains, e.g., a
       // second image.  However, for now we are more strict.
@@ -436,7 +436,7 @@ namespace GeographicLib {
       try {
         _data.clear();
         // Use swap to release memory back to system
-        vector< vector<unsigned short> >().swap(_data);
+        vector< vector<pixel_t> >().swap(_data);
       }
       catch (const exception&) {
       }
@@ -486,7 +486,7 @@ namespace GeographicLib {
     _yoffset = in;
 
     try {
-      _data.resize(_ysize, vector<unsigned short>(_xsize));
+      _data.resize(_ysize, vector<pixel_t>(_xsize));
       for (int iy = min(oysize, _ysize); iy--;)
         _data[iy].resize(_xsize);
     }
@@ -496,10 +496,11 @@ namespace GeographicLib {
     }
 
     try {
-      vector<char> buf(2 * _xsize);
+      vector<char> buf(pixel_size_ * _xsize);
       for (int iy = in; iy <= is; ++iy) {
         int iy1 = iy, iw1 = iw;
         if (iy < 0 || iy >= _height) {
+          // Allow points "beyond" the poles to support interpolation
           iy1 = iy1 < 0 ? -iy1 : 2 * (_height - 1) - iy1;
           iw1 += _width/2;
           if (iw1 >= _width)
@@ -507,16 +508,21 @@ namespace GeographicLib {
         }
         int xs1 = min(_width - iw1, _xsize);
         filepos(iw1, iy1);
-        _file.read(&(buf[0]), 2 * xs1);
+        _file.read(&(buf[0]), pixel_size_ * xs1);
         if (xs1 < _xsize) {
           // Wrap around longitude = 0
           filepos(0, iy1);
-          _file.read(&(buf[2 * xs1]), 2 * (_xsize - xs1));
+          _file.read(&(buf[pixel_size_ * xs1]), pixel_size_ * (_xsize - xs1));
         }
-        for (int ix = 0; ix < _xsize; ++ix)
-          _data[iy - in][ix] =
-            (unsigned short)((unsigned char)buf[2 * ix] * 256u +
-                             (unsigned char)buf[2 * ix + 1]);
+        for (int ix = 0; ix < _xsize; ++ix) {
+          unsigned r = ((unsigned char)buf[pixel_size_ * ix] << 8) |
+            (unsigned char)buf[pixel_size_ * ix + 1];
+          if (pixel_size_ == 4)
+            r = (r << 16 ) |
+              ((unsigned char)buf[pixel_size_ * ix + 2] << 8) |
+              (unsigned char)buf[pixel_size_ * ix + 3];
+          _data[iy - in][ix] = pixel_t(r);
+        }
       }
       _cache = true;
     }

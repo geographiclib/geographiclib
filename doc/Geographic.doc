@@ -1030,7 +1030,6 @@ Matlab.
    The first command allows you to select the compiler to use (which
    should be the same as that used to compile %GeographicLib).
 
-
 To use the interface routines for %GeographicLib, run one of (for
 example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
@@ -1559,7 +1558,7 @@ two alternatives:
 
 A test set for the geoid models is available at
  - <a href="http://sf.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz/download">
-   GeoidHeight.dat.gz</a>
+   GeoidHeights.dat.gz</a>
  .
 This is about 11 MB (compressed).  This test set consists of a set of
 500000 geographic coordinates together with the corresponding geoid
@@ -3315,6 +3314,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     correctly with autoconf.
   - cmake tweaks:
     - Support doxygen under Windows.
+    - Changes to Matlab interface
 
  - Version 1.20 (released 2012-03-23)
   - cmake tweaks:

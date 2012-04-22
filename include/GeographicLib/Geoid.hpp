@@ -2,7 +2,7 @@
  * \file Geoid.hpp
  * \brief Header for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -21,6 +21,8 @@
 #pragma warning (push)
 #pragma warning (disable: 4251)
 #endif
+
+#define PGM_PIXEL_WIDTH 2
 
 namespace GeographicLib {
 
@@ -71,6 +73,15 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT Geoid {
   private:
     typedef Math::real real;
+#if PGM_PIXEL_WIDTH != 4
+    typedef unsigned short pixel_t;
+    static const unsigned pixel_size_ = 2;
+    static const unsigned pixel_max_ = 0xffffu;
+#else
+    typedef unsigned pixel_t;
+    static const unsigned pixel_size_ = 4;
+    static const unsigned pixel_max_ = 0xffffffffu;
+#endif
     static const unsigned stencilsize_ = 12;
     static const unsigned nterms_ = ((3 + 1) * (3 + 2))/2; // for a cubic fit
     static const real c0_;
@@ -91,7 +102,7 @@ namespace GeographicLib {
     unsigned long long _datastart, _swidth;
     bool _threadsafe;
     // Area cache
-    mutable std::vector< std::vector<unsigned short> > _data;
+    mutable std::vector< std::vector<pixel_t> > _data;
     mutable bool _cache;
     // NE corner and extent of cache
     mutable int _xoffset, _yoffset, _xsize, _ysize;
@@ -105,7 +116,8 @@ namespace GeographicLib {
                   // g++ 3.x doesn't know about the cast to streamoff.
                   std::ios::streamoff
 #endif
-                  (_datastart + 2ULL * (unsigned(iy)*_swidth + unsigned(ix))));
+                  (_datastart +
+                   pixel_size_ * (unsigned(iy)*_swidth + unsigned(ix))));
     }
     real rawval(int ix, int iy) const {
       if (ix < 0)
@@ -127,7 +139,13 @@ namespace GeographicLib {
           char a, b;
           _file.get(a);
           _file.get(b);
-          return real((unsigned char)(a) * 256u + (unsigned char)(b));
+          unsigned r = ((unsigned char)(a) << 8) | (unsigned char)(b);
+          if (pixel_size_ == 4) {
+            _file.get(a);
+            _file.get(b);
+            r = (r << 16) | ((unsigned char)(a) << 8) | (unsigned char)(b);
+          }
+          return real(r);
         }
         catch (const std::exception& e) {
           // throw GeographicErr("Error reading " + _filename + ": "
