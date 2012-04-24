@@ -45,6 +45,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-PolygonArea.cpp
+   *
+   * <a href="Planimeter.1.html">Planimeter</a> is a command-line utility
+   * providing access to the functionality of PolygonArea.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT PolygonArea {

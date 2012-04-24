@@ -31,6 +31,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-LocalCartesian.cpp
+   *
+   * <a href="CartConvert.1.html">CartConvert</a> is a command-line utility
+   * providing access to the functionality of Geocentric and LocalCartesian.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT LocalCartesian {

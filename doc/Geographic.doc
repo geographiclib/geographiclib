@@ -12,8 +12,8 @@
 \mainpage Geographic library
 \author Charles Karney
 <charles@karney.com>
-\version 1.20
-\date 2012-03-23
+\version 1.21
+\date 2012-mm-dd
 
 \section abstract Abstract
 
@@ -45,10 +45,10 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.20.tar.gz/download">
-  GeographicLib-1.20.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.20.zip/download">
-  GeographicLib-1.20.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.21.tar.gz/download">
+  GeographicLib-1.21.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.21.zip/download">
+  GeographicLib-1.21.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)  Alternatively you can get the latest stable release
@@ -57,10 +57,10 @@ using git \verbatim
   cd geographiclib; git checkout stable
 \endverbatim
 There are also a binary installers for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.20-win32.exe/download">
-  GeographicLib-1.20-win32.exe</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.20-win64.exe/download">
-  GeographicLib-1.20-win64.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.21-win32.exe/download">
+  GeographicLib-1.21-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.21-win64.exe/download">
+  GeographicLib-1.21-win64.exe</a>
 .
 It is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -161,14 +161,14 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.20.tar.gz/download">
-GeographicLib-1.20.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.20.zip/download">
-GeographicLib-1.20.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.20-win32.exe/download">
-GeographicLib-1.20-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.20-win64.exe/download">
-GeographicLib-1.20-win64.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.21.tar.gz/download">
+GeographicLib-1.21.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.21.zip/download">
+GeographicLib-1.21.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.21-win32.exe/download">
+GeographicLib-1.21-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.21-win64.exe/download">
+GeographicLib-1.21-win64.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -241,10 +241,10 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.20.tar.gz
-  unzip -q GeographicLib-1.20.zip \endverbatim
+  tar xfpz GeographicLib-1.21.tar.gz
+  unzip -q GeographicLib-1.21.zip \endverbatim
   then enter the directory created with one of \verbatim
-  cd GeographicLib-1.20 \endverbatim
+  cd GeographicLib-1.21 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD\endverbatim
@@ -305,14 +305,17 @@ Here are the steps to compile and install %GeographicLib:
 \endverbatim
     (With IDE compile environments, you get to select the build type in
     the IDE.)
-  - <code>ENABLE_MATLAB</code> (default: OFF).  Set this to ON to get
-    cmake to try to compile and install the Matlab/Octave interface.  At
-    present this is compiled for Matlab under Windows and for Octave
-    under Linux.  See \ref matlab for more information.
+  - <code>MATLAB_COMPILER</code> (default: OFF).  Set this to either
+    "mex" (for Matlab) or "mkoctfile" (for Octave) to specify the
+    compiler to use for the Matlab/Octave interface.  See \ref matlab
+    for more information.
   - <code>MAINTAINER</code> (default: ON for non-Windows environments
     provided doxygen, pod2man, and pod2html are found).  This affects
     whether the targets for creating source packages are activated.
     See \ref maintainer for details.
+  - <code>GEOGRAPHICLIB_EXAMPLES</code> (default: ON for the maintainer
+    and OFF otherwise).  If set to ON, then the short example programs
+    in the <code>examples</code> directory are built.
 - Build and install the software.  In non-IDE environments, run
   \verbatim
   make         # compile the library and the examples
@@ -336,9 +339,9 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.20.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.21.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.20 \endverbatim
+  cd GeographicLib-1.21 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD\endverbatim
@@ -367,9 +370,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.20.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.21.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.20 \endverbatim
+  cd GeographicLib-1.21 \endverbatim
 - Edit \verbatim
   include/GeographicLib/Config.h \endverbatim
   If your C++ compiler does not recognize the long double type
@@ -400,8 +403,8 @@ static library and the utilities.  If you only have Visual Studio 2003,
 use cmake to create the necessary solution file, see \ref cmake.  (cmake
 is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.20.zip \endverbatim
-- Open GeographicLib-1.20/windows/GeographicLib-vc10.sln in Visual Studio
+  unzip -q GeographicLib-1.21.zip \endverbatim
+- Open GeographicLib-1.21/windows/GeographicLib-vc10.sln in Visual Studio
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
@@ -424,14 +427,14 @@ library, it is advisable to build it with the compiler you are using for
 your own code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.20-win32.exe/download">
-GeographicLib-1.20-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.20-win64.exe/download">
-GeographicLib-1.20-win64.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.21-win32.exe/download">
+GeographicLib-1.21-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.21-win64.exe/download">
+GeographicLib-1.21-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc10\\GeographicLib-1.20 or C:\\pkg-vc10-x64\\GeographicLib-1.20,
+   C:\\pkg-vc10\\GeographicLib-1.21 or C:\\pkg-vc10-x64\\GeographicLib-1.21,
  - select the start menu folder,
  - and install.
  .
@@ -439,7 +442,7 @@ GeographicLib-1.20-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc10/GeographicLib-1.20/bin where the utilities are
+will include C:/pkg-vc10/GeographicLib-1.21/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the libexec/GeographicLib/matlab
@@ -497,8 +500,8 @@ In the case of cmake, you then run \verbatim
 which will copy the documentation and man pages from the build directory
 back into the source tree and package the resulting source tree for
 distribution as \verbatim
-  GeographicLib-1.20.tar.gz
-  GeographicLib-1.20.zip \endverbatim
+  GeographicLib-1.21.tar.gz
+  GeographicLib-1.21.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -509,7 +512,7 @@ With configure, run \verbatim
   make dist-gzip \endverbatim
 which will create the additional files and packages the results ready
 for distribution as \verbatim
-  geographiclib-1.20.tar.gz \endverbatim
+  geographiclib-1.21.tar.gz \endverbatim
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
@@ -666,7 +669,7 @@ The utilities are
    GeographicLib::Geodesic and GeographicLib::GeodesicLine.
  - <a href="Planimeter.1.html">
    <b>Planimeter</b></a>: compute the area of geodesic polygons using
-   the area facilities provided by GeographicLib::Geodesic.
+   GeographicLib::PolygonArea.
  - <a href="TransverseMercatorProj.1.html">
    <b>TransverseMercatorProj</b></a>: convert between geographic
    and transverse Mercator.  This is for testing
@@ -689,10 +692,10 @@ The utilities are
    GeographicLib::Geoid.
  - <a href="Gravity.1.html">
    <b>Gravity</b></a>: compute the earth's gravitational field using
-   GeographicLib::GravityModel.
+   GeographicLib::GravityModel and GeographicLib::GravityCircle.
  - <a href="MagneticField.1.html">
    <b>MagneticField</b></a>: compute the earth's magnetic field using
-   GeographicLib::MagneticModel.
+   GeographicLib::MagneticModel and GeographicLib::MagneticCircle.
  .
 The documentation for these utilities is in the form of man pages.  This
 documentation can be accessed by clicking on the utility name in the
@@ -1007,24 +1010,24 @@ Matlab.
 
    Compiler: 2
    etc. \endverbatim
-   (This will require that mex.bat is in your PATH.)  Then configure cmake
-   with, for example \verbatim
-   cmake -G "Visual Studio 10" -D ENABLE_MATLAB=ON .. \endverbatim
+   (This will require that mex.bat is in your PATH.  With Linux, use
+   <code>mex -setup</code>.)  Then configure cmake with, for example
+   \verbatim
+   cmake -G "Visual Studio 10" -D MATLAB_COMPILER=mex .. \endverbatim
    If you are running a 64-bit version of Matlab, be sure to select a
    64-bit generator with cmake, e.g., "Visual Studio 10 Win64".  Finally
    compile %GeographicLib with Visual Studio.  (The binary installer for
    64-bit Windows includes the compiled interface built with Visual
    Studio 10 and Matlab R2010b 64-bit).<br>
-   On Linux systems, cmake is configured to use Octave instead of Matlab,
-   because Matlab typically supports out-of-date versions of gcc.  However
-   the steps are similar (use <code>mex -setup</code> instead of
-   <code>mex.bat -setup</code>).
+   On Linux systems, you can compile the interface for use with octave
+   instead by using \verbatim
+   cmake -D MATLAB_COMPILER=mkoctfile .. \endverbatim
  - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
    Octave and run, e.g., \code
    mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-1.20/libexec/GeographicLib/matlab'
+   cd 'C:/pkg-vc10-x64/GeographicLib-1.21/libexec/GeographicLib/matlab'
    help geographiclibinterface
-   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.20');
+   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.21');
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
@@ -1033,7 +1036,7 @@ Matlab.
 To use the interface routines for %GeographicLib, run one of (for
 example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-1.20/libexec/GeographicLib/matlab'
+  addpath 'C:/pkg-vc10-x64/GeographicLib-1.21/libexec/GeographicLib/matlab'
 \endverbatim
 in Octave or Matlab.  The available functions are:
  - geodesicdirect: solve direct geodesic problem
@@ -1426,7 +1429,14 @@ compressed format.
 GeographicLib::Geoid evaluates the geoid height using bilinear or cubic
 interpolation.  The gradient of the geoid height is obtained by
 differentiating the interpolated height and referencing the result to
-distance on the WGS84 ellipsoid.
+distance on the WGS84 ellipsoid. 
+
+<b>WARNING</b>: Although GeographicLib::Geoid computes the gradient of
+the geoid height, this is subject to large quantization errors as a
+result of the way that the geoid data is stored.  This is particularly
+acute for fine grids, at high latitudes, and for the easterly gradient.
+If you need to compute the direction of the acceleration due to gravity
+accurately, you should use GeographicLib::GravityModel::Gravity.
 
 The bilinear interpolation is based on the values at the 4 corners of
 the enclosing cell.  The interpolated height is a continuous function of
@@ -2066,87 +2076,18 @@ point.  There are two ways to speed up this computation:
    this can speed up the computation by another factor of 8.
  .
 Both of these techniques are illustrated by the following code,
-GeoidHeightTable.cpp, which computes a table of egm2008 geoid heights on
-a 1 minute grid.  On an 8-processor Intel 2.66 GHz machine using OpenMP
-(-DHAVE_OPENMP=1), this takes about 40 minutes of elapsed time.
-(Without these optimizations, the computation would have taken about 200
-days!)  \code
-// Compute a table of egm2008 geoid heights on a 1' grid.
+which computes a table of geoid heights on
+a regular grid and writes on the result in a
+<a href="http://vdatum.noaa.gov/dev/gtx_info.html#dev_gtx_binary">.gtx</a>
+file.  On an 8-processor Intel 2.66 GHz machine using OpenMP
+(-DHAVE_OPENMP=1), it takes about 40 minutes of elapsed time to compute
+the geoid height for EGM2008 on a 1' gride.  (Without these
+optimizations, the computation would have taken about 200 days!)
+\include GeoidToGTX.cpp
 
-#include <vector>
-#include <fstream>
-#include <algorithm>
-
-#if HAVE_OPENMP
-#include <omp.h>
-#endif
-
-#include <GeographicLib/GravityModel.hpp>
-#include <GeographicLib/GravityCircle.hpp>
-
-using namespace std;
-using namespace GeographicLib;
-
-int main() {
-  GravityModel g("egm2008");
-  int
-    ndeg = 60,                  // Number of intervals per degree
-    nlat = 180 * ndeg + 1,
-    nlon = 360 * ndeg;
-  double delta = 1 / double(ndeg); // Grid spacing
-
-  // Write results as floats in binary mode
-  ofstream file("egm2008-geoid.dat", ios::binary);
-
-  // Compute and store results for nbatch latitudes at a time
-  const int nbatch = 64;
-  vector< vector<float> > N(nbatch, vector<float>(nlon));
-
-  for (int ilat0 = 0; ilat0 < nlat; ilat0 += nbatch) { // Loop over batches
-    int nlat0 = min(nlat, ilat0 + nbatch);
-
-#if HAVE_OPENMP
-#pragma omp parallel for
-#endif
-    for (int ilat = ilat0; ilat < nlat0; ++ilat) { // Loop over latitudes
-      double lat = 90 - ilat * delta, h = 0;
-      GravityCircle c(g.Circle(lat, h, GravityModel::GEOID_HEIGHT));
-      for (int ilon = 0; ilon < nlon; ++ilon) { // Loop over longitudes
-        double lon = ilon * delta;
-        N[ilat - ilat0][ilon] = float(c.GeoidHeight(lon));
-      } // longitude loop
-    }   // latitude loop
-    for (int ilat = ilat0; ilat < nlat0; ++ilat)
-      file.write(reinterpret_cast<char *>(N[ilat - ilat0].data()),
-                 nlon * sizeof(float));
-
-  } // batch loop
-}
-\endcode
-
-OpenMP is supported by g++ and Visual Studio but these compilers need to
-be instructed to honor the OpenMP directives.  CMake can do the
-necessary work with this CMakeLists.txt: \verbatim
-cmake_minimum_required (VERSION 2.6)
-project (GeoidHeightTable)
-# GravityModel was introduced in GeographicLib 1.16.
-find_package (GeographicLib 1.16 REQUIRED)
-find_package (OpenMP)
-
-include_directories (${GeographicLib_INCLUDE_DIRS})
-add_executable (GeoidHeightTable GeoidHeightTable.cpp)
-target_link_libraries (GeoidHeightTable ${GeographicLib_LIBRARIES})
-
-if (OPENMP_FOUND OR OpenMP_FOUND)
-  set_target_properties (GeoidHeightTable PROPERTIES
-    COMPILE_FLAGS ${OpenMP_CXX_FLAGS}
-    COMPILE_DEFINITIONS HAVE_OPENMP=1)
-  if (NOT WIN32)
-    set_target_properties (GeoidHeightTable PROPERTIES
-      LINK_FLAGS ${OpenMP_CXX_FLAGS})
-  endif (NOT WIN32)
-endif (OPENMP_FOUND OR OpenMP_FOUND)
-\endverbatim
+This example is built if cmake is invoked with <code>-D
+GEOGRAPHICLIB_EXAMPLES=ON</code>.  cmake will add in support for OpenMP,
+if it is available.
 
 <center>
 Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
@@ -3304,20 +3245,21 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
  - Version 1.21 (released 2012-mm-dd)
   - Support for colon-separated DMS output:
-    - GeographicLib::DMS::Encode and
-      GeographicLib::GeoCoords::DMSRepresentation generalized,
-    - <a href="Geod.1.html">GeoConvert</a> and
-      <a href="Geod.1.html">Geod</a> accept a -: option.
+     - GeographicLib::DMS::Encode and
+       GeographicLib::GeoCoords::DMSRepresentation generalized,
+     - <a href="GeoConvert.1.html">GeoConvert</a> and
+       <a href="Geod.1.html">Geod</a> accept a -: option.
+  - <a href="GeoidEval.1.html">GeoidEval</a> does not print the gradient
+    of the geoid height by default (it's subject to large errors).  Give
+    the -g option to get the gradient printed.
   - Work around optimization BUG in GeographicLib::Geodesic::Inverse
     with tdm mingw g++ version 4.6.1.
   - Various fixes to ensure that that out-of-sources builds work
     correctly with autoconf.
   - cmake tweaks:
-    - prune excluded file list?
-    - support doxygen under Windows (still hide behind MAINTAINER?)
-    - Changes to Matlab interface
-  - GeoidEval -g, warning about gradients, documentation on truncation
-    errs (to do)
+     - simplify the configuration of doxygen;
+     - allow the Matlab compiler to be specified with the
+       MATLAB_COMPILER option.
 
  - Version 1.20 (released 2012-03-23)
   - cmake tweaks:

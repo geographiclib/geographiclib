@@ -7,7 +7,7 @@ GeoidEval -- look up geoid heights
 =head1 SYNOPSIS
 
 B<GeoidEval> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-l> ]
-[ B<-a> | B<-c> I<south> I<west> I<north> I<east> ]
+[ B<-a> | B<-c> I<south> I<west> I<north> I<east> ] [ B<-g> ]
 [ B<-z> I<zone> ] [ B<--msltohae> ] [ B<--haetomsl> ]
 [ B<-v> ]
 [ B<--comment-delimiter> I<commentdelim> ]
@@ -19,10 +19,8 @@ B<GeoidEval> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-l> ]
 =head1 DESCRIPTION
 
 B<GeoidEval> reads in positions on standard input and prints out the
-corresponding geoid heights on standard output.  It also prints the
-northerly and easterly gradients of the geoid height (i.e., the rate at
-which the geoid height changes per unit distance along the WGS84
-ellipsoid in the specified directions).
+corresponding geoid heights on standard output.  Optionally, it also
+prints the northerly and easterly gradients of the geoid height.
 
 Positions are given as latitude and longitude, UTM/UPS, or MGRS, in any
 of the formats accepted by GeoConvert(1).  (MGRS coordinates signify the
@@ -61,6 +59,15 @@ cache the entire data set in memory.  See L<CACHE|cache>.
 
 cache the data bounded by I<south> I<west> I<north> I<east> in memory.
 See L<CACHE|cache>.
+
+=item B<-g>
+
+print the northerly and easterly gradients after the geoid height (i.e.,
+the rate at which the geoid height changes per unit distance along the
+WGS84 ellipsoid in the specified directions).  As a result of the way
+that the geoid data is stored, the calculation of gradients can result
+in large quantization errors.  This is particularly acute at high
+latitudes and for the easterly gradient.
 
 =item B<-z>
 
@@ -150,10 +157,7 @@ installed):
 By default, the C<egm96-5> geoid is used.  This may changed by setting
 the environment variable C<GEOID_NAME> or with the B<-n> option.  The
 errors listed here are estimates of the quantization and interpolation
-errors in the reported heights compared to the specified geoid.  As a
-result of the way that the geoid data is stored, the calculation of
-gradients can result in large quantization errors.  This is particularly
-acute at high latitudes and for the easterly gradient.
+errors in the reported heights compared to the specified geoid.
 
 The geoid data will be loaded from a directory specified at compile
 time.  This may changed by setting the environment variables
@@ -183,10 +187,7 @@ The cubic is constrained to be independent of longitude when evaluating
 the height at one of the poles.  Cubic interpolation is considerably
 more accurate than bilinear; however it results in small discontinuities
 in the returned height on cell boundaries.  The gradients are computed
-by differentiating the interpolated results.  As a result of the way
-that the geoid data is stored, the calculation of gradients can result
-in large quantization errors.  This is particularly acute for fine
-grids, at high latitudes, and for the easterly gradient.
+by differentiating the interpolated results.
 
 =head1 CACHE
 

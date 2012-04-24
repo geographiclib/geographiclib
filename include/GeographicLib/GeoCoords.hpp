@@ -43,6 +43,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-GeoCoords.cpp
+   *
+   * <a href="GeoConvert.1.html">GeoConvert</a> is a command-line utility
+   * providing access to the functionality of GeoCoords.
    **********************************************************************/
   class GEOGRAPHIC_EXPORT GeoCoords {
   private:

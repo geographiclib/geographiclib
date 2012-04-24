@@ -14,20 +14,20 @@ foreach (TOOL ${TOOLS})
   set (HTMLMAN ${HTMLMAN} ${MANDIR}/${TOOL}.1.html)
 endforeach ()
 
-# The maintainer runs doxygen...
+# Run doxygen, if available
 
 # First assemble a list of all the files the documentation uses.  Add a
 # dependency on htmlman (from man/CMakeLists.txt).  Use doxygen.log as
 # the make target.  To make this target, copy the non-doxygen generated
-# files into html/.  Run Doxfile thru a sed command so that absolute
-# path names are used and so that the pathnames are properly stripped by
-# doxygen (via STRIP_FROM_PATH). The distrib-doc target copies the html
-# directory into the source tree.
+# files into html/.  Run doxfile.in cmake's config process so that
+# absolute path names are used and so that the pathnames are properly
+# stripped by doxygen (via STRIP_FROM_PATH). The distrib-doc target
+# copies the html directory into the source tree.
 
-# In non-maintenance mode, only the install step (from the source tree)
-# is needed.
+# If doxygen is not available, only the install step (from the source
+# tree) is done.
 
-if (MAINTAINER)
+if (DOXYGEN_FOUND)
   configure_file (
       "${CMAKE_CURRENT_SOURCE_DIR}/doxyfile.in"
       "${CMAKE_CURRENT_BINARY_DIR}/doxyfile" )

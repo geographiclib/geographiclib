@@ -64,14 +64,14 @@ rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 tar xfpzC GeographicLib-$VERSION.tar.gz $WINDOWSBUILD
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
 (
-    echo vcmake ..
+    echo vcmake -D GEOGRAPHICLIB_EXAMPLES=ON ..
     echo vmake all test install package
     echo cp GeographicLib-$VERSION-win32.exe $DEVELSOURCE/
 ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
 (
-    echo vcmake -D ENABLE_MATLAB=on ..
+    echo vcmake -D GEOGRAPHICLIB_EXAMPLES=ON -D MATLAB_COMPILER=mex ..
     echo vmake all matlab-all test install package
     echo cp GeographicLib-$VERSION-win64.exe $DEVELSOURCE/
 ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/build
@@ -101,18 +101,18 @@ make -j10
 make install
 mkdir ../BUILD-maint
 cd ../BUILD-maint
-cmake -D MAINTAINER=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instd ..
+cmake  -D GEOGRAPHICLIB_EXAMPLES=ON -D MAINTAINER=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instd ..
 make -j10
 make install
 mkdir ../BUILD-matlab
 cd ../BUILD-matlab
-cmake -D MAINTAINER=OFF -D ENABLE_MATLAB=ON -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
+cmake -D MAINTAINER=OFF -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
 make -j10
 make -j10 matlab-all
 make install
 mkdir ../BUILD-system
 cd ../BUILD-system
-cmake -D MAINTAINER=OFF -D ENABLE_MATLAB=ON ..
+cmake -D MAINTAINER=OFF -D MATLAB_COMPILER=mkoctfile ..
 make -j10
 make -j10 matlab-all
 

@@ -54,6 +54,10 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-AlbersEqualArea.cpp
+   *
+   * <a href="ConicProj.1.html">ConicProj</a> is a command-line utility
+   * providing access to the functionality of LambertConformalConic and
+   * AlbersEqualArea.
    **********************************************************************/
   class GEOGRAPHIC_EXPORT AlbersEqualArea {
   private:

@@ -70,6 +70,10 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-TransverseMercator.cpp
+   *
+   * <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a> is a
+   * command-line utility providing access to the functionality of
+   * TransverseMercator and TransverseMercatorExact.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT TransverseMercator {

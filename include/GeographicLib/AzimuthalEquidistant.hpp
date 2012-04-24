@@ -34,6 +34,10 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-AzimuthalEquidistant.cpp
+   *
+   * <a href="GeodesicProj.1.html">GeodesicProj</a> is a command-line utility
+   * providing access to the functionality of AzimuthalEquidistant, Gnomonic,
+   * and CassiniSoldner.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT AzimuthalEquidistant {

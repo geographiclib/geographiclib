@@ -13,5 +13,26 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   target_link_libraries (${EXAMPLE} Geographic)
 endforeach ()
 
+set (OTHER_EXAMPLES GeoidToGTX.cpp)
+
+foreach (EXAMPLE_SOURCE ${OTHER_EXAMPLES})
+  get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
+  set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
+  add_executable (${EXAMPLE} ${EXAMPLE_SOURCE})
+  target_link_libraries (${EXAMPLE} Geographic)
+endforeach ()
+
+find_package (OpenMP)
+
+if (OPENMP_FOUND OR OpenMP_FOUND)
+  set_target_properties (GeoidToGTX PROPERTIES
+    COMPILE_FLAGS ${OpenMP_CXX_FLAGS}
+    COMPILE_DEFINITIONS HAVE_OPENMP=1)
+  if (NOT WIN32)
+    set_target_properties (GeoidToGTX PROPERTIES
+      LINK_FLAGS ${OpenMP_CXX_FLAGS})
+  endif (NOT WIN32)
+endif (OPENMP_FOUND OR OpenMP_FOUND)
+
 add_custom_target (examples DEPENDS ${EXAMPLES})
 add_dependencies (examples Geographic)

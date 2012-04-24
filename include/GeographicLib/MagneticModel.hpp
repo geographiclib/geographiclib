@@ -56,6 +56,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-MagneticModel.cpp
+   *
+   * <a href="MagneticField.1.html">MagneticField</a> is a command-line utility
+   * providing access to the functionality of MagneticModel and MagneticCircle.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT MagneticModel {

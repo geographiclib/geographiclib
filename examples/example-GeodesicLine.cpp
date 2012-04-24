@@ -26,7 +26,7 @@ int main() {
     // Alternatively
     // const GeographicLib::GeodesicLine line = geod.Line(lat1, lon1, azi1);
     double ds = 500e3;          // Nominal distance between points = 500 km
-    int num = ceil(s12 / ds);   // The number of intervals
+    int num = int(ceil(s12 / ds)); // The number of intervals
     cout << fixed << setprecision(3);
     {
       // Use intervals of equal length

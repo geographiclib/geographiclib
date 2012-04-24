@@ -51,6 +51,10 @@ namespace GeographicLib {
    * system (<a href="http://www.spatialreference.org/ref/epsg/3364/">
    * EPSG:3364</a>) is obtained by:
    * \include example-LambertConformalConic.cpp
+   *
+   * <a href="ConicProj.1.html">ConicProj</a> is a command-line utility
+   * providing access to the functionality of LambertConformalConic and
+   * AlbersEqualArea.
    **********************************************************************/
   class GEOGRAPHIC_EXPORT LambertConformalConic {
   private:

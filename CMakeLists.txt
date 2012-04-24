@@ -56,6 +56,15 @@ else ()
     CACHE PATH "Location for data for GeographicLib")
 endif ()
 
+# (4) Compiler the Matlab interfaces?  Skip Matlab compilation if OFF
+if (WIN32)
+  option (GEOGRAPHICLIB_EXAMPLES
+    "Build example programs in examples directory" OFF)
+elseif ()
+  option (GEOGRAPHICLIB_EXAMPLES
+    "Build example programs in examples directory" ON)
+endif ()
+
 # The debug version of the library is called Geographic_d.
 set (CMAKE_DEBUG_POSTFIX _d)
 
@@ -77,10 +86,9 @@ configure_file (
 # therefore only done in "MAINTAINER" mode.  The maintainer runs "make
 # distrib-all" which installs the transformed documentation files into
 # the source tree.
-set (DOXYGEN_SKIP_DOT ON)
-find_package (Doxygen)
-
 if (NOT WIN32)
+  set (DOXYGEN_SKIP_DOT ON)
+  find_package (Doxygen)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
   find_program (HAVE_DOXYGEN doxygen)
@@ -153,7 +161,7 @@ add_subdirectory (man)
 add_subdirectory (doc)
 add_subdirectory (matlab)
 add_subdirectory (python/geographiclib)
-if (MAINTAINER)
+if (GEOGRAPHICLIB_EXAMPLES)
   add_subdirectory (examples)
 endif ()
 
@@ -210,50 +218,17 @@ set (CPACK_PACKAGE_CONTACT charles@karney.com)
 set (CPACK_PACKAGE_VENDOR "GeographicLib")
 set (CPACK_PACKAGE_DESCRIPTION_SUMMARY
   "Geographic library, utilities, and documentation")
-# It's necessary to specify rather a long list of files to be excluded
-# in the source distribution.
+# The list of files to be excluded from the source distribution.
 set (CPACK_SOURCE_IGNORE_FILES
   "#"
   "~\$"
-  "${PROJECT_SOURCE_DIR}/(BUILD|WINDOWS|TAGS|geographiclib-[0-9])"
-  "${PROJECT_SOURCE_DIR}/release-notes/"
-  "${PROJECT_SOURCE_DIR}/(geoids-distrib|geoids-installer)/"
-  "${PROJECT_SOURCE_DIR}/(magnetic-distrib|magnetic-installer)/"
-  "${PROJECT_SOURCE_DIR}/(gravity-distrib|gravity-installer)/"
-  "${PROJECT_SOURCE_DIR}/(magnetic|gravity)/"
-  "${PROJECT_SOURCE_DIR}/(distrib|cgi-bin|scratch|srcL|workspace)/"
-  "${PROJECT_SOURCE_DIR}/(tests|testdata)/"
-  "${PROJECT_SOURCE_DIR}/python/(MANIFEST\$|build/)"
-  "${PROJECT_SOURCE_DIR}/(geodesic.*|makefile-admin|install_manifest.txt)"
-  "Makefile\$"
-  "Config.h\$"
-  "TAGS\$"
-  "/GeographicLibL"
-  "/\\\\.(deps|libs|svn)/"
   "/\\\\.git"
-  "/(UpgradeLog|_UpgradeReport)"
-  "/(CMakeCache.txt|CPack)"
-  "/(CMakeFiles|_CPack_Packages|BACKUP)/"
-  "/config\\\\.(h|status)"
-  "/Config-ac\\\\.h\$"
-  "/(status|libtool)\$"
-  "/stamp-"
-  "/junk"
-  "/octave-core"
-  "\\\\.(bak|BAK|patch|tmp|zip|gz|lo|o|ncb|suo|a|la|log|exe|pyc)\$"
-  "\\\\.(mex|mexw32|mexw64|mexa64|kml|kmz)\$"
-  "/(Release|Debug|Win32)"
-  "\\\\.cache/"
-  "proj.*\\\\.user\$"
-  "lib.*\\\\.so"
-  "tools/[A-Za-z]+\$"
-  "tools/geographiclib-get-geoids\$"
-  "tools/geographiclib-get-magnetic\$"
-  "tools/geographiclib-get-gravity\$"
-  "tools/.*\\\\.usage\$"
-  "scripts/geographiclib.js\$"
-  "/(fix-permissions|autogen|biblio|js-compress)\\\\.sh"
-  "${PROJECT_SOURCE_DIR}/[^/]*\\\\.html" )
+  "${PROJECT_SOURCE_DIR}/BUILD"
+  "${PROJECT_SOURCE_DIR}/(tests|testdata|cgi-bin|.*\\\\.cache)/"
+  "${PROJECT_SOURCE_DIR}/(distrib|.*-distrib|.*-installer|geodesic-papers)/"
+  "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(html|kmz)\$"
+  "${PROJECT_SOURCE_DIR}/(autogen|biblio|js-compress)\\\\.sh\$"
+  "${PROJECT_SOURCE_DIR}/(geodesic-biblio.txt|makefile-admin)\$" )
 set (CPACK_SOURCE_GENERATOR TGZ)
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)

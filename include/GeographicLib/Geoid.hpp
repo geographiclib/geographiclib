@@ -77,6 +77,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-Geoid.cpp
+   *
+   * <a href="GeoidEval.1.html">GeoidEval</a> is a command-line utility
+   * providing access to the functionality of Geoid.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT Geoid {
@@ -295,7 +298,12 @@ namespace GeographicLib {
      * The latitude should be in [-90, 90] and longitude should be in [-180,
      * 360].  This may throw an error because of an error reading data from
      * disk.  However, it will not throw if (\e lat, \e lon) is within a
-     * successfully cached area.
+     * successfully cached area.  As a result of the way that the geoid data is
+     * stored, the calculation of gradients can result in large quantization
+     * errors.  This is particularly acute for fine grids, at high latitudes,
+     * and for the easterly gradient.  If you need to compute the direction of
+     * the acceleration due to gravity accurately, you should use
+     * GravityModel::Gravity.
      **********************************************************************/
     Math::real operator()(real lat, real lon, real& gradn, real& grade) const {
       return height(lat, lon, true, gradn, grade);

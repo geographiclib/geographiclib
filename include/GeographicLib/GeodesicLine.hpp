@@ -51,6 +51,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-GeodesicLine.cpp
+   *
+   * <a href="Geod.1.html">Geod</a> is a command-line utility providing access
+   * to the functionality of Geodesic and GeodesicLine.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT GeodesicLine {
