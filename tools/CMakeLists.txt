@@ -198,8 +198,8 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
   # Check fix for single-cell cache bug found 2010-11-23
   add_test (GeoidEval0 GeoidEval -n egm96-5 --input-string "0d1 0d1;0d4 0d4")
   set_tests_properties (GeoidEval0
-    PROPERTIES PASS_REGULAR_EXPRESSION "^17\\.1[56].. .*
-17\\.1[45].. ")
+    PROPERTIES PASS_REGULAR_EXPRESSION "^17\\.1[56]..
+17\\.1[45]..")
 endif ()
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/wmm2010.wmm)
