@@ -3313,8 +3313,11 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Various fixes to ensure that that out-of-sources builds work
     correctly with autoconf.
   - cmake tweaks:
-    - Support doxygen under Windows.
+    - prune excluded file list?
+    - support doxygen under Windows (still hide behind MAINTAINER?)
     - Changes to Matlab interface
+  - GeoidEval -g, warning about gradients, documentation on truncation
+    errs (to do)
 
  - Version 1.20 (released 2012-03-23)
   - cmake tweaks:

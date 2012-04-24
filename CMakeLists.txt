@@ -116,7 +116,7 @@ if (MATLAB_COMPILER)
   if (NOT MEX)
     message (WARNING
       "Cannot find Matlab compiler ${MATLAB_COMPILER}${MATLAB_COMPILER_EXT}")
-  else if (NOT MEXEXT)
+  elseif (NOT MEXEXT)
     set (MEX OFF)
     message (WARNING "Cannot determine extension for Matlab compiled code")
   endif ()
@@ -182,7 +182,7 @@ install (FILES
 
 # Make information about the cmake targets (the library and the tools)
 # available.
-install (EXPORT DEPENDS
+install (EXPORT depends
   FILE geographiclib-depends.cmake
   DESTINATION "${INSTALL_CMAKE_DIR}")
 

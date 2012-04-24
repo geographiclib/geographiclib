@@ -11,6 +11,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <algorithm>
+#include <GeographicLib/Utility.hpp>
 
 #define GEOGRAPHICLIB_GEOID_CPP \
   "$Id$"
@@ -215,6 +216,7 @@ namespace GeographicLib {
     , _eps( sqrt(numeric_limits<real>::epsilon()) )
     , _threadsafe(false)        // Set after cache is read
   {
+    STATIC_ASSERT(sizeof(pixel_t) == pixel_size_, "pixel_t has the wrong size");
     if (_dir.empty())
       _dir = DefaultGeoidPath();
     _filename = _dir + "/" + _name + (pixel_size_ != 4 ? ".pgm" : ".pgm4");
@@ -496,7 +498,6 @@ namespace GeographicLib {
     }
 
     try {
-      vector<char> buf(pixel_size_ * _xsize);
       for (int iy = in; iy <= is; ++iy) {
         int iy1 = iy, iw1 = iw;
         if (iy < 0 || iy >= _height) {
@@ -508,20 +509,13 @@ namespace GeographicLib {
         }
         int xs1 = min(_width - iw1, _xsize);
         filepos(iw1, iy1);
-        _file.read(&(buf[0]), pixel_size_ * xs1);
+        Utility::readarray<pixel_t, pixel_t, true>
+          (_file, &(_data[iy - in][0]), xs1);
         if (xs1 < _xsize) {
           // Wrap around longitude = 0
           filepos(0, iy1);
-          _file.read(&(buf[pixel_size_ * xs1]), pixel_size_ * (_xsize - xs1));
-        }
-        for (int ix = 0; ix < _xsize; ++ix) {
-          unsigned r = ((unsigned char)buf[pixel_size_ * ix] << 8) |
-            (unsigned char)buf[pixel_size_ * ix + 1];
-          if (pixel_size_ == 4)
-            r = (r << 16 ) |
-              ((unsigned char)buf[pixel_size_ * ix + 2] << 8) |
-              (unsigned char)buf[pixel_size_ * ix + 3];
-          _data[iy - in][ix] = pixel_t(r);
+          Utility::readarray<pixel_t, pixel_t, true>
+            (_file, &(_data[iy - in][xs1]), _xsize - xs1);
         }
       }
       _cache = true;

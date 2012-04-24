@@ -23,9 +23,9 @@ else ()
     VERSION "${LIBVERSIONFULL}" SOVERSION "${LIBVERSION}" )
 endif ()
 
-# Specify where the library is installed, adding it to the export DEPENDS
+# Specify where the library is installed, adding it to the export depends
 install (TARGETS Geographic
-  EXPORT DEPENDS
+  EXPORT depends
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)

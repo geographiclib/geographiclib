@@ -22,7 +22,16 @@
 #pragma warning (disable: 4251)
 #endif
 
+#if !defined(PGM_PIXEL_WIDTH)
+/**
+ * The size of the pixel data in the pgm data files for the geoids.  2
+ * is the standard size corresponding to a maxval 2^16-1.  Setting it
+ * to 4 uses a maxval of 2^32-1 and changes the extension for the data
+ * files from .pgm to .pgm4.  Note that the format of these pgm4 files
+ * is a non-standard extension of the pgm format.
+ **********************************************************************/
 #define PGM_PIXEL_WIDTH 2
+#endif
 
 namespace GeographicLib {
 

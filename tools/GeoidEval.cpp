@@ -257,7 +257,7 @@ int main(int argc, char* argv[]) {
           } else {
             real gradn, grade;
             real h = g(p.Latitude(), p.Longitude(), gradn, grade);
-            *output << Utility::str<real>(h, 6) << " "
+            *output << Utility::str<real>(h, 4) << " "
                     << Utility::str<real>(gradn * 1e6, 2)
                     << (Math::isnan(gradn) ? " " : "e-6 ")
                     << Utility::str<real>(grade * 1e6, 2)
