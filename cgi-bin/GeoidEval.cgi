@@ -38,9 +38,6 @@ if test "$INPUT"; then
 	GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm2008-1 | head -1`
 	HEIGHT84=`echo $INPUT |
 	GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm84-15 | head -1`
-	HEIGHT2008=`echo $HEIGHT2008 | cut -f1 -d' '`
-	HEIGHT96=`echo $HEIGHT96 | cut -f1 -d' '`
-	HEIGHT84=`echo $HEIGHT84 | cut -f1 -d' '`
     else
 	POSITION1=`encodevalue "$HEIGHT96"`
 	HEIGHT96=
