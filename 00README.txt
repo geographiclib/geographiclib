@@ -49,6 +49,7 @@ Files
 
     examples/
       example-*.cpp -- simple usage examples for all the classes
+      GeoidToGTX.cpp -- a parallelization example
 
     tools/
       GeoConvert.cpp -- geographic conversion utility
@@ -97,7 +98,7 @@ Files
       polygonarea.{cpp,m} -- Matlab code for polygon areas
 
     doc/
-      Doxyfile -- Doxygen config file
+      doxyfile.in -- Doxygen config file
       Geographic.doc -- main page of Doxygen documentation
       geodseries30.html -- geodesic series to 30th order
       tmseries30.html -- transverse Mercator series to 30th order

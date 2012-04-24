@@ -22,7 +22,7 @@ MAXIMASOURCES = $(patsubst %,../maxima/%.mac,$(MAXIMA))
 
 doc: html/index.html
 
-html/index.html: Doxyfile Geographic.doc \
+html/index.html: doxyfile.in Geographic.doc \
 	$(HEADERS) $(ALLSOURCES) $(MAXIMASOURCES) $(EXTRAFILES) \
 	$(HTMLMANPAGES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi
