@@ -1472,7 +1472,7 @@ The interpolation methods are quick and give good accuracy.  Here is a
 summary of the combined quantization and interpolation errors for the
 heights.
 <center><table>
-<caption>Interpolation errors for geoid heights</caption>
+<caption>Interpolation and quantization errors for geoid heights</caption>
 <tr>
  <th rowspan="2">name
  <th rowspan="2">geoid
@@ -1489,35 +1489,67 @@ heights.
 <tr>
  <td>egm84-15   <td>EGM84  <td><center>15'  </center>
  <td><center>0.413 m</center><td><center>18 mm</center>
- <td><center>0.020 m</center><td><center> 1 mm</center>
+ <td><center>0.021 m</center><td><center>1.2 mm</center>
 <tr>
  <td>egm96-15   <td>EGM96  <td><center>15'  </center>
  <td><center>1.152 m</center><td><center>40 mm</center>
- <td><center>0.169 m</center><td><center> 7 mm</center>
+ <td><center>0.169 m</center><td><center>7.0 mm</center>
 <tr>
  <td>egm96-5    <td>EGM96  <td><center> 5'  </center>
- <td><center>0.140 m</center><td><center> 5 mm</center>
- <td><center>0.003 m</center><td><center> 1 mm</center>
+ <td><center>0.140 m</center><td><center>4.6 mm</center>
+ <td><center>0.0032 m</center><td><center>0.7 mm</center>
 <tr>
  <td>egm2008-5  <td>EGM2008<td><center> 5'  </center>
  <td><center>0.478 m</center><td><center>12 mm</center>
- <td><center>0.294 m</center><td><center> 5 mm</center>
+ <td><center>0.294 m</center><td><center>4.5 mm</center>
 <tr>
  <td>egm2008-2_5<td>EGM2008<td><center> 2.5'</center>
- <td><center>0.135 m</center><td><center> 3 mm</center>
- <td><center>0.031 m</center><td><center> 1 mm</center>
+ <td><center>0.135 m</center><td><center>3.2 mm</center>
+ <td><center>0.031 m</center><td><center>0.8 mm</center>
 <tr>
  <td>egm2008-1  <td>EGM2008<td><center> 1'  </center>
- <td><center>0.025 m</center><td><center> 1 mm</center>
- <td><center>0.003 m</center><td><center> 1 mm</center>
+ <td><center>0.025 m</center><td><center>0.8 mm</center>
+ <td><center>0.0022 m</center><td><center>0.7 mm</center>
 </table></center>
 The errors are with respect to the specific NGA earth gravity model
 (not to any "real" geoid).  The RMS values are obtained using 5 million
 uniformly distributed random points.  The maximum values are obtained by
-evaluating the errors using a different grid with points at or near the
+evaluating the errors using a different grid with points at the
 centers of the original grid.  (The RMS difference between EGM96 and
 EGM2008 is about 0.5 m.  The RMS difference between EGM84 and EGM96 is
 about 1.5 m.)
+
+The errors in the table above include the quantization errors that arise
+because the height data that GeographicLib::Geoid uses are quantized to
+3 mm.  If, instead, GeographicLib::Geoid were to use data files without
+such quantization artifacts, the overall error would be reduced <i>but
+only modestly</i> as shown in the following table, where only the
+changed rows are included and where the changed entries are given in
+bold:
+<center><table>
+<caption>Interpolation (only!) errors for geoid heights</caption>
+<tr>
+ <th rowspan="2">name
+ <th rowspan="2">geoid
+ <th rowspan="2">grid
+ <th colspan="2"><center>bilinear error</center></th>
+ <th colspan="2"><center>cubic error</center></th>
+<tr>
+ <th><center>max</center><th><center>rms</center>
+ <th><center>max</center><th><center>rms</center>
+<tr>
+ <td>egm96-5    <td>EGM96  <td><center> 5'  </center>
+ <td><center>0.140 m</center><td><center>4.6 mm</center>
+ <td><center><b>0.0026 m</b></center><td><center><b>0.1 mm</b></center>
+<tr>
+ <td>egm2008-2_5<td>EGM2008<td><center> 2.5'</center>
+ <td><center>0.135 m</center><td><center>3.2 mm</center>
+ <td><center>0.031 m</center><td><center><b>0.4 mm</b></center>
+<tr>
+ <td>egm2008-1  <td>EGM2008<td><center> 1'  </center>
+ <td><center>0.025 m</center><td><center><b>0.6 mm</b></center>
+ <td><center><b>0.0010 m</b></center><td><center><b>0.011 mm</b></center>
+</table></center>
 
 \section geoidcache Caching the geoid data
 
