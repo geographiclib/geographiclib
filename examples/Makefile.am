@@ -40,6 +40,7 @@ EXAMPLE_FILES = \
 	example-TransverseMercator.cpp \
 	example-TransverseMercatorExact.cpp \
 	example-UTMUPS.cpp \
-	example-Utility.cpp
+	example-Utility.cpp \
+	GeoidToGTX.cpp
 
 EXTRA_DIST = CMakeLists.txt $(EXAMPLE_FILES)
