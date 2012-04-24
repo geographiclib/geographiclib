@@ -1,4 +1,4 @@
-# $Id: cf92200e035004c008151dc430a83537b9d0ed55 $
+# $Id: 0decae99c6f1f56173f01e0cfadc59032805d104 $
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
@@ -22,13 +22,15 @@ MAXIMASOURCES = $(patsubst %,../maxima/%.mac,$(MAXIMA))
 
 doc: html/index.html
 
-html/index.html: Doxyfile Geographic.doc \
+html/index.html: doxyfile.in Geographic.doc \
 	$(HEADERS) $(ALLSOURCES) $(MAXIMASOURCES) $(EXTRAFILES) \
 	$(HTMLMANPAGES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi
 	cp -p $(MAXIMASOURCES) $(EXTRAFILES) $(HTMLMANPAGES) \
 	../LICENSE.txt html/
-	doxygen
+	sed -e "s%@PROJECT_SOURCE_DIR@%..%g" \
+	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	$(srcdir)/doxyfile.in | doxygen -
 
 PREFIX = /usr/local
 DEST = $(PREFIX)/share/doc/GeographicLib

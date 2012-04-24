@@ -1,4 +1,4 @@
-# $Id: e9ae358f1980455604e6c06cf48e50537a57eb0c $
+# $Id: 8da4ccf20ab1de73f6ac4c2d60d6857229a076af $
 
 # Set up the matlab interface.  The .m files just contain the
 # documentation.  The .cpp files implement the interface.
@@ -8,12 +8,12 @@ file (GLOB MATLAB_INTERFACES *.cpp)
 install (FILES ${MATLAB_FILES} ${MATLAB_INTERFACES}
   DESTINATION libexec/GeographicLib/matlab)
 
-# If HAVE_MEX then compile the interface routines.  On non-Windows
+# If MEX then compile the interface routines.  On non-Windows
 # systems, an attempt is made to minimize the number of addition target
 # generated.  For some reason this does not work with Windows systems.
 # On Windows systems, need also to copy the shared library to where the
 # mex files live (in the build and install trees).
-if (HAVE_MEX)
+if (MEX)
   if (WIN32)
     include (InstallRequiredSystemLibraries)
     install (PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}

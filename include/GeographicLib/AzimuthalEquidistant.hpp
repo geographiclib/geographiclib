@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)
 #define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP \
-  "$Id: 6b31d0e0568e56df40aca98af1cffc101b9819ca $"
+  "$Id: 95a1d6e7a8c4613be25ec32550231601202da1e5 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -34,6 +34,10 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-AzimuthalEquidistant.cpp
+   *
+   * <a href="GeodesicProj.1.html">GeodesicProj</a> is a command-line utility
+   * providing access to the functionality of AzimuthalEquidistant, Gnomonic,
+   * and CassiniSoldner.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT AzimuthalEquidistant {
@@ -129,14 +133,16 @@ namespace GeographicLib {
      *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const throw() { return _earth.Flattening(); }
+    ///@}
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return _earth.InverseFlattening(); }
-    ///@}
+    /// \endcond
   };
 
 } // namespace GeographicLib

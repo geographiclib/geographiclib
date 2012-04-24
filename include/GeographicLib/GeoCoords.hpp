@@ -9,7 +9,7 @@
 
 #ifndef GEOGRAPHICLIB_GEOCOORDS_HPP
 #define GEOGRAPHICLIB_GEOCOORDS_HPP \
-  "$Id: 0e3e97086e04d9bf0f3c6154d97645fc17f9133d $"
+  "$Id: e706d3a35c3be0e2beaf39041cac29beb468a5aa $"
 
 #include <GeographicLib/UTMUPS.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -43,6 +43,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-GeoCoords.cpp
+   *
+   * <a href="GeoConvert.1.html">GeoConvert</a> is a command-line utility
+   * providing access to the functionality of GeoCoords.
    **********************************************************************/
   class GEOGRAPHIC_EXPORT GeoCoords {
   private:
@@ -103,7 +106,8 @@ namespace GeographicLib {
      * - Latitude and Longitude
      *   -  33.44      43.27
      *   -  N33d26.4'  E43d16.2'
-     *   -  43d16'12"E 33d26'24"N
+     *   -  43d16'12&quot;E 33d26'24&quot;N
+     *   -  43:16:12E  33:26:24
      * - MGRS
      *   -  38SLC301
      *   -  38SLC391014
@@ -124,13 +128,17 @@ namespace GeographicLib {
      * - 75W 40N
      * - E-75 -40S
      * .
-     * are all the same position.  The coordinates may be given in decimal
-     * degrees, degrees and decimal minutes, degrees, minutes, seconds, etc.
-     * Use d, ', and " to make off the degrees, minutes and seconds.  Thus
-     * - 40d30'30"
+     * are all the same position.  The coordinates may be given in
+     * decimal degrees, degrees and decimal minutes, degrees, minutes,
+     * seconds, etc.  Use d, ', and &quot; to mark off the degrees,
+     * minutes and seconds.  Alternatively, use : to separate these
+     * components.  Thus
+     * - 40d30'30&quot;
      * - 40d30'30
      * - 40d30.5'
      * - 40d30.5
+     * - 40:30:30
+     * - 40:30.5
      * - 40.508333333
      * .
      * all specify the same angle.  The leading sign applies to all components
@@ -354,6 +362,8 @@ namespace GeographicLib {
      *
      * @param[in] prec precision (relative to about 1m)
      * @param[in] swaplatlong if true give longitude first (default = false)
+     * @param[in] dmssep if non-null, use as the DMS separator character
+     *   (instead of d, ', &quot; delimiters).
      * @return DMS latitude/longitude string representation.
      *
      * Precision specifies accuracy of representation as follows:
@@ -361,10 +371,29 @@ namespace GeographicLib {
      * - prec = -4, 0.1d
      * - prec = -3, 1'
      * - prec = -2, 0.1'
-     * - prec = -1, 1"
-     * - prec = 0, 0.1" (about 3m)
-     * - prec = 1, 0.01"
-     * - prec = 10 (max), 10<sup>-11</sup>"
+     * - prec = -1, 1&quot;
+     * - prec = 0, 0.1&quot; (about 3m)
+     * - prec = 1, 0.01&quot;
+     * - prec = 10 (max), 10<sup>-11</sup>&quot;
+     **********************************************************************/
+    std::string DMSRepresentation(int prec, bool swaplatlong, char dmssep)
+      const;
+
+    /**
+     * String representation with latitude and longitude as degrees, minutes,
+     * seconds, and hemisphere.
+     *
+     * @param[in] prec precision (relative to about 1m)
+     * @param[in] swaplatlong if true give longitude first (default = false)
+     * @return DMS latitude/longitude string representation.
+     *
+     * <b>COMPATIBILITY NOTE:</b> This function calls
+     * DMSRepresentation(int, bool, char) const with a 3rd argument of
+     * char(0).  At some point, DMSRepresentation(int, bool) const and
+     * will be withdrawn and the interface to
+     * DMSRepresentation(int, bool, char) const changed so that its
+     * arguments have default values.  This will preserve source-level
+     * compatibility.
      **********************************************************************/
     std::string DMSRepresentation(int prec = 0, bool swaplatlong = false) const;
 
@@ -436,14 +465,16 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     Math::real Flattening() const throw() { return UTMUPS::Flattening(); }
+    ///@}
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the WGS84 ellipsoid.
+     * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return UTMUPS::InverseFlattening(); }
-    ///@}
+    /// \endcond
   };
 
 } // namespace GeographicLib

@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)
 #define GEOGRAPHICLIB_GEODESICLINE_HPP \
-  "$Id: dd046d5105df4193d2448aeb383b2888f971866b $"
+  "$Id: 4bbc611bc3837d78456bc227e17bea39cb443745 $"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geodesic.hpp>
@@ -51,6 +51,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-GeodesicLine.cpp
+   *
+   * <a href="Geod.1.html">Geod</a> is a command-line utility providing access
+   * to the functionality of Geodesic and GeodesicLine.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT GeodesicLine {
@@ -561,12 +564,14 @@ namespace GeographicLib {
     Math::real Flattening() const throw()
     { return Init() ? _f : Math::NaN<real>(); }
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return Init() ? 1/_f : Math::NaN<real>(); }
+    /// \endcond
 
     /**
      * @return \e caps the computational capabilities that this object was

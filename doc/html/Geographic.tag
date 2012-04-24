@@ -367,15 +367,15 @@
       <type>std::string</type>
       <name>LatLonString</name>
       <anchorfile>Geod_8cpp.html</anchorfile>
-      <anchor>a816c824309c06ba9fce8978d534c8a59</anchor>
-      <arglist>(real lat, real lon, int prec, bool dms)</arglist>
+      <anchor>a8c3a2a4c039b4d0118416afd97a45fcf</anchor>
+      <arglist>(real lat, real lon, int prec, bool dms, char dmssep)</arglist>
     </member>
     <member kind="function">
       <type>std::string</type>
       <name>AzimuthString</name>
       <anchorfile>Geod_8cpp.html</anchorfile>
-      <anchor>ade33c0d3b83c6fcbf2fc612d5c6a7172</anchor>
-      <arglist>(real azi, int prec, bool dms)</arglist>
+      <anchor>adeb84b4732b410c9fdccf799037ef245</anchor>
+      <arglist>(real azi, int prec, bool dms, char dmssep)</arglist>
     </member>
     <member kind="function">
       <type>std::string</type>
@@ -494,6 +494,7 @@
     <path>/scratch/geographic-dist/gita/geographiclib/src/</path>
     <filename>Geoid_8cpp</filename>
     <includes id="Geoid_8hpp" name="Geoid.hpp" local="no" imported="no">GeographicLib/Geoid.hpp</includes>
+    <includes id="Utility_8hpp" name="Utility.hpp" local="no" imported="no">GeographicLib/Utility.hpp</includes>
     <namespace>GeographicLib</namespace>
     <member kind="define">
       <type>#define</type>
@@ -529,6 +530,13 @@
       <name>GEOGRAPHICLIB_GEOID_HPP</name>
       <anchorfile>Geoid_8hpp.html</anchorfile>
       <anchor>a81966978f2fe7fad1effabc667a99820</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>PGM_PIXEL_WIDTH</name>
+      <anchorfile>Geoid_8hpp.html</anchorfile>
+      <anchor>aa34d236045b829973cbc0d958d3ed139</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -1411,96 +1419,95 @@
   <compound kind="class">
     <name>GeographicLib::Accumulator</name>
     <filename>classGeographicLib_1_1Accumulator.html</filename>
-    <templarg>T</templarg>
     <member kind="function">
       <type></type>
       <name>Accumulator</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a14d98e366933e0997c1954290f9d0fc3</anchor>
+      <anchor>a6d30e4a792644ffc78546dda4b5d0022</anchor>
       <arglist>(T y=T(0))</arglist>
     </member>
     <member kind="function">
       <type>Accumulator &amp;</type>
       <name>operator=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>acb3c1aa458551c474bd8d487c3488789</anchor>
+      <anchor>a9cd31c9155208a2de0fdd9810f2a9dd8</anchor>
       <arglist>(T y)</arglist>
     </member>
     <member kind="function">
       <type>T</type>
       <name>operator()</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a7da3f417100387abd140f4f6fd541f3c</anchor>
+      <anchor>af74ec2f9a77fcc82819111e6bb87b375</anchor>
       <arglist>() const </arglist>
     </member>
     <member kind="function">
       <type>T</type>
       <name>operator()</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a34cc7a21a2163fe7865734f9c2995f34</anchor>
+      <anchor>a1a2b7ac3fd3b067a1c9930cb02a102b2</anchor>
       <arglist>(T y) const </arglist>
     </member>
     <member kind="function">
       <type>Accumulator &amp;</type>
       <name>operator+=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>acdefeaf2aa13cfc78109bdcf4b2cc5d9</anchor>
+      <anchor>adc56d12f08b8a61b19dd78ce532285d4</anchor>
       <arglist>(T y)</arglist>
     </member>
     <member kind="function">
       <type>Accumulator &amp;</type>
       <name>operator-=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a1add8644c70e445b32c11f269a0345ef</anchor>
+      <anchor>abf3e43f38791c48d1fa09e4fb569827b</anchor>
       <arglist>(T y)</arglist>
     </member>
     <member kind="function">
       <type>Accumulator &amp;</type>
       <name>operator*=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a400f473aa76225662c0493679c1a9072</anchor>
+      <anchor>a2b0bc40e9722e1ffac89ecfeb601fb23</anchor>
       <arglist>(int n)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator==</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a826d30c1794c242628121d528461a383</anchor>
+      <anchor>a6ea5d769a36e01327f3633b39cd38290</anchor>
       <arglist>(T y) const </arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator!=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a64df6698b929c36ef2ea53762b1ca93b</anchor>
+      <anchor>a4102ce7aac36753c2b0390c4fc951a42</anchor>
       <arglist>(T y) const </arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator&lt;</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a3852660b49bef6eb2d92f1296a86459b</anchor>
+      <anchor>a9a7299c02ec8805d951309fdae60e57f</anchor>
       <arglist>(T y) const </arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator&lt;=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a04aea3f9aad7dd1599bb419e7cf4529a</anchor>
+      <anchor>afb83bdb43b78e20f76e2a7e5e2440386</anchor>
       <arglist>(T y) const </arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator&gt;</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a3f1172477b4c225e064fb87753d567ef</anchor>
+      <anchor>af0e4a35c09b0b179ebf1e2f6912ddeb3</anchor>
       <arglist>(T y) const </arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator&gt;=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a4d509a497da83624d913ed00649644c1</anchor>
+      <anchor>aeafc5d10683648d37fe18ec75725196b</anchor>
       <arglist>(T y) const </arglist>
     </member>
   </compound>
@@ -1575,13 +1582,6 @@
       <name>Flattening</name>
       <anchorfile>classGeographicLib_1_1AlbersEqualArea.html</anchorfile>
       <anchor>a565c63954715204781ae458db0d6b1f7</anchor>
-      <arglist>() const </arglist>
-    </member>
-    <member kind="function">
-      <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1AlbersEqualArea.html</anchorfile>
-      <anchor>a1d0ad953a852d4cdb9faa731b5530d70</anchor>
       <arglist>() const </arglist>
     </member>
     <member kind="function">
@@ -1672,13 +1672,6 @@
       <anchor>a3f300fcc10aeee9dc88ff93fb991f191</anchor>
       <arglist>() const </arglist>
     </member>
-    <member kind="function">
-      <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1AzimuthalEquidistant.html</anchorfile>
-      <anchor>ac4ec606131221d3eb0acc1ae00a34c63</anchor>
-      <arglist>() const </arglist>
-    </member>
   </compound>
   <compound kind="class">
     <name>GeographicLib::CassiniSoldner</name>
@@ -1765,13 +1758,6 @@
       <name>Flattening</name>
       <anchorfile>classGeographicLib_1_1CassiniSoldner.html</anchorfile>
       <anchor>a8d618d5abe71a49fc5ec4f2801d22555</anchor>
-      <arglist>() const </arglist>
-    </member>
-    <member kind="function">
-      <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1CassiniSoldner.html</anchorfile>
-      <anchor>aae869d96e9267c13e675e3a3804eb0e2</anchor>
       <arglist>() const </arglist>
     </member>
   </compound>
@@ -1863,7 +1849,7 @@
       <type>static T</type>
       <name>WGS84_a</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
-      <anchor>af7abfdedede7d8180d0c2c4015b72194</anchor>
+      <anchor>ae12127984ac6713823746d917b4abfa7</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -1877,7 +1863,7 @@
       <type>static T</type>
       <name>WGS84_f</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
-      <anchor>a2e95ed8ac2738590348f9f3bbaa3fa41</anchor>
+      <anchor>acc5244425bb484594be51b27d56cd335</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -1891,21 +1877,14 @@
       <type>static T</type>
       <name>WGS84_GM</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
-      <anchor>aa6cbaa16e143ebbe8b2c226492c09fbc</anchor>
+      <anchor>af7806106d7bd289bb63d5290e79c87a6</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>WGS84_omega</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
-      <anchor>a60299d9299292f18312eee2870bdf9ba</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static T</type>
-      <name>WGS84_r</name>
-      <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
-      <anchor>aa886c9955848d0fe9204b1a14f7ae43f</anchor>
+      <anchor>a98c114d5a6ca42d3e4ece8595a0c2180</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -1919,35 +1898,35 @@
       <type>static T</type>
       <name>GRS80_a</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
-      <anchor>ac0ae4c03001a7fb4dea386d7539d38d3</anchor>
+      <anchor>a9b955c3556dcfcebce6a2926bfeaf464</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>GRS80_GM</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
-      <anchor>a436996122a60fde693eef527c74b3f05</anchor>
+      <anchor>a7541474ca70cbec7fccb08d3e3fbfe31</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>GRS80_omega</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
-      <anchor>ae714c61fde82178814973c94038b9b41</anchor>
+      <anchor>a9caea97ab2be0959c7972155141bfd1b</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>GRS80_J2</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
-      <anchor>ae37450bc3e1137946cdf874affa2e44c</anchor>
+      <anchor>a59c7a1d298eb72256119894b67470974</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>UTM_k0</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
-      <anchor>a76c804fc143b26086a296d05ed09fe4f</anchor>
+      <anchor>ab5cc487ab160c0a213fdf8e12cde198a</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -1961,7 +1940,7 @@
       <type>static T</type>
       <name>UPS_k0</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
-      <anchor>ae48baa0a561e58acb2574f07e7acda1f</anchor>
+      <anchor>a3fe287ab1a0847f5392c1aaf9c5e635a</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -1975,7 +1954,7 @@
       <type>static T</type>
       <name>meter</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
-      <anchor>aa1f90367063bc442ef165907650ef1f0</anchor>
+      <anchor>ac1b17e7cf67ef42b9b91f3677c2eaa75</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -2003,7 +1982,7 @@
       <type>static T</type>
       <name>square_meter</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
-      <anchor>a69b9a03f52615661b8e16f4aaa05425a</anchor>
+      <anchor>ab92200b36f9d306a2710738c6d9bc705</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -2187,20 +2166,6 @@
       <arglist>(real d, real m=0, real s=0)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static Math::real</type>
-      <name>Decode</name>
-      <anchorfile>classGeographicLib_1_1DMS.html</anchorfile>
-      <anchor>aab2493a4f9bcf1b8fa8b636361feca47</anchor>
-      <arglist>(const std::string &amp;str)</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static Math::real</type>
-      <name>DecodeFraction</name>
-      <anchorfile>classGeographicLib_1_1DMS.html</anchorfile>
-      <anchor>adb889bc03d4370fbc99c6f8fd34b12f9</anchor>
-      <arglist>(const std::string &amp;str)</arglist>
-    </member>
-    <member kind="function" static="yes">
       <type>static void</type>
       <name>DecodeLatLon</name>
       <anchorfile>classGeographicLib_1_1DMS.html</anchorfile>
@@ -2225,6 +2190,13 @@
       <type>static std::string</type>
       <name>Encode</name>
       <anchorfile>classGeographicLib_1_1DMS.html</anchorfile>
+      <anchor>a0777e26ef4507f8123549723bf3cb56f</anchor>
+      <arglist>(real angle, component trailing, unsigned prec, flag ind, char dmssep)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static std::string</type>
+      <name>Encode</name>
+      <anchorfile>classGeographicLib_1_1DMS.html</anchorfile>
       <anchor>a3e36baa6114d46f82a8900d002784369</anchor>
       <arglist>(real angle, component trailing, unsigned prec, flag ind=NONE)</arglist>
     </member>
@@ -2232,8 +2204,8 @@
       <type>static std::string</type>
       <name>Encode</name>
       <anchorfile>classGeographicLib_1_1DMS.html</anchorfile>
-      <anchor>a87dd4a3eea0be6d3a45c8390e725aeb9</anchor>
-      <arglist>(real angle, unsigned prec, flag ind=NONE)</arglist>
+      <anchor>aeb9d338b12e885092a611bda7e52f9f4</anchor>
+      <arglist>(real angle, unsigned prec, flag ind=NONE, char dmssep=char(0))</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static void</type>
@@ -2381,13 +2353,6 @@
       <name>Flattening</name>
       <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
       <anchor>a30ba434524b5836c9852d454e61d795f</anchor>
-      <arglist>() const </arglist>
-    </member>
-    <member kind="function">
-      <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
-      <anchor>aa947dd7275c12692b03d6ff43d217d13</anchor>
       <arglist>() const </arglist>
     </member>
     <member kind="variable" static="yes">
@@ -2629,6 +2594,13 @@
       <type>std::string</type>
       <name>DMSRepresentation</name>
       <anchorfile>classGeographicLib_1_1GeoCoords.html</anchorfile>
+      <anchor>af6e9f9087a407b01dc24401df8610257</anchor>
+      <arglist>(int prec, bool swaplatlong, char dmssep) const </arglist>
+    </member>
+    <member kind="function">
+      <type>std::string</type>
+      <name>DMSRepresentation</name>
+      <anchorfile>classGeographicLib_1_1GeoCoords.html</anchorfile>
       <anchor>ab37746606876eb77335268054589390a</anchor>
       <arglist>(int prec=0, bool swaplatlong=false) const </arglist>
     </member>
@@ -2672,13 +2644,6 @@
       <name>Flattening</name>
       <anchorfile>classGeographicLib_1_1GeoCoords.html</anchorfile>
       <anchor>a4d892f5e55df8cbb597d1a693da4783c</anchor>
-      <arglist>() const </arglist>
-    </member>
-    <member kind="function">
-      <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1GeoCoords.html</anchorfile>
-      <anchor>a8f653a04eb087280cd020466213c9cac</anchor>
       <arglist>() const </arglist>
     </member>
   </compound>
@@ -2931,13 +2896,6 @@
       <name>Flattening</name>
       <anchorfile>classGeographicLib_1_1Geodesic.html</anchorfile>
       <anchor>a7abba09bec76f8f97f1e3bc81a7456e2</anchor>
-      <arglist>() const </arglist>
-    </member>
-    <member kind="function">
-      <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1Geodesic.html</anchorfile>
-      <anchor>ab64c9662ce24d7a658924db0c85f8b2d</anchor>
       <arglist>() const </arglist>
     </member>
     <member kind="function">
@@ -3200,13 +3158,6 @@
       <arglist>() const </arglist>
     </member>
     <member kind="function">
-      <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1GeodesicLine.html</anchorfile>
-      <anchor>ad0d59a47c24d11229ab7ce4363d525ea</anchor>
-      <arglist>() const </arglist>
-    </member>
-    <member kind="function">
       <type>unsigned</type>
       <name>Capabilities</name>
       <anchorfile>classGeographicLib_1_1GeodesicLine.html</anchorfile>
@@ -3430,13 +3381,6 @@
       <anchor>abd2076cab3455b816e9477cdb410b187</anchor>
       <arglist>() const </arglist>
     </member>
-    <member kind="function">
-      <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1Geoid.html</anchorfile>
-      <anchor>a19fd88ada94ee9b3b063e9ff097fd2e5</anchor>
-      <arglist>() const </arglist>
-    </member>
     <member kind="function" static="yes">
       <type>static std::string</type>
       <name>DefaultGeoidPath</name>
@@ -3502,13 +3446,6 @@
       <name>Flattening</name>
       <anchorfile>classGeographicLib_1_1Gnomonic.html</anchorfile>
       <anchor>a06b559fa72aa1e51da966c43d22b983d</anchor>
-      <arglist>() const </arglist>
-    </member>
-    <member kind="function">
-      <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1Gnomonic.html</anchorfile>
-      <anchor>a655eff8ef95f92902899459e8a5efe63</anchor>
       <arglist>() const </arglist>
     </member>
   </compound>
@@ -3944,13 +3881,6 @@
     </member>
     <member kind="function">
       <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1LambertConformalConic.html</anchorfile>
-      <anchor>a2dcd66922112771c232d686e7bcc5f31</anchor>
-      <arglist>() const </arglist>
-    </member>
-    <member kind="function">
-      <type>Math::real</type>
       <name>OriginLatitude</name>
       <anchorfile>classGeographicLib_1_1LambertConformalConic.html</anchorfile>
       <anchor>a7c589335b43b2274d3a68c0f68f29d77</anchor>
@@ -4056,13 +3986,6 @@
       <name>Flattening</name>
       <anchorfile>classGeographicLib_1_1LocalCartesian.html</anchorfile>
       <anchor>a99907eda4b863acbe8e7d159a6482abb</anchor>
-      <arglist>() const </arglist>
-    </member>
-    <member kind="function">
-      <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1LocalCartesian.html</anchorfile>
-      <anchor>ad6991a2dff56a460a650c757ffda8e94</anchor>
       <arglist>() const </arglist>
     </member>
   </compound>
@@ -4298,7 +4221,7 @@
       <type>static T</type>
       <name>pi</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>a55d06bfccddf52b1c1066962af738b75</anchor>
+      <anchor>aca1580c771e7019bfe826512fba9b2f1</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -4312,7 +4235,7 @@
       <type>static T</type>
       <name>degree</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>a3d84677a4dfd6c2149c16426544eaf6c</anchor>
+      <anchor>a0f3b4ea16cc2cb21557555fca3b1c201</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -4326,63 +4249,63 @@
       <type>static T</type>
       <name>sq</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>a8a952f405e2ff2cbe079ba5687c40327</anchor>
+      <anchor>a6a092f38e231c80a1f144814c90f1895</anchor>
       <arglist>(T x)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>hypot</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>a0d422863198d4bec2aae6b187a60760c</anchor>
+      <anchor>a62b6fca06c571481aafba3f1716a8bb2</anchor>
       <arglist>(T x, T y)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>expm1</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>a71afd1ae80f942a0b90d65f7784bf2f8</anchor>
+      <anchor>a2fd4e8930d9dd953352d25fc184d843e</anchor>
       <arglist>(T x)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>log1p</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>ac84507dc4df09cf27e831620e8ad8880</anchor>
+      <anchor>a90eddd5a6d0c9dcc4a9f18dd647ac520</anchor>
       <arglist>(T x)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>asinh</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>ab0998a80c8946d1c016c1bc4810a0698</anchor>
+      <anchor>aba75669f9d52fc672a8faaf69261bd8a</anchor>
       <arglist>(T x)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>atanh</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>a62ae372f983cb076561204be8de263bd</anchor>
+      <anchor>a372ac604592d9de9cf608cfdfc463447</anchor>
       <arglist>(T x)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>cbrt</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>a21b33765456b50bf9e32ed0d57b441a6</anchor>
+      <anchor>a04b87b033b845f4812a5700661c64a2a</anchor>
       <arglist>(T x)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
       <name>isfinite</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>adadc6f5069c0a5f75a7c5a5bf2720aa3</anchor>
+      <anchor>af61f7360e67c35131d80083e7b53dda8</anchor>
       <arglist>(T x)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>NaN</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>a77c57c61f93d7ac3f6a5095489c36715</anchor>
+      <anchor>ad1dc13a367125d3f8d291eaa98339186</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -4396,14 +4319,14 @@
       <type>static bool</type>
       <name>isnan</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>aa63d7a640d1126e47af65f782dd40bca</anchor>
+      <anchor>a554d35e9f54bf304447833a21ee2047c</anchor>
       <arglist>(T x)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>infinity</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>a4e8a86ff2039262e99b8e41070cc2223</anchor>
+      <anchor>a82ccc01be301f14061c681ee93a5120b</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -4417,7 +4340,7 @@
       <type>static T</type>
       <name>swab</name>
       <anchorfile>classGeographicLib_1_1Math.html</anchorfile>
-      <anchor>aa81163e3148b2d45d903d23f5d8fb261</anchor>
+      <anchor>aec7f95c2bb99422f1f047cb628a232f8</anchor>
       <arglist>(T x)</arglist>
     </member>
     <member kind="variable" static="yes">
@@ -4464,13 +4387,6 @@
       <name>Flattening</name>
       <anchorfile>classGeographicLib_1_1MGRS.html</anchorfile>
       <anchor>a8eee27799bda8238d6d0525dffdddd4e</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1MGRS.html</anchorfile>
-      <anchor>a32792f0e117641cb48d06786d4c6fdbc</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="friend" protection="private">
@@ -4693,13 +4609,6 @@
     </member>
     <member kind="function" static="yes">
       <type>static Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1OSGB.html</anchorfile>
-      <anchor>a72bb966b2a93e4607bfcbf78f5b80bb4</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static Math::real</type>
       <name>CentralScale</name>
       <anchorfile>classGeographicLib_1_1OSGB.html</anchorfile>
       <anchor>a65210bfdcac362f393a8f81f28259ad0</anchor>
@@ -4791,13 +4700,6 @@
       <name>Flattening</name>
       <anchorfile>classGeographicLib_1_1PolarStereographic.html</anchorfile>
       <anchor>a3b08d03e475dae2c2a81c76420946942</anchor>
-      <arglist>() const </arglist>
-    </member>
-    <member kind="function">
-      <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1PolarStereographic.html</anchorfile>
-      <anchor>a969a21c3df38517a081e233ae90c098e</anchor>
       <arglist>() const </arglist>
     </member>
     <member kind="function">
@@ -4894,14 +4796,14 @@
       <type>static Math::real</type>
       <name>Value</name>
       <anchorfile>classGeographicLib_1_1SphericalEngine.html</anchorfile>
-      <anchor>a987cbe2cdb67410174a6e9594da92573</anchor>
+      <anchor>a1157f59596dd15bf0a21b6a7fb99630b</anchor>
       <arglist>(const coeff c[], const real f[], real x, real y, real z, real a, real &amp;gradx, real &amp;grady, real &amp;gradz)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static CircularEngine</type>
       <name>Circle</name>
       <anchorfile>classGeographicLib_1_1SphericalEngine.html</anchorfile>
-      <anchor>a7733e7913671b573042a2fcf8db089dd</anchor>
+      <anchor>af6a5fa63535d47cf528b733bb6a97901</anchor>
       <arglist>(const coeff c[], const real f[], real p, real z, real a)</arglist>
     </member>
     <member kind="function" static="yes">
@@ -5316,13 +5218,6 @@
     </member>
     <member kind="function">
       <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1TransverseMercator.html</anchorfile>
-      <anchor>a5b5a56027507ae2aa08ab5b43a4bddc5</anchor>
-      <arglist>() const </arglist>
-    </member>
-    <member kind="function">
-      <type>Math::real</type>
       <name>CentralScale</name>
       <anchorfile>classGeographicLib_1_1TransverseMercator.html</anchorfile>
       <anchor>a63876dc20e8765501ca62022f9a73432</anchor>
@@ -5390,13 +5285,6 @@
     </member>
     <member kind="function">
       <type>Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1TransverseMercatorExact.html</anchorfile>
-      <anchor>a9c4df948ed85f96273c04414fc6871df</anchor>
-      <arglist>() const </arglist>
-    </member>
-    <member kind="function">
-      <type>Math::real</type>
       <name>CentralScale</name>
       <anchorfile>classGeographicLib_1_1TransverseMercatorExact.html</anchorfile>
       <anchor>a355a827f45c194d56a465e0d4f91c3a3</anchor>
@@ -5459,35 +5347,35 @@
       <type>static T</type>
       <name>fractionalyear</name>
       <anchorfile>classGeographicLib_1_1Utility.html</anchorfile>
-      <anchor>a6daedff1fb56da7ee149066c1cce106a</anchor>
+      <anchor>a074607cb34326b7109532c8fdd07e38c</anchor>
       <arglist>(const std::string &amp;s)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static std::string</type>
       <name>str</name>
       <anchorfile>classGeographicLib_1_1Utility.html</anchorfile>
-      <anchor>a53fbf616c74bab1cbbc9e8d4c7b6739f</anchor>
+      <anchor>ae87a7ae2bee75f724907af9f753f03b7</anchor>
       <arglist>(T x, int p=-1)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>num</name>
       <anchorfile>classGeographicLib_1_1Utility.html</anchorfile>
-      <anchor>a8a490ea58d4de4c5a7ce86ab2cda25bd</anchor>
+      <anchor>aa35f1f83c0543558a79b3cf42ddf50c8</anchor>
       <arglist>(const std::string &amp;s)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>nummatch</name>
       <anchorfile>classGeographicLib_1_1Utility.html</anchorfile>
-      <anchor>a6e8268e5d125846dee7b087dec889825</anchor>
+      <anchor>ad0d89bfe63814bab5312306fe3ac2b43</anchor>
       <arglist>(const std::string &amp;s)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
       <name>fract</name>
       <anchorfile>classGeographicLib_1_1Utility.html</anchorfile>
-      <anchor>ad6fbe8736a470a0acecf191e29f72ceb</anchor>
+      <anchor>a46b13d9ce2893f7e0fe6e7da093f528f</anchor>
       <arglist>(const std::string &amp;s)</arglist>
     </member>
     <member kind="function" static="yes">
@@ -5501,15 +5389,29 @@
       <type>static void</type>
       <name>readarray</name>
       <anchorfile>classGeographicLib_1_1Utility.html</anchorfile>
-      <anchor>ae9208f2d9c37de596ead9af2136e8468</anchor>
+      <anchor>a23e88040ceb60bd3fe28efc04f9119f8</anchor>
       <arglist>(std::istream &amp;str, IntT array[], size_t num)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static void</type>
       <name>readarray</name>
       <anchorfile>classGeographicLib_1_1Utility.html</anchorfile>
-      <anchor>a3acad0c1faffcd87292776d1cae26290</anchor>
+      <anchor>a044796b4fc14a952abec27da27fc20be</anchor>
       <arglist>(std::istream &amp;str, std::vector&lt; IntT &gt; &amp;array)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>writearray</name>
+      <anchorfile>classGeographicLib_1_1Utility.html</anchorfile>
+      <anchor>a276eb20ace49c5260e1878c7d8aefd31</anchor>
+      <arglist>(std::ostream &amp;str, const IntT array[], size_t num)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>writearray</name>
+      <anchorfile>classGeographicLib_1_1Utility.html</anchorfile>
+      <anchor>a0621066e4aa146a2c100802375e70389</anchor>
+      <arglist>(std::ostream &amp;str, std::vector&lt; IntT &gt; &amp;array)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
@@ -5662,13 +5564,6 @@
       <name>Flattening</name>
       <anchorfile>classGeographicLib_1_1UTMUPS.html</anchorfile>
       <anchor>a182de2e29f1181c55a266777039b8a9d</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static Math::real</type>
-      <name>InverseFlattening</name>
-      <anchorfile>classGeographicLib_1_1UTMUPS.html</anchorfile>
-      <anchor>a3de827995b6327282bfe95fcab99ebb2</anchor>
       <arglist>()</arglist>
     </member>
   </compound>

@@ -1,19 +1,19 @@
-#  $Id: e579178aae21ecd2ad529b7ea0f75416b123243d $
+#  $Id: a22d824c2a60646aff275d080be5c805c2c924eb $
 
-EXTRAFILES = tmseries30.html geodseries30.html
+EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html
 
 SCRIPTDRIVERS = \
-scripts/geod-calc.html \
-scripts/geod-google.html \
-scripts/geod-google-instructions.html
+$(srcdir)/scripts/geod-calc.html \
+$(srcdir)/scripts/geod-google.html \
+$(srcdir)/scripts/geod-google-instructions.html
 
 JSSCRIPTS = \
-scripts/GeographicLib/Math.js \
-scripts/GeographicLib/Geodesic.js \
-scripts/GeographicLib/GeodesicLine.js \
-scripts/GeographicLib/PolygonArea.js \
-scripts/GeographicLib/DMS.js \
-scripts/GeographicLib/Interface.js
+$(srcdir)/scripts/GeographicLib/Math.js \
+$(srcdir)/scripts/GeographicLib/Geodesic.js \
+$(srcdir)/scripts/GeographicLib/GeodesicLine.js \
+$(srcdir)/scripts/GeographicLib/PolygonArea.js \
+$(srcdir)/scripts/GeographicLib/DMS.js \
+$(srcdir)/scripts/GeographicLib/Interface.js
 
 HPPFILES = \
 $(top_srcdir)/include/GeographicLib/Accumulator.hpp \
@@ -85,19 +85,21 @@ MANPAGES = \
 
 doc: html/index.html
 
-html/index.html: Doxyfile Geographic.doc \
+html/index.html: doxyfile.in Geographic.doc \
 	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(MANPAGES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi
 	cp -p $(EXTRAFILES) $(MANPAGES) $(top_srcdir)/maxima/*.mac \
 	$(top_srcdir)/LICENSE.txt html/
-	doxygen
+	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
+	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	$(srcdir)/doxyfile.in | doxygen -
 
 maintainer-clean-local:
 	rm -rf html
 
-install-doc: doc
+install-doc: html/index.html
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html
-	$(INSTALL) -m 644 html/* $(DESTDIR)$(docdir)/html
+	$(INSTALL) -m 644 `dirname $<`/* $(DESTDIR)$(docdir)/html
 	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts
 	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(DESTDIR)$(docdir)/scripts
 	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts/GeographicLib

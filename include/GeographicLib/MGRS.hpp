@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_MGRS_HPP)
-#define GEOGRAPHICLIB_MGRS_HPP "$Id: 0c88de3f53072cd255e2af6353fb141add83fce9 $"
+#define GEOGRAPHICLIB_MGRS_HPP "$Id: 80e08da6eca9d9cf92c5adad148c64302df2573d $"
 
 #include <sstream>
 #include <GeographicLib/Constants.hpp>
@@ -271,14 +271,16 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     static Math::real Flattening() throw() { return UTMUPS::Flattening(); }
+    ///@}
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      **********************************************************************/
     static Math::real InverseFlattening() throw()
     { return UTMUPS::InverseFlattening(); }
-    ///@}
+    /// \endcond
   };
 
 } // namespace GeographicLib

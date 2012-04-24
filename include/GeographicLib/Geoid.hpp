@@ -2,14 +2,14 @@
  * \file Geoid.hpp
  * \brief Header for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOID_HPP)
 #define GEOGRAPHICLIB_GEOID_HPP \
-  "$Id: ab4318594c7b3edb747999d1b07822a8ae262bd3 $"
+  "$Id: 4e4eb5941d16ad00416798703d246a6f7ef5fe46 $"
 
 #include <string>
 #include <vector>
@@ -20,6 +20,17 @@
 // Squelch warnings about dll vs vector
 #pragma warning (push)
 #pragma warning (disable: 4251)
+#endif
+
+#if !defined(PGM_PIXEL_WIDTH)
+/**
+ * The size of the pixel data in the pgm data files for the geoids.  2
+ * is the standard size corresponding to a maxval 2^16-1.  Setting it
+ * to 4 uses a maxval of 2^32-1 and changes the extension for the data
+ * files from .pgm to .pgm4.  Note that the format of these pgm4 files
+ * is a non-standard extension of the pgm format.
+ **********************************************************************/
+#define PGM_PIXEL_WIDTH 2
 #endif
 
 namespace GeographicLib {
@@ -66,11 +77,23 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-Geoid.cpp
+   *
+   * <a href="GeoidEval.1.html">GeoidEval</a> is a command-line utility
+   * providing access to the functionality of Geoid.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT Geoid {
   private:
     typedef Math::real real;
+#if PGM_PIXEL_WIDTH != 4
+    typedef unsigned short pixel_t;
+    static const unsigned pixel_size_ = 2;
+    static const unsigned pixel_max_ = 0xffffu;
+#else
+    typedef unsigned pixel_t;
+    static const unsigned pixel_size_ = 4;
+    static const unsigned pixel_max_ = 0xffffffffu;
+#endif
     static const unsigned stencilsize_ = 12;
     static const unsigned nterms_ = ((3 + 1) * (3 + 2))/2; // for a cubic fit
     static const real c0_;
@@ -91,7 +114,7 @@ namespace GeographicLib {
     unsigned long long _datastart, _swidth;
     bool _threadsafe;
     // Area cache
-    mutable std::vector< std::vector<unsigned short> > _data;
+    mutable std::vector< std::vector<pixel_t> > _data;
     mutable bool _cache;
     // NE corner and extent of cache
     mutable int _xoffset, _yoffset, _xsize, _ysize;
@@ -105,7 +128,8 @@ namespace GeographicLib {
                   // g++ 3.x doesn't know about the cast to streamoff.
                   std::ios::streamoff
 #endif
-                  (_datastart + 2ULL * (unsigned(iy)*_swidth + unsigned(ix))));
+                  (_datastart +
+                   pixel_size_ * (unsigned(iy)*_swidth + unsigned(ix))));
     }
     real rawval(int ix, int iy) const {
       if (ix < 0)
@@ -127,7 +151,13 @@ namespace GeographicLib {
           char a, b;
           _file.get(a);
           _file.get(b);
-          return real((unsigned char)(a) * 256u + (unsigned char)(b));
+          unsigned r = ((unsigned char)(a) << 8) | (unsigned char)(b);
+          if (pixel_size_ == 4) {
+            _file.get(a);
+            _file.get(b);
+            r = (r << 16) | ((unsigned char)(a) << 8) | (unsigned char)(b);
+          }
+          return real(r);
         }
         catch (const std::exception& e) {
           // throw GeographicErr("Error reading " + _filename + ": "
@@ -268,7 +298,12 @@ namespace GeographicLib {
      * The latitude should be in [-90, 90] and longitude should be in [-180,
      * 360].  This may throw an error because of an error reading data from
      * disk.  However, it will not throw if (\e lat, \e lon) is within a
-     * successfully cached area.
+     * successfully cached area.  As a result of the way that the geoid data is
+     * stored, the calculation of gradients can result in large quantization
+     * errors.  This is particularly acute for fine grids, at high latitudes,
+     * and for the easterly gradient.  If you need to compute the direction of
+     * the acceleration due to gravity accurately, you should use
+     * GravityModel::Gravity.
      **********************************************************************/
     Math::real operator()(real lat, real lon, real& gradn, real& grade) const {
       return height(lat, lon, true, gradn, grade);
@@ -425,14 +460,16 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     Math::real Flattening() const throw() { return Constants::WGS84_f<real>(); }
+    ///@}
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return 1/Constants::WGS84_f<real>(); }
-    ///@}
+    /// \endcond
 
     /**
      * @return the default path for geoid data files.

@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)
 #define GEOGRAPHICLIB_GEOCENTRIC_HPP \
-  "$Id: d0b4b35254aca989b27e033bd6f2546dec69890a $"
+  "$Id: e9f709c85e61f60509c492429061cba04350eea8 $"
 
 #include <vector>
 #include <algorithm>
@@ -55,6 +55,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-Geocentric.cpp
+   *
+   * <a href="CartConvert.1.html">CartConvert</a> is a command-line utility
+   * providing access to the functionality of Geocentric and LocalCartesian.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT Geocentric {
@@ -251,14 +254,16 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const throw()
     { return Init() ? _f : Math::NaN<real>(); }
+    ///@}
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return Init() ? 1/_f : Math::NaN<real>(); }
-    ///@}
+    /// \endcond
 
     /**
      * A global instantiation of Geocentric with the parameters for the WGS84

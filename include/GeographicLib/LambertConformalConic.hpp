@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
 #define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP \
-  "$Id: 01a4aff302dde6b1dca687badd42f945f34b9bf7 $"
+  "$Id: 9aef04f77098543818681966f13ef97ea47dedb4 $"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>
@@ -51,6 +51,10 @@ namespace GeographicLib {
    * system (<a href="http://www.spatialreference.org/ref/epsg/3364/">
    * EPSG:3364</a>) is obtained by:
    * \include example-LambertConformalConic.cpp
+   *
+   * <a href="ConicProj.1.html">ConicProj</a> is a command-line utility
+   * providing access to the functionality of LambertConformalConic and
+   * AlbersEqualArea.
    **********************************************************************/
   class GEOGRAPHIC_EXPORT LambertConformalConic {
   private:
@@ -286,11 +290,13 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const throw() { return _f; }
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return 1/_f; }
+    /// \endcond
 
     /**
      * @return latitude of the origin for the projection (degrees).

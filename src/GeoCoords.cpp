@@ -15,7 +15,7 @@
 #include <GeographicLib/DMS.hpp>
 
 #define GEOGRAPHICLIB_GEOCOORDS_CPP \
-  "$Id: 93bc606a5376d54facd1db56ae5e559b71fdfc8e $"
+  "$Id: 084d4ec9163dc9d8989b54b12a04bf0f44a8c23f $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_HPP)
@@ -85,13 +85,17 @@ namespace GeographicLib {
     return os.str();
   }
 
-  string GeoCoords::DMSRepresentation(int prec, bool swaplatlong) const {
+  string GeoCoords::DMSRepresentation(int prec, bool swaplatlong,
+				      char dmssep) const {
     prec = max(0, min(10, prec) + 5);
     return DMS::Encode(swaplatlong ? _long : _lat, unsigned(prec),
-                       swaplatlong ? DMS::LONGITUDE : DMS::LATITUDE) +
+                       swaplatlong ? DMS::LONGITUDE : DMS::LATITUDE, dmssep) +
       " " + DMS::Encode(swaplatlong ? _lat : _long, unsigned(prec),
-                        swaplatlong ? DMS::LATITUDE : DMS::LONGITUDE);
+                        swaplatlong ? DMS::LATITUDE : DMS::LONGITUDE, dmssep);
   }
+
+  string GeoCoords::DMSRepresentation(int prec, bool swaplatlong) const
+  { return DMSRepresentation(prec, swaplatlong, char(0)); }
 
   string GeoCoords::MGRSRepresentation(int prec) const {
     // Max precision is um

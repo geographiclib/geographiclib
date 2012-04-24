@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_UTMUPS_HPP)
 #define GEOGRAPHICLIB_UTMUPS_HPP \
-  "$Id: abe46ba34b3f962dcb212cc086eaf753a671030f $"
+  "$Id: a529ed8aeaeffb02994254bbc7eb1209aa41b9ca $"
 
 #include <sstream>
 #include <GeographicLib/Constants.hpp>
@@ -303,14 +303,16 @@ namespace GeographicLib {
      **********************************************************************/
     static Math::real Flattening() throw()
     { return Constants::WGS84_f<real>(); }
+    ///@}
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      **********************************************************************/
     static Math::real InverseFlattening() throw()
     { return 1/Constants::WGS84_f<real>(); }
-    ///@}
+    /// \endcond
   };
 
 } // namespace GeographicLib

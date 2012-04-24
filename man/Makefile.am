@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: ca24d50603b0fe36941e8909ae996779a8cc860d $
+# $Id: 1744bf09577749b0b2bb5775499fe4f0259cc02f $
 
 MANPAGES = \
 CartConvert.1 \
@@ -55,7 +55,7 @@ usage: $(USAGE)
 htmlman: $(HTMLMAN)
 
 .pod.usage:
-	sh makeusage.sh $< > $*.usage
+	sh $(srcdir)/makeusage.sh $< > $*.usage
 
 .pod.1:
 	pod2html --noindex $^ | $(PODFIX) > $*.1.html

@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_GNOMONIC_HPP)
 #define GEOGRAPHICLIB_GNOMONIC_HPP \
-  "$Id: 93b8247cb467dd7cbafbe10acd6b7c85f7aaf7d1 $"
+  "$Id: f2e7e429e56165c314a518fada607c225132b945 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
@@ -98,6 +98,10 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-Gnomonic.cpp
+   *
+   * <a href="GeodesicProj.1.html">GeodesicProj</a> is a command-line utility
+   * providing access to the functionality of AzimuthalEquidistant, Gnomonic,
+   * and CassiniSoldner.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT Gnomonic {
@@ -206,14 +210,16 @@ namespace GeographicLib {
      *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const throw() { return _earth.Flattening(); }
+    ///@}
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return _earth.InverseFlattening(); }
-    ///@}
+    /// \endcond
   };
 
 } // namespace GeographicLib

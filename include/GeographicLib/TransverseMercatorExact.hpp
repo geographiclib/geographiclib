@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP \
-  "$Id: 9516cea48fed92db266fb5e04cab934e97743cb3 $"
+  "$Id: bd96340b9dc3e7bfd09d4374296a75f4c6e00fc3 $"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
@@ -70,6 +70,10 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-TransverseMercatorExact.cpp
+   *
+   * <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a> is a
+   * command-line utility providing access to the functionality of
+   * TransverseMercator and TransverseMercatorExact.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT TransverseMercatorExact {
@@ -241,11 +245,13 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const throw() { return _f; }
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return 1/_f; }
+    /// \endcond
 
     /**
      * @return \e k0 central scale for the projection.  This is the value of \e

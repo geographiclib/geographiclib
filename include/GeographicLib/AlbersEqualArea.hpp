@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
 #define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP \
-  "$Id: c9f194023273bee32876018a1f6a548e35303836 $"
+  "$Id: d17f37d1bec84543dc3753e882d8e95f1c1d5a1b $"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>
@@ -54,6 +54,10 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-AlbersEqualArea.cpp
+   *
+   * <a href="ConicProj.1.html">ConicProj</a> is a command-line utility
+   * providing access to the functionality of LambertConformalConic and
+   * AlbersEqualArea.
    **********************************************************************/
   class GEOGRAPHIC_EXPORT AlbersEqualArea {
   private:
@@ -257,11 +261,13 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const throw() { return _f; }
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return 1/_f; }
+    /// \endcond
 
     /**
      * @return latitude of the origin for the projection (degrees).

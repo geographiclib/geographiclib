@@ -48,7 +48,7 @@
 <hr />
 <h1><a name="synopsis">SYNOPSIS</a></h1>
 <p><strong>Geod</strong> [ <strong>-i</strong> | <strong>-l</strong> <em>lat1</em> <em>lon1</em> <em>azi1</em> ] [ <strong>-a</strong> ] [ <strong>-e</strong> <em>a</em> <em>f</em> ]
-[ <strong>-d</strong> ] [ <strong>-b</strong> ] [ <strong>-f</strong> ] [ <strong>-p</strong> <em>prec</em> ]
+[ <strong>-d</strong> | <strong>-:</strong> ] [ <strong>-b</strong> ] [ <strong>-f</strong> ] [ <strong>-p</strong> <em>prec</em> ]
 [ <strong>--comment-delimiter</strong> <em>commentdelim</em> ]
 [ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
 [ <strong>--input-file</strong> <em>infile</em> | <strong>--input-string</strong> <em>instring</em> ]
@@ -117,6 +117,12 @@ is allowed for <em>f</em>.  (Also, if <em>f</em> &gt; 1, the flattening is set t
 
 <dd>
 <p>output angles as degrees, minutes, seconds instead of decimal degrees.</p>
+</dd>
+<dt><strong><a name="__" class="item"><strong>-:</strong></a></strong></dt>
+
+<dd>
+<p>like <strong>-d</strong>, except use : as a separator instead of the d, ', and &quot;
+delimiters.</p>
 </dd>
 <dt><strong><a name="b" class="item"><strong>-b</strong></a></strong></dt>
 
@@ -266,24 +272,24 @@ will be converted.</p>
 <h1><a name="examples">EXAMPLES</a></h1>
 <p>Route from JFK Airport to Singapore Changi Airport:</p>
 <pre>
-   echo &quot;40d38'23N&quot; &quot;073d46'44W&quot; &quot;01d21'33N&quot; &quot;103d59'22E&quot; |
-   Geod -i -d -p 0</pre>
+   echo 40:38:23N 073:46:44W 01:21:33N 103:59:22E |
+   Geod -i -: -p 0</pre>
 <pre>
-   003d18'29.9&quot; 177d29'09.2&quot; 15347628 4302458</pre>
+   003:18:29.9 177:29:09.2 15347628</pre>
 <p>Waypoints on the route at intervals of 2000km:</p>
 <pre>
    for ((i = 0; i &lt;= 16; i += 2)); do echo ${i}000000;done |
-   Geod -l &quot;40d38'23N&quot; &quot;073d46'44W&quot; &quot;003d18'29.9&quot; -d -p 0</pre>
+   Geod -l 40:38:23N 073:46:44W 003:18:29.9 -: -p 0</pre>
 <pre>
-   40d38'23.0&quot;N 073d46'44.0&quot;W 003d18'29.9&quot; 0
-   58d34'45.1&quot;N 071d49'36.7&quot;W 004d48'48.8&quot; 1967419
-   76d22'28.4&quot;N 065d32'17.8&quot;W 010d41'38.4&quot; 3743642
-   84d50'28.0&quot;N 075d04'39.2&quot;E 150d55'00.9&quot; 5156905
-   67d26'20.3&quot;N 098d00'51.2&quot;E 173d27'20.3&quot; 6070415
-   49d33'03.2&quot;N 101d06'52.6&quot;E 176d07'54.3&quot; 6394568
-   31d34'16.5&quot;N 102d30'46.3&quot;E 177d03'08.4&quot; 6095725
-   13d31'56.0&quot;N 103d26'50.7&quot;E 177d24'55.0&quot; 5200700
-   04d32'05.7&quot;S 104d14'48.7&quot;E 177d28'43.6&quot; 3795596</pre>
+   40:38:23.0N 073:46:44.0W 003:18:29.9
+   58:34:45.1N 071:49:36.7W 004:48:48.8
+   76:22:28.4N 065:32:17.8W 010:41:38.4
+   84:50:28.0N 075:04:39.2E 150:55:00.9
+   67:26:20.3N 098:00:51.2E 173:27:20.3
+   49:33:03.2N 101:06:52.6E 176:07:54.3
+   31:34:16.5N 102:30:46.3E 177:03:08.4
+   13:31:56.0N 103:26:50.7E 177:24:55.0
+   04:32:05.7S 104:14:48.7E 177:28:43.6</pre>
 <p>
 </p>
 <hr />

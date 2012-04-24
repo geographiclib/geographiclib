@@ -1,4 +1,4 @@
-# $Id: ab2cf73915688bde47a6b8b731ef6b67a7805ed9 $
+# $Id: 6e59195303d0fbf5e3d86159e0c2808bc1014fec $
 
 # Build the tools...
 
@@ -35,8 +35,8 @@ if (NOT WIN32)
     INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 endif ()
 
-# Specify where the tools are installed, adding them to the export DEPENDS
-install (TARGETS ${TOOLS} EXPORT DEPENDS DESTINATION bin)
+# Specify where the tools are installed
+install (TARGETS ${TOOLS} DESTINATION bin)
 
 # Create the scripts for downloading the data files on non-Windows
 # systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the
@@ -118,6 +118,7 @@ set_tests_properties (Geod5
   "90\\.00000 -150\\.00000 -180\\.00000;90\\.00000 30\\.00000 0\\.00000")
 
 # Check fix for volatile sbet12a bug found 2011-06-25 (gcc 4.4.4 x86 -O3)
+# Found again on 2012-03-27 with tdm-mingw32 (g++ 4.6.1).
 add_test (Geod6 Geod -i --input-string
   "88.202499451857 0 -88.202499451857 179.981022032992859592")
 add_test (Geod7 Geod -i --input-string
@@ -197,8 +198,8 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
   # Check fix for single-cell cache bug found 2010-11-23
   add_test (GeoidEval0 GeoidEval -n egm96-5 --input-string "0d1 0d1;0d4 0d4")
   set_tests_properties (GeoidEval0
-    PROPERTIES PASS_REGULAR_EXPRESSION "^17\\.1602 .*
-17\\.1511 ")
+    PROPERTIES PASS_REGULAR_EXPRESSION "^17\\.1[56]..
+17\\.1[45]..")
 endif ()
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/wmm2010.wmm)

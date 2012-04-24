@@ -31,18 +31,18 @@
 
 typedef GeographicLib::Math::real real;
 
-std::string LatLonString(real lat, real lon, int prec, bool dms) {
+std::string LatLonString(real lat, real lon, int prec, bool dms, char dmssep) {
   using namespace GeographicLib;
   return dms ?
-    DMS::Encode(lat, prec + 5, DMS::LATITUDE) + " " +
-    DMS::Encode(lon, prec + 5, DMS::LONGITUDE) :
+    DMS::Encode(lat, prec + 5, DMS::LATITUDE, dmssep) + " " +
+    DMS::Encode(lon, prec + 5, DMS::LONGITUDE, dmssep) :
     DMS::Encode(lat, prec + 5, DMS::NUMBER) + " " +
     DMS::Encode(lon, prec + 5, DMS::NUMBER);
 }
 
-std::string AzimuthString(real azi, int prec, bool dms) {
+std::string AzimuthString(real azi, int prec, bool dms, char dmssep) {
   using namespace GeographicLib;
-  return dms ? DMS::Encode(azi, prec + 5, DMS::AZIMUTH) :
+  return dms ? DMS::Encode(azi, prec + 5, DMS::AZIMUTH, dmssep) :
     DMS::Encode(azi >= 180 ? azi - 360 : azi, prec + 5, DMS::NUMBER);
 }
 
@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
     real azi2sense = 0;
     int prec = 3;
     std::string istring, ifile, ofile, cdelim;
-    char lsep = ';';
+    char lsep = ';', dmssep = char(0);
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -111,9 +111,13 @@ int main(int argc, char* argv[]) {
         }
         m += 2;
       }
-      else if (arg == "-d")
+      else if (arg == "-d") {
         dms = true;
-      else if (arg == "-b")
+	dmssep = '\0';
+      } else if (arg == "-:") {
+	dms = true;
+	dmssep = ':';
+      } else if (arg == "-b")
         azi2sense = 180;
       else if (arg == "-f")
         full = true;
@@ -148,7 +152,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 25b3b2427e8347dfa920076243691536c8927226 $\n"
+          << ": $Id: 68e3a8ec4a5717094498179912279a756f6e3f8b $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else
@@ -225,11 +229,11 @@ int main(int argc, char* argv[]) {
           a12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2,
                              m12, M12, M21, S12);
           if (full)
-            *output << LatLonString(lat1, lon1, prec, dms) << " ";
-          *output << AzimuthString(azi1, prec, dms) << " ";
+            *output << LatLonString(lat1, lon1, prec, dms, dmssep) << " ";
+          *output << AzimuthString(azi1, prec, dms, dmssep) << " ";
           if (full)
-            *output << LatLonString(lat2, lon2, prec, dms) << " ";
-          *output << AzimuthString(azi2 + azi2sense, prec, dms) << " "
+            *output << LatLonString(lat2, lon2, prec, dms, dmssep) << " ";
+          *output << AzimuthString(azi2 + azi2sense, prec, dms, dmssep) << " "
                   << DistanceStrings(s12, a12, full, arcmode, prec, dms);
           if (full)
             *output << " " << Utility::str<real>(m12, prec)
@@ -270,10 +274,10 @@ int main(int argc, char* argv[]) {
           if (arcmode)
             std::swap(s12, a12);
           if (full)
-            *output << LatLonString(lat1, lon1, prec, dms) << " "
-                    << AzimuthString(azi1, prec, dms) << " ";
-          *output << LatLonString(lat2, lon2, prec, dms) << " "
-                  << AzimuthString(azi2 + azi2sense, prec, dms);
+            *output << LatLonString(lat1, lon1, prec, dms, dmssep) << " "
+                    << AzimuthString(azi1, prec, dms, dmssep) << " ";
+          *output << LatLonString(lat2, lon2, prec, dms, dmssep) << " "
+                  << AzimuthString(azi2 + azi2sense, prec, dms, dmssep);
           if (full)
             *output << " "
                     << DistanceStrings(s12, a12, full, arcmode, prec, dms)

@@ -2,7 +2,7 @@
  * \file Geoid.cpp
  * \brief Implementation for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -11,9 +11,10 @@
 #include <sstream>
 #include <cstdlib>
 #include <algorithm>
+#include <GeographicLib/Utility.hpp>
 
 #define GEOGRAPHICLIB_GEOID_CPP \
-  "$Id: fe09ee06e01e2fd69cfbc2153387a57c3487b40e $"
+  "$Id: 5c3c23dd877485af9c9e298ddb28c5aac12b5e6a $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
@@ -215,9 +216,10 @@ namespace GeographicLib {
     , _eps( sqrt(numeric_limits<real>::epsilon()) )
     , _threadsafe(false)        // Set after cache is read
   {
+    STATIC_ASSERT(sizeof(pixel_t) == pixel_size_, "pixel_t has the wrong size");
     if (_dir.empty())
       _dir = DefaultGeoidPath();
-    _filename = _dir + "/" + _name + ".pgm";
+    _filename = _dir + "/" + _name + (pixel_size_ != 4 ? ".pgm" : ".pgm4");
     _file.open(_filename.c_str(), ios::binary);
     if (!(_file.good()))
       throw GeographicErr("File not readable " + _filename);
@@ -266,8 +268,8 @@ namespace GeographicLib {
       unsigned maxval;
       if (!(_file >> maxval))
         throw GeographicErr("Error reading maxval " + _filename);
-      if (maxval != 0xffffu)
-        throw GeographicErr("Maxval not equal to 2^16-1 " + _filename);
+      if (maxval != pixel_max_)
+        throw GeographicErr("Incorrect value of maxval " + _filename);
       // Add 1 for whitespace after maxval
       _datastart = (unsigned long long)(_file.tellg()) + 1ULL;
       _swidth = (unsigned long long)(_width);
@@ -289,7 +291,7 @@ namespace GeographicLib {
       throw GeographicErr("Raster height is even " + _filename);
     _file.seekg(0, ios::end);
     if (!_file.good() ||
-        _datastart + 2ULL * _swidth * (unsigned long long)(_height) !=
+        _datastart + pixel_size_ * _swidth * (unsigned long long)(_height) !=
         (unsigned long long)(_file.tellg()))
       // Possibly this test should be "<" because the file contains, e.g., a
       // second image.  However, for now we are more strict.
@@ -436,7 +438,7 @@ namespace GeographicLib {
       try {
         _data.clear();
         // Use swap to release memory back to system
-        vector< vector<unsigned short> >().swap(_data);
+        vector< vector<pixel_t> >().swap(_data);
       }
       catch (const exception&) {
       }
@@ -486,7 +488,7 @@ namespace GeographicLib {
     _yoffset = in;
 
     try {
-      _data.resize(_ysize, vector<unsigned short>(_xsize));
+      _data.resize(_ysize, vector<pixel_t>(_xsize));
       for (int iy = min(oysize, _ysize); iy--;)
         _data[iy].resize(_xsize);
     }
@@ -496,10 +498,10 @@ namespace GeographicLib {
     }
 
     try {
-      vector<char> buf(2 * _xsize);
       for (int iy = in; iy <= is; ++iy) {
         int iy1 = iy, iw1 = iw;
         if (iy < 0 || iy >= _height) {
+          // Allow points "beyond" the poles to support interpolation
           iy1 = iy1 < 0 ? -iy1 : 2 * (_height - 1) - iy1;
           iw1 += _width/2;
           if (iw1 >= _width)
@@ -507,16 +509,14 @@ namespace GeographicLib {
         }
         int xs1 = min(_width - iw1, _xsize);
         filepos(iw1, iy1);
-        _file.read(&(buf[0]), 2 * xs1);
+        Utility::readarray<pixel_t, pixel_t, true>
+          (_file, &(_data[iy - in][0]), xs1);
         if (xs1 < _xsize) {
           // Wrap around longitude = 0
           filepos(0, iy1);
-          _file.read(&(buf[2 * xs1]), 2 * (_xsize - xs1));
+          Utility::readarray<pixel_t, pixel_t, true>
+            (_file, &(_data[iy - in][xs1]), _xsize - xs1);
         }
-        for (int ix = 0; ix < _xsize; ++ix)
-          _data[iy - in][ix] =
-            (unsigned short)((unsigned char)buf[2 * ix] * 256u +
-                             (unsigned char)buf[2 * ix + 1]);
       }
       _cache = true;
     }

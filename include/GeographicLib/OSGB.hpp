@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_OSGB_HPP)
-#define GEOGRAPHICLIB_OSGB_HPP "$Id: 8d8f45bf479e7191b7dae5f8dd2f43ede9e934d2 $"
+#define GEOGRAPHICLIB_OSGB_HPP "$Id: e91367e693ad63bb500c953e9c21445bef017464 $"
 
 #include <string>
 #include <sstream>
@@ -194,11 +194,13 @@ namespace GeographicLib {
     static Math::real Flattening() throw()
     { return real(20923713 - 20853810) / real(20923713); }
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the Airy 1830 ellipsoid.
      **********************************************************************/
     static Math::real InverseFlattening() throw() { return 1/Flattening(); }
+    /// \endcond
 
     /**
      * @return \e k0 central scale for the OSGB projection (0.9996012717).

@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_MAGNETICCIRCLE_HPP)
 #define GEOGRAPHICLIB_MAGNETICCIRCLE_HPP \
-  "$Id: 3884656adfb278af41423d4df4826b1b928f55f1 $"
+  "$Id: 5b3adc58d894f36ca4206864eb565541f24ff492 $"
 
 #include <string>
 #include <vector>
@@ -31,6 +31,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-MagneticCircle.cpp
+   *
+   * <a href="MagneticField.1.html">MagneticField</a> is a command-line utility
+   * providing access to the functionality of MagneticModel and MagneticCircle.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT MagneticCircle {

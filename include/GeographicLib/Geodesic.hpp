@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_GEODESIC_HPP)
 #define GEOGRAPHICLIB_GEODESIC_HPP \
-  "$Id: f3f99146e9009da6232a8b7a0ab46703b8c480fe $"
+  "$Id: c1b085aadd7b8eabe0f9518b29531a38c152d495 $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -121,6 +121,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-Geodesic.cpp
+   *
+   * <a href="Geod.1.html">Geod</a> is a command-line utility providing access
+   * to the functionality of Geodesic and GeodesicLine.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT Geodesic {
@@ -813,11 +816,13 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const throw() { return _f; }
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return 1/_f; }
+    /// \endcond
 
     /**
      * @return total area of ellipsoid in meters<sup>2</sup>.  The area of a

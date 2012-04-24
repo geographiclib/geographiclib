@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
 #define GEOGRAPHICLIB_CONSTANTS_HPP \
-  "$Id: 8e3be453716fd6f8a03fa6308f958f95cbafef31 $"
+  "$Id: 895e4bd91979aae347436bbf6be37964f05f5b6f $"
 
 #include <GeographicLib/Config.h>
 
@@ -127,6 +127,7 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static inline T WGS84_omega() throw()
     { return T(7292115) / (T(1000000) * T(100000)); }
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return the reciprocal flattening of WGS84 ellipsoid.
@@ -137,6 +138,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * A synonym for WGS84_r<real>().
      **********************************************************************/
+    /// \endcond
     static inline Math::real WGS84_r() throw() { return WGS84_r<real>(); }
     /**
      * @tparam T the type of the returned value.

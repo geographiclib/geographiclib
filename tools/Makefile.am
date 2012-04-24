@@ -2,10 +2,11 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 06061d19429c2ebd7073f9b0f321b6aa02bb0472 $
+# $Id: c212f6390b52c0be8aaa7ceba4ccabefe63fb1fd $
 
 AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/man
+INCLUDES = -I$(top_builddir)/include -I$(top_srcdir)/include \
+           -I$(top_builddir)/man -I$(top_srcdir)/man
 
 LDADD = $(top_builddir)/src/libGeographic.la
 DEPS = $(top_builddir)/src/libGeographic.la

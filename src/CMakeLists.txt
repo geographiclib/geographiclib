@@ -1,4 +1,4 @@
-# $Id: a91621fc0ef115f483a16effdeaa117fe68b7470 $
+# $Id: db0813d9df0e4b911eb0282bbf2e5bebca5c6563 $
 
 # Build the library...
 
@@ -23,9 +23,9 @@ else ()
     VERSION "${LIBVERSIONFULL}" SOVERSION "${LIBVERSION}" )
 endif ()
 
-# Specify where the library is installed, adding it to the export DEPENDS
+# Specify where the library is installed, adding it to the export depends
 install (TARGETS Geographic
-  EXPORT DEPENDS
+  EXPORT depends
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)

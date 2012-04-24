@@ -2,18 +2,18 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: 29cca1fbc4c0be28911bf0a2e6f8072b42cb68b9 $
+# $Id: 9b974cbcac490c66540bdd090786d14e12719d82 $
 
 PACKAGE=geographiclib
 PYTHON_FILES = \
-	$(PACKAGE)/__init__.py \
-	$(PACKAGE)/geomath.py \
-	$(PACKAGE)/constants.py \
-	$(PACKAGE)/accumulator.py \
-	$(PACKAGE)/geodesiccapability.py \
-	$(PACKAGE)/geodesic.py \
-	$(PACKAGE)/geodesicline.py \
-	$(PACKAGE)/polygonarea.py
+	$(srcdir)/$(PACKAGE)/__init__.py \
+	$(srcdir)/$(PACKAGE)/geomath.py \
+	$(srcdir)/$(PACKAGE)/constants.py \
+	$(srcdir)/$(PACKAGE)/accumulator.py \
+	$(srcdir)/$(PACKAGE)/geodesiccapability.py \
+	$(srcdir)/$(PACKAGE)/geodesic.py \
+	$(srcdir)/$(PACKAGE)/geodesicline.py \
+	$(srcdir)/$(PACKAGE)/polygonarea.py
 
 pythondir=$(libdir)/python/site-packages/$(PACKAGE)
 

@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_POLYGONAREA_HPP)
 #define GEOGRAPHICLIB_POLYGONAREA_HPP \
-  "$Id: 8c532d61c2cec114c7bf224b2f80a1c249748f1b $"
+  "$Id: 7a339f312a9c977b9fccad3c0c8bfa9009d863e2 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -45,6 +45,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-PolygonArea.cpp
+   *
+   * <a href="Planimeter.1.html">Planimeter</a> is a command-line utility
+   * providing access to the functionality of PolygonArea.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT PolygonArea {

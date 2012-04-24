@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
 #define GEOGRAPHICLIB_LOCALCARTESIAN_HPP \
-  "$Id: c614ff49cba632fe217125ec0d40105fe4b9a4c3 $"
+  "$Id: 133014a30695adf3bdea9f4b52613fab458c505a $"
 
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -31,6 +31,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-LocalCartesian.cpp
+   *
+   * <a href="CartConvert.1.html">CartConvert</a> is a command-line utility
+   * providing access to the functionality of Geocentric and LocalCartesian.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT LocalCartesian {
@@ -221,14 +224,16 @@ namespace GeographicLib {
      *   inherited from the Geocentric object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const throw() { return _earth.Flattening(); }
+    ///@}
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return _earth.InverseFlattening(); }
-    ///@}
+    /// \endcond
   };
 
 } // namespace GeographicLib

@@ -36,7 +36,8 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
-    bool cacheall = false, cachearea = false, verbose = false, cubic = true;
+    bool cacheall = false, cachearea = false, verbose = false,
+      cubic = true, gradp = false;
     real caches, cachew, cachen, cachee;
     std::string dir;
     std::string geoid = Geoid::DefaultGeoidName();
@@ -91,9 +92,11 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-d") {
         if (++m == argc) return usage(1, true);
         dir = argv[m];
-      } else if (arg == "-l") {
+      } else if (arg == "-l")
         cubic = false;
-      } else if (arg == "-v")
+      else if (arg == "-g")
+        gradp = true;
+      else if (arg == "-v")
         verbose = true;
       else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
@@ -117,7 +120,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 9d5d73118f902bce6be96aeeac12081b039ded11 $\n"
+          << ": $Id: 6db1ff0b8309a39d0d9b0250dd73be964c5efb7c $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else {
@@ -255,6 +258,7 @@ int main(int argc, char* argv[]) {
                     << Utility::str<real>(height + real(heightmult) * h, 4)
                     << suff << eol;
           } else {
+            if (gradp) {
             real gradn, grade;
             real h = g(p.Latitude(), p.Longitude(), gradn, grade);
             *output << Utility::str<real>(h, 4) << " "
@@ -263,6 +267,10 @@ int main(int argc, char* argv[]) {
                     << Utility::str<real>(grade * 1e6, 2)
                     << (Math::isnan(grade) ? "" : "e-6")
                     << eol;
+            } else {
+            real h = g(p.Latitude(), p.Longitude());
+            *output << Utility::str<real>(h, 4) << eol;
+            }
           }
         }
         catch (const std::exception& e) {

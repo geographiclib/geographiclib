@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
 #define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP \
-  "$Id: 8f2e5895b63cd512461959768583b869ded4fdbb $"
+  "$Id: 07add8492c46e42012007a8738060abc902a5504 $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -148,11 +148,13 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const throw() { return _f; }
 
+    /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return 1/_f; }
+    /// \endcond
 
     /**
      * The central scale for the projection.  This is the value of \e k0 used

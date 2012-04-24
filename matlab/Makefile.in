@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: a8293d05276359f975210af0269924eddf6e800b $
+# $Id: 472c249909687bc3d74ec316a8a7d06e778fd826 $
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -184,36 +184,36 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 MATLAB_INTERFACE = \
-geodesicdirect.cpp \
-geodesicinverse.cpp \
-geodesicline.cpp \
-geoidheight.cpp \
-mgrsforward.cpp \
-mgrsreverse.cpp \
-utmupsforward.cpp \
-utmupsreverse.cpp \
-geocentricforward.cpp \
-geocentricreverse.cpp \
-localcartesianforward.cpp \
-localcartesianreverse.cpp \
-polygonarea.cpp
+$(srcdir)/geodesicdirect.cpp \
+$(srcdir)/geodesicinverse.cpp \
+$(srcdir)/geodesicline.cpp \
+$(srcdir)/geoidheight.cpp \
+$(srcdir)/mgrsforward.cpp \
+$(srcdir)/mgrsreverse.cpp \
+$(srcdir)/utmupsforward.cpp \
+$(srcdir)/utmupsreverse.cpp \
+$(srcdir)/geocentricforward.cpp \
+$(srcdir)/geocentricreverse.cpp \
+$(srcdir)/localcartesianforward.cpp \
+$(srcdir)/localcartesianreverse.cpp \
+$(srcdir)/polygonarea.cpp
 
 MATLAB_DOC = \
-geodesicdirect.m \
-geodesicinverse.m \
-geodesicline.m \
-geoidheight.m \
-mgrsforward.m \
-mgrsreverse.m \
-utmupsforward.m \
-utmupsreverse.m \
-geocentricforward.m \
-geocentricreverse.m \
-localcartesianforward.m \
-localcartesianreverse.m \
-polygonarea.m
+$(srcdir)/geodesicdirect.m \
+$(srcdir)/geodesicinverse.m \
+$(srcdir)/geodesicline.m \
+$(srcdir)/geoidheight.m \
+$(srcdir)/mgrsforward.m \
+$(srcdir)/mgrsreverse.m \
+$(srcdir)/utmupsforward.m \
+$(srcdir)/utmupsreverse.m \
+$(srcdir)/geocentricforward.m \
+$(srcdir)/geocentricreverse.m \
+$(srcdir)/localcartesianforward.m \
+$(srcdir)/localcartesianreverse.m \
+$(srcdir)/polygonarea.m
 
-MATLAB_COMPILESCRIPT = geographiclibinterface.m
+MATLAB_COMPILESCRIPT = $(srcdir)/geographiclibinterface.m
 MATLAB_ALL = $(MATLAB_INTERFACE) $(MATLAB_DOC) $(MATLAB_COMPILESCRIPT)
 matlabdir = $(libexecdir)/GeographicLib/matlab
 EXTRA_DIST = Makefile.mk CMakeLists.txt $(MATLAB_ALL)

@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_GRAVITYCIRCLE_HPP)
 #define GEOGRAPHICLIB_GRAVITYCIRCLE_HPP \
-  "$Id: e7a230fffb6fcb413694f2b4ece36ae44627ef33 $"
+  "$Id: 6ae0869411185a48c9f55016e6d1fb14e69aaac1 $"
 
 #include <string>
 #include <vector>
@@ -35,6 +35,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-GravityCircle.cpp
+   *
+   * <a href="Gravity.1.html">Gravity</a> is a command-line utility providing
+   * access to the functionality of GravityModel and GravityCircle.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT GravityCircle {

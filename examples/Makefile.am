@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: 88d7788930d32d562c5e4d9f73b5c0b541eb2b2b $
+# $Id: 8f327ca307cc38126a2ecbca4df19f2c8eef2604 $
 
 EXAMPLE_FILES = \
 	example-Accumulator.cpp \
@@ -40,6 +40,7 @@ EXAMPLE_FILES = \
 	example-TransverseMercator.cpp \
 	example-TransverseMercatorExact.cpp \
 	example-UTMUPS.cpp \
-	example-Utility.cpp
+	example-Utility.cpp \
+	GeoidToGTX.cpp
 
 EXTRA_DIST = CMakeLists.txt $(EXAMPLE_FILES)

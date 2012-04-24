@@ -48,8 +48,8 @@
 </p>
 <hr />
 <h1><a name="synopsis">SYNOPSIS</a></h1>
-<p><strong>GeoConvert</strong> [ <strong>-g</strong> | <strong>-d</strong> | <strong>-u</strong> | <strong>-m</strong> | <strong>-c</strong> ] [ <strong>-p</strong> <em>prec</em> ]
-[ <strong>-z</strong> <em>zone</em> | <strong>-s</strong> | <strong>-t</strong> ] [ <strong>-n</strong> ] [ <strong>-w</strong> ]
+<p><strong>GeoConvert</strong> [ <strong>-g</strong> | <strong>-d</strong> | <strong>-:</strong> | <strong>-u</strong> | <strong>-m</strong> | <strong>-c</strong> ]
+[ <strong>-p</strong> <em>prec</em> ] [ <strong>-z</strong> <em>zone</em> | <strong>-s</strong> | <strong>-t</strong> ] [ <strong>-n</strong> ] [ <strong>-w</strong> ]
 [ <strong>--comment-delimiter</strong> <em>commentdelim</em> ]
 [ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
 [ <strong>--input-file</strong> <em>infile</em> | <strong>--input-string</strong> <em>instring</em> ]
@@ -70,7 +70,7 @@ is used (<em>a</em> = 6378137 m, <em>f</em> = 1/298.257223563).</p>
 <dt><strong><a name="geographic" class="item"><strong>geographic</strong></a></strong></dt>
 
 <dd>
-<p>2 tokens (output options <strong>-g</strong> or <strong>-d</strong>) given as <em>latitude</em>
+<p>2 tokens (output options <strong>-g</strong>, <strong>-d</strong>, or <strong>-:</strong>) given as <em>latitude</em>
 <em>longitude</em> using decimal degrees or degrees minutes seconds.  d, ',
 and &quot; are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  (See <a href="#quoting">QUOTING</a> for how to
@@ -126,6 +126,12 @@ grid square.  For example,</p>
 
 <dd>
 <p>output latitude and longitude using degrees, minutes, and seconds (DMS).</p>
+</dd>
+<dt><strong><a name="__" class="item"><strong>-:</strong></a></strong></dt>
+
+<dd>
+<p>like <strong>-d</strong>, except use : as a separator instead of the d, ', and &quot;
+delimiters.</p>
 </dd>
 <dt><strong><a name="u" class="item"><strong>-u</strong></a></strong></dt>
 
@@ -332,7 +338,7 @@ file <code>input.txt</code> should just contain the plain coordinates.</p>
 <h1><a name="examples">EXAMPLES</a></h1>
 <pre>
    echo 38SMB4488 | GeoConvert         =&gt; 33.33424 44.40363
-   echo 38SMB4488 | GeoConvert -d -p 1 =&gt; 33d20'03.25&quot;N 044d24'13.06&quot;E
+   echo 38SMB4488 | GeoConvert -: -p 1 =&gt; 33:20:03.25N 044:2413.06E
    echo 38SMB4488 | GeoConvert -u      =&gt; 38N 444500 3688500
    echo E44d24 N33d20 | GeoConvert -m -p -3 =&gt; 38SMB4488</pre>
 <p>

@@ -1,4 +1,4 @@
-# $Id: adb1c452897202c0b508305e58f389651e1f34ce $
+# $Id: a9ac6876ce9b9276e0b6add11f6d77a9c8f7c75b $
 
 # Where the html versions of the man pages (extension .1.html) are
 # found.
@@ -14,20 +14,23 @@ foreach (TOOL ${TOOLS})
   set (HTMLMAN ${HTMLMAN} ${MANDIR}/${TOOL}.1.html)
 endforeach ()
 
-# The maintainer runs doxygen...
+# Run doxygen, if available
 
 # First assemble a list of all the files the documentation uses.  Add a
 # dependency on htmlman (from man/CMakeLists.txt).  Use doxygen.log as
 # the make target.  To make this target, copy the non-doxygen generated
-# files into html/.  Run Doxfile thru a sed command so that absolute
-# path names are used and so that the pathnames are properly stripped by
-# doxygen (via STRIP_FROM_PATH). The distrib-doc target copies the html
-# directory into the source tree.
+# files into html/.  Run doxfile.in cmake's config process so that
+# absolute path names are used and so that the pathnames are properly
+# stripped by doxygen (via STRIP_FROM_PATH). The distrib-doc target
+# copies the html directory into the source tree.
 
-# In non-maintenance mode, only the install step (from the source tree)
-# is needed.
+# If doxygen is not available, only the install step (from the source
+# tree) is done.
 
-if (MAINTAINER)
+if (DOXYGEN_FOUND)
+  configure_file (
+      "${CMAKE_CURRENT_SOURCE_DIR}/doxyfile.in"
+      "${CMAKE_CURRENT_BINARY_DIR}/doxyfile" )
   file (GLOB SOURCES
     ../src/*.cpp ../include/GeographicLib/*.hpp
     ../tools/*.cpp ../examples/*.cpp)
@@ -37,13 +40,12 @@ if (MAINTAINER)
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxygen.log)
   add_dependencies (doc htmlman)
   add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doxygen.log
-    DEPENDS Doxyfile Geographic.doc ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxyfile
+      Geographic.doc ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
     COMMAND rm -rf html && mkdir html
     COMMAND
       cp -p ${EXTRA_FILES} ${HTMLMAN} html/
-    COMMAND
-      sed \"s%\\.\\./%${PROJECT_SOURCE_DIR}/%g\"
-        ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile | doxygen - > doxygen.log
+    COMMAND ${DOXYGEN_EXECUTABLE} doxyfile > doxygen.log
     COMMENT "Generating html documentation tree")
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
     DESTINATION share/doc/GeographicLib)
