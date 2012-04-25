@@ -2117,9 +2117,9 @@ the geoid height for EGM2008 on a 1' gride.  (Without these
 optimizations, the computation would have taken about 200 days!)
 \include GeoidToGTX.cpp
 
-This example is built if cmake is invoked with <code>-D
-GEOGRAPHICLIB_EXAMPLES=ON</code>.  cmake will add in support for OpenMP,
-if it is available.
+This example, <code>examples/GeoidToGTX.cpp</code>, is built if cmake
+is configured with <code>-D GEOGRAPHICLIB_EXAMPLES=ON</code>.  cmake
+will add in support for OpenMP, if it is available.
 
 <center>
 Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
