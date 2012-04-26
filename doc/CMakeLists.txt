@@ -19,7 +19,7 @@ endforeach ()
 # First assemble a list of all the files the documentation uses.  Add a
 # dependency on htmlman (from man/CMakeLists.txt).  Use doxygen.log as
 # the make target.  To make this target, copy the non-doxygen generated
-# files into html/.  Run doxfile.in cmake's config process so that
+# files into html/.  Run doxfile.in thru cmake's config process so that
 # absolute path names are used and so that the pathnames are properly
 # stripped by doxygen (via STRIP_FROM_PATH). The distrib-doc target
 # copies the html directory into the source tree.
