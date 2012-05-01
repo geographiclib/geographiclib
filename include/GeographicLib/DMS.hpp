@@ -330,7 +330,7 @@ namespace GeographicLib {
      * format with precision \e prec.
      **********************************************************************/
     static std::string Encode(real angle, unsigned prec, flag ind = NONE,
-			      char dmssep = char(0)) {
+                              char dmssep = char(0)) {
       return ind == NUMBER ? Utility::str<real>(angle, int(prec)) :
         Encode(angle,
                prec < 2 ? DEGREE : (prec < 4 ? MINUTE : SECOND),

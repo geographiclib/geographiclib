@@ -49,10 +49,10 @@ int main(int argc, char* argv[]) {
         outputmode = GEOGRAPHIC;
       else if (arg == "-d") {
         outputmode = DMS;
-	dmssep = '\0';
+        dmssep = '\0';
       } else if (arg == "-:") {
         outputmode = DMS;
-	dmssep = ':';
+        dmssep = ':';
       } else if (arg == "-u")
         outputmode = UTMUPS;
       else if (arg == "-m")

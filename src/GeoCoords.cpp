@@ -86,7 +86,7 @@ namespace GeographicLib {
   }
 
   string GeoCoords::DMSRepresentation(int prec, bool swaplatlong,
-				      char dmssep) const {
+                                      char dmssep) const {
     prec = max(0, min(10, prec) + 5);
     return DMS::Encode(swaplatlong ? _long : _lat, unsigned(prec),
                        swaplatlong ? DMS::LONGITUDE : DMS::LATITUDE, dmssep) +

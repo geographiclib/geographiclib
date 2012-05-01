@@ -113,10 +113,10 @@ int main(int argc, char* argv[]) {
       }
       else if (arg == "-d") {
         dms = true;
-	dmssep = '\0';
+        dmssep = '\0';
       } else if (arg == "-:") {
-	dms = true;
-	dmssep = ':';
+        dms = true;
+        dmssep = ':';
       } else if (arg == "-b")
         azi2sense = 180;
       else if (arg == "-f")

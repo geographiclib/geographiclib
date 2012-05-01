@@ -304,7 +304,7 @@ namespace GeographicLib {
      * @tparam L the number of terms in the coefficients.
      * @param[in] c an array of coeff objects.
      * @param[in] f array of coefficient multipliers.  f[0] should be 1.
-     * @param[in] p the radius of the circle = sqrt(<i>x</i><sup>2</sup> + 
+     * @param[in] p the radius of the circle = sqrt(<i>x</i><sup>2</sup> +
      *   <i>y</i><sup>2</sup>).
      * @param[in] z the height of the circle.
      * @param[in] a the normalizing radius.
