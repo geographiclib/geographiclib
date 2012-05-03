@@ -20,6 +20,8 @@ JSSCRIPTS = $(wildcard scripts/GeographicLib/*.js)
 MAXIMA = tm ellint tmseries geod
 MAXIMASOURCES = $(patsubst %,../maxima/%.mac,$(MAXIMA))
 
+VERSION:=$(shell grep '\bVERSION=' ../configure | cut -f2 -d\' | head -1)
+
 doc: html/index.html
 
 html/index.html: doxyfile.in Geographic.doc \
@@ -30,7 +32,7 @@ html/index.html: doxyfile.in Geographic.doc \
 	../LICENSE.txt html/
 	sed -e "s%@PROJECT_SOURCE_DIR@%..%g" \
 	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
-	$(srcdir)/doxyfile.in | doxygen -
+	doxyfile.in | doxygen -
 
 PREFIX = /usr/local
 DEST = $(PREFIX)/share/doc/GeographicLib

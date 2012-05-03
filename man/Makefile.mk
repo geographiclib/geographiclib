@@ -21,7 +21,6 @@ DEST = $(PREFIX)/share/man/man1
 
 VERSION:=$(shell grep '\bVERSION=' ../configure | cut -f2 -d\' | head -1)
 
-
 %.1: %.pod
 	pod2man --center="GeographicLib Utilities" \
 	--release="GeographicLib $(VERSION)" $^ > $@
