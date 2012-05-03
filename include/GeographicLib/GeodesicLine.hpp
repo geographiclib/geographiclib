@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief A geodesic line.
+   * \brief A geodesic line
    *
    * GeodesicLine facilitates the determination of a series of points on a
    * single geodesic.  The starting point (\e lat1, \e lon1) and the azimuth \e

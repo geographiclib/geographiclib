@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Albers Equal Area Conic Projection
+   * \brief Albers equal area conic projection
    *
    * Implementation taken from the report,
    * - J. P. Snyder,

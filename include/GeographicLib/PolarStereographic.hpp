@@ -16,7 +16,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Polar Stereographic Projection
+   * \brief Polar stereographic projection
    *
    * Implementation taken from the report,
    * - J. P. Snyder,

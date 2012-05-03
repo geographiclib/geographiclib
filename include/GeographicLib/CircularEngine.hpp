@@ -24,7 +24,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Spherical Harmonic sums for a circle.
+   * \brief Spherical harmonic sums for a circle
    *
    * The class is a companion to SphericalEngine.  If the results of a
    * spherical harmonic sum are needed for several points on a circle of

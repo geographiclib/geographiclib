@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Azimuthal Equidistant Projection.
+   * \brief Azimuthal equidistant projection
    *
    * Azimuthal equidistant projection centered at an arbitrary position on the
    * ellipsoid.  For a point in projected space (\e x, \e y), the geodesic

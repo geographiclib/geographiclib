@@ -25,7 +25,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Transverse Mercator Projection
+   * \brief Transverse Mercator projection
    *
    * This uses Kr&uuml;ger's method which evaluates the projection and its
    * inverse in terms of a series.  See

@@ -24,7 +24,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Convert between degrees and %DMS representation.
+   * \brief Convert between degrees and the %DMS representation
    *
    * Parse a string representing degree, minutes, and seconds and return the
    * angle in degrees and format an angle in degrees as degree, minutes, and

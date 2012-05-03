@@ -2,8 +2,8 @@
  * \file Geohash.hpp
  * \brief Header for GeographicLib::Geohash class
  *
- * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
- * under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed under
+ * the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -17,7 +17,16 @@
 namespace GeographicLib {
 
   /**
-   * \brief %Geohash coordinates
+   * \brief Convert between geodetic coordinates and geohashes
+   *
+   * Geohashes are described in
+   * - http://en.wikipedia.org/wiki/Geohash
+   * - http://geohash.org/
+   * .
+   * They provide a compact string representation of a particular geographic
+   * location (expressed as latitude and longitude), with the property that if
+   * trailing characters are dropped from the string the geographic location
+   * remains nearby.
    *
    * Example of use:
    * \include example-Geohash.cpp
@@ -26,7 +35,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT Geohash {
   private:
     typedef Math::real real;
-    static const int maxprec_ = 18;
+    static const int maxlen_ = 18;
     static const unsigned long long mask_ = 1ULL << 45;
     static const int decprec_[];
     static const real loneps_;
@@ -39,109 +48,109 @@ namespace GeographicLib {
   public:
 
     /**
-     * Convert from geodetic coordinates to a geohash.
+     * Convert from geographic coordinates to a geohash.
      *
      * @param[in] lat latitude of point (degrees).
      * @param[in] lon longitude of point (degrees).
-     * @param[in] prec the length of the resulting geohash.
+     * @param[in] len the length of the resulting geohash.
      * @param[out] geohash the geohash.
      *
      * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
-     * the range [-180, 360].  Internally, \e prec is first put in the range
+     * the range [-180, 360].  Internally, \e len is first put in the range
      * [0, 18].
      **********************************************************************/
-    static void Forward(real lat, real lon, int prec, std::string& geohash);
+    static void Forward(real lat, real lon, int len, std::string& geohash);
 
     /**
-     * Convert from a geohash to geodetic coordinates.
+     * Convert from a geohash to geographic coordinates.
      *
      * @param[in] geohash the geohash.
      * @param[out] lat latitude of point (degrees).
      * @param[out] lon longitude of point (degrees).
-     * @param[out] prec the length of the geohash.
+     * @param[out] len the length of the geohash.
      * @param[in] centerp if true (the default) return the center of the
-     *   geohash, otherwise return the south-west corner.
+     *   geohash location, otherwise return the south-west corner.
      *
      * Only the first 18 characters for \e geohash are considered.
      **********************************************************************/
     static void Reverse(const std::string& geohash, real& lat, real& lon,
-                        int& prec, bool centerp = true);
+                        int& len, bool centerp = true);
 
     /**
      * The latitude resolution of a geohash.
      *
-     * @param[in] prec the length of the geohash.
+     * @param[in] len the length of the geohash.
      * @return the latitude resolution (degrees).
      *
-     * Internally, \e prec is first put in the range [0, 18].
+     * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
-    static real LatitudeResolution(int prec) throw() {
-      prec = std::max(0, std::min(int(maxprec_), prec));
-      return 180 * std::pow(0.5, 5 * prec / 2);
+    static real LatitudeResolution(int len) throw() {
+      len = std::max(0, std::min(int(maxlen_), len));
+      return 180 * std::pow(0.5, 5 * len / 2);
     }
 
     /**
      * The longitude resolution of a geohash.
      *
-     * @param[in] prec the length of the geohash.
+     * @param[in] len the length of the geohash.
      * @return the longitude resolution (degrees).
      *
-     * Internally, \e prec is first put in the range [0, 18].
+     * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
-    static real LongitudeResolution(int prec) throw() {
-      prec = std::max(0, std::min(int(maxprec_), prec));
-      return 360 * std::pow(0.5, 5 * prec - 5 * prec / 2);
+    static real LongitudeResolution(int len) throw() {
+      len = std::max(0, std::min(int(maxlen_), len));
+      return 360 * std::pow(0.5, 5 * len - 5 * len / 2);
     }
 
     /**
-     * The geohash precision required to meet a given geodetic resolution.
+     * The geohash length required to meet a given geographic resolution.
      *
      * @param[in] res the minimum of resolution in latitude and longitude
      *   (degrees).
-     * @return geohash precision.
+     * @return geohash length.
      *
-     * The return precision is in the range [0, 18].
+     * The returned length is in the range [0, 18].
      **********************************************************************/
-    static int GeohashPrecision(real res) throw() {
+    static int GeohashLength(real res) throw() {
       res = std::abs(res);
-      for (int prec = 0; prec < maxprec_; ++prec)
-        if (LongitudeResolution(prec) <= res)
-          return prec;
-      return maxprec_;
+      for (int len = 0; len < maxlen_; ++len)
+        if (LongitudeResolution(len) <= res)
+          return len;
+      return maxlen_;
     }
 
     /**
-     * The geohash precision required to meet a given geodetic resolution.
+     * The geohash length required to meet a given geographic resolution.
      *
      * @param[in] latres the resolution in latitude (degrees).
      * @param[in] lonres the resolution in longitude (degrees).
-     * @return geohash precision.
+     * @return geohash length.
      *
-     * The return precision is in the range [0, 18].
+     * The returned length is in the range [0, 18].
      **********************************************************************/
-    static int GeohashPrecision(real latres, real lonres) throw() {
+    static int GeohashLength(real latres, real lonres) throw() {
       latres = std::abs(latres);
       lonres = std::abs(lonres);
-      for (int prec = 0; prec < maxprec_; ++prec)
-        if (LatitudeResolution(prec) <= latres &&
-            LongitudeResolution(prec) <= lonres)
-          return prec;
-      return maxprec_;
+      for (int len = 0; len < maxlen_; ++len)
+        if (LatitudeResolution(len) <= latres &&
+            LongitudeResolution(len) <= lonres)
+          return len;
+      return maxlen_;
     }
 
     /**
-     * The decimal geodetic precision required to match a given geohash
-     * precision.  This is the number of digits needed after decimal point in a
+     * The decimal geographic precision required to match a given geohash
+     * length.  This is the number of digits needed after decimal point in a
      * decimal degrees representation.
      *
-     * @param[in] prec the length of the geohash.
+     * @param[in] len the length of the geohash.
      * @return the decimal precision (may be negative).
      *
-     * Internally, \e prec is first put in the range [0, 18].  The returned
+     * Internally, \e len is first put in the range [0, 18].  The returned
      * decimal precision is in the range [-2, 12].
      **********************************************************************/
-    static int DecimalPrecision(int prec) throw() {
-      return -int(std::floor(std::log(LatitudeResolution(prec))/
+    static int DecimalPrecision(int len) throw() {
+      return -int(std::floor(std::log(LatitudeResolution(len))/
                              std::log(Math::real(10))));
     }
 

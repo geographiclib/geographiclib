@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Lambert Conformal Conic Projection
+   * \brief Lambert conformal conic projection
    *
    * Implementation taken from the report,
    * - J. P. Snyder,

@@ -18,7 +18,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief %Gnomonic Projection.
+   * \brief %Gnomonic projection
    *
    * %Gnomonic projection centered at an arbitrary position \e C on the
    * ellipsoid.  This projection is derived in Section 13 of

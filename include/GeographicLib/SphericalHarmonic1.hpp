@@ -19,7 +19,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Spherical Harmonic series with a correction to the coefficients.
+   * \brief Spherical harmonic series with a correction to the coefficients
    *
    * This classes is similar to SphericalHarmonic, except that the coefficients
    * \e C<sub>\e nm</sub> are replaced by \e C<sub>\e nm</sub> + \e tau

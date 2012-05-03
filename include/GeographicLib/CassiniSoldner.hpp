@@ -18,7 +18,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Cassini-Soldner Projection.
+   * \brief Cassini-Soldner projection
    *
    * Cassini-Soldner projection centered at an arbitrary position, \e lat0, \e
    * lon0, on the ellipsoid.  This projection is a transverse cylindrical

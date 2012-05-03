@@ -20,7 +20,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Spherical Harmonic series
+   * \brief Spherical harmonic series
    *
    * This class evaluates the spherical harmonic sum \verbatim
  V(x, y, z) = sum(n = 0..N)[ q^(n+1) * sum(m = 0..n)[

@@ -18,7 +18,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Polygon Areas.
+   * \brief Polygon areas
    *
    * This computes the area of a geodesic polygon using the method given
    * Section 15 of

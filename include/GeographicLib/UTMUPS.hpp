@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Convert between Geographic coordinates and UTM/UPS
+   * \brief Convert between geographic coordinates and UTM/UPS
    *
    * UTM and UPS are defined
    * - J. W. Hager, J. F. Behensky, and B. W. Drew,

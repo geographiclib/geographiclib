@@ -16,10 +16,10 @@ int main() {
       // Sample forward calculation
       double lat = 57.64911, lon = 10.40744; // Jutland (the wikipedia example)
       string geohash;
-      int maxprec = Geohash::GeohashPrecision(1.0e-5);
-      for (int prec = 0; prec <= maxprec; ++prec) {
-        Geohash::Forward(lat, lon, prec, geohash);
-        cout << prec << " " << geohash << "\n";
+      int maxlen = Geohash::GeohashLength(1.0e-5);
+      for (int len = 0; len <= maxlen; ++len) {
+        Geohash::Forward(lat, lon, len, geohash);
+        cout << len << " " << geohash << "\n";
       }
     }
     {
@@ -28,10 +28,10 @@ int main() {
       double lat, lon;
       cout << fixed;
       for (unsigned i = 0; i <= geohash.length(); ++i) {
-        int prec;
-        Geohash::Reverse(geohash.substr(0, i), lat, lon, prec);
-        cout << setprecision(max(0, Geohash::DecimalPrecision(prec)))
-             << prec << " " << lat << " " << lon << "\n";
+        int len;
+        Geohash::Reverse(geohash.substr(0, i), lat, lon, len);
+        cout << setprecision(max(0, Geohash::DecimalPrecision(len)))
+             << len << " " << lat << " " << lon << "\n";
       }
     }
   }

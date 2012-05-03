@@ -16,7 +16,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief An accumulator for sums.
+   * \brief An accumulator for sums
    *
    * This allow many numbers of floating point type \e T to be added together
    * with twice the normal precision.  Thus if \e T is double, the effective

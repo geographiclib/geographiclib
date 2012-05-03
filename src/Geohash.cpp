@@ -2,8 +2,8 @@
  * \file Geohash.cpp
  * \brief Implementation for GeographicLib::Geohash class
  *
- * Copyright (c) Charles Karney (2008-2012) <charles@karney.com> and licensed
- * under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed under
+ * the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -11,7 +11,8 @@
 #include <GeographicLib/Utility.hpp>
 #include <algorithm>            // For copy
 
-#define GEOGRAPHICLIB_GEOHASH_CPP "$Id$"
+#define GEOGRAPHICLIB_GEOHASH_CPP \
+  "$Id$"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOHASH_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOHASH_HPP)
@@ -28,7 +29,7 @@ namespace GeographicLib {
   const string Geohash::lcdigits_ = "0123456789bcdefghjkmnpqrstuvwxyz";
   const string Geohash::ucdigits_ = "0123456789BCDEFGHJKMNPQRSTUVWXYZ";
 
-  void Geohash::Forward(real lat, real lon, int prec, std::string& geohash) {
+  void Geohash::Forward(real lat, real lon, int len, std::string& geohash) {
     if (lat < -90 || lat > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
@@ -39,13 +40,13 @@ namespace GeographicLib {
     if (lon >= 180) lon -= 360; // lon in [-180,180)
     // lon/loneps_ in [-2^45,2^45); lon/eps + shift_ in [0,2^46)
     // similarly for lat
-    prec = max(0, min(int(maxprec_), prec));
+    len = max(0, min(int(maxlen_), len));
     unsigned long long
       ulon = (unsigned long long)(floor(lon/loneps_) + shift_),
       ulat = (unsigned long long)(floor(lat/lateps_) + shift_);
-    char geohash1[maxprec_];
+    char geohash1[maxlen_];
     unsigned byte = 0;
-    for (unsigned i = 0; i < 5 * unsigned(prec);) {
+    for (unsigned i = 0; i < 5 * unsigned(len);) {
       if ((i & 1) == 0) {
         byte = (byte << 1) + unsigned((ulon & mask_) != 0);
         ulon <<= 1;
@@ -59,15 +60,15 @@ namespace GeographicLib {
         byte = 0;
       }
     }
-    geohash.resize(prec);
-    copy(geohash1, geohash1 + prec, geohash.begin());
+    geohash.resize(len);
+    copy(geohash1, geohash1 + len, geohash.begin());
   }
 
   void Geohash::Reverse(const std::string& geohash, real& lat, real& lon,
-                        int& prec, bool centerp) {
-    prec = min(int(maxprec_), geohash.length());
+                        int& len, bool centerp) {
+    len = min(int(maxlen_), int(geohash.length()));
     unsigned long long ulon = 0, ulat = 0;
-    for (unsigned k = 0, j = 0; k < unsigned(prec); ++k) {
+    for (unsigned k = 0, j = 0; k < unsigned(len); ++k) {
       int byte = Utility::lookup(ucdigits_, geohash[k]);
       if (byte < 0)
         throw GeographicErr("Illegal character in geohash " + geohash);
@@ -84,7 +85,7 @@ namespace GeographicLib {
       ulon += 1;
       ulat += 1;
     }
-    int s = 5 * (maxprec_ - prec);
+    int s = 5 * (maxlen_ - len);
     ulon <<=     (s / 2);
     ulat <<= s - (s / 2);
     lon = ulon * loneps_ - 180;
