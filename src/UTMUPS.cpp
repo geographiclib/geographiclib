@@ -144,11 +144,11 @@ namespace GeographicLib {
   }
 
   void UTMUPS::CheckLatLon(real lat, real lon) {
-    if (lat < -90 || lat > 90)
+    if (!(lat >= -90 && lat <= 90))
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    if (lon < -180 || lon > 360)
-      throw GeographicErr("Latitude " + Utility::str(lon)
+    if (!(lon >= -180 && lon <= 360))
+      throw GeographicErr("Longitude " + Utility::str(lon)
                           + "d not in [-180d, 360d]");
     }
 

@@ -20,6 +20,7 @@ MODULES = AlbersEqualArea \
 	Geocentric \
 	Geodesic \
 	GeodesicLine \
+	Geohash \
 	Geoid \
 	Gnomonic \
 	GravityCircle \
@@ -87,6 +88,7 @@ GeoCoords.o: Config.h Constants.hpp DMS.hpp GeoCoords.hpp MGRS.hpp Math.hpp \
 Geocentric.o: Config.h Constants.hpp Geocentric.hpp Math.hpp
 Geodesic.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Math.hpp
 GeodesicLine.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Math.hpp
+Geohash.o: Config.h Constants.hpp Geohash.hpp Utility.hpp
 Geoid.o: Config.h Constants.hpp Geoid.hpp Math.hpp
 Gnomonic.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Gnomonic.hpp \
 	Math.hpp

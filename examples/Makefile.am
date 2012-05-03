@@ -19,6 +19,7 @@ EXAMPLE_FILES = \
 	example-Geodesic-small.cpp \
 	example-GeodesicLine.cpp \
 	example-GeographicErr.cpp \
+	example-Geohash.cpp \
 	example-Geoid.cpp \
 	example-Gnomonic.cpp \
 	example-GravityCircle.cpp \

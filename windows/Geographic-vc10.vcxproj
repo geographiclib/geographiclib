@@ -151,6 +151,7 @@
     <ClInclude Include="../include/GeographicLib/Geocentric.hpp" />
     <ClInclude Include="../include/GeographicLib/Geodesic.hpp" />
     <ClInclude Include="../include/GeographicLib/GeodesicLine.hpp" />
+    <ClInclude Include="../include/GeographicLib/Geohash.hpp" />
     <ClInclude Include="../include/GeographicLib/Geoid.hpp" />
     <ClInclude Include="../include/GeographicLib/Gnomonic.hpp" />
     <ClInclude Include="../include/GeographicLib/GravityCircle.hpp" />
@@ -186,6 +187,7 @@
     <ClCompile Include="../src/Geocentric.cpp" />
     <ClCompile Include="../src/Geodesic.cpp" />
     <ClCompile Include="../src/GeodesicLine.cpp" />
+    <ClCompile Include="../src/Geohash.cpp" />
     <ClCompile Include="../src/Geoid.cpp" />
     <ClCompile Include="../src/Gnomonic.cpp" />
     <ClCompile Include="../src/GravityCircle.cpp" />

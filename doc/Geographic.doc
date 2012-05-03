@@ -3275,6 +3275,9 @@ Older versions are in
 <a href="http://sf.net/projects/geographiclib/files/distrib/archive/">
 http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
+ - Version 1.22 (released 2012-mm-dd)
+  - Add GeographicLib::Geohash.
+
  - Version 1.21 (released 2012-04-25)
   - Support colon-separated DMS output:
      - GeographicLib::DMS::Encode and

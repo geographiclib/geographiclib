@@ -301,6 +301,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Geohash.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Geoid.cpp"
 				>
 			</File>
@@ -424,6 +428,10 @@
 			</File>
 			<File
 				RelativePath="../include/GeographicLib/GeodesicLine.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/Geohash.hpp"
 				>
 			</File>
 			<File

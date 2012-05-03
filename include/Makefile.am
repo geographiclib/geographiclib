@@ -16,6 +16,7 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/Geocentric.hpp \
 			GeographicLib/Geodesic.hpp \
 			GeographicLib/GeodesicLine.hpp \
+			GeographicLib/Geohash.hpp \
 			GeographicLib/Geoid.hpp \
 			GeographicLib/Gnomonic.hpp \
 			GeographicLib/GravityCircle.hpp \

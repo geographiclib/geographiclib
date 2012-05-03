@@ -19,6 +19,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		Geocentric.cpp \
 		Geodesic.cpp \
 		GeodesicLine.cpp \
+		Geohash.cpp \
 		Geoid.cpp \
 		Gnomonic.cpp \
 		GravityCircle.cpp \
@@ -49,6 +50,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/Geocentric.hpp \
 		../include/GeographicLib/Geodesic.hpp \
 		../include/GeographicLib/GeodesicLine.hpp \
+		../include/GeographicLib/Geohash.hpp \
 		../include/GeographicLib/Geoid.hpp \
 		../include/GeographicLib/Gnomonic.hpp \
 		../include/GeographicLib/GravityCircle.hpp \

@@ -10,6 +10,7 @@ MODULES = AlbersEqualArea \
 	Geocentric \
 	Geodesic \
 	GeodesicLine \
+	Geohash \
 	Geoid \
 	Gnomonic \
 	GravityCircle \
