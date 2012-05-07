@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief An exact implementation of the Transverse Mercator projection
+   * \brief An exact implementation of the transverse Mercator projection
    *
    * Implementation of the Transverse Mercator Projection given in
    *  - L. P. Lee,

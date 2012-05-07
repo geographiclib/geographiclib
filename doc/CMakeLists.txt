@@ -28,9 +28,7 @@ endforeach ()
 # tree) is done.
 
 if (DOXYGEN_FOUND)
-  configure_file (
-      "${CMAKE_CURRENT_SOURCE_DIR}/doxyfile.in"
-      "${CMAKE_CURRENT_BINARY_DIR}/doxyfile" )
+  configure_file (doxyfile.in doxyfile)
   file (GLOB SOURCES
     ../src/*.cpp ../include/GeographicLib/*.hpp
     ../tools/*.cpp ../examples/*.cpp)

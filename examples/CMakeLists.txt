@@ -27,7 +27,9 @@ find_package (OpenMP)
 if (OPENMP_FOUND OR OpenMP_FOUND)
   set_target_properties (GeoidToGTX PROPERTIES
     COMPILE_FLAGS ${OpenMP_CXX_FLAGS} COMPILE_DEFINITIONS HAVE_OPENMP=1)
-  set_target_properties (GeoidToGTX PROPERTIES LINK_FLAGS ${OpenMP_CXX_FLAGS})
+  if (NOT WIN32)
+    set_target_properties (GeoidToGTX PROPERTIES LINK_FLAGS ${OpenMP_CXX_FLAGS})
+  endif ()
 endif (OPENMP_FOUND OR OpenMP_FOUND)
 
 add_custom_target (examples DEPENDS ${EXAMPLES})

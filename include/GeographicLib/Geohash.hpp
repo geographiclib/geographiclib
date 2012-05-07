@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Convert between geodetic coordinates and geohashes
+   * \brief Conversions for geohashes
    *
    * Geohashes are described in
    * - http://en.wikipedia.org/wiki/Geohash
@@ -71,7 +71,8 @@ namespace GeographicLib {
      * @param[in] centerp if true (the default) return the center of the
      *   geohash location, otherwise return the south-west corner.
      *
-     * Only the first 18 characters for \e geohash are considered.
+     * Only the first 18 characters for \e geohash are considered.  The case of
+     * the letters in \e geohash is ignored.
      **********************************************************************/
     static void Reverse(const std::string& geohash, real& lat, real& lon,
                         int& len, bool centerp = true);

@@ -41,8 +41,8 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/Utility.hpp \
 			GeographicLib/Config.h
 
-geoids_dir=$(datadir)/GeographicLib/geoids
+geographiclib_data=$(datadir)/GeographicLib
 
-DEFS=-DGEOID_DEFAULT_PATH=\"$(geoids_dir)\"  @DEFS@
+DEFS=-DGEOGRAPHICLIB_DATA=\"$(geographiclib_data)\" @DEFS@
 
 EXTRA_DIST = Makefile.mk GeographicLib/CMakeLists.txt GeographicLib/Config.h.in
