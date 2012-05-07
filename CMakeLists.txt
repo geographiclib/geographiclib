@@ -45,16 +45,6 @@ if (DEFINED INSTALL_PATH)
 endif ()
 message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
 
-# Backwards compatibility (support the mechanism advertized in versions 1.20 and 1.21):
-# Set CMAKE_INSTALL_PREFIX from first element of CMAKE_PREFIX_PATH
-if (WIN32)
-  if (DEFINED CMAKE_PREFIX_PATH
-    AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    list (GET CMAKE_PREFIX_PATH 0 CMAKE_INSTALL_PREFIX)
-    set (CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
-      CACHE PATH "Installation directory for GeographicLib" FORCE)
-
-
 # User-settable cache variables
 
 # (1) Build as a shared library?  On Windows systems, this is typically
