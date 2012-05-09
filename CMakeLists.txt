@@ -14,30 +14,52 @@ set (PACKAGE_VERSION ${GeographicLib_VERSION})
 set (LIBVERSION 9)
 set (LIBVERSIONFULL 9.3.0)
 
-# Check for PACKAGE_PATH and INSTALL_PATH
+# Set the find_package search path and the installation directory.
+#
+#   COMMON_INSTALL_PATH governs the installation convention.  If it is
+#   on ON (the Linux default), the installation to a common directory,
+#   e.g., /usr/local.  If it is OFF (the Windows default), the
+#   installation directory contains the package name, e.g.,
+#   c:/pkg/tnt-1.2.6.
+#
+#   If PACKAGE_PATH is defined, it is prepended to CMAKE_PREFIX_PATH.
 #
 #   If INSTALL_PATH is not specified but PACKAGE_PATH is, then
-#   INSTALL_PATH is set to ${PACKAGE_PATH}/${PROJECT_NAME} (Windows) or
-#   PACKAGE_PATH (non-Windows).
+#   INSTALL_PATH is set to
+#     ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON;
+#     ${PACKAGE_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}, otherwise.
 #
 #   If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
 #   INSTALL_PATH.
-if (NOT DEFINED INSTALL_PATH)
-  if (DEFINED PACKAGE_PATH)
-    if (WIN32)
-      set (INSTALL_PATH ${PACKAGE_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}
-	CACHE PATH "Installation Directory" FORCE)
-    else ()
-      set (INSTALL_PATH ${PACKAGE_PATH} CACHE PATH "Install Directory" FORCE)
-    endif ()
-  elseif (WIN32 AND DEFINED CMAKE_PREFIX_PATH
+#
+#   Typically, only PACKAGE_PATH needs to be specified, eg.,
+#   cmake -D PACKAGE_PATH=/opt .. (on Linux)
+#     => CMAKE_PREFIX_PATH=/opt   CMAKE_INSTALL_PREFIX=/opt
+#   cmake -D PACKAGE_PATH=c:/pkg .. (on Windows)
+#     => CMAKE_PREFIX_PATH=c:/pkg CMAKE_INSTALL_PREFIX=c:/pkg/tnt-1.2.6
+
+if (WIN32)
+  option (COMMON_INSTALL_PATH "Use a common installation path for packages" OFF)
+else ()
+  option (COMMON_INSTALL_PATH "Use a common installation path for packages" ON)
+endif ()
+
+if (DEFINED PACKAGE_PATH)
+  set (CMAKE_PREFIX_PATH ${PACKAGE_PATH} ${CMAKE_PREFIX_PATH})
+  message (STATUS "CMAKE_PREFIX_PATH set to ${CMAKE_PREFIX_PATH}")
+elseif (DEFINED CMAKE_PREFIX_PATH
     AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     # Backwards compatibility (support the mechanism advertised in
-    # versions 1.20 and 1.21): set CMAKE_INSTALL_PREFIX from first
-    # element of CMAKE_PREFIX_PATH
-    list (GET CMAKE_PREFIX_PATH 0 INSTALL_PATH)
-    set (INSTALL_PATH ${INSTALL_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}
-      CACHE PATH "Installation directory for GeographicLib" FORCE)
+    # versions 1.20 and 1.21).
+    list (GET CMAKE_PREFIX_PATH 0 PACKAGE_PATH)
+endif ()
+
+if (NOT DEFINED INSTALL_PATH AND DEFINED PACKAGE_PATH)
+  if (COMMON_INSTALL_PATH)
+    set (INSTALL_PATH ${PACKAGE_PATH} CACHE PATH "Install Directory" FORCE)
+  else ()
+    set (INSTALL_PATH ${PACKAGE_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}
+    CACHE PATH "Install Directory" FORCE)
   endif ()
 endif ()
 if (DEFINED INSTALL_PATH)

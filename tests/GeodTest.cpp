@@ -70,9 +70,9 @@ Math::extended dist(Math::extended lat0, Math::extended lon0,
   //    WGS84.Inverse(real(lat0), real(lon0), real(lat1), real(lon1), s12);
   //  return Math::extended(s12);
   Math::extended
-    a = GeographicLib::Constants::WGS84_a<Math::extended>() *
+    a = Constants::WGS84_a<Math::extended>() *
         Math::degree<Math::extended>(),
-    f = GeographicLib::Constants::WGS84_f<Math::extended>();
+    f = Constants::WGS84_f<Math::extended>();
   if (abs(lat0 + lat1) > Math::extended(179.998)) {
     // Near pole, transform into polar coordinates
     Math::extended
@@ -81,7 +81,7 @@ Math::extended dist(Math::extended lat0, Math::extended lon0,
       lam0 = lon0 * Math::degree<Math::extended>(),
       lam1 = lon1 * Math::degree<Math::extended>();
     return (a / (1 - f)) *
-      GeographicLib::Math::hypot
+      Math::hypot
       (r0 * cos(lam0) - r1 * cos(lam1), r0 * sin(lam0) - r1 * sin(lam1));
   } else {
     // Otherwise use cylindrical formula
@@ -99,7 +99,7 @@ Math::extended dist(Math::extended lat0, Math::extended lon0,
       dlat = lat1 - lat0;
     dlat *= degreeLat;
     dlon *= degreeLon;
-    return GeographicLib::Math::hypot(dlat, dlon);
+    return Math::hypot(dlat, dlon);
   }
 }
 
