@@ -202,9 +202,8 @@ namespace GeographicLib {
       ei = abs(sn) * (RF(cn2, dn2, real(1)) -
                       (_m / 3) * sn2 * RD(cn2, dn2, real(1)));
     // Enforce usual trig-like symmetries
-    if (cn < 0) {
+    if (cn < 0)
       ei = 2 * E() - ei;
-    }
     if (sn < 0)
       ei = -ei;
     return ei;

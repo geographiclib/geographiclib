@@ -125,6 +125,7 @@ namespace GeographicLib {
                real snv, real cnv, real dnv,
                real& gamma, real& k) const throw();
 
+    friend class Ellipsoid;           // For access to taup, taupinv, etc.
   public:
 
     /**

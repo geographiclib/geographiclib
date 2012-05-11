@@ -114,6 +114,8 @@ namespace GeographicLib {
     void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) throw();
     real txif(real tphi) const throw();
     real tphif(real txi) const throw();
+
+    friend class Ellipsoid;           // For access to txif, tphif, etc.
   public:
 
     /**
