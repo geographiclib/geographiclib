@@ -15,6 +15,7 @@ MODULES = AlbersEqualArea \
 	CassiniSoldner \
 	CircularEngine \
 	DMS \
+	Ellipsoid \
 	EllipticFunction \
 	GeoCoords \
 	Geocentric \
@@ -82,6 +83,8 @@ CassiniSoldner.o: CassiniSoldner.hpp Config.h Constants.hpp Geodesic.hpp \
 CircularEngine.o: CircularEngine.hpp Config.h Constants.hpp Math.hpp \
 	SphericalEngine.hpp
 DMS.o: Config.h Constants.hpp DMS.hpp Math.hpp Utility.hpp
+Ellipsoid.o: Config.h Constants.hpp Ellipsoid.hpp AlbersEqualArea.hpp \
+	EllipticFunction.hpp Math.hpp TransverseMercatorExact.hpp
 EllipticFunction.o: Config.h Constants.hpp EllipticFunction.hpp Math.hpp
 GeoCoords.o: Config.h Constants.hpp DMS.hpp GeoCoords.hpp MGRS.hpp Math.hpp \
 	UTMUPS.hpp Utility.hpp

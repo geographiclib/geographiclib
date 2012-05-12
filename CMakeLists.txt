@@ -12,7 +12,7 @@ set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.3.1)
+set (LIBVERSIONFULL 9.4.0)
 
 # Check for PACKAGE_PATH and INSTALL_PATH
 #

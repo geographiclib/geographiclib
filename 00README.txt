@@ -47,6 +47,7 @@ Files
       Gnomonic.[ch]pp -- Ellipsoidal gnomonic projection
       OSGB.[ch]pp -- Ordnance Survey grid system
       Geohash.[ch]pp -- conversions for geohashes
+      Ellipsoid.[ch]pp -- ellipsoid properties
 
     examples/
       example-*.cpp -- simple usage examples for all the classes

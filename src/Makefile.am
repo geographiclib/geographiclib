@@ -14,6 +14,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		CassiniSoldner.cpp \
 		CircularEngine.cpp \
 		DMS.cpp \
+		Ellipsoid.cpp \
 		EllipticFunction.cpp \
 		GeoCoords.cpp \
 		Geocentric.cpp \
@@ -45,6 +46,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/CircularEngine.hpp \
 		../include/GeographicLib/Constants.hpp \
 		../include/GeographicLib/DMS.hpp \
+		../include/GeographicLib/Ellipsoid.hpp \
 		../include/GeographicLib/EllipticFunction.hpp \
 		../include/GeographicLib/GeoCoords.hpp \
 		../include/GeographicLib/Geocentric.hpp \

@@ -11,6 +11,7 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/CircularEngine.hpp \
 			GeographicLib/Constants.hpp \
 			GeographicLib/DMS.hpp \
+			GeographicLib/Ellipsoid.hpp \
 			GeographicLib/EllipticFunction.hpp \
 			GeographicLib/GeoCoords.hpp \
 			GeographicLib/Geocentric.hpp \

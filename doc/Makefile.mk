@@ -1,12 +1,37 @@
 # $Id$
 
-MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
-	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
-	LocalCartesian Geodesic GeodesicLine PolygonArea \
-	AzimuthalEquidistant CassiniSoldner \
-	Geoid Gnomonic OSGB AlbersEqualArea Geohash
-PROGRAMS = GeoConvert TransverseMercatorProj CartConvert Geod GeodesicProj \
-	GeoidEval Gravity MagneticField Planimeter ConicProj
+MODULES = AlbersEqualArea \
+	AzimuthalEquidistant \
+	CassiniSoldner \
+	DMS \
+	Ellipsoid \
+	EllipticFunction \
+	GeoCoords \
+	Geocentric \
+	Geodesic \
+	GeodesicLine \
+	Geohash \
+	Geoid \
+	Gnomonic \
+	LocalCartesian \
+	MGRS \
+	OSGB \
+	PolarStereographic \
+	PolygonArea \
+	TransverseMercator \
+	TransverseMercatorExact \
+	UTMUPS
+
+PROGRAMS = CartConvert \
+	ConicProj \
+	GeoConvert \
+	Geod \
+	GeodesicProj \
+	GeoidEval \
+	Gravity \
+	MagneticField \
+	Planimeter \
+	TransverseMercatorProj
 
 HEADERS = $(patsubst %,../include/GeographicLib/%.hpp,Constants $(MODULES))
 SOURCES = $(patsubst %,../src/%.cpp,$(MODULES)) \

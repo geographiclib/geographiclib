@@ -146,6 +146,7 @@
     <ClInclude Include="../include/GeographicLib/CircularEngine.hpp" />
     <ClInclude Include="../include/GeographicLib/Constants.hpp" />
     <ClInclude Include="../include/GeographicLib/DMS.hpp" />
+    <ClInclude Include="../include/GeographicLib/Ellipsoid.hpp" />
     <ClInclude Include="../include/GeographicLib/EllipticFunction.hpp" />
     <ClInclude Include="../include/GeographicLib/GeoCoords.hpp" />
     <ClInclude Include="../include/GeographicLib/Geocentric.hpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="../src/CassiniSoldner.cpp" />
     <ClCompile Include="../src/CircularEngine.cpp" />
     <ClCompile Include="../src/DMS.cpp" />
+    <ClCompile Include="../src/Ellipsoid.cpp" />
     <ClCompile Include="../src/EllipticFunction.cpp" />
     <ClCompile Include="../src/GeoCoords.cpp" />
     <ClCompile Include="../src/Geocentric.cpp" />

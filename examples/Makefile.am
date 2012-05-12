@@ -12,6 +12,7 @@ EXAMPLE_FILES = \
 	example-CircularEngine.cpp \
 	example-Constants.cpp \
 	example-DMS.cpp \
+	example-Ellipsoid.cpp \
 	example-EllipticFunction.cpp \
 	example-GeoCoords.cpp \
 	example-Geocentric.cpp \

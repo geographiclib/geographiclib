@@ -21,6 +21,17 @@ namespace GeographicLib {
   /**
    * \brief Properties of an ellipsoid
    *
+   * This class returns various properties of the ellipsoid and converts
+   * between various types of latitudes.  The latitude conversions are also
+   * possible using the various projections supported by %GeographicLib; but
+   * Ellipsoid provides more direct access (sometimes using private functions
+   * of the projection classes).  Ellipsoid::RectifyingLatitude,
+   * Ellipsoid::InverseRectifyingLatitude, and Ellipsoid::MeridianDistance
+   * provide functionality which can be provided by the Geodesic class.
+   * However Geodesic uses a series approximation (valid for abs \e f < 1/150),
+   * whereas Ellipsoid computes these quantities using EllipticFunction which
+   * provides accurate results even when \e f is large.
+   *
    * Example of use:
    * \include example-Ellipsoid.cpp
    **********************************************************************/
@@ -370,6 +381,12 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real TransverseCurvatureRadius(real phi) const throw();
     ///@}
+
+    /**
+     * A global instantiation of Ellipsoid with the parameters for the WGS84
+     * ellipsoid.
+     **********************************************************************/
+    static const Ellipsoid WGS84;
 
   };
 

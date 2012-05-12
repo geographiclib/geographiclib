@@ -281,6 +281,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Ellipsoid.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\EllipticFunction.cpp"
 				>
 			</File>
@@ -408,6 +412,10 @@
 			</File>
 			<File
 				RelativePath="../include/GeographicLib/DMS.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/Ellipsoid.hpp"
 				>
 			</File>
 			<File

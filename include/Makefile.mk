@@ -5,6 +5,7 @@ MODULES = AlbersEqualArea \
 	CassiniSoldner \
 	CircularEngine \
 	DMS \
+	Ellipsoid \
 	EllipticFunction \
 	GeoCoords \
 	Geocentric \

@@ -37,6 +37,9 @@ namespace GeographicLib {
     , _au(_a, _f, real(0), real(1), real(0), real(1), real(1))
   {}
 
+  const Ellipsoid Ellipsoid::WGS84(Constants::WGS84_a<real>(),
+                                   Constants::WGS84_f<real>());
+
   Math::real Ellipsoid::QuarterMeridian() const throw()
   { return (_f >= 0 ? _a : _b) * _tm._Eu.E(); }
 
