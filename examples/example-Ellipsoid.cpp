@@ -20,6 +20,8 @@ int main() {
          << 90 - wgs84.RectifyingLatitude(90) << "\n";
     cout << "Half the area of the ellipsoid lies between latitudes +/-"
          << wgs84.InverseAuthalicLatitude(30) << "\n";
+    cout << "The northernmost edge of a square Mercator map "
+         << wgs84.InverseIsometricLatitude(180) << "\n";
     {
       Ellipsoid wgs84x(6e6, -0.1);
     cout << "The latitude half way between the equator and the pole is "
