@@ -14,6 +14,12 @@ foreach (TOOL ${TOOLS})
   set (HTMLMAN ${HTMLMAN} ${MANDIR}/${TOOL}.1.html)
 endforeach ()
 
+if (COMMON_INSTALL_PATH)
+  set (INSTALL_DOC_DIR "share/doc/GeographicLib")
+else ()
+  set (INSTALL_DOC_DIR "doc")
+endif ()
+
 # Run doxygen, if available
 
 # First assemble a list of all the files the documentation uses.  Add a
@@ -46,7 +52,7 @@ if (DOXYGEN_FOUND)
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile > doxygen.log
     COMMENT "Generating html documentation tree")
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
-    DESTINATION share/doc/GeographicLib)
+    DESTINATION ${INSTALL_DOC_DIR})
 
   add_custom_target (distrib-doc)
   add_dependencies (distrib-doc doc)
@@ -56,12 +62,12 @@ if (DOXYGEN_FOUND)
     COMMENT "Installing html documentation tree in source tree")
 
 else ()
-  install (DIRECTORY html DESTINATION share/doc/GeographicLib)
+  install (DIRECTORY html DESTINATION ${INSTALL_DOC_DIR})
 endif ()
 
 # Finally install the Javascript files
 file (GLOB SCRIPTDRIVERS scripts/*.html)
 file (GLOB JSSCRIPTS scripts/GeographicLib/*.js)
-install (FILES ${SCRIPTDRIVERS} DESTINATION share/doc/GeographicLib/scripts)
+install (FILES ${SCRIPTDRIVERS} DESTINATION ${INSTALL_DOC_DIR}/scripts)
 install (FILES ${JSSCRIPTS}
-  DESTINATION share/doc/GeographicLib/scripts/GeographicLib)
+  DESTINATION ${INSTALL_DOC_DIR}/scripts/GeographicLib)

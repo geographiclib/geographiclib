@@ -89,20 +89,23 @@ namespace GeographicLib {
     Math::real MinorRadius() const throw() { return _b; }
 
     /**
-     * @return \e L the distance between the equator and a pole along a meridian
-     *   (meters).  For a sphere \e L = (\e pi / 2) \e a.
+     * @return \e L the distance between the equator and a pole along a
+     *   meridian (meters).  For a sphere \e L = (\e pi / 2) \e a.  The radius
+     *   of a sphere with the same meridian length is \e L / (\e pi / 2).
      **********************************************************************/
     Math::real QuarterMeridian() const throw();
 
     /**
      * @return \e A the total area of the ellipsoid (meters<sup>2</sup>).  For
-     *   a sphere \e A = 4\e pi <i>a</i><sup>2</sup>.
+     *   a sphere \e A = 4\e pi <i>a</i><sup>2</sup>.  The radius of a sphere
+     *   with the same area is sqrt(\e A / (4 \e pi)).
      **********************************************************************/
     Math::real Area() const throw();
 
     /**
      * @return \e V the total volume of the ellipsoid (meters<sup>3</sup>).
-     *   For a sphere \e V = (4\e pi / 3) <i>a</i><sup>3</sup>.
+     *   For a sphere \e V = (4\e pi / 3) <i>a</i><sup>3</sup>.  The radius of
+     *   a sphere with the same volume is cbrt(\e V / (4 \e pi / 3)).
      **********************************************************************/
     Math::real Volume() const throw()
     { return (4 * Math::pi<real>()) * Math::sq(_a) * _b / 3; }
@@ -327,7 +330,8 @@ namespace GeographicLib {
     /**
      * @param[in] phi the geographic latitude (degrees).
      * @return \e R = \e a cos \e beta the radius of a circle of latitude \e
-     *   phi (meters).
+     *   phi (meters).  \e R (\e pi / 180<sup>o</sup>) gives meters per degree
+     *   longitude measured along a circle of latitude.
      *
      * \e phi must lie in the range [-90<sup>o</sup>, 90<sup>o</sup>]; the
      * result is undefined if this condition does not hold.
@@ -361,7 +365,8 @@ namespace GeographicLib {
      * @return \e rho the meridional radius of curvature of the ellipsoid at
      *   latitude \e phi (meters); this is the curvature of the meridian.  \e
      *   rho is given by \e rho = (180<sup>o</sup> / \e pi) d\e s / d\e phi,
-     *   where \e s = MeridianDistance().
+     *   where \e s = MeridianDistance(); thus \e rho (\e pi / 180<sup>o</sup>)
+     *   gives meters per degree latitude measured along a meridian.
      *
      * \e phi must lie in the range [-90<sup>o</sup>, 90<sup>o</sup>]; the
      * result is undefined if this condition does not hold.

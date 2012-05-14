@@ -14,6 +14,31 @@ set (PACKAGE_VERSION ${GeographicLib_VERSION})
 set (LIBVERSION 9)
 set (LIBVERSIONFULL 9.4.0)
 
+# Set the find_package search path and the installation directory.
+#
+#   COMMON_INSTALL_PATH governs the installation convention.  If it is
+#   on ON (the Linux default), the installation to a common directory,
+#   e.g., /usr/local.  If it is OFF (the Windows default), the
+#   installation directory contains the package name, e.g.,
+#   c:/pkg/tnt-1.2.6.
+#
+#   If PACKAGE_PATH is defined, it is prepended to CMAKE_PREFIX_PATH.
+#   On Windows, specifying PACKAGE_PATH is mandatory.
+#
+#   If INSTALL_PATH is not specified but PACKAGE_PATH is, then
+#   INSTALL_PATH is set to
+#     ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON;
+#     ${PACKAGE_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}, otherwise.
+#
+#   If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
+#   INSTALL_PATH.
+#
+#   Typically, only PACKAGE_PATH needs to be specified, eg.,
+#   cmake -D PACKAGE_PATH=/opt .. (on Linux)
+#     => CMAKE_PREFIX_PATH=/opt   CMAKE_INSTALL_PREFIX=/opt
+#   cmake -D PACKAGE_PATH=c:/pkg .. (on Windows)
+#     => CMAKE_PREFIX_PATH=c:/pkg CMAKE_INSTALL_PREFIX=c:/pkg/tnt-1.2.6
+
 # Check for PACKAGE_PATH and INSTALL_PATH
 #
 #   If INSTALL_PATH is not specified but PACKAGE_PATH is, then
@@ -22,13 +47,26 @@ set (LIBVERSIONFULL 9.4.0)
 #
 #   If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
 #   INSTALL_PATH.
+
+
+if (WIN32)
+  option (COMMON_INSTALL_PATH "Use a common installation path for packages" OFF)
+else ()
+  option (COMMON_INSTALL_PATH "Use a common installation path for packages" ON)
+endif ()
+
+if (DEFINED PACKAGE_PATH)
+  set (CMAKE_PREFIX_PATH ${PACKAGE_PATH} ${CMAKE_PREFIX_PATH})
+  message (STATUS "CMAKE_PREFIX_PATH set to ${CMAKE_PREFIX_PATH}")
+endif ()
+
 if (NOT DEFINED INSTALL_PATH)
   if (DEFINED PACKAGE_PATH)
-    if (WIN32)
+    if (COMMON_INSTALL_PATH)
+      set (INSTALL_PATH ${PACKAGE_PATH} CACHE PATH "Install Directory" FORCE)
+    else ()
       set (INSTALL_PATH ${PACKAGE_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}
 	CACHE PATH "Installation Directory" FORCE)
-    else ()
-      set (INSTALL_PATH ${PACKAGE_PATH} CACHE PATH "Install Directory" FORCE)
     endif ()
   elseif (WIN32 AND DEFINED CMAKE_PREFIX_PATH
     AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -185,35 +223,7 @@ add_subdirectory (python/geographiclib)
 if (GEOGRAPHICLIB_EXAMPLES)
   add_subdirectory (examples)
 endif ()
-
-# config file support for find_package(GeographicLib).  This only
-# supports finding GeographicLib in the "install" tree (as opposed to
-# the "build" tree).  The process installs geographiclib-config.cmake in
-# ${INSTALL_CMAKE_DIR} and @GEOGRAPHICLIB_ROOT_DIR@ is the relative path
-# to the root from there.  (Thus the whole install tree can be
-# relocated.)
-if (WIN32)
-  set (INSTALL_CMAKE_DIR "cmake")
-  set (GEOGRAPHICLIB_ROOT_DIR "..")
-else ()
-  set (INSTALL_CMAKE_DIR
-    "share/cmake/${PROJECT_NAME}-${PACKAGE_VERSION}")
-  set (GEOGRAPHICLIB_ROOT_DIR "../../..")
-endif ()
-configure_file (cmake/geographiclib-config.cmake.in
-  cmake/geographiclib-config.cmake @ONLY)
-configure_file (cmake/geographiclib-config-version.cmake.in
-  cmake/geographiclib-config-version.cmake @ONLY)
-install (FILES
-  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config.cmake"
-  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config-version.cmake"
-  DESTINATION "${INSTALL_CMAKE_DIR}")
-
-# Make information about the cmake targets (the library and the tools)
-# available.
-install (EXPORT depends
-  FILE geographiclib-depends.cmake
-  DESTINATION "${INSTALL_CMAKE_DIR}")
+add_subdirectory (cmake)
 
 # Packaging support; we deal with 
 # (1) a source distribution: cmake make a tar.gz file and the zip file

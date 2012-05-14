@@ -55,7 +55,7 @@
  * \brief Namespace for %GeographicLib
  *
  * All of %GeographicLib is defined within the GeographicLib namespace.  In
- * addition all the header files are included via %GeographicLib/filename.
+ * addition all the header files are included via %GeographicLib/Class.hpp.
  * This minimizes the likelihood of conflicts with other packages.
  **********************************************************************/
 namespace GeographicLib {

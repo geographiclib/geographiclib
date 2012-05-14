@@ -4,6 +4,6 @@
 #define GEOGRAPHICLIB_DATA "@GEOGRAPHICLIB_DATA@"
 
 // These are macros which affect the building of the library
-#cmakedefine GEOGRAPHIC_SHARED_LIB 1
-#cmakedefine HAVE_LONG_DOUBLE 1
-#cmakedefine WORDS_BIGENDIAN 1
+#cmakedefine01 GEOGRAPHIC_SHARED_LIB
+#cmakedefine01 HAVE_LONG_DOUBLE
+#cmakedefine01 WORDS_BIGENDIAN
