@@ -14,6 +14,7 @@
 #include <string>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/TransverseMercator.hpp>
+#include <GeographicLib/EllipticFunction.hpp>
 #include <GeographicLib/AlbersEqualArea.hpp>
 
 namespace GeographicLib {
