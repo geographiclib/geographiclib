@@ -38,7 +38,7 @@
 #  define RCSID_DECL(x) namespace { char VAR_ ## x [] = x; }
 #endif
 
-#if defined(_WIN32) && defined(GEOGRAPHIC_SHARED_LIB)
+#if defined(_WIN32) && defined(GEOGRAPHIC_SHARED_LIB) && GEOGRAPHIC_SHARED_LIB
 #  if defined(Geographic_EXPORTS)
 #    define GEOGRAPHIC_EXPORT __declspec(dllexport)
 #  else

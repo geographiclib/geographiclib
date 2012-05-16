@@ -182,6 +182,11 @@ add_test (ConicProj0
 set_tests_properties (ConicProj0
   PROPERTIES PASS_REGULAR_EXPRESSION
   "39\\.95[0-9]+ -75\\.17[0-9]+ 1\\.67[0-9]+ 0\\.99[0-9]+")
+# Check fix for AlbersEqualArea prolate bug found 2012-05-15
+add_test (ConicProj1
+  ConicProj -a 0 0 -e 6.4e6 -0.5 -r --input-string "0 8605508")
+set_tests_properties (ConicProj1
+  PROPERTIES PASS_REGULAR_EXPRESSION "^85\\.00")
 
 add_test (CartConvert0
   CartConvert -e 6.4e6 1/100 -r --input-string "10e3 0 1e3")
