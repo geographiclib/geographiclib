@@ -3277,6 +3277,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
  - Version 1.22 (released 2012-mm-dd)
   - Add GeographicLib::Geohash and GeographicLib::Ellipsoid.
+  - Fix bug in AlbersEqualArea of very prolate ellipsoids.
   - cmake tweaks:
     - optionally use PACKAGE_PATH and INSTALL_PATH to determine
       CMAKE_INSTALL_PREFIX;

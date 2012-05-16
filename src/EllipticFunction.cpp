@@ -214,4 +214,15 @@ namespace GeographicLib {
     return E(sn, cos(phi), sqrt(1 - _m * sn * sn));
   }
 
+  Math::real EllipticFunction::Ed(real ang) const throw() {
+    real
+      phi = ang * Math::degree<real>(),
+      sn = sin(phi),
+      sn2 = Math::sq(sn),
+      cn2 = abs(ang) == 90 ? 0 : Math::sq(cos(phi)),
+      dn2 = 1 - _m * sn2;
+    return sn * (RF(cn2, dn2, real(1)) -
+                 (_m / 3) * sn2 * RD(cn2, dn2, real(1)));
+  }
+
 } // namespace GeographicLib

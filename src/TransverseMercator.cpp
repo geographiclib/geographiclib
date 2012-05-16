@@ -214,6 +214,39 @@ namespace GeographicLib {
                           Constants::WGS84_f<real>(),
                           Constants::UTM_k0<real>());
 
+  // taupf and tauf are adapted from TransverseMercatorExact (taup and
+  // taupinv).  tau = tan(phi), taup = sinh(psi)
+  Math::real TransverseMercator::taupf(real tau) const throw() {
+    real
+      tau1 = Math::hypot(real(1), tau),
+      sig = sinh( eatanhe(tau / tau1) );
+    return Math::hypot(real(1), sig) * tau - sig * tau1;
+  }
+
+  Math::real TransverseMercator::tauf(real taup) const throw() {
+    real
+      // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
+      // tau = taup/_e2m as a starting guess.  Only 1 iteration is needed for
+      // |lat| < 3.35 deg, otherwise 2 iterations are needed.  If, instead, tau
+      // = taup is used the mean number of iterations increases to 1.99 (2
+      // iterations are needed except near tau = 0).
+      tau = taup/_e2m,
+      stol = tol_ * max(real(1), abs(taup));
+    // min iterations = 1, max iterations = 2; mean = 1.94
+    for (int i = 0; i < numit_; ++i) {
+      real
+        tau1 = Math::hypot(real(1), tau),
+        sig = sinh( eatanhe( tau / tau1 ) ),
+        taupa = Math::hypot(real(1), sig) * tau - sig * tau1,
+        dtau = (taup - taupa) * (1 + _e2m * Math::sq(tau)) /
+        ( _e2m * tau1 * Math::hypot(real(1), taupa) );
+      tau += dtau;
+      if (!(abs(dtau) >= stol))
+        break;
+    }
+    return tau;
+  }
+
   void TransverseMercator::Forward(real lon0, real lat, real lon,
                                    real& x, real& y, real& gamma, real& k)
     const throw() {
@@ -262,9 +295,7 @@ namespace GeographicLib {
       real
         c = max(real(0), cos(lam)), // cos(pi/2) might be negative
         tau = tan(phi),
-        secphi = Math::hypot(real(1), tau),
-        sig = sinh( eatanhe(tau / secphi) ),
-        taup = Math::hypot(real(1), sig) * tau - sig * secphi;
+        taup = taupf(tau);
       xip = atan2(taup, c);
       // Used to be
       //   etap = Math::atanh(sin(lam) / cosh(psi));
@@ -281,7 +312,8 @@ namespace GeographicLib {
       // This form has cancelling errors.  This property is lost if cosh(psip)
       // is replaced by 1/cos(phi), even though it's using "primary" data (phi
       // instead of psip).
-      k = sqrt(_e2m + _e2 * Math::sq(cos(phi))) * secphi / Math::hypot(taup, c);
+      k = sqrt(_e2m + _e2 * Math::sq(cos(phi))) * Math::hypot(real(1), tau)
+        / Math::hypot(taup, c);
     } else {
       xip = Math::pi<real>()/2;
       etap = 0;
@@ -450,25 +482,7 @@ namespace GeographicLib {
       // Use Newton's method to solve for tau
       real
         taup = sin(xip)/r,
-        // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
-        // tau = taup/_e2m as a starting guess.  Only 1 iteration is needed for
-        // |lat| < 3.35 deg, otherwise 2 iterations are needed.  If, instead,
-        // tau = taup is used the mean number of iterations increases to 1.99
-        // (2 iterations are needed except near tau = 0).
-        tau = taup/_e2m,
-        stol = tol_ * max(real(1), abs(taup));
-      // min iterations = 1, max iterations = 2; mean = 1.94
-      for (int i = 0; i < numit_; ++i) {
-        real
-          tau1 = Math::hypot(real(1), tau),
-          sig = sinh( eatanhe( tau / tau1 ) ),
-          taupa = Math::hypot(real(1), sig) * tau - sig * tau1,
-          dtau = (taup - taupa) * (1 + _e2m * Math::sq(tau)) /
-          ( _e2m * tau1 * Math::hypot(real(1), taupa) );
-        tau += dtau;
-        if (!(abs(dtau) >= stol))
-          break;
-      }
+        tau = tauf(taup);
       phi = atan(tau);
       gamma += atan(tanx(xip) * tanh(etap)); // Krueger p 19 (31)
       // Note cos(phi') * cosh(eta') = r

@@ -97,6 +97,10 @@ namespace GeographicLib {
     inline real eatanhe(real x) const throw() {
       return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x);
     }
+    real taupf(real tau) const throw();
+    real tauf(real taup) const throw();
+
+    friend class Ellipsoid;           // For access to taupf, tauf.
   public:
 
     /**

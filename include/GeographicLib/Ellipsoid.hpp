@@ -13,7 +13,7 @@
 
 #include <string>
 #include <GeographicLib/Constants.hpp>
-#include <GeographicLib/TransverseMercatorExact.hpp>
+#include <GeographicLib/TransverseMercator.hpp>
 #include <GeographicLib/AlbersEqualArea.hpp>
 
 namespace GeographicLib {
@@ -30,7 +30,8 @@ namespace GeographicLib {
    * provide functionality which can be provided by the Geodesic class.
    * However Geodesic uses a series approximation (valid for abs \e f < 1/150),
    * whereas Ellipsoid computes these quantities using EllipticFunction which
-   * provides accurate results even when \e f is large.
+   * provides accurate results even when \e f is large.  Use of this class
+   * should be limited to -3 < \e f < 3/4 (i.e., 1/4 < b/a < 4).
    *
    * Example of use:
    * \include example-Ellipsoid.cpp
@@ -41,13 +42,14 @@ namespace GeographicLib {
     typedef Math::real real;
     static const int numit_ = 10;
     real _a, _f, _f1, _f12, _e2, _e12, _n, _b, _stol;
-    const TransverseMercatorExact _tm;
+    const TransverseMercator _tm;
+    const EllipticFunction _ell;
     const AlbersEqualArea _au;
     static real tand(real x) throw() {
       return
         std::abs(x) == real(90) ? (x < 0 ?
-                                   - TransverseMercatorExact::overflow_
-                                   : TransverseMercatorExact::overflow_) :
+                                   - TransverseMercator::overflow_
+                                   : TransverseMercator::overflow_) :
         std::tan(x * Math::degree<real>());
     }
     static real atand(real x) throw()

@@ -28,12 +28,9 @@ namespace GeographicLib {
     , _e12(_e2 / (1 - _e2))
     , _n(_f / (2  - _f))
     , _b(_a * _f1)
-    , _stol(max(_a, _b) * 0.01 * sqrt(numeric_limits<real>::epsilon()))
-      // TransverseMercatorExact only handles oblate ellipsoid; if prolate,
-      // interchange major and minor radii.
-    , _tm(_f >= 0 ? _a : _a * _f1,
-          _f >= 0 ? _f : -_f / _f1,
-          real(1), false)
+    , _stol(0.01 * sqrt(numeric_limits<real>::epsilon()))
+    , _tm(_a, _f, real(1))
+    , _ell(-_e12)
     , _au(_a, _f, real(0), real(1), real(0), real(1), real(1))
   {}
 
@@ -41,7 +38,7 @@ namespace GeographicLib {
                                    Constants::WGS84_f<real>());
 
   Math::real Ellipsoid::QuarterMeridian() const throw()
-  { return (_f >= 0 ? _a : _b) * _tm._Eu.E(); }
+  { return _b * _ell.E(); }
 
   Math::real Ellipsoid::Area() const throw() {
     return 4 * Math::pi<real>() *
@@ -71,25 +68,21 @@ namespace GeographicLib {
   Math::real Ellipsoid::InverseRectifyingLatitude(real mu) const throw() {
     if (abs(mu) == 90)
       return mu;
+    // mu depends on beta nearly linearly (much more so that it depends on
+    // phi).  So find beta first by solving E(beta, -e12) = e0 with initial
+    // guess beta = mu
     real
-      mdist0 = mu * QuarterMeridian() / 90,
-      // Include first order correction in initial guess.  The contributions to
-      // the coeffecient 3/2 are
-      // 1/2 = coefficient of epsilon (= n) in expression for C'_{11};
-      // 1 = conversion from sigma (= beta) to phi.
-      // Clamp _n to [-1/4,1/4] to avoid overcorrecting for very eccentric
-      // ellipsoids.
-      phi = mu + (real(1.5) * min(real(0.25), max(real(-0.25), _n)) *
-                  sin(2 * mu * Math::degree<real>())
-                  / Math::degree<real>());
+      e0 = mu * QuarterMeridian() / (90 * _b),
+      beta = mu;
     for (int i = 0; i < numit_; ++i) {
-      // Solve by Newton's method
-      real err = MeridianDistance(phi) - mdist0;
-      phi = phi - err / (MeridionalCurvatureRadius(phi) * Math::degree<real>());
+      real err = _ell.Ed(beta) - e0;
+      beta = beta -
+        err / ( sqrt(1 + _e12 * Math::sq(sin(beta *  Math::degree<real>())))
+                * Math::degree<real>());
       if (abs(err) < _stol)
         break;
     }
-    return phi;
+    return InverseParametricLatitude(beta);
   }
 
   Math::real Ellipsoid::AuthalicLatitude(real phi) const throw()
@@ -99,16 +92,20 @@ namespace GeographicLib {
   { return atand(_au.tphif(tand(xi))); }
 
   Math::real Ellipsoid::ConformalLatitude(real phi) const throw()
-  { return atand(_tm.taup(tand(phi))); }
+  { return _f ? atand(_tm.taupf(tand(phi))) : phi; }
 
   Math::real Ellipsoid::InverseConformalLatitude(real chi) const throw()
-  { return atand(_tm.taupinv(tand(chi))); }
+  { return _f ? atand(_tm.tauf(tand(chi))) : chi; }
 
-  Math::real Ellipsoid::IsometricLatitude(real phi) const throw()
-  { return Math::asinh(_tm.taup(tand(phi))) / Math::degree<real>(); }
+  Math::real Ellipsoid::IsometricLatitude(real phi) const throw() {
+    real tphi = tand(phi);
+    return Math::asinh(_f ? _tm.taupf(tphi) : tphi) / Math::degree<real>();
+  }
 
-  Math::real Ellipsoid::InverseIsometricLatitude(real psi) const throw()
-  { return atand(_tm.taupinv(sinh(psi * Math::degree<real>()))); }
+  Math::real Ellipsoid::InverseIsometricLatitude(real psi) const throw() {
+    real shphi = sinh(psi * Math::degree<real>());
+    return atand(_f ? _tm.tauf(shphi) : shphi);
+  }
 
   Math::real Ellipsoid::CircleRadius(real phi) const throw() {
     return abs(phi) == 90 ? 0 :
@@ -122,17 +119,8 @@ namespace GeographicLib {
     return _b * tbeta / Math::hypot(real(1), _f1 * tand(phi));
   }
 
-  Math::real Ellipsoid::MeridianDistance(real phi) const throw() {
-    if (phi == 0) return 0;
-    real
-      tbet = _f1 * tand(abs(phi)),
-      cbet = 1 / Math::hypot(real(1), tbet),
-      sbet = tbet * cbet,
-      E = _f >= 0 ?
-      _tm._Eu.E(cbet, sbet, sqrt(1 - _tm._Eu.m() * Math::sq(cbet))) :
-      _tm._Eu.E(sbet, cbet, sqrt(1 - _tm._Eu.m() * Math::sq(sbet)));
-    return (phi < 0 ? -1 : 1) * (_f >= 0 ? _a * (_tm._Eu.E() - E) : _b * E);
-  }
+  Math::real Ellipsoid::MeridianDistance(real phi) const throw()
+  { return _b * _ell.Ed( ParametricLatitude(phi) ); }
 
   Math::real Ellipsoid::MeridionalCurvatureRadius(real phi) const throw() {
     real v = 1 - _e2 * Math::sq(sin(phi * Math::degree<real>()));

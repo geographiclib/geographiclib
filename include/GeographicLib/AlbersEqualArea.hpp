@@ -79,7 +79,11 @@ namespace GeographicLib {
     // x                              if f = 0
     inline real atanhee(real x) const throw() {
       return _f > 0 ? Math::atanh(_e * x)/_e :
-        (_f < 0 ? std::atan(_e * x)/_e : x);
+        // We only invoke atanhee in txif for positive latitude.  Then x is
+        // only negative for very prolate ellipsoids (_b/_a >= sqrt(2)) and we
+        // still need to return a positive result in this case; hence the need
+        // for the call to atan2.
+        (_f < 0 ? (std::atan2(_e * std::abs(x), x < 0 ? -1 : 1)/_e) : x);
     }
     // return atanh(sqrt(x))/sqrt(x) - 1, accurate for small x
     static real atanhxm1(real x) throw();
