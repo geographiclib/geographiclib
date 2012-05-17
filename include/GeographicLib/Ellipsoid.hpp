@@ -390,6 +390,112 @@ namespace GeographicLib {
     Math::real TransverseCurvatureRadius(real phi) const throw();
     ///@}
 
+    /** \name Eccentricity conversions.
+     **********************************************************************/
+    ///@{
+    
+    /**
+     * @param[in] fp the second flattening.
+     * @return \e f the flattening.
+     *
+     * \e fp should lie in (-1, inf).
+     * The returned value \e f lies in (-inf, 1).
+     **********************************************************************/
+    static Math::real SecondFlatteningToFlattening(real fp) throw()
+    { return fp / (1 + fp); }
+
+    /**
+     * @param[in] f the flattening.
+     * @return \e fp the second flattening.
+     *
+     * \e f should lie in (-inf, 1).
+     * The returned value \e fp lies in (-1, inf).
+     **********************************************************************/
+    static Math::real FlatteningToSecondFlattening(real f) throw()
+    { return f / (1 - f); }
+
+    /**
+     * @param[in] n the third flattening.
+     * @return \e f the flattening.
+     *
+     * \e n should lie in (-1, 1).
+     * The returned value \e f lies in (-inf, 1).
+     **********************************************************************/
+    static Math::real ThirdFlatteningToFlattening(real n) throw()
+    { return 2 * n / (1 + n); }
+
+    /**
+     * @param[in] f the flattening.
+     * @return \e n the third flattening.
+     *
+     * \e f should lie in (-inf, 1).
+     * The returned value \e n lies in (-1, 1).
+     **********************************************************************/
+    static Math::real FlatteningToThirdFlattening(real f) throw()
+    { return f / (2 - f); }
+
+    /**
+     * @param[in] e2 the eccentricity squared.
+     * @return \e f the flattening.
+     *
+     * \e e2 should lie in (-inf, 1).
+     * The returned value \e f lies in (-inf, 1).
+     **********************************************************************/
+    static Math::real EccentricitySqToFlattening(real e2) throw()
+    { return e2 / (std::sqrt(1 - e2) + 1); }
+
+    /**
+     * @param[in] f the flattening.
+     * @return \e e2 the eccentricity squared.
+     *
+     * \e f should lie in (-inf, 1).
+     * The returned value \e e2 lies in (-inf, 1).
+     **********************************************************************/
+    static Math::real FlatteningToEccentricitySq(real f) throw()
+    { return f * (2 - f); }
+
+    /**
+     * @param[in] ep2 the second eccentricity squared.
+     * @return \e f the flattening.
+     *
+     * \e ep2 should lie in (-1, inf).
+     * The returned value \e f lies in (-inf, 1).
+     **********************************************************************/
+    static Math::real SecondEccentricitySqToFlattening(real ep2) throw()
+    { return ep2 / (std::sqrt(1 + ep2) + 1 + ep2); }
+
+    /**
+     * @param[in] f the flattening.
+     * @return \e ep2 the second eccentricity squared.
+     *
+     * \e f should lie in (-inf, 1).
+     * The returned value \e ep2 lies in (-1, inf).
+     **********************************************************************/
+    static Math::real FlatteningToSecondEccentricitySq(real f) throw()
+    { return f * (2 - f) / Math::sq(1 - f); }
+
+    /**
+     * @param[in] epp2 the third eccentricity squared.
+     * @return \e f the flattening.
+     *
+     * \e epp2 should lie in (-1, 1).
+     * The returned value \e f lies in (-inf, 1).
+     **********************************************************************/
+    static Math::real ThirdEccentricitySqToFlattening(real epp2) throw()
+    { return 2 * epp2 / (sqrt((1 - epp2) * (1 + epp2)) + 1 + epp2); }
+
+    /**
+     * @param[in] f the flattening.
+     * @return \e epp2 the third eccentricity squared.
+     *
+     * \e f should lie in (-inf, 1).
+     * The returned value \e epp2 lies in (-1, 1).
+     **********************************************************************/
+    static Math::real FlatteningToThirdEccentricitySq(real f) throw()
+    { return f * (2 - f) / (1 + Math::sq(1 - f)); }
+
+    ///@}
+
     /**
      * A global instantiation of Ellipsoid with the parameters for the WGS84
      * ellipsoid.
