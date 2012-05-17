@@ -4,14 +4,20 @@
 # Probably full-time python users should install the python package from
 # http://pypi.python.org/pypi/geographiclib
 file (GLOB PYTHON_FILES *.py)
+if (COMMON_INSTALL_PATH)
+  set (INSTALL_PYTHON_DIR "lib/python/site-packages")
+else ()
+  set (INSTALL_PYTHON_DIR "python")
+endif ()
+
 install (FILES ${PYTHON_FILES}
-  DESTINATION lib/python/site-packages/geographiclib)
+  DESTINATION ${INSTALL_PYTHON_DIR}/geographiclib)
 
 # Only install setup.py under Windows because the installation tree is,
-# e.g., c:/Program Files/GeographicLib/lib/python/site-packages.  Don't
+# e.g., c:/Program Files/GeographicLib/${INSTALL_PYTHON_PATH}.  Don't
 # install on other systems where this command would create, e.g.,
-# /usr/local/lib/python/site-packages/setup.py which is likely to cause
+# /usr/local/${INSTALL_PYTHON_PATH}/setup.py which is likely to cause
 # conflicts.
-if (WIN32)
-  install (FILES ../setup.py DESTINATION lib/python/site-packages)
+if (NOT COMMON_INSTALL_PATH)
+  install (FILES ../setup.py DESTINATION ${INSTALL_PYTHON_DIR})
 endif ()

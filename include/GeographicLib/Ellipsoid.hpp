@@ -126,7 +126,7 @@ namespace GeographicLib {
     Math::real Flattening() { return _f; }
 
     /**
-     * @return \e f' = (\e a - \e b) / \e b, the second flattening of the
+     * @return \e f ' = (\e a - \e b) / \e b, the second flattening of the
      *   ellipsoid.  This is zero, positive, or negative for a sphere, oblate
      *   ellipsoid, or prolate ellipsoid.
      **********************************************************************/
@@ -148,7 +148,7 @@ namespace GeographicLib {
     Math::real EccentricitySq() { return _e2; }
 
     /**
-     * @return <i>e'</i><sup>2</sup> = (<i>a</i><sup>2</sup> -
+     * @return <i>e'</i> <sup>2</sup> = (<i>a</i><sup>2</sup> -
      *   <i>b</i><sup>2</sup>) / <i>b</i><sup>2</sup>, the second eccentricity
      *   squared of the the ellipsoid.  This is zero, positive, or negative for
      *   a sphere, oblate ellipsoid, or prolate ellipsoid.
@@ -156,7 +156,7 @@ namespace GeographicLib {
     Math::real SecondEccentricitySq() { return _e12; }
 
     /**
-     * @return <i>e''</i><sup>2</sup> = (<i>a</i><sup>2</sup> -
+     * @return <i>e''</i> <sup>2</sup> = (<i>a</i><sup>2</sup> -
      *   <i>b</i><sup>2</sup>) / (<i>a</i><sup>2</sup> + <i>b</i><sup>2</sup>),
      *   the third eccentricity squared of the the ellipsoid.  This is zero,
      *   positive, or negative for a sphere, oblate ellipsoid, or prolate
@@ -393,30 +393,30 @@ namespace GeographicLib {
     /** \name Eccentricity conversions.
      **********************************************************************/
     ///@{
-    
+
     /**
-     * @param[in] fp the second flattening.
-     * @return \e f the flattening.
+     * @param[in] fp = \e f ' = (\e a - \e b) / \e b, the second flattening.
+     * @return \e f = (\e a - \e b) / \e a, the flattening.
      *
-     * \e fp should lie in (-1, inf).
+     * \e f ' should lie in (-1, inf).
      * The returned value \e f lies in (-inf, 1).
      **********************************************************************/
     static Math::real SecondFlatteningToFlattening(real fp) throw()
     { return fp / (1 + fp); }
 
     /**
-     * @param[in] f the flattening.
-     * @return \e fp the second flattening.
+     * @param[in] f = (\e a - \e b) / \e a, the flattening.
+     * @return \e f ' = (\e a - \e b) / \e b, the second flattening.
      *
      * \e f should lie in (-inf, 1).
-     * The returned value \e fp lies in (-1, inf).
+     * The returned value \e f ' lies in (-1, inf).
      **********************************************************************/
     static Math::real FlatteningToSecondFlattening(real f) throw()
     { return f / (1 - f); }
 
     /**
-     * @param[in] n the third flattening.
-     * @return \e f the flattening.
+     * @param[in] n = (\e a - \e b) / (\e a + \e b), the third flattening.
+     * @return \e f = (\e a - \e b) / \e a, the flattening.
      *
      * \e n should lie in (-1, 1).
      * The returned value \e f lies in (-inf, 1).
@@ -425,8 +425,8 @@ namespace GeographicLib {
     { return 2 * n / (1 + n); }
 
     /**
-     * @param[in] f the flattening.
-     * @return \e n the third flattening.
+     * @param[in] f = (\e a - \e b) / \e a, the flattening.
+     * @return \e n = (\e a - \e b) / (\e a + \e b), the third flattening.
      *
      * \e f should lie in (-inf, 1).
      * The returned value \e n lies in (-1, 1).
@@ -435,61 +435,73 @@ namespace GeographicLib {
     { return f / (2 - f); }
 
     /**
-     * @param[in] e2 the eccentricity squared.
-     * @return \e f the flattening.
+     * @param[in] e2 = <i>e</i><sup>2</sup> = (<i>a</i><sup>2</sup> -
+     *   <i>b</i><sup>2</sup>) / <i>a</i><sup>2</sup>, the eccentricity
+     *   squared.
+     * @return \e f = (\e a - \e b) / \e a, the flattening.
      *
-     * \e e2 should lie in (-inf, 1).
+     * <i>e</i><sup>2</sup> should lie in (-inf, 1).
      * The returned value \e f lies in (-inf, 1).
      **********************************************************************/
     static Math::real EccentricitySqToFlattening(real e2) throw()
     { return e2 / (std::sqrt(1 - e2) + 1); }
 
     /**
-     * @param[in] f the flattening.
-     * @return \e e2 the eccentricity squared.
+     * @param[in] f = (\e a - \e b) / \e a, the flattening.
+     * @return <i>e</i><sup>2</sup> = (<i>a</i><sup>2</sup> -
+     *   <i>b</i><sup>2</sup>) / <i>a</i><sup>2</sup>, the eccentricity
+     *   squared.
      *
      * \e f should lie in (-inf, 1).
-     * The returned value \e e2 lies in (-inf, 1).
+     * The returned value <i>e</i><sup>2</sup> lies in (-inf, 1).
      **********************************************************************/
     static Math::real FlatteningToEccentricitySq(real f) throw()
     { return f * (2 - f); }
 
     /**
-     * @param[in] ep2 the second eccentricity squared.
-     * @return \e f the flattening.
+     * @param[in] ep2 = <i>e'</i> <sup>2</sup> = (<i>a</i><sup>2</sup> -
+     *   <i>b</i><sup>2</sup>) / <i>b</i><sup>2</sup>, the second eccentricity
+     *   squared.
+     * @return \e f = (\e a - \e b) / \e a, the flattening.
      *
-     * \e ep2 should lie in (-1, inf).
+     * <i>e'</i> <sup>2</sup> should lie in (-1, inf).
      * The returned value \e f lies in (-inf, 1).
      **********************************************************************/
     static Math::real SecondEccentricitySqToFlattening(real ep2) throw()
     { return ep2 / (std::sqrt(1 + ep2) + 1 + ep2); }
 
     /**
-     * @param[in] f the flattening.
-     * @return \e ep2 the second eccentricity squared.
+     * @param[in] f = (\e a - \e b) / \e a, the flattening.
+     * @return <i>e'</i> <sup>2</sup> = (<i>a</i><sup>2</sup> -
+     *   <i>b</i><sup>2</sup>) / <i>b</i><sup>2</sup>, the second eccentricity
+     *   squared.
      *
      * \e f should lie in (-inf, 1).
-     * The returned value \e ep2 lies in (-1, inf).
+     * The returned value <i>e'</i> <sup>2</sup> lies in (-1, inf).
      **********************************************************************/
     static Math::real FlatteningToSecondEccentricitySq(real f) throw()
     { return f * (2 - f) / Math::sq(1 - f); }
 
     /**
-     * @param[in] epp2 the third eccentricity squared.
-     * @return \e f the flattening.
+     * @param[in] epp2 = <i>e''</i> <sup>2</sup> = (<i>a</i><sup>2</sup> -
+     *   <i>b</i><sup>2</sup>) / (<i>a</i><sup>2</sup> + <i>b</i><sup>2</sup>),
+     *   the third eccentricity squared.
+     * @return \e f = (\e a - \e b) / \e a, the flattening.
      *
-     * \e epp2 should lie in (-1, 1).
+     * <i>e''</i> <sup>2</sup> should lie in (-1, 1).
      * The returned value \e f lies in (-inf, 1).
      **********************************************************************/
     static Math::real ThirdEccentricitySqToFlattening(real epp2) throw()
     { return 2 * epp2 / (sqrt((1 - epp2) * (1 + epp2)) + 1 + epp2); }
 
     /**
-     * @param[in] f the flattening.
-     * @return \e epp2 the third eccentricity squared.
+     * @param[in] f = (\e a - \e b) / \e a, the flattening.
+     * @return <i>e''</i> <sup>2</sup> = (<i>a</i><sup>2</sup> -
+     *   <i>b</i><sup>2</sup>) / (<i>a</i><sup>2</sup> + <i>b</i><sup>2</sup>),
+     *   the third eccentricity squared.
      *
      * \e f should lie in (-inf, 1).
-     * The returned value \e epp2 lies in (-1, 1).
+     * The returned value <i>e''</i> <sup>2</sup> lies in (-1, 1).
      **********************************************************************/
     static Math::real FlatteningToThirdEccentricitySq(real f) throw()
     { return f * (2 - f) / (1 + Math::sq(1 - f)); }

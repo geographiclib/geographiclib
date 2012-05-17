@@ -1,4 +1,4 @@
-// Example of using the GeographicLib::Geoid class
+// Example of using the GeographicLib::Ellipsoid class
 // $Id$
 
 #include <iostream>

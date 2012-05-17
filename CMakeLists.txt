@@ -209,8 +209,7 @@ set (SCRIPTS
 
 # Set the include directories.  Look in ${PROJECT_BINARY_DIR}/include
 # first because that's where Config.h will be
-include_directories ("${PROJECT_BINARY_DIR}/include")
-include_directories (include)
+include_directories ("${PROJECT_BINARY_DIR}/include" include)
 
 # The list of subdirectories to process
 add_subdirectory (src)
@@ -292,8 +291,8 @@ if (WIN32)
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
-  CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Library Documentation.lnk\\\" \\\"$INSTDIR\\\\share\\\\doc\\\\GeographicLib\\\\html\\\\index.html\\\"
-  CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Utility Documentation.lnk\\\" \\\"$INSTDIR\\\\share\\\\doc\\\\GeographicLib\\\\html\\\\utilities.html\\\"
+  CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Library Documentation.lnk\\\" \\\"$INSTDIR\\\\doc\\\\html\\\\index.html\\\"
+  CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Utility Documentation.lnk\\\" \\\"$INSTDIR\\\\doc\\\\html\\\\utilities.html\\\"
 ")
   set (CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
   !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP

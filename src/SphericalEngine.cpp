@@ -397,82 +397,82 @@ namespace GeographicLib {
   }
 
   /// \cond SKIP
-  template
-  Math::real SphericalEngine::Value<true, SphericalEngine::FULL, 1>
+  template Math::real GEOGRAPHIC_EXPORT
+  SphericalEngine::Value<true, SphericalEngine::FULL, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<false, SphericalEngine::FULL, 1>
+  template Math::real GEOGRAPHIC_EXPORT
+  SphericalEngine::Value<false, SphericalEngine::FULL, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 1>
+  template Math::real GEOGRAPHIC_EXPORT
+  SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 1>
-  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-
-  template
-  Math::real SphericalEngine::Value<true, SphericalEngine::FULL, 2>
-  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<false, SphericalEngine::FULL, 2>
-  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 2>
-  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 2>
+  template Math::real GEOGRAPHIC_EXPORT
+  SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
 
-  template
-  Math::real SphericalEngine::Value<true, SphericalEngine::FULL, 3>
+  template Math::real GEOGRAPHIC_EXPORT
+  SphericalEngine::Value<true, SphericalEngine::FULL, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<false, SphericalEngine::FULL, 3>
+  template Math::real GEOGRAPHIC_EXPORT
+  SphericalEngine::Value<false, SphericalEngine::FULL, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 3>
+  template Math::real GEOGRAPHIC_EXPORT
+  SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 3>
+  template Math::real GEOGRAPHIC_EXPORT
+  SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
 
-  template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::FULL, 1>
+  template Math::real GEOGRAPHIC_EXPORT
+  SphericalEngine::Value<true, SphericalEngine::FULL, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+  template Math::real GEOGRAPHIC_EXPORT
+  SphericalEngine::Value<false, SphericalEngine::FULL, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+  template Math::real GEOGRAPHIC_EXPORT
+  SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+  template Math::real GEOGRAPHIC_EXPORT
+  SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+
+  template CircularEngine GEOGRAPHIC_EXPORT
+  SphericalEngine::Circle<true, SphericalEngine::FULL, 1>
   (const coeff[], const real[], real, real, real);
-  template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::FULL, 1>
+  template CircularEngine GEOGRAPHIC_EXPORT
+  SphericalEngine::Circle<false, SphericalEngine::FULL, 1>
   (const coeff[], const real[], real, real, real);
-  template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 1>
+  template CircularEngine GEOGRAPHIC_EXPORT
+  SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 1>
   (const coeff[], const real[], real, real, real);
-  template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 1>
+  template CircularEngine GEOGRAPHIC_EXPORT
+  SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 1>
   (const coeff[], const real[], real, real, real);
 
-  template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::FULL, 2>
+  template CircularEngine GEOGRAPHIC_EXPORT
+  SphericalEngine::Circle<true, SphericalEngine::FULL, 2>
   (const coeff[], const real[], real, real, real);
-  template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::FULL, 2>
+  template CircularEngine GEOGRAPHIC_EXPORT
+  SphericalEngine::Circle<false, SphericalEngine::FULL, 2>
   (const coeff[], const real[], real, real, real);
-  template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 2>
+  template CircularEngine GEOGRAPHIC_EXPORT
+  SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 2>
   (const coeff[], const real[], real, real, real);
-  template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 2>
+  template CircularEngine GEOGRAPHIC_EXPORT
+  SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 2>
   (const coeff[], const real[], real, real, real);
 
-  template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::FULL, 3>
+  template CircularEngine GEOGRAPHIC_EXPORT
+  SphericalEngine::Circle<true, SphericalEngine::FULL, 3>
   (const coeff[], const real[], real, real, real);
-  template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::FULL, 3>
+  template CircularEngine GEOGRAPHIC_EXPORT
+  SphericalEngine::Circle<false, SphericalEngine::FULL, 3>
   (const coeff[], const real[], real, real, real);
-  template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 3>
+  template CircularEngine GEOGRAPHIC_EXPORT
+  SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 3>
   (const coeff[], const real[], real, real, real);
-  template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 3>
+  template CircularEngine GEOGRAPHIC_EXPORT
+  SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 3>
   (const coeff[], const real[], real, real, real);
   /// \endcond
 

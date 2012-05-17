@@ -30,7 +30,9 @@ namespace GeographicLib {
    * \include example-SphericalHarmonic2.cpp
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT SphericalHarmonic2 {
+  // Don't include the GEOGRPAHIC_EXPORT because this header-only class isn't
+  // used by any other classes in the library.
+  class /*GEOGRAPHIC_EXPORT*/ SphericalHarmonic2 {
   public:
     /**
      * Supported normalizations for associate Legendre polynomials.

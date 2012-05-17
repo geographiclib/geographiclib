@@ -4,9 +4,14 @@
 # documentation.  The .cpp files implement the interface.
 file (GLOB MATLAB_FILES *.m)
 file (GLOB MATLAB_INTERFACES *.cpp)
+if (COMMON_INSTALL_PATH)
+  set (INSTALL_MATLAB_DIR "libexec/GeographicLib/matlab")
+else ()
+  set (INSTALL_MATLAB_DIR "matlab")
+endif ()
 # Both sets of files get installed
 install (FILES ${MATLAB_FILES} ${MATLAB_INTERFACES}
-  DESTINATION libexec/GeographicLib/matlab)
+  DESTINATION ${INSTALL_MATLAB_DIR})
 
 # If MEX then compile the interface routines.  On non-Windows
 # systems, an attempt is made to minimize the number of addition target
@@ -17,7 +22,7 @@ if (MEX)
   if (WIN32)
     include (InstallRequiredSystemLibraries)
     install (PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-      DESTINATION libexec/GeographicLib/matlab)
+      DESTINATION ${INSTALL_MATLAB_DIR})
     add_custom_target (matlab-all)
   else ()
     set (INTERFACE_LIST)
@@ -38,7 +43,7 @@ if (MEX)
       add_dependencies (matlab-${TARGET} Geographic)
       add_dependencies (matlab-all matlab-${TARGET})
       install (PROGRAMS ${TARGET_INTERFACE}
-        DESTINATION libexec/GeographicLib/matlab CONFIGURATIONS Release)
+        DESTINATION ${INSTALL_MATLAB_DIR} CONFIGURATIONS Release)
     else ()
       set (INTERFACE_LIST ${INTERFACE_LIST} ${TARGET_INTERFACE})
       add_custom_command (OUTPUT ${TARGET_INTERFACE}
@@ -56,7 +61,7 @@ if (MEX)
     add_custom_target (matlab-all DEPENDS ${INTERFACE_LIST})
     add_dependencies (matlab-all Geographic)
     install (PROGRAMS ${INTERFACE_LIST}
-      DESTINATION libexec/GeographicLib/matlab CONFIGURATIONS Release)
+      DESTINATION ${INSTALL_MATLAB_DIR} CONFIGURATIONS Release)
   endif ()
   if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
     get_target_property (GEOGRAPHIC_LIBRARY_FILE Geographic LOCATION_RELEASE)
@@ -65,6 +70,6 @@ if (MEX)
     get_filename_component (GEOGRAPHIC_LIBRARY_NAME
       ${GEOGRAPHIC_LIBRARY_FILE} NAME)
     install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${GEOGRAPHIC_LIBRARY_NAME}
-      DESTINATION libexec/GeographicLib/matlab CONFIGURATIONS Release)
+      DESTINATION ${INSTALL_MATLAB_DIR} CONFIGURATIONS Release)
   endif ()
 endif ()
