@@ -61,18 +61,32 @@ tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relb # Version for autoconf
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relc # Version for cmake
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relx
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
-tar xfpzC GeographicLib-$VERSION.tar.gz $WINDOWSBUILD
+unzip -d $WINDOWSBUILD GeographicLib-$VERSION.zip 
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
 (
-    echo vcmake -D GEOGRAPHICLIB_EXAMPLES=ON ..
-    echo vmake all test install package
+    echo cmake -G "Visual Studio 10" -D PACKAGE_PATH=u:/pkg-vc10 -D GEOGRAPHICLIB_EXAMPLES=ON ..
+    echo cmake --build . --config Release --target ALL_BUILD
+    echo cmake --build . --config Release --target RUN_TESTS
+    echo cmake --build . --config Release --target INSTALL
+    echo cmake --build . --config Release --target PACKAGE
     echo cp GeographicLib-$VERSION-win32.exe $DEVELSOURCE/
 ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
+mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared
+(
+    echo cmake -G "Visual Studio 10" -D PACKAGE_PATH=u:/pkg-vc10-shared -D GEOGRAPHICLIB_EXAMPLES=ON -D GEOGRAPHIC_SHARED_LIB=ON ..
+    echo cmake --build . --config Release --target ALL_BUILD
+    echo cmake --build . --config Release --target RUN_TESTS
+    echo cmake --build . --config Release --target INSTALL
+) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared/build
+chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared/build
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
 (
-    echo vcmake -D GEOGRAPHICLIB_EXAMPLES=ON -D MATLAB_COMPILER=mex ..
-    echo vmake all matlab-all test install package
+    echo cmake -G "Visual Studio 10 Win64" -D PACKAGE_PATH=u:/pkg-vc10-x64 -D GEOGRAPHICLIB_EXAMPLES=ON ..
+    echo cmake --build . --config Release --target ALL_BUILD
+    echo cmake --build . --config Release --target RUN_TESTS
+    echo cmake --build . --config Release --target INSTALL
+    echo cmake --build . --config Release --target PACKAGE
     echo cp GeographicLib-$VERSION-win64.exe $DEVELSOURCE/
 ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/build
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/build
