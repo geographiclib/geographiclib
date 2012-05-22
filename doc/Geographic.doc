@@ -3283,6 +3283,12 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
       CMAKE_INSTALL_PREFIX;
     - use COMMON_PACKAGE_PATH to determine installation directories;
     - add config for build tree.
+    - TODO: use config mechanism instead of sed for
+      get-geographic... scripts.
+    - TODO: consistent file permissions in source distrib
+    - TODO: zip source distrib uses dos line endings
+      egrep  '\.(cpp|hpp|h.in|txt|pro|usage|html|pod|1|py|m|mac|cmake.in|cmake|h|js)$' + doxyfile.in + MANIFEST.in + NEWS + AUTHORS + INSTALL
+    - Test windows builds with cmake --build.  Test windows shared lib build.
 
  - Version 1.21 (released 2012-04-25)
   - Support colon-separated DMS output:

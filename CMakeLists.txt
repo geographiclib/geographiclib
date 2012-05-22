@@ -14,35 +14,43 @@ set (PACKAGE_VERSION ${GeographicLib_VERSION})
 set (LIBVERSION 9)
 set (LIBVERSIONFULL 9.4.0)
 
-# Set the find_package search path and the installation directory.
-#
-#   COMMON_INSTALL_PATH governs the installation convention.  If it is
-#   on ON (the Linux default), the installation to a common directory,
-#   e.g., /usr/local.  If it is OFF (the Windows default), the
-#   installation directory contains the package name, e.g.,
-#   c:/pkg/geographiclib-1.22
-#
-#   If PACKAGE_PATH is defined, it is prepended to CMAKE_PREFIX_PATH.
-#
-#   If INSTALL_PATH is not specified but PACKAGE_PATH is, then
-#   INSTALL_PATH is set to
-#     ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON;
-#     ${PACKAGE_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}, otherwise.
-#
-#   If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
-#   INSTALL_PATH.
-#
-#   Typically, only PACKAGE_PATH needs to be specified, eg.,
-#   cmake -D PACKAGE_PATH=/opt .. (on Linux)
-#     => CMAKE_PREFIX_PATH=/opt   CMAKE_INSTALL_PREFIX=/opt
-#   cmake -D PACKAGE_PATH=c:/pkg .. (on Windows)
-#     => CMAKE_PREFIX_PATH=c:/pkg CMAKE_INSTALL_PREFIX=c:/pkg/geographiclib-1.22
+# User-settable variables
+
+# (1) COMMON_INSTALL_PATH governs the installation convention.  If it is
+# on ON (the Linux default), the installation to a common directory,
+# e.g., /usr/local.  If it is OFF (the Windows default), the
+# installation directory contains the package name, e.g.,
+# c:/pkg/GeographicLib-1.22.  The installation directories for the
+# documentation, cmake configuration, python and matlab interfaces all
+# depend on the variable with deeper paths being used when it's ON.
 
 if (WIN32)
   option (COMMON_INSTALL_PATH "Use a common installation path for packages" OFF)
 else ()
   option (COMMON_INSTALL_PATH "Use a common installation path for packages" ON)
 endif ()
+
+# (2) PACKAGE_PATH and INSTALL_PATH govern the find_package search path
+# and the installation directory.  (find_package is not used by
+# GeographicLib since it doesn't depend on other packages.  However
+# PACKAGE_PATH is used here for uniformity with other packages which
+# adopt the same conventions.)
+#
+# If PACKAGE_PATH is defined, it is prepended to CMAKE_PREFIX_PATH.
+#
+# If INSTALL_PATH is not specified but PACKAGE_PATH is, then
+# INSTALL_PATH is set to
+#   ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON;
+#   ${PACKAGE_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}, otherwise.
+#
+# If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
+# INSTALL_PATH.
+#
+# Typically, only PACKAGE_PATH needs to be specified, eg.,
+# cmake -D PACKAGE_PATH=/opt .. (on Linux)
+#   => CMAKE_PREFIX_PATH=/opt   CMAKE_INSTALL_PREFIX=/opt
+# cmake -D PACKAGE_PATH=c:/pkg .. (on Windows)
+#   => CMAKE_PREFIX_PATH=c:/pkg CMAKE_INSTALL_PREFIX=c:/pkg/GeographicLib-1.22
 
 if (DEFINED PACKAGE_PATH)
   set (CMAKE_PREFIX_PATH ${PACKAGE_PATH} ${CMAKE_PREFIX_PATH})
@@ -56,10 +64,10 @@ endif ()
 
 if (NOT DEFINED INSTALL_PATH AND DEFINED PACKAGE_PATH)
   if (COMMON_INSTALL_PATH)
-    set (INSTALL_PATH ${PACKAGE_PATH} CACHE PATH "Install Directory" FORCE)
+    set (INSTALL_PATH ${PACKAGE_PATH} CACHE PATH "Installation directory" FORCE)
   else ()
     set (INSTALL_PATH ${PACKAGE_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}
-    CACHE PATH "Install Directory" FORCE)
+    CACHE PATH "Installation directory" FORCE)
   endif ()
 endif ()
 if (DEFINED INSTALL_PATH)
@@ -67,9 +75,7 @@ if (DEFINED INSTALL_PATH)
 endif ()
 message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
 
-# User-settable cache variables
-
-# (1) Build as a shared library?  On Windows systems, this is typically
+# (3) Build as a shared library?  On Windows systems, this is typically
 # more trouble than it's worth.
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
@@ -77,11 +83,11 @@ else ()
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" ON)
 endif ()
 
-# (2) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
+# (4) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
 option (MATLAB_COMPILER
   "Compiler for matlab/octave interface: mex or mkoctfile or OFF" OFF)
 
-# (3) Where to look for data files.  Various classes look in the geoids,
+# (5) Where to look for data files.  Various classes look in the geoids,
 # gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
 if (WIN32)
   # The binary installers for the data files for Windows are created
@@ -99,7 +105,7 @@ else ()
     CACHE PATH "Location for data for GeographicLib")
 endif ()
 
-# (4) Compile the short example programs?
+# (6) Compile the short example programs?
 if (WIN32)
   option (GEOGRAPHICLIB_EXAMPLES
     "Build example programs in examples directory" OFF)
@@ -137,9 +143,9 @@ if (NOT WIN32)
   find_program (HAVE_DOXYGEN doxygen)
 endif ()
 if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND DOXYGEN_FOUND)
-  set (MAINTAINER ON CACHE BOOL "Allow build of additional components")
+  set (MAINTAINER ON)
 else ()
-  set (MAINTAINER OFF CACHE BOOL "Allow build of additional components")
+  set (MAINTAINER OFF)
 endif ()
 if (MAINTAINER)
   add_custom_target (distrib-all)
@@ -316,14 +322,21 @@ if (MAINTAINER)
       \\"${PACKAGE_VERSION}\\" > include/GeographicLib/Config.h
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
-      touch man/*.usage man/*.1 man/*.1.html && touch doc/html/index.html
+      touch man/*.usage man/*.1 man/*.1.html && touch doc/html/index.html &&
+      chmod -R g+w .
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ &&
       find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
       tar cfzT ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz -
     COMMAND
-      rm -f ${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip &&
-      cd _CPack_Packages/Linux-Source/TGZ &&
+      rm -f ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip &&
+      rsync -a --delete
+      _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME}
+      _CPack_Packages/Linux-Source/TGZ.DOS/ &&
+      cd _CPack_Packages/Linux-Source/TGZ.DOS &&
+      find . -type f |
+      egrep  '/(doxyfile.in|MANIFEST.in|NEWS|AUTHORS|INSTALL|.*\.(cpp|hpp|h.in|txt|pro|usage|pod|py|m|mac|cmake.in|cmake|h|js))$' |
+      unix2dos -q -k &&
       find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
       zip -q ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip -@
   )

@@ -3,7 +3,7 @@
 # Configure GeographicLib
 #
 # Set
-#  GEOGRAPHICLIB_FOUND = TRUE
+#  Geographiclib_FOUND = GEOGRAPHICLIB_FOUND = TRUE
 #  GeographicLib_INCLUDE_DIRS = /usr/local/include
 #  GeographicLib_LIBRARIES = Geographic
 #  GeographicLib_LIBRARY_DIRS = /usr/local/lib
@@ -34,4 +34,5 @@ endif ()
 include ("${_DIR}/geographiclib-depends.cmake")
 set (GeographicLib_LIBRARIES Geographic)
 
-set (GEOGRAPHICLIB_FOUND TRUE)
+# Geographiclib_FOUND is set to 1 automatically
+set (GEOGRAPHICLIB_FOUND TRUE) # for backwards compatibility

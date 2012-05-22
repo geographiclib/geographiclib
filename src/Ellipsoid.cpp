@@ -92,20 +92,16 @@ namespace GeographicLib {
   { return atand(_au.tphif(tand(xi))); }
 
   Math::real Ellipsoid::ConformalLatitude(real phi) const throw()
-  { return _f ? atand(_tm.taupf(tand(phi))) : phi; }
+  { return atand(_tm.taupf(tand(phi))); }
 
   Math::real Ellipsoid::InverseConformalLatitude(real chi) const throw()
-  { return _f ? atand(_tm.tauf(tand(chi))) : chi; }
+  { return atand(_tm.tauf(tand(chi))); }
 
-  Math::real Ellipsoid::IsometricLatitude(real phi) const throw() {
-    real tphi = tand(phi);
-    return Math::asinh(_f ? _tm.taupf(tphi) : tphi) / Math::degree<real>();
-  }
+  Math::real Ellipsoid::IsometricLatitude(real phi) const throw()
+  { return Math::asinh(_tm.taupf(tand(phi))) / Math::degree<real>(); }
 
-  Math::real Ellipsoid::InverseIsometricLatitude(real psi) const throw() {
-    real shphi = sinh(psi * Math::degree<real>());
-    return atand(_f ? _tm.tauf(shphi) : shphi);
-  }
+  Math::real Ellipsoid::InverseIsometricLatitude(real psi) const throw()
+  { return atand(_tm.tauf(sinh(psi * Math::degree<real>()))); }
 
   Math::real Ellipsoid::CircleRadius(real phi) const throw() {
     return abs(phi) == 90 ? 0 :
