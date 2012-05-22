@@ -3287,8 +3287,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
       get-geographic... scripts.
     - TODO: consistent file permissions in source distrib
     - TODO: zip source distrib uses dos line endings
-      egrep  '\.(cpp|hpp|h.in|txt|pro|usage|html|pod|1|py|m|mac|cmake.in|cmake|h|js)$' + doxyfile.in + MANIFEST.in + NEWS + AUTHORS + INSTALL
     - Test windows builds with cmake --build.  Test windows shared lib build.
+    - Paths for doc, python, matlab shortened for Windows.
 
  - Version 1.21 (released 2012-04-25)
   - Support colon-separated DMS output:

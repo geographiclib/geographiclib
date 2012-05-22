@@ -323,7 +323,7 @@ if (MAINTAINER)
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
       touch man/*.usage man/*.1 man/*.1.html && touch doc/html/index.html &&
-      chmod -R g+w .
+      chmod -R g-w .
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ &&
       find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
