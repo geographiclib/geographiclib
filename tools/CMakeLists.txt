@@ -44,12 +44,10 @@ install (TARGETS ${TOOLS} EXPORT depends DESTINATION bin)
 # expected to be run with write access to /usr/local.
 if (NOT WIN32)
   foreach (SCRIPT ${SCRIPTS})
+    configure_file (${SCRIPT}.sh scripts/${SCRIPT} @ONLY)
     add_custom_command (OUTPUT ${SCRIPT}
-      COMMAND
-        sed -e "s%@DEFAULTDIR@%${GEOGRAPHICLIB_DATA}%"
-          ${CMAKE_CURRENT_SOURCE_DIR}/${SCRIPT}.sh >
-          ${SCRIPT}
-      COMMAND chmod +x ${SCRIPT}
+      COMMAND ${CMAKE_COMMAND} -E
+        copy scripts/${SCRIPT} ${SCRIPT} && chmod +x ${SCRIPT}
       DEPENDS ${SCRIPT}.sh)
     install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT} DESTINATION sbin)
   endforeach ()

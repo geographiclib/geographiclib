@@ -3283,12 +3283,15 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
       CMAKE_INSTALL_PREFIX;
     - use COMMON_PACKAGE_PATH to determine installation directories;
     - add config for build tree.
-    - TODO: use config mechanism instead of sed for
-      get-geographic... scripts.
-    - TODO: consistent file permissions in source distrib
-    - TODO: zip source distrib uses dos line endings
+    - use config mechanism instead of sed for get-geographiclib-xxx
+      scripts.
+    - tests work in debug mode for Windows
+    - consistent file permissions in source distrib
+    - zip source distrib uses dos line endings
     - Test windows builds with cmake --build.  Test windows shared lib build.
     - Paths for doc, python, matlab shortened for Windows.
+    - TODO: Doc to set GEOGRAPHICLIB_DATA is INSTALL_PATH is
+      non-standard (Linux)
 
  - Version 1.21 (released 2012-04-25)
   - Support colon-separated DMS output:

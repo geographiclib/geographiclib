@@ -137,13 +137,13 @@ sbin_SCRIPTS = geographiclib-get-geoids \
 
 geographiclib_data=$(datadir)/GeographicLib
 geographiclib-get-geoids: geographiclib-get-geoids.sh
-	sed -e "s%@DEFAULTDIR@%$(geographiclib_data)%" $< > $@
+	sed -e "s%@GEOGRAPHICLIB_DATA@%$(geographiclib_data)%" $< > $@
 	chmod +x $@
 geographiclib-get-gravity: geographiclib-get-gravity.sh
-	sed -e "s%@DEFAULTDIR@%$(geographiclib_data)%" $< > $@
+	sed -e "s%@GEOGRAPHICLIB_DATA@%$(geographiclib_data)%" $< > $@
 	chmod +x $@
 geographiclib-get-magnetic: geographiclib-get-magnetic.sh
-	sed -e "s%@DEFAULTDIR@%$(geographiclib_data)%" $< > $@
+	sed -e "s%@GEOGRAPHICLIB_DATA@%$(geographiclib_data)%" $< > $@
 	chmod +x $@
 
 CLEANFILES = $(sbin_SCRIPTS)

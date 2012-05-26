@@ -82,7 +82,7 @@ TransverseMercatorProj.o: TransverseMercatorProj.usage Config.h Constants.hpp \
 	TransverseMercatorExact.hpp Utility.hpp
 
 %: %.sh
-	sed -e "s%@DEFAULTDIR@%$(GEOGRAPHICLIB_DATA)%" $< > $@
+	sed -e "s%@GEOGRAPHICLIB_DATA@%$(GEOGRAPHICLIB_DATA)%" $< > $@
 	chmod +x $@
 
 INSTALL = install -b

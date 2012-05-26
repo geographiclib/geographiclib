@@ -10,7 +10,7 @@
 #
 # $Id$
 
-DEFAULTDIR="@DEFAULTDIR@"
+DEFAULTDIR="@GEOGRAPHICLIB_DATA@"
 usage() {
     cat <<EOF
 usage: $0 [-p parentdir] [-d] [-h] geoid...
