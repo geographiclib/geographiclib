@@ -228,6 +228,8 @@ if (NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
   # squelch the warning.
   set (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS ON)
 endif ()
+# To include debug versions of runtime support on Windows, do...
+# set (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
 include (InstallRequiredSystemLibraries)
 
 # The configuration of CPack is via variable that need to be set before

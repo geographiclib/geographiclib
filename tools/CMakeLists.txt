@@ -29,10 +29,19 @@ foreach (TOOL ${TOOLS})
 
 endforeach ()
 
-# Set the run time path for shared libraries for non-Windows machines.
-if (NOT WIN32)
-  set_target_properties (${TOOLS} PROPERTIES
-    INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
+if (GEOGRAPHIC_SHARED_LIB)
+  if (WIN32)
+    # Copy the shared library on Windows systems to this directory
+    # (tools) so that the tests can be run.
+    add_custom_command (TARGET tools POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E
+	copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
+      COMMENT "Copying shared library to tools directory")
+  else ()
+    # Set the run time path for shared libraries for non-Windows machines.
+    set_target_properties (${TOOLS} PROPERTIES
+      INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
+  endif ()
 endif ()
 
 # Specify where the tools are installed
@@ -52,15 +61,6 @@ if (NOT WIN32)
     install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT} DESTINATION sbin)
   endforeach ()
   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
-endif ()
-
-# Copy the shared library on Windows systems to this directory (tools) so
-# that the tests can be run.
-if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
-  add_custom_command (TARGET tools POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E
-      copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
-    COMMENT "Copying shared library to tools directory")
 endif ()
 
 # Turn on testing
