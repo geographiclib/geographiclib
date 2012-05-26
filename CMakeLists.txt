@@ -17,12 +17,13 @@ set (LIBVERSIONFULL 9.4.0)
 # User-settable variables
 
 # (1) COMMON_INSTALL_PATH governs the installation convention.  If it
-# is on ON (the Linux default), the installation to a common
+# is on ON (the Linux default), the installation is to a common
 # directory, e.g., /usr/local.  If it is OFF (the Windows default),
 # the installation directory contains the package name, e.g.,
-# c:/pkg/GeographicLib-1.22.  The installation directories for the
+# C:/pkg/GeographicLib-1.22.  The installation directories for the
 # documentation, cmake configuration, python and matlab interfaces all
-# depend on the variable with deeper paths being used when it's ON.
+# depend on the variable with deeper paths relative to
+# CMAKE_INSTALL_PREFIX being used when it's ON.
 
 if (WIN32)
   option (COMMON_INSTALL_PATH "Use a common installation path for packages" OFF)
@@ -46,11 +47,11 @@ endif ()
 # If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
 # INSTALL_PATH.
 #
-# Typically, only PACKAGE_PATH needs to be specified, eg.,
+# Typically, only PACKAGE_PATH needs to be specified, e.g.,
 # cmake -D PACKAGE_PATH=/opt .. (on Linux)
 #   => CMAKE_PREFIX_PATH=/opt   CMAKE_INSTALL_PREFIX=/opt
-# cmake -D PACKAGE_PATH=c:/pkg .. (on Windows)
-#   => CMAKE_PREFIX_PATH=c:/pkg CMAKE_INSTALL_PREFIX=c:/pkg/GeographicLib-1.22
+# cmake -D PACKAGE_PATH=C:/pkg .. (on Windows)
+#   => CMAKE_PREFIX_PATH=C:/pkg CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.22
 
 if (DEFINED PACKAGE_PATH)
   set (CMAKE_PREFIX_PATH ${PACKAGE_PATH} ${CMAKE_PREFIX_PATH})
@@ -102,7 +103,7 @@ if (WIN32)
     CACHE PATH "Location for data for GeographicLib")
 else ()
   set (GEOGRAPHICLIB_DATA
-    "${CMAKE_INSTALL_PREFIX}/share/GeographicLib"
+    "/usr/local/share/GeographicLib"
     CACHE PATH "Location for data for GeographicLib")
 endif ()
 
@@ -321,8 +322,9 @@ if (MAINTAINER)
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
       echo include Makefile.mk > Makefile &&
-      echo "\\#define" GEOGRAPHICLIB_VERSION_STRING
-      \\"${PACKAGE_VERSION}\\" > include/GeographicLib/Config.h
+      sed -e "s/Unconfigured/${PACKAGE_VERSION}/"
+      include/GeographicLib/Config.h > include/GeographicLib/Config.h.new &&
+      mv include/GeographicLib/Config.h.new include/GeographicLib/Config.h
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
       touch man/*.usage man/*.1 man/*.1.html && touch doc/html/index.html &&
