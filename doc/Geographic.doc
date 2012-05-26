@@ -13,7 +13,7 @@
 \author Charles Karney
 <charles@karney.com>
 \version 1.22
-\date 2012-mm-dd
+\date 2012-05-27
 
 \section abstract Abstract
 
@@ -351,7 +351,12 @@ Here are the steps to compile and install %GeographicLib:
   On IDE environments, run your IDE (e.g., Visual Studio), load
   GeographicLib.sln, pick the build type (e.g., Release), and select "Build
   Solution".  If this succeeds, select "RUN_TESTS" to build.  Finally,
-  select "INSTALL" to build.
+  select "INSTALL" to build.  Alternatively, you can get cmake to run
+  the Visual Studio compiler from the command line with \verbatim
+  cmake --build . --config Release --target ALL_BUILD
+  cmake --build . --config Release --target RUN_TESTS
+  cmake --build . --config Release --target INSTALL
+\endverbatim
 - The headers, library, and utilities are installed in the
   include/GeographicLib, lib, and bin directories under
   <code>CMAKE_INSTALL_PREFIX</code>.  (dll dynamic libraries are
@@ -620,8 +625,16 @@ Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\
   \verbatim
   cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/XYZProject ..
 \endverbatim
-  (If you used some other method of installing %GeographicLib, you can
-  try copying cmake/FindGeographicLib.cmake to somewhere in your
+  You can direct find_package to a specific version of %GeographicLib
+  by specifying the cmake variable <code>GeographicLib_DIR</code> to
+  point to the directory containing the configuration file
+  <code>geographiclib-config.cmake</code>; this should normally the
+  cmake directory in the installation tree, but can also be a build
+  directory for %GeographicLib.  On Windows systems, find_package will
+  only look for versions of %GeographicLib built with the right
+  version of the compiler.  (If you used a non-cmake method of
+  installing %GeographicLib, you can try copying
+  cmake/FindGeographicLib.cmake to somewhere in your
   <code>CMAKE_MODULE_PATH</code> in order for find_package to work.
   However, this method has not been thoroughly tested.)
 - For Windows, ensure that you build the library with the same version
@@ -3303,23 +3316,22 @@ Older versions are in
 <a href="http://sf.net/projects/geographiclib/files/distrib/archive/">
 http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
- - Version 1.22 (released 2012-mm-dd)
-  - Add GeographicLib::Geohash and GeographicLib::Ellipsoid.
-  - Fix bug in AlbersEqualArea of very prolate ellipsoids.
-  - cmake tweaks:
+ - Version 1.22 (released 2012-05-27)
+  - Add GeographicLib::Geohash and GeographicLib::Ellipsoid classes.
+  - Fix bug in GeographicLib::AlbersEqualArea for very prolate
+    ellipsoids (<i>b</i><sup>2</sup> > 2 <i>a</i><sup>2</sup>).
+  - cmake changes:
     - optionally use PACKAGE_PATH and INSTALL_PATH to determine
       CMAKE_INSTALL_PREFIX;
-    - use COMMON_PACKAGE_PATH to determine installation directories;
-    - add config for build tree.
-    - use config mechanism instead of sed for get-geographiclib-xxx
-      scripts.
-    - tests work in debug mode for Windows
-    - consistent file permissions in source distrib
-    - zip source distrib uses dos line endings
-    - Test windows builds with cmake --build.  Test windows shared lib build.
-    - Paths for doc, python, matlab shortened for Windows.
-    - TODO: Doc to set GEOGRAPHICLIB_DATA is INSTALL_PATH is
-      non-standard (Linux)
+    - use COMMON_INSTALL_PATH to determine layout of installation
+      directories;
+    - as a consequence, the installation paths for the documentation,
+      and python and matlab interfaces are shortened for Windows;
+    - zip source distribution now uses DOS line endings;
+    - the tests work in debug mode for Windows;
+    - default setting of GEOGRAPHICLIB_DATA does not depend on
+      CMAKE_INSTALL_PREFIX;
+    - add a cmake configuration for build tree.
 
  - Version 1.21 (released 2012-04-25)
   - Support colon-separated DMS output:
