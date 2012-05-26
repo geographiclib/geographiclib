@@ -36,7 +36,7 @@ if (NOT WIN32)
 endif ()
 
 # Specify where the tools are installed
-install (TARGETS ${TOOLS} DESTINATION bin)
+install (TARGETS ${TOOLS} EXPORT depends DESTINATION bin)
 
 # Create the scripts for downloading the data files on non-Windows
 # systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the
@@ -59,11 +59,10 @@ endif ()
 # Copy the shared library on Windows systems to this directory (tools) so
 # that the tests can be run.
 if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
-  get_target_property (GEOGRAPHIC_LIBRARY_FILE Geographic
-    "LOCATION_${CMAKE_CFG_INTDIR}")
   add_custom_command (TARGET tools POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E
-    copy ${GEOGRAPHIC_LIBRARY_FILE} ${CMAKE_CFG_INTDIR}/)
+      copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
+    COMMENT "Copying shared library to tools directory")
 endif ()
 
 # Turn on testing

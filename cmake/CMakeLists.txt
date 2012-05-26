@@ -13,7 +13,7 @@ configure_file (geographiclib-config.cmake.in
   "${PROJECT_BINARY_DIR}/geographiclib-config.cmake" @ONLY)
 configure_file (geographiclib-config-version.cmake.in
   "${PROJECT_BINARY_DIR}/geographiclib-config-version.cmake" @ONLY)
-export (TARGETS Geographic
+export (TARGETS Geographic ${TOOLS}
   FILE "${PROJECT_BINARY_DIR}/geographiclib-depends.cmake")
 
 # geographiclib-config.cmake for the install tree.  It's installed in

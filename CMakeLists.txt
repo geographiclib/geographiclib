@@ -7,7 +7,7 @@ project (GeographicLib)
 set (GeographicLib_VERSION_MAJOR 1)
 set (GeographicLib_VERSION_MINOR 22)
 set (GeographicLib_VERSION
-     "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
+  "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
@@ -16,10 +16,10 @@ set (LIBVERSIONFULL 9.4.0)
 
 # User-settable variables
 
-# (1) COMMON_INSTALL_PATH governs the installation convention.  If it is
-# on ON (the Linux default), the installation to a common directory,
-# e.g., /usr/local.  If it is OFF (the Windows default), the
-# installation directory contains the package name, e.g.,
+# (1) COMMON_INSTALL_PATH governs the installation convention.  If it
+# is on ON (the Linux default), the installation to a common
+# directory, e.g., /usr/local.  If it is OFF (the Windows default),
+# the installation directory contains the package name, e.g.,
 # c:/pkg/GeographicLib-1.22.  The installation directories for the
 # documentation, cmake configuration, python and matlab interfaces all
 # depend on the variable with deeper paths being used when it's ON.
@@ -30,8 +30,8 @@ else ()
   option (COMMON_INSTALL_PATH "Use a common installation path for packages" ON)
 endif ()
 
-# (2) PACKAGE_PATH and INSTALL_PATH govern the find_package search path
-# and the installation directory.  (find_package is not used by
+# (2) PACKAGE_PATH and INSTALL_PATH govern the find_package search
+# path and the installation directory.  (find_package is not used by
 # GeographicLib since it doesn't depend on other packages.  However
 # PACKAGE_PATH is used here for uniformity with other packages which
 # adopt the same conventions.)
@@ -57,9 +57,9 @@ if (DEFINED PACKAGE_PATH)
   message (STATUS "CMAKE_PREFIX_PATH set to ${CMAKE_PREFIX_PATH}")
 elseif (DEFINED CMAKE_PREFIX_PATH
     AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    # Backwards compatibility (support the mechanism advertised in
-    # versions 1.20 and 1.21).
-    list (GET CMAKE_PREFIX_PATH 0 PACKAGE_PATH)
+  # Backwards compatibility (support the mechanism advertised in
+  # versions 1.20 and 1.21).
+  list (GET CMAKE_PREFIX_PATH 0 PACKAGE_PATH)
 endif ()
 
 if (NOT DEFINED INSTALL_PATH AND DEFINED PACKAGE_PATH)
@@ -67,7 +67,7 @@ if (NOT DEFINED INSTALL_PATH AND DEFINED PACKAGE_PATH)
     set (INSTALL_PATH ${PACKAGE_PATH} CACHE PATH "Installation directory" FORCE)
   else ()
     set (INSTALL_PATH ${PACKAGE_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}
-    CACHE PATH "Installation directory" FORCE)
+      CACHE PATH "Installation directory" FORCE)
   endif ()
 endif ()
 if (DEFINED INSTALL_PATH)
@@ -84,8 +84,9 @@ else ()
 endif ()
 
 # (4) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
-option (MATLAB_COMPILER
-  "Compiler for matlab/octave interface: mex or mkoctfile or OFF" OFF)
+set (MATLAB_COMPILER OFF CACHE STRING
+  "Compiler for matlab/octave interface: mex or mkoctfile or OFF") 
+set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
 
 # (5) Where to look for data files.  Various classes look in the geoids,
 # gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
@@ -125,8 +126,8 @@ test_big_endian (WORDS_BIGENDIAN)
 
 # Create a Config.h to expose system information to the compiler
 configure_file (
-    include/GeographicLib/Config.h.in
-    include/GeographicLib/Config.h )
+  include/GeographicLib/Config.h.in
+  include/GeographicLib/Config.h )
 
 # The documentation depends on doxygen.  In addition, the man pages are
 # written as pod files and converted to nroff format, C++ code, and
