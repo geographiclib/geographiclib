@@ -22,9 +22,10 @@ dist-hook:
 	find $(distdir) \
 		\( -name .svn -o -name '.git*' -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.tmp' -o -name '*.pyc' -o -name '*.bak' -o -name '*.BAK' -o -name geographiclib.js \)| \
 		xargs rm -rf ; \
-	echo include Makefile.mk > $(distdir)/Makefile
-	echo '#define' GEOGRAPHICLIB_VERSION_STRING \
-	\"$(PACKAGE_VERSION)\" > $(distdir)/include/GeographicLib/Config.h
+	echo include Makefile.mk > $(distdir)/Makefile ; \
+	sed -e "s/Unconfigured/$(PACKAGE_VERSION)/" \
+		include/GeographicLib/Config.h > \
+		$(distdir)/include/GeographicLib/Config.h
 # Custom rules
 
 all-local: man doc
