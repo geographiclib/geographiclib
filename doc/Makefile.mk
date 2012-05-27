@@ -1,12 +1,37 @@
-# $Id: 0decae99c6f1f56173f01e0cfadc59032805d104 $
+# $Id: 19d74c208c296af2438256b0770d41b31edbb834 $
 
-MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
-	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
-	LocalCartesian Geodesic GeodesicLine PolygonArea \
-	AzimuthalEquidistant CassiniSoldner \
-	Geoid Gnomonic OSGB AlbersEqualArea
-PROGRAMS = GeoConvert TransverseMercatorProj CartConvert Geod GeodesicProj \
-	GeoidEval Gravity MagneticField Planimeter ConicProj
+MODULES = AlbersEqualArea \
+	AzimuthalEquidistant \
+	CassiniSoldner \
+	DMS \
+	Ellipsoid \
+	EllipticFunction \
+	GeoCoords \
+	Geocentric \
+	Geodesic \
+	GeodesicLine \
+	Geohash \
+	Geoid \
+	Gnomonic \
+	LocalCartesian \
+	MGRS \
+	OSGB \
+	PolarStereographic \
+	PolygonArea \
+	TransverseMercator \
+	TransverseMercatorExact \
+	UTMUPS
+
+PROGRAMS = CartConvert \
+	ConicProj \
+	GeoConvert \
+	Geod \
+	GeodesicProj \
+	GeoidEval \
+	Gravity \
+	MagneticField \
+	Planimeter \
+	TransverseMercatorProj
 
 HEADERS = $(patsubst %,../include/GeographicLib/%.hpp,Constants $(MODULES))
 SOURCES = $(patsubst %,../src/%.cpp,$(MODULES)) \
@@ -20,6 +45,8 @@ JSSCRIPTS = $(wildcard scripts/GeographicLib/*.js)
 MAXIMA = tm ellint tmseries geod
 MAXIMASOURCES = $(patsubst %,../maxima/%.mac,$(MAXIMA))
 
+VERSION:=$(shell grep '\bVERSION=' ../configure | cut -f2 -d\' | head -1)
+
 doc: html/index.html
 
 html/index.html: doxyfile.in Geographic.doc \
@@ -30,7 +57,7 @@ html/index.html: doxyfile.in Geographic.doc \
 	../LICENSE.txt html/
 	sed -e "s%@PROJECT_SOURCE_DIR@%..%g" \
 	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
-	$(srcdir)/doxyfile.in | doxygen -
+	doxyfile.in | doxygen -
 
 PREFIX = /usr/local
 DEST = $(PREFIX)/share/doc/GeographicLib

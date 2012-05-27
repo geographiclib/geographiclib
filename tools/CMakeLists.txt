@@ -1,4 +1,4 @@
-# $Id: 6e59195303d0fbf5e3d86159e0c2808bc1014fec $
+# $Id: ab4ee4d8d3396dcbd4b1a69afefba14bffddecfb $
 
 # Build the tools...
 
@@ -29,14 +29,23 @@ foreach (TOOL ${TOOLS})
 
 endforeach ()
 
-# Set the run time path for shared libraries for non-Windows machines.
-if (NOT WIN32)
-  set_target_properties (${TOOLS} PROPERTIES
-    INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
+if (GEOGRAPHIC_SHARED_LIB)
+  if (WIN32)
+    # Copy the shared library on Windows systems to this directory
+    # (tools) so that the tests can be run.
+    add_custom_command (TARGET tools POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E
+	copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
+      COMMENT "Copying shared library to tools directory")
+  else ()
+    # Set the run time path for shared libraries for non-Windows machines.
+    set_target_properties (${TOOLS} PROPERTIES
+      INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
+  endif ()
 endif ()
 
 # Specify where the tools are installed
-install (TARGETS ${TOOLS} DESTINATION bin)
+install (TARGETS ${TOOLS} EXPORT depends DESTINATION bin)
 
 # Create the scripts for downloading the data files on non-Windows
 # systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the
@@ -44,26 +53,14 @@ install (TARGETS ${TOOLS} DESTINATION bin)
 # expected to be run with write access to /usr/local.
 if (NOT WIN32)
   foreach (SCRIPT ${SCRIPTS})
+    configure_file (${SCRIPT}.sh scripts/${SCRIPT} @ONLY)
     add_custom_command (OUTPUT ${SCRIPT}
-      COMMAND
-        sed -e "s%@DEFAULTDIR@%${GEOGRAPHICLIB_DATA}%"
-          ${CMAKE_CURRENT_SOURCE_DIR}/${SCRIPT}.sh >
-          ${SCRIPT}
-      COMMAND chmod +x ${SCRIPT}
+      COMMAND ${CMAKE_COMMAND} -E
+        copy scripts/${SCRIPT} ${SCRIPT} && chmod +x ${SCRIPT}
       DEPENDS ${SCRIPT}.sh)
     install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT} DESTINATION sbin)
   endforeach ()
   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
-endif ()
-
-# Copy the shared library on Windows systems to this directory (tools) so
-# that the tests can be run.
-if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
-  get_target_property (GEOGRAPHIC_LIBRARY_FILE Geographic
-    "LOCATION_${CMAKE_CFG_INTDIR}")
-  add_custom_command (TARGET tools POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E
-    copy ${GEOGRAPHIC_LIBRARY_FILE} ${CMAKE_CFG_INTDIR}/)
 endif ()
 
 # Turn on testing
@@ -182,6 +179,11 @@ add_test (ConicProj0
 set_tests_properties (ConicProj0
   PROPERTIES PASS_REGULAR_EXPRESSION
   "39\\.95[0-9]+ -75\\.17[0-9]+ 1\\.67[0-9]+ 0\\.99[0-9]+")
+# Check fix for AlbersEqualArea prolate bug found 2012-05-15
+add_test (ConicProj1
+  ConicProj -a 0 0 -e 6.4e6 -0.5 -r --input-string "0 8605508")
+set_tests_properties (ConicProj1
+  PROPERTIES PASS_REGULAR_EXPRESSION "^85\\.00")
 
 add_test (CartConvert0
   CartConvert -e 6.4e6 1/100 -r --input-string "10e3 0 1e3")

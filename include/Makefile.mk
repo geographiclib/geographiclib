@@ -1,15 +1,17 @@
-# $Id: 197ef293b5d7f1c3e139caf577ba5d9798721826 $
+# $Id: b48c136822b1ccb463885823dfa7bfe87c2c2e2f $
 
 MODULES = AlbersEqualArea \
 	AzimuthalEquidistant \
 	CassiniSoldner \
 	CircularEngine \
 	DMS \
+	Ellipsoid \
 	EllipticFunction \
 	GeoCoords \
 	Geocentric \
 	Geodesic \
 	GeodesicLine \
+	Geohash \
 	Geoid \
 	Gnomonic \
 	GravityCircle \

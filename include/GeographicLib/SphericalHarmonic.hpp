@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_SPHERICALHARMONIC_HPP)
 #define GEOGRAPHICLIB_SPHERICALHARMONIC_HPP \
-  "$Id: 6fa804c46efd01670cfb7835dd022791b60d2942 $"
+  "$Id: ef47b5e3bd16594a8a82242fa7cac8dcbf5d7dee $"
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
@@ -20,7 +20,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Spherical Harmonic series
+   * \brief Spherical harmonic series
    *
    * This class evaluates the spherical harmonic sum \verbatim
  V(x, y, z) = sum(n = 0..N)[ q^(n+1) * sum(m = 0..n)[

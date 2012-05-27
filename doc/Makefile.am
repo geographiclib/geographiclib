@@ -1,4 +1,4 @@
-#  $Id: a22d824c2a60646aff275d080be5c805c2c924eb $
+#  $Id: 957d9d4fda2ed8b889b13d07778af32b2741c4a2 $
 
 EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html
 
@@ -22,11 +22,13 @@ $(top_srcdir)/include/GeographicLib/AzimuthalEquidistant.hpp \
 $(top_srcdir)/include/GeographicLib/CassiniSoldner.hpp \
 $(top_srcdir)/include/GeographicLib/Constants.hpp \
 $(top_srcdir)/include/GeographicLib/DMS.hpp \
+$(top_srcdir)/include/GeographicLib/Ellipsoid.hpp \
 $(top_srcdir)/include/GeographicLib/EllipticFunction.hpp \
 $(top_srcdir)/include/GeographicLib/Geocentric.hpp \
 $(top_srcdir)/include/GeographicLib/GeoCoords.hpp \
 $(top_srcdir)/include/GeographicLib/Geodesic.hpp \
 $(top_srcdir)/include/GeographicLib/GeodesicLine.hpp \
+$(top_srcdir)/include/GeographicLib/Geohash.hpp \
 $(top_srcdir)/include/GeographicLib/Geoid.hpp \
 $(top_srcdir)/include/GeographicLib/Gnomonic.hpp \
 $(top_srcdir)/include/GeographicLib/LambertConformalConic.hpp \
@@ -45,11 +47,13 @@ $(top_srcdir)/src/AlbersEqualArea.cpp \
 $(top_srcdir)/src/AzimuthalEquidistant.cpp \
 $(top_srcdir)/src/CassiniSoldner.cpp \
 $(top_srcdir)/src/DMS.cpp \
+$(top_srcdir)/src/Ellipsoid.cpp \
 $(top_srcdir)/src/EllipticFunction.cpp \
 $(top_srcdir)/src/Geocentric.cpp \
 $(top_srcdir)/src/GeoCoords.cpp \
 $(top_srcdir)/src/Geodesic.cpp \
 $(top_srcdir)/src/GeodesicLine.cpp \
+$(top_srcdir)/src/Geohash.cpp \
 $(top_srcdir)/src/Geoid.cpp \
 $(top_srcdir)/src/Gnomonic.cpp \
 $(top_srcdir)/src/LambertConformalConic.cpp \

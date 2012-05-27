@@ -281,6 +281,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Ellipsoid.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\EllipticFunction.cpp"
 				>
 			</File>
@@ -298,6 +302,10 @@
 			</File>
 			<File
 				RelativePath="..\src\GeodesicLine.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Geohash.cpp"
 				>
 			</File>
 			<File
@@ -407,6 +415,10 @@
 				>
 			</File>
 			<File
+				RelativePath="../include/GeographicLib/Ellipsoid.hpp"
+				>
+			</File>
+			<File
 				RelativePath="../include/GeographicLib/EllipticFunction.hpp"
 				>
 			</File>
@@ -424,6 +436,10 @@
 			</File>
 			<File
 				RelativePath="../include/GeographicLib/GeodesicLine.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/Geohash.hpp"
 				>
 			</File>
 			<File

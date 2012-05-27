@@ -15,7 +15,7 @@
 #include <GeographicLib/DMS.hpp>
 
 #define GEOGRAPHICLIB_GEOCOORDS_CPP \
-  "$Id: 084d4ec9163dc9d8989b54b12a04bf0f44a8c23f $"
+  "$Id: aa7a547c7e89e306cb892e263b3c027fbe40cb6c $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_HPP)
@@ -86,7 +86,7 @@ namespace GeographicLib {
   }
 
   string GeoCoords::DMSRepresentation(int prec, bool swaplatlong,
-				      char dmssep) const {
+                                      char dmssep) const {
     prec = max(0, min(10, prec) + 5);
     return DMS::Encode(swaplatlong ? _long : _lat, unsigned(prec),
                        swaplatlong ? DMS::LONGITUDE : DMS::LATITUDE, dmssep) +

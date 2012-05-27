@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: c212f6390b52c0be8aaa7ceba4ccabefe63fb1fd $
+# $Id: 97f39fb9c258055657ec31c29bee74c05fd27b15 $
 
 AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 INCLUDES = -I$(top_builddir)/include -I$(top_srcdir)/include \
@@ -137,13 +137,13 @@ sbin_SCRIPTS = geographiclib-get-geoids \
 
 geographiclib_data=$(datadir)/GeographicLib
 geographiclib-get-geoids: geographiclib-get-geoids.sh
-	sed -e "s%@DEFAULTDIR@%$(geographiclib_data)%" $< > $@
+	sed -e "s%@GEOGRAPHICLIB_DATA@%$(geographiclib_data)%" $< > $@
 	chmod +x $@
 geographiclib-get-gravity: geographiclib-get-gravity.sh
-	sed -e "s%@DEFAULTDIR@%$(geographiclib_data)%" $< > $@
+	sed -e "s%@GEOGRAPHICLIB_DATA@%$(geographiclib_data)%" $< > $@
 	chmod +x $@
 geographiclib-get-magnetic: geographiclib-get-magnetic.sh
-	sed -e "s%@DEFAULTDIR@%$(geographiclib_data)%" $< > $@
+	sed -e "s%@GEOGRAPHICLIB_DATA@%$(geographiclib_data)%" $< > $@
 	chmod +x $@
 
 CLEANFILES = $(sbin_SCRIPTS)

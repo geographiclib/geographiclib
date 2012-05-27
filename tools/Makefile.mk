@@ -1,4 +1,4 @@
-# $Id: f2db3b0aaaea655853962095ae51f7c160a211ec $
+# $Id: 93361bd06b7de26c27aea78a7f98324041756145 $
 
 PROGRAMS = GeoConvert \
 	TransverseMercatorProj \
@@ -82,7 +82,7 @@ TransverseMercatorProj.o: TransverseMercatorProj.usage Config.h Constants.hpp \
 	TransverseMercatorExact.hpp Utility.hpp
 
 %: %.sh
-	sed -e "s%@DEFAULTDIR@%$(GEOGRAPHICLIB_DATA)%" $< > $@
+	sed -e "s%@GEOGRAPHICLIB_DATA@%$(GEOGRAPHICLIB_DATA)%" $< > $@
 	chmod +x $@
 
 INSTALL = install -b

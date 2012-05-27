@@ -1,5 +1,5 @@
 // Example of using the GeographicLib::Constants class
-// $Id: c32f14d43abd9e969043dd0506b00c2458763419 $
+// $Id: 4142ea6f2f1c229e00eaf5872865a862698d5a38 $
 
 #include <iostream>
 #include <exception>
@@ -10,7 +10,9 @@ using namespace GeographicLib;
 
 int main() {
   try {
-    cout << Constants::WGS84_a() << " 1/" << 1/Constants::WGS84_f() << "\n";
+    cout << "WGS84 parameters:\n"
+         << "a = " << Constants::WGS84_a() << " m\n"
+         << "f = 1/" << 1/Constants::WGS84_f() << "\n";
   }
   catch (const exception& e) {
     cerr << "Caught exception: " << e.what() << "\n";

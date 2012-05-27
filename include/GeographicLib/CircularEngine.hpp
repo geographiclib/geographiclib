@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_CIRCULARENGINE_HPP)
 #define GEOGRAPHICLIB_CIRCULARENGINE_HPP \
-  "$Id: d0528f468369dbc1b7af11e02278ad7a361d398b $"
+  "$Id: 1e012847f5ecd4d38f3cfdae7ef3badebb433da5 $"
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
@@ -24,7 +24,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Spherical Harmonic sums for a circle.
+   * \brief Spherical harmonic sums for a circle
    *
    * The class is a companion to SphericalEngine.  If the results of a
    * spherical harmonic sum are needed for several points on a circle of

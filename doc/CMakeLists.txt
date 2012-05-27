@@ -1,4 +1,4 @@
-# $Id: a9ac6876ce9b9276e0b6add11f6d77a9c8f7c75b $
+# $Id: d3d644518773ed0acdcf130af4a535071b5101a9 $
 
 # Where the html versions of the man pages (extension .1.html) are
 # found.
@@ -14,12 +14,18 @@ foreach (TOOL ${TOOLS})
   set (HTMLMAN ${HTMLMAN} ${MANDIR}/${TOOL}.1.html)
 endforeach ()
 
+if (COMMON_INSTALL_PATH)
+  set (INSTALL_DOC_DIR "share/doc/GeographicLib")
+else ()
+  set (INSTALL_DOC_DIR "doc")
+endif ()
+
 # Run doxygen, if available
 
 # First assemble a list of all the files the documentation uses.  Add a
 # dependency on htmlman (from man/CMakeLists.txt).  Use doxygen.log as
 # the make target.  To make this target, copy the non-doxygen generated
-# files into html/.  Run doxfile.in cmake's config process so that
+# files into html/.  Run doxfile.in thru cmake's config process so that
 # absolute path names are used and so that the pathnames are properly
 # stripped by doxygen (via STRIP_FROM_PATH). The distrib-doc target
 # copies the html directory into the source tree.
@@ -28,9 +34,7 @@ endforeach ()
 # tree) is done.
 
 if (DOXYGEN_FOUND)
-  configure_file (
-      "${CMAKE_CURRENT_SOURCE_DIR}/doxyfile.in"
-      "${CMAKE_CURRENT_BINARY_DIR}/doxyfile" )
+  configure_file (doxyfile.in doxyfile)
   file (GLOB SOURCES
     ../src/*.cpp ../include/GeographicLib/*.hpp
     ../tools/*.cpp ../examples/*.cpp)
@@ -48,7 +52,7 @@ if (DOXYGEN_FOUND)
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile > doxygen.log
     COMMENT "Generating html documentation tree")
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
-    DESTINATION share/doc/GeographicLib)
+    DESTINATION ${INSTALL_DOC_DIR})
 
   add_custom_target (distrib-doc)
   add_dependencies (distrib-doc doc)
@@ -58,12 +62,12 @@ if (DOXYGEN_FOUND)
     COMMENT "Installing html documentation tree in source tree")
 
 else ()
-  install (DIRECTORY html DESTINATION share/doc/GeographicLib)
+  install (DIRECTORY html DESTINATION ${INSTALL_DOC_DIR})
 endif ()
 
 # Finally install the Javascript files
 file (GLOB SCRIPTDRIVERS scripts/*.html)
 file (GLOB JSSCRIPTS scripts/GeographicLib/*.js)
-install (FILES ${SCRIPTDRIVERS} DESTINATION share/doc/GeographicLib/scripts)
+install (FILES ${SCRIPTDRIVERS} DESTINATION ${INSTALL_DOC_DIR}/scripts)
 install (FILES ${JSSCRIPTS}
-  DESTINATION share/doc/GeographicLib/scripts/GeographicLib)
+  DESTINATION ${INSTALL_DOC_DIR}/scripts/GeographicLib)

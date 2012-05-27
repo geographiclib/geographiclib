@@ -6,9 +6,9 @@
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 #
-# $Id: c51df2bd26c5734d35de1fc47d60c433680c6721 $
+# $Id: e44eaef97dbddc78e8af359aeae1ca6fc864f7a4 $
 
-DEFAULTDIR="@DEFAULTDIR@"
+DEFAULTDIR="@GEOGRAPHICLIB_DATA@"
 usage() {
     cat <<EOF
 usage: $0 [-p parentdir] [-d] [-h] gravitymodel...

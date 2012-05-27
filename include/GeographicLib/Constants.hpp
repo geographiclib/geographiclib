@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
 #define GEOGRAPHICLIB_CONSTANTS_HPP \
-  "$Id: 895e4bd91979aae347436bbf6be37964f05f5b6f $"
+  "$Id: 9d779f7a1f6939407128e2dcb925b1dc96f74f69 $"
 
 #include <GeographicLib/Config.h>
 
@@ -38,7 +38,7 @@
 #  define RCSID_DECL(x) namespace { char VAR_ ## x [] = x; }
 #endif
 
-#if defined(_WIN32) && defined(GEOGRAPHIC_SHARED_LIB)
+#if defined(_WIN32) && defined(GEOGRAPHIC_SHARED_LIB) && GEOGRAPHIC_SHARED_LIB
 #  if defined(Geographic_EXPORTS)
 #    define GEOGRAPHIC_EXPORT __declspec(dllexport)
 #  else
@@ -55,7 +55,7 @@
  * \brief Namespace for %GeographicLib
  *
  * All of %GeographicLib is defined within the GeographicLib namespace.  In
- * addition all the header files are included via %GeographicLib/filename.
+ * addition all the header files are included via %GeographicLib/Class.hpp.
  * This minimizes the likelihood of conflicts with other packages.
  **********************************************************************/
 namespace GeographicLib {

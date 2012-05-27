@@ -9,14 +9,14 @@
 
 #if !defined(GEOGRAPHICLIB_ACCUMULATOR_HPP)
 #define GEOGRAPHICLIB_ACCUMULATOR_HPP \
-  "$Id: 03b7f4fdb9974c822f98d5f5aab1094b5a9ac8f2 $"
+  "$Id: 7a95b0ebcc20534577ea6fcbd3d145e498dd5049 $"
 
 #include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
 
   /**
-   * \brief An accumulator for sums.
+   * \brief An accumulator for sums
    *
    * This allow many numbers of floating point type \e T to be added together
    * with twice the normal precision.  Thus if \e T is double, the effective

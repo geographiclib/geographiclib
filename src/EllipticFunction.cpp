@@ -10,7 +10,7 @@
 #include <GeographicLib/EllipticFunction.hpp>
 
 #define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP \
-  "$Id: 00b30b3d051fce1da7eb0c7e74c1c03854de6ea3 $"
+  "$Id: c72135af9b63ef3e8048cf1d0fbdd19b91af14a0 $"
 
 RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP)
 RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
@@ -202,9 +202,8 @@ namespace GeographicLib {
       ei = abs(sn) * (RF(cn2, dn2, real(1)) -
                       (_m / 3) * sn2 * RD(cn2, dn2, real(1)));
     // Enforce usual trig-like symmetries
-    if (cn < 0) {
+    if (cn < 0)
       ei = 2 * E() - ei;
-    }
     if (sn < 0)
       ei = -ei;
     return ei;
@@ -213,6 +212,17 @@ namespace GeographicLib {
   Math::real EllipticFunction::E(real phi) const throw() {
     real sn = sin(phi);
     return E(sn, cos(phi), sqrt(1 - _m * sn * sn));
+  }
+
+  Math::real EllipticFunction::Ed(real ang) const throw() {
+    real
+      phi = ang * Math::degree<real>(),
+      sn = sin(phi),
+      sn2 = Math::sq(sn),
+      cn2 = abs(ang) == 90 ? 0 : Math::sq(cos(phi)),
+      dn2 = 1 - _m * sn2;
+    return sn * (RF(cn2, dn2, real(1)) -
+                 (_m / 3) * sn2 * RD(cn2, dn2, real(1)));
   }
 
 } // namespace GeographicLib

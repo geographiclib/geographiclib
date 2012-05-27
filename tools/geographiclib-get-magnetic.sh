@@ -6,9 +6,9 @@
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 #
-# $Id: bd05b3437908f70fbcc21d1a91e1fec586276a7b $
+# $Id: 93583fcbaeae29c5331b2652464017b5a7912d73 $
 
-DEFAULTDIR="@DEFAULTDIR@"
+DEFAULTDIR="@GEOGRAPHICLIB_DATA@"
 usage() {
     cat <<EOF
 usage: $0 [-p parentdir] [-d] [-h] magneticmodel...

@@ -1,4 +1,4 @@
-# $Id: 1001171ae9372d1bfc31646763709bc4e4f279e1 $
+# $Id: f59158cf616ee3a1faca03d972c53034be3784d1 $
 
 A library for geographic projections.
 
@@ -46,6 +46,8 @@ Files
       AlbersEqualArea.[ch]pp -- Albers equal area projection
       Gnomonic.[ch]pp -- Ellipsoidal gnomonic projection
       OSGB.[ch]pp -- Ordnance Survey grid system
+      Geohash.[ch]pp -- conversions for geohashes
+      Ellipsoid.[ch]pp -- ellipsoid properties
 
     examples/
       example-*.cpp -- simple usage examples for all the classes

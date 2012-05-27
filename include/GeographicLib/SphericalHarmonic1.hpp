@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_SPHERICALHARMONIC1_HPP)
 #define GEOGRAPHICLIB_SPHERICALHARMONIC1_HPP \
-  "$Id: 9dd895ded08db0f7fdd82159399da511f40a17e1 $"
+  "$Id: 7164de400276831319d8b0a3792042b1529ecabd $"
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
@@ -19,7 +19,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Spherical Harmonic series with a correction to the coefficients.
+   * \brief Spherical harmonic series with a correction to the coefficients
    *
    * This classes is similar to SphericalHarmonic, except that the coefficients
    * \e C<sub>\e nm</sub> are replaced by \e C<sub>\e nm</sub> + \e tau

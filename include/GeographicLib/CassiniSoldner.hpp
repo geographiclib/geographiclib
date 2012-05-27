@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
 #define GEOGRAPHICLIB_CASSINISOLDNER_HPP \
-  "$Id: d794ea8a1e64fd9cbb8dcee34755b6dc4fee623a $"
+  "$Id: 0faa2e3045fa02878e47c4c76da781062a0bdf54 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
@@ -18,7 +18,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Cassini-Soldner Projection.
+   * \brief Cassini-Soldner projection
    *
    * Cassini-Soldner projection centered at an arbitrary position, \e lat0, \e
    * lon0, on the ellipsoid.  This projection is a transverse cylindrical

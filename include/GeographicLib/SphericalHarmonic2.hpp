@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_SPHERICALHARMONIC2_HPP)
 #define GEOGRAPHICLIB_SPHERICALHARMONIC2_HPP \
-  "$Id: ce4cda614c1966dea65610bc73bc4db562677fa8 $"
+  "$Id: 6dbe2934b6bc0ae3d9d457030210a41fb461984b $"
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
@@ -19,7 +19,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Spherical Harmonic series with two corrections to the coefficients.
+   * \brief Spherical harmonic series with two corrections to the coefficients
    *
    * This classes is similar to SphericalHarmonic, except that the coefficients
    * \e C<sub>\e nm</sub> are replaced by \e C<sub>\e nm</sub> + \e tau'
@@ -30,7 +30,9 @@ namespace GeographicLib {
    * \include example-SphericalHarmonic2.cpp
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT SphericalHarmonic2 {
+  // Don't include the GEOGRPAHIC_EXPORT because this header-only class isn't
+  // used by any other classes in the library.
+  class /*GEOGRAPHIC_EXPORT*/ SphericalHarmonic2 {
   public:
     /**
      * Supported normalizations for associate Legendre polynomials.

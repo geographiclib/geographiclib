@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_POLYGONAREA_HPP)
 #define GEOGRAPHICLIB_POLYGONAREA_HPP \
-  "$Id: 7a339f312a9c977b9fccad3c0c8bfa9009d863e2 $"
+  "$Id: 04dc2b7450ed688972073405ebe13d5ac5da5d89 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -18,7 +18,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Polygon Areas.
+   * \brief Polygon areas
    *
    * This computes the area of a geodesic polygon using the method given
    * Section 15 of

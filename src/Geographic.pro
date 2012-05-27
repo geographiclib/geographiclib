@@ -1,4 +1,4 @@
-# $Id: fb1395afc191fe67ced4b6e7227b5afaa2559a1c $
+# $Id: cc4b79d1e8302fe04b479356f942d0d37f28a0d2 $
 
 VERSION = 9.2.4
 
@@ -12,11 +12,13 @@ SOURCES += AzimuthalEquidistant.cpp
 SOURCES += CassiniSoldner.cpp
 SOURCES += CircularEngine.cpp
 SOURCES += DMS.cpp
+SOURCES += Ellipsoid.cpp
 SOURCES += EllipticFunction.cpp
 SOURCES += GeoCoords.cpp
 SOURCES += Geocentric.cpp
 SOURCES += Geodesic.cpp
 SOURCES += GeodesicLine.cpp
+SOURCES += Geohash.cpp
 SOURCES += Geoid.cpp
 SOURCES += Gnomonic.cpp
 SOURCES += GravityCircle.cpp
@@ -43,11 +45,13 @@ HEADERS += $$INCLUDEDIR/CassiniSoldner.hpp
 HEADERS += $$INCLUDEDIR/CircularEngine.hpp
 HEADERS += $$INCLUDEDIR/Constants.hpp
 HEADERS += $$INCLUDEDIR/DMS.hpp
+HEADERS += $$INCLUDEDIR/Ellipsoid.hpp
 HEADERS += $$INCLUDEDIR/EllipticFunction.hpp
 HEADERS += $$INCLUDEDIR/GeoCoords.hpp
 HEADERS += $$INCLUDEDIR/Geocentric.hpp
 HEADERS += $$INCLUDEDIR/Geodesic.hpp
 HEADERS += $$INCLUDEDIR/GeodesicLine.hpp
+HEADERS += $$INCLUDEDIR/Geohash.hpp
 HEADERS += $$INCLUDEDIR/Geoid.hpp
 HEADERS += $$INCLUDEDIR/Gnomonic.hpp
 HEADERS += $$INCLUDEDIR/GravityCircle.hpp

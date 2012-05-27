@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_UTMUPS_HPP)
 #define GEOGRAPHICLIB_UTMUPS_HPP \
-  "$Id: a529ed8aeaeffb02994254bbc7eb1209aa41b9ca $"
+  "$Id: ae9e09602676178c7d9a7e3fdb1c6018b3d87bc9 $"
 
 #include <sstream>
 #include <GeographicLib/Constants.hpp>
@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Convert between Geographic coordinates and UTM/UPS
+   * \brief Convert between geographic coordinates and UTM/UPS
    *
    * UTM and UPS are defined
    * - J. W. Hager, J. F. Behensky, and B. W. Drew,

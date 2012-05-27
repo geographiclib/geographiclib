@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
 #define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP \
-  "$Id: 30ac447643e48afcaf5ab4671fbf2b235008dabe $"
+  "$Id: fdcfd14ffa66adbc9ac813b93b62e302eada1d7c $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -87,6 +87,8 @@ namespace GeographicLib {
 
     /**
      * @return the complete integral of second kind, \e E(\e m).
+     *
+     * This function returns the correct result even when \e m is negative.
      **********************************************************************/
     Math::real E() const throw() { _init || Init(); return _ec; }
 
@@ -113,6 +115,17 @@ namespace GeographicLib {
      * @return int sqrt(1 -  \e m sin<sup>2</sup>(\e phi)) \e dphi.
      **********************************************************************/
     Math::real E(real phi) const throw();
+
+    /**
+     * The incomplete integral of the second kind.
+     *
+     * @param[in] ang in <i>degrees</i>.
+     * @return int sqrt(1 -  \e m sin<sup>2</sup>(\e phi)) \e dphi.
+     *
+     * \e ang must lie in [-90, 90].  This function returns the correct result
+     * even when \e m is negative.
+     **********************************************************************/
+    Math::real Ed(real ang) const throw();
 
     /**
      * The incomplete integral of the second kind in terms of Jacobi elliptic

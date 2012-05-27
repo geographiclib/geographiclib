@@ -9,14 +9,14 @@
 
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
 #define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP \
-  "$Id: 07add8492c46e42012007a8738060abc902a5504 $"
+  "$Id: a8bf5e616f8e1b6b95de40c60ac70d34360c843b $"
 
 #include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
 
   /**
-   * \brief Polar Stereographic Projection
+   * \brief Polar stereographic projection
    *
    * Implementation taken from the report,
    * - J. P. Snyder,

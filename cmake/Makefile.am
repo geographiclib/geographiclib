@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: f340bddbdd117ebc666bf508bc582ac92690bf57 $
+# $Id: a97bc3a884bcf3bcd1223fa635d2b7d27dfade54 $
 
 cmakedir=$(datadir)/cmake/GeographicLib
 
@@ -11,5 +11,5 @@ install:
 	$(INSTALL) -m 644 $(srcdir)/FindGeographicLib.cmake \
 		$(DESTDIR)$(cmakedir)
 
-EXTRA_DIST = Makefile.mk FindGeographicLib.cmake \
+EXTRA_DIST = Makefile.mk CMakeLists.txt FindGeographicLib.cmake \
 	geographiclib-config-version.cmake.in geographiclib-config.cmake.in

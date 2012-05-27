@@ -1,4 +1,4 @@
-# $Id: 6d0f3921b8c739428669640b67932b7bf9f925d0 $
+# $Id: 3283462880fcacc2d74481ec43db7eda0885c1c7 $
 PROGRAMS = CartConvert \
 	ConicProj \
 	GeoConvert \
@@ -20,7 +20,6 @@ PREFIX = /usr/local
 DEST = $(PREFIX)/share/man/man1
 
 VERSION:=$(shell grep '\bVERSION=' ../configure | cut -f2 -d\' | head -1)
-
 
 %.1: %.pod
 	pod2man --center="GeographicLib Utilities" \

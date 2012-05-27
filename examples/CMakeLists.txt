@@ -1,4 +1,4 @@
-# $Id: 54590373678f8a602e370bb7a54265163f5b9d73 $
+# $Id: 5b20ba2ecadd8c3462154c98889195ebe3fbea38 $
 
 # Compile (but don't install) a bunch of tiny example programs.  These
 # are mainly for including as examples within the doxygen documentation;
@@ -24,15 +24,13 @@ endforeach ()
 
 find_package (OpenMP)
 
-if (OPENMP_FOUND OR OpenMP_FOUND)
+if (OPENMP_FOUND)
   set_target_properties (GeoidToGTX PROPERTIES
-    COMPILE_FLAGS ${OpenMP_CXX_FLAGS}
-    COMPILE_DEFINITIONS HAVE_OPENMP=1)
+    COMPILE_FLAGS ${OpenMP_CXX_FLAGS} COMPILE_DEFINITIONS HAVE_OPENMP=1)
   if (NOT WIN32)
-    set_target_properties (GeoidToGTX PROPERTIES
-      LINK_FLAGS ${OpenMP_CXX_FLAGS})
-  endif (NOT WIN32)
-endif (OPENMP_FOUND OR OpenMP_FOUND)
+    set_target_properties (GeoidToGTX PROPERTIES LINK_FLAGS ${OpenMP_CXX_FLAGS})
+  endif ()
+endif ()
 
 add_custom_target (examples DEPENDS ${EXAMPLES})
 add_dependencies (examples Geographic)

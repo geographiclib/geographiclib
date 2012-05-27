@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
 #define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP \
-  "$Id: 9aef04f77098543818681966f13ef97ea47dedb4 $"
+  "$Id: 6b365254690f981dea955760b03204d7d8e00582 $"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>
@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Lambert Conformal Conic Projection
+   * \brief Lambert conformal conic projection
    *
    * Implementation taken from the report,
    * - J. P. Snyder,

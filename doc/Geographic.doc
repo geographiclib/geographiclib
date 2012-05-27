@@ -7,13 +7,13 @@
  * MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
-// $Id: 39fe7aa302faa3170132f94a3e800b401ce18c89 $
+// $Id: 3ec5f949ebf111dfb8e6410a30e8bb02b9d7e466 $
 /**
 \mainpage Geographic library
 \author Charles Karney
 <charles@karney.com>
-\version 1.21
-\date 2012-04-25
+\version 1.22
+\date 2012-05-27
 
 \section abstract Abstract
 
@@ -45,22 +45,23 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.21.tar.gz/download">
-  GeographicLib-1.21.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.21.zip/download">
-  GeographicLib-1.21.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.22.tar.gz/download">
+  GeographicLib-1.22.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.22.zip/download">
+  GeographicLib-1.22.zip</a>
 .
-as either a compressed tar file (tar.gz) or a zip file.  (The two archives
-have identical contents.)  Alternatively you can get the latest stable release
+as either a compressed tar file (tar.gz) or a zip file.  (The two
+archives have identical contents, except that the zip file has DOS
+line endings.)  Alternatively you can get the latest stable release
 using git \verbatim
   git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib-release geographiclib
   cd geographiclib; git checkout stable
 \endverbatim
 There are also a binary installers for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.21-win32.exe/download">
-  GeographicLib-1.21-win32.exe</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.21-win64.exe/download">
-  GeographicLib-1.21-win64.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.22-win32.exe/download">
+  GeographicLib-1.22-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.22-win64.exe/download">
+  GeographicLib-1.22-win64.exe</a>
 .
 It is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -161,14 +162,14 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.21.tar.gz/download">
-GeographicLib-1.21.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.21.zip/download">
-GeographicLib-1.21.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.21-win32.exe/download">
-GeographicLib-1.21-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.21-win64.exe/download">
-GeographicLib-1.21-win64.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.22.tar.gz/download">
+GeographicLib-1.22.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.22.zip/download">
+GeographicLib-1.22.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.22-win32.exe/download">
+GeographicLib-1.22-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.22-win64.exe/download">
+GeographicLib-1.22-win64.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -241,10 +242,10 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.21.tar.gz
-  unzip -q GeographicLib-1.21.zip \endverbatim
+  tar xfpz GeographicLib-1.22.tar.gz
+  unzip -q GeographicLib-1.22.zip \endverbatim
   then enter the directory created with one of \verbatim
-  cd GeographicLib-1.21 \endverbatim
+  cd GeographicLib-1.22 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD\endverbatim
@@ -252,13 +253,12 @@ Here are the steps to compile and install %GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically one of \verbatim
-  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib ..
-  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib ..
-  cmake -G "Visual Studio 8 2005" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc8/GeographicLib ..
+  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.22 ..
+  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.22 ..
 \endverbatim
   Instead of setting CMAKE_INSTALL_PREFIX, you can (on Windows) set
-  CMAKE_PREFIX_PATH to point to its parent directory, e.g., \verbatim
-  cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 ..
+  PACKAGE_PATH to point to its parent directory, e.g., \verbatim
+  cmake -G "Visual Studio 10" -D PACKAGE_PATH=C:/pkg-vc10 ..
 \endverbatim
   The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
   settings given above are recommended to ensure that packages that use
@@ -270,16 +270,47 @@ Here are the steps to compile and install %GeographicLib:
   supplying options, for example \verbatim
   cmake -D CMAKE_INSTALL_PREFIX=/tmp/geographic . \endverbatim
   The options you might need to change are
+  - <code>COMMON_INSTALL_PATH</code> governs the installation
+    convention.  If it is on ON (the Linux default), the installation
+    is to a common directory, e.g., /usr/local.  If it is OFF (the
+    Windows default), the installation directory contains the package
+    name, e.g., C:/pkg/GeographicLib-1.22.  The installation
+    directories for the documentation, cmake configuration, python and
+    matlab interfaces all depend on the variable with deeper paths
+    relative to CMAKE_INSTALL_PREFIX being used when it's ON:
+    - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
+    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib-1.22;
+    - python interface: OFF: python; ON: lib/python/site-packages;
+    - matlab interface: OFF: matlab; ON: libexec/GeographicLib/matlab;
+    .
   - <code>CMAKE_INSTALL_PREFIX</code> (default: /usr/local on
     non-Windows systems, C:/Program Files/GeographicLib on Windows
     systems) specifies where the library will be installed.  For windows
     systems, it is recommended to use a prefix which includes the
     compiler version, as shown above (and also, possibly, whether this
     is a 64-bit build, e.g., <code>cmake -G "Visual Studio 10 Win64" -D
-    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib ..</code>) If you
-    just want to try the library to see if it suits your needs, pick
-    <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic, for example, and
-    set <code>GEOGRAPHIC_SHARED_LIB</code>=OFF.
+    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.22 ..</code>).
+    If you just want to try the library to see if it suits your needs,
+    pick, for example, <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
+  - <code>PACKAGE_PATH</code> and <code>INSTALL_PATH</code> provide an
+    alternative mechanism for setting the find_package search path and
+    the installation directory.  (find_package is not used by
+    %GeographicLib since it doesn't depend on other packages.  However
+    PACKAGE_PATH is used here for uniformity with other packages which
+    adopt the same conventions.)
+    - If PACKAGE_PATH is defined, it is prepended to CMAKE_PREFIX_PATH.
+    - If INSTALL_PATH is not specified but PACKAGE_PATH is, then
+      INSTALL_PATH is set to
+      ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON, and to
+      ${PACKAGE_PATH}/GeographicLib-1.22, otherwise.
+    - If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
+      INSTALL_PATH.
+    .
+    Typically, only PACKAGE_PATH needs to be specified, e.g.,
+    - Linux: cmake -D PACKAGE_PATH=/opt .. => CMAKE_INSTALL_PREFIX=/opt
+    - Windows: cmake -D PACKAGE_PATH=C:/pkg .. =>
+      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.22
+    .
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
     C:/Documents and Settings/All Users/Application
@@ -288,11 +319,10 @@ Here are the steps to compile and install %GeographicLib:
     GeographicLib::GravityModel, and GeographicLib::MagneticModel.
     See \ref geoidinst, \ref gravityinst, and \ref magneticinst for more
     information.
-  - <code>GEOGRAPHIC_SHARED_LIB</code> (default: ON for
-    non-Windows systems, OFF for Windows systems)
-    determines whether a shared or static library is built.  The default
-    is OFF for Windows because there's no standard place to install the
-    dlls.
+  - <code>GEOGRAPHIC_SHARED_LIB</code> (default: ON for non-Windows
+    systems, OFF for Windows systems) determines whether a shared or
+    static library is built.  The default is OFF for Windows because
+    there's no standard place to install the dlls.
   - <code>CMAKE_BUILD_TYPE</code> (default: Release).  This
     flags only affects non-IDE compile environments (like make + g++).
     The default is actually blank, but this is treated as
@@ -309,13 +339,10 @@ Here are the steps to compile and install %GeographicLib:
     "mex" (for Matlab) or "mkoctfile" (for Octave) to specify the
     compiler to use for the Matlab/Octave interface.  See \ref matlab
     for more information.
-  - <code>MAINTAINER</code> (default: ON for non-Windows environments
-    provided doxygen, pod2man, and pod2html are found).  This affects
-    whether the targets for creating source packages are activated.
-    See \ref maintainer for details.
-  - <code>GEOGRAPHICLIB_EXAMPLES</code> (default: ON for the maintainer
-    and OFF otherwise).  If set to ON, then the short example programs
-    in the <code>examples</code> directory are built.
+  - <code>GEOGRAPHICLIB_EXAMPLES</code> (default: ON for non-Windows
+    systems and OFF for Windows systems).  If set to ON, then the
+    short example programs in the <code>examples</code> directory are
+    built.
 - Build and install the software.  In non-IDE environments, run
   \verbatim
   make         # compile the library and the examples
@@ -325,23 +352,29 @@ Here are the steps to compile and install %GeographicLib:
   On IDE environments, run your IDE (e.g., Visual Studio), load
   GeographicLib.sln, pick the build type (e.g., Release), and select "Build
   Solution".  If this succeeds, select "RUN_TESTS" to build.  Finally,
-  select "INSTALL" to build.
+  select "INSTALL" to build.  Alternatively, you can get cmake to run
+  the Visual Studio compiler from the command line with \verbatim
+  cmake --build . --config Release --target ALL_BUILD
+  cmake --build . --config Release --target RUN_TESTS
+  cmake --build . --config Release --target INSTALL
+\endverbatim
 - The headers, library, and utilities are installed in the
   include/GeographicLib, lib, and bin directories under
   <code>CMAKE_INSTALL_PREFIX</code>.  (dll dynamic libraries are
-  installed in bin.)  The Matlab/Octave interface is installed in
-  libexec/GeographicLib/matlab.  For documentation, open
+  installed in bin.)  For documentation, open in a web browser
   <a href="index.html">
-  share/doc/GeographicLib/html/index.html</a> in a web browser.
+  PREFIX/share/doc/GeographicLib/html/index.html</a>, if
+  COMMON_INSTALL_PATH is ON, or <a href="index.html">
+  PREFIX/doc/index.html</a>, otherwise.
 
 \section autoconf Installation using the autoconfigure tools
 
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.21.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.22.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.21 \endverbatim
+  cd GeographicLib-1.22 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD\endverbatim
@@ -370,15 +403,15 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.21.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.22.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.21 \endverbatim
+  cd GeographicLib-1.22 \endverbatim
 - Edit \verbatim
   include/GeographicLib/Config.h \endverbatim
   If your C++ compiler does not recognize the long double type
   (unlikely), insert \code
   #undef HAVE_LONG_DOUBLE \endcode
-  If you machine using big endian ordering, then insert \code
+  If your machine using big endian ordering, then insert \code
   #define WORDS_BIGENDIAN 1 \endcode
 - Build and install the software: \verbatim
   make             # compile the library and the examples
@@ -403,8 +436,8 @@ static library and the utilities.  If you only have Visual Studio 2003,
 use cmake to create the necessary solution file, see \ref cmake.  (cmake
 is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.21.zip \endverbatim
-- Open GeographicLib-1.21/windows/GeographicLib-vc10.sln in Visual Studio
+  unzip -q GeographicLib-1.22.zip \endverbatim
+- Open GeographicLib-1.22/windows/GeographicLib-vc10.sln in Visual Studio
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
@@ -427,14 +460,14 @@ library, it is advisable to build it with the compiler you are using for
 your own code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.21-win32.exe/download">
-GeographicLib-1.21-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.21-win64.exe/download">
-GeographicLib-1.21-win64.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.22-win32.exe/download">
+GeographicLib-1.22-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.22-win64.exe/download">
+GeographicLib-1.22-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc10\\GeographicLib-1.21 or C:\\pkg-vc10-x64\\GeographicLib-1.21,
+   C:\\pkg-vc10\\GeographicLib-1.22 or C:\\pkg-vc10-x64\\GeographicLib-1.22,
  - select the start menu folder,
  - and install.
  .
@@ -442,14 +475,14 @@ GeographicLib-1.21-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc10/GeographicLib-1.21/bin where the utilities are
+will include C:/pkg-vc10/GeographicLib-1.22/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  With the 64-bit installer, the
-Matlab interface is installed in the libexec/GeographicLib/matlab
-folder.  Add this to your path in Matlab to access this interface.  The
-binaries were built using Visual Studio 10 (2010) in Release mode.  The
-Matlab interface was compiled with Matlab R2010b 64-bit, however it may
-work with some other 64-bit versions of Matlab.
+Matlab interface is installed in the matlab folder.  Add this to your
+path in Matlab to access this interface.  The binaries were built
+using Visual Studio 10 (2010) in Release mode.  The Matlab interface
+was compiled with Matlab R2010b 64-bit, however it may work with some
+other 64-bit versions of Matlab.
 
 \section qt Building the library for use with Qt
 
@@ -500,8 +533,8 @@ In the case of cmake, you then run \verbatim
 which will copy the documentation and man pages from the build directory
 back into the source tree and package the resulting source tree for
 distribution as \verbatim
-  GeographicLib-1.21.tar.gz
-  GeographicLib-1.21.zip \endverbatim
+  GeographicLib-1.22.tar.gz
+  GeographicLib-1.22.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -512,7 +545,7 @@ With configure, run \verbatim
   make dist-gzip \endverbatim
 which will create the additional files and packages the results ready
 for distribution as \verbatim
-  geographiclib-1.21.tar.gz \endverbatim
+  geographiclib-1.22.tar.gz \endverbatim
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
@@ -585,7 +618,7 @@ Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\
   target_link_libraries (program2 ${GeographicLib_LIBRARIES}) \endverbatim
   in your CMakeLists.txt files (as noted).  find_package command should
   find the library and set the required cmake variables (including
-  <code>GEOGRAPHICLIB_FOUND = TRUE</code>).  For find_package to be able
+  <code>GeographicLib_FOUND = TRUE</code>).  For find_package to be able
   to locate %GeographicLib, it may be necessary for %GeographicLib to be
   built and installed with cmake (see \ref cmake) instead of using some
   other installation method.  In addition, on Windows systems, you
@@ -593,8 +626,16 @@ Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\
   \verbatim
   cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/XYZProject ..
 \endverbatim
-  (If you used some other method of installing %GeographicLib, you can
-  try copying cmake/FindGeographicLib.cmake to somewhere in your
+  You can direct find_package to a specific version of %GeographicLib
+  by specifying the cmake variable <code>GeographicLib_DIR</code> to
+  point to the directory containing the configuration file
+  <code>geographiclib-config.cmake</code>; this should normally the
+  cmake directory in the installation tree, but can also be a build
+  directory for %GeographicLib.  On Windows systems, find_package will
+  only look for versions of %GeographicLib built with the right
+  version of the compiler.  (If you used a non-cmake method of
+  installing %GeographicLib, you can try copying
+  cmake/FindGeographicLib.cmake to somewhere in your
   <code>CMAKE_MODULE_PATH</code> in order for find_package to work.
   However, this method has not been thoroughly tested.)
 - For Windows, ensure that you build the library with the same version
@@ -941,10 +982,11 @@ which loads faster.
 
 \section python Python interface
 
-A python implementation of the geodesic routines from GeographicLib are
-provided in the python/geographiclib directory (which is installed as
-PREFIX/lib/python/site-packages/geographiclib).  This contains
-implementations of the classes
+A python implementation of the geodesic routines from GeographicLib
+are provided in the python/geographiclib directory (which is installed
+as PREFIX/lib/python/site-packages/geographiclib, if
+COMMON_INSTALL_PATH is ON, and as PREFIX/python/geographiclib,
+otherwise).  This contains implementations of the classes
 - GeographicLib::Math
 - GeographicLib::Accumulator
 - GeographicLib::Geodesic
@@ -1025,9 +1067,9 @@ Matlab.
  - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
    Octave and run, e.g., \code
    mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-1.21/libexec/GeographicLib/matlab'
+   cd 'C:/pkg-vc10-x64/GeographicLib-1.22/matlab'
    help geographiclibinterface
-   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.21');
+   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.22');
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
@@ -1036,7 +1078,7 @@ Matlab.
 To use the interface routines for %GeographicLib, run one of (for
 example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-1.21/libexec/GeographicLib/matlab'
+  addpath 'C:/pkg-vc10-x64/GeographicLib-1.22/libexec/GeographicLib/matlab'
 \endverbatim
 in Octave or Matlab.  The available functions are:
  - geodesicdirect: solve direct geodesic problem
@@ -2117,9 +2159,9 @@ the geoid height for EGM2008 on a 1' gride.  (Without these
 optimizations, the computation would have taken about 200 days!)
 \include GeoidToGTX.cpp
 
-This example is built if cmake is invoked with <code>-D
-GEOGRAPHICLIB_EXAMPLES=ON</code>.  cmake will add in support for OpenMP,
-if it is available.
+This example, <code>examples/GeoidToGTX.cpp</code>, is built if cmake
+is configured with <code>-D GEOGRAPHICLIB_EXAMPLES=ON</code>.  cmake
+will add in support for OpenMP, if it is available.
 
 <center>
 Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
@@ -3275,12 +3317,29 @@ Older versions are in
 <a href="http://sf.net/projects/geographiclib/files/distrib/archive/">
 http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
+ - Version 1.22 (released 2012-05-27)
+  - Add GeographicLib::Geohash and GeographicLib::Ellipsoid classes.
+  - Fix bug in GeographicLib::AlbersEqualArea for very prolate
+    ellipsoids (<i>b</i><sup>2</sup> > 2 <i>a</i><sup>2</sup>).
+  - cmake changes:
+    - optionally use PACKAGE_PATH and INSTALL_PATH to determine
+      CMAKE_INSTALL_PREFIX;
+    - use COMMON_INSTALL_PATH to determine layout of installation
+      directories;
+    - as a consequence, the installation paths for the documentation,
+      and python and matlab interfaces are shortened for Windows;
+    - zip source distribution now uses DOS line endings;
+    - the tests work in debug mode for Windows;
+    - default setting of GEOGRAPHICLIB_DATA does not depend on
+      CMAKE_INSTALL_PREFIX;
+    - add a cmake configuration for build tree.
+
  - Version 1.21 (released 2012-04-25)
   - Support colon-separated DMS output:
-     - GeographicLib::DMS::Encode and
-       GeographicLib::GeoCoords::DMSRepresentation generalized;
-     - <a href="GeoConvert.1.html">GeoConvert</a> and
-       <a href="Geod.1.html">Geod</a> now accept a -: option.
+    - GeographicLib::DMS::Encode and
+      GeographicLib::GeoCoords::DMSRepresentation generalized;
+    - <a href="GeoConvert.1.html">GeoConvert</a> and
+      <a href="Geod.1.html">Geod</a> now accept a -: option.
   - <a href="GeoidEval.1.html">GeoidEval</a> does not print the gradient
     of the geoid height by default (because it's subject to large
     errors); give the -g option to get the gradient printed.
@@ -3289,9 +3348,9 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - autoconf fixed to ensure that that out-of-sources builds work;
     document this as the preferred method of using autoconf.
   - cmake tweaks:
-     - simplify the configuration of doxygen;
-     - allow the Matlab compiler to be specified with the
-       MATLAB_COMPILER option.
+    - simplify the configuration of doxygen;
+    - allow the Matlab compiler to be specified with the
+      MATLAB_COMPILER option.
 
  - Version 1.20 (released 2012-03-23)
   - cmake tweaks:
@@ -3343,21 +3402,21 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
      <a href="MagneticField.1.html">MagneticField</a>, look at the
      environment variable GEOGRAPHICLIB_DATA to locate the data.
   - Spherical harmonic software changes:
-     - capitalize enums GeographicLib::SphericalHarmonic::FULL and
-       GeographicLib::SphericalHarmonic::SCHMIDT (the lower case names
-       are retained but deprecated);
-     - optimize the sum by using a static table of square roots which is
-       updated by GeographicLib::SphericalEngine::RootTable;
-     - avoid overflow for high degree models.
+    - capitalize enums GeographicLib::SphericalHarmonic::FULL and
+      GeographicLib::SphericalHarmonic::SCHMIDT (the lower case names
+      are retained but deprecated);
+    - optimize the sum by using a static table of square roots which is
+      updated by GeographicLib::SphericalEngine::RootTable;
+    - avoid overflow for high degree models.
   - Magnetic software fixes:
-     - fix documentation BUG in GeographicLib::MagneticModel::Circle;
-     - make GeographicLib::MagneticModel constructor explicit;
-     - provide default GeographicLib::MagneticCircle constructor;
-     - add additional inspector functions to
-       GeographicLib::MagneticCircle;
-     - add -c option to <a href="MagneticField.1.html">MagneticField</a>;
-     - default height to zero in
-       <a href="MagneticField.1.html">MagneticField</a>.
+    - fix documentation BUG in GeographicLib::MagneticModel::Circle;
+    - make GeographicLib::MagneticModel constructor explicit;
+    - provide default GeographicLib::MagneticCircle constructor;
+    - add additional inspector functions to
+      GeographicLib::MagneticCircle;
+    - add -c option to <a href="MagneticField.1.html">MagneticField</a>;
+    - default height to zero in
+      <a href="MagneticField.1.html">MagneticField</a>.
 
  - Version 1.15 (released 2011-11-08)
   - Add calculation of the earth's magnetic field:
@@ -3462,15 +3521,15 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
  - Version 1.10 (released 2011-06-11)
   - Improvements to Matlab/Octave interface:
-     - add {geocentric,localcartesian}{forward,reverse};
-     - make geographiclibinterface more general;
-     - install the source for the interface;
-     - cmake compiles the interface if ENABLE_MATLAB=ON;
-     - include compiled interface with Windows binary installer.
+    - add {geocentric,localcartesian}{forward,reverse};
+    - make geographiclibinterface more general;
+    - install the source for the interface;
+    - cmake compiles the interface if ENABLE_MATLAB=ON;
+    - include compiled interface with Windows binary installer.
   - Fix various configuration issues
-     - autoconf did not install Config.h;
-     - cmake installed in man/man1 instead of share/man/man1;
-     - cmake did not set the rpath on the tools.
+    - autoconf did not install Config.h;
+    - cmake installed in man/man1 instead of share/man/man1;
+    - cmake did not set the rpath on the tools.
 
  - Version 1.9 (released 2011-05-28)
   - FIX BUG in area returned by

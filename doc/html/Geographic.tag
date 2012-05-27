@@ -1,13 +1,5 @@
 <?xml version='1.0' encoding='ISO-8859-1' standalone='yes' ?>
 <tagfile>
-  <compound kind="page">
-    <name>index</name>
-    <title>Geographic library</title>
-    <filename>index</filename>
-    <docanchor file="index">contents</docanchor>
-    <docanchor file="index">download</docanchor>
-    <docanchor file="index">abstract</docanchor>
-  </compound>
   <compound kind="file">
     <name>Accumulator.hpp</name>
     <path>/scratch/geographic-dist/gita/geographiclib/include/GeographicLib/</path>
@@ -240,6 +232,38 @@
       <name>GEOGRAPHICLIB_DMS_HPP</name>
       <anchorfile>DMS_8hpp.html</anchorfile>
       <anchor>a844e4c8afc70c59c842f4553ce40b9c6</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>Ellipsoid.cpp</name>
+    <path>/scratch/geographic-dist/gita/geographiclib/src/</path>
+    <filename>Ellipsoid_8cpp</filename>
+    <includes id="Ellipsoid_8hpp" name="Ellipsoid.hpp" local="no" imported="no">GeographicLib/Ellipsoid.hpp</includes>
+    <namespace>GeographicLib</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>GEOGRAPHICLIB_ELLIPSOID_CPP</name>
+      <anchorfile>Ellipsoid_8cpp.html</anchorfile>
+      <anchor>a701b735d6d2c51c4314887e1314af9a8</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>Ellipsoid.hpp</name>
+    <path>/scratch/geographic-dist/gita/geographiclib/include/GeographicLib/</path>
+    <filename>Ellipsoid_8hpp</filename>
+    <includes id="Constants_8hpp" name="Constants.hpp" local="no" imported="no">GeographicLib/Constants.hpp</includes>
+    <includes id="TransverseMercator_8hpp" name="TransverseMercator.hpp" local="no" imported="no">GeographicLib/TransverseMercator.hpp</includes>
+    <includes id="EllipticFunction_8hpp" name="EllipticFunction.hpp" local="no" imported="no">GeographicLib/EllipticFunction.hpp</includes>
+    <includes id="AlbersEqualArea_8hpp" name="AlbersEqualArea.hpp" local="no" imported="no">GeographicLib/AlbersEqualArea.hpp</includes>
+    <class kind="class">GeographicLib::Ellipsoid</class>
+    <namespace>GeographicLib</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>GEOGRAPHICLIB_ELLIPSOID_HPP</name>
+      <anchorfile>Ellipsoid_8hpp.html</anchorfile>
+      <anchor>abacbdf0d7576e8b77a2c3dd5d18c52ca</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -488,6 +512,36 @@
     <name>Geographic.doc</name>
     <path>/scratch/geographic-dist/gita/geographiclib/doc/</path>
     <filename>Geographic_8doc</filename>
+  </compound>
+  <compound kind="file">
+    <name>Geohash.cpp</name>
+    <path>/scratch/geographic-dist/gita/geographiclib/src/</path>
+    <filename>Geohash_8cpp</filename>
+    <includes id="Geohash_8hpp" name="Geohash.hpp" local="no" imported="no">GeographicLib/Geohash.hpp</includes>
+    <includes id="Utility_8hpp" name="Utility.hpp" local="no" imported="no">GeographicLib/Utility.hpp</includes>
+    <namespace>GeographicLib</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>GEOGRAPHICLIB_GEOHASH_CPP</name>
+      <anchorfile>Geohash_8cpp.html</anchorfile>
+      <anchor>a222e459ea6668312617751118063f50e</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>Geohash.hpp</name>
+    <path>/scratch/geographic-dist/gita/geographiclib/include/GeographicLib/</path>
+    <filename>Geohash_8hpp</filename>
+    <includes id="Constants_8hpp" name="Constants.hpp" local="no" imported="no">GeographicLib/Constants.hpp</includes>
+    <class kind="class">GeographicLib::Geohash</class>
+    <namespace>GeographicLib</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>GEOGRAPHICLIB_GEOHASH_HPP</name>
+      <anchorfile>Geohash_8hpp.html</anchorfile>
+      <anchor>a7bd4f5a1981ac0870fab4e50032aa4f3</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>Geoid.cpp</name>
@@ -1294,13 +1348,13 @@
     <name>install</name>
     <title>Installing %GeographicLib</title>
     <filename>install</filename>
-    <docanchor file="install">maintainer</docanchor>
+    <docanchor file="install">cmake</docanchor>
+    <docanchor file="install">autoconf</docanchor>
+    <docanchor file="install">gnu</docanchor>
+    <docanchor file="install">windows</docanchor>
     <docanchor file="install">windowsbin</docanchor>
     <docanchor file="install">qt</docanchor>
-    <docanchor file="install">windows</docanchor>
-    <docanchor file="install">gnu</docanchor>
-    <docanchor file="install">autoconf</docanchor>
-    <docanchor file="install">cmake</docanchor>
+    <docanchor file="install">maintainer</docanchor>
   </compound>
   <compound kind="page">
     <name>start</name>
@@ -1329,29 +1383,29 @@
     <name>geoid</name>
     <title>Geoid height</title>
     <filename>geoid</filename>
-    <docanchor file="geoid">geoidinterp</docanchor>
-    <docanchor file="geoid">geoidformat</docanchor>
-    <docanchor file="geoid">geoidcache</docanchor>
     <docanchor file="geoid">geoidinst</docanchor>
+    <docanchor file="geoid">geoidformat</docanchor>
+    <docanchor file="geoid">geoidinterp</docanchor>
+    <docanchor file="geoid">geoidcache</docanchor>
     <docanchor file="geoid">testgeoid</docanchor>
   </compound>
   <compound kind="page">
     <name>gravity</name>
     <title>Gravity models</title>
     <filename>gravity</filename>
-    <docanchor file="gravity">gravityatmos</docanchor>
-    <docanchor file="gravity">gravityformat</docanchor>
     <docanchor file="gravity">gravityinst</docanchor>
-    <docanchor file="gravity">gravityparallel</docanchor>
-    <docanchor file="gravity">gravitygeoid</docanchor>
+    <docanchor file="gravity">gravityformat</docanchor>
     <docanchor file="gravity">gravitynga</docanchor>
+    <docanchor file="gravity">gravitygeoid</docanchor>
+    <docanchor file="gravity">gravityatmos</docanchor>
+    <docanchor file="gravity">gravityparallel</docanchor>
   </compound>
   <compound kind="page">
     <name>magnetic</name>
     <title>Magnetic models</title>
     <filename>magnetic</filename>
-    <docanchor file="magnetic">magneticformat</docanchor>
     <docanchor file="magnetic">magneticinst</docanchor>
+    <docanchor file="magnetic">magneticformat</docanchor>
   </compound>
   <compound kind="page">
     <name>geodesic</name>
@@ -1364,8 +1418,8 @@
     <name>transversemercator</name>
     <title>Transverse Mercator projection</title>
     <filename>transversemercator</filename>
-    <docanchor file="transversemercator">tmseries</docanchor>
     <docanchor file="transversemercator">testmerc</docanchor>
+    <docanchor file="transversemercator">tmseries</docanchor>
   </compound>
   <compound kind="page">
     <name>geocentric</name>
@@ -1388,11 +1442,13 @@
     <class kind="class">GeographicLib::Constants</class>
     <class kind="class">GeographicLib::GeographicErr</class>
     <class kind="class">GeographicLib::DMS</class>
+    <class kind="class">GeographicLib::Ellipsoid</class>
     <class kind="class">GeographicLib::EllipticFunction</class>
     <class kind="class">GeographicLib::Geocentric</class>
     <class kind="class">GeographicLib::GeoCoords</class>
     <class kind="class">GeographicLib::Geodesic</class>
     <class kind="class">GeographicLib::GeodesicLine</class>
+    <class kind="class">GeographicLib::Geohash</class>
     <class kind="class">GeographicLib::Geoid</class>
     <class kind="class">GeographicLib::Gnomonic</class>
     <class kind="class">GeographicLib::GravityCircle</class>
@@ -1419,95 +1475,96 @@
   <compound kind="class">
     <name>GeographicLib::Accumulator</name>
     <filename>classGeographicLib_1_1Accumulator.html</filename>
+    <templarg>T</templarg>
     <member kind="function">
       <type></type>
       <name>Accumulator</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a6d30e4a792644ffc78546dda4b5d0022</anchor>
+      <anchor>a14d98e366933e0997c1954290f9d0fc3</anchor>
       <arglist>(T y=T(0))</arglist>
     </member>
     <member kind="function">
       <type>Accumulator &amp;</type>
       <name>operator=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a9cd31c9155208a2de0fdd9810f2a9dd8</anchor>
+      <anchor>acb3c1aa458551c474bd8d487c3488789</anchor>
       <arglist>(T y)</arglist>
     </member>
     <member kind="function">
       <type>T</type>
       <name>operator()</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>af74ec2f9a77fcc82819111e6bb87b375</anchor>
+      <anchor>a7da3f417100387abd140f4f6fd541f3c</anchor>
       <arglist>() const </arglist>
     </member>
     <member kind="function">
       <type>T</type>
       <name>operator()</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a1a2b7ac3fd3b067a1c9930cb02a102b2</anchor>
+      <anchor>a34cc7a21a2163fe7865734f9c2995f34</anchor>
       <arglist>(T y) const </arglist>
     </member>
     <member kind="function">
       <type>Accumulator &amp;</type>
       <name>operator+=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>adc56d12f08b8a61b19dd78ce532285d4</anchor>
+      <anchor>acdefeaf2aa13cfc78109bdcf4b2cc5d9</anchor>
       <arglist>(T y)</arglist>
     </member>
     <member kind="function">
       <type>Accumulator &amp;</type>
       <name>operator-=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>abf3e43f38791c48d1fa09e4fb569827b</anchor>
+      <anchor>a1add8644c70e445b32c11f269a0345ef</anchor>
       <arglist>(T y)</arglist>
     </member>
     <member kind="function">
       <type>Accumulator &amp;</type>
       <name>operator*=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a2b0bc40e9722e1ffac89ecfeb601fb23</anchor>
+      <anchor>a400f473aa76225662c0493679c1a9072</anchor>
       <arglist>(int n)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator==</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a6ea5d769a36e01327f3633b39cd38290</anchor>
+      <anchor>a826d30c1794c242628121d528461a383</anchor>
       <arglist>(T y) const </arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator!=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a4102ce7aac36753c2b0390c4fc951a42</anchor>
+      <anchor>a64df6698b929c36ef2ea53762b1ca93b</anchor>
       <arglist>(T y) const </arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator&lt;</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>a9a7299c02ec8805d951309fdae60e57f</anchor>
+      <anchor>a3852660b49bef6eb2d92f1296a86459b</anchor>
       <arglist>(T y) const </arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator&lt;=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>afb83bdb43b78e20f76e2a7e5e2440386</anchor>
+      <anchor>a04aea3f9aad7dd1599bb419e7cf4529a</anchor>
       <arglist>(T y) const </arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator&gt;</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>af0e4a35c09b0b179ebf1e2f6912ddeb3</anchor>
+      <anchor>a3f1172477b4c225e064fb87753d567ef</anchor>
       <arglist>(T y) const </arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>operator&gt;=</name>
       <anchorfile>classGeographicLib_1_1Accumulator.html</anchorfile>
-      <anchor>aeafc5d10683648d37fe18ec75725196b</anchor>
+      <anchor>a4d509a497da83624d913ed00649644c1</anchor>
       <arglist>(T y) const </arglist>
     </member>
   </compound>
@@ -1617,6 +1674,13 @@
       <name>AzimuthalEqualAreaSouth</name>
       <anchorfile>classGeographicLib_1_1AlbersEqualArea.html</anchorfile>
       <anchor>aff0ff4e2f162107bd136310b44444cc1</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>Ellipsoid</name>
+      <anchorfile>classGeographicLib_1_1AlbersEqualArea.html</anchorfile>
+      <anchor>a26de2ba48553f37df3a39cf643961b51</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -2223,6 +2287,290 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>GeographicLib::Ellipsoid</name>
+    <filename>classGeographicLib_1_1Ellipsoid.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Ellipsoid</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a5a3cc8bd0200a126e43d2c82bce5df49</anchor>
+      <arglist>(real a, real f)</arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>MajorRadius</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>afb3863269b1de48a07f0663d1e19cf44</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>MinorRadius</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a26ea3685f10328ec8985122e0470ab76</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>QuarterMeridian</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>ae1090dfc269b7f1c683f6a83d9f6290e</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Area</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>adbfeb95007d0ae76f1a68b16d9f1b457</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Volume</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a628e9ad09e21965f331246fcf10ff342</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Flattening</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>af77621e7553a4019effcdc2e99430b16</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>SecondFlattening</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a8600f4c45e07eb241a1f449bb6953cdc</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>ThirdFlattening</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a0fc8c291de324965fb34d080827e5dd4</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>EccentricitySq</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a3fde24220cd49e9f95a74af0517f8b95</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>SecondEccentricitySq</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>ae7802e1cc4b679539a4c7f1c2008947a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>ThirdEccentricitySq</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a08c35635ff00650221e461fb51a6a98a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>ParametricLatitude</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>ae62fb1d29ef6df343f483d8e6e7a1712</anchor>
+      <arglist>(real phi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>InverseParametricLatitude</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>ae38062b94fc183d080fd2fc9853d7623</anchor>
+      <arglist>(real beta) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>GeocentricLatitude</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>ac5f07fab7f2f6a523b1f3bf33a1e8fbd</anchor>
+      <arglist>(real phi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>InverseGeocentricLatitude</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a7b2ee479ff19a892a871ca42f53c358a</anchor>
+      <arglist>(real theta) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>RectifyingLatitude</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a9c50dff5532999b39b865d19c71041b7</anchor>
+      <arglist>(real phi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>InverseRectifyingLatitude</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a4fb5fe4e7605d3c4132adf511a300238</anchor>
+      <arglist>(real mu) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>AuthalicLatitude</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a5600dff6e9ff8fcbd28aaf5379fee7c9</anchor>
+      <arglist>(real phi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>InverseAuthalicLatitude</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>ac6713f59f297f0497d74e7fbbac286a5</anchor>
+      <arglist>(real xi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>ConformalLatitude</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a920f0b91d38075da4b15fd38e1bc1328</anchor>
+      <arglist>(real phi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>InverseConformalLatitude</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a6a3d92b79773926114134f836015ddb8</anchor>
+      <arglist>(real chi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>IsometricLatitude</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>ae1f6a98b2d595dcafe00320f1171115f</anchor>
+      <arglist>(real phi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>InverseIsometricLatitude</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a48544e529746b1cf11b49d360debcf1e</anchor>
+      <arglist>(real psi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>CircleRadius</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a65cea9f9b4f2e8ed9238036231ea6584</anchor>
+      <arglist>(real phi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>CircleHeight</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a01af14c26f086822ae07b022a361e41f</anchor>
+      <arglist>(real phi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>MeridianDistance</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a1f2c02889747c363605df2a9d742a7f0</anchor>
+      <arglist>(real phi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>MeridionalCurvatureRadius</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>af601e859fb2270c1f2d0f6980d29f3bb</anchor>
+      <arglist>(real phi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>TransverseCurvatureRadius</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a39570ab7cf66376cad41214bbce2e800</anchor>
+      <arglist>(real phi) const </arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static Math::real</type>
+      <name>SecondFlatteningToFlattening</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>ab65f55e2248ab7e79630a02198111a1b</anchor>
+      <arglist>(real fp)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static Math::real</type>
+      <name>FlatteningToSecondFlattening</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a561926e53556deeed21c8dd7aee2e0ba</anchor>
+      <arglist>(real f)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static Math::real</type>
+      <name>ThirdFlatteningToFlattening</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a07eee0a85c57b2f71e6b2f5cc2799c15</anchor>
+      <arglist>(real n)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static Math::real</type>
+      <name>FlatteningToThirdFlattening</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a4f73302cc829b06a65c9f52ce15362bf</anchor>
+      <arglist>(real f)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static Math::real</type>
+      <name>EccentricitySqToFlattening</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a04636791d70da86fffd97cd6e708f771</anchor>
+      <arglist>(real e2)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static Math::real</type>
+      <name>FlatteningToEccentricitySq</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a57767e6ddae834cc470ed7cda9559891</anchor>
+      <arglist>(real f)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static Math::real</type>
+      <name>SecondEccentricitySqToFlattening</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a4646b294883d5ebfaf697707795c1b75</anchor>
+      <arglist>(real ep2)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static Math::real</type>
+      <name>FlatteningToSecondEccentricitySq</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a69c99a88bf12c40856b7b830174c1728</anchor>
+      <arglist>(real f)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static Math::real</type>
+      <name>ThirdEccentricitySqToFlattening</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a82b34bd4fad7ae934d619037f6089a65</anchor>
+      <arglist>(real epp2)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static Math::real</type>
+      <name>FlatteningToThirdEccentricitySq</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>aa5a2899df3458ebccfa64e20e46cfc21</anchor>
+      <arglist>(real f)</arglist>
+    </member>
+    <member kind="variable" static="yes">
+      <type>static const Ellipsoid</type>
+      <name>WGS84</name>
+      <anchorfile>classGeographicLib_1_1Ellipsoid.html</anchorfile>
+      <anchor>a0980515fad6036d541cbfac069597545</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>GeographicLib::EllipticFunction</name>
     <filename>classGeographicLib_1_1EllipticFunction.html</filename>
     <member kind="function">
@@ -2280,6 +2628,13 @@
       <anchorfile>classGeographicLib_1_1EllipticFunction.html</anchorfile>
       <anchor>a8be312b5da54b01f2976416aa82e7d08</anchor>
       <arglist>(real phi) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Ed</name>
+      <anchorfile>classGeographicLib_1_1EllipticFunction.html</anchorfile>
+      <anchor>ac41fe0ea208ed8b1157805cea3a85f77</anchor>
+      <arglist>(real ang) const </arglist>
     </member>
     <member kind="function">
       <type>Math::real</type>
@@ -3177,6 +3532,59 @@
       <anchorfile>classGeographicLib_1_1GeodesicLine.html</anchorfile>
       <anchor>a088c26ef9558197029bbeb317f3104c0</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>GeographicLib::Geohash</name>
+    <filename>classGeographicLib_1_1Geohash.html</filename>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>Forward</name>
+      <anchorfile>classGeographicLib_1_1Geohash.html</anchorfile>
+      <anchor>a9abd45c543473d0df4b1cc4de7076953</anchor>
+      <arglist>(real lat, real lon, int len, std::string &amp;geohash)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>Reverse</name>
+      <anchorfile>classGeographicLib_1_1Geohash.html</anchorfile>
+      <anchor>aa535488b31591ba0c1964575f7f0941a</anchor>
+      <arglist>(const std::string &amp;geohash, real &amp;lat, real &amp;lon, int &amp;len, bool centerp=true)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static Math::real</type>
+      <name>LatitudeResolution</name>
+      <anchorfile>classGeographicLib_1_1Geohash.html</anchorfile>
+      <anchor>a0551b38628901e799153b333592927a1</anchor>
+      <arglist>(int len)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static Math::real</type>
+      <name>LongitudeResolution</name>
+      <anchorfile>classGeographicLib_1_1Geohash.html</anchorfile>
+      <anchor>a4d8d01b527c5be03056ad175fd014fea</anchor>
+      <arglist>(int len)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static int</type>
+      <name>GeohashLength</name>
+      <anchorfile>classGeographicLib_1_1Geohash.html</anchorfile>
+      <anchor>abd5df5f8f4b3488c7f66a9f96c43c772</anchor>
+      <arglist>(real res)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static int</type>
+      <name>GeohashLength</name>
+      <anchorfile>classGeographicLib_1_1Geohash.html</anchorfile>
+      <anchor>a8ade3e89e09ee77006e3734d98f19be3</anchor>
+      <arglist>(real latres, real lonres)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static int</type>
+      <name>DecimalPrecision</name>
+      <anchorfile>classGeographicLib_1_1Geohash.html</anchorfile>
+      <anchor>a4435cb2961b446103500bbc91c8cd43c</anchor>
+      <arglist>(int len)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -5230,6 +5638,13 @@
       <anchor>aa25b52e35bc54c368e6c8b17e02b0542</anchor>
       <arglist></arglist>
     </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>Ellipsoid</name>
+      <anchorfile>classGeographicLib_1_1TransverseMercator.html</anchorfile>
+      <anchor>a26de2ba48553f37df3a39cf643961b51</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>GeographicLib::TransverseMercatorExact</name>
@@ -5570,7 +5985,7 @@
   <compound kind="dir">
     <name>include/GeographicLib/</name>
     <path>/scratch/geographic-dist/gita/geographiclib/include/GeographicLib/</path>
-    <filename>dir_b4d36717c8020107727c093197410e9d.html</filename>
+    <filename>dir_077a1fddae214a30b2ba9df62c9b9a38.html</filename>
     <file>Accumulator.hpp</file>
     <file>AlbersEqualArea.hpp</file>
     <file>AzimuthalEquidistant.hpp</file>
@@ -5578,11 +5993,13 @@
     <file>CircularEngine.hpp</file>
     <file>Constants.hpp</file>
     <file>DMS.hpp</file>
+    <file>Ellipsoid.hpp</file>
     <file>EllipticFunction.hpp</file>
     <file>Geocentric.hpp</file>
     <file>GeoCoords.hpp</file>
     <file>Geodesic.hpp</file>
     <file>GeodesicLine.hpp</file>
+    <file>Geohash.hpp</file>
     <file>Geoid.hpp</file>
     <file>Gnomonic.hpp</file>
     <file>GravityCircle.hpp</file>
@@ -5609,23 +6026,25 @@
   <compound kind="dir">
     <name>include/</name>
     <path>/scratch/geographic-dist/gita/geographiclib/include/</path>
-    <filename>dir_addd23a7fcb542c6c8ac894d486b21be.html</filename>
+    <filename>dir_d44c64559bbebec7f509842c48db8b23.html</filename>
     <dir>include/GeographicLib/</dir>
   </compound>
   <compound kind="dir">
     <name>src/</name>
     <path>/scratch/geographic-dist/gita/geographiclib/src/</path>
-    <filename>dir_20dd3cf0f425f295158796088ceb05f4.html</filename>
+    <filename>dir_68267d1309a1af8e8297ef4c3efbcdba.html</filename>
     <file>AlbersEqualArea.cpp</file>
     <file>AzimuthalEquidistant.cpp</file>
     <file>CassiniSoldner.cpp</file>
     <file>CircularEngine.cpp</file>
     <file>DMS.cpp</file>
+    <file>Ellipsoid.cpp</file>
     <file>EllipticFunction.cpp</file>
     <file>Geocentric.cpp</file>
     <file>GeoCoords.cpp</file>
     <file>Geodesic.cpp</file>
     <file>GeodesicLine.cpp</file>
+    <file>Geohash.cpp</file>
     <file>Geoid.cpp</file>
     <file>Gnomonic.cpp</file>
     <file>GravityCircle.cpp</file>
@@ -5648,7 +6067,7 @@
   <compound kind="dir">
     <name>tools/</name>
     <path>/scratch/geographic-dist/gita/geographiclib/tools/</path>
-    <filename>dir_27ad12676aedce3065ab152db424ea04.html</filename>
+    <filename>dir_4eeb864c4eec08c7d6b9d3b0352cfdde.html</filename>
     <file>CartConvert.cpp</file>
     <file>ConicProj.cpp</file>
     <file>GeoConvert.cpp</file>
@@ -5659,5 +6078,13 @@
     <file>MagneticField.cpp</file>
     <file>Planimeter.cpp</file>
     <file>TransverseMercatorProj.cpp</file>
+  </compound>
+  <compound kind="page">
+    <name>index</name>
+    <title>Geographic library</title>
+    <filename>index</filename>
+    <docanchor file="index">abstract</docanchor>
+    <docanchor file="index">download</docanchor>
+    <docanchor file="index">contents</docanchor>
   </compound>
 </tagfile>

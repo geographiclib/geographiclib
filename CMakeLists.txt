@@ -1,32 +1,82 @@
-# $Id: a3ad2e3a9ae71b3bc393ca9a3f1ab2277f171d35 $
+# $Id: 8727b65259ba84542b07ddd8e14531b6b08ddb74 $
 
 cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 21)
+set (GeographicLib_VERSION_MINOR 22)
 set (GeographicLib_VERSION
-     "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
+  "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
+set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.3.0)
+set (LIBVERSIONFULL 9.4.0)
 
-# Set CMAKE_INSTALL_PREFIX from first element of CMAKE_PREFIX_PATH
+# User-settable variables
+
+# (1) COMMON_INSTALL_PATH governs the installation convention.  If it
+# is on ON (the Linux default), the installation is to a common
+# directory, e.g., /usr/local.  If it is OFF (the Windows default),
+# the installation directory contains the package name, e.g.,
+# C:/pkg/GeographicLib-1.22.  The installation directories for the
+# documentation, cmake configuration, python and matlab interfaces all
+# depend on the variable with deeper paths relative to
+# CMAKE_INSTALL_PREFIX being used when it's ON.
+
 if (WIN32)
-  if (DEFINED CMAKE_PREFIX_PATH
-    AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    list (GET CMAKE_PREFIX_PATH 0 CMAKE_INSTALL_PREFIX)
-    set (CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
-      CACHE PATH "Installation directory for GeographicLib" FORCE)
-  endif ()
-  message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
+  option (COMMON_INSTALL_PATH "Use a common installation path for packages" OFF)
+else ()
+  option (COMMON_INSTALL_PATH "Use a common installation path for packages" ON)
 endif ()
 
-# User-settable cache variables
+# (2) PACKAGE_PATH and INSTALL_PATH govern the find_package search
+# path and the installation directory.  (find_package is not used by
+# GeographicLib since it doesn't depend on other packages.  However
+# PACKAGE_PATH is used here for uniformity with other packages which
+# adopt the same conventions.)
+#
+# If PACKAGE_PATH is defined, it is prepended to CMAKE_PREFIX_PATH.
+#
+# If INSTALL_PATH is not specified but PACKAGE_PATH is, then
+# INSTALL_PATH is set to
+#   ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON;
+#   ${PACKAGE_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}, otherwise.
+#
+# If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
+# INSTALL_PATH.
+#
+# Typically, only PACKAGE_PATH needs to be specified, e.g.,
+# cmake -D PACKAGE_PATH=/opt .. (on Linux)
+#   => CMAKE_PREFIX_PATH=/opt   CMAKE_INSTALL_PREFIX=/opt
+# cmake -D PACKAGE_PATH=C:/pkg .. (on Windows)
+#   => CMAKE_PREFIX_PATH=C:/pkg CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.22
 
-# (1) Build as a shared library?  On Windows systems, this is typically
+if (DEFINED PACKAGE_PATH)
+  set (CMAKE_PREFIX_PATH ${PACKAGE_PATH} ${CMAKE_PREFIX_PATH})
+  message (STATUS "CMAKE_PREFIX_PATH set to ${CMAKE_PREFIX_PATH}")
+elseif (DEFINED CMAKE_PREFIX_PATH
+    AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  # Backwards compatibility (support the mechanism advertised in
+  # versions 1.20 and 1.21).
+  list (GET CMAKE_PREFIX_PATH 0 PACKAGE_PATH)
+endif ()
+
+if (NOT DEFINED INSTALL_PATH AND DEFINED PACKAGE_PATH)
+  if (COMMON_INSTALL_PATH)
+    set (INSTALL_PATH ${PACKAGE_PATH} CACHE PATH "Installation directory" FORCE)
+  else ()
+    set (INSTALL_PATH ${PACKAGE_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}
+      CACHE PATH "Installation directory" FORCE)
+  endif ()
+endif ()
+if (DEFINED INSTALL_PATH)
+  set (CMAKE_INSTALL_PREFIX ${INSTALL_PATH})
+endif ()
+message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
+
+# (3) Build as a shared library?  On Windows systems, this is typically
 # more trouble than it's worth.
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
@@ -34,11 +84,12 @@ else ()
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" ON)
 endif ()
 
-# (2) Compiler the Matlab interfaces?  Skip Matlab compilation if OFF
-option (MATLAB_COMPILER
-  "Compiler for matlab/octave interface: mex or mkoctfile or OFF" OFF)
+# (4) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
+set (MATLAB_COMPILER OFF CACHE STRING
+  "Compiler for matlab/octave interface: mex or mkoctfile or OFF") 
+set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
 
-# (3) Where to look for data files.  Various classes look in the geoids,
+# (5) Where to look for data files.  Various classes look in the geoids,
 # gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
 if (WIN32)
   # The binary installers for the data files for Windows are created
@@ -52,15 +103,15 @@ if (WIN32)
     CACHE PATH "Location for data for GeographicLib")
 else ()
   set (GEOGRAPHICLIB_DATA
-    "${CMAKE_INSTALL_PREFIX}/share/GeographicLib"
+    "/usr/local/share/GeographicLib"
     CACHE PATH "Location for data for GeographicLib")
 endif ()
 
-# (4) Compiler the Matlab interfaces?  Skip Matlab compilation if OFF
+# (6) Compile the short example programs?
 if (WIN32)
   option (GEOGRAPHICLIB_EXAMPLES
     "Build example programs in examples directory" OFF)
-elseif ()
+else ()
   option (GEOGRAPHICLIB_EXAMPLES
     "Build example programs in examples directory" ON)
 endif ()
@@ -76,8 +127,8 @@ test_big_endian (WORDS_BIGENDIAN)
 
 # Create a Config.h to expose system information to the compiler
 configure_file (
-    "${PROJECT_SOURCE_DIR}/include/GeographicLib/Config.h.in"
-    "${PROJECT_BINARY_DIR}/include/GeographicLib/Config.h" )
+  include/GeographicLib/Config.h.in
+  include/GeographicLib/Config.h )
 
 # The documentation depends on doxygen.  In addition, the man pages are
 # written as pod files and converted to nroff format, C++ code, and
@@ -94,9 +145,9 @@ if (NOT WIN32)
   find_program (HAVE_DOXYGEN doxygen)
 endif ()
 if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND DOXYGEN_FOUND)
-  set (MAINTAINER ON CACHE BOOL "Allow build of additional components")
+  set (MAINTAINER ON)
 else ()
-  set (MAINTAINER OFF CACHE BOOL "Allow build of additional components")
+  set (MAINTAINER OFF)
 endif ()
 if (MAINTAINER)
   add_custom_target (distrib-all)
@@ -150,8 +201,7 @@ set (SCRIPTS
 
 # Set the include directories.  Look in ${PROJECT_BINARY_DIR}/include
 # first because that's where Config.h will be
-include_directories ("${PROJECT_BINARY_DIR}/include")
-include_directories (include)
+include_directories ("${PROJECT_BINARY_DIR}/include" include)
 
 # The list of subdirectories to process
 add_subdirectory (src)
@@ -164,35 +214,7 @@ add_subdirectory (python/geographiclib)
 if (GEOGRAPHICLIB_EXAMPLES)
   add_subdirectory (examples)
 endif ()
-
-# config file support for find_package(GeographicLib).  This only
-# supports finding GeographicLib in the "install" tree (as opposed to
-# the "build" tree).  The process installs geographiclib-config.cmake in
-# ${INSTALL_CMAKE_DIR} and @GEOGRAPHICLIB_ROOT_DIR@ is the relative path
-# to the root from there.  (Thus the whole install tree can be
-# relocated.)
-if (WIN32)
-  set (INSTALL_CMAKE_DIR "cmake")
-  set (GEOGRAPHICLIB_ROOT_DIR "..")
-else ()
-  set (INSTALL_CMAKE_DIR
-    "share/cmake/${PROJECT_NAME}-${GeographicLib_VERSION}")
-  set (GEOGRAPHICLIB_ROOT_DIR "../../..")
-endif ()
-configure_file (cmake/geographiclib-config.cmake.in
-  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config.cmake" @ONLY)
-configure_file (cmake/geographiclib-config-version.cmake.in
-  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config-version.cmake" @ONLY)
-install (FILES
-  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config.cmake"
-  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config-version.cmake"
-  DESTINATION "${INSTALL_CMAKE_DIR}")
-
-# Make information about the cmake targets (the library and the tools)
-# available.
-install (EXPORT depends
-  FILE geographiclib-depends.cmake
-  DESTINATION "${INSTALL_CMAKE_DIR}")
+add_subdirectory (cmake)
 
 # Packaging support; we deal with 
 # (1) a source distribution: cmake make a tar.gz file and the zip file
@@ -207,6 +229,8 @@ if (NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
   # squelch the warning.
   set (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS ON)
 endif ()
+# To include debug versions of runtime support on Windows, do...
+# set (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
 include (InstallRequiredSystemLibraries)
 
 # The configuration of CPack is via variable that need to be set before
@@ -233,7 +257,7 @@ set (CPACK_SOURCE_GENERATOR TGZ)
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
 set (CPACK_PACKAGE_INSTALL_DIRECTORY
-  "${PROJECT_NAME}-${GeographicLib_VERSION}")
+  "${PROJECT_NAME}-${PACKAGE_VERSION}")
 set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
 
 if (WIN32)
@@ -247,22 +271,22 @@ if (WIN32)
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10-x64")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
     set (CPACK_NSIS_PACKAGE_NAME
-      "${PROJECT_NAME} x64 ${GeographicLib_VERSION}")
+      "${PROJECT_NAME} x64 ${PACKAGE_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
-      "${PROJECT_NAME}-x64-${GeographicLib_VERSION}")
+      "${PROJECT_NAME}-x64-${PACKAGE_VERSION}")
   else ()
     # Hardcode the prefix for Visual Studio 10
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
     set (CPACK_NSIS_PACKAGE_NAME
-      "${PROJECT_NAME} ${GeographicLib_VERSION}")
+      "${PROJECT_NAME} ${PACKAGE_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
-      "${PROJECT_NAME}-${GeographicLib_VERSION}")
+      "${PROJECT_NAME}-${PACKAGE_VERSION}")
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
-  CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Library Documentation.lnk\\\" \\\"$INSTDIR\\\\share\\\\doc\\\\GeographicLib\\\\html\\\\index.html\\\"
-  CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Utility Documentation.lnk\\\" \\\"$INSTDIR\\\\share\\\\doc\\\\GeographicLib\\\\html\\\\utilities.html\\\"
+  CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Library Documentation.lnk\\\" \\\"$INSTDIR\\\\doc\\\\html\\\\index.html\\\"
+  CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Utility Documentation.lnk\\\" \\\"$INSTDIR\\\\doc\\\\html\\\\utilities.html\\\"
 ")
   set (CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
   !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
@@ -298,18 +322,26 @@ if (MAINTAINER)
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
       echo include Makefile.mk > Makefile &&
-      echo "\\#define" GEOGRAPHICLIB_VERSION_STRING
-      \\"${GeographicLib_VERSION}\\" > include/GeographicLib/Config.h
+      sed -e "s/Unconfigured/${PACKAGE_VERSION}/"
+      include/GeographicLib/Config.h > include/GeographicLib/Config.h.new &&
+      mv include/GeographicLib/Config.h.new include/GeographicLib/Config.h
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
-      touch man/*.usage man/*.1 man/*.1.html && touch doc/html/index.html
+      touch man/*.usage man/*.1 man/*.1.html && touch doc/html/index.html &&
+      chmod -R g-w .
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ &&
       find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
       tar cfzT ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz -
     COMMAND
-      rm -f ${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip &&
-      cd _CPack_Packages/Linux-Source/TGZ &&
+      rm -f ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip &&
+      rsync -a --delete
+      _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME}
+      _CPack_Packages/Linux-Source/TGZ.DOS/ &&
+      cd _CPack_Packages/Linux-Source/TGZ.DOS &&
+      find . -type f |
+      egrep  '/\(doxyfile.in|MANIFEST.in|NEWS|AUTHORS|INSTALL|.*\\.\(cpp|hpp|h.in|txt|pro|usage|pod|py|m|mac|cmake.in|cmake|h|js\)\)$$' |
+      xargs unix2dos -q -k &&
       find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
       zip -q ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip -@
   )

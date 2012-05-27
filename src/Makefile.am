@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: f4da355113a782652c871e23951589bb90e4578b $
+# $Id: 0fce5da7b469c3db54023745f2a81fcd9ebc27b8 $
 
 AM_CPPFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include -Wall -Wextra
 
@@ -14,11 +14,13 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		CassiniSoldner.cpp \
 		CircularEngine.cpp \
 		DMS.cpp \
+		Ellipsoid.cpp \
 		EllipticFunction.cpp \
 		GeoCoords.cpp \
 		Geocentric.cpp \
 		Geodesic.cpp \
 		GeodesicLine.cpp \
+		Geohash.cpp \
 		Geoid.cpp \
 		Gnomonic.cpp \
 		GravityCircle.cpp \
@@ -44,11 +46,13 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/CircularEngine.hpp \
 		../include/GeographicLib/Constants.hpp \
 		../include/GeographicLib/DMS.hpp \
+		../include/GeographicLib/Ellipsoid.hpp \
 		../include/GeographicLib/EllipticFunction.hpp \
 		../include/GeographicLib/GeoCoords.hpp \
 		../include/GeographicLib/Geocentric.hpp \
 		../include/GeographicLib/Geodesic.hpp \
 		../include/GeographicLib/GeodesicLine.hpp \
+		../include/GeographicLib/Geohash.hpp \
 		../include/GeographicLib/Geoid.hpp \
 		../include/GeographicLib/Gnomonic.hpp \
 		../include/GeographicLib/GravityCircle.hpp \

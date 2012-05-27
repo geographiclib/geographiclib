@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: 8f327ca307cc38126a2ecbca4df19f2c8eef2604 $
+# $Id: ee15d9025a4dded004f85e00777b8ca8faee51d0 $
 
 EXAMPLE_FILES = \
 	example-Accumulator.cpp \
@@ -12,6 +12,7 @@ EXAMPLE_FILES = \
 	example-CircularEngine.cpp \
 	example-Constants.cpp \
 	example-DMS.cpp \
+	example-Ellipsoid.cpp \
 	example-EllipticFunction.cpp \
 	example-GeoCoords.cpp \
 	example-Geocentric.cpp \
@@ -19,6 +20,7 @@ EXAMPLE_FILES = \
 	example-Geodesic-small.cpp \
 	example-GeodesicLine.cpp \
 	example-GeographicErr.cpp \
+	example-Geohash.cpp \
 	example-Geoid.cpp \
 	example-Gnomonic.cpp \
 	example-GravityCircle.cpp \

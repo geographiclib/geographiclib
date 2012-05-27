@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
 #define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP \
-  "$Id: d17f37d1bec84543dc3753e882d8e95f1c1d5a1b $"
+  "$Id: ac57b23974e41848724eba72e55887112d67c85a $"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>
@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Albers Equal Area Conic Projection
+   * \brief Albers equal area conic projection
    *
    * Implementation taken from the report,
    * - J. P. Snyder,
@@ -79,7 +79,11 @@ namespace GeographicLib {
     // x                              if f = 0
     inline real atanhee(real x) const throw() {
       return _f > 0 ? Math::atanh(_e * x)/_e :
-        (_f < 0 ? std::atan(_e * x)/_e : x);
+        // We only invoke atanhee in txif for positive latitude.  Then x is
+        // only negative for very prolate ellipsoids (_b/_a >= sqrt(2)) and we
+        // still need to return a positive result in this case; hence the need
+        // for the call to atan2.
+        (_f < 0 ? (std::atan2(_e * std::abs(x), x < 0 ? -1 : 1)/_e) : x);
     }
     // return atanh(sqrt(x))/sqrt(x) - 1, accurate for small x
     static real atanhxm1(real x) throw();
@@ -114,6 +118,8 @@ namespace GeographicLib {
     void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) throw();
     real txif(real tphi) const throw();
     real tphif(real txi) const throw();
+
+    friend class Ellipsoid;           // For access to txif, tphif, etc.
   public:
 
     /**

@@ -1,9 +1,9 @@
-// $Id: 4e2f7e42dcc37f3c8b3d98f6aa9b50dc4a328289 $
+// $Id: 2eefe849b2226d63b624ad23b73cf12955af09d1 $
 
 #define GEOGRAPHICLIB_VERSION_STRING "@GeographicLib_VERSION@"
 #define GEOGRAPHICLIB_DATA "@GEOGRAPHICLIB_DATA@"
 
 // These are macros which affect the building of the library
-#cmakedefine GEOGRAPHIC_SHARED_LIB 1
-#cmakedefine HAVE_LONG_DOUBLE 1
-#cmakedefine WORDS_BIGENDIAN 1
+#cmakedefine01 GEOGRAPHIC_SHARED_LIB
+#cmakedefine01 HAVE_LONG_DOUBLE
+#cmakedefine01 WORDS_BIGENDIAN

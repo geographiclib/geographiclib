@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP \
-  "$Id: 94bb078aa13d2d7392cee5498aae7df6e9914e4a $"
+  "$Id: 967bdfb37093c5355c1ac8e399b06195e33494da $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -25,7 +25,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Transverse Mercator Projection
+   * \brief Transverse Mercator projection
    *
    * This uses Kr&uuml;ger's method which evaluates the projection and its
    * inverse in terms of a series.  See
@@ -97,6 +97,10 @@ namespace GeographicLib {
     inline real eatanhe(real x) const throw() {
       return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x);
     }
+    real taupf(real tau) const throw();
+    real tauf(real taup) const throw();
+
+    friend class Ellipsoid;           // For access to taupf, tauf.
   public:
 
     /**

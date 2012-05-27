@@ -1,4 +1,4 @@
-# $Id: fcc7381297d2c8de25e002260cfc217eb6448551 $
+# $Id: a28ed038d66a7d6abeee29f358f2fda051d855d1 $
 
 LIBSTEM = Geographic
 LIBRARY = lib$(LIBSTEM).a
@@ -15,11 +15,13 @@ MODULES = AlbersEqualArea \
 	CassiniSoldner \
 	CircularEngine \
 	DMS \
+	Ellipsoid \
 	EllipticFunction \
 	GeoCoords \
 	Geocentric \
 	Geodesic \
 	GeodesicLine \
+	Geohash \
 	Geoid \
 	Gnomonic \
 	GravityCircle \
@@ -81,12 +83,15 @@ CassiniSoldner.o: CassiniSoldner.hpp Config.h Constants.hpp Geodesic.hpp \
 CircularEngine.o: CircularEngine.hpp Config.h Constants.hpp Math.hpp \
 	SphericalEngine.hpp
 DMS.o: Config.h Constants.hpp DMS.hpp Math.hpp Utility.hpp
+Ellipsoid.o: Config.h Constants.hpp Ellipsoid.hpp AlbersEqualArea.hpp \
+	EllipticFunction.hpp Math.hpp TransverseMercator.hpp
 EllipticFunction.o: Config.h Constants.hpp EllipticFunction.hpp Math.hpp
 GeoCoords.o: Config.h Constants.hpp DMS.hpp GeoCoords.hpp MGRS.hpp Math.hpp \
 	UTMUPS.hpp Utility.hpp
 Geocentric.o: Config.h Constants.hpp Geocentric.hpp Math.hpp
 Geodesic.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Math.hpp
 GeodesicLine.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Math.hpp
+Geohash.o: Config.h Constants.hpp Geohash.hpp Utility.hpp
 Geoid.o: Config.h Constants.hpp Geoid.hpp Math.hpp
 Gnomonic.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Gnomonic.hpp \
 	Math.hpp

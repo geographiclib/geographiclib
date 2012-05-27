@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)
 #define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP \
-  "$Id: 95a1d6e7a8c4613be25ec32550231601202da1e5 $"
+  "$Id: 585a3b7b28ec2cb070d8ba5a472fea83c9a21f7f $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Azimuthal Equidistant Projection.
+   * \brief Azimuthal equidistant projection
    *
    * Azimuthal equidistant projection centered at an arbitrary position on the
    * ellipsoid.  For a point in projected space (\e x, \e y), the geodesic

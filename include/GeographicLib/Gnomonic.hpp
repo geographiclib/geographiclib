@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_GNOMONIC_HPP)
 #define GEOGRAPHICLIB_GNOMONIC_HPP \
-  "$Id: f2e7e429e56165c314a518fada607c225132b945 $"
+  "$Id: 8b845d9465a032fdd4b5991d9a02c65599d79deb $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
@@ -18,7 +18,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief %Gnomonic Projection.
+   * \brief %Gnomonic projection
    *
    * %Gnomonic projection centered at an arbitrary position \e C on the
    * ellipsoid.  This projection is derived in Section 13 of

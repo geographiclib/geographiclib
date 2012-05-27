@@ -113,10 +113,10 @@ int main(int argc, char* argv[]) {
       }
       else if (arg == "-d") {
         dms = true;
-	dmssep = '\0';
+        dmssep = '\0';
       } else if (arg == "-:") {
-	dms = true;
-	dmssep = ':';
+        dms = true;
+        dmssep = ':';
       } else if (arg == "-b")
         azi2sense = 180;
       else if (arg == "-f")
@@ -152,7 +152,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 68e3a8ec4a5717094498179912279a756f6e3f8b $\n"
+          << ": $Id: 9ffc2892affd3a4252c722a40b63c8d917e122a6 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

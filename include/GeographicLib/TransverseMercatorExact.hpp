@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP \
-  "$Id: bd96340b9dc3e7bfd09d4374296a75f4c6e00fc3 $"
+  "$Id: 1ec9c881231a9ed2d2256832a9e642e0197deaa1 $"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief An exact implementation of the Transverse Mercator Projection
+   * \brief An exact implementation of the transverse Mercator projection
    *
    * Implementation of the Transverse Mercator Projection given in
    *  - L. P. Lee,

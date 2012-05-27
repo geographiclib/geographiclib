@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_DMS_CPP "$Id: db38ddc05f7c27732da3aa820191a51200ce92ac $"
+#define GEOGRAPHICLIB_DMS_CPP "$Id: cd137ef36e3a09e59b146d9569f1330e1d80fcb5 $"
 
 RCSID_DECL(GEOGRAPHICLIB_DMS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_DMS_HPP)
@@ -259,7 +259,7 @@ namespace GeographicLib {
   }
 
   string DMS::Encode(real angle, component trailing, unsigned prec, flag ind,
-		     char dmssep) {
+                     char dmssep) {
     // Assume check on range of input angle has been made by calling
     // routine (which might be able to offer a better diagnostic).
     if (!Math::isfinite(angle))
@@ -312,19 +312,19 @@ namespace GeographicLib {
       if (ind != NONE)
         s << setw(1 + min(int(ind), 2));
       s << setprecision(0) << pieces[0]
-	<< (dmssep ? dmssep : char(tolower(dmsindicators_[0])));
+        << (dmssep ? dmssep : char(tolower(dmsindicators_[0])));
       switch (trailing) {
       case MINUTE:
         s << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec) << pieces[1];
-	if (!dmssep)
-	  s << char(tolower(dmsindicators_[1]));
+        if (!dmssep)
+          s << char(tolower(dmsindicators_[1]));
         break;
       case SECOND:
         s << setw(2)
-	  << pieces[1] << (dmssep ? dmssep : char(tolower(dmsindicators_[1])))
+          << pieces[1] << (dmssep ? dmssep : char(tolower(dmsindicators_[1])))
           << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec) << pieces[2];
-	if (!dmssep)
-	  s << char(tolower(dmsindicators_[2]));
+        if (!dmssep)
+          s << char(tolower(dmsindicators_[2]));
         break;
       default:
         break;

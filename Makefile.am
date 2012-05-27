@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 9e9190d7a798cd96abe4d009adc10535e2fffe73 $
+# $Id: 8503ee6cf2db3b11c7774b233e34775d9622881b $
 
 AUTOMAKE_OPTIONS = foreign
 
@@ -22,9 +22,10 @@ dist-hook:
 	find $(distdir) \
 		\( -name .svn -o -name '.git*' -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.tmp' -o -name '*.pyc' -o -name '*.bak' -o -name '*.BAK' -o -name geographiclib.js \)| \
 		xargs rm -rf ; \
-	echo include Makefile.mk > $(distdir)/Makefile
-	echo '#define' GEOGRAPHICLIB_VERSION_STRING \
-	\"$(PACKAGE_VERSION)\" > $(distdir)/include/GeographicLib/Config.h
+	echo include Makefile.mk > $(distdir)/Makefile ; \
+	sed -e "s/Unconfigured/$(PACKAGE_VERSION)/" \
+		$(top_srcdir)/include/GeographicLib/Config.h > \
+		$(distdir)/include/GeographicLib/Config.h
 # Custom rules
 
 all-local: man doc

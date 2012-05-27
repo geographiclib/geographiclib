@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_GEODESIC_HPP)
 #define GEOGRAPHICLIB_GEODESIC_HPP \
-  "$Id: c1b085aadd7b8eabe0f9518b29531a38c152d495 $"
+  "$Id: df63b56b6cca3c80859b8d0448745800b40106fc $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -28,7 +28,6 @@ namespace GeographicLib {
   /**
    * \brief %Geodesic calculations
    *
-
    * The shortest path between two points on a ellipsoid at (\e lat1, \e lon1)
    * and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12 and
    * the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at

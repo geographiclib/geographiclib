@@ -1,9 +1,9 @@
-# $Id: 6f2f024584465d9903d8e3cd313cd876a850b4d2 $
+# $Id: 75ee04788b1492c381e42bed9c68bf3bc580cd55 $
 #
 # Configure GeographicLib
 #
 # Set
-#  GEOGRAPHICLIB_FOUND = TRUE
+#  Geographiclib_FOUND = GEOGRAPHICLIB_FOUND = TRUE
 #  GeographicLib_INCLUDE_DIRS = /usr/local/include
 #  GeographicLib_LIBRARIES = Geographic
 #  GeographicLib_LIBRARY_DIRS = /usr/local/lib
@@ -16,13 +16,23 @@ message (STATUS "GeographicLib configuration, version "
 
 # Tell the user project where to find our headers and libraries
 get_filename_component (_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
-get_filename_component (GEOGRAPHICLIB_ROOT_DIR
-  "${_DIR}/@GEOGRAPHICLIB_ROOT_DIR@" ABSOLUTE)
-set (GeographicLib_INCLUDE_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/include")
-set (GeographicLib_LIBRARY_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/lib")
+if (IS_ABSOLUTE "@GEOGRAPHICLIB_ROOT_DIR@")
+  # This is an uninstalled package (still in the build tree)
+  set (GEOGRAPHICLIB_ROOT_DIR "@GEOGRAPHICLIB_ROOT_DIR@")
+  set (GeographicLib_INCLUDE_DIRS "@GeographicLib_INCLUDE_DIRS@")
+  set (GeographicLib_LIBRARY_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/src")
+else ()
+  # This is an installed package; figure out the paths relative to the
+  # current directory.
+  get_filename_component (GEOGRAPHICLIB_ROOT_DIR
+    "${_DIR}/@GEOGRAPHICLIB_ROOT_DIR@" ABSOLUTE)
+  set (GeographicLib_INCLUDE_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/include")
+  set (GeographicLib_LIBRARY_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/lib")
+endif ()
 
 # Read in the exported definition of the library
 include ("${_DIR}/geographiclib-depends.cmake")
 set (GeographicLib_LIBRARIES Geographic)
 
-set (GEOGRAPHICLIB_FOUND TRUE)
+# Geographiclib_FOUND is set to 1 automatically
+set (GEOGRAPHICLIB_FOUND TRUE) # for backwards compatibility

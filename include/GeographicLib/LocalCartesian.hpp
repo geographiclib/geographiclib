@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
 #define GEOGRAPHICLIB_LOCALCARTESIAN_HPP \
-  "$Id: 133014a30695adf3bdea9f4b52613fab458c505a $"
+  "$Id: 31995a29f5216e6346a238edeedeb0e848452954 $"
 
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Local Cartesian coordinates
+   * \brief Local cartesian coordinates
    *
    * Convert between geodetic coordinates latitude = \e lat, longitude = \e
    * lon, height = \e h (measured vertically from the surface of the ellipsoid)

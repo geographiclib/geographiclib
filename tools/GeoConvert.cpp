@@ -49,10 +49,10 @@ int main(int argc, char* argv[]) {
         outputmode = GEOGRAPHIC;
       else if (arg == "-d") {
         outputmode = DMS;
-	dmssep = '\0';
+        dmssep = '\0';
       } else if (arg == "-:") {
         outputmode = DMS;
-	dmssep = ':';
+        dmssep = ':';
       } else if (arg == "-u")
         outputmode = UTMUPS;
       else if (arg == "-m")
@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: e39b9974b58d123fd979b1c3c086ae3ccccba72d $\n"
+          << ": $Id: 4acbc8443e41de2c7ca6cb4f471acdcf2d955e2a $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_DMS_HPP)
-#define GEOGRAPHICLIB_DMS_HPP "$Id: 67770a78c105495a31a9d3755c811e938729c85a $"
+#define GEOGRAPHICLIB_DMS_HPP "$Id: b785083c68342befaed31fa99990bc7d26dbce39 $"
 
 #include <sstream>
 #include <iomanip>
@@ -24,7 +24,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Convert between degrees and %DMS representation.
+   * \brief Convert between degrees and the %DMS representation
    *
    * Parse a string representing degree, minutes, and seconds and return the
    * angle in degrees and format an angle in degrees as degree, minutes, and
@@ -330,7 +330,7 @@ namespace GeographicLib {
      * format with precision \e prec.
      **********************************************************************/
     static std::string Encode(real angle, unsigned prec, flag ind = NONE,
-			      char dmssep = char(0)) {
+                              char dmssep = char(0)) {
       return ind == NUMBER ? Utility::str<real>(angle, int(prec)) :
         Encode(angle,
                prec < 2 ? DEGREE : (prec < 4 ? MINUTE : SECOND),

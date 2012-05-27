@@ -15,7 +15,7 @@
 #include <GeographicLib/Utility.hpp>
 
 #define GEOGRAPHICLIB_UTMUPS_CPP \
-  "$Id: 5672b003ee47cd660377c111e3fca2b81da86323 $"
+  "$Id: 2d11017eb693437c6112243f8d528867d5b592a2 $"
 
 RCSID_DECL(GEOGRAPHICLIB_UTMUPS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_UTMUPS_HPP)
@@ -144,11 +144,11 @@ namespace GeographicLib {
   }
 
   void UTMUPS::CheckLatLon(real lat, real lon) {
-    if (lat < -90 || lat > 90)
+    if (!(lat >= -90 && lat <= 90))
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    if (lon < -180 || lon > 360)
-      throw GeographicErr("Latitude " + Utility::str(lon)
+    if (!(lon >= -180 && lon <= 360))
+      throw GeographicErr("Longitude " + Utility::str(lon)
                           + "d not in [-180d, 360d]");
     }
 

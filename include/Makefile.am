@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: d1953212c87ff569e24f893ea76ed3a55127eff1 $
+# $Id: a08ad35553d210c5a6e48189baad9c55cd0cb51f $
 
 nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/AlbersEqualArea.hpp \
@@ -11,11 +11,13 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/CircularEngine.hpp \
 			GeographicLib/Constants.hpp \
 			GeographicLib/DMS.hpp \
+			GeographicLib/Ellipsoid.hpp \
 			GeographicLib/EllipticFunction.hpp \
 			GeographicLib/GeoCoords.hpp \
 			GeographicLib/Geocentric.hpp \
 			GeographicLib/Geodesic.hpp \
 			GeographicLib/GeodesicLine.hpp \
+			GeographicLib/Geohash.hpp \
 			GeographicLib/Geoid.hpp \
 			GeographicLib/Gnomonic.hpp \
 			GeographicLib/GravityCircle.hpp \
@@ -40,8 +42,8 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/Utility.hpp \
 			GeographicLib/Config.h
 
-geoids_dir=$(datadir)/GeographicLib/geoids
+geographiclib_data=$(datadir)/GeographicLib
 
-DEFS=-DGEOID_DEFAULT_PATH=\"$(geoids_dir)\"  @DEFS@
+DEFS=-DGEOGRAPHICLIB_DATA=\"$(geographiclib_data)\" @DEFS@
 
 EXTRA_DIST = Makefile.mk GeographicLib/CMakeLists.txt GeographicLib/Config.h.in

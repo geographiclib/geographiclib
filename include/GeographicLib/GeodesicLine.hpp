@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)
 #define GEOGRAPHICLIB_GEODESICLINE_HPP \
-  "$Id: 4bbc611bc3837d78456bc227e17bea39cb443745 $"
+  "$Id: 6d8b4f427813cac9195c1a3a9b785256b34d4e96 $"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geodesic.hpp>
@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief A geodesic line.
+   * \brief A geodesic line
    *
    * GeodesicLine facilitates the determination of a series of points on a
    * single geodesic.  The starting point (\e lat1, \e lon1) and the azimuth \e
