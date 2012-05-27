@@ -24,7 +24,7 @@ dist-hook:
 		xargs rm -rf ; \
 	echo include Makefile.mk > $(distdir)/Makefile ; \
 	sed -e "s/Unconfigured/$(PACKAGE_VERSION)/" \
-		include/GeographicLib/Config.h > \
+		$(top_srcdir)/include/GeographicLib/Config.h > \
 		$(distdir)/include/GeographicLib/Config.h
 # Custom rules
 
