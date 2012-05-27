@@ -50,8 +50,9 @@ The code is available for download at
 - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.22.zip/download">
   GeographicLib-1.22.zip</a>
 .
-as either a compressed tar file (tar.gz) or a zip file.  (The two archives
-have identical contents.)  Alternatively you can get the latest stable release
+as either a compressed tar file (tar.gz) or a zip file.  (The two
+archives have identical contents, except that the zip file has DOS
+line endings.)  Alternatively you can get the latest stable release
 using git \verbatim
   git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib-release geographiclib
   cd geographiclib; git checkout stable
