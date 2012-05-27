@@ -34,7 +34,7 @@
 set -e
 
 VERSION=1.22
-BRANCH=devel
+BRANCH=master
 TEMP=/scratch/geographic-dist
 DEVELSOURCE=/u/geographiclib
 GITSOURCE=file://$DEVELSOURCE

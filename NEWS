@@ -6,7 +6,27 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.21.
+The current version of the library is 1.22.
+
+Changes between 1.22 (released 2012-05-27) and 1.21 versions:
+
+  * Add Geohash and Ellipsoid classes.
+
+  * Fix bug in AlbersEqualArea of very prolate ellipsoids (b^2 > 2
+    a^2).
+
+  * cmake changes:
+    + optionally use PACKAGE_PATH and INSTALL_PATH to determine
+      CMAKE_INSTALL_PREFIX;
+    + use COMMON_INSTALL_PATH to determine layout of installation
+      directories;
+    + as a consequence, the installation paths for the documentation,
+      and python and matlab interfaces are shortened for Windows;
+    + zip source distribution now uses DOS line endings;
+    + the tests work in debug mode for Windows;
+    + default setting of GEOGRAPHICLIB_DATA does not depend on
+      CMAKE_INSTALL_PREFIX;
+    + add a cmake configuration for build tree.
 
 Changes between 1.21 (released 2012-04-25) and 1.20 versions:
 

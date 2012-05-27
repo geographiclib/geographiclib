@@ -442,11 +442,11 @@
 				>
 			</File>
 			<File
-				RelativePath="../include/GeographicLib/Geoid.hpp"
+				RelativePath="../include/GeographicLib/Geohash.hpp"
 				>
 			</File>
 			<File
-				RelativePath="../include/GeographicLib/Geohash.hpp"
+				RelativePath="../include/GeographicLib/Geoid.hpp"
 				>
 			</File>
 			<File
