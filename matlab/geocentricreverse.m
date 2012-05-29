@@ -32,6 +32,6 @@ end
 % geocentricreverse.m
 % Matlab .m file for geocentric to geographic conversions
 %
-% Copyright (c) Charles Karney (2011) <charles@karney.com> and
-% licensed under the MIT/X11 License.  For more information, see
+% Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
+% under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
