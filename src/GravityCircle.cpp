@@ -12,14 +12,6 @@
 #include <sstream>
 #include <GeographicLib/Geocentric.hpp>
 
-#define GEOGRAPHICLIB_GRAVITYCIRCLE_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_GRAVITYCIRCLE_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GRAVITYCIRCLE_HPP)
-
-#define GRAVITY_DEFAULT_PATH "/home/ckarney/geographiclib/gravity"
-
 namespace GeographicLib {
 
   using namespace std;

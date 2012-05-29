@@ -2,7 +2,6 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id$
 
 nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/AlbersEqualArea.hpp \

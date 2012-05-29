@@ -1,5 +1,3 @@
-# $Id$
-
 These files give the data for various geomagnetic models.  It's
 necessary to download and install at least one of these files if you
 want to use the MagneticModel class in GeographicLib.

@@ -9,12 +9,6 @@
 
 #include <GeographicLib/NormalGravity.hpp>
 
-#define GEOGRAPHICLIB_NORMALGRAVITY_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_NORMALGRAVITY_CPP)
-RCSID_DECL(GEOGRAPHICLIB_NORMALGRAVITY_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

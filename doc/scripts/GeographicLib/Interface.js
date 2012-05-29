@@ -97,8 +97,6 @@
  * There is no need to "close" the polygon.  If polyline (default =
  * false) is true, then the points denote a polyline and its length is
  * returned as the perimeter (and the area is not calculated).
- *
- * $Id$
  **********************************************************************/
 
 (function() {

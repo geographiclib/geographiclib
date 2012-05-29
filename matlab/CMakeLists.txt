@@ -1,5 +1,3 @@
-# $Id$
-
 # Set up the matlab interface.  The .m files just contain the
 # documentation.  The .cpp files implement the interface.
 file (GLOB MATLAB_FILES *.m)

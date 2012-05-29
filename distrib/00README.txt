@@ -1,5 +1,3 @@
-# $Id$
-
 These files contain the source code for GeographicLib.
 
 Programmers should download the latest .tar.gz or .zip file.  The .exe

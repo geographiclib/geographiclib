@@ -3,8 +3,6 @@
 Written by Charles Karney <charles@karney.com>
 http://geographiclib.sourceforge.net/
 
-$Id$
-
 */
 
 /* Implementation of methods given in

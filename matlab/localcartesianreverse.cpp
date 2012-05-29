@@ -15,8 +15,6 @@
 // mex -I../include -L../windows/Release
 //    -lGeographic localcartesianreverse.cpp
 
-// $Id$
-
 #include <GeographicLib/LocalCartesian.hpp>
 #include <mex.h>
 

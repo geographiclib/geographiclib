@@ -15,8 +15,6 @@
 // mex -I../include -L../windows/Release
 //    -lGeographic geodesicline.cpp
 
-// $Id$
-
 #include <GeographicLib/GeodesicLine.hpp>
 #include <mex.h>
 

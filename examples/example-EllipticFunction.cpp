@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::EllipticFunction class
-// $Id$
 
 #include <iostream>
 #include <cmath>

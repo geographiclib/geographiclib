@@ -1,5 +1,3 @@
-#  $Id$
-
 EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html
 
 SCRIPTDRIVERS = \

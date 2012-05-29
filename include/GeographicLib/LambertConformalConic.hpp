@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP \
-  "$Id$"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP 1
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>

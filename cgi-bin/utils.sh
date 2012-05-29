@@ -1,5 +1,3 @@
-# $Id$
-
 # Look up a key in a QUERY_STRING and return raw value
 lookuprawkey () {
     QUERY="$1"

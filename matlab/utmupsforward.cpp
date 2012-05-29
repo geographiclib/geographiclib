@@ -15,8 +15,6 @@
 // mex -I../include -L../windows/Release
 //    -lGeographic utmupsforward.cpp
 
-// $Id$
-
 #include <GeographicLib/UTMUPS.hpp>
 #include <mex.h>
 

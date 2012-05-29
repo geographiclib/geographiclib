@@ -1,5 +1,3 @@
-# $Id$
-
 # Build the tools...
 
 # Where to find the *.usage files for the --help option.  For a

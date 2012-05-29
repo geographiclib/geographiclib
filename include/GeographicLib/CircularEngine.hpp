@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CIRCULARENGINE_HPP)
-#define GEOGRAPHICLIB_CIRCULARENGINE_HPP \
-  "$Id$"
+#define GEOGRAPHICLIB_CIRCULARENGINE_HPP 1
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>

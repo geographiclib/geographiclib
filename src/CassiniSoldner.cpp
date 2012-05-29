@@ -9,12 +9,6 @@
 
 #include <GeographicLib/CassiniSoldner.hpp>
 
-#define GEOGRAPHICLIB_CASSINISOLDNER_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_CASSINISOLDNER_CPP)
-RCSID_DECL(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

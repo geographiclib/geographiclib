@@ -11,12 +11,6 @@
 #include <GeographicLib/Utility.hpp>
 #include <algorithm>            // For copy
 
-#define GEOGRAPHICLIB_GEOHASH_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_GEOHASH_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GEOHASH_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

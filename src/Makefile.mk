@@ -1,5 +1,3 @@
-# $Id$
-
 LIBSTEM = Geographic
 LIBRARY = lib$(LIBSTEM).a
 

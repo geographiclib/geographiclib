@@ -1,5 +1,3 @@
-; $Id$
-
 #ifndef PREFIX
 #define PREFIX "DUMMY"
 #endif

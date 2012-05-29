@@ -75,7 +75,6 @@ public:
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "ConicTest -l -s\n\
-$Id$\n\
 \n\
 Checks conic projections\n";
   return retval;

@@ -9,12 +9,6 @@
 
 #include <GeographicLib/LambertConformalConic.hpp>
 
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP)
-RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

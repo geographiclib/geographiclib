@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::LambertConformalConic class
-// $Id$
 
 #include <iostream>
 #include <exception>

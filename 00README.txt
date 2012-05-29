@@ -1,5 +1,3 @@
-# $Id$
-
 A library for geographic projections.
 
 Written by Charles Karney <charles@karney.com> and licensed under

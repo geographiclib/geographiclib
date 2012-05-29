@@ -1,5 +1,3 @@
-# $Id$
-
 PROGRAMS = CartConvert \
 	ConicProj \
 	GeoConvert \

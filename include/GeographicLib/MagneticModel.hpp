@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_MAGNETICMODEL_HPP)
-#define GEOGRAPHICLIB_MAGNETICMODEL_HPP \
-  "$Id$"
+#define GEOGRAPHICLIB_MAGNETICMODEL_HPP 1
 
 #include <string>
 #include <sstream>

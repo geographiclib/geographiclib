@@ -143,7 +143,6 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "ProjTest latlonfile projfile\n\
-$Id$\n\
 \n\
 Checks projections against NGS GoldData files\n";
   return retval;

@@ -9,12 +9,6 @@
 
 #include <GeographicLib/EllipticFunction.hpp>
 
-#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP)
-RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

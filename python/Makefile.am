@@ -2,7 +2,6 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id$
 
 PACKAGE=geographiclib
 PYTHON_FILES = \

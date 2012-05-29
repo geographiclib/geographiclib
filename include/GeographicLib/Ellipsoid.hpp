@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ELLIPSOID_HPP)
-#define GEOGRAPHICLIB_ELLIPSOID_HPP \
-  "$Id$"
+#define GEOGRAPHICLIB_ELLIPSOID_HPP 1
 
 #include <string>
 #include <GeographicLib/Constants.hpp>

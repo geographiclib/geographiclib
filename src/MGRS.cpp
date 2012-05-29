@@ -10,11 +10,6 @@
 #include <GeographicLib/MGRS.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_MGRS_CPP "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_MGRS_CPP)
-RCSID_DECL(GEOGRAPHICLIB_MGRS_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

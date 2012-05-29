@@ -1,5 +1,3 @@
-# $Id$
-
 # Build the library...
 
 # Include all the .cpp files in the library.

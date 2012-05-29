@@ -1,5 +1,3 @@
-# $Id$
-
 MAXIMA = tm ellint tmseries geod
 MAXIMASOURCES = $(addsuffix .mac,$(MAXIMA))
 

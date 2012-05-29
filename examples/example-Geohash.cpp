@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::Geohash class
-// $Id$
 
 #include <iostream>
 #include <iomanip>

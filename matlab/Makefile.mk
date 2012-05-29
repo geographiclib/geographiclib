@@ -1,5 +1,3 @@
-# $Id$
-
 FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
 	geodesicdirect geodesicinverse geodesicline \
 	geoidheight geocentricforward geocentricreverse \

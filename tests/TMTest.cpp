@@ -47,7 +47,6 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "TMTest [-s] [-d]\n\
-$Id$\n\
 \n\
 Read in TMcoords.dat on standard input and test TransverseMercatorExact\n\
 or (if -s is given) TransverseMercator.  If -d dump the error for each\n\

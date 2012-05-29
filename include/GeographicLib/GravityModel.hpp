@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
-#define GEOGRAPHICLIB_GRAVITYMODEL_HPP \
-  "$Id$"
+#define GEOGRAPHICLIB_GRAVITYMODEL_HPP 1
 
 #include <string>
 #include <sstream>

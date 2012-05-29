@@ -9,12 +9,6 @@
 
 #include <GeographicLib/LocalCartesian.hpp>
 
-#define GEOGRAPHICLIB_LOCALCARTESIAN_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_LOCALCARTESIAN_CPP)
-RCSID_DECL(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

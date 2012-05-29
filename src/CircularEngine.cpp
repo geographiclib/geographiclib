@@ -10,12 +10,6 @@
 #include <GeographicLib/CircularEngine.hpp>
 #include <limits>
 
-#define GEOGRAPHICLIB_CIRCULARENGINE_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_CIRCULARENGINE_CPP)
-RCSID_DECL(GEOGRAPHICLIB_CIRCULARENGINE_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

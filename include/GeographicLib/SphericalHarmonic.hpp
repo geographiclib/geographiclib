@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_SPHERICALHARMONIC_HPP)
-#define GEOGRAPHICLIB_SPHERICALHARMONIC_HPP \
-  "$Id$"
+#define GEOGRAPHICLIB_SPHERICALHARMONIC_HPP 1
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>

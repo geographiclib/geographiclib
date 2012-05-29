@@ -1,6 +1,5 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-dnl $Id$
 
 AC_INIT([GeographicLib],[1.22],[charles@karney.com])
 AC_CANONICAL_SYSTEM

@@ -1,5 +1,3 @@
-=for comment $Id$
-
 =head1 NAME
 
 Planimeter -- compute the area of geodesic polygons

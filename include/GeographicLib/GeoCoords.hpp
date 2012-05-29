@@ -7,9 +7,8 @@
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-#ifndef GEOGRAPHICLIB_GEOCOORDS_HPP
-#define GEOGRAPHICLIB_GEOCOORDS_HPP \
-  "$Id$"
+#if !defined(GEOGRAPHICLIB_GEOCOORDS_HPP)
+#define GEOGRAPHICLIB_GEOCOORDS_HPP 1
 
 #include <GeographicLib/UTMUPS.hpp>
 #include <GeographicLib/Constants.hpp>

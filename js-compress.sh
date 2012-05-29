@@ -1,5 +1,4 @@
 #! /bin/sh
-# $Id$
 # Concatenate and strip Javascript files
 cat <<EOF
 /*

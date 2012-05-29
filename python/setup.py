@@ -11,8 +11,6 @@
 #
 # The initial version of this file was provided by
 # Andrew MacIntyre <Andrew.MacIntyre@acma.gov.au>.
-#
-# $Id$
 
 from distutils.core import setup
 

@@ -12,11 +12,6 @@
 #include <GeographicLib/SphericalEngine.hpp>
 #include <GeographicLib/GravityCircle.hpp>
 #include <GeographicLib/Utility.hpp>
-#define GEOGRAPHICLIB_GRAVITYMODEL_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
 
 #if !defined(GEOGRAPHICLIB_DATA)
 #  if defined(_MSC_VER)

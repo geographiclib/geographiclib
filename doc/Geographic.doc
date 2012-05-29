@@ -7,7 +7,7 @@
  * MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
-// $Id$
+
 /**
 \mainpage Geographic library
 \author Charles Karney

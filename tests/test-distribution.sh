@@ -24,17 +24,14 @@
 # rely - autoconf release package inventory
 # insta - installed files, make
 # instb - installed files, autoconf
-# instc - installed files, cmake maintainer=off
-# instd - installed files, cmake maintainer=on
-# inste - installed files, cmake maintainer=off matlab=on
+# instc - installed files, cmake
+# inste - installed files, cmake matlab=on
 # instf - installed files, autoconf direct from git repository
-
-# $Id$
 
 set -e
 
 VERSION=1.22
-BRANCH=master
+BRANCH=devel
 TEMP=/scratch/geographic-dist
 DEVELSOURCE=/u/geographiclib
 GITSOURCE=file://$DEVELSOURCE
@@ -111,30 +108,23 @@ find . -type f | sort -u > ../files.b
 cd $TEMP/relc/GeographicLib-$VERSION
 mkdir BUILD
 cd BUILD
-cmake -D MAINTAINER=OFF -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
-make -j10
-make install
-mkdir ../BUILD-maint
-cd ../BUILD-maint
-cmake  -D GEOGRAPHICLIB_EXAMPLES=ON -D MAINTAINER=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instd ..
+cmake -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
 make -j10
 make install
 mkdir ../BUILD-matlab
 cd ../BUILD-matlab
-cmake -D MAINTAINER=OFF -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
+cmake -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
 make -j10
 make -j10 matlab-all
 make install
 mkdir ../BUILD-system
 cd ../BUILD-system
-cmake -D MAINTAINER=OFF -D MATLAB_COMPILER=mkoctfile ..
+cmake -D MATLAB_COMPILER=mkoctfile ..
 make -j10
 make -j10 matlab-all
 
 cd $TEMP/instc
 find . -type f | sort -u > ../files.c
-cd $TEMP/instd
-find . -type f | sort -u > ../files.d
 cd $TEMP/inste
 find . -type f | sort -u > ../files.e
 

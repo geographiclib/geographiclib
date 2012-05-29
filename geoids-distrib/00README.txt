@@ -1,5 +1,3 @@
-# $Id$
-
 These files give the geoid heights on a rectangular grid.  It's
 necessary to download and install at least one of these files if you
 want to use the Geoid class in GeographicLib.

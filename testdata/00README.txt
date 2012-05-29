@@ -1,5 +1,3 @@
-# $Id$
-
 NOTE: It's not necessary to download these files to use GeographicLib.
 
 GeodTest.dat.gz and GeodTest-share.dat.gz provide test data for

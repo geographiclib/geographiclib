@@ -15,8 +15,6 @@
 // mex -I../include -L../windows/Release
 //    -lGeographic geoidheight.cpp
 
-// $Id$
-
 #include <string>
 #include <algorithm>
 #include <GeographicLib/Geoid.hpp>

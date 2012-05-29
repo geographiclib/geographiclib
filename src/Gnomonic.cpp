@@ -9,12 +9,6 @@
 
 #include <GeographicLib/Gnomonic.hpp>
 
-#define GEOGRAPHICLIB_GNOMONIC_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_GNOMONIC_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GNOMONIC_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

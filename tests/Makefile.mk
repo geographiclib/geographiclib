@@ -1,5 +1,3 @@
-# $Id$
-
 PROGRAMS = ProjTest TMTest GeodTest ConicTest NaNTester PASouth HarmTest
 
 all: $(PROGRAMS)

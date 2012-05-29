@@ -9,13 +9,6 @@
 
 #include <GeographicLib/PolygonArea.hpp>
 
-#define GEOGRAPHICLIB_POLYGONAREA_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_POLYGONAREA_CPP)
-RCSID_DECL(GEOGRAPHICLIB_POLYGONAREA_HPP)
-RCSID_DECL(GEOGRAPHICLIB_ACCUMULATOR_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

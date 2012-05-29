@@ -1,5 +1,3 @@
-# $Id$
-
 # Install the python files.
 # Probably full-time python users should install the python package from
 # http://pypi.python.org/pypi/geographiclib

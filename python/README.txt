@@ -1,5 +1,3 @@
-# $Id$
-
 This is a python implementation of the geodesic routines from
 GeographicLib.  This contains implementations of the classes
 

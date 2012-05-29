@@ -1,5 +1,4 @@
 #! /bin/sh
-# $Id$
 # Convert geodesic-biblio.txt to an html page
 cat <<'EOF'
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -34,7 +33,7 @@ cat <<EOF
     </p>
     <ul>
 EOF
-tail --lines +2 $1 |
+cat $1 |
 sed -e 's/\*/<li>/' -e 's/  *\[\[BR\]\]/ <br>/' \
     -e 's/\*/<li>/' -e 's/\[\[BR\]\]/<br>/' \
     -e "s%'''\([0-9][0-9]*\)'''%<b>\1</b>%g" \

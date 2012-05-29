@@ -14,12 +14,6 @@
 #include <GeographicLib/MGRS.hpp>
 #include <GeographicLib/DMS.hpp>
 
-#define GEOGRAPHICLIB_GEOCOORDS_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

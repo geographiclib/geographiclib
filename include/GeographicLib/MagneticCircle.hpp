@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_MAGNETICCIRCLE_HPP)
-#define GEOGRAPHICLIB_MAGNETICCIRCLE_HPP \
-  "$Id$"
+#define GEOGRAPHICLIB_MAGNETICCIRCLE_HPP 1
 
 #include <string>
 #include <vector>

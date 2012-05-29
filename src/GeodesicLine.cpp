@@ -28,12 +28,6 @@
 
 #include <GeographicLib/GeodesicLine.hpp>
 
-#define GEOGRAPHICLIB_GEODESICLINE_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_GEODESICLINE_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GEODESICLINE_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

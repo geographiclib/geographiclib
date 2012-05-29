@@ -9,12 +9,6 @@
 
 #include <GeographicLib/Ellipsoid.hpp>
 
-#define GEOGRAPHICLIB_ELLIPSOID_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_ELLIPSOID_CPP)
-RCSID_DECL(GEOGRAPHICLIB_ELLIPSOID_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

@@ -41,12 +41,6 @@
 
 #include <GeographicLib/TransverseMercator.hpp>
 
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP)
-RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

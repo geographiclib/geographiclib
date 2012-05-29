@@ -1,5 +1,3 @@
-# $Id$
-
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
 MAKE := $(MAKE) -f $(MAKEFILE)
 SUBDIRS = src man tools doc

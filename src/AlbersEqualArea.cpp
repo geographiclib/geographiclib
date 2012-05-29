@@ -9,12 +9,6 @@
 
 #include <GeographicLib/AlbersEqualArea.hpp>
 
-#define GEOGRAPHICLIB_ALBERSEQUALAREA_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_ALBERSEQUALAREA_CPP)
-RCSID_DECL(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

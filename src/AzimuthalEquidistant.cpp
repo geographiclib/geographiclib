@@ -9,12 +9,6 @@
 
 #include <GeographicLib/AzimuthalEquidistant.hpp>
 
-#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_CPP)
-RCSID_DECL(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

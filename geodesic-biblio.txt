@@ -1,4 +1,3 @@
-$Id$
  * I. Newton,[[BR]]
    ''Philosophiae Naturalis Principia Mathematica''
    (3rd edition, Roy. Soc., 1726),

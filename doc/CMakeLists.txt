@@ -1,5 +1,3 @@
-# $Id$
-
 # Where the html versions of the man pages (extension .1.html) are
 # found.
 if (MAINTAINER)

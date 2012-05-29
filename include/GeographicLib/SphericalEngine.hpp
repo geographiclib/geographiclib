@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_SPHERICALENGINE_HPP)
-#define GEOGRAPHICLIB_SPHERICALENGINE_HPP \
-  "$Id$"
+#define GEOGRAPHICLIB_SPHERICALENGINE_HPP 1
 
 #include <vector>
 #include <istream>

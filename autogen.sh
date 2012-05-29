@@ -1,7 +1,6 @@
 #!/bin/sh
 #
 # A simple script to add/reset autotools support
-# $Id$
 
 run ()
 {

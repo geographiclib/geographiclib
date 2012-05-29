@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
-#define GEOGRAPHICLIB_CONSTANTS_HPP \
-  "$Id$"
+#define GEOGRAPHICLIB_CONSTANTS_HPP 1
 
 #include <GeographicLib/Config.h>
 
@@ -25,17 +24,6 @@
 #    define STATIC_ASSERT(cond,reason) \
             { enum{ STATIC_ASSERT_ENUM = 1/int(cond) }; }
 #  endif
-#endif
-
-#if defined(__GNUC__)
-// Suppress "defined but not used" warnings
-#  define RCSID_DECL(x) namespace \
-          { char VAR_ ## x [] __attribute__((used)) = x; }
-#else
-/**
- * Insertion of RCS Id strings into the object file.
- **********************************************************************/
-#  define RCSID_DECL(x) namespace { char VAR_ ## x [] = x; }
 #endif
 
 #if defined(_WIN32) && defined(GEOGRAPHIC_SHARED_LIB) && GEOGRAPHIC_SHARED_LIB

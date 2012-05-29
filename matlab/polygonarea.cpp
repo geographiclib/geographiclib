@@ -15,8 +15,6 @@
 // mex -I../include -L../windows/Release
 //    -lGeographic polygonarea.cpp
 
-// $Id$
-
 #include <algorithm>
 #include <GeographicLib/PolygonArea.hpp>
 #include <mex.h>

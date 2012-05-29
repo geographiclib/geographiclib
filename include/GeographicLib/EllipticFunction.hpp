@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
-#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP \
-  "$Id$"
+#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP 1
 
 #include <GeographicLib/Constants.hpp>
 

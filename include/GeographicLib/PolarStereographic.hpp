@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP \
-  "$Id$"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP 1
 
 #include <GeographicLib/Constants.hpp>
 

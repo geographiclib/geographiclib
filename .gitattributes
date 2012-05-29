@@ -1,31 +1,31 @@
-AUTHORS ident text
-INSTALL ident text
-NEWS ident text
-MANIFEST.in ident text
-*.bib ident text
-*.cgi ident text
-*.cmake ident text
-*.cmake.in ident text
-doxyfile.in ident text
-*.cpp ident text
-*.h ident text
-*.hpp ident text
-*.h.in ident text
+AUTHORS text
+INSTALL text
+NEWS text
+MANIFEST.in text
+*.bib text
+*.cgi text
+*.cmake text
+*.cmake.in text
+doxyfile.in text
+*.cpp text
+*.h text
+*.hpp text
+*.h.in text
 *.htaccess text
-*.html ident text
-*.iss ident text
-*.js ident text
-*.pro ident text
-*.py ident text
-*.m ident text
-*.mac ident text
-*.pod ident text
-*.tex ident text
-*.txt ident text
-[Mm]akefile* ident eol=lf
-*.ac ident eol=lf
-*.am ident eol=lf
-*.sh ident eol=lf
+*.html text
+*.iss text
+*.js text
+*.pro text
+*.py text
+*.m text
+*.mac text
+*.pod text
+*.tex text
+*.txt text
+[Mm]akefile* eol=lf
+*.ac eol=lf
+*.am eol=lf
+*.sh eol=lf
 *.eps -text
 *.pdf -text
 *.png -text

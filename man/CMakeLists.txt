@@ -1,5 +1,3 @@
-# $Id$
-
 # The man pages are maintained as .pod (plain old documentatoin) files.
 # In maintainer mode, there are used to create real man pages (extension
 # .1), usage files (extension .usage) for including in the tool itself,

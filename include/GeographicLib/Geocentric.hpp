@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)
-#define GEOGRAPHICLIB_GEOCENTRIC_HPP \
-  "$Id$"
+#define GEOGRAPHICLIB_GEOCENTRIC_HPP 1
 
 #include <vector>
 #include <algorithm>

@@ -2,7 +2,6 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id$
 
 MATLAB_INTERFACE = \
 $(srcdir)/geodesicdirect.cpp \

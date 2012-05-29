@@ -24,7 +24,6 @@ using namespace GeographicLib;
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "GeodTest [ -a | -c | -t0 | -t1 | -t2 | -t3 | -h ]\n\
-$Id$\n\
 \n\
 Check GeographicLib::Geodesic class.\n\
 -a (default) accuracy test (reads test date on standard input)\n\

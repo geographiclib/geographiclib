@@ -14,12 +14,6 @@
 #include <GeographicLib/TransverseMercator.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_UTMUPS_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_UTMUPS_CPP)
-RCSID_DECL(GEOGRAPHICLIB_UTMUPS_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

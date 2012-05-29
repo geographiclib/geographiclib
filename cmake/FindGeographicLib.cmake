@@ -1,5 +1,3 @@
-# $Id$
-#
 # Look for GeographicLib
 #
 # Set

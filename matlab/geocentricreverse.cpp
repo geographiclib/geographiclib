@@ -15,8 +15,6 @@
 // mex -I../include -L../windows/Release
 //    -lGeographic geocentricreverse.cpp
 
-// $Id$
-
 #include <GeographicLib/Geocentric.hpp>
 #include <mex.h>
 

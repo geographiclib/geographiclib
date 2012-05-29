@@ -1,5 +1,3 @@
-# $Id$
-
 MODULES = AlbersEqualArea \
 	AzimuthalEquidistant \
 	CassiniSoldner \

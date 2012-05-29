@@ -13,12 +13,6 @@
 #include <algorithm>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_GEOID_CPP \
-  "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
-
 #if !defined(GEOGRAPHICLIB_DATA)
 #  if defined(_MSC_VER)
 #    define GEOGRAPHICLIB_DATA \

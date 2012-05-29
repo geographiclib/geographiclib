@@ -12,7 +12,7 @@
 #include <GeographicLib/Constants.hpp>
 
 #if !defined(GEOGRAPHICLIB_MATH_HPP)
-#define GEOGRAPHICLIB_MATH_HPP "$Id$"
+#define GEOGRAPHICLIB_MATH_HPP 1
 
 /**
  * Are C++11 math functions available?

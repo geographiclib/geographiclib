@@ -11,13 +11,6 @@
 #include <algorithm>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_DMS_CPP "$Id$"
-
-RCSID_DECL(GEOGRAPHICLIB_DMS_CPP)
-RCSID_DECL(GEOGRAPHICLIB_DMS_HPP)
-RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
-RCSID_DECL(GEOGRAPHICLIB_MATH_HPP)
-
 namespace GeographicLib {
 
   using namespace std;
