@@ -34,10 +34,10 @@ endif ()
 if (DOXYGEN_FOUND)
   configure_file (doxyfile.in doxyfile)
   file (GLOB SOURCES
-    ../src/*.cpp ../include/GeographicLib/*.hpp
-    ../tools/*.cpp ../examples/*.cpp)
-  file (GLOB EXTRA_FILES ../maxima/*.mac tmseries30.html geodseries30.html
-    ../LICENSE.txt)
+    ../src/[A-Za-z]*.cpp ../include/GeographicLib/[A-Za-z]*.hpp
+    ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp)
+  file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac
+    tmseries30.html geodseries30.html ../LICENSE.txt)
   add_custom_target (doc ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxygen.log)
   add_dependencies (doc htmlman)
@@ -64,8 +64,8 @@ else ()
 endif ()
 
 # Finally install the Javascript files
-file (GLOB SCRIPTDRIVERS scripts/*.html)
-file (GLOB JSSCRIPTS scripts/GeographicLib/*.js)
+file (GLOB SCRIPTDRIVERS scripts/[A-Za-z]*.html)
+file (GLOB JSSCRIPTS scripts/GeographicLib/[A-Za-z]*.js)
 install (FILES ${SCRIPTDRIVERS} DESTINATION ${INSTALL_DOC_DIR}/scripts)
 install (FILES ${JSSCRIPTS}
   DESTINATION ${INSTALL_DOC_DIR}/scripts/GeographicLib)

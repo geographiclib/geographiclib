@@ -37,8 +37,8 @@ SOURCES = $(patsubst %,../src/%.cpp,$(MODULES)) \
 
 EXTRAFILES = tmseries30.html geodseries30.html
 HTMLMANPAGES = 	$(patsubst %,../man/%.1.html,$(PROGRAMS))
-SCRIPTDRIVERS = $(wildcard scripts/*.html)
-JSSCRIPTS = $(wildcard scripts/GeographicLib/*.js)
+SCRIPTDRIVERS = $(wildcard scripts/[A-Za-z]*.html)
+JSSCRIPTS = $(wildcard scripts/GeographicLib/[A-Za-z]*.js)
 
 MAXIMA = tm ellint tmseries geod
 MAXIMASOURCES = $(patsubst %,../maxima/%.mac,$(MAXIMA))

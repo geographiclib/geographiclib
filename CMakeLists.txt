@@ -325,7 +325,8 @@ if (MAINTAINER)
       mv include/GeographicLib/Config.h.new include/GeographicLib/Config.h
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
-      touch man/*.usage man/*.1 man/*.1.html && touch doc/html/index.html &&
+      touch man/[A-Za-z]*.usage man/[A-Za-z]*.1 man/[A-Za-z]*.1.html &&
+      touch doc/html/index.html &&
       chmod -R g-w .
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ &&
