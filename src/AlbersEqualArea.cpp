@@ -39,7 +39,7 @@ namespace GeographicLib {
     if (!(Math::isfinite(k0) && k0 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
-      throw GeographicErr("Standard latitude not in [-90, 90]");
+      throw GeographicErr("Standard latitude not in [-90d, 90d]");
     real
       phi = stdlat * Math::degree<real>(),
       sphi = sin(phi),
@@ -65,9 +65,9 @@ namespace GeographicLib {
     if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat1) <= 90))
-      throw GeographicErr("Standard latitude 1 not in [-90, 90]");
+      throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
     if (!(abs(stdlat2) <= 90))
-      throw GeographicErr("Standard latitude 2 not in [-90, 90]");
+      throw GeographicErr("Standard latitude 2 not in [-90d, 90d]");
     real
       phi1 = stdlat1 * Math::degree<real>(),
       phi2 = stdlat2 * Math::degree<real>();
@@ -95,9 +95,9 @@ namespace GeographicLib {
     if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(coslat1 >= 0))
-      throw GeographicErr("Standard latitude 1 not in [-90, 90]");
+      throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
     if (!(coslat2 >= 0))
-      throw GeographicErr("Standard latitude 2 not in [-90, 90]");
+      throw GeographicErr("Standard latitude 2 not in [-90d, 90d]");
     if (!(abs(sinlat1) <= 1 && coslat1 <= 1) || (coslat1 == 0 && sinlat1 == 0))
       throw GeographicErr("Bad sine/cosine of standard latitude 1");
     if (!(abs(sinlat2) <= 1 && coslat2 <= 1) || (coslat2 == 0 && sinlat2 == 0))
@@ -373,12 +373,8 @@ namespace GeographicLib {
   void AlbersEqualArea::Forward(real lon0, real lat, real lon,
                                 real& x, real& y, real& gamma, real& k)
     const throw() {
-    if (lon - lon0 >= 180)
-      lon -= lon0 + 360;
-    else if (lon - lon0 < -180)
-      lon -= lon0 - 360;
-    else
-      lon -= lon0;
+    lon = Math::AngNormalize(Math::AngNormalize(lon) -
+                             Math::AngNormalize(lon0));
     lat *= _sign;
     real
       lam = lon * Math::degree<real>(),
@@ -420,13 +416,7 @@ namespace GeographicLib {
     gamma = _sign * theta / Math::degree<real>();
     lat = phi / Math::degree<real>();
     lon = lam / Math::degree<real>();
-    // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
-    if (lon + lon0 >= 180)
-      lon += lon0 - 360;
-    else if (lon + lon0 < -180)
-      lon += lon0 + 360;
-    else
-      lon += lon0;
+    lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
     k = _k0 * (den != 0 ? (_nrho0 + _n0 * drho) * hyp(_fm * tphi) / _a : 1);
   }
 
@@ -434,7 +424,7 @@ namespace GeographicLib {
     if (!(Math::isfinite(k) && k > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(lat) < 90))
-      throw GeographicErr("Latitude for SetScale not in (-90, 90)");
+      throw GeographicErr("Latitude for SetScale not in (-90d, 90d)");
     real x, y, gamma, kold;
     Forward(0, lat, 0, x, y, gamma, kold);
     k /= kold;

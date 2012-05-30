@@ -120,8 +120,8 @@ namespace GeographicLib {
      * @param[in] lat the latitude of the point (degrees).
      * @param[in] lon the latitude of the point (degrees).
      *
-     * \e lat should be in the range [-90, 90] and \e lon should be in the
-     * range [-180, 360].
+     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
+     * lon should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void AddPoint(real lat, real lon) throw();
 
@@ -163,8 +163,8 @@ namespace GeographicLib {
      *   set if polyline is false in the constructor.
      * @return the number of points.
      *
-     * \e lat should be in the range [-90, 90] and \e lon should be in the
-     * range [-180, 360].
+     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
+     * lon should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     unsigned TestCompute(real lat, real lon, bool reverse, bool sign,
                          real& perimeter, real& area) const throw();

@@ -141,9 +141,10 @@ namespace GeographicLib {
      * - 40.508333333
      * .
      * all specify the same angle.  The leading sign applies to all components
-     * so -1d30 is -(1+30/60) = -1.5.  Latitudes must be in the range [-90, 90]
-     * and longitudes in the range [-180, 360].  Internally longitudes are
-     * reduced to the range [-180, 180).
+     * so -1d30 is -(1+30/60) = -1.5.  Latitudes must be in the range
+     * [-90<sup>o</sup>, 90<sup>o</sup>] and longitudes in the range
+     * (-540<sup>o</sup>, 540<sup>o</sup>).  Internally longitudes are reduced
+     * to the range [-180, 180).
      *
      * UTM/UPS parsing.  For UTM zones (-80 <= Lat <= 84), the zone designator
      * is made up of a zone number (for 1 to 60) and a hemisphere letter (N or
@@ -210,8 +211,8 @@ namespace GeographicLib {
                       zone);
       _lat = latitude;
       _long = longitude;
-      if (_long >= 180)
-        _long -= 360;
+      if (_long >= 180) _long -= 360;
+      else if (_long < -180) _long += 360;
       CopyToAlt();
     }
 

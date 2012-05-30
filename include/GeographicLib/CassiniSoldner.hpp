@@ -77,10 +77,6 @@ namespace GeographicLib {
     static const unsigned maxit_ = 10;
 
     // The following private helper functions are copied from Geodesic.
-    static inline real AngNormalize(real x) throw() {
-      // Place angle in [-180, 180).  Assumes x is in [-540, 540).
-      return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
-    }
     static inline real AngRound(real x) throw() {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
       // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
@@ -120,8 +116,8 @@ namespace GeographicLib {
      * @param[in] earth the Geodesic object to use for geodesic calculations.
      *   By default this uses the WGS84 ellipsoid.
      *
-     * \e lat0 should be in the range [-90, 90] and \e lon0 should be in the
-     * range [-180, 360].
+     * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
+     * lon0 should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     CassiniSoldner(real lat0, real lon0,
                    const Geodesic& earth = Geodesic::WGS84) throw()
@@ -135,8 +131,8 @@ namespace GeographicLib {
      * @param[in] lat0 latitude of center point of projection (degrees).
      * @param[in] lon0 longitude of center point of projection (degrees).
      *
-     * \e lat0 should be in the range [-90, 90] and \e lon0 should be in the
-     * range [-180, 360].
+     * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
+     * lon0 should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void Reset(real lat0, real lon0) throw();
 
@@ -150,10 +146,11 @@ namespace GeographicLib {
      * @param[out] azi azimuth of easting direction at point (degrees).
      * @param[out] rk reciprocal of azimuthal northing scale at point.
      *
-     * \e lat should be in the range [-90, 90] and \e lon should be in the
-     * range [-180, 360].  A call to Forward followed by a call to Reverse will
-     * return the original (\e lat, \e lon) (to within roundoff).  The routine
-     * does nothing if the origin has not been set.
+     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
+     * lon should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).  A call
+     * to Forward followed by a call to Reverse will return the original (\e
+     * lat, \e lon) (to within roundoff).  The routine does nothing if the
+     * origin has not been set.
      **********************************************************************/
     void Forward(real lat, real lon,
                  real& x, real& y, real& azi, real& rk) const throw();

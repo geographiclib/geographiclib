@@ -132,7 +132,7 @@ namespace GeographicLib {
      * @param[in] k0 azimuthal scale on the standard parallel.
      *
      * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat
-     * is not in the range [-90, 90].
+     * is not in the range [-90<sup>o</sup>, 90<sup>o</sup>].
      **********************************************************************/
     AlbersEqualArea(real a, real f, real stdlat, real k0);
 
@@ -148,8 +148,9 @@ namespace GeographicLib {
      * @param[in] k1 azimuthal scale on the standard parallels.
      *
      * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat1
-     * or \e stdlat2 is not in the range [-90, 90].  In addition, an exception
-     * is thrown if \e stdlat1 and \e stdlat2 are opposite poles.
+     * or \e stdlat2 is not in the range [-90<sup>o</sup>, 90<sup>o</sup>].  In
+     * addition, an exception is thrown if \e stdlat1 and \e stdlat2 are
+     * opposite poles.
      **********************************************************************/
     AlbersEqualArea(real a, real f, real stdlat1, real stdlat2, real k1);
 
@@ -184,8 +185,8 @@ namespace GeographicLib {
      * @param[in] k azimuthal scale at latitude \e lat (default 1).
      *
      * This allows a "latitude of conformality" to be specified.  An exception
-     * is thrown if \e k is not positive or if \e lat is not in the range (-90,
-     * 90).
+     * is thrown if \e k is not positive or if \e lat is not in the range
+     * (-90<sup>o</sup>, 90<sup>o</sup>).
      **********************************************************************/
     void SetScale(real lat, real k = real(1));
 
@@ -203,9 +204,10 @@ namespace GeographicLib {
      *
      * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No
      * false easting or northing is added and \e lat should be in the range
-     * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].  The
-     * values of \e x and \e y returned for points which project to infinity
-     * (i.e., one or both of the poles) will be large but finite.
+     * [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon and \e lon0 should be in the
+     * range (-540<sup>o</sup>, 540<sup>o</sup>).  The values of \e x and \e y
+     * returned for points which project to infinity (i.e., one or both of the
+     * poles) will be large but finite.
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
@@ -224,9 +226,11 @@ namespace GeographicLib {
      *
      * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No
      * false easting or northing is added.  \e lon0 should be in the range
-     * [-180, 360].  The value of \e lon returned is in the range [-180, 180).
-     * The value of \e lat returned is in the range [-90,90].  If the input
-     * point is outside the legal projected space the nearest pole is returned.
+     * (-540<sup>o</sup>, 540<sup>o</sup>).  The value of \e lon returned is in
+     * the range [-180<sup>o</sup>, 180<sup>o</sup>).  The value of \e lat
+     * returned is in the range [-90<sup>o</sup>, 90<sup>o</sup>].  If the
+     * input point is outside the legal projected space the nearest pole is
+     * returned.
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();

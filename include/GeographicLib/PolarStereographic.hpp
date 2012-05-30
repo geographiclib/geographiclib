@@ -72,8 +72,8 @@ namespace GeographicLib {
      * @param[in] k scale at latitude \e lat (default 1).
      *
      * This allows a "latitude of true scale" to be specified.  An exception is
-     * thrown if \e k is not positive or if \e lat is not in the range (-90,
-     * 90].
+     * thrown if \e k is not positive or if \e lat is not in the range
+     * (-90<sup>o</sup>, 90<sup>o</sup>].
      **********************************************************************/
     void SetScale(real lat, real k = real(1));
 
@@ -90,8 +90,9 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added.  \e lat should be in the range
-     * (-90, 90] for \e northp = true and in the range [-90, 90) for \e northp
-     * = false; \e lon should be in the range [-180, 360].
+     * (-90<sup>o</sup>, 90<sup>o</sup>] for \e northp = true and in the range
+     * [-90<sup>o</sup>, 90<sup>o</sup>) for \e northp = false; \e lon should
+     * be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void Forward(bool northp, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();

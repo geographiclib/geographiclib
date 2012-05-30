@@ -310,6 +310,7 @@ namespace GeographicLib {
       if (gradp) gradn = grade = Math::NaN<real>();
       return Math::NaN<real>();
     }
+    lon = Math::AngNormalize(lon);
     real
       fx =  lon * _rlonres,
       fy = -lat * _rlatres;
@@ -446,10 +447,8 @@ namespace GeographicLib {
       CacheClear();
       return;
     }
-    if (west >= 180)
-      west -= 360;              // west in [-180, 180)
-    if (east >= 180)
-      east -= 360;
+    west = Math::AngNormalize(west); // west in [-180, 180)
+    east = Math::AngNormalize(east);
     if (east <= west)
       east += 360;              // east - west in (0, 360]
     int

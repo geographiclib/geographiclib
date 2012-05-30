@@ -238,8 +238,8 @@ namespace GeographicLib {
      * insufficient memory or because of an error reading the data from the
      * file.  In this case, you can catch the error and either do nothing (you
      * will have no cache in this case) or try again with a smaller area.  \e
-     * south and \e north should be in the range [-90, 90]; \e west and \e east
-     * should be in the range [-180, 360].  An exception is thrown if this
+     * south and \e north should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e west and \e east
+     * should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).  An exception is thrown if this
      * routine is called on a thread safe Geoid.
      **********************************************************************/
     void CacheArea(real south, real west, real north, real east) const;
@@ -275,10 +275,10 @@ namespace GeographicLib {
      * @param[in] lon longitude of the point (degrees).
      * @return geoid height (meters).
      *
-     * The latitude should be in [-90, 90] and longitude should be in
-     * [-180,360].  This may throw an error because of an error reading data
-     * from disk.  However, it will not throw if (\e lat, \e lon) is within a
-     * successfully cached area.
+     * The latitude should be in [-90<sup>o</sup>, 90<sup>o</sup>] and
+     * longitude should be in (-540<sup>o</sup>, 540<sup>o</sup>).  This may
+     * throw an error because of an error reading data from disk.  However, it
+     * will not throw if (\e lat, \e lon) is within a successfully cached area.
      **********************************************************************/
     Math::real operator()(real lat, real lon) const {
       real gradn, grade;
@@ -294,15 +294,15 @@ namespace GeographicLib {
      * @param[out] grade easterly gradient (dimensionless).
      * @return geoid height (meters).
      *
-     * The latitude should be in [-90, 90] and longitude should be in [-180,
-     * 360].  This may throw an error because of an error reading data from
-     * disk.  However, it will not throw if (\e lat, \e lon) is within a
-     * successfully cached area.  As a result of the way that the geoid data is
-     * stored, the calculation of gradients can result in large quantization
-     * errors.  This is particularly acute for fine grids, at high latitudes,
-     * and for the easterly gradient.  If you need to compute the direction of
-     * the acceleration due to gravity accurately, you should use
-     * GravityModel::Gravity.
+     * The latitude should be in [-90<sup>o</sup>, 90<sup>o</sup>] and
+     * longitude should be in (-540<sup>o</sup>, 540<sup>o</sup>).  This may
+     * throw an error because of an error reading data from disk.  However, it
+     * will not throw if (\e lat, \e lon) is within a successfully cached area.
+     * As a result of the way that the geoid data is stored, the calculation of
+     * gradients can result in large quantization errors.  This is particularly
+     * acute for fine grids, at high latitudes, and for the easterly gradient.
+     * If you need to compute the direction of the acceleration due to gravity
+     * accurately, you should use GravityModel::Gravity.
      **********************************************************************/
     Math::real operator()(real lat, real lon, real& gradn, real& grade) const {
       return height(lat, lon, true, gradn, grade);

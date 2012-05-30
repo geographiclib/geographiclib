@@ -60,9 +60,9 @@ namespace GeographicLib {
      * @param[in] len the length of the resulting geohash.
      * @param[out] geohash the geohash.
      *
-     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
-     * the range [-180, 360].  Internally, \e len is first put in the range
-     * [0, 18].
+     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
+     * should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).  Internally,
+     * \e len is first put in the range [0, 18].
      **********************************************************************/
     static void Forward(real lat, real lon, int len, std::string& geohash);
 

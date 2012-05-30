@@ -218,14 +218,13 @@ namespace GeographicLib {
     real
       lat1 = ia == LATITUDE ? a : b,
       lon1 = ia == LATITUDE ? b : a;
-    if (lat1 < -90 || lat1 > 90)
+    if (abs(lat1) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat1)
                           + "d not in [-90d, 90d]");
-    if (lon1 < -180 || lon1 > 360)
+    if (abs(lon1) >= 540)
       throw GeographicErr("Longitude " + Utility::str(lon1)
-                          + "d not in [-180d, 360d]");
-    if (lon1 >= 180)
-      lon1 -= 360;
+                          + "d not in (-540d, 540d)");
+    lon1 = Math::AngNormalize(lon1);
     lat = lat1;
     lon = lon1;
   }
@@ -245,9 +244,10 @@ namespace GeographicLib {
     if (ind == LATITUDE)
       throw GeographicErr("Azimuth " + azistr
                           + " has a latitude hemisphere, N/S");
-    if (azi < -180 || azi > 360)
-      throw GeographicErr("Azimuth " + azistr + " not in range [-180d, 360d]");
+    if (abs(azi) >= 540)
+      throw GeographicErr("Azimuth " + azistr + " not in range (-540d, 540d)");
     if (azi >= 180) azi -= 360;
+    else if (azi < 180) azi += 360;
     return azi;
   }
 

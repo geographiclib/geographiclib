@@ -168,8 +168,9 @@ namespace GeographicLib {
      *   i.e., which quantities can be returned in calls to
      *   GeodesicLib::Position.
      *
-     * \e lat1 should be in the range [-90, 90]; \e lon1 and \e azi1 should be
-     * in the range [-180, 360].
+     * \e lat1 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
+     * lon1 and \e azi1 should be in the range (-540<sup>o</sup>,
+     * 540<sup>o</sup>).
      *
      * The GeodesicLine::mask values are
      * - \e caps |= GeodesicLine::LATITUDE for the latitude \e lat2; this is
@@ -190,8 +191,8 @@ namespace GeographicLib {
      * capabilities.
      *
      * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-     * fixed and writing \e lat1 = 90 - \e eps or -90 + \e eps and taking the
-     * limit \e eps -> 0 from above.
+     * fixed and writing \e lat1 = 90<sup>o</sup> - \e eps or -90<sup>o</sup> +
+     * \e eps and taking the limit \e eps -> 0 from above.
      **********************************************************************/
     GeodesicLine(const Geodesic& g, real lat1, real lon1, real azi1,
                  unsigned caps = ALL)

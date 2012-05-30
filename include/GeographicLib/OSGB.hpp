@@ -80,8 +80,8 @@ namespace GeographicLib {
      * @param[out] gamma meridian convergence at point (degrees).
      * @param[out] k scale of projection at point.
      *
-     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
-     * the range [-180, 360].
+     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
+     * should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     static void Forward(real lat, real lon,
                         real& x, real& y, real& gamma, real& k) throw() {

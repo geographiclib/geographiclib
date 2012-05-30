@@ -97,8 +97,8 @@ namespace GeographicLib {
      * @param[out] y local cartesian coordinate (meters).
      * @param[out] z local cartesian coordinate (meters).
      *
-     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
-     * the range [-180, 360].
+     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
+     * and \e lon0 should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& x, real& y, real& z)
       const throw() {

@@ -47,12 +47,13 @@ namespace GeographicLib {
       return setzone;
     if (Math::isnan(lat) || Math::isnan(lon)) // Check if lat or lon is a NaN
       return INVALID;
-    // Assume lon is in [-180, 360].
     if (setzone == UTM || (lat >= -80 && lat < 84)) {
-      // Assume lon is in [-180, 360].
+      // Assume lon is in (-540, 540).
       int ilon = int(floor(lon));
       if (ilon >= 180)
         ilon -= 360;
+      else if (ilon < -180)
+        ilon += 360;
       int zone = (ilon + 186)/6;
       int band = MGRS::LatitudeBand(lat);
       if (band == 7 && zone == 31 && ilon >= 3)
@@ -138,12 +139,12 @@ namespace GeographicLib {
   }
 
   void UTMUPS::CheckLatLon(real lat, real lon) {
-    if (!(lat >= -90 && lat <= 90))
+    if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    if (!(lon >= -180 && lon <= 360))
+    if (abs(lat) >= 540)
       throw GeographicErr("Longitude " + Utility::str(lon)
-                          + "d not in [-180d, 360d]");
+                          + "d not in (-540d, 540d)");
     }
 
   bool UTMUPS::CheckCoords(bool utmp, bool northp, real x, real y,

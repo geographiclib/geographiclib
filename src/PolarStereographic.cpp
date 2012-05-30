@@ -78,7 +78,7 @@ namespace GeographicLib {
     rho *= 2 * _k0 * _a / _c;
     k = lat != 90 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) :
       _k0;
-    lon = lon >= 180 ? lon - 360 : (lon < -180 ? lon + 360 : lon);
+    lon = Math::AngNormalize(lon);
     real
       lam = lon * Math::degree<real>();
     x = rho * (lon == -180 ? 0 : sin(lam));

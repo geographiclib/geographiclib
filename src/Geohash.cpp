@@ -24,14 +24,14 @@ namespace GeographicLib {
   const string Geohash::ucdigits_ = "0123456789BCDEFGHJKMNPQRSTUVWXYZ";
 
   void Geohash::Forward(real lat, real lon, int len, std::string& geohash) {
-    if (lat < -90 || lat > 90)
+    if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    if (lon < -180 || lon > 360)
+    if (abs(lon) >= 540)
       throw GeographicErr("Longitude " + Utility::str(lon)
-                          + "d not in [-180d, 360d]");
+                          + "d not in (-540d, 540d)");
     if (lat == 90) lat -= lateps_ / 2;
-    if (lon >= 180) lon -= 360; // lon in [-180,180)
+    lon = Math::AngNormalize(lon); // lon in [-180,180)
     // lon/loneps_ in [-2^45,2^45); lon/eps + shift_ in [0,2^46)
     // similarly for lat
     len = max(0, min(int(maxlen_), len));

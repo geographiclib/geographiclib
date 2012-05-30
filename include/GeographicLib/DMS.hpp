@@ -229,7 +229,7 @@ namespace GeographicLib {
      * \e dmsa or \e dmsb contain a latitude or longitude hemisphere designator
      * (N, S, E, W).  Throws an error if the decoded numbers are out of the
      * ranges [-90<sup>o</sup>, 90<sup>o</sup>] for latitude and
-     * [-180<sup>o</sup>, 360<sup>o</sup>] for longitude and, in which case \e
+     * (-540<sup>o</sup>, 540<sup>o</sup>) for longitude and, in which case \e
      * lat and \e lon are unchanged.  Finally the longitude is reduced to the
      * range [-180<sup>o</sup>, 180<sup>o</sup>).
      **********************************************************************/
@@ -255,7 +255,7 @@ namespace GeographicLib {
      *
      * A hemisphere designator E/W can be used; the result is multiplied by -1
      * if W is present.  Throws an error if the result is out of the range
-     * [-180<sup>o</sup>, 360<sup>o</sup>].  Finally the azimuth is reduced to
+     * (-540<sup>o</sup>, 540<sup>o</sup>).  Finally the azimuth is reduced to
      * the range [-180<sup>o</sup>, 180<sup>o</sup>).
      **********************************************************************/
     static Math::real DecodeAzimuth(const std::string& azistr);

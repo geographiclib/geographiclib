@@ -94,7 +94,7 @@ namespace GeographicLib {
 #endif
 
     /**
-     * true if the machine is big-endian
+     * true if the machine is big-endian.
      **********************************************************************/
     static const bool bigendian = WORDS_BIGENDIAN;
 
@@ -122,7 +122,7 @@ namespace GeographicLib {
 
     /**
      * Square a number.
-
+     *
      * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return <i>x</i><sup>2</sup>.
@@ -319,6 +319,33 @@ namespace GeographicLib {
     static inline long double cbrt(long double x) throw() { return ::cbrtl(x); }
 #endif
 #endif
+
+    /**
+     * Normalize an angle (restricted input range).
+     *
+     * @tparam T the type of the argument and returned value.
+     * @param[in] x the angle in degrees.
+     * @return the angle reduced to the range [-180<sup>o</sup>,
+     *   180<sup>o</sup>).
+     *
+     * \e x must lie in [-540<sup>o</sup>, 540<sup>o</sup>).
+     **********************************************************************/
+    template<typename T> static inline T AngNormalize(T x) throw() {
+      return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
+    }
+    /**
+     * Normalize an angle (unrestricted input range).
+     *
+     * @tparam T the type of the argument and returned value.
+     * @param[in] x the angle in degrees.
+     * @return the angle reduced to the range [-180<sup>o</sup>,
+     *   180<sup>o</sup>).
+     *
+     * The range of \e x is unrestricted.
+     **********************************************************************/
+    template<typename T> static inline T AngNormalize2(T x) throw() {
+      return x - std::floor((std::floor(x) + 180) / 360) * 360;
+    }
 
     /**
      * Test for finiteness.

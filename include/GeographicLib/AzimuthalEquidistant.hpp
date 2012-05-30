@@ -67,12 +67,13 @@ namespace GeographicLib {
      * @param[out] azi azimuth of geodesic at point (degrees).
      * @param[out] rk reciprocal of azimuthal scale at point.
      *
-     * \e lat0 and \e lat should be in the range [-90, 90] and \e lon0 and \e
-     * lon should be in the range [-180, 360].  The scale of the projection is
-     * 1 in the "radial" direction, \e azi clockwise from true north, and is
-     * 1/\e rk in the direction perpendicular to this.  A call to Forward
-     * followed by a call to Reverse will return the original (\e lat, \e lon)
-     * (to within roundoff).
+     * \e lat0 and \e lat should be in the range [-90<sup>o</sup>,
+     * 90<sup>o</sup>] and \e lon0 and \e lon should be in the range
+     * (-540<sup>o</sup>, 540<sup>o</sup>).  The scale of the projection is 1
+     * in the "radial" direction, \e azi clockwise from true north, and is 1/\e
+     * rk in the direction perpendicular to this.  A call to Forward followed
+     * by a call to Reverse will return the original (\e lat, \e lon) (to
+     * within roundoff).
      **********************************************************************/
     void Forward(real lat0, real lon0, real lat, real lon,
                  real& x, real& y, real& azi, real& rk) const throw();
@@ -89,13 +90,15 @@ namespace GeographicLib {
      * @param[out] azi azimuth of geodesic at point (degrees).
      * @param[out] rk reciprocal of azimuthal scale at point.
      *
-     * \e lat0 should be in the range [-90, 90] and \e lon0 should be in the
-     * range [-180, 360].  \e lat will be in the range [-90, 90] and \e lon
-     * will be in the range [-180, 180).  The scale of the projection is 1 in
-     * the "radial" direction, \e azi clockwise from true north, and is 1/\e rk
-     * in the direction perpendicular to this.  A call to Reverse followed by a
-     * call to Forward will return the original (\e x, \e y) (to roundoff) only
-     * if the geodesic to (\e x, \e y) is a shortest path.
+     * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
+     * lon0 should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).  \e lat
+     * will be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e lon will
+     * be in the range [-180<sup>o</sup>, 180<sup>o</sup>).  The scale of the
+     * projection is 1 in the "radial" direction, \e azi clockwise from true
+     * north, and is 1/\e rk in the direction perpendicular to this.  A call to
+     * Reverse followed by a call to Forward will return the original (\e x, \e
+     * y) (to roundoff) only if the geodesic to (\e x, \e y) is a shortest
+     * path.
      **********************************************************************/
     void Reverse(real lat0, real lon0, real x, real y,
                  real& lat, real& lon, real& azi, real& rk) const throw();

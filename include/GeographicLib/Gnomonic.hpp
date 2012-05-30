@@ -138,8 +138,9 @@ namespace GeographicLib {
      * @param[out] azi azimuth of geodesic at point (degrees).
      * @param[out] rk reciprocal of azimuthal scale at point.
      *
-     * \e lat0 and \e lat should be in the range [-90, 90] and \e lon0 and \e
-     * lon should be in the range [-180, 360].  The scale of the projection is
+     * \e lat0 and \e lat should be in the range [-90<sup>o</sup>,
+     * 90<sup>o</sup>] and \e lon0 and \e lon should be in the range
+     * (-540<sup>o</sup>, 540<sup>o</sup>).  The scale of the projection is
      * 1/<i>rk</i><sup>2</sup> in the "radial" direction, \e azi clockwise from
      * true north, and is 1/\e rk in the direction perpendicular to this.  If
      * the point lies "over the horizon", i.e., if \e rk <= 0, then NaNs are
@@ -163,16 +164,17 @@ namespace GeographicLib {
      * @param[out] azi azimuth of geodesic at point (degrees).
      * @param[out] rk reciprocal of azimuthal scale at point.
      *
-     * \e lat0 should be in the range [-90, 90] and \e lon0 should be in the
-     * range [-180, 360].  \e lat will be in the range [-90, 90] and \e lon
-     * will be in the range [-180, 180).  The scale of the projection is 1/\e
-     * rk<sup>2</sup> in the "radial" direction, \e azi clockwise from true
-     * north, and is 1/\e rk in the direction perpendicular to this.  Even
-     * though all inputs should return a valid \e lat and \e lon, it's possible
-     * that the procedure fails to converge for very large \e x or \e y; in
-     * this case NaNs are returned for all the output arguments.  A call to
-     * Reverse followed by a call to Forward will return the original (\e x, \e
-     * y) (to roundoff).
+     * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
+     * lon0 should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).  \e lat
+     * will be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e lon will
+     * be in the range [-180<sup>o</sup>, 180<sup>o</sup>).  The scale of the
+     * projection is 1/\e rk<sup>2</sup> in the "radial" direction, \e azi
+     * clockwise from true north, and is 1/\e rk in the direction perpendicular
+     * to this.  Even though all inputs should return a valid \e lat and \e
+     * lon, it's possible that the procedure fails to converge for very large
+     * \e x or \e y; in this case NaNs are returned for all the output
+     * arguments.  A call to Reverse followed by a call to Forward will return
+     * the original (\e x, \e y) (to roundoff).
      **********************************************************************/
     void Reverse(real lat0, real lon0, real x, real y,
                  real& lat, real& lon, real& azi, real& rk) const throw();

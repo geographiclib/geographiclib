@@ -60,7 +60,6 @@ namespace GeographicLib {
     CopyToAlt();
   }
 
-
   string GeoCoords::GeoRepresentation(int prec, bool swaplatlong) const {
     prec = max(0, min(9, prec) + 5);
     ostringstream os;
