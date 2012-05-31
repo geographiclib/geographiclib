@@ -282,15 +282,10 @@ if (WIN32)
       "${PROJECT_NAME}-${PACKAGE_VERSION}")
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
-  set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
-  CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Library Documentation.lnk\\\" \\\"$INSTDIR\\\\doc\\\\html\\\\index.html\\\"
-  CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Utility Documentation.lnk\\\" \\\"$INSTDIR\\\\doc\\\\html\\\\utilities.html\\\"
-")
-  set (CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
-  !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
-  Delete \\\"$SMPROGRAMS\\\\$MUI_TEMP\\\\Library Documentation.lnk\\\"
-  Delete \\\"$SMPROGRAMS\\\\$MUI_TEMP\\\\Utility Documentation.lnk\\\"
-")
+  set (CPACK_NSIS_MENU_LINKS
+    "doc/html/index.html" "Library Documentation"
+    "doc/html/utilities.html" "Utilities Documentation"
+    "http://geographiclib.sf.net/html/" "Online Documentation")
   set (CPACK_NSIS_MODIFY_PATH ON)
 elseif (APPLE)
   # Not tested
