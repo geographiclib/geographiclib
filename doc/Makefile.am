@@ -87,9 +87,7 @@ MANPAGES = \
 
 doc: html/index.html
 
-test:
-	echo xx $(HAVE_DOXYGEN) yy $(DOXYGEN) zz
-
+if HAVE_DOXYGEN
 html/index.html: doxyfile.in Geographic.doc \
 	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(MANPAGES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi
@@ -97,7 +95,16 @@ html/index.html: doxyfile.in Geographic.doc \
 	$(top_srcdir)/LICENSE.txt html/
 	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
 	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
-	$(srcdir)/doxyfile.in | doxygen -
+	$(srcdir)/doxyfile.in | $(DOXYGEN) -
+else
+html/index.html: index.html.in utilities.html.in
+	if test -d html; then rm -rf html/*; else mkdir html; fi
+	cp $(top_srcdir)/LICENSE.txt html/
+	sed -e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	$(srcdir)/utilities.html.in > html/utilities.html
+	sed -e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	$(srcdir)/index.html.in > html/index.html
+endif
 
 maintainer-clean-local:
 	rm -rf html

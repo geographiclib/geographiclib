@@ -51,6 +51,7 @@ cd BUILD
 cmake ..
 make dist
 cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
+make doc
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
 
 mkdir $TEMP/rel{a,b,c,x,y}
