@@ -87,6 +87,9 @@ MANPAGES = \
 
 doc: html/index.html
 
+test:
+	echo xx $(HAVE_DOXYGEN) yy $(DOXYGEN) zz
+
 html/index.html: doxyfile.in Geographic.doc \
 	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(MANPAGES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi

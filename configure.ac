@@ -53,6 +53,10 @@ AC_SEARCH_LIBS([sqrt],[m])
 # Check endianness
 AC_C_BIGENDIAN
 
+# Check for doxygen
+AC_CHECK_PROGS([DOXYGEN], [doxygen])
+AM_CONDITIONAL([HAVE_DOXYGEN], [test "$DOXYGEN"])
+
 dnl
 dnl Add here new file to be generated
 dnl
