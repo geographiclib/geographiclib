@@ -229,7 +229,7 @@ namespace GeographicLib {
      * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
      * No false easting or northing is added and \e lat should be in the range
      * [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon and \e lon0 should be in the
-     * range (-540<sup>o</sup>, 540<sup>o</sup>).  The error in the projection
+     * range [-540<sup>o</sup>, 540<sup>o</sup>).  The error in the projection
      * is less than about 10 nm (10 nanometers), true distance, and the errors
      * in the meridian convergence and scale are consistent with this.  The
      * values of \e x and \e y returned for points which project to infinity
@@ -251,7 +251,7 @@ namespace GeographicLib {
      *
      * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
      * No false easting or northing is added.  \e lon0 should be in the range
-     * (-540<sup>o</sup>, 540<sup>o</sup>).  The value of \e lon returned is in
+     * [-540<sup>o</sup>, 540<sup>o</sup>).  The value of \e lon returned is in
      * the range [-180<sup>o</sup>, 180<sup>o</sup>).  The error in the
      * projection is less than about 10 nm (10 nanometers), true distance, and
      * the errors in the meridian convergence and scale are consistent with

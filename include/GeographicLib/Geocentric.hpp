@@ -129,7 +129,7 @@ namespace GeographicLib {
      * @param[out] Z geocentric coordinate (meters).
      *
      * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
-     * should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
+     * should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& X, real& Y, real& Z)
       const throw() {

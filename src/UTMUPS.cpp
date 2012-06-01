@@ -48,7 +48,7 @@ namespace GeographicLib {
     if (Math::isnan(lat) || Math::isnan(lon)) // Check if lat or lon is a NaN
       return INVALID;
     if (setzone == UTM || (lat >= -80 && lat < 84)) {
-      // Assume lon is in (-540, 540).
+      // Assume lon is in [-540, 540).
       int ilon = int(floor(lon));
       if (ilon >= 180)
         ilon -= 360;
@@ -142,9 +142,9 @@ namespace GeographicLib {
     if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    if (abs(lat) >= 540)
+    if (!(lon >= -540 && lon < 540))
       throw GeographicErr("Longitude " + Utility::str(lon)
-                          + "d not in (-540d, 540d)");
+                          + "d not in [-540d, 540d)");
     }
 
   bool UTMUPS::CheckCoords(bool utmp, bool northp, real x, real y,

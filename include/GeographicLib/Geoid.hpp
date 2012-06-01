@@ -243,7 +243,7 @@ namespace GeographicLib {
      * \e east is always interpreted as being east of \e west, if necessary by
      * adding 360<sup>o</sup> to its value.  \e south and \e north should be in
      * the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e west and \e east should
-     * be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
+     * be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void CacheArea(real south, real west, real north, real east) const;
 
@@ -284,7 +284,7 @@ namespace GeographicLib {
      * @return geoid height (meters).
      *
      * The latitude should be in [-90<sup>o</sup>, 90<sup>o</sup>] and
-     * longitude should be in (-540<sup>o</sup>, 540<sup>o</sup>).
+     * longitude should be in [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     Math::real operator()(real lat, real lon) const {
       real gradn, grade;
@@ -303,7 +303,7 @@ namespace GeographicLib {
      * @return geoid height (meters).
      *
      * The latitude should be in [-90<sup>o</sup>, 90<sup>o</sup>] and
-     * longitude should be in (-540<sup>o</sup>, 540<sup>o</sup>).  As a result
+     * longitude should be in [-540<sup>o</sup>, 540<sup>o</sup>).  As a result
      * of the way that the geoid data is stored, the calculation of gradients
      * can result in large quantization errors.  This is particularly acute for
      * fine grids, at high latitudes, and for the easterly gradient.  If you

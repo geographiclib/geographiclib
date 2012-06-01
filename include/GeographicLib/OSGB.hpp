@@ -81,7 +81,7 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
-     * should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
+     * should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     static void Forward(real lat, real lon,
                         real& x, real& y, real& gamma, real& k) throw() {

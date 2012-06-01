@@ -221,9 +221,9 @@ namespace GeographicLib {
     if (abs(lat1) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat1)
                           + "d not in [-90d, 90d]");
-    if (abs(lon1) >= 540)
+    if (!(lon1 >= -540 && lon1 < 540))
       throw GeographicErr("Longitude " + Utility::str(lon1)
-                          + "d not in (-540d, 540d)");
+                          + "d not in [-540d, 540d)");
     lon1 = Math::AngNormalize(lon1);
     lat = lat1;
     lon = lon1;
@@ -244,11 +244,9 @@ namespace GeographicLib {
     if (ind == LATITUDE)
       throw GeographicErr("Azimuth " + azistr
                           + " has a latitude hemisphere, N/S");
-    if (abs(azi) >= 540)
-      throw GeographicErr("Azimuth " + azistr + " not in range (-540d, 540d)");
-    if (azi >= 180) azi -= 360;
-    else if (azi < 180) azi += 360;
-    return azi;
+    if (!(azi >= -540 && azi < 540))
+      throw GeographicErr("Azimuth " + azistr + " not in range [-540d, 540d)");
+    return Math::AngNormalize(azi);
   }
 
   string DMS::Encode(real angle, component trailing, unsigned prec, flag ind,

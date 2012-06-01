@@ -173,7 +173,7 @@ namespace GeographicLib {
      *   coordinates (default = false).
      * @exception GeographicErr if \e lat is not in [-90<sup>o</sup>,
      *   90<sup>o</sup>].
-     * @exception GeographicErr if \e lon is not in (-540<sup>o</sup>,
+     * @exception GeographicErr if \e lon is not in [-540<sup>o</sup>,
      *   540<sup>o</sup>).
      * @exception GeographicLib if the resulting \e x or \e y is out of allowed
      *   range (see Reverse); in this case, these arguments are unchanged.

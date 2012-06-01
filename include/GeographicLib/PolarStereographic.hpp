@@ -90,7 +90,7 @@ namespace GeographicLib {
      * No false easting or northing is added.  \e lat should be in the range
      * (-90<sup>o</sup>, 90<sup>o</sup>] for \e northp = true and in the range
      * [-90<sup>o</sup>, 90<sup>o</sup>) for \e northp = false; \e lon should
-     * be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
+     * be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void Forward(bool northp, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();

@@ -117,7 +117,7 @@ namespace GeographicLib {
      *   By default this uses the WGS84 ellipsoid.
      *
      * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
-     * lon0 should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
+     * lon0 should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     CassiniSoldner(real lat0, real lon0,
                    const Geodesic& earth = Geodesic::WGS84) throw()
@@ -132,7 +132,7 @@ namespace GeographicLib {
      * @param[in] lon0 longitude of center point of projection (degrees).
      *
      * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
-     * lon0 should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
+     * lon0 should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void Reset(real lat0, real lon0) throw();
 
@@ -147,7 +147,7 @@ namespace GeographicLib {
      * @param[out] rk reciprocal of azimuthal northing scale at point.
      *
      * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
-     * lon should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).  A call
+     * lon should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).  A call
      * to Forward followed by a call to Reverse will return the original (\e
      * lat, \e lon) (to within roundoff).  The routine does nothing if the
      * origin has not been set.

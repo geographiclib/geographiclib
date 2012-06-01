@@ -169,7 +169,7 @@ namespace GeographicLib {
      *   GeodesicLib::Position.
      *
      * \e lat1 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
-     * lon1 and \e azi1 should be in the range (-540<sup>o</sup>,
+     * lon1 and \e azi1 should be in the range [-540<sup>o</sup>,
      * 540<sup>o</sup>).
      *
      * The GeodesicLine::mask values are

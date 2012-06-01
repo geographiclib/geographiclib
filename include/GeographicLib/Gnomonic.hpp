@@ -140,7 +140,7 @@ namespace GeographicLib {
      *
      * \e lat0 and \e lat should be in the range [-90<sup>o</sup>,
      * 90<sup>o</sup>] and \e lon0 and \e lon should be in the range
-     * (-540<sup>o</sup>, 540<sup>o</sup>).  The scale of the projection is
+     * [-540<sup>o</sup>, 540<sup>o</sup>).  The scale of the projection is
      * 1/<i>rk</i><sup>2</sup> in the "radial" direction, \e azi clockwise from
      * true north, and is 1/\e rk in the direction perpendicular to this.  If
      * the point lies "over the horizon", i.e., if \e rk <= 0, then NaNs are
@@ -165,7 +165,7 @@ namespace GeographicLib {
      * @param[out] rk reciprocal of azimuthal scale at point.
      *
      * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
-     * lon0 should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).  \e lat
+     * lon0 should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).  \e lat
      * will be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e lon will
      * be in the range [-180<sup>o</sup>, 180<sup>o</sup>).  The scale of the
      * projection is 1/\e rk<sup>2</sup> in the "radial" direction, \e azi

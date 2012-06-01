@@ -3318,8 +3318,9 @@ Older versions are in
 http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
  - Version 1.23 (released 2012-mm-dd)
-  - Use doxygen mechanisms to document exceptions.
-  - Allowed range for longitudes and azimuths widened to (-540d, 540d).
+  - Use doxygen tags to document exceptions.
+  - Add Math::AngNormalize and Math::AngNormalize2; allowed range for
+    longitudes and azimuths widened to [-540d, 540d).
   - TODO: remove html documentation from distribution.
 
  - Version 1.22 (released 2012-05-27)

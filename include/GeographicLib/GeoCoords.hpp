@@ -144,7 +144,7 @@ namespace GeographicLib {
      * all specify the same angle.  The leading sign applies to all components
      * so -1d30 is -(1+30/60) = -1.5.  Latitudes must be in the range
      * [-90<sup>o</sup>, 90<sup>o</sup>] and longitudes in the range
-     * (-540<sup>o</sup>, 540<sup>o</sup>).  Internally longitudes are reduced
+     * [-540<sup>o</sup>, 540<sup>o</sup>).  Internally longitudes are reduced
      * to the range [-180, 180).
      *
      * UTM/UPS parsing.  For UTM zones (-80 <= Lat <= 84), the zone designator
@@ -180,7 +180,7 @@ namespace GeographicLib {
      *   specified zone using the rules given in UTMUPS::zonespec.
      * @exception GeographicErr if \e latitude is not in [-90<sup>o</sup>,
      *   90<sup>o</sup>].
-     * @exception GeographicErr if \e longitude is not in (-540<sup>o</sup>,
+     * @exception GeographicErr if \e longitude is not in [-540<sup>o</sup>,
      *   540<sup>o</sup>).
      * @exception GeographicErr if \e zone cannot be used for this location.
      **********************************************************************/
@@ -226,7 +226,7 @@ namespace GeographicLib {
      *   specified zone using the rules given in UTMUPS::zonespec.
      * @exception GeographicErr if \e latitude is not in [-90<sup>o</sup>,
      *   90<sup>o</sup>].
-     * @exception GeographicErr if \e longitude is not in (-540<sup>o</sup>,
+     * @exception GeographicErr if \e longitude is not in [-540<sup>o</sup>,
      *   540<sup>o</sup>).
      * @exception GeographicErr if \e zone cannot be used for this location.
      **********************************************************************/

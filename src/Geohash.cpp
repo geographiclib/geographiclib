@@ -27,9 +27,9 @@ namespace GeographicLib {
     if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    if (abs(lon) >= 540)
+    if (!(lon >= -540 && lon < 540))
       throw GeographicErr("Longitude " + Utility::str(lon)
-                          + "d not in (-540d, 540d)");
+                          + "d not in [-540d, 540d)");
     if (lat == 90) lat -= lateps_ / 2;
     lon = Math::AngNormalize(lon); // lon in [-180,180)
     // lon/loneps_ in [-2^45,2^45); lon/eps + shift_ in [0,2^46)

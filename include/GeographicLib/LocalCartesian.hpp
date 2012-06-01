@@ -60,7 +60,7 @@ namespace GeographicLib {
      *   Geocentric::WGS84.
      *
      * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
-     * lon0 should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
+     * lon0 should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     LocalCartesian(real lat0, real lon0, real h0 = 0,
                    const Geocentric& earth = Geocentric::WGS84) throw()
@@ -88,7 +88,7 @@ namespace GeographicLib {
      * @param[in] h0 height above ellipsoid at origin (meters); default 0.
      *
      * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
-     * lon0 should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
+     * lon0 should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void Reset(real lat0, real lon0, real h0 = 0) throw();
 
@@ -103,7 +103,7 @@ namespace GeographicLib {
      * @param[out] z local cartesian coordinate (meters).
      *
      * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
-     * should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
+     * should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& x, real& y, real& z)
       const throw() {
@@ -124,7 +124,7 @@ namespace GeographicLib {
      *   matrix in row-major order.
      *
      * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
-     * should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
+     * should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      *
      * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can
      * express \e v as \e column vectors in one of two ways

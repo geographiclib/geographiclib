@@ -189,7 +189,7 @@ namespace GeographicLib {
      *
      * No false easting or northing is added. \e lat should be in the range
      * [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon and \e lon0 should be in the
-     * range (-540<sup>o</sup>, 540<sup>o</sup>).
+     * range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
@@ -206,7 +206,7 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added.  \e lon0 should be in the range
-     * (-540<sup>o</sup>, 540<sup>o</sup>).  The value of \e lon returned is in
+     * [-540<sup>o</sup>, 540<sup>o</sup>).  The value of \e lon returned is in
      * the range [-180<sup>o</sup>, 180<sup>o</sup>).
      **********************************************************************/
     void Reverse(real lon0, real x, real y,

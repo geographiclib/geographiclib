@@ -212,7 +212,7 @@ namespace GeographicLib {
      * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No
      * false easting or northing is added and \e lat should be in the range
      * [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon and \e lon0 should be in the
-     * range (-540<sup>o</sup>, 540<sup>o</sup>).  The values of \e x and \e y
+     * range [-540<sup>o</sup>, 540<sup>o</sup>).  The values of \e x and \e y
      * returned for points which project to infinity (i.e., one or both of the
      * poles) will be large but finite.
      **********************************************************************/
@@ -233,7 +233,7 @@ namespace GeographicLib {
      *
      * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No
      * false easting or northing is added.  \e lon0 should be in the range
-     * (-540<sup>o</sup>, 540<sup>o</sup>).  The value of \e lon returned is in
+     * [-540<sup>o</sup>, 540<sup>o</sup>).  The value of \e lon returned is in
      * the range [-180<sup>o</sup>, 180<sup>o</sup>).  The value of \e lat
      * returned is in the range [-90<sup>o</sup>, 90<sup>o</sup>].  If the
      * input point is outside the legal projected space the nearest pole is

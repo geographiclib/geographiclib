@@ -61,7 +61,7 @@ namespace GeographicLib {
      * @param[out] geohash the geohash.
      * @exception GeographicErr if \e la is not in [-90<sup>o</sup>,
      *   90<sup>o</sup>].
-     * @exception GeographicErr if \e lon is not in (-540<sup>o</sup>,
+     * @exception GeographicErr if \e lon is not in [-540<sup>o</sup>,
      *   540<sup>o</sup>).
      * @exception std::bad_alloc if memory for \e geohash can't be allocated.
      *

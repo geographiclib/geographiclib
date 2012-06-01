@@ -235,7 +235,7 @@ namespace GeographicLib {
      * @exception GeographicErr if decoded latitude is not in [-90<sup>o</sup>,
      *   90<sup>o</sup>].
      * @exception GeographicErr if decoded longitude is not in
-     *   (-540<sup>o</sup>, 540<sup>o</sup>).
+     *   [-540<sup>o</sup>, 540<sup>o</sup>).
      *
      * By default, the \e lat (resp., \e lon) is assigned to the results of
      * decoding \e dmsa (resp., \e dmsb).  However this is overridden if either
@@ -266,7 +266,7 @@ namespace GeographicLib {
      * @exception GeographicErr if \e azistr is malformed.
      * @exception GeographicErr if \e azistr includes a N/S designator.
      * @exception GeographicErr if decoded azimuth is not in
-     *   (-540<sup>o</sup>, 540<sup>o</sup>).
+     *   [-540<sup>o</sup>, 540<sup>o</sup>).
      * @return azimuth (degrees) reduced to the range [-180<sup>o</sup>,
      *   180<sup>o</sup>).
      *

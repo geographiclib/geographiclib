@@ -323,7 +323,7 @@ namespace GeographicLib {
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
      * \e lat1 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
-     * lon1 and \e azi1 should be in the range (-540<sup>o</sup>,
+     * lon1 and \e azi1 should be in the range [-540<sup>o</sup>,
      * 540<sup>o</sup>).  The values of \e lon2 and \e azi2 returned are in the
      * range [-180<sup>o</sup>, 180<sup>o</sup>).
      *
@@ -438,7 +438,7 @@ namespace GeographicLib {
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
      *
      * \e lat1 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
-     * lon1 and \e azi1 should be in the range (-540<sup>o</sup>,
+     * lon1 and \e azi1 should be in the range [-540<sup>o</sup>,
      * 540<sup>o</sup>).  The values of \e lon2 and \e azi2 returned are in the
      * range [-180<sup>o</sup>, 180<sup>o</sup>).
      *
@@ -614,7 +614,7 @@ namespace GeographicLib {
      *
      * \e lat1 and \e lat2 should be in the range [-90<sup>o</sup>,
      * 90<sup>o</sup>]; \e lon1 and \e lon2 should be in the range
-     * (-540<sup>o</sup>, 540<sup>o</sup>).  The values of \e azi1 and \e azi2
+     * [-540<sup>o</sup>, 540<sup>o</sup>).  The values of \e azi1 and \e azi2
      * returned are in the range [-180<sup>o</sup>, 180<sup>o</sup>).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
@@ -768,7 +768,7 @@ namespace GeographicLib {
      *   GeodesicLib::Position.
      *
      * \e lat1 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
-     * lon1 and \e azi1 should be in the range (-540<sup>o</sup>,
+     * lon1 and \e azi1 should be in the range [-540<sup>o</sup>,
      * 540<sup>o</sup>).
      *
      * The Geodesic::mask values are
