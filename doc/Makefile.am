@@ -88,10 +88,14 @@ MANPAGES = \
 doc: html/index.html
 
 if HAVE_DOXYGEN
-html/index.html: doxyfile.in Geographic.doc \
-	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(MANPAGES)
+manpages: $(MANPAGES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi
-	cp -p $(EXTRAFILES) $(MANPAGES) $(top_srcdir)/maxima/*.mac \
+	cp $^ html/
+	touch $@
+
+html/index.html: manpages doxyfile.in Geographic.doc \
+	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES)
+	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \
 	$(top_srcdir)/LICENSE.txt html/
 	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
 	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
@@ -107,7 +111,7 @@ html/index.html: index.html.in utilities.html.in
 endif
 
 maintainer-clean-local:
-	rm -rf html
+	rm -rf html manpages
 
 install-doc: html/index.html
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html
