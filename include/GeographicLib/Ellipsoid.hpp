@@ -68,9 +68,7 @@ namespace GeographicLib {
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
-     *
-     * An exception is thrown if either of the axes of the ellipsoid is
-     * non-positive.
+     * @exception GeographicErr if \e a or (1 - \e f ) \e a is not positive.
      **********************************************************************/
     Ellipsoid(real a, real f);
     ///@}
@@ -141,23 +139,23 @@ namespace GeographicLib {
     /**
      * @return <i>e</i><sup>2</sup> = (<i>a</i><sup>2</sup> -
      *   <i>b</i><sup>2</sup>) / <i>a</i><sup>2</sup>, the eccentricity squared
-     *   of the the ellipsoid.  This is zero, positive, or negative for a
-     *   sphere, oblate ellipsoid, or prolate ellipsoid.
+     *   of the ellipsoid.  This is zero, positive, or negative for a sphere,
+     *   oblate ellipsoid, or prolate ellipsoid.
      **********************************************************************/
     Math::real EccentricitySq() { return _e2; }
 
     /**
      * @return <i>e'</i> <sup>2</sup> = (<i>a</i><sup>2</sup> -
      *   <i>b</i><sup>2</sup>) / <i>b</i><sup>2</sup>, the second eccentricity
-     *   squared of the the ellipsoid.  This is zero, positive, or negative for
-     *   a sphere, oblate ellipsoid, or prolate ellipsoid.
+     *   squared of the ellipsoid.  This is zero, positive, or negative for a
+     *   sphere, oblate ellipsoid, or prolate ellipsoid.
      **********************************************************************/
     Math::real SecondEccentricitySq() { return _e12; }
 
     /**
      * @return <i>e''</i> <sup>2</sup> = (<i>a</i><sup>2</sup> -
      *   <i>b</i><sup>2</sup>) / (<i>a</i><sup>2</sup> + <i>b</i><sup>2</sup>),
-     *   the third eccentricity squared of the the ellipsoid.  This is zero,
+     *   the third eccentricity squared of the ellipsoid.  This is zero,
      *   positive, or negative for a sphere, oblate ellipsoid, or prolate
      *   ellipsoid.
      **********************************************************************/

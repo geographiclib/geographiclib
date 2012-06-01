@@ -50,7 +50,7 @@ namespace GeographicLib {
    *
    * The standard way of specifying the direct problem is the specify the
    * distance \e s12 to the second point.  However it is sometimes useful
-   * instead to specify the the arc length \e a12 (in degrees) on the auxiliary
+   * instead to specify the arc length \e a12 (in degrees) on the auxiliary
    * sphere.  This is a mathematical construct used in solving the geodesic
    * problems.  The solution of the direct problem in this form is provide by
    * Geodesic::ArcDirect.  An arc length in excess of 180<sup>o</sup> indicates
@@ -61,10 +61,10 @@ namespace GeographicLib {
    * This class can also calculate several other quantities related to
    * geodesics.  These are:
    * - <i>reduced length</i>.  If we fix the first point and increase \e azi1
-   *   by \e dazi1 (radians), the the second point is displaced \e m12 \e dazi1
-   *   in the direction \e azi2 + 90<sup>o</sup>.  The quantity \e m12 is
-   *   called the "reduced length" and is symmetric under interchange of the
-   *   two points.  On a curved surface the reduced length obeys a symmetry
+   *   by \e dazi1 (radians), the second point is displaced \e m12 \e dazi1 in
+   *   the direction \e azi2 + 90<sup>o</sup>.  The quantity \e m12 is called
+   *   the "reduced length" and is symmetric under interchange of the two
+   *   points.  On a curved surface the reduced length obeys a symmetry
    *   relation, \e m12 + \e m21 = 0.  On a flat surface, we have \e m12 = \e
    *   s12.  The ratio <i>s12</i>/\e m12 gives the azimuthal scale for an
    *   azimuthal equidistant projection.
@@ -294,9 +294,7 @@ namespace GeographicLib {
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
-     *
-     * An exception is thrown if either of the axes of the ellipsoid is
-     * non-positive.
+     * @exception GeographicLib if \e a or (1 - \e f ) \e a is not positive.
      **********************************************************************/
     Geodesic(real a, real f);
     ///@}

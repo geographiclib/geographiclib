@@ -59,10 +59,13 @@ namespace GeographicLib {
      * @param[in] lon longitude of point (degrees).
      * @param[in] len the length of the resulting geohash.
      * @param[out] geohash the geohash.
+     * @exception GeographicErr if \e la is not in [-90<sup>o</sup>,
+     *   90<sup>o</sup>].
+     * @exception GeographicErr if \e lon is not in (-540<sup>o</sup>,
+     *   540<sup>o</sup>).
+     * @exception std::bad_alloc if memory for \e geohash can't be allocated.
      *
-     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
-     * should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).  Internally,
-     * \e len is first put in the range [0, 18].
+     * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
     static void Forward(real lat, real lon, int len, std::string& geohash);
 
@@ -75,6 +78,7 @@ namespace GeographicLib {
      * @param[out] len the length of the geohash.
      * @param[in] centerp if true (the default) return the center of the
      *   geohash location, otherwise return the south-west corner.
+     * @exception GeographicErr if \e geohash contains illegal characters.
      *
      * Only the first 18 characters for \e geohash are considered.  The case of
      * the letters in \e geohash is ignored.

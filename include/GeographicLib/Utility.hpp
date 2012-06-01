@@ -111,9 +111,8 @@ namespace GeographicLib {
      * @param[in] m the month, Jan = 1, etc. (must be positive).  Default = 1.
      * @param[in] d the day of the month (must be positive).  Default = 1.
      * @param[in] check whether to check the date.
+     * @exception GeographicErr if the date is invalid and \e check is true.
      * @return the sequential day number.
-     *
-     * If \e check is true and the date is invalid an exception is thrown.
      **********************************************************************/
     static int day(int y, int m, int d, bool check) {
       int s = day(y, m, d);
@@ -168,6 +167,7 @@ namespace GeographicLib {
      * @param[out] y the year.
      * @param[out] m the month, Jan = 1, etc.
      * @param[out] d the day of the month.
+     * @exception GeographicErr is \e s is malformed.
      **********************************************************************/
     static void date(const std::string& s, int& y, int& m, int& d) {
       int y1, m1 = 1, d1 = 1;
@@ -225,6 +225,7 @@ namespace GeographicLib {
      *
      * @tparam T the type of the argument.
      * @param[in] s the string to be converted.
+     * @exception GeographicErr if \e s can't be interpreted as a date.
      * @return the fractional year.
      *
      * The string is first read as an ordinary number (e.g., 2010 or 2012.5);
@@ -250,6 +251,7 @@ namespace GeographicLib {
      * @tparam T the type of the argument.
      * @param[in] x the value to be converted.
      * @param[in] p the precision used (default -1).
+     * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return the string representation.
      *
      * If \e p >= 0, then the number fixed format is used with p bits of
@@ -269,6 +271,7 @@ namespace GeographicLib {
      *
      * @tparam T the type of the return value.
      * @param[in] s the string to be converted.
+     * @exception GeographicErr is \e s is not readable as a T.
      * @return object of type T
      **********************************************************************/
     template<typename T> static T num(const std::string& s) {
@@ -328,6 +331,7 @@ namespace GeographicLib {
      *
      * @tparam T the type of the return value.
      * @param[in] s the string to be converted.
+     * @exception GeographicErr is \e s is not readable as a fraction of type T.
      * @return object of type T
      **********************************************************************/
     template<typename T> static T fract(const std::string& s) {
@@ -366,6 +370,7 @@ namespace GeographicLib {
      *   (external).
      * @param[out] array the output array of type IntT (internal).
      * @param[in] num the size of the array.
+     * @exception GeographicErr if the data cannot be read.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
       static inline void readarray(std::istream& str,
@@ -412,6 +417,7 @@ namespace GeographicLib {
      * @param[in] str the input stream containing the data of type ExtT
      *   (external).
      * @param[out] array the output vector of type IntT (internal).
+     * @exception GeographicErr if the data cannot be read.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
       static inline void readarray(std::istream& str,
@@ -429,6 +435,7 @@ namespace GeographicLib {
      * @param[out] str the output stream for the data of type ExtT (external).
      * @param[in] array the input array of type IntT (internal).
      * @param[in] num the size of the array.
+     * @exception GeographicErr if the data cannot be written.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
       static inline void writearray(std::ostream& str,
@@ -470,6 +477,7 @@ namespace GeographicLib {
      * @tparam bigendp true if the external storage format is big-endian.
      * @param[out] str the output stream for the data of type ExtT (external).
      * @param[in] array the input vector of type IntT (internal).
+     * @exception GeographicErr if the data cannot be written.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
       static inline void writearray(std::ostream& str,
@@ -483,6 +491,8 @@ namespace GeographicLib {
      * @param[in] line the input line.
      * @param[out] key the key.
      * @param[out] val the value.
+     * @exception std::bad_alloc if memory for the internal strings can't be
+     *   allocated.
      * @return whether a key was found.
      *
      * A # character and everything after it are discarded.  If the results is

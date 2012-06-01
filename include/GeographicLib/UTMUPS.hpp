@@ -171,11 +171,15 @@ namespace GeographicLib {
      * @param[in] setzone zone override.
      * @param[in] mgrslimits if true enforce the stricter MGRS limits on the
      *   coordinates (default = false).
+     * @exception GeographicErr if \e lat is not in [-90<sup>o</sup>,
+     *   90<sup>o</sup>].
+     * @exception GeographicErr if \e lon is not in (-540<sup>o</sup>,
+     *   540<sup>o</sup>).
+     * @exception GeographicLib if the resulting \e x or \e y is out of allowed
+     *   range (see Reverse); in this case, these arguments are unchanged.
      *
      * The preferred zone for the result can be specified with \e setzone, see
-     * UTMUPS::StandardZone.  Throw error if the resulting easting or northing
-     * is outside the allowed range (see Reverse), in which case the arguments
-     * are unchanged.  This also returns meridian convergence \e gamma
+     * UTMUPS::StandardZone.  This also returns meridian convergence \e gamma
      * (degrees) and scale \e k.  The accuracy of the conversion is about 5nm.
      **********************************************************************/
     static void Forward(real lat, real lon,
@@ -196,10 +200,10 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      * @param[in] mgrslimits if true enforce the stricter MGRS limits on the
      *   coordinates (default = false).
+     * @exception GeographicLib if \e zone, \e x, or \e y is out of allowed
+     *   range; this this case the arguments are unchanged.
      *
-     * Throw error if easting or northing is outside the allowed range (see
-     * below), in which case the arguments are unchanged.  The accuracy of the
-     * conversion is about 5nm.
+     * The accuracy of the conversion is about 5nm.
      *
      * UTM eastings are allowed to be in the range [0km, 1000km], northings are
      * allowed to be in in [0km, 9600km] for the northern hemisphere and in
@@ -249,6 +253,7 @@ namespace GeographicLib {
      * @param[in] zonestr string representation of zone and hemisphere.
      * @param[out] zone the UTM zone (zero means UPS).
      * @param[out] northp hemisphere (true means north, false means south).
+     * @exception GeographicErr of \e zonestr is malformed.
      *
      * For UTM, \e zonestr has the form of a zone number in the range
      * [UTMUPS::MINUTMZONE, UTMUPS::MAXUTMZONE] = [1, 60] followed by a
@@ -266,6 +271,8 @@ namespace GeographicLib {
      *
      * @param[out] zone the UTM zone (zero means UPS).
      * @param[out] northp hemisphere (true means north, false means south).
+     * @exception GeographicErr of \e zone is out of range (see below).
+     * @exception std::bad_alloc if memoy for the string can't be allocated.
      * @return string representation of zone and hemisphere.
      *
      * \e zone must be in the range [UTMUPS::MINZONE, UTMUPS::MAXZONE] = [0,

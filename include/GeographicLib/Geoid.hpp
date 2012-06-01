@@ -210,15 +210,17 @@ namespace GeographicLib {
      *   true (the default) means cubic.
      * @param[in] threadsafe (optional), if true, construct a thread safe
      *   object.  The default is false
+     * @exception GeographicErr if the data file cannot be found, is
+     *   unreadable, or is corrupt.
+     * @exception GeographicErr if \e threadsafe is true but the memory
+     *   necessary for caching the data can't be allocated.
      *
      * The data file is formed by appending ".pgm" to the name.  If \e path is
      * specified (and is non-empty), then the file is loaded from directory, \e
-     * path.  Otherwise the path is given by DefaultGeoidPath().  This may
-     * throw an exception because the file does not exist, is unreadable, or is
-     * corrupt.  If the \e threadsafe parameter is true, the data set is read
-     * into memory (which this may also cause an exception to be thrown), the
-     * data file is closed, and single-cell caching is turned off; this results
-     * in a Geoid object which \e is thread safe.
+     * path.  Otherwise the path is given by DefaultGeoidPath().  If the \e
+     * threadsafe parameter is true, the data set is read into memory, the data
+     * file is closed, and single-cell caching is turned off; this results in a
+     * Geoid object which \e is thread safe.
      **********************************************************************/
     explicit Geoid(const std::string& name, const std::string& path = "",
                    bool cubic = true, bool threadsafe = false);
@@ -230,29 +232,33 @@ namespace GeographicLib {
      * @param[in] west longitude (degrees) of the west edge of the cached area.
      * @param[in] north latitude (degrees) of the north edge of the cached area.
      * @param[in] east longitude (degrees) of the east edge of the cached area.
+     * @exception GeographicErr if the memory necessary for caching the data
+     *   can't be allocated (in this case, you will have no cache and can try
+     *   again with a smaller area).
+     * @exception GeographicErr if there's a problem reading the data.
+     * @exception GeographicErr if this is called on a threadsafe Geoid.
      *
      * Cache the data for the specified "rectangular" area bounded by the
      * parallels \e south and \e north and the meridians \e west and \e east.
      * \e east is always interpreted as being east of \e west, if necessary by
-     * adding 360<sup>o</sup> to its value.  This may throw an error because of
-     * insufficient memory or because of an error reading the data from the
-     * file.  In this case, you can catch the error and either do nothing (you
-     * will have no cache in this case) or try again with a smaller area.  \e
-     * south and \e north should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e west and \e east
-     * should be in the range (-540<sup>o</sup>, 540<sup>o</sup>).  An exception is thrown if this
-     * routine is called on a thread safe Geoid.
+     * adding 360<sup>o</sup> to its value.  \e south and \e north should be in
+     * the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e west and \e east should
+     * be in the range (-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void CacheArea(real south, real west, real north, real east) const;
 
     /**
-     * Cache all the data.  On most computers, this is fast for data sets with
-     * grid resolution of 5' or coarser.  For a 1' grid, the required RAM is
-     * 450MB; a 2.5' grid needs 72MB; and a 5' grid needs 18MB.  This may throw
-     * an error because of insufficient memory or because of an error reading
-     * the data from the file.  In this case, you can catch the error and
-     * either do nothing (you will have no cache in this case) or try using
-     * Geoid::CacheArea on a specific area.  An exception is thrown if this
-     * routine is called on a thread safe Geoid.
+     * Cache all the data.
+     *
+     * @exception GeographicErr if the memory necessary for caching the data
+     *   can't be allocated (in this case, you will have no cache and can try
+     *   again with a smaller area).
+     * @exception GeographicErr if there's a problem reading the data.
+     * @exception GeographicErr if this is called on a threadsafe Geoid.
+     *
+     * On most computers, this is fast for data sets with grid resolution of 5'
+     * or coarser.  For a 1' grid, the required RAM is 450MB; a 2.5' grid needs
+     * 72MB; and a 5' grid needs 18MB.
      **********************************************************************/
     void CacheAll() const { CacheArea(real(-90), real(0),
                                       real(90), real(360)); }
@@ -273,12 +279,12 @@ namespace GeographicLib {
      *
      * @param[in] lat latitude of the point (degrees).
      * @param[in] lon longitude of the point (degrees).
+     * @exception GeographicErr if there's a problem reading the data; this
+     *   never happens if (\e lat, \e lon) is within a successfully cached area.
      * @return geoid height (meters).
      *
      * The latitude should be in [-90<sup>o</sup>, 90<sup>o</sup>] and
-     * longitude should be in (-540<sup>o</sup>, 540<sup>o</sup>).  This may
-     * throw an error because of an error reading data from disk.  However, it
-     * will not throw if (\e lat, \e lon) is within a successfully cached area.
+     * longitude should be in (-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     Math::real operator()(real lat, real lon) const {
       real gradn, grade;
@@ -292,16 +298,16 @@ namespace GeographicLib {
      * @param[in] lon longitude of the point (degrees).
      * @param[out] gradn northerly gradient (dimensionless).
      * @param[out] grade easterly gradient (dimensionless).
+     * @exception GeographicErr if there's a problem reading the data; this
+     *   never happens if (\e lat, \e lon) is within a successfully cached area.
      * @return geoid height (meters).
      *
      * The latitude should be in [-90<sup>o</sup>, 90<sup>o</sup>] and
-     * longitude should be in (-540<sup>o</sup>, 540<sup>o</sup>).  This may
-     * throw an error because of an error reading data from disk.  However, it
-     * will not throw if (\e lat, \e lon) is within a successfully cached area.
-     * As a result of the way that the geoid data is stored, the calculation of
-     * gradients can result in large quantization errors.  This is particularly
-     * acute for fine grids, at high latitudes, and for the easterly gradient.
-     * If you need to compute the direction of the acceleration due to gravity
+     * longitude should be in (-540<sup>o</sup>, 540<sup>o</sup>).  As a result
+     * of the way that the geoid data is stored, the calculation of gradients
+     * can result in large quantization errors.  This is particularly acute for
+     * fine grids, at high latitudes, and for the easterly gradient.  If you
+     * need to compute the direction of the acceleration due to gravity
      * accurately, you should use GravityModel::Gravity.
      **********************************************************************/
     Math::real operator()(real lat, real lon, real& gradn, real& grade) const {
@@ -319,6 +325,8 @@ namespace GeographicLib {
      *   conversion; Geoid::GEOIDTOELLIPSOID means convert a height above the
      *   geoid to a height above the ellipsoid; Geoid::ELLIPSOIDTOGEOID means
      *   convert a height above the ellipsoid to a height above the geoid.
+     * @exception GeographicErr if there's a problem reading the data; this
+     *   never happens if (\e lat, \e lon) is within a successfully cached area.
      * @return converted height (meters).
      **********************************************************************/
     Math::real ConvertHeight(real lat, real lon, real h,

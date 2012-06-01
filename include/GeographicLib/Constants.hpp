@@ -110,8 +110,8 @@ namespace GeographicLib {
     { return T(3986004) * T(100000000) + T(41800000); }
     /**
      * @tparam T the type of the returned value.
-     * @return the angular velocity of the the WGS84 ellipsoid, \e omega, in
-     *   rad s<sup>-1</sup>.
+     * @return the angular velocity of the WGS84 ellipsoid, \e omega, in rad
+     *   s<sup>-1</sup>.
      **********************************************************************/
     template<typename T> static inline T WGS84_omega() throw()
     { return T(7292115) / (T(1000000) * T(100000)); }
@@ -143,8 +143,8 @@ namespace GeographicLib {
     { return T(3986005) * T(100000000); }
     /**
      * @tparam T the type of the returned value.
-     * @return the angular velocity of the the GRS80 ellipsoid, \e omega, in
-     *   rad s<sup>-1</sup>.
+     * @return the angular velocity of the GRS80 ellipsoid, \e omega, in rad
+     *   s<sup>-1</sup>.
      *
      * This is about 2*pi*366.25 / (365.25*24*3600) rad s<sup>-1</sup>.  365.25
      * is the number of days in a Julian year and 365.35/366.25 converts from

@@ -133,6 +133,10 @@ namespace GeographicLib {
      * @param[in] y northing of point (meters).
      * @param[in] prec precision relative to 100 km.
      * @param[out] gridref National Grid reference.
+     * @exception GeographicErr if \e prec, \e x, or \e y is outside its
+     *   allowed range.
+     * @exception std::bad_alloc if the memory for \e gridref can't be
+     *   allocatied.
      *
      * \e prec specifies the precision of the grid reference string as follows:
      * - prec = 0 (min), 100km
@@ -161,6 +165,7 @@ namespace GeographicLib {
      * @param[out] prec precision relative to 100 km.
      * @param[in] centerp if true (default), return center of the grid square,
      *   else return SW (lower left) corner.
+     * @exception GeographicErr if \e gridref is illegal.
      *
      * The grid reference must be of the form: two letters (not including I)
      * followed by an even number of digits (up to 22).

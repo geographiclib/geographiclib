@@ -77,9 +77,12 @@ namespace GeographicLib {
      * @param[in] norm the normalization for the associated Legendre
      *   polynomials, either SphericalHarmonic1::FULL (the default) or
      *   SphericalHarmonic1::SCHMIDT.
+     * @exception GeographicErr if \e N and \e N1 do not satisfy \e N >=
+     *   \e N1 >= -1.
+     * @exception GeographicErr if any of the vectors of coefficients is not
+     *   large enough.
      *
-     * See SphericalHarmonic for the way the coefficients should be stored.  \e
-     * N1 should satisfy \e N1 <= \e N.
+     * See SphericalHarmonic for the way the coefficients should be stored.
      *
      * The class stores <i>pointers</i> to the first elements of \e C, \e S, \e
      * C', and \e S'.  These arrays should not be altered or destroyed during
@@ -121,6 +124,11 @@ namespace GeographicLib {
      * @param[in] norm the normalization for the associated Legendre
      *   polynomials, either SphericalHarmonic1::FULL (the default) or
      *   SphericalHarmonic1::SCHMIDT.
+     * @exception GeographicErr if the parameters do not satisfy
+     *   \e N >= \e nmx >= \e mmx >= -1; \e N1 >= \e nmx1 >= \e mmx1 >= -1;
+     *   \e N >= \e N1; \e nmx >= \e nmx1; \e mmx >= \e mmx1.
+     * @exception GeographicErr if any of the vectors of coefficients is not
+     *   large enough.
      *
      * The class stores <i>pointers</i> to the first elements of \e C, \e S, \e
      * C', and \e S'.  These arrays should not be altered or destroyed during
@@ -223,6 +231,8 @@ namespace GeographicLib {
      * @param[in] z the height of the circle above the equatorial plane.
      * @param[in] gradp if true the returned object will be able to compute the
      *   gradient of the sum.
+     * @exception std::bad_alloc if the memory for the CircularEngine can't be
+     *   allocated.
      * @return the CircularEngine object.
      *
      * SphericalHarmonic1::operator()() exchanges the order of the sums in the
@@ -231,7 +241,7 @@ namespace GeographicLib {
      * inner sum over degree \e n (which entails about <i>N</i><sup>2</sup>
      * operations).  Calling CircularEngine::operator()() on the returned
      * object performs the outer sum over the order \e m (about \e N
-     * operations).  This routine may throw a bad_alloc exception in the
+     * operations).  This routine may throw a std::bad_alloc exception in the
      * CircularEngine constructor.
      *
      * See SphericalHarmonic::Circle for an example of its use.

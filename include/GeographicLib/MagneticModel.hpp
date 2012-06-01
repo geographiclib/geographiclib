@@ -90,12 +90,15 @@ namespace GeographicLib {
      * @param[in] path (optional) directory for data file.
      * @param[in] earth (optional) Geocentric object for converting
      *   coordinates; default Geocentric::WGS84.
+     * @exception GeographicErr if the data file cannot be found, is
+     *   unreadable, or is corrupt.
+     * @exception std::bad_alloc if the memory necessary for storing the model
+     *   can't be allocated.
      *
      * A filename is formed by appending ".wmm" (World Magnetic Model) to the
      * name.  If \e path is specified (and is non-empty), then the file is
      * loaded from directory, \e path.  Otherwise the path is given by the
-     * DefaultMagneticPath().  This may throw an exception because the file
-     * does not exist, is unreadable, or is corrupt.
+     * DefaultMagneticPath().
      *
      * This file contains the metadata which specifies the properties of the
      * model.  The coefficients for the spherical harmonic sums are obtained
@@ -103,7 +106,7 @@ namespace GeographicLib {
      * filename ends in ".wwm.cof").
      *
      * The model is not tied to a particular ellipsoidal model of the earth.
-     * The final earth argument to the constructor specify an ellipsoid to
+     * The final earth argument to the constructor specifies an ellipsoid to
      * allow geodetic coordinates to the transformed into the spherical
      * coordinates used in the spherical harmonic sum.
      **********************************************************************/
@@ -163,6 +166,8 @@ namespace GeographicLib {
      * @param[in] t the time (years).
      * @param[in] lat latitude of the point (degrees).
      * @param[in] h the height of the point above the ellipsoid (meters).
+     * @exception std::bad_alloc if the memory necessary for creating a
+     *   MagneticCircle can't be allocated.
      * @return a MagneticCircle object whose MagneticCircle::operator()(real
      *   lon) member function computes the field at particular values of \e
      *   lon.

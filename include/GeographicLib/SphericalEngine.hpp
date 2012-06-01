@@ -111,10 +111,12 @@ namespace GeographicLib {
        * @param[in] N the degree giving storage layout for \e C and \e S.
        * @param[in] nmx the maximum degree to be used.
        * @param[in] mmx the maximum order to be used.
-       *
-       * This requires \e N >= \e nmx >= \e mmx >= -1.  \e C and \e S must also
-       * be large enough to hold the coefficients.  Otherwise an exception is
-       * thrown.
+       * @exception GeographicErr if \e N, \e nmx, and \e mmx do not satisfy
+       *   \e N >= \e nmx >= \e mmx >= -1.
+       * @exception GeographicErr if \e C or \e S is not big enough to hold the
+       *   coefficients.
+       * @exception std::bad_alloc if the memory for the square root table
+       *   can't be allocated.
        **********************************************************************/
       coeff(const std::vector<real>& C,
             const std::vector<real>& S,
@@ -138,9 +140,11 @@ namespace GeographicLib {
        * @param[in] C a vector of coefficients for the cosine terms.
        * @param[in] S a vector of coefficients for the sine terms.
        * @param[in] N the maximum degree and order.
-       *
-       * This requires \e N >= -1.  \e C and \e S must also be large enough to
-       * hold the coefficients.  Otherwise an exception is thrown.
+       * @exception GeographicErr if \e N does not satisfy \e N >= -1.
+       * @exception GeographicErr if \e C or \e S is not big enough to hold the
+       *   coefficients.
+       * @exception std::bad_alloc if the memory for the square root table
+       *   can't be allocated.
        **********************************************************************/
       coeff(const std::vector<real>& C,
             const std::vector<real>& S,
@@ -226,7 +230,7 @@ namespace GeographicLib {
        * @return the size of the vector of cosine terms as stored in column
        *   major order.
        **********************************************************************/
-      static inline int Csize(int N, int M)
+      static inline int Csize(int N, int M) throw()
       { return (M + 1) * (2 * N - M + 2) / 2; }
 
       /**
@@ -237,7 +241,7 @@ namespace GeographicLib {
        * @return the size of the vector of cosine terms as stored in column
        *   major order.
        **********************************************************************/
-      static inline int Ssize(int N, int M)
+      static inline int Ssize(int N, int M) throw ()
       { return Csize(N, M) - (N + 1); }
 
       /**
@@ -248,6 +252,11 @@ namespace GeographicLib {
        * @param[out] M The maximum order of the coefficients.
        * @param[out] C The vector of cosine coefficients.
        * @param[out] S The vector of sine coefficients.
+       * @exception GeographicErr if \e N and \e M do not satisfy \e N >=
+       *   \e M >= -1.
+       * @exception GeographicErr if there's an error reading the data.
+       * @exception std::bad_alloc if the memory for \e C or \e S can't be
+       *   allocated.
        *
        * \e N and \e M are read as 4-byte ints.  \e C and \e S are resized to
        * accommodate all the coefficients (with the \e m = 0 coefficients for
@@ -307,6 +316,8 @@ namespace GeographicLib {
      *   <i>y</i><sup>2</sup>).
      * @param[in] z the height of the circle.
      * @param[in] a the normalizing radius.
+     * @exception std::bad_alloc if the memory for the CircularEngine can't be
+     *   allocated.
      * @result the CircularEngine object.
      *
      * If you need to evaluate the spherical harmonic sum for several points
@@ -324,6 +335,8 @@ namespace GeographicLib {
      * if necessary.
      *
      * @param[in] N the maximum degree to be used in SphericalEngine.
+     * @exception std::bad_alloc if the memory for the square root table can't
+     *   be allocated.
      *
      * Typically, there's no need for an end-user to call this routine, because
      * the constructors for SphericalEngine::coeff do so.  However, since this

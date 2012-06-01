@@ -146,9 +146,10 @@ namespace GeographicLib {
      *   to 1/\e f.
      * @param[in] stdlat standard parallel (degrees), the circle of tangency.
      * @param[in] k0 scale on the standard parallel.
-     *
-     * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat
-     * is not in the range [-90<sup>o</sup>, 90<sup>o</sup>].
+     * @exception GeographicLib if \e a, (1 - \e f ) \e a, or \e k0 is not
+     *   positive.
+     * @exception GeographicErr if \e stdlat is not in [-90<sup>o</sup>,
+     *   90<sup>o</sup>].
      **********************************************************************/
     LambertConformalConic(real a, real f, real stdlat, real k0);
 
@@ -162,11 +163,11 @@ namespace GeographicLib {
      * @param[in] stdlat1 first standard parallel (degrees).
      * @param[in] stdlat2 second standard parallel (degrees).
      * @param[in] k1 scale on the standard parallels.
-     *
-     * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat1
-     * or \e stdlat2 is not in the range [-90<sup>o</sup>, 90<sup>o</sup>].  In addition, if either \e
-     * stdlat1 or \e stdlat2 is a pole, then an exception is thrown if \e
-     * stdlat1 is not equal \e stdlat2.
+     * @exception GeographicLib if \e a, (1 - \e f ) \e a, or \e k1 is not
+     *   positive.
+     * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
+     *   [-90<sup>o</sup>, 90<sup>o</sup>], or if either \e stdlat1 or \e
+     *   stdlat2 is a pole and \e stdlat1 is not equal \e stdlat2.
      **********************************************************************/
     LambertConformalConic(real a, real f, real stdlat1, real stdlat2, real k1);
 
@@ -182,6 +183,11 @@ namespace GeographicLib {
      * @param[in] sinlat2 sine of second standard parallel.
      * @param[in] coslat2 cosine of second standard parallel.
      * @param[in] k1 scale on the standard parallels.
+     * @exception GeographicLib if \e a, (1 - \e f ) \e a, or \e k1 is not
+     *   positive.
+     * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
+     *   [-90<sup>o</sup>, 90<sup>o</sup>], or if either \e stdlat1 or \e
+     *   stdlat2 is a pole and \e stdlat1 is not equal \e stdlat2.
      *
      * This allows parallels close to the poles to be specified accurately.
      * This routine computes the latitude of origin and the scale at this
@@ -203,10 +209,9 @@ namespace GeographicLib {
      *
      * @param[in] lat (degrees).
      * @param[in] k scale at latitude \e lat (default 1).
-     *
-     * This allows a "latitude of true scale" to be specified.  An exception is
-     * thrown if \e k is not positive or if \e stdlat is not in the range
-     * [-90<sup>o</sup>, 90<sup>o</sup>]
+     * @exception GeographicLib \e k is not positive.
+     * @exception GeographicErr if \e lat is not in [-90<sup>o</sup>,
+     *   90<sup>o</sup>].
      **********************************************************************/
     void SetScale(real lat, real k = real(1));
 

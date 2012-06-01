@@ -134,6 +134,7 @@ namespace GeographicLib {
      *   to 1/\e f.
      * @param[in] k0 central scale factor.
      * @param[in] extendp use extended domain.
+     * @exception GeographicLib if \e a, \e f, or \e k0 is not positive.
      *
      * The transverse Mercator projection has a branch point singularity at \e
      * lat = 0 and \e lon - \e lon0 = 90 (1 - \e e) or (for

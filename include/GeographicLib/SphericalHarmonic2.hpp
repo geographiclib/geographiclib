@@ -84,6 +84,10 @@ namespace GeographicLib {
      * @param[in] norm the normalization for the associated Legendre
      *   polynomials, either SphericalHarmonic2::FULL (the default) or
      *   SphericalHarmonic2::SCHMIDT.
+     * @exception GeographicErr if \e N and \e N1 do not satisfy \e N >=
+     *   \e N1 >= -1, and similarly for \e N2.
+     * @exception GeographicErr if any of the vectors of coefficients is not
+     *   large enough.
      *
      * See SphericalHarmonic for the way the coefficients should be stored.  \e
      * N1 and \e N2 should satisfy \e N1 <= \e N and \e N2 <= \e N.
@@ -138,6 +142,12 @@ namespace GeographicLib {
      * @param[in] norm the normalization for the associated Legendre
      *   polynomials, either SphericalHarmonic2::FULL (the default) or
      *   SphericalHarmonic2::SCHMIDT.
+     * @exception GeographicErr if the parameters do not satisfy \e N >= \e
+     *   nmx >= \e mmx >= -1; \e N1 >= \e nmx1 >= \e mmx1 >= -1; \e N >= \e N1;
+     *   \e nmx >= \e nmx1; \e mmx >= \e mmx1; and similarly for \e N2, \e
+     *   nmx2, and \e mmx2.
+     * @exception GeographicErr if any of the vectors of coefficients is not
+     *   large enough.
      *
      * The class stores <i>pointers</i> to the first elements of \e C, \e S, \e
      * C', \e S', \e C'', and \e S''.  These arrays should not be altered or
@@ -158,7 +168,7 @@ namespace GeographicLib {
       if (!(nmx1 <= nmx && nmx2 <= nmx))
         throw GeographicErr("nmx1 and nmx2 cannot be larger that nmx");
       if (!(mmx1 <= mmx && mmx2 <= mmx))
-        throw GeographicErr("mmx1 and mmx2cannot be larger that mmx");
+        throw GeographicErr("mmx1 and mmx2 cannot be larger that mmx");
       _c[0] = SphericalEngine::coeff(C, S, N, nmx, mmx);
       _c[1] = SphericalEngine::coeff(C1, S1, N1, nmx1, mmx1);
       _c[2] = SphericalEngine::coeff(C2, S2, N2, nmx2, mmx2);
@@ -248,6 +258,8 @@ namespace GeographicLib {
      * @param[in] z the height of the circle above the equatorial plane.
      * @param[in] gradp if true the returned object will be able to compute the
      *   gradient of the sum.
+     * @exception std::bad_alloc if the memory for the CircularEngine can't be
+     *   allocated.
      * @return the CircularEngine object.
      *
      * SphericalHarmonic2::operator()() exchanges the order of the sums in the
@@ -256,7 +268,7 @@ namespace GeographicLib {
      * inner sum over degree \e n (which entails about <i>N</i><sup>2</sup>
      * operations).  Calling CircularEngine::operator()() on the returned
      * object performs the outer sum over the order \e m (about \e N
-     * operations).  This routine may throw a bad_alloc exception in the
+     * operations).  This routine may throw a std::bad_alloc exception in the
      * CircularEngine constructor.
      *
      * See SphericalHarmonic::Circle for an example of its use.

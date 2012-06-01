@@ -93,6 +93,7 @@ namespace GeographicLib {
      *   below).
      * @param[in] swaplatlong governs the interpretation of geographic
      *   coordinates (see below).
+     * @exception GeographicErr if the \e s is malformed (see below).
      *
      * Parse as a string and interpret it as a geographic position.  The input
      * string is broken into space (or comma) separated pieces and Basic
@@ -177,6 +178,11 @@ namespace GeographicLib {
      * @param[in] longitude (degrees).
      * @param[in] zone if specified, force the UTM/UPS representation to use a
      *   specified zone using the rules given in UTMUPS::zonespec.
+     * @exception GeographicErr if \e latitude is not in [-90<sup>o</sup>,
+     *   90<sup>o</sup>].
+     * @exception GeographicErr if \e longitude is not in (-540<sup>o</sup>,
+     *   540<sup>o</sup>).
+     * @exception GeographicErr if \e zone cannot be used for this location.
      **********************************************************************/
     GeoCoords(real latitude, real longitude, int zone = UTMUPS::STANDARD) {
       Reset(latitude, longitude, zone);
@@ -189,6 +195,8 @@ namespace GeographicLib {
      * @param[in] northp hemisphere (true means north, false means south).
      * @param[in] easting (meters).
      * @param[in] northing (meters).
+     * @exception GeographicErr if \e zone, \e easting, or \e northing is
+     *   outside its allowed range.
      **********************************************************************/
     GeoCoords(int zone, bool northp, real easting, real northing) {
       Reset(zone, northp, easting, northing);
@@ -197,6 +205,13 @@ namespace GeographicLib {
     /**
      * Reset the location from a string.  See
      * GeoCoords(const std::string& s, bool centerp, bool swaplatlong).
+     *
+     * @param[in] s 1-element, 2-element, or 3-element string representation of
+     *   the position.
+     * @param[in] centerp governs the interpretation of MGRS coordinates.
+     * @param[in] swaplatlong governs the interpretation of geographic
+     *   coordinates.
+     * @exception GeographicErr if the \e s is malformed.
      **********************************************************************/
     void Reset(const std::string& s,
                bool centerp = true, bool swaplatlong = false);
@@ -204,6 +219,16 @@ namespace GeographicLib {
     /**
      * Reset the location in terms of geographic coordinates.  See
      * GeoCoords(real latitude, real longitude, int zone).
+     *
+     * @param[in] latitude (degrees).
+     * @param[in] longitude (degrees).
+     * @param[in] zone if specified, force the UTM/UPS representation to use a
+     *   specified zone using the rules given in UTMUPS::zonespec.
+     * @exception GeographicErr if \e latitude is not in [-90<sup>o</sup>,
+     *   90<sup>o</sup>].
+     * @exception GeographicErr if \e longitude is not in (-540<sup>o</sup>,
+     *   540<sup>o</sup>).
+     * @exception GeographicErr if \e zone cannot be used for this location.
      **********************************************************************/
     void Reset(real latitude, real longitude, int zone = UTMUPS::STANDARD) {
       UTMUPS::Forward(latitude, longitude,
@@ -219,6 +244,13 @@ namespace GeographicLib {
     /**
      * Reset the location in terms of UPS/UPS coordinates.  See
      * GeoCoords(int zone, bool northp, real easting, real northing).
+     *
+     * @param[in] zone UTM zone (zero means UPS).
+     * @param[in] northp hemisphere (true means north, false means south).
+     * @param[in] easting (meters).
+     * @param[in] northing (meters).
+     * @exception GeographicErr if \e zone, \e easting, or \e northing is
+     *   outside its allowed range.
      **********************************************************************/
     void Reset(int zone, bool northp, real easting, real northing) {
       UTMUPS::Reverse(zone, northp, easting, northing,
@@ -289,6 +321,7 @@ namespace GeographicLib {
      * Specify alternate zone number.
      *
      * @param[in] zone zone number for the alternate representation.
+     * @exception GeographicErr if \e zone cannot be used for this location.
      *
      * See UTMUPS::zonespec for more information on the interpretation of \e
      * zone.  Note that \e zone == UTMUPS::STANDARD (the default) use the
@@ -346,6 +379,7 @@ namespace GeographicLib {
      *
      * @param[in] prec precision (relative to about 1m).
      * @param[in] swaplatlong if true give longitude first (default = false)
+     * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return decimal latitude/longitude string representation.
      *
      * Precision specifies accuracy of representation as follows:
@@ -364,6 +398,7 @@ namespace GeographicLib {
      * @param[in] swaplatlong if true give longitude first (default = false)
      * @param[in] dmssep if non-null, use as the DMS separator character
      *   (instead of d, ', &quot; delimiters).
+     * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return DMS latitude/longitude string representation.
      *
      * Precision specifies accuracy of representation as follows:
@@ -385,6 +420,7 @@ namespace GeographicLib {
      *
      * @param[in] prec precision (relative to about 1m)
      * @param[in] swaplatlong if true give longitude first (default = false)
+     * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return DMS latitude/longitude string representation.
      *
      * <b>COMPATIBILITY NOTE:</b> This function calls
@@ -401,6 +437,7 @@ namespace GeographicLib {
      * MGRS string.
      *
      * @param[in] prec precision (relative to about 1m).
+     * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return MGRS string.
      *
      * This gives the coordinates of the enclosing grid square with size given
@@ -422,6 +459,7 @@ namespace GeographicLib {
      * UTM/UPS string.
      *
      * @param[in] prec precision (relative to about 1m)
+     * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return UTM/UPS string representation: zone designator, easting, and
      *   northing.
      *
@@ -437,12 +475,21 @@ namespace GeographicLib {
 
     /**
      * MGRS string for the alternate zone.  See GeoCoords::MGRSRepresentation.
+     *
+     * @param[in] prec precision (relative to about 1m).
+     * @exception std::bad_alloc if memory for the string can't be allocated.
+     * @return MGRS string.
      **********************************************************************/
     std::string AltMGRSRepresentation(int prec = 0) const;
 
     /**
      * UTM/UPS string for the alternate zone.  See
      * GeoCoords::UTMUPSRepresentation.
+     *
+     * @param[in] prec precision (relative to about 1m)
+     * @exception std::bad_alloc if memory for the string can't be allocated.
+     * @return UTM/UPS string representation: zone designator, easting, and
+     *   northing.
      **********************************************************************/
     std::string AltUTMUPSRepresentation(int prec = 0) const;
     ///@}

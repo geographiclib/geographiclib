@@ -131,6 +131,9 @@ namespace GeographicLib {
      * @param[in] norm the normalization for the associated Legendre
      *   polynomials, either SphericalHarmonic::full (the default) or
      *   SphericalHarmonic::schmidt.
+     * @exception GeographicErr if \e N does not satisfy \e N >= -1.
+     * @exception GeographicErr if \e C or \e S is not big enough to hold the
+     *   coefficients.
      *
      * The coefficients \e C<sub>\e nm</sub> and \e S<sub>\e nm</sub> are
      * stored in the one-dimensional vectors \e C and \e S which must contain
@@ -177,6 +180,10 @@ namespace GeographicLib {
      * @param[in] norm the normalization for the associated Legendre
      *   polynomials, either SphericalHarmonic::FULL (the default) or
      *   SphericalHarmonic::SCHMIDT.
+     * @exception GeographicErr if \e N, \e nmx, and \e mmx do not satisfy
+     *   \e N >= \e nmx >= \e mmx >= -1.
+     * @exception GeographicErr if \e C or \e S is not big enough to hold the
+     *   coefficients.
      *
      * The class stores <i>pointers</i> to the first elements of \e C and \e S.
      * These arrays should not be altered or destroyed during the lifetime of a
@@ -266,6 +273,8 @@ namespace GeographicLib {
      * @param[in] z the height of the circle above the equatorial plane.
      * @param[in] gradp if true the returned object will be able to compute the
      *   gradient of the sum.
+     * @exception std::bad_alloc if the memory for the CircularEngine can't be
+     *   allocated.
      * @return the CircularEngine object.
      *
      * SphericalHarmonic::operator()() exchanges the order of the sums in the
@@ -274,7 +283,7 @@ namespace GeographicLib {
      * sum over degree \e n (which entails about <i>N</i><sup>2</sup>
      * operations).  Calling CircularEngine::operator()() on the returned
      * object performs the outer sum over the order \e m (about \e N
-     * operations).  This routine may throw a bad_alloc exception in the
+     * operations).  This routine may throw a std::bad_alloc exception in the
      * CircularEngine constructor.
      *
      * Here's an example of computing the spherical sum at a sequence of

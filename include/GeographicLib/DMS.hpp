@@ -116,6 +116,7 @@ namespace GeographicLib {
      * @param[in] dms string input.
      * @param[out] ind a DMS::flag value signaling the presence of a
      *   hemisphere indicator.
+     * @exception GeographicErr if \e dms is malformed (see below).
      * @return angle (degrees).
      *
      * Degrees, minutes, and seconds are indicated by the characters d, '
@@ -197,6 +198,7 @@ namespace GeographicLib {
      * Convert a string to a real number.
      *
      * @param[in] str string input.
+     * @exception GeographicErr if \e str is malformed.
      * @return decoded number.
      **********************************************************************/
     static Math::real Decode(const std::string& str)
@@ -208,6 +210,7 @@ namespace GeographicLib {
      * a simple fraction.
      *
      * @param[in] str string input.
+     * @exception GeographicErr if \e str is malformed.
      * @return decoded number.
      **********************************************************************/
     static Math::real DecodeFraction(const std::string& str)
@@ -220,18 +223,25 @@ namespace GeographicLib {
      * @param[in] dmsa first string.
      * @param[in] dmsb second string.
      * @param[out] lat latitude.
-     * @param[out] lon longitude.
+     * @param[out] lon longitude reduced to the range [-180<sup>o</sup>,
+     *   180<sup>o</sup>).
      * @param[in] swaplatlong if true assume longitude is given before latitude
      *   in the absence of hemisphere designators (default false).
+     * @exception GeographicErr if \e dmsa or \e dmsb is malformed.
+     * @exception GeographicErr if \e dmsa and \e dmsb are both interpreted as
+     *   latitudes.
+     * @exception GeographicErr if \e dmsa and \e dmsb are both interpreted as
+     *   longitudes.
+     * @exception GeographicErr if decoded latitude is not in [-90<sup>o</sup>,
+     *   90<sup>o</sup>].
+     * @exception GeographicErr if decoded longitude is not in
+     *   (-540<sup>o</sup>, 540<sup>o</sup>).
      *
      * By default, the \e lat (resp., \e lon) is assigned to the results of
      * decoding \e dmsa (resp., \e dmsb).  However this is overridden if either
      * \e dmsa or \e dmsb contain a latitude or longitude hemisphere designator
-     * (N, S, E, W).  Throws an error if the decoded numbers are out of the
-     * ranges [-90<sup>o</sup>, 90<sup>o</sup>] for latitude and
-     * (-540<sup>o</sup>, 540<sup>o</sup>) for longitude and, in which case \e
-     * lat and \e lon are unchanged.  Finally the longitude is reduced to the
-     * range [-180<sup>o</sup>, 180<sup>o</sup>).
+     * (N, S, E, W).  If an exception is thrown, \e lat and \e lon are
+     * unchanged.
      **********************************************************************/
     static void DecodeLatLon(const std::string& dmsa, const std::string& dmsb,
                              real& lat, real& lon, bool swaplatlong = false);
@@ -240,6 +250,8 @@ namespace GeographicLib {
      * Convert a string to an angle in degrees.
      *
      * @param[in] angstr input string.
+     * @exception GeographicErr if \e angstr is malformed.
+     * @exception GeographicErr if \e angstr includes a hemisphere designator.
      * @return angle (degrees)
      *
      * No hemisphere designator is allowed and no check is done on the range of
@@ -251,12 +263,15 @@ namespace GeographicLib {
      * Convert a string to an azimuth in degrees.
      *
      * @param[in] azistr input string.
-     * @return azimuth (degrees)
+     * @exception GeographicErr if \e azistr is malformed.
+     * @exception GeographicErr if \e azistr includes a N/S designator.
+     * @exception GeographicErr if decoded azimuth is not in
+     *   (-540<sup>o</sup>, 540<sup>o</sup>).
+     * @return azimuth (degrees) reduced to the range [-180<sup>o</sup>,
+     *   180<sup>o</sup>).
      *
      * A hemisphere designator E/W can be used; the result is multiplied by -1
-     * if W is present.  Throws an error if the result is out of the range
-     * (-540<sup>o</sup>, 540<sup>o</sup>).  Finally the azimuth is reduced to
-     * the range [-180<sup>o</sup>, 180<sup>o</sup>).
+     * if W is present.
      **********************************************************************/
     static Math::real DecodeAzimuth(const std::string& azistr);
 
@@ -271,6 +286,7 @@ namespace GeographicLib {
      * @param[in] ind DMS::flag value indicated additional formatting.
      * @param[in] dmssep if non-null, use as the DMS separator character
      *   (instead of d, ', &quot; delimiters).
+     * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return formatted string
      *
      * The interpretation of \e ind is as follows:
@@ -321,6 +337,7 @@ namespace GeographicLib {
      * @param[in] ind DMS::flag value indicated additional formatting.
      * @param[in] dmssep if non-null, use as the DMS separator character
      *   (instead of d, ', &quot; delimiters).
+     * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return formatted string
      *
      * \e prec indicates the precision relative to 1 degree, e.g., \e prec = 3

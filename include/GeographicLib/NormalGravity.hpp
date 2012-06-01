@@ -84,6 +84,8 @@ namespace GeographicLib {
      * @param[in] omega the angular velocity (rad s<sup>-1</sup>).
      * @param[in] f the flattening of the ellipsoid.
      * @param[in] J2 dynamical form factor.
+     * @exception if \e a is not positive or the other constants are
+     *   inconsistent (see below).
      *
      * Exactly one of \e f and \e J2 should be positive and this will be used
      * to define the ellipsoid.  The shape of the ellipsoid can be given in one

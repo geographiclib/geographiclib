@@ -132,6 +132,10 @@ namespace GeographicLib {
      * @param[in] y northing of point (meters).
      * @param[in] prec precision relative to 100 km.
      * @param[out] mgrs MGRS string.
+     * @exception GeographicErr if \e zone, \e x, or \e y is outside its
+     *   allowed range.
+     * @exception GeographicErr if the memory for the MGRS string can't be
+     *   allocated.
      *
      * \e prec specifies the precision of the MGRS string as follows:
      * - prec = 0 (min), 100 km
@@ -207,6 +211,11 @@ namespace GeographicLib {
      * @param[in] lat latitude (degrees).
      * @param[in] prec precision relative to 100 km.
      * @param[out] mgrs MGRS string.
+     * @exception GeographicErr if \e zone, \e x, or \e y is outside its
+     *   allowed range.
+     * @exception GeographicErr if \e lat is inconsistent with the given UTM
+     *   coordinates.
+     * @exception std::bad_alloc if the memory for \e mgrs can't be allocated.
      *
      * The latitude is ignored for \e zone = 0 (UPS); otherwise the latitude is
      * used to determine the latitude band and this is checked for consistency
@@ -226,6 +235,7 @@ namespace GeographicLib {
      * @param[out] prec precision relative to 100 km.
      * @param[in] centerp if true (default), return center of the MGRS square,
      *   else return SW (lower left) corner.
+     * @exception GeographicErr if \e mgrs is illegal.
      *
      * All conversions from MGRS to UTM/UPS are permitted provided the MGRS
      * coordinate is a possible result of a conversion in the other direction.
@@ -247,7 +257,7 @@ namespace GeographicLib {
      * centerp = true the conversion from MGRS to geographic and back is
      * stable.  This is not assured if \e centerp = false.
      *
-     * If an error is thrown, then the arguments are unchanged.
+     * If an exception is thrown, then the arguments are unchanged.
      **********************************************************************/
     static void Reverse(const std::string& mgrs,
                         int& zone, bool& northp, real& x, real& y,
