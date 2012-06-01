@@ -18,6 +18,7 @@ decodevalue () {
 # Apply conversions for the various degree, minute, and second symbols
 # %A0 -> nothing (non-breaking space)
 # [%C2]%B0 [%C2]%BA %81%8B %E2%81%B0 %26%238304%3B (&#8304;) -> d
+# %26%23730%3B (&#730;) -> d
 # %91 %92 [%C2]%B4 %E2%80%B2 %26%238242%3B (&#8242;) %81%8C -> ' (%27)
 # %93 %94 %E2%80%B3 %26%238243%3B (&#8243;) %81%8D -> " (%22)
 # Remove left/right guillemot symbols %AB %BB used to quote examples.
@@ -28,6 +29,7 @@ translate () {
 	-e 's/%C2%[AB]B//g' -e 's/%[AB]B//g' \
 	-e 's/%C2%B0/d/g' -e 's/%C2%BA/d/g' -e 's/%C2%B4/%27/g' \
 	-e 's/%26%238304%3B/d/g' -e 's/%E2%81%B0/d/g' \
+	-e 's/%26%23730%3B/d/g' \
 	-e 's/%B0/d/g' -e 's/%BA/d/g' -e 's/%B4/%27/g' \
 	-e 's/%9[12]/%27/g' -e 's/%9[34]/%22/g' \
 	-e 's/%E2%80%B2/%27/g' -e 's/%E2%80%B3/%22/g' \

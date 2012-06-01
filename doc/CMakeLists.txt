@@ -38,29 +38,26 @@ if (DOXYGEN_FOUND)
     ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp)
   file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac
     tmseries30.html geodseries30.html ../LICENSE.txt)
+  file (COPY ${EXTRA_FILES} DESTINATION html-stage)
   add_custom_target (doc ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxygen.log)
   add_dependencies (doc htmlman)
   add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doxygen.log
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxyfile
       Geographic.doc ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
-    COMMAND rm -rf html && mkdir html
-    COMMAND
-      cp -p ${EXTRA_FILES} ${HTMLMAN} html/
+    COMMAND ${CMAKE_COMMAND} -E remove_directory html
+    COMMAND ${CMAKE_COMMAND} -E copy_directory html-stage html
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile > doxygen.log
     COMMENT "Generating html documentation tree")
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
     DESTINATION ${INSTALL_DOC_DIR})
-
-  add_custom_target (distrib-doc)
-  add_dependencies (distrib-doc doc)
-  add_custom_command (TARGET distrib-doc
-    COMMAND rsync -a --delete html/ ${CMAKE_CURRENT_SOURCE_DIR}/html/
-    COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/html/index.html
-    COMMENT "Installing html documentation tree in source tree")
-
 else ()
-  install (DIRECTORY html DESTINATION ${INSTALL_DOC_DIR})
+  configure_file (index.html.in index.html)
+  configure_file (utilities.html.in utilities.html)
+  install (FILES ../LICENSE.txt
+    ${CMAKE_CURRENT_BINARY_DIR}/index.html
+    ${CMAKE_CURRENT_BINARY_DIR}/utilities.html
+    DESTINATION ${INSTALL_DOC_DIR}/html)
 endif ()
 
 # Finally install the Javascript files

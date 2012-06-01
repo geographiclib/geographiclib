@@ -1,7 +1,7 @@
 #! /bin/sh
 #
 # tar.gz and zip distrib files copied to $DEVELSOURCE
-# html documentation rsync'ed to  $DEVELSOURCE/doc/html/
+# html documentation rsync'ed to  $WEBDIST/htdocs/$VERSION-pre/
 #
 # Windows version ready to build in
 # $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10{,-x64}
@@ -35,6 +35,7 @@ BRANCH=devel
 TEMP=/scratch/geographic-dist
 DEVELSOURCE=/u/geographiclib
 GITSOURCE=file://$DEVELSOURCE
+WEBDIST=/home/ckarney/web/geographic-web
 WINDOWSBUILD=/u/temp
 
 test -d $TEMP || mkdir $TEMP
@@ -50,7 +51,7 @@ cd BUILD
 cmake ..
 make dist
 cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
-rsync -a --delete doc/html/ $DEVELSOURCE/doc/html/
+rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
 
 mkdir $TEMP/rel{a,b,c,x,y}
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/rela # Version of make build

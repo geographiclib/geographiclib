@@ -114,6 +114,17 @@ else ()
     "Build example programs in examples directory" ON)
 endif ()
 
+# (7) Create the documentation?  This depends on whether doxygen can be
+# found.  If this is OFF, then links will be provided to the online
+# documentation on Sourceforge.
+if (WIN32)
+  option (GEOGRAPHICLIB_DOCUMENTATION
+    "Use doxygen to create the documentation" OFF)
+else ()
+  option (GEOGRAPHICLIB_DOCUMENTATION
+    "Use doxygen to create the documentation" ON)
+endif ()
+
 # The debug version of the library is called Geographic_d.
 set (CMAKE_DEBUG_POSTFIX _d)
 
@@ -128,28 +139,30 @@ configure_file (
   include/GeographicLib/Config.h.in
   include/GeographicLib/Config.h )
 
-# The documentation depends on doxygen.  In addition, the man pages are
-# written as pod files and converted to nroff format, C++ code, and
-# html.  Because this require tools that may not be available on an
-# end-user's system, the creation of the final documentation is
-# therefore only done in "MAINTAINER" mode.  The maintainer runs "make
-# distrib-all" which installs the transformed documentation files into
-# the source tree.
-if (NOT WIN32)
+# The documentation depends on doxygen.  If the documentation is 
+if (GEOGRAPHICLIB_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
   find_package (Doxygen)
+endif ()
+
+# The man pages are written as pod files and converted to nroff format,
+# C++ code, and html.  Because this require tools that may not be
+# available on an end-user's system, the creation of the final
+# documentation is therefore only done in "MAINTAINER" mode.  The
+# maintainer runs "make distrib-all" which installs the transformed
+# documentation files into the source tree.
+if (NOT WIN32)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
-  find_program (HAVE_DOXYGEN doxygen)
 endif ()
-if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND DOXYGEN_FOUND)
+if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML)
   set (MAINTAINER ON)
 else ()
   set (MAINTAINER OFF)
 endif ()
 if (MAINTAINER)
   add_custom_target (distrib-all)
-  add_dependencies (distrib-all distrib-man distrib-doc)
+  add_dependencies (distrib-all distrib-man)
 endif ()
 
 # Look for the tool to compile the Matlab interfaces.

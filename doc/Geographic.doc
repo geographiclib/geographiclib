@@ -524,9 +524,8 @@ order to create the autoconf configuration script, run \verbatim
   sh autogen.sh \endverbatim
 in the top level directory.  Provided you are running on a system with
 doxygen, pod2man, and pod2html installed, then you can create the
-documentation and the man pages by building the system using cmake (the
-<code>MAINTAINER</code> configuration variable set to ON, if the
-necessary tools are found) or configure.
+documentation and the man pages by building the system using cmake or
+configure.
 
 In the case of cmake, you then run \verbatim
   make dist \endverbatim
@@ -3322,6 +3321,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Add Math::AngNormalize and Math::AngNormalize2; allowed range for
     longitudes and azimuths widened to [-540d, 540d).
   - TODO: remove html documentation from distribution.
+  - DMS: more glyphs understood; TODO: port to js and cgi-bin
 
  - Version 1.22 (released 2012-05-27)
   - Add GeographicLib::Geohash and GeographicLib::Ellipsoid classes.

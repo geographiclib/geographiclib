@@ -4,40 +4,40 @@
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
 
 MANPAGES = \
-CartConvert.1 \
-ConicProj.1 \
-GeodesicProj.1 \
-GeoConvert.1 \
-Geod.1 \
-GeoidEval.1 \
-Gravity.1 \
-MagneticField.1 \
-Planimeter.1 \
-TransverseMercatorProj.1
+	CartConvert.1 \
+	ConicProj.1 \
+	GeodesicProj.1 \
+	GeoConvert.1 \
+	Geod.1 \
+	GeoidEval.1 \
+	Gravity.1 \
+	MagneticField.1 \
+	Planimeter.1 \
+	TransverseMercatorProj.1
 
 USAGE = \
-CartConvert.usage \
-ConicProj.usage \
-GeodesicProj.usage \
-GeoConvert.usage \
-Geod.usage \
-GeoidEval.usage \
-Gravity.usage \
-MagneticField.usage \
-Planimeter.usage \
-TransverseMercatorProj.usage
+	CartConvert.usage \
+	ConicProj.usage \
+	GeodesicProj.usage \
+	GeoConvert.usage \
+	Geod.usage \
+	GeoidEval.usage \
+	Gravity.usage \
+	MagneticField.usage \
+	Planimeter.usage \
+	TransverseMercatorProj.usage
 
 HTMLMAN = \
-CartConvert.1.html \
-ConicProj.1.html \
-GeodesicProj.1.html \
-GeoConvert.1.html \
-Geod.1.html \
-GeoidEval.1.html \
-Gravity.1.html \
-MagneticField.1.html \
-Planimeter.1.html \
-TransverseMercatorProj.1.html
+	CartConvert.1.html \
+	ConicProj.1.html \
+	GeodesicProj.1.html \
+	GeoConvert.1.html \
+	Geod.1.html \
+	GeoidEval.1.html \
+	Gravity.1.html \
+	MagneticField.1.html \
+	Planimeter.1.html \
+	TransverseMercatorProj.1.html
 
 POD2MAN = pod2man --center="GeographicLib Utilities" \
 	--release="$(PACKAGE_STRING)"
