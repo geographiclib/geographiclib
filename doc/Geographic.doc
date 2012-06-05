@@ -3320,8 +3320,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Use doxygen tags to document exceptions.
   - Add Math::AngNormalize and Math::AngNormalize2; allowed range for
     longitudes and azimuths widened to [-540d, 540d).
-  - TODO: remove html documentation from distribution.
-  - DMS: more glyphs understood; TODO: port to js and cgi-bin
+  - Remove html documentation from distribution.
+  - GeographicLib::DMS::Decode understands more unicode symbols.
 
  - Version 1.22 (released 2012-05-27)
   - Add GeographicLib::Geohash and GeographicLib::Ellipsoid classes.

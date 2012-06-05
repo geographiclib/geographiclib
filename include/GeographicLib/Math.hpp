@@ -330,9 +330,8 @@ namespace GeographicLib {
      *
      * \e x must lie in [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
-    template<typename T> static inline T AngNormalize(T x) throw() {
-      return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
-    }
+    template<typename T> static inline T AngNormalize(T x) throw()
+    { return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x); }
     /**
      * Normalize an angle (unrestricted input range).
      *
@@ -343,9 +342,8 @@ namespace GeographicLib {
      *
      * The range of \e x is unrestricted.
      **********************************************************************/
-    template<typename T> static inline T AngNormalize2(T x) throw() {
-      return x - std::floor((std::floor(x) + 180) / 360) * 360;
-    }
+    template<typename T> static inline T AngNormalize2(T x) throw()
+    { return AngNormalize<T>(std::fmod(x, T(360))); }
 
     /**
      * Test for finiteness.
