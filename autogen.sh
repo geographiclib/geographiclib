@@ -17,7 +17,9 @@ rm -rf autom4ate.cache m4
 mkdir m4
 run aclocal
 run autoheader
-run libtoolize --force --copy
+LIBTOOLIZE=libtoolize
+type $LIBTOOLIZE > /dev/null 2>&1 || LIBTOOLIZE=g$LIBTOOLIZE
+run $LIBTOOLIZE --force --copy
 run automake --add-missing --copy --force-missing --foreign
 run autoconf
 run autoreconf
