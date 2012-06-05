@@ -17,7 +17,7 @@
  * The order of the series approximation used in TransverseMercator.
  * TM_TX_MAXPOW can be set to any integer in [4, 8].
  **********************************************************************/
-#define TM_TX_MAXPOW \
+#  define TM_TX_MAXPOW \
   (GEOGRAPHICLIB_PREC == 1 ? 6 : (GEOGRAPHICLIB_PREC == 0 ? 4 : 8))
 #endif
 

@@ -17,8 +17,8 @@
 
 #if defined(_MSC_VER)
 // Squelch warnings about dll vs vector
-#pragma warning (push)
-#pragma warning (disable: 4251)
+#  pragma warning (push)
+#  pragma warning (disable: 4251)
 #endif
 
 #if !defined(PGM_PIXEL_WIDTH)
@@ -29,7 +29,7 @@
  * files from .pgm to .pgm4.  Note that the format of these pgm4 files
  * is a non-standard extension of the pgm format.
  **********************************************************************/
-#define PGM_PIXEL_WIDTH 2
+#  define PGM_PIXEL_WIDTH 2
 #endif
 
 namespace GeographicLib {
@@ -505,7 +505,7 @@ namespace GeographicLib {
 } // namespace GeographicLib
 
 #if defined(_MSC_VER)
-#pragma warning (pop)
+#  pragma warning (pop)
 #endif
 
 #endif  // GEOGRAPHICLIB_GEOID_HPP

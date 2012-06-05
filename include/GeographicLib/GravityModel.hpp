@@ -20,8 +20,8 @@
 
 #if defined(_MSC_VER)
 // Squelch warnings about dll vs vector
-#pragma warning (push)
-#pragma warning (disable: 4251)
+#  pragma warning (push)
+#  pragma warning (disable: 4251)
 #endif
 
 namespace GeographicLib {
@@ -512,7 +512,7 @@ namespace GeographicLib {
 } // namespace GeographicLib
 
 #if defined(_MSC_VER)
-#pragma warning (pop)
+#  pragma warning (pop)
 #endif
 
 #endif  // GEOGRAPHICLIB_GRAVITYMODEL_HPP

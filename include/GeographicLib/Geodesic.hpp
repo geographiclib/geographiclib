@@ -16,7 +16,7 @@
 /**
  * The order of the expansions used by Geodesic.
  **********************************************************************/
-#define GEOD_ORD \
+#  define GEOD_ORD \
   (GEOGRAPHICLIB_PREC == 1 ? 6 : (GEOGRAPHICLIB_PREC == 0 ? 3 : 7))
 #endif
 

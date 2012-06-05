@@ -21,7 +21,7 @@
 #include <algorithm>
 
 #if HAVE_OPENMP
-#include <omp.h>
+#  include <omp.h>
 #endif
 
 #include <GeographicLib/GravityModel.hpp>
@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
       int nlat0 = min(nlat, ilat0 + nbatch);
 
 #if HAVE_OPENMP
-#pragma omp parallel for
+#  pragma omp parallel for
 #endif
       for (int ilat = ilat0; ilat < nlat0; ++ilat) { // Loop over latitudes
         double
