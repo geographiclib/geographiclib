@@ -60,7 +60,7 @@ namespace GeographicLib {
     int _crossings;
     Accumulator<real> _areasum, _perimetersum;
     real _lat0, _lon0, _lat1, _lon1;
-    // Copied from Geodesic class
+    // Copied from Geodesic class (now the Math class)
     static inline real AngNormalize(real x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
       //
