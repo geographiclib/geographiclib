@@ -43,6 +43,16 @@ GeographicLib.Math.atanh = function(x) {
   return x < 0 ? -y : y;
 }
 
+GeographicLib.Math.AngNormalize = function(x) {
+    // Place angle in [-180, 180).  Assumes x is in [-540, 540).
+    return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
+}
+
+GeographicLib.Math.AngNormalize2 = function(x) {
+    // Place arbitrary angle in [-180, 180).
+    return GeographicLib.Math.AngNormalize(x % 360);
+}
+
 GeographicLib.Math.epsilon = Math.pow(0.5, 52);
 GeographicLib.Math.degree = Math.PI/180;
 

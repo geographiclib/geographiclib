@@ -37,10 +37,10 @@ class GeodesicLine(object):
     self._f1 = geod._f1
     self._caps = caps | Geodesic.LATITUDE | Geodesic.AZIMUTH
 
-    azi1 = Geodesic.AngNormalize(azi1)
+    azi1 = Math.AngNormalize(azi1)
     # Guard against underflow in salp0
     azi1 = Geodesic.AngRound(azi1)
-    lon1 = Geodesic.AngNormalize(lon1)
+    lon1 = Math.AngNormalize(lon1)
     self._lat1 = lat1
     self._lon1 = lon1
     self._azi1 = azi1
@@ -185,10 +185,10 @@ class GeodesicLine(object):
                                        self._C3a, Geodesic.nC3_-1)
                  - self._B31))
       lon12 = lam12 / Math.degree
-      # Can't use AngNormalize because longitude might have wrapped multiple
-      # times.
-      lon12 = lon12 - 360 * math.floor(lon12/360 + 0.5)
-      lon2 = Geodesic.AngNormalize(self._lon1 + lon12)
+      # Use Math.AngNormalize2 because longitude might have wrapped
+      # multiple times.
+      lon12 = Math.AngNormalize2(lon12)
+      lon2 = Math.AngNormalize(self._lon1 + lon12)
 
     if outmask & Geodesic.LATITUDE:
       lat2 = math.atan2(sbet2, self._f1 * cbet2) / Math.degree

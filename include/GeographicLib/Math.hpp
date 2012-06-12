@@ -333,7 +333,7 @@ namespace GeographicLib {
     template<typename T> static inline T AngNormalize(T x) throw()
     { return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x); }
     /**
-     * Normalize an angle (unrestricted input range).
+     * Normalize an arbitrary angle.
      *
      * @tparam T the type of the argument and returned value.
      * @param[in] x the angle in degrees.

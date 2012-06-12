@@ -79,11 +79,6 @@ GeographicLib.GeodesicLine = {};
             : cosx * (y0 - y1));   // cos(x) * (y0 - y1)
   }
 
-  g.AngNormalize = function(x) {
-    // Place angle in [-180, 180).  Assumes x is in [-540, 540).
-    return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
-  }
-
   g.AngRound = function(x) {
     // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
     // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
@@ -620,8 +615,8 @@ GeographicLib.GeodesicLine = {};
   g.Geodesic.prototype.GenInverse = function(lat1, lon1, lat2, lon2, outmask) {
     var vals = {};
     outmask &= g.OUT_ALL;
-    lon1 = g.AngNormalize(lon1);
-    var lon12 = g.AngNormalize(g.AngNormalize(lon2) - lon1);
+    lon1 = m.AngNormalize(lon1);
+    var lon12 = m.AngNormalize(m.AngNormalize(lon2) - lon1);
     // If very close to being on the same meridian, then make it so.
     // Not sure this is necessary...
     lon12 = g.AngRound(lon12);

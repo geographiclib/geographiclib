@@ -123,12 +123,6 @@ class Geodesic(object):
              else cosx * (y0 - y1) )      # cos(x) * (y0 - y1)
   SinCosSeries = staticmethod(SinCosSeries)
 
-  def AngNormalize(x):
-    # Place angle in [-180, 180).  Assumes x is in [-540, 540).
-    return (x - 360 if x >= 180 else
-            (x + 360 if x < -180 else x))
-  AngNormalize = staticmethod(AngNormalize)
-
   def AngRound(x):
     # The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
     # for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
@@ -625,8 +619,8 @@ class Geodesic(object):
     a12 = s12 = azi1 = azi2 = m12 = M12 = M21 = S12 = Math.nan # return vals
 
     outmask &= Geodesic.OUT_ALL
-    lon1 = Geodesic.AngNormalize(lon1)
-    lon12 = Geodesic.AngNormalize(Geodesic.AngNormalize(lon2) - lon1)
+    lon1 = Math.AngNormalize(lon1)
+    lon12 = Math.AngNormalize(Math.AngNormalize(lon2) - lon1)
     # If very close to being on the same meridian, then make it so.
     # Not sure this is necessary...
     lon12 = Geodesic.AngRound(lon12)
@@ -893,15 +887,15 @@ class Geodesic(object):
   def CheckPosition(lat, lon):
     if not (abs(lat) <= 90):
       raise ValueError("latitude " + str(lat) + " not in [-90, 90]")
-    if not (lon >= -180 and lon <= 360):
-      raise ValueError("longitude " + str(lon) + " not in [-180, 360]")
-    return Geodesic.AngNormalize(lon)
+    if not (lon >= -540 and lon < 540):
+      raise ValueError("longitude " + str(lon) + " not in [-540, 540)")
+    return Math.AngNormalize(lon)
   CheckPosition = staticmethod(CheckPosition)
 
   def CheckAzimuth(azi):
-    if not (azi >= -180 and azi <= 360):
-      raise ValueError("azimuth " + str(azi) + " not in [-180, 360]")
-    return Geodesic.AngNormalize(azi)
+    if not (azi >= -540 and azi < 540):
+      raise ValueError("azimuth " + str(azi) + " not in [-540, 540)")
+    return Math.AngNormalize(azi)
   CheckAzimuth = staticmethod(CheckAzimuth)
 
   def CheckDistance(s):

@@ -72,6 +72,19 @@ class Math(object):
     return -y if x < 0 else y
   atanh = staticmethod(atanh)
 
+  def AngNormalize(x):
+    """reduce angle in [-540,540) to [-180,180)"""
+
+    return (x - 360 if x >= 180 else
+            (x + 360 if x < -180 else x))
+  AngNormalize = staticmethod(AngNormalize)
+
+  def AngNormalize2(x):
+    """reduce arbitrary angle to [-180,180)"""
+
+    return Math.AngNormalize(math.fmod(x, 360))
+  AngNormalize2 = staticmethod(AngNormalize2)
+
   def isfinite(x):
     """Test for finiteness"""
 

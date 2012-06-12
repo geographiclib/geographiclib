@@ -14,6 +14,7 @@ GeographicLib.DMS = {};
 
 (function() {
   var d = GeographicLib.DMS;
+  var m = GeographicLib.Math;
   d.lookup = function(s, c) {
     return s.indexOf(c.toUpperCase());
   }
@@ -249,12 +250,11 @@ GeographicLib.DMS = {};
                       + strb + " interpreted as "
                       + (ia == d.LATITUDE ? "latitudes" : "longitudes"));
     var lat = ia == d.LATITUDE ? a : b, lon = ia == d.LATITUDE ? b : a;
-    if (lat < -90 || lat > 90)
+    if (!(Math.abs(lat) <= 90))
       throw new Error("Latitude " + lat + "d not in [-90d, 90d]");
-    if (lon < -180 || lon > 360)
-      throw new Error("Latitude " + lon + "d not in [-180d, 360d]");
-    if (lon >= 180)
-      lon -= 360;
+    if (!(lon >= -540 && lon < 540))
+      throw new Error("Latitude " + lon + "d not in [-540d, 540d)");
+    lon = m.AngNormalize(lon);
     vals.lat = lat;
     vals.lon = lon;
     return vals;
@@ -275,9 +275,9 @@ GeographicLib.DMS = {};
     if (ind == d.LATITUDE)
       throw new Error("Azimuth " + azistr
                       + " has a latitude hemisphere, N/S");
-    if (azi < -180 || azi > 360)
-      throw new Error("Azimuth " + azistr + " not in range [-180d, 360d]");
-    if (azi >= 180) azi -= 360;
+    if (!(azi >= -540 && azi < 540))
+      throw new Error("Azimuth " + azistr + " not in range [-540d, 540d)");
+    azi = m.AngNormalize(azi);
     return azi;
   }
 

@@ -107,15 +107,15 @@
   g.Geodesic.CheckPosition = function(lat, lon) {
     if (!(Math.abs(lat) <= 90))
       throw new Error("latitude " + lat + " not in [-90, 90]");
-    if (!(lon >= -180 && lon <= 360))
-      throw new Error("longitude " + lon + " not in [-180, 360]");
-    return g.AngNormalize(lon);
+    if (!(lon >= -540 && lon < 540))
+      throw new Error("longitude " + lon + " not in [-540, 540)");
+    return m.AngNormalize(lon);
   }
 
   g.Geodesic.CheckAzimuth = function(azi) {
-    if (!(azi >= -180 && azi <= 360))
-      throw new Error("longitude " + azi + " not in [-180, 360]");
-    return g.AngNormalize(azi);
+    if (!(azi >= -540 && azi < 540))
+      throw new Error("longitude " + azi + " not in [-540, 540)");
+    return m.AngNormalize(azi);
   }
 
   g.Geodesic.CheckDistance = function(s) {
@@ -201,14 +201,14 @@
   g.Geodesic.prototype.Circle = function(lat1, lon1, azi1, s12, k) {
     if (!(Math.abs(lat1) <= 90))
       throw new Error("lat1 must be in [-90, 90]");
-    if (!(lon1 >= -180 && lon1 <= 360))
-      throw new Error("lon1 must be in [-180, 360]");
-    if (!(azi1 >= -180 && azi1 <= 360))
-      throw new Error("azi1 must be in [-180, 360]");
+    if (!(lon1 >= -540 && lon1 < 540))
+      throw new Error("lon1 must be in [-540, 540)");
+    if (!(azi1 >= -540 && azi1 < 540))
+      throw new Error("azi1 must be in [-540, 540)");
     if (!(isFinite(s12)))
       throw new Error("s12 must be a finite number");
-    if (lon1 >= 180) lon1 -= 360;
-    if (azi1 >= 180) azi1 -= 360;
+    lon1 = m.AngNormalize(lon1);
+    azi1 = m.AngNormalize(azi1);
     if (!k || k < 4) k = 24;
     var points = new Array(k + 1);
     var vals;
@@ -225,9 +225,9 @@
   g.Geodesic.prototype.Envelope = function(lat1, lon1, k, ord) {
     if (!(Math.abs(lat1) <= 90))
       throw new Error("lat1 must be in [-90, 90]");
-    if (!(lon1 >= -180 && lon1 <= 360))
-      throw new Error("lon1 must be in [-180, 360]");
-    if (lon1 >= 180) lon1 -= 360;
+    if (!(lon1 >= -540 && lon1 < 540))
+      throw new Error("lon1 must be in [-540, 540)");
+    lon1 = m.AngNormalize(lon1);
     if (!k || k < 4) k = 24;
     if (!ord) ord = 1;
     var points = new Array(k + 1);

@@ -24,10 +24,10 @@
     this._c2 = geod._c2;
     this._f1 = geod._f1;
     this._caps = !caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH);
-    azi1 = g.AngNormalize(azi1);
+    azi1 = m.AngNormalize(azi1);
     // Guard against underflow in salp0
     azi1 = g.AngRound(azi1);
-    lon1 = g.AngNormalize(lon1);
+    lon1 = m.AngNormalize(lon1);
     this._lat1 = lat1;
     this._lon1 = lon1;
     this._azi1 = azi1;
@@ -185,10 +185,9 @@
         ( sig12 + (g.SinCosSeries(true, ssig2, csig2, this._C3a, g.nC3_-1)
                    - this._B31));
       lon12 = lam12 / m.degree;
-      // Can't use AngNormalize because longitude might have wrapped multiple
-      // times.
-      lon12 = lon12 - 360 * Math.floor(lon12/360 + 0.5);
-      vals.lon2 = g.AngNormalize(this._lon1 + lon12);
+      // Use AngNormalize2 because longitude might have wrapped multiple times.
+      lon12 = m.AngNormalize2(lon12);
+      vals.lon2 = m.AngNormalize(this._lon1 + lon12);
     }
 
     if (outmask & g.LATITUDE)
