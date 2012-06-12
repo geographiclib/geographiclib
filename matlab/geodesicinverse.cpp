@@ -84,9 +84,8 @@ void mexFunction( int nlhs, mxArray* plhs[],
   try {
     const Geodesic g(a, f);
     for (int i = 0; i < m; ++i) {
-      if (!(abs(lat1[i]) > 90 || abs(lat2[i]) > 90) &&
-          !(lon1[i] < -180 || lon1[i] > 360 ||
-            lon2[i] < -180 || lon2[i] > 360)) {
+      if (abs(lat1[i]) <= 90 && lon1[i] >= -540 && lon1[i] < 540 &&
+          abs(lat2[i]) <= 90 && lon2[i] >= -540 && lon2[i] < 540) {
         if (aux)
           a12[i] = g.Inverse(lat1[i], lon1[i], lat2[i], lon2[i],
                              s12[i], azi1[i], azi2[i],

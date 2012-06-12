@@ -92,7 +92,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   try {
     const Geoid g(geoidname, geoiddir);
     for (int i = 0; i < m; ++i) {
-      if (!(abs(lat[i]) > 90) && !(lon[i] < -180 || lon[i] > 360)) {
+      if (abs(lat[i]) <= 90 && lon[i] >= -540 && lon[i] < 540) {
         // g() can throw an exception, e.g., because of an I/O failure.  Treat
         // this as fatal.
         if (gradient)

@@ -71,9 +71,9 @@ void mexFunction( int nlhs, mxArray* plhs[],
     const Geodesic g(a, f);
     PolygonArea p(g, false);
     for (int i = 0; i < m; ++i) {
-      if (abs(lat[i]) > 90)
+      if (!(abs(lat[i]) <= 90))
         throw GeographicErr("Invalid latitude");
-      if (lon[i] < -180 || lon[i] > 360)
+      if (!(lon[i] >= -540 || lon[i] < 540))
         throw GeographicErr("Invalid longitude");
       p.AddPoint(lat[i], lon[i]);
     }

@@ -92,11 +92,11 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   try {
     const Geodesic g(a, f);
-    if (abs(lat1) > 90)
+    if (!(abs(lat1) <= 90))
       throw GeographicErr("Invalid latitude");
-    if (lon1 < -180 || lon1 > 360)
+    if (!(lon1 >= -540 || lon1 < 540))
       throw GeographicErr("Invalid longitude");
-    if (azi1 < -180 || azi1 > 360)
+    if (!(azi1 >= -540 || azi1 < 540))
       throw GeographicErr("Invalid azimuth");
     const GeodesicLine l(g, lat1, lon1, azi1);
     for (int i = 0; i < m; ++i)

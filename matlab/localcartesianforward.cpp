@@ -86,13 +86,13 @@ void mexFunction( int nlhs, mxArray* plhs[],
   try {
     std::vector<double> rotv(rotp ? 9 : 0);
     const Geocentric c(a, f);
-    if (abs(lat0) > 90)
+    if (!(abs(lat0) <= 90))
       throw GeographicErr("Invalid latitude");
-    if (lon0 < -180 || lon0 > 360)
+    if (!(lon0 >= -540 || lon0 < 540))
       throw GeographicErr("Invalid longitude");
     const LocalCartesian l(lat0, lon0, h0, c);
     for (int i = 0; i < m; ++i) {
-      if (!(abs(lat[i]) > 90) && !(lon[i] < -180 || lon[i] > 360)) {
+      if (abs(lat[i]) <= 90 && lon[i] >= -540 && lon[i] < 540) {
         l.Forward(lat[i], lon[i], haveh ? h[i] : 0.0, x[i], y[i], z[i], rotv);
         if (rotp) {
           for (int k = 0; k < 9; ++k)
