@@ -24,7 +24,7 @@ namespace GeographicLib {
   const string Geohash::ucdigits_ = "0123456789BCDEFGHJKMNPQRSTUVWXYZ";
 
   void Geohash::Forward(real lat, real lon, int len, std::string& geohash) {
-    if (abs(lat) > 90)
+    if (!(abs(lat) <= 90))
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
     if (!(lon >= -540 && lon < 540))

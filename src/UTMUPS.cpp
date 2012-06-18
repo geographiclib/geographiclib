@@ -142,7 +142,7 @@ namespace GeographicLib {
     if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    if (!(lon >= -540 && lon < 540))
+    if (lon < -540 || lon >= 540)
       throw GeographicErr("Longitude " + Utility::str(lon)
                           + "d not in [-540d, 540d)");
     }

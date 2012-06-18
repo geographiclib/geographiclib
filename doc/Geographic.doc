@@ -3322,6 +3322,10 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     longitudes and azimuths widened to [-540d, 540d).
   - Remove html documentation from distribution.
   - GeographicLib::DMS::Decode understands more unicode symbols.
+  - TODO: GeographicLib::Geohash uses geohash codes nan and inv to stand
+    for not a number.
+  - TODO: Document limits on f for Geodesic class.  (Maybe more general
+    discussion of limitations?)
 
  - Version 1.22 (released 2012-05-27)
   - Add GeographicLib::Geohash and GeographicLib::Ellipsoid classes.

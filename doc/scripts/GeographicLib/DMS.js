@@ -250,9 +250,9 @@ GeographicLib.DMS = {};
                       + strb + " interpreted as "
                       + (ia == d.LATITUDE ? "latitudes" : "longitudes"));
     var lat = ia == d.LATITUDE ? a : b, lon = ia == d.LATITUDE ? b : a;
-    if (!(Math.abs(lat) <= 90))
+    if (Math.abs(lat) > 90)
       throw new Error("Latitude " + lat + "d not in [-90d, 90d]");
-    if (!(lon >= -540 && lon < 540))
+    if (lon < -540 || lon >= 540)
       throw new Error("Latitude " + lon + "d not in [-540d, 540d)");
     lon = m.AngNormalize(lon);
     vals.lat = lat;
@@ -275,7 +275,7 @@ GeographicLib.DMS = {};
     if (ind == d.LATITUDE)
       throw new Error("Azimuth " + azistr
                       + " has a latitude hemisphere, N/S");
-    if (!(azi >= -540 && azi < 540))
+    if (azi < -540 || azi >= 540)
       throw new Error("Azimuth " + azistr + " not in range [-540d, 540d)");
     azi = m.AngNormalize(azi);
     return azi;

@@ -885,15 +885,15 @@ class Geodesic(object):
     return a12, s12, azi1, azi2, m12, M12, M21, S12
 
   def CheckPosition(lat, lon):
-    if not (abs(lat) <= 90):
+    if (abs(lat) > 90):
       raise ValueError("latitude " + str(lat) + " not in [-90, 90]")
-    if not (lon >= -540 and lon < 540):
+    if (lon < -540 or lon >= 540):
       raise ValueError("longitude " + str(lon) + " not in [-540, 540)")
     return Math.AngNormalize(lon)
   CheckPosition = staticmethod(CheckPosition)
 
   def CheckAzimuth(azi):
-    if not (azi >= -540 and azi < 540):
+    if (azi < -540 or azi >= 540):
       raise ValueError("azimuth " + str(azi) + " not in [-540, 540)")
     return Math.AngNormalize(azi)
   CheckAzimuth = staticmethod(CheckAzimuth)
