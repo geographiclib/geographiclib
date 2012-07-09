@@ -3326,6 +3326,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     for not a number.
   - TODO: Document limits on f for Geodesic class.  (Maybe more general
     discussion of limitations?)
+  - Add Ellipsoid::NormalCurvatureRadius.
 
  - Version 1.22 (released 2012-05-27)
   - Add GeographicLib::Geohash and GeographicLib::Ellipsoid classes.

@@ -122,4 +122,13 @@ namespace GeographicLib {
     return _a / sqrt(v);
   }
 
+  Math::real Ellipsoid::NormalCurvatureRadius(real phi, real azi)
+    const throw() {
+    real
+      alpha = azi * Math::degree<real>(),
+      v = 1 - _e2 * Math::sq(sin(phi * Math::degree<real>()));
+    return _a / (sqrt(v) *
+                 (Math::sq(cos(alpha)) * v / (1 - _e2) + Math::sq(sin(alpha))));
+  }
+  
 } // namespace GeographicLib

@@ -385,6 +385,20 @@ namespace GeographicLib {
      * result is undefined if this condition does not hold.
      **********************************************************************/
     Math::real TransverseCurvatureRadius(real phi) const throw();
+
+    /**
+     * @param[in] phi the geographic latitude (degrees).
+     * @param[in] azi the angle between the meridian and the normal section
+     *   (degrees).
+     * @return \e rho the radius of curvature of the ellipsoid in the normal
+     *   section at latitude \e phi inclined at an angle \e azi to the
+     *   meridian (meters).
+     *
+     * \e phi must lie in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
+     * azi must lie in the range [-540<sup>o</sup>, 540<sup>o</sup>); the
+     * result is undefined if either of conditions does not hold.
+     **********************************************************************/
+    Math::real NormalCurvatureRadius(real phi, real azi) const throw();
     ///@}
 
     /** \name Eccentricity conversions.
