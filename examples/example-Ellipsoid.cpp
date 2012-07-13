@@ -17,6 +17,10 @@ int main() {
          << wgs84.InverseAuthalicLatitude(30) << "\n";
     cout << "The northernmost edge of a square Mercator map at latitude "
          << wgs84.InverseIsometricLatitude(180) << "\n";
+    cout << wgs84.IsometricLatitude(90) << " " 
+         << wgs84.IsometricLatitude(-90) << "\n";
+    cout << wgs84.InverseIsometricLatitude(1e10) << " " 
+         << wgs84.InverseIsometricLatitude(-1e10) << "\n";
   }
   catch (const exception& e) {
     cerr << "Caught exception: " << e.what() << "\n";
