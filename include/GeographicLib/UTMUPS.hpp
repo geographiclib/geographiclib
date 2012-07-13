@@ -185,19 +185,19 @@ namespace GeographicLib {
      * otherwise apply the rules given in UTMUPS::zonespec.  The accuracy of
      * the conversion is about 5nm.
      *
-     * The northing \e y jumps by UTMUPS::UTMShift() when crossing the
-     * equator in the southerly direction.  Sometimes it is useful to remove
-     * this discontinuity in \e y by extending the "northen" hemisphere with
+     * The northing \e y jumps by UTMUPS::UTMShift() when crossing the equator
+     * in the southerly direction.  Sometimes it is useful to remove this
+     * discontinuity in \e y by extending the "northern" hemisphere with
      * \code
-  double lat = -1, lon = 123;
-  int zone;
-  bool northp;
-  double x, y, gamma, k;
-  GeographicLib::UTMUPS::Forward(lat, lon, zone, northp, x, y, gamma, k);
-  if (zone > 0 && !northp) {
-    northp = true;
-    y -= GeographicLib::UTMUPS::UTMShift();
-  }
+    double lat = -1, lon = 123;
+    int zone;
+    bool northp;
+    double x, y, gamma, k;
+    GeographicLib::UTMUPS::Forward(lat, lon, zone, northp, x, y, gamma, k);
+    if (zone > 0 && !northp) {
+      northp = true;
+      y -= GeographicLib::UTMUPS::UTMShift();
+    }
      \endcode
      **********************************************************************/
     static void Forward(real lat, real lon,

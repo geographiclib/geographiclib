@@ -22,10 +22,10 @@ namespace GeographicLib {
    * \brief Spherical harmonic series
    *
    * This class evaluates the spherical harmonic sum \verbatim
- V(x, y, z) = sum(n = 0..N)[ q^(n+1) * sum(m = 0..n)[
-   (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) *
-   P[n,m](cos(theta)) ] ]
-\endverbatim
+   V(x, y, z) = sum(n = 0..N)[ q^(n+1) * sum(m = 0..n)[
+     (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) *
+     P[n,m](cos(theta)) ] ]
+   \endverbatim
    * where
    * - <i>p</i><sup>2</sup> = <i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>,
    * - <i>r</i><sup>2</sup> = <i>p</i><sup>2</sup> + <i>z</i><sup>2</sup>,

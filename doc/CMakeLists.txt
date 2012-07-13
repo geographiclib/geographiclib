@@ -21,12 +21,12 @@ endif ()
 # Run doxygen, if available
 
 # First assemble a list of all the files the documentation uses.  Add a
-# dependency on htmlman (from man/CMakeLists.txt).  Use doxygen.log as
-# the make target.  To make this target, copy the non-doxygen generated
-# files into html/.  Run doxfile.in thru cmake's config process so that
-# absolute path names are used and so that the pathnames are properly
-# stripped by doxygen (via STRIP_FROM_PATH). The distrib-doc target
-# copies the html directory into the source tree.
+# dependency on htmlman (from man/CMakeLists.txt).  Use html/index.html
+# as the make target.  To make this target, copy the non-doxygen
+# generated files into html/.  Run doxfile.in thru cmake's config
+# process so that absolute path names are used and so that the pathnames
+# are properly stripped by doxygen (via STRIP_FROM_PATH). The
+# distrib-doc target copies the html directory into the source tree.
 
 # If doxygen is not available, only the install step (from the source
 # tree) is done.
@@ -40,9 +40,9 @@ if (DOXYGEN_FOUND)
     tmseries30.html geodseries30.html ../LICENSE.txt)
   file (COPY ${EXTRA_FILES} DESTINATION html-stage)
   add_custom_target (doc ALL
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxygen.log)
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
   add_dependencies (doc htmlman)
-  add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doxygen.log
+  add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/html/index.html
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxyfile
       Geographic.doc ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
     COMMAND ${CMAKE_COMMAND} -E remove_directory html

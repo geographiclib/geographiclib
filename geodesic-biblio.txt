@@ -77,7 +77,7 @@
    Mém. de l'Acad. Roy. des Sciences de Berlin '''9''',
    258--293 (1753, publ. 1755).[[BR]]
    http://books.google.com/books?id=QIIfAAAAYAAJ&pg=PA258 [[BR]]
-   figures: http://books.google.com/books?id=QIIfAAAAYAAJ&pg=PA363 [[BR]]
+   figures: http://books.google.com/books?id=QIIfAAAAYAAJ&pg=PA362-IA1 [[BR]]
    alt: http://math.dartmouth.edu/~euler/pages/E215.html
  * J. L. Lagrange,[[BR]]
    ''Nouvelle méthode pour résoudre les équations littérales par le moyen

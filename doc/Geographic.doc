@@ -1917,9 +1917,9 @@ coefficients.  The first of these gives the gravity potential and the
 second gives the zeta-to-N corrections to the geoid height.  The format
 for each set of coefficients is:
  - \e N, the maximum degree of the sum stored as a 4-byte signed integer.
-   This must satisfy \e N >= -1.
+   This must satisfy \e N &ge; -1.
  - \e M, the maximum order of the sum stored as a 4-byte signed integer.
-   This must satisfy \e N >= \e M >= -1.
+   This must satisfy \e N &ge; \e M &ge; -1.
  - \e C<sub>\e nm</sub>, the coefficients of the cosine coefficients of
    the sum in column (i.e., \e m) major order.  There are (\e M + 1)
    (2\e N - \e M + 2) / 2 elements which are stored as IEEE doubles (8
@@ -2383,14 +2383,14 @@ The coefficient file NAME.wmm.cof is a binary file in little endian
 order.  The first 8 bytes of this file must match the ID given in
 NAME.wmm.  This is followed by NumModels + 1 sets of spherical harmonic
 coefficients.  The first NumModels of these model the magnetic field at
-Epoch + \e i * DeltaEpoch for 0 <= \e i < NumModels.  The last set of
+Epoch + \e i * DeltaEpoch for 0 &le; \e i < NumModels.  The last set of
 coefficients model the rate of change of the magnetic field at Epoch +
 (NumModels - 1) * DeltaEpoch.  The format for each set of coefficients
 is:
  - \e N, the maximum degree of the sum stored as a 4-byte signed integer.
-   This must satisfy \e N >= -1.
+   This must satisfy \e N &ge; -1.
  - \e M, the maximum order of the sum stored as a 4-byte signed integer.
-   This must satisfy \e N >= \e M >= -1.
+   This must satisfy \e N &ge; \e M &ge; -1.
  - \e C<sub>\e nm</sub>, the coefficients of the cosine coefficients of
    the sum in column (i.e., \e m) major order.  There are (\e M + 1)
    (2\e N - \e M + 2) / 2 elements which are stored as IEEE doubles (8
@@ -2531,7 +2531,7 @@ Each line of the test set gives 10 space delimited numbers
  .
 These are computed using as direct geodesic calculations with the given
 \e lat1, \e lon1, \e azi1, and \e s12.  The distance \e s12 always
-corresponds to an arc length \e a12 <= 180<sup>o</sup>, so the given
+corresponds to an arc length \e a12 &le; 180<sup>o</sup>, so the given
 geodesics give the shortest paths from point 1 to point 2.  For
 simplicity and without loss of generality, \e lat1 is chosen in
 [0<sup>o</sup>, 90<sup>o</sup>], \e lon1 is taken to be zero, \e azi1 is
@@ -3015,22 +3015,22 @@ The contents of the file are as follows:
  - 1000 entries randomly distributed on lat = 0, lon in [0, 90];
  - 1000 entries randomly distributed on lat in [0, 90], lon = 90;
  - 1000 entries close to lat = 90 with lon in [0, 90];
- - 1000 entries close to lat = 0, lon = 0 with lat >= 0, lon >= 0;
- - 1000 entries close to lat = 0, lon = 90 with lat >= 0, lon <= 90;
- - 2000 entries close to lat = 0, lon = 90 (1 - \e e) with lat >= 0;
+ - 1000 entries close to lat = 0, lon = 0 with lat &ge; 0, lon &ge; 0;
+ - 1000 entries close to lat = 0, lon = 90 with lat &ge; 0, lon &le; 90;
+ - 2000 entries close to lat = 0, lon = 90 (1 - \e e) with lat &ge; 0;
  - 25000 entries randomly distributed in lat
    in [-89, 0], lon in [90 (1 - \e e), 90];
  - 1000 entries randomly distributed on lat in [-89, 0], lon = 90;
  - 1000 entries randomly distributed on lat in [-89, 0], lon = 90 (1 - \e e);
- - 1000 entries close to lat = 0, lon = 90 (lat < 0, lon <= 90);
+ - 1000 entries close to lat = 0, lon = 90 (lat < 0, lon &le; 90);
  - 1000 entries close to lat = 0, lon = 90 (1 - \e e)
-   (lat < 0, lon <= 90 (1 - \e e));
+   (lat < 0, lon &le; 90 (1 - \e e));
  .
 (a total of 287000 entries).  The entries for lat < 0<sup>o</sup> and
 lon in [90<sup>o</sup> (1 - \e e), 90<sup>o</sup>] use the "extended"
 domain for the transverse Mercator projection explained in Sec. 5 of
 <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.  The first
-258000 entries have lat >= 0<sup>o</sup> and are suitable for testing
+258000 entries have lat &ge; 0<sup>o</sup> and are suitable for testing
 implementations following the standard convention.
 
 \section tmseries Series approximation for transverse Mercator
@@ -3235,7 +3235,7 @@ doubles for the WGS84 parameters).  Generate random (long double)
 geodetic coordinates (\e lat0, \e lon0, \e h0) and use the "long double"
 WGS84.Forward to obtain the corresponding (long double) geocentric
 coordinates (\e x0, \e y0, \e z0).  [We restrict \e h0 so that
-\e h0 >= - \e a (1 - <i>e</i><sup>2</sup>) / sqrt(1 -
+\e h0 &ge; - \e a (1 - <i>e</i><sup>2</sup>) / sqrt(1 -
 <i>e</i><sup>2</sup> sin<sup>2</sup>\e lat0), which ensures that (\e
 lat0, \e lon0, \e h0) is the principal geodetic inverse of (\e x0, \e
 y0, \e z0).]  Because the forward calculation is numerically stable and
