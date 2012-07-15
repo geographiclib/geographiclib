@@ -3337,8 +3337,12 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - TODO: Document limits on f for Geodesic class.  (Maybe more general
     discussion of limitations?)
   - Add Ellipsoid::NormalCurvatureRadius.
-  - Fix Ellipsoid::IsometricLatitude and
-    Ellipsoid::InverseIsometricLatitude for the poles.
+  - Various fixes in LambertConformalConic, TransverseMercator,
+    PolarStereographic, and Ellipsoid to handle reverse projections of
+    points near infinity.
+  - Fix programming blunder in LambertConformalConic::Forward
+    (incorrect results were returned if the tangent latitude was
+    negative).
 
  - Version 1.22 (released 2012-05-27)
   - Add GeographicLib::Geohash and GeographicLib::Ellipsoid classes.

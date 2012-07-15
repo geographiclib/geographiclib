@@ -211,6 +211,8 @@ namespace GeographicLib {
   // taupf and tauf are adapted from TransverseMercatorExact (taup and
   // taupinv).  tau = tan(phi), taup = sinh(psi)
   Math::real TransverseMercator::taupf(real tau) const throw() {
+    if (!(abs(tau) < overflow_))
+      return tau;
     real
       tau1 = Math::hypot(real(1), tau),
       sig = sinh( eatanhe(tau / tau1) );
@@ -218,6 +220,8 @@ namespace GeographicLib {
   }
 
   Math::real TransverseMercator::tauf(real taup) const throw() {
+    if (!(abs(taup) < overflow_))
+      return taup;
     real
       // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
       // tau = taup/_e2m as a starting guess.  Only 1 iteration is needed for

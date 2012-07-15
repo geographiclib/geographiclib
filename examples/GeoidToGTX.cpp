@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
     // Write header
     {
       double transform[] = {latorg, lonorg, delta, delta};
-      unsigned sizes[] = {nlat, nlon};
+      unsigned sizes[] = {unsigned(nlat), unsigned(nlon)};
       Utility::writearray<double, double, true>(file, transform, 4);
       Utility::writearray<unsigned, unsigned, true>(file, sizes, 2);
     }

@@ -95,17 +95,19 @@ namespace GeographicLib {
       taup = (1 / t - t) / 2,
       tau = taup * _Cx,
       stol = tol_ * max(real(1), abs(taup));
-    // min iterations = 1, max iterations = 2; mean = 1.99
-    for (int i = 0; i < numit_; ++i) {
-      real
-        tau1 = Math::hypot(real(1), tau),
-        sig = sinh( eatanhe( tau / tau1 ) ),
-        taupa = Math::hypot(real(1), sig) * tau - sig * tau1,
-        dtau = (taup - taupa) * (1 + _e2m * Math::sq(tau)) /
-        ( _e2m * tau1 * Math::hypot(real(1), taupa) );
-      tau += dtau;
-      if (!(abs(dtau) >= stol))
-        break;
+    if (abs(tau) < overflow_) {
+      // min iterations = 1, max iterations = 2; mean = 1.99
+      for (int i = 0; i < numit_; ++i) {
+        real
+          tau1 = Math::hypot(real(1), tau),
+          sig = sinh( eatanhe( tau / tau1 ) ),
+          taupa = Math::hypot(real(1), sig) * tau - sig * tau1,
+          dtau = (taup - taupa) * (1 + _e2m * Math::sq(tau)) /
+          ( _e2m * tau1 * Math::hypot(real(1), taupa) );
+        tau += dtau;
+        if (!(abs(dtau) >= stol))
+          break;
+      }
     }
     real
       phi = atan(tau),

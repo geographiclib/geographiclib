@@ -182,6 +182,36 @@ add_test (ConicProj1
   ConicProj -a 0 0 -e 6.4e6 -0.5 -r --input-string "0 8605508")
 set_tests_properties (ConicProj1
   PROPERTIES PASS_REGULAR_EXPRESSION "^85\\.00")
+# Check fix for LambertConformalConic::Forward bug found 2012-07-14
+add_test (ConicProj2
+  ConicProj -c -30 -30 --input-string "-30 0")
+set_tests_properties (ConicProj2
+  PROPERTIES PASS_REGULAR_EXPRESSION "^-?0\\.0+ -?0\\.0+ -?0\\.0+ 1\\.0+")
+# Check fixes for LambertConformalConic::Reverse overflow bugs found 2012-07-14
+add_test (ConicProj3
+  ConicProj -r -c 0 0 --input-string "1113195 -1e10")
+set_tests_properties (ConicProj3
+  PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ 10\\.00[0-9]+ ")
+add_test (ConicProj4
+  ConicProj -r -c 0 0 --input-string "1113195 inf")
+set_tests_properties (ConicProj4
+  PROPERTIES PASS_REGULAR_EXPRESSION "^90\\.0+ 10\\.00[0-9]+ ")
+add_test (ConicProj5
+  ConicProj -r -c 45 45 --input-string "0 -1e100")
+set_tests_properties (ConicProj5
+  PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ -?0\\.00[0-9]+ ")
+add_test (ConicProj6
+  ConicProj -r -c 45 45 --input-string "0 -inf")
+set_tests_properties (ConicProj6
+  PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ -?0\\.00[0-9]+ ")
+add_test (ConicProj7
+  ConicProj -r -c 90 90 --input-string "0 -1e150")
+set_tests_properties (ConicProj7
+  PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ -?0\\.00[0-9]+ ")
+add_test (ConicProj8
+  ConicProj -r -c 90 90 --input-string "0 -inf")
+set_tests_properties (ConicProj8
+  PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ -?0\\.00[0-9]+ ")
 
 add_test (CartConvert0
   CartConvert -e 6.4e6 1/100 -r --input-string "10e3 0 1e3")

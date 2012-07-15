@@ -308,6 +308,21 @@ namespace GeographicLib {
       * (tchi1 >= 0 ? scchi1 + tchi1 : 1 / (scchi1 - tchi1)) /
       (_scchi0 + _tchi0);
     _nrho0 = polar ? 0 : _a * _k0 / _scbet0;
+    {
+      // Figure _drhomax using code at beginning of Forward with lat = -90
+      real
+        sphi = -1, cphi =  epsx_,
+        tphi = sphi/cphi,
+        scphi = 1/cphi, shxi = sinh(eatanhe(sphi)),
+        tchi = hyp(shxi) * tphi - shxi * scphi, scchi = hyp(tchi),
+        psi = Math::asinh(tchi),
+        dpsi = Dasinh(tchi, _tchi0, scchi, _scchi0) * (tchi - _tchi0);
+      _drhomax = - _scale * (2 * _nc < 1 && dpsi != 0 ?
+                             (exp(Math::sq(_nc)/(1 + _n) * psi ) *
+                              (tchi > 0 ? 1/(scchi + tchi) : (scchi - tchi))
+                              - (_t0nm1 + 1))/(-_n) :
+                             Dexp(-_n * psi, -_n * _psi0) * dpsi);
+    }
   }
 
   const LambertConformalConic
@@ -332,9 +347,9 @@ namespace GeographicLib {
     // and drho is evaluated with divided differences
     real
       lam = lon * Math::degree<real>(),
-      phi = lat * Math::degree<real>(),
+      phi = _sign * lat * Math::degree<real>(),
       sphi = sin(phi), cphi = abs(lat) != 90 ? cos(phi) : epsx_,
-      tphi = sphi/cphi, tbet = _fm * tphi, scbet = hyp(tbet),
+      tphi = sphi/cphi, scbet = hyp(_fm * tphi),
       scphi = 1/cphi, shxi = sinh(eatanhe(sphi)),
       tchi = hyp(shxi) * tphi - shxi * scphi, scchi = hyp(tchi),
       psi = Math::asinh(tchi),
@@ -375,9 +390,17 @@ namespace GeographicLib {
     // dpsi = - Dlog1p(t^n-1, t0^n-1) * drho / scale
     y *= _sign;
     real
-      nx = _n * x, ny = _n * y, y1 = _nrho0 - ny,
+      // Guard against 0 * inf in computation of ny
+      nx = _n * x, ny = _n ? _n * y : 0, y1 = _nrho0 - ny,
       den = Math::hypot(nx, y1) + _nrho0, // 0 implies origin with polar aspect
-      drho = den != 0 ? (x*nx - 2*y*_nrho0 + y*ny) / den : 0,
+      // isfinite test is to avoid inf/inf
+      drho = ((den != 0 && Math::isfinite(den))
+              ? (x*nx + y * (ny - 2*_nrho0)) / den
+              : den);
+    drho = min(drho, _drhomax);
+    if (_n == 0)
+      drho = max(drho, -_drhomax);
+    real
       tnm1 = _t0nm1 + _n * drho/_scale,
       dpsi = (den == 0 ? 0 :
               (tnm1 + 1 != 0 ? - Dlog1p(tnm1, _t0nm1) * drho / _scale :
