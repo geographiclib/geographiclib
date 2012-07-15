@@ -149,11 +149,9 @@ covered by the data (assuming the edges of the image are geodesics).
 
 =head1 SEE ALSO
 
-GeoConvert(1).  The algorithm for the area of geodesic polygon is given
-in Section 15 of C. F. F. Karney, I<Geodesics on an ellipsoid of
-revolution>, Feb. 2011; preprint L<http://arxiv.org/abs/1102.1215>.  See
-also Section 6 of C. F. F. Karney, I<Algorithms for geodesics>,
-Sept. 2011; preprint L<http://arxiv.org/abs/1109.4448>.
+GeoConvert(1).  The algorithm for the area of geodesic polygon is
+given in Section 6 of C. F. F. Karney, I<Algorithms for geodesics>,
+J. Geodesy, 2012; L<http://dx.doi.org/10.1007/s00190-012-0578-z>.
 
 
 =head1 AUTHOR

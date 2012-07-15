@@ -35,16 +35,11 @@ namespace GeographicLib {
    *
    * The algorithms are described in
    * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
-   *   on an ellipsoid of revolution</a>,
-   *   Feb. 2011;
-   *   preprint
-   *   <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a>.
-   * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1109.4448">Algorithms for geodesics</a>,
-   *   Sept. 2011;
-   *   preprint
-   *   <a href="http://arxiv.org/abs/1109.4448">arxiv:1109.4448</a>.
+   *   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   Algorithms for geodesics</a>,
+   *   J. Geodesy, 2012;
+   *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   10.1007/s00190-012-0578-z</a>.
    * .
    * For more information on geodesics see \ref geodesic.
    *

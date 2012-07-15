@@ -20,20 +20,13 @@ namespace GeographicLib {
    * \brief %Gnomonic projection
    *
    * %Gnomonic projection centered at an arbitrary position \e C on the
-   * ellipsoid.  This projection is derived in Section 13 of
+   * ellipsoid.  This projection is derived in Section 8 of
    * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
-   *   on an ellipsoid of revolution</a>,
-   *   Feb. 2011;
-   *   preprint
-   *   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
-   * .
-   * See also Section 8 of
-   * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1109.4448">Algorithms for geodesics</a>,
-   *   Sept. 2011;
-   *   preprint
-   *   <a href="http://arxiv.org/abs/1109.4448">arxiv:1109.4448</a>.
+   *   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   Algorithms for geodesics</a>,
+   *   J. Geodesy, 2012;
+   *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   10.1007/s00190-012-0578-z</a>.
    * .
    * The projection of \e P is defined as follows: compute the
    * geodesic line from \e C to \e P; compute the reduced length \e m12,

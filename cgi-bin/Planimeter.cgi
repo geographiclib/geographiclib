@@ -162,15 +162,11 @@ cat <<EOF
         download</a>
       and compile GeographicLib.  The algorithms are described
       in C. F. F. Karney,
-      <a href="http://arxiv.org/abs/1102.1215"><i>Geodesics
-	on an ellipsoid of revolution</i></a>,
-      Feb. 2011; preprint
-      <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.  See also
-      C. F. F. Karney,
-      <a href="http://arxiv.org/abs/1109.4448"><i>Algorithms for
+      <a href="http://dx.doi.org/10.1007/s00190-012-0578-z"><i>Algorithms for
       geodesics</i></a>,
-      Sept. 2011; preprint
-      <a href="http://arxiv.org/abs/1109.4448">arxiv:1109.4448</a>.
+      J. Geodesy, 2012; DOI:
+      <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+	10.1007/s00190-012-0578-z</a>.
     </p>
     <hr>
     <address>Charles Karney

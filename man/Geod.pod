@@ -237,11 +237,9 @@ Waypoints on the route at intervals of 2000km:
 
 =head1 SEE ALSO
 
-The algorithms are described in C. F. F. Karney, I<Geodesics on an
-ellipsoid of revolution>, Feb. 2011; preprint
-L<http://arxiv.org/abs/1102.1215>.  See also C. F. F. Karney,
-I<Algorithms for geodesics>, Sept. 2011; preprint
-L<http://arxiv.org/abs/1109.4448>.
+The algorithms are described in C. F. F. Karney,
+I<Algorithms for geodesics>, J. Geodesy, 2012;
+L<http://dx.doi.org/10.1007/s00190-012-0578-z>.
 
 =head1 AUTHOR
 
