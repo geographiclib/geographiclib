@@ -343,7 +343,7 @@ namespace GeographicLib {
     // and drho is evaluated with divided differences
     real
       lam = lon * Math::degree<real>(),
-      phi = lat * Math::degree<real>(),
+      phi = _sign * lat * Math::degree<real>(),
       sphi = sin(phi), cphi = abs(lat) != 90 ? cos(phi) : epsx_,
       tphi = sphi/cphi, tbet = _fm * tphi, scbet = hyp(tbet),
       scphi = 1/cphi, shxi = sinh(eatanhe(sphi)),
