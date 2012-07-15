@@ -13,8 +13,7 @@ cat <<EOF
  * Inventory of files;
 EOF
 for f; do
-    id=`ident < $f | sed -e 's/^ *//'`
-    echo " *  " `basename $f` $id
+    echo " *  " `basename $f`
 done
 echo " */"
 for f; do
