@@ -53,11 +53,13 @@ if (DOXYGEN_FOUND)
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
     DESTINATION ${INSTALL_DOC_DIR})
 else ()
-  configure_file (index.html.in index.html)
-  configure_file (utilities.html.in utilities.html)
-  install (FILES ../LICENSE.txt
-    ${CMAKE_CURRENT_BINARY_DIR}/index.html
-    ${CMAKE_CURRENT_BINARY_DIR}/utilities.html
+  file (COPY ../LICENSE.txt DESTINATION html)
+  configure_file (index.html.in html/index.html)
+  configure_file (utilities.html.in html/utilities.html)
+  install (FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/html/LICENSE.txt
+    ${CMAKE_CURRENT_BINARY_DIR}/html/index.html
+    ${CMAKE_CURRENT_BINARY_DIR}/html/utilities.html
     DESTINATION ${INSTALL_DOC_DIR}/html)
 endif ()
 
