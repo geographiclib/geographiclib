@@ -13,7 +13,7 @@ EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL \
 	Makefile.mk CMakeLists.txt windows maxima doc
 
 dist-hook:
-	rm -rf $(distdir)/doc/html ; \
+	rm -rf $(distdir)/doc/html $(distdir)/doc/manpages ; \
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \
