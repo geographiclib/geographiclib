@@ -58,7 +58,7 @@ AC_C_BIGENDIAN
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
 AM_CONDITIONAL([HAVE_DOXYGEN],
 	[test "$DOXYGEN" -a `"$DOXYGEN" --version |
-	sed 's/^\([0-9]\)\.\([0-9]\)\./\1.0\2./'` '>' 1.08.1.1])
+	sed 's/^\([[0-9]]\)\.\([[0-9]]\)\./\1.0\2./'` '>' 1.08.1.1])
 
 dnl
 dnl Add here new file to be generated
