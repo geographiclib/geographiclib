@@ -912,8 +912,9 @@ typically throw errors (an exception is GeodesicLine).  However, calling
 the class functions with NaNs as arguments is not an error; NaNs are
 returned as appropriate.  "INV" is treated as an invalid zone
 designation by UTMUPS.  "INVALID" is the corresponding invalid MGRS
-string.  NaNs allow the projection of polylines which are separated by
-NaNs; in this format they can be easily plotted in Matlab.
+string.  (Similary "nan" is the equivalent invalid Geohash.)  NaNs allow
+the projection of polylines which are separated by NaNs; in this format
+they can be easily plotted in Matlab.
 
 A note about portability.  For the most part, the code uses standard C++
 and should be able to be deployed on any system with a modern C++
@@ -3330,25 +3331,37 @@ Older versions are in
 <a href="http://sf.net/projects/geographiclib/files/distrib/archive/">
 http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
- - Version 1.23 (released 2012-mm-dd)
-  - Use doxygen tags to document exceptions.
-  - Add Math::AngNormalize and Math::AngNormalize2; allowed range for
-    longitudes and azimuths widened to [&minus;540&deg;, 540&deg;).
-  - Remove html documentation from distribution.
+The corresponding documentation for these versions is obtained by
+clicking on the "Version m.nn" links below.  Some of the links in the
+documentaion of older versions may be out of date (in particular the
+links for the source code will not work if the code has been migrated to
+the archive subdirectory).
+
+ - <a href="http://geographiclib.sf.net/1.23">Version 1.23</a>
+   (released 2012-mm-dd)
+  - Documentation changes:
+    - remove html documentation from distribution and use web links if
+      doxygen is not available;
+    - use doxygen tags to document exceptions;
+    - begin migrating the documentation to using Greek letters where
+      appropriate (requires doxygen 1.8.1.2 or later).
+  - Add GeographicLib::Math::AngNormalize and
+    GeographicLib::Math::AngNormalize2; the allowed range for longitudes
+    and azimuths widened to [&minus;540&deg;, 540&deg;).
   - GeographicLib::DMS::Decode understands more unicode symbols.
-  - TODO: GeographicLib::Geohash uses geohash codes nan and inv to stand
-    for not a number.
-  - TODO: Document limits on f for Geodesic class.  (Maybe more general
-    discussion of limitations?)
-  - Add Ellipsoid::NormalCurvatureRadius.
-  - Various fixes in LambertConformalConic, TransverseMercator,
-    PolarStereographic, and Ellipsoid to handle reverse projections of
-    points near infinity.
-  - Fix programming blunder in LambertConformalConic::Forward
+  - GeographicLib::Geohash uses geohash code "nan" to stand for not a
+    number.
+  - Add GeographicLib::Ellipsoid::NormalCurvatureRadius.
+  - Various fixes in GeographicLib::LambertConformalConic,
+    GeographicLib::TransverseMercator,
+    GeographicLib::PolarStereographic, and GeographicLib::Ellipsoid to
+    handle reverse projections of points near infinity.
+  - Fix programming blunder in GeographicLib::LambertConformalConic::Forward
     (incorrect results were returned if the tangent latitude was
     negative).
 
- - Version 1.22 (released 2012-05-27)
+ - <a href="http://geographiclib.sf.net/1.22">Version 1.22</a>
+   (released 2012-05-27)
   - Add GeographicLib::Geohash and GeographicLib::Ellipsoid classes.
   - Fix bug in GeographicLib::AlbersEqualArea for very prolate
     ellipsoids (<i>b</i><sup>2</sup> > 2 <i>a</i><sup>2</sup>).
@@ -3365,7 +3378,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
       CMAKE_INSTALL_PREFIX;
     - add a cmake configuration for build tree.
 
- - Version 1.21 (released 2012-04-25)
+ - <a href="http://geographiclib.sf.net/1.21">Version 1.21</a>
+   (released 2012-04-25)
   - Support colon-separated DMS output:
     - GeographicLib::DMS::Encode and
       GeographicLib::GeoCoords::DMSRepresentation generalized;
@@ -3383,7 +3397,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - allow the Matlab compiler to be specified with the
       MATLAB_COMPILER option.
 
- - Version 1.20 (released 2012-03-23)
+ - <a href="http://geographiclib.sf.net/1.20">Version 1.20</a>
+   (released 2012-03-23)
   - cmake tweaks:
     - improve find_package's matching of compiler versions;
     - CMAKE_INSTALL_PREFIX set from CMAKE_PREFIX_PATH if available;
@@ -3393,7 +3408,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     checking by Visual Studio.
   - Fix transcription BUG is Geodesic.js.
 
- - Version 1.19 (released 2012-03-13)
+ - <a href="http://geographiclib.sf.net/1.19">Version 1.19</a>
+   (released 2012-03-13)
   - Slight improvement in GeographicLib::Geodesic::Inverse for very
     short lines.
   - Fix argument checking tests in GeographicLib::MGRS::Forward.
@@ -3402,13 +3418,15 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Add installer for 64-bit Windows; the compiled Matlab interface is
     supplied with the Windows 64-bit installer only.
 
- - Version 1.18 (released 2012-02-18)
+ - <a href="http://geographiclib.sf.net/1.18">Version 1.18</a>
+   (released 2012-02-18)
   - Improve documentation on configuration with cmake.
   - cmake's find_package ensures that the compiler versions match on Windows.
   - Improve documentation on compiling Matlab interface.
   - Binary installer for Windows installs under C:/pkg-vc10 by default.
 
- - Version 1.17 (released 2012-01-21)
+ - <a href="http://geographiclib.sf.net/1.17">Version 1.17</a>
+   (released 2012-01-21)
   - Work around optimization BUG in GeographicLib::Geodesic::Inverse
     with g++ version 4.4.0 (mingw).
   - Fix BUG in argument checking with GeographicLib::OSGB::GridReference.
@@ -3416,7 +3434,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Add simple examples of usage for each class.
   - Add internal documentation to the cmake configuration files.
 
- - Version 1.16 (released 2011-12-07)
+ - <a href="http://geographiclib.sf.net/1.16">Version 1.16</a>
+   (released 2011-12-07)
   - Add calculation of the earth's gravitational field:
     - add GeographicLib::NormalGravity GeographicLib::GravityModel and
        GeographicLib::GravityCircle classes;
@@ -3449,7 +3468,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - default height to zero in
       <a href="MagneticField.1.html">MagneticField</a>.
 
- - Version 1.15 (released 2011-11-08)
+ - <a href="http://geographiclib.sf.net/1.15">Version 1.15</a>
+   (released 2011-11-08)
   - Add calculation of the earth's magnetic field:
     - add GeographicLib::MagneticModel and GeographicLib::MagneticCircle
       classes;
@@ -3471,7 +3491,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     install setup.py for non-Windows systems.
   - Include Doxygen tag file in distribution as doc/html/Geographic.tag.
 
- - Version 1.14 (released 2011-09-30)
+ - <a href="http://geographiclib.sf.net/1.14">Version 1.14</a>
+   (released 2011-09-30)
   - Ensure that geographiclib-config.cmake is relocatable.
   - Allow more unicode symbols to be used in GeographicLib::DMS::Decode.
   - Modify <a href="GeoidEval.1.html">GeoidEval</a> so that it can be
@@ -3485,7 +3506,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Supply a minimal Qt qmake project file for library
     src/Geographic.pro.
 
- - Version 1.13 (released 2011-08-13)
+ - <a href="http://geographiclib.sf.net/1.13">Version 1.13</a>
+   (released 2011-08-13)
   - Changes to I/O:
     - allow : (colon) to be used as a DMS separator in
       GeographicLib::DMS::Decode(const std::string&, flag&);
@@ -3513,7 +3535,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
       geographiclib-config.cmake;
     - better support for building a shared library under Windows.
 
- - Version 1.12 (released 2011-07-21)
+ - <a href="http://geographiclib.sf.net/1.12">Version 1.12</a>
+   (released 2011-07-21)
   - Change license to MIT/X11.
   - Add GeographicLib::PolygonArea class and equivalent Matlab function.
   - Provide Javascript and Python implementations of geodesic routines.
@@ -3524,7 +3547,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - A couple of code changes to enable compilation with Visual
     Studio 2003.
 
- - Version 1.11 (released 2011-06-27)
+ - <a href="http://geographiclib.sf.net/1.11">Version 1.11</a>
+   (released 2011-06-27)
   - Changes to <a href="Planimeter.1.html">Planimeter</a>:
     - add -l flag to <a href="Planimeter.1.html">Planimeter</a> for polyline
       calculations;
@@ -3550,7 +3574,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - InverseFlattening() has been deprecated (and now returns inf for a
       sphere, instead of 0).
 
- - Version 1.10 (released 2011-06-11)
+ - <a href="http://geographiclib.sf.net/1.10">Version 1.10</a>
+   (released 2011-06-11)
   - Improvements to Matlab/Octave interface:
     - add {geocentric,localcartesian}{forward,reverse};
     - make geographiclibinterface more general;
@@ -3562,7 +3587,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - cmake installed in man/man1 instead of share/man/man1;
     - cmake did not set the rpath on the tools.
 
- - Version 1.9 (released 2011-05-28)
+ - <a href="http://geographiclib.sf.net/1.9">Version 1.9</a>
+   (released 2011-05-28)
   - FIX BUG in area returned by
     <a href="Planimeter.1.html">Planimeter</a> for pole encircling polygons.
   - FIX BUG in error message reported when DMS::Decode reads the string
@@ -3591,7 +3617,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     <a href="http://geographiclib.git.sf.net/git/gitweb-index.cgi">
     git</a>.
 
- - Version 1.8 (released 2011-02-22)
+ - <a href="http://geographiclib.sf.net/1.8">Version 1.8</a>
+   (released 2011-02-22)
   - Optionally return rotation matrix from GeographicLib::Geocentric and
     GeographicLib::LocalCartesian.
   - For the \ref utilities, supply man pages, -h prints the synopsis,
@@ -3610,7 +3637,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Remove documentation that duplicates papers on transverse Mercator
     and geodesics.
 
- - Version 1.7 (released 2010-12-21)
+ - <a href="http://geographiclib.sf.net/1.7">Version 1.7</a>
+   (released 2010-12-21)
   - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.
   - Add GeographicLib::AlbersEqualArea projection.
   - Library created by Visual Studio is Geographic.lib instead of
@@ -3620,11 +3648,13 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Add solution/project files for Visual Studio 2010 (32-bit only).
   - Use C++11 static_assert and math functions, if available.
 
- - Version 1.6 (released 2010-11-23)
+ - <a href="http://geographiclib.sf.net/1.6">Version 1.6</a>
+   (released 2010-11-23)
   - FIX BUG introduced in GeographicLib::Geoid in version 1.5 (found by
     Dave Edwards).
 
- - Version 1.5 (released 2010-11-19)
+ - <a href="http://geographiclib.sf.net/1.5">Version 1.5</a>
+   (released 2010-11-19)
   - Improve area calculations for small polygons.
   - Add -s and -r flags to <a href="Planimeter.1.html">Planimeter</a>.
   - Improve the accuracy of GeographicLib::LambertConformalConic using
@@ -3649,7 +3679,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - fixes to compile under cygwin;
     - tweak expression used to find latitude from conformal latitude.
 
- - Version 1.4 (released 2010-09-12)
+ - <a href="http://geographiclib.sf.net/1.4">Version 1.4</a>
+   (released 2010-09-12)
   - Changes to GeographicLib::Geodesic and GeographicLib::GeodesicLine:
     - FIX BUG in Geodesic::Inverse with prolate ellipsoids;
     - add area computations to Geodesic::Direct and Geodesic::Inverse;
@@ -3679,7 +3710,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     classes which don't return the convergence (or azimuth) and scale.
   - Document function parameters and return values consistently.
 
- - Version 1.3 (released 2010-07-21)
+ - <a href="http://geographiclib.sf.net/1.3">Version 1.3</a>
+   (released 2010-07-21)
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the
     gnomonic projection.
   - Add -g and -e options to
@@ -3698,7 +3730,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Update references to Geotrans in MGRS documentation.
   - Speed up tmseries.mac.
 
- - Version 1.2 (released 2010-05-21)
+ - <a href="http://geographiclib.sf.net/1.2">Version 1.2</a>
+   (released 2010-05-21)
   - FIX BUGS in GeographicLib::Geodesic,
     - wrong azimuth returned by Direct if point 2 is on a pole;
     - Inverse sometimes fails with very close points.
@@ -3729,14 +3762,16 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - <a href="CartConvert.1.html">CartConvert</a> allows the ellipsoid
       to be specified with -e.
 
- - Version 1.1 (released 2010-02-09)
+ - <a href="http://geographiclib.sf.net/1.1">Version 1.1</a>
+   (released 2010-02-09)
   - FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).
   - Increase accuracy of scale calculation in TransverseMercator and
     TransverseMercatorExact.
   - Code and documentation changes for consistency with
     <a  href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>
 
- - Version 1.0 (released 2010-01-07)
+ - <a href="http://geographiclib.sf.net/1.0">Version 1.0</a>
+   (released 2010-01-07)
   - Add autoconf configuration files.
   - BUG FIX: Improve initial guess for Newton's method in
     PolarStereographic::Reverse.  (Previously this failed to converge
@@ -3759,7 +3794,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
       cached area without disk reads;
     - Add inspector functions to query the extent of the cache.
 
- - Version 2009-11
+ - <a href="http://geographiclib.sf.net/2009-11">Version 2009-11</a>
   - Allow specification of "closest UTM zone" in GeographicLib::UTMUPS
     and <a href="GeoConvert.1.html">GeoConvert</a> (via -t option).
   - Utilities now complain is there are too many tokens on input lines.
@@ -3773,7 +3808,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - Improve accuracy of inverse hyperbolic functions.
     - Fix the way GeographicLib::Math functions handle different precisions.
 
- - Version 2009-10
+ - <a href="http://geographiclib.sf.net/2009-10">Version 2009-10</a>
   - Change web site to http://geographiclib.sourceforge.net
   - Several house-cleaning changes:
     - Change from the a flat directory structure to a more easily
@@ -3794,11 +3829,11 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
       northings.
     - Add 64-bit targets in Visual Studio project files.
 
- - Version 2009-09
+ - <a href="http://geographiclib.sf.net/2009-09">Version 2009-09</a>
   - Add GeographicLib::Geoid and
     <a href="GeoidEval.1.html">GeoidEval</a> utility.
 
- - Version 2009-08
+ - <a href="http://geographiclib.sf.net/2009-08">Version 2009-08</a>
   - Add GeographicLib::CassiniSoldner class and
     <a href="GeodesicProj.1.html">EquidistantTest</a> utility.
   - Fix bug in GeographicLib::Geodesic::Inverse where NaNs were
@@ -3807,15 +3842,15 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     of the azimuthal scale instead of the reduced length.
   - Add -n option to <a href="GeoConvert.1.html">GeoConvert</a>.
 
- - Version 2009-07
+ - <a href="http://geographiclib.sf.net/2009-07">Version 2009-07</a>
   - Speed up the series inversion code in tmseries.mac and geod.mac.
   - Reference Borkowski in section on \ref geocentric.
 
- - Version 2009-06
+ - <a href="http://geographiclib.sf.net/2009-06">Version 2009-06</a>
   - Add routines to decode and encode zone+hemisphere to GeographicLib::UTMUPS.
   - Clean up code in GeographicLib::Geodesic.
 
- - Version 2009-05
+ - <a href="http://geographiclib.sf.net/2009-05">Version 2009-05</a>
   - Improvements to GeographicLib::Geodesic:
     - more economical series expansions,
     - return reduced length (as does the
@@ -3830,7 +3865,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     carefully.
   - Remove reference to defunct Constants.cpp from GeographicLib.vcproj.
 
- - Version 2009-04
+ - <a href="http://geographiclib.sf.net/2009-04">Version 2009-04</a>
   - Use compile-time constants to select the order of series in
     GeographicLib::TransverseMercator.
   - 2x unroll of Clenshaw summation to avoid data shuffling.
@@ -3846,7 +3881,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - works with both oblate and prolate ellipsoids,
     - add -a, -e, -b options to the <a href="Geod.1.html">Geod</a> utility.
 
- - Version 2009-03
+ - <a href="http://geographiclib.sf.net/2009-03">Version 2009-03</a>
   - Add GeographicLib::Geodesic and the <a href="Geod.1.html">Geod</a> utility.
   - Declare when no exceptions are thrown by functions.
   - Minor changes to GeographicLib::DMS class.
@@ -3856,7 +3891,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     to <a href="CartConvert.1.html">CartConvert</a>.
   - Use inline functions to define constant doubles in Constants.hpp.
 
- - Version 2009-02
+ - <a href="http://geographiclib.sf.net/2009-02">Version 2009-02</a>
   - Fix documentation of constructors (flattening -> inverse
     flattening).
   - Use std versions of math functions.
@@ -3864,7 +3899,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     and the ECEFConvert utility.
   - Gather the documentation on the \ref utilities onto one page.
 
- - Version 2009-01
+ - <a href="http://geographiclib.sf.net/2009-01">Version 2009-01</a>
   - First proper release of library.
   - More robust GeographicLib::TransverseMercatorExact:
     - Introduce \e extendp version of constructor,

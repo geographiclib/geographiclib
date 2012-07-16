@@ -24,12 +24,16 @@ namespace GeographicLib {
   const string Geohash::ucdigits_ = "0123456789BCDEFGHJKMNPQRSTUVWXYZ";
 
   void Geohash::Forward(real lat, real lon, int len, std::string& geohash) {
-    if (!(abs(lat) <= 90))
+    if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    if (!(lon >= -540 && lon < 540))
+    if (lon < -540 || lon >= 540)
       throw GeographicErr("Longitude " + Utility::str(lon)
                           + "d not in [-540d, 540d)");
+    if (Math::isnan(lat) || Math::isnan(lon)) {
+      geohash = "nan";
+      return;
+    }
     if (lat == 90) lat -= lateps_ / 2;
     lon = Math::AngNormalize(lon); // lon in [-180,180)
     // lon/loneps_ in [-2^45,2^45); lon/eps + shift_ in [0,2^46)
@@ -61,6 +65,13 @@ namespace GeographicLib {
   void Geohash::Reverse(const std::string& geohash, real& lat, real& lon,
                         int& len, bool centerp) {
     len = min(int(maxlen_), int(geohash.length()));
+    if (len == 3 &&
+        toupper(geohash[0]) == 'N' &&
+        toupper(geohash[1]) == 'A' &&
+        toupper(geohash[2]) == 'N') {
+      lat = lon = Math::NaN<real>();
+      return;
+    }
     unsigned long long ulon = 0, ulat = 0;
     for (unsigned k = 0, j = 0; k < unsigned(len); ++k) {
       int byte = Utility::lookup(ucdigits_, geohash[k]);

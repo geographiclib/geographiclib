@@ -66,6 +66,8 @@ namespace GeographicLib {
      * @exception std::bad_alloc if memory for \e geohash can't be allocated.
      *
      * Internally, \e len is first put in the range [0, 18].
+     *
+     * If \e lat or \e lon is NaN, the returned geohash is "nan".
      **********************************************************************/
     static void Forward(real lat, real lon, int len, std::string& geohash);
 
@@ -82,6 +84,8 @@ namespace GeographicLib {
      *
      * Only the first 18 characters for \e geohash are considered.  The case of
      * the letters in \e geohash is ignored.
+     *
+     * If \e geohash is "nan", then \e lat and \e lon are set to NaN.
      **********************************************************************/
     static void Reverse(const std::string& geohash, real& lat, real& lon,
                         int& len, bool centerp = true);

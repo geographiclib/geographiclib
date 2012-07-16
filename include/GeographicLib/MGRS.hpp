@@ -257,6 +257,9 @@ namespace GeographicLib {
      * centerp = true the conversion from MGRS to geographic and back is
      * stable.  This is not assured if \e centerp = false.
      *
+     * If the first 3 characters of \e mgrs are "INV", then \e x and \e y are
+     * set to NaN and \e zone is set to UTMUPS::INVALID.
+     *
      * If an exception is thrown, then the arguments are unchanged.
      **********************************************************************/
     static void Reverse(const std::string& mgrs,
