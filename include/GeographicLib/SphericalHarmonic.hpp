@@ -51,10 +51,10 @@ namespace GeographicLib {
    *   Research Australasia 68, 31-60, (June 1998).
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San
    *   Francisco, 1967).  (See Sec. 1-14, for a definition of Pbar.)
-   * - S. A. Holmes and W. E. Featherstone, A unified approach to the
-   *   Clenshaw summation and the recursive computation of very high degree
-   *   and order normalised associated Legendre functions, J. Geod. 76(5),
-   *   279-299 (2002).
+   * - S. A. Holmes and W. E. Featherstone, A unified approach to the Clenshaw
+   *   summation and the recursive computation of very high degree and order
+   *   normalised associated Legendre functions, J. Geodesy 76(5), 279-299
+   *   (2002).
    * - C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw
    *   summation, Boll. Geod. Sci. Aff. 41(4), 349-375 (1982).
    *
