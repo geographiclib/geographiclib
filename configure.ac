@@ -55,7 +55,8 @@ AC_C_BIGENDIAN
 
 # Check for doxygen
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
-AM_CONDITIONAL([HAVE_DOXYGEN], [test "$DOXYGEN"])
+AM_CONDITIONAL([HAVE_DOXYGEN],
+	[test "$DOXYGEN" -a `"$DOXYGEN" --version` > 1.8.1.1])
 
 dnl
 dnl Add here new file to be generated
