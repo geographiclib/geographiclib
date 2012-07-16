@@ -31,7 +31,7 @@ endif ()
 # If doxygen is not available, only the install step (from the source
 # tree) is done.
 
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} html-stage)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html-stage)
 if (DOXYGEN_FOUND)
   configure_file (doxyfile.in doxyfile)
   file (GLOB SOURCES
