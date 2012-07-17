@@ -21,7 +21,7 @@
 #include <algorithm>
 
 #if HAVE_OPENMP
-#include <omp.h>
+#  include <omp.h>
 #endif
 
 #include <GeographicLib/GravityModel.hpp>
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
     // Write header
     {
       double transform[] = {latorg, lonorg, delta, delta};
-      unsigned sizes[] = {nlat, nlon};
+      unsigned sizes[] = {unsigned(nlat), unsigned(nlon)};
       Utility::writearray<double, double, true>(file, transform, 4);
       Utility::writearray<unsigned, unsigned, true>(file, sizes, 2);
     }
@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
       int nlat0 = min(nlat, ilat0 + nbatch);
 
 #if HAVE_OPENMP
-#pragma omp parallel for
+#  pragma omp parallel for
 #endif
       for (int ilat = ilat0; ilat < nlat0; ++ilat) { // Loop over latitudes
         double

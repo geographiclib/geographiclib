@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)
-#define GEOGRAPHICLIB_GEOCENTRIC_HPP \
-  "$Id: e9f709c85e61f60509c492429061cba04350eea8 $"
+#define GEOGRAPHICLIB_GEOCENTRIC_HPP 1
 
 #include <vector>
 #include <algorithm>
@@ -107,6 +106,7 @@ namespace GeographicLib {
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
+     * @exception GeographicLib if \e a or (1 - \e f ) \e a is not positive.
      *
      * An exception is thrown if either of the axes of the ellipsoid is
      * non-positive.
@@ -128,8 +128,8 @@ namespace GeographicLib {
      * @param[out] Y geocentric coordinate (meters).
      * @param[out] Z geocentric coordinate (meters).
      *
-     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
-     * the range [-180, 360].
+     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
+     * should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& X, real& Y, real& Z)
       const throw() {

@@ -1,5 +1,3 @@
-=for comment $Id: bf56ca96d0775a0610ee03a5e6d92bb21afeff7b $
-
 =head1 NAME
 
 Gravity -- compute the earth's gravity field

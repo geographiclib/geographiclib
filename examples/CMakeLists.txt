@@ -1,5 +1,3 @@
-# $Id: 5b20ba2ecadd8c3462154c98889195ebe3fbea38 $
-
 # Compile (but don't install) a bunch of tiny example programs.  These
 # are mainly for including as examples within the doxygen documentation;
 # however, compiling them catches most obvious blunders.

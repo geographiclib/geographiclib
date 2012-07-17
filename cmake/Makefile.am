@@ -2,7 +2,6 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: a97bc3a884bcf3bcd1223fa635d2b7d27dfade54 $
 
 cmakedir=$(datadir)/cmake/GeographicLib
 

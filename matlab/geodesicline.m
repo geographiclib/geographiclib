@@ -37,8 +37,6 @@ end
 % geodesicline.m
 % Matlab .m file for computing points along a geodesic
 %
-% Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and
-% licensed under the MIT/X11 License.  For more information, see
+% Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
+% under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
-%
-% $Id: 49924160d0b03dc6e7c930fc43c9850808cc527f $

@@ -136,12 +136,6 @@
 #include <GeographicLib/CircularEngine.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_SPHERICALENGINE_CPP \
-  "$Id: b1efb110417feafe37595e5aecf74873bae01d52 $"
-
-RCSID_DECL(GEOGRAPHICLIB_SPHERICALENGINE_CPP)
-RCSID_DECL(GEOGRAPHICLIB_SPHERICALENGINE_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

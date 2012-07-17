@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::UTMUPS class
-// $Id: 83d5ba7eb8c9ce1963cb9499a6ee404329e74f3a $
 
 #include <iostream>
 #include <exception>

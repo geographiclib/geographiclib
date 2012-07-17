@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::PolygonArea class
-// $Id: 103c4d2f060347fd499adc2e8487102c8b93d58f $
 
 #include <iostream>
 #include <exception>

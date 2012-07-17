@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::SphericalEngine class
-// $Id: 08fe16ba3619311b15fc58956511a88c37886f91 $
 
 #include <iostream>
 #include <exception>

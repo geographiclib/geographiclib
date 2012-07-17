@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::PolarStereographic class
-// $Id: 76bd97693e4f711118164cc0cde1db7f5ca70e12 $
 
 #include <iostream>
 #include <exception>

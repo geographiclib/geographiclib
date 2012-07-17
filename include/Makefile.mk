@@ -1,5 +1,3 @@
-# $Id: b48c136822b1ccb463885823dfa7bfe87c2c2e2f $
-
 MODULES = AlbersEqualArea \
 	AzimuthalEquidistant \
 	CassiniSoldner \

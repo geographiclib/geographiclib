@@ -5,8 +5,6 @@
 # Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
-#
-# $Id: 93583fcbaeae29c5331b2652464017b5a7912d73 $
 
 DEFAULTDIR="@GEOGRAPHICLIB_DATA@"
 usage() {

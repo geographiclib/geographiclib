@@ -1,5 +1,3 @@
-=for comment $Id: fe9a4ece2e3919b375542db7836d269d1dfdb9b6 $
-
 =head1 NAME
 
 MagneticField -- compute the earth's magnetic field

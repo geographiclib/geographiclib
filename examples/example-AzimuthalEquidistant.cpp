@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::AzimuthalEquidistant class
-// $Id: d018fda4dc3289b06b9e6fe8cda16638430d9213 $
 
 #include <iostream>
 #include <exception>

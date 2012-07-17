@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
-#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP \
-  "$Id: 31995a29f5216e6346a238edeedeb0e848452954 $"
+#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP 1
 
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -59,6 +58,9 @@ namespace GeographicLib {
      * @param[in] h0 height above ellipsoid at origin (meters); default 0.
      * @param[in] earth Geocentric object for the transformation; default
      *   Geocentric::WGS84.
+     *
+     * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
+     * lon0 should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     LocalCartesian(real lat0, real lon0, real h0 = 0,
                    const Geocentric& earth = Geocentric::WGS84) throw()
@@ -84,9 +86,11 @@ namespace GeographicLib {
      * @param[in] lat0 latitude at origin (degrees).
      * @param[in] lon0 longitude at origin (degrees).
      * @param[in] h0 height above ellipsoid at origin (meters); default 0.
+     *
+     * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
+     * lon0 should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
-    void Reset(real lat0, real lon0, real h0 = 0)
-      throw();
+    void Reset(real lat0, real lon0, real h0 = 0) throw();
 
     /**
      * Convert from geodetic to local cartesian coordinates.
@@ -98,8 +102,8 @@ namespace GeographicLib {
      * @param[out] y local cartesian coordinate (meters).
      * @param[out] z local cartesian coordinate (meters).
      *
-     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
-     * the range [-180, 360].
+     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
+     * should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& x, real& y, real& z)
       const throw() {
@@ -118,6 +122,9 @@ namespace GeographicLib {
      * @param[out] z local cartesian coordinate (meters).
      * @param[out] M if the length of the vector is 9, fill with the rotation
      *   matrix in row-major order.
+     *
+     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
+     * should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      *
      * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can
      * express \e v as \e column vectors in one of two ways

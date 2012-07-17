@@ -2,7 +2,6 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: ee15d9025a4dded004f85e00777b8ca8faee51d0 $
 
 EXAMPLE_FILES = \
 	example-Accumulator.cpp \

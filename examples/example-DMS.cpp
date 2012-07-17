@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::DMS class
-// $Id: c12828a51e75bb4a2a28f67768acdb405f63a197 $
 
 #include <iostream>
 #include <exception>

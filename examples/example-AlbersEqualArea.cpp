@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::AlbersEqualArea class
-// $Id: 230027b09ff2dfa7940202913a6d965281818b99 $
 
 #include <iostream>
 #include <exception>

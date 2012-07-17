@@ -2,14 +2,13 @@
  * \file LambertConformalConic.hpp
  * \brief Header for GeographicLib::LambertConformalConic class
  *
- * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP \
-  "$Id: 6b365254690f981dea955760b03204d7d8e00582 $"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP 1
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>
@@ -61,7 +60,7 @@ namespace GeographicLib {
     typedef Math::real real;
     real _a, _f, _fm, _e2, _e, _e2m;
     real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
-    real _scbet0, _tchi0, _scchi0, _psi0, _nrho0;
+    real _scbet0, _tchi0, _scchi0, _psi0, _nrho0, _drhomax;
     static const real eps_;
     static const real epsx_;
     static const real tol_;
@@ -147,9 +146,10 @@ namespace GeographicLib {
      *   to 1/\e f.
      * @param[in] stdlat standard parallel (degrees), the circle of tangency.
      * @param[in] k0 scale on the standard parallel.
-     *
-     * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat
-     * is not in the range [-90, 90].
+     * @exception GeographicLib if \e a, (1 - \e f ) \e a, or \e k0 is not
+     *   positive.
+     * @exception GeographicErr if \e stdlat is not in [-90<sup>o</sup>,
+     *   90<sup>o</sup>].
      **********************************************************************/
     LambertConformalConic(real a, real f, real stdlat, real k0);
 
@@ -163,11 +163,11 @@ namespace GeographicLib {
      * @param[in] stdlat1 first standard parallel (degrees).
      * @param[in] stdlat2 second standard parallel (degrees).
      * @param[in] k1 scale on the standard parallels.
-     *
-     * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat1
-     * or \e stdlat2 is not in the range [-90, 90].  In addition, if either \e
-     * stdlat1 or \e stdlat2 is a pole, then an exception is thrown if \e
-     * stdlat1 is not equal \e stdlat2.
+     * @exception GeographicLib if \e a, (1 - \e f ) \e a, or \e k1 is not
+     *   positive.
+     * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
+     *   [-90<sup>o</sup>, 90<sup>o</sup>], or if either \e stdlat1 or \e
+     *   stdlat2 is a pole and \e stdlat1 is not equal \e stdlat2.
      **********************************************************************/
     LambertConformalConic(real a, real f, real stdlat1, real stdlat2, real k1);
 
@@ -183,6 +183,11 @@ namespace GeographicLib {
      * @param[in] sinlat2 sine of second standard parallel.
      * @param[in] coslat2 cosine of second standard parallel.
      * @param[in] k1 scale on the standard parallels.
+     * @exception GeographicLib if \e a, (1 - \e f ) \e a, or \e k1 is not
+     *   positive.
+     * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
+     *   [-90<sup>o</sup>, 90<sup>o</sup>], or if either \e stdlat1 or \e
+     *   stdlat2 is a pole and \e stdlat1 is not equal \e stdlat2.
      *
      * This allows parallels close to the poles to be specified accurately.
      * This routine computes the latitude of origin and the scale at this
@@ -204,10 +209,9 @@ namespace GeographicLib {
      *
      * @param[in] lat (degrees).
      * @param[in] k scale at latitude \e lat (default 1).
-     *
-     * This allows a "latitude of true scale" to be specified.  An exception is
-     * thrown if \e k is not positive or if \e stdlat is not in the range [-90,
-     * 90]
+     * @exception GeographicLib \e k is not positive.
+     * @exception GeographicErr if \e lat is not in [-90<sup>o</sup>,
+     *   90<sup>o</sup>].
      **********************************************************************/
     void SetScale(real lat, real k = real(1));
 
@@ -224,12 +228,12 @@ namespace GeographicLib {
      *
      * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
      * No false easting or northing is added and \e lat should be in the range
-     * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].  The
-     * error in the projection is less than about 10 nm (10 nanometers), true
-     * distance, and the errors in the meridian convergence and scale are
-     * consistent with this.  The values of \e x and \e y returned for points
-     * which project to infinity (i.e., one or both of the poles) will be large
-     * but finite.
+     * [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon and \e lon0 should be in the
+     * range [-540<sup>o</sup>, 540<sup>o</sup>).  The error in the projection
+     * is less than about 10 nm (10 nanometers), true distance, and the errors
+     * in the meridian convergence and scale are consistent with this.  The
+     * values of \e x and \e y returned for points which project to infinity
+     * (i.e., one or both of the poles) will be large but finite.
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
@@ -247,10 +251,11 @@ namespace GeographicLib {
      *
      * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
      * No false easting or northing is added.  \e lon0 should be in the range
-     * [-180, 360].  The value of \e lon returned is in the range [-180, 180).
-     * The error in the projection is less than about 10 nm (10 nanometers),
-     * true distance, and the errors in the meridian convergence and scale are
-     * consistent with this.
+     * [-540<sup>o</sup>, 540<sup>o</sup>).  The value of \e lon returned is in
+     * the range [-180<sup>o</sup>, 180<sup>o</sup>).  The error in the
+     * projection is less than about 10 nm (10 nanometers), true distance, and
+     * the errors in the meridian convergence and scale are consistent with
+     * this.
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();

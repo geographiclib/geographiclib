@@ -29,12 +29,6 @@
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
 
-#define GEOGRAPHICLIB_GEODESIC_CPP \
-  "$Id: dd137806b8a5ba58211a37eb87e163b8a9bd7aa7 $"
-
-RCSID_DECL(GEOGRAPHICLIB_GEODESIC_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GEODESIC_HPP)
-
 namespace GeographicLib {
 
   using namespace std;
@@ -126,8 +120,8 @@ namespace GeographicLib {
                                   real& m12, real& M12, real& M21, real& S12)
     const throw() {
     outmask &= OUT_ALL;
-    lon1 = AngNormalize(lon1);
-    real lon12 = AngNormalize(AngNormalize(lon2) - lon1);
+    lon1 = Math::AngNormalize(lon1);
+    real lon12 = Math::AngNormalize(Math::AngNormalize(lon2) - lon1);
     // If very close to being on the same meridian, then make it so.
     // Not sure this is necessary...
     lon12 = AngRound(lon12);

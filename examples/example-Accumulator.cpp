@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::Accumulator class
-// $Id: cd6505cf47fbae653b439ba63ea927050cbf0a45 $
 
 #include <iostream>
 #include <exception>

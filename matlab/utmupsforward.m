@@ -35,8 +35,6 @@ end
 % utmupsforward.m
 % Matlab .m file for geographic to UTM/UPS conversions
 %
-% Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+% Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
 % under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
-%
-% $Id: 8160e1e84c6c5fb707b89cc429562926805bc3f3 $

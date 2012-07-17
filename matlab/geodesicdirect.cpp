@@ -2,7 +2,7 @@
  * \file geodesicdirect.cpp
  * \brief Matlab mex file for geographic to UTM/UPS conversions
  *
- * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -14,8 +14,6 @@
 // [Windows]
 // mex -I../include -L../windows/Release
 //    -lGeographic geodesicdirect.cpp
-
-// $Id: 8865cbe511d3dd56c0eed73e62ec32d5b5d35f99 $
 
 #include <algorithm>
 #include <GeographicLib/Geodesic.hpp>
@@ -86,9 +84,9 @@ void mexFunction( int nlhs, mxArray* plhs[],
   try {
     const Geodesic g(a, f);
     for (int i = 0; i < m; ++i) {
-      if (!(abs(lat1[i]) > 90) &&
-          !(lon1[i] < -180 || lon1[i] > 360) &&
-          !(azi1[i] < -180 || azi1[i] > 360)) {
+      if (abs(lat1[i]) <= 90 &&
+          lon1[i] >= -540 && lon1[i] < 540 &&
+          azi1[i] >= -540 && azi1[i] < 540) {
         if (aux)
           a12[i] = g.Direct(lat1[i], lon1[i], azi1[i], s12[i],
                             lat2[i], lon2[i], azi2[i], m12[i],

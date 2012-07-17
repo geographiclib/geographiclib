@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
-#define GEOGRAPHICLIB_CONSTANTS_HPP \
-  "$Id: 9d779f7a1f6939407128e2dcb925b1dc96f74f69 $"
+#define GEOGRAPHICLIB_CONSTANTS_HPP 1
 
 #include <GeographicLib/Config.h>
 
@@ -25,17 +24,6 @@
 #    define STATIC_ASSERT(cond,reason) \
             { enum{ STATIC_ASSERT_ENUM = 1/int(cond) }; }
 #  endif
-#endif
-
-#if defined(__GNUC__)
-// Suppress "defined but not used" warnings
-#  define RCSID_DECL(x) namespace \
-          { char VAR_ ## x [] __attribute__((used)) = x; }
-#else
-/**
- * Insertion of RCS Id strings into the object file.
- **********************************************************************/
-#  define RCSID_DECL(x) namespace { char VAR_ ## x [] = x; }
 #endif
 
 #if defined(_WIN32) && defined(GEOGRAPHIC_SHARED_LIB) && GEOGRAPHIC_SHARED_LIB
@@ -122,8 +110,8 @@ namespace GeographicLib {
     { return T(3986004) * T(100000000) + T(41800000); }
     /**
      * @tparam T the type of the returned value.
-     * @return the angular velocity of the the WGS84 ellipsoid, \e omega, in
-     *   rad s<sup>-1</sup>.
+     * @return the angular velocity of the WGS84 ellipsoid, \e omega, in rad
+     *   s<sup>-1</sup>.
      **********************************************************************/
     template<typename T> static inline T WGS84_omega() throw()
     { return T(7292115) / (T(1000000) * T(100000)); }
@@ -155,8 +143,8 @@ namespace GeographicLib {
     { return T(3986005) * T(100000000); }
     /**
      * @tparam T the type of the returned value.
-     * @return the angular velocity of the the GRS80 ellipsoid, \e omega, in
-     *   rad s<sup>-1</sup>.
+     * @return the angular velocity of the GRS80 ellipsoid, \e omega, in rad
+     *   s<sup>-1</sup>.
      *
      * This is about 2*pi*366.25 / (365.25*24*3600) rad s<sup>-1</sup>.  365.25
      * is the number of days in a Julian year and 365.35/366.25 converts from

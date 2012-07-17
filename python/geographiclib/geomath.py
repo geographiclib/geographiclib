@@ -1,16 +1,13 @@
 # geomath.py
 #
-# This is a rather literal translation of the GeographicLib::Math class
-# to python.  See the documentation for the C++ class for more
-# information at
+# This is a rather literal translation of the GeographicLib::Math class to
+# python.  See the documentation for the C++ class for more information at
 #
 #    http://geographiclib.sourceforge.net/html/annotated.html
 #
-# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
-# under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
+# the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
-#
-# $Id: 9c5444e65f8541f8528ef2a504465e5565987c15 $
 ######################################################################
 
 import sys
@@ -74,6 +71,19 @@ class Math(object):
     y = Math.log1p(2 * y/(1 - y))/2
     return -y if x < 0 else y
   atanh = staticmethod(atanh)
+
+  def AngNormalize(x):
+    """reduce angle in [-540,540) to [-180,180)"""
+
+    return (x - 360 if x >= 180 else
+            (x + 360 if x < -180 else x))
+  AngNormalize = staticmethod(AngNormalize)
+
+  def AngNormalize2(x):
+    """reduce arbitrary angle to [-180,180)"""
+
+    return Math.AngNormalize(math.fmod(x, 360))
+  AngNormalize2 = staticmethod(AngNormalize2)
 
   def isfinite(x):
     """Test for finiteness"""

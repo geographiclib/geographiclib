@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP \
-  "$Id: a8bf5e616f8e1b6b95de40c60ac70d34360c843b $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP 1
 
 #include <GeographicLib/Constants.hpp>
 
@@ -60,9 +59,8 @@ namespace GeographicLib {
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
      * @param[in] k0 central scale factor.
-     *
-     * An exception is thrown if either of the axes of the ellipsoid is
-     * not positive \e a or if \e k0 is not positive.
+     * @exception GeographicLib if \e a, (1 - \e f ) \e a, or \e k0 is not
+     *   positive.
      **********************************************************************/
     PolarStereographic(real a, real f, real k0);
 
@@ -71,10 +69,9 @@ namespace GeographicLib {
      *
      * @param[in] lat (degrees) assuming \e northp = true.
      * @param[in] k scale at latitude \e lat (default 1).
-     *
-     * This allows a "latitude of true scale" to be specified.  An exception is
-     * thrown if \e k is not positive or if \e lat is not in the range (-90,
-     * 90].
+     * @exception GeographicLib \e k is not positive.
+     * @exception GeographicErr if \e lat is not in (-90<sup>o</sup>,
+     *   90<sup>o</sup>].
      **********************************************************************/
     void SetScale(real lat, real k = real(1));
 
@@ -91,8 +88,9 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added.  \e lat should be in the range
-     * (-90, 90] for \e northp = true and in the range [-90, 90) for \e northp
-     * = false; \e lon should be in the range [-180, 360].
+     * (-90<sup>o</sup>, 90<sup>o</sup>] for \e northp = true and in the range
+     * [-90<sup>o</sup>, 90<sup>o</sup>) for \e northp = false; \e lon should
+     * be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void Forward(bool northp, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();

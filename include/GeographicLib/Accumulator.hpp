@@ -2,14 +2,13 @@
  * \file Accumulator.hpp
  * \brief Header for GeographicLib::Accumulator class
  *
- * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ACCUMULATOR_HPP)
-#define GEOGRAPHICLIB_ACCUMULATOR_HPP \
-  "$Id: 7a95b0ebcc20534577ea6fcbd3d145e498dd5049 $"
+#define GEOGRAPHICLIB_ACCUMULATOR_HPP 1
 
 #include <GeographicLib/Constants.hpp>
 

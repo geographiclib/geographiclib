@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CIRCULARENGINE_HPP)
-#define GEOGRAPHICLIB_CIRCULARENGINE_HPP \
-  "$Id: 1e012847f5ecd4d38f3cfdae7ef3badebb433da5 $"
+#define GEOGRAPHICLIB_CIRCULARENGINE_HPP 1
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
@@ -17,8 +16,8 @@
 
 #if defined(_MSC_VER)
 // Squelch warnings about dll vs vector
-#pragma warning (push)
-#pragma warning (disable: 4251)
+#  pragma warning (push)
+#  pragma warning (disable: 4251)
 #endif
 
 namespace GeographicLib {
@@ -44,7 +43,7 @@ namespace GeographicLib {
    * CircularEngine stores the coefficients needed to allow the summation over
    * order to be performed in 2 or 6 vectors of length \e M + 1 (depending on
    * whether gradients are to be calculated).  For this reason the constructor
-   * may throw a bad_alloc exception.
+   * may throw a std::bad_alloc exception.
    *
    * Example of use:
    * \include example-CircularEngine.cpp
@@ -199,7 +198,7 @@ namespace GeographicLib {
 } // namespace GeographicLib
 
 #if defined(_MSC_VER)
-#pragma warning (pop)
+#  pragma warning (pop)
 #endif
 
 #endif  // GEOGRAPHICLIB_CIRCULARENGINE_HPP

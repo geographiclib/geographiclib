@@ -1,16 +1,14 @@
 # accumulator.py
 #
-# This is a rather literal translation of the GeographicLib::Accumulator
-# class from to python.  See the documentation for the C++ class for
-# more information at
+# This is a rather literal translation of the GeographicLib::Accumulator class
+# from to python.  See the documentation for the C++ class for more information
+# at
 #
 #    http://geographiclib.sourceforge.net/html/annotated.html
 #
-# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
-# under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
+# the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
-#
-# $Id: bbf905e5f404f97b10497ac32fa02b4203cb0c7d $
 ######################################################################
 
 class Accumulator(object):

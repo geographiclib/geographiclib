@@ -14,8 +14,6 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
-
-#  $Id: 957d9d4fda2ed8b889b13d07778af32b2741c4a2 $
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -72,6 +70,7 @@ CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+DOXYGEN = @DOXYGEN@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -181,89 +180,89 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html
 SCRIPTDRIVERS = \
-$(srcdir)/scripts/geod-calc.html \
-$(srcdir)/scripts/geod-google.html \
-$(srcdir)/scripts/geod-google-instructions.html
+	$(srcdir)/scripts/geod-calc.html \
+	$(srcdir)/scripts/geod-google.html \
+	$(srcdir)/scripts/geod-google-instructions.html
 
 JSSCRIPTS = \
-$(srcdir)/scripts/GeographicLib/Math.js \
-$(srcdir)/scripts/GeographicLib/Geodesic.js \
-$(srcdir)/scripts/GeographicLib/GeodesicLine.js \
-$(srcdir)/scripts/GeographicLib/PolygonArea.js \
-$(srcdir)/scripts/GeographicLib/DMS.js \
-$(srcdir)/scripts/GeographicLib/Interface.js
+	$(srcdir)/scripts/GeographicLib/Math.js \
+	$(srcdir)/scripts/GeographicLib/Geodesic.js \
+	$(srcdir)/scripts/GeographicLib/GeodesicLine.js \
+	$(srcdir)/scripts/GeographicLib/PolygonArea.js \
+	$(srcdir)/scripts/GeographicLib/DMS.js \
+	$(srcdir)/scripts/GeographicLib/Interface.js
 
 HPPFILES = \
-$(top_srcdir)/include/GeographicLib/Accumulator.hpp \
-$(top_srcdir)/include/GeographicLib/AlbersEqualArea.hpp \
-$(top_srcdir)/include/GeographicLib/AzimuthalEquidistant.hpp \
-$(top_srcdir)/include/GeographicLib/CassiniSoldner.hpp \
-$(top_srcdir)/include/GeographicLib/Constants.hpp \
-$(top_srcdir)/include/GeographicLib/DMS.hpp \
-$(top_srcdir)/include/GeographicLib/Ellipsoid.hpp \
-$(top_srcdir)/include/GeographicLib/EllipticFunction.hpp \
-$(top_srcdir)/include/GeographicLib/Geocentric.hpp \
-$(top_srcdir)/include/GeographicLib/GeoCoords.hpp \
-$(top_srcdir)/include/GeographicLib/Geodesic.hpp \
-$(top_srcdir)/include/GeographicLib/GeodesicLine.hpp \
-$(top_srcdir)/include/GeographicLib/Geohash.hpp \
-$(top_srcdir)/include/GeographicLib/Geoid.hpp \
-$(top_srcdir)/include/GeographicLib/Gnomonic.hpp \
-$(top_srcdir)/include/GeographicLib/LambertConformalConic.hpp \
-$(top_srcdir)/include/GeographicLib/LocalCartesian.hpp \
-$(top_srcdir)/include/GeographicLib/Math.hpp \
-$(top_srcdir)/include/GeographicLib/MGRS.hpp \
-$(top_srcdir)/include/GeographicLib/OSGB.hpp \
-$(top_srcdir)/include/GeographicLib/PolarStereographic.hpp \
-$(top_srcdir)/include/GeographicLib/PolygonArea.hpp \
-$(top_srcdir)/include/GeographicLib/TransverseMercatorExact.hpp \
-$(top_srcdir)/include/GeographicLib/TransverseMercator.hpp \
-$(top_srcdir)/include/GeographicLib/UTMUPS.hpp
+	$(top_srcdir)/include/GeographicLib/Accumulator.hpp \
+	$(top_srcdir)/include/GeographicLib/AlbersEqualArea.hpp \
+	$(top_srcdir)/include/GeographicLib/AzimuthalEquidistant.hpp \
+	$(top_srcdir)/include/GeographicLib/CassiniSoldner.hpp \
+	$(top_srcdir)/include/GeographicLib/Constants.hpp \
+	$(top_srcdir)/include/GeographicLib/DMS.hpp \
+	$(top_srcdir)/include/GeographicLib/Ellipsoid.hpp \
+	$(top_srcdir)/include/GeographicLib/EllipticFunction.hpp \
+	$(top_srcdir)/include/GeographicLib/Geocentric.hpp \
+	$(top_srcdir)/include/GeographicLib/GeoCoords.hpp \
+	$(top_srcdir)/include/GeographicLib/Geodesic.hpp \
+	$(top_srcdir)/include/GeographicLib/GeodesicLine.hpp \
+	$(top_srcdir)/include/GeographicLib/Geohash.hpp \
+	$(top_srcdir)/include/GeographicLib/Geoid.hpp \
+	$(top_srcdir)/include/GeographicLib/Gnomonic.hpp \
+	$(top_srcdir)/include/GeographicLib/LambertConformalConic.hpp \
+	$(top_srcdir)/include/GeographicLib/LocalCartesian.hpp \
+	$(top_srcdir)/include/GeographicLib/Math.hpp \
+	$(top_srcdir)/include/GeographicLib/MGRS.hpp \
+	$(top_srcdir)/include/GeographicLib/OSGB.hpp \
+	$(top_srcdir)/include/GeographicLib/PolarStereographic.hpp \
+	$(top_srcdir)/include/GeographicLib/PolygonArea.hpp \
+	$(top_srcdir)/include/GeographicLib/TransverseMercatorExact.hpp \
+	$(top_srcdir)/include/GeographicLib/TransverseMercator.hpp \
+	$(top_srcdir)/include/GeographicLib/UTMUPS.hpp
 
 ALLSOURCES = \
-$(top_srcdir)/src/AlbersEqualArea.cpp \
-$(top_srcdir)/src/AzimuthalEquidistant.cpp \
-$(top_srcdir)/src/CassiniSoldner.cpp \
-$(top_srcdir)/src/DMS.cpp \
-$(top_srcdir)/src/Ellipsoid.cpp \
-$(top_srcdir)/src/EllipticFunction.cpp \
-$(top_srcdir)/src/Geocentric.cpp \
-$(top_srcdir)/src/GeoCoords.cpp \
-$(top_srcdir)/src/Geodesic.cpp \
-$(top_srcdir)/src/GeodesicLine.cpp \
-$(top_srcdir)/src/Geohash.cpp \
-$(top_srcdir)/src/Geoid.cpp \
-$(top_srcdir)/src/Gnomonic.cpp \
-$(top_srcdir)/src/LambertConformalConic.cpp \
-$(top_srcdir)/src/LocalCartesian.cpp \
-$(top_srcdir)/src/MGRS.cpp \
-$(top_srcdir)/src/OSGB.cpp \
-$(top_srcdir)/src/PolarStereographic.cpp \
-$(top_srcdir)/src/PolygonArea.cpp \
-$(top_srcdir)/src/TransverseMercator.cpp \
-$(top_srcdir)/src/TransverseMercatorExact.cpp \
-$(top_srcdir)/src/UTMUPS.cpp \
-$(top_srcdir)/tools/CartConvert.cpp \
-$(top_srcdir)/tools/ConicProj.cpp \
-$(top_srcdir)/tools/GeodesicProj.cpp \
-$(top_srcdir)/tools/GeoConvert.cpp \
-$(top_srcdir)/tools/Geod.cpp \
-$(top_srcdir)/tools/GeoidEval.cpp \
-$(top_srcdir)/tools/Gravity.cpp \
-$(top_srcdir)/tools/Planimeter.cpp \
-$(top_srcdir)/tools/TransverseMercatorProj.cpp
+	$(top_srcdir)/src/AlbersEqualArea.cpp \
+	$(top_srcdir)/src/AzimuthalEquidistant.cpp \
+	$(top_srcdir)/src/CassiniSoldner.cpp \
+	$(top_srcdir)/src/DMS.cpp \
+	$(top_srcdir)/src/Ellipsoid.cpp \
+	$(top_srcdir)/src/EllipticFunction.cpp \
+	$(top_srcdir)/src/Geocentric.cpp \
+	$(top_srcdir)/src/GeoCoords.cpp \
+	$(top_srcdir)/src/Geodesic.cpp \
+	$(top_srcdir)/src/GeodesicLine.cpp \
+	$(top_srcdir)/src/Geohash.cpp \
+	$(top_srcdir)/src/Geoid.cpp \
+	$(top_srcdir)/src/Gnomonic.cpp \
+	$(top_srcdir)/src/LambertConformalConic.cpp \
+	$(top_srcdir)/src/LocalCartesian.cpp \
+	$(top_srcdir)/src/MGRS.cpp \
+	$(top_srcdir)/src/OSGB.cpp \
+	$(top_srcdir)/src/PolarStereographic.cpp \
+	$(top_srcdir)/src/PolygonArea.cpp \
+	$(top_srcdir)/src/TransverseMercator.cpp \
+	$(top_srcdir)/src/TransverseMercatorExact.cpp \
+	$(top_srcdir)/src/UTMUPS.cpp \
+	$(top_srcdir)/tools/CartConvert.cpp \
+	$(top_srcdir)/tools/ConicProj.cpp \
+	$(top_srcdir)/tools/GeodesicProj.cpp \
+	$(top_srcdir)/tools/GeoConvert.cpp \
+	$(top_srcdir)/tools/Geod.cpp \
+	$(top_srcdir)/tools/GeoidEval.cpp \
+	$(top_srcdir)/tools/Gravity.cpp \
+	$(top_srcdir)/tools/Planimeter.cpp \
+	$(top_srcdir)/tools/TransverseMercatorProj.cpp
 
 MANPAGES = \
-../man/CartConvert.1.html \
-../man/ConicProj.1.html \
-../man/GeodesicProj.1.html \
-../man/GeoConvert.1.html \
-../man/Geod.1.html \
-../man/GeoidEval.1.html \
-../man/Gravity.1.html \
-../man/MagneticField.1.html \
-../man/Planimeter.1.html \
-../man/TransverseMercatorProj.1.html
+	../man/CartConvert.1.html \
+	../man/ConicProj.1.html \
+	../man/GeodesicProj.1.html \
+	../man/GeoConvert.1.html \
+	../man/Geod.1.html \
+	../man/GeoidEval.1.html \
+	../man/Gravity.1.html \
+	../man/MagneticField.1.html \
+	../man/Planimeter.1.html \
+	../man/TransverseMercatorProj.1.html
 
 all: all-am
 
@@ -459,17 +458,28 @@ uninstall-am:
 
 doc: html/index.html
 
-html/index.html: doxyfile.in Geographic.doc \
-	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(MANPAGES)
-	if test -d html; then rm -rf html/*; else mkdir html; fi
-	cp -p $(EXTRAFILES) $(MANPAGES) $(top_srcdir)/maxima/*.mac \
-	$(top_srcdir)/LICENSE.txt html/
-	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
-	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
-	$(srcdir)/doxyfile.in | doxygen -
+@HAVE_DOXYGEN_TRUE@manpages: $(MANPAGES)
+@HAVE_DOXYGEN_TRUE@	if test -d html; then rm -rf html/*; else mkdir html; fi
+@HAVE_DOXYGEN_TRUE@	cp $^ html/
+@HAVE_DOXYGEN_TRUE@	touch $@
+
+@HAVE_DOXYGEN_TRUE@html/index.html: manpages doxyfile.in Geographic.doc \
+@HAVE_DOXYGEN_TRUE@	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES)
+@HAVE_DOXYGEN_TRUE@	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \
+@HAVE_DOXYGEN_TRUE@	$(top_srcdir)/LICENSE.txt html/
+@HAVE_DOXYGEN_TRUE@	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
+@HAVE_DOXYGEN_TRUE@	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+@HAVE_DOXYGEN_TRUE@	$(srcdir)/doxyfile.in | $(DOXYGEN) -
+@HAVE_DOXYGEN_FALSE@html/index.html: index.html.in utilities.html.in
+@HAVE_DOXYGEN_FALSE@	if test -d html; then rm -rf html/*; else mkdir html; fi
+@HAVE_DOXYGEN_FALSE@	cp $(top_srcdir)/LICENSE.txt html/
+@HAVE_DOXYGEN_FALSE@	sed -e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+@HAVE_DOXYGEN_FALSE@	$(srcdir)/utilities.html.in > html/utilities.html
+@HAVE_DOXYGEN_FALSE@	sed -e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+@HAVE_DOXYGEN_FALSE@	$(srcdir)/index.html.in > html/index.html
 
 maintainer-clean-local:
-	rm -rf html
+	rm -rf html manpages
 
 install-doc: html/index.html
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html

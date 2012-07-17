@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::GeoCoords class
-// $Id: 3f9c326bb5293db26a153e6f5eab165146899a9e $
 
 #include <iostream>
 #include <exception>

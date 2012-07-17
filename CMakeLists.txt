@@ -1,18 +1,16 @@
-# $Id: 8727b65259ba84542b07ddd8e14531b6b08ddb74 $
-
 cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 22)
+set (GeographicLib_VERSION_MINOR 23)
 set (GeographicLib_VERSION
   "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.4.0)
+set (LIBVERSIONFULL 9.5.0)
 
 # User-settable variables
 
@@ -116,6 +114,17 @@ else ()
     "Build example programs in examples directory" ON)
 endif ()
 
+# (7) Create the documentation?  This depends on whether doxygen can be
+# found.  If this is OFF, then links will be provided to the online
+# documentation on Sourceforge.
+if (WIN32)
+  option (GEOGRAPHICLIB_DOCUMENTATION
+    "Use doxygen to create the documentation" OFF)
+else ()
+  option (GEOGRAPHICLIB_DOCUMENTATION
+    "Use doxygen to create the documentation" ON)
+endif ()
+
 # The debug version of the library is called Geographic_d.
 set (CMAKE_DEBUG_POSTFIX _d)
 
@@ -130,28 +139,31 @@ configure_file (
   include/GeographicLib/Config.h.in
   include/GeographicLib/Config.h )
 
-# The documentation depends on doxygen.  In addition, the man pages are
-# written as pod files and converted to nroff format, C++ code, and
-# html.  Because this require tools that may not be available on an
-# end-user's system, the creation of the final documentation is
-# therefore only done in "MAINTAINER" mode.  The maintainer runs "make
-# distrib-all" which installs the transformed documentation files into
-# the source tree.
-if (NOT WIN32)
+# The documentation depends on doxygen.  Need version 1.8.1.2 or later
+# for support of greek letters and math symbols.
+if (GEOGRAPHICLIB_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
-  find_package (Doxygen)
+  find_package (Doxygen 1.8.1.2)
+endif ()
+
+# The man pages are written as pod files and converted to nroff format,
+# C++ code, and html.  Because this require tools that may not be
+# available on an end-user's system, the creation of the final
+# documentation is therefore only done in "MAINTAINER" mode.  The
+# maintainer runs "make distrib-all" which installs the transformed
+# documentation files into the source tree.
+if (NOT WIN32)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
-  find_program (HAVE_DOXYGEN doxygen)
 endif ()
-if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND DOXYGEN_FOUND)
+if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML)
   set (MAINTAINER ON)
 else ()
   set (MAINTAINER OFF)
 endif ()
 if (MAINTAINER)
   add_custom_target (distrib-all)
-  add_dependencies (distrib-all distrib-man distrib-doc)
+  add_dependencies (distrib-all distrib-man)
 endif ()
 
 # Look for the tool to compile the Matlab interfaces.
@@ -284,15 +296,10 @@ if (WIN32)
       "${PROJECT_NAME}-${PACKAGE_VERSION}")
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
-  set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
-  CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Library Documentation.lnk\\\" \\\"$INSTDIR\\\\doc\\\\html\\\\index.html\\\"
-  CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Utility Documentation.lnk\\\" \\\"$INSTDIR\\\\doc\\\\html\\\\utilities.html\\\"
-")
-  set (CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
-  !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
-  Delete \\\"$SMPROGRAMS\\\\$MUI_TEMP\\\\Library Documentation.lnk\\\"
-  Delete \\\"$SMPROGRAMS\\\\$MUI_TEMP\\\\Utility Documentation.lnk\\\"
-")
+  set (CPACK_NSIS_MENU_LINKS
+    "doc/html/index.html" "Library Documentation"
+    "doc/html/utilities.html" "Utilities Documentation"
+    "http://geographiclib.sf.net/html/" "Online Documentation")
   set (CPACK_NSIS_MODIFY_PATH ON)
 elseif (APPLE)
   # Not tested
@@ -327,7 +334,7 @@ if (MAINTAINER)
       mv include/GeographicLib/Config.h.new include/GeographicLib/Config.h
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
-      touch man/*.usage man/*.1 man/*.1.html && touch doc/html/index.html &&
+      touch man/[A-Za-z]*.usage man/[A-Za-z]*.1 man/[A-Za-z]*.1.html &&
       chmod -R g-w .
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ &&

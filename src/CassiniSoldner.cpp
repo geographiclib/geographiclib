@@ -9,12 +9,6 @@
 
 #include <GeographicLib/CassiniSoldner.hpp>
 
-#define GEOGRAPHICLIB_CASSINISOLDNER_CPP \
-  "$Id: 2823df38f3e31fd8b882e2f55ad72d6419b03246 $"
-
-RCSID_DECL(GEOGRAPHICLIB_CASSINISOLDNER_CPP)
-RCSID_DECL(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
-
 namespace GeographicLib {
 
   using namespace std;
@@ -40,7 +34,7 @@ namespace GeographicLib {
                                real& azi, real& rk) const throw() {
     if (!Init())
       return;
-    real dlon = AngNormalize(lon - LongitudeOrigin());
+    real dlon = Math::AngNormalize(Math::AngNormalize(lon) - LongitudeOrigin());
     real sig12, s12, azi1, azi2;
     lat = AngRound(lat);
     sig12 = _earth.Inverse(lat, -abs(dlon), lat, abs(dlon), s12, azi1, azi2);
@@ -64,7 +58,7 @@ namespace GeographicLib {
       sig12 = -sig12;
     }
     x = s12;
-    azi = AngNormalize(azi2);
+    azi = Math::AngNormalize(azi2);
     GeodesicLine perp(_earth.Line(lat, dlon, azi2, Geodesic::GEODESICSCALE));
     real t;
     perp.GenPosition(true, -sig12,

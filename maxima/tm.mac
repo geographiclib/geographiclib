@@ -5,8 +5,6 @@ Arbitrary precision Transverse Mercator Projection
 Written by Charles Karney <charles@karney.com>
 http://geographiclib.sourceforge.net/
 
-$Id: 688c810de1f36d1e2239f39a973835acfc5a8649 $
-
 Reference:
 
    Charles F. F. Karney,

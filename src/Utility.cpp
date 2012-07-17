@@ -9,12 +9,6 @@
 
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_UTILITY_CPP \
-  "$Id: 6f06d5d8fa9d731dc5a5fa4516838f639a2ba40b $"
-
-RCSID_DECL(GEOGRAPHICLIB_UTILITY_CPP)
-RCSID_DECL(GEOGRAPHICLIB_UTILITY_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

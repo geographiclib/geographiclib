@@ -14,12 +14,6 @@
 #include <GeographicLib/MGRS.hpp>
 #include <GeographicLib/DMS.hpp>
 
-#define GEOGRAPHICLIB_GEOCOORDS_CPP \
-  "$Id: aa7a547c7e89e306cb892e263b3c027fbe40cb6c $"
-
-RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_HPP)
-
 namespace GeographicLib {
 
   using namespace std;
@@ -65,7 +59,6 @@ namespace GeographicLib {
       throw GeographicErr("Coordinate requires 1, 2, or 3 elements");
     CopyToAlt();
   }
-
 
   string GeoCoords::GeoRepresentation(int prec, bool swaplatlong) const {
     prec = max(0, min(9, prec) + 5);

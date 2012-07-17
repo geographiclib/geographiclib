@@ -11,13 +11,11 @@
 #
 # The initial version of this file was provided by
 # Andrew MacIntyre <Andrew.MacIntyre@acma.gov.au>.
-#
-# $Id: e5d240fa0c0790fdbbc0c3ff654325abf8f9ec71 $
 
 from distutils.core import setup
 
 setup(name="geographiclib",
-      version="1.20",
+      version="1.23",
       description=
         "A translation of the GeographicLib::Geodesic class to Python",
       author="Charles Karney",

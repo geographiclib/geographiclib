@@ -13,12 +13,6 @@
 #include <GeographicLib/MagneticCircle.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_MAGNETICMODEL_CPP \
-  "$Id: b0287ac014f10e4c6656b67f21c764432a47559a $"
-
-RCSID_DECL(GEOGRAPHICLIB_MAGNETICMODEL_CPP)
-RCSID_DECL(GEOGRAPHICLIB_MAGNETICMODEL_HPP)
-
 #if !defined(GEOGRAPHICLIB_DATA)
 #  if defined(_MSC_VER)
 #    define GEOGRAPHICLIB_DATA \
@@ -34,7 +28,7 @@ RCSID_DECL(GEOGRAPHICLIB_MAGNETICMODEL_HPP)
 
 #if defined(_MSC_VER)
 // Squelch warnings about unsafe use of getenv
-#pragma warning (disable: 4996)
+#  pragma warning (disable: 4996)
 #endif
 
 namespace GeographicLib {

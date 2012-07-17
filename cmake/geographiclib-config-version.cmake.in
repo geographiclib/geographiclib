@@ -1,5 +1,3 @@
-# $Id: bcb4b84d50be4e5bf5a85d13dff07dcfa3e6715a $
-
 # Version checking for GeographicLib
 
 set (PACKAGE_VERSION "@GeographicLib_VERSION@")

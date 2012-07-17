@@ -12,14 +12,6 @@
 #include <sstream>
 #include <GeographicLib/Geocentric.hpp>
 
-#define GEOGRAPHICLIB_MAGNETICCIRCLE_CPP \
-  "$Id: 8cd933c406708a1f8b90e029e89bb99d2eb177b0 $"
-
-RCSID_DECL(GEOGRAPHICLIB_MAGNETICCIRCLE_CPP)
-RCSID_DECL(GEOGRAPHICLIB_MAGNETICCIRCLE_HPP)
-
-#define MAGNETIC_DEFAULT_PATH "/home/ckarney/geographiclib/magnetic"
-
 namespace GeographicLib {
 
   using namespace std;

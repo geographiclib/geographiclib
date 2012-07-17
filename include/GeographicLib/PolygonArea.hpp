@@ -2,14 +2,13 @@
  * \file PolygonArea.hpp
  * \brief Header for GeographicLib::PolygonArea class
  *
- * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_POLYGONAREA_HPP)
-#define GEOGRAPHICLIB_POLYGONAREA_HPP \
-  "$Id: 04dc2b7450ed688972073405ebe13d5ac5da5d89 $"
+#define GEOGRAPHICLIB_POLYGONAREA_HPP 1
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -21,20 +20,13 @@ namespace GeographicLib {
    * \brief Polygon areas
    *
    * This computes the area of a geodesic polygon using the method given
-   * Section 15 of
+   * Section 6 of
    * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
-   *   on an ellipsoid of revolution</a>,
-   *   Feb. 2011;
-   *   preprint
-   *   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
-   * .
-   * See also Section 6 of
-   * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1109.4448">Algorithms for geodesics</a>,
-   *   Sept. 2011;
-   *   preprint
-   *   <a href="http://arxiv.org/abs/1109.4448">arxiv:1109.4448</a>.
+   *   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   Algorithms for geodesics</a>,
+   *   J. Geodesy, 2012;
+   *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   10.1007/s00190-012-0578-z</a>.
    *
    * This class lets you add vertices one at a time to the polygon.  The area
    * and perimeter are accumulated in two times the standard floating point
@@ -61,7 +53,7 @@ namespace GeographicLib {
     int _crossings;
     Accumulator<real> _areasum, _perimetersum;
     real _lat0, _lon0, _lat1, _lon1;
-    // Copied from Geodesic class
+    // Copied from Geodesic class (now the Math class)
     static inline real AngNormalize(real x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
       //
@@ -121,8 +113,8 @@ namespace GeographicLib {
      * @param[in] lat the latitude of the point (degrees).
      * @param[in] lon the latitude of the point (degrees).
      *
-     * \e lat should be in the range [-90, 90] and \e lon should be in the
-     * range [-180, 360].
+     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
+     * lon should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void AddPoint(real lat, real lon) throw();
 
@@ -164,8 +156,8 @@ namespace GeographicLib {
      *   set if polyline is false in the constructor.
      * @return the number of points.
      *
-     * \e lat should be in the range [-90, 90] and \e lon should be in the
-     * range [-180, 360].
+     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
+     * lon should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     unsigned TestCompute(real lat, real lon, bool reverse, bool sign,
                          real& perimeter, real& area) const throw();

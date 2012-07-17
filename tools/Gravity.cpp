@@ -2,7 +2,7 @@
  * \file Gravity.cpp
  * \brief Command line utility for evaluating gravity fields
  *
- * Copyright (c) Charles Karney (2011, 2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -117,9 +117,8 @@ int main(int argc, char* argv[]) {
         cdelim = argv[m];
       } else if (arg == "--version") {
         std::cout
-          << argv[0]
-          << ": $Id: c87c647c3e973929010cdb2fd5d1eaa6aa739eca $\n"
-          << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
+          << argv[0] << ": GeographicLib version "
+          << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else {
         int retval = usage(!(arg == "-h" || arg == "--help"), arg != "--help");

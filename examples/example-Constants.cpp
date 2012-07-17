@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::Constants class
-// $Id: 4142ea6f2f1c229e00eaf5872865a862698d5a38 $
 
 #include <iostream>
 #include <exception>

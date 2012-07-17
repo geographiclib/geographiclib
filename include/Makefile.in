@@ -19,7 +19,6 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: a08ad35553d210c5a6e48189baad9c55cd0cb51f $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -109,6 +108,7 @@ CYGPATH_W = @CYGPATH_W@
 DEFS = -DGEOGRAPHICLIB_DATA=\"$(geographiclib_data)\" @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+DOXYGEN = @DOXYGEN@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@

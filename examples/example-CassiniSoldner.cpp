@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::CassiniSoldner class
-// $Id: f1d1d192c9449d198226a19cfbdc37d0b14ea52f $
 
 #include <iostream>
 #include <exception>

@@ -1,5 +1,3 @@
-# $Id: 19d74c208c296af2438256b0770d41b31edbb834 $
-
 MODULES = AlbersEqualArea \
 	AzimuthalEquidistant \
 	CassiniSoldner \
@@ -39,8 +37,8 @@ SOURCES = $(patsubst %,../src/%.cpp,$(MODULES)) \
 
 EXTRAFILES = tmseries30.html geodseries30.html
 HTMLMANPAGES = 	$(patsubst %,../man/%.1.html,$(PROGRAMS))
-SCRIPTDRIVERS = $(wildcard scripts/*.html)
-JSSCRIPTS = $(wildcard scripts/GeographicLib/*.js)
+SCRIPTDRIVERS = $(wildcard scripts/[A-Za-z]*.html)
+JSSCRIPTS = $(wildcard scripts/GeographicLib/[A-Za-z]*.js)
 
 MAXIMA = tm ellint tmseries geod
 MAXIMASOURCES = $(patsubst %,../maxima/%.mac,$(MAXIMA))
@@ -49,15 +47,13 @@ VERSION:=$(shell grep '\bVERSION=' ../configure | cut -f2 -d\' | head -1)
 
 doc: html/index.html
 
-html/index.html: doxyfile.in Geographic.doc \
-	$(HEADERS) $(ALLSOURCES) $(MAXIMASOURCES) $(EXTRAFILES) \
-	$(HTMLMANPAGES)
+html/index.html: index.html.in utilities.html.in
 	if test -d html; then rm -rf html/*; else mkdir html; fi
-	cp -p $(MAXIMASOURCES) $(EXTRAFILES) $(HTMLMANPAGES) \
-	../LICENSE.txt html/
-	sed -e "s%@PROJECT_SOURCE_DIR@%..%g" \
-	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
-	doxyfile.in | doxygen -
+	cp ../LICENSE.txt html/
+	sed -e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	utilities.html.in > html/utilities.html
+	sed -e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	index.html.in > html/index.html
 
 PREFIX = /usr/local
 DEST = $(PREFIX)/share/doc/GeographicLib

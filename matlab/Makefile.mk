@@ -1,5 +1,3 @@
-# $Id: 2e3bb10fb00f675941b80294bf69a64d97a1f29b $
-
 FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
 	geodesicdirect geodesicinverse geodesicline \
 	geoidheight geocentricforward geocentricreverse \

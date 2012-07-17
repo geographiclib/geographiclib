@@ -1,16 +1,13 @@
 # polygonarea.py
 #
-# This is a rather literal translation of the GeographicLib::PolygonArea
-# class to python.  See the documentation for the C++ class for more
-# information at
+# This is a rather literal translation of the GeographicLib::PolygonArea class
+# to python.  See the documentation for the C++ class for more information at
 #
 #    http://geographiclib.sourceforge.net/html/annotated.html
 #
-# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
-# under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
+# the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
-#
-# $Id: 4a2cf9d0cb7eeb7c9c3a2248f44e84a04e4e0b35 $
 ######################################################################
 
 import math
@@ -24,10 +21,10 @@ class PolygonArea(object):
     # Return 1 or -1 if crossing prime meridian in east or west direction.
     # Otherwise return zero.
     from geographiclib.geodesic import Geodesic
-    lon1 = Geodesic.AngNormalize(lon1)
-    lon2 = Geodesic.AngNormalize(lon2)
+    lon1 = Math.AngNormalize(lon1)
+    lon2 = Math.AngNormalize(lon2)
     # treat lon12 = -180 as an eastward geodesic, so convert to 180.
-    lon12 = -Geodesic.AngNormalize(lon1 - lon2) # In (-180, 180]
+    lon12 = -Math.AngNormalize(lon1 - lon2) # In (-180, 180]
     cross = (1 if lon1 < 0 and lon2 >= 0 and lon12 > 0
              else (-1 if lon2 < 0 and lon1 >= 0 and lon12 < 0 else 0))
     return cross

@@ -1,9 +1,7 @@
-# $Id: 4cd605c85a8b59364b4b99054a0ca3ebf6160066 $
-
 # Set up the matlab interface.  The .m files just contain the
 # documentation.  The .cpp files implement the interface.
-file (GLOB MATLAB_FILES *.m)
-file (GLOB MATLAB_INTERFACES *.cpp)
+file (GLOB MATLAB_FILES [A-Za-z]*.m)
+file (GLOB MATLAB_INTERFACES [A-Za-z]*.cpp)
 if (COMMON_INSTALL_PATH)
   set (INSTALL_MATLAB_DIR "libexec/GeographicLib/matlab")
 else ()

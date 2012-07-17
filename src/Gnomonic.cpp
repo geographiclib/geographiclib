@@ -2,18 +2,12 @@
  * \file Gnomonic.cpp
  * \brief Implementation for GeographicLib::Gnomonic class
  *
- * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/Gnomonic.hpp>
-
-#define GEOGRAPHICLIB_GNOMONIC_CPP \
-  "$Id: 1abf2f2ebdc8a805d0d205051120809f0c0e6071 $"
-
-RCSID_DECL(GEOGRAPHICLIB_GNOMONIC_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GNOMONIC_HPP)
 
 namespace GeographicLib {
 

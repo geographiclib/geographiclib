@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP \
-  "$Id: 967bdfb37093c5355c1ac8e399b06195e33494da $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP 1
 
 #include <GeographicLib/Constants.hpp>
 
@@ -18,7 +17,7 @@
  * The order of the series approximation used in TransverseMercator.
  * TM_TX_MAXPOW can be set to any integer in [4, 8].
  **********************************************************************/
-#define TM_TX_MAXPOW \
+#  define TM_TX_MAXPOW \
   (GEOGRAPHICLIB_PREC == 1 ? 6 : (GEOGRAPHICLIB_PREC == 0 ? 4 : 8))
 #endif
 
@@ -111,9 +110,8 @@ namespace GeographicLib {
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
      * @param[in] k0 central scale factor.
-     *
-     * An exception is thrown if either of the axes of the ellipsoid or \e k0
-     * is not positive.
+     * @exception GeographicLib if \e a, (1 - \e f ) \e a, or \e k0 is not
+     *   positive.
      **********************************************************************/
     TransverseMercator(real a, real f, real k0);
 
@@ -129,7 +127,8 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added. \e lat should be in the range
-     * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].
+     * [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon and \e lon0 should be in the
+     * range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
@@ -146,7 +145,8 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added.  \e lon0 should be in the range
-     * [-180, 360].  The value of \e lon returned is in the range [-180, 180).
+     * [-540<sup>o</sup>, 540<sup>o</sup>).  The value of \e lon returned is in
+     * the range [-180<sup>o</sup>, 180<sup>o</sup>).
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();

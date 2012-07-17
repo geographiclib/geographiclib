@@ -2,7 +2,7 @@
  * \file GravityModel.cpp
  * \brief Implementation for GeographicLib::GravityModel class
  *
- * Copyright (c) Charles Karney (2011, 2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -12,11 +12,6 @@
 #include <GeographicLib/SphericalEngine.hpp>
 #include <GeographicLib/GravityCircle.hpp>
 #include <GeographicLib/Utility.hpp>
-#define GEOGRAPHICLIB_GRAVITYMODEL_CPP \
-  "$Id: 1897d0d53c7339ecdf20b1348637340e9f687f30 $"
-
-RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
 
 #if !defined(GEOGRAPHICLIB_DATA)
 #  if defined(_MSC_VER)
@@ -33,7 +28,7 @@ RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
 
 #if defined(_MSC_VER)
 // Squelch warnings about unsafe use of getenv
-#pragma warning (disable: 4996)
+#  pragma warning (disable: 4996)
 #endif
 
 namespace GeographicLib {

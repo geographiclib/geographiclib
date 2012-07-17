@@ -9,12 +9,6 @@
 
 #include <GeographicLib/Geocentric.hpp>
 
-#define GEOGRAPHICLIB_GEOCENTRIC_CPP \
-  "$Id: b5135e8042dbbbcddfd5894c66b729bf5c43cab9 $"
-
-RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_HPP)
-
 namespace GeographicLib {
 
   using namespace std;
@@ -40,7 +34,7 @@ namespace GeographicLib {
   void Geocentric::IntForward(real lat, real lon, real h,
                               real& X, real& Y, real& Z,
                               real M[dim2_]) const throw() {
-    lon = lon >= 180 ? lon - 360 : (lon < -180 ? lon + 360 : lon);
+    lon = Math::AngNormalize(lon);
     real
       phi = lat * Math::degree<real>(),
       lam = lon * Math::degree<real>(),

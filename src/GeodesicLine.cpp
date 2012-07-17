@@ -28,12 +28,6 @@
 
 #include <GeographicLib/GeodesicLine.hpp>
 
-#define GEOGRAPHICLIB_GEODESICLINE_CPP \
-  "$Id: d95fea8e73fd86fdc558e5b0397a97241cfe40c2 $"
-
-RCSID_DECL(GEOGRAPHICLIB_GEODESICLINE_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GEODESICLINE_HPP)
-
 namespace GeographicLib {
 
   using namespace std;
@@ -49,10 +43,10 @@ namespace GeographicLib {
       // Always allow latitude and azimuth
     , _caps(caps | LATITUDE | AZIMUTH)
   {
-    azi1 = Geodesic::AngNormalize(azi1);
+    azi1 = Math::AngNormalize(azi1);
     // Guard against underflow in salp0
     azi1 = Geodesic::AngRound(azi1);
-    lon1 = Geodesic::AngNormalize(lon1);
+    lon1 = Math::AngNormalize(lon1);
     _lat1 = lat1;
     _lon1 = lon1;
     _azi1 = azi1;
@@ -195,10 +189,10 @@ namespace GeographicLib {
         ( sig12 + (Geodesic::SinCosSeries(true, ssig2, csig2, _C3a, nC3_-1)
                    - _B31));
       lon12 = lam12 / Math::degree<real>();
-      // Can't use AngNormalize because longitude might have wrapped multiple
+      // Use Math::AngNormalize2 because longitude might have wrapped multiple
       // times.
-      lon12 = lon12 - 360 * floor(lon12/360 + real(0.5));
-      lon2 = Geodesic::AngNormalize(_lon1 + lon12);
+      lon12 = Math::AngNormalize2(lon12);
+      lon2 = Math::AngNormalize(_lon1 + lon12);
     }
 
     if (outmask & LATITUDE)

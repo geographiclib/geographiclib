@@ -2,7 +2,7 @@
  * \file TransverseMercator.cpp
  * \brief Implementation for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -40,12 +40,6 @@
  **********************************************************************/
 
 #include <GeographicLib/TransverseMercator.hpp>
-
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP \
-  "$Id: 7f266c4a77bbf422b04f1044dd5eb46bb78ee434 $"
-
-RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP)
-RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
 
 namespace GeographicLib {
 
@@ -217,6 +211,8 @@ namespace GeographicLib {
   // taupf and tauf are adapted from TransverseMercatorExact (taup and
   // taupinv).  tau = tan(phi), taup = sinh(psi)
   Math::real TransverseMercator::taupf(real tau) const throw() {
+    if (!(abs(tau) < overflow_))
+      return tau;
     real
       tau1 = Math::hypot(real(1), tau),
       sig = sinh( eatanhe(tau / tau1) );
@@ -224,6 +220,8 @@ namespace GeographicLib {
   }
 
   Math::real TransverseMercator::tauf(real taup) const throw() {
+    if (!(abs(taup) < overflow_))
+      return taup;
     real
       // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
       // tau = taup/_e2m as a starting guess.  Only 1 iteration is needed for
@@ -250,14 +248,8 @@ namespace GeographicLib {
   void TransverseMercator::Forward(real lon0, real lat, real lon,
                                    real& x, real& y, real& gamma, real& k)
     const throw() {
-    // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
-    if (lon - lon0 > 180)
-      lon -= lon0 + 360;
-    else if (lon - lon0 <= -180)
-      lon -= lon0 - 360;
-    else
-      lon -= lon0;
-    // Now lon in (-180, 180]
+    lon = Math::AngNormalize(Math::AngNormalize(lon) -
+                             Math::AngNormalize(lon0));
     // Explicitly enforce the parity
     int
       latsign = lat < 0 ? -1 : 1,
@@ -498,13 +490,7 @@ namespace GeographicLib {
     if (backside)
       lon = 180 - lon;
     lon *= etasign;
-    // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
-    if (lon + lon0 >= 180)
-      lon += lon0 - 360;
-    else if (lon + lon0 < -180)
-      lon += lon0 + 360;
-    else
-      lon += lon0;
+    lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
     gamma /= Math::degree<real>();
     if (backside)
       gamma = 180 - gamma;

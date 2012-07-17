@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
-#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP \
-  "$Id: fdcfd14ffa66adbc9ac813b93b62e302eada1d7c $"
+#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP 1
 
 #include <GeographicLib/Constants.hpp>
 
@@ -122,8 +121,8 @@ namespace GeographicLib {
      * @param[in] ang in <i>degrees</i>.
      * @return int sqrt(1 -  \e m sin<sup>2</sup>(\e phi)) \e dphi.
      *
-     * \e ang must lie in [-90, 90].  This function returns the correct result
-     * even when \e m is negative.
+     * \e ang must lie in [-90<sup>o</sup>, 90<sup>o</sup>].  This function
+     * returns the correct result even when \e m is negative.
      **********************************************************************/
     Math::real Ed(real ang) const throw();
 

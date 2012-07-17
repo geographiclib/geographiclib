@@ -2,19 +2,12 @@
  * \file PolygonArea.cpp
  * \brief Implementation for GeographicLib::PolygonArea class
  *
- * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/PolygonArea.hpp>
-
-#define GEOGRAPHICLIB_POLYGONAREA_CPP \
-  "$Id: ae2fce0b24653309ca8835d962b1a3e047a6768a $"
-
-RCSID_DECL(GEOGRAPHICLIB_POLYGONAREA_CPP)
-RCSID_DECL(GEOGRAPHICLIB_POLYGONAREA_HPP)
-RCSID_DECL(GEOGRAPHICLIB_ACCUMULATOR_HPP)
 
 namespace GeographicLib {
 

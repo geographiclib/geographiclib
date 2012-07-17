@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::TransverseMercator class
-// $Id: c01651412c934220e2293c344258773ac3d7131c $
 
 #include <iostream>
 #include <exception>

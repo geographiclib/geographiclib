@@ -12,7 +12,7 @@
 #include <GeographicLib/Constants.hpp>
 
 #if !defined(GEOGRAPHICLIB_MATH_HPP)
-#define GEOGRAPHICLIB_MATH_HPP "$Id: edd244e4c5c74e696096c2b6d598728957a0d36d $"
+#define GEOGRAPHICLIB_MATH_HPP 1
 
 /**
  * Are C++11 math functions available?
@@ -26,7 +26,7 @@
 #endif
 
 #if !defined(WORDS_BIGENDIAN)
-# define WORDS_BIGENDIAN 0
+#  define WORDS_BIGENDIAN 0
 #endif
 
 #if !defined(GEOGRAPHICLIB_PREC)
@@ -38,7 +38,7 @@
  * to be defined.  Note that with Microsoft Visual Studio, long double is the
  * same as double.
  **********************************************************************/
-#define GEOGRAPHICLIB_PREC 1
+#  define GEOGRAPHICLIB_PREC 1
 #endif
 
 #include <cmath>
@@ -94,7 +94,7 @@ namespace GeographicLib {
 #endif
 
     /**
-     * true if the machine is big-endian
+     * true if the machine is big-endian.
      **********************************************************************/
     static const bool bigendian = WORDS_BIGENDIAN;
 
@@ -122,7 +122,7 @@ namespace GeographicLib {
 
     /**
      * Square a number.
-
+     *
      * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return <i>x</i><sup>2</sup>.
@@ -152,28 +152,28 @@ namespace GeographicLib {
 #elif defined(_MSC_VER)
     static inline double hypot(double x, double y) throw()
     { return _hypot(x, y); }
-#if _MSC_VER < 1400
+#  if _MSC_VER < 1400
     // Visual C++ 7.1/VS .NET 2003 does not have _hypotf()
     static inline float hypot(float x, float y) throw()
     { return float(_hypot(x, y)); }
-#else
+#  else
     static inline float hypot(float x, float y) throw()
     { return _hypotf(x, y); }
-#endif
-#if defined(HAVE_LONG_DOUBLE)
+#  endif
+#  if defined(HAVE_LONG_DOUBLE)
     static inline long double hypot(long double x, long double y) throw()
     { return _hypot(x, y); }
-#endif
+#  endif
 #else
     // Use overloading to define generic versions
     static inline double hypot(double x, double y) throw()
     { return ::hypot(x, y); }
     static inline float hypot(float x, float y) throw()
     { return ::hypotf(x, y); }
-#if defined(HAVE_LONG_DOUBLE)
+#  if defined(HAVE_LONG_DOUBLE)
     static inline long double hypot(long double x, long double y) throw()
     { return ::hypotl(x, y); }
-#endif
+#  endif
 #endif
 
 #if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
@@ -202,10 +202,10 @@ namespace GeographicLib {
 #else
     static inline double expm1(double x) throw() { return ::expm1(x); }
     static inline float expm1(float x) throw() { return ::expm1f(x); }
-#if defined(HAVE_LONG_DOUBLE)
+#  if defined(HAVE_LONG_DOUBLE)
     static inline long double expm1(long double x) throw()
     { return ::expm1l(x); }
-#endif
+#  endif
 #endif
 
 #if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
@@ -237,10 +237,10 @@ namespace GeographicLib {
 #else
     static inline double log1p(double x) throw() { return ::log1p(x); }
     static inline float log1p(float x) throw() { return ::log1pf(x); }
-#if defined(HAVE_LONG_DOUBLE)
+#  if defined(HAVE_LONG_DOUBLE)
     static inline long double log1p(long double x) throw()
     { return ::log1pl(x); }
-#endif
+#  endif
 #endif
 
 #if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
@@ -264,10 +264,10 @@ namespace GeographicLib {
 #else
     static inline double asinh(double x) throw() { return ::asinh(x); }
     static inline float asinh(float x) throw() { return ::asinhf(x); }
-#if defined(HAVE_LONG_DOUBLE)
+#  if defined(HAVE_LONG_DOUBLE)
     static inline long double asinh(long double x) throw()
     { return ::asinhl(x); }
-#endif
+#  endif
 #endif
 
 #if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
@@ -291,10 +291,10 @@ namespace GeographicLib {
 #else
     static inline double atanh(double x) throw() { return ::atanh(x); }
     static inline float atanh(float x) throw() { return ::atanhf(x); }
-#if defined(HAVE_LONG_DOUBLE)
+#  if defined(HAVE_LONG_DOUBLE)
     static inline long double atanh(long double x) throw()
     { return ::atanhl(x); }
-#endif
+#  endif
 #endif
 
 #if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
@@ -315,10 +315,35 @@ namespace GeographicLib {
 #else
     static inline double cbrt(double x) throw() { return ::cbrt(x); }
     static inline float cbrt(float x) throw() { return ::cbrtf(x); }
-#if defined(HAVE_LONG_DOUBLE)
+#  if defined(HAVE_LONG_DOUBLE)
     static inline long double cbrt(long double x) throw() { return ::cbrtl(x); }
+#  endif
 #endif
-#endif
+
+    /**
+     * Normalize an angle (restricted input range).
+     *
+     * @tparam T the type of the argument and returned value.
+     * @param[in] x the angle in degrees.
+     * @return the angle reduced to the range [-180<sup>o</sup>,
+     *   180<sup>o</sup>).
+     *
+     * \e x must lie in [-540<sup>o</sup>, 540<sup>o</sup>).
+     **********************************************************************/
+    template<typename T> static inline T AngNormalize(T x) throw()
+    { return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x); }
+    /**
+     * Normalize an arbitrary angle.
+     *
+     * @tparam T the type of the argument and returned value.
+     * @param[in] x the angle in degrees.
+     * @return the angle reduced to the range [-180<sup>o</sup>,
+     *   180<sup>o</sup>).
+     *
+     * The range of \e x is unrestricted.
+     **********************************************************************/
+    template<typename T> static inline T AngNormalize2(T x) throw()
+    { return AngNormalize<T>(std::fmod(x, T(360))); }
 
     /**
      * Test for finiteness.

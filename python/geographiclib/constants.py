@@ -1,15 +1,13 @@
 # constants.py
 #
-# This is a translation of the GeographicLib::Constants class to python.
-# See the documentation for the C++ class for more information at
+# This is a translation of the GeographicLib::Constants class to python.  See
+# the documentation for the C++ class for more information at
 #
 #    http://geographiclib.sourceforge.net/html/annotated.html
 #
-# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
-# under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
+# the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
-#
-# $Id: dd3c90107aedf80bead4c3f5c670df2b3eed7492 $
 ######################################################################
 
 class Constants(object):

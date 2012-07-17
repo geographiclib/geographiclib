@@ -1,27 +1,19 @@
 # geodesicline.py
 #
-# This is a rather literal translation of the
-# GeographicLib::GeodesicLine class to python.  See the documentation
-# for the C++ class for more information at
+# This is a rather literal translation of the GeographicLib::GeodesicLine class
+# to python.  See the documentation for the C++ class for more information at
 #
 #    http://geographiclib.sourceforge.net/html/annotated.html
 #
 # The algorithms are derived in
 #
 #    Charles F. F. Karney,
-#    Geodesics on an ellipsoid of revolution, Feb. 2011,
-#    http://arxiv.org/abs/1102.1215
-#    errata: http://geographiclib.sourceforge.net/geod-errata.html
+#    Algorithms for geodesics, J. Geodesy, 2012,
+#    http://dx.doi.org/10.1007/s00190-012-0578-z
 #
-#    Charles F. F. Karney,
-#    Algorithms for geodesics, Sept. 2011,
-#    http://arxiv.org/abs/1109.4448
-#
-# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
-# under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
+# the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
-#
-# $Id: d5d0b60d8d88eaea0cdc504a6b73fc6fb6049f0c $
 ######################################################################
 
 import math
@@ -40,10 +32,10 @@ class GeodesicLine(object):
     self._f1 = geod._f1
     self._caps = caps | Geodesic.LATITUDE | Geodesic.AZIMUTH
 
-    azi1 = Geodesic.AngNormalize(azi1)
+    azi1 = Math.AngNormalize(azi1)
     # Guard against underflow in salp0
     azi1 = Geodesic.AngRound(azi1)
-    lon1 = Geodesic.AngNormalize(lon1)
+    lon1 = Math.AngNormalize(lon1)
     self._lat1 = lat1
     self._lon1 = lon1
     self._azi1 = azi1
@@ -188,10 +180,10 @@ class GeodesicLine(object):
                                        self._C3a, Geodesic.nC3_-1)
                  - self._B31))
       lon12 = lam12 / Math.degree
-      # Can't use AngNormalize because longitude might have wrapped multiple
-      # times.
-      lon12 = lon12 - 360 * math.floor(lon12/360 + 0.5)
-      lon2 = Geodesic.AngNormalize(self._lon1 + lon12)
+      # Use Math.AngNormalize2 because longitude might have wrapped
+      # multiple times.
+      lon12 = Math.AngNormalize2(lon12)
+      lon2 = Math.AngNormalize(self._lon1 + lon12)
 
     if outmask & Geodesic.LATITUDE:
       lat2 = math.atan2(sbet2, self._f1 * cbet2) / Math.degree

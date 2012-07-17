@@ -2,13 +2,13 @@
  * \file OSGB.hpp
  * \brief Header for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_OSGB_HPP)
-#define GEOGRAPHICLIB_OSGB_HPP "$Id: e91367e693ad63bb500c953e9c21445bef017464 $"
+#define GEOGRAPHICLIB_OSGB_HPP 1
 
 #include <string>
 #include <sstream>
@@ -17,8 +17,8 @@
 
 #if defined(_MSC_VER)
 // Squelch warnings about dll vs string
-#pragma warning (push)
-#pragma warning (disable: 4251)
+#  pragma warning (push)
+#  pragma warning (disable: 4251)
 #endif
 
 namespace GeographicLib {
@@ -80,8 +80,8 @@ namespace GeographicLib {
      * @param[out] gamma meridian convergence at point (degrees).
      * @param[out] k scale of projection at point.
      *
-     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
-     * the range [-180, 360].
+     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
+     * should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
      **********************************************************************/
     static void Forward(real lat, real lon,
                         real& x, real& y, real& gamma, real& k) throw() {
@@ -133,6 +133,10 @@ namespace GeographicLib {
      * @param[in] y northing of point (meters).
      * @param[in] prec precision relative to 100 km.
      * @param[out] gridref National Grid reference.
+     * @exception GeographicErr if \e prec, \e x, or \e y is outside its
+     *   allowed range.
+     * @exception std::bad_alloc if the memory for \e gridref can't be
+     *   allocatied.
      *
      * \e prec specifies the precision of the grid reference string as follows:
      * - prec = 0 (min), 100km
@@ -161,6 +165,7 @@ namespace GeographicLib {
      * @param[out] prec precision relative to 100 km.
      * @param[in] centerp if true (default), return center of the grid square,
      *   else return SW (lower left) corner.
+     * @exception GeographicErr if \e gridref is illegal.
      *
      * The grid reference must be of the form: two letters (not including I)
      * followed by an even number of digits (up to 22).
@@ -234,7 +239,7 @@ namespace GeographicLib {
 } // namespace GeographicLib
 
 #if defined(_MSC_VER)
-#pragma warning (pop)
+#  pragma warning (pop)
 #endif
 
 #endif

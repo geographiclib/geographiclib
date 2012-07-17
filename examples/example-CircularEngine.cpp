@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::CircularEngine class
-// $Id: a742c5ccdb47b73fcd599dc1adda36a70450b5a5 $
 
 #include <iostream>
 #include <exception>

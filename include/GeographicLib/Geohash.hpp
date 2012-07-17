@@ -8,16 +8,15 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOHASH_HPP)
-#define GEOGRAPHICLIB_GEOHASH_HPP \
-  "$Id: dbfced4af65871c0040168e0fe72bb1aeefd8248 $"
+#define GEOGRAPHICLIB_GEOHASH_HPP 1
 
 #include <string>
 #include <GeographicLib/Constants.hpp>
 
 #if defined(_MSC_VER)
 // Squelch warnings about dll vs string
-#pragma warning (push)
-#pragma warning (disable: 4251)
+#  pragma warning (push)
+#  pragma warning (disable: 4251)
 #endif
 
 namespace GeographicLib {
@@ -60,10 +59,15 @@ namespace GeographicLib {
      * @param[in] lon longitude of point (degrees).
      * @param[in] len the length of the resulting geohash.
      * @param[out] geohash the geohash.
+     * @exception GeographicErr if \e la is not in [-90<sup>o</sup>,
+     *   90<sup>o</sup>].
+     * @exception GeographicErr if \e lon is not in [-540<sup>o</sup>,
+     *   540<sup>o</sup>).
+     * @exception std::bad_alloc if memory for \e geohash can't be allocated.
      *
-     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
-     * the range [-180, 360].  Internally, \e len is first put in the range
-     * [0, 18].
+     * Internally, \e len is first put in the range [0, 18].
+     *
+     * If \e lat or \e lon is NaN, the returned geohash is "nan".
      **********************************************************************/
     static void Forward(real lat, real lon, int len, std::string& geohash);
 
@@ -76,9 +80,13 @@ namespace GeographicLib {
      * @param[out] len the length of the geohash.
      * @param[in] centerp if true (the default) return the center of the
      *   geohash location, otherwise return the south-west corner.
+     * @exception GeographicErr if \e geohash contains illegal characters.
      *
      * Only the first 18 characters for \e geohash are considered.  The case of
      * the letters in \e geohash is ignored.
+     *
+     * If the first three characters in \e geohash are "nan", then \e lat and
+     * \e lon are set to NaN.
      **********************************************************************/
     static void Reverse(const std::string& geohash, real& lat, real& lon,
                         int& len, bool centerp = true);
@@ -166,7 +174,7 @@ namespace GeographicLib {
 } // namespace GeographicLib
 
 #if defined(_MSC_VER)
-#pragma warning (pop)
+#  pragma warning (pop)
 #endif
 
 #endif  // GEOGRAPHICLIB_GEOHASH_HPP

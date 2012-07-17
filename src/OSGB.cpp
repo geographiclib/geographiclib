@@ -10,11 +10,6 @@
 #include <GeographicLib/OSGB.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_OSGB_CPP "$Id: 4bfb35c88866ed936faad797f3cef6f4ece36196 $"
-
-RCSID_DECL(GEOGRAPHICLIB_OSGB_CPP)
-RCSID_DECL(GEOGRAPHICLIB_OSGB_HPP)
-
 namespace GeographicLib {
 
   using namespace std;

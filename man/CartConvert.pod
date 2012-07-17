@@ -1,5 +1,3 @@
-=for comment $Id: f3d0184303d2278f369eeb6f8fae2726c6bbfaf4 $
-
 =head1 NAME
 
 CartConvert -- convert geodetic coordinates to geocentric or local cartesian

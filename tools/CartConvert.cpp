@@ -90,9 +90,8 @@ int main(int argc, char* argv[]) {
         cdelim = argv[m];
      } else if (arg == "--version") {
         std::cout
-          << argv[0]
-          << ": $Id: b9e53a72ea7d026978678f3ab9d726a2d8485079 $\n"
-          << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
+          << argv[0] << ": GeographicLib version "
+          << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");

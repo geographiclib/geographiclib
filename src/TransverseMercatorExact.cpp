@@ -41,12 +41,6 @@
 
 #include <GeographicLib/TransverseMercatorExact.hpp>
 
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP \
-  "$Id: 125a2d11919018a84fb0c09ea2e77011a35a4a2d $"
-
-RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP)
-RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
-
 namespace GeographicLib {
 
   using namespace std;
@@ -378,14 +372,8 @@ namespace GeographicLib {
   void TransverseMercatorExact::Forward(real lon0, real lat, real lon,
                                         real& x, real& y, real& gamma, real& k)
     const throw() {
-    // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
-    if (lon - lon0 > 180)
-      lon -= lon0 + 360;
-    else if (lon - lon0 <= -180)
-      lon -= lon0 - 360;
-    else
-      lon -= lon0;
-    // Now lon in (-180, 180]
+    lon = Math::AngNormalize(Math::AngNormalize(lon) -
+                             Math::AngNormalize(lon0));
     // Explicitly enforce the parity
     int
       latsign = !_extendp && lat < 0 ? -1 : 1,
@@ -483,13 +471,7 @@ namespace GeographicLib {
     if (backside)
       lon = 180 - lon;
     lon *= lonsign;
-    // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
-    if (lon + lon0 >= 180)
-      lon += lon0 - 360;
-    else if (lon + lon0 < -180)
-      lon += lon0 + 360;
-    else
-      lon += lon0;
+    lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
     lat *= latsign;
     if (backside)
       y = 2 * _Eu.E() - y;

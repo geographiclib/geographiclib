@@ -1,5 +1,3 @@
-# $Id: 93361bd06b7de26c27aea78a7f98324041756145 $
-
 PROGRAMS = GeoConvert \
 	TransverseMercatorProj \
 	CartConvert \

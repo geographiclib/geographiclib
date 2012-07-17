@@ -34,8 +34,6 @@ end
 % geodesicdirect.m
 % Matlab .m file for solving direct geodesic problem
 %
-% Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and
-% licensed under the MIT/X11 License.  For more information, see
+% Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
+% under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
-%
-% $Id: edeee2fe9d9c273cfa9d7512139223f70c464cc1 $

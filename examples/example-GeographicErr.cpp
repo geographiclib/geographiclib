@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::GeographicErr class
-// $Id: aaa4cf5e9b5070f9a6307a59daabf578880b85d3 $
 
 #include <iostream>
 #include <GeographicLib/Constants.hpp>

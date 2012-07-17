@@ -2,7 +2,7 @@
  * \file geodesicline.cpp
  * \brief Matlab mex file for geographic to UTM/UPS conversions
  *
- * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -14,8 +14,6 @@
 // [Windows]
 // mex -I../include -L../windows/Release
 //    -lGeographic geodesicline.cpp
-
-// $Id: f9bab46d15d25940301b5b91f79ac9f610277f8c $
 
 #include <GeographicLib/GeodesicLine.hpp>
 #include <mex.h>
@@ -94,11 +92,11 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   try {
     const Geodesic g(a, f);
-    if (abs(lat1) > 90)
+    if (!(abs(lat1) <= 90))
       throw GeographicErr("Invalid latitude");
-    if (lon1 < -180 || lon1 > 360)
+    if (!(lon1 >= -540 || lon1 < 540))
       throw GeographicErr("Invalid longitude");
-    if (azi1 < -180 || azi1 > 360)
+    if (!(azi1 >= -540 || azi1 < 540))
       throw GeographicErr("Invalid azimuth");
     const GeodesicLine l(g, lat1, lon1, azi1);
     for (int i = 0; i < m; ++i)

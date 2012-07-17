@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_SPHERICALHARMONIC_HPP)
-#define GEOGRAPHICLIB_SPHERICALHARMONIC_HPP \
-  "$Id: ef47b5e3bd16594a8a82242fa7cac8dcbf5d7dee $"
+#define GEOGRAPHICLIB_SPHERICALHARMONIC_HPP 1
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
@@ -23,10 +22,10 @@ namespace GeographicLib {
    * \brief Spherical harmonic series
    *
    * This class evaluates the spherical harmonic sum \verbatim
- V(x, y, z) = sum(n = 0..N)[ q^(n+1) * sum(m = 0..n)[
-   (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) *
-   P[n,m](cos(theta)) ] ]
-\endverbatim
+   V(x, y, z) = sum(n = 0..N)[ q^(n+1) * sum(m = 0..n)[
+     (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) *
+     P[n,m](cos(theta)) ] ]
+   \endverbatim
    * where
    * - <i>p</i><sup>2</sup> = <i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>,
    * - <i>r</i><sup>2</sup> = <i>p</i><sup>2</sup> + <i>z</i><sup>2</sup>,
@@ -52,10 +51,10 @@ namespace GeographicLib {
    *   Research Australasia 68, 31-60, (June 1998).
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San
    *   Francisco, 1967).  (See Sec. 1-14, for a definition of Pbar.)
-   * - S. A. Holmes and W. E. Featherstone, A unified approach to the
-   *   Clenshaw summation and the recursive computation of very high degree
-   *   and order normalised associated Legendre functions, J. Geod. 76(5),
-   *   279-299 (2002).
+   * - S. A. Holmes and W. E. Featherstone, A unified approach to the Clenshaw
+   *   summation and the recursive computation of very high degree and order
+   *   normalised associated Legendre functions, J. Geodesy 76(5), 279-299
+   *   (2002).
    * - C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw
    *   summation, Boll. Geod. Sci. Aff. 41(4), 349-375 (1982).
    *
@@ -132,6 +131,9 @@ namespace GeographicLib {
      * @param[in] norm the normalization for the associated Legendre
      *   polynomials, either SphericalHarmonic::full (the default) or
      *   SphericalHarmonic::schmidt.
+     * @exception GeographicErr if \e N does not satisfy \e N >= -1.
+     * @exception GeographicErr if \e C or \e S is not big enough to hold the
+     *   coefficients.
      *
      * The coefficients \e C<sub>\e nm</sub> and \e S<sub>\e nm</sub> are
      * stored in the one-dimensional vectors \e C and \e S which must contain
@@ -178,6 +180,10 @@ namespace GeographicLib {
      * @param[in] norm the normalization for the associated Legendre
      *   polynomials, either SphericalHarmonic::FULL (the default) or
      *   SphericalHarmonic::SCHMIDT.
+     * @exception GeographicErr if \e N, \e nmx, and \e mmx do not satisfy
+     *   \e N >= \e nmx >= \e mmx >= -1.
+     * @exception GeographicErr if \e C or \e S is not big enough to hold the
+     *   coefficients.
      *
      * The class stores <i>pointers</i> to the first elements of \e C and \e S.
      * These arrays should not be altered or destroyed during the lifetime of a
@@ -267,6 +273,8 @@ namespace GeographicLib {
      * @param[in] z the height of the circle above the equatorial plane.
      * @param[in] gradp if true the returned object will be able to compute the
      *   gradient of the sum.
+     * @exception std::bad_alloc if the memory for the CircularEngine can't be
+     *   allocated.
      * @return the CircularEngine object.
      *
      * SphericalHarmonic::operator()() exchanges the order of the sums in the
@@ -275,7 +283,7 @@ namespace GeographicLib {
      * sum over degree \e n (which entails about <i>N</i><sup>2</sup>
      * operations).  Calling CircularEngine::operator()() on the returned
      * object performs the outer sum over the order \e m (about \e N
-     * operations).  This routine may throw a bad_alloc exception in the
+     * operations).  This routine may throw a std::bad_alloc exception in the
      * CircularEngine constructor.
      *
      * Here's an example of computing the spherical sum at a sequence of

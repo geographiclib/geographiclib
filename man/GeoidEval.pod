@@ -1,5 +1,3 @@
-=for comment $Id: a3894e4de1e548a59e099d2a170ab330b25dbb21 $
-
 =head1 NAME
 
 GeoidEval -- look up geoid heights

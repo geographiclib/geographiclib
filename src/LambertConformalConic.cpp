@@ -2,18 +2,12 @@
  * \file LambertConformalConic.cpp
  * \brief Implementation for GeographicLib::LambertConformalConic class
  *
- * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/LambertConformalConic.hpp>
-
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP \
-  "$Id: da8f6ce89092006a26946d671edca1a7836e7ce6 $"
-
-RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP)
-RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
 
 namespace GeographicLib {
 
@@ -43,7 +37,7 @@ namespace GeographicLib {
     if (!(Math::isfinite(k0) && k0 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
-      throw GeographicErr("Standard latitude not in [-90, 90]");
+      throw GeographicErr("Standard latitude not in [-90d, 90d]");
     real
       phi = stdlat * Math::degree<real>(),
       sphi = sin(phi),
@@ -68,9 +62,9 @@ namespace GeographicLib {
     if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat1) <= 90))
-      throw GeographicErr("Standard latitude 1 not in [-90, 90]");
+      throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
     if (!(abs(stdlat2) <= 90))
-      throw GeographicErr("Standard latitude 2 not in [-90, 90]");
+      throw GeographicErr("Standard latitude 2 not in [-90d, 90d]");
     real
       phi1 = stdlat1 * Math::degree<real>(),
       phi2 = stdlat2 * Math::degree<real>();
@@ -96,9 +90,9 @@ namespace GeographicLib {
     if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(coslat1 >= 0))
-      throw GeographicErr("Standard latitude 1 not in [-90, 90]");
+      throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
     if (!(coslat2 >= 0))
-      throw GeographicErr("Standard latitude 2 not in [-90, 90]");
+      throw GeographicErr("Standard latitude 2 not in [-90d, 90d]");
     if (!(abs(sinlat1) <= 1 && coslat1 <= 1) || (coslat1 == 0 && sinlat1 == 0))
       throw GeographicErr("Bad sine/cosine of standard latitude 1");
     if (!(abs(sinlat2) <= 1 && coslat2 <= 1) || (coslat2 == 0 && sinlat2 == 0))
@@ -314,6 +308,21 @@ namespace GeographicLib {
       * (tchi1 >= 0 ? scchi1 + tchi1 : 1 / (scchi1 - tchi1)) /
       (_scchi0 + _tchi0);
     _nrho0 = polar ? 0 : _a * _k0 / _scbet0;
+    {
+      // Figure _drhomax using code at beginning of Forward with lat = -90
+      real
+        sphi = -1, cphi =  epsx_,
+        tphi = sphi/cphi,
+        scphi = 1/cphi, shxi = sinh(eatanhe(sphi)),
+        tchi = hyp(shxi) * tphi - shxi * scphi, scchi = hyp(tchi),
+        psi = Math::asinh(tchi),
+        dpsi = Dasinh(tchi, _tchi0, scchi, _scchi0) * (tchi - _tchi0);
+      _drhomax = - _scale * (2 * _nc < 1 && dpsi != 0 ?
+                             (exp(Math::sq(_nc)/(1 + _n) * psi ) *
+                              (tchi > 0 ? 1/(scchi + tchi) : (scchi - tchi))
+                              - (_t0nm1 + 1))/(-_n) :
+                             Dexp(-_n * psi, -_n * _psi0) * dpsi);
+    }
   }
 
   const LambertConformalConic
@@ -324,13 +333,8 @@ namespace GeographicLib {
   void LambertConformalConic::Forward(real lon0, real lat, real lon,
                                       real& x, real& y, real& gamma, real& k)
     const throw() {
-    if (lon - lon0 >= 180)
-      lon -= lon0 + 360;
-    else if (lon - lon0 < -180)
-      lon -= lon0 - 360;
-    else
-      lon -= lon0;
-    lat *= _sign;
+    lon = Math::AngNormalize(Math::AngNormalize(lon) -
+                             Math::AngNormalize(lon0));
     // From Snyder, we have
     //
     // theta = n * lambda
@@ -345,7 +349,7 @@ namespace GeographicLib {
       lam = lon * Math::degree<real>(),
       phi = _sign * lat * Math::degree<real>(),
       sphi = sin(phi), cphi = abs(lat) != 90 ? cos(phi) : epsx_,
-      tphi = sphi/cphi, tbet = _fm * tphi, scbet = hyp(tbet),
+      tphi = sphi/cphi, scbet = hyp(_fm * tphi),
       scphi = 1/cphi, shxi = sinh(eatanhe(sphi)),
       tchi = hyp(shxi) * tphi - shxi * scphi, scchi = hyp(tchi),
       psi = Math::asinh(tchi),
@@ -386,9 +390,17 @@ namespace GeographicLib {
     // dpsi = - Dlog1p(t^n-1, t0^n-1) * drho / scale
     y *= _sign;
     real
-      nx = _n * x, ny = _n * y, y1 = _nrho0 - ny,
+      // Guard against 0 * inf in computation of ny
+      nx = _n * x, ny = _n ? _n * y : 0, y1 = _nrho0 - ny,
       den = Math::hypot(nx, y1) + _nrho0, // 0 implies origin with polar aspect
-      drho = den != 0 ? (x*nx - 2*y*_nrho0 + y*ny) / den : 0,
+      // isfinite test is to avoid inf/inf
+      drho = ((den != 0 && Math::isfinite(den))
+              ? (x*nx + y * (ny - 2*_nrho0)) / den
+              : den);
+    drho = min(drho, _drhomax);
+    if (_n == 0)
+      drho = max(drho, -_drhomax);
+    real
       tnm1 = _t0nm1 + _n * drho/_scale,
       dpsi = (den == 0 ? 0 :
               (tnm1 + 1 != 0 ? - Dlog1p(tnm1, _t0nm1) * drho / _scale :
@@ -439,13 +451,7 @@ namespace GeographicLib {
       lam = _n != 0 ? gamma / _n : x / y1;
     lat = phi / Math::degree<real>();
     lon = lam / Math::degree<real>();
-    // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
-    if (lon + lon0 >= 180)
-      lon += lon0 - 360;
-    else if (lon + lon0 < -180)
-      lon += lon0 + 360;
-    else
-      lon += lon0;
+    lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
     k = _k0 * (scbet/_scbet0) /
       (exp(_nc != 0 ? - (Math::sq(_nc)/(1 + _n)) * dpsi : 0)
        * (tchi >= 0 ? scchi + tchi : 1 / (scchi - tchi)) / (_scchi0 + _tchi0));
@@ -456,7 +462,7 @@ namespace GeographicLib {
     if (!(Math::isfinite(k) && k > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(lat) <= 90))
-      throw GeographicErr("Latitude for SetScale not in [-90, 90]");
+      throw GeographicErr("Latitude for SetScale not in [-90d, 90d]");
     if (abs(lat) == 90 && !(_nc == 0 && lat * _n > 0))
       throw GeographicErr("Incompatible polar latitude in SetScale");
     real x, y, gamma, kold;

@@ -2,18 +2,12 @@
  * \file PolarStereographic.cpp
  * \brief Implementation for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/PolarStereographic.hpp>
-
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP \
-  "$Id: 3a2dee07e6ef1c55ddcdc2178d818c8edd4d1cd4 $"
-
-RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP)
-RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
 
 namespace GeographicLib {
 
@@ -84,7 +78,7 @@ namespace GeographicLib {
     rho *= 2 * _k0 * _a / _c;
     k = lat != 90 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) :
       _k0;
-    lon = lon >= 180 ? lon - 360 : (lon < -180 ? lon + 360 : lon);
+    lon = Math::AngNormalize(lon);
     real
       lam = lon * Math::degree<real>();
     x = rho * (lon == -180 ? 0 : sin(lam));
@@ -101,17 +95,19 @@ namespace GeographicLib {
       taup = (1 / t - t) / 2,
       tau = taup * _Cx,
       stol = tol_ * max(real(1), abs(taup));
-    // min iterations = 1, max iterations = 2; mean = 1.99
-    for (int i = 0; i < numit_; ++i) {
-      real
-        tau1 = Math::hypot(real(1), tau),
-        sig = sinh( eatanhe( tau / tau1 ) ),
-        taupa = Math::hypot(real(1), sig) * tau - sig * tau1,
-        dtau = (taup - taupa) * (1 + _e2m * Math::sq(tau)) /
-        ( _e2m * tau1 * Math::hypot(real(1), taupa) );
-      tau += dtau;
-      if (!(abs(dtau) >= stol))
-        break;
+    if (abs(tau) < overflow_) {
+      // min iterations = 1, max iterations = 2; mean = 1.99
+      for (int i = 0; i < numit_; ++i) {
+        real
+          tau1 = Math::hypot(real(1), tau),
+          sig = sinh( eatanhe( tau / tau1 ) ),
+          taupa = Math::hypot(real(1), sig) * tau - sig * tau1,
+          dtau = (taup - taupa) * (1 + _e2m * Math::sq(tau)) /
+          ( _e2m * tau1 * Math::hypot(real(1), taupa) );
+        tau += dtau;
+        if (!(abs(dtau) >= stol))
+          break;
+      }
     }
     real
       phi = atan(tau),

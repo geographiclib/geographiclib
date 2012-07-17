@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::GravityCircle class
-// $Id: dc7c895cc248cee01a434ea3df1b31771ffb6ad2 $
 
 #include <iostream>
 #include <exception>

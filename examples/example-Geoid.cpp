@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::Geoid class
-// $Id: 2ba4534ebb4c4853dc111932fe44b4bf85ac8149 $
 
 #include <iostream>
 #include <exception>

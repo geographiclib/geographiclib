@@ -36,8 +36,6 @@ end
 % localcartesianreverse.m
 % Matlab .m file for local cartesian to geographic conversions
 %
-% Copyright (c) Charles Karney (2011) <charles@karney.com> and
-% licensed under the MIT/X11 License.  For more information, see
+% Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
+% the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
-%
-% $Id: d125a552e78aaec23ab0069c078301fa3e66569f $

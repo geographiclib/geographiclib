@@ -9,19 +9,13 @@
 
 #include <GeographicLib/LocalCartesian.hpp>
 
-#define GEOGRAPHICLIB_LOCALCARTESIAN_CPP \
-  "$Id: 4d15764c089e07855bf6db300271e18f4fa89624 $"
-
-RCSID_DECL(GEOGRAPHICLIB_LOCALCARTESIAN_CPP)
-RCSID_DECL(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
-
 namespace GeographicLib {
 
   using namespace std;
 
   void LocalCartesian::Reset(real lat0, real lon0, real h0) throw() {
     _lat0 = lat0;
-    _lon0 = lon0 >= 180 ? lon0 - 360 : (lon0 < -180 ? lon0 + 360 : lon0);
+    _lon0 = Math::AngNormalize(lon0);
     _h0 = h0;
     _earth.Forward(_lat0, _lon0, _h0, _x0, _y0, _z0);
     real

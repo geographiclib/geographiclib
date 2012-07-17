@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_UTMUPS_HPP)
-#define GEOGRAPHICLIB_UTMUPS_HPP \
-  "$Id: ae9e09602676178c7d9a7e3fdb1c6018b3d87bc9 $"
+#define GEOGRAPHICLIB_UTMUPS_HPP 1
 
 #include <sstream>
 #include <GeographicLib/Constants.hpp>
@@ -149,12 +148,14 @@ namespace GeographicLib {
      *
      * @param[in] lat latitude (degrees).
      * @param[in] lon longitude (degrees).
-     * @param[in] setzone zone override (optional).
+     * @param[in] setzone zone override (optional).  If omitted, use the
+     *   standard rules for picking the zone.  If \e setzone is given then use
+     *   that zone if it is non-negative, otherwise apply the rules given in
+     *   UTMUPS::zonespec.
+     * @exception GeographicErr if \e setzone is outside the range
+     *   [UTMUPS::MINPSEUDOZONE, UTMUPS::MAXZONE] = [-4, 60].
      *
-     * This is exact.  If the optional argument \e setzone is given then use
-     * that zone if it is non-negative, otherwise apply the rules given in
-     * UTMUPS::zonespec.  Throws an error if \e setzone is outsize the range
-     * [UTMUPS::MINPSEUDOZONE, UTMUPS::MAXZONE] = [-4, 60].
+     * This is exact.
      **********************************************************************/
     static int StandardZone(real lat, real lon, int setzone = STANDARD);
 
@@ -169,15 +170,35 @@ namespace GeographicLib {
      * @param[out] y northing of point (meters).
      * @param[out] gamma meridian convergence at point (degrees).
      * @param[out] k scale of projection at point.
-     * @param[in] setzone zone override.
+     * @param[in] setzone zone override (optional).
      * @param[in] mgrslimits if true enforce the stricter MGRS limits on the
      *   coordinates (default = false).
+     * @exception GeographicErr if \e lat is not in [-90<sup>o</sup>,
+     *   90<sup>o</sup>].
+     * @exception GeographicErr if \e lon is not in [-540<sup>o</sup>,
+     *   540<sup>o</sup>).
+     * @exception GeographicLib if the resulting \e x or \e y is out of allowed
+     *   range (see Reverse); in this case, these arguments are unchanged.
      *
-     * The preferred zone for the result can be specified with \e setzone, see
-     * UTMUPS::StandardZone.  Throw error if the resulting easting or northing
-     * is outside the allowed range (see Reverse), in which case the arguments
-     * are unchanged.  This also returns meridian convergence \e gamma
-     * (degrees) and scale \e k.  The accuracy of the conversion is about 5nm.
+     * If \e setzone is omitted, use the standard rules for picking the zone.
+     * If \e setzone is given then use that zone if it is non-negative,
+     * otherwise apply the rules given in UTMUPS::zonespec.  The accuracy of
+     * the conversion is about 5nm.
+     *
+     * The northing \e y jumps by UTMUPS::UTMShift() when crossing the equator
+     * in the southerly direction.  Sometimes it is useful to remove this
+     * discontinuity in \e y by extending the "northern" hemisphere with
+     * \code
+    double lat = -1, lon = 123;
+    int zone;
+    bool northp;
+    double x, y, gamma, k;
+    GeographicLib::UTMUPS::Forward(lat, lon, zone, northp, x, y, gamma, k);
+    if (zone > 0 && !northp) {
+      northp = true;
+      y -= GeographicLib::UTMUPS::UTMShift();
+    }
+     \endcode
      **********************************************************************/
     static void Forward(real lat, real lon,
                         int& zone, bool& northp, real& x, real& y,
@@ -197,17 +218,17 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      * @param[in] mgrslimits if true enforce the stricter MGRS limits on the
      *   coordinates (default = false).
+     * @exception GeographicLib if \e zone, \e x, or \e y is out of allowed
+     *   range; this this case the arguments are unchanged.
      *
-     * Throw error if easting or northing is outside the allowed range (see
-     * below), in which case the arguments are unchanged.  The accuracy of the
-     * conversion is about 5nm.
+     * The accuracy of the conversion is about 5nm.
      *
      * UTM eastings are allowed to be in the range [0km, 1000km], northings are
      * allowed to be in in [0km, 9600km] for the northern hemisphere and in
-     * [900km, 10000km] for the southern hemisphere.  (However UTM northings
+     * [900km, 10000km] for the southern hemisphere.  However UTM northings
      * can be continued across the equator.  So the actual limits on the
      * northings are [-9100km, 9600km] for the "northern" hemisphere and
-     * [900km, 19600km] for the "southern" hemisphere.)
+     * [900km, 19600km] for the "southern" hemisphere.
      *
      * UPS eastings and northings are allowed to be in the range [1200km,
      * 2800km] in the northern hemisphere and in [700km, 3100km] in the
@@ -250,6 +271,7 @@ namespace GeographicLib {
      * @param[in] zonestr string representation of zone and hemisphere.
      * @param[out] zone the UTM zone (zero means UPS).
      * @param[out] northp hemisphere (true means north, false means south).
+     * @exception GeographicErr of \e zonestr is malformed.
      *
      * For UTM, \e zonestr has the form of a zone number in the range
      * [UTMUPS::MINUTMZONE, UTMUPS::MAXUTMZONE] = [1, 60] followed by a
@@ -258,7 +280,7 @@ namespace GeographicLib {
      * well that "38S" indicates the southern hemisphere of zone 38 and not
      * latitude band S, [32, 40].  N, 01S, 2N, 38S are legal.  0N, 001S, 61N,
      * 38P are illegal.  INV is a special value for which the returned value of
-     * \e is UTMUPS::INVALID.  Throws an error is the zone string is malformed.
+     * \e is UTMUPS::INVALID.
      **********************************************************************/
     static void DecodeZone(const std::string& zonestr, int& zone, bool& northp);
 
@@ -267,6 +289,8 @@ namespace GeographicLib {
      *
      * @param[out] zone the UTM zone (zero means UPS).
      * @param[out] northp hemisphere (true means north, false means south).
+     * @exception GeographicErr of \e zone is out of range (see below).
+     * @exception std::bad_alloc if memoy for the string can't be allocated.
      * @return string representation of zone and hemisphere.
      *
      * \e zone must be in the range [UTMUPS::MINZONE, UTMUPS::MAXZONE] = [0,

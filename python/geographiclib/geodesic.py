@@ -1,27 +1,19 @@
 # geodesic.py
 #
-# This is a rather literal translation of the GeographicLib::Geodesic
-# class to python.  See the documentation for the C++ class for more
-# information at
+# This is a rather literal translation of the GeographicLib::Geodesic class to
+# python.  See the documentation for the C++ class for more information at
 #
 #    http://geographiclib.sourceforge.net/html/annotated.html
 #
 # The algorithms are derived in
 #
 #    Charles F. F. Karney,
-#    Geodesics on an ellipsoid of revolution, Feb. 2011,
-#    http://arxiv.org/abs/1102.1215
-#    errata: http://geographiclib.sourceforge.net/geod-errata.html
+#    Algorithms for geodesics, J. Geodesy, 2012,
+#    http://dx.doi.org/10.1007/s00190-012-0578-z
 #
-#    Charles F. F. Karney,
-#    Algorithms for geodesics, Sept. 2011,
-#    http://arxiv.org/abs/1109.4448
-#
-# Copyright (c) Charles Karney (2011, 2012) <charles@karney.com> and
-# licensed under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
+# under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
-#
-# $Id: 95edebf1ac240458e1ba8a63577c589f330f849d $
 ######################################################################
 
 import math
@@ -125,12 +117,6 @@ class Geodesic(object):
     return ( 2 * sinx * cosx * y0 if sinp # sin(2 * x) * y0
              else cosx * (y0 - y1) )      # cos(x) * (y0 - y1)
   SinCosSeries = staticmethod(SinCosSeries)
-
-  def AngNormalize(x):
-    # Place angle in [-180, 180).  Assumes x is in [-540, 540).
-    return (x - 360 if x >= 180 else
-            (x + 360 if x < -180 else x))
-  AngNormalize = staticmethod(AngNormalize)
 
   def AngRound(x):
     # The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
@@ -628,8 +614,8 @@ class Geodesic(object):
     a12 = s12 = azi1 = azi2 = m12 = M12 = M21 = S12 = Math.nan # return vals
 
     outmask &= Geodesic.OUT_ALL
-    lon1 = Geodesic.AngNormalize(lon1)
-    lon12 = Geodesic.AngNormalize(Geodesic.AngNormalize(lon2) - lon1)
+    lon1 = Math.AngNormalize(lon1)
+    lon12 = Math.AngNormalize(Math.AngNormalize(lon2) - lon1)
     # If very close to being on the same meridian, then make it so.
     # Not sure this is necessary...
     lon12 = Geodesic.AngRound(lon12)
@@ -894,17 +880,17 @@ class Geodesic(object):
     return a12, s12, azi1, azi2, m12, M12, M21, S12
 
   def CheckPosition(lat, lon):
-    if not (abs(lat) <= 90):
+    if (abs(lat) > 90):
       raise ValueError("latitude " + str(lat) + " not in [-90, 90]")
-    if not (lon >= -180 and lon <= 360):
-      raise ValueError("longitude " + str(lon) + " not in [-180, 360]")
-    return Geodesic.AngNormalize(lon)
+    if (lon < -540 or lon >= 540):
+      raise ValueError("longitude " + str(lon) + " not in [-540, 540)")
+    return Math.AngNormalize(lon)
   CheckPosition = staticmethod(CheckPosition)
 
   def CheckAzimuth(azi):
-    if not (azi >= -180 and azi <= 360):
-      raise ValueError("azimuth " + str(azi) + " not in [-180, 360]")
-    return Geodesic.AngNormalize(azi)
+    if (azi < -540 or azi >= 540):
+      raise ValueError("azimuth " + str(azi) + " not in [-540, 540)")
+    return Math.AngNormalize(azi)
   CheckAzimuth = staticmethod(CheckAzimuth)
 
   def CheckDistance(s):

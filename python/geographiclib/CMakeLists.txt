@@ -1,9 +1,7 @@
-# $Id: d9804e2b7bbfdce4e40979e5fc0f1791d4a02355 $
-
 # Install the python files.
 # Probably full-time python users should install the python package from
 # http://pypi.python.org/pypi/geographiclib
-file (GLOB PYTHON_FILES *.py)
+file (GLOB PYTHON_FILES [A-Za-z_]*.py)
 if (COMMON_INSTALL_PATH)
   set (INSTALL_PYTHON_DIR "lib/python/site-packages")
 else ()

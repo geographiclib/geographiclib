@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::GeodesicLine class
-// $Id: df5c5ffe6534d46e343544430de8c13fc8119bfb $
 
 #include <iostream>
 #include <exception>

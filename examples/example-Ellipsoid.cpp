@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::Ellipsoid class
-// $Id: dd3a570b1a112463405e4020eabe32f84672efde $
 
 #include <iostream>
 #include <exception>

@@ -1,5 +1,3 @@
-# $Id: cc4b79d1e8302fe04b479356f942d0d37f28a0d2 $
-
 VERSION = 9.2.4
 
 TEMPLATE = lib

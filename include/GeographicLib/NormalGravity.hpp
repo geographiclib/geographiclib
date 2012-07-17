@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_NORMALGRAVITY_HPP)
-#define GEOGRAPHICLIB_NORMALGRAVITY_HPP \
-  "$Id: e4b65c9c5787d8ee14f476cbb518fd5007006344 $"
+#define GEOGRAPHICLIB_NORMALGRAVITY_HPP 1
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geocentric.hpp>
@@ -51,7 +50,7 @@ namespace GeographicLib {
    * References:
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
    *   Francisco, 1967), Secs. 1-19, 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).
-   * - H. Moritz, Geodetic Reference System 1980, J. Geod. 54(3), 395-405
+   * - H. Moritz, Geodetic Reference System 1980, J. Geodesy 54(3), 395-405
    *   (1980) http://dx.doi.org/10.1007/BF02521480
    *
    * Example of use:
@@ -85,6 +84,8 @@ namespace GeographicLib {
      * @param[in] omega the angular velocity (rad s<sup>-1</sup>).
      * @param[in] f the flattening of the ellipsoid.
      * @param[in] J2 dynamical form factor.
+     * @exception if \e a is not positive or the other constants are
+     *   inconsistent (see below).
      *
      * Exactly one of \e f and \e J2 should be positive and this will be used
      * to define the ellipsoid.  The shape of the ellipsoid can be given in one

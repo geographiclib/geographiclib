@@ -2,7 +2,6 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 97f39fb9c258055657ec31c29bee74c05fd27b15 $
 
 AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 INCLUDES = -I$(top_builddir)/include -I$(top_srcdir)/include \

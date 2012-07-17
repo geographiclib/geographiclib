@@ -15,8 +15,6 @@
 // mex -I../include -L../windows/Release
 //    -lGeographic mgrsreverse.cpp
 
-// $Id: fea6af03d0363148520e514fd8374020871160b9 $
-
 #include <GeographicLib/MGRS.hpp>
 #include <mex.h>
 

@@ -30,8 +30,6 @@ end
 % polygonarea.m
 % Matlab .m file for finding polygon areas
 %
-% Copyright (c) Charles Karney (2011) <charles@karney.com> and
-% licensed under the MIT/X11 License.  For more information, see
+% Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
+% the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
-%
-% $Id: 6e5fb482c0c2c1d543c110f912fc42888877906e $

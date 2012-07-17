@@ -1,8 +1,7 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-dnl $Id: 2fa5cc4816f8fd2a485e7ba487ba7215cf836b07 $
 
-AC_INIT([GeographicLib],[1.22],[charles@karney.com])
+AC_INIT([GeographicLib],[1.23],[charles@karney.com])
 AC_CANONICAL_SYSTEM
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
@@ -22,9 +21,9 @@ dnl Library code modified:              REVISION++
 dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
-LT_CURRENT=13
+LT_CURRENT=14
 LT_REVISION=0
-LT_AGE=4
+LT_AGE=5
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
@@ -53,6 +52,13 @@ AC_SEARCH_LIBS([sqrt],[m])
 
 # Check endianness
 AC_C_BIGENDIAN
+
+# Check for doxygen.
+# Need version 1.8.1.2 or later for greek and math symbols.
+AC_CHECK_PROGS([DOXYGEN], [doxygen])
+AM_CONDITIONAL([HAVE_DOXYGEN],
+	[test "$DOXYGEN" -a `"$DOXYGEN" --version |
+	sed 's/^\([[0-9]]\)\.\([[0-9]]\)\./\1.0\2./'` '>' 1.08.1.1])
 
 dnl
 dnl Add here new file to be generated

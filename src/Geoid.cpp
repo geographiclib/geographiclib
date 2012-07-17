@@ -13,12 +13,6 @@
 #include <algorithm>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_GEOID_CPP \
-  "$Id: 5c3c23dd877485af9c9e298ddb28c5aac12b5e6a $"
-
-RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
-RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
-
 #if !defined(GEOGRAPHICLIB_DATA)
 #  if defined(_MSC_VER)
 #    define GEOGRAPHICLIB_DATA \
@@ -34,7 +28,7 @@ RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
 
 #if defined(_MSC_VER)
 // Squelch warnings about unsafe use of getenv
-#pragma warning (disable: 4996)
+#  pragma warning (disable: 4996)
 #endif
 
 namespace GeographicLib {
@@ -316,6 +310,7 @@ namespace GeographicLib {
       if (gradp) gradn = grade = Math::NaN<real>();
       return Math::NaN<real>();
     }
+    lon = Math::AngNormalize(lon);
     real
       fx =  lon * _rlonres,
       fy = -lat * _rlatres;
@@ -452,10 +447,8 @@ namespace GeographicLib {
       CacheClear();
       return;
     }
-    if (west >= 180)
-      west -= 360;              // west in [-180, 180)
-    if (east >= 180)
-      east -= 360;
+    west = Math::AngNormalize(west); // west in [-180, 180)
+    east = Math::AngNormalize(east);
     if (east <= west)
       east += 360;              // east - west in (0, 360]
     int

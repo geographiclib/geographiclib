@@ -1,12 +1,10 @@
-# $Id: db0813d9df0e4b911eb0282bbf2e5bebca5c6563 $
-
 # Build the library...
 
 # Include all the .cpp files in the library.
-file (GLOB SOURCES *.cpp)
+file (GLOB SOURCES [A-Za-z]*.cpp)
 file (GLOB HEADERS
   ${PROJECT_BINARY_DIR}/include/GeographicLib/Config.h
-  ../include/GeographicLib/*.hpp)
+  ../include/GeographicLib/[A-Za-z]*.hpp)
 
 # Define the library and specify whether it is shared or not.
 if (GEOGRAPHIC_SHARED_LIB)

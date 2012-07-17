@@ -15,8 +15,6 @@
 // mex -I../include -L../windows/Release
 //    -lGeographic geocentricforward.cpp
 
-// $Id: 4b6a1a65868ee6d55166cbedd0206140b4eb06a5 $
-
 #include <algorithm>
 #include <GeographicLib/Geocentric.hpp>
 #include <mex.h>
@@ -79,7 +77,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     std::vector<double> rotv(rotp ? 9 : 0);
     const Geocentric c(a, f);
     for (int i = 0; i < m; ++i) {
-      if (!(abs(lat[i]) > 90) && !(lon[i] < -180 || lon[i] > 360)) {
+      if (abs(lat[i]) <= 90 && lon[i] >= -540 && lon[i] < 540) {
         c.Forward(lat[i], lon[i], haveh ? h[i] : 0.0, x[i], y[i], z[i], rotv);
         if (rotp) {
           for (int k = 0; k < 9; ++k)

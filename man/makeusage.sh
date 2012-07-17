@@ -1,6 +1,5 @@
 #! /bin/sh
 # Convert a pod file into a usage function for the GeographicLib utilities.
-# $Id: b30e390f45730799e56eb08d7450008f1b1bb540 $
 
 SOURCE=$1
 NAME=`basename $SOURCE .pod`

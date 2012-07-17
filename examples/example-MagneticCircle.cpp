@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::MagneticCircle class
-// $Id: d499f22160be523e01c0a6e3c740dbe828aa918d $
 
 #include <iostream>
 #include <exception>

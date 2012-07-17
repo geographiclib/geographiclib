@@ -11,13 +11,6 @@
 #include <algorithm>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_DMS_CPP "$Id: cd137ef36e3a09e59b146d9569f1330e1d80fcb5 $"
-
-RCSID_DECL(GEOGRAPHICLIB_DMS_CPP)
-RCSID_DECL(GEOGRAPHICLIB_DMS_HPP)
-RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
-RCSID_DECL(GEOGRAPHICLIB_MATH_HPP)
-
 namespace GeographicLib {
 
   using namespace std;
@@ -31,15 +24,18 @@ namespace GeographicLib {
   Math::real DMS::Decode(const std::string& dms, flag& ind) {
     string errormsg;
     string dmsa = dms;
-    replace(dmsa, "\xc2\xb0", 'd'); // degree symbol (U+00b0 = UTF-8 c2 b0)
-    replace(dmsa, "\xc2\xba", 'd'); // alt symbol (U+00ba = UTF-8 c2 ba)
-    replace(dmsa, "\xe2\x81\xb0", 'd');  // sup zero (U+2070 = UTF-8 e2 81 b0)
-    replace(dmsa, "\xe2\x80\xb2", '\''); // prime (U+2032 = UTF-8 e2 80 b2)
-    replace(dmsa, "\xc2\xb4", '\'');     // acute accent (U+00b4 = UTF-8 c2 b4)
-    replace(dmsa, "\xe2\x80\xb3", '"');  // dbl prime (U+2033 = UTF-8 e2 80 b3)
-    replace(dmsa, "\xb0", 'd');          // bare degree symbol (b0)
-    replace(dmsa, "\xba", 'd');          // bare alt symbol (ba)
-    replace(dmsa, "\xb4", 'd');          // bare acute accent (b4)
+    replace(dmsa, "\xc2\xb0", 'd');      // U+00b0 degree symbol
+    replace(dmsa, "\xc2\xba", 'd');      // U+00ba alt symbol
+    replace(dmsa, "\xe2\x81\xb0", 'd');  // U+2070 sup zero
+    replace(dmsa, "\xcb\x9a", 'd');      // U+02da ring above
+    replace(dmsa, "\xe2\x80\xb2", '\''); // U+2032 prime
+    replace(dmsa, "\xc2\xb4", '\'');     // U+00b4 acute accent
+    replace(dmsa, "\xe2\x80\x99", '\''); // U+2019 right single quote
+    replace(dmsa, "\xe2\x80\xb3", '"');  // U+2033 double prime
+    replace(dmsa, "\xe2\x80\x9d", '"');  // U+201d right double quote
+    replace(dmsa, "\xb0", 'd');          // 0xb0 bare degree symbol
+    replace(dmsa, "\xba", 'd');          // 0xba bare alt symbol
+    replace(dmsa, "\xb4", '\'');         // 0xb4 bare acute accent
     replace(dmsa, "''", '"');            // '' -> "
     do {                       // Executed once (provides the ability to break)
       int sign = 1;
@@ -225,14 +221,13 @@ namespace GeographicLib {
     real
       lat1 = ia == LATITUDE ? a : b,
       lon1 = ia == LATITUDE ? b : a;
-    if (lat1 < -90 || lat1 > 90)
+    if (abs(lat1) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat1)
                           + "d not in [-90d, 90d]");
-    if (lon1 < -180 || lon1 > 360)
+    if (lon1 < -540 || lon1 >= 540)
       throw GeographicErr("Longitude " + Utility::str(lon1)
-                          + "d not in [-180d, 360d]");
-    if (lon1 >= 180)
-      lon1 -= 360;
+                          + "d not in [-540d, 540d)");
+    lon1 = Math::AngNormalize(lon1);
     lat = lat1;
     lon = lon1;
   }
@@ -252,10 +247,9 @@ namespace GeographicLib {
     if (ind == LATITUDE)
       throw GeographicErr("Azimuth " + azistr
                           + " has a latitude hemisphere, N/S");
-    if (azi < -180 || azi > 360)
-      throw GeographicErr("Azimuth " + azistr + " not in range [-180d, 360d]");
-    if (azi >= 180) azi -= 360;
-    return azi;
+    if (azi < -540 || azi >= 540)
+      throw GeographicErr("Azimuth " + azistr + " not in range [-540d, 540d)");
+    return Math::AngNormalize(azi);
   }
 
   string DMS::Encode(real angle, component trailing, unsigned prec, flag ind,

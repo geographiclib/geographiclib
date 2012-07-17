@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::LocalCartesian class
-// $Id: 0fd182a359b17d3b76ccd55f405b272a327a42e8 $
 
 #include <iostream>
 #include <exception>

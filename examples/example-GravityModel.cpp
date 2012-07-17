@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::GravityModel class
-// $Id: fde4f431ed9c43e9e0ec797e302f32a373cdd219 $
 
 #include <iostream>
 #include <exception>

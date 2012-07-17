@@ -1,10 +1,11 @@
 // Example of using the GeographicLib::OSGB class
-// $Id: 80feea12c2ebb7e594d8e17bf841c1a141cf3c36 $
 
 #include <iostream>
+#include <iomanip>
 #include <exception>
 #include <string>
 #include <GeographicLib/OSGB.hpp>
+#include <GeographicLib/DMS.hpp>
 
 using namespace std;
 using namespace GeographicLib;
@@ -12,23 +13,28 @@ using namespace GeographicLib;
 int main() {
   try {
     {
-      // Sample forward calculation
-      double lat = 55.5, lon = -1.64; // Embleton, Northumberland
+      // Sample forward calculation from
+      // A guide to coordinate systems in Great Britain
+      double
+        lat = DMS::Decode(52,39,27.2531),
+        lon = DMS::Decode( 1,43, 4.5177);
       double x, y;
       OSGB::Forward(lat, lon, x, y);
       string gridref;
       OSGB::GridReference(x, y, 2, gridref);
-      cout << x << " " << y << " " << gridref << "\n";
+      cout << fixed << setprecision(3)
+           << x << " " << y << " " << gridref << "\n";
     }
     {
       // Sample reverse calculation
-      string gridref = "NU2222";
+      string gridref = "TG5113";
       double x, y;
       int prec;
       OSGB::GridReference(gridref, x, y, prec);
       double lat, lon;
       OSGB::Reverse(x, y, lat, lon);
-      cout << prec << " " << lat << " " << lon << "\n";
+      cout << fixed << setprecision(8)
+           << prec << " " << lat << " " << lon << "\n";
     }
   }
   catch (const exception& e) {

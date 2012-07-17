@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::Geocentric class
-// $Id: fea8cd4d5464b6029d6a135a25230892f52f318f $
 
 #include <iostream>
 #include <exception>

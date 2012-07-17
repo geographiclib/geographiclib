@@ -1,5 +1,3 @@
-# $Id: f59158cf616ee3a1faca03d972c53034be3784d1 $
-
 A library for geographic projections.
 
 Written by Charles Karney <charles@karney.com> and licensed under

@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::NormalGravity class
-// $Id: 8d0337072d40334e8147a50b1e6035d75d38c53c $
 
 #include <iostream>
 #include <exception>

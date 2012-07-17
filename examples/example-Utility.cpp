@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::Utility class
-// $Id: 34856fc274a1db91814bb96768a6c8feee03dacc $
 
 #include <iostream>
 #include <exception>

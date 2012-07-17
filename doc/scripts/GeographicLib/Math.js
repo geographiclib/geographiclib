@@ -6,8 +6,6 @@
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
- *
- * $Id: d8f72fdee7b661e6ba3f08bb7ecfe9f0673e8132 $
  **********************************************************************/
 
 var GeographicLib; if (!GeographicLib) GeographicLib = {};
@@ -43,6 +41,16 @@ GeographicLib.Math.atanh = function(x) {
   var y = Math.abs(x);          // Enforce odd parity
   y = GeographicLib.Math.log1p(2 * y/(1 - y))/2;
   return x < 0 ? -y : y;
+}
+
+GeographicLib.Math.AngNormalize = function(x) {
+    // Place angle in [-180, 180).  Assumes x is in [-540, 540).
+    return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
+}
+
+GeographicLib.Math.AngNormalize2 = function(x) {
+    // Place arbitrary angle in [-180, 180).
+    return GeographicLib.Math.AngNormalize(x % 360);
 }
 
 GeographicLib.Math.epsilon = Math.pow(0.5, 52);

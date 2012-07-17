@@ -1,5 +1,3 @@
-# $Id: 68ad590f505a0fc2f5419b6abf59d457d7901fc7 $
-#
 # Look for GeographicLib
 #
 # Set

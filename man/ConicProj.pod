@@ -1,5 +1,3 @@
-=for comment $Id: 79921d487c55a107062161cc0d60c48527eb8e05 $
-
 =head1 NAME
 
 ConicProj -- perform conic projections

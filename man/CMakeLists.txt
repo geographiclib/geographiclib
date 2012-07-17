@@ -1,5 +1,3 @@
-# $Id: c8cbcc51270dab8273fb82cf8944118b40cea1fa $
-
 # The man pages are maintained as .pod (plain old documentatoin) files.
 # In maintainer mode, there are used to create real man pages (extension
 # .1), usage files (extension .usage) for including in the tool itself,
@@ -41,7 +39,8 @@ foreach (TOOL ${TOOLS})
       COMMAND
         pod2html --noindex ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod |
         sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%'
-          -e 's%<code>\\\([^<>]*\\\)\(\\\(.\\\)\)</code>%<a href="\\1.\\2.html">&</a>%'g > ${TOOL}.1.html
+          -e 's%<code>\\\([^<>]*\\\)\(\\\(.\\\)\)</code>%<a href="\\1.\\2.html">&</a>%'g > ${TOOL}.1.html &&
+	cp ${TOOL}.1.html ../doc/html-stage/
       COMMENT "Building html version of man page for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
     add_custom_command (OUTPUT ${TOOL}.usage
@@ -49,6 +48,8 @@ foreach (TOOL ${TOOLS})
         ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod > ${TOOL}.usage
       COMMENT "Building usage code for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
+  else ()
+    file (COPY ${TOOL}.1.html DESTINATION ../doc/html-stage)
   endif ()
 endforeach ()
 

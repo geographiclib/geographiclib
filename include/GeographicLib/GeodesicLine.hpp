@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)
-#define GEOGRAPHICLIB_GEODESICLINE_HPP \
-  "$Id: 6d8b4f427813cac9195c1a3a9b785256b34d4e96 $"
+#define GEOGRAPHICLIB_GEODESICLINE_HPP 1
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geodesic.hpp>
@@ -36,16 +35,11 @@ namespace GeographicLib {
    *
    * The algorithms are described in
    * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
-   *   on an ellipsoid of revolution</a>,
-   *   Feb. 2011;
-   *   preprint
-   *   <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a>.
-   * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1109.4448">Algorithms for geodesics</a>,
-   *   Sept. 2011;
-   *   preprint
-   *   <a href="http://arxiv.org/abs/1109.4448">arxiv:1109.4448</a>.
+   *   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   Algorithms for geodesics</a>,
+   *   J. Geodesy, 2012;
+   *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   10.1007/s00190-012-0578-z</a>.
    * .
    * For more information on geodesics see \ref geodesic.
    *
@@ -169,8 +163,9 @@ namespace GeographicLib {
      *   i.e., which quantities can be returned in calls to
      *   GeodesicLib::Position.
      *
-     * \e lat1 should be in the range [-90, 90]; \e lon1 and \e azi1 should be
-     * in the range [-180, 360].
+     * \e lat1 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
+     * lon1 and \e azi1 should be in the range [-540<sup>o</sup>,
+     * 540<sup>o</sup>).
      *
      * The GeodesicLine::mask values are
      * - \e caps |= GeodesicLine::LATITUDE for the latitude \e lat2; this is
@@ -191,8 +186,8 @@ namespace GeographicLib {
      * capabilities.
      *
      * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-     * fixed and writing \e lat1 = 90 - \e eps or -90 + \e eps and taking the
-     * limit \e eps -> 0 from above.
+     * fixed and writing \e lat1 = 90<sup>o</sup> - \e eps or -90<sup>o</sup> +
+     * \e eps and taking the limit \e eps -> 0 from above.
      **********************************************************************/
     GeodesicLine(const Geodesic& g, real lat1, real lon1, real azi1,
                  unsigned caps = ALL)

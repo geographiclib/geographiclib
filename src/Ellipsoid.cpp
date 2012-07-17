@@ -9,12 +9,6 @@
 
 #include <GeographicLib/Ellipsoid.hpp>
 
-#define GEOGRAPHICLIB_ELLIPSOID_CPP \
-  "$Id: 67f0e391bfd0ef8376a013eaf4adec5eafbef491 $"
-
-RCSID_DECL(GEOGRAPHICLIB_ELLIPSOID_CPP)
-RCSID_DECL(GEOGRAPHICLIB_ELLIPSOID_HPP)
-
 namespace GeographicLib {
 
   using namespace std;
@@ -128,4 +122,13 @@ namespace GeographicLib {
     return _a / sqrt(v);
   }
 
+  Math::real Ellipsoid::NormalCurvatureRadius(real phi, real azi)
+    const throw() {
+    real
+      alpha = azi * Math::degree<real>(),
+      v = 1 - _e2 * Math::sq(sin(phi * Math::degree<real>()));
+    return _a / (sqrt(v) *
+                 (Math::sq(cos(alpha)) * v / (1 - _e2) + Math::sq(sin(alpha))));
+  }
+  
 } // namespace GeographicLib

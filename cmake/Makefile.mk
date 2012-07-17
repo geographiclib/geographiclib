@@ -1,5 +1,3 @@
-# $Id: 9c58123e002564d0252e543c70539b5a79df36a6 $
-
 DEST = $(PREFIX)/share/cmake/GeographicLib
 
 INSTALL=install -b

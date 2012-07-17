@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::MagneticModel class
-// $Id: ab27b155755e540d29e5e6bf550df8cdb00c74ba $
 
 #include <iostream>
 #include <exception>

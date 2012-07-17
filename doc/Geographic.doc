@@ -7,13 +7,13 @@
  * MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
-// $Id: 3ec5f949ebf111dfb8e6410a30e8bb02b9d7e466 $
+
 /**
 \mainpage Geographic library
 \author Charles Karney
 <charles@karney.com>
-\version 1.22
-\date 2012-05-27
+\version 1.23
+\date 2012-mm-dd
 
 \section abstract Abstract
 
@@ -45,10 +45,10 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.22.tar.gz/download">
-  GeographicLib-1.22.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.22.zip/download">
-  GeographicLib-1.22.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.23.tar.gz/download">
+  GeographicLib-1.23.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.23.zip/download">
+  GeographicLib-1.23.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
@@ -57,11 +57,11 @@ using git \verbatim
   git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib-release geographiclib
   cd geographiclib; git checkout stable
 \endverbatim
-There are also a binary installers for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.22-win32.exe/download">
-  GeographicLib-1.22-win32.exe</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.22-win64.exe/download">
-  GeographicLib-1.22-win64.exe</a>
+There are also binary installers for Windows available at
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.23-win32.exe/download">
+  GeographicLib-1.23-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.23-win64.exe/download">
+  GeographicLib-1.23-win64.exe</a>
 .
 It is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -162,14 +162,14 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.22.tar.gz/download">
-GeographicLib-1.22.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.22.zip/download">
-GeographicLib-1.22.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.22-win32.exe/download">
-GeographicLib-1.22-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.22-win64.exe/download">
-GeographicLib-1.22-win64.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.23.tar.gz/download">
+GeographicLib-1.23.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.23.zip/download">
+GeographicLib-1.23.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.23-win32.exe/download">
+GeographicLib-1.23-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.23-win64.exe/download">
+GeographicLib-1.23-win64.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -242,10 +242,10 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.22.tar.gz
-  unzip -q GeographicLib-1.22.zip \endverbatim
+  tar xfpz GeographicLib-1.23.tar.gz
+  unzip -q GeographicLib-1.23.zip \endverbatim
   then enter the directory created with one of \verbatim
-  cd GeographicLib-1.22 \endverbatim
+  cd GeographicLib-1.23 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD\endverbatim
@@ -253,8 +253,8 @@ Here are the steps to compile and install %GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically one of \verbatim
-  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.22 ..
-  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.22 ..
+  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.23 ..
+  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.23 ..
 \endverbatim
   Instead of setting CMAKE_INSTALL_PREFIX, you can (on Windows) set
   PACKAGE_PATH to point to its parent directory, e.g., \verbatim
@@ -274,12 +274,12 @@ Here are the steps to compile and install %GeographicLib:
     convention.  If it is on ON (the Linux default), the installation
     is to a common directory, e.g., /usr/local.  If it is OFF (the
     Windows default), the installation directory contains the package
-    name, e.g., C:/pkg/GeographicLib-1.22.  The installation
+    name, e.g., C:/pkg/GeographicLib-1.23.  The installation
     directories for the documentation, cmake configuration, python and
     matlab interfaces all depend on the variable with deeper paths
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
-    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib-1.22;
+    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib-1.23;
     - python interface: OFF: python; ON: lib/python/site-packages;
     - matlab interface: OFF: matlab; ON: libexec/GeographicLib/matlab;
     .
@@ -289,7 +289,7 @@ Here are the steps to compile and install %GeographicLib:
     systems, it is recommended to use a prefix which includes the
     compiler version, as shown above (and also, possibly, whether this
     is a 64-bit build, e.g., <code>cmake -G "Visual Studio 10 Win64" -D
-    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.22 ..</code>).
+    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.23 ..</code>).
     If you just want to try the library to see if it suits your needs,
     pick, for example, <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
   - <code>PACKAGE_PATH</code> and <code>INSTALL_PATH</code> provide an
@@ -302,14 +302,14 @@ Here are the steps to compile and install %GeographicLib:
     - If INSTALL_PATH is not specified but PACKAGE_PATH is, then
       INSTALL_PATH is set to
       ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON, and to
-      ${PACKAGE_PATH}/GeographicLib-1.22, otherwise.
+      ${PACKAGE_PATH}/GeographicLib-1.23, otherwise.
     - If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
       INSTALL_PATH.
     .
     Typically, only PACKAGE_PATH needs to be specified, e.g.,
     - Linux: cmake -D PACKAGE_PATH=/opt .. => CMAKE_INSTALL_PREFIX=/opt
     - Windows: cmake -D PACKAGE_PATH=C:/pkg .. =>
-      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.22
+      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.23
     .
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
@@ -372,9 +372,9 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.22.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.23.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.22 \endverbatim
+  cd GeographicLib-1.23 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD\endverbatim
@@ -403,9 +403,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.22.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.23.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.22 \endverbatim
+  cd GeographicLib-1.23 \endverbatim
 - Edit \verbatim
   include/GeographicLib/Config.h \endverbatim
   If your C++ compiler does not recognize the long double type
@@ -436,8 +436,8 @@ static library and the utilities.  If you only have Visual Studio 2003,
 use cmake to create the necessary solution file, see \ref cmake.  (cmake
 is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.22.zip \endverbatim
-- Open GeographicLib-1.22/windows/GeographicLib-vc10.sln in Visual Studio
+  unzip -q GeographicLib-1.23.zip \endverbatim
+- Open GeographicLib-1.23/windows/GeographicLib-vc10.sln in Visual Studio
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
@@ -460,14 +460,14 @@ library, it is advisable to build it with the compiler you are using for
 your own code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.22-win32.exe/download">
-GeographicLib-1.22-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.22-win64.exe/download">
-GeographicLib-1.22-win64.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.23-win32.exe/download">
+GeographicLib-1.23-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.23-win64.exe/download">
+GeographicLib-1.23-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc10\\GeographicLib-1.22 or C:\\pkg-vc10-x64\\GeographicLib-1.22,
+   C:\\pkg-vc10\\GeographicLib-1.23 or C:\\pkg-vc10-x64\\GeographicLib-1.23,
  - select the start menu folder,
  - and install.
  .
@@ -475,7 +475,7 @@ GeographicLib-1.22-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc10/GeographicLib-1.22/bin where the utilities are
+will include C:/pkg-vc10/GeographicLib-1.23/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the matlab folder.  Add this to your
@@ -524,17 +524,16 @@ order to create the autoconf configuration script, run \verbatim
   sh autogen.sh \endverbatim
 in the top level directory.  Provided you are running on a system with
 doxygen, pod2man, and pod2html installed, then you can create the
-documentation and the man pages by building the system using cmake (the
-<code>MAINTAINER</code> configuration variable set to ON, if the
-necessary tools are found) or configure.
+documentation and the man pages by building the system using cmake or
+configure.
 
 In the case of cmake, you then run \verbatim
   make dist \endverbatim
 which will copy the documentation and man pages from the build directory
 back into the source tree and package the resulting source tree for
 distribution as \verbatim
-  GeographicLib-1.22.tar.gz
-  GeographicLib-1.22.zip \endverbatim
+  GeographicLib-1.23.tar.gz
+  GeographicLib-1.23.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -545,7 +544,7 @@ With configure, run \verbatim
   make dist-gzip \endverbatim
 which will create the additional files and packages the results ready
 for distribution as \verbatim
-  geographiclib-1.22.tar.gz \endverbatim
+  geographiclib-1.23.tar.gz \endverbatim
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
@@ -913,8 +912,9 @@ typically throw errors (an exception is GeodesicLine).  However, calling
 the class functions with NaNs as arguments is not an error; NaNs are
 returned as appropriate.  "INV" is treated as an invalid zone
 designation by UTMUPS.  "INVALID" is the corresponding invalid MGRS
-string.  NaNs allow the projection of polylines which are separated by
-NaNs; in this format they can be easily plotted in Matlab.
+string.  (Similary "nan" is the equivalent invalid Geohash.)  NaNs allow
+the projection of polylines which are separated by NaNs; in this format
+they can be easily plotted in Matlab.
 
 A note about portability.  For the most part, the code uses standard C++
 and should be able to be deployed on any system with a modern C++
@@ -1067,9 +1067,9 @@ Matlab.
  - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
    Octave and run, e.g., \code
    mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-1.22/matlab'
+   cd 'C:/pkg-vc10-x64/GeographicLib-1.23/matlab'
    help geographiclibinterface
-   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.22');
+   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.23');
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
@@ -1078,7 +1078,7 @@ Matlab.
 To use the interface routines for %GeographicLib, run one of (for
 example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-1.22/libexec/GeographicLib/matlab'
+  addpath 'C:/pkg-vc10-x64/GeographicLib-1.23/libexec/GeographicLib/matlab'
 \endverbatim
 in Octave or Matlab.  The available functions are:
  - geodesicdirect: solve direct geodesic problem
@@ -1655,14 +1655,15 @@ Each line of the test set gives 6 space delimited numbers
  - EGM96 height (meters, accurate to 1 um)
  - EGM2008 height (meters, accurate to 1 um)
  .
-The latitude and longitude are all multiples of 10<sup>-6</sup> deg and
-should be regarded as exact.  The geoid heights are computed using the
-harmonic NGA synthesis programs, where the programs were compiled (with
-gfortran) and run under Linux.  In the case of the EGM2008 program, a
-<code>SAVE</code> statement needed to be added to subroutine
-<code>latf</code>, in order for the program to compile correctly with a
-stack-based compiler.  Similarly the EGM96 code requires a
-<code>SAVE</code> statement in subroutine <code>legfdn</code>.
+The latitude and longitude are all multiples of 10<sup>&minus;6</sup>
+deg and should be regarded as exact.  The geoid heights are computed
+using the harmonic NGA synthesis programs, where the programs were
+compiled (with gfortran) and run under Linux.  In the case of the
+EGM2008 program, a <code>SAVE</code> statement needed to be added to
+subroutine <code>latf</code>, in order for the program to compile
+correctly with a stack-based compiler.  Similarly the EGM96 code
+requires a <code>SAVE</code> statement in subroutine
+<code>legfdn</code>.
 
 <center>
 Back to \ref other.  Forward to \ref gravity.  Up to \ref contents.
@@ -1868,9 +1869,9 @@ keywords
      in meters<sup>3</sup>/seconds<sup>2</sup>.
    - <b>ReferenceMass</b> (required), the mass constant \e GM for the
      reference ellipsoid in meters<sup>3</sup>/seconds<sup>2</sup>.
-   - <b>AngularVelocity</b> (required), the angular velocity \e omega for
+   - <b>AngularVelocity</b> (required), the angular velocity &omega; for
      the model \e and the reference ellipsoid in rad
-     seconds<sup>-1</sup>.
+     seconds<sup>&minus;1</sup>.
    - <b>Flattening</b>, the flattening of the reference ellipsoid; this
      can be given a fraction, e.g., 1/298.257223563.  One of
      <b>Flattening</b> and <b>DynamicalFormFactor</b> is required.
@@ -1918,9 +1919,9 @@ coefficients.  The first of these gives the gravity potential and the
 second gives the zeta-to-N corrections to the geoid height.  The format
 for each set of coefficients is:
  - \e N, the maximum degree of the sum stored as a 4-byte signed integer.
-   This must satisfy \e N >= -1.
+   This must satisfy \e N &ge; &minus;1.
  - \e M, the maximum order of the sum stored as a 4-byte signed integer.
-   This must satisfy \e N >= \e M >= -1.
+   This must satisfy \e N &ge; \e M &ge; &minus;1.
  - \e C<sub>\e nm</sub>, the coefficients of the cosine coefficients of
    the sum in column (i.e., \e m) major order.  There are (\e M + 1)
    (2\e N - \e M + 2) / 2 elements which are stored as IEEE doubles (8
@@ -1995,9 +1996,10 @@ issues that I encountered using the NGA code:
     Note too that the reference ellipsoid is no longer a level surface of
     the effective normal potential.
  -# Subroutine <code>radgrav</code> computes the ellipsoidal coordinate
-    \e beta incorrectly.  This leads to small errors in the deflection
-    of the vertical, \e xi and \e eta, when the height above the
-    ellipsoid, \e h, is non-zero (about 1e-7 arcsec at \e h = 400 km).
+    &beta; incorrectly.  This leads to small errors in the deflection
+    of the vertical, &xi; and &eta;, when the height above the
+    ellipsoid, \e h, is non-zero (about 10<sup>&minus;7</sup> arcsec at
+    \e h = 400 km).
  -# There are several expressions which will return inaccurate results
     due to cancellation.  For example, subroutine <code>grs</code>
     computes the flattening using \e f = 1 - sqrt(1 -
@@ -2010,7 +2012,7 @@ issues that I encountered using the NGA code:
     expressions, it's preferable to do so.
  -# hsynth_WGS84 returns an "undefined" value for \e xi and \e eta at the
     poles.  Better would be to return the value obtained by taking the
-    limit \e lat -> +/- 90<sup>o</sup>.
+    limit \e lat -> +/- 90&deg;.
  .
 Issues 1&ndash;4 have been reported to the authors of hsynth_WGS84.
 Issue 1 is peculiar to Fortran and is not encountered in C++ code and
@@ -2033,7 +2035,7 @@ hsynth_WGS84 closely because most users of EGM2008 use the gridded data
 generated by this code (e.g., GeographicLib::Geoid) and it is desirable
 to use a consistent definition of the geoid height.
  - The model potential is band limited; the minimum wavelength that is
-   represented is 360<sup>o</sup>/2160 = 10' (i.e., about 10NM or
+   represented is 360&deg;/2160 = 10' (i.e., about 10NM or
    18.5km).  The maximum degree for the spherical harmonic sum is 2190;
    however the model was derived using ellipsoidal harmonics of degree
    and order 2160 and the degree was increased to 2190 in order to
@@ -2121,19 +2123,22 @@ has (see
 TR8350.2</a>, table 3.1)
  - \e a = 6378137 m
  - \e f = 1/298.257223563
- - \e omega = 7292115e-11 rad s<sup>-1</sup>
- - \e GM = 3986004.418e8 m<sup>3</sup>/s<sup>2</sup>.
+ - &omega; = 7292115 &times; 10<sup>&minus;11</sup> rad
+   s<sup>&minus;1</sup>
+ - \e GM = 3986004.418 &times; 10<sup>8</sup> m<sup>3</sup>
+   s<sup>&minus;2</sup>.
  .
 The value of \e GM includes the mass of the atmosphere and so strictly
 only applies above the earth's atmosphere.  Near the surface of the
 earth, the value of \e g will be less (in absolute value) than the value
-predicted by these models by about \e delta \e g = (4 \e pi
-<i>G</i>/\e g) \e A = 8.552e-11 \e A m<sup>2</sup>/kg, where \e G is the
-gravitational constant, \e g is the earth's gravity, and \e A is the
-pressure of the atmosphere.  At sea level we have \e A = 101.3 kPa, and
-\e delta \e g = 8.7e-6 m s<sup>-2</sup>, approximately.  (In other words
-the effect is about 1 part in a million; by way of comparison, buoyancy
-effects are about 100 times larger.)
+predicted by these models by about &delta;\e g = (4&pi;<i>G</i>/\e
+g) \e A = 8.552 &times; 10<sup>&minus;11</sup> \e A m<sup>2</sup>/kg,
+where \e G is the gravitational constant, \e g is the earth's gravity,
+and \e A is the pressure of the atmosphere.  At sea level we have \e A =
+101.3 kPa, and &delta;\e g = 8.7 &times; 10<sup>&minus;6</sup> m
+s<sup>&minus;2</sup>, approximately.  (In other words the effect is
+about 1&nbsp;part in a million; by way of comparison, buoyancy effects
+are about 100 times larger.)
 
 \section gravityparallel Geoid heights on a multi-processor system
 
@@ -2143,7 +2148,7 @@ for example it takes about 78 ms to compute the geoid height at a single
 point.  There are two ways to speed up this computation:
  - Use a GeographicLib::GravityCircle to compute the geoid height at
    several points on a circle of latitude.  This reduces the cost per
-   point to about 92 us (a reduction by a factor of over 800).
+   point to about 92 &mu;s (a reduction by a factor of over 800).
  - Compute the values on several circles of latitude in parallel.  One
    of the simplest ways of doing this is with
    <a href="http://openmp.org"> OpenMP</a>; on an 8-processor system,
@@ -2384,17 +2389,17 @@ The coefficient file NAME.wmm.cof is a binary file in little endian
 order.  The first 8 bytes of this file must match the ID given in
 NAME.wmm.  This is followed by NumModels + 1 sets of spherical harmonic
 coefficients.  The first NumModels of these model the magnetic field at
-Epoch + \e i * DeltaEpoch for 0 <= \e i < NumModels.  The last set of
+Epoch + \e i * DeltaEpoch for 0 &le; \e i < NumModels.  The last set of
 coefficients model the rate of change of the magnetic field at Epoch +
-(NumModels - 1) * DeltaEpoch.  The format for each set of coefficients
+(NumModels &minus; 1) * DeltaEpoch.  The format for each set of coefficients
 is:
  - \e N, the maximum degree of the sum stored as a 4-byte signed integer.
-   This must satisfy \e N >= -1.
+   This must satisfy \e N &ge; &minus;1.
  - \e M, the maximum order of the sum stored as a 4-byte signed integer.
-   This must satisfy \e N >= \e M >= -1.
+   This must satisfy \e N &ge; \e M &ge; &minus;1.
  - \e C<sub>\e nm</sub>, the coefficients of the cosine coefficients of
    the sum in column (i.e., \e m) major order.  There are (\e M + 1)
-   (2\e N - \e M + 2) / 2 elements which are stored as IEEE doubles (8
+   (2\e N &minus; \e M + 2) / 2 elements which are stored as IEEE doubles (8
    bytes).  For example for \e N = \e M = 3, there are 10 coefficients
    arranged as
    <i>C</i><sub>00</sub>,
@@ -2409,7 +2414,7 @@ is:
    <i>C</i><sub>33</sub>.
  - \e S<sub>\e nm</sub>, the coefficients of the sine coefficients of
    the sum in column (i.e., \e m) major order starting at \e m = 1.
-   There are \e M (2\e N - \e M + 1) / 2 elements which are stored as
+   There are \e M (2\e N &minus; \e M + 1) / 2 elements which are stored as
    IEEE doubles (8 bytes).  For example for \e N = \e M = 3, there are 6
    coefficients arranged as
    <i>S</i><sub>11</sub>,
@@ -2474,6 +2479,10 @@ equidistant projection in terms of geodesics.  The
 <a href="GeodesicProj.1.html">GeodesicProj</a> utility provides an
 interface to these projections.
 
+Go to
+ - \ref testgeod
+ - \ref geodseries
+
 References
  - F. W. Bessel,
    <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation
@@ -2490,17 +2499,13 @@ References
    The Area under the Geodesic,
    Survey Review 30 (232), 61&ndash;66 (1989).
  - C. F. F. Karney,
-   <a href="http://arxiv.org/abs/1102.1215v1">
-   Geodesics on an ellipsoid of revolution</a>,
-   Feb. 2011; preprint
-   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>;
+   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   Algorithms for geodesics</a>,
+   J. Geodesy, 2012;
+   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   10.1007/s00190-012-0578-z</a>;
    resource page
    <a href="http://geographiclib.sf.net/geod.html">geod.html</a>.
- - C. F. F. Karney,
-   <a href="http://arxiv.org/abs/1109.4448">
-   Algorithms for geodesics</a>,
-   Sept. 2011, preprint
-   <a href="http://arxiv.org/abs/1109.4448">arXiv:1109.4448</a>.
  - A collection of some papers on geodesics is available at
    http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
 
@@ -2520,27 +2525,29 @@ Each line of the test set gives 10 space delimited numbers
  - latitude for point 1, \e lat1 (degrees, exact)
  - longitude for point 1, \e lon1 (degrees, always 0)
  - azimuth for point 1, \e azi1 (clockwise from north in degrees, exact)
- - latitude for point 2, \e lat2 (degrees, accurate to 10<sup>-18</sup> deg)
- - longitude for point 2, \e lon2 (degrees, accurate to 10<sup>-18</sup> deg)
- - azimuth for point 2, \e azi2 (degrees, accurate to 10<sup>-18</sup> deg)
+ - latitude for point 2, \e lat2 (degrees, accurate to
+   10<sup>&minus;18</sup> deg)
+ - longitude for point 2, \e lon2 (degrees, accurate to
+   10<sup>&minus;18</sup> deg)
+ - azimuth for point 2, \e azi2 (degrees, accurate to
+   10<sup>&minus;18</sup> deg)
  - geodesic distance from point 1 to point 2, \e s12 (meters, exact)
  - arc distance on the auxiliary sphere, \e a12 (degrees, accurate to
-   10<sup>-18</sup> deg)
+   10<sup>&minus;18</sup> deg)
  - reduced length of the geodesic, \e m12 (meters, accurate to 0.1 pm)
  - the area under the geodesic, \e S12 (m<sup>2</sup>, accurate to
    1 mm<sup>2</sup>)
  .
 These are computed using as direct geodesic calculations with the given
 \e lat1, \e lon1, \e azi1, and \e s12.  The distance \e s12 always
-corresponds to an arc length \e a12 <= 180<sup>o</sup>, so the given
+corresponds to an arc length \e a12 &le; 180&deg;, so the given
 geodesics give the shortest paths from point 1 to point 2.  For
 simplicity and without loss of generality, \e lat1 is chosen in
-[0<sup>o</sup>, 90<sup>o</sup>], \e lon1 is taken to be zero, \e azi1 is
-chosen in [0<sup>o</sup>, 180<sup>o</sup>].  Furthermore, \e lat1 and \e
-azi1 are taken to be multiples of 10<sup>-12</sup> deg and \e s12 is a
-multiple of 0.1 um in [0 m, 20003931.4586254 m].  This results \e lon2
-in [0<sup>o</sup>, 180<sup>o</sup>] and \e azi2 in [0<sup>o</sup>,
-180<sup>o</sup>].
+[0&deg;, 90&deg;], \e lon1 is taken to be zero, \e azi1 is
+chosen in [0&deg;, 180&deg;].  Furthermore, \e lat1 and \e
+azi1 are taken to be multiples of 10<sup>&minus;12</sup> deg and \e s12
+is a multiple of 0.1 um in [0 m, 20003931.4586254 m].  This results \e
+lon2 in [0&deg;, 180&deg;] and \e azi2 in [0&deg;, 180&deg;].
 
 The direct calculation uses an expansion of the geodesic equations
 accurate to <i>f</i><sup>30</sup> (approximately 1 part in 10<sup>50</sup>)
@@ -2557,7 +2564,7 @@ The contents of the file are as follows:
  - 50000 entries with both ends near opposite poles
  - 50000 entries which are nearly meridional
  - 50000 entries which are nearly equatorial
- - 50000 entries running between vertices (\e azi1 = \e azi2 = 90<sup>o</sup>)
+ - 50000 entries running between vertices (\e azi1 = \e azi2 = 90&deg;)
  - 50000 entries ending close to vertices
  .
 (a total of 500000 entries).  The values for \e s12 for the geodesics
@@ -2600,40 +2607,41 @@ up to 8.  (If using long doubles, with a 64-bit fraction, the default
 order is 7.)  The series expanded to order <i>f</i><sup>30</sup> are
 given in <a href="geodseries30.html"> geodseries30.html</a>.
 
-In the formulas below ^ indicates exponentiation (\e f^3 = \e f*\e f*\e
-f) and / indicates real division (3/5 = 0.6).  The equations need to be
-converted to Horner form, but are here left in expanded form so that
-they can be easily truncated to lower order.  These expansions were
-obtained using the Maxima code, <a href="geod.mac">geod.mac</a>.
+In the formulas below ^ indicates exponentiation (\e f^3 =
+<i>f</i><sup>3</sup>) and / indicates real division (3/5 = 0.6).  The
+equations need to be converted to Horner form, but are here left in
+expanded form so that they can be easily truncated to lower order.
+These expansions were obtained using the Maxima code, <a
+href="geod.mac">geod.mac</a>.
 
 In the expansions below, we have
- - \e alpha is the azimuth
- - <i>alpha</i><sub>0</sub> is the azimuth at the equator crossing
- - \e lambda is the longitude measured from the equator crossing
- - \e omega is the spherical longitude
- - \e sigma is the spherical arc length
+ - &alpha; is the azimuth
+ - &alpha;<sub>0</sub> is the azimuth at the equator crossing
+ - &lambda; is the longitude measured from the equator crossing
+ - &omega; is the spherical longitude
+ - &sigma; is the spherical arc length
  - \e a is the equatorial radius
  - \e b is the polar semi-axis
  - \e f is the flattening
- - <i>e</i><sup>2</sup> = \e f (2 - \e f)
- - <i>e'</i><sup>2</sup> = <i>e</i><sup>2</sup>/(1 - <i>e</i><sup>2</sup>)
+ - <i>e</i><sup>2</sup> = \e f (2 &minus; \e f)
+ - <i>e'</i><sup>2</sup> = <i>e</i><sup>2</sup>/(1 &minus; <i>e</i><sup>2</sup>)
  - <i>k</i><sup>2</sup> = <i>e'</i><sup>2</sup> cos<sup>2</sup>
-   <i>alpha</i><sub>0</sub> = 4 \e eps / (1 - \e eps)<sup>2</sup>
- - \e n = \e f / (2 - \e f)
+   &alpha;<sub>0</sub> = 4 \e eps / (1 &minus; \e eps)<sup>2</sup>
+ - \e n = \e f / (2 &minus; \e f)
  - <i>c</i><sup>2</sup> = <i>a</i><sup>2</sup>/2 +
-   <i>b</i><sup>2</sup>/2 (tanh<sup>-1</sup> \e e)/\e e
+   <i>b</i><sup>2</sup>/2 (tanh<sup>&minus;1</sup> \e e)/\e e
  - \e ep2 = <i>e'</i><sup>2</sup>
  - \e k2 = <i>k</i><sup>2</sup>
 
 The formula for distance is
 
-&nbsp; &nbsp; <i>s</i>/\e b = \e I1(\e sigma)
+&nbsp; &nbsp; <i>s</i>/\e b = I1(&sigma;)
 
 where
 
-&nbsp; &nbsp; \e I1(\e sigma) = \e A1 (\e sigma + \e B1(\e sigma))<br>
-&nbsp; &nbsp; \e B1(\e sigma) =
-sum<sub>\e j = 1</sub> \e C1<sub>j</sub> sin(2 \e j \e sigma)
+&nbsp; &nbsp; I1(&sigma;) = A1 (&sigma; + B1(&sigma;))<br>
+&nbsp; &nbsp; B1(&sigma;) =
+&sum;<sub> <i>j</i>=1</sub> C1<sub>\e j</sub> sin(2 \e j &sigma;)
 
 and
 
@@ -2678,11 +2686,11 @@ C1[9] = - 715/589824 * eps^9;
 C1[10] = - 2431/2621440 * eps^10;
 \endverbatim
 
-The function \e tau(\e sigma) = <i>s</i>/(\e b \e A1) = \e sigma + \e B1(\e
-sigma) may be inverted by series reversion giving
+The function &tau;(&sigma;) = <i>s</i>/(\e b A1) = &sigma; + B1(&sigma;)
+may be inverted by series reversion giving
 
-&nbsp; &nbsp; \e sigma(\e tau) =
-\e tau + sum<sub>\e j = 1</sub> \e C1'<sub>j</sub> sin(2 \e j \e tau)
+&nbsp; &nbsp; &sigma;(&tau;) =
+&tau; + &sum;<sub> <i>j</i>=1</sub> C1'<sub>\e j</sub> sin(2 \e j &tau;)
 
 where
 
@@ -2722,22 +2730,22 @@ C1'[10] = + 9303339907/2972712960 * eps^10;
 The reduced length is given by
 
 &nbsp; &nbsp; <i>m</i>/\e b =
-sqrt(1 + <i>k</i><sup>2</sup> sin<sup>2</sup><i>sigma</i><sub>2</sub>)
-cos <i>sigma</i><sub>1</sub> sin <i>sigma</i><sub>2</sub><br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -
-sqrt(1 + <i>k</i><sup>2</sup> sin<sup>2</sup><i>sigma</i><sub>1</sub>)
-sin <i>sigma</i><sub>1</sub> cos <i>sigma</i><sub>2</sub><br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -
-cos <i>sigma</i><sub>1</sub>  cos <i>sigma</i><sub>2</sub>
-(\e J(<i>sigma</i><sub>2</sub>) - \e J(<i>sigma</i><sub>1</sub>))
+sqrt(1 + <i>k</i><sup>2</sup> sin<sup>2</sup>&sigma;<sub>2</sub>)
+cos &sigma;<sub>1</sub> sin &sigma;<sub>2</sub><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &minus;
+sqrt(1 + <i>k</i><sup>2</sup> sin<sup>2</sup>&sigma;<sub>1</sub>)
+sin &sigma;<sub>1</sub> cos &sigma;<sub>2</sub><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &minus;
+cos &sigma;<sub>1</sub>  cos &sigma;<sub>2</sub>
+(\e J(&sigma;<sub>2</sub>) &minus; \e J(&sigma;<sub>1</sub>))
 
 where
 
-&nbsp; &nbsp; \e J(\e sigma) =
-\e I1(\e sigma) - \e I2(\e sigma)<br>
-&nbsp; &nbsp; \e I2(\e sigma) = \e A2 (\e sigma + \e B2(\e sigma))<br>
-&nbsp; &nbsp; \e B2(\e sigma) =
-sum<sub>\e j = 1</sub> \e C2<sub>j</sub> sin(2 \e j \e sigma)
+&nbsp; &nbsp; \e J(&sigma;) =
+I1(&sigma;) &minus; I2(&sigma;)<br>
+&nbsp; &nbsp; I2(&sigma;) = A2 (&sigma; + B2(&sigma;))<br>
+&nbsp; &nbsp; B2(&sigma;) =
+&sum;<sub> <i>j</i>=1</sub> C2<sub>\e j</sub> sin(2 \e j &sigma;)
 
 \verbatim
 A2 = (1 + 1/4 * eps^2
@@ -2783,13 +2791,13 @@ C2[10] = + 46189/2621440 * eps^10;
 The longitude is given in terms of the spherical longitude by
 
 &nbsp; &nbsp;
-\e lambda = \e omega - \e f sin <i>alpha</i><sub>0</sub> \e I3(\e sigma)
+&lambda; = &omega; &minus; \e f sin &alpha;<sub>0</sub> I3(&sigma;)
 
 where
 
-&nbsp; &nbsp; \e I3(\e sigma) = \e A3 (\e sigma + \e B3(\e sigma))<br>
-&nbsp; &nbsp; \e B3(\e sigma) =
-sum<sub>\e j = 1</sub> \e C3<sub>j</sub> sin(2 \e j \e sigma)
+&nbsp; &nbsp; I3(&sigma;) = A3 (&sigma; + B3(&sigma;))<br>
+&nbsp; &nbsp; B3(&sigma;) =
+&sum;<sub> <i>j</i>=1</sub> C3<sub>\e j</sub> sin(2 \e j &sigma;)
 
 and
 
@@ -2854,19 +2862,19 @@ C3[9] = + 2431/1179648 * eps^9;
 \endverbatim
 
 The formula for area between the geodesic and the equator is given in
-Sec. 15 of
-<a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>
-in terms of \e S,
+Sec. 6 of
+<a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+Algorithms for geodesics</a> in terms of \e S,
 
 &nbsp; &nbsp;
-\e S = <i>c</i><sup>2</sup> \e alpha + <i>e</i><sup>2</sup>
-<i>a</i><sup>2</sup> cos <i>alpha</i><sub>0</sub> sin
-<i>alpha</i><sub>0</sub> \e I4(\e sigma)
+\e S = <i>c</i><sup>2</sup> &alpha; + <i>e</i><sup>2</sup>
+<i>a</i><sup>2</sup> cos &alpha;<sub>0</sub> sin
+&alpha;<sub>0</sub> I4(&sigma;)
 
 where
 
-&nbsp; &nbsp; \e I4(\e sigma) =
-sum<sub>\e j = 0</sub> \e C4<sub>j</sub> cos((2\e j + 1) \e sigma)
+&nbsp; &nbsp; I4(&sigma;) =
+&sum;<sub> <i>j</i>=0</sub> C4<sub>\e j</sub> cos((2\e j + 1) &sigma;)
 
 with
 
@@ -2946,6 +2954,10 @@ of the transverse Mercator projection.  The
  <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
 utility provides an interface to these classes.
 
+Go to
+ - \ref testmerc
+ - \ref tmseries
+
 References
  - L. Kr&uuml;ger,
    <a href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
@@ -2987,7 +2999,7 @@ A test set for the transverse Mercator projection is available at
 This is about 17 MB (compressed).  This test set consists of a set of
 geographic coordinates together with the corresponding transverse
 Mercator coordinates.  The WGS84 ellipsoid is used, with central
-meridian 0<sup>o</sup>, central scale factor 0.9996 (the UTM value),
+meridian 0&deg;, central scale factor 0.9996 (the UTM value),
 false easting = false northing = 0 m.
 
 Each line of the test set gives 6 space delimited numbers
@@ -2995,11 +3007,11 @@ Each line of the test set gives 6 space delimited numbers
  - longitude (degrees, exact &mdash; see below)
  - easting (meters, accurate to 0.1 pm)
  - northing (meters, accurate to 0.1 pm)
- - meridian convergence (degrees, accurate to 10<sup>-18</sup> deg)
- - scale (accurate to 10<sup>-20</sup>)
+ - meridian convergence (degrees, accurate to 10<sup>&minus;18</sup> deg)
+ - scale (accurate to 10<sup>&minus;20</sup>)
  .
-The latitude and longitude are all multiples of 10<sup>-12</sup> deg and
-should be regarded as exact, except that longitude =
+The latitude and longitude are all multiples of 10<sup>&minus;12</sup>
+deg and should be regarded as exact, except that longitude =
 82.63627282416406551 should be interpreted as exactly 90 (1 - \e e)
 degrees.  These results are computed using Lee's formulas with
 <a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
@@ -3016,22 +3028,23 @@ The contents of the file are as follows:
  - 1000 entries randomly distributed on lat = 0, lon in [0, 90];
  - 1000 entries randomly distributed on lat in [0, 90], lon = 90;
  - 1000 entries close to lat = 90 with lon in [0, 90];
- - 1000 entries close to lat = 0, lon = 0 with lat >= 0, lon >= 0;
- - 1000 entries close to lat = 0, lon = 90 with lat >= 0, lon <= 90;
- - 2000 entries close to lat = 0, lon = 90 (1 - \e e) with lat >= 0;
+ - 1000 entries close to lat = 0, lon = 0 with lat &ge; 0, lon &ge; 0;
+ - 1000 entries close to lat = 0, lon = 90 with lat &ge; 0, lon &le; 90;
+ - 2000 entries close to lat = 0, lon = 90 (1 &minus; \e e) with lat &ge; 0;
  - 25000 entries randomly distributed in lat
-   in [-89, 0], lon in [90 (1 - \e e), 90];
- - 1000 entries randomly distributed on lat in [-89, 0], lon = 90;
- - 1000 entries randomly distributed on lat in [-89, 0], lon = 90 (1 - \e e);
- - 1000 entries close to lat = 0, lon = 90 (lat < 0, lon <= 90);
- - 1000 entries close to lat = 0, lon = 90 (1 - \e e)
-   (lat < 0, lon <= 90 (1 - \e e));
+   in [&minus;89, 0], lon in [90 (1 &minus; \e e), 90];
+ - 1000 entries randomly distributed on lat in [&minus;89, 0], lon = 90;
+ - 1000 entries randomly distributed on lat in [&minus;89, 0], lon = 90
+   (1 &minus; \e e);
+ - 1000 entries close to lat = 0, lon = 90 (lat < 0, lon &le; 90);
+ - 1000 entries close to lat = 0, lon = 90 (1 &minus; \e e)
+   (lat < 0, lon &le; 90 (1 &minus; \e e));
  .
-(a total of 287000 entries).  The entries for lat < 0<sup>o</sup> and
-lon in [90<sup>o</sup> (1 - \e e), 90<sup>o</sup>] use the "extended"
+(a total of 287000 entries).  The entries for lat < 0&deg; and
+lon in [90&deg; (1 &minus; \e e), 90&deg;] use the "extended"
 domain for the transverse Mercator projection explained in Sec. 5 of
 <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.  The first
-258000 entries have lat >= 0<sup>o</sup> and are suitable for testing
+258000 entries have lat &ge; 0&deg; and are suitable for testing
 implementations following the standard convention.
 
 \section tmseries Series approximation for transverse Mercator
@@ -3061,7 +3074,7 @@ be included as double literals.
                      + 49/65536 * n^10);
 \endverbatim
 
-\e gamma in Kr&uuml;ger, p. 21, eq. (41)
+&gamma; in Kr&uuml;ger, p. 21, eq. (41)
 \verbatim
 alpha[1] =   1/2 * n
            - 2/3 * n^2
@@ -3120,7 +3133,7 @@ alpha[9] =   21091646195357/6080126976000 * n^9
 alpha[10]=   77911515623232821/12014330904576000 * n^10;
 \endverbatim
 
-\e beta in Kr&uuml;ger, p. 18, eq. (26*)
+&beta; in Kr&uuml;ger, p. 18, eq. (26*)
 \verbatim
  beta[1] =   1/2 * n
            - 2/3 * n^2
@@ -3179,7 +3192,7 @@ alpha[10]=   77911515623232821/12014330904576000 * n^10;
  beta[10]=   7028504530429621/72085985427456000 * n^10;
 \endverbatim
 
-The high-order expansions for \e alpha and \e beta were produced by the
+The high-order expansions for &alpha; and &beta; were produced by the
 Maxima program <a href="tmseries.mac">tmseries.mac</a> (included in the
 distribution).  To run, start Maxima and enter
 \verbatim
@@ -3226,7 +3239,7 @@ The problems encountered near the center of the ellipsoid are:
    round-off errors.
  - Some of the equations result in a large loss of accuracy due to
    subtracting nearly equal quantities.  E.g., \e k= sqrt(\e u + \e v +
-   <i>w</i><sup>2</sup>) - \e w is inaccurate if \e u + \e v is small;
+   <i>w</i><sup>2</sup>) &minus; \e w is inaccurate if \e u + \e v is small;
    we can fix this by writing \e k = (\e u + \e v)/(sqrt(\e u + \e v +
    <i>w</i><sup>2</sup>) + \e w).
 
@@ -3236,7 +3249,7 @@ doubles for the WGS84 parameters).  Generate random (long double)
 geodetic coordinates (\e lat0, \e lon0, \e h0) and use the "long double"
 WGS84.Forward to obtain the corresponding (long double) geocentric
 coordinates (\e x0, \e y0, \e z0).  [We restrict \e h0 so that
-\e h0 >= - \e a (1 - <i>e</i><sup>2</sup>) / sqrt(1 -
+\e h0 &ge; &minus; \e a (1 &minus; <i>e</i><sup>2</sup>) / sqrt(1 &minus;
 <i>e</i><sup>2</sup> sin<sup>2</sup>\e lat0), which ensures that (\e
 lat0, \e lon0, \e h0) is the principal geodetic inverse of (\e x0, \e
 y0, \e z0).]  Because the forward calculation is numerically stable and
@@ -3246,9 +3259,10 @@ test data as exact.
 
 Apply the double version of WGS84.Reverse to (\e x0, \e y0, \e z0) to
 compute the approximate geodetic coordinates (\e lat1, \e lon1, \e h1).
-Convert (\e lat1 - \e lat0, \e lon1 - \e lon0) to a distance, \e ds, on the
-surface of the ellipsoid and define \e err = hypot(\e ds, \e h1 - \e h0).
-For |\e h0| < 5000 km, we have \e err < 7 nm (7 nanometers).
+Convert (\e lat1 &minus; \e lat0, \e lon1 &minus; \e lon0) to a
+distance, \e ds, on the surface of the ellipsoid and define \e err =
+hypot(\e ds, \e h1 &minus; \e h0).  For |\e h0| < 5000 km, we have \e
+err < 7 nm (7 nanometers).
 
 This methodology is not very useful very far from the globe, because the
 absolute errors in the approximate geodetic height become large, or
@@ -3265,12 +3279,12 @@ geodetic latitude becomes 7.45", a distance of 229 m from the equator.
 In light of this, Reverse does quite well in this vicinity.
 
 To obtain a practical measure of the error for the general case we define
-- <i>err</i><sub>h</sub> = |\e h1 - \e h0| / max(1, \e h0 / \e a)
+- <i>err</i><sub>h</sub> = |\e h1 &minus; \e h0| / max(1, \e h0 / \e a)
 - for \e h0 > 0, <i>err</i><sub>out</sub> = \e ds
-- for \e h0 < 0, apply the long double version of WGS84.Forward to (\e lat1,
-  \e lon1, \e h1) to give (\e x1, \e y1, \e z1) and compute
-  <i>err</i><sub>in</sub> = hypot(\e x1 - \e x0, \e y1 - \e y0, \e z1 - \e
-  z0).
+- for \e h0 < 0, apply the long double version of WGS84.Forward to (\e
+  lat1, \e lon1, \e h1) to give (\e x1, \e y1, \e z1) and compute
+  <i>err</i><sub>in</sub> = hypot(\e x1 &minus; \e x0, \e y1 &minus; \e
+  y0, \e z1 &minus; \e z0).
 .
 We then find <i>err</i><sub>h</sub> < 8 nm, <i>err</i><sub>out</sub> < 4 nm,
 and <i>err</i><sub>in</sub> < 7 nm.  (1 nm = 1 nanometer.)
@@ -3317,7 +3331,37 @@ Older versions are in
 <a href="http://sf.net/projects/geographiclib/files/distrib/archive/">
 http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
- - Version 1.22 (released 2012-05-27)
+The corresponding documentation for these versions is obtained by
+clicking on the "Version m.nn" links below.  Some of the links in the
+documentaion of older versions may be out of date (in particular the
+links for the source code will not work if the code has been migrated to
+the archive subdirectory).
+
+ - <a href="http://geographiclib.sf.net/1.23">Version 1.23</a>
+   (released 2012-mm-dd)
+  - Documentation changes:
+    - remove html documentation from distribution and use web links if
+      doxygen is not available;
+    - use doxygen tags to document exceptions;
+    - begin migrating the documentation to using Greek letters where
+      appropriate (requires doxygen 1.8.1.2 or later).
+  - Add GeographicLib::Math::AngNormalize and
+    GeographicLib::Math::AngNormalize2; the allowed range for longitudes
+    and azimuths widened to [&minus;540&deg;, 540&deg;).
+  - GeographicLib::DMS::Decode understands more unicode symbols.
+  - GeographicLib::Geohash uses geohash code "nan" to stand for not a
+    number.
+  - Add GeographicLib::Ellipsoid::NormalCurvatureRadius.
+  - Various fixes in GeographicLib::LambertConformalConic,
+    GeographicLib::TransverseMercator,
+    GeographicLib::PolarStereographic, and GeographicLib::Ellipsoid to
+    handle reverse projections of points near infinity.
+  - Fix programming blunder in GeographicLib::LambertConformalConic::Forward
+    (incorrect results were returned if the tangent latitude was
+    negative).
+
+ - <a href="http://geographiclib.sf.net/1.22">Version 1.22</a>
+   (released 2012-05-27)
   - Add GeographicLib::Geohash and GeographicLib::Ellipsoid classes.
   - Fix bug in GeographicLib::AlbersEqualArea for very prolate
     ellipsoids (<i>b</i><sup>2</sup> > 2 <i>a</i><sup>2</sup>).
@@ -3334,7 +3378,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
       CMAKE_INSTALL_PREFIX;
     - add a cmake configuration for build tree.
 
- - Version 1.21 (released 2012-04-25)
+ - <a href="http://geographiclib.sf.net/1.21">Version 1.21</a>
+   (released 2012-04-25)
   - Support colon-separated DMS output:
     - GeographicLib::DMS::Encode and
       GeographicLib::GeoCoords::DMSRepresentation generalized;
@@ -3352,7 +3397,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - allow the Matlab compiler to be specified with the
       MATLAB_COMPILER option.
 
- - Version 1.20 (released 2012-03-23)
+ - <a href="http://geographiclib.sf.net/1.20">Version 1.20</a>
+   (released 2012-03-23)
   - cmake tweaks:
     - improve find_package's matching of compiler versions;
     - CMAKE_INSTALL_PREFIX set from CMAKE_PREFIX_PATH if available;
@@ -3362,7 +3408,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     checking by Visual Studio.
   - Fix transcription BUG is Geodesic.js.
 
- - Version 1.19 (released 2012-03-13)
+ - <a href="http://geographiclib.sf.net/1.19">Version 1.19</a>
+   (released 2012-03-13)
   - Slight improvement in GeographicLib::Geodesic::Inverse for very
     short lines.
   - Fix argument checking tests in GeographicLib::MGRS::Forward.
@@ -3371,13 +3418,15 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Add installer for 64-bit Windows; the compiled Matlab interface is
     supplied with the Windows 64-bit installer only.
 
- - Version 1.18 (released 2012-02-18)
+ - <a href="http://geographiclib.sf.net/1.18">Version 1.18</a>
+   (released 2012-02-18)
   - Improve documentation on configuration with cmake.
   - cmake's find_package ensures that the compiler versions match on Windows.
   - Improve documentation on compiling Matlab interface.
   - Binary installer for Windows installs under C:/pkg-vc10 by default.
 
- - Version 1.17 (released 2012-01-21)
+ - <a href="http://geographiclib.sf.net/1.17">Version 1.17</a>
+   (released 2012-01-21)
   - Work around optimization BUG in GeographicLib::Geodesic::Inverse
     with g++ version 4.4.0 (mingw).
   - Fix BUG in argument checking with GeographicLib::OSGB::GridReference.
@@ -3385,7 +3434,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Add simple examples of usage for each class.
   - Add internal documentation to the cmake configuration files.
 
- - Version 1.16 (released 2011-12-07)
+ - <a href="http://geographiclib.sf.net/1.16">Version 1.16</a>
+   (released 2011-12-07)
   - Add calculation of the earth's gravitational field:
     - add GeographicLib::NormalGravity GeographicLib::GravityModel and
        GeographicLib::GravityCircle classes;
@@ -3418,7 +3468,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - default height to zero in
       <a href="MagneticField.1.html">MagneticField</a>.
 
- - Version 1.15 (released 2011-11-08)
+ - <a href="http://geographiclib.sf.net/1.15">Version 1.15</a>
+   (released 2011-11-08)
   - Add calculation of the earth's magnetic field:
     - add GeographicLib::MagneticModel and GeographicLib::MagneticCircle
       classes;
@@ -3440,7 +3491,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     install setup.py for non-Windows systems.
   - Include Doxygen tag file in distribution as doc/html/Geographic.tag.
 
- - Version 1.14 (released 2011-09-30)
+ - <a href="http://geographiclib.sf.net/1.14">Version 1.14</a>
+   (released 2011-09-30)
   - Ensure that geographiclib-config.cmake is relocatable.
   - Allow more unicode symbols to be used in GeographicLib::DMS::Decode.
   - Modify <a href="GeoidEval.1.html">GeoidEval</a> so that it can be
@@ -3454,7 +3506,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Supply a minimal Qt qmake project file for library
     src/Geographic.pro.
 
- - Version 1.13 (released 2011-08-13)
+ - <a href="http://geographiclib.sf.net/1.13">Version 1.13</a>
+   (released 2011-08-13)
   - Changes to I/O:
     - allow : (colon) to be used as a DMS separator in
       GeographicLib::DMS::Decode(const std::string&, flag&);
@@ -3482,7 +3535,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
       geographiclib-config.cmake;
     - better support for building a shared library under Windows.
 
- - Version 1.12 (released 2011-07-21)
+ - <a href="http://geographiclib.sf.net/1.12">Version 1.12</a>
+   (released 2011-07-21)
   - Change license to MIT/X11.
   - Add GeographicLib::PolygonArea class and equivalent Matlab function.
   - Provide Javascript and Python implementations of geodesic routines.
@@ -3493,7 +3547,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - A couple of code changes to enable compilation with Visual
     Studio 2003.
 
- - Version 1.11 (released 2011-06-27)
+ - <a href="http://geographiclib.sf.net/1.11">Version 1.11</a>
+   (released 2011-06-27)
   - Changes to <a href="Planimeter.1.html">Planimeter</a>:
     - add -l flag to <a href="Planimeter.1.html">Planimeter</a> for polyline
       calculations;
@@ -3503,7 +3558,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     by default; however the -f flag still reports this and in addition
     gives the geodesic scales and the geodesic area.
   - FIX BUGS (compiler-specific) in inverse geodesic calculations.
-  - FIX BUG: accommodate tellg() returning -1 at end of string.
+  - FIX BUG: accommodate tellg() returning &minus;1 at end of string.
   - Change way flattening of the ellipsoid is specified:
     - constructors take \e f argument which is taken to be the
       flattening if \e f &lt; 1 and the inverse flattening otherwise
@@ -3519,7 +3574,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - InverseFlattening() has been deprecated (and now returns inf for a
       sphere, instead of 0).
 
- - Version 1.10 (released 2011-06-11)
+ - <a href="http://geographiclib.sf.net/1.10">Version 1.10</a>
+   (released 2011-06-11)
   - Improvements to Matlab/Octave interface:
     - add {geocentric,localcartesian}{forward,reverse};
     - make geographiclibinterface more general;
@@ -3531,7 +3587,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - cmake installed in man/man1 instead of share/man/man1;
     - cmake did not set the rpath on the tools.
 
- - Version 1.9 (released 2011-05-28)
+ - <a href="http://geographiclib.sf.net/1.9">Version 1.9</a>
+   (released 2011-05-28)
   - FIX BUG in area returned by
     <a href="Planimeter.1.html">Planimeter</a> for pole encircling polygons.
   - FIX BUG in error message reported when DMS::Decode reads the string
@@ -3560,7 +3617,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     <a href="http://geographiclib.git.sf.net/git/gitweb-index.cgi">
     git</a>.
 
- - Version 1.8 (released 2011-02-22)
+ - <a href="http://geographiclib.sf.net/1.8">Version 1.8</a>
+   (released 2011-02-22)
   - Optionally return rotation matrix from GeographicLib::Geocentric and
     GeographicLib::LocalCartesian.
   - For the \ref utilities, supply man pages, -h prints the synopsis,
@@ -3579,7 +3637,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Remove documentation that duplicates papers on transverse Mercator
     and geodesics.
 
- - Version 1.7 (released 2010-12-21)
+ - <a href="http://geographiclib.sf.net/1.7">Version 1.7</a>
+   (released 2010-12-21)
   - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.
   - Add GeographicLib::AlbersEqualArea projection.
   - Library created by Visual Studio is Geographic.lib instead of
@@ -3589,11 +3648,13 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Add solution/project files for Visual Studio 2010 (32-bit only).
   - Use C++11 static_assert and math functions, if available.
 
- - Version 1.6 (released 2010-11-23)
+ - <a href="http://geographiclib.sf.net/1.6">Version 1.6</a>
+   (released 2010-11-23)
   - FIX BUG introduced in GeographicLib::Geoid in version 1.5 (found by
     Dave Edwards).
 
- - Version 1.5 (released 2010-11-19)
+ - <a href="http://geographiclib.sf.net/1.5">Version 1.5</a>
+   (released 2010-11-19)
   - Improve area calculations for small polygons.
   - Add -s and -r flags to <a href="Planimeter.1.html">Planimeter</a>.
   - Improve the accuracy of GeographicLib::LambertConformalConic using
@@ -3618,7 +3679,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - fixes to compile under cygwin;
     - tweak expression used to find latitude from conformal latitude.
 
- - Version 1.4 (released 2010-09-12)
+ - <a href="http://geographiclib.sf.net/1.4">Version 1.4</a>
+   (released 2010-09-12)
   - Changes to GeographicLib::Geodesic and GeographicLib::GeodesicLine:
     - FIX BUG in Geodesic::Inverse with prolate ellipsoids;
     - add area computations to Geodesic::Direct and Geodesic::Inverse;
@@ -3648,7 +3710,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     classes which don't return the convergence (or azimuth) and scale.
   - Document function parameters and return values consistently.
 
- - Version 1.3 (released 2010-07-21)
+ - <a href="http://geographiclib.sf.net/1.3">Version 1.3</a>
+   (released 2010-07-21)
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the
     gnomonic projection.
   - Add -g and -e options to
@@ -3667,7 +3730,8 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Update references to Geotrans in MGRS documentation.
   - Speed up tmseries.mac.
 
- - Version 1.2 (released 2010-05-21)
+ - <a href="http://geographiclib.sf.net/1.2">Version 1.2</a>
+   (released 2010-05-21)
   - FIX BUGS in GeographicLib::Geodesic,
     - wrong azimuth returned by Direct if point 2 is on a pole;
     - Inverse sometimes fails with very close points.
@@ -3698,14 +3762,16 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - <a href="CartConvert.1.html">CartConvert</a> allows the ellipsoid
       to be specified with -e.
 
- - Version 1.1 (released 2010-02-09)
+ - <a href="http://geographiclib.sf.net/1.1">Version 1.1</a>
+   (released 2010-02-09)
   - FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).
   - Increase accuracy of scale calculation in TransverseMercator and
     TransverseMercatorExact.
   - Code and documentation changes for consistency with
     <a  href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>
 
- - Version 1.0 (released 2010-01-07)
+ - <a href="http://geographiclib.sf.net/1.0">Version 1.0</a>
+   (released 2010-01-07)
   - Add autoconf configuration files.
   - BUG FIX: Improve initial guess for Newton's method in
     PolarStereographic::Reverse.  (Previously this failed to converge
@@ -3728,7 +3794,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
       cached area without disk reads;
     - Add inspector functions to query the extent of the cache.
 
- - Version 2009-11
+ - <a href="http://geographiclib.sf.net/2009-11">Version 2009-11</a>
   - Allow specification of "closest UTM zone" in GeographicLib::UTMUPS
     and <a href="GeoConvert.1.html">GeoConvert</a> (via -t option).
   - Utilities now complain is there are too many tokens on input lines.
@@ -3742,7 +3808,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - Improve accuracy of inverse hyperbolic functions.
     - Fix the way GeographicLib::Math functions handle different precisions.
 
- - Version 2009-10
+ - <a href="http://geographiclib.sf.net/2009-10">Version 2009-10</a>
   - Change web site to http://geographiclib.sourceforge.net
   - Several house-cleaning changes:
     - Change from the a flat directory structure to a more easily
@@ -3763,11 +3829,11 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
       northings.
     - Add 64-bit targets in Visual Studio project files.
 
- - Version 2009-09
+ - <a href="http://geographiclib.sf.net/2009-09">Version 2009-09</a>
   - Add GeographicLib::Geoid and
     <a href="GeoidEval.1.html">GeoidEval</a> utility.
 
- - Version 2009-08
+ - <a href="http://geographiclib.sf.net/2009-08">Version 2009-08</a>
   - Add GeographicLib::CassiniSoldner class and
     <a href="GeodesicProj.1.html">EquidistantTest</a> utility.
   - Fix bug in GeographicLib::Geodesic::Inverse where NaNs were
@@ -3776,15 +3842,15 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     of the azimuthal scale instead of the reduced length.
   - Add -n option to <a href="GeoConvert.1.html">GeoConvert</a>.
 
- - Version 2009-07
+ - <a href="http://geographiclib.sf.net/2009-07">Version 2009-07</a>
   - Speed up the series inversion code in tmseries.mac and geod.mac.
   - Reference Borkowski in section on \ref geocentric.
 
- - Version 2009-06
+ - <a href="http://geographiclib.sf.net/2009-06">Version 2009-06</a>
   - Add routines to decode and encode zone+hemisphere to GeographicLib::UTMUPS.
   - Clean up code in GeographicLib::Geodesic.
 
- - Version 2009-05
+ - <a href="http://geographiclib.sf.net/2009-05">Version 2009-05</a>
   - Improvements to GeographicLib::Geodesic:
     - more economical series expansions,
     - return reduced length (as does the
@@ -3799,7 +3865,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     carefully.
   - Remove reference to defunct Constants.cpp from GeographicLib.vcproj.
 
- - Version 2009-04
+ - <a href="http://geographiclib.sf.net/2009-04">Version 2009-04</a>
   - Use compile-time constants to select the order of series in
     GeographicLib::TransverseMercator.
   - 2x unroll of Clenshaw summation to avoid data shuffling.
@@ -3815,7 +3881,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     - works with both oblate and prolate ellipsoids,
     - add -a, -e, -b options to the <a href="Geod.1.html">Geod</a> utility.
 
- - Version 2009-03
+ - <a href="http://geographiclib.sf.net/2009-03">Version 2009-03</a>
   - Add GeographicLib::Geodesic and the <a href="Geod.1.html">Geod</a> utility.
   - Declare when no exceptions are thrown by functions.
   - Minor changes to GeographicLib::DMS class.
@@ -3825,7 +3891,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     to <a href="CartConvert.1.html">CartConvert</a>.
   - Use inline functions to define constant doubles in Constants.hpp.
 
- - Version 2009-02
+ - <a href="http://geographiclib.sf.net/2009-02">Version 2009-02</a>
   - Fix documentation of constructors (flattening -> inverse
     flattening).
   - Use std versions of math functions.
@@ -3833,7 +3899,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
     and the ECEFConvert utility.
   - Gather the documentation on the \ref utilities onto one page.
 
- - Version 2009-01
+ - <a href="http://geographiclib.sf.net/2009-01">Version 2009-01</a>
   - First proper release of library.
   - More robust GeographicLib::TransverseMercatorExact:
     - Introduce \e extendp version of constructor,

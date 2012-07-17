@@ -2,14 +2,13 @@
  * \file Gnomonic.hpp
  * \brief Header for GeographicLib::Gnomonic class
  *
- * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GNOMONIC_HPP)
-#define GEOGRAPHICLIB_GNOMONIC_HPP \
-  "$Id: 8b845d9465a032fdd4b5991d9a02c65599d79deb $"
+#define GEOGRAPHICLIB_GNOMONIC_HPP 1
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
@@ -21,20 +20,13 @@ namespace GeographicLib {
    * \brief %Gnomonic projection
    *
    * %Gnomonic projection centered at an arbitrary position \e C on the
-   * ellipsoid.  This projection is derived in Section 13 of
+   * ellipsoid.  This projection is derived in Section 8 of
    * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
-   *   on an ellipsoid of revolution</a>,
-   *   Feb. 2011;
-   *   preprint
-   *   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
-   * .
-   * See also Section 8 of
-   * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1109.4448">Algorithms for geodesics</a>,
-   *   Sept. 2011;
-   *   preprint
-   *   <a href="http://arxiv.org/abs/1109.4448">arxiv:1109.4448</a>.
+   *   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   Algorithms for geodesics</a>,
+   *   J. Geodesy, 2012;
+   *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   10.1007/s00190-012-0578-z</a>.
    * .
    * The projection of \e P is defined as follows: compute the
    * geodesic line from \e C to \e P; compute the reduced length \e m12,
@@ -139,8 +131,9 @@ namespace GeographicLib {
      * @param[out] azi azimuth of geodesic at point (degrees).
      * @param[out] rk reciprocal of azimuthal scale at point.
      *
-     * \e lat0 and \e lat should be in the range [-90, 90] and \e lon0 and \e
-     * lon should be in the range [-180, 360].  The scale of the projection is
+     * \e lat0 and \e lat should be in the range [-90<sup>o</sup>,
+     * 90<sup>o</sup>] and \e lon0 and \e lon should be in the range
+     * [-540<sup>o</sup>, 540<sup>o</sup>).  The scale of the projection is
      * 1/<i>rk</i><sup>2</sup> in the "radial" direction, \e azi clockwise from
      * true north, and is 1/\e rk in the direction perpendicular to this.  If
      * the point lies "over the horizon", i.e., if \e rk <= 0, then NaNs are
@@ -164,16 +157,17 @@ namespace GeographicLib {
      * @param[out] azi azimuth of geodesic at point (degrees).
      * @param[out] rk reciprocal of azimuthal scale at point.
      *
-     * \e lat0 should be in the range [-90, 90] and \e lon0 should be in the
-     * range [-180, 360].  \e lat will be in the range [-90, 90] and \e lon
-     * will be in the range [-180, 180).  The scale of the projection is 1/\e
-     * rk<sup>2</sup> in the "radial" direction, \e azi clockwise from true
-     * north, and is 1/\e rk in the direction perpendicular to this.  Even
-     * though all inputs should return a valid \e lat and \e lon, it's possible
-     * that the procedure fails to converge for very large \e x or \e y; in
-     * this case NaNs are returned for all the output arguments.  A call to
-     * Reverse followed by a call to Forward will return the original (\e x, \e
-     * y) (to roundoff).
+     * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
+     * lon0 should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).  \e lat
+     * will be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e lon will
+     * be in the range [-180<sup>o</sup>, 180<sup>o</sup>).  The scale of the
+     * projection is 1/\e rk<sup>2</sup> in the "radial" direction, \e azi
+     * clockwise from true north, and is 1/\e rk in the direction perpendicular
+     * to this.  Even though all inputs should return a valid \e lat and \e
+     * lon, it's possible that the procedure fails to converge for very large
+     * \e x or \e y; in this case NaNs are returned for all the output
+     * arguments.  A call to Reverse followed by a call to Forward will return
+     * the original (\e x, \e y) (to roundoff).
      **********************************************************************/
     void Reverse(real lat0, real lon0, real x, real y,
                  real& lat, real& lon, real& azi, real& rk) const throw();

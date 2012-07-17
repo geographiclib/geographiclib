@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
-#define GEOGRAPHICLIB_GRAVITYMODEL_HPP \
-  "$Id: e1a573fb0148fa5bc408b2dbdb096d4cd3091bac $"
+#define GEOGRAPHICLIB_GRAVITYMODEL_HPP 1
 
 #include <string>
 #include <sstream>
@@ -21,8 +20,8 @@
 
 #if defined(_MSC_VER)
 // Squelch warnings about dll vs vector
-#pragma warning (push)
-#pragma warning (disable: 4251)
+#  pragma warning (push)
+#  pragma warning (disable: 4251)
 #endif
 
 namespace GeographicLib {
@@ -166,12 +165,15 @@ namespace GeographicLib {
      *
      * @param[in] name the name of the model.
      * @param[in] path (optional) directory for data file.
+     * @exception GeographicErr if the data file cannot be found, is
+     *   unreadable, or is corrupt.
+     * @exception std::bad_alloc if the memory necessary for storing the model
+     *   can't be allocated.
      *
      * A filename is formed by appending ".egm" (World Gravity Model) to the
      * name.  If \e path is specified (and is non-empty), then the file is
      * loaded from directory, \e path.  Otherwise the path is given by
-     * DefaultGravityPath().  This may throw an exception because the file does
-     * not exist, is unreadable, or is corrupt.
+     * DefaultGravityPath().
      *
      * This file contains the metadata which specifies the properties of the
      * model.  The coefficients for the spherical harmonic sums are obtained
@@ -389,6 +391,8 @@ namespace GeographicLib {
      * @param[in] h the height of the point above the ellipsoid (meters).
      * @param[in] caps bitor'ed combination of GravityModel::mask values
      *   specifying the capabilities of the resulting GravityCircle object.
+     * @exception std::bad_alloc if the memory necessary for creating a
+     *   GravityCircle can't be allocated.
      * @return a GravityCircle object whose member functions computes the
      *   gravitational field at a particular values of \e lon.
      *
@@ -508,7 +512,7 @@ namespace GeographicLib {
 } // namespace GeographicLib
 
 #if defined(_MSC_VER)
-#pragma warning (pop)
+#  pragma warning (pop)
 #endif
 
 #endif  // GEOGRAPHICLIB_GRAVITYMODEL_HPP

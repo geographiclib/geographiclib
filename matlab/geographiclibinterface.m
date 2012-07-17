@@ -29,11 +29,10 @@ function geographiclibinterface(incdir, libdir);
 %
 % Run 'mex -setup' to configure the C++ compiler for Matlab to use.
 %
-% Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+% Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
 % under the MIT/X11 License.  For more information, see
 % http://geographiclib.sf.net/html/other.html#matlab
-%
-% $Id: b277d1bf94adefbdb95fba08d5db4cc128b72e48 $
+
   funs = {'geodesicdirect', 'geodesicinverse', 'geodesicline', ...
           'geoidheight', ...
           'utmupsforward', 'utmupsreverse', ...
@@ -78,3 +77,4 @@ function geographiclibinterface(incdir, libdir);
     fprintf(' done.\n');
   end
 end
+ 

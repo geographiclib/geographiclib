@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::Math class
-// $Id: 04519bb67e82229a86ee23002ddc27a6b5bb2939 $
 
 #include <iostream>
 #include <exception>

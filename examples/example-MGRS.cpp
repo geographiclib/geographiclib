@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::MGRS class
-// $Id: 011e73554cd2851ef396442f1ec8392207b101c3 $
 
 #include <iostream>
 #include <exception>

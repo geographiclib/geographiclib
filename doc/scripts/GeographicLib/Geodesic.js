@@ -5,11 +5,9 @@
  * See the documentation for the C++ class.  The conversion is a literal
  * conversion from C++.
  *
- * Copyright (c) Charles Karney (2011, 2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
- *
- * $Id: d9a7879a3ff27db0b34f6c9fe3d8eaf8f90d1e29 $
  **********************************************************************/
 
 // Load AFTER Math.js
@@ -79,11 +77,6 @@ GeographicLib.GeodesicLine = {};
     return (sinp
             ? 2 * sinx * cosx * y0 // sin(2 * x) * y0
             : cosx * (y0 - y1));   // cos(x) * (y0 - y1)
-  }
-
-  g.AngNormalize = function(x) {
-    // Place angle in [-180, 180).  Assumes x is in [-540, 540).
-    return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
   }
 
   g.AngRound = function(x) {
@@ -622,8 +615,8 @@ GeographicLib.GeodesicLine = {};
   g.Geodesic.prototype.GenInverse = function(lat1, lon1, lat2, lon2, outmask) {
     var vals = {};
     outmask &= g.OUT_ALL;
-    lon1 = g.AngNormalize(lon1);
-    var lon12 = g.AngNormalize(g.AngNormalize(lon2) - lon1);
+    lon1 = m.AngNormalize(lon1);
+    var lon12 = m.AngNormalize(m.AngNormalize(lon2) - lon1);
     // If very close to being on the same meridian, then make it so.
     // Not sure this is necessary...
     lon12 = g.AngRound(lon12);

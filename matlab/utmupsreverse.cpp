@@ -15,8 +15,6 @@
 // mex -I../include -L../windows/Release
 //    -lGeographic utmupsreverse.cpp
 
-// $Id: 097c8ccdb535c826583b1d640d08e79bd1ad6c38 $
-
 #include <GeographicLib/UTMUPS.hpp>
 #include <mex.h>
 

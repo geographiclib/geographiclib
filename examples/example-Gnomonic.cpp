@@ -1,5 +1,4 @@
 // Example of using the GeographicLib::Gnomonic class
-// $Id: 59ed16349fd55bdde98654feeb1225a046d85696 $
 
 #include <iostream>
 #include <exception>

@@ -1,5 +1,3 @@
-# $Id: 74272e0080b7bb7ccfad039d79f938781045eea9 $
-
 MODULES = __init__ geomath constants accumulator geodesiccapability \
 	geodesic geodesicline polygonarea
 PACKAGE = geographiclib

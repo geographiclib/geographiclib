@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GRAVITYCIRCLE_HPP)
-#define GEOGRAPHICLIB_GRAVITYCIRCLE_HPP \
-  "$Id: 6ae0869411185a48c9f55016e6d1fb14e69aaac1 $"
+#define GEOGRAPHICLIB_GRAVITYCIRCLE_HPP 1
 
 #include <string>
 #include <vector>
