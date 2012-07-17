@@ -14,6 +14,7 @@
 # python update
 # in gita/geographiclib/python ...
 # python setup.py sdist --formats gztar,zip upload
+# [or: python setup.py sdist --formats gztar,zip register upload]
 #
 # gita - check out from git, create package with cmake
 # gita - check out from git, create package with autoconf
