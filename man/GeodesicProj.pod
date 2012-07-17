@@ -128,7 +128,7 @@ terminate; following lines will be converted.
 =head1 SEE ALSO
 
 The ellipsoidal gnomonic projection is derived in Section 8 of
-C. F. F. Karney, I<Algorithms for geodesics>, J. Geodesy, 2012;
+C. F. F. Karney, I<Algorithms for geodesics>, J. Geodesy, 2012; DOI
 L<http://dx.doi.org/10.1007/s00190-012-0578-z>.
 
 =head1 AUTHOR

@@ -65,7 +65,7 @@ namespace GeographicLib {
   void Geohash::Reverse(const std::string& geohash, real& lat, real& lon,
                         int& len, bool centerp) {
     len = min(int(maxlen_), int(geohash.length()));
-    if (len == 3 &&
+    if (len >= 3 &&
         toupper(geohash[0]) == 'N' &&
         toupper(geohash[1]) == 'A' &&
         toupper(geohash[2]) == 'N') {

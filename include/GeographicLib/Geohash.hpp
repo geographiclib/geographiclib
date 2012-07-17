@@ -85,7 +85,8 @@ namespace GeographicLib {
      * Only the first 18 characters for \e geohash are considered.  The case of
      * the letters in \e geohash is ignored.
      *
-     * If \e geohash is "nan", then \e lat and \e lon are set to NaN.
+     * If the first three characters in \e geohash are "nan", then \e lat and
+     * \e lon are set to NaN.
      **********************************************************************/
     static void Reverse(const std::string& geohash, real& lat, real& lon,
                         int& len, bool centerp = true);

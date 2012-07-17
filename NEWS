@@ -6,7 +6,30 @@ For more information, see
 
 The current version of the library is 1.23.
 
-Changes between 1.23 (released 2012-mm-dd) and 1.22 versions:
+Changes between 1.23 (released 2012-07-17) and 1.22 versions:
+
+  * Documentation changes:
+    + remove html documentation from distribution and use web links if
+      doxygen is not available;
+    + use doxygen tags to document exceptions;
+    + begin migrating the documentation to using Greek letters where
+      appropriate (requires doxygen 1.8.1.2 or later).
+
+  * Add Math::AngNormalize and Math::AngNormalize2; the allowed range
+    for longitudes and azimuths widened to [-540d, 540d).
+
+  * DMS::Decode understands more unicode symbols.
+
+  * Geohash uses geohash code "nan" to stand for not a number.
+
+  * Add Ellipsoid::NormalCurvatureRadius.
+
+  * Various fixes in LambertConformalConic, TransverseMercator,
+    PolarStereographic, and Ellipsoid to handle reverse projections of
+    points near infinity.
+
+  * Fix programming blunder in LambertConformalConic::Forward (incorrect
+    results were returned if the tangent latitude was negative).
 
 Changes between 1.22 (released 2012-05-27) and 1.21 versions:
 
