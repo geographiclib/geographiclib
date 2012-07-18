@@ -42,29 +42,29 @@ namespace GeographicLib {
    *
    * Definitions and terminology (from Heiskanen and Moritz, Sec 2-13):
    * - \e V = gravitational potential;
-   * - \e Phi = rotational potential;
-   * - \e W = \e V + \e Phi = \e T + \e U = total potential;
+   * - &Phi; = rotational potential;
+   * - \e W = \e V + &Phi; = \e T + \e U = total potential;
    * - <i>V</i><sub>0</sub> = normal gravitation potential;
-   * - \e U = <i>V</i><sub>0</sub> + \e Phi = total normal potential;
-   * - \e T = \e W - \e U = \e V - <i>V</i><sub>0</sub> = anomalous or
-   *   disturbing potential;
-   * - <b>g</b> = <b>grad</b> \e W = <b>gamma</b> + <b>delta</b>;
-   * - <b>f</b> = <b>grad</b> \e Phi;
-   * - <b>Gamma</b> = <b>grad</b> <i>V</i><sub>0</sub>;
-   * - <b>gamma</b> = <b>grad</b> \e U;
-   * - <b>delta</b> = <b>grad</b> \e T = gravity disturbance vector
-   *   = <b>g</b><sub><i>P</i></sub> - <b>gamma</b><sub><i>P</i></sub>;
-   * - delta \e g = gravity disturbance = \e g<sub><i>P</i></sub> - \e
-   *   gamma<sub><i>P</i></sub>;
-   * - Delta <b>g</b> = gravity anomaly vector =
-   *   <b>g</b><sub><i>P</i></sub> - <b>gamma</b><sub><i>Q</i></sub>; here the
-   *   line \e PQ is perpendicular to ellipsoid and the potential at \e P
-   *   equals the normal potential at \e Q;
-   * - Delta \e g = gravity anomaly = \e g<sub><i>P</i></sub> - \e
-   *   gamma<sub><i>Q</i></sub>;
-   * - (\e xi, \e eta) deflection of the vertical, the difference in
+   * - \e U = <i>V</i><sub>0</sub> + &Phi; = total normal potential;
+   * - \e T = \e W &minus; \e U = \e V &minus; <i>V</i><sub>0</sub> = anomalous
+   *   or disturbing potential;
+   * - <b>g</b> = &nabla;\e W = <b>&gamma;</b> + <b>&delta;</b>;
+   * - <b>f</b> = &nabla;&Phi;;
+   * - <b>&Gamma;</b> = &nabla;<i>V</i><sub>0</sub>;
+   * - <b>&gamma;</b> = &nabla;\e U;
+   * - <b>&delta;</b> = &nabla;\e T = gravity disturbance vector
+   *   = <b>g</b><sub><i>P</i></sub> &minus; <b>&gamma;</b><sub><i>P</i></sub>;
+   * - &delta;\e g = gravity disturbance = \e g<sub><i>P</i></sub> &minus;
+   *   &gamma;<sub><i>P</i></sub>;
+   * - &Delta;<b>g</b> = gravity anomaly vector = <b>g</b><sub><i>P</i></sub>
+   *   &minus; <b>&gamma;</b><sub><i>Q</i></sub>; here the line \e PQ is
+   *   perpendicular to ellipsoid and the potential at \e P equals the normal
+   *   potential at \e Q;
+   * - &Delta;\e g = gravity anomaly = \e g<sub><i>P</i></sub> &minus;
+   *   &gamma;<sub><i>Q</i></sub>;
+   * - (&xi;, &eta;) deflection of the vertical, the difference in
    *   directions of <b>g</b><sub><i>P</i></sub> and
-   *   <b>gamma</b><sub><i>Q</i></sub>, \e xi = NS, \e eta = EW.
+   *   <b>&gamma;</b><sub><i>Q</i></sub>, &xi; = NS, &eta; = EW.
    * - \e X, \e Y, \e Z, geocentric coordinates;
    * - \e x, \e y, \e z, local cartesian coordinates used to denote the east,
    *   north and up directions.
@@ -195,11 +195,11 @@ namespace GeographicLib {
      * @param[in] lon the geographic longitude (degrees).
      * @param[in] h the height above the ellipsoid (meters).
      * @param[out] gx the easterly component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] gy the northerly component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] gz the upward component of the acceleration
-     *   (m s<sup>-2</sup>); this is usually negative.
+     *   (m s<sup>&minus;2</sup>); this is usually negative.
      * @return \e W the sum of the gravitational and centrifugal potentials.
      *
      * The function includes the effects of the earth's rotation.
@@ -215,11 +215,11 @@ namespace GeographicLib {
      * @param[in] lon the geographic longitude (degrees).
      * @param[in] h the height above the ellipsoid (meters).
      * @param[out] deltax the easterly component of the disturbance vector
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] deltay the northerly component of the disturbance vector
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] deltaz the upward component of the disturbance vector
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @return \e T the corresponding disturbing potential.
      **********************************************************************/
     Math::real Disturbance(real lat, real lon, real h,
@@ -248,7 +248,7 @@ namespace GeographicLib {
      * @param[in] lat the geographic latitude (degrees).
      * @param[in] lon the geographic longitude (degrees).
      * @param[in] h the height above the ellipsoid (meters).
-     * @param[out] Dg01 the gravity anomaly (m s<sup>-2</sup>).
+     * @param[out] Dg01 the gravity anomaly (m s<sup>&minus;2</sup>).
      * @param[out] xi the northerly component of the deflection of the vertical
      *  (degrees).
      * @param[out] eta the easterly component of the deflection of the vertical
@@ -273,13 +273,13 @@ namespace GeographicLib {
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[in] Z geocentric coordinate of point (meters).
      * @param[out] gX the \e X component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] gY the \e Y component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] gZ the \e Z component of the acceleration
-     *   (m s<sup>-2</sup>).
-     * @return \e W = \e V + \e Phi the sum of the gravitational and
-     *   centrifugal potentials (m<sup>2</sup> s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
+     * @return \e W = \e V + &Phi; the sum of the gravitational and
+     *   centrifugal potentials (m<sup>2</sup> s<sup>&minus;2</sup>).
      *
      * This calls NormalGravity::U for  ReferenceEllipsoid().
      **********************************************************************/
@@ -294,13 +294,13 @@ namespace GeographicLib {
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[in] Z geocentric coordinate of point (meters).
      * @param[out] GX the \e X component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] GY the \e Y component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] GZ the \e Z component of the acceleration
-     *   (m s<sup>-2</sup>).
-     * @return \e V = \e W - \e Phi the gravitational potential
-     *   (m<sup>2</sup> s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
+     * @return \e V = \e W - &Phi; the gravitational potential
+     *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real V(real X, real Y, real Z,
                  real& GX, real& GY, real& GZ) const throw();
@@ -313,13 +313,13 @@ namespace GeographicLib {
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[in] Z geocentric coordinate of point (meters).
      * @param[out] deltaX the \e X component of the gravity disturbance
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] deltaY the \e Y component of the gravity disturbance
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] deltaZ the \e Z component of the gravity disturbance
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @return \e T = \e W - \e U the disturbing potential (also called the
-     *   anomalous potential) (m<sup>2</sup> s<sup>-2</sup>).
+     *   anomalous potential) (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real T(real X, real Y, real Z,
                  real& deltaX, real& deltaY, real& deltaZ) const throw()
@@ -332,7 +332,7 @@ namespace GeographicLib {
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[in] Z geocentric coordinate of point (meters).
      * @return \e T = \e W - \e U the disturbing potential (also called the
-     *   anomalous potential) (m<sup>2</sup> s<sup>-2</sup>).
+     *   anomalous potential) (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real T(real X, real Y, real Z) const throw() {
       real dummy;
@@ -340,21 +340,21 @@ namespace GeographicLib {
     }
 
     /**
-     * Evaluate the components of the acceleration due to normal gravity and the
-     * centrifugal acceleration in geocentric coordinates.
+     * Evaluate the components of the acceleration due to normal gravity and
+     * the centrifugal acceleration in geocentric coordinates.
      *
      * @param[in] X geocentric coordinate of point (meters).
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[in] Z geocentric coordinate of point (meters).
      * @param[out] gammaX the \e X component of the normal acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] gammaY the \e Y component of the normal acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] gammaZ the \e Z component of the normal acceleration
-     *   (m s<sup>-2</sup>).
-     * @return \e U = <i>V</i><sub>0</sub> + \e Phi the sum of the
+     *   (m s<sup>&minus;2</sup>).
+     * @return \e U = <i>V</i><sub>0</sub> + &Phi; the sum of the
      *   normal gravitational and centrifugal potentials
-     *   (m<sup>2</sup> s<sup>-2</sup>).
+     *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      *
      * This calls NormalGravity::U for  ReferenceEllipsoid().
      **********************************************************************/
@@ -368,10 +368,11 @@ namespace GeographicLib {
      * @param[in] X geocentric coordinate of point (meters).
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[out] fX the \e X component of the centrifugal acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] fY the \e Y component of the centrifugal acceleration
-     *   (m s<sup>-2</sup>).
-     * @return \e Phi the centrifugal potential (m<sup>2</sup> s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
+     * @return &Phi; the centrifugal potential (m<sup>2</sup>
+     * s<sup>&minus;2</sup>).
      *
      * This calls NormalGravity::Phi for  ReferenceEllipsoid().
      **********************************************************************/
@@ -459,23 +460,23 @@ namespace GeographicLib {
     Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
 
     /**
-     * @return \e GM the mass constant of the model
-     *   (m<sup>3</sup> s<sup>-2</sup>); this is the product of \e G the
-     *   gravitational constant and \e M the mass of the earth (usually
-     *   including the mass of the earth's atmosphere).
+     * @return \e GM the mass constant of the model (m<sup>3</sup>
+     *   s<sup>&minus;2</sup>); this is the product of \e G the gravitational
+     *   constant and \e M the mass of the earth (usually including the mass of
+     *   the earth's atmosphere).
      **********************************************************************/
     Math::real MassConstant() const throw() { return _GMmodel; }
 
     /**
      * @return \e GM the mass constant of the ReferenceEllipsoid()
-     *   (m<sup>3</sup> s<sup>-2</sup>).
+     *   (m<sup>3</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real ReferenceMassConstant() const throw()
     { return _earth.MassConstant(); }
 
     /**
-     * @return \e omega the angular velocity of the model and the
-     *   ReferenceEllipsoid() (rad s<sup>-1</sup>).
+     * @return &omega; the angular velocity of the model and the
+     *   ReferenceEllipsoid() (rad s<sup>&minus;1</sup>).
      **********************************************************************/
     Math::real AngularVelocity() const throw()
     { return _earth.AngularVelocity(); }

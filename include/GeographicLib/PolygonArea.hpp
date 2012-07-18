@@ -113,8 +113,8 @@ namespace GeographicLib {
      * @param[in] lat the latitude of the point (degrees).
      * @param[in] lon the latitude of the point (degrees).
      *
-     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
-     * lon should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
+     * lon should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     void AddPoint(real lat, real lon) throw();
 
@@ -128,8 +128,8 @@ namespace GeographicLib {
      *   the area for the rest of the earth.
      * @param[out] perimeter the perimeter of the polygon or length of the
      *   polyline (meters).
-     * @param[out] area the area of the polygon (meters^2); only set if
-     *   polyline is false in the constructor.
+     * @param[out] area the area of the polygon (meters<sup>2</sup>); only set
+     *   if polyline is false in the constructor.
      * @return the number of points.
      **********************************************************************/
     unsigned Compute(bool reverse, bool sign,
@@ -152,12 +152,13 @@ namespace GeographicLib {
      *   the area for the rest of the earth.
      * @param[out] perimeter the approximate perimeter of the polygon or length
      *   of the polyline (meters).
-     * @param[out] area the approximate area of the polygon (meters^2); only
-     *   set if polyline is false in the constructor.
+     * @param[out] area the approximate area of the polygon
+     *   (meters<sup>2</sup>); only set if polyline is false in the
+     *   constructor.
      * @return the number of points.
      *
-     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
-     * lon should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
+     * lon should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     unsigned TestCompute(real lat, real lon, bool reverse, bool sign,
                          real& perimeter, real& area) const throw();

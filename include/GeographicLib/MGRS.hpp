@@ -145,14 +145,14 @@ namespace GeographicLib {
      * - prec = 4, 10 m
      * - prec = 5, 1 m
      * - prec = 6, 0.1 m
-     * - prec = 11 (max), 1 um
+     * - prec = 11 (max), 1 &mu;m
      *
      * UTM eastings are allowed to be in the range [100 km, 900 km], northings
      * are allowed to be in in [0 km, 9500 km] for the northern hemisphere and
      * in [1000 km, 10000 km] for the southern hemisphere.  (However UTM
      * northings can be continued across the equator.  So the actual limits on
-     * the northings are [-9000 km, 9500 km] for the "northern" hemisphere and
-     * [1000 km, 19500 km] for the "southern" hemisphere.)
+     * the northings are [&minus;9000 km, 9500 km] for the "northern"
+     * hemisphere and [1000 km, 19500 km] for the "southern" hemisphere.)
      *
      * UPS eastings/northings are allowed to be in the range [1300 km, 2700 km]
      * in the northern hemisphere and in [800 km, 3200 km] in the southern

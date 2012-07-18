@@ -104,14 +104,14 @@ namespace GeographicLib {
     /**
      * @tparam T the type of the returned value.
      * @return the gravitational constant of the WGS84 ellipsoid, \e GM, in
-     *   m<sup>3</sup> s<sup>-2</sup>.
+     *   m<sup>3</sup> s<sup>&minus;2</sup>.
      **********************************************************************/
     template<typename T> static inline T WGS84_GM() throw()
     { return T(3986004) * T(100000000) + T(41800000); }
     /**
      * @tparam T the type of the returned value.
-     * @return the angular velocity of the WGS84 ellipsoid, \e omega, in rad
-     *   s<sup>-1</sup>.
+     * @return the angular velocity of the WGS84 ellipsoid, &omega;, in rad
+     *   s<sup>&minus;1</sup>.
      **********************************************************************/
     template<typename T> static inline T WGS84_omega() throw()
     { return T(7292115) / (T(1000000) * T(100000)); }
@@ -137,20 +137,21 @@ namespace GeographicLib {
     /**
      * @tparam T the type of the returned value.
      * @return the gravitational constant of the GRS80 ellipsoid, \e GM, in
-     *   m<sup>3</sup> s<sup>-2</sup>.
+     *   m<sup>3</sup> s<sup>&minus;2</sup>.
      **********************************************************************/
     template<typename T> static inline T GRS80_GM() throw()
     { return T(3986005) * T(100000000); }
     /**
      * @tparam T the type of the returned value.
-     * @return the angular velocity of the GRS80 ellipsoid, \e omega, in rad
-     *   s<sup>-1</sup>.
+     * @return the angular velocity of the GRS80 ellipsoid, &omega;, in rad
+     *   s<sup>&minus;1</sup>.
      *
-     * This is about 2*pi*366.25 / (365.25*24*3600) rad s<sup>-1</sup>.  365.25
-     * is the number of days in a Julian year and 365.35/366.25 converts from
-     * solar days to sidereal days.  Using the number of days in a Gregorian
-     * year (365.2425) results in a worse approximation (because the Gregorian
-     * year includes the precession of the earth's axis).
+     * This is about 2 &pi; 366.25 / (365.25 &times; 24 &times; 3600) rad
+     * s<sup>&minus;1</sup>.  365.25 is the number of days in a Julian year and
+     * 365.35/366.25 converts from solar days to sidereal days.  Using the
+     * number of days in a Gregorian year (365.2425) results in a worse
+     * approximation (because the Gregorian year includes the precession of the
+     * earth's axis).
      **********************************************************************/
     template<typename T> static inline T GRS80_omega() throw()
     { return T(7292115) / (T(1000000) * T(100000)); }

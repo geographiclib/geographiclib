@@ -28,16 +28,16 @@ namespace GeographicLib {
    *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>.
    * .
-   * The projection of \e P is defined as follows: compute the
-   * geodesic line from \e C to \e P; compute the reduced length \e m12,
-   * geodesic scale \e M12, and \e rho = <i>m12</i>/\e M12; finally \e x = \e
-   * rho sin \e azi1; \e y = \e rho cos \e azi1, where \e azi1 is the azimuth
-   * of the geodesic at \e C.  The Gnomonic::Forward and Gnomonic::Reverse
-   * methods also return the azimuth \e azi of the geodesic at \e P and
-   * reciprocal scale \e rk in the azimuthal direction.  The scale in the
-   * radial direction if 1/<i>rk</i><sup>2</sup>.
+   * The projection of \e P is defined as follows: compute the geodesic line
+   * from \e C to \e P; compute the reduced length \e m12, geodesic scale \e
+   * M12, and &rho; = <i>m12</i>/\e M12; finally \e x = &rho; sin \e azi1; \e
+   * y = &rho; cos \e azi1, where \e azi1 is the azimuth of the geodesic at \e
+   * C.  The Gnomonic::Forward and Gnomonic::Reverse methods also return the
+   * azimuth \e azi of the geodesic at \e P and reciprocal scale \e rk in the
+   * azimuthal direction.  The scale in the radial direction if
+   * 1/<i>rk</i><sup>2</sup>.
    *
-   * For a sphere, \e rho is reduces to \e a tan(<i>s12</i>/<i>a</i>), where \e
+   * For a sphere, &rho; is reduces to \e a tan(<i>s12</i>/<i>a</i>), where \e
    * s12 is the length of the geodesic from \e C to \e P, and the gnomonic
    * projection has the property that all geodesics appear as straight lines.
    * For an ellipsoid, this property holds only for geodesics interesting the
@@ -58,8 +58,8 @@ namespace GeographicLib {
    * This result applies for any surface.  For an ellipsoid of revolution,
    * consider all geodesics whose end points are within a distance \e r of \e
    * C.  For a given \e r, the deviation is maximum when the latitude of \e C
-   * is 45<sup>o</sup>, when endpoints are a distance \e r away, and when their
-   * azimuths from the center are +/- 45<sup>o</sup> or +/- 135<sup>o</sup>.
+   * is 45&deg;, when endpoints are a distance \e r away, and when their
+   * azimuths from the center are &plusmn; 45&deg; or &plusmn; 135&deg;.
    * To lowest order in \e r and the flattening \e f, the deviation is \e f
    * (<i>r</i>/2<i>a</i>)<sup>3</sup> \e r.
    *
@@ -83,7 +83,7 @@ namespace GeographicLib {
    *   proposed by I. G. Letoval'tsev, Generalization of the %Gnomonic
    *   Projection for a Spheroid and the Principal Geodetic Problems Involved
    *   in the Alignment of Surface Routes, Geodesy and Aerophotography (5),
-   *   271-274 (1963).
+   *   271&ndash;274 (1963).
    * - The projection given here.  This causes geodesics close to the center
    *   point to appear as straight lines in the projection; i.e., it
    *   generalizes the spherical great circle to a geodesic.
@@ -131,16 +131,15 @@ namespace GeographicLib {
      * @param[out] azi azimuth of geodesic at point (degrees).
      * @param[out] rk reciprocal of azimuthal scale at point.
      *
-     * \e lat0 and \e lat should be in the range [-90<sup>o</sup>,
-     * 90<sup>o</sup>] and \e lon0 and \e lon should be in the range
-     * [-540<sup>o</sup>, 540<sup>o</sup>).  The scale of the projection is
-     * 1/<i>rk</i><sup>2</sup> in the "radial" direction, \e azi clockwise from
-     * true north, and is 1/\e rk in the direction perpendicular to this.  If
-     * the point lies "over the horizon", i.e., if \e rk <= 0, then NaNs are
-     * returned for \e x and \e y (the correct values are returned for \e azi
-     * and \e rk).  A call to Forward followed by a call to Reverse will return
-     * the original (\e lat, \e lon) (to within roundoff) provided the point in
-     * not over the horizon.
+     * \e lat0 and \e lat should be in the range [&minus;90&deg;, 90&deg;] and
+     * \e lon0 and \e lon should be in the range [&minus;540&deg;, 540&deg;).
+     * The scale of the projection is 1/<i>rk</i><sup>2</sup> in the "radial"
+     * direction, \e azi clockwise from true north, and is 1/\e rk in the
+     * direction perpendicular to this.  If the point lies "over the horizon",
+     * i.e., if \e rk &le; 0, then NaNs are returned for \e x and \e y (the
+     * correct values are returned for \e azi and \e rk).  A call to Forward
+     * followed by a call to Reverse will return the original (\e lat, \e lon)
+     * (to within roundoff) provided the point in not over the horizon.
      **********************************************************************/
     void Forward(real lat0, real lon0, real lat, real lon,
                  real& x, real& y, real& azi, real& rk) const throw();
@@ -157,10 +156,10 @@ namespace GeographicLib {
      * @param[out] azi azimuth of geodesic at point (degrees).
      * @param[out] rk reciprocal of azimuthal scale at point.
      *
-     * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
-     * lon0 should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).  \e lat
-     * will be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e lon will
-     * be in the range [-180<sup>o</sup>, 180<sup>o</sup>).  The scale of the
+     * \e lat0 should be in the range [&minus;90&deg;, 90&deg;] and \e
+     * lon0 should be in the range [&minus;540&deg;, 540&deg;).  \e lat
+     * will be in the range [&minus;90&deg;, 90&deg;] and \e lon will
+     * be in the range [&minus;180&deg;, 180&deg;).  The scale of the
      * projection is 1/\e rk<sup>2</sup> in the "radial" direction, \e azi
      * clockwise from true north, and is 1/\e rk in the direction perpendicular
      * to this.  Even though all inputs should return a valid \e lat and \e

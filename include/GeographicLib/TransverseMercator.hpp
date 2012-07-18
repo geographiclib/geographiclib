@@ -36,14 +36,15 @@ namespace GeographicLib {
    *  - C. F. F. Karney,
    *    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    *    Transverse Mercator with an accuracy of a few nanometers,</a>
-   *    J. Geodesy 85(8), 475-485 (Aug. 2011);
+   *    J. Geodesy 85(8), 475&ndash;485 (Aug. 2011);
    *    preprint
    *    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
    *
    * Kr&uuml;ger's method has been extended from 4th to 6th order.  The maximum
    * error is 5 nm (5 nanometers), ground distance, for all positions within 35
-   * degrees of the central meridian.  The error in the convergence is
-   * 2e-15&quot; and the relative error in the scale is 6e-12%%.  See Sec. 4 of
+   * degrees of the central meridian.  The error in the convergence is 2
+   * &times; 10<sup>&minus;15</sup>&quot; and the relative error in the scale
+   * is 6 &minus; 10<sup>&minus;12</sup>%%.  See Sec. 4 of
    * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details.
    * The speed penalty in going to 6th order is only about 1%.
    * TransverseMercatorExact is an alternative implementation of the projection
@@ -110,8 +111,8 @@ namespace GeographicLib {
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
      * @param[in] k0 central scale factor.
-     * @exception GeographicLib if \e a, (1 - \e f ) \e a, or \e k0 is not
-     *   positive.
+     * @exception GeographicLib if \e a, (1 &minus; \e f ) \e a, or \e k0 is
+     *   not positive.
      **********************************************************************/
     TransverseMercator(real a, real f, real k0);
 
@@ -127,8 +128,8 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added. \e lat should be in the range
-     * [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon and \e lon0 should be in the
-     * range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * [&minus;90&deg;, 90&deg;]; \e lon and \e lon0 should be in the
+     * range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
@@ -145,8 +146,8 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added.  \e lon0 should be in the range
-     * [-540<sup>o</sup>, 540<sup>o</sup>).  The value of \e lon returned is in
-     * the range [-180<sup>o</sup>, 180<sup>o</sup>).
+     * [&minus;540&deg;, 540&deg;).  The value of \e lon returned is in
+     * the range [&minus;180&deg;, 180&deg;).
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();

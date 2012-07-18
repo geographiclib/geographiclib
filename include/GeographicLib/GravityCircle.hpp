@@ -22,7 +22,7 @@ namespace GeographicLib {
    * \brief Gravity on a circle of latitude
    *
    * Evaluate the earth's gravity field on a circle of constant height and
-   * latitude.  This uses a CircleEngine to pre-evaluate the inner sum of the
+   * latitude.  This uses a CircularEngine to pre-evaluate the inner sum of the
    * spherical harmonic sum, allowing the values of the field at several
    * different longitudes to be evaluated rapidly.
    *
@@ -113,11 +113,11 @@ namespace GeographicLib {
      *
      * @param[in] lon the geographic longitude (degrees).
      * @param[out] gx the easterly component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] gy the northerly component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] gz the upward component of the acceleration
-     *   (m s<sup>-2</sup>); this is usually negative.
+     *   (m s<sup>&minus;2</sup>); this is usually negative.
      * @return \e W the sum of the gravitational and centrifugal potentials.
      *
      * The function includes the effects of the earth's rotation.
@@ -129,11 +129,11 @@ namespace GeographicLib {
      *
      * @param[in] lon the geographic longitude (degrees).
      * @param[out] deltax the easterly component of the disturbance vector
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] deltay the northerly component of the disturbance vector
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] deltaz the upward component of the disturbance vector
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @return \e T the corresponding disturbing potential.
      **********************************************************************/
     Math::real Disturbance(real lon, real& deltax, real& deltay, real& deltaz)
@@ -157,7 +157,7 @@ namespace GeographicLib {
      * spherical approximation.
      *
      * @param[in] lon the geographic longitude (degrees).
-     * @param[out] Dg01 the gravity anomaly (m s<sup>-2</sup>).
+     * @param[out] Dg01 the gravity anomaly (m s<sup>&minus;2</sup>).
      * @param[out] xi the northerly component of the deflection of the vertical
      *  (degrees).
      * @param[out] eta the easterly component of the deflection of the vertical
@@ -176,13 +176,13 @@ namespace GeographicLib {
      *
      * @param[in] lon the geographic longitude (degrees).
      * @param[out] gX the \e X component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] gY the \e Y component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] gZ the \e Z component of the acceleration
-     *   (m s<sup>-2</sup>).
-     * @return \e W = \e V + \e Phi the sum of the gravitational and
-     *   centrifugal potentials (m<sup>2</sup> s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
+     * @return \e W = \e V + &Phi; the sum of the gravitational and
+     *   centrifugal potentials (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real W(real lon, real& gX, real& gY, real& gZ) const throw() {
       real clam, slam;
@@ -196,13 +196,13 @@ namespace GeographicLib {
      *
      * @param[in] lon the geographic longitude (degrees).
      * @param[out] GX the \e X component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] GY the \e Y component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] GZ the \e Z component of the acceleration
-     *   (m s<sup>-2</sup>).
-     * @return \e V = \e W - \e Phi the gravitational potential
-     *   (m<sup>2</sup> s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
+     * @return \e V = \e W - &Phi; the gravitational potential
+     *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real V(real lon, real& GX, real& GY, real& GZ) const throw() {
       real clam, slam;
@@ -217,13 +217,13 @@ namespace GeographicLib {
      *
      * @param[in] lon the geographic longitude (degrees).
      * @param[out] deltaX the \e X component of the gravity disturbance
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] deltaY the \e Y component of the gravity disturbance
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] deltaZ the \e Z component of the gravity disturbance
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @return \e T = \e W - \e U the disturbing potential (also called the
-     *   anomalous potential) (m<sup>2</sup> s<sup>-2</sup>).
+     *   anomalous potential) (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real T(real lon, real& deltaX, real& deltaY, real& deltaZ)
       const throw() {
@@ -237,7 +237,7 @@ namespace GeographicLib {
      *
      * @param[in] lon the geographic longitude (degrees).
      * @return \e T = \e W - \e U the disturbing potential (also called the
-     *   anomalous potential) (m<sup>2</sup> s<sup>-2</sup>).
+     *   anomalous potential) (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real T(real lon) const throw() {
       real clam, slam, dummy;

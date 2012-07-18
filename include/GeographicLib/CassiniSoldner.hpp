@@ -24,13 +24,13 @@ namespace GeographicLib {
    * equidistant projection.  The projection from (\e lat, \e lon) to easting
    * and northing (\e x, \e y) is defined by geodesics as follows.  Go north
    * along a geodesic a distance \e y from the central point; then turn
-   * clockwise 90<sup>o</sup> and go a distance \e x along a geodesic.
+   * clockwise 90&deg; and go a distance \e x along a geodesic.
    * (Although the initial heading is north, this changes to south if the pole
    * is crossed.)  This procedure uniquely defines the reverse projection.  The
    * forward projection is constructed as follows.  Find the point (\e lat1, \e
    * lon1) on the meridian closest to (\e lat, \e lon).  Here we consider the
    * full meridian so that \e lon1 may be either \e lon0 or \e lon0 +
-   * 180<sup>o</sup>.  \e x is the geodesic distance from (\e lat1, \e lon1) to
+   * 180&deg;.  \e x is the geodesic distance from (\e lat1, \e lon1) to
    * (\e lat, \e lon), appropriately signed according to which side of the
    * central meridian (\e lat, \e lon) lies.  \e y is the shortest distance
    * along the meridian from (\e lat0, \e lon0) to (\e lat1, \e lon1), again,
@@ -116,8 +116,8 @@ namespace GeographicLib {
      * @param[in] earth the Geodesic object to use for geodesic calculations.
      *   By default this uses the WGS84 ellipsoid.
      *
-     * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
-     * lon0 should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * \e lat0 should be in the range [&minus;90&deg;, 90&deg;] and \e
+     * lon0 should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     CassiniSoldner(real lat0, real lon0,
                    const Geodesic& earth = Geodesic::WGS84) throw()
@@ -131,8 +131,8 @@ namespace GeographicLib {
      * @param[in] lat0 latitude of center point of projection (degrees).
      * @param[in] lon0 longitude of center point of projection (degrees).
      *
-     * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
-     * lon0 should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * \e lat0 should be in the range [&minus;90&deg;, 90&deg;] and \e
+     * lon0 should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     void Reset(real lat0, real lon0) throw();
 
@@ -146,8 +146,8 @@ namespace GeographicLib {
      * @param[out] azi azimuth of easting direction at point (degrees).
      * @param[out] rk reciprocal of azimuthal northing scale at point.
      *
-     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>] and \e
-     * lon should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).  A call
+     * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
+     * lon should be in the range [&minus;540&deg;, 540&deg;).  A call
      * to Forward followed by a call to Reverse will return the original (\e
      * lat, \e lon) (to within roundoff).  The routine does nothing if the
      * origin has not been set.

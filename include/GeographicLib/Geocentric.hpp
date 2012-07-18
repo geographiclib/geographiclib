@@ -23,7 +23,7 @@ namespace GeographicLib {
    * lon, height = \e h (measured vertically from the surface of the ellipsoid)
    * to geocentric coordinates (\e X, \e Y, \e Z).  The origin of geocentric
    * coordinates is at the center of the earth.  The \e Z axis goes thru the
-   * north pole, \e lat = 90<sup>o</sup>.  The \e X axis goes thru \e lat = 0,
+   * north pole, \e lat = 90&deg;.  The \e X axis goes thru \e lat = 0,
    * \e lon = 0.  %Geocentric coordinates are also known as earth centered,
    * earth fixed (ECEF) coordinates.
    *
@@ -106,10 +106,8 @@ namespace GeographicLib {
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
-     * @exception GeographicLib if \e a or (1 - \e f ) \e a is not positive.
-     *
-     * An exception is thrown if either of the axes of the ellipsoid is
-     * non-positive.
+     * @exception GeographicLib if \e a or (1 &minus; \e f ) \e a is not
+     *   positive.
      **********************************************************************/
     Geocentric(real a, real f);
 
@@ -128,8 +126,8 @@ namespace GeographicLib {
      * @param[out] Y geocentric coordinate (meters).
      * @param[out] Z geocentric coordinate (meters).
      *
-     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
-     * should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * \e lat should be in the range [&minus;90&deg;, 90&deg;]; \e lon
+     * should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& X, real& Y, real& Z)
       const throw() {
@@ -158,7 +156,7 @@ namespace GeographicLib {
      * - in geocentric \e X, \e Y, \e Z coordinates; call this representation
      *   \e v0.
      * .
-     * Then we have \e v0 = \e M . \e v1.
+     * Then we have \e v0 = \e M &sdot; \e v1.
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& X, real& Y, real& Z,
                  std::vector<real>& M)
@@ -188,9 +186,10 @@ namespace GeographicLib {
      * latitudes (applies only if \e Z = 0), then the solution with \e lat > 0
      * is returned.  If there are still multiple solutions with different
      * longitudes (applies only if \e X = \e Y = 0) then \e lon = 0 is
-     * returned.  The value of \e h returned satisfies \e h >= - \e a (1 -
-     * <i>e</i><sup>2</sup>) / sqrt(1 - <i>e</i><sup>2</sup> sin<sup>2</sup>\e
-     * lat).  The value of \e lon returned is in the range [-180, 180).
+     * returned.  The value of \e h returned satisfies \e h &ge; &minus; \e a
+     * (1 &minus; <i>e</i><sup>2</sup>) / sqrt(1 &minus; <i>e</i><sup>2</sup>
+     * sin<sup>2</sup>\e lat).  The value of \e lon returned is in the range
+     * [&minus;180&deg;, 180&deg;).
      **********************************************************************/
     void Reverse(real X, real Y, real Z, real& lat, real& lon, real& h)
       const throw() {
@@ -218,8 +217,8 @@ namespace GeographicLib {
      * - in geocentric \e X, \e Y, \e Z coordinates; call this representation
      *   \e v0.
      * .
-     * Then we have \e v1 = \e M^T . \e v0, where \e M^T is the transpose of \e
-     * M.
+     * Then we have \e v1 = \e M<sup>T</sup> &sdot; \e v0, where \e
+     * M<sup>T</sup> is the transpose of \e M.
      **********************************************************************/
     void Reverse(real X, real Y, real Z, real& lat, real& lon, real& h,
                  std::vector<real>& M)

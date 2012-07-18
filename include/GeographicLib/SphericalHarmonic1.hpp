@@ -77,8 +77,8 @@ namespace GeographicLib {
      * @param[in] norm the normalization for the associated Legendre
      *   polynomials, either SphericalHarmonic1::FULL (the default) or
      *   SphericalHarmonic1::SCHMIDT.
-     * @exception GeographicErr if \e N and \e N1 do not satisfy \e N >=
-     *   \e N1 >= -1.
+     * @exception GeographicErr if \e N and \e N1 do not satisfy \e N &ge;
+     *   \e N1 &ge; &minus;1.
      * @exception GeographicErr if any of the vectors of coefficients is not
      *   large enough.
      *
@@ -124,9 +124,9 @@ namespace GeographicLib {
      * @param[in] norm the normalization for the associated Legendre
      *   polynomials, either SphericalHarmonic1::FULL (the default) or
      *   SphericalHarmonic1::SCHMIDT.
-     * @exception GeographicErr if the parameters do not satisfy
-     *   \e N >= \e nmx >= \e mmx >= -1; \e N1 >= \e nmx1 >= \e mmx1 >= -1;
-     *   \e N >= \e N1; \e nmx >= \e nmx1; \e mmx >= \e mmx1.
+     * @exception GeographicErr if the parameters do not satisfy \e N &ge; \e
+     *   nmx &ge; \e mmx &ge; &minus;1; \e N1 &ge; \e nmx1 &ge; \e mmx1 &ge;
+     *   &minus;1; \e N &ge; \e N1; \e nmx &ge; \e nmx1; \e mmx &ge; \e mmx1.
      * @exception GeographicErr if any of the vectors of coefficients is not
      *   large enough.
      *
@@ -236,13 +236,12 @@ namespace GeographicLib {
      * @return the CircularEngine object.
      *
      * SphericalHarmonic1::operator()() exchanges the order of the sums in the
-     * definition, i.e., sum(n = 0..N)[sum(m = 0..n)[...]] becomes sum(m =
-     * 0..N)[sum(n = m..N)[...]].  SphericalHarmonic1::Circle performs the
-     * inner sum over degree \e n (which entails about <i>N</i><sup>2</sup>
-     * operations).  Calling CircularEngine::operator()() on the returned
-     * object performs the outer sum over the order \e m (about \e N
-     * operations).  This routine may throw a std::bad_alloc exception in the
-     * CircularEngine constructor.
+     * definition, i.e., &sum;<sub>n = 0..N</sub> &sum;<sub>m = 0..n</sub>
+     * becomes &sum;<sub>m = 0..N</sub> &sum;<sub>n = m..N</sub>.
+     * SphericalHarmonic1::Circle performs the inner sum over degree \e n
+     * (which entails about <i>N</i><sup>2</sup> operations).  Calling
+     * CircularEngine::operator()() on the returned object performs the outer
+     * sum over the order \e m (about \e N operations).
      *
      * See SphericalHarmonic::Circle for an example of its use.
      **********************************************************************/

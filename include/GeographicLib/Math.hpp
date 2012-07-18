@@ -100,7 +100,7 @@ namespace GeographicLib {
 
     /**
      * @tparam T the type of the returned value.
-     * @return \e pi.
+     * @return &pi;.
      **********************************************************************/
     template<typename T> static inline T pi() throw()
     { return std::atan2(T(0), -T(1)); }
@@ -178,13 +178,13 @@ namespace GeographicLib {
 
 #if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
     /**
-     * exp(\e x) - 1 accurate near \e x = 0.  This is taken from
+     * exp(\e x) &minus; 1 accurate near \e x = 0.  This is taken from
      * N. J. Higham, Accuracy and Stability of Numerical Algorithms, 2nd
      * Edition (SIAM, 2002), Sec 1.14.1, p 19.
      *
      * @tparam T the type of the argument and the returned value.
      * @param[in] x
-     * @return exp(\e x) - 1.
+     * @return exp(\e x) &minus; 1.
      **********************************************************************/
     template<typename T> static inline T expm1(T x) throw() {
       volatile T
@@ -325,10 +325,10 @@ namespace GeographicLib {
      *
      * @tparam T the type of the argument and returned value.
      * @param[in] x the angle in degrees.
-     * @return the angle reduced to the range [-180<sup>o</sup>,
-     *   180<sup>o</sup>).
+     * @return the angle reduced to the range [&minus;180&deg;,
+     *   180&deg;).
      *
-     * \e x must lie in [-540<sup>o</sup>, 540<sup>o</sup>).
+     * \e x must lie in [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     template<typename T> static inline T AngNormalize(T x) throw()
     { return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x); }
@@ -337,8 +337,8 @@ namespace GeographicLib {
      *
      * @tparam T the type of the argument and returned value.
      * @param[in] x the angle in degrees.
-     * @return the angle reduced to the range [-180<sup>o</sup>,
-     *   180<sup>o</sup>).
+     * @return the angle reduced to the range [&minus;180&deg;,
+     *   180&deg;).
      *
      * The range of \e x is unrestricted.
      **********************************************************************/

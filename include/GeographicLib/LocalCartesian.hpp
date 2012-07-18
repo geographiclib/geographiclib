@@ -59,8 +59,8 @@ namespace GeographicLib {
      * @param[in] earth Geocentric object for the transformation; default
      *   Geocentric::WGS84.
      *
-     * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
-     * lon0 should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * \e lat0 should be in the range [&minus;90&deg;, 90&deg;]; \e
+     * lon0 should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     LocalCartesian(real lat0, real lon0, real h0 = 0,
                    const Geocentric& earth = Geocentric::WGS84) throw()
@@ -87,8 +87,8 @@ namespace GeographicLib {
      * @param[in] lon0 longitude at origin (degrees).
      * @param[in] h0 height above ellipsoid at origin (meters); default 0.
      *
-     * \e lat0 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
-     * lon0 should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * \e lat0 should be in the range [&minus;90&deg;, 90&deg;]; \e
+     * lon0 should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     void Reset(real lat0, real lon0, real h0 = 0) throw();
 
@@ -102,8 +102,8 @@ namespace GeographicLib {
      * @param[out] y local cartesian coordinate (meters).
      * @param[out] z local cartesian coordinate (meters).
      *
-     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
-     * should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * \e lat should be in the range [&minus;90&deg;, 90&deg;]; \e lon
+     * should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& x, real& y, real& z)
       const throw() {
@@ -123,8 +123,8 @@ namespace GeographicLib {
      * @param[out] M if the length of the vector is 9, fill with the rotation
      *   matrix in row-major order.
      *
-     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
-     * should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * \e lat should be in the range [&minus;90&deg;, 90&deg;]; \e lon
+     * should be in the range [&minus;540&deg;, 540&deg;).
      *
      * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can
      * express \e v as \e column vectors in one of two ways
@@ -135,7 +135,7 @@ namespace GeographicLib {
      *   the local coordinate system at (\e lat0, \e lon0, \e h0)); call this
      *   representation \e v0.
      * .
-     * Then we have \e v0 = \e M . \e v1.
+     * Then we have \e v0 = \e M &sdot; \e v1.
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& x, real& y, real& z,
                  std::vector<real>& M)
@@ -158,7 +158,8 @@ namespace GeographicLib {
      * @param[out] lon longitude of point (degrees).
      * @param[out] h height of point above the ellipsoid (meters).
      *
-     * The value of \e lon returned is in the range [-180, 180).
+     * The value of \e lon returned is in the range [&minus;180&deg;,
+     * 180&deg;).
      **********************************************************************/
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h)
       const throw() {
@@ -187,8 +188,8 @@ namespace GeographicLib {
      *   the local coordinate system at (\e lat0, \e lon0, \e h0)); call this
      *   representation \e v0.
      * .
-     * Then we have \e v1 = \e M^T . \e v0, where \e M^T is the transpose of \e
-     * M.
+     * Then we have \e v1 = \e M<sup>T</sup> &sdot; \e v0, where \e
+     * M<sup>T</sup> is the transpose of \e M.
      **********************************************************************/
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h,
                  std::vector<real>& M)

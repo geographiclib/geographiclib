@@ -163,9 +163,8 @@ namespace GeographicLib {
      *   i.e., which quantities can be returned in calls to
      *   GeodesicLib::Position.
      *
-     * \e lat1 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
-     * lon1 and \e azi1 should be in the range [-540<sup>o</sup>,
-     * 540<sup>o</sup>).
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
+     * azi1 should be in the range [&minus;540&deg;, 540&deg;).
      *
      * The GeodesicLine::mask values are
      * - \e caps |= GeodesicLine::LATITUDE for the latitude \e lat2; this is
@@ -186,8 +185,9 @@ namespace GeographicLib {
      * capabilities.
      *
      * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-     * fixed and writing \e lat1 = 90<sup>o</sup> - \e eps or -90<sup>o</sup> +
-     * \e eps and taking the limit \e eps -> 0 from above.
+     * fixed and writing \e lat1 = 90&deg; &minus; &epsilon; or
+     * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
+     * above.
      **********************************************************************/
     GeodesicLine(const Geodesic& g, real lat1, real lon1, real azi1,
                  unsigned caps = ALL)
@@ -231,7 +231,8 @@ namespace GeographicLib {
      *   GeodesicLine::AREA.
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
-     * The values of \e lon2 and \e azi2 returned are in the range [-180, 180).
+     * The values of \e lon2 and \e azi2 returned are in the range
+     * [&minus;180&deg;, 180&deg;).
      *
      * The GeodesicLine object \e must have been constructed with \e caps |=
      * GeodesicLine::DISTANCE_IN; otherwise Math::NaN() is returned and no
@@ -348,7 +349,8 @@ namespace GeographicLib {
      *   that the GeodesicLine object was constructed with \e caps |=
      *   GeodesicLine::AREA.
      *
-     * The values of \e lon2 and \e azi2 returned are in the range [-180, 180).
+     * The values of \e lon2 and \e azi2 returned are in the range
+     * [&minus;180&deg;, 180&deg;).
      *
      * Requesting a value which the GeodesicLine object is not capable of
      * computing is not an error; the corresponding argument will not be
