@@ -59,8 +59,8 @@ namespace GeographicLib {
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
      * @param[in] k0 central scale factor.
-     * @exception GeographicLib if \e a, (1 - \e f ) \e a, or \e k0 is not
-     *   positive.
+     * @exception GeographicLib if \e a, (1 &minus; \e f ) \e a, or \e k0 is
+     *   not positive.
      **********************************************************************/
     PolarStereographic(real a, real f, real k0);
 
@@ -70,8 +70,8 @@ namespace GeographicLib {
      * @param[in] lat (degrees) assuming \e northp = true.
      * @param[in] k scale at latitude \e lat (default 1).
      * @exception GeographicLib \e k is not positive.
-     * @exception GeographicErr if \e lat is not in (-90<sup>o</sup>,
-     *   90<sup>o</sup>].
+     * @exception GeographicErr if \e lat is not in (&minus;90&deg;,
+     *   90&deg;].
      **********************************************************************/
     void SetScale(real lat, real k = real(1));
 
@@ -88,9 +88,9 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added.  \e lat should be in the range
-     * (-90<sup>o</sup>, 90<sup>o</sup>] for \e northp = true and in the range
-     * [-90<sup>o</sup>, 90<sup>o</sup>) for \e northp = false; \e lon should
-     * be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * (&minus;90&deg;, 90&deg;] for \e northp = true and in the range
+     * [&minus;90&deg;, 90&deg;) for \e northp = false; \e lon should
+     * be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     void Forward(bool northp, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
@@ -108,7 +108,7 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added.  The value of \e lon returned is
-     * in the range [-180, 180).
+     * in the range [&minus;180&deg;, 180&deg;).
      **********************************************************************/
     void Reverse(bool northp, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();

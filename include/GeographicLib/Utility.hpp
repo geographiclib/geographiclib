@@ -206,7 +206,8 @@ namespace GeographicLib {
      * @param[in] y the year (must be positive).
      * @param[in] m the month, Jan = 1, etc. (must be positive).
      * @param[in] d the day of the month (must be positive).
-     * @return the day of the week with Sunday, Monday - Saturday = 0, 1 - 6.
+     * @return the day of the week with Sunday, Monday&ndash;Saturday = 0,
+     *   1&ndash;6.
      **********************************************************************/
     static int dow(int y, int m, int d) throw() { return dow(day(y, m, d)); }
 
@@ -214,7 +215,8 @@ namespace GeographicLib {
      * Given the sequential day, return the day of the week.
      *
      * @param[in] s the sequential day (must be positive).
-     * @return the day of the week with Sunday, Monday - Saturday = 0, 1 - 6.
+     * @return the day of the week with Sunday, Monday&ndash;Saturday = 0,
+     *   1&ndash;6.
      **********************************************************************/
     static int dow(int s) throw() {
       return (s + 5) % 7;  // The 5 offset makes day 1 (0001-01-01) a Saturday.
@@ -250,11 +252,11 @@ namespace GeographicLib {
      *
      * @tparam T the type of the argument.
      * @param[in] x the value to be converted.
-     * @param[in] p the precision used (default -1).
+     * @param[in] p the precision used (default &minus;1).
      * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return the string representation.
      *
-     * If \e p >= 0, then the number fixed format is used with p bits of
+     * If \e p &ge; 0, then the number fixed format is used with p bits of
      * precision.  With p < 0, there is no manipulation of the format.
      **********************************************************************/
     template<typename T> static std::string str(T x, int p = -1) {
@@ -301,7 +303,8 @@ namespace GeographicLib {
      *
      * @tparam T the type of the return value.
      * @param[in] s the string to be matched.
-     * @return appropriate special value (+/-inf, nan) or 0 is none is found.
+     * @return appropriate special value (&plusmn;&infin;, nan) or 0 is none is
+     *   found.
      **********************************************************************/
     template<typename T> static T nummatch(const std::string& s) {
       if (s.length() < 3)
@@ -348,8 +351,8 @@ namespace GeographicLib {
      *
      * @param[in] s the string to be searched.
      * @param[in] c the character to look for.
-     * @return the index of the first occurrence character in the string or -1
-     *   is the character is not present.
+     * @return the index of the first occurrence character in the string or
+     *   &minus;1 is the character is not present.
      *
      * \e c is converted to upper case before search \e s.  Therefore, it is
      * intended that \e s should not contain any lower case letters.

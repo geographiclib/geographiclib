@@ -30,7 +30,7 @@ namespace GeographicLib {
    *  - C. F. F. Karney,
    *    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    *    Transverse Mercator with an accuracy of a few nanometers,</a>
-   *    J. Geodesy 85(8), 475-485 (Aug. 2011);
+   *    J. Geodesy 85(8), 475&ndash;485 (Aug. 2011);
    *    preprint
    *    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
    *
@@ -38,8 +38,9 @@ namespace GeographicLib {
    * subject to the branch cut rules (see the description of the \e extendp
    * argument to the constructor).  The maximum error is about 8 nm (8
    * nanometers), ground distance, for the forward and reverse transformations.
-   * The error in the convergence is 2e-15&quot;, the relative error in the
-   * scale is 7e-12%%.  See Sec. 3 of
+   * The error in the convergence is 2 &times; 10<sup>&minus;15</sup>&quot;,
+   * the relative error in the scale is 7 &times; 10<sup>&minus;12</sup>%%.
+   * See Sec. 3 of
    * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details.
    * The method is "exact" in the sense that the errors are close to the
    * round-off limit and that no changes are needed in the algorithms for them
@@ -137,30 +138,33 @@ namespace GeographicLib {
      * @exception GeographicLib if \e a, \e f, or \e k0 is not positive.
      *
      * The transverse Mercator projection has a branch point singularity at \e
-     * lat = 0 and \e lon - \e lon0 = 90 (1 - \e e) or (for
+     * lat = 0 and \e lon &minus; \e lon0 = 90 (1 &minus; \e e) or (for
      * TransverseMercatorExact::UTM) x = 18381 km, y = 0m.  The \e extendp
      * argument governs where the branch cut is placed.  With \e extendp =
      * false, the "standard" convention is followed, namely the cut is placed
-     * along x > 18381 km, y = 0m.  Forward can be called with any \e lat and
-     * \e lon then produces the transformation shown in Lee, Fig 46.  Reverse
-     * analytically continues this in the +/- \e x direction.  As a
-     * consequence, Reverse may map multiple points to the same geographic
+     * along \e x > 18381 km, \e y = 0m.  Forward can be called with any \e lat
+     * and \e lon then produces the transformation shown in Lee, Fig 46.
+     * Reverse analytically continues this in the &plusmn; \e x direction.  As
+     * a consequence, Reverse may map multiple points to the same geographic
      * location; for example, for TransverseMercatorExact::UTM, \e x =
-     * 22051449.037349 m, \e y = -7131237.022729 m and \e x = 29735142.378357
-     * m, \e y = 4235043.607933 m both map to \e lat = -2 deg, \e lon = 88 deg.
+     * 22051449.037349 m, \e y = &minus;7131237.022729 m and \e x =
+     * 29735142.378357 m, \e y = 4235043.607933 m both map to \e lat =
+     * &minus;2&deg;, \e lon = 88&deg;.
      *
      * With \e extendp = true, the branch cut is moved to the lower left
      * quadrant.  The various symmetries of the transverse Mercator projection
      * can be used to explore the projection on any sheet.  In this mode the
      * domains of \e lat, \e lon, \e x, and \e y are restricted to
      * - the union of
-     *   - \e lat in [0, 90] and \e lon - \e lon0 in [0, 90]
-     *   - \e lat in (-90, 0] and \e lon - \e lon0 in [90 (1 - \e e), 90]
+     *   - \e lat in [0, 90] and \e lon &minus; \e lon0 in [0, 90]
+     *   - \e lat in (-90, 0] and \e lon &minus; \e lon0 in [90 (1 &minus; \e
+           e), 90]
      * - the union of
-     *   - <i>x</i>/(\e k0 \e a) in [0, inf) and
+     *   - <i>x</i>/(\e k0 \e a) in [0, &infin;) and
      *     <i>y</i>/(\e k0 \e a) in [0, E(<i>e</i><sup>2</sup>)]
-     *   - <i>x</i>/(\e k0 \e a) in [K(1 - <i>e</i><sup>2</sup>) - E(1 -
-     *     <i>e</i><sup>2</sup>), inf) and <i>y</i>/(\e k0 \e a) in (-inf, 0]
+     *   - <i>x</i>/(\e k0 \e a) in [K(1 &minus; <i>e</i><sup>2</sup>) &minus;
+     *     E(1 &minus; <i>e</i><sup>2</sup>), &infin;) and <i>y</i>/(\e k0 \e
+     *     a) in (&minus;&infin;, 0]
      * .
      * See Sec. 5 of
      * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for a full
@@ -169,10 +173,9 @@ namespace GeographicLib {
      * The method will work for all ellipsoids used in terrestrial geodesy.
      * The method cannot be applied directly to the case of a sphere (\e f = 0)
      * because some the constants characterizing this method diverge in that
-     * limit, and in practice, \e f should be larger than about numeric_limits<
-     * real >::%epsilon().  However, TransverseMercator treats the sphere
-     * exactly.  An exception is thrown if either axis of the ellipsoid or \e
-     * k0 is not positive or if \e f <= 0.
+     * limit, and in practice, \e f should be larger than about
+     * numeric_limits<real>::epsilon().  However, TransverseMercator treats the
+     * sphere exactly.
      **********************************************************************/
     TransverseMercatorExact(real a, real f, real k0, bool extendp = false);
 
@@ -188,8 +191,8 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added. \e lat should be in the range
-     * [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon and \e lon0 should be in the
-     * range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * [&minus;90&deg;, 90&deg;]; \e lon and \e lon0 should be in the
+     * range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
@@ -206,8 +209,8 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added.  \e lon0 should be in the range
-     * [-540<sup>o</sup>, 540<sup>o</sup>).  The value of \e lon returned is in
-     * the range [-180<sup>o</sup>, 180<sup>o</sup>).
+     * [&minus;540&deg;, 540&deg;).  The value of \e lon returned is in
+     * the range [&minus;180&deg;, 180&deg;).
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();

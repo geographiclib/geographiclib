@@ -393,7 +393,7 @@ namespace GeographicLib {
      * @param[in] phi the geographic latitude (degrees).
      * @param[in] azi the angle between the meridian and the normal section
      *   (degrees).
-     * @return &rho; the radius of curvature of the ellipsoid in the normal
+     * @return the radius of curvature of the ellipsoid in the normal
      *   section at latitude &phi; inclined at an angle \e azi to the
      *   meridian (meters).
      *

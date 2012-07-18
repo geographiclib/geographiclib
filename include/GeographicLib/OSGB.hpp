@@ -80,8 +80,8 @@ namespace GeographicLib {
      * @param[out] gamma meridian convergence at point (degrees).
      * @param[out] k scale of projection at point.
      *
-     * \e lat should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon
-     * should be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * \e lat should be in the range [&minus;90&deg;, 90&deg;]; \e lon
+     * should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     static void Forward(real lat, real lon,
                         real& x, real& y, real& gamma, real& k) throw() {
@@ -100,7 +100,8 @@ namespace GeographicLib {
      * @param[out] gamma meridian convergence at point (degrees).
      * @param[out] k scale of projection at point.
      *
-     * The value of \e lon returned is in the range [-180, 180).
+     * The value of \e lon returned is in the range [&minus;180&deg;,
+     * 180&deg;).
      **********************************************************************/
 
     static void Reverse(real x, real y,
@@ -146,11 +147,10 @@ namespace GeographicLib {
      * - prec = 4, 10m
      * - prec = 5, 1m
      * - prec = 6, 0.1m
-     * - prec = 11 (max), 1um
+     * - prec = 11 (max), 1&mu;m
      *
-     * The easting must be in the range [-1000 km, 1500 km) and the northing
-     * must be in the range [-500 km, 2000 km).  An exception is thrown if
-     * either the easting and northing is outside these bounds.  These bounds
+     * The easting must be in the range [&minus;1000 km, 1500 km) and the
+     * northing must be in the range [&minus;500 km, 2000 km).  These bounds
      * are consistent with rules for the letter designations for the grid
      * system.
      **********************************************************************/
@@ -181,8 +181,8 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the Airy 1830 ellipsoid (meters).
      *
      * This is 20923713 ft converted to meters using the rule 1 ft =
-     * 10^(9.48401603-10) m.  (The Airy 1830 value is returned because the OSGB
-     * projection is based on this ellipsoid.)
+     * 10<sup>9.48401603&minus;10</sup> m.  (The Airy 1830 value is returned
+     * because the OSGB projection is based on this ellipsoid.)
      **********************************************************************/
     static Math::real MajorRadius() throw()
     // result is about 6377563.3960320664406 m
@@ -192,9 +192,9 @@ namespace GeographicLib {
      * @return \e f the inverse flattening of the Airy 1830 ellipsoid.
      *
      * For the Airy 1830 ellipsoid, \e a = 20923713 ft and \e b = 20853810 ft;
-     * thus the flattening = (20923713 - 20853810)/20923713 = 7767/2324857 =
-     * 1/299.32496459...  (The Airy 1830 value is returned because the OSGB
-     * projection is based on this ellipsoid.)
+     * thus the flattening = (20923713 &minus; 20853810)/20923713 =
+     * 7767/2324857 = 1/299.32496459...  (The Airy 1830 value is returned
+     * because the OSGB projection is based on this ellipsoid.)
      **********************************************************************/
     static Math::real Flattening() throw()
     { return real(20923713 - 20853810) / real(20923713); }
@@ -219,12 +219,13 @@ namespace GeographicLib {
     static Math::real OriginLatitude() throw() { return real(49); }
 
     /**
-     * @return longitude of the origin for the OSGB projection (-2 degrees).
+     * @return longitude of the origin for the OSGB projection (&minus;2
+     *   degrees).
      **********************************************************************/
     static Math::real OriginLongitude() throw() { return real(-2); }
 
     /**
-     * @return false northing the OSGB projection (-100000 meters).
+     * @return false northing the OSGB projection (&minus;100000 meters).
      **********************************************************************/
     static Math::real FalseNorthing() throw() { return real(-100000); }
 

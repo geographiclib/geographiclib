@@ -71,8 +71,8 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * The default constructor is equivalent to \e latitude = 90<sup>o</sup>,
-     * \e longitude = 0<sup>o</sup>.
+     * The default constructor is equivalent to \e latitude = 90&deg;,
+     * \e longitude = 0&deg;.
      **********************************************************************/
     GeoCoords() throw()
       // This is the N pole
@@ -143,16 +143,17 @@ namespace GeographicLib {
      * .
      * all specify the same angle.  The leading sign applies to all components
      * so -1d30 is -(1+30/60) = -1.5.  Latitudes must be in the range
-     * [-90<sup>o</sup>, 90<sup>o</sup>] and longitudes in the range
-     * [-540<sup>o</sup>, 540<sup>o</sup>).  Internally longitudes are reduced
-     * to the range [-180, 180).
+     * [&minus;90&deg;, 90&deg;] and longitudes in the range
+     * [&minus;540&deg;, 540&deg;).  Internally longitudes are reduced
+     * to the range [&minus;180&deg;, 180&deg;).
      *
-     * UTM/UPS parsing.  For UTM zones (-80 <= Lat <= 84), the zone designator
-     * is made up of a zone number (for 1 to 60) and a hemisphere letter (N or
-     * S), e.g., 38N.  The latitude zone designer ([C&ndash;M] in the southern
-     * hemisphere and [N&ndash;X] in the northern) should NOT be used.  (This
-     * is part of the MGRS coordinate.)  The zone designator for the poles
-     * (where UPS is employed) is a hemisphere letter by itself, i.e., N or S.
+     * UTM/UPS parsing.  For UTM zones (&minus;80&deg; &le; Lat < 84&deg;), the
+     * zone designator is made up of a zone number (for 1 to 60) and a
+     * hemisphere letter (N or S), e.g., 38N.  The latitude zone designer
+     * ([C&ndash;M] in the southern hemisphere and [N&ndash;X] in the northern)
+     * should NOT be used.  (This is part of the MGRS coordinate.)  The zone
+     * designator for the poles (where UPS is employed) is a hemisphere letter
+     * by itself, i.e., N or S.
      *
      * MGRS parsing interprets the grid references as square area at the
      * specified precision (1m, 10m, 100m, etc.).  If \e centerp = true (the
@@ -178,10 +179,10 @@ namespace GeographicLib {
      * @param[in] longitude (degrees).
      * @param[in] zone if specified, force the UTM/UPS representation to use a
      *   specified zone using the rules given in UTMUPS::zonespec.
-     * @exception GeographicErr if \e latitude is not in [-90<sup>o</sup>,
-     *   90<sup>o</sup>].
-     * @exception GeographicErr if \e longitude is not in [-540<sup>o</sup>,
-     *   540<sup>o</sup>).
+     * @exception GeographicErr if \e latitude is not in [&minus;90&deg;,
+     *   90&deg;].
+     * @exception GeographicErr if \e longitude is not in [&minus;540&deg;,
+     *   540&deg;).
      * @exception GeographicErr if \e zone cannot be used for this location.
      **********************************************************************/
     GeoCoords(real latitude, real longitude, int zone = UTMUPS::STANDARD) {
@@ -224,10 +225,10 @@ namespace GeographicLib {
      * @param[in] longitude (degrees).
      * @param[in] zone if specified, force the UTM/UPS representation to use a
      *   specified zone using the rules given in UTMUPS::zonespec.
-     * @exception GeographicErr if \e latitude is not in [-90<sup>o</sup>,
-     *   90<sup>o</sup>].
-     * @exception GeographicErr if \e longitude is not in [-540<sup>o</sup>,
-     *   540<sup>o</sup>).
+     * @exception GeographicErr if \e latitude is not in [&minus;90&deg;,
+     *   90&deg;].
+     * @exception GeographicErr if \e longitude is not in [&minus;540&deg;,
+     *   540&deg;).
      * @exception GeographicErr if \e zone cannot be used for this location.
      **********************************************************************/
     void Reset(real latitude, real longitude, int zone = UTMUPS::STANDARD) {
@@ -383,10 +384,10 @@ namespace GeographicLib {
      * @return decimal latitude/longitude string representation.
      *
      * Precision specifies accuracy of representation as follows:
-     * - prec = -5 (min), 1d
-     * - prec = 0, 10<sup>-5</sup>d (about 1m)
-     * - prec = 3, 10<sup>-8</sup>d
-     * - prec = 9 (max), 10<sup>-14</sup>d
+     * - prec = &minus;5 (min), 1&deg;
+     * - prec = 0, 10<sup>&minus;5</sup>&deg; (about 1m)
+     * - prec = 3, 10<sup>&minus;8</sup>&deg;
+     * - prec = 9 (max), 10<sup>&minus;14</sup>&deg;
      **********************************************************************/
     std::string GeoRepresentation(int prec = 0, bool swaplatlong = false) const;
 
@@ -402,14 +403,14 @@ namespace GeographicLib {
      * @return DMS latitude/longitude string representation.
      *
      * Precision specifies accuracy of representation as follows:
-     * - prec = -5 (min), 1d
-     * - prec = -4, 0.1d
-     * - prec = -3, 1'
-     * - prec = -2, 0.1'
-     * - prec = -1, 1&quot;
+     * - prec = &minus;5 (min), 1&deg;
+     * - prec = &minus;4, 0.1&deg;
+     * - prec = &minus;3, 1'
+     * - prec = &minus;2, 0.1'
+     * - prec = &minus;1, 1&quot;
      * - prec = 0, 0.1&quot; (about 3m)
      * - prec = 1, 0.01&quot;
-     * - prec = 10 (max), 10<sup>-11</sup>&quot;
+     * - prec = 10 (max), 10<sup>&minus;11</sup>&quot;
      **********************************************************************/
     std::string DMSRepresentation(int prec, bool swaplatlong, char dmssep)
       const;
@@ -442,16 +443,17 @@ namespace GeographicLib {
      *
      * This gives the coordinates of the enclosing grid square with size given
      * by the precision.  Thus 38N 444180 3684790 converted to a MGRS
-     * coordinate at precision -2 (100m) is 38SMB441847 and not 38SMB442848.
-     * \e prec specifies the precision of the MGRS string as follows:
-     * - prec = -5 (min), 100km
-     * - prec = -4, 10km
-     * - prec = -3, 1km
-     * - prec = -2, 100m
-     * - prec = -1, 10m
+     * coordinate at precision &minus;2 (100m) is 38SMB441847 and not
+     * 38SMB442848.  \e prec specifies the precision of the MGRS string as
+     * follows:
+     * - prec = &minus;5 (min), 100km
+     * - prec = &minus;4, 10km
+     * - prec = &minus;3, 1km
+     * - prec = &minus;2, 100m
+     * - prec = &minus;1, 10m
      * - prec = 0, 1m
      * - prec = 1, 0.1m
-     * - prec = 6 (max), 1um
+     * - prec = 6 (max), 1&mu;m
      **********************************************************************/
     std::string MGRSRepresentation(int prec = 0) const;
 
@@ -464,11 +466,11 @@ namespace GeographicLib {
      *   northing.
      *
      * Precision specifies accuracy of representation as follows:
-     * - prec = -5 (min), 100km
-     * - prec = -3, 1km
+     * - prec = &minus;5 (min), 100km
+     * - prec = &minus;3, 1km
      * - prec = 0, 1m
      * - prec = 3, 1mm
-     * - prec = 6, 1um
+     * - prec = 6, 1&mu;m
      * - prec = 9 (max), 1nm
      **********************************************************************/
     std::string UTMUPSRepresentation(int prec = 0) const;

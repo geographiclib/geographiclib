@@ -59,10 +59,10 @@ namespace GeographicLib {
      * @param[in] lon longitude of point (degrees).
      * @param[in] len the length of the resulting geohash.
      * @param[out] geohash the geohash.
-     * @exception GeographicErr if \e la is not in [-90<sup>o</sup>,
-     *   90<sup>o</sup>].
-     * @exception GeographicErr if \e lon is not in [-540<sup>o</sup>,
-     *   540<sup>o</sup>).
+     * @exception GeographicErr if \e la is not in [&minus;90&deg;,
+     *   90&deg;].
+     * @exception GeographicErr if \e lon is not in [&minus;540&deg;,
+     *   540&deg;).
      * @exception std::bad_alloc if memory for \e geohash can't be allocated.
      *
      * Internally, \e len is first put in the range [0, 18].
@@ -162,7 +162,7 @@ namespace GeographicLib {
      * @return the decimal precision (may be negative).
      *
      * Internally, \e len is first put in the range [0, 18].  The returned
-     * decimal precision is in the range [-2, 12].
+     * decimal precision is in the range [&minus;2, 12].
      **********************************************************************/
     static int DecimalPrecision(int len) throw() {
       return -int(std::floor(std::log(LatitudeResolution(len))/

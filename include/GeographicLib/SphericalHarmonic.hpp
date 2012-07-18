@@ -30,8 +30,8 @@ namespace GeographicLib {
    * - <i>p</i><sup>2</sup> = <i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>,
    * - <i>r</i><sup>2</sup> = <i>p</i><sup>2</sup> + <i>z</i><sup>2</sup>,
    * - \e q = <i>a</i>/<i>r</i>,
-   * - \e theta = atan2(\e p, \e z) = the spherical \e colatitude,
-   * - \e lambda = atan2(\e y, \e x) = the longitude.
+   * - &theta; = atan2(\e p, \e z) = the spherical \e colatitude,
+   * - &lambda; = atan2(\e y, \e x) = the longitude.
    * - P<sub>\e nm</sub>(\e t) is the associated Legendre polynomial of degree
    *   \e n and order \e m.
    *
@@ -46,17 +46,17 @@ namespace GeographicLib {
    *
    * References:
    * - C. W. Clenshaw, A note on the summation of Chebyshev series,
-   *   %Math. Tables Aids Comput. 9(51), 118-120 (1955).
+   *   %Math. Tables Aids Comput. 9(51), 118&ndash;120 (1955).
    * - R. E. Deakin, Derivatives of the earth's potentials, Geomatics
-   *   Research Australasia 68, 31-60, (June 1998).
+   *   Research Australasia 68, 31&ndash;60, (June 1998).
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San
    *   Francisco, 1967).  (See Sec. 1-14, for a definition of Pbar.)
    * - S. A. Holmes and W. E. Featherstone, A unified approach to the Clenshaw
    *   summation and the recursive computation of very high degree and order
-   *   normalised associated Legendre functions, J. Geodesy 76(5), 279-299
-   *   (2002).
+   *   normalised associated Legendre functions, J. Geodesy 76(5),
+   *   279&ndash;299 (2002).
    * - C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw
-   *   summation, Boll. Geod. Sci. Aff. 41(4), 349-375 (1982).
+   *   summation, Boll. Geod. Sci. Aff. 41(4), 349&ndash;375 (1982).
    *
    * Example of use:
    * \include example-SphericalHarmonic.cpp
@@ -72,17 +72,19 @@ namespace GeographicLib {
        * Fully normalized associated Legendre polynomials.
        *
        * These are defined by <i>P</i><sub><i>nm</i></sub><sup>full</sup>(\e z)
-       * = (-1)<sup><i>m</i></sup> sqrt(\e k (2\e n + 1) (\e n - \e m)! / (\e n
-       * + \e m)!) <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z), where
+       * = (&minus;1)<sup><i>m</i></sup> sqrt(\e k (2\e n + 1) (\e n &minus; \e
+       * m)! / (\e n + \e m)!)
+       * <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z), where
        * <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z) is Ferrers
        * function (also known as the Legendre function on the cut or the
        * associated Legendre polynomial) http://dlmf.nist.gov/14.7.E10 and \e k
        * = 1 for \e m = 0 and \e k = 2 otherwise.
        *
        * The mean squared value of
-       * <i>P</i><sub><i>nm</i></sub><sup>full</sup>(cos \e theta) cos(\e m \e
-       * lambda) and <i>P</i><sub><i>nm</i></sub><sup>full</sup>(cos \e theta)
-       * sin(\e m \e lambda) over the sphere is 1.
+       * <i>P</i><sub><i>nm</i></sub><sup>full</sup>(cos&theta;)
+       * cos(<i>m</i>&lambda;) and
+       * <i>P</i><sub><i>nm</i></sub><sup>full</sup>(cos&theta;)
+       * sin(<i>m</i>&lambda;) over the sphere is 1.
        *
        * @hideinitializer
        **********************************************************************/
@@ -91,17 +93,18 @@ namespace GeographicLib {
        * Schmidt semi-normalized associated Legendre polynomials.
        *
        * These are defined by <i>P</i><sub><i>nm</i></sub><sup>schmidt</sup>(\e
-       * z) = (-1)<sup><i>m</i></sup> sqrt(\e k (\e n - \e m)! / (\e n + \e
-       * m)!)  <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z), where
-       * <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z) is Ferrers
+       * z) = (&minus;1)<sup><i>m</i></sup> sqrt(\e k (\e n &minus; \e m)! /
+       * (\e n + \e m)!)  <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z),
+       * where <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z) is Ferrers
        * function (also known as the Legendre function on the cut or the
        * associated Legendre polynomial) http://dlmf.nist.gov/14.7.E10 and \e k
        * = 1 for \e m = 0 and \e k = 2 otherwise.
        *
        * The mean squared value of
-       * <i>P</i><sub><i>nm</i></sub><sup>schmidt</sup>(cos \e theta) cos(\e m
-       * \e lambda) and <i>P</i><sub><i>nm</i></sub><sup>schmidt</sup>(cos \e
-       * theta) sin(\e m \e lambda) over the sphere is 1/(2\e n + 1).
+       * <i>P</i><sub><i>nm</i></sub><sup>schmidt</sup>(cos&theta;)
+       * cos(<i>m</i>&lambda;) and
+       * <i>P</i><sub><i>nm</i></sub><sup>schmidt</sup>(cos&theta;)
+       * sin(<i>m</i>&lambda;) over the sphere is 1/(2\e n + 1).
        *
        * @hideinitializer
        **********************************************************************/
@@ -131,7 +134,7 @@ namespace GeographicLib {
      * @param[in] norm the normalization for the associated Legendre
      *   polynomials, either SphericalHarmonic::full (the default) or
      *   SphericalHarmonic::schmidt.
-     * @exception GeographicErr if \e N does not satisfy \e N >= -1.
+     * @exception GeographicErr if \e N does not satisfy \e N &ge; &minus;1.
      * @exception GeographicErr if \e C or \e S is not big enough to hold the
      *   coefficients.
      *
@@ -149,10 +152,10 @@ namespace GeographicLib {
      * <i>C</i><sub>22</sub>,
      * <i>C</i><sub>32</sub>,
      * <i>C</i><sub>33</sub>.
-     * In general the (\e n,\e m) element is at index \e m*\e N - \e m*(\e m -
-     * 1)/2 + \e n.  The layout of \e S is the same except that the first
-     * column is omitted (since the \e m = 0 terms never contribute to the sum)
-     * and the 0th element is <i>S</i><sub>11</sub>
+     * In general the (\e n,\e m) element is at index \e m \e N &minus; \e m
+     * (\e m &minus; 1)/2 + \e n.  The layout of \e S is the same except that
+     * the first column is omitted (since the \e m = 0 terms never contribute
+     * to the sum) and the 0th element is <i>S</i><sub>11</sub>
      *
      * The class stores <i>pointers</i> to the first elements of \e C and \e S.
      * These arrays should not be altered or destroyed during the lifetime of a
@@ -181,7 +184,7 @@ namespace GeographicLib {
      *   polynomials, either SphericalHarmonic::FULL (the default) or
      *   SphericalHarmonic::SCHMIDT.
      * @exception GeographicErr if \e N, \e nmx, and \e mmx do not satisfy
-     *   \e N >= \e nmx >= \e mmx >= -1.
+     *   \e N &ge; \e nmx &ge; \e mmx &ge; &minus;1.
      * @exception GeographicErr if \e C or \e S is not big enough to hold the
      *   coefficients.
      *
@@ -278,43 +281,42 @@ namespace GeographicLib {
      * @return the CircularEngine object.
      *
      * SphericalHarmonic::operator()() exchanges the order of the sums in the
-     * definition, i.e., sum(n = 0..N)[sum(m = 0..n)[...]] becomes sum(m =
-     * 0..N)[sum(n = m..N)[...]].  SphericalHarmonic::Circle performs the inner
-     * sum over degree \e n (which entails about <i>N</i><sup>2</sup>
-     * operations).  Calling CircularEngine::operator()() on the returned
-     * object performs the outer sum over the order \e m (about \e N
-     * operations).  This routine may throw a std::bad_alloc exception in the
-     * CircularEngine constructor.
+     * definition, i.e., &sum;<sub>n = 0..N</sub> &sum;<sub>m = 0..n</sub>
+     * becomes &sum;<sub>m = 0..N</sub> &sum;<sub>n = m..N</sub>.
+     * SphericalHarmonic::Circle performs the inner sum over degree \e n (which
+     * entails about <i>N</i><sup>2</sup> operations).  Calling
+     * CircularEngine::operator()() on the returned object performs the outer
+     * sum over the order \e m (about \e N operations).
      *
      * Here's an example of computing the spherical sum at a sequence of
      * longitudes without using a CircularEngine object
      \code
-  SphericalHarmonic h(...);     // Create the SphericalHarmonic object
-  double r = 2, lat = 33, lon0 = 44, dlon = 0.01;
-  double
-    phi = lat * Math::degree<double>(),
-    z = r * sin(phi), p = r * cos(phi);
-  for (int i = 0; i <= 100; ++i) {
-    real
-      lon = lon0 + i * dlon,
-      lam = lon * Math::degree<double>();
-    std::cout << lon << " " << h(p * cos(lam), p * sin(lam), z) << "\n";
-  }
+     SphericalHarmonic h(...);     // Create the SphericalHarmonic object
+     double r = 2, lat = 33, lon0 = 44, dlon = 0.01;
+     double
+       phi = lat * Math::degree<double>(),
+       z = r * sin(phi), p = r * cos(phi);
+     for (int i = 0; i <= 100; ++i) {
+       real
+         lon = lon0 + i * dlon,
+         lam = lon * Math::degree<double>();
+       std::cout << lon << " " << h(p * cos(lam), p * sin(lam), z) << "\n";
+     }
      \endcode
      * Here is the same calculation done using a CircularEngine object.  This
      * will be about <i>N</i>/2 times faster.
      \code
-  SphericalHarmonic h(...);     // Create the SphericalHarmonic object
-  double r = 2, lat = 33, lon0 = 44, dlon = 0.01;
-  double
-    phi = lat * Math::degree<double>(),
-    z = r * sin(phi), p = r * cos(phi);
-  CircularEngine c(h(p, z, false)); // Create the CircularEngine object
-  for (int i = 0; i <= 100; ++i) {
-    real
-      lon = lon0 + i * dlon;
-    std::cout << lon << " " << c(lon) << "\n";
-  }
+     SphericalHarmonic h(...);     // Create the SphericalHarmonic object
+     double r = 2, lat = 33, lon0 = 44, dlon = 0.01;
+     double
+       phi = lat * Math::degree<double>(),
+       z = r * sin(phi), p = r * cos(phi);
+     CircularEngine c(h(p, z, false)); // Create the CircularEngine object
+     for (int i = 0; i <= 100; ++i) {
+       real
+         lon = lon0 + i * dlon;
+       std::cout << lon << " " << c(lon) << "\n";
+     }
      \endcode
      **********************************************************************/
     CircularEngine Circle(real p, real z, bool gradp) const {

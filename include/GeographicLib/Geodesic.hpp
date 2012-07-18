@@ -53,16 +53,16 @@ namespace GeographicLib {
    * instead to specify the arc length \e a12 (in degrees) on the auxiliary
    * sphere.  This is a mathematical construct used in solving the geodesic
    * problems.  The solution of the direct problem in this form is provide by
-   * Geodesic::ArcDirect.  An arc length in excess of 180<sup>o</sup> indicates
+   * Geodesic::ArcDirect.  An arc length in excess of 180&deg; indicates
    * that the geodesic is not a shortest path.  In addition, the arc length
    * between an equatorial crossing and the next extremum of latitude for a
-   * geodesic is 90<sup>o</sup>.
+   * geodesic is 90&deg;.
    *
    * This class can also calculate several other quantities related to
    * geodesics.  These are:
    * - <i>reduced length</i>.  If we fix the first point and increase \e azi1
    *   by \e dazi1 (radians), the second point is displaced \e m12 \e dazi1 in
-   *   the direction \e azi2 + 90<sup>o</sup>.  The quantity \e m12 is called
+   *   the direction \e azi2 + 90&deg;.  The quantity \e m12 is called
    *   the "reduced length" and is symmetric under interchange of the two
    *   points.  On a curved surface the reduced length obeys a symmetry
    *   relation, \e m12 + \e m21 = 0.  On a flat surface, we have \e m12 = \e
@@ -91,8 +91,8 @@ namespace GeographicLib {
    * obey addition rules.  Let points 1, 2, and 3 all lie on a single geodesic,
    * then
    * - \e m13 = \e m12 \e M23 + \e m23 \e M21
-   * - \e M13 = \e M12 \e M23 - (1 - \e M12 \e M21) \e m23 / \e m12
-   * - \e M31 = \e M32 \e M21 - (1 - \e M23 \e M32) \e m12 / \e m23
+   * - \e M13 = \e M12 \e M23 &minus; (1 &minus; \e M12 \e M21) \e m23 / \e m12
+   * - \e M31 = \e M32 \e M21 &minus; (1 &minus; \e M23 \e M32) \e m12 / \e m23
    *
    * Additional functionality is provided by the GeodesicLine class, which
    * allows a sequence of points along a geodesic to be computed.
@@ -289,7 +289,8 @@ namespace GeographicLib {
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
-     * @exception GeographicLib if \e a or (1 - \e f ) \e a is not positive.
+     * @exception GeographicLib if \e a or (1 &minus; \e f ) \e a is not
+     *   positive.
      **********************************************************************/
     Geodesic(real a, real f);
     ///@}
@@ -317,18 +318,18 @@ namespace GeographicLib {
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
-     * \e lat1 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
-     * lon1 and \e azi1 should be in the range [-540<sup>o</sup>,
-     * 540<sup>o</sup>).  The values of \e lon2 and \e azi2 returned are in the
-     * range [-180<sup>o</sup>, 180<sup>o</sup>).
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
+     * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
+     * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
+     * 180&deg;).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
-     * longitude fixed and writing \e lat = 90<sup>o</sup> - \e eps or
-     * -90<sup>o</sup> + \e eps and taking the limit \e eps -> 0 from above.
-     * An arc length greater that 180<sup>o</sup> signifies a geodesic which is
-     * not a shortest path.  (For a prolate ellipsoid, an additional condition
-     * is necessary for a shortest path: the longitudinal extent must not
-     * exceed of 180<sup>o</sup>.)
+     * longitude fixed and writing \e lat = 90&deg; &minus; &epsilon; or
+     * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
+     * above.  An arc length greater that 180&deg; signifies a geodesic which
+     * is not a shortest path.  (For a prolate ellipsoid, an additional
+     * condition is necessary for a shortest path: the longitudinal extent must
+     * not exceed of 180&deg;.)
      *
      * The following functions are overloaded versions of Geodesic::Direct
      * which omit some of the output parameters.  Note, however, that the arc
@@ -432,18 +433,18 @@ namespace GeographicLib {
      *   (dimensionless).
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
      *
-     * \e lat1 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
-     * lon1 and \e azi1 should be in the range [-540<sup>o</sup>,
-     * 540<sup>o</sup>).  The values of \e lon2 and \e azi2 returned are in the
-     * range [-180<sup>o</sup>, 180<sup>o</sup>).
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
+     * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
+     * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
+     * 180&deg;).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
-     * longitude fixed and writing \e lat = 90<sup>o</sup> - \e eps or
-     * -90<sup>o</sup> + \e eps and taking the limit \e eps -> 0 from above.
-     * An arc length greater that 180<sup>o</sup> signifies a geodesic which is
-     * not a shortest path.  (For a prolate ellipsoid, an additional condition
-     * is necessary for a shortest path: the longitudinal extent must not
-     * exceed of 180<sup>o</sup>.)
+     * longitude fixed and writing \e lat = 90&deg; &minus; &epsilon; or
+     * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
+     * above.  An arc length greater that 180&deg; signifies a geodesic which
+     * is not a shortest path.  (For a prolate ellipsoid, an additional
+     * condition is necessary for a shortest path: the longitudinal extent must
+     * not exceed of 180&deg;.)
      *
      * The following functions are overloaded versions of Geodesic::Direct
      * which omit some of the output parameters.
@@ -607,18 +608,18 @@ namespace GeographicLib {
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
-     * \e lat1 and \e lat2 should be in the range [-90<sup>o</sup>,
-     * 90<sup>o</sup>]; \e lon1 and \e lon2 should be in the range
-     * [-540<sup>o</sup>, 540<sup>o</sup>).  The values of \e azi1 and \e azi2
-     * returned are in the range [-180<sup>o</sup>, 180<sup>o</sup>).
+     * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;]; \e
+     * lon1 and \e lon2 should be in the range [&minus;540&deg;, 540&deg;).
+     * The values of \e azi1 and \e azi2 returned are in the range
+     * [&minus;180&deg;, 180&deg;).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
-     * longitude fixed and writing \e lat = 90<sup>o</sup> - \e eps or
-     * -90<sup>o</sup> + \e eps and taking the limit \e eps -> 0 from above.
-     * If the routine fails to converge, then all the requested outputs are set
-     * to Math::NaN().  (Test for such results with Math::isnan.)  This is not
-     * expected to happen with ellipsoidal models of the earth; please report
-     * all cases where this occurs.
+     * longitude fixed and writing \e lat = 90&deg; &minus; &epsilon; or
+     * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
+     * above.  If the routine fails to converge, then all the requested outputs
+     * are set to Math::NaN().  (Test for such results with Math::isnan.)  This
+     * is not expected to happen with ellipsoidal models of the earth; please
+     * report all cases where this occurs.
      *
      * The following functions are overloaded versions of Geodesic::Inverse
      * which omit some of the output parameters.  Note, however, that the arc
@@ -762,9 +763,8 @@ namespace GeographicLib {
      *   i.e., which quantities can be returned in calls to
      *   GeodesicLib::Position.
      *
-     * \e lat1 should be in the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e
-     * lon1 and \e azi1 should be in the range [-540<sup>o</sup>,
-     * 540<sup>o</sup>).
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
+     * azi1 should be in the range [&minus;540&deg;, 540&deg;).
      *
      * The Geodesic::mask values are
      * - \e caps |= Geodesic::LATITUDE for the latitude \e lat2; this is
@@ -785,8 +785,8 @@ namespace GeographicLib {
      * capabilities.
      *
      * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-     * fixed and writing \e lat1 = 90 - \e eps or -90 + \e eps and taking the
-     * limit \e eps -> 0 from above.
+     * fixed and writing \e lat1 = 90 &minus; &epsilon; or &minus;90 +
+     * &epsilon; and taking the limit &epsilon; &rarr; 0 from above.
      **********************************************************************/
     GeodesicLine Line(real lat1, real lon1, real azi1, unsigned caps = ALL)
       const throw();

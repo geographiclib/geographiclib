@@ -81,11 +81,12 @@ namespace GeographicLib {
 
     /**
      * In this class we bring together the UTM and UPS coordinates systems.
-     * The UTM divides the earth between latitudes -80 and 84 into 60 zones
-     * numbered 1 thru 60.  Zone assign zone number 0 to the UPS regions,
-     * covering the two poles.  Within UTMUPS, non-negative zone numbers refer
-     * to one of the "physical" zones, 0 for UPS and [1, 60] for UTM.  Negative
-     * "pseudo-zone" numbers are used to select one of the physical zones.
+     * The UTM divides the earth between latitudes &minus;80&deg; and 84&deg;
+     * into 60 zones numbered 1 thru 60.  Zone assign zone number 0 to the UPS
+     * regions, covering the two poles.  Within UTMUPS, non-negative zone
+     * numbers refer to one of the "physical" zones, 0 for UPS and [1, 60] for
+     * UTM.  Negative "pseudo-zone" numbers are used to select one of the
+     * physical zones.
      **********************************************************************/
     enum zonespec {
       /**
@@ -104,17 +105,17 @@ namespace GeographicLib {
       /**
        * Apply the standard rules for UTM zone assigment extending the UTM zone
        * to each pole to give a zone number in [1, 60].  For example, use UTM
-       * zone 38 for longitude in [42, 48).  The rules include the Norway and
-       * Svalbard exceptions.
+       * zone 38 for longitude in [42&deg;, 48&deg;).  The rules include the
+       * Norway and Svalbard exceptions.
        **********************************************************************/
       UTM = -2,
       /**
        * Apply the standard rules for zone assignment to give a zone number in
-       * [0, 60].  If the latitude is not in [-80, 84), then use UTMUPS::UPS =
-       * 0, otherwise apply the rules for UTMUPS::UTM.  The tests on latitudes
-       * and longitudes are all closed on the lower end open on the upper.
-       * Thus for UTM zone 38, latitude is in [-80, 84) and longitude is in
-       * [42, 48).
+       * [0, 60].  If the latitude is not in [&minus;80&deg;, 84&deg;), then
+       * use UTMUPS::UPS = 0, otherwise apply the rules for UTMUPS::UTM.  The
+       * tests on latitudes and longitudes are all closed on the lower end open
+       * on the upper.  Thus for UTM zone 38, latitude is in [&minus;80&deg;,
+       * 84&deg;) and longitude is in [42&deg;, 48&deg;).
        **********************************************************************/
       STANDARD = -1,
       /**
@@ -153,7 +154,7 @@ namespace GeographicLib {
      *   that zone if it is non-negative, otherwise apply the rules given in
      *   UTMUPS::zonespec.
      * @exception GeographicErr if \e setzone is outside the range
-     *   [UTMUPS::MINPSEUDOZONE, UTMUPS::MAXZONE] = [-4, 60].
+     *   [UTMUPS::MINPSEUDOZONE, UTMUPS::MAXZONE] = [&minus;4, 60].
      *
      * This is exact.
      **********************************************************************/
@@ -173,10 +174,10 @@ namespace GeographicLib {
      * @param[in] setzone zone override (optional).
      * @param[in] mgrslimits if true enforce the stricter MGRS limits on the
      *   coordinates (default = false).
-     * @exception GeographicErr if \e lat is not in [-90<sup>o</sup>,
-     *   90<sup>o</sup>].
-     * @exception GeographicErr if \e lon is not in [-540<sup>o</sup>,
-     *   540<sup>o</sup>).
+     * @exception GeographicErr if \e lat is not in [&minus;90&deg;,
+     *   90&deg;].
+     * @exception GeographicErr if \e lon is not in [&minus;540&deg;,
+     *   540&deg;).
      * @exception GeographicLib if the resulting \e x or \e y is out of allowed
      *   range (see Reverse); in this case, these arguments are unchanged.
      *

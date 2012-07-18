@@ -122,7 +122,7 @@ namespace GeographicLib {
      * Degrees, minutes, and seconds are indicated by the characters d, '
      * (single quote), &quot; (double quote), and these components may only be
      * given in this order.  Any (but not all) components may be omitted and
-     * other symbols (e.g., the <sup>o</sup> symbol for degrees and the unicode
+     * other symbols (e.g., the &deg; symbol for degrees and the unicode
      * prime and double prime symbols for minutes and seconds) may be
      * substituted.  The last component indicator may be omitted and is assumed
      * to be the next smallest unit (thus 33d10 is interpreted as 33d10').  The
@@ -160,16 +160,19 @@ namespace GeographicLib {
      * seconds:
      * - degrees:
      *   - d, D lower and upper case letters
-     *   - U+00b0 degree symbol
+     *   - U+00b0 degree symbol (&deg;)
      *   - U+00ba masculine ordinal indicator
      *   - U+2070 superscript zero
+     *   - U+02da ring above
      * - minutes:
      *   - ' apostrophe
-     *   - U+2032 prime
+     *   - U+2032 prime (&prime;)
      *   - U+00b4 acute accent
+     *   - U+2019 right single quote (&rsquo;)
      * - seconds:
      *   - &quot; quotation mark
-     *   - U+2033 double prime
+     *   - U+2033 double prime (&Prime;)
+     *   - U+201d right double quote (&rdquo;)
      *   - '&nbsp;' any two consecutive symbols for minutes
      * .
      * The codes with a leading zero byte, e.g., U+00b0, are accepted in their
@@ -223,8 +226,8 @@ namespace GeographicLib {
      * @param[in] dmsa first string.
      * @param[in] dmsb second string.
      * @param[out] lat latitude.
-     * @param[out] lon longitude reduced to the range [-180<sup>o</sup>,
-     *   180<sup>o</sup>).
+     * @param[out] lon longitude reduced to the range [&minus;180&deg;,
+     *   180&deg;).
      * @param[in] swaplatlong if true assume longitude is given before latitude
      *   in the absence of hemisphere designators (default false).
      * @exception GeographicErr if \e dmsa or \e dmsb is malformed.
@@ -232,10 +235,10 @@ namespace GeographicLib {
      *   latitudes.
      * @exception GeographicErr if \e dmsa and \e dmsb are both interpreted as
      *   longitudes.
-     * @exception GeographicErr if decoded latitude is not in [-90<sup>o</sup>,
-     *   90<sup>o</sup>].
+     * @exception GeographicErr if decoded latitude is not in [&minus;90&deg;,
+     *   90&deg;].
      * @exception GeographicErr if decoded longitude is not in
-     *   [-540<sup>o</sup>, 540<sup>o</sup>).
+     *   [&minus;540&deg;, 540&deg;).
      *
      * By default, the \e lat (resp., \e lon) is assigned to the results of
      * decoding \e dmsa (resp., \e dmsb).  However this is overridden if either
@@ -266,12 +269,12 @@ namespace GeographicLib {
      * @exception GeographicErr if \e azistr is malformed.
      * @exception GeographicErr if \e azistr includes a N/S designator.
      * @exception GeographicErr if decoded azimuth is not in
-     *   [-540<sup>o</sup>, 540<sup>o</sup>).
-     * @return azimuth (degrees) reduced to the range [-180<sup>o</sup>,
-     *   180<sup>o</sup>).
+     *   [&minus;540&deg;, 540&deg;).
+     * @return azimuth (degrees) reduced to the range [&minus;180&deg;,
+     *   180&deg;).
      *
-     * A hemisphere designator E/W can be used; the result is multiplied by -1
-     * if W is present.
+     * A hemisphere designator E/W can be used; the result is multiplied by
+     * &minus;1 if W is present.
      **********************************************************************/
     static Math::real DecodeAzimuth(const std::string& azistr);
 
@@ -296,7 +299,7 @@ namespace GeographicLib {
      *   pad degrees to 2 digits, e.g., 08d03'S.
      * - ind == DMS::LONGITUDE, trailing E or W hemisphere designator, no
      *   sign, pad degrees to 3 digits, e.g., 008d03'W.
-     * - ind == DMS::AZIMUTH, convert to the range [0, 360<sup>o</sup>), no
+     * - ind == DMS::AZIMUTH, convert to the range [0, 360&deg;), no
      *   sign, pad degrees to 3 digits, , e.g., 351d57'.
      * .
      * The integer parts of the minutes and seconds components are always given

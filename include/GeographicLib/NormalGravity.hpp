@@ -35,13 +35,13 @@ namespace GeographicLib {
    * Definitions:
    * - <i>V</i><sub>0</sub>, the gravitational contribution to the normal
    *   potential;
-   * - \e Phi, the rotational contribution to the normal potential;
-   * - \e U = <i>V</i><sub>0</sub> + \e Phi, the total
+   * - &Phi;, the rotational contribution to the normal potential;
+   * - \e U = <i>V</i><sub>0</sub> + &Phi;, the total
    *   potential;
-   * - <b>Gamma</b> = <b>grad</b> <i>V</i><sub>0</sub>, the acceleration due to
+   * - <b>&Gamma;</b> = &nabla;<i>V</i><sub>0</sub>, the acceleration due to
    *   mass of the earth;
-   * - <b>f</b> = <b>grad</b> \e Phi, the centrifugal acceleration;
-   * - <b>gamma</b> = <b>grad</b> \e U = <b>Gamma</b> + <b>f</b>, the normal
+   * - <b>f</b> = &nabla;&Phi;, the centrifugal acceleration;
+   * - <b>&gamma;</b> = &nabla;\e U = <b>&Gamma;</b> + <b>f</b>, the normal
    *   acceleration;
    * - \e X, \e Y, \e Z, geocentric coordinates;
    * - \e x, \e y, \e z, local cartesian coordinates used to denote the east,
@@ -81,7 +81,7 @@ namespace GeographicLib {
      *   (meters<sup>3</sup>/seconds<sup>2</sup>); this is the product of \e G
      *   the gravitational constant and \e M the mass of the earth (usually
      *   including the mass of the earth's atmosphere).
-     * @param[in] omega the angular velocity (rad s<sup>-1</sup>).
+     * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
      * @param[in] f the flattening of the ellipsoid.
      * @param[in] J2 dynamical form factor.
      * @exception if \e a is not positive or the other constants are
@@ -90,13 +90,13 @@ namespace GeographicLib {
      * Exactly one of \e f and \e J2 should be positive and this will be used
      * to define the ellipsoid.  The shape of the ellipsoid can be given in one
      * of two ways:
-     * - geometrically, the ellipsoid is defined by the flattening \e f =
-     *   (\e a - \e b) / \e a, where \e a and \e b are the equatorial radius
+     * - geometrically, the ellipsoid is defined by the flattening \e f = (\e a
+     *   &minus; \e b) / \e a, where \e a and \e b are the equatorial radius
      *   and the polar semi-axis.
      * - physically, the ellipsoid is defined by the dynamical form factor
-     *   <i>J</i><sub>2</sub> = (\e C - \e A) / <i>Ma</i><sup>2</sup>, where \e
-     *   A and \e C are the equatorial and polar moments of inertia and \e M is
-     *   the mass of the earth.
+     *   <i>J</i><sub>2</sub> = (\e C &minus; \e A) / <i>Ma</i><sup>2</sup>,
+     *   where \e A and \e C are the equatorial and polar moments of inertia
+     *   and \e M is the mass of the earth.
      **********************************************************************/
     NormalGravity(real a, real GM, real omega, real f, real J2);
 
@@ -115,8 +115,8 @@ namespace GeographicLib {
      * Evaluate the gravity on the surface of the ellipsoid.
      *
      * @param[in] lat the geographic latitude (degrees).
-     * @return \e gamma the acceleration due to gravity, positive downwards
-     *   (m s<sup>-2</sup>).
+     * @return &gamma; the acceleration due to gravity, positive downwards
+     *   (m s<sup>&minus;2</sup>).
      *
      * Due to the axial symmetry of the ellipsoid, the result is independent of
      * the value of the longitude.  This acceleration is perpendicular to the
@@ -132,9 +132,9 @@ namespace GeographicLib {
      * @param[in] lat the geographic latitude (degrees).
      * @param[in] h the height above the ellipsoid (meters).
      * @param[out] gammay the northerly component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] gammaz the upward component of the acceleration
-     *   (m s<sup>-2</sup>); this is usually negative.
+     *   (m s<sup>&minus;2</sup>); this is usually negative.
      * @return \e U the corresponding normal potential.
      *
      * Due to the axial symmetry of the ellipsoid, the result is independent of
@@ -154,17 +154,17 @@ namespace GeographicLib {
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[in] Z geocentric coordinate of point (meters).
      * @param[out] gammaX the \e X component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] gammaY the \e Y component of the acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] gammaZ the \e Z component of the acceleration
-     *   (m s<sup>-2</sup>).
-     * @return \e U = <i>V</i><sub>0</sub> + \e Phi the sum of the
+     *   (m s<sup>&minus;2</sup>).
+     * @return \e U = <i>V</i><sub>0</sub> + &Phi; the sum of the
      *   gravitational and centrifugal potentials
-     *   (m<sup>2</sup> s<sup>-2</sup>).
+     *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      *
-     * The acceleration given by <b>gamma</b> = <b>grad</b> \e U = <b>grad</b>
-     * <i>V</i><sub>0</sub> + <b>grad</b> \e Phi = <b>Gamma</b> + <b>f</b>.
+     * The acceleration given by <b>&gamma;</b> = &nabla;\e U =
+     * &nabla;<i>V</i><sub>0</sub> + &nabla;&Phi; = <b>&Gamma;</b> + <b>f</b>.
      **********************************************************************/
     Math::real U(real X, real Y, real Z,
                  real& gammaX, real& gammaY, real& gammaZ) const throw();
@@ -177,13 +177,13 @@ namespace GeographicLib {
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[in] Z geocentric coordinate of point (meters).
      * @param[out] GammaX the \e X component of the acceleration due to gravity
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] GammaY the \e Y component of the acceleration due to gravity
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] GammaZ the \e Z component of the acceleration due to gravity
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @return <i>V</i><sub>0</sub> the gravitational potential
-     *   (m<sup>2</sup> s<sup>-2</sup>).
+     *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      *
      * This function excludes the centrifugal acceleration and is appropriate
      * to use for space applications.  In terrestrial applications, the
@@ -199,12 +199,13 @@ namespace GeographicLib {
      * @param[in] X geocentric coordinate of point (meters).
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[out] fX the \e X component of the centrifugal acceleration
-     *   (m s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
      * @param[out] fY the \e Y component of the centrifugal acceleration
-     *   (m s<sup>-2</sup>).
-     * @return \e Phi the centrifugal potential (m<sup>2</sup> s<sup>-2</sup>).
+     *   (m s<sup>&minus;2</sup>).
+     * @return &Phi; the centrifugal potential (m<sup>2</sup>
+     *   s<sup>&minus;2</sup>).
      *
-     * \e Phi is independent of \e Z, thus \e fZ = 0.  This function
+     * &Phi; is independent of \e Z, thus \e fZ = 0.  This function
      * NormalGravity::U sums the results of NormalGravity::V0 and
      * NormalGravity::Phi.
      **********************************************************************/
@@ -228,7 +229,7 @@ namespace GeographicLib {
 
     /**
      * @return \e GM the mass constant of the ellipsoid
-     *   (m<sup>3</sup> s<sup>-2</sup>).  This is the value used in the
+     *   (m<sup>3</sup> s<sup>&minus;2</sup>).  This is the value used in the
      *   constructor.
      **********************************************************************/
     Math::real MassConstant() const throw()
@@ -240,51 +241,52 @@ namespace GeographicLib {
      * If \e n = 2 (the default), this is the value of <i>J</i><sub>2</sub>
      * used in the constructor.  Otherwise it is the zonal coefficient of the
      * Legendre harmonic sum of the normal gravitational potential.  Note that
-     * \e J<sub>n</sub> = 0 if \e is odd.  In most gravity applications, fully
-     * normalized Legendre functions are used and the corresponding coefficient
-     * is <i>C</i><sub><i>n</i>0</sub> = -\e J<sub>n</sub> / sqrt(2 \e n + 1).
+     * \e J<sub>n</sub> = 0 if \e n is odd.  In most gravity applications,
+     * fully normalized Legendre functions are used and the corresponding
+     * coefficient is <i>C</i><sub><i>n</i>0</sub> = &minus;\e J<sub>n</sub> /
+     * sqrt(2 \e n + 1).
      **********************************************************************/
     Math::real DynamicalFormFactor(int n = 2) const throw()
     { return Init() ? ( n == 2 ? _J2 : Jn(n)) : Math::NaN<real>(); }
 
     /**
-     * @return \e omega the angular velocity of the ellipsoid
-     *   (rad s<sup>-1</sup>).  This is the value used in the constructor.
+     * @return &omega; the angular velocity of the ellipsoid (rad
+     *   s<sup>&minus;1</sup>).  This is the value used in the constructor.
      **********************************************************************/
     Math::real AngularVelocity() const throw()
     { return Init() ? _omega : Math::NaN<real>(); }
 
     /**
-     * @return <i>f</i> the flattening of the ellipsoid (\e a - \e b)/\e a.
+     * @return <i>f</i> the flattening of the ellipsoid (\e a &minus; \e b)/\e
+     *   a.
      **********************************************************************/
     Math::real Flattening() const throw()
     { return Init() ? _f : Math::NaN<real>(); }
 
     /**
-     * @return <i>gamma</i><sub>e</sub> the normal gravity at equator
-     *   (m s<sup>-2</sup>).
+     * @return &gamma;<sub>e</sub> the normal gravity at equator (m
+     *   s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real EquatorialGravity() const throw()
     { return Init() ? _gammae : Math::NaN<real>(); }
 
     /**
-     * @return <i>gamma</i><sub>p</sub> the normal gravity at poles
-     *   (m s<sup>-2</sup>).
+     * @return &gamma;<sub>p</sub> the normal gravity at poles (m
+     *   s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real PolarGravity() const throw()
     { return Init() ? _gammap : Math::NaN<real>(); }
 
     /**
-     * @return <i>f*</i> the gravity flattening
-     *   (<i>gamma</i><sub>p</sub> - <i>gamma</i><sub>e</sub>) /
-     *   <i>gamma</i><sub>e</sub>.
+     * @return <i>f*</i> the gravity flattening (&gamma;<sub>p</sub> &minus;
+     *   &gamma;<sub>e</sub>) / &gamma;<sub>e</sub>.
      **********************************************************************/
     Math::real GravityFlattening() const throw()
     { return Init() ? _fstar : Math::NaN<real>(); }
 
     /**
      * @return <i>U</i><sub>0</sub> the constant normal potential for the
-     *   surface of the ellipsoid (m<sup>2</sup> s<sup>-2</sup>).
+     *   surface of the ellipsoid (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real SurfacePotential() const throw()
     { return Init() ? _U0 : Math::NaN<real>(); }

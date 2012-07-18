@@ -43,10 +43,10 @@ namespace GeographicLib {
    * longitude) is specified as the \e lon0 argument of the
    * AlbersEqualArea::Forward and AlbersEqualArea::Reverse functions.
    * AlbersEqualArea::Forward and AlbersEqualArea::Reverse also return the
-   * meridian convergence, \e gamma, and azimuthal scale, \e k.  A small square
+   * meridian convergence, &gamma;, and azimuthal scale, \e k.  A small square
    * aligned with the cardinal directions is projected to a rectangle with
    * dimensions \e k (in the E-W direction) and 1/\e k (in the N-S direction).
-   * The E-W sides of the rectangle are oriented \e gamma degrees
+   * The E-W sides of the rectangle are oriented &gamma; degrees
    * counter-clockwise from the \e x axis.  There is no provision in this class
    * for specifying a false easting or false northing or a different latitude
    * of origin.
@@ -130,10 +130,10 @@ namespace GeographicLib {
      *   to 1/\e f.
      * @param[in] stdlat standard parallel (degrees), the circle of tangency.
      * @param[in] k0 azimuthal scale on the standard parallel.
-     * @exception GeographicLib if \e a, (1 - \e f ) \e a, or \e k0 is not
-     *   positive.
-     * @exception GeographicErr if \e stdlat is not in [-90<sup>o</sup>,
-     *   90<sup>o</sup>].
+     * @exception GeographicLib if \e a, (1 &minus; \e f ) \e a, or \e k0 is
+     *   not positive.
+     * @exception GeographicErr if \e stdlat is not in [&minus;90&deg;,
+     *   90&deg;].
      **********************************************************************/
     AlbersEqualArea(real a, real f, real stdlat, real k0);
 
@@ -147,10 +147,10 @@ namespace GeographicLib {
      * @param[in] stdlat1 first standard parallel (degrees).
      * @param[in] stdlat2 second standard parallel (degrees).
      * @param[in] k1 azimuthal scale on the standard parallels.
-     * @exception GeographicLib if \e a, (1 - \e f ) \e a, or \e k1 is not
-     *   positive.
+     * @exception GeographicLib if \e a, (1 &minus; \e f ) \e a, or \e k1 is
+     *   not positive.
      * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
-     *   [-90<sup>o</sup>, 90<sup>o</sup>], or if \e stdlat1 and \e stdlat2 are
+     *   [&minus;90&deg;, 90&deg;], or if \e stdlat1 and \e stdlat2 are
      *   opposite poles.
      **********************************************************************/
     AlbersEqualArea(real a, real f, real stdlat1, real stdlat2, real k1);
@@ -167,17 +167,17 @@ namespace GeographicLib {
      * @param[in] sinlat2 sine of second standard parallel.
      * @param[in] coslat2 cosine of second standard parallel.
      * @param[in] k1 azimuthal scale on the standard parallels.
-     * @exception GeographicLib if \e a, (1 - \e f ) \e a, or \e k1 is not
-     *   positive.
+     * @exception GeographicLib if \e a, (1 &minus; \e f ) \e a, or \e k1 is
+     *   not positive.
      * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
-     *   [-90<sup>o</sup>, 90<sup>o</sup>], or if \e stdlat1 and \e stdlat2 are
+     *   [&minus;90&deg;, 90&deg;], or if \e stdlat1 and \e stdlat2 are
      *   opposite poles.
      *
      * This allows parallels close to the poles to be specified accurately.
      * This routine computes the latitude of origin and the azimuthal scale at
-     * this latitude.  If \e dlat = abs(\e lat2 - \e lat1) <= 160<sup>o</sup>,
-     * then the error in the latitude of origin is less than
-     * 4.5e-14<sup>o</sup>.
+     * this latitude.  If \e dlat = abs(\e lat2 &minus; \e lat1) &le; 160&deg;,
+     * then the error in the latitude of origin is less than 4.5 &times;
+     * 10<sup>&minus;14</sup>d;.
      **********************************************************************/
     AlbersEqualArea(real a, real f,
                     real sinlat1, real coslat1,
@@ -190,8 +190,8 @@ namespace GeographicLib {
      * @param[in] lat (degrees).
      * @param[in] k azimuthal scale at latitude \e lat (default 1).
      * @exception GeographicLib \e k is not positive.
-     * @exception GeographicErr if \e lat is not in (-90<sup>o</sup>,
-     *   90<sup>o</sup>).
+     * @exception GeographicErr if \e lat is not in (&minus;90&deg;,
+     *   90&deg;).
      *
      * This allows a "latitude of conformality" to be specified.
      **********************************************************************/
@@ -211,8 +211,8 @@ namespace GeographicLib {
      *
      * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No
      * false easting or northing is added and \e lat should be in the range
-     * [-90<sup>o</sup>, 90<sup>o</sup>]; \e lon and \e lon0 should be in the
-     * range [-540<sup>o</sup>, 540<sup>o</sup>).  The values of \e x and \e y
+     * [&minus;90&deg;, 90&deg;]; \e lon and \e lon0 should be in the
+     * range [&minus;540&deg;, 540&deg;).  The values of \e x and \e y
      * returned for points which project to infinity (i.e., one or both of the
      * poles) will be large but finite.
      **********************************************************************/
@@ -233,9 +233,9 @@ namespace GeographicLib {
      *
      * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No
      * false easting or northing is added.  \e lon0 should be in the range
-     * [-540<sup>o</sup>, 540<sup>o</sup>).  The value of \e lon returned is in
-     * the range [-180<sup>o</sup>, 180<sup>o</sup>).  The value of \e lat
-     * returned is in the range [-90<sup>o</sup>, 90<sup>o</sup>].  If the
+     * [&minus;540&deg;, 540&deg;).  The value of \e lon returned is in
+     * the range [&minus;180&deg;, 180&deg;).  The value of \e lat
+     * returned is in the range [&minus;90&deg;, 90&deg;].  If the
      * input point is outside the legal projected space the nearest pole is
      * returned.
      **********************************************************************/
@@ -310,14 +310,14 @@ namespace GeographicLib {
 
     /**
      * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e
-     * stdlat = 90<sup>o</sup>, and \e k0 = 1.  This degenerates to the
+     * stdlat = 90&deg;, and \e k0 = 1.  This degenerates to the
      * Lambert azimuthal equal area projection.
      **********************************************************************/
     static const AlbersEqualArea AzimuthalEqualAreaNorth;
 
     /**
      * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e
-     * stdlat = -90<sup>o</sup>, and \e k0 = 1.  This degenerates to the
+     * stdlat = &minus;90&deg;, and \e k0 = 1.  This degenerates to the
      * Lambert azimuthal equal area projection.
      **********************************************************************/
     static const AlbersEqualArea AzimuthalEqualAreaSouth;

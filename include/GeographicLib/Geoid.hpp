@@ -23,10 +23,10 @@
 
 #if !defined(PGM_PIXEL_WIDTH)
 /**
- * The size of the pixel data in the pgm data files for the geoids.  2
- * is the standard size corresponding to a maxval 2^16-1.  Setting it
- * to 4 uses a maxval of 2^32-1 and changes the extension for the data
- * files from .pgm to .pgm4.  Note that the format of these pgm4 files
+ * The size of the pixel data in the pgm data files for the geoids.  2 is the
+ * standard size corresponding to a maxval 2<sup>16</sup>&minus;1.  Setting it
+ * to 4 uses a maxval of 2<sup>32</sup>&minus;1 and changes the extension for
+ * the data files from .pgm to .pgm4.  Note that the format of these pgm4 files
  * is a non-standard extension of the pgm format.
  **********************************************************************/
 #  define PGM_PIXEL_WIDTH 2
@@ -241,9 +241,9 @@ namespace GeographicLib {
      * Cache the data for the specified "rectangular" area bounded by the
      * parallels \e south and \e north and the meridians \e west and \e east.
      * \e east is always interpreted as being east of \e west, if necessary by
-     * adding 360<sup>o</sup> to its value.  \e south and \e north should be in
-     * the range [-90<sup>o</sup>, 90<sup>o</sup>]; \e west and \e east should
-     * be in the range [-540<sup>o</sup>, 540<sup>o</sup>).
+     * adding 360&deg; to its value.  \e south and \e north should be in
+     * the range [&minus;90&deg;, 90&deg;]; \e west and \e east should
+     * be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     void CacheArea(real south, real west, real north, real east) const;
 
@@ -283,8 +283,8 @@ namespace GeographicLib {
      *   never happens if (\e lat, \e lon) is within a successfully cached area.
      * @return geoid height (meters).
      *
-     * The latitude should be in [-90<sup>o</sup>, 90<sup>o</sup>] and
-     * longitude should be in [-540<sup>o</sup>, 540<sup>o</sup>).
+     * The latitude should be in [&minus;90&deg;, 90&deg;] and
+     * longitude should be in [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     Math::real operator()(real lat, real lon) const {
       real gradn, grade;
@@ -302,8 +302,8 @@ namespace GeographicLib {
      *   never happens if (\e lat, \e lon) is within a successfully cached area.
      * @return geoid height (meters).
      *
-     * The latitude should be in [-90<sup>o</sup>, 90<sup>o</sup>] and
-     * longitude should be in [-540<sup>o</sup>, 540<sup>o</sup>).  As a result
+     * The latitude should be in [&minus;90&deg;, 90&deg;] and
+     * longitude should be in [&minus;540&deg;, 540&deg;).  As a result
      * of the way that the geoid data is stored, the calculation of gradients
      * can result in large quantization errors.  This is particularly acute for
      * fine grids, at high latitudes, and for the easterly gradient.  If you
@@ -378,7 +378,7 @@ namespace GeographicLib {
      *   (meters).
      *
      * This relies on the value being stored in the data file.  If the value is
-     * absent, return -1.
+     * absent, return &minus;1.
      **********************************************************************/
     Math::real MaxError() const throw() { return _maxerror; }
 
@@ -387,7 +387,7 @@ namespace GeographicLib {
      *   (meters).
      *
      * This relies on the value being stored in the data file.  If the value is
-     * absent, return -1.
+     * absent, return &minus;1.
      **********************************************************************/
     Math::real RMSError() const throw() { return _rmserror; }
 

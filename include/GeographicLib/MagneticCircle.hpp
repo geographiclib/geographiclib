@@ -21,7 +21,7 @@ namespace GeographicLib {
    * \brief Geomagnetic field on a circle of latitude
    *
    * Evaluate the earth's magnetic field on a circle of constant height and
-   * latitude.  This uses a CircleEngine to pre-evaluate the inner sum of the
+   * latitude.  This uses a CircularEngine to pre-evaluate the inner sum of the
    * spherical harmonic sum, allowing the values of the field at several
    * different longitudes to be evaluated rapidly.
    *

@@ -112,7 +112,7 @@ namespace GeographicLib {
        * @param[in] nmx the maximum degree to be used.
        * @param[in] mmx the maximum order to be used.
        * @exception GeographicErr if \e N, \e nmx, and \e mmx do not satisfy
-       *   \e N >= \e nmx >= \e mmx >= -1.
+       *   \e N &ge; \e nmx &ge; \e mmx &ge; &minus;1.
        * @exception GeographicErr if \e C or \e S is not big enough to hold the
        *   coefficients.
        * @exception std::bad_alloc if the memory for the square root table
@@ -140,7 +140,7 @@ namespace GeographicLib {
        * @param[in] C a vector of coefficients for the cosine terms.
        * @param[in] S a vector of coefficients for the sine terms.
        * @param[in] N the maximum degree and order.
-       * @exception GeographicErr if \e N does not satisfy \e N >= -1.
+       * @exception GeographicErr if \e N does not satisfy \e N &ge; &minus;1.
        * @exception GeographicErr if \e C or \e S is not big enough to hold the
        *   coefficients.
        * @exception std::bad_alloc if the memory for the square root table
@@ -252,8 +252,8 @@ namespace GeographicLib {
        * @param[out] M The maximum order of the coefficients.
        * @param[out] C The vector of cosine coefficients.
        * @param[out] S The vector of sine coefficients.
-       * @exception GeographicErr if \e N and \e M do not satisfy \e N >=
-       *   \e M >= -1.
+       * @exception GeographicErr if \e N and \e M do not satisfy \e N &ge;
+       *   \e M &ge; &minus;1.
        * @exception GeographicErr if there's an error reading the data.
        * @exception std::bad_alloc if the memory for \e C or \e S can't be
        *   allocated.
@@ -286,14 +286,13 @@ namespace GeographicLib {
      * @param[out] gradz the \e z component of the gradient.
      * @result the spherical harmonic sum.
      *
-     * See the SphericalHarmonic class for the definition of the sum.
-     * The coefficients used by this function are, for example,
-     * c[0].Cv + f[1] * c[1].Cv + ... + f[L-1] * c[L-1].Cv.  (Note
-     * that f[0] is \e not used.)  The upper limits on the sum are
-     * determined by c[0].nmx() and c[0].mmx(); these limits apply to
-     * \e all the components of the coefficients.  The parameters \e
-     * gradp, \e norm, and \e L are template parameters, to allow more
-     * optimization to be done at compile time.
+     * See the SphericalHarmonic class for the definition of the sum.  The
+     * coefficients used by this function are, for example, c[0].Cv + f[1] *
+     * c[1].Cv + ... + f[L&minus;1] * c[L&minus;1].Cv.  (Note that f[0] is \e
+     * not used.)  The upper limits on the sum are determined by c[0].nmx() and
+     * c[0].mmx(); these limits apply to \e all the components of the
+     * coefficients.  The parameters \e gradp, \e norm, and \e L are template
+     * parameters, to allow more optimization to be done at compile time.
      *
      * Clenshaw summation is used which permits the evaluation of the sum
      * without the need to allocate temporary arrays.  Thus this function never
@@ -346,7 +345,7 @@ namespace GeographicLib {
      * call this routine at program start up (when it's still single threaded),
      * supplying the largest degree that your program will use.  E.g.,
      \code
-  GeographicLib::SphericalEngine::RootTable(2190);
+     GeographicLib::SphericalEngine::RootTable(2190);
      \endcode
      * suffices to accommodate extant magnetic and gravity models.
      **********************************************************************/
