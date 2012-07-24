@@ -133,14 +133,14 @@
    [Analytical methods for determination an arc of the meridian]''
    (Crapelet, Paris, 1799).[[BR]]
    http://books.google.com/books?id=DBAOAAAAQAAJ
- * J. B. J. Delambre and P. Méchain,[[BR]
+ * J. B. J. Delambre and P. Méchain,[[BR]]
    ''Base du système métrique décimal, ou Mesure de l'arc du méridien
    compris entre les parralèles de Dunkerque et Barcelone, executée
    [Basis of the metric system, or the measurement of the meridian arc
    between the parallels of Dunkirk and Barcelona]''
-   (Baudouin, Paris), Vol. 1 (1806), Vol. 2 (1807), Vol. 3 (1810).[[BR]
-   http://books.google.com/books?id=6DEVAAAAQAAJ [[BR]
-   http://books.google.com/books?id=4HVFAAAAcAAJ [[BR]
+   (Baudouin, Paris), Vol. 1 (1806), Vol. 2 (1807), Vol. 3 (1810).[[BR]]
+   http://books.google.com/books?id=6DEVAAAAQAAJ [[BR]]
+   http://books.google.com/books?id=4HVFAAAAcAAJ [[BR]]
    http://books.google.com/books?id=ZFpDAAAAcAAJ
  * A. M. Legendre,[[BR]]
    ''Mémoire sur les opérations trigonométriques, dont les résultats
@@ -771,5 +771,5 @@
  * C. F. F. Karney,[[BR]]
    ''Algorithms for geodesics'',
    J. Geodesy (2012).[[BR]]
-   http://dx.doi.org/10.1007/s00190-012-0578-z [[BR]
-   http://arxiv.org/abs/1109.4488
+   http://dx.doi.org/10.1007/s00190-012-0578-z [[BR]]
+   preprint: http://arxiv.org/abs/1109.4488
