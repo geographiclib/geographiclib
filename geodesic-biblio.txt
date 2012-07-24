@@ -135,7 +135,7 @@
    http://books.google.com/books?id=DBAOAAAAQAAJ
  * J. B. J. Delambre and P. Méchain,[[BR]]
    ''Base du système métrique décimal, ou Mesure de l'arc du méridien
-   compris entre les parralèles de Dunkerque et Barcelone, executée
+   compris entre les parralèles de Dunkerque et Barcelone
    [Basis of the metric system, or the measurement of the meridian arc
    between the parallels of Dunkirk and Barcelona]''
    (Baudouin, Paris), Vol. 1 (1806), Vol. 2 (1807), Vol. 3 (1810).[[BR]]
