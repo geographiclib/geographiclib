@@ -32,5 +32,5 @@ endif ()
 include ("${_DIR}/geographiclib-depends.cmake")
 set (GeographicLib_LIBRARIES Geographic)
 
-# Geographiclib_FOUND is set to 1 automatically
+# GeographicLib_FOUND is set to 1 automatically
 set (GEOGRAPHICLIB_FOUND TRUE) # for backwards compatibility

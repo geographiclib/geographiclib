@@ -133,6 +133,15 @@
    [Analytical methods for determination an arc of the meridian]''
    (Crapelet, Paris, 1799).[[BR]]
    http://books.google.com/books?id=DBAOAAAAQAAJ
+ * J. B. J. Delambre and P. Méchain,[[BR]
+   ''Base du système métrique décimal, ou Mesure de l'arc du méridien
+   compris entre les parralèles de Dunkerque et Barcelone, executée
+   [Basis of the metric system, or the measurement of the meridian arc
+   between the parallels of Dunkirk and Barcelona]''
+   (Baudouin, Paris), Vol. 1 (1806), Vol. 2 (1807), Vol. 3 (1810).[[BR]
+   http://books.google.com/books?id=6DEVAAAAQAAJ [[BR]
+   http://books.google.com/books?id=4HVFAAAAcAAJ [[BR]
+   http://books.google.com/books?id=ZFpDAAAAcAAJ
  * A. M. Legendre,[[BR]]
    ''Mémoire sur les opérations trigonométriques, dont les résultats
    dépendent de la figure de la terre [Trigonometric operations which
@@ -284,6 +293,7 @@
    from geodesic measurements]'',
    Astron. Nachr. '''4'''(86), 241--254 + tables (1825).[[BR]]
    http://adsabs.harvard.edu/full/1825AN......4..241B [[BR]]
+   http://dx.doi.org/10.1002/asna.18260041601 [[BR]]
    With corrections: http://arxiv.org/abs/0908.1823 [[BR]]
    Partial English translation:
    ''Calculation of longitudes and latitudes on a spheroid'',
@@ -408,6 +418,8 @@
    '''42'''(1006), 337--358 (1856).[[BR]]
    http://adsabs.harvard.edu/full/1855AN.....41..209J [[BR]]
    http://adsabs.harvard.edu/full/1856AN.....42..337J [[BR]]
+   http://dx.doi.org/10.1002/asna.18550411401 [[BR]]
+   http://dx.doi.org/10.1002/asna.18550422201 [[BR]]
    also in Jour. Crelle '''53''', 335--365 (1857).[[BR]]
    http://books.google.com/books?id=vc0GAAAAYAAJ&pg=PA335
  * C. G. J. Jacobi,[[BR]]
@@ -427,7 +439,8 @@
    ''Über die Curven des kürzesten Perimeters auf krummen Flächen
    [Curves of minimum perimeter on curved surfaces]'',
    Jour. Crelle '''5''', 297--304 (1830).[[BR]]
-   http://books.google.com/books?id=Y6wGAAAAYAAJ&pg=PA297
+   http://books.google.com/books?id=Y6wGAAAAYAAJ&pg=PA297 [[BR]]
+   http://dx.doi.org/10.1515/crll.1830.5.297
  * F. Minding,
    ''Beiträge zur Theorie der kürzesten Linien auf krummen Flächen
    [Contributions to the theory of shortest lines on curved suraces]'',
@@ -758,4 +771,5 @@
  * C. F. F. Karney,[[BR]]
    ''Algorithms for geodesics'',
    J. Geodesy (2012).[[BR]]
-   http://dx.doi.org/10.1007/s00190-012-0578-z
+   http://dx.doi.org/10.1007/s00190-012-0578-z [[BR]
+   http://arxiv.org/abs/1109.4488
