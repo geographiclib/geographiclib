@@ -343,8 +343,7 @@ namespace GeographicLib {
      * multi-threaded environment.  Because this routine does nothing if the
      * table is already large enough, one way to avoid race conditions is to
      * call this routine at program start up (when it's still single threaded),
-     * supplying the largest degree that your program will use.  E.g.,
-     \code
+     * supplying the largest degree that your program will use.  E.g., \code
      GeographicLib::SphericalEngine::RootTable(2190);
      \endcode
      * suffices to accommodate extant magnetic and gravity models.

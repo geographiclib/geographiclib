@@ -248,7 +248,7 @@ Here are the steps to compile and install %GeographicLib:
   cd GeographicLib-1.23 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
-  cd BUILD\endverbatim
+  cd BUILD \endverbatim
 - Run cmake, pointing it to the source directory (..).  On Linux, Unix,
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
@@ -377,7 +377,7 @@ Here are the steps to compile and install %GeographicLib:
   cd GeographicLib-1.23 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
-  cd BUILD\endverbatim
+  cd BUILD \endverbatim
 - Configure the software, specifing the path of the source directory,
   with \verbatim
   ../configure \endverbatim
@@ -574,22 +574,22 @@ In order to use %GeographicLib from C++ code, you will need to
   /usr/local specified as the installation directory,
   this is accomplished with \verbatim
   g++ -c -g -O3 -I/usr/local/include testprogram.cpp
-\endverbatim
+  \endverbatim
   With Visual Studio, specify the include directory in the IDE via,
   e.g.,
   \verbatim
-C/C++ -> General -> Additional Include Directories = C:\pkg-vc10\GeographicLib\include
-\endverbatim
+  C/C++ -> General -> Additional Include Directories = C:\pkg-vc10\GeographicLib\include
+  \endverbatim
 - Tell the linker the name, Geographic, and location of the
   library.  Using g++ as the linker, you would use \verbatim
   g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographic
-\endverbatim
+  \endverbatim
   With Visual Studio, you supply this information in the IDE via,
   e.g.,
   \verbatim
-Linker -> Input -> Additional Dependencies = Geographic.lib
-Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\lib
-\endverbatim
+  Linker -> Input -> Additional Dependencies = Geographic.lib
+  Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\lib
+  \endverbatim
   Note that the library name is <b>Geographic</b> and not
   %GeographicLib.  If the library was configured and built with cmake,
   then the debug version of the library is called Geographic_d.lib.
@@ -597,7 +597,7 @@ Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\
   (assuming you compiled %GeographicLib as a shared library).  With g++,
   this is accomplished by modifying the link line above to read \verbatim
   g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic
-\endverbatim
+  \endverbatim
   (There are two other ways to specify the location of shared libraries
   at runtime: (1) define the environment variable
   <code>LD_LIBRARY_PATH</code> to be a colon-separated list of
@@ -624,7 +624,7 @@ Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\
   should specify <code>CMAKE_PREFIX_PATH</code> with, for example,
   \verbatim
   cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/XYZProject ..
-\endverbatim
+  \endverbatim
   You can direct find_package to a specific version of %GeographicLib
   by specifying the cmake variable <code>GeographicLib_DIR</code> to
   point to the directory containing the configuration file
@@ -977,7 +977,7 @@ Examples of using this interface are
 These examples include a "stripped" version of the Javascript code, \code
 <script type="text/javascript"
         src="http://geographiclib.sf.net/scripts/geographiclib.js">
-</script>\endcode
+</script> \endcode
 which loads faster.
 
 \section python Python interface

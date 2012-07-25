@@ -289,8 +289,7 @@ namespace GeographicLib {
      * sum over the order \e m (about \e N operations).
      *
      * Here's an example of computing the spherical sum at a sequence of
-     * longitudes without using a CircularEngine object
-     \code
+     * longitudes without using a CircularEngine object \code
      SphericalHarmonic h(...);     // Create the SphericalHarmonic object
      double r = 2, lat = 33, lon0 = 44, dlon = 0.01;
      double
@@ -304,8 +303,7 @@ namespace GeographicLib {
      }
      \endcode
      * Here is the same calculation done using a CircularEngine object.  This
-     * will be about <i>N</i>/2 times faster.
-     \code
+     * will be about <i>N</i>/2 times faster. \code
      SphericalHarmonic h(...);     // Create the SphericalHarmonic object
      double r = 2, lat = 33, lon0 = 44, dlon = 0.01;
      double
