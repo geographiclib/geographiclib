@@ -22,7 +22,7 @@ namespace GeographicLib {
    * - J. P. Snyder,
    *   <a href="http://pubs.er.usgs.gov/usgspubs/pp/pp1395"> Map Projections: A
    *   Working Manual</a>, USGS Professional Paper 1395 (1987),
-   *   pp. 101&ndash;102.
+   *   pp. 101--102.
    *
    * This is a implementation of the equations in Snyder except that divided
    * differences will be [have been] used to transform the expressions into

@@ -83,7 +83,7 @@ namespace GeographicLib {
    *   proposed by I. G. Letoval'tsev, Generalization of the %Gnomonic
    *   Projection for a Spheroid and the Principal Geodetic Problems Involved
    *   in the Alignment of Surface Routes, Geodesy and Aerophotography (5),
-   *   271&ndash;274 (1963).
+   *   271--274 (1963).
    * - The projection given here.  This causes geodesics close to the center
    *   point to appear as straight lines in the projection; i.e., it
    *   generalizes the spherical great circle to a geodesic.

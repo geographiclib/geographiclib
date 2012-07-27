@@ -23,7 +23,7 @@ MGRS, geocentric, and local cartesian coordinates, for gravity (e.g.,
 EGM2008), geoid height and geomagnetic field (e.g., WMM2010)
 calculations, and for solving geodesic problems.  The emphasis is on
 returning accurate results with errors close to round-off (about
-5&ndash;15 nanometers).  New accurate algorithms for \ref geodesic and
+5--15 nanometers).  New accurate algorithms for \ref geodesic and
 \ref transversemercator have been developed for this library.  The
 functionality of the library can be accessed from user code, from the
 \ref utilities provided, or via the \ref other.  For a sample of the
@@ -2014,9 +2014,9 @@ issues that I encountered using the NGA code:
     poles.  Better would be to return the value obtained by taking the
     limit \e lat -> +/- 90&deg;.
  .
-Issues 1&ndash;4 have been reported to the authors of hsynth_WGS84.
+Issues 1--4 have been reported to the authors of hsynth_WGS84.
 Issue 1 is peculiar to Fortran and is not encountered in C++ code and
-GeographicLib::GravityModel corrects issues 3&ndash;5.  On issue 2,
+GeographicLib::GravityModel corrects issues 3--5.  On issue 2,
 GeographicLib::GravityModel neglects the 1/\e r term in \e T in
 GeographicLib::GravityModel::GeoidHeight and
 GeographicLib::GravityModel::SphericalAnomaly in order to produce
@@ -2066,7 +2066,7 @@ Dru A. Smith in
 <a href="http://www.ngs.noaa.gov/PUBS_LIB/EGM96_GEOID_PAPER/egm96_geoid_paper.html">
 There is no such thing as "The" EGM96 geoid: Subtle points on the use of
 a global geopotential model</a>, IGeS Bulletin No. 8, International
-Geoid Service, Milan, Italy, pp. 17&ndash;28 (1998).
+Geoid Service, Milan, Italy, pp. 17--28 (1998).
 
 GeographicLib::GravityModel::GeoidHeight reproduces the results of the
 several NGA codes for harmonic synthesis with the following maximum
@@ -2196,15 +2196,15 @@ The supported models are
  - <b>wmm2010</b>, the
    <a href="http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"> World
    Magnetic Model 2010</a>, which approximates the main magnetic field
-   for the period 2010&ndash;2015.
+   for the period 2010--2015.
  - <b>igrf11</b>, the
    <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (11th generation)</a>, which approximates
-   the main magnetic field for the period 1900&ndash;2015.
+   the main magnetic field for the period 1900--2015.
  - <b>emm2010</b>, the
    <a href="http://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
    Magnetic Model 2010</a>, which approximates the main and crustal
-   magnetic fields for the period 2010&ndash;2015.
+   magnetic fields for the period 2010--2015.
 
 Go to
  - \ref magneticinst
@@ -2228,7 +2228,7 @@ These magnetic models are available for download:
 <tr>
  <td>wmm2010
  <td><center>12</center>
- <td><center>2010&ndash;2015</center>
+ <td><center>2010--2015</center>
  <td><center>3</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.tar.bz2/download">
@@ -2242,7 +2242,7 @@ These magnetic models are available for download:
 <tr>
  <td>igrf11
  <td><center>13</center>
- <td><center>1900&ndash;2015</center>
+ <td><center>1900--2015</center>
  <td><center>25</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.tar.bz2/download">
@@ -2256,7 +2256,7 @@ These magnetic models are available for download:
 <tr>
  <td>emm2010
  <td><center>739</center>
- <td><center>2010&ndash;2015</center>
+ <td><center>2010--2015</center>
  <td><center>4400</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.tar.bz2/download">
@@ -2494,10 +2494,10 @@ References
    <a href="http://geographiclib.sf.net/geodesic-papers/helmert80-en.pdf">
    Mathematical and Physical Theories of Higher Geodesy, Part 1 (1880)</a>,
    Aeronautical Chart and Information Center (St. Louis, 1964),
-   Chaps. 5&ndash;7.
+   Chaps. 5--7.
  - J. Danielsen,
    The Area under the Geodesic,
-   Survey Review 30 (232), 61&ndash;66 (1989).
+   Survey Review 30 (232), 61--66 (1989).
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
@@ -2970,13 +2970,13 @@ References
    ISBN: 0919870163
    (Also appeared as:
    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
-   Part V, pp. 67&ndash;101,
+   Part V, pp. 67--101,
    <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
    Projections Based On Jacobian Elliptic Functions</a>.
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers,</a>
-   J. Geodesy 85(8), 475&ndash;485 (Aug. 2011);
+   J. Geodesy 85(8), 475--485 (Aug. 2011);
    preprint
    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>;
    resource page
@@ -3215,7 +3215,7 @@ The implementation of GeographicLib::Geocentric::Reverse is adapted from
  - H. Vermeille,
    <a href="http://dx.doi.org/10.1007/s00190-002-0273-6">
    Direct transformation from geocentric coordinates to geodetic
-   coordinates</a>, J. Geodesy 76, 451&ndash;454 (2002).
+   coordinates</a>, J. Geodesy 76, 451--454 (2002).
 
 This provides a closed-form solution but can't directly be applied close to
 the center of the earth.  Several changes have been made to remove this
@@ -3301,11 +3301,11 @@ accurate results.
 Other comparable methods are K. M. Borkowski,
 <a href="http://dx.doi.org/10.1007/BF00643807"> Transformation
 of geocentric to geodetic coordinates without approximations</a>,
-Astrophys. Space Sci. 139, 1&ndash;4 (1987)
+Astrophys. Space Sci. 139, 1--4 (1987)
 (<a href="http://dx.doi.org/10.1007/BF00656995"> erratum</a>)
 and T. Fukushima,
 <a href="http://dx.doi.org/10.1007/s001900050271"> Fast transform from
-geocentric to geodetic coordinates</a>, J. Geodesy 73, 603&ndash;610 (2003).
+geocentric to geodetic coordinates</a>, J. Geodesy 73, 603--610 (2003).
 However the choice of independent variables in these methods leads
 to a loss of accuracy for points near the equatorial plane.
 

@@ -180,8 +180,8 @@ namespace GeographicLib {
      *
      * The UTM/UPS selection and the UTM zone is preserved in the conversion to
      * MGRS coordinate.  Thus for \e zone > 0, the MGRS coordinate begins with
-     * the zone number followed by one of [C&ndash;M] for the southern
-     * hemisphere and [N&ndash;X] for the northern hemisphere.  For \e zone =
+     * the zone number followed by one of [C--M] for the southern
+     * hemisphere and [N--X] for the northern hemisphere.  For \e zone =
      * 0, the MGRS coordinates begins with one of [AB] for the southern
      * hemisphere and [XY] for the northern hemisphere.
      *
@@ -240,7 +240,7 @@ namespace GeographicLib {
      * All conversions from MGRS to UTM/UPS are permitted provided the MGRS
      * coordinate is a possible result of a conversion in the other direction.
      * (The leading 0 may be dropped from an input MGRS coordinate for UTM
-     * zones 1&ndash;9.)  In addition, MGRS coordinates with a neighboring
+     * zones 1--9.)  In addition, MGRS coordinates with a neighboring
      * latitude band letter are permitted provided that some portion of the
      * 100 km block is within the given latitude band.  Thus
      *   - 38VLS and 38WLS are allowed (latitude 64N intersects the square

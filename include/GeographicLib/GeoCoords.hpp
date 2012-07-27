@@ -150,7 +150,7 @@ namespace GeographicLib {
      * UTM/UPS parsing.  For UTM zones (&minus;80&deg; &le; Lat < 84&deg;), the
      * zone designator is made up of a zone number (for 1 to 60) and a
      * hemisphere letter (N or S), e.g., 38N.  The latitude zone designer
-     * ([C&ndash;M] in the southern hemisphere and [N&ndash;X] in the northern)
+     * ([C--M] in the southern hemisphere and [N--X] in the northern)
      * should NOT be used.  (This is part of the MGRS coordinate.)  The zone
      * designator for the poles (where UPS is employed) is a hemisphere letter
      * by itself, i.e., N or S.
