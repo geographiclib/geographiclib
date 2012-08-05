@@ -1471,7 +1471,7 @@ compressed format.
 GeographicLib::Geoid evaluates the geoid height using bilinear or cubic
 interpolation.  The gradient of the geoid height is obtained by
 differentiating the interpolated height and referencing the result to
-distance on the WGS84 ellipsoid. 
+distance on the WGS84 ellipsoid.
 
 <b>WARNING</b>: Although GeographicLib::Geoid computes the gradient of
 the geoid height, this is subject to large quantization errors as a
@@ -1651,9 +1651,9 @@ heights according to various earth gravity models.
 Each line of the test set gives 6 space delimited numbers
  - latitude (degrees, exact)
  - longitude (degrees, exact)
- - EGM84 height (meters, accurate to 1 um)
- - EGM96 height (meters, accurate to 1 um)
- - EGM2008 height (meters, accurate to 1 um)
+ - EGM84 height (meters, accurate to 1 &mu;m)
+ - EGM96 height (meters, accurate to 1 &mu;m)
+ - EGM2008 height (meters, accurate to 1 &mu;m)
  .
 The latitude and longitude are all multiples of 10<sup>&minus;6</sup>
 deg and should be regarded as exact.  The geoid heights are computed
@@ -2546,7 +2546,7 @@ simplicity and without loss of generality, \e lat1 is chosen in
 [0&deg;, 90&deg;], \e lon1 is taken to be zero, \e azi1 is
 chosen in [0&deg;, 180&deg;].  Furthermore, \e lat1 and \e
 azi1 are taken to be multiples of 10<sup>&minus;12</sup> deg and \e s12
-is a multiple of 0.1 um in [0 m, 20003931.4586254 m].  This results \e
+is a multiple of 0.1 &mu;m in [0 m, 20003931.4586254 m].  This results \e
 lon2 in [0&deg;, 180&deg;] and \e azi2 in [0&deg;, 180&deg;].
 
 The direct calculation uses an expansion of the geodesic equations
