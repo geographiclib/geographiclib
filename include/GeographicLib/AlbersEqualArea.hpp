@@ -130,7 +130,7 @@ namespace GeographicLib {
      *   to 1/\e f.
      * @param[in] stdlat standard parallel (degrees), the circle of tangency.
      * @param[in] k0 azimuthal scale on the standard parallel.
-     * @exception GeographicLib if \e a, (1 &minus; \e f ) \e a, or \e k0 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k0 is
      *   not positive.
      * @exception GeographicErr if \e stdlat is not in [&minus;90&deg;,
      *   90&deg;].
@@ -147,7 +147,7 @@ namespace GeographicLib {
      * @param[in] stdlat1 first standard parallel (degrees).
      * @param[in] stdlat2 second standard parallel (degrees).
      * @param[in] k1 azimuthal scale on the standard parallels.
-     * @exception GeographicLib if \e a, (1 &minus; \e f ) \e a, or \e k1 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k1 is
      *   not positive.
      * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
      *   [&minus;90&deg;, 90&deg;], or if \e stdlat1 and \e stdlat2 are
@@ -167,7 +167,7 @@ namespace GeographicLib {
      * @param[in] sinlat2 sine of second standard parallel.
      * @param[in] coslat2 cosine of second standard parallel.
      * @param[in] k1 azimuthal scale on the standard parallels.
-     * @exception GeographicLib if \e a, (1 &minus; \e f ) \e a, or \e k1 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k1 is
      *   not positive.
      * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
      *   [&minus;90&deg;, 90&deg;], or if \e stdlat1 and \e stdlat2 are
@@ -189,7 +189,7 @@ namespace GeographicLib {
      *
      * @param[in] lat (degrees).
      * @param[in] k azimuthal scale at latitude \e lat (default 1).
-     * @exception GeographicLib \e k is not positive.
+     * @exception GeographicErr \e k is not positive.
      * @exception GeographicErr if \e lat is not in (&minus;90&deg;,
      *   90&deg;).
      *

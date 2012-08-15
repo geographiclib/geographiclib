@@ -106,7 +106,7 @@ namespace GeographicLib {
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
-     * @exception GeographicLib if \e a or (1 &minus; \e f ) \e a is not
+     * @exception GeographicErr if \e a or (1 &minus; \e f ) \e a is not
      *   positive.
      **********************************************************************/
     Geocentric(real a, real f);

@@ -111,7 +111,7 @@ namespace GeographicLib {
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
      * @param[in] k0 central scale factor.
-     * @exception GeographicLib if \e a, (1 &minus; \e f ) \e a, or \e k0 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k0 is
      *   not positive.
      **********************************************************************/
     TransverseMercator(real a, real f, real k0);

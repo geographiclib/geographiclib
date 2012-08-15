@@ -178,7 +178,7 @@ namespace GeographicLib {
      *   90&deg;].
      * @exception GeographicErr if \e lon is not in [&minus;540&deg;,
      *   540&deg;).
-     * @exception GeographicLib if the resulting \e x or \e y is out of allowed
+     * @exception GeographicErr if the resulting \e x or \e y is out of allowed
      *   range (see Reverse); in this case, these arguments are unchanged.
      *
      * If \e setzone is omitted, use the standard rules for picking the zone.
@@ -219,7 +219,7 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      * @param[in] mgrslimits if true enforce the stricter MGRS limits on the
      *   coordinates (default = false).
-     * @exception GeographicLib if \e zone, \e x, or \e y is out of allowed
+     * @exception GeographicErr if \e zone, \e x, or \e y is out of allowed
      *   range; this this case the arguments are unchanged.
      *
      * The accuracy of the conversion is about 5nm.

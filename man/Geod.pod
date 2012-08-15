@@ -235,6 +235,16 @@ Waypoints on the route at intervals of 2000km:
    13:31:56.0N 103:26:50.7E 177:24:55.0
    04:32:05.7S 104:14:48.7E 177:28:43.6
 
+=head1 WARNING
+
+The proj library has a utility B<geod> which offers similar
+functionality (but which uses less accurate algorithms).  B<Geod> and
+B<geod> are distinct names on most operating systems, but can be
+confused on Windows systems.  If you have proj installed on your Windows
+system, then in order to use B<Geod> you will need to use the full
+pathname for the executable or ensure that your C<PATH> includes the
+GeographicLib binary directory before the proj directory.
+
 =head1 SEE ALSO
 
 The algorithms are described in C. F. F. Karney,
