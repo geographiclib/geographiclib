@@ -31,7 +31,7 @@
 
 set -e
 
-VERSION=1.23
+VERSION=1.24
 BRANCH=devel
 TEMP=/scratch/geographic-dist
 DEVELSOURCE=/u/geographiclib

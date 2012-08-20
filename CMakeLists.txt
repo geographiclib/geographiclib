@@ -3,14 +3,14 @@ project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 23)
+set (GeographicLib_VERSION_MINOR 24)
 set (GeographicLib_VERSION
   "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.5.0)
+set (LIBVERSIONFULL 9.5.1)
 
 # User-settable variables
 
@@ -74,20 +74,7 @@ if (DEFINED INSTALL_PATH)
 endif ()
 message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
 
-# (3) Build as a shared library?  On Windows systems, this is typically
-# more trouble than it's worth.
-if (WIN32)
-  option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
-else ()
-  option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" ON)
-endif ()
-
-# (4) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
-set (MATLAB_COMPILER OFF CACHE STRING
-  "Compiler for matlab/octave interface: mex or mkoctfile or OFF") 
-set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
-
-# (5) Where to look for data files.  Various classes look in the geoids,
+# (3) Where to look for data files.  Various classes look in the geoids,
 # gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
 if (WIN32)
   # The binary installers for the data files for Windows are created
@@ -104,6 +91,19 @@ else ()
     "/usr/local/share/GeographicLib"
     CACHE PATH "Location for data for GeographicLib")
 endif ()
+
+# (4) Build as a shared library?  On Windows systems, this is typically
+# more trouble than it's worth.
+if (WIN32)
+  option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
+else ()
+  option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" ON)
+endif ()
+
+# (5) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
+set (MATLAB_COMPILER OFF CACHE STRING
+  "Compiler for matlab/octave interface: mex or mkoctfile or OFF") 
+set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
 
 # (6) Compile the short example programs?
 if (WIN32)
