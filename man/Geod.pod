@@ -153,6 +153,9 @@ be given first by appending (or prepending) I<N> or I<S> to the latitude
 and I<E> or I<W> to the longitude.  Azimuths are measured clockwise from
 north; however this may be overridden with I<E> or I<W>.
 
+See the C<QUOTING> section of GeoConvert(1) for how to quote the DMS
+designators ' and ".
+
 =head1 AUXILIARY SPHERE
 
 Geodesics on the ellipsoid can be transferred to the I<auxiliary sphere>
@@ -247,7 +250,7 @@ GeographicLib binary directory before the proj directory.
 
 =head1 SEE ALSO
 
-The algorithms are described in C. F. F. Karney,
+GeoConvert(1).  The algorithms are described in C. F. F. Karney,
 I<Algorithms for geodesics>, J. Geodesy, 2012; DOI
 L<http://dx.doi.org/10.1007/s00190-012-0578-z>.
 

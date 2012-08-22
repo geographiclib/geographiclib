@@ -230,33 +230,40 @@ replace I<C> thru I<M> by I<S>; replace I<N> thru I<X> by I<N>.
 =head1 QUOTING
 
 Unfortunately the characters ' and " have special meanings in many
-shells and have to be entered with care.
+shells and have to be entered with care.  However note (1) that the
+trailing designator is optional and that (2) you can use colons as a
+separator character.  Thus 10d20' can be entered as 10d20 or 10:20 and
+10d20'30" can be entered as 10:20:30.
 
 =over
 
 =item Unix shells (sh, bash, tsch)
 
-The special characters can be quoted by preceding them with a \
-(backslash).  Alternatively you can quote a ' with a pair of "s.  The
-two alternatives are illustrated by
+The characters ' and " can be quoted by preceding them with a \
+(backslash); or you can quote a ' with a pair of "s.  The two
+alternatives are illustrated by
 
-   echo 30d30\'30\" "30d30'30" | GeoConvert -d -p -1
-   => 30d30'30"N 030d30'30"E
+   echo 10d20\'30\" "20d30'40" | GeoConvert -d -p -1
+   => 10d20'30"N 020d30'40"E
 
-Alternatively use colon separators, e.g., 30:30:30, which need no
-quoting.
+Quoting of command line arguments is similar
+
+   GeoConvert -d -p -1 --input-string "10d20'30\" 20d30'40"
+   => 10d20'30"N 020d30'40"E
 
 =item Windows command shell (cmd)
 
 The ' character needs no quoting and the " character can be quoted by a
-^.  However this quoting is usually unnecessary because the trailing
-designator can be omitted.  Thus
+^.  (This quoting is usually unnecessary because the trailing designator
+can be omitted.)  Thus
 
-   echo 30d30'30^" 30d30'30 | GeoConvert -d -p -1
-   => 30d30'30"N 030d30'30"E
+   echo 10d20'30^" 20d30'40 | GeoConvert -d -p -1
+   => 10d20'30"N 020d30'40"E
 
-Alternatively use colon separators, e.g., 30:30:30, which need no
-quoting.
+Use \ to quote the " character in a command line argument
+
+   GeoConvert -d -p -1 --input-string "10d20'30\" 20d30'40"
+   => 10d20'30"N 020d30'40"E
 
 =item Input from a file
 
