@@ -188,17 +188,17 @@ namespace GeographicLib {
      *
      * The northing \e y jumps by UTMUPS::UTMShift() when crossing the equator
      * in the southerly direction.  Sometimes it is useful to remove this
-     * discontinuity in \e y by extending the "northern" hemisphere with
+     * discontinuity in \e y by extending the "northern" hemisphere using
+     * UTMUPS::Transfer:
      * \code
      double lat = -1, lon = 123;
      int zone;
      bool northp;
      double x, y, gamma, k;
      GeographicLib::UTMUPS::Forward(lat, lon, zone, northp, x, y, gamma, k);
-     if (zone > 0 && !northp) {
-       northp = true;
-       y -= GeographicLib::UTMUPS::UTMShift();
-     }
+     GeographicLib::UTMUPS::Transfer(zone, northp, x, y,
+                                     zone, true,   x, y, zone);
+     northp = true;
      \endcode
      **********************************************************************/
     static void Forward(real lat, real lon,
@@ -267,12 +267,47 @@ namespace GeographicLib {
     }
 
     /**
+     * Transfer UTM/UPS coordinated from one zone to another.
+     *
+     * @param[in] zonein the UTM zone for \e xin and \e yin (or 0 for UPS); 
+     * @param[in] northpin hemisphere for \e xin and \e yin (true means north,
+     *   false means south).
+     * @param[in] xin easting of point (meters) in \e zonein.
+     * @param[in] yin northing of point (meters) in \e zonein.
+     * @param[in] zoneout the requested UTM zone for \e xout and \e yout (or 0
+     *   for UPS).
+     * @param[in] northpout hemisphere for \e xout output and \e yout.
+     * @param[out] xout easting of point (meters) in \e zoneout.
+     * @param[out] yout northing of point (meters) in \e zoneout.
+     * @param[out] zone the actual UTM zone for \e xout and \e yout (or 0 for
+     *   UPS); this equals \e zoneout if \e zoneout &ge; 0.
+     * @exception GeographicErr if \e zonein is out of range (see below).
+     * @exception GeographicErr if \e zoneout is out of range (see below).
+     * @exception GeographicErr if \e xin or \e yin fall outside their allowed
+     *   ranges (see UTMUPS::Reverse).
+     * @exception GeographicErr if \e xout or \e yout fall outside their
+     *   allowed ranges (see UTMUPS::Forward).
+     *
+     * \e zonein must be in the range [UTMUPS::MINZONE, UTMUPS::MAXZONE] = [0,
+     * 60] with \e zonein = UTMUPS::UPS, 0, indicating UPS.  \e zonein may
+     * also be UTMUPS::INVALID.
+     *
+     * \e zoneout must be in the range [UTMUPS::MINPSEUDOZONE, UTMUPS::MAXZONE]
+     * = [-4, 60].  If \e zoneout &lt; UTMUPS::MINZONE then the rules give in
+     * the documentation of UTMUPS::zonespec are applied, and \e zone is set to
+     * the actual zone used for output.
+     **********************************************************************/
+    static void Transfer(int zonein, bool northpin, real xin, real yin,
+                         int zoneout, bool northpout, real& xout, real& yout,
+                         int& zone);
+
+    /**
      * Decode a UTM/UPS zone string.
      *
      * @param[in] zonestr string representation of zone and hemisphere.
      * @param[out] zone the UTM zone (zero means UPS).
      * @param[out] northp hemisphere (true means north, false means south).
-     * @exception GeographicErr of \e zonestr is malformed.
+     * @exception GeographicErr if \e zonestr is malformed.
      *
      * For UTM, \e zonestr has the form of a zone number in the range
      * [UTMUPS::MINUTMZONE, UTMUPS::MAXUTMZONE] = [1, 60] followed by a
@@ -290,7 +325,7 @@ namespace GeographicLib {
      *
      * @param[out] zone the UTM zone (zero means UPS).
      * @param[out] northp hemisphere (true means north, false means south).
-     * @exception GeographicErr of \e zone is out of range (see below).
+     * @exception GeographicErr if \e zone is out of range (see below).
      * @exception std::bad_alloc if memoy for the string can't be allocated.
      * @return string representation of zone and hemisphere.
      *

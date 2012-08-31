@@ -296,7 +296,7 @@ namespace GeographicLib {
           // In some regimes we don't get quadratic convergence because slope
           // -> 0.  So use convergence conditions based on epsilon instead of
           // sqrt(epsilon).  The first criterion is a test on abs(v) against
-          // 100 * epsilon.  The second takes credit for an anticipated
+          // 200 * epsilon.  The second takes credit for an anticipated
           // reduction in abs(v) by v/ov (due to the latest update in alp1) and
           // checks this against epsilon.
           if (!(abs(v) >= tol1_ && Math::sq(v) >= ov * tol0_)) ++trip;

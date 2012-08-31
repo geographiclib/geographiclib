@@ -237,4 +237,32 @@ namespace GeographicLib {
 
   Math::real UTMUPS::UTMShift() throw() { return real(MGRS::utmNshift_); }
 
+  void UTMUPS::Transfer(int zonein, bool northpin, real xin, real yin,
+                        int zoneout, bool northpout, real& xout, real& yout,
+                        int& zone) {
+    bool northp = northpin;
+    if (zonein != zoneout) {
+      // Determine lat, lon
+      real lat, lon;
+      GeographicLib::UTMUPS::Reverse(zonein, northpin, xin, yin, lat, lon);
+      // Try converting to zoneout
+      real x, y;
+      int zone1;
+      GeographicLib::UTMUPS::Forward(lat, lon, zone1, northp, x, y, zoneout);
+      if (zone == 0 && northp != northpout)
+        throw GeographicErr
+          ("Attempt to transfer UPS coordinates between hemispheres");
+      zone = zone1;
+      xout = x;
+      yout = y;
+    } else {
+      xout = xin;
+      yout = yin;
+    }
+    if (northp != northpout)
+      // Can't get here if UPS
+      yout += (northpout ? -1 : 1) * GeographicLib::UTMUPS::UTMShift();
+    return;
+  }
+
 } // namespace GeographicLib
