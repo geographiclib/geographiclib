@@ -62,8 +62,8 @@ namespace GeographicLib {
       _alt_k = _k;
       _alt_zone = _zone;
     }
-    void UTMUPSString(int zone, real easting, real northing,
-                      int prec, std::string& utm) const;
+    static void UTMUPSString(int zone, bool northp, real easting, real northing,
+                             int prec, std::string& utm);
     void FixHemisphere();
   public:
 
@@ -476,6 +476,19 @@ namespace GeographicLib {
     std::string UTMUPSRepresentation(int prec = 0) const;
 
     /**
+     * UTM/UPS string with hemisphere override.
+     *
+     * @param[in] prec precision (relative to about 1m)
+     * @param[in] northp hemisphere override
+     * @exception GeographicErr if the hemisphere override attempts to change
+     *   UPS N to UPS S or vice verse.
+     * @exception std::bad_alloc if memory for the string can't be allocated.
+     * @return UTM/UPS string representation: zone designator, easting, and
+     *   northing.
+     **********************************************************************/
+    std::string UTMUPSRepresentation(bool northp, int prec = 0) const;
+
+    /**
      * MGRS string for the alternate zone.  See GeoCoords::MGRSRepresentation.
      *
      * @param[in] prec precision (relative to about 1m).
@@ -494,6 +507,19 @@ namespace GeographicLib {
      *   northing.
      **********************************************************************/
     std::string AltUTMUPSRepresentation(int prec = 0) const;
+
+    /**
+     * UTM/UPS string for the alternate zone, with hemisphere override.
+     *
+     * @param[in] prec precision (relative to about 1m)
+     * @param[in] northp hemisphere override
+     * @exception GeographicErr if the hemisphere override attempts to change
+     *   UPS N to UPS S or vice verse.
+     * @exception std::bad_alloc if memory for the string can't be allocated.
+     * @return UTM/UPS string representation: zone designator, easting, and
+     *   northing.
+     **********************************************************************/
+    std::string AltUTMUPSRepresentation(bool northp, int prec = 0) const;
     ///@}
 
     /** \name Inspector functions

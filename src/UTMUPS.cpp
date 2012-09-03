@@ -178,6 +178,40 @@ namespace GeographicLib {
     return true;
   }
 
+  void UTMUPS::Transfer(int zonein, bool northpin, real xin, real yin,
+                        int zoneout, bool northpout, real& xout, real& yout,
+                        int& zone) {
+    bool northp = northpin;
+    if (zonein != zoneout) {
+      // Determine lat, lon
+      real lat, lon;
+      GeographicLib::UTMUPS::Reverse(zonein, northpin, xin, yin, lat, lon);
+      // Try converting to zoneout
+      real x, y;
+      int zone1;
+      GeographicLib::UTMUPS::Forward(lat, lon, zone1, northp, x, y,
+                                     zoneout == UTMUPS::MATCH
+                                     ? zonein : zoneout);
+      if (zone1 == 0 && northp != northpout)
+        throw GeographicErr
+          ("Attempt to transfer UPS coordinates between hemispheres");
+      zone = zone1;
+      xout = x;
+      yout = y;
+    } else {
+      if (zoneout == 0 && northp != northpout)
+        throw GeographicErr
+          ("Attempt to transfer UPS coordinates between hemispheres");
+      zone = zoneout;
+      xout = xin;
+      yout = yin;
+    }
+    if (northp != northpout)
+      // Can't get here if UPS
+      yout += (northpout ? -1 : 1) * MGRS::utmNshift_;
+    return;
+  }
+
   void UTMUPS::DecodeZone(const std::string& zonestr, int& zone, bool& northp) {
     unsigned zlen = unsigned(zonestr.size());
     if (zlen == 0)
@@ -235,34 +269,36 @@ namespace GeographicLib {
     return os.str();
   }
 
-  Math::real UTMUPS::UTMShift() throw() { return real(MGRS::utmNshift_); }
-
-  void UTMUPS::Transfer(int zonein, bool northpin, real xin, real yin,
-                        int zoneout, bool northpout, real& xout, real& yout,
-                        int& zone) {
-    bool northp = northpin;
-    if (zonein != zoneout) {
-      // Determine lat, lon
-      real lat, lon;
-      GeographicLib::UTMUPS::Reverse(zonein, northpin, xin, yin, lat, lon);
-      // Try converting to zoneout
-      real x, y;
-      int zone1;
-      GeographicLib::UTMUPS::Forward(lat, lon, zone1, northp, x, y, zoneout);
-      if (zone == 0 && northp != northpout)
-        throw GeographicErr
-          ("Attempt to transfer UPS coordinates between hemispheres");
-      zone = zone1;
-      xout = x;
-      yout = y;
+  void UTMUPS::DecodeEPSG(int& epsg, int& zone, bool& northp) throw() {
+    if (epsg >= epsg01N && epsg <= epsg60N) {
+      zone = epsg - epsg01N + 1;
+      northp = true;
+    } else if (epsg == epsgN) {
+      zone = UPS;
+      northp = true;
+    } else if (epsg >= epsg01S && epsg <= epsg60S) {
+      zone = epsg - epsg01S + 1;
+      northp = false;
+    } else if (epsg == epsgS) {
+      zone = UPS;
+      northp = false;
     } else {
-      xout = xin;
-      yout = yin;
+      zone = INVALID;
+      northp = false;
     }
-    if (northp != northpout)
-      // Can't get here if UPS
-      yout += (northpout ? -1 : 1) * GeographicLib::UTMUPS::UTMShift();
-    return;
   }
+
+  int UTMUPS::EncodeEPSG(int zone, bool northp) throw() {
+    int epsg = -1;
+    if (zone == UPS)
+      epsg = epsgS;
+    else if (zone >= MINUTMZONE && zone <= MAXUTMZONE)
+      epsg = epsg + (zone - MINUTMZONE) + epsg01S;
+    if (epsg >= 0 && northp)
+      epsg += epsgN - epsgS;
+    return epsg;
+  }
+
+  Math::real UTMUPS::UTMShift() throw() { return real(MGRS::utmNshift_); }
 
 } // namespace GeographicLib

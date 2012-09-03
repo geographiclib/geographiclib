@@ -68,6 +68,12 @@ namespace GeographicLib {
     static const real maxeasting_[4];
     static const real minnorthing_[4];
     static const real maxnorthing_[4];
+    static const int epsg01N = 32601; // EPSG code for UTM 01N
+    static const int epsg60N = 32660; // EPSG code for UTM 60N
+    static const int epsgN   = 32661; // EPSG code for UPS   N
+    static const int epsg01S = 32701; // EPSG code for UTM 01N
+    static const int epsg60S = 32760; // EPSG code for UTM 60S
+    static const int epsgS   = 32761; // EPSG code for UPS   S
     static real CentralMeridian(int zone) throw()
     { return real(6 * zone - 183); }
     static void CheckLatLon(real lat, real lon);
@@ -269,24 +275,24 @@ namespace GeographicLib {
     /**
      * Transfer UTM/UPS coordinated from one zone to another.
      *
-     * @param[in] zonein the UTM zone for \e xin and \e yin (or 0 for UPS); 
+     * @param[in] zonein the UTM zone for \e xin and \e yin (or zero for UPS); 
      * @param[in] northpin hemisphere for \e xin and \e yin (true means north,
      *   false means south).
      * @param[in] xin easting of point (meters) in \e zonein.
      * @param[in] yin northing of point (meters) in \e zonein.
-     * @param[in] zoneout the requested UTM zone for \e xout and \e yout (or 0
-     *   for UPS).
+     * @param[in] zoneout the requested UTM zone for \e xout and \e yout (or
+     *   zero for UPS).
      * @param[in] northpout hemisphere for \e xout output and \e yout.
      * @param[out] xout easting of point (meters) in \e zoneout.
      * @param[out] yout northing of point (meters) in \e zoneout.
-     * @param[out] zone the actual UTM zone for \e xout and \e yout (or 0 for
-     *   UPS); this equals \e zoneout if \e zoneout &ge; 0.
+     * @param[out] zone the actual UTM zone for \e xout and \e yout (or zero
+     *   for UPS); this equals \e zoneout if \e zoneout &ge; 0.
      * @exception GeographicErr if \e zonein is out of range (see below).
      * @exception GeographicErr if \e zoneout is out of range (see below).
      * @exception GeographicErr if \e xin or \e yin fall outside their allowed
      *   ranges (see UTMUPS::Reverse).
      * @exception GeographicErr if \e xout or \e yout fall outside their
-     *   allowed ranges (see UTMUPS::Forward).
+     *   allowed ranges (see UTMUPS::Reverse).
      *
      * \e zonein must be in the range [UTMUPS::MINZONE, UTMUPS::MAXZONE] = [0,
      * 60] with \e zonein = UTMUPS::UPS, 0, indicating UPS.  \e zonein may
@@ -323,8 +329,8 @@ namespace GeographicLib {
     /**
      * Encode a UTM/UPS zone string.
      *
-     * @param[out] zone the UTM zone (zero means UPS).
-     * @param[out] northp hemisphere (true means north, false means south).
+     * @param[in] zone the UTM zone (zero means UPS).
+     * @param[in] northp hemisphere (true means north, false means south).
      * @exception GeographicErr if \e zone is out of range (see below).
      * @exception std::bad_alloc if memoy for the string can't be allocated.
      * @return string representation of zone and hemisphere.
@@ -336,6 +342,34 @@ namespace GeographicLib {
      * UTMUPS::DecodeZone.
      **********************************************************************/
     static std::string EncodeZone(int zone, bool northp);
+
+    /**
+     * Decode EPSG.
+     *
+     * @param[in] epsg the EPSG code.
+     * @param[out] zone the UTM zone (zero means UPS).
+     * @param[out] northp hemisphere (true means north, false means south).
+     *
+     * EPSG (European Petroleum Survery Group) codes are a way to refer to many
+     * different projections.  DecodeEPSG decodes those refering to UTM or UPS
+     * projections for the WGS84 ellipsoid.  If the code does not refer to one
+     * of these projections, \e zone is set to UTMUPS::INVALID.  See
+     * http://spatialreference.org/ref/epsg/
+     **********************************************************************/
+    static void DecodeEPSG(int& epsg, int& zone, bool& northp) throw();
+
+    /**
+     * Encode zone as EPSG.
+     *
+     * @param[in] zone the UTM zone (zero means UPS).
+     * @param[in] northp hemisphere (true means north, false means south).
+     * @return EPSG code (or -1 if \e zone is not in the range
+     *   [UTMUPS::MINZONE, UTMUPS::MAXZONE] = [0, 60])
+     *
+     * Convert \e zone and \e northp to the corresponding EPSG (European
+     * Petroleum Survery Group) codes
+     **********************************************************************/
+    static int EncodeEPSG(int zone, bool northp) throw();
 
     /**
      * @return shift (meters) necessary to align N and S halves of a UTM zone

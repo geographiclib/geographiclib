@@ -222,6 +222,14 @@ then
    echo 31CEM6066227959 | GeoConvert -p -3 -m -s    => 32CMS4328
    echo 31CEM6066227959 | GeoConvert -p -3 -m -z 0  =>   BBZ1917
 
+Is I<zone> is specified with a hemisphere, then this is honored when
+printing UTM coordinates:
+
+   echo -1 3 | GeoConvert -u         => 31S 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31   => 31S 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31S  => 31S 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31N  => 31N 500000 -110530
+
 B<NOTE>: the letter in the zone specification for UTM is a hemisphere
 designator I<N> or I<S> and I<not> an MGRS latitude band letter.
 Convert the MGRS latitude band letter to a hemisphere as follows:
