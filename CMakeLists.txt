@@ -150,10 +150,13 @@ if (GEOGRAPHICLIB_DOCUMENTATION)
   if (DOXYGEN_FOUND)
     execute_process (COMMAND ${DOXYGEN_EXECUTABLE} --version
       OUTPUT_VARIABLE DOXYGEN_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-    if (DOXYGEN_VERSION VERSION_LESS 1.8.1.2 OR
-	CMAKE_VERSION VERSION_LESS 2.8)
+    if (DOXYGEN_VERSION VERSION_LESS 1.4.0)
       set (DOXYGEN_FOUND FALSE)
       message (STATUS "Doxygen version found, ${DOXYGEN_VERSION}, is too old")
+    elseif (CMAKE_VERSION VERSION_LESS 2.8)
+      set (DOXYGEN_FOUND FALSE)
+      message (STATUS
+	"CMake version ${CMAKE_VERSION} too old for building documentation")
     endif ()
   endif ()
 endif ()
