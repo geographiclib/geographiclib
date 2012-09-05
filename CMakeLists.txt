@@ -103,7 +103,9 @@ endif ()
 # (5) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
 set (MATLAB_COMPILER OFF CACHE STRING
   "Compiler for matlab/octave interface: mex or mkoctfile or OFF") 
-set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
+if (NOT CMAKE_VERSION VERSION_LESS 2.8)
+  set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
+endif ()
 
 # (6) Compile the short example programs?
 if (WIN32)
@@ -140,14 +142,16 @@ configure_file (
   include/GeographicLib/Config.h )
 
 # The documentation depends on doxygen.  Need version 1.8.1.2 or later
-# for support of greek letters and math symbols.
+# for support of greek letters and math symbols.  Also require cmake
+# 2.8 or later for support of file (COPY ...).
 if (GEOGRAPHICLIB_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
   find_package (Doxygen 1.8.1.2)
   if (DOXYGEN_FOUND)
     execute_process (COMMAND ${DOXYGEN_EXECUTABLE} --version
       OUTPUT_VARIABLE DOXYGEN_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-    if (DOXYGEN_VERSION VERSION_LESS 1.8.1.2)
+    if (DOXYGEN_VERSION VERSION_LESS 1.8.1.2 OR
+	CMAKE_VERSION VERSION_LESS 2.8)
       set (DOXYGEN_FOUND FALSE)
       message (STATUS "Doxygen version found, ${DOXYGEN_VERSION}, is too old")
     endif ()

@@ -51,7 +51,9 @@ install (TARGETS ${TOOLS} EXPORT depends DESTINATION bin)
 # expected to be run with write access to /usr/local.
 if (NOT WIN32)
   foreach (SCRIPT ${SCRIPTS})
-    configure_file (${SCRIPT}.sh scripts/${SCRIPT} @ONLY)
+    # Need to absolute path on destination to support old versions of cmake
+    configure_file (${SCRIPT}.sh ${CMAKE_CURRENT_BINARY_DIR}/scripts/${SCRIPT}
+      @ONLY)
     add_custom_command (OUTPUT ${SCRIPT}
       COMMAND ${CMAKE_COMMAND} -E
         copy scripts/${SCRIPT} ${SCRIPT} && chmod +x ${SCRIPT}

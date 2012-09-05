@@ -105,10 +105,9 @@ precision relative to 1 m.  See L<PRECISION|precision>.
 
 =item B<-z>
 
-set the zone to I<zone> for output.  Use either 0 E<lt> I<zone> E<lt>= 60
-for a UTM zone or I<zone> = 0 for UPS.  Alternatively use a
-I<zone>+I<hemisphere> designation (I<hemisphere> is ignored), e.g., 38N.
-See L<ZONE|zone>.
+set the zone to I<zone> for output.  Use either 0 E<lt> I<zone> E<lt>=
+60 for a UTM zone or I<zone> = 0 for UPS.  Alternatively use a
+I<zone>+I<hemisphere> designation, e.g., 38N.  See L<ZONE|zone>.
 
 =item B<-s>
 
@@ -126,7 +125,7 @@ square instead of the center; see L<MGRS|mgrs>.
 =item B<-w>
 
 on input and output, longitude precedes latitude (except that on input
-this can be overridden by a hemisphere designator, I<N>, I<S>,I<E>,
+this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
 I<W>).
 
 =item B<--comment-delimiter>
@@ -202,10 +201,10 @@ square is returned instead (C<38N 444000 3688000> in the example above).
 
 If the input is B<geographic>, B<GeoConvert> uses the standard rules of
 selecting UTM vs UPS and for assigning the UTM zone (with the Norway and
-Svalbard exceptions).  If the input is B<UTM/UPS>, or B<MGRS>, then the
+Svalbard exceptions).  If the input is B<UTM/UPS> or B<MGRS>, then the
 choice between UTM and UPS and the UTM zone mirrors the input.  The B<-z>
-I<zone>, B<-s>, B<-t> options allow these rules to be overridden with
-I<zone> = 0 being used to indicate UPS.  For example, the point
+I<zone>, B<-s>, and B<-t> options allow these rules to be overridden
+with I<zone> = 0 being used to indicate UPS.  For example, the point
 
    79.9S 6.1E
 
