@@ -90,7 +90,7 @@ namespace GeographicLib {
      **********************************************************************/
     class GEOGRAPHIC_EXPORT coeff {
     private:
-      int _N, _nmx, _mmx;
+      int _Nx, _nmx, _mmx;
       std::vector<real>::const_iterator _Cnm;
       std::vector<real>::const_iterator _Snm;
     public:
@@ -98,7 +98,7 @@ namespace GeographicLib {
        * A default constructor
        **********************************************************************/
       coeff()
-        : _N(-1)
+        : _Nx(-1)
         , _nmx(-1)
         , _mmx(-1)
         , _Cnm(Z_.begin())
@@ -121,16 +121,16 @@ namespace GeographicLib {
       coeff(const std::vector<real>& C,
             const std::vector<real>& S,
             int N, int nmx, int mmx)
-        : _N(N)
+        : _Nx(N)
         , _nmx(nmx)
         , _mmx(mmx)
         , _Cnm(C.begin())
         , _Snm(S.begin())
       {
-        if (!(_N >= _nmx && _nmx >= _mmx && _mmx >= -1))
+        if (!(_Nx >= _nmx && _nmx >= _mmx && _mmx >= -1))
           throw GeographicErr("Bad indices for coeff");
         if (!(index(_nmx, _mmx) < int(C.size()) &&
-              index(_nmx, _mmx) < int(S.size()) + (_N + 1)))
+              index(_nmx, _mmx) < int(S.size()) + (_Nx + 1)))
           throw GeographicErr("Arrays too small in coeff");
         SphericalEngine::RootTable(_nmx);
       }
@@ -149,23 +149,23 @@ namespace GeographicLib {
       coeff(const std::vector<real>& C,
             const std::vector<real>& S,
             int N)
-        : _N(N)
+        : _Nx(N)
         , _nmx(N)
         , _mmx(N)
         , _Cnm(C.begin())
         , _Snm(S.begin())
       {
-        if (!(_N >= -1))
+        if (!(_Nx >= -1))
           throw GeographicErr("Bad indices for coeff");
         if (!(index(_nmx, _mmx) < int(C.size()) &&
-              index(_nmx, _mmx) < int(S.size()) + (_N + 1)))
+              index(_nmx, _mmx) < int(S.size()) + (_Nx + 1)))
           throw GeographicErr("Arrays too small in coeff");
         SphericalEngine::RootTable(_nmx);
       }
       /**
        * @return \e N the degree giving storage layout for \e C and \e S.
        **********************************************************************/
-      inline int N() const throw() { return _N; }
+      inline int N() const throw() { return _Nx; }
       /**
        * @return \e nmx the maximum degree to be used.
        **********************************************************************/
@@ -182,7 +182,7 @@ namespace GeographicLib {
        * @return the one-dimensional index.
        **********************************************************************/
       inline int index(int n, int m) const throw()
-      { return m * _N - m * (m - 1) / 2 + n; }
+      { return m * _Nx - m * (m - 1) / 2 + n; }
       /**
        * An element of \e C.
        *
@@ -196,7 +196,7 @@ namespace GeographicLib {
        * @param[in] k the one-dimensional index.
        * @return the value of the \e S coefficient.
        **********************************************************************/
-      inline Math::real Sv(int k) const { return *(_Snm + (k - (_N + 1))); }
+      inline Math::real Sv(int k) const { return *(_Snm + (k - (_Nx + 1))); }
       /**
        * An element of \e C with checking.
        *
@@ -220,7 +220,7 @@ namespace GeographicLib {
        *   and \e m are in range else 0.
        **********************************************************************/
       inline Math::real Sv(int k, int n, int m, real f) const
-      { return m > _mmx || n > _nmx ? 0 : *(_Snm + (k - (_N + 1))) * f; }
+      { return m > _mmx || n > _nmx ? 0 : *(_Snm + (k - (_Nx + 1))) * f; }
 
       /**
        * The size of the coefficient vector for the cosine terms.

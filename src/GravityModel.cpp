@@ -62,11 +62,11 @@ namespace GeographicLib {
       if (_id != string(id))
         throw GeographicErr("ID mismatch: " + _id + " vs " + id);
       int N, M;
-      SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _C, _S);
-      if (!(M < 0 || _C[0] == 0))
+      SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _Cx, _Sx);
+      if (!(M < 0 || _Cx[0] == 0))
         throw GeographicErr("A degree 0 term should be zero");
-      _C[0] = 1;                // Include the 1/r term in the sum
-      _gravitational = SphericalHarmonic(_C, _S, N, N, M, _amodel, _norm);
+      _Cx[0] = 1;                // Include the 1/r term in the sum
+      _gravitational = SphericalHarmonic(_Cx, _Sx, N, N, M, _amodel, _norm);
       SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _CC, _CS);
       if (N < 0) {
         N = M = 0;
@@ -96,7 +96,7 @@ namespace GeographicLib {
       // goes out to n = 18.
       mult *= amult;
       real
-        r = _C[n],                                         // the model term
+        r = _Cx[n],                                        // the model term
         s = - mult * _earth.Jn(n) / sqrt(real(2 * n + 1)), // the normal term
         t = r - s;                                         // the difference
       if (t == r)               // the normal term is negligible
@@ -105,7 +105,7 @@ namespace GeographicLib {
       _zonal.push_back(s);
     }
     int nmx1 = int(_zonal.size()) - 1;
-    _disturbing = SphericalHarmonic1(_C, _S,
+    _disturbing = SphericalHarmonic1(_Cx, _Sx,
                                      _gravitational.Coefficients().N(),
                                      nmx, _gravitational.Coefficients().mmx(),
                                      _zonal,

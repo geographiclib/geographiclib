@@ -1,4 +1,5 @@
 cmake_minimum_required (VERSION 2.6)
+set(CMAKE_LEGACY_CYGWIN_WIN32 0) # Remove when CMake >= 2.8.4 is required
 project (GeographicLib)
 
 # Version information
@@ -131,8 +132,11 @@ endif ()
 set (CMAKE_DEBUG_POSTFIX _d)
 
 # Determine system properties
-include (CheckTypeSize)
-check_type_size ("long double" LONG_DOUBLE BUILTIN_TYPES_ONLY)
+if (NOT CYGWIN)
+  # cygwin has a long double but the support for ::cbrtl etc is missing
+  include (CheckTypeSize)
+  check_type_size ("long double" LONG_DOUBLE BUILTIN_TYPES_ONLY)
+endif ()
 include (TestBigEndian)
 test_big_endian (WORDS_BIGENDIAN)
 
@@ -170,8 +174,10 @@ endif ()
 if (NOT WIN32)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
+  find_program (HAVE_COL col)
 endif ()
-if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML)
+if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_COL AND
+    NOT CMAKE_VERSION VERSION_LESS 2.8)
   set (MAINTAINER ON)
 else ()
   set (MAINTAINER OFF)
