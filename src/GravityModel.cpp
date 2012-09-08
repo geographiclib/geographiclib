@@ -65,7 +65,7 @@ namespace GeographicLib {
       SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _Cx, _Sx);
       if (!(M < 0 || _Cx[0] == 0))
         throw GeographicErr("A degree 0 term should be zero");
-      _Cx[0] = 1;                // Include the 1/r term in the sum
+      _Cx[0] = 1;               // Include the 1/r term in the sum
       _gravitational = SphericalHarmonic(_Cx, _Sx, N, N, M, _amodel, _norm);
       SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _CC, _CS);
       if (N < 0) {

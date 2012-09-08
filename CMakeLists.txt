@@ -95,7 +95,7 @@ endif ()
 
 # (4) Build as a shared library?  On Windows systems, this is typically
 # more trouble than it's worth.
-if (WIN32)
+if (WIN32 OR CYGWIN)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
 else ()
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" ON)
