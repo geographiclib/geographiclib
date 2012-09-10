@@ -10,8 +10,7 @@
 
 /**
 \mainpage Geographic library
-\author Charles F. F. Karney
-<charles@karney.com>
+\author Charles F. F. Karney (charles@karney.com)
 \version 1.24
 \date 2012-mm-dd
 
@@ -162,7 +161,7 @@ of problems may occur with larger values of \e f:
    inversion may be incorrect if \e f is large.
 
 Undoubtedly, bugs lurk in this code and in the documentation.  Please
-report any you find to <charles@karney.com>.
+report any you find to charles@karney.com.
 
 <center>
 Forward to \ref install.  Up to \ref contents.
