@@ -19,19 +19,19 @@ class Math(object):
 
   This defines constants:
     epsilon, difference between 1 and the next bigger number
-    minval, minimum positive number
+    minval, minimum normalized positive number
     maxval, maximum finite number
     degree, the number of radians in a degree
     nan, not a number
-    int, infinity
+    inf, infinity
   """
   
   epsilon = math.pow(2.0, -52)
   minval = math.pow(2.0, -1022)
   maxval = math.pow(2.0, 1023) * (2 - epsilon)
   degree = math.pi/180
-  nan = float("nan")
-  inf = float("inf")
+  inf = float("inf") if sys.version_info > (2, 6) else 2 * maxval
+  nan = float("nan") if sys.version_info > (2, 6) else inf - inf
 
   def sq(x):
     """Square a number"""

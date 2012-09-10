@@ -45,9 +45,9 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.24.tar.gz/download">
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.24.tar.gz">
   GeographicLib-1.24.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.24.zip/download">
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.24.zip">
   GeographicLib-1.24.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two
@@ -58,9 +58,9 @@ using git \verbatim
   cd geographiclib; git checkout stable
 \endverbatim
 There are also binary installers for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win32.exe/download">
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win32.exe">
   GeographicLib-1.24-win32.exe</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win64.exe/download">
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win64.exe">
   GeographicLib-1.24-win64.exe</a>
 .
 It is licensed under the
@@ -143,6 +143,24 @@ problem.
 The section \ref transversemercator documents various properties of this
 projection.
 
+The bulk of the testing has used geographically relevant values of the
+flattening.  Thus, you can expect close to full accuracy for -0.01 &le;
+\e f &le; 0.01 (but note that GeographicLib::TransverseMercatorExact is
+restricted to \e f > 0).  However, reasonably accurate results can be
+expected if -0.1 &le; \e f &le; 0.1.  Outside this range, you should
+attempt to verify the accuracy of the routines independently.  Two types
+of problems may occur with larger values of \e f:
+ - Some classes, specifically GeographicLib::Geodesic,
+   GeographicLib::GeodesicLine, and GeographicLib::TransverseMercator,
+   use series expansions using \e f as a small parameter.  The accuracy
+   of these routines will degrade as \e f becomes large.
+ - Even when exact formulas are used, many of the classes need to invert
+   the exact formulas (e.g., to invert a projection), typically, using
+   Newton's method.  This usually provides an essentially exact
+   inversion.  However, the choice of starting guess and the exit
+   conditions have been tuned to cover small values of \e f and the
+   inversion may be incorrect if \e f is large.
+
 Undoubtedly, bugs lurk in this code and in the documentation.  Please
 report any you find to <charles@karney.com>.
 
@@ -162,13 +180,13 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24.tar.gz/download">
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24.tar.gz">
 GeographicLib-1.24.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24.zip/download">
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24.zip">
 GeographicLib-1.24.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win32.exe/download">
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win32.exe">
 GeographicLib-1.24-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win64.exe/download">
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win64.exe">
 GeographicLib-1.24-win64.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
@@ -466,9 +484,9 @@ library, it is advisable to build it with the compiler you are using for
 your own code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win32.exe/download">
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win32.exe">
 GeographicLib-1.24-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win64.exe/download">
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win64.exe">
 GeographicLib-1.24-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
@@ -1207,13 +1225,13 @@ EGM2008.  These data files are available for download:
  <td><center>30'</center>
  <td><center>0.6</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2">
  link</a> (0.5)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.exe">
  link</a> (0.8)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip">
  link</a> (0.5)</center>
 <tr>
  <td>egm84-15
@@ -1221,13 +1239,13 @@ EGM2008.  These data files are available for download:
  <td><center>15'</center>
  <td><center>2.1</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2">
  link</a> (1.5)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.exe">
  link</a> (1.9)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip">
  link</a> (2.0)</center>
 <tr>
  <td>egm96-15
@@ -1235,13 +1253,13 @@ EGM2008.  These data files are available for download:
  <td><center>15'</center>
  <td><center>2.1</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2">
  link</a> (1.5)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.exe">
  link</a> (1.9)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip">
  link</a> (2.0)</center>
 <tr>
  <td>egm96-5
@@ -1249,13 +1267,13 @@ EGM2008.  These data files are available for download:
  <td><center>5'</center>
  <td><center> 19</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2">
  link</a> (11)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.exe">
  link</a> (11)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip">
  link</a> (17)</center>
 <tr>
  <td>egm2008-5
@@ -1263,13 +1281,13 @@ EGM2008.  These data files are available for download:
  <td><center>5'</center>
  <td><center> 19</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2">
  link</a> (11)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.exe">
  link</a> (11)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip">
  link</a> (17)</center>
 <tr>
  <td>egm2008-2_5
@@ -1277,13 +1295,13 @@ EGM2008.  These data files are available for download:
  <td><center>2.5'</center>
  <td><center> 75</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2">
  link</a> (35)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.exe">
  link</a> (33)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip">
  link</a> (65)</center>
 <tr>
  <td>egm2008-1
@@ -1291,13 +1309,13 @@ EGM2008.  These data files are available for download:
  <td><center>1'</center>
  <td><center>470</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2">
  link</a> (170)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.exe">
  link</a> (130)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip">
  link</a> (390)</center>
 </table>
 </center>
@@ -1647,7 +1665,7 @@ two alternatives:
 \section testgeoid Test data for geoids
 
 A test set for the geoid models is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz/download">
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz">
    GeoidHeights.dat.gz</a>
  .
 This is about 11 MB (compressed).  This test set consists of a set of
@@ -1745,52 +1763,52 @@ These gravity models are available for download:
  <td><center>180</center>
  <td><center>27</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.tar.bz2">
  link</a> (26)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.exe">
  link</a> (55)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.zip">
  link</a> (26)</center>
 <tr>
  <td>egm96
  <td><center>360</center>
  <td><center>2100</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.tar.bz2">
  link</a> (2100)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.exe">
  link</a> (2300)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.zip">
  link</a> (2100)</center>
 <tr>
  <td>egm2008
  <td><center>2190</center>
  <td><center>76000</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.tar.bz2">
  link</a> (75000)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.exe">
  link</a> (72000)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.zip">
  link</a> (73000)</center>
 <tr>
  <td>wgs84
  <td><center>20</center>
  <td><center>1</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.tar.bz2">
  link</a> (1)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.exe">
  link</a> (30)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.zip">
  link</a> (1)</center>
 </table>
 </center>
@@ -2237,13 +2255,13 @@ These magnetic models are available for download:
  <td><center>2010--2015</center>
  <td><center>3</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.tar.bz2">
  link</a> (2)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.exe">
  link</a> (300)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.zip">
  link</a> (2)</center>
 <tr>
  <td>igrf11
@@ -2251,13 +2269,13 @@ These magnetic models are available for download:
  <td><center>1900--2015</center>
  <td><center>25</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.tar.bz2">
  link</a> (7)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.exe">
  link</a> (310)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.zip">
  link</a> (8)</center>
 <tr>
  <td>emm2010
@@ -2265,13 +2283,13 @@ These magnetic models are available for download:
  <td><center>2010--2015</center>
  <td><center>4400</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.tar.bz2">
  link</a> (3700)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.exe">
  link</a> (3000)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.zip">
  link</a> (4100)</center>
 </table>
 </center>
@@ -2518,13 +2536,13 @@ References
 \section testgeod Test data for geodesics
 
 A test set a geodesics is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest.dat.gz/download">
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest.dat.gz">
    GeodTest.dat.gz</a>
  .
 This is about 39 MB (compressed).  This consists of a set of geodesics
 for the WGS84 ellipsoid.  A subset of this (consisting of 1/50 of the
 members &mdash; about 690 kB, compressed) is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz/download">
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz">
    GeodTest-short.dat.gz</a>
 
 Each line of the test set gives 10 space delimited numbers
@@ -2999,7 +3017,7 @@ illustration of the exact transverse Mercator grid in Google Earth.
 \section testmerc Test data for the transverse Mercator projection
 
 A test set for the transverse Mercator projection is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/TMcoords.dat.gz/download">
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/TMcoords.dat.gz">
    TMcoords.dat.gz</a>
  .
 This is about 17 MB (compressed).  This test set consists of a set of
