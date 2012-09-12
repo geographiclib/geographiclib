@@ -1,7 +1,7 @@
 *-core
 *.BAK
-*.[oa]
 *.bak
+*.[oa]
 *.exe
 *.gz
 *.bz2
@@ -20,7 +20,12 @@
 .nfs*
 /gravity
 /magnetic
-BUILD*
+/autom4te.cache/
+/geoids-distrib/
+/magnetic-distrib/
+/gravity-distrib/
+/testdata/
+/BUILD*/
 CMakeCache.txt
 CMakeFiles
 CPackConfig.cmake
@@ -33,7 +38,6 @@ Release
 Release64
 SWIGTYPE_p_namespace.cs
 TAGS
-TransverseMercatorTest
 UpgradeLog.XML
 UpgradeLog2.XML
 \#*#
@@ -41,7 +45,6 @@ _CPack_Packages
 _UpgradeReport_Files
 aclocal.m4
 archive
-autom4te.cache
 cmake_install.cmake
 config.guess
 config.h
@@ -55,9 +58,6 @@ distrib
 doc.log
 geodesic.gie
 geodesic.gie-2.0
-geoids-distrib
-magnetic-distrib
-gravity-distrib
 html
 install-sh
 install_manifest.txt
@@ -69,6 +69,5 @@ missing
 scratch
 srcL
 stamp-h1
-testdata
 workspace
 x64
