@@ -93,7 +93,7 @@ manpages: $(MANPAGES)
 	cp $^ html/
 	touch $@
 
-html/index.html: manpages doxyfile.in Geographic.doc \
+html/index.html: manpages doxyfile.in Geographic.dox \
 	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES)
 	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \
 	$(top_srcdir)/LICENSE.txt html/

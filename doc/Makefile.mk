@@ -1,47 +1,5 @@
-MODULES = AlbersEqualArea \
-	AzimuthalEquidistant \
-	CassiniSoldner \
-	DMS \
-	Ellipsoid \
-	EllipticFunction \
-	GeoCoords \
-	Geocentric \
-	Geodesic \
-	GeodesicLine \
-	Geohash \
-	Geoid \
-	Gnomonic \
-	LocalCartesian \
-	MGRS \
-	OSGB \
-	PolarStereographic \
-	PolygonArea \
-	TransverseMercator \
-	TransverseMercatorExact \
-	UTMUPS
-
-PROGRAMS = CartConvert \
-	ConicProj \
-	GeoConvert \
-	Geod \
-	GeodesicProj \
-	GeoidEval \
-	Gravity \
-	MagneticField \
-	Planimeter \
-	TransverseMercatorProj
-
-HEADERS = $(patsubst %,../include/GeographicLib/%.hpp,Constants $(MODULES))
-SOURCES = $(patsubst %,../src/%.cpp,$(MODULES)) \
-	$(patsubst %,../tools/%.cpp,$(PROGRAMS))
-
-EXTRAFILES = tmseries30.html geodseries30.html
-HTMLMANPAGES = 	$(patsubst %,../man/%.1.html,$(PROGRAMS))
 SCRIPTDRIVERS = $(wildcard scripts/[A-Za-z]*.html)
 JSSCRIPTS = $(wildcard scripts/GeographicLib/[A-Za-z]*.js)
-
-MAXIMA = tm ellint tmseries geod
-MAXIMASOURCES = $(patsubst %,../maxima/%.mac,$(MAXIMA))
 
 VERSION:=$(shell grep '\bVERSION=' ../configure | cut -f2 -d\' | head -1)
 

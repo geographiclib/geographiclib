@@ -99,7 +99,7 @@ Files
 
     doc/
       doxyfile.in -- Doxygen config file
-      Geographic.doc -- main page of Doxygen documentation
+      Geographic.dox -- main page of Doxygen documentation
       geodseries30.html -- geodesic series to 30th order
       tmseries30.html -- transverse Mercator series to 30th order
       html/* -- directory with built documentation

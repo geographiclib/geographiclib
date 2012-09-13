@@ -45,7 +45,7 @@ if (DOXYGEN_FOUND)
   add_dependencies (doc htmlman)
   add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/html/index.html
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxyfile
-      Geographic.doc ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
+      Geographic.dox ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
     COMMAND ${CMAKE_COMMAND} -E remove_directory html
     COMMAND ${CMAKE_COMMAND} -E copy_directory html-stage html
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile > doxygen.log
