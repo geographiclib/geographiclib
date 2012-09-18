@@ -670,6 +670,11 @@
    between two points on a spheroid'',
    Astron. Nachr. '''112'''(2671), 97--108 (1885).[[BR]]
    http://books.google.com/books?id=kN4zAQAAIAAJ&pg=PA206
+ * G. H. Halphen,[[BR]]
+   ''Traité des Fonctions Elliptiques et de leurs Applications
+   [A Treatise on Elliptic Functions and their Applications]'',
+   Vol. 2 (Gauthier-Villars, 1888), Chaps. 6--7.[[BR]]
+   http://books.google.com/books?id=7C3vAAAAMAAJ&pg=PA237
  * J. Knoblauch,[[BR]]
    ''Einleitung in die allgemeine Theorie der krummen Flächen
    [Introduction to the general theory of curved surfaces]''
@@ -702,6 +707,10 @@
    http://books.google.com/books?id=YsAKAAAAIAAJ&pg=PA161 [[BR]]
    unreadable page:
    http://geographiclib.sf.net/geodesic-papers/forsyth96b-add.pdf
+ * A. R. Forsyth,[[BR]]
+   ''Lectures on the Differential Geometry of Curves and Surfaces'',
+   (Cambridge Univ. Press, 1912), Chap. 5.[[BR]]
+   http://archive.org/details/cu31924060289141 [[BR]]
  * R. Fricke,[[BR]]
    ''Kurzgefasste Vorlesungen über verschiedene Gebiete der
    höheren Mathematik mit Berücksichtigung der Anwendungen

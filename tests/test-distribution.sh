@@ -17,7 +17,7 @@
 # [or: python setup.py sdist --formats gztar,zip register upload]
 #
 # gita - check out from git, create package with cmake
-# gita - check out from git, create package with autoconf
+# gitb - check out from git, create package with autoconf
 # rela - release package, build with make
 # relb - release package, build with autoconf
 # relc - release package, build with cmake
