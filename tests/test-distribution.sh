@@ -96,6 +96,18 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
 ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/build
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/build
 
+mkdir $TEMP/gitr
+cd $TEMP/gitr
+git clone -b release $GITSOURCE
+cd geographiclib
+find . -type f | grep -v '/\.git' | xargs rm
+tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
+(
+    cd GeographicLib-$VERSION
+    find . -type f | while read f; do mv $f ../$f; done
+)
+rm -rf GeographicLib-$VERSION
+
 cd $TEMP/rela/GeographicLib-$VERSION
 make -j10
 make PREFIX=$TEMP/insta install
@@ -198,3 +210,45 @@ for i in a b c e f; do
     g++ -g -o testprogram$i testprogram$i.o -Wl,-rpath=$TEMP/inst$i/lib -L$TEMP/inst$i/lib -lGeographic
     ./testprogram$i
 done
+
+DATE=`date +%F`
+cat > $TEMP/tasks.txt <<EOF
+# deploy documentation
+rm -rf $WEBDIST/htdocs/$VERSION &&
+mv $WEBDIST/htdocs/$VERSION{-pre,} &&
+make -C $DEVELSOURCE -f makefile-admin distrib-doc
+
+rm $WEBDIST/htdocs/html &&
+ln -s $VERSION $WEBDIST/htdocs/html &&
+make -C $DEVELSOURCE -f makefile-admin distrib-doc
+
+# deploy release packages
+mv $DEVELSOURCE/GeographicLib-$VERSION.{tar.gz,zip} $DEVELSOURCE/distrib
+make -C $DEVELSOURCE -f makefile-admin distrib-files
+
+# install built version
+cd $TEMP/relc/GeographicLib-$VERSION/BUILD-system
+sudo make install
+
+# python release
+cd $TEMP/gita/geographiclib/python
+python setup.py sdist --formats gztar,zip upload
+
+# tag master branch
+cd $DEVELSOURCE
+git tag -m "Version $VERSION ($DATE)" v$VERSION
+git push
+git push --tags
+
+# commit and tag release branch
+cd $TEMP/gitr/geographiclib
+git add .
+git commit -m "Version $VERSION ($DATE)"
+git tag -m "Version $VERSION ($DATE)" r$VERSION
+git tag -m "Mark stable version" -f stable
+git push
+git push --tags
+
+EOF
+echo cat $TEMP/tasks.txt
+cat $TEMP/tasks.txt

@@ -53,8 +53,8 @@ as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
 line endings.)  Alternatively you can get the latest stable release
 using git \verbatim
-  git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib-release geographiclib
-  cd geographiclib; git checkout stable
+  git clone git://git.code.sf.net/p/geographiclib/code geographiclib
+  cd geographiclib; git checkout -q r1.24
 \endverbatim
 There are also binary installers for Windows available at
 - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win32.exe">
@@ -539,11 +539,26 @@ include/GeographicLib.
 \section maintainer Maintainer tasks
 
 Check the code out of git with \verbatim
-  git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib
+  git clone -b master git://git.code.sf.net/p/geographiclib/code geographiclib
 \endverbatim
+Here the "master" branch is checked out.  There are three branches in
+the git repository:
+- <b>master</b>: the main branch for code maintainence.  Releases are
+  tagged on this branch as, e.g., v1.24.
+- <b>devel</b>: the development branch; changes made here are merged
+  into master.
+- <b>release</b>: the release branch created by unpacking the source
+  releases (git is \e not used to merge changes from the other
+  branches into this branch).  This is the \e default branch of the
+  repository (the branch you get if cloning the repository without
+  specifying a branch).  This differs from the master branch in that
+  some administrative files are excluded while some intermediate files
+  are included (in order to aid building on as many platforms as
+  possible).  Releases are tagged on this branch as, e.g., r1.24.
+.
 The autoconf configuration script and the formatted man pages are not
-checked into git.  In order to create the autoconf configuration script,
-run \verbatim
+checked into master branch of the repository.  In order to create the
+autoconf configuration script, run \verbatim
   sh autogen.sh \endverbatim
 in the top level directory.  Provided you are running on a system with
 doxygen, pod2man, and pod2html installed, then you can create the
@@ -3355,10 +3370,12 @@ Older versions are in
 http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
 The corresponding documentation for these versions is obtained by
-clicking on the "Version m.nn" links below.  Some of the links in the
-documentaion of older versions may be out of date (in particular the
-links for the source code will not work if the code has been migrated to
-the archive subdirectory).
+clicking on the &ldquo;Version <i>m.nn</i>&rdquo; links below.  Some of
+the links in the documentaion of older versions may be out of date (in
+particular the links for the source code will not work if the code has
+been migrated to the archive subdirectory).  All the releases are
+available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
+of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.24">Version 1.24</a>
    (released 2012-mm-dd)

@@ -1,5 +1,4 @@
 # -*- Makefile -*-
-include Makefile.mk
 
 # ssh -t karney,geographiclib@shell.sourceforge.net create
 
