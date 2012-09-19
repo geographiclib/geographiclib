@@ -117,11 +117,11 @@ namespace GeographicLib {
      *   -  38N 339188 3701405
      *   -  897039 3708229 37N
      *
-     * Latitude and Longitude parsing.  Latitude precedes longitude, unless a
-     * N, S, E, W hemisphere designator is used on one or both coordinates.  If
-     * \e swaplatlong = true (default is false), then longitude precedes
-     * latitude in the absence of a hemisphere designator.  Thus (with \e
-     * swaplatlong = false)
+     * <b>Latitude and Longitude parsing</b>: Latitude precedes longitude,
+     * unless a N, S, E, W hemisphere designator is used on one or both
+     * coordinates.  If \e swaplatlong = true (default is false), then
+     * longitude precedes latitude in the absence of a hemisphere designator.
+     * Thus (with \e swaplatlong = false)
      * - 40 -75
      * - N40 W75
      * - -75 N40
@@ -131,10 +131,12 @@ namespace GeographicLib {
      * are all the same position.  The coordinates may be given in
      * decimal degrees, degrees and decimal minutes, degrees, minutes,
      * seconds, etc.  Use d, ', and &quot; to mark off the degrees,
-     * minutes and seconds.  Alternatively, use : to separate these
-     * components.  Thus
+     * minutes and seconds.  Various alternative symbols for degrees, minutes,
+     * and seconds are allowed.  Alternatively, use : to separate these
+     * components.  (See DMS::Decode for details.)  Thus
      * - 40d30'30&quot;
      * - 40d30'30
+     * - 40&deg;30'30
      * - 40d30.5'
      * - 40d30.5
      * - 40:30:30
@@ -147,15 +149,15 @@ namespace GeographicLib {
      * [&minus;540&deg;, 540&deg;).  Internally longitudes are reduced
      * to the range [&minus;180&deg;, 180&deg;).
      *
-     * UTM/UPS parsing.  For UTM zones (&minus;80&deg; &le; Lat < 84&deg;), the
-     * zone designator is made up of a zone number (for 1 to 60) and a
-     * hemisphere letter (N or S), e.g., 38N.  The latitude zone designer
-     * ([C--M] in the southern hemisphere and [N--X] in the northern)
-     * should NOT be used.  (This is part of the MGRS coordinate.)  The zone
+     * <b>UTM/UPS parsing</b>: For UTM zones (&minus;80&deg; &le; Lat <
+     * 84&deg;), the zone designator is made up of a zone number (for 1 to 60)
+     * and a hemisphere letter (N or S), e.g., 38N.  The latitude zone designer
+     * ([C--M] in the southern hemisphere and [N--X] in the northern) should
+     * NOT be used.  (This is part of the MGRS coordinate.)  The zone
      * designator for the poles (where UPS is employed) is a hemisphere letter
      * by itself, i.e., N or S.
      *
-     * MGRS parsing interprets the grid references as square area at the
+     * <b>MGRS parsing</b> interprets the grid references as square area at the
      * specified precision (1m, 10m, 100m, etc.).  If \e centerp = true (the
      * default), the center of this square is then taken to be the precise
      * position; thus:
