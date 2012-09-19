@@ -718,10 +718,10 @@
    applications]''
    (Teubner, Leipzig 1900), Chap. 5, Sec. 3, pp. 293--305.[[BR]]
    http://books.google.com/books?id=bSsLAAAAYAAJ&pg=PA293
- * L. Bianci,[[BR]]
+ * L. Bianchi,[[BR]]
    ''Lezioni di Geometria Differenziale
    [Lessons in Differential Geometry]'', Vol. 1
-   (Spoerri, Pisa, 1902), Chap. 6.[[BR]]
+   (2nd edition, Spoerri, Pisa, 1902), Chap. 6.[[BR]]
    http://books.google.com/books?id=U7ALAAAAYAAJ&pg=PA179 [[BR]]
  * L. P. Eisenhart,[[BR]]
    ''A Treatise on the Differential Geometry of Curves and Surfaces''
