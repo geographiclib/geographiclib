@@ -223,7 +223,7 @@ ln -s $VERSION $WEBDIST/htdocs/html &&
 make -C $DEVELSOURCE -f makefile-admin distrib-doc
 
 # deploy release packages
-mv $DEVELSOURCE/GeographicLib-$VERSION.{tar.gz,zip} $DEVELSOURCE/distrib
+mv $DEVELSOURCE/GeographicLib-$VERSION{.tar.gz,.zip,-win{32,64}.exe} $DEVELSOURCE/distrib
 make -C $DEVELSOURCE -f makefile-admin distrib-files
 
 # install built version
@@ -234,18 +234,18 @@ sudo make install
 cd $TEMP/gita/geographiclib/python
 python setup.py sdist --formats gztar,zip upload
 
-# tag master branch
-cd $DEVELSOURCE
-git tag -m "Version $VERSION ($DATE)" v$VERSION
-git push
-git push --tags
-
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib
 git add .
 git commit -m "Version $VERSION ($DATE)"
 git tag -m "Version $VERSION ($DATE)" r$VERSION
 git tag -m "Mark stable version" -f stable
+git push
+git push --tags
+
+# tag master branch
+cd $DEVELSOURCE
+git tag -m "Version $VERSION ($DATE)" v$VERSION
 git push
 git push --tags
 
