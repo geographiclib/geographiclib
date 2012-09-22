@@ -158,10 +158,9 @@ precision relative to 1 m.  See <a href="#precision">PRECISION</a>.</p>
 <dt><strong><a name="z" class="item"><strong>-z</strong></a></strong></dt>
 
 <dd>
-<p>set the zone to <em>zone</em> for output.  Use either 0 &lt; <em>zone</em> &lt;= 60
-for a UTM zone or <em>zone</em> = 0 for UPS.  Alternatively use a
-<em>zone</em>+<em>hemisphere</em> designation (<em>hemisphere</em> is ignored), e.g., 38N.
-See <a href="#zone">ZONE</a>.</p>
+<p>set the zone to <em>zone</em> for output.  Use either 0 &lt; <em>zone</em> &lt;=
+60 for a UTM zone or <em>zone</em> = 0 for UPS.  Alternatively use a
+<em>zone</em>+<em>hemisphere</em> designation, e.g., 38N.  See <a href="#zone">ZONE</a>.</p>
 </dd>
 <dt><strong><a name="s" class="item"><strong>-s</strong></a></strong></dt>
 
@@ -183,7 +182,7 @@ square instead of the center; see <a href="#mgrs">MGRS</a>.</p>
 
 <dd>
 <p>on input and output, longitude precedes latitude (except that on input
-this can be overridden by a hemisphere designator, <em>N</em>, <em>S</em>,<em>E</em>,
+this can be overridden by a hemisphere designator, <em>N</em>, <em>S</em>, <em>E</em>,
 <em>W</em>).</p>
 </dd>
 <dt><strong><a name="comment_delimiter" class="item"><strong>--comment-delimiter</strong></a></strong></dt>
@@ -270,10 +269,10 @@ square is returned instead (<code>38N 444000 3688000</code> in the example above
 <h1><a name="zone">ZONE</a></h1>
 <p>If the input is <strong>geographic</strong>, <strong>GeoConvert</strong> uses the standard rules of
 selecting UTM vs UPS and for assigning the UTM zone (with the Norway and
-Svalbard exceptions).  If the input is <strong>UTM/UPS</strong>, or <strong>MGRS</strong>, then the
+Svalbard exceptions).  If the input is <strong>UTM/UPS</strong> or <strong>MGRS</strong>, then the
 choice between UTM and UPS and the UTM zone mirrors the input.  The <strong>-z</strong>
-<em>zone</em>, <strong>-s</strong>, <strong>-t</strong> options allow these rules to be overridden with
-<em>zone</em> = 0 being used to indicate UPS.  For example, the point</p>
+<em>zone</em>, <strong>-s</strong>, and <strong>-t</strong> options allow these rules to be overridden
+with <em>zone</em> = 0 being used to indicate UPS.  For example, the point</p>
 <pre>
    79.9S 6.1E</pre>
 <p>corresponds to possible MGRS coordinates</p>
@@ -287,6 +286,13 @@ choice between UTM and UPS and the UTM zone mirrors the input.  The <strong>-z</
    echo 31CEM6066227959 | GeoConvert -p -3 -m       =&gt; 31CEM6027
    echo 31CEM6066227959 | GeoConvert -p -3 -m -s    =&gt; 32CMS4328
    echo 31CEM6066227959 | GeoConvert -p -3 -m -z 0  =&gt;   BBZ1917</pre>
+<p>Is <em>zone</em> is specified with a hemisphere, then this is honored when
+printing UTM coordinates:</p>
+<pre>
+   echo -1 3 | GeoConvert -u         =&gt; 31S 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31   =&gt; 31S 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31S  =&gt; 31S 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31N  =&gt; 31N 500000 -110530</pre>
 <p><strong>NOTE</strong>: the letter in the zone specification for UTM is a hemisphere
 designator <em>N</em> or <em>S</em> and <em>not</em> an MGRS latitude band letter.
 Convert the MGRS latitude band letter to a hemisphere as follows:
@@ -296,31 +302,38 @@ replace <em>C</em> thru <em>M</em> by <em>S</em>; replace <em>N</em> thru <em>X<
 <hr />
 <h1><a name="quoting">QUOTING</a></h1>
 <p>Unfortunately the characters ' and &quot; have special meanings in many
-shells and have to be entered with care.</p>
+shells and have to be entered with care.  However note (1) that the
+trailing designator is optional and that (2) you can use colons as a
+separator character.  Thus 10d20' can be entered as 10d20 or 10:20 and
+10d20'30&quot; can be entered as 10:20:30.</p>
 <dl>
 <dt><strong><a name="shells" class="item">Unix shells (sh, bash, tsch)</a></strong></dt>
 
 <dd>
-<p>The special characters can be quoted by preceding them with a \
-(backslash).  Alternatively you can quote a ' with a pair of &quot;s.  The
-two alternatives are illustrated by</p>
+<p>The characters ' and &quot; can be quoted by preceding them with a \
+(backslash); or you can quote a ' with a pair of &quot;s.  The two
+alternatives are illustrated by</p>
 <pre>
-   echo 30d30\'30\&quot; &quot;30d30'30&quot; | GeoConvert -d -p -1
-   =&gt; 30d30'30&quot;N 030d30'30&quot;E</pre>
-<p>Alternatively use colon separators, e.g., 30:30:30, which need no
-quoting.</p>
+   echo 10d20\'30\&quot; &quot;20d30'40&quot; | GeoConvert -d -p -1
+   =&gt; 10d20'30&quot;N 020d30'40&quot;E</pre>
+<p>Quoting of command line arguments is similar</p>
+<pre>
+   GeoConvert -d -p -1 --input-string &quot;10d20'30\&quot; 20d30'40&quot;
+   =&gt; 10d20'30&quot;N 020d30'40&quot;E</pre>
 </dd>
 <dt><strong><a name="shell" class="item">Windows command shell (cmd)</a></strong></dt>
 
 <dd>
 <p>The ' character needs no quoting and the &quot; character can be quoted by a
-^.  However this quoting is usually unnecessary because the trailing
-designator can be omitted.  Thus</p>
+^.  (This quoting is usually unnecessary because the trailing designator
+can be omitted.)  Thus</p>
 <pre>
-   echo 30d30'30^&quot; 30d30'30 | GeoConvert -d -p -1
-   =&gt; 30d30'30&quot;N 030d30'30&quot;E</pre>
-<p>Alternatively use colon separators, e.g., 30:30:30, which need no
-quoting.</p>
+   echo 10d20'30^&quot; 20d30'40 | GeoConvert -d -p -1
+   =&gt; 10d20'30&quot;N 020d30'40&quot;E</pre>
+<p>Use \ to quote the &quot; character in a command line argument</p>
+<pre>
+   GeoConvert -d -p -1 --input-string &quot;10d20'30\&quot; 20d30'40&quot;
+   =&gt; 10d20'30&quot;N 020d30'40&quot;E</pre>
 </dd>
 <dt><strong><a name="input_from_a_file" class="item">Input from a file</a></strong></dt>
 

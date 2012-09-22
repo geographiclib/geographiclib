@@ -141,7 +141,7 @@ namespace GeographicLib {
      * string.  No check is performed on the range of the result.  Examples of
      * legal and illegal strings are
      * - <i>LEGAL</i> (all the entries on each line are equivalent)
-     *   - -20.51125, 20d30'40.5&quot;S, -20d30'40.5, -20d30.675,
+     *   - -20.51125, 20d30'40.5&quot;S, -20&deg;30'40.5, -20d30.675,
      *     N-20d30'40.5&quot;, -20:30:40.5
      *   - 4d0'9, 4d9&quot;, 4d9'', 4:0:9, 004:00:09, 4.0025, 4.0025d, 4d0.15,
      *     04:.15

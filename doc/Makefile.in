@@ -463,7 +463,7 @@ doc: html/index.html
 @HAVE_DOXYGEN_TRUE@	cp $^ html/
 @HAVE_DOXYGEN_TRUE@	touch $@
 
-@HAVE_DOXYGEN_TRUE@html/index.html: manpages doxyfile.in Geographic.doc \
+@HAVE_DOXYGEN_TRUE@html/index.html: manpages doxyfile.in Geographic.dox \
 @HAVE_DOXYGEN_TRUE@	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES)
 @HAVE_DOXYGEN_TRUE@	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \
 @HAVE_DOXYGEN_TRUE@	$(top_srcdir)/LICENSE.txt html/

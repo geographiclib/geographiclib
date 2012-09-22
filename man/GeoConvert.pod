@@ -105,10 +105,9 @@ precision relative to 1 m.  See L<PRECISION|precision>.
 
 =item B<-z>
 
-set the zone to I<zone> for output.  Use either 0 E<lt> I<zone> E<lt>= 60
-for a UTM zone or I<zone> = 0 for UPS.  Alternatively use a
-I<zone>+I<hemisphere> designation (I<hemisphere> is ignored), e.g., 38N.
-See L<ZONE|zone>.
+set the zone to I<zone> for output.  Use either 0 E<lt> I<zone> E<lt>=
+60 for a UTM zone or I<zone> = 0 for UPS.  Alternatively use a
+I<zone>+I<hemisphere> designation, e.g., 38N.  See L<ZONE|zone>.
 
 =item B<-s>
 
@@ -126,7 +125,7 @@ square instead of the center; see L<MGRS|mgrs>.
 =item B<-w>
 
 on input and output, longitude precedes latitude (except that on input
-this can be overridden by a hemisphere designator, I<N>, I<S>,I<E>,
+this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
 I<W>).
 
 =item B<--comment-delimiter>
@@ -202,10 +201,10 @@ square is returned instead (C<38N 444000 3688000> in the example above).
 
 If the input is B<geographic>, B<GeoConvert> uses the standard rules of
 selecting UTM vs UPS and for assigning the UTM zone (with the Norway and
-Svalbard exceptions).  If the input is B<UTM/UPS>, or B<MGRS>, then the
+Svalbard exceptions).  If the input is B<UTM/UPS> or B<MGRS>, then the
 choice between UTM and UPS and the UTM zone mirrors the input.  The B<-z>
-I<zone>, B<-s>, B<-t> options allow these rules to be overridden with
-I<zone> = 0 being used to indicate UPS.  For example, the point
+I<zone>, B<-s>, and B<-t> options allow these rules to be overridden
+with I<zone> = 0 being used to indicate UPS.  For example, the point
 
    79.9S 6.1E
 
@@ -222,6 +221,14 @@ then
    echo 31CEM6066227959 | GeoConvert -p -3 -m -s    => 32CMS4328
    echo 31CEM6066227959 | GeoConvert -p -3 -m -z 0  =>   BBZ1917
 
+Is I<zone> is specified with a hemisphere, then this is honored when
+printing UTM coordinates:
+
+   echo -1 3 | GeoConvert -u         => 31S 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31   => 31S 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31S  => 31S 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31N  => 31N 500000 -110530
+
 B<NOTE>: the letter in the zone specification for UTM is a hemisphere
 designator I<N> or I<S> and I<not> an MGRS latitude band letter.
 Convert the MGRS latitude band letter to a hemisphere as follows:
@@ -230,33 +237,40 @@ replace I<C> thru I<M> by I<S>; replace I<N> thru I<X> by I<N>.
 =head1 QUOTING
 
 Unfortunately the characters ' and " have special meanings in many
-shells and have to be entered with care.
+shells and have to be entered with care.  However note (1) that the
+trailing designator is optional and that (2) you can use colons as a
+separator character.  Thus 10d20' can be entered as 10d20 or 10:20 and
+10d20'30" can be entered as 10:20:30.
 
 =over
 
 =item Unix shells (sh, bash, tsch)
 
-The special characters can be quoted by preceding them with a \
-(backslash).  Alternatively you can quote a ' with a pair of "s.  The
-two alternatives are illustrated by
+The characters ' and " can be quoted by preceding them with a \
+(backslash); or you can quote a ' with a pair of "s.  The two
+alternatives are illustrated by
 
-   echo 30d30\'30\" "30d30'30" | GeoConvert -d -p -1
-   => 30d30'30"N 030d30'30"E
+   echo 10d20\'30\" "20d30'40" | GeoConvert -d -p -1
+   => 10d20'30"N 020d30'40"E
 
-Alternatively use colon separators, e.g., 30:30:30, which need no
-quoting.
+Quoting of command line arguments is similar
+
+   GeoConvert -d -p -1 --input-string "10d20'30\" 20d30'40"
+   => 10d20'30"N 020d30'40"E
 
 =item Windows command shell (cmd)
 
 The ' character needs no quoting and the " character can be quoted by a
-^.  However this quoting is usually unnecessary because the trailing
-designator can be omitted.  Thus
+^.  (This quoting is usually unnecessary because the trailing designator
+can be omitted.)  Thus
 
-   echo 30d30'30^" 30d30'30 | GeoConvert -d -p -1
-   => 30d30'30"N 030d30'30"E
+   echo 10d20'30^" 20d30'40 | GeoConvert -d -p -1
+   => 10d20'30"N 020d30'40"E
 
-Alternatively use colon separators, e.g., 30:30:30, which need no
-quoting.
+Use \ to quote the " character in a command line argument
+
+   GeoConvert -d -p -1 --input-string "10d20'30\" 20d30'40"
+   => 10d20'30"N 020d30'40"E
 
 =item Input from a file
 

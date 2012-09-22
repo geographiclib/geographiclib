@@ -49,7 +49,9 @@ foreach (TOOL ${TOOLS})
       COMMENT "Building usage code for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
   else ()
-    file (COPY ${TOOL}.1.html DESTINATION ../doc/html-stage)
+    if (DOXYGEN_FOUND)
+      file (COPY ${TOOL}.1.html DESTINATION ../doc/html-stage)
+    endif ()
   endif ()
 endforeach ()
 

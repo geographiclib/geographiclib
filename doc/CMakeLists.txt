@@ -31,7 +31,7 @@ endif ()
 # If doxygen is not available, only the install step (from the source
 # tree) is done.
 
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html-stage)
+file (MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html-stage)
 if (DOXYGEN_FOUND)
   configure_file (doxyfile.in doxyfile)
   file (GLOB SOURCES
@@ -45,7 +45,7 @@ if (DOXYGEN_FOUND)
   add_dependencies (doc htmlman)
   add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/html/index.html
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxyfile
-      Geographic.doc ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
+      Geographic.dox ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
     COMMAND ${CMAKE_COMMAND} -E remove_directory html
     COMMAND ${CMAKE_COMMAND} -E copy_directory html-stage html
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile > doxygen.log
@@ -53,9 +53,16 @@ if (DOXYGEN_FOUND)
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
     DESTINATION ${INSTALL_DOC_DIR})
 else ()
-  file (COPY ../LICENSE.txt DESTINATION html)
-  configure_file (index.html.in html/index.html)
-  configure_file (utilities.html.in html/utilities.html)
+  if (CMAKE_VERSION VERSION_LESS 2.8)
+    configure_file (../LICENSE.txt ${CMAKE_CURRENT_BINARY_DIR}/html/LICENSE.txt
+      COPYONLY)
+  else ()
+    file (COPY ../LICENSE.txt DESTINATION html)
+  endif ()
+  # Need to absolute path on destination to support old versions of cmake
+  configure_file (index.html.in ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
+  configure_file (utilities.html.in
+    ${CMAKE_CURRENT_BINARY_DIR}/html/utilities.html)
   install (FILES
     ${CMAKE_CURRENT_BINARY_DIR}/html/LICENSE.txt
     ${CMAKE_CURRENT_BINARY_DIR}/html/index.html

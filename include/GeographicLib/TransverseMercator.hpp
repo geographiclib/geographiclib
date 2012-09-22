@@ -36,7 +36,7 @@ namespace GeographicLib {
    *  - C. F. F. Karney,
    *    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    *    Transverse Mercator with an accuracy of a few nanometers,</a>
-   *    J. Geodesy 85(8), 475&ndash;485 (Aug. 2011);
+   *    J. Geodesy 85(8), 475--485 (Aug. 2011);
    *    preprint
    *    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
    *
@@ -111,7 +111,7 @@ namespace GeographicLib {
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
      * @param[in] k0 central scale factor.
-     * @exception GeographicLib if \e a, (1 &minus; \e f ) \e a, or \e k0 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k0 is
      *   not positive.
      **********************************************************************/
     TransverseMercator(real a, real f, real k0);

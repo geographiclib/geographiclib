@@ -1,16 +1,17 @@
 cmake_minimum_required (VERSION 2.6)
+set(CMAKE_LEGACY_CYGWIN_WIN32 0) # Remove when CMake >= 2.8.4 is required
 project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 23)
+set (GeographicLib_VERSION_MINOR 24)
 set (GeographicLib_VERSION
   "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.5.0)
+set (LIBVERSIONFULL 9.6.0)
 
 # User-settable variables
 
@@ -74,20 +75,7 @@ if (DEFINED INSTALL_PATH)
 endif ()
 message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
 
-# (3) Build as a shared library?  On Windows systems, this is typically
-# more trouble than it's worth.
-if (WIN32)
-  option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
-else ()
-  option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" ON)
-endif ()
-
-# (4) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
-set (MATLAB_COMPILER OFF CACHE STRING
-  "Compiler for matlab/octave interface: mex or mkoctfile or OFF") 
-set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
-
-# (5) Where to look for data files.  Various classes look in the geoids,
+# (3) Where to look for data files.  Various classes look in the geoids,
 # gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
 if (WIN32)
   # The binary installers for the data files for Windows are created
@@ -103,6 +91,21 @@ else ()
   set (GEOGRAPHICLIB_DATA
     "/usr/local/share/GeographicLib"
     CACHE PATH "Location for data for GeographicLib")
+endif ()
+
+# (4) Build as a shared library?  On Windows systems, this is typically
+# more trouble than it's worth.
+if (WIN32 OR CYGWIN)
+  option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
+else ()
+  option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" ON)
+endif ()
+
+# (5) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
+set (MATLAB_COMPILER OFF CACHE STRING
+  "Compiler for matlab/octave interface: mex or mkoctfile or OFF") 
+if (NOT CMAKE_VERSION VERSION_LESS 2.8)
+  set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
 endif ()
 
 # (6) Compile the short example programs?
@@ -129,8 +132,11 @@ endif ()
 set (CMAKE_DEBUG_POSTFIX _d)
 
 # Determine system properties
-include (CheckTypeSize)
-check_type_size ("long double" LONG_DOUBLE BUILTIN_TYPES_ONLY)
+if (NOT CYGWIN)
+  # cygwin has a long double but the support for ::cbrtl etc is missing
+  include (CheckTypeSize)
+  check_type_size ("long double" LONG_DOUBLE BUILTIN_TYPES_ONLY)
+endif ()
 include (TestBigEndian)
 test_big_endian (WORDS_BIGENDIAN)
 
@@ -140,10 +146,23 @@ configure_file (
   include/GeographicLib/Config.h )
 
 # The documentation depends on doxygen.  Need version 1.8.1.2 or later
-# for support of greek letters and math symbols.
+# for support of greek letters and math symbols.  Also require cmake
+# 2.8 or later for support of file (COPY ...).
 if (GEOGRAPHICLIB_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
   find_package (Doxygen 1.8.1.2)
+  if (DOXYGEN_FOUND)
+    execute_process (COMMAND ${DOXYGEN_EXECUTABLE} --version
+      OUTPUT_VARIABLE DOXYGEN_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if (DOXYGEN_VERSION VERSION_LESS 1.4.0)
+      set (DOXYGEN_FOUND FALSE)
+      message (STATUS "Doxygen version found, ${DOXYGEN_VERSION}, is too old")
+    elseif (CMAKE_VERSION VERSION_LESS 2.8)
+      set (DOXYGEN_FOUND FALSE)
+      message (STATUS
+	"CMake version ${CMAKE_VERSION} too old for building documentation")
+    endif ()
+  endif ()
 endif ()
 
 # The man pages are written as pod files and converted to nroff format,
@@ -155,8 +174,10 @@ endif ()
 if (NOT WIN32)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
+  find_program (HAVE_COL col)
 endif ()
-if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML)
+if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_COL AND
+    NOT CMAKE_VERSION VERSION_LESS 2.8)
   set (MAINTAINER ON)
 else ()
   set (MAINTAINER OFF)

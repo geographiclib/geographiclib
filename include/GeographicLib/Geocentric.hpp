@@ -32,7 +32,7 @@ namespace GeographicLib {
    * - H. Vermeille,
    *   <a href="http://dx.doi.org/10.1007/s00190-002-0273-6"> Direct
    *   transformation from geocentric coordinates to geodetic coordinates</a>,
-   *   J. Geodesy 76, 451&ndash;454 (2002).
+   *   J. Geodesy 76, 451--454 (2002).
    * .
    * Several changes have been made to ensure that the method returns accurate
    * results for all finite inputs (even if \e h is infinite).  The changes are
@@ -106,7 +106,7 @@ namespace GeographicLib {
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
-     * @exception GeographicLib if \e a or (1 &minus; \e f ) \e a is not
+     * @exception GeographicErr if \e a or (1 &minus; \e f ) \e a is not
      *   positive.
      **********************************************************************/
     Geocentric(real a, real f);

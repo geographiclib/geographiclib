@@ -42,6 +42,7 @@ int main(int argc, char* argv[]) {
     bool centerp = true, swaplatlong = false;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
+    bool sethemisphere = false, northp = false;
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -76,8 +77,8 @@ int main(int argc, char* argv[]) {
         if (++m == argc) return usage(1, true);
         std::string zonestr(argv[m]);
         try {
-          bool northp;
           UTMUPS::DecodeZone(zonestr, zone, northp);
+          sethemisphere = true;
         }
         catch (const std::exception&) {
           std::istringstream str(zonestr);
@@ -91,12 +92,15 @@ int main(int argc, char* argv[]) {
             std::cerr << "Zone " << zone << " not in [0, 60]\n";
             return 1;
           }
+          sethemisphere = false;
         }
-      } else if (arg == "-s")
+      } else if (arg == "-s") {
         zone = UTMUPS::STANDARD;
-      else if (arg == "-t")
+        sethemisphere = false;
+      } else if (arg == "-t") {
         zone = UTMUPS::UTM;
-      else if (arg == "--input-string") {
+        sethemisphere = false;
+      } else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
       } else if (arg == "--input-file") {
@@ -186,7 +190,9 @@ int main(int argc, char* argv[]) {
           os = p.DMSRepresentation(prec, swaplatlong, dmssep);
           break;
         case UTMUPS:
-          os = p.AltUTMUPSRepresentation(prec);
+          os = (sethemisphere
+                ? p.AltUTMUPSRepresentation(northp, prec)
+                : p.AltUTMUPSRepresentation(prec));
           break;
         case MGRS:
           os = p.AltMGRSRepresentation(prec);

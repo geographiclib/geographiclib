@@ -46,17 +46,17 @@ namespace GeographicLib {
    *
    * References:
    * - C. W. Clenshaw, A note on the summation of Chebyshev series,
-   *   %Math. Tables Aids Comput. 9(51), 118&ndash;120 (1955).
+   *   %Math. Tables Aids Comput. 9(51), 118--120 (1955).
    * - R. E. Deakin, Derivatives of the earth's potentials, Geomatics
-   *   Research Australasia 68, 31&ndash;60, (June 1998).
+   *   Research Australasia 68, 31--60, (June 1998).
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San
    *   Francisco, 1967).  (See Sec. 1-14, for a definition of Pbar.)
    * - S. A. Holmes and W. E. Featherstone, A unified approach to the Clenshaw
    *   summation and the recursive computation of very high degree and order
    *   normalised associated Legendre functions, J. Geodesy 76(5),
-   *   279&ndash;299 (2002).
+   *   279--299 (2002).
    * - C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw
-   *   summation, Boll. Geod. Sci. Aff. 41(4), 349&ndash;375 (1982).
+   *   summation, Boll. Geod. Sci. Aff. 41(4), 349--375 (1982).
    *
    * Example of use:
    * \include example-SphericalHarmonic.cpp
@@ -289,8 +289,7 @@ namespace GeographicLib {
      * sum over the order \e m (about \e N operations).
      *
      * Here's an example of computing the spherical sum at a sequence of
-     * longitudes without using a CircularEngine object
-     \code
+     * longitudes without using a CircularEngine object \code
      SphericalHarmonic h(...);     // Create the SphericalHarmonic object
      double r = 2, lat = 33, lon0 = 44, dlon = 0.01;
      double
@@ -304,8 +303,7 @@ namespace GeographicLib {
      }
      \endcode
      * Here is the same calculation done using a CircularEngine object.  This
-     * will be about <i>N</i>/2 times faster.
-     \code
+     * will be about <i>N</i>/2 times faster. \code
      SphericalHarmonic h(...);     // Create the SphericalHarmonic object
      double r = 2, lat = 33, lon0 = 44, dlon = 0.01;
      double

@@ -206,8 +206,8 @@ namespace GeographicLib {
      * @param[in] y the year (must be positive).
      * @param[in] m the month, Jan = 1, etc. (must be positive).
      * @param[in] d the day of the month (must be positive).
-     * @return the day of the week with Sunday, Monday&ndash;Saturday = 0,
-     *   1&ndash;6.
+     * @return the day of the week with Sunday, Monday--Saturday = 0,
+     *   1--6.
      **********************************************************************/
     static int dow(int y, int m, int d) throw() { return dow(day(y, m, d)); }
 
@@ -215,8 +215,8 @@ namespace GeographicLib {
      * Given the sequential day, return the day of the week.
      *
      * @param[in] s the sequential day (must be positive).
-     * @return the day of the week with Sunday, Monday&ndash;Saturday = 0,
-     *   1&ndash;6.
+     * @return the day of the week with Sunday, Monday--Saturday = 0,
+     *   1--6.
      **********************************************************************/
     static int dow(int s) throw() {
       return (s + 5) % 7;  // The 5 offset makes day 1 (0001-01-01) a Saturday.

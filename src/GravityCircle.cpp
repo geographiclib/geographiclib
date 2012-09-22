@@ -70,7 +70,7 @@ namespace GeographicLib {
 
   Math::real GravityCircle::W(real clam, real slam,
                               real& gX, real& gY, real& gZ) const throw() {
-    real Wres = V(clam, slam, gX, gY, gZ) + _frot * _P / 2;
+    real Wres = V(clam, slam, gX, gY, gZ) + _frot * _Px / 2;
     gX += _frot * clam;
     gY += _frot * slam;
     return Wres;
@@ -118,8 +118,8 @@ namespace GeographicLib {
       deltaZ *= f;
       if (correct) {
         real r3 = _GMmodel * _dzonal0 * _invR * _invR * _invR;
-        deltaX += _P * clam * r3;
-        deltaY += _P * slam * r3;
+        deltaX += _Px * clam * r3;
+        deltaY += _Px * slam * r3;
         deltaZ += _Z * r3;
       }
     }

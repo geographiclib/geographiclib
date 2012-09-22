@@ -107,12 +107,13 @@ namespace GeographicLib {
     return mgrs;
   }
 
-  void GeoCoords::UTMUPSString(int zone, real easting, real northing, int prec,
-                               std::string& utm) const {
+  void GeoCoords::UTMUPSString(int zone, bool northp,
+                               real easting, real northing, int prec,
+                               std::string& utm) {
     ostringstream os;
     prec = max(-5, min(9, prec));
     real scale = prec < 0 ? pow(real(10), -prec) : real(1);
-    os << UTMUPS::EncodeZone(zone, _northp) << fixed << setfill('0');
+    os << UTMUPS::EncodeZone(zone, northp) << fixed << setfill('0');
     if (Math::isfinite(easting)) {
       os << " " << setprecision(max(0, prec)) << easting / scale;
       if (prec < 0 && abs(easting / scale) > real(0.5))
@@ -130,13 +131,33 @@ namespace GeographicLib {
 
   string GeoCoords::UTMUPSRepresentation(int prec) const {
     string utm;
-    UTMUPSString(_zone, _easting, _northing, prec, utm);
+    UTMUPSString(_zone, _northp, _easting, _northing, prec, utm);
+    return utm;
+  }
+
+  string GeoCoords::UTMUPSRepresentation(bool northp, int prec) const {
+    double e, n;
+    int z;
+    UTMUPS::Transfer(_zone, _northp, _easting, _northing,
+                     _zone,  northp,  e,        n,       z);
+    string utm;
+    UTMUPSString(_zone, northp, e, n, prec, utm);
     return utm;
   }
 
   string GeoCoords::AltUTMUPSRepresentation(int prec) const {
     string utm;
-    UTMUPSString(_alt_zone, _alt_easting, _alt_northing, prec, utm);
+    UTMUPSString(_alt_zone, _northp, _alt_easting, _alt_northing, prec, utm);
+    return utm;
+  }
+
+  string GeoCoords::AltUTMUPSRepresentation(bool northp, int prec) const {
+    double e, n;
+    int z;
+    UTMUPS::Transfer(_alt_zone, _northp, _alt_easting, _alt_northing,
+                     _alt_zone,  northp,      e,            n,       z);
+    string utm;
+    UTMUPSString(_alt_zone, northp, e, n, prec, utm);
     return utm;
   }
 

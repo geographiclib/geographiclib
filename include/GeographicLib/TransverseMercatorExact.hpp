@@ -30,7 +30,7 @@ namespace GeographicLib {
    *  - C. F. F. Karney,
    *    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    *    Transverse Mercator with an accuracy of a few nanometers,</a>
-   *    J. Geodesy 85(8), 475&ndash;485 (Aug. 2011);
+   *    J. Geodesy 85(8), 475--485 (Aug. 2011);
    *    preprint
    *    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
    *
@@ -135,7 +135,7 @@ namespace GeographicLib {
      *   to 1/\e f.
      * @param[in] k0 central scale factor.
      * @param[in] extendp use extended domain.
-     * @exception GeographicLib if \e a, \e f, or \e k0 is not positive.
+     * @exception GeographicErr if \e a, \e f, or \e k0 is not positive.
      *
      * The transverse Mercator projection has a branch point singularity at \e
      * lat = 0 and \e lon &minus; \e lon0 = 90 (1 &minus; \e e) or (for

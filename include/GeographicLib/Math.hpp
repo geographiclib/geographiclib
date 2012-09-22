@@ -29,6 +29,10 @@
 #  define WORDS_BIGENDIAN 0
 #endif
 
+#if !defined(HAVE_LONG_DOUBLE)
+#  define HAVE_LONG_DOUBLE 0
+#endif
+
 #if !defined(GEOGRAPHICLIB_PREC)
 /**
  * The precision of floating point numbers used in %GeographicLib.  0 means
@@ -67,7 +71,7 @@ namespace GeographicLib {
     Math();                     // Disable constructor
   public:
 
-#if defined(HAVE_LONG_DOUBLE)
+#if HAVE_LONG_DOUBLE
     /**
      * The extended precision type for real numbers, used for some testing.
      * This is long double on computers with this type; otherwise it is double.
@@ -160,7 +164,7 @@ namespace GeographicLib {
     static inline float hypot(float x, float y) throw()
     { return _hypotf(x, y); }
 #  endif
-#  if defined(HAVE_LONG_DOUBLE)
+#  if HAVE_LONG_DOUBLE
     static inline long double hypot(long double x, long double y) throw()
     { return _hypot(x, y); }
 #  endif
@@ -170,7 +174,7 @@ namespace GeographicLib {
     { return ::hypot(x, y); }
     static inline float hypot(float x, float y) throw()
     { return ::hypotf(x, y); }
-#  if defined(HAVE_LONG_DOUBLE)
+#  if HAVE_LONG_DOUBLE
     static inline long double hypot(long double x, long double y) throw()
     { return ::hypotl(x, y); }
 #  endif
@@ -202,7 +206,7 @@ namespace GeographicLib {
 #else
     static inline double expm1(double x) throw() { return ::expm1(x); }
     static inline float expm1(float x) throw() { return ::expm1f(x); }
-#  if defined(HAVE_LONG_DOUBLE)
+#  if HAVE_LONG_DOUBLE
     static inline long double expm1(long double x) throw()
     { return ::expm1l(x); }
 #  endif
@@ -237,7 +241,7 @@ namespace GeographicLib {
 #else
     static inline double log1p(double x) throw() { return ::log1p(x); }
     static inline float log1p(float x) throw() { return ::log1pf(x); }
-#  if defined(HAVE_LONG_DOUBLE)
+#  if HAVE_LONG_DOUBLE
     static inline long double log1p(long double x) throw()
     { return ::log1pl(x); }
 #  endif
@@ -264,7 +268,7 @@ namespace GeographicLib {
 #else
     static inline double asinh(double x) throw() { return ::asinh(x); }
     static inline float asinh(float x) throw() { return ::asinhf(x); }
-#  if defined(HAVE_LONG_DOUBLE)
+#  if HAVE_LONG_DOUBLE
     static inline long double asinh(long double x) throw()
     { return ::asinhl(x); }
 #  endif
@@ -291,7 +295,7 @@ namespace GeographicLib {
 #else
     static inline double atanh(double x) throw() { return ::atanh(x); }
     static inline float atanh(float x) throw() { return ::atanhf(x); }
-#  if defined(HAVE_LONG_DOUBLE)
+#  if HAVE_LONG_DOUBLE
     static inline long double atanh(long double x) throw()
     { return ::atanhl(x); }
 #  endif
@@ -315,7 +319,7 @@ namespace GeographicLib {
 #else
     static inline double cbrt(double x) throw() { return ::cbrt(x); }
     static inline float cbrt(float x) throw() { return ::cbrtf(x); }
-#  if defined(HAVE_LONG_DOUBLE)
+#  if HAVE_LONG_DOUBLE
     static inline long double cbrt(long double x) throw() { return ::cbrtl(x); }
 #  endif
 #endif

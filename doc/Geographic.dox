@@ -1,6 +1,6 @@
 // -*- text -*-
 /**
- * \file Geographic.doc
+ * \file Geographic.dox
  * \brief Documentation for GeographicLib
  *
  * Written by Charles Karney <charles@karney.com> and licensed under the
@@ -10,10 +10,9 @@
 
 /**
 \mainpage Geographic library
-\author Charles Karney
-<charles@karney.com>
-\version 1.23
-\date 2012-07-17
+\author Charles F. F. Karney (charles@karney.com)
+\version 1.24
+\date 2012-09-22
 
 \section abstract Abstract
 
@@ -23,7 +22,7 @@ MGRS, geocentric, and local cartesian coordinates, for gravity (e.g.,
 EGM2008), geoid height and geomagnetic field (e.g., WMM2010)
 calculations, and for solving geodesic problems.  The emphasis is on
 returning accurate results with errors close to round-off (about
-5&ndash;15 nanometers).  New accurate algorithms for \ref geodesic and
+5--15 nanometers).  New accurate algorithms for \ref geodesic and
 \ref transversemercator have been developed for this library.  The
 functionality of the library can be accessed from user code, from the
 \ref utilities provided, or via the \ref other.  For a sample of the
@@ -45,23 +44,23 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.23.tar.gz/download">
-  GeographicLib-1.23.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.23.zip/download">
-  GeographicLib-1.23.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.24.tar.gz">
+  GeographicLib-1.24.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.24.zip">
+  GeographicLib-1.24.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
-line endings.)  Alternatively you can get the latest stable release
-using git \verbatim
-  git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib-release geographiclib
-  cd geographiclib; git checkout stable
+line endings.)  Alternatively you can get the latest release using git
+\verbatim
+  git clone git://git.code.sf.net/p/geographiclib/code geographiclib
+  cd geographiclib; git checkout -q r1.24
 \endverbatim
 There are also binary installers for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.23-win32.exe/download">
-  GeographicLib-1.23-win32.exe</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.23-win64.exe/download">
-  GeographicLib-1.23-win64.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win32.exe">
+  GeographicLib-1.24-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win64.exe">
+  GeographicLib-1.24-win64.exe</a>
 .
 It is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -143,8 +142,26 @@ problem.
 The section \ref transversemercator documents various properties of this
 projection.
 
+The bulk of the testing has used geographically relevant values of the
+flattening.  Thus, you can expect close to full accuracy for -0.01 &le;
+\e f &le; 0.01 (but note that GeographicLib::TransverseMercatorExact is
+restricted to \e f > 0).  However, reasonably accurate results can be
+expected if -0.1 &le; \e f &le; 0.1.  Outside this range, you should
+attempt to verify the accuracy of the routines independently.  Two types
+of problems may occur with larger values of \e f:
+ - Some classes, specifically GeographicLib::Geodesic,
+   GeographicLib::GeodesicLine, and GeographicLib::TransverseMercator,
+   use series expansions using \e f as a small parameter.  The accuracy
+   of these routines will degrade as \e f becomes large.
+ - Even when exact formulas are used, many of the classes need to invert
+   the exact formulas (e.g., to invert a projection), typically, using
+   Newton's method.  This usually provides an essentially exact
+   inversion.  However, the choice of starting guess and the exit
+   conditions have been tuned to cover small values of \e f and the
+   inversion may be incorrect if \e f is large.
+
 Undoubtedly, bugs lurk in this code and in the documentation.  Please
-report any you find to <charles@karney.com>.
+report any you find to charles@karney.com.
 
 <center>
 Forward to \ref install.  Up to \ref contents.
@@ -162,14 +179,14 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.23.tar.gz/download">
-GeographicLib-1.23.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.23.zip/download">
-GeographicLib-1.23.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.23-win32.exe/download">
-GeographicLib-1.23-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.23-win64.exe/download">
-GeographicLib-1.23-win64.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24.tar.gz">
+GeographicLib-1.24.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24.zip">
+GeographicLib-1.24.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win32.exe">
+GeographicLib-1.24-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win64.exe">
+GeographicLib-1.24-win64.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -242,19 +259,19 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.23.tar.gz
-  unzip -q GeographicLib-1.23.zip \endverbatim
+  tar xfpz GeographicLib-1.24.tar.gz
+  unzip -q GeographicLib-1.24.zip \endverbatim
   then enter the directory created with one of \verbatim
-  cd GeographicLib-1.23 \endverbatim
+  cd GeographicLib-1.24 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
-  cd BUILD\endverbatim
+  cd BUILD \endverbatim
 - Run cmake, pointing it to the source directory (..).  On Linux, Unix,
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically one of \verbatim
-  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.23 ..
-  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.23 ..
+  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.24 ..
+  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.24 ..
 \endverbatim
   Instead of setting CMAKE_INSTALL_PREFIX, you can (on Windows) set
   PACKAGE_PATH to point to its parent directory, e.g., \verbatim
@@ -274,12 +291,12 @@ Here are the steps to compile and install %GeographicLib:
     convention.  If it is on ON (the Linux default), the installation
     is to a common directory, e.g., /usr/local.  If it is OFF (the
     Windows default), the installation directory contains the package
-    name, e.g., C:/pkg/GeographicLib-1.23.  The installation
+    name, e.g., C:/pkg/GeographicLib-1.24.  The installation
     directories for the documentation, cmake configuration, python and
     matlab interfaces all depend on the variable with deeper paths
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
-    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib-1.23;
+    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib-1.24;
     - python interface: OFF: python; ON: lib/python/site-packages;
     - matlab interface: OFF: matlab; ON: libexec/GeographicLib/matlab;
     .
@@ -289,7 +306,7 @@ Here are the steps to compile and install %GeographicLib:
     systems, it is recommended to use a prefix which includes the
     compiler version, as shown above (and also, possibly, whether this
     is a 64-bit build, e.g., <code>cmake -G "Visual Studio 10 Win64" -D
-    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.23 ..</code>).
+    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.24 ..</code>).
     If you just want to try the library to see if it suits your needs,
     pick, for example, <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
   - <code>PACKAGE_PATH</code> and <code>INSTALL_PATH</code> provide an
@@ -302,14 +319,14 @@ Here are the steps to compile and install %GeographicLib:
     - If INSTALL_PATH is not specified but PACKAGE_PATH is, then
       INSTALL_PATH is set to
       ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON, and to
-      ${PACKAGE_PATH}/GeographicLib-1.23, otherwise.
+      ${PACKAGE_PATH}/GeographicLib-1.24, otherwise.
     - If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
       INSTALL_PATH.
     .
     Typically, only PACKAGE_PATH needs to be specified, e.g.,
     - Linux: cmake -D PACKAGE_PATH=/opt .. => CMAKE_INSTALL_PREFIX=/opt
     - Windows: cmake -D PACKAGE_PATH=C:/pkg .. =>
-      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.23
+      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.24
     .
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
@@ -343,6 +360,12 @@ Here are the steps to compile and install %GeographicLib:
     systems and OFF for Windows systems).  If set to ON, then the
     short example programs in the <code>examples</code> directory are
     built.
+  - <code>GEOGRAPHICLIB_DOCUMENTATION</code> (default: ON for
+    non-Windows systems and OFF for Windows systems).  If set to ON,
+    then html documentation is created from the source files, provided a
+    sufficiently recent version of doxygen can be found.  Otherwise, the
+    html documentation will redirect to the appropriate version of the
+    online documentation.
 - Build and install the software.  In non-IDE environments, run
   \verbatim
   make         # compile the library and the examples
@@ -372,12 +395,12 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.23.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.24.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.23 \endverbatim
+  cd GeographicLib-1.24 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
-  cd BUILD\endverbatim
+  cd BUILD \endverbatim
 - Configure the software, specifing the path of the source directory,
   with \verbatim
   ../configure \endverbatim
@@ -403,9 +426,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.23.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.24.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.23 \endverbatim
+  cd GeographicLib-1.24 \endverbatim
 - Edit \verbatim
   include/GeographicLib/Config.h \endverbatim
   If your C++ compiler does not recognize the long double type
@@ -436,8 +459,8 @@ static library and the utilities.  If you only have Visual Studio 2003,
 use cmake to create the necessary solution file, see \ref cmake.  (cmake
 is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.23.zip \endverbatim
-- Open GeographicLib-1.23/windows/GeographicLib-vc10.sln in Visual Studio
+  unzip -q GeographicLib-1.24.zip \endverbatim
+- Open GeographicLib-1.24/windows/GeographicLib-vc10.sln in Visual Studio
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
@@ -460,14 +483,14 @@ library, it is advisable to build it with the compiler you are using for
 your own code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.23-win32.exe/download">
-GeographicLib-1.23-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.23-win64.exe/download">
-GeographicLib-1.23-win64.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win32.exe">
+GeographicLib-1.24-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.24-win64.exe">
+GeographicLib-1.24-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc10\\GeographicLib-1.23 or C:\\pkg-vc10-x64\\GeographicLib-1.23,
+   C:\\pkg-vc10\\GeographicLib-1.24 or C:\\pkg-vc10-x64\\GeographicLib-1.24,
  - select the start menu folder,
  - and install.
  .
@@ -475,7 +498,7 @@ GeographicLib-1.23-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc10/GeographicLib-1.23/bin where the utilities are
+will include C:/pkg-vc10/GeographicLib-1.24/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the matlab folder.  Add this to your
@@ -516,11 +539,26 @@ include/GeographicLib.
 \section maintainer Maintainer tasks
 
 Check the code out of git with \verbatim
-  git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib
+  git clone -b master git://git.code.sf.net/p/geographiclib/code geographiclib
 \endverbatim
-The autoconf configuration script, the html version of the
-documentation, and the formatted man pages not checked into git.  In
-order to create the autoconf configuration script, run \verbatim
+Here the "master" branch is checked out.  There are three branches in
+the git repository:
+- <b>master</b>: the main branch for code maintainence.  Releases are
+  tagged on this branch as, e.g., v1.24.
+- <b>devel</b>: the development branch; changes made here are merged
+  into master.
+- <b>release</b>: the release branch created by unpacking the source
+  releases (git is \e not used to merge changes from the other
+  branches into this branch).  This is the \e default branch of the
+  repository (the branch you get if cloning the repository without
+  specifying a branch).  This differs from the master branch in that
+  some administrative files are excluded while some intermediate files
+  are included (in order to aid building on as many platforms as
+  possible).  Releases are tagged on this branch as, e.g., r1.24.
+.
+The autoconf configuration script and the formatted man pages are not
+checked into master branch of the repository.  In order to create the
+autoconf configuration script, run \verbatim
   sh autogen.sh \endverbatim
 in the top level directory.  Provided you are running on a system with
 doxygen, pod2man, and pod2html installed, then you can create the
@@ -529,11 +567,11 @@ configure.
 
 In the case of cmake, you then run \verbatim
   make dist \endverbatim
-which will copy the documentation and man pages from the build directory
-back into the source tree and package the resulting source tree for
-distribution as \verbatim
-  GeographicLib-1.23.tar.gz
-  GeographicLib-1.23.zip \endverbatim
+which will copy the man pages from the build directory back into the
+source tree and package the resulting source tree for distribution as
+\verbatim
+  GeographicLib-1.24.tar.gz
+  GeographicLib-1.24.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -544,7 +582,7 @@ With configure, run \verbatim
   make dist-gzip \endverbatim
 which will create the additional files and packages the results ready
 for distribution as \verbatim
-  geographiclib-1.23.tar.gz \endverbatim
+  geographiclib-1.24.tar.gz \endverbatim
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
@@ -574,22 +612,22 @@ In order to use %GeographicLib from C++ code, you will need to
   /usr/local specified as the installation directory,
   this is accomplished with \verbatim
   g++ -c -g -O3 -I/usr/local/include testprogram.cpp
-\endverbatim
+  \endverbatim
   With Visual Studio, specify the include directory in the IDE via,
   e.g.,
   \verbatim
-C/C++ -> General -> Additional Include Directories = C:\pkg-vc10\GeographicLib\include
-\endverbatim
+  C/C++ -> General -> Additional Include Directories = C:\pkg-vc10\GeographicLib\include
+  \endverbatim
 - Tell the linker the name, Geographic, and location of the
   library.  Using g++ as the linker, you would use \verbatim
   g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographic
-\endverbatim
+  \endverbatim
   With Visual Studio, you supply this information in the IDE via,
   e.g.,
   \verbatim
-Linker -> Input -> Additional Dependencies = Geographic.lib
-Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\lib
-\endverbatim
+  Linker -> Input -> Additional Dependencies = Geographic.lib
+  Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\lib
+  \endverbatim
   Note that the library name is <b>Geographic</b> and not
   %GeographicLib.  If the library was configured and built with cmake,
   then the debug version of the library is called Geographic_d.lib.
@@ -597,7 +635,7 @@ Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\
   (assuming you compiled %GeographicLib as a shared library).  With g++,
   this is accomplished by modifying the link line above to read \verbatim
   g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic
-\endverbatim
+  \endverbatim
   (There are two other ways to specify the location of shared libraries
   at runtime: (1) define the environment variable
   <code>LD_LIBRARY_PATH</code> to be a colon-separated list of
@@ -624,7 +662,7 @@ Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\
   should specify <code>CMAKE_PREFIX_PATH</code> with, for example,
   \verbatim
   cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/XYZProject ..
-\endverbatim
+  \endverbatim
   You can direct find_package to a specific version of %GeographicLib
   by specifying the cmake variable <code>GeographicLib_DIR</code> to
   point to the directory containing the configuration file
@@ -977,7 +1015,7 @@ Examples of using this interface are
 These examples include a "stripped" version of the Javascript code, \code
 <script type="text/javascript"
         src="http://geographiclib.sf.net/scripts/geographiclib.js">
-</script>\endcode
+</script> \endcode
 which loads faster.
 
 \section python Python interface
@@ -1067,9 +1105,9 @@ Matlab.
  - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
    Octave and run, e.g., \code
    mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-1.23/matlab'
+   cd 'C:/pkg-vc10-x64/GeographicLib-1.24/matlab'
    help geographiclibinterface
-   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.23');
+   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.24');
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
@@ -1078,7 +1116,7 @@ Matlab.
 To use the interface routines for %GeographicLib, run one of (for
 example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-1.23/libexec/GeographicLib/matlab'
+  addpath 'C:/pkg-vc10-x64/GeographicLib-1.24/libexec/GeographicLib/matlab'
 \endverbatim
 in Octave or Matlab.  The available functions are:
  - geodesicdirect: solve direct geodesic problem
@@ -1201,13 +1239,13 @@ EGM2008.  These data files are available for download:
  <td><center>30'</center>
  <td><center>0.6</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2">
  link</a> (0.5)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.exe">
  link</a> (0.8)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip">
  link</a> (0.5)</center>
 <tr>
  <td>egm84-15
@@ -1215,13 +1253,13 @@ EGM2008.  These data files are available for download:
  <td><center>15'</center>
  <td><center>2.1</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2">
  link</a> (1.5)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.exe">
  link</a> (1.9)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip">
  link</a> (2.0)</center>
 <tr>
  <td>egm96-15
@@ -1229,13 +1267,13 @@ EGM2008.  These data files are available for download:
  <td><center>15'</center>
  <td><center>2.1</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2">
  link</a> (1.5)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.exe">
  link</a> (1.9)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip">
  link</a> (2.0)</center>
 <tr>
  <td>egm96-5
@@ -1243,13 +1281,13 @@ EGM2008.  These data files are available for download:
  <td><center>5'</center>
  <td><center> 19</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2">
  link</a> (11)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.exe">
  link</a> (11)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip">
  link</a> (17)</center>
 <tr>
  <td>egm2008-5
@@ -1257,13 +1295,13 @@ EGM2008.  These data files are available for download:
  <td><center>5'</center>
  <td><center> 19</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2">
  link</a> (11)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.exe">
  link</a> (11)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip">
  link</a> (17)</center>
 <tr>
  <td>egm2008-2_5
@@ -1271,13 +1309,13 @@ EGM2008.  These data files are available for download:
  <td><center>2.5'</center>
  <td><center> 75</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2">
  link</a> (35)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.exe">
  link</a> (33)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip">
  link</a> (65)</center>
 <tr>
  <td>egm2008-1
@@ -1285,13 +1323,13 @@ EGM2008.  These data files are available for download:
  <td><center>1'</center>
  <td><center>470</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2">
  link</a> (170)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.exe">
  link</a> (130)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip">
  link</a> (390)</center>
 </table>
 </center>
@@ -1471,7 +1509,7 @@ compressed format.
 GeographicLib::Geoid evaluates the geoid height using bilinear or cubic
 interpolation.  The gradient of the geoid height is obtained by
 differentiating the interpolated height and referencing the result to
-distance on the WGS84 ellipsoid. 
+distance on the WGS84 ellipsoid.
 
 <b>WARNING</b>: Although GeographicLib::Geoid computes the gradient of
 the geoid height, this is subject to large quantization errors as a
@@ -1641,7 +1679,7 @@ two alternatives:
 \section testgeoid Test data for geoids
 
 A test set for the geoid models is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz/download">
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz">
    GeoidHeights.dat.gz</a>
  .
 This is about 11 MB (compressed).  This test set consists of a set of
@@ -1651,9 +1689,9 @@ heights according to various earth gravity models.
 Each line of the test set gives 6 space delimited numbers
  - latitude (degrees, exact)
  - longitude (degrees, exact)
- - EGM84 height (meters, accurate to 1 um)
- - EGM96 height (meters, accurate to 1 um)
- - EGM2008 height (meters, accurate to 1 um)
+ - EGM84 height (meters, accurate to 1 &mu;m)
+ - EGM96 height (meters, accurate to 1 &mu;m)
+ - EGM2008 height (meters, accurate to 1 &mu;m)
  .
 The latitude and longitude are all multiples of 10<sup>&minus;6</sup>
 deg and should be regarded as exact.  The geoid heights are computed
@@ -1739,52 +1777,52 @@ These gravity models are available for download:
  <td><center>180</center>
  <td><center>27</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.tar.bz2">
  link</a> (26)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.exe">
  link</a> (55)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.zip">
  link</a> (26)</center>
 <tr>
  <td>egm96
  <td><center>360</center>
  <td><center>2100</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.tar.bz2">
  link</a> (2100)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.exe">
  link</a> (2300)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.zip">
  link</a> (2100)</center>
 <tr>
  <td>egm2008
  <td><center>2190</center>
  <td><center>76000</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.tar.bz2">
  link</a> (75000)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.exe">
  link</a> (72000)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.zip">
  link</a> (73000)</center>
 <tr>
  <td>wgs84
  <td><center>20</center>
  <td><center>1</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.tar.bz2">
  link</a> (1)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.exe">
  link</a> (30)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.zip">
  link</a> (1)</center>
 </table>
 </center>
@@ -2014,9 +2052,9 @@ issues that I encountered using the NGA code:
     poles.  Better would be to return the value obtained by taking the
     limit \e lat -> +/- 90&deg;.
  .
-Issues 1&ndash;4 have been reported to the authors of hsynth_WGS84.
+Issues 1--4 have been reported to the authors of hsynth_WGS84.
 Issue 1 is peculiar to Fortran and is not encountered in C++ code and
-GeographicLib::GravityModel corrects issues 3&ndash;5.  On issue 2,
+GeographicLib::GravityModel corrects issues 3--5.  On issue 2,
 GeographicLib::GravityModel neglects the 1/\e r term in \e T in
 GeographicLib::GravityModel::GeoidHeight and
 GeographicLib::GravityModel::SphericalAnomaly in order to produce
@@ -2066,7 +2104,7 @@ Dru A. Smith in
 <a href="http://www.ngs.noaa.gov/PUBS_LIB/EGM96_GEOID_PAPER/egm96_geoid_paper.html">
 There is no such thing as "The" EGM96 geoid: Subtle points on the use of
 a global geopotential model</a>, IGeS Bulletin No. 8, International
-Geoid Service, Milan, Italy, pp. 17&ndash;28 (1998).
+Geoid Service, Milan, Italy, pp. 17--28 (1998).
 
 GeographicLib::GravityModel::GeoidHeight reproduces the results of the
 several NGA codes for harmonic synthesis with the following maximum
@@ -2196,15 +2234,15 @@ The supported models are
  - <b>wmm2010</b>, the
    <a href="http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"> World
    Magnetic Model 2010</a>, which approximates the main magnetic field
-   for the period 2010&ndash;2015.
+   for the period 2010--2015.
  - <b>igrf11</b>, the
    <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (11th generation)</a>, which approximates
-   the main magnetic field for the period 1900&ndash;2015.
+   the main magnetic field for the period 1900--2015.
  - <b>emm2010</b>, the
    <a href="http://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
    Magnetic Model 2010</a>, which approximates the main and crustal
-   magnetic fields for the period 2010&ndash;2015.
+   magnetic fields for the period 2010--2015.
 
 Go to
  - \ref magneticinst
@@ -2228,44 +2266,44 @@ These magnetic models are available for download:
 <tr>
  <td>wmm2010
  <td><center>12</center>
- <td><center>2010&ndash;2015</center>
+ <td><center>2010--2015</center>
  <td><center>3</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.tar.bz2">
  link</a> (2)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.exe">
  link</a> (300)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.zip">
  link</a> (2)</center>
 <tr>
  <td>igrf11
  <td><center>13</center>
- <td><center>1900&ndash;2015</center>
+ <td><center>1900--2015</center>
  <td><center>25</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.tar.bz2">
  link</a> (7)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.exe">
  link</a> (310)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.zip">
  link</a> (8)</center>
 <tr>
  <td>emm2010
  <td><center>739</center>
- <td><center>2010&ndash;2015</center>
+ <td><center>2010--2015</center>
  <td><center>4400</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.tar.bz2/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.tar.bz2">
  link</a> (3700)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.exe/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.exe">
  link</a> (3000)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.zip/download">
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.zip">
  link</a> (4100)</center>
 </table>
 </center>
@@ -2494,10 +2532,10 @@ References
    <a href="http://geographiclib.sf.net/geodesic-papers/helmert80-en.pdf">
    Mathematical and Physical Theories of Higher Geodesy, Part 1 (1880)</a>,
    Aeronautical Chart and Information Center (St. Louis, 1964),
-   Chaps. 5&ndash;7.
+   Chaps. 5--7.
  - J. Danielsen,
    The Area under the Geodesic,
-   Survey Review 30 (232), 61&ndash;66 (1989).
+   Survey Review 30 (232), 61--66 (1989).
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
@@ -2512,13 +2550,13 @@ References
 \section testgeod Test data for geodesics
 
 A test set a geodesics is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest.dat.gz/download">
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest.dat.gz">
    GeodTest.dat.gz</a>
  .
 This is about 39 MB (compressed).  This consists of a set of geodesics
 for the WGS84 ellipsoid.  A subset of this (consisting of 1/50 of the
 members &mdash; about 690 kB, compressed) is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz/download">
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz">
    GeodTest-short.dat.gz</a>
 
 Each line of the test set gives 10 space delimited numbers
@@ -2546,7 +2584,7 @@ simplicity and without loss of generality, \e lat1 is chosen in
 [0&deg;, 90&deg;], \e lon1 is taken to be zero, \e azi1 is
 chosen in [0&deg;, 180&deg;].  Furthermore, \e lat1 and \e
 azi1 are taken to be multiples of 10<sup>&minus;12</sup> deg and \e s12
-is a multiple of 0.1 um in [0 m, 20003931.4586254 m].  This results \e
+is a multiple of 0.1 &mu;m in [0 m, 20003931.4586254 m].  This results \e
 lon2 in [0&deg;, 180&deg;] and \e azi2 in [0&deg;, 180&deg;].
 
 The direct calculation uses an expansion of the geodesic equations
@@ -2970,13 +3008,13 @@ References
    ISBN: 0919870163
    (Also appeared as:
    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
-   Part V, pp. 67&ndash;101,
+   Part V, pp. 67--101,
    <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
    Projections Based On Jacobian Elliptic Functions</a>.
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers,</a>
-   J. Geodesy 85(8), 475&ndash;485 (Aug. 2011);
+   J. Geodesy 85(8), 475--485 (Aug. 2011);
    preprint
    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>;
    resource page
@@ -2993,7 +3031,7 @@ illustration of the exact transverse Mercator grid in Google Earth.
 \section testmerc Test data for the transverse Mercator projection
 
 A test set for the transverse Mercator projection is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/TMcoords.dat.gz/download">
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/TMcoords.dat.gz">
    TMcoords.dat.gz</a>
  .
 This is about 17 MB (compressed).  This test set consists of a set of
@@ -3215,7 +3253,7 @@ The implementation of GeographicLib::Geocentric::Reverse is adapted from
  - H. Vermeille,
    <a href="http://dx.doi.org/10.1007/s00190-002-0273-6">
    Direct transformation from geocentric coordinates to geodetic
-   coordinates</a>, J. Geodesy 76, 451&ndash;454 (2002).
+   coordinates</a>, J. Geodesy 76, 451--454 (2002).
 
 This provides a closed-form solution but can't directly be applied close to
 the center of the earth.  Several changes have been made to remove this
@@ -3301,11 +3339,11 @@ accurate results.
 Other comparable methods are K. M. Borkowski,
 <a href="http://dx.doi.org/10.1007/BF00643807"> Transformation
 of geocentric to geodetic coordinates without approximations</a>,
-Astrophys. Space Sci. 139, 1&ndash;4 (1987)
+Astrophys. Space Sci. 139, 1--4 (1987)
 (<a href="http://dx.doi.org/10.1007/BF00656995"> erratum</a>)
 and T. Fukushima,
 <a href="http://dx.doi.org/10.1007/s001900050271"> Fast transform from
-geocentric to geodetic coordinates</a>, J. Geodesy 73, 603&ndash;610 (2003).
+geocentric to geodetic coordinates</a>, J. Geodesy 73, 603--610 (1999).
 However the choice of independent variables in these methods leads
 to a loss of accuracy for points near the equatorial plane.
 
@@ -3332,10 +3370,30 @@ Older versions are in
 http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
 The corresponding documentation for these versions is obtained by
-clicking on the "Version m.nn" links below.  Some of the links in the
-documentaion of older versions may be out of date (in particular the
-links for the source code will not work if the code has been migrated to
-the archive subdirectory).
+clicking on the &ldquo;Version <i>m.nn</i>&rdquo; links below.  Some of
+the links in the documentaion of older versions may be out of date (in
+particular the links for the source code will not work if the code has
+been migrated to the archive subdirectory).  All the releases are
+available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
+of the git repository for %GeographicLib.
+
+ - <a href="http://geographiclib.sf.net/1.24">Version 1.24</a>
+   (released 2012-09-22)
+   - Allow the specification of the hemisphere in UTM coordinates in
+     order to provide continuity across the equator:
+     - add GeographicLib::UTMUPS::Transfer;
+     - add GeographicLib::GeoCoords::UTMUPSRepresentation(bool, int) and
+       GeographicLib::GeoCoords::AltUTMUPSRepresentation(bool, int);
+     - use the hemisphere letter in, e.g.,
+       <a href="GeoConvert.1.html">GeoConvert</a> -u -z 31N.
+   - Add GeographicLib::UTMUPS::DecodeEPSG and
+     GeographicLib::UTMUPS::EncodeEPSG.
+   - cmake changes:
+     - restore support for cmake 2.4.x;
+     - explicitly check version of doxygen.
+   - Fix building under cygwin.
+   - Document restrictions on \e f in \ref intro.
+   - Fix python interface to work with version 2.6.x.
 
  - <a href="http://geographiclib.sf.net/1.23">Version 1.23</a>
    (released 2012-07-17)
@@ -3795,6 +3853,7 @@ the archive subdirectory).
     - Add inspector functions to query the extent of the cache.
 
  - <a href="http://geographiclib.sf.net/2009-11">Version 2009-11</a>
+   (released 2009-11-03)
   - Allow specification of "closest UTM zone" in GeographicLib::UTMUPS
     and <a href="GeoConvert.1.html">GeoConvert</a> (via -t option).
   - Utilities now complain is there are too many tokens on input lines.
@@ -3809,6 +3868,7 @@ the archive subdirectory).
     - Fix the way GeographicLib::Math functions handle different precisions.
 
  - <a href="http://geographiclib.sf.net/2009-10">Version 2009-10</a>
+   (released 2009-10-18)
   - Change web site to http://geographiclib.sourceforge.net
   - Several house-cleaning changes:
     - Change from the a flat directory structure to a more easily
@@ -3830,10 +3890,12 @@ the archive subdirectory).
     - Add 64-bit targets in Visual Studio project files.
 
  - <a href="http://geographiclib.sf.net/2009-09">Version 2009-09</a>
+   (released 2009-09-01)
   - Add GeographicLib::Geoid and
     <a href="GeoidEval.1.html">GeoidEval</a> utility.
 
  - <a href="http://geographiclib.sf.net/2009-08">Version 2009-08</a>
+   (released 2009-08-14)
   - Add GeographicLib::CassiniSoldner class and
     <a href="GeodesicProj.1.html">EquidistantTest</a> utility.
   - Fix bug in GeographicLib::Geodesic::Inverse where NaNs were
@@ -3843,14 +3905,17 @@ the archive subdirectory).
   - Add -n option to <a href="GeoConvert.1.html">GeoConvert</a>.
 
  - <a href="http://geographiclib.sf.net/2009-07">Version 2009-07</a>
+   (released 2009-07-16)
   - Speed up the series inversion code in tmseries.mac and geod.mac.
   - Reference Borkowski in section on \ref geocentric.
 
  - <a href="http://geographiclib.sf.net/2009-06">Version 2009-06</a>
+   (released 2009-06-01)
   - Add routines to decode and encode zone+hemisphere to GeographicLib::UTMUPS.
   - Clean up code in GeographicLib::Geodesic.
 
  - <a href="http://geographiclib.sf.net/2009-05">Version 2009-05</a>
+   (released 2009-05-01)
   - Improvements to GeographicLib::Geodesic:
     - more economical series expansions,
     - return reduced length (as does the
@@ -3866,6 +3931,7 @@ the archive subdirectory).
   - Remove reference to defunct Constants.cpp from GeographicLib.vcproj.
 
  - <a href="http://geographiclib.sf.net/2009-04">Version 2009-04</a>
+   (released 2009-04-01)
   - Use compile-time constants to select the order of series in
     GeographicLib::TransverseMercator.
   - 2x unroll of Clenshaw summation to avoid data shuffling.
@@ -3882,6 +3948,7 @@ the archive subdirectory).
     - add -a, -e, -b options to the <a href="Geod.1.html">Geod</a> utility.
 
  - <a href="http://geographiclib.sf.net/2009-03">Version 2009-03</a>
+   (released 2009-03-01)
   - Add GeographicLib::Geodesic and the <a href="Geod.1.html">Geod</a> utility.
   - Declare when no exceptions are thrown by functions.
   - Minor changes to GeographicLib::DMS class.
@@ -3892,6 +3959,7 @@ the archive subdirectory).
   - Use inline functions to define constant doubles in Constants.hpp.
 
  - <a href="http://geographiclib.sf.net/2009-02">Version 2009-02</a>
+   (released 2009-01-30)
   - Fix documentation of constructors (flattening -> inverse
     flattening).
   - Use std versions of math functions.
@@ -3900,6 +3968,7 @@ the archive subdirectory).
   - Gather the documentation on the \ref utilities onto one page.
 
  - <a href="http://geographiclib.sf.net/2009-01">Version 2009-01</a>
+   (released 2009-01-12)
   - First proper release of library.
   - More robust GeographicLib::TransverseMercatorExact:
     - Introduce \e extendp version of constructor,

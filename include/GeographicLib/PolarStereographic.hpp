@@ -21,7 +21,7 @@ namespace GeographicLib {
    * - J. P. Snyder,
    *   <a href="http://pubs.er.usgs.gov/usgspubs/pp/pp1395"> Map Projections: A
    *   Working Manual</a>, USGS Professional Paper 1395 (1987),
-   *   pp. 160&ndash;163.
+   *   pp. 160--163.
    *
    * This is a straightforward implementation of the equations in Snyder except
    * that Newton's method is used to invert the projection.
@@ -59,7 +59,7 @@ namespace GeographicLib {
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
      * @param[in] k0 central scale factor.
-     * @exception GeographicLib if \e a, (1 &minus; \e f ) \e a, or \e k0 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k0 is
      *   not positive.
      **********************************************************************/
     PolarStereographic(real a, real f, real k0);
@@ -69,7 +69,7 @@ namespace GeographicLib {
      *
      * @param[in] lat (degrees) assuming \e northp = true.
      * @param[in] k scale at latitude \e lat (default 1).
-     * @exception GeographicLib \e k is not positive.
+     * @exception GeographicErr \e k is not positive.
      * @exception GeographicErr if \e lat is not in (&minus;90&deg;,
      *   90&deg;].
      **********************************************************************/

@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOCONVERT 1"
-.TH GEOCONVERT 1 "2012-07-18" "GeographicLib 1.23" "GeographicLib Utilities"
+.TH GEOCONVERT 1 "2012-09-22" "GeographicLib 1.24" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -222,10 +222,9 @@ set the output precision to \fIprec\fR (default 0); \fIprec\fR is the
 precision relative to 1 m.  See \s-1PRECISION\s0.
 .IP "\fB\-z\fR" 4
 .IX Item "-z"
-set the zone to \fIzone\fR for output.  Use either 0 < \fIzone\fR <= 60
-for a \s-1UTM\s0 zone or \fIzone\fR = 0 for \s-1UPS\s0.  Alternatively use a
-\&\fIzone\fR+\fIhemisphere\fR designation (\fIhemisphere\fR is ignored), e.g., 38N.
-See \s-1ZONE\s0.
+set the zone to \fIzone\fR for output.  Use either 0 < \fIzone\fR <=
+60 for a \s-1UTM\s0 zone or \fIzone\fR = 0 for \s-1UPS\s0.  Alternatively use a
+\&\fIzone\fR+\fIhemisphere\fR designation, e.g., 38N.  See \s-1ZONE\s0.
 .IP "\fB\-s\fR" 4
 .IX Item "-s"
 use the standard \s-1UPS\s0 and \s-1UTM\s0 zones.
@@ -239,7 +238,7 @@ square instead of the center; see \s-1MGRS\s0.
 .IP "\fB\-w\fR" 4
 .IX Item "-w"
 on input and output, longitude precedes latitude (except that on input
-this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR,\fIE\fR,
+this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR, \fIE\fR,
 \&\fIW\fR).
 .IP "\fB\-\-comment\-delimiter\fR" 4
 .IX Item "--comment-delimiter"
@@ -302,10 +301,10 @@ square is returned instead (\f(CW\*(C`38N 444000 3688000\*(C'\fR in the example 
 .IX Header "ZONE"
 If the input is \fBgeographic\fR, \fBGeoConvert\fR uses the standard rules of
 selecting \s-1UTM\s0 vs \s-1UPS\s0 and for assigning the \s-1UTM\s0 zone (with the Norway and
-Svalbard exceptions).  If the input is \fB\s-1UTM/UPS\s0\fR, or \fB\s-1MGRS\s0\fR, then the
+Svalbard exceptions).  If the input is \fB\s-1UTM/UPS\s0\fR or \fB\s-1MGRS\s0\fR, then the
 choice between \s-1UTM\s0 and \s-1UPS\s0 and the \s-1UTM\s0 zone mirrors the input.  The \fB\-z\fR
-\&\fIzone\fR, \fB\-s\fR, \fB\-t\fR options allow these rules to be overridden with
-\&\fIzone\fR = 0 being used to indicate \s-1UPS\s0.  For example, the point
+\&\fIzone\fR, \fB\-s\fR, and \fB\-t\fR options allow these rules to be overridden
+with \fIzone\fR = 0 being used to indicate \s-1UPS\s0.  For example, the point
 .PP
 .Vb 1
 \&   79.9S 6.1E
@@ -328,40 +327,61 @@ then
 \&   echo 31CEM6066227959 | GeoConvert \-p \-3 \-m \-z 0  =>   BBZ1917
 .Ve
 .PP
+Is \fIzone\fR is specified with a hemisphere, then this is honored when
+printing \s-1UTM\s0 coordinates:
+.PP
+.Vb 4
+\&   echo \-1 3 | GeoConvert \-u         => 31S 500000 9889470
+\&   echo \-1 3 | GeoConvert \-u \-z 31   => 31S 500000 9889470
+\&   echo \-1 3 | GeoConvert \-u \-z 31S  => 31S 500000 9889470
+\&   echo \-1 3 | GeoConvert \-u \-z 31N  => 31N 500000 \-110530
+.Ve
+.PP
 \&\fB\s-1NOTE\s0\fR: the letter in the zone specification for \s-1UTM\s0 is a hemisphere
 designator \fIN\fR or \fIS\fR and \fInot\fR an \s-1MGRS\s0 latitude band letter.
 Convert the \s-1MGRS\s0 latitude band letter to a hemisphere as follows:
 replace \fIC\fR thru \fIM\fR by \fIS\fR; replace \fIN\fR thru \fIX\fR by \fIN\fR.
 .SH "QUOTING"
 .IX Header "QUOTING"
-Unfortunately the characters ' and " have special meanings in many
-shells and have to be entered with care.
+Unfortunately the characters ' and \*(L" have special meanings in many
+shells and have to be entered with care.  However note (1) that the
+trailing designator is optional and that (2) you can use colons as a
+separator character.  Thus 10d20' can be entered as 10d20 or 10:20 and
+10d20'30\*(R" can be entered as 10:20:30.
 .IP "Unix shells (sh, bash, tsch)" 4
 .IX Item "Unix shells (sh, bash, tsch)"
-The special characters can be quoted by preceding them with a \e
-(backslash).  Alternatively you can quote a ' with a pair of "s.  The
-two alternatives are illustrated by
+The characters ' and \*(L" can be quoted by preceding them with a \e
+(backslash); or you can quote a ' with a pair of \*(R"s.  The two
+alternatives are illustrated by
 .Sp
 .Vb 2
-\&   echo 30d30\e\*(Aq30\e" "30d30\*(Aq30" | GeoConvert \-d \-p \-1
-\&   => 30d30\*(Aq30"N 030d30\*(Aq30"E
+\&   echo 10d20\e\*(Aq30\e" "20d30\*(Aq40" | GeoConvert \-d \-p \-1
+\&   => 10d20\*(Aq30"N 020d30\*(Aq40"E
 .Ve
 .Sp
-Alternatively use colon separators, e.g., 30:30:30, which need no
-quoting.
+Quoting of command line arguments is similar
+.Sp
+.Vb 2
+\&   GeoConvert \-d \-p \-1 \-\-input\-string "10d20\*(Aq30\e" 20d30\*(Aq40"
+\&   => 10d20\*(Aq30"N 020d30\*(Aq40"E
+.Ve
 .IP "Windows command shell (cmd)" 4
 .IX Item "Windows command shell (cmd)"
 The ' character needs no quoting and the " character can be quoted by a
-^.  However this quoting is usually unnecessary because the trailing
-designator can be omitted.  Thus
+^.  (This quoting is usually unnecessary because the trailing designator
+can be omitted.)  Thus
 .Sp
 .Vb 2
-\&   echo 30d30\*(Aq30^" 30d30\*(Aq30 | GeoConvert \-d \-p \-1
-\&   => 30d30\*(Aq30"N 030d30\*(Aq30"E
+\&   echo 10d20\*(Aq30^" 20d30\*(Aq40 | GeoConvert \-d \-p \-1
+\&   => 10d20\*(Aq30"N 020d30\*(Aq40"E
 .Ve
 .Sp
-Alternatively use colon separators, e.g., 30:30:30, which need no
-quoting.
+Use \e to quote the " character in a command line argument
+.Sp
+.Vb 2
+\&   GeoConvert \-d \-p \-1 \-\-input\-string "10d20\*(Aq30\e" 20d30\*(Aq40"
+\&   => 10d20\*(Aq30"N 020d30\*(Aq40"E
+.Ve
 .IP "Input from a file" 4
 .IX Item "Input from a file"
 No quoting need be done if the input from a file.  Thus each line of the

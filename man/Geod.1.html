@@ -27,6 +27,7 @@
 	<li><a href="#precision">PRECISION</a></li>
 	<li><a href="#errors">ERRORS</a></li>
 	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#warning">WARNING</a></li>
 	<li><a href="#see_also">SEE ALSO</a></li>
 	<li><a href="#author">AUTHOR</a></li>
 	<li><a href="#history">HISTORY</a></li>
@@ -207,6 +208,8 @@ latitude precedes longitude for each point; however on input either may
 be given first by appending (or prepending) <em>N</em> or <em>S</em> to the latitude
 and <em>E</em> or <em>W</em> to the longitude.  Azimuths are measured clockwise from
 north; however this may be overridden with <em>E</em> or <em>W</em>.</p>
+<p>See the <code>QUOTING</code> section of <a href="GeoConvert.1.html"><code>GeoConvert(1)</code></a> for how to quote the DMS
+designators ' and &quot;.</p>
 <p>
 </p>
 <hr />
@@ -292,8 +295,19 @@ will be converted.</p>
 <p>
 </p>
 <hr />
+<h1><a name="warning">WARNING</a></h1>
+<p>The proj library has a utility <strong>geod</strong> which offers similar
+functionality (but which uses less accurate algorithms).  <strong>Geod</strong> and
+<strong>geod</strong> are distinct names on most operating systems, but can be
+confused on Windows systems.  If you have proj installed on your Windows
+system, then in order to use <strong>Geod</strong> you will need to use the full
+pathname for the executable or ensure that your <code>PATH</code> includes the
+GeographicLib binary directory before the proj directory.</p>
+<p>
+</p>
+<hr />
 <h1><a name="see_also">SEE ALSO</a></h1>
-<p>The algorithms are described in C. F. F. Karney,
+<p><a href="GeoConvert.1.html"><code>GeoConvert(1)</code></a>.  The algorithms are described in C. F. F. Karney,
 <em>Algorithms for geodesics</em>, J. Geodesy, 2012; DOI
 <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">http://dx.doi.org/10.1007/s00190-012-0578-z</a>.</p>
 <p>
