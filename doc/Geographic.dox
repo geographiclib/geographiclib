@@ -12,7 +12,7 @@
 \mainpage Geographic library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.24
-\date 2012-mm-dd
+\date 2012-09-22
 
 \section abstract Abstract
 
@@ -3378,8 +3378,9 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.24">Version 1.24</a>
-   (released 2012-mm-dd)
-   - Support continuity in UTM coordinates across the equator:
+   (released 2012-09-22)
+   - Allow the specification of the hemisphere in UTM coordinates in
+     order to provide continuity across the equator:
      - add GeographicLib::UTMUPS::Transfer;
      - add GeographicLib::GeoCoords::UTMUPSRepresentation(bool, int) and
        GeographicLib::GeoCoords::AltUTMUPSRepresentation(bool, int);
