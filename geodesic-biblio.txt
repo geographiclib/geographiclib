@@ -727,6 +727,10 @@
    ''A Treatise on the Differential Geometry of Curves and Surfaces''
    (Ginn & Co., Boston, 1909).[[BR]]
    http://books.google.com/books?id=hkENAAAAYAAJ
+ * O. S. Adams,[[BR]]
+   ''Latitude Developments Connected with Geodesy and Cartography'',
+   Spec. Pub. 67 (US Coast and Geodetic Survey, 1921), Appendix.[[BR]]
+   http://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no671921.pdf
  * P. D. Thomas,[[BR]]
    ''Conformal Projections in Geodesy and Cartography'',
    Spec. Pub. 251 (US Coast and Geodetic Survey, 1952), pp. 63--66.[[BR]]
