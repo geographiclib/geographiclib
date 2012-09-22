@@ -31,7 +31,15 @@
 
 set -e
 
-VERSION=1.24
+# The following files contain version information:
+#   CMakeLists.txt
+#   NEWS
+#   configure.ac
+#   doc/Geographic.dox
+#   python/setup.py
+#   tests/test-distribution.sh
+
+VERSION=1.25
 BRANCH=devel
 TEMP=/scratch/geographic-dist
 DEVELSOURCE=/u/geographiclib
