@@ -3388,7 +3388,7 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.25">Version 1.25</a>
    (released 2012-mm-dd)
    - Accommodate absence of pod tools.
-   - Remove support for maintainer tasks in */Makefile.mk.
+   - Remove support for maintainer tasks in Makefile.mk.
    - Allow precision of reals to be set via cmake.
 
  - <a href="http://geographiclib.sf.net/1.24">Version 1.24</a>

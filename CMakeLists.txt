@@ -256,6 +256,9 @@ if (GEOGRAPHICLIB_EXAMPLES)
   add_subdirectory (examples)
 endif ()
 add_subdirectory (cmake)
+if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
+  add_subdirectory (tests)
+endif ()
 
 # Packaging support; we deal with 
 # (1) a source distribution: cmake make a tar.gz file and the zip file
