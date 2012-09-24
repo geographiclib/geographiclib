@@ -24,6 +24,8 @@
 #include <fstream>
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
+#include <GeographicLib/GeodesicExact.hpp>
+#include <GeographicLib/GeodesicLineExact.hpp>
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 
@@ -68,7 +70,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     bool linecalc = false, inverse = false, arcmode = false,
-      dms = false, full = false;
+      dms = false, full = false, exact = false;
     real
       a = Constants::WGS84_a<real>(),
       f = Constants::WGS84_f<real>();
@@ -130,7 +132,9 @@ int main(int argc, char* argv[]) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
-      } else if (arg == "--input-string") {
+      } else if (arg == "-E")
+        exact = true;
+      else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
       } else if (arg == "--input-file") {
@@ -196,9 +200,15 @@ int main(int argc, char* argv[]) {
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
     const Geodesic geod(a, f);
+    const GeodesicExact geode(a, f);
     GeodesicLine l;
-    if (linecalc)
-      l = geod.Line(lat1, lon1, azi1);
+    GeodesicLineExact le;
+    if (linecalc) {
+      if (exact)
+        le = geode.Line(lat1, lon1, azi1);
+      else
+        l = geod.Line(lat1, lon1, azi1);
+    }
 
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
@@ -225,8 +235,11 @@ int main(int argc, char* argv[]) {
             throw GeographicErr("Extraneous input: " + strc);
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
           DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
-          a12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2,
-                             m12, M12, M21, S12);
+          a12 = exact ?
+            geode.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2,
+                          m12, M12, M21, S12) :
+            geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2,
+                         m12, M12, M21, S12);
           if (full)
             *output << LatLonString(lat1, lon1, prec, dms, dmssep) << " ";
           *output << AzimuthString(azi1, prec, dms, dmssep) << " ";
@@ -250,9 +263,13 @@ int main(int argc, char* argv[]) {
               throw GeographicErr("Extraneous input: " + strc);
             s12 = ReadDistance(ss12, arcmode);
             if (arcmode)
-              l.ArcPosition(s12, lat2, lon2, azi2, a12, m12, M12, M21, S12);
+              exact ?
+                le.ArcPosition(s12, lat2, lon2, azi2, a12, m12, M12, M21, S12) :
+                l.ArcPosition(s12, lat2, lon2, azi2, a12, m12, M12, M21, S12);
             else
-              a12 = l.Position(s12, lat2, lon2, azi2, m12, M12, M21, S12);
+              a12 = exact ?
+                le.Position(s12, lat2, lon2, azi2, m12, M12, M21, S12) :
+                l.Position(s12, lat2, lon2, azi2, m12, M12, M21, S12);
           } else {
             std::string slat1, slon1, sazi1, ss12;
             if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
@@ -264,11 +281,17 @@ int main(int argc, char* argv[]) {
             azi1 = DMS::DecodeAzimuth(sazi1);
             s12 = ReadDistance(ss12, arcmode);
             if (arcmode)
-              geod.ArcDirect(lat1, lon1, azi1, s12, lat2, lon2, azi2, a12,
-                             m12, M12, M21, S12);
+              exact ?
+                geode.ArcDirect(lat1, lon1, azi1, s12, lat2, lon2, azi2, a12,
+                                m12, M12, M21, S12) : 
+                geod.ArcDirect(lat1, lon1, azi1, s12, lat2, lon2, azi2, a12,
+                               m12, M12, M21, S12);
             else
-              a12 = geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2,
-                                m12, M12, M21, S12);
+              a12 = exact ?
+                geode.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2,
+                             m12, M12, M21, S12) :
+                geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2,
+                            m12, M12, M21, S12);
           }
           if (arcmode)
             std::swap(s12, a12);

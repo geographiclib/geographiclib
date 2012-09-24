@@ -5,7 +5,7 @@ Geod -- perform geodesic calculations
 =head1 SYNOPSIS
 
 B<Geod> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi1> ] [ B<-a> ] [ B<-e> I<a> I<f> ]
-[ B<-d> | B<-:> ] [ B<-b> ] [ B<-f> ] [ B<-p> I<prec> ]
+[ B<-d> | B<-:> ] [ B<-b> ] [ B<-f> ] [ B<-p> I<prec> ] [ B<-E> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -96,6 +96,12 @@ L<ADDITIONAL QUANTITIES>.
 
 set the output precision to I<prec> (default 3); I<prec> is the
 precision relative to 1 m.  See L<PRECISION|precision>.
+
+=item B<-E>
+
+use "exact" algorithms (based on elliptic integrals) for the geodesic
+calculations.  These are be more accurate than the (default) series
+expansions for abs(I<f>) > 0.01.  This facility is B<experimental>.
 
 =item B<--comment-delimiter>
 

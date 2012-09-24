@@ -9,6 +9,7 @@
 
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/GeodesicLine.hpp"
+#include "GeographicLib/GeodesicExact.hpp"
 #include "GeographicLib/Constants.hpp"
 // Allow for mixed libraries?
 namespace GeographicLibL = GeographicLib;
@@ -27,6 +28,7 @@ int usage(int retval) {
 \n\
 Check GeographicLib::Geodesic class.\n\
 -a (default) accuracy test (reads test date on standard input)\n\
+-E accuracy test with GeodesicExact (reads test date on standard input)\n\
 -c coverage test (reads test data on standard input)\n\
 -t0 time GeodecicLine with distances using synthetic data\n\
 -t1 time GeodecicLine with angles using synthetic data\n\
@@ -177,36 +179,48 @@ int main(int argc, char* argv[]) {
   int timecase = 0; // 0 = line, 1 = line ang, 2 = direct, 3 = inverse
   bool accuracytest = true;
   bool coverage = false;
+  bool exact = false;
   if (argc == 2) {
     std::string arg = argv[1];
     if (arg == "-a") {
       accuracytest = true;
       coverage = false;
       timing = false;
+      exact = false;
+    } else if (arg == "-E") {
+      accuracytest = true;
+      coverage = false;
+      timing = false;
+      exact = true;
     } else if (arg == "-c") {
       accuracytest = false;
       coverage = true;
       timing = false;
+      exact = false;
     } else if (arg == "-t0") {
       accuracytest = false;
       coverage = false;
       timing = true;
       timecase = 0;
+      exact = false;
     } else if (arg == "-t1") {
       accuracytest = false;
       coverage = false;
       timing = true;
       timecase = 1;
+      exact = false;
     } else if (arg == "-t2") {
       accuracytest = false;
       coverage = false;
       timing = true;
       timecase = 2;
+      exact = false;
     } else if (arg == "-t3") {
       accuracytest = false;
       coverage = false;
       timing = true;
       timecase = 3;
+      exact = false;
     } else
       return usage(arg == "-h" ? 0 : 1);
   } else if (argc > 2)
@@ -296,6 +310,8 @@ int main(int argc, char* argv[]) {
   else if (accuracytest || coverage) {
     const Geodesic geod(Constants::WGS84_a<Math::real>(),
                         Constants::WGS84_f<Math::real>());
+    const GeodesicExact geode(Constants::WGS84_a<Math::real>(),
+                             Constants::WGS84_f<Math::real>());
 
     const GeographicLibL::Geodesic geodl
       (GeographicLibL::Constants::WGS84_a<Math::real>(),
@@ -329,9 +345,17 @@ int main(int argc, char* argv[]) {
         cout << geod.coverage << " " << geod.niter << "\n";
 #endif
       } else {
-        GeodError< Math::extended,
-          Geodesic, Math::real,
-          GeographicLibL::Geodesic, GeographicLibL::Math::real >
+        exact ?
+          GeodError< Math::extended,
+                     GeodesicExact, Math::real,
+                     GeographicLibL::Geodesic, GeographicLibL::Math::real >
+          (geode, geodl, lat1l, lon1l, azi1l,
+           lat2l, lon2l, azi2l,
+           s12l, a12l, m12l, S12l,
+           erra) :
+          GeodError< Math::extended,
+                     Geodesic, Math::real,
+                     GeographicLibL::Geodesic, GeographicLibL::Math::real >
           (geod, geodl, lat1l, lon1l, azi1l,
            lat2l, lon2l, azi2l,
            s12l, a12l, m12l, S12l,

@@ -1,32 +1,32 @@
 /**
- * \file GeodesicLine.hpp
- * \brief Header for GeographicLib::GeodesicLine class
+ * \file GeodesicLineExact.hpp
+ * \brief Header for GeographicLib::GeodesicLineExact class
  *
  * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-#if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)
-#define GEOGRAPHICLIB_GEODESICLINE_HPP 1
+#if !defined(GEOGRAPHICLIB_GEODESICLINEEXACT_HPP)
+#define GEOGRAPHICLIB_GEODESICLINEEXACT_HPP 1
 
 #include <GeographicLib/Constants.hpp>
-#include <GeographicLib/Geodesic.hpp>
+#include <GeographicLib/GeodesicExact.hpp>
 
 namespace GeographicLib {
 
   /**
    * \brief A geodesic line
    *
-   * GeodesicLine facilitates the determination of a series of points on a
+   * GeodesicLineExact facilitates the determination of a series of points on a
    * single geodesic.  The starting point (\e lat1, \e lon1) and the azimuth \e
-   * azi1 are specified in the constructor.  GeodesicLine.Position returns the
-   * location of point 2 a distance \e s12 along the geodesic.  Alternatively
-   * GeodesicLine.ArcPosition gives the position of point 2 an arc length \e
-   * a12 along the geodesic.
+   * azi1 are specified in the constructor.  GeodesicLineExact.Position returns
+   * the location of point 2 a distance \e s12 along the geodesic.
+   * Alternatively GeodesicLineExact.ArcPosition gives the position of point 2
+   * an arc length \e a12 along the geodesic.
    *
    * The default copy constructor and assignment operators work with this
-   * class.  Similarly, a vector can be used to hold GeodesicLine objects.
+   * class.  Similarly, a vector can be used to hold GeodesicLineExact objects.
    *
    * The calculations are accurate to better than 15 nm (15 nanometers).  See
    * Sec. 9 of
@@ -44,21 +44,21 @@ namespace GeographicLib {
    * For more information on geodesics see \ref geodesic.
    *
    * Example of use:
-   * \include example-GeodesicLine.cpp
+   * \include example-GeodesicLineExact.cpp
    *
    * <a href="Geod.1.html">Geod</a> is a command-line utility providing access
-   * to the functionality of Geodesic and GeodesicLine.
+   * to the functionality of GeodesicExact and GeodesicLineExact.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT GeodesicLine {
+  class GEOGRAPHIC_EXPORT GeodesicLineExact {
   private:
     typedef Math::real real;
-    friend class Geodesic;
-    static const int nC1_ = Geodesic::nC1_;
-    static const int nC1p_ = Geodesic::nC1p_;
-    static const int nC2_ = Geodesic::nC2_;
-    static const int nC3_ = Geodesic::nC3_;
-    static const int nC4_ = Geodesic::nC4_;
+    friend class GeodesicExact;
+    static const int nC1_ = GeodesicExact::nC1_;
+    static const int nC1p_ = GeodesicExact::nC1p_;
+    static const int nC2_ = GeodesicExact::nC2_;
+    static const int nC3_ = GeodesicExact::nC3_;
+    static const int nC4_ = GeodesicExact::nC4_;
 
     real _lat1, _lon1, _azi1;
     real _a, _f, _b, _c2, _f1, _salp0, _calp0, _k2,
@@ -70,78 +70,79 @@ namespace GeographicLib {
     unsigned _caps;
 
     enum captype {
-      CAP_NONE = Geodesic::CAP_NONE,
-      CAP_C1   = Geodesic::CAP_C1,
-      CAP_C1p  = Geodesic::CAP_C1p,
-      CAP_C2   = Geodesic::CAP_C2,
-      CAP_C3   = Geodesic::CAP_C3,
-      CAP_C4   = Geodesic::CAP_C4,
-      CAP_ALL  = Geodesic::CAP_ALL,
-      OUT_ALL  = Geodesic::OUT_ALL,
+      CAP_NONE = GeodesicExact::CAP_NONE,
+      CAP_C1   = GeodesicExact::CAP_C1,
+      CAP_C1p  = GeodesicExact::CAP_C1p,
+      CAP_C2   = GeodesicExact::CAP_C2,
+      CAP_C3   = GeodesicExact::CAP_C3,
+      CAP_C4   = GeodesicExact::CAP_C4,
+      CAP_ALL  = GeodesicExact::CAP_ALL,
+      OUT_ALL  = GeodesicExact::OUT_ALL,
     };
   public:
 
     /**
      * Bit masks for what calculations to do.  They signify to the
-     * GeodesicLine::GeodesicLine constructor and to Geodesic::Line what
-     * capabilities should be included in the GeodesicLine object.  This is
-     * merely a duplication of Geodesic::mask.
+     * GeodesicLineExact::GeodesicLineExact constructor and to
+     * GeodesicExact::Line what capabilities should be included in the
+     * GeodesicLineExact object.  This is merely a duplication of
+     * GeodesicExact::mask.
      **********************************************************************/
     enum mask {
       /**
        * No capabilities, no output.
        * @hideinitializer
        **********************************************************************/
-      NONE          = Geodesic::NONE,
+      NONE          = GeodesicExact::NONE,
       /**
        * Calculate latitude \e lat2.  (It's not necessary to include this as a
-       * capability to GeodesicLine because this is included by default.)
+       * capability to GeodesicLineExact because this is included by default.)
        * @hideinitializer
        **********************************************************************/
-      LATITUDE      = Geodesic::LATITUDE,
+      LATITUDE      = GeodesicExact::LATITUDE,
       /**
        * Calculate longitude \e lon2.
        * @hideinitializer
        **********************************************************************/
-      LONGITUDE     = Geodesic::LONGITUDE,
+      LONGITUDE     = GeodesicExact::LONGITUDE,
       /**
        * Calculate azimuths \e azi1 and \e azi2.  (It's not necessary to
-       * include this as a capability to GeodesicLine because this is included
-       * by default.)
+       * include this as a capability to GeodesicLineExact because this is
+       * included by default.)
        * @hideinitializer
        **********************************************************************/
-      AZIMUTH       = Geodesic::AZIMUTH,
+      AZIMUTH       = GeodesicExact::AZIMUTH,
       /**
        * Calculate distance \e s12.
        * @hideinitializer
        **********************************************************************/
-      DISTANCE      = Geodesic::DISTANCE,
+      DISTANCE      = GeodesicExact::DISTANCE,
       /**
        * Allow distance \e s12 to be used as input in the direct geodesic
        * problem.
        * @hideinitializer
        **********************************************************************/
-      DISTANCE_IN   = Geodesic::DISTANCE_IN,
+      DISTANCE_IN   = GeodesicExact::DISTANCE_IN,
       /**
        * Calculate reduced length \e m12.
        * @hideinitializer
        **********************************************************************/
-      REDUCEDLENGTH = Geodesic::REDUCEDLENGTH,
+      REDUCEDLENGTH = GeodesicExact::REDUCEDLENGTH,
       /**
        * Calculate geodesic scales \e M12 and \e M21.
        * @hideinitializer
        **********************************************************************/
-      GEODESICSCALE = Geodesic::GEODESICSCALE,
+      GEODESICSCALE = GeodesicExact::GEODESICSCALE,
       /**
        * Calculate area \e S12.
        * @hideinitializer
        **********************************************************************/
-      AREA          = Geodesic::AREA,
+      AREA          = GeodesicExact::AREA,
       /**
        * All capabilities.  Calculate everything.
        * @hideinitializer
        **********************************************************************/
-      ALL           = Geodesic::ALL,
+      ALL           = GeodesicExact::ALL,
     };
 
     /** \name Constructors
@@ -152,53 +153,55 @@ namespace GeographicLib {
      * Constructor for a geodesic line staring at latitude \e lat1, longitude
      * \e lon1, and azimuth \e azi1 (all in degrees).
      *
-     * @param[in] g A Geodesic object used to compute the necessary information
-     *   about the GeodesicLine.
+     * @param[in] g A GeodesicExact object used to compute the necessary
+     *   information about the GeodesicLineExact.
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
      * @param[in] azi1 azimuth at point 1 (degrees).
-     * @param[in] caps bitor'ed combination of GeodesicLine::mask values
-     *   specifying the capabilities the GeodesicLine object should possess,
-     *   i.e., which quantities can be returned in calls to
+     * @param[in] caps bitor'ed combination of GeodesicLineExact::mask values
+     *   specifying the capabilities the GeodesicLineExact object should
+     *   possess, i.e., which quantities can be returned in calls to
      *   GeodesicLib::Position.
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
      * azi1 should be in the range [&minus;540&deg;, 540&deg;).
      *
-     * The GeodesicLine::mask values are
-     * - \e caps |= GeodesicLine::LATITUDE for the latitude \e lat2; this is
+     * The GeodesicLineExact::mask values are
+     * - \e caps |= GeodesicLineExact::LATITUDE for the latitude \e lat2; this
+     *   is added automatically
+     * - \e caps |= GeodesicLineExact::LONGITUDE for the latitude \e lon2
+     * - \e caps |= GeodesicLineExact::AZIMUTH for the latitude \e azi2; this is
      *   added automatically
-     * - \e caps |= GeodesicLine::LONGITUDE for the latitude \e lon2
-     * - \e caps |= GeodesicLine::AZIMUTH for the latitude \e azi2; this is
-     *   added automatically
-     * - \e caps |= GeodesicLine::DISTANCE for the distance \e s12
-     * - \e caps |= GeodesicLine::REDUCEDLENGTH for the reduced length \e m12
-     * - \e caps |= GeodesicLine::GEODESICSCALE for the geodesic scales \e M12
-     *   and \e M21
-     * - \e caps |= GeodesicLine::AREA for the area \e S12
-     * - \e caps |= GeodesicLine::DISTANCE_IN permits the length of the
+     * - \e caps |= GeodesicLineExact::DISTANCE for the distance \e s12
+     * - \e caps |= GeodesicLineExact::REDUCEDLENGTH for the reduced length \e
+         m12
+     * - \e caps |= GeodesicLineExact::GEODESICSCALE for the geodesic scales \e
+     *   M12 and \e M21
+     * - \e caps |= GeodesicLineExact::AREA for the area \e S12
+     * - \e caps |= GeodesicLineExact::DISTANCE_IN permits the length of the
      *   geodesic to be given in terms of \e s12; without this capability the
      *   length can only be specified in terms of arc length.
      * .
-     * The default value of \e caps is GeodesicLine::ALL which turns on all the
-     * capabilities.
+     * The default value of \e caps is GeodesicLineExact::ALL which turns on
+     * all the capabilities.
      *
      * If the point is at a pole, the azimuth is defined by keeping the \e lon1
      * fixed and writing \e lat1 = 90&deg; &minus; &epsilon; or
      * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
      * above.
      **********************************************************************/
-    GeodesicLine(const Geodesic& g, real lat1, real lon1, real azi1,
+    GeodesicLineExact(const GeodesicExact& g, real lat1, real lon1, real azi1,
                  unsigned caps = ALL)
       throw();
 
     /**
-     * A default constructor.  If GeodesicLine::Position is called on the
+     * A default constructor.  If GeodesicLineExact::Position is called on the
      * resulting object, it returns immediately (without doing any
-     * calculations).  The object can be set with a call to Geodesic::Line.
-     * Use Init() to test whether object is still in this uninitialized state.
+     * calculations).  The object can be set with a call to
+     * GeodesicExact::Line.  Use Init() to test whether object is still in this
+     * uninitialized state.
      **********************************************************************/
-    GeodesicLine() throw() : _caps(0U) {}
+    GeodesicLineExact() throw() : _caps(0U) {}
     ///@}
 
     /** \name Position in terms of distance
@@ -213,36 +216,36 @@ namespace GeographicLib {
      *   signed.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees); requires that the
-     *   GeodesicLine object was constructed with \e caps |=
-     *   GeodesicLine::LONGITUDE.
+     *   GeodesicLineExact object was constructed with \e caps |=
+     *   GeodesicLineExact::LONGITUDE.
      * @param[out] azi2 (forward) azimuth at point 2 (degrees).
      * @param[out] m12 reduced length of geodesic (meters); requires that the
-     *   GeodesicLine object was constructed with \e caps |=
-     *   GeodesicLine::REDUCEDLENGTH.
+     *   GeodesicLineExact object was constructed with \e caps |=
+     *   GeodesicLineExact::REDUCEDLENGTH.
      * @param[out] M12 geodesic scale of point 2 relative to point 1
-     *   (dimensionless); requires that the GeodesicLine object was constructed
-     *   with \e caps |= GeodesicLine::GEODESICSCALE.
+     *   (dimensionless); requires that the GeodesicLineExact object was
+     *   constructed with \e caps |= GeodesicLineExact::GEODESICSCALE.
      * @param[out] M21 geodesic scale of point 1 relative to point 2
-     *   (dimensionless); requires that the GeodesicLine object was constructed
-     *   with \e caps |= GeodesicLine::GEODESICSCALE.
+     *   (dimensionless); requires that the GeodesicLineExact object was
+     *   constructed with \e caps |= GeodesicLineExact::GEODESICSCALE.
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>); requires
-     *   that the GeodesicLine object was constructed with \e caps |=
-     *   GeodesicLine::AREA.
+     *   that the GeodesicLineExact object was constructed with \e caps |=
+     *   GeodesicLineExact::AREA.
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
      * The values of \e lon2 and \e azi2 returned are in the range
      * [&minus;180&deg;, 180&deg;).
      *
-     * The GeodesicLine object \e must have been constructed with \e caps |=
-     * GeodesicLine::DISTANCE_IN; otherwise Math::NaN() is returned and no
-     * parameters are set.  Requesting a value which the GeodesicLine object is
-     * not capable of computing is not an error; the corresponding argument
-     * will not be altered.
+     * The GeodesicLineExact object \e must have been constructed with \e caps
+     * |= GeodesicLineExact::DISTANCE_IN; otherwise Math::NaN() is returned and
+     * no parameters are set.  Requesting a value which the GeodesicLineExact
+     * object is not capable of computing is not an error; the corresponding
+     * argument will not be altered.
      *
      * The following functions are overloaded versions of
-     * GeodesicLine::Position which omit some of the output parameters.  Note,
-     * however, that the arc length is always computed and returned as the
-     * function value.
+     * GeodesicLineExact::Position which omit some of the output parameters.
+     * Note, however, that the arc length is always computed and returned as
+     * the function value.
      **********************************************************************/
     Math::real Position(real s12,
                         real& lat2, real& lon2, real& azi2,
@@ -256,7 +259,7 @@ namespace GeographicLib {
     }
 
     /**
-     * See the documentation for GeodesicLine::Position.
+     * See the documentation for GeodesicLineExact::Position.
      **********************************************************************/
     Math::real Position(real s12, real& lat2, real& lon2) const throw() {
       real t;
@@ -266,7 +269,7 @@ namespace GeographicLib {
     }
 
     /**
-     * See the documentation for GeodesicLine::Position.
+     * See the documentation for GeodesicLineExact::Position.
      **********************************************************************/
     Math::real Position(real s12, real& lat2, real& lon2,
                         real& azi2) const throw() {
@@ -277,7 +280,7 @@ namespace GeographicLib {
     }
 
     /**
-     * See the documentation for GeodesicLine::Position.
+     * See the documentation for GeodesicLineExact::Position.
      **********************************************************************/
     Math::real Position(real s12, real& lat2, real& lon2,
                         real& azi2, real& m12) const throw() {
@@ -289,7 +292,7 @@ namespace GeographicLib {
     }
 
     /**
-     * See the documentation for GeodesicLine::Position.
+     * See the documentation for GeodesicLineExact::Position.
      **********************************************************************/
     Math::real Position(real s12, real& lat2, real& lon2,
                         real& azi2, real& M12, real& M21)
@@ -302,7 +305,7 @@ namespace GeographicLib {
     }
 
     /**
-     * See the documentation for GeodesicLine::Position.
+     * See the documentation for GeodesicLineExact::Position.
      **********************************************************************/
     Math::real Position(real s12,
                         real& lat2, real& lon2, real& azi2,
@@ -329,34 +332,34 @@ namespace GeographicLib {
      *   be signed.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees); requires that the
-     *   GeodesicLine object was constructed with \e caps |=
-     *   GeodesicLine::LONGITUDE.
+     *   GeodesicLineExact object was constructed with \e caps |=
+     *   GeodesicLineExact::LONGITUDE.
      * @param[out] azi2 (forward) azimuth at point 2 (degrees).
      * @param[out] s12 distance between point 1 and point 2 (meters); requires
-     *   that the GeodesicLine object was constructed with \e caps |=
-     *   GeodesicLine::DISTANCE.
+     *   that the GeodesicLineExact object was constructed with \e caps |=
+     *   GeodesicLineExact::DISTANCE.
      * @param[out] m12 reduced length of geodesic (meters); requires that the
-     *   GeodesicLine object was constructed with \e caps |=
-     *   GeodesicLine::REDUCEDLENGTH.
+     *   GeodesicLineExact object was constructed with \e caps |=
+     *   GeodesicLineExact::REDUCEDLENGTH.
      * @param[out] M12 geodesic scale of point 2 relative to point 1
-     *   (dimensionless); requires that the GeodesicLine object was constructed
-     *   with \e caps |= GeodesicLine::GEODESICSCALE.
+     *   (dimensionless); requires that the GeodesicLineExact object was
+     *   constructed with \e caps |= GeodesicLineExact::GEODESICSCALE.
      * @param[out] M21 geodesic scale of point 1 relative to point 2
-     *   (dimensionless); requires that the GeodesicLine object was constructed
-     *   with \e caps |= GeodesicLine::GEODESICSCALE.
+     *   (dimensionless); requires that the GeodesicLineExact object was
+     *   constructed with \e caps |= GeodesicLineExact::GEODESICSCALE.
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>); requires
-     *   that the GeodesicLine object was constructed with \e caps |=
-     *   GeodesicLine::AREA.
+     *   that the GeodesicLineExact object was constructed with \e caps |=
+     *   GeodesicLineExact::AREA.
      *
      * The values of \e lon2 and \e azi2 returned are in the range
      * [&minus;180&deg;, 180&deg;).
      *
-     * Requesting a value which the GeodesicLine object is not capable of
+     * Requesting a value which the GeodesicLineExact object is not capable of
      * computing is not an error; the corresponding argument will not be
      * altered.
      *
      * The following functions are overloaded versions of
-     * GeodesicLine::ArcPosition which omit some of the output parameters.
+     * GeodesicLineExact::ArcPosition which omit some of the output parameters.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
                      real& s12, real& m12, real& M12, real& M21,
@@ -368,7 +371,7 @@ namespace GeographicLib {
     }
 
     /**
-     * See the documentation for GeodesicLine::ArcPosition.
+     * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2)
       const throw() {
@@ -379,7 +382,7 @@ namespace GeographicLib {
     }
 
     /**
-     * See the documentation for GeodesicLine::ArcPosition.
+     * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
     void ArcPosition(real a12,
                      real& lat2, real& lon2, real& azi2)
@@ -391,7 +394,7 @@ namespace GeographicLib {
     }
 
     /**
-     * See the documentation for GeodesicLine::ArcPosition.
+     * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
                      real& s12) const throw() {
@@ -402,7 +405,7 @@ namespace GeographicLib {
     }
 
     /**
-     * See the documentation for GeodesicLine::ArcPosition.
+     * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
                      real& s12, real& m12) const throw() {
@@ -414,7 +417,7 @@ namespace GeographicLib {
     }
 
     /**
-     * See the documentation for GeodesicLine::ArcPosition.
+     * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
                      real& s12, real& M12, real& M21)
@@ -427,7 +430,7 @@ namespace GeographicLib {
     }
 
     /**
-     * See the documentation for GeodesicLine::ArcPosition.
+     * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
                      real& s12, real& m12, real& M12, real& M21)
@@ -445,51 +448,51 @@ namespace GeographicLib {
     ///@{
 
     /**
-     * The general position function.  GeodesicLine::Position and
-     * GeodesicLine::ArcPosition are defined in terms of this function.
+     * The general position function.  GeodesicLineExact::Position and
+     * GeodesicLineExact::ArcPosition are defined in terms of this function.
      *
      * @param[in] arcmode boolean flag determining the meaning of the second
-     *   parameter; if arcmode is false, then the GeodesicLine object must have
-     *   been constructed with \e caps |= GeodesicLine::DISTANCE_IN.
+     *   parameter; if arcmode is false, then the GeodesicLineExact object must
+     *   have been constructed with \e caps |= GeodesicLineExact::DISTANCE_IN.
      * @param[in] s12_a12 if \e arcmode is false, this is the distance between
      *   point 1 and point 2 (meters); otherwise it is the arc length between
      *   point 1 and point 2 (degrees); it can be signed.
-     * @param[in] outmask a bitor'ed combination of GeodesicLine::mask values
-     *   specifying which of the following parameters should be set.
+     * @param[in] outmask a bitor'ed combination of GeodesicLineExact::mask
+     *   values specifying which of the following parameters should be set.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees); requires that the
-     *   GeodesicLine object was constructed with \e caps |=
-     *   GeodesicLine::LONGITUDE.
+     *   GeodesicLineExact object was constructed with \e caps |=
+     *   GeodesicLineExact::LONGITUDE.
      * @param[out] azi2 (forward) azimuth at point 2 (degrees).
      * @param[out] s12 distance between point 1 and point 2 (meters); requires
-     *   that the GeodesicLine object was constructed with \e caps |=
-     *   GeodesicLine::DISTANCE.
+     *   that the GeodesicLineExact object was constructed with \e caps |=
+     *   GeodesicLineExact::DISTANCE.
      * @param[out] m12 reduced length of geodesic (meters); requires that the
-     *   GeodesicLine object was constructed with \e caps |=
-     *   GeodesicLine::REDUCEDLENGTH.
+     *   GeodesicLineExact object was constructed with \e caps |=
+     *   GeodesicLineExact::REDUCEDLENGTH.
      * @param[out] M12 geodesic scale of point 2 relative to point 1
-     *   (dimensionless); requires that the GeodesicLine object was constructed
-     *   with \e caps |= GeodesicLine::GEODESICSCALE.
+     *   (dimensionless); requires that the GeodesicLineExact object was
+     *   constructed with \e caps |= GeodesicLineExact::GEODESICSCALE.
      * @param[out] M21 geodesic scale of point 1 relative to point 2
-     *   (dimensionless); requires that the GeodesicLine object was constructed
-     *   with \e caps |= GeodesicLine::GEODESICSCALE.
+     *   (dimensionless); requires that the GeodesicLineExact object was
+     *   constructed with \e caps |= GeodesicLineExact::GEODESICSCALE.
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>); requires
-     *   that the GeodesicLine object was constructed with \e caps |=
-     *   GeodesicLine::AREA.
+     *   that the GeodesicLineExact object was constructed with \e caps |=
+     *   GeodesicLineExact::AREA.
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
-     * The GeodesicLine::mask values possible for \e outmask are
-     * - \e outmask |= GeodesicLine::LATITUDE for the latitude \e lat2.
-     * - \e outmask |= GeodesicLine::LONGITUDE for the latitude \e lon2.
-     * - \e outmask |= GeodesicLine::AZIMUTH for the latitude \e azi2.
-     * - \e outmask |= GeodesicLine::DISTANCE for the distance \e s12.
-     * - \e outmask |= GeodesicLine::REDUCEDLENGTH for the reduced length \e
-     *   m12.
-     * - \e outmask |= GeodesicLine::GEODESICSCALE for the geodesic scales \e
-     *   M12 and \e M21.
-     * - \e outmask |= GeodesicLine::AREA for the area \e S12.
+     * The GeodesicLineExact::mask values possible for \e outmask are
+     * - \e outmask |= GeodesicLineExact::LATITUDE for the latitude \e lat2.
+     * - \e outmask |= GeodesicLineExact::LONGITUDE for the latitude \e lon2.
+     * - \e outmask |= GeodesicLineExact::AZIMUTH for the latitude \e azi2.
+     * - \e outmask |= GeodesicLineExact::DISTANCE for the distance \e s12.
+     * - \e outmask |= GeodesicLineExact::REDUCEDLENGTH for the reduced length
+     *   \e m12.
+     * - \e outmask |= GeodesicLineExact::GEODESICSCALE for the geodesic scales
+     *   \e M12 and \e M21.
+     * - \e outmask |= GeodesicLineExact::AREA for the area \e S12.
      * .
-     * Requesting a value which the GeodesicLine object is not capable of
+     * Requesting a value which the GeodesicLineExact object is not capable of
      * computing is not an error; the corresponding argument will not be
      * altered.  Note, however, that the arc length is always computed and
      * returned as the function value.
@@ -548,14 +551,15 @@ namespace GeographicLib {
 
     /**
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
-     *   the value inherited from the Geodesic object used in the constructor.
+     *   the value inherited from the GeodesicExact object used in the
+     *   constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw()
     { return Init() ? _a : Math::NaN<real>(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
-     *   inherited from the Geodesic object used in the constructor.
+     *   inherited from the GeodesicExact object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const throw()
     { return Init() ? _f : Math::NaN<real>(); }
@@ -576,8 +580,8 @@ namespace GeographicLib {
     unsigned Capabilities() const throw() { return _caps; }
 
     /**
-     * @param[in] testcaps a set of bitor'ed GeodesicLine::mask values.
-     * @return true if the GeodesicLine object has all these capabilities.
+     * @param[in] testcaps a set of bitor'ed GeodesicLineExact::mask values.
+     * @return true if the GeodesicLineExact object has all these capabilities.
      **********************************************************************/
     bool Capabilities(unsigned testcaps) const throw() {
       testcaps &= OUT_ALL;
@@ -589,4 +593,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif  // GEOGRAPHICLIB_GEODESICLINE_HPP
+#endif  // GEOGRAPHICLIB_GEODESICLINEEXACT_HPP
