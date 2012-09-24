@@ -1451,7 +1451,7 @@ namespace GeographicLib {
       _C4x[35] = 1/real(26254800);
       break;
     default:
-      STATIC_ASSERT(nC3_ >= 0 && nC4_ <= 8, "Bad value of nC4_");
+      STATIC_ASSERT(nC4_ >= 0 && nC4_ <= 8, "Bad value of nC4_");
     }
   }
 

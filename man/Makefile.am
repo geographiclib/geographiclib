@@ -3,18 +3,6 @@
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
 
-MANPAGES = \
-	CartConvert.1 \
-	ConicProj.1 \
-	GeodesicProj.1 \
-	GeoConvert.1 \
-	Geod.1 \
-	GeoidEval.1 \
-	Gravity.1 \
-	MagneticField.1 \
-	Planimeter.1 \
-	TransverseMercatorProj.1
-
 USAGE = \
 	CartConvert.usage \
 	ConicProj.usage \
@@ -26,6 +14,18 @@ USAGE = \
 	MagneticField.usage \
 	Planimeter.usage \
 	TransverseMercatorProj.usage
+
+MANPAGES = \
+	CartConvert.1 \
+	ConicProj.1 \
+	GeodesicProj.1 \
+	GeoConvert.1 \
+	Geod.1 \
+	GeoidEval.1 \
+	Gravity.1 \
+	MagneticField.1 \
+	Planimeter.1 \
+	TransverseMercatorProj.1
 
 HTMLMAN = \
 	CartConvert.1.html \
@@ -44,7 +44,7 @@ POD2MAN = pod2man --center="GeographicLib Utilities" \
 PODFIX= sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%' -e 's%<code>\([^<>]*\)(\(.\))</code>%<a href="\1.\2.html">&</a>%'g
 man1_MANS = $(MANPAGES)
 
-SUFFIXES = .pod .1 .usage
+SUFFIXES = .pod .1 .usage .1.html
 
 all: man
 man: manpages usage htmlman
@@ -53,47 +53,96 @@ manpages: $(MANPAGES)
 usage: $(USAGE)
 htmlman: $(HTMLMAN)
 
+if HAVE_PODPROGS
+
 .pod.usage:
-	sh $(srcdir)/makeusage.sh $< > $*.usage
+	sh $(srcdir)/makeusage.sh $< > $@
 
 .pod.1:
-	pod2html --noindex $^ | $(PODFIX) > $*.1.html
 	$(POD2MAN) $^ > $@
 
-CartConvert.1.html: CartConvert.pod
+.pod.1.html:
 	pod2html --noindex $^ | $(PODFIX) > $@
-ConicProj.1.html: ConicProj.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-GeodesicProj.1.html: GeodesicProj.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-GeoConvert.1.html: GeoConvert.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-Geod.1.html: Geod.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-GeoidEval.1.html: GeoidEval.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-Gravity.1.html: Gravity.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-MagneticField.1.html: MagneticField.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-Planimeter.1.html: Planimeter.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-TransverseMercatorProj.1.html: TransverseMercatorProj.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
+
+else
+
+USAGECMD = cat $(srcdir)/$@ 2> /dev/null || \
+	sed "s/@TOOL@/$*/g" $(srcdir)/dummy.usage.in > $@
+MANCMD = cat $(srcdir)/$@ 2> /dev/null || \
+	sed "s/@TOOL@/$*/g" $(srcdir)/dummy.1.in > $@
+HTMLCMD = cat $(srcdir)/$@ 2> /dev/null || \
+	sed "s/@TOOL@/$*/g" $(srcdir)/dummy.1.html.in > $@
+
+CartConvert.usage:
+	$(USAGECMD)
+ConicProj.usage:
+	$(USAGECMD)
+GeodesicProj.usage:
+	$(USAGECMD)
+GeoConvert.usage:
+	$(USAGECMD)
+Geod.usage:
+	$(USAGECMD)
+GeoidEval.usage:
+	$(USAGECMD)
+Gravity.usage:
+	$(USAGECMD)
+MagneticField.usage:
+	$(USAGECMD)
+Planimeter.usage:
+	$(USAGECMD)
+TransverseMercatorProj.usage:
+	$(USAGECMD)
+
+CartConvert.1:
+	$(MANCMD)
+ConicProj.1:
+	$(MANCMD)
+GeodesicProj.1:
+	$(MANCMD)
+GeoConvert.1:
+	$(MANCMD)
+Geod.1:
+	$(MANCMD)
+GeoidEval.1:
+	$(MANCMD)
+Gravity.1:
+	$(MANCMD)
+MagneticField.1:
+	$(MANCMD)
+Planimeter.1:
+	$(MANCMD)
+TransverseMercatorProj.1:
+	$(MANCMD)
+
+CartConvert.1.html:
+	$(HTMLCMD)
+ConicProj.1.html:
+	$(HTMLCMD)
+GeodesicProj.1.html:
+	$(HTMLCMD)
+GeoConvert.1.html:
+	$(HTMLCMD)
+Geod.1.html:
+	$(HTMLCMD)
+GeoidEval.1.html:
+	$(HTMLCMD)
+Gravity.1.html:
+	$(HTMLCMD)
+MagneticField.1.html:
+	$(HTMLCMD)
+Planimeter.1.html:
+	$(HTMLCMD)
+TransverseMercatorProj.1.html:
+	$(HTMLCMD)
+
+endif
 
 EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	GeoConvert.pod TransverseMercatorProj.pod \
 	CartConvert.pod ConicProj.pod Geod.pod GeodesicProj.pod \
 	GeoidEval.pod Gravity.pod MagneticField.pod Planimeter.pod \
-	GeoConvert.1 TransverseMercatorProj.1 \
-	CartConvert.1 ConicProj.1 Geod.1 GeodesicProj.1 \
-	GeoidEval.1 Gravity.1 MagneticField.1 Planimeter.1 \
-	GeoConvert.usage TransverseMercatorProj.usage \
-	CartConvert.usage ConicProj.usage Geod.usage GeodesicProj.usage \
-	GeoidEval.usage Gravity.usage MagneticField.usage Planimeter.usage \
-	GeoConvert.1.html TransverseMercatorProj.1.html \
-	CartConvert.1.html ConicProj.1.html Geod.1.html GeodesicProj.1.html \
-	GeoidEval.1.html Gravity.1.html MagneticField.1.html Planimeter.1.html
+	$(MANPAGES) $(USAGE) $(HTMLMAN)
 
 maintainer-clean-local:
 	rm -rf *.usage *.1.html *.1

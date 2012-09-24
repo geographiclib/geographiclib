@@ -12,12 +12,12 @@
 
 #include <GeographicLib/Constants.hpp>
 
-#if !defined(GEOD_ORD)
+#if !defined(GEOGRAPHICLIB_GEODESIC_ORDER)
 /**
  * The order of the expansions used by Geodesic.
  **********************************************************************/
-#  define GEOD_ORD \
-  (GEOGRAPHICLIB_PREC == 1 ? 6 : (GEOGRAPHICLIB_PREC == 0 ? 3 : 7))
+#  define GEOGRAPHICLIB_GEODESIC_ORDER \
+  (GEOGRAPHICLIB_PRECISION == 2 ? 6 : (GEOGRAPHICLIB_PRECISION == 1 ? 3 : 7))
 #endif
 
 namespace GeographicLib {
@@ -123,16 +123,16 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class GeodesicLine;
-    static const int nA1_ = GEOD_ORD;
-    static const int nC1_ = GEOD_ORD;
-    static const int nC1p_ = GEOD_ORD;
-    static const int nA2_ = GEOD_ORD;
-    static const int nC2_ = GEOD_ORD;
-    static const int nA3_ = GEOD_ORD;
+    static const int nA1_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+    static const int nC1_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+    static const int nC1p_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+    static const int nA2_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+    static const int nC2_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+    static const int nA3_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nA3x_ = nA3_;
-    static const int nC3_ = GEOD_ORD;
+    static const int nC3_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC3x_ = (nC3_ * (nC3_ - 1)) / 2;
-    static const int nC4_ = GEOD_ORD;
+    static const int nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
     static const unsigned maxit_ = 50;
 

@@ -366,6 +366,13 @@ Here are the steps to compile and install %GeographicLib:
     sufficiently recent version of doxygen can be found.  Otherwise, the
     html documentation will redirect to the appropriate version of the
     online documentation.
+  - <code>GEOGRAPHICLIB_PRECISION</code> specifies the precision to be
+    used for "real" (i.e., floating point) numbers.  1 means float
+    (single precision); 2 (the default) means double; 3 means long
+    double; 4 is reserved for quadruple precision.  Nearly all the
+    testing has been carried out with doubles and that's the
+    recommended configuration.  In particular you should avoid
+    "installing" the library with a precision different from double.
 - Build and install the software.  In non-IDE environments, run
   \verbatim
   make         # compile the library and the examples
@@ -2638,12 +2645,13 @@ scales \e M12 and \e M21 which are inserted between \e m12 and \e S12.
 
 We give here the series expansions for the various geodesic integrals
 valid to order <i>f</i><sup>10</sup>.  In this release of the code, we
-use a 6th-order expansions.  This is sufficient to maintain accuracy for
-doubles for the SRMmax ellipsoid (\e a = 6400 km, \e f = 1/150).
-However, the preprocessor macro GEOD_ORD can be used to select any order
-up to 8.  (If using long doubles, with a 64-bit fraction, the default
-order is 7.)  The series expanded to order <i>f</i><sup>30</sup> are
-given in <a href="geodseries30.html"> geodseries30.html</a>.
+use a 6th-order expansions.  This is sufficient to maintain accuracy
+for doubles for the SRMmax ellipsoid (\e a = 6400 km, \e f = 1/150).
+However, the preprocessor macro GEOGRAPHICLIB_GEODESIC_ORDER can be
+used to select any order up to 8.  (If using long doubles, with a
+64-bit fraction, the default order is 7.)  The series expanded to
+order <i>f</i><sup>30</sup> are given in <a href="geodseries30.html">
+geodseries30.html</a>.
 
 In the formulas below ^ indicates exponentiation (\e f^3 =
 <i>f</i><sup>3</sup>) and / indicates real division (3/5 = 0.6).  The
@@ -3088,13 +3096,13 @@ implementations following the standard convention.
 \section tmseries Series approximation for transverse Mercator
 
 Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
-Mercator projection.  This is accurate to about 200 nm (200 nanometers)
-within the UTM domain.  Here we present the series extended to 10th
-order.  By default, GeographicLib::TransverseMercator uses the 6th-order
-approximation. The preprocessor variable TM_TX_MAXPOW can be used to
-select an order from 4 thru 8.  The series expanded to order
-<i>n</i><sup>30</sup> are given in
-<a href="tmseries30.html"> tmseries30.html</a>.
+Mercator projection.  This is accurate to about 200 nm (200
+nanometers) within the UTM domain.  Here we present the series
+extended to 10th order.  By default, GeographicLib::TransverseMercator
+uses the 6th-order approximation. The preprocessor macro
+GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER can be used to select an order
+from 4 thru 8.  The series expanded to order <i>n</i><sup>30</sup> are
+given in <a href="tmseries30.html"> tmseries30.html</a>.
 
 In the formulas below ^ indicates exponentiation (\e n^3 = \e n*\e n*\e
 n) and / indicates real division (3/5 = 0.6).  The equations need to be
@@ -3379,6 +3387,9 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.25">Version 1.25</a>
    (released 2012-mm-dd)
+   - Accommodate absence of pod tools.
+   - Remove support for maintainer tasks in */Makefile.mk.
+   - Allow precision of reals to be set via cmake.
 
  - <a href="http://geographiclib.sf.net/1.24">Version 1.24</a>
    (released 2012-09-22)

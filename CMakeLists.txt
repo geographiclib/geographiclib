@@ -128,6 +128,14 @@ else ()
     "Use doxygen to create the documentation" ON)
 endif ()
 
+# (8) Set the default "real" precision.  This should probably be left
+# at 2 (double).
+set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
+  "Default real precision: 1 = float, 2 = double, 3 = long double")
+if (NOT CMAKE_VERSION VERSION_LESS 2.8)
+  set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3)
+endif ()
+
 # The debug version of the library is called Geographic_d.
 set (CMAKE_DEBUG_POSTFIX _d)
 

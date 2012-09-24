@@ -27,7 +27,4 @@ install: html/index.html
 	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(SCRIPTDEST)/
 	$(INSTALL) -m 644 $(JSSCRIPTS) $(SCRIPTDEST)/GeographicLib/
 
-maintainer-clean:
-	rm -rf html
-
 .PHONY: doc install clean

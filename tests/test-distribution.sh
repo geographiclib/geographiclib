@@ -173,7 +173,6 @@ mv $TEMP/instf/share/doc/{geographiclib,GeographicLib}
 cd $TEMP/instf
 find . -type f | sort -u > ../files.f
 
-
 cd $TEMP
 cat > testprogram.cpp <<EOF
 #include <iostream>

@@ -1,14 +1,7 @@
 # Build the tools...
 
-# Where to find the *.usage files for the --help option.  For a
-# maintainer these are in the build tree; otherwise they are in the
-# source tree.
-if (MAINTAINER)
-  set (MANDIR ${PROJECT_BINARY_DIR}/man)
-else ()
-  set (MANDIR ${PROJECT_SOURCE_DIR}/man)
-endif ()
-include_directories (${MANDIR})
+# Where to find the *.usage files for the --help option.
+include_directories (${PROJECT_BINARY_DIR}/man)
 
 # Loop over all the tools, specifying the source and library.
 add_custom_target (tools ALL)
@@ -21,7 +14,7 @@ foreach (TOOL ${TOOLS})
   add_dependencies (tools ${TOOL})
 
   set_source_files_properties (${TOOL}.cpp PROPERTIES
-    OBJECT_DEPENDS ${MANDIR}/${TOOL}.usage)
+    OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/${TOOL}.usage)
 
   target_link_libraries (${TOOL} Geographic)
 

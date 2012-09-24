@@ -25,9 +25,9 @@ set (HTMLMAN)
 # cross-referencing between the tools.  The .usage files are generated
 # by a shell script makeusage.sh.
 foreach (TOOL ${TOOLS})
-  set (MANPAGES ${MANPAGES} ${MANDIR}/${TOOL}.1)
-  set (USAGE ${USAGE} ${MANDIR}/${TOOL}.usage)
-  set (HTMLMAN ${HTMLMAN} ${MANDIR}/${TOOL}.1.html)
+  set (MANPAGES ${MANPAGES} ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1)
+  set (USAGE ${USAGE} ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.usage)
+  set (HTMLMAN ${HTMLMAN} ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html)
   if (MAINTAINER)
     add_custom_command (OUTPUT ${TOOL}.1
       COMMAND pod2man --center=\"GeographicLib Utilities\"
@@ -49,8 +49,32 @@ foreach (TOOL ${TOOLS})
       COMMENT "Building usage code for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
   else ()
+    # Replace configure_file (... COPYONLY) with file (COPY ...)  once
+    # cmake version 2.8 is required
+    if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.usage)
+      configure_file (${TOOL}.usage ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.usage
+	COPYONLY)
+    else ()
+      configure_file (dummy.usage.in ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.usage
+	@ONLY)
+    endif ()
+    if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.1)
+      configure_file (${TOOL}.1 ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1
+	COPYONLY)
+    else ()
+      configure_file (dummy.1.in ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1
+	@ONLY)
+    endif ()
+    if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.1.html)
+      configure_file (${TOOL}.1.html ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html
+	COPYONLY)
+    else ()
+      configure_file (dummy.1.html.in ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html
+	@ONLY)
+    endif ()
     if (DOXYGEN_FOUND)
-      file (COPY ${TOOL}.1.html DESTINATION ../doc/html-stage)
+      file (COPY ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html
+	DESTINATION ../doc/html-stage)
     endif ()
   endif ()
 endforeach ()
