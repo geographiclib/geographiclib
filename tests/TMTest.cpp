@@ -157,12 +157,12 @@ int main(int argc, char* argv[]) {
     Math::extended lat0l, lon0l, x0l, y0l, gam0l, k0l;
     while (std::cin >> lat0l >> lon0l >> x0l >> y0l >> gam0l >> k0l) {
       real
-        lat0 = lat0l,
-        lon0 = lon0l,
-        x0 = x0l,
-        y0 = y0l,
-        gam0 = gam0l,
-        k0 = k0l;
+        lat0 = real(lat0l),
+        lon0 = real(lon0l),
+        x0 = real(x0l),
+        y0 = real(y0l),
+        gam0 = real(gam0l),
+        k0 = real(k0l);
       if (lat0 < minlat)
         continue;
       real azi1, azi2, s12, m12;

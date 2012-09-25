@@ -18,6 +18,12 @@
 #include <algorithm>
 #include <cctype>
 
+#if defined(_MSC_VER)
+// Squelch warnings about constant conditional expressions
+#  pragma warning (push)
+#  pragma warning (disable: 4127)
+#endif
+
 namespace GeographicLib {
 
   /**
@@ -313,7 +319,7 @@ namespace GeographicLib {
       t.resize(s.length());
       std::transform(s.begin(), s.end(), t.begin(), (int(*)(int))std::toupper);
       for (size_t i = s.length(); i--;)
-        t[i] = std::toupper(s[i]);
+        t[i] = char(std::toupper(s[i]));
       int sign = t[0] == '-' ? -1 : 1;
       std::string::size_type p0 = t[0] == '-' || t[0] == '+' ? 1 : 0;
       std::string::size_type p1 = t.find_last_not_of('0');
@@ -358,7 +364,7 @@ namespace GeographicLib {
      * intended that \e s should not contain any lower case letters.
      **********************************************************************/
     static int lookup(const std::string& s, char c) throw() {
-      std::string::size_type r = s.find(toupper(c));
+      std::string::size_type r = s.find(char(toupper(c)));
       return r == std::string::npos ? -1 : int(r);
     }
 
@@ -509,5 +515,9 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
+
+#if defined(_MSC_VER)
+#  pragma warning (pop)
+#endif
 
 #endif  // GEOGRAPHICLIB_UTILITY_HPP

@@ -29,6 +29,11 @@
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about potentially uninitialized local variables
+#  pragma warning (disable: 4701)
+#endif
+
 namespace GeographicLib {
 
   using namespace std;

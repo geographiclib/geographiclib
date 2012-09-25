@@ -228,8 +228,10 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release)
 endif ()
 
-# On non-Windows machine, make the compiler more picky.
-if (NOT WIN32)
+# Make the compiler more picky.
+if (WIN32)
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 endif ()
 

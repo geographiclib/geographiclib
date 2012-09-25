@@ -16,9 +16,9 @@
 #include <GeographicLib/Utility.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about dll vs string
+// Squelch warnings about dll vs vector and constant conditional expressions
 #  pragma warning (push)
-#  pragma warning (disable: 4251)
+#  pragma warning (disable: 4251 4127)
 #endif
 
 namespace GeographicLib {

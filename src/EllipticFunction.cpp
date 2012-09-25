@@ -150,7 +150,7 @@ namespace GeographicLib {
     // negative _m1.
     if (_m1 != 0) {
       real mc = _m1;
-      real c;
+      real c = 0;           // To suppress warning about uninitialized variable
       real m[num_], n[num_];
       unsigned l = 0;
       for (real a = 1; l < num_; ++l) {

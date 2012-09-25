@@ -32,6 +32,12 @@
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about constant conditional expressions and potentially
+// uninitialized local variables
+#  pragma warning (disable: 4127 4701)
+#endif
+
 #include "GeodesicProj.usage"
 
 int main(int argc, char* argv[]) {

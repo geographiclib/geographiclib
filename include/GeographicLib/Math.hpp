@@ -167,7 +167,7 @@ namespace GeographicLib {
 #  endif
 #  if HAVE_LONG_DOUBLE
     static inline long double hypot(long double x, long double y) throw()
-    { return _hypot(x, y); }
+    { return _hypot(double(x), double(y)); } // Suppress loss of data warning
 #  endif
 #else
     // Use overloading to define generic versions
@@ -361,7 +361,7 @@ namespace GeographicLib {
 #if defined(DOXYGEN)
       return std::abs(x) <= (std::numeric_limits<T>::max)();
 #elif (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
-      return _finite(x) != 0;
+      return _finite(double(x)) != 0;
 #else
       return std::isfinite(x);
 #endif

@@ -41,6 +41,8 @@ private:
   //    STANDARD PARALLEL ONE
   //    STANDARD PARALLEL TWO
   real _lon0, _fe, _fn, _latts, _lonfp, _lat0, _k0, _lat1, _lat2;
+  DataFile(const DataFile&);
+  DataFile& operator=(const DataFile&);
 public:
   DataFile(const std::string& file) {
     if (!(file.empty() || file == "-")) {
@@ -99,11 +101,13 @@ public:
   }
   bool Next(real &x, real &y) throw() {
     char c;
-    return *_istr >> x >> c >> y;
+    // Avoid a warning about void* changed to bool
+    return (*_istr >> x >> c >> y) ? true : false;
   }
   bool Next(real &x, real &y, real &z) throw() {
     char c, d;
-    return *_istr >> x >> c >> y >> d >> z;
+    // Avoid a warning about void* changed to bool
+    return (*_istr >> x >> c >> y >> d >> z) ? true : false;
   }
   const std::string& coords() const throw() { return _coords; }
   const std::string& proj() const throw() { return _proj; }
@@ -270,6 +274,7 @@ int main(int argc, char* argv[]) {
         txa.Reverse(lat1 > 0, x, y, lat, lon, gam, k);
         break;
       case tm:
+      default:
         txb.Reverse(lon0, x, y, lat, lon, gam, k);
         break;
       }

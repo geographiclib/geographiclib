@@ -124,12 +124,14 @@ void GeodError(const test& tgeod, const ref& rgeod,
   treal tlat1, tlon1, tazi1, tlat2, tlon2, tazi2, ts12, tm12a, tm12b,
     tM12, tM21, tS12a, tS12b /*, ta12*/;
   rreal rlat1, rlon1, razi1, rlat2, rlon2, razi2, rm12;
-  tgeod.Direct(lat1, lon1, azi1,  s12, tlat2, tlon2, tazi2, tm12a,
+  tgeod.Direct(treal(lat1), treal(lon1), treal(azi1),  treal(s12),
+               tlat2, tlon2, tazi2, tm12a,
                tM12, tM21, tS12a);
-  tS12a -= rgeod.EllipsoidArea() * (tazi2-azi2)/720;
-  tgeod.Direct(lat2, lon2, azi2, -s12, tlat1, tlon1, tazi1, tm12b,
+  tS12a -= treal(rgeod.EllipsoidArea() * (tazi2-azi2)/720);
+  tgeod.Direct(treal(lat2), treal(lon2), treal(azi2), -treal(s12),
+               tlat1, tlon1, tazi1, tm12b,
                tM12, tM21, tS12b);
-  tS12b -= rgeod.EllipsoidArea() * (tazi1-azi1)/720;
+  tS12b -= treal(rgeod.EllipsoidArea() * (tazi1-azi1)/720);
   err[0] = max(dist(lat2, lon2, tlat2, tlon2),
                dist(lat1, lon1, tlat1, tlon1));
   err[1] = max(abs(azidiff(lat2, lon2, tlon2, azi2, tazi2)),
@@ -139,9 +141,10 @@ void GeodError(const test& tgeod, const ref& rgeod,
   if (!Math::isnan(S12))
     err[6] = max(abs(tS12a - S12), abs(tS12b + S12)) / rgeod.MajorRadius();
 
-  /* ta12 = */ tgeod.Inverse(lat1, lon1, lat2, lon2, ts12, tazi1, tazi2, tm12a,
+  /* ta12 = */ tgeod.Inverse(treal(lat1), treal(lon1), treal(lat2), treal(lon2),
+                             ts12, tazi1, tazi2, tm12a,
                              tM12, tM21, tS12a);
-  tS12a -= rgeod.EllipsoidArea() * ((tazi2-azi2)-(tazi1-azi1))/720;
+  tS12a -= treal(rgeod.EllipsoidArea() * ((tazi2-azi2)-(tazi1-azi1))/720);
   err[3] = abs(ts12 - s12);
   err[4] = max(abs(angdiff(azi1, tazi1)), abs(angdiff(azi2, tazi2))) *
     Math::degree<Math::extended>() * abs(m12);
@@ -156,18 +159,22 @@ void GeodError(const test& tgeod, const ref& rgeod,
       err[6] = max(err[6], wreal(abs(tS12a - S12) / rgeod.MajorRadius()));
   }
   if (s12 > rgeod.MajorRadius()) {
-    rgeod.Direct(lat1, lon1, tazi1,   ts12/2, rlat2, rlon2, razi2, rm12);
-    rgeod.Direct(lat2, lon2, tazi2, - ts12/2, rlat1, rlon1, razi1, rm12);
-    err[5] = dist(rlat1, rlon1, rlat2, rlon2);
-  } else {
-    rgeod.Direct(lat1, lon1, tazi1, ts12 + rgeod.MajorRadius(),
+    rgeod.Direct(rreal(lat1), rreal(lon1), rreal(tazi1),   rreal(ts12)/2,
                  rlat2, rlon2, razi2, rm12);
-    rgeod.Direct(lat2, lon2, tazi2, rgeod.MajorRadius(),
+    rgeod.Direct(rreal(lat2), rreal(lon2), rreal(tazi2), - rreal(ts12)/2,
                  rlat1, rlon1, razi1, rm12);
     err[5] = dist(rlat1, rlon1, rlat2, rlon2);
-    rgeod.Direct(lat1, lon1, tazi1, - rgeod.MajorRadius(),
+  } else {
+    rgeod.Direct(rreal(lat1), rreal(lon1), rreal(tazi1),
+                 rreal(ts12) + rgeod.MajorRadius(),
                  rlat2, rlon2, razi2, rm12);
-    rgeod.Direct(lat2, lon2, tazi2, - ts12 - rgeod.MajorRadius(),
+    rgeod.Direct(rreal(lat2), rreal(lon2), rreal(tazi2), rgeod.MajorRadius(),
+                 rlat1, rlon1, razi1, rm12);
+    err[5] = dist(rlat1, rlon1, rlat2, rlon2);
+    rgeod.Direct(rreal(lat1), rreal(lon1), rreal(tazi1), - rgeod.MajorRadius(),
+                 rlat2, rlon2, razi2, rm12);
+    rgeod.Direct(rreal(lat2), rreal(lon2), rreal(tazi2),
+                 - rreal(ts12) - rgeod.MajorRadius(),
                  rlat1, rlon1, razi1, rm12);
     err[5] = max(err[5], wreal(dist(rlat1, rlon1, rlat2, rlon2)));
   }

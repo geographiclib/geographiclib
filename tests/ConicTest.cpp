@@ -20,6 +20,11 @@
 #include <iomanip>
 #include <stdexcept>
 
+#if defined(_MSC_VER)
+// Squelch warnings about constant conditional expressions
+#  pragma warning (disable: 4127)
+#endif
+
 GeographicLib::Math::extended
 dist(GeographicLib::Math::extended a, GeographicLib::Math::extended f,
      GeographicLib::Math::extended lat0, GeographicLib::Math::extended lon0,
@@ -50,6 +55,7 @@ private:
   bool _usesaved;               // Should GetNext use saved values?
   bool _valid;                  // Are there saved values?
   extended _lat0, _lat, _lon, _x, _y, _k;
+  TestData& operator=(const TestData&);
 public:
   TestData(std::istream& is) : _is(is), _usesaved(false), _valid(false) {}
   bool GetNext(extended& lat0, extended& lat, extended& lon,
@@ -57,7 +63,8 @@ public:
     if (_usesaved)
       _usesaved = false;
     else {
-      _valid = (_is >> _lat0 >> _lat >> _lon >> _x >> _y >> _k);
+      // Avoid a warning about void* changed to bool
+      _valid = (_is >> _lat0 >> _lat >> _lon >> _x >> _y >> _k) ? true : false;
       if (!_valid)
         return false;
     }
@@ -205,41 +212,41 @@ int main(int argc, char* argv[]) {
             alb.Forward(real(0), real(lat), real(lon), xa, ya, gammaa, ka);
           else
             lcc.Forward(real(0), real(lat), real(lon), xa, ya, gammaa, ka);
-          real errf = Math::hypot(extended(xa) - x, extended(ya) - y);
+          real errf = real(Math::hypot(extended(xa) - x, extended(ya) - y));
           if (lambert)
-            errf /= k;
-          real errkf = abs(extended(ka) - k)/k;
+            errf /= real(k);
+          real errkf = real(abs(extended(ka) - k)/k);
           if (albers)
             alb.Reverse(real(0), real(x), real(y), latb, lonb, gammab, kb);
           else
             lcc.Reverse(real(0), real(x), real(y), latb, lonb, gammab, kb);
-          real errr = dist(extended(a), extended(f),
-                           lat, lon, extended(latb), extended(lonb));
+          real errr = real(dist(extended(a), extended(f),
+                                lat, lon, extended(latb), extended(lonb)));
           /*
           std::cout << latb << " " << lonb << " " << xa << " " << ya << " "
                     << ka << " " << kb << " "
                     << gammaa << " " << gammab << "\n";
           */
-          real errkr = real(abs(extended(kb) - k))/k;
+          real errkr = real(abs(extended(kb) - k)/k);
           if (!(errf <= maxerrf)) {
             maxerrf = errf;
-            latf = lat;
-            lonf = lon;
+            latf = real(lat);
+            lonf = real(lon);
           }
           if (!(errr <= maxerrr)) {
             maxerrr = errr;
-            latr = lat;
-            lonr = lon;
+            latr = real(lat);
+            lonr = real(lon);
           }
           if (!(errkf <= maxerrkf || abs(lat) >= 89)) {
             maxerrkf = errkf;
-            latkf = lat;
-            lonkf = lon;
+            latkf = real(lat);
+            lonkf = real(lon);
           }
           if (!(errkr <= maxerrkr || abs(lat) >= 89)) {
             maxerrkr = errkr;
-            latkr = lat;
-            lonkr = lon;
+            latkr = real(lat);
+            lonkr = real(lon);
           }
           std::cout << lat0 << " " << lat << " " << lon << " "
                     << errf << " " << errr << " "

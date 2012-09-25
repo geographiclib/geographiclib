@@ -42,9 +42,9 @@ namespace GeographicLib {
     typedef Math::real real;
     static const int numit_ = 10;
     real _a, _f, _f1, _f12, _e2, _e12, _n, _b, _stol;
-    const TransverseMercator _tm;
-    const EllipticFunction _ell;
-    const AlbersEqualArea _au;
+    TransverseMercator _tm;
+    EllipticFunction _ell;
+    AlbersEqualArea _au;
     static real tand(real x) throw() {
       return
         std::abs(x) == real(90) ? (x < 0 ?
@@ -56,7 +56,6 @@ namespace GeographicLib {
     { return std::atan(x) / Math::degree<real>(); }
 
   public:
-
     /** \name Constructor
      **********************************************************************/
     ///@{

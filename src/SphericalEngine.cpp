@@ -136,6 +136,11 @@
 #include <GeographicLib/CircularEngine.hpp>
 #include <GeographicLib/Utility.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about constant conditional expressions
+#  pragma warning (disable: 4127)
+#endif
+
 namespace GeographicLib {
 
   using namespace std;
@@ -197,6 +202,7 @@ namespace GeographicLib {
             (w * root_[n - m + 2] * root_[n + m + 2]);
           break;
         case SCHMIDT:
+        default:
           w = root_[n - m + 1] * root_[n + m + 1];
           Ax = q * (2 * n + 1) / w;
           A = t * Ax;
@@ -235,6 +241,7 @@ namespace GeographicLib {
           B = - v * root_[2 * m + 5] / (root_[8] * root_[m + 2]) * uq2;
           break;
         case SCHMIDT:
+        default:
           v = root_[2] * root_[2 * m + 1] / root_[m + 1];
           A = cl * v * uq;
           B = - v * root_[2 * m + 3] / (root_[8] * root_[m + 2]) * uq2;
@@ -260,6 +267,7 @@ namespace GeographicLib {
           B = - root_[15]/2 * uq2; // beta[1]/q
           break;
         case SCHMIDT:
+        default:
           A = uq;
           B = - root_[3]/2 * uq2;
           break;
@@ -324,6 +332,7 @@ namespace GeographicLib {
             (w * root_[n - m + 2] * root_[n + m + 2]);
           break;
         case SCHMIDT:
+        default:
           w = root_[n - m + 1] * root_[n + m + 1];
           Ax = q * (2 * n + 1) / w;
           A = t * Ax;

@@ -3390,6 +3390,7 @@ of the git repository for %GeographicLib.
    - Accommodate absence of pod tools.
    - Remove support for maintainer tasks in Makefile.mk.
    - Allow precision of reals to be set via cmake.
+   - Allow GeographicLib::Ellipsoid to be copied.
 
  - <a href="http://geographiclib.sf.net/1.24">Version 1.24</a>
    (released 2012-09-22)
