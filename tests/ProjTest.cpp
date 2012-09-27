@@ -296,6 +296,7 @@ int main(int argc, char* argv[]) {
         txa.Forward(lat1 > 0, lata, lona, x, y, gam, k);
         break;
       case tm:
+      default:
         txb.Forward(lon0, lata, lona, x, y, gam, k);
         break;
       }
@@ -306,7 +307,7 @@ int main(int argc, char* argv[]) {
       real
         errx = std::abs(x - xa),
         erry = std::abs(y - ya),
-        err = hypot(errx, erry),
+        err = Math::hypot(errx, erry),
         errk = err/std::max(real(1),k);
       std::ostringstream sx, sxa, sy, sya;
       sx << std::fixed << std::setprecision(6) << x;

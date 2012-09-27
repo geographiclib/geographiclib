@@ -1,6 +1,7 @@
 # Build the test programs...
 
-set (TESTPROGRAMS ProjTest TMTest GeodTest ConicTest NaNTester HarmTest)
+set (TESTPROGRAMS
+  ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest)
 
 # Loop over all the tools, specifying the source and library.
 add_custom_target (testprograms ALL)
