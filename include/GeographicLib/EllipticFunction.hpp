@@ -189,18 +189,20 @@ namespace GeographicLib {
      * <i>R<sub>F</sub></i> is defined in http://dlmf.nist.gov/19.16.E1
      * \f[ R_F(x, y, z) = \frac12
      *       \int_0^\infty[(t + x) (t + y) (t + z)]^{-1/2}\, dt \f]
+     * If one of the arguments is zero, it is more efficient to call the
+     * two-argument version of this function with the non-zero arguments.
      **********************************************************************/
     static real RF(real x, real y, real z) throw();
 
     /**
-     * Symmetric integral of the first kind <i>R<sub>F</sub></i> with one
-     * argument zero.
+     * Complete symmetric integral of the first kind, <i>R<sub>F</sub></i> with
+     * one argument zero.
      *
      * @param[in] x
      * @param[in] y
      * @return <i>R<sub>F</sub></i>(\e x, \e y, 0)
      **********************************************************************/
-    static real RF0(real x, real y) throw();
+    static real RF(real x, real y) throw();
 
     /**
      * Degenerate symmetric integral of the first kind <i>R<sub>C</sub></i>.
@@ -230,19 +232,21 @@ namespace GeographicLib {
      *        \biggl(
      *             \frac x{t + x} + \frac y{t + y} + \frac z{t + z}
      *        \biggr)t\,dt \f]
-     * See also http://dlmf.nist.gov/19.16.E3
+     * See also http://dlmf.nist.gov/19.16.E3.
+     * If one of the arguments is zero, it is more efficient to call the
+     * two-argument version of this function with the non-zero arguments.
      **********************************************************************/
     static real RG(real x, real y, real z) throw();
 
     /**
-     * Symmetric integral of the second kind <i>R<sub>G</sub></i> with one
-     * argument zero.
+     * Complete symmetric integral of the second kind, <i>R<sub>G</sub></i>
+     * with one argument zero.
      *
      * @param[in] x
      * @param[in] y
      * @return  <i>R<sub>G</sub></i>(\e x, \e y, 0)
      **********************************************************************/
-    static real RG0(real x, real y) throw();
+    static real RG(real x, real y) throw();
 
     /**
      * Symmetric integral of the third kind <i>R<sub>J</sub></i>.

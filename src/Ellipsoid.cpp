@@ -13,6 +13,9 @@ namespace GeographicLib {
 
   using namespace std;
 
+  const Math::real Ellipsoid::stol_ =
+    0.01 * sqrt(numeric_limits<real>::epsilon());
+
   Ellipsoid::Ellipsoid(real a, real f)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
@@ -22,7 +25,6 @@ namespace GeographicLib {
     , _e12(_e2 / (1 - _e2))
     , _n(_f / (2  - _f))
     , _b(_a * _f1)
-    , _stol(0.01 * sqrt(numeric_limits<real>::epsilon()))
     , _tm(_a, _f, real(1))
     , _ell(-_e12)
     , _au(_a, _f, real(0), real(1), real(0), real(1), real(1))
@@ -73,7 +75,7 @@ namespace GeographicLib {
       beta = beta -
         err / ( sqrt(1 + _e12 * Math::sq(sin(beta *  Math::degree<real>())))
                 * Math::degree<real>());
-      if (abs(err) < _stol)
+      if (abs(err) < stol_)
         break;
     }
     return InverseParametricLatitude(beta);

@@ -337,6 +337,7 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static inline T AngNormalize(T x) throw()
     { return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x); }
+
     /**
      * Normalize an arbitrary angle.
      *
@@ -349,6 +350,47 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static inline T AngNormalize2(T x) throw()
     { return AngNormalize<T>(std::fmod(x, T(360))); }
+
+    /**
+     * Compute sine and cosine of an angle keeping track of the period
+     *
+     * @tparam T the type of the arguments and returned value.
+     * @param[in] x the angle in radians.
+     * @param[out] sinx sin(\e x).
+     * @param[out] cosx cos(\e x).
+     * @return \e n the period number.  This satisfies \e x = 2&pi;\e n +
+     *   atan2(\e sinx, \e cosx).  Although \e n is of type T, its value is an
+     *   integer.
+     **********************************************************************/
+    template<typename T>
+      static inline T sincosp(T x, T& sinx, T& cosx) throw () {
+      sinx = std::sin(x); cosx = std::cos(x);
+      // Treat the common case (x small) specially
+      return std::abs(x) < pi<T>() ? 0 :
+        std::floor((x - std::atan2(sinx, cosx)) / (2 * pi<T>()) + T(0.5));
+    }
+
+    /**
+     * Compute sine and cosine of an angle in degrees keeping track of the
+     * period
+     *
+     * @tparam T the type of the arguments and returned value.
+     * @param[in] x the angle in degrees.
+     * @param[out] sinx sin(\e x).
+     * @param[out] cosx cos(\e x).
+     * @return \e n the period number.  This satisfies \e x = 360\e n +
+     *   atan2(\e sinx, \e cosx).  Although \e n is of type T, its value is an
+     *   integer.
+     **********************************************************************/
+    template<typename T>
+      static inline T sincospd(T x, T& sinx, T& cosx) throw () {
+      T n = std::ceil(x/360 - T(0.5));
+      x -= 360 * n;
+      T phi = x * Math::degree<real>();
+      sinx = std::abs(x) == 180 ? 0 : std::sin(phi);
+      cosx = std::abs(x) ==  90 ? 0 : std::cos(phi);
+      return n;
+    }
 
     /**
      * Test for finiteness.
@@ -371,7 +413,7 @@ namespace GeographicLib {
      * The NaN (not a number)
      *
      * @tparam T the type of the returned value.
-     * @return NaN if available, otherwise return the max real.
+     * @return NaN if available, otherwise return the max real of type T.
      **********************************************************************/
     template<typename T> static inline T NaN() throw() {
       return std::numeric_limits<T>::has_quiet_NaN ?

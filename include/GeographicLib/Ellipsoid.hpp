@@ -41,7 +41,8 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     static const int numit_ = 10;
-    real _a, _f, _f1, _f12, _e2, _e12, _n, _b, _stol;
+    static const real stol_;
+    real _a, _f, _f1, _f12, _e2, _e12, _n, _b;
     TransverseMercator _tm;
     EllipticFunction _ell;
     AlbersEqualArea _au;

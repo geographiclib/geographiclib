@@ -22,18 +22,18 @@ int main() {
          << "\n";
     // See Carlson 1995, Sec 3.
     cout << fixed << setprecision(16)
-         << "RF(1,2,0) = " << EllipticFunction::RF0(1,2) << "\n"
-         << "RF(2,3,4) = " << EllipticFunction::RF(2,3,4) << "\n"
-         << "RC(0,1/4) = " << EllipticFunction::RC(0,0.25) << "\n"
-         << "RC(9/4,2) = " << EllipticFunction::RC(2.25,2) << "\n"
-         << "RC(1/4,-2) = " << EllipticFunction::RC(0.25,-2) << "\n"
-         << "RJ(0,1,2,3) = " << EllipticFunction::RJ(0,1,2,3) << "\n"
-         << "RJ(2,3,4,5) = " << EllipticFunction::RJ(2,3,4,5) << "\n"
-         << "RD(0,2,1) = " << EllipticFunction::RD(0,2,1) << "\n"
-         << "RD(2,3,4) = " << EllipticFunction::RD(2,3,4) << "\n"
-         << "RG(0,16,16) = " << EllipticFunction::RG0(16,16) << "\n"
-         << "RG(2,3,4) = " << EllipticFunction::RG(2,3,4) << "\n"
-         << "RG(0,0.0796,4) = " << EllipticFunction::RG0(0.0796,4) << "\n";
+         << "RF(1,2,0)      = " << EllipticFunction::RF(1,2)      << "\n"
+         << "RF(2,3,4)      = " << EllipticFunction::RF(2,3,4)    << "\n"
+         << "RC(0,1/4)      = " << EllipticFunction::RC(0,0.25)   << "\n"
+         << "RC(9/4,2)      = " << EllipticFunction::RC(2.25,2)   << "\n"
+         << "RC(1/4,-2)     = " << EllipticFunction::RC(0.25,-2)  << "\n"
+         << "RJ(0,1,2,3)    = " << EllipticFunction::RJ(0,1,2,3)  << "\n"
+         << "RJ(2,3,4,5)    = " << EllipticFunction::RJ(2,3,4,5)  << "\n"
+         << "RD(0,2,1)      = " << EllipticFunction::RD(0,2,1)    << "\n"
+         << "RD(2,3,4)      = " << EllipticFunction::RD(2,3,4)    << "\n"
+         << "RG(0,16,16)    = " << EllipticFunction::RG(16,16)    << "\n"
+         << "RG(2,3,4)      = " << EllipticFunction::RG(2,3,4)    << "\n"
+         << "RG(0,0.0796,4) = " << EllipticFunction::RG(0.0796,4) << "\n";
   }
   catch (const GeographicErr& e) {
     cout << "Caught exception: " << e.what() << "\n";

@@ -65,10 +65,11 @@ namespace GeographicLib {
   }
 
 
-  Math::real EllipticFunction::RF0(real x, real y) throw() {
+  Math::real EllipticFunction::RF(real x, real y) throw() {
     // Carlson, eqs 2.36 - 2.38
     real xn = sqrt(x), yn = sqrt(y);
-    while (abs(xn-yn) >= tolRG0_ * abs(xn)) {
+    if (xn < yn) swap(xn, yn);
+    while (abs(xn-yn) > tolRG0_ * xn) {
       // Max 4 trips
       real t = (xn + yn) /2;
       yn = sqrt(xn * yn);
@@ -96,8 +97,9 @@ namespace GeographicLib {
             + sqrt(x * y / z)) / 2;
   }
 
-  Math::real EllipticFunction::RG0(real x, real y) throw() {
+  Math::real EllipticFunction::RG(real x, real y) throw() {
     // Carlson, eqs 2.36 - 2.39
+    if (x < y) swap(x, y);
     real
       x0 = sqrt(x),
       y0 = sqrt(y),
@@ -105,7 +107,7 @@ namespace GeographicLib {
       yn = y0,
       s = 0,
       mul = real(0.25);
-    while (abs(xn-yn) >= tolRG0_ * abs(xn)) {
+    while (abs(xn-yn) > tolRG0_ * xn) {
       // Max 4 trips
       real t = (xn + yn) /2;
       yn = sqrt(xn * yn);
@@ -137,7 +139,7 @@ namespace GeographicLib {
         lam = sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0),
         d0 = (sqrt(p0)+sqrt(x0)) * (sqrt(p0)+sqrt(y0)) * (sqrt(p0)+sqrt(z0)),
         e0 = delta/(mul3 * Math::sq(d0));
-      s += RC(real(1), 1 + e0)/(mul * d0);
+      s += RC(1, 1 + e0)/(mul * d0);
       An = (An + lam)/4;
       x0 = (x0 + lam)/4;
       y0 = (y0 + lam)/4;
@@ -218,11 +220,11 @@ namespace GeographicLib {
 
   bool EllipticFunction::Init() const throw() {
     // Complete elliptic integral K(m), Carlson eq. 4.1
-    _kc = RF0(_m1, real(1));
+    _kc = _m1 ? RF(_m1, 1) : Math::infinity<real>();
     // Complete elliptic integral E(m), Carlson eq. 4.2
-    _ec = 2 * RG0(_m1, real(1));
+    _ec = _m1 ? 2 * RG(_m1, 1) : 1;
     // D(m) = (K(m) - E(m))/m, Carlson eq.4.3
-    _dc = RD(real(0), _m1, real(1)) / 3;
+    _dc = _m1 ? RD(real(0), _m1, 1) / 3 : Math::infinity<real>();
     return _init = true;
   }
 
@@ -291,9 +293,18 @@ namespace GeographicLib {
   Math::real EllipticFunction::E(real sn, real cn, real dn) const throw() {
     real
       cn2 = cn * cn, dn2 = dn * dn, sn2 = sn * sn,
-      // Carlson, eq. 4.6
-      ei = abs(sn) * (RF(cn2, dn2, real(1)) -
-                      (_m / 3) * sn2 * RD(cn2, dn2, real(1)));
+      ei = ( _m <= 0 ?
+             // Carlson, eq. 4.6
+             // http://dlmf.nist.gov/19.25.E9
+             RF(cn2, dn2, 1) - (_m / 3) * sn2 * RD(cn2, dn2, 1) :
+             ( _m <= 1 ?
+               // http://dlmf.nist.gov/19.25.E10
+               _m1 * RF(cn2, dn2, 1) +
+               (_m * _m1 / 3) * sn2 * RD(cn2, 1, dn2) +
+               _m * abs(cn) / dn :
+               // http://dlmf.nist.gov/19.25.E11
+               - (_m1 / 3) * sn2 * RD(dn2, 1, cn2) + dn / abs(cn) ) );
+    ei *= abs(sn);
     // Enforce usual trig-like symmetries
     if (cn < 0)
       ei = 2 * E() - ei;
@@ -303,19 +314,15 @@ namespace GeographicLib {
   }
 
   Math::real EllipticFunction::E(real phi) const throw() {
-    real sn = sin(phi);
-    return E(sn, cos(phi), sqrt(1 - _m * sn * sn));
+    real sn, cn, n = Math::sincosp(phi, sn, cn);
+    return 4 * n * E() +
+      E(sn, cn, sqrt(_m < 0 ? 1 - _m * sn * sn : _m1 + _m * cn * cn));
   }
 
   Math::real EllipticFunction::Ed(real ang) const throw() {
-    real
-      phi = ang * Math::degree<real>(),
-      sn = sin(phi),
-      sn2 = Math::sq(sn),
-      cn2 = abs(ang) == 90 ? 0 : Math::sq(cos(phi)),
-      dn2 = 1 - _m * sn2;
-    return sn * (RF(cn2, dn2, real(1)) -
-                 (_m / 3) * sn2 * RD(cn2, dn2, real(1)));
+    real sn, cn, n = Math::sincospd(ang, sn, cn);
+    return 4 * n * E() +
+      E(sn, cn, sqrt(_m < 0 ? 1 - _m * sn * sn : _m1 + _m * cn * cn));
   }
 
 } // namespace GeographicLib
