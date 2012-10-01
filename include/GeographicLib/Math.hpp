@@ -359,15 +359,14 @@ namespace GeographicLib {
      * @param[out] sinx sin(\e x).
      * @param[out] cosx cos(\e x).
      * @return \e n the period number.  This satisfies \e x = 2&pi;\e n +
-     *   atan2(\e sinx, \e cosx).  Although \e n is of type T, its value is an
-     *   integer.
+     *   atan2(\e sinx, \e cosx).
      **********************************************************************/
     template<typename T>
-      static inline T sincosp(T x, T& sinx, T& cosx) throw () {
+      static inline int sincosp(T x, T& sinx, T& cosx) throw () {
       sinx = std::sin(x); cosx = std::cos(x);
       // Treat the common case (x small) specially
       return std::abs(x) < pi<T>() ? 0 :
-        std::floor((x - std::atan2(sinx, cosx)) / (2 * pi<T>()) + T(0.5));
+        int(std::floor((x - std::atan2(sinx, cosx)) / (2 * pi<T>()) + T(0.5)));
     }
 
     /**
@@ -379,17 +378,16 @@ namespace GeographicLib {
      * @param[out] sinx sin(\e x).
      * @param[out] cosx cos(\e x).
      * @return \e n the period number.  This satisfies \e x = 360\e n +
-     *   atan2(\e sinx, \e cosx).  Although \e n is of type T, its value is an
-     *   integer.
+     *   atan2(\e sinx, \e cosx).
      **********************************************************************/
     template<typename T>
-      static inline T sincospd(T x, T& sinx, T& cosx) throw () {
+      static inline int sincospd(T x, T& sinx, T& cosx) throw () {
       T n = std::ceil(x/360 - T(0.5));
       x -= 360 * n;
       T phi = x * Math::degree<real>();
       sinx = std::abs(x) == 180 ? 0 : std::sin(phi);
       cosx = std::abs(x) ==  90 ? 0 : std::cos(phi);
-      return n;
+      return int(n);
     }
 
     /**

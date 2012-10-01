@@ -103,8 +103,8 @@ int main() {
   {
     EllipticFunction e(Math::NaN<Math::real>());
     Math::real sn, cn, dn;
-    cout << " m " << e.m()
-         << " m1 " << e.m1()
+    cout << " k2 " << e.k2()
+         << " kp2 " << e.kp2()
          << " K " << e.K()
          << " E " << e.E()
          << " KE " << e.KE() << "\n";

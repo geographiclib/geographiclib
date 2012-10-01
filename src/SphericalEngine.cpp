@@ -202,12 +202,12 @@ namespace GeographicLib {
             (w * root_[n - m + 2] * root_[n + m + 2]);
           break;
         case SCHMIDT:
-        default:
           w = root_[n - m + 1] * root_[n + m + 1];
           Ax = q * (2 * n + 1) / w;
           A = t * Ax;
           B = - q2 * w / (root_[n - m + 2] * root_[n + m + 2]);
           break;
+        default: break;       // To suppress warning message from Visual Studio
         }
         R = c[0].Cv(--k[0]);
         for (int l = 1; l < L; ++l)
@@ -241,11 +241,11 @@ namespace GeographicLib {
           B = - v * root_[2 * m + 5] / (root_[8] * root_[m + 2]) * uq2;
           break;
         case SCHMIDT:
-        default:
           v = root_[2] * root_[2 * m + 1] / root_[m + 1];
           A = cl * v * uq;
           B = - v * root_[2 * m + 3] / (root_[8] * root_[m + 2]) * uq2;
           break;
+        default: break;       // To suppress warning message from Visual Studio
         }
         v = A * vc  + B * vc2  +  wc ; vc2  = vc ; vc  = v;
         v = A * vs  + B * vs2  +  ws ; vs2  = vs ; vs  = v;
@@ -267,10 +267,10 @@ namespace GeographicLib {
           B = - root_[15]/2 * uq2; // beta[1]/q
           break;
         case SCHMIDT:
-        default:
           A = uq;
           B = - root_[3]/2 * uq2;
           break;
+        default: break;       // To suppress warning message from Visual Studio
         }
         qs = q / scale_;
         vc = qs * (wc + A * (cl * vc + sl * vs ) + B * vc2);
@@ -332,12 +332,12 @@ namespace GeographicLib {
             (w * root_[n - m + 2] * root_[n + m + 2]);
           break;
         case SCHMIDT:
-        default:
           w = root_[n - m + 1] * root_[n + m + 1];
           Ax = q * (2 * n + 1) / w;
           A = t * Ax;
           B = - q2 * w / (root_[n - m + 2] * root_[n + m + 2]);
           break;
+        default: break;       // To suppress warning message from Visual Studio
         }
         R = c[0].Cv(--k[0]);
         for (int l = 1; l < L; ++l)

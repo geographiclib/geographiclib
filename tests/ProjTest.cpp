@@ -274,9 +274,9 @@ int main(int argc, char* argv[]) {
         txa.Reverse(lat1 > 0, x, y, lat, lon, gam, k);
         break;
       case tm:
-      default:
         txb.Reverse(lon0, x, y, lat, lon, gam, k);
         break;
+      default: break;           // To suppress warning
       }
       real errr = dist(a, f, lata, lona, lat, lon);
       maxerrr = std::max(errr, maxerrr);
@@ -296,9 +296,9 @@ int main(int argc, char* argv[]) {
         txa.Forward(lat1 > 0, lata, lona, x, y, gam, k);
         break;
       case tm:
-      default:
         txb.Forward(lon0, lata, lona, x, y, gam, k);
         break;
+      default: break;           // To suppress warning
       }
       x -= x0;
       y -= y0;

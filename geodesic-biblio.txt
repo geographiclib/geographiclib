@@ -311,7 +311,7 @@
    on geodetic work and their comparison with the astronomical
    measurements]'',
    Astron. Nachr. '''14'''(329), 269--312 (1837).[[BR]]
-   http://articles.adsabs.harvard.edu/full/1837AN.....14..269B [[BR]]
+   http://articles.adsabs.harvard.edu/full/1837AN.....14..269B
  * F. W. Bessel,[[BR]]
    ''Abhandlungen von Friedrich Wilhelm Bessel [The Works of Bessel]'',
    Vol. 3 (W. Engelmann, Leipzig, 1876), Part 6 contains the previous
@@ -710,7 +710,7 @@
  * A. R. Forsyth,[[BR]]
    ''Lectures on the Differential Geometry of Curves and Surfaces'',
    (Cambridge Univ. Press, 1912), Chap. 5.[[BR]]
-   http://archive.org/details/cu31924060289141 [[BR]]
+   http://archive.org/details/cu31924060289141
  * R. Fricke,[[BR]]
    ''Kurzgefasste Vorlesungen über verschiedene Gebiete der
    höheren Mathematik mit Berücksichtigung der Anwendungen
@@ -722,7 +722,12 @@
    ''Lezioni di Geometria Differenziale
    [Lessons in Differential Geometry]'', Vol. 1
    (2nd edition, Spoerri, Pisa, 1902), Chap. 6.[[BR]]
-   http://books.google.com/books?id=U7ALAAAAYAAJ&pg=PA179 [[BR]]
+   http://books.google.com/books?id=U7ALAAAAYAAJ&pg=PA179
+ * H. Poincaré,[[BR]]
+   ''Sur les lignes géodésiques des surfaces convexes
+   [Geodesics lines on convex surfaces]'',
+   Trans. AMS 6(3) 237--274 (1905).[[BR]]
+   http://books.google.com/books?id=o0MLAAAAYAAJ&pg=PA237
  * L. P. Eisenhart,[[BR]]
    ''A Treatise on the Differential Geometry of Curves and Surfaces''
    (Ginn & Co., Boston, 1909).[[BR]]
@@ -754,12 +759,12 @@
  * E. M. Sodano and T. A. Robinson,[[BR]]
    ''Direct and Inverse Solutions of Geodesics'',
    Tech. Rep. 7 Rev. (Army Map Service, 1963).[[BR]]
-   http://handle.dtic.mil/100.2/AD657591 [[BR]]
+   http://handle.dtic.mil/100.2/AD657591
  * E. A. Lewis,[[BR]]
    ''Parametric Formulas for Geodesic Curves and Distances on a
    Slightly Oblate Earth'',
    AFCRL-63-485 (US Air Force, Apr. 1963).[[BR]]
-   http://handle.dtic.mil/100.2/AD0412501 [[BR]]
+   http://handle.dtic.mil/100.2/AD0412501
  * W. Köhnlein,[[BR]]
    ''Geodesics on an Equipotential Surface of Revolution'',
    Special Report 144, Smithsonian Astrophysical Observatory (1964).[[BR]]

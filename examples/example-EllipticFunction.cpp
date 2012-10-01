@@ -18,7 +18,7 @@ int main() {
     // See Abramowitz and Stegun, table 17.6 with
     // alpha = asin(sqrt(m)) = 18.43 deg and phi = 20 deg
     cout << ell.E(phi) << " "
-         << ell.E(sin(phi), cos(phi), sqrt(1 - ell.m() * Math::sq(sin(phi))))
+         << ell.E(sin(phi), cos(phi), sqrt(1 - ell.k2() * Math::sq(sin(phi))))
          << "\n";
     // See Carlson 1995, Sec 3.
     cout << fixed << setprecision(16)

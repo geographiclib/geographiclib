@@ -9,6 +9,7 @@
 
 #include <GeographicLib/EllipticFunction.hpp>
 #include <algorithm>            // For swap
+#include <iostream>
 
 namespace GeographicLib {
 
@@ -79,14 +80,15 @@ namespace GeographicLib {
   }
 
   Math::real EllipticFunction::RC(real x, real y) throw() {
-    return ( x < y ?
+    return ( !(x >= y) ?        // x < y  and catch nans
              // http://dlmf.nist.gov/19.2.E18
              atan(sqrt((y - x) / x)) / sqrt(y - x) :
-             Math::atanh( y > 0 ?
-                          // http://dlmf.nist.gov/19.2.E19
-                          sqrt((x - y) / x) :
-                          // http://dlmf.nist.gov/19.2.E20
-                          sqrt(x / (x - y)) ) / sqrt(x - y) );
+             ( x == y && y > 0 ? 1 / sqrt(y) :
+               Math::atanh( y > 0 ?
+                            // http://dlmf.nist.gov/19.2.E19
+                            sqrt((x - y) / x) :
+                            // http://dlmf.nist.gov/19.2.E20
+                            sqrt(x / (x - y)) ) / sqrt(x - y) ) );
   }
 
   Math::real EllipticFunction::RG(real x, real y, real z) throw() {
@@ -210,21 +212,51 @@ namespace GeographicLib {
       (4084080 * mul * An * sqrt(An)) + 3 * s;
   }
 
-  EllipticFunction::EllipticFunction(real m) throw()
-    : _m(m)
-    , _m1(1 - m)
-      // Don't initialize _kc, _ec, _kec since this constructor might be called
+  EllipticFunction::EllipticFunction(real k2) throw()
+    : _k2(k2)
+    , _kp2(1 - k2)
+    , _alpha2(0)
+      // Don't initialize _Kc, _Ec, _Dc since this constructor might be called
       // before the static real constants tolRF_, etc., are initialized.
     , _init(false)
   {}
 
+  EllipticFunction::EllipticFunction(real k2, real alpha2) throw()
+    : _k2(k2)
+    , _kp2(1 - k2)
+    , _alpha2(alpha2)
+      // Don't initialize _Kc, _Ec, _Dc since this constructor might be called
+      // before the static real constants tolRF_, etc., are initialized.
+    , _init(false)
+  {}
+
+  void EllipticFunction::Reset(real k2, real alpha2) throw() {
+    _k2 = k2;
+    _kp2 = 1 - k2;
+    _alpha2 = alpha2;
+    _init = false;
+  }
+
   bool EllipticFunction::Init() const throw() {
-    // Complete elliptic integral K(m), Carlson eq. 4.1
-    _kc = _m1 ? RF(_m1, 1) : Math::infinity<real>();
-    // Complete elliptic integral E(m), Carlson eq. 4.2
-    _ec = _m1 ? 2 * RG(_m1, 1) : 1;
-    // D(m) = (K(m) - E(m))/m, Carlson eq.4.3
-    _dc = _m1 ? RD(real(0), _m1, 1) / 3 : Math::infinity<real>();
+    // Complete elliptic integral K(k), Carlson eq. 4.1
+    // http://dlmf.nist.gov/19.25.E1
+    _Kc = _kp2 ? RF(_kp2, 1) : Math::infinity<real>();
+    // Complete elliptic integral E(k), Carlson eq. 4.2
+    // http://dlmf.nist.gov/19.25.E1
+    _Ec = _kp2 ? 2 * RG(_kp2, 1) : 1;
+    // D(k) = (K(k) - E(k))/m, Carlson eq.4.3
+    // http://dlmf.nist.gov/19.25.E1
+    _Dc = _kp2 ? RD(real(0), _kp2, 1) / 3 : Math::infinity<real>();
+    if (_alpha2) {
+      // http://dlmf.nist.gov/19.25.E2
+      real rj = _kp2 ? RJ(0, _kp2, 1, 1 - _alpha2) : Math::infinity<real>();
+      // Pi(alpha^2, k)
+      _Pic = _Kc + _alpha2 * rj / 3;
+      // F(alpha^2, k)
+      _Gc = _kp2 ? _Kc + (_alpha2 - _k2) * rj / 3 :  RC(1, 1 - _alpha2);
+    } else {
+      _Pic = _Kc; _Gc = _Ec;
+    }
     return _init = true;
   }
 
@@ -239,9 +271,9 @@ namespace GeographicLib {
   void EllipticFunction::sncndn(real x, real& sn, real& cn, real& dn)
     const throw() {
     // Bulirsch's sncndn routine, p 89.
-    if (_m1 != 0) {
-      real mc = _m1, d = 0;
-      if (_m1 < 0) {
+    if (_kp2 != 0) {
+      real mc = _kp2, d = 0;
+      if (_kp2 < 0) {
         d = 1 - mc;
         mc /= -d;
         d = sqrt(d);
@@ -276,10 +308,10 @@ namespace GeographicLib {
           dn = (n[l] + a) / (b + a);
           a = c / b;
         }
-        a = 1 / sqrt(c * c + 1);
+        a = 1 / sqrt(c*c + 1);
         sn = sn < 0 ? -a : a;
         cn = c * sn;
-        if (_m1 < 0) {
+        if (_kp2 < 0) {
           swap(cn, dn);
           sn /= d;
         }
@@ -290,39 +322,145 @@ namespace GeographicLib {
     }
   }
 
-  Math::real EllipticFunction::E(real sn, real cn, real dn) const throw() {
+  Math::real EllipticFunction::F(real sn, real cn, real dn, int n)
+    const throw() {
+    // Carlson, eq. 4.5 and
+    // http://dlmf.nist.gov/19.25.E5
+    real fi = abs(sn) * RF(cn*cn, dn*dn, 1);
+    // Enforce usual trig-like symmetries
+    if (cn < 0)
+      fi = 2 * K() - fi;
+    if (sn < 0)
+      fi = -fi;
+    return fi + 4 * n * K();
+  }
+
+  Math::real EllipticFunction::F(real phi) const throw() {
+    real sn, cn;
+    int n = Math::sincosp(phi, sn, cn);
+    return F(sn, cn, sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn), n);
+  }
+
+  Math::real EllipticFunction::E(real sn, real cn, real dn, int n)
+    const throw() {
     real
-      cn2 = cn * cn, dn2 = dn * dn, sn2 = sn * sn,
-      ei = ( _m <= 0 ?
-             // Carlson, eq. 4.6
+      cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
+      ei = ( _k2 <= 0 ?
+             // Carlson, eq. 4.6 and
              // http://dlmf.nist.gov/19.25.E9
-             RF(cn2, dn2, 1) - (_m / 3) * sn2 * RD(cn2, dn2, 1) :
-             ( _m <= 1 ?
+             RF(cn2, dn2, 1) - _k2 * sn2 * RD(cn2, dn2, 1) / 3 :
+             ( _k2 <= 1 ?
                // http://dlmf.nist.gov/19.25.E10
-               _m1 * RF(cn2, dn2, 1) +
-               (_m * _m1 / 3) * sn2 * RD(cn2, 1, dn2) +
-               _m * abs(cn) / dn :
+               _kp2 * RF(cn2, dn2, 1) +
+               _k2 * _kp2 * sn2 * RD(cn2, 1, dn2) / 3 +
+               _k2 * abs(cn) / dn :
                // http://dlmf.nist.gov/19.25.E11
-               - (_m1 / 3) * sn2 * RD(dn2, 1, cn2) + dn / abs(cn) ) );
+               - _kp2 * sn2 * RD(dn2, 1, cn2) / 3 + dn / abs(cn) ) );
     ei *= abs(sn);
     // Enforce usual trig-like symmetries
     if (cn < 0)
       ei = 2 * E() - ei;
     if (sn < 0)
       ei = -ei;
-    return ei;
+    return ei + 4 * n * E();
+  }
+
+  Math::real EllipticFunction::E(real sn, real cn, real dn) const throw () {
+    return E(sn, cn, dn, 0);
   }
 
   Math::real EllipticFunction::E(real phi) const throw() {
-    real sn, cn, n = Math::sincosp(phi, sn, cn);
-    return 4 * n * E() +
-      E(sn, cn, sqrt(_m < 0 ? 1 - _m * sn * sn : _m1 + _m * cn * cn));
+    real sn, cn;
+    int n = Math::sincosp(phi, sn, cn);
+    return E(sn, cn, sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn), n);
   }
 
   Math::real EllipticFunction::Ed(real ang) const throw() {
-    real sn, cn, n = Math::sincospd(ang, sn, cn);
-    return 4 * n * E() +
-      E(sn, cn, sqrt(_m < 0 ? 1 - _m * sn * sn : _m1 + _m * cn * cn));
+    real sn, cn;
+    int n = Math::sincospd(ang, sn, cn);
+    return E(sn, cn, sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn), n);
+  }
+
+  Math::real EllipticFunction::Einv(real x) const throw() {
+    _init || Init();
+    real n = floor(x / (2 * _Ec) + 0.5);
+    x -= 2 * _Ec * n;           // x now in [-ec, ec)
+    cerr << _Ec << " " << n << " " << x << "\n";
+    real phi = _k2 > 0.8 ? asin(x / _Ec) :
+      Math::pi<real>() * x / (2 * _Ec); // phi in [-pi/2, pi/2)
+    for (int i = 0; i < num_; ++i) {
+      real
+        sn = sin(phi),
+        cn = cos(phi),
+        dn = sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn),
+        err = E(sn, cn, dn) - x;
+      phi = phi - err / dn;
+      cerr << "it " << i << " " << phi << " " << err << "\n";
+      if (abs(err) < tolJAC_)
+        break;
+    }
+    return n * Math::pi<real>() + phi;
+  }
+
+  Math::real EllipticFunction::D(real sn, real cn, real dn, int n)
+    const throw() {
+    // Carlson, eq. 4.8 and
+    // http://dlmf.nist.gov/19.25.E5
+    real di = abs(sn) * sn*sn * RD(cn*cn, dn*dn, 1) / 3;
+    // Enforce usual trig-like symmetries
+    if (cn < 0)
+      di = 2 * D() - di;
+    if (sn < 0)
+      di = -di;
+    return di + 4 * n * D();
+  }
+
+  Math::real EllipticFunction::D(real phi) const throw() {
+    real sn, cn;
+    int n = Math::sincosp(phi, sn, cn);
+    return D(sn, cn, sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn), n);
+  }
+
+  Math::real EllipticFunction::Pi(real sn, real cn, real dn, int n)
+    const throw() {
+    // Carlson, eq. 4.5 and
+    // http://dlmf.nist.gov/19.25.E5
+    real
+      cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
+      pii = abs(sn) * (RF(cn2, dn2, 1) +
+                       _alpha2 * sn2 * RJ(cn2, dn2, 1, 1 - _alpha2) / 3);
+    // Enforce usual trig-like symmetries
+    if (cn < 0)
+      pii = 2 * Pi() - pii;
+    if (sn < 0)
+      pii = -pii;
+    return pii + 4 * n * Pi();
+  }
+
+  Math::real EllipticFunction::Pi(real phi) const throw() {
+    real sn, cn;
+    int n = Math::sincosp(phi, sn, cn);
+    return Pi(sn, cn, sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn), n);
+  }
+
+  Math::real EllipticFunction::G(real sn, real cn, real dn, int n)
+    const throw() {
+    real
+      cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
+      gi = abs(sn) * (RF(cn2, dn2, 1) +
+                      (_alpha2 - _k2) * sn2 * RJ(cn2, dn2, 1, 1 - _alpha2) / 3);
+    // Enforce usual trig-like symmetries
+    if (cn < 0)
+      gi = 2 * G() - gi;
+    if (sn < 0)
+      gi = -gi;
+    return gi + 4 * n * G();
+  }
+
+  Math::real EllipticFunction::G(real phi) const throw() {
+    real sn, cn;
+    int n = Math::sincosp(phi, sn, cn);
+    return G(sn, cn, sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn), n);
   }
 
 } // namespace GeographicLib
