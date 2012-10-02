@@ -38,6 +38,9 @@ endif ()
 # Specify where the tools are installed
 install (TARGETS ${TOOLS} EXPORT depends DESTINATION bin)
 
+# Put all the tools into a folder in the IDE
+set_property (TARGET tools ${TOOLS} PROPERTY FOLDER tools)
+
 # Create the scripts for downloading the data files on non-Windows
 # systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the
 # default data directory.  These are installed under sbin, because it is

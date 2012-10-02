@@ -3393,6 +3393,7 @@ of the git repository for %GeographicLib.
    - Allow GeographicLib::Ellipsoid to be copied.
    - Add functionality to GeographicLib::EllipticFunction.
    - Add Math::sincosp and Math::sincospd.
+   - cmake: use folders in IDEs
 
  - <a href="http://geographiclib.sf.net/1.24">Version 1.24</a>
    (released 2012-09-22)

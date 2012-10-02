@@ -242,6 +242,8 @@ set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert Geod
 set (SCRIPTS
   geographiclib-get-geoids geographiclib-get-gravity geographiclib-get-magnetic)
 
+set_property (GLOBAL PROPERTY USE_FOLDERS ON)
+
 # Set the include directories.  Look in ${PROJECT_BINARY_DIR}/include
 # first because that's where Config.h will be
 include_directories ("${PROJECT_BINARY_DIR}/include" include)

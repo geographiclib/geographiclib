@@ -27,3 +27,6 @@ install (TARGETS Geographic
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
+
+# Put all the library into a folder in the IDE
+set_property (TARGET Geographic PROPERTY FOLDER library)

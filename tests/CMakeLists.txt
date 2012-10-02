@@ -18,6 +18,7 @@ add_executable (GeodExact GeodExact.cpp
   Geodesic30.hpp GeodesicLine30.hpp)
 add_dependencies (testprograms GeodExact)
 target_link_libraries (GeodExact Geographic)
+set (TESTPROGRAMS ${TESTPROGRAMS} GeodExact)
 
 if (GEOGRAPHIC_SHARED_LIB)
   if (WIN32)
@@ -33,5 +34,8 @@ if (GEOGRAPHIC_SHARED_LIB)
       INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
   endif ()
 endif ()
+
+# Put all the tools into a folder in the IDE
+set_property (TARGET testprograms ${TESTPROGRAMS} PROPERTY FOLDER tests)
 
 # Don't install test programs

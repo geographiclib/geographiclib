@@ -42,6 +42,8 @@ if (MEX)
       add_dependencies (matlab-all matlab-${TARGET})
       install (PROGRAMS ${TARGET_INTERFACE}
         DESTINATION ${INSTALL_MATLAB_DIR} CONFIGURATIONS Release)
+      # Put all the matlab targets into a folder in the IDE
+      set_property (TARGET matlab-${TARGET} PROPERTY FOLDER matlab)
     else ()
       set (INTERFACE_LIST ${INTERFACE_LIST} ${TARGET_INTERFACE})
       add_custom_command (OUTPUT ${TARGET_INTERFACE}
@@ -70,4 +72,6 @@ if (MEX)
     install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${GEOGRAPHIC_LIBRARY_NAME}
       DESTINATION ${INSTALL_MATLAB_DIR} CONFIGURATIONS Release)
   endif ()
+
+  set_property (TARGET matlab-all PROPERTY FOLDER matlab)
 endif ()
