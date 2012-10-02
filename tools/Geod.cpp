@@ -289,7 +289,7 @@ int main(int argc, char* argv[]) {
             if (arcmode)
               exact ?
                 geode.ArcDirect(lat1, lon1, azi1, s12, lat2, lon2, azi2, a12,
-                                m12, M12, M21, S12) : 
+                                m12, M12, M21, S12) :
                 geod.ArcDirect(lat1, lon1, azi1, s12, lat2, lon2, azi2, a12,
                                m12, M12, M21, S12);
             else

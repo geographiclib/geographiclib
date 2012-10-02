@@ -6,13 +6,17 @@ using namespace GeographicLib;
 int main() {
   typedef GeographicLib::Math::real real;
   try {
-    EllipticFunction ell(0.99, 0.8);
-    real dphi = Math::pi<real>()/(2*100);
-    dphi = 0.05;
+    real
+      ASalpha = 30*Math::degree<double>(),
+      k2 = Math::sq(std::sin(ASalpha)),
+      alpha2 = 0.3;
+
+    EllipticFunction ell(k2, alpha2);
+    real dphi = Math::degree<real>();
     std::cout << std::fixed << std::setprecision(10);
-    for (int i = -100; i <= 100; ++i) {
+    for (int i = 0; i <= 90; i += 15) {
       real phi = i * dphi;
-      std::cout << phi << " "
+      std::cout << i << " "
                 << ell.F(phi) << " "
                 << ell.E(phi) << " "
                 << ell.D(phi) << " "

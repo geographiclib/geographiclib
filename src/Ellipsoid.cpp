@@ -132,5 +132,5 @@ namespace GeographicLib {
     return _a / (sqrt(v) *
                  (Math::sq(cos(alpha)) * v / (1 - _e2) + Math::sq(sin(alpha))));
   }
-  
+
 } // namespace GeographicLib

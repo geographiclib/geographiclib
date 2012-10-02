@@ -338,7 +338,7 @@ namespace GeographicLib {
   Math::real EllipticFunction::F(real phi) const throw() {
     real sn, cn;
     int n = Math::sincosp(phi, sn, cn);
-    return F(sn, cn, sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn), n);
+    return F(sn, cn, Delta(sn, cn), n);
   }
 
   Math::real EllipticFunction::E(real sn, real cn, real dn, int n)
@@ -372,13 +372,13 @@ namespace GeographicLib {
   Math::real EllipticFunction::E(real phi) const throw() {
     real sn, cn;
     int n = Math::sincosp(phi, sn, cn);
-    return E(sn, cn, sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn), n);
+    return E(sn, cn, Delta(sn, cn), n);
   }
 
   Math::real EllipticFunction::Ed(real ang) const throw() {
     real sn, cn;
     int n = Math::sincospd(ang, sn, cn);
-    return E(sn, cn, sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn), n);
+    return E(sn, cn, Delta(sn, cn), n);
   }
 
   Math::real EllipticFunction::Einv(real x) const throw() {
@@ -392,7 +392,7 @@ namespace GeographicLib {
       real
         sn = sin(phi),
         cn = cos(phi),
-        dn = sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn),
+        dn = Delta(sn, cn),
         err = E(sn, cn, dn) - x;
       phi = phi - err / dn;
       cerr << "it " << i << " " << phi << " " << err << "\n";
@@ -418,7 +418,7 @@ namespace GeographicLib {
   Math::real EllipticFunction::D(real phi) const throw() {
     real sn, cn;
     int n = Math::sincosp(phi, sn, cn);
-    return D(sn, cn, sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn), n);
+    return D(sn, cn, Delta(sn, cn), n);
   }
 
   Math::real EllipticFunction::Pi(real sn, real cn, real dn, int n)
@@ -428,7 +428,7 @@ namespace GeographicLib {
     real
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
       pii = abs(sn) * (RF(cn2, dn2, 1) +
-                       _alpha2 * sn2 * RJ(cn2, dn2, 1, 1 - _alpha2) / 3);
+                       _alpha2 * sn2 * RJ(cn2, dn2, 1, 1 - _alpha2 * sn2) / 3);
     // Enforce usual trig-like symmetries
     if (cn < 0)
       pii = 2 * Pi() - pii;
@@ -440,7 +440,7 @@ namespace GeographicLib {
   Math::real EllipticFunction::Pi(real phi) const throw() {
     real sn, cn;
     int n = Math::sincosp(phi, sn, cn);
-    return Pi(sn, cn, sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn), n);
+    return Pi(sn, cn, Delta(sn, cn), n);
   }
 
   Math::real EllipticFunction::G(real sn, real cn, real dn, int n)
@@ -448,7 +448,8 @@ namespace GeographicLib {
     real
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
       gi = abs(sn) * (RF(cn2, dn2, 1) +
-                      (_alpha2 - _k2) * sn2 * RJ(cn2, dn2, 1, 1 - _alpha2) / 3);
+                      (_alpha2 - _k2) * sn2 *
+                      RJ(cn2, dn2, 1, 1 - _alpha2 * sn2) / 3);
     // Enforce usual trig-like symmetries
     if (cn < 0)
       gi = 2 * G() - gi;
@@ -460,7 +461,7 @@ namespace GeographicLib {
   Math::real EllipticFunction::G(real phi) const throw() {
     real sn, cn;
     int n = Math::sincosp(phi, sn, cn);
-    return G(sn, cn, sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn), n);
+    return G(sn, cn, Delta(sn, cn), n);
   }
 
 } // namespace GeographicLib

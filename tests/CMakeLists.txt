@@ -13,6 +13,12 @@ foreach (TESTPROGRAM ${TESTPROGRAMS})
 
 endforeach ()
 
+add_executable (GeodExact GeodExact.cpp
+  Geodesic30.cpp GeodesicLine30.cpp
+  Geodesic30.hpp GeodesicLine30.hpp)
+add_dependencies (testprograms GeodExact)
+target_link_libraries (GeodExact Geographic)
+
 if (GEOGRAPHIC_SHARED_LIB)
   if (WIN32)
     # Copy the shared library on Windows systems to this directory
@@ -23,7 +29,7 @@ if (GEOGRAPHIC_SHARED_LIB)
       COMMENT "Copying shared library to tools directory")
   else ()
     # Set the run time path for shared libraries for non-Windows machines.
-    set_target_properties (${TESTPROGRAMS} PROPERTIES
+    set_target_properties (${TESTPROGRAMS} GeodExact PROPERTIES
       INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
   endif ()
 endif ()
