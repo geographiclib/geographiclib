@@ -153,10 +153,8 @@
    ''Analyse des triangles tracés sur la surface d'un sphéroïde
    [Analysis of spheroidal triangles]'',
    Mém. de l'Inst. Nat. de France, 130--161 (1st semester, 1806).[[BR]]
-   http://books.google.com/books?id=-d0EAAAAQAAJ&pg=PA130-IA4 [[BR]]
-   missing pages:
-   http://geographiclib.sf.net/geodesic-papers/legendre06-add.pdf
-   [[BR]]Review: http://books.google.com/books?id=DYoCAAAAYAAJ&pg=PA504
+   http://books.google.com/books?id=EnVFAAAAcAAJ&pg=PA130 [[BR]]
+   Review: http://books.google.com/books?id=DYoCAAAAYAAJ&pg=PA504
  * A. M. Legendre,[[BR]]
    ''Exercices de Calcul Intégral sur Divers Ordres de Transcendantes et
    sur les Quadratures [Exercises in Integral Calculus]'',
