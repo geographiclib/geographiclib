@@ -153,8 +153,7 @@ namespace GeographicLib {
       OUT_ALL  = 0x7F80U,
     };
 
-    static real SinCosSeries(bool sinp,
-                             real sinx, real cosx, const real c[], int n)
+    static real SinCosSeries(real sinx, real cosx, const real c[], int n)
       throw();
     static inline real AngRound(real x) throw() {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
@@ -185,7 +184,7 @@ namespace GeographicLib {
                  real& s12s, real& m12a, real& m0,
                  bool scalep, real& M12, real& M21,
                  real C1a[], real C2a[]) const throw();
-    real InverseStart(const EllipticFunction& E,
+    real InverseStart(EllipticFunction& E,
                       real sbet1, real cbet1, real sbet2, real cbet2,
                       real lam12,
                       real& salp1, real& calp1,
@@ -201,17 +200,7 @@ namespace GeographicLib {
       const throw();
 
     // These are Maxima generated functions to provide series approximations to
-    // the integrals for the ellipsoidal geodesic.
-    static real A1m1f(real eps) throw();
-    static void C1f(real eps, real c[]) throw();
-    static void C1pf(real eps, real c[]) throw();
-    static real A2m1f(real eps) throw();
-    static void C2f(real eps, real c[]) throw();
-
-    void A3coeff() throw();
-    real A3f(real eps) const throw();
-    void C3coeff() throw();
-    void C3f(real eps, real c[]) const throw();
+    // the integrals for the area.
     void C4coeff() throw();
     void C4f(real k2, real c[]) const throw();
 
