@@ -27,6 +27,9 @@
  **********************************************************************/
 
 #include <GeographicLib/GeodesicLineExact.hpp>
+#include <iostream>
+
+#define NEW 1
 
 namespace GeographicLib {
 
@@ -40,6 +43,7 @@ namespace GeographicLib {
     , _b(g._b)
     , _c2(g._c2)
     , _f1(g._f1)
+    , _E(0, 0)
       // Always allow latitude and azimuth
     , _caps(caps | LATITUDE | AZIMUTH)
   {
@@ -81,20 +85,36 @@ namespace GeographicLib {
     _csig1 = _comg1 = sbet1 != 0 || _calp1 != 0 ? cbet1 * _calp1 : 1;
     GeodesicExact::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
     GeodesicExact::SinCosNorm(_somg1, _comg1);
+    _sig1 = atan2(_ssig1, _csig1);
 
     _k2 = Math::sq(_calp0) * g._ep2;
+    _E.Reset(-_k2, Math::sq(_calp0), 1 + _k2, Math::sq(_salp0));
+    _dn1 = sqrt(1 - g._e2 * Math::sq(cbet1)) / _f1;
     real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
 
     if (_caps & CAP_C1) {
       _A1m1 = GeodesicExact::A1m1f(eps);
+      _E0 = (2 * _E.E()) / Math::pi<real>();
+      if (NEW)
+        _A1m1 = _E0 - 1;
+      else
+        cerr << "A1m1: " << _A1m1 << " " << _E0 - 1 << "\n";
       GeodesicExact::C1f(eps, _C1a);
       _B11 = GeodesicExact::SinCosSeries(true, _ssig1, _csig1, _C1a, nC1_);
+      _E1 = _E.pE(_ssig1, _csig1, _dn1);
+      if (NEW)
+        _B11 = _E1;
+      else
+        cout << "tau1 " << _B11 << " " << _E1 << "\n";
       real s = sin(_B11), c = cos(_B11);
       // tau1 = sig1 + B11
       _stau1 = _ssig1 * c + _csig1 * s;
       _ctau1 = _csig1 * c - _ssig1 * s;
       // Not necessary because C1pa reverts C1a
       //    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa, nC1p_);
+      if (!NEW)
+        cerr << "reversion check " << _E1 << " "
+             << -_E.pEinv(_stau1, _ctau1) << "\n";
     }
 
     if (_caps & CAP_C1p)
@@ -102,14 +122,24 @@ namespace GeographicLib {
 
     if (_caps & CAP_C2) {
       _A2m1 = GeodesicExact::A2m1f(eps);
+      _D0 = (2 * _E.D()) / Math::pi<real>();
       GeodesicExact::C2f(eps, _C2a);
+      if (!NEW)
+        cerr << "A1m1-A2m1 " << _A1m1 - _A2m1 << " "
+             << _k2 * _D0 << "\n";
       _B21 = GeodesicExact::SinCosSeries(true, _ssig1, _csig1, _C2a, nC2_);
+      if (!NEW)
+        cout << "B21 " << _B21 << " "
+             << _E.pF(_ssig1, _csig1, _dn1) << "\n";
+      _D1 = _E.pD(_ssig1, _csig1, _dn1);
     }
 
     if (_caps & CAP_C3) {
       g.C3f(eps, _C3a);
       _A3c = -_f * _salp0 * g.A3f(eps);
+      _G0 = 2 * _E.G() / Math::pi<real>();
       _B31 = GeodesicExact::SinCosSeries(true, _ssig1, _csig1, _C3a, nC3_-1);
+      _G1 = _E.pG(_ssig1, _csig1, _dn1);
     }
 
     if (_caps & CAP_C4) {
@@ -148,9 +178,15 @@ namespace GeographicLib {
         s = sin(tau12),
         c = cos(tau12);
       // tau2 = tau1 + tau12
-      B12 = - GeodesicExact::SinCosSeries(true, _stau1 * c + _ctau1 * s,
-                                     _ctau1 * c - _stau1 * s,
-                                     _C1pa, nC1p_);
+      B12 = - GeodesicExact::SinCosSeries(true,
+                                          _stau1 * c + _ctau1 * s,
+                                          _ctau1 * c - _stau1 * s,
+                                          _C1pa, nC1p_);
+      real E2 = - _E.pEinv(_stau1 * c + _ctau1 * s, _ctau1 * c - _stau1 * s);
+      if (NEW)
+        B12 = E2;
+      else
+        cout << "B12 " << B12 << " " << E2 << "\n";
       sig12 = tau12 - (B12 - _B11);
       ssig12 = sin(sig12);
       csig12 = cos(sig12);
@@ -161,10 +197,22 @@ namespace GeographicLib {
     // sig2 = sig1 + sig12
     ssig2 = _ssig1 * csig12 + _csig1 * ssig12;
     csig2 = _csig1 * csig12 - _ssig1 * ssig12;
+    real dn2 = _E.Delta(ssig2, csig2);
     if (outmask & (DISTANCE | REDUCEDLENGTH | GEODESICSCALE)) {
-      if (arcmode)
+      if (arcmode) {
         B12 = GeodesicExact::SinCosSeries(true, ssig2, csig2, _C1a, nC1_);
+        real B12x = _E.pE(ssig2, csig2, dn2);
+        if (NEW)
+          B12 = B12x;
+        else
+          cerr << "B12a " << B12 << " " << B12x << "\n";
+      }
       AB1 = (1 + _A1m1) * (B12 - _B11);
+      real AB1x = _E0 * (B12 - _B11);
+      if (NEW)
+        AB1 = AB1x;
+      else
+        cerr << "AB1 " << AB1 << " " << AB1x << "\n";
     }
     // sin(bet2) = cos(alp0) * sin(sig2)
     sbet2 = _calp0 * ssig2;
@@ -188,6 +236,12 @@ namespace GeographicLib {
       lam12 = omg12 + _A3c *
         ( sig12 + (GeodesicExact::SinCosSeries(true, ssig2, csig2, _C3a, nC3_-1)
                    - _B31));
+      real lam12x = _f1 * _salp0 * _G0 *
+        ( sig12 + _E.pG(ssig2, csig2, dn2) - _G1 );
+      if (NEW)
+        lam12 = lam12x;
+      else
+        cerr << "lam12: " << lam12 << " " << lam12x << "\n";
       lon12 = lam12 / Math::degree<real>();
       // Use Math::AngNormalize2 because longitude might have wrapped multiple
       // times.
@@ -211,6 +265,11 @@ namespace GeographicLib {
         B22 = GeodesicExact::SinCosSeries(true, ssig2, csig2, _C2a, nC2_),
         AB2 = (1 + _A2m1) * (B22 - _B21),
         J12 = (_A1m1 - _A2m1) * sig12 + (AB1 - AB2);
+      real J12x = _k2 * _D0 * (sig12 + _E.pD(ssig2, csig2, dn2) - _D1);
+      if (NEW)
+        J12 = J12x;
+      else
+        cerr << "J12 " << J12 << " " << J12x << "\n";
       if (outmask & REDUCEDLENGTH)
         // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
         // accurate cancellation in the case of coincident points.

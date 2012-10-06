@@ -11,6 +11,7 @@
 #define GEOGRAPHICLIB_GEODESICEXACT_HPP 1
 
 #include <GeographicLib/Constants.hpp>
+#include <GeographicLib/EllipticFunction.hpp>
 
 #if !defined(GEOGRAPHICLIB_GEODESICEXACT_ORDER)
 /**
@@ -177,13 +178,15 @@ namespace GeographicLib {
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
     real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
 
-    void Lengths(real eps, real sig12,
+    void Lengths(const EllipticFunction& E,
+                 real eps, real sig12,
                  real ssig1, real csig1, real ssig2, real csig2,
                  real cbet1, real cbet2,
                  real& s12s, real& m12a, real& m0,
                  bool scalep, real& M12, real& M21,
                  real C1a[], real C2a[]) const throw();
-    real InverseStart(real sbet1, real cbet1, real sbet2, real cbet2,
+    real InverseStart(const EllipticFunction& E,
+                      real sbet1, real cbet1, real sbet2, real cbet2,
                       real lam12,
                       real& salp1, real& calp1,
                       real& salp2, real& calp2,
@@ -192,6 +195,7 @@ namespace GeographicLib {
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
+                  EllipticFunction& E,
                   real& eps, real& domg12, bool diffp, real& dlam12,
                   real C1a[], real C2a[], real C3a[])
       const throw();

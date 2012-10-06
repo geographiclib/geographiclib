@@ -148,7 +148,8 @@ namespace GeographicLib {
         s = sin(tau12),
         c = cos(tau12);
       // tau2 = tau1 + tau12
-      B12 = - Geodesic::SinCosSeries(true, _stau1 * c + _ctau1 * s,
+      B12 = - Geodesic::SinCosSeries(true,
+                                     _stau1 * c + _ctau1 * s,
                                      _ctau1 * c - _stau1 * s,
                                      _C1pa, nC1p_);
       sig12 = tau12 - (B12 - _B11);

@@ -12,6 +12,7 @@
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/GeodesicExact.hpp>
+#include <GeographicLib/EllipticFunction.hpp>
 
 namespace GeographicLib {
 
@@ -63,10 +64,12 @@ namespace GeographicLib {
     real _lat1, _lon1, _azi1;
     real _a, _f, _b, _c2, _f1, _salp0, _calp0, _k2,
       _salp1, _calp1, _ssig1, _csig1, _stau1, _ctau1, _somg1, _comg1,
-      _A1m1, _A2m1, _A3c, _B11, _B21, _B31, _A4, _B41;
+      _A1m1, _A2m1, _A3c, _B11, _B21, _B31, _A4, _B41,
+      _sig1, _dn1, _E0, _D0, _G0, _E1, _D1, _G1;
     // index zero elements of _C1a, _C1pa, _C2a, _C3a are unused
     real _C1a[nC1_ + 1], _C1pa[nC1p_ + 1], _C2a[nC2_ + 1], _C3a[nC3_],
       _C4a[nC4_];    // all the elements of _C4a are used
+    EllipticFunction _E;
     unsigned _caps;
 
     enum captype {

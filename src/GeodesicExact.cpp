@@ -28,6 +28,11 @@
 
 #include <GeographicLib/GeodesicExact.hpp>
 #include <GeographicLib/GeodesicLineExact.hpp>
+#include <GeographicLib/EllipticFunction.hpp>
+#include <iostream>
+#include <iomanip>
+
+#define NEW 1
 
 #if defined(_MSC_VER)
 // Squelch warnings about potentially uninitialized local variables
@@ -97,7 +102,7 @@ namespace GeographicLib {
       y0 = ar * y1 - y0 + *--c;
     }
     return sinp
-      ? 2 * sinx * cosx * y0    // sin(2 * x) * y0
+      ? (1-NEW) * 2 * sinx * cosx * y0    // sin(2 * x) * y0
       : cosx * (y0 - y1);       // cos(x) * (y0 - y1)
   }
 
@@ -164,6 +169,7 @@ namespace GeographicLib {
     // enforces some symmetries in the results returned.
 
     real phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
+    EllipticFunction E(-_ep2, 0); // Initialize for the meridian
 
     phi = lat1 * Math::degree<real>();
     // Ensure cbet1 = +epsilon at poles
@@ -222,7 +228,7 @@ namespace GeographicLib {
                     csig1 * csig2 + ssig1 * ssig2);
       {
         real dummy;
-        Lengths(_n, sig12, ssig1, csig1, ssig2, csig2,
+        Lengths(E, _n, sig12, ssig1, csig1, ssig2, csig2,
                 cbet1, cbet2, s12x, m12x, dummy,
                 (outmask & GEODESICSCALE) != 0U, M12, M21, C1a, C2a);
       }
@@ -263,7 +269,7 @@ namespace GeographicLib {
       // meridian and geodesic is neither meridional or equatorial.
 
       // Figure a starting point for Newton's method
-      sig12 = InverseStart(sbet1, cbet1, sbet2, cbet2,
+      sig12 = InverseStart(E, sbet1, cbet1, sbet2, cbet2,
                            lam12,
                            salp1, calp1, salp2, calp2,
                            C1a, C2a);
@@ -287,7 +293,7 @@ namespace GeographicLib {
           real dv;
           real v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                            eps, omg12, trip < 1, dv, C1a, C2a, C3a) - lam12;
+                            E, eps, omg12, trip < 1, dv, C1a, C2a, C3a) - lam12;
           if (!(abs(v) > tiny_) || !(trip < 1)) {
             if (!(abs(v) <= max(tol1_, ov)))
               numit = maxit_;
@@ -328,7 +334,7 @@ namespace GeographicLib {
 
         {
           real dummy;
-          Lengths(eps, sig12, ssig1, csig1, ssig2, csig2,
+          Lengths(E, eps, sig12, ssig1, csig1, ssig2, csig2,
                   cbet1, cbet2, s12x, m12x, dummy,
                   (outmask & GEODESICSCALE) != 0U, M12, M21, C1a, C2a);
         }
@@ -424,7 +430,8 @@ namespace GeographicLib {
     return a12;
   }
 
-  void GeodesicExact::Lengths(real eps, real sig12,
+  void GeodesicExact::Lengths(const EllipticFunction& E,
+                              real eps, real sig12,
                               real ssig1, real csig1, real ssig2, real csig2,
                               real cbet1, real cbet2,
                               real& s12b, real& m12a, real& m0,
@@ -450,6 +457,17 @@ namespace GeographicLib {
       m0x = A1m1 - A2m1,
       J12 = m0x * sig12 + (AB1 - AB2);
     m0 = m0x;
+    m0x = - E.k2() * (2 * E.D() / Math::pi<real>());
+    if (NEW)
+      m0 = m0x;
+    else
+      cerr << "m0 " << m0 << " " << m0x << "\n";
+    real J12x = - E.k2() * (2 * E.D() / Math::pi<real>()) *
+      (sig12 + E.pD(ssig2, csig2, w2/_f1) - E.pD(ssig1, csig1, w1/_f1));
+    if (NEW)
+      J12 = J12x;
+    else
+      cerr << "J12 "<< J12 << " " << J12x << "\n";
     // Missing a factor of _a.
     // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
     // cancellation in the case of coincident points.
@@ -457,6 +475,12 @@ namespace GeographicLib {
       - _f1 * csig1 * csig2 * J12;
     // Missing a factor of _b
     s12b = (1 + A1m1) * sig12 + AB1;
+    real s12bx = (2 * E.E() / Math::pi<real>()) *
+      (sig12 + E.pE(ssig2, csig2, w2/_f1) - E.pE(ssig1, csig1, w1/_f1));
+    if (NEW)
+      s12b = s12bx;
+    else
+      cerr << "s12b "<< s12b << " " << s12bx << "\n";
     if (scalep) {
       real csig12 = csig1 * csig2 + ssig1 * ssig2;
       J12 *= _f1;
@@ -519,7 +543,8 @@ namespace GeographicLib {
     return k;
   }
 
-  Math::real GeodesicExact::InverseStart(real sbet1, real cbet1,
+  Math::real GeodesicExact::InverseStart(const EllipticFunction& E,
+                                         real sbet1, real cbet1,
                                          real sbet2, real cbet2,
                                          real lam12,
                                          real& salp1, real& calp1,
@@ -606,7 +631,7 @@ namespace GeographicLib {
         real m12a, m0, dummy;
         // In the case of lon12 = 180, this repeats a calculation made in
         // Inverse.
-        Lengths(_n, Math::pi<real>() + bet12a, sbet1, -cbet1, sbet2, cbet2,
+        Lengths(E, _n, Math::pi<real>() + bet12a, sbet1, -cbet1, sbet2, cbet2,
                 cbet1, cbet2, dummy, m12a, m0, false,
                 dummy, dummy, C1a, C2a);
         x = -1 + m12a/(_f1 * cbet1 * cbet2 * m0 * Math::pi<real>());
@@ -679,6 +704,7 @@ namespace GeographicLib {
                                      real& sig12,
                                      real& ssig1, real& csig1,
                                      real& ssig2, real& csig2,
+                                     EllipticFunction& E,
                                      real& eps, real& domg12,
                                      bool diffp, real& dlam12,
                                      // Scratch areas of the right size
@@ -734,6 +760,10 @@ namespace GeographicLib {
                   comg1 * comg2 + somg1 * somg2);
     real B312, h0;
     real k2 = Math::sq(calp0) * _ep2;
+    real
+      dn1 = sqrt(1 + _ep2 * Math::sq(sbet1)),
+      dn2 = sqrt(1 + _ep2 * Math::sq(sbet2));
+    E.Reset(-k2, Math::sq(calp0), 1 + k2, Math::sq(salp0));
     eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
     C3f(eps, C3a);
     B312 = (SinCosSeries(true, ssig2, csig2, C3a, nC3_-1) -
@@ -741,19 +771,24 @@ namespace GeographicLib {
     h0 = -_f * A3f(eps);
     domg12 = salp0 * h0 * (sig12 + B312);
     lam12 = omg12 + domg12;
-
+    real lam12x = _f1 * salp0 * (2 * E.G() / Math::pi<real>()) *
+      ( sig12 + E.pG(ssig2, csig2, dn2) - E.pG(ssig1, csig1, dn1) );
+    if (NEW) {
+      lam12 = lam12x;
+      domg12 = lam12 - omg12;
+    } else
+      cerr << "lam12 " << lam12 << " " << lam12x << "\n";
     if (diffp) {
       if (calp2 == 0)
         dlam12 = - 2 * sqrt(1 - _e2 * Math::sq(cbet1)) / sbet1;
       else {
         real dummy;
-        Lengths(eps, sig12, ssig1, csig1, ssig2, csig2,
+        Lengths(E, eps, sig12, ssig1, csig1, ssig2, csig2,
                 cbet1, cbet2, dummy, dlam12, dummy,
                 false, dummy, dummy, C1a, C2a);
         dlam12 /= calp2 * cbet2;
       }
     }
-
     return lam12;
   }
 
@@ -762,10 +797,12 @@ namespace GeographicLib {
     real v = 0;
     for (int i = nA3x_; i; )
       v = eps * v + _A3x[--i];
-    return v;
+    return (1-NEW) * v;
   }
 
   void GeodesicExact::C3f(real eps, real c[]) const throw() {
+    if (NEW)
+      return;
     // Evaluation C3 coeffs by Horner's method
     // Elements c[1] thru c[nC3_ - 1] are set
     for (int j = nC3x_, k = nC3_ - 1; k; ) {
@@ -801,7 +838,7 @@ namespace GeographicLib {
 
   // Generated by Maxima on 2012-09-23 10:50:07-04:00
 
-  // The scale factor A1-1 = mean value of I1-1
+  // The scale factor A1-1 = mean value of (d/dsigma)I1 - 1
   Math::real GeodesicExact::A1m1f(real eps) throw() {
     real
       eps2 = Math::sq(eps),
@@ -820,11 +857,13 @@ namespace GeographicLib {
       STATIC_ASSERT(nA1_ == 30, "Bad value of nA1_");
       t = 0;
     }
-    return (t + eps) / (1 - eps);
+    return (1-NEW) * (t + eps) / (1 - eps);
   }
 
   // The coefficients C1[l] in the Fourier expansion of B1
   void GeodesicExact::C1f(real eps, real c[]) throw() {
+    if (NEW)
+      return;
     real
       eps2 = Math::sq(eps),
       d = eps;
@@ -1002,6 +1041,8 @@ namespace GeographicLib {
 
   // The coefficients C1p[l] in the Fourier expansion of B1p
   void GeodesicExact::C1pf(real eps, real c[]) throw() {
+    if (NEW)
+      return;
     real
       eps2 = Math::sq(eps),
       d = eps;
@@ -1334,7 +1375,7 @@ namespace GeographicLib {
     }
   }
 
-  // The scale factor A2-1 = mean value of I2-1
+  // The scale factor A2-1 = mean value of (d/dsigma)I2 - 1
   Math::real GeodesicExact::A2m1f(real eps) throw() {
     real
       eps2 = Math::sq(eps),
@@ -1355,11 +1396,13 @@ namespace GeographicLib {
       STATIC_ASSERT(nA2_ == 30, "Bad value of nA2_");
       t = 0;
     }
-    return t * (1 - eps) - eps;
+    return (1-NEW) * t * (1 - eps) - eps;
   }
 
   // The coefficients C2[l] in the Fourier expansion of B2
   void GeodesicExact::C2f(real eps, real c[]) throw() {
+    if (NEW)
+      return;
     real
       eps2 = Math::sq(eps),
       d = eps;
@@ -1550,8 +1593,10 @@ namespace GeographicLib {
     }
   }
 
-  // The scale factor A3 = mean value of I3
+  // The scale factor A3 = mean value of (d/dsigma)I3
   void GeodesicExact::A3coeff() throw() {
+    if (NEW)
+      return;
     switch (nA3_) {
     case 30:
       _A3x[0] = 1;
@@ -1658,6 +1703,8 @@ namespace GeographicLib {
 
   // The coefficients C3[l] in the Fourier expansion of B3
   void GeodesicExact::C3coeff() throw() {
+    if (NEW)
+      return;
     switch (nC3_) {
     case 30:
       _C3x[0] = (1-_n)/real(4.L);
