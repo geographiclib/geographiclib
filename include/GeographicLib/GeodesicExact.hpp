@@ -123,15 +123,6 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class GeodesicLineExact;
-    static const int nA1_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
-    static const int nC1_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
-    static const int nC1p_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
-    static const int nA2_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
-    static const int nC2_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
-    static const int nA3_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
-    static const int nA3x_ = nA3_;
-    static const int nC3_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
-    static const int nC3x_ = (nC3_ * (nC3_ - 1)) / 2;
     static const int nC4_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
     static const unsigned maxit_ = 50;
@@ -175,28 +166,25 @@ namespace GeographicLib {
     static real Astroid(real x, real y) throw();
 
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
-    real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
+    real _C4x[nC4x_];
 
     void Lengths(const EllipticFunction& E,
                  real eps, real sig12,
                  real ssig1, real csig1, real ssig2, real csig2,
                  real cbet1, real cbet2,
                  real& s12s, real& m12a, real& m0,
-                 bool scalep, real& M12, real& M21,
-                 real C1a[], real C2a[]) const throw();
+                 bool scalep, real& M12, real& M21) const throw();
     real InverseStart(EllipticFunction& E,
                       real sbet1, real cbet1, real sbet2, real cbet2,
                       real lam12,
                       real& salp1, real& calp1,
-                      real& salp2, real& calp2,
-                      real C1a[], real C2a[]) const throw();
+                      real& salp2, real& calp2) const throw();
     real Lambda12(real sbet1, real cbet1, real sbet2, real cbet2,
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
                   EllipticFunction& E,
-                  real& eps, real& domg12, bool diffp, real& dlam12,
-                  real C1a[], real C2a[], real C3a[])
+                  real& eps, real& domg12, bool diffp, real& dlam12)
       const throw();
 
     // These are Maxima generated functions to provide series approximations to

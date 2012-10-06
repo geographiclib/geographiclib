@@ -91,10 +91,8 @@ namespace GeographicLib {
 
     if (_caps & CAP_C1) {
       _E0 = (2 * _E.E()) / Math::pi<real>();
-      _A1m1 = _E0 - 1;
       _E1 = _E.pE(_ssig1, _csig1, _dn1);
-      _B11 = _E1;
-      real s = sin(_B11), c = cos(_B11);
+      real s = sin(_E1), c = cos(_E1);
       // tau1 = sig1 + B11
       _stau1 = _ssig1 * c + _csig1 * s;
       _ctau1 = _csig1 * c - _ssig1 * s;
@@ -133,7 +131,7 @@ namespace GeographicLib {
       return Math::NaN<real>();
 
     // Avoid warning about uninitialized B12.
-    real sig12, ssig12, csig12, B12 = 0, AB1 = 0;
+    real sig12, ssig12, csig12, E2 = 0, AB1 = 0;
     if (arcmode) {
       // Interpret s12_a12 as spherical arc length
       sig12 = s12_a12 * Math::degree<real>();
@@ -144,13 +142,12 @@ namespace GeographicLib {
     } else {
       // Interpret s12_a12 as distance
       real
-        tau12 = s12_a12 / (_b * (1 + _A1m1)),
+        tau12 = s12_a12 / (_b * _E0),
         s = sin(tau12),
         c = cos(tau12);
       // tau2 = tau1 + tau12
-      real E2 = - _E.pEinv(_stau1 * c + _ctau1 * s, _ctau1 * c - _stau1 * s);
-      B12 = E2;
-      sig12 = tau12 - (B12 - _B11);
+      E2 = - _E.pEinv(_stau1 * c + _ctau1 * s, _ctau1 * c - _stau1 * s);
+      sig12 = tau12 - (E2 - _E1);
       ssig12 = sin(sig12);
       csig12 = cos(sig12);
     }
@@ -163,9 +160,9 @@ namespace GeographicLib {
     real dn2 = _E.Delta(ssig2, csig2);
     if (outmask & (DISTANCE | REDUCEDLENGTH | GEODESICSCALE)) {
       if (arcmode) {
-        B12 = _E.pE(ssig2, csig2, dn2);
+        E2 = _E.pE(ssig2, csig2, dn2);
       }
-      AB1 = _E0 * (B12 - _B11);
+      AB1 = _E0 * (E2 - _E1);
     }
     // sin(bet2) = cos(alp0) * sin(sig2)
     sbet2 = _calp0 * ssig2;
@@ -178,7 +175,7 @@ namespace GeographicLib {
     salp2 = _salp0; calp2 = _calp0 * csig2; // No need to normalize
 
     if (outmask & DISTANCE)
-      s12 = arcmode ? _b * ((1 + _A1m1) * sig12 + AB1) : s12_a12;
+      s12 = arcmode ? _b * (_E0 * sig12 + AB1) : s12_a12;
 
     if (outmask & LONGITUDE) {
       lam12 = _f1 * _salp0 * _G0 *

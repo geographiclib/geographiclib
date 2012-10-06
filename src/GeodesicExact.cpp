@@ -199,8 +199,6 @@ namespace GeographicLib {
       clam12 = cos(lam12);      // lon12 == 90 isn't interesting
 
     real a12, sig12, calp1, salp1, calp2, salp2;
-    // index zero elements of these arrays are unused
-    real C1a[nC1_ + 1], C2a[nC2_ + 1], C3a[nC3_];
 
     bool meridian = lat1 == -90 || slam12 == 0;
 
@@ -224,7 +222,7 @@ namespace GeographicLib {
         real dummy;
         Lengths(E, _n, sig12, ssig1, csig1, ssig2, csig2,
                 cbet1, cbet2, s12x, m12x, dummy,
-                (outmask & GEODESICSCALE) != 0U, M12, M21, C1a, C2a);
+                (outmask & GEODESICSCALE) != 0U, M12, M21);
       }
       // Add the check for sig12 since zero length geodesics might yield m12 <
       // 0.  Test case was
@@ -265,8 +263,7 @@ namespace GeographicLib {
       // Figure a starting point for Newton's method
       sig12 = InverseStart(E, sbet1, cbet1, sbet2, cbet2,
                            lam12,
-                           salp1, calp1, salp2, calp2,
-                           C1a, C2a);
+                           salp1, calp1, salp2, calp2);
 
       if (sig12 >= 0) {
         // Short lines (InverseStart sets salp2, calp2)
@@ -287,7 +284,7 @@ namespace GeographicLib {
           real dv;
           real v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                            E, eps, omg12, trip < 1, dv, C1a, C2a, C3a) - lam12;
+                            E, eps, omg12, trip < 1, dv) - lam12;
           if (!(abs(v) > tiny_) || !(trip < 1)) {
             if (!(abs(v) <= max(tol1_, ov)))
               numit = maxit_;
@@ -330,7 +327,7 @@ namespace GeographicLib {
           real dummy;
           Lengths(E, eps, sig12, ssig1, csig1, ssig2, csig2,
                   cbet1, cbet2, s12x, m12x, dummy,
-                  (outmask & GEODESICSCALE) != 0U, M12, M21, C1a, C2a);
+                  (outmask & GEODESICSCALE) != 0U, M12, M21);
         }
         m12x *= _a;
         s12x *= _b;
@@ -429,9 +426,7 @@ namespace GeographicLib {
                               real ssig1, real csig1, real ssig2, real csig2,
                               real cbet1, real cbet2,
                               real& s12b, real& m12a, real& m0,
-                              bool scalep, real& M12, real& M21,
-                              // Scratch areas of the right size
-                              real /*C1a*/[], real /*C2a*/[]) const throw() {
+                              bool scalep, real& M12, real& M21) const throw() {
     // Return m12a = (reduced length)/_a; also calculate s12b = distance/_b,
     // and m0 = coefficient of secular term in expression for reduced length.
     real
@@ -520,9 +515,8 @@ namespace GeographicLib {
                                          real lam12,
                                          real& salp1, real& calp1,
                                          // Only updated if return val >= 0
-                                         real& salp2, real& calp2,
-                                         // Scratch areas of the right size
-                                         real C1a[], real C2a[]) const throw() {
+                                         real& salp2, real& calp2)
+    const throw() {
     // Return a starting point for Newton's method in salp1 and calp1 (function
     // value is -1).  If Newton's method doesn't need to be used, return also
     // salp2 and calp2 and function value is sig12.
@@ -603,7 +597,7 @@ namespace GeographicLib {
         // Inverse.
         Lengths(E, _n, Math::pi<real>() + bet12a, sbet1, -cbet1, sbet2, cbet2,
                 cbet1, cbet2, dummy, m12a, m0, false,
-                dummy, dummy, C1a, C2a);
+                dummy, dummy);
         x = -1 + m12a/(_f1 * cbet1 * cbet2 * m0 * Math::pi<real>());
         betscale = x < -real(0.01) ? sbet12a / x :
           -_f * Math::sq(cbet1) * Math::pi<real>();
@@ -676,10 +670,7 @@ namespace GeographicLib {
                                      real& ssig2, real& csig2,
                                      EllipticFunction& E,
                                      real& eps, real& domg12,
-                                     bool diffp, real& dlam12,
-                                     // Scratch areas of the right size
-                                     real C1a[], real C2a[],
-                                     real /*C3a*/[]) const
+                                     bool diffp, real& dlam12) const
     throw() {
 
     if (sbet1 == 0 && calp1 == 0)
@@ -746,7 +737,7 @@ namespace GeographicLib {
         real dummy;
         Lengths(E, eps, sig12, ssig1, csig1, ssig2, csig2,
                 cbet1, cbet2, dummy, dlam12, dummy,
-                false, dummy, dummy, C1a, C2a);
+                false, dummy, dummy);
         dlam12 /= calp2 * cbet2;
       }
     }
