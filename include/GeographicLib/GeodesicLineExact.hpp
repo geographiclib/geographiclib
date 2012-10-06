@@ -68,10 +68,9 @@ namespace GeographicLib {
 
     enum captype {
       CAP_NONE = GeodesicExact::CAP_NONE,
-      CAP_C1   = GeodesicExact::CAP_C1,
-      CAP_C1p  = GeodesicExact::CAP_C1p,
-      CAP_C2   = GeodesicExact::CAP_C2,
-      CAP_C3   = GeodesicExact::CAP_C3,
+      CAP_E    = GeodesicExact::CAP_E,
+      CAP_D    = GeodesicExact::CAP_D,
+      CAP_G    = GeodesicExact::CAP_G,
       CAP_C4   = GeodesicExact::CAP_C4,
       CAP_ALL  = GeodesicExact::CAP_ALL,
       OUT_ALL  = GeodesicExact::OUT_ALL,

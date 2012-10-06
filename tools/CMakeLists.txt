@@ -261,3 +261,13 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
     PROPERTIES PASS_REGULAR_EXPRESSION
     "-0\\.000146 0\\.000078 -9\\.832294")
 endif ()
+
+#More tests?
+
+# Reported 2012-08-29 by Stefan Guenther <stefan.gunther@embl.de>
+# echo 0 0 -10 160 | Geod -i -e 89.8 -1.83
+# nan nan nan
+
+# Found 2012-10-06
+# echo 69.315470976553 0 -69.315470976553 179.786357922527230369 | Geod -E -i
+# nan nan nan

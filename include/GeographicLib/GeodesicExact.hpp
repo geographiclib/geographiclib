@@ -135,10 +135,10 @@ namespace GeographicLib {
 
     enum captype {
       CAP_NONE = 0U,
-      CAP_C1   = 1U<<0,
-      CAP_C1p  = 1U<<1,
-      CAP_C2   = 1U<<2,
-      CAP_C3   = 1U<<3,
+      CAP_E    = 1U<<0,
+      // Skip 1U<<1 for compatibility with Geodesic (not required)
+      CAP_D    = 1U<<2,
+      CAP_G    = 1U<<3,
       CAP_C4   = 1U<<4,
       CAP_ALL  = 0x1FU,
       OUT_ALL  = 0x7F80U,
@@ -169,7 +169,7 @@ namespace GeographicLib {
     real _C4x[nC4x_];
 
     void Lengths(const EllipticFunction& E,
-                 real eps, real sig12,
+                 real sig12,
                  real ssig1, real csig1, real ssig2, real csig2,
                  real cbet1, real cbet2,
                  real& s12s, real& m12a, real& m0,
@@ -184,7 +184,7 @@ namespace GeographicLib {
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
                   EllipticFunction& E,
-                  real& eps, real& domg12, bool diffp, real& dlam12)
+                  real& omg12, bool diffp, real& dlam12)
       const throw();
 
     // These are Maxima generated functions to provide series approximations to
@@ -219,7 +219,7 @@ namespace GeographicLib {
        * Calculate longitude \e lon2.
        * @hideinitializer
        **********************************************************************/
-      LONGITUDE     = 1U<<8  | CAP_C3,
+      LONGITUDE     = 1U<<8  | CAP_G,
       /**
        * Calculate azimuths \e azi1 and \e azi2.  (It's not necessary to
        * include this as a capability to GeodesicLineExact because this is
@@ -231,23 +231,23 @@ namespace GeographicLib {
        * Calculate distance \e s12.
        * @hideinitializer
        **********************************************************************/
-      DISTANCE      = 1U<<10 | CAP_C1,
+      DISTANCE      = 1U<<10 | CAP_E,
       /**
        * Allow distance \e s12 to be used as input in the direct geodesic
        * problem.
        * @hideinitializer
        **********************************************************************/
-      DISTANCE_IN   = 1U<<11 | CAP_C1 | CAP_C1p,
+      DISTANCE_IN   = 1U<<11 | CAP_E,
       /**
        * Calculate reduced length \e m12.
        * @hideinitializer
        **********************************************************************/
-      REDUCEDLENGTH = 1U<<12 | CAP_C1 | CAP_C2,
+      REDUCEDLENGTH = 1U<<12 | CAP_D,
       /**
        * Calculate geodesic scales \e M12 and \e M21.
        * @hideinitializer
        **********************************************************************/
-      GEODESICSCALE = 1U<<13 | CAP_C1 | CAP_C2,
+      GEODESICSCALE = 1U<<13 | CAP_D,
       /**
        * Calculate area \e S12.
        * @hideinitializer

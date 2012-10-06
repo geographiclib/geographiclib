@@ -29,10 +29,6 @@
 #include <GeographicLib/GeodesicExact.hpp>
 #include <GeographicLib/GeodesicLineExact.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
-#include <iostream>
-#include <iomanip>
-
-#define NEW 1
 
 #if defined(_MSC_VER)
 // Squelch warnings about potentially uninitialized local variables
@@ -220,7 +216,7 @@ namespace GeographicLib {
                     csig1 * csig2 + ssig1 * ssig2);
       {
         real dummy;
-        Lengths(E, _n, sig12, ssig1, csig1, ssig2, csig2,
+        Lengths(E, sig12, ssig1, csig1, ssig2, csig2,
                 cbet1, cbet2, s12x, m12x, dummy,
                 (outmask & GEODESICSCALE) != 0U, M12, M21);
       }
@@ -277,14 +273,14 @@ namespace GeographicLib {
       } else {
 
         // Newton's method
-        real ssig1, csig1, ssig2, csig2, eps;
+        real ssig1, csig1, ssig2, csig2;
         real ov = 0;
         unsigned numit = 0;
         for (unsigned trip = 0; numit < maxit_; ++numit) {
           real dv;
           real v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                            E, eps, omg12, trip < 1, dv) - lam12;
+                            E, omg12, trip < 1, dv) - lam12;
           if (!(abs(v) > tiny_) || !(trip < 1)) {
             if (!(abs(v) <= max(tol1_, ov)))
               numit = maxit_;
@@ -325,14 +321,13 @@ namespace GeographicLib {
 
         {
           real dummy;
-          Lengths(E, eps, sig12, ssig1, csig1, ssig2, csig2,
+          Lengths(E, sig12, ssig1, csig1, ssig2, csig2,
                   cbet1, cbet2, s12x, m12x, dummy,
                   (outmask & GEODESICSCALE) != 0U, M12, M21);
         }
         m12x *= _a;
         s12x *= _b;
         a12 = sig12 / Math::degree<real>();
-        omg12 = lam12 - omg12;
       }
     }
 
@@ -422,7 +417,7 @@ namespace GeographicLib {
   }
 
   void GeodesicExact::Lengths(const EllipticFunction& E,
-                              real /*eps*/, real sig12,
+                              real sig12,
                               real ssig1, real csig1, real ssig2, real csig2,
                               real cbet1, real cbet2,
                               real& s12b, real& m12a, real& m0,
@@ -595,7 +590,7 @@ namespace GeographicLib {
         real m12a, m0, dummy;
         // In the case of lon12 = 180, this repeats a calculation made in
         // Inverse.
-        Lengths(E, _n, Math::pi<real>() + bet12a, sbet1, -cbet1, sbet2, cbet2,
+        Lengths(E, Math::pi<real>() + bet12a, sbet1, -cbet1, sbet2, cbet2,
                 cbet1, cbet2, dummy, m12a, m0, false,
                 dummy, dummy);
         x = -1 + m12a/(_f1 * cbet1 * cbet2 * m0 * Math::pi<real>());
@@ -669,7 +664,7 @@ namespace GeographicLib {
                                      real& ssig1, real& csig1,
                                      real& ssig2, real& csig2,
                                      EllipticFunction& E,
-                                     real& eps, real& domg12,
+                                     real& omg12,
                                      bool diffp, real& dlam12) const
     throw() {
 
@@ -683,7 +678,7 @@ namespace GeographicLib {
       salp0 = salp1 * cbet1,
       calp0 = Math::hypot(calp1, salp1 * sbet1); // calp0 > 0
 
-    real somg1, comg1, somg2, comg2, omg12, lam12;
+    real somg1, comg1, somg2, comg2, lam12;
     // tan(bet1) = tan(sig1) * cos(alp1)
     // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
     ssig1 = sbet1; somg1 = salp0 * sbet1;
@@ -725,17 +720,15 @@ namespace GeographicLib {
       dn1 = sqrt(1 + _ep2 * Math::sq(sbet1)),
       dn2 = sqrt(1 + _ep2 * Math::sq(sbet2));
     E.Reset(-k2, Math::sq(calp0), 1 + k2, Math::sq(salp0));
-    eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
     lam12 = _f1 * salp0 * (2 * E.G() / Math::pi<real>()) *
       ( sig12 + E.pG(ssig2, csig2, dn2) - E.pG(ssig1, csig1, dn1) );
-    domg12 = lam12 - omg12;
 
     if (diffp) {
       if (calp2 == 0)
         dlam12 = - 2 * sqrt(1 - _e2 * Math::sq(cbet1)) / sbet1;
       else {
         real dummy;
-        Lengths(E, eps, sig12, ssig1, csig1, ssig2, csig2,
+        Lengths(E, sig12, ssig1, csig1, ssig2, csig2,
                 cbet1, cbet2, dummy, dlam12, dummy,
                 false, dummy, dummy);
         dlam12 /= calp2 * cbet2;
