@@ -57,7 +57,7 @@ namespace GeographicLib {
       // Guard against underflow in salp0
       azi1 = GeodesicExact::AngRound(azi1);
     }
-      
+
     _lat1 = lat1;
     _lon1 = lon1;
     _azi1 = azi1;

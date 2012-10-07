@@ -28,7 +28,6 @@
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
-#include <iostream>
 
 #if defined(_MSC_VER)
 // Squelch warnings about potentially uninitialized local variables
@@ -330,10 +329,6 @@ namespace GeographicLib {
               v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
                            salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                            eps, omg12, false, dummy, C1a, C2a, C3a) - lam12;
-            if (false)
-              cerr << i << " "
-                   << calp1a << " " << calp1 << " " << calp1b << " "
-                   << v << "\n";
             // Be more tolerant on error.  It is approximately 1 ulp for a
             // number in [0, pi].
             if (abs(v) <= 2 * tol0_) break;
@@ -343,7 +338,6 @@ namespace GeographicLib {
               salp1a = salp1; calp1a = calp1;
             }
           }
-          cerr << numit - maxit_ << "\n";
         }
 
         if (numit >= maxit_ + bisection_) {
