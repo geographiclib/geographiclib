@@ -262,7 +262,7 @@ namespace GeographicLib {
     return arcmode ? s12_a12 : sig12 / Math::degree<real>();
   }
 
-  template class GeodesicLine30<Math::real>;
-  template class GeodesicLine30<Math::extended>;
+  template class GeodesicLine30<double>;
+  template class GeodesicLine30<long double>;
 
 } // namespace GeographicLib

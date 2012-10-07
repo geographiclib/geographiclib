@@ -96,7 +96,7 @@ namespace GeographicLib {
 
     _k2 = Math::sq(_calp0) * g._ep2;
     _E.Reset(-_k2, Math::sq(_calp0), 1 + _k2, Math::sq(_salp0));
-    _dn1 = sqrt(1 - g._e2 * Math::sq(cbet1)) / _f1;
+    _dn1 = sqrt(1 + g._ep2 * Math::sq(sbet1));
 
     if (_caps & CAP_E) {
       _E0 = (2 * _E.E()) / Math::pi<real>();

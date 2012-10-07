@@ -6164,7 +6164,7 @@ namespace GeographicLib {
     }
   }
 
-  template class Geodesic30<Math::real>;
-  template class Geodesic30<Math::extended>;
+  template class Geodesic30<double>;
+  template class Geodesic30<long double>;
 
 } // namespace GeographicLib

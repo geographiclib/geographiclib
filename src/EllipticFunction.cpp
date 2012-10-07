@@ -64,7 +64,6 @@ namespace GeographicLib {
       (240240 * sqrt(An));
   }
 
-
   Math::real EllipticFunction::RF(real x, real y) throw() {
     // Carlson, eqs 2.36 - 2.38
     real xn = sqrt(x), yn = sqrt(y);
@@ -250,7 +249,7 @@ namespace GeographicLib {
     _eps = _k2/Math::sq(sqrt(_kp2) + 1);
     _init = false;
   }
-    
+
   bool EllipticFunction::Init() const throw() {
     // Complete elliptic integral K(k), Carlson eq. 4.1
     // http://dlmf.nist.gov/19.25.E1
@@ -336,8 +335,7 @@ namespace GeographicLib {
     }
   }
 
-  Math::real EllipticFunction::F(real sn, real cn, real dn, int n)
-    const throw() {
+  Math::real EllipticFunction::F(real sn, real cn, real dn) const throw() {
     // Carlson, eq. 4.5 and
     // http://dlmf.nist.gov/19.25.E5
     real fi = abs(sn) * RF(cn*cn, dn*dn, 1);
@@ -346,17 +344,10 @@ namespace GeographicLib {
       fi = 2 * K() - fi;
     if (sn < 0)
       fi = -fi;
-    return fi + 4 * n * K();
+    return fi;
   }
 
-  Math::real EllipticFunction::F(real phi) const throw() {
-    real sn, cn;
-    int n = Math::sincosp(phi, sn, cn);
-    return F(sn, cn, Delta(sn, cn), n);
-  }
-
-  Math::real EllipticFunction::E(real sn, real cn, real dn, int n)
-    const throw() {
+  Math::real EllipticFunction::E(real sn, real cn, real dn) const throw() {
     real
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
       ei = ( _k2 <= 0 ?
@@ -376,23 +367,113 @@ namespace GeographicLib {
       ei = 2 * E() - ei;
     if (sn < 0)
       ei = -ei;
-    return ei + 4 * n * E();
+    return ei;
   }
 
-  Math::real EllipticFunction::E(real sn, real cn, real dn) const throw () {
-    return E(sn, cn, dn, 0);
+  Math::real EllipticFunction::D(real sn, real cn, real dn) const throw() {
+    // Carlson, eq. 4.8 and
+    // http://dlmf.nist.gov/19.25.E5
+    real di = abs(sn) * sn*sn * RD(cn*cn, dn*dn, 1) / 3;
+    // Enforce usual trig-like symmetries
+    if (cn < 0)
+      di = 2 * D() - di;
+    if (sn < 0)
+      di = -di;
+    return di;
+  }
+
+  Math::real EllipticFunction::Pi(real sn, real cn, real dn) const throw() {
+    // Carlson, eq. 4.5 and
+    // http://dlmf.nist.gov/19.25.E5
+    real
+      cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
+      pii = abs(sn) * (RF(cn2, dn2, 1) +
+                       _alpha2 * sn2 * RJ(cn2, dn2, 1, 1 - _alpha2 * sn2) / 3);
+    // Enforce usual trig-like symmetries
+    if (cn < 0)
+      pii = 2 * Pi() - pii;
+    if (sn < 0)
+      pii = -pii;
+    return pii;
+  }
+
+  Math::real EllipticFunction::G(real sn, real cn, real dn) const throw() {
+    real
+      cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
+      gi = abs(sn) * (RF(cn2, dn2, 1) +
+                      (_alpha2 - _k2) * sn2 *
+                      RJ(cn2, dn2, 1, _alphap2 + _alpha2 * cn2) / 3);
+    // Enforce usual trig-like symmetries
+    if (cn < 0)
+      gi = 2 * G() - gi;
+    if (sn < 0)
+      gi = -gi;
+    return gi;
+  }
+
+  Math::real EllipticFunction::pF(real sn, real cn, real dn) const throw() {
+    // Function is periodic with period pi
+    if (cn < 0) { cn = -cn; sn = -sn; }
+    return F(sn, cn, dn) * (Math::pi<real>()/2) / K() - atan2(sn, cn);
+  }
+
+  Math::real EllipticFunction::pE(real sn, real cn, real dn) const throw() {
+    // Function is periodic with period pi
+    if (cn < 0) { cn = -cn; sn = -sn; }
+    return E(sn, cn, dn) * (Math::pi<real>()/2) / E() - atan2(sn, cn);
+  }
+
+  Math::real EllipticFunction::pPi(real sn, real cn, real dn) const throw() {
+    // Function is periodic with period pi
+    if (cn < 0) { cn = -cn; sn = -sn; }
+    return Pi(sn, cn, dn) * (Math::pi<real>()/2) / Pi() - atan2(sn, cn);
+  }
+
+  Math::real EllipticFunction::pD(real sn, real cn, real dn) const throw() {
+    // Function is periodic with period pi
+    if (cn < 0) { cn = -cn; sn = -sn; }
+    return D(sn, cn, dn) * (Math::pi<real>()/2) / D() - atan2(sn, cn);
+  }
+
+  Math::real EllipticFunction::pG(real sn, real cn, real dn) const throw() {
+    // Function is periodic with period pi
+    if (cn < 0) { cn = -cn; sn = -sn; }
+    return G(sn, cn, dn) * (Math::pi<real>()/2) / G() - atan2(sn, cn);
+  }
+
+  Math::real EllipticFunction::F(real phi) const throw() {
+    real sn = sin(phi), cn = cos(phi);
+    return (pF(sn, cn, Delta(sn, cn)) + phi) * K() / (Math::pi<real>()/2);
   }
 
   Math::real EllipticFunction::E(real phi) const throw() {
-    real sn, cn;
-    int n = Math::sincosp(phi, sn, cn);
-    return E(sn, cn, Delta(sn, cn), n);
+    real sn = sin(phi), cn = cos(phi);
+    return (pE(sn, cn, Delta(sn, cn)) + phi) * E() / (Math::pi<real>()/2);
   }
 
   Math::real EllipticFunction::Ed(real ang) const throw() {
-    real sn, cn;
-    int n = Math::sincospd(ang, sn, cn);
-    return E(sn, cn, Delta(sn, cn), n);
+    real n = ceil(ang/360 - real(0.5));
+    ang -= 360 * n;
+    real
+      phi = ang * Math::degree<real>(),
+      sn = abs(ang) == 180 ? 0 : sin(phi),
+      cn = abs(ang) ==  90 ? 0 : cos(phi);
+    return E(sn, cn, Delta(sn, cn)) + 4 * E() * n;
+  }
+
+  Math::real EllipticFunction::Pi(real phi) const throw() {
+    real sn = sin(phi), cn = cos(phi);
+    return (pPi(sn, cn, Delta(sn, cn)) + phi) * Pi() / (Math::pi<real>()/2);
+  }
+
+  Math::real EllipticFunction::D(real phi) const throw() {
+    real sn = sin(phi), cn = cos(phi);
+    return (pD(sn, cn, Delta(sn, cn)) + phi) * D() / (Math::pi<real>()/2);
+  }
+
+  Math::real EllipticFunction::G(real phi) const throw() {
+    real sn = sin(phi), cn = cos(phi);
+    return (pG(sn, cn, Delta(sn, cn)) + phi) * G() / (Math::pi<real>()/2);
   }
 
   Math::real EllipticFunction::Einv(real x) const throw() {
@@ -416,108 +497,10 @@ namespace GeographicLib {
     return n * Math::pi<real>() + phi;
   }
 
-  Math::real EllipticFunction::D(real sn, real cn, real dn, int n)
-    const throw() {
-    // Carlson, eq. 4.8 and
-    // http://dlmf.nist.gov/19.25.E5
-    real di = abs(sn) * sn*sn * RD(cn*cn, dn*dn, 1) / 3;
-    // Enforce usual trig-like symmetries
-    if (cn < 0)
-      di = 2 * D() - di;
-    if (sn < 0)
-      di = -di;
-    return di + 4 * n * D();
-  }
-
-  Math::real EllipticFunction::D(real phi) const throw() {
-    real sn, cn;
-    int n = Math::sincosp(phi, sn, cn);
-    return D(sn, cn, Delta(sn, cn), n);
-  }
-
-  Math::real EllipticFunction::Pi(real sn, real cn, real dn, int n)
-    const throw() {
-    // Carlson, eq. 4.5 and
-    // http://dlmf.nist.gov/19.25.E5
-    real
-      cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
-      pii = abs(sn) * (RF(cn2, dn2, 1) +
-                       _alpha2 * sn2 * RJ(cn2, dn2, 1, 1 - _alpha2 * sn2) / 3);
-    // Enforce usual trig-like symmetries
-    if (cn < 0)
-      pii = 2 * Pi() - pii;
-    if (sn < 0)
-      pii = -pii;
-    return pii + 4 * n * Pi();
-  }
-
-  Math::real EllipticFunction::Pi(real phi) const throw() {
-    real sn, cn;
-    int n = Math::sincosp(phi, sn, cn);
-    return Pi(sn, cn, Delta(sn, cn), n);
-  }
-
-  Math::real EllipticFunction::G(real sn, real cn, real dn, int n)
-    const throw() {
-    real
-      cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
-      gi = abs(sn) * (RF(cn2, dn2, 1) +
-                      (_alpha2 - _k2) * sn2 *
-                      RJ(cn2, dn2, 1, _alphap2 + _alpha2 * cn2) / 3);
-    // Enforce usual trig-like symmetries
-    if (cn < 0)
-      gi = 2 * G() - gi;
-    if (sn < 0)
-      gi = -gi;
-    return gi + 4 * n * G();
-  }
-
-  Math::real EllipticFunction::G(real phi) const throw() {
-    real sn, cn;
-    int n = Math::sincosp(phi, sn, cn);
-    return G(sn, cn, Delta(sn, cn), n);
-  }
-
-  Math::real EllipticFunction::pF(real sn, real cn, real dn)
-    const throw() {
-    // Function is periodic with period pi
-    if (cn < 0) { cn = -cn; sn = -sn; }
-    return F(sn, cn, dn, 0) * (Math::pi<real>()/2) / K() - atan2(0+sn, cn);
-  }
-
-  Math::real EllipticFunction::pE(real sn, real cn, real dn)
-    const throw() {
-    // Function is periodic with period pi
-    if (cn < 0) { cn = -cn; sn = -sn; }
-    return E(sn, cn, dn, 0) * (Math::pi<real>()/2) / E() - atan2(0+sn, cn);
-  }
-
-  Math::real EllipticFunction::pPi(real sn, real cn, real dn)
-    const throw() {
-    // Function is periodic with period pi
-    if (cn < 0) { cn = -cn; sn = -sn; }
-    return Pi(sn, cn, dn, 0) * (Math::pi<real>()/2) / Pi() - atan2(0+sn, cn);
-  }
-
-  Math::real EllipticFunction::pD(real sn, real cn, real dn)
-    const throw() {
-    // Function is periodic with period pi
-    if (cn < 0) { cn = -cn; sn = -sn; }
-    return D(sn, cn, dn, 0) * (Math::pi<real>()/2) / D() - atan2(0+sn, cn);
-  }
-
-  Math::real EllipticFunction::pG(real sn, real cn, real dn)
-    const throw() {
-    // Function is periodic with period pi
-    if (cn < 0) { cn = -cn; sn = -sn; }
-    return G(sn, cn, dn, 0) * (Math::pi<real>()/2) / G() - atan2(0+sn, cn);
-  }
-
-  Math::real EllipticFunction::pEinv(real stau, real ctau)
-    const throw() {
+  Math::real EllipticFunction::pEinv(real stau, real ctau) const throw() {
     // Function is periodic with period pi
     if (ctau < 0) { ctau = -ctau; stau = -stau; }
-    real tau = atan2(0+stau, ctau);
+    real tau = atan2(stau, ctau);
     return Einv( tau * E() / (Math::pi<real>()/2) ) - tau;
   }
 

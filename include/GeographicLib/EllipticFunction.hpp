@@ -269,11 +269,9 @@ namespace GeographicLib {
      * @param[in] cn = cos&phi;
      * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
-     * @param[in] n the period number such that &phi; = 2<i>n</i>&pi; +
-     *   atan2(\e sn, \e cn)
-     * @return \e F(&phi;, \e k).
+     * @return \e F(&phi;, \e k) as though &pi; &isin; (&minus;&pi;, &pi].
      **********************************************************************/
-    Math::real F(real sn, real cn, real dn, int n = 0) const throw();
+    Math::real F(real sn, real cn, real dn) const throw();
 
     /**
      * The incomplete integral of the second kind.
@@ -314,29 +312,10 @@ namespace GeographicLib {
      * @param[in] cn = cos&phi;
      * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
-     * @param[in] n the period number such that &phi; = 2<i>n</i>&pi; +
-     *   atan2(\e sn, \e cn)
-     * @return \e E(&phi;, \e k).
-     **********************************************************************/
-    Math::real E(real sn, real cn, real dn, int n) const throw();
-
-    /**
-     * The incomplete integral of the second kind in terms of Jacobi elliptic
-     * functions
-     *
-     * @param[in] sn = sin&phi;
-     * @param[in] cn = cos&phi;
-     * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
-     *   sin<sup>2</sup>&phi;)
-     * @return \e E(&phi;, \e k).
-     *
-     * <b>COMPATIBILITY NOTE:</b> This function calls E(real, real, real, int)
-     * with a 4th argument of 0.  At some point, E(real, real, real) and will
-     * be withdrawn and the interface to E(real, real, real, int) changed so
-     * that its 4th argument defaults to 0.  This will preserve source-level
-     * compatibility.
+     * @return \e E(&phi;, \e k) as though &pi; &isin; (&minus;&pi;, &pi].
      **********************************************************************/
     Math::real E(real sn, real cn, real dn) const throw();
+
 
     /**
      * The incomplete integral of the third kind.
@@ -361,11 +340,10 @@ namespace GeographicLib {
      * @param[in] cn = cos&phi;
      * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
-     * @param[in] n the period number such that &phi; = 2<i>n</i>&pi; +
-     *   atan2(\e sn, \e cn)
-     * @return &Pi;(&phi;, &alpha;<sup>2</sup>, \e k).
+     * @return &Pi;(&phi;, &alpha;<sup>2</sup>, \e k) as though &pi; &isin;
+     *   (&minus;&pi;, &pi].
      **********************************************************************/
-    Math::real Pi(real sn, real cn, real dn, int n = 0) const throw();
+    Math::real Pi(real sn, real cn, real dn) const throw();
 
     /**
      * Jahnke's incomplete elliptic integral.
@@ -389,11 +367,9 @@ namespace GeographicLib {
      * @param[in] cn = cos&phi;
      * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
-     * @param[in] n the period number such that &phi; = 2<i>n</i>&pi; +
-     *   atan2(\e sn, \e cn)
-     * @return \e D(&phi;, \e k).
+     * @return \e D(&phi;, \e k) as though &pi; &isin; (&minus;&pi;, &pi].
      **********************************************************************/
-    Math::real D(real sn, real cn, real dn, int n = 0) const throw();
+    Math::real D(real sn, real cn, real dn) const throw();
 
     /**
      * The geodesic longitude integral.
@@ -419,11 +395,10 @@ namespace GeographicLib {
      * @param[in] cn = cos&phi;
      * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
-     * @param[in] n the period number such that &phi; = 2<i>n</i>&pi; +
-     *   atan2(\e sn, \e cn)
-     * @return \e G(&phi;, &alpha;<sup>2</sup>, \e k).
+     * @return \e G(&phi;, &alpha;<sup>2</sup>, \e k) as though &pi; &isin;
+     *   (&minus;&pi;, &pi].
      **********************************************************************/
-    Math::real G(real sn, real cn, real dn, int n = 0) const throw();
+    Math::real G(real sn, real cn, real dn) const throw();
     ///@}
 
     /** \name Periodic versions of incomplete elliptic integrals.
@@ -522,7 +497,7 @@ namespace GeographicLib {
      *   sin<sup>2</sup>&phi;)
      **********************************************************************/
     Math::real Delta(real sn, real cn) const throw()
-    { return sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn); }
+    { return std::sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn); }
     ///@}
 
     /** \name Symmetric elliptic integrals.

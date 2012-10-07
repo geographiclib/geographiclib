@@ -161,15 +161,15 @@ int main() {
       break;
     }
     int k = ((N + 1) * (N + 2)) / 2;
-    std::vector<double> C(k);
-    std::vector<double> S(k);
+    std::vector<real> C(k);
+    std::vector<real> S(k);
     name = "/scratch/egm2008/harm/" + name;
     {
       std::ifstream f(name.c_str(), std::ios::binary);
       if (!f.good())
         throw GeographicErr("Cannot open coefficient file");
-      f.read(reinterpret_cast<char *>(&C[0]), k * sizeof(double));
-      f.read(reinterpret_cast<char *>(&S[0]), k * sizeof(double));
+      f.read(reinterpret_cast<char *>(&C[0]), k * sizeof(real));
+      f.read(reinterpret_cast<char *>(&S[0]), k * sizeof(real));
     }
     //    for (int i = 0; i < k; ++i)
     //      std::cout << i << " " << C[i] << " " << S[i] << "\n";
