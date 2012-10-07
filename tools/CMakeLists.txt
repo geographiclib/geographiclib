@@ -143,6 +143,13 @@ add_test (Geod11 Geod -i --input-string
 set_tests_properties (Geod11
   PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 19989144.774")
 
+# Check fix for inverse geodesics on extreme prolate/oblate ellipsoids
+# Reported 2012-08-29 Stefan Guenther <stefan.gunther@embl.de>; fixed 2012-10-07
+add_test (Geod12 Geod -i -e 89.8 -1.83 -p 0 --input-string "0 0 -10 160")
+add_test (Geod13 Geod -i -e 89.8 -1.83 -p 0 --input-string "0 0 -10 160" -E)
+set_tests_properties (Geod12 Geod13
+  PROPERTIES PASS_REGULAR_EXPRESSION "120\\.27.* 105\\.15.* 267")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (Planimeter0 Planimeter --input-string "89 0;89 90;89 180;89 270")
 add_test (Planimeter1
@@ -261,13 +268,3 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
     PROPERTIES PASS_REGULAR_EXPRESSION
     "-0\\.000146 0\\.000078 -9\\.832294")
 endif ()
-
-#More tests?
-
-# Reported 2012-08-29 by Stefan Guenther <stefan.gunther@embl.de>
-# echo 0 0 -10 160 | Geod -i -e 89.8 -1.83
-# nan nan nan
-
-# Found 2012-10-06
-# echo 69.315470976553 0 -69.315470976553 179.786357922527230369 | Geod -E -i
-# nan nan nan

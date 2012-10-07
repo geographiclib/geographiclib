@@ -59,7 +59,8 @@ ConicProj.o: ConicProj.usage Config.h AlbersEqualArea.hpp Constants.hpp \
 GeoConvert.o: GeoConvert.usage Config.h Constants.hpp DMS.hpp GeoCoords.hpp \
 	Math.hpp UTMUPS.hpp Utility.hpp
 Geod.o: Geod.usage Config.h Constants.hpp DMS.hpp Geodesic.hpp \
-	GeodesicLine.hpp Math.hpp Utility.hpp
+	GeodesicExact.hpp GeodesicLine.hpp GeodesicLineExact.hpp Math.hpp \
+	Utility.hpp
 GeodesicProj.o: GeodesicProj.usage Config.h AzimuthalEquidistant.hpp \
 	CassiniSoldner.hpp Constants.hpp DMS.hpp Geodesic.hpp GeodesicLine.hpp \
 	Gnomonic.hpp Math.hpp Utility.hpp
