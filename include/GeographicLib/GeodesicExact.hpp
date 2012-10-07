@@ -125,7 +125,8 @@ namespace GeographicLib {
     friend class GeodesicLineExact;
     static const int nC4_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
-    static const unsigned maxit_ = 50;
+    static const unsigned maxit_ = 20;
+    static const unsigned bisection_ = std::numeric_limits<real>::digits + 10;
 
     static const real tiny_;
     static const real tol0_;

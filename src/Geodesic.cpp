@@ -28,6 +28,7 @@
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
+#include <iostream>
 
 #if defined(_MSC_VER)
 // Squelch warnings about potentially uninitialized local variables
@@ -280,11 +281,19 @@ namespace GeographicLib {
         real ssig1, csig1, ssig2, csig2, eps;
         real ov = 0;
         unsigned numit = 0;
+        // Bracketing values for bisection method
+        real salp1a = 0, calp1a = 1, salp1b = 0, calp1b = -1;
         for (unsigned trip = 0; numit < maxit_; ++numit) {
           real dv;
           real v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                             eps, omg12, trip < 1, dv, C1a, C2a, C3a) - lam12;
+          // Update bracketing values
+          if (v >= 0 && calp1 > calp1b) {
+            salp1b = salp1; calp1b = calp1;
+          } else if (v <= 0 && calp1 < calp1a) {
+            salp1a = salp1; calp1a = calp1;
+          }
           if (!(abs(v) > tiny_) || !(trip < 1)) {
             if (!(abs(v) <= max(tol1_, ov)))
               numit = maxit_;
@@ -307,8 +316,37 @@ namespace GeographicLib {
           if (!(abs(v) >= tol1_ && Math::sq(v) >= ov * tol0_)) ++trip;
           ov = abs(v);
         }
-
         if (numit >= maxit_) {
+          // Resort to the safer bisection method
+          for (unsigned i = 0; i < bisection_; ++i) {
+            ++numit;
+            salp1 = (salp1a + salp1b)/2;
+            calp1 = (calp1a + calp1b)/2;
+            SinCosNorm(salp1, calp1);
+            if (abs(salp1a - salp1b) < tol0_ && calp1a - calp1b < tol0_)
+              break;
+            real
+              dummy,
+              v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
+                           salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
+                           eps, omg12, false, dummy, C1a, C2a, C3a) - lam12;
+            if (false)
+              cerr << i << " "
+                   << calp1a << " " << calp1 << " " << calp1b << " "
+                   << v << "\n";
+            // Be more tolerant on error.  It is approximately 1 ulp for a
+            // number in [0, pi].
+            if (abs(v) <= 2 * tol0_) break;
+            if (v > 0) {
+              salp1b = salp1; calp1b = calp1;
+            } else {
+              salp1a = salp1; calp1a = calp1;
+            }
+          }
+          cerr << numit - maxit_ << "\n";
+        }
+
+        if (numit >= maxit_ + bisection_) {
           // Signal failure.
           if (outmask & DISTANCE)
             s12 = Math::NaN<real>();
