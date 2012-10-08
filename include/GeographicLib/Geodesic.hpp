@@ -180,17 +180,20 @@ namespace GeographicLib {
     real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
 
     void Lengths(real eps, real sig12,
-                 real ssig1, real csig1, real ssig2, real csig2,
+                 real ssig1, real csig1, real dn1,
+                 real ssig2, real csig2, real dn2,
                  real cbet1, real cbet2,
                  real& s12s, real& m12a, real& m0,
                  bool scalep, real& M12, real& M21,
                  real C1a[], real C2a[]) const throw();
-    real InverseStart(real sbet1, real cbet1, real sbet2, real cbet2,
+    real InverseStart(real sbet1, real cbet1, real dn1,
+                      real sbet2, real cbet2, real dn2,
                       real lam12,
                       real& salp1, real& calp1,
                       real& salp2, real& calp2,
                       real C1a[], real C2a[]) const throw();
-    real Lambda12(real sbet1, real cbet1, real sbet2, real cbet2,
+    real Lambda12(real sbet1, real cbet1, real dn1,
+                  real sbet2, real cbet2, real dn2,
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
@@ -617,10 +620,17 @@ namespace GeographicLib {
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed and writing \e lat = 90&deg; &minus; &epsilon; or
      * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
-     * above.  If the routine fails to converge, then all the requested outputs
-     * are set to Math::NaN().  (Test for such results with Math::isnan.)  This
-     * is not expected to happen with ellipsoidal models of the earth; please
-     * report all cases where this occurs.
+     * above.
+     *
+     * The solution to the inverse problem is found using Newton's method.  If
+     * this fails to converge (this is very unlikely in geodetic applications
+     * but does occur for very eccentric ellipsoids), then the bisection method
+     * is used to refine the solution.  This should always converge to an
+     * accurate solution.
+     *
+     * (If the routine fails to converge, then all the requested outputs are
+     * set to Math::NaN() --- test for such results with Math::isnan.  Please
+     * report all cases where this occurs.)
      *
      * The following functions are overloaded versions of Geodesic::Inverse
      * which omit some of the output parameters.  Note, however, that the arc

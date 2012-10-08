@@ -191,6 +191,10 @@ namespace GeographicLib {
     }
 
     real
+      dn1 = sqrt(1 + _ep2 * Math::sq(sbet1)),
+      dn2 = sqrt(1 + _ep2 * Math::sq(sbet2));
+
+    real
       lam12 = lon12 * Math::degree<real>(),
       slam12 = lon12 == 180 ? 0 : sin(lam12),
       clam12 = cos(lam12);      // lon12 == 90 isn't interesting
@@ -219,7 +223,7 @@ namespace GeographicLib {
                     csig1 * csig2 + ssig1 * ssig2);
       {
         real dummy;
-        Lengths(_n, sig12, ssig1, csig1, ssig2, csig2,
+        Lengths(_n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
                 cbet1, cbet2, s12x, m12x, dummy,
                 (outmask & GEODESICSCALE) != 0U, M12, M21, C1a, C2a);
       }
@@ -231,7 +235,7 @@ namespace GeographicLib {
       // In fact, we will have sig12 > pi/2 for meridional geodesic which is
       // not a shortest path.
       if (sig12 < 1 || m12x >= 0) {
-        m12x *= _a;
+        m12x *= _b;
         s12x *= _b;
         a12 = sig12 / Math::degree<real>();
       } else
@@ -260,20 +264,20 @@ namespace GeographicLib {
       // meridian and geodesic is neither meridional or equatorial.
 
       // Figure a starting point for Newton's method
-      sig12 = InverseStart(sbet1, cbet1, sbet2, cbet2,
+      sig12 = InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
                            lam12,
                            salp1, calp1, salp2, calp2,
                            C1a, C2a);
 
       if (sig12 >= 0) {
         // Short lines (InverseStart sets salp2, calp2)
-        real wm = sqrt(1 - _e2 * Math::sq((cbet1 + cbet2) / 2));
-        s12x = sig12 * _a * wm;
-        m12x = Math::sq(wm) * _a / _f1 * sin(sig12 * _f1 / wm);
+        real dnm = (dn1 + dn2) / 2;
+        s12x = sig12 * _b * dnm;
+        m12x = Math::sq(dnm) * _b * sin(sig12 / dnm);
         if (outmask & GEODESICSCALE)
-          M12 = M21 = cos(sig12 * _f1 / wm);
+          M12 = M21 = cos(sig12 / dnm);
         a12 = sig12 / Math::degree<real>();
-        omg12 = lam12 / wm;
+        omg12 = lam12 / (_f1 * dnm);
       } else {
 
         // Newton's method
@@ -284,7 +288,7 @@ namespace GeographicLib {
         real salp1a = 0, calp1a = 1, salp1b = 0, calp1b = -1;
         for (unsigned trip = 0; numit < maxit_; ++numit) {
           real dv;
-          real v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
+          real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                             eps, omg12, trip < 1, dv, C1a, C2a, C3a) - lam12;
           // Update bracketing values
@@ -322,11 +326,12 @@ namespace GeographicLib {
             salp1 = (salp1a + salp1b)/2;
             calp1 = (calp1a + calp1b)/2;
             SinCosNorm(salp1, calp1);
-            if (abs(salp1a - salp1b) < tol0_ && calp1a - calp1b < tol0_)
+            if ( (abs(salp1 - salp1b) < tol0_ && calp1 - calp1b < tol0_) ||
+                 (abs(salp1a - salp1) < tol0_ && calp1a - calp1 < tol0_) )
               break;
             real
               dummy,
-              v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
+              v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                            salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                            eps, omg12, false, dummy, C1a, C2a, C3a) - lam12;
             // Be more tolerant on error.  It is approximately 1 ulp for a
@@ -357,11 +362,11 @@ namespace GeographicLib {
 
         {
           real dummy;
-          Lengths(eps, sig12, ssig1, csig1, ssig2, csig2,
+          Lengths(eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
                   cbet1, cbet2, s12x, m12x, dummy,
                   (outmask & GEODESICSCALE) != 0U, M12, M21, C1a, C2a);
         }
-        m12x *= _a;
+        m12x *= _b;
         s12x *= _b;
         a12 = sig12 / Math::degree<real>();
         omg12 = lam12 - omg12;
@@ -454,13 +459,14 @@ namespace GeographicLib {
   }
 
   void Geodesic::Lengths(real eps, real sig12,
-                         real ssig1, real csig1, real ssig2, real csig2,
+                         real ssig1, real csig1, real dn1,
+                         real ssig2, real csig2, real dn2,
                          real cbet1, real cbet2,
-                         real& s12b, real& m12a, real& m0,
+                         real& s12b, real& m12b, real& m0,
                          bool scalep, real& M12, real& M21,
                          // Scratch areas of the right size
                          real C1a[], real C2a[]) const throw() {
-    // Return m12a = (reduced length)/_a; also calculate s12b = distance/_b,
+    // Return m12b = (reduced length)/_b; also calculate s12b = distance/_b,
     // and m0 = coefficient of secular term in expression for reduced length.
     C1f(eps, C1a);
     C2f(eps, C2a);
@@ -471,10 +477,6 @@ namespace GeographicLib {
       A2m1 = A2m1f(eps),
       AB2 = (1 + A2m1) * (SinCosSeries(true, ssig2, csig2, C2a, nC2_) -
                           SinCosSeries(true, ssig1, csig1, C2a, nC2_)),
-      cbet1sq = Math::sq(cbet1),
-      cbet2sq = Math::sq(cbet2),
-      w1 = sqrt(1 - _e2 * cbet1sq),
-      w2 = sqrt(1 - _e2 * cbet2sq),
       // Make sure it's OK to have repeated dummy arguments
       m0x = A1m1 - A2m1,
       J12 = m0x * sig12 + (AB1 - AB2);
@@ -482,17 +484,14 @@ namespace GeographicLib {
     // Missing a factor of _a.
     // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
     // cancellation in the case of coincident points.
-    m12a = (w2 * (csig1 * ssig2) - w1 * (ssig1 * csig2))
-      - _f1 * csig1 * csig2 * J12;
+    m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) - csig1 * csig2 * J12;
     // Missing a factor of _b
     s12b = (1 + A1m1) * sig12 + AB1;
     if (scalep) {
       real csig12 = csig1 * csig2 + ssig1 * ssig2;
-      J12 *= _f1;
-      M12 = csig12 + (_e2 * (cbet1sq - cbet2sq) * ssig2 / (w1 + w2)
-                      - csig2 * J12) * ssig1 / w1;
-      M21 = csig12 - (_e2 * (cbet1sq - cbet2sq) * ssig1 / (w1 + w2)
-                      - csig1 * J12) * ssig2 / w2;
+      real t = _ep2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2);
+      M12 = csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1;
+      M21 = csig12 - (t * ssig1 - csig1 * J12) * ssig2 / dn2;
     }
   }
 
@@ -548,8 +547,8 @@ namespace GeographicLib {
     return k;
   }
 
-  Math::real Geodesic::InverseStart(real sbet1, real cbet1,
-                                    real sbet2, real cbet2,
+  Math::real Geodesic::InverseStart(real sbet1, real cbet1, real dn1,
+                                    real sbet2, real cbet2, real dn2,
                                     real lam12,
                                     real& salp1, real& calp1,
                                     // Only updated if return val >= 0
@@ -584,8 +583,7 @@ namespace GeographicLib {
     bool shortline = cbet12 >= 0 && sbet12 < real(0.5) &&
       lam12 <= Math::pi<real>() / 6;
     real
-      omg12 = (!shortline ? lam12 :
-               lam12 / sqrt(1 - _e2 * Math::sq((cbet1 + cbet2) / 2))),
+      omg12 = (!shortline ? lam12 : lam12 / (_f1 * (dn1 + dn2) / 2)),
       somg12 = sin(omg12), comg12 = cos(omg12);
 
     salp1 = cbet2 * somg12;
@@ -632,13 +630,14 @@ namespace GeographicLib {
         real
           cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
           bet12a = atan2(sbet12a, cbet12a);
-        real m12a, m0, dummy;
+        real m12b, m0, dummy;
         // In the case of lon12 = 180, this repeats a calculation made in
         // Inverse.
-        Lengths(_n, Math::pi<real>() + bet12a, sbet1, -cbet1, sbet2, cbet2,
-                cbet1, cbet2, dummy, m12a, m0, false,
+        Lengths(_n, Math::pi<real>() + bet12a,
+                sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
+                cbet1, cbet2, dummy, m12b, m0, false,
                 dummy, dummy, C1a, C2a);
-        x = -1 + m12a/(_f1 * cbet1 * cbet2 * m0 * Math::pi<real>());
+        x = -1 + m12b/(cbet1 * cbet2 * m0 * Math::pi<real>());
         betscale = x < -real(0.01) ? sbet12a / x :
           -_f * Math::sq(cbet1) * Math::pi<real>();
         lamscale = betscale / cbet1;
@@ -701,7 +700,8 @@ namespace GeographicLib {
     return sig12;
   }
 
-  Math::real Geodesic::Lambda12(real sbet1, real cbet1, real sbet2, real cbet2,
+  Math::real Geodesic::Lambda12(real sbet1, real cbet1, real dn1,
+                                real sbet2, real cbet2, real dn2,
                                 real salp1, real calp1,
                                 real& salp2, real& calp2,
                                 real& sig12,
@@ -772,13 +772,13 @@ namespace GeographicLib {
 
     if (diffp) {
       if (calp2 == 0)
-        dlam12 = - 2 * sqrt(1 - _e2 * Math::sq(cbet1)) / sbet1;
+        dlam12 = - 2 * _f1 * dn1 / sbet1;
       else {
         real dummy;
-        Lengths(eps, sig12, ssig1, csig1, ssig2, csig2,
+        Lengths(eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
                 cbet1, cbet2, dummy, dlam12, dummy,
                 false, dummy, dummy, C1a, C2a);
-        dlam12 /= calp2 * cbet2;
+        dlam12 *= _f1 / (calp2 * cbet2);
       }
     }
 

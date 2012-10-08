@@ -92,32 +92,32 @@ namespace GeographicLib {
     _csig1 = _comg1 = sbet1 != 0 || _calp1 != 0 ? cbet1 * _calp1 : 1;
     GeodesicExact::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
     GeodesicExact::SinCosNorm(_somg1, _comg1);
-    _sig1 = atan2(_ssig1, _csig1);
 
     _k2 = Math::sq(_calp0) * g._ep2;
     _E.Reset(-_k2, Math::sq(_calp0), 1 + _k2, Math::sq(_salp0));
-    _dn1 = sqrt(1 + g._ep2 * Math::sq(sbet1));
+    _dn1 = (_f >= 0 ? sqrt(1 + g._ep2 * Math::sq(sbet1)) :
+            sqrt(1 - g._e2 * Math::sq(cbet1)) / _f1);
 
     if (_caps & CAP_E) {
-      _E0 = (2 * _E.E()) / Math::pi<real>();
-      _E1 = _E.pE(_ssig1, _csig1, _dn1);
+      _E0 = _E.E() / (Math::pi<real>() / 2);
+      _E1 = _E.deltaE(_ssig1, _csig1, _dn1);
       real s = sin(_E1), c = cos(_E1);
       // tau1 = sig1 + B11
       _stau1 = _ssig1 * c + _csig1 * s;
       _ctau1 = _csig1 * c - _ssig1 * s;
       // Not necessary because Einv inverts E
-      //    _E1 = -_E.pEinv(_stau1, _ctau1);
+      //    _E1 = -_E.deltaEinv(_stau1, _ctau1);
     }
 
     if (_caps & CAP_D) {
-      _D0 = (2 * _E.D()) / Math::pi<real>();
-      _D1 = _E.pD(_ssig1, _csig1, _dn1);
+      _D0 = _E.D() / (Math::pi<real>() / 2);
+      _D1 = _E.deltaD(_ssig1, _csig1, _dn1);
     }
 
     if (_caps & CAP_G) {
       if (_salp0) {
-        _G0 = 2 * _E.G() / Math::pi<real>();
-        _G1 = _E.pG(_ssig1, _csig1, _dn1);
+        _G0 = _E.G() / (Math::pi<real>() / 2);
+        _G1 = _E.deltaG(_ssig1, _csig1, _dn1);
       }
     }
 
@@ -157,7 +157,7 @@ namespace GeographicLib {
         s = sin(tau12),
         c = cos(tau12);
       // tau2 = tau1 + tau12
-      E2 = - _E.pEinv(_stau1 * c + _ctau1 * s, _ctau1 * c - _stau1 * s);
+      E2 = - _E.deltaEinv(_stau1 * c + _ctau1 * s, _ctau1 * c - _stau1 * s);
       sig12 = tau12 - (E2 - _E1);
       ssig12 = sin(sig12);
       csig12 = cos(sig12);
@@ -171,7 +171,7 @@ namespace GeographicLib {
     real dn2 = _E.Delta(ssig2, csig2);
     if (outmask & (DISTANCE | REDUCEDLENGTH | GEODESICSCALE)) {
       if (arcmode) {
-        E2 = _E.pE(ssig2, csig2, dn2);
+        E2 = _E.deltaE(ssig2, csig2, dn2);
       }
       AB1 = _E0 * (E2 - _E1);
     }
@@ -190,7 +190,8 @@ namespace GeographicLib {
 
     if (outmask & LONGITUDE) {
       if (_salp0)
-        lam12 = _f1 * _salp0 * _G0 * ( sig12 + _E.pG(ssig2, csig2, dn2) - _G1 );
+        lam12 = _f1 * _salp0 * _G0 *
+          ( sig12 + _E.deltaG(ssig2, csig2, dn2) - _G1 );
       else {
         // tan(omg2) = sin(alp0) * tan(sig2)
         real somg2 = _salp0 * ssig2, comg2 = csig2;  // No need to normalize
@@ -213,22 +214,16 @@ namespace GeographicLib {
       azi2 = 0 - atan2(-salp2, calp2) / Math::degree<real>();
 
     if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
-      real
-        ssig1sq = Math::sq(_ssig1),
-        ssig2sq = Math::sq( ssig2),
-        w1 = sqrt(1 + _k2 * ssig1sq),
-        w2 = sqrt(1 + _k2 * ssig2sq),
-        J12 = _k2 * _D0 * (sig12 + _E.pD(ssig2, csig2, dn2) - _D1);
+      real J12 = _k2 * _D0 * (sig12 + _E.deltaD(ssig2, csig2, dn2) - _D1);
       if (outmask & REDUCEDLENGTH)
         // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
         // accurate cancellation in the case of coincident points.
-        m12 = _b * ((w2 * (_csig1 * ssig2) - w1 * (_ssig1 * csig2))
+        m12 = _b * ((dn2 * (_csig1 * ssig2) - _dn1 * (_ssig1 * csig2))
                   - _csig1 * csig2 * J12);
       if (outmask & GEODESICSCALE) {
-        M12 = csig12 + (_k2 * (ssig2sq - ssig1sq) *  ssig2 / (w1 + w2)
-                        - csig2 * J12) * _ssig1 / w1;
-        M21 = csig12 - (_k2 * (ssig2sq - ssig1sq) * _ssig1 / (w1 + w2)
-                        - _csig1 * J12) * ssig2 / w2;
+        real t = _k2 * (ssig2 - _ssig1) * (ssig2 + _ssig1) / (_dn1 + dn2);
+        M12 = csig12 + (t *  ssig2 -  csig2 * J12) * _ssig1 / _dn1;
+        M21 = csig12 - (t * _ssig1 - _csig1 * J12) *  ssig2 /  dn2;
       }
     }
 

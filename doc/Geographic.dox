@@ -884,6 +884,14 @@ GeographicLib::Gnomonic are projections based on the Geodesic class.
 <a href="GeodesicProj.1.html">GeodesicProj</a> is a command line utility
 to exercise these projections.
 
+GeographicLib::GeodesicExact and GeographicLib::GeodesicLineExact are
+drop in replacements for GeographicLib::Geodesic and
+GeographicLib::GeodesicLine in which the solution is given in terms of
+elliptic integrals (computed by GeographicLib::EllipticFunction).
+These classes should be used if the absolute value of the flattening
+exceeds 0.01.  The -E option to <a href="Geod.1.html">Geod</a> uses
+these classes.
+
 GeographicLib::Geocentric and GeographicLib::LocalCartesian convert between
 geodetic and geocentric or a local cartesian system.  The constructor for
 specifies the ellipsoid and the forward and reverse projections are
@@ -898,6 +906,9 @@ provided by the operator() member function.
 utility to provide access to this class.  This class requires
 installation of data files for the various geoid models; see \ref
 geoidinst for details.
+
+GeographicLib::Ellipsoid is a class which performs latitude
+conversions and returns various properties of the ellipsoid.
 
 GeographicLib::GravityModel evaluates the earth's gravitational field
 using a particular gravity model.  Various member functions return the
@@ -925,19 +936,22 @@ installation of data files for the various magnetic models; see \ref
 magneticinst for details.
 
 GeographicLib::Constants, GeographicLib::Math, GeographicLib::Utility,
-GeographicLib::DMS, are general utility class which are used internally
-by the library; in addition GeographicLib::EllipticFunction is used by
-GeographicLib::TransverseMercatorExact, GeographicLib::Accumulator is
-used by GeographicLib::PolygonArea, and GeographicLib::SphericalEngine,
+GeographicLib::DMS, are general utility class which are used
+internally by the library; in addition GeographicLib::EllipticFunction
+is used by GeographicLib::TransverseMercatorExact,
+GeographicLib::Ellipsoid, and GeographicLib::GeodesicExact, and
+GeographicLib::GeodesicLineExact; GeographicLib::Accumulator is used
+by GeographicLib::PolygonArea, and GeographicLib::SphericalEngine,
 GeographicLib::CircularEngine, GeographicLib::SphericalHarmonic,
-GeographicLib::SphericalHarmonic1, and GeographicLib::SphericalHarmonic2
-facilitate the summation of spherical harmonic series which is needed by
-and GeographicLib::MagneticModel and GeographicLib::MagneticCircle.  One
-important definition is GeographicLib::Math::real which is the type used
-for real numbers.  This allows the library to be easily switched to
-using floats, doubles, or long doubles.  However all the testing has
-been with real set to double and the library should be installed in this
-way.
+GeographicLib::SphericalHarmonic1, and
+GeographicLib::SphericalHarmonic2 facilitate the summation of
+spherical harmonic series which is needed by and
+GeographicLib::MagneticModel and GeographicLib::MagneticCircle.  One
+important definition is GeographicLib::Math::real which is the type
+used for real numbers.  This allows the library to be easily switched
+to using floats, doubles, or long doubles.  However all the testing
+has been with real set to double and the library should be installed
+in this way.
 
 In general, the constructors for the classes in %GeographicLib check
 their arguments and throw GeographicLib::GeographicErr exceptions with a
@@ -2524,9 +2538,23 @@ equidistant projection in terms of geodesics.  The
 <a href="GeodesicProj.1.html">GeodesicProj</a> utility provides an
 interface to these projections.
 
+The algorithms used by GeographicLib::Geodesic and
+GeographicLib::GeodesicLine are based on a Taylor expansion of the
+geodesic integrals valid when the flattening \e f is small.
+GeographicLib::GeodesicExact and GeographicLib::GeodesicLineExact
+evaluate the integrals exactly (in terms of incomplete elliptic
+integrals).  For the WGS84 ellipsoid, the series solutions are about
+2--3 times faster and 2--3 times more accurate (because it's easier to
+control round-off errors with series solutions); thus
+GeographicLib::Geodesic and GeographicLib::GeodesicLine are
+recommended for most geodetic applications.  However, in applications
+where the absolute value of \e f is greater than about 0.01, the exact
+classes should be used.
+
 Go to
  - \ref testgeod
  - \ref geodseries
+ - \ref geodellip
 
 References
  - F. W. Bessel,
@@ -2982,6 +3010,60 @@ C4[8] = + (1/141338340 - 1/164894730 * ep2) * k2^8
 C4[9] = + 1/737176440 * k2^9;
 \endverbatim
 
+\section geodellip Geodesics in terms of elliptic integrals
+
+GeographicLib::GeodesicExact and GeographicLib::GeodesicLineExact solve
+the geodesic problem using elliptic integrals.  The formulation of
+geodesic in terms of incomplete elliptic integrals is given in
+ - C. F. F. Karney,
+   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
+   on an ellipsoid of revolution</a>,
+   Feb. 2011; preprint
+   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
+ .
+It is most convenient to use the form derived for a prolate ellipsoid in
+Appendix D.  For an oblate ellipsoid this results in elliptic integrals
+with an imaginary modulus.  However, the integrals themselves are real
+and the algorithms used to compute the elliptic integrals handles the
+case of an imaginary modulus using real arithmetic.
+
+The key relations are
+\f[
+ \begin{aligned}
+  \frac sb &= E(\sigma, ik), \\
+  J(\sigma) &= k^2 D(\sigma, ik), \\
+  \lambda &= (1 - f) \sin\alpha_0  G(\sigma, \cos^2\alpha_0, ik),
+ \end{aligned}
+\f]
+where
+\f[
+ \begin{aligned}
+ D(\phi,k) &= \int_0^\phi
+ \frac{\sin^2\theta}{\sqrt{1 - k^2\sin^2\theta}}\,d\theta\\
+ &=\frac{F(\phi, k) - E(\phi, k)}{k^2},\\
+ G(\phi,\alpha^2,k) &= \int_0^\phi
+ \frac{\sqrt{1 - k^2\sin^2\theta}}{1 - \alpha^2\sin^2\theta}\,d\theta\\
+ &=\biggl(1-\frac{k^2}{\alpha^2}\biggr)\Pi(\phi, \alpha^2, k)
+ +\frac{k^2}{\alpha^2}F(\phi, k),
+ \end{aligned}
+\f]
+and \f$F(\phi, k)\f$, \f$E(\phi, k)\f$, and \f$\Pi(\phi, \alpha^2,
+k)\f$, are incomplete elliptic integrals of the first, second, and
+third kinds (see http://dlmf.nist.gov/19.2.ii). \f$D(\phi, k)\f$ is
+Jahnke's elliptic integral.
+
+Nominally, GeographicLib::GeodesicLineExact and ::GeodesicExact will
+give "exact" results for any value of the flattening.  However, the
+geographic latitude is a very distorted measure of distance from the
+equator with very eccentric ellipsoids and this introducing an
+irreducible representational error in the algorithms in this case.  It
+is therefore recommended to restrict the use of these classes to \e b/\e
+a &isin; [0.1, 10] or \e f &isin; [-9, 0.9].
+
+Note that GeographicLib::GeodesicExact still uses a series expansion for
+the area \e S12.  However the series is taken out to 30th order and
+should give accurate results for \e b/\e a &isin; [1/3, 3].
+
 <center>
 Back to \ref magnetic.  Forward to \ref transversemercator.  Up to
 \ref contents.
@@ -3392,7 +3474,12 @@ of the git repository for %GeographicLib.
    - Allow precision of reals to be set via cmake.
    - Allow GeographicLib::Ellipsoid to be copied.
    - Add functionality to GeographicLib::EllipticFunction.
-   - Add Math::sincosp and Math::sincospd.
+   - Geodesic calculations
+     - add GeographicLib:GeodesicExact and GeographicLib::GeodesicLineExact;
+     - add -E option to <a href="Geod.1.html">Geod</a>;
+     - GeographicLib:Geodesic (and its exact counterpart) use the
+       bisection method to refine the solution of inverse problem if
+       Newton's method fails to converge.
    - cmake: use folders in IDEs
 
  - <a href="http://geographiclib.sf.net/1.24">Version 1.24</a>

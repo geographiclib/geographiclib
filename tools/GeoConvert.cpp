@@ -207,10 +207,10 @@ int main(int argc, char* argv[]) {
             real
               gamma = p.AltConvergence(),
               k = p.AltScale();
-            os =
-              Utility::str<real>(gamma, std::max(-5,std::min(8,prec))+5)
-              + " " +
-              Utility::str<real>(k, std::max(-5,std::min(8,prec))+7);
+            int prec1 = std::max(-5, std::min( (sizeof(real) > sizeof(double) ?
+                                                3 : 0) + 8, prec ));
+            os = Utility::str<real>(gamma, prec1 + 5) + " "
+              + Utility::str<real>(k, prec1 + 7);
           }
         }
       }

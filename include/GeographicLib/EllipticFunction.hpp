@@ -17,19 +17,36 @@ namespace GeographicLib {
   /**
    * \brief Elliptic functions needed for TransverseMercatorExact
    *
-   * This provides the subset of elliptic functions needed for
-   * TransverseMercatorExact.  For a given ellipsoid, only parameters
-   * <i>e</i><sup>2</sup> and 1 &minus; <i>e</i><sup>2</sup> are needed.  This
-   * class taken the parameter as a constructor parameters and caches the
-   * values of the required complete integrals.  A method is provided for
-   * Jacobi elliptic functions and for the incomplete elliptic integral of the
-   * second kind in terms of the amplitude.
+   * This provides the elliptic functions and integrals needed for Ellipsoid,
+   * GeodesicExact, and TransverseMercatorExact.  Two categories of function
+   * are provided:
+   * - \e static functions to compute symmetric elliptic integrals
+   *   (http://dlmf.nist.gov/19.16.i)
+   * - \e member functions to compute Legrendre's elliptic
+   *   integrals (http://dlmf.nist.gov/19.2.ii) and the
+   *   Jacobi elliptic functions (http://dlmf.nist.gov/22.2).
+   * .
+   * In the latter case, an object is constructed giving the modulus \e k (and
+   * optionally the parameter &alpha;<sup>2</sup>).  The modulus is always
+   * passed as its square <i>k</i><sup>2</sup> which allows \e k to be pure
+   * imaginary (<i>k</i><sup>2</sup> &lt; 0).  (Confusingly, Abramowitz and
+   * Stegun call \e m = <i>k</i><sup>2</sup> the "parameter" and \e n =
+   * &alpha;<sup>2</sup> the "characteristic".)
+   *
+   * In geodesic applications, it is convenient to separate the incomplete
+   * integrals into secular and periodic components, e.g.,
+   * \f[
+   *   E(\phi, k) = E(\phi) / (\pi/2) [ \phi + \delta E(\phi, k) ]
+   * \f]
+   * where &delta;\e E(&phi;, \e k) is an odd periodic function with period
+   * &pi;.
    *
    * The computation of the elliptic integrals uses the algorithms given in
    * - B. C. Carlson,
    *   <a href="http://dx.doi.org/10.1007/BF02198293"> Computation of elliptic
-   *   integrals</a>, Numerical Algorithms 10, 13--26 (1995).
+   *   integrals</a>, Numerical Algorithms 10, 13--26 (1995)
    * .
+   * with the additional optimizations given in http://dlmf.nist.gov/19.36.i.
    * The computation of the Jacobi elliptic functions uses the algorithm given
    * in
    * - R. Bulirsch,
@@ -67,6 +84,10 @@ namespace GeographicLib {
      *   done.)
      * @param[in] alpha2 the parameter &alpha;<sup>2</sup>.
      *   &alpha;<sup>2</sup> must lie in (-&infin;, 1).  (No checking is done.)
+     *
+     * If only elliptic integrals of the first and second kinds are needed,
+     * then set &alpha;<sup>2</sup> = 0 (in which case we have &Pi;(&phi;, 0,
+     * \e k) = \e F(&phi;, \e k) and \e G(&phi;, 0, \e k) = \e E(&phi;, \e k)).
      **********************************************************************/
     EllipticFunction(real k2, real alpha2) throw();
 
@@ -86,7 +107,7 @@ namespace GeographicLib {
      * The arguments must satisfy \e k2 + \e kp2 = 1 and \e alpha2 + \e alphap2
      * = 1.  (No checking is done that these conditions are met.)  This
      * constructor is provided to enable accuracy to be maintained, e.g., when
-     * is very small.
+     * \e k is very close to unity.
      **********************************************************************/
     EllipticFunction(real k2, real alpha2, real kp2, real alphap2) throw();
 
@@ -262,18 +283,6 @@ namespace GeographicLib {
     Math::real F(real phi) const throw();
 
     /**
-     * The incomplete integral of the first kind in terms of Jacobi elliptic
-     * functions
-     *
-     * @param[in] sn = sin&phi;
-     * @param[in] cn = cos&phi;
-     * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
-     *   sin<sup>2</sup>&phi;)
-     * @return \e F(&phi;, \e k) as though &pi; &isin; (&minus;&pi;, &pi].
-     **********************************************************************/
-    Math::real F(real sn, real cn, real dn) const throw();
-
-    /**
      * The incomplete integral of the second kind.
      *
      * @param[in] phi
@@ -305,19 +314,6 @@ namespace GeographicLib {
     Math::real Einv(real x) const throw();
 
     /**
-     * The incomplete integral of the second kind in terms of Jacobi elliptic
-     * functions
-     *
-     * @param[in] sn = sin&phi;
-     * @param[in] cn = cos&phi;
-     * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
-     *   sin<sup>2</sup>&phi;)
-     * @return \e E(&phi;, \e k) as though &pi; &isin; (&minus;&pi;, &pi].
-     **********************************************************************/
-    Math::real E(real sn, real cn, real dn) const throw();
-
-
-    /**
      * The incomplete integral of the third kind.
      *
      * @param[in] phi
@@ -331,19 +327,6 @@ namespace GeographicLib {
      * \f]
      **********************************************************************/
     Math::real Pi(real phi) const throw();
-
-    /**
-     * The incomplete integral of the third kind in terms of Jacobi elliptic
-     * functions
-     *
-     * @param[in] sn = sin&phi;
-     * @param[in] cn = cos&phi;
-     * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
-     *   sin<sup>2</sup>&phi;)
-     * @return &Pi;(&phi;, &alpha;<sup>2</sup>, \e k) as though &pi; &isin;
-     *   (&minus;&pi;, &pi].
-     **********************************************************************/
-    Math::real Pi(real sn, real cn, real dn) const throw();
 
     /**
      * Jahnke's incomplete elliptic integral.
@@ -360,18 +343,6 @@ namespace GeographicLib {
     Math::real D(real phi) const throw();
 
     /**
-     * Jahnke's incomplete elliptic integral in terms of Jacobi elliptic
-     * functions
-     *
-     * @param[in] sn = sin&phi;
-     * @param[in] cn = cos&phi;
-     * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
-     *   sin<sup>2</sup>&phi;)
-     * @return \e D(&phi;, \e k) as though &pi; &isin; (&minus;&pi;, &pi].
-     **********************************************************************/
-    Math::real D(real sn, real cn, real dn) const throw();
-
-    /**
      * The geodesic longitude integral.
      *
      * @param[in] phi
@@ -386,6 +357,58 @@ namespace GeographicLib {
      * \f]
      **********************************************************************/
     Math::real G(real phi) const throw();
+    ///@}
+
+    /** \name Incomplete integrals in terms of Jacobi elliptic functions.
+     **********************************************************************/
+    /**
+     * The incomplete integral of the first kind in terms of Jacobi elliptic
+     * functions
+     *
+     * @param[in] sn = sin&phi;
+     * @param[in] cn = cos&phi;
+     * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
+     *   sin<sup>2</sup>&phi;)
+     * @return \e F(&phi;, \e k) as though &phi; &isin; (&minus;&pi;, &pi].
+     **********************************************************************/
+    Math::real F(real sn, real cn, real dn) const throw();
+
+    /**
+     * The incomplete integral of the second kind in terms of Jacobi elliptic
+     * functions
+     *
+     * @param[in] sn = sin&phi;
+     * @param[in] cn = cos&phi;
+     * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
+     *   sin<sup>2</sup>&phi;)
+     * @return \e E(&phi;, \e k) as though &phi; &isin; (&minus;&pi;, &pi].
+     **********************************************************************/
+    Math::real E(real sn, real cn, real dn) const throw();
+
+    /**
+     * The incomplete integral of the third kind in terms of Jacobi elliptic
+     * functions
+     *
+     * @param[in] sn = sin&phi;
+     * @param[in] cn = cos&phi;
+     * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
+     *   sin<sup>2</sup>&phi;)
+     * @return &Pi;(&phi;, &alpha;<sup>2</sup>, \e k) as though &phi; &isin;
+     *   (&minus;&pi;, &pi].
+     **********************************************************************/
+    Math::real Pi(real sn, real cn, real dn) const throw();
+
+    /**
+     * Jahnke's incomplete elliptic integral in terms of Jacobi elliptic
+     * functions
+     *
+     * @param[in] sn = sin&phi;
+     * @param[in] cn = cos&phi;
+     * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
+     *   sin<sup>2</sup>&phi;)
+     * @return \e D(&phi;, \e k) as though &phi; &isin; (&minus;&pi;, &pi].
+     **********************************************************************/
+    Math::real D(real sn, real cn, real dn) const throw();
 
     /**
      * The geodesic longitude integral in terms of Jacobi elliptic
@@ -395,7 +418,7 @@ namespace GeographicLib {
      * @param[in] cn = cos&phi;
      * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
-     * @return \e G(&phi;, &alpha;<sup>2</sup>, \e k) as though &pi; &isin;
+     * @return \e G(&phi;, &alpha;<sup>2</sup>, \e k) as though &phi; &isin;
      *   (&minus;&pi;, &pi].
      **********************************************************************/
     Math::real G(real sn, real cn, real dn) const throw();
@@ -414,7 +437,7 @@ namespace GeographicLib {
      * @return the periodic function &pi; \e F(&phi;, \e k) / (2 \e K(\e k)) -
      *   &phi;
      **********************************************************************/
-    Math::real pF(real sn, real cn, real dn) const throw();
+    Math::real deltaF(real sn, real cn, real dn) const throw();
 
     /**
      * The periodic incomplete integral of the second kind
@@ -426,7 +449,7 @@ namespace GeographicLib {
      * @return the periodic function &pi; \e E(&phi;, \e k) / (2 \e E(\e k)) -
      *   &phi;
      **********************************************************************/
-    Math::real pE(real sn, real cn, real dn) const throw();
+    Math::real deltaE(real sn, real cn, real dn) const throw();
 
     /**
      * The periodic inverse of the incomplete integral of the second kind.
@@ -436,7 +459,7 @@ namespace GeographicLib {
      * @return the periodic function <i>E</i><sup>&minus;1</sup>(&tau; (2 \e
      *   E(\e k)/&pi;), \e k) - &tau;
      **********************************************************************/
-    Math::real pEinv(real stau, real ctau) const throw();
+    Math::real deltaEinv(real stau, real ctau) const throw();
 
     /**
      * The periodic incomplete integral of the third kind
@@ -448,7 +471,7 @@ namespace GeographicLib {
      * @return the periodic function &pi; &Pi;(&phi;, \e k) / (2 &Pi;(\e k)) -
      *   &phi;
      **********************************************************************/
-    Math::real pPi(real sn, real cn, real dn) const throw();
+    Math::real deltaPi(real sn, real cn, real dn) const throw();
 
     /**
      * The periodic Jahnke's incomplete elliptic integral
@@ -460,7 +483,7 @@ namespace GeographicLib {
      * @return the periodic function &pi; \e D(&phi;, \e k) / (2 \e D(\e k)) -
      *   &phi;
      **********************************************************************/
-    Math::real pD(real sn, real cn, real dn) const throw();
+    Math::real deltaD(real sn, real cn, real dn) const throw();
 
     /**
      * The periodic geodesic longitude integral
@@ -472,7 +495,7 @@ namespace GeographicLib {
      * @return the periodic function &pi; \e G(&phi;, \e k) / (2 \e G(\e k)) -
      *   &phi;
      **********************************************************************/
-    Math::real pG(real sn, real cn, real dn) const throw();
+    Math::real deltaG(real sn, real cn, real dn) const throw();
     ///@}
 
     /** \name Elliptic functions.
@@ -489,7 +512,7 @@ namespace GeographicLib {
     void sncndn(real x, real& sn, real& cn, real& dn) const throw();
 
     /**
-     * The &Delta; function.
+     * The &Delta; amplitude function.
      *
      * @param[in] sn sin&phi;
      * @param[in] cn cos&phi;

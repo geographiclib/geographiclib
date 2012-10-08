@@ -411,31 +411,32 @@ namespace GeographicLib {
     return gi;
   }
 
-  Math::real EllipticFunction::pF(real sn, real cn, real dn) const throw() {
+  Math::real EllipticFunction::deltaF(real sn, real cn, real dn) const throw() {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
     return F(sn, cn, dn) * (Math::pi<real>()/2) / K() - atan2(sn, cn);
   }
 
-  Math::real EllipticFunction::pE(real sn, real cn, real dn) const throw() {
+  Math::real EllipticFunction::deltaE(real sn, real cn, real dn) const throw() {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
     return E(sn, cn, dn) * (Math::pi<real>()/2) / E() - atan2(sn, cn);
   }
 
-  Math::real EllipticFunction::pPi(real sn, real cn, real dn) const throw() {
+  Math::real EllipticFunction::deltaPi(real sn, real cn, real dn)
+    const throw() {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
     return Pi(sn, cn, dn) * (Math::pi<real>()/2) / Pi() - atan2(sn, cn);
   }
 
-  Math::real EllipticFunction::pD(real sn, real cn, real dn) const throw() {
+  Math::real EllipticFunction::deltaD(real sn, real cn, real dn) const throw() {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
     return D(sn, cn, dn) * (Math::pi<real>()/2) / D() - atan2(sn, cn);
   }
 
-  Math::real EllipticFunction::pG(real sn, real cn, real dn) const throw() {
+  Math::real EllipticFunction::deltaG(real sn, real cn, real dn) const throw() {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
     return G(sn, cn, dn) * (Math::pi<real>()/2) / G() - atan2(sn, cn);
@@ -443,12 +444,12 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::F(real phi) const throw() {
     real sn = sin(phi), cn = cos(phi);
-    return (pF(sn, cn, Delta(sn, cn)) + phi) * K() / (Math::pi<real>()/2);
+    return (deltaF(sn, cn, Delta(sn, cn)) + phi) * K() / (Math::pi<real>()/2);
   }
 
   Math::real EllipticFunction::E(real phi) const throw() {
     real sn = sin(phi), cn = cos(phi);
-    return (pE(sn, cn, Delta(sn, cn)) + phi) * E() / (Math::pi<real>()/2);
+    return (deltaE(sn, cn, Delta(sn, cn)) + phi) * E() / (Math::pi<real>()/2);
   }
 
   Math::real EllipticFunction::Ed(real ang) const throw() {
@@ -463,17 +464,17 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::Pi(real phi) const throw() {
     real sn = sin(phi), cn = cos(phi);
-    return (pPi(sn, cn, Delta(sn, cn)) + phi) * Pi() / (Math::pi<real>()/2);
+    return (deltaPi(sn, cn, Delta(sn, cn)) + phi) * Pi() / (Math::pi<real>()/2);
   }
 
   Math::real EllipticFunction::D(real phi) const throw() {
     real sn = sin(phi), cn = cos(phi);
-    return (pD(sn, cn, Delta(sn, cn)) + phi) * D() / (Math::pi<real>()/2);
+    return (deltaD(sn, cn, Delta(sn, cn)) + phi) * D() / (Math::pi<real>()/2);
   }
 
   Math::real EllipticFunction::G(real phi) const throw() {
     real sn = sin(phi), cn = cos(phi);
-    return (pG(sn, cn, Delta(sn, cn)) + phi) * G() / (Math::pi<real>()/2);
+    return (deltaG(sn, cn, Delta(sn, cn)) + phi) * G() / (Math::pi<real>()/2);
   }
 
   Math::real EllipticFunction::Einv(real x) const throw() {
@@ -497,7 +498,7 @@ namespace GeographicLib {
     return n * Math::pi<real>() + phi;
   }
 
-  Math::real EllipticFunction::pEinv(real stau, real ctau) const throw() {
+  Math::real EllipticFunction::deltaEinv(real stau, real ctau) const throw() {
     // Function is periodic with period pi
     if (ctau < 0) { ctau = -ctau; stau = -stau; }
     real tau = atan2(stau, ctau);

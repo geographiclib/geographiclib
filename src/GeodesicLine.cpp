@@ -44,9 +44,19 @@ namespace GeographicLib {
     , _caps(caps | LATITUDE | AZIMUTH)
   {
     azi1 = Math::AngNormalize(azi1);
-    // Guard against underflow in salp0
-    azi1 = Geodesic::AngRound(azi1);
     lon1 = Math::AngNormalize(lon1);
+    if (lat1 == 90) {
+      lon1 += lon1 < 0 ? 180 : -180;
+      lon1 = Math::AngNormalize(lon1 - azi1);
+      azi1 = -180;
+    } else if (lat1 == -90) {
+      lon1 = Math::AngNormalize(lon1 + azi1);
+      azi1 = 0;
+    } else {
+      // Guard against underflow in salp0
+      azi1 = Geodesic::AngRound(azi1);
+    }
+
     _lat1 = lat1;
     _lon1 = lon1;
     _azi1 = azi1;
@@ -84,6 +94,7 @@ namespace GeographicLib {
 
     _k2 = Math::sq(_calp0) * g._ep2;
     real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
+    _dn1 = sqrt(1 + g._ep2 * Math::sq(sbet1));
 
     if (_caps & CAP_C1) {
       _A1m1 = Geodesic::A1m1f(eps);
@@ -162,6 +173,7 @@ namespace GeographicLib {
     // sig2 = sig1 + sig12
     ssig2 = _ssig1 * csig12 + _csig1 * ssig12;
     csig2 = _csig1 * csig12 - _ssig1 * ssig12;
+    real dn2 = sqrt(1 + _k2 * Math::sq(ssig2));
     if (outmask & (DISTANCE | REDUCEDLENGTH | GEODESICSCALE)) {
       if (arcmode)
         B12 = Geodesic::SinCosSeries(true, ssig2, csig2, _C1a, nC1_);
@@ -205,23 +217,18 @@ namespace GeographicLib {
 
     if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
       real
-        ssig1sq = Math::sq(_ssig1),
-        ssig2sq = Math::sq( ssig2),
-        w1 = sqrt(1 + _k2 * ssig1sq),
-        w2 = sqrt(1 + _k2 * ssig2sq),
         B22 = Geodesic::SinCosSeries(true, ssig2, csig2, _C2a, nC2_),
         AB2 = (1 + _A2m1) * (B22 - _B21),
         J12 = (_A1m1 - _A2m1) * sig12 + (AB1 - AB2);
       if (outmask & REDUCEDLENGTH)
         // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
         // accurate cancellation in the case of coincident points.
-        m12 = _b * ((w2 * (_csig1 * ssig2) - w1 * (_ssig1 * csig2))
+        m12 = _b * ((dn2 * (_csig1 * ssig2) - _dn1 * (_ssig1 * csig2))
                   - _csig1 * csig2 * J12);
       if (outmask & GEODESICSCALE) {
-        M12 = csig12 + (_k2 * (ssig2sq - ssig1sq) *  ssig2 / (w1 + w2)
-                        - csig2 * J12) * _ssig1 / w1;
-        M21 = csig12 - (_k2 * (ssig2sq - ssig1sq) * _ssig1 / (w1 + w2)
-                        - _csig1 * J12) * ssig2 / w2;
+        real t = _k2 * (ssig2 - _ssig1) * (ssig2 + _ssig1) / (_dn1 + dn2);
+        M12 = csig12 + (t *  ssig2 -  csig2 * J12) * _ssig1 / _dn1;
+        M21 = csig12 - (t * _ssig1 - _csig1 * J12) *  ssig2 /  dn2;
       }
     }
 

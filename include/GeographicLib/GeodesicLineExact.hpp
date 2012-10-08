@@ -17,38 +17,19 @@
 namespace GeographicLib {
 
   /**
-   * \brief A geodesic line
+   * \brief An exact geodesic line
    *
    * GeodesicLineExact facilitates the determination of a series of points on a
-   * single geodesic.  The starting point (\e lat1, \e lon1) and the azimuth \e
-   * azi1 are specified in the constructor.  GeodesicLineExact.Position returns
-   * the location of point 2 a distance \e s12 along the geodesic.
-   * Alternatively GeodesicLineExact.ArcPosition gives the position of point 2
-   * an arc length \e a12 along the geodesic.
-   *
-   * The default copy constructor and assignment operators work with this
-   * class.  Similarly, a vector can be used to hold GeodesicLineExact objects.
-   *
-   * The calculations are accurate to better than 15 nm (15 nanometers).  See
-   * Sec. 9 of
-   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
-   * details.
-   *
-   * The algorithms are described in
-   * - C. F. F. Karney,
-   *   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
-   *   Algorithms for geodesics</a>,
-   *   J. Geodesy, 2012;
-   *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
-   *   10.1007/s00190-012-0578-z</a>.
-   * .
-   * For more information on geodesics see \ref geodesic.
+   * single geodesic.  This is a companion to the GeodesicExact class.  For
+   * additional information on this class see the documentation on the
+   * GeodesicLine class.
    *
    * Example of use:
    * \include example-GeodesicLineExact.cpp
    *
    * <a href="Geod.1.html">Geod</a> is a command-line utility providing access
-   * to the functionality of GeodesicExact and GeodesicLineExact.
+   * to the functionality of GeodesicExact and GeodesicLineExact (via the -E
+   * option).
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT GeodesicLineExact {
@@ -59,9 +40,8 @@ namespace GeographicLib {
 
     real _lat1, _lon1, _azi1;
     real _a, _f, _b, _c2, _f1, _salp0, _calp0, _k2,
-      _salp1, _calp1, _ssig1, _csig1, _stau1, _ctau1, _somg1, _comg1,
-      _A4, _B41,
-      _sig1, _dn1, _E0, _D0, _G0, _E1, _D1, _G1;
+      _salp1, _calp1, _ssig1, _csig1, _dn1, _stau1, _ctau1, _somg1, _comg1,
+      _A4, _B41, _E0, _D0, _G0, _E1, _D1, _G1;
     real _C4a[nC4_];            // all the elements of _C4a are used
     EllipticFunction _E;
     unsigned _caps;

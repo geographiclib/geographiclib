@@ -25,98 +25,34 @@ namespace GeographicLib {
   class GeodesicLineExact;
 
   /**
-   * \brief %Geodesic calculations
+   * \brief Exact %Geodesic calculations
    *
-   * The shortest path between two points on a ellipsoid at (\e lat1, \e lon1)
-   * and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12 and
-   * the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at
-   * the two end points.  (The azimuth is the heading measured clockwise from
-   * north.  \e azi2 is the "forward" azimuth, i.e., the heading that takes you
-   * beyond point 2 not back to point 1.)
+   * The equations for geodesics on an ellipsoid can be expressed in terms of
+   * incomplete elliptic integrals.  The Geodesic class expands these integrals
+   * in a series in the flattening \e f and this provides an accurate solution
+   * for \e f &isin [-0.01, 0.01].  The GeodesicExact class computes the
+   * ellitpic integrals directly and so provides a solution which is valid for
+   * all \e f.  However, in practice, its use should be limited to about \e
+   * b/\e a &isin; [0.1, 10] or \e f &isin; [-9, 0.9].
    *
-   * Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2, \e
-   * lon2, and \e azi2.  This is the \e direct geodesic problem and its
-   * solution is given by the function GeodesicExact::Direct.  (If \e s12 is
-   * sufficiently large that the geodesic wraps more than halfway around the
-   * earth, there will be another geodesic between the points with a smaller \e
-   * s12.)
+   * For the WGS84 ellipsoid, these classes are 2--3 times \e slower than the
+   * series solution and 2--3 times \e less \e accurate (because it's less easy
+   * to control round-off errors with the elliptic integral formulation).
+   * However the error in the series solution scales as <i>f</i><sup>7</sup>
+   * while the error in the elliptic integral solution is independent of \e f.
    *
-   * Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi1, \e
-   * azi2, and \e s12.  This is the \e inverse geodesic problem, whose solution
-   * is given by GeodesicExact::Inverse.  Usually, the solution to the inverse
-   * problem is unique.  In cases where there are multiple solutions (all with
-   * the same \e s12, of course), all the solutions can be easily generated
-   * once a particular solution is provided.
+   * The computation of the area in these classes is via a 30th order series.
+   * This will become inaccurate for very eccentric ellipsoids.
    *
-   * The standard way of specifying the direct problem is the specify the
-   * distance \e s12 to the second point.  However it is sometimes useful
-   * instead to specify the arc length \e a12 (in degrees) on the auxiliary
-   * sphere.  This is a mathematical construct used in solving the geodesic
-   * problems.  The solution of the direct problem in this form is provide by
-   * GeodesicExact::ArcDirect.  An arc length in excess of 180&deg; indicates
-   * that the geodesic is not a shortest path.  In addition, the arc length
-   * between an equatorial crossing and the next extremum of latitude for a
-   * geodesic is 90&deg;.
-   *
-   * This class can also calculate several other quantities related to
-   * geodesics.  These are:
-   * - <i>reduced length</i>.  If we fix the first point and increase \e azi1
-   *   by \e dazi1 (radians), the second point is displaced \e m12 \e dazi1 in
-   *   the direction \e azi2 + 90&deg;.  The quantity \e m12 is called
-   *   the "reduced length" and is symmetric under interchange of the two
-   *   points.  On a curved surface the reduced length obeys a symmetry
-   *   relation, \e m12 + \e m21 = 0.  On a flat surface, we have \e m12 = \e
-   *   s12.  The ratio <i>s12</i>/\e m12 gives the azimuthal scale for an
-   *   azimuthal equidistant projection.
-   * - <i>geodesic scale</i>.  Consider a reference geodesic and a second
-   *   geodesic parallel to this one at point 1 and separated by a small
-   *   distance \e dt.  The separation of the two geodesics at point 2 is \e
-   *   M12 \e dt where \e M12 is called the "geodesic scale".  \e M21 is
-   *   defined similarly (with the geodesics being parallel at point 2).  On a
-   *   flat surface, we have \e M12 = \e M21 = 1.  The quantity 1/\e M12 gives
-   *   the scale of the Cassini-Soldner projection.
-   * - <i>area</i>.  Consider the quadrilateral bounded by the following lines:
-   *   the geodesic from point 1 to point 2, the meridian from point 2 to the
-   *   equator, the equator from \e lon2 to \e lon1, the meridian from the
-   *   equator to point 1.  The area of this quadrilateral is represented by \e
-   *   S12 with a clockwise traversal of the perimeter counting as a positive
-   *   area and it can be used to compute the area of any simple geodesic
-   *   polygon.
-   *
-   * Overloaded versions of GeodesicExact::Direct, GeodesicExact::ArcDirect,
-   * and GeodesicExact::Inverse allow these quantities to be returned.  In
-   * addition there are general functions GeodesicExact::GenDirect, and
-   * GeodesicExact::GenInverse which allow an arbitrary set of results to be
-   * computed.  The quantities \e m12, \e M12, \e M21 which all specify the
-   * behavior of nearby geodesics obey addition rules.  Let points 1, 2, and 3
-   * all lie on a single geodesic, then
-   * - \e m13 = \e m12 \e M23 + \e m23 \e M21
-   * - \e M13 = \e M12 \e M23 &minus; (1 &minus; \e M12 \e M21) \e m23 / \e m12
-   * - \e M31 = \e M32 \e M21 &minus; (1 &minus; \e M23 \e M32) \e m12 / \e m23
-   *
-   * Additional functionality is provided by the GeodesicLineExact class, which
-   * allows a sequence of points along a geodesic to be computed.
-   *
-   * The calculations are accurate to better than 15 nm (15 nanometers).  See
-   * Sec. 9 of
-   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a>
-   * for details.
-   *
-   * The algorithms are described in
-   * - C. F. F. Karney,
-   *   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
-   *   Algorithms for geodesics</a>,
-   *   J. Geodesy, 2012;
-   *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
-   *   10.1007/s00190-012-0578-z</a>.
-   * .
-   * For more information on geodesics see \ref geodesic.
+   * See \ref geodellip for the formulation.  See the documentation on the
+   * Geodesic class for additional information on the geodesics problems.
    *
    * Example of use:
    * \include example-GeodesicExact.cpp
    *
    * <a href="Geod.1.html">Geod</a> is a command-line utility providing access
-   * to the functionality of GeodesicExact and GeodesicLineExact.
+   * to the functionality of GeodesicExact and GeodesicLineExact (via the -E
+   * option).
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT GeodesicExact {
@@ -171,16 +107,19 @@ namespace GeographicLib {
 
     void Lengths(const EllipticFunction& E,
                  real sig12,
-                 real ssig1, real csig1, real ssig2, real csig2,
+                 real ssig1, real csig1, real dn1,
+                 real ssig2, real csig2, real dn2,
                  real cbet1, real cbet2,
                  real& s12s, real& m12a, real& m0,
                  bool scalep, real& M12, real& M21) const throw();
     real InverseStart(EllipticFunction& E,
-                      real sbet1, real cbet1, real sbet2, real cbet2,
+                      real sbet1, real cbet1, real dn1,
+                      real sbet2, real cbet2, real dn2,
                       real lam12,
                       real& salp1, real& calp1,
                       real& salp2, real& calp2) const throw();
-    real Lambda12(real sbet1, real cbet1, real sbet2, real cbet2,
+    real Lambda12(real sbet1, real cbet1, real dn1,
+                  real sbet2, real cbet2, real dn2,
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,

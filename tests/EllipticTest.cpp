@@ -2,10 +2,16 @@
 #include <iomanip>
 #include <GeographicLib/EllipticFunction.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about constant conditional expressions
+#  pragma warning (disable: 4127)
+#endif
+
 using namespace GeographicLib;
 int main() {
   typedef GeographicLib::Math::real real;
   try {
+    // For tabulated values in A+S
     real
       ASalpha = 30*Math::degree<double>(),
       k2 = Math::sq(std::sin(ASalpha)),
