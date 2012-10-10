@@ -27,6 +27,7 @@
  **********************************************************************/
 
 #include <GeographicLib/GeodesicLineExact.hpp>
+#include <iostream>
 
 namespace GeographicLib {
 
@@ -40,7 +41,9 @@ namespace GeographicLib {
     , _b(g._b)
     , _c2(g._c2)
     , _f1(g._f1)
+    , _e2(g._e2)
     , _E(0, 0)
+    , _Eh(0, 0)
       // Always allow latitude and azimuth
     , _caps(caps | LATITUDE | AZIMUTH)
   {
@@ -73,6 +76,8 @@ namespace GeographicLib {
     sbet1 = _f1 * sin(phi);
     cbet1 = abs(lat1) == 90 ? GeodesicExact::tiny_ : cos(phi);
     GeodesicExact::SinCosNorm(sbet1, cbet1);
+    _dn1 = (_f >= 0 ? sqrt(1 + g._ep2 * Math::sq(sbet1)) :
+            sqrt(1 - _e2 * Math::sq(cbet1)) / _f1);
 
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
     _salp0 = _salp1 * cbet1; // alp0 in [0, pi/2 - |bet1|]
@@ -90,13 +95,15 @@ namespace GeographicLib {
     // With alp0 = 0, omg1 = 0 for alp1 = 0, omg1 = pi for alp1 = pi.
     _ssig1 = sbet1; _somg1 = _salp0 * sbet1;
     _csig1 = _comg1 = sbet1 != 0 || _calp1 != 0 ? cbet1 * _calp1 : 1;
+    // Without normalization we have sups1 = somg1.
+    _cups1 = _f1 * _dn1 * _comg1;
     GeodesicExact::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
-    GeodesicExact::SinCosNorm(_somg1, _comg1);
+    // GeodesicExact::SinCosNorm(_somg1, _comg1); -- don't need to normalize!
+    // GeodesicExact::SinCosNorm(_sups1, _cups1); -- don't need to normalize!
 
     _k2 = Math::sq(_calp0) * g._ep2;
     _E.Reset(-_k2, Math::sq(_calp0), 1 + _k2, Math::sq(_salp0));
-    _dn1 = (_f >= 0 ? sqrt(1 + g._ep2 * Math::sq(sbet1)) :
-            sqrt(1 - g._e2 * Math::sq(cbet1)) / _f1);
+    _Eh.Reset(-_k2, -g._ep2, 1 + _k2, 1 + g._ep2);
 
     if (_caps & CAP_E) {
       _E0 = _E.E() / (Math::pi<real>() / 2);
@@ -118,13 +125,15 @@ namespace GeographicLib {
       if (_salp0) {
         _G0 = _E.G() / (Math::pi<real>() / 2);
         _G1 = _E.deltaG(_ssig1, _csig1, _dn1);
+        _H0 = _Eh.H() / (Math::pi<real>() / 2);
+        _H1 = _Eh.deltaH(_ssig1, _csig1, _dn1);
       }
     }
 
     if (_caps & CAP_C4) {
       g.C4f(_k2, _C4a);
       // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
-      _A4 = Math::sq(_a) * _calp0 * _salp0 * g._e2;
+      _A4 = Math::sq(_a) * _calp0 * _salp0 * _e2;
       _B41 = GeodesicExact::SinCosSeries(_ssig1, _csig1, _C4a, nC4_);
     }
   }
@@ -189,9 +198,18 @@ namespace GeographicLib {
       s12 = arcmode ? _b * (_E0 * sig12 + AB1) : s12_a12;
 
     if (outmask & LONGITUDE) {
-      if (_salp0)
+      if (_salp0) {
         lam12 = _f1 * _salp0 * _G0 *
           ( sig12 + _E.deltaG(ssig2, csig2, dn2) - _G1 );
+        real somg2 = _salp0 * ssig2, comg2 = csig2;  // No need to normalize
+        // Without normalization we have sups2 = somg2.
+        real cups2 =  _f1 * dn2 *  comg2;
+        real lam12h = atan2(somg2 * _cups1 - cups2 * _somg1,
+                            cups2 * _cups1 + somg2 * _somg1) -
+          _e2/_f1 * _salp0 * _H0 *
+          (sig12 + _Eh.deltaH(ssig2, csig2, dn2) - _H1 );
+        cerr << lam12 << " " << lam12h << " " << lam12h - lam12 << "\n";
+      }
       else {
         // tan(omg2) = sin(alp0) * tan(sig2)
         real somg2 = _salp0 * ssig2, comg2 = csig2;  // No need to normalize

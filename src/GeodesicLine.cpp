@@ -72,6 +72,7 @@ namespace GeographicLib {
     sbet1 = _f1 * sin(phi);
     cbet1 = abs(lat1) == 90 ? Geodesic::tiny_ : cos(phi);
     Geodesic::SinCosNorm(sbet1, cbet1);
+    _dn1 = sqrt(1 + g._ep2 * Math::sq(sbet1));
 
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
     _salp0 = _salp1 * cbet1; // alp0 in [0, pi/2 - |bet1|]
@@ -90,11 +91,10 @@ namespace GeographicLib {
     _ssig1 = sbet1; _somg1 = _salp0 * sbet1;
     _csig1 = _comg1 = sbet1 != 0 || _calp1 != 0 ? cbet1 * _calp1 : 1;
     Geodesic::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
-    Geodesic::SinCosNorm(_somg1, _comg1);
+    // Geodesic::SinCosNorm(_somg1, _comg1); -- don't need to normalize!
 
     _k2 = Math::sq(_calp0) * g._ep2;
     real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
-    _dn1 = sqrt(1 + g._ep2 * Math::sq(sbet1));
 
     if (_caps & CAP_C1) {
       _A1m1 = Geodesic::A1m1f(eps);

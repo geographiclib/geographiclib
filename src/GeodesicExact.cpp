@@ -28,6 +28,7 @@
 
 #include <GeographicLib/GeodesicExact.hpp>
 #include <GeographicLib/GeodesicLineExact.hpp>
+#include <iostream>
 
 #if defined(_MSC_VER)
 // Squelch warnings about potentially uninitialized local variables
@@ -158,7 +159,10 @@ namespace GeographicLib {
     // enforces some symmetries in the results returned.
 
     real phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
-    EllipticFunction E(-_ep2, 0); // Initialize for the meridian
+    // Initialize for the meridian.  No longitude calculation is done in this
+    // case to let the parameter default to 0.
+    EllipticFunction E(-_ep2);
+    EllipticFunction Eh(-_ep2);
 
     phi = lat1 * Math::degree<real>();
     // Ensure cbet1 = +epsilon at poles
@@ -221,7 +225,7 @@ namespace GeographicLib {
                     csig1 * csig2 + ssig1 * ssig2);
       {
         real dummy;
-        Lengths(E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
+        Lengths(E, Eh, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
                 cbet1, cbet2, s12x, m12x, dummy,
                 (outmask & GEODESICSCALE) != 0U, M12, M21);
       }
@@ -262,7 +266,7 @@ namespace GeographicLib {
       // meridian and geodesic is neither meridional or equatorial.
 
       // Figure a starting point for Newton's method
-      sig12 = InverseStart(E, sbet1, cbet1, dn1, sbet2, cbet2, dn2,
+      sig12 = InverseStart(E, Eh, sbet1, cbet1, dn1, sbet2, cbet2, dn2,
                            lam12,
                            salp1, calp1, salp2, calp2);
 
@@ -287,7 +291,7 @@ namespace GeographicLib {
           real dv;
           real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                            E, omg12, trip < 1, dv) - lam12;
+                            E, Eh, omg12, trip < 1, dv) - lam12;
           // Update bracketing values
           if (v >= 0 && calp1 > calp1b) {
             salp1b = salp1; calp1b = calp1;
@@ -330,7 +334,7 @@ namespace GeographicLib {
               dummy,
               v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                            salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                           E, omg12, false, dummy) - lam12;
+                           E, Eh, omg12, false, dummy) - lam12;
             // Be more tolerant on error.  It is approximately 1 ulp for a
             // number in [0, pi].
             if (abs(v) <= 2 * tol0_) break;
@@ -359,7 +363,7 @@ namespace GeographicLib {
 
         {
           real dummy;
-          Lengths(E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
+          Lengths(E, Eh, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
                   cbet1, cbet2, s12x, m12x, dummy,
                   (outmask & GEODESICSCALE) != 0U, M12, M21);
         }
@@ -455,6 +459,7 @@ namespace GeographicLib {
   }
 
   void GeodesicExact::Lengths(const EllipticFunction& E,
+                              const EllipticFunction& /*Eh*/,
                               real sig12,
                               real ssig1, real csig1, real dn1,
                               real ssig2, real csig2, real dn2,
@@ -467,8 +472,8 @@ namespace GeographicLib {
     // It's OK to have repeated dummy arguments,
     // e.g., s12b = m0 = M12 = M21 = dummy
     m0 = - E.k2() * E.D() / (Math::pi<real>() / 2);
-    real J12 = m0 * (sig12 + E.deltaD(ssig2, csig2, dn2)
-                     - E.deltaD(ssig1, csig1, dn1));
+    real J12 = m0 *
+      (sig12 + E.deltaD(ssig2, csig2, dn2) - E.deltaD(ssig1, csig1, dn1));
     // Missing a factor of _a.
     // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
     // cancellation in the case of coincident points.
@@ -537,6 +542,7 @@ namespace GeographicLib {
   }
 
   Math::real GeodesicExact::InverseStart(EllipticFunction& E,
+                                         EllipticFunction& Eh,
                                          real sbet1, real cbet1, real dn1,
                                          real sbet2, real cbet2, real dn2,
                                          real lam12,
@@ -607,7 +613,11 @@ namespace GeographicLib {
         {
           real k2 = Math::sq(sbet1) * _ep2;
           E.Reset(-k2, Math::sq(sbet1), 1 + k2, Math::sq(cbet1));
+          Eh.Reset(-k2, -_ep2, 1 + k2, 1 + _ep2);
           lamscale = Math::pi<real>() - _f1 * cbet1 * 2 * E.G();
+          real lamscalex = _e2/_f1 * cbet1 * 2 * Eh.H();
+          cerr << lamscale << " " << lamscalex << " "
+               << lamscalex - lamscale << "\n";
         }
         betscale = lamscale * cbet1;
 
@@ -621,7 +631,7 @@ namespace GeographicLib {
         real m12b, m0, dummy;
         // In the case of lon12 = 180, this repeats a calculation made in
         // Inverse.
-        Lengths(E, Math::pi<real>() + bet12a,
+        Lengths(E, Eh, Math::pi<real>() + bet12a,
                 sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
                 cbet1, cbet2, dummy, m12b, m0, false,
                 dummy, dummy);
@@ -695,7 +705,7 @@ namespace GeographicLib {
                                      real& sig12,
                                      real& ssig1, real& csig1,
                                      real& ssig2, real& csig2,
-                                     EllipticFunction& E,
+                                     EllipticFunction& E, EllipticFunction& Eh,
                                      real& omg12,
                                      bool diffp, real& dlam12) const
     throw() {
@@ -710,13 +720,16 @@ namespace GeographicLib {
       salp0 = salp1 * cbet1,
       calp0 = Math::hypot(calp1, salp1 * sbet1); // calp0 > 0
 
-    real somg1, comg1, somg2, comg2, lam12;
+    real somg1, comg1, somg2, comg2, cups1, cups2, lam12;
     // tan(bet1) = tan(sig1) * cos(alp1)
     // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
     ssig1 = sbet1; somg1 = salp0 * sbet1;
     csig1 = comg1 = calp1 * cbet1;
+    // Without normalization we have sups1 = somg1.
+    cups1 = _f1 * dn1 * comg1;
     SinCosNorm(ssig1, csig1);
     // SinCosNorm(somg1, comg1); -- don't need to normalize!
+    // SinCosNorm(sups1, cups1); -- don't need to normalize!
 
     // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     // about this case, since this can yield singularities in the Newton
@@ -737,8 +750,11 @@ namespace GeographicLib {
     // tan(omg2) = sin(alp0) * tan(sig2).
     ssig2 = sbet2; somg2 = salp0 * sbet2;
     csig2 = comg2 = calp2 * cbet2;
+    // Without normalization we have sups2 = somg2.
+    cups2 = _f1 * dn2 * comg2;
     SinCosNorm(ssig2, csig2);
     // SinCosNorm(somg2, comg2); -- don't need to normalize!
+    // SinCosNorm(sups2, cups2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, real(0)),
@@ -749,15 +765,23 @@ namespace GeographicLib {
                   comg1 * comg2 + somg1 * somg2);
     real k2 = Math::sq(calp0) * _ep2;
     E.Reset(-k2, Math::sq(calp0), 1 + k2, Math::sq(salp0));
+    Eh.Reset(-k2, -_ep2, 1 + k2, 1 + _ep2);
     lam12 = _f1 * salp0 * E.G() / (Math::pi<real>() / 2) *
       ( sig12 + E.deltaG(ssig2, csig2, dn2) - E.deltaG(ssig1, csig1, dn1) );
+
+    real ups12 = atan2(max(cups1 * somg2 - somg1 * cups2, real(0)),
+                       cups1 * cups2 + somg1 * somg2);
+    real lam12h = ups12 -
+      _e2/_f1 * salp0 * Eh.H() / (Math::pi<real>() / 2) *
+      (sig12 + Eh.deltaH(ssig2, csig2, dn2) - Eh.deltaH(ssig1, csig1, dn1) );
+    cerr << lam12 << " " << lam12h << " " << lam12h - lam12 << "\n";
 
     if (diffp) {
       if (calp2 == 0)
         dlam12 = - 2 * _f1 * dn1 / sbet1;
       else {
         real dummy;
-        Lengths(E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
+        Lengths(E, Eh, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
                 cbet1, cbet2, dummy, dlam12, dummy,
                 false, dummy, dummy);
         dlam12 *= _f1 / (calp2 * cbet2);

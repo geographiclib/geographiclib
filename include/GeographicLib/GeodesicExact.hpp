@@ -105,14 +105,14 @@ namespace GeographicLib {
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
     real _C4x[nC4x_];
 
-    void Lengths(const EllipticFunction& E,
+    void Lengths(const EllipticFunction& E, const EllipticFunction& Eh,
                  real sig12,
                  real ssig1, real csig1, real dn1,
                  real ssig2, real csig2, real dn2,
                  real cbet1, real cbet2,
                  real& s12s, real& m12a, real& m0,
                  bool scalep, real& M12, real& M21) const throw();
-    real InverseStart(EllipticFunction& E,
+    real InverseStart(EllipticFunction& E, EllipticFunction& Eh,
                       real sbet1, real cbet1, real dn1,
                       real sbet2, real cbet2, real dn2,
                       real lam12,
@@ -123,7 +123,7 @@ namespace GeographicLib {
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
-                  EllipticFunction& E,
+                  EllipticFunction& E, EllipticFunction& Eh,
                   real& omg12, bool diffp, real& dlam12)
       const throw();
 

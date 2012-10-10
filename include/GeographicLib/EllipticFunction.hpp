@@ -70,7 +70,7 @@ namespace GeographicLib {
     enum { num_ = 13 }; // Max depth required for sncndn.  Probably 5 is enough.
     real _k2, _kp2, _alpha2, _alphap2, _eps;
     mutable bool _init;
-    mutable real _Kc, _Ec, _Dc, _Pic, _Gc;
+    mutable real _Kc, _Ec, _Dc, _Pic, _Gc, _Hc;
     bool Init() const throw();
   public:
     /** \name Constructor
@@ -87,7 +87,8 @@ namespace GeographicLib {
      *
      * If only elliptic integrals of the first and second kinds are needed,
      * then set &alpha;<sup>2</sup> = 0 (in which case we have &Pi;(&phi;, 0,
-     * \e k) = \e F(&phi;, \e k) and \e G(&phi;, 0, \e k) = \e E(&phi;, \e k)).
+     * \e k) = \e F(&phi;, \e k), \e G(&phi;, 0, \e k) = \e E(&phi;, \e k)),
+     * and \e H(&phi;, 0, \e k) = \e F(&phi;, \e k) - \e D(&phi;, \e k).
      **********************************************************************/
     EllipticFunction(real k2, real alpha2) throw();
 
@@ -128,7 +129,7 @@ namespace GeographicLib {
 
 
     /**
-     * Reset the modulus and parameter
+     * Reset the modulus and parameter.
      *
      * @param[in] k2 the new value of square of the modulus
      *   <i>k</i><sup>2</sup> which must lie in (-&infin;, 1).  (No checking is
@@ -140,7 +141,7 @@ namespace GeographicLib {
     { Reset(k2, alpha2, 1 - k2, 1 - alpha2); }
 
     /**
-     * Reset the modulus and parameter
+     * Reset the modulus and parameter supplying also their complements.
      *
      * @param[in] k2 the square of the modulus <i>k</i><sup>2</sup>.
      *   <i>k</i><sup>2</sup> must lie in (-&infin;, 1).  (No checking is
@@ -176,11 +177,22 @@ namespace GeographicLib {
     Math::real kp2() const throw() { return _kp2; }
 
     /**
+     * @return the parameter &alpha;<sup>2</sup>.
+     **********************************************************************/
+    Math::real alpha2() const throw() { return _alpha2; }
+
+    /**
+     * @return the complementary parameter &alpha;'<sup>2</sup> = 1 &minus;
+     *   &alpha;<sup>2</sup>.
+     **********************************************************************/
+    Math::real alphap2() const throw() { return _alphap2; }
+
+    /**
      * @return the square of the modulus <i>k</i><sup>2</sup>.
      *
      * <b>DEPRECATED</b>, use k2() instead.
      **********************************************************************/
-    Math::real mx() const throw() { return _k2; }
+    Math::real m() const throw() { return _k2; }
 
     /**
      * @return the square of the complementary modulus <i>k'</i><sup>2</sup> =
@@ -188,7 +200,7 @@ namespace GeographicLib {
      *
      * <b>DEPRECATED</b>, use kp2() instead.
      **********************************************************************/
-    Math::real m1x() const throw() { return _kp2; }
+    Math::real m1() const throw() { return _kp2; }
     ///@}
 
     /** \name Complete elliptic integrals.
@@ -252,18 +264,31 @@ namespace GeographicLib {
     Math::real Pi() const throw() { _init || Init(); return _Pic; }
 
     /**
-     * The complete geodesic longitude integral.
+     * Legendre's complete geodesic longitude integral.
      *
      * @return \e G(&alpha;<sup>2</sup>, \e k)
      *
-     * \e G(&alpha;<sup>2</sup>, \e k) is defined in
-     * http://dlmf.nist.gov/19.2.E7
+     * \e G(&alpha;<sup>2</sup>, \e k) is given by
      * \f[
      *   G(\alpha^2, k) = \int_0^{\pi/2}
      *     \frac{\sqrt{1-k^2\sin^2\phi}}{1 - \alpha^2\sin^2\phi}\,d\phi.
      * \f]
      **********************************************************************/
     Math::real G() const throw() { _init || Init(); return _Gc; }
+
+    /**
+     * Cayley's complete geodesic longitude difference integral.
+     *
+     * @return \e H(&alpha;<sup>2</sup>, \e k)
+     *
+     * \e H(&alpha;<sup>2</sup>, \e k) is given by
+     * \f[
+     *   H(\alpha^2, k) = \int_0^{\pi/2}
+     *     \frac{\cos^2\phi}{(1-\alpha^2\sin^2\phi)\sqrt{1-k^2\sin^2\phi}}
+     *     \,d\phi.
+     * \f]
+     **********************************************************************/
+    Math::real H() const throw() { _init || Init(); return _Hc; }
     ///@}
 
     /** \name Incomplete elliptic integrals.
@@ -343,27 +368,59 @@ namespace GeographicLib {
     Math::real D(real phi) const throw();
 
     /**
-     * The geodesic longitude integral.
+     * Legendre's geodesic longitude integral.
      *
      * @param[in] phi
      * @return \e G(&phi;, &alpha;<sup>2</sup>, \e k).
      *
      * \e G(&phi;, &alpha;<sup>2</sup>, \e k) is defined by
      * \f[
-     *   G(\phi, \alpha^2, k) =
-     *   \biggl(1 - \frac{k^2}{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k)
-     *   + \frac{k^2}{\alpha^2} F(\phi, k) = \int_0^\phi
+     *   \begin{aligned}
+     *   G(\phi, \alpha^2, k) &=
+     *   \frac{k^2}{\alpha^2} F(\phi, k) +
+     *      \biggl(1 - \frac{k^2}{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k) \\
+     *    &= \int_0^\phi
      *     \frac{\sqrt{1-k^2\sin^2\theta}}{1 - \alpha^2\sin^2\theta}\,d\theta.
+     *   \end{aligned}
      * \f]
+     *
+     * Legendre expresses the longitude of a point on the geodesic in terms of
+     * this combination of elliptic integrals in Exercices de Calcul
+     * Int&eacute;gral, Vol. 1 (1811), p. 181,
+     * http://books.google.com/books?id=riIOAAAAQAAJ&pg=PA181.
      **********************************************************************/
     Math::real G(real phi) const throw();
+
+    /**
+     * Cayley's geodesic longitude difference integral.
+     *
+     * @param[in] phi
+     * @return \e H(&phi;, &alpha;<sup>2</sup>, \e k).
+     *
+     * \e H(&phi;, &alpha;<sup>2</sup>, \e k) is defined by
+     * \f[
+     *   \begin{aligned}
+     *   H(\phi, \alpha^2, k) &=
+     *   \frac1{\alpha^2} F(\phi, k) +
+     *        \biggl(1 - \frac1{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k) \\
+     *   &= \int_0^\phi
+     *     \frac{\cos^2\theta}{(1-\alpha^2\sin^2\theta)\sqrt{1-k^2\sin^2\theta}}
+     *     \,d\theta.
+     *   \end{aligned}
+     * \f]
+     *
+     * Cayley expresses the longitude difference of a point on the geodesic in
+     * terms of this combination of elliptic integrals in Phil. Mag. <b>40</b>
+     * (1870), p. 333, http://books.google.com/books?id=Zk0wAAAAIAAJ&pg=PA333.
+     **********************************************************************/
+    Math::real H(real phi) const throw();
     ///@}
 
     /** \name Incomplete integrals in terms of Jacobi elliptic functions.
      **********************************************************************/
     /**
      * The incomplete integral of the first kind in terms of Jacobi elliptic
-     * functions
+     * functions.
      *
      * @param[in] sn = sin&phi;
      * @param[in] cn = cos&phi;
@@ -375,7 +432,7 @@ namespace GeographicLib {
 
     /**
      * The incomplete integral of the second kind in terms of Jacobi elliptic
-     * functions
+     * functions.
      *
      * @param[in] sn = sin&phi;
      * @param[in] cn = cos&phi;
@@ -387,7 +444,7 @@ namespace GeographicLib {
 
     /**
      * The incomplete integral of the third kind in terms of Jacobi elliptic
-     * functions
+     * functions.
      *
      * @param[in] sn = sin&phi;
      * @param[in] cn = cos&phi;
@@ -400,7 +457,7 @@ namespace GeographicLib {
 
     /**
      * Jahnke's incomplete elliptic integral in terms of Jacobi elliptic
-     * functions
+     * functions.
      *
      * @param[in] sn = sin&phi;
      * @param[in] cn = cos&phi;
@@ -411,8 +468,8 @@ namespace GeographicLib {
     Math::real D(real sn, real cn, real dn) const throw();
 
     /**
-     * The geodesic longitude integral in terms of Jacobi elliptic
-     * functions
+     * Legendre's geodesic longitude integral in terms of Jacobi elliptic
+     * functions.
      *
      * @param[in] sn = sin&phi;
      * @param[in] cn = cos&phi;
@@ -422,13 +479,26 @@ namespace GeographicLib {
      *   (&minus;&pi;, &pi].
      **********************************************************************/
     Math::real G(real sn, real cn, real dn) const throw();
+
+    /**
+     * Cayley's geodesic longitude difference integral in terms of Jacobi
+     * elliptic functions.
+     *
+     * @param[in] sn = sin&phi;
+     * @param[in] cn = cos&phi;
+     * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
+     *   sin<sup>2</sup>&phi;)
+     * @return \e H(&phi;, &alpha;<sup>2</sup>, \e k) as though &phi; &isin;
+     *   (&minus;&pi;, &pi].
+     **********************************************************************/
+    Math::real H(real sn, real cn, real dn) const throw();
     ///@}
 
     /** \name Periodic versions of incomplete elliptic integrals.
      **********************************************************************/
     ///@{
     /**
-     * The periodic incomplete integral of the first kind
+     * The periodic incomplete integral of the first kind.
      *
      * @param[in] sn = sin&phi;
      * @param[in] cn = cos&phi;
@@ -440,7 +510,7 @@ namespace GeographicLib {
     Math::real deltaF(real sn, real cn, real dn) const throw();
 
     /**
-     * The periodic incomplete integral of the second kind
+     * The periodic incomplete integral of the second kind.
      *
      * @param[in] sn = sin&phi;
      * @param[in] cn = cos&phi;
@@ -462,7 +532,7 @@ namespace GeographicLib {
     Math::real deltaEinv(real stau, real ctau) const throw();
 
     /**
-     * The periodic incomplete integral of the third kind
+     * The periodic incomplete integral of the third kind.
      *
      * @param[in] sn = sin&phi;
      * @param[in] cn = cos&phi;
@@ -474,7 +544,7 @@ namespace GeographicLib {
     Math::real deltaPi(real sn, real cn, real dn) const throw();
 
     /**
-     * The periodic Jahnke's incomplete elliptic integral
+     * The periodic Jahnke's incomplete elliptic integral.
      *
      * @param[in] sn = sin&phi;
      * @param[in] cn = cos&phi;
@@ -486,7 +556,7 @@ namespace GeographicLib {
     Math::real deltaD(real sn, real cn, real dn) const throw();
 
     /**
-     * The periodic geodesic longitude integral
+     * Legendre's periodic geodesic longitude integral.
      *
      * @param[in] sn = sin&phi;
      * @param[in] cn = cos&phi;
@@ -496,6 +566,18 @@ namespace GeographicLib {
      *   &phi;
      **********************************************************************/
     Math::real deltaG(real sn, real cn, real dn) const throw();
+
+    /**
+     * Cayley's periodic geodesic longitude difference integral.
+     *
+     * @param[in] sn = sin&phi;
+     * @param[in] cn = cos&phi;
+     * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
+     *   sin<sup>2</sup>&phi;)
+     * @return the periodic function &pi; \e H(&phi;, \e k) / (2 \e H(\e k)) -
+     *   &phi;
+     **********************************************************************/
+    Math::real deltaH(real sn, real cn, real dn) const throw();
     ///@}
 
     /** \name Elliptic functions.

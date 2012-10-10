@@ -2689,36 +2689,35 @@ These expansions were obtained using the Maxima code, <a
 href="geod.mac">geod.mac</a>.
 
 In the expansions below, we have
- - &alpha; is the azimuth
- - &alpha;<sub>0</sub> is the azimuth at the equator crossing
- - &lambda; is the longitude measured from the equator crossing
- - &omega; is the spherical longitude
- - &sigma; is the spherical arc length
- - \e a is the equatorial radius
- - \e b is the polar semi-axis
- - \e f is the flattening
- - <i>e</i><sup>2</sup> = \e f (2 &minus; \e f)
- - <i>e'</i><sup>2</sup> = <i>e</i><sup>2</sup>/(1 &minus; <i>e</i><sup>2</sup>)
- - <i>k</i><sup>2</sup> = <i>e'</i><sup>2</sup> cos<sup>2</sup>
-   &alpha;<sub>0</sub> = 4 \e eps / (1 &minus; \e eps)<sup>2</sup>
- - \e n = \e f / (2 &minus; \e f)
- - <i>c</i><sup>2</sup> = <i>a</i><sup>2</sup>/2 +
-   <i>b</i><sup>2</sup>/2 (tanh<sup>&minus;1</sup> \e e)/\e e
- - \e ep2 = <i>e'</i><sup>2</sup>
- - \e k2 = <i>k</i><sup>2</sup>
+ - \f$ \alpha \f$ is the azimuth
+ - \f$ \alpha_0 \f$ is the azimuth at the equator crossing
+ - \f$ \lambda \f$ is the longitude measured from the equator crossing
+ - \f$ \omega \f$ is the spherical longitude
+ - \f$ \sigma \f$ is the spherical arc length
+ - \f$ a \f$ is the equatorial radius
+ - \f$ b \f$ is the polar semi-axis
+ - \f$ f \f$ is the flattening
+ - \f$ e^2 = f(2 - f) \f$
+ - \f$ e'^2 = e^2/(1-e^2) \f$
+ - \f$ k^2 = e'^2 \cos^2\alpha_0 = 4 \epsilon / (1 - \epsilon)^2 \f$
+ - \f$ n = f / (2 - f) \f$
+ - \f$ c^2 = a^2/2 + b^2/2 (\tanh^{-1}e)/e \f$
+ - \e ep2 = \f$ e'^2 \f$
+ - \e k2 = \f$ k^2 \f$
+ - \e eps = \f$ \epsilon \f$
 
 The formula for distance is
-
-&nbsp; &nbsp; <i>s</i>/\e b = I1(&sigma;)
-
+\f[
+ \frac sb = I_1(\sigma)
+\f]
 where
-
-&nbsp; &nbsp; I1(&sigma;) = A1 (&sigma; + B1(&sigma;))<br>
-&nbsp; &nbsp; B1(&sigma;) =
-&sum;<sub> <i>j</i>=1</sub> C1<sub>\e j</sub> sin(2 \e j &sigma;)
-
+\f[
+\begin{aligned}
+  I_1(\sigma) &= A_1\bigl(\sigma + B_1(\sigma)\bigr) \\
+  B_1(\sigma) &= \sum_{j=1} C_{1j} \sin 2j\sigma
+\end{aligned}
+\f]
 and
-
 \verbatim
 A1 = (1 + 1/4 * eps^2
         + 1/64 * eps^4
@@ -2726,7 +2725,6 @@ A1 = (1 + 1/4 * eps^2
         + 25/16384 * eps^8
         + 49/65536 * eps^10) / (1 - eps);
 \endverbatim
-
 \verbatim
 C1[1] = - 1/2 * eps
         + 3/16 * eps^3
@@ -2760,14 +2758,12 @@ C1[9] = - 715/589824 * eps^9;
 C1[10] = - 2431/2621440 * eps^10;
 \endverbatim
 
-The function &tau;(&sigma;) = <i>s</i>/(\e b A1) = &sigma; + B1(&sigma;)
+The function \f$ \tau(\sigma) = s/(b A_1) = \sigma + B_1(\sigma) \f$
 may be inverted by series reversion giving
-
-&nbsp; &nbsp; &sigma;(&tau;) =
-&tau; + &sum;<sub> <i>j</i>=1</sub> C1'<sub>\e j</sub> sin(2 \e j &tau;)
-
+\f[
+  \sigma(\tau) = \tau + \sum_{j=1} C'_{1j} \sin 2j\sigma
+\f]
 where
-
 \verbatim
 C1'[1] = + 1/2 * eps
          - 9/32 * eps^3
@@ -2802,25 +2798,21 @@ C1'[10] = + 9303339907/2972712960 * eps^10;
 \endverbatim
 
 The reduced length is given by
-
-&nbsp; &nbsp; <i>m</i>/\e b =
-sqrt(1 + <i>k</i><sup>2</sup> sin<sup>2</sup>&sigma;<sub>2</sub>)
-cos &sigma;<sub>1</sub> sin &sigma;<sub>2</sub><br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &minus;
-sqrt(1 + <i>k</i><sup>2</sup> sin<sup>2</sup>&sigma;<sub>1</sub>)
-sin &sigma;<sub>1</sub> cos &sigma;<sub>2</sub><br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &minus;
-cos &sigma;<sub>1</sub>  cos &sigma;<sub>2</sub>
-(\e J(&sigma;<sub>2</sub>) &minus; \e J(&sigma;<sub>1</sub>))
-
+\f[
+\begin{aligned}
+  \frac mb &= \sqrt{1 + k^2 \sin^2\sigma_2} \cos\sigma_1 \sin\sigma_2 \\
+  &\quad {}-\sqrt{1 + k^2 \sin^2\sigma_1} \sin\sigma_1 \cos\sigma_2 \\
+  &\quad {}-\cos\sigma_1 \cos\sigma_2 \bigl(J(\sigma_2) - J(\sigma_1)\bigr)
+\end{aligned}
+\f]
 where
-
-&nbsp; &nbsp; \e J(&sigma;) =
-I1(&sigma;) &minus; I2(&sigma;)<br>
-&nbsp; &nbsp; I2(&sigma;) = A2 (&sigma; + B2(&sigma;))<br>
-&nbsp; &nbsp; B2(&sigma;) =
-&sum;<sub> <i>j</i>=1</sub> C2<sub>\e j</sub> sin(2 \e j &sigma;)
-
+\f[
+\begin{aligned}
+ J(\sigma) &= I_1(\sigma) - I_2(\sigma) \\
+ I_2(\sigma) &= A_2\bigl(\sigma + B_2(\sigma)\bigr) \\
+ B_2(\sigma) &= \sum_{j=1} C_{2j} \sin 2j\sigma
+\end{aligned}
+\f]
 \verbatim
 A2 = (1 + 1/4 * eps^2
         + 9/64 * eps^4
@@ -2828,7 +2820,6 @@ A2 = (1 + 1/4 * eps^2
         + 1225/16384 * eps^8
         + 3969/65536 * eps^10) * (1 - eps);
 \endverbatim
-
 \verbatim
 C2[1] = + 1/2 * eps
         + 1/16 * eps^3
@@ -2863,18 +2854,17 @@ C2[10] = + 46189/2621440 * eps^10;
 \endverbatim
 
 The longitude is given in terms of the spherical longitude by
-
-&nbsp; &nbsp;
-&lambda; = &omega; &minus; \e f sin &alpha;<sub>0</sub> I3(&sigma;)
-
+\f[
+\lambda = \omega - f \sin\alpha_0 I_3(\sigma)
+\f]
 where
-
-&nbsp; &nbsp; I3(&sigma;) = A3 (&sigma; + B3(&sigma;))<br>
-&nbsp; &nbsp; B3(&sigma;) =
-&sum;<sub> <i>j</i>=1</sub> C3<sub>\e j</sub> sin(2 \e j &sigma;)
-
+\f[
+\begin{aligned}
+ I_3(\sigma) &= A_3\bigl(\sigma + B_3(\sigma)\bigr) \\
+ B_3(\sigma) &= \sum_{j=1} C_{3j} \sin 2j\sigma
+\end{aligned}
+\f]
 and
-
 \verbatim
 A3 = 1 - (1/2 - 1/2 * n) * eps
        - (1/4 + 1/8 * n - 3/8 * n^2) * eps^2
@@ -2886,7 +2876,6 @@ A3 = 1 - (1/2 - 1/2 * n) * eps
        - (175/16384 + 35/4096 * n) * eps^8
        - 245/32768 * eps^9;
 \endverbatim
-
 \verbatim
 C3[1] = + (1/4 - 1/4 * n) * eps
         + (1/8 - 1/8 * n^2) * eps^2
@@ -2936,22 +2925,16 @@ C3[9] = + 2431/1179648 * eps^9;
 \endverbatim
 
 The formula for area between the geodesic and the equator is given in
-Sec. 6 of
-<a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+Sec. 6 of <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
 Algorithms for geodesics</a> in terms of \e S,
-
-&nbsp; &nbsp;
-\e S = <i>c</i><sup>2</sup> &alpha; + <i>e</i><sup>2</sup>
-<i>a</i><sup>2</sup> cos &alpha;<sub>0</sub> sin
-&alpha;<sub>0</sub> I4(&sigma;)
-
+\f[
+S = c^2 \alpha + e^2 a^2 \cos\alpha_0 \sin\alpha_0 I_4(\sigma)
+\f]
 where
-
-&nbsp; &nbsp; I4(&sigma;) =
-&sum;<sub> <i>j</i>=0</sub> C4<sub>\e j</sub> cos((2\e j + 1) &sigma;)
-
+\f[
+I_4(\sigma) = \sum_{j=0} C_{4j} \cos(2j+1)\sigma
+\f]
 with
-
 \verbatim
 C4[0] = + (2/3 - 1/15 * ep2 + 4/105 * ep2^2 - 8/315 * ep2^3 + 64/3465 * ep2^4 - 128/9009 * ep2^5 + 512/45045 * ep2^6 - 1024/109395 * ep2^7 + 16384/2078505 * ep2^8 - 32768/4849845 * ep2^9)
         - (1/20 - 1/35 * ep2 + 2/105 * ep2^2 - 16/1155 * ep2^3 + 32/3003 * ep2^4 - 128/15015 * ep2^5 + 256/36465 * ep2^6 - 4096/692835 * ep2^7 + 8192/1616615 * ep2^8) * k2
@@ -3032,10 +3015,17 @@ The key relations are
  \begin{aligned}
   \frac sb &= E(\sigma, ik), \\
   J(\sigma) &= k^2 D(\sigma, ik), \\
-  \lambda &= (1 - f) \sin\alpha_0  G(\sigma, \cos^2\alpha_0, ik),
+  \lambda &= (1 - f) \sin\alpha_0  G(\sigma, \cos^2\alpha_0, ik) \\
+          &= \upsilon
+	   - \frac{e'^2}{\sqrt{1+e'^2}}\sin\alpha_0 H(\sigma, -e'^2, ik)
  \end{aligned}
 \f]
-where
+where  \f$ \upsilon \f$ is a modified spherical longitude given by
+\f[
+\tan\upsilon = \frac{\sqrt{1+e'^2}           \sin\omega}
+                    {\sqrt{1+k^2\sin^2\sigma}\cos\omega}
+\f]
+and
 \f[
  \begin{aligned}
  D(\phi,k) &= \int_0^\phi
@@ -3043,22 +3033,32 @@ where
  &=\frac{F(\phi, k) - E(\phi, k)}{k^2},\\
  G(\phi,\alpha^2,k) &= \int_0^\phi
  \frac{\sqrt{1 - k^2\sin^2\theta}}{1 - \alpha^2\sin^2\theta}\,d\theta\\
- &=\biggl(1-\frac{k^2}{\alpha^2}\biggr)\Pi(\phi, \alpha^2, k)
- +\frac{k^2}{\alpha^2}F(\phi, k),
+ &=\frac{k^2}{\alpha^2}F(\phi, k)
+ +\biggl(1-\frac{k^2}{\alpha^2}\biggr)\Pi(\phi, \alpha^2, k),\\
+ H(\phi, \alpha^2, k)
+ &= \int_0^\phi
+   \frac{\cos^2\theta}{(1-\alpha^2\sin^2\theta)\sqrt{1-k^2\sin^2\theta}}
+   \,d\theta \\
+ &=
+ \frac1{\alpha^2} F(\phi, k) +
+      \biggl(1 - \frac1{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k)
  \end{aligned}
 \f]
 and \f$F(\phi, k)\f$, \f$E(\phi, k)\f$, and \f$\Pi(\phi, \alpha^2,
 k)\f$, are incomplete elliptic integrals of the first, second, and
 third kinds (see http://dlmf.nist.gov/19.2.ii). \f$D(\phi, k)\f$ is
-Jahnke's elliptic integral.
+Jahnke's elliptic integral.  The second expression for \f$ \lambda \f$
+(which is given by Cayley, 1870) is useful in that the elliptic integral
+is relegated to a small correction term.
 
-Nominally, GeographicLib::GeodesicLineExact and ::GeodesicExact will
-give "exact" results for any value of the flattening.  However, the
-geographic latitude is a very distorted measure of distance from the
-equator with very eccentric ellipsoids and this introducing an
-irreducible representational error in the algorithms in this case.  It
-is therefore recommended to restrict the use of these classes to \e b/\e
-a &isin; [0.1, 10] or \e f &isin; [-9, 0.9].
+Nominally, GeographicLib::GeodesicExact and
+GeographicLib::GeodesicLineExact and will give "exact" results for any
+value of the flattening.  However, the geographic latitude is a very
+distorted measure of distance from the equator with very eccentric
+ellipsoids and this introducing an irreducible representational error in
+the algorithms in this case.  It is therefore recommended to restrict
+the use of these classes to \e b/\e a &isin; [0.1, 10] or \e f &isin;
+[-9, 0.9].
 
 Note that GeographicLib::GeodesicExact still uses a series expansion for
 the area \e S12.  However the series is taken out to 30th order and

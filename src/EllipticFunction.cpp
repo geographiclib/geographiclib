@@ -265,10 +265,12 @@ namespace GeographicLib {
       real rj = _kp2 ? RJ(0, _kp2, 1, _alphap2) : Math::infinity<real>();
       // Pi(alpha^2, k)
       _Pic = _Kc + _alpha2 * rj / 3;
-      // F(alpha^2, k)
+      // G(alpha^2, k)
       _Gc = _kp2 ? _Kc + (_alpha2 - _k2) * rj / 3 :  RC(1, _alphap2);
+      // H(alpha^2, k)
+      _Hc = _kp2 ? _Kc - _alphap2 * rj / 3 : RC(1, _alphap2);
     } else {
-      _Pic = _Kc; _Gc = _Ec;
+      _Pic = _Kc; _Gc = _Ec; _Hc = _Kc - _Dc;
     }
     return _init = true;
   }
@@ -402,13 +404,27 @@ namespace GeographicLib {
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
       gi = abs(sn) * (RF(cn2, dn2, 1) +
                       (_alpha2 - _k2) * sn2 *
-                      RJ(cn2, dn2, 1, _alphap2 + _alpha2 * cn2) / 3);
+                      RJ(cn2, dn2, 1, cn2 + _alphap2 * sn2) / 3);
     // Enforce usual trig-like symmetries
     if (cn < 0)
       gi = 2 * G() - gi;
     if (sn < 0)
       gi = -gi;
     return gi;
+  }
+
+  Math::real EllipticFunction::H(real sn, real cn, real dn) const throw() {
+    real
+      cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
+      hi = abs(sn) * (RF(cn2, dn2, 1) -
+                      _alphap2 * sn2 *
+                      RJ(cn2, dn2, 1, cn2 + _alphap2 * sn2) / 3);
+    // Enforce usual trig-like symmetries
+    if (cn < 0)
+      hi = 2 * H() - hi;
+    if (sn < 0)
+      hi = -hi;
+    return hi;
   }
 
   Math::real EllipticFunction::deltaF(real sn, real cn, real dn) const throw() {
@@ -440,6 +456,12 @@ namespace GeographicLib {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
     return G(sn, cn, dn) * (Math::pi<real>()/2) / G() - atan2(sn, cn);
+  }
+
+  Math::real EllipticFunction::deltaH(real sn, real cn, real dn) const throw() {
+    // Function is periodic with period pi
+    if (cn < 0) { cn = -cn; sn = -sn; }
+    return H(sn, cn, dn) * (Math::pi<real>()/2) / H() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::F(real phi) const throw() {
@@ -475,6 +497,11 @@ namespace GeographicLib {
   Math::real EllipticFunction::G(real phi) const throw() {
     real sn = sin(phi), cn = cos(phi);
     return (deltaG(sn, cn, Delta(sn, cn)) + phi) * G() / (Math::pi<real>()/2);
+  }
+
+  Math::real EllipticFunction::H(real phi) const throw() {
+    real sn = sin(phi), cn = cos(phi);
+    return (deltaH(sn, cn, Delta(sn, cn)) + phi) * H() / (Math::pi<real>()/2);
   }
 
   Math::real EllipticFunction::Einv(real x) const throw() {
