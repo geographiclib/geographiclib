@@ -388,6 +388,9 @@ namespace GeographicLib {
      * this combination of elliptic integrals in Exercices de Calcul
      * Int&eacute;gral, Vol. 1 (1811), p. 181,
      * http://books.google.com/books?id=riIOAAAAQAAJ&pg=PA181.
+     *
+     * See \ref geodellip for the expression for the longitude in terms of this
+     * function.
      **********************************************************************/
     Math::real G(real phi) const throw();
 
@@ -412,6 +415,9 @@ namespace GeographicLib {
      * Cayley expresses the longitude difference of a point on the geodesic in
      * terms of this combination of elliptic integrals in Phil. Mag. <b>40</b>
      * (1870), p. 333, http://books.google.com/books?id=Zk0wAAAAIAAJ&pg=PA333.
+     *
+     * See \ref geodellip for the expression for the longitude in terms of this
+     * function.
      **********************************************************************/
     Math::real H(real phi) const throw();
     ///@}

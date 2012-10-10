@@ -75,7 +75,7 @@ namespace GeographicLib {
       CAP_E    = 1U<<0,
       // Skip 1U<<1 for compatibility with Geodesic (not required)
       CAP_D    = 1U<<2,
-      CAP_G    = 1U<<3,
+      CAP_H    = 1U<<3,
       CAP_C4   = 1U<<4,
       CAP_ALL  = 0x1FU,
       OUT_ALL  = 0x7F80U,
@@ -105,14 +105,14 @@ namespace GeographicLib {
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
     real _C4x[nC4x_];
 
-    void Lengths(const EllipticFunction& E, const EllipticFunction& Eh,
+    void Lengths(const EllipticFunction& E,
                  real sig12,
                  real ssig1, real csig1, real dn1,
                  real ssig2, real csig2, real dn2,
                  real cbet1, real cbet2,
                  real& s12s, real& m12a, real& m0,
                  bool scalep, real& M12, real& M21) const throw();
-    real InverseStart(EllipticFunction& E, EllipticFunction& Eh,
+    real InverseStart(EllipticFunction& E,
                       real sbet1, real cbet1, real dn1,
                       real sbet2, real cbet2, real dn2,
                       real lam12,
@@ -123,7 +123,7 @@ namespace GeographicLib {
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
-                  EllipticFunction& E, EllipticFunction& Eh,
+                  EllipticFunction& E,
                   real& omg12, bool diffp, real& dlam12)
       const throw();
 
@@ -159,7 +159,7 @@ namespace GeographicLib {
        * Calculate longitude \e lon2.
        * @hideinitializer
        **********************************************************************/
-      LONGITUDE     = 1U<<8  | CAP_G,
+      LONGITUDE     = 1U<<8  | CAP_H,
       /**
        * Calculate azimuths \e azi1 and \e azi2.  (It's not necessary to
        * include this as a capability to GeodesicLineExact because this is

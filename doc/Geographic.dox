@@ -3047,13 +3047,17 @@ and
 and \f$F(\phi, k)\f$, \f$E(\phi, k)\f$, and \f$\Pi(\phi, \alpha^2,
 k)\f$, are incomplete elliptic integrals of the first, second, and
 third kinds (see http://dlmf.nist.gov/19.2.ii). \f$D(\phi, k)\f$ is
-Jahnke's elliptic integral.  The second expression for \f$ \lambda \f$
-(which is given by Cayley, 1870) is useful in that the elliptic integral
-is relegated to a small correction term.
+Jahnke's elliptic integral.  The first expression for \f$ \lambda \f$ is
+given by Legendre (1811) and is the most common representation of the
+longitude in terms of elliptic integrals.  The second (equivalent)
+expression for \f$ \lambda \f$, which was given by Cayley (1870), is
+useful in that the elliptic integral is relegated to a small correction
+term.  This form allows the longitude to be computed more accurately and
+is used in %GeographicLib.
 
 Nominally, GeographicLib::GeodesicExact and
 GeographicLib::GeodesicLineExact and will give "exact" results for any
-value of the flattening.  However, the geographic latitude is a very
+value of the flattening.  However, the geographic latitude is a
 distorted measure of distance from the equator with very eccentric
 ellipsoids and this introducing an irreducible representational error in
 the algorithms in this case.  It is therefore recommended to restrict

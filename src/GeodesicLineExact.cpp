@@ -27,7 +27,6 @@
  **********************************************************************/
 
 #include <GeographicLib/GeodesicLineExact.hpp>
-#include <iostream>
 
 namespace GeographicLib {
 
@@ -43,7 +42,6 @@ namespace GeographicLib {
     , _f1(g._f1)
     , _e2(g._e2)
     , _E(0, 0)
-    , _Eh(0, 0)
       // Always allow latitude and azimuth
     , _caps(caps | LATITUDE | AZIMUTH)
   {
@@ -102,8 +100,7 @@ namespace GeographicLib {
     // GeodesicExact::SinCosNorm(_sups1, _cups1); -- don't need to normalize!
 
     _k2 = Math::sq(_calp0) * g._ep2;
-    _E.Reset(-_k2, Math::sq(_calp0), 1 + _k2, Math::sq(_salp0));
-    _Eh.Reset(-_k2, -g._ep2, 1 + _k2, 1 + g._ep2);
+    _E.Reset(-_k2, -g._ep2, 1 + _k2, 1 + g._ep2);
 
     if (_caps & CAP_E) {
       _E0 = _E.E() / (Math::pi<real>() / 2);
@@ -121,13 +118,9 @@ namespace GeographicLib {
       _D1 = _E.deltaD(_ssig1, _csig1, _dn1);
     }
 
-    if (_caps & CAP_G) {
-      if (_salp0) {
-        _G0 = _E.G() / (Math::pi<real>() / 2);
-        _G1 = _E.deltaG(_ssig1, _csig1, _dn1);
-        _H0 = _Eh.H() / (Math::pi<real>() / 2);
-        _H1 = _Eh.deltaH(_ssig1, _csig1, _dn1);
-      }
+    if (_caps & CAP_H) {
+      _H0 = _E.H() / (Math::pi<real>() / 2);
+      _H1 = _E.deltaH(_ssig1, _csig1, _dn1);
     }
 
     if (_caps & CAP_C4) {
@@ -198,25 +191,12 @@ namespace GeographicLib {
       s12 = arcmode ? _b * (_E0 * sig12 + AB1) : s12_a12;
 
     if (outmask & LONGITUDE) {
-      if (_salp0) {
-        lam12 = _f1 * _salp0 * _G0 *
-          ( sig12 + _E.deltaG(ssig2, csig2, dn2) - _G1 );
-        real somg2 = _salp0 * ssig2, comg2 = csig2;  // No need to normalize
-        // Without normalization we have sups2 = somg2.
-        real cups2 =  _f1 * dn2 *  comg2;
-        real lam12h = atan2(somg2 * _cups1 - cups2 * _somg1,
-                            cups2 * _cups1 + somg2 * _somg1) -
-          _e2/_f1 * _salp0 * _H0 *
-          (sig12 + _Eh.deltaH(ssig2, csig2, dn2) - _H1 );
-        cerr << lam12 << " " << lam12h << " " << lam12h - lam12 << "\n";
-      }
-      else {
-        // tan(omg2) = sin(alp0) * tan(sig2)
-        real somg2 = _salp0 * ssig2, comg2 = csig2;  // No need to normalize
-        // lam12 = omg12 = omg2 - omg1
-        lam12 = atan2(somg2 * _comg1 - comg2 * _somg1,
-                      comg2 * _comg1 + somg2 * _somg1);
-      }
+      real somg2 = _salp0 * ssig2, comg2 = csig2;  // No need to normalize
+      // Without normalization we have sups2 = somg2.
+      real cups2 =  _f1 * dn2 *  comg2;
+      lam12 = atan2(somg2 * _cups1 - cups2 * _somg1,
+                    cups2 * _cups1 + somg2 * _somg1) -
+        _e2/_f1 * _salp0 * _H0 * (sig12 + _E.deltaH(ssig2, csig2, dn2) - _H1 );
       lon12 = lam12 / Math::degree<real>();
       // Use Math::AngNormalize2 because longitude might have wrapped multiple
       // times.

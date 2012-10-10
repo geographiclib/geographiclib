@@ -42,16 +42,16 @@ namespace GeographicLib {
     real _a, _f, _b, _c2, _f1, _e2, _salp0, _calp0, _k2,
       _salp1, _calp1, _ssig1, _csig1, _dn1, _stau1, _ctau1,
       _somg1, _comg1, _cups1,
-      _A4, _B41, _E0, _D0, _G0, _H0, _E1, _D1, _G1, _H1;
+      _A4, _B41, _E0, _D0, _H0, _E1, _D1, _H1;
     real _C4a[nC4_];            // all the elements of _C4a are used
-    EllipticFunction _E, _Eh;
+    EllipticFunction _E;
     unsigned _caps;
 
     enum captype {
       CAP_NONE = GeodesicExact::CAP_NONE,
       CAP_E    = GeodesicExact::CAP_E,
       CAP_D    = GeodesicExact::CAP_D,
-      CAP_G    = GeodesicExact::CAP_G,
+      CAP_H    = GeodesicExact::CAP_H,
       CAP_C4   = GeodesicExact::CAP_C4,
       CAP_ALL  = GeodesicExact::CAP_ALL,
       OUT_ALL  = GeodesicExact::OUT_ALL,
