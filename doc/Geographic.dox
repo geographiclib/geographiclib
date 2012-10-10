@@ -3020,7 +3020,7 @@ The key relations are
 	   - \frac{e'^2}{\sqrt{1+e'^2}}\sin\alpha_0 H(\sigma, -e'^2, ik)
  \end{aligned}
 \f]
-where  \f$ \upsilon \f$ is a modified spherical longitude given by
+where \f$ \upsilon \f$ is a modified spherical longitude given by
 \f[
 \tan\upsilon = \frac{\sqrt{1+e'^2}           \sin\omega}
                     {\sqrt{1+k^2\sin^2\sigma}\cos\omega}
@@ -3053,7 +3053,8 @@ longitude in terms of elliptic integrals.  The second (equivalent)
 expression for \f$ \lambda \f$, which was given by Cayley (1870), is
 useful in that the elliptic integral is relegated to a small correction
 term.  This form allows the longitude to be computed more accurately and
-is used in %GeographicLib.
+is used in %GeographicLib.  (The equivalence of the two expressions for
+\f$ \lambda \f$ follows from http://dlmf.nist.gov/19.7.E8.)
 
 Nominally, GeographicLib::GeodesicExact and
 GeographicLib::GeodesicLineExact and will give "exact" results for any
