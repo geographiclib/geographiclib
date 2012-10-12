@@ -28,7 +28,7 @@ HPPFILES = \
 	$(top_srcdir)/include/GeographicLib/Geodesic.hpp \
 	$(top_srcdir)/include/GeographicLib/GeodesicExact.hpp \
 	$(top_srcdir)/include/GeographicLib/GeodesicLine.hpp \
-	$(top_srcdir)/include/GeographicLib/GeodesicLineEact.hpp \
+	$(top_srcdir)/include/GeographicLib/GeodesicLineExact.hpp \
 	$(top_srcdir)/include/GeographicLib/Geohash.hpp \
 	$(top_srcdir)/include/GeographicLib/Geoid.hpp \
 	$(top_srcdir)/include/GeographicLib/Gnomonic.hpp \
