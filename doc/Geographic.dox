@@ -2555,6 +2555,7 @@ Go to
  - \ref testgeod
  - \ref geodseries
  - \ref geodellip
+ - \ref meridian
 
 References
  - F. W. Bessel,
@@ -3017,13 +3018,13 @@ The key relations are
   J(\sigma) &= k^2 D(\sigma, ik), \\
   \lambda &= (1 - f) \sin\alpha_0  G(\sigma, \cos^2\alpha_0, ik) \\
           &= \upsilon
-	   - \frac{e'^2}{\sqrt{1+e'^2}}\sin\alpha_0 H(\sigma, -e'^2, ik)
+           - \frac{e'^2}{\sqrt{1+e'^2}}\sin\alpha_0 H(\sigma, -e'^2, ik),
  \end{aligned}
 \f]
 where \f$ \upsilon \f$ is a modified spherical longitude given by
 \f[
 \tan\upsilon = \frac{\sqrt{1+e'^2}           \sin\omega}
-                    {\sqrt{1+k^2\sin^2\sigma}\cos\omega}
+                    {\sqrt{1+k^2\sin^2\sigma}\cos\omega},
 \f]
 and
 \f[
@@ -3041,7 +3042,7 @@ and
    \,d\theta \\
  &=
  \frac1{\alpha^2} F(\phi, k) +
-      \biggl(1 - \frac1{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k)
+      \biggl(1 - \frac1{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k),
  \end{aligned}
 \f]
 and \f$F(\phi, k)\f$, \f$E(\phi, k)\f$, and \f$\Pi(\phi, \alpha^2,
@@ -3057,17 +3058,133 @@ is used in %GeographicLib.  (The equivalence of the two expressions for
 \f$ \lambda \f$ follows from http://dlmf.nist.gov/19.7.E8.)
 
 Nominally, GeographicLib::GeodesicExact and
-GeographicLib::GeodesicLineExact and will give "exact" results for any
+GeographicLib::GeodesicLineExact will give "exact" results for any
 value of the flattening.  However, the geographic latitude is a
 distorted measure of distance from the equator with very eccentric
-ellipsoids and this introducing an irreducible representational error in
-the algorithms in this case.  It is therefore recommended to restrict
-the use of these classes to \e b/\e a &isin; [0.1, 10] or \e f &isin;
-[-9, 0.9].
+ellipsoids and this introducing an irreducible representational error
+in the algorithms in this case.  It is therefore recommended to
+restrict the use of these classes to \e b/\e a &isin; [0.1, 10] or \e
+f &isin; [-9, 0.9].
 
 Note that GeographicLib::GeodesicExact still uses a series expansion for
 the area \e S12.  However the series is taken out to 30th order and
 should give accurate results for \e b/\e a &isin; [1/3, 3].
+
+\section meridian Parameters for the meridian
+
+The formula for $s$ given in the previous section is identical to the
+distance along a meridian (measured from the equator) for an ellipsoid
+with equatorial radius \f$ a \sqrt{1 - e^2 \sin^2\alpha_0} \f$ and polar
+semi-axis \f$ b \f$.  Here is a list of possible ways of expressing the
+meridian distance in terms of elliptic integrals using the notation:
+- \f$ a \f$, equatorial axis,
+- \f$ b \f$, polar axis,
+- \f$ e = \sqrt{(a^2 - b^2)/a^2} \f$, eccentricity,
+- \f$ e' = \sqrt{(a^2 - b^2)/b^2} \f$, second eccentricity,
+- \f$ \phi = \mathrm{am}(u, e) \f$, the geographic latitude,
+- \f$ \phi' = \mathrm{am}(v', ie') = \pi/2 - \phi \f$,
+  the geographic colatitude,
+- \f$ \beta = \mathrm{am}(v, ie') \f$, the parametric latitude
+  (\f$ \tan^2\beta = (1 - e^2) \tan^2\phi \f$),
+- \f$ \beta' = \mathrm{am}(u', e) = \pi/2 - \beta \f$,
+  the parametric colatitude,
+- \f$ M \f$, the length of a quarter meridian (equator to pole),
+- \f$ y \f$, the distance along the meridian (measured from the equator).
+- \f$ y' = M -y \f$, the distance along the meridian (measured from the pole).
+.
+The elliptic variables \f$(u, u')\f$ and \f$(v, v')\f$ are defined by
+- \f$ u = F(\phi, e) ,\quad u' = F(\beta', e) \f$
+- \f$ v = F(\beta, ie') ,\quad v' = F(\phi', ie') \f$,
+.
+and are linearly related by
+- \f$ u + u' = K(e) ,\quad v + v' = K(ie') \f$
+- \f$ v = \sqrt{1-e^2} u ,\quad u = \sqrt{1+e'^2} v \f$.
+.
+The cartesian coordinates for the meridian \f$ (x, y) \f$ are given by
+\f[
+\begin{aligned}
+  x &= a \cos\beta = a \cos\phi / \sqrt{1 - e^2 \sin^2\phi} \\
+    &= a \sin\beta' = (a^2/b) \sin\phi' / \sqrt{1 + e'^2 \sin^2\phi'} \\
+    &= a \,\mathrm{cn}(v, ie) = a \,\mathrm{cd}(u, e) \\
+    &= a \,\mathrm{sn}(u', e) = (a^2/b) \,\mathrm{sd}(v', ie'),
+\end{aligned}
+\f]
+\f[
+\begin{aligned}
+  z &= b \sin\beta = (b^2/a) \sin\phi / \sqrt{1 - e^2 \sin^2\phi} \\
+    &= b \cos\beta' = b \cos\phi' / \sqrt{1 + e'^2 \sin^2\phi'} \\
+    &= b \,\mathrm{sn}(v, ie) = (b^2/a) \,\mathrm{sd}(u, e)  \\
+    &= b \,\mathrm{cn}(u', e) = b \,\mathrm{cd}(v', ie').
+\end{aligned}
+\f]
+The distance along the meridian can be expressed variously as
+\f[
+\begin{aligned}
+  y  &=   b   \int \sqrt{1 + e'^2  \sin^2\beta}\, d\beta
+     =   b E(\beta, ie') \\
+     &= \frac{b^2}a \int \frac1{(1 - e^2 \sin^2\phi)^{3/2}}\, d\phi
+      = \frac{b^2}a \Pi(\phi, e^2, e) \\
+     &=   a \biggl(E(\phi, e) -
+        \frac{e^2\sin\phi \cos\phi}{\sqrt{1 - e^2\sin^2\phi}}\biggr) \\
+     &=  b \int \mathrm{dn}^2(v, ie')\, dv
+      = \frac{b^2}a \int \mathrm{nd}^2(u, e)\, du
+      = \cal E(v, ie'),
+\end{aligned}
+\f]
+\f[
+\begin{aligned}
+  y' &=   a   \int \sqrt{1 - e^2  \sin^2\beta'}\, d\beta'
+     =   a E(\beta', e) \\
+     &= \frac{a^2}b \int \frac1{(1 + e'^2 \sin^2\phi')^{3/2}}\, d\phi'
+      = \frac{a^2}b \Pi(\phi', -e'^2, ie') \\
+     &=  b \biggl(E(\phi', ie') +
+        \frac{e'^2\sin\phi' \cos\phi'}{\sqrt{1 + e'^2\sin^2\phi'}}\biggr) \\
+     &=  a \int \mathrm{dn}^2(u', e)\, du'
+      = \frac{a^2}b \int \mathrm{nd}^2(v', ie')\, dv'
+      = \cal E(u', e),
+\end{aligned}
+\f]
+with the quarter meridian distance given by
+\f[
+  M  = aE(e) = bE(ie') = (b^2/a)\Pi(e^2,e) = (a^2/b)\Pi(-e'^2,ie').
+\f]
+(Here \f$ E, F, \Pi \f$ are elliptic integrals defined in
+http://dlmf.nist.gov/19.2.ii.  \f$ \cal E, \mathrm{am}, \mathrm{sn},
+\mathrm{cn}, \mathrm{sd}, \mathrm{cd}, \mathrm{dn}, \mathrm{nd} \f$ are
+Jacobi elliptic functions defined in http://dlmf.nist.gov/22.2 and
+http://dlmf.nist.gov/22.16.)
+
+There are several considerations in the choice of independent variable
+for evaluate the meridian distance
+- The use of an imaginary modulus (i.e., \f$ ie' \f$, above) is of no
+  practical concern.  The integrals are real in this case and modern
+  methods (%GeographicLib uses the method given in
+  http://dlmf.nist.gov/19.36.i) for computing integrals handles this
+  case using just real arithmetic.
+- If the "natural" origin is the equator, choose one of \f$ \phi, \beta,
+  u, v \f$ (this might be preferred in geodesy).  If it's the pole,
+  choose one of the complementary quantities \f$ \phi', \beta', u', v'
+  \f$ (this might be preferred by mathematicians).
+- Applying these formulas to the geodesic problems, \f$ \beta \f$
+  becomes the arc length, \f$ \sigma \f$, on the auxiliary sphere.  This
+  is the traditional method of solution used by Legendre (1806), Oriani
+  (1806), Bessel (1825), Helmert (1880), Vincenty (1975), Rapp (1993),
+  and so on.  Many of the solutions in terms of elliptic functions use
+  one of the elliptic variables (\f$ u \f$ or \f$ v \f$), see, for
+  example, Jacobi (1855), , Halphen (1888), Forsyth (1896).  Some
+  solutions use the equivalent of \f$ \phi \f$, e.g., Thomas (1952),
+  Rollins (2010).
+- For highly eccentric ellipsoids the variation of the meridian with
+  respect to \f$ \beta \f$ is considerably "better behaved" than other
+  choices (see the figure below).  The choice of \f$ \phi \f$ is
+  probably a poor one in this case.
+.
+%GeographicLib uses the geodesic generalization of
+\f$ y = b E(\beta, ie') \f$, namely \f$ s = b E(\sigma, ik) \f$.  See
+\ref geodellip.
+
+<img src="meridian-measures.png" width=576 height=596
+     alt="comparison of meridian measures">
 
 <center>
 Back to \ref magnetic.  Forward to \ref transversemercator.  Up to

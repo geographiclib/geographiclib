@@ -90,7 +90,11 @@ GeoCoords.o: Config.h Constants.hpp DMS.hpp GeoCoords.hpp MGRS.hpp Math.hpp \
 	UTMUPS.hpp Utility.hpp
 Geocentric.o: Config.h Constants.hpp Geocentric.hpp Math.hpp
 Geodesic.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Math.hpp
+GeodesicExact.o: Config.h Constants.hpp GeodesicExact.hpp \
+	GeodesicLineExact.hpp Math.hpp
 GeodesicLine.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Math.hpp
+GeodesicLineExact.o: Config.h Constants.hpp GeodesicExact.hpp \
+	GeodesicLineExact.hpp Math.hpp
 Geohash.o: Config.h Constants.hpp Geohash.hpp Utility.hpp
 Geoid.o: Config.h Constants.hpp Geoid.hpp Math.hpp
 Gnomonic.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Gnomonic.hpp \

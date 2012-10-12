@@ -1,4 +1,5 @@
-EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html
+EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html \
+	$(srcdir)/meridian-measures.png
 
 SCRIPTDRIVERS = \
 	$(srcdir)/scripts/geod-calc.html \
@@ -25,7 +26,9 @@ HPPFILES = \
 	$(top_srcdir)/include/GeographicLib/Geocentric.hpp \
 	$(top_srcdir)/include/GeographicLib/GeoCoords.hpp \
 	$(top_srcdir)/include/GeographicLib/Geodesic.hpp \
+	$(top_srcdir)/include/GeographicLib/GeodesicExact.hpp \
 	$(top_srcdir)/include/GeographicLib/GeodesicLine.hpp \
+	$(top_srcdir)/include/GeographicLib/GeodesicLineEact.hpp \
 	$(top_srcdir)/include/GeographicLib/Geohash.hpp \
 	$(top_srcdir)/include/GeographicLib/Geoid.hpp \
 	$(top_srcdir)/include/GeographicLib/Gnomonic.hpp \

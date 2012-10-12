@@ -38,7 +38,7 @@ if (DOXYGEN_FOUND)
     ../src/[A-Za-z]*.cpp ../include/GeographicLib/[A-Za-z]*.hpp
     ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp)
   file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac
-    tmseries30.html geodseries30.html ../LICENSE.txt)
+    tmseries30.html geodseries30.html meridian-measures.png ../LICENSE.txt)
   file (COPY ${EXTRA_FILES} DESTINATION html-stage)
   add_custom_target (doc ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)

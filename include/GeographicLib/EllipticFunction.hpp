@@ -243,16 +243,17 @@ namespace GeographicLib {
     Math::real D() const throw() { _init || Init(); return _Dc; }
 
     /**
-     * The difference between complete integrals of the first and second kinds.
+     * The difference between the complete integrals of the first and second
+     * kinds.
      *
-     * @return \e K(\e k) - \e E(\e k).
+     * @return \e K(\e k) &minus; \e E(\e k).
      **********************************************************************/
     Math::real KE() const throw() { _init || Init(); return _k2 * _Dc; }
 
     /**
      * The complete integral of the third kind.
      *
-     * @return &Pi(&alpha;<sup>2</sup>, \e k)
+     * @return &Pi;(&alpha;<sup>2</sup>, \e k)
      *
      * &Pi;(&alpha;<sup>2</sup>, \e k) is defined in
      * http://dlmf.nist.gov/19.2.E7
@@ -344,7 +345,7 @@ namespace GeographicLib {
      * @param[in] phi
      * @return &Pi;(&phi;, &alpha;<sup>2</sup>, \e k).
      *
-     * \e &Pi;(&phi;, &alpha;<sup>2</sup>, \e k) is defined in
+     * &Pi;(&phi;, &alpha;<sup>2</sup>, \e k) is defined in
      * http://dlmf.nist.gov/19.2.E7
      * \f[
      *   \Pi(\phi, \alpha^2, k) = \int_0^\phi
@@ -432,7 +433,7 @@ namespace GeographicLib {
      * @param[in] cn = cos&phi;
      * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
-     * @return \e F(&phi;, \e k) as though &phi; &isin; (&minus;&pi;, &pi].
+     * @return \e F(&phi;, \e k) as though &phi; &isin; (&minus;&pi;, &pi;].
      **********************************************************************/
     Math::real F(real sn, real cn, real dn) const throw();
 
@@ -444,7 +445,7 @@ namespace GeographicLib {
      * @param[in] cn = cos&phi;
      * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
-     * @return \e E(&phi;, \e k) as though &phi; &isin; (&minus;&pi;, &pi].
+     * @return \e E(&phi;, \e k) as though &phi; &isin; (&minus;&pi;, &pi;].
      **********************************************************************/
     Math::real E(real sn, real cn, real dn) const throw();
 
@@ -457,7 +458,7 @@ namespace GeographicLib {
      * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
      * @return &Pi;(&phi;, &alpha;<sup>2</sup>, \e k) as though &phi; &isin;
-     *   (&minus;&pi;, &pi].
+     *   (&minus;&pi;, &pi;].
      **********************************************************************/
     Math::real Pi(real sn, real cn, real dn) const throw();
 
@@ -469,7 +470,7 @@ namespace GeographicLib {
      * @param[in] cn = cos&phi;
      * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
-     * @return \e D(&phi;, \e k) as though &phi; &isin; (&minus;&pi;, &pi].
+     * @return \e D(&phi;, \e k) as though &phi; &isin; (&minus;&pi;, &pi;].
      **********************************************************************/
     Math::real D(real sn, real cn, real dn) const throw();
 
@@ -482,7 +483,7 @@ namespace GeographicLib {
      * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
      * @return \e G(&phi;, &alpha;<sup>2</sup>, \e k) as though &phi; &isin;
-     *   (&minus;&pi;, &pi].
+     *   (&minus;&pi;, &pi;].
      **********************************************************************/
     Math::real G(real sn, real cn, real dn) const throw();
 
@@ -495,7 +496,7 @@ namespace GeographicLib {
      * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
      * @return \e H(&phi;, &alpha;<sup>2</sup>, \e k) as though &phi; &isin;
-     *   (&minus;&pi;, &pi].
+     *   (&minus;&pi;, &pi;].
      **********************************************************************/
     Math::real H(real sn, real cn, real dn) const throw();
     ///@}
