@@ -18,10 +18,10 @@ table:
 
                        size (kB)
   name     degree    tar.bz2  disk
-  egm84      18       27      26   
-  egm96      360     2100    2100 
+  egm84      18       27      26
+  egm96      360     2100    2100
   egm2008   2190    76000   75000
-  wgs84      20        1       1    
+  wgs84      20        1       1
 
 The size columns give the download and installed sizes of the models.
 In addition you can specify

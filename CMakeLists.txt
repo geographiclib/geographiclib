@@ -103,7 +103,7 @@ endif ()
 
 # (5) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
 set (MATLAB_COMPILER OFF CACHE STRING
-  "Compiler for matlab/octave interface: mex or mkoctfile or OFF") 
+  "Compiler for matlab/octave interface: mex or mkoctfile or OFF")
 if (NOT CMAKE_VERSION VERSION_LESS 2.8)
   set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
 endif ()
@@ -168,7 +168,7 @@ if (GEOGRAPHICLIB_DOCUMENTATION)
     elseif (CMAKE_VERSION VERSION_LESS 2.8)
       set (DOXYGEN_FOUND FALSE)
       message (STATUS
-	"CMake version ${CMAKE_VERSION} too old for building documentation")
+        "CMake version ${CMAKE_VERSION} too old for building documentation")
     endif ()
   endif ()
 endif ()

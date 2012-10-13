@@ -481,7 +481,7 @@ namespace GeographicLib {
       m0x = A1m1 - A2m1,
       J12 = m0x * sig12 + (AB1 - AB2);
     m0 = m0x;
-    // Missing a factor of _a.
+    // Missing a factor of _b.
     // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
     // cancellation in the case of coincident points.
     m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) - csig1 * csig2 * J12;

@@ -26,7 +26,7 @@ if (GEOGRAPHIC_SHARED_LIB)
     # (tools) so that the tests can be run.
     add_custom_command (TARGET tools POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E
-	copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
+        copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
       COMMENT "Copying shared library to tools directory")
   else ()
     # Set the run time path for shared libraries for non-Windows machines.

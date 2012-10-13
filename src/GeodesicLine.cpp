@@ -224,7 +224,7 @@ namespace GeographicLib {
         // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
         // accurate cancellation in the case of coincident points.
         m12 = _b * ((dn2 * (_csig1 * ssig2) - _dn1 * (_ssig1 * csig2))
-                  - _csig1 * csig2 * J12);
+                    - _csig1 * csig2 * J12);
       if (outmask & GEODESICSCALE) {
         real t = _k2 * (ssig2 - _ssig1) * (ssig2 + _ssig1) / (_dn1 + dn2);
         M12 = csig12 + (t *  ssig2 -  csig2 * J12) * _ssig1 / _dn1;

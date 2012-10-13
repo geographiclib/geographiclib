@@ -40,7 +40,7 @@ foreach (TOOL ${TOOLS})
         pod2html --noindex ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod |
         sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%'
           -e 's%<code>\\\([^<>]*\\\)\(\\\(.\\\)\)</code>%<a href="\\1.\\2.html">&</a>%'g > ${TOOL}.1.html &&
-	cp ${TOOL}.1.html ../doc/html-stage/
+        cp ${TOOL}.1.html ../doc/html-stage/
       COMMENT "Building html version of man page for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
     add_custom_command (OUTPUT ${TOOL}.usage
@@ -53,28 +53,28 @@ foreach (TOOL ${TOOLS})
     # cmake version 2.8 is required
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.usage)
       configure_file (${TOOL}.usage ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.usage
-	COPYONLY)
+        COPYONLY)
     else ()
       configure_file (dummy.usage.in ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.usage
-	@ONLY)
+        @ONLY)
     endif ()
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.1)
       configure_file (${TOOL}.1 ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1
-	COPYONLY)
+        COPYONLY)
     else ()
       configure_file (dummy.1.in ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1
-	@ONLY)
+        @ONLY)
     endif ()
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.1.html)
       configure_file (${TOOL}.1.html ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html
-	COPYONLY)
+        COPYONLY)
     else ()
       configure_file (dummy.1.html.in ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html
-	@ONLY)
+        @ONLY)
     endif ()
     if (DOXYGEN_FOUND)
       file (COPY ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html
-	DESTINATION ../doc/html-stage)
+        DESTINATION ../doc/html-stage)
     endif ()
   endif ()
 endforeach ()

@@ -218,6 +218,18 @@ for i in a b c e f; do
     ./testprogram$i
 done
 
+cd $TEMP/relx/GeographicLib-$VERSION
+echo Files with trailing spaces:
+find . -type f | egrep -v 'Makefile\.in|\.m4|\.png' |
+xargs grep -l ' $' || true
+echo
+echo Files with tabs:
+find . -type f |
+egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png' |
+egrep -v '\.sh|depcomp|install-sh|config\.|configure|missing' |
+xargs grep -l  '	' || true
+echo
+
 DATE=`date +%F`
 cat > $TEMP/tasks.txt <<EOF
 # deploy documentation

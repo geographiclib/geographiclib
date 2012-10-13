@@ -3072,11 +3072,12 @@ should give accurate results for \e b/\e a &isin; [1/3, 3].
 
 \section meridian Parameters for the meridian
 
-The formula for $s$ given in the previous section is identical to the
-distance along a meridian (measured from the equator) for an ellipsoid
-with equatorial radius \f$ a \sqrt{1 - e^2 \sin^2\alpha_0} \f$ and polar
-semi-axis \f$ b \f$.  Here is a list of possible ways of expressing the
-meridian distance in terms of elliptic integrals using the notation:
+The formula for \f$ s \f$ given in the previous section is identical to
+the distance along a meridian (as a function of the parametric latitude
+measured from the equator) for an ellipsoid with equatorial radius \f$ a
+\sqrt{1 - e^2 \sin^2\alpha_0} \f$ and polar semi-axis \f$ b \f$.  Here
+is a list of possible ways of expressing the meridian distance in terms
+of elliptic integrals using the notation:
 - \f$ a \f$, equatorial axis,
 - \f$ b \f$, polar axis,
 - \f$ e = \sqrt{(a^2 - b^2)/a^2} \f$, eccentricity,
@@ -3171,7 +3172,7 @@ for evaluate the meridian distance
   (1806), Bessel (1825), Helmert (1880), Vincenty (1975), Rapp (1993),
   and so on.  Many of the solutions in terms of elliptic functions use
   one of the elliptic variables (\f$ u \f$ or \f$ v \f$), see, for
-  example, Jacobi (1855), , Halphen (1888), Forsyth (1896).  Some
+  example, Jacobi (1855), Halphen (1888), Forsyth (1896).  Some
   solutions use the equivalent of \f$ \phi \f$, e.g., Thomas (1952),
   Rollins (2010).
 - For highly eccentric ellipsoids the variation of the meridian with
