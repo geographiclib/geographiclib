@@ -33,9 +33,18 @@ class GeodesicLine(object):
     self._caps = caps | Geodesic.LATITUDE | Geodesic.AZIMUTH
 
     azi1 = Math.AngNormalize(azi1)
-    # Guard against underflow in salp0
-    azi1 = Geodesic.AngRound(azi1)
     lon1 = Math.AngNormalize(lon1)
+    if lat1 == 90:
+      lon1 += 180 if lon1 < 0 else -180
+      lon1 = Math.AngNormalize(lon1 - azi1)
+      azi1 = -180
+    elif lat1 == -90:
+      lon1 = Math.AngNormalize(lon1 + azi1)
+      azi1 = 0
+    else:
+      # Guard against underflow in salp0
+      azi1 = Geodesic.AngRound(azi1)
+
     self._lat1 = lat1
     self._lon1 = lon1
     self._azi1 = azi1
@@ -51,6 +60,7 @@ class GeodesicLine(object):
     sbet1 = self._f1 * math.sin(phi)
     cbet1 = Geodesic.tiny_ if abs(lat1) == 90 else math.cos(phi)
     sbet1, cbet1 = Geodesic.SinCosNorm(sbet1, cbet1)
+    self._dn1 = math.sqrt(1 + geod._ep2 * Math.sq(sbet1))
 
     # Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
     self._salp0 = self._salp1 * cbet1 # alp0 in [0, pi/2 - |bet1|]
@@ -71,7 +81,8 @@ class GeodesicLine(object):
                                  if sbet1 != 0 or self._calp1 != 0 else 1)
     # sig1 in (-pi, pi]
     self._ssig1, self._csig1 = Geodesic.SinCosNorm(self._ssig1, self._csig1)
-    self._somg1, self._comg1 = Geodesic.SinCosNorm(self._somg1, self._comg1)
+    # No need to normalize
+    # self._somg1, self._comg1 = Geodesic.SinCosNorm(self._somg1, self._comg1)
 
     self._k2 = Math.sq(self._calp0) * geod._ep2
     eps = self._k2 / (2 * (1 + math.sqrt(1 + self._k2)) + self._k2)
@@ -139,9 +150,10 @@ class GeodesicLine(object):
       tau12 = s12_a12 / (self._b * (1 + self._A1m1))
       s = math.sin(tau12); c = math.cos(tau12)
       # tau2 = tau1 + tau12
-      B12 = - Geodesic.SinCosSeries(True, self._stau1 * c + self._ctau1 * s,
-                                     self._ctau1 * c - self._stau1 * s,
-                                     self._C1pa, Geodesic.nC1p_)
+      B12 = - Geodesic.SinCosSeries(True,
+                                    self._stau1 * c + self._ctau1 * s,
+                                    self._ctau1 * c - self._stau1 * s,
+                                    self._C1pa, Geodesic.nC1p_)
       sig12 = tau12 - (B12 - self._B11)
       ssig12 = math.sin(sig12); csig12 = math.cos(sig12)
 
@@ -150,6 +162,7 @@ class GeodesicLine(object):
     # sig2 = sig1 + sig12
     ssig2 = self._ssig1 * csig12 + self._csig1 * ssig12
     csig2 = self._csig1 * csig12 - self._ssig1 * ssig12
+    dn2 = math.sqrt(1 + self_k2 * Math.sq(ssig2))
     if outmask & (
       Geodesic.DISTANCE | Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
       if arcmode:
@@ -193,24 +206,20 @@ class GeodesicLine(object):
       azi2 = 0 - math.atan2(-salp2, calp2) / Math.degree
 
     if outmask & (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
-      ssig1sq = Math.sq(self._ssig1)
-      ssig2sq = Math.sq( ssig2)
-      w1 = math.sqrt(1 + self._k2 * ssig1sq)
-      w2 = math.sqrt(1 + self._k2 * ssig2sq)
       B22 = Geodesic.SinCosSeries(True, ssig2, csig2, self._C2a, Geodesic.nC2_)
       AB2 = (1 + self._A2m1) * (B22 - self._B21)
       J12 = (self._A1m1 - self._A2m1) * sig12 + (AB1 - AB2)
       if outmask & Geodesic.REDUCEDLENGTH:
         # Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
         # accurate cancellation in the case of coincident points.
-        m12 = self._b * ((w2 * (self._csig1 * ssig2) -
-                          w1 * (self._ssig1 * csig2))
-                  - self._csig1 * csig2 * J12)
+        m12 = self._b * ((      dn2 * (self._csig1 * ssig2) -
+                          self._dn1 * (self._ssig1 * csig2))
+                         - self._csig1 * csig2 * J12)
       if outmask & Geodesic.GEODESICSCALE:
-        M12 = csig12 + (self._k2 * (ssig2sq - ssig1sq) * ssig2 / (w1 + w2)
-                        - csig2 * J12) * self._ssig1 / w1
-        M21 = csig12 - (self._k2 * (ssig2sq - ssig1sq) * self._ssig1 / (w1 + w2)
-                        - self._csig1 * J12) * ssig2 / w2
+        t = (self._k2 * (ssig2 - self._ssig1) *
+             (ssig2 + self._ssig1) / (self._dn1 + dn2))
+        M12 = csig12 + (t * ssig2 - csig2 * J12) * self._ssig1 / self._dn1
+        M21 = csig12 - (t * self._ssig1 - self._csig1 * J12) * ssig2 / dn2
 
     if outmask & Geodesic.AREA:
       B42 = Geodesic.SinCosSeries(False, ssig2, csig2, self._C4a, Geodesic.nC4_)

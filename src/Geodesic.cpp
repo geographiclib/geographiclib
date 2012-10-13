@@ -334,7 +334,7 @@ namespace GeographicLib {
               v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                            salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                            eps, omg12, false, dummy, C1a, C2a, C3a) - lam12;
-            // Be more tolerant on error.  It is approximately 1 ulp for a
+            // Be more tolerant on error.  This is approximately 1 ulp for a
             // number in [0, pi].
             if (abs(v) <= 2 * tol0_) break;
             if (v > 0) {
@@ -583,7 +583,7 @@ namespace GeographicLib {
     bool shortline = cbet12 >= 0 && sbet12 < real(0.5) &&
       lam12 <= Math::pi<real>() / 6;
     real
-      omg12 = (!shortline ? lam12 : lam12 / (_f1 * (dn1 + dn2) / 2)),
+      omg12 = !shortline ? lam12 : lam12 / (_f1 * (dn1 + dn2) / 2),
       somg12 = sin(omg12), comg12 = cos(omg12);
 
     salp1 = cbet2 * somg12;

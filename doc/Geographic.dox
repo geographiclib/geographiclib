@@ -3157,7 +3157,7 @@ http://dlmf.nist.gov/22.16.)
 
 There are several considerations in the choice of independent variable
 for evaluate the meridian distance
-- The use of an imaginary modulus (i.e., \f$ ie' \f$, above) is of no
+- The use of an imaginary modulus (namely, \f$ ie' \f$, above) is of no
   practical concern.  The integrals are real in this case and modern
   methods (%GeographicLib uses the method given in
   http://dlmf.nist.gov/19.36.i) for computing integrals handles this

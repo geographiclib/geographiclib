@@ -55,6 +55,7 @@ GeographicLib.Math.AngNormalize2 = function(x) {
 
 GeographicLib.Math.epsilon = Math.pow(0.5, 52);
 GeographicLib.Math.degree = Math.PI/180;
+GeographicLib.Math.digits = 53;
 
 GeographicLib.Constants = {};
 GeographicLib.Constants.WGS84 = { a: 6378137, f: 1/298.257223563 };

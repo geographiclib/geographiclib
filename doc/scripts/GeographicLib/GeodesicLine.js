@@ -24,10 +24,21 @@
     this._c2 = geod._c2;
     this._f1 = geod._f1;
     this._caps = !caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH);
+
     azi1 = m.AngNormalize(azi1);
-    // Guard against underflow in salp0
-    azi1 = g.AngRound(azi1);
     lon1 = m.AngNormalize(lon1);
+    if (lat1 == 90) {
+      lon1 += lon1 < 0 ? 180 : -180;
+      lon1 = m.AngNormalize(lon1 - azi1);
+      azi1 = -180;
+    } else if (lat1 == -90) {
+      lon1 = m.AngNormalize(lon1 + azi1);
+      azi1 = 0;
+    } else {
+      // Guard against underflow in salp0
+      azi1 = g.AngRound(azi1);
+    }
+
     this._lat1 = lat1;
     this._lon1 = lon1;
     this._azi1 = azi1;
@@ -44,6 +55,7 @@
     cbet1 = Math.abs(lat1) == 90 ? g.tiny_ : Math.cos(phi);
     // SinCosNorm(sbet1, cbet1);
     var t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
+    this._dn1 = Math.sqrt(1 + geod._ep2 * m.sq(sbet1));
 
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
     this._salp0 = this._salp1 * cbet1; // alp0 in [0, pi/2 - |bet1|]
@@ -65,9 +77,7 @@
     // SinCosNorm(this._ssig1, this._csig1); // sig1 in (-pi, pi]
     var t = m.hypot(this._ssig1, this._csig1);
     this._ssig1 /= t; this._csig1 /= t;
-    // SinCosNorm(this._somg1, this._comg1);
-    var t = m.hypot(this._somg1, this._comg1);
-    this._somg1 /= t; this._comg1 /= t;
+    // SinCosNorm(this._somg1, this._comg1); -- don't need to normalize!
 
     this._k2 = m.sq(this._calp0) * geod._ep2;
     var eps = this._k2 / (2 * (1 + Math.sqrt(1 + this._k2)) + this._k2);
@@ -144,9 +154,10 @@
       s = Math.sin(tau12),
       c = Math.cos(tau12);
       // tau2 = tau1 + tau12
-      B12 = - g.SinCosSeries(true, this._stau1 * c + this._ctau1 * s,
-                                   this._ctau1 * c - this._stau1 * s,
-                                   this._C1pa, g.nC1p_);
+      B12 = - g.SinCosSeries(true,
+                             this._stau1 * c + this._ctau1 * s,
+                             this._ctau1 * c - this._stau1 * s,
+                             this._C1pa, g.nC1p_);
       sig12 = tau12 - (B12 - this._B11);
       ssig12 = Math.sin(sig12);
       csig12 = Math.cos(sig12);
@@ -157,6 +168,7 @@
     // sig2 = sig1 + sig12
     ssig2 = this._ssig1 * csig12 + this._csig1 * ssig12;
     csig2 = this._csig1 * csig12 - this._ssig1 * ssig12;
+    var dn2 = Math.sqrt(1 + this._k2 * m.sq(ssig2));
     if (outmask & (g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE)) {
       if (arcmode)
         B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a, g.nC1_);
@@ -199,25 +211,20 @@
 
     if (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE)) {
       var
-      ssig1sq = m.sq(this._ssig1),
-      ssig2sq = m.sq( ssig2),
-      w1 = Math.sqrt(1 + this._k2 * ssig1sq),
-      w2 = Math.sqrt(1 + this._k2 * ssig2sq),
       B22 = g.SinCosSeries(true, ssig2, csig2, this._C2a, g.nC2_),
       AB2 = (1 + this._A2m1) * (B22 - this._B21),
       J12 = (this._A1m1 - this._A2m1) * sig12 + (AB1 - AB2);
       if (outmask & g.REDUCEDLENGTH)
         // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
         // accurate cancellation in the case of coincident points.
-        vals.m12 = this._b * ((w2 * (this._csig1 * ssig2) -
-                               w1 * (this._ssig1 * csig2))
+        vals.m12 = this._b * ((      dn2 * (this._csig1 * ssig2) -
+                               this._dn1 * (this._ssig1 * csig2))
                               - this._csig1 * csig2 * J12);
       if (outmask & g.GEODESICSCALE) {
-        vals.M12 = csig12 + (this._k2 * (ssig2sq - ssig1sq) * ssig2 / (w1 + w2)
-                             - csig2 * J12) * this._ssig1 / w1;
-        vals.M21 = csig12 - (this._k2 * (ssig2sq - ssig1sq) * this._ssig1 /
-                             (w1 + w2)
-                             - this._csig1 * J12) * ssig2 / w2;
+        var t = this._k2 * (ssig2 - this._ssig1) * (ssig2 + this._ssig1) /
+          (this._dn1 + dn2);
+        vals.M12 = csig12 + (t * ssig2 - csig2 * J12) * this._ssig1 / this._dn1;
+        vals.M21 = csig12 - (t * this._ssig1 - this._csig1 * J12) * ssig2 / dn2;
       }
     }
 

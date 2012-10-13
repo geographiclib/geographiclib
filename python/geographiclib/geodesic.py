@@ -26,7 +26,7 @@ class Geodesic(object):
   Solve geodesic problems.  The following illustrates its use
 
     import sys
-    sys.path.append("/usr/local/lib/python/site-packages");
+    sys.path.append("/usr/local/lib/python/site-packages")
     from geographiclib.geodesic import Geodesic
 
     # The geodesic inverse problem
@@ -55,19 +55,20 @@ class Geodesic(object):
     help(Geodesic.Area)
   """
 
-  GEOD_ORD = 6
-  nA1_ = GEOD_ORD
-  nC1_ = GEOD_ORD
-  nC1p_ = GEOD_ORD
-  nA2_ = GEOD_ORD
-  nC2_ = GEOD_ORD
-  nA3_ = GEOD_ORD
+  GEOGRAPHICLIB_GEODESIC_ORDER = 6
+  nA1_ = GEOGRAPHICLIB_GEODESIC_ORDER
+  nC1_ = GEOGRAPHICLIB_GEODESIC_ORDER
+  nC1p_ = GEOGRAPHICLIB_GEODESIC_ORDER
+  nA2_ = GEOGRAPHICLIB_GEODESIC_ORDER
+  nC2_ = GEOGRAPHICLIB_GEODESIC_ORDER
+  nA3_ = GEOGRAPHICLIB_GEODESIC_ORDER
   nA3x_ = nA3_
-  nC3_ = GEOD_ORD
+  nC3_ = GEOGRAPHICLIB_GEODESIC_ORDER
   nC3x_ = (nC3_ * (nC3_ - 1)) / 2
-  nC4_ = GEOD_ORD
+  nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER
   nC4x_ = (nC4_ * (nC4_ + 1)) / 2
-  maxit_ = 50
+  maxit_ = 20
+  bisection_ = Math.digits + 10
 
   tiny_ = math.sqrt(Math.minval)
   tol0_ = Math.epsilon
@@ -367,12 +368,12 @@ class Geodesic(object):
       mult *= k2
       c[k] *= mult
 
-  # return s12b, m12a, m0, M12, M21
+  # return s12b, m12b, m0, M12, M21
   def Lengths(self, eps, sig12,
-              ssig1, csig1, ssig2, csig2, cbet1, cbet2, scalep,
+              ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2, scalep,
               # Scratch areas of the right size
               C1a, C2a):
-    # Return m12a = (reduced length)/_a; also calculate s12b = distance/_b,
+    # Return m12b = (reduced length)/_b; also calculate s12b = distance/_b,
     # and m0 = coefficient of secular term in expression for reduced length.
     Geodesic.C1f(eps, C1a)
     Geodesic.C2f(eps, C2a)
@@ -384,34 +385,27 @@ class Geodesic(object):
     AB2 = (1 + A2m1) * (
       Geodesic.SinCosSeries(True, ssig2, csig2, C2a, Geodesic.nC2_) -
       Geodesic.SinCosSeries(True, ssig1, csig1, C2a, Geodesic.nC2_))
-    cbet1sq = Math.sq(cbet1)
-    cbet2sq = Math.sq(cbet2)
-    w1 = math.sqrt(1 - self._e2 * cbet1sq)
-    w2 = math.sqrt(1 - self._e2 * cbet2sq)
     # Make sure it's OK to have repeated dummy arguments
     m0x = A1m1 - A2m1
     J12 = m0x * sig12 + (AB1 - AB2)
     m0 = m0x
-    # Missing a factor of _a.
+    # Missing a factor of _b.
     # Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
     # cancellation in the case of coincident points.
-    m12a = ((w2 * (csig1 * ssig2) - w1 * (ssig1 * csig2))
-            - self._f1 * csig1 * csig2 * J12)
+    m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) - csig1 * csig2 * J12
     # Missing a factor of _b
     s12b = (1 + A1m1) * sig12 + AB1
     if scalep:
       csig12 = csig1 * csig2 + ssig1 * ssig2
-      J12 *= self._f1
-      M12 = csig12 + (self._e2 * (cbet1sq - cbet2sq) * ssig2 / (w1 + w2)
-                      - csig2 * J12) * ssig1 / w1
-      M21 = csig12 - (self._e2 * (cbet1sq - cbet2sq) * ssig1 / (w1 + w2)
-                        - csig1 * J12) * ssig2 / w2
+      t = self._ep2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2)
+      M12 = csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1
+      M21 = csig12 - (t * ssig1 - csig1 * J12) * ssig2 / dn2
     else:
       M12 = M21 = Math.nan
-    return s12b, m12a, m0, M12, M21
+    return s12b, m12b, m0, M12, M21
 
   # return sig12, salp1, calp1, salp2, calp2
-  def InverseStart(self, sbet1, cbet1, sbet2, cbet2, lam12,
+  def InverseStart(self, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
                    # Scratch areas of the right size
                    C1a, C2a):
     # Return a starting point for Newton's method in salp1 and calp1 (function
@@ -430,8 +424,7 @@ class Geodesic(object):
     sbet12a += cbet2 * sbet1
 
     shortline = cbet12 >= 0 and sbet12 < 0.5 and lam12 <= math.pi / 6
-    omg12 = (lam12 if not shortline else
-             lam12 / math.sqrt(1 - self._e2 * Math.sq((cbet1 + cbet2) / 2)))
+    omg12 = lam12 if not shortline else lam12 / (self._f1 * (dn1 + dn2) / 2)
     somg12 = math.sin(omg12); comg12 = math.cos(omg12)
 
     salp1 = cbet2 * somg12
@@ -472,13 +465,13 @@ class Geodesic(object):
         # x = dlat, y = dlong
         cbet12a = cbet2 * cbet1 - sbet2 * sbet1
         bet12a = math.atan2(sbet12a, cbet12a)
-        # real m12a, m0, dummy
+        # real m12b, m0, dummy
         # In the case of lon12 = 180, this repeats a calculation made in
         # Inverse.
-        dummy, m12a, m0, dummy, dummy = self.Lengths(
-          self._n, math.pi + bet12a, sbet1, -cbet1, sbet2, cbet2,
+        dummy, m12b, m0, dummy, dummy = self.Lengths(
+          self._n, math.pi + bet12a, sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
           cbet1, cbet2, dummy, False, C1a, C2a)
-        x = -1 + m12a/(self._f1 * cbet1 * cbet2 * m0 * math.pi)
+        x = -1 + m12b/(cbet1 * cbet2 * m0 * math.pi)
         betscale = (sbet12a / x if x < -real(0.01)
                     else -self._f * Math.sq(cbet1) * math.pi)
         lamscale = betscale / cbet1
@@ -538,7 +531,7 @@ class Geodesic(object):
 
   # return lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
   # domg12, dlam12
-  def Lambda12(self, sbet1, cbet1, sbet2, cbet2, salp1, calp1, diffp,
+  def Lambda12(self, sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1, diffp,
                # Scratch areas of the right size
                C1a, C2a, C3a):
 
@@ -598,11 +591,12 @@ class Geodesic(object):
 
     if diffp:
       if calp2 == 0:
-        dlam12 = - 2 * math.sqrt(1 - self._e2 * Math.sq(cbet1)) / sbet1
+        dlam12 = - 2 * self._f1 * dn1 / sbet1
       else:
         dummy, dlam12, dummy, dummy, dummy = self.Lengths(
-          eps, sig12, ssig1, csig1, ssig2, csig2, cbet1, cbet2, False, C1a, C2a)
-        dlam12 /= calp2 * cbet2
+          eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+          False, C1a, C2a)
+        dlam12 *= self._f1 / (calp2 * cbet2)
     else:
       dlam12 = Math.nan
 
@@ -677,6 +671,9 @@ class Geodesic(object):
       if abs(sbet2) == -sbet1:
         cbet2 = cbet1
 
+    dn1 = math.sqrt(1 + self._ep2 * Math.sq(sbet1))
+    dn2 = math.sqrt(1 + self._ep2 * Math.sq(sbet2))
+
     lam12 = lon12 * Math.degree
     slam12 = 0 if lon12 == 180 else math.sin(lam12)
     clam12 = math.cos(lam12)      # lon12 == 90 isn't interesting
@@ -706,7 +703,7 @@ class Geodesic(object):
                          csig1 * csig2 + ssig1 * ssig2)
 
       s12x, m12x, dummy, M12, M21 = self.Lengths(
-        self._n, sig12, ssig1, csig1, ssig2, csig2, cbet1, cbet2,
+        self._n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
         (outmask & Geodesic.GEODESICSCALE) != 0, C1a, C2a)
 
       # Add the check for sig12 since zero length geodesics might yield m12 <
@@ -717,7 +714,7 @@ class Geodesic(object):
       # In fact, we will have sig12 > pi/2 for meridional geodesic which is
       # not a shortest path.
       if sig12 < 1 or m12x >= 0:
-        m12x *= self._a
+        m12x *= self._b
         s12x *= self._b
         a12 = sig12 / Math.degree
       else:
@@ -747,29 +744,37 @@ class Geodesic(object):
 
       # Figure a starting point for Newton's method
       sig12, salp1, calp1, salp2, calp2 = self.InverseStart(
-        sbet1, cbet1, sbet2, cbet2, lam12, C1a, C2a)
+        sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12, C1a, C2a)
 
       if sig12 >= 0:
         # Short lines (InverseStart sets salp2, calp2)
-        wm = math.sqrt(1 - self._e2 * Math.sq((cbet1 + cbet2) / 2))
-        s12x = sig12 * self._a * wm
-        m12x = (Math.sq(wm) * self._a / self._f1 *
-                math.sin(sig12 * self._f1 / wm))
+        dnm = (dn1 + dn2) / 2
+        s12x = sig12 * self._b * dnm
+        m12x = (Math.sq(dnm) * self._b * math.sin(sig12 / dnm))
         if outmask & Geodesic.GEODESICSCALE:
-          M12 = M21 = math.cos(sig12 * self._f1 / wm)
+          M12 = M21 = math.cos(sig12 / dnm)
         a12 = sig12 / Math.degree
-        omg12 = lam12 / wm
+        omg12 = lam12 / (self._f1 * dnm)
       else:
 
         # Newton's method
         # real ssig1, csig1, ssig2, csig2, eps
         ov = numit = trip = 0
+        # Bracketing values for bisection method
+        salp1a = 0; calp1a = 1; salp1b = 0; calp1b = -1
 
         while numit < Geodesic.maxit_:
           (nlam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
            eps, omg12, dv) = self.Lambda12(
-            sbet1, cbet1, sbet2, cbet2, salp1, calp1, trip < 1, C1a, C2a, C3a)
+            sbet1, cbet1, dn1, sbet2, cbet2, dn2,
+            salp1, calp1, trip < 1, C1a, C2a, C3a)
           v = nlam12 - lam12
+          # Update bracketing values
+          if v >= 0 and calp1 > calp1b:
+            salp1b = salp1; calp1b = calp1
+          elif v <= 0 and calp1 < calp1a:
+            salp1a = salp1; calp1a = calp1
+
           if not(abs(v) > Geodesic.tiny_) or not(trip < 1):
             if not(abs(v) <= max(Geodesic.tol1_, ov)):
               numit = Geodesic.maxit_
@@ -793,14 +798,41 @@ class Geodesic(object):
           numit += 1
 
         if numit >= Geodesic.maxit_:
+          i = Geodesic.bisection_
+          while i:
+            i -= 1
+            numit += 1
+            salp1 = (salp1a + salp1b)/2
+            calp1 = (calp1a + calp1b)/2
+            salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
+            if ( (abs(salp1 - salp1b) < Geodesic.tol0_ and
+                  calp1 - calp1b < Geodesic.tol0_) or
+                 (abs(salp1a - salp1) < Geodesic.tol0_ and
+                  calp1a - calp1 < Geodesic.tol0_) ):
+              break
+            (nlam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
+             eps, omg12, dummy) = self.Lambda12(
+              sbet1, cbet1, dn1, sbet2, cbet2, dn2,
+              salp1, calp1, False, C1a, C2a, C3a)
+            v = nlam12 - lam12
+            # Be more tolerant on error.  This is approximately 1 ulp
+            # for a number in [0, pi].
+            if abs(v) <= 2 * Geodesic.tol0_:
+              break
+            if v > 0:
+              salp1b = salp1; calp1b = calp1
+            else:
+              salp1a = salp1; calp1a = calp1
+
+        if numit >= Geodesic.maxit_ + Geodesic.bisection_:
           # Signal failure.
           return a12, s12, azi1, azi2, m12, M12, M21, S12
 
         s12x, m12x, dummy, M12, M21 = self.Lengths(
-          eps, sig12, ssig1, csig1, ssig2, csig2, cbet1, cbet2,
+          eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
           (outmask & Geodesic.GEODESICSCALE) != 0, C1a, C2a)
 
-        m12x *= self._a
+        m12x *= self._b
         s12x *= self._b
         a12 = sig12 / Math.degree
         omg12 = lam12 - omg12
