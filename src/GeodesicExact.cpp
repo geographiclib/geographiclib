@@ -2,8 +2,8 @@
  * \file GeodesicExact.cpp
  * \brief Implementation for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
- * under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed under
+ * the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * This is a reformulation of the geodesic problem.  The notation is as
@@ -284,16 +284,16 @@ namespace GeographicLib {
         real ov = 0;
         unsigned numit = 0;
         // Bracketing values for bisection method
-        real salp1a = 0, calp1a = 1, salp1b = 0, calp1b = -1;
+        real salp1a = tiny_, calp1a = 1, salp1b = tiny_, calp1b = -1;
         for (unsigned trip = 0; numit < maxit_; ++numit) {
           real dv;
           real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                             E, omg12, trip < 1, dv) - lam12;
           // Update bracketing values
-          if (v >= 0 && calp1 > calp1b) {
+          if (v >= 0 && calp1/salp1 > calp1b/salp1b) {
             salp1b = salp1; calp1b = calp1;
-          } else if (v <= 0 && calp1 < calp1a) {
+          } else if (v <= 0 && calp1/salp1 < calp1a/salp1b) {
             salp1a = salp1; calp1a = calp1;
           }
           if (!(abs(v) > tiny_) || !(trip < 1)) {
@@ -301,22 +301,34 @@ namespace GeographicLib {
               numit = maxit_;
             break;
           }
-          real
-            dalp1 = -v/dv;
-          real
-            sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
-            nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
-          calp1 = calp1 * cdalp1 - salp1 * sdalp1;
-          salp1 = max(real(0), nsalp1);
+          if (dv >= 0) {
+            real
+              dalp1 = -v/dv;
+            real
+              sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
+              nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
+            if (nsalp1 > 0) {
+              calp1 = calp1 * cdalp1 - salp1 * sdalp1;
+              salp1 = nsalp1;
+              SinCosNorm(salp1, calp1);
+              // In some regimes we don't get quadratic convergence because
+              // slope -> 0.  So use convergence conditions based on epsilon
+              // instead of sqrt(epsilon).  The first criterion is a test on
+              // abs(v) against 200 * epsilon.  The second takes credit for an
+              // anticipated reduction in abs(v) by v/ov (due to the latest
+              // update in alp1) and checks this against epsilon.
+              if (!(abs(v) >= tol1_ && Math::sq(v) >= ov * tol0_)) ++trip;
+              ov = abs(v);
+              continue;
+            }
+          }
+          // Either dv was not postive or updated value was outside legal
+          // range.  Use the midpoint of the bracket as the next estimate.
+          salp1 = (salp1a + salp1b)/2;
+          calp1 = (calp1a + calp1b)/2;
           SinCosNorm(salp1, calp1);
-          // In some regimes we don't get quadratic convergence because slope
-          // -> 0.  So use convergence conditions based on epsilon instead of
-          // sqrt(epsilon).  The first criterion is a test on abs(v) against
-          // 200 * epsilon.  The second takes credit for an anticipated
-          // reduction in abs(v) by v/ov (due to the latest update in alp1) and
-          // checks this against epsilon.
-          if (!(abs(v) >= tol1_ && Math::sq(v) >= ov * tol0_)) ++trip;
-          ov = abs(v);
+          trip = 0;
+          ov = 0;
         }
         if (numit >= maxit_) {
           // Resort to the safer bisection method
@@ -593,8 +605,9 @@ namespace GeographicLib {
       SinCosNorm(salp2, calp2);
       // Set return value
       sig12 = atan2(ssig12, csig12);
-    } else if (csig12 >= 0 ||
-               ssig12 >= 3 * abs(_f) * Math::pi<real>() * Math::sq(cbet1)) {
+    } else if (abs(_n) > real(0.1) || // Skip astroid calc if too eccentric
+               csig12 >= 0 ||
+               ssig12 >= 6 * abs(_n) * Math::pi<real>() * Math::sq(cbet1)) {
       // Nothing to do, zeroth order spherical approximation is OK
     } else {
       // Scale lam12 and bet2 to x, y coordinate system where antipodal point
@@ -610,10 +623,6 @@ namespace GeographicLib {
           real k2 = Math::sq(sbet1) * _ep2;
           E.Reset(-k2, -_ep2, 1 + k2, 1 + _ep2);
           lamscale = _e2/_f1 * cbet1 * 2 * E.H();
-          /*
-          cerr << lamscale << " " << lamscalex << " "
-               << lamscalex - lamscale << "\n";
-          */
         }
         betscale = lamscale * cbet1;
 
@@ -690,7 +699,11 @@ namespace GeographicLib {
         calp1 = sbet12a - cbet2 * sbet1 * Math::sq(somg12) / (1 - comg12);
       }
     }
-    SinCosNorm(salp1, calp1);
+    if (salp1 > 0)              // Sanity check on starting guess
+      SinCosNorm(salp1, calp1);
+    else {
+      salp1 = 1; calp1 = 0;
+    }
     return sig12;
   }
 
@@ -766,7 +779,6 @@ namespace GeographicLib {
     lam12 = ups12 -
       _e2/_f1 * salp0 * E.H() / (Math::pi<real>() / 2) *
       (sig12 + E.deltaH(ssig2, csig2, dn2) - E.deltaH(ssig1, csig1, dn1) );
-    // cerr << lam12 << " " << lam12h << " " << lam12h - lam12 << "\n";
 
     if (diffp) {
       if (calp2 == 0)

@@ -2,7 +2,7 @@
  * \file EllipticFunction.cpp
  * \brief Implementation for GeographicLib::EllipticFunction class
  *
- * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
