@@ -134,7 +134,7 @@ namespace GeographicLib {
     static const int nC3x_ = (nC3_ * (nC3_ - 1)) / 2;
     static const int nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
-    static const unsigned maxit_ = 20;
+    static const unsigned maxit_ = 30;
     static const unsigned bisection_ = std::numeric_limits<real>::digits + 10;
 
     static const real tiny_;

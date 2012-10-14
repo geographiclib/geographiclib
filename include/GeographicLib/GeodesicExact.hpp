@@ -2,7 +2,7 @@
  * \file GeodesicExact.hpp
  * \brief Header for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
+ * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed under
  * the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -61,7 +61,7 @@ namespace GeographicLib {
     friend class GeodesicLineExact;
     static const int nC4_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
-    static const unsigned maxit_ = 20;
+    static const unsigned maxit_ = 30;
     static const unsigned bisection_ = std::numeric_limits<real>::digits + 10;
 
     static const real tiny_;

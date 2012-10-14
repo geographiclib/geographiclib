@@ -293,7 +293,7 @@ namespace GeographicLib {
           // Update bracketing values
           if (v >= 0 && calp1/salp1 > calp1b/salp1b) {
             salp1b = salp1; calp1b = calp1;
-          } else if (v <= 0 && calp1/salp1 < calp1a/salp1b) {
+          } else if (v <= 0 && calp1/salp1 < calp1a/salp1a) {
             salp1a = salp1; calp1a = calp1;
           }
           if (!(abs(v) > tiny_) || !(trip < 1)) {
@@ -307,7 +307,7 @@ namespace GeographicLib {
             real
               sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
               nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
-            if (nsalp1 > 0) {
+            if (nsalp1 > 0 && abs(dalp1) < Math::pi<real>()) {
               calp1 = calp1 * cdalp1 - salp1 * sdalp1;
               salp1 = nsalp1;
               SinCosNorm(salp1, calp1);
