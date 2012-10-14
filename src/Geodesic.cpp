@@ -280,13 +280,24 @@ namespace GeographicLib {
         omg12 = lam12 / (_f1 * dnm);
       } else {
 
-        // Newton's method
+        // Newton's method.  This is a straightforward solution of f(alp1) =
+        // lambda12(alp1) - lam12 = 0 with one wrinkle.  f(alp) has exactly one
+        // root in the interval (0, pi) and its derivative is positive at the
+        // root.  Thus f(alp) is positive for alp > alp1 and negative for alp <
+        // alp1.  During the course of the iteration, a range (alp1a, alp1b) is
+        // maintained which brackets the root and with each evaluation of
+        // f(alp) the range is shrunk if possible.  Newton's method is
+        // restarted whenever the derivative of f is negative (because the new
+        // value of alp1 is guaranteed to be further from the solution) or if
+        // the new estimate of alp1 lies outside (0,pi); in this case, the new
+        // starting guess is taken to be (alp1a + alp1b) / 2.
         real ssig1, csig1, ssig2, csig2, eps;
         real ov = 0;
         unsigned numit = 0;
-        // Bracketing values for bisection method
+        // Bracketing range
         real salp1a = tiny_, calp1a = 1, salp1b = tiny_, calp1b = -1;
         for (unsigned trip = 0; numit < maxit_; ++numit) {
+          // For the WGS84 test set: mean = 1.62, sd = 1.13, max = 16
           real dv;
           real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
@@ -325,6 +336,10 @@ namespace GeographicLib {
           }
           // Either dv was not postive or updated value was outside legal
           // range.  Use the midpoint of the bracket as the next estimate.
+          // This mechanism is not needed for the WGS84 ellipsoid, but it does
+          // catch problems with more eccentric ellipsoids.  Its efficacy is
+          // such for the WGS84 test set with the starting guess set to alp1 =
+          // 90deg: mean = 4.86, sd = 3.42, max = 22
           salp1 = (salp1a + salp1b)/2;
           calp1 = (calp1a + calp1b)/2;
           SinCosNorm(salp1, calp1);
