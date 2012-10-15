@@ -31,7 +31,7 @@ GeographicLib.GeodesicLine = {};
   g.nC3x_ = (g.nC3_ * (g.nC3_ - 1)) / 2;
   g.nC4_ = g.GEOGRAPHICLIB_GEODESIC_ORDER;
   g.nC4x_ = (g.nC4_ * (g.nC4_ + 1)) / 2;
-  g.maxit_ = 20;
+  g.maxit_ = 30;
   g.bisection_ = m.digits + 10;
   g.tiny_ = Math.sqrt(Number.MIN_VALUE);
   g.tol0_ = m.epsilon;
@@ -421,8 +421,9 @@ GeographicLib.GeodesicLine = {};
       var t = m.hypot(vals.salp2, vals.calp2); vals.salp2 /= t; vals.calp2 /= t;
       // Set return value
       vals.sig12 = Math.atan2(ssig12, csig12);
-    } else if (csig12 >= 0 ||
-               ssig12 >= 3 * Math.abs(this._f) * Math.PI * m.sq(cbet1)) {
+    } else if (Math.abs(this._n) > 0.1 || // Skip astroid calc if too eccentric
+	       csig12 >= 0 ||
+               ssig12 >= 6 * Math.abs(this._n) * Math.PI * m.sq(cbet1)) {
       // Nothing to do, zeroth order spherical approximation is OK
     } else {
       // Scale lam12 and bet2 to x, y coordinate system where antipodal
@@ -518,8 +519,12 @@ GeographicLib.GeodesicLine = {};
           cbet2 * sbet1 * m.sq(somg12) / (1 - comg12);
       }
     }
-    // SinCosNorm(vals.salp1, vals.calp1);
-    var t = m.hypot(vals.salp1, vals.calp1); vals.salp1 /= t; vals.calp1 /= t;
+    if (vals.salp1 > 0) {       // Sanity check on starting guess
+      // SinCosNorm(vals.salp1, vals.calp1);
+      var t = m.hypot(vals.salp1, vals.calp1); vals.salp1 /= t; vals.calp1 /= t;
+    } else {
+      vals.salp1 = 1; vals.calp1 = 0;
+    }
     return vals;
   }
 
@@ -640,10 +645,10 @@ GeographicLib.GeodesicLine = {};
     //     lat1 <= lat2 <= -lat1
     //
     // longsign, swapp, latsign register the transformation to bring the
-    // coordinates to this canonical form.  In all cases, 1 means no
-    // change was made.  We make these transformations so that there are
-    // few cases to check, e.g., on verifying quadrants in atan2.  In
-    // addition, this enforces some symmetries in the results returned.
+    // coordinates to this canonical form.  In all cases, 1 means no change was
+    // made.  We make these transformations so that there are few cases to
+    // check, e.g., on verifying quadrants in atan2.  In addition, this
+    // enforces some symmetries in the results returned.
 
     var phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
 
@@ -661,12 +666,11 @@ GeographicLib.GeodesicLine = {};
     // SinCosNorm(sbet2, cbet2);
     var t = m.hypot(sbet2, cbet2); sbet2 /= t; cbet2 /= t;
 
-    // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of
-    // the |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2)
-    // + sbet1 is a better measure.  This logic is used in assigning
-    // calp2 in Lambda12.  Sometimes these quantities vanish and in that
-    // case we force bet2 = +/- bet1 exactly.  An example where is is
-    // necessary is the inverse problem
+    // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
+    // |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
+    // a better measure.  This logic is used in assigning calp2 in Lambda12.
+    // Sometimes these quantities vanish and in that case we force bet2 = +/-
+    // bet1 exactly.  An example where is is necessary is the inverse problem
     // 48.522876735459 0 -48.52287673545898293 179.599720456223079643
     // which failed with Visual Studio 10 (Release and Debug)
 
@@ -782,13 +786,24 @@ GeographicLib.GeodesicLine = {};
         omg12 = lam12 / (this._f1 * dnm);
       } else {
 
-        // Newton's method
+        // Newton's method.  This is a straightforward solution of f(alp1) =
+        // lambda12(alp1) - lam12 = 0 with one wrinkle.  f(alp) has exactly one
+        // root in the interval (0, pi) and its derivative is positive at the
+        // root.  Thus f(alp) is positive for alp > alp1 and negative for alp <
+        // alp1.  During the course of the iteration, a range (alp1a, alp1b) is
+        // maintained which brackets the root and with each evaluation of
+        // f(alp) the range is shrunk if possible.  Newton's method is
+        // restarted whenever the derivative of f is negative (because the new
+        // value of alp1 is guaranteed to be further from the solution) or if
+        // the new estimate of alp1 lies outside (0,pi); in this case, the new
+        // starting guess is taken to be (alp1a + alp1b) / 2.
         var ssig1, csig1, ssig2, csig2, eps;
         var ov = 0;
         var numit = 0;
-        // Bracketing values for bisection method
-        var salp1a = 0, calp1a = 1, salp1b = 0, calp1b = -1;
+        // Bracketing range
+        var salp1a = g.tiny_, calp1a = 1, salp1b = g.tiny_, calp1b = -1;
         for (var trip = 0; numit < g.maxit_; ++numit) {
+          // For the WGS84 test set: mean = 1.62, sd = 1.13, max = 16
           var dv;
           var nvals = this.Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
                                     salp1, calp1, trip < 1, C1a, C2a, C3a);
@@ -805,9 +820,9 @@ GeographicLib.GeodesicLine = {};
           if (trip < 1) dv = nvals.dlam12;
 
           // Update bracketing values
-          if (v >= 0 && calp1 > calp1b) {
+          if (v >= 0 && calp1/salp1 > calp1b/salp1b) {
             salp1b = salp1; calp1b = calp1;
-          } else if (v <= 0 && calp1 < calp1a) {
+          } else if (v <= 0 && calp1/salp1 < calp1a/salp1a) {
             salp1a = salp1; calp1a = calp1;
           }
           if (!(Math.abs(v) > g.tiny_) || !(trip < 1)) {
@@ -815,24 +830,41 @@ GeographicLib.GeodesicLine = {};
               numit = g.maxit_;
             break;
           }
-          var
-          dalp1 = -v/dv;
-          var
-          sdalp1 = Math.sin(dalp1), cdalp1 = Math.cos(dalp1),
-          nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
-          calp1 = calp1 * cdalp1 - salp1 * sdalp1;
-          salp1 = Math.max(0, nsalp1);
+          if (dv >= 0) {
+            var
+            dalp1 = -v/dv;
+            var
+            sdalp1 = Math.sin(dalp1), cdalp1 = Math.cos(dalp1),
+            nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
+            if (nsalp1 > 0 && Math.abs(dalp1) < Math.PI) {
+              calp1 = calp1 * cdalp1 - salp1 * sdalp1;
+              salp1 = Math.max(0, nsalp1);
+              // SinCosNorm(salp1, calp1);
+              var t = m.hypot(salp1, calp1); salp1 /= t; calp1 /= t;
+              // In some regimes we don't get quadratic convergence because
+              // slope -> 0.  So use convergence conditions based on epsilon
+              // instead of sqrt(epsilon).  The first criterion is a test on
+              // abs(v) against 100 * epsilon.  The second takes credit for an
+              // anticipated reduction in abs(v) by v/ov (due to the latest
+              // update in alp1) and checks this against epsilon.
+              if (!(Math.abs(v) >= g.tol1_ && m.sq(v) >= ov * g.tol0_))
+		++trip;
+              ov = Math.abs(v);
+              continue;
+	    }
+	  }
+          // Either dv was not postive or updated value was outside legal
+          // range.  Use the midpoint of the bracket as the next estimate.
+          // This mechanism is not needed for the WGS84 ellipsoid, but it does
+          // catch problems with more eccentric ellipsoids.  Its efficacy is
+          // such for the WGS84 test set with the starting guess set to alp1 =
+          // 90deg: mean = 4.86, sd = 3.42, max = 22
+          salp1 = (salp1a + salp1b)/2;
+          calp1 = (calp1a + calp1b)/2;
           // SinCosNorm(salp1, calp1);
           var t = m.hypot(salp1, calp1); salp1 /= t; calp1 /= t;
-          // In some regimes we don't get quadratic convergence because
-          // slope -> 0.  So use convergence conditions based on epsilon
-          // instead of sqrt(epsilon).  The first criterion is a test on
-          // abs(v) against 100 * epsilon.  The second takes credit for
-          // an anticipated reduction in abs(v) by v/ov (due to the
-          // latest update in alp1) and checks this against epsilon.
-          if (!(Math.abs(v) >= g.tol1_ && m.sq(v) >= ov * g.tol0_))
-            ++trip;
-          ov = Math.abs(v);
+          trip = 0;
+          ov = 0;
         }
         if (numit >= g.maxit_) {
           // Resort to the safer bisection method
@@ -957,10 +989,10 @@ GeographicLib.GeodesicLine = {};
         var
         salp12 = salp2 * calp1 - calp2 * salp1,
         calp12 = calp2 * calp1 + salp2 * salp1;
-        // The right thing appears to happen if alp1 = +/-180 and alp2 =
-        // 0, viz salp12 = -0 and alp12 = -180.  However this depends on
-        // the sign being attached to 0 correctly.  The following
-        // ensures the correct behavior.
+        // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
+        // salp12 = -0 and alp12 = -180.  However this depends on the sign
+        // being attached to 0 correctly.  The following ensures the correct
+        // behavior.
         if (salp12 == 0 && calp12 < 0) {
           salp12 = g.tiny_ * calp1;
           calp12 = -1;

@@ -67,7 +67,7 @@ class Geodesic(object):
   nC3x_ = (nC3_ * (nC3_ - 1)) / 2
   nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER
   nC4x_ = (nC4_ * (nC4_ + 1)) / 2
-  maxit_ = 20
+  maxit_ = 30
   bisection_ = Math.digits + 10
 
   tiny_ = math.sqrt(Math.minval)
@@ -442,7 +442,9 @@ class Geodesic(object):
       salp2, calp2 = Geodesic.SinCosNorm(salp2, calp2)
       # Set return value
       sig12 = math.atan2(ssig12, csig12)
-    elif csig12 >= 0 or ssig12 >= 3 * abs(self._f) * math.pi * Math.sq(cbet1):
+    elif (abs(self._n) >= 0.1 or # Skip astroid calc if too eccentric
+          csig12 >= 0 or
+          ssig12 >= 6 * abs(self._n) * math.pi * Math.sq(cbet1)):
       # Nothing to do, zeroth order spherical approximation is OK
       pass
     else:
@@ -526,7 +528,10 @@ class Geodesic(object):
         # Update spherical estimate of alp1 using omg12 instead of lam12
         salp1 = cbet2 * somg12
         calp1 = sbet12a - cbet2 * sbet1 * Math.sq(somg12) / (1 - comg12)
-    salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
+    if salp1 > 0:               # Sanity check on starting guess
+      salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
+    else:
+      salp1 = 1; calp1 = 0
     return sig12, salp1, calp1, salp2, calp2
 
   # return lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
@@ -757,45 +762,71 @@ class Geodesic(object):
         omg12 = lam12 / (self._f1 * dnm)
       else:
 
-        # Newton's method
-        # real ssig1, csig1, ssig2, csig2, eps
+        # Newton's method.  This is a straightforward solution of f(alp1) =
+        # lambda12(alp1) - lam12 = 0 with one wrinkle.  f(alp) has exactly one
+        # root in the interval (0, pi) and its derivative is positive at the
+        # root.  Thus f(alp) is positive for alp > alp1 and negative for alp <
+        # alp1.  During the course of the iteration, a range (alp1a, alp1b) is
+        # maintained which brackets the root and with each evaluation of f(alp)
+        # the range is shrunk if possible.  Newton's method is restarted
+        # whenever the derivative of f is negative (because the new value of
+        # alp1 is guaranteed to be further from the solution) or if the new
+        # estimate of alp1 lies outside (0,pi); in this case, the new starting
+        # guess is taken to be (alp1a + alp1b) / 2.  real ssig1, csig1, ssig2,
+        # csig2, eps
         ov = numit = trip = 0
-        # Bracketing values for bisection method
-        salp1a = 0; calp1a = 1; salp1b = 0; calp1b = -1
+        # Bracketing range
+        salp1a = Geodesic.tiny_; calp1a = 1
+        salp1b = Geodesic.tiny_; calp1b = -1
 
         while numit < Geodesic.maxit_:
+          # For the WGS84 test set: mean = 1.62, sd = 1.13, max = 16
           (nlam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
            eps, omg12, dv) = self.Lambda12(
             sbet1, cbet1, dn1, sbet2, cbet2, dn2,
             salp1, calp1, trip < 1, C1a, C2a, C3a)
           v = nlam12 - lam12
           # Update bracketing values
-          if v >= 0 and calp1 > calp1b:
+          if v >= 0 and calp1/salp1 > calp1b/salp1b:
             salp1b = salp1; calp1b = calp1
-          elif v <= 0 and calp1 < calp1a:
+          elif v <= 0 and calp1/salp1 < calp1a/salp1a:
             salp1a = salp1; calp1a = calp1
 
           if not(abs(v) > Geodesic.tiny_) or not(trip < 1):
             if not(abs(v) <= max(Geodesic.tol1_, ov)):
               numit = Geodesic.maxit_
             break
-          dalp1 = -v/dv
-          sdalp1 = math.sin(dalp1); cdalp1 = math.cos(dalp1)
-          nsalp1 = salp1 * cdalp1 + calp1 * sdalp1
-          calp1 = calp1 * cdalp1 - salp1 * sdalp1
-          salp1 = max(0.0, nsalp1)
-          salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
-          # In some regimes we don't get quadratic convergence because slope
-          # -> 0.  So use convergence conditions based on epsilon instead of
-          # sqrt(epsilon).  The first criterion is a test on abs(v) against
-          # 100 * epsilon.  The second takes credit for an anticipated
-          # reduction in abs(v) by v/ov (due to the latest update in alp1) and
-          # checks this against epsilon.
-          if not(abs(v) >= Geodesic.tol1_ and
-                 Math.sq(v) >= ov * Geodesic.tol0_):
-            trip += 1
-          ov = abs(v)
           numit += 1
+          if dv >= 0:
+            dalp1 = -v/dv
+            sdalp1 = math.sin(dalp1); cdalp1 = math.cos(dalp1)
+            nsalp1 = salp1 * cdalp1 + calp1 * sdalp1
+            if nsalp1 > 0 and abs(dalp1) < math.pi:
+              calp1 = calp1 * cdalp1 - salp1 * sdalp1
+              salp1 = nsalp1
+              salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
+              # In some regimes we don't get quadratic convergence because
+              # slope -> 0.  So use convergence conditions based on epsilon
+              # instead of sqrt(epsilon).  The first criterion is a test on
+              # abs(v) against 100 * epsilon.  The second takes credit for an
+              # anticipated reduction in abs(v) by v/ov (due to the latest
+              # update in alp1) and checks this against epsilon.
+              if not(abs(v) >= Geodesic.tol1_ and
+                     Math.sq(v) >= ov * Geodesic.tol0_):
+                trip += 1
+              ov = abs(v)
+              continue
+          # Either dv was not postive or updated value was outside legal range.
+          # Use the midpoint of the bracket as the next estimate.  This
+          # mechanism is not needed for the WGS84 ellipsoid, but it does catch
+          # problems with more eccentric ellipsoids.  Its efficacy is such for
+          # the WGS84 test set with the starting guess set to alp1 = 90deg:
+          # mean = 4.86, sd = 3.42, max = 22
+          salp1 = (salp1a + salp1b)/2
+          calp1 = (calp1a + calp1b)/2
+          salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
+          trip = 0
+          ov = 0
 
         if numit >= Geodesic.maxit_:
           i = Geodesic.bisection_

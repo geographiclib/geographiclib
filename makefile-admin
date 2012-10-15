@@ -14,6 +14,8 @@ JS_SOURCES=$(patsubst %,doc/scripts/GeographicLib/%.js,$(JS_MODULES))
 doc/scripts/geographiclib.js: $(JS_SOURCES)
 	sh js-compress.sh $^ > $@
 
+pack-js: doc/scripts/geographiclib.js
+
 distrib-html: geodesic-papers/biblio.html
 	rsync -av --exclude .svn --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded index.html tm.html tm-addenda.html tm-grid.kmz geod.html geod-errata.html bessel-errata.html geodesic-papers $(WEBSTAGE)/htdocs/
 	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
