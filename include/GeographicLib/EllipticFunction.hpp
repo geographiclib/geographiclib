@@ -15,7 +15,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Elliptic functions needed for TransverseMercatorExact
+   * \brief Elliptic integrals and functions
    *
    * This provides the elliptic functions and integrals needed for Ellipsoid,
    * GeodesicExact, and TransverseMercatorExact.  Two categories of function
@@ -36,7 +36,7 @@ namespace GeographicLib {
    * In geodesic applications, it is convenient to separate the incomplete
    * integrals into secular and periodic components, e.g.,
    * \f[
-   *   E(\phi, k) = E(\phi) / (\pi/2) [ \phi + \delta E(\phi, k) ]
+   *   E(\phi, k) = (2 E(\phi) / \pi) [ \phi + \delta E(\phi, k) ]
    * \f]
    * where &delta;\e E(&phi;, \e k) is an odd periodic function with period
    * &pi;.

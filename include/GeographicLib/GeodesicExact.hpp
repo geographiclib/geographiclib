@@ -33,7 +33,7 @@ namespace GeographicLib {
    * for \e f &isin [-0.01, 0.01].  The GeodesicExact class computes the
    * ellitpic integrals directly and so provides a solution which is valid for
    * all \e f.  However, in practice, its use should be limited to about \e
-   * b/\e a &isin; [0.1, 10] or \e f &isin; [-9, 0.9].
+   * b/\e a &isin; [0.01, 100] or \e f &isin; [-99, 0.99].
    *
    * For the WGS84 ellipsoid, these classes are 2--3 times \e slower than the
    * series solution and 2--3 times \e less \e accurate (because it's less easy
@@ -42,7 +42,7 @@ namespace GeographicLib {
    * while the error in the elliptic integral solution is independent of \e f.
    *
    * The computation of the area in these classes is via a 30th order series.
-   * This will become inaccurate for very eccentric ellipsoids.
+   * This will become inaccurate for when \e b/\e a &notin; [1/3, 3].
    *
    * See \ref geodellip for the formulation.  See the documentation on the
    * Geodesic class for additional information on the geodesics problems.

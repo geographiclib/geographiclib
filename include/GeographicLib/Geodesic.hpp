@@ -99,8 +99,12 @@ namespace GeographicLib {
    *
    * The calculations are accurate to better than 15 nm (15 nanometers).  See
    * Sec. 9 of
-   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a>
-   * for details.
+   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
+   * details.  The algorithms used by this class are based on series expansions
+   * using the flattening \e f as a small parameter.  These only accurate for
+   * |\e f| &lt; 0.01; however reasonably accurate results will be obtained for
+   * |\e f| &lt; 0.1.  For very eccentric ellipsoids, use GeodesicExact
+   * instead.
    *
    * The algorithms are described in
    * - C. F. F. Karney,

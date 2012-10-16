@@ -422,7 +422,7 @@ GeographicLib.GeodesicLine = {};
       // Set return value
       vals.sig12 = Math.atan2(ssig12, csig12);
     } else if (Math.abs(this._n) > 0.1 || // Skip astroid calc if too eccentric
-	       csig12 >= 0 ||
+               csig12 >= 0 ||
                ssig12 >= 6 * Math.abs(this._n) * Math.PI * m.sq(cbet1)) {
       // Nothing to do, zeroth order spherical approximation is OK
     } else {
@@ -848,11 +848,11 @@ GeographicLib.GeodesicLine = {};
               // anticipated reduction in abs(v) by v/ov (due to the latest
               // update in alp1) and checks this against epsilon.
               if (!(Math.abs(v) >= g.tol1_ && m.sq(v) >= ov * g.tol0_))
-		++trip;
+                ++trip;
               ov = Math.abs(v);
               continue;
-	    }
-	  }
+            }
+          }
           // Either dv was not postive or updated value was outside legal
           // range.  Use the midpoint of the bracket as the next estimate.
           // This mechanism is not needed for the WGS84 ellipsoid, but it does
@@ -875,9 +875,9 @@ GeographicLib.GeodesicLine = {};
             // SinCosNorm(salp1, calp1);
             var t = m.hypot(salp1, calp1); salp1 /= t; calp1 /= t;
             if ( (Math.abs(salp1 - salp1b) < g.tol0_ &&
-		  calp1 - calp1b < g.tol0_) ||
+                  calp1 - calp1b < g.tol0_) ||
                  (Math.abs(salp1a - salp1) < g.tol0_ &&
-		  calp1a - calp1 < g.tol0_) )
+                  calp1a - calp1 < g.tol0_) )
               break;
 
             var nvals = this.Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
