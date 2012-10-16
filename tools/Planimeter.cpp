@@ -32,6 +32,11 @@
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/GeoCoords.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about constant conditional expressions
+#  pragma warning (disable: 4127)
+#endif
+
 #include "Planimeter.usage"
 
 int main(int argc, char* argv[]) {

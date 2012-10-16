@@ -277,5 +277,5 @@ int usage(int retval, bool brief) {
 "       GeoConvert was added to GeographicLib, <http://geographiclib.sf.net>,\n"
 "       in 2009-01.\n"
 ;
-    return retval;
+  return retval;
 }

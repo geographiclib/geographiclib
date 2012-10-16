@@ -2,7 +2,7 @@
  * \file Geodesic.hpp
  * \brief Header for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -12,12 +12,12 @@
 
 #include <GeographicLib/Constants.hpp>
 
-#if !defined(GEOD_ORD)
+#if !defined(GEOGRAPHICLIB_GEODESIC_ORDER)
 /**
  * The order of the expansions used by Geodesic.
  **********************************************************************/
-#  define GEOD_ORD \
-  (GEOGRAPHICLIB_PREC == 1 ? 6 : (GEOGRAPHICLIB_PREC == 0 ? 3 : 7))
+#  define GEOGRAPHICLIB_GEODESIC_ORDER \
+  (GEOGRAPHICLIB_PRECISION == 2 ? 6 : (GEOGRAPHICLIB_PRECISION == 1 ? 3 : 7))
 #endif
 
 namespace GeographicLib {
@@ -99,8 +99,12 @@ namespace GeographicLib {
    *
    * The calculations are accurate to better than 15 nm (15 nanometers).  See
    * Sec. 9 of
-   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a>
-   * for details.
+   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
+   * details.  The algorithms used by this class are based on series expansions
+   * using the flattening \e f as a small parameter.  These only accurate for
+   * |\e f| &lt; 0.01; however reasonably accurate results will be obtained for
+   * |\e f| &lt; 0.1.  For very eccentric ellipsoids, use GeodesicExact
+   * instead.
    *
    * The algorithms are described in
    * - C. F. F. Karney,
@@ -123,18 +127,19 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class GeodesicLine;
-    static const int nA1_ = GEOD_ORD;
-    static const int nC1_ = GEOD_ORD;
-    static const int nC1p_ = GEOD_ORD;
-    static const int nA2_ = GEOD_ORD;
-    static const int nC2_ = GEOD_ORD;
-    static const int nA3_ = GEOD_ORD;
+    static const int nA1_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+    static const int nC1_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+    static const int nC1p_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+    static const int nA2_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+    static const int nC2_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+    static const int nA3_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nA3x_ = nA3_;
-    static const int nC3_ = GEOD_ORD;
+    static const int nC3_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC3x_ = (nC3_ * (nC3_ - 1)) / 2;
-    static const int nC4_ = GEOD_ORD;
+    static const int nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
-    static const unsigned maxit_ = 50;
+    static const unsigned maxit_ = 30;
+    static const unsigned bisection_ = std::numeric_limits<real>::digits + 10;
 
     static const real tiny_;
     static const real tol0_;
@@ -179,17 +184,20 @@ namespace GeographicLib {
     real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
 
     void Lengths(real eps, real sig12,
-                 real ssig1, real csig1, real ssig2, real csig2,
+                 real ssig1, real csig1, real dn1,
+                 real ssig2, real csig2, real dn2,
                  real cbet1, real cbet2,
                  real& s12s, real& m12a, real& m0,
                  bool scalep, real& M12, real& M21,
                  real C1a[], real C2a[]) const throw();
-    real InverseStart(real sbet1, real cbet1, real sbet2, real cbet2,
+    real InverseStart(real sbet1, real cbet1, real dn1,
+                      real sbet2, real cbet2, real dn2,
                       real lam12,
                       real& salp1, real& calp1,
                       real& salp2, real& calp2,
                       real C1a[], real C2a[]) const throw();
-    real Lambda12(real sbet1, real cbet1, real sbet2, real cbet2,
+    real Lambda12(real sbet1, real cbet1, real dn1,
+                  real sbet2, real cbet2, real dn2,
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
@@ -616,10 +624,17 @@ namespace GeographicLib {
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed and writing \e lat = 90&deg; &minus; &epsilon; or
      * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
-     * above.  If the routine fails to converge, then all the requested outputs
-     * are set to Math::NaN().  (Test for such results with Math::isnan.)  This
-     * is not expected to happen with ellipsoidal models of the earth; please
-     * report all cases where this occurs.
+     * above.
+     *
+     * The solution to the inverse problem is found using Newton's method.  If
+     * this fails to converge (this is very unlikely in geodetic applications
+     * but does occur for very eccentric ellipsoids), then the bisection method
+     * is used to refine the solution.  This should always converge to an
+     * accurate solution.
+     *
+     * (If the routine fails to converge, then all the requested outputs are
+     * set to Math::NaN() --- test for such results with Math::isnan.  Please
+     * report all cases where this occurs.)
      *
      * The following functions are overloaded versions of Geodesic::Inverse
      * which omit some of the output parameters.  Note, however, that the arc

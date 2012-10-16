@@ -54,7 +54,9 @@ Geod_SOURCES = Geod.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Geodesic.hpp \
+	../include/GeographicLib/GeodesicExact.hpp \
 	../include/GeographicLib/GeodesicLine.hpp \
+	../include/GeographicLib/GeodesicLineExact.hpp \
 	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/Utility.hpp
 GeodesicProj_SOURCES = GeodesicProj.cpp \

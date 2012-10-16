@@ -148,5 +148,5 @@ int usage(int retval, bool brief) {
 "       Planimeter was added to GeographicLib, <http://geographiclib.sf.net>,\n"
 "       in version 1.4.\n"
 ;
-    return retval;
+  return retval;
 }

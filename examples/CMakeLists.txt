@@ -32,3 +32,6 @@ endif ()
 
 add_custom_target (examples DEPENDS ${EXAMPLES})
 add_dependencies (examples Geographic)
+
+# Put all the examples into a folder in the IDE
+set_property (TARGET examples ${EXAMPLES} PROPERTY FOLDER examples)

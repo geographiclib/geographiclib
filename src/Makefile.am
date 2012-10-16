@@ -18,7 +18,9 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		GeoCoords.cpp \
 		Geocentric.cpp \
 		Geodesic.cpp \
+		GeodesicExact.cpp \
 		GeodesicLine.cpp \
+		GeodesicLineExact.cpp \
 		Geohash.cpp \
 		Geoid.cpp \
 		Gnomonic.cpp \
@@ -50,7 +52,9 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/GeoCoords.hpp \
 		../include/GeographicLib/Geocentric.hpp \
 		../include/GeographicLib/Geodesic.hpp \
+		../include/GeographicLib/GeodesicExact.hpp \
 		../include/GeographicLib/GeodesicLine.hpp \
+		../include/GeographicLib/GeodesicLineExact.hpp \
 		../include/GeographicLib/Geohash.hpp \
 		../include/GeographicLib/Geoid.hpp \
 		../include/GeographicLib/Gnomonic.hpp \

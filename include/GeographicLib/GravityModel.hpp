@@ -101,6 +101,9 @@ namespace GeographicLib {
     Math::real InternalT(real X, real Y, real Z,
                          real& deltaX, real& deltaY, real& deltaZ,
                          bool gradp, bool correct) const throw();
+    GravityModel(const GravityModel&); // copy constructor not allowed
+    GravityModel& operator=(const GravityModel&); // nor copy assignment
+
     enum captype {
       CAP_NONE   = 0U,
       CAP_G      = 1U<<0,       // implies potentials W and V

@@ -275,7 +275,7 @@ namespace GeographicLib {
     /**
      * Transfer UTM/UPS coordinated from one zone to another.
      *
-     * @param[in] zonein the UTM zone for \e xin and \e yin (or zero for UPS); 
+     * @param[in] zonein the UTM zone for \e xin and \e yin (or zero for UPS).
      * @param[in] northpin hemisphere for \e xin and \e yin (true means north,
      *   false means south).
      * @param[in] xin easting of point (meters) in \e zonein.

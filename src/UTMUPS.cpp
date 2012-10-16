@@ -227,7 +227,7 @@ namespace GeographicLib {
       northp = false;
       return;
     }
-    char hemi = toupper(zonestr[zlen - 1]);
+    char hemi = char(toupper(zonestr[zlen - 1]));
     bool northp1 = hemi == 'N';
     if (! (northp1 || hemi == 'S'))
       throw GeographicErr(string("Illegal hemisphere letter ") + hemi + " in "

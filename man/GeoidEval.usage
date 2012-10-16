@@ -256,5 +256,5 @@ int usage(int retval, bool brief) {
 "       GeoidEval was added to GeographicLib, <http://geographiclib.sf.net>, in\n"
 "       2009-09.\n"
 ;
-    return retval;
+  return retval;
 }

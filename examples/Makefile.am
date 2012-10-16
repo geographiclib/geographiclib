@@ -17,7 +17,9 @@ EXAMPLE_FILES = \
 	example-Geocentric.cpp \
 	example-Geodesic.cpp \
 	example-Geodesic-small.cpp \
+	example-GeodesicExact.cpp \
 	example-GeodesicLine.cpp \
+	example-GeodesicLineExact.cpp \
 	example-GeographicErr.cpp \
 	example-Geohash.cpp \
 	example-Geoid.cpp \

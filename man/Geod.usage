@@ -2,9 +2,9 @@ int usage(int retval, bool brief) {
   if (brief)
     ( retval ? std::cerr : std::cout ) << "Usage:\n"
 "    Geod [ -i | -l lat1 lon1 azi1 ] [ -a ] [ -e a f ] [ -d | -: ] [ -b ] [\n"
-"    -f ] [ -p prec ] [ --comment-delimiter commentdelim ] [ --version | -h\n"
-"    | --help ] [ --input-file infile | --input-string instring ] [\n"
-"    --line-separator linesep ] [ --output-file outfile ]\n"
+"    -f ] [ -p prec ] [ -E ] [ --comment-delimiter commentdelim ] [\n"
+"    --version | -h | --help ] [ --input-file infile | --input-string\n"
+"    instring ] [ --line-separator linesep ] [ --output-file outfile ]\n"
 "\n"
 "For full documentation type:\n"
 "    Geod --help\n"
@@ -17,9 +17,9 @@ int usage(int retval, bool brief) {
 "\n"
 "SYNOPSIS\n"
 "       Geod [ -i | -l lat1 lon1 azi1 ] [ -a ] [ -e a f ] [ -d | -: ] [ -b ] [\n"
-"       -f ] [ -p prec ] [ --comment-delimiter commentdelim ] [ --version | -h\n"
-"       | --help ] [ --input-file infile | --input-string instring ] [\n"
-"       --line-separator linesep ] [ --output-file outfile ]\n"
+"       -f ] [ -p prec ] [ -E ] [ --comment-delimiter commentdelim ] [\n"
+"       --version | -h | --help ] [ --input-file infile | --input-string\n"
+"       instring ] [ --line-separator linesep ] [ --output-file outfile ]\n"
 "\n"
 "DESCRIPTION\n"
 "       The shortest path between two points on the ellipsoid at (lat1, lon1)\n"
@@ -73,6 +73,10 @@ int usage(int retval, bool brief) {
 "\n"
 "       -p  set the output precision to prec (default 3); prec is the precision\n"
 "           relative to 1 m.  See PRECISION.\n"
+"\n"
+"       -E  use \"exact\" algorithms (based on elliptic integrals) for the\n"
+"           geodesic calculations.  These are more accurate than the (default)\n"
+"           series expansions for |f| > 0.01.\n"
 "\n"
 "       --comment-delimiter\n"
 "           set the comment delimiter to commentdelim (e.g., \"#\" or \"//\").  If\n"
@@ -217,5 +221,5 @@ int usage(int retval, bool brief) {
 "       Geod was added to GeographicLib, <http://geographiclib.sf.net>, in\n"
 "       2009-03.\n"
 ;
-    return retval;
+  return retval;
 }

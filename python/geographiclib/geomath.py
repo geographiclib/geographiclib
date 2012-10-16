@@ -19,14 +19,16 @@ class Math(object):
 
   This defines constants:
     epsilon, difference between 1 and the next bigger number
+    digits, the number of digits in the fraction of a real number
     minval, minimum normalized positive number
     maxval, maximum finite number
     degree, the number of radians in a degree
     nan, not a number
     inf, infinity
   """
-  
-  epsilon = math.pow(2.0, -52)
+
+  digits = 53
+  epsilon = math.pow(2.0, 1-digits)
   minval = math.pow(2.0, -1022)
   maxval = math.pow(2.0, 1023) * (2 - epsilon)
   degree = math.pi/180

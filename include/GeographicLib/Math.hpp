@@ -33,16 +33,16 @@
 #  define HAVE_LONG_DOUBLE 0
 #endif
 
-#if !defined(GEOGRAPHICLIB_PREC)
+#if !defined(GEOGRAPHICLIB_PRECISION)
 /**
- * The precision of floating point numbers used in %GeographicLib.  0 means
- * float; 1 (default) means double; 2 means long double.  Nearly all the
- * testing has been carried out with doubles and that's the recommended
- * configuration.  In order for long double to be used, HAVE_LONG_DOUBLE needs
- * to be defined.  Note that with Microsoft Visual Studio, long double is the
- * same as double.
+ * The precision of floating point numbers used in %GeographicLib.  1 means
+ * float (single precision); 2 (the default) means double; 3 means long double;
+ * 4 is reserved for quadruple precision.  Nearly all the testing has been
+ * carried out with doubles and that's the recommended configuration.  In order
+ * for long double to be used, HAVE_LONG_DOUBLE needs to be defined.  Note that
+ * with Microsoft Visual Studio, long double is the same as double.
  **********************************************************************/
-#  define GEOGRAPHICLIB_PREC 1
+#  define GEOGRAPHICLIB_PRECISION 2
 #endif
 
 #include <cmath>
@@ -65,7 +65,8 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT Math {
   private:
     void dummy() {
-      STATIC_ASSERT(GEOGRAPHICLIB_PREC >= 0 && GEOGRAPHICLIB_PREC <= 2,
+      STATIC_ASSERT(GEOGRAPHICLIB_PRECISION >= 1 &&
+                    GEOGRAPHICLIB_PRECISION <= 3,
                     "Bad value of precision");
     }
     Math();                     // Disable constructor
@@ -81,7 +82,7 @@ namespace GeographicLib {
     typedef double extended;
 #endif
 
-#if GEOGRAPHICLIB_PREC == 1
+#if GEOGRAPHICLIB_PRECISION == 2
     /**
      * The real type for %GeographicLib. Nearly all the testing has been done
      * with \e real = double.  However, the algorithms should also work with
@@ -89,9 +90,9 @@ namespace GeographicLib {
      * accuracy typically cannot be obtained using floats.)
      **********************************************************************/
     typedef double real;
-#elif GEOGRAPHICLIB_PREC == 0
+#elif GEOGRAPHICLIB_PRECISION == 1
     typedef float real;
-#elif GEOGRAPHICLIB_PREC == 2
+#elif GEOGRAPHICLIB_PRECISION == 3
     typedef extended real;
 #else
     typedef double real;
@@ -166,7 +167,7 @@ namespace GeographicLib {
 #  endif
 #  if HAVE_LONG_DOUBLE
     static inline long double hypot(long double x, long double y) throw()
-    { return _hypot(x, y); }
+    { return _hypot(double(x), double(y)); } // Suppress loss of data warning
 #  endif
 #else
     // Use overloading to define generic versions
@@ -336,6 +337,7 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static inline T AngNormalize(T x) throw()
     { return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x); }
+
     /**
      * Normalize an arbitrary angle.
      *
@@ -360,7 +362,7 @@ namespace GeographicLib {
 #if defined(DOXYGEN)
       return std::abs(x) <= (std::numeric_limits<T>::max)();
 #elif (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
-      return _finite(x) != 0;
+      return _finite(double(x)) != 0;
 #else
       return std::isfinite(x);
 #endif
@@ -370,7 +372,7 @@ namespace GeographicLib {
      * The NaN (not a number)
      *
      * @tparam T the type of the returned value.
-     * @return NaN if available, otherwise return the max real.
+     * @return NaN if available, otherwise return the max real of type T.
      **********************************************************************/
     template<typename T> static inline T NaN() throw() {
       return std::numeric_limits<T>::has_quiet_NaN ?

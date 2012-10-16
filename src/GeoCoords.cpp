@@ -61,7 +61,7 @@ namespace GeographicLib {
   }
 
   string GeoCoords::GeoRepresentation(int prec, bool swaplatlong) const {
-    prec = max(0, min(9, prec) + 5);
+    prec = max(0, min(9 + (sizeof(real) > sizeof(double) ? 3 : 0), prec) + 5);
     ostringstream os;
     os << fixed << setprecision(prec);
     real a = swaplatlong ? _long : _lat;
@@ -80,7 +80,7 @@ namespace GeographicLib {
 
   string GeoCoords::DMSRepresentation(int prec, bool swaplatlong,
                                       char dmssep) const {
-    prec = max(0, min(10, prec) + 5);
+    prec = max(0, min(10 + (sizeof(real) > sizeof(double) ? 3 : 0), prec) + 5);
     return DMS::Encode(swaplatlong ? _long : _lat, unsigned(prec),
                        swaplatlong ? DMS::LONGITUDE : DMS::LATITUDE, dmssep) +
       " " + DMS::Encode(swaplatlong ? _lat : _long, unsigned(prec),
@@ -111,7 +111,7 @@ namespace GeographicLib {
                                real easting, real northing, int prec,
                                std::string& utm) {
     ostringstream os;
-    prec = max(-5, min(9, prec));
+    prec = max(-5, min(9 + (sizeof(real) > sizeof(double) ? 3 : 0), prec));
     real scale = prec < 0 ? pow(real(10), -prec) : real(1);
     os << UTMUPS::EncodeZone(zone, northp) << fixed << setfill('0');
     if (Math::isfinite(easting)) {
@@ -136,7 +136,7 @@ namespace GeographicLib {
   }
 
   string GeoCoords::UTMUPSRepresentation(bool northp, int prec) const {
-    double e, n;
+    real e, n;
     int z;
     UTMUPS::Transfer(_zone, _northp, _easting, _northing,
                      _zone,  northp,  e,        n,       z);
@@ -152,7 +152,7 @@ namespace GeographicLib {
   }
 
   string GeoCoords::AltUTMUPSRepresentation(bool northp, int prec) const {
-    double e, n;
+    real e, n;
     int z;
     UTMUPS::Transfer(_alt_zone, _northp, _alt_easting, _alt_northing,
                      _alt_zone,  northp,      e,            n,       z);

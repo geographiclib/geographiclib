@@ -8,7 +8,9 @@ MODULES = AlbersEqualArea \
 	GeoCoords \
 	Geocentric \
 	Geodesic \
+	GeodesicExact \
 	GeodesicLine \
+	GeodesicLineExact \
 	Geohash \
 	Geoid \
 	Gnomonic \

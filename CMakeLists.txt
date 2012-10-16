@@ -4,14 +4,14 @@ project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 24)
+set (GeographicLib_VERSION_MINOR 25)
 set (GeographicLib_VERSION
   "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.6.0)
+set (LIBVERSIONFULL 9.7.0)
 
 # User-settable variables
 
@@ -103,7 +103,7 @@ endif ()
 
 # (5) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
 set (MATLAB_COMPILER OFF CACHE STRING
-  "Compiler for matlab/octave interface: mex or mkoctfile or OFF") 
+  "Compiler for matlab/octave interface: mex or mkoctfile or OFF")
 if (NOT CMAKE_VERSION VERSION_LESS 2.8)
   set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
 endif ()
@@ -126,6 +126,14 @@ if (WIN32)
 else ()
   option (GEOGRAPHICLIB_DOCUMENTATION
     "Use doxygen to create the documentation" ON)
+endif ()
+
+# (8) Set the default "real" precision.  This should probably be left
+# at 2 (double).
+set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
+  "Default real precision: 1 = float, 2 = double, 3 = long double")
+if (NOT CMAKE_VERSION VERSION_LESS 2.8)
+  set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3)
 endif ()
 
 # The debug version of the library is called Geographic_d.
@@ -160,7 +168,7 @@ if (GEOGRAPHICLIB_DOCUMENTATION)
     elseif (CMAKE_VERSION VERSION_LESS 2.8)
       set (DOXYGEN_FOUND FALSE)
       message (STATUS
-	"CMake version ${CMAKE_VERSION} too old for building documentation")
+        "CMake version ${CMAKE_VERSION} too old for building documentation")
     endif ()
   endif ()
 endif ()
@@ -220,8 +228,10 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release)
 endif ()
 
-# On non-Windows machine, make the compiler more picky.
-if (NOT WIN32)
+# Make the compiler more picky.
+if (WIN32)
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 endif ()
 
@@ -231,6 +241,8 @@ set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert Geod
 # The list of scripts (to be installed into, e.g., /usr/local/sbin)
 set (SCRIPTS
   geographiclib-get-geoids geographiclib-get-gravity geographiclib-get-magnetic)
+
+set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Set the include directories.  Look in ${PROJECT_BINARY_DIR}/include
 # first because that's where Config.h will be
@@ -244,12 +256,16 @@ add_subdirectory (man)
 add_subdirectory (doc)
 add_subdirectory (matlab)
 add_subdirectory (python/geographiclib)
-if (GEOGRAPHICLIB_EXAMPLES)
+if (GEOGRAPHICLIB_EXAMPLES AND GEOGRAPHICLIB_PRECISION EQUAL 2)
+  # The examples assume double precision
   add_subdirectory (examples)
 endif ()
 add_subdirectory (cmake)
+if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
+  add_subdirectory (tests)
+endif ()
 
-# Packaging support; we deal with 
+# Packaging support; we deal with
 # (1) a source distribution: cmake make a tar.gz file and the zip file
 # is created from this.  Only the maintainer can do this, because of
 # the need to generate additional documentation files.
@@ -318,9 +334,12 @@ if (WIN32)
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_NSIS_MENU_LINKS
-    "doc/html/index.html" "Library Documentation"
-    "doc/html/utilities.html" "Utilities Documentation"
-    "http://geographiclib.sf.net/html/" "Online Documentation")
+    "http://geographiclib.sf.net/${PACKAGE_VERSION}/index.html"
+    "Library documentation"
+    "http://geographiclib.sf.net/${PACKAGE_VERSION}/utilities.html"
+    "Utilities documentation"
+    "http://geographiclib.sf.net" "GeographicLib home page"
+    "http://sf.net/projects/geographiclib/" "Main project page")
   set (CPACK_NSIS_MODIFY_PATH ON)
 elseif (APPLE)
   # Not tested

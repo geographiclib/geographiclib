@@ -2,7 +2,7 @@
  * \file GeodesicLine.hpp
  * \brief Header for GeographicLib::GeodesicLine class
  *
- * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -31,7 +31,11 @@ namespace GeographicLib {
    * The calculations are accurate to better than 15 nm (15 nanometers).  See
    * Sec. 9 of
    * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
-   * details.
+   * details.  The algorithms used by this class are based on series expansions
+   * using the flattening \e f as a small parameter.  These only accurate for
+   * |\e f| &lt; 0.01; however reasonably accurate results will be obtained for
+   * |\e f| &lt; 0.1.  For very eccentric ellipsoids, use GeodesicLineExact
+   * instead.
    *
    * The algorithms are described in
    * - C. F. F. Karney,
@@ -62,7 +66,7 @@ namespace GeographicLib {
 
     real _lat1, _lon1, _azi1;
     real _a, _f, _b, _c2, _f1, _salp0, _calp0, _k2,
-      _salp1, _calp1, _ssig1, _csig1, _stau1, _ctau1, _somg1, _comg1,
+      _salp1, _calp1, _ssig1, _csig1, _dn1, _stau1, _ctau1, _somg1, _comg1,
       _A1m1, _A2m1, _A3c, _B11, _B21, _B31, _A4, _B41;
     // index zero elements of _C1a, _C1pa, _C2a, _C3a are unused
     real _C1a[nC1_ + 1], _C1pa[nC1p_ + 1], _C2a[nC2_ + 1], _C3a[nC3_],
@@ -154,7 +158,6 @@ namespace GeographicLib {
      *
      * @param[in] g A Geodesic object used to compute the necessary information
      *   about the GeodesicLine.
-     *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
      * @param[in] azi1 azimuth at point 1 (degrees).

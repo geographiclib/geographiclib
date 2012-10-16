@@ -1,14 +1,7 @@
 # Build the tools...
 
-# Where to find the *.usage files for the --help option.  For a
-# maintainer these are in the build tree; otherwise they are in the
-# source tree.
-if (MAINTAINER)
-  set (MANDIR ${PROJECT_BINARY_DIR}/man)
-else ()
-  set (MANDIR ${PROJECT_SOURCE_DIR}/man)
-endif ()
-include_directories (${MANDIR})
+# Where to find the *.usage files for the --help option.
+include_directories (${PROJECT_BINARY_DIR}/man)
 
 # Loop over all the tools, specifying the source and library.
 add_custom_target (tools ALL)
@@ -21,7 +14,7 @@ foreach (TOOL ${TOOLS})
   add_dependencies (tools ${TOOL})
 
   set_source_files_properties (${TOOL}.cpp PROPERTIES
-    OBJECT_DEPENDS ${MANDIR}/${TOOL}.usage)
+    OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/${TOOL}.usage)
 
   target_link_libraries (${TOOL} Geographic)
 
@@ -33,7 +26,7 @@ if (GEOGRAPHIC_SHARED_LIB)
     # (tools) so that the tests can be run.
     add_custom_command (TARGET tools POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E
-	copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
+        copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
       COMMENT "Copying shared library to tools directory")
   else ()
     # Set the run time path for shared libraries for non-Windows machines.
@@ -44,6 +37,9 @@ endif ()
 
 # Specify where the tools are installed
 install (TARGETS ${TOOLS} EXPORT depends DESTINATION bin)
+
+# Put all the tools into a folder in the IDE
+set_property (TARGET tools ${TOOLS} PROPERTY FOLDER tools)
 
 # Create the scripts for downloading the data files on non-Windows
 # systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the
@@ -146,6 +142,13 @@ add_test (Geod11 Geod -i --input-string
   "48.522876735459 0 -48.52287673545898293 179.599720456223079643")
 set_tests_properties (Geod11
   PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 19989144.774")
+
+# Check fix for inverse geodesics on extreme prolate/oblate ellipsoids
+# Reported 2012-08-29 Stefan Guenther <stefan.gunther@embl.de>; fixed 2012-10-07
+add_test (Geod12 Geod -i -e 89.8 -1.83 -p 0 --input-string "0 0 -10 160")
+add_test (Geod13 Geod -i -e 89.8 -1.83 -p 0 --input-string "0 0 -10 160" -E)
+set_tests_properties (Geod12 Geod13
+  PROPERTIES PASS_REGULAR_EXPRESSION "120\\.27.* 105\\.15.* 267")
 
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (Planimeter0 Planimeter --input-string "89 0;89 90;89 180;89 270")

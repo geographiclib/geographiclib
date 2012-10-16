@@ -38,7 +38,7 @@ if (DOXYGEN_FOUND)
     ../src/[A-Za-z]*.cpp ../include/GeographicLib/[A-Za-z]*.hpp
     ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp)
   file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac
-    tmseries30.html geodseries30.html ../LICENSE.txt)
+    tmseries30.html geodseries30.html meridian-measures.png ../LICENSE.txt)
   file (COPY ${EXTRA_FILES} DESTINATION html-stage)
   add_custom_target (doc ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
@@ -53,12 +53,9 @@ if (DOXYGEN_FOUND)
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
     DESTINATION ${INSTALL_DOC_DIR})
 else ()
-  if (CMAKE_VERSION VERSION_LESS 2.8)
-    configure_file (../LICENSE.txt ${CMAKE_CURRENT_BINARY_DIR}/html/LICENSE.txt
-      COPYONLY)
-  else ()
-    file (COPY ../LICENSE.txt DESTINATION html)
-  endif ()
+  # Replace with file (COPY ...) once cmake version 2.8 is required
+  configure_file (../LICENSE.txt ${CMAKE_CURRENT_BINARY_DIR}/html/LICENSE.txt
+    COPYONLY)
   # Need to absolute path on destination to support old versions of cmake
   configure_file (index.html.in ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
   configure_file (utilities.html.in

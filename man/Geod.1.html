@@ -48,7 +48,7 @@
 <hr />
 <h1><a name="synopsis">SYNOPSIS</a></h1>
 <p><strong>Geod</strong> [ <strong>-i</strong> | <strong>-l</strong> <em>lat1</em> <em>lon1</em> <em>azi1</em> ] [ <strong>-a</strong> ] [ <strong>-e</strong> <em>a</em> <em>f</em> ]
-[ <strong>-d</strong> | <strong>-:</strong> ] [ <strong>-b</strong> ] [ <strong>-f</strong> ] [ <strong>-p</strong> <em>prec</em> ]
+[ <strong>-d</strong> | <strong>-:</strong> ] [ <strong>-b</strong> ] [ <strong>-f</strong> ] [ <strong>-p</strong> <em>prec</em> ] [ <strong>-E</strong> ]
 [ <strong>--comment-delimiter</strong> <em>commentdelim</em> ]
 [ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
 [ <strong>--input-file</strong> <em>infile</em> | <strong>--input-string</strong> <em>instring</em> ]
@@ -143,6 +143,13 @@ quantities <em>m12</em>, <em>M12</em>, <em>M21</em>, and <em>S12</em> are descri
 <dd>
 <p>set the output precision to <em>prec</em> (default 3); <em>prec</em> is the
 precision relative to 1 m.  See <a href="#precision">PRECISION</a>.</p>
+</dd>
+<dt><strong><a name="e" class="item"><strong>-E</strong></a></strong></dt>
+
+<dd>
+<p>use &quot;exact&quot; algorithms (based on elliptic integrals) for the geodesic
+calculations.  These are more accurate than the (default) series
+expansions for |<em>f</em>| &gt; 0.01.</p>
 </dd>
 <dt><strong><a name="comment_delimiter" class="item"><strong>--comment-delimiter</strong></a></strong></dt>
 

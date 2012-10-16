@@ -29,7 +29,7 @@ tail --lines +5 | sed -e 's/\\/\\\\/g' -e 's/$/\\n\\/' -e 's/"/\\"/g'
 
 cat <<EOF
 ";
-    return retval;
+  return retval;
 }
 EOF
 ) | # Break long strings assuming that files don't contain the ~ character

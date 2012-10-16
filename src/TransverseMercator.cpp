@@ -29,10 +29,10 @@
  *  - evaluating the convergence and scale using the expression for the
  *    projection or its inverse.
  *
- * If the preprocessor variable TM_TX_MAXPOW is set to an integer between 4 and
- * 8, then this specifies the order of the series used for the forward and
- * reverse transformations.  The default value is 6.  (The series accurate to
- * 12th order is given in \ref tmseries.)
+ * If the preprocessor variable GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER is set
+ * to an integer between 4 and 8, then this specifies the order of the series
+ * used for the forward and reverse transformations.  The default value is 6.
+ * (The series accurate to 12th order is given in \ref tmseries.)
  *
  * Other equivalent implementations are given in
  *  - http://www.ign.fr/DISPLAY/000/526/702/5267021/NTG_76.pdf

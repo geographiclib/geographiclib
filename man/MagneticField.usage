@@ -201,5 +201,5 @@ int usage(int retval, bool brief) {
 "       MagneticField was added to GeographicLib,\n"
 "       <http://geographiclib.sf.net>, in version 1.15.\n"
 ;
-    return retval;
+  return retval;
 }

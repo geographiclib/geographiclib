@@ -126,5 +126,5 @@ int usage(int retval, bool brief) {
 "       ConicProj was added to GeographicLib, <http://geographiclib.sf.net>, in\n"
 "       version 1.9.\n"
 ;
-    return retval;
+  return retval;
 }

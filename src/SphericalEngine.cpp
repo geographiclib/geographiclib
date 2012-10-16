@@ -136,6 +136,12 @@
 #include <GeographicLib/CircularEngine.hpp>
 #include <GeographicLib/Utility.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about constant conditional expressions and potentially
+// uninitialized local variables
+#  pragma warning (disable: 4127 4701)
+#endif
+
 namespace GeographicLib {
 
   using namespace std;
@@ -202,6 +208,7 @@ namespace GeographicLib {
           A = t * Ax;
           B = - q2 * w / (root_[n - m + 2] * root_[n + m + 2]);
           break;
+        default: break;       // To suppress warning message from Visual Studio
         }
         R = c[0].Cv(--k[0]);
         for (int l = 1; l < L; ++l)
@@ -239,6 +246,7 @@ namespace GeographicLib {
           A = cl * v * uq;
           B = - v * root_[2 * m + 3] / (root_[8] * root_[m + 2]) * uq2;
           break;
+        default: break;       // To suppress warning message from Visual Studio
         }
         v = A * vc  + B * vc2  +  wc ; vc2  = vc ; vc  = v;
         v = A * vs  + B * vs2  +  ws ; vs2  = vs ; vs  = v;
@@ -263,6 +271,7 @@ namespace GeographicLib {
           A = uq;
           B = - root_[3]/2 * uq2;
           break;
+        default: break;       // To suppress warning message from Visual Studio
         }
         qs = q / scale_;
         vc = qs * (wc + A * (cl * vc + sl * vs ) + B * vc2);
@@ -329,6 +338,7 @@ namespace GeographicLib {
           A = t * Ax;
           B = - q2 * w / (root_[n - m + 2] * root_[n + m + 2]);
           break;
+        default: break;       // To suppress warning message from Visual Studio
         }
         R = c[0].Cv(--k[0]);
         for (int l = 1; l < L; ++l)

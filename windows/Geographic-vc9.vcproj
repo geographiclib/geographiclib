@@ -304,7 +304,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\GeodesicExact.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\GeodesicLine.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\GeodesicLineExact.cpp"
 				>
 			</File>
 			<File
@@ -438,7 +446,15 @@
 				>
 			</File>
 			<File
+				RelativePath="../include/GeographicLib/GeodesicExact.hpp"
+				>
+			</File>
+			<File
 				RelativePath="../include/GeographicLib/GeodesicLine.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/GeodesicLineExact.hpp"
 				>
 			</File>
 			<File

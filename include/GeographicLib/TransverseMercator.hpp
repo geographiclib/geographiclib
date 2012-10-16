@@ -12,13 +12,13 @@
 
 #include <GeographicLib/Constants.hpp>
 
-#if !defined(TM_TX_MAXPOW)
+#if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER)
 /**
  * The order of the series approximation used in TransverseMercator.
- * TM_TX_MAXPOW can be set to any integer in [4, 8].
+ * GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER can be set to any integer in [4, 8].
  **********************************************************************/
-#  define TM_TX_MAXPOW \
-  (GEOGRAPHICLIB_PREC == 1 ? 6 : (GEOGRAPHICLIB_PREC == 0 ? 4 : 8))
+#  define GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER \
+  (GEOGRAPHICLIB_PRECISION == 2 ? 6 : (GEOGRAPHICLIB_PRECISION == 1 ? 4 : 8))
 #endif
 
 namespace GeographicLib {
@@ -79,7 +79,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT TransverseMercator {
   private:
     typedef Math::real real;
-    static const int maxpow_ = TM_TX_MAXPOW;
+    static const int maxpow_ = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
     static const real tol_;
     static const real overflow_;
     static const int numit_ = 5;

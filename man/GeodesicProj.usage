@@ -121,5 +121,5 @@ int usage(int retval, bool brief) {
 "       GeodesicProj was added to GeographicLib, <http://geographiclib.sf.net>,\n"
 "       in 2009-08.  Prior to version 1.9 it was called EquidistantTest.\n"
 ;
-    return retval;
+  return retval;
 }

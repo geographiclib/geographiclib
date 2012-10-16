@@ -109,5 +109,5 @@ int usage(int retval, bool brief) {
 "       CartConvert was added to GeographicLib, <http://geographiclib.sf.net>,\n"
 "       in 2009-02.  Prior to 2009-03 it was called ECEFConvert.\n"
 ;
-    return retval;
+  return retval;
 }

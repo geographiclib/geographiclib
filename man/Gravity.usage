@@ -191,5 +191,5 @@ int usage(int retval, bool brief) {
 "       Gravity was added to GeographicLib, <http://geographiclib.sf.net>, in\n"
 "       version 1.16.\n"
 ;
-    return retval;
+  return retval;
 }
