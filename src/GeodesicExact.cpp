@@ -744,16 +744,16 @@ namespace GeographicLib {
       salp0 = salp1 * cbet1,
       calp0 = Math::hypot(calp1, salp1 * sbet1); // calp0 > 0
 
-    real somg1, comg1, somg2, comg2, cups1, cups2, lam12;
+    real somg1, comg1, somg2, comg2, cchi1, cchi2, lam12;
     // tan(bet1) = tan(sig1) * cos(alp1)
     // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
     ssig1 = sbet1; somg1 = salp0 * sbet1;
     csig1 = comg1 = calp1 * cbet1;
-    // Without normalization we have sups1 = somg1.
-    cups1 = _f1 * dn1 * comg1;
+    // Without normalization we have schi1 = somg1.
+    cchi1 = _f1 * dn1 * comg1;
     SinCosNorm(ssig1, csig1);
     // SinCosNorm(somg1, comg1); -- don't need to normalize!
-    // SinCosNorm(sups1, cups1); -- don't need to normalize!
+    // SinCosNorm(schi1, cchi1); -- don't need to normalize!
 
     // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     // about this case, since this can yield singularities in the Newton
@@ -774,11 +774,11 @@ namespace GeographicLib {
     // tan(omg2) = sin(alp0) * tan(sig2).
     ssig2 = sbet2; somg2 = salp0 * sbet2;
     csig2 = comg2 = calp2 * cbet2;
-    // Without normalization we have sups2 = somg2.
-    cups2 = _f1 * dn2 * comg2;
+    // Without normalization we have schi2 = somg2.
+    cchi2 = _f1 * dn2 * comg2;
     SinCosNorm(ssig2, csig2);
     // SinCosNorm(somg2, comg2); -- don't need to normalize!
-    // SinCosNorm(sups2, cups2); -- don't need to normalize!
+    // SinCosNorm(schi2, cchi2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, real(0)),
@@ -789,9 +789,9 @@ namespace GeographicLib {
                   comg1 * comg2 + somg1 * somg2);
     real k2 = Math::sq(calp0) * _ep2;
     E.Reset(-k2, -_ep2, 1 + k2, 1 + _ep2);
-    real ups12 = atan2(max(cups1 * somg2 - somg1 * cups2, real(0)),
-                       cups1 * cups2 + somg1 * somg2);
-    lam12 = ups12 -
+    real chi12 = atan2(max(cchi1 * somg2 - somg1 * cchi2, real(0)),
+                       cchi1 * cchi2 + somg1 * somg2);
+    lam12 = chi12 -
       _e2/_f1 * salp0 * E.H() / (Math::pi<real>() / 2) *
       (sig12 + E.deltaH(ssig2, csig2, dn2) - E.deltaH(ssig1, csig1, dn1) );
 

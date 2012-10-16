@@ -41,7 +41,7 @@ namespace GeographicLib {
     real _lat1, _lon1, _azi1;
     real _a, _f, _b, _c2, _f1, _e2, _salp0, _calp0, _k2,
       _salp1, _calp1, _ssig1, _csig1, _dn1, _stau1, _ctau1,
-      _somg1, _comg1, _cups1,
+      _somg1, _comg1, _cchi1,
       _A4, _B41, _E0, _D0, _H0, _E1, _D1, _H1;
     real _C4a[nC4_];            // all the elements of _C4a are used
     EllipticFunction _E;

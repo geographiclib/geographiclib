@@ -2693,8 +2693,8 @@ In the expansions below, we have
  - \f$ \alpha \f$ is the azimuth
  - \f$ \alpha_0 \f$ is the azimuth at the equator crossing
  - \f$ \lambda \f$ is the longitude measured from the equator crossing
- - \f$ \omega \f$ is the spherical longitude
  - \f$ \sigma \f$ is the spherical arc length
+ - \f$ \omega = \tan^{-1}(\sin\alpha_0\tan\sigma) \f$ is the spherical longitude
  - \f$ a \f$ is the equatorial radius
  - \f$ b \f$ is the polar semi-axis
  - \f$ f \f$ is the flattening
@@ -3011,20 +3011,19 @@ with an imaginary modulus.  However, the integrals themselves are real
 and the algorithms used to compute the elliptic integrals handles the
 case of an imaginary modulus using real arithmetic.
 
-The key relations are
+The key relations used by %GeographicLib are
 \f[
  \begin{aligned}
   \frac sb &= E(\sigma, ik), \\
   J(\sigma) &= k^2 D(\sigma, ik), \\
   \lambda &= (1 - f) \sin\alpha_0  G(\sigma, \cos^2\alpha_0, ik) \\
-          &= \upsilon
+          &= \chi
            - \frac{e'^2}{\sqrt{1+e'^2}}\sin\alpha_0 H(\sigma, -e'^2, ik),
  \end{aligned}
 \f]
-where \f$ \upsilon \f$ is a modified spherical longitude given by
+where \f$ \chi \f$ is a modified spherical longitude given by
 \f[
-\tan\upsilon = \frac{\sqrt{1+e'^2}           \sin\omega}
-                    {\sqrt{1+k^2\sin^2\sigma}\cos\omega},
+\tan\chi = \sqrt{\frac{1+e'^2}{1+k^2\sin^2\sigma}}\tan\omega,
 \f]
 and
 \f[
@@ -3046,16 +3045,17 @@ and
  \end{aligned}
 \f]
 and \f$F(\phi, k)\f$, \f$E(\phi, k)\f$, and \f$\Pi(\phi, \alpha^2,
-k)\f$, are incomplete elliptic integrals of the first, second, and
-third kinds (see http://dlmf.nist.gov/19.2.ii). \f$D(\phi, k)\f$ is
-Jahnke's elliptic integral.  The first expression for \f$ \lambda \f$ is
-given by Legendre (1811) and is the most common representation of the
-longitude in terms of elliptic integrals.  The second (equivalent)
-expression for \f$ \lambda \f$, which was given by Cayley (1870), is
-useful in that the elliptic integral is relegated to a small correction
-term.  This form allows the longitude to be computed more accurately and
-is used in %GeographicLib.  (The equivalence of the two expressions for
-\f$ \lambda \f$ follows from http://dlmf.nist.gov/19.7.E8.)
+k)\f$, are incomplete elliptic integrals of the first, second, and third
+kinds (see http://dlmf.nist.gov/19.2.ii). \f$D(\phi, k)\f$ is Jahnke's
+elliptic integral.  The formula for \f$ s \f$ and the first expression
+for \f$ \lambda \f$ are given by Legendre (1811) and are the most common
+representation of geodesics in terms of elliptic integrals.  The second
+(equivalent) expression for \f$ \lambda \f$, which was given by Cayley
+(1870), is useful in that the elliptic integral is relegated to a small
+correction term.  This form allows the longitude to be computed more
+accurately and is used in %GeographicLib.  (The equivalence of the two
+expressions for \f$ \lambda \f$ follows from
+http://dlmf.nist.gov/19.7.E8.)
 
 Nominally, GeographicLib::GeodesicExact and
 GeographicLib::GeodesicLineExact will give "exact" results for any
@@ -3064,20 +3064,52 @@ distorted measure of distance from the equator with very eccentric
 ellipsoids and this introducing an irreducible representational error
 in the algorithms in this case.  It is therefore recommended to
 restrict the use of these classes to \e b/\e a &isin; [0.1, 10] or \e
-f &isin; [-9, 0.9].
+f &isin; [-9, 0.9].  Note that GeographicLib::GeodesicExact still uses
+a series expansion for the area \e S12.  However the series is taken
+out to 30th order and should give accurate results for \e b/\e a
+&isin; [1/3, 3].
 
-Note that GeographicLib::GeodesicExact still uses a series expansion for
-the area \e S12.  However the series is taken out to 30th order and
-should give accurate results for \e b/\e a &isin; [1/3, 3].
+Thomas (1952) and Rollins (2010) use a different independent variable
+for geodesics, \f$\theta\f$ instead of \f$\sigma\f$, where \f$
+\tan\theta = \sqrt{1 + k^2} \tan\sigma \f$.  The corresponding
+expressions for \f$ s \f$ and \f$ \lambda \f$ are given here for
+completeness:
+\f[
+\begin{aligned}
+\frac sb &= \sqrt{1-k_1^2} \Pi(\theta, k_1^2, k_1), \\
+\lambda &= (1-f) \sqrt{1-k_1^2} \sin\alpha_0 \Pi(\theta, k_1^2/e^2, k_1),
+\end{aligned}
+\f]
+where \f$ k_1 = k/\sqrt{1 + k^2} \f$.  The expression for \f$ s \f$
+can be written in terms of elliptic integrals of the second kind and
+Cayley's technique can be used to subtract out the leading order
+behavior of \f$ \lambda \f$ to give
+\f[
+\begin{aligned}
+\frac sb &=\frac1{\sqrt{1-k_1^2}}
+  \biggl( E(\theta, k_1) -
+    \frac{k_1^2 \sin\theta \cos\theta}{\sqrt{1-k_1^2\sin^2\theta}} \biggr), \\
+\lambda &= \psi + (1-f) \sqrt{1-k_1^2} \sin\alpha_0
+\bigl( F(\theta, k_1) - \Pi(\theta, e^2, k_1) \bigr),
+\end{aligned}
+\f]
+where
+\f[
+\begin{aligned}
+\tan\psi &= \sqrt{\frac{1+k^2\sin^2\sigma}{1+e'^2}}\tan\omega \\
+	 &= \sqrt{\frac{1-e^2}{1+k^2\cos^2\theta}}\sin\alpha_0\tan\theta.
+\end{aligned}
+\f]
+The tangents of the three "longitude-like" angles are in geometric
+progression, \f$ \tan\chi/\tan\omega = \tan\omega/\tan\psi \f$.
 
 \section meridian Parameters for the meridian
 
-The formula for \f$ s \f$ given in the previous section is identical to
-the distance along a meridian (as a function of the parametric latitude
-measured from the equator) for an ellipsoid with equatorial radius \f$ a
-\sqrt{1 - e^2 \sin^2\alpha_0} \f$ and polar semi-axis \f$ b \f$.  Here
-is a list of possible ways of expressing the meridian distance in terms
-of elliptic integrals using the notation:
+The formulas for \f$ s \f$ given in the previous section are the same as
+those for the distance along a meridian for an ellipsoid with equatorial
+radius \f$ a \sqrt{1 - e^2 \sin^2\alpha_0} \f$ and polar semi-axis \f$ b
+\f$.  Here is a list of possible ways of expressing the meridian
+distance in terms of elliptic integrals using the notation:
 - \f$ a \f$, equatorial axis,
 - \f$ b \f$, polar axis,
 - \f$ e = \sqrt{(a^2 - b^2)/a^2} \f$, eccentricity,
@@ -3093,7 +3125,9 @@ of elliptic integrals using the notation:
 - \f$ y \f$, the distance along the meridian (measured from the equator).
 - \f$ y' = M -y \f$, the distance along the meridian (measured from the pole).
 .
-The elliptic variables \f$(u, u')\f$ and \f$(v, v')\f$ are defined by
+The eccentricities \f$ (e, e') \f$ are real (resp. imaginary) for
+oblate (resp. prolate) ellipsoids.  The elliptic variables \f$(u,
+u')\f$ and \f$(v, v')\f$ are defined by
 - \f$ u = F(\phi, e) ,\quad u' = F(\beta', e) \f$
 - \f$ v = F(\beta, ie') ,\quad v' = F(\phi', ie') \f$,
 .
@@ -3169,12 +3203,14 @@ for evaluate the meridian distance
 - Applying these formulas to the geodesic problems, \f$ \beta \f$
   becomes the arc length, \f$ \sigma \f$, on the auxiliary sphere.  This
   is the traditional method of solution used by Legendre (1806), Oriani
-  (1806), Bessel (1825), Helmert (1880), Vincenty (1975), Rapp (1993),
-  and so on.  Many of the solutions in terms of elliptic functions use
-  one of the elliptic variables (\f$ u \f$ or \f$ v \f$), see, for
-  example, Jacobi (1855), Halphen (1888), Forsyth (1896).  Some
-  solutions use the equivalent of \f$ \phi \f$, e.g., Thomas (1952),
-  Rollins (2010).
+  (1806), Bessel (1825), Helmert (1880), Rainsford (1955), Thomas
+  (1970), Vincenty (1975), Rapp (1993), and so on.  Many of the
+  solutions in terms of elliptic functions use one of the elliptic
+  variables (\f$ u \f$ or \f$ v \f$), see, for example, Jacobi (1855),
+  Halphen (1888), Forsyth (1896).  In the context of geodesics \f$
+  \phi \f$ becomes Thomas' variable \f$ \theta \f$; this is used by
+  Thomas (1952) and Rollins (2010) in their formulation of the
+  geodesic problem (see the previous section).
 - For highly eccentric ellipsoids the variation of the meridian with
   respect to \f$ \beta \f$ is considerably "better behaved" than other
   choices (see the figure below).  The choice of \f$ \phi \f$ is

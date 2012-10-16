@@ -93,11 +93,11 @@ namespace GeographicLib {
     // With alp0 = 0, omg1 = 0 for alp1 = 0, omg1 = pi for alp1 = pi.
     _ssig1 = sbet1; _somg1 = _salp0 * sbet1;
     _csig1 = _comg1 = sbet1 != 0 || _calp1 != 0 ? cbet1 * _calp1 : 1;
-    // Without normalization we have sups1 = somg1.
-    _cups1 = _f1 * _dn1 * _comg1;
+    // Without normalization we have schi1 = somg1.
+    _cchi1 = _f1 * _dn1 * _comg1;
     GeodesicExact::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
     // GeodesicExact::SinCosNorm(_somg1, _comg1); -- don't need to normalize!
-    // GeodesicExact::SinCosNorm(_sups1, _cups1); -- don't need to normalize!
+    // GeodesicExact::SinCosNorm(_schi1, _cchi1); -- don't need to normalize!
 
     _k2 = Math::sq(_calp0) * g._ep2;
     _E.Reset(-_k2, -g._ep2, 1 + _k2, 1 + g._ep2);
@@ -192,10 +192,10 @@ namespace GeographicLib {
 
     if (outmask & LONGITUDE) {
       real somg2 = _salp0 * ssig2, comg2 = csig2;  // No need to normalize
-      // Without normalization we have sups2 = somg2.
-      real cups2 =  _f1 * dn2 *  comg2;
-      lam12 = atan2(somg2 * _cups1 - cups2 * _somg1,
-                    cups2 * _cups1 + somg2 * _somg1) -
+      // Without normalization we have schi2 = somg2.
+      real cchi2 =  _f1 * dn2 *  comg2;
+      lam12 = atan2(somg2 * _cchi1 - cchi2 * _somg1,
+                    cchi2 * _cchi1 + somg2 * _somg1) -
         _e2/_f1 * _salp0 * _H0 * (sig12 + _E.deltaH(ssig2, csig2, dn2) - _H1 );
       lon12 = lam12 / Math::degree<real>();
       // Use Math::AngNormalize2 because longitude might have wrapped multiple
