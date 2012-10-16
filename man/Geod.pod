@@ -100,8 +100,8 @@ precision relative to 1 m.  See L<PRECISION|precision>.
 =item B<-E>
 
 use "exact" algorithms (based on elliptic integrals) for the geodesic
-calculations.  These are be more accurate than the (default) series
-expansions for abs(I<f>) > 0.01.
+calculations.  These are more accurate than the (default) series
+expansions for |I<f>| > 0.01.
 
 =item B<--comment-delimiter>
 

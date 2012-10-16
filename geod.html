@@ -62,13 +62,20 @@
 	<ul>
 	  <li>
 	    The C++ class
-	    <a href="http://geographiclib.sf.net/html/classGeographicLib_1_1Geodesic.html">
+	    <a href="html/classGeographicLib_1_1Geodesic.html">
 	      Geodesic</a>, which solves the direct and inverse geodesic
 	    problems.
 	  <li>
 	    The C++ class
 	    <a href="html/classGeographicLib_1_1GeodesicLine.html">
 	      GeodesicLine</a>, which solves for points on a given geodesic.
+	  <li>
+	    Companion classes
+	    <a href="html/classGeographicLib_1_1GeodesicExact.html">
+	      GeodesicExact</a> and
+	    <a href="html/classGeographicLib_1_1GeodesicLineExact.html">
+	      GeodesicLineExact</a>, which implement the solution in
+	      terms of elliptic integrals (instead of series).
 	  <li>
 	    The C++ classes for geodesic projections:
 	    <ul>
@@ -111,7 +118,7 @@
 	    <ul>
 	      <li>
 		the C++ class
-		<a href="http://geographiclib.sf.net/html/classGeographicLib_1_1Geocentric.html">
+		<a href="html/classGeographicLib_1_1Geocentric.html">
 		  Geocentric</a>,
 		for performing the transformation and its inverse;
 	      <li>
@@ -162,27 +169,22 @@
 	    <a href="http://maxima.sourceforge.net/">Download maxima</a>.
 	</ul>
       <li>
-	GeographicLib version 1.25 and later includes two classes
-	<a href="http://geographiclib.sf.net/1.25/classGeographicLib_1_1GeodesicExact.html">
+	The formulation in terms of elliptic integrals used by 
+	<a href="html/classGeographicLib_1_1GeodesicExact.html">
 	  GeodesicExact</a> and
-	<a href="http://geographiclib.sf.net/1.25/classGeographicLib_1_1GeodesicLineExact.html">
+	<a href="html/classGeographicLib_1_1GeodesicLineExact.html">
 	  GeodesicLineExact</a>
-	which implement the solution of the geodesic problems in terms
-	of elliptic integrals.  This yields accurate results for highly
-	oblate and highly prolate ellipsoids.  The formulation uses the
-	formulas given in Appendix D of
+	is given in Appendix D of
 	<a href="http://arxiv.org/abs/1102.1215">
-	  <i>Geodesics on an ellipsoid of revolution</i></a>
-	except that Cayley's form for the longitude integral is used.
-	(Even though Appendix D states that the formulas apply to a
-	prolate ellipsoid, they may be used for oblate ellipsoids too.
-	This results in an purely imaginary value for the modulus of the
-	elliptic integrals; however, the values of the integrals are
-	real.)  The command-line utility <a href="1.25/Geod.1.html">
-	Geod</a> accepts a -E option to use these exact classes.  See
-	<a href="http://geographiclib.sf.net/1.25/geodesic.html#geodellip">
-	  Geodesics in terms of elliptic integrals</a>
-	for more information.
+	  <i>Geodesics on an ellipsoid of revolution</i></a>.
+	Further details are given in
+	<a href="html/geodesic.html#geodellip">
+	  Geodesics in terms of elliptic integrals</a>.
+      <li>
+	Various ways that the distance along a meridian can be solved
+	in terms of elliptic integrals are given in
+	<a href="html/geodesic.html#meridian">
+	  Parameters for the meridian</a>.
       <li>
 	<a href="geodesic-papers/biblio.html">
 	  An online geodesic bibliography</a>.
@@ -210,7 +212,7 @@
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2012-10-10)</address>
+      (2012-10-16)</address>
     <br>
     <a href="http://geographiclib.sourceforge.net">
       <img
