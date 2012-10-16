@@ -334,9 +334,12 @@ if (WIN32)
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_NSIS_MENU_LINKS
-    "doc/html/index.html" "Library Documentation"
-    "doc/html/utilities.html" "Utilities Documentation"
-    "http://geographiclib.sf.net/html/" "Online Documentation")
+    "http://geographiclib.sf.net/${PACKAGE_VERSION}/index.html"
+    "Library documentation"
+    "http://geographiclib.sf.net/${PACKAGE_VERSION}/utilities.html"
+    "Utilities documentation"
+    "http://geographiclib.sf.net" "GeographicLib home page"
+    "http://sf.net/projects/geographiclib/" "Main project page")
   set (CPACK_NSIS_MODIFY_PATH ON)
 elseif (APPLE)
   # Not tested
