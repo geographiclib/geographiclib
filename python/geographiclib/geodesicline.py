@@ -162,7 +162,7 @@ class GeodesicLine(object):
     # sig2 = sig1 + sig12
     ssig2 = self._ssig1 * csig12 + self._csig1 * ssig12
     csig2 = self._csig1 * csig12 - self._ssig1 * ssig12
-    dn2 = math.sqrt(1 + self_k2 * Math.sq(ssig2))
+    dn2 = math.sqrt(1 + self._k2 * Math.sq(ssig2))
     if outmask & (
       Geodesic.DISTANCE | Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
       if arcmode:
