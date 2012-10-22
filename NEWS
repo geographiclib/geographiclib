@@ -4,7 +4,13 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.25.
+The current version of the library is 1.26.
+
+Changes between 1.26 (released 2012-10-22) and 1.25 versions:
+
+   * Replace the series used for geodesic areas by one with better
+     convergence (this only makes an appreciable difference if |f| >
+     1/150.
 
 Changes between 1.25 (released 2012-10-16) and 1.24 versions:
 

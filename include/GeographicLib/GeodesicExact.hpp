@@ -42,7 +42,8 @@ namespace GeographicLib {
    * while the error in the elliptic integral solution is independent of \e f.
    *
    * The computation of the area in these classes is via a 30th order series.
-   * This will become inaccurate for when \e b/\e a &notin; [1/3, 3].
+   * This gives accurate results for \e b/\e a &isin; [1/2, 2]; the accuracy is
+   * about 8 decimal digits for \e b/\e a &isin; [1/4, 4].
    *
    * See \ref geodellip for the formulation.  See the documentation on the
    * Geodesic class for additional information on the geodesics problems.

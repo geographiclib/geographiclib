@@ -270,29 +270,28 @@ GeographicLib.GeodesicLine = {};
   }
 
   g.Geodesic.prototype.C4coeff = function() {
-    var _ep2 = this._ep2;
-    this._C4x[0] = (_ep2*(_ep2*(_ep2*((832-640*_ep2)*_ep2-1144)+1716)-3003)+
-                    30030)/45045;
-    this._C4x[1] = (_ep2*(_ep2*((832-640*_ep2)*_ep2-1144)+1716)-3003)/60060;
-    this._C4x[2] = (_ep2*((208-160*_ep2)*_ep2-286)+429)/18018;
-    this._C4x[3] = ((104-80*_ep2)*_ep2-143)/10296;
-    this._C4x[4] = (13-10*_ep2)/1430;
-    this._C4x[5] = -1/156;
-    this._C4x[6] = (_ep2*(_ep2*(_ep2*(640*_ep2-832)+1144)-1716)+3003)/540540;
-    this._C4x[7] = (_ep2*(_ep2*(160*_ep2-208)+286)-429)/108108;
-    this._C4x[8] = (_ep2*(80*_ep2-104)+143)/51480;
-    this._C4x[9] = (10*_ep2-13)/6435;
-    this._C4x[10] = 5/3276;
-    this._C4x[11] = (_ep2*((208-160*_ep2)*_ep2-286)+429)/900900;
-    this._C4x[12] = ((104-80*_ep2)*_ep2-143)/257400;
-    this._C4x[13] = (13-10*_ep2)/25025;
-    this._C4x[14] = -1/2184;
-    this._C4x[15] = (_ep2*(80*_ep2-104)+143)/2522520;
-    this._C4x[16] = (10*_ep2-13)/140140;
-    this._C4x[17] = 5/45864;
-    this._C4x[18] = (13-10*_ep2)/1621620;
-    this._C4x[19] = -1/58968;
-    this._C4x[20] = 1/792792;
+    var _n = this._n;
+    this._C4x[0] = (_n*(_n*(_n*(_n*(100*_n+208)+572)+3432)-12012)+30030)/45045;
+    this._C4x[1] = (_n*(_n*(_n*(64*_n+624)-4576)+6864)-3003)/15015;
+    this._C4x[2] = (_n*((14144-10656*_n)*_n-4576)-858)/45045;
+    this._C4x[3] = ((-224*_n-4784)*_n+1573)/45045;
+    this._C4x[4] = (1088*_n+156)/45045;
+    this._C4x[5] = 97/15015.0;
+    this._C4x[6] = (_n*(_n*((-64*_n-624)*_n+4576)-6864)+3003)/135135;
+    this._C4x[7] = (_n*(_n*(5952*_n-11648)+9152)-2574)/135135;
+    this._C4x[8] = (_n*(5792*_n+1040)-1287)/135135;
+    this._C4x[9] = (468-2944*_n)/135135;
+    this._C4x[10] = 1/9009.0;
+    this._C4x[11] = (_n*((4160-1440*_n)*_n-4576)+1716)/225225;
+    this._C4x[12] = ((4992-8448*_n)*_n-1144)/225225;
+    this._C4x[13] = (1856*_n-936)/225225;
+    this._C4x[14] = 8/10725.0;
+    this._C4x[15] = (_n*(3584*_n-3328)+1144)/315315;
+    this._C4x[16] = (1024*_n-208)/105105;
+    this._C4x[17] = -136/63063.0;
+    this._C4x[18] = (832-2560*_n)/405405;
+    this._C4x[19] = -128/135135.0;
+    this._C4x[20] = 128/99099.0;
   }
 
   g.Geodesic.prototype.A3f = function(eps) {
@@ -321,6 +320,7 @@ GeographicLib.GeodesicLine = {};
   }
 
   g.Geodesic.prototype.C4f = function(k2, c) {
+    var eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
     // Evaluation C4 coeffs by Horner's method
     // Elements c[0] thru c[nC4_ - 1] are set
     for (var j = g.nC4x_, k = g.nC4_; k; ) {
@@ -794,9 +794,9 @@ GeographicLib.GeodesicLine = {};
         // maintained which brackets the root and with each evaluation of
         // f(alp) the range is shrunk if possible.  Newton's method is
         // restarted whenever the derivative of f is negative (because the new
-        // value of alp1 is guaranteed to be further from the solution) or if
-        // the new estimate of alp1 lies outside (0,pi); in this case, the new
-        // starting guess is taken to be (alp1a + alp1b) / 2.
+        // value of alp1 is then further from the solution) or if the new
+        // estimate of alp1 lies outside (0,pi); in this case, the new starting
+        // guess is taken to be (alp1a + alp1b) / 2.
         var ssig1, csig1, ssig2, csig2, eps;
         var ov = 0;
         var numit = 0;

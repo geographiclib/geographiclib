@@ -3,7 +3,7 @@
 # http://pypi.python.org/pypi/geographiclib
 file (GLOB PYTHON_FILES [A-Za-z_]*.py)
 if (COMMON_INSTALL_PATH)
-  set (INSTALL_PYTHON_DIR "lib/python/site-packages")
+  set (INSTALL_PYTHON_DIR "lib${LIB_SUFFIX}/python/site-packages")
 else ()
   set (INSTALL_PYTHON_DIR "python")
 endif ()

@@ -1,6 +1,6 @@
 // This will be overwritten by ./configure
 
-#define GEOGRAPHICLIB_VERSION_STRING "1.25"
+#define GEOGRAPHICLIB_VERSION_STRING "1.26"
 
 // Undefine HAVE_LONG_DOUBLE if this type is unknown to the compiler
 #define HAVE_LONG_DOUBLE 1
