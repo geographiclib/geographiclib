@@ -303,29 +303,28 @@ class Geodesic(object):
     self._C3x[14] = 21/2560.0
 
   def C4coeff(self):
-    _ep2 = self._ep2
-    self._C4x[0] = (_ep2*(_ep2*(_ep2*((832-640*_ep2)*_ep2-1144)+1716)-3003)+
-                    30030)/45045
-    self._C4x[1] = (_ep2*(_ep2*((832-640*_ep2)*_ep2-1144)+1716)-3003)/60060
-    self._C4x[2] = (_ep2*((208-160*_ep2)*_ep2-286)+429)/18018
-    self._C4x[3] = ((104-80*_ep2)*_ep2-143)/10296
-    self._C4x[4] = (13-10*_ep2)/1430
-    self._C4x[5] = -1/156.0
-    self._C4x[6] = (_ep2*(_ep2*(_ep2*(640*_ep2-832)+1144)-1716)+3003)/540540
-    self._C4x[7] = (_ep2*(_ep2*(160*_ep2-208)+286)-429)/108108
-    self._C4x[8] = (_ep2*(80*_ep2-104)+143)/51480
-    self._C4x[9] = (10*_ep2-13)/6435
-    self._C4x[10] = 5/3276.0
-    self._C4x[11] = (_ep2*((208-160*_ep2)*_ep2-286)+429)/900900
-    self._C4x[12] = ((104-80*_ep2)*_ep2-143)/257400
-    self._C4x[13] = (13-10*_ep2)/25025
-    self._C4x[14] = -1/2184.0
-    self._C4x[15] = (_ep2*(80*_ep2-104)+143)/2522520
-    self._C4x[16] = (10*_ep2-13)/140140
-    self._C4x[17] = 5/45864.0
-    self._C4x[18] = (13-10*_ep2)/1621620
-    self._C4x[19] = -1/58968.0
-    self._C4x[20] = 1/792792.0
+    _n = self._n
+    self._C4x[0] = (_n*(_n*(_n*(_n*(100*_n+208)+572)+3432)-12012)+30030)/45045
+    self._C4x[1] = (_n*(_n*(_n*(64*_n+624)-4576)+6864)-3003)/15015
+    self._C4x[2] = (_n*((14144-10656*_n)*_n-4576)-858)/45045
+    self._C4x[3] = ((-224*_n-4784)*_n+1573)/45045
+    self._C4x[4] = (1088*_n+156)/45045
+    self._C4x[5] = 97/15015.0
+    self._C4x[6] = (_n*(_n*((-64*_n-624)*_n+4576)-6864)+3003)/135135
+    self._C4x[7] = (_n*(_n*(5952*_n-11648)+9152)-2574)/135135
+    self._C4x[8] = (_n*(5792*_n+1040)-1287)/135135
+    self._C4x[9] = (468-2944*_n)/135135
+    self._C4x[10] = 1/9009.0
+    self._C4x[11] = (_n*((4160-1440*_n)*_n-4576)+1716)/225225
+    self._C4x[12] = ((4992-8448*_n)*_n-1144)/225225
+    self._C4x[13] = (1856*_n-936)/225225
+    self._C4x[14] = 8/10725.0
+    self._C4x[15] = (_n*(3584*_n-3328)+1144)/315315
+    self._C4x[16] = (1024*_n-208)/105105
+    self._C4x[17] = -136/63063.0
+    self._C4x[18] = (832-2560*_n)/405405
+    self._C4x[19] = -128/135135.0
+    self._C4x[20] = 128/99099.0
 
   def A3f(self, eps):
     # Evaluation sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner's method
@@ -352,6 +351,7 @@ class Geodesic(object):
       c[k] *= mult
 
   def C4f(self, k2, c):
+    eps = k2 / (2 * (1 + math.sqrt(1 + k2)) + k2)
     # Evaluation C4 coeffs by Horner's method
     # Elements c[0] thru c[nC4_ - 1] are set
     j = Geodesic.nC4x_; k = Geodesic.nC4_
@@ -359,13 +359,13 @@ class Geodesic(object):
       t = 0
       for i in range(Geodesic.nC4_ - k + 1):
         j -= 1
-        t = k2 * t + self._C4x[j]
+        t = eps * t + self._C4x[j]
       k -= 1
       c[k] = t
 
     mult = 1
     for k in range(1, Geodesic.nC4_):
-      mult *= k2
+      mult *= eps
       c[k] *= mult
 
   # return s12b, m12b, m0, M12, M21
@@ -474,7 +474,7 @@ class Geodesic(object):
           self._n, math.pi + bet12a, sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
           cbet1, cbet2, dummy, False, C1a, C2a)
         x = -1 + m12b/(cbet1 * cbet2 * m0 * math.pi)
-        betscale = (sbet12a / x if x < -real(0.01)
+        betscale = (sbet12a / x if x < -0.01
                     else -self._f * Math.sq(cbet1) * math.pi)
         lamscale = betscale / cbet1
         y = (lam12 - math.pi) / lamscale
@@ -770,10 +770,10 @@ class Geodesic(object):
         # maintained which brackets the root and with each evaluation of f(alp)
         # the range is shrunk if possible.  Newton's method is restarted
         # whenever the derivative of f is negative (because the new value of
-        # alp1 is guaranteed to be further from the solution) or if the new
-        # estimate of alp1 lies outside (0,pi); in this case, the new starting
-        # guess is taken to be (alp1a + alp1b) / 2.  real ssig1, csig1, ssig2,
-        # csig2, eps
+        # alp1 is then further from the solution) or if the new estimate of
+        # alp1 lies outside (0,pi); in this case, the new starting guess is
+        # taken to be (alp1a + alp1b) / 2.
+        # real ssig1, csig1, ssig2, csig2, eps
         ov = numit = trip = 0
         # Bracketing range
         salp1a = Geodesic.tiny_; calp1a = 1

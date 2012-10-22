@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <GeographicLib/EllipticFunction.hpp>
+#include <GeographicLib/Ellipsoid.hpp>
 
 #if defined(_MSC_VER)
 // Squelch warnings about constant conditional expressions
@@ -13,6 +14,31 @@ int main() {
   typedef GeographicLib::Math::real real;
   try {
     if (true) {
+      for (int i = -7; i <= 7; ++i) {
+        if (i == 0)
+          continue;
+        real a = 1, b = a*pow(2.0, i), f = (a-b)/a;
+        Ellipsoid e(a, f);
+        real m = e.QuarterMeridian();
+        real na = a * 1e7/m, nb = na * (1-f);
+        Ellipsoid ne(na, f);
+        cout << b/a << " " << na << " " << nb << " "
+             << ne.QuarterMeridian() << "\n";
+      }
+      for (int i = -1; i <= 1; ++i) {
+        if (i == 0)
+          continue;
+        real a = 1, b = a*pow(3.0, i), f = (a-b)/a;
+        Ellipsoid e(a, f);
+        real m = e.QuarterMeridian();
+        real na = a * 1e7/m, nb = na * (1-f);
+        Ellipsoid ne(na, f);
+        cout << b/a << " " << na << " " << nb << " "
+             << ne.QuarterMeridian() << "\n";
+      }
+      return 0;
+    }
+    if (false) {
       // Longitude check
       real a=1.5, b = 1, f = (a - b)/a,
         e2 = (a*a - b*b)/(a*a), ep2 = (a*a - b*b)/(b*b),

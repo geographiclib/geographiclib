@@ -408,7 +408,9 @@
    Jour. Crelle '''19''', 309--313 (1839).[[BR]]
    http://books.google.com/books?id=RbwGAAAAYAAJ&pg=PA309 [[BR]]
    French translation: Jour. Liouville '''6''', 267--272 (1841).[[BR]]
-   http://books.google.com/books?id=Rh8GAAAAYAAJ&pg=RA1-PA267
+   http://books.google.com/books?id=Rh8GAAAAYAAJ&pg=RA1-PA267 [[BR]]
+   Announcement: Comptes Rendus '''8''', 284 (1839).[[BR]]
+   http://books.google.com/books?id=J6sbAAAAMAAJ&pg=PA284
  * C. G. J. Jacobi and E. Luther,[[BR]]
    ''Solution nouvelle d'un problème fondamental de géodésie
    [A new solution to a fundamental problem of geodesy]'',
@@ -450,6 +452,11 @@
    [The shortest curves encirling a given area on a curved surface]'',
    Jour. Crelle '''86''', 279--289 (1879).[[BR]]
    http://books.google.com/books?id=85HxAAAAMAAJ&pg=PA279
+ * F. Joachimsthal,[[BR]]
+   ''Observationes de lineis brevissimis et curvis curvaturae in
+   superficiebus secundi gradus [Observations on the shortest lines on
+   curved surfaces of the second degree]'',
+   Jour. Crelle '''26''', 155--171 (1843).[[BR]]
  * J. Liouville,[[BR]]
    ''De la ligne géodésique sur un ellipsoïde quelconque
    [The geodesic on an arbitrary ellipsoid]'',
@@ -793,3 +800,8 @@
    ''Algorithms for geodesics'',
    J. Geodesy (2012).[[BR]]
    http://dx.doi.org/10.1007/s00190-012-0578-z
+   F. Joachimsthal,[[BR]]
+   ''Observationes de lineis brevissimis et curvis curvaturae in
+   superficiebus secundi gradus [Observations on the shortest lines in
+   curved surfaces of the second degree]'',
+   Jour. Crelle '''26''', 155--171 (1843).[[BR]]

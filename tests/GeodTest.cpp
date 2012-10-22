@@ -23,12 +23,14 @@ using namespace std;
 using namespace GeographicLib;
 
 int usage(int retval) {
-  ( retval ? std::cerr : std::cout ) <<
+  ( retval ? cerr : cout ) <<
 "GeodTest [ -a | -c | -t0 | -t1 | -t2 | -t3 | -h ]\n\
 \n\
 Check GeographicLib::Geodesic class.\n\
--a (default) accuracy test (reads test date on standard input)\n\
--E accuracy test with GeodesicExact (reads test date on standard input)\n\
+-a (default) accuracy test (reads test data on standard input)\n\
+-E accuracy test with GeodesicExact (reads test data on standard input)\n\
+-F accuracy test with GeodesicExact (reads test data on standard input\n\
+   first line gives a and f)\n\
 -c coverage test (reads test data on standard input)\n\
 -t0 time GeodecicLine with distances using synthetic data\n\
 -t1 time GeodecicLine with angles using synthetic data\n\
@@ -63,17 +65,15 @@ Math::extended azidiff(Math::extended lat,
   return res;
 }
 
-Math::extended dist(Math::extended lat0, Math::extended lon0,
+Math::extended dist(Math::extended a, Math::extended f,
+                    Math::extended lat0, Math::extended lon0,
                     Math::extended lat1, Math::extended lon1) {
   //  typedef GeographicLibL::Math::real real;
   //  real s12;
   //  GeographicLibL::Geodesic::
   //    WGS84.Inverse(real(lat0), real(lon0), real(lat1), real(lon1), s12);
   //  return Math::extended(s12);
-  Math::extended
-    a = Constants::WGS84_a<Math::extended>() *
-        Math::degree<Math::extended>(),
-    f = Constants::WGS84_f<Math::extended>();
+  a *= Math::degree<Math::extended>();
   if (abs(lat0 + lat1) > Math::extended(179.998)) {
     // Near pole, transform into polar coordinates
     Math::extended
@@ -120,7 +120,7 @@ void GeodError(const test& tgeod, const ref& rgeod,
                wreal lat1, wreal lon1, wreal azi1,
                wreal lat2, wreal lon2, wreal azi2,
                wreal s12, wreal /*a12*/, wreal m12, wreal S12,
-               std::vector<wreal>& err) {
+               vector<wreal>& err) {
   treal tlat1, tlon1, tazi1, tlat2, tlon2, tazi2, ts12, tm12a, tm12b,
     tM12, tM21, tS12a, tS12b /*, ta12*/;
   rreal rlat1, rlon1, razi1, rlat2, rlon2, razi2, rm12;
@@ -132,8 +132,10 @@ void GeodError(const test& tgeod, const ref& rgeod,
                tlat1, tlon1, tazi1, tm12b,
                tM12, tM21, tS12b);
   tS12b -= treal(rgeod.EllipsoidArea() * (tazi1-azi1)/720);
-  err[0] = max(dist(lat2, lon2, tlat2, tlon2),
-               dist(lat1, lon1, tlat1, tlon1));
+  err[0] = max(dist(rgeod.MajorRadius(), rgeod.Flattening(),
+                    lat2, lon2, tlat2, tlon2),
+               dist(rgeod.MajorRadius(), rgeod.Flattening(),
+                    lat1, lon1, tlat1, tlon1));
   err[1] = max(abs(azidiff(lat2, lon2, tlon2, azi2, tazi2)),
                abs(azidiff(lat1, lon1, tlon1, azi1, tazi1))) *
     rgeod.MajorRadius();
@@ -163,32 +165,41 @@ void GeodError(const test& tgeod, const ref& rgeod,
                  rlat2, rlon2, razi2, rm12);
     rgeod.Direct(rreal(lat2), rreal(lon2), rreal(tazi2), - rreal(ts12)/2,
                  rlat1, rlon1, razi1, rm12);
-    err[5] = dist(rlat1, rlon1, rlat2, rlon2);
+    err[5] = dist(rgeod.MajorRadius(), rgeod.Flattening(),
+                  rlat1, rlon1, rlat2, rlon2);
   } else {
     rgeod.Direct(rreal(lat1), rreal(lon1), rreal(tazi1),
                  rreal(ts12) + rgeod.MajorRadius(),
                  rlat2, rlon2, razi2, rm12);
     rgeod.Direct(rreal(lat2), rreal(lon2), rreal(tazi2), rgeod.MajorRadius(),
                  rlat1, rlon1, razi1, rm12);
-    err[5] = dist(rlat1, rlon1, rlat2, rlon2);
+    err[5] = dist(rgeod.MajorRadius(), rgeod.Flattening(),
+                  rlat1, rlon1, rlat2, rlon2);
     rgeod.Direct(rreal(lat1), rreal(lon1), rreal(tazi1), - rgeod.MajorRadius(),
                  rlat2, rlon2, razi2, rm12);
     rgeod.Direct(rreal(lat2), rreal(lon2), rreal(tazi2),
                  - rreal(ts12) - rgeod.MajorRadius(),
                  rlat1, rlon1, razi1, rm12);
-    err[5] = max(err[5], wreal(dist(rlat1, rlon1, rlat2, rlon2)));
+    err[5] = max(err[5], wreal(dist(rgeod.MajorRadius(), rgeod.Flattening(),
+                                    rlat1, rlon1, rlat2, rlon2)));
   }
 }
 
 
 int main(int argc, char* argv[]) {
+  Math::real a = Constants::WGS84_a<Math::real>();
+  Math::real f = Constants::WGS84_f<Math::real>();
+  Math::real al =
+    GeographicLibL::Constants::WGS84_a<GeographicLibL::Math::real>();
+  Math::real fl =
+    GeographicLibL::Constants::WGS84_f<GeographicLibL::Math::real>();
   bool timing = false;
   int timecase = 0; // 0 = line, 1 = line ang, 2 = direct, 3 = inverse
   bool accuracytest = true;
   bool coverage = false;
   bool exact = false;
   if (argc == 2) {
-    std::string arg = argv[1];
+    string arg = argv[1];
     if (arg == "-a") {
       accuracytest = true;
       coverage = false;
@@ -199,6 +210,16 @@ int main(int argc, char* argv[]) {
       coverage = false;
       timing = false;
       exact = true;
+    } else if (arg == "-F") {
+      accuracytest = true;
+      coverage = false;
+      timing = false;
+      exact = true;
+      string s;
+      getline(cin, s);
+      istringstream str(s);
+      str >> al >> fl;
+      a = al; f = fl;
     } else if (arg == "-c") {
       accuracytest = false;
       coverage = true;
@@ -315,14 +336,11 @@ int main(int argc, char* argv[]) {
     }
   }
   else if (accuracytest || coverage) {
-    const Geodesic geod(Constants::WGS84_a<Math::real>(),
-                        Constants::WGS84_f<Math::real>());
-    const GeodesicExact geode(Constants::WGS84_a<Math::real>(),
-                             Constants::WGS84_f<Math::real>());
+    const Geodesic geod(a, f);
+    const GeodesicExact geode(a, f);
 
-    const GeographicLibL::Geodesic geodl
-      (GeographicLibL::Constants::WGS84_a<Math::real>(),
-       GeographicLibL::Constants::WGS84_f<Math::real>());
+    const GeographicLibL::Geodesic geodl(al, fl);
+    const GeographicLibL::GeodesicExact geodel(al, fl);
     typedef GeographicLibL::Math::real reale;
     const unsigned NUMERR = 7;
 
@@ -355,8 +373,8 @@ int main(int argc, char* argv[]) {
         exact ?
           GeodError< Math::extended,
                      GeodesicExact, Math::real,
-                     GeographicLibL::Geodesic, GeographicLibL::Math::real >
-          (geode, geodl, lat1l, lon1l, azi1l,
+                     GeographicLibL::GeodesicExact, GeographicLibL::Math::real >
+          (geode, geodel, lat1l, lon1l, azi1l,
            lat2l, lon2l, azi2l,
            s12l, a12l, m12l, S12l,
            erra) :

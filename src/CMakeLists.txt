@@ -25,8 +25,8 @@ endif ()
 install (TARGETS Geographic
   EXPORT depends
   RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
+  LIBRARY DESTINATION lib${LIB_SUFFIX}
+  ARCHIVE DESTINATION lib${LIB_SUFFIX})
 
 # Put all the library into a folder in the IDE
 set_property (TARGET Geographic PROPERTY FOLDER library)

@@ -51,7 +51,7 @@ if (MEX)
           ${MEX} --mex
             -I${PROJECT_BINARY_DIR}/include -I${PROJECT_SOURCE_DIR}/include
             -L${PROJECT_BINARY_DIR}/src -lGeographic
-            -Wl,-rpath=${CMAKE_INSTALL_PREFIX}/lib
+            -Wl,-rpath=${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}
             ${INTERFACE}
         COMMENT "Building matlab interface for ${TARGET}"
         DEPENDS ${INTERFACE} Geographic)

@@ -31,7 +31,7 @@ if (GEOGRAPHIC_SHARED_LIB)
   else ()
     # Set the run time path for shared libraries for non-Windows machines.
     set_target_properties (${TOOLS} PROPERTIES
-      INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
+      INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
   endif ()
 endif ()
 

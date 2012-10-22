@@ -188,7 +188,10 @@ as a series
 
     sum(C4[l] * cos((2*l+1)*sigma), l, 0, maxpow-1) )
 
-valid for ep2 and k2 small.
+valid for ep2 and k2 small.  It is convenient to write k2 = 4 * eps /
+(1 - eps)^2 and ep2 = 4 * n / (1 - n)^2 and to expand in eps and n.
+This procedure leads to a series which converges even for very
+eccentric ellipsoids.
 
 */
 
@@ -201,7 +204,8 @@ computeI4(maxpow):=block([int,t,intexp,area, x,ep2,k2],
     tf(k2*sin(sigma)^2)=subst([x=k2*sin(sigma)^2],t)],
     int),
   int:subst([abs(sin(sigma))=sin(sigma)],int),
-  intexp:jtaylor(int,ep2,k2,maxpow),
+  int:subst([k2=4*eps/(1-eps)^2,ep2=4*n/(1-n)^2],int),
+  intexp:jtaylor(int,n,eps,maxpow),
   area:trigreduce(integrate(intexp,sigma)),
   area:expand(area-subst(sigma=%pi/2,area)),
   for i:0 thru maxpow do C4[i]:coeff(area,cos((2*i+1)*sigma)),
@@ -383,11 +387,11 @@ codeC4(maxpow):=block([tab2:"    ",tab3:"      "],
     print(concat(tab2,"case ",string(nn),":")),
     c:0,
     for m:0 thru nn-1 do block(
-      [q:jtaylor(subst([ep2=_ep2],C4[m]),_ep2,k2,nn-1),
+      [q:jtaylor(subst([n=_n],C4[m]),_n,eps,nn-1),
       linel:1200],
       for j:m thru nn-1 do (
         print(concat(tab3,"_C4x[",c,"] = ",
-            string(horner(coeff(q,k2,j))),";")),
+            string(horner(coeff(q,eps,j))),";")),
         c:c+1)
     ),
     print(concat(tab3,"break;"))),
@@ -512,29 +516,29 @@ block([tt:jtaylor(C3[i],eps,n,ord),
       print(concat(s,if j = ord then ";" else ""))))))$
 
 dispC4(ord):=(ord:ord-1,for i:0 thru ord do
-block([tt:jtaylor(C4[i],ep2,k2,ord),
+block([tt:jtaylor(C4[i],n,eps,ord),
   ttt,t4,linel:1200],
   tt:expand(subst([z=1],tt)),
   for j:i thru ord do (
-    ttt:coeff(tt,k2,j),
-    if ttt # 0 then block([a:taylor(ttt+ep2^(ord+1),ep2,0,ord+1),paren,s],
+    ttt:coeff(tt,eps,j),
+    if ttt # 0 then block([a:taylor(ttt+n^(ord+1),n,0,ord+1),paren,s],
       paren : is(length(a) > 2),
       s:if j = i then concat("C4[",i,"] = ") else "        ",
-      if subst([ep2=1],part(a,1)) > 0 then s:concat(s,"+ ")
+      if subst([n=1],part(a,1)) > 0 then s:concat(s,"+ ")
       else (s:concat(s,"- "), a:-a),
       if paren then s:concat(s,"("),
       for k:1 thru length(a)-1 do block([term:part(a,k),nn],
-        nn:subst([ep2=1],term),
+        nn:subst([n=1],term),
         term:term/nn,
         if nn > 0 and k > 1 then s:concat(s," + ")
         else if nn < 0 then (s:concat(s," - "), nn:-nn),
-        if lopow(term,ep2) = 0 then s:concat(s,string(nn))
+        if lopow(term,n) = 0 then s:concat(s,string(nn))
         else (
           if nn # 1 then s:concat(s,string(nn)," * "),
           s:concat(s,string(term))
           )),
       if paren then s:concat(s,")"),
-      if j>0 then s:concat(s," * ", string(k2^j)),
+      if j>0 then s:concat(s," * ", string(eps^j)),
       print(concat(s,if j = ord then ";" else ""))))))$
 
 dispseries():=(
@@ -562,13 +566,13 @@ dispseries():=(
 
 /* Timings for computeall(n)
    n   time(s)
-   8     4
-  10     8
-  12    16
-  20   128
-  30   771 (13m)
+   8     8
+  10    19
+  12    43
+  20   571
+  30  6671 (111m)
   */
-maxpow:8$
+maxpow:10$
 computeall()$
 printcode()$
 dispseries()$
