@@ -1,6 +1,7 @@
 # -*- Makefile -*-
 
 # ssh -t karney,geographiclib@shell.sourceforge.net create
+# git: /home/git/p/geographiclib/code.git
 
 USER=karney
 STAGE=$(HOME)/web

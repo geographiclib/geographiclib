@@ -246,8 +246,7 @@ mv $DEVELSOURCE/GeographicLib-$VERSION{.tar.gz,.zip,-win{32,64}.exe} $DEVELSOURC
 make -C $DEVELSOURCE -f makefile-admin distrib-files
 
 # install built version
-cd $TEMP/relc/GeographicLib-$VERSION/BUILD-system
-sudo make install
+sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 
 # python release
 cd $TEMP/gita/geographiclib/python

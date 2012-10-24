@@ -457,6 +457,13 @@
    superficiebus secundi gradus [Observations on the shortest lines on
    curved surfaces of the second degree]'',
    Jour. Crelle '''26''', 155--171 (1843).[[BR]]
+ * F. Joachimsthal,[[BR]]
+   ''Anwendung der Differential- und Integralrechnung auf die
+   allgemeine Theorie der Flächen und der Linien doppelter Krümmung
+   [Application of differential and integral calculus to the
+   general theory of surfaces and lines of double curvature]''
+   (Teubner, Leipzig, 1872), Chap. 9, pp. 131--157.[[BR]]
+   http://books.google.com/books?id=BvQoAAAAYAAJ&pg=PA131
  * J. Liouville,[[BR]]
    ''De la ligne géodésique sur un ellipsoïde quelconque
    [The geodesic on an arbitrary ellipsoid]'',
@@ -562,13 +569,6 @@
  * A. R. Clarke,[[BR]]
    ''Geodesy'' (Clarendon Press, Oxford, 1880), Chap. 6.[[BR]]
    http://books.google.com/books?id=lfIoAAAAYAAJ&pg=PA124
- * F. Joachimsthal,[[BR]]
-   ''Anwendung der Differential- und Integralrechnung auf die
-   allgemeine Theorie der Flächen und der Linien doppelter Krümmung
-   [Application of differential and integral calculus to the
-   general theory of surfaces and lines of double curvature]''
-   (Teubner, Leipzig, 1872), Chap. 9, pp. 131--157.[[BR]]
-   http://books.google.com/books?id=BvQoAAAAYAAJ&pg=PA131
  * I. Todhunter,[[BR]]
    ''A history of the mathematical theories of attraction and the figure of
    the earth from the time of Newton to that of Laplace'',
@@ -716,6 +716,16 @@
    ''Lectures on the Differential Geometry of Curves and Surfaces'',
    (Cambridge Univ. Press, 1912), Chap. 5.[[BR]]
    http://archive.org/details/cu31924060289141
+ * J. S. Hadamard,[[BR]]
+   ''Sur certaines propriétés des trajectoires en Dynamique
+   [On certain properties of trajectories in dynamics]'',
+   J. Math. Pures Appl. Ser. 5 '''3''' 331--388 (1897).[[BR]]
+   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1897_5_3_A12_0
+ * J. S. Hadamard,[[BR]]
+   ''Les surfaces à courbures opposées et leurs lignes géodésiques
+   [Surfaces with negative curvature and their geodesics],''
+   J. Math. Pures Appl. Ser. 5 '''4''' 27--74 (1898).[[BR]]
+   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1898_5_4_A3_0
  * R. Fricke,[[BR]]
    ''Kurzgefasste Vorlesungen über verschiedene Gebiete der
    höheren Mathematik mit Berücksichtigung der Anwendungen
@@ -731,8 +741,9 @@
  * H. Poincaré,[[BR]]
    ''Sur les lignes géodésiques des surfaces convexes
    [Geodesics lines on convex surfaces]'',
-   Trans. AMS 6(3) 237--274 (1905).[[BR]]
-   http://books.google.com/books?id=o0MLAAAAYAAJ&pg=PA237
+   Trans. AMS '''6'''(3), 237--274 (1905).[[BR]]
+   http://books.google.com/books?id=o0MLAAAAYAAJ&pg=PA237 [[BR]]
+   http://dx.doi.org/10.2307/1986219
  * L. P. Eisenhart,[[BR]]
    ''A Treatise on the Differential Geometry of Curves and Surfaces''
    (Ginn & Co., Boston, 1909).[[BR]]
@@ -800,8 +811,3 @@
    ''Algorithms for geodesics'',
    J. Geodesy (2012).[[BR]]
    http://dx.doi.org/10.1007/s00190-012-0578-z
-   F. Joachimsthal,[[BR]]
-   ''Observationes de lineis brevissimis et curvis curvaturae in
-   superficiebus secundi gradus [Observations on the shortest lines in
-   curved surfaces of the second degree]'',
-   Jour. Crelle '''26''', 155--171 (1843).[[BR]]
