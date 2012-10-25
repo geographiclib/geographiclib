@@ -551,7 +551,7 @@
  * E. Beltrami,[[BR]]
    ''Sulla teoria delle linee geodetiche
    [On the theory of geodesic lines]'',
-   Rendiconti del Reale Istituto Lombardo Ser. 2, '''1''',  708--718 (1868),
+   Rendiconti del Reale Istituto Lombardo (Ser. 2) '''1''',  708--718 (1868),
    in ''Opere matematiche di Eugenio Beltrami'' (Vol. 1, Hoepli, Milan, 1902),
    pp. 366--373.[[BR]]
    http://books.google.com/books?id=c48vHvLN--kC&pg=PA366
@@ -628,7 +628,7 @@
    Vol. 1 (Teubner, Leipzig, 1880), Chaps. 5--7.[[BR]]
    http://books.google.com/books?id=qt2CAAAAIAAJ&pg=PA212 [[BR]]
    English translation:
-   by Aeronautical Chart and Information Center (St. Louis, 1964). [[BR]]
+   by Aeronautical Chart and Information Center (St. Louis, 1964).[[BR]]
    http://geographiclib.sf.net/geodesic-papers/helmert80-en.html
  * M. Sadebeck,[[BR]]
    ''Hilfstafel für die Differenz zwischen dem sphäroidischen und dem
@@ -719,12 +719,12 @@
  * J. S. Hadamard,[[BR]]
    ''Sur certaines propriétés des trajectoires en Dynamique
    [On certain properties of trajectories in dynamics]'',
-   J. Math. Pures Appl. Ser. 5 '''3''' 331--388 (1897).[[BR]]
+   J. Math. Pures Appl. (Ser. 5) '''3''', 331--388 (1897).[[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1897_5_3_A12_0
  * J. S. Hadamard,[[BR]]
    ''Les surfaces à courbures opposées et leurs lignes géodésiques
    [Surfaces with negative curvature and their geodesics],''
-   J. Math. Pures Appl. Ser. 5 '''4''' 27--74 (1898).[[BR]]
+   J. Math. Pures Appl. (Ser. 5) '''4''', 27--74 (1898).[[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1898_5_4_A3_0
  * R. Fricke,[[BR]]
    ''Kurzgefasste Vorlesungen über verschiedene Gebiete der
