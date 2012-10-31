@@ -535,6 +535,12 @@
    ''Geodätische Untersuchungen [Geodetic investigations]''
    (Hirzel, Leipzig, 1865), Sec. 1.[[BR]]
    http://books.google.com/books?id=WlsOAAAAYAAJ&pg=PA1
+ * C. A. H. Bachoven von Echt,[[BR]]
+   ''Die Kürzeste auf dem Erdsphäroid nebst den Hauptaufgaben der
+   Geodäsie in neuer Darstellung [Shortest lines on the spheroid
+   together with the geodesic problems in a new representation]'',
+   (Coesfeld, 1865).[[BR]]
+   http://sammlungen.uni-muenster.de/hd/content/titleinfo/1012467
  * E. B. Christoffel,[[BR]]
    ''Allgemeine Theorie der geodätischen Dreiecke
    [General theory of geodesic triangles]'',
@@ -811,3 +817,10 @@
    ''Algorithms for geodesics'',
    J. Geodesy (2012).[[BR]]
    http://dx.doi.org/10.1007/s00190-012-0578-z
+
+ * C. A. H. Bachoven von Echt,[[BR]]
+   ''Die Kürzeste auf dem Erdsphäroid nebst den Hauptaufgaben der
+   Geodäsie in neuer Darstellung [The shortest line on the spheroid
+   together with the geodesic problems in a new representation]'',
+   (Coesfeld, 1865).[[BR]]
+   http://sammlungen.uni-muenster.de/hd/content/titleinfo/1012467
