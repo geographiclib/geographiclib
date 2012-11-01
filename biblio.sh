@@ -20,7 +20,8 @@ cat <<'EOF'
       some cases I have been able to scan the missing pages, see
       <a href=".">geodesic-papers</a>. Please let me, Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>,
-      know of errors, omissions, etc.
+      know of errors, omissions, etc.  In particular, I'm interested to
+      learn of any cases where I have mis-translated the title of a paper.
     </p>
     <p>This bibliography was started on 2009-06-06 (at
       <a href=" http://trac.osgeo.org/proj/wiki/GeodesicCalculations">

@@ -311,6 +311,13 @@
    Astron. Nachr. '''14'''(329), 269--312 (1837).[[BR]]
    http://articles.adsabs.harvard.edu/full/1837AN.....14..269B
  * F. W. Bessel,[[BR]]
+   ''Bestimmung der Axen des elliptischen Rotationssphäroids, welches
+   den vorhandenen Messungen von Meridianbögen der Erde am meisten
+   entspricht [Estimation of the axes of the ellipsoid through
+   measurements of the meridian arc]'',
+   Astron. Nachr. '''14'''(333), 333--346 (1837).[[BR]]
+   http://articles.adsabs.harvard.edu/full/1837AN.....14..333B
+ * F. W. Bessel,[[BR]]
    ''Abhandlungen von Friedrich Wilhelm Bessel [The Works of Bessel]'',
    Vol. 3 (W. Engelmann, Leipzig, 1876), Part 6 contains the previous
    4 papers.[[BR]]
@@ -539,7 +546,7 @@
    ''Die Kürzeste auf dem Erdsphäroid nebst den Hauptaufgaben der
    Geodäsie in neuer Darstellung [Shortest lines on the spheroid
    together with the geodesic problems in a new representation]'',
-   (Coesfeld, 1865).[[BR]]
+   (Istwann, Coesfeld, 1865).[[BR]]
    http://sammlungen.uni-muenster.de/hd/content/titleinfo/1012467
  * E. B. Christoffel,[[BR]]
    ''Allgemeine Theorie der geodätischen Dreiecke
@@ -581,6 +588,17 @@
    2 Vols. (Macmillan, 1873).[[BR]]
    http://books.google.com/books?id=6GMSAAAAIAAJ&pg=PR3 [[BR]]
    http://books.google.com/books?id=xmMSAAAAIAAJ&pg=PP7
+ * H. Levret,[[BR]]
+   ''Détermination des positions géographiques sur un ellipsoïde
+   quelconque [Determinations of geographic positions on an arbitrary
+   ellipsoid]'',
+   Comptes Rendus '''76''', 410--413 (1875).[[BR]]
+   http://books.google.com/books?id=lqJDAQAAIAAJ&pg=PA410
+ * C. Trepied,[[BR]]
+   ''Sur le calcul des coordonnées géodésiques [On the calculation of
+   geodesic coordinates]'',
+   Comptes Rendus '''80''', 36--40 (1875).[[BR]]
+   http://books.google.com/books?id=vE9EAQAAIAAJ&pg=PA36
  * F. J. van den Berg,[[BR]]
    ''Sur les écarts de la ligne géodésique et des sections planes normales
    entre deux points rapprochés d'une surface courbe
@@ -817,10 +835,3 @@
    ''Algorithms for geodesics'',
    J. Geodesy (2012).[[BR]]
    http://dx.doi.org/10.1007/s00190-012-0578-z
-
- * C. A. H. Bachoven von Echt,[[BR]]
-   ''Die Kürzeste auf dem Erdsphäroid nebst den Hauptaufgaben der
-   Geodäsie in neuer Darstellung [The shortest line on the spheroid
-   together with the geodesic problems in a new representation]'',
-   (Coesfeld, 1865).[[BR]]
-   http://sammlungen.uni-muenster.de/hd/content/titleinfo/1012467
