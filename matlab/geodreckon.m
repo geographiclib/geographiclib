@@ -130,18 +130,18 @@ function [lat2, lon2, azi2] = geodreckon(lat1, lon1, s12, azi1, ellipsoid)
   epsi = k2 ./ (2 * (1 + sqrt(1 + k2)) + k2);
   A1m1 = A1m1f(epsi);
   C1a = C1f(epsi);
-  B11 = SinSeries(ssig1, csig1, C1a);
+  B11 = SinCosSeries(1, ssig1, csig1, C1a);
   s = sin(B11); c = cos(B11);
   stau1 = ssig1 .* c + csig1 .* s; ctau1 = csig1 .* c - ssig1 .* s;
 
   C1pa = C1pf(epsi);
   C3a = C3f(epsi, C3x);
   A3c = -f * salp0 .* A3f(epsi, A3x);
-  B31 = SinSeries(ssig1, csig1, C3a);
+  B31 = SinCosSeries(1, ssig1, csig1, C3a);
 
   tau12 = s12 ./ (b * (1 + A1m1));
   s = sin(tau12); c = cos(tau12);
-  B12 = - SinSeries( stau1 .* c + ctau1 .* s, ...
+  B12 = - SinCosSeries(1,  stau1 .* c + ctau1 .* s, ...
                         ctau1 .* c - stau1 .* s, C1pa);
   sig12 = tau12 - (B12 - B11);
   ssig12 = sin(sig12); csig12 = cos(sig12);
@@ -156,7 +156,7 @@ function [lat2, lon2, azi2] = geodreckon(lat1, lon1, s12, azi1, ellipsoid)
   omg12 = atan2(somg2 .* comg1 - comg2 .* somg1, ...
                 comg2 .* comg1 + somg2 .* somg1);
 
-  lam12 = omg12 + A3c .* ( sig12 + (SinSeries(ssig2, csig2, C3a) - B31));
+  lam12 = omg12 + A3c .* ( sig12 + (SinCosSeries(1, ssig2, csig2, C3a) - B31));
   lon12 = lam12 / degree;
   lon12 = AngNormalize2(lon12);
   lon2 = AngNormalize(lon1 + lon12);
@@ -174,30 +174,32 @@ end
 function [sinx, cosx] = SinCosNorm(sinx, cosx)
 %SINCOSNORM  Normalize sinx and cosx
 %
-%  [sinx, cosx] = SINCOSNORM(sinx, cosx) normalize sinx and cosx so that
-%  sinx^2 + cosx^2 = 1.  sinx and cosx can be any shape.
+%  [SINX, COSX] = SINCOSNORM(SINX, COSX) normalize SINX and COSX so that
+%  SINX^2 + COSX^2 = 1.  SINX and COSX can be any shape.
 
   r = hypot(sinx, cosx);
   sinx = sinx ./ r;
   cosx = cosx ./ r;
 end
 
-function y = SinSeries(sinx, cosx, c)
+function y = SinCosSeries(sinp, sinx, cosx, c)
 %SINSERIES  Evaluate a sine series using Clenshaw summation
 %
-%  Y = SINSERIES(SINX, COSX, C) evaluate
+%  Y = SINSERIES(SINP, SINX, COSX, C) evaluate
 %
-%    y = sum(c[i] * sin( 2*i * x), i, 1, n)
+%    y = sum(c[i] * sin( 2*i    * x), i, 1, n), if sinp = 1
+%    y = sum(c[i] * cos((2*i-1) * x), i, 1, n), if sinp = 0
 %
-%  where n is the size of c.  x is given via its sine and cosine in SINX and
-%  COSX.  SINX, COSX, and Y are K x 1 arrays.  C is a K x N array.
+%  where n is the size of C.  x is given via its sine and cosine in SINX
+%  and COSX.  SINP is a scalar.  SINX, COSX, and Y are K x 1 arrays.  C is
+%  a K x N array.
 
   if size(sinx, 1) == 0,
     y = [];
     return;
   end
   n = size(c, 2);
-  ar = 2 * (cosx - sinx) .* (cosx + sinx); % 2 * cos(2 * x)
+  ar = 2 * (cosx - sinx) .* (cosx + sinx);
   y1 = zeros(size(sinx, 1), 1);
   if mod(n, 2),
     y0 = c(:, n);
@@ -210,7 +212,11 @@ function y = SinSeries(sinx, cosx, c)
     y1 = ar .* y0 - y1 + c(:, k);
     y0 = ar .* y1 - y0 + c(:, k-1);
   end
-  y = 2 * sinx .* cosx .* y0;
+  if sinp,
+    y = 2 * sinx .* cosx .* y0;
+  else
+    y = cosx .* (y0 - y1);
+  end
 end
 
 function x = AngNormalize(x)
@@ -336,7 +342,7 @@ function C3x = C3coeff(n)
 %C3COEFF  Evaluate coefficients for C_3
 %
 %  C3x = C3COEFF(N) evaluates the coefficients of epsilon^l in Eq. (25).  N
-%  is a scalar.  A3x is a 1 x 15 array.
+%  is a scalar.  C3x is a 1 x 15 array.
 
   nC3 = 6;
   nC3x = (nC3 * (nC3 - 1)) / 2;
@@ -362,7 +368,7 @@ function C3 = C3f(epsi, C3x)
 %C3F  Evaluate C_3
 %
 %  C3 = C3F(EPSI, C3X) evaluates C_{3,l} using Eq. (25) and the coefficient
-%  vector C3X.  EPSI is a K x 1 arraya.  C3X is a 1 x 15 array.  C3 is a
+%  vector C3X.  EPSI is a K x 1 array.  C3X is a 1 x 15 array.  C3 is a
 %  K x 5 array.
 
   nC3 = 6;

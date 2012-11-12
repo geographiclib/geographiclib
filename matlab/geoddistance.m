@@ -1,4 +1,5 @@
-function [s12, azi1, azi2] = geoddistance(lat1, lon1, lat2, lon2, ellipsoid)
+function [s12, azi1, azi2, S12] = ...
+      geoddistance(lat1, lon1, lat2, lon2, ellipsoid)
 %DISTANCE  Distance between points on ellipsoid
 %
 %   [S12, AZI1, AZI2] = GEODDISTANCE(LAT1, LON1, LAT2, LON2, ELLIPSOID)
@@ -92,8 +93,13 @@ function [s12, azi1, azi2] = geoddistance(lat1, lon1, lat2, lon2, ellipsoid)
   n = f / (2 - f);
   b = a * f1;
 
+  areap = nargout >= 4;
+
   A3x = A3coeff(n);
   C3x = C3coeff(n);
+  if areap,
+    C4x = C4coeff(n);
+  end
 
   lon1 = AngNormalize(lon1(:));
   lon12 = AngNormalize(AngNormalize(lon2(:)) - lon1);
@@ -131,7 +137,7 @@ function [s12, azi1, azi2] = geoddistance(lat1, lon1, lat2, lon2, ellipsoid)
 
   sig12 = Z; ssig1 = Z; csig1 = Z; ssig2 = Z; csig2 = Z;
   calp1 = Z; salp1 = Z; calp2 = Z; salp2 = Z;
-  s12 = Z; m12 = Z;
+  s12 = Z; m12 = Z; omg12 = Z;
 
   m = lat1 == -90 | slam12 == 0;
 
@@ -157,7 +163,7 @@ function [s12, azi1, azi2] = geoddistance(lat1, lon1, lat2, lon2, ellipsoid)
     eq = eq & lam12 < pi - f * pi;
   end
   calp1(eq) = 0; calp2(eq) = 0; salp1(eq) = 1; salp2(eq) = 1;
-  s12(eq) = a * lam12(eq);
+  s12(eq) = a * lam12(eq); omg12(eq) = lam12(eq) / f1;
 
   g = ~eq & ~m;
 
@@ -166,7 +172,9 @@ function [s12, azi1, azi2] = geoddistance(lat1, lon1, lat2, lon2, ellipsoid)
                    lam12(g), f, A3x);
 
   s = g & sig12 >= 0;
-  s12(s) = b * sig12(s) .* (dn1(s) + dn2(s)) / 2;
+  dnm = (dn1(s) + dn2(s)) / 2;
+  s12(s) = b * sig12(s) .* dnm;
+  omg12(s) = lam12(s) ./ (f1 * dnm);
 
   g = g & sig12 < 0;
 
@@ -184,7 +192,7 @@ function [s12, azi1, azi2] = geoddistance(lat1, lon1, lat2, lon2, ellipsoid)
     numit(g) = k;
     [v(g), dv(g), ...
      salp2(g), calp2(g), sig12(g), ...
-     ssig1(g), csig1(g), ssig2(g), csig2(g), epsi(g)] = ...
+     ssig1(g), csig1(g), ssig2(g), csig2(g), epsi(g), omg12(g)] = ...
         Lambda12(sbet1(g), cbet1(g), dn1(g), ...
                  sbet2(g), cbet2(g), dn2(g), ...
                  salp1(g), calp1(g), f, A3x, C3x);
@@ -202,8 +210,8 @@ function [s12, azi1, azi2] = geoddistance(lat1, lon1, lat2, lon2, ellipsoid)
     dalp1 = -v ./ dv;
     sdalp1 = sin(dalp1); cdalp1 = cos(dalp1);
     nsalp1 = salp1 .* cdalp1 + calp1 .* sdalp1;
-    calp1 = calp1 .* cdalp1 - salp1 .* sdalp1;
-    salp1 = nsalp1;
+    calp1(g) = calp1(g) .* cdalp1(g) - salp1(g) .* sdalp1(g);
+    salp1(g) = nsalp1(g);
     c = g & ~(abs(v) >= tol1 & v.^2 >= ov * tol0);
     trip(c) = trip(c) + 1;
     ov = abs(v);
@@ -231,7 +239,7 @@ function [s12, azi1, azi2] = geoddistance(lat1, lon1, lat2, lon2, ellipsoid)
     g = g & ~c;
     [v(g), dv(g), ...
      salp2(g), calp2(g), sig12(g), ...
-     ssig1(g), csig1(g), ssig2(g), csig2(g), epsi(g)] = ...
+     ssig1(g), csig1(g), ssig2(g), csig2(g), epsi(g), omg12(g)] = ...
         Lambda12(sbet1(g), cbet1(g), dn1(g), ...
                  sbet2(g), cbet2(g), dn2(g), ...
                  salp1(g), calp1(g), f, A3x, C3x);
@@ -251,6 +259,46 @@ function [s12, azi1, azi2] = geoddistance(lat1, lon1, lat2, lon2, ellipsoid)
                            ssig2(g), csig2(g), dn2(g));
 
   s12(g) = s12(g) * b;
+  omg12(g) = lam12(g) - omg12(g);
+
+  s12 = 0 + s12;
+  
+  if areap,
+    salp0 = salp1 .* cbet1; calp0 = hypot(calp1, salp1 .* sbet1);
+    ssig1 = sbet1; csig1 = calp1 .* cbet1;
+    ssig2 = sbet2; csig2 = calp2 .* cbet2;
+    k2 = calp0.^2 * ep2;
+    A4 = (a^2 * e2) * calp0 .* salp0;
+    [ssig1, csig1] = SinCosNorm(ssig1, csig1);
+    [ssig2, csig2] = SinCosNorm(ssig2, csig2);
+
+    C4a = C4f(k2, C4x);
+    B41 = SinCosSeries(0, ssig1, csig1, C4a);
+    B42 = SinCosSeries(0, ssig2, csig2, C4a);
+    S12 = A4 .* (B42 - B41);
+    S12(calp0 == 0 | salp0 == 0) = 0;
+
+    l = ~m & omg12 < 0.75 * pi & sbet2 - sbet1 < 1.75;
+    alp12 = Z;
+    somg12 = sin(omg12(l)); domg12 = 1 + cos(omg12(l));
+    dbet1 = 1 + cbet1(l); dbet2 = 1 + cbet2(l);
+    alp12(l) = 2 * atan2(somg12 .* (sbet1(l) .* dbet2 + sbet2(l) .* dbet1), ...
+                         domg12 .* (sbet1(l) .* sbet2(l) + dbet1 .* dbet2));
+    l = ~l;
+    salp12 = salp2(l) .* calp1(l) - calp2(l) .* salp1(l);
+    calp12 = calp2(l) .* calp1(l) + salp2(l) .* salp1(l);
+    s = salp12 == 0 & calp12 < 0;
+    salp12(s) = tiny * calp1(s); calp12(s) = -1;
+    alp12(l) = atan2(salp12, calp12);
+    if e2 == 0,
+      c2 = a^2;
+    elseif e2 > 0,
+      c2 = (a^2 + b^2* atanh(sqrt(e2))/sqrt(e2)) / 2;
+    else
+      c2 = (a^2 + b^2* atan(sqrt(-e2))/sqrt(-e2)) / 2;
+    end
+    S12 = 0 + swapp .* lonsign .* latsign .* (S12 + c2 * alp12);
+  end
 
   [salp1(swapp<0), salp2(swapp<0)] = swap(salp1(swapp<0), salp2(swapp<0));
   [calp1(swapp<0), calp2(swapp<0)] = swap(calp1(swapp<0), calp2(swapp<0));
@@ -314,30 +362,32 @@ end
 function [sinx, cosx] = SinCosNorm(sinx, cosx)
 %SINCOSNORM  Normalize sinx and cosx
 %
-%  [sinx, cosx] = SINCOSNORM(sinx, cosx) normalize sinx and cosx so that
-%  sinx^2 + cosx^2 = 1.  sinx and cosx can be any shape.
+%  [SINX, COSX] = SINCOSNORM(SINX, COSX) normalize SINX and COSX so that
+%  SINX^2 + COSX^2 = 1.  SINX and COSX can be any shape.
 
   r = hypot(sinx, cosx);
   sinx = sinx ./ r;
   cosx = cosx ./ r;
 end
 
-function y = SinSeries(sinx, cosx, c)
+function y = SinCosSeries(sinp, sinx, cosx, c)
 %SINSERIES  Evaluate a sine series using Clenshaw summation
 %
-%  Y = SINSERIES(SINX, COSX, C) evaluate
+%  Y = SINSERIES(SINP, SINX, COSX, C) evaluate
 %
-%    y = sum(c[i] * sin( 2*i * x), i, 1, n)
+%    y = sum(c[i] * sin( 2*i    * x), i, 1, n), if sinp = 1
+%    y = sum(c[i] * cos((2*i-1) * x), i, 1, n), if sinp = 0
 %
-%  where n is the size of c.  x is given via its sine and cosine in SINX and
-%  COSX.  SINX, COSX, and Y are K x 1 arrays.  C is a K x N array.
+%  where n is the size of C.  x is given via its sine and cosine in SINX
+%  and COSX.  SINP is a scalar.  SINX, COSX, and Y are K x 1 arrays.  C is
+%  a K x N array.
 
   if size(sinx, 1) == 0,
     y = [];
     return;
   end
   n = size(c, 2);
-  ar = 2 * (cosx - sinx) .* (cosx + sinx); % 2 * cos(2 * x)
+  ar = 2 * (cosx - sinx) .* (cosx + sinx);
   y1 = zeros(size(sinx, 1), 1);
   if mod(n, 2),
     y0 = c(:, n);
@@ -350,7 +400,11 @@ function y = SinSeries(sinx, cosx, c)
     y1 = ar .* y0 - y1 + c(:, k);
     y0 = ar .* y1 - y0 + c(:, k-1);
   end
-  y = 2 * sinx .* cosx .* y0;
+  if sinp,
+    y = 2 * sinx .* cosx .* y0;
+  else
+    y = cosx .* (y0 - y1);
+  end
 end
 
 function x = AngNormalize(x)
@@ -519,11 +573,11 @@ function [s12b, m12b, m0] = Lengths(epsi, sig12, ...
   C1a = C1f(epsi);
   C2a = C2f(epsi);
   A1m1 = A1m1f(epsi);
-  AB1 = (1 + A1m1) .* (SinSeries(ssig2, csig2, C1a) - ...
-                       SinSeries(ssig1, csig1, C1a));
+  AB1 = (1 + A1m1) .* (SinCosSeries(1, ssig2, csig2, C1a) - ...
+                       SinCosSeries(1, ssig1, csig1, C1a));
   A2m1 = A2m1f(epsi);
-  AB2 = (1 + A2m1) .* (SinSeries(ssig2, csig2, C2a) - ...
-                       SinSeries(ssig1, csig1, C2a));
+  AB2 = (1 + A2m1) .* (SinCosSeries(1, ssig2, csig2, C2a) - ...
+                       SinCosSeries(1, ssig1, csig1, C2a));
   m0 = A1m1 - A2m1;
   J12 = m0 .* sig12 + (AB1 - AB2);
   m12b = dn2 .* (csig1 .* ssig2) - dn1 .* (ssig1 .* csig2) - ...
@@ -532,7 +586,7 @@ function [s12b, m12b, m0] = Lengths(epsi, sig12, ...
 end
 
 function [lam12, dlam12, ...
-          salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, epsi] = ...
+          salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, epsi, domg12] = ...
     Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1, f, A3x, C3x)
 %LAMBDA12  Solve the hybrid problem
 
@@ -568,7 +622,8 @@ function [lam12, dlam12, ...
   k2 = calp0.^2 * ep2;
   epsi = k2 ./ (2 * (1 + sqrt(1 + k2)) + k2);
   C3a = C3f(epsi, C3x);
-  B312 = SinSeries(ssig2, csig2, C3a) - SinSeries(ssig1, csig1, C3a);
+  B312 = SinCosSeries(1, ssig2, csig2, C3a) - ...
+         SinCosSeries(1, ssig1, csig1, C3a);
   h0 = -f * A3f(epsi, A3x);
   domg12 = salp0 .* h0 .* (sig12 + B312);
   lam12 = omg12 + domg12;
@@ -683,7 +738,7 @@ function C3x = C3coeff(n)
 %C3COEFF  Evaluate coefficients for C_3
 %
 %  C3x = C3COEFF(N) evaluates the coefficients of epsilon^l in Eq. (25).  N
-%  is a scalar.  A3x is a 1 x 15 array.
+%  is a scalar.  C3x is a 1 x 15 array.
 
   nC3 = 6;
   nC3x = (nC3 * (nC3 - 1)) / 2;
@@ -709,7 +764,7 @@ function C3 = C3f(epsi, C3x)
 %C3F  Evaluate C_3
 %
 %  C3 = C3F(EPSI, C3X) evaluates C_{3,l} using Eq. (25) and the coefficient
-%  vector C3X.  EPSI is a K x 1 arraya.  C3X is a 1 x 15 array.  C3 is a
+%  vector C3X.  EPSI is a K x 1 array.  C3X is a 1 x 15 array.  C3 is a
 %  K x 5 array.
 
   nC3 = 6;
@@ -728,5 +783,65 @@ function C3 = C3f(epsi, C3x)
   for k = 1 : nC3 - 1,
     mult = mult .* epsi;
     C3(:, k) = C3(:, k) .* mult;
+  end
+end
+
+function C4x = C4coeff(n)
+%C4COEFF  Evaluate coefficients for C_4
+%
+%  C4x = C4COEFF(N) evaluates the coefficients of epsilon^l in expansion of
+%  the area (Eq. (65) expressed in terms of n and epsi).  N is a scalar.
+%  C4x is a 1 x 21 array.
+
+  nC4 = 6;
+  nC4x = (nC4 * (nC4 + 1)) / 2;
+  C4x = zeros(1, nC4x);
+  C4x(0+1) = (n*(n*(n*(n*(100*n+208)+572)+3432)-12012)+30030)/45045;
+  C4x(1+1) = (n*(n*(n*(64*n+624)-4576)+6864)-3003)/15015;
+  C4x(2+1) = (n*((14144-10656*n)*n-4576)-858)/45045;
+  C4x(3+1) = ((-224*n-4784)*n+1573)/45045;
+  C4x(4+1) = (1088*n+156)/45045;
+  C4x(5+1) = 97/15015;
+  C4x(6+1) = (n*(n*((-64*n-624)*n+4576)-6864)+3003)/135135;
+  C4x(7+1) = (n*(n*(5952*n-11648)+9152)-2574)/135135;
+  C4x(8+1) = (n*(5792*n+1040)-1287)/135135;
+  C4x(9+1) = (468-2944*n)/135135;
+  C4x(10+1) = 1/9009;
+  C4x(11+1) = (n*((4160-1440*n)*n-4576)+1716)/225225;
+  C4x(12+1) = ((4992-8448*n)*n-1144)/225225;
+  C4x(13+1) = (1856*n-936)/225225;
+  C4x(14+1) = 8/10725;
+  C4x(15+1) = (n*(3584*n-3328)+1144)/315315;
+  C4x(16+1) = (1024*n-208)/105105;
+  C4x(17+1) = -136/63063;
+  C4x(18+1) = (832-2560*n)/405405;
+  C4x(19+1) = -128/135135;
+  C4x(20+1) = 128/99099;
+end
+
+function C4 = C4f(k2, C4x)
+%C4F  Evaluate C_4
+%
+%  C4 = C4F(K2, C4X) evaluates C_{4,l} in the expansion for the area
+%  (Eq. (65) expressed in terms of n and epsi) using the coefficient vector
+%  C4X.  K2 is a K x 1 array.  C4X is a 1 x 15 array.  C4 is a K x 5 array.
+
+  nC4 = 6;
+  nC4x = size(C4x, 2);
+  epsi = k2 ./ (2 * (1 + sqrt(1 + k2)) + k2);
+  j = nC4x;
+  C4 = zeros(size(epsi, 1), nC4);
+  for k = nC4 : -1 : 1,
+    t = C4(:, k);
+    for i = nC4 - k : -1 : 0,
+      t = epsi .* t + C4x(j);
+      j = j - 1;
+    end
+    C4(:, k) = t;
+  end
+  mult = ones(size(epsi, 1), 1);
+  for k = 2 : nC4,
+    mult = mult .* epsi;
+    C4(:, k) = C4(:, k) .* mult;
   end
 end
