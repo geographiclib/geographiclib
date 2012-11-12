@@ -261,15 +261,8 @@ cat <<EOF
     </p>
     <p>
       Geod is accurate to about 15&nbsp;nm and gives solutions for the
-      inverse problem for any pair of points.  Most other geodesic
-      calculators fail for some inputs; for example, compare the
-      inverse result given by Geod for the antipodal points (N30, E0)
-      and (S30, E180) where the geodesic follows a meridian with the
-      <b>wrong</b> result returned by the
-      <a href="http://www.ngs.noaa.gov/">
-        NGS</a> online
-      <a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
-        inverse geodesic calculator</a>.
+      inverse problem for any pair of points.  Many other geodesic
+      calculators (based in Vincenty's method) fail for some inputs.
     </p>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/Geod.1.html">

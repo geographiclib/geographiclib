@@ -295,7 +295,7 @@ GeographicLib.GeodesicLine = {};
   }
 
   g.Geodesic.prototype.A3f = function(eps) {
-    // Evaluation sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner's method
+    // Evaluate sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner's method
     var v = 0;
     for (var i = g.nA3x_; i; )
       v = eps * v + this._A3x[--i];
@@ -303,7 +303,7 @@ GeographicLib.GeodesicLine = {};
   }
 
   g.Geodesic.prototype.C3f = function(eps, c) {
-    // Evaluation C3 coeffs by Horner's method
+    // Evaluate C3 coeffs by Horner's method
     // Elements c[1] thru c[nC3_ - 1] are set
     for (var j = g.nC3x_, k = g.nC3_ - 1; k; ) {
       var t = 0;
@@ -321,7 +321,7 @@ GeographicLib.GeodesicLine = {};
 
   g.Geodesic.prototype.C4f = function(k2, c) {
     var eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
-    // Evaluation C4 coeffs by Horner's method
+    // Evaluate C4 coeffs by Horner's method
     // Elements c[0] thru c[nC4_ - 1] are set
     for (var j = g.nC4x_, k = g.nC4_; k; ) {
       var t = 0;
@@ -457,7 +457,7 @@ GeographicLib.GeodesicLine = {};
                                  sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
                                  cbet1, cbet2, false, C1a, C2a);
         m12b = nvals.m12b; m0 = nvals.m0;
-        x = -1 + m12b/(cbet1 * cbet2 * m0 * Math.PI);
+        x = -1 + m12b / (cbet1 * cbet2 * m0 * Math.PI);
         betscale = x < -0.01 ? sbet12a / x :
           -this._f * m.sq(cbet1) * Math.PI;
         lamscale = betscale / cbet1;
@@ -820,9 +820,9 @@ GeographicLib.GeodesicLine = {};
           if (trip < 1) dv = nvals.dlam12;
 
           // Update bracketing values
-          if (v >= 0 && calp1/salp1 > calp1b/salp1b) {
+          if (v > 0 && calp1/salp1 > calp1b/salp1b) {
             salp1b = salp1; calp1b = calp1;
-          } else if (v <= 0 && calp1/salp1 < calp1a/salp1a) {
+          } else if (v < 0 && calp1/salp1 < calp1a/salp1a) {
             salp1a = salp1; calp1a = calp1;
           }
           if (!(Math.abs(v) > g.tiny_) || !(trip < 1)) {
@@ -830,7 +830,7 @@ GeographicLib.GeodesicLine = {};
               numit = g.maxit_;
             break;
           }
-          if (dv >= 0) {
+          if (dv > 0) {
             var
             dalp1 = -v/dv;
             var

@@ -15,7 +15,7 @@
 from distutils.core import setup
 
 setup(name="geographiclib",
-      version="1.26",
+      version="1.27",
       description=
         "A translation of the GeographicLib::Geodesic class to Python",
       author="Charles Karney",

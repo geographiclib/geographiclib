@@ -303,9 +303,9 @@ namespace GeographicLib {
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                             eps, omg12, trip < 1, dv, C1a, C2a, C3a) - lam12;
           // Update bracketing values
-          if (v >= 0 && calp1/salp1 > calp1b/salp1b) {
+          if (v > 0 && calp1/salp1 > calp1b/salp1b) {
             salp1b = salp1; calp1b = calp1;
-          } else if (v <= 0 && calp1/salp1 < calp1a/salp1a) {
+          } else if (v < 0 && calp1/salp1 < calp1a/salp1a) {
             salp1a = salp1; calp1a = calp1;
           }
           if (!(abs(v) > tiny_) || !(trip < 1)) {
@@ -313,7 +313,7 @@ namespace GeographicLib {
               numit = maxit_;
             break;
           }
-          if (dv >= 0) {
+          if (dv > 0) {
             real
               dalp1 = -v/dv;
             real
@@ -665,7 +665,7 @@ namespace GeographicLib {
                 sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
                 cbet1, cbet2, dummy, m12b, m0, false,
                 dummy, dummy, C1a, C2a);
-        x = -1 + m12b/(cbet1 * cbet2 * m0 * Math::pi<real>());
+        x = -1 + m12b / (cbet1 * cbet2 * m0 * Math::pi<real>());
         betscale = x < -real(0.01) ? sbet12a / x :
           -_f * Math::sq(cbet1) * Math::pi<real>();
         lamscale = betscale / cbet1;
@@ -818,7 +818,7 @@ namespace GeographicLib {
   }
 
   Math::real Geodesic::A3f(real eps) const throw() {
-    // Evaluation sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner's method
+    // Evaluate sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner's method
     real v = 0;
     for (int i = nA3x_; i; )
       v = eps * v + _A3x[--i];
@@ -826,7 +826,7 @@ namespace GeographicLib {
   }
 
   void Geodesic::C3f(real eps, real c[]) const throw() {
-    // Evaluation C3 coeffs by Horner's method
+    // Evaluate C3 coeffs by Horner's method
     // Elements c[1] thru c[nC3_ - 1] are set
     for (int j = nC3x_, k = nC3_ - 1; k; ) {
       real t = 0;
@@ -844,7 +844,7 @@ namespace GeographicLib {
 
   void Geodesic::C4f(real k2, real c[]) const throw() {
     real eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
-    // Evaluation C4 coeffs by Horner's method
+    // Evaluate C4 coeffs by Horner's method
     // Elements c[0] thru c[nC4_ - 1] are set
     for (int j = nC4x_, k = nC4_; k; ) {
       real t = 0;
@@ -1523,163 +1523,5 @@ namespace GeographicLib {
       STATIC_ASSERT(nC4_ >= 0 && nC4_ <= 8, "Bad value of nC4_");
     }
   }
-
-  /*
-  // The coefficients C4[l] in the Fourier expansion of I4
-  void Geodesic::C4coeff() throw() {
-    switch (nC4_) {
-    case 0:
-      break;
-    case 1:
-      _C4x[0] = 2/real(3);
-      break;
-    case 2:
-      _C4x[0] = (10-_ep2)/15;
-      _C4x[1] = -1/real(20);
-      _C4x[2] = 1/real(180);
-      break;
-    case 3:
-      _C4x[0] = (_ep2*(4*_ep2-7)+70)/105;
-      _C4x[1] = (4*_ep2-7)/140;
-      _C4x[2] = 1/real(42);
-      _C4x[3] = (7-4*_ep2)/1260;
-      _C4x[4] = -1/real(252);
-      _C4x[5] = 1/real(2100);
-      break;
-    case 4:
-      _C4x[0] = (_ep2*((12-8*_ep2)*_ep2-21)+210)/315;
-      _C4x[1] = ((12-8*_ep2)*_ep2-21)/420;
-      _C4x[2] = (3-2*_ep2)/126;
-      _C4x[3] = -1/real(72);
-      _C4x[4] = (_ep2*(8*_ep2-12)+21)/3780;
-      _C4x[5] = (2*_ep2-3)/756;
-      _C4x[6] = 1/real(360);
-      _C4x[7] = (3-2*_ep2)/6300;
-      _C4x[8] = -1/real(1800);
-      _C4x[9] = 1/real(17640);
-      break;
-    case 5:
-      _C4x[0] = (_ep2*(_ep2*(_ep2*(64*_ep2-88)+132)-231)+2310)/3465;
-      _C4x[1] = (_ep2*(_ep2*(64*_ep2-88)+132)-231)/4620;
-      _C4x[2] = (_ep2*(16*_ep2-22)+33)/1386;
-      _C4x[3] = (8*_ep2-11)/792;
-      _C4x[4] = 1/real(110);
-      _C4x[5] = (_ep2*((88-64*_ep2)*_ep2-132)+231)/41580;
-      _C4x[6] = ((22-16*_ep2)*_ep2-33)/8316;
-      _C4x[7] = (11-8*_ep2)/3960;
-      _C4x[8] = -1/real(495);
-      _C4x[9] = (_ep2*(16*_ep2-22)+33)/69300;
-      _C4x[10] = (8*_ep2-11)/19800;
-      _C4x[11] = 1/real(1925);
-      _C4x[12] = (11-8*_ep2)/194040;
-      _C4x[13] = -1/real(10780);
-      _C4x[14] = 1/real(124740);
-      break;
-    case 6:
-      _C4x[0] = (_ep2*(_ep2*(_ep2*((832-640*_ep2)*_ep2-1144)+1716)-3003)+
-                30030)/45045;
-      _C4x[1] = (_ep2*(_ep2*((832-640*_ep2)*_ep2-1144)+1716)-3003)/60060;
-      _C4x[2] = (_ep2*((208-160*_ep2)*_ep2-286)+429)/18018;
-      _C4x[3] = ((104-80*_ep2)*_ep2-143)/10296;
-      _C4x[4] = (13-10*_ep2)/1430;
-      _C4x[5] = -1/real(156);
-      _C4x[6] = (_ep2*(_ep2*(_ep2*(640*_ep2-832)+1144)-1716)+3003)/540540;
-      _C4x[7] = (_ep2*(_ep2*(160*_ep2-208)+286)-429)/108108;
-      _C4x[8] = (_ep2*(80*_ep2-104)+143)/51480;
-      _C4x[9] = (10*_ep2-13)/6435;
-      _C4x[10] = 5/real(3276);
-      _C4x[11] = (_ep2*((208-160*_ep2)*_ep2-286)+429)/900900;
-      _C4x[12] = ((104-80*_ep2)*_ep2-143)/257400;
-      _C4x[13] = (13-10*_ep2)/25025;
-      _C4x[14] = -1/real(2184);
-      _C4x[15] = (_ep2*(80*_ep2-104)+143)/2522520;
-      _C4x[16] = (10*_ep2-13)/140140;
-      _C4x[17] = 5/real(45864);
-      _C4x[18] = (13-10*_ep2)/1621620;
-      _C4x[19] = -1/real(58968);
-      _C4x[20] = 1/real(792792);
-      break;
-    case 7:
-      _C4x[0] = (_ep2*(_ep2*(_ep2*(_ep2*(_ep2*(512*_ep2-640)+832)-1144)+1716)-
-                3003)+30030)/45045;
-      _C4x[1] = (_ep2*(_ep2*(_ep2*(_ep2*(512*_ep2-640)+832)-1144)+1716)-
-                3003)/60060;
-      _C4x[2] = (_ep2*(_ep2*(_ep2*(128*_ep2-160)+208)-286)+429)/18018;
-      _C4x[3] = (_ep2*(_ep2*(64*_ep2-80)+104)-143)/10296;
-      _C4x[4] = (_ep2*(8*_ep2-10)+13)/1430;
-      _C4x[5] = (4*_ep2-5)/780;
-      _C4x[6] = 1/real(210);
-      _C4x[7] = (_ep2*(_ep2*(_ep2*((640-512*_ep2)*_ep2-832)+1144)-1716)+
-                3003)/540540;
-      _C4x[8] = (_ep2*(_ep2*((160-128*_ep2)*_ep2-208)+286)-429)/108108;
-      _C4x[9] = (_ep2*((80-64*_ep2)*_ep2-104)+143)/51480;
-      _C4x[10] = ((10-8*_ep2)*_ep2-13)/6435;
-      _C4x[11] = (5-4*_ep2)/3276;
-      _C4x[12] = -1/real(840);
-      _C4x[13] = (_ep2*(_ep2*(_ep2*(128*_ep2-160)+208)-286)+429)/900900;
-      _C4x[14] = (_ep2*(_ep2*(64*_ep2-80)+104)-143)/257400;
-      _C4x[15] = (_ep2*(8*_ep2-10)+13)/25025;
-      _C4x[16] = (4*_ep2-5)/10920;
-      _C4x[17] = 1/real(2520);
-      _C4x[18] = (_ep2*((80-64*_ep2)*_ep2-104)+143)/2522520;
-      _C4x[19] = ((10-8*_ep2)*_ep2-13)/140140;
-      _C4x[20] = (5-4*_ep2)/45864;
-      _C4x[21] = -1/real(8820);
-      _C4x[22] = (_ep2*(8*_ep2-10)+13)/1621620;
-      _C4x[23] = (4*_ep2-5)/294840;
-      _C4x[24] = 1/real(41580);
-      _C4x[25] = (5-4*_ep2)/3963960;
-      _C4x[26] = -1/real(304920);
-      _C4x[27] = 1/real(4684680);
-      break;
-    case 8:
-      _C4x[0] = (_ep2*(_ep2*(_ep2*(_ep2*(_ep2*((8704-7168*_ep2)*_ep2-10880)+
-                14144)-19448)+29172)-51051)+510510)/765765;
-      _C4x[1] = (_ep2*(_ep2*(_ep2*(_ep2*((8704-7168*_ep2)*_ep2-10880)+14144)-
-                19448)+29172)-51051)/1021020;
-      _C4x[2] = (_ep2*(_ep2*(_ep2*((2176-1792*_ep2)*_ep2-2720)+3536)-4862)+
-                7293)/306306;
-      _C4x[3] = (_ep2*(_ep2*((1088-896*_ep2)*_ep2-1360)+1768)-2431)/175032;
-      _C4x[4] = (_ep2*((136-112*_ep2)*_ep2-170)+221)/24310;
-      _C4x[5] = ((68-56*_ep2)*_ep2-85)/13260;
-      _C4x[6] = (17-14*_ep2)/3570;
-      _C4x[7] = -1/real(272);
-      _C4x[8] = (_ep2*(_ep2*(_ep2*(_ep2*(_ep2*(7168*_ep2-8704)+10880)-14144)+
-                19448)-29172)+51051)/9189180;
-      _C4x[9] = (_ep2*(_ep2*(_ep2*(_ep2*(1792*_ep2-2176)+2720)-3536)+4862)-
-                7293)/1837836;
-      _C4x[10] = (_ep2*(_ep2*(_ep2*(896*_ep2-1088)+1360)-1768)+2431)/875160;
-      _C4x[11] = (_ep2*(_ep2*(112*_ep2-136)+170)-221)/109395;
-      _C4x[12] = (_ep2*(56*_ep2-68)+85)/55692;
-      _C4x[13] = (14*_ep2-17)/14280;
-      _C4x[14] = 7/real(7344);
-      _C4x[15] = (_ep2*(_ep2*(_ep2*((2176-1792*_ep2)*_ep2-2720)+3536)-4862)+
-                7293)/15315300;
-      _C4x[16] = (_ep2*(_ep2*((1088-896*_ep2)*_ep2-1360)+1768)-2431)/4375800;
-      _C4x[17] = (_ep2*((136-112*_ep2)*_ep2-170)+221)/425425;
-      _C4x[18] = ((68-56*_ep2)*_ep2-85)/185640;
-      _C4x[19] = (17-14*_ep2)/42840;
-      _C4x[20] = -7/real(20400);
-      _C4x[21] = (_ep2*(_ep2*(_ep2*(896*_ep2-1088)+1360)-1768)+2431)/42882840;
-      _C4x[22] = (_ep2*(_ep2*(112*_ep2-136)+170)-221)/2382380;
-      _C4x[23] = (_ep2*(56*_ep2-68)+85)/779688;
-      _C4x[24] = (14*_ep2-17)/149940;
-      _C4x[25] = 1/real(8976);
-      _C4x[26] = (_ep2*((136-112*_ep2)*_ep2-170)+221)/27567540;
-      _C4x[27] = ((68-56*_ep2)*_ep2-85)/5012280;
-      _C4x[28] = (17-14*_ep2)/706860;
-      _C4x[29] = -7/real(242352);
-      _C4x[30] = (_ep2*(56*_ep2-68)+85)/67387320;
-      _C4x[31] = (14*_ep2-17)/5183640;
-      _C4x[32] = 7/real(1283568);
-      _C4x[33] = (17-14*_ep2)/79639560;
-      _C4x[34] = -1/real(1516944);
-      _C4x[35] = 1/real(26254800);
-      break;
-    default:
-      STATIC_ASSERT(nC4_ >= 0 && nC4_ <= 8, "Bad value of nC4_");
-    }
-  }
-  */
 
 } // namespace GeographicLib

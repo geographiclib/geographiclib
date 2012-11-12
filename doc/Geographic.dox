@@ -3634,6 +3634,17 @@ been migrated to the archive subdirectory).  All the releases are
 available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
 
+ - <a href="http://geographiclib.sf.net/1.27">Version 1.27</a>
+   (released 2012-mm-dd)
+   - TODO: Ellipsoid::InverseRectifyingLatitude should use
+     EllipticFunction::Einv.
+   - TODO: check short-line condition for very eccentric ellipsoids.
+   - TODO: in geod-addendum set sign of sin(sigma_1) negative
+   - TODO: add geod and tm refs to JavaScript, python, and matlab code
+   - TODO: prolate m12 conjugacy check should use lon12?
+   - TODO: stop being nasty about NGS geodesic calculator.
+   - MacOSX fixes: universal binaries and build fixes.
+
  - <a href="http://geographiclib.sf.net/1.26">Version 1.26</a>
    (released 2012-10-22)
    - Replace the series used for geodesic areas by one with better

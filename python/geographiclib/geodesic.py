@@ -327,14 +327,14 @@ class Geodesic(object):
     self._C4x[20] = 128/99099.0
 
   def A3f(self, eps):
-    # Evaluation sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner's method
+    # Evaluate sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner's method
     v = 0
     for i in range(Geodesic.nA3x_-1, -1, -1):
       v = eps * v + self._A3x[i]
     return v
 
   def C3f(self, eps, c):
-    # Evaluation C3 coeffs by Horner's method
+    # Evaluate C3 coeffs by Horner's method
     # Elements c[1] thru c[nC3_ - 1] are set
     j = Geodesic.nC3x_; k = Geodesic.nC3_ - 1
     while k:
@@ -352,7 +352,7 @@ class Geodesic(object):
 
   def C4f(self, k2, c):
     eps = k2 / (2 * (1 + math.sqrt(1 + k2)) + k2)
-    # Evaluation C4 coeffs by Horner's method
+    # Evaluate C4 coeffs by Horner's method
     # Elements c[0] thru c[nC4_ - 1] are set
     j = Geodesic.nC4x_; k = Geodesic.nC4_
     while k:
@@ -473,7 +473,7 @@ class Geodesic(object):
         dummy, m12b, m0, dummy, dummy = self.Lengths(
           self._n, math.pi + bet12a, sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
           cbet1, cbet2, dummy, False, C1a, C2a)
-        x = -1 + m12b/(cbet1 * cbet2 * m0 * math.pi)
+        x = -1 + m12b / (cbet1 * cbet2 * m0 * math.pi)
         betscale = (sbet12a / x if x < -0.01
                     else -self._f * Math.sq(cbet1) * math.pi)
         lamscale = betscale / cbet1
@@ -787,9 +787,9 @@ class Geodesic(object):
             salp1, calp1, trip < 1, C1a, C2a, C3a)
           v = nlam12 - lam12
           # Update bracketing values
-          if v >= 0 and calp1/salp1 > calp1b/salp1b:
+          if v > 0 and calp1/salp1 > calp1b/salp1b:
             salp1b = salp1; calp1b = calp1
-          elif v <= 0 and calp1/salp1 < calp1a/salp1a:
+          elif v < 0 and calp1/salp1 < calp1a/salp1a:
             salp1a = salp1; calp1a = calp1
 
           if not(abs(v) > Geodesic.tiny_) or not(trip < 1):
@@ -797,7 +797,7 @@ class Geodesic(object):
               numit = Geodesic.maxit_
             break
           numit += 1
-          if dv >= 0:
+          if dv > 0:
             dalp1 = -v/dv
             sdalp1 = math.sin(dalp1); cdalp1 = math.cos(dalp1)
             nsalp1 = salp1 * cdalp1 + calp1 * sdalp1

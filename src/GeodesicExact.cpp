@@ -302,9 +302,9 @@ namespace GeographicLib {
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                             E, omg12, trip < 1, dv) - lam12;
           // Update bracketing values
-          if (v >= 0 && calp1/salp1 > calp1b/salp1b) {
+          if (v > 0 && calp1/salp1 > calp1b/salp1b) {
             salp1b = salp1; calp1b = calp1;
-          } else if (v <= 0 && calp1/salp1 < calp1a/salp1a) {
+          } else if (v < 0 && calp1/salp1 < calp1a/salp1a) {
             salp1a = salp1; calp1a = calp1;
           }
           if (!(abs(v) > tiny_) || !(trip < 1)) {
@@ -312,7 +312,7 @@ namespace GeographicLib {
               numit = maxit_;
             break;
           }
-          if (dv >= 0) {
+          if (dv > 0) {
             real
               dalp1 = -v/dv;
             real
@@ -655,7 +655,7 @@ namespace GeographicLib {
                 sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
                 cbet1, cbet2, dummy, m12b, m0, false,
                 dummy, dummy);
-        x = -1 + m12b/(cbet1 * cbet2 * m0 * Math::pi<real>());
+        x = -1 + m12b / (cbet1 * cbet2 * m0 * Math::pi<real>());
         betscale = x < -real(0.01) ? sbet12a / x :
           -_f * Math::sq(cbet1) * Math::pi<real>();
         lamscale = betscale / cbet1;
