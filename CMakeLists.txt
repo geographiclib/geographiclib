@@ -109,7 +109,7 @@ if (NOT CMAKE_VERSION VERSION_LESS 2.8)
 endif ()
 
 # (6) Compile the short example programs?
-if (WIN32)
+if (WIN32 OR APPLE)
   option (GEOGRAPHICLIB_EXAMPLES
     "Build example programs in examples directory" OFF)
 else ()
@@ -235,6 +235,14 @@ else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 endif ()
 
+if (APPLE)
+  if (CMAKE_SYSTEM_PROCESSOR MATCHES "i.86" OR
+      CMAKE_SYSTEM_PROCESSOR MATCHES "amd64" OR
+      CMAKE_SYSTEM_PROCESSOR MATCHES "x86")
+    set (CMAKE_OSX_ARCHITECTURES "i386 -arch x86_64")
+  endif ()
+endif ()
+
 # The list of tools (to be installed into, e.g., /usr/local/bin)
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert Geod
   GeoidEval Gravity MagneticField Planimeter TransverseMercatorProj)
@@ -343,7 +351,7 @@ if (WIN32)
   set (CPACK_NSIS_MODIFY_PATH ON)
 elseif (APPLE)
   # Not tested
-  set (CPACK_GENERATOR DMG)
+  set (CPACK_GENERATOR Bundle)
   set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-darwin")
 else ()
   # Not tested
