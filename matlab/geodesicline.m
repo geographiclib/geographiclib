@@ -28,10 +28,22 @@ function [latlong, aux] = geodesicline(lat1, lon1, azi1, distances, a, f)
 %       geodesicdirect([repmat([lat1, lon1, azi1],size(distances)), ...
 %                       distances], a, f)
 %
+% The algorithm used in this function is given in
+%
+%     C. F. F. Karney
+%     Algorithms for geodesics
+%     J. Geodesy (2012)
+%     http://dx.doi.org/10.1007/s00190-012-0578-z
+%
 % This is an interface to the GeographicLib C++ routine
 %     GeodesicLine::Position
 % See the documentation on this function for more information:
 % http://geographiclib.sf.net/html/classGeographicLib_1_1GeodesicLine.html
+%
+% A native MATLAB implementation is available as GEODRECKON.
+%
+% See also GEODRECKON.
+
   error('Error: executing .m file instead of compiled routine');
 end
 % geodesicline.m

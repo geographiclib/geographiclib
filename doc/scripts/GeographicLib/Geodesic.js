@@ -5,6 +5,12 @@
  * See the documentation for the C++ class.  The conversion is a literal
  * conversion from C++.
  *
+ * The algorithms are derived in
+ *
+ *    Charles F. F. Karney,
+ *    Algorithms for geodesics, J. Geodesy, 2012,
+ *    http://dx.doi.org/10.1007/s00190-012-0578-z
+ *
  * Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
@@ -754,11 +760,11 @@ GeographicLib.GeodesicLine = {};
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
       s12x = this._a * lam12;
-      m12x = this._b * Math.sin(lam12 / this._f1);
-      if (outmask & g.GEODESICSCALE)
-        vals.M12 = vals.M21 = Math.cos(lam12 / this._f1);
-      vals.a12 = lon12 / this._f1;
       sig12 = omg12 = lam12 / this._f1;
+      m12x = this._b * Math.sin(sig12);
+      if (outmask & g.GEODESICSCALE)
+        vals.M12 = vals.M21 = Math.cos(sig12);
+      vals.a12 = lon12 / this._f1;
 
     } else if (!meridian) {
 

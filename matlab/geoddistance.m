@@ -1,17 +1,20 @@
-function [s12, azi1, azi2, S12] = ...
+function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
       geoddistance(lat1, lon1, lat2, lon2, ellipsoid)
-%DISTANCE  Distance between points on ellipsoid
+%GEODDISTANCE  Distance between points on ellipsoid
 %
-%   [S12, AZI1, AZI2] = GEODDISTANCE(LAT1, LON1, LAT2, LON2, ELLIPSOID)
-%   computes the geodesic distance and azimuth assuming that the points lie
-%   on the reference ellipsoid defined by the input ELLIPSOID.  The input
-%   latitudes and longitudes, LAT1, LON1, LAT2, LON2, can be scalars or
-%   arrays of equal size and must be expressed in degrees.  The ELLIPSOID
-%   vector is of the form [a, e], where a is the equatorial radius, e is
-%   the eccentricity e = sqrt(a^2 - b^2)/a, and b is the polar semi-axis.
-%   The output S12 is expressed in the same distance units as the
-%   equatorial radius.  AZI1 and AZI2 are the forward azimuths at the end
-%   points in degrees.
+%   [s12, azi1, azi2] = GEODDISTANCE(lat1, lon1, lat2, lon2)
+%   [s12, azi1, azi2, S12, m12, M12, M21, a12] =
+%      GEODDISTANCE(lat1, lon1, lat2, lon2, ellipsoid)
+%
+%   solves the inverse geodesic problem of finding of length and azimuths
+%   of the shortest geodesic between points specified by lat1, lon1, lat2,
+%   lon2.  The input latitudes and longitudes, lat1, lon1, lat2, lon2, can
+%   be scalars or arrays of equal size and must be expressed in degrees.
+%   The ellipsoid vector is of the form [a, e], where a is the equatorial
+%   radius in meters, e is the eccentricity.  If ellipsoid is omitted, the
+%   WGS84 ellipsoid is used.  The output s12 is the distance in meters and
+%   azi1 and azi2 are the forward azimuths at the end points in degrees.
+%   The other outputs, S12, m12, M12, M21, a12 are documented in GEODDOC.
 %
 %   When given a combination of scalar and array inputs, the scalar inputs
 %   are automatically expanded to match the size of the arrays.
@@ -23,34 +26,21 @@ function [s12, azi1, azi2, S12] = ...
 %     J. Geodesy (2012)
 %     http://dx.doi.org/10.1007/s00190-012-0578-z
 %
-%   The calculations are carried out as expansions in the eccentricity
-%   which are accurate for eccentricities typical of the Earth (i.e.,
-%   abs(e) < 0.1).  Note that the algorithms are valid also for slightly
-%   prolate ellipsoids (b > a), in which case the eccentricity should be
-%   specified as a pure imaginary number.
-%
 %   This function duplicates some of the functionality of the DISTANCE
 %   function in the MATLAB mapping toolbox.  Differences are
 %
-%     * When the ELLIPSOID argument is omitted, use the WGS84 ellipsoid.
-%     * The azimuths at the end points AZI1 and AZI2 are returned.
+%     * When the ellipsoid argument is omitted, use the WGS84 ellipsoid.
+%     * The azimuths at the end points azi1 and azi2 are returned.
 %     * The solution is accurate to round-off error.
 %     * The algorithm converges for all pairs of input points.
 %
-%   This is the solution of the so-called inverse geodesic problem.  The
-%   direct geodesic problem is solved by GEODRECKON.
-%
-%   The MATLAB implementation is a transcription of the C++ version in
-%   GeographicLib http://geographiclib.sf.net.  Note the C++ version has a
-%   few additional capabilities (e.g., computing also the reduced length
-%   and the ellipsoidal area).  These capabilities are accessible from
-%   MATLAB using the wrapper function, GEODESICINVERSE.
-%
-%   See also GEODESICINVERSE, GEODRECKON.
+%   See also GEODDOC, GEODRECKON, GEODAREA, GEODESICINVERSE.
 
 % Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
 % under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
+%
+% This file was distributed with GeographicLib 1.27.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
@@ -58,8 +48,6 @@ function [s12, azi1, azi2, S12] = ...
 % with array arguments are identical to those obtained with multiple calls
 % with scalar arguments.  The biggest change was to eliminate the branching
 % to allow a vectorized solution.
-%
-% This file was distributed with GeographicLib 1.27.
 
   try
     Z = lat1 + lon1 + lat2 + lon2;
@@ -79,11 +67,14 @@ function [s12, azi1, azi2, S12] = ...
   maxit = 30;
   bisection = -log2(eps) + 1 + 10;
 
-  if nargin < 5,
+  if nargin < 5, % Default: ellipsoid = [6378137, 0.081819190842621494335];
     a = 6378137;
     f = 1/298.257223563;
     e2 = f * (2 - f);
   else
+    if length(ellipsoid(:)) ~= 2,
+      error('ellipsoid must be a vector of size 2');
+    end
     a = ellipsoid(1);
     e2 = ellipsoid(2)^2;
     f = e2 / (1 + sqrt(1 - e2));
@@ -94,12 +85,10 @@ function [s12, azi1, azi2, S12] = ...
   b = a * f1;
 
   areap = nargout >= 4;
+  scalp = nargout >= 6;
 
   A3x = A3coeff(n);
   C3x = C3coeff(n);
-  if areap,
-    C4x = C4coeff(n);
-  end
 
   lon1 = AngNormalize(lon1(:));
   lon12 = AngNormalize(AngNormalize(lon2(:)) - lon1);
@@ -137,7 +126,7 @@ function [s12, azi1, azi2, S12] = ...
 
   sig12 = Z; ssig1 = Z; csig1 = Z; ssig2 = Z; csig2 = Z;
   calp1 = Z; salp1 = Z; calp2 = Z; salp2 = Z;
-  s12 = Z; m12 = Z; omg12 = Z;
+  s12 = Z; m12 = Z; M12 = Z; M21 = Z; omg12 = Z;
 
   m = lat1 == -90 | slam12 == 0;
 
@@ -151,9 +140,10 @@ function [s12, azi1, azi2, S12] = ...
     sig12(m) = atan2(max(csig1(m) .* ssig2(m) - ssig1(m) .* csig2(m), 0), ...
                      csig1(m) .* csig2(m) + ssig1(m) .* ssig2(m));
 
-    [s12(m), m12(m), ~] = Lengths(n, sig12(m), ...
-                                  ssig1(m), csig1(m), dn1(m), ...
-                                  ssig2(m), csig2(m), dn2(m));
+    [s12(m), m12(m), ~, M12(m), M21(m)] = ...
+        Lengths(n, sig12(m), ...
+                ssig1(m), csig1(m), dn1(m), ssig2(m), csig2(m), dn2(m), ...
+                cbet1(m), cbet2(m), scalp, ep2);
     m = m & (sig12 < 1 | m12 >= 0);
     s12(m) = s12(m) * b;
   end
@@ -163,7 +153,8 @@ function [s12, azi1, azi2, S12] = ...
     eq = eq & lam12 < pi - f * pi;
   end
   calp1(eq) = 0; calp2(eq) = 0; salp1(eq) = 1; salp2(eq) = 1;
-  s12(eq) = a * lam12(eq); omg12(eq) = lam12(eq) / f1;
+  s12(eq) = a * lam12(eq); sig12(eq) = lam12(eq) / f1; omg12(eq) = sig12(eq);
+  m12(eq) = b * sin(omg12(eq)); M12(eq) = cos(omg12(eq)); M21(eq) = M12(eq);
 
   g = ~eq & ~m;
 
@@ -174,6 +165,10 @@ function [s12, azi1, azi2, S12] = ...
   s = g & sig12 >= 0;
   dnm = (dn1(s) + dn2(s)) / 2;
   s12(s) = b * sig12(s) .* dnm;
+  m12(s) = b * dnm.^2 .* sin(sig12(s) ./ dnm);
+  if scalp,
+    M12(s) = cos(sig12(s) ./ dnm); M21(s) = M12(s);
+  end
   omg12(s) = lam12(s) ./ (f1 * dnm);
 
   g = g & sig12 < 0;
@@ -254,15 +249,17 @@ function [s12, azi1, azi2, S12] = ...
   end
 
   g = gsave;
-  [s12(g), ~, ~] = Lengths(epsi(g), sig12(g), ...
-                           ssig1(g), csig1(g), dn1(g), ...
-                           ssig2(g), csig2(g), dn2(g));
+  [s12(g), m12(g), ~, M12(g), M21(g)] = ...
+      Lengths(epsi(g), sig12(g), ...
+              ssig1(g), csig1(g), dn1(g), ssig2(g), csig2(g), dn2(g), ...
+              cbet1(g), cbet2(g), scalp, ep2);
 
+  m12(g) = m12(g) * b;
   s12(g) = s12(g) * b;
   omg12(g) = lam12(g) - omg12(g);
 
   s12 = 0 + s12;
-  
+
   if areap,
     salp0 = salp1 .* cbet1; calp0 = hypot(calp1, salp1 .* sbet1);
     ssig1 = sbet1; csig1 = calp1 .* cbet1;
@@ -272,9 +269,10 @@ function [s12, azi1, azi2, S12] = ...
     [ssig1, csig1] = SinCosNorm(ssig1, csig1);
     [ssig2, csig2] = SinCosNorm(ssig2, csig2);
 
+    C4x = C4coeff(n);
     C4a = C4f(k2, C4x);
-    B41 = SinCosSeries(0, ssig1, csig1, C4a);
-    B42 = SinCosSeries(0, ssig2, csig2, C4a);
+    B41 = SinCosSeries(false, ssig1, csig1, C4a);
+    B42 = SinCosSeries(false, ssig2, csig2, C4a);
     S12 = A4 .* (B42 - B41);
     S12(calp0 == 0 | salp0 == 0) = 0;
 
@@ -293,26 +291,37 @@ function [s12, azi1, azi2, S12] = ...
     if e2 == 0,
       c2 = a^2;
     elseif e2 > 0,
-      c2 = (a^2 + b^2* atanh(sqrt(e2))/sqrt(e2)) / 2;
+      c2 = (a^2 + b^2 * atanh(sqrt(e2))/sqrt(e2)) / 2;
     else
-      c2 = (a^2 + b^2* atan(sqrt(-e2))/sqrt(-e2)) / 2;
+      c2 = (a^2 + b^2 * atan(sqrt(-e2))/sqrt(-e2)) / 2;
     end
     S12 = 0 + swapp .* lonsign .* latsign .* (S12 + c2 * alp12);
   end
 
   [salp1(swapp<0), salp2(swapp<0)] = swap(salp1(swapp<0), salp2(swapp<0));
   [calp1(swapp<0), calp2(swapp<0)] = swap(calp1(swapp<0), calp2(swapp<0));
-
+  if scalp,
+    [M12(swapp<0), M21(swapp<0)] = swap(M12(swapp<0), M21(swapp<0));
+  end
   salp1 = salp1 .* swapp .* lonsign; calp1 = calp1 .* swapp .* latsign;
   salp2 = salp2 .* swapp .* lonsign; calp2 = calp2 .* swapp .* latsign;
 
   azi1 = 0 - atan2(-salp1, calp1) / degree;
   azi2 = 0 - atan2(-salp2, calp2) / degree;
+  a12 = sig12 / degree;
 
   g = numit >= maxit + bisection;
   s12(g) = NaN; azi1(g) = NaN; azi2(g) = NaN;
+  m12(g) = NaN; M12(g) = NaN; M21(g) = NaN;
+  a12(g) = NaN;
 
   s12 = reshape(s12, S); azi1 = reshape(azi1, S); azi2 = reshape(azi2, S);
+  m12 = reshape(m12, S); M12 = reshape(M12, S); M21 = reshape(M21, S);
+  a12 = reshape(a12, S);
+  if (areap)
+    S12(g) = NaN;
+    S12 = reshape(S12, S);
+  end
 end
 
 %% UTILITIES
@@ -362,8 +371,8 @@ end
 function [sinx, cosx] = SinCosNorm(sinx, cosx)
 %SINCOSNORM  Normalize sinx and cosx
 %
-%  [SINX, COSX] = SINCOSNORM(SINX, COSX) normalize SINX and COSX so that
-%  SINX^2 + COSX^2 = 1.  SINX and COSX can be any shape.
+%   [SINX, COSX] = SINCOSNORM(SINX, COSX) normalize SINX and COSX so that
+%   SINX^2 + COSX^2 = 1.  SINX and COSX can be any shape.
 
   r = hypot(sinx, cosx);
   sinx = sinx ./ r;
@@ -371,24 +380,23 @@ function [sinx, cosx] = SinCosNorm(sinx, cosx)
 end
 
 function y = SinCosSeries(sinp, sinx, cosx, c)
-%SINSERIES  Evaluate a sine series using Clenshaw summation
+%SINSCOSERIES  Evaluate a sine or cosine series using Clenshaw summation
 %
-%  Y = SINSERIES(SINP, SINX, COSX, C) evaluate
+%   Y = SINCOSSERIES(SINP, SINX, COSX, C) evaluate
+%     y = sum(c[i] * sin( 2*i    * x), i, 1, n), if  sinp
+%     y = sum(c[i] * cos((2*i-1) * x), i, 1, n), if ~sinp
 %
-%    y = sum(c[i] * sin( 2*i    * x), i, 1, n), if sinp = 1
-%    y = sum(c[i] * cos((2*i-1) * x), i, 1, n), if sinp = 0
-%
-%  where n is the size of C.  x is given via its sine and cosine in SINX
-%  and COSX.  SINP is a scalar.  SINX, COSX, and Y are K x 1 arrays.  C is
-%  a K x N array.
+%   where n is the size of C.  x is given via its sine and cosine in SINX
+%   and COSX.  SINP is a scalar.  SINX, COSX, and Y are K x 1 arrays.  C is
+%   a K x N array.
 
-  if size(sinx, 1) == 0,
+  if length(sinx) == 0,
     y = [];
     return;
   end
   n = size(c, 2);
   ar = 2 * (cosx - sinx) .* (cosx + sinx);
-  y1 = zeros(size(sinx, 1), 1);
+  y1 = zeros(length(sinx), 1);
   if mod(n, 2),
     y0 = c(:, n);
     n = n - 1;
@@ -410,18 +418,18 @@ end
 function x = AngNormalize(x)
 %ANGNORMALIZE  Reduce angle to range [-180, 180)
 %
-%  X = ANGNORMALIZE(X) reduces angles in [-540, 540) to the range
-%  [-180, 180).  X can be any shape.
+%   X = ANGNORMALIZE(X) reduces angles in [-540, 540) to the range
+%   [-180, 180).  X can be any shape.
 
   x(x >= 180) = x(x >= 180) - 360;
   x(x < -180) = x(x < -180) + 360;
 end
 
-function y =  AngRound(x)
+function y = AngRound(x)
 %ANGROUND  Round tiny values so that tiny values become zero.
 %
-%  Y = ANGROUND(X) rounds X by adding and subtracting 1/16 to it if it is
-%  small.  X and Y can be any shape.
+%   Y = ANGROUND(X) rounds X by adding and subtracting 1/16 to it if it is
+%   small.  X and Y can be any shape.
 
   z = 1/16;
   y = abs(x);
@@ -435,7 +443,7 @@ function [sig12, salp1, calp1, salp2, calp2] = ...
       InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12, f, A3x)
 %INVERSESTART  Compute a starting point for Newton's method
 
-  N = size(sbet1, 1);
+  N = length(sbet1);
   f1 = 1 - f;
   e2 = f * (2 - f);
   ep2 = e2 / (1 - e2);
@@ -484,9 +492,10 @@ function [sig12, salp1, calp1, salp2, calp2] = ...
     else
       cbet12a = cbet2(s) .* cbet1(s) - sbet2(s) .* sbet1(s);
       bet12a = atan2(sbet12a(s), cbet12a);
-      [~, m12b, m0] = Lengths(n, pi + bet12a, ...
-                                  sbet1(s), -cbet1(s), dn1(s), ...
-                                  sbet2(s), cbet2(s), dn2(s));
+      [~, m12b, m0] = ...
+          Lengths(n, pi + bet12a, ...
+                  sbet1(s), -cbet1(s), dn1(s), sbet2(s), cbet2(s), dn2(s), ...
+                  cbet1(s), cbet2(s), false);
       x = -1 + m12b ./ (cbet1(s) .* cbet2(s) .* m0 * pi);
       betscale = cvmgt(sbet12a(s) ./ x, - f * cbet1(s).^2 * pi, x < -0.01);
       lamscale = betscale ./ cbet1(s);
@@ -531,7 +540,7 @@ function k = Astroid(x, y)
 %   for the positive root K.  X and Y are column vectors of the same size
 %   and the returned value K has the same size.
 
-  k = zeros(size(x, 1), 1);
+  k = zeros(length(x), 1);
   p = x.^2;
   q = y.^2;
   r = (p + q - 1) / 6;
@@ -559,30 +568,41 @@ function k = Astroid(x, y)
   k(fl1) = uv ./ (sqrt(uv + w.^2) + w);
 end
 
-function [s12b, m12b, m0] = Lengths(epsi, sig12, ...
-                                    ssig1, csig1, dn1, ssig2, csig2, dn2)
+function [s12b, m12b, m0, M12, M21] = ...
+      Lengths(epsi, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, ...
+              cbet1, cbet2, scalp, ep2)
 %LENGTHS  Compute various lengths associate with a geodesic
 
-  if size(sig12, 1) == 0,
+  if length(sig12) == 0,
     s12b = [];
     m12b = [];
     m0 = [];
+    M12 = [];
+    M21 = [];
     return;
   end
 
   C1a = C1f(epsi);
   C2a = C2f(epsi);
   A1m1 = A1m1f(epsi);
-  AB1 = (1 + A1m1) .* (SinCosSeries(1, ssig2, csig2, C1a) - ...
-                       SinCosSeries(1, ssig1, csig1, C1a));
+  AB1 = (1 + A1m1) .* (SinCosSeries(true, ssig2, csig2, C1a) - ...
+                       SinCosSeries(true, ssig1, csig1, C1a));
   A2m1 = A2m1f(epsi);
-  AB2 = (1 + A2m1) .* (SinCosSeries(1, ssig2, csig2, C2a) - ...
-                       SinCosSeries(1, ssig1, csig1, C2a));
+  AB2 = (1 + A2m1) .* (SinCosSeries(true, ssig2, csig2, C2a) - ...
+                       SinCosSeries(true, ssig1, csig1, C2a));
   m0 = A1m1 - A2m1;
   J12 = m0 .* sig12 + (AB1 - AB2);
   m12b = dn2 .* (csig1 .* ssig2) - dn1 .* (ssig1 .* csig2) - ...
          csig1 .* csig2 .* J12;
   s12b = (1 + A1m1) .* sig12 + AB1;
+  if scalp,
+    csig12 = csig1 .* csig2 + ssig1 .* ssig2;
+    t = ep2 * (cbet1 - cbet2) .* (cbet1 + cbet2) ./ (dn1 + dn2);
+    M12 = csig12 + (t .* ssig2 - csig2 .* J12) .* ssig1 ./ dn1;
+    M21 = csig12 - (t .* ssig1 - csig1 .* J12) .* ssig2 ./ dn2;
+  else
+    M12 = sig12 + NaN; M21 = M12;
+  end
 end
 
 function [lam12, dlam12, ...
@@ -622,14 +642,15 @@ function [lam12, dlam12, ...
   k2 = calp0.^2 * ep2;
   epsi = k2 ./ (2 * (1 + sqrt(1 + k2)) + k2);
   C3a = C3f(epsi, C3x);
-  B312 = SinCosSeries(1, ssig2, csig2, C3a) - ...
-         SinCosSeries(1, ssig1, csig1, C3a);
+  B312 = SinCosSeries(true, ssig2, csig2, C3a) - ...
+         SinCosSeries(true, ssig1, csig1, C3a);
   h0 = -f * A3f(epsi, A3x);
   domg12 = salp0 .* h0 .* (sig12 + B312);
   lam12 = omg12 + domg12;
 
-  [~, dlam12, ~] = Lengths(epsi, sig12, ...
-                           ssig1, csig1, dn1, ssig2, csig2, dn2);
+  [~, dlam12] = ...
+      Lengths(epsi, sig12, ...
+              ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2, false);
   dlam12 = dlam12 .* f1 ./ (calp2 .* cbet2);
   z = calp2 == 0;
   dlam12(z) = - 2 * f1 .* dn1(z) ./ sbet1(z);
@@ -640,8 +661,8 @@ end
 function A1m1 = A1m1f(epsi)
 %A1M1F  Evaluate A_1 - 1
 %
-%  A1M1 = A1M1F(EPSI) evaluates A_1 - 1 using Eq. (17).  EPSI and A1M1 are
-%  K x 1 arrays.
+%   A1M1 = A1M1F(EPSI) evaluates A_1 - 1 using Eq. (17).  EPSI and A1M1 are
+%   K x 1 arrays.
 
   eps2 = epsi.^2;
   t = eps2.*(eps2.*(eps2+4)+64)/256;
@@ -651,11 +672,11 @@ end
 function C1 = C1f(epsi)
 %C1F  Evaluate C_{1,k}
 %
-%  C1 = C1F(EPSI) evaluates C_{1,l} using Eq. (18).  EPSI is an
-%  K x 1 array and C1 is a K x 6 array.
+%   C1 = C1F(EPSI) evaluates C_{1,l} using Eq. (18).  EPSI is a K x 1
+%   array and C1 is a K x 6 array.
 
   nC1 = 6;
-  C1 = zeros(size(epsi, 1), nC1);
+  C1 = zeros(length(epsi), nC1);
   eps2 = epsi.^2;
   d = epsi;
   C1(:,1) = d.*((6-eps2).*eps2-16)/32;
@@ -671,11 +692,11 @@ function C1 = C1f(epsi)
   C1(:,6) = -7*d/2048;
 end
 
-function A2m1 =  A2m1f(epsi)
+function A2m1 = A2m1f(epsi)
 %A2M1F  Evaluate A_2 - 1
 %
-%  A2M1 = A2M1F(EPSI) evaluates A_2 - 1 using Eq. (42).  EPSI and A2M1 are
-%  K x 1 arrays.
+%   A2M1 = A2M1F(EPSI) evaluates A_2 - 1 using Eq. (42).  EPSI and A2M1 are
+%   K x 1 arrays.
 
   eps2 = epsi.^2;
   t = eps2.*(eps2.*(25*eps2+36)+64)/256;
@@ -685,11 +706,11 @@ end
 function C2 = C2f(epsi)
 %C2F  Evaluate C_{2,k}
 %
-%  C2 = C2F(EPSI) evaluates C_{2,l} using Eq. (43).  EPSI is an
-%  K x 1 array and C2 is a K x 6 array.
+%   C2 = C2F(EPSI) evaluates C_{2,l} using Eq. (43).  EPSI is an
+%   K x 1 array and C2 is a K x 6 array.
 
   nC2 = 6;
-  C2 = zeros(size(epsi, 1), nC2);
+  C2 = zeros(length(epsi), nC2);
   eps2 = epsi.^2;
   d = epsi;
   C2(:,1) = d.*(eps2.*(eps2+2)+16)/32;
@@ -708,8 +729,8 @@ end
 function A3x = A3coeff(n)
 %A3COEFF  Evaluate coefficients for A_3
 %
-%  A3x = A3COEFF(N) evaluates the coefficients of epsilon^l in Eq. (24).  N
-%  is a scalar.  A3x is a 1 x 6 array.
+%   A3x = A3COEFF(N) evaluates the coefficients of epsilon^l in Eq. (24).  N
+%   is a scalar.  A3x is a 1 x 6 array.
 
   nA3 = 6;
   A3x = zeros(1, nA3);
@@ -724,11 +745,11 @@ end
 function A3 = A3f(epsi, A3x)
 %A3F  Evaluate A_3
 %
-%  A3 = A3F(EPSI, A3X) evaluates A_3 using Eq. (24) and the coefficient
-%  vector A3X.  EPSI and A3 are K x 1 arrays.  A3X is a 1 x 6 array.
+%   A3 = A3F(EPSI, A3X) evaluates A_3 using Eq. (24) and the coefficient
+%   vector A3X.  EPSI and A3 are K x 1 arrays.  A3X is a 1 x 6 array.
 
   nA3 = 6;
-  A3 = zeros(size(epsi, 1), 1);
+  A3 = zeros(length(epsi), 1);
   for i = nA3 : -1 : 1,
     A3 = epsi .* A3 + A3x(i);
   end
@@ -737,8 +758,8 @@ end
 function C3x = C3coeff(n)
 %C3COEFF  Evaluate coefficients for C_3
 %
-%  C3x = C3COEFF(N) evaluates the coefficients of epsilon^l in Eq. (25).  N
-%  is a scalar.  C3x is a 1 x 15 array.
+%   C3x = C3COEFF(N) evaluates the coefficients of epsilon^l in Eq. (25).
+%   N is a scalar.  C3x is a 1 x 15 array.
 
   nC3 = 6;
   nC3x = (nC3 * (nC3 - 1)) / 2;
@@ -763,14 +784,14 @@ end
 function C3 = C3f(epsi, C3x)
 %C3F  Evaluate C_3
 %
-%  C3 = C3F(EPSI, C3X) evaluates C_{3,l} using Eq. (25) and the coefficient
-%  vector C3X.  EPSI is a K x 1 array.  C3X is a 1 x 15 array.  C3 is a
-%  K x 5 array.
+%   C3 = C3F(EPSI, C3X) evaluates C_{3,l} using Eq. (25) and the
+%   coefficient vector C3X.  EPSI is a K x 1 array.  C3X is a 1 x 15 array.
+%   C3 is a K x 5 array.
 
   nC3 = 6;
   nC3x = size(C3x, 2);
   j = nC3x;
-  C3 = zeros(size(epsi, 1), nC3 - 1);
+  C3 = zeros(length(epsi), nC3 - 1);
   for k = nC3 - 1 : -1 : 1,
     t = C3(:, k);
     for i = nC3 - k : -1 : 1,
@@ -779,7 +800,7 @@ function C3 = C3f(epsi, C3x)
     end
     C3(:, k) = t;
   end
-  mult = ones(size(epsi, 1), 1);
+  mult = ones(length(epsi), 1);
   for k = 1 : nC3 - 1,
     mult = mult .* epsi;
     C3(:, k) = C3(:, k) .* mult;
@@ -789,9 +810,9 @@ end
 function C4x = C4coeff(n)
 %C4COEFF  Evaluate coefficients for C_4
 %
-%  C4x = C4COEFF(N) evaluates the coefficients of epsilon^l in expansion of
-%  the area (Eq. (65) expressed in terms of n and epsi).  N is a scalar.
-%  C4x is a 1 x 21 array.
+%   C4x = C4COEFF(N) evaluates the coefficients of epsilon^l in expansion
+%   of the area (Eq. (65) expressed in terms of n and epsi).  N is a
+%   scalar.  C4x is a 1 x 21 array.
 
   nC4 = 6;
   nC4x = (nC4 * (nC4 + 1)) / 2;
@@ -822,15 +843,16 @@ end
 function C4 = C4f(k2, C4x)
 %C4F  Evaluate C_4
 %
-%  C4 = C4F(K2, C4X) evaluates C_{4,l} in the expansion for the area
-%  (Eq. (65) expressed in terms of n and epsi) using the coefficient vector
-%  C4X.  K2 is a K x 1 array.  C4X is a 1 x 15 array.  C4 is a K x 5 array.
+%   C4 = C4F(K2, C4X) evaluates C_{4,l} in the expansion for the area
+%   (Eq. (65) expressed in terms of n and epsi) using the coefficient
+%   vector C4X.  K2 is a K x 1 array.  C4X is a 1 x 15 array.  C4 is a K x
+%   5 array.
 
   nC4 = 6;
   nC4x = size(C4x, 2);
   epsi = k2 ./ (2 * (1 + sqrt(1 + k2)) + k2);
   j = nC4x;
-  C4 = zeros(size(epsi, 1), nC4);
+  C4 = zeros(length(epsi), nC4);
   for k = nC4 : -1 : 1,
     t = C4(:, k);
     for i = nC4 - k : -1 : 0,
@@ -839,7 +861,7 @@ function C4 = C4f(k2, C4x)
     end
     C4(:, k) = t;
   end
-  mult = ones(size(epsi, 1), 1);
+  mult = ones(length(epsi), 1);
   for k = 2 : nC4,
     mult = mult .* epsi;
     C4(:, k) = C4(:, k) .* mult;

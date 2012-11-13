@@ -25,10 +25,22 @@ function [latlong, aux] = geodesicdirect(geodesic, a, f)
 %   f = flattening (0 means a sphere)
 %   If a and f are omitted, the WGS84 values are used.
 %
+% The algorithm used in this function is given in
+%
+%     C. F. F. Karney
+%     Algorithms for geodesics
+%     J. Geodesy (2012)
+%     http://dx.doi.org/10.1007/s00190-012-0578-z
+%
 % This is an interface to the GeographicLib C++ routine
 %     Geodesic::Direct
 % See the documentation on this function for more information:
 % http://geographiclib.sf.net/html/classGeographicLib_1_1Geodesic.html
+%
+% A native MATLAB implementation is available as GEODRECKON.
+%
+% See also GEODRECKON.
+
   error('Error: executing .m file instead of compiled routine');
 end
 % geodesicdirect.m

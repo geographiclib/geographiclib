@@ -736,11 +736,11 @@ class Geodesic(object):
       # Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1
       s12x = self._a * lam12
-      m12x = self._b * math.sin(lam12 / self._f1)
-      if outmask & Geodesic.GEODESICSCALE:
-        M12 = M21 = math.cos(lam12 / self._f1)
-      a12 = lon12 / self._f1
       sig12 = omg12 = lam12 / self._f1
+      m12x = self._b * math.sin(sig12)
+      if outmask & Geodesic.GEODESICSCALE:
+        M12 = M21 = math.cos(sig12)
+      a12 = lon12 / self._f1
 
     elif not meridian:
 

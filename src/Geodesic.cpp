@@ -252,11 +252,11 @@ namespace GeographicLib {
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
       s12x = _a * lam12;
-      m12x = _b * sin(lam12 / _f1);
-      if (outmask & GEODESICSCALE)
-        M12 = M21 = cos(lam12 / _f1);
-      a12 = lon12 / _f1;
       sig12 = omg12 = lam12 / _f1;
+      m12x = _b * sin(sig12);
+      if (outmask & GEODESICSCALE)
+        M12 = M21 = cos(sig12);
+      a12 = lon12 / _f1;
 
     } else if (!meridian) {
 

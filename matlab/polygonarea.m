@@ -16,15 +16,27 @@ function [area, perimeter] = polygonarea(latlong, a, f)
 %   If a and f are omitted, the WGS84 values are used.
 %
 % Only simple polygons (which do not intersect themselves) are supported.
-% There is no need to "close" the polygon. Counter-clockwise traversal
+% There is no need to "close" the polygon.  Counter-clockwise traversal
 % counts as a positive area.  A polygon may encircle one or both poles.
 % The total area of the WGS84 ellipsoid is given by
 %   8 * polygonarea([ 0 0; 0 90; 90 0 ])
+%
+% The algorithm used in this function is given in
+%
+%     C. F. F. Karney
+%     Algorithms for geodesics
+%     J. Geodesy (2012)
+%     http://dx.doi.org/10.1007/s00190-012-0578-z
 %
 % This is an interface to the GeographicLib C++ class
 %     Geodesic::PolygonArea
 % See the documentation on this function for more information:
 % http://geographiclib.sf.net/html/classGeographicLib_1_1PolygonArea
+%
+% A native MATLAB implementation is available as GEODAREA.
+%
+% See also GEODAREA.
+
   error('Error: executing .m file instead of compiled routine');
 end
 % polygonarea.m
