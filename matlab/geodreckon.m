@@ -19,7 +19,8 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
 %   If arcmode is true (default is false), then the input argument s12 is
 %   interpreted as the arc length on the auxiliary sphere (in degrees) and
 %   the corresponding distance is returned in the final output variable a12
-%   (in meters).
+%   (in meters).  The two optional arguments, ellispoid and arcmode, may be
+%   given in any order and either or both may be omitted.
 %
 %   When given a combination of scalar and array inputs, GEODRECKON behaves
 %   as though the inputs were expanded to match the size of the arrays.
@@ -45,6 +46,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
 %     * The algorithm is non-iterative and thus may be faster.
 %     * Redundant calculations are avoided when computing multiple
 %       points on a single geodesic.
+%     * Additional properties of the geodesic are calcuated.
 %
 %   See also GEODDOC, GEODDISTANCE, GEODAREA, GEODESICDIRECT, GEODESICLINE.
 
@@ -69,21 +71,37 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
   degree = pi/180;
   tiny = sqrt(realmin);
 
-  if nargin < 5, % Default: ellipsoid = [6378137, 0.081819190842621494335];
-    a = 6378137;
-    f = 1/298.257223563;
-    e2 = f * (2 - f);
-  else
-    if length(ellipsoid(:)) ~= 2,
-      error('ellipsoid must be a vector of size 2');
+  a = 6378137;
+  f = 1/298.257223563;
+  e2 = f * (2 - f);
+  % Default: ellipsoid = [6378137, 0.081819190842621494335];
+  wgs84 = [a, sqrt(e2)];
+
+  if nargin <= 4,
+    ellipsoid = wgs84; arcmode = false;
+  elseif nargin == 5,
+    arg5 = ellipsoid(:);
+    if length(arg5) == 2,
+      ellipsoid = arg5; arcmode = false;
+    else
+      arcmode = arg5; ellipsoid = wgs84;
     end
-    a = ellipsoid(1);
-    e2 = ellipsoid(2)^2;
-    f = e2 / (1 + sqrt(1 - e2));
+  else
+    arg5 = ellipsoid(:);
+    arg6 = arcmode;
+    if length(arg5) == 2,
+      ellipsoid = arg5; arcmode = arg6;
+    else
+      arcmode = arg5; ellipsoid = arg6;
+    end
   end
-  if nargin < 6,
-    arcmode = false;
+  if length(ellipsoid) ~= 2,
+    error('ellipsoid must be a vector of size 2');
   end
+  if ~isscalar(arcmode),
+    error('arcmode must be true or false');
+  end
+
   f1 = 1 - f;
   ep2 = e2 / (1 - e2);
   n = f / (2 - f);

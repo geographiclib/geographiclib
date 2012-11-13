@@ -33,6 +33,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
 %     * The azimuths at the end points azi1 and azi2 are returned.
 %     * The solution is accurate to round-off error.
 %     * The algorithm converges for all pairs of input points.
+%     * Additional properties of the geodesic are calcuated.
 %
 %   See also GEODDOC, GEODRECKON, GEODAREA, GEODESICINVERSE.
 
