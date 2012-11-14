@@ -14,7 +14,8 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
 %   meters^2.  Counter-clockwise traversal counts as a positive area.  Only
 %   simple polygons (which do not intersect themselves) are supported.
 %   Also returned are the perimeters of the polygons in P (meters) and the
-%   numbers of vertices in N.
+%   numbers of vertices in N.  GEODDOC gives the restrictions on the
+%   allowed ranges of the arguments.
 %
 %   GEODAREA loosely duplicates the functionality of the AREAINT function
 %   in the MATLAB mapping toolbox.  The major difference is that the
@@ -120,4 +121,5 @@ function cross = transit(lon1, lon2)
   cross = zeros(length(lon1), 1);
   cross(lon1 < 0 & lon2 >= 0 & lon12 > 0) = 1;
   cross(lon2 < 0 & lon1 >= 0 & lon12 < 0) = -1;
+
 end

@@ -1,4 +1,4 @@
-function geoddoc,
+function geoddoc
 %GEODDOC  Introduction to geodesic routines.
 %
 %   The geod package includes three routines GEODDISTANCE, GEODRECKON, and
@@ -27,6 +27,8 @@ function geoddoc,
 %       lat2, lon2, and azi2.  This is solved by GEODRECKON.
 %     * the inverse problem -- given lat1, lon1, lat2, lon2, determine s12,
 %       azi1, and azi2.  This is solved by GEODDISTANCE.
+%   In addition, GEODAREA computes the area of an ellipsoidal polygon
+%   where the edges are defined as shortest geodesics.
 %
 %   The parameters of the ellipsoid are specified by the optional ELLIPSOID
 %   argument to the routines.  This is a two-element vector of the form
@@ -79,9 +81,10 @@ function geoddoc,
 %       curves on the surface.
 %     * Similarly the spherical arc length, a12, is unrestricted.
 %     * The equatorial radius, a, must be positive.
-%     * The eccentricity, e, should be satisfy abs(e) < 0.1 in order to
-%       retain full accuracy.  Larger values of e can be used with a
-%       corresponding drop in accuracy.
+%     * The eccentricity, e, should be satisfy abs(e) <= 0.1 in order to
+%       retain full accuracy (this corresponds to flattenings satisfying
+%       abs(f) <= 1/150, approximately).  Larger values of e can be used
+%       with a corresponding drop in accuracy.
 %
 %   These routines are transcriptions of the C++ classes, Geodesic,
 %   GeodesicLine, and PolygonArea, provided by GeographicLib which is
@@ -95,7 +98,10 @@ function geoddoc,
 %   code, which limits their usefulness.  GEODDISTANCE, GEODRECKON, and
 %   GEODAREA are native implementations which will work on any MATLAB
 %   platform.  They are fully vectorized internally so that their speed is
-%   competitive with the compiled C++ code.
+%   competitive with the compiled C++ code.  Implementations of these
+%   routines in Python and Javascript are also available; see
+%
+%     http://geographiclib.sf.net/html/other.html
 %
 %   The restriction on e above arises because the formulation is in terms
 %   of series expansions in e^2.  The exact solutions (valid for any e) can
@@ -106,7 +112,9 @@ function geoddoc,
 %   RECKON, and AREAINT functions in the MATLAB mapping toolbox.  The major
 %   improvements offered by GEODDISTANCE, GEODRECKON, and GEODAREA are
 %
-%     * The routines are accurate to round off.
+%     * The routines are accurate to round off.  For example, for the WGS84
+%       ellipsoid the error in the distance returned by GEODDISTANCE is
+%       less then 15 nanometers.
 %     * GEODDISTANCE converges for all inputs.
 %     * Differential and integral properties of the geodesics are computed.
 %     * GEODAREA is accurate regardless of the length of the edges of the

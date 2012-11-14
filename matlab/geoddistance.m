@@ -15,6 +15,8 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
 %   WGS84 ellipsoid is used.  The output s12 is the distance in meters and
 %   azi1 and azi2 are the forward azimuths at the end points in degrees.
 %   The other outputs, S12, m12, M12, M21, a12 are documented in GEODDOC.
+%   GEODDOC also gives the restrictions on the allowed ranges of the
+%   arguments.
 %
 %   When given a combination of scalar and array inputs, the scalar inputs
 %   are automatically expanded to match the size of the arrays.
@@ -391,7 +393,7 @@ function y = SinCosSeries(sinp, sinx, cosx, c)
 %   and COSX.  SINP is a scalar.  SINX, COSX, and Y are K x 1 arrays.  C is
 %   a K x N array.
 
-  if length(sinx) == 0,
+  if isempty(sinx),
     y = [];
     return;
   end
@@ -574,7 +576,7 @@ function [s12b, m12b, m0, M12, M21] = ...
               cbet1, cbet2, scalp, ep2)
 %LENGTHS  Compute various lengths associate with a geodesic
 
-  if length(sig12) == 0,
+  if isempty(sig12),
     s12b = [];
     m12b = [];
     m0 = [];

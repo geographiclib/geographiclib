@@ -14,7 +14,8 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid is
 %   used.  lat2, lon2, and azi2 give the position and forward azimuths at
 %   the end point in degrees.  The other outputs, S12, m12, M12, M21, a12
-%   are documented in GEODDOC.
+%   are documented in GEODDOC.  GEODDOC also gives the restrictions on the
+%   allowed ranges of the arguments.
 %
 %   If arcmode is true (default is false), then the input argument s12 is
 %   interpreted as the arc length on the auxiliary sphere (in degrees) and
@@ -95,6 +96,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
       arcmode = arg5; ellipsoid = arg6;
     end
   end
+
   if length(ellipsoid) ~= 2,
     error('ellipsoid must be a vector of size 2');
   end
@@ -102,6 +104,9 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
     error('arcmode must be true or false');
   end
 
+  a = ellipsoid(1);
+  e2 = ellipsoid(2)^2;
+  f = e2 / (1 + sqrt(1 - e2));
   f1 = 1 - f;
   ep2 = e2 / (1 - e2);
   n = f / (2 - f);
@@ -177,11 +182,11 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
   ssig2 = ssig1 .* csig12 + csig1 .* ssig12;
   csig2 = csig1 .* csig12 - ssig1 .* ssig12;
   dn2 = sqrt(1 + k2 .* ssig2.^2);
-  if arcmode | redlp | scalp,
+  if arcmode || redlp || scalp,
     if arcmode,
       B12 = SinCosSeries(true, ssig2, csig2, C1a);
     end
-    AB1 = (1 + A1m1) * (B12 - B11);
+    AB1 = (1 + A1m1) .* (B12 - B11);
   end
   sbet2 = calp0 .* ssig2;
   cbet2 = hypot(salp0, calp0 .* csig2);
@@ -203,12 +208,12 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
     a12 = sig12 / degree;
   end
 
-  if redlp | scalp,
+  if redlp || scalp,
     A2m1 = A2m1f(epsi);
     C2a = C2f(epsi);
     B21 = SinCosSeries(true, ssig1, csig1, C2a);
     B22 = SinCosSeries(true, ssig2, csig2, C2a);
-    AB2 = (1 + A2m1) * (B22 - B21);
+    AB2 = (1 + A2m1) .* (B22 - B21);
     J12 = (A1m1 - A2m1) .* sig12 + (AB1 - AB2);
     if redlp,
       m12 = b * ((dn2 .* (csig1 .* ssig2) - dn1 .* (ssig1 .* csig2)) ...
@@ -238,7 +243,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
     salp12(s) = salp2(s) .* calp1(s) - calp2(s) .* salp1(s);
     calp12(s) = calp2(s) .* calp1(s) + salp2(s) .* salp1(s);
     s = s & salp12 == 0 & calp12 < 0;
-    salp12(s) = tiny * calp1; cal12(s) = -1;
+    salp12(s) = tiny * calp1(s); cal12(s) = -1;
     if e2 == 0,
       c2 = a^2;
     elseif e2 > 0,
@@ -303,7 +308,7 @@ function y = SinCosSeries(sinp, sinx, cosx, c)
 %   and COSX.  SINP is a scalar.  SINX, COSX, and Y are K x 1 arrays.  C is
 %   a K x N array.
 
-  if length(sinx) == 0,
+  if isempty(sinx),
     y = [];
     return;
   end
