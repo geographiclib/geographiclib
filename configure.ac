@@ -57,7 +57,7 @@ AC_C_BIGENDIAN
 # Need version 1.8.1.2 or later for greek and math symbols.
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
 AM_CONDITIONAL([HAVE_DOXYGEN],
-	[test "$DOXYGEN" -a `"$DOXYGEN" --version |
+	[test "$DOXYGEN" && test `"$DOXYGEN" --version |
 	sed 's/^\([[0-9]]\)\.\([[0-9]]\)\./\1.0\2./'` '>' 1.08.1.1])
 
 AC_CHECK_PROGS([POD2MAN], [pod2man])

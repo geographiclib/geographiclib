@@ -243,7 +243,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
     salp12(s) = salp2(s) .* calp1(s) - calp2(s) .* salp1(s);
     calp12(s) = calp2(s) .* calp1(s) + salp2(s) .* salp1(s);
     s = s & salp12 == 0 & calp12 < 0;
-    salp12(s) = tiny * calp1(s); cal12(s) = -1;
+    salp12(s) = tiny * calp1(s); calp12(s) = -1;
     if e2 == 0,
       c2 = a^2;
     elseif e2 > 0,
