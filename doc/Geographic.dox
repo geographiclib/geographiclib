@@ -3647,6 +3647,7 @@ of the git repository for %GeographicLib.
    - TODO: combine C3f and C4f into a single function.
    - MacOSX fixes: universal binaries and build fixes.
    - Native matlab implementation of geodesic functions.
+   - Fix DMS double rounding bug 179.99999999999998578 rounds to 180
 
  - <a href="http://geographiclib.sf.net/1.26">Version 1.26</a>
    (released 2012-10-22)
