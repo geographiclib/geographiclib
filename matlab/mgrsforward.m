@@ -1,4 +1,4 @@
-function mgrs = mgrsforward(utmups, prec)
+function mgrsforward(~, ~)
 %mgrsforward  Convert UTM/UPS coordinates to MGRS
 %
 %   mgrs = mgrsforward(utmups)

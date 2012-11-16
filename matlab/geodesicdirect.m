@@ -1,4 +1,4 @@
-function [latlong, aux] = geodesicdirect(geodesic, a, f)
+function geodesicdirect(~, ~, ~)
 %geodesicdirect  Solve direct geodesic problem
 %
 %   [latlong, aux] = geodesicdirect(geodesic)

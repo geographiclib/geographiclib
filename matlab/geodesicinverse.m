@@ -1,4 +1,4 @@
-function [geodesic, aux] = geodesicinverse(latlong, a, f)
+function geodesicinverse(~, ~, ~)
 %geodesicinverse  Solve inverse geodesic problem
 %
 %   [geodesic, aux] = geodesicinverse(latlong)

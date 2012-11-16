@@ -66,8 +66,9 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
   degree = pi/180;
   tiny = sqrt(realmin);
   tol0 = eps;
-  maxit = 30;
-  bisection = -log2(eps) + 1 + 10;
+  tolb = eps * sqrt(eps);
+  maxit1 = 20;
+  maxit2 = maxit1 + (-log2(eps) + 1) + 10;
 
   if nargin < 5, % Default: ellipsoid = [6378137, 0.081819190842621494335];
     a = 6378137;
@@ -179,12 +180,12 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
   salp1b = Z + tiny; calp1b = Z - 1;
   ssig1 = Z; csig1 = Z; ssig2 = Z; csig2 = Z;
   epsi = Z; v = Z; dv = Z;
-  trip = Z; numit = Z;
+  numit = Z;
+  tripn = Z > 0;
+  tripb = tripn;
   gsave = g;
-  for k = 1 : maxit,
-    if ~any(g),
-      break;
-    end
+  for k = 0 : maxit2 - 1,
+    if ~any(g), break; end
     numit(g) = k;
     [v(g), dv(g), ...
      salp2(g), calp2(g), sig12(g), ...
@@ -193,55 +194,41 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
                  sbet2(g), cbet2(g), dn2(g), ...
                  salp1(g), calp1(g), f, A3x, C3x);
     v = v - lam12;
-    g = g & ~(abs(v) < 2 * tol0 | (abs(v) <= 8 * tol0 & trip > 0));
+    g = g & ~(tripb | abs(v) < ((tripn * 6) + 2) * tol0);
+    if ~any(g), break; end
 
-    c = g & v > 0 & calp1 ./ salp1 > calp1b ./ salp1b;
+    c = g & v > 0;
+    if k <= maxit1,
+      c = c & calp1 ./ salp1 > calp1b ./ salp1b;
+    end
     salp1b(c) = salp1(c); calp1b(c) = calp1(c);
-    c = g & v < 0 & calp1 ./ salp1 < calp1a ./ salp1a;
+
+    c = g & v < 0;
+    if k <= maxit1,
+      c = c & calp1 ./ salp1 < calp1a ./ salp1a;
+    end
     salp1a(c) = salp1(c); calp1a(c) = calp1(c);
 
-    dalp1 = -v ./ dv;
-    sdalp1 = sin(dalp1); cdalp1 = cos(dalp1);
-    nsalp1 = salp1 .* cdalp1 + calp1 .* sdalp1;
-    calp1(g) = calp1(g) .* cdalp1(g) - salp1(g) .* sdalp1(g);
-    salp1(g) = nsalp1(g);
-    c = g & abs(v) <= 16 * tol0;
-    trip(c) = trip(c) + 1;
+    if k == maxit1,
+      tripn(g) = false;
+    end
+    if k < maxit1,
+      dalp1 = -v ./ dv;
+      sdalp1 = sin(dalp1); cdalp1 = cos(dalp1);
+      nsalp1 = salp1 .* cdalp1 + calp1 .* sdalp1;
+      calp1(g) = calp1(g) .* cdalp1(g) - salp1(g) .* sdalp1(g);
+      salp1(g) = nsalp1(g);
+      tripn = g & abs(v) <= 16 * tol0;
+      c = g & ~(dv > 0 & nsalp1 > 0 & abs(dalp1) < pi);
+    else
+      c = g;
+      tripb = (abs(salp1a - salp1) + (calp1a - calp1) < tolb | ...
+               abs(salp1 - salp1b) + (calp1 - calp1b) < tolb);
+    end
 
-    c = g & ~(dv > 0 & nsalp1 > 0 & abs(dalp1) < pi);
     salp1(c) = (salp1a(c) + salp1b(c))/2;
     calp1(c) = (calp1a(c) + calp1b(c))/2;
-    trip(c) = 0;
-
     [salp1(g), calp1(g)] = SinCosNorm(salp1(g), calp1(g));
-  end
-
-  g = numit >= maxit;
-  for k = maxit + 1 : maxit + bisection,
-    if ~any(g),
-      break;
-    end
-    numit(g) = k;
-    salp1(g) = (salp1a(g) + salp1b(g))/2;
-    calp1(g) = (calp1a(g) + calp1b(g))/2;
-    [salp1(g), calp1(g)] = SinCosNorm(salp1(g), calp1(g));
-    c = (abs(salp1 - salp1b) < tol0 & calp1 - calp1b < tol0) | ...
-        (abs(salp1a - salp1) < tol0 & calp1a - calp1 < tol0);
-    g = g & ~c;
-    [v(g), dv(g), ...
-     salp2(g), calp2(g), sig12(g), ...
-     ssig1(g), csig1(g), ssig2(g), csig2(g), epsi(g), omg12(g)] = ...
-        Lambda12(sbet1(g), cbet1(g), dn1(g), ...
-                 sbet2(g), cbet2(g), dn2(g), ...
-                 salp1(g), calp1(g), f, A3x, C3x);
-    v = v - lam12;
-
-    c = abs(v) <= 2 * tol0;
-    g = g & ~c;
-    c = v > 0;
-    salp1b(c) = salp1(c); calp1b(c) = calp1(c);
-    c = ~c;
-    salp1a(c) = salp1(c); calp1a(c) = calp1(c);
   end
 
   g = gsave;
@@ -306,16 +293,10 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
   azi2 = 0 - atan2(-salp2, calp2) / degree;
   a12 = sig12 / degree;
 
-  g = numit >= maxit + bisection;
-  s12(g) = NaN; azi1(g) = NaN; azi2(g) = NaN;
-  m12(g) = NaN; M12(g) = NaN; M21(g) = NaN;
-  a12(g) = NaN;
-
   s12 = reshape(s12, S); azi1 = reshape(azi1, S); azi2 = reshape(azi2, S);
   m12 = reshape(m12, S); M12 = reshape(M12, S); M21 = reshape(M21, S);
   a12 = reshape(a12, S);
   if (areap)
-    S12(g) = NaN;
     S12 = reshape(S12, S);
   end
 end

@@ -1,4 +1,4 @@
-function [area, perimeter] = polygonarea(latlong, a, f)
+function polygonarea(~, ~, ~)
 %polygonarea  Compute area of a geodesic polygon
 %
 %   [area, perimeter] = polygonarea(latlong)

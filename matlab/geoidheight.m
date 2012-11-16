@@ -1,4 +1,4 @@
-function [height, gradient] = geoidheight(latlong, geoidname, geoiddir)
+function geoidheight(~, ~, ~)
 %geoidheight  Compute geoid height
 %
 %   CAUTION: THIS MAY CAUSE MATLAB TO CRASH!!  This occurs when the interface

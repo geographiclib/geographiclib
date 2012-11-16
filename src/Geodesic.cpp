@@ -47,7 +47,9 @@ namespace GeographicLib {
   // 52.784459512564 0 -52.784459512563990912 179.634407464943777557
   // which otherwise failed for Visual Studio 10 (Release and Debug)
   const Math::real Geodesic::tol1_ = 200 * tol0_;
-  const Math::real Geodesic::tol2_ = sqrt(numeric_limits<real>::epsilon());
+  const Math::real Geodesic::tol2_ = sqrt(tol0_);
+  // Check on bisection interval
+  const Math::real Geodesic::tolb_ = tol0_ * tol2_;
   const Math::real Geodesic::xthresh_ = 1000 * tol2_;
 
   Geodesic::Geodesic(real a, real f)
@@ -295,21 +297,25 @@ namespace GeographicLib {
         unsigned numit = 0;
         // Bracketing range
         real salp1a = tiny_, calp1a = 1, salp1b = tiny_, calp1b = -1;
-        for (unsigned trip = 0; numit < maxit_; ++numit) {
-          // For the WGS84 test set: mean = 1.62, sd = 1.13, max = 16
+        for (bool tripn = false, tripb = false; numit < maxit2_; ++numit) {
+          // the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
+          // WGS84 and random input: mean = 2.85, sd = 0.60
+          // 1/4 meridan = 1e7 and random input:
+          // b/a = 0.5: 
           real dv;
           real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                            eps, omg12, true, dv, C1a, C2a, C3a) - lam12;
+                            eps, omg12, numit < maxit1_, dv, C1a, C2a, C3a)
+            - lam12;
           // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
-          if (abs(v) < 2 * tol0_ || (abs(v) <= 8 * tol0_ && trip > 0)) break; 
+          if (tripb || abs(v) < (tripn ? 8 : 2) * tol0_) break;
           // Update bracketing values
-          if (v > 0 && calp1/salp1 > calp1b/salp1b) {
+          if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b)) {
             salp1b = salp1; calp1b = calp1;
-          } else if (v < 0 && calp1/salp1 < calp1a/salp1a) {
+          } else if (numit > maxit1_ || calp1/salp1 < calp1a/salp1a) {
             salp1a = salp1; calp1a = calp1;
           }
-          if (dv > 0) {
+          if (numit < maxit1_ && dv > 0) {
             real
               dalp1 = -v/dv;
             real
@@ -322,7 +328,7 @@ namespace GeographicLib {
               // In some regimes we don't get quadratic convergence because
               // slope -> 0.  So use convergence conditions based on epsilon
               // instead of sqrt(epsilon).
-              if (abs(v) <= 16 * tol0_) ++trip;
+              tripn = abs(v) <= 16 * tol0_;
               continue;
             }
           }
@@ -331,52 +337,16 @@ namespace GeographicLib {
           // This mechanism is not needed for the WGS84 ellipsoid, but it does
           // catch problems with more eccentric ellipsoids.  Its efficacy is
           // such for the WGS84 test set with the starting guess set to alp1 =
-          // 90deg: mean = 4.86, sd = 3.42, max = 22
+          // 90deg:
+          // the WGS84 test set: mean = 5.21, sd = 3.93, max = 24
+          // WGS84 and random input: mean = 4.74, sd = 0.99
           salp1 = (salp1a + salp1b)/2;
           calp1 = (calp1a + calp1b)/2;
           SinCosNorm(salp1, calp1);
-          trip = 0;
+          tripn = false;
+          tripb = (abs(salp1a - salp1) + (calp1a - calp1) < tolb_ ||
+                   abs(salp1 - salp1b) + (calp1 - calp1b) < tolb_);
         }
-        if (numit >= maxit_) {
-          // Resort to the safer bisection method
-          for (unsigned i = 0; i < bisection_; ++i) {
-            ++numit;
-            salp1 = (salp1a + salp1b)/2;
-            calp1 = (calp1a + calp1b)/2;
-            SinCosNorm(salp1, calp1);
-            if ( (abs(salp1 - salp1b) < tol0_ && calp1 - calp1b < tol0_) ||
-                 (abs(salp1a - salp1) < tol0_ && calp1a - calp1 < tol0_) )
-              break;
-            real
-              dummy,
-              v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
-                           salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                           eps, omg12, false, dummy, C1a, C2a, C3a) - lam12;
-            // Now allow equality.
-            if (abs(v) <= 2 * tol0_) break;
-            if (v > 0) {
-              salp1b = salp1; calp1b = calp1;
-            } else {
-              salp1a = salp1; calp1a = calp1;
-            }
-          }
-        }
-
-        if (numit >= maxit_ + bisection_) {
-          // Signal failure.
-          if (outmask & DISTANCE)
-            s12 = Math::NaN<real>();
-          if (outmask & AZIMUTH)
-            azi1 = azi2 = Math::NaN<real>();
-          if (outmask & REDUCEDLENGTH)
-            m12 = Math::NaN<real>();
-          if (outmask & GEODESICSCALE)
-            M12 = M21 = Math::NaN<real>();
-          if (outmask & AREA)
-            S12 = Math::NaN<real>();
-          return Math::NaN<real>();
-        }
-
         {
           real dummy;
           Lengths(eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,

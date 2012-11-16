@@ -1,4 +1,4 @@
-function [latlong, aux] = geodesicline(lat1, lon1, azi1, distances, a, f)
+function geodesicline(~, ~, ~, ~, ~, ~)
 %geodesicline  Compute points along a geodesic
 %
 %   [latlong, aux] = geodesicline(lat1, lon1, azi1, distances)

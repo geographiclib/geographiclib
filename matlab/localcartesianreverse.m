@@ -1,4 +1,4 @@
-function [geodetic, rot] = localcartesianreverse(origin, cartesian, a, f)
+function localcartesianreverse(~, ~, ~, ~)
 %localcartesianreverse  Convert local cartesian coordinates to geographic
 %
 %   [geodetic, rot] = localcartesianreverse(origin, cartesian)

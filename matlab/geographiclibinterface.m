@@ -1,4 +1,4 @@
-function geographiclibinterface(incdir, libdir);
+function geographiclibinterface(incdir, libdir)
 % geographiclibinterface  Use mex to compile interface to GeographicLib
 %
 %   geographiclibinterface
