@@ -41,7 +41,11 @@ function geoddoc
 %   meters and a flattening f = 1/298.257223563.  For a sphere, set e = 0;
 %   for a prolate ellipsoid (b > a), specify a pure imaginary e.
 %
-%   All angles (latitude, longitude, azimuth) are measured in degrees.
+%   All angles (latitude, longitude, azimuth) are measured in degrees with
+%   latitudes increasing northwards, longitudes increasing eastwards, and
+%   azimuths measured clockwise from north.  For a point at a pole, the
+%   azimuth is defined by keeping the longitude fixed, writing lat =
+%   +/-(90-eps), and taking the limit eps -> 0+.
 %
 %   The routines also calculate several other quantities of interest
 %     * S12 is the area between the geodesic from point 1 to point 2 and
@@ -70,9 +74,9 @@ function geoddoc
 %     * s13 = s12 + s23
 %     * a13 = a12 + a23
 %     * S13 = S12 + S23
-%     * m13 = m12 M23 + m23 M21
-%     * M13 = M12 M23 - (1 - M12 M21) m23 / m12
-%     * M31 = M32 M21 - (1 - M23 M32) m12 / m23
+%     * m13 = m12*m23 + m23*m21
+%     * M13 = M12*M23 - (1 - M12*M21) * m23/m12
+%     * M31 = M32*M21 - (1 - M23*M32) * m12/m23
 %
 %   Restrictions on the inputs:
 %     * All latitudes must lie in [-90, 90].
@@ -88,9 +92,6 @@ function geoddoc
 %       abs(f) <= 1/150, approximately).  This condition holds for most
 %       applications in geodesy.  Larger values of e can be used with a
 %       corresponding drop in accuracy.
-%   When either end of a geodesic is at a pole, the azimuth is defined by
-%   keeping the longitude fixed, writing lat = 90 - eps or -90 + eps, and
-%   taking the limit eps -> 0+.
 %
 %   The shortest distance returned by GEODDISTANCE is (obviously) uniquely
 %   defined.  However, in a few special cases there are multiple azimuths
