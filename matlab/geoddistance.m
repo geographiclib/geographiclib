@@ -66,7 +66,6 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
   degree = pi/180;
   tiny = sqrt(realmin);
   tol0 = eps;
-  tol1 = 200 * tol0;
   maxit = 30;
   bisection = -log2(eps) + 1 + 10;
 
@@ -176,7 +175,6 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
 
   g = g & sig12 < 0;
 
-  ov = Z;
   salp1a = Z + tiny; calp1a = Z + 1;
   salp1b = Z + tiny; calp1b = Z - 1;
   ssig1 = Z; csig1 = Z; ssig2 = Z; csig2 = Z;
@@ -195,30 +193,25 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
                  sbet2(g), cbet2(g), dn2(g), ...
                  salp1(g), calp1(g), f, A3x, C3x);
     v = v - lam12;
+    g = g & ~(abs(v) < 2 * tol0 | (abs(v) <= 8 * tol0 & trip > 0));
 
     c = g & v > 0 & calp1 ./ salp1 > calp1b ./ salp1b;
     salp1b(c) = salp1(c); calp1b(c) = calp1(c);
     c = g & v < 0 & calp1 ./ salp1 < calp1a ./ salp1a;
     salp1a(c) = salp1(c); calp1a(c) = calp1(c);
 
-    c = g & (~(abs(v) > tiny) | ~(trip < 1));
-    numit(c & ~(abs(v) <= max(tol1, ov))) = maxit;
-    g = g & ~c;
-
     dalp1 = -v ./ dv;
     sdalp1 = sin(dalp1); cdalp1 = cos(dalp1);
     nsalp1 = salp1 .* cdalp1 + calp1 .* sdalp1;
     calp1(g) = calp1(g) .* cdalp1(g) - salp1(g) .* sdalp1(g);
     salp1(g) = nsalp1(g);
-    c = g & ~(abs(v) >= tol1 & v.^2 >= ov * tol0);
+    c = g & abs(v) <= 16 * tol0;
     trip(c) = trip(c) + 1;
-    ov = abs(v);
 
     c = g & ~(dv > 0 & nsalp1 > 0 & abs(dalp1) < pi);
     salp1(c) = (salp1a(c) + salp1b(c))/2;
     calp1(c) = (calp1a(c) + calp1b(c))/2;
     trip(c) = 0;
-    ov(c) = 0;
 
     [salp1(g), calp1(g)] = SinCosNorm(salp1(g), calp1(g));
   end
@@ -454,7 +447,7 @@ function [sig12, salp1, calp1, salp2, calp2] = ...
   tol0 = eps;
   tol1 = 200 * tol0;
   tol2 = sqrt(eps);
-  etol2 = 10 * tol2 / max(0.1, sqrt(abs(e2)));
+  etol2 = 0.001 * tol2 / max(0.1, sqrt(abs(e2)));
   xthresh = 1000 * tol2;
 
   sig12 = - ones(N, 1); salp2 = NaN(N, 1); calp2 = NaN(N, 1);

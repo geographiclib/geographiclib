@@ -263,7 +263,7 @@ class Geodesic(object):
                   math.atan(math.sqrt(-self._e2))) /
                  math.sqrt(abs(self._e2))))/2
     # The sig12 threshold for "really short"
-    self._etol2 = 10 * Geodesic.tol2_ / max(0.1, math.sqrt(abs(self._e2)))
+    self._etol2 = 0.001 * Geodesic.tol2_ / max(0.1, math.sqrt(abs(self._e2)))
     if not(Math.isfinite(self._a) and self._a > 0):
       raise ValueError("Major radius is not positive")
     if not(Math.isfinite(self._b) and self._b > 0):
@@ -774,7 +774,7 @@ class Geodesic(object):
         # alp1 lies outside (0,pi); in this case, the new starting guess is
         # taken to be (alp1a + alp1b) / 2.
         # real ssig1, csig1, ssig2, csig2, eps
-        ov = numit = trip = 0
+        numit = trip = 0
         # Bracketing range
         salp1a = Geodesic.tiny_; calp1a = 1
         salp1b = Geodesic.tiny_; calp1b = -1
@@ -784,18 +784,18 @@ class Geodesic(object):
           (nlam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
            eps, omg12, dv) = self.Lambda12(
             sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-            salp1, calp1, trip < 1, C1a, C2a, C3a)
+            salp1, calp1, True, C1a, C2a, C3a)
           v = nlam12 - lam12
+          # 2 * tol0 is approximately 1 ulp for a number in [0, pi].
+          if abs(v) < 2 * Geodesic.tol0_ or (abs(v) <= 8 * Geodesic.tol0_
+                                             and trip > 0):
+            break;
           # Update bracketing values
           if v > 0 and calp1/salp1 > calp1b/salp1b:
             salp1b = salp1; calp1b = calp1
           elif v < 0 and calp1/salp1 < calp1a/salp1a:
             salp1a = salp1; calp1a = calp1
 
-          if not(abs(v) > Geodesic.tiny_) or not(trip < 1):
-            if not(abs(v) <= max(Geodesic.tol1_, ov)):
-              numit = Geodesic.maxit_
-            break
           numit += 1
           if dv > 0:
             dalp1 = -v/dv
@@ -807,14 +807,9 @@ class Geodesic(object):
               salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
               # In some regimes we don't get quadratic convergence because
               # slope -> 0.  So use convergence conditions based on epsilon
-              # instead of sqrt(epsilon).  The first criterion is a test on
-              # abs(v) against 100 * epsilon.  The second takes credit for an
-              # anticipated reduction in abs(v) by v/ov (due to the latest
-              # update in alp1) and checks this against epsilon.
-              if not(abs(v) >= Geodesic.tol1_ and
-                     Math.sq(v) >= ov * Geodesic.tol0_):
+              # instead of sqrt(epsilon).
+              if abs(v) <= 16 * Geodesic.tol0_:
                 trip += 1
-              ov = abs(v)
               continue
           # Either dv was not postive or updated value was outside legal range.
           # Use the midpoint of the bracket as the next estimate.  This
@@ -826,7 +821,6 @@ class Geodesic(object):
           calp1 = (calp1a + calp1b)/2
           salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
           trip = 0
-          ov = 0
 
         if numit >= Geodesic.maxit_:
           i = Geodesic.bisection_
@@ -846,8 +840,7 @@ class Geodesic(object):
               sbet1, cbet1, dn1, sbet2, cbet2, dn2,
               salp1, calp1, False, C1a, C2a, C3a)
             v = nlam12 - lam12
-            # Be more tolerant on error.  This is approximately 1 ulp
-            # for a number in [0, pi].
+            # Now allow equality.
             if abs(v) <= 2 * Geodesic.tol0_:
               break
             if v > 0:

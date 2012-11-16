@@ -63,7 +63,7 @@ namespace GeographicLib {
             (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
             sqrt(abs(_e2))))/2) // authalic radius squared
       // The sig12 threshold for "really short"
-    , _etol2(10 * tol2_ / max(real(0.1), sqrt(abs(_e2))))
+    , _etol2(0.001 * 10 * tol2_ / max(real(0.1), sqrt(abs(_e2))))
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -292,7 +292,6 @@ namespace GeographicLib {
         // estimate of alp1 lies outside (0,pi); in this case, the new starting
         // guess is taken to be (alp1a + alp1b) / 2.
         real ssig1, csig1, ssig2, csig2, eps;
-        real ov = 0;
         unsigned numit = 0;
         // Bracketing range
         real salp1a = tiny_, calp1a = 1, salp1b = tiny_, calp1b = -1;
@@ -301,17 +300,14 @@ namespace GeographicLib {
           real dv;
           real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                            eps, omg12, trip < 1, dv, C1a, C2a, C3a) - lam12;
+                            eps, omg12, true, dv, C1a, C2a, C3a) - lam12;
+          // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
+          if (abs(v) < 2 * tol0_ || (abs(v) <= 8 * tol0_ && trip > 0)) break; 
           // Update bracketing values
           if (v > 0 && calp1/salp1 > calp1b/salp1b) {
             salp1b = salp1; calp1b = calp1;
           } else if (v < 0 && calp1/salp1 < calp1a/salp1a) {
             salp1a = salp1; calp1a = calp1;
-          }
-          if (!(abs(v) > tiny_) || !(trip < 1)) {
-            if (!(abs(v) <= max(tol1_, ov)))
-              numit = maxit_;
-            break;
           }
           if (dv > 0) {
             real
@@ -325,12 +321,8 @@ namespace GeographicLib {
               SinCosNorm(salp1, calp1);
               // In some regimes we don't get quadratic convergence because
               // slope -> 0.  So use convergence conditions based on epsilon
-              // instead of sqrt(epsilon).  The first criterion is a test on
-              // abs(v) against 200 * epsilon.  The second takes credit for an
-              // anticipated reduction in abs(v) by v/ov (due to the latest
-              // update in alp1) and checks this against epsilon.
-              if (!(abs(v) >= tol1_ && Math::sq(v) >= ov * tol0_)) ++trip;
-              ov = abs(v);
+              // instead of sqrt(epsilon).
+              if (abs(v) <= 16 * tol0_) ++trip;
               continue;
             }
           }
@@ -344,7 +336,6 @@ namespace GeographicLib {
           calp1 = (calp1a + calp1b)/2;
           SinCosNorm(salp1, calp1);
           trip = 0;
-          ov = 0;
         }
         if (numit >= maxit_) {
           // Resort to the safer bisection method
@@ -361,8 +352,7 @@ namespace GeographicLib {
               v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                            salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                            eps, omg12, false, dummy, C1a, C2a, C3a) - lam12;
-            // Be more tolerant on error.  This is approximately 1 ulp for a
-            // number in [0, pi].
+            // Now allow equality.
             if (abs(v) <= 2 * tol0_) break;
             if (v > 0) {
               salp1b = salp1; calp1b = calp1;

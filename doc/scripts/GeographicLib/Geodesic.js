@@ -233,7 +233,8 @@ GeographicLib.GeodesicLine = {};
                   Math.atan(Math.sqrt(-this._e2))) /
                  Math.sqrt(Math.abs(this._e2))))/2;
     // The sig12 threshold for "really short"
-    this._etol2 = 10 * g.tol2_ / Math.max(0.1, Math.sqrt(Math.abs(this._e2)));
+    this._etol2 = 0.001 * g.tol2_ /
+      Math.max(0.1, Math.sqrt(Math.abs(this._e2)));
     if (!(isFinite(this._a) && this._a > 0))
       throw new Error("Major radius is not positive");
     if (!(isFinite(this._b) && this._b > 0))
@@ -804,7 +805,6 @@ GeographicLib.GeodesicLine = {};
         // estimate of alp1 lies outside (0,pi); in this case, the new starting
         // guess is taken to be (alp1a + alp1b) / 2.
         var ssig1, csig1, ssig2, csig2, eps;
-        var ov = 0;
         var numit = 0;
         // Bracketing range
         var salp1a = g.tiny_, calp1a = 1, salp1b = g.tiny_, calp1b = -1;
@@ -812,7 +812,7 @@ GeographicLib.GeodesicLine = {};
           // For the WGS84 test set: mean = 1.62, sd = 1.13, max = 16
           var dv;
           var nvals = this.Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-                                    salp1, calp1, trip < 1, C1a, C2a, C3a);
+                                    salp1, calp1, true, C1a, C2a, C3a);
           var v = nvals.lam12 - lam12;
           salp2 = nvals.salp2;
           calp2 = nvals.calp2;
@@ -823,18 +823,17 @@ GeographicLib.GeodesicLine = {};
           csig2 = nvals.csig2;
           eps = nvals.eps;
           omg12 = nvals.domg12;
-          if (trip < 1) dv = nvals.dlam12;
+          dv = nvals.dlam12;
 
+          // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
+          if (Math.abs(v) < 2 * g.tol0_ ||
+              (Math.abs(v) <= 8 * g.tol0_ && trip > 0))
+            break; 
           // Update bracketing values
           if (v > 0 && calp1/salp1 > calp1b/salp1b) {
             salp1b = salp1; calp1b = calp1;
           } else if (v < 0 && calp1/salp1 < calp1a/salp1a) {
             salp1a = salp1; calp1a = calp1;
-          }
-          if (!(Math.abs(v) > g.tiny_) || !(trip < 1)) {
-            if (!(Math.abs(v) <= Math.max(g.tol1_, ov)))
-              numit = g.maxit_;
-            break;
           }
           if (dv > 0) {
             var
@@ -849,13 +848,8 @@ GeographicLib.GeodesicLine = {};
               var t = m.hypot(salp1, calp1); salp1 /= t; calp1 /= t;
               // In some regimes we don't get quadratic convergence because
               // slope -> 0.  So use convergence conditions based on epsilon
-              // instead of sqrt(epsilon).  The first criterion is a test on
-              // abs(v) against 100 * epsilon.  The second takes credit for an
-              // anticipated reduction in abs(v) by v/ov (due to the latest
-              // update in alp1) and checks this against epsilon.
-              if (!(Math.abs(v) >= g.tol1_ && m.sq(v) >= ov * g.tol0_))
-                ++trip;
-              ov = Math.abs(v);
+              // instead of sqrt(epsilon).
+              if (Math.abs(v) <= 16 * g.tol0_) ++trip;
               continue;
             }
           }
@@ -870,7 +864,6 @@ GeographicLib.GeodesicLine = {};
           // SinCosNorm(salp1, calp1);
           var t = m.hypot(salp1, calp1); salp1 /= t; calp1 /= t;
           trip = 0;
-          ov = 0;
         }
         if (numit >= g.maxit_) {
           // Resort to the safer bisection method
@@ -898,8 +891,7 @@ GeographicLib.GeodesicLine = {};
             csig2 = nvals.csig2;
             eps = nvals.eps;
             omg12 = nvals.domg12;
-            // Be more tolerant on error.  This is approximately 1 ulp
-            // for a number in [0, pi].
+            // Now allow equality.
             if (Math.abs(v) <= 2 * g.tol0_) break;
             if (v > 0) {
               salp1b = salp1; calp1b = calp1;
