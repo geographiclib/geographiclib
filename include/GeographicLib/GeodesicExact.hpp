@@ -37,9 +37,28 @@ namespace GeographicLib {
    *
    * For the WGS84 ellipsoid, these classes are 2--3 times \e slower than the
    * series solution and 2--3 times \e less \e accurate (because it's less easy
-   * to control round-off errors with the elliptic integral formulation).
-   * However the error in the series solution scales as <i>f</i><sup>7</sup>
-   * while the error in the elliptic integral solution is independent of \e f.
+   * to control round-off errors with the elliptic integral formulation); i.e.,
+   * the error is about 40 nm (40 nanometers) instead of 15 nm.  However the
+   * error in the series solution scales as <i>f</i><sup>7</sup> while the
+   * error in the elliptic integral solution depends weakly on \e f.  If the
+   * quarter meridian distance is 10000 km and the ratio \e b/\e a = 1 - \e f
+   * is varied then the approximate maximum error (expressed as a distance) is
+   *       1-f    error (nm)
+   *       1/128   387
+   *       1/64    345
+   *       1/32    269
+   *       1/16    210
+   *       1/8     115
+   *       1/4      69
+   *       1/2      36
+   *         1      15
+   *         2      25
+   *         4      96
+   *         8     318
+   *        16     985
+   *        32    2352
+   *        64    6008
+   *       128   19024
    *
    * The computation of the area in these classes is via a 30th order series.
    * This gives accurate results for \e b/\e a &isin; [1/2, 2]; the accuracy is
@@ -84,7 +103,7 @@ namespace GeographicLib {
       OUT_ALL  = 0x7F80U,
     };
 
-    static real SinCosSeries(real sinx, real cosx, const real c[], int n)
+    static real CosSeries(real sinx, real cosx, const real c[], int n)
       throw();
     static inline real AngRound(real x) throw() {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
@@ -540,10 +559,7 @@ namespace GeographicLib {
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed and writing \e lat = 90&deg; &minus; &epsilon; or
      * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
-     * above.  If the routine fails to converge, then all the requested outputs
-     * are set to Math::NaN().  (Test for such results with Math::isnan.)  This
-     * is not expected to happen with ellipsoidal models of the earth; please
-     * report all cases where this occurs.
+     * above.
      *
      * The following functions are overloaded versions of GeodesicExact::Inverse
      * which omit some of the output parameters.  Note, however, that the arc

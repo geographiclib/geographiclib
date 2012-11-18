@@ -67,13 +67,14 @@ class Geodesic(object):
   nC3x_ = (nC3_ * (nC3_ - 1)) / 2
   nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER
   nC4x_ = (nC4_ * (nC4_ + 1)) / 2
-  maxit_ = 30
-  bisection_ = Math.digits + 10
+  maxit1_ = 20
+  maxit2_= maxit1_ + Math.digits + 10
 
   tiny_ = math.sqrt(Math.minval)
   tol0_ = Math.epsilon
   tol1_ = 200 * tol0_
-  tol2_ = math.sqrt(Math.epsilon)
+  tol2_ = math.sqrt(tol0_)
+  tolb_ = tol0_ * tol2_
   xthresh_ = 1000 * tol2_
 
   CAP_NONE = GeodesicCapability.CAP_NONE
@@ -350,8 +351,7 @@ class Geodesic(object):
       mult *= eps
       c[k] *= mult
 
-  def C4f(self, k2, c):
-    eps = k2 / (2 * (1 + math.sqrt(1 + k2)) + k2)
+  def C4f(self, eps, c):
     # Evaluate C4 coeffs by Horner's method
     # Elements c[0] thru c[nC4_ - 1] are set
     j = Geodesic.nC4x_; k = Geodesic.nC4_
@@ -472,7 +472,7 @@ class Geodesic(object):
         # Inverse.
         dummy, m12b, m0, dummy, dummy = self.Lengths(
           self._n, math.pi + bet12a, sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
-          cbet1, cbet2, dummy, False, C1a, C2a)
+          cbet1, cbet2, False, C1a, C2a)
         x = -1 + m12b / (cbet1 * cbet2 * m0 * math.pi)
         betscale = (sbet12a / x if x < -0.01
                     else -self._f * Math.sq(cbet1) * math.pi)
@@ -774,30 +774,32 @@ class Geodesic(object):
         # alp1 lies outside (0,pi); in this case, the new starting guess is
         # taken to be (alp1a + alp1b) / 2.
         # real ssig1, csig1, ssig2, csig2, eps
-        numit = trip = 0
+        numit = 0
+        tripn = tripb = False
         # Bracketing range
         salp1a = Geodesic.tiny_; calp1a = 1
         salp1b = Geodesic.tiny_; calp1b = -1
 
-        while numit < Geodesic.maxit_:
-          # For the WGS84 test set: mean = 1.62, sd = 1.13, max = 16
+        while numit < Geodesic.maxit2_:
+          # the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
+          # WGS84 and random input: mean = 2.85, sd = 0.60
           (nlam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
            eps, omg12, dv) = self.Lambda12(
             sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-            salp1, calp1, True, C1a, C2a, C3a)
+            salp1, calp1, numit < Geodesic.maxit1_, C1a, C2a, C3a)
           v = nlam12 - lam12
           # 2 * tol0 is approximately 1 ulp for a number in [0, pi].
-          if abs(v) < 2 * Geodesic.tol0_ or (abs(v) <= 8 * Geodesic.tol0_
-                                             and trip > 0):
-            break;
+          if tripb or abs(v) < (8 if tripn else 2) * Geodesic.tol0_:
+            break
           # Update bracketing values
-          if v > 0 and calp1/salp1 > calp1b/salp1b:
+          if v > 0 and (numit > Geodesic.maxit1_ or
+                        calp1/salp1 > calp1b/salp1b):
             salp1b = salp1; calp1b = calp1
-          elif v < 0 and calp1/salp1 < calp1a/salp1a:
+          elif numit > Geodesic.maxit1_ or calp1/salp1 < calp1a/salp1a:
             salp1a = salp1; calp1a = calp1
 
           numit += 1
-          if dv > 0:
+          if numit < Geodesic.maxit1_ and dv > 0:
             dalp1 = -v/dv
             sdalp1 = math.sin(dalp1); cdalp1 = math.cos(dalp1)
             nsalp1 = salp1 * cdalp1 + calp1 * sdalp1
@@ -808,49 +810,21 @@ class Geodesic(object):
               # In some regimes we don't get quadratic convergence because
               # slope -> 0.  So use convergence conditions based on epsilon
               # instead of sqrt(epsilon).
-              if abs(v) <= 16 * Geodesic.tol0_:
-                trip += 1
+              tripn = abs(v) <= 16 * Geodesic.tol0_
               continue
           # Either dv was not postive or updated value was outside legal range.
           # Use the midpoint of the bracket as the next estimate.  This
           # mechanism is not needed for the WGS84 ellipsoid, but it does catch
           # problems with more eccentric ellipsoids.  Its efficacy is such for
           # the WGS84 test set with the starting guess set to alp1 = 90deg:
-          # mean = 4.86, sd = 3.42, max = 22
+          # the WGS84 test set: mean = 5.21, sd = 3.93, max = 24
+          # WGS84 and random input: mean = 4.74, sd = 0.99
           salp1 = (salp1a + salp1b)/2
           calp1 = (calp1a + calp1b)/2
           salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
-          trip = 0
-
-        if numit >= Geodesic.maxit_:
-          i = Geodesic.bisection_
-          while i:
-            i -= 1
-            numit += 1
-            salp1 = (salp1a + salp1b)/2
-            calp1 = (calp1a + calp1b)/2
-            salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
-            if ( (abs(salp1 - salp1b) < Geodesic.tol0_ and
-                  calp1 - calp1b < Geodesic.tol0_) or
-                 (abs(salp1a - salp1) < Geodesic.tol0_ and
-                  calp1a - calp1 < Geodesic.tol0_) ):
-              break
-            (nlam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-             eps, omg12, dummy) = self.Lambda12(
-              sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-              salp1, calp1, False, C1a, C2a, C3a)
-            v = nlam12 - lam12
-            # Now allow equality.
-            if abs(v) <= 2 * Geodesic.tol0_:
-              break
-            if v > 0:
-              salp1b = salp1; calp1b = calp1
-            else:
-              salp1a = salp1; calp1a = calp1
-
-        if numit >= Geodesic.maxit_ + Geodesic.bisection_:
-          # Signal failure.
-          return a12, s12, azi1, azi2, m12, M12, M21, S12
+          tripn = False
+          tripb = (abs(salp1a - salp1) + (calp1a - calp1) < Geodesic.tolb_ or
+                   abs(salp1 - salp1b) + (calp1 - calp1b) < Geodesic.tolb_)
 
         s12x, m12x, dummy, M12, M21 = self.Lengths(
           eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
@@ -878,12 +852,13 @@ class Geodesic(object):
         ssig1 = sbet1; csig1 = calp1 * cbet1
         ssig2 = sbet2; csig2 = calp2 * cbet2
         k2 = Math.sq(calp0) * self._ep2
+        eps = k2 / (2 * (1 + math.sqrt(1 + k2)) + k2)
         # Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
         A4 = Math.sq(self._a) * calp0 * salp0 * self._e2
         ssig1, csig1 = Geodesic.SinCosNorm(ssig1, csig1)
         ssig2, csig2 = Geodesic.SinCosNorm(ssig2, csig2)
         C4a = range(Geodesic.nC4_)
-        self.C4f(k2, C4a)
+        self.C4f(eps, C4a)
         B41 = Geodesic.SinCosSeries(False, ssig1, csig1, C4a, Geodesic.nC4_)
         B42 = Geodesic.SinCosSeries(False, ssig2, csig2, C4a, Geodesic.nC4_)
         S12 = A4 * (B42 - B41)

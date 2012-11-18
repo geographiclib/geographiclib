@@ -97,14 +97,22 @@ namespace GeographicLib {
    * Additional functionality is provided by the GeodesicLine class, which
    * allows a sequence of points along a geodesic to be computed.
    *
-   * The calculations are accurate to better than 15 nm (15 nanometers).  See
-   * Sec. 9 of
+   * The calculations are accurate to better than 15 nm (15 nanometers) for the
+   * WGS84 ellipsoid.  See Sec. 9 of
    * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
    * details.  The algorithms used by this class are based on series expansions
    * using the flattening \e f as a small parameter.  These only accurate for
-   * |\e f| &lt; 0.01; however reasonably accurate results will be obtained for
-   * |\e f| &lt; 0.1.  For very eccentric ellipsoids, use GeodesicExact
-   * instead.
+   * |\e f| &lt; 0.02; however reasonably accurate results will be obtained for
+   * |\e f| &lt; 0.2.  Here is a table of the approximate maximum error
+   * (expressed as a distance) for an ellipsoid with the same major radius as
+   * the WGS84 ellipsoid and different values of the flattening.
+   *     |f|     error
+   *     0.01    25 nm
+   *     0.02    30 nm
+   *     0.05    10 um
+   *     0.1    1.5 mm
+   *     0.2    300 mm
+   * For very eccentric ellipsoids, use GeodesicExact instead.
    *
    * The algorithms are described in
    * - C. F. F. Karney,
@@ -631,12 +639,7 @@ namespace GeographicLib {
      * The solution to the inverse problem is found using Newton's method.  If
      * this fails to converge (this is very unlikely in geodetic applications
      * but does occur for very eccentric ellipsoids), then the bisection method
-     * is used to refine the solution.  This should always converge to an
-     * accurate solution.
-     *
-     * (If the routine fails to converge, then all the requested outputs are
-     * set to Math::NaN() --- test for such results with Math::isnan.  Please
-     * report all cases where this occurs.)
+     * is used to refine the solution.
      *
      * The following functions are overloaded versions of Geodesic::Inverse
      * which omit some of the output parameters.  Note, however, that the arc

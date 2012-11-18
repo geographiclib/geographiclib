@@ -125,7 +125,7 @@
 
     if (this._caps & g.CAP_C4) {
       this._C4a = new Array(g.nC4_); // all the elements of _C4a are used
-      geod.C4f(this._k2, this._C4a);
+      geod.C4f(eps, this._C4a);
       // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
       this._A4 = m.sq(this._a) * this._calp0 * this._salp0 * geod._e2;
       this._B41 = g.SinCosSeries(false, this._ssig1, this._csig1,
@@ -165,8 +165,39 @@
                              this._ctau1 * c - this._stau1 * s,
                              this._C1pa, g.nC1p_);
       sig12 = tau12 - (B12 - this._B11);
-      ssig12 = Math.sin(sig12);
-      csig12 = Math.cos(sig12);
+      ssig12 = Math.sin(sig12); csig12 = Math.cos(sig12);
+      if (Math.abs(this._f) > 0.01) {
+        // Reverted distance series is inaccurate for |f| > 1/100, so correct
+        // sig12 with 1 Newton iteration.  The following table shows the
+        // approximate maximum error for a = WGS_a() and various f relative to
+        // GeodesicExact.
+        //     erri = the error in the inverse solution (nm)
+        //     errd = the error in the direct solution (series only) (nm)
+        //     errda = the error in the direct solution (series + 1 Newton) (nm)
+        //
+        //       f     erri  errd errda
+        //     -1/5    12e6 1.2e9  69e6
+        //     -1/10  123e3  12e6 765e3
+        //     -1/20   1110 108e3  7155
+        //     -1/50  18.63 200.9 27.12
+        //     -1/100 18.63 23.78 23.37
+        //     -1/150 18.63 21.05 20.26
+        //      1/150 22.35 24.73 25.83
+        //      1/100 22.35 25.03 25.31
+        //      1/50  29.80 231.9 30.44
+        //      1/20   5376 146e3  10e3
+        //      1/10  829e3  22e6 1.5e6
+        //      1/5   157e6 3.8e9 280e6
+        var
+          ssig2 = this._ssig1 * csig12 + this._csig1 * ssig12,
+          csig2 = this._csig1 * csig12 - this._ssig1 * ssig12;
+        B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a, g.nC1_);
+        var serr = (1 + this._A1m1) * (sig12 + (B12 - this._B11)) -
+          s12_a12 / this._b;
+        sig12 = sig12 - serr / Math.sqrt(1 + this._k2 * m.sq(ssig2));
+        ssig12 = Math.sin(sig12); csig12 = Math.cos(sig12);
+        // Update B12 below
+      }
     }
 
     var omg12, lam12, lon12;
@@ -176,7 +207,7 @@
     csig2 = this._csig1 * csig12 - this._ssig1 * ssig12;
     var dn2 = Math.sqrt(1 + this._k2 * m.sq(ssig2));
     if (outmask & (g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE)) {
-      if (arcmode)
+      if (arcmode || Math.abs(_f) > 0.01)
         B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a, g.nC1_);
       AB1 = (1 + this._A1m1) * (B12 - this._B11);
     }

@@ -179,12 +179,12 @@ endif ()
 # documentation is therefore only done in "MAINTAINER" mode.  The
 # maintainer runs "make distrib-all" which installs the transformed
 # documentation files into the source tree.
-if (NOT WIN32)
+if (NOT WIN32 AND NOT APPLE)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
   find_program (HAVE_COL col)
 endif ()
-if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_COL AND
+if (HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_COL AND
     NOT CMAKE_VERSION VERSION_LESS 2.8)
   set (MAINTAINER ON)
 else ()

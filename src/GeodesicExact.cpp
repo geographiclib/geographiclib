@@ -79,8 +79,8 @@ namespace GeographicLib {
   const GeodesicExact GeodesicExact::WGS84(Constants::WGS84_a<real>(),
                                            Constants::WGS84_f<real>());
 
-  Math::real GeodesicExact::SinCosSeries(real sinx, real cosx,
-                                         const real c[], int n) throw() {
+  Math::real GeodesicExact::CosSeries(real sinx, real cosx,
+                                      const real c[], int n) throw() {
     // Evaluate
     // y = sum(c[i] * cos((2*i+1) * x), i, 0, n-1) :
     // using Clenshaw summation.
@@ -320,7 +320,6 @@ namespace GeographicLib {
           //     5    2352 6.32 3.44
           //     6    6008 6.30 3.45
           //     7   19024 6.19 3.30
-
           real dv;
           real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
@@ -395,15 +394,16 @@ namespace GeographicLib {
           ssig1 = sbet1, csig1 = calp1 * cbet1,
           ssig2 = sbet2, csig2 = calp2 * cbet2,
           k2 = Math::sq(calp0) * _ep2,
+          eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2),
           // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
           A4 = Math::sq(_a) * calp0 * salp0 * _e2;
         SinCosNorm(ssig1, csig1);
         SinCosNorm(ssig2, csig2);
         real C4a[nC4_];
-        C4f(k2, C4a);
+        C4f(eps, C4a);
         real
-          B41 = SinCosSeries(ssig1, csig1, C4a, nC4_),
-          B42 = SinCosSeries(ssig2, csig2, C4a, nC4_);
+          B41 = CosSeries(ssig1, csig1, C4a, nC4_),
+          B42 = CosSeries(ssig2, csig2, C4a, nC4_);
         S12 = A4 * (B42 - B41);
       } else
         // Avoid problems with indeterminate sig1, sig2 on equator
@@ -789,8 +789,7 @@ namespace GeographicLib {
     return lam12;
   }
 
-  void GeodesicExact::C4f(real k2, real c[]) const throw() {
-    real eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
+  void GeodesicExact::C4f(real eps, real c[]) const throw() {
     // Evaluation C4 coeffs by Horner's method
     // Elements c[0] thru c[nC4_ - 1] are set
     for (int j = nC4x_, k = nC4_; k; ) {

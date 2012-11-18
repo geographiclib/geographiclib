@@ -3636,19 +3636,27 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.27">Version 1.27</a>
    (released 2012-mm-dd)
-   - TODO: Ellipsoid::InverseRectifyingLatitude should use
-     EllipticFunction::Einv.
-   - TODO: check short-line condition for very eccentric ellipsoids.
-   - TODO: use change in alp1 in exit check for Geodesic::Inverse?
-   - TODO: in geod-addendum set sign of sin(sigma_1) negative
-   - DONE: add geod and tm refs to JavaScript, python, and matlab code
-   - TODO: prolate m12 conjugacy check should use lon12?
+   - Changes to geodesic routines:
+     - add native matlab implementations geoddistance, geodreckon,
+       geodarea;
+     - improve the solution of the direct problem so that now the series
+       solution is accurate to round-off for |\e f| < 1/50;
+     - tighten up the convergence criteria for solution of the inverse
+       problem;
+     - no longer signal failures of convergence with NaNs (a slightly
+       less accurate answer is returned instead).
+   - Fix GeographicLib::DMS::Decode double rounding BUG.
+   - On MacOSX platforms with the cmake configuration, universal
+     binaries are built.
+   - TODO: geod-addendum additions:
+     - set sign of sin(sigma_1) negative for equatorial geodesic
+     - solution in terms of elliptic integrals
+     - better area series
+     - making Newton robust
+     - improving accuracy of direct calculation
+     - document accuracy as function of f
+     - python and matlab implementations
    - DONE: stop being nasty about NGS geodesic calculator.
-   - TODO: combine C3f and C4f into a single function.
-   - MacOSX fixes: universal binaries and build fixes.
-   - Native matlab implementation of geodesic functions.
-   - Fix DMS double rounding bug 179.99999999999998578 rounds to 180
-   - Geodesic::Inverse: tighten up exit criteron for Newton's method.
 
  - <a href="http://geographiclib.sf.net/1.26">Version 1.26</a>
    (released 2012-10-22)

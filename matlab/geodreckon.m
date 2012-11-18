@@ -177,13 +177,21 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
                          ctau1 .* c - stau1 .* s, C1pa);
     sig12 = tau12 - (B12 - B11);
     ssig12 = sin(sig12); csig12 = cos(sig12);
+    if abs(f) > 1/125,
+      ssig2 = ssig1 .* csig12 + csig1 .* ssig12;
+      csig2 = csig1 .* csig12 - ssig1 .* ssig12;
+      B12 =  SinCosSeries(true, ssig2, csig2, C1a);
+      serr = (1 + A1m1) .* (sig12 + (B12 - B11)) - s12/b;
+      sig12 = sig12 - serr ./ sqrt(1 + k2 .* ssig2.^2);
+      ssig12 = sin(sig12); csig12 = cos(sig12);
+    end
   end
 
   ssig2 = ssig1 .* csig12 + csig1 .* ssig12;
   csig2 = csig1 .* csig12 - ssig1 .* ssig12;
   dn2 = sqrt(1 + k2 .* ssig2.^2);
   if arcmode || redlp || scalp,
-    if arcmode,
+    if arcmode || abs(f) > 1/125,
       B12 = SinCosSeries(true, ssig2, csig2, C1a);
     end
     AB1 = (1 + A1m1) .* (B12 - B11);
@@ -230,7 +238,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
 
   if areap,
     C4x = C4coeff(n);
-    C4a = C4f(k2, C4x);
+    C4a = C4f(eps, C4x);
     A4 = (a^2 * e2) * calp0 .* salp0;
     B41 = SinCosSeries(false, ssig1, csig1, C4a);
     B42 = SinCosSeries(false, ssig2, csig2, C4a);
@@ -571,17 +579,16 @@ function C4x = C4coeff(n)
   C4x(20+1) = 128/99099;
 end
 
-function C4 = C4f(k2, C4x)
+function C4 = C4f(epsi, C4x)
 %C4F  Evaluate C_4
 %
-%   C4 = C4F(K2, C4X) evaluates C_{4,l} in the expansion for the area
+%   C4 = C4F(EPSI, C4X) evaluates C_{4,l} in the expansion for the area
 %   (Eq. (65) expressed in terms of n and epsi) using the coefficient
 %   vector C4X.  K2 is a K x 1 array.  C4X is a 1 x 15 array.  C4 is a K x
 %   5 array.
 
   nC4 = 6;
   nC4x = size(C4x, 2);
-  epsi = k2 ./ (2 * (1 + sqrt(1 + k2)) + k2);
   j = nC4x;
   C4 = zeros(length(epsi), nC4);
   for k = nC4 : -1 : 1,

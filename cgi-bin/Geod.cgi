@@ -262,7 +262,12 @@ cat <<EOF
     <p>
       Geod is accurate to about 15&nbsp;nm and gives solutions for the
       inverse problem for any pair of points.  Many other geodesic
-      calculators (based in Vincenty's method) fail for some inputs.
+      calculators (based in Vincenty's method) fail for some inputs; for
+      example the
+      <a href="http://www.ga.gov.au/"> Geoscience Australia</a>
+      <a href="http://www.ga.gov.au/geodesy/datums/vincenty_inverse.jsp">
+      online calculator</a> <b>fails</b> for the approximately antipodal
+      points (N30, E0) and (S30, E179.5).
     </p>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/Geod.1.html">

@@ -300,8 +300,6 @@ namespace GeographicLib {
         for (bool tripn = false, tripb = false; numit < maxit2_; ++numit) {
           // the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
           // WGS84 and random input: mean = 2.85, sd = 0.60
-          // 1/4 meridan = 1e7 and random input:
-          // b/a = 0.5: 
           real dv;
           real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
@@ -378,12 +376,13 @@ namespace GeographicLib {
           ssig1 = sbet1, csig1 = calp1 * cbet1,
           ssig2 = sbet2, csig2 = calp2 * cbet2,
           k2 = Math::sq(calp0) * _ep2,
+          eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2),
           // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
           A4 = Math::sq(_a) * calp0 * salp0 * _e2;
         SinCosNorm(ssig1, csig1);
         SinCosNorm(ssig2, csig2);
         real C4a[nC4_];
-        C4f(k2, C4a);
+        C4f(eps, C4a);
         real
           B41 = SinCosSeries(false, ssig1, csig1, C4a, nC4_),
           B42 = SinCosSeries(false, ssig2, csig2, C4a, nC4_);
@@ -802,8 +801,7 @@ namespace GeographicLib {
     }
   }
 
-  void Geodesic::C4f(real k2, real c[]) const throw() {
-    real eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
+  void Geodesic::C4f(real eps, real c[]) const throw() {
     // Evaluate C4 coeffs by Horner's method
     // Elements c[0] thru c[nC4_ - 1] are set
     for (int j = nC4x_, k = nC4_; k; ) {

@@ -185,7 +185,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
   tripb = tripn;
   gsave = g;
   for k = 0 : maxit2 - 1,
-    if ~any(g), break; end
+    if k == 0 && ~any(g), break; end
     numit(g) = k;
     [v(g), dv(g), ...
      salp2(g), calp2(g), sig12(g), ...
@@ -209,9 +209,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
     end
     salp1a(c) = salp1(c); calp1a(c) = calp1(c);
 
-    if k == maxit1,
-      tripn(g) = false;
-    end
+    if k == maxit1, tripn(g) = false; end
     if k < maxit1,
       dalp1 = -v ./ dv;
       sdalp1 = sin(dalp1); cdalp1 = cos(dalp1);
@@ -220,15 +218,16 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
       salp1(g) = nsalp1(g);
       tripn = g & abs(v) <= 16 * tol0;
       c = g & ~(dv > 0 & nsalp1 > 0 & abs(dalp1) < pi);
+      tripn(c) = false;
     else
       c = g;
-      tripb = (abs(salp1a - salp1) + (calp1a - calp1) < tolb | ...
-               abs(salp1 - salp1b) + (calp1 - calp1b) < tolb);
     end
 
     salp1(c) = (salp1a(c) + salp1b(c))/2;
     calp1(c) = (calp1a(c) + calp1b(c))/2;
     [salp1(g), calp1(g)] = SinCosNorm(salp1(g), calp1(g));
+    tripb(c) = (abs(salp1a(c) - salp1(c)) + (calp1a(c) - calp1(c)) < tolb | ...
+                abs(salp1(c) - salp1b(c)) + (calp1(c) - calp1b(c)) < tolb);
   end
 
   g = gsave;
@@ -248,12 +247,13 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
     ssig1 = sbet1; csig1 = calp1 .* cbet1;
     ssig2 = sbet2; csig2 = calp2 .* cbet2;
     k2 = calp0.^2 * ep2;
+    epsi = k2 ./ (2 * (1 + sqrt(1 + k2)) + k2);
     A4 = (a^2 * e2) * calp0 .* salp0;
     [ssig1, csig1] = SinCosNorm(ssig1, csig1);
     [ssig2, csig2] = SinCosNorm(ssig2, csig2);
 
     C4x = C4coeff(n);
-    C4a = C4f(k2, C4x);
+    C4a = C4f(epsi, C4x);
     B41 = SinCosSeries(false, ssig1, csig1, C4a);
     B42 = SinCosSeries(false, ssig2, csig2, C4a);
     S12 = A4 .* (B42 - B41);
@@ -817,17 +817,16 @@ function C4x = C4coeff(n)
   C4x(20+1) = 128/99099;
 end
 
-function C4 = C4f(k2, C4x)
+function C4 = C4f(epsi, C4x)
 %C4F  Evaluate C_4
 %
-%   C4 = C4F(K2, C4X) evaluates C_{4,l} in the expansion for the area
+%   C4 = C4F(EPSI, C4X) evaluates C_{4,l} in the expansion for the area
 %   (Eq. (65) expressed in terms of n and epsi) using the coefficient
 %   vector C4X.  K2 is a K x 1 array.  C4X is a 1 x 15 array.  C4 is a K x
 %   5 array.
 
   nC4 = 6;
   nC4x = size(C4x, 2);
-  epsi = k2 ./ (2 * (1 + sqrt(1 + k2)) + k2);
   j = nC4x;
   C4 = zeros(length(epsi), nC4);
   for k = nC4 : -1 : 1,
