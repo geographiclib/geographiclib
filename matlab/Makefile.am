@@ -35,15 +35,50 @@ $(srcdir)/polygonarea.m
 
 MATLAB_COMPILESCRIPT = $(srcdir)/geographiclibinterface.m
 
-MATLAB_ALL = $(MATLAB_INTERFACE) $(MATLAB_DOC) $(MATLAB_COMPILESCRIPT)
+MATLAB_GEOD = \
+$(srcdir)/geoddoc.m \
+$(srcdir)/geodreckon.m \
+$(srcdir)/geoddistance.m \
+$(srcdir)/geodarea.m \
+
+MATLAB_GEOD_PRIVATE = \
+$(srcdir)/private/A1m1f.m \
+$(srcdir)/private/A2m1f.m \
+$(srcdir)/private/A3coeff.m \
+$(srcdir)/private/A3f.m \
+$(srcdir)/private/AngNormalize2.m \
+$(srcdir)/private/AngNormalize.m \
+$(srcdir)/private/AngRound.m \
+$(srcdir)/private/Astroid.m \
+$(srcdir)/private/C1f.m \
+$(srcdir)/private/C1pf.m \
+$(srcdir)/private/C2f.m \
+$(srcdir)/private/C3coeff.m \
+$(srcdir)/private/C3f.m \
+$(srcdir)/private/C4coeff.m \
+$(srcdir)/private/C4f.m \
+$(srcdir)/private/cbrt.m \
+$(srcdir)/private/cvmgt.m \
+$(srcdir)/private/defaultellipsoid.m \
+$(srcdir)/private/InverseStart.m \
+$(srcdir)/private/Lambda12.m \
+$(srcdir)/private/Lengths.m \
+$(srcdir)/private/SinCosNorm.m \
+$(srcdir)/private/SinCosSeries.m \
+$(srcdir)/private/swap.m
+
+
+MATLAB_ALL = $(MATLAB_INTERFACE) $(MATLAB_DOC) $(MATLAB_COMPILESCRIPT) \
+	$(MATLAB_GEOD)
 
 matlabdir=$(libexecdir)/GeographicLib/matlab
 
 install:
-	$(INSTALL) -d $(DESTDIR)$(matlabdir)
+	$(INSTALL) -d $(DESTDIR)$(matlabdir)/private
 	$(INSTALL) -m 644 $(MATLAB_ALL) $(DESTDIR)$(matlabdir)
+	$(INSTALL) -m 644 $(MATLAB_GEOD_PRIVATE) $(DESTDIR)$(matlabdir)/private
 
 clean-local:
 	rm -rf *.mex* *.oct
 
-EXTRA_DIST = Makefile.mk CMakeLists.txt $(MATLAB_ALL)
+EXTRA_DIST = Makefile.mk CMakeLists.txt $(MATLAB_ALL) $(MATLAB_GEOD_PRIVATE)

@@ -10,6 +10,10 @@ endif ()
 # Both sets of files get installed
 install (FILES ${MATLAB_FILES} ${MATLAB_INTERFACES}
   DESTINATION ${INSTALL_MATLAB_DIR})
+# Install "private" functions
+file (GLOB PRIVATE_MATLAB_FILES private/[A-Za-z]*.m)
+install (FILES ${PRIVATE_MATLAB_FILES}
+  DESTINATION ${INSTALL_MATLAB_DIR}/private)
 
 # If MEX then compile the interface routines.  On non-Windows
 # systems, an attempt is made to minimize the number of addition target

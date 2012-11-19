@@ -112,7 +112,11 @@ find . -type f | grep -v '/\.git' | xargs rm
 tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
 (
     cd GeographicLib-$VERSION
-    find . -type f | while read f; do mv $f ../$f; done
+    find . -type f | while read f; do
+	dest=../`dirname $f`
+	test -d $dest || mkdir -p $dest
+	mv $f $dest/
+    done
 )
 rm -rf GeographicLib-$VERSION
 

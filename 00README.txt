@@ -96,6 +96,11 @@ Files
       geodesicline.{cpp,m} -- Matlab code for geodesic lines
       geoidheight.{cpp,m} -- Matlab code to look up geoid heights
       polygonarea.{cpp,m} -- Matlab code for polygon areas
+      geoddoc.m -- Documentation for native Matlab geodesic routines
+      geodreckon.m -- Native Matlab implementation of direct geodesic problem
+      geoddistance.m -- Native Matlab implementation of inverse geodesic problem
+      geodarea.m -- Native Matlab implementation of polygon area
+      private/*.m -- Internal function for geodesic routines
 
     doc/
       doxyfile.in -- Doxygen config file
