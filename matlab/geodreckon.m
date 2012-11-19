@@ -11,11 +11,12 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
 %   lon1, s12, azi1, can be scalars or arrays of equal size.  lat1, lon1,
 %   azi1 are given in degrees and s12 in meters.  The ellipsoid vector is
 %   of the form [a, e], where a is the equatorial radius in meters, e is
-%   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid is
-%   used.  lat2, lon2, and azi2 give the position and forward azimuths at
-%   the end point in degrees.  The other outputs, S12, m12, M12, M21, a12
-%   are documented in GEODDOC.  GEODDOC also gives the restrictions on the
-%   allowed ranges of the arguments.
+%   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
+%   precisely, the value returned by DEFAULTELLIPSOID) is used.  lat2,
+%   lon2, and azi2 give the position and forward azimuths at the end point
+%   in degrees.  The other outputs, S12, m12, M12, M21, a12 are documented
+%   in GEODDOC.  GEODDOC also gives the restrictions on the allowed ranges
+%   of the arguments.
 %
 %   If arcmode is true (default is false), then the input argument s12 is
 %   interpreted as the arc length on the auxiliary sphere (in degrees) and
@@ -49,7 +50,9 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
 %       points on a single geodesic.
 %     * Additional properties of the geodesic are calcuated.
 %
-%   See also GEODDOC, GEODDISTANCE, GEODAREA, GEODESICDIRECT, GEODESICLINE.
+%   See also GEODDOC, GEODDISTANCE, GEODAREA, GEODESICDIRECT, GEODESICLINE,
+%     DEFAULTELLIPSOID.
+
 
 % Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
 % under the MIT/X11 License.  For more information, see

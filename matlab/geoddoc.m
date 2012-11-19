@@ -36,8 +36,9 @@ function geoddoc
 %   sqrt(a^2-b^2)/a, and b is the polar semi-axis.  Typically, a and b are
 %   measured in meters and the linear and area quantities returned by the
 %   routines are then in meters and meters^2.  However, other units can be
-%   employed.  If ELLIPSOID is omitted, then the WGS84 ellipsoid is assumed
-%   [6378137, 0.0818191908426215] corresponding to a = 6378137 meters and a
+%   employed.  If ELLIPSOID is omitted, then the WGS84 ellipsoid (more
+%   precisely, the value returned by DEFAULTELLIPSOID) is assumed [6378137,
+%   0.0818191908426215] corresponding to a = 6378137 meters and a
 %   flattening f = (a-b)/a = 1/298.257223563.  The flattening and
 %   eccentricity are related by
 %
@@ -179,8 +180,8 @@ function geoddoc
 %     * GEODAREA is accurate regardless of the length of the edges of the
 %       polygon.
 %
-%   See also GEODDISTANCE, GEODRECKON, GEODAREA, GEODESICDIRECT,
-%     GEODESICLINE, GEODESICINVERSE, POLYGONAREA.
+%   See also GEODDISTANCE, GEODRECKON, GEODAREA, DEFAULTELLIPSOID,
+%     GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, POLYGONAREA.
 
 % Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
 % under the MIT/X11 License.  For more information, see

@@ -7,14 +7,15 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
 %   calculates the surface area A of the geodesic polygon specified by the
 %   input vectors lat, lon (in degrees).  The ellipsoid vector is of the
 %   form [a, e], where a is the equatorial radius in meters, e is the
-%   eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid is used.
-%   There is no need to "close" the polygon by repeating the first point.
-%   Multiple polygons can be specified by separating the vertices by NaNs
-%   in the vectors.  Thus a series of quadrilaterals can be specified as
-%   two 5 x K arrays where the 5th row is NaN.  The output, A, is in
-%   meters^2.  Counter-clockwise traversal counts as a positive area.  Only
-%   simple polygons (which do not intersect themselves) are supported.
-%   Also returned are the perimeters of the polygons in P (meters) and the
+%   eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
+%   precisely, the value returned by DEFAULTELLIPSOID) is used.  There is
+%   no need to "close" the polygon by repeating the first point.  Multiple
+%   polygons can be specified by separating the vertices by NaNs in the
+%   vectors.  Thus a series of quadrilaterals can be specified as two 5 x K
+%   arrays where the 5th row is NaN.  The output, A, is in meters^2.
+%   Counter-clockwise traversal counts as a positive area.  Only simple
+%   polygons (which do not intersect themselves) are supported.  Also
+%   returned are the perimeters of the polygons in P (meters) and the
 %   numbers of vertices in N.  GEODDOC gives the restrictions on the
 %   allowed ranges of the arguments.
 %
@@ -29,7 +30,8 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
 %     J. Geodesy (2012)
 %     http://dx.doi.org/10.1007/s00190-012-0578-z
 %
-%   See also GEODDOC, GEODDISTANCE, GEODRECKON, POLYGONAREA
+%   See also GEODDOC, GEODDISTANCE, GEODRECKON, POLYGONAREA,
+%     DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
 % under the MIT/X11 License.  For more information, see

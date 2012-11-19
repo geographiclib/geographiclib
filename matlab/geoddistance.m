@@ -12,11 +12,12 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
 %   be scalars or arrays of equal size and must be expressed in degrees.
 %   The ellipsoid vector is of the form [a, e], where a is the equatorial
 %   radius in meters, e is the eccentricity.  If ellipsoid is omitted, the
-%   WGS84 ellipsoid is used.  The output s12 is the distance in meters and
-%   azi1 and azi2 are the forward azimuths at the end points in degrees.
-%   The other optional outputs, S12, m12, M12, M21, a12 are documented in
-%   GEODDOC.  GEODDOC also gives the restrictions on the allowed ranges of
-%   the arguments.
+%   WGS84 ellipsoid (more precisely, the value returned by
+%   DEFAULTELLIPSOID) is used.  The output s12 is the distance in meters
+%   and azi1 and azi2 are the forward azimuths at the end points in
+%   degrees.  The other optional outputs, S12, m12, M12, M21, a12 are
+%   documented in GEODDOC.  GEODDOC also gives the restrictions on the
+%   allowed ranges of the arguments.
 %
 %   When given a combination of scalar and array inputs, the scalar inputs
 %   are automatically expanded to match the size of the arrays.
@@ -38,7 +39,8 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
 %     * The algorithm converges for all pairs of input points.
 %     * Additional properties of the geodesic are calcuated.
 %
-%   See also GEODDOC, GEODRECKON, GEODAREA, GEODESICINVERSE.
+%   See also GEODDOC, GEODRECKON, GEODAREA, GEODESICINVERSE,
+%     DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
 % under the MIT/X11 License.  For more information, see

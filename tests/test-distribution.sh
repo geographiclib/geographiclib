@@ -119,6 +119,14 @@ tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
     done
 )
 rm -rf GeographicLib-$VERSION
+mkdir -p $TEMP/geographiclib-matlab/private
+cp -p $TEMP/gitr/geographiclib/matlab/geod{doc,reckon,distance,area}.m \
+    $TEMP/geographiclib-matlab/
+cp -p $TEMP/gitr/geographiclib/matlab/private/*.m \
+    $TEMP/geographiclib-matlab/private/
+cd $TEMP
+zip $DEVELSOURCE/geographiclib-matlab-$VERSION.zip \
+    geographiclib-matlab/*.m geographiclib-matlab/private/*.m
 
 cd $TEMP/rela/GeographicLib-$VERSION
 make -j10

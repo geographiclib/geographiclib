@@ -39,7 +39,8 @@ MATLAB_GEOD = \
 $(srcdir)/geoddoc.m \
 $(srcdir)/geodreckon.m \
 $(srcdir)/geoddistance.m \
-$(srcdir)/geodarea.m
+$(srcdir)/geodarea.m \
+$(srcdir)/defaultellipsoid.m
 
 MATLAB_GEOD_PRIVATE = \
 $(srcdir)/private/A1m1f.m \
@@ -59,7 +60,6 @@ $(srcdir)/private/C4coeff.m \
 $(srcdir)/private/C4f.m \
 $(srcdir)/private/cbrt.m \
 $(srcdir)/private/cvmgt.m \
-$(srcdir)/private/defaultellipsoid.m \
 $(srcdir)/private/InverseStart.m \
 $(srcdir)/private/Lambda12.m \
 $(srcdir)/private/Lengths.m \
