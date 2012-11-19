@@ -42,9 +42,9 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
 %   function in the MATLAB mapping toolbox.  Differences are
 %
 %     * When the ellipsoid argument is omitted, use the WGS84 ellipsoid.
+%     * The routines work for prolate (as well as oblate) ellipsoids.
 %     * The azimuth at the end point azi2 is returned.
-%     * The solution is accurate to round-off error.
-%     * The algorithm is non-iterative and thus may be faster.
+%     * The solution is accurate to round off for abs(e) < 0.2.
 %     * Redundant calculations are avoided when computing multiple
 %       points on a single geodesic.
 %     * Additional properties of the geodesic are calcuated.

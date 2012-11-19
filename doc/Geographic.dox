@@ -891,7 +891,7 @@ drop in replacements for GeographicLib::Geodesic and
 GeographicLib::GeodesicLine in which the solution is given in terms of
 elliptic integrals (computed by GeographicLib::EllipticFunction).
 These classes should be used if the absolute value of the flattening
-exceeds 0.01.  The -E option to <a href="Geod.1.html">Geod</a> uses
+exceeds 0.02.  The -E option to <a href="Geod.1.html">Geod</a> uses
 these classes.
 
 GeographicLib::Geocentric and GeographicLib::LocalCartesian convert between
@@ -2550,7 +2550,7 @@ integrals).  For the WGS84 ellipsoid, the series solutions are about
 control round-off errors with series solutions); thus
 GeographicLib::Geodesic and GeographicLib::GeodesicLine are
 recommended for most geodetic applications.  However, in applications
-where the absolute value of \e f is greater than about 0.01, the exact
+where the absolute value of \e f is greater than about 0.02, the exact
 classes should be used.
 
 Go to
@@ -3640,7 +3640,7 @@ of the git repository for %GeographicLib.
      - add native matlab implementations geoddistance, geodreckon,
        geodarea;
      - improve the solution of the direct problem so that now the series
-       solution is accurate to round-off for |\e f| < 1/50;
+       solution is accurate to round off for |\e f| < 1/50;
      - tighten up the convergence criteria for solution of the inverse
        problem;
      - no longer signal failures of convergence with NaNs (a slightly
@@ -3648,15 +3648,6 @@ of the git repository for %GeographicLib.
    - Fix GeographicLib::DMS::Decode double rounding BUG.
    - On MacOSX platforms with the cmake configuration, universal
      binaries are built.
-   - TODO: geod-addendum additions:
-     - set sign of sin(sigma_1) negative for equatorial geodesic
-     - solution in terms of elliptic integrals
-     - better area series
-     - making Newton robust
-     - improving accuracy of direct calculation
-     - document accuracy as function of f
-     - python and matlab implementations
-   - DONE: stop being nasty about NGS geodesic calculator.
 
  - <a href="http://geographiclib.sf.net/1.26">Version 1.26</a>
    (released 2012-10-22)

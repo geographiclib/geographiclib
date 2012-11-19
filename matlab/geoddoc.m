@@ -170,9 +170,10 @@ function geoddoc
 %   RECKON, and AREAINT functions in the MATLAB mapping toolbox.  The major
 %   improvements offered by GEODDISTANCE, GEODRECKON, and GEODAREA are
 %
-%     * The routines are accurate to round off.  For example, for the WGS84
-%       ellipsoid, the error in the distance returned by GEODDISTANCE is
-%       less then 15 nanometers.
+%     * The routines are accurate to round off for abs(e) < 0.2.  For
+%       example, for the WGS84 ellipsoid, the error in the distance
+%       returned by GEODDISTANCE is less then 15 nanometers.
+%     * The routines work for prolate (as well as oblate) ellipsoids.
 %     * GEODDISTANCE converges for all inputs.
 %     * Differential and integral properties of the geodesics are computed.
 %     * GEODAREA is accurate regardless of the length of the edges of the

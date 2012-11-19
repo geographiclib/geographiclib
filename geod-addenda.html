@@ -19,70 +19,33 @@
       <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
 	J. Geodesy (2012)</a>.
     </h3>
-    <p>
-      The algorithms given in this paper were derived for small values
-      of the flattening, specifically \(\left|f\right| \lt 0.01\).  This
-      covers all terrestrial geodetic applications.  In other fields
-      much more ellipsoids need to be modeled, which necessitates some
-      changes to the algorithms briefy described here.
-      <ol>
-	<li>
-	  Replace the series expansions for the integrals (which are
-	  valid only if \(f\) is small) with direct evaluation in
-	  terms of elliptic integrals (which are valid for all
-	  \(f\)).  The key relations used are
-	  \[
-\begin{aligned}
-  \frac sb &= E(\sigma, ik), \\
-  \lambda &= \chi
-           - \frac{e'^2}{\sqrt{1+e'^2}}\sin\alpha_0 H(\sigma, -e'^2, ik), \\
-  J(\sigma) &= k^2 D(\sigma, ik),
-\end{aligned}
-	  \]
-	  where
-	  \[
-\begin{aligned}
-\tan\chi &= \sqrt{\frac{1+e'^2}{1+k^2\sin^2\sigma}}\tan\omega, \\
- H(\phi, \alpha^2, k)
- &=
- \frac1{\alpha^2} F(\phi, k) +
-      \biggl(1 - \frac1{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k),
-\end{aligned}
-	  \]
-	  and \(F(\phi, k)\), \(E(\phi, k)\), \(D(\phi, k)\), and
-	  \(\Pi(\phi, \alpha^2, k)\), are incomplete elliptic integrals
-	  (see <a href="http://dlmf.nist.gov/19.2.ii">
-	    http://dlmf.nist.gov/19.2.ii</a>).
-	<li>
-	  Make Newton's method for the inverse problem (Sec. 4) more
-	  robust.  The starting guesses given in Sec. 5 are not very
-	  good for highly eccentric ellipsoids.  In fact, it's
-	  possible to modify Newton's method so that it converges even
-	  for poor initial guesses.  The goal is to find the root of
-	  \[
-f(\alpha_1) \equiv \lambda_{12}(\alpha_1) - \lambda_{12} = 0,
-
-	  \] where \(\lambda_{12}(\alpha_1)\) is the solution of the
-	  hybrid problem.  There is exactly one root to this equation
-	  in the interval \(\alpha_1 \in (0,\pi)\) and its derivative
-	  \(f'(\alpha_1)\) is positive at the root.  During the course
-	  of the iteration, a range \((\alpha_{1a}, \alpha_{1b})\) is
-	  maintained which brackets the root and with each evaluation
-	  of \(f(\alpha_1)\) the range is shrunk, if possible.
-	  Newton's method is restarted whenever the derivative of
-	  \(f(\alpha_1)\) is negative (because the new value of
-	  \(\alpha_1\) is then further from the solution) or if the
-	  new estimate of \(\alpha_1\) lies outside \((0,\pi)\); in
-	  this case, the new starting guess is taken to be
-	  \((\alpha_{1a} + \alpha_{1b}) / 2\).
-	<li>
-	  Use a better series for the area.  Equation (63) give
-	  expansions for the area integral using \(e'^2\) and \(k^2\)
-	  as small parameters.  Unfortunately the resulting series
-	  diverges for \(e' \gt 1\) or \(b/a \lt 1/\sqrt2\).  This
-	  problem is remedied by expanding instead in terms of \(n\)
-	  and \(\epsilon\).  Thus Eq. (63) becomes
-	  \[
+    <ol>
+      <li>
+	Care needs to be taken when solving the inverse problem for a
+	non-equatorial geodesic when both end points on the equator.  In
+	Table 5, the quadrants for \(\sigma_1\) and \(\omega_1\) must be
+	determined taking \(\sin\sigma_1\) and \(\sin\omega_1\) to be
+	negative; this is consistent with the ordering \(\phi_1 \le 0\).
+      <li>
+	The 6th-order series given in the paper provide solutions for
+	the geodesic problem which are accurate to round off for
+	\(\left|f\right| \lt 0.01\).  The least accurate of the series
+	is the reverted series for \(\sigma\) in terms of \(\tau\),
+	Eqs. (20) and (21), which is used only in solving the direct
+	problem.  The accuracy can be improved by using these equations
+	to give an initial approximation for \(\sigma\) which is
+	following by one step of Newton's method applied to Eq. (7),
+	with \(dI_1(\sigma)/d\sigma = \sqrt{1 + k^2 \sin^2\sigma}\).
+	With this change (which need only be applied for
+	\(\left|f\right| \gt 0.01\)), the 6th-order series are accurate
+	to round-off for \(\left|f\right| \lt 0.02\).
+      <li>
+	Equation (63) give expansions for the area integral using
+	\(e'^2\) and \(k^2\) as small parameters.  Unfortunately the
+	resulting series diverges for \(e' \gt 1\) or \(b/a \lt
+	1/\sqrt2\).  This problem is remedied by expanding instead in
+	terms of \(n\) and \(\epsilon\).  Thus Eq. (63) becomes
+	\[
 \begin{aligned}
 C_{40} &\textstyle= \bigl(\frac{2}{3} - \frac{4}{15} n + \frac{8}{105} n^2 +
       \frac{4}{315} n^3 + \frac{16}{3465} n^4 + \frac{20}{9009} n^5\bigr)\\
@@ -123,28 +86,79 @@ C_{44} &\textstyle=  \bigl(\frac{64}{31185} -
       - \frac{128}{135135} \epsilon^5 + \ldots,\\
 C_{45} &\textstyle=  \frac{128}{99099} \epsilon^5 + \ldots.
 \end{aligned}
-	  \]
-      </ol>
-      Changes 2 and 3 have been implemented in the <a href="index.html">
-      GeographicLib<a> classes
-      <a href="html/classGeographicLib_1_1Geodesic.html">
-	Geodesic</a> and
-      <a href="html/classGeographicLib_1_1GeodesicLine.html">
-	GeodesicLine</a>.
-      Change 1 (the evaluation of the integrals in terms of elliptic
-      integrals) is implemented in the <a href="index.html">
-      GeographicLib<a> classes
-      <a href="html/classGeographicLib_1_1GeodesicExact.html">
-	GeodesicExact</a> and
-      <a href="html/classGeographicLib_1_1GeodesicLineExact.html">
-	GeodesicLineExact</a>.
-      For geodetic applications,
-      <a href="html/classGeographicLib_1_1Geodesic.html">
-	Geodesic</a> and
-      <a href="html/classGeographicLib_1_1GeodesicLine.html">
-	GeodesicLine</a>
-      are preferred, because they are about 2&ndash;3 times faster and
-      the round-off errors are about 2&ndash;3 times smaller.
+	\]
+      <li>
+	The starting guesses for Newton's metho given in Sec. 5 are not
+	very good for highly eccentric ellipsoids.  It's possible to
+	modify Newton's method so that it converges even for poor
+	initial guesses.  The goal is to find the root of
+	\[
+	f(\alpha_1) \equiv \lambda_{12}(\alpha_1) - \lambda_{12} = 0,
+	\]
+	where \(\lambda_{12}(\alpha_1)\) is the solution of the hybrid
+	problem.  There is exactly one root to this equation in the
+	interval \(\alpha_1 \in (0,\pi)\) and its derivative
+	\(f'(\alpha_1)\) is positive at the root.  During the course of
+	the iteration, a range \((\alpha_{1a}, \alpha_{1b})\) is
+	maintained which brackets the root and with each evaluation of
+	\(f(\alpha_1)\) the range is shrunk, if possible.  Newton's
+	method is restarted whenever the derivative of \(f(\alpha_1)\)
+	is negative (because the new value of \(\alpha_1\) is then
+	further from the solution) or if the new estimate of
+	\(\alpha_1\) lies outside \((0,\pi)\); in this case, the new
+	starting guess is taken to be \((\alpha_{1a} + \alpha_{1b}) /
+	2\).
+      <li>
+	In order to obtain accurate solutions for ellipsoids of
+	arbitrary eccentricity, it is necessary to replace the series
+	expansions for the integrals (which are valid only if \(f\) is
+	small) with direct evaluation in terms of elliptic integrals
+	(which are valid for all \(f\)).  The key relations used are
+	\[
+\begin{aligned}
+  \frac sb &= E(\sigma, ik), \\
+  \lambda &= \chi
+           - \frac{e'^2}{\sqrt{1+e'^2}}\sin\alpha_0 H(\sigma, -e'^2, ik), \\
+  J(\sigma) &= k^2 D(\sigma, ik),
+\end{aligned}
+	\]
+	where
+	\[
+\begin{aligned}
+\tan\chi &= \sqrt{\frac{1+e'^2}{1+k^2\sin^2\sigma}}\tan\omega, \\
+ H(\phi, \alpha^2, k)
+ &=
+ \frac1{\alpha^2} F(\phi, k) +
+      \biggl(1 - \frac1{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k),
+\end{aligned}
+	\]
+	and \(F(\phi, k)\), \(E(\phi, k)\), \(D(\phi, k)\), and
+	\(\Pi(\phi, \alpha^2, k)\), are incomplete elliptic integrals
+	(see <a href="http://dlmf.nist.gov/19.2.ii">
+	http://dlmf.nist.gov/19.2.ii</a>).
+    </ol>
+    Items 2&ndash;5 represent changes since the publication of the
+    paper.  Change 2&ndash;4 have been implemented in the
+    <a href="index.html"> GeographicLib</a> classes
+    <a href="html/classGeographicLib_1_1Geodesic.html"> Geodesic</a> and
+    <a href="html/classGeographicLib_1_1GeodesicLine.html">
+      GeodesicLine</a>
+    in GeographicLib versions 1.27, 1.26, and 1.25, respectively.
+    Change 5 (the evaluation of the integrals in terms of elliptic
+    integrals) is implemented in the <a href="index.html">
+      GeographicLib</a>
+    classes
+    <a href="html/classGeographicLib_1_1GeodesicExact.html">
+      GeodesicExact</a> and
+    <a href="html/classGeographicLib_1_1GeodesicLineExact.html">
+      GeodesicLineExact</a> which were added to GeographicLib 1.25.
+    For geodetic applications,
+    <a href="html/classGeographicLib_1_1Geodesic.html">
+      Geodesic</a> and
+    <a href="html/classGeographicLib_1_1GeodesicLine.html">
+      GeodesicLine</a>
+    are preferred, because they are about 2&ndash;3 times faster and the
+    round-off errors are about 2&ndash;3 times smaller.
     <h3>
       <a name="geodalg-errata">Errata</a> for C. F. F. Karney,
       <a href="geod.html">
