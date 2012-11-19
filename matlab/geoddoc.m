@@ -1,7 +1,7 @@
 function geoddoc
-%GEODDOC  Introduction to geodesic routines.
+%GEODDOC  Geodesics on an ellipsoid of revolution
 %
-%   The geod package includes three routines GEODDISTANCE, GEODRECKON, and
+%   This package includes three routines GEODDISTANCE, GEODRECKON, and
 %   GEODAREA which solve various problems involving geodesics on the
 %   surface of an ellipsoid of revolution.  These are based on the paper
 %
@@ -19,8 +19,8 @@ function geoddoc
 %
 %   The shortest path between two points on the ellipsoid at (lat1, lon1)
 %   and (lat2, lon2) is called the geodesic.  Its length is s12 and the
-%   geodesic from point 1 to point 2 has azimuths azi1 and azi2 at the two
-%   end points.
+%   geodesic from point 1 to point 2 has forward azimuths azi1 and azi2 at
+%   the two end points.
 %
 %   Traditionally two geodesic problems are considered:
 %     * the direct problem -- given lat1, lon1, s12, and azi1, determine
@@ -39,9 +39,13 @@ function geoddoc
 %   employed.  If ELLIPSOID is omitted, then the WGS84 ellipsoid is assumed
 %   [6378137, 0.0818191908426215] corresponding to a = 6378137 meters and a
 %   flattening f = (a-b)/a = 1/298.257223563.  The flattening and
-%   eccentricity are related by e = sqrt(f*(2-f)) and f =
-%   e^2/(1+sqrt(1-e^2)).  For a sphere, set e = 0; for a prolate ellipsoid
-%   (b > a), specify a pure imaginary e.
+%   eccentricity are related by
+%
+%       e = sqrt(f * (2 - f))
+%       f = e^2 / (1 + sqrt(1 - e^2))
+%
+%   For a sphere, set e = 0; for a prolate ellipsoid (b > a), specify e as
+%   a pure imaginary number.
 %
 %   All angles (latitude, longitude, azimuth) are measured in degrees with
 %   latitudes increasing northwards, longitudes increasing eastwards, and
@@ -146,13 +150,14 @@ function geoddoc
 %     http://geographiclib.sf.net
 %
 %   An alternate MATLAB interface is provided by the wrapper functions,
-%   GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, and POLYGONAREA.
-%   However these depend on being able to compile and link the interface
-%   code, which limits their usefulness.  GEODDISTANCE, GEODRECKON, and
-%   GEODAREA are native implementations which will work on any MATLAB
-%   platform.  They are fully vectorized internally so that their speed is
-%   competitive with the compiled C++ code.  Implementations of these
-%   routines in Python and Javascript are also available; see
+%   GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, and POLYGONAREA which
+%   are part of GeographicLib.  However these depend on being able to
+%   compile and link the interface code, which limits their usefulness.
+%   GEODDISTANCE, GEODRECKON, and GEODAREA are native implementations which
+%   will work on any MATLAB platform.  They are fully vectorized internally
+%   so that their speed is competitive with the compiled C++ code.
+%   Implementations of these routines in Python and Javascript are also
+%   available; see
 %
 %     http://geographiclib.sf.net/html/other.html
 %
@@ -164,6 +169,7 @@ function geoddoc
 %   The routines duplicate some of the functionality of the DISTANCE,
 %   RECKON, and AREAINT functions in the MATLAB mapping toolbox.  The major
 %   improvements offered by GEODDISTANCE, GEODRECKON, and GEODAREA are
+%
 %     * The routines are accurate to round off.  For example, for the WGS84
 %       ellipsoid, the error in the distance returned by GEODDISTANCE is
 %       less then 15 nanometers.
@@ -181,5 +187,5 @@ function geoddoc
 %
 % This file was distributed with GeographicLib 1.27.
 
-  help geoddoc;
+  help geoddoc
 end

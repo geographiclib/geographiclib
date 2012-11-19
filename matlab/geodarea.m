@@ -1,5 +1,5 @@
 function [A, P, N] = geodarea(lat, lon, ellipsoid)
-%GEODAREAINT  Surface area of polygon on ellipsoid
+%GEODAREA  Surface area of polygon on an ellipsoid
 %
 %   A = GEODAREA(lat, lon)
 %   [A, P, N] = GEODAREA(lat, lon, ellipsoid)
@@ -8,6 +8,7 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
 %   input vectors lat, lon (in degrees).  The ellipsoid vector is of the
 %   form [a, e], where a is the equatorial radius in meters, e is the
 %   eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid is used.
+%   There is no need to "close" the polygon by repeating the first point.
 %   Multiple polygons can be specified by separating the vertices by NaNs
 %   in the vectors.  Thus a series of quadrilaterals can be specified as
 %   two 5 x K arrays where the 5th row is NaN.  The output, A, is in
@@ -36,22 +37,20 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
 %
 % This file was distributed with GeographicLib 1.27.
 
-  if ~isequal(size(lat), size(lon)),
-    error('lat, lon have incompatible sizes');
+  if ~isequal(size(lat), size(lon))
+    error('lat, lon have incompatible sizes')
   end
 
   lat1 = lat(:);
   lon1 = lon(:);
   M = length(lat1);
   ind = [0; find(isnan(lat1 + lon1))];
-  if length(ind) == 1 || ind(end) ~= M,
+  if length(ind) == 1 || ind(end) ~= M
     ind = [ind; M + 1];
   end
   K = length(ind) - 1;
   A = zeros(K, 1); P = A; N = A; crossings = A;
-  if M == 0,
-    return;
-  end
+  if M == 0, return, end
 
   lat2 = [lat1(2:end, 1); 0];
   lon2 = [lon1(2:end, 1); 0];
@@ -59,23 +58,18 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
   m1 = max(1, ind(2:end) - 1);
   lat2(m1) = lat1(m0); lon2(m1) = lon1(m0);
 
-  if nargin < 3, % Default: ellipsoid = [6378137, 0.081819190842621494335];
-    a = 6378137;
-    f = 1/298.257223563;
-    e2 = f * (2 - f);
-    ellipsoid = [a, sqrt(e2)];
-  else
-    if length(ellipsoid(:)) ~= 2,
-      error('ellipsoid must be a vector of size 2');
-    end
-    a = ellipsoid(1);
-    e2 = ellipsoid(2)^2;
-    f = e2 / (1 + sqrt(1 - e2));
+  if nargin < 3, ellipsoid = defaultellipsoid; end
+  if length(ellipsoid(:)) ~= 2
+    error('ellipsoid must be a vector of size 2')
   end
+  a = ellipsoid(1);
+  e2 = ellipsoid(2)^2;
+  f = e2 / (1 + sqrt(1 - e2));
+
   b = (1 - f) * a;
-  if e2 == 0,
+  if e2 == 0
     c2 = a^2;
-  elseif e2 > 0,
+  elseif e2 > 0
     c2 = (a^2 + b^2 * atanh(sqrt(e2))/sqrt(e2)) / 2;
   else
     c2 = (a^2 + b^2 * atan(sqrt(-e2))/sqrt(-e2)) / 2;
@@ -85,7 +79,7 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
   [s12, ~, ~, S12] = geoddistance(lat1, lon1, lat2, lon2, ellipsoid);
   cross = transit(lon1, lon2);
 
-  for k = 1 : K,
+  for k = 1 : K
     N(k) = m1(k) - m0(k) + 1;
     P(k) = sum(s12(m0(k):m1(k)));
     A(k) = -sum(S12(m0(k):m1(k)));

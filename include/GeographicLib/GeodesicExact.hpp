@@ -41,24 +41,26 @@ namespace GeographicLib {
    * the error is about 40 nm (40 nanometers) instead of 15 nm.  However the
    * error in the series solution scales as <i>f</i><sup>7</sup> while the
    * error in the elliptic integral solution depends weakly on \e f.  If the
-   * quarter meridian distance is 10000 km and the ratio \e b/\e a = 1 - \e f
-   * is varied then the approximate maximum error (expressed as a distance) is
-   *       1-f    error (nm)
-   *       1/128   387
-   *       1/64    345
-   *       1/32    269
-   *       1/16    210
-   *       1/8     115
-   *       1/4      69
-   *       1/2      36
-   *         1      15
-   *         2      25
-   *         4      96
-   *         8     318
-   *        16     985
-   *        32    2352
-   *        64    6008
-   *       128   19024
+   * quarter meridian distance is 10000 km and the ratio \e b/\e a = 1 &minus;
+   * \e f is varied then the approximate maximum error (expressed as a
+   * distance) is <pre>
+   *       1 - f  error (nm)
+   *       1/128     387
+   *       1/64      345
+   *       1/32      269
+   *       1/16      210
+   *       1/8       115
+   *       1/4        69
+   *       1/2        36
+   *         1        15
+   *         2        25
+   *         4        96
+   *         8       318
+   *        16       985
+   *        32      2352
+   *        64      6008
+   *       128     19024
+   * </pre>
    *
    * The computation of the area in these classes is via a 30th order series.
    * This gives accurate results for \e b/\e a &isin; [1/2, 2]; the accuracy is

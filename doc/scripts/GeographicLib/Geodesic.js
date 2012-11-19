@@ -829,7 +829,7 @@ GeographicLib.GeodesicLine = {};
 
           // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
           if (tripb || Math.abs(v) < (tripn ? 8 : 2) * tol0_)
-            break; 
+            break;
           // Update bracketing values
           if (v > 0 && (numit < g.maxit1_ || calp1/salp1 > calp1b/salp1b)) {
             salp1b = salp1; calp1b = calp1;

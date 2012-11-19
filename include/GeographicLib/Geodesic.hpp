@@ -105,14 +105,14 @@ namespace GeographicLib {
    * |\e f| &lt; 0.02; however reasonably accurate results will be obtained for
    * |\e f| &lt; 0.2.  Here is a table of the approximate maximum error
    * (expressed as a distance) for an ellipsoid with the same major radius as
-   * the WGS84 ellipsoid and different values of the flattening.
-   *     |f|     error
-   *     0.01    25 nm
-   *     0.02    30 nm
-   *     0.05    10 um
-   *     0.1    1.5 mm
-   *     0.2    300 mm
-   * For very eccentric ellipsoids, use GeodesicExact instead.
+   * the WGS84 ellipsoid and different values of the flattening.<pre>
+   *     |f|      error
+   *     0.01     25 nm
+   *     0.02     30 nm
+   *     0.05     10 um
+   *     0.1     1.5 mm
+   *     0.2     300 mm
+   * </pre>For very eccentric ellipsoids, use GeodesicExact instead.
    *
    * The algorithms are described in
    * - C. F. F. Karney,

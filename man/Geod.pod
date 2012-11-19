@@ -16,8 +16,8 @@ B<Geod> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi1> ] [ B<-a> ] [ B<-e> I<a> I<f> ]
 
 The shortest path between two points on the ellipsoid at (I<lat1>,
 I<lon1>) and (I<lat2>, I<lon2>) is called the geodesic.  Its length is
-I<s12> and the geodesic from point 1 to point 2 has azimuths I<azi1> and
-I<azi2> at the two end points.
+I<s12> and the geodesic from point 1 to point 2 has forward azimuths
+I<azi1> and I<azi2> at the two end points.
 
 B<Geod> operates in one of three modes:
 

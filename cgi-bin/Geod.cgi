@@ -1,4 +1,4 @@
-#! /bin/sh
+N3#! /bin/sh
 #
 # Geod.cgi
 # cgi script for geodesic calculations
@@ -267,7 +267,7 @@ cat <<EOF
       <a href="http://www.ga.gov.au/"> Geoscience Australia</a>
       <a href="http://www.ga.gov.au/geodesy/datums/vincenty_inverse.jsp">
       online calculator</a> <b>fails</b> for the approximately antipodal
-      points (N30, E0) and (S30, E179.5).
+      points (30, 0) and (-30, 179.5).
     </p>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/Geod.1.html">

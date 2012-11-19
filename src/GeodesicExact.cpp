@@ -304,7 +304,7 @@ namespace GeographicLib {
           // solution).  iter is mean and sd of number of iterations
           //
           //           max   iter
-          // log2(b/a) err mean  sd	
+          // log2(b/a) err mean  sd
           //    -7     387 5.33 3.68
           //    -6     345 5.19 3.43
           //    -5     269 5.00 3.05
@@ -323,7 +323,7 @@ namespace GeographicLib {
           real dv;
           real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                            E, omg12, numit < maxit1_, dv) - lam12; 
+                            E, omg12, numit < maxit1_, dv) - lam12;
          // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
           if (tripb || abs(v) < (tripn ? 8 : 2) * tol0_) break;
           // Update bracketing values
