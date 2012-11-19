@@ -39,7 +39,7 @@ MATLAB_GEOD = \
 $(srcdir)/geoddoc.m \
 $(srcdir)/geodreckon.m \
 $(srcdir)/geoddistance.m \
-$(srcdir)/geodarea.m \
+$(srcdir)/geodarea.m
 
 MATLAB_GEOD_PRIVATE = \
 $(srcdir)/private/A1m1f.m \
