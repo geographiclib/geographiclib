@@ -331,9 +331,9 @@ GeographicLib binary directory before the proj directory.
 =head1 SEE ALSO
 
 GeoConvert(1).  The algorithms are described in C. F. F. Karney,
-I<Algorithms for geodesics>, J. Geodesy, 2012; DOI
+I<Algorithms for geodesics>, J. Geodesy, 2012; DOI:
 L<http://dx.doi.org/10.1007/s00190-012-0578-z>;
-addenda L<http://geographiclib.sf.net/geod-addenda.html>.
+addenda: L<http://geographiclib.sf.net/geod-addenda.html>.
 
 
 =head1 AUTHOR

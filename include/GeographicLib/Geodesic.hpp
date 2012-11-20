@@ -121,8 +121,8 @@ namespace GeographicLib {
    *   J. Geodesy, 2012;
    *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
-   *   <a href="http://geographiclib.sf.net/geod-addenda.html">
-   *   addenda</a>.
+   *   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+   *   geod-addenda.html</a>.
    * .
    * For more information on geodesics see \ref geodesic.
    *
