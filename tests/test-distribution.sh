@@ -127,8 +127,8 @@ cp -p $TEMP/gitr/geographiclib/matlab/defaultellipsoid.m \
 cp -p $TEMP/gitr/geographiclib/matlab/private/*.m \
     $TEMP/geographiclib-matlab/private/
 cd $TEMP
-rm -f $DEVELSOURCE/geographiclib-matlab-$VERSION.zip
-zip $DEVELSOURCE/geographiclib-matlab-$VERSION.zip \
+rm -f $DEVELSOURCE/geographiclib_matlab_$VERSION.zip
+zip $DEVELSOURCE/geographiclib_matlab_$VERSION.zip \
     geographiclib-matlab/*.m geographiclib-matlab/private/*.m
 
 cd $TEMP/rela/GeographicLib-$VERSION

@@ -1095,10 +1095,32 @@ of the Australian Communications and Media Authority.)
 
 \section matlab Matlab and Octave interfaces
 
-The matlab directory contains interface code so that some %GeographicLib
-classes can be accessed from Matlab or Octave.  There are two ways of
-compiling this code: (1) using cmake and (2) invoking the compiler from
-Matlab.
+The matlab directory contains
+ - Native Matlab implementations of the geodesic routines.  To use
+   these, start Matlab or Octave and run one of (for example) \verbatim
+   addpath /usr/local/libexec/GeographicLib/matlab
+   addpath 'C:/pkg-vc10-x64/GeographicLib-1.27/libexec/GeographicLib/matlab'
+   \endverbatim
+   The available functions are:
+   - geoddoc: briefly descibe the routines
+   - geodreckon: solve the direct geodesic problem
+   - geoddistance: solve the inverse geodesic problem
+   - geodarea: compute the area of ellipsoidal polygons
+   .
+   Use the help function to get documentation, e.g., \code
+   help geoddistance \endcode
+   to obtain documentation.  These functions are also available as a
+   standalone package from
+   <a href="http://www.mathworks.com/matlabcentral/fileexchange/">
+   Matlab File Exchange</a> using the link
+   <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
+   http://www.mathworks.com/matlabcentral/fileexchange/39108</a>
+ - Interface code so that some %GeographicLib classes can be accessed
+   from Matlab or Octave.  The rest of this section describes how to
+   compile and use these interfaces.
+
+There are two ways of compiling the interface code: (1) using cmake and
+(2) invoking the compiler from Matlab.
  - <b>Using cmake:</b> Before running cmake, configure MATLAB on
    Windows to use the same compiler that you're going to use for compiling
    %GeographicLib.  For example \verbatim

@@ -329,7 +329,7 @@ class Geodesic(object):
     self._C4x[20] = 128/99099.0
 
   def A3f(self, eps):
-    # Evaluate sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner's method
+    # Evaluate sum(_A3x[k] * eps^k, k, 0, nA3x_-1) by Horner's method
     v = 0
     for i in range(Geodesic.nA3x_-1, -1, -1):
       v = eps * v + self._A3x[i]
@@ -614,8 +614,8 @@ class Geodesic(object):
     a12 = s12 = azi1 = azi2 = m12 = M12 = M21 = S12 = Math.nan # return vals
 
     outmask &= Geodesic.OUT_ALL
-    lon1 = Math.AngNormalize(lon1)
-    lon12 = Math.AngNormalize(Math.AngNormalize(lon2) - lon1)
+    lon12 = Math.AngNormalize(Math.AngNormalize(lon2) -
+                              Math.AngNormalize(lon1))
     # If very close to being on the same meridian, then make it so.
     # Not sure this is necessary...
     lon12 = Geodesic.AngRound(lon12)

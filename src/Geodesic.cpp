@@ -65,7 +65,7 @@ namespace GeographicLib {
             (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
             sqrt(abs(_e2))))/2) // authalic radius squared
       // The sig12 threshold for "really short"
-    , _etol2(0.001 * 10 * tol2_ / max(real(0.1), sqrt(abs(_e2))))
+    , _etol2(0.001 * tol2_ / max(real(0.1), sqrt(abs(_e2))))
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -127,8 +127,8 @@ namespace GeographicLib {
                                   real& m12, real& M12, real& M21, real& S12)
     const throw() {
     outmask &= OUT_ALL;
-    lon1 = Math::AngNormalize(lon1);
-    real lon12 = Math::AngNormalize(Math::AngNormalize(lon2) - lon1);
+    real lon12 = Math::AngNormalize(Math::AngNormalize(lon2) -
+                                    Math::AngNormalize(lon1));
     // If very close to being on the same meridian, then make it so.
     // Not sure this is necessary...
     lon12 = AngRound(lon12);
@@ -777,7 +777,7 @@ namespace GeographicLib {
   }
 
   Math::real Geodesic::A3f(real eps) const throw() {
-    // Evaluate sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner's method
+    // Evaluate sum(_A3x[k] * eps^k, k, 0, nA3x_-1) by Horner's method
     real v = 0;
     for (int i = nA3x_; i; )
       v = eps * v + _A3x[--i];

@@ -1,4 +1,4 @@
-N3#! /bin/sh
+#! /bin/sh
 #
 # Geod.cgi
 # cgi script for geodesic calculations
@@ -263,11 +263,12 @@ cat <<EOF
       Geod is accurate to about 15&nbsp;nm and gives solutions for the
       inverse problem for any pair of points.  Many other geodesic
       calculators (based in Vincenty's method) fail for some inputs; for
-      example the
-      <a href="http://www.ga.gov.au/"> Geoscience Australia</a>
-      <a href="http://www.ga.gov.au/geodesy/datums/vincenty_inverse.jsp">
-      online calculator</a> <b>fails</b> for the approximately antipodal
-      points (30, 0) and (-30, 179.5).
+      example, the
+      <a href="http://www.ngs.noaa.gov/">
+        NGS</a> online
+      <a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
+        inverse geodesic calculator</a>
+      sometimes fails to terminate.
     </p>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/Geod.1.html">

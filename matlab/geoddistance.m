@@ -93,8 +93,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
   A3x = A3coeff(n);
   C3x = C3coeff(n);
 
-  lon1 = AngNormalize(lon1(:));
-  lon12 = AngNormalize(AngNormalize(lon2(:)) - lon1);
+  lon12 = AngNormalize(AngNormalize(lon2(:)) - AngNormalize(lon1(:)));
   lon12 = AngRound(lon12);
   lonsign = 2 * (lon12 >= 0) - 1;
   lon12 = lonsign .* lon12;
@@ -313,7 +312,7 @@ function [sig12, salp1, calp1, salp2, calp2] = ...
   tol0 = eps;
   tol1 = 200 * tol0;
   tol2 = sqrt(eps);
-  etol2 = 0.001 * tol2 / max(0.1, sqrt(abs(e2)));
+  etol2 = 0.01 * tol2 / max(0.1, sqrt(abs(e2)));
   xthresh = 1000 * tol2;
 
   sig12 = - ones(N, 1); salp2 = NaN(N, 1); calp2 = NaN(N, 1);

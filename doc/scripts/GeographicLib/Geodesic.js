@@ -304,7 +304,7 @@ GeographicLib.GeodesicLine = {};
   }
 
   g.Geodesic.prototype.A3f = function(eps) {
-    // Evaluate sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner's method
+    // Evaluate sum(_A3x[k] * eps^k, k, 0, nA3x_-1) by Horner's method
     var v = 0;
     for (var i = g.nA3x_; i; )
       v = eps * v + this._A3x[--i];
@@ -620,8 +620,7 @@ GeographicLib.GeodesicLine = {};
   g.Geodesic.prototype.GenInverse = function(lat1, lon1, lat2, lon2, outmask) {
     var vals = {};
     outmask &= g.OUT_ALL;
-    lon1 = m.AngNormalize(lon1);
-    var lon12 = m.AngNormalize(m.AngNormalize(lon2) - lon1);
+    var lon12 = m.AngNormalize(m.AngNormalize(lon2) - m.AngNormalize(lon1));
     // If very close to being on the same meridian, then make it so.
     // Not sure this is necessary...
     lon12 = g.AngRound(lon12);
