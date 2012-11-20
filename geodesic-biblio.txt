@@ -830,8 +830,10 @@
  * C. F. F. Karney,[[BR]]
    ''Geodesics on an ellipsoid of revolution''
    (Feb. 2011).[[BR]]
-   http://arxiv.org/abs/1102.1215
+   http://arxiv.org/abs/1102.1215 [[BR]]
+   Errata: http://geographiclib.sf.net/geod-addenda.html#geod-errata
  * C. F. F. Karney,[[BR]]
    ''Algorithms for geodesics'',
    J. Geodesy (2012).[[BR]]
-   http://dx.doi.org/10.1007/s00190-012-0578-z
+   http://dx.doi.org/10.1007/s00190-012-0578-z [[BR]]
+   Addenda: http://geographiclib.sf.net/geod-addenda.html

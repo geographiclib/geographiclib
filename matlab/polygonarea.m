@@ -27,6 +27,7 @@ function polygonarea(~, ~, ~)
 %     Algorithms for geodesics
 %     J. Geodesy (2012)
 %     http://dx.doi.org/10.1007/s00190-012-0578-z
+%     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
 % This is an interface to the GeographicLib C++ class
 %     Geodesic::PolygonArea

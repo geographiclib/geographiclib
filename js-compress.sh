@@ -11,6 +11,7 @@ cat <<EOF
  *    Charles F. F. Karney,
  *    Algorithms for geodesics, J. Geodesy, 2012,
  *    http://dx.doi.org/10.1007/s00190-012-0578-z
+ *    Addenda: http://geographiclib.sf.net/geod-addenda.html
  *
  * Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see

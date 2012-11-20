@@ -38,6 +38,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
 %     Algorithms for geodesics
 %     J. Geodesy (2012)
 %     http://dx.doi.org/10.1007/s00190-012-0578-z
+%     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
 %   This function duplicates some of the functionality of the RECKON
 %   function in the MATLAB mapping toolbox.  Differences are

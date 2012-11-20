@@ -26,7 +26,9 @@ namespace GeographicLib {
    *   Algorithms for geodesics</a>,
    *   J. Geodesy, 2012;
    *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
-   *   10.1007/s00190-012-0578-z</a>.
+   *   10.1007/s00190-012-0578-z</a>;
+   *   addenda <a href="http://geographiclib.sf.net/geod-addenda.html">
+   *   geod-addenda.html</a>.
    *
    * This class lets you add vertices one at a time to the polygon.  The area
    * and perimeter are accumulated in two times the standard floating point

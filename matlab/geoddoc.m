@@ -9,6 +9,7 @@ function geoddoc
 %     Algorithms for geodesics
 %     J. Geodesy (2012)
 %     http://dx.doi.org/10.1007/s00190-012-0578-z
+%     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
 %   which, in turn, is based on the classic solution of the geodesic
 %   problems pioneered by Legendre (1806), Bessel (1825), and Helmert
