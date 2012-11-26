@@ -46,8 +46,9 @@ function geoddoc
 %       e = sqrt(f * (2 - f))
 %       f = e^2 / (1 + sqrt(1 - e^2))
 %
-%   For a sphere, set e = 0; for a prolate ellipsoid (b > a), specify e as
-%   a pure imaginary number.
+%   (The functions ECC2FLAT and FLAT2ECC implement these conversions.)  For
+%   a sphere, set e = 0; for a prolate ellipsoid (b > a), specify e as a
+%   pure imaginary number.
 %
 %   All angles (latitude, longitude, azimuth) are measured in degrees with
 %   latitudes increasing northwards, longitudes increasing eastwards, and
@@ -181,7 +182,8 @@ function geoddoc
 %     * GEODAREA is accurate regardless of the length of the edges of the
 %       polygon.
 %
-%   See also GEODDISTANCE, GEODRECKON, GEODAREA, DEFAULTELLIPSOID,
+%   See also GEODDISTANCE, GEODRECKON, GEODAREA,
+%     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
 %     GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, POLYGONAREA.
 
 % Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
