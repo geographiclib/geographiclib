@@ -1,55 +1,79 @@
 #include "geodesicc.h"
 #include <math.h>
 
+#define GEOGRAPHICLIB_GEODESIC_ORDER 6
+#define nA1   GEOGRAPHICLIB_GEODESIC_ORDER
+#define nC1   GEOGRAPHICLIB_GEODESIC_ORDER
+#define nC1p  GEOGRAPHICLIB_GEODESIC_ORDER
+#define nA2   GEOGRAPHICLIB_GEODESIC_ORDER
+#define nC2   GEOGRAPHICLIB_GEODESIC_ORDER
+#define nA3   GEOGRAPHICLIB_GEODESIC_ORDER
+#define nA3x  nA3
+#define nC3   GEOGRAPHICLIB_GEODESIC_ORDER
+#define nC3x  ((nC3 * (nC3 - 1)) / 2)
+#define nC4   GEOGRAPHICLIB_GEODESIC_ORDER
+#define nC4x  ((nC4 * (nC4 + 1)) / 2)
+
 typedef double real;
 typedef unsigned bool;
 
-static unsigned init_ = 0;
+static unsigned init = 0;
 static const unsigned false = 0;
 static const unsigned true = 1;
-static unsigned digits_, maxit1_, maxit2_;
-static real epsilon_, realmin_, pi_, degree_,
-  tiny_, tol0_, tol1_, tol2_, tolb_, xthresh_;
+static unsigned digits, maxit1, maxit2;
+static real epsilon, realmin, pi, degree,
+  tiny, tol0, tol1, tol2, tolb, xthresh;
 
-static bool init() {
-  if (!init_) {
+static bool Init() {
+  if (!init) {
 #if defined(__DBL_MANT_DIG__)
-    digits_ = __DBL_MANT_DIG__;
+    digits = __DBL_MANT_DIG__;
 #else
-    digits_ = 53;
+    digits = 53;
 #endif
 #if defined(__DBL_EPSILON__)
-    epsilon_ = __DBL_EPSILON__;
+    epsilon = __DBL_EPSILON__;
 #else
-    epsilon_ = pow(0.5, digits_ - 1);
+    epsilon = pow(0.5, digits - 1);
 #endif
 #if defined(__DBL_MIN__)
-    realmin_ = __DBL_MIN__;
+    realmin = __DBL_MIN__;
 #else
-    realmin_ = pow(0.5, 1022);
+    realmin = pow(0.5, 1022);
 #endif
 #if defined(M_PI)
-    pi_ = M_PI;
+    pi = M_PI;
 #else
-    pi_ = atan2(0.0, -1.0);
+    pi = atan2(0.0, -1.0);
 #endif
-    maxit1_ = 20;
-    maxit2_ = maxit1_ + digits_ + 10;
-    tiny_ = sqrt(realmin_);
-    tol0_ = epsilon_;
-    /* Increase multiplier in defn of tol1_ from 100 to 200 to fix inverse case
+    maxit1 = 20;
+    maxit2 = maxit1 + digits + 10;
+    tiny = sqrt(realmin);
+    tol0 = epsilon;
+    /* Increase multiplier in defn of tol1 from 100 to 200 to fix inverse case
      * 52.784459512564 0 -52.784459512563990912 179.634407464943777557
      * which otherwise failed for Visual Studio 10 (Release and Debug) */
-    tol1_ = 200 * tol0_;
-    tol2_ = sqrt(tol0_);
+    tol1 = 200 * tol0;
+    tol2 = sqrt(tol0);
     /* Check on bisection interval */
-    tolb_ = tol0_ * tol2_;
-    xthresh_ = 1000 * tol2_;
-    degree_ = pi_/180;
-    init_ = 1;
+    tolb = tol0 * tol2;
+    xthresh = 1000 * tol2;
+    degree = pi/180;
+    init = 1;
   }
   return true;
 }
+
+enum captype {
+  CAP_NONE = 0U,
+  CAP_C1   = 1U<<0,
+  CAP_C1p  = 1U<<1,
+  CAP_C2   = 1U<<2,
+  CAP_C3   = 1U<<3,
+  CAP_C4   = 1U<<4,
+  CAP_ALL  = 0x1FU,
+  OUT_ALL  = 0x7F80U
+};
 
 static real sq(real x) { return x * x; }
 static real log1px(real x) {
@@ -92,7 +116,7 @@ static void SinCosNorm(real* sinx, real* cosx) {
   *cosx /= r;
 }
 
-static real AngNormalize(real x) 
+static real AngNormalize(real x)
 { return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x); }
 static real AngNormalize2(real x)
 { return AngNormalize(fmod(x, (real)(360))); }
@@ -152,7 +176,7 @@ static real A2m1f(real eps);
 static void C2f(real eps, real c[]);
 
 void GeodesicInit(struct Geodesic* g, real a, real f) {
-  init_ || init();
+  init || Init();
   g->a = a;
   g->f = f <= 1 ? f : 1/f;
   g->f1 = 1 - g->f;
@@ -165,7 +189,7 @@ void GeodesicInit(struct Geodesic* g, real a, real f) {
             (g->e2 > 0 ? atanhx(sqrt(g->e2)) : atan(sqrt(-g->e2))) /
             sqrt(fabs(g->e2))))/2; /* authalic radius squared */
   /* The sig12 threshold for "really short" */
-  g->etol2 = 0.01 * tol2_ / maxx((real)(0.1), sqrt(fabs(g->e2)));
+  g->etol2 = 0.01 * tol2 / maxx((real)(0.1), sqrt(fabs(g->e2)));
   A3coeff(g);
   C3coeff(g);
   C4coeff(g);
@@ -200,15 +224,15 @@ void GeodesicLineInit(struct GeodesicLine* l,
   l->lon1 = lon1;
   l->azi1 = azi1;
   /* alp1 is in [0, pi] */
-  alp1 = azi1 * degree_;
+  alp1 = azi1 * degree;
   /* Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
    * problems directly than to skirt them. */
   l->salp1 =     azi1  == -180 ? 0 : sin(alp1);
   l->calp1 = fabs(azi1) ==   90 ? 0 : cos(alp1);
-  phi = lat1 * degree_;
+  phi = lat1 * degree;
   /* Ensure cbet1 = +epsilon at poles */
   sbet1 = l->f1 * sin(phi);
-  cbet1 = fabs(lat1) == 90 ? tiny_ : cos(phi);
+  cbet1 = fabs(lat1) == 90 ? tiny : cos(phi);
   SinCosNorm(&sbet1, &cbet1);
   l->dn1 = sqrt(1 + g->ep2 * sq(sbet1));
 
@@ -229,7 +253,7 @@ void GeodesicLineInit(struct GeodesicLine* l,
   l->ssig1 = sbet1; l->somg1 = l->salp0 * sbet1;
   l->csig1 = l->comg1 = sbet1 != 0 || l->calp1 != 0 ? cbet1 * l->calp1 : 1;
   SinCosNorm(&l->ssig1, &l->csig1); /* sig1 in (-pi, pi] */
-  /* SinCosNorm(_somg1, _comg1); -- don't need to normalize! */
+  /* SinCosNorm(somg1, comg1); -- don't need to normalize! */
 
   l->k2 = sq(l->calp0) * g->ep2;
   eps = l->k2 / (2 * (1 + sqrt(1 + l->k2)) + l->k2);
@@ -238,13 +262,13 @@ void GeodesicLineInit(struct GeodesicLine* l,
     real s, c;
     l->A1m1 = A1m1f(eps);
     C1f(eps, l->C1a);
-    l->B11 = SinCosSeries(true, l->ssig1, l->csig1, l->C1a, nC1_);
+    l->B11 = SinCosSeries(true, l->ssig1, l->csig1, l->C1a, nC1);
     s = sin(l->B11); c = cos(l->B11);
     /* tau1 = sig1 + B11 */
     l->stau1 = l->ssig1 * c + l->csig1 * s;
     l->ctau1 = l->csig1 * c - l->ssig1 * s;
     /* Not necessary because C1pa reverts C1a
-     *    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa, nC1p_); */
+     *    B11 = -SinCosSeries(true, stau1, ctau1, C1pa, nC1p); */
   }
 
   if (l->caps & CAP_C1p)
@@ -253,26 +277,25 @@ void GeodesicLineInit(struct GeodesicLine* l,
   if (l->caps & CAP_C2) {
     l->A2m1 = A2m1f(eps);
     C2f(eps, l->C2a);
-    l->B21 = SinCosSeries(true, l->ssig1, l->csig1, l->C2a, nC2_);
+    l->B21 = SinCosSeries(true, l->ssig1, l->csig1, l->C2a, nC2);
   }
 
   if (l->caps & CAP_C3) {
     C3f(g, eps, l->C3a);
     l->A3c = -l->f * l->salp0 * A3f(g, eps);
-    l->B31 = SinCosSeries(true, l->ssig1, l->csig1, l->C3a, nC3_-1);
+    l->B31 = SinCosSeries(true, l->ssig1, l->csig1, l->C3a, nC3-1);
   }
 
   if (l->caps & CAP_C4) {
     C4f(g, eps, l->C4a);
     /* Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0) */
     l->A4 = sq(l->a) * l->calp0 * l->salp0 * g->e2;
-    l->B41 = SinCosSeries(false, l->ssig1, l->csig1, l->C4a, nC4_);
+    l->B41 = SinCosSeries(false, l->ssig1, l->csig1, l->C4a, nC4);
   }
 }
 
 real GenPosition(const struct GeodesicLine* l,
                  bool arcmode, real s12_a12,
-                 unsigned outmask,
                  real* plat2, real* plon2, real* pazi2,
                  real* ps12, real* pm12,
                  real* pM12, real* pM21,
@@ -282,6 +305,14 @@ real GenPosition(const struct GeodesicLine* l,
   real sig12, ssig12, csig12, B12 = 0, AB1 = 0;
   real omg12, lam12, lon12;
   real ssig2, csig2, sbet2, cbet2, somg2, comg2, salp2, calp2, dn2;
+  unsigned outmask =
+    (plat2 ? LATITUDE : 0U) |
+    (plon2 ? LONGITUDE : 0U) |
+    (pazi2 ? AZIMUTH : 0U) |
+    (ps12 ? DISTANCE : 0U) |
+    (pm12 ? REDUCEDLENGTH : 0U) |
+    (pM12 || pM21 ? GEODESICSCALE : 0U) |
+    (pS12 ? AREA : 0U);
 
   outmask &= l->caps & OUT_ALL;
   if (!( true /*Init()*/ && (arcmode || (l->caps & DISTANCE_IN & OUT_ALL)) ))
@@ -291,7 +322,7 @@ real GenPosition(const struct GeodesicLine* l,
   if (arcmode) {
     real s12a;
     /* Interpret s12_a12 as spherical arc length */
-    sig12 = s12_a12 * degree_;
+    sig12 = s12_a12 * degree;
     s12a = fabs(s12_a12);
     s12a -= 180 * floor(s12a / 180);
     ssig12 = s12a ==  0 ? 0 : sin(sig12);
@@ -306,7 +337,7 @@ real GenPosition(const struct GeodesicLine* l,
     B12 = - SinCosSeries(true,
                          l->stau1 * c + l->ctau1 * s,
                          l->ctau1 * c - l->stau1 * s,
-                         l->C1pa, nC1p_);
+                         l->C1pa, nC1p);
     sig12 = tau12 - (B12 - l->B11);
     ssig12 = sin(sig12); csig12 = cos(sig12);
     if (fabs(l->f) > 0.01) {
@@ -335,7 +366,7 @@ real GenPosition(const struct GeodesicLine* l,
         ssig2 = l->ssig1 * csig12 + l->csig1 * ssig12,
         csig2 = l->csig1 * csig12 - l->ssig1 * ssig12,
         serr;
-      B12 = SinCosSeries(true, ssig2, csig2, l->C1a, nC1_);
+      B12 = SinCosSeries(true, ssig2, csig2, l->C1a, nC1);
       serr = (1 + l->A1m1) * (sig12 + (B12 - l->B11)) - s12_a12 / l->b;
       sig12 = sig12 - serr / sqrt(1 + l->k2 * sq(ssig2));
       ssig12 = sin(sig12); csig12 = cos(sig12);
@@ -349,7 +380,7 @@ real GenPosition(const struct GeodesicLine* l,
   dn2 = sqrt(1 + l->k2 * sq(ssig2));
   if (outmask & (DISTANCE | REDUCEDLENGTH | GEODESICSCALE)) {
     if (arcmode || fabs(l->f) > 0.01)
-      B12 = SinCosSeries(true, ssig2, csig2, l->C1a, nC1_);
+      B12 = SinCosSeries(true, ssig2, csig2, l->C1a, nC1);
     AB1 = (1 + l->A1m1) * (B12 - l->B11);
   }
   /* sin(bet2) = cos(alp0) * sin(sig2) */
@@ -358,7 +389,7 @@ real GenPosition(const struct GeodesicLine* l,
   cbet2 = hypotx(l->salp0, l->calp0 * csig2);
   if (cbet2 == 0)
     /* I.e., salp0 = 0, csig2 = 0.  Break the degeneracy in this case */
-    cbet2 = csig2 = tiny_;
+    cbet2 = csig2 = tiny;
   /* tan(omg2) = sin(alp0) * tan(sig2) */
   somg2 = l->salp0 * ssig2; comg2 = csig2;  /* No need to normalize */
   /* tan(alp0) = cos(sig2)*tan(alp2) */
@@ -372,9 +403,9 @@ real GenPosition(const struct GeodesicLine* l,
 
   if (outmask & LONGITUDE) {
     lam12 = omg12 + l->A3c *
-      ( sig12 + (SinCosSeries(true, ssig2, csig2, l->C3a, nC3_-1)
+      ( sig12 + (SinCosSeries(true, ssig2, csig2, l->C3a, nC3-1)
                  - l->B31));
-    lon12 = lam12 / degree_;
+    lon12 = lam12 / degree;
     /* Use AngNormalize2 because longitude might have wrapped multiple
      * times. */
     lon12 = AngNormalize2(lon12);
@@ -382,19 +413,19 @@ real GenPosition(const struct GeodesicLine* l,
   }
 
   if (outmask & LATITUDE)
-    lat2 = atan2(sbet2, l->f1 * cbet2) / degree_;
+    lat2 = atan2(sbet2, l->f1 * cbet2) / degree;
 
   if (outmask & AZIMUTH)
     /* minus signs give range [-180, 180). 0- converts -0 to +0. */
-    azi2 = 0 - atan2(-salp2, calp2) / degree_;
+    azi2 = 0 - atan2(-salp2, calp2) / degree;
 
   if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
     real
-      B22 = SinCosSeries(true, ssig2, csig2, l->C2a, nC2_),
+      B22 = SinCosSeries(true, ssig2, csig2, l->C2a, nC2),
       AB2 = (1 + l->A2m1) * (B22 - l->B21),
       J12 = (l->A1m1 - l->A2m1) * sig12 + (AB1 - AB2);
     if (outmask & REDUCEDLENGTH)
-      /* Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
+      /* Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure
        * accurate cancellation in the case of coincident points. */
       m12 = l->b * ((dn2 * (l->csig1 * ssig2) - l->dn1 * (l->ssig1 * csig2))
                     - l->csig1 * csig2 * J12);
@@ -407,7 +438,7 @@ real GenPosition(const struct GeodesicLine* l,
 
   if (outmask & AREA) {
     real
-      B42 = SinCosSeries(false, ssig2, csig2, l->C4a, nC4_);
+      B42 = SinCosSeries(false, ssig2, csig2, l->C4a, nC4);
     real salp12, calp12;
     if (l->calp0 == 0 || l->salp0 == 0) {
       /* alp12 = alp2 - alp1, used in atan2 so no need to normalized */
@@ -418,7 +449,7 @@ real GenPosition(const struct GeodesicLine* l,
        * attached to 0 correctly.  The following ensures the correct
        * behavior. */
       if (salp12 == 0 && calp12 < 0) {
-        salp12 = tiny_ * l->calp1;
+        salp12 = tiny * l->calp1;
         calp12 = -1;
       }
     } else {
@@ -449,32 +480,48 @@ real GenPosition(const struct GeodesicLine* l,
   if (outmask & REDUCEDLENGTH)
     *pm12 = m12;
   if (outmask & GEODESICSCALE) {
-    *pM12 = M12;
-    *pM21 = M21;
+    if (pM12) *pM12 = M12;
+    if (pM21) *pM21 = M21;
   }
   if (outmask & AREA)
     *pS12 = S12;
 
-  return arcmode ? s12_a12 : sig12 / degree_;
+  return arcmode ? s12_a12 : sig12 / degree;
 }
 
 real GenDirect(const struct Geodesic* g,
                real lat1, real lon1, real azi1,
-               bool arcmode, real s12_a12, unsigned outmask,
+               bool arcmode, real s12_a12,
                real* plat2, real* plon2, real* pazi2,
                real* ps12, real* pm12, real* pM12, real* pM21,
                real* pS12) {
   struct GeodesicLine l;
+  unsigned outmask =
+    (plat2 ? LATITUDE : 0U) |
+    (plon2 ? LONGITUDE : 0U) |
+    (pazi2 ? AZIMUTH : 0U) |
+    (ps12 ? DISTANCE : 0U) |
+    (pm12 ? REDUCEDLENGTH : 0U) |
+    (pM12 || pM21 ? GEODESICSCALE : 0U) |
+    (pS12 ? AREA : 0U);
+
   GeodesicLineInit(&l, g, lat1, lon1, azi1,
                    /* Automatically supply DISTANCE_IN if necessary */
                    outmask | (arcmode ? NONE : DISTANCE_IN));
-  return GenPosition(&l, arcmode, s12_a12, outmask,
+  return GenPosition(&l, arcmode, s12_a12,
                      plat2, plon2, pazi2, ps12, pm12, pM12, pM21, pS12);
-  }
+}
+
+void Direct(const struct Geodesic* g,
+            real lat1, real lon1, real azi1,
+            real s12,
+            real* plat2, real* plon2, real* pazi2) {
+  GenDirect(g, lat1, lon1, azi1, false, s12, plat2, plon2, pazi2,
+            0, 0, 0, 0, 0);
+}
 
 real GenInverse(const struct Geodesic* g,
                 real lat1, real lon1, real lat2, real lon2,
-                unsigned outmask,
                 real* ps12, real* pazi1, real* pazi2,
                 real* pm12, real* pM12, real* pM21, real* pS12) {
   real s12, azi1, azi2, m12, M12, M21, S12;
@@ -484,9 +531,16 @@ real GenInverse(const struct Geodesic* g,
   real dn1, dn2, lam12, slam12, clam12;
   real a12, sig12, calp1, salp1, calp2, salp2;
   /* index zero elements of these arrays are unused */
-  real C1a[nC1_ + 1], C2a[nC2_ + 1], C3a[nC3_];
+  real C1a[nC1 + 1], C2a[nC2 + 1], C3a[nC3];
   bool meridian;
   real omg12;
+
+  unsigned outmask =
+    (ps12 ? DISTANCE : 0U) |
+    (pazi1 || pazi2 ? AZIMUTH : 0U) |
+    (pm12 ? REDUCEDLENGTH : 0U) |
+    (pM12 || pM21 ? GEODESICSCALE : 0U) |
+    (pS12 ? AREA : 0U);
 
   outmask &= OUT_ALL;
   lon12 = AngNormalize(AngNormalize(lon2) -
@@ -524,16 +578,16 @@ real GenInverse(const struct Geodesic* g,
    * check, e.g., on verifying quadrants in atan2.  In addition, this
    * enforces some symmetries in the results returned. */
 
-  phi = lat1 * degree_;
+  phi = lat1 * degree;
   /* Ensure cbet1 = +epsilon at poles */
   sbet1 = g->f1 * sin(phi);
-  cbet1 = lat1 == -90 ? tiny_ : cos(phi);
+  cbet1 = lat1 == -90 ? tiny : cos(phi);
   SinCosNorm(&sbet1, &cbet1);
 
-  phi = lat2 * degree_;
+  phi = lat2 * degree;
   /* Ensure cbet2 = +epsilon at poles */
   sbet2 = g->f1 * sin(phi);
-  cbet2 = fabs(lat2) == 90 ? tiny_ : cos(phi);
+  cbet2 = fabs(lat2) == 90 ? tiny : cos(phi);
   SinCosNorm(&sbet2, &cbet2);
 
   /* If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
@@ -555,7 +609,7 @@ real GenInverse(const struct Geodesic* g,
   dn1 = sqrt(1 + g->ep2 * sq(sbet1));
   dn2 = sqrt(1 + g->ep2 * sq(sbet2));
 
-  lam12 = lon12 * degree_;
+  lam12 = lon12 * degree;
   slam12 = lon12 == 180 ? 0 : sin(lam12);
   clam12 = cos(lam12);      /* lon12 == 90 isn't interesting */
 
@@ -594,7 +648,7 @@ real GenInverse(const struct Geodesic* g,
     if (sig12 < 1 || m12x >= 0) {
       m12x *= g->b;
       s12x *= g->b;
-      a12 = sig12 / degree_;
+      a12 = sig12 / degree;
     } else
       /* m12 < 0, i.e., prolate and too close to anti-podal */
       meridian = false;
@@ -603,7 +657,7 @@ real GenInverse(const struct Geodesic* g,
   if (!meridian &&
       sbet1 == 0 &&           /* and sbet2 == 0 */
       /* Mimic the way Lambda12 works with calp1 = 0 */
-      (g->f <= 0 || lam12 <= pi_ - g->f * pi_)) {
+      (g->f <= 0 || lam12 <= pi - g->f * pi)) {
 
     /* Geodesic runs along equator */
     calp1 = calp2 = 0; salp1 = salp2 = 1;
@@ -632,7 +686,7 @@ real GenInverse(const struct Geodesic* g,
       m12x = sq(dnm) * g->b * sin(sig12 / dnm);
       if (outmask & GEODESICSCALE)
         M12 = M21 = cos(sig12 / dnm);
-      a12 = sig12 / degree_;
+      a12 = sig12 / degree;
       omg12 = lam12 / (g->f1 * dnm);
     } else {
 
@@ -650,38 +704,38 @@ real GenInverse(const struct Geodesic* g,
       real ssig1, csig1, ssig2, csig2, eps;
       unsigned numit = 0;
       /* Bracketing range */
-      real salp1a = tiny_, calp1a = 1, salp1b = tiny_, calp1b = -1;
+      real salp1a = tiny, calp1a = 1, salp1b = tiny, calp1b = -1;
       bool tripn, tripb;
-      for (tripn = false, tripb = false; numit < maxit2_; ++numit) {
+      for (tripn = false, tripb = false; numit < maxit2; ++numit) {
         /* the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
          * WGS84 and random input: mean = 2.85, sd = 0.60 */
         real dv,
           v = (Lambda12(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                         &salp2, &calp2, &sig12, &ssig1, &csig1, &ssig2, &csig2,
-                        &eps, &omg12, numit < maxit1_, &dv, C1a, C2a, C3a)
+                        &eps, &omg12, numit < maxit1, &dv, C1a, C2a, C3a)
                - lam12);
         /* 2 * tol0 is approximately 1 ulp for a number in [0, pi]. */
-        if (tripb || fabs(v) < (tripn ? 8 : 2) * tol0_) break;
+        if (tripb || fabs(v) < (tripn ? 8 : 2) * tol0) break;
         /* Update bracketing values */
-        if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b)) {
+        if (v > 0 && (numit > maxit1 || calp1/salp1 > calp1b/salp1b)) {
           salp1b = salp1; calp1b = calp1;
-        } else if (numit > maxit1_ || calp1/salp1 < calp1a/salp1a) {
+        } else if (numit > maxit1 || calp1/salp1 < calp1a/salp1a) {
           salp1a = salp1; calp1a = calp1;
         }
-        if (numit < maxit1_ && dv > 0) {
+        if (numit < maxit1 && dv > 0) {
           real
             dalp1 = -v/dv;
           real
             sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
             nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
-          if (nsalp1 > 0 && fabs(dalp1) < pi_) {
+          if (nsalp1 > 0 && fabs(dalp1) < pi) {
             calp1 = calp1 * cdalp1 - salp1 * sdalp1;
             salp1 = nsalp1;
             SinCosNorm(&salp1, &calp1);
             /* In some regimes we don't get quadratic convergence because
              * slope -> 0.  So use convergence conditions based on epsilon
              * instead of sqrt(epsilon). */
-            tripn = fabs(v) <= 16 * tol0_;
+            tripn = fabs(v) <= 16 * tol0;
             continue;
           }
         }
@@ -697,8 +751,8 @@ real GenInverse(const struct Geodesic* g,
         calp1 = (calp1a + calp1b)/2;
         SinCosNorm(&salp1, &calp1);
         tripn = false;
-        tripb = (fabs(salp1a - salp1) + (calp1a - calp1) < tolb_ ||
-                 fabs(salp1 - salp1b) + (calp1 - calp1b) < tolb_);
+        tripb = (fabs(salp1a - salp1) + (calp1a - calp1) < tolb ||
+                 fabs(salp1 - salp1b) + (calp1 - calp1b) < tolb);
       }
       {
         real dummy;
@@ -708,7 +762,7 @@ real GenInverse(const struct Geodesic* g,
       }
       m12x *= g->b;
       s12x *= g->b;
-      a12 = sig12 / degree_;
+      a12 = sig12 / degree;
       omg12 = lam12 - omg12;
     }
   }
@@ -734,20 +788,20 @@ real GenInverse(const struct Geodesic* g,
         eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2),
         /* Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0). */
         A4 = sq(g->a) * calp0 * salp0 * g->e2;
-      real C4a[nC4_];
+      real C4a[nC4];
       real B41, B42;
       SinCosNorm(&ssig1, &csig1);
       SinCosNorm(&ssig2, &csig2);
       C4f(g, eps, C4a);
-      B41 = SinCosSeries(false, ssig1, csig1, C4a, nC4_);
-      B42 = SinCosSeries(false, ssig2, csig2, C4a, nC4_);
+      B41 = SinCosSeries(false, ssig1, csig1, C4a, nC4);
+      B42 = SinCosSeries(false, ssig2, csig2, C4a, nC4);
       S12 = A4 * (B42 - B41);
     } else
       /* Avoid problems with indeterminate sig1, sig2 on equator */
       S12 = 0;
 
     if (!meridian &&
-        omg12 < (real)(0.75) * pi_ &&   /* Long difference too big */
+        omg12 < (real)(0.75) * pi &&   /* Long difference too big */
         sbet2 - sbet1 < (real)(1.75)) { /* Lat difference too big */
       /* Use tan(Gamma/2) = tan(omg12/2)
        * * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
@@ -767,7 +821,7 @@ real GenInverse(const struct Geodesic* g,
        * being attached to 0 correctly.  The following ensures the correct
        * behavior. */
       if (salp12 == 0 && calp12 < 0) {
-        salp12 = tiny_ * calp1;
+        salp12 = tiny * calp1;
         calp12 = -1;
       }
       alp12 = atan2(salp12, calp12);
@@ -791,27 +845,33 @@ real GenInverse(const struct Geodesic* g,
 
   if (outmask & AZIMUTH) {
     /* minus signs give range [-180, 180). 0- converts -0 to +0. */
-    azi1 = 0 - atan2(-salp1, calp1) / degree_;
-    azi2 = 0 - atan2(-salp2, calp2) / degree_;
+    azi1 = 0 - atan2(-salp1, calp1) / degree;
+    azi2 = 0 - atan2(-salp2, calp2) / degree;
   }
 
   if (outmask & DISTANCE)
     *ps12 = s12;
   if (outmask & AZIMUTH) {
-    *pazi1 = azi1;
-    *pazi2 = azi2;
+    if (pazi1) *pazi1 = azi1;
+    if (pazi2) *pazi2 = azi2;
   }
   if (outmask & REDUCEDLENGTH)
     *pm12 = m12;
   if (outmask & GEODESICSCALE) {
-    *pM12 = M12;
-    *pM21 = M21;
+    if (pM12) *pM12 = M12;
+    if (pM21) *pM21 = M21;
   }
   if (outmask & AREA)
     *pS12 = S12;
 
   /* Returned value in [0, 180] */
   return a12;
+}
+
+void Inverse(const struct Geodesic* g,
+             double lat1, double lon1, double lat2, double lon2,
+             double* ps12, double* pazi1, double* pazi2) {
+  GenInverse(g, lat1, lon1, lat2, lon2, ps12, pazi1, pazi2, 0, 0, 0, 0);
 }
 
 real SinCosSeries(bool sinp,
@@ -850,23 +910,23 @@ void Lengths(const struct Geodesic* g,
   real s12b, m12b, m0, M12, M21;
   real A1m1, AB1, A2m1, AB2, J12;
 
-  /* Return m12b = (reduced length)/_b; also calculate s12b = distance/_b,
+  /* Return m12b = (reduced length)/b; also calculate s12b = distance/b,
    * and m0 = coefficient of secular term in expression for reduced length. */
   C1f(eps, C1a);
   C2f(eps, C2a);
   A1m1 = A1m1f(eps);
-  AB1 = (1 + A1m1) * (SinCosSeries(true, ssig2, csig2, C1a, nC1_) -
-                      SinCosSeries(true, ssig1, csig1, C1a, nC1_));
+  AB1 = (1 + A1m1) * (SinCosSeries(true, ssig2, csig2, C1a, nC1) -
+                      SinCosSeries(true, ssig1, csig1, C1a, nC1));
   A2m1 = A2m1f(eps);
-  AB2 = (1 + A2m1) * (SinCosSeries(true, ssig2, csig2, C2a, nC2_) -
-                      SinCosSeries(true, ssig1, csig1, C2a, nC2_));
+  AB2 = (1 + A2m1) * (SinCosSeries(true, ssig2, csig2, C2a, nC2) -
+                      SinCosSeries(true, ssig1, csig1, C2a, nC2));
   m0 = A1m1 - A2m1;
   J12 = m0 * sig12 + (AB1 - AB2);
-  /* Missing a factor of _b.
+  /* Missing a factor of b.
    * Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
    * cancellation in the case of coincident points. */
   m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) - csig1 * csig2 * J12;
-  /* Missing a factor of _b */
+  /* Missing a factor of b */
   s12b = (1 + A1m1) * sig12 + AB1;
   if (scalep) {
     real csig12 = csig1 * csig2 + ssig1 * ssig2;
@@ -972,7 +1032,7 @@ real InverseStart(const struct Geodesic* g,
   real sbet12a = sbet2 * cbet1 + cbet2 * sbet1;
 #endif
   bool shortline = cbet12 >= 0 && sbet12 < (real)(0.5) &&
-    lam12 <= pi_ / 6;
+    lam12 <= pi / 6;
   real
     omg12 = !shortline ? lam12 : lam12 / (g->f1 * (dn1 + dn2) / 2),
     somg12 = sin(omg12), comg12 = cos(omg12);
@@ -995,7 +1055,7 @@ real InverseStart(const struct Geodesic* g,
     sig12 = atan2(ssig12, csig12);
   } else if (fabs(g->n) > (real)(0.1) || /* No astroid calc if too eccentric */
              csig12 >= 0 ||
-             ssig12 >= 6 * fabs(g->n) * pi_ * sq(cbet1)) {
+             ssig12 >= 6 * fabs(g->n) * pi * sq(cbet1)) {
     /* Nothing to do, zeroth order spherical approximation is OK */
   } else {
     /* Scale lam12 and bet2 to x, y coordinate system where antipodal point
@@ -1011,13 +1071,13 @@ real InverseStart(const struct Geodesic* g,
         real
           k2 = sq(sbet1) * g->ep2,
           eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
-        lamscale = g->f * cbet1 * A3f(g, eps) * pi_;
+        lamscale = g->f * cbet1 * A3f(g, eps) * pi;
       }
       betscale = lamscale * cbet1;
 
-      x = (lam12 - pi_) / lamscale;
+      x = (lam12 - pi) / lamscale;
       y = sbet12a / betscale;
-    } else {                    /* _f < 0 */
+    } else {                    /* f < 0 */
       /* x = dlat, y = dlong */
       real
         cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
@@ -1025,31 +1085,31 @@ real InverseStart(const struct Geodesic* g,
       real m12b, m0, dummy;
       /* In the case of lon12 = 180, this repeats a calculation made in
        * Inverse. */
-      Lengths(g, g->n, pi_ + bet12a,
+      Lengths(g, g->n, pi + bet12a,
               sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
               cbet1, cbet2, &dummy, &m12b, &m0, false,
               &dummy, &dummy, C1a, C2a);
-      x = -1 + m12b / (cbet1 * cbet2 * m0 * pi_);
+      x = -1 + m12b / (cbet1 * cbet2 * m0 * pi);
       betscale = x < -(real)(0.01) ? sbet12a / x :
-        -g->f * sq(cbet1) * pi_;
+        -g->f * sq(cbet1) * pi;
       lamscale = betscale / cbet1;
-      y = (lam12 - pi_) / lamscale;
+      y = (lam12 - pi) / lamscale;
     }
 
-    if (y > -tol1_ && x > -1 - xthresh_) {
+    if (y > -tol1 && x > -1 - xthresh) {
       /* strip near cut */
       if (g->f >= 0) {
         salp1 = minx((real)(1), -(real)(x)); calp1 = - sqrt(1 - sq(salp1));
       } else {
-        calp1 = maxx((real)(x > -tol1_ ? 0 : -1), (real)(x));
+        calp1 = maxx((real)(x > -tol1 ? 0 : -1), (real)(x));
         salp1 = sqrt(1 - sq(calp1));
       }
     } else {
       /* Estimate alp1, by solving the astroid problem.
        *
        * Could estimate alpha1 = theta + pi/2, directly, i.e.,
-       *   calp1 = y/k; salp1 = -x/(1+k);  for _f >= 0
-       *   calp1 = x/(1+k); salp1 = -y/k;  for _f < 0 (need to check)
+       *   calp1 = y/k; salp1 = -x/(1+k);  for f >= 0
+       *   calp1 = x/(1+k); salp1 = -y/k;  for f < 0 (need to check)
        *
        * However, it's better to estimate omg12 from astroid and use
        * spherical formula to compute alp1.  This reduces the mean number of
@@ -1123,7 +1183,7 @@ real Lambda12(const struct Geodesic* g,
   if (sbet1 == 0 && calp1 == 0)
     /* Break degeneracy of equatorial line.  This case has already been
      * handled. */
-    calp1 = -tiny_;
+    calp1 = -tiny;
 
   /* sin(alp1) * cos(bet1) = sin(alp0) */
   salp0 = salp1 * cbet1;
@@ -1168,8 +1228,8 @@ real Lambda12(const struct Geodesic* g,
   k2 = sq(calp0) * g->ep2;
   eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
   C3f(g, eps, C3a);
-  B312 = (SinCosSeries(true, ssig2, csig2, C3a, nC3_-1) -
-          SinCosSeries(true, ssig1, csig1, C3a, nC3_-1));
+  B312 = (SinCosSeries(true, ssig2, csig2, C3a, nC3-1) -
+          SinCosSeries(true, ssig1, csig1, C3a, nC3-1));
   h0 = -g->f * A3f(g, eps);
   domg12 = salp0 * h0 * (sig12 + B312);
   lam12 = omg12 + domg12;
@@ -1197,32 +1257,32 @@ real Lambda12(const struct Geodesic* g,
   *pdomg12 = domg12;
   if (diffp)
     *pdlam12 = dlam12;
-  
+
   return lam12;
 }
 
 real A3f(const struct Geodesic* g, real eps) {
-  /* Evaluate sum(_A3x[k] * eps^k, k, 0, nA3x_-1) by Horner's method */
+  /* Evaluate sum(A3x[k] * eps^k, k, 0, nA3x-1) by Horner's method */
   real v = 0;
   int i;
-  for (i = nA3x_; i; )
+  for (i = nA3x; i; )
     v = eps * v + g->A3x[--i];
   return v;
 }
 
 void C3f(const struct Geodesic* g, real eps, real c[]) {
   /* Evaluate C3 coeffs by Horner's method
-   * Elements c[1] thru c[nC3_ - 1] are set */
+   * Elements c[1] thru c[nC3 - 1] are set */
   int i, j, k;
   real mult = 1;
-  for (j = nC3x_, k = nC3_ - 1; k; ) {
+  for (j = nC3x, k = nC3 - 1; k; ) {
     real t = 0;
-    for (i = nC3_ - k; i; --i)
+    for (i = nC3 - k; i; --i)
       t = eps * t + g->C3x[--j];
     c[k--] = t;
   }
 
-  for (k = 1; k < nC3_; ) {
+  for (k = 1; k < nC3; ) {
     mult *= eps;
     c[k++] *= mult;
   }
@@ -1230,17 +1290,17 @@ void C3f(const struct Geodesic* g, real eps, real c[]) {
 
 void C4f(const struct Geodesic* g, real eps, real c[]) {
   /* Evaluate C4 coeffs by Horner's method
-   * Elements c[0] thru c[nC4_ - 1] are set */
+   * Elements c[0] thru c[nC4 - 1] are set */
   int i, j, k;
   real mult = 1;
-  for (j = nC4x_, k = nC4_; k; ) {
+  for (j = nC4x, k = nC4; k; ) {
     real t = 0;
-    for (i = nC4_ - k + 1; i; --i)
+    for (i = nC4 - k + 1; i; --i)
       t = eps * t + g->C4x[--j];
     c[--k] = t;
   }
 
-  for (k = 1; k < nC4_; ) {
+  for (k = 1; k < nC4; ) {
     mult *= eps;
     c[k++] *= mult;
   }

@@ -1,10 +1,10 @@
-function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
-      geodreckon(lat1, lon1, s12, azi1, ellipsoid, arcmode)
+function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = ...
+      geodreckon(lat1, lon1, s12_a12, azi1, ellipsoid, arcmode)
 %GEODRECKON  Point at specified azimuth, range on an ellipsoid
 %
 %   [lat2, lon2, azi2] = GEODRECKON(lat1, lon1, s12, azi1)
-%   [lat2, lon2, azi2, S12, m12, M12, M21, a12] =
-%     GEODRECKON(lat1, lon1, s12, azi1, ellipsoid, arcmode)
+%   [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] =
+%     GEODRECKON(lat1, lon1, s12_a12, azi1, ellipsoid, arcmode)
 %
 %   solves the direct geodesic problem of finding the final point and
 %   azimuth given lat1, lon1, s12, and azi1.  The input arguments lat1,
@@ -18,11 +18,15 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
 %   in GEODDOC.  GEODDOC also gives the restrictions on the allowed ranges
 %   of the arguments.
 %
-%   If arcmode is true (default is false), then the input argument s12 is
-%   interpreted as the arc length on the auxiliary sphere (in degrees) and
-%   the corresponding distance is returned in the final output variable a12
-%   (in meters).  The two optional arguments, ellispoid and arcmode, may be
-%   given in any order and either or both may be omitted.
+%   If arcmode if false (the default), then, in the long form of the call,
+%   the input argument s12_a12 stands for the distance s12 (in meters) and
+%   the final output variable a12_s12 stands for the arc length on the
+%   auxiliary sphere a12 (in degrees).  If arcmode is true, then s12_a12 is
+%   interpreted as the arc length on the auxiliary sphere a12 (in degrees)
+%   and the corresponding distance s12 is returned in the final output
+%   variable a12_s12 (in meters).  The two optional arguments, ellispoid
+%   and arcmode, may be given in any order and either or both may be
+%   omitted.
 %
 %   When given a combination of scalar and array inputs, GEODRECKON behaves
 %   as though the inputs were expanded to match the size of the arrays.
@@ -54,7 +58,6 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
 %   See also GEODDOC, GEODDISTANCE, GEODAREA, GEODESICDIRECT, GEODESICLINE,
 %     DEFAULTELLIPSOID.
 
-
 % Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
 % under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
@@ -68,7 +71,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
 % with scalar arguments.
 
   try
-    S = size(lat1 + lon1 + s12 + azi1);
+    S = size(lat1 + lon1 + s12_a12 + azi1);
   catch err
     error('lat1, lon1, s12, azi1 have incompatible sizes')
   end
@@ -120,7 +123,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
   lat1 = lat1(:);
   lon1 = AngNormalize(lon1(:));
   azi1 = AngNormalize(azi1(:));
-  s12 = s12(:);
+  s12_a12 = s12_a12(:);
 
   p = lat1 == 90;
   lon1(p) = lon1(p) + ((lon1(p) < 1) * 2 - 1) * 180;
@@ -161,15 +164,15 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
   B31 = SinCosSeries(true, ssig1, csig1, C3a);
 
   if arcmode
-    sig12 = s12 * degree;
+    sig12 = s12_a12 * degree;
     ssig12 = sin(sig12);
     csig12 = cos(sig12);
-    s12a = abs(s12);
+    s12a = abs(s12_a12);
     s12a = s12a - 180 * floor(s12a / 180);
     ssig12(s12a == 0) = 0;
     csig12(s12a == 90) = 0;
   else
-    tau12 = s12 ./ (b * (1 + A1m1));
+    tau12 = s12_a12 ./ (b * (1 + A1m1));
     s = sin(tau12); c = cos(tau12);
     B12 = - SinCosSeries(true,  stau1 .* c + ctau1 .* s, ...
                          ctau1 .* c - stau1 .* s, C1pa);
@@ -179,7 +182,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
       ssig2 = ssig1 .* csig12 + csig1 .* ssig12;
       csig2 = csig1 .* csig12 - ssig1 .* ssig12;
       B12 =  SinCosSeries(true, ssig2, csig2, C1a);
-      serr = (1 + A1m1) .* (sig12 + (B12 - B11)) - s12/b;
+      serr = (1 + A1m1) .* (sig12 + (B12 - B11)) - s12_a12/b;
       sig12 = sig12 - serr ./ sqrt(1 + k2 .* ssig2.^2);
       ssig12 = sin(sig12); csig12 = cos(sig12);
     end
@@ -209,9 +212,9 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12] = ...
   lat2 = atan2(sbet2, f1 * cbet2) / degree;
   azi2 = 0 - atan2(-salp2, calp2) / degree;
   if arcmode
-    a12 = b * ((1 + A1m1) .* sig12 + AB1);
+    a12_s12 = b * ((1 + A1m1) .* sig12 + AB1);
   else
-    a12 = sig12 / degree;
+    a12_s12 = sig12 / degree;
   end
 
   if redlp || scalp
