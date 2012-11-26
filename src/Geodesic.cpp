@@ -65,7 +65,7 @@ namespace GeographicLib {
             (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
             sqrt(abs(_e2))))/2) // authalic radius squared
       // The sig12 threshold for "really short"
-    , _etol2(0.001 * tol2_ / max(real(0.1), sqrt(abs(_e2))))
+    , _etol2(0.01 * tol2_ / max(real(0.1), sqrt(abs(_e2))))
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -84,7 +84,7 @@ namespace GeographicLib {
                                     const real c[], int n) throw() {
     // Evaluate
     // y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
-    //            sum(c[i] * cos((2*i+1) * x), i, 0, n-1) :
+    //            sum(c[i] * cos((2*i+1) * x), i, 0, n-1)
     // using Clenshaw summation.  N.B. c[0] is unused for sin series
     // Approx operation count = (n + 5) mult and (2 * n + 2) add
     c += (n + sinp);            // Point to one beyond last element
@@ -462,11 +462,9 @@ namespace GeographicLib {
                           SinCosSeries(true, ssig1, csig1, C1a, nC1_)),
       A2m1 = A2m1f(eps),
       AB2 = (1 + A2m1) * (SinCosSeries(true, ssig2, csig2, C2a, nC2_) -
-                          SinCosSeries(true, ssig1, csig1, C2a, nC2_)),
-      // Make sure it's OK to have repeated dummy arguments
-      m0x = A1m1 - A2m1,
-      J12 = m0x * sig12 + (AB1 - AB2);
-    m0 = m0x;
+                          SinCosSeries(true, ssig1, csig1, C2a, nC2_));
+    m0 = A1m1 - A2m1;
+    real J12 = m0 * sig12 + (AB1 - AB2);
     // Missing a factor of _b.
     // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
     // cancellation in the case of coincident points.
@@ -633,6 +631,7 @@ namespace GeographicLib {
 
       if (y > -tol1_ && x > -1 - xthresh_) {
         // strip near cut
+        // Need real(x) here to cast away the volatility of x for min/max
         if (_f >= 0) {
           salp1 = min(real(1), -real(x)); calp1 = - sqrt(1 - Math::sq(salp1));
         } else {
@@ -676,8 +675,8 @@ namespace GeographicLib {
         // Because omg12 is near pi, estimate work with omg12a = pi - omg12
         real k = Astroid(x, y);
         real
-          omg12a = lamscale * ( _f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k ),
-          somg12 = sin(omg12a), comg12 = -cos(omg12a);
+          omg12a = lamscale * ( _f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k );
+        somg12 = sin(omg12a); comg12 = -cos(omg12a);
         // Update spherical estimate of alp1 using omg12 instead of lam12
         salp1 = cbet2 * somg12;
         calp1 = sbet12a - cbet2 * sbet1 * Math::sq(somg12) / (1 - comg12);

@@ -69,7 +69,7 @@ GeographicLib.GeodesicLine = {};
   g.SinCosSeries = function(sinp, sinx, cosx, c, n) {
     // Evaluate
     // y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
-    //            sum(c[i] * cos((2*i+1) * x), i, 0, n-1) :
+    //            sum(c[i] * cos((2*i+1) * x), i, 0, n-1)
     // using Clenshaw summation.  N.B. c[0] is unused for sin series
     // Approx operation count = (n + 5) mult and (2 * n + 2) add
     var k = n + (sinp ? 1 : 0); // Point to one beyond last element
@@ -235,8 +235,7 @@ GeographicLib.GeodesicLine = {};
                   Math.atan(Math.sqrt(-this._e2))) /
                  Math.sqrt(Math.abs(this._e2))))/2;
     // The sig12 threshold for "really short"
-    this._etol2 = 0.001 * g.tol2_ /
-      Math.max(0.1, Math.sqrt(Math.abs(this._e2)));
+    this._etol2 = 0.01 * g.tol2_ / Math.max(0.1, Math.sqrt(Math.abs(this._e2)));
     if (!(isFinite(this._a) && this._a > 0))
       throw new Error("Major radius is not positive");
     if (!(isFinite(this._b) && this._b > 0))
@@ -362,11 +361,9 @@ GeographicLib.GeodesicLine = {};
                         g.SinCosSeries(true, ssig1, csig1, C1a, g.nC1_)),
     A2m1 = g.A2m1f(eps),
     AB2 = (1 + A2m1) * (g.SinCosSeries(true, ssig2, csig2, C2a, g.nC2_) -
-                        g.SinCosSeries(true, ssig1, csig1, C2a, g.nC2_)),
-    // Make sure it's OK to have repeated dummy arguments
-    m0x = A1m1 - A2m1,
-    J12 = m0x * sig12 + (AB1 - AB2);
-    vals.m0 = m0x;
+                        g.SinCosSeries(true, ssig1, csig1, C2a, g.nC2_));
+    vals.m0 = A1m1 - A2m1;
+    var J12 = vals.m0 * sig12 + (AB1 - AB2);
     // Missing a factor of _b.
     // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to
     // ensure accurate cancellation in the case of coincident
@@ -518,8 +515,8 @@ GeographicLib.GeodesicLine = {};
         // Because omg12 is near pi, estimate work with omg12a = pi - omg12
         var k = g.Astroid(x, y);
         var
-        omg12a = lamscale * ( this._f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k ),
-        somg12 = Math.sin(omg12a), comg12 = -Math.cos(omg12a);
+        omg12a = lamscale * ( this._f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k );
+        somg12 = Math.sin(omg12a); comg12 = -Math.cos(omg12a);
         // Update spherical estimate of alp1 using omg12 instead of
         // lam12
         vals.salp1 = cbet2 * somg12;

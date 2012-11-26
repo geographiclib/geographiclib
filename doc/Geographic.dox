@@ -3672,6 +3672,8 @@ of the git repository for %GeographicLib.
    - Fix GeographicLib::DMS::Decode double rounding BUG.
    - On MacOSX platforms with the cmake configuration, universal
      binaries are built.
+   - TODO: figure out if m0x is needed in Lengths
+   - TODO: check etol2 is consistently defined
 
  - <a href="http://geographiclib.sf.net/1.26">Version 1.26</a>
    (released 2012-10-22)

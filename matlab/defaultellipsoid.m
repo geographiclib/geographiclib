@@ -8,6 +8,6 @@ function ellipsoid = defaultellipsoid
 
   a = 6378137;
   f = 1/298.257223563;
-  e = sqrt(f * (2 - f));
+  e = flat2ecc(f);
   ellipsoid = [a, e];
 end

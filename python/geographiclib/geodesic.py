@@ -100,7 +100,7 @@ class Geodesic(object):
   def SinCosSeries(sinp, sinx, cosx, c, n):
     # Evaluate
     # y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
-    #            sum(c[i] * cos((2*i+1) * x), i, 0, n-1) :
+    #            sum(c[i] * cos((2*i+1) * x), i, 0, n-1)
     # using Clenshaw summation.  N.B. c[0] is unused for sin series
     # Approx operation count = (n + 5) mult and (2 * n + 2) add
     k = (n + sinp)             # Point to one beyond last element
@@ -265,7 +265,7 @@ class Geodesic(object):
                   math.atan(math.sqrt(-self._e2))) /
                  math.sqrt(abs(self._e2))))/2
     # The sig12 threshold for "really short"
-    self._etol2 = 0.001 * Geodesic.tol2_ / max(0.1, math.sqrt(abs(self._e2)))
+    self._etol2 = 0.01 * Geodesic.tol2_ / max(0.1, math.sqrt(abs(self._e2)))
     if not(Math.isfinite(self._a) and self._a > 0):
       raise ValueError("Major radius is not positive")
     if not(Math.isfinite(self._b) and self._b > 0):
@@ -386,10 +386,8 @@ class Geodesic(object):
     AB2 = (1 + A2m1) * (
       Geodesic.SinCosSeries(True, ssig2, csig2, C2a, Geodesic.nC2_) -
       Geodesic.SinCosSeries(True, ssig1, csig1, C2a, Geodesic.nC2_))
-    # Make sure it's OK to have repeated dummy arguments
-    m0x = A1m1 - A2m1
-    J12 = m0x * sig12 + (AB1 - AB2)
-    m0 = m0x
+    m0 = A1m1 - A2m1
+    J12 = m0 * sig12 + (AB1 - AB2)
     # Missing a factor of _b.
     # Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
     # cancellation in the case of coincident points.
