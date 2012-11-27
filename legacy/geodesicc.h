@@ -1,6 +1,10 @@
 #if !defined(GEODESICC_H)
 #define GEODESICC_H 1
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 struct Geodesic {
   double a, f, f1, e2, ep2, n, b, c2, etol2;
   double A3x[6], C3x[15], C4x[21];
@@ -92,5 +96,9 @@ double GenPosition(const struct GeodesicLine* l,
                    double* ps12, double* pm12,
                    double* pM12, double* pM21,
                    double* pS12);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif

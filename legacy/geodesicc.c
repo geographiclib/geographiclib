@@ -24,7 +24,7 @@ static unsigned digits, maxit1, maxit2;
 static real epsilon, realmin, pi, degree,
   tiny, tol0, tol1, tol2, tolb, xthresh;
 
-static bool Init() {
+static void Init() {
   if (!init) {
 #if defined(__DBL_MANT_DIG__)
     digits = __DBL_MANT_DIG__;
@@ -61,7 +61,6 @@ static bool Init() {
     degree = pi/180;
     init = 1;
   }
-  return true;
 }
 
 enum captype {
@@ -176,7 +175,7 @@ static real A2m1f(real eps);
 static void C2f(real eps, real c[]);
 
 void GeodesicInit(struct Geodesic* g, real a, real f) {
-  init || Init();
+  if (!init) Init();
   g->a = a;
   g->f = f <= 1 ? f : 1/f;
   g->f1 = 1 - g->f;
@@ -300,7 +299,8 @@ real GenPosition(const struct GeodesicLine* l,
                  real* ps12, real* pm12,
                  real* pM12, real* pM21,
                  real* pS12) {
-  real lat2, lon2, azi2, s12, m12, M12, M21, S12;
+  real lat2 = 0, lon2 = 0, azi2 = 0, s12 = 0,
+    m12 = 0, M12 = 0, M21 = 0, S12 = 0;
   /* Avoid warning about uninitialized B12. */
   real sig12, ssig12, csig12, B12 = 0, AB1 = 0;
   real omg12, lam12, lon12;
@@ -524,16 +524,16 @@ real GenInverse(const struct Geodesic* g,
                 real lat1, real lon1, real lat2, real lon2,
                 real* ps12, real* pazi1, real* pazi2,
                 real* pm12, real* pM12, real* pM21, real* pS12) {
-  real s12, azi1, azi2, m12, M12, M21, S12;
+  real s12 = 0, azi1 = 0, azi2 = 0, m12 = 0, M12 = 0, M21 = 0, S12 = 0;
   real lon12;
   int latsign, lonsign, swapp;
-  real phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
+  real phi, sbet1, cbet1, sbet2, cbet2, s12x = 0, m12x = 0;
   real dn1, dn2, lam12, slam12, clam12;
-  real a12, sig12, calp1, salp1, calp2, salp2;
+  real a12 = 0, sig12, calp1 = 0, salp1 = 0, calp2 = 0, salp2 = 0;
   /* index zero elements of these arrays are unused */
   real C1a[nC1 + 1], C2a[nC2 + 1], C3a[nC3];
   bool meridian;
-  real omg12;
+  real omg12 = 0;
 
   unsigned outmask =
     (ps12 ? DISTANCE : 0U) |
@@ -701,7 +701,7 @@ real GenInverse(const struct Geodesic* g,
        * value of alp1 is then further from the solution) or if the new
        * estimate of alp1 lies outside (0,pi); in this case, the new starting
        * guess is taken to be (alp1a + alp1b) / 2. */
-      real ssig1, csig1, ssig2, csig2, eps;
+      real ssig1 = 0, csig1 = 0, ssig2 = 0, csig2 = 0, eps = 0;
       unsigned numit = 0;
       /* Bracketing range */
       real salp1a = tiny, calp1a = 1, salp1b = tiny, calp1b = -1;
@@ -907,7 +907,7 @@ void Lengths(const struct Geodesic* g,
              bool scalep, real* pM12, real* pM21,
              /* Scratch areas of the right size */
              real C1a[], real C2a[]) {
-  real s12b, m12b, m0, M12, M21;
+  real s12b = 0, m12b = 0, m0 = 0, M12 = 0, M21 = 0;
   real A1m1, AB1, A2m1, AB2, J12;
 
   /* Return m12b = (reduced length)/b; also calculate s12b = distance/b,
@@ -1004,7 +1004,7 @@ real InverseStart(const struct Geodesic* g,
                   real* psalp2, real* pcalp2,
                   /* Scratch areas of the right size */
                   real C1a[], real C2a[]) {
-  real salp1, calp1, salp2, calp2;
+  real salp1 = 0, calp1 = 0, salp2 = 0, calp2 = 0;
 
   /* Return a starting point for Newton's method in salp1 and calp1 (function
    * value is -1).  If Newton's method doesn't need to be used, return also
@@ -1175,7 +1175,8 @@ real Lambda12(const struct Geodesic* g,
               bool diffp, real* pdlam12,
               /* Scratch areas of the right size */
               real C1a[], real C2a[], real C3a[]) {
-  real salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps, domg12, dlam12;
+  real salp2 = 0, calp2 = 0, sig12 = 0,
+    ssig1 = 0, csig1 = 0, ssig2 = 0, csig2 = 0, eps = 0, domg12 = 0, dlam12 = 0;
   real salp0, calp0;
   real somg1, comg1, somg2, comg2, omg12, lam12;
   real B312, h0, k2;

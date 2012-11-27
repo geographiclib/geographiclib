@@ -14,6 +14,8 @@
       erri = 0
       errd = 0
       i = 0
+      ierri = 0
+      ierrd = 0
 
  10   continue
       if (test) then
