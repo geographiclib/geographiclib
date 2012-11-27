@@ -1,5 +1,5 @@
-function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = ...
-      geodreckon(lat1, lon1, s12_a12, azi1, ellipsoid, arcmode)
+function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
+      (lat1, lon1, s12_a12, azi1, ellipsoid, arcmode)
 %GEODRECKON  Point at specified azimuth, range on an ellipsoid
 %
 %   [lat2, lon2, azi2] = GEODRECKON(lat1, lon1, s12, azi1)
@@ -19,14 +19,14 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = ...
 %   of the arguments.
 %
 %   If arcmode if false (the default), then, in the long form of the call,
-%   the input argument s12_a12 stands for the distance s12 (in meters) and
-%   the final output variable a12_s12 stands for the arc length on the
-%   auxiliary sphere a12 (in degrees).  If arcmode is true, then s12_a12 is
-%   interpreted as the arc length on the auxiliary sphere a12 (in degrees)
-%   and the corresponding distance s12 is returned in the final output
-%   variable a12_s12 (in meters).  The two optional arguments, ellispoid
-%   and arcmode, may be given in any order and either or both may be
-%   omitted.
+%   the input argument s12_a12 is the distance s12 (in meters) and the
+%   final output variable a12_s12 is the arc length on the auxiliary sphere
+%   a12 (in degrees).  If arcmode is true, then the roles of s12_a12 and
+%   a12_s12 are reversed; s12_a12 is interpreted as the arc length on the
+%   auxiliary sphere a12 (in degrees) and the corresponding distance s12 is
+%   returned in the final output variable a12_s12 (in meters).  The two
+%   optional arguments, ellispoid and arcmode, may be given in any order
+%   and either or both may be omitted.
 %
 %   When given a combination of scalar and array inputs, GEODRECKON behaves
 %   as though the inputs were expanded to match the size of the arrays.

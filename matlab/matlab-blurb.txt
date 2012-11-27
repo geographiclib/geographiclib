@@ -1,0 +1,33 @@
+This package includes three routines GEODDISTANCE, GEODRECKON, and
+GEODAREA which solve various problems involving geodesics on the surface
+of an ellipsoid of revolution.  These are based on the paper
+
+  C. F. F. Karney
+  Algorithms for geodesics
+  J. Geodesy (2012)
+  http://dx.doi.org/10.1007/s00190-012-0578-z
+  Addenda: http://geographiclib.sf.net/geod-addenda.html
+
+which, in turn, is based on the classic solution of the geodesic
+problems pioneered by Legendre (1806), Bessel (1825), and Helmert
+(1880).
+
+GEODRECKON solves the direct geodesic problem (determining an end point
+given a starting point, range, and bearing).  GEODDISTANCE solves the
+inverse geodesic problem (determining the shortest distance between two
+points).  GEODAREA determines the area of a polygon whose edges are
+geodesics.
+
+  * The routines are accurate to round off for abs(f) < 1/50.  For
+    example, for the WGS84 ellipsoid, the error in the distance returned
+    by GEODDISTANCE is less then 15 nanometers.
+  * The routines work for prolate (as well as oblate) ellipsoids.
+  * GEODDISTANCE converges for all inputs.
+  * Differential and integral properties of the geodesics are computed.
+  * GEODAREA is accurate regardless of the length of the edges of the
+    polygon.
+
+Only provided are 3 auxiliary routines, DEFAULTELLIPSOID, ECC2FLAT, and
+FLAT2ECC.
+
+Use GEODDOC to obtain a more detailed desciption.

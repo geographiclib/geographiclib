@@ -1,14 +1,36 @@
       program geod
+      implicit none
+
+      interface
+        subroutine direct(a, f, lat1, lon1, azi1, s12a12, arcmod,
+     +      lat2, lon2, azi2, omask, a12s12, m12, MM12, MM21, SS12)
+        double precision, intent(in) :: a, f, lat1, lon1, azi1, s12a12
+        logical, intent(in) :: arcmod
+        integer, intent(in) :: omask
+        double precision, intent(out) :: lat2, lon2, azi2
+* optional output (depending on omask)
+        double precision, intent(out) :: a12s12, m12, MM12, MM21, SS12
+        end subroutine direct
+
+        subroutine invers(a, f, lat1, lon1, lat2, lon2,
+     +      s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+        double precision, intent(in) :: a, f, lat1, lon1, lat2, lon2
+        integer, intent(in) :: omask
+        double precision, intent(out) :: s12, azi1, azi2
+* optional output (depending on omask)
+        double precision, intent(out) :: a12, m12, MM12, MM21, SS12
+        end subroutine invers
+      end interface
+
       double precision a, f, lat1, lon1, lat2, lon2, s12, azi1, azi2,
      +    lat1a, lon1a, lat2a, lon2a, azi1a, azi2a, s12a,
      +    a12, m12, MM12, MM21, SS12
       double precision erri, errd
       integer omask, i, ierri, ierrd
       logical invp, arcmod, test
+
       a = 6378137d0
       f = 1/298.257223563d0
-*      a = 6.4d6
-*      f = 1/10d0
       invp = .false.
       test = .true.
       erri = 0

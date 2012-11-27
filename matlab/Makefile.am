@@ -40,7 +40,9 @@ $(srcdir)/geoddoc.m \
 $(srcdir)/geodreckon.m \
 $(srcdir)/geoddistance.m \
 $(srcdir)/geodarea.m \
-$(srcdir)/defaultellipsoid.m
+$(srcdir)/defaultellipsoid.m \
+$(srcdir)/ecc2flat.m \
+$(srcdir)/flat2ecc.m
 
 MATLAB_GEOD_PRIVATE = \
 $(srcdir)/private/A1m1f.m \
@@ -62,7 +64,6 @@ $(srcdir)/private/cvmgt.m \
 $(srcdir)/private/SinCosNorm.m \
 $(srcdir)/private/SinCosSeries.m \
 $(srcdir)/private/swap.m
-
 
 MATLAB_ALL = $(MATLAB_INTERFACE) $(MATLAB_DOC) $(MATLAB_COMPILESCRIPT) \
 	$(MATLAB_GEOD)

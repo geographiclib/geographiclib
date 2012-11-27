@@ -2,12 +2,17 @@
 #include <math.h>
 #include "geodesicc.h"
 
+#if defined(_MSC_VER)
+// Squelch warnings about scanf
+#  pragma warning (disable: 4996)
+#endif
+
 int main() {
   double lat1, lon1, lat2, lon2;
   double a12, s12, azi1, azi2, m12, M12, M21, S12;
   double a = 6378137, f = 1/298.257223563;
   struct Geodesic g;
-  unsigned inverse = 1, test = 1;
+  unsigned inverse = 1, test = 0;
 
   GeodesicInit(&g, a, f);
   if (test) {

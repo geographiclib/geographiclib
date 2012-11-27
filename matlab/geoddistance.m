@@ -1,5 +1,5 @@
-function [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
-      geoddistance(lat1, lon1, lat2, lon2, ellipsoid)
+function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
+      (lat1, lon1, lat2, lon2, ellipsoid)
 %GEODDISTANCE  Distance between points on an ellipsoid
 %
 %   [s12, azi1, azi2] = GEODDISTANCE(lat1, lon1, lat2, lon2)
