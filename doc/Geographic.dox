@@ -1205,7 +1205,7 @@ Note that geoidheight, when compiled with Visual Studio 2008 causes
 Matlab to crash.  (The problem does not occur with Visual Studio 2005 or
 Visual Studio 2010.)
 
-\section c-fortran
+\section c-fortran C and Fortran
 
 The directories <code>legacy/C</code> and <code>legacy/Fortran</code>
 contain implementations of GeographicLib::Geodesic and
@@ -1213,7 +1213,7 @@ GeographicLib::GeodesicLine in C and Fortran respectively.  These are
 intended for use in old codes written in these languages and should work
 any reasonably modern compiler.  These implementations are entirely
 self-contained and do not depend on the rest of %GeographicLib.
-Documentation of the interfaces are given at the tops of
+Documentation of the interfaces are given at the beginning of
 <code>legacy/C/geodesic.h</code> and
 <code>legacy/Fortran/geodesic.for</code>.  Sample main programs which
 solve the direct and inverse geodesic problems are provided.
