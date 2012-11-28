@@ -13,7 +13,7 @@
 #define nC4x  ((nC4 * (nC4 + 1)) / 2)
 
 typedef double real;
-typedef int bool;
+typedef int boolx;
 
 static unsigned init = 0;
 static const int FALSE = 0;
@@ -130,7 +130,7 @@ static real AngRound(real x) {
 static void A3coeff(struct Geodesic* g);
 static void C3coeff(struct Geodesic* g);
 static void C4coeff(struct Geodesic* g);
-static real SinCosSeries(bool sinp,
+static real SinCosSeries(boolx sinp,
                          real sinx, real cosx,
                          const real c[], int n);
 static void Lengths(const struct Geodesic* g,
@@ -139,7 +139,7 @@ static void Lengths(const struct Geodesic* g,
                     real ssig2, real csig2, real dn2,
                     real cbet1, real cbet2,
                     real* ps12b, real* pm12b, real* pm0,
-                    bool scalep, real* pM12, real* pM21,
+                    boolx scalep, real* pM12, real* pM21,
                     /* Scratch areas of the right size */
                     real C1a[], real C2a[]);
 static real Astroid(real x, real y);
@@ -161,7 +161,7 @@ static real Lambda12(const struct Geodesic* g,
                      real* pssig1, real* pcsig1,
                      real* pssig2, real* pcsig2,
                      real* peps, real* pdomg12,
-                     bool diffp, real* pdlam12,
+                     boolx diffp, real* pdlam12,
                      /* Scratch areas of the right size */
                      real C1a[], real C2a[], real C3a[]);
 static real A3f(const struct Geodesic* g, real eps);
@@ -202,7 +202,9 @@ void GeodesicLineInit(struct GeodesicLine* l,
   l->b = g->b;
   l->c2 = g->c2;
   l->f1 = g->f1;
-  l->caps = caps | LATITUDE | AZIMUTH; /* Always allow latitude and azimuth */
+  /* If caps is 0 assume the standard direct calculation */
+  l->caps = (caps ? caps : DISTANCE_IN | LONGITUDE) |
+    LATITUDE | AZIMUTH; /* Always allow latitude and azimuth */
 
   azi1 = AngNormalize(azi1);
   lon1 = AngNormalize(lon1);
@@ -293,7 +295,7 @@ void GeodesicLineInit(struct GeodesicLine* l,
 }
 
 real GenPosition(const struct GeodesicLine* l,
-                 bool arcmode, real s12_a12,
+                 boolx arcmode, real s12_a12,
                  real* plat2, real* plon2, real* pazi2,
                  real* ps12, real* pm12,
                  real* pM12, real* pM21,
@@ -495,7 +497,7 @@ void Position(const struct GeodesicLine* l, real s12,
 
 real GenDirect(const struct Geodesic* g,
                real lat1, real lon1, real azi1,
-               bool arcmode, real s12_a12,
+               boolx arcmode, real s12_a12,
                real* plat2, real* plon2, real* pazi2,
                real* ps12, real* pm12, real* pM12, real* pM21,
                real* pS12) {
@@ -536,7 +538,7 @@ real GenInverse(const struct Geodesic* g,
   real a12 = 0, sig12, calp1 = 0, salp1 = 0, calp2 = 0, salp2 = 0;
   /* index zero elements of these arrays are unused */
   real C1a[nC1 + 1], C2a[nC2 + 1], C3a[nC3];
-  bool meridian;
+  boolx meridian;
   real omg12 = 0;
 
   unsigned outmask =
@@ -709,7 +711,7 @@ real GenInverse(const struct Geodesic* g,
       unsigned numit = 0;
       /* Bracketing range */
       real salp1a = tiny, calp1a = 1, salp1b = tiny, calp1b = -1;
-      bool tripn, tripb;
+      boolx tripn, tripb;
       for (tripn = FALSE, tripb = FALSE; numit < maxit2; ++numit) {
         /* the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
          * WGS84 and random input: mean = 2.85, sd = 0.60 */
@@ -878,7 +880,7 @@ void Inverse(const struct Geodesic* g,
   GenInverse(g, lat1, lon1, lat2, lon2, ps12, pazi1, pazi2, 0, 0, 0, 0);
 }
 
-real SinCosSeries(bool sinp,
+real SinCosSeries(boolx sinp,
                   real sinx, real cosx,
                   const real c[], int n) {
   /* Evaluate
@@ -908,7 +910,7 @@ void Lengths(const struct Geodesic* g,
              real ssig2, real csig2, real dn2,
              real cbet1, real cbet2,
              real* ps12b, real* pm12b, real* pm0,
-             bool scalep, real* pM12, real* pM21,
+             boolx scalep, real* pM12, real* pM21,
              /* Scratch areas of the right size */
              real C1a[], real C2a[]) {
   real s12b = 0, m12b = 0, m0 = 0, M12 = 0, M21 = 0;
@@ -1035,7 +1037,7 @@ real InverseStart(const struct Geodesic* g,
 #else
   real sbet12a = sbet2 * cbet1 + cbet2 * sbet1;
 #endif
-  bool shortline = cbet12 >= 0 && sbet12 < (real)(0.5) &&
+  boolx shortline = cbet12 >= 0 && sbet12 < (real)(0.5) &&
     lam12 <= pi / 6;
   real
     omg12 = !shortline ? lam12 : lam12 / (g->f1 * (dn1 + dn2) / 2),
@@ -1176,7 +1178,7 @@ real Lambda12(const struct Geodesic* g,
               real* pssig1, real* pcsig1,
               real* pssig2, real* pcsig2,
               real* peps, real* pdomg12,
-              bool diffp, real* pdlam12,
+              boolx diffp, real* pdlam12,
               /* Scratch areas of the right size */
               real C1a[], real C2a[], real C3a[]) {
   real salp2 = 0, calp2 = 0, sig12 = 0,

@@ -1,17 +1,12 @@
-      program geod
+* A simple test of the Fortran library for geodesics.  This solves the
+* "inverse geodesic problem" by reading in lines with lat1, lon1, lat2,
+* lon2 and printing out lines with azi1, azi2, s12 (for the WGS84
+* ellipsoid).
+
+      program geoinv
       implicit none
 
       interface
-        subroutine direct(a, f, lat1, lon1, azi1, s12a12, arcmod,
-     +      lat2, lon2, azi2, omask, a12s12, m12, MM12, MM21, SS12)
-        double precision, intent(in) :: a, f, lat1, lon1, azi1, s12a12
-        logical, intent(in) :: arcmod
-        integer, intent(in) :: omask
-        double precision, intent(out) :: lat2, lon2, azi2
-* optional output (depending on omask)
-        double precision, intent(out) :: a12s12, m12, MM12, MM21, SS12
-        end subroutine direct
-
         subroutine invers(a, f, lat1, lon1, lat2, lon2,
      +      s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
         double precision, intent(in) :: a, f, lat1, lon1, lat2, lon2

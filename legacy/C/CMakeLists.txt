@@ -15,7 +15,7 @@ else ()
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -ansi")
 endif ()
 
-set (TOOLS direct inverse test)
+set (TOOLS direct inverse)
 
 foreach (TOOL ${TOOLS})
   add_executable (${TOOL} ${TOOL}.c geodesic.c geodesic.h)

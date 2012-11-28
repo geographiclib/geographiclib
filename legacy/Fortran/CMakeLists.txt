@@ -12,7 +12,7 @@ set (CMAKE_Fortran_FLAGS
   "${CMAKE_Fortran_FLAGS} -Wall -Wextra -pedantic -std=f95 -fimplicit-none")
 
 
-set (TOOLS direct inverse test)
+set (TOOLS direct inverse)
 
 foreach (TOOL ${TOOLS})
   add_executable (${TOOL} ${TOOL}.for geodesic.for)

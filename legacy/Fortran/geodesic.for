@@ -1,3 +1,100 @@
+* This is a Fortran implementation of the geodesic algorithms described
+* in
+*
+*   C. F. F. Karney
+*   Algorithms for geodesics
+*   J. Geodesy (2012)
+*   http://dx.doi.org/10.1007/s00190-012-0578-z
+*   Addenda: http://geographiclib.sf.net/geod-addenda.html
+*
+* The shortest path between two points on the ellipsoid at (lat1, lon1)
+* and (lat2, lon2) is called the geodesic.  Its length is s12 and the
+* geodesic from point 1 to point 2 has forward azimuths azi1 and azi2 at
+* the two end points.
+*
+* Traditionally two geodesic problems are considered:
+*   * the direct problem -- given lat1, lon1, s12, and azi1, determine
+*     lat2, lon2, and azi2.  This is solved by the subroutine direct.
+*   * the inverse problem -- given lat1, lon1, lat2, lon2, determine
+*     s12, azi1, and azi2.  This is solved by the subroutine invers.
+*
+* The calling sequence for direct and invers is specified by the
+* interface block
+*
+*       interface
+*         subroutine direct(a, f, lat1, lon1, azi1, s12a12, arcmod,
+*      +      lat2, lon2, azi2, omask, a12s12, m12, MM12, MM21, SS12)
+*         double precision, intent(in) :: a, f, lat1, lon1, azi1, s12a12
+*         logical, intent(in) :: arcmod
+*         integer, intent(in) :: omask
+*         double precision, intent(out) :: lat2, lon2, azi2
+* * optional output (depending on omask)
+*         double precision, intent(out) :: a12s12, m12, MM12, MM21, SS12
+*         end subroutine direct
+*
+*         subroutine invers(a, f, lat1, lon1, lat2, lon2,
+*      +      s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+*         double precision, intent(in) :: a, f, lat1, lon1, lat2, lon2
+*         integer, intent(in) :: omask
+*         double precision, intent(out) :: s12, azi1, azi2
+* * optional output (depending on omask)
+*         double precision, intent(out) :: a12, m12, MM12, MM21, SS12
+*         end subroutine invers
+*       end interface
+*
+* The ellipsoid is specified by its equatorial radius a (typically in
+* meters) and flattening f.  The routines are accurate to round-off with
+* double precision arithmetic provided that abs(f) < 1/50, although
+* reasonably accurate results are obtained for abs(f) < 1/5.  Latitudes,
+* longitudes, and azimuths are in degrees.  Latitudes must lie in
+* [-90,90] and longitudes and azimuths must lie in [-540,540).  The
+* returned values for longitude and azimuths are in [-180,180).  The
+* distance s12 is measured in meters (more precisely the same units as
+* a).
+*
+* The routines also calculate several other quantities of interest
+*   * SS12 is the area between the geodesic from point 1 to point 2 and
+*     the equator; i.e., it is the area, measured counter-clockwise, of
+*     the quadrilateral with corners (lat1,lon1), (0,lon1), (0,lon2),
+*     and (lat2,lon2).  It is given in meters^2.
+*   * m12, the reduced length of the geodesic is defined such that if
+*     the initial azimuth is perturbed by dazi1 (radians) then the
+*     second point is displaced by m12 dazi1 in the direction
+*     perpendicular to the geodesic.  m12 is given in meters.  On a
+*     curved surface the reduced length obeys a symmetry relation, m12 +
+*     m21 = 0.  On a flat surface, we have m12 = s12.
+*   * MM12 and MM21 are geodesic scales.  If two geodesics are parallel
+*     at point 1 and separated by a small distance dt, then they are
+*     separated by a distance MM12 dt at point 2.  MM21 is defined
+*     similarly (with the geodesics being parallel to one another at
+*     point 2).  MM12 and MM21 are dimensionless quantities.  On a flat
+*     surface, we have MM12 = MM21 = 1.
+*   * a12 is the arc length on the auxiliary sphere.  This is a
+*     construct for converting the problem to one in spherical
+*     trigonometry.  a12 is measured in degrees.  The spherical arc
+*     length from one equator crossing to the next is always 180
+*     degrees.
+*
+* Whether or not these quantities are return depends on the value of
+* omask which is a integer bit mask with the following bit assigments
+*   * 1 return a12
+*   * 2 return m12
+*   * 4 return MM12 and MM21
+*   * 8 return SS12
+*
+* Subroutine direct accepts an input parameter arcmod.  If this is false
+* (the "normal" setting) then the length of the geodesic is specified by
+* s12 and a12 is returned.  Setting arcmod = true, allows the length to
+* be specified as a12 (the argument s12a12) and the "real" length (in
+* meters) is returned as the argument a12s12 (provided that the 1 bit of
+* omask is set).
+*
+* Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
+* under the MIT/X11 License.  For more information, see
+* http://geographiclib.sourceforge.net/
+*
+* This file was distributed with GeographicLib 1.27.
+
       block data geodat
       double precision dblmin, dbleps, pi, degree, tiny,
      +    tol0, tol1, tol2, tolb, xthrsh
