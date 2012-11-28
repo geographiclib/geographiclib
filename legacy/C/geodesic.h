@@ -1,5 +1,11 @@
-#if !defined(GEODESICC_H)
-#define GEODESICC_H 1
+#if !defined(GEODESIC_H)
+#define GEODESIC_H 1
+
+/*
+ * This is a C transcription of the C++ classes Geodesic and GeodesicLine.  It
+ * uses ANSI C as described in B. W. Kernigan and D. M. Ritchie, The C
+ * Programming Language, 2nd Ed. (Prentice Hall, 1988).
+ */
 
 #if defined(__cplusplus)
 extern "C" {
@@ -22,6 +28,9 @@ extern "C" {
   };
 
   void GeodesicInit(struct Geodesic* g, double a, double f);
+  void GeodesicLineInit(struct GeodesicLine* l,
+                        const struct Geodesic* g,
+                        double lat1, double lon1, double azi1, unsigned caps);
 
   void Direct(const struct Geodesic* g,
               double lat1, double lon1, double azi1, double s12,
@@ -29,6 +38,8 @@ extern "C" {
   void Inverse(const struct Geodesic* g,
                double lat1, double lon1, double lat2, double lon2,
                double* ps12, double* pazi1, double* pazi2);
+  void Position(const struct GeodesicLine* l, double s12,
+                double* plat2, double* plon2, double* pazi2);
 
   double GenDirect(const struct Geodesic* g,
                    double lat1, double lon1, double azi1,
@@ -40,9 +51,6 @@ extern "C" {
                     double lat1, double lon1, double lat2, double lon2,
                     double* ps12, double* pazi1, double* pazi2,
                     double* pm12, double* pM12, double* pM21, double* pS12);
-  void GeodesicLineInit(struct GeodesicLine* l,
-                        const struct Geodesic* g,
-                        double lat1, double lon1, double azi1, unsigned caps);
   double GenPosition(const struct GeodesicLine* l,
                      int arcmode, double s12_a12,
                      double* plat2, double* plon2, double* pazi2,

@@ -1,32 +1,3 @@
-* Table of name abbreviations to conform to the 6-char limit
-* A3coeff          A3cof
-* C3coeff          C3cof
-* C4coeff          C4cof
-* AngNormalize     AngNm
-* AngNormalize2    AngNm2
-* AngRound         AngRnd
-* arcmode          arcmod
-* Astroid          Astrd
-* betscale         betscl
-* lamscale         lamscl
-* cbet12a          cbt12a
-* sbet12a          sbt12a
-* epsilon          dbleps
-* realmin          dblmin
-* geodesic         geod
-* inverse          invers
-* InverseStart     InvSta
-* Lambda12         Lam12f
-* latsign          latsgn
-* lonsign          lonsgn
-* Lengths          Lengs
-* meridian         merid
-* outmask          omask
-* shortline        shortp
-* SinCosNorm       Norm
-* SinCosSeries     TrgSum
-* xthresh          xthrsh
-
       block data geodat
       double precision dblmin, dbleps, pi, degree, tiny,
      +    tol0, tol1, tol2, tolb, xthrsh
@@ -80,10 +51,8 @@
 * optional output
       double precision a12s12, m12, MM12, MM21, SS12
 
-      integer ord
-      parameter (ord = 6)
-      integer nC1, nC1p, nC2, nA3, nA3x, nC3, nC3x, nC4, nC4x
-      parameter (nC1 = ord, nC1p = ord,
+      integer ord, nC1, nC1p, nC2, nA3, nA3x, nC3, nC3x, nC4, nC4x
+      parameter (ord = 6, nC1 = ord, nC1p = ord,
      +    nC2 = ord, nA3 = ord, nA3x = nA3,
      +    nC3 = ord, nC3x = (nC3 * (nC3 - 1)) / 2,
      +    nC4 = ord, nC4x = (nC4 * (nC4 + 1)) / 2)
@@ -386,10 +355,8 @@
 * optional output
       double precision a12, m12, MM12, MM21, SS12
 
-      integer ord
-      parameter (ord = 6)
-      integer nC1, nC2, nA3, nA3x, nC3, nC3x, nC4, nC4x
-      parameter (nC1 = ord, nC2 = ord, nA3 = ord, nA3x = nA3,
+      integer ord, nC1, nC2, nA3, nA3x, nC3, nC3x, nC4, nC4x
+      parameter (ord = 6, nC1 = ord, nC2 = ord, nA3 = ord, nA3x = nA3,
      +    nC3 = ord, nC3x = (nC3 * (nC3 - 1)) / 2,
      +    nC4 = ord, nC4x = (nC4 * (nC4 + 1)) / 2)
       double precision A3x(0:nA3x-1), C3x(0:nC3x-1), C4x(0:nC4x-1),
@@ -788,10 +755,8 @@
 * temporary storage
       double precision C1a(*), C2a(*)
 
-      integer ord
-      parameter (ord = 6)
-      integer nC1, nC2
-      parameter (nC1 = ord, nC2 = ord)
+      integer ord, nC1, nC2
+      parameter (ord = 6, nC1 = ord, nC2 = ord)
 
       double precision A1m1f, A2m1f, TrgSum
       double precision A1m1, AB1, A2m1, AB2, J12, csig12, t
@@ -1070,10 +1035,8 @@
 * temporary
       double precision C1a(*), C2a(*), C3a(*)
 
-      integer ord
-      parameter (ord = 6)
-      integer nC3
-      parameter (nC3 = ord)
+      integer ord, nC3
+      parameter (ord = 6, nC3 = ord)
 
       double precision csmgt, hypotx, A3f, TrgSum
 
@@ -1164,10 +1127,8 @@
 
       double precision function A3f(eps, A3x)
 * Evaluate sum(A3x[k] * eps^k, k, 0, nA3x-1) by Horner's method
-      integer ord
-      parameter (ord = 6)
-      integer nA3, nA3x
-      parameter (nA3 = ord, nA3x = nA3)
+      integer ord, nA3, nA3x
+      parameter (ord = 6, nA3 = ord, nA3x = nA3)
 
 * input
       double precision eps
@@ -1185,10 +1146,8 @@
       subroutine C3f(eps, C3x, c)
 * Evaluate C3 coeffs by Horner's method
 * Elements c[1] thru c[nC3-1] are set
-      integer ord
-      parameter (ord = 6)
-      integer nC3, nC3x
-      parameter (nC3 = ord, nC3x = (nC3 * (nC3 - 1)) / 2)
+      integer ord, nC3, nC3x
+      parameter (ord = 6, nC3 = ord, nC3x = (nC3 * (nC3 - 1)) / 2)
 
 * input
       double precision eps, C3x(0:nC3x-1)
@@ -1220,10 +1179,8 @@
       subroutine C4f(eps, C4x, c)
 * Evaluate C4 coeffs by Horner's method
 * Elements c[0] thru c[nC4-1] are set
-      integer ord
-      parameter (ord = 6)
-      integer nC4, nC4x
-      parameter (nC4 = ord, nC4x = (nC4 * (nC4 + 1)) / 2)
+      integer ord, nC4, nC4x
+      parameter (ord = 6, nC4 = ord, nC4x = (nC4 * (nC4 + 1)) / 2)
 
 * input
       double precision eps, C4x(0:nC4x-1)
@@ -1269,10 +1226,8 @@
 
       subroutine C1f(eps, c)
 * The coefficients C1[l] in the Fourier expansion of B1
-      integer ord
-      parameter (ord = 6)
-      integer nC1
-      parameter (nC1 = ord)
+      integer ord, nC1
+      parameter (ord = 6, nC1 = ord)
 
 * input
       double precision eps
@@ -1300,10 +1255,8 @@
 
       subroutine C1pf(eps, c)
 * The coefficients C1p[l] in the Fourier expansion of B1p
-      integer ord
-      parameter (ord = 6)
-      integer nC1p
-      parameter (nC1p = ord)
+      integer ord, nC1p
+      parameter (ord = 6, nC1p = ord)
 
 * input
       double precision eps
@@ -1345,10 +1298,8 @@
 
       subroutine C2f(eps, c)
 * The coefficients C2[l] in the Fourier expansion of B2
-      integer ord
-      parameter (ord = 6)
-      integer nC2
-      parameter (nC2 = ord)
+      integer ord, nC2
+      parameter (ord = 6, nC2 = ord)
 
 * input
       double precision eps
@@ -1376,10 +1327,8 @@
 
       subroutine A3cof(n, A3x)
 * The scale factor A3 = mean value of (d/dsigma)I3
-      integer ord
-      parameter (ord = 6)
-      integer nA3, nA3x
-      parameter (nA3 = ord, nA3x = nA3)
+      integer ord, nA3, nA3x
+      parameter (ord = 6, nA3 = ord, nA3x = nA3)
 
 * input
       double precision n
@@ -1398,10 +1347,8 @@
 
       subroutine C3cof(n, C3x)
 * The coefficients C3[l] in the Fourier expansion of B3
-      integer ord
-      parameter (ord = 6)
-      integer nC3, nC3x
-      parameter (nC3 = ord, nC3x = (nC3 * (nC3 - 1)) / 2)
+      integer ord, nC3, nC3x
+      parameter (ord = 6, nC3 = ord, nC3x = (nC3 * (nC3 - 1)) / 2)
 
 * input
       double precision n
@@ -1431,10 +1378,8 @@
 
       subroutine C4cof(n, C4x)
 * The coefficients C4[l] in the Fourier expansion of I4
-      integer ord
-      parameter (ord = 6)
-      integer nC4, nC4x
-      parameter (nC4 = ord, nC4x = (nC4 * (nC4 + 1)) / 2)
+      integer ord, nC4, nC4x
+      parameter (ord = 6, nC4 = ord, nC4x = (nC4 * (nC4 + 1)) / 2)
 
 * input
       double precision n
@@ -1539,14 +1484,14 @@
       return
       end
 
-      double precision function log1p(x)
+      double precision function log1px(x)
 * input
       double precision x
 
       double precision csmgt, y, z
       y = 1 + x
       z = y - 1
-      log1p = csmgt(x, x * log(y) / z, z .eq. 0)
+      log1px = csmgt(x, x * log(y) / z, z .eq. 0)
       return
       end
 
@@ -1554,9 +1499,9 @@
 * input
       double precision x
 
-      double precision log1p, y
+      double precision log1px, y
       y = abs(x)
-      y = log1p(2 * y/(1 - y))/2
+      y = log1px(2 * y/(1 - y))/2
       atanhx = sign(y, x)
       return
       end
@@ -1624,3 +1569,31 @@
       return
       end
 
+* Table of name abbreviations to conform to the 6-char limit
+*    A3coeff       A3cof
+*    C3coeff       C3cof
+*    C4coeff       C4cof
+*    AngNormalize  AngNm
+*    AngNormalize2 AngNm2
+*    AngRound      AngRnd
+*    arcmode       arcmod
+*    Astroid       Astrd
+*    betscale      betscl
+*    lamscale      lamscl
+*    cbet12a       cbt12a
+*    sbet12a       sbt12a
+*    epsilon       dbleps
+*    realmin       dblmin
+*    geodesic      geod
+*    inverse       invers
+*    InverseStart  InvSta
+*    Lambda12      Lam12f
+*    latsign       latsgn
+*    lonsign       lonsgn
+*    Lengths       Lengs
+*    meridian      merid
+*    outmask       omask
+*    shortline     shortp
+*    SinCosNorm    Norm
+*    SinCosSeries  TrgSum
+*    xthresh       xthrsh

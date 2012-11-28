@@ -1,4 +1,4 @@
-#include "geodesicc.h"
+#include "geodesic.h"
 #include <math.h>
 
 #define GEOGRAPHICLIB_GEODESIC_ORDER 6
@@ -486,6 +486,11 @@ real GenPosition(const struct GeodesicLine* l,
     *pS12 = S12;
 
   return arcmode ? s12_a12 : sig12 / degree;
+}
+
+void Position(const struct GeodesicLine* l, real s12,
+              real* plat2, real* plon2, real* pazi2) {
+  GenPosition(l, FALSE, s12, plat2, plon2, pazi2, 0, 0, 0, 0, 0);
 }
 
 real GenDirect(const struct Geodesic* g,

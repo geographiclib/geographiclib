@@ -1,10 +1,6 @@
 cmake_minimum_required (VERSION 2.6)
 
-if (WIN32)
-  project (GeographicLib-legacy C)
-else ()
-  project (GeographicLib-legacy C Fortran)
-endif ()
+project (GeographicLib-legacy-C C)
 
 # Set a default build type for single-configuration cmake generators if
 # no build type is set.
@@ -18,14 +14,12 @@ if (WIN32)
 else ()
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -ansi")
 endif ()
-add_executable (geodc geodc.c geodesicc.c geodesicc.h)
-if (NOT WIN32)
-  target_link_libraries (geodc m)
-endif ()
 
-if (NOT WIN32)
-  set (CMAKE_Fortran_FLAGS
-    "${CMAKE_Fortran_FLAGS} -Wall -Wextra -pedantic -std=f95 -fimplicit-none")
-  add_executable (geodf geodf.f geodesicf.f)
-endif ()
+set (TOOLS direct inverse test)
 
+foreach (TOOL ${TOOLS})
+  add_executable (${TOOL} ${TOOL}.c geodesic.c geodesic.h)
+  if (NOT WIN32)
+    target_link_libraries (${TOOL} m)
+  endif ()
+endforeach ()
