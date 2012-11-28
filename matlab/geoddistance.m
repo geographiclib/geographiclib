@@ -24,9 +24,9 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %
 %   This is an implementation of the algorithm given in
 %
-%     C. F. F. Karney
-%     Algorithms for geodesics
-%     J. Geodesy (2012)
+%     C. F. F. Karney,
+%     Algorithms for geodesics,
+%     J. Geodesy (2012);
 %     http://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %

@@ -25,9 +25,9 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
 %   each edge is computed using a series expansion with is accurate
 %   regardless of the length of the edge.  The formulas are derived in
 %
-%     C. F. F. Karney
-%     Algorithms for geodesics
-%     J. Geodesy (2012)
+%     C. F. F. Karney,
+%     Algorithms for geodesics,
+%     J. Geodesy (2012);
 %     http://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %

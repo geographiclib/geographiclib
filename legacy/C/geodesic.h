@@ -1,9 +1,9 @@
 /*
  * This is a C implementation of the geodesic algorithms described in
  *
- *   C. F. F. Karney
- *   Algorithms for geodesics
- *   J. Geodesy (2012)
+ *   C. F. F. Karney,
+ *   Algorithms for geodesics,
+ *   J. Geodesy (2012);
  *   http://dx.doi.org/10.1007/s00190-012-0578-z
  *   Addenda: http://geographiclib.sf.net/geod-addenda.html
  *
@@ -18,38 +18,34 @@
  *   * the inverse problem -- given lat1, lon1, lat2, lon2, determine
  *     s12, azi1, and azi2.
  *
- * The ellipsoid is specified by its equatorial radius a (typically in
- * meters) and flattening f.  The routines are accurate to round-off with
- * double precision arithmetic provided that abs(f) < 1/50, although
- * reasonably accurate results are obtained for abs(f) < 1/5.  Latitudes,
- * longitudes, and azimuths are in degrees.  Latitudes must lie in
- * [-90,90] and longitudes and azimuths must lie in [-540,540).  The
- * returned values for longitude and azimuths are in [-180,180).  The
- * distance s12 is measured in meters (more precisely the same units as
- * a).
+ * The ellipsoid is specified by its equatorial radius a (typically in meters)
+ * and flattening f.  The routines are accurate to round-off with double
+ * precision arithmetic provided that abs(f) < 1/50, although reasonably
+ * accurate results are obtained for abs(f) < 1/5.  Latitudes, longitudes, and
+ * azimuths are in degrees.  Latitudes must lie in [-90,90] and longitudes and
+ * azimuths must lie in [-540,540).  The returned values for longitude and
+ * azimuths are in [-180,180).  The distance s12 is measured in meters (more
+ * precisely the same units as a).
  *
  * The routines also calculate several other quantities of interest
- *   * SS12 is the area between the geodesic from point 1 to point 2 and
- *     the equator; i.e., it is the area, measured counter-clockwise, of
- *     the quadrilateral with corners (lat1,lon1), (0,lon1), (0,lon2),
- *     and (lat2,lon2).  It is given in meters^2.
- *   * m12, the reduced length of the geodesic is defined such that if
- *     the initial azimuth is perturbed by dazi1 (radians) then the
- *     second point is displaced by m12 dazi1 in the direction
- *     perpendicular to the geodesic.  m12 is given in meters.  On a
- *     curved surface the reduced length obeys a symmetry relation, m12 +
- *     m21 = 0.  On a flat surface, we have m12 = s12.
- *   * MM12 and MM21 are geodesic scales.  If two geodesics are parallel
- *     at point 1 and separated by a small distance dt, then they are
- *     separated by a distance MM12 dt at point 2.  MM21 is defined
- *     similarly (with the geodesics being parallel to one another at
- *     point 2).  MM12 and MM21 are dimensionless quantities.  On a flat
- *     surface, we have MM12 = MM21 = 1.
- *   * a12 is the arc length on the auxiliary sphere.  This is a
- *     construct for converting the problem to one in spherical
- *     trigonometry.  a12 is measured in degrees.  The spherical arc
- *     length from one equator crossing to the next is always 180
- *     degrees.
+ *   * SS12 is the area between the geodesic from point 1 to point 2 and the
+ *     equator; i.e., it is the area, measured counter-clockwise, of the
+ *     quadrilateral with corners (lat1,lon1), (0,lon1), (0,lon2), and
+ *     (lat2,lon2).  It is given in meters^2.
+ *   * m12, the reduced length of the geodesic is defined such that if the
+ *     initial azimuth is perturbed by dazi1 (radians) then the second point is
+ *     displaced by m12 dazi1 in the direction perpendicular to the geodesic.
+ *     m12 is given in meters.  On a curved surface the reduced length obeys a
+ *     symmetry relation, m12 + m21 = 0.  On a flat surface, we have m12 = s12.
+ *   * MM12 and MM21 are geodesic scales.  If two geodesics are parallel at
+ *     point 1 and separated by a small distance dt, then they are separated by
+ *     a distance MM12 dt at point 2.  MM21 is defined similarly (with the
+ *     geodesics being parallel to one another at point 2).  MM12 and MM21 are
+ *     dimensionless quantities.  On a flat surface, we have MM12 = MM21 = 1.
+ *   * a12 is the arc length on the auxiliary sphere.  This is a construct for
+ *     converting the problem to one in spherical trigonometry.  a12 is
+ *     measured in degrees.  The spherical arc length from one equator crossing
+ *     to the next is always 180 degrees.
  *
  * Simple interface
  *
@@ -148,9 +144,7 @@ extern "C" {
     double a, f, b, c2, f1, salp0, calp0, k2,
       salp1, calp1, ssig1, csig1, dn1, stau1, ctau1, somg1, comg1,
       A1m1, A2m1, A3c, B11, B21, B31, A4, B41;
-    /* index zero elements of C1a, C1pa, C2a, C3a are unused */
-    double C1a[6+1], C1pa[6+1], C2a[6+1], C3a[6],
-      C4a[6];                   /* all the elements of C4a are used */
+    double C1a[6+1], C1pa[6+1], C2a[6+1], C3a[6], C4a[6];
     unsigned caps;
   };
 
@@ -186,49 +180,15 @@ extern "C" {
                      double* pS12);
 
   enum mask {
-    /**
-     * No capabilities, no output.
-     **********************************************************************/
     NONE          = 0U,
-    /**
-     * Calculate latitude \e lat2.  (It's not necessary to include this as a
-     * capability to GeodesicLine because this is included by default.)
-     **********************************************************************/
     LATITUDE      = 1U<<7  | 0U,
-    /**
-     * Calculate longitude \e lon2.
-     **********************************************************************/
     LONGITUDE     = 1U<<8  | 1U<<3,
-    /**
-     * Calculate azimuths \e azi1 and \e azi2.  (It's not necessary to
-     * include this as a capability to GeodesicLine because this is included
-     * by default.)
-     **********************************************************************/
     AZIMUTH       = 1U<<9  | 0U,
-    /**
-     * Calculate distance \e s12.
-     **********************************************************************/
     DISTANCE      = 1U<<10 | 1U<<0,
-    /**
-     * Allow distance \e s12 to be used as input in the direct geodesic
-     * problem.
-     **********************************************************************/
     DISTANCE_IN   = 1U<<11 | 1U<<0 | 1U<<1,
-    /**
-     * Calculate reduced length \e m12.
-     **********************************************************************/
     REDUCEDLENGTH = 1U<<12 | 1U<<0 | 1U<<2,
-    /**
-     * Calculate geodesic scales \e M12 and \e M21.
-     **********************************************************************/
     GEODESICSCALE = 1U<<13 | 1U<<0 | 1U<<2,
-    /**
-     * Calculate area \e S12.
-     **********************************************************************/
     AREA          = 1U<<14 | 1U<<4,
-    /**
-     * All capabilities.  Calculate everything.
-     **********************************************************************/
     ALL           = 0x7F80U| 0x1FU
   };
 
