@@ -1,3 +1,21 @@
+/*
+ * This is a C implementation of the geodesic algorithms described in
+ *
+ *   C. F. F. Karney
+ *   Algorithms for geodesics
+ *   J. Geodesy (2012)
+ *   http://dx.doi.org/10.1007/s00190-012-0578-z
+ *   Addenda: http://geographiclib.sf.net/geod-addenda.html
+ *
+ * See the comments in geodesic.h for documentation.
+ *
+ * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
+ * http://geographiclib.sourceforge.net/
+ *
+ * This file was distributed with GeographicLib 1.27.
+ */
+
 #include "geodesic.h"
 #include <math.h>
 

@@ -1003,7 +1003,7 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page other Other interfaces (Javascript, Python, Matlab, Octave)
+\page other Other interfaces (Javascript, Python, Matlab, C, Fortran)
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -1013,6 +1013,7 @@ Interfaces to subsets of %GeographicLib are available in other languages
 - \ref javascript.
 - \ref python.
 - \ref matlab.
+- \ref c-fortran
 
 \section javascript Javascript interface
 
@@ -1203,6 +1204,19 @@ coordinates to MGRS can easily be written with Matlab code.
 Note that geoidheight, when compiled with Visual Studio 2008 causes
 Matlab to crash.  (The problem does not occur with Visual Studio 2005 or
 Visual Studio 2010.)
+
+\section c-fortran
+
+The directories <code>legacy/C</code> and <code>legacy/Fortran</code>
+contain implementations of GeographicLib::Geodesic and
+GeographicLib::GeodesicLine in C and Fortran respectively.  These are
+intended for use in old codes written in these languages and should work
+any reasonably modern compiler.  These implementations are entirely
+self-contained and do not depend on the rest of %GeographicLib.
+Documentation of the interfaces are given at the tops of
+<code>legacy/C/geodesic.h</code> and
+<code>legacy/Fortran/geodesic.for</code>.  Sample main programs which
+solve the direct and inverse geodesic problems are provided.
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -3661,8 +3675,9 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.27">Version 1.27</a>
    (released 2012-mm-dd)
    - Changes to geodesic routines:
-     - add native matlab implementations geoddistance, geodreckon,
-       geodarea;
+     - add native matlab implementations: geoddistance.m, geodreckon.m,
+       geodarea.m;
+     - add C and Fortran implementations;
      - improve the solution of the direct problem so that now the series
        solution is accurate to round off for |\e f| < 1/50;
      - tighten up the convergence criteria for solution of the inverse
@@ -3672,8 +3687,6 @@ of the git repository for %GeographicLib.
    - Fix GeographicLib::DMS::Decode double rounding BUG.
    - On MacOSX platforms with the cmake configuration, universal
      binaries are built.
-   - TODO: figure out if m0x is needed in Lengths
-   - TODO: check etol2 is consistently defined
 
  - <a href="http://geographiclib.sf.net/1.26">Version 1.26</a>
    (released 2012-10-22)
