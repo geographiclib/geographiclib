@@ -100,6 +100,7 @@ Files
       geodreckon.m -- Native Matlab implementation of direct geodesic problem
       geoddistance.m -- Native Matlab implementation of inverse geodesic problem
       geodarea.m -- Native Matlab implementation of polygon area
+      defaultellipsoid.m, ecc2flat.m, flat2ecc.m -- auxiliary functions
       private/*.m -- Internal function for geodesic routines
 
     doc/
@@ -117,7 +118,10 @@ Files
       *.1.html -- man pages in html format
       *.usage -- documentation for incorporation into executables
 
-    python/GeographicLib/*.py -- Python implementation of geodesics
+    python/GeographicLib/*.py -- Python implementation of geodesic routines
+
+    legacy/C/* -- C implementation of geodesic routines
+    legacy/Fortran/* -- Fortran implementation of geodesic routines
 
     Makefile.mk -- Unix/Linux makefiles
     configure -- autoconf configuration script

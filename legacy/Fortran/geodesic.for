@@ -7,6 +7,12 @@
 *   http://dx.doi.org/10.1007/s00190-012-0578-z
 *   Addenda: http://geographiclib.sf.net/geod-addenda.html
 *
+* The principal advantages of these algorithms over previous ones (e.g.,
+* Vincenty, 1975) are
+*   * accurate to round off for abs(f) < 1/50;
+*   * the solution of the inverse problem is always found;
+*   * differential and integral properties of geodesics are computed.
+*
 * The shortest path between two points on the ellipsoid at (lat1, lon1)
 * and (lat2, lon2) is called the geodesic.  Its length is s12 and the
 * geodesic from point 1 to point 2 has forward azimuths azi1 and azi2 at
@@ -43,9 +49,10 @@
 *       end interface
 *
 * The ellipsoid is specified by its equatorial radius a (typically in
-* meters) and flattening f.  The routines are accurate to round-off with
-* double precision arithmetic provided that abs(f) < 1/50, although
-* reasonably accurate results are obtained for abs(f) < 1/5.  Latitudes,
+* meters) and flattening f.  The routines are accurate to round off with
+* double precision arithmetic provided that abs(f) < 1/50; for the WGS84
+* ellipsoid, the errors are less than 15 nanometers.  (Reasonably
+* accurate results are obtained for abs(f) < 1/5.)  Latitudes,
 * longitudes, and azimuths are in degrees.  Latitudes must lie in
 * [-90,90] and longitudes and azimuths must lie in [-540,540).  The
 * returned values for longitude and azimuths are in [-180,180).  The

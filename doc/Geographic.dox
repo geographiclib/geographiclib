@@ -12,7 +12,7 @@
 \mainpage Geographic library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.27
-\date 2012-mm-dd
+\date 2012-11-29
 
 \section abstract Abstract
 
@@ -3673,12 +3673,12 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.27">Version 1.27</a>
-   (released 2012-mm-dd)
+   (released 2012-11-29)
    - Changes to geodesic routines:
      - add native matlab implementations: geoddistance.m, geodreckon.m,
        geodarea.m;
      - add C and Fortran implementations;
-     - improve the solution of the direct problem so that now the series
+     - improve the solution of the direct problem so that the series
        solution is accurate to round off for |\e f| < 1/50;
      - tighten up the convergence criteria for solution of the inverse
        problem;
