@@ -333,13 +333,13 @@ GeographicLib.GeodesicLine = {};
     for (var j = g.nC4x_, k = g.nC4_; k; ) {
       var t = 0;
       for (var i = g.nC4_ - k + 1; i; --i)
-        t = k2 * t + this._C4x[--j];
+        t = eps * t + this._C4x[--j];
       c[--k] = t;
     }
 
     var mult = 1;
     for (var k = 1; k < g.nC4_; ) {
-      mult *= k2;
+      mult *= eps;
       c[k++] *= mult;
     }
   }
@@ -825,7 +825,7 @@ GeographicLib.GeodesicLine = {};
           dv = nvals.dlam12;
 
           // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
-          if (tripb || Math.abs(v) < (tripn ? 8 : 2) * tol0_)
+          if (tripb || Math.abs(v) < (tripn ? 8 : 2) * g.tol0_)
             break;
           // Update bracketing values
           if (v > 0 && (numit < g.maxit1_ || calp1/salp1 > calp1b/salp1b)) {
