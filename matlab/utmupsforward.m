@@ -1,4 +1,4 @@
-function [utmups, scale] = utmupsforward(latlong, setzone)
+function utmupsforward(~, ~)
 %utmupsforward  Convert geographic coordinates to UTM/UPS
 %
 %   [utmups, scale] = utmupsforward(latlong)

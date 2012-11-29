@@ -64,21 +64,8 @@ namespace GeographicLib {
   Math::real Ellipsoid::InverseRectifyingLatitude(real mu) const throw() {
     if (abs(mu) == 90)
       return mu;
-    // mu depends on beta nearly linearly (much more so that it depends on
-    // phi).  So find beta first by solving E(beta, -e12) = e0 with initial
-    // guess beta = mu
-    real
-      e0 = mu * QuarterMeridian() / (90 * _b),
-      beta = mu;
-    for (int i = 0; i < numit_; ++i) {
-      real err = _ell.Ed(beta) - e0;
-      beta = beta -
-        err / ( sqrt(1 + _e12 * Math::sq(sin(beta *  Math::degree<real>())))
-                * Math::degree<real>());
-      if (abs(err) < stol_)
-        break;
-    }
-    return InverseParametricLatitude(beta);
+    return InverseParametricLatitude(_ell.Einv(mu * _ell.E() / 90) /
+                                     Math::degree<real>());
   }
 
   Math::real Ellipsoid::AuthalicLatitude(real phi) const throw()

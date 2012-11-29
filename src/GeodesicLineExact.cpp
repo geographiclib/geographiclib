@@ -124,10 +124,11 @@ namespace GeographicLib {
     }
 
     if (_caps & CAP_C4) {
-      g.C4f(_k2, _C4a);
+      real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
+      g.C4f(eps, _C4a);
       // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
       _A4 = Math::sq(_a) * _calp0 * _salp0 * _e2;
-      _B41 = GeodesicExact::SinCosSeries(_ssig1, _csig1, _C4a, nC4_);
+      _B41 = GeodesicExact::CosSeries(_ssig1, _csig1, _C4a, nC4_);
     }
   }
 
@@ -227,7 +228,7 @@ namespace GeographicLib {
 
     if (outmask & AREA) {
       real
-        B42 = GeodesicExact::SinCosSeries(ssig2, csig2, _C4a, nC4_);
+        B42 = GeodesicExact::CosSeries(ssig2, csig2, _C4a, nC4_);
       real salp12, calp12;
       if (_calp0 == 0 || _salp0 == 0) {
         // alp12 = alp2 - alp1, used in atan2 so no need to normalized

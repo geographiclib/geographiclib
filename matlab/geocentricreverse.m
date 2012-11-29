@@ -1,4 +1,4 @@
-function [geodetic, rot] = geocentricreverse(geocentric, a, f)
+function geocentricreverse(~, ~, ~)
 %geocentricreverse  Convert geocentric coordinates to geographic
 %
 %   [geodetic, rot] = geocentricreverse(geocentric)

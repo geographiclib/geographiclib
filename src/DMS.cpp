@@ -94,15 +94,17 @@ namespace GeographicLib {
       real fcurrent = 0;
       unsigned ncurrent = 0, p = beg;
       bool pointseen = false;
-      unsigned digcount = 0;
+      unsigned digcount = 0, intcount = 0;
       while (p < end) {
         char x = dmsa[p++];
         if ((k = Utility::lookup(digits_, x)) >= 0) {
           ++ncurrent;
           if (digcount > 0)
             ++digcount;         // Count of decimal digits
-          else
+          else {
             icurrent = 10 * icurrent + k;
+            ++intcount;
+          }
         } else if (x == '.') {
           if (pointseen) {
             errormsg = "Multiple decimal points in "
@@ -136,15 +138,17 @@ namespace GeographicLib {
             break;
           }
           if (digcount > 1) {
-            istringstream s(dmsa.substr(p - digcount - 1, digcount));
+            istringstream s(dmsa.substr(p - intcount - digcount - 1,
+                                        intcount + digcount));
             s >> fcurrent;
+            icurrent = 0;
           }
           ipieces[k] = icurrent;
           fpieces[k] = icurrent + fcurrent;
           if (p < end) {
             npiece = k + 1;
             icurrent = fcurrent = 0;
-            ncurrent = digcount = 0;
+            ncurrent = digcount = intcount = 0;
           }
         } else if (Utility::lookup(signs_, x) >= 0) {
           errormsg = "Internal sign in DMS string "
@@ -170,8 +174,10 @@ namespace GeographicLib {
           break;
         }
         if (digcount > 1) {
-          istringstream s(dmsa.substr(p - digcount, digcount));
+          istringstream s(dmsa.substr(p - intcount - digcount,
+                                      intcount + digcount));
           s >> fcurrent;
+          icurrent = 0;
         }
         ipieces[npiece] = icurrent;
         fpieces[npiece] = icurrent + fcurrent;

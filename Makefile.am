@@ -10,7 +10,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src man tools doc include matlab python cmake examples
 
 EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL \
-	Makefile.mk CMakeLists.txt windows maxima doc
+	Makefile.mk CMakeLists.txt windows maxima doc legacy
 
 dist-hook:
 	rm -rf $(distdir)/doc/html $(distdir)/doc/manpages ; \

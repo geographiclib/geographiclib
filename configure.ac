@@ -1,7 +1,7 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 
-AC_INIT([GeographicLib],[1.26],[charles@karney.com])
+AC_INIT([GeographicLib],[1.27],[charles@karney.com])
 AC_CANONICAL_SYSTEM
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
@@ -22,7 +22,7 @@ dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
 LT_CURRENT=16
-LT_REVISION=1
+LT_REVISION=2
 LT_AGE=7
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
@@ -57,7 +57,7 @@ AC_C_BIGENDIAN
 # Need version 1.8.1.2 or later for greek and math symbols.
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
 AM_CONDITIONAL([HAVE_DOXYGEN],
-	[test "$DOXYGEN" -a `"$DOXYGEN" --version |
+	[test "$DOXYGEN" && test `"$DOXYGEN" --version |
 	sed 's/^\([[0-9]]\)\.\([[0-9]]\)\./\1.0\2./'` '>' 1.08.1.1])
 
 AC_CHECK_PROGS([POD2MAN], [pod2man])

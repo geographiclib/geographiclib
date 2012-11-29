@@ -1,4 +1,4 @@
-function [latlong, scale] = utmupsreverse(utmups)
+function utmupsreverse(~)
 %utmupsreverse  Convert UTM/UPS coordinates to geographic
 %
 %   [latlong, scale] = utmupsreverse(utmups)

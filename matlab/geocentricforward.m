@@ -1,4 +1,4 @@
-function [geocentric, rot] = geocentricforward(geodetic, a, f)
+function geocentricforward(~, ~, ~)
 %geocentricforward  Convert geographic coordinates to geocentric
 %
 %   [geocentric, rot] = geocentricforward(geodetic)

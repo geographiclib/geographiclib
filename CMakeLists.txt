@@ -4,14 +4,14 @@ project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 26)
+set (GeographicLib_VERSION_MINOR 27)
 set (GeographicLib_VERSION
   "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.7.1)
+set (LIBVERSIONFULL 9.7.2)
 
 # User-settable variables
 
@@ -71,7 +71,7 @@ if (NOT DEFINED INSTALL_PATH AND DEFINED PACKAGE_PATH)
   endif ()
 endif ()
 if (DEFINED INSTALL_PATH)
-  set (CMAKE_INSTALL_PREFIX ${INSTALL_PATH})
+  file (TO_CMAKE_PATH ${INSTALL_PATH} CMAKE_INSTALL_PREFIX)
 endif ()
 message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
 
@@ -109,7 +109,7 @@ if (NOT CMAKE_VERSION VERSION_LESS 2.8)
 endif ()
 
 # (6) Compile the short example programs?
-if (WIN32)
+if (WIN32 OR APPLE)
   option (GEOGRAPHICLIB_EXAMPLES
     "Build example programs in examples directory" OFF)
 else ()
@@ -179,12 +179,12 @@ endif ()
 # documentation is therefore only done in "MAINTAINER" mode.  The
 # maintainer runs "make distrib-all" which installs the transformed
 # documentation files into the source tree.
-if (NOT WIN32)
+if (NOT WIN32 AND NOT APPLE)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
   find_program (HAVE_COL col)
 endif ()
-if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_COL AND
+if (HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_COL AND
     NOT CMAKE_VERSION VERSION_LESS 2.8)
   set (MAINTAINER ON)
 else ()
@@ -233,6 +233,14 @@ if (WIN32)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+endif ()
+
+if (APPLE)
+  if (CMAKE_SYSTEM_PROCESSOR MATCHES "i.86" OR
+      CMAKE_SYSTEM_PROCESSOR MATCHES "amd64" OR
+      CMAKE_SYSTEM_PROCESSOR MATCHES "x86")
+    set (CMAKE_OSX_ARCHITECTURES "i386 -arch x86_64")
+  endif ()
 endif ()
 
 # The list of tools (to be installed into, e.g., /usr/local/bin)
@@ -301,7 +309,8 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/(distrib|.*-distrib|.*-installer|geodesic-papers)/"
   "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(html|kmz)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio|js-compress)\\\\.sh\$"
-  "${PROJECT_SOURCE_DIR}/(geodesic-biblio.txt|makefile-admin)\$" )
+  "${PROJECT_SOURCE_DIR}/(geodesic-biblio.txt|makefile-admin|geodesic.png)\$"
+  "${PROJECT_SOURCE_DIR}/matlab/matlab-blurb.txt\$" )
 set (CPACK_SOURCE_GENERATOR TGZ)
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
@@ -343,7 +352,7 @@ if (WIN32)
   set (CPACK_NSIS_MODIFY_PATH ON)
 elseif (APPLE)
   # Not tested
-  set (CPACK_GENERATOR DMG)
+  set (CPACK_GENERATOR Bundle)
   set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-darwin")
 else ()
   # Not tested
@@ -387,7 +396,7 @@ if (MAINTAINER)
       _CPack_Packages/Linux-Source/TGZ.DOS/ &&
       cd _CPack_Packages/Linux-Source/TGZ.DOS &&
       find . -type f |
-      egrep  '/\(doxyfile.in|MANIFEST.in|NEWS|AUTHORS|INSTALL|.*\\.\(cpp|hpp|h.in|txt|pro|usage|pod|py|m|mac|cmake.in|cmake|h|js\)\)$$' |
+      egrep  '/\(doxyfile.in|MANIFEST.in|NEWS|AUTHORS|INSTALL|.*\\.\(cpp|hpp|h.in|txt|pro|usage|pod|py|m|mac|cmake.in|cmake|h|js|c|for\)\)$$' |
       xargs unix2dos -q -k &&
       find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
       zip -q ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip -@

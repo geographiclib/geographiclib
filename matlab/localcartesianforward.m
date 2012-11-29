@@ -1,4 +1,4 @@
-function [cartesian, rot] = localcartesianforward(origin, geodetic, a, f)
+function localcartesianforward(~, ~, ~, ~)
 %localcartesianforward  Convert geographic coordinates to local cartesian
 %
 %   [cartesian, rot] = localcartesianforward(origin, geodetic)

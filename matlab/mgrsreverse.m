@@ -1,4 +1,4 @@
-function [utmups, prec] = mgrsreverse(utmups)
+function mgrsreverse(~)
 %mgrsreverse  Convert UTM/UPS coordinates to MGRS
 %
 %   [utmups, prec] = mgrsreverse(mgrs)

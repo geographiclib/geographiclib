@@ -28,6 +28,8 @@
 
 #include <GeographicLib/GeodesicExact.hpp>
 #include <GeographicLib/GeodesicLineExact.hpp>
+#include <iostream>
+#include <iomanip>
 
 #if defined(_MSC_VER)
 // Squelch warnings about potentially uninitialized local variables
@@ -47,7 +49,9 @@ namespace GeographicLib {
   // 52.784459512564 0 -52.784459512563990912 179.634407464943777557
   // which otherwise failed for Visual Studio 10 (Release and Debug)
   const Math::real GeodesicExact::tol1_ = 200 * tol0_;
-  const Math::real GeodesicExact::tol2_ = sqrt(numeric_limits<real>::epsilon());
+  const Math::real GeodesicExact::tol2_ = sqrt(tol0_);
+  // Check on bisection interval
+  const Math::real GeodesicExact::tolb_ = tol0_ * tol2_;
   const Math::real GeodesicExact::xthresh_ = 1000 * tol2_;
 
   GeodesicExact::GeodesicExact(real a, real f)
@@ -63,7 +67,7 @@ namespace GeographicLib {
             (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
             sqrt(abs(_e2))))/2) // authalic radius squared
       // The sig12 threshold for "really short"
-    , _etol2(10 * tol2_ / max(real(0.1), sqrt(abs(_e2))))
+    , _etol2(0.01 * tol2_ / max(real(0.1), sqrt(abs(_e2))))
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -75,10 +79,10 @@ namespace GeographicLib {
   const GeodesicExact GeodesicExact::WGS84(Constants::WGS84_a<real>(),
                                            Constants::WGS84_f<real>());
 
-  Math::real GeodesicExact::SinCosSeries(real sinx, real cosx,
-                                         const real c[], int n) throw() {
+  Math::real GeodesicExact::CosSeries(real sinx, real cosx,
+                                      const real c[], int n) throw() {
     // Evaluate
-    // y = sum(c[i] * cos((2*i+1) * x), i, 0, n-1) :
+    // y = sum(c[i] * cos((2*i+1) * x), i, 0, n-1)
     // using Clenshaw summation.
     // Approx operation count = (n + 5) mult and (2 * n + 2) add
     c += n ;                    // Point to one beyond last element
@@ -122,8 +126,8 @@ namespace GeographicLib {
                                        real& m12, real& M12, real& M21,
                                        real& S12) const throw() {
     outmask &= OUT_ALL;
-    lon1 = Math::AngNormalize(lon1);
-    real lon12 = Math::AngNormalize(Math::AngNormalize(lon2) - lon1);
+    real lon12 = Math::AngNormalize(Math::AngNormalize(lon2) -
+                                    Math::AngNormalize(lon1));
     // If very close to being on the same meridian, then make it so.
     // Not sure this is necessary...
     lon12 = AngRound(lon12);
@@ -252,11 +256,11 @@ namespace GeographicLib {
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
       s12x = _a * lam12;
-      m12x = _b * sin(lam12 / _f1);
-      if (outmask & GEODESICSCALE)
-        M12 = M21 = cos(lam12 / _f1);
-      a12 = lon12 / _f1;
       sig12 = omg12 = lam12 / _f1;
+      m12x = _b * sin(sig12);
+      if (outmask & GEODESICSCALE)
+        M12 = M21 = cos(sig12);
+      a12 = lon12 / _f1;
 
     } else if (!meridian) {
 
@@ -285,34 +289,50 @@ namespace GeographicLib {
         // root.  Thus f(alp) is positive for alp > alp1 and negative for alp <
         // alp1.  During the course of the iteration, a range (alp1a, alp1b) is
         // maintained which brackets the root and with each evaluation of
-        // f(alp) the range is shrunk if possible.  Newton's method is
+        // f(alp) the range is shrunk, if possible.  Newton's method is
         // restarted whenever the derivative of f is negative (because the new
-        // value of alp1 is guaranteed to be further from the solution) or if
-        // the new estimate of alp1 lies outside (0,pi); in this case, the new
-        // starting guess is taken to be (alp1a + alp1b) / 2.
+        // value of alp1 is then further from the solution) or if the new
+        // estimate of alp1 lies outside (0,pi); in this case, the new starting
+        // guess is taken to be (alp1a + alp1b) / 2.
         real ssig1, csig1, ssig2, csig2;
-        real ov = 0;
         unsigned numit = 0;
         // Bracketing range
         real salp1a = tiny_, calp1a = 1, salp1b = tiny_, calp1b = -1;
-        for (unsigned trip = 0; numit < maxit_; ++numit) {
-          // For the WGS84 test set: mean = 1.62, sd = 1.13, max = 16
+        for (bool tripn = false, tripb = false; numit < maxit2_; ++numit) {
+          // 1/4 meridan = 10e6 m and random input.  max err is estimated max
+          // error in nm (checking solution of inverse problem by direct
+          // solution).  iter is mean and sd of number of iterations
+          //
+          //           max   iter
+          // log2(b/a) err mean  sd
+          //    -7     387 5.33 3.68
+          //    -6     345 5.19 3.43
+          //    -5     269 5.00 3.05
+          //    -4     210 4.76 2.44
+          //    -3     115 4.55 1.87
+          //    -2      69 4.35 1.38
+          //    -1      36 4.05 1.03
+          //     0      15 0.01 0.13
+          //     1      25 5.10 1.53
+          //     2      96 5.61 2.09
+          //     3     318 6.02 2.74
+          //     4     985 6.24 3.22
+          //     5    2352 6.32 3.44
+          //     6    6008 6.30 3.45
+          //     7   19024 6.19 3.30
           real dv;
           real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                            E, omg12, trip < 1, dv) - lam12;
+                            E, omg12, numit < maxit1_, dv) - lam12;
+         // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
+          if (tripb || abs(v) < (tripn ? 8 : 2) * tol0_) break;
           // Update bracketing values
-          if (v >= 0 && calp1/salp1 > calp1b/salp1b) {
+          if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b)) {
             salp1b = salp1; calp1b = calp1;
-          } else if (v <= 0 && calp1/salp1 < calp1a/salp1a) {
+          } else if (numit > maxit1_ || calp1/salp1 < calp1a/salp1a) {
             salp1a = salp1; calp1a = calp1;
           }
-          if (!(abs(v) > tiny_) || !(trip < 1)) {
-            if (!(abs(v) <= max(tol1_, ov)))
-              numit = maxit_;
-            break;
-          }
-          if (dv >= 0) {
+          if (numit < maxit1_ && dv > 0) {
             real
               dalp1 = -v/dv;
             real
@@ -324,12 +344,8 @@ namespace GeographicLib {
               SinCosNorm(salp1, calp1);
               // In some regimes we don't get quadratic convergence because
               // slope -> 0.  So use convergence conditions based on epsilon
-              // instead of sqrt(epsilon).  The first criterion is a test on
-              // abs(v) against 200 * epsilon.  The second takes credit for an
-              // anticipated reduction in abs(v) by v/ov (due to the latest
-              // update in alp1) and checks this against epsilon.
-              if (!(abs(v) >= tol1_ && Math::sq(v) >= ov * tol0_)) ++trip;
-              ov = abs(v);
+              // instead of sqrt(epsilon).
+              tripn = abs(v) <= 16 * tol0_;
               continue;
             }
           }
@@ -338,54 +354,16 @@ namespace GeographicLib {
           // This mechanism is not needed for the WGS84 ellipsoid, but it does
           // catch problems with more eccentric ellipsoids.  Its efficacy is
           // such for the WGS84 test set with the starting guess set to alp1 =
-          // 90deg: mean = 4.86, sd = 3.42, max = 22
+          // 90deg:
+          // the WGS84 test set: mean = 5.21, sd = 3.93, max = 24
+          // WGS84 and random input: mean = 4.74, sd = 0.99
           salp1 = (salp1a + salp1b)/2;
           calp1 = (calp1a + calp1b)/2;
           SinCosNorm(salp1, calp1);
-          trip = 0;
-          ov = 0;
+          tripn = false;
+          tripb = (abs(salp1a - salp1) + (calp1a - calp1) < tolb_ ||
+                   abs(salp1 - salp1b) + (calp1 - calp1b) < tolb_);
         }
-        if (numit >= maxit_) {
-          // Resort to the safer bisection method
-          for (unsigned i = 0; i < bisection_; ++i) {
-            ++numit;
-            salp1 = (salp1a + salp1b)/2;
-            calp1 = (calp1a + calp1b)/2;
-            SinCosNorm(salp1, calp1);
-            if ( (abs(salp1 - salp1b) < tol0_ && calp1 - calp1b < tol0_) ||
-                 (abs(salp1a - salp1) < tol0_ && calp1a - calp1 < tol0_) )
-              break;
-            real
-              dummy,
-              v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
-                           salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                           E, omg12, false, dummy) - lam12;
-            // Be more tolerant on error.  It is approximately 1 ulp for a
-            // number in [0, pi].
-            if (abs(v) <= 2 * tol0_) break;
-            if (v > 0) {
-              salp1b = salp1; calp1b = calp1;
-            } else {
-              salp1a = salp1; calp1a = calp1;
-            }
-          }
-        }
-
-        if (numit >= maxit_ + bisection_) {
-          // Signal failure.
-          if (outmask & DISTANCE)
-            s12 = Math::NaN<real>();
-          if (outmask & AZIMUTH)
-            azi1 = azi2 = Math::NaN<real>();
-          if (outmask & REDUCEDLENGTH)
-            m12 = Math::NaN<real>();
-          if (outmask & GEODESICSCALE)
-            M12 = M21 = Math::NaN<real>();
-          if (outmask & AREA)
-            S12 = Math::NaN<real>();
-          return Math::NaN<real>();
-        }
-
         {
           real dummy;
           Lengths(E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
@@ -416,15 +394,16 @@ namespace GeographicLib {
           ssig1 = sbet1, csig1 = calp1 * cbet1,
           ssig2 = sbet2, csig2 = calp2 * cbet2,
           k2 = Math::sq(calp0) * _ep2,
+          eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2),
           // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
           A4 = Math::sq(_a) * calp0 * salp0 * _e2;
         SinCosNorm(ssig1, csig1);
         SinCosNorm(ssig2, csig2);
         real C4a[nC4_];
-        C4f(k2, C4a);
+        C4f(eps, C4a);
         real
-          B41 = SinCosSeries(ssig1, csig1, C4a, nC4_),
-          B42 = SinCosSeries(ssig2, csig2, C4a, nC4_);
+          B41 = CosSeries(ssig1, csig1, C4a, nC4_),
+          B42 = CosSeries(ssig2, csig2, C4a, nC4_);
         S12 = A4 * (B42 - B41);
       } else
         // Avoid problems with indeterminate sig1, sig2 on equator
@@ -655,7 +634,7 @@ namespace GeographicLib {
                 sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
                 cbet1, cbet2, dummy, m12b, m0, false,
                 dummy, dummy);
-        x = -1 + m12b/(cbet1 * cbet2 * m0 * Math::pi<real>());
+        x = -1 + m12b / (cbet1 * cbet2 * m0 * Math::pi<real>());
         betscale = x < -real(0.01) ? sbet12a / x :
           -_f * Math::sq(cbet1) * Math::pi<real>();
         lamscale = betscale / cbet1;
@@ -664,6 +643,7 @@ namespace GeographicLib {
 
       if (y > -tol1_ && x > -1 - xthresh_) {
         // strip near cut
+        // Need real(x) here to cast away the volatility of x for min/max
         if (_f >= 0) {
           salp1 = min(real(1), -real(x)); calp1 = - sqrt(1 - Math::sq(salp1));
         } else {
@@ -707,8 +687,8 @@ namespace GeographicLib {
         // Because omg12 is near pi, estimate work with omg12a = pi - omg12
         real k = Astroid(x, y);
         real
-          omg12a = lamscale * ( _f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k ),
-          somg12 = sin(omg12a), comg12 = -cos(omg12a);
+          omg12a = lamscale * ( _f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k );
+        somg12 = sin(omg12a); comg12 = -cos(omg12a);
         // Update spherical estimate of alp1 using omg12 instead of lam12
         salp1 = cbet2 * somg12;
         calp1 = sbet12a - cbet2 * sbet1 * Math::sq(somg12) / (1 - comg12);
@@ -810,8 +790,7 @@ namespace GeographicLib {
     return lam12;
   }
 
-  void GeodesicExact::C4f(real k2, real c[]) const throw() {
-    real eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
+  void GeodesicExact::C4f(real eps, real c[]) const throw() {
     // Evaluation C4 coeffs by Horner's method
     // Elements c[0] thru c[nC4_ - 1] are set
     for (int j = nC4x_, k = nC4_; k; ) {

@@ -97,14 +97,22 @@ namespace GeographicLib {
    * Additional functionality is provided by the GeodesicLine class, which
    * allows a sequence of points along a geodesic to be computed.
    *
-   * The calculations are accurate to better than 15 nm (15 nanometers).  See
-   * Sec. 9 of
+   * The calculations are accurate to better than 15 nm (15 nanometers) for the
+   * WGS84 ellipsoid.  See Sec. 9 of
    * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
    * details.  The algorithms used by this class are based on series expansions
    * using the flattening \e f as a small parameter.  These only accurate for
-   * |\e f| &lt; 0.01; however reasonably accurate results will be obtained for
-   * |\e f| &lt; 0.1.  For very eccentric ellipsoids, use GeodesicExact
-   * instead.
+   * |\e f| &lt; 0.02; however reasonably accurate results will be obtained for
+   * |\e f| &lt; 0.2.  Here is a table of the approximate maximum error
+   * (expressed as a distance) for an ellipsoid with the same major radius as
+   * the WGS84 ellipsoid and different values of the flattening.<pre>
+   *     |f|      error
+   *     0.01     25 nm
+   *     0.02     30 nm
+   *     0.05     10 um
+   *     0.1     1.5 mm
+   *     0.2     300 mm
+   * </pre>For very eccentric ellipsoids, use GeodesicExact instead.
    *
    * The algorithms are described in
    * - C. F. F. Karney,
@@ -112,7 +120,9 @@ namespace GeographicLib {
    *   Algorithms for geodesics</a>,
    *   J. Geodesy, 2012;
    *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
-   *   10.1007/s00190-012-0578-z</a>.
+   *   10.1007/s00190-012-0578-z</a>;
+   *   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+   *   geod-addenda.html</a>.
    * .
    * For more information on geodesics see \ref geodesic.
    *
@@ -138,13 +148,15 @@ namespace GeographicLib {
     static const int nC3x_ = (nC3_ * (nC3_ - 1)) / 2;
     static const int nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
-    static const unsigned maxit_ = 30;
-    static const unsigned bisection_ = std::numeric_limits<real>::digits + 10;
+    static const unsigned maxit1_ = 20;
+    static const unsigned maxit2_ = maxit1_ +
+      std::numeric_limits<real>::digits + 10;
 
     static const real tiny_;
     static const real tol0_;
     static const real tol1_;
     static const real tol2_;
+    static const real tolb_;
     static const real xthresh_;
 
     enum captype {
@@ -629,12 +641,7 @@ namespace GeographicLib {
      * The solution to the inverse problem is found using Newton's method.  If
      * this fails to converge (this is very unlikely in geodetic applications
      * but does occur for very eccentric ellipsoids), then the bisection method
-     * is used to refine the solution.  This should always converge to an
-     * accurate solution.
-     *
-     * (If the routine fails to converge, then all the requested outputs are
-     * set to Math::NaN() --- test for such results with Math::isnan.  Please
-     * report all cases where this occurs.)
+     * is used to refine the solution.
      *
      * The following functions are overloaded versions of Geodesic::Inverse
      * which omit some of the output parameters.  Note, however, that the arc
