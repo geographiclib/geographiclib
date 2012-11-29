@@ -39,7 +39,7 @@ set -e
 #   python/setup.py
 #   tests/test-distribution.sh
 
-VERSION=1.27
+VERSION=1.28
 BRANCH=devel
 TEMP=/scratch/geographic-dist
 DEVELSOURCE=/u/geographiclib
@@ -250,6 +250,7 @@ echo
 DATE=`date +%F`
 cat > $TEMP/tasks.txt <<EOF
 # deploy documentation
+test -d $WEBDIST/htdocs/$VERSION-pre &&
 rm -rf $WEBDIST/htdocs/$VERSION &&
 mv $WEBDIST/htdocs/$VERSION{-pre,} &&
 make -C $DEVELSOURCE -f makefile-admin distrib-doc

@@ -546,7 +546,7 @@
         latsgn = 1
       else
         latsgn = -1
-      endif
+      end if
       lat1x = lat1x * latsgn
       lat2x = lat2x * latsgn
 * Now we have
