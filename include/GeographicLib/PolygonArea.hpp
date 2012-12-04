@@ -55,25 +55,13 @@ namespace GeographicLib {
     int _crossings;
     Accumulator<real> _areasum, _perimetersum;
     real _lat0, _lon0, _lat1, _lon1;
-    // Copied from Geodesic class (now the Math class)
-    static inline real AngNormalize(real x) throw() {
-      // Place angle in [-180, 180).  Assumes x is in [-540, 540).
-      //
-      // g++ 4.4.4 holds a temporary in an extended register causing an error
-      // with the triangle 89,0.1;89,90.1;89,-179.9.  The volatile declaration
-      // fixes this.  (The bug probably triggered because transit and
-      // AngNormalize are inline functions.  So don't port this change over to
-      // Geodesic.hpp.)
-      volatile real y = x;
-      return y >= 180 ? y - 360 : (y < -180 ? y + 360 : y);
-    }
     static inline int transit(real lon1, real lon2) {
       // Return 1 or -1 if crossing prime meridian in east or west direction.
       // Otherwise return zero.
-      lon1 = AngNormalize(lon1);
-      lon2 = AngNormalize(lon2);
-      // treat lon12 = -180 as an eastward geodesic, so convert to 180.
-      real lon12 = -AngNormalize(lon1 - lon2); // In (-180, 180]
+      // Compute lon12 the same way as Geodesic::Inverse.
+      lon1 = Math::AngNormalize(lon1);
+      lon2 = Math::AngNormalize(lon2);
+      real lon12 = Math::AngDiff(lon1, lon2);
       int cross =
         lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
         (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);

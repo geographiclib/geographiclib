@@ -127,7 +127,7 @@ class Geodesic(object):
     # is about 1000 times more resolution than we get with angles around 90
     # degrees.)  We use this to avoid having to deal with near singular
     # cases when x is non-zero but tiny (e.g., 1.0e-200).
-    z = 0.0625                  # 1/16
+    z = 1/16.0
     y = abs(x)
     # The compiler mustn't "simplify" z - (z - y) to y
     y = z - (z - y) if y < z else y
@@ -612,16 +612,15 @@ class Geodesic(object):
     a12 = s12 = azi1 = azi2 = m12 = M12 = M21 = S12 = Math.nan # return vals
 
     outmask &= Geodesic.OUT_ALL
-    lon12 = Math.AngNormalize(Math.AngNormalize(lon2) -
-                              Math.AngNormalize(lon1))
-    # If very close to being on the same meridian, then make it so.
-    # Not sure this is necessary...
+    # Compute longitude difference (AngDiff does this carefully).  Result is
+    # in [-180, 180] but -180 is only for west-going geodesics.  180 is for
+    # east-going and meridional geodesics.
+    lon12 = Math.AngDiff(Math.AngNormalize(lon1), Math.AngNormalize(lon2))
+    # If very close to being on the same half-meridian, then make it so.
     lon12 = Geodesic.AngRound(lon12)
     # Make longitude difference positive.
     lonsign = 1 if lon12 >= 0 else -1
     lon12 *= lonsign
-    if lon12 == 180:
-      lonsign = 1
     # If really close to the equator, treat as on equator.
     lat1 = Geodesic.AngRound(lat1)
     lat2 = Geodesic.AngRound(lat2)

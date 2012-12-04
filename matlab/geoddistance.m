@@ -47,7 +47,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 % under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% This file was distributed with GeographicLib 1.27.
+% This file was distributed with GeographicLib 1.28.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
@@ -93,11 +93,10 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   A3x = A3coeff(n);
   C3x = C3coeff(n);
 
-  lon12 = AngNormalize(AngNormalize(lon2(:)) - AngNormalize(lon1(:)));
+  lon12 = AngDiff(AngNormalize(lon1(:)), AngNormalize(lon2(:)));
   lon12 = AngRound(lon12);
   lonsign = 2 * (lon12 >= 0) - 1;
   lon12 = lonsign .* lon12;
-  lonsign(lon12 == 180) = 1;
   lat1 = AngRound(lat1(:));
   lat2 = AngRound(lat2(:));
   swapp = 2 * (abs(lat1) >= abs(lat2)) - 1;

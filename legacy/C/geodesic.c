@@ -13,7 +13,7 @@
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * This file was distributed with GeographicLib 1.27.
+ * This file was distributed with GeographicLib 1.28.
  */
 
 #include "geodesic.h"
@@ -117,6 +117,18 @@ static real cbrtx(real x) {
   return x < 0 ? -y : y;
 }
 
+static real sumx(real u, real v, real* t) {
+  volatile real s = u + v;
+  volatile real up = s - v;
+  volatile real vpp = s - up;
+  up -= u;
+  vpp -= v;
+  *t = -(up + vpp);
+  /* u + v =       s      + t
+   *       = round(u + v) + t */
+  return s;
+}
+
 static real minx(real x, real y)
 { return x < y ? x : y; }
 
@@ -137,8 +149,17 @@ static real AngNormalize(real x)
 static real AngNormalize2(real x)
 { return AngNormalize(fmod(x, (real)(360))); }
 
+static real AngDiff(real x, real y) {
+  real t, d = sumx(-x, y, &t);
+  if ((d - (real)(180)) + t > (real)(0))       /* y - x > 180 */
+    d -= (real)(360);			       /* exact */
+  else if ((d + (real)(180)) + t <= (real)(0)) /* y - x <= -180 */
+    d += (real)(360);			       /* exact */
+  return d + t;
+}
+
 static real AngRound(real x) {
-  const real z = (real)(0.0625); /* 1/16 */
+  const real z = 1/(real)(16);
   volatile real y = fabs(x);
   /* The compiler mustn't "simplify" z - (z - y) to y */
   y = y < z ? z - (z - y) : y;
@@ -190,6 +211,7 @@ static void C1f(real eps, real c[]);
 static void C1pf(real eps, real c[]);
 static real A2m1f(real eps);
 static void C2f(real eps, real c[]);
+static int transit(real lon1, real lon2);
 
 void GeodesicInit(struct Geodesic* g, real a, real f) {
   if (!init) Init();
@@ -567,16 +589,15 @@ real GenInverse(const struct Geodesic* g,
     (pS12 ? AREA : 0U);
 
   outmask &= OUT_ALL;
-  lon12 = AngNormalize(AngNormalize(lon2) -
-                            AngNormalize(lon1));
-  /* If very close to being on the same meridian, then make it so.
-   * Not sure this is necessary... */
+  /* Compute longitude difference (AngDiff does this carefully).  Result is
+   * in [-180, 180] but -180 is only for west-going geodesics.  180 is for
+   * east-going and meridional geodesics. */
+  lon12 = AngDiff(AngNormalize(lon1), AngNormalize(lon2));
+  /* If very close to being on the same half-meridian, then make it so. */
   lon12 = AngRound(lon12);
   /* Make longitude difference positive. */
   lonsign = lon12 >= 0 ? 1 : -1;
   lon12 *= lonsign;
-  if (lon12 == 180)
-    lonsign = 1;
   /* If really close to the equator, treat as on equator. */
   lat1 = AngRound(lat1);
   lat2 = AngRound(lat2);
@@ -1458,4 +1479,39 @@ void C4coeff(struct Geodesic* g) {
   g->C4x[18] = (832-2560*g->n)/405405;
   g->C4x[19] = -128/(real)(135135);
   g->C4x[20] = 128/(real)(99099);
+}
+
+int transit(real lon1, real lon2) {
+  real lon12;
+  /* Return 1 or -1 if crossing prime meridian in east or west direction.
+   * Otherwise return zero. */
+  /* Compute lon12 the same way as Geodesic::Inverse. */
+  lon1 = AngNormalize(lon1);
+  lon2 = AngNormalize(lon2);
+  lon12 = AngDiff(lon1, lon2);
+  return lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
+    (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
+}
+
+void PolygonArea(const struct Geodesic* g, real lats[], real lons[], int n,
+		 real* pA, real* pP) {
+  int i, crossings = 0;
+  real area0 = 4 * pi * g->c2, A = 0, P = 0;
+  for (i = 0; i < n; ++i) {
+    real s12, S12;
+    GenInverse(g, lats[i], lons[i], lats[(i + 1) % n], lons[(i + 1) % n],
+	       &s12, 0, 0, 0, 0, 0, &S12);
+    P += s12;
+    A -= S12; /* The minus sign is due to the counter-clockwise convention */
+    crossings += transit(lons[i], lons[(i + 1) % n]);
+  }
+  if (crossings & 1)
+    A += (A < 0 ? 1 : -1) * area0/2;
+  /* Put area in (-area0/2, area0/2] */
+  if (A > area0/2)
+    A -= area0;
+  else if (A <= -area0/2)
+    A += area0;
+  if (pA) *pA = A;
+  if (pP) *pP = P;
 }

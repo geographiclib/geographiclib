@@ -1,12 +1,8 @@
 # Where the html versions of the man pages (extension .1.html) are
 # found.
-if (MAINTAINER)
-  set (MANDIR ${PROJECT_BINARY_DIR}/man)
-else ()
-  set (MANDIR ${PROJECT_SOURCE_DIR}/man)
-endif ()
+set (MANDIR ${PROJECT_BINARY_DIR}/man)
 
-# BUILD UP A LIST OF THE .1.HTML FILES.
+# Build up a list of the .1.html files.
 set (HTMLMAN)
 foreach (TOOL ${TOOLS})
   set (HTMLMAN ${HTMLMAN} ${MANDIR}/${TOOL}.1.html)

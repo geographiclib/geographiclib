@@ -18,7 +18,7 @@ extant Fortran compiler.
 Inventory:
 
   geodesic.for -- the library
-  direct.for, inverse.for -- sample driver programs
+  direct.for, inverse.for, planimeter.for -- sample driver programs
   CMakeLists.txt -- the cmake file for building the driver programs
 
 See the comments at the beginning of geodesic.for for details for the

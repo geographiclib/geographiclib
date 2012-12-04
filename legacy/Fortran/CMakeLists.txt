@@ -11,8 +11,7 @@ endif ()
 set (CMAKE_Fortran_FLAGS
   "${CMAKE_Fortran_FLAGS} -Wall -Wextra -pedantic -std=f95 -fimplicit-none")
 
-
-set (TOOLS direct inverse)
+set (TOOLS direct inverse planimeter)
 
 foreach (TOOL ${TOOLS})
   add_executable (${TOOL} ${TOOL}.for geodesic.for)

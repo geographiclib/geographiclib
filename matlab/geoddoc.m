@@ -191,7 +191,7 @@ function geoddoc
 % under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% This file was distributed with GeographicLib 1.27.
+% This file was distributed with GeographicLib 1.28.
 
   help geoddoc
 end

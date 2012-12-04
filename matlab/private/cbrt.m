@@ -1,5 +1,6 @@
 function y = cbrt(x)
 %CBRT   The real cube root
+%
 %   CBRT(X) is the real cube root of X (assuming X is real).  X
 %   can be any shape.
 

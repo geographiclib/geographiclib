@@ -127,11 +127,29 @@
  *
  * See the documentation on GenDirect for the meaning of arcmode.
  *
+ * Finally PolygonArea computes the area of a geodesic polygon
+ *
+ *    double a, f;
+ *    struct Geodesic g;
+ *    double lats[] = {...};
+ *    double lons[] = {...};
+ *    int n = sizeof(lats)/sizeof(double);
+ *    double A, P;
+ *
+ *    GeodesicInit(&g, a, f);
+ *    PolygonArea(&g, lats, lons, n, &A, &P);
+ *
+ * A now contains the area of the polygon and P its perimeter.  The lats and
+ * lons arrays contain the coordinates of the vertices of the polygon; there's
+ * no need to "close" the polygon by repeating the first point as the last.
+ * The polygon must not intersect itself.  Counter-clockwise traversal of the
+ * polygon counts as a positive area.
+ *
  * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * This file was distributed with GeographicLib 1.27.
+ * This file was distributed with GeographicLib 1.28.
  */
 
 #if !defined(GEODESIC_H)
@@ -185,6 +203,10 @@ extern "C" {
                      double* ps12, double* pm12,
                      double* pM12, double* pM21,
                      double* pS12);
+
+  void PolygonArea(const struct Geodesic* g,
+                   double lats[], double lons[], int n,
+                   double* pA, double* pP);
 
   enum mask {
     NONE          = 0U,

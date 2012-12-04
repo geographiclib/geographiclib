@@ -145,7 +145,7 @@ function GeodesicArea(input, polyline) {
     result.area = t.number + " " +
       t.perimeter.toFixed(8);
     if (!polyline)
-      result.area += " " + t.area.toFixed(3);
+      result.area += " " + t.area.toFixed(2);
   }
   catch (e) {
     result.status = "ERROR: " + e.message;

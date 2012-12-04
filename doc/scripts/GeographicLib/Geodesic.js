@@ -617,15 +617,15 @@ GeographicLib.GeodesicLine = {};
   g.Geodesic.prototype.GenInverse = function(lat1, lon1, lat2, lon2, outmask) {
     var vals = {};
     outmask &= g.OUT_ALL;
-    var lon12 = m.AngNormalize(m.AngNormalize(lon2) - m.AngNormalize(lon1));
-    // If very close to being on the same meridian, then make it so.
-    // Not sure this is necessary...
+    // Compute longitude difference (AngDiff does this carefully).  Result is
+    // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
+    // east-going and meridional geodesics.
+    var lon12 = m.AngDiff(m.AngNormalize(lon1), m.AngNormalize(lon2));
+    // If very close to being on the same half-meridian, then make it so.
     lon12 = g.AngRound(lon12);
     // Make longitude difference positive.
     var lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
-    if (lon12 == 180)
-      lonsign = 1;
     // If really close to the equator, treat as on equator.
     lat1 = g.AngRound(lat1);
     lat2 = g.AngRound(lat2);

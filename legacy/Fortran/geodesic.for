@@ -28,6 +28,7 @@
 * interface block
 *
 *       interface
+*
 *         subroutine direct(a, f, lat1, lon1, azi1, s12a12, arcmod,
 *      +      lat2, lon2, azi2, omask, a12s12, m12, MM12, MM21, SS12)
 *         double precision, intent(in) :: a, f, lat1, lon1, azi1, s12a12
@@ -46,6 +47,13 @@
 * * optional output (depending on omask)
 *         double precision, intent(out) :: a12, m12, MM12, MM21, SS12
 *         end subroutine invers
+*
+*         subroutine area(a, f, lats, lons, n, S, P)
+*         integer, intent(in) :: n
+*         double precision, intent(in) :: a, f, lats(n), lons(n)
+*         double precision, intent(out) :: S, P
+*         end subroutine area
+*
 *       end interface
 *
 * The ellipsoid is specified by its equatorial radius a (typically in
@@ -96,11 +104,16 @@
 * meters) is returned as the argument a12s12 (provided that the 1 bit of
 * omask is set).
 *
+* Subroutine area computes the area of a geodesic polygon with n
+* vertices given by the areas lats and lons.  It returns the area in S
+* and the perimeter in P.  The polygon must be simple; counter-clockwise
+* traversal counts as a positive area.
+*
 * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
 * under the MIT/X11 License.  For more information, see
 * http://geographiclib.sourceforge.net/
 *
-* This file was distributed with GeographicLib 1.27.
+* This file was distributed with GeographicLib 1.28.
 
       block data geodat
       double precision dblmin, dbleps, pi, degree, tiny,
@@ -467,7 +480,7 @@
      +    C1a(nC1), C2a(nC2), C3a(nC3-1), C4a(0:nC4-1)
 
       double precision csmgt, atanhx, hypotx,
-     +    AngNm, AngRnd, TrgSum, Lam12f, InvSta
+     +    AngNm, AngDif, AngRnd, TrgSum, Lam12f, InvSta
       integer latsgn, lonsgn, swapp, numit
       logical arcp, redlp, scalp, areap, merid, tripn, tripb
 
@@ -516,9 +529,11 @@
       call C3cof(n, C3x)
       if (areap) call C4cof(n, C4x)
 
-      lon12 = AngNm(AngNm(lon2) - AngNm(lon1))
-* If very close to being on the same meridian, then make it so.
-* Not sure this is necessary...
+* Compute longitude difference (AngDiff does this carefully).  Result is
+* in [-180, 180] but -180 is only for west-going geodesics.  180 is for
+* east-going and meridional geodesics.
+      lon12 = AngDif(AngNm(lon1), AngNm(lon2))
+* If very close to being on the same half-meridian, then make it so.
       lon12 = AngRnd(lon12)
 * Make longitude difference positive.
       if (lon12 .ge. 0) then
@@ -527,7 +542,6 @@
         lonsgn = -1
       end if
       lon12 = lon12 * lonsgn
-      if (lon12 .eq. 180) lonsgn = 1
 * If really close to the equator, treat as on equator.
       lat1x = AngRnd(lat1)
       lat2x = AngRnd(lat2)
@@ -706,7 +720,7 @@
             v = Lam12f(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
      +          salp1, calp1, f, A3x, C3x, salp2, calp2, sig12,
      +          ssig1, csig1, ssig2, csig2,
-     +          eps, omg12, numit < maxit1, dv,
+     +          eps, omg12, numit .lt. maxit1, dv,
      +          C1a, C2a, C3a) - lam12
 * 2 * tol0 is approximately 1 ulp for a number in [0, pi].
             if (tripb .or. abs(v) .lt.
@@ -840,6 +854,62 @@
       azi2 = 0 - atan2(-salp2, calp2) / degree
 
       if (arcp) a12 = a12x
+
+      return
+      end
+
+      subroutine area(a, f, lats, lons, n, S, P)
+* input
+      integer n
+      double precision a, f, lats(0:n-1), lons(0:n-1)
+* output
+      double precision S, P
+
+      integer i, omask, cross, trnsit
+      double precision s12, azi1, azi2, dummy, SS12, b, e2, c2, area0,
+     +    atanhx
+
+      double precision dblmin, dbleps, pi, degree, tiny,
+     +    tol0, tol1, tol2, tolb, xthrsh
+      integer digits, maxit1, maxit2
+      logical init
+      common /geocom/ dblmin, dbleps, pi, degree, tiny,
+     +    tol0, tol1, tol2, tolb, xthrsh, digits, maxit1, maxit2, init
+
+      omask = 8
+      S = 0
+      P = 0
+      cross = 0
+      do 10 i = 0, n-1
+        call invers(a, f, lats(i), lons(i),
+     +      lats(mod(i+1, n)), lons(mod(i+1, n)),
+     +      s12, azi1, azi2, omask, dummy, dummy, dummy, dummy, SS12)
+        P = P + s12
+        S = S - SS12
+        cross = cross + trnsit(lons(i), lons(mod(i+1, n)))
+ 10   continue
+      b = a * (1 - f)
+      e2 = f * (2 - f)
+      if (e2 .eq. 0) then
+        c2 = a**2
+      else if (e2 .gt. 0) then
+        c2 = (a**2 + b**2 * atanhx(sqrt(e2)) / sqrt(e2)) / 2
+      else
+        c2 = (a**2 + b**2 * atan(sqrt(abs(e2))) / sqrt(abs(e2))) / 2
+      end if
+      area0 = 4 * pi * c2
+      if (mod(abs(cross), 2) .eq. 1) then
+        if (S .lt. 0) then
+          S = S + area0/2
+        else
+          S = S - area0/2
+        end if
+      end if
+      if (S .gt. area0/2) then
+        S = S - area0
+      else if (S .le. -area0/2) then
+        S = S + area0
+      end if
 
       return
       end
@@ -1515,6 +1585,23 @@
       return
       end
 
+      double precision function sumx(u, v, t)
+* input
+      double precision u, v
+* output
+      double precision t
+
+      double precision up, vpp
+      sumx = u + v
+      up = sumx - v
+      vpp = sumx - up
+      up = up - u
+      vpp = vpp -  v
+      t = -(up + vpp)
+
+      return
+      end
+
       double precision function AngNm(x)
 * input
       double precision x
@@ -1536,6 +1623,20 @@
       x = mod(x, 360d0)
       AngNm2 = AngNm(x)
       return
+      end
+
+      double precision function AngDif(x, y)
+* input
+      double precision x, y
+
+      double precision d, t, sumx
+      d = sumx(-x, y, t)
+      if ((d - 180d0) + t .gt. 0d0) then
+        d = d - 360d0
+      else if ((d + 180d0) + t .le. 0d0) then
+        d = d + 360d0
+      end if
+      AngDif = d + t
       end
 
       double precision function AngRnd(x)
@@ -1673,12 +1774,30 @@
       return
       end
 
+      integer function trnsit(lon1, lon2)
+* input
+      double precision lon1, lon2
+
+      double precision lon1x, lon2x, lon12, AngNm, AngDif
+      lon1x = AngNm(lon1)
+      lon2x = AngNm(lon2)
+      lon12 = AngDif(lon1x, lon2x);
+      trnsit = 0
+      if (lon1 .lt. 0 .and. lon2 .ge. 0 .and. lon12 .gt. 0) then
+        trnsit = 1
+      else if (lon2 .lt. 0 .and. lon1 .ge. 0 .and. lon12 .lt. 0) then
+        trnsit = -1
+      end if
+      return
+      end
+
 * Table of name abbreviations to conform to the 6-char limit
 *    A3coeff       A3cof
 *    C3coeff       C3cof
 *    C4coeff       C4cof
 *    AngNormalize  AngNm
 *    AngNormalize2 AngNm2
+*    AngDiff       AngDif
 *    AngRound      AngRnd
 *    arcmode       arcmod
 *    Astroid       Astrd
@@ -1701,3 +1820,4 @@
 *    SinCosNorm    Norm
 *    SinCosSeries  TrgSum
 *    xthresh       xthrsh
+*    transit       trnsit

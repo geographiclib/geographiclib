@@ -19,7 +19,7 @@ compiler.
 Inventory:
 
   geodesic.h, geodesic.c -- the library
-  direct.c, inverse.c -- sample driver programs
+  direct.c, inverse.c, planimeter.c -- sample driver programs
   CMakeLists.txt -- the cmake file for building the driver programs
 
 See the comments at the beginning of geodesic.h for details for the

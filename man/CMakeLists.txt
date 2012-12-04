@@ -10,9 +10,6 @@
 if (MAINTAINER)
   add_custom_target (distrib-man)
   add_custom_target (man ALL)
-  set (MANDIR ${CMAKE_CURRENT_BINARY_DIR})
-else ()
-  set (MANDIR ${CMAKE_CURRENT_SOURCE_DIR})
 endif ()
 
 set (MANPAGES)

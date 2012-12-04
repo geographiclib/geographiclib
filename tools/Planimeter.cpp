@@ -167,7 +167,7 @@ int main(int argc, char* argv[]) {
           *output << num << " "
                   << Utility::str<real>(perimeter, 8);
           if (!polyline)
-            *output << " " << Utility::str<real>(area, 3);
+            *output << " " << Utility::str<real>(area, 2);
           *output << eol;
         }
         poly.Clear();
@@ -180,7 +180,7 @@ int main(int argc, char* argv[]) {
       *output << num << " "
               << Utility::str<real>(perimeter, 8);
       if (!polyline)
-        *output << " " << Utility::str<real>(area, 3);
+        *output << " " << Utility::str<real>(area, 2);
       *output << eol;
     }
     poly.Clear();

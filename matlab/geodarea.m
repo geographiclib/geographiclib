@@ -38,7 +38,7 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
 % under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% This file was distributed with GeographicLib 1.27.
+% This file was distributed with GeographicLib 1.28.
 
   if ~isequal(size(lat), size(lon))
     error('lat, lon have incompatible sizes')
@@ -96,16 +96,6 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
   A(p) = A(p) + area0;
 end
 
-function x = AngNormalize(x)
-%ANGNORMALIZE  Reduce angle to range [-180, 180)
-%
-%   X = ANGNORMALIZE(X) reduces angles in [-540, 540) to the range
-%   [-180, 180).  X can be any shape.
-
-  x(x >= 180) = x(x >= 180) - 360;
-  x(x < -180) = x(x < -180) + 360;
-end
-
 function cross = transit(lon1, lon2)
 %TRANSIT  Count crossings of prime meridian
 %
@@ -114,7 +104,7 @@ function cross = transit(lon1, lon2)
 
   lon1 = AngNormalize(lon1);
   lon2 = AngNormalize(lon2);
-  lon12 = -AngNormalize(lon1 - lon2);
+  lon12 = AngDiff(lon1, lon2);
   cross = zeros(length(lon1), 1);
   cross(lon1 < 0 & lon2 >= 0 & lon12 > 0) = 1;
   cross(lon2 < 0 & lon1 >= 0 & lon12 < 0) = -1;

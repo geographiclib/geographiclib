@@ -326,6 +326,30 @@ namespace GeographicLib {
 #endif
 
     /**
+     * The error-free sum of two numbers.
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] u
+     * @param[in] v
+     * @param[out] t the exact error given by (\e u + \e v) - \e s.
+     * @return \e s = round(\e u + \e v).
+     *
+     * See D. E. Knuth, TAOCP, Vol 2, 4.2.2, Theorem B.  (Note that \e t can be
+     * the same as one of the first two arguments.)
+     **********************************************************************/
+    template<typename T> static inline T sum(T u, T v, T& t) throw() {
+      volatile T s = u + v;
+      volatile T up = s - v;
+      volatile T vpp = s - up;
+      up -= u;
+      vpp -= v;
+      t = -(up + vpp);
+      // u + v =       s      + t
+      //       = round(u + v) + t
+      return s;
+    }
+
+    /**
      * Normalize an angle (restricted input range).
      *
      * @tparam T the type of the argument and returned value.
@@ -350,6 +374,30 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static inline T AngNormalize2(T x) throw()
     { return AngNormalize<T>(std::fmod(x, T(360))); }
+
+    /**
+     * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]
+     *
+     * @tparam T the type of the arguments and returned value.
+     * @param[in] x the first angle in degrees.
+     * @param[in] y the second angle in degrees.
+     * @return \e y &minus; \e x, reduced to the range [&minus;180&deg;,
+     *   180&deg;].
+     *
+     * \e x and \e y must both lie in [&minus;180&deg;, 180&deg;].  The result
+     * is equivalent to computing the difference exactly, reducing it to
+     * (&minus;180&deg;, 180&deg;] and rounding the result.  Note that this
+     * prescription allows &minus;180&deg; to be returned (e.g., if \e x is
+     * tiny and negative and \e y = 180&deg;).
+     **********************************************************************/
+    template<typename T> static inline T AngDiff(T x, T y) throw() {
+      T t, d = sum(-x, y, t);
+      if ((d - T(180)) + t > T(0)) // y - x > 180
+        d -= T(360);            // exact
+      else if ((d + T(180)) + t <= T(0)) // y - x <= -180
+        d += T(360);            // exact
+      return d + t;
+    }
 
     /**
      * Test for finiteness.
