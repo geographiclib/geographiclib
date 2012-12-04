@@ -1114,8 +1114,8 @@ The matlab directory contains
    standalone package from
    <a href="http://www.mathworks.com/matlabcentral/fileexchange/">
    Matlab File Exchange</a> using the link
-   <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
-   http://www.mathworks.com/matlabcentral/fileexchange/39108</a>
+   - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
+     http://www.mathworks.com/matlabcentral/fileexchange/39108</a>
  - Interface code so that some %GeographicLib classes can be accessed
    from Matlab or Octave.  The rest of this section describes how to
    compile and use these interfaces.

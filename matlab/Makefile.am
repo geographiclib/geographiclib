@@ -49,6 +49,7 @@ $(srcdir)/private/A1m1f.m \
 $(srcdir)/private/A2m1f.m \
 $(srcdir)/private/A3coeff.m \
 $(srcdir)/private/A3f.m \
+$(srcdir)/private/AngDiff.m \
 $(srcdir)/private/AngNormalize2.m \
 $(srcdir)/private/AngNormalize.m \
 $(srcdir)/private/AngRound.m \
@@ -63,6 +64,7 @@ $(srcdir)/private/cbrt.m \
 $(srcdir)/private/cvmgt.m \
 $(srcdir)/private/SinCosNorm.m \
 $(srcdir)/private/SinCosSeries.m \
+$(srcdir)/private/sumx.m \
 $(srcdir)/private/swap.m
 
 MATLAB_ALL = $(MATLAB_INTERFACE) $(MATLAB_DOC) $(MATLAB_COMPILESCRIPT) \
