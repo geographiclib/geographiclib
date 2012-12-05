@@ -48,8 +48,7 @@ function [lat, lon, azi, rk] = eqdazimrev(lat0, lon0, x, y, ellipsoid)
 % This file was distributed with GeographicLib 1.28.
 
   try
-    Z = lat0 + lon0 + x + y;
-    Z = zeros(size(Z));
+    [~] = lat0 + lon0 + x + y;
   catch err
     error('lat0, lon0, x, y have incompatible sizes')
   end

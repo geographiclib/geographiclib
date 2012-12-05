@@ -52,8 +52,7 @@ function [x, y, azi, rk] = gnomonicfwd(lat0, lon0, lat, lon, ellipsoid)
 % This file was distributed with GeographicLib 1.28.
 
   try
-    Z = lat0 + lon0 + lat + lon;
-    Z = zeros(size(Z));
+    [~] = lat0 + lon0 + lat + lon;
   catch err
     error('lat0, lon0, lat, lon have incompatible sizes')
   end

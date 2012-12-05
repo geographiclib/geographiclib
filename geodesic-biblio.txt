@@ -465,6 +465,7 @@
    superficiebus secundi gradus [Observations on the shortest lines on
    curved surfaces of the second degree]'',
    Jour. Crelle '''26''', 155--171 (1843).[[BR]]
+   http://books.google.com/books?id=8ptGAAAAcAAJ&pg=PA155
  * F. Joachimsthal,[[BR]]
    ''Anwendung der Differential- und Integralrechnung auf die
    allgemeine Theorie der Flächen und der Linien doppelter Krümmung
