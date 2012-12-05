@@ -40,7 +40,7 @@ function [x, y, azi, rk] = gnomonicfwd(lat0, lon0, lat, lon, ellipsoid)
 %
 %   This routine depends on the MATLAB File Exchange package "Geodesics on
 %   an ellipsoid of revolution":
-%  
+%
 %     http://www.mathworks.com/matlabcentral/fileexchange/39108
 %
 %   See also GNOMONICREV, GEODDISTANCE, DEFAULTELLIPSOID.

@@ -24,7 +24,7 @@ convenient way of solving various geometrical problems on the ellipsoid.
 In particular the azimuthal equidistant projection allows problems
 associated with determining maritime boundaries to be solved easily.
 Similary the gnomonic projection allows the intersection of two
-geodesics to be determined quickly.  
+geodesics to be determined quickly. 
 
 This package depends on the MATLAB File Exchange package "Geodesics on
 an ellipsoid of revolution" for performing the necessary geodesic

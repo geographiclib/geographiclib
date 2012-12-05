@@ -42,7 +42,7 @@ function [lat, lon, azi, rk] = gnomonicrev(lat0, lon0, x, y, ellipsoid)
 %
 %   This routine depends on the MATLAB File Exchange package "Geodesics on
 %   an ellipsoid of revolution":
-%  
+%
 %     http://www.mathworks.com/matlabcentral/fileexchange/39108
 %
 %   See also GNOMONICFWD, GEODRECKON, DEFAULTELLIPSOID.
