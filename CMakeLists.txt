@@ -309,7 +309,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/(distrib|.*-distrib|.*-installer|geodesic-papers)/"
   "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(html|kmz)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio|js-compress)\\\\.sh\$"
-  "${PROJECT_SOURCE_DIR}/(geodesic-biblio.txt|makefile-admin|.*\\\\.png)\$"
+  "${PROJECT_SOURCE_DIR}/(geodesic-biblio.txt|makefile-admin|[^/]*\\\\.png)\$"
   "${PROJECT_SOURCE_DIR}/matlab/matlab-blurb.txt\$" )
 set (CPACK_SOURCE_GENERATOR TGZ)
 
