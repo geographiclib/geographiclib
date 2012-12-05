@@ -152,9 +152,9 @@ static real AngNormalize2(real x)
 static real AngDiff(real x, real y) {
   real t, d = sumx(-x, y, &t);
   if ((d - (real)(180)) + t > (real)(0))       /* y - x > 180 */
-    d -= (real)(360);			       /* exact */
+    d -= (real)(360);                          /* exact */
   else if ((d + (real)(180)) + t <= (real)(0)) /* y - x <= -180 */
-    d += (real)(360);			       /* exact */
+    d += (real)(360);                          /* exact */
   return d + t;
 }
 
@@ -1494,13 +1494,13 @@ int transit(real lon1, real lon2) {
 }
 
 void PolygonArea(const struct Geodesic* g, real lats[], real lons[], int n,
-		 real* pA, real* pP) {
+                 real* pA, real* pP) {
   int i, crossings = 0;
   real area0 = 4 * pi * g->c2, A = 0, P = 0;
   for (i = 0; i < n; ++i) {
     real s12, S12;
     GenInverse(g, lats[i], lons[i], lats[(i + 1) % n], lons[(i + 1) % n],
-	       &s12, 0, 0, 0, 0, 0, &S12);
+               &s12, 0, 0, 0, 0, 0, &S12);
     P += s12;
     A -= S12; /* The minus sign is due to the counter-clockwise convention */
     crossings += transit(lons[i], lons[(i + 1) % n]);

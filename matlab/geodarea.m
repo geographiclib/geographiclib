@@ -1,11 +1,11 @@
-function [A, P, N] = geodarea(lat, lon, ellipsoid)
+function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %GEODAREA  Surface area of polygon on an ellipsoid
 %
-%   A = GEODAREA(lat, lon)
-%   [A, P, N] = GEODAREA(lat, lon, ellipsoid)
+%   A = GEODAREA(lats, lons)
+%   [A, P, N] = GEODAREA(lats, lons, ellipsoid)
 %
 %   calculates the surface area A of the geodesic polygon specified by the
-%   input vectors lat, lon (in degrees).  The ellipsoid vector is of the
+%   input vectors lats, lons (in degrees).  The ellipsoid vector is of the
 %   form [a, e], where a is the equatorial radius in meters, e is the
 %   eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
 %   precisely, the value returned by DEFAULTELLIPSOID) is used.  There is
@@ -40,12 +40,12 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
 %
 % This file was distributed with GeographicLib 1.28.
 
-  if ~isequal(size(lat), size(lon))
-    error('lat, lon have incompatible sizes')
+  if ~isequal(size(lats), size(lons))
+    error('lats, lons have incompatible sizes')
   end
 
-  lat1 = lat(:);
-  lon1 = lon(:);
+  lat1 = lats(:);
+  lon1 = lons(:);
   M = length(lat1);
   ind = [0; find(isnan(lat1 + lon1))];
   if length(ind) == 1 || ind(end) ~= M

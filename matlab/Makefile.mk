@@ -6,7 +6,8 @@ FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
 MATLAB_COMPILESCRIPT = geographiclibinterface.m
 
 MATLAB_GEOD = geoddoc.m geodreckon.m geoddistance.m geodarea.m \
-	defaultellipsoid.m ecc2flat.m flat2ecc.m
+	defaultellipsoid.m ecc2flat.m flat2ecc.m eqdazimfwd.m eqdazimrev.m \
+	gnomonicfwd.m gnomonicrev.m
 
 MATLAB_GEOD_PRIVATE = $(wildcard private/*.m)
 

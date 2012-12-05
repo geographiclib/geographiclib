@@ -3678,12 +3678,16 @@ of the git repository for %GeographicLib.
      accurately.
    - Hence fix BUG in area calculations for polygons with vertices very
      close to the prime meridian.
-   - Inclue polygon area routine in C and Fortran implementations.
+   - Include polygon area routine in C and Fortran implementations.
+   - Fix BUG is geoddistance.m where the value of m12 was wtong for
+     meridional geodesics.
+   - Add Matlab implementations of azimuthal equidistant and gnomonic
+     projections.
 
  - <a href="http://geographiclib.sf.net/1.27">Version 1.27</a>
    (released 2012-11-29)
    - Changes to geodesic routines:
-     - add native matlab implementations: geoddistance.m, geodreckon.m,
+     - add native Matlab implementations: geoddistance.m, geodreckon.m,
        geodarea.m;
      - add C and Fortran implementations;
      - improve the solution of the direct problem so that the series

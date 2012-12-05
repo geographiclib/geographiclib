@@ -146,6 +146,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
                 ssig1(m), csig1(m), dn1(m), ssig2(m), csig2(m), dn2(m), ...
                 cbet1(m), cbet2(m), scalp, ep2);
     m = m & (sig12 < 1 | m12 >= 0);
+    m12(m) = m12(m) * b;
     s12(m) = s12(m) * b;
   end
 

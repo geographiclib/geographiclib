@@ -42,7 +42,11 @@ $(srcdir)/geoddistance.m \
 $(srcdir)/geodarea.m \
 $(srcdir)/defaultellipsoid.m \
 $(srcdir)/ecc2flat.m \
-$(srcdir)/flat2ecc.m
+$(srcdir)/flat2ecc.m \
+$(srcdir)/eqdazimfwd.m \
+$(srcdir)/eqdazimrev.m \
+$(srcdir)/gnomonicfwd.m \
+$(srcdir)/gnomonicrev.m
 
 MATLAB_GEOD_PRIVATE = \
 $(srcdir)/private/A1m1f.m \

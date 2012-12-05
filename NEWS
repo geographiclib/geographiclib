@@ -9,7 +9,7 @@ The current version of the library is 1.26.
 Changes between 1.27 (released 2012-11-29) and 1.26 versions:
 
    * Changes to geodesic routines:
-     + add native matlab implementations: geoddistance.m, geodreckon.m,
+     + add native Matlab implementations: geoddistance.m, geodreckon.m,
        geodarea.m;
      + add C and Fortran implementations;
      + improve the solution of the direct problem so that the series

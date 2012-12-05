@@ -62,7 +62,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 % under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% This file was distributed with GeographicLib 1.27.
+% This file was distributed with GeographicLib 1.28.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional

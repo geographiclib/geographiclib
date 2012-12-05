@@ -1,0 +1,33 @@
+This package includes two geodesic projections
+
+  * the azimuthal equidistant projection
+  * the gnomonic projection
+
+These generalize the projections of the MATLAB mapping toolbox to
+include an ellipsoidal model of the earth.  The functions provided are
+EQDAZIMFWD, EQDAZIMREV, GNOMONICFWD, and GNOMONICREV.
+
+The ellipsoidal gnomonic projection is an azimuthal projection about a
+center point.  All geodesics through the center point are projected into
+straight lines with the correct azimuth relative to the center point.
+In addition all geodesics are pass close to the center point are very
+nearly straight.  The projection is derived in Section 8 of
+
+  C. F. F. Karney,
+  Algorithms for geodesics,
+  J. Geodesy (2012);
+  http://dx.doi.org/10.1007/s00190-012-0578-z
+  Addenda: http://geographiclib.sf.net/geod-addenda.html
+
+The primary importance of these projections is that they offer a
+convenient way of solving various geometrical problems on the ellipsoid.
+In particular the azimuthal equidistant projection allows problems
+associated with determining maritime boundaries to be solved easily.
+Similary the gnomonic projection allows the intersection of two
+geodesics to be determined quickly.  
+
+This package depends on the MATLAB File Exchange package "Geodesics on
+an ellipsoid of revolution" for performing the necessary geodesic
+computations:
+
+  http://www.mathworks.com/matlabcentral/fileexchange/39108
