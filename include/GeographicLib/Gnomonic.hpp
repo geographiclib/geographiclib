@@ -105,7 +105,7 @@ namespace GeographicLib {
     real _a, _f;
     static const real eps0_;
     static const real eps_;
-    static const int numit_ = 5;
+    static const int numit_ = 10;
   public:
 
     /**

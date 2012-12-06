@@ -64,7 +64,7 @@ function [lat, lon, azi, rk] = gnomonicrev(lat0, lon0, x, y, ellipsoid)
     error('ellipsoid must be a vector of size 2')
   end
   a = ellipsoid(1);
-  numit = 5;
+  numit = 10;
   eps1 = a * 0.01 * sqrt(eps);
 
   lat0 = lat0 + Z; lon0 = lon0 + Z; x = x + Z; y = y + Z;
@@ -85,7 +85,7 @@ function [lat, lon, azi, rk] = gnomonicrev(lat0, lon0, x, y, ellipsoid)
     c = ~little & g;
     ds(c) = (rho(c) - M(c) ./ m(c)) .* m(c).^2;
     s(g) = s(g) - ds(g);
-    trip(g) = abs(ds(g)) < eps1;
+    trip(g) = ~(abs(ds(g)) >= eps1);
   end
   c = ~trip;
   if any(c)

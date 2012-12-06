@@ -723,8 +723,10 @@
      +          eps, omg12, numit .lt. maxit1, dv,
      +          C1a, C2a, C3a) - lam12
 * 2 * tol0 is approximately 1 ulp for a number in [0, pi].
-            if (tripb .or. abs(v) .lt.
-     +          csmgt(8d0, 2d0, tripn) * tol0) go to 20
+* Reversed test to allow escape with NaNs
+            if (tripb .or.
+     +          .not. (abs(v) .ge. csmgt(8d0, 2d0, tripn) * tol0))
+     +          go to 20
 * Update bracketing values
             if (v .gt. 0 .and. (numit .gt. maxit1 .or.
      +          calp1/salp1 .gt. calp1b/salp1b)) then

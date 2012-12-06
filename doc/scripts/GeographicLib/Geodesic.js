@@ -825,7 +825,8 @@ GeographicLib.GeodesicLine = {};
           dv = nvals.dlam12;
 
           // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
-          if (tripb || Math.abs(v) < (tripn ? 8 : 2) * g.tol0_)
+          // Reversed test to allow escape with NaNs
+          if (tripb || !(Math.abs(v) >= (tripn ? 8 : 2) * g.tol0_))
             break;
           // Update bracketing values
           if (v > 0 && (numit < g.maxit1_ || calp1/salp1 > calp1b/salp1b)) {

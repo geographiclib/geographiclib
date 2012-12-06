@@ -306,7 +306,8 @@ namespace GeographicLib {
                             eps, omg12, numit < maxit1_, dv, C1a, C2a, C3a)
             - lam12;
           // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
-          if (tripb || abs(v) < (tripn ? 8 : 2) * tol0_) break;
+          // Reversed test to allow escape with NaNs
+          if (tripb || !(abs(v) >= (tripn ? 8 : 2) * tol0_)) break;
           // Update bracketing values
           if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b)) {
             salp1b = salp1; calp1b = calp1;

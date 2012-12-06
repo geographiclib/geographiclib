@@ -193,7 +193,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
                  sbet2(g), cbet2(g), dn2(g), ...
                  salp1(g), calp1(g), f, A3x, C3x);
     v = v - lam12;
-    g = g & ~(tripb | abs(v) < ((tripn * 6) + 2) * tol0);
+    g = g & ~(tripb | ~(abs(v) >= ((tripn * 6) + 2) * tol0));
     if ~any(g), break, end
 
     c = g & v > 0;

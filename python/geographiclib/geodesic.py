@@ -787,7 +787,8 @@ class Geodesic(object):
             salp1, calp1, numit < Geodesic.maxit1_, C1a, C2a, C3a)
           v = nlam12 - lam12
           # 2 * tol0 is approximately 1 ulp for a number in [0, pi].
-          if tripb or abs(v) < (8 if tripn else 2) * Geodesic.tol0_:
+          # Reversed test to allow escape with NaNs
+          if tripb or not (abs(v) >= (8 if tripn else 2) * Geodesic.tol0_):
             break
           # Update bracketing values
           if v > 0 and (numit > Geodesic.maxit1_ or
