@@ -2,10 +2,10 @@ function geodproj
 %GEODPROJ  Geodesic projections for an ellipsoid
 %
 %   This package implements four projections based on geodesics:
-%     * the equidistant azimuthal projection (eqdazim)
+%     * the azimuthal equidistant projection (eqdazim)
 %     * the Cassini-Soldner projection (cassini)
 %     * the transverse Mercator projection (tranmerc)
-%     * the gnonomic projection (gnomonic)
+%     * the ellipsoidal gnonomic projection (gnomonic)
 %
 %   The package implements the forward projection (from geographic to
 %   projected coordinates) and inverse projection (from projected to
@@ -21,7 +21,7 @@ function geodproj
 %
 %     http://www.mathworks.com/matlabcentral/fileexchange/39108
 %
-%   The equidistant azimuthal inverse projection is a polar geodesic
+%   The azimuthal equidistant inverse projection is a polar geodesic
 %   projecton defined by
 %
 %     [S,AZI0] = GEODDISTANCE(LAT0,LON0,LAT,LON)
@@ -113,7 +113,7 @@ function geodproj
 %   CASSINISTD, TRANMERC, and GNOMONIC projections in the the MATLAB
 %   mapping toolbox.  The major improvements offered by this package are
 %
-%     * The equidistant azimuthal and gnomonic projections are defined
+%     * The azimuthal equidistant and gnomonic projections are defined
 %       for the ellipsoid (instead of just for the sphere).
 %     * The Cassini-Soldner projection is essentially exact (instead of
 %       being defined in terms of an approximate series).

@@ -133,7 +133,7 @@ rm -f $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip
 zip $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip \
     geographiclib-matlab/*.m geographiclib-matlab/private/*.m
 mkdir -p $TEMP/proj/geographiclib-matlab
-cp -p $TEMP/gitr/geographiclib/matlab/{eqdazim,gnomonic}{fwd,rev}.m \
+cp -p $TEMP/gitr/geographiclib/matlab/{geodproj,*_{fwd,inv}}.m \
     $TEMP/proj/geographiclib-matlab
 cd $TEMP/proj
 rm -f $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip

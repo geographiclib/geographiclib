@@ -1,17 +1,17 @@
 function [lat, lon, azi, rk] = eqdazim_inv(lat0, lon0, x, y, ellipsoid)
-%EQDAZIM_INV  Inverse ellipsoidal equidistant azimuthal projection
+%EQDAZIM_INV  Inverse azimuthal equidistant projection
 %
 %   [LAT, LON] = EQDAZIM_INV(LAT0, LON0, X, Y)
 %   [LAT, LON, AZI, RK] = EQDAZIM_INV(LAT0, LON0, X, Y, ELLIPSOID)
 %
-%   performs the inverse ellipsoidal equidistant azimuthal projection of
-%   points (X,Y) using (LAT0,LON0) as the center of projection.  These
-%   input arguments can be scalars or arrays of equal size.  The ELLIPSOID
-%   vector is of the form [a, e], where a is the equatorial radius in
-%   meters, e is the eccentricity.  If ellipsoid is omitted, the WGS84
-%   ellipsoid (more precisely, the value returned by DEFAULTELLIPSOID) is
-%   used.  GEODPROJ gives the restrictions on the allowed ranges of the
-%   arguments.  The forward projection is given by EQDAZIM_FWD.
+%   performs the inverse azimuthal equidistant projection of points (X,Y)
+%   using (LAT0,LON0) as the center of projection.  These input arguments
+%   can be scalars or arrays of equal size.  The ELLIPSOID vector is of the
+%   form [a, e], where a is the equatorial radius in meters, e is the
+%   eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
+%   precisely, the value returned by DEFAULTELLIPSOID) is used.  GEODPROJ
+%   gives the restrictions on the allowed ranges of the arguments.  The
+%   forward projection is given by EQDAZIM_FWD.
 %
 %   AZI and RK give metric properties of the projection at (LAT,LON); AZI
 %   is the azimuth of the geodesic from the center of projection and RK is
