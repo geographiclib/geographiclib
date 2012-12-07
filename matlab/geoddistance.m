@@ -54,7 +54,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 % with scalar arguments.  The biggest change was to eliminate the branching
 % to allow a vectorized solution.
 
-  if nargin < 4 || nargin > 5, error('Wrong number of arguments supplied'), end
+  if nargin < 4, error('Too few input arguments'), end
   if nargin < 5, ellipsoid = defaultellipsoid; end
   try
     Z = lat1 + lon1 + lat2 + lon2;

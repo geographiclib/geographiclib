@@ -45,7 +45,7 @@ function [lat, lon, gam, k] = utm_inv(zone, northp, x, y)
 %
 % This file was distributed with GeographicLib 1.28.
 
-  if nargin ~= 4, error('Wrong number of arguments supplied'), end
+  if nargin < 4, error('Too few input arguments'), end
   lon0 = -183 + 6 * zone; lat0 = 0;
   fe = 500e3; fn = cvmgt(0, 10000e3, logical(northp)); k0 = 0.9996;
   x = (x - fe) / k0; y = (y - fn) / k0;

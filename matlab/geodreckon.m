@@ -68,16 +68,12 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 % with array arguments are identical to those obtained with multiple calls
 % with scalar arguments.
 
-  if nargin < 4 || nargin > 6, error('Wrong number of arguments supplied'), end
+  if nargin < 4, error('Too few input arguments'), end
   try
     S = size(lat1 + lon1 + s12_a12 + azi1);
   catch err
     error('lat1, lon1, s12, azi1 have incompatible sizes')
   end
-
-  degree = pi/180;
-  tiny = sqrt(realmin);
-
   if nargin <= 4
     ellipsoid = defaultellipsoid; arcmode = false;
   elseif nargin == 5
@@ -96,13 +92,16 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
       arcmode = arg5; ellipsoid = arg6;
     end
   end
-
   if length(ellipsoid) ~= 2
     error('ellipsoid must be a vector of size 2')
   end
+  arcmode = logical(arcmode);
   if ~isscalar(arcmode)
     error('arcmode must be true or false')
   end
+
+  degree = pi/180;
+  tiny = sqrt(realmin);
 
   a = ellipsoid(1);
   e2 = ellipsoid(2)^2;

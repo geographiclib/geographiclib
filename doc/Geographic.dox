@@ -1116,6 +1116,22 @@ The matlab directory contains
    Matlab File Exchange</a> using the link
    - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
      http://www.mathworks.com/matlabcentral/fileexchange/39108</a>
+ - Native Matlab implementations of projections which are related to
+   geodesics.  These are
+   - geodproj: briefly descibe the routines
+   - eqdazim_fwd, eqdazim_inv: azimuthal equidistant
+   - cassini_fwd, cassini_inv: Cassini-Soldner
+   - tranmerc_fwd, tranmerc_inv: transverse Mercator
+   - gnomonic_fwd, gnomonic_inv: ellipsoidal gnomonic
+   - utm_fwd, utm_inv: universal transverse Mercator
+   .
+   These functions are also available as a package from
+   <a href="http://www.mathworks.com/matlabcentral/fileexchange/">
+   Matlab File Exchange</a> using the link
+   - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
+     http://www.mathworks.com/matlabcentral/fileexchange/39366</a>
+   .
+   (This requires that the previous package also be installed.)
  - Interface code so that some %GeographicLib classes can be accessed
    from Matlab or Octave.  The rest of this section describes how to
    compile and use these interfaces.

@@ -38,7 +38,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %
 % This file was distributed with GeographicLib 1.28.
 
-  if nargin < 2 || nargin > 4, error('Wrong number of arguments supplied'), end
+  if nargin < 2, error('Too few input arguments'), end
   if nargin < 3, ellipsoid = defaultellipsoid; end
   if ~isequal(size(lats), size(lons))
     error('lats, lons have incompatible sizes')
