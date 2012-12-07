@@ -36,7 +36,7 @@ The implementation of the transverse Mercator projection is based on
 
 The functions provided are EQDAZIM_FWD, EQDAZIM_INV, CASSINI_FWD,
 CASSINI_INV, TRANMERC_FWD, TRANMERC_INV, GNOMONIC_FWD, GNOMONIC_INV,
-UTM_FWD, UTM_REV
+UTM_FWD, UTM_INV.
 
 The Cassini-Solder and transverse Mercator projections are useful for
 large scale maps.  The primary importance of the other two projections

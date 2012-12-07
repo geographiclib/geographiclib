@@ -52,8 +52,7 @@ $(srcdir)/tranmerc_inv.m \
 $(srcdir)/gnomonic_fwd.m \
 $(srcdir)/gnomonic_inv.m \
 $(srcdir)/utm_fwd.m \
-$(srcdir)/utm_rev.m
-
+$(srcdir)/utm_inv.m
 
 MATLAB_GEOD_PRIVATE = \
 $(srcdir)/private/A1m1f.m \
