@@ -25,7 +25,7 @@ function geodproj
 %   projecton defined by
 %
 %     [S,AZI0] = GEODDISTANCE(LAT0,LON0,LAT,LON)
-%     X = S.*SIND(AZI0); Y = S.*COSD(AZI0)
+%     X = S.*SIND(AZI0), Y = S.*COSD(AZI0)
 %
 %   Thus all distances and azimuths relative to the center point are
 %   correct.
@@ -42,7 +42,7 @@ function geodproj
 %   widely used for large scale maps until about 1930 (when it was
 %   supplanted by various conformal projections, in particular, by the
 %   transverse Mercator projection).
-%  
+%
 %   The transverse Mercator projection is also a cylindrical projection
 %   which maps the central meridian to a straight line at constant scale.
 %   However the behavior either side of the central meridian is determined
@@ -59,7 +59,7 @@ function geodproj
 %   The ellipsoidal gnomonic projection is defined by
 %
 %     [~,AZI0,~,~,m,M] = GEODDISTANCE(LAT0,LON0,LAT,LON)
-%     RHO = m./M; X = RHO.*SIND(AZI0); Y = RHO.*COSD(AZI0)
+%     RHO = m./M, X = RHO.*SIND(AZI0), Y = RHO.*COSD(AZI0)
 %
 %   Obviously this is an azimuthal projection.  It also enjoys approximately
 %   the property of the spherical gnomonic projection, that geodesics map

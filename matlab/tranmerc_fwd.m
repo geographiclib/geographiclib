@@ -14,7 +14,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   inverse projection is given by TRANMERC_INV.
 %
 %   GAM and K give metric properties of the projection at (LAT,LON); GAM is
-%   the meridian convergence at the point (in degrees) and K is the scale.
+%   the meridian convergence at the point and K is the scale.
 %
 %   LAT0, LON0, LAT, LON, GAM are in degrees.  The projected coordinates X,
 %   Y are in meters (more precisely the units used for the equatorial
@@ -64,7 +64,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 
   degree = pi/180;
   maxpow = 6;
-  
+
   a = ellipsoid(1);
   f = ecc2flat(ellipsoid(2));
   e2 = f * (2 - f);
@@ -136,7 +136,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   x = a1 * eta .* lonsign;
   gam(backside) = 180 - gam(backside);
   gam = gam .* latsign .* lonsign;
-  
+
   if isscalar(lat0) && lat0 == 0
     y0 = 0;
   else

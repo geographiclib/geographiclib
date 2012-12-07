@@ -16,7 +16,7 @@ following respects:
 The ellipsoidal gnomonic projection is an azimuthal projection about a
 center point.  All geodesics through the center point are projected into
 straight lines with the correct azimuth relative to the center point.
-In addition all geodesics are pass close to the center point are very
+In addition, all geodesics that pass close to the center point are very
 nearly straight.  It is derived in Section 8 of
 
   C. F. F. Karney,
@@ -41,7 +41,7 @@ UTM_FWD, UTM_INV.
 The Cassini-Solder and transverse Mercator projections are useful for
 large scale maps.  The primary importance of the other two projections
 is that they offer a convenient way of solving various geometrical
-problems on the ellipsoid.  In particular the azimuthal equidistant
+problems on the ellipsoid.  In particular, the azimuthal equidistant
 projection allows problems associated with determining maritime
 boundaries to be solved easily.  Similary the gnomonic projection allows
 the intersection of two geodesics to be determined quickly.

@@ -12,7 +12,7 @@ function [x, y, gam, k] = utm_fwd(zone, northp, lat, lon)
 %   = false) hemisphere.  The inverse projection is given by UTM_INV.
 %
 %   GAM and K give metric properties of the projection at (LAT,LON); GAM is
-%   the meridian convergence at the point (in degrees) and K is the scale.
+%   the meridian convergence at the point and K is the scale.
 %
 %   LAT, LON, GAM are in degrees.  The projected coordinates X, Y are in
 %   meters.  K is dimensionless.
@@ -47,7 +47,7 @@ function [x, y, gam, k] = utm_fwd(zone, northp, lat, lon)
 
   if nargin ~= 4, error('Wrong number of arguments supplied'), end
   lon0 = -183 + 6 * zone; lat0 = 0;
-  fe = 500e3; fn = cvmgt(0,10000e3,northp); k0 = 0.9996;
+  fe = 500e3; fn = cvmgt(0,10000e3,logical(northp)); k0 = 0.9996;
   [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon);
   x = x * k0 + fe; y = y * k0 + fn; k = k * k0;
 end

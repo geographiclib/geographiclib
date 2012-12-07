@@ -12,7 +12,7 @@ function [lat, lon, gam, k] = utm_inv(zone, northp, x, y)
 %   hemisphere.  The forward projection is given by UTM_FWD.
 %
 %   GAM and K give metric properties of the projection at (LAT,LON); GAM is
-%   the meridian convergence at the point (in degrees) and K is the scale.
+%   the meridian convergence at the point and K is the scale.
 %
 %   LAT, LON, GAM are in degrees.  The projected coordinates X, Y are in
 %   meters.  K is dimensionless.
@@ -47,7 +47,7 @@ function [lat, lon, gam, k] = utm_inv(zone, northp, x, y)
 
   if nargin ~= 4, error('Wrong number of arguments supplied'), end
   lon0 = -183 + 6 * zone; lat0 = 0;
-  fe = 500e3; fn = cvmgt(0, 10000e3, northp); k0 = 0.9996;
+  fe = 500e3; fn = cvmgt(0, 10000e3, logical(northp)); k0 = 0.9996;
   x = (x - fe) / k0; y = (y - fn) / k0;
   [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y);
   k = k * k0;
