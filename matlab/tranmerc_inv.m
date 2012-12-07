@@ -50,7 +50,7 @@ function [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y, ellipsoid)
 %
 % This file was distributed with GeographicLib 1.28.
 
-  if nargin < 4 || nargin > 6, error('Wrong number of arguments supplied'), end
+  if nargin < 4 || nargin > 5, error('Wrong number of arguments supplied'), end
   if nargin < 5, ellipsoid = defaultellipsoid; end
   try
     Z = lat0 + lon0 + x + y;
@@ -186,22 +186,5 @@ function tau = tauf(taup, e2)
            (e2m * tau1 .* hypot(1, taupa));
     tau(g) = tau(g) + dtau(g);
     g = g & abs(dtau) >= stol;
-  end
-end
-
-% TEMPORARY
-function y = atanhee(x, e2)
-%ATANHEE   atanh(e*x)/e
-%
-%   ATANHEE(X, E2) returns atanh(E*X)/E where E = SQRT(E2)
-%   E2 is a scalar; X can be any shape.
-
-  e = sqrt(abs(e2));
-  if (e2 > 0)
-    y = atanh(e * x) / e;
-  elseif (e2 < 0)
-    y = atan(e * x) / e;
-  else
-    y = x;
   end
 end

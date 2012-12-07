@@ -46,12 +46,13 @@ function [lat, lon, azi, rk] = eqdazim_inv(lat0, lon0, x, y, ellipsoid)
 %
 % This file was distributed with GeographicLib 1.28.
 
+  if nargin < 4 || nargin > 5, error('Wrong number of arguments supplied'), end
+  if nargin < 5, ellipsoid = defaultellipsoid; end
   try
     [~] = lat0 + lon0 + x + y;
   catch err
     error('lat0, lon0, x, y have incompatible sizes')
   end
-  if nargin < 5, ellipsoid = defaultellipsoid; end
 
   azi0 = atan2(x, y) / (pi/180);
   s = hypot(x, y);

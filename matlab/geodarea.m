@@ -38,8 +38,13 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %
 % This file was distributed with GeographicLib 1.28.
 
+  if nargin < 2 || nargin > 4, error('Wrong number of arguments supplied'), end
+  if nargin < 3, ellipsoid = defaultellipsoid; end
   if ~isequal(size(lats), size(lons))
     error('lats, lons have incompatible sizes')
+  end
+  if length(ellipsoid(:)) ~= 2
+    error('ellipsoid must be a vector of size 2')
   end
 
   lat1 = lats(:);
@@ -59,10 +64,6 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
   m1 = max(1, ind(2:end) - 1);
   lat2(m1) = lat1(m0); lon2(m1) = lon1(m0);
 
-  if nargin < 3, ellipsoid = defaultellipsoid; end
-  if length(ellipsoid(:)) ~= 2
-    error('ellipsoid must be a vector of size 2')
-  end
   a = ellipsoid(1);
   e2 = ellipsoid(2)^2;
   f = e2 / (1 + sqrt(1 - e2));

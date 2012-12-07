@@ -183,6 +183,11 @@ function geoddoc
 %     * GEODAREA is accurate regardless of the length of the edges of the
 %       polygon.
 %
+%   This package is used by the MATLAB File Exchange package "Geodesic
+%   projections for an ellipsoid":
+%
+%     http://www.mathworks.com/matlabcentral/fileexchange/39366
+%
 %   See also GEODDISTANCE, GEODRECKON, GEODAREA,
 %     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
 %     GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, POLYGONAREA.

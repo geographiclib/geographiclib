@@ -45,7 +45,7 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
 %
 % This file was distributed with GeographicLib 1.28.
 
-  if nargin < 4 || nargin > 6, error('Wrong number of arguments supplied'), end
+  if nargin < 4 || nargin > 5, error('Wrong number of arguments supplied'), end
   if nargin < 5, ellipsoid = defaultellipsoid; end
   try
     Z = lat0 + lon0 + lat + lon;
@@ -102,9 +102,4 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
   cbet01 = cbet1 .* cbet0 + sbet1 .* sbet0;
   sig01 = atan2(sbet01, cbet01) / degree;
   [~, ~, ~, ~, ~, ~, ~, y] = geodreckon(lat0, 0, sig01, 0, ellipsoid, true);
-end
-
-% TEMPORARY
-function d = AngDiff(x, y)
-  d = AngNormalize(y - x);
 end

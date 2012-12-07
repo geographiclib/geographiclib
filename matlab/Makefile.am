@@ -43,6 +43,7 @@ $(srcdir)/geodarea.m \
 $(srcdir)/defaultellipsoid.m \
 $(srcdir)/ecc2flat.m \
 $(srcdir)/flat2ecc.m \
+$(srcdir)/geodproj.m \
 $(srcdir)/eqdazim_fwd.m \
 $(srcdir)/eqdazim_inv.m \
 $(srcdir)/cassini_fwd.m \
