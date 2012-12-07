@@ -1,15 +1,17 @@
-function [lat, lon, azi, rk] = gnomonicrev(lat0, lon0, x, y, ellipsoid)
-%GNOMONICREV  Reverse ellipsoidal gnomonic projection
+function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
+%GNOMONIC_INV  Inverse ellipsoidal gnomonic projection
 %
-%   [LAT, LON] = GNOMONICREV(LAT0, LON0, X, Y)
-%   [LAT, LON, AZI, RK] = GNOMONICREV(LAT0, LON0, X, Y, ELLIPSOID)
+%   [LAT, LON] = GNOMONIC_INV(LAT0, LON0, X, Y)
+%   [LAT, LON, AZI, RK] = GNOMONIC_INV(LAT0, LON0, X, Y, ELLIPSOID)
 %
-%   performs the reverse ellipsoidal gnomonic projection of points (X,Y)
+%   performs the inverse ellipsoidal gnomonic projection of points (X,Y)
 %   using (LAT0,LON0) as the center of projection.  These input arguments
 %   can be scalars or arrays of equal size.  The ELLIPSOID vector is of the
 %   form [a, e], where a is the equatorial radius in meters, e is the
 %   eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by DEFAULTELLIPSOID) is used.
+%   precisely, the value returned by DEFAULTELLIPSOID) is used.  GEODPROJ
+%   gives the restrictions on the allowed ranges of the arguments.  The
+%   forward projection is given by GNOMONIC_FWD.
 %
 %   AZI and RK give metric properties of the projection at (LAT,LON); AZI
 %   is the azimuth of the geodesic from the center of projection and RK is
@@ -17,7 +19,7 @@ function [lat, lon, azi, rk] = gnomonicrev(lat0, lon0, x, y, ellipsoid)
 %   direction is 1/RK^2.
 %
 %   In principle, all finite X and Y are allowed.  However, it's possible
-%   that the reverse projection fails for very large X and Y (when the
+%   that the inverse projection fails for very large X and Y (when the
 %   geographic position is close to the "horizon").  In that case, NaNs are
 %   returned for the corresponding output variables.
 %
@@ -45,11 +47,9 @@ function [lat, lon, azi, rk] = gnomonicrev(lat0, lon0, x, y, ellipsoid)
 %
 %     http://www.mathworks.com/matlabcentral/fileexchange/39108
 %
-%   See also GNOMONICFWD, GEODRECKON, DEFAULTELLIPSOID.
+%   See also GEODPROJ, GNOMONIC_FWD, GEODRECKON, DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
-% under the MIT/X11 License.  For more information, see
-% http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.28.
 

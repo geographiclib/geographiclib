@@ -246,20 +246,9 @@ void GeodesicLineInit(struct GeodesicLine* l,
   l->caps = (caps ? caps : DISTANCE_IN | LONGITUDE) |
     LATITUDE | AZIMUTH; /* Always allow latitude and azimuth */
 
-  azi1 = AngNormalize(azi1);
+  /* Guard against underflow in salp0 */
+  azi1 = AngRound(AngNormalize(azi1));
   lon1 = AngNormalize(lon1);
-  if (lat1 == 90) {
-    lon1 += lon1 < 0 ? 180 : -180;
-    lon1 = AngNormalize(lon1 - azi1);
-    azi1 = -180;
-  } else if (lat1 == -90) {
-    lon1 = AngNormalize(lon1 + azi1);
-    azi1 = 0;
-  } else {
-    /* Guard against underflow in salp0 */
-    azi1 = AngRound(azi1);
-  }
-
   l->lat1 = lat1;
   l->lon1 = lon1;
   l->azi1 = azi1;

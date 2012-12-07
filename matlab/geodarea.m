@@ -34,9 +34,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %   See also GEODDOC, GEODDISTANCE, GEODRECKON, POLYGONAREA,
 %     DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
-% under the MIT/X11 License.  For more information, see
-% http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.28.
 
@@ -70,13 +68,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
   f = e2 / (1 + sqrt(1 - e2));
 
   b = (1 - f) * a;
-  if e2 == 0
-    c2 = a^2;
-  elseif e2 > 0
-    c2 = (a^2 + b^2 * atanh(sqrt(e2))/sqrt(e2)) / 2;
-  else
-    c2 = (a^2 + b^2 * atan(sqrt(-e2))/sqrt(-e2)) / 2;
-  end
+  c2 = (a^2 + b^2 * atanhee(1, e2)) / 2;
   area0 = 4 * pi * c2;
 
   [s12, ~, ~, S12] = geoddistance(lat1, lon1, lat2, lon2, ellipsoid);

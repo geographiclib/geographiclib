@@ -5,7 +5,7 @@ This package includes two geodesic projections
 
 These generalize the projections of the MATLAB mapping toolbox to
 include an ellipsoidal model of the earth.  The functions provided are
-EQDAZIMFWD, EQDAZIMREV, GNOMONICFWD, and GNOMONICREV.
+EQDAZIM_FWD, EQDAZIM_INV, GNOMONIC_FWD, and GNOMONIC_INV.
 
 The ellipsoidal gnomonic projection is an azimuthal projection about a
 center point.  All geodesics through the center point are projected into

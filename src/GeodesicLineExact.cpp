@@ -45,20 +45,8 @@ namespace GeographicLib {
       // Always allow latitude and azimuth
     , _caps(caps | LATITUDE | AZIMUTH)
   {
-    azi1 = Math::AngNormalize(azi1);
+    azi1 = GeodesicExact::AngRound(Math::AngNormalize(azi1));
     lon1 = Math::AngNormalize(lon1);
-    if (lat1 == 90) {
-      lon1 += lon1 < 0 ? 180 : -180;
-      lon1 = Math::AngNormalize(lon1 - azi1);
-      azi1 = -180;
-    } else if (lat1 == -90) {
-      lon1 = Math::AngNormalize(lon1 + azi1);
-      azi1 = 0;
-    } else {
-      // Guard against underflow in salp0
-      azi1 = GeodesicExact::AngRound(azi1);
-    }
-
     _lat1 = lat1;
     _lon1 = lon1;
     _azi1 = azi1;

@@ -333,8 +333,7 @@ namespace GeographicLib {
   void LambertConformalConic::Forward(real lon0, real lat, real lon,
                                       real& x, real& y, real& gamma, real& k)
     const throw() {
-    lon = Math::AngNormalize(Math::AngNormalize(lon) -
-                             Math::AngNormalize(lon0));
+    lon = Math::AngDiff(Math::AngNormalize(lon0), Math::AngNormalize(lon));
     // From Snyder, we have
     //
     // theta = n * lambda

@@ -3674,15 +3674,16 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.28">Version 1.28</a>
    (released 201y-mm-dd)
-   - Compute longitude difference in GeographicLib::Geodesic::Inverse
-     accurately.
-   - Hence fix BUG in area calculations for polygons with vertices very
-     close to the prime meridian.
-   - Include polygon area routine in C and Fortran implementations.
-   - Fix BUG is geoddistance.m where the value of m12 was wtong for
-     meridional geodesics.
-   - Add Matlab implementations of azimuthal equidistant and gnomonic
-     projections.
+   - Changes to geodesic routines:
+     - compute longitude difference exactly;
+     - hence fix BUG in area calculations for polygons with vertices very
+       close to the prime meridian;
+     - include polygon area routine in C and Fortran implementations;
+     - fix BUG is geoddistance.m where the value of m12 was wrong for
+       meridional geodesics;
+     - add Matlab implementations of azimuthal equidistant,
+       Cassini-Soldner, transverse Mercator, and gnomonic projections;
+     - remove unneeded special code for geodesics which start at a pole.
 
  - <a href="http://geographiclib.sf.net/1.27">Version 1.27</a>
    (released 2012-11-29)

@@ -11,4 +11,3 @@ function [s, t] = sumx(u, v)
   vpp = vpp -  v;
   t = -(up + vpp);
 end
-

@@ -34,7 +34,7 @@ namespace GeographicLib {
                                real& azi, real& rk) const throw() {
     if (!Init())
       return;
-    real dlon = Math::AngNormalize(Math::AngNormalize(lon) - LongitudeOrigin());
+    real dlon = Math::AngDiff(LongitudeOrigin(), Math::AngNormalize(lon));
     real sig12, s12, azi1, azi2;
     lat = AngRound(lat);
     sig12 = _earth.Inverse(lat, -abs(dlon), lat, abs(dlon), s12, azi1, azi2);
@@ -59,7 +59,7 @@ namespace GeographicLib {
     }
     x = s12;
     azi = Math::AngNormalize(azi2);
-    GeodesicLine perp(_earth.Line(lat, dlon, azi2, Geodesic::GEODESICSCALE));
+    GeodesicLine perp(_earth.Line(lat, dlon, azi, Geodesic::GEODESICSCALE));
     real t;
     perp.GenPosition(true, -sig12,
                      Geodesic::GEODESICSCALE,

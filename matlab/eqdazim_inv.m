@@ -1,16 +1,17 @@
-function [x, y, azi, rk] = eqdazimfwd(lat0, lon0, lat, lon, ellipsoid)
-%EQDAZIMFWD  Forward ellipsoidal equidistant azimuthal projection
+function [lat, lon, azi, rk] = eqdazim_inv(lat0, lon0, x, y, ellipsoid)
+%EQDAZIM_INV  Inverse ellipsoidal equidistant azimuthal projection
 %
-%   [X, Y] = EQDAZIMFWD(LAT0, LON0, LAT, LON)
-%   [X, Y, AZI, RK] = EQDAZIMFWD(LAT0, LON0, LAT, LON, ELLIPSOID)
+%   [LAT, LON] = EQDAZIM_INV(LAT0, LON0, X, Y)
+%   [LAT, LON, AZI, RK] = EQDAZIM_INV(LAT0, LON0, X, Y, ELLIPSOID)
 %
-%   performs the forward ellipsoidal equidistant azimuthal projection of
-%   points (LAT,LON) using (LAT0,LON0) as the center of projection.  These
+%   performs the inverse ellipsoidal equidistant azimuthal projection of
+%   points (X,Y) using (LAT0,LON0) as the center of projection.  These
 %   input arguments can be scalars or arrays of equal size.  The ELLIPSOID
 %   vector is of the form [a, e], where a is the equatorial radius in
 %   meters, e is the eccentricity.  If ellipsoid is omitted, the WGS84
 %   ellipsoid (more precisely, the value returned by DEFAULTELLIPSOID) is
-%   used.
+%   used.  GEODPROJ gives the restrictions on the allowed ranges of the
+%   arguments.  The forward projection is given by EQDAZIM_FWD.
 %
 %   AZI and RK give metric properties of the projection at (LAT,LON); AZI
 %   is the azimuth of the geodesic from the center of projection and RK is
@@ -39,26 +40,22 @@ function [x, y, azi, rk] = eqdazimfwd(lat0, lon0, lat, lon, ellipsoid)
 %
 %     http://www.mathworks.com/matlabcentral/fileexchange/39108
 %
-%   See also EQDAZIMREV, GEODDISTANCE, DEFAULTELLIPSOID.
+%   See also GEODPROJ, EQDAZIM_FWD, GEODRECKON, DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
-% under the MIT/X11 License.  For more information, see
-% http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.28.
 
   try
-    [~] = lat0 + lon0 + lat + lon;
+    [~] = lat0 + lon0 + x + y;
   catch err
-    error('lat0, lon0, lat, lon have incompatible sizes')
+    error('lat0, lon0, x, y have incompatible sizes')
   end
   if nargin < 5, ellipsoid = defaultellipsoid; end
 
-  [s, azi0, azi, ~, m, ~, ~, sig] = ...
-      geoddistance(lat0, lon0, lat, lon, ellipsoid);
-  azi0 = azi0 * (pi/180);
-  x = s .* sin(azi0);
-  y = s .* cos(azi0);
+  azi0 = atan2(x, y) / (pi/180);
+  s = hypot(x, y);
+  [lat, lon, azi, ~, m, ~, ~, sig] = geodreckon(lat0, lon0, s, azi0, ellipsoid);
   rk = m ./ s;
   rk(sig <= 0.01 * sqrt(realmin)) = 1;
 end

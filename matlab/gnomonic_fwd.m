@@ -1,15 +1,18 @@
-function [x, y, azi, rk] = gnomonicfwd(lat0, lon0, lat, lon, ellipsoid)
-%GNOMONICFWD  Forward ellipsoidal gnomonic projection
+function [x, y, azi, rk] = gnomonic_fwd(lat0, lon0, lat, lon, ellipsoid)
+%GNOMONIC_FWD  Forward ellipsoidal gnomonic projection
 %
-%   [X, Y] = GNOMONICFWD(LAT0, LON0, LAT, LON)
-%   [X, Y, AZI, RK] = GNOMONICFWD(LAT0, LON0, LAT, LON, ELLIPSOID)
+%   [X, Y] = GNOMONIC_FWD(LAT0, LON0, LAT, LON)
+%   [X, Y, AZI, RK] = GNOMONIC_FWD(LAT0, LON0, LAT, LON, ELLIPSOID)
 %
 %   performs the forward ellipsoidal gnomonic projection of points
-%   (LAT,LON) using (LAT0,LON0) as the center of projection.  These input
-%   arguments can be scalars or arrays of equal size.  The ELLIPSOID vector
-%   is of the form [a, e], where a is the equatorial radius in meters, e is
-%   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by DEFAULTELLIPSOID) is used.
+%   (LAT,LON) to (X,Y) using (LAT0,LON0) as the center of projection.
+%   These input arguments can be scalars or arrays of equal size.  The
+%   ELLIPSOID vector is of the form [a, e], where a is the equatorial
+%   radius in meters, e is the eccentricity.  If ellipsoid is omitted, the
+%   WGS84 ellipsoid (more precisely, the value returned by
+%   DEFAULTELLIPSOID) is used.  GEODPROJ gives the restrictions on the
+%   allowed ranges of the arguments.  The inverse projection is given by
+%   GNOMONIC_INV.
 %
 %   AZI and RK give metric properties of the projection at (LAT,LON); AZI
 %   is the azimuth of the geodesic from the center of projection and RK is
@@ -43,11 +46,9 @@ function [x, y, azi, rk] = gnomonicfwd(lat0, lon0, lat, lon, ellipsoid)
 %
 %     http://www.mathworks.com/matlabcentral/fileexchange/39108
 %
-%   See also GNOMONICREV, GEODDISTANCE, DEFAULTELLIPSOID.
+%   See also GEODPROJ, GNOMONIC_INV, GEODDISTANCE, DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
-% under the MIT/X11 License.  For more information, see
-% http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.28.
 

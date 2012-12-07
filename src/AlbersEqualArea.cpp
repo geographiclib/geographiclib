@@ -373,8 +373,7 @@ namespace GeographicLib {
   void AlbersEqualArea::Forward(real lon0, real lat, real lon,
                                 real& x, real& y, real& gamma, real& k)
     const throw() {
-    lon = Math::AngNormalize(Math::AngNormalize(lon) -
-                             Math::AngNormalize(lon0));
+    lon = Math::AngDiff(Math::AngNormalize(lon0), Math::AngNormalize(lon));
     lat *= _sign;
     real
       lam = lon * Math::degree<real>(),

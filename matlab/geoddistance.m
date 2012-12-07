@@ -43,9 +43,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %   See also GEODDOC, GEODRECKON, GEODAREA, GEODESICINVERSE,
 %     DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
-% under the MIT/X11 License.  For more information, see
-% http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.28.
 %
@@ -270,13 +268,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
     s = salp12 == 0 & calp12 < 0;
     salp12(s) = tiny * calp1(s); calp12(s) = -1;
     alp12(l) = atan2(salp12, calp12);
-    if e2 == 0
-      c2 = a^2;
-    elseif e2 > 0
-      c2 = (a^2 + b^2 * atanh(sqrt(e2))/sqrt(e2)) / 2;
-    else
-      c2 = (a^2 + b^2 * atan(sqrt(-e2))/sqrt(-e2)) / 2;
-    end
+    c2 = (a^2 + b^2 * atanhee(1, e2)) / 2;
     S12 = 0 + swapp .* lonsign .* latsign .* (S12 + c2 * alp12);
   end
 

@@ -187,9 +187,7 @@ function geoddoc
 %     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
 %     GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, POLYGONAREA.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
-% under the MIT/X11 License.  For more information, see
-% http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.28.
 

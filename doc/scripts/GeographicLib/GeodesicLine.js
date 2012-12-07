@@ -32,20 +32,8 @@
     this._f1 = geod._f1;
     this._caps = !caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH);
 
-    azi1 = m.AngNormalize(azi1);
+    azi1 = g.AngRound(m.AngNormalize(azi1));
     lon1 = m.AngNormalize(lon1);
-    if (lat1 == 90) {
-      lon1 += lon1 < 0 ? 180 : -180;
-      lon1 = m.AngNormalize(lon1 - azi1);
-      azi1 = -180;
-    } else if (lat1 == -90) {
-      lon1 = m.AngNormalize(lon1 + azi1);
-      azi1 = 0;
-    } else {
-      // Guard against underflow in salp0
-      azi1 = g.AngRound(azi1);
-    }
-
     this._lat1 = lat1;
     this._lon1 = lon1;
     this._azi1 = azi1;

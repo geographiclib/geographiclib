@@ -223,20 +223,9 @@
       call C3cof(n, C3x)
       if (areap) call C4cof(n, C4x)
 
-      azi1x = AngNm(azi1)
-      lon1x = AngNm(lon1)
-
-      if (lat1 .eq. 90) then
-        lon1x = lon1x + csmgt(180d0, -180d0, lon1x .lt. 0)
-        lon1x = AngNm(lon1x - azi1x)
-        azi1x = -180
-      else if (lat1 .eq. -90) then
-        lon1x = AngNm(lon1x + azi1x)
-        azi1x = 0
-      else
 * Guard against underflow in salp0
-        azi1x = AngRnd(azi1x)
-      end if
+      azi1x = AngRnd(AngNm(azi1))
+      lon1x = AngNm(lon1)
 
 * alp1 is in [0, pi]
       alp1 = azi1x * degree
