@@ -5,7 +5,7 @@ function geodproj
 %     * the azimuthal equidistant projection (eqdazim)
 %     * the Cassini-Soldner projection (cassini)
 %     * the transverse Mercator projection (tranmerc)
-%     * the ellipsoidal gnonomic projection (gnomonic)
+%     * the ellipsoidal gnomonic projection (gnomonic)
 %
 %   The package implements the forward projection (from geographic to
 %   projected coordinates) and inverse projection (from projected to
@@ -21,8 +21,8 @@ function geodproj
 %
 %     http://www.mathworks.com/matlabcentral/fileexchange/39108
 %
-%   The azimuthal equidistant inverse projection is a polar geodesic
-%   projecton defined by
+%   The azimuthal equidistant inverse projection is a geodesic projection
+%   defined by
 %
 %     [S,AZI0] = GEODDISTANCE(LAT0,LON0,LAT,LON)
 %     X = S.*SIND(AZI0), Y = S.*COSD(AZI0)
@@ -30,7 +30,7 @@ function geodproj
 %   Thus all distances and azimuths relative to the center point are
 %   correct.
 %
-%   The Cassini-Solder projection is a rectangular geodesic projecton
+%   The Cassini-Solder projection is a rectangular geodesic projection
 %   whose inverse is specified by
 %
 %     [LAT1,LON1,AZI1] = GEODRECKON(LAT0,LON0,Y,0)
@@ -50,7 +50,7 @@ function geodproj
 %   package is based on the series method described in
 %
 %     C. F. F. Karney,
-%     Transverse Mercator with an accurcy of a few nanometers,
+%     Transverse Mercator with an accuracy of a few nanometers,
 %     J. Geodesy 85(8), 475-485 (Aug. 2011);
 %     http://dx.doi.org/10.1007/s00190-011-0445-3
 %     Preprint: http://arxiv.org/abs/1002.1417
@@ -124,7 +124,7 @@ function geodproj
 %   offer a convenient way of solving various geometrical problems on the
 %   ellipsoid.  In particular the azimuthal equidistant projection allows
 %   problems associated with determining maritime boundaries to be solved
-%   easily.  Similary the gnomonic projection allows the intersection of
+%   easily.  Similarly the gnomonic projection allows the intersection of
 %   two geodesics to be determined quickly.
 %
 %   See also EQDAZIM_FWD, EQDAZIM_INV, CASSINI_FWD, CASSINI_INV,

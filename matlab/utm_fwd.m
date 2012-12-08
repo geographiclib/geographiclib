@@ -21,7 +21,7 @@ function [x, y, gam, k] = utm_fwd(zone, northp, lat, lon)
 %   method described in
 %
 %     C. F. F. Karney,
-%     Transverse Mercator with an accurcy of a few nanometers,
+%     Transverse Mercator with an accuracy of a few nanometers,
 %     J. Geodesy 85(8), 475-485 (Aug. 2011);
 %     http://dx.doi.org/10.1007/s00190-011-0445-3
 %     Preprint: http://arxiv.org/abs/1002.1417

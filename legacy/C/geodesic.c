@@ -124,7 +124,8 @@ static real sumx(real u, real v, real* t) {
   up -= u;
   vpp -= v;
   *t = -(up + vpp);
-  /* u + v =       s      + t
+  /* error-free sum:
+   * u + v =       s      + t
    *       = round(u + v) + t */
   return s;
 }
@@ -256,7 +257,7 @@ void GeodesicLineInit(struct GeodesicLine* l,
   alp1 = azi1 * degree;
   /* Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
    * problems directly than to skirt them. */
-  l->salp1 =     azi1  == -180 ? 0 : sin(alp1);
+  l->salp1 =      azi1  == -180 ? 0 : sin(alp1);
   l->calp1 = fabs(azi1) ==   90 ? 0 : cos(alp1);
   phi = lat1 * degree;
   /* Ensure cbet1 = +epsilon at poles */

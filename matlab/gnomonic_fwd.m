@@ -10,9 +10,9 @@ function [x, y, azi, rk] = gnomonic_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   ELLIPSOID vector is of the form [a, e], where a is the equatorial
 %   radius in meters, e is the eccentricity.  If ellipsoid is omitted, the
 %   WGS84 ellipsoid (more precisely, the value returned by
-%   DEFAULTELLIPSOID) is used.  GEODPROJ gives the restrictions on the
-%   allowed ranges of the arguments.  The inverse projection is given by
-%   GNOMONIC_INV.
+%   DEFAULTELLIPSOID) is used.  GEODPROJ defines the projection and gives
+%   the restrictions on the allowed ranges of the arguments.  The inverse
+%   projection is given by GNOMONIC_INV.
 %
 %   AZI and RK give metric properties of the projection at (LAT,LON); AZI
 %   is the azimuth of the geodesic from the center of projection and RK is

@@ -5,14 +5,14 @@ function [x, y, azi, rk] = eqdazim_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   [X, Y, AZI, RK] = EQDAZIM_FWD(LAT0, LON0, LAT, LON, ELLIPSOID)
 %
 %   performs the forward azimuthal equidistant projection of points
-%   (LAT,LON) to (X, Y) using (LAT0,LON0) as the center of projection.
+%   (LAT,LON) to (X,Y) using (LAT0,LON0) as the center of projection.
 %   These input arguments can be scalars or arrays of equal size.  The
 %   ELLIPSOID vector is of the form [a, e], where a is the equatorial
 %   radius in meters, e is the eccentricity.  If ellipsoid is omitted, the
 %   WGS84 ellipsoid (more precisely, the value returned by
-%   DEFAULTELLIPSOID) is used.  GEODPROJ gives the restrictions on the
-%   allowed ranges of the arguments.  The inverse projection is given by
-%   EQDAZIM_INV.
+%   DEFAULTELLIPSOID) is used.  GEODPROJ defines the projection and gives
+%   the restrictions on the allowed ranges of the arguments.  The inverse
+%   projection is given by EQDAZIM_INV.
 %
 %   AZI and RK give metric properties of the projection at (LAT,LON); AZI
 %   is the azimuth of the geodesic from the center of projection and RK is
@@ -23,10 +23,7 @@ function [x, y, azi, rk] = eqdazim_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   Y are in meters (more precisely the units used for the equatorial
 %   radius).  RK is dimensionless.
 %
-%   The ellipsoidal azimuthal projection is an azimuthal projection about a
-%   center point.  The distance and azimuth from the center point to all
-%   other points are correctly represented in the projection.  Section
-%   14 of
+%   Section 14 of
 %
 %     C. F. F. Karney,
 %     Geodesics on an ellipsoid of revolution (2011),

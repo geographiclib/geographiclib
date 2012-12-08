@@ -10,8 +10,8 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   is of the form [a, e], where a is the equatorial radius in meters, e is
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
 %   precisely, the value returned by DEFAULTELLIPSOID) is used.  GEODPROJ
-%   gives the restrictions on the allowed ranges of the arguments.  The
-%   inverse projection is given by TRANMERC_INV.
+%   defines the projection and gives the restrictions on the allowed ranges
+%   of the arguments.  The inverse projection is given by TRANMERC_INV.
 %
 %   GAM and K give metric properties of the projection at (LAT,LON); GAM is
 %   the meridian convergence at the point and K is the scale.
@@ -20,13 +20,11 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   Y are in meters (more precisely the units used for the equatorial
 %   radius).  K is dimensionless.
 %
-%   The transverse Mercator projection is a conformal projection where a
-%   "central" meridian maps to a straight line with constant scale (unity
-%   in this implementation).  This implementation is based on the series
-%   method described in
+%   This implementation of the projection is based on the series method
+%   described in
 %
 %     C. F. F. Karney,
-%     Transverse Mercator with an accurcy of a few nanometers,
+%     Transverse Mercator with an accuracy of a few nanometers,
 %     J. Geodesy 85(8), 475-485 (Aug. 2011);
 %     http://dx.doi.org/10.1007/s00190-011-0445-3
 %     Preprint: http://arxiv.org/abs/1002.1417

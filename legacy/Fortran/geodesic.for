@@ -91,7 +91,7 @@
 *     degrees.
 *
 * Whether or not these quantities are return depends on the value of
-* omask which is a integer bit mask with the following bit assigments
+* omask which is a integer bit mask with the following bit assignments
 *   * 1 return a12
 *   * 2 return m12
 *   * 4 return MM12 and MM21

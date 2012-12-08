@@ -35,7 +35,7 @@
  * units as a).
  *
  * The routines also calculate several other quantities of interest
- *   * SS12 is the area between the geodesic from point 1 to point 2 and the
+ *   * S12 is the area between the geodesic from point 1 to point 2 and the
  *     equator; i.e., it is the area, measured counter-clockwise, of the
  *     quadrilateral with corners (lat1,lon1), (0,lon1), (0,lon2), and
  *     (lat2,lon2).  It is given in meters^2.
@@ -44,11 +44,11 @@
  *     displaced by m12 dazi1 in the direction perpendicular to the geodesic.
  *     m12 is given in meters.  On a curved surface the reduced length obeys a
  *     symmetry relation, m12 + m21 = 0.  On a flat surface, we have m12 = s12.
- *   * MM12 and MM21 are geodesic scales.  If two geodesics are parallel at
- *     point 1 and separated by a small distance dt, then they are separated by
- *     a distance MM12 dt at point 2.  MM21 is defined similarly (with the
- *     geodesics being parallel to one another at point 2).  MM12 and MM21 are
- *     dimensionless quantities.  On a flat surface, we have MM12 = MM21 = 1.
+ *   * M12 and M21 are geodesic scales.  If two geodesics are parallel at point
+ *     1 and separated by a small distance dt, then they are separated by a
+ *     distance M12 dt at point 2.  M21 is defined similarly (with the
+ *     geodesics being parallel to one another at point 2).  M12 and M21 are
+ *     dimensionless quantities.  On a flat surface, we have M12 = M21 = 1.
  *   * a12 is the arc length on the auxiliary sphere.  This is a construct for
  *     converting the problem to one in spherical trigonometry.  a12 is
  *     measured in degrees.  The spherical arc length from one equator crossing
@@ -65,8 +65,8 @@
  *    Direct(&g, lat1, lon1, azi1, s12, &lat2, &lon2, &azi2);
  *    Inverse(&g, lat1, lon1, lat2, lon2, &s12, &azi1, &azi2);
  *
- * GeodesicInit initalizes g for the ellipsoid.  Subsequent calls to Direct and
- * Inverse solve the direct and inverse geodesic problems.
+ * GeodesicInit initializes g for the ellipsoid.  The subsequent calls to
+ * Direct and Inverse solve the direct and inverse geodesic problems.
  *
  * Returning auxiliary quantities (continued from the previous example):
  *
