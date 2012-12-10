@@ -1236,7 +1236,7 @@ solve the direct and inverse geodesic problems are provided.
 
 For documentation, see
  - <a href="C/index.html">C library</a>,
- - <a href="fortran/index.html">Fortran library</a>.
+ - <a href="Fortran/index.html">Fortran library</a>.
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
