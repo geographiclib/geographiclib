@@ -1,6 +1,6 @@
 /**
  * \file geodesic.c
- * \brief Implementation for geodesic.c
+ * \brief Implementation of the geodesic routines in C
  **********************************************************************/
 
 /*

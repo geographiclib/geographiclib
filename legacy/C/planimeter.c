@@ -1,7 +1,7 @@
-/* A simple test of the C library for geodesics.  This computes the area
- * of a geodesic polygon by reading in up to 100 lines with the
- * coordinates (lat, lon) for each vertex, and printing out the number
- * of points, the perimeter, and the area (for the WGS84 ellipsoid). */
+/**
+ * @file planimeter.c
+ * @brief A test program for geod_polygonarea()
+ **********************************************************************/
 
 #include <stdio.h>
 #include "geodesic.h"
@@ -10,8 +10,17 @@
 /* Squelch warnings about scanf */
 #  pragma warning (disable: 4996)
 #endif
-
 #define MAXPTS 100
+
+/**
+ * A simple program to compute the area of a geodesic polygon.
+ *
+ * This program reads in up to 100 lines with lat, lon for each vertex
+ * of a polygon.  At the end of input, the program prints the number of
+ * vertices, the perimeter of the polygon and its area (for the WGS84
+ * ellipsoid).
+ **********************************************************************/
+
 int main() {
   double a = 6378137, f = 1/298.257223563; /* WGS84 */
   double lats[MAXPTS], lons[MAXPTS], A, P;

@@ -1,6 +1,6 @@
 /**
  * \file geodesic.h
- * \brief Header for geodesic.c
+ * \brief Header for the geodesic routines in C
  *
  * This an implementation in C of the geodesic algorithms described in
  * - C. F. F. Karney,
@@ -97,7 +97,7 @@
  *   azi2] + [\e d, \e d], for arbitrary \e d.
  *
  * These routines are a simple transcription of the corresponding C++ classes
- * in %GeographicLib, which is available at http://geographiclib.sf.net.  The
+ * in <a href="http://geographiclib.sf.net"> GeographicLib</a>.  The
  * "class data" is represented by the structs geod_geodesic and
  * geod_geodesicline and these are passed as initial arguments to the member
  * functions.  (But note that the PolygonArea class has been replaced by a

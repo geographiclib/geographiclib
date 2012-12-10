@@ -1,6 +1,7 @@
-/* A simple test of the C library for geodesics.  This solves the "inverse
- * geodesic problem" by reading in lines with lat1, lon1, lat2, lon2 and
- * printing out lines with azi1, azi2, s12 (for the WGS84 ellipsoid). */
+/**
+ * @file inverse.c
+ * @brief A test program for geod_inverse()
+ **********************************************************************/
 
 #include <stdio.h>
 #include "geodesic.h"
@@ -9,6 +10,13 @@
 /* Squelch warnings about scanf */
 #  pragma warning (disable: 4996)
 #endif
+
+/**
+ * A simple program to solve the inverse geodesic problem.
+ *
+ * This program reads in lines with lat1, lon1, lat2, lon2 and prints out lines
+ * with azi1, azi2, s12 (for the WGS84 ellipsoid).
+ **********************************************************************/
 
 int main() {
   double a = 6378137, f = 1/298.257223563; /* WGS84 */

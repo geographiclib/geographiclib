@@ -1003,17 +1003,33 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page other Other interfaces (Javascript, Python, Matlab, C, Fortran)
+\page other Other interfaces (C, Fortran, Javascript, Python, Matlab)
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 </center>
 
 Interfaces to subsets of %GeographicLib are available in other languages
+- \ref c-fortran
 - \ref javascript.
 - \ref python.
 - \ref matlab.
-- \ref c-fortran
+
+\section c-fortran C and Fortran
+
+The directories <code>legacy/C</code> and <code>legacy/Fortran</code>
+contain implementations of GeographicLib::Geodesic,
+GeographicLib::GeodesicLine, and GeographicLib::PolygonArea in C and
+Fortran respectively.  These are intended for use in old codes written
+in these languages and should work any reasonably modern compiler.
+These implementations are entirely self-contained and do not depend on
+the rest of %GeographicLib.  Sample main programs to solve the direct
+and inverse geodesic problems and to compute polygonal areas are
+provided.
+
+For documentation, see
+ - <a href="C/index.html">C library for geodesics</a>,
+ - <a href="Fortran/index.html">Fortran library for geodesics</a>.
 
 \section javascript Javascript interface
 
@@ -1220,23 +1236,6 @@ coordinates to MGRS can easily be written with Matlab code.
 Note that geoidheight, when compiled with Visual Studio 2008 causes
 Matlab to crash.  (The problem does not occur with Visual Studio 2005 or
 Visual Studio 2010.)
-
-\section c-fortran C and Fortran
-
-The directories <code>legacy/C</code> and <code>legacy/Fortran</code>
-contain implementations of GeographicLib::Geodesic and
-GeographicLib::GeodesicLine in C and Fortran respectively.  These are
-intended for use in old codes written in these languages and should work
-any reasonably modern compiler.  These implementations are entirely
-self-contained and do not depend on the rest of %GeographicLib.
-Documentation of the interfaces are given at the beginning of
-<code>legacy/C/geodesic.h</code> and
-<code>legacy/Fortran/geodesic.for</code>.  Sample main programs which
-solve the direct and inverse geodesic problems are provided.
-
-For documentation, see
- - <a href="C/index.html">C library</a>,
- - <a href="Fortran/index.html">Fortran library</a>.
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.

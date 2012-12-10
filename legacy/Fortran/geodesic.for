@@ -97,17 +97,17 @@
 *!   azi2] + [\e d, \e d], for arbitrary \e d.
 *!
 *! These routines are a simple transcription of the corresponding C++
-*! classes in %GeographicLib, which is available at
-*! http://geographiclib.sf.net.  Because of the limitations of Fortran
-*! 77, the classes have been replaced by simple subroutines with no
-*! attempt to save "state" across subroutine calls.  Most of the
-*! internal comments have been retained.  However, in the process of
-*! transcription some documentation has been lost and the documentation
-*! for the C++ classes, GeographicLib::Geodesic,
-*! GeographicLib::GeodesicLine, and GeographicLib::PolygonArea, should
-*! be consulted.  The C++ code remains the "reference implementation".
-*! Think twice about restructuring the internals of the C code since
-*! this may make porting fixes from the C++ code more difficult.
+*! classes in <a href="http://geographiclib.sf.net"> GeographicLib</a>.
+*! Because of the limitations of Fortran 77, the classes have been
+*! replaced by simple subroutines with no attempt to save "state" across
+*! subroutine calls.  Most of the internal comments have been retained.
+*! However, in the process of transcription some documentation has been
+*! lost and the documentation for the C++ classes,
+*! GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
+*! GeographicLib::PolygonArea, should be consulted.  The C++ code
+*! remains the "reference implementation".  Think twice about
+*! restructuring the internals of the C code since this may make porting
+*! fixes from the C++ code more difficult.
 *!
 *! Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
 *! under the MIT/X11 License.  For more information, see

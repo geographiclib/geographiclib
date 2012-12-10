@@ -1,5 +1,5 @@
 *> @file geodesic.inc
-*! @brief The interface file for the geodesic library
+*! @brief The interface file for the geodesic routines in Fortran
 *!
 *! Optinally insert \code
 *! include 'geodesic.inc' \endcode
