@@ -98,7 +98,7 @@ LEGACYFILES = \
 	$(top_srcdir)/legacy/Fortran/geodesic.inc \
 	$(top_srcdir)/legacy/Fortran/geoddirect.for \
 	$(top_srcdir)/legacy/Fortran/geodinverse.for \
-	$(top_srcdir)/legacy/Fortran/planimter.for
+	$(top_srcdir)/legacy/Fortran/planimeter.for
 
 doc: html/index.html
 

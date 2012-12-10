@@ -16,12 +16,12 @@ int main() {
   double a = 6378137, f = 1/298.257223563; /* WGS84 */
   double lats[MAXPTS], lons[MAXPTS], A, P;
   int n = 0;
-  struct Geodesic g;
+  struct geod_geodesic g;
 
   while (n < MAXPTS && scanf("%lf %lf\n", &lats[n], &lons[n]) == 2)
     ++n;
-  GeodesicInit(&g, a, f);
-  PolygonArea(&g, lats, lons, n, &A, &P);
+  geod_init(&g, a, f);
+  geod_polygonarea(&g, lats, lons, n, &A, &P);
   printf("%d %.8f %.2f\n", n, P, A);
   return 0;
 }

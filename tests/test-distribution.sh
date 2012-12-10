@@ -18,6 +18,7 @@
 #
 # gita - check out from git, create package with cmake
 # gitb - check out from git, create package with autoconf
+# gitr - new release branch
 # rela - release package, build with make
 # relb - release package, build with autoconf
 # relc - release package, build with cmake
@@ -119,26 +120,6 @@ tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
     done
 )
 rm -rf GeographicLib-$VERSION
-mkdir -p $TEMP/geographiclib-matlab/private
-cp -p $TEMP/gitr/geographiclib/matlab/geod{doc,reckon,distance,area}.m \
-    $TEMP/geographiclib-matlab/
-cp -p $TEMP/gitr/geographiclib/matlab/defaultellipsoid.m \
-    $TEMP/gitr/geographiclib/matlab/ecc2flat.m \
-    $TEMP/gitr/geographiclib/matlab/flat2ecc.m \
-    $TEMP/geographiclib-matlab/
-cp -p $TEMP/gitr/geographiclib/matlab/private/*.m \
-    $TEMP/geographiclib-matlab/private/
-cd $TEMP
-rm -f $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip
-zip $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip \
-    geographiclib-matlab/*.m geographiclib-matlab/private/*.m
-mkdir -p $TEMP/proj/geographiclib-matlab
-cp -p $TEMP/gitr/geographiclib/matlab/{geodproj,*_{fwd,inv}}.m \
-    $TEMP/proj/geographiclib-matlab
-cd $TEMP/proj
-rm -f $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip
-zip $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip \
-    geographiclib-matlab/*.m
 
 cd $TEMP/rela/GeographicLib-$VERSION
 make -j10
@@ -173,6 +154,43 @@ cd ../BUILD-system
 cmake -D MATLAB_COMPILER=mkoctfile ..
 make -j10
 make -j10 matlab-all
+
+mkdir -p $TEMP/geographiclib-matlab/private
+cd $TEMP/instc/libexec/GeographicLib/matlab
+cp -p geod{doc,reckon,distance,area}.m \
+    defaultellipsoid.m ecc2flat.m flat2ecc.m \
+    $TEMP/geographiclib-matlab/
+cp -p private/*.m $TEMP/geographiclib-matlab/private/
+cd $TEMP
+rm -f $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip
+zip $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip \
+    geographiclib-matlab/*.m geographiclib-matlab/private/*.m
+mkdir -p $TEMP/proj/geographiclib-matlab
+cd $TEMP/instc/libexec/GeographicLib/matlab
+cp -p {geodproj,*_{fwd,inv}}.m $TEMP/proj/geographiclib-matlab
+cd $TEMP/proj
+rm -f $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip
+zip $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip \
+    geographiclib-matlab/*.m
+
+cd $TEMP
+cat > tester.py <<EOF
+import sys
+sys.path.append("$TEMP/instc/lib/python/site-packages")
+from geographiclib.geodesic import Geodesic
+print(Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50))
+# The geodesic direct problem
+print(Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3))
+# How to obtain several points along a geodesic
+line = Geodesic.WGS84.Line(40.6, -73.8, 45)
+print(line.Position( 5000e3))
+print(line.Position(10000e3))
+# Computing the area of a geodesic polygon
+def p(lat,lon): return {'lat': lat, 'lon': lon}
+
+print(Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)]))
+EOF
+python tester.py
 
 cd $TEMP/instc
 find . -type f | sort -u > ../files.c

@@ -13,11 +13,11 @@
 int main() {
   double a = 6378137, f = 1/298.257223563; /* WGS84 */
   double lat1, lon1, azi1, lat2, lon2, azi2, s12;
-  struct Geodesic g;
+  struct geod_geodesic g;
 
-  GeodesicInit(&g, a, f);
+  geod_init(&g, a, f);
   while (scanf("%lf %lf %lf %lf\n", &lat1, &lon1, &azi1, &s12) == 4) {
-    Direct(&g, lat1, lon1, azi1, s12, &lat2, &lon2, &azi2);
+    geod_direct(&g, lat1, lon1, azi1, s12, &lat2, &lon2, &azi2);
     printf("%.15f %.15f %.15f\n", lat2, lon2, azi2);
   }
   return 0;
