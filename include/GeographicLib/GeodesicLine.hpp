@@ -33,9 +33,9 @@ namespace GeographicLib {
    * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
    * details.  The algorithms used by this class are based on series expansions
    * using the flattening \e f as a small parameter.  These only accurate for
-   * |\e f| &lt; 0.02; however reasonably accurate results will be obtained for
-   * |\e f| &lt; 0.2.  For very eccentric ellipsoids, use GeodesicLineExact
-   * instead.
+   * |<i>f</i>| &lt; 0.02; however reasonably accurate results will be obtained
+   * for |<i>f</i>| &lt; 0.2.  For very eccentric ellipsoids, use
+   * GeodesicLineExact instead.
    *
    * The algorithms are described in
    * - C. F. F. Karney,

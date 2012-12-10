@@ -20,11 +20,8 @@ function [lat, lon, gam, k] = utm_inv(zone, northp, x, y)
 %   This implementation for the UTM projection is based on the series
 %   method described in
 %
-%     C. F. F. Karney,
-%     Transverse Mercator with an accuracy of a few nanometers,
-%     J. Geodesy 85(8), 475-485 (Aug. 2011);
-%     http://dx.doi.org/10.1007/s00190-011-0445-3
-%     Preprint: http://arxiv.org/abs/1002.1417
+%     C. F. F. Karney, Transverse Mercator with an accuracy of a few
+%     nanometers, J. Geodesy 85(8), 475-485 (Aug. 2011);
 %     Addenda: http://geographiclib.sf.net/tm-addenda.html
 %
 %   This extends the series given by Krueger (1912) to sixth order in the

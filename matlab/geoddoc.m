@@ -5,10 +5,8 @@ function geoddoc
 %   GEODAREA which solve various problems involving geodesics on the
 %   surface of an ellipsoid of revolution.  These are based on the paper
 %
-%     C. F. F. Karney,
-%     Algorithms for geodesics,
-%     J. Geodesy (2012);
-%     http://dx.doi.org/10.1007/s00190-012-0578-z
+%     C. F. F. Karney, Algorithms for geodesics,
+%     J. Geodesy (2012); http://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
 %   which, in turn, is based on the classic solution of the geodesic

@@ -14,7 +14,7 @@
  * .
  * The principal advantages of these algorithms over previous ones (e.g.,
  * Vincenty, 1975) are
- * - accurate to round off for |\e f| < 1/50;
+ * - accurate to round off for |<i>f</i>| < 1/50;
  * - the solution of the inverse problem is always found;
  * - differential and integral properties of geodesics are computed.
  *
@@ -25,16 +25,18 @@
  *
  * Traditionally two geodesic problems are considered:
  * - the direct problem -- given \e lat1, \e lon1, \e s12, and \e azi1,
- *   determine \e lat2, \e lon2, and \e azi2.
- * - the inverse problem -- given \e lat1, \e lon1, \e lat2, \e lon2,
- *   determine \e s12, \e azi1, and \e azi2.
+ *   determine \e lat2, \e lon2, and \e azi2.  This is solved by the function
+ *   geod_direct().
+ * - the inverse problem -- given \e lat1, \e lon1, \e lat2, \e lon2, determine
+ *   \e s12, \e azi1, and \e azi2.  This is solved by the function
+ *   geod_direct().
  *
- * The ellipsoid is specified by its equatorial radius \e a (typically
- * in meters) and flattening \e f.  The routines are accurate to round
- * off with double precision arithmetic provided that |\e f| < 1/50; for
- * the WGS84 ellipsoid, the errors are less than 15 nanometers.
- * (Reasonably accurate results are obtained for |\e f| < 1/5.)  For a
- * prolate ellipsoid, specify \e f < 0.
+ * The ellipsoid is specified by its equatorial radius \e a (typically in
+ * meters) and flattening \e f.  The routines are accurate to round off with
+ * double precision arithmetic provided that |<i>f</i>| < 1/50; for the WGS84
+ * ellipsoid, the errors are less than 15 nanometers.  (Reasonably accurate
+ * results are obtained for |<i>f</i>| < 1/5.)  For a prolate ellipsoid,
+ * specify \e f < 0.
  *
  * The routines also calculate several other quantities of interest
  * - \e S12 is the area between the geodesic from point 1 to point 2 and the
@@ -95,17 +97,19 @@
  *   azi2] + [\e d, \e d], for arbitrary \e d.
  *
  * These routines are a simple transcription of the corresponding C++ classes
- * in GeographicLib, which is available at http://geographiclib.sf.net.  The
+ * in %GeographicLib, which is available at http://geographiclib.sf.net.  The
  * "class data" is represented by the structs geod_geodesic and
  * geod_geodesicline and these are passed as initial arguments to the member
- * functions.  (But note that the geod_polygonarea class has been replaced by
- * the simple function interface and the area computation does use the accurate
+ * functions.  (But note that the PolygonArea class has been replaced by a
+ * simple function interface and the area computation does use the accurate
  * summing providing by the Accumulator class.)  Most of the internal comments
  * have been retained.  However, in the process of transcription some
- * documentation has been lost and the documentation for the C++ code should be
- * consulted.  The C++ code remains the "reference implementation".  Think
- * twice about restructuring the internals of the C code since this may make
- * porting fixes from the C++ code more difficult.
+ * documentation has been lost and the documentation for the C++ classes,
+ * GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
+ * GeographicLib::PolygonArea, should be consulted.  The C++ code remains the
+ * "reference implementation".  Think twice about restructuring the internals
+ * of the C code since this may make porting fixes from the C++ code more
+ * difficult.
  *
  * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
@@ -300,8 +304,8 @@ extern "C" {
    * plat2, etc., may be replaced by 0, if you do not need some quantities
    * computed.
    *
-   * Example, computer way points between JFK and Singapore Changi Airport
-   * using geod_direct():
+   * Example, compute way points between JFK and Singapore Changi Airport
+   * the "obvious" way using geod_direct():
    @code
    struct geod_geodesic g;
    double s12, azi1, lat[101],lon[101];
@@ -407,41 +411,39 @@ extern "C" {
    * The general position function.
    *
    * @param[in] l the geod_geodesicline object specifying the geodesic line.
-   * @param[in] arcmode flag determining the meaning of the second
-   *   parameter; if arcmode is 0, then the geod_geodesicline object must have
-   *   been constructed with \e caps |= GEOD_DISTANCE_IN.
+   * @param[in] arcmode flag determining the meaning of the second parameter;
+   *   if arcmode is 0, then \e l must have been initialized with \e caps |=
+   *   GEOD_DISTANCE_IN.
    * @param[in] s12_a12 if \e arcmode is 0, this is the distance between
    *   point 1 and point 2 (meters); otherwise it is the arc length between
    *   point 1 and point 2 (degrees); it can be negative.
    * @param[out] plat2 pointer to the latitude of point 2 (degrees).
    * @param[out] plon2 pointer to the longitude of point 2 (degrees); requires
-   *   that the geod_geodesicline object was constructed with \e caps |=
-   *   GEOD_LONGITUDE.
+   *   that \e l was initialized with \e caps |= GEOD_LONGITUDE.
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
    * @param[out] ps12 pointer to the distance between point 1 and point 2
-   *   (meters); requires that the geod_geodesicline object was constructed
-   *   with \e caps |= GEOD_DISTANCE.
+   *   (meters); requires that \e l was initialized with \e caps |=
+   *   GEOD_DISTANCE.
    * @param[out] pm12 pointer to the reduced length of geodesic (meters);
-   *   requires that the geod_geodesicline object was constructed with \e caps
-   *   |= GEOD_REDUCEDLENGTH.
+   *   requires that \e l was initialized with \e caps |= GEOD_REDUCEDLENGTH.
    * @param[out] pM12 pointer to the geodesic scale of point 2 relative to
-   *   point 1 (dimensionless); requires that the geod_geodesicline object was
-   *   constructed with \e caps |= GEOD_GEODESICSCALE.
+   *   point 1 (dimensionless); requires that \e l was initialized with \e caps
+   *   |= GEOD_GEODESICSCALE.
    * @param[out] pM21 pointer to the geodesic scale of point 1 relative to
-   *   point 2 (dimensionless); requires that the geod_geodesicline object was
-   *   constructed with \e caps |= GEOD_GEODESICSCALE.
+   *   point 2 (dimensionless); requires that \e l was initialized with \e caps
+   *   |= GEOD_GEODESICSCALE.
    * @param[out] pS12 pointer to the area under the geodesic
-   *   (meters<sup>2</sup>); requires that the geod_geodesicline object was
-   *   constructed with \e caps |= GEOD_AREA.
+   *   (meters<sup>2</sup>); requires that \e l was initialized with \e caps |=
+   *   GEOD_AREA.
+
    * @return \e a12 arc length of between point 1 and point 2 (degrees).
    *
    * \e l must have been initialized with a call to geod_lineinit() with \e
    * caps |= GEOD_DISTANCE_IN.  The values of \e lon2 and \e azi2 returned are
    * in the range [&minus;180&deg;, 180&deg;).  Any of the "return" arguments
    * plat2, etc., may be replaced by 0, if you do not need some quantities
-   * computed.  Requesting a value which the geod_geodesicline object is not
-   * capable of computing is not an error; the corresponding argument will not
-   * be altered.
+   * computed.  Requesting a value which \e l is not capable of computing is
+   * not an error; the corresponding argument will not be altered.
    *
    * Example, computer way points between JFK and Singapore Changi Airport
    * using geod_genposition().  In this example, the points are evenly space in

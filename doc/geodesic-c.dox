@@ -16,10 +16,14 @@
 
 \section abstract Abstract
 
-This is a C implementation of the geodesic algorithms from
-<a href="http://geographiclib.sf.net">GeographicLib</a>.  This is a
-self-contained library which make it easy to do geodesic computations
-for an ellipsoid of revolution in a C program.
+This is a C implementation of the geodesic algorithms from <a
+href="http://geographiclib.sf.net">GeographicLib</a>.  This is a
+self-contained library (requiring only the standard C math library)
+which makes it easy to do geodesic computations for an ellipsoid of
+revolution in a C program.  It uses ANSI C as described in
+B. W. Kernigan and D. M. Ritchie, The C Programming Language, 2nd
+Ed. (Prentice Hall, 1988), and so should compile correctly with just
+about any C compiler.
 
 \section download Downloading the source
 
@@ -31,11 +35,16 @@ The C library is part of %GeographicLib which available for download at
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the C library can be found in GeographicLib-1.28/legacy/C.
-This consists of two files geodesic.c and geodesic.h.
+The library consists of two files geodesic.c and geodesic.h.
+
+\section doc Library documentation
+
+The interface to the library is documented via doxygen in the header
+file.  To access this, see geodesic.h.
 
 \section samples Sample programs
 
-Also included are 3 small test programs are provided:
+Also included are 3 small test programs:
  - direct.c is a simple command line utility for solving the
    direct geodesic problem;
  - inverse.c is a simple command line utility for solving the
@@ -43,10 +52,10 @@ Also included are 3 small test programs are provided:
  - planimeter.c is a simple command line utility for computing the
    area of a geodesic polygon given its vertices.
  .
-Here, for example, is direct.c
-\include direct.c
+Here, for example, is inverse.c
+\include inverse.c
 To compile and link this, you would typically run \verbatim
-cc -o direct direct.c geodesic.h -lm \endverbatim
+cc -o inverse inverse.c geodesic.h -lm \endverbatim
 These sample programs can also be build with the supplied cmake file,
 CMakeLists.txt.
 
@@ -58,10 +67,6 @@ CMakeLists.txt.
 - Include calls to the geodesic routines in your code.  The interface to
   the library is documented in geodesic.h.
 - Compile and link as described above.
-
-\section doc Library documentation
-
-See geodesic.h.
 
 \section external External links
 
@@ -79,9 +84,9 @@ See geodesic.h.
 - <a href="http://geographiclib.sf.net">The GeographicLib web site</a>.
 - <a href="../index.html">The C++ library</a>.
 - Documentation on the C++ classes: GeographicLib::Geodesic,
-  GeographicLib::GeodesicLine, GeographicLib::GeodesicExact,
-  GeographicLib::GeodesicLineExact.
-- \ref geodesic
+  GeographicLib::GeodesicLine, GeographicLib::PolygonArea.
+- The section in the %GeographicLib documentation on geodesics: \ref
+  geodesic.
 - <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">
   An online geodesic bibliography</a>.
 **********************************************************************/

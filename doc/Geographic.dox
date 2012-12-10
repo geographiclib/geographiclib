@@ -3713,7 +3713,7 @@ of the git repository for %GeographicLib.
        geodarea.m;
      - add C and Fortran implementations;
      - improve the solution of the direct problem so that the series
-       solution is accurate to round off for |\e f| < 1/50;
+       solution is accurate to round off for |<i>f</i>| &lt; 1/50;
      - tighten up the convergence criteria for solution of the inverse
        problem;
      - no longer signal failures of convergence with NaNs (a slightly
@@ -3725,8 +3725,8 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.26">Version 1.26</a>
    (released 2012-10-22)
    - Replace the series used for geodesic areas by one with better
-     convergence (this only makes an appreciable difference if |\e f|
-     &gt; 1/150).
+     convergence (this only makes an appreciable difference if
+     |<i>f</i>| &gt; 1/150).
 
  - <a href="http://geographiclib.sf.net/1.25">Version 1.25</a>
    (released 2012-10-16)

@@ -16,31 +16,34 @@
 
 \section abstract Abstract
 
-This is a Fortran implementation of the geodesic algorithms given in
- - C. F. F. Karney,
-   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
-   Algorithms for geodesics</a>,
-   J. Geodesy, 2012;
-   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
-   10.1007/s00190-012-0578-z</a>;
-   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
-   geod-addenda.html</a>.
- .
+This is a Fortran implementation of the geodesic algorithms from <a
+href="http://geographiclib.sf.net">GeographicLib</a>.  This is a
+self-contained library which makes it easy to do geodesic computations
+for an ellipsoid of revolution in a Fortran program.  It is written in
+Fortran 77 (avoiding features which are now deprecated) and should
+compile correctly with just about any Fortran compiler.
 
-The library consists of 2 files
- - geodesic.for contains 3 subroutines:
-   - direct() for solving the direct geodesic problem,
-   - invers() for solving the inverse geodesic problem,
-   - area() for computing the area of a geodesic polygon.
-   .
-   This is written is pure Fortran 77 (which avoids now deprecated
-   features of that standand) and should compile correctly with just
-   about any Fortran compiler.
- - geodesic.inc contains the interface definition for geodesic.for.
-   Optionally you can include this in subroutines which invoke the
-   geodesic routines.
- .
-In addition, 3 small test programs are provided:
+\section download Downloading the source
+
+The Fortran library is part of %GeographicLib which available for download at
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.28.tar.gz">
+  GeographicLib-1.28.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.28.zip">
+  GeographicLib-1.28.zip</a>
+.
+as either a compressed tar file (tar.gz) or a zip file.  After unpacking
+the source, the Fortran library can be found in
+GeographicLib-1.28/legacy/Fortran.  The library consists of the file
+geodesic.for.
+
+\section doc Library documentation
+
+The interface to the library is documented via doxygen in the source
+file.  To access this, see geodesic.for.
+
+\section samples Sample programs
+
+Also included are 3 small test programs:
  - geoddirect.for is a simple command line utility for solving the
    direct geodesic problem;
  - geodinverse.for is a simple command line utility for solving the
@@ -48,12 +51,43 @@ In addition, 3 small test programs are provided:
  - planimeter.for is a simple command line utility for computing the
    area of a geodesic polygon given its vertices.
  .
-Here, for example, is geoddirect.for
-\include geoddirect.for
+Here, for example, is geodinverse.for
+\include geodinverse.for
 To compile and link this, you would typically run \verbatim
-fortran -o geoddirect geoddirect.for geodesic.for \endverbatim
+f77 -o geodinverse goedinverse.c geodesic.for \endverbatim
+These sample programs can also be build with the supplied cmake file,
+CMakeLists.txt.
 
-For more information on geodesics, see \ref geodesic.
-geodesic.for direct direct() inverse inverse() garea() planimeter.for
-<a href="../index.html">GeographicLib</a>
+\section library Using the library
+
+- Optionall put @verbatim
+  include "geodesic.inc" @endverbatim
+  in declaration section of your subroutines.
+- Include calls to the geodesic routines in your code.  The interface to
+  the library is documented in geodesic.for.
+- Compile and link as described above.
+
+\section external External links
+
+- These algorithms are derived in C. F. F. Karney,
+  <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+  Algorithms for geodesics</a>,
+  J. Geodesy, 2012 (<a href="http://geographiclib.sf.net/geod-addenda.html">
+  addenda</a>).
+- A longer paper on geodesics: C. F. F. Karney,
+   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
+   on an ellipsoid of revolution</a>,
+   Feb. 2011
+   (<a href="http://geographiclib.sf.net/geod-addenda.html#geod-errata">
+   errata</a>).
+- <a href="http://geographiclib.sf.net">The GeographicLib web site</a>.
+- <a href="../index.html">The C++ library</a>.
+- Documentation on the C++ classes: GeographicLib::Geodesic,
+  GeographicLib::GeodesicLine, GeographicLib::PolygonArea.
+- The section in the %GeographicLib documentation on geodesics: \ref
+  geodesic.
+- <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">
+  An online geodesic bibliography</a>.
+**********************************************************************/
+
 **********************************************************************/

@@ -33,10 +33,8 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
 %   point.  In addition all geodesics are pass close to the center point
 %   are very nearly straight.  The projection is derived in Section 8 of
 %
-%     C. F. F. Karney,
-%     Algorithms for geodesics,
-%     J. Geodesy (2012);
-%     http://dx.doi.org/10.1007/s00190-012-0578-z
+%     C. F. F. Karney, Algorithms for geodesics,
+%     J. Geodesy (2012); http://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
 %   which also includes methods for solving the "intersection" and
