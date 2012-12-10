@@ -917,6 +917,11 @@
 *! \e lats should be in the range [&minus;90&deg;, 90&deg;]; \e lons
 *! should be in the range [&minus;540&deg;, 540&deg;).
 *!
+*! Only simple polygons (which are not self-intersecting) are allowed.
+*! There's no need to "close" the polygon by repeating the first vertex.
+*! The area returned is signed with counter-clockwise traversal being
+*! treated as positive.
+*!
 *! This is a transcription of the C++ class GeographicLib::PolygonArea.
 
       subroutine area(a, f, lats, lons, n, AA, PP)
