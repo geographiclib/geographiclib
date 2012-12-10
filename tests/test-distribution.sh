@@ -47,6 +47,7 @@ DEVELSOURCE=/u/geographiclib
 GITSOURCE=file://$DEVELSOURCE
 WEBDIST=/home/ckarney/web/geographic-web
 WINDOWSBUILD=/u/temp
+NUMCPUS=4
 
 test -d $TEMP || mkdir $TEMP
 rm -rf $TEMP/*
@@ -121,7 +122,7 @@ tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
 rm -rf GeographicLib-$VERSION
 
 cd $TEMP/rela/GeographicLib-$VERSION
-make -j10
+make -j$NUMCPUS
 make PREFIX=$TEMP/insta install
 cd $TEMP/insta
 find . -type f | sort -u > ../files.a
@@ -130,7 +131,7 @@ cd $TEMP/relb/GeographicLib-$VERSION
 mkdir BUILD-config
 cd BUILD-config
 ../configure --prefix=$TEMP/instb
-make -j10
+make -j$NUMCPUS
 make install
 mv $TEMP/instb/share/doc/{geographiclib,GeographicLib}
 cd $TEMP/instb
@@ -140,19 +141,19 @@ cd $TEMP/relc/GeographicLib-$VERSION
 mkdir BUILD
 cd BUILD
 cmake -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
-make -j10
+make -j$NUMCPUS
 make install
 mkdir ../BUILD-matlab
 cd ../BUILD-matlab
 cmake -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
-make -j10
-make -j10 matlab-all
+make -j$NUMCPUS
+make -j$NUMCPUS matlab-all
 make install
 mkdir ../BUILD-system
 cd ../BUILD-system
 cmake -D MATLAB_COMPILER=mkoctfile ..
-make -j10
-make -j10 matlab-all
+make -j$NUMCPUS
+make -j$NUMCPUS matlab-all
 
 mkdir -p $TEMP/geographiclib-matlab/private
 cd $TEMP/instc/libexec/GeographicLib/matlab
@@ -193,6 +194,15 @@ print(Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)]))
 EOF
 python tester.py
 
+cp -pr $TEMP/relc/GeographicLib-$VERSION/legacy $TEMP/
+for l in C Fortran; do
+    (
+      mkdir $TEMP/legacy/$l/BUILD
+      cd $TEMP/legacy/$l/BUILD
+      cmake ..
+      make -j$NUMCPUS
+    )
+done
 cd $TEMP/instc
 find . -type f | sort -u > ../files.c
 cd $TEMP/inste
