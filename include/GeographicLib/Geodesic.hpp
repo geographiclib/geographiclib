@@ -128,11 +128,12 @@ namespace GeographicLib {
    * WGS84 ellipsoid.  See Sec. 9 of
    * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
    * details.  The algorithms used by this class are based on series expansions
-   * using the flattening \e f as a small parameter.  These only accurate for
-   * |<i>f</i>| &lt; 0.02; however reasonably accurate results will be obtained
-   * for |<i>f</i>| &lt; 0.2.  Here is a table of the approximate maximum error
-   * (expressed as a distance) for an ellipsoid with the same major radius as
-   * the WGS84 ellipsoid and different values of the flattening.<pre>
+   * using the flattening \e f as a small parameter.  These are only accurate
+   * for |<i>f</i>| &lt; 0.02; however reasonably accurate results will be
+   * obtained for |<i>f</i>| &lt; 0.2.  Here is a table of the approximate
+   * maximum error (expressed as a distance) for an ellipsoid with the same
+   * major radius as the WGS84 ellipsoid and different values of the
+   * flattening.<pre>
    *     |f|      error
    *     0.01     25 nm
    *     0.02     30 nm

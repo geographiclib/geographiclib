@@ -14,7 +14,7 @@
 *! .
 *! The principal advantages of these algorithms over previous ones (e.g.,
 *! Vincenty, 1975) are
-*! - accurate to round off for |<i>f</i>| < 1/50;
+*! - accurate to round off for |<i>f</i>| &lt; 1/50;
 *! - the solution of the inverse problem is always found;
 *! - differential and integral properties of geodesics are computed.
 *!
@@ -33,10 +33,10 @@
 *!
 *! The ellipsoid is specified by its equatorial radius \e a (typically
 *! in meters) and flattening \e f.  The routines are accurate to round
-*! off with double precision arithmetic provided that |<i>f</i>| < 1/50;
-*! for the WGS84 ellipsoid, the errors are less than 15 nanometers.
-*! (Reasonably accurate results are obtained for |<i>f</i>| < 1/5.)  For
-*! a prolate ellipsoid, specify \e f < 0.
+*! off with double precision arithmetic provided that |<i>f</i>| &lt;
+*! 1/50; for the WGS84 ellipsoid, the errors are less than 15
+*! nanometers.  (Reasonably accurate results are obtained for |<i>f</i>|
+*! &lt; 1/5.)  For a prolate ellipsoid, specify \e f &lt; 0.
 *!
 *! The routines also calculate several other quantities of interest
 *! - \e SS12 is the area between the geodesic from point 1 to point 2

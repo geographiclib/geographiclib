@@ -49,11 +49,8 @@ function geodproj
 %   by the condition of conformality.  The implementation used in this
 %   package is based on the series method described in
 %
-%     C. F. F. Karney,
-%     Transverse Mercator with an accuracy of a few nanometers,
-%     J. Geodesy 85(8), 475-485 (Aug. 2011);
-%     http://dx.doi.org/10.1007/s00190-011-0445-3
-%     Preprint: http://arxiv.org/abs/1002.1417
+%     C. F. F. Karney, Transverse Mercator with an accuracy of a few
+%     nanometers, J. Geodesy 85(8), 475-485 (Aug. 2011);
 %     Addenda: http://geographiclib.sf.net/tm-addenda.html
 %
 %   The ellipsoidal gnomonic projection is defined by
