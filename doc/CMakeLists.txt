@@ -30,9 +30,12 @@ endif ()
 file (MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html-stage)
 if (DOXYGEN_FOUND)
   configure_file (doxyfile.in doxyfile)
+  configure_file (doxyfile-c.in doxyfile-c)
+  configure_file (doxyfile-for.in doxyfile-for)
   file (GLOB SOURCES
     ../src/[A-Za-z]*.cpp ../include/GeographicLib/[A-Za-z]*.hpp
-    ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp)
+    ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp
+    ../legacy/C/*.[ch] ../legacy/Fortran/*.for ../legacy/Fortran/*.inc)
   file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac
     tmseries30.html geodseries30.html meridian-measures.png ../LICENSE.txt)
   file (COPY ${EXTRA_FILES} DESTINATION html-stage)
@@ -41,10 +44,13 @@ if (DOXYGEN_FOUND)
   add_dependencies (doc htmlman)
   add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/html/index.html
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxyfile
-      Geographic.dox ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
+      Geographic.dox geodesic-c.dox geodesic-for.dox
+      ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
     COMMAND ${CMAKE_COMMAND} -E remove_directory html
     COMMAND ${CMAKE_COMMAND} -E copy_directory html-stage html
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile > doxygen.log
+    COMMAND ${DOXYGEN_EXECUTABLE} doxyfile-c > doxygen-c.log
+    COMMAND ${DOXYGEN_EXECUTABLE} doxyfile-for > doxygen-for.log
     COMMENT "Generating html documentation tree")
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
     DESTINATION ${INSTALL_DOC_DIR})

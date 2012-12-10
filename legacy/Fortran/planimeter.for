@@ -1,18 +1,17 @@
-* A simple test of the C library for geodesics.  This computes the area
-* of a geodesic polygon by reading in up to 100 lines with the
-* coordinates (lat, lon) for each vertex, and printing out the number
-* of points, the perimeter, and the area (for the WGS84 ellipsoid).
+*> @file planimeter.for
+*! @brief A test program for area()
+
+*> A simple program to compute the area of a geodesic polygon.
+*!
+*! This program reads in up to 100 lines with lat, lon for each vertex
+*! of a polygon.  At the end of input, the program prints the number of
+*! vertices, the perimeter of the polygon and its area (for the WGS84
+*! ellipsoid).
 
       program garea
       implicit none
 
-      interface
-        subroutine area(a, f, lats, lons, n, S, P)
-        integer, intent(in) :: n
-        double precision, intent(in) :: a, f, lats(n), lons(n)
-        double precision, intent(out) :: S, P
-        end subroutine area
-      end interface
+      include 'geodesic.inc'
 
       integer maxpts
       parameter (maxpts = 100)
@@ -26,8 +25,8 @@
       n = 0
  10   continue
       if (n .ge. maxpts) go to 20
-      read(*, *, end=20, err=20) lats(n + 1), lons(n + 1)
-      n = n + 1
+      read(*, *, end=20, err=20) lats(n+1), lons(n+1)
+      n = n+1
       go to 10
  20   continue
       call area(a, f, lats, lons, n, S, P)

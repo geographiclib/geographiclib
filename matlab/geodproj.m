@@ -106,8 +106,11 @@ function geodproj
 %       abs(f) <= 1/50, approximately).  This condition holds for most
 %       applications in geodesy.
 %
-%   These routines are fully vectorized internally so that their speed is
-%   competitive with the compiled C++ code.
+%   These routines are fully vectorized so that their speed is competitive
+%   with the compiled C++ code.  These MATLAB versions are transcriptions
+%   of several C++ classes provided by GeographicLib which is available at
+%
+%     http://geographiclib.sf.net
 %
 %   The routines duplicate some of the functionality of the EQDAZIM,
 %   CASSINISTD, TRANMERC, and GNOMONIC projections in the the MATLAB

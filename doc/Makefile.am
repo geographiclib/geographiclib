@@ -88,6 +88,18 @@ MANPAGES = \
 	../man/Planimeter.1.html \
 	../man/TransverseMercatorProj.1.html
 
+LEGACYFILES = \
+	$(top_srcdir)/legacy/C/geodesic.c \
+	$(top_srcdir)/legacy/C/geodesic.h \
+	$(top_srcdir)/legacy/C/direct.c \
+	$(top_srcdir)/legacy/C/inverse.c \
+	$(top_srcdir)/legacy/C/planimeter.c \
+	$(top_srcdir)/legacy/Fortran/geodesic.for \
+	$(top_srcdir)/legacy/Fortran/geodesic.inc \
+	$(top_srcdir)/legacy/Fortran/geoddirect.for \
+	$(top_srcdir)/legacy/Fortran/geodinverse.for \
+	$(top_srcdir)/legacy/Fortran/planimter.for
+
 doc: html/index.html
 
 if HAVE_DOXYGEN
@@ -97,12 +109,20 @@ manpages: $(MANPAGES)
 	touch $@
 
 html/index.html: manpages doxyfile.in Geographic.dox \
-	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES)
+	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) \
+	doxyfile-c.in geodesic-c.dox doxyfile-for.in geodesic-for.dox \
+	$(LEGACYFILES)
 	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \
 	$(top_srcdir)/LICENSE.txt html/
 	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
 	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
 	$(srcdir)/doxyfile.in | $(DOXYGEN) -
+	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
+	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	$(srcdir)/doxyfile-c.in | $(DOXYGEN) -
+	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
+	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	$(srcdir)/doxyfile-for.in | $(DOXYGEN) -
 else
 html/index.html: index.html.in utilities.html.in
 	if test -d html; then rm -rf html/*; else mkdir html; fi

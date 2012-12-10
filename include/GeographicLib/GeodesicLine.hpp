@@ -190,9 +190,8 @@ namespace GeographicLib {
      * capabilities.
      *
      * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-     * fixed and writing \e lat1 = 90&deg; &minus; &epsilon; or
-     * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
-     * above.
+     * fixed and writing \e lat1 = &plusmn;(90&deg; &minus; &epsilon;) and
+     * taking the limit &epsilon; &rarr; 0+.
      **********************************************************************/
     GeodesicLine(const Geodesic& g, real lat1, real lon1, real azi1,
                  unsigned caps = ALL)
@@ -212,11 +211,11 @@ namespace GeographicLib {
     ///@{
 
     /**
-     * Compute the position of point 2 which is a distance \e s12 (meters)
-     * from point 1.
+     * Compute the position of point 2 which is a distance \e s12 (meters) from
+     * point 1.
      *
      * @param[in] s12 distance between point 1 and point 2 (meters); it can be
-     *   signed.
+     *   negative.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees); requires that the
      *   GeodesicLine object was constructed with \e caps |=
@@ -332,7 +331,7 @@ namespace GeographicLib {
      * from point 1.
      *
      * @param[in] a12 arc length between point 1 and point 2 (degrees); it can
-     *   be signed.
+     *   be negative.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees); requires that the
      *   GeodesicLine object was constructed with \e caps |=
@@ -459,7 +458,7 @@ namespace GeographicLib {
      *   been constructed with \e caps |= GeodesicLine::DISTANCE_IN.
      * @param[in] s12_a12 if \e arcmode is false, this is the distance between
      *   point 1 and point 2 (meters); otherwise it is the arc length between
-     *   point 1 and point 2 (degrees); it can be signed.
+     *   point 1 and point 2 (degrees); it can be negative.
      * @param[in] outmask a bitor'ed combination of GeodesicLine::mask values
      *   specifying which of the following parameters should be set.
      * @param[out] lat2 latitude of point 2 (degrees).

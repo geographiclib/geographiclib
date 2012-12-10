@@ -1,0 +1,55 @@
+// -*- text -*-
+/**
+ * \file geodesic-c.dox
+ * \brief Documentation for geodesic routines implemented in C
+ *
+ * Written by Charles Karney <charles@karney.com> and licensed under the
+ * MIT/X11 License.  For more information, see
+ * http://geographiclib.sourceforge.net/
+ **********************************************************************/
+
+/**
+\mainpage Geodesic routines implemented in C
+\author Charles F. F. Karney (charles@karney.com)
+\version 1.28
+\date 201y-mm-dd
+
+\section abstract Abstract
+
+This is a Fortran implementation of the geodesic algorithms given in
+ - C. F. F. Karney,
+   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   Algorithms for geodesics</a>,
+   J. Geodesy, 2012;
+   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   10.1007/s00190-012-0578-z</a>;
+   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+   geod-addenda.html</a>.
+ .
+
+The library consists of 2 files
+ - geodesic.h contains 3 subroutines:
+   - Direct() for solving the direct geodesic problem,
+   - Inverse() for solving the inverse geodesic problem,
+   - PolygonArea() for computing the area of a geodesic polygon.
+   .
+ - geodesic.c contains the corresponding code.  This is written is ANSI
+   C and should compile correctly with just about any C compiler.
+ .
+In addition, 3 small test programs are provided:
+ - direct.c is a simple command line utility for solving the
+   direct geodesic problem;
+ - inveres.c is a simple command line utility for solving the
+   inverse geodesic problem;
+ - planimeter.c is a simple command line utility for computing the
+   area of a geodesic polygon given its vertices.
+ .
+Here, for example, is direct.c
+\include direct.c
+To compile and link this, you would typically run \verbatim
+cc -o direct direct.c geodesic.h -lm \endverbatim
+
+For more information on geodesics, see \ref geodesic.
+geodesic.for direct direct() inverse inverse() garea() planimeter.for
+<a href="../index.html">GeographicLib</a>
+**********************************************************************/

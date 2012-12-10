@@ -1070,7 +1070,7 @@ path with, for example \verbatim
 (this will require root privileges).  Or else you can set the path
 within python using \code
 >>> import sys
->>> sys.path.append("/usr/local/lib/python/site-packages");
+>>> sys.path.append("/usr/local/lib/python/site-packages")
 \endcode
 
 An example of using this interface is \code
@@ -1233,6 +1233,10 @@ Documentation of the interfaces are given at the beginning of
 <code>legacy/C/geodesic.h</code> and
 <code>legacy/Fortran/geodesic.for</code>.  Sample main programs which
 solve the direct and inverse geodesic problems are provided.
+
+For documentation, see
+ - <a href="C/index.html">C library</a>,
+ - <a href="fortran/index.html">Fortran library</a>.
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -3699,7 +3703,8 @@ of the git repository for %GeographicLib.
        meridional geodesics;
      - add Matlab implementations of azimuthal equidistant,
        Cassini-Soldner, transverse Mercator, and gnomonic projections;
-     - remove unneeded special code for geodesics which start at a pole.
+     - remove unneeded special code for geodesics which start at a pole;
+     - add doxygen documentation for C and Fortran versions.
 
  - <a href="http://geographiclib.sf.net/1.27">Version 1.27</a>
    (released 2012-11-29)

@@ -1,3 +1,8 @@
+/**
+ * \file geodesic.c
+ * \brief Implementation for geodesic.c
+ **********************************************************************/
+
 /*
  * This is a C implementation of the geodesic algorithms described in
  *
@@ -17,6 +22,8 @@
  */
 
 #include "geodesic.h"
+
+/** @cond SKIP */
 #include <math.h>
 
 #define GEOGRAPHICLIB_GEODESIC_ORDER 6
@@ -213,6 +220,8 @@ static void C1pf(real eps, real c[]);
 static real A2m1f(real eps);
 static void C2f(real eps, real c[]);
 static int transit(real lon1, real lon2);
+
+/** @endcond */
 
 void GeodesicInit(struct Geodesic* g, real a, real f) {
   if (!init) Init();
@@ -910,6 +919,8 @@ void Inverse(const struct Geodesic* g,
   GenInverse(g, lat1, lon1, lat2, lon2, ps12, pazi1, pazi2, 0, 0, 0, 0);
 }
 
+/** @cond SKIP */
+
 real SinCosSeries(boolx sinp,
                   real sinx, real cosx,
                   const real c[], int n) {
@@ -1506,3 +1517,5 @@ void PolygonArea(const struct Geodesic* g, real lats[], real lons[], int n,
   if (pA) *pA = A;
   if (pP) *pP = P;
 }
+
+/** @endcond */

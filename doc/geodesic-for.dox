@@ -1,0 +1,59 @@
+// -*- text -*-
+/**
+ * \file geodesic-for.dox
+ * \brief Documentation for geodesic routines implemented in Fortran
+ *
+ * Written by Charles Karney <charles@karney.com> and licensed under the
+ * MIT/X11 License.  For more information, see
+ * http://geographiclib.sourceforge.net/
+ **********************************************************************/
+
+/**
+\mainpage Geodesic routines implemented in Fortran
+\author Charles F. F. Karney (charles@karney.com)
+\version 1.28
+\date 201y-mm-dd
+
+\section abstract Abstract
+
+This is a Fortran implementation of the geodesic algorithms given in
+ - C. F. F. Karney,
+   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   Algorithms for geodesics</a>,
+   J. Geodesy, 2012;
+   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   10.1007/s00190-012-0578-z</a>;
+   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+   geod-addenda.html</a>.
+ .
+
+The library consists of 2 files
+ - geodesic.for contains 3 subroutines:
+   - direct() for solving the direct geodesic problem,
+   - invers() for solving the inverse geodesic problem,
+   - area() for computing the area of a geodesic polygon.
+   .
+   This is written is pure Fortran 77 (which avoids now deprecated
+   features of that standand) and should compile correctly with just
+   about any Fortran compiler.
+ - geodesic.inc contains the interface definition for geodesic.for.
+   Optionally you can include this in subroutines which invoke the
+   geodesic routines.
+ .
+In addition, 3 small test programs are provided:
+ - geoddirect.for is a simple command line utility for solving the
+   direct geodesic problem;
+ - geodinverse.for is a simple command line utility for solving the
+   inverse geodesic problem;
+ - planimeter.for is a simple command line utility for computing the
+   area of a geodesic polygon given its vertices.
+ .
+Here, for example, is geoddirect.for
+\include geoddirect.for
+To compile and link this, you would typically run \verbatim
+fortran -o geoddirect geoddirect.for geodesic.for \endverbatim
+
+For more information on geodesics, see \ref geodesic.
+geodesic.for direct direct() inverse inverse() garea() planimeter.for
+<a href="../index.html">GeographicLib</a>
+**********************************************************************/
