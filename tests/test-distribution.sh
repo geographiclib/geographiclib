@@ -47,7 +47,6 @@ DEVELSOURCE=/u/geographiclib
 GITSOURCE=file://$DEVELSOURCE
 WEBDIST=/home/ckarney/web/geographic-web
 WINDOWSBUILD=/u/temp
-export PATH="$HOME/bin:$PATH"  # to pick up latest doxygen
 
 test -d $TEMP || mkdir $TEMP
 rm -rf $TEMP/*
