@@ -4,7 +4,20 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.26.
+The current version of the library is 1.28.
+
+Changes between 1.28 (released 2012-12-11) and 1.27 versions:
+
+   * Changes to geodesic routines:
+     + compute longitude difference exactly;
+     + hence fix BUG in area calculations for polygons with vertices very
+       close to the prime meridian;
+     + fix BUG is geoddistance.m where the value of m12 was wrong for
+       meridional geodesics;
+     + add Matlab implementations of the geodesic projections;
+     + remove unneeded special code for geodesics which start at a pole;
+     + include polygon area routine in C and Fortran implementations;
+     + add doxygen documentation for C and Fortran libraries.
 
 Changes between 1.27 (released 2012-11-29) and 1.26 versions:
 

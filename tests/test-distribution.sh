@@ -173,9 +173,11 @@ zip $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip \
     geographiclib-matlab/*.m
 
 cd $TEMP
+mkdir python-test
+cp -pr $TEMP/instc/lib/python/site-packages python-test
 cat > tester.py <<EOF
 import sys
-sys.path.append("$TEMP/instc/lib/python/site-packages")
+sys.path.append("$TEMP/python-test/site-packages")
 from geographiclib.geodesic import Geodesic
 print(Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50))
 # The geodesic direct problem

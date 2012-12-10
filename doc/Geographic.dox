@@ -12,7 +12,7 @@
 \mainpage Geographic library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.28
-\date 201y-mm-dd
+\date 2012-12-11
 
 \section abstract Abstract
 
@@ -3692,18 +3692,17 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.28">Version 1.28</a>
-   (released 201y-mm-dd)
+   (released 2012-12-11)
    - Changes to geodesic routines:
      - compute longitude difference exactly;
      - hence fix BUG in area calculations for polygons with vertices very
        close to the prime meridian;
-     - include polygon area routine in C and Fortran implementations;
      - fix BUG is geoddistance.m where the value of m12 was wrong for
        meridional geodesics;
-     - add Matlab implementations of azimuthal equidistant,
-       Cassini-Soldner, transverse Mercator, and gnomonic projections;
+     - add Matlab implementations of the geodesic projections;
      - remove unneeded special code for geodesics which start at a pole;
-     - add doxygen documentation for C and Fortran versions.
+     - include polygon area routine in C and Fortran implementations;
+     - add doxygen documentation for C and Fortran libraries.
 
  - <a href="http://geographiclib.sf.net/1.27">Version 1.27</a>
    (released 2012-11-29)
