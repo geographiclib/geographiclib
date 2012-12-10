@@ -139,8 +139,10 @@ maintainer-clean-local:
 install-doc: html/index.html
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html
 	$(INSTALL) -m 644 `dirname $<`/*.* $(DESTDIR)$(docdir)/html
+	$(INSTALL) -d $(DESTDIR)$(docdir)/html/C
 	$(INSTALL) -m 644 `dirname $<`/C/*.* $(DESTDIR)$(docdir)/html/C
-	$(INSTALL) -m 644 `dirname $<`/Fortran/*.* \
+	$(INSTALL) -d $(DESTDIR)$(docdir)/html/Fortran
+	$(INSTALL) -m 644 `dirname $<`/Fortran/*.*
 	$(DESTDIR)$(docdir)/html/Fortran
 	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts
 	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(DESTDIR)$(docdir)/scripts
