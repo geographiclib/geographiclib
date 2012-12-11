@@ -1,148 +1,168 @@
-* This is a Fortran implementation of the geodesic algorithms described
-* in
-*
-*   C. F. F. Karney,
-*   Algorithms for geodesics,
-*   J. Geodesy (2012);
-*   http://dx.doi.org/10.1007/s00190-012-0578-z
-*   Addenda: http://geographiclib.sf.net/geod-addenda.html
-*
-* The principal advantages of these algorithms over previous ones (e.g.,
-* Vincenty, 1975) are
-*   * accurate to round off for abs(f) < 1/50;
-*   * the solution of the inverse problem is always found;
-*   * differential and integral properties of geodesics are computed.
-*
-* The shortest path between two points on the ellipsoid at (lat1, lon1)
-* and (lat2, lon2) is called the geodesic.  Its length is s12 and the
-* geodesic from point 1 to point 2 has forward azimuths azi1 and azi2 at
-* the two end points.
-*
-* Traditionally two geodesic problems are considered:
-*   * the direct problem -- given lat1, lon1, s12, and azi1, determine
-*     lat2, lon2, and azi2.  This is solved by the subroutine direct.
-*   * the inverse problem -- given lat1, lon1, lat2, lon2, determine
-*     s12, azi1, and azi2.  This is solved by the subroutine invers.
-*
-* The calling sequence for direct and invers is specified by the
-* interface block
-*
-*       interface
-*         subroutine direct(a, f, lat1, lon1, azi1, s12a12, arcmod,
-*      +      lat2, lon2, azi2, omask, a12s12, m12, MM12, MM21, SS12)
-*         double precision, intent(in) :: a, f, lat1, lon1, azi1, s12a12
-*         logical, intent(in) :: arcmod
-*         integer, intent(in) :: omask
-*         double precision, intent(out) :: lat2, lon2, azi2
-* * optional output (depending on omask)
-*         double precision, intent(out) :: a12s12, m12, MM12, MM21, SS12
-*         end subroutine direct
-*
-*         subroutine invers(a, f, lat1, lon1, lat2, lon2,
-*      +      s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
-*         double precision, intent(in) :: a, f, lat1, lon1, lat2, lon2
-*         integer, intent(in) :: omask
-*         double precision, intent(out) :: s12, azi1, azi2
-* * optional output (depending on omask)
-*         double precision, intent(out) :: a12, m12, MM12, MM21, SS12
-*         end subroutine invers
-*       end interface
-*
-* The ellipsoid is specified by its equatorial radius a (typically in
-* meters) and flattening f.  The routines are accurate to round off with
-* double precision arithmetic provided that abs(f) < 1/50; for the WGS84
-* ellipsoid, the errors are less than 15 nanometers.  (Reasonably
-* accurate results are obtained for abs(f) < 1/5.)  Latitudes,
-* longitudes, and azimuths are in degrees.  Latitudes must lie in
-* [-90,90] and longitudes and azimuths must lie in [-540,540).  The
-* returned values for longitude and azimuths are in [-180,180).  The
-* distance s12 is measured in meters (more precisely the same units as
-* a).
-*
-* The routines also calculate several other quantities of interest
-*   * SS12 is the area between the geodesic from point 1 to point 2 and
-*     the equator; i.e., it is the area, measured counter-clockwise, of
-*     the quadrilateral with corners (lat1,lon1), (0,lon1), (0,lon2),
-*     and (lat2,lon2).  It is given in meters^2.
-*   * m12, the reduced length of the geodesic is defined such that if
-*     the initial azimuth is perturbed by dazi1 (radians) then the
-*     second point is displaced by m12 dazi1 in the direction
-*     perpendicular to the geodesic.  m12 is given in meters.  On a
-*     curved surface the reduced length obeys a symmetry relation, m12 +
-*     m21 = 0.  On a flat surface, we have m12 = s12.
-*   * MM12 and MM21 are geodesic scales.  If two geodesics are parallel
-*     at point 1 and separated by a small distance dt, then they are
-*     separated by a distance MM12 dt at point 2.  MM21 is defined
-*     similarly (with the geodesics being parallel to one another at
-*     point 2).  MM12 and MM21 are dimensionless quantities.  On a flat
-*     surface, we have MM12 = MM21 = 1.
-*   * a12 is the arc length on the auxiliary sphere.  This is a
-*     construct for converting the problem to one in spherical
-*     trigonometry.  a12 is measured in degrees.  The spherical arc
-*     length from one equator crossing to the next is always 180
-*     degrees.
-*
-* Whether or not these quantities are return depends on the value of
-* omask which is a integer bit mask with the following bit assigments
-*   * 1 return a12
-*   * 2 return m12
-*   * 4 return MM12 and MM21
-*   * 8 return SS12
-*
-* Subroutine direct accepts an input parameter arcmod.  If this is false
-* (the "normal" setting) then the length of the geodesic is specified by
-* s12 and a12 is returned.  Setting arcmod = true, allows the length to
-* be specified as a12 (the argument s12a12) and the "real" length (in
-* meters) is returned as the argument a12s12 (provided that the 1 bit of
-* omask is set).
-*
-* Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
-* under the MIT/X11 License.  For more information, see
-* http://geographiclib.sourceforge.net/
-*
-* This file was distributed with GeographicLib 1.27.
+*> @file geodesic.for
+*! @brief Implementation of geodesic routines in Fortran
+*!
+*! This is a Fortran implementation of the geodesic algorithms described
+*! in
+*! - C. F. F. Karney,
+*!   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+*!   Algorithms for geodesics</a>,
+*!   J. Geodesy, 2012;
+*!   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+*!   10.1007/s00190-012-0578-z</a>;
+*!   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+*!   geod-addenda.html</a>.
+*! .
+*! The principal advantages of these algorithms over previous ones (e.g.,
+*! Vincenty, 1975) are
+*! - accurate to round off for |<i>f</i>| &lt; 1/50;
+*! - the solution of the inverse problem is always found;
+*! - differential and integral properties of geodesics are computed.
+*!
+*! The shortest path between two points on the ellipsoid at (\e lat1, \e
+*! lon1) and (\e lat2, \e lon2) is called the geodesic.  Its length is
+*! \e s12 and the geodesic from point 1 to point 2 has forward azimuths
+*! \e azi1 and \e azi2 at the two end points.
+*!
+*! Traditionally two geodesic problems are considered:
+*! - the direct problem -- given \e lat1, \e lon1, \e s12, and \e azi1,
+*!   determine \e lat2, \e lon2, and \e azi2.  This is solved by the
+*!   subroutine direct().
+*! - the inverse problem -- given \e lat1, \e lon1, \e lat2, \e lon2,
+*!   determine \e s12, \e azi1, and \e azi2.  This is solved by the
+*!   subroutine invers().
+*!
+*! The ellipsoid is specified by its equatorial radius \e a (typically
+*! in meters) and flattening \e f.  The routines are accurate to round
+*! off with double precision arithmetic provided that |<i>f</i>| &lt;
+*! 1/50; for the WGS84 ellipsoid, the errors are less than 15
+*! nanometers.  (Reasonably accurate results are obtained for |<i>f</i>|
+*! &lt; 1/5.)  For a prolate ellipsoid, specify \e f &lt; 0.
+*!
+*! The routines also calculate several other quantities of interest
+*! - \e SS12 is the area between the geodesic from point 1 to point 2
+*!   and the equator; i.e., it is the area, measured counter-clockwise,
+*!   of the quadrilateral with corners (\e lat1,\e lon1), (0,\e lon1),
+*!   (0,\e lon2), and (\e lat2,\e lon2).
+*! - \e m12, the reduced length of the geodesic is defined such that if
+*!   the initial azimuth is perturbed by \e dazi1 (radians) then the
+*!   second point is displaced by \e m12 \e dazi1 in the direction
+*!   perpendicular to the geodesic.  On a curved surface the reduced
+*!   length obeys a symmetry relation, \e m12 + \e m21 = 0.  On a flat
+*!   surface, we have \e m12 = \e s12.
+*! - \e MM12 and \e MM21 are geodesic scales.  If two geodesics are
+*!   parallel at point 1 and separated by a small distance \e dt, then
+*!   they are separated by a distance \e MM12 \e dt at point 2.  \e MM21
+*!   is defined similarly (with the geodesics being parallel to one
+*!   another at point 2).  On a flat surface, we have \e MM12 = \e MM21
+*!   = 1.
+*! - \e a12 is the arc length on the auxiliary sphere.  This is a
+*!   construct for converting the problem to one in spherical
+*!   trigonometry.  \e a12 is measured in degrees.  The spherical arc
+*!   length from one equator crossing to the next is always 180&deg;.
+*!
+*! If points 1, 2, and 3 lie on a single geodesic, then the following
+*! addition rules hold:
+*! - \e s13 = \e s12 + \e s23
+*! - \e a13 = \e a12 + \e a23
+*! - \e SS13 = \e SS12 + \e SS23
+*! - \e m13 = \e m12 \e MM23 + \e m23 \e MM21
+*! - \e MM13 = \e MM12 \e MM23 &minus; (1 &minus; \e MM12 \e MM21) \e
+*!   m23 / \e m12
+*! - \e MM31 = \e MM32 \e MM21 &minus; (1 &minus; \e MM23 \e MM32) \e
+*!   m12 / \e m23
+*!
+*! The shortest distance returned by the solution of the inverse problem is
+*! (obviously) uniquely defined.  However, in a few special cases there are
+*! multiple azimuths which yield the same shortest distance.  Here is a
+*! catalog of those cases:
+*! - \e lat1 = &minus;\e lat2 (with neither at a pole).  If \e azi1 = \e
+*!   azi2, the geodesic is unique.  Otherwise there are two geodesics
+*!   and the second one is obtained by setting [\e azi1, \e azi2] = [\e
+*!   azi2, \e azi1], [\e MM12, \e MM21] = [\e MM21, \e MM12], \e SS12 =
+*!   &minus;\e SS12.  (This occurs when the longitude difference is near
+*!   &plusmn;180&deg; for oblate ellipsoids.)
+*! - \e lon2 = \e lon1 &plusmn; 180&deg; (with neither at a pole).  If
+*!   \e azi1 = 0&deg; or &plusmn;180&deg;, the geodesic is unique.
+*!   Otherwise there are two geodesics and the second one is obtained by
+*!   setting [\e azi1, \e azi2] = [&minus;\e azi1, &minus;\e azi2], \e
+*!   SS12 = &minus;\e SS12.  (This occurs when the \e lat2 is near
+*!   &minus;\e lat1 for prolate ellipsoids.)
+*! - Points 1 and 2 at opposite poles.  There are infinitely many
+*!   geodesics which can be generated by setting [\e azi1, \e azi2] =
+*!   [\e azi1, \e azi2] + [\e d, &minus;\e d], for arbitrary \e d.  (For
+*!   spheres, this prescription applies when points 1 and 2 are
+*!   antipodal.)
+*! - s12 = 0 (coincident points).  There are infinitely many geodesics
+*!   which can be generated by setting [\e azi1, \e azi2] = [\e azi1, \e
+*!   azi2] + [\e d, \e d], for arbitrary \e d.
+*!
+*! These routines are a simple transcription of the corresponding C++
+*! classes in <a href="http://geographiclib.sf.net"> GeographicLib</a>.
+*! Because of the limitations of Fortran 77, the classes have been
+*! replaced by simple subroutines with no attempt to save "state" across
+*! subroutine calls.  Most of the internal comments have been retained.
+*! However, in the process of transcription some documentation has been
+*! lost and the documentation for the C++ classes,
+*! GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
+*! GeographicLib::PolygonArea, should be consulted.  The C++ code
+*! remains the "reference implementation".  Think twice about
+*! restructuring the internals of the Fortran code since this may make
+*! porting fixes from the C++ code more difficult.
+*!
+*! Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
+*! under the MIT/X11 License.  For more information, see
+*! http://geographiclib.sourceforge.net/
+*!
+*! This file was distributed with
+*! <a href="../index.html">GeographicLib</a> 1.28.
 
-      block data geodat
-      double precision dblmin, dbleps, pi, degree, tiny,
-     +    tol0, tol1, tol2, tolb, xthrsh
-      integer digits, maxit1, maxit2
-      logical init
-      data init /.false./
-      common /geocom/ dblmin, dbleps, pi, degree, tiny,
-     +    tol0, tol1, tol2, tolb, xthrsh, digits, maxit1, maxit2, init
-      end
-
-      subroutine geoini
-      double precision dblmin, dbleps, pi, degree, tiny,
-     +    tol0, tol1, tol2, tolb, xthrsh
-      integer digits, maxit1, maxit2
-      logical init
-      common /geocom/ dblmin, dbleps, pi, degree, tiny,
-     +    tol0, tol1, tol2, tolb, xthrsh, digits, maxit1, maxit2, init
-
-      digits = 53
-      dblmin = 0.5d0**1022
-      dbleps = 0.5d0**(digits-1)
-
-      pi = atan2(0.0d0, -1.0d0)
-      degree = pi/180
-      tiny = sqrt(dblmin)
-      tol0 = dbleps
-* Increase multiplier in defn of tol1 from 100 to 200 to fix inverse case
-* 52.784459512564 0 -52.784459512563990912 179.634407464943777557
-* which otherwise failed for Visual Studio 10 (Release and Debug)
-      tol1 = 200 * tol0
-      tol2 = sqrt(tol0)
-* Check on bisection interval
-      tolb = tol0 * tol2
-      xthrsh = 1000 * tol2
-      maxit1 = 20
-      maxit2 = maxit1 + digits + 10
-
-      init = .true.
-
-      return
-      end
+*> Solve the direct geodesic problem
+*!
+*! @param[in] a the equatorial radius (meters).
+*! @param[in] f the flattening of the ellipsoid.  Setting \e f = 0 gives
+*!   a sphere.  Negative \e f gives a prolate ellipsoid.
+*! @param[in] lat1 latitude of point 1 (degrees).
+*! @param[in] lon1 longitude of point 1 (degrees).
+*! @param[in] azi1 azimuth at point 1 (degrees).
+*! @param[in] s12a12 if \e arcmod is false, this is the distance between
+*!   point 1 and point 2 (meters); otherwise it is the arc length between
+*!   point 1 and point 2 (degrees); it can be negative.
+*! @param[in] arcmod logical flag determining the meaning of the \e
+*!   s12a12.
+*! @param[out] lat2 latitude of point 2 (degrees).
+*! @param[out] lon2 longitude of point 2 (degrees).
+*! @param[out] azi2 (forward) azimuth at point 2 (degrees).
+*! @param[in] omask a bitor'ed combination of mask values
+*!   specifying which of the following parameters should be set.
+*! @param[out] a12s12 if \e arcmod is false, this is the arc length between
+*!   point 1 and point 2 (degrees); otherwise it is the distance between
+*!   point 1 and point 2 (meters).
+*! @param[out] m12 reduced length of geodesic (meters).
+*! @param[out] MM12 geodesic scale of point 2 relative to point 1
+*!   (dimensionless).
+*! @param[out] MM21 geodesic scale of point 1 relative to point 2
+*!   (dimensionless).
+*! @param[out] SS12 area under the geodesic (meters<sup>2</sup>).
+*!
+*! \e omask is an integer in [0, 16) whose binary bits are interpreted
+*! as follows
+*! - 1 return \e a12
+*! - 2 return \e m12
+*! - 4 return \e MM12 and \e MM21
+*! - 8 return \e SS12
+*!
+*! \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
+*! azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
+*! \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
+*! 180&deg;).
+*!
+*! If either point is at a pole, the azimuth is defined by keeping the
+*! longitude fixed and writing \e lat = \e lat = &plusmn;(90&deg;
+*! &minus; &epsilon;) and taking the limit &epsilon; &rarr; 0+.  An arc
+*! length greater that 180&deg; signifies a geodesic which is not a
+*! shortest path.  (For a prolate ellipsoid, an additional condition is
+*! necessary for a shortest path: the longitudinal extent must not
+*! exceed of 180&deg;.)
 
       subroutine direct(a, f, lat1, lon1, azi1, s12a12, arcmod,
      +    lat2, lon2, azi2, omask, a12s12, m12, MM12, MM21, SS12)
@@ -210,20 +230,9 @@
       call C3cof(n, C3x)
       if (areap) call C4cof(n, C4x)
 
-      azi1x = AngNm(azi1)
-      lon1x = AngNm(lon1)
-
-      if (lat1 .eq. 90) then
-        lon1x = lon1x + csmgt(180d0, -180d0, lon1x .lt. 0)
-        lon1x = AngNm(lon1x - azi1x)
-        azi1x = -180
-      else if (lat1 .eq. -90) then
-        lon1x = AngNm(lon1x + azi1x)
-        azi1x = 0
-      else
 * Guard against underflow in salp0
-        azi1x = AngRnd(azi1x)
-      end if
+      azi1x = AngRnd(AngNm(azi1))
+      lon1x = AngNm(lon1)
 
 * alp1 is in [0, pi]
       alp1 = azi1x * degree
@@ -449,6 +458,50 @@
       return
       end
 
+*> Solve the inverse geodesic problem.
+*!
+*! @param[in] a the equatorial radius (meters).
+*! @param[in] f the flattening of the ellipsoid.  Setting \e f = 0 gives
+*!   a sphere.  Negative \e f gives a prolate ellipsoid.
+*! @param[in] lat1 latitude of point 1 (degrees).
+*! @param[in] lon1 longitude of point 1 (degrees).
+*! @param[in] lat2 latitude of point 2 (degrees).
+*! @param[in] lon2 longitude of point 2 (degrees).
+*! @param[out] s12 distance between point 1 and point 2 (meters).
+*! @param[out] azi1 azimuth at point 1 (degrees).
+*! @param[out] azi2 (forward) azimuth at point 2 (degrees).
+*! @param[in] omask a bitor'ed combination of mask values
+*!   specifying which of the following parameters should be set.
+*! @param[out] a12 arc length of between point 1 and point 2 (degrees).
+*! @param[out] m12 reduced length of geodesic (meters).
+*! @param[out] MM12 geodesic scale of point 2 relative to point 1
+*!   (dimensionless).
+*! @param[out] MM21 geodesic scale of point 1 relative to point 2
+*!   (dimensionless).
+*! @param[out] SS12 area under the geodesic (meters<sup>2</sup>).
+*!
+*! \e omask is an integer in [0, 16) whose binary bits are interpreted
+*! as follows
+*! - 1 return \e a12
+*! - 2 return \e m12
+*! - 4 return \e MM12 and \e MM21
+*! - 8 return \e SS12
+*!
+*! \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;]; \e
+*! lon1 and \e lon2 should be in the range [&minus;540&deg;, 540&deg;).
+*! The values of \e azi1 and \e azi2 returned are in the range
+*! [&minus;180&deg;, 180&deg;).
+*!
+*! If either point is at a pole, the azimuth is defined by keeping the
+*! longitude fixed and writing \e lat = 90&deg; &minus; &epsilon; or
+*! &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
+*! above.
+*!
+*! The solution to the inverse problem is found using Newton's method.  If
+*! this fails to converge (this is very unlikely in geodetic applications
+*! but does occur for very eccentric ellipsoids), then the bisection method
+*! is used to refine the solution.
+
       subroutine invers(a, f, lat1, lon1, lat2, lon2,
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
 * input
@@ -467,7 +520,7 @@
      +    C1a(nC1), C2a(nC2), C3a(nC3-1), C4a(0:nC4-1)
 
       double precision csmgt, atanhx, hypotx,
-     +    AngNm, AngRnd, TrgSum, Lam12f, InvSta
+     +    AngNm, AngDif, AngRnd, TrgSum, Lam12f, InvSta
       integer latsgn, lonsgn, swapp, numit
       logical arcp, redlp, scalp, areap, merid, tripn, tripb
 
@@ -516,9 +569,11 @@
       call C3cof(n, C3x)
       if (areap) call C4cof(n, C4x)
 
-      lon12 = AngNm(AngNm(lon2) - AngNm(lon1))
-* If very close to being on the same meridian, then make it so.
-* Not sure this is necessary...
+* Compute longitude difference (AngDiff does this carefully).  Result is
+* in [-180, 180] but -180 is only for west-going geodesics.  180 is for
+* east-going and meridional geodesics.
+      lon12 = AngDif(AngNm(lon1), AngNm(lon2))
+* If very close to being on the same half-meridian, then make it so.
       lon12 = AngRnd(lon12)
 * Make longitude difference positive.
       if (lon12 .ge. 0) then
@@ -527,7 +582,6 @@
         lonsgn = -1
       end if
       lon12 = lon12 * lonsgn
-      if (lon12 .eq. 180) lonsgn = 1
 * If really close to the equator, treat as on equator.
       lat1x = AngRnd(lat1)
       lat2x = AngRnd(lat2)
@@ -546,7 +600,7 @@
         latsgn = 1
       else
         latsgn = -1
-      endif
+      end if
       lat1x = lat1x * latsgn
       lat2x = lat2x * latsgn
 * Now we have
@@ -706,11 +760,13 @@
             v = Lam12f(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
      +          salp1, calp1, f, A3x, C3x, salp2, calp2, sig12,
      +          ssig1, csig1, ssig2, csig2,
-     +          eps, omg12, numit < maxit1, dv,
+     +          eps, omg12, numit .lt. maxit1, dv,
      +          C1a, C2a, C3a) - lam12
 * 2 * tol0 is approximately 1 ulp for a number in [0, pi].
-            if (tripb .or. abs(v) .lt.
-     +          csmgt(8d0, 2d0, tripn) * tol0) go to 20
+* Reversed test to allow escape with NaNs
+            if (tripb .or.
+     +          .not. (abs(v) .ge. csmgt(8d0, 2d0, tripn) * tol0))
+     +          go to 20
 * Update bracketing values
             if (v .gt. 0 .and. (numit .gt. maxit1 .or.
      +          calp1/salp1 .gt. calp1b/salp1b)) then
@@ -840,6 +896,125 @@
       azi2 = 0 - atan2(-salp2, calp2) / degree
 
       if (arcp) a12 = a12x
+
+      return
+      end
+
+*> Determine the area of a geodesic polygon
+*!
+*! @param[in] a the equatorial radius (meters).
+*! @param[in] f the flattening of the ellipsoid.  Setting \e f = 0 gives
+*!   a sphere.  Negative \e f gives a prolate ellipsoid.
+*! @param[in] lats an array of the latitudes of the vertices (degrees).
+*! @param[in] lons an array of the longitudes of the vertices (degrees).
+*! @param[in] n the number of vertices
+*! @param[out] AA the (signed) area of the polygon (meters<sup>2</sup>)
+*! @param[out] PP the perimeter of the polygon
+*!
+*! \e lats should be in the range [&minus;90&deg;, 90&deg;]; \e lons
+*! should be in the range [&minus;540&deg;, 540&deg;).
+*!
+*! Only simple polygons (which are not self-intersecting) are allowed.
+*! There's no need to "close" the polygon by repeating the first vertex.
+*! The area returned is signed with counter-clockwise traversal being
+*! treated as positive.
+
+      subroutine area(a, f, lats, lons, n, AA, PP)
+* input
+      integer n
+      double precision a, f, lats(n), lons(n)
+* output
+      double precision AA, PP
+
+      integer i, omask, cross, trnsit
+      double precision s12, azi1, azi2, dummy, SS12, b, e2, c2, area0,
+     +    atanhx
+
+      double precision dblmin, dbleps, pi, degree, tiny,
+     +    tol0, tol1, tol2, tolb, xthrsh
+      integer digits, maxit1, maxit2
+      logical init
+      common /geocom/ dblmin, dbleps, pi, degree, tiny,
+     +    tol0, tol1, tol2, tolb, xthrsh, digits, maxit1, maxit2, init
+
+      omask = 8
+      AA = 0
+      PP = 0
+      cross = 0
+      do 10 i = 0, n-1
+        call invers(a, f, lats(i+1), lons(i+1),
+     +      lats(mod(i+1,n)+1), lons(mod(i+1,n)+1),
+     +      s12, azi1, azi2, omask, dummy, dummy, dummy, dummy, SS12)
+        PP = PP + s12
+        AA = AA - SS12
+        cross = cross + trnsit(lons(i+1), lons(mod(i+1,n)+1))
+ 10   continue
+      b = a * (1 - f)
+      e2 = f * (2 - f)
+      if (e2 .eq. 0) then
+        c2 = a**2
+      else if (e2 .gt. 0) then
+        c2 = (a**2 + b**2 * atanhx(sqrt(e2)) / sqrt(e2)) / 2
+      else
+        c2 = (a**2 + b**2 * atan(sqrt(abs(e2))) / sqrt(abs(e2))) / 2
+      end if
+      area0 = 4 * pi * c2
+      if (mod(abs(cross), 2) .eq. 1) then
+        if (AA .lt. 0) then
+          AA = AA + area0/2
+        else
+          AA = AA - area0/2
+        end if
+      end if
+      if (AA .gt. area0/2) then
+        AA = AA - area0
+      else if (AA .le. -area0/2) then
+        AA = AA + area0
+      end if
+
+      return
+      end
+
+*> @cond SKIP
+
+      block data geodat
+      double precision dblmin, dbleps, pi, degree, tiny,
+     +    tol0, tol1, tol2, tolb, xthrsh
+      integer digits, maxit1, maxit2
+      logical init
+      data init /.false./
+      common /geocom/ dblmin, dbleps, pi, degree, tiny,
+     +    tol0, tol1, tol2, tolb, xthrsh, digits, maxit1, maxit2, init
+      end
+
+      subroutine geoini
+      double precision dblmin, dbleps, pi, degree, tiny,
+     +    tol0, tol1, tol2, tolb, xthrsh
+      integer digits, maxit1, maxit2
+      logical init
+      common /geocom/ dblmin, dbleps, pi, degree, tiny,
+     +    tol0, tol1, tol2, tolb, xthrsh, digits, maxit1, maxit2, init
+
+      digits = 53
+      dblmin = 0.5d0**1022
+      dbleps = 0.5d0**(digits-1)
+
+      pi = atan2(0.0d0, -1.0d0)
+      degree = pi/180
+      tiny = sqrt(dblmin)
+      tol0 = dbleps
+* Increase multiplier in defn of tol1 from 100 to 200 to fix inverse case
+* 52.784459512564 0 -52.784459512563990912 179.634407464943777557
+* which otherwise failed for Visual Studio 10 (Release and Debug)
+      tol1 = 200 * tol0
+      tol2 = sqrt(tol0)
+* Check on bisection interval
+      tolb = tol0 * tol2
+      xthrsh = 1000 * tol2
+      maxit1 = 20
+      maxit2 = maxit1 + digits + 10
+
+      init = .true.
 
       return
       end
@@ -1515,6 +1690,23 @@
       return
       end
 
+      double precision function sumx(u, v, t)
+* input
+      double precision u, v
+* output
+      double precision t
+
+      double precision up, vpp
+      sumx = u + v
+      up = sumx - v
+      vpp = sumx - up
+      up = up - u
+      vpp = vpp -  v
+      t = -(up + vpp)
+
+      return
+      end
+
       double precision function AngNm(x)
 * input
       double precision x
@@ -1536,6 +1728,20 @@
       x = mod(x, 360d0)
       AngNm2 = AngNm(x)
       return
+      end
+
+      double precision function AngDif(x, y)
+* input
+      double precision x, y
+
+      double precision d, t, sumx
+      d = sumx(-x, y, t)
+      if ((d - 180d0) + t .gt. 0d0) then
+        d = d - 360d0
+      else if ((d + 180d0) + t .le. 0d0) then
+        d = d + 360d0
+      end if
+      AngDif = d + t
       end
 
       double precision function AngRnd(x)
@@ -1673,12 +1879,30 @@
       return
       end
 
+      integer function trnsit(lon1, lon2)
+* input
+      double precision lon1, lon2
+
+      double precision lon1x, lon2x, lon12, AngNm, AngDif
+      lon1x = AngNm(lon1)
+      lon2x = AngNm(lon2)
+      lon12 = AngDif(lon1x, lon2x);
+      trnsit = 0
+      if (lon1 .lt. 0 .and. lon2 .ge. 0 .and. lon12 .gt. 0) then
+        trnsit = 1
+      else if (lon2 .lt. 0 .and. lon1 .ge. 0 .and. lon12 .lt. 0) then
+        trnsit = -1
+      end if
+      return
+      end
+
 * Table of name abbreviations to conform to the 6-char limit
 *    A3coeff       A3cof
 *    C3coeff       C3cof
 *    C4coeff       C4cof
 *    AngNormalize  AngNm
 *    AngNormalize2 AngNm2
+*    AngDiff       AngDif
 *    AngRound      AngRnd
 *    arcmode       arcmod
 *    Astroid       Astrd
@@ -1701,3 +1925,5 @@
 *    SinCosNorm    Norm
 *    SinCosSeries  TrgSum
 *    xthresh       xthrsh
+*    transit       trnsit
+*> @endcond SKIP

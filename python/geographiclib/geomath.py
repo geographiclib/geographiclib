@@ -74,6 +74,20 @@ class Math(object):
     return -y if x < 0 else y
   atanh = staticmethod(atanh)
 
+  def sum(u, v):
+    # Error free transformation of a sum.  Note that t can be the same as one
+    # of the first two arguments.
+    s = u + v
+    up = s - v
+    vpp = s - up
+    up -= u
+    vpp -= v
+    t = -(up + vpp)
+    # u + v =       s      + t
+    #       = round(u + v) + t
+    return s, t
+  sum = staticmethod(sum)
+
   def AngNormalize(x):
     """reduce angle in [-540,540) to [-180,180)"""
 
@@ -86,6 +100,17 @@ class Math(object):
 
     return Math.AngNormalize(math.fmod(x, 360))
   AngNormalize2 = staticmethod(AngNormalize2)
+
+  def AngDiff(x, y):
+    """compute y - x and reduce to [-180,180] accurately"""
+
+    d, t = Math.sum(-x, y)
+    if (d - 180) + t > 0:       # y - x > 180
+      d -= 360                  # exact
+    elif (d + 180) + t <= 0:    # y - x <= -180
+      d += 360                  # exact
+    return d + t
+  AngDiff = staticmethod(AngDiff)
 
   def isfinite(x):
     """Test for finiteness"""

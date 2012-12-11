@@ -38,10 +38,8 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %
 %   This is an implementation of the algorithm given in
 %
-%     C. F. F. Karney,
-%     Algorithms for geodesics,
-%     J. Geodesy (2012);
-%     http://dx.doi.org/10.1007/s00190-012-0578-z
+%     C. F. F. Karney, Algorithms for geodesics,
+%     J. Geodesy (2012); http://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
 %   This function duplicates some of the functionality of the RECKON
@@ -58,11 +56,9 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %   See also GEODDOC, GEODDISTANCE, GEODAREA, GEODESICDIRECT, GEODESICLINE,
 %     DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
-% under the MIT/X11 License.  For more information, see
-% http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.27.
+% This file was distributed with GeographicLib 1.28.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
@@ -70,15 +66,12 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 % with array arguments are identical to those obtained with multiple calls
 % with scalar arguments.
 
+  if nargin < 4, error('Too few input arguments'), end
   try
     S = size(lat1 + lon1 + s12_a12 + azi1);
   catch err
     error('lat1, lon1, s12, azi1 have incompatible sizes')
   end
-
-  degree = pi/180;
-  tiny = sqrt(realmin);
-
   if nargin <= 4
     ellipsoid = defaultellipsoid; arcmode = false;
   elseif nargin == 5
@@ -97,13 +90,16 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
       arcmode = arg5; ellipsoid = arg6;
     end
   end
-
   if length(ellipsoid) ~= 2
     error('ellipsoid must be a vector of size 2')
   end
+  arcmode = logical(arcmode);
   if ~isscalar(arcmode)
     error('arcmode must be true or false')
   end
+
+  degree = pi/180;
+  tiny = sqrt(realmin);
 
   a = ellipsoid(1);
   e2 = ellipsoid(2)^2;
@@ -122,19 +118,8 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 
   lat1 = lat1(:);
   lon1 = AngNormalize(lon1(:));
-  azi1 = AngNormalize(azi1(:));
+  azi1 = AngRound(AngNormalize(azi1(:)));
   s12_a12 = s12_a12(:);
-
-  p = lat1 == 90;
-  lon1(p) = lon1(p) + ((lon1(p) < 1) * 2 - 1) * 180;
-  lon1(p) = AngNormalize(lon1(p) - azi1(p));
-  azi1(p) = -180;
-
-  p = lat1 == -90;
-  lon1(p) = AngNormalize(lon1(p) + azi1(p));
-  azi1(p) = 0;
-
-  azi1 = AngRound(azi1);
 
   alp1 = azi1 * degree;
   salp1 = sin(alp1); salp1(azi1 == -180) = 0;
@@ -253,13 +238,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
     calp12(s) = calp2(s) .* calp1(s) + salp2(s) .* salp1(s);
     s = s & salp12 == 0 & calp12 < 0;
     salp12(s) = tiny * calp1(s); calp12(s) = -1;
-    if e2 == 0
-      c2 = a^2;
-    elseif e2 > 0
-      c2 = (a^2 + b^2 * atanh(sqrt(e2))/sqrt(e2)) / 2;
-    else
-      c2 = (a^2 + b^2 * atan(sqrt(-e2))/sqrt(-e2)) / 2;
-    end
+    c2 = (a^2 + b^2 * atanhee(1, e2)) / 2;
     S12 = c2 * atan2(salp12, calp12) + A4 .* (B42 - B41);
   end
 

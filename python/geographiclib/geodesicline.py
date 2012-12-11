@@ -33,19 +33,9 @@ class GeodesicLine(object):
     self._f1 = geod._f1
     self._caps = caps | Geodesic.LATITUDE | Geodesic.AZIMUTH
 
-    azi1 = Math.AngNormalize(azi1)
+    # Guard against underflow in salp0
+    azi1 = Geodesic.AngRound(Math.AngNormalize(azi1))
     lon1 = Math.AngNormalize(lon1)
-    if lat1 == 90:
-      lon1 += 180 if lon1 < 0 else -180
-      lon1 = Math.AngNormalize(lon1 - azi1)
-      azi1 = -180
-    elif lat1 == -90:
-      lon1 = Math.AngNormalize(lon1 + azi1)
-      azi1 = 0
-    else:
-      # Guard against underflow in salp0
-      azi1 = Geodesic.AngRound(azi1)
-
     self._lat1 = lat1
     self._lon1 = lon1
     self._azi1 = azi1

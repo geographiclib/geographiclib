@@ -43,14 +43,46 @@ GeographicLib.Math.atanh = function(x) {
   return x < 0 ? -y : y;
 }
 
+GeographicLib.Math.sum = function(u, v) {
+  var
+  s = u + v,
+  up = s - v,
+  vpp = s - up;
+  up -= u;
+  vpp -= v;
+  t = -(up + vpp);
+  // u + v =       s      + t
+  //       = round(u + v) + t
+  return {s: s, t: t};
+}
+
 GeographicLib.Math.AngNormalize = function(x) {
-    // Place angle in [-180, 180).  Assumes x is in [-540, 540).
-    return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
+  // Place angle in [-180, 180).  Assumes x is in [-540, 540).
+  return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
 }
 
 GeographicLib.Math.AngNormalize2 = function(x) {
-    // Place arbitrary angle in [-180, 180).
-    return GeographicLib.Math.AngNormalize(x % 360);
+  // Place arbitrary angle in [-180, 180).
+  return GeographicLib.Math.AngNormalize(x % 360);
+}
+
+GeographicLib.Math.AngDiff = function(x, y) {
+  // Compute y - x and reduce to [-180,180] accurately.
+  // This is the same logic as the Accumulator class uses.
+  var
+  d = y - x,
+  yp = d + x,
+  xpp = yp - d;
+  yp -= y;
+  xpp -= x;
+  var t =  xpp - yp;
+  // y - x =       d      + t
+  //       = round(y - x) + t
+  if ((d - 180) + t > 0)        // y - x > 180
+    d -= 360;                   // exact
+  else if ((d + 180) + t <= 0)  // y - x <= -180
+    d += 360;                   // exact
+  return d + t;
 }
 
 GeographicLib.Math.epsilon = Math.pow(0.5, 52);
@@ -63,6 +95,7 @@ GeographicLib.Constants.WGS84 = { a: 6378137, f: 1/298.257223563 };
 GeographicLib.Accumulator = {};
 (function() {
   a = GeographicLib.Accumulator;
+  var m = GeographicLib.Math;
 
   a.Accumulator = function(y) {
     this.Set(y);
@@ -79,24 +112,11 @@ GeographicLib.Accumulator = {};
     }
   }
 
-  // Error free transformation of a sum.  Note that t can be the same as one
-  // of the first two arguments.
-  a.sum = function(u, v) {
-    var
-    s = u + v,
-    up = s - v,
-    vpp = s - up;
-    up -= u;
-    vpp -= v;
-    var t = -(up + vpp);
-    return {s: s, t: t};
-  }
-
   a.Accumulator.prototype.Add = function(y) {
     // Here's Shewchuk's solution...
     // Accumulate starting at least significant end
-    var u = a.sum(y, this._t);
-    var v = a.sum(u.s, this._s);
+    var u = m.sum(y, this._t);
+    var v = m.sum(u.s, this._s);
     u = u.t;
     this._s = v.s;
     this._t = v.t;

@@ -113,7 +113,7 @@ namespace GeographicLib {
       // is about 1000 times more resolution than we get with angles around 90
       // degrees.)  We use this to avoid having to deal with near singular
       // cases when x is non-zero but tiny (e.g., 1.0e-200).
-      const real z = real(0.0625); // 1/16
+      const real z = 1/real(16);
       volatile real y = std::abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
@@ -269,12 +269,11 @@ namespace GeographicLib {
      * 180&deg;).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
-     * longitude fixed and writing \e lat = 90&deg; &minus; &epsilon; or
-     * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
-     * above.  An arc length greater that 180&deg; signifies a geodesic which
-     * is not a shortest path.  (For a prolate ellipsoid, an additional
-     * condition is necessary for a shortest path: the longitudinal extent must
-     * not exceed of 180&deg;.)
+     * longitude fixed and writing \e lat = &plusmn;(90&deg; &minus; &epsilon;)
+     * and taking the limit &epsilon; &rarr; 0+..  An arc length greater that
+     * 180&deg; signifies a geodesic which is not a shortest path.  (For a
+     * prolate ellipsoid, an additional condition is necessary for a shortest
+     * path: the longitudinal extent must not exceed of 180&deg;.)
      *
      * The following functions are overloaded versions of GeodesicExact::Direct
      * which omit some of the output parameters.  Note, however, that the arc
@@ -384,12 +383,11 @@ namespace GeographicLib {
      * 180&deg;).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
-     * longitude fixed and writing \e lat = 90&deg; &minus; &epsilon; or
-     * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
-     * above.  An arc length greater that 180&deg; signifies a geodesic which
-     * is not a shortest path.  (For a prolate ellipsoid, an additional
-     * condition is necessary for a shortest path: the longitudinal extent must
-     * not exceed of 180&deg;.)
+     * longitude fixed and writing \e lat = &plusmn;(90&deg; &minus; &epsilon;)
+     * and taking the limit &epsilon; &rarr; 0+.  An arc length greater that
+     * 180&deg; signifies a geodesic which is not a shortest path.  (For a
+     * prolate ellipsoid, an additional condition is necessary for a shortest
+     * path: the longitudinal extent must not exceed of 180&deg;.)
      *
      * The following functions are overloaded versions of GeodesicExact::Direct
      * which omit some of the output parameters.
@@ -559,9 +557,8 @@ namespace GeographicLib {
      * [&minus;180&deg;, 180&deg;).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
-     * longitude fixed and writing \e lat = 90&deg; &minus; &epsilon; or
-     * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
-     * above.
+     * longitude fixed and writing \e lat = &plusmn;(90&deg; &minus; &epsilon;)
+     * and taking the limit &epsilon; &rarr; 0+.
      *
      * The following functions are overloaded versions of GeodesicExact::Inverse
      * which omit some of the output parameters.  Note, however, that the arc

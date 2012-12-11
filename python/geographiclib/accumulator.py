@@ -11,22 +11,10 @@
 # http://geographiclib.sourceforge.net/
 ######################################################################
 
+from geographiclib.geomath import Math
+
 class Accumulator(object):
   """Like math.fsum, but allows a running sum"""
-
-  def sum(u, v):
-    # Error free transformation of a sum.  Note that t can be the same as one
-    # of the first two arguments.
-      s = u + v
-      up = s - v
-      vpp = s - up
-      up -= u
-      vpp -= v
-      t = -(up + vpp)
-      # u + v =       s      + t
-      #       = round(u + v) + t
-      return s, t
-  sum = staticmethod(sum)
 
   def Set(self, y = 0.0):
     if type(self) == type(y):
@@ -40,8 +28,8 @@ class Accumulator(object):
   def Add(self, y):
     # Here's Shewchuk's solution...
     # hold exact sum as [s, t, u]
-    y, u = Accumulator.sum(y, self._t) # Accumulate starting at
-    self._s, self._t = Accumulator.sum(y, self._s) # least significant end
+    y, u = Math.sum(y, self._t)             # Accumulate starting at
+    self._s, self._t = Math.sum(y, self._s) # least significant end
     # Start is _s, _t decreasing and non-adjacent.  Sum is now (s + t + u)
     # exactly with s, t, u non-adjacent and in decreasing order (except
     # for possible zeros).  The following code tries to normalize the

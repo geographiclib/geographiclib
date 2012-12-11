@@ -1,11 +1,11 @@
-function [A, P, N] = geodarea(lat, lon, ellipsoid)
+function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %GEODAREA  Surface area of polygon on an ellipsoid
 %
-%   A = GEODAREA(lat, lon)
-%   [A, P, N] = GEODAREA(lat, lon, ellipsoid)
+%   A = GEODAREA(lats, lons)
+%   [A, P, N] = GEODAREA(lats, lons, ellipsoid)
 %
 %   calculates the surface area A of the geodesic polygon specified by the
-%   input vectors lat, lon (in degrees).  The ellipsoid vector is of the
+%   input vectors lats, lons (in degrees).  The ellipsoid vector is of the
 %   form [a, e], where a is the equatorial radius in meters, e is the
 %   eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
 %   precisely, the value returned by DEFAULTELLIPSOID) is used.  There is
@@ -25,27 +25,28 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
 %   each edge is computed using a series expansion with is accurate
 %   regardless of the length of the edge.  The formulas are derived in
 %
-%     C. F. F. Karney,
-%     Algorithms for geodesics,
-%     J. Geodesy (2012);
-%     http://dx.doi.org/10.1007/s00190-012-0578-z
+%     C. F. F. Karney, Algorithms for geodesics,
+%     J. Geodesy (2012); http://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
 %   See also GEODDOC, GEODDISTANCE, GEODRECKON, POLYGONAREA,
 %     DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
-% under the MIT/X11 License.  For more information, see
-% http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.27.
+% This file was distributed with GeographicLib 1.28.
 
-  if ~isequal(size(lat), size(lon))
-    error('lat, lon have incompatible sizes')
+  if nargin < 2, error('Too few input arguments'), end
+  if nargin < 3, ellipsoid = defaultellipsoid; end
+  if ~isequal(size(lats), size(lons))
+    error('lats, lons have incompatible sizes')
+  end
+  if length(ellipsoid(:)) ~= 2
+    error('ellipsoid must be a vector of size 2')
   end
 
-  lat1 = lat(:);
-  lon1 = lon(:);
+  lat1 = lats(:);
+  lon1 = lons(:);
   M = length(lat1);
   ind = [0; find(isnan(lat1 + lon1))];
   if length(ind) == 1 || ind(end) ~= M
@@ -61,22 +62,12 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
   m1 = max(1, ind(2:end) - 1);
   lat2(m1) = lat1(m0); lon2(m1) = lon1(m0);
 
-  if nargin < 3, ellipsoid = defaultellipsoid; end
-  if length(ellipsoid(:)) ~= 2
-    error('ellipsoid must be a vector of size 2')
-  end
   a = ellipsoid(1);
   e2 = ellipsoid(2)^2;
   f = e2 / (1 + sqrt(1 - e2));
 
   b = (1 - f) * a;
-  if e2 == 0
-    c2 = a^2;
-  elseif e2 > 0
-    c2 = (a^2 + b^2 * atanh(sqrt(e2))/sqrt(e2)) / 2;
-  else
-    c2 = (a^2 + b^2 * atan(sqrt(-e2))/sqrt(-e2)) / 2;
-  end
+  c2 = (a^2 + b^2 * atanhee(1, e2)) / 2;
   area0 = 4 * pi * c2;
 
   [s12, ~, ~, S12] = geoddistance(lat1, lon1, lat2, lon2, ellipsoid);
@@ -96,16 +87,6 @@ function [A, P, N] = geodarea(lat, lon, ellipsoid)
   A(p) = A(p) + area0;
 end
 
-function x = AngNormalize(x)
-%ANGNORMALIZE  Reduce angle to range [-180, 180)
-%
-%   X = ANGNORMALIZE(X) reduces angles in [-540, 540) to the range
-%   [-180, 180).  X can be any shape.
-
-  x(x >= 180) = x(x >= 180) - 360;
-  x(x < -180) = x(x < -180) + 360;
-end
-
 function cross = transit(lon1, lon2)
 %TRANSIT  Count crossings of prime meridian
 %
@@ -114,7 +95,7 @@ function cross = transit(lon1, lon2)
 
   lon1 = AngNormalize(lon1);
   lon2 = AngNormalize(lon2);
-  lon12 = -AngNormalize(lon1 - lon2);
+  lon12 = AngDiff(lon1, lon2);
   cross = zeros(length(lon1), 1);
   cross(lon1 < 0 & lon2 >= 0 & lon12 > 0) = 1;
   cross(lon2 < 0 & lon1 >= 0 & lon12 < 0) = -1;

@@ -30,10 +30,10 @@ GeographicLib.PolygonArea = {};
   p.transit = function(lon1, lon2) {
     // Return 1 or -1 if crossing prime meridian in east or west direction.
     // Otherwise return zero.
+    // Compute lon12 the same way as Geodesic::Inverse.
     lon1 = m.AngNormalize(lon1);
     lon2 = m.AngNormalize(lon2);
-    // treat lon12 = -180 as an eastward geodesic, so convert to 180.
-    var lon12 = -m.AngNormalize(lon1 - lon2); // In (-180, 180]
+    var lon12 = m.AngDiff(lon1, lon2);
     var cross =
       lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
       (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);

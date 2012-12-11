@@ -42,16 +42,29 @@ $(srcdir)/geoddistance.m \
 $(srcdir)/geodarea.m \
 $(srcdir)/defaultellipsoid.m \
 $(srcdir)/ecc2flat.m \
-$(srcdir)/flat2ecc.m
+$(srcdir)/flat2ecc.m \
+$(srcdir)/geodproj.m \
+$(srcdir)/eqdazim_fwd.m \
+$(srcdir)/eqdazim_inv.m \
+$(srcdir)/cassini_fwd.m \
+$(srcdir)/cassini_inv.m \
+$(srcdir)/tranmerc_fwd.m \
+$(srcdir)/tranmerc_inv.m \
+$(srcdir)/gnomonic_fwd.m \
+$(srcdir)/gnomonic_inv.m \
+$(srcdir)/utm_fwd.m \
+$(srcdir)/utm_inv.m
 
 MATLAB_GEOD_PRIVATE = \
 $(srcdir)/private/A1m1f.m \
 $(srcdir)/private/A2m1f.m \
 $(srcdir)/private/A3coeff.m \
 $(srcdir)/private/A3f.m \
+$(srcdir)/private/AngDiff.m \
 $(srcdir)/private/AngNormalize2.m \
 $(srcdir)/private/AngNormalize.m \
 $(srcdir)/private/AngRound.m \
+$(srcdir)/private/atanhee.m \
 $(srcdir)/private/C1f.m \
 $(srcdir)/private/C1pf.m \
 $(srcdir)/private/C2f.m \
@@ -63,6 +76,7 @@ $(srcdir)/private/cbrt.m \
 $(srcdir)/private/cvmgt.m \
 $(srcdir)/private/SinCosNorm.m \
 $(srcdir)/private/SinCosSeries.m \
+$(srcdir)/private/sumx.m \
 $(srcdir)/private/swap.m
 
 MATLAB_ALL = $(MATLAB_INTERFACE) $(MATLAB_DOC) $(MATLAB_COMPILESCRIPT) \

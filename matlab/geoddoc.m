@@ -5,10 +5,8 @@ function geoddoc
 %   GEODAREA which solve various problems involving geodesics on the
 %   surface of an ellipsoid of revolution.  These are based on the paper
 %
-%     C. F. F. Karney,
-%     Algorithms for geodesics,
-%     J. Geodesy (2012);
-%     http://dx.doi.org/10.1007/s00190-012-0578-z
+%     C. F. F. Karney, Algorithms for geodesics,
+%     J. Geodesy (2012); http://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
 %   which, in turn, is based on the classic solution of the geodesic
@@ -158,10 +156,9 @@ function geoddoc
 %   are part of GeographicLib.  However these depend on being able to
 %   compile and link the interface code, which limits their usefulness.
 %   GEODDISTANCE, GEODRECKON, and GEODAREA are native implementations which
-%   will work on any MATLAB platform.  They are fully vectorized internally
-%   so that their speed is competitive with the compiled C++ code.
-%   Implementations of these routines in Python and Javascript are also
-%   available; see
+%   will work on any MATLAB platform.  They are fully vectorized so that
+%   their speed is competitive with the compiled C++ code.  Implementations
+%   of these routines in Python and Javascript are also available; see
 %
 %     http://geographiclib.sf.net/html/other.html
 %
@@ -183,15 +180,18 @@ function geoddoc
 %     * GEODAREA is accurate regardless of the length of the edges of the
 %       polygon.
 %
+%   This package is used by the MATLAB File Exchange package "Geodesic
+%   projections for an ellipsoid":
+%
+%     http://www.mathworks.com/matlabcentral/fileexchange/39366
+%
 %   See also GEODDISTANCE, GEODRECKON, GEODAREA,
 %     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
 %     GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, POLYGONAREA.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
-% under the MIT/X11 License.  For more information, see
-% http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.27.
+% This file was distributed with GeographicLib 1.28.
 
   help geoddoc
 end

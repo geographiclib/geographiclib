@@ -28,10 +28,10 @@ class PolygonArea(object):
     # Return 1 or -1 if crossing prime meridian in east or west direction.
     # Otherwise return zero.
     from geographiclib.geodesic import Geodesic
-    lon1 = Math.AngNormalize(lon1)
-    lon2 = Math.AngNormalize(lon2)
-    # treat lon12 = -180 as an eastward geodesic, so convert to 180.
-    lon12 = -Math.AngNormalize(lon1 - lon2) # In (-180, 180]
+    # Compute lon12 the same way as Geodesic::Inverse.
+    lon1 = Math.AngNormalize(lon1);
+    lon2 = Math.AngNormalize(lon2);
+    lon12 = Math.AngDiff(lon1, lon2);
     cross = (1 if lon1 < 0 and lon2 >= 0 and lon12 > 0
              else (-1 if lon2 < 0 and lon1 >= 0 and lon12 < 0 else 0))
     return cross

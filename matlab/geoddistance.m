@@ -24,10 +24,8 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %
 %   This is an implementation of the algorithm given in
 %
-%     C. F. F. Karney,
-%     Algorithms for geodesics,
-%     J. Geodesy (2012);
-%     http://dx.doi.org/10.1007/s00190-012-0578-z
+%     C. F. F. Karney, Algorithms for geodesics,
+%     J. Geodesy (2012); http://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
 %   This function duplicates some of the functionality of the DISTANCE
@@ -43,11 +41,9 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %   See also GEODDOC, GEODRECKON, GEODAREA, GEODESICINVERSE,
 %     DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
-% under the MIT/X11 License.  For more information, see
-% http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.27.
+% This file was distributed with GeographicLib 1.28.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
@@ -56,6 +52,8 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 % with scalar arguments.  The biggest change was to eliminate the branching
 % to allow a vectorized solution.
 
+  if nargin < 4, error('Too few input arguments'), end
+  if nargin < 5, ellipsoid = defaultellipsoid; end
   try
     Z = lat1 + lon1 + lat2 + lon2;
     S = size(Z);
@@ -66,6 +64,9 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   catch err
     error('lat1, lon1, s12, azi1 have incompatible sizes')
   end
+  if length(ellipsoid(:)) ~= 2
+    error('ellipsoid must be a vector of size 2')
+  end
 
   degree = pi/180;
   tiny = sqrt(realmin);
@@ -74,10 +75,6 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   maxit1 = 20;
   maxit2 = maxit1 + (-log2(eps) + 1) + 10;
 
-  if nargin < 5, ellipsoid = defaultellipsoid; end
-  if length(ellipsoid(:)) ~= 2
-    error('ellipsoid must be a vector of size 2')
-  end
   a = ellipsoid(1);
   e2 = ellipsoid(2)^2;
   f = e2 / (1 + sqrt(1 - e2));
@@ -93,11 +90,10 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   A3x = A3coeff(n);
   C3x = C3coeff(n);
 
-  lon12 = AngNormalize(AngNormalize(lon2(:)) - AngNormalize(lon1(:)));
+  lon12 = AngDiff(AngNormalize(lon1(:)), AngNormalize(lon2(:)));
   lon12 = AngRound(lon12);
   lonsign = 2 * (lon12 >= 0) - 1;
   lon12 = lonsign .* lon12;
-  lonsign(lon12 == 180) = 1;
   lat1 = AngRound(lat1(:));
   lat2 = AngRound(lat2(:));
   swapp = 2 * (abs(lat1) >= abs(lat2)) - 1;
@@ -147,6 +143,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
                 ssig1(m), csig1(m), dn1(m), ssig2(m), csig2(m), dn2(m), ...
                 cbet1(m), cbet2(m), scalp, ep2);
     m = m & (sig12 < 1 | m12 >= 0);
+    m12(m) = m12(m) * b;
     s12(m) = s12(m) * b;
   end
 
@@ -193,7 +190,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
                  sbet2(g), cbet2(g), dn2(g), ...
                  salp1(g), calp1(g), f, A3x, C3x);
     v = v - lam12;
-    g = g & ~(tripb | abs(v) < ((tripn * 6) + 2) * tol0);
+    g = g & ~(tripb | ~(abs(v) >= ((tripn * 6) + 2) * tol0));
     if ~any(g), break, end
 
     c = g & v > 0;
@@ -270,13 +267,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
     s = salp12 == 0 & calp12 < 0;
     salp12(s) = tiny * calp1(s); calp12(s) = -1;
     alp12(l) = atan2(salp12, calp12);
-    if e2 == 0
-      c2 = a^2;
-    elseif e2 > 0
-      c2 = (a^2 + b^2 * atanh(sqrt(e2))/sqrt(e2)) / 2;
-    else
-      c2 = (a^2 + b^2 * atan(sqrt(-e2))/sqrt(-e2)) / 2;
-    end
+    c2 = (a^2 + b^2 * atanhee(1, e2)) / 2;
     S12 = 0 + swapp .* lonsign .* latsign .* (S12 + c2 * alp12);
   end
 

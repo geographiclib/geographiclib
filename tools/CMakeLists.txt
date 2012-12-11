@@ -179,6 +179,13 @@ add_test (Planimeter5 Planimeter --input-string "89,0.1;89,90.1;89,-179.9")
 set_tests_properties (Planimeter5
   PROPERTIES PASS_REGULAR_EXPRESSION
   "3 539297\\.[0-9]+ 1247615283[89]\\.[0-9]+")
+# Check fix for Planimeter lon12 rounding bug found 2012-12-03
+add_test (Planimeter6 Planimeter --input-string "9 -0.00000000000001;9 180;9 0")
+add_test (Planimeter7 Planimeter --input-string "9  0.00000000000001;9 0;9 180")
+add_test (Planimeter8 Planimeter --input-string "9  0.00000000000001;9 180;9 0")
+add_test (Planimeter9 Planimeter --input-string "9 -0.00000000000001;9 0;9 180")
+set_tests_properties (Planimeter6 Planimeter7 Planimeter8 Planimeter9
+  PROPERTIES PASS_REGULAR_EXPRESSION "3 36026861\\.[0-9]+ -?0.0[0-9]+")
 
 # Check fix for AlbersEqualArea::Reverse bug found 2011-05-01
 add_test (ConicProj0

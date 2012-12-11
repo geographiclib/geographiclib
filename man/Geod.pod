@@ -194,6 +194,9 @@ I<M12> = I<M21> = 1.
 
 If points 1, 2, and 3 lie on a single geodesic, then the following
 addition rules hold,
+I<s13> = I<s12> + I<s23>,
+I<a13> = I<a12> + I<a23>,
+I<S13> = I<S12> + I<S23>,
 I<m13> = I<m12> I<M23> + I<m23> I<M21>,
 I<M13> = I<M12> I<M23> - (1 - I<M12> I<M21>) I<m23> / I<m12>, and
 I<M31> = I<M32> I<M21> - (1 - I<M23> I<M32>) I<m12> / I<m23>.

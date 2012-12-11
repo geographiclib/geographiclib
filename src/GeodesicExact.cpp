@@ -126,16 +126,16 @@ namespace GeographicLib {
                                        real& m12, real& M12, real& M21,
                                        real& S12) const throw() {
     outmask &= OUT_ALL;
-    real lon12 = Math::AngNormalize(Math::AngNormalize(lon2) -
-                                    Math::AngNormalize(lon1));
-    // If very close to being on the same meridian, then make it so.
-    // Not sure this is necessary...
+    // Compute longitude difference (AngDiff does this carefully).  Result is
+    // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
+    // east-going and meridional geodesics
+    real lon12 = Math::AngDiff(Math::AngNormalize(lon1),
+                               Math::AngNormalize(lon2));
+    // If very close to being on the same half-meridian, then make it so.
     lon12 = AngRound(lon12);
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
-    if (lon12 == 180)
-      lonsign = 1;
     // If really close to the equator, treat as on equator.
     lat1 = AngRound(lat1);
     lat2 = AngRound(lat2);
@@ -202,7 +202,7 @@ namespace GeographicLib {
 
     real
       lam12 = lon12 * Math::degree<real>(),
-      slam12 = lon12 == 180 ? 0 : sin(lam12),
+      slam12 = abs(lon12) == 180 ? 0 : sin(lam12),
       clam12 = cos(lam12);      // lon12 == 90 isn't interesting
 
     real a12, sig12, calp1, salp1, calp2, salp2;
@@ -325,7 +325,8 @@ namespace GeographicLib {
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                             E, omg12, numit < maxit1_, dv) - lam12;
          // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
-          if (tripb || abs(v) < (tripn ? 8 : 2) * tol0_) break;
+          // Reversed test to allow escape with NaNs
+          if (tripb || !(abs(v) >= (tripn ? 8 : 2) * tol0_)) break;
           // Update bracketing values
           if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b)) {
             salp1b = salp1; calp1b = calp1;

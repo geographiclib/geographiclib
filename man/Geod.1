@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOD 1"
-.TH GEOD 1 "2012-11-29" "GeographicLib 1.27" "GeographicLib Utilities"
+.TH GEOD 1 "2012-12-11" "GeographicLib 1.28" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -287,6 +287,9 @@ and \fIM21\fR are dimensionless quantities.  On a flat surface, we have
 .PP
 If points 1, 2, and 3 lie on a single geodesic, then the following
 addition rules hold,
+\&\fIs13\fR = \fIs12\fR + \fIs23\fR,
+\&\fIa13\fR = \fIa12\fR + \fIa23\fR,
+\&\fIS13\fR = \fIS12\fR + \fIS23\fR,
 \&\fIm13\fR = \fIm12\fR \fIM23\fR + \fIm23\fR \fIM21\fR,
 \&\fIM13\fR = \fIM12\fR \fIM23\fR \- (1 \- \fIM12\fR \fIM21\fR) \fIm23\fR / \fIm12\fR, and
 \&\fIM31\fR = \fIM32\fR \fIM21\fR \- (1 \- \fIM23\fR \fIM32\fR) \fIm12\fR / \fIm23\fR.
