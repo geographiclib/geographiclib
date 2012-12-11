@@ -106,8 +106,8 @@
 *! GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
 *! GeographicLib::PolygonArea, should be consulted.  The C++ code
 *! remains the "reference implementation".  Think twice about
-*! restructuring the internals of the C code since this may make porting
-*! fixes from the C++ code more difficult.
+*! restructuring the internals of the Fortran code since this may make
+*! porting fixes from the C++ code more difficult.
 *!
 *! Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
 *! under the MIT/X11 License.  For more information, see

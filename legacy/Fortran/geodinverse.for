@@ -1,7 +1,7 @@
 *> @file geodinverse.for
 *! @brief A test program for invers()
 
-*> A simple program to solve the invese geodesic problem.
+*> A simple program to solve the inverse geodesic problem.
 *!
 *! This program reads in lines with lat1, lon1, lon2, lat2 and prints
 *! out lines with azi1, azi2, s12 (for the WGS84 ellipsoid).
