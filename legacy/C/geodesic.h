@@ -29,7 +29,7 @@
  *   geod_direct().
  * - the inverse problem -- given \e lat1, \e lon1, \e lat2, \e lon2, determine
  *   \e s12, \e azi1, and \e azi2.  This is solved by the function
- *   geod_direct().
+ *   geod_inverse().
  *
  * The ellipsoid is specified by its equatorial radius \e a (typically in
  * meters) and flattening \e f.  The routines are accurate to round off with

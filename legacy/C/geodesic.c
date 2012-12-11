@@ -1496,6 +1496,8 @@ int transit(real lon1, real lon2) {
     (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
 }
 
+/** @endcond */
+
 void geod_polygonarea(const struct geod_geodesic* g,
                       real lats[], real lons[], int n,
                       real* pA, real* pP) {
@@ -1519,5 +1521,3 @@ void geod_polygonarea(const struct geod_geodesic* g,
   if (pA) *pA = A;
   if (pP) *pP = P;
 }
-
-/** @endcond */
