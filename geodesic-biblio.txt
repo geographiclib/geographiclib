@@ -480,11 +480,22 @@
    http://books.google.com/books?id=7oYGAAAAYAAJ&pg=PA401 [[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1844_1_9_A37_0
  * J. Liouville,[[BR]]
+   ''Sur quelques cas particuliers où les équations du mouvement d'un
+   point matériel peuvent s'intégrer [Special cases where the equations
+   of motion are integrable]'',
+   Jour. Liouville '''11''', 345--378 (1846).[[BR]]
+   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1846_1_11_A45_0
+ * J. Liouville,[[BR]]
    ''Sur la théorie générale des surfaces
    [On the general theory of surfaces]'',
    Jour. Liouville '''16''', 130--132 (1851).[[BR]]
    http://books.google.com/books?id=TFdOAAAAMAAJ&pg=PA130 [[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1851_1_16_A4_0
+ * M. Roberts,[[BR]]
+   ''Géométrie, Communication verbale de M. Liouville
+   [Geometry, Verbal communication of J. Liouville]'',
+   Comptes Rendus '''21''', 1410--1411 (1845).[[BR]]
+   http://books.google.com/books?id=vnFFAAAAcAAJ&pg=PA1410
  * M. Roberts,[[BR]]
    ''Sur quelques propriétés des lignes géodésiques et des lignes de
    courbure de l'ellipsoïde [Properties of geodesics and lines of
@@ -502,13 +513,22 @@
    ''Sur les lignes géodésiques et les lignes de courbure des surfaces
    du second degré [Geodesic lines and the lines of curvature of the
    surfaces of the second degree]'',
-   Jour. Liouville '''11''', 5-20 (1846).[[BR]]
+   Jour. Liouville '''11''', 5--20 (1846).[[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1846_1_11_A2_0
  * P. O. Bonnet,[[BR]]
    ''Mémoire sur la théorie générale des surfaces
    [On the general theory of surfaces]'',
    Jour. l'École Polytechnique '''19'''(32), 1--146 (1848).[[BR]]
    http://books.google.com/books?id=VGo_AAAAcAAJ&pg=PA1
+ * J. Bertrand,[[BR]]
+   ''Démonstration d'un théorème de M. Gauss [Proof of a theorem of
+   C. F. Gauss]'',
+   Jour. Liouville '''13''', 80--82 (1848).[[BR]]
+   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1848_1_13_A11_0
+ * C.-F. Bertrand,[[BR]]
+   ''Note à l'occasion de l'article précédent [Note on the preceding article]'',
+   Jour. Liouville '''13''', 83--86 (1848).[[BR]]
+   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1848_1_13_A12_0
  * G. Monge and J. Liouville,[[BR]]
    ''Application de l'Analyse à la Géometrie
    [Application of analysis to geometry]''
@@ -592,6 +612,13 @@
    Vol. 7 (Cambridge Univ. Press, 1894), paper 422, pp. 15--25.[[BR]]
    http://books.google.com/books?id=Zk0wAAAAIAAJ&pg=PA329 [[BR]]
    http://books.google.com/books?id=4XGIOoCMYYAC&pg=PA15
+ * A. Cayley,[[BR]]
+   ''Note on the geodesic lines on an ellipsoid'',
+   Phil. Mag. '''41''' (4th ser.), 534--535 (1870),
+   in ''The Collected Mathematical Papers of Arthur Cayley'',
+   Vol. 7 (Cambridge Univ. Press, 1894), paper 425, pp. 34--35.[[BR]]
+   http://books.google.com/books?id=oHUvAQAAIAAJ&pg=PA534 [[BR]]
+   http://books.google.com/books?id=4XGIOoCMYYAC&pg=PA34
  * A. R. Clarke,[[BR]]
    ''On the course of geodetic lines on the earth's surface'',
    Phil. Mag. '''39''' (4th ser.), 352--363 (1870).[[BR]]
@@ -743,7 +770,12 @@
  * J. G. Darboux,[[BR]]
    ''Leçons sur la théorie générale des surfaces
    [Lessons on the general theory of surfaces]'',
-   Vol. 3 (Gauthier-Villars, 1894), Book 6.[[BR]]
+   Vol. 2 (Gauthier-Villars, 1889), Book 4, Chap. 14.[[BR]]
+   http://books.google.com/books?id=_apXAAAAYAAJ&pg=PA291
+ * J. G. Darboux,[[BR]]
+   ''Leçons sur la théorie générale des surfaces
+   [Lessons on the general theory of surfaces]'',
+   Vol. 3 (Gauthier-Villars, 1894), Book 6, Chaps. 1--3.[[BR]]
    http://books.google.com/books?id=hGMSAAAAIAAJ&pg=PA1
  * A. R. Forsyth,[[BR]]
    ''Geodesics on an oblate spheroid'', Mess. Math. '''25''', 81--124 (1896);

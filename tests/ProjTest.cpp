@@ -261,7 +261,8 @@ int main(int argc, char* argv[]) {
     std::cout << std::fixed << std::setprecision(7);
     while (geo.Next(lata, lona) && proj.Next(xa, ya)) {
       ++count;
-      real lat, lon, x, y, xx, yy;
+      // Suppress bogus uninitialized warnings for lat and lon
+      real lat = 0, lon = 0, x, y, xx, yy;
       x = xa - fe + x0;
       y = ya - fn + y0;
       xx = x/k1;
