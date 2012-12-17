@@ -25,7 +25,7 @@ nearly straight.  It is derived in Section 8 of
 
 The implementation of the transverse Mercator projection is based on
 
-  C. F. F. Karney, Transverse Mercator with an accurcy of a few
+  C. F. F. Karney, Transverse Mercator with an accuracy of a few
   nanometers, J. Geodesy 85(8), 475-485 (Aug. 2011);
   Addenda: http://geographiclib.sf.net/tm-addenda.html
 
