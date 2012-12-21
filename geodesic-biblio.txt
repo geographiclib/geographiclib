@@ -117,6 +117,13 @@
    Mém. l'Acad. Roy. des Sciences de Turin '''5''', 100--121
    (1790--91, publ. 1793).[[BR]]
    http://books.google.com/books?id=yZH2VQBt4CkC&pg=PA100
+ * G. Monge,[[BR]]
+   ''Sur les lignes de courbure de la surface de l'ellipsoïde
+   [On the lines of curvature on the surface of the ellipsoid]'' (1796),
+   in ''Application de l'Analyse à la Géometrie''
+   (5th edition, Bachelier, Paris, 1850), pp. 139--160.[[BR]]
+   http://books.google.com/books?id=Nf5zhlffjd0C&pg=PA139 [[BR]]
+   figures: http://geographiclib.sf.net/geodesic-papers/monge50-fig.pdf
  * P. S. Laplace,[[BR]]
    ''Traité de Mécanique Céleste'', Vol. 2 (Duprat, Paris, 1798/1799),
    Book 3, Chap. 5; reprinted in
@@ -488,6 +495,10 @@
    Jour. Liouville '''11''', 345--378 (1846).[[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1846_1_11_A45_0
  * J. Liouville,[[BR]]
+   Notes on G. Monge, ''Application de l'Analyse à la Géometrie''
+   (5th edition, Bachelier, Paris, 1850), pp. 547--600.[[BR]]
+   http://books.google.com/books?id=Nf5zhlffjd0C&pg=PA547
+ * J. Liouville,[[BR]]
    ''Sur la théorie générale des surfaces
    [On the general theory of surfaces]'',
    Jour. Liouville '''16''', 130--132 (1851).[[BR]]
@@ -531,11 +542,6 @@
    ''Note à l'occasion de l'article précédent [Note on the preceding article]'',
    Jour. Liouville '''13''', 83--86 (1848).[[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1848_1_13_A12_0
- * G. Monge and J. Liouville,[[BR]]
-   ''Application de l'Analyse à la Géometrie
-   [Application of analysis to geometry]''
-   (5th edition, Bachelier, Paris, 1850), pp. 547--600.[[BR]]
-   http://books.google.com/books?id=Nf5zhlffjd0C&pg=PA547
  * K. T. W. Weierstrass,[[BR]]
    ''Über die geodätischen Linien auf dem dreiaxigen Ellipsoid
    [Geodesic lines on a triaxial ellipsoid]'',
