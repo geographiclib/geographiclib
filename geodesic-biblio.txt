@@ -522,11 +522,26 @@
    curvature on an allispoid]'',
    Jour. Liouville '''13''', 1--11 (1848).[[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1848_1_13_A1_0
+ * M. Roberts,[[BR]]
+   Theorems on the lines of curvature of an ellipsoid
+   Camb. Dublin Math. Jour. '''3''', 159--163 (1848).[[BR]]
+   http://books.google.com/books?id=3hVbAAAAYAAJ&pg=PA159
+ * M. Roberts,[[BR]]
+   ''Mémoire sur la géométrie de courbes tracées sur la surface d'un
+   ellipsoïde [The geometry of curves on the surface of an ellipsoid]'',
+   Jour. Liouville '''15''', 275--295 (1850).[[BR]]
+   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1850_1_15_A16_0
+ * M. Roberts,[[BR]]
+   ''Sur quelques applications de la théorie des surfaces
+   [Some applications of the theory of surfaces]'',
+   Nouvelles Annales de Mathématiques '''14''', 268--271 (1855).[[BR]]
+   http://books.google.com/books?id=BwcAAAAAMAAJ&pg=PA268
  * M. Chasles,[[BR]]
    ''Sur les lignes géodésiques et les lignes de courbure des surfaces
    du second degré [Geodesic lines and the lines of curvature of the
    surfaces of the second degree]'',
    Jour. Liouville '''11''', 5--20 (1846).[[BR]]
+   http://books.google.com/books?id=qTUGAAAAYAAJ&pg=PA5 [[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1846_1_11_A2_0
  * P. O. Bonnet,[[BR]]
    ''Mémoire sur la théorie générale des surfaces
@@ -538,10 +553,27 @@
    C. F. Gauss]'',
    Jour. Liouville '''13''', 80--82 (1848).[[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1848_1_13_A11_0
- * C.-F. Bertrand,[[BR]]
+ * C.-F. Diguet,[[BR]]
    ''Note à l'occasion de l'article précédent [Note on the preceding article]'',
    Jour. Liouville '''13''', 83--86 (1848).[[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1848_1_13_A12_0
+ * A. S. Hart,[[BR]]
+   Geometrical demonstration of some properties of geodesics lines
+   Camb. Dublin Math. Jour. '''4''', 80--84 (1849).[[BR]]
+   http://books.google.com/books?id=ClAeAQAAMAAJ&pg=PA80
+ * A. S. Hart,[[BR]]
+   On geodesics lines traced on a surface of the second degree
+   Camb. Dublin Math. Jour. '''4''', 192--194 (1849).[[BR]]
+   http://books.google.com/books?id=ClAeAQAAMAAJ&pg=PA192
+ * C. Graves,[[BR]]
+   ''Elementary geometrical proof of Joachimsthal's theorem'',
+   Jour. Crelle '''42''', 279 (1851).[[BR]]
+   http://books.google.com/books?id=gKBGAAAAcAAJ&pg=PA279
+ * W. Roberts,[[BR]]
+   ''Sur une ligne géodésique de l'ellipsoïde
+   [The geodesic line of the ellipsoid]'',
+   J. Math. Pures Appl. (Ser. 2) '''2''', 213--216 (1857).[[BR]]
+   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1857_2_2_A18_0
  * K. T. W. Weierstrass,[[BR]]
    ''Über die geodätischen Linien auf dem dreiaxigen Ellipsoid
    [Geodesic lines on a triaxial ellipsoid]'',
@@ -593,6 +625,14 @@
    together with the geodesic problems in a new representation]'',
    (Istwann, Coesfeld, 1865).[[BR]]
    http://sammlungen.uni-muenster.de/hd/content/titleinfo/1012467
+ * B. Price,[[BR]]
+   ''A Treatise on Infinitesimal Calculus'', Vol. 2
+   (2nd edition, Oxford, 1865), Chap. 14, Sec. 2.[[BR]]
+   http://books.google.com/books?id=fho1AAAAIAAJ&pg=PA475
+ * G. Salmon,
+   ''A Treatise on the Analytic Geometry of Three Dimensions''
+   (2nd Edition, Dublin, 1865), Chap. 12, Sec. 4.[[BR]]
+   http://books.google.com/books?id=Y54LAAAAYAAJ&pg=PA305
  * E. B. Christoffel,[[BR]]
    ''Allgemeine Theorie der geodätischen Dreiecke
    [General theory of geodesic triangles]'',
@@ -622,7 +662,7 @@
    http://books.google.com/books?id=4XGIOoCMYYAC&pg=PA15
  * A. Cayley,[[BR]]
    ''Note on the geodesic lines on an ellipsoid'',
-   Phil. Mag. '''41''' (4th ser.), 534--535 (1870),
+   Phil. Mag. '''41''' (4th ser.), 534--535 (1871),
    in ''The Collected Mathematical Papers of Arthur Cayley'',
    Vol. 7 (Cambridge Univ. Press, 1894), paper 425, pp. 34--35.[[BR]]
    http://books.google.com/books?id=oHUvAQAAIAAJ&pg=PA534 [[BR]]
@@ -747,10 +787,18 @@
    http://books.google.com/books?id=4KgRAAAAYAAJ&pg=PA361 [[BR]]
    http://books.google.com/books?id=4KgRAAAAYAAJ&pg=PA518
  * C. H. Kummell,[[BR]]
+   ''Solution of Problem 155'',
+   Tha Analyst '''4'''(4), 117--120 (1877).[[BR]]
+   http://books.google.com/books?id=eKYEAAAAQAAJ&pg=RA1-PA117
+ * C. H. Kummell,[[BR]]
    ''On the determination of the shortest distance
    between two points on a spheroid'',
    Astron. Nachr. '''112'''(2671), 97--108 (1885).[[BR]]
    http://books.google.com/books?id=kN4zAQAAIAAJ&pg=PA206
+ * P. Frost,[[BR]]
+   ''Solid Geometry''
+   (3rd edition, Macmillan, 1886), Chap. 23.[[BR]]
+   http://books.google.com/books?id=ym1LAAAAMAAJ&pg=PA305
  * G. H. Halphen,[[BR]]
    ''Traité des Fonctions Elliptiques et de leurs Applications
    [A Treatise on Elliptic Functions and their Applications]'',
