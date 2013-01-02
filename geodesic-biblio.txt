@@ -497,6 +497,14 @@
    http://books.google.com/books?id=7oYGAAAAYAAJ&pg=PA401 [[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1844_1_9_A37_0
  * J. Liouville,[[BR]]
+   ''Démonstration géométrique relative à l'équation des lignes
+   géodésiques sur les surfaces du second degré [Geometrical
+   demonstration of the equation for geodesic lines on the surfaces of
+   the second degree]'',
+   Jour. Liouville '''11''', 21--24 (1846).[[BR]]
+   http://books.google.com/books?id=qTUGAAAAYAAJ&pg=PA21 [[BR]]
+   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1846_1_11_A3_0
+ * J. Liouville,[[BR]]
    ''Sur quelques cas particuliers où les équations du mouvement d'un
    point matériel peuvent s'intégrer [Special cases where the equations
    of motion are integrable]'',
@@ -551,11 +559,26 @@
    Jour. Liouville '''11''', 5--20 (1846).[[BR]]
    http://books.google.com/books?id=qTUGAAAAYAAJ&pg=PA5 [[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1846_1_11_A2_0
+ * M. Chasles,[[BR]]
+   ''Nouvelles démonstrations des deux équations relatives aux tangentes
+   communes à deux surfaces du second degré homofocales; Et propriétés
+   des lignes géodésiques et des lignes de courbure de ces surfaces [New
+   demonstration of two equations for the common tangents to two
+   confocal surfaces of the second degree; and properties of the
+   geodesic lines and the lines of curvature of these surfaces]'',
+   Jour. Liouville '''11''', 105--119 (1846).[[BR]]
+   http://books.google.com/books?id=qTUGAAAAYAAJ&pg=PA105 [[BR]]
+   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1846_1_11_A14_0
  * P. O. Bonnet,[[BR]]
    ''Mémoire sur la théorie générale des surfaces
    [On the general theory of surfaces]'',
    Jour. l'École Polytechnique '''19'''(32), 1--146 (1848).[[BR]]
    http://books.google.com/books?id=VGo_AAAAcAAJ&pg=PA1
+ * P. O. Bonnet,[[BR]]
+   ''Sur quelques propriétés des lignes géodésiques
+   [Some properties for geodesic lines]'',
+   Comptes Rendus '''40''', 1311--1313 (1855).[[BR]]
+   http://books.google.com/books?id=v28kAQAAIAAJ&pg=PA1311
  * J. Bertrand,[[BR]]
    ''Démonstration d'un théorème de M. Gauss [Proof of a theorem of
    C. F. Gauss]'',
@@ -585,7 +608,7 @@
  * K. T. W. Weierstrass,[[BR]]
    ''Über die geodätischen Linien auf dem dreiaxigen Ellipsoid
    [Geodesic lines on a triaxial ellipsoid]'',
-   Monat. König. Akad. Wiss. 988--997 (Berlin, 1861),
+   Monat. König. Akad. Wiss. 986--997 (Berlin, 1861),
    in ''Mathematische Werke'', Vol. 1 (Berlin, 1894), pp. 257--266.[[BR]]
    http://books.google.com/books?id=9O4GAAAAYAAJ&pg=PA257
  * P. A. Gordan,[[BR]]
@@ -677,7 +700,7 @@
    http://books.google.com/books?id=4XGIOoCMYYAC&pg=PA34
  * A. Cayley,[[BR]]
    ''On the geodesic lines on an ellipsoid'',
-   Mem. Roy. Astron. Soc '''39''', 31--53 (1872),
+   Mem. Roy. Astron. Soc. '''39''', 31--53 & plate 2 (1872),
    in ''The Collected Mathematical Papers of Arthur Cayley'',
    Vol. 7 (Cambridge Univ. Press, 1894), paper 478, pp. 493--510.[[BR]]
    http://books.google.com/books?id=S4znAAAAMAAJ&pg=PA31 [[BR]]
