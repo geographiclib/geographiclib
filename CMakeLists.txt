@@ -4,7 +4,7 @@ project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 28)
+set (GeographicLib_VERSION_MINOR 29)
 set (GeographicLib_VERSION
   "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 set (PACKAGE_VERSION ${GeographicLib_VERSION})

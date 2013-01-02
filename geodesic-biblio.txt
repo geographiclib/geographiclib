@@ -235,6 +235,10 @@
      the shortest which can be drawn between its two extremities on the
      surface of the earth; and it is therefore the proper itinerary
      measure of the distance between those two points.
+ * P. C. F. Dupin,[[BR]]
+   ''Développements de géométrie [Developments in geometry]''
+   (Courcier, Paris, 1813), Part 5.[[BR]]
+   http://books.google.com/books?id=j40AAAAAMAAJ&pg=PA297
  * E. G. F. Thune,[[BR]]
    ''Tentamen circa trigonometriam sphaeroidicam
    [Essay on spheroidal trigonometry]''
@@ -469,19 +473,23 @@
    [The shortest curves encirling a given area on a curved surface]'',
    Jour. Crelle '''86''', 279--289 (1879).[[BR]]
    http://books.google.com/books?id=85HxAAAAMAAJ&pg=PA279
- * F. Joachimsthal,[[BR]]
+ * F. J. Joachimsthal,[[BR]]
    ''Observationes de lineis brevissimis et curvis curvaturae in
    superficiebus secundi gradus [Observations on the shortest lines on
    curved surfaces of the second degree]'',
    Jour. Crelle '''26''', 155--171 (1843).[[BR]]
    http://books.google.com/books?id=8ptGAAAAcAAJ&pg=PA155
- * F. Joachimsthal,[[BR]]
+ * F. J. Joachimsthal,[[BR]]
    ''Anwendung der Differential- und Integralrechnung auf die
    allgemeine Theorie der Flächen und der Linien doppelter Krümmung
    [Application of differential and integral calculus to the
    general theory of surfaces and lines of double curvature]''
    (Teubner, Leipzig, 1872), Chap. 9, pp. 131--157.[[BR]]
    http://books.google.com/books?id=BvQoAAAAYAAJ&pg=PA131
+ * P.Q.R. (W. Thomson, Lord Kelvin),[[BR]]
+   ''Elementary demonstration of Dupin's theorem'',
+   Camb. Math. Jour. '''4'''(20), 62--64 (1844).[[BR]]
+   http://books.google.com/books?id=vtxEAAAAcAAJ&pg=PA62
  * J. Liouville,[[BR]]
    ''De la ligne géodésique sur un ellipsoïde quelconque
    [The geodesic on an arbitrary ellipsoid]'',
@@ -667,6 +675,13 @@
    Vol. 7 (Cambridge Univ. Press, 1894), paper 425, pp. 34--35.[[BR]]
    http://books.google.com/books?id=oHUvAQAAIAAJ&pg=PA534 [[BR]]
    http://books.google.com/books?id=4XGIOoCMYYAC&pg=PA34
+ * A. Cayley,[[BR]]
+   ''On the geodesic lines on an ellipsoid'',
+   Mem. Roy. Astron. Soc '''39''', 31--53 (1872),
+   in ''The Collected Mathematical Papers of Arthur Cayley'',
+   Vol. 7 (Cambridge Univ. Press, 1894), paper 478, pp. 493--510.[[BR]]
+   http://books.google.com/books?id=S4znAAAAMAAJ&pg=PA31 [[BR]]
+   http://books.google.com/books?id=4XGIOoCMYYAC&pg=PA493
  * A. R. Clarke,[[BR]]
    ''On the course of geodetic lines on the earth's surface'',
    Phil. Mag. '''39''' (4th ser.), 352--363 (1870).[[BR]]

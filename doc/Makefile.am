@@ -1,4 +1,18 @@
 EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html \
+	$(srcdir)/gauss-krueger-graticule.png \
+	$(srcdir)/gauss-krueger-graticule.pdf \
+	$(srcdir)/thompson-tm-graticule.png \
+	$(srcdir)/thompson-tm-graticule.pdf \
+	$(srcdir)/gauss-krueger-convergence-scale.png \
+	$(srcdir)/gauss-krueger-convergence-scale.pdf \
+	$(srcdir)/gauss-schreiber-graticule-a.png \
+	$(srcdir)/gauss-schreiber-graticule-a.pdf \
+	$(srcdir)/gauss-krueger-graticule-a.png \
+	$(srcdir)/gauss-krueger-graticule-a.pdf \
+	$(srcdir)/thompson-tm-graticule-a.png \
+	$(srcdir)/thompson-tm-graticule-a.pdf \
+	$(srcdir)/gauss-krueger-error.png \
+	$(srcdir)/gauss-krueger-error.pdf \
 	$(srcdir)/meridian-measures.png
 
 SCRIPTDRIVERS = \
@@ -139,9 +153,11 @@ maintainer-clean-local:
 install-doc: html/index.html
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html
 	$(INSTALL) -m 644 `dirname $<`/*.* $(DESTDIR)$(docdir)/html
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/C
+	-test -f `dirname $<`/C/index.html && \
+	$(INSTALL) -d $(DESTDIR)$(docdir)/html/C && \
 	$(INSTALL) -m 644 `dirname $<`/C/*.* $(DESTDIR)$(docdir)/html/C
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/Fortran
+	-test -f `dirname $<`/Fortran/index.html && \
+	$(INSTALL) -d $(DESTDIR)$(docdir)/html/Fortran && \
 	$(INSTALL) -m 644 `dirname $<`/Fortran/*.* \
 	$(DESTDIR)$(docdir)/html/Fortran
 	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts
