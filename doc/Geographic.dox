@@ -78,6 +78,7 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref gravity
  - \ref magnetic
  - \ref geodesic
+ - \ref triaxial
  - \ref transversemercator
  - \ref geocentric
  - \ref old
@@ -2578,11 +2579,10 @@ Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page geodesic Geodesics on the ellipsoid
+\page geodesic Geodesics on the ellipsoid of revolution
 
 <center>
-Back to \ref magnetic.  Forward to \ref transversemercator.  Up to
-\ref contents.
+Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
 </center>
 
 GeographicLib::Geodesic and GeographicLib::GeodesicLine provide accurate
@@ -2613,7 +2613,6 @@ Go to
  - \ref geodseries
  - \ref geodellip
  - \ref meridian
- - \ref triaxial
 
 References
  - F. W. Bessel,
@@ -3289,10 +3288,67 @@ for evaluate the meridian distance
 <img src="meridian-measures.png" width=576 height=596
      alt="comparison of meridian measures">
 
-\section triaxial Geodesics on a triaxial ellipsoid
+<center>
+Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page triaxial Geodesics on a triaxial ellipsoid
 
 <center>
-Back to \ref magnetic.  Forward to \ref transversemercator.  Up to
+Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
+\ref contents.
+</center>
+
+<center>
+<img src="triaxial-grid.png"
+width=419 height=375 alt="Geodesic grid on a triaxial ellipsoid">
+<a href="triaxial-grid.pdf">Fig. 1</a>
+</center>\n
+Geodesic grid on a triaxial ellipsoid.
+
+<center>
+<img src="triaxial-equatorial-a.png"
+width=419 height=375 alt="Example of a circumpolar geodesic on a
+triaxial ellipsoid">
+<a href="triaxial-equatorial-a.pdf">Fig. 1</a>
+</center>\n
+Example of a circumpolar geodesic on a triaxial ellipsoid.
+
+<center>
+<img src="triaxial-equatorial-b.png"
+width=419 height=375 alt="Another example of a circumpolar geodesic on a
+triaxial ellipsoid">
+<a href="triaxial-equatorial-b.pdf">Fig. 1</a>
+</center>\n
+Another example of a circumpolar geodesic on a triaxial ellipsoid.
+
+<center>
+<img src="triaxial-polar-a.png"
+width=419 height=375 alt="Example of a transpolar geodesic on a
+triaxial ellipsoid">
+<a href="triaxial-polar-a.pdf">Fig. 1</a>
+</center>\n
+Example of a transpolar geodesic on a triaxial ellipsoid.
+
+<center>
+<img src="triaxial-polar-b.png"
+width=419 height=375 alt="Another example of a transpolar geodesic on a
+triaxial ellipsoid">
+<a href="triaxial-polar-b.pdf">Fig. 1</a>
+</center>\n
+Another example of a transpolar geodesic on a triaxial ellipsoid.
+
+<center>
+<img src="triaxial-umbilic.png"
+width=419 height=375 alt="Example of an umbilic geodesic on a
+triaxial ellipsoid">
+<a href="triaxial-umbilic.pdf">Fig. 1</a>
+</center>\n
+Example of an umbilic geodesic on a triaxial ellipsoid.
+
+<center>
+Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
 \ref contents.
 </center>
 **********************************************************************/
@@ -3300,7 +3356,7 @@ Back to \ref magnetic.  Forward to \ref transversemercator.  Up to
 \page transversemercator Transverse Mercator projection
 
 <center>
-Back to \ref geodesic.  Forward to \ref geocentric.  Up to \ref contents.
+Back to \ref triaxial.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 
 GeographicLib::TransverseMercator and
@@ -3684,7 +3740,7 @@ projection (Fig. 3(a)).  The extended Thompson projection figure has
 reflection symmetry on all the four sides of Fig. 3(c).
 
 <center>
-Back to \ref geodesic.  Forward to \ref geocentric.  Up to \ref contents.
+Back to \ref triaxial.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
