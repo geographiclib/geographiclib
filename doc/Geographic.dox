@@ -3305,9 +3305,9 @@ Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
 
 Jacobi (1839) showed that the problem of geodesics on a triaxial
 ellipsoids (with 3 unequal axes) can be reduced by quadrature.  Despite
-this fact, the detailed behavior of the geodesics is not very well
-known.  In this section, I briefly give Jacobi's solution and illustrate
-the behavior of the geodesics.
+this, the detailed behavior of the geodesics is not very well known.  In
+this section, I briefly give Jacobi's solution and illustrate the
+behavior of the geodesics.
 
 Go to
  - \ref triaxial-coords
@@ -3361,7 +3361,7 @@ Go to
  -# An alternative to exploring geodesics using Jacobi's solution is to
     integrate the equations for the geodesics directly.  This is the
     approach taken by
-    <a href="http://www.math.harvard.edu/~knill/caustic/exhibits/ellipsoid/">
+    <a href="http://www.math.harvard.edu/~knill/caustic/">
     Oliver Knill and Michael Teodorescu</a>.  However it is difficult to
     ensure that the long time behavior is correctly modeled with such an
     approach.
@@ -3461,7 +3461,7 @@ and thus represented a challenging "unsolved" problem in the first half
 of the nineteenth century.  As Jacobi discovered, the geodesics equation
 are separable if they are expressed in ellipsoidal coordinates.  You can
 get an idea of the importance Jacobi attached to his discovery from the
-<a href="http://books.google.com/books?id=_09tAAAAMAAJ&pg=PA385"
+<a href="http://books.google.com/books?id=_09tAAAAMAAJ&pg=PA385">
 letter</a> he wrote to his friend and neighbor Bessel:
 <blockquote> The day before yesterday, I reduced to quadrature the
 problem of geodesic lines on an <i>ellipsoid with three unequal

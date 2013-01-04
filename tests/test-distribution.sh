@@ -273,12 +273,12 @@ done
 
 cd $TEMP/relx/GeographicLib-$VERSION
 echo Files with trailing spaces:
-find . -type f | egrep -v 'Makefile\.in|\.m4|\.png' |
+find . -type f | egrep -v 'Makefile\.in|\.m4|\.png|\.pdf' |
 xargs grep -l ' $' || true
 echo
 echo Files with tabs:
 find . -type f |
-egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png' |
+egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf' |
 egrep -v '\.sh|depcomp|install-sh|config\.|configure|missing' |
 xargs grep -l  '	' || true
 echo
