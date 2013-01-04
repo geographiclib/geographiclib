@@ -72,8 +72,8 @@ CMakeLists.txt.
 - These algorithms are derived in C. F. F. Karney,
   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
   Algorithms for geodesics</a>,
-  J. Geodesy, 2012 (<a href="http://geographiclib.sf.net/geod-addenda.html">
-  addenda</a>).
+  J. Geodesy <b>87</b>, 43--55 (2013)
+  (<a href="http://geographiclib.sf.net/geod-addenda.html"> addenda</a>).
 - A longer paper on geodesics: C. F. F. Karney,
    <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
    on an ellipsoid of revolution</a>,

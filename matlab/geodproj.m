@@ -62,9 +62,8 @@ function geodproj
 %   the property of the spherical gnomonic projection, that geodesics map
 %   to straight lines.  The projection is derived in Section 8 of
 %
-%     C. F. F. Karney,
-%     Algorithms for geodesics,
-%     J. Geodesy (2012);
+%     C. F. F. Karney, Algorithms for geodesics,
+%     J. Geodesy 87, 43-55 (2013);
 %     http://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %

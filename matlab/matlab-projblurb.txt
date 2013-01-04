@@ -20,13 +20,14 @@ In addition, all geodesics that pass close to the center point are very
 nearly straight.  It is derived in Section 8 of
 
   C. F. F. Karney, Algorithms for geodesics,
-  J. Geodesy (2012); http://dx.doi.org/10.1007/s00190-012-0578-z
+  J. Geodesy 87, 43-55 (2013);
+  http://dx.doi.org/10.1007/s00190-012-0578-z
   Addenda: http://geographiclib.sf.net/geod-addenda.html
 
 The implementation of the transverse Mercator projection is based on
 
   C. F. F. Karney, Transverse Mercator with an accuracy of a few
-  nanometers, J. Geodesy 85(8), 475-485 (Aug. 2011);
+  nanometers, J. Geodesy 85, 475-485 (2011);
   Addenda: http://geographiclib.sf.net/tm-addenda.html
 
 The functions provided are EQDAZIM_FWD, EQDAZIM_INV, CASSINI_FWD,

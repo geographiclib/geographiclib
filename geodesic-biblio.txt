@@ -977,6 +977,6 @@
    Errata: http://geographiclib.sf.net/geod-addenda.html#geod-errata
  * C. F. F. Karney,[[BR]]
    ''Algorithms for geodesics'',
-   J. Geodesy (2012).[[BR]]
+   J. Geodesy '''87'''(1), 43--55 (2013).[[BR]]
    http://dx.doi.org/10.1007/s00190-012-0578-z [[BR]]
    Addenda: http://geographiclib.sf.net/geod-addenda.html

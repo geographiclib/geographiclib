@@ -151,7 +151,7 @@ covered by the data (assuming the edges of the image are geodesics).
 
 GeoConvert(1).  The algorithm for the area of geodesic polygon is
 given in Section 6 of C. F. F. Karney, I<Algorithms for geodesics>,
-J. Geodesy, 2012; DOI L<http://dx.doi.org/10.1007/s00190-012-0578-z>;
+J. Geodesy 87, 43-55 (2013); DOI L<http://dx.doi.org/10.1007/s00190-012-0578-z>;
 addenda: L<http://geographiclib.sf.net/geod-addenda.html>.
 
 =head1 AUTHOR

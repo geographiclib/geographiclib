@@ -2579,7 +2579,7 @@ Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page geodesic Geodesics on the ellipsoid of revolution
+\page geodesic Geodesics on an ellipsoid of revolution
 
 <center>
 Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
@@ -2613,6 +2613,9 @@ Go to
  - \ref geodseries
  - \ref geodellip
  - \ref meridian
+ .
+For some background information on geodesics on triaxial ellipsoids, see
+\ref triaxial.
 
 References
  - F. W. Bessel,
@@ -2628,11 +2631,11 @@ References
    Chaps. 5--7.
  - J. Danielsen,
    The Area under the Geodesic,
-   Survey Review 30 (232), 61--66 (1989).
+   Survey Review 30(232), 61--66 (1989).
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
-   J. Geodesy, 2012;
+   J. Geodesy 87(1), 43--55 (Jan. 2013);
    DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
    addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
@@ -3300,52 +3303,397 @@ Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
 \ref contents.
 </center>
 
+Jacobi (1839) showed that the problem of geodesics on a triaxial
+ellipsoids (with 3 unequal axes) can be reduced by quadrature.  Despite
+this fact, the detailed behavior of the geodesics is not very well
+known.  In this section, I briefly give Jacobi's solution and illustrate
+the behavior of the geodesics.
+
+Go to
+ - \ref triaxial-coords
+ - \ref triaxial-rev
+ - \ref triaxial-jacobi
+ - \ref triaxial-survey
+ - \ref triaxial-stab
+
+<b>NOTES</b>
+ -# There is nothing new in this section.  It is just an exercise in
+    exploring Jacobi's solution.  My interest here is in generating long
+    geodesics with the correct long-time behavior.  Arnold gives a
+    nice qualitative description of the solution in <i>Mathematical
+    Methods of Classical Mechanics</i> (2nd edition, Springer, 1989),
+    pp. 264--266.
+ -# A triaxial ellipsoid approximates the earth only slightly better
+    than an ellipsoid of revolution.  If you are really considering
+    measuring distances on the earth using a triaxial ellipsoid, you
+    should also be worrying about the shape of the geoid (which
+    essentially makes the geodesic problem a hopeless mess).
+ -# Possible reasons this problem might, nevertheless, be of interest
+    are:
+    - It is the first example of a dynamical system which has a
+      non-trivial constant of motion.  As such, Jacobi's paper generated
+      a lot of excitement and was followed by many papers elaborating
+      his solution.  In particular, the unstable behavior of one of the
+      closed geodesics of the ellipsoid, is an early example of a system
+      with a positive Lyapunov exponent (one of the essential
+      ingredients for chaotic behavior in dynamical systems).
+    - Knowledge of ellipsoidal coordinates (used by Jacobi) might be
+      useful in other areas of geodesy.
+    - Geodesics which pass through the pole on an ellipsoid revolution
+      represent a degenerate class (they are all closed and all pass
+      through the opposite pole).  It is of interest to see how this
+      degeneracy is broken with a surface with a more general shape.
+ -# My interest in this problem was piqued by Jean-Marc Baillard.  I put
+    him onto Jacobi's solution without having looked at it in detail
+    myself; and he quickly implemented the solution for an HP-41
+    calculator(!) which is posted
+    <a href="http://hp41programs.yolasite.com/geod3axial.php"> here</a>.
+ -# The figures in this section are relatively small in order to allow
+    them to be displayed quickly.  The "Fig. N" link beneath each figure
+    points to a PDF version of the figure.  These are in vector format
+    and allow the figures to be magnified to show the details more
+    clearly.
+ -# I do not give full citations of the papers here.  You can find these
+    in the
+    <a href="http://geographiclib.sourceforge.net/geodesic-papers/biblio.html">
+    Online Geodesic Bibliography</a>; this includes links to online
+    versions of the papers.
+ -# An alternative to exploring geodesics using Jacobi's solution is to
+    integrate the equations for the geodesics directly.  This is the
+    approach taken by
+    <a href="http://www.math.harvard.edu/~knill/caustic/exhibits/ellipsoid/">
+    Oliver Knill and Michael Teodorescu</a>.  However it is difficult to
+    ensure that the long time behavior is correctly modeled with such an
+    approach.
+ -# At this point, I have no plans to add the solution of triaxial
+    geodesic problem to %GeographicLib.
+
+\section triaxial-coords Triaxial coordinate systems
+
+Consider the ellipsoid defined by
+\f[
+  f = \frac{x^2}{a^2} + \frac{y^2}{b^2} + \frac{z^2}{c^2} = 1,
+\f]
+where, without loss of generality, \f$ a \ge b \ge c \gt 0\f$.  A
+point on the surface is specified by a latitude and longitude.  The \e
+geographical latitude and longitude \f$(\phi, \lambda)\f$ are defined by
+\f[
+ \frac{\nabla f}{\left| \nabla f\right|} = \left(
+\begin{array}{c} \cos\phi \cos\lambda \\ \cos\phi \sin\lambda \\ \sin\phi
+\end{array}\right).
+\f]
+The \e parametric latitude and longitude \f$(\phi', \lambda')\f$ are
+defined by
+\f[
+\begin{aligned}
+ x &= a \cos\phi' \cos\lambda', \\
+ y &= b \cos\phi' \sin\lambda', \\
+ z &= c \sin\phi'. \\
+\end{aligned}
+\f]
+Jacobi employed the \e ellipsoidal latitude and longitude \f$(\beta,
+\omega)\f$ defined by
+\f[
+\begin{aligned}
+  x &= a \cos\omega
+      \frac{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}}
+           {\sqrt{a^2 - c^2}}, \\
+  y &= b \cos\beta \sin\omega, \\
+  z &= c \sin\beta
+      \frac{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}}
+           {\sqrt{a^2 - c^2}}.
+\end{aligned}
+\f]
+Grid lines of constant \f$\beta\f$ and \f$\omega\f$ are given in Fig. 1.
+
 <center>
 <img src="triaxial-grid.png"
 width=419 height=375 alt="Geodesic grid on a triaxial ellipsoid">
 <a href="triaxial-grid.pdf">Fig. 1</a>
 </center>\n
-Geodesic grid on a triaxial ellipsoid.
+<a href="triaxial-grid.pdf">Fig. 1</a>:
+The ellipsoidal grid.  The blue (resp. green) lines are lines of constant
+\f$\beta\f$ (resp. \f$\omega\f$); the grid spacing is 10&deg;.  Also
+shown in red are two of the principal sections of the ellipsoid, defined
+by \f$x = 0\f$ and \f$z = 0\f$.  The third principal section, \f$y =
+0\f$, is covered by the lines \f$\beta = \pm 90^\circ\f$ and \f$\omega =
+90^\circ \pm 90^\circ\f$.  These lines meet at four umbilical points (two
+of which are visible in this figure) where the principal radii of
+curvature are equal.  The parameters of the ellipsoid are \f$a =
+1.01\f$, \f$b = 1\f$, \f$c = 0.8\f$, and it is viewed in an orthographic
+projection from a point above \f$\phi = 40^\circ\f$, \f$\lambda =
+30^\circ\f$.  These parameters were chosen to accentuate the ellipsoidal
+effects on geodesics (relative to those on the earth) while still
+allowing the connection to an ellipsoid of revolution to be made.
+
+The grid lines of the ellipsoid coordinates are "lines of curvature" on
+the ellipsoid, i.e., they are parallel to the direction of principal
+curvature (Monge, 1796).  They are also intersections of the ellipsoid
+with confocal systems of hyperboloids of one and two sheets (Dupin,
+1813).  Finally they are geodesic ellipses and hyperbolas defined using
+two adjacent umbilical points.  For example, the lines of constant
+\f$\beta\f$ in Fig. 1 can be generated with the familiar string
+construction for ellipses with the ends of the string pinned to the two
+umbilical points.
+
+Inter-conversions between these three latitudes and longitudes and the
+cartesian coordinates are simple algebraic exercises.
+
+\section triaxial-rev Survey of geodesics on an ellipsoid of revolution
+
+The problem of geodesics on an ellipsoid of revolution is, from the
+mathematical point of view, trivial.  Because of its symmetry, it has a
+constant of the motion (analogous to the angular momentum) which was
+found by Clairaut (1733).  By 1806 (with the work of Legendre, Oriani,
+et al.), there was a complete understanding of the qualitative behavior
+of geodesics on an ellipsoid of revolution.  There are two classes of
+simple closed geodesics (i.e., geodesics which close on themselves
+without intersection): the equator and all the meridians.  All other
+geodesics oscillate between two equal and opposite circles of latitude;
+but after completing a full oscillation in latitude these fall slightly
+short (for an oblate ellipsoid) of completing a full circuit in
+longitude.
+
+\section triaxial-jacobi Jacobi's solution
+
+Geodesics on a triaxial ellipsoid has no obvious constant of the motion
+and thus represented a challenging "unsolved" problem in the first half
+of the nineteenth century.  As Jacobi discovered, the geodesics equation
+are separable if they are expressed in ellipsoidal coordinates.  You can
+get an idea of the importance Jacobi attached to his discovery from the
+<a href="http://books.google.com/books?id=_09tAAAAMAAJ&pg=PA385"
+letter</a> he wrote to his friend and neighbor Bessel:
+<blockquote> The day before yesterday, I reduced to quadrature the
+problem of geodesic lines on an <i>ellipsoid with three unequal
+axes</i>.  They are the simplest formulas in the world, Abelian
+integrals, which become the well-known elliptic integrals if 2 axes are
+set equal.\n
+K&ouml;nigsberg, 28th Dec. '38.
+</blockquote>
+
+On the same day he wrote a similar letter to the editor of Compte Rendus
+and his result was published in J. Crelle in (1839) with a French
+translation (from German) appearing in J. Liouville in (1841).
+
+Here is the solution, exactly as given by Jacobi
+<a href="http://books.google.com/books?id=Rh8GAAAAYAAJ&pg=PA268"> here</a>
+(with minor changes in notation):
+\f[
+\begin{aligned}
+\delta &= \int \frac
+{\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}\,d\beta}
+{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}
+ \sqrt{(b^2-c^2)\cos^2\beta - \gamma}}\\
+&\quad -
+\int \frac
+{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}\,d\omega}
+{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}
+ \sqrt{(a^2-b^2)\sin^2\omega + \gamma}}
+\end{aligned}
+\f]
+As Jacobi notes &quot;a function of the angle \f$\beta\f$ equals a
+function of the angle \f$\omega\f$.  These two functions are just
+Abelian integrals...&quot; Two constants \f$\delta\f$ and \f$\gamma\f$
+appear in the solution.  Typically \f$\delta\f$ is zero if the lower
+limits of the integrals are taken to be the starting point of the geodesic
+and the direction of the geodesics is determined by \f$\gamma\f$.
+However for geodesics that start at an umbilical points, we have \f$\gamma
+= 0\f$ and \f$\delta\f$ determines the direction at the umbilical point.
+Incidentally the constant \f$\gamma\f$ may be expressed as
+\f[
+\gamma = (b^2-c^2)\cos^2\beta\sin^2\alpha-(a^2-b^2)\sin^2\omega\cos^2\alpha
+\f]
+where \f$\alpha\f$ is the angle the geodesic makes with lines of
+constant \f$\omega\f$. In the limit \f$a\rightarrow b\f$, this reduces
+to \f$\cos\beta\sin\alpha = \text{const.}\f$, the familiar Clairaut
+relation.  A nice derivation of Jacobi's result is given by Darboux
+(1894) <a href="http://books.google.com/books?id=hGMSAAAAIAAJ&pg=PA9">
+&sect;&sect;583--584</a>.
+
+Jacobi's solution is a convenient way to compute geodesics on an
+ellipsoid.  Care must be taken to avoid the singularities arising from
+the last terms in the denominators of the integrands.  If \f$\gamma \gt
+0\f$ (resp. \f$\gamma \lt 0\f$), then the \f$\beta\f$
+(resp. \f$\omega\f$) integrand diverges.  The integrand can be
+transformed into a finite one by a change of variable, e.g.,
+\f$\sin\beta = \sin\sigma \sqrt{1 - \gamma/(b^2-c^2)}\f$.  The resulting
+integrals are periodic, so the behavior of an arbitrarily long geodesic
+is entirely captured by tabulating the integrals over a single period.
+
+The situation is more complicated if \f$\gamma = 0\f$ (corresponding to
+umbilical geodesics).  Both integrands have simple poles at the umbilical
+points.  However, this behavior may be subtracted from the integrands to
+yield (for example) the sum of a term involving
+\f$\tanh^{-1}\sin\beta\f$ and a finite integral.  Since both integrals
+contain similar logarithmic singularities they can be equated (thus
+fixing the ratio \f$\cos\beta/\sin\omega\f$ at the umbilical point) and
+connection formulas can be found which allow the geodesic to be followed
+through the umbilical point.  The study of umbilical geodesics was of
+special interest to a group of Irish mathematicians in the 1840's and
+1850's, including Michael and William Roberts (twins!), Hart, Graves,
+and Salmon.
+
+\section triaxial-survey Survey of geodesics on a triaxial ellipsoid
+
+In Figs. 2--6, I use the same ellipsoid parameters as in Fig. 1 and the
+same viewing direction.  The three principal ellipses are shown in red
+in each of these figures.
+
+There are only 3 simple closed geodesics, the three principal sections
+of the ellipsoid given by \f$x = 0\f$, \f$y = 0\f$, and \f$z = 0\f$.  To
+survey the other geodesics, it is convenient to consider geodesics which
+intersect the middle principal section, \f$y = 0\f$, at right angles.
+
+If the starting point is \f$\beta_1 \in (-90^\circ, 90^\circ)\f$,
+\f$\omega_1 = 0\f$, and \f$\alpha_1 = 90^\circ\f$, then the geodesic
+encircles the ellipsoid in a "circumpolar" sense.  The geodesic
+oscillates north and south of the equator; on each oscillation it
+completes slightly less that a full circuit around the ellipsoid
+resulting in the geodesic filling the area bounded by the two latitude
+lines \f$\beta = \pm \beta_1\f$.  Two examples are given in
+Figs. 2 and 3.  Figure 2 shows practically the same behavior as for an
+oblate ellipsoid of revolution (because \f$a \approx b\f$).  However, if
+the starting point is at a higher latitude the distortions resulting
+from \f$a \ne b\f$ are evident.
 
 <center>
 <img src="triaxial-equatorial-a.png"
 width=419 height=375 alt="Example of a circumpolar geodesic on a
 triaxial ellipsoid">
-<a href="triaxial-equatorial-a.pdf">Fig. 1</a>
+<a href="triaxial-equatorial-a.pdf">Fig. 2</a>
 </center>\n
-Example of a circumpolar geodesic on a triaxial ellipsoid.
+<a href="triaxial-equatorial-a.pdf">Fig. 2</a>:
+Example of a circumpolar geodesic on a triaxial ellipsoid.  The starting
+point of this geodesic is \f$\beta_1 = 45.1^\circ\f$, \f$\omega_1 =
+0^\circ\f$, and \f$\alpha_1 = 90^\circ\f$.
 
 <center>
 <img src="triaxial-equatorial-b.png"
 width=419 height=375 alt="Another example of a circumpolar geodesic on a
 triaxial ellipsoid">
-<a href="triaxial-equatorial-b.pdf">Fig. 1</a>
+<a href="triaxial-equatorial-b.pdf">Fig. 3</a>
 </center>\n
-Another example of a circumpolar geodesic on a triaxial ellipsoid.
+<a href="triaxial-equatorial-b.pdf">Fig. 3</a>:
+Another example of a circumpolar geodesic on a triaxial ellipsoid.  The
+starting point of this geodesic is \f$\beta_1 = 87.48^\circ\f$, \f$\omega_1 =
+0^\circ\f$, and \f$\alpha_1 = 90^\circ\f$.
+
+If the starting point is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 \in
+(0^\circ, 180^\circ)\f$, and \f$\alpha_1 = 0^\circ\f$, then the geodesic
+encircles the ellipsoid in a "transpolar" sense.  The geodesic
+oscillates east and west of the ellipse \f$x = 0\f$; on each oscillation
+it completes slightly more that a full circuit around the ellipsoid
+resulting in the geodesic filling the area bounded by the two longitude
+lines \f$\omega = \omega_1\f$ and \f$\omega = 180^\circ - \omega_1\f$.
+If \f$a = b\f$, all meridians are geodesics; the effect of \f$a \ne b\f$
+causes such geodesics to oscillate east and west.  Two examples are
+given in Figs. 4 and 5.
 
 <center>
 <img src="triaxial-polar-a.png"
 width=419 height=375 alt="Example of a transpolar geodesic on a
 triaxial ellipsoid">
-<a href="triaxial-polar-a.pdf">Fig. 1</a>
+<a href="triaxial-polar-a.pdf">Fig. 4</a>
 </center>\n
-Example of a transpolar geodesic on a triaxial ellipsoid.
+<a href="triaxial-polar-a.pdf">Fig. 4</a>:
+Example of a transpolar geodesic on a triaxial ellipsoid.  The
+starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
+39.9^\circ\f$, and \f$\alpha_1 = 0^\circ\f$.
 
 <center>
 <img src="triaxial-polar-b.png"
 width=419 height=375 alt="Another example of a transpolar geodesic on a
 triaxial ellipsoid">
-<a href="triaxial-polar-b.pdf">Fig. 1</a>
+<a href="triaxial-polar-b.pdf">Fig. 5</a>
 </center>\n
-Another example of a transpolar geodesic on a triaxial ellipsoid.
+<a href="triaxial-polar-b.pdf">Fig. 5</a>:
+Another example of a transpolar geodesic on a triaxial ellipsoid.  The
+starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
+9.966^\circ\f$, and \f$\alpha_1 = 0^\circ\f$.
+
+If the starting point is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
+0^\circ\f$ (an umbilical point), and \f$\alpha_1 = 45^\circ\f$ (the
+geodesic leaves the ellipse \f$y = 0\f$ at right angles), then the
+geodesic repeatedly intersects the opposite umbilical point and returns to
+its starting point.  However on each circuit the angle at which
+intersects \f$y = 0\f$ becomes closer to \f$0^\circ\f$ or
+\f$180^\circ\f$ so that asymptotically the geodesic lies on the ellipse
+\f$y = 0\f$.  This is shown in Fig. 6.  Note that a single geodesic does
+not fill an area on the ellipsoid.
 
 <center>
 <img src="triaxial-umbilic.png"
-width=419 height=375 alt="Example of an umbilic geodesic on a
+width=419 height=375 alt="Example of an umbilical geodesic on a
 triaxial ellipsoid">
-<a href="triaxial-umbilic.pdf">Fig. 1</a>
+<a href="triaxial-umbilic.pdf">Fig. 6</a>
 </center>\n
-Example of an umbilic geodesic on a triaxial ellipsoid.
+<a href="triaxial-umbilic.pdf">Fig. 6</a>:
+Example of an umbilical geodesic on a triaxial ellipsoid.  The
+starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
+0^\circ\f$, and \f$\alpha_1 = 45^\circ\f$ and the geodesics is followed
+forwards and backwards until it lies close to the plane \f$y = 0\f$ in
+both directions.
+
+Umbilical geodesic enjoy several interesting properties.
+ - Through any point on the ellipsoid, there are two umbilical geodesics.
+ - The geodesic distance between opposite umbilical points is the same
+   regardless of the initial direction of the geodesic.
+ - Whereas the closed geodesics on the ellipses \f$x = 0\f$ and \f$z =
+   0\f$ are stable (an geodesic initially close to and nearly parallel to
+   the ellipse remains close to the ellipse), the closed geodesic on the
+   ellipse \f$y = 0\f$, which goes through all 4 umbilical points, is \e
+   unstable.  If it is perturbed, it will swing out of the plane \f$y =
+   0\f$ and flip around before returning to close to the plane.  (This
+   behavior may repeat depending on the nature of the initial
+   perturbation.).
+
+\section triaxial-stab The stability of closed geodesics on a triaxial ellipsoid
+
+The stability of the three simple closed geodesics can be determined by
+examining the properties of Jacobi's solution.  In particular the
+unstable behavior of umbilical geodesics was shown by Hart (1849).
+However an alternative approach is to use the equations that Gauss
+(1828) gives for a perturbed geodesic
+\f[
+\frac {d^2m}{ds^2} + Km = 0
+\f]
+where \f$m\f$ is the distance of perturbed geodesic from a reference
+geodesic and \f$K\f$ is the Gaussian curvature of the surface.  If the
+reference geodesic is closed, then this is a linear homogeneous
+differential equation with periodic coefficients.  In fact it's a
+special case of Hill's equation which can be treated using Floquet
+theory, see <a href="http://dlmf.nist.gov/28.29">DLMF, &sect;28.29</a>.
+Using the notation of &sect;3 of
+<a href="http://dx.doi.org/10.1007/s00190-012-0578-z"> Algorithms for
+geodesics</a>, the stability is determined by computing the reduced
+length \f$m_{12}\f$ and the geodesic scales \f$M_{12}, M_{21}\f$ over
+half the perimeter of the ellipse and determining the eigenvalues
+\f$\lambda_{1,2}\f$ of
+\f[
+{\cal M} = \left(\begin{array}{cc}
+M_{12} & m_{12}\\
+-\frac{1 - M_{12}M_{21}}{m_{12}} & M_{21}
+\end{array}\right).
+\f]
+Because \f$\mathrm{det}\,{\cal M} = 1\f$, the eigenvalues are determined
+by \f$\mathrm{tr}\,{\cal M}\f$.  In particular if
+\f$\left|\mathrm{tr}\,{\cal M}\right| < 2\f$, we have
+\f$\left|\lambda_{1,2}\right| = 1\f$ and the solution is stable; if
+\f$\left|\mathrm{tr}\,{\cal M}\right| > 2\f$, one of
+\f$\left|\lambda_{1,2}\right|\f$ is larger than unity and the solution
+is (exponentially) unstable.  In the transition case,
+\f$\left|\mathrm{tr}\,{\cal M}\right| = 2\f$, the solution is stable
+provided that the off-diagonal elements of \f${\cal M}\f$ are zero;
+otherwise the solution is linearly unstable.
+
+The exponential instability of the geodesic on the ellipse \f$y = 0\f$
+is confirmed by this analysis and results from the resonance between the
+natural frequency of the equation for \f$m\f$ and the driving frequency
+when \f$b\f$ lies in \f$(c, a)\f$.  If \f$b\f$ is equal to either of the
+other axes (and the triaxial ellipsoid degenerates to an ellipsoid of
+revolution), then the solution is linearly unstable.  (For example, a
+geodesic is which is close to a meridian on an oblate ellipsoid, slowly
+moves away from that meridian.)
 
 <center>
 Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
@@ -3637,6 +3985,7 @@ width=667 height=305 alt="Gauss-Schreiber transverse Mercator graticule
 (scaled)">
 <a href="gauss-schreiber-graticule-a.pdf">Fig. 1(a)</a>
 </center>\n
+<a href="gauss-schreiber-graticule-a.pdf">Fig. 1(a)</a>:
 The graticule for the spherical transverse Mercator projection.
 The equator lies on \e y = 0.
 Compare this with Lee, Fig. 1 (right), which shows the graticule for
@@ -3666,6 +4015,7 @@ width=667 height=305 alt="Thompson transverse Mercator graticule
 (scaled)">
 <a href="thompson-tm-graticule-a.pdf">Fig. 1(c)</a>
 </center>\n
+<a href="thompson-tm-graticule-a.pdf">Fig. 1(c)</a>:
 The graticule for the Thompson transverse Mercator projection.  The
 equator lies on \e y = 0 for longitude < 81&deg;; at longitude =
 81&deg;, it turns by 120&deg; and heads for \e y = 1.
@@ -3679,6 +4029,7 @@ projection) projects the ellipsoid to a finite area.
 width=672 height=552 alt="Truncation error for Gauss-Krueger series">
 <a href="gauss-krueger-error.pdf">Fig. 2</a>
 </center>\n
+<a href="gauss-krueger-error.pdf">Fig. 2</a>:
 The truncation error for the series for the Gauss-Kr&uuml;ger transverse
 Mercator projection.  The blue curves show the truncation error for the
 order of the series \e J = 2 (top) thru \e J = 12 (bottom).  The red
@@ -3693,6 +4044,7 @@ width=673 height=323 alt="Gauss-Krueger transverse Mercator
 graticule">\n
 <a href="gauss-krueger-graticule.pdf">Fig. 3(a)</a>
 </center>
+<a href="gauss-krueger-graticule.pdf">Fig. 3(a)</a>:
 The graticule for the extended domain.  The blue lines show
 latitude and longitude at multiples of 10&deg;.  The green lines
 show 1&deg; intervals for longitude in [80&deg;, 90&deg;] and latitude in
@@ -3704,6 +4056,7 @@ width=673 height=323 alt="Gauss-Krueger transverse Mercator
 convergence and scale">
 <a href="gauss-krueger-convergence-scale.pdf">Fig. 3(b)</a>
 </center>\n
+<a href="gauss-krueger-convergence-scale.pdf">Fig. 3(b)</a>:
 The convergence and scale for the Gauss-Kr&uuml;ger
 transverse Mercator projection in the extended domain.  The blue lines
 emanating from the top left corner (the north pole) are lines of
@@ -3727,6 +4080,7 @@ scale and convergence at the branch point are 1/\e e = 10 and
 width=661 height=321 alt="Thompson transverse Mercator graticule">
 <a href="thompson-tm-graticule.pdf">Fig. 3(c)</a>
 </center>\n
+<a href="thompson-tm-graticule.pdf">Fig. 3(c)</a>:
 The graticule for the Thompson transverse Mercator
 projection for the extended domain.  The range of the projection is the
 rectangular region shown
