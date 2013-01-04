@@ -147,13 +147,13 @@ mkdir ../BUILD-matlab
 cd ../BUILD-matlab
 cmake -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
 make -j$NUMCPUS
-make -j$NUMCPUS matlab-all
+make -j$(((NUMCPUS+2)/3)) matlab-all
 make install
 mkdir ../BUILD-system
 cd ../BUILD-system
 cmake -D MATLAB_COMPILER=mkoctfile ..
 make -j$NUMCPUS
-make -j$NUMCPUS matlab-all
+make -j$(((NUMCPUS+2)/3)) matlab-all
 
 mkdir -p $TEMP/geographiclib-matlab/private
 cd $TEMP/instc/libexec/GeographicLib/matlab

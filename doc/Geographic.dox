@@ -3311,7 +3311,6 @@ behavior of the geodesics.
 
 Go to
  - \ref triaxial-coords
- - \ref triaxial-rev
  - \ref triaxial-jacobi
  - \ref triaxial-survey
  - \ref triaxial-stab
@@ -3439,28 +3438,21 @@ umbilical points.
 Inter-conversions between these three latitudes and longitudes and the
 cartesian coordinates are simple algebraic exercises.
 
-\section triaxial-rev Survey of geodesics on an ellipsoid of revolution
-
-The problem of geodesics on an ellipsoid of revolution is, from the
-mathematical point of view, trivial.  Because of its symmetry, it has a
-constant of the motion (analogous to the angular momentum) which was
-found by Clairaut (1733).  By 1806 (with the work of Legendre, Oriani,
-et al.), there was a complete understanding of the qualitative behavior
-of geodesics on an ellipsoid of revolution.  There are two classes of
-simple closed geodesics (i.e., geodesics which close on themselves
-without intersection): the equator and all the meridians.  All other
-geodesics oscillate between two equal and opposite circles of latitude;
-but after completing a full oscillation in latitude these fall slightly
-short (for an oblate ellipsoid) of completing a full circuit in
-longitude.
-
 \section triaxial-jacobi Jacobi's solution
 
-Geodesics on a triaxial ellipsoid has no obvious constant of the motion
-and thus represented a challenging "unsolved" problem in the first half
-of the nineteenth century.  As Jacobi discovered, the geodesics equation
-are separable if they are expressed in ellipsoidal coordinates.  You can
-get an idea of the importance Jacobi attached to his discovery from the
+Solving the geodesic problem for an ellipsoid of revolution is, from the
+mathematical point of view, trivial; because of symmetry, geodesics have
+a constant of the motion (analogous to the angular momentum) which was
+found by Clairaut (1733).  By 1806 (with the work of Legendre, Oriani,
+et al.), there was a complete understanding of the qualitative behavior
+of geodesics on an ellipsoid of revolution.
+
+On the other hand, geodesics on a triaxial ellipsoid have no obvious
+constant of the motion and thus represented a challenging "unsolved"
+problem in the first half of the nineteenth century.  Jacobi discovered
+that the geodesic equations are separable if they are expressed in
+ellipsoidal coordinates.  You can get an idea of the importance Jacobi
+attached to his discovery from the
 <a href="http://books.google.com/books?id=_09tAAAAMAAJ&pg=PA385">
 letter</a> he wrote to his friend and neighbor Bessel:
 <blockquote> The day before yesterday, I reduced to quadrature the
@@ -3533,16 +3525,25 @@ special interest to a group of Irish mathematicians in the 1840's and
 1850's, including Michael and William Roberts (twins!), Hart, Graves,
 and Salmon.
 
-\section triaxial-survey Survey of geodesics on a triaxial ellipsoid
+\section triaxial-survey Survey of triaxial geodesics
 
-In Figs. 2--6, I use the same ellipsoid parameters as in Fig. 1 and the
-same viewing direction.  The three principal ellipses are shown in red
-in each of these figures.
+Before delving into the nature of geodesics on a triaxial geodesic, it
+is worth reviewing geodesics on an ellipsoid of revolution.  There are
+two classes of simple closed geodesics (i.e., geodesics which close on
+themselves without intersection): the equator and all the meridians.
+All other geodesics oscillate between two equal and opposite circles of
+latitude; but after completing a full oscillation in latitude these fall
+slightly short (for an oblate ellipsoid) of completing a full circuit in
+longitude.
 
-There are only 3 simple closed geodesics, the three principal sections
-of the ellipsoid given by \f$x = 0\f$, \f$y = 0\f$, and \f$z = 0\f$.  To
-survey the other geodesics, it is convenient to consider geodesics which
-intersect the middle principal section, \f$y = 0\f$, at right angles.
+Turning to the triaxial case, we find that there are only 3 simple
+closed geodesics, the three principal sections of the ellipsoid given by
+\f$x = 0\f$, \f$y = 0\f$, and \f$z = 0\f$.  To survey the other
+geodesics, it is convenient to consider geodesics which intersect the
+middle principal section, \f$y = 0\f$, at right angles.  Such geodesics
+are shown in Figs. 2--6, where I use the same ellipsoid parameters as in
+Fig. 1 and the same viewing direction.  In addition, The three principal
+ellipses are shown in red in each of these figures.
 
 If the starting point is \f$\beta_1 \in (-90^\circ, 90^\circ)\f$,
 \f$\omega_1 = 0\f$, and \f$\alpha_1 = 90^\circ\f$, then the geodesic
@@ -3553,8 +3554,8 @@ resulting in the geodesic filling the area bounded by the two latitude
 lines \f$\beta = \pm \beta_1\f$.  Two examples are given in
 Figs. 2 and 3.  Figure 2 shows practically the same behavior as for an
 oblate ellipsoid of revolution (because \f$a \approx b\f$).  However, if
-the starting point is at a higher latitude the distortions resulting
-from \f$a \ne b\f$ are evident.
+the starting point is at a higher latitude (Fig. 3) the distortions
+resulting from \f$a \ne b\f$ are evident.
 
 <center>
 <img src="triaxial-equatorial-a.png"
@@ -3647,7 +3648,7 @@ Umbilical geodesic enjoy several interesting properties.
    behavior may repeat depending on the nature of the initial
    perturbation.).
 
-\section triaxial-stab The stability of closed geodesics on a triaxial ellipsoid
+\section triaxial-stab The stability of closed geodesics
 
 The stability of the three simple closed geodesics can be determined by
 examining the properties of Jacobi's solution.  In particular the
