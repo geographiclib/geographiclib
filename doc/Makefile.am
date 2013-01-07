@@ -1,31 +1,18 @@
 EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html \
 	$(srcdir)/gauss-krueger-graticule.png \
-	$(srcdir)/gauss-krueger-graticule.pdf \
 	$(srcdir)/thompson-tm-graticule.png \
-	$(srcdir)/thompson-tm-graticule.pdf \
 	$(srcdir)/gauss-krueger-convergence-scale.png \
-	$(srcdir)/gauss-krueger-convergence-scale.pdf \
 	$(srcdir)/gauss-schreiber-graticule-a.png \
-	$(srcdir)/gauss-schreiber-graticule-a.pdf \
 	$(srcdir)/gauss-krueger-graticule-a.png \
-	$(srcdir)/gauss-krueger-graticule-a.pdf \
 	$(srcdir)/thompson-tm-graticule-a.png \
-	$(srcdir)/thompson-tm-graticule-a.pdf \
 	$(srcdir)/gauss-krueger-error.png \
-	$(srcdir)/gauss-krueger-error.pdf \
 	$(srcdir)/meridian-measures.png \
-	$(srcdir)/triaxial-grid.pdf \
 	$(srcdir)/triaxial-grid.png \
-	$(srcdir)/triaxial-equatorial-a.pdf \
 	$(srcdir)/triaxial-equatorial-a.png \
-	$(srcdir)/triaxial-equatorial-b.pdf \
 	$(srcdir)/triaxial-equatorial-b.png \
-	$(srcdir)/triaxial-polar-a.pdf \
 	$(srcdir)/triaxial-polar-a.png \
-	$(srcdir)/triaxial-polar-b.pdf \
 	$(srcdir)/triaxial-polar-b.png \
-	$(srcdir)/triaxial-umbilic.pdf \
-	$(srcdir)/triaxial-umbilic.png
+	$(srcdir)/triaxial-umbilical.png
 
 SCRIPTDRIVERS = \
 	$(srcdir)/scripts/geod-calc.html \

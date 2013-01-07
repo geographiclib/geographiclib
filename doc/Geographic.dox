@@ -107,7 +107,7 @@ The goals of %GeographicLib are:
  - Accuracy.  In most applications the accuracy is close to round-off,
    about 5 nm (5 nanometers).  Even though in many geographic
    applications 1 cm is considered "accurate enough", there is little
-   penalty in providing much better accuracy.  If situations where a
+   penalty in providing much better accuracy.  In situations where a
    faster approximate algorithm is necessary, %GeographicLib offers an
    accurate benchmark to guide the development.
  - Completeness.  For each of the projections included, an attempt is
@@ -3348,10 +3348,11 @@ Go to
     calculator(!) which is posted
     <a href="http://hp41programs.yolasite.com/geod3axial.php"> here</a>.
  -# The figures in this section are relatively small in order to allow
-    them to be displayed quickly.  The "Fig. N" link beneath each figure
-    points to a PDF version of the figure.  These are in vector format
-    and allow the figures to be magnified to show the details more
-    clearly.
+    them to be displayed quickly.  Vector versions of these figures are
+    available in
+    <a href="http://geographiclib.sourceforge.net/triaxial-figs.pdf"
+    type="application/pdf"> triaxial-figs.pdf</a>.  This allows you to
+    magnify the figures to show the details more clearly.
  -# I do not give full citations of the papers here.  You can find these
     in the
     <a href="http://geographiclib.sourceforge.net/geodesic-papers/biblio.html">
@@ -3407,10 +3408,10 @@ Grid lines of constant \f$\beta\f$ and \f$\omega\f$ are given in Fig. 1.
 
 <center>
 <img src="triaxial-grid.png"
-width=419 height=375 alt="Geodesic grid on a triaxial ellipsoid">
-<a href="triaxial-grid.pdf">Fig. 1</a>
+width=419 height=397 alt="Geodesic grid on a triaxial ellipsoid">
+Fig. 1
 </center>\n
-<a href="triaxial-grid.pdf">Fig. 1</a>:
+Fig. 1:
 The ellipsoidal grid.  The blue (resp. green) lines are lines of constant
 \f$\beta\f$ (resp. \f$\omega\f$); the grid spacing is 10&deg;.  Also
 shown in red are two of the principal sections of the ellipsoid, defined
@@ -3559,22 +3560,22 @@ resulting from \f$a \ne b\f$ are evident.
 
 <center>
 <img src="triaxial-equatorial-a.png"
-width=419 height=375 alt="Example of a circumpolar geodesic on a
+width=419 height=397 alt="Example of a circumpolar geodesic on a
 triaxial ellipsoid">
-<a href="triaxial-equatorial-a.pdf">Fig. 2</a>
+Fig. 2
 </center>\n
-<a href="triaxial-equatorial-a.pdf">Fig. 2</a>:
+Fig. 2:
 Example of a circumpolar geodesic on a triaxial ellipsoid.  The starting
 point of this geodesic is \f$\beta_1 = 45.1^\circ\f$, \f$\omega_1 =
 0^\circ\f$, and \f$\alpha_1 = 90^\circ\f$.
 
 <center>
 <img src="triaxial-equatorial-b.png"
-width=419 height=375 alt="Another example of a circumpolar geodesic on a
+width=419 height=397 alt="Another example of a circumpolar geodesic on a
 triaxial ellipsoid">
-<a href="triaxial-equatorial-b.pdf">Fig. 3</a>
+Fig. 3
 </center>\n
-<a href="triaxial-equatorial-b.pdf">Fig. 3</a>:
+Fig. 3:
 Another example of a circumpolar geodesic on a triaxial ellipsoid.  The
 starting point of this geodesic is \f$\beta_1 = 87.48^\circ\f$, \f$\omega_1 =
 0^\circ\f$, and \f$\alpha_1 = 90^\circ\f$.
@@ -3592,22 +3593,22 @@ given in Figs. 4 and 5.
 
 <center>
 <img src="triaxial-polar-a.png"
-width=419 height=375 alt="Example of a transpolar geodesic on a
+width=419 height=397 alt="Example of a transpolar geodesic on a
 triaxial ellipsoid">
-<a href="triaxial-polar-a.pdf">Fig. 4</a>
+Fig. 4
 </center>\n
-<a href="triaxial-polar-a.pdf">Fig. 4</a>:
+Fig. 4:
 Example of a transpolar geodesic on a triaxial ellipsoid.  The
 starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
 39.9^\circ\f$, and \f$\alpha_1 = 0^\circ\f$.
 
 <center>
 <img src="triaxial-polar-b.png"
-width=419 height=375 alt="Another example of a transpolar geodesic on a
+width=419 height=397 alt="Another example of a transpolar geodesic on a
 triaxial ellipsoid">
-<a href="triaxial-polar-b.pdf">Fig. 5</a>
+Fig. 5
 </center>\n
-<a href="triaxial-polar-b.pdf">Fig. 5</a>:
+Fig. 5:
 Another example of a transpolar geodesic on a triaxial ellipsoid.  The
 starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
 9.966^\circ\f$, and \f$\alpha_1 = 0^\circ\f$.
@@ -3623,12 +3624,12 @@ intersects \f$y = 0\f$ becomes closer to \f$0^\circ\f$ or
 not fill an area on the ellipsoid.
 
 <center>
-<img src="triaxial-umbilic.png"
-width=419 height=375 alt="Example of an umbilical geodesic on a
+<img src="triaxial-umbilical.png"
+width=419 height=397 alt="Example of an umbilical geodesic on a
 triaxial ellipsoid">
-<a href="triaxial-umbilic.pdf">Fig. 6</a>
+Fig. 6
 </center>\n
-<a href="triaxial-umbilic.pdf">Fig. 6</a>:
+Fig. 6:
 Example of an umbilical geodesic on a triaxial ellipsoid.  The
 starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
 0^\circ\f$, and \f$\alpha_1 = 45^\circ\f$ and the geodesics is followed
@@ -3973,20 +3974,21 @@ This section gives color versions of the figures in
    resource page
    <a href="http://geographiclib.sf.net/tm.html">tm.html</a>.
 
-\b NOTE: The figures in this section are relatively small in order to
-allow them to be displayed quickly.  The "Fig. N" link beneath each
-figure points to a PDF version of the figure.  These are in vector
-format and allow the figures to be magnified to show the details more
-clearly.  The numbering of the figures matches that in the paper cited
-above.
+\b NOTE:
+The numbering of the figures matches that in the paper cited above.  The
+figures in this section are relatively small in order to allow them to
+be displayed quickly.  Vector versions of these figures are available in
+<a href="http://geographiclib.sourceforge.net/tm-figs.pdf"
+type="application/pdf"> tm-figs.pdf</a>.  This allows you to magnify the
+figures to show the details more clearly.
 
 <center>
 <img src="gauss-schreiber-graticule-a.png"
 width=667 height=305 alt="Gauss-Schreiber transverse Mercator graticule
 (scaled)">
-<a href="gauss-schreiber-graticule-a.pdf">Fig. 1(a)</a>
+Fig. 1(a)
 </center>\n
-<a href="gauss-schreiber-graticule-a.pdf">Fig. 1(a)</a>:
+Fig. 1(a):
 The graticule for the spherical transverse Mercator projection.
 The equator lies on \e y = 0.
 Compare this with Lee, Fig. 1 (right), which shows the graticule for
@@ -4001,8 +4003,9 @@ the lines of latitude.)  This projection places the point latitude =
 <img src="gauss-krueger-graticule-a.png"
 width=667 height=305 alt="Gauss-Krueger transverse Mercator graticule
 (scaled)">
-<a href="gauss-krueger-graticule-a.pdf">Fig. 1(b)</a>
+Fig. 1(b)
 </center>\n
+Fig. 1(b):
 The graticule for the Gauss-Kr&uuml;ger transverse Mercator projection.
 The equator lies on \e y = 0 for longitude < 81&deg;; beyond
 this, it arcs up to meet \e y = 1.  Compare this with Lee, Fig. 45
@@ -4014,9 +4017,9 @@ Fig. 46, shows the graticule for the entire ellipsoid.  This projection
 <img src="thompson-tm-graticule-a.png"
 width=667 height=305 alt="Thompson transverse Mercator graticule
 (scaled)">
-<a href="thompson-tm-graticule-a.pdf">Fig. 1(c)</a>
+Fig. 1(c)
 </center>\n
-<a href="thompson-tm-graticule-a.pdf">Fig. 1(c)</a>:
+Fig. 1(c):
 The graticule for the Thompson transverse Mercator projection.  The
 equator lies on \e y = 0 for longitude < 81&deg;; at longitude =
 81&deg;, it turns by 120&deg; and heads for \e y = 1.
@@ -4028,9 +4031,9 @@ projection) projects the ellipsoid to a finite area.
 <center>
 <img src="gauss-krueger-error.png"
 width=672 height=552 alt="Truncation error for Gauss-Krueger series">
-<a href="gauss-krueger-error.pdf">Fig. 2</a>
+Fig. 2
 </center>\n
-<a href="gauss-krueger-error.pdf">Fig. 2</a>:
+Fig. 2:
 The truncation error for the series for the Gauss-Kr&uuml;ger transverse
 Mercator projection.  The blue curves show the truncation error for the
 order of the series \e J = 2 (top) thru \e J = 12 (bottom).  The red
@@ -4041,11 +4044,11 @@ curves show the combined truncation and round-off errors for
 
 <center>
 <img src="gauss-krueger-graticule.png"
-width=673 height=323 alt="Gauss-Krueger transverse Mercator
+width=673 height=323 alt="Gauss-Krueger transverse Mercator extended
 graticule">\n
-<a href="gauss-krueger-graticule.pdf">Fig. 3(a)</a>
+Fig. 3(a)
 </center>
-<a href="gauss-krueger-graticule.pdf">Fig. 3(a)</a>:
+Fig. 3(a):
 The graticule for the extended domain.  The blue lines show
 latitude and longitude at multiples of 10&deg;.  The green lines
 show 1&deg; intervals for longitude in [80&deg;, 90&deg;] and latitude in
@@ -4055,9 +4058,9 @@ show 1&deg; intervals for longitude in [80&deg;, 90&deg;] and latitude in
 <img src="gauss-krueger-convergence-scale.png"
 width=673 height=323 alt="Gauss-Krueger transverse Mercator
 convergence and scale">
-<a href="gauss-krueger-convergence-scale.pdf">Fig. 3(b)</a>
+Fig. 3(b)
 </center>\n
-<a href="gauss-krueger-convergence-scale.pdf">Fig. 3(b)</a>:
+Fig. 3(b):
 The convergence and scale for the Gauss-Kr&uuml;ger
 transverse Mercator projection in the extended domain.  The blue lines
 emanating from the top left corner (the north pole) are lines of
@@ -4075,13 +4078,12 @@ shows the equator between lon = 81&deg; and 90&deg;.  The
 scale and convergence at the branch point are 1/\e e = 10 and
 0&deg;, respectively.
 
-
 <center>
 <img src="thompson-tm-graticule.png"
-width=661 height=321 alt="Thompson transverse Mercator graticule">
-<a href="thompson-tm-graticule.pdf">Fig. 3(c)</a>
+width=661 height=321 alt="Thompson transverse Mercator extended graticule">
+Fig. 3(c)
 </center>\n
-<a href="thompson-tm-graticule.pdf">Fig. 3(c)</a>:
+Fig. 3(c):
 The graticule for the Thompson transverse Mercator
 projection for the extended domain.  The range of the projection is the
 rectangular region shown

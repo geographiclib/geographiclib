@@ -37,7 +37,7 @@ if (DOXYGEN_FOUND)
     ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp
     ../legacy/C/*.[ch] ../legacy/Fortran/*.for ../legacy/Fortran/*.inc)
   file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac
-    tmseries30.html geodseries30.html *.png *.pdf ../LICENSE.txt)
+    tmseries30.html geodseries30.html *.png ../LICENSE.txt)
   file (COPY ${EXTRA_FILES} DESTINATION html-stage)
   add_custom_target (doc ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
