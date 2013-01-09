@@ -79,6 +79,13 @@
    http://books.google.com/books?id=QIIfAAAAYAAJ&pg=PA258 [[BR]]
    figures: http://books.google.com/books?id=QIIfAAAAYAAJ&pg=PA362-IA1 [[BR]]
    alt: http://math.dartmouth.edu/~euler/pages/E215.html
+ * L. Euler,[[BR]]
+   ''Recherches sur la courbure des surfaces
+   [The curvature of surfaces]'',
+   Mém. de l'Acad. Roy. des Sciences de Berlin '''16''',
+   119--143 (1760, publ. 1767).[[BR]]
+   http://books.google.com/books&pg=PA119 [[BR]]
+   figures: http://math.dartmouth.edu/~euler/pages/E333.html
  * J. L. Lagrange,[[BR]]
    ''Nouvelle méthode pour résoudre les équations littérales par le moyen
    des séries [New method for solving explicit equations by means of a
@@ -509,6 +516,7 @@
    point matériel peuvent s'intégrer [Special cases where the equations
    of motion are integrable]'',
    Jour. Liouville '''11''', 345--378 (1846).[[BR]]
+   http://books.google.com/books?id=qTUGAAAAYAAJ&pg=PA345 [[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1846_1_11_A45_0
  * J. Liouville,[[BR]]
    Notes on G. Monge, ''Application de l'Analyse à la Géometrie''

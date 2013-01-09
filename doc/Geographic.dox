@@ -3307,26 +3307,33 @@ Jacobi (1839) showed that the problem of geodesics on a triaxial
 ellipsoids (with 3 unequal axes) can be reduced by quadrature.  Despite
 this, the detailed behavior of the geodesics is not very well known.  In
 this section, I briefly give Jacobi's solution and illustrate the
-behavior of the geodesics.
+behavior of the geodesics and outline an algorithm for the solution of
+the inverse problem.  The figures in this section are relatively small
+in order to allow them to be displayed quickly.  Vector versions of
+these figures are available in
+<a href="http://geographiclib.sourceforge.net/triaxial-figs.pdf"
+type="application/pdf"> triaxial-figs.pdf</a>.  This allows you to
+magnify the figures to show the details more clearly.
 
 Go to
  - \ref triaxial-coords
  - \ref triaxial-jacobi
  - \ref triaxial-survey
  - \ref triaxial-stab
+ - \ref triaxial-inverse
 
 <b>NOTES</b>
+ -# A triaxial ellipsoid approximates the earth only slightly better
+    than an ellipsoid of revolution.  If you are really considering
+    measuring distances on the earth using a triaxial ellipsoid, you
+    should also be worrying about the shape of the geoid (which
+    essentially makes the geodesic problem a hopeless mess).
  -# There is nothing new in this section.  It is just an exercise in
     exploring Jacobi's solution.  My interest here is in generating long
     geodesics with the correct long-time behavior.  Arnold gives a
     nice qualitative description of the solution in <i>Mathematical
     Methods of Classical Mechanics</i> (2nd edition, Springer, 1989),
     pp. 264--266.
- -# A triaxial ellipsoid approximates the earth only slightly better
-    than an ellipsoid of revolution.  If you are really considering
-    measuring distances on the earth using a triaxial ellipsoid, you
-    should also be worrying about the shape of the geoid (which
-    essentially makes the geodesic problem a hopeless mess).
  -# Possible reasons this problem might, nevertheless, be of interest
     are:
     - It is the first example of a dynamical system which has a
@@ -3347,12 +3354,6 @@ Go to
     myself; and he quickly implemented the solution for an HP-41
     calculator(!) which is posted
     <a href="http://hp41programs.yolasite.com/geod3axial.php"> here</a>.
- -# The figures in this section are relatively small in order to allow
-    them to be displayed quickly.  Vector versions of these figures are
-    available in
-    <a href="http://geographiclib.sourceforge.net/triaxial-figs.pdf"
-    type="application/pdf"> triaxial-figs.pdf</a>.  This allows you to
-    magnify the figures to show the details more clearly.
  -# I do not give full citations of the papers here.  You can find these
     in the
     <a href="http://geographiclib.sourceforge.net/geodesic-papers/biblio.html">
@@ -3459,7 +3460,7 @@ letter</a> he wrote to his friend and neighbor Bessel:
 <blockquote> The day before yesterday, I reduced to quadrature the
 problem of geodesic lines on an <i>ellipsoid with three unequal
 axes</i>.  They are the simplest formulas in the world, Abelian
-integrals, which become the well-known elliptic integrals if 2 axes are
+integrals, which become the well known elliptic integrals if 2 axes are
 set equal.\n
 K&ouml;nigsberg, 28th Dec. '38.
 </blockquote>
@@ -3501,7 +3502,9 @@ constant \f$\omega\f$. In the limit \f$a\rightarrow b\f$, this reduces
 to \f$\cos\beta\sin\alpha = \text{const.}\f$, the familiar Clairaut
 relation.  A nice derivation of Jacobi's result is given by Darboux
 (1894) <a href="http://books.google.com/books?id=hGMSAAAAIAAJ&pg=PA9">
-&sect;&sect;583--584</a>.
+&sect;&sect;583--584</a> where he gives the solution found by Liouville
+(1846) for general quadratic surfaces.  (Darboux gives equations for the
+distance along the geodesic.)
 
 Jacobi's solution is a convenient way to compute geodesics on an
 ellipsoid.  Care must be taken to avoid the singularities arising from
@@ -3696,6 +3699,60 @@ other axes (and the triaxial ellipsoid degenerates to an ellipsoid of
 revolution), then the solution is linearly unstable.  (For example, a
 geodesic is which is close to a meridian on an oblate ellipsoid, slowly
 moves away from that meridian.)
+
+\section triaxial-inverse The inverse problem
+
+In order to solve the inverse geodesic problem, it helps to have an
+understanding of the properties of all the geodesics emanating from a
+single point \f$(\beta_1, \omega_1)\f$.
+ - If the point is an umbilical point, all the lines converge on the
+   opposite umbilical point.
+ - Otherwise, the first envelope of the geodesics is a 4-pointed
+   astroid.  The cusps of the astroid lie on either \f$\beta = -
+   \beta_1\f$ or \f$\omega = \omega_1 + \pi\f$.
+ - Two geodesics with azimuths \f$\pm\alpha_1\f$ first intersect on
+   \f$\omega = \omega_1 + \pi\f$ and their lengths to the point of
+   intersection are equal.
+ - Two geodesics with azimuths \f$\alpha_1\f$ and \f$\pi-\alpha_1\f$
+   first intersect on \f$\beta = -\beta_1\f$ and their lengths to the
+   point of intersection are equal.
+ .
+(I'm reasonably confident of these assertions.  However, some of them
+are surprising given the asymmetries of the ellipsoid.)  Consider now
+terminating the geodesics from \f$(\beta_1, \omega_1)\f$ at the point
+where they first intersect the line \f$\beta = -\beta_1\f$.  To focus
+the discussion, take \f$\beta_1 \le 0\f$.
+ - The geodesics completely fill the portion of the ellipsoid satisfying
+   \f$\beta \le -\beta_1\f$.
+ - None of geodesics intersect any other geodesics.
+ - Any portion of these geodesics is a shortest path.
+ - Each geodesic intersects the line \f$\beta = \beta_2\f$, where
+   \f$\beta_1 < \beta_2 < -\beta_1\f$, exactly once.
+ - For a given \f$\beta_2\f$, this defines a mapping of \f$\alpha_1\f$
+   to \f$\omega_2\f$.  This is a strictly increasing twist map of the
+   interval \f$[0, 2\pi)\f$ onto itself.
+ - If \f$\beta_2 = \pm \beta_1\f$, then the previous two assertions need
+   to be modified similarly to the case for an ellipsoid of revolution.
+
+These properties show that the inverse problem can be solved by a
+technique similar to that employed for an ellipsoid of revolution.
+Starting at the point which is closest to a pole, pick \f$\alpha_1\f$,
+solve the hybrid problem terminating the geodesic at \f$\beta =
+\beta_2\f$, and determine the resulting \f$\omega_2\f$.  Adjust
+\f$\alpha_1\f$ so that the value of \f$\omega_2\f$ matches the given
+\f$\omega_2\f$ (there is a single root).  If a sufficiently close
+solution can be found, Newton's method can be employed since the
+necessary derivative can be expressed in terms of the reduced length
+\f$m_{12}\f$.
+
+The shortest path found by this method is unique unless:
+ - The points are opposite umbilical points.  In this case,
+   \f$\alpha_1\f$ can take on any value and \f$\alpha_2\f$ needs to be
+   adjusted to maintain the value of \f$\tan\alpha_1 / \tan\alpha_2\f$.
+ - \f$\beta_1 + \beta_2 = 0\f$ and \f$\cos\alpha_1\f$ and
+   \f$\cos\alpha_2\f$ have opposite signs.  In this case, there another
+   shortest geodesic with azimuths \f$\pi - \alpha_1\f$ and
+   \f$\pi - \alpha_2\f$.
 
 <center>
 Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
