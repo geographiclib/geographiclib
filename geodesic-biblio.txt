@@ -426,6 +426,11 @@
    Jour. Crelle '''16''', 344--350 (1837).[[BR]]
    http://books.google.com/books?id=2qrxAAAAMAAJ&pg=PA344
  * C. G. J. Jacobi,[[BR]]
+   ''Zur Theorie der Variations Rechnung und der Differential Gleichungen 
+   [The theory of the calculus of variations and of differential equations]'',
+   Jour. Crelle '''17''', 68--82 (1837).[[BR]]
+   http://books.google.com/books?id=FKvxAAAAMAAJ&pg=PA68
+ * C. G. J. Jacobi,[[BR]]
    ''Note von der geodätischen Linie auf einem Ellipsoid und den
    verschiedenen Anwendungen einer merkwürdigen analytischen Substitution
    [The geodesic on an ellipsoid and various applications of a remarkable

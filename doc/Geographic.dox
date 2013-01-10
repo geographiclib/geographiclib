@@ -3326,8 +3326,10 @@ Go to
  -# A triaxial ellipsoid approximates the earth only slightly better
     than an ellipsoid of revolution.  If you are really considering
     measuring distances on the earth using a triaxial ellipsoid, you
-    should also be worrying about the shape of the geoid (which
-    essentially makes the geodesic problem a hopeless mess).
+    should also be worrying about the shape of the geoid, which
+    essentially makes the geodesic problem a hopeless mess; see, for
+    example, <a href="http://arxiv.org/abs/1112.3231"> Waters
+    (2011)</a>.
  -# There is nothing new in this section.  It is just an exercise in
     exploring Jacobi's solution.  My interest here is in generating long
     geodesics with the correct long-time behavior.  Arnold gives a
@@ -3345,7 +3347,7 @@ Go to
       ingredients for chaotic behavior in dynamical systems).
     - Knowledge of ellipsoidal coordinates (used by Jacobi) might be
       useful in other areas of geodesy.
-    - Geodesics which pass through the pole on an ellipsoid revolution
+    - Geodesics which pass through the pole on an ellipsoid of revolution
       represent a degenerate class (they are all closed and all pass
       through the opposite pole).  It is of interest to see how this
       degeneracy is broken with a surface with a more general shape.
@@ -3732,22 +3734,38 @@ To focus the discussion, take \f$\beta_1 \le 0\f$.
  - Any initial portion of these geodesics is a shortest path.
  - Each geodesic intersects the line \f$\beta = \beta_2\f$, where
    \f$\beta_1 < \beta_2 < -\beta_1\f$, exactly once.
- - For a given \f$\beta_2\f$, this defines a mapping of \f$\alpha_1\f$
-   to \f$\omega_2\f$.  This is a strictly increasing twist map of the
-   interval \f$[0, 2\pi)\f$ onto itself.
+ - For a given \f$\beta_2\f$, this defines a continuous monotonic
+   mapping of the circle of azimuths \f$\alpha_1\f$ to the circle of
+   longitudes \f$\omega_2\f$.
  - If \f$\beta_2 = \pm \beta_1\f$, then the previous two assertions need
    to be modified similarly to the case for an ellipsoid of revolution.
 
-These properties show that the inverse problem can be solved by a
-technique similar to that employed for an ellipsoid of revolution.
-Starting at the point which is closest to a pole, pick \f$\alpha_1\f$,
-solve the hybrid problem terminating the geodesic at \f$\beta =
-\beta_2\f$, and determine the resulting \f$\omega_2\f$.  Adjust
-\f$\alpha_1\f$ so that the value of \f$\omega_2\f$ matches the given
-\f$\omega_2\f$ (there is a single root).  If a sufficiently close
-solution can be found, Newton's method can be employed since the
-necessary derivative can be expressed in terms of the reduced length
-\f$m_{12}\f$.
+These properties show that the inverse problem can be solved using
+techniques similar to those employed for an ellipsoid of revolution (see
+&sect;4 of
+<a href="http://dx.doi.org/10.1007/s00190-012-0578-z"> Algorithms for
+geodesics</a>).
+ - If the points are opposite umbilical points, an arbitrary
+   \f$\alpha_1\f$ may be chosen.
+ - If the points are neighboring umbilical points, the shortest path
+   lies on the ellipse \f$y = 0\f$.
+ - If only one point is an umbilicial point, the azimuth at the
+   non-umbilical point is found using the generalization of Clairaut's
+   equation (given above) with \f$\gamma = 0\f$.
+ - If both points lie on the equator \f$\beta = 0\f$, then determine the
+   reduced length \f$m_{12}\f$ for the geodesic which is the shorter
+   path along the ellipse \f$z = 0\f$.  If \f$m_{12} \ge 0\f$, then this
+   is the shortest path on the ellipsoid; otherwise proceed to the
+   general case (next).
+ - Swap the points, if necessary, so that the first point is the one
+   closest to a pole.  Estimate \f$\alpha_1\f$ (by some means) and solve
+   the \e hybrid problem, i.e., determine the longitude \f$\omega_2\f$
+   corresponding to the first intersection of the geodesic with \f$\beta
+   = \beta_2\f$.  Adjust \f$\alpha_1\f$ so that the value of
+   \f$\omega_2\f$ matches the given \f$\omega_2\f$ (there is a single
+   root).  If a sufficiently close solution can be found, Newton's
+   method can be employed since the necessary derivative can be
+   expressed in terms of the reduced length \f$m_{12}\f$.
 
 The shortest path found by this method is unique unless:
  - The points are opposite umbilical points.  In this case,
