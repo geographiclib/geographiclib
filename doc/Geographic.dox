@@ -3705,11 +3705,15 @@ moves away from that meridian.)
 In order to solve the inverse geodesic problem, it helps to have an
 understanding of the properties of all the geodesics emanating from a
 single point \f$(\beta_1, \omega_1)\f$.
- - If the point is an umbilical point, all the lines converge on the
+ - If the point is an umbilical point, all the lines meet at the
    opposite umbilical point.
  - Otherwise, the first envelope of the geodesics is a 4-pointed
    astroid.  The cusps of the astroid lie on either \f$\beta = -
    \beta_1\f$ or \f$\omega = \omega_1 + \pi\f$.
+ - All geodesics intersect (or, in the case of \f$\alpha_1 = 0\f$ or
+   \f$\pi\f$, touch) the line \f$\omega = \omega_1 + \pi\f$.
+ - All geodesics intersect (or, in the case of \f$\alpha_1 =
+   \pm\pi/2\f$, touch) the line \f$\beta = -\beta_1\f$.
  - Two geodesics with azimuths \f$\pm\alpha_1\f$ first intersect on
    \f$\omega = \omega_1 + \pi\f$ and their lengths to the point of
    intersection are equal.
@@ -3720,12 +3724,12 @@ single point \f$(\beta_1, \omega_1)\f$.
 (I'm reasonably confident of these assertions.  However, some of them
 are surprising given the asymmetries of the ellipsoid.)  Consider now
 terminating the geodesics from \f$(\beta_1, \omega_1)\f$ at the point
-where they first intersect the line \f$\beta = -\beta_1\f$.  To focus
-the discussion, take \f$\beta_1 \le 0\f$.
+where they first intersect (or touch) the line \f$\beta = -\beta_1\f$.
+To focus the discussion, take \f$\beta_1 \le 0\f$.
  - The geodesics completely fill the portion of the ellipsoid satisfying
    \f$\beta \le -\beta_1\f$.
  - None of geodesics intersect any other geodesics.
- - Any portion of these geodesics is a shortest path.
+ - Any initial portion of these geodesics is a shortest path.
  - Each geodesic intersects the line \f$\beta = \beta_2\f$, where
    \f$\beta_1 < \beta_2 < -\beta_1\f$, exactly once.
  - For a given \f$\beta_2\f$, this defines a mapping of \f$\alpha_1\f$
