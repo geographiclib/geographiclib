@@ -11,7 +11,7 @@ set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.8.0)
+set (LIBVERSIONFULL 9.8.1)
 
 # User-settable variables
 

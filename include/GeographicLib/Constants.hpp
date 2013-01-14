@@ -37,6 +37,7 @@
 #endif
 
 #include <stdexcept>
+#include <string>
 #include <GeographicLib/Math.hpp>
 
 /**

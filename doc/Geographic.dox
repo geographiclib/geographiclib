@@ -132,7 +132,10 @@ The goals of %GeographicLib are:
 Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
 and the utilities have been tested with g++ 4.4 under Linux, with g++
-4.2 under Mac OS X, and with MS Visual Studio 2008 and 2010.
+4.2 under Mac OS X, and with MS Visual Studio 9 (2008), 10 (2010), and
+11 (2012) compiled for 32 bit and 64 bit.  Note that one of the tests \b
+fails with Visual Studio 11.  This is a bug in the I/O library and is
+unlikely to affect most users (bug reported 2013-01-10).
 
 Matlab, Javascript, and Python interfaces are provided to portions of
 %GeographicLib; see \ref other.
@@ -4316,6 +4319,9 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.29">Version 1.29</a>
    (released 2013-mm-dd)
+   - Changes to allow compilation with libc++ (courtesy of Kal Conley).
+   - Add description of geodesics on triaxial ellipsoid to
+     documentation.
 
  - <a href="http://geographiclib.sf.net/1.28">Version 1.28</a>
    (released 2012-12-11)
