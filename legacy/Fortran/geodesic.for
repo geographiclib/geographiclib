@@ -113,8 +113,8 @@
 *! under the MIT/X11 License.  For more information, see
 *! http://geographiclib.sourceforge.net/
 *!
-*! This file was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.28.
+*! This library was distributed with
+*! <a href="../index.html">GeographicLib</a> 1.29.
 
 *> Solve the direct geodesic problem
 *!

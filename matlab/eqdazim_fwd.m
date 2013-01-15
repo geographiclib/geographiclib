@@ -41,7 +41,7 @@ function [x, y, azi, rk] = eqdazim_fwd(lat0, lon0, lat, lon, ellipsoid)
 
 % Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.28.
+% This file was distributed with GeographicLib 1.29.
 
   if nargin < 4, error('Too few input arguments'), end
   if nargin < 5, ellipsoid = defaultellipsoid; end

@@ -13,6 +13,8 @@ Changes between 1.29 (released 2013-01-16) and 1.28 versions:
    * Add description of geodesics on triaxial ellipsoid to
      documentation.
 
+   * Update journal reference for "Algorithms for geodesics".
+
 Changes between 1.28 (released 2012-12-11) and 1.27 versions:
 
    * Changes to geodesic routines:

@@ -40,7 +40,7 @@ function [lat, lon, gam, k] = utm_inv(zone, northp, x, y)
 
 % Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.28.
+% This file was distributed with GeographicLib 1.29.
 
   if nargin < 4, error('Too few input arguments'), end
   lon0 = -183 + 6 * zone; lat0 = 0;

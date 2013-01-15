@@ -8,4 +8,4 @@ This is a C implementation of the geodesic algorithms described in
 
 For documentation, see
 
-  http://geographiclib.sourceforge.net/1.28/C/index.html
+  http://geographiclib.sourceforge.net/html/C/index.html

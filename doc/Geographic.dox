@@ -4362,6 +4362,7 @@ of the git repository for %GeographicLib.
    - Changes to allow compilation with libc++ (courtesy of Kal Conley).
    - Add description of geodesics on triaxial ellipsoid to
      documentation.
+   - Update journal reference for "Algorithms for geodesics".
 
  - <a href="http://geographiclib.sf.net/1.28">Version 1.28</a>
    (released 2012-12-11)

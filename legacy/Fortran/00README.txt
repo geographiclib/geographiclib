@@ -8,4 +8,4 @@ This is a Fortran implementation of the geodesic algorithms described in
 
 For documentation, see
 
-  http://geographiclib.sourceforge.net/1.28/Fortran/index.html
+  http://geographiclib.sourceforge.net/html/Fortran/index.html

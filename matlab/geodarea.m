@@ -35,7 +35,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 
 % Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.28.
+% This file was distributed with GeographicLib 1.29.
 
   if nargin < 2, error('Too few input arguments'), end
   if nargin < 3, ellipsoid = defaultellipsoid; end
