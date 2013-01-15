@@ -12,7 +12,7 @@
 \mainpage Geographic library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.29
-\date 2013-mm-dd
+\date 2013-01-16
 
 \section abstract Abstract
 
@@ -2642,9 +2642,9 @@ References
    DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
    addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
-       geod-addenda.html</a>;
-   resource page
-   <a href="http://geographiclib.sf.net/geod.html">geod.html</a>.
+   geod-addenda.html</a>;
+   resource page:
+   <a href="http://geographiclib.sf.net/geod.html"> geod.html</a>.
  - A collection of some papers on geodesics is available at
    http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
 
@@ -3373,6 +3373,16 @@ Go to
     approach.
  -# At this point, I have no plans to add the solution of triaxial
     geodesic problem to %GeographicLib.
+ -# If you only want to learn about geodesics on a biaxial ellipsoid (an
+    ellipsoid of revolution), then see \ref geodesic or the paper
+    - C. F. F. Karney,
+      <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+      Algorithms for geodesics</a>,
+      J. Geodesy 87(1), 43--55 (Jan. 2013);
+      DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+      10.1007/s00190-012-0578-z</a>;
+      addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+      geod-addenda.html</a>.
 
 \section triaxial-coords Triaxial coordinate systems
 
@@ -3508,13 +3518,40 @@ to \f$\cos\beta\sin\alpha = \text{const.}\f$, the familiar Clairaut
 relation.  A nice derivation of Jacobi's result is given by Darboux
 (1894) <a href="http://books.google.com/books?id=hGMSAAAAIAAJ&pg=PA9">
 &sect;&sect;583--584</a> where he gives the solution found by Liouville
-(1846) for general quadratic surfaces.  (Darboux gives equations for the
-distance along the geodesic.)
+(1846) for general quadratic surfaces.  In this formulation, the
+distance along the geodesic, \f$s\f$, is also found using
+\f[
+\begin{aligned}
+\frac{ds}{(b^2-c^2)\cos^2\beta + (a^2-b^2)\sin^2\omega}
+&= \frac
+{\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}\,d\beta}
+{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}
+ \sqrt{(b^2-c^2)\cos^2\beta - \gamma}}\\
+&= \frac
+{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}\,d\omega}
+{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}
+ \sqrt{(a^2-b^2)\sin^2\omega + \gamma}}
+\end{aligned}
+\f]
+An alternative expression for the distance is
+\f[
+\begin{aligned}
+ds
+&= \frac
+{\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}
+ \sqrt{(b^2-c^2)\cos^2\beta - \gamma}\,d\beta}
+{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}}\\
+&\quad {}+ \frac
+{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}
+ \sqrt{(a^2-b^2)\sin^2\omega + \gamma}\,d\omega}
+{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}}
+\end{aligned}
+\f]
 
 Jacobi's solution is a convenient way to compute geodesics on an
-ellipsoid.  Care must be taken to avoid the singularities arising from
-the last terms in the denominators of the integrands.  If \f$\gamma \gt
-0\f$ (resp. \f$\gamma \lt 0\f$), then the \f$\beta\f$
+ellipsoid.  Care must be taken with the signs of the square roots (which
+are determined by the initial azimuth of the geodesic).  Also if
+\f$\gamma \gt 0\f$ (resp. \f$\gamma \lt 0\f$), then the \f$\beta\f$
 (resp. \f$\omega\f$) integrand diverges.  The integrand can be
 transformed into a finite one by a change of variable, e.g.,
 \f$\sin\beta = \sin\sigma \sqrt{1 - \gamma/(b^2-c^2)}\f$.  The resulting
@@ -3726,11 +3763,12 @@ single point \f$(\beta_1, \omega_1)\f$.
    first intersect on \f$\beta = -\beta_1\f$ and their lengths to the
    point of intersection are equal.
  .
-(I'm reasonably confident of these assertions.  However, some of them
-are surprising given the asymmetries of the ellipsoid.)  Consider now
-terminating the geodesics from \f$(\beta_1, \omega_1)\f$ at the point
-where they first intersect (or touch) the line \f$\beta = -\beta_1\f$.
-To focus the discussion, take \f$\beta_1 \le 0\f$.
+(These assertions follow directly from the equations for the geodesics;
+some of them are somewhat surprising given the asymmetries of the
+ellipsoid.)  Consider now terminating the geodesics from \f$(\beta_1,
+\omega_1)\f$ at the point where they first intersect (or touch) the line
+\f$\beta = -\beta_1\f$.  To focus the discussion, take \f$\beta_1 \le
+0\f$.
  - The geodesics completely fill the portion of the ellipsoid satisfying
    \f$\beta \le -\beta_1\f$.
  - None of geodesics intersect any other geodesics.
@@ -3771,6 +3809,8 @@ geodesics</a>).
    expressed in terms of the reduced length \f$m_{12}\f$.
 
 The shortest path found by this method is unique unless:
+ - The length of the geodesic vanishes \f$s_{12}=0\f$, in which case any
+   constant can be added to the azimuths.
  - The points are opposite umbilical points.  In this case,
    \f$\alpha_1\f$ can take on any value and \f$\alpha_2\f$ needs to be
    adjusted to maintain the value of \f$\tan\alpha_1 / \tan\alpha_2\f$.
@@ -3821,10 +3861,10 @@ References
    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers,</a>
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   preprint
-   <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>;
-   resource page
-   <a href="http://geographiclib.sf.net/tm.html">tm.html</a>.
+   preprint:
+   <a href="http://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
+   resource page:
+   <a href="http://geographiclib.sf.net/tm.html"> tm.html</a>.
  .
 The algorithm for GeographicLib::TransverseMercator is based on
 Kr&uuml;ger (1912); that for GeographicLib::TransverseMercatorExact is
@@ -4051,10 +4091,10 @@ This section gives color versions of the figures in
    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers,</a>
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   preprint
-   <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>;
-   resource page
-   <a href="http://geographiclib.sf.net/tm.html">tm.html</a>.
+   preprint:
+   <a href="http://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
+   resource page:
+   <a href="http://geographiclib.sf.net/tm.html"> tm.html</a>.
 
 \b NOTE:
 The numbering of the figures matches that in the paper cited above.  The
@@ -4318,7 +4358,7 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.29">Version 1.29</a>
-   (released 2013-mm-dd)
+   (released 2013-01-16)
    - Changes to allow compilation with libc++ (courtesy of Kal Conley).
    - Add description of geodesics on triaxial ellipsoid to
      documentation.

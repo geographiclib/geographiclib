@@ -4,7 +4,14 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.28.
+The current version of the library is 1.29.
+
+Changes between 1.29 (released 2013-01-16) and 1.28 versions:
+
+   * Changes to allow compilation with libc++ (courtesy of Kal Conley).
+
+   * Add description of geodesics on triaxial ellipsoid to
+     documentation.
 
 Changes between 1.28 (released 2012-12-11) and 1.27 versions:
 
