@@ -10,7 +10,6 @@
 #if !defined(GEOGRAPHICLIB_ELLIPSOID_HPP)
 #define GEOGRAPHICLIB_ELLIPSOID_HPP 1
 
-#include <string>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/TransverseMercator.hpp>
 #include <GeographicLib/EllipticFunction.hpp>

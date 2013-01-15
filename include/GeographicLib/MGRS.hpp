@@ -10,7 +10,6 @@
 #if !defined(GEOGRAPHICLIB_MGRS_HPP)
 #define GEOGRAPHICLIB_MGRS_HPP 1
 
-#include <sstream>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/UTMUPS.hpp>
 

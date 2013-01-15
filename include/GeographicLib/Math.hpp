@@ -51,7 +51,6 @@
 #if defined(_LIBCPP_VERSION)
 #include <type_traits>
 #endif
-#include <vector>
 
 namespace GeographicLib {
 

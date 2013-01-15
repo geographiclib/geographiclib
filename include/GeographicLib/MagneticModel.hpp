@@ -10,9 +10,6 @@
 #if !defined(GEOGRAPHICLIB_MAGNETICMODEL_HPP)
 #define GEOGRAPHICLIB_MAGNETICMODEL_HPP 1
 
-#include <string>
-#include <sstream>
-#include <vector>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/SphericalHarmonic.hpp>

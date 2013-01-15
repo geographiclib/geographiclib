@@ -8,7 +8,6 @@
  **********************************************************************/
 
 #include <GeographicLib/EllipticFunction.hpp>
-#include <algorithm>            // For swap
 
 namespace GeographicLib {
 

@@ -8,9 +8,7 @@
  **********************************************************************/
 
 #include <GeographicLib/Geoid.hpp>
-#include <sstream>
 #include <cstdlib>
-#include <algorithm>
 #include <GeographicLib/Utility.hpp>
 
 #if !defined(GEOGRAPHICLIB_DATA)

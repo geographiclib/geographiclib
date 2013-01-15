@@ -10,9 +10,6 @@
 #if !defined(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
 #define GEOGRAPHICLIB_GRAVITYMODEL_HPP 1
 
-#include <string>
-#include <sstream>
-#include <vector>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/NormalGravity.hpp>
 #include <GeographicLib/SphericalHarmonic.hpp>

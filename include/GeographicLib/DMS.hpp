@@ -10,8 +10,6 @@
 #if !defined(GEOGRAPHICLIB_DMS_HPP)
 #define GEOGRAPHICLIB_DMS_HPP 1
 
-#include <sstream>
-#include <iomanip>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Utility.hpp>
 

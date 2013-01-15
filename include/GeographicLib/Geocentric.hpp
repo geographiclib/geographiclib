@@ -11,7 +11,6 @@
 #define GEOGRAPHICLIB_GEOCENTRIC_HPP 1
 
 #include <vector>
-#include <algorithm>
 #include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {

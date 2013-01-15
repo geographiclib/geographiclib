@@ -10,7 +10,6 @@
 #if !defined(GEOGRAPHICLIB_GRAVITYCIRCLE_HPP)
 #define GEOGRAPHICLIB_GRAVITYCIRCLE_HPP 1
 
-#include <string>
 #include <vector>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/CircularEngine.hpp>
