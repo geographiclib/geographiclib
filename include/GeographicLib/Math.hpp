@@ -418,19 +418,17 @@ namespace GeographicLib {
     }
 #elif defined(_LIBCPP_VERSION)
     // libc++ implements std::isfinite() as a template that only allows
-    // floating-point types.
-    //
-    // FIXME: This is only needed because isfinite is being called for
-    //        non-floating-point types. Does this even make sense?
-    //        Perhaps the callers should be modified?
+    // floating-point types.  isfinite is invoked by Utility::str to format
+    // numbers conveniently and this allows integer arguments, so we need to
+    // allow Math::isfinite to work on integers.
     template<typename T> static inline
     typename std::enable_if<std::is_floating_point<T>::value, bool>::type
-    isfinite(T x) throw() {
+      isfinite(T x) throw() {
       return std::isfinite(x);
     }
     template<typename T> static inline
     typename std::enable_if<!std::is_floating_point<T>::value, bool>::type
-    isfinite(T x) throw() {
+      isfinite(T /*x*/) throw() {
       return true;
     }
 #else
