@@ -8,7 +8,7 @@
 # The algorithms are derived in
 #
 #    Charles F. F. Karney,
-#    Algorithms for geodesics, J. Geodesy, 2012,
+#    Algorithms for geodesics, J. Geodesy 87, 43-55 (2013),
 #    http://dx.doi.org/10.1007/s00190-012-0578-z
 #    Addenda: http://geographiclib.sf.net/geod-addenda.html
 #

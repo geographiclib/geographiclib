@@ -10,7 +10,6 @@
 #if !defined(GEOGRAPHICLIB_GEOHASH_HPP)
 #define GEOGRAPHICLIB_GEOHASH_HPP 1
 
-#include <string>
 #include <GeographicLib/Constants.hpp>
 
 #if defined(_MSC_VER)

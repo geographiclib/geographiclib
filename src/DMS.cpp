@@ -8,7 +8,6 @@
  **********************************************************************/
 
 #include <GeographicLib/DMS.hpp>
-#include <algorithm>
 #include <GeographicLib/Utility.hpp>
 
 #if defined(_MSC_VER)

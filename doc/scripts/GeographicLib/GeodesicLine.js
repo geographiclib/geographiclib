@@ -8,7 +8,7 @@
  * The algorithms are derived in
  *
  *    Charles F. F. Karney,
- *    Algorithms for geodesics, J. Geodesy, 2012,
+ *    Algorithms for geodesics, J. Geodesy 87, 43-55 (2013);
  *    http://dx.doi.org/10.1007/s00190-012-0578-z
  *    Addenda: http://geographiclib.sf.net/geod-addenda.html
  *
@@ -196,7 +196,7 @@
     csig2 = this._csig1 * csig12 - this._ssig1 * ssig12;
     var dn2 = Math.sqrt(1 + this._k2 * m.sq(ssig2));
     if (outmask & (g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE)) {
-      if (arcmode || Math.abs(_f) > 0.01)
+      if (arcmode || Math.abs(this._f) > 0.01)
         B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a, g.nC1_);
       AB1 = (1 + this._A1m1) * (B12 - this._B11);
     }

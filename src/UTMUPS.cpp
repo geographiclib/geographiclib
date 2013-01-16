@@ -8,7 +8,6 @@
  **********************************************************************/
 
 #include <GeographicLib/UTMUPS.hpp>
-#include <iomanip>
 #include <GeographicLib/MGRS.hpp>
 #include <GeographicLib/PolarStereographic.hpp>
 #include <GeographicLib/TransverseMercator.hpp>

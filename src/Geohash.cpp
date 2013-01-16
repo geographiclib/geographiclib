@@ -9,7 +9,6 @@
 
 #include <GeographicLib/Geohash.hpp>
 #include <GeographicLib/Utility.hpp>
-#include <algorithm>            // For copy
 
 namespace GeographicLib {
 

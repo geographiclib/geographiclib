@@ -13,9 +13,7 @@
 #include <GeographicLib/Constants.hpp>
 #include <iomanip>
 #include <vector>
-#include <string>
 #include <sstream>
-#include <algorithm>
 #include <cctype>
 
 #if defined(_MSC_VER)
@@ -309,7 +307,7 @@ namespace GeographicLib {
      *
      * @tparam T the type of the return value.
      * @param[in] s the string to be matched.
-     * @return appropriate special value (&plusmn;&infin;, nan) or 0 is none is
+     * @return appropriate special value (&plusmn;&infin;, nan) or 0 if none is
      *   found.
      **********************************************************************/
     template<typename T> static T nummatch(const std::string& s) {

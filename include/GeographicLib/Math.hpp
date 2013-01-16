@@ -46,9 +46,11 @@
 #endif
 
 #include <cmath>
-#include <limits>
 #include <algorithm>
-#include <vector>
+#include <limits>
+#if defined(_LIBCPP_VERSION)
+#include <type_traits>
+#endif
 
 namespace GeographicLib {
 
@@ -399,6 +401,7 @@ namespace GeographicLib {
       return d + t;
     }
 
+#if defined(DOXYGEN)
     /**
      * Test for finiteness.
      *
@@ -407,14 +410,32 @@ namespace GeographicLib {
      * @return true if number is finite, false if NaN or infinite.
      **********************************************************************/
     template<typename T> static inline bool isfinite(T x) throw() {
-#if defined(DOXYGEN)
       return std::abs(x) <= (std::numeric_limits<T>::max)();
-#elif (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
-      return _finite(double(x)) != 0;
-#else
-      return std::isfinite(x);
-#endif
     }
+#elif (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
+    template<typename T> static inline bool isfinite(T x) throw() {
+      return _finite(double(x)) != 0;
+    }
+#elif defined(_LIBCPP_VERSION)
+    // libc++ implements std::isfinite() as a template that only allows
+    // floating-point types.  isfinite is invoked by Utility::str to format
+    // numbers conveniently and this allows integer arguments, so we need to
+    // allow Math::isfinite to work on integers.
+    template<typename T> static inline
+    typename std::enable_if<std::is_floating_point<T>::value, bool>::type
+      isfinite(T x) throw() {
+      return std::isfinite(x);
+    }
+    template<typename T> static inline
+    typename std::enable_if<!std::is_floating_point<T>::value, bool>::type
+      isfinite(T /*x*/) throw() {
+      return true;
+    }
+#else
+    template<typename T> static inline bool isfinite(T x) throw() {
+      return std::isfinite(x);
+    }
+#endif
 
     /**
      * The NaN (not a number)

@@ -10,8 +10,6 @@
 #if !defined(GEOGRAPHICLIB_OSGB_HPP)
 #define GEOGRAPHICLIB_OSGB_HPP 1
 
-#include <string>
-#include <sstream>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/TransverseMercator.hpp>
 

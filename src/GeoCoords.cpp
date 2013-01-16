@@ -8,9 +8,6 @@
  **********************************************************************/
 
 #include <GeographicLib/GeoCoords.hpp>
-#include <vector>
-#include <sstream>
-#include <iomanip>
 #include <GeographicLib/MGRS.hpp>
 #include <GeographicLib/DMS.hpp>
 

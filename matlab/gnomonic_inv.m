@@ -34,7 +34,8 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
 %   are very nearly straight.  The projection is derived in Section 8 of
 %
 %     C. F. F. Karney, Algorithms for geodesics,
-%     J. Geodesy (2012); http://dx.doi.org/10.1007/s00190-012-0578-z
+%     J. Geodesy 87, 43-55 (2013);
+%     http://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
 %   which also includes methods for solving the "intersection" and
@@ -49,7 +50,7 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
 
 % Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.28.
+% This file was distributed with GeographicLib 1.29.
 
   if nargin < 4, error('Too few input arguments'), end
   if nargin < 5, ellipsoid = defaultellipsoid; end

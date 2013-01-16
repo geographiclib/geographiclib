@@ -131,8 +131,6 @@
  **********************************************************************/
 
 #include <GeographicLib/SphericalEngine.hpp>
-#include <limits>
-#include <algorithm>
 #include <GeographicLib/CircularEngine.hpp>
 #include <GeographicLib/Utility.hpp>
 

@@ -28,8 +28,6 @@
 
 #include <GeographicLib/GeodesicExact.hpp>
 #include <GeographicLib/GeodesicLineExact.hpp>
-#include <iostream>
-#include <iomanip>
 
 #if defined(_MSC_VER)
 // Squelch warnings about potentially uninitialized local variables

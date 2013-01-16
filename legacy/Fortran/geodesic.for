@@ -6,7 +6,7 @@
 *! - C. F. F. Karney,
 *!   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
 *!   Algorithms for geodesics</a>,
-*!   J. Geodesy, 2012;
+*!   J. Geodesy <b>87</b>, 43--55 (2013);
 *!   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
 *!   10.1007/s00190-012-0578-z</a>;
 *!   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
@@ -113,8 +113,8 @@
 *! under the MIT/X11 License.  For more information, see
 *! http://geographiclib.sourceforge.net/
 *!
-*! This file was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.28.
+*! This library was distributed with
+*! <a href="../index.html">GeographicLib</a> 1.29.
 
 *> Solve the direct geodesic problem
 *!

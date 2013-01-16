@@ -11,8 +11,8 @@
 /**
 \mainpage Geographic library
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.28
-\date 2012-12-11
+\version 1.29
+\date 2013-01-16
 
 \section abstract Abstract
 
@@ -44,23 +44,23 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.28.tar.gz">
-  GeographicLib-1.28.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.28.zip">
-  GeographicLib-1.28.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.29.tar.gz">
+  GeographicLib-1.29.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.29.zip">
+  GeographicLib-1.29.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
 line endings.)  Alternatively you can get the latest release using git
 \verbatim
   git clone git://git.code.sf.net/p/geographiclib/code geographiclib
-  cd geographiclib; git checkout -q r1.28
+  cd geographiclib; git checkout -q r1.29
 \endverbatim
 There are also binary installers for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.28-win32.exe">
-  GeographicLib-1.28-win32.exe</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.28-win64.exe">
-  GeographicLib-1.28-win64.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.29-win32.exe">
+  GeographicLib-1.29-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.29-win64.exe">
+  GeographicLib-1.29-win64.exe</a>
 .
 It is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -78,6 +78,7 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref gravity
  - \ref magnetic
  - \ref geodesic
+ - \ref triaxial
  - \ref transversemercator
  - \ref geocentric
  - \ref old
@@ -106,7 +107,7 @@ The goals of %GeographicLib are:
  - Accuracy.  In most applications the accuracy is close to round-off,
    about 5 nm (5 nanometers).  Even though in many geographic
    applications 1 cm is considered "accurate enough", there is little
-   penalty in providing much better accuracy.  If situations where a
+   penalty in providing much better accuracy.  In situations where a
    faster approximate algorithm is necessary, %GeographicLib offers an
    accurate benchmark to guide the development.
  - Completeness.  For each of the projections included, an attempt is
@@ -131,7 +132,10 @@ The goals of %GeographicLib are:
 Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
 and the utilities have been tested with g++ 4.4 under Linux, with g++
-4.2 under Mac OS X, and with MS Visual Studio 2008 and 2010.
+4.2 under Mac OS X, and with MS Visual Studio 9 (2008), 10 (2010), and
+11 (2012) compiled for 32 bit and 64 bit.  Note that one of the tests \b
+fails with Visual Studio 11.  This is a bug in the I/O library and is
+unlikely to affect most users (bug reported 2013-01-10).
 
 Matlab, Javascript, and Python interfaces are provided to portions of
 %GeographicLib; see \ref other.
@@ -179,14 +183,14 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.28.tar.gz">
-GeographicLib-1.28.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.28.zip">
-GeographicLib-1.28.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.28-win32.exe">
-GeographicLib-1.28-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.28-win64.exe">
-GeographicLib-1.28-win64.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.29.tar.gz">
+GeographicLib-1.29.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.29.zip">
+GeographicLib-1.29.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.29-win32.exe">
+GeographicLib-1.29-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.29-win64.exe">
+GeographicLib-1.29-win64.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -259,10 +263,10 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.28.tar.gz
-  unzip -q GeographicLib-1.28.zip \endverbatim
+  tar xfpz GeographicLib-1.29.tar.gz
+  unzip -q GeographicLib-1.29.zip \endverbatim
   then enter the directory created with one of \verbatim
-  cd GeographicLib-1.28 \endverbatim
+  cd GeographicLib-1.29 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -270,8 +274,8 @@ Here are the steps to compile and install %GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically one of \verbatim
-  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.28 ..
-  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.28 ..
+  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.29 ..
+  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.29 ..
 \endverbatim
   Instead of setting CMAKE_INSTALL_PREFIX, you can (on Windows) set
   PACKAGE_PATH to point to its parent directory, e.g., \verbatim
@@ -291,12 +295,12 @@ Here are the steps to compile and install %GeographicLib:
     convention.  If it is on ON (the Linux default), the installation
     is to a common directory, e.g., /usr/local.  If it is OFF (the
     Windows default), the installation directory contains the package
-    name, e.g., C:/pkg/GeographicLib-1.28.  The installation
+    name, e.g., C:/pkg/GeographicLib-1.29.  The installation
     directories for the documentation, cmake configuration, python and
     matlab interfaces all depend on the variable with deeper paths
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
-    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib-1.28;
+    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib-1.29;
     - python interface: OFF: python; ON: lib/python/site-packages;
     - matlab interface: OFF: matlab; ON: libexec/GeographicLib/matlab;
     .
@@ -306,7 +310,7 @@ Here are the steps to compile and install %GeographicLib:
     systems, it is recommended to use a prefix which includes the
     compiler version, as shown above (and also, possibly, whether this
     is a 64-bit build, e.g., <code>cmake -G "Visual Studio 10 Win64" -D
-    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.28 ..</code>).
+    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.29 ..</code>).
     If you just want to try the library to see if it suits your needs,
     pick, for example, <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
   - <code>PACKAGE_PATH</code> and <code>INSTALL_PATH</code> provide an
@@ -319,14 +323,14 @@ Here are the steps to compile and install %GeographicLib:
     - If INSTALL_PATH is not specified but PACKAGE_PATH is, then
       INSTALL_PATH is set to
       ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON, and to
-      ${PACKAGE_PATH}/GeographicLib-1.28, otherwise.
+      ${PACKAGE_PATH}/GeographicLib-1.29, otherwise.
     - If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
       INSTALL_PATH.
     .
     Typically, only PACKAGE_PATH needs to be specified, e.g.,
     - Linux: cmake -D PACKAGE_PATH=/opt .. => CMAKE_INSTALL_PREFIX=/opt
     - Windows: cmake -D PACKAGE_PATH=C:/pkg .. =>
-      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.28
+      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.29
     .
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
@@ -403,9 +407,9 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.28.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.29.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.28 \endverbatim
+  cd GeographicLib-1.29 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -434,9 +438,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.28.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.29.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.28 \endverbatim
+  cd GeographicLib-1.29 \endverbatim
 - Edit \verbatim
   include/GeographicLib/Config.h \endverbatim
   If your C++ compiler does not recognize the long double type
@@ -467,8 +471,8 @@ static library and the utilities.  If you only have Visual Studio 2003,
 use cmake to create the necessary solution file, see \ref cmake.  (cmake
 is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.28.zip \endverbatim
-- Open GeographicLib-1.28/windows/GeographicLib-vc10.sln in Visual Studio
+  unzip -q GeographicLib-1.29.zip \endverbatim
+- Open GeographicLib-1.29/windows/GeographicLib-vc10.sln in Visual Studio
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
@@ -491,14 +495,14 @@ library, it is advisable to build it with the compiler you are using for
 your own code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.28-win32.exe">
-GeographicLib-1.28-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.28-win64.exe">
-GeographicLib-1.28-win64.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.29-win32.exe">
+GeographicLib-1.29-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.29-win64.exe">
+GeographicLib-1.29-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc10\\GeographicLib-1.28 or C:\\pkg-vc10-x64\\GeographicLib-1.28,
+   C:\\pkg-vc10\\GeographicLib-1.29 or C:\\pkg-vc10-x64\\GeographicLib-1.29,
  - select the start menu folder,
  - and install.
  .
@@ -506,7 +510,7 @@ GeographicLib-1.28-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc10/GeographicLib-1.28/bin where the utilities are
+will include C:/pkg-vc10/GeographicLib-1.29/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the matlab folder.  Add this to your
@@ -553,7 +557,7 @@ Check the code out of git with \verbatim
 Here the "master" branch is checked out.  There are three branches in
 the git repository:
 - <b>master</b>: the main branch for code maintainence.  Releases are
-  tagged on this branch as, e.g., v1.28.
+  tagged on this branch as, e.g., v1.29.
 - <b>devel</b>: the development branch; changes made here are merged
   into master.
 - <b>release</b>: the release branch created by unpacking the source
@@ -563,7 +567,7 @@ the git repository:
   specifying a branch).  This differs from the master branch in that
   some administrative files are excluded while some intermediate files
   are included (in order to aid building on as many platforms as
-  possible).  Releases are tagged on this branch as, e.g., r1.28.
+  possible).  Releases are tagged on this branch as, e.g., r1.29.
 .
 The autoconf configuration script and the formatted man pages are not
 checked into master branch of the repository.  In order to create the
@@ -579,8 +583,8 @@ In the case of cmake, you then run \verbatim
 which will copy the man pages from the build directory back into the
 source tree and package the resulting source tree for distribution as
 \verbatim
-  GeographicLib-1.28.tar.gz
-  GeographicLib-1.28.zip \endverbatim
+  GeographicLib-1.29.tar.gz
+  GeographicLib-1.29.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -591,7 +595,7 @@ With configure, run \verbatim
   make dist-gzip \endverbatim
 which will create the additional files and packages the results ready
 for distribution as \verbatim
-  geographiclib-1.28.tar.gz \endverbatim
+  geographiclib-1.29.tar.gz \endverbatim
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
@@ -1116,7 +1120,7 @@ The matlab directory contains
  - Native Matlab implementations of the geodesic routines.  To use
    these, start Matlab or Octave and run one of (for example) \verbatim
    addpath /usr/local/libexec/GeographicLib/matlab
-   addpath 'C:/pkg-vc10-x64/GeographicLib-1.28/libexec/GeographicLib/matlab'
+   addpath 'C:/pkg-vc10-x64/GeographicLib-1.29/libexec/GeographicLib/matlab'
    \endverbatim
    The available functions are:
    - geoddoc: briefly descibe the routines
@@ -1183,9 +1187,9 @@ There are two ways of compiling the interface code: (1) using cmake and
  - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
    Octave and run, e.g., \code
    mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-1.28/matlab'
+   cd 'C:/pkg-vc10-x64/GeographicLib-1.29/matlab'
    help geographiclibinterface
-   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.28');
+   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.29');
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
@@ -1194,7 +1198,7 @@ There are two ways of compiling the interface code: (1) using cmake and
 To use the interface routines for %GeographicLib, run one of (for
 example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-1.28/libexec/GeographicLib/matlab'
+  addpath 'C:/pkg-vc10-x64/GeographicLib-1.29/libexec/GeographicLib/matlab'
 \endverbatim
 in Octave or Matlab.  The available functions are:
  - geodesicdirect: solve direct geodesic problem
@@ -2578,11 +2582,10 @@ Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page geodesic Geodesics on the ellipsoid
+\page geodesic Geodesics on an ellipsoid of revolution
 
 <center>
-Back to \ref magnetic.  Forward to \ref transversemercator.  Up to
-\ref contents.
+Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
 </center>
 
 GeographicLib::Geodesic and GeographicLib::GeodesicLine provide accurate
@@ -2613,6 +2616,9 @@ Go to
  - \ref geodseries
  - \ref geodellip
  - \ref meridian
+ .
+For some background information on geodesics on triaxial ellipsoids, see
+\ref triaxial.
 
 References
  - F. W. Bessel,
@@ -2628,17 +2634,17 @@ References
    Chaps. 5--7.
  - J. Danielsen,
    The Area under the Geodesic,
-   Survey Review 30 (232), 61--66 (1989).
+   Survey Review 30(232), 61--66 (1989).
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
-   J. Geodesy, 2012;
+   J. Geodesy 87(1), 43--55 (Jan. 2013);
    DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
    addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
-       geod-addenda.html</a>;
-   resource page
-   <a href="http://geographiclib.sf.net/geod.html">geod.html</a>.
+   geod-addenda.html</a>;
+   resource page:
+   <a href="http://geographiclib.sf.net/geod.html"> geod.html</a>.
  - A collection of some papers on geodesics is available at
    http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
 
@@ -3289,7 +3295,534 @@ for evaluate the meridian distance
      alt="comparison of meridian measures">
 
 <center>
-Back to \ref magnetic.  Forward to \ref transversemercator.  Up to
+Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page triaxial Geodesics on a triaxial ellipsoid
+
+<center>
+Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
+\ref contents.
+</center>
+
+Jacobi (1839) showed that the problem of geodesics on a triaxial
+ellipsoids (with 3 unequal axes) can be reduced by quadrature.  Despite
+this, the detailed behavior of the geodesics is not very well known.  In
+this section, I briefly give Jacobi's solution and illustrate the
+behavior of the geodesics and outline an algorithm for the solution of
+the inverse problem.  The figures in this section are relatively small
+in order to allow them to be displayed quickly.  Vector versions of
+these figures are available in
+<a href="http://geographiclib.sourceforge.net/triaxial-figs.pdf"
+type="application/pdf"> triaxial-figs.pdf</a>.  This allows you to
+magnify the figures to show the details more clearly.
+
+Go to
+ - \ref triaxial-coords
+ - \ref triaxial-jacobi
+ - \ref triaxial-survey
+ - \ref triaxial-stab
+ - \ref triaxial-inverse
+
+<b>NOTES</b>
+ -# A triaxial ellipsoid approximates the earth only slightly better
+    than an ellipsoid of revolution.  If you are really considering
+    measuring distances on the earth using a triaxial ellipsoid, you
+    should also be worrying about the shape of the geoid, which
+    essentially makes the geodesic problem a hopeless mess; see, for
+    example, <a href="http://arxiv.org/abs/1112.3231"> Waters
+    (2011)</a>.
+ -# There is nothing new in this section.  It is just an exercise in
+    exploring Jacobi's solution.  My interest here is in generating long
+    geodesics with the correct long-time behavior.  Arnold gives a
+    nice qualitative description of the solution in <i>Mathematical
+    Methods of Classical Mechanics</i> (2nd edition, Springer, 1989),
+    pp. 264--266.
+ -# Possible reasons this problem might, nevertheless, be of interest
+    are:
+    - It is the first example of a dynamical system which has a
+      non-trivial constant of motion.  As such, Jacobi's paper generated
+      a lot of excitement and was followed by many papers elaborating
+      his solution.  In particular, the unstable behavior of one of the
+      closed geodesics of the ellipsoid, is an early example of a system
+      with a positive Lyapunov exponent (one of the essential
+      ingredients for chaotic behavior in dynamical systems).
+    - Knowledge of ellipsoidal coordinates (used by Jacobi) might be
+      useful in other areas of geodesy.
+    - Geodesics which pass through the pole on an ellipsoid of revolution
+      represent a degenerate class (they are all closed and all pass
+      through the opposite pole).  It is of interest to see how this
+      degeneracy is broken with a surface with a more general shape.
+ -# My interest in this problem was piqued by Jean-Marc Baillard.  I put
+    him onto Jacobi's solution without having looked at it in detail
+    myself; and he quickly implemented the solution for an HP-41
+    calculator(!) which is posted
+    <a href="http://hp41programs.yolasite.com/geod3axial.php"> here</a>.
+ -# I do not give full citations of the papers here.  You can find these
+    in the
+    <a href="http://geographiclib.sourceforge.net/geodesic-papers/biblio.html">
+    Online Geodesic Bibliography</a>; this includes links to online
+    versions of the papers.
+ -# An alternative to exploring geodesics using Jacobi's solution is to
+    integrate the equations for the geodesics directly.  This is the
+    approach taken by
+    <a href="http://www.math.harvard.edu/~knill/caustic/">
+    Oliver Knill and Michael Teodorescu</a>.  However it is difficult to
+    ensure that the long time behavior is correctly modeled with such an
+    approach.
+ -# At this point, I have no plans to add the solution of triaxial
+    geodesic problem to %GeographicLib.
+ -# If you only want to learn about geodesics on a biaxial ellipsoid (an
+    ellipsoid of revolution), then see \ref geodesic or the paper
+    - C. F. F. Karney,
+      <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+      Algorithms for geodesics</a>,
+      J. Geodesy 87(1), 43--55 (Jan. 2013);
+      DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+      10.1007/s00190-012-0578-z</a>;
+      addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+      geod-addenda.html</a>.
+
+\section triaxial-coords Triaxial coordinate systems
+
+Consider the ellipsoid defined by
+\f[
+  f = \frac{x^2}{a^2} + \frac{y^2}{b^2} + \frac{z^2}{c^2} = 1,
+\f]
+where, without loss of generality, \f$ a \ge b \ge c \gt 0\f$.  A
+point on the surface is specified by a latitude and longitude.  The \e
+geographical latitude and longitude \f$(\phi, \lambda)\f$ are defined by
+\f[
+ \frac{\nabla f}{\left| \nabla f\right|} = \left(
+\begin{array}{c} \cos\phi \cos\lambda \\ \cos\phi \sin\lambda \\ \sin\phi
+\end{array}\right).
+\f]
+The \e parametric latitude and longitude \f$(\phi', \lambda')\f$ are
+defined by
+\f[
+\begin{aligned}
+ x &= a \cos\phi' \cos\lambda', \\
+ y &= b \cos\phi' \sin\lambda', \\
+ z &= c \sin\phi'. \\
+\end{aligned}
+\f]
+Jacobi employed the \e ellipsoidal latitude and longitude \f$(\beta,
+\omega)\f$ defined by
+\f[
+\begin{aligned}
+  x &= a \cos\omega
+      \frac{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}}
+           {\sqrt{a^2 - c^2}}, \\
+  y &= b \cos\beta \sin\omega, \\
+  z &= c \sin\beta
+      \frac{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}}
+           {\sqrt{a^2 - c^2}}.
+\end{aligned}
+\f]
+Grid lines of constant \f$\beta\f$ and \f$\omega\f$ are given in Fig. 1.
+
+<center>
+<img src="triaxial-grid.png"
+width=419 height=397 alt="Geodesic grid on a triaxial ellipsoid">
+Fig. 1
+</center>\n
+Fig. 1:
+The ellipsoidal grid.  The blue (resp. green) lines are lines of constant
+\f$\beta\f$ (resp. \f$\omega\f$); the grid spacing is 10&deg;.  Also
+shown in red are two of the principal sections of the ellipsoid, defined
+by \f$x = 0\f$ and \f$z = 0\f$.  The third principal section, \f$y =
+0\f$, is covered by the lines \f$\beta = \pm 90^\circ\f$ and \f$\omega =
+90^\circ \pm 90^\circ\f$.  These lines meet at four umbilical points (two
+of which are visible in this figure) where the principal radii of
+curvature are equal.  The parameters of the ellipsoid are \f$a =
+1.01\f$, \f$b = 1\f$, \f$c = 0.8\f$, and it is viewed in an orthographic
+projection from a point above \f$\phi = 40^\circ\f$, \f$\lambda =
+30^\circ\f$.  These parameters were chosen to accentuate the ellipsoidal
+effects on geodesics (relative to those on the earth) while still
+allowing the connection to an ellipsoid of revolution to be made.
+
+The grid lines of the ellipsoid coordinates are "lines of curvature" on
+the ellipsoid, i.e., they are parallel to the direction of principal
+curvature (Monge, 1796).  They are also intersections of the ellipsoid
+with confocal systems of hyperboloids of one and two sheets (Dupin,
+1813).  Finally they are geodesic ellipses and hyperbolas defined using
+two adjacent umbilical points.  For example, the lines of constant
+\f$\beta\f$ in Fig. 1 can be generated with the familiar string
+construction for ellipses with the ends of the string pinned to the two
+umbilical points.
+
+Inter-conversions between these three latitudes and longitudes and the
+cartesian coordinates are simple algebraic exercises.
+
+\section triaxial-jacobi Jacobi's solution
+
+Solving the geodesic problem for an ellipsoid of revolution is, from the
+mathematical point of view, trivial; because of symmetry, geodesics have
+a constant of the motion (analogous to the angular momentum) which was
+found by Clairaut (1733).  By 1806 (with the work of Legendre, Oriani,
+et al.), there was a complete understanding of the qualitative behavior
+of geodesics on an ellipsoid of revolution.
+
+On the other hand, geodesics on a triaxial ellipsoid have no obvious
+constant of the motion and thus represented a challenging "unsolved"
+problem in the first half of the nineteenth century.  Jacobi discovered
+that the geodesic equations are separable if they are expressed in
+ellipsoidal coordinates.  You can get an idea of the importance Jacobi
+attached to his discovery from the
+<a href="http://books.google.com/books?id=_09tAAAAMAAJ&pg=PA385">
+letter</a> he wrote to his friend and neighbor Bessel:
+<blockquote> The day before yesterday, I reduced to quadrature the
+problem of geodesic lines on an <i>ellipsoid with three unequal
+axes</i>.  They are the simplest formulas in the world, Abelian
+integrals, which become the well known elliptic integrals if 2 axes are
+set equal.\n
+K&ouml;nigsberg, 28th Dec. '38.
+</blockquote>
+
+On the same day he wrote a similar letter to the editor of Compte Rendus
+and his result was published in J. Crelle in (1839) with a French
+translation (from German) appearing in J. Liouville in (1841).
+
+Here is the solution, exactly as given by Jacobi
+<a href="http://books.google.com/books?id=Rh8GAAAAYAAJ&pg=PA268"> here</a>
+(with minor changes in notation):
+\f[
+\begin{aligned}
+\delta &= \int \frac
+{\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}\,d\beta}
+{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}
+ \sqrt{(b^2-c^2)\cos^2\beta - \gamma}}\\
+&\quad -
+\int \frac
+{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}\,d\omega}
+{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}
+ \sqrt{(a^2-b^2)\sin^2\omega + \gamma}}
+\end{aligned}
+\f]
+As Jacobi notes &quot;a function of the angle \f$\beta\f$ equals a
+function of the angle \f$\omega\f$.  These two functions are just
+Abelian integrals...&quot; Two constants \f$\delta\f$ and \f$\gamma\f$
+appear in the solution.  Typically \f$\delta\f$ is zero if the lower
+limits of the integrals are taken to be the starting point of the geodesic
+and the direction of the geodesics is determined by \f$\gamma\f$.
+However for geodesics that start at an umbilical points, we have \f$\gamma
+= 0\f$ and \f$\delta\f$ determines the direction at the umbilical point.
+Incidentally the constant \f$\gamma\f$ may be expressed as
+\f[
+\gamma = (b^2-c^2)\cos^2\beta\sin^2\alpha-(a^2-b^2)\sin^2\omega\cos^2\alpha
+\f]
+where \f$\alpha\f$ is the angle the geodesic makes with lines of
+constant \f$\omega\f$. In the limit \f$a\rightarrow b\f$, this reduces
+to \f$\cos\beta\sin\alpha = \text{const.}\f$, the familiar Clairaut
+relation.  A nice derivation of Jacobi's result is given by Darboux
+(1894) <a href="http://books.google.com/books?id=hGMSAAAAIAAJ&pg=PA9">
+&sect;&sect;583--584</a> where he gives the solution found by Liouville
+(1846) for general quadratic surfaces.  In this formulation, the
+distance along the geodesic, \f$s\f$, is also found using
+\f[
+\begin{aligned}
+\frac{ds}{(b^2-c^2)\cos^2\beta + (a^2-b^2)\sin^2\omega}
+&= \frac
+{\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}\,d\beta}
+{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}
+ \sqrt{(b^2-c^2)\cos^2\beta - \gamma}}\\
+&= \frac
+{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}\,d\omega}
+{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}
+ \sqrt{(a^2-b^2)\sin^2\omega + \gamma}}
+\end{aligned}
+\f]
+An alternative expression for the distance is
+\f[
+\begin{aligned}
+ds
+&= \frac
+{\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}
+ \sqrt{(b^2-c^2)\cos^2\beta - \gamma}\,d\beta}
+{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}}\\
+&\quad {}+ \frac
+{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}
+ \sqrt{(a^2-b^2)\sin^2\omega + \gamma}\,d\omega}
+{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}}
+\end{aligned}
+\f]
+
+Jacobi's solution is a convenient way to compute geodesics on an
+ellipsoid.  Care must be taken with the signs of the square roots (which
+are determined by the initial azimuth of the geodesic).  Also if
+\f$\gamma \gt 0\f$ (resp. \f$\gamma \lt 0\f$), then the \f$\beta\f$
+(resp. \f$\omega\f$) integrand diverges.  The integrand can be
+transformed into a finite one by a change of variable, e.g.,
+\f$\sin\beta = \sin\sigma \sqrt{1 - \gamma/(b^2-c^2)}\f$.  The resulting
+integrals are periodic, so the behavior of an arbitrarily long geodesic
+is entirely captured by tabulating the integrals over a single period.
+
+The situation is more complicated if \f$\gamma = 0\f$ (corresponding to
+umbilical geodesics).  Both integrands have simple poles at the umbilical
+points.  However, this behavior may be subtracted from the integrands to
+yield (for example) the sum of a term involving
+\f$\tanh^{-1}\sin\beta\f$ and a finite integral.  Since both integrals
+contain similar logarithmic singularities they can be equated (thus
+fixing the ratio \f$\cos\beta/\sin\omega\f$ at the umbilical point) and
+connection formulas can be found which allow the geodesic to be followed
+through the umbilical point.  The study of umbilical geodesics was of
+special interest to a group of Irish mathematicians in the 1840's and
+1850's, including Michael and William Roberts (twins!), Hart, Graves,
+and Salmon.
+
+\section triaxial-survey Survey of triaxial geodesics
+
+Before delving into the nature of geodesics on a triaxial geodesic, it
+is worth reviewing geodesics on an ellipsoid of revolution.  There are
+two classes of simple closed geodesics (i.e., geodesics which close on
+themselves without intersection): the equator and all the meridians.
+All other geodesics oscillate between two equal and opposite circles of
+latitude; but after completing a full oscillation in latitude these fall
+slightly short (for an oblate ellipsoid) of completing a full circuit in
+longitude.
+
+Turning to the triaxial case, we find that there are only 3 simple
+closed geodesics, the three principal sections of the ellipsoid given by
+\f$x = 0\f$, \f$y = 0\f$, and \f$z = 0\f$.  To survey the other
+geodesics, it is convenient to consider geodesics which intersect the
+middle principal section, \f$y = 0\f$, at right angles.  Such geodesics
+are shown in Figs. 2--6, where I use the same ellipsoid parameters as in
+Fig. 1 and the same viewing direction.  In addition, The three principal
+ellipses are shown in red in each of these figures.
+
+If the starting point is \f$\beta_1 \in (-90^\circ, 90^\circ)\f$,
+\f$\omega_1 = 0\f$, and \f$\alpha_1 = 90^\circ\f$, then the geodesic
+encircles the ellipsoid in a "circumpolar" sense.  The geodesic
+oscillates north and south of the equator; on each oscillation it
+completes slightly less that a full circuit around the ellipsoid
+resulting in the geodesic filling the area bounded by the two latitude
+lines \f$\beta = \pm \beta_1\f$.  Two examples are given in
+Figs. 2 and 3.  Figure 2 shows practically the same behavior as for an
+oblate ellipsoid of revolution (because \f$a \approx b\f$).  However, if
+the starting point is at a higher latitude (Fig. 3) the distortions
+resulting from \f$a \ne b\f$ are evident.
+
+<center>
+<img src="triaxial-equatorial-a.png"
+width=419 height=397 alt="Example of a circumpolar geodesic on a
+triaxial ellipsoid">
+Fig. 2
+</center>\n
+Fig. 2:
+Example of a circumpolar geodesic on a triaxial ellipsoid.  The starting
+point of this geodesic is \f$\beta_1 = 45.1^\circ\f$, \f$\omega_1 =
+0^\circ\f$, and \f$\alpha_1 = 90^\circ\f$.
+
+<center>
+<img src="triaxial-equatorial-b.png"
+width=419 height=397 alt="Another example of a circumpolar geodesic on a
+triaxial ellipsoid">
+Fig. 3
+</center>\n
+Fig. 3:
+Another example of a circumpolar geodesic on a triaxial ellipsoid.  The
+starting point of this geodesic is \f$\beta_1 = 87.48^\circ\f$, \f$\omega_1 =
+0^\circ\f$, and \f$\alpha_1 = 90^\circ\f$.
+
+If the starting point is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 \in
+(0^\circ, 180^\circ)\f$, and \f$\alpha_1 = 0^\circ\f$, then the geodesic
+encircles the ellipsoid in a "transpolar" sense.  The geodesic
+oscillates east and west of the ellipse \f$x = 0\f$; on each oscillation
+it completes slightly more that a full circuit around the ellipsoid
+resulting in the geodesic filling the area bounded by the two longitude
+lines \f$\omega = \omega_1\f$ and \f$\omega = 180^\circ - \omega_1\f$.
+If \f$a = b\f$, all meridians are geodesics; the effect of \f$a \ne b\f$
+causes such geodesics to oscillate east and west.  Two examples are
+given in Figs. 4 and 5.
+
+<center>
+<img src="triaxial-polar-a.png"
+width=419 height=397 alt="Example of a transpolar geodesic on a
+triaxial ellipsoid">
+Fig. 4
+</center>\n
+Fig. 4:
+Example of a transpolar geodesic on a triaxial ellipsoid.  The
+starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
+39.9^\circ\f$, and \f$\alpha_1 = 0^\circ\f$.
+
+<center>
+<img src="triaxial-polar-b.png"
+width=419 height=397 alt="Another example of a transpolar geodesic on a
+triaxial ellipsoid">
+Fig. 5
+</center>\n
+Fig. 5:
+Another example of a transpolar geodesic on a triaxial ellipsoid.  The
+starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
+9.966^\circ\f$, and \f$\alpha_1 = 0^\circ\f$.
+
+If the starting point is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
+0^\circ\f$ (an umbilical point), and \f$\alpha_1 = 45^\circ\f$ (the
+geodesic leaves the ellipse \f$y = 0\f$ at right angles), then the
+geodesic repeatedly intersects the opposite umbilical point and returns to
+its starting point.  However on each circuit the angle at which
+intersects \f$y = 0\f$ becomes closer to \f$0^\circ\f$ or
+\f$180^\circ\f$ so that asymptotically the geodesic lies on the ellipse
+\f$y = 0\f$.  This is shown in Fig. 6.  Note that a single geodesic does
+not fill an area on the ellipsoid.
+
+<center>
+<img src="triaxial-umbilical.png"
+width=419 height=397 alt="Example of an umbilical geodesic on a
+triaxial ellipsoid">
+Fig. 6
+</center>\n
+Fig. 6:
+Example of an umbilical geodesic on a triaxial ellipsoid.  The
+starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
+0^\circ\f$, and \f$\alpha_1 = 45^\circ\f$ and the geodesics is followed
+forwards and backwards until it lies close to the plane \f$y = 0\f$ in
+both directions.
+
+Umbilical geodesic enjoy several interesting properties.
+ - Through any point on the ellipsoid, there are two umbilical geodesics.
+ - The geodesic distance between opposite umbilical points is the same
+   regardless of the initial direction of the geodesic.
+ - Whereas the closed geodesics on the ellipses \f$x = 0\f$ and \f$z =
+   0\f$ are stable (an geodesic initially close to and nearly parallel to
+   the ellipse remains close to the ellipse), the closed geodesic on the
+   ellipse \f$y = 0\f$, which goes through all 4 umbilical points, is \e
+   unstable.  If it is perturbed, it will swing out of the plane \f$y =
+   0\f$ and flip around before returning to close to the plane.  (This
+   behavior may repeat depending on the nature of the initial
+   perturbation.).
+
+\section triaxial-stab The stability of closed geodesics
+
+The stability of the three simple closed geodesics can be determined by
+examining the properties of Jacobi's solution.  In particular the
+unstable behavior of umbilical geodesics was shown by Hart (1849).
+However an alternative approach is to use the equations that Gauss
+(1828) gives for a perturbed geodesic
+\f[
+\frac {d^2m}{ds^2} + Km = 0
+\f]
+where \f$m\f$ is the distance of perturbed geodesic from a reference
+geodesic and \f$K\f$ is the Gaussian curvature of the surface.  If the
+reference geodesic is closed, then this is a linear homogeneous
+differential equation with periodic coefficients.  In fact it's a
+special case of Hill's equation which can be treated using Floquet
+theory, see <a href="http://dlmf.nist.gov/28.29">DLMF, &sect;28.29</a>.
+Using the notation of &sect;3 of
+<a href="http://dx.doi.org/10.1007/s00190-012-0578-z"> Algorithms for
+geodesics</a>, the stability is determined by computing the reduced
+length \f$m_{12}\f$ and the geodesic scales \f$M_{12}, M_{21}\f$ over
+half the perimeter of the ellipse and determining the eigenvalues
+\f$\lambda_{1,2}\f$ of
+\f[
+{\cal M} = \left(\begin{array}{cc}
+M_{12} & m_{12}\\
+-\frac{1 - M_{12}M_{21}}{m_{12}} & M_{21}
+\end{array}\right).
+\f]
+Because \f$\mathrm{det}\,{\cal M} = 1\f$, the eigenvalues are determined
+by \f$\mathrm{tr}\,{\cal M}\f$.  In particular if
+\f$\left|\mathrm{tr}\,{\cal M}\right| < 2\f$, we have
+\f$\left|\lambda_{1,2}\right| = 1\f$ and the solution is stable; if
+\f$\left|\mathrm{tr}\,{\cal M}\right| > 2\f$, one of
+\f$\left|\lambda_{1,2}\right|\f$ is larger than unity and the solution
+is (exponentially) unstable.  In the transition case,
+\f$\left|\mathrm{tr}\,{\cal M}\right| = 2\f$, the solution is stable
+provided that the off-diagonal elements of \f${\cal M}\f$ are zero;
+otherwise the solution is linearly unstable.
+
+The exponential instability of the geodesic on the ellipse \f$y = 0\f$
+is confirmed by this analysis and results from the resonance between the
+natural frequency of the equation for \f$m\f$ and the driving frequency
+when \f$b\f$ lies in \f$(c, a)\f$.  If \f$b\f$ is equal to either of the
+other axes (and the triaxial ellipsoid degenerates to an ellipsoid of
+revolution), then the solution is linearly unstable.  (For example, a
+geodesic is which is close to a meridian on an oblate ellipsoid, slowly
+moves away from that meridian.)
+
+\section triaxial-inverse The inverse problem
+
+In order to solve the inverse geodesic problem, it helps to have an
+understanding of the properties of all the geodesics emanating from a
+single point \f$(\beta_1, \omega_1)\f$.
+ - If the point is an umbilical point, all the lines meet at the
+   opposite umbilical point.
+ - Otherwise, the first envelope of the geodesics is a 4-pointed
+   astroid.  The cusps of the astroid lie on either \f$\beta = -
+   \beta_1\f$ or \f$\omega = \omega_1 + \pi\f$; see
+   <a href="http://dx.doi.org/10.1080/10586458.2003.10504515"> Sinclair
+   (2003)</a>.
+ - All geodesics intersect (or, in the case of \f$\alpha_1 = 0\f$ or
+   \f$\pi\f$, touch) the line \f$\omega = \omega_1 + \pi\f$.
+ - All geodesics intersect (or, in the case of \f$\alpha_1 =
+   \pm\pi/2\f$, touch) the line \f$\beta = -\beta_1\f$.
+ - Two geodesics with azimuths \f$\pm\alpha_1\f$ first intersect on
+   \f$\omega = \omega_1 + \pi\f$ and their lengths to the point of
+   intersection are equal.
+ - Two geodesics with azimuths \f$\alpha_1\f$ and \f$\pi-\alpha_1\f$
+   first intersect on \f$\beta = -\beta_1\f$ and their lengths to the
+   point of intersection are equal.
+ .
+(These assertions follow directly from the equations for the geodesics;
+some of them are somewhat surprising given the asymmetries of the
+ellipsoid.)  Consider now terminating the geodesics from \f$(\beta_1,
+\omega_1)\f$ at the point where they first intersect (or touch) the line
+\f$\beta = -\beta_1\f$.  To focus the discussion, take \f$\beta_1 \le
+0\f$.
+ - The geodesics completely fill the portion of the ellipsoid satisfying
+   \f$\beta \le -\beta_1\f$.
+ - None of geodesics intersect any other geodesics.
+ - Any initial portion of these geodesics is a shortest path.
+ - Each geodesic intersects the line \f$\beta = \beta_2\f$, where
+   \f$\beta_1 < \beta_2 < -\beta_1\f$, exactly once.
+ - For a given \f$\beta_2\f$, this defines a continuous monotonic
+   mapping of the circle of azimuths \f$\alpha_1\f$ to the circle of
+   longitudes \f$\omega_2\f$.
+ - If \f$\beta_2 = \pm \beta_1\f$, then the previous two assertions need
+   to be modified similarly to the case for an ellipsoid of revolution.
+
+These properties show that the inverse problem can be solved using
+techniques similar to those employed for an ellipsoid of revolution (see
+&sect;4 of
+<a href="http://dx.doi.org/10.1007/s00190-012-0578-z"> Algorithms for
+geodesics</a>).
+ - If the points are opposite umbilical points, an arbitrary
+   \f$\alpha_1\f$ may be chosen.
+ - If the points are neighboring umbilical points, the shortest path
+   lies on the ellipse \f$y = 0\f$.
+ - If only one point is an umbilicial point, the azimuth at the
+   non-umbilical point is found using the generalization of Clairaut's
+   equation (given above) with \f$\gamma = 0\f$.
+ - If both points lie on the equator \f$\beta = 0\f$, then determine the
+   reduced length \f$m_{12}\f$ for the geodesic which is the shorter
+   path along the ellipse \f$z = 0\f$.  If \f$m_{12} \ge 0\f$, then this
+   is the shortest path on the ellipsoid; otherwise proceed to the
+   general case (next).
+ - Swap the points, if necessary, so that the first point is the one
+   closest to a pole.  Estimate \f$\alpha_1\f$ (by some means) and solve
+   the \e hybrid problem, i.e., determine the longitude \f$\omega_2\f$
+   corresponding to the first intersection of the geodesic with \f$\beta
+   = \beta_2\f$.  Adjust \f$\alpha_1\f$ so that the value of
+   \f$\omega_2\f$ matches the given \f$\omega_2\f$ (there is a single
+   root).  If a sufficiently close solution can be found, Newton's
+   method can be employed since the necessary derivative can be
+   expressed in terms of the reduced length \f$m_{12}\f$.
+
+The shortest path found by this method is unique unless:
+ - The length of the geodesic vanishes \f$s_{12}=0\f$, in which case any
+   constant can be added to the azimuths.
+ - The points are opposite umbilical points.  In this case,
+   \f$\alpha_1\f$ can take on any value and \f$\alpha_2\f$ needs to be
+   adjusted to maintain the value of \f$\tan\alpha_1 / \tan\alpha_2\f$.
+ - \f$\beta_1 + \beta_2 = 0\f$ and \f$\cos\alpha_1\f$ and
+   \f$\cos\alpha_2\f$ have opposite signs.  In this case, there another
+   shortest geodesic with azimuths \f$\pi - \alpha_1\f$ and
+   \f$\pi - \alpha_2\f$.
+
+<center>
+Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
 \ref contents.
 </center>
 **********************************************************************/
@@ -3297,7 +3830,7 @@ Back to \ref magnetic.  Forward to \ref transversemercator.  Up to
 \page transversemercator Transverse Mercator projection
 
 <center>
-Back to \ref geodesic.  Forward to \ref geocentric.  Up to \ref contents.
+Back to \ref triaxial.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 
 GeographicLib::TransverseMercator and
@@ -3309,6 +3842,7 @@ utility provides an interface to these classes.
 Go to
  - \ref testmerc
  - \ref tmseries
+ - \ref tmfigures
 
 References
  - L. Kr&uuml;ger,
@@ -3329,10 +3863,10 @@ References
    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers,</a>
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   preprint
-   <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>;
-   resource page
-   <a href="http://geographiclib.sf.net/tm.html">tm.html</a>.
+   preprint:
+   <a href="http://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
+   resource page:
+   <a href="http://geographiclib.sf.net/tm.html"> tm.html</a>.
  .
 The algorithm for GeographicLib::TransverseMercator is based on
 Kr&uuml;ger (1912); that for GeographicLib::TransverseMercatorExact is
@@ -3552,8 +4086,142 @@ distribution).  To run, start Maxima and enter
 \endverbatim
 Further instructions are included at the top of the file.
 
+\section tmfigures Figures from paper on transverse Mercator projection
+
+This section gives color versions of the figures in
+ - C. F. F. Karney,
+   <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
+   Transverse Mercator with an accuracy of a few nanometers,</a>
+   J. Geodesy 85(8), 475--485 (Aug. 2011);
+   preprint:
+   <a href="http://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
+   resource page:
+   <a href="http://geographiclib.sf.net/tm.html"> tm.html</a>.
+
+\b NOTE:
+The numbering of the figures matches that in the paper cited above.  The
+figures in this section are relatively small in order to allow them to
+be displayed quickly.  Vector versions of these figures are available in
+<a href="http://geographiclib.sourceforge.net/tm-figs.pdf"
+type="application/pdf"> tm-figs.pdf</a>.  This allows you to magnify the
+figures to show the details more clearly.
+
 <center>
-Back to \ref geodesic.  Forward to \ref geocentric.  Up to \ref contents.
+<img src="gauss-schreiber-graticule-a.png"
+width=667 height=305 alt="Gauss-Schreiber transverse Mercator graticule
+(scaled)">
+Fig. 1(a)
+</center>\n
+Fig. 1(a):
+The graticule for the spherical transverse Mercator projection.
+The equator lies on \e y = 0.
+Compare this with Lee, Fig. 1 (right), which shows the graticule for
+half a sphere, but note that in his notation \e x and \e y have switched
+meanings.  The graticule for the ellipsoid differs from that for a
+sphere only in that the latitude lines have shifted slightly.  (The
+conformal transformation from an ellipsoid to a sphere merely relabels
+the lines of latitude.)  This projection places the point latitude =
+0&deg;, longitude = 90&deg; at infinity.
+
+<center>
+<img src="gauss-krueger-graticule-a.png"
+width=667 height=305 alt="Gauss-Krueger transverse Mercator graticule
+(scaled)">
+Fig. 1(b)
+</center>\n
+Fig. 1(b):
+The graticule for the Gauss-Kr&uuml;ger transverse Mercator projection.
+The equator lies on \e y = 0 for longitude < 81&deg;; beyond
+this, it arcs up to meet \e y = 1.  Compare this with Lee, Fig. 45
+(upper), which shows the graticule for the International Ellipsoid.  Lee,
+Fig. 46, shows the graticule for the entire ellipsoid.  This projection
+(like the Thompson projection) projects the ellipsoid to a finite area.
+
+<center>
+<img src="thompson-tm-graticule-a.png"
+width=667 height=305 alt="Thompson transverse Mercator graticule
+(scaled)">
+Fig. 1(c)
+</center>\n
+Fig. 1(c):
+The graticule for the Thompson transverse Mercator projection.  The
+equator lies on \e y = 0 for longitude < 81&deg;; at longitude =
+81&deg;, it turns by 120&deg; and heads for \e y = 1.
+Compare this with Lee, Fig. 43, which shows the graticule for the
+International Ellipsoid.  Lee, Fig. 44, shows the graticule for the
+entire ellipsoid.  This projection (like the Gauss-Kr&uuml;ger
+projection) projects the ellipsoid to a finite area.
+
+<center>
+<img src="gauss-krueger-error.png"
+width=672 height=552 alt="Truncation error for Gauss-Krueger series">
+Fig. 2
+</center>\n
+Fig. 2:
+The truncation error for the series for the Gauss-Kr&uuml;ger transverse
+Mercator projection.  The blue curves show the truncation error for the
+order of the series \e J = 2 (top) thru \e J = 12 (bottom).  The red
+curves show the combined truncation and round-off errors for
+ - float and \e J = 4 (top)
+ - double and \e J = 6 (middle)
+ - long double and \e J = 8 (bottom)
+
+<center>
+<img src="gauss-krueger-graticule.png"
+width=673 height=323 alt="Gauss-Krueger transverse Mercator extended
+graticule">\n
+Fig. 3(a)
+</center>
+Fig. 3(a):
+The graticule for the extended domain.  The blue lines show
+latitude and longitude at multiples of 10&deg;.  The green lines
+show 1&deg; intervals for longitude in [80&deg;, 90&deg;] and latitude in
+[&minus;5&deg;, 10&deg;].
+
+<center>
+<img src="gauss-krueger-convergence-scale.png"
+width=673 height=323 alt="Gauss-Krueger transverse Mercator
+convergence and scale">
+Fig. 3(b)
+</center>\n
+Fig. 3(b):
+The convergence and scale for the Gauss-Kr&uuml;ger
+transverse Mercator projection in the extended domain.  The blue lines
+emanating from the top left corner (the north pole) are lines of
+constant convergence.  Convergence = 0&deg; is given by the
+dog-legged line joining the points (0,1), (0,0), (1.71,0),
+(1.71,&minus;&infin;).
+Convergence = 90&deg; is given by the line y = 1.  The other
+lines show multiples of 10&deg; between 0&deg; and
+90&deg;.  The other blue, the green and the black lines show
+scale = 1 thru 2 at intervals of 0.1, 2 thru 15 at intervals of 1, and
+15 thru 35 at intervals of 5.  Multiples of 5 are shown in black,
+multiples of 1 are shown in blue, and the rest are shown in green.
+Scale = 1 is given by the line segment (0,0) to (0,1).  The red line
+shows the equator between lon = 81&deg; and 90&deg;.  The
+scale and convergence at the branch point are 1/\e e = 10 and
+0&deg;, respectively.
+
+<center>
+<img src="thompson-tm-graticule.png"
+width=661 height=321 alt="Thompson transverse Mercator extended graticule">
+Fig. 3(c)
+</center>\n
+Fig. 3(c):
+The graticule for the Thompson transverse Mercator
+projection for the extended domain.  The range of the projection is the
+rectangular region shown
+ - 0 &le; \e u &le; K(<i>e</i><sup>2</sup>),
+   0 &le; \e v &le; K(1 &minus; <i>e</i><sup>2</sup>)
+ .
+The coloring of the lines is the same as Fig. 3(a), except that latitude
+lines extended down to &minus;10&deg; and a red line has been added
+showing the line \e y = 0 for \e x > 1.71 in the Gauss-Kr&uuml;ger
+projection (Fig. 3(a)).  The extended Thompson projection figure has
+reflection symmetry on all the four sides of Fig. 3(c).
+
+<center>
+Back to \ref triaxial.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
@@ -3690,6 +4358,13 @@ particular the links for the source code will not work if the code has
 been migrated to the archive subdirectory).  All the releases are
 available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
+
+ - <a href="http://geographiclib.sf.net/1.29">Version 1.29</a>
+   (released 2013-01-16)
+   - Changes to allow compilation with libc++ (courtesy of Kal Conley).
+   - Add description of geodesics on triaxial ellipsoid to
+     documentation.
+   - Update journal reference for "Algorithms for geodesics".
 
  - <a href="http://geographiclib.sf.net/1.28">Version 1.28</a>
    (released 2012-12-11)

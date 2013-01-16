@@ -39,7 +39,8 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %   This is an implementation of the algorithm given in
 %
 %     C. F. F. Karney, Algorithms for geodesics,
-%     J. Geodesy (2012); http://dx.doi.org/10.1007/s00190-012-0578-z
+%     J. Geodesy 87, 43-55 (2013);
+%     http://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
 %   This function duplicates some of the functionality of the RECKON
@@ -58,7 +59,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 
 % Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.28.
+% This file was distributed with GeographicLib 1.29.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional

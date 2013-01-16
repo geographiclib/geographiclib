@@ -8,7 +8,6 @@
  **********************************************************************/
 
 #include <GeographicLib/CircularEngine.hpp>
-#include <limits>
 
 namespace GeographicLib {
 

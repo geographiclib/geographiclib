@@ -26,7 +26,8 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %   regardless of the length of the edge.  The formulas are derived in
 %
 %     C. F. F. Karney, Algorithms for geodesics,
-%     J. Geodesy (2012); http://dx.doi.org/10.1007/s00190-012-0578-z
+%     J. Geodesy 87, 43-55 (2013);
+%     http://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
 %   See also GEODDOC, GEODDISTANCE, GEODRECKON, POLYGONAREA,
@@ -34,7 +35,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 
 % Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.28.
+% This file was distributed with GeographicLib 1.29.
 
   if nargin < 2, error('Too few input arguments'), end
   if nargin < 3, ellipsoid = defaultellipsoid; end

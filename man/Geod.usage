@@ -274,7 +274,7 @@ int usage(int retval, bool brief) {
 "\n"
 "SEE ALSO\n"
 "       GeoConvert(1).  The algorithms are described in C. F. F. Karney,\n"
-"       Algorithms for geodesics, J. Geodesy, 2012; DOI:\n"
+"       Algorithms for geodesics, J. Geodesy 87, 43-55 (2013); DOI:\n"
 "       http://dx.doi.org/10.1007/s00190-012-0578-z\n"
 "       <http://dx.doi.org/10.1007/s00190-012-0578-z>; addenda:\n"
 "       http://geographiclib.sf.net/geod-addenda.html\n"
