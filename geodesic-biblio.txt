@@ -777,7 +777,8 @@
    ''Ueber Enveloppen geodätischer Linien
    [The envelopes of geodesic lines]'',
    Math. Ann. '''14''', 557--566 (1879).[[BR]]
-   http://books.google.com/books?id=CwgPAAAAIAAJ&pg=PA557
+   http://books.google.com/books?id=CwgPAAAAIAAJ&pg=PA557 [[BR]]
+   partial figure: http://books.google.com/books?id=CwgPAAAAIAAJ&pg=PA579
  * A. v. Braunmühl,[[BR]]
    ''Geodätische Linien und ihre Enveloppen auf dreiaxigen Flächen
    zweiten Grades [Geodesic lines and their envelopes on

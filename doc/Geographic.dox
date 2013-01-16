@@ -3751,7 +3751,9 @@ single point \f$(\beta_1, \omega_1)\f$.
    opposite umbilical point.
  - Otherwise, the first envelope of the geodesics is a 4-pointed
    astroid.  The cusps of the astroid lie on either \f$\beta = -
-   \beta_1\f$ or \f$\omega = \omega_1 + \pi\f$.
+   \beta_1\f$ or \f$\omega = \omega_1 + \pi\f$; see
+   <a href="http://dx.doi.org/10.1080/10586458.2003.10504515"> Sinclair
+   (2003)</a>.
  - All geodesics intersect (or, in the case of \f$\alpha_1 = 0\f$ or
    \f$\pi\f$, touch) the line \f$\omega = \omega_1 + \pi\f$.
  - All geodesics intersect (or, in the case of \f$\alpha_1 =
