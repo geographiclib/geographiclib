@@ -20,7 +20,7 @@ int main() {
       double x, y;
       UTMUPS::Forward(lat, lon, zone, northp, x, y);
       string mgrs;
-      MGRS::Forward(zone, northp, x, y, 5, mgrs);
+      MGRS::Forward(zone, northp, x, y, lat, 5, mgrs);
       cout << mgrs << "\n";
     }
     {

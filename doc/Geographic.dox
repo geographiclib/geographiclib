@@ -34,8 +34,7 @@ the script for displaying
 This library is <i>not</i> a general purpose projection library; use
 <a href="http://trac.osgeo.org/proj/">proj.4</a> for that.  On the other
 hand, it does provide the core functionality offered by
-<a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a> and it
-cures several of the defects of that package.
+<a href="http://earth-info.nima.mil/GandG/geotrans/">GEOTRANS</a>.
 
 \section download Download
 

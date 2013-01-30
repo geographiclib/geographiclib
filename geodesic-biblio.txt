@@ -918,7 +918,12 @@
    ''Lezioni di Geometria Differenziale
    [Lessons in Differential Geometry]'', Vol. 1
    (2nd edition, Spoerri, Pisa, 1902), Chap. 6.[[BR]]
-   http://books.google.com/books?id=U7ALAAAAYAAJ&pg=PA179
+   http://books.google.com/books?id=U7ALAAAAYAAJ&pg=PA179 [[BR]]
+   German translation:
+   ''Vorlesungen über Differentialgeometrie'',
+   by M. Lukat,
+   (Teubner, Leipzig 1899), Chap. 6.[[BR]]
+   http://books.google.com/books?id=Xa4LAAAAYAAJ&pg=PA146
  * H. Poincaré,[[BR]]
    ''Sur les lignes géodésiques des surfaces convexes
    [Geodesics lines on convex surfaces]'',
