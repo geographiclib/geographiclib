@@ -519,7 +519,6 @@ block([tt:jtaylor(C3[i],eps,n,ord),
 dispC4(ord):=(ord:ord-1,for i:0 thru ord do
 block([tt:jtaylor(C4[i],n,eps,ord),
   ttt,t4,linel:1200],
-  tt:expand(subst([z=1],tt)),
   for j:i thru ord do (
     ttt:coeff(tt,eps,j),
     if ttt # 0 then block([a:taylor(ttt+n^(ord+1),n,0,ord+1),paren,s],
@@ -577,3 +576,6 @@ maxpow:10$
 computeall()$
 printcode()$
 dispseries()$
+/* Save the values needed for geodesic.mac  This is commented out
+here to avoid accidentally overwriting files in a user's directory. */
+/* save(concat("geod",maxpow,".lsp"), values, arrays)$ */

@@ -266,9 +266,10 @@ cat <<EOF
       example, the
       <a href="http://www.ngs.noaa.gov/">
         NGS</a> online
-      <a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
+      <a href="http://www.ngs.noaa.gov/TOOLS/Inv_Fwd/Inv_Fwd.html">
         inverse geodesic calculator</a>
-      sometimes fails to terminate.
+      sometimes fails to terminate.  (NGS has removed the inverse
+      geodesic calculator in order to address this problem.)
     </p>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/Geod.1.html">
@@ -300,7 +301,7 @@ cat <<EOF
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2011-08-14)</address>
+      (2013-02-14)</address>
     <a href="http://geographiclib.sourceforge.net">
       <img
 	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"

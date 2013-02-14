@@ -202,8 +202,8 @@ extern "C" {
    * direct problem).
    **********************************************************************/
   void geod_lineinit(struct geod_geodesicline* l,
-                        const struct geod_geodesic* g,
-                        double lat1, double lon1, double azi1, unsigned caps);
+                     const struct geod_geodesic* g,
+                     double lat1, double lon1, double azi1, unsigned caps);
 
   /**
    * Solve the direct geodesic problem.
@@ -242,8 +242,8 @@ extern "C" {
    @endcode
    **********************************************************************/
   void geod_direct(const struct geod_geodesic* g,
-              double lat1, double lon1, double azi1, double s12,
-              double* plat2, double* plon2, double* pazi2);
+                   double lat1, double lon1, double azi1, double s12,
+                   double* plat2, double* plon2, double* pazi2);
 
   /**
    * Solve the inverse geodesic problem.
@@ -284,8 +284,8 @@ extern "C" {
    @endcode
    **********************************************************************/
   void geod_inverse(const struct geod_geodesic* g,
-               double lat1, double lon1, double lat2, double lon2,
-               double* ps12, double* pazi1, double* pazi2);
+                    double lat1, double lon1, double lat2, double lon2,
+                    double* ps12, double* pazi1, double* pazi2);
 
   /**
    * Compute the position along a geod_geodesicline.
@@ -333,7 +333,7 @@ extern "C" {
    @endcode
    **********************************************************************/
   void geod_position(const struct geod_geodesicline* l, double s12,
-                double* plat2, double* plon2, double* pazi2);
+                     double* plat2, double* plon2, double* pazi2);
 
   /**
    * The general direct geodesic problem.
@@ -369,11 +369,11 @@ extern "C" {
    * quantities computed.
    **********************************************************************/
   double geod_gendirect(const struct geod_geodesic* g,
-                   double lat1, double lon1, double azi1,
-                   int arcmode, double s12_a12,
-                   double* plat2, double* plon2, double* pazi2,
-                   double* ps12, double* pm12, double* pM12, double* pM21,
-                   double* pS12);
+                        double lat1, double lon1, double azi1,
+                        int arcmode, double s12_a12,
+                        double* plat2, double* plon2, double* pazi2,
+                        double* ps12, double* pm12, double* pM12, double* pM21,
+                        double* pS12);
 
   /**
    * The general inverse geodesic calculation.
@@ -403,9 +403,10 @@ extern "C" {
    * some quantities computed.
    **********************************************************************/
   double geod_geninverse(const struct geod_geodesic* g,
-                    double lat1, double lon1, double lat2, double lon2,
-                    double* ps12, double* pazi1, double* pazi2,
-                    double* pm12, double* pM12, double* pM21, double* pS12);
+                         double lat1, double lon1, double lat2, double lon2,
+                         double* ps12, double* pazi1, double* pazi2,
+                         double* pm12, double* pM12, double* pM21,
+                         double* pS12);
 
   /**
    * The general position function.
@@ -467,11 +468,11 @@ extern "C" {
    @endcode
    **********************************************************************/
   double geod_genposition(const struct geod_geodesicline* l,
-                     int arcmode, double s12_a12,
-                     double* plat2, double* plon2, double* pazi2,
-                     double* ps12, double* pm12,
-                     double* pM12, double* pM21,
-                     double* pS12);
+                          int arcmode, double s12_a12,
+                          double* plat2, double* plon2, double* pazi2,
+                          double* ps12, double* pm12,
+                          double* pM12, double* pM21,
+                          double* pS12);
 
   /**
    * The area of a geodesic polygon.
@@ -506,8 +507,8 @@ extern "C" {
    @endcode
    **********************************************************************/
   void geod_polygonarea(const struct geod_geodesic* g,
-                   double lats[], double lons[], int n,
-                   double* pA, double* pP);
+                        double lats[], double lons[], int n,
+                        double* pA, double* pP);
 
   /**
    * mask values for geod_geodesicline capabilities.

@@ -656,7 +656,6 @@ real geod_geninverse(const struct geod_geodesic* g,
   slam12 = lon12 == 180 ? 0 : sin(lam12);
   clam12 = cos(lam12);      /* lon12 == 90 isn't interesting */
 
-
   meridian = lat1 == -90 || slam12 == 0;
 
   if (meridian) {

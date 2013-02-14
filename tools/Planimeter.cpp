@@ -165,9 +165,9 @@ int main(int argc, char* argv[]) {
         num = poly.Compute(reverse, sign, perimeter, area);
         if (num > 0) {
           *output << num << " "
-                  << Utility::str<real>(perimeter, 8);
+                  << Utility::str<real>(perimeter, 8 + Math::extradigits+1);
           if (!polyline)
-            *output << " " << Utility::str<real>(area, 2);
+            *output << " " << Utility::str<real>(area, 3  + Math::extradigits+1);
           *output << eol;
         }
         poly.Clear();
@@ -178,9 +178,9 @@ int main(int argc, char* argv[]) {
     num = poly.Compute(reverse, sign, perimeter, area);
     if (num > 0) {
       *output << num << " "
-              << Utility::str<real>(perimeter, 8);
+              << Utility::str<real>(perimeter, 8 + Math::extradigits+1);
       if (!polyline)
-        *output << " " << Utility::str<real>(area, 2);
+        *output << " " << Utility::str<real>(area, 3 + Math::extradigits+1);
       *output << eol;
     }
     poly.Clear();

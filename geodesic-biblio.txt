@@ -697,6 +697,12 @@
    in ''Opere matematiche di Eugenio Beltrami'' (Vol. 1, Hoepli, Milan, 1902),
    pp. 366--373.[[BR]]
    http://books.google.com/books?id=c48vHvLN--kC&pg=PA366
+ * U. Dini,[[BR]]
+   ''Sopra un problema che si presenta nella teoria generale delle
+   rappresentazioni geografiche di una superfìcie su di un altra [The
+   general theory of mapping one geographical surface to another]'',
+   Ann. Mat. Pura App. '''3''' (2nd ser.), 269--293 (1869).[[BR]]
+   http://books.google.com/books?id=FvkEAAAAYAAJ&pg=PA269
  * A. Cayley,[[BR]]
    ''On the geodesic lines on an oblate spheroid'',
    Phil. Mag. '''40''' (4th ser.), 329--340 (1870),
