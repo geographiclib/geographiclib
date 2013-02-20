@@ -17,8 +17,8 @@ tolRG0 : 2.7b0 * sqrt(etol)$
 tolJAC:sqrt(etol)$  /* For Bulirsch */
 pi:bfloat(%pi)$
 atan2x(y,x) := -atan2(-y, x)$  /* fix atan2(0b0,-1b0) = -pi */
-rf(x,y,z) := block(
-  [a0:(x+y+z)/3, q,x0:x,y0:y,z0:z,an,ln,xx,yy,zz,e2,e3,mul:1b0],
+rf(x,y,z) := block([a0:(x+y+z)/3, q,x0:x,y0:y,z0:z,
+  an,ln,xx,yy,zz,e2,e3,mul:1b0],
   q:max(abs(a0-x),abs(a0-y),abs(a0-z))/tolRF,
   an:a0,
   while q >= mul * abs(an) do (
@@ -36,11 +36,10 @@ rf(x,y,z) := block(
   (e3 * (6930 * e3 + e2 * (15015 * e2 - 16380) + 17160) +
     e2 * ((10010 - 5775 * e2) * e2 - 24024) + 240240) /
   (240240 * sqrt(an)))$
-rd(x,y,z) := block(
-  [a0:(x+y+3*z)/5, q,x0:x,y0:y,z0:z,an,ln,xx,yy,zz,e2,e3,e4,e5,s,mul:1],
+rd(x,y,z) := block([a0:(x+y+3*z)/5, q,x0:x,y0:y,z0:z,
+  an,ln,xx,yy,zz,e2,e3,e4,e5,s:0b0,mul:1b0],
   q:max(abs(a0-x),abs(a0-y),abs(a0-z))/tolRD,
   an:a0,
-  s:0,
   while q >= mul*abs(an) do (
     ln:sqrt(x0)*sqrt(y0)+sqrt(y0)*sqrt(z0)+sqrt(z0)*sqrt(x0),
     s:s+1/(mul*sqrt(z0)*(z0+ln)),
@@ -63,11 +62,10 @@ rd(x,y,z) := block(
   (4084080 * mul * an * sqrt(an)) + 3 * s)$
 
 /* R_G(x,y,0) */
-rg0(x,y) := block(
-  [x0:sqrt(max(x,y)),y0:sqrt(min(x,y)),xn,yn,t,s,mul:0.25b0],
+rg0(x,y) := block([x0:sqrt(max(x,y)),y0:sqrt(min(x,y)),xn,yn,
+  t,s:0b0,mul:0.25b0],
   xn:x0,
   yn:y0,
-  s:0,
   while abs(xn-yn) > tolRG0 * xn do (
     t:(xn+yn)/2,
     yn:sqrt(xn*yn),
@@ -81,19 +79,10 @@ rg(x, y, z) := (
   (z * rf(x, y, z) - (x-z) * (y-z) * rd(x, y, z) / 3
     + sqrt(x * y / z)) / 2)$
 
-rj(x, y, z, p) := block([A0,An,delta,Q,x0,y0,z0,p0,mul,mul3,s,
-  X,Y,Z,P,E2,E3,E4,E5],
-  A0 : (x + y + z + 2*p)/5,
+rj(x, y, z, p) := block([A0:(x + y + z + 2*p)/5,An,delta:(p-x) * (p-y) * (p-z),
+  Q,x0:x,y0:y,z0:z,p0:p,mul:1b0,mul3:1b0,s:0b0,X,Y,Z,P,E2,E3,E4,E5],
   An : A0,
-  delta : (p-x) * (p-y) * (p-z),
   Q : max(abs(A0-x), abs(A0-y), abs(A0-z), abs(A0-p)) / tolRD,
-  x0 : x,
-  y0 : y,
-  z0 : z,
-  p0 : p,
-  mul : 1b0,
-  mul3 : 1b0,
-  s : 0,
   while Q >= mul * abs(An) do block([lam,d0,e0],
     lam : sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0),
     d0 : (sqrt(p0)+sqrt(x0)) * (sqrt(p0)+sqrt(y0)) * (sqrt(p0)+sqrt(z0)),
@@ -120,13 +109,10 @@ rj(x, y, z, p) := block([A0,An,delta,Q,x0,y0,z0,p0,mul,mul3,s,
     E2 * ((417690 - 255255 * E2) * E2 - 875160) + 4084080) /
   (4084080 * mul * An * sqrt(An)) + 6 * s)$
 
-rd(x, y, z) := block([A0,An,Q,x0,y0,mul:1b0,s:0b0,X,Y,Z,E2,E3,E4,E5],
-  A0 : (x + y + 3*z)/5,
+rd(x, y, z) := block([A0:(x + y + 3*z)/5,An,Q,x0:x,y0:y,z0:z,
+  mul:1b0,s:0b0,X,Y,Z,E2,E3,E4,E5],
   An : A0,
   Q : max(abs(A0-x), abs(A0-y), abs(A0-z)) / tolRD,
-  x0 : x,
-  y0 : y,
-  z0 : z,
   while Q >= mul * abs(An) do block([lam],
     lam : sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0),
     s : s + 1/(mul * sqrt(z0) * (z0 + lam)),
