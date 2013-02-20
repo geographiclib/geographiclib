@@ -2,7 +2,7 @@
 Solve the direct and inverse geodesic problems accurately.
 
 Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
-under the MIT/Xll License.  For more information, see
+under the MIT/X11 License.  For more information, see
 http://geographiclib.sourceforge.net/
 
 References:
@@ -181,8 +181,8 @@ atanhx(x):=block([y:abs(x)],
   if x < 0b0 then -y else y)$
 */
 atanhx(x):=atanh(x)$
-
 hypotx(x, y):= sqrt(x * x + y * y)$
+atan2x(y,x) := -atan2(-y, x)$  /* fix atan2(0b0,-1b0) = -pi */
 
 /*
 pow(x,y):=x^y$
@@ -433,7 +433,7 @@ geod_genposition(l, arcmode,  s12_a12):=block(
   csig2 : l[l_csig1] * csig12 - l[l_ssig1] * ssig12,
   dn2 : sqrt(1 + l[l_k2] * sq(ssig2)),
   if exact then (if arcmode
-    then E2 : E.deltae(ssig2, csig2, dn2, l[l_E][e_k2], l[l_E][e_ec]),
+    then E2 : deltae(ssig2, csig2, dn2, l[l_E][e_k2], l[l_E][e_ec]),
     AB1 : l[l_E0] * (E2 - l[l_E1]))
   else (if arcmode or abs(l[l_f]) > 0.01b0
     then B12 : SinCosSeries(true, ssig2, csig2, l[l_C1a]),
@@ -452,7 +452,7 @@ geod_genposition(l, arcmode,  s12_a12):=block(
   salp2 : l[l_salp0], calp2 : l[l_calp0] * csig2, /* No need to normalize */
   if not exact then
   /* omg12 = omg2 - omg1 */
-  omg12 : atan2(somg2 * l[l_comg1] - comg2 * l[l_somg1],
+  omg12 : atan2x(somg2 * l[l_comg1] - comg2 * l[l_somg1],
     comg2 * l[l_comg1] + somg2 * l[l_somg1]),
   s12 : if arcmode then l[l_b] *
   ((if exact then l[l_E0] else (1 + l[l_A1m1])) * sig12 + AB1) else s12_a12,
@@ -461,7 +461,7 @@ geod_genposition(l, arcmode,  s12_a12):=block(
     cchi2],
     /* Without normalization we have schi2 = somg2. */
     cchi2 : l[l_f1] * dn2 *  comg2,
-    lam12 : atan2(somg2 * l[l_cchi1] - cchi2 * l[l_somg1],
+    lam12 : atan2x(somg2 * l[l_cchi1] - cchi2 * l[l_somg1],
       cchi2 * l[l_cchi1] + somg2 * l[l_somg1]) -
     l[l_e2]/l[l_f1] * l[l_salp0] * l[l_H0] *
     (sig12 + deltah(ssig2, csig2, dn2,
@@ -472,9 +472,9 @@ geod_genposition(l, arcmode,  s12_a12):=block(
   /* Use AngNormalize2 because longitude might have wrapped multiple times. */
   lon12 : AngNormalize2(lon12),
   lon2 : AngNormalize(l[l_lon1] + lon12),
-  lat2 : atan2(sbet2, l[l_f1] * cbet2) / degree,
+  lat2 : atan2x(sbet2, l[l_f1] * cbet2) / degree,
   /* minus signs give range [-180, 180). 0- converts -0 to +0. */
-  azi2 : 0 - atan2(-salp2, calp2) / degree,
+  azi2 : 0 - atan2x(-salp2, calp2) / degree,
   block([B22, AB2, J12],
     if exact then J12 : l[l_k2] * l[l_D0] *
     (sig12 + deltad(ssig2, csig2, dn2, l[l_E][e_k2], l[l_E][e_dc]) - l[l_D1])
@@ -515,7 +515,7 @@ geod_genposition(l, arcmode,  s12_a12):=block(
       ( if csig12 <= 0b0 then l[l_csig1] * (1 - csig12) + ssig12 * l[l_ssig1]
         else ssig12 * (l[l_csig1] * ssig12 / (1 + csig12) + l[l_ssig1])),
       calp12 : sq(l[l_salp0]) + sq(l[l_calp0]) * l[l_csig1] * csig2),
-    S12 : l[l_c2] * atan2(salp12, calp12) + l[l_A4] * (B42 - l[l_B41])),
+    S12 : l[l_c2] * atan2x(salp12, calp12) + l[l_A4] * (B42 - l[l_B41])),
   [if arcmode then s12_a12 else sig12 / degree,
   lat2, lon2, azi2, s12, m12, M12, M21, S12])$
 
@@ -608,7 +608,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
     ssig1 : sbet1, csig1 : calp1 * cbet1,
     ssig2 : sbet2, csig2 : calp2 * cbet2,
     /* sig12 = sig2 - sig1 */
-    sig12 : atan2(max(csig1 * ssig2 - ssig1 * csig2, 0b0),
+    sig12 : atan2x(max(csig1 * ssig2 - ssig1 * csig2, 0b0),
       csig1 * csig2 + ssig1 * ssig2),
     block([r],
       r:Lengths(g, g[g_n], E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
@@ -757,7 +757,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
       with tan(x/2) = sin(x)/(1+cos(x)) */
       [somg12 : sin(omg12), domg12 : 1 + cos(omg12),
       dbet1 : 1 + cbet1, dbet2 : 1 + cbet2],
-      alp12 : 2 * atan2( somg12 * ( sbet1 * dbet2 + sbet2 * dbet1 ),
+      alp12 : 2 * atan2x( somg12 * ( sbet1 * dbet2 + sbet2 * dbet1 ),
         domg12 * ( sbet1 * sbet2 + dbet1 * dbet2 ) ))
     else block(
       /* alp12 = alp2 - alp1, used in atan2 so no need to normalize */
@@ -770,7 +770,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
       if salp12 = 0b0 and calp12 < 0b0 then (
         salp12 : tiny * calp1,
         calp12 : -1b0),
-      alp12 : atan2(salp12, calp12) ),
+      alp12 : atan2x(salp12, calp12) ),
     S12 : S12 + g[g_c2] * alp12,
     S12 : S12 * swapp * lonsign * latsign,
     /* Convert -0 to 0 */
@@ -783,8 +783,8 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
   salp1 : salp1 * swapp * lonsign, calp1 : calp1 * swapp * latsign,
   salp2 : salp2 * swapp * lonsign, calp2 : calp2 * swapp * latsign,
   /* minus signs give range [-180, 180). 0- converts -0 to +0. */
-  azi1 : 0b0 - atan2(-salp1, calp1) / degree,
-  azi2 : 0b0 - atan2(-salp2, calp2) / degree,
+  azi1 : 0b0 - atan2x(-salp1, calp1) / degree,
+  azi2 : 0b0 - atan2x(-salp2, calp2) / degree,
   [a12, s12, azi1, azi2, m12, M12, M21, S12]
 )$
 
@@ -878,7 +878,7 @@ Astroid(x, y):= block(
       u : u + T + (if T # 0b0 then r2 / T else 0b0))
     else block(
       /* T is complex, but the way u is defined the result is real. */
-      [ang : atan2(sqrt(-disc), -(S + r3))],
+      [ang : atan2x(sqrt(-disc), -(S + r3))],
       /* There are three possible cube roots.  We choose the root which
       avoids cancellation.  Note that disc < 0 implies that r < 0. */
       u : u + 2 * r * cos(ang / 3)),
@@ -924,7 +924,7 @@ InverseStart(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12):=block(
     calp2 : sbet12 - cbet1 * sbet2 * sq(somg12) / (1 + comg12),
     block([t:SinCosNorm(salp2, calp2)], salp2:t[1], calp2:t[2]),
     /* Set return value */
-    sig12 : atan2(ssig12, csig12))
+    sig12 : atan2x(ssig12, csig12))
   else if abs(g[g_n]) > 0.1b0 or /* No astroid calc if too eccentric */
   csig12 >= 0 or
   ssig12 >= 6 * abs(g[g_n]) * pi * sq(cbet1) then true
@@ -947,7 +947,7 @@ InverseStart(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12):=block(
     else block(                    /* f < 0 */
       /* x = dlat, y = dlong */
       [cbet12a : cbet2 * cbet1 - sbet2 * sbet1,bet12a,m12b, m0],
-      bet12a : atan2(sbet12a, cbet12a),
+      bet12a : atan2x(sbet12a, cbet12a),
       /* In the case of lon12 = 180, this repeats a calculation made in
       * Inverse. */
       block([r],
@@ -1058,15 +1058,15 @@ block([salp2 : 0b0, calp2 : 0b0, sig12 : 0b0,
   block([t:SinCosNorm(ssig2, csig2)], ssig2:t[1], csig2:t[2]),
   /* SinCosNorm (&somg2, &comg2); -- don't need to normalize! */
   /* sig12 = sig2 - sig1, limit to [0, pi] */
-  sig12 : atan2(max(csig1 * ssig2 - ssig1 * csig2, 0b0),
+  sig12 : atan2x(max(csig1 * ssig2 - ssig1 * csig2, 0b0),
     csig1 * csig2 + ssig1 * ssig2),
   /* omg12 = omg2 - omg1, limit to [0, pi] */
-  omg12 : atan2(max(comg1 * somg2 - somg1 * comg2, 0b0),
+  omg12 : atan2x(max(comg1 * somg2 - somg1 * comg2, 0b0),
     comg1 * comg2 + somg1 * somg2),
   k2 : sq(calp0) * g[g_ep2],
   if exact then block([chi12],
     E : Ef(-k2, -g[g_ep2]),
-    chi12 : atan2(max(cchi1 * somg2 - somg1 * cchi2, 0b0),
+    chi12 : atan2x(max(cchi1 * somg2 - somg1 * cchi2, 0b0),
                        cchi1 * cchi2 + somg1 * somg2),
     lam12 : chi12 -
       g[g_e2]/g[g_f1] * salp0 * E[e_hc] / (pi/2) *

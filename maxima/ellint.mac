@@ -5,11 +5,8 @@ Computation of elliptic integrals
 Numerical Algorithms 10, 13-26 (1995)
 
 Copyright (c) Charles Karney (2009-2013) <charles@karney.com> and
-licensed under the MIT/Xll License.  For more information, see
+licensed under the MIT/X11 License.  For more information, see
 http://geographiclib.sourceforge.net/
-*/
-
-/* 
 */
 
 /* fpprec:120$  Should be set outside */
@@ -19,7 +16,7 @@ tolRD : (etol/5)^(1/8b0)$
 tolRG0 : 2.7b0 * sqrt(etol)$
 tolJAC:sqrt(etol)$  /* For Bulirsch */
 pi:bfloat(%pi)$
-ratprint:false$
+atan2x(y,x) := -atan2(-y, x)$  /* fix atan2(0b0,-1b0) = -pi */
 rf(x,y,z) := block(
   [a0:(x+y+z)/3, q,x0:x,y0:y,z0:z,an,ln,xx,yy,zz,e2,e3,mul:1b0],
   q:max(abs(a0-x),abs(a0-y),abs(a0-z))/tolRF,
@@ -273,13 +270,13 @@ hirx(sn, cn, dn, k2, alpha2, hc):=block(
 
 deltae(sn, cn, dn, k2, ec):=(
   if cn < 0 then (cn : -cn, sn : -sn),
-  eirx(sn, cn, dn, k2 ,ec) * (pi/2) / ec - atan2(sn, cn))$
+  eirx(sn, cn, dn, k2 ,ec) * (pi/2) / ec - atan2x(sn, cn))$
 deltad(sn, cn, dn, k2, dc):=(
   if cn < 0 then (cn : -cn, sn : -sn),
-  dirx(sn, cn, dn, k2 ,ec) * (pi/2) / dc - atan2(sn, cn))$
+  dirx(sn, cn, dn, k2 ,ec) * (pi/2) / dc - atan2x(sn, cn))$
 deltah(sn, cn, dn, k2, alpha2, hc):=(
   if cn < 0 then (cn : -cn, sn : -sn),
-  hirx(sn, cn, dn, k2, alpha2, hc) * (pi/2) / hc - atan2(sn, cn))$
+  hirx(sn, cn, dn, k2, alpha2, hc) * (pi/2) / hc - atan2x(sn, cn))$
 
 einv(x, k2, ec):=block(
  [n : floor(x / (2 * ec) + 0.5b0), phi, eps : k2/(sqrt(1b0-k2) + 1b0)^2,
@@ -295,5 +292,5 @@ einv(x, k2, ec):=block(
 
 deltaeinv(stau, ctau, k2, ec) := block([tau],
   if ctau < 0 then (ctau : -ctau, stau : -stau),
-  tau : atan2(stau, ctau),
+  tau : atan2x(stau, ctau),
   einv(tau * ec / (pi/2), k2, ec) - tau)$
