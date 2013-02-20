@@ -1,8 +1,8 @@
 /*
+Compute the series expansions for the ellipsoidal geodesic problem.
 
-Compute the series expansions for the spheroidal geodesic problem.
-
-Written by Charles Karney <charles@karney.com>
+Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and
+licensed under the MIT/Xll License.  For more information, see
 http://geographiclib.sourceforge.net/
 
 References:
@@ -20,11 +20,14 @@ There are 4 sections in this file
 (4) Calls to the above.
 
 Edit the section at the end, to modify what is done.  As distributed
-this code computes the 8th order series.  This takes less that 10 secs.
+this code computes the 8th order series.  This takes about 10 secs.  If
+you want to compute accurate geodesics using geodesic.mac, then you need
+alse to uncomment the last line of this file so that the series get
+saved as geodNN.lsp.
+
 To run the code, start Maxima and enter
 
   load("geod.mac")$
-
 */
 
 /* EXPANSIONS FOR INTEGRALS */
@@ -572,7 +575,7 @@ dispseries():=(
   20   571
   30  6671 (111m)
   */
-maxpow:10$
+maxpow:8$
 computeall()$
 printcode()$
 dispseries()$

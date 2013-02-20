@@ -111,12 +111,12 @@
  * of the C code since this may make porting fixes from the C++ code more
  * difficult.
  *
- * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * This library was distributed with
- * <a href="../index.html">GeographicLib</a> 1.29.
+ * <a href="../index.html">GeographicLib</a> 1.30.
  **********************************************************************/
 
 #if !defined(GEODESIC_H)

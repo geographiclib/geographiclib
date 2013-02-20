@@ -2,8 +2,8 @@
  * \file GeodesicExact.cpp
  * \brief Implementation for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2012-2013) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * This is a reformulation of the geodesic problem.  The notation is as
@@ -326,11 +326,10 @@ namespace GeographicLib {
           // Reversed test to allow escape with NaNs
           if (tripb || !(abs(v) >= (tripn ? 8 : 2) * tol0_)) break;
           // Update bracketing values
-          if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b)) {
-            salp1b = salp1; calp1b = calp1;
-          } else if (numit > maxit1_ || calp1/salp1 < calp1a/salp1a) {
-            salp1a = salp1; calp1a = calp1;
-          }
+          if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b))
+            { salp1b = salp1; calp1b = calp1; }
+          else if (v < 0 && (numit > maxit1_ || calp1/salp1 < calp1a/salp1a))
+            { salp1a = salp1; calp1a = calp1; }
           if (numit < maxit1_ && dv > 0) {
             real
               dalp1 = -v/dv;

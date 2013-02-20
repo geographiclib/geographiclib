@@ -2,7 +2,7 @@
  * \file Geodesic.cpp
  * \brief Implementation for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -309,11 +309,10 @@ namespace GeographicLib {
           // Reversed test to allow escape with NaNs
           if (tripb || !(abs(v) >= (tripn ? 8 : 2) * tol0_)) break;
           // Update bracketing values
-          if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b)) {
-            salp1b = salp1; calp1b = calp1;
-          } else if (numit > maxit1_ || calp1/salp1 < calp1a/salp1a) {
-            salp1a = salp1; calp1a = calp1;
-          }
+          if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b))
+            { salp1b = salp1; calp1b = calp1; }
+          else if (v < 0 && (numit > maxit1_ || calp1/salp1 < calp1a/salp1a))
+            { salp1a = salp1; calp1a = calp1; }
           if (numit < maxit1_ && dv > 0) {
             real
               dalp1 = -v/dv;

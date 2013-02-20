@@ -2,7 +2,8 @@
 
 Arbitrary precision Transverse Mercator Projection
 
-Written by Charles Karney <charles@karney.com>
+Copyright (c) Charles Karney (2009-2010) <charles@karney.com> and
+licensed under the MIT/Xll License.  For more information, see
 http://geographiclib.sourceforge.net/
 
 Reference:

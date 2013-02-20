@@ -14,7 +14,7 @@
  *
  * See the comments in geodesic.h for documentation.
  *
- * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  */
@@ -760,11 +760,10 @@ real geod_geninverse(const struct geod_geodesic* g,
         /* Reversed test to allow escape with NaNs */
         if (tripb || !(fabs(v) >= (tripn ? 8 : 2) * tol0)) break;
         /* Update bracketing values */
-        if (v > 0 && (numit > maxit1 || calp1/salp1 > calp1b/salp1b)) {
-          salp1b = salp1; calp1b = calp1;
-        } else if (numit > maxit1 || calp1/salp1 < calp1a/salp1a) {
-          salp1a = salp1; calp1a = calp1;
-        }
+        if (v > 0 && (numit > maxit1 || calp1/salp1 > calp1b/salp1b))
+          { salp1b = salp1; calp1b = calp1; }
+        else if (v < 0 && (numit > maxit1 || calp1/salp1 < calp1a/salp1a))
+          { salp1a = salp1; calp1a = calp1; }
         if (numit < maxit1 && dv > 0) {
           real
             dalp1 = -v/dv;

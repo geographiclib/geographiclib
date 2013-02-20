@@ -268,7 +268,7 @@ cat <<EOF
         NGS</a> online
       <a href="http://www.ngs.noaa.gov/TOOLS/Inv_Fwd/Inv_Fwd.html">
         inverse geodesic calculator</a>
-      sometimes fails to terminate.  (NGS has removed the inverse
+      sometimes fails to terminate.  (NGS has removed its inverse
       geodesic calculator in order to address this problem.)
     </p>
     <p>
