@@ -83,7 +83,7 @@ ALLSOURCES = \
 	$(top_srcdir)/tools/ConicProj.cpp \
 	$(top_srcdir)/tools/GeodesicProj.cpp \
 	$(top_srcdir)/tools/GeoConvert.cpp \
-	$(top_srcdir)/tools/Geod.cpp \
+	$(top_srcdir)/tools/GeodSolve.cpp \
 	$(top_srcdir)/tools/GeoidEval.cpp \
 	$(top_srcdir)/tools/Gravity.cpp \
 	$(top_srcdir)/tools/Planimeter.cpp \
@@ -94,7 +94,7 @@ MANPAGES = \
 	../man/ConicProj.1.html \
 	../man/GeodesicProj.1.html \
 	../man/GeoConvert.1.html \
-	../man/Geod.1.html \
+	../man/GeodSolve.1.html \
 	../man/GeoidEval.1.html \
 	../man/Gravity.1.html \
 	../man/MagneticField.1.html \

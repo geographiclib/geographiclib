@@ -1,13 +1,13 @@
-PROGRAMS = GeoConvert \
-	TransverseMercatorProj \
-	CartConvert \
-	Geod \
+PROGRAMS = CartConvert \
+	ConicProj \
+	GeoConvert \
+	GeodSolve \
 	GeodesicProj \
 	GeoidEval \
 	Gravity \
 	MagneticField \
 	Planimeter \
-	ConicProj
+	TransverseMercatorProj
 SCRIPTS = geographiclib-get-geoids \
 	geographiclib-get-gravity \
 	geographiclib-get-magnetic
@@ -44,7 +44,7 @@ clean:
 GeoConvert: GeoConvert.o
 TransverseMercatorProj: TransverseMercatorProj.o
 CartConvert: CartConvert.o
-Geod: Geod.o
+GeodSolve: GeodSolve.o
 GeodesicProj: GeodesicProj.o
 GeoidEval: GeoidEval.o
 Gravity: Gravity.o
@@ -58,7 +58,7 @@ ConicProj.o: ConicProj.usage Config.h AlbersEqualArea.hpp Constants.hpp \
 	DMS.hpp LambertConformalConic.hpp Math.hpp Utility.hpp
 GeoConvert.o: GeoConvert.usage Config.h Constants.hpp DMS.hpp GeoCoords.hpp \
 	Math.hpp UTMUPS.hpp Utility.hpp
-Geod.o: Geod.usage Config.h Constants.hpp DMS.hpp Geodesic.hpp \
+GeodSolve.o: GeodSolve.usage Config.h Constants.hpp DMS.hpp Geodesic.hpp \
 	GeodesicExact.hpp GeodesicLine.hpp GeodesicLineExact.hpp Math.hpp \
 	Utility.hpp
 GeodesicProj.o: GeodesicProj.usage Config.h AzimuthalEquidistant.hpp \

@@ -13,13 +13,14 @@ DEPS = $(top_builddir)/src/libGeographic.la
 bin_PROGRAMS = CartConvert \
 	ConicProj \
 	GeoConvert \
-	Geod \
+	GeodSolve \
 	GeodesicProj \
 	GeoidEval \
 	Gravity \
 	MagneticField \
 	Planimeter \
-	TransverseMercatorProj
+	TransverseMercatorProj \
+	Geod
 
 CartConvert_SOURCES = CartConvert.cpp \
 	../man/CartConvert.usage \
@@ -48,8 +49,8 @@ GeoConvert_SOURCES = GeoConvert.cpp \
 	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/UTMUPS.hpp \
 	../include/GeographicLib/Utility.hpp
-Geod_SOURCES = Geod.cpp \
-	../man/Geod.usage \
+GeodSolve_SOURCES = GeodSolve.cpp \
+	../man/GeodSolve.usage \
 	../include/GeographicLib/Config.h \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
@@ -130,6 +131,17 @@ TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
 	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/TransverseMercator.hpp \
 	../include/GeographicLib/TransverseMercatorExact.hpp \
+	../include/GeographicLib/Utility.hpp
+Geod_SOURCES = GeodSolve.cpp \
+	../man/GeodSolve.usage \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/Geodesic.hpp \
+	../include/GeographicLib/GeodesicExact.hpp \
+	../include/GeographicLib/GeodesicLine.hpp \
+	../include/GeographicLib/GeodesicLineExact.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/Utility.hpp
 
 sbin_SCRIPTS = geographiclib-get-geoids \

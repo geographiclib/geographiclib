@@ -244,7 +244,7 @@ if (APPLE)
 endif ()
 
 # The list of tools (to be installed into, e.g., /usr/local/bin)
-set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert Geod
+set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
   GeoidEval Gravity MagneticField Planimeter TransverseMercatorProj)
 # The list of scripts (to be installed into, e.g., /usr/local/sbin)
 set (SCRIPTS

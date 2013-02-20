@@ -8,7 +8,7 @@ USAGE = \
 	ConicProj.usage \
 	GeodesicProj.usage \
 	GeoConvert.usage \
-	Geod.usage \
+	GeodSolve.usage \
 	GeoidEval.usage \
 	Gravity.usage \
 	MagneticField.usage \
@@ -20,7 +20,7 @@ MANPAGES = \
 	ConicProj.1 \
 	GeodesicProj.1 \
 	GeoConvert.1 \
-	Geod.1 \
+	GeodSolve.1 \
 	GeoidEval.1 \
 	Gravity.1 \
 	MagneticField.1 \
@@ -32,7 +32,7 @@ HTMLMAN = \
 	ConicProj.1.html \
 	GeodesicProj.1.html \
 	GeoConvert.1.html \
-	Geod.1.html \
+	GeodSolve.1.html \
 	GeoidEval.1.html \
 	Gravity.1.html \
 	MagneticField.1.html \
@@ -81,7 +81,7 @@ GeodesicProj.usage:
 	$(USAGECMD)
 GeoConvert.usage:
 	$(USAGECMD)
-Geod.usage:
+GeodSolve.usage:
 	$(USAGECMD)
 GeoidEval.usage:
 	$(USAGECMD)
@@ -102,7 +102,7 @@ GeodesicProj.1:
 	$(MANCMD)
 GeoConvert.1:
 	$(MANCMD)
-Geod.1:
+GeodSolve.1:
 	$(MANCMD)
 GeoidEval.1:
 	$(MANCMD)
@@ -123,7 +123,7 @@ GeodesicProj.1.html:
 	$(HTMLCMD)
 GeoConvert.1.html:
 	$(HTMLCMD)
-Geod.1.html:
+GeodSolve.1.html:
 	$(HTMLCMD)
 GeoidEval.1.html:
 	$(HTMLCMD)
@@ -140,7 +140,7 @@ endif
 
 EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	GeoConvert.pod TransverseMercatorProj.pod \
-	CartConvert.pod ConicProj.pod Geod.pod GeodesicProj.pod \
+	CartConvert.pod ConicProj.pod GeodSolve.pod GeodesicProj.pod \
 	GeoidEval.pod Gravity.pod MagneticField.pod Planimeter.pod \
 	$(MANPAGES) $(USAGE) $(HTMLMAN) \
 	dummy.usage.in dummy.1.in dummy.1.html.in

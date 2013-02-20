@@ -1,5 +1,5 @@
 /**
- * \file Geod.cpp
+ * \file GeodSolve.cpp
  * \brief Command line utility for geodesic calculations
  *
  * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
@@ -7,13 +7,13 @@
  * http://geographiclib.sourceforge.net/
  *
  * Compile and link with
- *   g++ -g -O3 -I../include -I../man -o Geod \
- *       Geod.cpp \
+ *   g++ -g -O3 -I../include -I../man -o GeodSolve \
+ *       GeodSolve.cpp \
  *       ../src/DMS.cpp \
  *       ../src/Geodesic.cpp \
  *       ../src/GeodesicLine.cpp
  *
- * See the <a href="Geod.1.html">man page</a> for usage
+ * See the <a href="GeodSolve.1.html">man page</a> for usage
  * information.
  **********************************************************************/
 
@@ -35,7 +35,7 @@
 #  pragma warning (disable: 4127 4701)
 #endif
 
-#include "Geod.usage"
+#include "GeodSolve.usage"
 
 typedef GeographicLib::Math::real real;
 

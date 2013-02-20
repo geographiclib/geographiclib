@@ -686,9 +686,9 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
         return(true),
         /* Update bracketing values */
         if v > 0b0 and (numit > maxit1 or calp1/salp1 > calp1b/salp1b)
-	then ( salp1b : salp1, calp1b : calp1 )
+        then ( salp1b : salp1, calp1b : calp1 )
         else if v < 0b0 and (numit > maxit1 or calp1/salp1 < calp1a/salp1a)
-	then ( salp1a : salp1, calp1a : calp1 ),
+        then ( salp1a : salp1, calp1a : calp1 ),
         if numit < maxit1 and dv > 0b0 then block(
           [dalp1, sdalp1, cdalp1,nsalp1],
           dalp1 : -v/dv,
