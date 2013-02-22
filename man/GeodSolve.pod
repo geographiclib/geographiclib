@@ -337,4 +337,4 @@ B<GeodSolve> was written by Charles Karney.
 
 B<GeodSolve> was added to GeographicLib, L<http://geographiclib.sf.net>,
 in 2009-03.  Prior to version 1.30, it was called B<Geod>.  (The name
-was change to avoid conflict with the B<geod> utility in I<proj.4>.)
+was changed to avoid a conflict with the B<geod> utility in I<proj.4>.)

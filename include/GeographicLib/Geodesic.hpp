@@ -817,7 +817,7 @@ namespace GeographicLib {
      * - \e caps |= Geodesic::LATITUDE for the latitude \e lat2; this is
      *   added automatically
      * - \e caps |= Geodesic::LONGITUDE for the latitude \e lon2
-     * - \e caps |= Geodesic::AZIMUTH for the latitude \e azi2; this is
+     * - \e caps |= Geodesic::AZIMUTH for the azimuth \e azi2; this is
      *   added automatically
      * - \e caps |= Geodesic::DISTANCE for the distance \e s12
      * - \e caps |= Geodesic::REDUCEDLENGTH for the reduced length \e m12

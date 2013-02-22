@@ -4375,6 +4375,7 @@ of the git repository for %GeographicLib.
      - fix BUG in fail-safe mechanisms in GeographicLib::Geodesic::Inverse;
      - the command line utility Geod is now called
        <a href="GeodSolve.1.html">GeodSolve</a>;
+     - allow addition of polygon edges in GeographicLib::PolygonArea;
      - add full maxima implementation of geodesic algorithms.
 
  - <a href="http://geographiclib.sf.net/1.29">Version 1.29</a>
