@@ -136,9 +136,8 @@ rd(x, y, z) := block([A0:(x + y + 3*z)/5,An,Q,x0:x,y0:y,z0:z,
 
 rc(x, y):=if x < y then atan(sqrt((y - x) / x)) / sqrt(y - x)
 else ( if x = y and y > 0b0 then 1 / sqrt(y) else
-  atanh( if y > 0b0 then
-    sqrt((x - y) / x) else
-    sqrt(x / (x - y)) ) / sqrt(x - y) )$
+  atanh( if y > 0b0 then sqrt((x - y) / x)
+    else sqrt(x / (x - y)) ) / sqrt(x - y) )$
 
 /* k^2 = m */
 ec(k2):=2*rg0(1b0-k2,1b0)$
@@ -265,16 +264,16 @@ deltah(sn, cn, dn, k2, alpha2, hc):=(
   hirx(sn, cn, dn, k2, alpha2, hc) * (pi/2) / hc - atan2x(sn, cn))$
 
 einv(x, k2, ec):=block(
- [n : floor(x / (2 * ec) + 0.5b0), phi, eps : k2/(sqrt(1b0-k2) + 1b0)^2,
- err:1b0],
- x : x - 2 * ec * n,
- phi : pi * x / (2 * ec),
- phi : phi - eps * sin(2 * phi) / 2,
- while abs(err) > tolJAC do block([sn:sin(phi), cn:cos(phi), dn],
-   dn : Delta(sn, k2),
-   err : (eirx(sn, cn, dn, k2, ec) - x)/dn,
-   phi : phi - err),
- n * pi + phi)$
+  [n : floor(x / (2 * ec) + 0.5b0), phi, eps : k2/(sqrt(1b0-k2) + 1b0)^2,
+  err:1b0],
+  x : x - 2 * ec * n,
+  phi : pi * x / (2 * ec),
+  phi : phi - eps * sin(2 * phi) / 2,
+  while abs(err) > tolJAC do block([sn:sin(phi), cn:cos(phi), dn],
+    dn : Delta(sn, k2),
+    err : (eirx(sn, cn, dn, k2, ec) - x)/dn,
+    phi : phi - err),
+  n * pi + phi)$
 
 deltaeinv(stau, ctau, k2, ec) := block([tau],
   if ctau < 0 then (ctau : -ctau, stau : -stau),

@@ -143,7 +143,7 @@ namespace GeographicLib {
       perimeter = Math::NaN<real>();
       if (!_polyline)
         area = Math::NaN<real>();
-      return 0;             
+      return 0;
     }
     unsigned num = _num + 1;
     perimeter = _perimetersum() + s;

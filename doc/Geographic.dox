@@ -1007,7 +1007,7 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page other Other interfaces (C, Fortran, Javascript, Python, Matlab)
+\page other Other interfaces (C, Fortran, Javascript, Python, Matlab, Maxima)
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -1018,6 +1018,7 @@ Interfaces to subsets of %GeographicLib are available in other languages
 - \ref javascript.
 - \ref python.
 - \ref matlab.
+- \ref maxima.
 
 \section c-fortran C and Fortran
 
@@ -1240,6 +1241,19 @@ coordinates to MGRS can easily be written with Matlab code.
 Note that geoidheight, when compiled with Visual Studio 2008 causes
 Matlab to crash.  (The problem does not occur with Visual Studio 2005 or
 Visual Studio 2010.)
+
+\section maxima Maxima routines
+
+Maxima is a free computer algebra system which can be downloaded from
+http://maxima.sf.net.  Maxima was used to generate the series used by
+GeographicLib::TransverseMercator (<a href="tmseries.mac">
+tmseries.mac</a>) and GeographicLib::Geodesic (<a href="geod.mac">
+geod.mac</a>) and to generate accurate data for testing
+(<a href="tm.mac"> tm.mac</a> and <a href="geodesic.mac">
+geodesic.mac</a>).  The latter uses Maxima's bigfloat arithmetic
+together with series extended to high order or solutions in terms of
+elliptic integrals (<a href="ellint.mac"> ellint.mac</a>).  These files
+contain brief instructions on how to use them.
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -2737,9 +2751,9 @@ geodesic scales \e M12 and \e M21 which are inserted between \e m12 and
 \e S12.
 
 Code for computing arbitrarily accurate geodesics in maxima is available
-in <a href="geodesic.mac">geodesic.mac</a> (this depends on
-<a href="ellint.mac">ellint.mac</a> and uses the series computed by
-<a href="geod.mac">geod.mac</a>).  This solve both the direct and
+in <a href="geodesic.mac"> geodesic.mac</a> (this depends on
+<a href="ellint.mac"> ellint.mac</a> and uses the series computed by
+<a href="geod.mac"> geod.mac</a>).  This solve both the direct and
 inverse geodesic problems and offers the ability to solve the problems
 either using series expansions (similar to GeographicLib::Geodesic) or
 in terms of elliptic integrals (similar to
@@ -4089,7 +4103,7 @@ alpha[10]=   77911515623232821/12014330904576000 * n^10;
 \endverbatim
 
 The high-order expansions for &alpha; and &beta; were produced by the
-Maxima program <a href="tmseries.mac">tmseries.mac</a> (included in the
+Maxima program <a href="tmseries.mac"> tmseries.mac</a> (included in the
 distribution).  To run, start Maxima and enter
 \verbatim
   load("tmseries.mac")$
@@ -4376,7 +4390,7 @@ of the git repository for %GeographicLib.
      - the command line utility Geod is now called
        <a href="GeodSolve.1.html">GeodSolve</a>;
      - allow addition of polygon edges in GeographicLib::PolygonArea;
-     - add full maxima implementation of geodesic algorithms.
+     - add full Maxima implementation of geodesic algorithms.
 
  - <a href="http://geographiclib.sf.net/1.29">Version 1.29</a>
    (released 2013-01-16)
