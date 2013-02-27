@@ -98,10 +98,9 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::RG(real x, real y) throw() {
     // Carlson, eqs 2.36 - 2.39
-    if (x < y) swap(x, y);
     real
-      x0 = sqrt(x),
-      y0 = sqrt(y),
+      x0 = sqrt(max(x, y)),
+      y0 = sqrt(min(x, y)),
       xn = x0,
       yn = y0,
       s = 0,
@@ -510,7 +509,7 @@ namespace GeographicLib {
     // Linear approximation
     real phi = Math::pi<real>() * x / (2 * _Ec); // phi in [-pi/2, pi/2)
     // First order correction
-    phi = phi - _eps * sin(2 * phi) / 2;
+    phi -= _eps * sin(2 * phi) / 2;
     for (int i = 0; i < num_; ++i) {
       real
         sn = sin(phi),

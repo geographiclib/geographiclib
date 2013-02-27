@@ -709,7 +709,7 @@ namespace GeographicLib {
      * - \e caps |= GeodesicExact::LATITUDE for the latitude \e lat2; this is
      *   added automatically
      * - \e caps |= GeodesicExact::LONGITUDE for the latitude \e lon2
-     * - \e caps |= GeodesicExact::AZIMUTH for the latitude \e azi2; this is
+     * - \e caps |= GeodesicExact::AZIMUTH for the azimuth \e azi2; this is
      *   added automatically
      * - \e caps |= GeodesicExact::DISTANCE for the distance \e s12
      * - \e caps |= GeodesicExact::REDUCEDLENGTH for the reduced length \e m12

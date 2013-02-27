@@ -246,7 +246,7 @@ USAGE = \
 	ConicProj.usage \
 	GeodesicProj.usage \
 	GeoConvert.usage \
-	Geod.usage \
+	GeodSolve.usage \
 	GeoidEval.usage \
 	Gravity.usage \
 	MagneticField.usage \
@@ -258,7 +258,7 @@ MANPAGES = \
 	ConicProj.1 \
 	GeodesicProj.1 \
 	GeoConvert.1 \
-	Geod.1 \
+	GeodSolve.1 \
 	GeoidEval.1 \
 	Gravity.1 \
 	MagneticField.1 \
@@ -270,7 +270,7 @@ HTMLMAN = \
 	ConicProj.1.html \
 	GeodesicProj.1.html \
 	GeoConvert.1.html \
-	Geod.1.html \
+	GeodSolve.1.html \
 	GeoidEval.1.html \
 	Gravity.1.html \
 	MagneticField.1.html \
@@ -291,7 +291,7 @@ SUFFIXES = .pod .1 .usage .1.html
 
 EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	GeoConvert.pod TransverseMercatorProj.pod \
-	CartConvert.pod ConicProj.pod Geod.pod GeodesicProj.pod \
+	CartConvert.pod ConicProj.pod GeodSolve.pod GeodesicProj.pod \
 	GeoidEval.pod Gravity.pod MagneticField.pod Planimeter.pod \
 	$(MANPAGES) $(USAGE) $(HTMLMAN) \
 	dummy.usage.in dummy.1.in dummy.1.html.in
@@ -573,7 +573,7 @@ htmlman: $(HTMLMAN)
 @HAVE_PODPROGS_FALSE@	$(USAGECMD)
 @HAVE_PODPROGS_FALSE@GeoConvert.usage:
 @HAVE_PODPROGS_FALSE@	$(USAGECMD)
-@HAVE_PODPROGS_FALSE@Geod.usage:
+@HAVE_PODPROGS_FALSE@GeodSolve.usage:
 @HAVE_PODPROGS_FALSE@	$(USAGECMD)
 @HAVE_PODPROGS_FALSE@GeoidEval.usage:
 @HAVE_PODPROGS_FALSE@	$(USAGECMD)
@@ -594,7 +594,7 @@ htmlman: $(HTMLMAN)
 @HAVE_PODPROGS_FALSE@	$(MANCMD)
 @HAVE_PODPROGS_FALSE@GeoConvert.1:
 @HAVE_PODPROGS_FALSE@	$(MANCMD)
-@HAVE_PODPROGS_FALSE@Geod.1:
+@HAVE_PODPROGS_FALSE@GeodSolve.1:
 @HAVE_PODPROGS_FALSE@	$(MANCMD)
 @HAVE_PODPROGS_FALSE@GeoidEval.1:
 @HAVE_PODPROGS_FALSE@	$(MANCMD)
@@ -615,7 +615,7 @@ htmlman: $(HTMLMAN)
 @HAVE_PODPROGS_FALSE@	$(HTMLCMD)
 @HAVE_PODPROGS_FALSE@GeoConvert.1.html:
 @HAVE_PODPROGS_FALSE@	$(HTMLCMD)
-@HAVE_PODPROGS_FALSE@Geod.1.html:
+@HAVE_PODPROGS_FALSE@GeodSolve.1.html:
 @HAVE_PODPROGS_FALSE@	$(HTMLCMD)
 @HAVE_PODPROGS_FALSE@GeoidEval.1.html:
 @HAVE_PODPROGS_FALSE@	$(HTMLCMD)

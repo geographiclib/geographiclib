@@ -20,6 +20,15 @@ foreach (TOOL ${TOOLS})
 
 endforeach ()
 
+add_executable (Geod GeodSolve.cpp)
+if (MAINTAINER)
+  add_dependencies (Geod usage)
+endif ()
+add_dependencies (tools Geod)
+set_source_files_properties (Geod.cpp PROPERTIES
+  OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/GeodSolve.usage)
+target_link_libraries (Geod Geographic)
+
 if (GEOGRAPHIC_SHARED_LIB)
   if (WIN32)
     # Copy the shared library on Windows systems to this directory
@@ -30,16 +39,16 @@ if (GEOGRAPHIC_SHARED_LIB)
       COMMENT "Copying shared library to tools directory")
   else ()
     # Set the run time path for shared libraries for non-Windows machines.
-    set_target_properties (${TOOLS} PROPERTIES
+    set_target_properties (${TOOLS} Geod PROPERTIES
       INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
   endif ()
 endif ()
 
 # Specify where the tools are installed
-install (TARGETS ${TOOLS} EXPORT depends DESTINATION bin)
+install (TARGETS ${TOOLS} Geod EXPORT depends DESTINATION bin)
 
 # Put all the tools into a folder in the IDE
-set_property (TARGET tools ${TOOLS} PROPERTY FOLDER tools)
+set_property (TARGET tools ${TOOLS} Geod PROPERTY FOLDER tools)
 
 # Create the scripts for downloading the data files on non-Windows
 # systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the

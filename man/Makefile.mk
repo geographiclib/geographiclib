@@ -1,7 +1,7 @@
 PROGRAMS = CartConvert \
 	ConicProj \
 	GeoConvert \
-	Geod \
+	GeodSolve \
 	GeodesicProj \
 	GeoidEval \
 	Gravity \

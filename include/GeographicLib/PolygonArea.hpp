@@ -81,10 +81,9 @@ namespace GeographicLib {
       : _earth(earth)
       , _area0(_earth.EllipsoidArea())
       , _polyline(polyline)
-      , _mask(Geodesic::DISTANCE | (_polyline ? 0 : Geodesic::AREA))
-    {
-      Clear();
-    }
+      , _mask(Geodesic::LATITUDE | Geodesic::LONGITUDE |
+              Geodesic::DISTANCE | (_polyline ? 0 : Geodesic::AREA))
+    { Clear(); }
 
     /**
      * Clear PolygonArea, allowing a new polygon to be started.
@@ -94,7 +93,7 @@ namespace GeographicLib {
       _crossings = 0;
       _areasum = 0;
       _perimetersum = 0;
-      _lat0 = _lon0 = _lat1 = _lon1 = 0;
+      _lat0 = _lon0 = _lat1 = _lon1 = Math::NaN<real>();
     }
 
     /**
@@ -107,6 +106,18 @@ namespace GeographicLib {
      * lon should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     void AddPoint(real lat, real lon) throw();
+
+    /**
+     * Add an edge to the polygon or polyline.
+     *
+     * @param[in] azi azimuth at current point (degrees).
+     * @param[in] s distance from current point to next point (meters).
+     *
+     * \e azi should be in the range [&minus;540&deg;, 540&deg;).  This does
+     * nothing if no points have been added yet.  Use PolygonArea::CurrentPoint
+     * to determine the position of the new vertex.
+     **********************************************************************/
+    void AddEdge(real azi, real s) throw();
 
     /**
      * Return the results so far.
@@ -150,6 +161,40 @@ namespace GeographicLib {
      * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
      * lon should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
+    unsigned TestPoint(real lat, real lon, bool reverse, bool sign,
+                       real& perimeter, real& area) const throw();
+
+    /**
+     * Return the results assuming a tentative final test point is added via an
+     * azimuth and distance; however, the data for the test point is not saved.
+     * This lets you report a running result for the perimeter and area as the
+     * user moves the mouse cursor.  Ordinary floating point arithmetic is used
+     * to accumulate the data for the test point; thus the area and perimeter
+     * returned are less accurate than if AddPoint and Compute are used.
+     *
+     * @param[in] azi azimuth at current point (degrees).
+     * @param[in] s distance from current point to final test point (meters).
+     * @param[in] reverse if true then clockwise (instead of counter-clockwise)
+     *   traversal counts as a positive area.
+     * @param[in] sign if true then return a signed result for the area if
+     *   the polygon is traversed in the "wrong" direction instead of returning
+     *   the area for the rest of the earth.
+     * @param[out] perimeter the approximate perimeter of the polygon or length
+     *   of the polyline (meters).
+     * @param[out] area the approximate area of the polygon
+     *   (meters<sup>2</sup>); only set if polyline is false in the
+     *   constructor.
+     * @return the number of points.
+     *
+     * \e azi should be in the range [&minus;540&deg;, 540&deg;).
+     **********************************************************************/
+    unsigned TestEdge(real azi, real s, bool reverse, bool sign,
+                      real& perimeter, real& area) const throw();
+
+    /**
+     * <b>DEPRECATED</b>
+     * The old name for PolygonArea::TestPoint.
+     **********************************************************************/
     unsigned TestCompute(real lat, real lon, bool reverse, bool sign,
                          real& perimeter, real& area) const throw();
 
@@ -168,6 +213,18 @@ namespace GeographicLib {
      *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const throw() { return _earth.Flattening(); }
+
+    /**
+     * Report the previous vertex added to the polygon or polyline.
+     *
+     * @param[out] lat the latitude of the point (degrees).
+     * @param[out] lon the latitude of the point (degrees).
+     *
+     * If no points have been added, then NaNs are returned.  Otherwise, \e lon
+     * will be in the range [&minus;180&deg;, 180&deg;).
+     **********************************************************************/
+    void CurrentPoint(real& lat, real& lon) const throw()
+    { lat = _lat1; lon = _lon1; }
     ///@}
   };
 

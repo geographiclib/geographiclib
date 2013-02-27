@@ -109,12 +109,12 @@
 *! restructuring the internals of the Fortran code since this may make
 *! porting fixes from the C++ code more difficult.
 *!
-*! Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed
-*! under the MIT/X11 License.  For more information, see
+*! Copyright (c) Charles Karney (2012-2013) <charles@karney.com> and
+*! licensed under the MIT/X11 License.  For more information, see
 *! http://geographiclib.sourceforge.net/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.29.
+*! <a href="../index.html">GeographicLib</a> 1.30.
 
 *> Solve the direct geodesic problem
 *!
@@ -772,8 +772,8 @@
      +          calp1/salp1 .gt. calp1b/salp1b)) then
               salp1b = salp1
               calp1b = calp1
-            else if (numit .gt. maxit1 .or.
-     +            calp1/salp1 .lt. calp1a/salp1a) then
+            else if (v .lt. 0 .and. (numit .gt. maxit1 .or.
+     +            calp1/salp1 .lt. calp1a/salp1a)) then
               salp1a = salp1
               calp1a = calp1
             end if
