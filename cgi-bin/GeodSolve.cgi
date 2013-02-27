@@ -3,8 +3,8 @@
 # GeodSolve.cgi
 # cgi script for geodesic calculations
 #
-# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
-# under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011-2013) <charles@karney.com> and
+# licensed under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 
 . ./utils.sh
@@ -301,7 +301,7 @@ cat <<EOF
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2013-02-14)</address>
+      (2013-02-26)</address>
     <a href="http://geographiclib.sourceforge.net">
       <img
 	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"

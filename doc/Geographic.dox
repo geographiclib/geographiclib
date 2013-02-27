@@ -12,7 +12,7 @@
 \mainpage Geographic library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.30
-\date 2013-mm-dd
+\date 2013-02-27
 
 \section abstract Abstract
 
@@ -4384,7 +4384,7 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
-   (released 2013-mm-dd)
+   (released 2013-02-27)
    - Changes to geodesic routines:
      - fix BUG in fail-safe mechanisms in GeographicLib::Geodesic::Inverse;
      - the command line utility Geod is now called

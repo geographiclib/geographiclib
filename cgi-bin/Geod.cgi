@@ -26,7 +26,7 @@ AZX="faz2"
 test "$AZF2" = b && AZX="baz2"
 
 INPUTENC=`encodevalue "$INPUT"`
-COMMAND=Geod
+COMMAND=GeodSolve
 EXECDIR=../bin
 F='<font color="blue">'
 G='</font>'
@@ -96,8 +96,8 @@ cat <<EOF
   <body>
     <h3>
       Online geodesic calculations using the
-      <a href="http://geographiclib.sourceforge.net/html/Geod.1.html">
-	 Geod</a> utility
+      <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">
+	 GeodSolve</a> utility
     </h3>
     <form action="/cgi-bin/Geod" method="get">
       <p>
@@ -234,8 +234,8 @@ cat <<EOF
     </form>
     <hr>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/Geod.1.html">
-        Geod</a>
+      <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">
+        GeodSolve</a>
       performs geodesic calculations for the WGS84 ellipsoid.  The
       shortest path between two points on the ellipsoid at
       (<em>lat1</em>, <em>lon1</em>) and (<em>lat2</em>,
@@ -260,7 +260,7 @@ cat <<EOF
       distance <em>s12</em> is in meters.
     </p>
     <p>
-      Geod is accurate to about 15&nbsp;nm and gives solutions for the
+      GeodSolve is accurate to about 15&nbsp;nm and gives solutions for the
       inverse problem for any pair of points.  Many other geodesic
       calculators (based in Vincenty's method) fail for some inputs; for
       example, the
@@ -272,8 +272,8 @@ cat <<EOF
       geodesic calculator in order to address this problem.)
     </p>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/Geod.1.html">
-        Geod</a>,
+      <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">
+        GeodSolve</a>,
       which is a simple wrapper of the
       <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Geodesic.html">
         GeographicLib::Geodesic</a> class,
@@ -285,7 +285,7 @@ cat <<EOF
       <a href="../scripts/geod-calc.html">Javascript geodesic
 	calculator</a> and
       <a href="../scripts/geod-google.html">geodesics on Google
-	maps</a>.  If you wish to use Geod directly,
+	maps</a>.  If you wish to use GeodSolve directly,
       <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
         download</a>
       and compile GeographicLib.  The algorithms are described
@@ -301,7 +301,7 @@ cat <<EOF
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2013-02-14)</address>
+      (2013-02-26)</address>
     <a href="http://geographiclib.sourceforge.net">
       <img
 	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"

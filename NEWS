@@ -4,7 +4,15 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.29.
+The current version of the library is 1.30.
+
+Changes between 1.30 (released 2013-02-27) and 1.29 versions:
+
+   * Changes to geodesic routines:
+     + fix BUG in fail-safe mechanisms in Geodesic::Inverse;
+     + the command line utility Geod is now called GeodSolve;
+     + allow addition of polygon edges in PolygonArea;
+     + add full Maxima implementation of geodesic algorithms.
 
 Changes between 1.29 (released 2013-01-16) and 1.28 versions:
 
