@@ -11,8 +11,8 @@
 /**
 \mainpage Geographic library
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.29
-\date 2013-01-16
+\version 1.30
+\date 2013-02-27
 
 \section abstract Abstract
 
@@ -34,8 +34,7 @@ the script for displaying
 This library is <i>not</i> a general purpose projection library; use
 <a href="http://trac.osgeo.org/proj/">proj.4</a> for that.  On the other
 hand, it does provide the core functionality offered by
-<a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a> and it
-cures several of the defects of that package.
+<a href="http://earth-info.nima.mil/GandG/geotrans/">GEOTRANS</a>.
 
 \section download Download
 
@@ -44,23 +43,23 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.29.tar.gz">
-  GeographicLib-1.29.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.29.zip">
-  GeographicLib-1.29.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.30.tar.gz">
+  GeographicLib-1.30.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.30.zip">
+  GeographicLib-1.30.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
 line endings.)  Alternatively you can get the latest release using git
 \verbatim
   git clone git://git.code.sf.net/p/geographiclib/code geographiclib
-  cd geographiclib; git checkout -q r1.29
+  cd geographiclib; git checkout -q r1.30
 \endverbatim
 There are also binary installers for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.29-win32.exe">
-  GeographicLib-1.29-win32.exe</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.29-win64.exe">
-  GeographicLib-1.29-win64.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.30-win32.exe">
+  GeographicLib-1.30-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.30-win64.exe">
+  GeographicLib-1.30-win64.exe</a>
 .
 It is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -183,14 +182,14 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.29.tar.gz">
-GeographicLib-1.29.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.29.zip">
-GeographicLib-1.29.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.29-win32.exe">
-GeographicLib-1.29-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.29-win64.exe">
-GeographicLib-1.29-win64.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.30.tar.gz">
+GeographicLib-1.30.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.30.zip">
+GeographicLib-1.30.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.30-win32.exe">
+GeographicLib-1.30-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.30-win64.exe">
+GeographicLib-1.30-win64.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -263,10 +262,10 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.29.tar.gz
-  unzip -q GeographicLib-1.29.zip \endverbatim
+  tar xfpz GeographicLib-1.30.tar.gz
+  unzip -q GeographicLib-1.30.zip \endverbatim
   then enter the directory created with one of \verbatim
-  cd GeographicLib-1.29 \endverbatim
+  cd GeographicLib-1.30 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -274,8 +273,8 @@ Here are the steps to compile and install %GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically one of \verbatim
-  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.29 ..
-  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.29 ..
+  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.30 ..
+  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.30 ..
 \endverbatim
   Instead of setting CMAKE_INSTALL_PREFIX, you can (on Windows) set
   PACKAGE_PATH to point to its parent directory, e.g., \verbatim
@@ -295,12 +294,12 @@ Here are the steps to compile and install %GeographicLib:
     convention.  If it is on ON (the Linux default), the installation
     is to a common directory, e.g., /usr/local.  If it is OFF (the
     Windows default), the installation directory contains the package
-    name, e.g., C:/pkg/GeographicLib-1.29.  The installation
+    name, e.g., C:/pkg/GeographicLib-1.30.  The installation
     directories for the documentation, cmake configuration, python and
     matlab interfaces all depend on the variable with deeper paths
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
-    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib-1.29;
+    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib-1.30;
     - python interface: OFF: python; ON: lib/python/site-packages;
     - matlab interface: OFF: matlab; ON: libexec/GeographicLib/matlab;
     .
@@ -310,7 +309,7 @@ Here are the steps to compile and install %GeographicLib:
     systems, it is recommended to use a prefix which includes the
     compiler version, as shown above (and also, possibly, whether this
     is a 64-bit build, e.g., <code>cmake -G "Visual Studio 10 Win64" -D
-    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.29 ..</code>).
+    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.30 ..</code>).
     If you just want to try the library to see if it suits your needs,
     pick, for example, <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
   - <code>PACKAGE_PATH</code> and <code>INSTALL_PATH</code> provide an
@@ -323,14 +322,14 @@ Here are the steps to compile and install %GeographicLib:
     - If INSTALL_PATH is not specified but PACKAGE_PATH is, then
       INSTALL_PATH is set to
       ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON, and to
-      ${PACKAGE_PATH}/GeographicLib-1.29, otherwise.
+      ${PACKAGE_PATH}/GeographicLib-1.30, otherwise.
     - If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
       INSTALL_PATH.
     .
     Typically, only PACKAGE_PATH needs to be specified, e.g.,
     - Linux: cmake -D PACKAGE_PATH=/opt .. => CMAKE_INSTALL_PREFIX=/opt
     - Windows: cmake -D PACKAGE_PATH=C:/pkg .. =>
-      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.29
+      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.30
     .
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
@@ -407,9 +406,9 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.29.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.30.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.29 \endverbatim
+  cd GeographicLib-1.30 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -438,9 +437,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.29.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.30.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.29 \endverbatim
+  cd GeographicLib-1.30 \endverbatim
 - Edit \verbatim
   include/GeographicLib/Config.h \endverbatim
   If your C++ compiler does not recognize the long double type
@@ -471,8 +470,8 @@ static library and the utilities.  If you only have Visual Studio 2003,
 use cmake to create the necessary solution file, see \ref cmake.  (cmake
 is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.29.zip \endverbatim
-- Open GeographicLib-1.29/windows/GeographicLib-vc10.sln in Visual Studio
+  unzip -q GeographicLib-1.30.zip \endverbatim
+- Open GeographicLib-1.30/windows/GeographicLib-vc10.sln in Visual Studio
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
@@ -495,14 +494,14 @@ library, it is advisable to build it with the compiler you are using for
 your own code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.29-win32.exe">
-GeographicLib-1.29-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.29-win64.exe">
-GeographicLib-1.29-win64.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.30-win32.exe">
+GeographicLib-1.30-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.30-win64.exe">
+GeographicLib-1.30-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc10\\GeographicLib-1.29 or C:\\pkg-vc10-x64\\GeographicLib-1.29,
+   C:\\pkg-vc10\\GeographicLib-1.30 or C:\\pkg-vc10-x64\\GeographicLib-1.30,
  - select the start menu folder,
  - and install.
  .
@@ -510,7 +509,7 @@ GeographicLib-1.29-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc10/GeographicLib-1.29/bin where the utilities are
+will include C:/pkg-vc10/GeographicLib-1.30/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the matlab folder.  Add this to your
@@ -557,7 +556,7 @@ Check the code out of git with \verbatim
 Here the "master" branch is checked out.  There are three branches in
 the git repository:
 - <b>master</b>: the main branch for code maintainence.  Releases are
-  tagged on this branch as, e.g., v1.29.
+  tagged on this branch as, e.g., v1.30.
 - <b>devel</b>: the development branch; changes made here are merged
   into master.
 - <b>release</b>: the release branch created by unpacking the source
@@ -567,7 +566,7 @@ the git repository:
   specifying a branch).  This differs from the master branch in that
   some administrative files are excluded while some intermediate files
   are included (in order to aid building on as many platforms as
-  possible).  Releases are tagged on this branch as, e.g., r1.29.
+  possible).  Releases are tagged on this branch as, e.g., r1.30.
 .
 The autoconf configuration script and the formatted man pages are not
 checked into master branch of the repository.  In order to create the
@@ -583,8 +582,8 @@ In the case of cmake, you then run \verbatim
 which will copy the man pages from the build directory back into the
 source tree and package the resulting source tree for distribution as
 \verbatim
-  GeographicLib-1.29.tar.gz
-  GeographicLib-1.29.zip \endverbatim
+  GeographicLib-1.30.tar.gz
+  GeographicLib-1.30.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -595,7 +594,7 @@ With configure, run \verbatim
   make dist-gzip \endverbatim
 which will create the additional files and packages the results ready
 for distribution as \verbatim
-  geographiclib-1.29.tar.gz \endverbatim
+  geographiclib-1.30.tar.gz \endverbatim
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
@@ -755,8 +754,8 @@ The utilities are
  - <a href="GeoConvert.1.html">
    <b>GeoConvert</b></a>: convert geographic coordinates using
    GeographicLib::GeoCoords.
- - <a href="Geod.1.html">
-   <b>Geod</b></a>: perform geodesic calculations using
+ - <a href="GeodSolve.1.html">
+   <b>GeodSolve</b></a>: perform geodesic calculations using
    GeographicLib::Geodesic and GeographicLib::GeodesicLine.
  - <a href="Planimeter.1.html">
    <b>Planimeter</b></a>: compute the area of geodesic polygons using
@@ -802,9 +801,9 @@ also be used interactively, often with the input supplied via a pipe,
 e.g.,
  - echo 38SMB4488 | GeoConvert -d
 
-Online versions of three of these utilities are provided:
+Online versions of four of these utilities are provided:
  - <a href="http://geographiclib.sf.net/cgi-bin/GeoConvert">GeoConvert</a>
- - <a href="http://geographiclib.sf.net/cgi-bin/Geod">Geod</a>
+ - <a href="http://geographiclib.sf.net/cgi-bin/GeodSolve">GeodSolve</a>
  - <a href="http://geographiclib.sf.net/cgi-bin/Planimeter">Planimeter</a>
  - <a href="http://geographiclib.sf.net/cgi-bin/GeoidEval">GeoidEval</a>
 
@@ -880,23 +879,24 @@ order to perform a series of direct geodesic calculations on a single
 line, the GeographicLib::GeodesicLine class can be used.  This packages
 all the information needed to specify a geodesic.  A const member
 function returns the coordinates a specified distance from the starting
-point.  <a href="Geod.1.html">Geod</a> is a simple command line utility
-to perform geodesic calculations.  GeographicLib::PolygonArea is a class
-which compute the area of geodesic polygons using the Geodesic class and
-<a href="Planimeter.1.html">Geod</a> is a command line utility for the
-same purpose.
-GeographicLib::AzimuthalEquidistant, GeographicLib::CassiniSoldner, and
-GeographicLib::Gnomonic are projections based on the Geodesic class.
-<a href="GeodesicProj.1.html">GeodesicProj</a> is a command line utility
-to exercise these projections.
+point.  <a href="GeodSolve.1.html">GeodSolve</a> is a simple command
+line utility to perform geodesic calculations.
+GeographicLib::PolygonArea is a class which compute the area of geodesic
+polygons using the Geodesic class and <a
+href="Planimeter.1.html">Planimeter</a> is a command line utility for
+the same purpose.  GeographicLib::AzimuthalEquidistant,
+GeographicLib::CassiniSoldner, and GeographicLib::Gnomonic are
+projections based on the Geodesic class.  <a
+href="GeodesicProj.1.html">GeodesicProj</a> is a command line utility to
+exercise these projections.
 
 GeographicLib::GeodesicExact and GeographicLib::GeodesicLineExact are
 drop in replacements for GeographicLib::Geodesic and
 GeographicLib::GeodesicLine in which the solution is given in terms of
 elliptic integrals (computed by GeographicLib::EllipticFunction).
 These classes should be used if the absolute value of the flattening
-exceeds 0.02.  The -E option to <a href="Geod.1.html">Geod</a> uses
-these classes.
+exceeds 0.02.  The -E option to <a href="GeodSolve.1.html">GeodSolve</a>
+uses these classes.
 
 GeographicLib::Geocentric and GeographicLib::LocalCartesian convert between
 geodetic and geocentric or a local cartesian system.  The constructor for
@@ -1007,7 +1007,7 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page other Other interfaces (C, Fortran, Javascript, Python, Matlab)
+\page other Other interfaces (C, Fortran, Javascript, Python, Matlab, Maxima)
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -1018,6 +1018,7 @@ Interfaces to subsets of %GeographicLib are available in other languages
 - \ref javascript.
 - \ref python.
 - \ref matlab.
+- \ref maxima.
 
 \section c-fortran C and Fortran
 
@@ -1120,7 +1121,7 @@ The matlab directory contains
  - Native Matlab implementations of the geodesic routines.  To use
    these, start Matlab or Octave and run one of (for example) \verbatim
    addpath /usr/local/libexec/GeographicLib/matlab
-   addpath 'C:/pkg-vc10-x64/GeographicLib-1.29/libexec/GeographicLib/matlab'
+   addpath 'C:/pkg-vc10-x64/GeographicLib-1.30/libexec/GeographicLib/matlab'
    \endverbatim
    The available functions are:
    - geoddoc: briefly descibe the routines
@@ -1187,9 +1188,9 @@ There are two ways of compiling the interface code: (1) using cmake and
  - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
    Octave and run, e.g., \code
    mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-1.29/matlab'
+   cd 'C:/pkg-vc10-x64/GeographicLib-1.30/matlab'
    help geographiclibinterface
-   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.29');
+   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.30');
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
@@ -1198,7 +1199,7 @@ There are two ways of compiling the interface code: (1) using cmake and
 To use the interface routines for %GeographicLib, run one of (for
 example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-1.29/libexec/GeographicLib/matlab'
+  addpath 'C:/pkg-vc10-x64/GeographicLib-1.30/libexec/GeographicLib/matlab'
 \endverbatim
 in Octave or Matlab.  The available functions are:
  - geodesicdirect: solve direct geodesic problem
@@ -1240,6 +1241,19 @@ coordinates to MGRS can easily be written with Matlab code.
 Note that geoidheight, when compiled with Visual Studio 2008 causes
 Matlab to crash.  (The problem does not occur with Visual Studio 2005 or
 Visual Studio 2010.)
+
+\section maxima Maxima routines
+
+Maxima is a free computer algebra system which can be downloaded from
+http://maxima.sf.net.  Maxima was used to generate the series used by
+GeographicLib::TransverseMercator (<a href="tmseries.mac">
+tmseries.mac</a>) and GeographicLib::Geodesic (<a href="geod.mac">
+geod.mac</a>) and to generate accurate data for testing
+(<a href="tm.mac"> tm.mac</a> and <a href="geodesic.mac">
+geodesic.mac</a>).  The latter uses Maxima's bigfloat arithmetic
+together with series extended to high order or solutions in terms of
+elliptic integrals (<a href="ellint.mac"> ellint.mac</a>).  These files
+contain brief instructions on how to use them.
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -2590,12 +2604,12 @@ Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
 
 GeographicLib::Geodesic and GeographicLib::GeodesicLine provide accurate
 solutions to the direct and inverse geodesic problems.  The
-<a href="Geod.1.html">Geod</a> utility provides an interface to these
-classes.  GeographicLib::AzimuthalEquidistant implements the azimuthal
-equidistant projection in terms of geodesics.
+<a href="GeodSolve.1.html">GeodSolve</a> utility provides an interface
+to these classes.  GeographicLib::AzimuthalEquidistant implements the
+azimuthal equidistant projection in terms of geodesics.
 GeographicLib::CassiniSoldner implements a transverse cylindrical
-equidistant projection in terms of geodesics.  The
-<a href="GeodesicProj.1.html">GeodesicProj</a> utility provides an
+equidistant projection in terms of geodesics.  The <a
+href="GeodesicProj.1.html">GeodesicProj</a> utility provides an
 interface to these projections.
 
 The algorithms used by GeographicLib::Geodesic and
@@ -2710,30 +2724,40 @@ The contents of the file are as follows:
 running between vertices are truncated to a multiple of 0.1 pm and this
 is used to determine point 2.
 
-This data can be fed to the <a href="Geod.1.html">Geod</a> utility as
-follows
+This data can be fed to the <a href="GeodSolve.1.html">GeodSolve</a>
+utility as follows
  - Direct from point 1:
 \verbatim
-  gunzip -c GeodTest.dat.gz | cut -d' ' -f1,2,3,7 | ./Geod
+  gunzip -c GeodTest.dat.gz | cut -d' ' -f1,2,3,7 | ./GeodSolve
 \endverbatim
    This should yield columns 4, 5, 6, and 9 of the test set.
  - Direct from point 2:
 \verbatim
   gunzip -c GeodTest.dat.gz | cut -d' ' -f4,5,6,7 |
-  sed "s/ \([^ ]*$\)/ -\1/" | ./Geod
+  sed "s/ \([^ ]*$\)/ -\1/" | ./GeodSolve
 \endverbatim
    (The sed command negates the distance.)  This should yield columns 1,
    2, and 3, and the negative of column 9 of the test set.
  - Inverse between points 1 and 2:
 \verbatim
-  gunzip -c GeodTest.dat.gz | cut -d' ' -f1,2,4,5 | ./Geod -i
+  gunzip -c GeodTest.dat.gz | cut -d' ' -f1,2,4,5 | ./GeodSolve -i
 \endverbatim
    This should yield columns 3, 6, 7, and 9 of the test set.
  .
-Add, e.g., "-p 6", to the call to Geod to change the precision of the
-output.  Adding "-f" causes Geod to print 12 fields specifying the
-geodesic; these include the 10 fields in the test set plus the geodesic
-scales \e M12 and \e M21 which are inserted between \e m12 and \e S12.
+Add, e.g., "-p 6", to the call to GeodSolve to change the precision of
+the output.  Adding "-f" causes GeodSolve to print 12 fields specifying
+the geodesic; these include the 10 fields in the test set plus the
+geodesic scales \e M12 and \e M21 which are inserted between \e m12 and
+\e S12.
+
+Code for computing arbitrarily accurate geodesics in maxima is available
+in <a href="geodesic.mac"> geodesic.mac</a> (this depends on
+<a href="ellint.mac"> ellint.mac</a> and uses the series computed by
+<a href="geod.mac"> geod.mac</a>).  This solve both the direct and
+inverse geodesic problems and offers the ability to solve the problems
+either using series expansions (similar to GeographicLib::Geodesic) or
+in terms of elliptic integrals (similar to
+GeographicLib::GeodesicExact).
 
 \section geodseries Expansions for geodesics
 
@@ -2751,8 +2775,8 @@ In the formulas below ^ indicates exponentiation (\e f^3 =
 <i>f</i><sup>3</sup>) and / indicates real division (3/5 = 0.6).  The
 equations need to be converted to Horner form, but are here left in
 expanded form so that they can be easily truncated to lower order.
-These expansions were obtained using the Maxima code, <a
-href="geod.mac">geod.mac</a>.
+These expansions were obtained using the Maxima code,
+<a href="geod.mac">geod.mac</a>.
 
 In the expansions below, we have
  - \f$ \alpha \f$ is the azimuth
@@ -4079,7 +4103,7 @@ alpha[10]=   77911515623232821/12014330904576000 * n^10;
 \endverbatim
 
 The high-order expansions for &alpha; and &beta; were produced by the
-Maxima program <a href="tmseries.mac">tmseries.mac</a> (included in the
+Maxima program <a href="tmseries.mac"> tmseries.mac</a> (included in the
 distribution).  To run, start Maxima and enter
 \verbatim
   load("tmseries.mac")$
@@ -4359,6 +4383,15 @@ been migrated to the archive subdirectory).  All the releases are
 available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
 
+ - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
+   (released 2013-02-27)
+   - Changes to geodesic routines:
+     - fix BUG in fail-safe mechanisms in GeographicLib::Geodesic::Inverse;
+     - the command line utility Geod is now called
+       <a href="GeodSolve.1.html">GeodSolve</a>;
+     - allow addition of polygon edges in GeographicLib::PolygonArea;
+     - add full Maxima implementation of geodesic algorithms.
+
  - <a href="http://geographiclib.sf.net/1.29">Version 1.29</a>
    (released 2013-01-16)
    - Changes to allow compilation with libc++ (courtesy of Kal Conley).
@@ -4411,7 +4444,7 @@ of the git repository for %GeographicLib.
        GeographicLib::GeodesicLineExact which are formulated in terms
        of elliptic integrals and thus yield accurate results even for
        very eccentric ellipsoids.
-     - the -E option to <a href="Geod.1.html">Geod</a> invokes these
+     - the -E option to <a href="GeodSolve.1.html">Geod</a> invokes these
        exact classes.
    - Add functionality to GeographicLib::EllipticFunction:
      - add all the traditional elliptic integrals;
@@ -4490,7 +4523,7 @@ of the git repository for %GeographicLib.
     - GeographicLib::DMS::Encode and
       GeographicLib::GeoCoords::DMSRepresentation generalized;
     - <a href="GeoConvert.1.html">GeoConvert</a> and
-      <a href="Geod.1.html">Geod</a> now accept a -: option.
+      <a href="GeodSolve.1.html">Geod</a> now accept a -: option.
   - <a href="GeoidEval.1.html">GeoidEval</a> does not print the gradient
     of the geoid height by default (because it's subject to large
     errors); give the -g option to get the gradient printed.
@@ -4544,12 +4577,12 @@ of the git repository for %GeographicLib.
    (released 2011-12-07)
   - Add calculation of the earth's gravitational field:
     - add GeographicLib::NormalGravity GeographicLib::GravityModel and
-       GeographicLib::GravityCircle classes;
+      GeographicLib::GravityCircle classes;
     - add command line utility
       <a href="Gravity.1.html">Gravity</a>;
     - add \ref gravity;
     - add GeographicLib::Constants::WGS84_GM(),
-       GeographicLib::Constants::WGS84_omega(), and similarly for GRS80.
+      GeographicLib::Constants::WGS84_omega(), and similarly for GRS80.
   - Build uses GEOGRAPHICLIB_DATA to specify a common parent directory
      for geoid, gravity, and magnetic data (instead of
      GEOGRAPHICLIB_GEOID_PATH, etc.); similarly,
@@ -4660,9 +4693,9 @@ of the git repository for %GeographicLib.
       calculations;
     - trim precision of area to 3 decimal places;
     - FIX BUG with pole crossing edges (due to compiler optimization).
-  - <a href="Geod.1.html">Geod</a> no longer reports the reduced length
-    by default; however the -f flag still reports this and in addition
-    gives the geodesic scales and the geodesic area.
+  - <a href="GeodSolve.1.html">Geod</a> no longer reports the reduced
+    length by default; however the -f flag still reports this and in
+    addition gives the geodesic scales and the geodesic area.
   - FIX BUGS (compiler-specific) in inverse geodesic calculations.
   - FIX BUG: accommodate tellg() returning &minus;1 at end of string.
   - Change way flattening of the ellipsoid is specified:
@@ -4799,7 +4832,7 @@ of the git repository for %GeographicLib.
     - signal convergence failure in Geodesic::Inverse with NaNs;
     - deprecate one function in Geodesic and two functions in
       GeodesicLine;
-    - deprecate -n option for <a href="Geod.1.html">Geod</a>.
+    - deprecate -n option for <a href="GeodSolve.1.html">Geod</a>.
     .
     WARNING: These changes may break binary compatibility with previous
     versions of %GeographicLib.  However, the library is source
@@ -4967,7 +5000,7 @@ of the git repository for %GeographicLib.
   - Improvements to GeographicLib::Geodesic:
     - more economical series expansions,
     - return reduced length (as does the
-      <a href="Geod.1.html">Geod</a> utility),
+      <a href="GeodSolve.1.html">Geod</a> utility),
     - improved calculation of starting point for inverse method,
     - use reduced length to give derivative for Newton's method.
   - Add GeographicLib::AzimuthalEquidistant class.
@@ -4993,11 +5026,13 @@ of the git repository for %GeographicLib.
       method,
     - accept and return spherical arc lengths,
     - works with both oblate and prolate ellipsoids,
-    - add -a, -e, -b options to the <a href="Geod.1.html">Geod</a> utility.
+    - add -a, -e, -b options to the <a href="GeodSolve.1.html">Geod</a>
+      utility.
 
  - <a href="http://geographiclib.sf.net/2009-03">Version 2009-03</a>
    (released 2009-03-01)
-  - Add GeographicLib::Geodesic and the <a href="Geod.1.html">Geod</a> utility.
+  - Add GeographicLib::Geodesic and the
+    <a href="GeodSolve.1.html">Geod</a> utility.
   - Declare when no exceptions are thrown by functions.
   - Minor changes to GeographicLib::DMS class.
   - Use invf = 0 to mean a sphere in constructors to some classes.

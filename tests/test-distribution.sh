@@ -40,7 +40,7 @@ set -e
 #   python/setup.py
 #   tests/test-distribution.sh
 
-VERSION=1.29
+VERSION=1.30
 BRANCH=devel
 TEMP=/scratch/geographic-dist
 DEVELSOURCE=/u/geographiclib

@@ -101,6 +101,16 @@ namespace GeographicLib {
 #endif
 
     /**
+     * Number of additional decimal digits of precision of real relative to
+     * double (0 for float).
+     **********************************************************************/
+    static const int extradigits =
+      std::numeric_limits<real>::digits10 >
+      std::numeric_limits<double>::digits10 ?
+      std::numeric_limits<real>::digits10 -
+      std::numeric_limits<double>::digits10 : 0;
+
+    /**
      * true if the machine is big-endian.
      **********************************************************************/
     static const bool bigendian = WORDS_BIGENDIAN;

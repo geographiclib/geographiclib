@@ -1,10 +1,10 @@
 #! /bin/sh
 #
-# Geod.cgi
+# GeodSolve.cgi
 # cgi script for geodesic calculations
 #
-# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
-# under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011-2013) <charles@karney.com> and
+# licensed under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 
 . ./utils.sh
@@ -99,7 +99,7 @@ cat <<EOF
       <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">
 	 GeodSolve</a> utility
     </h3>
-    <form action="/cgi-bin/Geod" method="get">
+    <form action="/cgi-bin/GeodSolve" method="get">
       <p>
         Geodesic calculation:
         <table>

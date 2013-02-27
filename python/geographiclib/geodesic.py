@@ -12,7 +12,7 @@
 #    http://dx.doi.org/10.1007/s00190-012-0578-z
 #    Addenda: http://geographiclib.sf.net/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2013) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 ######################################################################
@@ -794,7 +794,8 @@ class Geodesic(object):
           if v > 0 and (numit > Geodesic.maxit1_ or
                         calp1/salp1 > calp1b/salp1b):
             salp1b = salp1; calp1b = calp1
-          elif numit > Geodesic.maxit1_ or calp1/salp1 < calp1a/salp1a:
+          elif v < 0 and (numit > Geodesic.maxit1_ or
+                          calp1/salp1 < calp1a/salp1a):
             salp1a = salp1; calp1a = calp1
 
           numit += 1

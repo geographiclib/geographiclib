@@ -1,8 +1,8 @@
 /*
+Compute the series expansions for the ellipsoidal geodesic problem.
 
-Compute the series expansions for the spheroidal geodesic problem.
-
-Written by Charles Karney <charles@karney.com>
+Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and
+licensed under the MIT/X11 License.  For more information, see
 http://geographiclib.sourceforge.net/
 
 References:
@@ -20,11 +20,14 @@ There are 4 sections in this file
 (4) Calls to the above.
 
 Edit the section at the end, to modify what is done.  As distributed
-this code computes the 8th order series.  This takes less that 10 secs.
+this code computes the 8th order series.  This takes about 10 secs.  If
+you want to compute accurate geodesics using geodesic.mac, then you need
+alse to uncomment the last line of this file so that the series get
+saved as geodNN.lsp.
+
 To run the code, start Maxima and enter
 
   load("geod.mac")$
-
 */
 
 /* EXPANSIONS FOR INTEGRALS */
@@ -519,7 +522,6 @@ block([tt:jtaylor(C3[i],eps,n,ord),
 dispC4(ord):=(ord:ord-1,for i:0 thru ord do
 block([tt:jtaylor(C4[i],n,eps,ord),
   ttt,t4,linel:1200],
-  tt:expand(subst([z=1],tt)),
   for j:i thru ord do (
     ttt:coeff(tt,eps,j),
     if ttt # 0 then block([a:taylor(ttt+n^(ord+1),n,0,ord+1),paren,s],
@@ -573,7 +575,10 @@ dispseries():=(
   20   571
   30  6671 (111m)
   */
-maxpow:10$
+maxpow:8$
 computeall()$
 printcode()$
 dispseries()$
+/* Save the values needed for geodesic.mac  This is commented out
+here to avoid accidentally overwriting files in a user's directory. */
+/* save(concat("geod",maxpow,".lsp"), values, arrays)$ */

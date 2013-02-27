@@ -2,8 +2,8 @@
  * \file GeodesicExact.cpp
  * \brief Implementation for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2012-2013) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * This is a reformulation of the geodesic problem.  The notation is as
@@ -126,7 +126,7 @@ namespace GeographicLib {
     outmask &= OUT_ALL;
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
-    // east-going and meridional geodesics
+    // east-going and meridional geodesics.
     real lon12 = Math::AngDiff(Math::AngNormalize(lon1),
                                Math::AngNormalize(lon2));
     // If very close to being on the same half-meridian, then make it so.
@@ -326,11 +326,10 @@ namespace GeographicLib {
           // Reversed test to allow escape with NaNs
           if (tripb || !(abs(v) >= (tripn ? 8 : 2) * tol0_)) break;
           // Update bracketing values
-          if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b)) {
-            salp1b = salp1; calp1b = calp1;
-          } else if (numit > maxit1_ || calp1/salp1 < calp1a/salp1a) {
-            salp1a = salp1; calp1a = calp1;
-          }
+          if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b))
+            { salp1b = salp1; calp1b = calp1; }
+          else if (v < 0 && (numit > maxit1_ || calp1/salp1 < calp1a/salp1a))
+            { salp1a = salp1; calp1a = calp1; }
           if (numit < maxit1_ && dv > 0) {
             real
               dalp1 = -v/dv;
@@ -476,7 +475,7 @@ namespace GeographicLib {
     m0 = - E.k2() * E.D() / (Math::pi<real>() / 2);
     real J12 = m0 *
       (sig12 + E.deltaD(ssig2, csig2, dn2) - E.deltaD(ssig1, csig1, dn1));
-    // Missing a factor of _a.
+    // Missing a factor of _b.
     // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
     // cancellation in the case of coincident points.
     m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) - csig1 * csig2 * J12;
@@ -579,7 +578,7 @@ namespace GeographicLib {
     bool shortline = cbet12 >= 0 && sbet12 < real(0.5) &&
       lam12 <= Math::pi<real>() / 6;
     real
-      omg12 = (!shortline ? lam12 : lam12 / (_f1 * (dn1 + dn2) / 2)),
+      omg12 = !shortline ? lam12 : lam12 / (_f1 * (dn1 + dn2) / 2),
       somg12 = sin(omg12), comg12 = cos(omg12);
 
     salp1 = cbet2 * somg12;
@@ -790,7 +789,7 @@ namespace GeographicLib {
   }
 
   void GeodesicExact::C4f(real eps, real c[]) const throw() {
-    // Evaluation C4 coeffs by Horner's method
+    // Evaluate C4 coeffs by Horner's method
     // Elements c[0] thru c[nC4_ - 1] are set
     for (int j = nC4x_, k = nC4_; k; ) {
       real t = 0;
