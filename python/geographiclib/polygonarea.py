@@ -1,3 +1,4 @@
+"""polygonarea.py: transcription of GeographicLib::PolygonArea class."""
 # polygonarea.py
 #
 # This is a rather literal translation of the GeographicLib::PolygonArea class
@@ -25,13 +26,13 @@ class PolygonArea(object):
   """Area of a geodesic polygon"""
 
   def transit(lon1, lon2):
+    """Count crossings of prime meridian."""
     # Return 1 or -1 if crossing prime meridian in east or west direction.
     # Otherwise return zero.
-    from geographiclib.geodesic import Geodesic
     # Compute lon12 the same way as Geodesic::Inverse.
-    lon1 = Math.AngNormalize(lon1);
-    lon2 = Math.AngNormalize(lon2);
-    lon12 = Math.AngDiff(lon1, lon2);
+    lon1 = Math.AngNormalize(lon1)
+    lon2 = Math.AngNormalize(lon2)
+    lon12 = Math.AngDiff(lon1, lon2)
     cross = (1 if lon1 < 0 and lon2 >= 0 and lon12 > 0
              else (-1 if lon2 < 0 and lon1 >= 0 and lon12 < 0 else 0))
     return cross
@@ -48,6 +49,7 @@ class PolygonArea(object):
     self.Clear()
 
   def Clear(self):
+    """Reset to empty polygon."""
     self._num = 0
     self._crossings = 0
     if not self._polyline: self._areasum.Set(0)
@@ -55,11 +57,12 @@ class PolygonArea(object):
     self._lat0 = self._lon0 = self._lat1 = self._lon1 = 0
 
   def AddPoint(self, lat, lon):
+    """Add a vertex to the polygon."""
     if self._num == 0:
       self._lat0 = self._lat1 = lat
       self._lon0 = self._lon1 = lon
     else:
-      t, s12, t, t, t, t, t, S12 = self._earth.GenInverse(
+      _, s12, _, _, _, _, _, S12 = self._earth.GenInverse(
         self._lat1, self._lon1, lat, lon, self._mask)
       self._perimetersum.Add(s12)
       if not self._polyline:
@@ -71,6 +74,7 @@ class PolygonArea(object):
 
   # return number, perimeter, area
   def Compute(self, reverse, sign):
+    """Return the number, perimeter, and area for the polygon."""
     if self._polyline: area = Math.nan
     if self._num < 2:
       perimeter = 0
@@ -81,7 +85,7 @@ class PolygonArea(object):
       perimeter = self._perimetersum.Sum()
       return self._num, perimeter, area
 
-    t, s12, t, t, t, t, t, S12 = self._earth.GenInverse(
+    _, s12, _, _, _, _, _, S12 = self._earth.GenInverse(
       self._lat1, self._lon1, self._lat0, self._lon0, self._mask)
     perimeter = self._perimetersum.Sum(s12)
     tempsum = Accumulator(self._areasum)
@@ -97,18 +101,19 @@ class PolygonArea(object):
       if tempsum.Sum() > self._area0/2:
         tempsum.Add( -self._area0 )
       elif tempsum.Sum() <= -self._area0/2:
-        tempsum.Add( +self._area0 )
+        tempsum.Add(  self._area0 )
     else:
       if tempsum.Sum() >= self._area0:
         tempsum.Add( -self._area0 )
       elif tempsum.Sum() < 0:
-        tempsum.Add( +self._area0 )
+        tempsum.Add(  self._area0 )
 
     area = 0 + tempsum.Sum()
     return self._num, perimeter, area
 
   # return number, perimeter, area
   def TestCompute(self, lat, lon, reverse, sign):
+    """Return the results for a tentative additional vertex."""
     if self._polyline: area = Math.nan
     if self._num == 0:
       perimeter = 0
@@ -119,7 +124,7 @@ class PolygonArea(object):
     tempsum = 0 if self._polyline else self._areasum.Sum()
     crossings = self._crossings; num = self._num + 1
     for i in ([0] if self._polyline else [0, 1]):
-      t, s12, t, t, t, t, t, S12 = self._earth.GenInverse(
+      _, s12, _, _, _, _, _, S12 = self._earth.GenInverse(
         self._lat1 if i == 0 else lat, self._lon1 if i == 0 else lon,
         self._lat0 if i != 0 else lat, self._lon0 if i != 0 else lon,
         self._mask)
@@ -153,6 +158,7 @@ class PolygonArea(object):
     return num, perimeter, area
 
   def Area(earth, points, polyline):
+    """Return the number, perimeter, and area for a set of vertices."""
     poly = PolygonArea(earth, polyline)
     for p in points:
       poly.AddPoint(p['lat'], p['lon'])

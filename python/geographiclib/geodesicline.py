@@ -1,3 +1,4 @@
+"""geodesicline.py: transcription of GeographicLib::GeodesicLine class."""
 # geodesicline.py
 #
 # This is a rather literal translation of the GeographicLib::GeodesicLine class
@@ -119,7 +120,7 @@ class GeodesicLine(object):
 
   # return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   def GenPosition(self, arcmode, s12_a12, outmask):
-
+    """Private: General solution of position along geodesic"""
     from geographiclib.geodesic import Geodesic
     a12 = lat2 = lon2 = azi2 = s12 = m12 = M12 = M21 = S12 = Math.nan
     outmask &= self._caps & Geodesic.OUT_ALL

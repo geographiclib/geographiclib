@@ -55,7 +55,7 @@ The ellipsoids wgs84 and grs80 are pre-defined.
 
 (7) To solve a direct problem, run
 
-  geod_direct(ellipse, lat1, lon1, azi1, s12);
+  geod_direct(ellipsoid, lat1, lon1, azi1, s12);
 
 e.g.,
 
@@ -74,7 +74,7 @@ This returns a list, [a12, lat2, lon2, azi2, s12, m12, M12, M21, S12], e.g.,
 
 (8) To solve an inverse problem, run
 
-  geod_inverse(ellipse, lat1, lon1, lat2, lon2)l
+  geod_inverse(ellipsoid, lat1, lon1, lat2, lon2);
 
 e.g.,
 
