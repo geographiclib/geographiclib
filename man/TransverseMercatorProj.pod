@@ -5,7 +5,7 @@ TransverseMercatorProj -- perform transverse Mercator projection
 =head1 SYNOPSIS
 
 B<TransverseMercatorProj> [ B<-s> | B<-t> ]
-[ B<-l> I<lon0> ] [ B<-k> I<k1> ] [ B<-r> ]
+[ B<-l> I<lon0> ] [ B<-k> I<k0> ] [ B<-r> ]
 [ B<-e> I<a> I<f> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]

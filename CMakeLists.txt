@@ -4,9 +4,15 @@ project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 30)
+set (GeographicLib_VERSION_MINOR 31)
+set (GeographicLib_VERSION_PATCH 0)
 set (GeographicLib_VERSION
   "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
+if (GeographicLib_VERSION_PATCH GREATER 0)
+  set (GeographicLib_VERSION
+    "${GeographicLib_VERSION}.${GeographicLib_VERSION_PATCH}")
+endif ()
+
 set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
@@ -294,7 +300,7 @@ include (InstallRequiredSystemLibraries)
 # the include (CPack).
 set (CPACK_PACKAGE_VERSION_MAJOR ${GeographicLib_VERSION_MAJOR})
 set (CPACK_PACKAGE_VERSION_MINOR ${GeographicLib_VERSION_MINOR})
-set (CPACK_PACKAGE_VERSION_PATCH 0)
+set (CPACK_PACKAGE_VERSION_PATCH ${GeographicLib_VERSION_PATCH})
 set (CPACK_PACKAGE_CONTACT charles@karney.com)
 set (CPACK_PACKAGE_VENDOR "GeographicLib")
 set (CPACK_PACKAGE_DESCRIPTION_SUMMARY
@@ -379,6 +385,9 @@ if (MAINTAINER)
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
       echo include Makefile.mk > Makefile &&
       sed -e "s/Unconfigured/${PACKAGE_VERSION}/"
+      -e "s/MAJOR .*/MAJOR ${CPACK_PACKAGE_VERSION_MAJOR}/"
+      -e "s/MINOR .*/MINOR ${CPACK_PACKAGE_VERSION_MINOR}/"
+      -e "s/PATCH .*/PATCH ${CPACK_PACKAGE_VERSION_PATCH}/"
       include/GeographicLib/Config.h > include/GeographicLib/Config.h.new &&
       mv include/GeographicLib/Config.h.new include/GeographicLib/Config.h
     COMMAND
