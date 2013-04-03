@@ -474,7 +474,7 @@
    Jour. Crelle '''5''', 297--304 (1830).[[BR]]
    http://books.google.com/books?id=Y6wGAAAAYAAJ&pg=PA297 [[BR]]
    http://dx.doi.org/10.1515/crll.1830.5.297
- * F. Minding,
+ * F. Minding,[[BR]]
    ''Beiträge zur Theorie der kürzesten Linien auf krummen Flächen
    [Contributions to the theory of shortest lines on curved suraces]'',
    Jour. Crelle '''20''', 323--327 (1840).[[BR]]
@@ -673,7 +673,7 @@
    ''A Treatise on Infinitesimal Calculus'', Vol. 2
    (2nd edition, Oxford, 1865), Chap. 14, Sec. 2.[[BR]]
    http://books.google.com/books?id=fho1AAAAIAAJ&pg=PA475
- * G. Salmon,
+ * G. Salmon,[[BR]]
    ''A Treatise on the Analytic Geometry of Three Dimensions''
    (2nd Edition, Dublin, 1865), Chap. 12, Sec. 4.[[BR]]
    http://books.google.com/books?id=Y54LAAAAYAAJ&pg=PA305

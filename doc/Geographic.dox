@@ -4386,6 +4386,7 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.31">Version 1.31</a>
    (released 2013-mm-dd)
    - Add macros GEOGRAPHICLIB_VERSION_{MAJOR,MINOR,PATCH} to Config.h.
+   - Fix documentation for new version of perlpod.
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)
