@@ -84,9 +84,6 @@ namespace GeographicLib {
                         swaplatlong ? DMS::LATITUDE : DMS::LONGITUDE, dmssep);
   }
 
-  string GeoCoords::DMSRepresentation(int prec, bool swaplatlong) const
-  { return DMSRepresentation(prec, swaplatlong, char(0)); }
-
   string GeoCoords::MGRSRepresentation(int prec) const {
     // Max precision is um
     prec = max(0, min(6, prec) + 5);

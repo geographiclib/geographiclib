@@ -4390,7 +4390,8 @@ of the git repository for %GeographicLib.
    - Fix documentation for new version of perlpod.
    - Fix declaration of first arg to GeographicLib::UTMUPS::DecodeEPSG.
    - Windows binary release use MATLAB R2012a 64-bit and
-     use -largeArrayDims option (TODO).
+     use -largeArrayDims option.
+   - Address those COMPATIBILITY issues (TODO).
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)

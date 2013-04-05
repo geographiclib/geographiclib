@@ -86,11 +86,12 @@ namespace GeographicLib {
      *   &alpha;<sup>2</sup> must lie in (-&infin;, 1).  (No checking is done.)
      *
      * If only elliptic integrals of the first and second kinds are needed,
-     * then set &alpha;<sup>2</sup> = 0 (in which case we have &Pi;(&phi;, 0,
-     * \e k) = \e F(&phi;, \e k), \e G(&phi;, 0, \e k) = \e E(&phi;, \e k)),
-     * and \e H(&phi;, 0, \e k) = \e F(&phi;, \e k) - \e D(&phi;, \e k).
+     * then set &alpha;<sup>2</sup> = 0 (the default value); in this case, we
+     * have &Pi;(&phi;, 0, \e k) = \e F(&phi;, \e k), \e G(&phi;, 0, \e k) = \e
+     * E(&phi;, \e k), and \e H(&phi;, 0, \e k) = \e F(&phi;, \e k) - \e
+     * D(&phi;, \e k).
      **********************************************************************/
-    EllipticFunction(real k2, real alpha2) throw();
+    EllipticFunction(real k2 = 0, real alpha2 = 0) throw();
 
     /**
      * Constructor specifying the modulus and parameter and their complements.
@@ -111,22 +112,6 @@ namespace GeographicLib {
      * \e k is very close to unity.
      **********************************************************************/
     EllipticFunction(real k2, real alpha2, real kp2, real alphap2) throw();
-
-    /**
-     * Constructor specifying the modulus only.
-     *
-     * @param[in] k2 the square of the modulus <i>k</i><sup>2</sup>.
-     *   <i>k</i><sup>2</sup> must lie in (-&infin;, 1).  (No checking is
-     *   done.)
-     *
-     * <b>COMPATIBILITY NOTE:</b> This constructor calls EllipticFunction(real,
-     * real) with a 2nd argument of 0.  At some point, EllipticFunction(real)
-     * and will be withdrawn and the interface to EllipticFunction(real, real)
-     * changed so that its 2nd argument defaults to 0.  This will preserve
-     * source-level compatibility.
-     **********************************************************************/
-    explicit EllipticFunction(real k2 = 0) throw();
-
 
     /**
      * Reset the modulus and parameter.
