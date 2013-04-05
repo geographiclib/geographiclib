@@ -66,7 +66,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     f = mxGetScalar(prhs[5]);
   }
 
-  int m = mxGetM(prhs[3]);
+  mwSize m = mxGetM(prhs[3]);
 
   double* s12 = mxGetPr(prhs[3]);
 
@@ -99,7 +99,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     if (!(azi1 >= -540 || azi1 < 540))
       throw GeographicErr("Invalid azimuth");
     const GeodesicLine l(g, lat1, lon1, azi1);
-    for (int i = 0; i < m; ++i)
+    for (mwIndex i = 0; i < m; ++i)
       if (aux)
         a12[i] = l.Position(s12[i], lat2[i], lon2[i], azi2[i],
                             m12[i], M12[i], M21[i], S12[i]);

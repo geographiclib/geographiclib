@@ -268,7 +268,7 @@ namespace GeographicLib {
     return os.str();
   }
 
-  void UTMUPS::DecodeEPSG(int& epsg, int& zone, bool& northp) throw() {
+  void UTMUPS::DecodeEPSG(int epsg, int& zone, bool& northp) throw() {
     if (epsg >= epsg01N && epsg <= epsg60N) {
       zone = epsg - epsg01N + 1;
       northp = true;

@@ -52,7 +52,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     f = mxGetScalar(prhs[2]);
   }
 
-  int m = mxGetM(prhs[0]);
+  mwSize m = mxGetM(prhs[0]);
 
   double* lat = mxGetPr(prhs[0]);
   double* lon = lat + m;
@@ -70,7 +70,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   try {
     const Geodesic g(a, f);
     PolygonArea p(g, false);
-    for (int i = 0; i < m; ++i) {
+    for (mwIndex i = 0; i < m; ++i) {
       if (!(abs(lat[i]) <= 90))
         throw GeographicErr("Invalid latitude");
       if (!(lon[i] >= -540 || lon[i] < 540))

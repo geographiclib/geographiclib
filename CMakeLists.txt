@@ -17,7 +17,7 @@ set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.8.2)
+set (LIBVERSIONFULL 9.8.3)
 
 # User-settable variables
 
@@ -216,8 +216,10 @@ if (MATLAB_COMPILER)
       PATHS "${MATLABDIR}")
     execute_process (COMMAND "${MEXEXTPROG}"
       OUTPUT_VARIABLE MEXEXT OUTPUT_STRIP_TRAILING_WHITESPACE)
+    set (MEXOPTIONS "-largeArrayDims")
   else ()
     set (MEXEXT "mex")
+    set (MEXOPTIONS "--mex")
   endif ()
   if (NOT MEX)
     message (WARNING

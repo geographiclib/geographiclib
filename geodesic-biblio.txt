@@ -930,7 +930,7 @@
    by M. Lukat,
    (Teubner, Leipzig 1899), Chap. 6.[[BR]]
    http://books.google.com/books?id=Xa4LAAAAYAAJ&pg=PA146
- * H. Poincaré,[[BR]]
+ * J. H. Poincaré,[[BR]]
    ''Sur les lignes géodésiques des surfaces convexes
    [Geodesics lines on convex surfaces]'',
    Trans. AMS '''6'''(3), 237--274 (1905).[[BR]]

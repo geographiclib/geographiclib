@@ -515,7 +515,7 @@ include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the matlab folder.  Add this to your
 path in Matlab to access this interface.  The binaries were built
 using Visual Studio 10 (2010) in Release mode.  The Matlab interface
-was compiled with Matlab R2010b 64-bit, however it may work with some
+was compiled with Matlab R2012a 64-bit, however it may work with some
 other 64-bit versions of Matlab.
 
 \section qt Building the library for use with Qt
@@ -1164,14 +1164,15 @@ There are two ways of compiling the interface code: (1) using cmake and
    %GeographicLib.  For example \verbatim
    mex.bat -setup
 
-   Please choose your compiler for building external interface (MEX) files:
+   Please choose your compiler for building MEX-files:
    Would you like mex to locate installed compilers [y]/n? y
    Select a compiler:
-   [1] Lcc-win32 C 2.4.1 in C:\PROGRA~1\MATLAB\R2010b\sys\lcc
-   [2] Microsoft Visual C++ 2010 in C:\Program Files\Microsoft Visual Studio 10.0
+   [1] Microsoft Visual C++ 2010 in c:\Program Files (x86)\Microsoft Visual Studio 10.0
+   [2] Microsoft Visual C++ 2008 SP1 in c:\Program Files (x86)\Microsoft Visual Studio 9.0
+
    [0] None
 
-   Compiler: 2
+   Compiler: 1
    etc. \endverbatim
    (This will require that mex.bat is in your PATH.  With Linux, use
    <code>mex -setup</code>.)  Then configure cmake with, for example
@@ -1181,7 +1182,7 @@ There are two ways of compiling the interface code: (1) using cmake and
    64-bit generator with cmake, e.g., "Visual Studio 10 Win64".  Finally
    compile %GeographicLib with Visual Studio.  (The binary installer for
    64-bit Windows includes the compiled interface built with Visual
-   Studio 10 and Matlab R2010b 64-bit).<br>
+   Studio 10 and Matlab R2012a 64-bit).<br>
    On Linux systems, you can compile the interface for use with octave
    instead by using \verbatim
    cmake -D MATLAB_COMPILER=mkoctfile .. \endverbatim
@@ -4387,6 +4388,9 @@ of the git repository for %GeographicLib.
    (released 2013-mm-dd)
    - Add macros GEOGRAPHICLIB_VERSION_{MAJOR,MINOR,PATCH} to Config.h.
    - Fix documentation for new version of perlpod.
+   - Fix declaration of first arg to GeographicLib::UTMUPS::DecodeEPSG.
+   - Windows binary release use MATLAB R2012a 64-bit and
+     use -largeArrayDims option (TODO).
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)

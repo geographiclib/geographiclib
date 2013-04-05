@@ -39,7 +39,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[0]) != 2)
     mexErrMsgTxt("latlong coordinates must be M x 2 matrix.");
 
-  int m = mxGetM(prhs[0]);
+  mwSize m = mxGetM(prhs[0]);
 
   double* lat = mxGetPr(prhs[0]);
   double* lon = lat + m;
@@ -66,12 +66,12 @@ void mexFunction( int nlhs, mxArray* plhs[],
       mexErrMsgTxt("geoid name cannot be empty.");
     if (mxGetM(prhs[1]) != 1)
       mexErrMsgTxt("geoid name cannot be a vector of strings.");
-    int n = mxGetN(prhs[1]);
+    mwSize n = mxGetN(prhs[1]);
     if (n < 1)
       mexErrMsgTxt("geoid name cannot be empty.");
     mxChar* ptr = mxGetChars(prhs[1]);
     geoidname.resize(n);
-    for (int i = 0; i < n; ++i)
+    for (mwIndex i = 0; i < n; ++i)
       geoidname[i] = ptr[i];
   }
   string geoiddir("");
@@ -80,18 +80,18 @@ void mexFunction( int nlhs, mxArray* plhs[],
       mexErrMsgTxt("geoid directory must be a string.");
     if (mxGetM(prhs[2]) > 1)
       mexErrMsgTxt("geoid directory cannot be a vector of strings.");
-    int n = mxGetN(prhs[2]);
+    mwSize n = mxGetN(prhs[2]);
     if (n > 0 && mxGetM(prhs[2]) == 1) {
       mxChar* ptr = mxGetChars(prhs[2]);
       geoiddir.resize(n);
-      for (int i = 0; i < n; ++i)
+      for (mwIndex i = 0; i < n; ++i)
         geoiddir[i] = ptr[i];
     } // else string is empty and do nothing
   }
 
   try {
     const Geoid g(geoidname, geoiddir);
-    for (int i = 0; i < m; ++i) {
+    for (mwIndex i = 0; i < m; ++i) {
       if (abs(lat[i]) <= 90 && lon[i] >= -540 && lon[i] < 540) {
         // g() can throw an exception, e.g., because of an I/O failure.  Treat
         // this as fatal.

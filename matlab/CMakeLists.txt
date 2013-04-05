@@ -36,7 +36,7 @@ if (MEX)
       add_custom_target (matlab-${TARGET} DEPENDS ${TARGET_INTERFACE})
       add_custom_command (OUTPUT ${TARGET_INTERFACE}
         COMMAND
-          ${MEX}
+          ${MEX} ${MEXOPTIONS}
             -I${PROJECT_BINARY_DIR}/include -I${PROJECT_SOURCE_DIR}/include
             -L${PROJECT_BINARY_DIR}/src/Release -lGeographic
             ${INTERFACE}
@@ -52,7 +52,7 @@ if (MEX)
       set (INTERFACE_LIST ${INTERFACE_LIST} ${TARGET_INTERFACE})
       add_custom_command (OUTPUT ${TARGET_INTERFACE}
         COMMAND
-          ${MEX} --mex
+          ${MEX} ${MEXOPTIONS}
             -I${PROJECT_BINARY_DIR}/include -I${PROJECT_SOURCE_DIR}/include
             -L${PROJECT_BINARY_DIR}/src -lGeographic
             -Wl,-rpath=${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}

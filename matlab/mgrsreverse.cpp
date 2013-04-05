@@ -32,7 +32,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (!mxIsCell(prhs[0]) || mxGetN(prhs[0]) != 1)
     mexErrMsgTxt("mgrs coordinates should be in a M x 1 cell array.");
 
-  int m = mxGetM(prhs[0]);
+  mwSize m = mxGetM(prhs[0]);
 
   plhs[0] = mxCreateDoubleMatrix(m, 4, mxREAL);
   double* x = mxGetPr(plhs[0]);
@@ -48,15 +48,15 @@ void mexFunction( int nlhs, mxArray* plhs[],
   }
 
   string mgrsstr;
-  for (int i = 0; i < m; ++i) {
+  for (mwIndex i = 0; i < m; ++i) {
     try {
       mxArray* mgrs = mxGetCell(prhs[0], i);
       if (!mxIsChar(mgrs) || mxGetM(mgrs) != 1)
         throw GeographicErr("Cell element not a string");
-      int n = mxGetN(mgrs);
+      mwSize n = mxGetN(mgrs);
       mxChar* mgrschar = mxGetChars(mgrs);
       mgrsstr.resize(n);
-      for (int k = 0; k < n; ++k)
+      for (mwIndex k = 0; k < n; ++k)
         mgrsstr[k] = mgrschar[k];
       int ZONE, PREC;
       bool HEMI;
