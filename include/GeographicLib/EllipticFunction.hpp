@@ -43,8 +43,8 @@ namespace GeographicLib {
    *
    * The computation of the elliptic integrals uses the algorithms given in
    * - B. C. Carlson,
-   *   <a href="http://dx.doi.org/10.1007/BF02198293"> Computation of elliptic
-   *   integrals</a>, Numerical Algorithms 10, 13--26 (1995)
+   *   <a href="http://dx.doi.org/10.1007/BF02198293"> Computation of real or
+   *   complex elliptic integrals</a>, Numerical Algorithms 10, 13--26 (1995)
    * .
    * with the additional optimizations given in http://dlmf.nist.gov/19.36.i.
    * The computation of the Jacobi elliptic functions uses the algorithm given
@@ -122,7 +122,7 @@ namespace GeographicLib {
      * @param[in] alpha2 the new value of parameter &alpha;<sup>2</sup>.
      *   &alpha;<sup>2</sup> must lie in (-&infin;, 1).  (No checking is done.)
      **********************************************************************/
-    void Reset(real k2, real alpha2 = 0) throw()
+    void Reset(real k2 = 0, real alpha2 = 0) throw()
     { Reset(k2, alpha2, 1 - k2, 1 - alpha2); }
 
     /**

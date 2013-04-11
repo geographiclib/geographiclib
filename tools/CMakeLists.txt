@@ -117,8 +117,7 @@ add_test (Geod4
   Geod -i --input-string "36.493349428792 0 36.49334942879201 .0000008")
 set_tests_properties (Geod4 PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 0\\.072")
 # Check fix for point2=pole bug found 2010-05-03 (but only with long double)
-add_test (Geod5
-  Geod -p 0 --input-string "0.01777745589997 30 0 10e6")
+add_test (Geod5 Geod -p 0 --input-string "0.01777745589997 30 0 10e6")
 set_tests_properties (Geod5
   PROPERTIES PASS_REGULAR_EXPRESSION
   "90\\.00000 -150\\.00000 -180\\.00000;90\\.00000 30\\.00000 0\\.00000")
@@ -208,33 +207,26 @@ add_test (ConicProj1
 set_tests_properties (ConicProj1
   PROPERTIES PASS_REGULAR_EXPRESSION "^85\\.00")
 # Check fix for LambertConformalConic::Forward bug found 2012-07-14
-add_test (ConicProj2
-  ConicProj -c -30 -30 --input-string "-30 0")
+add_test (ConicProj2 ConicProj -c -30 -30 --input-string "-30 0")
 set_tests_properties (ConicProj2
   PROPERTIES PASS_REGULAR_EXPRESSION "^-?0\\.0+ -?0\\.0+ -?0\\.0+ 1\\.0+")
 # Check fixes for LambertConformalConic::Reverse overflow bugs found 2012-07-14
-add_test (ConicProj3
-  ConicProj -r -c 0 0 --input-string "1113195 -1e10")
+add_test (ConicProj3 ConicProj -r -c 0 0 --input-string "1113195 -1e10")
 set_tests_properties (ConicProj3
   PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ 10\\.00[0-9]+ ")
-add_test (ConicProj4
-  ConicProj -r -c 0 0 --input-string "1113195 inf")
+add_test (ConicProj4 ConicProj -r -c 0 0 --input-string "1113195 inf")
 set_tests_properties (ConicProj4
   PROPERTIES PASS_REGULAR_EXPRESSION "^90\\.0+ 10\\.00[0-9]+ ")
-add_test (ConicProj5
-  ConicProj -r -c 45 45 --input-string "0 -1e100")
+add_test (ConicProj5 ConicProj -r -c 45 45 --input-string "0 -1e100")
 set_tests_properties (ConicProj5
   PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ -?0\\.00[0-9]+ ")
-add_test (ConicProj6
-  ConicProj -r -c 45 45 --input-string "0 -inf")
+add_test (ConicProj6 ConicProj -r -c 45 45 --input-string "0 -inf")
 set_tests_properties (ConicProj6
   PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ -?0\\.00[0-9]+ ")
-add_test (ConicProj7
-  ConicProj -r -c 90 90 --input-string "0 -1e150")
+add_test (ConicProj7 ConicProj -r -c 90 90 --input-string "0 -1e150")
 set_tests_properties (ConicProj7
   PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ -?0\\.00[0-9]+ ")
-add_test (ConicProj8
-  ConicProj -r -c 90 90 --input-string "0 -inf")
+add_test (ConicProj8 ConicProj -r -c 90 90 --input-string "0 -inf")
 set_tests_properties (ConicProj8
   PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ -?0\\.00[0-9]+ ")
 
@@ -282,9 +274,15 @@ endif ()
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
   # Verify no overflow at poles with high degree model
-  add_test (Gravity0
-    Gravity -n egm2008 -p 6 --input-string "90 110 0")
+  add_test (Gravity0 Gravity -n egm2008 -p 6 --input-string "90 110 0")
   set_tests_properties (Gravity0
-    PROPERTIES PASS_REGULAR_EXPRESSION
-    "-0\\.000146 0\\.000078 -9\\.832294")
+    PROPERTIES PASS_REGULAR_EXPRESSION "-0\\.000146 0\\.000078 -9\\.832294")
+  # Check fix for invR bug in GravityCircle found by Mathieu Peyrega on
+  # 2013-04-09
+  add_test (Gravity1 Gravity -n egm2008 -A -c -18 4000 --input-string "-86")
+  set_tests_properties (Gravity1
+    PROPERTIES PASS_REGULAR_EXPRESSION "-7\\.438 1\\.305 -1\\.563")
+  add_test (Gravity2 Gravity -n egm2008 -D -c -18 4000 --input-string "-86")
+  set_tests_properties (Gravity2
+    PROPERTIES PASS_REGULAR_EXPRESSION "7\\.404 -6\\.168 7\\.616")
 endif ()

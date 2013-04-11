@@ -515,7 +515,7 @@ include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the matlab folder.  Add this to your
 path in Matlab to access this interface.  The binaries were built
 using Visual Studio 10 (2010) in Release mode.  The Matlab interface
-was compiled with Matlab R2012a 64-bit, however it may work with some
+was compiled with Matlab R2013a 64-bit, however it may work with some
 other 64-bit versions of Matlab.
 
 \section qt Building the library for use with Qt
@@ -1167,12 +1167,12 @@ There are two ways of compiling the interface code: (1) using cmake and
    Please choose your compiler for building MEX-files:
    Would you like mex to locate installed compilers [y]/n? y
    Select a compiler:
-   [1] Microsoft Visual C++ 2010 in c:\Program Files (x86)\Microsoft Visual Studio 10.0
-   [2] Microsoft Visual C++ 2008 SP1 in c:\Program Files (x86)\Microsoft Visual Studio 9.0
+   [1] Microsoft Visual C++ 2012 in C:\Program Files (x86)\Microsoft Visual Studio 11.0
+   [2] Microsoft Visual C++ 2010 in C:\Program Files (x86)\Microsoft Visual Studio 10.0
 
    [0] None
 
-   Compiler: 1
+   Compiler: 2
    etc. \endverbatim
    (This will require that mex.bat is in your PATH.  With Linux, use
    <code>mex -setup</code>.)  Then configure cmake with, for example
@@ -1182,7 +1182,7 @@ There are two ways of compiling the interface code: (1) using cmake and
    64-bit generator with cmake, e.g., "Visual Studio 10 Win64".  Finally
    compile %GeographicLib with Visual Studio.  (The binary installer for
    64-bit Windows includes the compiled interface built with Visual
-   Studio 10 and Matlab R2012a 64-bit).<br>
+   Studio 10 and Matlab R2013a 64-bit).<br>
    On Linux systems, you can compile the interface for use with octave
    instead by using \verbatim
    cmake -D MATLAB_COMPILER=mkoctfile .. \endverbatim
@@ -4389,14 +4389,19 @@ of the git repository for %GeographicLib.
    - Add macros GEOGRAPHICLIB_VERSION_{MAJOR,MINOR,PATCH} to Config.h.
    - Fix documentation for new version of perlpod.
    - Fix declaration of first arg to GeographicLib::UTMUPS::DecodeEPSG.
-   - Windows binary release use MATLAB R2012a 64-bit and
+   - Windows binary release now uses Matlab R2013a 64-bit and
      use -largeArrayDims option.
    - Address those COMPATIBILITY issues (TODO).
+   - FIX BUG in GeographicLib::GravityCircle constructor (found by
+     Mathieu Peyr&eacute;ga) which caused bogus results for the gravity
+     disturbance and gravity anomaly vectors.  (This only affected
+     calculations using GravityCircle.  GravityModel calculations did
+     not suffer from this bug.)
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)
    - Changes to geodesic routines:
-     - fix BUG in fail-safe mechanisms in GeographicLib::Geodesic::Inverse;
+     - FIX BUG in fail-safe mechanisms in GeographicLib::Geodesic::Inverse;
      - the command line utility Geod is now called
        <a href="GeodSolve.1.html">GeodSolve</a>;
      - allow addition of polygon edges in GeographicLib::PolygonArea;
@@ -4413,9 +4418,9 @@ of the git repository for %GeographicLib.
    (released 2012-12-11)
    - Changes to geodesic routines:
      - compute longitude difference exactly;
-     - hence fix BUG in area calculations for polygons with vertices very
+     - hence FIX BUG in area calculations for polygons with vertices very
        close to the prime meridian;
-     - fix BUG is geoddistance.m where the value of m12 was wrong for
+     - FIX BUG is geoddistance.m where the value of m12 was wrong for
        meridional geodesics;
      - add Matlab implementations of the geodesic projections;
      - remove unneeded special code for geodesics which start at a pole;
@@ -4512,7 +4517,7 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.22">Version 1.22</a>
    (released 2012-05-27)
   - Add GeographicLib::Geohash and GeographicLib::Ellipsoid classes.
-  - Fix bug in GeographicLib::AlbersEqualArea for very prolate
+  - FIX BUG in GeographicLib::AlbersEqualArea for very prolate
     ellipsoids (<i>b</i><sup>2</sup> > 2 <i>a</i><sup>2</sup>).
   - cmake changes:
     - optionally use PACKAGE_PATH and INSTALL_PATH to determine
