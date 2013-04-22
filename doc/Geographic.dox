@@ -4397,6 +4397,7 @@ of the git repository for %GeographicLib.
      disturbance and gravity anomaly vectors.  (This only affected
      calculations using GravityCircle.  GravityModel calculations did
      not suffer from this bug.)
+   - Install pdb files with Visual Studio to aid debugging.
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)

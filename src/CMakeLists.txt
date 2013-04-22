@@ -16,6 +16,10 @@ endif ()
 # Set the version number on the library
 if (WIN32)
   set_target_properties (Geographic PROPERTIES VERSION "${LIBVERSIONFULL}" )
+  get_property(PDB TARGET Geographic PROPERTY LOCATION_DEBUG)
+  get_filename_component(_P ${PDB} PATH)
+  get_filename_component(PDB ${PDB} NAME_WE)
+  set(PDB ${_P}/${PDB}.pdb)
 else ()
   set_target_properties (Geographic PROPERTIES
     VERSION "${LIBVERSIONFULL}" SOVERSION "${LIBVERSION}" )
@@ -27,6 +31,11 @@ install (TARGETS Geographic
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib${LIB_SUFFIX}
   ARCHIVE DESTINATION lib${LIB_SUFFIX})
+
+if (MSVC)
+  # Install pdb files
+  INSTALL(FILES ${PDB} DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
+endif()
 
 # Put all the library into a folder in the IDE
 set_property (TARGET Geographic PROPERTY FOLDER library)
