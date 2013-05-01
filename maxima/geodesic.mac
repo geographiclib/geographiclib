@@ -530,14 +530,15 @@ geod_direct(g, lat1, lon1, azi1, s12):=
 
 /* Return [a12, s12, azi1, azi2, m12, M12, M21, S12] */
 geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
-  [s12 : 0, azi1 : 0, azi2 : 0, m12 : 0, M12 : 0, M21 : 0, S12 : 0,
+  [s12 : 0b0, azi1 : 0b0, azi2 : 0b0,
+  m12 : 0b0, M12 : 0b0, M21 : 0b0, S12 : 0b0,
   lon12, latsign, lonsign, swapp,
-  phi, sbet1, cbet1, sbet2, cbet2, s12x : 0, m12x : 0,
+  phi, sbet1, cbet1, sbet2, cbet2, s12x : 0b0, m12x : 0b0,
   dn1, dn2, lam12, slam12, clam12,
-  a12 : 0, sig12, calp1 : 0, salp1 : 0, calp2 : 0, salp2 : 0,
+  a12 : 0b0, sig12, calp1 : 0b0, salp1 : 0b0, calp2 : 0b0, salp2 : 0b0,
   /* index zero elements of these arrays are unused */
   C1a, C2a, C3a,
-  meridian,  omg12 : 0,
+  meridian,  omg12 : 0b0,
   /* Initialize for the meridian.  No longitude calculation is done in this
   case to let the parameter default to 0. */
   E : Ef(-g[g_ep2],  0b0)],
@@ -603,7 +604,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
     a meridian. */
     [ ssig1, csig1, ssig2, csig2],
     calp1 : clam12, salp1 : slam12, /* Head to the target longitude */
-    calp2 : 1, salp2 : 0,           /* At the target we're heading north */
+    calp2 : 1b0, salp2 : 0b0,       /* At the target we're heading north */
     /* tan(bet) : tan(sig) * cos(alp) */
     ssig1 : sbet1, csig1 : calp1 * cbet1,
     ssig2 : sbet2, csig2 : calp2 * cbet2,

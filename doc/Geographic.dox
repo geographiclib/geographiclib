@@ -1002,6 +1002,18 @@ compiler.  System dependencies come into
    the WORDS_BIGENDIAN macro (which sets the compile-time constant
    GeographicLib::Math::bigendian).
 
+An attempt is made to maintain backward compatibility with
+%GeographicLib (especially at the level of your source code).  Sometimes
+it's necessary to take actions that depend on what version of
+%GeographicLib is being used; for example, you may want to use a new
+feature of %GeographicLib, but want your code still to work with older
+versions.  In that case, you can test the values of the macros
+GEOGRAPHICLIB_VERSION_MAJOR, GEOGRAPHICLIB_VERSION_MINOR, and
+GEOGRAPHICLIB_VERSION_PATCH; these expand to numbers (and the last one
+is usually 0); these macros appeared starting in version 1.31.  There's
+also a macro GEOGRAPHICLIB_VERSION_STRING which expands to, e.g.,
+"1.31"; this macro has been defined since version 1.9.
+
 <center>
 Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
@@ -4397,7 +4409,9 @@ of the git repository for %GeographicLib.
      disturbance and gravity anomaly vectors.  (This only affected
      calculations using GravityCircle.  GravityModel calculations did
      not suffer from this bug.)
-   - Install pdb files with Visual Studio to aid debugging.
+   - Install PDB files when compiling with Visual Studio to aid
+     debugging.
+   - Better treatment of short geodesics?
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)
