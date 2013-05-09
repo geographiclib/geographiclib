@@ -604,7 +604,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
     a meridian. */
     [ ssig1, csig1, ssig2, csig2],
     calp1 : clam12, salp1 : slam12, /* Head to the target longitude */
-    calp2 : 1b0, salp2 : 0b0,       /* At the target we're heading north */
+    calp2 : 1b0, salp2 : 0b0,           /* At the target we're heading north */
     /* tan(bet) : tan(sig) * cos(alp) */
     ssig1 : sbet1, csig1 : calp1 * cbet1,
     ssig2 : sbet2, csig2 : calp2 * cbet2,

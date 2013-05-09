@@ -65,7 +65,9 @@ namespace GeographicLib {
             (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
             sqrt(abs(_e2))))/2) // authalic radius squared
       // The sig12 threshold for "really short"
-    , _etol2(0.01 * tol2_ / max(real(0.1), sqrt(abs(_e2))))
+      // 0.01 is a safety factor.  max(0.0001, ...) stops widening the
+      // definition for nearly spherical cases.
+    , _etol2(0.01 * Math::cbrt(tol0_ / max(real(0.0001), f >= 0 ? _ep2 : -_e2)))
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -266,14 +268,14 @@ namespace GeographicLib {
       // meridian and geodesic is neither meridional or equatorial.
 
       // Figure a starting point for Newton's method
+      real dnm;
       sig12 = InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
                            lam12,
-                           salp1, calp1, salp2, calp2,
+                           salp1, calp1, salp2, calp2, dnm,
                            C1a, C2a);
 
       if (sig12 >= 0) {
         // Short lines (InverseStart sets salp2, calp2)
-        real dnm = (dn1 + dn2) / 2;
         s12x = sig12 * _b * dnm;
         m12x = Math::sq(dnm) * _b * sin(sig12 / dnm);
         if (outmask & GEODESICSCALE)
@@ -537,6 +539,8 @@ namespace GeographicLib {
                                     real& salp1, real& calp1,
                                     // Only updated if return val >= 0
                                     real& salp2, real& calp2,
+                                    // Only updated for short lines
+                                    real& dnm,
                                     // Scratch areas of the right size
                                     real C1a[], real C2a[]) const throw() {
     // Return a starting point for Newton's method in salp1 and calp1 (function
@@ -566,9 +570,16 @@ namespace GeographicLib {
 #endif
     bool shortline = cbet12 >= 0 && sbet12 < real(0.5) &&
       lam12 <= Math::pi<real>() / 6;
-    real
-      omg12 = !shortline ? lam12 : lam12 / (_f1 * (dn1 + dn2) / 2),
-      somg12 = sin(omg12), comg12 = cos(omg12);
+    real omg12 = lam12;
+    if (shortline) {
+      real sbetm2 = Math::sq(sbet1 + sbet2);
+      // sin((bet1+bet2)/2)^2 
+      // =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
+      sbetm2 = sbetm2 / (sbetm2 + Math::sq(cbet1 + cbet2));
+      dnm = sqrt(1 + _ep2 * sbetm2);
+      omg12 /= _f1 * dnm;
+    }
+    real somg12 = sin(omg12), comg12 = cos(omg12);
 
     salp1 = cbet2 * somg12;
     calp1 = comg12 >= 0 ?
