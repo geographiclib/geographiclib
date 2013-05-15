@@ -1,7 +1,11 @@
 # Build the test programs...
 
 set (TESTPROGRAMS
-  ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest)
+  ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest GeodShort)
+
+if (NOT WIN32)
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+endif ()
 
 # Loop over all the tools, specifying the source and library.
 add_custom_target (testprograms ALL)

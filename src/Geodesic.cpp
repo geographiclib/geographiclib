@@ -64,10 +64,18 @@ namespace GeographicLib {
            (_e2 == 0 ? 1 :
             (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
             sqrt(abs(_e2))))/2) // authalic radius squared
-      // The sig12 threshold for "really short"
-      // 0.01 is a safety factor.  max(0.0001, ...) stops widening the
-      // definition for nearly spherical cases.
-    , _etol2(0.01 * Math::cbrt(tol0_ / max(real(0.0001), f >= 0 ? _ep2 : -_e2)))
+      // The sig12 threshold for "really short".  Using the auxiliary sphere
+      // solution with dnm computed at (bet1 + bet2) / 2, the relative error in
+      // the azimuth consistency check is sig12^2 * abs(f) * min(1, 1-f/2) / 2.
+      // (Error measured for 1/100 < b/a < 100 and abs(f) >= 1/1000.  For a
+      // given f and sig12, the max error occurs for lines near the pole.  If
+      // the old rule for computing dnm = (dn1 + dn2)/2 is used, then the error
+      // increases by a factor of 2.)  Setting this equal to epsilon gives
+      // sig12 = etol2.  Here 0.1 is a safety factor (error decreased by 100)
+      // and max(0.001, abs(f)) stops etol2 getting too large in the nearly
+      // spherical case.
+    , _etol2(0.1 * tol2_ / sqrt( max(real(0.001), abs(f)) *
+                                 min(real(1), 1 - f/2) / 2 ))
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
