@@ -114,7 +114,7 @@
 *! http://geographiclib.sourceforge.net/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.30.
+*! <a href="../index.html">GeographicLib</a> 1.31.
 
 *> Solve the direct geodesic problem
 *!
@@ -720,11 +720,10 @@
 
 * Figure a starting point for Newton's method
         sig12 = InvSta(sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
-     +      f, A3x, salp1, calp1, salp2, calp2, C1a, C2a)
+     +      f, A3x, salp1, calp1, salp2, calp2, dnm, C1a, C2a)
 
         if (sig12 .ge. 0) then
-* Short lines (InvSta sets salp2, calp2)
-          dnm = (dn1 + dn2) / 2
+* Short lines (InvSta sets salp2, calp2, dnm)
           s12x = sig12 * b * dnm
           m12x = dnm**2 * b * sin(sig12 / dnm)
           if (scalp) then
@@ -1137,16 +1136,16 @@
 
       double precision function InvSta(sbet1, cbet1, dn1,
      +    sbet2, cbet2, dn2, lam12, f, A3x,
-     +    salp1, calp1, salp2, calp2,
+     +    salp1, calp1, salp2, calp2, dnm,
      +    C1a, C2a)
 * Return a starting point for Newton's method in salp1 and calp1 (function
 * value is -1).  If Newton's method doesn't need to be used, return also
-* salp2 and calp2 and function value is sig12.
+* salp2, calp2, and dnm and function value is sig12.
 * input
       double precision sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
      +    f, A3x(*)
 * output
-      double precision salp1, calp1, salp2, calp2
+      double precision salp1, calp1, salp2, calp2, dnm
 * temporary
       double precision C1a(*), C2a(*)
 
@@ -1155,7 +1154,7 @@
       double precision f1, e2, ep2, n, etol2, k2, eps, sig12,
      +    sbet12, cbet12, sbt12a, omg12, somg12, comg12, ssig12, csig12,
      +    x, y, lamscl, betscl, cbt12a, bt12a, m12b, m0, dummy,
-     +    k, omg12a
+     +    k, omg12a, sbetm2
 
       double precision dblmin, dbleps, pi, degree, tiny,
      +    tol0, tol1, tol2, tolb, xthrsh
@@ -1168,7 +1167,8 @@
       e2 = f * (2 - f)
       ep2 = e2 / (1 - e2)
       n = f / (2 - f)
-      etol2 = 0.01d0 * tol2 / max(0.1d0, sqrt(abs(e2)))
+      etol2 = 0.1d0 * tol2 /
+     +    sqrt( max(0.001d0, abs(f)) * min(1d0, 1 - f/2) / 2 )
 
 * Return value
       sig12 = -1
@@ -1181,7 +1181,14 @@
      +    lam12 .le. pi / 6
 
       omg12 = lam12
-      if (shortp) omg12 = omg12 / (f1 * (dn1 + dn2) / 2)
+      if (shortp) then
+        sbetm2 = (sbet1 + sbet2)**2
+* sin((bet1+bet2)/2)^2
+*  =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
+        sbetm2 = sbetm2 / (sbetm2 + (cbet1 + cbet2)**2)
+        dnm = sqrt(1 + ep2 * sbetm2)
+        omg12 = omg12 / (f1 * dnm)
+      end if
       somg12 = sin(omg12)
       comg12 = cos(omg12)
 
@@ -1886,7 +1893,7 @@
       double precision lon1x, lon2x, lon12, AngNm, AngDif
       lon1x = AngNm(lon1)
       lon2x = AngNm(lon2)
-      lon12 = AngDif(lon1x, lon2x);
+      lon12 = AngDif(lon1x, lon2x)
       trnsit = 0
       if (lon1 .lt. 0 .and. lon2 .ge. 0 .and. lon12 .gt. 0) then
         trnsit = 1

@@ -274,8 +274,17 @@ class Geodesic(object):
                  (Math.atanh(math.sqrt(self._e2)) if self._e2 > 0 else
                   math.atan(math.sqrt(-self._e2))) /
                  math.sqrt(abs(self._e2))))/2
-    # The sig12 threshold for "really short"
-    self._etol2 = 0.01 * Geodesic.tol2_ / max(0.1, math.sqrt(abs(self._e2)))
+    # The sig12 threshold for "really short".  Using the auxiliary sphere
+    # solution with dnm computed at (bet1 + bet2) / 2, the relative error in
+    # the azimuth consistency check is sig12^2 * abs(f) * min(1, 1-f/2) / 2.
+    # (Error measured for 1/100 < b/a < 100 and abs(f) >= 1/1000.  For a given
+    # f and sig12, the max error occurs for lines near the pole.  If the old
+    # rule for computing dnm = (dn1 + dn2)/2 is used, then the error increases
+    # by a factor of 2.)  Setting this equal to epsilon gives sig12 = etol2.
+    # Here 0.1 is a safety factor (error decreased by 100) and max(0.001,
+    # abs(f)) stops etol2 getting too large in the nearly spherical case.
+    self._etol2 = 0.1 * Geodesic.tol2_ / math.sqrt( max(0.001, abs(self._f)) *
+                                                    min(1.0, 1-self._f/2) / 2 )
     if not(Math.isfinite(self._a) and self._a > 0):
       raise ValueError("Major radius is not positive")
     if not(Math.isfinite(self._b) and self._b > 0):
@@ -420,7 +429,7 @@ class Geodesic(object):
       M12 = M21 = Math.nan
     return s12b, m12b, m0, M12, M21
 
-  # return sig12, salp1, calp1, salp2, calp2
+  # return sig12, salp1, calp1, salp2, calp2, dnm
   def InverseStart(self, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
                    # Scratch areas of the right size
                    C1a, C2a):
@@ -428,7 +437,7 @@ class Geodesic(object):
     # Return a starting point for Newton's method in salp1 and calp1 (function
     # value is -1).  If Newton's method doesn't need to be used, return also
     # salp2 and calp2 and function value is sig12.
-    sig12 = -1; salp2 = calp2 = Math.nan # Return values
+    sig12 = -1; salp2 = calp2 = dnm = Math.nan # Return values
     # bet12 = bet2 - bet1 in [0, pi); bet12a = bet2 + bet1 in (-pi, 0]
     sbet12 = sbet2 * cbet1 - cbet2 * sbet1
     cbet12 = cbet2 * cbet1 + sbet2 * sbet1
@@ -441,7 +450,14 @@ class Geodesic(object):
     sbet12a += cbet2 * sbet1
 
     shortline = cbet12 >= 0 and sbet12 < 0.5 and lam12 <= math.pi / 6
-    omg12 = lam12 if not shortline else lam12 / (self._f1 * (dn1 + dn2) / 2)
+    omg12 = lam12
+    if shortline:
+      sbetm2 = Math.sq(sbet1 + sbet2)
+      # sin((bet1+bet2)/2)^2
+      # =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
+      sbetm2 /= sbetm2 + Math.sq(cbet1 + cbet2)
+      dnm = math.sqrt(1 + self._ep2 * sbetm2)
+      omg12 /= self._f1 * dnm
     somg12 = math.sin(omg12); comg12 = math.cos(omg12)
 
     salp1 = cbet2 * somg12
@@ -549,7 +565,7 @@ class Geodesic(object):
       salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
     else:
       salp1 = 1; calp1 = 0
-    return sig12, salp1, calp1, salp2, calp2
+    return sig12, salp1, calp1, salp2, calp2, dnm
 
   # return lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
   # domg12, dlam12
@@ -765,12 +781,11 @@ class Geodesic(object):
       # meridian and geodesic is neither meridional or equatorial.
 
       # Figure a starting point for Newton's method
-      sig12, salp1, calp1, salp2, calp2 = self.InverseStart(
+      sig12, salp1, calp1, salp2, calp2, dnm = self.InverseStart(
         sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12, C1a, C2a)
 
       if sig12 >= 0:
-        # Short lines (InverseStart sets salp2, calp2)
-        dnm = (dn1 + dn2) / 2
+        # Short lines (InverseStart sets salp2, calp2, dnm)
         s12x = sig12 * self._b * dnm
         m12x = (Math.sq(dnm) * self._b * math.sin(sig12 / dnm))
         if outmask & Geodesic.GEODESICSCALE:

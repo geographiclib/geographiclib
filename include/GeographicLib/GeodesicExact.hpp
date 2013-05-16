@@ -141,7 +141,7 @@ namespace GeographicLib {
                       real sbet2, real cbet2, real dn2,
                       real lam12,
                       real& salp1, real& calp1,
-                      real& salp2, real& calp2) const throw();
+                      real& salp2, real& calp2, real& dnm) const throw();
     real Lambda12(real sbet1, real cbet1, real dn1,
                   real sbet2, real cbet2, real dn2,
                   real salp1, real calp1,

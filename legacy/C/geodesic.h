@@ -116,7 +116,7 @@
  * http://geographiclib.sourceforge.net/
  *
  * This library was distributed with
- * <a href="../index.html">GeographicLib</a> 1.30.
+ * <a href="../index.html">GeographicLib</a> 1.31.
  **********************************************************************/
 
 #if !defined(GEODESIC_H)

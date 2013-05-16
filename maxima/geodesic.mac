@@ -230,8 +230,17 @@ geod_init(a, f):= (a:bfloat(a),f:bfloat(f),
       (if e2 = 0b0 then 1b0 else
         (if e2 > 0b0 then atanhx(sqrt(e2)) else atan(sqrt(-e2))) /
         sqrt(abs(e2))))/2, /* authalic radius squared */
-    /* The sig12 threshold for "really short" */
-    etol2 : 0.01b0 * tol2 / max(0.1b0, sqrt(abs(e2))),
+    /* The sig12 threshold for "really short".  Using the auxiliary sphere
+    solution with dnm computed at (bet1 + bet2) / 2, the relative error in
+    the azimuth consistency check is sig12^2 * abs(f) * min(1, 1-f/2) / 2.
+    (Error measured for 1/100 < b/a < 100 and abs(f) >= 1/1000.  For a
+    given f and sig12, the max error occurs for lines near the pole.  If
+    the old rule for computing dnm = (dn1 + dn2)/2 is used, then the error
+    increases by a factor of 2.)  Setting this equal to epsilon gives
+    sig12 = etol2.  Here 0.1 is a safety factor (error decreased by 100)
+    and max(0.001, abs(f)) stops etol2 getting too large in the nearly
+    spherical case. */
+    etol2 : 0.1b0 * tol2 / sqrt( max(0.001b0, abs(f)) * min(1b0, 1-f/2) / 2 ),
     [ a, f, f1, e2,
     ep2, n, b, c2, etol2,
     if exact then [] else bfloat(A3coeff(n)),
@@ -638,15 +647,16 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
     m12x : g[g_b] * sin(sig12),
     M12 : M21 : cos(sig12),
     a12 : lon12 / g[g_f1] )
-  else if not meridian then (
+  else if not meridian then block([dnm],
     /* Now point1 and point2 belong within a hemisphere bounded by a
     meridian and geodesic is neither meridional or equatorial.
     Figure a starting point for Newton's method */
     block([r],
       r : InverseStart(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12),
-      sig12:r[1], salp1:r[2], calp1:r[3], salp2:r[4], calp2:r[5]),
-    if sig12 >= 0b0 then block([dnm : (dn1 + dn2) / 2],
-      /* Short lines (InverseStart sets salp2, calp2) */
+      sig12:r[1], salp1:r[2], calp1:r[3], salp2:r[4], calp2:r[5],
+      dnm:r[6]),
+    if sig12 >= 0b0 then (
+      /* Short lines (InverseStart sets salp2, calp2, dnm) */
       s12x : sig12 * g[g_b] * dnm,
       m12x : sq(dnm) * g[g_b] * sin(sig12 / dnm),
       M12 : M21 : cos(sig12 / dnm),
@@ -896,9 +906,9 @@ Astroid(x, y):= block(
   k : 0b0,
   k)$
 
-/* Return [sig12, salp1, calp1, salp2, calp2] */
+/* Return [sig12, salp1, calp1, salp2, calp2, dnm] */
 InverseStart(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12):=block(
-  [ salp1 : 0b0, calp1 : 0b0, salp2 : 0b0, calp2 : 0b0, C1a, C2a,
+  [ salp1 : 0b0, calp1 : 0b0, salp2 : 0b0, calp2 : 0b0, dnm : 0b0,
   /* Return a starting point for Newton's method in salp1 and calp1 (function
   value is -1).  If Newton's method doesn't need to be used, return also
   salp2 and calp2 and function value is sig12. */
@@ -910,8 +920,13 @@ InverseStart(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12):=block(
   shortline, omg12, somg12, comg12, ssig12, csig12, E:[]],
   shortline : is(cbet12 >= 0b0 and sbet12 < 0.5b0 and
     lam12 <= pi / 6),
-  omg12 : if not shortline then lam12
-  else lam12 / (g[g_f1] * (dn1 + dn2) / 2),
+  omg12 : lam12,
+  if shortline then block([sbetm2 : sq(sbet1 + sbet2)],
+    /* sin((bet1+bet2)/2)^2
+     * =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2) */
+    sbetm2 : sbetm2 / (sbetm2 + sq(cbet1 + cbet2)),
+    dnm : sqrt(1 + g[g_ep2] * sbetm2),
+    omg12 : omg12 / (g[g_f1] * dnm)),
   somg12 : sin(omg12), comg12 : cos(omg12),
   salp1 : cbet2 * somg12,
   calp1 : if comg12 >= 0b0
@@ -1007,7 +1022,7 @@ InverseStart(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12):=block(
   if salp1 > 0 then              /* Sanity check on starting guess */
   block([t:SinCosNorm(salp1, calp1)], salp1:t[1], calp1:t[2])
   else ( salp1 : 1b0, calp1 : 0b0 ),
-  [sig12, salp1, calp1, salp2, calp2]
+  [sig12, salp1, calp1, salp2, calp2, dnm]
   )$
 
 /* Return [lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,

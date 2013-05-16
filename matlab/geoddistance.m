@@ -158,18 +158,18 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 
   g = ~eq & ~m;
 
-  [sig12(g), salp1(g), calp1(g), salp2(g), calp2(g)] = ...
+  dnm = Z;
+  [sig12(g), salp1(g), calp1(g), salp2(g), calp2(g), dnm(g)] = ...
       InverseStart(sbet1(g), cbet1(g), dn1(g), sbet2(g), cbet2(g), dn2(g), ...
                    lam12(g), f, A3x);
 
   s = g & sig12 >= 0;
-  dnm = (dn1(s) + dn2(s)) / 2;
-  s12(s) = b * sig12(s) .* dnm;
-  m12(s) = b * dnm.^2 .* sin(sig12(s) ./ dnm);
+  s12(s) = b * sig12(s) .* dnm(s);
+  m12(s) = b * dnm(s).^2 .* sin(sig12(s) ./ dnm(s));
   if scalp
-    M12(s) = cos(sig12(s) ./ dnm); M21(s) = M12(s);
+    M12(s) = cos(sig12(s) ./ dnm(s)); M21(s) = M12(s);
   end
-  omg12(s) = lam12(s) ./ (f1 * dnm);
+  omg12(s) = lam12(s) ./ (f1 * dnm(s));
 
   g = g & sig12 < 0;
 
@@ -292,7 +292,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   end
 end
 
-function [sig12, salp1, calp1, salp2, calp2] = ...
+function [sig12, salp1, calp1, salp2, calp2, dnm] = ...
       InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12, f, A3x)
 %INVERSESTART  Compute a starting point for Newton's method
 
@@ -304,16 +304,20 @@ function [sig12, salp1, calp1, salp2, calp2] = ...
   tol0 = eps;
   tol1 = 200 * tol0;
   tol2 = sqrt(eps);
-  etol2 = 0.01 * tol2 / max(0.1, sqrt(abs(e2)));
+  etol2 = 0.1 * tol2 / sqrt( max(0.001, abs(f)) * min(1, 1 - f/2) / 2 );
   xthresh = 1000 * tol2;
 
-  sig12 = - ones(N, 1); salp2 = NaN(N, 1); calp2 = NaN(N, 1);
+  sig12 = -ones(N, 1); salp2 = NaN(N, 1); calp2 = NaN(N, 1);
   sbet12 = sbet2 .* cbet1 - cbet2 .* sbet1;
   cbet12 = cbet2 .* cbet1 + sbet2 .* sbet1;
   sbet12a = sbet2 .* cbet1 + cbet2 .* sbet1;
   s = cbet12 >= 0 & sbet12 < 0.5 & lam12 <= pi / 6;
   omg12 = lam12;
-  omg12(s) = omg12(s) ./ (f1 * (dn1(s) + dn2(s)) / 2);
+  dnm = NaN(N, 1);
+  sbetm2 = (sbet1(s) + sbet2(s)).^2;
+  sbetm2 = sbetm2 ./ (sbetm2 + (cbet1(s) + cbet2(s)).^2);
+  dnm(s) = sqrt(1 + ep2 * sbetm2);
+  omg12(s) = omg12(s) ./ (f1 * dnm(s));
   somg12 = sin(omg12); comg12 = cos(omg12);
 
   salp1 = cbet2 .* somg12;

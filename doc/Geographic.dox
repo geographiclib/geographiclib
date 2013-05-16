@@ -4411,7 +4411,7 @@ of the git repository for %GeographicLib.
      not suffer from this bug.)
    - Install PDB files when compiling with Visual Studio to aid
      debugging.
-   - Better treatment of short geodesics?
+   - Better treatment of short geodesics.
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)

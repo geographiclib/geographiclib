@@ -74,8 +74,8 @@ namespace GeographicLib {
       // sig12 = etol2.  Here 0.1 is a safety factor (error decreased by 100)
       // and max(0.001, abs(f)) stops etol2 getting too large in the nearly
       // spherical case.
-    , _etol2(0.1 * tol2_ / sqrt( max(real(0.001), abs(f)) *
-                                 min(real(1), 1 - f/2) / 2 ))
+    , _etol2(0.1 * tol2_ /
+             sqrt( max(real(0.001), abs(_f)) * min(real(1), 1 - _f/2) / 2 ))
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -283,7 +283,7 @@ namespace GeographicLib {
                            C1a, C2a);
 
       if (sig12 >= 0) {
-        // Short lines (InverseStart sets salp2, calp2)
+        // Short lines (InverseStart sets salp2, calp2, dnm)
         s12x = sig12 * _b * dnm;
         m12x = Math::sq(dnm) * _b * sin(sig12 / dnm);
         if (outmask & GEODESICSCALE)
@@ -581,9 +581,9 @@ namespace GeographicLib {
     real omg12 = lam12;
     if (shortline) {
       real sbetm2 = Math::sq(sbet1 + sbet2);
-      // sin((bet1+bet2)/2)^2 
+      // sin((bet1+bet2)/2)^2
       // =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
-      sbetm2 = sbetm2 / (sbetm2 + Math::sq(cbet1 + cbet2));
+      sbetm2 /= sbetm2 + Math::sq(cbet1 + cbet2);
       dnm = sqrt(1 + _ep2 * sbetm2);
       omg12 /= _f1 * dnm;
     }
