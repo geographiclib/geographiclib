@@ -1178,7 +1178,7 @@
       sbt12a = sbet2 * cbet1 + cbet2 * sbet1
 
       shortp = cbet12 .ge. 0 .and. sbet12 .lt. 0.5d0 .and.
-     +    lam12 .le. pi / 6
+     +    cbet2 * lam12 .lt. 0.5d0
 
       omg12 = lam12
       if (shortp) then
@@ -1203,7 +1203,8 @@
       if (shortp .and. ssig12 .lt. etol2) then
 * really short lines
         salp2 = cbet1 * somg12
-        calp2 = sbet12 - cbet1 * sbet2 * somg12**2 / (1 + comg12)
+        calp2 = sbet12 - cbet1 * sbet2 *
+     +      csmgt(somg12**2 / (1 + comg12), 1 - comg12, comg12 .ge. 0)
         call Norm(salp2, calp2)
 * Set return value
         sig12 = atan2(ssig12, csig12)

@@ -413,8 +413,7 @@ GeographicLib.GeodesicLine = {};
     var sbet12a = sbet2 * cbet1;
     sbet12a += cbet2 * sbet1;
 
-    var shortline = cbet12 >= 0 && sbet12 < 0.5 &&
-      lam12 <= Math.PI / 6;
+    var shortline = cbet12 >= 0 && sbet12 < 0.5 && cbet2 * lam12 < 0.5;
     var omg12 = lam12;
     if (shortline) {
       var sbetm2 = m.sq(sbet1 + sbet2);
@@ -438,7 +437,8 @@ GeographicLib.GeodesicLine = {};
     if (shortline && ssig12 < this._etol2) {
       // really short lines
       vals.salp2 = cbet1 * somg12;
-      vals.calp2 = sbet12 - cbet1 * sbet2 * m.sq(somg12) / (1 + comg12);
+      vals.calp2 = sbet12 - cbet1 * sbet2 *
+        (comg12 >= 0 ? m.sq(somg12) / (1 + comg12) : 1 - comg12);
       // SinCosNorm(vals.salp2, vals.calp2);
       var t = m.hypot(vals.salp2, vals.calp2); vals.salp2 /= t; vals.calp2 /= t;
       // Set return value

@@ -989,7 +989,7 @@
    http://geographiclib.sf.net/geodesic-papers/vincenty75b.pdf
  * R. H. Rapp,[[BR]]
    ''Geometric geodesy, Part I'',
-   Ohio State Univ. (1991), Chap. 4.[[BR]]
+   Ohio State Univ. (1991), Chaps. 4 & 6.[[BR]]
    http://hdl.handle.net/1811/24333
  * R. H. Rapp,[[BR]]
    ''Geometric geodesy, Part II'',

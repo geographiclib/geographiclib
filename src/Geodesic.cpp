@@ -577,7 +577,7 @@ namespace GeographicLib {
     real sbet12a = sbet2 * cbet1 + cbet2 * sbet1;
 #endif
     bool shortline = cbet12 >= 0 && sbet12 < real(0.5) &&
-      lam12 <= Math::pi<real>() / 6;
+      cbet2 * lam12 < real(0.5);
     real omg12 = lam12;
     if (shortline) {
       real sbetm2 = Math::sq(sbet1 + sbet2);
@@ -601,7 +601,8 @@ namespace GeographicLib {
     if (shortline && ssig12 < _etol2) {
       // really short lines
       salp2 = cbet1 * somg12;
-      calp2 = sbet12 - cbet1 * sbet2 * Math::sq(somg12) / (1 + comg12);
+      calp2 = sbet12 - cbet1 * sbet2 *
+        (comg12 >= 0 ? Math::sq(somg12) / (1 + comg12) : 1 - comg12);
       SinCosNorm(salp2, calp2);
       // Set return value
       sig12 = atan2(ssig12, csig12);

@@ -311,7 +311,7 @@ function [sig12, salp1, calp1, salp2, calp2, dnm] = ...
   sbet12 = sbet2 .* cbet1 - cbet2 .* sbet1;
   cbet12 = cbet2 .* cbet1 + sbet2 .* sbet1;
   sbet12a = sbet2 .* cbet1 + cbet2 .* sbet1;
-  s = cbet12 >= 0 & sbet12 < 0.5 & lam12 <= pi / 6;
+  s = cbet12 >= 0 & sbet12 < 0.5 & cbet2 .* lam12 < 0.5;
   omg12 = lam12;
   dnm = NaN(N, 1);
   sbetm2 = (sbet1(s) + sbet2(s)).^2;
@@ -331,8 +331,9 @@ function [sig12, salp1, calp1, salp2, calp2, dnm] = ...
 
   s = s & ssig12 < etol2;
   salp2(s) = cbet1(s) .* somg12(s);
-  calp2(s) = sbet12(s) - cbet1(s) .* sbet2(s) .* somg12(s).^2 ./ ...
-      (1 + comg12(s));
+  calp2(s) = somg12(s).^2 ./ (1 + comg12(s));
+  calp2(s & comg12 < 0) = 1 - comg12(s & comg12 < 0);
+  calp2(s) = sbet12(s) - cbet1(s) .* sbet2(s) .* calp2(s);
   [salp2, calp2] = SinCosNorm(salp2, calp2);
   sig12(s) = atan2(ssig12(s), csig12(s));
 

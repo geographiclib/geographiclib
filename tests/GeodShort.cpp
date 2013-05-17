@@ -107,6 +107,35 @@ public:
                                   lam12 / (_f1 * dnm),
                                   azi1, azi2);
   }
+  real Inverse2(real lat1, real lon1, real lat2, real lon2,
+               real& azi1, real& azi2) {
+    real
+      phi1 = Math::degree<real>() * lat1,
+      phi2 = Math::degree<real>() * lat2,
+      lam12 = Math::degree<real>() * Math::AngNormalize(lon2 - lon1),
+      sbet1 = _f1 * sin(phi1), cbet1 = cos(phi1),
+      sbet2 = _f1 * sin(phi2), cbet2 = cos(phi2);
+    SinCosNorm(sbet1, cbet1); SinCosNorm(sbet2, cbet2);
+    real dnm;
+    real sbetm2 = Math::sq(sbet1 + sbet2);
+    sbetm2 = sbetm2 / (sbetm2 + Math::sq(cbet1 + cbet2));
+    dnm = sqrt(1 + _ep2 * sbetm2);
+    // Adjust bet1 and bet2 via conformal map
+    real
+      A = 1/(dnm * _f1),
+      phim = atan((sbet1+sbet2)/(_f1*(cbet1+cbet2))),
+      betm = atan((sbet1+sbet2)/(cbet1+cbet2)),
+      psim = psif(phim),
+      psipm = psi0f(betm),
+      K = psipm - A * psim,
+      bet1 = invpsi0f( A*psif(phi1) + K ),
+      bet2 = invpsi0f( A*psif(phi2) + K );
+    sbet1 = sin(bet1); cbet1 = cos(bet1);
+    sbet2 = sin(bet2); cbet2 = cos(bet2);
+    return _b * dnm * GreatCircle(sbet1, cbet1, sbet2, cbet2,
+                                  lam12 / (_f1 * dnm),
+                                  azi1, azi2);
+  }
   real Bowring0(real lat1, real lon1, real lat2, real lon2,
                 real& azi1, real& azi2) {
     int mode = 2;
@@ -180,6 +209,7 @@ public:
   }
   real Bowring2(real lat1, real lon1, real lat2, real lon2,
                 real& azi1, real& azi2) {
+    real highfact = 1;
     real
       phi1 = Math::degree<real>() * lat1,
       phi2 = Math::degree<real>() * lat2,
@@ -203,12 +233,12 @@ public:
       dnm = sqrt(dnm2),
       phip1 = phipm + dbet1/dnm *
       (1 + dbet1 * _ep2/(2*dnm2) *
-       ( cbetm*sbetm + dbet1 * ( Math::sq(cbetm) -
-                                 Math::sq(sbetm)*dnm2)/(3*dnm2) )),
+       ( cbetm*sbetm + highfact * dbet1 * ( Math::sq(cbetm) -
+                                            Math::sq(sbetm)*dnm2)/(3*dnm2) )),
       phip2 = phipm + dbet2/dnm *
       (1 + dbet2 * _ep2/(2*dnm2) *
-       ( cbetm*sbetm + dbet2 * ( Math::sq(cbetm) -
-                                 Math::sq(sbetm)*dnm2)/(3*dnm2) ));
+       ( cbetm*sbetm + highfact * dbet2 * ( Math::sq(cbetm) -
+                                            Math::sq(sbetm)*dnm2)/(3*dnm2) ));
     return R * GreatCircle(sin(phip1), cos(phip1), sin(phip2), cos(phip2),
                            omg12, azi1, azi2);
   }
@@ -255,7 +285,7 @@ int main(int argc, char* argv[]) {
       else
         g.ArcDirect(lat1, lon1, azi1, sig, lat2, lon2, azi2, s12);
       real
-        s12a = s.Bowring0(lat1, lon1, lat2, lon2, azi1, azi2),
+        s12a = s.Bowring2(lat1, lon1, lat2, lon2, azi1, azi2),
         err1 = abs(s12a - s12) / norm;
       if (err1 > maxerr1) {
         maxerr1 = err1;

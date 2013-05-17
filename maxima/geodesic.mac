@@ -918,8 +918,7 @@ InverseStart(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12):=block(
   cbet12 : cbet2 * cbet1 + sbet2 * sbet1,
   sbet12a : sbet2 * cbet1 + cbet2 * sbet1,
   shortline, omg12, somg12, comg12, ssig12, csig12, E:[]],
-  shortline : is(cbet12 >= 0b0 and sbet12 < 0.5b0 and
-    lam12 <= pi / 6),
+  shortline : is(cbet12 >= 0b0 and sbet12 < 0.5b0 and cbet2 * lam12 < 0.5b0),
   omg12 : lam12,
   if shortline then block([sbetm2 : sq(sbet1 + sbet2)],
     /* sin((bet1+bet2)/2)^2
@@ -937,7 +936,8 @@ InverseStart(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12):=block(
   if shortline and ssig12 < g[g_etol2] then (
     /* really short lines */
     salp2 : cbet1 * somg12,
-    calp2 : sbet12 - cbet1 * sbet2 * sq(somg12) / (1 + comg12),
+    calp2 : sbet12 - cbet1 * sbet2 *
+    (if comg12 >= 0 then sq(somg12) / (1 + comg12) else 1 - comg12),
     block([t:SinCosNorm(salp2, calp2)], salp2:t[1], calp2:t[2]),
     /* Set return value */
     sig12 : atan2x(ssig12, csig12))

@@ -1090,7 +1090,7 @@ real InverseStart(const struct geod_geodesic* g,
   real sbet12a = sbet2 * cbet1 + cbet2 * sbet1;
 #endif
   boolx shortline = cbet12 >= 0 && sbet12 < (real)(0.5) &&
-    lam12 <= pi / 6;
+    cbet2 * lam12 < (real)(0.5);
   real omg12 = lam12, somg12, comg12, ssig12, csig12;
   if (shortline) {
     real sbetm2 = sq(sbet1 + sbet2);
@@ -1113,7 +1113,8 @@ real InverseStart(const struct geod_geodesic* g,
   if (shortline && ssig12 < g->etol2) {
     /* really short lines */
     salp2 = cbet1 * somg12;
-    calp2 = sbet12 - cbet1 * sbet2 * sq(somg12) / (1 + comg12);
+    calp2 = sbet12 - cbet1 * sbet2 *
+      (comg12 >= 0 ? sq(somg12) / (1 + comg12) : 1 - comg12);
     SinCosNorm(&salp2, &calp2);
     /* Set return value */
     sig12 = atan2(ssig12, csig12);

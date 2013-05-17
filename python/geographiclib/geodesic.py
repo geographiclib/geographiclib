@@ -449,7 +449,7 @@ class Geodesic(object):
     sbet12a = sbet2 * cbet1
     sbet12a += cbet2 * sbet1
 
-    shortline = cbet12 >= 0 and sbet12 < 0.5 and lam12 <= math.pi / 6
+    shortline = cbet12 >= 0 and sbet12 < 0.5 and cbet2 * lam12 < 0.5
     omg12 = lam12
     if shortline:
       sbetm2 = Math.sq(sbet1 + sbet2)
@@ -471,7 +471,8 @@ class Geodesic(object):
     if shortline and ssig12 < self._etol2:
       # really short lines
       salp2 = cbet1 * somg12
-      calp2 = sbet12 - cbet1 * sbet2 * Math.sq(somg12) / (1 + comg12)
+      calp2 = sbet12 - cbet1 * sbet2 * (Math.sq(somg12) / (1 + comg12)
+                                        if comg12 >= 0 else 1 - comg12)
       salp2, calp2 = Geodesic.SinCosNorm(salp2, calp2)
       # Set return value
       sig12 = math.atan2(ssig12, csig12)
