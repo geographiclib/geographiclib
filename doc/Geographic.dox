@@ -177,11 +177,10 @@ Forward to \ref install.  Up to \ref contents.
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
 
-%GeographicLib has been developed under Linux with the g++ compiler (versions
-4.0 and later) and under Windows with Visual Studio 2005, 2008, and
-2010.  Earlier versions were tested also under Darwin and Solaris.  It
-should compile on a wide range of other systems.  First
-download either
+%GeographicLib has been developed under Linux with the g++ compiler
+(versions 4.0 and later) and under Windows with Visual Studio 2005, 2008,
+and 2010.  Earlier versions were tested also under Darwin and Solaris.  It
+should compile on a wide range of other systems.  First download either
 <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.31.tar.gz">
 GeographicLib-1.31.tar.gz</a> or
 <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.31.zip">
@@ -2643,6 +2642,7 @@ Go to
  - \ref geodseries
  - \ref geodellip
  - \ref meridian
+ - \ref geodshort
  .
 For some background information on geodesics on triaxial ellipsoids, see
 \ref triaxial.
@@ -3330,6 +3330,136 @@ for evaluate the meridian distance
 
 <img src="meridian-measures.png" width=576 height=596
      alt="comparison of meridian measures">
+
+\section geodshort Short geodesics
+
+Here we describe Bowring's method for solving the inverse geodesic
+problem in the limit of short geodesics.  References:
+ - B. R. Bowring, The Direct and Inverse Problems for Short Geodesic
+   Lines on the Ellipsoid, Surveying and Mapping 41(2), 135--141 (1981).
+ - R. H. Rapp,
+   <a href="http://hdl.handle.net/1811/24333">
+   Geometric Geodesy, Part I</a>, Ohio State Univ. (1991), Sec. 6.5.
+   
+Bowring considers the conformal mapping of the ellipsoid to a sphere
+of radius \f$ R \f$ such circle of latitudes and meridians are preserved
+(and hence the azimuth of a line is preserved).  Let \f$ (\phi, \lambda)
+\f$ and \f$ (\phi', \lambda') \f$ be the latitude and longitude on the
+ellipsoid and sphere respectively.  Define isometric latitudes for the
+sphere and the ellipoid as
+\f[
+\begin{aligned}
+  \psi' &= \sinh^{-1} \tan \phi', \\
+  \psi &= \sinh^{-1} \tan \phi - e \tanh^{-1}(e \sin\phi),
+\end{aligned}
+\f]
+The most general conformal mapping satisfying Bowring's conditions is
+\f[
+\psi' = A \psi + K, \quad \lambda' = A \lambda,
+\f]
+where \f$ A \f$ and \f$ K \f$ are constants.  (In fact a constant can be
+added to the equation for \f$ \lambda' \f$, but this does affect the
+analysis.)  The scale of this mapping is
+\f[
+m(\phi) = \frac{AR}{\nu}\frac{\cos\phi'}{\cos\phi},
+\f]
+where \f$ \nu = a/\sqrt{1 - e^2\sin^2\phi} \f$ is the transverse radius
+of curvature.  (Note that in Bowring's Eq. (10), \f$ \phi \f$ whould be
+replaced by \f$ \phi' \f$.)  The mapping from the ellipsoid to the sphere
+depends on three parameters \f$ R, A, K \f$.  These will be selected to
+satisfy certain conditions at some representative latitude \f$ \phi_0
+\f$.  Two possible choices are given below.
+
+<b>Bowring's method:</b>
+
+Bowring's requires that
+\f[
+m(\phi_0) = 1,\quad
+\left.\frac{dm(\phi)}{d\phi}\right|_{\phi=\phi_0} = 0,\quad
+\left.\frac{d^2m(\phi)}{d\phi^2}\right|_{\phi=\phi_0} = 0.
+\f]
+This gives
+\f[
+\begin{aligned}
+R &= \frac{\sqrt{1 + e'^2}}{B^2} a, \\
+A &= \sqrt{1 + e'^2 \cos^4\phi_0}, \\
+\tan\phi'_0 &= \frac1B \tan\phi_0,
+\end{aligned}
+\f]
+where \f$ e' = e/\sqrt{1-e^2} \f$ is the second eccentricity, \f$ B =
+\sqrt{1+e'^2\cos^2\phi_0} \f$, and \f$ K \f$ is defined implicitly by
+the equation for \f$\phi'_0\f$.  The radius \f$ R \f$ is the (Gaussian)
+mean radius of curvature of the ellipsoid at \f$\phi_0\f$.  The third
+derivative of \f$ m \f$ is given by
+\f[
+\left.\frac{d^3m(\phi)}{d\phi^3}\right|_{\phi=\phi_0} = 
+\frac{-2e'^2\sin2\phi_0}{B^4}.
+\f]
+
+The method for solving the inverse problem between two nearby points \f$
+(\phi_1, \lambda_1) \f$ and \f$ (\phi_2, \lambda_2) \f$.  Set \f$\phi_0
+= (\phi_1 + \phi_2)/2\f$.  Compute \f$ R, A, \phi'_0 \f$, and hence find
+\f$ (\phi'_1, \lambda'_1) \f$ and \f$ (\phi'_2, \lambda'_2) \f$.
+Finally, solve for the great circle on a sphere of radius \f$ R \f$; the
+resulting distance and azimuths are good approximations for the
+corresponding quantities for the ellipsoidal geodesic.
+
+Consistent with the accuracy of this method, we can compute
+\f$\phi'_1\f$ and \f$\phi'_2\f$ using a Taylor expansion about
+\f$\phi_0\f$.  Write \f$\Delta \phi = \phi - \phi_0\f$ and \f$\Delta
+\phi' = \phi' - \phi'_0\f$; then we have, accurate to \f$(\Delta\phi)^3\f$,
+\f[
+\Delta\phi' =
+\frac{\Delta\phi}B \biggl[1 +
+\frac{\Delta\phi}{B^2}\frac{e'^2}2
+  \biggl(3\sin\phi_0\cos\phi_0 +
+   \frac{\Delta\phi}{B^2}\bigl(1-2\sin^2\phi_0 +
+   e'^2 \cos^2\phi_0 (1 + 3\sin^2\phi_0)\bigr)\biggr)\biggr]
+\f]
+
+This is essentially Bowring's method.  Significant differences are
+ - Bowring elects to use \f$\phi_0 = \phi_1\f$.  This simplifies the
+   calculations somewhat but increases the error by about a factor of
+   4.
+ - Bowring's expression for \f$ \Delta\phi' \f$ is only accurate in the
+   limit \f$ e' \rightarrow 0 \f$.
+
+With highly eccentric ellipsoids, the parametric latitude \f$ \beta \f$
+is a better behaved independent variable to use.  In this case, \f$
+\phi_0 \f$ is naturally defined using \f$\beta_0 = (\beta_1 +
+\beta_2)/2\f$ and in terms of \f$\Delta\beta = \beta - \beta_0\f$, we
+have
+\f[
+\Delta\phi' =
+\frac{\Delta\beta}{B'} \biggl[1 +
+\frac{\Delta\beta}{B'^2}\frac{e'^2}2
+  \biggl(\sin\beta_0\cos\beta_0 +
+   \frac{\Delta\beta}{3B'^2}
+    \bigl( 1 - \sin^2\beta_0(2 + e'^2\sin^2\beta_0)\bigr)
+\biggr)\biggr],
+\f]
+where \f$B' = \sqrt{1+e'^2\sin^2\beta_0} = \sqrt{1+e'^2}/B\f$.
+
+<b>Bessel's auxiliary sphere</b>
+
+%GeographicLib's uses the auxiliary sphere method of Legendre, Bessel,
+and Helmert.  For short geodesics, this is equivalent to picking 
+\f$ R, A, K \f$ so that
+\f[
+m(\phi_0) = 1,\quad
+\left.\frac{dm(\phi)}{d\phi}\right|_{\phi=\phi_0} = 0,\quad
+\tan\phi'_0 = (1 - f) \tan\phi_0.
+\f]
+(The last relation means that \f$\phi'_0 = \beta_0\f$ is the parametric
+latitude corresponding to \f$\phi_0\f$.)  This gives
+\f[
+\begin{aligned}
+R &= B'(1-f)a, \\
+A &= \frac1{B'(1-f)}, \\
+\left.\frac{d^2m(\phi)}{d\phi^2}\right|_{\phi=\phi_0} &=
+-e^2B'^2\sin^2\phi_0.
+\end{aligned}
+\f]
 
 <center>
 Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
