@@ -52,8 +52,7 @@ as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
 line endings.)  Alternatively you can get the latest release using git
 \verbatim
-  git clone git://git.code.sf.net/p/geographiclib/code geographiclib
-  cd geographiclib; git checkout -q r1.31
+  git clone -b r1.31 git://git.code.sf.net/p/geographiclib/code geographiclib
 \endverbatim
 There are also binary installers for Windows available at
 - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.31-win32.exe">
@@ -4542,6 +4541,8 @@ of the git repository for %GeographicLib.
    - Install PDB files when compiling with Visual Studio to aid
      debugging.
    - Better treatment of short geodesics.
+   - geographiclib-get-geoids skips already download models by default
+     unless the -f flag is given.
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)

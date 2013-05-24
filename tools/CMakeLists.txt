@@ -29,19 +29,13 @@ set_source_files_properties (Geod.cpp PROPERTIES
   OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/GeodSolve.usage)
 target_link_libraries (Geod Geographic)
 
-if (GEOGRAPHIC_SHARED_LIB)
-  if (WIN32)
-    # Copy the shared library on Windows systems to this directory
-    # (tools) so that the tests can be run.
-    add_custom_command (TARGET tools POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E
-        copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
-      COMMENT "Copying shared library to tools directory")
-  else ()
-    # Set the run time path for shared libraries for non-Windows machines.
-    set_target_properties (${TOOLS} Geod PROPERTIES
-      INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
-  endif ()
+if (GEOGRAPHIC_SHARED_LIB AND WIN32)
+  # Copy the shared library on Windows systems to this directory (tools)
+  # so that the tests can be run.
+  add_custom_command (TARGET tools POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E
+    copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
+    COMMENT "Copying shared library to tools directory")
 endif ()
 
 # Specify where the tools are installed

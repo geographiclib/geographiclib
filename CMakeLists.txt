@@ -145,7 +145,25 @@ endif ()
 # The debug version of the library is called Geographic_d.
 set (CMAKE_DEBUG_POSTFIX _d)
 
-# Determine system properties
+if (NOT WIN32)
+  # Set the run time path for shared libraries for non-Windows machines.
+  # (1) include link path for external packages (not needed with
+  # GeographicLib because there are no external packages).
+  set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  # (2) include installed path for GeographicLib
+  if (GEOGRAPHIC_SHARED_LIB)
+    # Alternatively set CMAKE_INSTALL_RPATH to
+    # $ORIGIN/../lib${LIB_SUFFIX}.  But this might not work on all
+    # systems and the check for system directories should be skipped in
+    # this case.
+    list (FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES
+      "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" SYSDIR)
+    if (SYSDIR LESS 0)
+      set (CMAKE_INSTALL_RPATH "{CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+    endif ()
+  endif ()
+endif ()
+
 if (NOT CYGWIN)
   # cygwin has a long double but the support for ::cbrtl etc is missing
   include (CheckTypeSize)

@@ -157,11 +157,12 @@ namespace GeographicLib {
      * @return sqrt(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>).
      **********************************************************************/
     template<typename T> static inline T hypot(T x, T y) throw() {
-      x = std::abs(x);
-      y = std::abs(y);
-      T a = (std::max)(x, y),
-        b = (std::min)(x, y) / (a ? a : 1);
+      x = std::abs(x); y = std::abs(y);
+      T a = (std::max)(x, y), b = (std::min)(x, y) / (a ? a : 1);
       return a * std::sqrt(1 + b * b);
+      // For an alternative method see
+      // C. Moler and D. Morrision (1983) http://dx.doi.org/10.1147/rd.276.0577
+      // and A. A. Dubrulle (1983) http://dx.doi.org/10.1147/rd.276.0582
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
     template<typename T> static inline T hypot(T x, T y) throw()
