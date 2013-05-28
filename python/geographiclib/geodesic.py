@@ -66,9 +66,9 @@ class Geodesic(object):
   nA3_ = GEOGRAPHICLIB_GEODESIC_ORDER
   nA3x_ = nA3_
   nC3_ = GEOGRAPHICLIB_GEODESIC_ORDER
-  nC3x_ = (nC3_ * (nC3_ - 1)) / 2
+  nC3x_ = (nC3_ * (nC3_ - 1)) // 2
   nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER
-  nC4x_ = (nC4_ * (nC4_ + 1)) / 2
+  nC4x_ = (nC4_ * (nC4_ + 1)) // 2
   maxit1_ = 20
   maxit2_ = maxit1_ + Math.digits + 10
 
@@ -289,9 +289,9 @@ class Geodesic(object):
       raise ValueError("Major radius is not positive")
     if not(Math.isfinite(self._b) and self._b > 0):
       raise ValueError("Minor radius is not positive")
-    self._A3x = range(Geodesic.nA3x_)
-    self._C3x = range(Geodesic.nC3x_)
-    self._C4x = range(Geodesic.nC4x_)
+    self._A3x = list(range(Geodesic.nA3x_))
+    self._C3x = list(range(Geodesic.nC3x_))
+    self._C4x = list(range(Geodesic.nC4x_))
     self.A3coeff()
     self.C3coeff()
     self.C4coeff()
@@ -719,9 +719,9 @@ class Geodesic(object):
 
     # real a12, sig12, calp1, salp1, calp2, salp2
     # index zero elements of these arrays are unused
-    C1a = range(Geodesic.nC1_ + 1)
-    C2a = range(Geodesic.nC2_ + 1)
-    C3a = range(Geodesic.nC3_)
+    C1a = list(range(Geodesic.nC1_ + 1))
+    C2a = list(range(Geodesic.nC2_ + 1))
+    C3a = list(range(Geodesic.nC3_))
 
     meridian = lat1 == -90 or slam12 == 0
 
@@ -892,7 +892,7 @@ class Geodesic(object):
         A4 = Math.sq(self._a) * calp0 * salp0 * self._e2
         ssig1, csig1 = Geodesic.SinCosNorm(ssig1, csig1)
         ssig2, csig2 = Geodesic.SinCosNorm(ssig2, csig2)
-        C4a = range(Geodesic.nC4_)
+        C4a = list(range(Geodesic.nC4_))
         self.C4f(eps, C4a)
         B41 = Geodesic.SinCosSeries(False, ssig1, csig1, C4a, Geodesic.nC4_)
         B42 = Geodesic.SinCosSeries(False, ssig2, csig2, C4a, Geodesic.nC4_)

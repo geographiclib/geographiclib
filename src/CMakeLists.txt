@@ -16,10 +16,6 @@ endif ()
 # Set the version number on the library
 if (WIN32)
   set_target_properties (Geographic PROPERTIES VERSION "${LIBVERSIONFULL}" )
-  get_property(PDB TARGET Geographic PROPERTY LOCATION_DEBUG)
-  get_filename_component(_P ${PDB} PATH)
-  get_filename_component(PDB ${PDB} NAME_WE)
-  set(PDB ${_P}/${PDB}.pdb)
 else ()
   set_target_properties (Geographic PROPERTIES
     VERSION "${LIBVERSIONFULL}" SOVERSION "${LIBVERSION}" )
@@ -33,7 +29,11 @@ install (TARGETS Geographic
   ARCHIVE DESTINATION lib${LIB_SUFFIX})
 
 if (MSVC)
-  # Install pdb files
+  # Install pdb files in debug mode
+  get_property(PDB TARGET Geographic PROPERTY LOCATION_DEBUG)
+  get_filename_component(_P ${PDB} PATH)
+  get_filename_component(PDB ${PDB} NAME_WE)
+  set(PDB ${_P}/${PDB}.pdb)
   INSTALL(FILES ${PDB} DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
 endif()
 

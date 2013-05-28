@@ -81,7 +81,7 @@ class GeodesicLine(object):
 
     if self._caps & Geodesic.CAP_C1:
       self._A1m1 = Geodesic.A1m1f(eps)
-      self._C1a = range(Geodesic.nC1_ + 1)
+      self._C1a = list(range(Geodesic.nC1_ + 1))
       Geodesic.C1f(eps, self._C1a)
       self._B11 = Geodesic.SinCosSeries(
         True, self._ssig1, self._csig1, self._C1a, Geodesic.nC1_)
@@ -93,25 +93,25 @@ class GeodesicLine(object):
       #    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa, nC1p_)
 
     if self._caps & Geodesic.CAP_C1p:
-      self._C1pa = range(Geodesic.nC1p_ + 1)
+      self._C1pa = list(range(Geodesic.nC1p_ + 1))
       Geodesic.C1pf(eps, self._C1pa)
 
     if self._caps & Geodesic.CAP_C2:
       self._A2m1 = Geodesic.A2m1f(eps)
-      self._C2a = range(Geodesic.nC2_ + 1)
+      self._C2a = list(range(Geodesic.nC2_ + 1))
       Geodesic.C2f(eps, self._C2a)
       self._B21 = Geodesic.SinCosSeries(
         True, self._ssig1, self._csig1, self._C2a, Geodesic.nC2_)
 
     if self._caps & Geodesic.CAP_C3:
-      self._C3a = range(Geodesic.nC3_)
+      self._C3a = list(range(Geodesic.nC3_))
       geod.C3f(eps, self._C3a)
       self._A3c = -self._f * self._salp0 * geod.A3f(eps)
       self._B31 = Geodesic.SinCosSeries(
         True, self._ssig1, self._csig1, self._C3a, Geodesic.nC3_-1)
 
     if self._caps & Geodesic.CAP_C4:
-      self._C4a = range(Geodesic.nC4_)
+      self._C4a = list(range(Geodesic.nC4_))
       geod.C4f(eps, self._C4a)
       # Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
       self._A4 = Math.sq(self._a) * self._calp0 * self._salp0 * geod._e2

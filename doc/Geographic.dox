@@ -1468,7 +1468,7 @@ will prompt for an installation directory with the default being one of
 \endverbatim
 (which you probably should not change) and the data is installed in the
 "geoids" sub-directory.  (The second directory name is an alternate name
-that Windows 7 for the "Application Data" directory.)
+that Windows 7 uses for the "Application Data" directory.)
 
 Otherwise download \e either the tar.bz2 file \e or the zip file (they
 have the same contents).  If possible use the tar.bz2 files, since these
@@ -1956,7 +1956,7 @@ will prompt for an installation directory with the default being one of
 \endverbatim
 (which you probably should not change) and the data is installed in the
 "gravity" sub-directory.  (The second directory name is an alternate name
-that Windows 7 for the "Application Data" directory.)
+that Windows 7 uses for the "Application Data" directory.)
 
 Otherwise download \e either the tar.bz2 file \e or the zip file (they
 have the same contents).  To unpack these, run, for example
@@ -2437,7 +2437,7 @@ will prompt for an installation directory with the default being one of
 \endverbatim
 (which you probably should not change) and the data is installed in the
 "magnetic" sub-directory.  (The second directory name is an alternate name
-that Windows 7 for the "Application Data" directory.)
+that Windows 7 uses for the "Application Data" directory.)
 
 Otherwise download \e either the tar.bz2 file \e or the zip file (they
 have the same contents).  To unpack these, run, for example
@@ -3339,7 +3339,7 @@ problem in the limit of short geodesics.  References:
  - R. H. Rapp,
    <a href="http://hdl.handle.net/1811/24333">
    Geometric Geodesy, Part I</a>, Ohio State Univ. (1991), Sec. 6.5.
-   
+
 Bowring considers the conformal mapping of the ellipsoid to a sphere
 of radius \f$ R \f$ such circle of latitudes and meridians are preserved
 (and hence the azimuth of a line is preserved).  Let \f$ (\phi, \lambda)
@@ -3391,7 +3391,7 @@ the equation for \f$\phi'_0\f$.  The radius \f$ R \f$ is the (Gaussian)
 mean radius of curvature of the ellipsoid at \f$\phi_0\f$.  The third
 derivative of \f$ m \f$ is given by
 \f[
-\left.\frac{d^3m(\phi)}{d\phi^3}\right|_{\phi=\phi_0} = 
+\left.\frac{d^3m(\phi)}{d\phi^3}\right|_{\phi=\phi_0} =
 \frac{-2e'^2\sin2\phi_0}{B^4}.
 \f]
 
@@ -3442,7 +3442,7 @@ where \f$B' = \sqrt{1+e'^2\sin^2\beta_0} = \sqrt{1+e'^2}/B\f$.
 <b>Bessel's auxiliary sphere</b>
 
 %GeographicLib's uses the auxiliary sphere method of Legendre, Bessel,
-and Helmert.  For short geodesics, this is equivalent to picking 
+and Helmert.  For short geodesics, this is equivalent to picking
 \f$ R, A, K \f$ so that
 \f[
 m(\phi_0) = 1,\quad
@@ -4543,6 +4543,8 @@ of the git repository for %GeographicLib.
    - Better treatment of short geodesics.
    - geographiclib-get-geoids skips already download models by default
      unless the -f flag is given.
+   - Improving setting of runtime path for Unix-like OS with cmake.
+   - Fixes to python port so that they work with versions 3.x and 2.x.
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)

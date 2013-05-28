@@ -192,7 +192,8 @@ def p(lat,lon): return {'lat': lat, 'lon': lon}
 
 print(Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)]))
 EOF
-python tester.py
+python2 tester.py
+python3 tester.py
 
 cp -pr $TEMP/relc/GeographicLib-$VERSION/legacy $TEMP/
 for l in C Fortran; do
