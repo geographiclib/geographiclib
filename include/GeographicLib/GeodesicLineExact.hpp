@@ -167,7 +167,7 @@ namespace GeographicLib {
      * taking the limit &epsilon; &rarr; 0+.
      **********************************************************************/
     GeodesicLineExact(const GeodesicExact& g, real lat1, real lon1, real azi1,
-                 unsigned caps = ALL)
+                      unsigned caps = ALL)
       throw();
 
     /**

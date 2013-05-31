@@ -188,9 +188,8 @@ namespace GeographicLib {
      * all the capabilities.
      *
      * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-     * fixed and writing \e lat1 = 90&deg; &minus; &epsilon; or
-     * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
-     * above.
+     * fixed and writing \e lat1 = &plusmn;(90&deg; &minus; &epsilon;) and
+     * taking the limit &epsilon; &rarr; 0+.
      **********************************************************************/
     GeodesicLine30(const Geodesic30<real>& g, real lat1, real lon1, real azi1,
                  unsigned caps = ALL)

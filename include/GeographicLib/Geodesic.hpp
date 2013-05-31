@@ -832,7 +832,7 @@ namespace GeographicLib {
      * capabilities.
      *
      * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-     * fixed and writing \e lat1 = &plusmn;&(90 &minus; &epsilon;) and taking
+     * fixed and writing \e lat1 = &plusmn;(90 &minus; &epsilon;) and taking
      * the limit &epsilon; &rarr; 0+.
      **********************************************************************/
     GeodesicLine Line(real lat1, real lon1, real azi1, unsigned caps = ALL)

@@ -14,6 +14,7 @@ doxyfile.in text
 *.htaccess text
 *.html text
 *.iss text
+*.java text
 *.js text
 *.pro text
 *.py text
