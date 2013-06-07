@@ -55,7 +55,7 @@ namespace GeographicLib {
     int _crossings;
     Accumulator<real> _areasum, _perimetersum;
     real _lat0, _lon0, _lat1, _lon1;
-    static inline int transit(real lon1, real lon2) {
+    static inline int transit(real lon1, real lon2) throw() {
       // Return 1 or -1 if crossing prime meridian in east or west direction.
       // Otherwise return zero.
       // Compute lon12 the same way as Geodesic::Inverse.
@@ -81,8 +81,8 @@ namespace GeographicLib {
       : _earth(earth)
       , _area0(_earth.EllipsoidArea())
       , _polyline(polyline)
-      , _mask(Geodesic::LATITUDE | Geodesic::LONGITUDE |
-              Geodesic::DISTANCE | (_polyline ? 0 : Geodesic::AREA))
+      , _mask(Geodesic::LATITUDE | Geodesic::LONGITUDE | Geodesic::DISTANCE |
+              (_polyline ? Geodesic::NONE : Geodesic::AREA))
     { Clear(); }
 
     /**
@@ -100,7 +100,7 @@ namespace GeographicLib {
      * Add a point to the polygon or polyline.
      *
      * @param[in] lat the latitude of the point (degrees).
-     * @param[in] lon the latitude of the point (degrees).
+     * @param[in] lon the longitude of the point (degrees).
      *
      * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
      * lon should be in the range [&minus;540&deg;, 540&deg;).
@@ -130,7 +130,7 @@ namespace GeographicLib {
      * @param[out] perimeter the perimeter of the polygon or length of the
      *   polyline (meters).
      * @param[out] area the area of the polygon (meters<sup>2</sup>); only set
-     *   if polyline is false in the constructor.
+     *   if \e polyline is false in the constructor.
      * @return the number of points.
      **********************************************************************/
     unsigned Compute(bool reverse, bool sign,
@@ -197,7 +197,9 @@ namespace GeographicLib {
      * The old name for PolygonArea::TestPoint.
      **********************************************************************/
     unsigned TestCompute(real lat, real lon, bool reverse, bool sign,
-                         real& perimeter, real& area) const throw();
+                         real& perimeter, real& area) const throw() {
+      return TestPoint(lat, lon, reverse, sign, perimeter, area);
+    }
     /// \endcond
 
     /** \name Inspector functions
@@ -220,7 +222,7 @@ namespace GeographicLib {
      * Report the previous vertex added to the polygon or polyline.
      *
      * @param[out] lat the latitude of the point (degrees).
-     * @param[out] lon the latitude of the point (degrees).
+     * @param[out] lon the longitude of the point (degrees).
      *
      * If no points have been added, then NaNs are returned.  Otherwise, \e lon
      * will be in the range [&minus;180&deg;, 180&deg;).

@@ -308,7 +308,7 @@ namespace GeographicLib {
      * Constructor
      *
      * @param[in] msg a string message, which is accessible in the catch
-     *   clause, via what().
+     *   clause via what().
      **********************************************************************/
     GeographicErr(const std::string& msg) : std::runtime_error(msg) {}
   };

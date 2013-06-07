@@ -166,28 +166,28 @@ namespace GeographicLib {
      * @param[in] caps bitor'ed combination of GeodesicLine::mask values
      *   specifying the capabilities the GeodesicLine object should possess,
      *   i.e., which quantities can be returned in calls to
-     *   GeodesicLib::Position.
+     *   GeodesicLine::Position.
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
      * azi1 should be in the range [&minus;540&deg;, 540&deg;).
      *
      * The GeodesicLine::mask values are
      * - \e caps |= GeodesicLine::LATITUDE for the latitude \e lat2; this is
-     *   added automatically
-     * - \e caps |= GeodesicLine::LONGITUDE for the latitude \e lon2
+     *   added automatically;
+     * - \e caps |= GeodesicLine::LONGITUDE for the latitude \e lon2;
      * - \e caps |= GeodesicLine::AZIMUTH for the latitude \e azi2; this is
-     *   added automatically
-     * - \e caps |= GeodesicLine::DISTANCE for the distance \e s12
-     * - \e caps |= GeodesicLine::REDUCEDLENGTH for the reduced length \e m12
+     *   added automatically;
+     * - \e caps |= GeodesicLine::DISTANCE for the distance \e s12;
+     * - \e caps |= GeodesicLine::REDUCEDLENGTH for the reduced length \e m12;
      * - \e caps |= GeodesicLine::GEODESICSCALE for the geodesic scales \e M12
-     *   and \e M21
-     * - \e caps |= GeodesicLine::AREA for the area \e S12
+     *   and \e M21;
+     * - \e caps |= GeodesicLine::AREA for the area \e S12;
      * - \e caps |= GeodesicLine::DISTANCE_IN permits the length of the
      *   geodesic to be given in terms of \e s12; without this capability the
-     *   length can only be specified in terms of arc length.
+     *   length can only be specified in terms of arc length;
+     * - \e caps |= GeodesicLine::ALL for all of the above.
      * .
-     * The default value of \e caps is GeodesicLine::ALL which turns on all the
-     * capabilities.
+     * The default value of \e caps is GeodesicLine::ALL.
      *
      * If the point is at a pole, the azimuth is defined by keeping the \e lon1
      * fixed and writing \e lat1 = &plusmn;(90&deg; &minus; &epsilon;) and
@@ -484,15 +484,16 @@ namespace GeographicLib {
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
      * The GeodesicLine::mask values possible for \e outmask are
-     * - \e outmask |= GeodesicLine::LATITUDE for the latitude \e lat2.
-     * - \e outmask |= GeodesicLine::LONGITUDE for the latitude \e lon2.
-     * - \e outmask |= GeodesicLine::AZIMUTH for the latitude \e azi2.
-     * - \e outmask |= GeodesicLine::DISTANCE for the distance \e s12.
+     * - \e outmask |= GeodesicLine::LATITUDE for the latitude \e lat2;
+     * - \e outmask |= GeodesicLine::LONGITUDE for the latitude \e lon2;
+     * - \e outmask |= GeodesicLine::AZIMUTH for the latitude \e azi2;
+     * - \e outmask |= GeodesicLine::DISTANCE for the distance \e s12;
      * - \e outmask |= GeodesicLine::REDUCEDLENGTH for the reduced length \e
-     *   m12.
+     *   m12;
      * - \e outmask |= GeodesicLine::GEODESICSCALE for the geodesic scales \e
-     *   M12 and \e M21.
-     * - \e outmask |= GeodesicLine::AREA for the area \e S12.
+     *   M12 and \e M21;
+     * - \e outmask |= GeodesicLine::AREA for the area \e S12;
+     * - \e outmask |= GeodesicLine::ALL for all of the above.
      * .
      * Requesting a value which the GeodesicLine object is not capable of
      * computing is not an error; the corresponding argument will not be

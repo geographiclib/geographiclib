@@ -5,7 +5,7 @@
  * This provides javascript-style interfaces to Math.js, Geodesic.js,
  * GeodesicLine.js, and PolygonArea.js which, in turn, are rather
  * literal translations of the following classes from GeographicLib:
- * Math, Accumulator, Geodesic, GeodesicLib, PolygonArea.  See the
+ * Math, Accumulator, Geodesic, GeodesicLine, PolygonArea.  See the
  * documentation for the C++ class for more information at
  *
  *    http://geographiclib.sourceforge.net/html/annotated.html

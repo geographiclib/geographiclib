@@ -37,7 +37,7 @@ if (DOXYGEN_FOUND)
     ../src/[A-Za-z]*.cpp ../include/GeographicLib/[A-Za-z]*.hpp
     ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp
     ../legacy/C/*.[ch] ../legacy/Fortran/*.for ../legacy/Fortran/*.inc
-    ../java/GeographicLib/*.java)
+    ../java/*.java ../java/GeographicLib/*.java)
   file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac
     tmseries30.html geodseries30.html *.png ../LICENSE.txt)
   file (COPY ${EXTRA_FILES} DESTINATION html-stage)

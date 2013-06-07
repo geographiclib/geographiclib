@@ -245,7 +245,7 @@ namespace GeographicLib {
     ///@{
     /**
      * Perform the direct geodesic calculation where the length of the geodesic
-     * is specify in terms of distance.
+     * is specified in terms of distance.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -359,7 +359,7 @@ namespace GeographicLib {
     ///@{
     /**
      * Perform the direct geodesic calculation where the length of the geodesic
-     * is specify in terms of arc length.
+     * is specified in terms of arc length.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -507,15 +507,16 @@ namespace GeographicLib {
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
      * The GeodesicExact::mask values possible for \e outmask are
-     * - \e outmask |= GeodesicExact::LATITUDE for the latitude \e lat2.
-     * - \e outmask |= GeodesicExact::LONGITUDE for the latitude \e lon2.
-     * - \e outmask |= GeodesicExact::AZIMUTH for the latitude \e azi2.
-     * - \e outmask |= GeodesicExact::DISTANCE for the distance \e s12.
+     * - \e outmask |= GeodesicExact::LATITUDE for the latitude \e lat2;
+     * - \e outmask |= GeodesicExact::LONGITUDE for the latitude \e lon2;
+     * - \e outmask |= GeodesicExact::AZIMUTH for the latitude \e azi2;
+     * - \e outmask |= GeodesicExact::DISTANCE for the distance \e s12;
      * - \e outmask |= GeodesicExact::REDUCEDLENGTH for the reduced length \e
-     *   m12.
+     *   m12;
      * - \e outmask |= GeodesicExact::GEODESICSCALE for the geodesic scales \e
-     *   M12 and \e M21.
-     * - \e outmask |= GeodesicExact::AREA for the area \e S12.
+     *   M12 and \e M21;
+     * - \e outmask |= GeodesicExact::AREA for the area \e S12;
+     * - \e outmask |= GeodesicExact::ALL for all of the above.
      * .
      * The function value \e a12 is always computed and returned and this
      * equals \e s12_a12 is \e arcmode is true.  If \e outmask includes
@@ -670,13 +671,14 @@ namespace GeographicLib {
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
      * The GeodesicExact::mask values possible for \e outmask are
-     * - \e outmask |= GeodesicExact::DISTANCE for the distance \e s12.
-     * - \e outmask |= GeodesicExact::AZIMUTH for the latitude \e azi2.
+     * - \e outmask |= GeodesicExact::DISTANCE for the distance \e s12;
+     * - \e outmask |= GeodesicExact::AZIMUTH for the latitude \e azi2;
      * - \e outmask |= GeodesicExact::REDUCEDLENGTH for the reduced length \e
-     *   m12.
+     *   m12;
      * - \e outmask |= GeodesicExact::GEODESICSCALE for the geodesic scales \e
-     *   M12 and \e M21.
-     * - \e outmask |= GeodesicExact::AREA for the area \e S12.
+     *   M12 and \e M21;
+     * - \e outmask |= GeodesicExact::AREA for the area \e S12;
+     * - \e outmask |= GeodesicExact::ALL for all of the above.
      * .
      * The arc length is always computed and returned as the function value.
      **********************************************************************/
@@ -692,7 +694,7 @@ namespace GeographicLib {
     ///@{
 
     /**
-     * Set up to compute several points on a singe geodesic.
+     * Set up to compute several points on a single geodesic.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -700,25 +702,26 @@ namespace GeographicLib {
      * @param[in] caps bitor'ed combination of GeodesicExact::mask values
      *   specifying the capabilities the GeodesicLineExact object should
      *   possess, i.e., which quantities can be returned in calls to
-     *   GeodesicLib::Position.
+     *   GeodesicLine::Position.
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
      * azi1 should be in the range [&minus;540&deg;, 540&deg;).
      *
      * The GeodesicExact::mask values are
      * - \e caps |= GeodesicExact::LATITUDE for the latitude \e lat2; this is
-     *   added automatically
-     * - \e caps |= GeodesicExact::LONGITUDE for the latitude \e lon2
+     *   added automatically;
+     * - \e caps |= GeodesicExact::LONGITUDE for the latitude \e lon2;
      * - \e caps |= GeodesicExact::AZIMUTH for the azimuth \e azi2; this is
-     *   added automatically
-     * - \e caps |= GeodesicExact::DISTANCE for the distance \e s12
-     * - \e caps |= GeodesicExact::REDUCEDLENGTH for the reduced length \e m12
+     *   added automatically;
+     * - \e caps |= GeodesicExact::DISTANCE for the distance \e s12;
+     * - \e caps |= GeodesicExact::REDUCEDLENGTH for the reduced length \e m12;
      * - \e caps |= GeodesicExact::GEODESICSCALE for the geodesic scales \e M12
-     *   and \e M21
-     * - \e caps |= GeodesicExact::AREA for the area \e S12
+     *   and \e M21;
+     * - \e caps |= GeodesicExact::AREA for the area \e S12;
      * - \e caps |= GeodesicExact::DISTANCE_IN permits the length of the
      *   geodesic to be given in terms of \e s12; without this capability the
-     *   length can only be specified in terms of arc length.
+     *   length can only be specified in terms of arc length;
+     * - \e caps |= GeodesicExact::ALL for all of the above.
      * .
      * The default value of \e caps is GeodesicExact::ALL which turns on all
      * the capabilities.

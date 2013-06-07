@@ -52,11 +52,11 @@ namespace GeographicLib {
    * distance \e s12 to the second point.  However it is sometimes useful
    * instead to specify the arc length \e a12 (in degrees) on the auxiliary
    * sphere.  This is a mathematical construct used in solving the geodesic
-   * problems.  The solution of the direct problem in this form is provide by
-   * Geodesic30::ArcDirect.  An arc length in excess of 180&deg; indicates
-   * that the geodesic is not a shortest path.  In addition, the arc length
-   * between an equatorial crossing and the next extremum of latitude for a
-   * geodesic is 90&deg;.
+   * problems.  The solution of the direct problem in this form is provided by
+   * Geodesic30::ArcDirect.  An arc length in excess of 180&deg; indicates that
+   * the geodesic is not a shortest path.  In addition, the arc length between
+   * an equatorial crossing and the next extremum of latitude for a geodesic is
+   * 90&deg;.
    *
    * This class can also calculate several other quantities related to
    * geodesics.  These are:
@@ -303,7 +303,7 @@ namespace GeographicLib {
     ///@{
     /**
      * Perform the direct geodesic calculation where the length of the geodesic
-     * is specify in terms of distance.
+     * is specified in terms of distance.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -418,7 +418,7 @@ namespace GeographicLib {
     ///@{
     /**
      * Perform the direct geodesic calculation where the length of the geodesic
-     * is specify in terms of arc length.
+     * is specified in terms of arc length.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -756,7 +756,7 @@ namespace GeographicLib {
     ///@{
 
     /**
-     * Set up to compute several points on a singe geodesic.
+     * Set up to compute several points on a single geodesic.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -764,7 +764,7 @@ namespace GeographicLib {
      * @param[in] caps bitor'ed combination of Geodesic30::mask values
      *   specifying the capabilities the GeodesicLine30 object should
      *   possess, i.e., which quantities can be returned in calls to
-     *   GeodesicLib::Position.
+     *   GeodesicLine::Position.
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
      * azi1 should be in the range [&minus;540&deg;, 540&deg;).

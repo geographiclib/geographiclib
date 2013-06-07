@@ -163,7 +163,7 @@ namespace GeographicLib {
      * @param[in] caps bitor'ed combination of GeodesicLine30::mask values
      *   specifying the capabilities the GeodesicLine30 object should
      *   possess, i.e., which quantities can be returned in calls to
-     *   GeodesicLib::Position.
+     *   GeodesicLine::Position.
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
      * azi1 should be in the range [&minus;540&deg;, 540&deg;).

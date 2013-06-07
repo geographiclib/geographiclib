@@ -3,18 +3,18 @@
 
 *> A simple program to compute the area of a geodesic polygon.
 *!
-*! This program reads in up to 100 lines with lat, lon for each vertex
+*! This program reads in up to 100000 lines with lat, lon for each vertex
 *! of a polygon.  At the end of input, the program prints the number of
 *! vertices, the perimeter of the polygon and its area (for the WGS84
 *! ellipsoid).
 
-      program garea
+      program planimeter
       implicit none
 
       include 'geodesic.inc'
 
       integer maxpts
-      parameter (maxpts = 100)
+      parameter (maxpts = 100000)
       double precision a, f, lats(maxpts), lons(maxpts), S, P
       integer n
 
@@ -31,6 +31,6 @@
  20   continue
       call area(a, f, lats, lons, n, S, P)
       print 30, n, P, S
- 30   format(i3, 1x, f20.8, 1x, f19.2)
+ 30   format(i5, 1x, f20.8, 1x, f20.3)
       stop
       end
