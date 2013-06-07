@@ -17,13 +17,9 @@ public class Inverse {
       Scanner in = new Scanner(System.in);
       double lat1, lon1, lat2, lon2;
       while (true) {
-        lat1 = in.nextDouble();
-        lon1 = in.nextDouble();
-        lat2 = in.nextDouble();
-        lon2 = in.nextDouble();
-        GeodesicData g =
-          Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2,
-                                 GeodesicMask.DISTANCE | GeodesicMask.AZIMUTH);
+        lat1 = in.nextDouble(); lon1 = in.nextDouble();
+        lat2 = in.nextDouble(); lon2 = in.nextDouble();
+        GeodesicData g = Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2);
         System.out.println(g.azi1 + " " + g.azi2 + " " + g.s12);
       }
     }

@@ -279,18 +279,22 @@ public class GeodesicLine {
    *
    * @param s12 distance between point 1 and point 2 (meters); it can be
    *   negative.
-   * @return a GeodesicData object included in all the quantities the
-   *   GeodesicLine object is capable of producing.
+   * @return a GeodesicData object with the following fields: \e lat1, \e lon1,
+   *   \e azi1, \e lat2, \e lon2, \e azi2, \e s12, \e a12.  Some of these
+   *   results may be missing if the GeodesicLine did not include the relevant
+   *   capability.
    *
    * The values of \e lon2 and \e azi2 returned are in the range
    * [&minus;180&deg;, 180&deg;).
    *
    * The GeodesicLine object \e must have been constructed with \e caps |=
-   * GeodesicLine.DISTANCE_IN; otherwise NaN is returned and no
+   * GeodesicLine.DISTANCE_IN; otherwise Double.NaN is returned and no
    * parameters are set.
    **********************************************************************/
   public GeodesicData Position(double s12) {
-    return Position(false, s12, GeodesicMask.ALL);
+    return Position(false, s12,
+                    GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
+                    GeodesicMask.AZIMUTH);
   }
   /**
    * Compute the position of point 2 which is a distance \e s12 (meters) from
@@ -300,13 +304,12 @@ public class GeodesicLine {
    *   negative.
    * @param outmask a bitor'ed combination of GeodesicMask values
    *   specifying which results should be returned.
-   * @return a GeodesicData object included in all the quantities the
-   *   GeodesicLine object is capable of producing.
+   * @return a GeodesicData object including the requested results.
    *
    * The GeodesicLine object \e must have been constructed with \e caps |=
-   * GeodesicLine.DISTANCE_IN; otherwise NaN is returned and no
+   * GeodesicLine.DISTANCE_IN; otherwise Double.NaN is returned and no
    * parameters are set.  Requesting a value which the GeodesicLine object is
-   * not capable of computing is not an error; NaN is returned instead.
+   * not capable of computing is not an error; Double.NaN is returned instead.
    **********************************************************************/
   public GeodesicData Position(double s12, int outmask) {
     return Position(false, s12, outmask);
@@ -324,18 +327,22 @@ public class GeodesicLine {
    *
    * @param a12 arc length between point 1 and point 2 (degrees); it can
    *   be negative.
-   * @return a GeodesicData object giving \e lat1, \e lon2, \e azi2, and \e
-   *   a12.
+   * @return a GeodesicData object with the following fields: \e lat1, \e lon1,
+   *   \e azi1, \e lat2, \e lon2, \e azi2, \e s12, \e a12.  Some of these
+   *   results may be missing if the GeodesicLine did not include the relevant
+   *   capability.
    *
    * The values of \e lon2 and \e azi2 returned are in the range
    * [&minus;180&deg;, 180&deg;).
    *
    * The GeodesicLine object \e must have been constructed with \e caps |=
-   * GeodesicLine.DISTANCE_IN; otherwise Math.NaN() is returned and no
+   * GeodesicLine.DISTANCE_IN; otherwise Double.NaN is returned and no
    * parameters are set.
    **********************************************************************/
   public GeodesicData ArcPosition(double a12) {
-    return Position(true, a12, GeodesicMask.ALL);
+    return Position(true, a12,
+                    GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
+                    GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE);
   }
   /**
    * Compute the position of point 2 which is an arc length \e a12 (degrees)
@@ -349,9 +356,9 @@ public class GeodesicLine {
    *   a12.
    *
    * The GeodesicLine object \e must have been constructed with \e caps |=
-   * GeodesicLine.DISTANCE_IN; otherwise Math.NaN() is returned and no
+   * GeodesicLine.DISTANCE_IN; otherwise Double.NaN is returned and no
    * parameters are set.  Requesting a value which the GeodesicLine object is
-   * not capable of computing is not an error; NaN is returned instead.
+   * not capable of computing is not an error; Double.NaN is returned instead.
    **********************************************************************/
   public GeodesicData ArcPosition(double a12, int outmask) {
     return Position(true, a12, outmask);
@@ -389,7 +396,7 @@ public class GeodesicLine {
    * - \e outmask |= GeodesicLine.AREA for the area \e S12.
    * .
    * Requesting a value which the GeodesicLine object is not capable of
-   * computing is not an error; NaN is returned instead.
+   * computing is not an error; Double.NaN is returned instead.
    **********************************************************************/
   public GeodesicData Position(boolean arcmode, double s12_a12,
                                int outmask) {

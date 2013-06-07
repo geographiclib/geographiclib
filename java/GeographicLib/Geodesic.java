@@ -81,15 +81,16 @@ package GeographicLib;
  * lat1, \e lon1, \e azi1, \e lat2, \e lon2, \e azi2, \e s12, \e a12, \e m12,
  * \e M12, \e M21, \e S12.
  *
- * The functions Geodesic.Direct, Geodesic.ArcDirect, and Geodesic.Inverse may
- * be called with a final argument \e outmask which allow a subset of the
- * results to be computed and returned.  \e outmask is bitor'ed combination of
- * GeodesicMask values.  For example, if you wish just to compute the distance
- * between two points and the azimuths of the geodesics at the two endpoints,
- * you would call, e.g.,
+ * The functions Geodesic.Direct, Geodesic.ArcDirect, and Geodesic.Inverse
+ * include an optional a final argument \e outmask which allows you specify
+ * which results should be computed and returned.  If you omit \e outmask, then
+ * the "standard" geodesic results are computed (latitude, longitudes,
+ * azimuths, and distance).  \e outmask is bitor'ed combination of GeodesicMask
+ * values.  For example, if you wish just to compute the distance between two
+ * points you would call, e.g.,
  * @code
  *  GeodesicData g = Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2,
- *                      GeodesicMask.DISTANCE | GeodesicMask.AZIMUTH);
+ *                      GeodesicMask.DISTANCE);
  * @endcode
  *
  * Additional functionality is provided by the GeodesicLine class, which
@@ -277,7 +278,8 @@ public class Geodesic {
    * @param azi1 azimuth at point 1 (degrees).
    * @param s12 distance between point 1 and point 2 (meters); it can be
    *   negative.
-   * @return a GeodesicData object with all the fields computed.
+   * @return a GeodesicData object with the following fields: \e lat1, \e lon1,
+   *   \e azi1, \e lat2, \e lon2, \e azi2, \e s12, \e a12.
    *
    * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
    * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
@@ -293,7 +295,9 @@ public class Geodesic {
    **********************************************************************/
   public GeodesicData Direct(double lat1, double lon1,
                              double azi1, double s12) {
-    return Direct(lat1, lon1, azi1, false, s12, GeodesicMask.ALL);
+    return Direct(lat1, lon1, azi1, false, s12,
+                  GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
+                  GeodesicMask.AZIMUTH);
   }
   /**
    * Solve the direct geodesic problem where the length of the geodesic is
@@ -332,7 +336,8 @@ public class Geodesic {
    * @param azi1 azimuth at point 1 (degrees).
    * @param a12 arc length between point 1 and point 2 (degrees); it can
    *   be negative.
-   * @return a GeodesicData object with all the fields computed.
+   * @return a GeodesicData object with the following fields: \e lat1, \e lon1,
+   *   \e azi1, \e lat2, \e lon2, \e azi2, \e s12, \e a12.
    *
    * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
    * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
@@ -348,7 +353,9 @@ public class Geodesic {
    **********************************************************************/
   public GeodesicData ArcDirect(double lat1, double lon1,
                                 double azi1, double a12) {
-    return Direct(lat1, lon1, azi1, true, a12, GeodesicMask.ALL);
+    return Direct(lat1, lon1, azi1, true, a12,
+                  GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
+                  GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE);
   }
 
   /**
@@ -437,7 +444,8 @@ public class Geodesic {
    * @param lon1 longitude of point 1 (degrees).
    * @param lat2 latitude of point 2 (degrees).
    * @param lon2 longitude of point 2 (degrees).
-   * @return a GeodesicData object with all the fields computed.
+   * @return a GeodesicData object with the following fields: \e lat1, \e lon1,
+   *   \e azi1, \e lat2, \e lon2, \e azi2, \e s12, \e a12.
    *
    * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;]; \e
    * lon1 and \e lon2 should be in the range [&minus;540&deg;, 540&deg;).
@@ -455,7 +463,8 @@ public class Geodesic {
    **********************************************************************/
   public GeodesicData Inverse(double lat1, double lon1,
                               double lat2, double lon2) {
-    return Inverse(lat1, lon1, lat2, lon2, GeodesicMask.ALL);
+    return Inverse(lat1, lon1, lat2, lon2,
+                   GeodesicMask.DISTANCE | GeodesicMask.AZIMUTH);
   }
 
   /**

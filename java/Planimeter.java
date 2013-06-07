@@ -17,15 +17,13 @@ public class Planimeter {
     PolygonArea p = new PolygonArea(Geodesic.WGS84, false);
     try {
       Scanner in = new Scanner(System.in);
-      double lat, lon;
       while (true) {
-        lat = in.nextDouble();
-        lon = in.nextDouble();
+        double lat = in.nextDouble(), lon = in.nextDouble();
         p.AddPoint(lat, lon);
       }
     }
     catch (Exception e) {}
-    PolygonResult r = p.Compute(false, true);
+    PolygonResult r = p.Compute();
     System.out.println(r.num + " " + r.perimeter + " " + r.area);
   }
 }

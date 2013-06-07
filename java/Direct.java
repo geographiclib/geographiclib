@@ -17,14 +17,9 @@ public class Direct {
       Scanner in = new Scanner(System.in);
       double lat1, lon1, azi1, s12;
       while (true) {
-        lat1 = in.nextDouble();
-        lon1 = in.nextDouble();
-        azi1 = in.nextDouble();
-        s12 = in.nextDouble();
-        GeodesicData g =
-          Geodesic.WGS84.Direct(lat1, lon1, azi1, s12,
-                                GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
-                                GeodesicMask.AZIMUTH);
+        lat1 = in.nextDouble(); lon1 = in.nextDouble();
+        azi1 = in.nextDouble(); s12 = in.nextDouble();
+        GeodesicData g = Geodesic.WGS84.Direct(lat1, lon1, azi1, s12);
         System.out.println(g.lat2 + " " + g.lon2 + " " + g.azi2);
       }
     }

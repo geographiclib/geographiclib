@@ -141,6 +141,18 @@ public class PolygonArea {
   /**
    * Return the results so far.
    *
+   * @return PolygonResult(\e num, \e perimeter, \e area) where \e num is the
+   *   number of vertices, \e perimeter is the perimeter of the polygon or the
+   *   length of the polyline (meters), and \e area is the area of the polygon
+   *   (meters<sup>2</sup>) or Double.NaN of \e polyline is true in the
+   *   constructor.
+   *
+   * Counter-clockwise traversal counts as a positive area.
+   **********************************************************************/
+  public PolygonResult Compute() { return Compute(false, true); }
+  /**
+   * Return the results so far.
+   *
    * @param reverse if true then clockwise (instead of counter-clockwise)
    *   traversal counts as a positive area.
    * @param sign if true then return a signed result for the area if
@@ -149,7 +161,8 @@ public class PolygonArea {
    * @return PolygonResult(\e num, \e perimeter, \e area) where \e num is the
    *   number of vertices, \e perimeter is the perimeter of the polygon or the
    *   length of the polyline (meters), and \e area is the area of the polygon
-   *   (meters<sup>2</sup>) or NaN of \e polyline is true in the constructor.
+   *   (meters<sup>2</sup>) or Double.NaN of \e polyline is true in the
+   *   constructor.
    **********************************************************************/
   public PolygonResult Compute(boolean reverse, boolean sign) {
     if (_num < 2)
@@ -200,7 +213,8 @@ public class PolygonArea {
    * @return PolygonResult(\e num, \e perimeter, \e area) where \e num is the
    *   number of vertices, \e perimeter is the perimeter of the polygon or the
    *   length of the polyline (meters), and \e area is the area of the polygon
-   *   (meters<sup>2</sup>) or NaN of \e polyline is true in the constructor.
+   *   (meters<sup>2</sup>) or Double.NaN of \e polyline is true in the
+   *   constructor.
    *
    * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
    * lon should be in the range [&minus;540&deg;, 540&deg;).
@@ -269,7 +283,8 @@ public class PolygonArea {
    * @return PolygonResult(\e num, \e perimeter, \e area) where \e num is the
    *   number of vertices, \e perimeter is the perimeter of the polygon or the
    *   length of the polyline (meters), and \e area is the area of the polygon
-   *   (meters<sup>2</sup>) or NaN of \e polyline is true in the constructor.
+   *   (meters<sup>2</sup>) or Double.NaN of \e polyline is true in the
+   *   constructor.
    *
    * \e azi should be in the range [&minus;540&deg;, 540&deg;).
    **********************************************************************/
@@ -341,8 +356,8 @@ public class PolygonArea {
    *
    * @return Pair(\e lat, \e lon), the current latitude and longitude.
    *
-   * If no points have been added, then NaNs are returned.  Otherwise, \e lon
-   * will be in the range [&minus;180&deg;, 180&deg;).
+   * If no points have been added, then Double.NaN is returned.  Otherwise, \e
+   * lon will be in the range [&minus;180&deg;, 180&deg;).
    **********************************************************************/
   public Pair CurrentPoint() { return new Pair(_lat1, _lon1); }
   ///@}

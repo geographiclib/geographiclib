@@ -12,7 +12,7 @@ package GeographicLib;
  *
  * This is used to return the results for a geodesic between point 1 (\e lat1,
  * \e lon1) and point 2 (\e lat2, \e lon2).  Fields that have not been set will
- * be filled with NaNs.
+ * be filled with Double.NaN.
  **********************************************************************/
 public class GeodesicData {
   /**
@@ -65,7 +65,7 @@ public class GeodesicData {
    **********************************************************************/
   public double S12;
   /**
-   * Initialize all the fields to NaN.
+   * Initialize all the fields to Double.NaN.
    **********************************************************************/
   public GeodesicData() {
     lat1 = lon1 = azi1 = lat2 = lon2 = azi2 =
