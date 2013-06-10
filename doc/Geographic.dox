@@ -1122,6 +1122,23 @@ An example of using this interface is \code
 ... help(Geodesic)
 \endcode
 
+Another illustrative exercise is finding the point midway between JFK
+Airport to Singapore Changi Airport
+\code
+from geographiclib.geodesic import Geodesic
+
+# Coordinates of airports
+lat1, lon1 = 40.640, -73.779  # JFK
+lat2, lon2 =  1.359, 103.989  # SIN
+
+# Compute path from 1 to 2
+g = Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2)
+
+# Compute midpoint starting at 1
+h = Geodesic.WGS84.Direct(lat1, lon1, g['azi1'], g['s12']/2)
+print(h['lat2'], h['lon2']);
+\endcode
+
 (Note: The initial version of setup.py was provided by Andrew MacIntyre
 of the Australian Communications and Media Authority.)
 
@@ -4545,6 +4562,10 @@ of the git repository for %GeographicLib.
      unless the -f flag is given.
    - Improving setting of runtime path for Unix-like OS with cmake.
    - Fixes to python port so that they work with versions 3.x and 2.x.
+   - Stop altering input args in Fortran implementation.
+   - Use extended precision arithmetic for accumulating perimeter and
+     area of polygons in Fortran, C, and Matlab implementations.
+   - Still to do: add AddEdge to JavaScript, python interfaces
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)

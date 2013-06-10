@@ -220,6 +220,8 @@ static void C1pf(real eps, real c[]);
 static real A2m1f(real eps);
 static void C2f(real eps, real c[]);
 static int transit(real lon1, real lon2);
+static void accini(real s[]);
+static void accadd(real s[], real y);
 
 /** @endcond */
 
@@ -1515,28 +1517,45 @@ int transit(real lon1, real lon2) {
     (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
 }
 
+void accini(real s[]) {
+  /* Initialize an accumulator; this is an array with two elements. */
+  s[0] = s[1] = 0;
+}
+
+void accadd(real s[], real y) {
+  /* Add y to an accumulator. */
+  real u, z = sumx(y, s[1], &u);
+  s[0] = sumx(z, s[0], &s[1]);
+  if (s[0] == 0)
+    s[0] = u;
+  else
+    s[1] = s[1] + u;
+}
+
 /** @endcond */
 
 void geod_polygonarea(const struct geod_geodesic* g,
                       real lats[], real lons[], int n,
                       real* pA, real* pP) {
   int i, crossings = 0;
-  real area0 = 4 * pi * g->c2, A = 0, P = 0;
+  real area0 = 4 * pi * g->c2, A[2], P[2];
+  accini(A); accini(P);
   for (i = 0; i < n; ++i) {
     real s12, S12;
     geod_geninverse(g, lats[i], lons[i], lats[(i + 1) % n], lons[(i + 1) % n],
                &s12, 0, 0, 0, 0, 0, &S12);
-    P += s12;
-    A -= S12; /* The minus sign is due to the counter-clockwise convention */
+    accadd(P, s12);
+    /* The minus sign is due to the counter-clockwise convention */
+    accadd(A, -S12);
     crossings += transit(lons[i], lons[(i + 1) % n]);
   }
   if (crossings & 1)
-    A += (A < 0 ? 1 : -1) * area0/2;
+    accadd(A, (A[0] < 0 ? 1 : -1) * area0/2);
   /* Put area in (-area0/2, area0/2] */
-  if (A > area0/2)
-    A -= area0;
-  else if (A <= -area0/2)
-    A += area0;
-  if (pA) *pA = A;
-  if (pP) *pP = P;
+  if (A[0] > area0/2)
+    accadd(A, -area0);
+  else if (A[0] <= -area0/2)
+    accadd(A, +area0);
+  if (pA) *pA = A[0];
+  if (pP) *pP = P[0];
 }

@@ -927,7 +927,7 @@
 
       integer i, omask, cross, trnsit
       double precision s12, azi1, azi2, dummy, SS12, b, e2, c2, area0,
-     +    atanhx
+     +    atanhx, Aacc(2), Pacc(2)
 
       double precision dblmin, dbleps, pi, degree, tiny,
      +    tol0, tol1, tol2, tolb, xthrsh
@@ -937,17 +937,18 @@
      +    tol0, tol1, tol2, tolb, xthrsh, digits, maxit1, maxit2, init
 
       omask = 8
-      AA = 0
-      PP = 0
+      call accini(Aacc)
+      call accini(Pacc)
       cross = 0
       do 10 i = 0, n-1
         call invers(a, f, lats(i+1), lons(i+1),
      +      lats(mod(i+1,n)+1), lons(mod(i+1,n)+1),
      +      s12, azi1, azi2, omask, dummy, dummy, dummy, dummy, SS12)
-        PP = PP + s12
-        AA = AA - SS12
+        call accadd(Pacc, s12)
+        call accadd(Aacc, -SS12)
         cross = cross + trnsit(lons(i+1), lons(mod(i+1,n)+1))
  10   continue
+      PP = Pacc(1)
       b = a * (1 - f)
       e2 = f * (2 - f)
       if (e2 .eq. 0) then
@@ -959,17 +960,18 @@
       end if
       area0 = 4 * pi * c2
       if (mod(abs(cross), 2) .eq. 1) then
-        if (AA .lt. 0) then
-          AA = AA + area0/2
+        if (Aacc(1) .lt. 0) then
+          call accadd(Aacc, +area0/2)
         else
-          AA = AA - area0/2
+          call accadd(Aacc, -area0/2)
         end if
       end if
-      if (AA .gt. area0/2) then
-        AA = AA - area0
-      else if (AA .le. -area0/2) then
-        AA = AA + area0
+      if (Aacc(1) .gt. area0/2) then
+        call accadd(Aacc, -area0)
+      else if (Aacc(1) .le. -area0/2) then
+        call accadd(Aacc, +area0)
       end if
+      AA = Aacc(1)
 
       return
       end
@@ -1437,6 +1439,7 @@
       do 10 i = nA3x-1, 0, -1
         A3f = eps * A3f + A3x(i)
  10   continue
+
       return
       end
 
@@ -1518,6 +1521,7 @@
       eps2 = eps**2
       t = eps2*(eps2*(eps2+4)+64)/256
       A1m1f = (t + eps) / (1 - eps)
+
       return
       end
 
@@ -1719,7 +1723,7 @@
       up = sumx - v
       vpp = sumx - up
       up = up - u
-      vpp = vpp -  v
+      vpp = vpp - v
       t = -(up + vpp)
 
       return
@@ -1730,11 +1734,13 @@
       double precision x
 
       if (x .ge. 180) then
-         x = x - 360
+        AngNm = x - 360
       else if (x .lt. -180) then
-         x = x + 360
+        AngNm = x + 360
+      else
+        AngNm = x
       end if
-      AngNm = x
+
       return
       end
 
@@ -1743,12 +1749,17 @@
       double precision x
 
       double precision AngNm
-      x = mod(x, 360d0)
-      AngNm2 = AngNm(x)
+      AngNm2 = mod(x, 360d0)
+      AngNm2 = AngNm(AngNm2)
+
       return
       end
 
       double precision function AngDif(x, y)
+* Compute y - x.  x and y must both lie in [-180, 180].  The result is
+* equivalent to computing the difference exactly, reducing it to (-180,
+* 180] and rounding the result.  Note that this prescription allows -180
+* to be returned (e.g., if x is tiny and negative and y = 180).
 * input
       double precision x, y
 
@@ -1760,6 +1771,8 @@
         d = d + 360d0
       end if
       AngDif = d + t
+
+      return
       end
 
       double precision function AngRnd(x)
@@ -1776,8 +1789,7 @@
       y = abs(x)
 * The compiler mustn't "simplify" z - (z - y) to y
       if (y .lt. z) y = z - (z - y)
-      x = sign(y, x)
-      AngRnd = x
+      AngRnd = sign(y, x)
 
       return
       end
@@ -1790,6 +1802,7 @@
       z = x
       x = y
       y = z
+
       return
       end
 
@@ -1798,6 +1811,7 @@
       double precision x, y
 
       hypotx = sqrt(x**2 + y**2)
+
       return
       end
 
@@ -1809,6 +1823,7 @@
       r = hypotx(sinx, cosx)
       sinx = sinx/r
       cosx = cosx/r
+
       return
       end
 
@@ -1820,6 +1835,7 @@
       y = 1 + x
       z = y - 1
       log1px = csmgt(x, x * log(y) / z, z .eq. 0)
+
       return
       end
 
@@ -1831,6 +1847,7 @@
       y = abs(x)
       y = log1px(2 * y/(1 - y))/2
       atanhx = sign(y, x)
+
       return
       end
 
@@ -1839,6 +1856,7 @@
       double precision x
 
       cbrt = sign(abs(x)**(1/3d0), x)
+
       return
       end
 
@@ -1852,6 +1870,7 @@
       else
         csmgt = y
       end if
+
       return
       end
 
@@ -1906,11 +1925,42 @@
       lon2x = AngNm(lon2)
       lon12 = AngDif(lon1x, lon2x)
       trnsit = 0
-      if (lon1 .lt. 0 .and. lon2 .ge. 0 .and. lon12 .gt. 0) then
+      if (lon1x .lt. 0 .and. lon2x .ge. 0 .and. lon12 .gt. 0) then
         trnsit = 1
-      else if (lon2 .lt. 0 .and. lon1 .ge. 0 .and. lon12 .lt. 0) then
+      else if (lon2x .lt. 0 .and. lon1x .ge. 0 .and. lon12 .lt. 0) then
         trnsit = -1
       end if
+
+      return
+      end
+
+      subroutine accini(s)
+* Initialize an accumulator; this is an array with two elements.
+* input/output
+      double precision s(2)
+
+      s(1) = 0
+      s(2) = 0
+
+      return
+      end
+
+      subroutine accadd(s, y)
+* Add y to an accumulator.
+* input
+      double precision y
+* input/output
+      double precision s(2)
+
+      double precision z, u, sumx
+      z = sumx(y, s(2), u)
+      s(1) = sumx(z, s(1), s(2))
+      if (s(1) .eq. 0) then
+        s(1) = u
+      else
+        s(2) = s(2) + u
+      end if
+
       return
       end
 

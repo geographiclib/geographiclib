@@ -54,7 +54,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
     ind = [ind; M + 1];
   end
   K = length(ind) - 1;
-  A = zeros(K, 1); P = A; N = A; crossings = A;
+  A = zeros(K, 1); P = A; N = A;
   if M == 0, return, end
 
   lat2 = [lat1(2:end, 1); 0];
@@ -76,16 +76,20 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 
   for k = 1 : K
     N(k) = m1(k) - m0(k) + 1;
-    P(k) = sum(s12(m0(k):m1(k)));
-    A(k) = -sum(S12(m0(k):m1(k)));
-    crossings(k) = sum(cross(m0(k):m1(k)));
+    P(k) = accumulator(s12(m0(k):m1(k)));
+    [As, At] = accumulator(S12(m0(k):m1(k)));
+    crossings = sum(cross(m0(k):m1(k)));
+    if mod(crossings, 2) ~= 0,
+      [As, At] = accumulator( ((As < 0) * 2 - 1) * area0 / 2, As, At);
+    end
+    As = -As; At = -At;
+    if As > area0/2
+      As = accumulator( -area0 / 2, As, At);
+    elseif As <= -area0/2
+      As = accumulator(  area0 / 2, As, At);
+    end
+    A(k) = As;
   end
-  p = mod(crossings, 2) ~= 0;
-  A(p) = A(p) - ((A(p) < 0) * 2 - 1) * area0 / 2;
-  p = A > area0 / 2;
-  A(p) = A(p) - area0;
-  p = ~p & A <= -area0 / 2;
-  A(p) = A(p) + area0;
 end
 
 function cross = transit(lon1, lon2)
@@ -101,4 +105,25 @@ function cross = transit(lon1, lon2)
   cross(lon1 < 0 & lon2 >= 0 & lon12 > 0) = 1;
   cross(lon2 < 0 & lon1 >= 0 & lon12 < 0) = -1;
 
+end
+
+function [s, t] = accumulator(x, s, t)
+%ACCUMULATOR  Accurately sum x
+%
+%   [S, T] = ACCUMULATOR(X, S, T) accumulate the sum of the elements of X
+%   into [S, T] using extended precision.  S and T are scalars.
+
+  if nargin < 3, t = 0; end
+  if nargin < 2, s = 0; end
+
+  for y = x(:)',
+    % Here's Shewchuk's solution...
+    [z, u] = sumx(y, t);
+    [s, t] = sumx(z, s);
+    if s == 0
+      s = u;
+    else
+      t = t + u;
+    end
+  end
 end
