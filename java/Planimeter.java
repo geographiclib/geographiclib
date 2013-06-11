@@ -4,7 +4,7 @@
  **********************************************************************/
 
 import java.util.*;
-import GeographicLib.*;
+import net.sf.geographiclib.*;
 /**
  * @brief Compute the area of a geodesic polygon.
  *

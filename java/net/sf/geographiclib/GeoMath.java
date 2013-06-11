@@ -1,12 +1,12 @@
 /**
  * @file GeoMath.java
- * @brief Implementation of the GeographicLib.GeoMath class
+ * @brief Implementation of the net.sf.geographiclib.GeoMath class
  *
  * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
-package GeographicLib;
+package net.sf.geographiclib;
   /**
    * @brief Mathematical functions needed by GeographicLib
    *
@@ -20,17 +20,18 @@ public class GeoMath {
    **********************************************************************/
   public static final int digits = 53;
   /**
-   * Equivalent to C++'s numeric_limits<double>::epsilon().  Math.ulp(1.0) can
-   * be used in Java version 1.5.
+   * Equivalent to C++'s numeric_limits<double>::epsilon().  In Java version
+   * 1.5 and later, Math.ulp(1.0) can be used.
    **********************************************************************/
   public static final double epsilon = Math.pow(0.5, digits - 1);
   /**
-   * Equivalent to C++'s numeric_limits<double>::min().  Double.MIN_NORMAL can
-   * be used in Java version 1.6.
+   * Equivalent to C++'s numeric_limits<double>::min().  In Java version 1.6
+   * and later, Double.MIN_NORMAL can be used.
    **********************************************************************/
   public static final double min = Math.pow(0.5, 1022);
   /**
-   * The number of radians in a degree.
+   * The number of radians in a degree.  In Java version 1.2 and later,
+   * Math.toRadians and Math.toDegrees can be used.
    **********************************************************************/
   public static final double degree = Math.PI / 180;
 
@@ -43,8 +44,8 @@ public class GeoMath {
   public static double sq(double x) { return x * x; }
 
   /**
-   * The hypotenuse function avoiding underflow and overflow.  Math.hypot
-   * appeared in Java version 1.5.
+   * The hypotenuse function avoiding underflow and overflow.  In Java version
+   * 1.5 and later, Math.hypot can be used.
    *
    * @param x
    * @param y
@@ -60,8 +61,8 @@ public class GeoMath {
   }
 
   /**
-   * log(1 + \e x) accurate near \e x = 0.  Math.log1p appeared in Java version
-   * 1.5.
+   * log(1 + \e x) accurate near \e x = 0.  In Java version 1.5 and later,
+   * Math.log1p can be used.
    *
    * This is taken from D. Goldberg,
    * <a href="http://dx.doi.org/10.1145/103162.103163">What every computer
@@ -98,7 +99,8 @@ public class GeoMath {
   }
 
   /**
-   * The cube root function.  Math.cbrt appeared in Java version 1.5.
+   * The cube root function.  In Java version 1.5 and later, Math.cbrt can be
+   * used.
    *
    * @param x
    * @return the real cube root of \e x.

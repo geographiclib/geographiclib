@@ -655,7 +655,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                  = @PROJECT_SOURCE_DIR@/java/GeographicLib \
+INPUT                  = @PROJECT_SOURCE_DIR@/java/net/sf/geographiclib \
                          @PROJECT_SOURCE_DIR@/doc/geodesic-java.dox
 
 # This tag can be used to specify the character encoding of the source files

@@ -31,7 +31,7 @@ The Java library is part of %GeographicLib which available for download at
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the Java library can be found in GeographicLib-1.31/java.
-The library consists of the files in the GeographicLib subdirectory.
+The library consists of the files in the net/sf/geographiclib subdirectory.
 
 \section samples Sample programs
 
@@ -46,30 +46,29 @@ Also included are 3 small test programs:
 Here, for example, is Inverse.java
 \include Inverse.java
 To compile and run this, you would typically run \verbatim
-export CLASSPATH=/usr/local/share/GeographicLib/java
 javac Inverse.java
 echo -30 0 29.5 179.5 | java Inverse \endverbatim
 
 \section library Using the library
 
 - Put @verbatim
-  import GeographicLib.* @endverbatim
+  import net.sf.geographiclib.* @endverbatim
   in your source code.
 - Include calls to the geodesic routines in your code.
 - Compile and run as described above.
 
 The important classes are
-- GeographicLib.Geodesic, for direct and inverse geodesic calculations
-- GeographicLib.GeodesicLine, an efficient way of calculating multiple
+- net.sf.geographiclib.Geodesic, for direct and inverse geodesic calculations
+- net.sf.geographiclib.GeodesicLine, an efficient way of calculating multiple
   points on a single geodesic.
-- GeographicLib.GeodesicData, the object containing the results of the
+- net.sf.geographiclib.GeodesicData, the object containing the results of the
   geodesic calculations.
-- GeographicLib.GeodesicMask, the constants that let you specify the
+- net.sf.geographiclib.GeodesicMask, the constants that let you specify the
   variables to return in GeodesicData and the capabilities of a
   GeodesicLine.
-- GeographicLib.Constant, the parameters for the WGS84 ellipsoid.
-- GeographicLib.PolygonArea, a class to compute the perimeter and area
-  of a geodesic polygon (returned as a GeographicLib.PolygonResult).
+- net.sf.geographiclib.Constant, the parameters for the WGS84 ellipsoid.
+- net.sf.geographiclib.PolygonArea, a class to compute the perimeter and area
+  of a geodesic polygon (returned as a net.sf.geographiclib.PolygonResult).
 
 \section external External links
 

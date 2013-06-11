@@ -4,7 +4,7 @@
  **********************************************************************/
 
 import java.util.*;
-import GeographicLib.*;
+import net.sf.geographiclib.*;
 public class Direct {
 /**
  * @brief Solve the direct geodesic problem.

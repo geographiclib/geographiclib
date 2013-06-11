@@ -9,3 +9,13 @@ This is a Fortran implementation of the geodesic algorithms described in
 For documentation, see
 
   http://geographiclib.sourceforge.net/html/Fortran/index.html
+
+The code in this directory is entirely self-contained.  In particular,
+it does not depend on the C++ classes.  You can build the example
+programs using cmake.  For example, on Linux systems you might do:
+
+  mkdir BUILD
+  cd BUILD
+  cmake ..
+  make
+  echo 30 0 29.5 179.5 | ./geodinverse

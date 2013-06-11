@@ -4,7 +4,7 @@
  **********************************************************************/
 
 import java.util.*;
-import GeographicLib.*;
+import net.sf.geographiclib.*;
 /**
  * @brief Solve the inverse geodesic problem.
  *

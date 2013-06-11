@@ -1,12 +1,12 @@
 /**
  * @file GeodesicLine.java
- * @brief Implementation of the GeographicLib.GeodesicLine class
+ * @brief Implementation of the net.sf.geographiclib.GeodesicLine class
  *
  * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
-package GeographicLib;
+package net.sf.geographiclib;
 /**
  * @brief A geodesic line
  *
@@ -38,7 +38,7 @@ package GeographicLib;
  *
  * Here's an example of using this class
  * @code
- * import GeographicLib.*;
+ * import net.sf.geographiclib.*;
  * public class GeodesicLineTest {
  *   public static void main(String[] args) {
  *     // Print waypoints between JFK and SIN
@@ -147,7 +147,7 @@ public class GeodesicLine {
    *   i.e., which quantities can be returned in calls to
    *   GeodesicLine.Position.
    *
-   * The GeographicLib.GeodesicMask values are
+   * The net.sf.geographiclib.GeodesicMask values are
    * - \e caps |= GeodesicMask.LATITUDE for the latitude \e lat2; this is
    *   added automatically;
    * - \e caps |= GeodesicMask.LONGITUDE for the latitude \e lon2;
