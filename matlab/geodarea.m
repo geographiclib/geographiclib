@@ -33,9 +33,9 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %   See also GEODDOC, GEODDISTANCE, GEODRECKON, POLYGONAREA,
 %     DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2013) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.29.
+% This file was distributed with GeographicLib 1.31.
 
   if nargin < 2, error('Too few input arguments'), end
   if nargin < 3, ellipsoid = defaultellipsoid; end

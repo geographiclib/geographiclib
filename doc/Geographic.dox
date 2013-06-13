@@ -1017,20 +1017,21 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page other Other interfaces (C, Fortran, Javascript, Python, Matlab, Maxima)
+\page other Implementations in C, Fortran, Java, Javascript, Python, Matlab, Maxima
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 </center>
 
-Interfaces to subsets of %GeographicLib are available in other languages
+Implementations of subsets of %GeographicLib are available in other languages
 - \ref c-fortran
+- \ref java.
 - \ref javascript.
 - \ref python.
 - \ref matlab.
 - \ref maxima.
 
-\section c-fortran C and Fortran
+\section c-fortran C and Fortran implementation
 
 The directories <code>legacy/C</code> and <code>legacy/Fortran</code>
 contain implementations of GeographicLib::Geodesic,
@@ -1046,7 +1047,20 @@ For documentation, see
  - <a href="C/index.html">C library for geodesics</a>,
  - <a href="Fortran/index.html">Fortran library for geodesics</a>.
 
-\section javascript Javascript interface
+\section java Java implementation
+
+The directory <code>java</code> and <code>legacy/Fortran</code> contains
+implementations of GeographicLib::Geodesic, GeographicLib::GeodesicLine,
+and GeographicLib::PolygonArea in Java.  This implementation is entirely
+self-contained and does not depend on the rest of %GeographicLib.
+Sample main programs to solve the direct and inverse geodesic problems
+and to compute polygonal areas are provided.  I am open to suggestions
+for how best to package this as a stand-alone library.
+
+For documentation, see
+ - <a href="java/index.html">Java library for geodesics</a>.
+
+\section javascript Javascript implementation
 
 The directory doc/scripts/GeographicLib contains the classes
 - GeographicLib::Math
@@ -1073,7 +1087,7 @@ These examples include a "stripped" version of the Javascript code, \code
 </script> \endcode
 which loads faster.
 
-\section python Python interface
+\section python Python implementation
 
 A python implementation of the geodesic routines from GeographicLib
 are provided in the python/geographiclib directory (which is installed
@@ -1142,9 +1156,9 @@ print(h['lat2'], h['lon2']);
 (Note: The initial version of setup.py was provided by Andrew MacIntyre
 of the Australian Communications and Media Authority.)
 
-\section matlab Matlab and Octave interfaces
+\section matlab Matlab and Octave implementations
 
-The matlab directory contains
+The <code>matlab</code> directory contains
  - Native Matlab implementations of the geodesic routines.  To use
    these, start Matlab or Octave and run one of (for example) \verbatim
    addpath /usr/local/libexec/GeographicLib/matlab
@@ -4544,28 +4558,40 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.31">Version 1.31</a>
    (released 2013-mm-dd)
-   - Add macros GEOGRAPHICLIB_VERSION_{MAJOR,MINOR,PATCH} to Config.h.
-   - Fix documentation for new version of perlpod.
-   - Fix declaration of first arg to GeographicLib::UTMUPS::DecodeEPSG.
-   - Windows binary release now uses Matlab R2013a 64-bit and
-     use -largeArrayDims option.
-   - Address those COMPATIBILITY issues (TODO).
+   - Changes breaking binary compatibility (source compatibility is
+     maintained):
+     - overloaded versions of GeographicLib::DMS::Encode,
+       GeographicLib::EllipticFunction::EllipticFunction, and
+       GeographicLib::GeoCoords::DMSRepresentation, have been eliminated
+       by the use of optional arguments;
+     - correct the declaration of first arg to
+       GeographicLib::UTMUPS::DecodeEPSG.
    - FIX BUG in GeographicLib::GravityCircle constructor (found by
      Mathieu Peyr&eacute;ga) which caused bogus results for the gravity
      disturbance and gravity anomaly vectors.  (This only affected
      calculations using GravityCircle.  GravityModel calculations did
      not suffer from this bug.)
-   - Install PDB files when compiling with Visual Studio to aid
-     debugging.
-   - Better treatment of short geodesics.
-   - geographiclib-get-geoids skips already download models by default
-     unless the -f flag is given.
-   - Improving setting of runtime path for Unix-like OS with cmake.
-   - Fixes to python port so that they work with versions 3.x and 2.x.
-   - Stop altering input args in Fortran implementation.
-   - Use extended precision arithmetic for accumulating perimeter and
-     area of polygons in Fortran, C, and Matlab implementations.
-   - Still to do: add AddEdge to JavaScript, python interfaces
+   - Improvements to the build:
+     - add macros GEOGRAPHICLIB_VERSION_{MAJOR,MINOR,PATCH} to Config.h;
+     - fix documentation for new version of perlpod;
+     - improving setting of runtime path for Unix-like systems with cmake;
+     - install PDB files when compiling with Visual Studio to aid
+       debugging;
+     - Windows binary release now uses Matlab R2013a (64-bit) and
+       uses the -largeArrayDims option.
+   - Changes to the geodesic routines:
+     - add \ref java of the geodesic routines;
+     - avoid altering input args in Fortran implementation;
+     - more systematic treatment of very short geodesics;
+     - fixes to python port so that they work with version 3.x, in
+       addition to 2.x (courtesy of Amato);
+     - accumulate the perimeter and area of polygons via a double-wide
+       accumulator in Fortran, C, and Matlab implementations (this is
+       already included in the other implementations);
+     - port PolygonArea::AddEdge to JavaScript and python interfaces.
+   - Unix scripts for downloading datasets,
+     geographiclib-get-{geoids,gravity,magnetic}, skip already download
+     models by default, unless the -f flag is given.
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)

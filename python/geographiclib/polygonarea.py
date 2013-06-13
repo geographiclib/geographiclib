@@ -13,7 +13,7 @@
 #    http://dx.doi.org/10.1007/s00190-012-0578-z
 #    Addenda: http://geographiclib.sf.net/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2013) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 ######################################################################
@@ -43,7 +43,9 @@ class PolygonArea(object):
     self._earth = earth
     self._area0 = 4 * math.pi * earth._c2
     self._polyline = polyline
-    self._mask = Geodesic.DISTANCE | (0 if self._polyline else Geodesic.AREA)
+    self._mask = (Geodesic.LATITUDE | Geodesic.LONGITUDE |
+                  Geodesic.DISTANCE |
+                  (Geodesic.EMPTY if self._polyline else Geodesic.AREA))
     if not self._polyline: self._areasum = Accumulator()
     self._perimetersum = Accumulator()
     self.Clear()
@@ -54,7 +56,7 @@ class PolygonArea(object):
     self._crossings = 0
     if not self._polyline: self._areasum.Set(0)
     self._perimetersum.Set(0)
-    self._lat0 = self._lon0 = self._lat1 = self._lon1 = 0
+    self._lat0 = self._lon0 = self._lat1 = self._lon1 = Math.nan
 
   def AddPoint(self, lat, lon):
     """Add a vertex to the polygon."""
@@ -71,6 +73,19 @@ class PolygonArea(object):
       self._lat1 = lat
       self._lon1 = lon
     self._num += 1
+
+  def AddEdge(self, azi, s):
+    """Add an edge to the polygon."""
+    if self._num != 0:
+      _, lat, lon, _, _, _, _, _, S12 = self._earth.GenDirect(
+        self._lat1, self._lon1, azi, False, s, self._mask)
+      self._perimetersum.Add(s)
+      if not self._polyline:
+        self._areasum.Add(S12)
+        self._crossings += PolygonArea.transit(self._lon1, lon)
+      self._lat1 = lat
+      self._lon1 = lon
+      self._num += 1
 
   # return number, perimeter, area
   def Compute(self, reverse, sign):
@@ -112,7 +127,7 @@ class PolygonArea(object):
     return self._num, perimeter, area
 
   # return number, perimeter, area
-  def TestCompute(self, lat, lon, reverse, sign):
+  def TestPoint(self, lat, lon, reverse, sign):
     """Return the results for a tentative additional vertex."""
     if self._polyline: area = Math.nan
     if self._num == 0:
@@ -156,6 +171,56 @@ class PolygonArea(object):
 
     area = 0 + tempsum
     return num, perimeter, area
+
+  # return number, perimeter, area (for backward compatibility)
+  def TestCompute(self, lat, lon, reverse, sign):
+    return self.TestPoint(lat, lon, reverse, sign)
+
+  # return num, perimeter, area
+  def TestEdge(self, azi, s, reverse, sign):
+    """Return the results for a tentative additional edge."""
+    if self._num == 0:               # we don't have a starting point!
+      return 0, Math.nan, Math.nan
+    num = self._num + 1
+    perimeter = self._perimetersum.Sum() + s
+    if self._polyline:
+      return num, perimeter, Math.nan
+
+    tempsum =  self._areasum.Sum()
+    crossings = self._crossings
+    _, lat, lon, _, _, _, _, _, S12 = self._earth.GenDirect(
+      self._lat1, self._lon1, azi, False, s, self._mask)
+    tempsum += S12
+    crossings += PolygonArea.transit(self._lon1, lon)
+    _, s12, _, _, _, _, _, S12 = self._earth.GenInverse(
+      lat, lon, self._lat0, self._lon0, self._mask)
+    perimeter += s12
+    tempsum += S12
+    crossings += PolygonArea.transit(lon, self._lon0)
+
+    if crossings & 1:
+      tempsum += (1 if tempsum < 0 else -1) * self._area0/2
+    # area is with the clockwise sense.  If !reverse convert to
+    # counter-clockwise convention.
+    if not reverse: tempsum *= -1
+    # If sign put area in (-area0/2, area0/2], else put area in [0, area0)
+    if sign:
+      if tempsum > self._area0/2:
+        tempsum -= self._area0
+      elif tempsum <= -self._area0/2:
+        tempsum += self._area0
+    else:
+      if tempsum >= self._area0:
+        tempsum -= self._area0
+      elif tempsum < 0:
+        tempsum += self._area0
+
+    area = 0 + tempsum
+    return num, perimeter, area
+
+  def CurrentPoint(self):
+    """Return the current point as a lat, lon tuple."""
+    return self._lat1, self._lon1
 
   def Area(earth, points, polyline):
     """Return the number, perimeter, and area for a set of vertices."""

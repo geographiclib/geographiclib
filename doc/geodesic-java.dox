@@ -19,7 +19,8 @@ This is a Java implementation of the geodesic algorithms from <a
 href="http://geographiclib.sf.net">GeographicLib</a>.  This is a
 self-contained library which makes it easy to do geodesic computations
 for an ellipsoid of revolution in a Java program.  It requires Java
-version 1.1 or later.
+version 1.1 or later.  I am open to suggestions for how best to package
+this as a stand-alone library.
 
 \section download Downloading the source
 

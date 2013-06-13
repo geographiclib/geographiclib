@@ -113,6 +113,22 @@ LEGACYFILES = \
 	$(top_srcdir)/legacy/Fortran/geodinverse.for \
 	$(top_srcdir)/legacy/Fortran/planimeter.for
 
+JAVAFILES = \
+	$(top_srcdir)/java/net/sf/geographiclib/Accumulator.java \
+	$(top_srcdir)/java/net/sf/geographiclib/Constants.java \
+	$(top_srcdir)/java/net/sf/geographiclib/GeodesicData.java \
+	$(top_srcdir)/java/net/sf/geographiclib/Geodesic.java \
+	$(top_srcdir)/java/net/sf/geographiclib/GeodesicLine.java \
+	$(top_srcdir)/java/net/sf/geographiclib/GeodesicMask.java \
+	$(top_srcdir)/java/net/sf/geographiclib/GeographicErr.java \
+	$(top_srcdir)/java/net/sf/geographiclib/GeoMath.java \
+	$(top_srcdir)/java/net/sf/geographiclib/Pair.java \
+	$(top_srcdir)/java/net/sf/geographiclib/PolygonArea.java \
+	$(top_srcdir)/java/net/sf/geographiclib/PolygonResult.java \
+	$(top_srcdir)/java/Direct.java \
+	$(top_srcdir)/java/Inverse.java \
+	$(top_srcdir)/java/Planimeter.java
+
 doc: html/index.html
 
 if HAVE_DOXYGEN
@@ -124,7 +140,7 @@ manpages: $(MANPAGES)
 html/index.html: manpages doxyfile.in Geographic.dox \
 	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) \
 	doxyfile-c.in geodesic-c.dox doxyfile-for.in geodesic-for.dox \
-	$(LEGACYFILES)
+	doxyfile-java.in geodesic-java.dox $(LEGACYFILES) $(JAVAFILES)
 	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \
 	$(top_srcdir)/LICENSE.txt html/
 	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
@@ -136,6 +152,9 @@ html/index.html: manpages doxyfile.in Geographic.dox \
 	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
 	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
 	$(srcdir)/doxyfile-for.in | $(DOXYGEN) -
+	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
+	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	$(srcdir)/doxyfile-java.in | $(DOXYGEN) -
 else
 html/index.html: index.html.in utilities.html.in
 	if test -d html; then rm -rf html/*; else mkdir html; fi
@@ -159,6 +178,10 @@ install-doc: html/index.html
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html/Fortran && \
 	$(INSTALL) -m 644 `dirname $<`/Fortran/*.* \
 	$(DESTDIR)$(docdir)/html/Fortran
+	-test -f `dirname $<`/java/index.html && \
+	$(INSTALL) -d $(DESTDIR)$(docdir)/html/java && \
+	$(INSTALL) -m 644 `dirname $<`/java/*.* \
+	$(DESTDIR)$(docdir)/html/java
 	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts
 	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(DESTDIR)$(docdir)/scripts
 	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts/GeographicLib

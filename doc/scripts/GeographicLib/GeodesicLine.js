@@ -129,7 +129,7 @@
     outmask &= this._caps & g.OUT_ALL;
     if (!( arcmode || (this._caps & g.DISTANCE_IN & g.OUT_ALL) )) {
       // Uninitialized or impossible distance calculation requested
-      vals.a12 = Number.NaN();
+      vals.a12 = Number.NaN;
       return vals;
     }
 
