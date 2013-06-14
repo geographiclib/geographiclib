@@ -4588,7 +4588,8 @@ of the git repository for %GeographicLib.
      - accumulate the perimeter and area of polygons via a double-wide
        accumulator in Fortran, C, and Matlab implementations (this is
        already included in the other implementations);
-     - port PolygonArea::AddEdge to JavaScript and python interfaces.
+     - port PolygonArea::AddEdge to JavaScript and python interfaces;
+     - write up stuff about short geodesics.
    - Unix scripts for downloading datasets,
      geographiclib-get-{geoids,gravity,magnetic}, skip already download
      models by default, unless the -f flag is given.
@@ -4605,8 +4606,7 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.29">Version 1.29</a>
    (released 2013-01-16)
    - Changes to allow compilation with libc++ (courtesy of Kal Conley).
-   - Add description of geodesics on triaxial ellipsoid to
-     documentation.
+   - Add description of \ref triaxial to documentation.
    - Update journal reference for "Algorithms for geodesics".
 
  - <a href="http://geographiclib.sf.net/1.28">Version 1.28</a>

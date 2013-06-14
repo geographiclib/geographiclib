@@ -86,6 +86,8 @@ The important classes are
    errata</a>).
 - <a href="http://geographiclib.sf.net">The GeographicLib web site</a>.
 - <a href="../index.html">The C++ library</a>.
+- <a href="../C/index.html">The C library</a>.
+- <a href="../Fortran/index.html">The Fortran library</a>.
 - The section in the %GeographicLib documentation on geodesics:
   <a href="../geodesic.html">Geodesics on an ellipsoid of revolution</a>.
 - <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">

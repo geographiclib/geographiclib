@@ -81,6 +81,8 @@ CMakeLists.txt.
    errata</a>).
 - <a href="http://geographiclib.sf.net">The GeographicLib web site</a>.
 - <a href="../index.html">The C++ library</a>.
+- <a href="../C/index.html">The C library</a>.
+- <a href="../java/index.html">The Java library</a>.
 - Documentation on the C++ classes: GeographicLib::Geodesic,
   GeographicLib::GeodesicLine, GeographicLib::PolygonArea.
 - The section in the %GeographicLib documentation on geodesics: \ref

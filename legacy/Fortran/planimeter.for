@@ -31,6 +31,6 @@
  20   continue
       call area(a, f, lats, lons, n, S, P)
       print 30, n, P, S
- 30   format(i5, 1x, f20.8, 1x, f20.3)
+ 30   format(i6, 1x, f20.8, 1x, f20.3)
       stop
       end
