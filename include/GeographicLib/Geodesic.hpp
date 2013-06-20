@@ -373,7 +373,7 @@ namespace GeographicLib {
      * 180&deg;).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
-     * longitude fixed and writing \e lat = &plusmn;(90&deg; &minus; &epsilon;)
+     * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
      * and taking the limit &epsilon; &rarr; 0+.  An arc length greater that
      * 180&deg; signifies a geodesic which is not a shortest path.  (For a
      * prolate ellipsoid, an additional condition is necessary for a shortest
@@ -487,7 +487,7 @@ namespace GeographicLib {
      * 180&deg;).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
-     * longitude fixed and writing \e lat = &plusmn;(90&deg; &minus; &epsilon;)
+     * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
      * and taking the limit &epsilon; &rarr; 0+.  An arc length greater that
      * 180&deg; signifies a geodesic which is not a shortest path.  (For a
      * prolate ellipsoid, an additional condition is necessary for a shortest
@@ -662,7 +662,7 @@ namespace GeographicLib {
      * [&minus;180&deg;, 180&deg;).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
-     * longitude fixed and writing \e lat = &plusmn;(90&deg; &minus; &epsilon;)
+     * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
      * and taking the limit &epsilon; &rarr; 0+.
      *
      * The solution to the inverse problem is found using Newton's method.  If
@@ -812,6 +812,7 @@ namespace GeographicLib {
      *   specifying the capabilities the GeodesicLine object should possess,
      *   i.e., which quantities can be returned in calls to
      *   GeodesicLine::Position.
+     * @return a GeodesicLine object.
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
      * azi1 should be in the range [&minus;540&deg;, 540&deg;).
@@ -834,9 +835,9 @@ namespace GeographicLib {
      * .
      * The default value of \e caps is Geodesic::ALL.
      *
-     * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-     * fixed and writing \e lat1 = &plusmn;(90 &minus; &epsilon;) and taking
-     * the limit &epsilon; &rarr; 0+.
+     * If the point is at a pole, the azimuth is defined by keeping \e lon1
+     * fixed, writing \e lat1 = &plusmn;(90 &minus; &epsilon;), and taking the
+     * limit &epsilon; &rarr; 0+.
      **********************************************************************/
     GeodesicLine Line(real lat1, real lon1, real azi1, unsigned caps = ALL)
       const throw();

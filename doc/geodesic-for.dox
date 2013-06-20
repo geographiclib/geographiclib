@@ -62,7 +62,7 @@ CMakeLists.txt.
 - Optionall put @verbatim
   include "geodesic.inc" @endverbatim
   in declaration section of your subroutines.
-- Include calls to the geodesic routines in your code.  The interface to
+- make calls to the geodesic routines from your code.  The interface to
   the library is documented in geodesic.for.
 - Compile and link as described above.
 

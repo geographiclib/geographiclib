@@ -1,6 +1,5 @@
 /**
- * @file PolygonResult.java
- * @brief Implementation of the net.sf.geographiclib.PolygonResult class
+ * Implementation of the net.sf.geographiclib.PolygonResult class
  *
  * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
@@ -9,7 +8,7 @@
 package net.sf.geographiclib;
 
 /**
- * @brief A container for the results from PolygonArea
+ * A container for the results from PolygonArea.
  **********************************************************************/
 public class PolygonResult {
   /**
@@ -26,7 +25,7 @@ public class PolygonResult {
   public double area;
   /**
    * Constructor
-   *
+   * <p>
    * @param num the number of vertices in the polygon.
    * @param perimeter the perimeter of the polygon or the length of the
    *   polyline (meters).

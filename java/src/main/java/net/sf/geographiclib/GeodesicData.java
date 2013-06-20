@@ -1,18 +1,22 @@
 /**
- * @file GeodesicData.java
- * @brief Implementation of the net.sf.geographiclib.GeodesicData class
+ * Implementation of the net.sf.geographiclib.GeodesicData class
  *
  * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 package net.sf.geographiclib;
+
 /**
- * @brief The results of geodesic calculations
+ * The results of geodesic calculations.
  *
- * This is used to return the results for a geodesic between point 1 (\e lat1,
- * \e lon1) and point 2 (\e lat2, \e lon2).  Fields that have not been set will
- * be filled with Double.NaN.
+ * This is used to return the results for a geodesic between point 1
+ * (<i>lat1</i>, <i>lon1</i>) and point 2 (<i>lat2</i>, <i>lon2</i>).  Fields
+ * that have not been set will be filled with Double.NaN.  The returned
+ * GeodesicData objects always include the parameters provided to {@link
+ * Geodesic#Direct(double, double, double, double) Geodesic.Direct} and {@link
+ * Geodesic#Inverse(double, double, double, double) Geodesic.Inverse} and it
+ * always includes the field <i>a12</i>.
  **********************************************************************/
 public class GeodesicData {
   /**

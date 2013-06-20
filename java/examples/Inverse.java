@@ -1,12 +1,11 @@
 /**
- * @file Inverse.java
- * @brief A test program for the GeographicLib.Geodesic.Inverse method
+ * A test program for the GeographicLib.Geodesic.Inverse method
  **********************************************************************/
 
 import java.util.*;
 import net.sf.geographiclib.*;
 /**
- * @brief Solve the inverse geodesic problem.
+ * Solve the inverse geodesic problem.
  *
  * This program reads in lines with lat1, lon1, lat2, lon2 and prints out lines
  * with azi1, azi2, s12 (for the WGS84 ellipsoid).

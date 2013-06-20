@@ -157,12 +157,12 @@
 *! 180&deg;).
 *!
 *! If either point is at a pole, the azimuth is defined by keeping the
-*! longitude fixed and writing \e lat = \e lat = &plusmn;(90&deg;
-*! &minus; &epsilon;) and taking the limit &epsilon; &rarr; 0+.  An arc
-*! length greater that 180&deg; signifies a geodesic which is not a
-*! shortest path.  (For a prolate ellipsoid, an additional condition is
-*! necessary for a shortest path: the longitudinal extent must not
-*! exceed of 180&deg;.)
+*! longitude fixed, writing \e lat = \e lat = &plusmn;(90&deg; &minus;
+*! &epsilon;), and taking the limit &epsilon; &rarr; 0+.  An arc length
+*! greater that 180&deg; signifies a geodesic which is not a shortest
+*! path.  (For a prolate ellipsoid, an additional condition is necessary
+*! for a shortest path: the longitudinal extent must not exceed of
+*! 180&deg;.)
 
       subroutine direct(a, f, lat1, lon1, azi1, s12a12, arcmod,
      +    lat2, lon2, azi2, omask, a12s12, m12, MM12, MM21, SS12)
@@ -493,9 +493,8 @@
 *! [&minus;180&deg;, 180&deg;).
 *!
 *! If either point is at a pole, the azimuth is defined by keeping the
-*! longitude fixed and writing \e lat = 90&deg; &minus; &epsilon; or
-*! &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
-*! above.
+*! longitude fixed, writing \e lat = &plusmn;(90&deg; &minus;
+*! &epsilon;), and taking the limit &epsilon; &rarr; 0+.
 *!
 *! The solution to the inverse problem is found using Newton's method.  If
 *! this fails to converge (this is very unlikely in geodetic applications

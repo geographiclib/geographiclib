@@ -1,130 +1,157 @@
 /**
- * @file Geodesic.java
- * @brief Implementation of the net.sf.geographiclib.Geodesic class
+ * Implementation of the net.sf.geographiclib.Geodesic class
  *
  * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 package net.sf.geographiclib;
+
 /**
- * @brief %Geodesic calculations
- *
- * The shortest path between two points on a ellipsoid at (\e lat1, \e lon1)
- * and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12 and
- * the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at
- * the two end points.  (The azimuth is the heading measured clockwise from
- * north.  \e azi2 is the "forward" azimuth, i.e., the heading that takes you
- * beyond point 2 not back to point 1.)
- *
- * Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2, \e
- * lon2, and \e azi2.  This is the \e direct geodesic problem and its
- * solution is given by the function Geodesic.Direct.  (If \e s12 is
- * sufficiently large that the geodesic wraps more than halfway around the
- * earth, there will be another geodesic between the points with a smaller \e
- * s12.)
- *
- * Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi1, \e
- * azi2, and \e s12.  This is the \e inverse geodesic problem, whose solution
- * is given by Geodesic.Inverse.  Usually, the solution to the inverse
- * problem is unique.  In cases where there are multiple solutions (all with
- * the same \e s12, of course), all the solutions can be easily generated
- * once a particular solution is provided.
- *
+ * Geodesic calculations.
+ * <p>
+ * The shortest path between two points on a ellipsoid at (<i>lat1</i>,
+ * <i>lon1</i>) and (<i>lat2</i>, <i>lon2</i>) is called the geodesic.  Its
+ * length is <i>s12</i> and the geodesic from point 1 to point 2 has azimuths
+ * <i>azi1</i> and <i>azi2</i> at the two end points.  (The azimuth is the
+ * heading measured clockwise from north.  <i>azi2</i> is the "forward"
+ * azimuth, i.e., the heading that takes you beyond point 2 not back to point
+ * 1.)
+ * <p>
+ * Given <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, and <i>s12</i>, we can
+ * determine <i>lat2</i>, <i>lon2</i>, and <i>azi2</i>.  This is the
+ * <i>direct</i> geodesic problem and its solution is given by the function
+ * {@link #Direct Direct}.  (If <i>s12</i> is sufficiently large that the
+ * geodesic wraps more than halfway around the earth, there will be another
+ * geodesic between the points with a smaller <i>s12</i>.)
+ * <p>
+ * Given <i>lat1</i>, <i>lon1</i>, <i>lat2</i>, and <i>lon2</i>, we can
+ * determine <i>azi1</i>, <i>azi2</i>, and <i>s12</i>.  This is the
+ * <i>inverse</i> geodesic problem, whose solution is given by {@link #Inverse
+ * Inverse}.  Usually, the solution to the inverse problem is unique.  In cases
+ * where there are multiple solutions (all with the same <i>s12</i>, of
+ * course), all the solutions can be easily generated once a particular
+ * solution is provided.
+ * <p>
  * The standard way of specifying the direct problem is the specify the
- * distance \e s12 to the second point.  However it is sometimes useful
- * instead to specify the arc length \e a12 (in degrees) on the auxiliary
+ * distance <i>s12</i> to the second point.  However it is sometimes useful
+ * instead to specify the arc length <i>a12</i> (in degrees) on the auxiliary
  * sphere.  This is a mathematical construct used in solving the geodesic
  * problems.  The solution of the direct problem in this form is provided by
- * Geodesic.ArcDirect.  An arc length in excess of 180&deg; indicates
+ * {@link #ArcDirect ArcDirect}.  An arc length in excess of 180&deg; indicates
  * that the geodesic is not a shortest path.  In addition, the arc length
  * between an equatorial crossing and the next extremum of latitude for a
  * geodesic is 90&deg;.
- *
+ * <p>
  * This class can also calculate several other quantities related to
  * geodesics.  These are:
- * - <i>reduced length</i>.  If we fix the first point and increase \e azi1
- *   by \e dazi1 (radians), the second point is displaced \e m12 \e dazi1 in
- *   the direction \e azi2 + 90&deg;.  The quantity \e m12 is called
- *   the "reduced length" and is symmetric under interchange of the two
- *   points.  On a curved surface the reduced length obeys a symmetry
- *   relation, \e m12 + \e m21 = 0.  On a flat surface, we have \e m12 = \e
- *   s12.  The ratio <i>s12</i>/\e m12 gives the azimuthal scale for an
- *   azimuthal equidistant projection.
- * - <i>geodesic scale</i>.  Consider a reference geodesic and a second
- *   geodesic parallel to this one at point 1 and separated by a small
- *   distance \e dt.  The separation of the two geodesics at point 2 is \e
- *   M12 \e dt where \e M12 is called the "geodesic scale".  \e M21 is
+ * <ul>
+ * <li>
+ *   <i>reduced length</i>.  If we fix the first point and increase
+ *   <i>azi1</i> by <i>dazi1</i> (radians), the second point is displaced
+ *   <i>m12</i> <i>dazi1</i> in the direction <i>azi2</i> + 90&deg;.  The
+ *   quantity <i>m12</i> is called the "reduced length" and is symmetric under
+ *   interchange of the two points.  On a curved surface the reduced length
+ *   obeys a symmetry relation, <i>m12</i> + <i>m21</i> = 0.  On a flat
+ *   surface, we have <i>m12</i> = <i>s12</i>.  The ratio <i>s12</i>/<i>m12</i>
+ *   gives the azimuthal scale for an azimuthal equidistant projection.
+ * <li>
+ *   <i>geodesic scale</i>.  Consider a reference geodesic and a second
+ *   geodesic parallel to this one at point 1 and separated by a small distance
+ *   <i>dt</i>.  The separation of the two geodesics at point 2 is <i>M12</i>
+ *   <i>dt</i> where <i>M12</i> is called the "geodesic scale".  <i>M21</i> is
  *   defined similarly (with the geodesics being parallel at point 2).  On a
- *   flat surface, we have \e M12 = \e M21 = 1.  The quantity 1/\e M12 gives
- *   the scale of the Cassini-Soldner projection.
- * - <i>area</i>.  Consider the quadrilateral bounded by the following lines:
+ *   flat surface, we have <i>M12</i> = <i>M21</i> = 1.  The quantity
+ *   1/<i>M12</i> gives the scale of the Cassini-Soldner projection.
+ * <li>
+ *   <i>area</i>.  Consider the quadrilateral bounded by the following lines:
  *   the geodesic from point 1 to point 2, the meridian from point 2 to the
- *   equator, the equator from \e lon2 to \e lon1, the meridian from the
- *   equator to point 1.  The area of this quadrilateral is represented by \e
- *   S12 with a clockwise traversal of the perimeter counting as a positive
- *   area and it can be used to compute the area of any simple geodesic
- *   polygon.
- *
- * The quantities \e m12, \e M12, \e M21 which all specify the behavior of
- * nearby geodesics obey addition rules.  If points 1, 2, and 3 all lie on a
- * single geodesic, then the following rules hold:
- * - \e s13 = \e s12 + \e s23
- * - \e a13 = \e a12 + \e a23
- * - \e S13 = \e S12 + \e S23
- * - \e m13 = \e m12 \e M23 + \e m23 \e M21
- * - \e M13 = \e M12 \e M23 &minus; (1 &minus; \e M12 \e M21) \e m23 / \e m12
- * - \e M31 = \e M32 \e M21 &minus; (1 &minus; \e M23 \e M32) \e m12 / \e m23
- *
- * The results of the geodesic calculations are bundled up into a GeodesicData
- * object which includes in parameters and all the derived results, i.e., \e
- * lat1, \e lon1, \e azi1, \e lat2, \e lon2, \e azi2, \e s12, \e a12, \e m12,
- * \e M12, \e M21, \e S12.
- *
- * The functions Geodesic.Direct, Geodesic.ArcDirect, and Geodesic.Inverse
- * include an optional a final argument \e outmask which allows you specify
- * which results should be computed and returned.  If you omit \e outmask, then
- * the "standard" geodesic results are computed (latitude, longitudes,
- * azimuths, and distance).  \e outmask is bitor'ed combination of GeodesicMask
- * values.  For example, if you wish just to compute the distance between two
- * points you would call, e.g.,
- * @code
+ *   equator, the equator from <i>lon2</i> to <i>lon1</i>, the meridian from
+ *   the equator to point 1.  The area of this quadrilateral is represented by
+ *   <i>S12</i> with a clockwise traversal of the perimeter counting as a
+ *   positive area and it can be used to compute the area of any simple
+ *   geodesic polygon.
+ * </ul>
+ * <p>
+ * The quantities <i>m12</i>, <i>M12</i>, <i>M21</i> which all specify the
+ * behavior of nearby geodesics obey addition rules.  If points 1, 2, and 3 all
+ * lie on a single geodesic, then the following rules hold:
+ * <ul>
+ * <li>
+ *   <i>s13</i> = <i>s12</i> + <i>s23</i>
+ * <li>
+ *   <i>a13</i> = <i>a12</i> + <i>a23</i>
+ * <li>
+ *   <i>S13</i> = <i>S12</i> + <i>S23</i>
+ * <li>
+ *   <i>m13</i> = <i>m12</i> <i>M23</i> + <i>m23</i> <i>M21</i>
+ * <li>
+ *   <i>M13</i> = <i>M12</i> <i>M23</i> &minus; (1 &minus; <i>M12</i>
+ *   <i>M21</i>) <i>m23</i> / <i>m12</i>
+ * <li>
+ *   <i>M31</i> = <i>M32</i> <i>M21</i> &minus; (1 &minus; <i>M23</i>
+ *   <i>M32</i>) <i>m12</i> / <i>m23</i>
+ * </ul>
+ * <p>
+ * The results of the geodesic calculations are bundled up into a {@link
+ * GeodesicData} object which includes the input parameters and all the
+ * computed results, i.e., <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>lat2</i>,
+ * <i>lon2</i>, <i>azi2</i>, <i>s12</i>, <i>a12</i>, <i>m12</i>, <i>M12</i>,
+ * <i>M21</i>, <i>S12</i>.
+ * <p>
+ * The functions {@link #Direct(double, double, double, double, int) Direct},
+ * {@link #ArcDirect(double, double, double, double, int) ArcDirect}, and
+ * {@link #Inverse(double, double, double, double, int) Inverse} include an
+ * optional final argument <i>outmask</i> which allows you specify which
+ * results should be computed and returned.  If you omit <i>outmask</i>, then
+ * the "standard" geodesic results are computed (latitudes, longitudes,
+ * azimuths, and distance).  <i>outmask</i> is bitor'ed combination of {@link
+ * GeodesicMask} values.  For example, if you wish just to compute the distance
+ * between two points you would call, e.g.,
+ * <pre>
+ * {@code
  *  GeodesicData g = Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2,
- *                      GeodesicMask.DISTANCE);
- * @endcode
- *
- * Additional functionality is provided by the GeodesicLine class, which
- * allows a sequence of points along a geodesic to be computed.
- *
+ *                      GeodesicMask.DISTANCE); }</pre>
+ * <p>
+ * Additional functionality is provided by the {@link GeodesicLine} class,
+ * which allows a sequence of points along a geodesic to be computed.
+ * <p>
  * The shortest distance returned by the solution of the inverse problem is
  * (obviously) uniquely defined.  However, in a few special cases there are
  * multiple azimuths which yield the same shortest distance.  Here is a
  * catalog of those cases:
- * - \e lat1 = &minus;\e lat2 (with neither at a pole).  If \e azi1 = \e
- *   azi2, the geodesic is unique.  Otherwise there are two geodesics and the
- *   second one is obtained by setting [\e azi1, \e azi2] = [\e azi2, \e
- *   azi1], [\e M12, \e M21] = [\e M21, \e M12], \e S12 = &minus;\e S12.
- *   (This occurs when the longitude difference is near &plusmn;180&deg; for
- *   oblate ellipsoids.)
- * - \e lon2 = \e lon1 &plusmn; 180&deg; (with neither at a pole).  If \e
- *   azi1 = 0&deg; or &plusmn;180&deg;, the geodesic is unique.  Otherwise
- *   there are two geodesics and the second one is obtained by setting [\e
- *   azi1, \e azi2] = [&minus;\e azi1, &minus;\e azi2], \e S12 = &minus;\e
- *   S12.  (This occurs when the \e lat2 is near &minus;\e lat1 for prolate
- *   ellipsoids.)
- * - Points 1 and 2 at opposite poles.  There are infinitely many geodesics
- *   which can be generated by setting [\e azi1, \e azi2] = [\e azi1, \e
- *   azi2] + [\e d, &minus;\e d], for arbitrary \e d.  (For spheres, this
- *   prescription applies when points 1 and 2 are antipodal.)
- * - s12 = 0 (coincident points).  There are infinitely many geodesics which
- *   can be generated by setting [\e azi1, \e azi2] = [\e azi1, \e azi2] +
- *   [\e d, \e d], for arbitrary \e d.
- *
+ * <ul>
+ * <li>
+ *   <i>lat1</i> = &minus;<i>lat2</i> (with neither at a pole).  If <i>azi1</i>
+ *   = <i>azi2</i>, the geodesic is unique.  Otherwise there are two geodesics
+ *   and the second one is obtained by setting [<i>azi1</i>, <i>azi2</i>] =
+ *   [<i>azi2</i>, <i>azi1</i>], [<i>M12</i>, <i>M21</i>] = [<i>M21</i>,
+ *   <i>M12</i>], <i>S12</i> = &minus;<i>S12</i>.  (This occurs when the
+ *   longitude difference is near &plusmn;180&deg; for oblate ellipsoids.)
+ * <li>
+ *   <i>lon2</i> = <i>lon1</i> &plusmn; 180&deg; (with neither at a pole).  If
+ *   <i>azi1</i> = 0&deg; or &plusmn;180&deg;, the geodesic is unique.
+ *   Otherwise there are two geodesics and the second one is obtained by
+ *   setting [ <i>azi1</i>, <i>azi2</i>] = [&minus;<i>azi1</i>,
+ *   &minus;<i>azi2</i>], <i>S12</i> = &minus; <i>S12</i>.  (This occurs when
+ *   the <i>lat2</i> is near &minus;<i>lat1</i> for prolate ellipsoids.)
+ * <li>
+ *   Points 1 and 2 at opposite poles.  There are infinitely many geodesics
+ *   which can be generated by setting [<i>azi1</i>, <i>azi2</i>] =
+ *   [<i>azi1</i>, <i>azi2</i>] + [<i>d</i>, &minus;<i>d</i>], for arbitrary
+ *   <i>d</i>.  (For spheres, this prescription applies when points 1 and 2 are
+ *   antipodal.)
+ * <li>
+ *   s12 = 0 (coincident points).  There are infinitely many geodesics which
+ *   can be generated by setting [<i>azi1</i>, <i>azi2</i>] = [<i>azi1</i>,
+ *   <i>azi2</i>] + [<i>d</i>, <i>d</i>], for arbitrary <i>d</i>.
+ * </ul>
+ * <p>
  * The calculations are accurate to better than 15 nm (15 nanometers) for the
  * WGS84 ellipsoid.  See Sec. 9 of
  * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
  * details.  The algorithms used by this class are based on series expansions
- * using the flattening \e f as a small parameter.  These are only accurate
+ * using the flattening <i>f</i> as a small parameter.  These are only accurate
  * for |<i>f</i>| &lt; 0.02; however reasonably accurate results will be
  * obtained for |<i>f</i>| &lt; 0.2.  Here is a table of the approximate
  * maximum error (expressed as a distance) for an ellipsoid with the same
@@ -135,25 +162,47 @@ package net.sf.geographiclib;
  *     0.02     30 nm
  *     0.05     10 um
  *     0.1     1.5 mm
- *     0.2     300 mm
- * </pre>
- *
+ *     0.2     300 mm </pre>
+ * <p>
  * The algorithms are described in
- * - C. F. F. Karney,
+ * <ul>
+ * <li>C. F. F. Karney,
  *   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
  *   Algorithms for geodesics</a>,
- *   J. Geodesy <b>87</b>, 43--55 (2013);
+ *   J. Geodesy <b>87</b>, 43&ndash;55 (2013);
  *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
  *   10.1007/s00190-012-0578-z</a>;
  *   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
  *   geod-addenda.html</a>.
+ * </ul>
+ * <p>
+ * Example of use:
+ * <pre>
+ * {@code
+ * // Solve the direct geodesic problem.
  *
- * Examples of use:
- * \include Direct.java
- * \include Inverse.java
+ * // This program reads in lines with lat1, lon1, azi1, s12 and prints
+ * // out lines with lat2, lon2, azi2 (for the WGS84 ellipsoid).
+ *
+ * import java.util.*;
+ * import net.sf.geographiclib.*;
+ * public class Direct {
+ *   public static void main(String[] args) {
+ *     try {
+ *       Scanner in = new Scanner(System.in);
+ *       double lat1, lon1, azi1, s12;
+ *       while (true) {
+ *         lat1 = in.nextDouble(); lon1 = in.nextDouble();
+ *         azi1 = in.nextDouble(); s12 = in.nextDouble();
+ *         GeodesicData g = Geodesic.WGS84.Direct(lat1, lon1, azi1, s12);
+ *         System.out.println(g.lat2 + " " + g.lon2 + " " + g.azi2);
+ *       }
+ *     }
+ *     catch (Exception e) {}
+ *   }
+ * }}</pre>
  **********************************************************************/
 public class Geodesic {
-  /// @cond SKIP
 
   /**
    * The order of the expansions used by Geodesic.
@@ -209,21 +258,16 @@ public class Geodesic {
   protected double _a, _f, _f1, _e2, _ep2, _b, _c2;
   private double _n, _etol2;
   private double _A3x[], _C3x[], _C4x[];
-  /// @endcond
 
   /**
-   * @name Constructor
-   **********************************************************************/
-  ///@{
-  /**
    * Constructor for a ellipsoid with
-   *
+   * <p>
    * @param a equatorial radius (meters).
-   * @param f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-   *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-   *   to 1/\e f.
-   * @exception GeographicErr if \e a or (1 &minus; \e f ) \e a is not
-   *   positive.
+   * @param f flattening of ellipsoid.  Setting <i>f</i> = 0 gives a sphere.
+   *   Negative <i>f</i> gives a prolate ellipsoid.  If <i>f</i> > 1, set
+   *   flattening to 1/<i>f</i>.
+   * @exception GeographicErr if <i>a</i> or (1 &minus; <i>f</i> ) <i>a</i> is
+   *   not positive.
    **********************************************************************/
   public Geodesic(double a, double f) {
     _a = a;
@@ -263,31 +307,27 @@ public class Geodesic {
     C3coeff();
     C4coeff();
   }
-  ///@}
 
-  /**
-   * @name Direct geodesic problem specified in terms of distance.
-   **********************************************************************/
-  ///@{
   /**
    * Solve the direct geodesic problem where the length of the geodesic
    * is specified in terms of distance.
-   *
+   * <p>
    * @param lat1 latitude of point 1 (degrees).
    * @param lon1 longitude of point 1 (degrees).
    * @param azi1 azimuth at point 1 (degrees).
    * @param s12 distance between point 1 and point 2 (meters); it can be
    *   negative.
-   * @return a GeodesicData object with the following fields: \e lat1, \e lon1,
-   *   \e azi1, \e lat2, \e lon2, \e azi2, \e s12, \e a12.
-   *
-   * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-   * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
-   * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
-   * 180&deg;).
-   *
+   * @return a {@link GeodesicData} object with the following fields:
+   *   <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>lat2</i>, <i>lon2</i>,
+   *   <i>azi2</i>, <i>s12</i>, <i>a12</i>.
+   * <p>
+   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;]; <i>lon1</i>
+   * and <i>azi1</i> should be in the range [&minus;540&deg;, 540&deg;).  The
+   * values of <i>lon2</i> and <i>azi2</i> returned are in the range
+   * [&minus;180&deg;, 180&deg;).
+   * <p>
    * If either point is at a pole, the azimuth is defined by keeping the
-   * longitude fixed and writing \e lat = &plusmn;(90&deg; &minus; &epsilon;)
+   * longitude fixed, writing <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;),
    * and taking the limit &epsilon; &rarr; 0+.  An arc length greater that
    * 180&deg; signifies a geodesic which is not a shortest path.  (For a
    * prolate ellipsoid, an additional condition is necessary for a shortest
@@ -303,49 +343,45 @@ public class Geodesic {
    * Solve the direct geodesic problem where the length of the geodesic is
    * specified in terms of distance and with a subset of the geodesic results
    * returned.
-   *
+   * <p>
    * @param lat1 latitude of point 1 (degrees).
    * @param lon1 longitude of point 1 (degrees).
    * @param azi1 azimuth at point 1 (degrees).
    * @param s12 distance between point 1 and point 2 (meters); it can be
    *   negative.
-   * @param outmask a bitor'ed combination of GeodesicMask values
+   * @param outmask a bitor'ed combination of {@link GeodesicMask} values
    *   specifying which results should be returned.
-   * @return a GeodesicData object with the fields specified by \e outmask
-   *   computed.
-   *
-   * \e lat1, \e lon1, \e azi1, \e s12, and \e a12 are always included in the
-   * returned result.
+   * @return a {@link GeodesicData} object with the fields specified by
+   *   <i>outmask</i> computed.
+   * <p>
+   * <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>s12</i>, and <i>a12</i> are
+   * always included in the returned result.
    **********************************************************************/
   public GeodesicData Direct(double lat1, double lon1,
                              double azi1, double s12, int outmask) {
     return Direct(lat1, lon1, azi1, false, s12, outmask);
   }
-  ///@}
 
-  /**
-   * @name Direct geodesic problem specified in terms of arc length.
-   **********************************************************************/
-  ///@{
   /**
    * Solve the direct geodesic problem where the length of the geodesic
    * is specified in terms of arc length.
-   *
+   * <p>
    * @param lat1 latitude of point 1 (degrees).
    * @param lon1 longitude of point 1 (degrees).
    * @param azi1 azimuth at point 1 (degrees).
    * @param a12 arc length between point 1 and point 2 (degrees); it can
    *   be negative.
-   * @return a GeodesicData object with the following fields: \e lat1, \e lon1,
-   *   \e azi1, \e lat2, \e lon2, \e azi2, \e s12, \e a12.
-   *
-   * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-   * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
-   * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
-   * 180&deg;).
-   *
+   * @return a {@link GeodesicData} object with the following fields:
+   *   <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>lat2</i>, <i>lon2</i>,
+   *   <i>azi2</i>, <i>s12</i>, <i>a12</i>.
+   * <p>
+   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;]; <i>lon1</i>
+   * and <i>azi1</i> should be in the range [&minus;540&deg;, 540&deg;).  The
+   * values of <i>lon2</i> and <i>azi2</i> returned are in the range
+   * [&minus;180&deg;, 180&deg;).
+   * <p>
    * If either point is at a pole, the azimuth is defined by keeping the
-   * longitude fixed and writing \e lat = &plusmn;(90&deg; &minus; &epsilon;)
+   * longitude fixed, writing <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;),
    * and taking the limit &epsilon; &rarr; 0+.  An arc length greater that
    * 180&deg; signifies a geodesic which is not a shortest path.  (For a
    * prolate ellipsoid, an additional condition is necessary for a shortest
@@ -362,65 +398,70 @@ public class Geodesic {
    * Solve the direct geodesic problem where the length of the geodesic is
    * specified in terms of arc length and with a subset of the geodesic results
    * returned.
-   *
+   * <p>
    * @param lat1 latitude of point 1 (degrees).
    * @param lon1 longitude of point 1 (degrees).
    * @param azi1 azimuth at point 1 (degrees).
    * @param a12 arc length between point 1 and point 2 (degrees); it can
    *   be negative.
-   * @param outmask a bitor'ed combination of GeodesicMask values
+   * @param outmask a bitor'ed combination of {@link GeodesicMask} values
    *   specifying which results should be returned.
-   * @return a GeodesicData object with the fields specified by \e outmask
-   *   computed.
-   *
-   * \e lat1, \e lon1, \e azi1, and \e a12 are always included in the
-   * returned result.
+   * @return a {@link GeodesicData} object with the fields specified by
+   *   <i>outmask</i> computed.
+   * <p>
+   * <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, and <i>a12</i> are always included
+   * in the returned result.
    **********************************************************************/
   public GeodesicData ArcDirect(double lat1, double lon1,
                                 double azi1, double a12, int outmask) {
     return Direct(lat1, lon1, azi1, true, a12, outmask);
   }
-  ///@}
 
   /**
-   * @name General version of the direct geodesic solution.
-   **********************************************************************/
-  ///@{
-
-  /**
-   * The general direct geodesic problem.  Geodesic.Direct and
-   * Geodesic.ArcDirect are defined in terms of this function.
-   *
+   * The general direct geodesic problem.  {@link #Direct Direct} and
+   * {@link #ArcDirect ArcDirect} are defined in terms of this function.
+   * <p>
    * @param lat1 latitude of point 1 (degrees).
    * @param lon1 longitude of point 1 (degrees).
    * @param azi1 azimuth at point 1 (degrees).
-   * @param arcmode boolean flag determining the meaning of the \e
-   *   s12_a12.
-   * @param s12_a12 if \e arcmode is false, this is the distance between
+   * @param arcmode boolean flag determining the meaning of the
+   *   <i>s12_a12</i>.
+   * @param s12_a12 if <i>arcmode</i> is false, this is the distance between
    *   point 1 and point 2 (meters); otherwise it is the arc length between
    *   point 1 and point 2 (degrees); it can be negative.
-   * @param outmask a bitor'ed combination of GeodesicMask values
+   * @param outmask a bitor'ed combination of {@link GeodesicMask} values
    *   specifying which results should be returned.
-   * @return a GeodesicData object with the fields specified by \e outmask
-   *   computed.
-   *
-   * The GeodesicMask values possible for \e outmask are
-   * - \e outmask |= GeodesicMask.LATITUDE for the latitude \e lat2;
-   * - \e outmask |= GeodesicMask.LONGITUDE for the latitude \e lon2;
-   * - \e outmask |= GeodesicMask.AZIMUTH for the latitude \e azi2;
-   * - \e outmask |= GeodesicMask.DISTANCE for the distance \e s12;
-   * - \e outmask |= GeodesicMask.REDUCEDLENGTH for the reduced length \e
-   *   m12;
-   * - \e outmask |= GeodesicMask.GEODESICSCALE for the geodesic scales \e
-   *   M12 and \e M21;
-   * - \e outmask |= GeodesicMask.AREA for the area \e S12;
-   * - \e outmask |= GeodesicMask.ALL for all of the above.
-   * .
-   * The function value \e a12 is always computed and returned and this
-   * equals \e s12_a12 is \e arcmode is true.  If \e outmask includes
-   * Geodesic.DISTANCE and \e arcmode is false, then \e s12 = \e s12_a12.
-   * It is not necessary to include Geodesic.DISTANCE_IN in \e outmask; this
-   * is automatically included is \e arcmode is false.
+   * @return a {@link GeodesicData} object with the fields specified by
+   *   <i>outmask</i> computed.
+   * <p>
+   * The {@link GeodesicMask} values possible for <i>outmask</i> are
+   * <ul>
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.LATITUDE for the latitude <i>lat2</i>;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.LONGITUDE for the latitude <i>lon2</i>;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.AZIMUTH for the latitude <i>azi2</i>;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.DISTANCE for the distance <i>s12</i>;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.REDUCEDLENGTH for the reduced length
+   *   <i>m12</i>;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.GEODESICSCALE for the geodesic scales
+   *   <i>M12</i> and <i>M21</i>;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.AREA for the area <i>S12</i>;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.ALL for all of the above.
+   * </ul>
+   * <p>
+   * The function value <i>a12</i> is always computed and returned and this
+   * equals <i>s12_a12</i> is <i>arcmode</i> is true.  If <i>outmask</i>
+   * includes {@link GeodesicMask#DISTANCE} and <i>arcmode</i> is false, then
+   * <i>s12</i> = <i>s12_a12</i>.  It is not necessary to include {@link
+   * GeodesicMask#DISTANCE_IN} in <i>outmask</i>; this is automatically
+   * included is <i>arcmode</i> is false.
    **********************************************************************/
   public GeodesicData Direct(double lat1, double lon1, double azi1,
                              boolean arcmode, double s12_a12, int outmask) {
@@ -431,31 +472,27 @@ public class Geodesic {
       .                         // Note the dot!
       Position(arcmode, s12_a12, outmask);
   }
-  ///@}
 
   /**
-   * @name Inverse geodesic problem.
-   **********************************************************************/
-  ///@{
-  /**
    * Solve the inverse geodesic problem.
-   *
+   * <p>
    * @param lat1 latitude of point 1 (degrees).
    * @param lon1 longitude of point 1 (degrees).
    * @param lat2 latitude of point 2 (degrees).
    * @param lon2 longitude of point 2 (degrees).
-   * @return a GeodesicData object with the following fields: \e lat1, \e lon1,
-   *   \e azi1, \e lat2, \e lon2, \e azi2, \e s12, \e a12.
-   *
-   * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;]; \e
-   * lon1 and \e lon2 should be in the range [&minus;540&deg;, 540&deg;).
-   * The values of \e azi1 and \e azi2 returned are in the range
-   * [&minus;180&deg;, 180&deg;).
-   *
+   * @return a {@link GeodesicData} object with the following fields:
+   *   <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>lat2</i>, <i>lon2</i>,
+   *   <i>azi2</i>, <i>s12</i>, <i>a12</i>.
+   * <p>
+   * <i>lat1</i> and <i>lat2</i> should be in the range [&minus;90&deg;,
+   * 90&deg;]; <i>lon1</i> and <i>lon2</i> should be in the range
+   * [&minus;540&deg;, 540&deg;).  The values of <i>azi1</i> and <i>azi2</i>
+   * returned are in the range [&minus;180&deg;, 180&deg;).
+   * <p>
    * If either point is at a pole, the azimuth is defined by keeping the
-   * longitude fixed and writing \e lat = &plusmn;(90&deg; &minus; &epsilon;)
-   * and taking the limit &epsilon; &rarr; 0+.
-   *
+   * longitude fixed, writing <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;),
+   * taking the limit &epsilon; &rarr; 0+.
+   * <p>
    * The solution to the inverse problem is found using Newton's method.  If
    * this fails to converge (this is very unlikely in geodetic applications
    * but does occur for very eccentric ellipsoids), then the bisection method
@@ -470,28 +507,36 @@ public class Geodesic {
   /**
    * Solve the inverse geodesic problem with a subset of the geodesic results
    * returned.
-   *
+   * <p>
    * @param lat1 latitude of point 1 (degrees).
    * @param lon1 longitude of point 1 (degrees).
    * @param lat2 latitude of point 2 (degrees).
    * @param lon2 longitude of point 2 (degrees).
-   * @param outmask a bitor'ed combination of GeodesicMask values
+   * @param outmask a bitor'ed combination of {@link GeodesicMask} values
    *   specifying which results should be returned.
-   * @return a GeodesicData object with the fields specified by \e outmask
-   *   computed.
-   *
-   * The GeodesicMask values possible for \e outmask are
-   * - \e outmask |= GeodesicMask.DISTANCE for the distance \e s12;
-   * - \e outmask |= GeodesicMask.AZIMUTH for the latitude \e azi2;
-   * - \e outmask |= GeodesicMask.REDUCEDLENGTH for the reduced length \e
-   *   m12;
-   * - \e outmask |= GeodesicMask.GEODESICSCALE for the geodesic scales \e
-   *   M12 and \e M21;
-   * - \e outmask |= GeodesicMask.AREA for the area \e S12;
-   * - \e outmask |= GeodesicMask.ALL for all of the above.
-   * .
-   * \e lat1, \e lon1, \e lat2, \e lon2, and \e a12 are always included in the
-   * returned result.
+   * @return a {@link GeodesicData} object with the fields specified by
+   *   <i>outmask</i> computed.
+   * <p>
+   * The {@link GeodesicMask} values possible for <i>outmask</i> are
+   * <ul>
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.DISTANCE for the distance <i>s12</i>;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.AZIMUTH for the latitude <i>azi2</i>;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.REDUCEDLENGTH for the reduced length
+   *   <i>m12</i>;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.GEODESICSCALE for the geodesic scales
+   *   <i>M12</i> and <i>M21</i>;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.AREA for the area <i>S12</i>;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.ALL for all of the above.
+   * </ul>
+   * <p>
+   * <i>lat1</i>, <i>lon1</i>, <i>lat2</i>, <i>lon2</i>, and <i>a12</i> are
+   * always included in the returned result.
    **********************************************************************/
   public GeodesicData Inverse(double lat1, double lon1,
                               double lat2, double lon2, int outmask) {
@@ -849,27 +894,22 @@ public class Geodesic {
     r.a12 = a12;
     return r;
   }
-  ///@}
-
-  /**
-   * @name Interface to GeodesicLine.
-   **********************************************************************/
-  ///@{
 
   /**
    * Set up to compute several points on a single geodesic.
-   *
+   * <p>
    * @param lat1 latitude of point 1 (degrees).
    * @param lon1 longitude of point 1 (degrees).
    * @param azi1 azimuth at point 1 (degrees).
-   *
-   * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-   * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The full set of
-   * capabilities is included.
-   *
-   * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-   * fixed and writing \e lat1 = &plusmn;&(90 &minus; &epsilon;) and taking
-   * the limit &epsilon; &rarr; 0+.
+   * @return a {@link GeodesicLine} object.
+   * <p>
+   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;]; <i>lon1</i>
+   * and <i>azi1</i> should be in the range [&minus;540&deg;, 540&deg;).  The
+   * full set of capabilities is included.
+   * <p>
+   * If the point is at a pole, the azimuth is defined by keeping the
+   * <i>lon1</i> fixed, writing <i>lat1</i> = &plusmn;(90 &minus; &epsilon;),
+   * taking the limit &epsilon; &rarr; 0+.
    **********************************************************************/
   public GeodesicLine Line(double lat1, double lon1, double azi1) {
     return Line(lat1, lon1, azi1, GeodesicMask.ALL);
@@ -877,67 +917,70 @@ public class Geodesic {
   /**
    * Set up to compute several points on a single geodesic with a subset of the
    * capabilities included.
-   *
+   * <p>
    * @param lat1 latitude of point 1 (degrees).
    * @param lon1 longitude of point 1 (degrees).
    * @param azi1 azimuth at point 1 (degrees).
-   * @param caps bitor'ed combination of GeodesicMask values
-   *   specifying the capabilities the GeodesicLine object should possess,
-   *   i.e., which quantities can be returned in calls to
-   *   GeodesicLine.Position.
-   *
-   * The GeodesicMask values are
-   * - \e caps |= GeodesicMask.LATITUDE for the latitude \e lat2; this is
+   * @param caps bitor'ed combination of {@link GeodesicMask} values specifying
+   *   the capabilities the {@link GeodesicLine} object should possess, i.e.,
+   *   which quantities can be returned in calls to {@link
+   *   GeodesicLine#Position GeodesicLine.Position}.
+   * @return a {@link GeodesicLine} object.
+   * <p>
+   * The {@link GeodesicMask} values are
+   * <ul>
+   * <li>
+   *   <i>caps</i> |= GeodesicMask.LATITUDE for the latitude <i>lat2</i>; this
+   *   is added automatically;
+   * <li>
+   *   <i>caps</i> |= GeodesicMask.LONGITUDE for the latitude <i>lon2</i>;
+   * <li>
+   *   <i>caps</i> |= GeodesicMask.AZIMUTH for the azimuth <i>azi2</i>; this is
    *   added automatically;
-   * - \e caps |= GeodesicMask.LONGITUDE for the latitude \e lon2;
-   * - \e caps |= GeodesicMask.AZIMUTH for the azimuth \e azi2; this is
-   *   added automatically;
-   * - \e caps |= GeodesicMask.DISTANCE for the distance \e s12;
-   * - \e caps |= GeodesicMask.REDUCEDLENGTH for the reduced length \e m12;
-   * - \e caps |= GeodesicMask.GEODESICSCALE for the geodesic scales \e M12
-   *   and \e M21;
-   * - \e caps |= GeodesicMask.AREA for the area \e S12;
-   * - \e caps |= GeodesicMask.DISTANCE_IN permits the length of the
-   *   geodesic to be given in terms of \e s12; without this capability the
+   * <li>
+   *   <i>caps</i> |= GeodesicMask.DISTANCE for the distance <i>s12</i>;
+   * <li>
+   *   <i>caps</i> |= GeodesicMask.REDUCEDLENGTH for the reduced length
+   *   <i>m12</i>;
+   * <li>
+   *   <i>caps</i> |= GeodesicMask.GEODESICSCALE for the geodesic scales
+   *   <i>M12</i> and <i>M21</i>;
+   * <li>
+   *   <i>caps</i> |= GeodesicMask.AREA for the area <i>S12</i>;
+   * <li>
+   *   <i>caps</i> |= GeodesicMask.DISTANCE_IN permits the length of the
+   *   geodesic to be given in terms of <i>s12</i>; without this capability the
    *   length can only be specified in terms of arc length;
-   * - \e caps |= GeodesicMask.ALL for all of the above.
-   * .
-   *
-   * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-   * fixed and writing \e lat1 = &plusmn;&(90 &minus; &epsilon;) and taking
+   * <li>
+   *   <i>caps</i> |= GeodesicMask.ALL for all of the above.
+   * </ul>
+   * <p>
+   * If the point is at a pole, the azimuth is defined by keeping <i>lon1</i>
+   * fixed, writing <i>lat1</i> = &plusmn;(90 &minus; &epsilon;), and taking
    * the limit &epsilon; &rarr; 0+.
    **********************************************************************/
   public GeodesicLine Line(double lat1, double lon1, double azi1, int caps) {
     return new GeodesicLine(this, lat1, lon1, azi1, caps);
   }
-  ///@}
 
   /**
-   * @name Inspector functions.
-   **********************************************************************/
-  ///@{
-
-  /**
-   * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+   * @return <i>a</i> the equatorial radius of the ellipsoid (meters).  This is
    *   the value used in the constructor.
    **********************************************************************/
   public double MajorRadius() { return _a; }
 
   /**
-   * @return \e f the  flattening of the ellipsoid.  This is the
+   * @return <i>f</i> the  flattening of the ellipsoid.  This is the
    *   value used in the constructor.
    **********************************************************************/
   public double Flattening() { return _f; }
 
-
   /**
    * @return total area of ellipsoid in meters<sup>2</sup>.  The area of a
-   *   polygon encircling a pole can be found by adding
-   *   Geodesic.EllipsoidArea()/2 to the sum of \e S12 for each side of the
-   *   polygon.
+   *   polygon encircling a pole can be found by adding EllipsoidArea()/2 to
+   *   the sum of <i>S12</i> for each side of the polygon.
    **********************************************************************/
   public double EllipsoidArea() { return 4 * Math.PI * _c2; }
-  ///@}
 
   /**
    * A global instantiation of Geodesic with the parameters for the WGS84
@@ -945,8 +988,6 @@ public class Geodesic {
    **********************************************************************/
   public static final Geodesic WGS84 =
       new Geodesic(Constants.WGS84_a, Constants.WGS84_f);
-
-  /// @cond SKIP
 
   // This is a reformulation of the geodesic problem.  The notation is as
   // follows:
@@ -1519,5 +1560,4 @@ public class Geodesic {
     _C4x[19] = -128/135135.0;
     _C4x[20] = 128/99099.0;
   }
-  /// @endcond
 }

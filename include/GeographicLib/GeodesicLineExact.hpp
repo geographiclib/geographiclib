@@ -162,9 +162,9 @@ namespace GeographicLib {
      * .
      * The default value of \e caps is GeodesicLineExact::ALL.
      *
-     * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-     * fixed and writing \e lat1 = &plusmn;(90&deg; &minus; &epsilon;) and
-     * taking the limit &epsilon; &rarr; 0+.
+     * If the point is at a pole, the azimuth is defined by keeping \e lon1
+     * fixed, writing \e lat1 = &plusmn;(90&deg; &minus; &epsilon;), and taking
+     * the limit &epsilon; &rarr; 0+.
      **********************************************************************/
     GeodesicLineExact(const GeodesicExact& g, real lat1, real lon1, real azi1,
                       unsigned caps = ALL)

@@ -1,13 +1,12 @@
 /**
- * @file Direct.java
- * @brief A test program for the GeographicLib.Geodesic.Direct method
+ * A test program for the GeographicLib.Geodesic.Direct method
  **********************************************************************/
 
 import java.util.*;
 import net.sf.geographiclib.*;
 public class Direct {
 /**
- * @brief Solve the direct geodesic problem.
+ * Solve the direct geodesic problem.
  *
  * This program reads in lines with lat1, lon1, azi1, s12 and prints out lines
  * with lat2, lon2, azi2 (for the WGS84 ellipsoid).

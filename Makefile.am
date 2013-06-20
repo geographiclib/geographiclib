@@ -15,6 +15,7 @@ EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL \
 dist-hook:
 	rm -rf $(distdir)/doc/html $(distdir)/doc/manpages ; \
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
+	rm -rf $(distdir)/java/targets ; \
 	find $(distdir)/java -type f -name '*.class' | xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \

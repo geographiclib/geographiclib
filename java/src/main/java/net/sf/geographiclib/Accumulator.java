@@ -1,6 +1,5 @@
 /**
- * @file Accumulator.java
- * @brief Implementation of the net.sf.geographiclib.Accumulator class
+ * Implementation of the net.sf.geographiclib.Accumulator class
  *
  * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
@@ -9,18 +8,18 @@
 package net.sf.geographiclib;
 
 /**
- * @brief An accumulator for sums
- *
+ * An accumulator for sums.
+ * <p>
  * This allow many double precision numbers to be added together with twice the
  * normal precision.  Thus the effective precision of the sum is 106 bits or
  * about 32 decimal places.
- *
+ * <p>
  * The implementation follows J. R. Shewchuk,
  * <a href="http://dx.doi.org/10.1007/PL00009321"> Adaptive Precision
  * Floating-Point Arithmetic and Fast Robust Geometric Predicates</a>,
- * Discrete & Computational Geometry 18(3) 305--363 (1997).
- *
- * In the documentation of the member functions, \e sum stands for the value
+ * Discrete & Computational Geometry 18(3) 305&ndash;363 (1997).
+ * <p>
+ * In the documentation of the member functions, <i>sum</i> stands for the value
  * currently held in the accumulator.
  ***********************************************************************/
 public  class Accumulator {
@@ -28,33 +27,34 @@ public  class Accumulator {
   private double _s, _t;
   /**
    * Construct from a double.
-   *
-   * @param y set \e sum = \e y.
+   * <p>
+   * @param y set <i>sum</i> = <i>y</i>.
    **********************************************************************/
   public Accumulator(double y) { _s = y; _t = 0; }
   /**
    * Construct from another Accumulator.
-   *
-   * @param a set \e sum = \e a.
+   * <p>
+   * @param a set <i>sum</i> = <i>a</i>.
    **********************************************************************/
   public Accumulator(Accumulator a) { _s = a._s; _t = a._t; }
   /**
    * Set the value to a double.
-   *
-   * @param y set \e sum = \e y.
+   * <p>
+   * @param y set <i>sum</i> = <i>y</i>.
    **********************************************************************/
   public void Set(double y) { _s = y; _t = 0; }
   /**
    * Return the value held in the accumulator.
-   *
-   * @return \e sum.
+   * <p>
+   * @return <i>sum</i>.
    **********************************************************************/
   public double Sum() { return _s; }
   /**
-   * Return the result of adding a number to \e sum (but don't change \e sum).
-   *
+   * Return the result of adding a number to <i>sum</i> (but don't change
+   * <i>sum</i>).
+   * <p>
    * @param y the number to be added to the sum.
-   * @return \e sum + \e y.
+   * @return <i>sum</i> + <i>y</i>.
    **********************************************************************/
   public double Sum(double y) {
     Accumulator a = new Accumulator(this);
@@ -63,8 +63,8 @@ public  class Accumulator {
   }
   /**
    * Add a number to the accumulator.
-   *
-   * @param y set \e sum += \e y.
+   * <p>
+   * @param y set <i>sum</i> += <i>y</i>.
    **********************************************************************/
   public void Add(double y) {
     // Here's Shewchuk's solution...
@@ -106,8 +106,8 @@ public  class Accumulator {
   }
   /**
    * Negate an accumulator.
-   *
-   * Set \e sum = - \e sum.
+   * <p>
+   * Set <i>sum</i> = &minus;<i>sum</i>.
    **********************************************************************/
   public void Negate() { _s = -_s; _t = -_t; }
 }

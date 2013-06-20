@@ -63,7 +63,7 @@ CMakeLists.txt.
 - Put @verbatim
   #include "geodesic.h" @endverbatim
   in your source code.
-- Include calls to the geodesic routines in your code.  The interface to
+- make calls to the geodesic routines from your code.  The interface to
   the library is documented in geodesic.h.
 - Compile and link as described above.
 

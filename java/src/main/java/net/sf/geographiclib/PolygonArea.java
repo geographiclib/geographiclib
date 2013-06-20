@@ -1,40 +1,64 @@
 /**
- * @file PolygonArea.java
- * @brief Implementation of the net.sf.geographiclib.PolygonArea class
+ * Implementation of the net.sf.geographiclib.PolygonArea class
  *
  * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 package net.sf.geographiclib;
+
 /**
- * @brief Polygon areas
- *
+ * Polygon areas.
+ * <p>
  * This computes the area of a geodesic polygon using the method given
  * Section 6 of
- * - C. F. F. Karney,
+ * <ul>
+ * <li>
+ *   C. F. F. Karney,
  *   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
  *   Algorithms for geodesics</a>,
- *   J. Geodesy <b>87</b>, 43--55 (2013);
+ *   J. Geodesy <b>87</b>, 43&ndash;55 (2013);
  *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
  *   10.1007/s00190-012-0578-z</a>;
  *   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
  *   geod-addenda.html</a>.
- *
+ * </ul>
+ * <p>
  * This class lets you add vertices one at a time to the polygon.  The area
  * and perimeter are accumulated in two times the standard floating point
  * precision to guard against the loss of accuracy with many-sided polygons.
  * At any point you can ask for the perimeter and area so far.  There's an
  * option to treat the points as defining a polyline instead of a polygon; in
  * that case, only the perimeter is computed.
- *
+ * <p>
  * Example of use:
- * @include Planimeter.java
+ * <pre>
+ * {@code
+ * // Compute the area of a geodesic polygon.
  *
- * <a href="Planimeter.1.html">Planimeter</a> is a command-line utility
- * providing access to the functionality of PolygonArea.
+ * // This program reads lines with lat, lon for each vertex of a polygon.
+ * // At the end of input, the program prints the number of vertices,
+ * // the perimeter of the polygon and its area (for the WGS84 ellipsoid).
+ *
+ * import java.util.*;
+ * import net.sf.geographiclib.*;
+ *
+ * public class Planimeter {
+ *   public static void main(String[] args) {
+ *     PolygonArea p = new PolygonArea(Geodesic.WGS84, false);
+ *     try {
+ *       Scanner in = new Scanner(System.in);
+ *       while (true) {
+ *         double lat = in.nextDouble(), lon = in.nextDouble();
+ *         p.AddPoint(lat, lon);
+ *       }
+ *     }
+ *     catch (Exception e) {}
+ *     PolygonResult r = p.Compute();
+ *     System.out.println(r.num + " " + r.perimeter + " " + r.area);
+ *   }
+ * }}</pre>
  **********************************************************************/
-
 public class PolygonArea {
 
   private Geodesic _earth;
@@ -60,7 +84,7 @@ public class PolygonArea {
 
   /**
    * Constructor for PolygonArea.
-   *
+   * <p>
    * @param earth the Geodesic object to use for geodesic calculations.
    * @param polyline if true that treat the points as defining a polyline
    *   instead of a polygon.
@@ -91,12 +115,12 @@ public class PolygonArea {
 
   /**
    * Add a point to the polygon or polyline.
-   *
+   * <p>
    * @param lat the latitude of the point (degrees).
    * @param lon the latitude of the point (degrees).
-   *
-   * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
-   * lon should be in the range [&minus;540&deg;, 540&deg;).
+   * <p>
+   * <i>lat</i> should be in the range [&minus;90&deg;, 90&deg;] and <i>lon</i>
+   * should be in the range [&minus;540&deg;, 540&deg;).
    **********************************************************************/
   public void AddPoint(double lat, double lon) {
     lon = GeoMath.AngNormalize(lon);
@@ -117,13 +141,13 @@ public class PolygonArea {
 
   /**
    * Add an edge to the polygon or polyline.
-   *
+   * <p>
    * @param azi azimuth at current point (degrees).
    * @param s distance from current point to next point (meters).
-   *
-   * \e azi should be in the range [&minus;540&deg;, 540&deg;).  This does
-   * nothing if no points have been added yet.  Use PolygonArea.CurrentPoint
-   * to determine the position of the new vertex.
+   * <p>
+   * <i>azi</i> should be in the range [&minus;540&deg;, 540&deg;).  This does
+   * nothing if no points have been added yet.  Use PolygonArea.CurrentPoint to
+   * determine the position of the new vertex.
    **********************************************************************/
   public void AddEdge(double azi, double s) {
     if (_num > 0) {             // Do nothing if _num is zero
@@ -140,29 +164,29 @@ public class PolygonArea {
 
   /**
    * Return the results so far.
-   *
-   * @return PolygonResult(\e num, \e perimeter, \e area) where \e num is the
-   *   number of vertices, \e perimeter is the perimeter of the polygon or the
-   *   length of the polyline (meters), and \e area is the area of the polygon
-   *   (meters<sup>2</sup>) or Double.NaN of \e polyline is true in the
-   *   constructor.
-   *
+   * <p>
+   * @return PolygonResult(<i>num</i>, <i>perimeter</i>, <i>area</i>) where
+   *   <i>num</i> is the number of vertices, <i>perimeter</i> is the perimeter
+   *   of the polygon or the length of the polyline (meters), and <i>area</i>
+   *   is the area of the polygon (meters<sup>2</sup>) or Double.NaN of
+   *   <i>polyline</i> is true in the constructor.
+   * <p>
    * Counter-clockwise traversal counts as a positive area.
    **********************************************************************/
   public PolygonResult Compute() { return Compute(false, true); }
   /**
    * Return the results so far.
-   *
+   * <p>
    * @param reverse if true then clockwise (instead of counter-clockwise)
    *   traversal counts as a positive area.
    * @param sign if true then return a signed result for the area if
    *   the polygon is traversed in the "wrong" direction instead of returning
    *   the area for the rest of the earth.
-   * @return PolygonResult(\e num, \e perimeter, \e area) where \e num is the
-   *   number of vertices, \e perimeter is the perimeter of the polygon or the
-   *   length of the polyline (meters), and \e area is the area of the polygon
-   *   (meters<sup>2</sup>) or Double.NaN of \e polyline is true in the
-   *   constructor.
+   * @return PolygonResult(<i>num</i>, <i>perimeter</i>, <i>area</i>) where
+   *   <i>num</i> is the number of vertices, <i>perimeter</i> is the perimeter
+   *   of the polygon or the length of the polyline (meters), and <i>area</i>
+   *   is the area of the polygon (meters<sup>2</sup>) or Double.NaN of
+   *   <i>polyline</i> is true in the constructor.
    **********************************************************************/
   public PolygonResult Compute(boolean reverse, boolean sign) {
     if (_num < 2)
@@ -202,7 +226,7 @@ public class PolygonArea {
    * cursor.  Ordinary floating point arithmetic is used to accumulate the
    * data for the test point; thus the area and perimeter returned are less
    * accurate than if AddPoint and Compute are used.
-   *
+   * <p>
    * @param lat the latitude of the test point (degrees).
    * @param lon the longitude of the test point (degrees).
    * @param reverse if true then clockwise (instead of counter-clockwise)
@@ -210,14 +234,14 @@ public class PolygonArea {
    * @param sign if true then return a signed result for the area if
    *   the polygon is traversed in the "wrong" direction instead of returning
    *   the area for the rest of the earth.
-   * @return PolygonResult(\e num, \e perimeter, \e area) where \e num is the
-   *   number of vertices, \e perimeter is the perimeter of the polygon or the
-   *   length of the polyline (meters), and \e area is the area of the polygon
-   *   (meters<sup>2</sup>) or Double.NaN of \e polyline is true in the
-   *   constructor.
-   *
-   * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
-   * lon should be in the range [&minus;540&deg;, 540&deg;).
+   * @return PolygonResult(<i>num</i>, <i>perimeter</i>, <i>area</i>) where
+   *   <i>num</i> is the number of vertices, <i>perimeter</i> is the perimeter
+   *   of the polygon or the length of the polyline (meters), and <i>area</i>
+   *   is the area of the polygon (meters<sup>2</sup>) or Double.NaN of
+   *   <i>polyline</i> is true in the constructor.
+   * <p>
+   * <i>lat</i> should be in the range [&minus;90&deg;, 90&deg;] and <i>lon</i>
+   * should be in the range [&minus;540&deg;, 540&deg;).
    **********************************************************************/
   public PolygonResult TestPoint(double lat, double lon,
                                  boolean reverse, boolean sign) {
@@ -272,7 +296,7 @@ public class PolygonArea {
    * user moves the mouse cursor.  Ordinary floating point arithmetic is used
    * to accumulate the data for the test point; thus the area and perimeter
    * returned are less accurate than if AddPoint and Compute are used.
-   *
+   * <p>
    * @param azi azimuth at current point (degrees).
    * @param s distance from current point to final test point (meters).
    * @param reverse if true then clockwise (instead of counter-clockwise)
@@ -280,13 +304,13 @@ public class PolygonArea {
    * @param sign if true then return a signed result for the area if
    *   the polygon is traversed in the "wrong" direction instead of returning
    *   the area for the rest of the earth.
-   * @return PolygonResult(\e num, \e perimeter, \e area) where \e num is the
-   *   number of vertices, \e perimeter is the perimeter of the polygon or the
-   *   length of the polyline (meters), and \e area is the area of the polygon
-   *   (meters<sup>2</sup>) or Double.NaN of \e polyline is true in the
-   *   constructor.
-   *
-   * \e azi should be in the range [&minus;540&deg;, 540&deg;).
+   * @return PolygonResult(<i>num</i>, <i>perimeter</i>, <i>area</i>) where
+   *   <i>num</i> is the number of vertices, <i>perimeter</i> is the perimeter
+   *   of the polygon or the length of the polyline (meters), and <i>area</i>
+   *   is the area of the polygon (meters<sup>2</sup>) or Double.NaN of
+   *   <i>polyline</i> is true in the constructor.
+   * <p>
+   * <i>azi</i> should be in the range [&minus;540&deg;, 540&deg;).
    **********************************************************************/
   public PolygonResult TestEdge(double azi, double s,
                                 boolean reverse, boolean sign) {
@@ -335,30 +359,25 @@ public class PolygonArea {
   }
 
   /**
-   * @name Inspector functions
-   **********************************************************************/
-  ///@{
-  /**
-   * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+   * @return <i>a</i> the equatorial radius of the ellipsoid (meters).  This is
    *   the value inherited from the Geodesic object used in the constructor.
    **********************************************************************/
 
   public double MajorRadius() { return _earth.MajorRadius(); }
 
   /**
-   * @return \e f the flattening of the ellipsoid.  This is the value
+   * @return <i>f</i> the flattening of the ellipsoid.  This is the value
    *   inherited from the Geodesic object used in the constructor.
    **********************************************************************/
   public double Flattening() { return _earth.Flattening(); }
 
   /**
    * Report the previous vertex added to the polygon or polyline.
-   *
-   * @return Pair(\e lat, \e lon), the current latitude and longitude.
-   *
-   * If no points have been added, then Double.NaN is returned.  Otherwise, \e
-   * lon will be in the range [&minus;180&deg;, 180&deg;).
+   * <p>
+   * @return Pair(<i>lat</i>, <i>lon</i>), the current latitude and longitude.
+   * <p>
+   * If no points have been added, then Double.NaN is returned.  Otherwise,
+   * <i>lon</i> will be in the range [&minus;180&deg;, 180&deg;).
    **********************************************************************/
   public Pair CurrentPoint() { return new Pair(_lat1, _lon1); }
-  ///@}
 }

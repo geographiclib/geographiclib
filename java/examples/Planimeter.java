@@ -1,12 +1,11 @@
 /**
- * @file Planimeter.java
- * @brief A test program for the GeographicLib.PolygonArea class
+ * A test program for the GeographicLib.PolygonArea class
  **********************************************************************/
 
 import java.util.*;
 import net.sf.geographiclib.*;
 /**
- * @brief Compute the area of a geodesic polygon.
+ * Compute the area of a geodesic polygon.
  *
  * This program reads lines with lat, lon for each vertex of a polygon.  At the
  * end of input, the program prints the number of vertices, the perimeter of

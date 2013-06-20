@@ -1,6 +1,5 @@
 /**
- * @file Constants.java
- * @brief Implementation of the net.sf.geographiclib.Constants class
+ * Implementation of the net.sf.geographiclib.Constants class
  *
  * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
@@ -9,8 +8,8 @@
 package net.sf.geographiclib;
 
 /**
- * @brief %Constants needed by %GeographicLib
- *
+ * Constants needed by GeographicLib.
+ * <p>
  * Define constants specifying the WGS84 ellipsoid.
  ***********************************************************************/
 public class Constants {
@@ -22,4 +21,6 @@ public class Constants {
    * The flattening of WGS84 ellipsoid (1/298.257223563).
    **********************************************************************/
   public static final double WGS84_f = 1/298.257223563;
+
+  private Constants() {}
 }

@@ -189,9 +189,9 @@ namespace GeographicLib {
      * .
      * The default value of \e caps is GeodesicLine::ALL.
      *
-     * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-     * fixed and writing \e lat1 = &plusmn;(90&deg; &minus; &epsilon;) and
-     * taking the limit &epsilon; &rarr; 0+.
+     * If the point is at a pole, the azimuth is defined by keeping \e lon1
+     * fixed, writing \e lat1 = &plusmn;(90&deg; &minus; &epsilon;), and taking
+     * the limit &epsilon; &rarr; 0+.
      **********************************************************************/
     GeodesicLine(const Geodesic& g, real lat1, real lon1, real azi1,
                  unsigned caps = ALL)
@@ -536,7 +536,7 @@ namespace GeographicLib {
 
     /**
      * @return \e azi0 the azimuth (degrees) of the geodesic line as it crosses
-     * the equator in a northward direction.
+     *   the equator in a northward direction.
      **********************************************************************/
     Math::real EquatorialAzimuth() const throw() {
       return Init() ?
@@ -545,7 +545,7 @@ namespace GeographicLib {
 
     /**
      * @return \e a1 the arc length (degrees) between the northward equatorial
-     * crossing and point 1.
+     *   crossing and point 1.
      **********************************************************************/
     Math::real EquatorialArc() const throw() {
       return Init() ?

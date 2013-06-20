@@ -63,6 +63,11 @@ cmake ..
 make dist
 cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
 make doc
+(
+    cd ../java
+    mvn package
+    rsync -a target/apidocs/ ../BUILD/doc/html/java/
+)
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
 
 mkdir $TEMP/rel{a,b,c,x,y}
@@ -204,6 +209,7 @@ for l in C Fortran; do
       make -j$NUMCPUS
     )
 done
+
 cd $TEMP/instc
 find . -type f | sort -u > ../files.c
 cd $TEMP/inste
