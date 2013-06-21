@@ -218,7 +218,7 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = 1U<<14 | CAP_C4,
       /**
-       * All capabilities.  Calculate everything.
+       * All capabilities, calculate everything.
        * @hideinitializer
        **********************************************************************/
       ALL           = OUT_ALL| CAP_ALL,

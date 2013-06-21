@@ -204,7 +204,7 @@ I<M31> = I<M32> I<M21> - (1 - I<M23> I<M32>) I<m12> / I<m23>.
 
 Finally, I<S12> is the area between the geodesic from point 1 to point 2
 and the equator; i.e., it is the area, measured counter-clockwise, of
-the quadrilateral with corners (I<lat1>,I<lon1>), (0,I<lon1>),
+the geodesic quadrilateral with corners (I<lat1>,I<lon1>), (0,I<lon1>),
 (0,I<lon2>), and (I<lat2>,I<lon2>).  It is given in meters^2.
 
 =head1 PRECISION

@@ -64,13 +64,12 @@ package net.sf.geographiclib;
  *   flat surface, we have <i>M12</i> = <i>M21</i> = 1.  The quantity
  *   1/<i>M12</i> gives the scale of the Cassini-Soldner projection.
  * <li>
- *   <i>area</i>.  Consider the quadrilateral bounded by the following lines:
- *   the geodesic from point 1 to point 2, the meridian from point 2 to the
- *   equator, the equator from <i>lon2</i> to <i>lon1</i>, the meridian from
- *   the equator to point 1.  The area of this quadrilateral is represented by
- *   <i>S12</i> with a clockwise traversal of the perimeter counting as a
- *   positive area and it can be used to compute the area of any simple
- *   geodesic polygon.
+ *   <i>area</i>.  The area between the geodesic from point 1 to point 2 and
+ *   the equation is represented by <i>S12</i>; it is the area, measured
+ *   counter-clockwise, of the geodesic quadrilateral with corners
+ *   (<i>lat1</i>,<i>lon1</i>), (0,<i>lon1</i>), (0,<i>lon2</i>), and
+ *   (<i>lat2</i>,<i>lon2</i>).  It can be used to compute the area of any
+ *   simple geodesic polygon.
  * </ul>
  * <p>
  * The quantities <i>m12</i>, <i>M12</i>, <i>M21</i> which all specify the

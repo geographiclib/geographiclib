@@ -75,13 +75,13 @@ namespace GeographicLib {
    *   defined similarly (with the geodesics being parallel at point 2).  On a
    *   flat surface, we have \e M12 = \e M21 = 1.  The quantity 1/\e M12 gives
    *   the scale of the Cassini-Soldner projection.
-   * - <i>area</i>.  Consider the quadrilateral bounded by the following lines:
-   *   the geodesic from point 1 to point 2, the meridian from point 2 to the
-   *   equator, the equator from \e lon2 to \e lon1, the meridian from the
-   *   equator to point 1.  The area of this quadrilateral is represented by \e
-   *   S12 with a clockwise traversal of the perimeter counting as a positive
-   *   area and it can be used to compute the area of any simple geodesic
-   *   polygon.
+
+   * - <i>area</i>.  The area between the geodesic from point 1 to point 2 and
+   *   the equation is represented by \e S12; it is the area, measured
+   *   counter-clockwise, of the geodesic quadrilateral with corners
+   *   (<i>lat1</i>,<i>lon1</i>), (0,<i>lon1</i>), (0,<i>lon2</i>), and
+   *   (<i>lat2</i>,<i>lon2</i>).  It can be used to compute the area of any
+   *   simple geodesic polygon.
    *
    * Overloaded versions of Geodesic::Direct, Geodesic::ArcDirect, and
    * Geodesic::Inverse allow these quantities to be returned.  In addition
@@ -322,7 +322,7 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = 1U<<14 | CAP_C4,
       /**
-       * All capabilities.  Calculate everything.
+       * All capabilities, calculate everything.
        * @hideinitializer
        **********************************************************************/
       ALL           = OUT_ALL| CAP_ALL,

@@ -53,10 +53,16 @@ Also included are 3 small test programs:
  .
 Here, for example, is inverse.c
 \include inverse.c
-To compile and link this, you would typically run \verbatim
-cc -o inverse inverse.c geodesic.c -lm \endverbatim
+To compile, link, and run this, you would typically use \verbatim
+cc -o inverse inverse.c geodesic.c -lm
+echo 30 0 29.5 179.5 | ./inverse \endverbatim
 These sample programs can also be built with the supplied cmake file,
-CMakeLists.txt.
+CMakeLists.txt, as follows \verbatim
+mkdir BUILD
+cd BUILD
+cmake ..
+make
+echo 30 0 29.5 179.5 | ./inverse \endverbatim
 
 \section library Using the library
 

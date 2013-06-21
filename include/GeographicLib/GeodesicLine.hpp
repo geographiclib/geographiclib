@@ -144,7 +144,7 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = Geodesic::AREA,
       /**
-       * All capabilities.  Calculate everything.
+       * All capabilities, calculate everything.
        * @hideinitializer
        **********************************************************************/
       ALL           = Geodesic::ALL,

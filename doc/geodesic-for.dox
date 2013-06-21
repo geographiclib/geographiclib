@@ -52,10 +52,16 @@ Also included are 3 small test programs:
  .
 Here, for example, is geodinverse.for
 \include geodinverse.for
-To compile and link this, you would typically run \verbatim
-f77 -o geodinverse geodinverse.for geodesic.for \endverbatim
+To compile, link, and run this, you would typically use \verbatim
+f95 -o geodinverse geodinverse.for geodesic.for
+echo 30 0 29.5 179.5 | ./geodinverse \endverbatim
 These sample programs can also be built with the supplied cmake file,
-CMakeLists.txt.
+CMakeLists.txt, as follows \verbatim
+mkdir BUILD
+cd BUILD
+cmake ..
+make
+echo 30 0 29.5 179.5 | ./geodinverse \endverbatim
 
 \section library Using the library
 

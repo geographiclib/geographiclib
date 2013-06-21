@@ -71,7 +71,7 @@ public class GeodesicMask {
    **********************************************************************/
   public static final int AREA          = 1<<14 | CAP_C4;
   /**
-   * All capabilities.  Calculate everything.
+   * All capabilities, calculate everything.
    **********************************************************************/
   public static final int ALL           = OUT_ALL| CAP_ALL;
 }
