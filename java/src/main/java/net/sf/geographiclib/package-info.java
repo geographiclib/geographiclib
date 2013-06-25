@@ -32,20 +32,20 @@
  * <p>
  * <h2>Sample programs</h2>
  * <p>
- * Also included are 3 small test programs in the examples directory
+ * Also included are 3 small test programs
  * <ul>
  * <li>
- *    Direct.java is a simple command line utility for solving the
- *    direct geodesic problem;
+ *    {@code direct/src/main/java/Direct.java} is a simple command line utility
+ *    for solving the direct geodesic problem;
  * <li>
- *    Inverse.java is a simple command line utility for solving the
- *    inverse geodesic problem;
+ *    {@code inverse/src/main/java/Inverse.java} is a simple command line
+ *    utility for solving the inverse geodesic problem;
  * <li>
- *    Planimeter.java is a simple command line utility for computing the
- *    area of a geodesic polygon given its vertices.
+ *    {@code planimter/src/main/java/Planimeter.java} is a simple command line
+ *    utility for computing the area of a geodesic polygon given its vertices.
  * </ul>
  * <p>
- * Here, for example, is Inverse.java
+ * Here, for example, is {@code Inverse.java}
  * <pre>
  * {@code
  * // Solve the inverse geodesic problem.
@@ -70,23 +70,37 @@
  *     catch (Exception e) {}
  *   }
  * }}</pre>
- * To compile and run this, you would typically run <pre>
- * cd examples
- * javac -cp .:../src/main/java Inverse.java
- * echo -30 0 29.5 179.5 | java -cp .:../src/main/java Inverse </pre>
- * <p>
- * Alternatively you can use <a href="http://maven.apache.org/">maven</a>
- * to create a jar file by running (in the main java directory) <pre>
+ * <h2>Compiling and running a sample program</h2>
+ * Three difference ways of compiling and running {@code Inverse.java} are
+ * given.  These differ in the degree to which they utilize
+ * <a href="http://maven.apache.org/">maven</a> to manage your Java code and
+ * its dependencies.
+ * <h3>Without using maven</h3>
+ * Compile and run as follows <pre>
+ * cd inverse/src/main/java
+ * javac -cp .:../../../../src/main/java Inverse.java
+ * echo -30 0 29.5 179.5 | java -cp .:../../../../src/main/java Inverse </pre>
+ * <h3>Using maven to package GeographicLib</h3>
+ * Use <a href="http://maven.apache.org/">maven</a> to create a jar file by
+ * running (in the main java directory) <pre>
  * mvn package </pre>
  * (Your first run of maven may take a long time, because it needs to download
- * some additional packages to your local repository.)
- * In order to use the resulting jar file with the examples, you would run
- * <pre>
- * cd examples
- * javac -cp .:../targets/GeographicLib-1.31.jar Inverse.java
+ * some additional packages to your local repository.)  Then compile and run
+ * Inverse.java with <pre>
+ * cd inverse/src/main/java
+ * javac -cp .:../../../../target/GeographicLib-1.31.jar Inverse.java
  * echo -30 0 29.5 179.5 |
- *   java -cp .:../targets/GeographicLib-1.31.jar Inverse </pre>
- * <p>
+ *   java -cp .:../../../../target/GeographicLib-1.31.jar Inverse </pre>
+ * <h3>Using maven to build and run {@code Inverse.java}</h3>
+ * Use <a href="http://maven.apache.org/">maven</a> to install GeographicLib by
+ * running (in the main java directory) <pre>
+ * mvn install </pre>
+ * (Your first run of maven may take a long time, because it needs to download
+ * some additional packages to your local repository.)  Then compile and run
+ * Inverse.java using {@code inverse/pom.xml} with <pre>
+ * cd inverse
+ * mvn compile
+ * echo -30 0 29.5 179.5 | mvn -q exec:java </pre>
  * <h2>Using the library</h2>
  * <p>
  * <ul>
@@ -97,7 +111,7 @@
  * <li>
  *   Make calls to the geodesic routines from your code.
  * <li>
- *   Compile and run as described above.
+ *   Compile and run in one of the ways described above.
  * </ul>
  * <p>
  * The important classes are
