@@ -1,6 +1,6 @@
 /**
  * Geodesic.js
- * Transcription of Geodesic.[ch]pp into javascript.
+ * Transcription of Geodesic.[ch]pp into JavaScript.
  *
  * See the documentation for the C++ class.  The conversion is a literal
  * conversion from C++.

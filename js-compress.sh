@@ -1,8 +1,8 @@
 #! /bin/sh
-# Concatenate and strip Javascript files
+# Concatenate and strip JavaScript files
 cat <<EOF
 /*
- * Geodesic routines from GeographicLib translated to Javascript.  For
+ * Geodesic routines from GeographicLib translated to JavaScript.  For
  * more information, see
  * http://geographiclib.sf.net/html/other.html#javascript
  *

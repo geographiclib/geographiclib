@@ -14,14 +14,8 @@ The code in this directory is entirely self-contained.  In particular,
 it does not depend on the C++ classes.  You can build the example
 programs using, for example,
 
-  cd examples
-  javac -cp .:../src/main/java Inverse.java
-  echo -30 0 29.5 179.5 | java -cp .:../src/main/java Inverse
+  cd inverse/src/main/java
+  javac -cp .:../../../../src/main/java Inverse.java
+  echo -30 0 29.5 179.5 | java -cp .:../../../../src/main/java Inverse
 
-Alternatively you can create a jar file for the libary and use that
-
-  mvn package
-  cd examples
-  javac -cp .:../targets/GeographicLib-1.31.jar Inverse.java
-  echo -30 0 29.5 179.5 |
-    java -cp .:../targets/GeographicLib-1.31.jar Inverse
+Building with maven is also supported (see the documentation).

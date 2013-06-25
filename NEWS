@@ -304,7 +304,7 @@ Changes between 1.13 (released 2011-08-13) and 1.12 versions:
       functions to make longitude precede latitude;
     + GeoConvert now has a -w option to make longitude precede latitude
       on input and output;
-    + include a Javascript version of DMS.
+    + include a JavaScript version of DMS.
 
   * Slight improvement in starting guess for solution of geographic
     latitude in terms of conformal latitude in TransverseMercator,
@@ -333,7 +333,7 @@ Changes between 1.12 (released 2011-07-21) and 1.11 versions:
 
   * Add GeographicLib::PolygonArea class and equivalent Matlab function.
 
-  * Provide Javascript and Python implementations of geodesic routines.
+  * Provide JavaScript and Python implementations of geodesic routines.
 
   * Fix Windows installer to include runtime dlls for Matlab.
 

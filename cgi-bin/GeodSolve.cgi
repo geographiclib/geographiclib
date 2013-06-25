@@ -281,8 +281,8 @@ cat <<EOF
       with <a href="http://geographiclib.sourceforge.net/">
         GeographicLib</a>.
       This web interface illustrates a subset of its capabilities.
-      Geodesics can also be computed using Javascript; see the
-      <a href="../scripts/geod-calc.html">Javascript geodesic
+      Geodesics can also be computed using JavaScript; see the
+      <a href="../scripts/geod-calc.html">JavaScript geodesic
 	calculator</a> and
       <a href="../scripts/geod-google.html">geodesics on Google
 	maps</a>.  If you wish to use GeodSolve directly,

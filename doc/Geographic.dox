@@ -26,7 +26,7 @@ returning accurate results with errors close to round-off (about
 \ref transversemercator have been developed for this library.  The
 functionality of the library can be accessed from user code, from the
 \ref utilities provided, or via the \ref other.  For a sample of the
-geodesic capabilities in Javascript, check out the
+geodesic capabilities in JavaScript, check out the
 <a href="../scripts/geod-calc.html">online geodesic calculator</a> and
 the script for displaying
 <a href="../scripts/geod-google.html">geodesics in Google Maps</a>
@@ -135,7 +135,7 @@ and the utilities have been tested with g++ 4.4 under Linux, with g++
 fails with Visual Studio 11.  This is a bug in the I/O library and is
 unlikely to affect most users (bug reported 2013-01-10).
 
-Matlab, Javascript, and Python interfaces are provided to portions of
+Matlab, JavaScript, and Python interfaces are provided to portions of
 %GeographicLib; see \ref other.
 
 The section \ref geodesic documents the method of solving the geodesic
@@ -1017,7 +1017,7 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page other Implementations in C, Fortran, Java, Javascript, Python, Matlab, Maxima
+\page other Implementations in C, Fortran, Java, JavaScript, Python, Matlab, Maxima
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -1049,9 +1049,9 @@ For documentation, see
 
 \section java Java implementation
 
-The directory <code>java</code> and <code>legacy/Fortran</code> contains
-implementations of GeographicLib::Geodesic, GeographicLib::GeodesicLine,
-and GeographicLib::PolygonArea in Java.  This implementation is entirely
+The directory <code>java</code> contains implementations of
+GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
+GeographicLib::PolygonArea in Java.  This implementation is entirely
 self-contained and does not depend on the rest of %GeographicLib.
 Sample main programs to solve the direct and inverse geodesic problems
 and to compute polygonal areas are provided.
@@ -1059,7 +1059,7 @@ and to compute polygonal areas are provided.
 For documentation, see
  - <a href="java/index.html">Java library for geodesics</a>.
 
-\section javascript Javascript implementation
+\section javascript JavaScript implementation
 
 The directory doc/scripts/GeographicLib contains the classes
 - GeographicLib::Math
@@ -1069,7 +1069,7 @@ The directory doc/scripts/GeographicLib contains the classes
 - GeographicLib::PolygonArea
 - GeographicLib::DMS
 .
-translated into Javascript.  See Interface.js for a simple Javascript
+translated into JavaScript.  See Interface.js for a simple JavaScript
 interface to these routines (documented near the top of the file).
 Examples of using this interface are
 - a <a href="../scripts/geod-calc.html">geodesic calculator</a> showing
@@ -1080,7 +1080,7 @@ Examples of using this interface are
   Maps</a> which shows the geodesic, the geodesic circle, and various
   geodesic envelopes.
 .
-These examples include a "stripped" version of the Javascript code, \code
+These examples include a "stripped" version of the JavaScript code, \code
 <script type="text/javascript"
         src="http://geographiclib.sf.net/scripts/geographiclib.js">
 </script> \endcode
@@ -4581,7 +4581,7 @@ of the git repository for %GeographicLib.
        uses the -largeArrayDims option.
    - Changes to the geodesic routines:
      - add \ref java of the geodesic routines;
-     - avoid altering input args in Fortran implementation;
+     - FIX BUG: avoid altering input args in Fortran implementation;
      - more systematic treatment of very short geodesics;
      - fixes to python port so that they work with version 3.x, in
        addition to 2.x (courtesy of Amato);
@@ -4867,7 +4867,7 @@ of the git repository for %GeographicLib.
       longitude precede latitude;
     - <a href="GeoConvert.1.html">GeoConvert</a> now has a -w option to
       make longitude precede latitude on input and output;
-    - include a Javascript version of GeographicLib::DMS.
+    - include a JavaScript version of GeographicLib::DMS.
   - Slight improvement in starting guess for solution of geographic
     latitude in terms of conformal latitude in TransverseMercator,
     TransverseMercatorExact, and LambertConformalConic.
@@ -4888,7 +4888,7 @@ of the git repository for %GeographicLib.
    (released 2011-07-21)
   - Change license to MIT/X11.
   - Add GeographicLib::PolygonArea class and equivalent Matlab function.
-  - Provide Javascript and Python implementations of geodesic routines.
+  - Provide JavaScript and Python implementations of geodesic routines.
   - Fix Windows installer to include runtime dlls for Matlab.
   - Fix (innocuous) unassigned variable in Geodesic::GenInverse.
   - Geodesic routines in Matlab return a12 as first column of aux return

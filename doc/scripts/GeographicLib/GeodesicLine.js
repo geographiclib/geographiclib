@@ -1,6 +1,6 @@
 /**
  * GeodesicLine.js
- * Transcription of GeodesicLine.[ch]pp into javascript.
+ * Transcription of GeodesicLine.[ch]pp into JavaScript.
  *
  * See the documentation for the C++ class.  The conversion is a literal
  * conversion from C++.

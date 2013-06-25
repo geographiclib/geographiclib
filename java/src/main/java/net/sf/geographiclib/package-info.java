@@ -9,8 +9,7 @@
  * href="http://geographiclib.sf.net">GeographicLib</a>.  This is a
  * self-contained library which makes it easy to do geodesic computations
  * for an ellipsoid of revolution in a Java program.  It requires Java
- * version 1.1 or later.  I am open to suggestions for how best to package
- * this as a stand-alone library.
+ * version 1.1 or later.
  * <p>
  * <h2>Downloading the source</h2>
  * <p>
@@ -74,7 +73,8 @@
  * Three difference ways of compiling and running {@code Inverse.java} are
  * given.  These differ in the degree to which they utilize
  * <a href="http://maven.apache.org/">maven</a> to manage your Java code and
- * its dependencies.
+ * its dependencies.  (Thanks to Skip Breidbach for supplying the maven
+ * support.)
  * <h3>Without using maven</h3>
  * Compile and run as follows <pre>
  * cd inverse/src/main/java

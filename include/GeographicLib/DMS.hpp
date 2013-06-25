@@ -151,7 +151,7 @@ namespace GeographicLib {
      * implementation %GeographicLib is with 8-bit characters.  The support for
      * unicode symbols for degrees, minutes, and seconds is therefore via the
      * <a href="http://en.wikipedia.org/wiki/UTF-8">UTF-8</a> encoding.  (The
-     * Javascript implementation of this class uses unicode natively, of
+     * JavaScript implementation of this class uses unicode natively, of
      * course.)
      *
      * Here is the list of Unicode symbols supported for degrees, minutes,
