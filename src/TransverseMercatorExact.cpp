@@ -344,9 +344,9 @@ namespace GeographicLib {
   }
 
   void TransverseMercatorExact::Scale(real tau, real /*lam*/,
-                                       real snu, real cnu, real dnu,
-                                       real snv, real cnv, real dnv,
-                                       real& gamma, real& k) const throw() {
+                                      real snu, real cnu, real dnu,
+                                      real snv, real cnv, real dnv,
+                                      real& gamma, real& k) const throw() {
     real sec2 = 1 + Math::sq(tau);    // sec(phi)^2
     // Lee 55.12 -- negated for our sign convention.  gamma gives the bearing
     // (clockwise from true north) of grid north
@@ -375,8 +375,8 @@ namespace GeographicLib {
     lon = Math::AngDiff(Math::AngNormalize(lon0), Math::AngNormalize(lon));
     // Explicitly enforce the parity
     int
-      latsign = !_extendp && lat < 0 ? -1 : 1,
-      lonsign = !_extendp && lon < 0 ? -1 : 1;
+      latsign = (!_extendp && lat < 0) ? -1 : 1,
+      lonsign = (!_extendp && lon < 0) ? -1 : 1;
     lon *= lonsign;
     lat *= latsign;
     bool backside = !_extendp && lon > 90;
@@ -416,7 +416,10 @@ namespace GeographicLib {
     zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
     tau=taupinv(tau);
     Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-    gamma /= Math::degree<real>();
+    if (lat == 90)
+      gamma = lon;
+    else
+      gamma /= Math::degree<real>();
     if (backside)
       gamma = 180 - gamma;
     gamma *= latsign * lonsign;

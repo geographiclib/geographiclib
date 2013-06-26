@@ -3436,17 +3436,19 @@ corresponding quantities for the ellipsoidal geodesic.
 
 Consistent with the accuracy of this method, we can compute
 \f$\phi'_1\f$ and \f$\phi'_2\f$ using a Taylor expansion about
-\f$\phi_0\f$.  Write \f$\Delta \phi = \phi - \phi_0\f$ and \f$\Delta
-\phi' = \phi' - \phi'_0\f$; then we have, accurate to \f$(\Delta\phi)^3\f$,
+\f$\phi_0\f$.  This also avoid numerical errors arising from subtracting
+nearly equal quantities when using the equation for \f$\phi'\f$
+directly.  Write \f$\Delta \phi = \phi - \phi_0\f$ and \f$\Delta
+\phi' = \phi' - \phi'_0\f$; then we have
 \f[
-\Delta\phi' =
+\Delta\phi' \approx
 \frac{\Delta\phi}B \biggl[1 +
 \frac{\Delta\phi}{B^2}\frac{e'^2}2
   \biggl(3\sin\phi_0\cos\phi_0 +
-   \frac{\Delta\phi}{B^2}\bigl(1-2\sin^2\phi_0 +
-   e'^2 \cos^2\phi_0 (1 + 3\sin^2\phi_0)\bigr)\biggr)\biggr]
+   \frac{\Delta\phi}{B^2}
+   \bigl(B^2 - \sin^2\phi_0(2 - 3 e'^2 \cos^2\phi_0)\bigr)\biggr)\biggr],
 \f]
-
+where the error is \f$O(f\Delta\phi^4)\f$.
 This is essentially Bowring's method.  Significant differences are
  - Bowring elects to use \f$\phi_0 = \phi_1\f$.  This simplifies the
    calculations somewhat but increases the error by about a factor of
@@ -3460,15 +3462,16 @@ is a better behaved independent variable to use.  In this case, \f$
 \beta_2)/2\f$ and in terms of \f$\Delta\beta = \beta - \beta_0\f$, we
 have
 \f[
-\Delta\phi' =
+\Delta\phi' \approx
 \frac{\Delta\beta}{B'} \biggl[1 +
 \frac{\Delta\beta}{B'^2}\frac{e'^2}2
   \biggl(\sin\beta_0\cos\beta_0 +
    \frac{\Delta\beta}{3B'^2}
-    \bigl( 1 - \sin^2\beta_0(2 + e'^2\sin^2\beta_0)\bigr)
+    \bigl( \cos^2\beta_0 - \sin^2\beta_0 B'^2\bigr)
 \biggr)\biggr],
 \f]
-where \f$B' = \sqrt{1+e'^2\sin^2\beta_0} = \sqrt{1+e'^2}/B\f$.
+where \f$B' = \sqrt{1+e'^2\sin^2\beta_0} = \sqrt{1+e'^2}/B\f$, and the
+error once again is \f$O(f\Delta\phi^4)\f$.
 
 <b>Bessel's auxiliary sphere</b>
 
@@ -4588,11 +4591,17 @@ of the git repository for %GeographicLib.
      - accumulate the perimeter and area of polygons via a double-wide
        accumulator in Fortran, C, and Matlab implementations (this is
        already included in the other implementations);
-     - port PolygonArea::AddEdge to JavaScript and python interfaces;
+     - port GeographicLib::PolygonArea::AddEdge and
+       GeographicLib::PolygonArea::TestEdge to JavaScript and python
+       interfaces;
      - write up stuff about short geodesics.
    - Unix scripts for downloading datasets,
      geographiclib-get-{geoids,gravity,magnetic}, skip already download
      models by default, unless the -f flag is given.
+   - Fixes to the way the Matlab interface routine are build (thanks to
+     Phil Miller and Chris F.).
+   - FIX BUG: meridian convergence returned by
+     GeographicLib::TransverseMercatorExact::Forward was wrong at a pole.
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)

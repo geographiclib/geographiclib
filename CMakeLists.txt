@@ -239,6 +239,11 @@ if (MATLAB_COMPILER)
     set (MEXEXT "mex")
     set (MEXOPTIONS "--mex")
   endif ()
+  if (NOT GEOGRAPHIC_SHARED_LIB AND NOT WIN32)
+    # mex files are shared objects => require static lib to be built with
+    # position independent code
+    set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS}")
+  endif ()
   if (NOT MEX)
     message (WARNING
       "Cannot find Matlab compiler ${MATLAB_COMPILER}${MATLAB_COMPILER_EXT}")
