@@ -4602,6 +4602,8 @@ of the git repository for %GeographicLib.
      Phil Miller and Chris F.).
    - FIX BUG: meridian convergence returned by
      GeographicLib::TransverseMercatorExact::Forward was wrong at a pole.
+   - Improve efficiency of GeographicLib::MGRS::Forward by seeing if the
+     band letter can be determined from the northing.
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)
