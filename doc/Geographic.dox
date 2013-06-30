@@ -3363,7 +3363,8 @@ for evaluate the meridian distance
 \section geodshort Short geodesics
 
 Here we describe Bowring's method for solving the inverse geodesic
-problem in the limit of short geodesics.  References:
+problem in the limit of short geodesics and contrast it with the great
+circle solution using Bessel's auxiliary sphere.  References:
  - B. R. Bowring, The Direct and Inverse Problems for Short Geodesic
    Lines on the Ellipsoid, Surveying and Mapping 41(2), 135--141 (1981).
  - R. H. Rapp,
@@ -3371,15 +3372,15 @@ problem in the limit of short geodesics.  References:
    Geometric Geodesy, Part I</a>, Ohio State Univ. (1991), Sec. 6.5.
 
 Bowring considers the conformal mapping of the ellipsoid to a sphere of
-radius \f$ R \f$ such that circles of latitudes and meridians are
+radius \f$ R \f$ such that circles of latitude and meridians are
 preserved (and hence the azimuth of a line is preserved).  Let \f$
 (\phi, \lambda) \f$ and \f$ (\phi', \lambda') \f$ be the latitude and
 longitude on the ellipsoid and sphere respectively.  Define isometric
-latitudes for the sphere and the ellipoid as
+latitudes for the sphere and the ellipsoid as
 \f[
 \begin{aligned}
   \psi' &= \sinh^{-1} \tan \phi', \\
-  \psi &= \sinh^{-1} \tan \phi - e \tanh^{-1}(e \sin\phi),
+  \psi &= \sinh^{-1} \tan \phi - e \tanh^{-1}(e \sin\phi).
 \end{aligned}
 \f]
 The most general conformal mapping satisfying Bowring's conditions is
@@ -3393,20 +3394,21 @@ analysis.)  The scale of this mapping is
 m(\phi) = \frac{AR}{\nu}\frac{\cos\phi'}{\cos\phi},
 \f]
 where \f$ \nu = a/\sqrt{1 - e^2\sin^2\phi} \f$ is the transverse radius
-of curvature.  (Note that in Bowring's Eq. (10), \f$ \phi \f$ whould be
+of curvature.  (Note that in Bowring's Eq. (10), \f$ \phi \f$ should be
 replaced by \f$ \phi' \f$.)  The mapping from the ellipsoid to the sphere
 depends on three parameters \f$ R, A, K \f$.  These will be selected to
 satisfy certain conditions at some representative latitude \f$ \phi_0
 \f$.  Two possible choices are given below.
 
-<b>Bowring's method:</b>
+\subsection bowring Bowring's method
 
-Bowring's requires that
+Bowring (1981) requires that
 \f[
 m(\phi_0) = 1,\quad
 \left.\frac{dm(\phi)}{d\phi}\right|_{\phi=\phi_0} = 0,\quad
-\left.\frac{d^2m(\phi)}{d\phi^2}\right|_{\phi=\phi_0} = 0.
+\left.\frac{d^2m(\phi)}{d\phi^2}\right|_{\phi=\phi_0} = 0,
 \f]
+i.e, \f$m\approx 1\f$ in the vicinity of \f$\phi = \phi_0\f$.
 This gives
 \f[
 \begin{aligned}
@@ -3419,7 +3421,7 @@ where \f$ e' = e/\sqrt{1-e^2} \f$ is the second eccentricity, \f$ B =
 \sqrt{1+e'^2\cos^2\phi_0} \f$, and \f$ K \f$ is defined implicitly by
 the equation for \f$\phi'_0\f$.  The radius \f$ R \f$ is the (Gaussian)
 mean radius of curvature of the ellipsoid at \f$\phi_0\f$ (so near
-\f$\phi_0\f$ the ellispoid can be deformed to fit the sphere snugly).
+\f$\phi_0\f$ the ellipsoid can be deformed to fit the sphere snugly).
 The third derivative of \f$ m \f$ is given by
 \f[
 \left.\frac{d^3m(\phi)}{d\phi^3}\right|_{\phi=\phi_0} =
@@ -3427,19 +3429,20 @@ The third derivative of \f$ m \f$ is given by
 \f]
 
 The method for solving the inverse problem between two nearby points \f$
-(\phi_1, \lambda_1) \f$ and \f$ (\phi_2, \lambda_2) \f$.  Set \f$\phi_0
-= (\phi_1 + \phi_2)/2\f$.  Compute \f$ R, A, \phi'_0 \f$, and hence find
-\f$ (\phi'_1, \lambda'_1) \f$ and \f$ (\phi'_2, \lambda'_2) \f$.
-Finally, solve for the great circle on a sphere of radius \f$ R \f$; the
-resulting distance and azimuths are good approximations for the
-corresponding quantities for the ellipsoidal geodesic.
+(\phi_1, \lambda_1) \f$ and \f$ (\phi_2, \lambda_2) \f$ is as follows:
+Set \f$\phi_0 = (\phi_1 + \phi_2)/2\f$.  Compute \f$ R, A, \phi'_0 \f$,
+and hence find \f$ (\phi'_1, \lambda'_1) \f$ and \f$ (\phi'_2,
+\lambda'_2) \f$.  Finally, solve for the great circle on a sphere of
+radius \f$ R \f$; the resulting distance and azimuths are good
+approximations for the corresponding quantities for the ellipsoidal
+geodesic.
 
 Consistent with the accuracy of this method, we can compute
 \f$\phi'_1\f$ and \f$\phi'_2\f$ using a Taylor expansion about
-\f$\phi_0\f$.  This also avoid numerical errors arising from subtracting
-nearly equal quantities when using the equation for \f$\phi'\f$
-directly.  Write \f$\Delta \phi = \phi - \phi_0\f$ and \f$\Delta
-\phi' = \phi' - \phi'_0\f$; then we have
+\f$\phi_0\f$.  This also avoids numerical errors that arise from
+subtracting nearly equal quantities when using the equation for
+\f$\phi'\f$ directly.  Write \f$\Delta \phi = \phi - \phi_0\f$ and
+\f$\Delta \phi' = \phi' - \phi'_0\f$; then we have
 \f[
 \Delta\phi' \approx
 \frac{\Delta\phi}B \biggl[1 +
@@ -3449,12 +3452,21 @@ directly.  Write \f$\Delta \phi = \phi - \phi_0\f$ and \f$\Delta
    \bigl(B^2 - \sin^2\phi_0(2 - 3 e'^2 \cos^2\phi_0)\bigr)\biggr)\biggr],
 \f]
 where the error is \f$O(f\Delta\phi^4)\f$.
-This is essentially Bowring's method.  Significant differences are
+This is essentially Bowring's method.  Significant differences between
+this result, "Bowring (improved)", compared to Bowring's paper, "Bowring
+(original)", are:
  - Bowring elects to use \f$\phi_0 = \phi_1\f$.  This simplifies the
    calculations somewhat but increases the error by about a factor of
    4.
  - Bowring's expression for \f$ \Delta\phi' \f$ is only accurate in the
    limit \f$ e' \rightarrow 0 \f$.
+ .
+In fact, arguably, the highest order \f$O(f\Delta\phi^3)\f$ terms should
+be dropped altogether.  Their inclusion does result in a better estimate
+for the distance.  However, if your goal is to generate both accurate
+distances \e and accurate azimuths, then \f$\Delta\phi\f$ needs to be
+restricted sufficiently to allow these terms to be dropped to give the
+"Bowring (truncated)" method.
 
 With highly eccentric ellipsoids, the parametric latitude \f$ \beta \f$
 is a better behaved independent variable to use.  In this case, \f$
@@ -3471,9 +3483,10 @@ have
 \biggr)\biggr],
 \f]
 where \f$B' = \sqrt{1+e'^2\sin^2\beta_0} = \sqrt{1+e'^2}/B\f$, and the
-error once again is \f$O(f\Delta\phi^4)\f$.
+error once again is \f$O(f\Delta\phi^4)\f$.  This is the &quot;Bowring
+(using \f$\beta\f$)&quot; method.
 
-<b>Bessel's auxiliary sphere</b>
+\subsection auxsphere Bessel's auxiliary sphere
 
 %GeographicLib's uses the auxiliary sphere method of Legendre, Bessel,
 and Helmert.  For short geodesics, this is equivalent to picking
@@ -3483,8 +3496,10 @@ m(\phi_0) = 1,\quad
 \left.\frac{dm(\phi)}{d\phi}\right|_{\phi=\phi_0} = 0,\quad
 \tan\phi'_0 = (1 - f) \tan\phi_0.
 \f]
-(The last relation means that \f$\phi'_0 = \beta_0\f$ is the parametric
-latitude corresponding to \f$\phi_0\f$.)  This gives
+Bowring's requirement that the second derivative of \f$m\f$ vanish has
+been replaced by the last relation which states that \f$\phi'_0 =
+\beta_0\f$, the parametric latitude corresponding to \f$\phi_0\f$.  This
+gives
 \f[
 \begin{aligned}
 R &= B'(1-f)a, \\
@@ -3493,6 +3508,87 @@ A &= \frac1{B'(1-f)}, \\
 -e^2B'^2\sin^2\phi_0.
 \end{aligned}
 \f]
+
+Similar to Bowring's method, we can compute \f$\phi'_1\f$ and
+\f$\phi'_2\f$ using a Taylor expansion about \f$\beta_0\f$.  This results
+in the simple expression
+\f[
+\Delta\phi' \approx \Delta\beta,
+\f]
+where the error is \f$O(f\Delta\beta^2)\f$.
+
+\subsection shorterr Estimating the accuracy
+
+In assessing the accuracy of these methods we use two metrics:
+ - The absolute error in the distance.
+ - The consistency of the predicted azimuths.  Imagine starting
+   ellipsoidal geodesics at \f$ (\phi_1, \lambda_1) \f$ and \f$ (\phi_2,
+   \lambda_2) \f$ with the predicted azimuths.  What is the distance
+   between them when they are extended a distance \f$ a \f$ beyond the
+   second point?
+ .
+(The second metric is much more stringent.)  We may now compare the
+methods by asking for a limit to the length of a geodesic which ensures
+that the 2 errors fall below 1 mm and 1 nm (1 nanometer, about the
+round-off limit).
+
+<center>
+<table>
+<caption>Maximum distance that can be used in various methods for
+computing short geodesics while keeping the errors within prescribed
+bounds</caption>
+<tr>
+ <th rowspan="2">method
+ <th colspan="2"><center>distance metric</center></th>
+ <th colspan="2"><center>azimuth metric</center></th>
+<tr>
+ <th>1 mm error</th>
+ <th>1 nm error</th>
+ <th>1 mm error</th>
+ <th>1 nm error</th>
+<tr>
+ <td>Bowring (original)
+ <td><center>87 km</center>
+ <td><center>870 m</center>
+ <td><center>35 km</center>
+ <td><center>350 m</center>
+<tr>
+ <td>Bowring (improved)
+ <td><center>180 km</center>
+ <td><center>1.8 km</center>
+ <td><center>58 km</center>
+ <td><center>580 m</center>
+<tr>
+ <td>Bowring (truncated)
+ <td><center>52 km</center>
+ <td><center>520 m</center>
+ <td><center>52 km</center>
+ <td><center>520 m</center>
+<tr>
+ <td>Bowring (using \f$\beta\f$)
+ <td><center>380 km</center>
+ <td><center>24 km</center>
+ <td><center>60 km</center>
+ <td><center>600 m</center>
+<tr>
+ <td>Bessel's aux. sphere
+ <td><center>42 km</center>
+ <td><center>420 m</center>
+ <td><center>1.7 km</center>
+ <td><center>1.7 m</center>
+</table>
+</center>
+
+For example, if you're only interested in measuring distances and an
+accuracy of 1 mm is sufficient, then Bowring's improved method can be
+used for distances up to 180 km.  On the other hand, %GeographicLib uses
+Bessel's auxiliary sphere and we require both the distance and the
+azimuth to be accurate, so the great circle approximation can only be
+used for distances less than 1.7 m.  The reason that %GeographicLib does
+not use Bowring's method is that the information necessary for auxiliary
+sphere method is already available as part of the general solution and,
+as much as possible, we allow all geodesics to be computed by the
+general method.
 
 <center>
 Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
