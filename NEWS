@@ -4,7 +4,60 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.30.
+The current version of the library is 1.31.
+
+Changes between 1.31 (released 2013-07-01) and 1.30 versions:
+
+   * Changes breaking binary compatibility (source compatibility is
+     maintained):
+     + overloaded versions of DMS::Encode,
+       EllipticFunction::EllipticFunction, and
+       GeoCoords::DMSRepresentation, have been eliminated by the use of
+       optional arguments;
+     + correct the declaration of first arg to UTMUPS::DecodeEPSG.
+
+   * FIX BUG in GeographicLib::GravityCircle constructor (found by
+     Mathieu Peyréga) which caused bogus results for the gravity
+     disturbance and gravity anomaly vectors. (This only affected
+     calculations using GravityCircle. GravityModel calculations did not
+     suffer from this bug.)
+
+   * Improvements to the build:
+     + add macros GEOGRAPHICLIB_VERSION_{MAJOR,MINOR,PATCH} to Config.h;
+     + fix documentation for new version of perlpod;
+     + improving setting of runtime path for Unix-like systems with
+       cmake;
+     + install PDB files when compiling with Visual Studio to aid
+       debugging;
+     + Windows binary release now uses Matlab R2013a (64-bit) and uses
+       the -largeArrayDims option.
+
+   * Changes to the geodesic routines:
+     + add Java implementation of the geodesic routines (thanks to Skip
+       Breidbach for the maven support);
+     + FIX BUG: avoid altering input args in Fortran implementation;
+     + more systematic treatment of very short geodesic;
+     + fixes to python port so that they work with version 3.x, in
+       addition to 2.x (courtesy of Amato);
+     + accumulate the perimeter and area of polygons via a double-wide
+       accumulator in Fortran, C, and Matlab implementations (this is
+       already included in the other implementations);
+     + port PolygonArea::AddEdge and PolygonArea::TestEdge to JavaScript
+       and python interfaces;
+     + include documentation on short geodesics.
+
+   * Unix scripts for downloading datasets,
+     geographiclib-get-{geoids,gravity,magnetic}, skip already download
+     models by default, unless the -f flag is given.
+
+   * FIX BUGS: meridian convergence and scale returned by
+     TransverseMercatorExact was wrong at a pole.
+
+   * Improve efficiency of MGRS::Forward by avoiding the calculation of
+     the latitude if possible (adapting an idea of Craig Rollins).
+
+   * Fixes to the way the Matlab interface routines are built (thanks to
+     Phil Miller and Chris F.).
 
 Changes between 1.30 (released 2013-02-27) and 1.29 versions:
 

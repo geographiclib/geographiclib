@@ -4678,7 +4678,7 @@ of the git repository for %GeographicLib.
      - install PDB files when compiling with Visual Studio to aid
        debugging;
      - Windows binary release now uses Matlab R2013a (64-bit) and
-       uses the -largeArrayDims option;
+       uses the -largeArrayDims option.
      - fixes to the way the Matlab interface routines are built (thanks
        to Phil Miller and Chris F.).
    - Changes to the geodesic routines:
@@ -4703,6 +4703,8 @@ of the git repository for %GeographicLib.
    - Improve efficiency of GeographicLib::MGRS::Forward by avoiding the
      calculation of the latitude if possible (adapting an idea of Craig
      Rollins).
+   - Fixes to the way the Matlab interface routines are built (thanks to
+     Phil Miller and Chris F.).
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)

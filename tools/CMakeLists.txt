@@ -87,7 +87,7 @@ set_tests_properties (GeoConvert5 PROPERTIES WILL_FAIL ON)
 # Check fix for DMS::Decode double rounding bug fixed on 2012-11-15
 add_test (GeoConvert6 GeoConvert -p 9 --input-string "0 179.99999999999998578")
 set_tests_properties (GeoConvert6
-  PROPERTIES PASS_REGULAR_EXPRESSION  "179\\.99999999999997")
+  PROPERTIES PASS_REGULAR_EXPRESSION  "179\\.9999999999999[7-9]")
 
 add_test (Geod0 Geod -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")
 set_tests_properties (Geod0
@@ -238,15 +238,16 @@ set_tests_properties (CartConvert1
 # Test fix to bad meridian convergence at pole with
 # TransverseMercatorExact found 2013-06-26
 add_test (TransverseMercatorProj0
-  TransverseMercatorProj --input-string "90 75")
+  TransverseMercatorProj -k 1 --input-string "90 75")
 set_tests_properties (TransverseMercatorProj0
-  PROPERTIES PASS_REGULAR_EXPRESSION "^0.0+ 9997964.9[0-9]+ 75.0+ 0.999[56]")
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "^0\\.0+ 10001965\\.7293[0-9]+ 75\\.0+ 1\\.0+")
 # Test fix to bad scale at pole with TransverseMercatorExact
-# found 2013-06-30
+# found 2013-06-30 (quarter meridian = 10001965.7293127228128889202m)
 add_test (TransverseMercatorProj1
-  TransverseMercatorProj -r --input-string "0 9997964.943021")
+  TransverseMercatorProj -k 1 -r --input-string "0 10001965.7293127228")
 set_tests_properties (TransverseMercatorProj1
-  PROPERTIES PASS_REGULAR_EXPRESSION "[89][09].[0-9]+ 0.0+ 0.0+ 0.999[56]")
+  PROPERTIES PASS_REGULAR_EXPRESSION "90\\.0+ 0\\.0+ 0\\.0+ (1\\.0+|0\\.9999+)")
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
   # Check fix for single-cell cache bug found 2010-11-23
