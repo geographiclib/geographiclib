@@ -339,7 +339,4 @@ namespace GeographicLib {
     return s.str();
   }
 
-  string DMS::Encode(real angle, component trailing, unsigned prec, flag ind)
-  { return Encode(angle, trailing, prec, ind, char(0)); }
-
 } // namespace GeographicLib

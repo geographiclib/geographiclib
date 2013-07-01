@@ -1,7 +1,7 @@
 int usage(int retval, bool brief) {
   if (brief)
     ( retval ? std::cerr : std::cout ) << "Usage:\n"
-"    TransverseMercatorProj [ -s | -t ] [ -l lon0 ] [ -k k1 ] [ -r ] [ -e a\n"
+"    TransverseMercatorProj [ -s | -t ] [ -l lon0 ] [ -k k0 ] [ -r ] [ -e a\n"
 "    f ] [ --comment-delimiter commentdelim ] [ --version | -h | --help ] [\n"
 "    --input-file infile | --input-string instring ] [ --line-separator\n"
 "    linesep ] [ --output-file outfile ]\n"
@@ -16,7 +16,7 @@ int usage(int retval, bool brief) {
 "       TransverseMercatorProj -- perform transverse Mercator projection\n"
 "\n"
 "SYNOPSIS\n"
-"       TransverseMercatorProj [ -s | -t ] [ -l lon0 ] [ -k k1 ] [ -r ] [ -e a\n"
+"       TransverseMercatorProj [ -s | -t ] [ -l lon0 ] [ -k k0 ] [ -r ] [ -e a\n"
 "       f ] [ --comment-delimiter commentdelim ] [ --version | -h | --help ] [\n"
 "       --input-file infile | --input-string instring ] [ --line-separator\n"
 "       linesep ] [ --output-file outfile ]\n"
@@ -40,7 +40,7 @@ int usage(int retval, bool brief) {
 "       -s  use the sixth-order Krueger series approximation to the transverse\n"
 "           Mercator projection instead of the exact projection.\n"
 "\n"
-"       -t  use exact algorithm with the EXTENDED DOMAIN.\n"
+"       -t  use the exact algorithm with the \"EXTENDED DOMAIN\".\n"
 "\n"
 "       -l  specify the longitude of origin lon0 (degrees, default 0).\n"
 "\n"

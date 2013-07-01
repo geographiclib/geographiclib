@@ -1,12 +1,25 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 
-AC_INIT([GeographicLib],[1.30],[charles@karney.com])
+AC_INIT([GeographicLib],[1.31],[charles@karney.com])
 AC_CANONICAL_SYSTEM
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
 AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE
+
+GEOGRAPHICLIB_VERSION_MAJOR=1
+GEOGRAPHICLIB_VERSION_MINOR=31
+GEOGRAPHICLIB_VERSION_PATCH=0
+AC_DEFINE_UNQUOTED([GEOGRAPHICLIB_VERSION_MAJOR],
+	[$GEOGRAPHICLIB_VERSION_MAJOR],[major version number])
+AC_DEFINE_UNQUOTED([GEOGRAPHICLIB_VERSION_MINOR],
+	[$GEOGRAPHICLIB_VERSION_MINOR],[minor version number])
+AC_DEFINE_UNQUOTED([GEOGRAPHICLIB_VERSION_PATCH],
+	[$GEOGRAPHICLIB_VERSION_PATCH],[patch number])
+AC_SUBST(GEOGRAPHICLIB_VERSION_MAJOR)
+AC_SUBST(GEOGRAPHICLIB_VERSION_MINOR)
+AC_SUBST(GEOGRAPHICLIB_VERSION_PATCH)
 
 dnl
 dnl This directive is deprecated by someone, but I prefer to avoid
@@ -21,9 +34,9 @@ dnl Library code modified:              REVISION++
 dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
-LT_CURRENT=17
-LT_REVISION=2
-LT_AGE=8
+LT_CURRENT=10
+LT_REVISION=0
+LT_AGE=0
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)

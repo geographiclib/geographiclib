@@ -94,11 +94,35 @@ namespace GeographicLib {
     static int UTMRow(int iband, int icol, int irow) throw();
 
     friend class UTMUPS;        // UTMUPS::StandardZone calls LatitudeBand
-    // Return latitude band number [-10, 10) for the give latitude (degrees).
+    // Return latitude band number [-10, 10) for the given latitude (degrees).
     // The bands are reckoned in include their southern edges.
     static int LatitudeBand(real lat) throw() {
       int ilat = int(std::floor(lat));
       return (std::max)(-10, (std::min)(9, (ilat + 80)/8 - 10));
+    }
+    // Return approximate latitude band number [-10, 10) for the given northing
+    // (meters).  With this rule, each 100km tile would have a unique band
+    // letter corresponding to the latitude at the center of the tile.  This
+    // function isn't currently used.
+    static int ApproxLatitudeBand(real y) throw() {
+      // northing at tile center in units of tile = 100km
+      real ya = std::floor( std::min(real(88), std::abs(y/tile_)) ) + 0.5;
+      // convert to lat (mult by 90/100) and then to band (divide by 8)
+      // the +1 fine tunes the boundary between bands 3 and 4
+      int b = int(std::floor( ((ya * 9 + 1) / 10) / 8 ));
+      // For the northern hemisphere we have
+      // band rows  num
+      // N 0   0:8    9
+      // P 1   9:17   9
+      // Q 2  18:26   9
+      // R 3  27:34   8
+      // S 4  35:43   9
+      // T 5  44:52   9
+      // U 6  53:61   9
+      // V 7  62:70   9
+      // W 8  71:79   9
+      // X 9  80:94  15
+      return y >= 0 ? b : -(b + 1);
     }
     // UTMUPS access these enums
     enum {

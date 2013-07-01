@@ -151,7 +151,7 @@ namespace GeographicLib {
      * implementation %GeographicLib is with 8-bit characters.  The support for
      * unicode symbols for degrees, minutes, and seconds is therefore via the
      * <a href="http://en.wikipedia.org/wiki/UTF-8">UTF-8</a> encoding.  (The
-     * Javascript implementation of this class uses unicode natively, of
+     * JavaScript implementation of this class uses unicode natively, of
      * course.)
      *
      * Here is the list of Unicode symbols supported for degrees, minutes,
@@ -304,30 +304,7 @@ namespace GeographicLib {
      * with 2 digits.
      **********************************************************************/
     static std::string Encode(real angle, component trailing, unsigned prec,
-                              flag ind, char dmssep);
-
-    /**
-     * Convert angle (in degrees) into a DMS string (using d, ', and &quot;).
-     *
-     * @param[in] angle input angle (degrees)
-     * @param[in] trailing DMS::component value indicating the trailing units
-     *   on the string and this is given as a decimal number if necessary.
-     * @param[in] prec the number of digits after the decimal point for the
-     *   trailing component.
-     * @param[in] ind DMS::flag value indicated additional formatting.
-     * @return formatted string
-     *
-     * <b>COMPATIBILITY NOTE:</b> This function calls
-     * Encode(real, component, unsigned, flag, char) with a 5th
-     * argument of char(0).  At some point,
-     * Encode(real, component, unsigned, flag) and will be withdrawn
-     * and the interface to
-     * Encode(real, component, unsigned, flag, char) changed so that
-     * its 4th and 5th arguments have default values.  This will
-     * preserve source-level compatibility.
-     **********************************************************************/
-    static std::string Encode(real angle, component trailing, unsigned prec,
-                              flag ind = NONE);
+                              flag ind = NONE, char dmssep = char(0));
 
     /**
      * Convert angle into a DMS string (using d, ', and &quot;) selecting the

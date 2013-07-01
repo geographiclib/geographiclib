@@ -56,12 +56,12 @@ The WGS84 ellipsoid is used, I<a> = 6378137 m, I<f> = 1/298.257223563.
 =item B<-n>
 
 use magnetic field model I<name> instead of the default C<wmm2010>.  See
-L<MODELS|models>.
+L</MODELS>.
 
 =item B<-d>
 
 read magnetic models from I<dir> instead of the default.  See
-L<MODELS|models>.
+L</MODELS>.
 
 =item B<-t>
 

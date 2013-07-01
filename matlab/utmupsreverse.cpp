@@ -35,7 +35,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[0]) != 4)
     mexErrMsgTxt("utmups coordinates must be M x 4 matrix.");
 
-  int m = mxGetM(prhs[0]);
+  mwSize m = mxGetM(prhs[0]);
 
   double* x = mxGetPr(prhs[0]);
   double* y = x + m;
@@ -55,7 +55,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     k = gamma + m;
   }
 
-  for (int i = 0; i < m; ++i) {
+  for (mwIndex i = 0; i < m; ++i) {
     try {
       int ZONE = int(zone[i]);
       if (double(ZONE) != zone[i])

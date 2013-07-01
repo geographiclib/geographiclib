@@ -64,8 +64,18 @@ namespace GeographicLib {
            (_e2 == 0 ? 1 :
             (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
             sqrt(abs(_e2))))/2) // authalic radius squared
-      // The sig12 threshold for "really short"
-    , _etol2(0.01 * tol2_ / max(real(0.1), sqrt(abs(_e2))))
+      // The sig12 threshold for "really short".  Using the auxiliary sphere
+      // solution with dnm computed at (bet1 + bet2) / 2, the relative error in
+      // the azimuth consistency check is sig12^2 * abs(f) * min(1, 1-f/2) / 2.
+      // (Error measured for 1/100 < b/a < 100 and abs(f) >= 1/1000.  For a
+      // given f and sig12, the max error occurs for lines near the pole.  If
+      // the old rule for computing dnm = (dn1 + dn2)/2 is used, then the error
+      // increases by a factor of 2.)  Setting this equal to epsilon gives
+      // sig12 = etol2.  Here 0.1 is a safety factor (error decreased by 100)
+      // and max(0.001, abs(f)) stops etol2 getting too large in the nearly
+      // spherical case.
+    , _etol2(0.1 * tol2_ /
+             sqrt( max(real(0.001), abs(_f)) * min(real(1), 1 - _f/2) / 2 ))
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -266,14 +276,14 @@ namespace GeographicLib {
       // meridian and geodesic is neither meridional or equatorial.
 
       // Figure a starting point for Newton's method
+      real dnm;
       sig12 = InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
                            lam12,
-                           salp1, calp1, salp2, calp2,
+                           salp1, calp1, salp2, calp2, dnm,
                            C1a, C2a);
 
       if (sig12 >= 0) {
-        // Short lines (InverseStart sets salp2, calp2)
-        real dnm = (dn1 + dn2) / 2;
+        // Short lines (InverseStart sets salp2, calp2, dnm)
         s12x = sig12 * _b * dnm;
         m12x = Math::sq(dnm) * _b * sin(sig12 / dnm);
         if (outmask & GEODESICSCALE)
@@ -537,6 +547,8 @@ namespace GeographicLib {
                                     real& salp1, real& calp1,
                                     // Only updated if return val >= 0
                                     real& salp2, real& calp2,
+                                    // Only updated for short lines
+                                    real& dnm,
                                     // Scratch areas of the right size
                                     real C1a[], real C2a[]) const throw() {
     // Return a starting point for Newton's method in salp1 and calp1 (function
@@ -565,10 +577,17 @@ namespace GeographicLib {
     real sbet12a = sbet2 * cbet1 + cbet2 * sbet1;
 #endif
     bool shortline = cbet12 >= 0 && sbet12 < real(0.5) &&
-      lam12 <= Math::pi<real>() / 6;
-    real
-      omg12 = !shortline ? lam12 : lam12 / (_f1 * (dn1 + dn2) / 2),
-      somg12 = sin(omg12), comg12 = cos(omg12);
+      cbet2 * lam12 < real(0.5);
+    real omg12 = lam12;
+    if (shortline) {
+      real sbetm2 = Math::sq(sbet1 + sbet2);
+      // sin((bet1+bet2)/2)^2
+      // =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
+      sbetm2 /= sbetm2 + Math::sq(cbet1 + cbet2);
+      dnm = sqrt(1 + _ep2 * sbetm2);
+      omg12 /= _f1 * dnm;
+    }
+    real somg12 = sin(omg12), comg12 = cos(omg12);
 
     salp1 = cbet2 * somg12;
     calp1 = comg12 >= 0 ?
@@ -582,7 +601,8 @@ namespace GeographicLib {
     if (shortline && ssig12 < _etol2) {
       // really short lines
       salp2 = cbet1 * somg12;
-      calp2 = sbet12 - cbet1 * sbet2 * Math::sq(somg12) / (1 + comg12);
+      calp2 = sbet12 - cbet1 * sbet2 *
+        (comg12 >= 0 ? Math::sq(somg12) / (1 + comg12) : 1 - comg12);
       SinCosNorm(salp2, calp2);
       // Set return value
       sig12 = atan2(ssig12, csig12);

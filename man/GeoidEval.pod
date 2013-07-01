@@ -37,26 +37,26 @@ This utility can also compute the direction of gravity accurately.
 =item B<-n>
 
 use geoid I<name> instead of the default C<egm96-5>.  See
-L<GEOIDS|geoids>.
+L</GEOIDS>.
 
 =item B<-d>
 
 read geoid data from I<dir> instead of the default.  See
-L<GEOIDS|geoids>.
+L</GEOIDS>.
 
 =item B<-l>
 
 use bilinear interpolation instead of cubic.  See
-L<INTERPOLATION|interpolation>.
+L</INTERPOLATION>.
 
 =item B<-a>
 
-cache the entire data set in memory.  See L<CACHE|cache>.
+cache the entire data set in memory.  See L</CACHE>.
 
 =item B<-c>
 
 cache the data bounded by I<south> I<west> I<north> I<east> in memory.
-See L<CACHE|cache>.
+See L</CACHE>.
 
 =item B<-g>
 
@@ -138,9 +138,8 @@ file name of "-" stands for standard output.
 =head1 GEOIDS
 
 B<GeoidEval> computes geoid heights by interpolating on the data in a
-regularly spaced table (see L<INTERPOLATION|interpolation>).  The
-following geoid tables are available (however, some may not be
-installed):
+regularly spaced table (see L</INTERPOLATION>).  The following geoid
+tables are available (however, some may not be installed):
 
                                   bilinear error    cubic error
    name         geoid    grid     max      rms      max      rms

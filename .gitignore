@@ -6,6 +6,7 @@
 *.[oa]
 *.BAK
 *.bak
+*.class
 *.exe
 *.gz
 *.pyc

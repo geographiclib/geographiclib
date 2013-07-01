@@ -8,4 +8,20 @@ This is a C implementation of the geodesic algorithms described in
 
 For documentation, see
 
-  http://geographiclib.sourceforge.net/html/C/index.html
+  http://geographiclib.sourceforge.net/html/C/
+
+The code in this directory is entirely self-contained.  In particular,
+it does not depend on the C++ classes.  You can compile and link the
+example programs directly with something like:
+
+  cc -o inverse inverse.c geodesic.c -lm
+  echo 30 0 29.5 179.5 | ./inverse
+
+Alternatively, you can build the examples using cmake.  For example, on
+Linux systems you might do:
+
+  mkdir BUILD
+  cd BUILD
+  cmake ..
+  make
+  echo 30 0 29.5 179.5 | ./inverse

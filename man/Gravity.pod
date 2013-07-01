@@ -40,12 +40,12 @@ and I<GM> = 3986004.418e8 m^3/s^2.
 =item B<-n>
 
 use gravity field model I<name> instead of the default C<egm96>.  See
-L<MODELS|models>.
+L</MODELS>.
 
 =item B<-d>
 
 read gravity models from I<dir> instead of the default.  See
-L<MODELS|models>.
+L</MODELS>.
 
 =item B<-G>
 

@@ -44,6 +44,8 @@ if (DOXYGEN_FOUND)
   add_dependencies (doc htmlman)
   add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/html/index.html
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxyfile
+      ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-c
+      ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-for
       Geographic.dox geodesic-c.dox geodesic-for.dox
       ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
     COMMAND ${CMAKE_COMMAND} -E remove_directory html
@@ -69,7 +71,7 @@ else ()
     DESTINATION ${INSTALL_DOC_DIR}/html)
 endif ()
 
-# Finally install the Javascript files
+# Finally install the JavaScript files
 file (GLOB SCRIPTDRIVERS scripts/[A-Za-z]*.html)
 file (GLOB JSSCRIPTS scripts/GeographicLib/[A-Za-z]*.js)
 install (FILES ${SCRIPTDRIVERS} DESTINATION ${INSTALL_DOC_DIR}/scripts)

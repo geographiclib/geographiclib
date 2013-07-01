@@ -11,8 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in Fortran
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.30
-\date 2013-mm-dd
+\version 1.31
 
 \section abstract Abstract
 
@@ -26,14 +25,14 @@ compile correctly with just about any Fortran compiler.
 \section download Downloading the source
 
 The Fortran library is part of %GeographicLib which available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.30.tar.gz">
-  GeographicLib-1.30.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.30.zip">
-  GeographicLib-1.30.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.31.tar.gz">
+  GeographicLib-1.31.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.31.zip">
+  GeographicLib-1.31.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the Fortran library can be found in
-GeographicLib-1.30/legacy/Fortran.  The library consists of the file
+GeographicLib-1.31/legacy/Fortran.  The library consists of the file
 geodesic.for.
 
 \section doc Library documentation
@@ -53,17 +52,23 @@ Also included are 3 small test programs:
  .
 Here, for example, is geodinverse.for
 \include geodinverse.for
-To compile and link this, you would typically run \verbatim
-f77 -o geodinverse geodinverse.for geodesic.for \endverbatim
+To compile, link, and run this, you would typically use \verbatim
+f95 -o geodinverse geodinverse.for geodesic.for
+echo 30 0 29.5 179.5 | ./geodinverse \endverbatim
 These sample programs can also be built with the supplied cmake file,
-CMakeLists.txt.
+CMakeLists.txt, as follows \verbatim
+mkdir BUILD
+cd BUILD
+cmake ..
+make
+echo 30 0 29.5 179.5 | ./geodinverse \endverbatim
 
 \section library Using the library
 
 - Optionall put @verbatim
   include "geodesic.inc" @endverbatim
   in declaration section of your subroutines.
-- Include calls to the geodesic routines in your code.  The interface to
+- make calls to the geodesic routines from your code.  The interface to
   the library is documented in geodesic.for.
 - Compile and link as described above.
 
@@ -82,6 +87,8 @@ CMakeLists.txt.
    errata</a>).
 - <a href="http://geographiclib.sf.net">The GeographicLib web site</a>.
 - <a href="../index.html">The C++ library</a>.
+- <a href="../C/index.html">The C library</a>.
+- <a href="../java/index.html">The Java library</a>.
 - Documentation on the C++ classes: GeographicLib::Geodesic,
   GeographicLib::GeodesicLine, GeographicLib::PolygonArea.
 - The section in the %GeographicLib documentation on geodesics: \ref

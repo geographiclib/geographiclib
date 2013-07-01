@@ -52,7 +52,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     f = mxGetScalar(prhs[2]);
   }
 
-  int m = mxGetM(prhs[0]);
+  mwSize m = mxGetM(prhs[0]);
 
   double* lat1 = mxGetPr(prhs[0]);
   double* lon1 = lat1 + m;
@@ -83,7 +83,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   try {
     const Geodesic g(a, f);
-    for (int i = 0; i < m; ++i) {
+    for (mwIndex i = 0; i < m; ++i) {
       if (abs(lat1[i]) <= 90 && lon1[i] >= -540 && lon1[i] < 540 &&
           abs(lat2[i]) <= 90 && lon2[i] >= -540 && lon2[i] < 540) {
         if (aux)

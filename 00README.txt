@@ -109,8 +109,8 @@ Files
       geodseries30.html -- geodesic series to 30th order
       tmseries30.html -- transverse Mercator series to 30th order
       html/* -- directory with built documentation
-      scripts/*.html -- demonstrations of the Javascript interface
-      scripts/GeographicLib/*.js -- Javascript implementation of geodesics
+      scripts/*.html -- demonstrations of the JavaScript interface
+      scripts/GeographicLib/*.js -- JavaScript implementation of geodesics
 
     man/
       *.pod -- plain old documentation

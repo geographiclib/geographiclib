@@ -68,16 +68,16 @@ namespace GeographicLib {
     static inline real hyp(real x) throw() { return Math::hypot(real(1), x); }
     // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0
     // - sqrt(-e2) * atan( sqrt(-e2) * x)                    if f < 0
-    inline real eatanhe(real x) const throw() {
-      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x);
-    }
+    inline real eatanhe(real x) const throw()
+    { return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x); }
     // Divided differences
     // Definition: Df(x,y) = (f(x)-f(y))/(x-y)
-    // See: W. M. Kahan and R. J. Fateman,
-    // Symbolic computation of divided differences,
-    // SIGSAM Bull. 33(3), 7-28 (1999)
-    // http://dx.doi.org/10.1145/334714.334716
-    // http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
+    // See:
+    //   W. M. Kahan and R. J. Fateman,
+    //   Symbolic computation of divided differences,
+    //   SIGSAM Bull. 33(3), 7-28 (1999)
+    //   http://dx.doi.org/10.1145/334714.334716
+    //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
     //
     // General rules
     // h(x) = f(g(x)): Dh(x,y) = Df(g(x),g(y))*Dg(x,y)

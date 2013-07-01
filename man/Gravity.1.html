@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">
-<title>Gravity -- compute the earth's gravity field</title>
+<title></title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <link rev="made" href="mailto:root@localhost" />
 </head>
@@ -10,289 +10,200 @@
 <body style="background-color: white">
 
 
-<!-- INDEX BEGIN -->
-<div name="index">
-<p><a name="__index__"></a></p>
-<!--
 
-<ul>
+<h1 id="NAME">NAME</h1>
 
-	<li><a href="#name">NAME</a></li>
-	<li><a href="#synopsis">SYNOPSIS</a></li>
-	<li><a href="#description">DESCRIPTION</a></li>
-	<li><a href="#options">OPTIONS</a></li>
-	<li><a href="#models">MODELS</a></li>
-	<li><a href="#environment">ENVIRONMENT</a></li>
-	<li><a href="#errors">ERRORS</a></li>
-	<li><a href="#examples">EXAMPLES</a></li>
-	<li><a href="#see_also">SEE ALSO</a></li>
-	<li><a href="#author">AUTHOR</a></li>
-	<li><a href="#history">HISTORY</a></li>
-</ul>
+<p>Gravity -- compute the earth&#39;s gravity field</p>
 
--->
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
 
+<p><b>Gravity</b> [ <b>-n</b> <i>name</i> ] [ <b>-d</b> <i>dir</i> ] [ <b>-G</b> | <b>-D</b> | <b>-A</b> | <b>-H</b> ] [ <b>-c</b> <i>lat</i> <i>h</i> ] [ <b>-p</b> <i>prec</i> ] [ <b>-v</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
 
-</div>
-<!-- INDEX END -->
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
 
-<p>
-</p>
-<h1><a name="name">NAME</a></h1>
-<p>Gravity -- compute the earth's gravity field</p>
-<p>
-</p>
-<hr />
-<h1><a name="synopsis">SYNOPSIS</a></h1>
-<p><strong>Gravity</strong> [ <strong>-n</strong> <em>name</em> ] [ <strong>-d</strong> <em>dir</em> ]
-[ <strong>-G</strong> | <strong>-D</strong> | <strong>-A</strong> | <strong>-H</strong> ] [ <strong>-c</strong> <em>lat</em> <em>h</em> ]
-[ <strong>-p</strong> <em>prec</em> ]
-[ <strong>-v</strong> ]
-[ <strong>--comment-delimiter</strong> <em>commentdelim</em> ]
-[ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
-[ <strong>--input-file</strong> <em>infile</em> | <strong>--input-string</strong> <em>instring</em> ]
-[ <strong>--line-separator</strong> <em>linesep</em> ]
-[ <strong>--output-file</strong> <em>outfile</em> ]</p>
-<p>
-</p>
-<hr />
-<h1><a name="description">DESCRIPTION</a></h1>
-<p><strong>Gravity</strong> reads in positions on standard input and prints out the
-gravitational field on standard output.</p>
-<p>The input line is of the form <em>lat</em> <em>lon</em> <em>h</em>.  <em>lat</em> and <em>lon</em> are
-the latitude and longitude expressed as decimal degrees or degrees,
-minutes, and seconds; see <a href="GeoConvert.1.html"><code>GeoConvert(1)</code></a> for details.  <em>h</em> is the height
-above the ellipsoid in meters; this quantity is optional and defaults to
-0.  Alternatively, the gravity field can be computed at various points
-on a circle of latitude (constant <em>lat</em> and <em>h</em>) via the <strong>-c</strong> option;
-in this case only the longitude should be given on the input lines.  The
-quantities printed out are governed by the <strong>-G</strong> (default), <strong>-D</strong>,
-<strong>-A</strong>, or <strong>-H</strong> options.</p>
-<p>All the supported gravity models use WGS84 as the reference ellipsoid
-<em>a</em> = 6378137 m, <em>f</em> = 1/298.257223563, <em>omega</em> = 7292115e-11 rad/s,
-and <em>GM</em> = 3986004.418e8 m^3/s^2.</p>
-<p>
-</p>
-<hr />
-<h1><a name="options">OPTIONS</a></h1>
+<p><b>Gravity</b> reads in positions on standard input and prints out the gravitational field on standard output.</p>
+
+<p>The input line is of the form <i>lat</i> <i>lon</i> <i>h</i>. <i>lat</i> and <i>lon</i> are the latitude and longitude expressed as decimal degrees or degrees, minutes, and seconds; see GeoConvert(1) for details. <i>h</i> is the height above the ellipsoid in meters; this quantity is optional and defaults to 0. Alternatively, the gravity field can be computed at various points on a circle of latitude (constant <i>lat</i> and <i>h</i>) via the <b>-c</b> option; in this case only the longitude should be given on the input lines. The quantities printed out are governed by the <b>-G</b> (default), <b>-D</b>, <b>-A</b>, or <b>-H</b> options.</p>
+
+<p>All the supported gravity models use WGS84 as the reference ellipsoid <i>a</i> = 6378137 m, <i>f</i> = 1/298.257223563, <i>omega</i> = 7292115e-11 rad/s, and <i>GM</i> = 3986004.418e8 m^3/s^2.</p>
+
+<h1 id="OPTIONS">OPTIONS</h1>
+
 <dl>
-<dt><strong><a name="n" class="item"><strong>-n</strong></a></strong></dt>
 
+<dt id="n"><b>-n</b></dt>
 <dd>
-<p>use gravity field model <em>name</em> instead of the default <code>egm96</code>.  See
-<a href="#models">MODELS</a>.</p>
+
+<p>use gravity field model <i>name</i> instead of the default <code>egm96</code>. See <a href="#MODELS">&quot;MODELS&quot;</a>.</p>
+
 </dd>
-<dt><strong><a name="d" class="item"><strong>-d</strong></a></strong></dt>
-
+<dt id="d"><b>-d</b></dt>
 <dd>
-<p>read gravity models from <em>dir</em> instead of the default.  See
-<a href="#models">MODELS</a>.</p>
+
+<p>read gravity models from <i>dir</i> instead of the default. See <a href="#MODELS">&quot;MODELS&quot;</a>.</p>
+
 </dd>
-<dt><strong><a name="g" class="item"><strong>-G</strong></a></strong></dt>
-
+<dt id="G"><b>-G</b></dt>
 <dd>
-<p>compute the acceleration due to gravity (including the centrifugal
-acceleration due the the earth's rotation) <strong>g</strong>.  The output consists of
-<em>gx</em> <em>gy</em> <em>gz</em> (all in m/s^2), where the <em>x</em>, <em>y</em>, and <em>z</em>
-components are in easterly, northerly, and up directions, respectively.
-Usually <em>gz</em> is negative.</p>
+
+<p>compute the acceleration due to gravity (including the centrifugal acceleration due the the earth&#39;s rotation) <b>g</b>. The output consists of <i>gx</i> <i>gy</i> <i>gz</i> (all in m/s^2), where the <i>x</i>, <i>y</i>, and <i>z</i> components are in easterly, northerly, and up directions, respectively. Usually <i>gz</i> is negative.</p>
+
 </dd>
-<dt><strong><a name="d" class="item"><strong>-D</strong></a></strong></dt>
-
+<dt id="D"><b>-D</b></dt>
 <dd>
-<p>compute the gravity disturbance <strong>delta</strong> = <strong>g</strong> - <strong>gamma</strong>, where
-<strong>gamma</strong> is the &quot;normal&quot; gravity due to the reference ellipsoid .  The
-output consists of <em>deltax</em> <em>deltay</em> <em>deltaz</em> (all in mGal, 1 mGal =
-10^-5 m/s^2), where the <em>x</em>, <em>y</em>, and <em>z</em> components are in easterly,
-northerly, and up directions, respectively.  Note that <em>deltax</em> =
-<em>gx</em>, because <em>gammax</em> = 0.</p>
+
+<p>compute the gravity disturbance <b>delta</b> = <b>g</b> - <b>gamma</b>, where <b>gamma</b> is the &quot;normal&quot; gravity due to the reference ellipsoid . The output consists of <i>deltax</i> <i>deltay</i> <i>deltaz</i> (all in mGal, 1 mGal = 10^-5 m/s^2), where the <i>x</i>, <i>y</i>, and <i>z</i> components are in easterly, northerly, and up directions, respectively. Note that <i>deltax</i> = <i>gx</i>, because <i>gammax</i> = 0.</p>
+
 </dd>
-<dt><strong><a name="a" class="item"><strong>-A</strong></a></strong></dt>
-
+<dt id="A"><b>-A</b></dt>
 <dd>
-<p>computes the gravitational anomaly.  The output consists of 3 items
-<em>Dg01</em> <em>xi</em> <em>eta</em>, where <em>Dg01</em> is in mGal (1 mGal = 10^-5 m/s^2)
-and <em>xi</em> and <em>eta</em> are in arcseconds.  The gravitational anomaly
-compares the gravitational field <strong>g</strong> at <em>P</em> with the normal gravity
-<strong>gamma</strong> at <em>Q</em> where the <em>P</em> is vertically above <em>Q</em> and the
-gravitational potential at <em>P</em> equals the normal potential at <em>Q</em>.
-<em>Dg01</em> gives the difference in the magnitudes of these two vectors and
-<em>xi</em> and <em>eta</em> give the difference in their directions (as northerly
-and easterly components).  The calculation uses a spherical
-approximation to match the results of the NGA's synthesis programs.</p>
+
+<p>computes the gravitational anomaly. The output consists of 3 items <i>Dg01</i> <i>xi</i> <i>eta</i>, where <i>Dg01</i> is in mGal (1 mGal = 10^-5 m/s^2) and <i>xi</i> and <i>eta</i> are in arcseconds. The gravitational anomaly compares the gravitational field <b>g</b> at <i>P</i> with the normal gravity <b>gamma</b> at <i>Q</i> where the <i>P</i> is vertically above <i>Q</i> and the gravitational potential at <i>P</i> equals the normal potential at <i>Q</i>. <i>Dg01</i> gives the difference in the magnitudes of these two vectors and <i>xi</i> and <i>eta</i> give the difference in their directions (as northerly and easterly components). The calculation uses a spherical approximation to match the results of the NGA&#39;s synthesis programs.</p>
+
 </dd>
-<dt><strong><a name="h" class="item"><strong>-H</strong></a></strong></dt>
-
+<dt id="H"><b>-H</b></dt>
 <dd>
-<p>compute the height of the geoid above the reference ellipsoid (in
-meters).  In this case, <em>h</em> should be zero.  The results accurately
-match the results of the NGA's synthesis programs.  <a href="GeoidEval.1.html"><code>GeoidEval(1)</code></a> can
-compute geoid heights much more quickly by interpolating on a grid of
-precomputed results; however the results from <a href="GeoidEval.1.html"><code>GeoidEval(1)</code></a> are only
-accurate to a few millimeters.</p>
+
+<p>compute the height of the geoid above the reference ellipsoid (in meters). In this case, <i>h</i> should be zero. The results accurately match the results of the NGA&#39;s synthesis programs. GeoidEval(1) can compute geoid heights much more quickly by interpolating on a grid of precomputed results; however the results from GeoidEval(1) are only accurate to a few millimeters.</p>
+
 </dd>
-<dt><strong><a name="c" class="item"><strong>-c</strong></a></strong></dt>
-
+<dt id="c"><b>-c</b></dt>
 <dd>
-<p>evaluate the field on a circle of latitude given by <em>lat</em> and <em>h</em>
-instead of reading these quantities from the input lines.  In this case,
-<strong>Gravity</strong> can calculate the field considerably more quickly.  If geoid
-heights are being computed (the <strong>-H</strong> option), then <em>h</em> must be zero.</p>
+
+<p>evaluate the field on a circle of latitude given by <i>lat</i> and <i>h</i> instead of reading these quantities from the input lines. In this case, <b>Gravity</b> can calculate the field considerably more quickly. If geoid heights are being computed (the <b>-H</b> option), then <i>h</i> must be zero.</p>
+
 </dd>
-<dt><strong><a name="p" class="item"><strong>-p</strong></a></strong></dt>
-
+<dt id="p"><b>-p</b></dt>
 <dd>
-<p>set the output precision to <em>prec</em>.  By default <em>prec</em> is 5 for
-acceleration due to gravity, 3 for the gravity disturbance and anomaly,
-and 4 for the geoid height.</p>
+
+<p>set the output precision to <i>prec</i>. By default <i>prec</i> is 5 for acceleration due to gravity, 3 for the gravity disturbance and anomaly, and 4 for the geoid height.</p>
+
 </dd>
-<dt><strong><a name="v" class="item"><strong>-v</strong></a></strong></dt>
-
+<dt id="v"><b>-v</b></dt>
 <dd>
-<p>print information about the gravity model on standard error before
-processing the input.</p>
+
+<p>print information about the gravity model on standard error before processing the input.</p>
+
 </dd>
-<dt><strong><a name="comment_delimiter" class="item"><strong>--comment-delimiter</strong></a></strong></dt>
-
+<dt id="comment-delimiter"><b>--comment-delimiter</b></dt>
 <dd>
-<p>set the comment delimiter to <em>commentdelim</em> (e.g., &quot;#&quot; or &quot;//&quot;).  If
-set, the input lines will be scanned for this delimiter and, if found,
-the delimiter and the rest of the line will be removed prior to
-processing and subsequently appended to the output line (separated by a
-space).</p>
+
+<p>set the comment delimiter to <i>commentdelim</i> (e.g., &quot;#&quot; or &quot;//&quot;). If set, the input lines will be scanned for this delimiter and, if found, the delimiter and the rest of the line will be removed prior to processing and subsequently appended to the output line (separated by a space).</p>
+
 </dd>
-<dt><strong><a name="version" class="item"><strong>--version</strong></a></strong></dt>
-
+<dt id="version"><b>--version</b></dt>
 <dd>
+
 <p>print version and exit.</p>
-</dd>
-<dt><strong><a name="h" class="item"><strong>-h</strong></a></strong></dt>
 
+</dd>
+<dt id="h"><b>-h</b></dt>
 <dd>
+
 <p>print usage, the default gravity path and name, and exit.</p>
-</dd>
-<dt><strong><a name="help" class="item"><strong>--help</strong></a></strong></dt>
 
+</dd>
+<dt id="help"><b>--help</b></dt>
 <dd>
+
 <p>print full documentation and exit.</p>
-</dd>
-<dt><strong><a name="input_file" class="item"><strong>--input-file</strong></a></strong></dt>
 
-<dd>
-<p>read input from the file <em>infile</em> instead of from standard input; a file
-name of &quot;-&quot; stands for standard input.</p>
 </dd>
-<dt><strong><a name="input_string" class="item"><strong>--input-string</strong></a></strong></dt>
-
+<dt id="input-file"><b>--input-file</b></dt>
 <dd>
-<p>read input from the string <em>instring</em> instead of from standard input.
-All occurrences of the line separator character (default is a semicolon)
-in <em>instring</em> are converted to newlines before the reading begins.</p>
+
+<p>read input from the file <i>infile</i> instead of from standard input; a file name of &quot;-&quot; stands for standard input.</p>
+
 </dd>
-<dt><strong><a name="line_separator" class="item"><strong>--line-separator</strong></a></strong></dt>
-
+<dt id="input-string"><b>--input-string</b></dt>
 <dd>
-<p>set the line separator character to <em>linesep</em>.  By default this is a
-semicolon.</p>
+
+<p>read input from the string <i>instring</i> instead of from standard input. All occurrences of the line separator character (default is a semicolon) in <i>instring</i> are converted to newlines before the reading begins.</p>
+
 </dd>
-<dt><strong><a name="output_file" class="item"><strong>--output-file</strong></a></strong></dt>
-
+<dt id="line-separator"><b>--line-separator</b></dt>
 <dd>
-<p>write output to the file <em>outfile</em> instead of to standard output; a
-file name of &quot;-&quot; stands for standard output.</p>
+
+<p>set the line separator character to <i>linesep</i>. By default this is a semicolon.</p>
+
+</dd>
+<dt id="output-file"><b>--output-file</b></dt>
+<dd>
+
+<p>write output to the file <i>outfile</i> instead of to standard output; a file name of &quot;-&quot; stands for standard output.</p>
+
 </dd>
 </dl>
-<p>
-</p>
-<hr />
-<h1><a name="models">MODELS</a></h1>
-<p><strong>Gravity</strong> computes the gravity field using one of the following models</p>
-<pre>
-    egm84, earth gravity model 1984.  See
-      <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html</a>
+
+<h1 id="MODELS">MODELS</h1>
+
+<p><b>Gravity</b> computes the gravity field using one of the following models</p>
+
+<pre><code>    egm84, earth gravity model 1984.  See
+      http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
     egm96, earth gravity model 1996.  See
-      <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html</a>
+      http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
     egm2008, earth gravity model 2008.  See
-      <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008</a>
+      http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
     wgs84, world geodetic system 1984.  This returns the normal
-      gravity for the WGS84 ellipsoid.</pre>
-<p>These models approximate the gravitation field above the surface of the
-earth.  By default, the <code>egm96</code> gravity model is used.  This may
-changed by setting the environment variable <a href="#gravity_name"><code>GRAVITY_NAME</code></a> or with the
-<strong>-n</strong> option.</p>
-<p>The gravity models will be loaded from a directory specified at compile
-time.  This may changed by setting the environment variables
-<a href="#gravity_path"><code>GRAVITY_PATH</code></a> or <a href="#geographiclib_data"><code>GEOGRAPHICLIB_DATA</code></a>, or with the <strong>-d</strong> option.
-The <strong>-h</strong> option prints the default gravity path and name.  Use the
-<strong>-v</strong> option to ascertain the full path name of the data file.</p>
-<p>Instructions for downloading and installing gravity models are
-available at
-<a href="http://geographiclib.sf.net/html/gravity.html#gravityinst">http://geographiclib.sf.net/html/gravity.html#gravityinst</a>.</p>
-<p>
-</p>
-<hr />
-<h1><a name="environment">ENVIRONMENT</a></h1>
+      gravity for the WGS84 ellipsoid.</code></pre>
+
+<p>These models approximate the gravitation field above the surface of the earth. By default, the <code>egm96</code> gravity model is used. This may changed by setting the environment variable <code>GRAVITY_NAME</code> or with the <b>-n</b> option.</p>
+
+<p>The gravity models will be loaded from a directory specified at compile time. This may changed by setting the environment variables <code>GRAVITY_PATH</code> or <code>GEOGRAPHICLIB_DATA</code>, or with the <b>-d</b> option. The <b>-h</b> option prints the default gravity path and name. Use the <b>-v</b> option to ascertain the full path name of the data file.</p>
+
+<p>Instructions for downloading and installing gravity models are available at <a href="http://geographiclib.sf.net/html/gravity.html#gravityinst">http://geographiclib.sf.net/html/gravity.html#gravityinst</a>.</p>
+
+<h1 id="ENVIRONMENT">ENVIRONMENT</h1>
+
 <dl>
-<dt><strong><a name="gravity_name" class="item"><strong>GRAVITY_NAME</strong></a></strong></dt>
 
+<dt id="GRAVITY_NAME"><b>GRAVITY_NAME</b></dt>
 <dd>
-<p>Override the compile-time default gravity name of <code>egm96</code>.  The <strong>-h</strong>
-option reports the value of <strong>GRAVITY_NAME</strong>, if defined, otherwise it
-reports the compile-time value.  If the <strong>-n</strong> <em>name</em> option is used,
-then <em>name</em> takes precedence.</p>
+
+<p>Override the compile-time default gravity name of <code>egm96</code>. The <b>-h</b> option reports the value of <b>GRAVITY_NAME</b>, if defined, otherwise it reports the compile-time value. If the <b>-n</b> <i>name</i> option is used, then <i>name</i> takes precedence.</p>
+
 </dd>
-<dt><strong><a name="gravity_path" class="item"><strong>GRAVITY_PATH</strong></a></strong></dt>
-
+<dt id="GRAVITY_PATH"><b>GRAVITY_PATH</b></dt>
 <dd>
-<p>Override the compile-time default gravity path.  This is typically
-<code>/usr/local/share/GeographicLib/gravity</code> on Unix-like systems and
-<code>C:/Documents and Settings/All Users/Application
-Data/GeographicLib/gravity</code> on Windows systems.  The <strong>-h</strong> option reports
-the value of <strong>GRAVITY_PATH</strong>, if defined, otherwise it reports the
-compile-time value.  If the <strong>-d</strong> <em>dir</em> option is used, then <em>dir</em>
-takes precedence.</p>
+
+<p>Override the compile-time default gravity path. This is typically <code>/usr/local/share/GeographicLib/gravity</code> on Unix-like systems and <code>C:/Documents and Settings/All Users/Application Data/GeographicLib/gravity</code> on Windows systems. The <b>-h</b> option reports the value of <b>GRAVITY_PATH</b>, if defined, otherwise it reports the compile-time value. If the <b>-d</b> <i>dir</i> option is used, then <i>dir</i> takes precedence.</p>
+
 </dd>
-<dt><strong><a name="geographiclib_data" class="item"><strong>GEOGRAPHICLIB_DATA</strong></a></strong></dt>
-
+<dt id="GEOGRAPHICLIB_DATA"><b>GEOGRAPHICLIB_DATA</b></dt>
 <dd>
-<p>Another way of overriding the compile-time default gravity path.  If it
-is set (and if <strong>GRAVITY_PATH</strong> is not set), then
-$<strong>GEOGRAPHICLIB_DATA</strong>/gravity is used.</p>
+
+<p>Another way of overriding the compile-time default gravity path. If it is set (and if <b>GRAVITY_PATH</b> is not set), then $<b>GEOGRAPHICLIB_DATA</b>/gravity is used.</p>
+
 </dd>
 </dl>
-<p>
-</p>
-<hr />
-<h1><a name="errors">ERRORS</a></h1>
-<p>An illegal line of input will print an error message to standard output
-beginning with <code>ERROR:</code> and causes <strong>Gravity</strong> to return an exit
-code of 1.  However, an error does not cause <strong>Gravity</strong> to
-terminate; following lines will be converted.</p>
-<p>
-</p>
-<hr />
-<h1><a name="examples">EXAMPLES</a></h1>
+
+<h1 id="ERRORS">ERRORS</h1>
+
+<p>An illegal line of input will print an error message to standard output beginning with <code>ERROR:</code> and causes <b>Gravity</b> to return an exit code of 1. However, an error does not cause <b>Gravity</b> to terminate; following lines will be converted.</p>
+
+<h1 id="EXAMPLES">EXAMPLES</h1>
+
 <p>The gravity field from EGM2008 at the top of Mount Everest</p>
-<pre>
-    echo 27:59:17N 86:55:32E 8820 | Gravity -n egm2008
-    =&gt; -0.00001 0.00103 -9.76782</pre>
-<p>
-</p>
-<hr />
-<h1><a name="see_also">SEE ALSO</a></h1>
-<p><a href="GeoConvert.1.html"><code>GeoConvert(1)</code></a>, <a href="GeoidEval.1.html"><code>GeoidEval(1)</code></a>.</p>
-<p>
-</p>
-<hr />
-<h1><a name="author">AUTHOR</a></h1>
-<p><strong>Gravity</strong> was written by Charles Karney.</p>
-<p>
-</p>
-<hr />
-<h1><a name="history">HISTORY</a></h1>
-<p><strong>Gravity</strong> was added to GeographicLib, <a href="http://geographiclib.sf.net">http://geographiclib.sf.net</a>,
-in version 1.16.</p>
+
+<pre><code>    echo 27:59:17N 86:55:32E 8820 | Gravity -n egm2008
+    =&gt; -0.00001 0.00103 -9.76782</code></pre>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p>GeoConvert(1), GeoidEval(1).</p>
+
+<h1 id="AUTHOR">AUTHOR</h1>
+
+<p><b>Gravity</b> was written by Charles Karney.</p>
+
+<h1 id="HISTORY">HISTORY</h1>
+
+<p><b>Gravity</b> was added to GeographicLib, <a href="http://geographiclib.sf.net">http://geographiclib.sf.net</a>, in version 1.16.</p>
+
 
 </body>
 
 </html>
+
+

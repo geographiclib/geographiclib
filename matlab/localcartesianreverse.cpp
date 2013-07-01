@@ -61,7 +61,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     f = mxGetScalar(prhs[3]);
   }
 
-  int m = mxGetM(prhs[1]);
+  mwSize m = mxGetM(prhs[1]);
 
   double* x = mxGetPr(prhs[1]);
   double* y = x + m;
@@ -87,10 +87,10 @@ void mexFunction( int nlhs, mxArray* plhs[],
     if (!(lon0 >= -540 || lon0 < 540))
       throw GeographicErr("Invalid longitude");
     const LocalCartesian l(lat0, lon0, h0, c);
-    for (int i = 0; i < m; ++i) {
+    for (mwIndex i = 0; i < m; ++i) {
       l.Reverse(x[i], y[i], z[i], lat[i], lon[i], h[i], rotv);
       if (rotp) {
-          for (int k = 0; k < 9; ++k)
+          for (mwIndex k = 0; k < 9; ++k)
             rot[m * k + i] = rotv[k];
       }
     }

@@ -1,3 +1,4 @@
+"""accumulator.py: transcription of GeographicLib::Accumulator class."""
 # accumulator.py
 #
 # This is a rather literal translation of the GeographicLib::Accumulator class
@@ -16,7 +17,8 @@ from geographiclib.geomath import Math
 class Accumulator(object):
   """Like math.fsum, but allows a running sum"""
 
-  def Set(self, y = 0.0):
+  def Set(self, y):
+    """Set value from argument"""
     if type(self) == type(y):
       self._s, self._t = y._s, y._t
     else:
@@ -26,6 +28,7 @@ class Accumulator(object):
     self.Set(y)
 
   def Add(self, y):
+    """Add a value"""
     # Here's Shewchuk's solution...
     # hold exact sum as [s, t, u]
     y, u = Math.sum(y, self._t)             # Accumulate starting at
@@ -64,6 +67,7 @@ class Accumulator(object):
       self._t += u              # otherwise just accumulate u to t.
 
   def Sum(self, y = 0.0):
+    """Return sum + y"""
     if y == 0.0:
       return self._s
     else:
@@ -72,5 +76,6 @@ class Accumulator(object):
       return b._s
 
   def Negate(self):
+    """Negate sum"""
     self._s *= -1
     self._t *= -1

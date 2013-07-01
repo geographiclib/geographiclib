@@ -7,13 +7,19 @@
 # http://geographiclib.sourceforge.net/
 
 DEFAULTDIR="@GEOGRAPHICLIB_DATA@"
+SUBDIR=gravity
+NAME=gravity
+MODEL=gravitymodel
+CLASS=GravityModel
+TOOL=Gravity
+EXT=egm.cof
 usage() {
     cat <<EOF
-usage: $0 [-p parentdir] [-d] [-h] gravitymodel...
+usage: $0 [-p parentdir] [-d] [-h] $MODEL...
 
-This program downloads and installs the gravity models used by the
-GeographicLib::GravityModel class and the Gravity tool to compute
-gravity fields.  gravitymodel is one of more of the names from this
+This program downloads and installs the datasets used by the
+GeographicLib::$CLASS class and the $TOOL tool to compute
+gravity fields.  $MODEL is one of more of the names from this
 table:
 
                        size (kB)
@@ -23,7 +29,7 @@ table:
   egm2008   2190    76000   75000
   wgs84      20        1       1
 
-The size columns give the download and installed sizes of the models.
+The size columns give the download and installed sizes of the datasets.
 In addition you can specify
 
   all = all of the supported gravity models
@@ -32,26 +38,31 @@ In addition you can specify
 If no name is specified then minimal is assumed.
 
 -p parentdir (default $DEFAULTDIR) specifies where the
-datasets should be stored.  The "Default gravity path" listed when running
+datasets should be stored.  The "Default $NAME path" listed when running
 
-  Gravity -h
+  $TOOL -h
 
-should be parentdir/gravity.  This script must be run by a user with
+should be parentdir/$SUBDIR.  This script must be run by a user with
 write access to this directory.
 
+Normally only datasets which are not already in parentdir are
+downloaded.  You can force the download and reinstallation with -f.
+
 If -d is provided, the temporary directory which holds the downloads,
-${TMPDIR:-/tmp}/gravity-XXXXXXXX, will be saved.  -h prints this help.
+\$TMPDIR/$NAME-XXXXXXXX or ${TMPDIR:-/tmp}/$NAME-XXXXXXXX,
+will be saved.  -h prints this help.
 
-For more information on the gravity models, visit
+For more information on the $NAME datasets, visit
 
-  http://geographiclib.sourceforge.net/html/gravity.html
+  http://geographiclib.sourceforge.net/html/$NAME.html
 
 EOF
 }
 
 PARENTDIR="$DEFAULTDIR"
 DEBUG=
-while getopts hp:d c; do
+FORCE=
+while getopts hp:fd c; do
     case $c in
         h )
             usage;
@@ -59,6 +70,8 @@ while getopts hp:d c; do
             ;;
         p ) PARENTDIR="$OPTARG"
             ;;
+	f ) FORCE=y
+	    ;;
         d ) DEBUG=y
             ;;
         * )
@@ -69,9 +82,9 @@ while getopts hp:d c; do
 done
 shift `expr $OPTIND - 1`
 
-test -d "$PARENTDIR"/gravity || mkdir -p "$PARENTDIR"/gravity 2> /dev/null
-if test ! -d "$PARENTDIR"/gravity; then
-    echo Cannot create directory $PARENTDIR/gravity 1>&2
+test -d "$PARENTDIR"/$SUBDIR || mkdir -p "$PARENTDIR"/$SUBDIR 2> /dev/null
+if test ! -d "$PARENTDIR"/$SUBDIR; then
+    echo Cannot create directory $PARENTDIR/$SUBDIR 1>&2
     exit 1
 fi
 
@@ -80,18 +93,18 @@ if test -z "$DEBUG"; then
 trap 'trap "" 0; test "$TEMP" && rm -rf "$TEMP"; exit 1' 1 2 3 9 15
 trap            'test "$TEMP" && rm -rf "$TEMP"'            0
 fi
-TEMP=`mktemp --tmpdir --quiet --directory gravity-XXXXXXXX`
+TEMP=`mktemp --tmpdir --quiet --directory $NAME-XXXXXXXX`
 
 if test -z "$TEMP" -o ! -d "$TEMP"; then
     echo Cannot create temporary directory 1>&2
     exit 1
 fi
 
-WRITETEST="$PARENTDIR"/gravity/write-test-`basename $TEMP`
+WRITETEST="$PARENTDIR"/$SUBDIR/write-test-`basename $TEMP`
 if touch "$WRITETEST" 2> /dev/null; then
     rm -f "$WRITETEST"
 else
-    echo Cannot write in directory $PARENTDIR/gravity 1>&2
+    echo Cannot write in directory $PARENTDIR/$SUBDIR 1>&2
     exit 1
 fi
 
@@ -118,7 +131,7 @@ while test $# -gt 0; do
 		echo egm96; echo wgs84
 		;;
 	    * )
-		echo Unknown gravity model $1 1>&2
+		echo Unknown $MODEL $1 1>&2
 		exit 1
 		;;
 	esac
@@ -129,21 +142,37 @@ done > $TEMP/list
 sort -u $TEMP/list > $TEMP/todo
 
 while read file; do
+    if test -z "$FORCE" -a -s $PARENTDIR/$SUBDIR/$file.$EXT; then
+	echo $PARENTDIR/$SUBDIR/$file.$EXT already installed, skipping $file...
+	echo $file >> $TEMP/skip
+	continue
+    fi
     echo download $file.tar.bz2 ...
-    URL="http://downloads.sourceforge.net/project/geographiclib/gravity-distrib/$file.tar.bz2?use_mirror=autoselect"
+    echo $file >> $TEMP/download
+    URL="http://downloads.sourceforge.net/project/geographiclib/$SUBDIR-distrib/$file.tar.bz2?use_mirror=autoselect"
     ARCHIVE=$TEMP/$file.tar.bz2
     wget -O$ARCHIVE $URL
     echo unpack $file.tar.bz2 ...
     tar vxojf $ARCHIVE -C $PARENTDIR
-    echo gravity $file installed.
+    echo $MODEL $file installed.
 done < $TEMP/todo
 
 if test "$DEBUG"; then
     echo Saving temporary directory $TEMP
 fi
-cat <<EOF
-
-Gravity models `tr '\n' ' ' < $TEMP/todo`
-downloaded and installed in $PARENTDIR/gravity.
-
+echo
+if test -s $TEMP/download; then
+    n=`wc -l < $TEMP/download`
+    s=; test $n -gt 1 && s=s
+    cat <<EOF
+Installed $NAME dataset$s `tr '\n' ' ' < $TEMP/download`in $PARENTDIR/$SUBDIR.
 EOF
+fi
+if test -s $TEMP/skip; then
+    n=`wc -l < $TEMP/skip`
+    s=; test $n -gt 1 && s=s
+    cat <<EOF
+Skipped $NAME dataset$s `tr '\n' ' ' < $TEMP/skip | sed 's/ $//'`.
+EOF
+fi
+echo

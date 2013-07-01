@@ -1,3 +1,4 @@
+"""geodesic.py: transcription of GeographicLib::Geodesic class."""
 # geodesic.py
 #
 # This is a rather literal translation of the GeographicLib::Geodesic class to
@@ -65,11 +66,11 @@ class Geodesic(object):
   nA3_ = GEOGRAPHICLIB_GEODESIC_ORDER
   nA3x_ = nA3_
   nC3_ = GEOGRAPHICLIB_GEODESIC_ORDER
-  nC3x_ = (nC3_ * (nC3_ - 1)) / 2
+  nC3x_ = (nC3_ * (nC3_ - 1)) // 2
   nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER
-  nC4x_ = (nC4_ * (nC4_ + 1)) / 2
+  nC4x_ = (nC4_ * (nC4_ + 1)) // 2
   maxit1_ = 20
-  maxit2_= maxit1_ + Math.digits + 10
+  maxit2_ = maxit1_ + Math.digits + 10
 
   tiny_ = math.sqrt(Math.minval)
   tol0_ = Math.epsilon
@@ -80,24 +81,25 @@ class Geodesic(object):
 
   CAP_NONE = GeodesicCapability.CAP_NONE
   CAP_C1   = GeodesicCapability.CAP_C1
-  CAP_C1p  = 1<<1
-  CAP_C2   = 1<<2
-  CAP_C3   = 1<<3
-  CAP_C4   = 1<<4
+  CAP_C1p  = 1 << 1
+  CAP_C2   = 1 << 2
+  CAP_C3   = 1 << 3
+  CAP_C4   = 1 << 4
   CAP_ALL  = 0x1F
   OUT_ALL  = 0x7F80
-  NONE          = 0
-  LATITUDE      = 1<<7  | CAP_NONE
-  LONGITUDE     = 1<<8  | CAP_C3
-  AZIMUTH       = 1<<9  | CAP_NONE
-  DISTANCE      = 1<<10 | CAP_C1
-  DISTANCE_IN   = 1<<11 | CAP_C1 | CAP_C1p
-  REDUCEDLENGTH = 1<<12 | CAP_C1 | CAP_C2
-  GEODESICSCALE = 1<<13 | CAP_C1 | CAP_C2
-  AREA          = 1<<14 | CAP_C4
-  ALL           = OUT_ALL| CAP_ALL
+  EMPTY         = 0
+  LATITUDE      = 1 << 7  | CAP_NONE
+  LONGITUDE     = 1 << 8  | CAP_C3
+  AZIMUTH       = 1 << 9  | CAP_NONE
+  DISTANCE      = 1 << 10 | CAP_C1
+  DISTANCE_IN   = 1 << 11 | CAP_C1 | CAP_C1p
+  REDUCEDLENGTH = 1 << 12 | CAP_C1 | CAP_C2
+  GEODESICSCALE = 1 << 13 | CAP_C1 | CAP_C2
+  AREA          = 1 << 14 | CAP_C4
+  ALL           = OUT_ALL | CAP_ALL
 
   def SinCosSeries(sinp, sinx, cosx, c, n):
+    """Private: Evaluate a trig series using Clenshaw summation."""
     # Evaluate
     # y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
     #            sum(c[i] * cos((2*i+1) * x), i, 0, n-1)
@@ -111,7 +113,7 @@ class Geodesic(object):
     else:
       y0 = 0
     # Now n is even
-    n //= 2
+    n = n // 2
     while n:                    # while n--:
       n -= 1
       # Unroll loop x 2, so accumulators return to their original role
@@ -122,6 +124,7 @@ class Geodesic(object):
   SinCosSeries = staticmethod(SinCosSeries)
 
   def AngRound(x):
+    """Private: Round an angle so that small values underflow to zero."""
     # The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
     # for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
     # is about 1000 times more resolution than we get with angles around 90
@@ -130,16 +133,18 @@ class Geodesic(object):
     z = 1/16.0
     y = abs(x)
     # The compiler mustn't "simplify" z - (z - y) to y
-    y = z - (z - y) if y < z else y
+    if y < z: y = z - (z - y)
     return -y if x < 0 else y
   AngRound = staticmethod(AngRound)
 
   def SinCosNorm(sinx, cosx):
+    """Private: Normalize sin and cos."""
     r = math.hypot(sinx, cosx)
     return sinx/r, cosx/r
   SinCosNorm = staticmethod(SinCosNorm)
 
   def Astroid(x, y):
+    """Private: solve astroid equation."""
     # Solve k^4+2*k^3-(x^2+y^2-1)*k^2-2*y^2*k-y^2 = 0 for positive root k.
     # This solution is adapted from Geocentric::Reverse.
     p = Math.sq(x)
@@ -186,12 +191,14 @@ class Geodesic(object):
   Astroid = staticmethod(Astroid)
 
   def A1m1f(eps):
+    """Private: return A1-1."""
     eps2 = Math.sq(eps)
     t = eps2*(eps2*(eps2+4)+64)/256
     return (t + eps) / (1 - eps)
   A1m1f = staticmethod(A1m1f)
 
   def C1f(eps, c):
+    """Private: return C1."""
     eps2 = Math.sq(eps)
     d = eps
     c[1] = d*((6-eps2)*eps2-16)/32
@@ -208,6 +215,7 @@ class Geodesic(object):
   C1f = staticmethod(C1f)
 
   def C1pf(eps, c):
+    """Private: return C1'"""
     eps2 = Math.sq(eps)
     d = eps
     c[1] = d*(eps2*(205*eps2-432)+768)/1536
@@ -224,12 +232,14 @@ class Geodesic(object):
   C1pf = staticmethod(C1pf)
 
   def A2m1f(eps):
+    """Private: return A2-1"""
     eps2 = Math.sq(eps)
     t = eps2*(eps2*(25*eps2+36)+64)/256
     return t * (1 - eps) - eps
   A2m1f = staticmethod(A2m1f)
 
   def C2f(eps, c):
+    """Private: return C2"""
     eps2 = Math.sq(eps)
     d = eps
     c[1] = d*(eps2*(eps2+2)+16)/32
@@ -264,20 +274,30 @@ class Geodesic(object):
                  (Math.atanh(math.sqrt(self._e2)) if self._e2 > 0 else
                   math.atan(math.sqrt(-self._e2))) /
                  math.sqrt(abs(self._e2))))/2
-    # The sig12 threshold for "really short"
-    self._etol2 = 0.01 * Geodesic.tol2_ / max(0.1, math.sqrt(abs(self._e2)))
+    # The sig12 threshold for "really short".  Using the auxiliary sphere
+    # solution with dnm computed at (bet1 + bet2) / 2, the relative error in
+    # the azimuth consistency check is sig12^2 * abs(f) * min(1, 1-f/2) / 2.
+    # (Error measured for 1/100 < b/a < 100 and abs(f) >= 1/1000.  For a given
+    # f and sig12, the max error occurs for lines near the pole.  If the old
+    # rule for computing dnm = (dn1 + dn2)/2 is used, then the error increases
+    # by a factor of 2.)  Setting this equal to epsilon gives sig12 = etol2.
+    # Here 0.1 is a safety factor (error decreased by 100) and max(0.001,
+    # abs(f)) stops etol2 getting too large in the nearly spherical case.
+    self._etol2 = 0.1 * Geodesic.tol2_ / math.sqrt( max(0.001, abs(self._f)) *
+                                                    min(1.0, 1-self._f/2) / 2 )
     if not(Math.isfinite(self._a) and self._a > 0):
       raise ValueError("Major radius is not positive")
     if not(Math.isfinite(self._b) and self._b > 0):
       raise ValueError("Minor radius is not positive")
-    self._A3x = range(Geodesic.nA3x_)
-    self._C3x = range(Geodesic.nC3x_)
-    self._C4x = range(Geodesic.nC4x_)
+    self._A3x = list(range(Geodesic.nA3x_))
+    self._C3x = list(range(Geodesic.nC3x_))
+    self._C4x = list(range(Geodesic.nC4x_))
     self.A3coeff()
     self.C3coeff()
     self.C4coeff()
 
   def A3coeff(self):
+    """Private: return coefficients for A3"""
     _n = self._n
     self._A3x[0] = 1
     self._A3x[1] = (_n-1)/2
@@ -287,6 +307,7 @@ class Geodesic(object):
     self._A3x[5] = -3/128.0
 
   def C3coeff(self):
+    """Private: return coefficients for C3"""
     _n = self._n
     self._C3x[0] = (1-_n)/4
     self._C3x[1] = (1-_n*_n)/8
@@ -305,6 +326,7 @@ class Geodesic(object):
     self._C3x[14] = 21/2560.0
 
   def C4coeff(self):
+    """Private: return coefficients for C4"""
     _n = self._n
     self._C4x[0] = (_n*(_n*(_n*(_n*(100*_n+208)+572)+3432)-12012)+30030)/45045
     self._C4x[1] = (_n*(_n*(_n*(64*_n+624)-4576)+6864)-3003)/15015
@@ -329,6 +351,7 @@ class Geodesic(object):
     self._C4x[20] = 128/99099.0
 
   def A3f(self, eps):
+    """Private: return A3"""
     # Evaluate sum(_A3x[k] * eps^k, k, 0, nA3x_-1) by Horner's method
     v = 0
     for i in range(Geodesic.nA3x_-1, -1, -1):
@@ -336,12 +359,13 @@ class Geodesic(object):
     return v
 
   def C3f(self, eps, c):
+    """Private: return C3"""
     # Evaluate C3 coeffs by Horner's method
     # Elements c[1] thru c[nC3_ - 1] are set
     j = Geodesic.nC3x_; k = Geodesic.nC3_ - 1
     while k:
       t = 0
-      for i in range(Geodesic.nC3_ - k):
+      for _ in range(Geodesic.nC3_ - k):
         j -= 1
         t = eps * t + self._C3x[j]
       c[k] = t
@@ -353,12 +377,13 @@ class Geodesic(object):
       c[k] *= mult
 
   def C4f(self, eps, c):
+    """Private: return C4"""
     # Evaluate C4 coeffs by Horner's method
     # Elements c[0] thru c[nC4_ - 1] are set
     j = Geodesic.nC4x_; k = Geodesic.nC4_
     while k:
       t = 0
-      for i in range(Geodesic.nC4_ - k + 1):
+      for _ in range(Geodesic.nC4_ - k + 1):
         j -= 1
         t = eps * t + self._C4x[j]
       k -= 1
@@ -374,6 +399,7 @@ class Geodesic(object):
               ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2, scalep,
               # Scratch areas of the right size
               C1a, C2a):
+    """Private: return a bunch of lengths"""
     # Return m12b = (reduced length)/_b; also calculate s12b = distance/_b,
     # and m0 = coefficient of secular term in expression for reduced length.
     Geodesic.C1f(eps, C1a)
@@ -403,14 +429,15 @@ class Geodesic(object):
       M12 = M21 = Math.nan
     return s12b, m12b, m0, M12, M21
 
-  # return sig12, salp1, calp1, salp2, calp2
+  # return sig12, salp1, calp1, salp2, calp2, dnm
   def InverseStart(self, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
                    # Scratch areas of the right size
                    C1a, C2a):
+    """Private: Find a starting value for Newton's method."""
     # Return a starting point for Newton's method in salp1 and calp1 (function
     # value is -1).  If Newton's method doesn't need to be used, return also
     # salp2 and calp2 and function value is sig12.
-    sig12 = -1; salp2 = calp2 = Math.nan # Return values
+    sig12 = -1; salp2 = calp2 = dnm = Math.nan # Return values
     # bet12 = bet2 - bet1 in [0, pi); bet12a = bet2 + bet1 in (-pi, 0]
     sbet12 = sbet2 * cbet1 - cbet2 * sbet1
     cbet12 = cbet2 * cbet1 + sbet2 * sbet1
@@ -422,8 +449,15 @@ class Geodesic(object):
     sbet12a = sbet2 * cbet1
     sbet12a += cbet2 * sbet1
 
-    shortline = cbet12 >= 0 and sbet12 < 0.5 and lam12 <= math.pi / 6
-    omg12 = lam12 if not shortline else lam12 / (self._f1 * (dn1 + dn2) / 2)
+    shortline = cbet12 >= 0 and sbet12 < 0.5 and cbet2 * lam12 < 0.5
+    omg12 = lam12
+    if shortline:
+      sbetm2 = Math.sq(sbet1 + sbet2)
+      # sin((bet1+bet2)/2)^2
+      # =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
+      sbetm2 /= sbetm2 + Math.sq(cbet1 + cbet2)
+      dnm = math.sqrt(1 + self._ep2 * sbetm2)
+      omg12 /= self._f1 * dnm
     somg12 = math.sin(omg12); comg12 = math.cos(omg12)
 
     salp1 = cbet2 * somg12
@@ -437,7 +471,8 @@ class Geodesic(object):
     if shortline and ssig12 < self._etol2:
       # really short lines
       salp2 = cbet1 * somg12
-      calp2 = sbet12 - cbet1 * sbet2 * Math.sq(somg12) / (1 + comg12)
+      calp2 = sbet12 - cbet1 * sbet2 * (Math.sq(somg12) / (1 + comg12)
+                                        if comg12 >= 0 else 1 - comg12)
       salp2, calp2 = Geodesic.SinCosNorm(salp2, calp2)
       # Set return value
       sig12 = math.atan2(ssig12, csig12)
@@ -531,14 +566,14 @@ class Geodesic(object):
       salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
     else:
       salp1 = 1; calp1 = 0
-    return sig12, salp1, calp1, salp2, calp2
+    return sig12, salp1, calp1, salp2, calp2, dnm
 
   # return lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
   # domg12, dlam12
   def Lambda12(self, sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1, diffp,
                # Scratch areas of the right size
                C1a, C2a, C3a):
-
+    """Private: Solve hybrid problem"""
     if sbet1 == 0 and calp1 == 0:
       # Break degeneracy of equatorial line.  This case has already been
       # handled.
@@ -609,6 +644,7 @@ class Geodesic(object):
 
   # return a12, s12, azi1, azi2, m12, M12, M21, S12
   def GenInverse(self, lat1, lon1, lat2, lon2, outmask):
+    """Private: General version of the inverse problem"""
     a12 = s12 = azi1 = azi2 = m12 = M12 = M21 = S12 = Math.nan # return vals
 
     outmask &= Geodesic.OUT_ALL
@@ -683,9 +719,9 @@ class Geodesic(object):
 
     # real a12, sig12, calp1, salp1, calp2, salp2
     # index zero elements of these arrays are unused
-    C1a = range(Geodesic.nC1_ + 1)
-    C2a = range(Geodesic.nC2_ + 1)
-    C3a = range(Geodesic.nC3_)
+    C1a = list(range(Geodesic.nC1_ + 1))
+    C2a = list(range(Geodesic.nC2_ + 1))
+    C3a = list(range(Geodesic.nC3_))
 
     meridian = lat1 == -90 or slam12 == 0
 
@@ -746,12 +782,11 @@ class Geodesic(object):
       # meridian and geodesic is neither meridional or equatorial.
 
       # Figure a starting point for Newton's method
-      sig12, salp1, calp1, salp2, calp2 = self.InverseStart(
+      sig12, salp1, calp1, salp2, calp2, dnm = self.InverseStart(
         sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12, C1a, C2a)
 
       if sig12 >= 0:
-        # Short lines (InverseStart sets salp2, calp2)
-        dnm = (dn1 + dn2) / 2
+        # Short lines (InverseStart sets salp2, calp2, dnm)
         s12x = sig12 * self._b * dnm
         m12x = (Math.sq(dnm) * self._b * math.sin(sig12 / dnm))
         if outmask & Geodesic.GEODESICSCALE:
@@ -857,7 +892,7 @@ class Geodesic(object):
         A4 = Math.sq(self._a) * calp0 * salp0 * self._e2
         ssig1, csig1 = Geodesic.SinCosNorm(ssig1, csig1)
         ssig2, csig2 = Geodesic.SinCosNorm(ssig2, csig2)
-        C4a = range(Geodesic.nC4_)
+        C4a = list(range(Geodesic.nC4_))
         self.C4f(eps, C4a)
         B41 = Geodesic.SinCosSeries(False, ssig1, csig1, C4a, Geodesic.nC4_)
         B42 = Geodesic.SinCosSeries(False, ssig2, csig2, C4a, Geodesic.nC4_)
@@ -911,6 +946,7 @@ class Geodesic(object):
     return a12, s12, azi1, azi2, m12, M12, M21, S12
 
   def CheckPosition(lat, lon):
+    """Check that lat and lon are legal and return normalized lon"""
     if (abs(lat) > 90):
       raise ValueError("latitude " + str(lat) + " not in [-90, 90]")
     if (lon < -540 or lon >= 540):
@@ -919,12 +955,14 @@ class Geodesic(object):
   CheckPosition = staticmethod(CheckPosition)
 
   def CheckAzimuth(azi):
+    """Check that azi is legal and return normalized value"""
     if (azi < -540 or azi >= 540):
       raise ValueError("azimuth " + str(azi) + " not in [-540, 540)")
     return Math.AngNormalize(azi)
   CheckAzimuth = staticmethod(CheckAzimuth)
 
   def CheckDistance(s):
+    """Check that s is a legal distance"""
     if not (Math.isfinite(s)):
       raise ValueError("distance " + str(s) + " not a finite number")
   CheckDistance = staticmethod(CheckDistance)
@@ -981,11 +1019,12 @@ class Geodesic(object):
 
   # return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   def GenDirect(self, lat1, lon1, azi1, arcmode, s12_a12, outmask):
+    """Private: General version of direct problem"""
     from geographiclib.geodesicline import GeodesicLine
     line = GeodesicLine(
       self, lat1, lon1, azi1,
       # Automatically supply DISTANCE_IN if necessary
-      outmask | ( Geodesic.NONE if arcmode else Geodesic.DISTANCE_IN))
+      outmask | ( Geodesic.EMPTY if arcmode else Geodesic.DISTANCE_IN))
     return line.GenPosition(arcmode, s12_a12, outmask)
 
   def Direct(self, lat1, lon1, azi1, s12,

@@ -1,6 +1,6 @@
 /**
  * Geodesic.js
- * Transcription of Geodesic.[ch]pp into javascript.
+ * Transcription of Geodesic.[ch]pp into JavaScript.
  *
  * See the documentation for the C++ class.  The conversion is a literal
  * conversion from C++.
@@ -234,8 +234,18 @@ GeographicLib.GeodesicLine = {};
                  (this._e2 > 0 ? m.atanh(Math.sqrt(this._e2)) :
                   Math.atan(Math.sqrt(-this._e2))) /
                  Math.sqrt(Math.abs(this._e2))))/2;
-    // The sig12 threshold for "really short"
-    this._etol2 = 0.01 * g.tol2_ / Math.max(0.1, Math.sqrt(Math.abs(this._e2)));
+    // The sig12 threshold for "really short".  Using the auxiliary sphere
+    // solution with dnm computed at (bet1 + bet2) / 2, the relative error in
+    // the azimuth consistency check is sig12^2 * abs(f) * min(1, 1-f/2) / 2.
+    // (Error measured for 1/100 < b/a < 100 and abs(f) >= 1/1000.  For a given
+    // f and sig12, the max error occurs for lines near the pole.  If the old
+    // rule for computing dnm = (dn1 + dn2)/2 is used, then the error increases
+    // by a factor of 2.)  Setting this equal to epsilon gives sig12 = etol2.
+    // Here 0.1 is a safety factor (error decreased by 100) and max(0.001,
+    // abs(f)) stops etol2 getting too large in the nearly spherical case.
+    this._etol2 = 0.1 * g.tol2_ /
+      Math.sqrt( Math.max(0.001, Math.abs(this._f)) *
+                 Math.min(1.0, 1 - this._f/2) / 2 );
     if (!(isFinite(this._a) && this._a > 0))
       throw new Error("Major radius is not positive");
     if (!(isFinite(this._b) && this._b > 0))
@@ -381,7 +391,7 @@ GeographicLib.GeodesicLine = {};
       return vals;
   }
 
-  // return sig12, salp1, calp1, salp2, calp2
+  // return sig12, salp1, calp1, salp2, calp2, dnm
   g.Geodesic.prototype.InverseStart = function(sbet1, cbet1, dn1,
                                                sbet2, cbet2, dn2, lam12,
                                                C1a, C2a) {
@@ -403,11 +413,17 @@ GeographicLib.GeodesicLine = {};
     var sbet12a = sbet2 * cbet1;
     sbet12a += cbet2 * sbet1;
 
-    var shortline = cbet12 >= 0 && sbet12 < 0.5 &&
-      lam12 <= Math.PI / 6;
-    var
-    omg12 = !shortline ? lam12 : lam12 / (this._f1 * (dn1 + dn2) / 2),
-    somg12 = Math.sin(omg12), comg12 = Math.cos(omg12);
+    var shortline = cbet12 >= 0 && sbet12 < 0.5 && cbet2 * lam12 < 0.5;
+    var omg12 = lam12;
+    if (shortline) {
+      var sbetm2 = m.sq(sbet1 + sbet2);
+      // sin((bet1+bet2)/2)^2
+      // =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
+      sbetm2 /= sbetm2 + m.sq(cbet1 + cbet2);
+      vals.dnm = Math.sqrt(1 + this._ep2 * sbetm2);
+      omg12 /= this._f1 * vals.dnm;
+    }
+    var somg12 = Math.sin(omg12), comg12 = Math.cos(omg12);
 
     vals.salp1 = cbet2 * somg12;
     vals.calp1 = comg12 >= 0 ?
@@ -421,7 +437,8 @@ GeographicLib.GeodesicLine = {};
     if (shortline && ssig12 < this._etol2) {
       // really short lines
       vals.salp2 = cbet1 * somg12;
-      vals.calp2 = sbet12 - cbet1 * sbet2 * m.sq(somg12) / (1 + comg12);
+      vals.calp2 = sbet12 - cbet1 * sbet2 *
+        (comg12 >= 0 ? m.sq(somg12) / (1 + comg12) : 1 - comg12);
       // SinCosNorm(vals.salp2, vals.calp2);
       var t = m.hypot(vals.salp2, vals.calp2); vals.salp2 /= t; vals.calp2 /= t;
       // Set return value
@@ -779,9 +796,9 @@ GeographicLib.GeodesicLine = {};
       if (sig12 >= 0) {
         salp2 = nvals.salp2;
         calp2 = nvals.calp2;
-        // Short lines (InverseStart sets salp2, calp2)
+        // Short lines (InverseStart sets salp2, calp2, dnm)
 
-        var dnm = (dn1 + dn2) /2;
+        var dnm = nvals.dnm;
         s12x = sig12 * this._b * dnm;
         m12x = m.sq(dnm) * this._b * Math.sin(sig12 / dnm);
         if (outmask & g.GEODESICSCALE)

@@ -344,9 +344,9 @@ namespace GeographicLib {
   }
 
   void TransverseMercatorExact::Scale(real tau, real /*lam*/,
-                                       real snu, real cnu, real dnu,
-                                       real snv, real cnv, real dnv,
-                                       real& gamma, real& k) const throw() {
+                                      real snu, real cnu, real dnu,
+                                      real snv, real cnv, real dnv,
+                                      real& gamma, real& k) const throw() {
     real sec2 = 1 + Math::sq(tau);    // sec(phi)^2
     // Lee 55.12 -- negated for our sign convention.  gamma gives the bearing
     // (clockwise from true north) of grid north
@@ -375,8 +375,8 @@ namespace GeographicLib {
     lon = Math::AngDiff(Math::AngNormalize(lon0), Math::AngNormalize(lon));
     // Explicitly enforce the parity
     int
-      latsign = !_extendp && lat < 0 ? -1 : 1,
-      lonsign = !_extendp && lon < 0 ? -1 : 1;
+      latsign = (!_extendp && lat < 0) ? -1 : 1,
+      lonsign = (!_extendp && lon < 0) ? -1 : 1;
     lon *= lonsign;
     lat *= latsign;
     bool backside = !_extendp && lon > 90;
@@ -412,11 +412,16 @@ namespace GeographicLib {
     y = xi * _a * _k0 * latsign;
     x = eta * _a * _k0 * lonsign;
 
-    // Recompute (tau, lam) from (u, v) to improve accuracy of Scale
-    zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
-    tau=taupinv(tau);
-    Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-    gamma /= Math::degree<real>();
+    if (lat == 90) {
+      gamma = lon;
+      k = 1;
+    } else {
+      // Recompute (tau, lam) from (u, v) to improve accuracy of Scale
+      zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
+      tau=taupinv(tau);
+      Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
+      gamma /= Math::degree<real>();
+    }
     if (backside)
       gamma = 180 - gamma;
     gamma *= latsign * lonsign;
@@ -459,14 +464,16 @@ namespace GeographicLib {
       phi = atan(tau);
       lat = phi / Math::degree<real>();
       lon = lam / Math::degree<real>();
+      Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
+      gamma /= Math::degree<real>();
     } else {
       tau = overflow_;
       phi = Math::pi<real>()/2;
       lat = 90;
-      lon = lam = 0;
+      lon = lam = gamma = 0;
+      k = 1;
     }
-    Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-    gamma /= Math::degree<real>();
+
     if (backside)
       lon = 180 - lon;
     lon *= lonsign;

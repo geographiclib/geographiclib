@@ -43,8 +43,8 @@ namespace GeographicLib {
    *
    * The computation of the elliptic integrals uses the algorithms given in
    * - B. C. Carlson,
-   *   <a href="http://dx.doi.org/10.1007/BF02198293"> Computation of elliptic
-   *   integrals</a>, Numerical Algorithms 10, 13--26 (1995)
+   *   <a href="http://dx.doi.org/10.1007/BF02198293"> Computation of real or
+   *   complex elliptic integrals</a>, Numerical Algorithms 10, 13--26 (1995)
    * .
    * with the additional optimizations given in http://dlmf.nist.gov/19.36.i.
    * The computation of the Jacobi elliptic functions uses the algorithm given
@@ -86,11 +86,12 @@ namespace GeographicLib {
      *   &alpha;<sup>2</sup> must lie in (-&infin;, 1).  (No checking is done.)
      *
      * If only elliptic integrals of the first and second kinds are needed,
-     * then set &alpha;<sup>2</sup> = 0 (in which case we have &Pi;(&phi;, 0,
-     * \e k) = \e F(&phi;, \e k), \e G(&phi;, 0, \e k) = \e E(&phi;, \e k)),
-     * and \e H(&phi;, 0, \e k) = \e F(&phi;, \e k) - \e D(&phi;, \e k).
+     * then set &alpha;<sup>2</sup> = 0 (the default value); in this case, we
+     * have &Pi;(&phi;, 0, \e k) = \e F(&phi;, \e k), \e G(&phi;, 0, \e k) = \e
+     * E(&phi;, \e k), and \e H(&phi;, 0, \e k) = \e F(&phi;, \e k) - \e
+     * D(&phi;, \e k).
      **********************************************************************/
-    EllipticFunction(real k2, real alpha2) throw();
+    EllipticFunction(real k2 = 0, real alpha2 = 0) throw();
 
     /**
      * Constructor specifying the modulus and parameter and their complements.
@@ -113,22 +114,6 @@ namespace GeographicLib {
     EllipticFunction(real k2, real alpha2, real kp2, real alphap2) throw();
 
     /**
-     * Constructor specifying the modulus only.
-     *
-     * @param[in] k2 the square of the modulus <i>k</i><sup>2</sup>.
-     *   <i>k</i><sup>2</sup> must lie in (-&infin;, 1).  (No checking is
-     *   done.)
-     *
-     * <b>COMPATIBILITY NOTE:</b> This constructor calls EllipticFunction(real,
-     * real) with a 2nd argument of 0.  At some point, EllipticFunction(real)
-     * and will be withdrawn and the interface to EllipticFunction(real, real)
-     * changed so that its 2nd argument defaults to 0.  This will preserve
-     * source-level compatibility.
-     **********************************************************************/
-    explicit EllipticFunction(real k2 = 0) throw();
-
-
-    /**
      * Reset the modulus and parameter.
      *
      * @param[in] k2 the new value of square of the modulus
@@ -137,7 +122,7 @@ namespace GeographicLib {
      * @param[in] alpha2 the new value of parameter &alpha;<sup>2</sup>.
      *   &alpha;<sup>2</sup> must lie in (-&infin;, 1).  (No checking is done.)
      **********************************************************************/
-    void Reset(real k2, real alpha2 = 0) throw()
+    void Reset(real k2 = 0, real alpha2 = 0) throw()
     { Reset(k2, alpha2, 1 - k2, 1 - alpha2); }
 
     /**
@@ -186,14 +171,15 @@ namespace GeographicLib {
      *   &alpha;<sup>2</sup>.
      **********************************************************************/
     Math::real alphap2() const throw() { return _alphap2; }
+    ///@}
 
+    /// \cond SKIP
     /**
      * @return the square of the modulus <i>k</i><sup>2</sup>.
      *
      * <b>DEPRECATED</b>, use k2() instead.
      **********************************************************************/
     Math::real m() const throw() { return _k2; }
-
     /**
      * @return the square of the complementary modulus <i>k'</i><sup>2</sup> =
      *   1 &minus; <i>k</i><sup>2</sup>.
@@ -201,7 +187,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>, use kp2() instead.
      **********************************************************************/
     Math::real m1() const throw() { return _kp2; }
-    ///@}
+    /// \endcond
 
     /** \name Complete elliptic integrals.
      **********************************************************************/

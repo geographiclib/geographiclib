@@ -129,9 +129,33 @@ namespace GeographicLib {
   void MGRS::Forward(int zone, bool northp, real x, real y,
                      int prec, std::string& mgrs) {
     real lat, lon;
-    if (zone > 0)
-      UTMUPS::Reverse(zone, northp, x, y, lat, lon);
-    else
+    if (zone > 0) {
+      // Does a rough estimate for latitude determine the latitude band?
+      real ys = northp ? y : y - utmNshift_;
+      // A cheap calculation of the latitude which results in an "allowed"
+      // latitude band would be
+      //   lat = ApproxLatitudeBand(ys) * 8 + 4;
+      //
+      // Here we do a more careful job using the band letter corresponding to
+      // the actual latitude.
+      ys /= tile_;
+      if (abs(ys) < 1)
+        lat = 0.9 * ys;         // accurate enough estimate near equator
+      else {
+        real
+          // The poleward bound a fit from above of lat(x,y)
+          // for x = 500km and y = [0km, 950km]
+          latp = real(0.901) * ys + (ys > 0 ? 1 : -1) * real(0.135),
+          // The equatorward bound is a fit from below of lat(x,y)
+          // for x = 900km and y = [0km, 950km]
+          late = real(0.902) * ys * (1 - real(1.85e-6) * ys * ys);
+        if (LatitudeBand(latp) == LatitudeBand(late))
+          lat = latp;
+        else
+          // bounds straddle a band boundary so need to compute lat accurately
+          UTMUPS::Reverse(zone, northp, x, y, lat, lon);
+      }
+    } else
       // Latitude isn't needed for UPS specs or for INVALID
       lat = 0;
     Forward(zone, northp, x, y, lat, prec, mgrs);
@@ -308,6 +332,27 @@ namespace GeographicLib {
     // 90 deg = 100 tiles; 1 band = 8 deg = 100*8/90 tiles
     real c = 100 * (8 * iband + 4)/real(90);
     bool northp = iband >= 0;
+    //  iband minrow maxrow
+    //   -10    -90    -81
+    //    -9    -80    -72
+    //    -8    -71    -63
+    //    -7    -63    -54
+    //    -6    -54    -45
+    //    -5    -45    -36
+    //    -4    -36    -27
+    //    -3    -27    -18
+    //    -2    -18     -9
+    //    -1     -9     -1
+    //     0      0      8
+    //     1      8     17
+    //     2     17     26
+    //     3     26     35
+    //     4     35     44
+    //     5     44     53
+    //     6     53     62
+    //     7     62     70
+    //     8     71     79
+    //     9     80     94
     int
       minrow = iband > -10 ?
       int(floor(c - real(4.3) - real(0.1) * northp)) : -90,
