@@ -52,7 +52,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
       mexErrMsgTxt("setzone outside the legal range.");
   }
 
-  int m = mxGetM(prhs[0]);
+  mwSize m = mxGetM(prhs[0]);
 
   double* lat = mxGetPr(prhs[0]);
   double* lon = lat + m;
@@ -72,7 +72,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     k = gamma + m;
   }
 
-  for (int i = 0; i < m; ++i) {
+  for (mwIndex i = 0; i < m; ++i) {
     int ZONE;
     bool HEMI;
     try {

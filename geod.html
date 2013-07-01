@@ -37,7 +37,7 @@
 	<a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
 	  10.1007/s00190-012-0578-z</a>;
 	<a href="http://dx.doi.org/10.1007/s00190-012-0578-z">pdf</a>,
-	<a href="geod-addenda.html#geodalg-addenda"><b>addenda</b></a>.<br>
+	<a href="geod-addenda.html"><b>addenda</b></a>.<br>
 	preprint
 	<a href="http://arxiv.org/abs/1109.4448"> arXiv:1109.4448</a>,
 	<a href="geod-addenda.html#geodalg-errata"><b>errata</b></a>.
@@ -56,12 +56,6 @@
       see <a href="html/LICENSE.txt">LICENSE.txt</a> for the terms.
     </p>
     <ul>
-      <li>
-	The treatment of very eccentric ellipsoids is covered in
-	the <a href="geod-addenda.html#geodalg-addenda"><b>
-	addenda</b></a>
-	to <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
-	  <i>Algorithms for geodesics</i></a>.
       <li>
 	<a href="index.html">GeographicLib home page</a>.
       <li>
@@ -113,7 +107,7 @@
 	    <a href="html/GeodesicProj.1.html">
 	      GeodesicProj</a>, for performing geodesic projections.
 	  <li>
-	    Javascript tools for geodesic calculations,
+	    JavaScript tools for geodesic calculations,
 	    <a href="scripts/geod-calc.html">geod-calc</a>, and for
 	    displaying geodesics on Google Maps,
 	    <a href="scripts/geod-google.html">geod-google</a>.
@@ -136,12 +130,13 @@
 	    </ul>
 	    <li>
 	      GeographicLib also contains implementations of the
-	      geodesic routines in other languages:
+	      geodesic routines in
+	      <a href="html/other.html">other languages</a>:
 	      <ul>
 		<li>Python:
 		  <a href="http://pypi.python.org/pypi/geographiclib">
 		    http://pypi.python.org/pypi/geographiclib</a>
-		<li>Javascript:
+		<li>JavaScript:
 		  <a href="http://geographiclib.sf.net/scripts/geographiclib.js">
 		    http://geographiclib.sf.net/scripts/geographiclib.js</a><br>
 		  Examples: geodesic calculations,
@@ -150,8 +145,14 @@
 		  <a href="scripts/geod-google.html">geod-google</a>.
 		<li>Matlab/Octave:
 		  <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
-		    http://www.mathworks.com/matlabcentral/fileexchange/39108</a>
-		<li> C and Fortran: small self-contained libraries in
+		    File ID: 39108 (geodesics)</a>;
+		  <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
+		    File ID: 39366 (geodesic projections)</a>.
+
+		<li><a href="html/C/index.html">C</a>,
+		  <a href="html/Fortran/index.html">Fortran</a>, and
+		  <a href="html/java/index.html">Java</a>:
+		  small self-contained libraries in
 		  these languages are also part of the source
 		  distribution of GeographicLib.
 	      </ul>
@@ -164,6 +165,9 @@
       Additional material:
     </p>
     <ul>
+      <li>
+	<a href="html/geodesic.html">Supplementary documentation</a> on
+	  geodesics on an ellipsoid of revolution.
       <li>
 	Test set for the geodesic problem:
 	<ul>
@@ -211,8 +215,11 @@
 	<a href="html/geodesic.html#meridian">
 	  Parameters for the meridian</a>.
       <li>
+	Some notes on solving the inverse geodesic problem in the case of 
+	<a href="html/geodesic.html#geodshort">short geodesics</a>.
+      <li>
 	Some notes on geodesics on a <i>triaxial</i> ellipsoid are given
-	in <a href="html/triaxial.html"> Geodesics on a triaxial
+	in <a href="html/triaxial.html">Geodesics on a triaxial
 	ellipsoid</a>.  This examines the solution to this problem found
 	by Jacobi in 1839.
       <li>
@@ -235,14 +242,16 @@
 	F. R. Helmert,
 	<a href="geodesic-papers/helmert80-en.html">
 	<i>Mathematical and Physical Theories of Higher Geodesy</i>,
-	Vol. 1</a>,
+	Vol. 1</a> and
+	<a href="geodesic-papers/helmert84-en.html">
+	Vol. 2</a>,
 	English translation by Aeronautical Chart and Information Center
 	(St. Louis, 1964).
     </ul>
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2013-01-13)</address>
+      (2013-06-30)</address>
     <br>
     <a href="http://geographiclib.sourceforge.net">
       <img

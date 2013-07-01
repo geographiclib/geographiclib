@@ -36,7 +36,7 @@ if (MEX)
       add_custom_target (matlab-${TARGET} DEPENDS ${TARGET_INTERFACE})
       add_custom_command (OUTPUT ${TARGET_INTERFACE}
         COMMAND
-          ${MEX}
+          ${MEX} ${MEXOPTIONS}
             -I${PROJECT_BINARY_DIR}/include -I${PROJECT_SOURCE_DIR}/include
             -L${PROJECT_BINARY_DIR}/src/Release -lGeographic
             ${INTERFACE}
@@ -50,12 +50,15 @@ if (MEX)
       set_property (TARGET matlab-${TARGET} PROPERTY FOLDER matlab)
     else ()
       set (INTERFACE_LIST ${INTERFACE_LIST} ${TARGET_INTERFACE})
+      if (GEOGRAPHIC_SHARED_LIB)
+        set (RPATH_OPTS -Wl,-rpath=${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+      endif ()
       add_custom_command (OUTPUT ${TARGET_INTERFACE}
         COMMAND
-          ${MEX} --mex
+          ${MEX} ${MEXOPTIONS}
             -I${PROJECT_BINARY_DIR}/include -I${PROJECT_SOURCE_DIR}/include
             -L${PROJECT_BINARY_DIR}/src -lGeographic
-            -Wl,-rpath=${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}
+            ${RPATH_OPTS}
             ${INTERFACE}
         COMMENT "Building matlab interface for ${TARGET}"
         DEPENDS ${INTERFACE} Geographic)

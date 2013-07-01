@@ -11,8 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in C
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.30
-\date 2013-mm-dd
+\version 1.31
 
 \section abstract Abstract
 
@@ -28,14 +27,20 @@ about any C compiler.
 \section download Downloading the source
 
 The C library is part of %GeographicLib which available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.30.tar.gz">
-  GeographicLib-1.30.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.30.zip">
-  GeographicLib-1.30.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.31.tar.gz">
+  GeographicLib-1.31.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.31.zip">
+  GeographicLib-1.31.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
-the source, the C library can be found in GeographicLib-1.30/legacy/C.
+the source, the C library can be found in GeographicLib-1.31/legacy/C.
 The library consists of two files geodesic.c and geodesic.h.
+
+The library is also included as part of
+<a href="http://trac.osgeo.org/proj/">proj.4</a> starting with version
+4.9.0, where is used as the computational backend for
+<a href="http://trac.osgeo.org/proj/wiki/man_geod">geod(1)</a>.
+Instructions for how to use the library via proj.4 are given below.
 
 \section doc Library documentation
 
@@ -54,17 +59,36 @@ Also included are 3 small test programs:
  .
 Here, for example, is inverse.c
 \include inverse.c
-To compile and link this, you would typically run \verbatim
-cc -o inverse inverse.c geodesic.c -lm \endverbatim
+To compile, link, and run this, you would typically use \verbatim
+cc -o inverse inverse.c geodesic.c -lm
+echo 30 0 29.5 179.5 | ./inverse \endverbatim
 These sample programs can also be built with the supplied cmake file,
-CMakeLists.txt.
+CMakeLists.txt, as follows \verbatim
+mkdir BUILD
+cd BUILD
+cmake ..
+make
+echo 30 0 29.5 179.5 | ./inverse \endverbatim
+
+Alternatively, if you have proj.4 installed, you can compile and link
+with \verbatim
+cc -c inverse.c
+cc -o inverse inverse.o -lproj
+echo 30 0 29.5 179.5 | ./inverse \endverbatim
+If proj.4 is installed, e.g., in /usr/local, you might have to use
+\verbatim
+cc -c -I/usr/local/include inverse.c
+cc -o inverse inverse.o -lproj -L/usr/local/lib -Wl,-rpath=/usr/local/lib
+echo 30 0 29.5 179.5 | ./inverse \endverbatim
 
 \section library Using the library
 
 - Put @verbatim
   #include "geodesic.h" @endverbatim
-  in your source code.
-- Include calls to the geodesic routines in your code.  The interface to
+  in your source code.  If you are using the library via proj.4, change
+  this to @verbatim
+  #include <geodesic.h> @endverbatim
+- make calls to the geodesic routines from your code.  The interface to
   the library is documented in geodesic.h.
 - Compile and link as described above.
 
@@ -83,6 +107,8 @@ CMakeLists.txt.
    errata</a>).
 - <a href="http://geographiclib.sf.net">The GeographicLib web site</a>.
 - <a href="../index.html">The C++ library</a>.
+- <a href="../java/index.html">The Java library</a>.
+- <a href="../Fortran/index.html">The Fortran library</a>.
 - Documentation on the C++ classes: GeographicLib::Geodesic,
   GeographicLib::GeodesicLine, GeographicLib::PolygonArea.
 - The section in the %GeographicLib documentation on geodesics: \ref

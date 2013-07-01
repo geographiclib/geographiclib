@@ -39,7 +39,7 @@ namespace GeographicLib {
   template<typename T = Math::real>
   class GEOGRAPHIC_EXPORT Accumulator {
   private:
-    // _s + _t accumulates for the sum.
+    // _s + _t accumulators for the sum.
     T _s, _t;
     // Same as Math::sum, but requires abs(u) >= abs(v).  This isn't currently
     // used.

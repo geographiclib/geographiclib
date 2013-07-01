@@ -276,8 +276,9 @@ int main(int argc, char* argv[]) {
             lon = DMS::Decode(strb, ind);
             if (ind == DMS::LATITUDE)
               throw GeographicErr("Bad hemisphere letter on " + strb);
-            if (lon < -180 || lon > 360)
-              throw GeographicErr("Longitude " + strb + "not in [-180d, 360d]");
+            if (lon < -540 || lon >= 540)
+              throw GeographicErr("Longitude " + strb +
+                                  " not in [-540d, 540d)");
           } else {
             if (!(str >> stra >> strb))
               throw GeographicErr("Incomplete input: " + s);

@@ -29,7 +29,7 @@ is used (I<a> = 6378137 m, I<f> = 1/298.257223563).
 2 tokens (output options B<-g>, B<-d>, or B<-:>) given as I<latitude>
 I<longitude> using decimal degrees or degrees minutes seconds.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
-significant designator optional.  (See L<QUOTING|quoting> for how to
+significant designator optional.  (See L</QUOTING> for how to
 quote the characters ' and " when entering coordinates on the command
 line.)  Various unicode characters (encoded with UTF-8) may also be used
 to denote degrees, minutes, and seconds, e.g., the degree, prime, and
@@ -101,13 +101,13 @@ degrees clockwise from true north.
 =item B<-p>
 
 set the output precision to I<prec> (default 0); I<prec> is the
-precision relative to 1 m.  See L<PRECISION|precision>.
+precision relative to 1 m.  See L</PRECISION>.
 
 =item B<-z>
 
 set the zone to I<zone> for output.  Use either 0 E<lt> I<zone> E<lt>=
 60 for a UTM zone or I<zone> = 0 for UPS.  Alternatively use a
-I<zone>+I<hemisphere> designation, e.g., 38N.  See L<ZONE|zone>.
+I<zone>+I<hemisphere> designation, e.g., 38N.  See L</ZONE>.
 
 =item B<-s>
 
@@ -120,7 +120,7 @@ similar to B<-s> but forces UPS regions to the closest UTM zone.
 =item B<-n>
 
 on input, MGRS coordinates refer to the south-west corner of the MGRS
-square instead of the center; see L<MGRS|mgrs>.
+square instead of the center; see L</MGRS>.
 
 =item B<-w>
 

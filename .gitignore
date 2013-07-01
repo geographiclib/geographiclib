@@ -15,6 +15,7 @@
 *.suo
 *.tgz
 *.zip
+*.class
 *~
 .#*
 .nfs*

@@ -229,15 +229,6 @@ namespace GeographicLib {
     , _init(false)
   {}
 
-  EllipticFunction::EllipticFunction(real k2) throw()
-    : _k2(k2)
-    , _kp2(1 - k2)
-    , _alpha2(0)
-    , _alphap2(1)
-    , _eps(_k2/Math::sq(sqrt(_kp2) + 1))
-    , _init(false)
-  {}
-
   void EllipticFunction::Reset(real k2, real alpha2,
                                real kp2, real alphap2) throw() {
     _k2 = k2;

@@ -88,16 +88,19 @@ namespace GeographicLib {
 
     // Divided differences
     // Definition: Df(x,y) = (f(x)-f(y))/(x-y)
-    // See: W. M. Kahan and R. J. Fateman,
-    // Symbolic computation of divided differences,
-    // SIGSAM Bull. 33(3), 7-28 (1999)
-    // http://doi.acm.org/10.1145/334714.334716
-    // http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
+    // See:
+    //   W. M. Kahan and R. J. Fateman,
+    //   Symbolic computation of divided differences,
+    //   SIGSAM Bull. 33(3), 7-28 (1999)
+    //   http://dx.doi.org/10.1145/334714.334716
+    //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
     //
     // General rules
     // h(x) = f(g(x)): Dh(x,y) = Df(g(x),g(y))*Dg(x,y)
     // h(x) = f(x)*g(x):
-    //        Dh(x,y) = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2
+    //        Dh(x,y) = Df(x,y)*g(x) + Dg(x,y)*f(y)
+    //                = Df(x,y)*g(y) + Dg(x,y)*f(x)
+    //                = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2
     //
     // sn(x) = x/sqrt(1+x^2): Dsn(x,y) = (x+y)/((sn(x)+sn(y))*(1+x^2)*(1+y^2))
     static inline real Dsn(real x, real y, real sx, real sy) throw() {

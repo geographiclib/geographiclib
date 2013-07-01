@@ -1,3 +1,4 @@
+"""constants.py: transcription of GeographicLib::Constants class."""
 # constants.py
 #
 # This is a translation of the GeographicLib::Constants class to python.  See

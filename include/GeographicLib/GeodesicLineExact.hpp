@@ -116,7 +116,7 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = GeodesicExact::AREA,
       /**
-       * All capabilities.  Calculate everything.
+       * All capabilities, calculate everything.
        * @hideinitializer
        **********************************************************************/
       ALL           = GeodesicExact::ALL,
@@ -138,36 +138,36 @@ namespace GeographicLib {
      * @param[in] caps bitor'ed combination of GeodesicLineExact::mask values
      *   specifying the capabilities the GeodesicLineExact object should
      *   possess, i.e., which quantities can be returned in calls to
-     *   GeodesicLib::Position.
+     *   GeodesicLine::Position.
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
      * azi1 should be in the range [&minus;540&deg;, 540&deg;).
      *
      * The GeodesicLineExact::mask values are
      * - \e caps |= GeodesicLineExact::LATITUDE for the latitude \e lat2; this
-     *   is added automatically
-     * - \e caps |= GeodesicLineExact::LONGITUDE for the latitude \e lon2
+     *   is added automatically;
+     * - \e caps |= GeodesicLineExact::LONGITUDE for the latitude \e lon2;
      * - \e caps |= GeodesicLineExact::AZIMUTH for the latitude \e azi2; this is
-     *   added automatically
-     * - \e caps |= GeodesicLineExact::DISTANCE for the distance \e s12
+     *   added automatically;
+     * - \e caps |= GeodesicLineExact::DISTANCE for the distance \e s12;
      * - \e caps |= GeodesicLineExact::REDUCEDLENGTH for the reduced length \e
-         m12
+         m12;
      * - \e caps |= GeodesicLineExact::GEODESICSCALE for the geodesic scales \e
-     *   M12 and \e M21
-     * - \e caps |= GeodesicLineExact::AREA for the area \e S12
+     *   M12 and \e M21;
+     * - \e caps |= GeodesicLineExact::AREA for the area \e S12;
      * - \e caps |= GeodesicLineExact::DISTANCE_IN permits the length of the
      *   geodesic to be given in terms of \e s12; without this capability the
-     *   length can only be specified in terms of arc length.
+     *   length can only be specified in terms of arc length;
+     * - \e caps |= GeodesicLineExact::ALL for all of the above.
      * .
-     * The default value of \e caps is GeodesicLineExact::ALL which turns on
-     * all the capabilities.
+     * The default value of \e caps is GeodesicLineExact::ALL.
      *
-     * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-     * fixed and writing \e lat1 = &plusmn;(90&deg; &minus; &epsilon;) and
-     * taking the limit &epsilon; &rarr; 0+.
+     * If the point is at a pole, the azimuth is defined by keeping \e lon1
+     * fixed, writing \e lat1 = &plusmn;(90&deg; &minus; &epsilon;), and taking
+     * the limit &epsilon; &rarr; 0+.
      **********************************************************************/
     GeodesicLineExact(const GeodesicExact& g, real lat1, real lon1, real azi1,
-                 unsigned caps = ALL)
+                      unsigned caps = ALL)
       throw();
 
     /**
@@ -458,15 +458,16 @@ namespace GeographicLib {
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
      * The GeodesicLineExact::mask values possible for \e outmask are
-     * - \e outmask |= GeodesicLineExact::LATITUDE for the latitude \e lat2.
-     * - \e outmask |= GeodesicLineExact::LONGITUDE for the latitude \e lon2.
-     * - \e outmask |= GeodesicLineExact::AZIMUTH for the latitude \e azi2.
-     * - \e outmask |= GeodesicLineExact::DISTANCE for the distance \e s12.
+     * - \e outmask |= GeodesicLineExact::LATITUDE for the latitude \e lat2;
+     * - \e outmask |= GeodesicLineExact::LONGITUDE for the latitude \e lon2;
+     * - \e outmask |= GeodesicLineExact::AZIMUTH for the latitude \e azi2;
+     * - \e outmask |= GeodesicLineExact::DISTANCE for the distance \e s12;
      * - \e outmask |= GeodesicLineExact::REDUCEDLENGTH for the reduced length
-     *   \e m12.
+     *   \e m12;
      * - \e outmask |= GeodesicLineExact::GEODESICSCALE for the geodesic scales
-     *   \e M12 and \e M21.
-     * - \e outmask |= GeodesicLineExact::AREA for the area \e S12.
+     *   \e M12 and \e M21;
+     * - \e outmask |= GeodesicLineExact::AREA for the area \e S12;
+     * - \e outmask |= GeodesicLine::ALL for all of the above.
      * .
      * Requesting a value which the GeodesicLineExact object is not capable of
      * computing is not an error; the corresponding argument will not be

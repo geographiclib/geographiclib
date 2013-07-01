@@ -241,4 +241,4 @@ namespace GeographicLib {
 #  pragma warning (pop)
 #endif
 
-#endif
+#endif  // GEOGRAPHICLIB_OSGB_HPP

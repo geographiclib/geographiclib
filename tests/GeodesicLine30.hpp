@@ -141,7 +141,7 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = Geodesic30<real>::AREA,
       /**
-       * All capabilities.  Calculate everything.
+       * All capabilities, calculate everything.
        * @hideinitializer
        **********************************************************************/
       ALL           = Geodesic30<real>::ALL,
@@ -163,7 +163,7 @@ namespace GeographicLib {
      * @param[in] caps bitor'ed combination of GeodesicLine30::mask values
      *   specifying the capabilities the GeodesicLine30 object should
      *   possess, i.e., which quantities can be returned in calls to
-     *   GeodesicLib::Position.
+     *   GeodesicLine::Position.
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
      * azi1 should be in the range [&minus;540&deg;, 540&deg;).
@@ -188,9 +188,8 @@ namespace GeographicLib {
      * all the capabilities.
      *
      * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-     * fixed and writing \e lat1 = 90&deg; &minus; &epsilon; or
-     * &minus;90&deg; + &epsilon; and taking the limit &epsilon; &rarr; 0 from
-     * above.
+     * fixed and writing \e lat1 = &plusmn;(90&deg; &minus; &epsilon;) and
+     * taking the limit &epsilon; &rarr; 0+.
      **********************************************************************/
     GeodesicLine30(const Geodesic30<real>& g, real lat1, real lon1, real azi1,
                  unsigned caps = ALL)

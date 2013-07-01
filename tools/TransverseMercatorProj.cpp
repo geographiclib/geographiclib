@@ -69,9 +69,9 @@ int main(int argc, char* argv[]) {
           lon0 = DMS::Decode(std::string(argv[m]), ind);
           if (ind == DMS::LATITUDE)
             throw GeographicErr("Bad hemisphere");
-          if (!(lon0 >= -180 && lon0 <= 360))
+          if (!(lon0 >= -540 && lon0 < 540))
             throw GeographicErr("Bad longitude");
-          if (lon0 >= 180) lon0 -= 360;
+          lon0 = Math::AngNormalize(lon0);
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding argument of " << arg << ": "

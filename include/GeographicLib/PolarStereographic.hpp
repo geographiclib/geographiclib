@@ -46,9 +46,8 @@ namespace GeographicLib {
     }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
-    inline real eatanhe(real x) const throw() {
-      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x);
-    }
+    inline real eatanhe(real x) const throw()
+    { return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x); }
   public:
 
     /**

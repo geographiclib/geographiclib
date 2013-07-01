@@ -1,6 +1,6 @@
 /**
  * PolygonArea.js
- * Transcription of PolygonArea.[ch]pp into javascript.
+ * Transcription of PolygonArea.[ch]pp into JavaScript.
  *
  * See the documentation for the C++ class.  The conversion is a literal
  * conversion from C++.
@@ -12,7 +12,7 @@
  *    http://dx.doi.org/10.1007/s00190-012-0578-z
  *    Addenda: http://geographiclib.sf.net/geod-addenda.html
  *
- * Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -44,7 +44,8 @@ GeographicLib.PolygonArea = {};
     this._earth = earth;
     this._area0 = 4 * Math.PI * earth._c2;
     this._polyline = !polyline ? false : polyline;
-    this._mask = g.DISTANCE | (this._polyline ? 0 : g.AREA);
+    this._mask = g.LATITUDE | g.LONGITUDE | g.DISTANCE |
+          (this._polyline ? g.NONE : g.AREA);
     if (!this._polyline)
       this._areasum = new a.Accumulator(0);
     this._perimetersum = new a.Accumulator(0);
@@ -57,7 +58,7 @@ GeographicLib.PolygonArea = {};
     if (!this._polyline)
       this._areasum.Set(0);
     this._perimetersum.Set(0);
-    this._lat0 = this._lon0 = this._lat1 = this._lon1 = 0;
+    this._lat0 = this._lon0 = this._lat1 = this._lon1 = Number.NaN;
   }
 
   p.PolygonArea.prototype.AddPoint = function(lat, lon) {
@@ -73,6 +74,20 @@ GeographicLib.PolygonArea = {};
       }
       this._lat1 = lat;
       this._lon1 = lon;
+    }
+    ++this._num;
+  }
+
+  p.PolygonArea.prototype.AddEdge = function(azi, s) {
+    if (this._num) {
+      var t = this._earth.Direct(this._lat1, this._lon1, azi, s, this._mask);
+      this._perimetersum.Add(s);
+      if (!this._polyline) {
+        this._areasum.Add(t.S12);
+        this._crossings += p.transit(this._lon1, t.lon2);
+      }
+      this._lat1 = t.lat2;
+      this._lon1 = t.lon2;
     }
     ++this._num;
   }
@@ -119,7 +134,7 @@ GeographicLib.PolygonArea = {};
   }
 
   // return number, perimeter, area
-  p.TestCompute = function(lat, lon, reverse, sign) {
+  p.PolygonArea.prototype.TestPoint = function(lat, lon, reverse, sign) {
     var vals = {number: this._num + 1};
     if (this._num == 0) {
       vals.perimeter = 0;
@@ -166,6 +181,53 @@ GeographicLib.PolygonArea = {};
         tempsum += this._area0;
     }
     vals.area = tempsum;
+    return vals;
+  }
+
+  // return number, perimeter, area
+  p.PolygonArea.prototype.TestEdge = function(azi, s, reverse, sign) {
+    var vals = {number: this._num ? this._num + 1 : 0};
+    if (this._num == 0)
+      return vals;
+    vals.perimeter = this._perimetersum.Sum() + s;
+    if (this._polyline)
+      return vals;
+
+    var tempsum = this._areasum.Sum();
+    var crossings = this._crossings;
+    var t;
+    t = this._earth.Direct(this._lat1, this._lon1, azi, s, this._mask);
+    tempsum += t.S12;
+    crossings += p.transit(this._lon1, t.lon2);
+    t = this._earth(t.lat2, t.lon2, this._lat0, this._lon0, this._mask);
+    perimeter += t.s12;
+    tempsum += t.S12;
+    crossings += p.transit(t.lon2, this._lon0);
+
+    if (crossings & 1)
+      tempsum += (tempsum < 0 ? 1 : -1) * this._area0/2;
+    // area is with the clockwise sense.  If !reverse convert to
+    // counter-clockwise convention.
+    if (!reverse)
+      tempsum *= -1;
+    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
+    if (sign) {
+      if (tempsum > this._area0/2)
+        tempsum -= this._area0;
+      else if (tempsum <= -this._area0/2)
+        tempsum += this._area0;
+    } else {
+      if (tempsum >= this._area0)
+        tempsum -= this._area0;
+      else if (tempsum < 0)
+        tempsum += this._area0;
+    }
+    vals.area = tempsum;
+    return vals;
+  }
+
+  p.PolygonArea.prototype.CurrentPoint = function() {
+    var vals = {lat: this._lat1, lon: this._lon1};
     return vals;
   }
 

@@ -301,6 +301,8 @@ namespace GeographicLib {
      * = [-4, 60].  If \e zoneout &lt; UTMUPS::MINZONE then the rules give in
      * the documentation of UTMUPS::zonespec are applied, and \e zone is set to
      * the actual zone used for output.
+     *
+     * (\e xout, \e yout) can overlap with (\e xin, \e yin).
      **********************************************************************/
     static void Transfer(int zonein, bool northpin, real xin, real yin,
                          int zoneout, bool northpout, real& xout, real& yout,
@@ -355,7 +357,7 @@ namespace GeographicLib {
      * of these projections, \e zone is set to UTMUPS::INVALID.  See
      * http://spatialreference.org/ref/epsg/
      **********************************************************************/
-    static void DecodeEPSG(int& epsg, int& zone, bool& northp) throw();
+    static void DecodeEPSG(int epsg, int& zone, bool& northp) throw();
 
     /**
      * Encode zone as EPSG.

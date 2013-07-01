@@ -2,7 +2,7 @@
  * \file Geodesic.hpp
  * \brief Header for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -52,11 +52,11 @@ namespace GeographicLib {
    * distance \e s12 to the second point.  However it is sometimes useful
    * instead to specify the arc length \e a12 (in degrees) on the auxiliary
    * sphere.  This is a mathematical construct used in solving the geodesic
-   * problems.  The solution of the direct problem in this form is provide by
-   * Geodesic::ArcDirect.  An arc length in excess of 180&deg; indicates
-   * that the geodesic is not a shortest path.  In addition, the arc length
-   * between an equatorial crossing and the next extremum of latitude for a
-   * geodesic is 90&deg;.
+   * problems.  The solution of the direct problem in this form is provided by
+   * Geodesic::ArcDirect.  An arc length in excess of 180&deg; indicates that
+   * the geodesic is not a shortest path.  In addition, the arc length between
+   * an equatorial crossing and the next extremum of latitude for a geodesic is
+   * 90&deg;.
    *
    * This class can also calculate several other quantities related to
    * geodesics.  These are:
@@ -75,13 +75,13 @@ namespace GeographicLib {
    *   defined similarly (with the geodesics being parallel at point 2).  On a
    *   flat surface, we have \e M12 = \e M21 = 1.  The quantity 1/\e M12 gives
    *   the scale of the Cassini-Soldner projection.
-   * - <i>area</i>.  Consider the quadrilateral bounded by the following lines:
-   *   the geodesic from point 1 to point 2, the meridian from point 2 to the
-   *   equator, the equator from \e lon2 to \e lon1, the meridian from the
-   *   equator to point 1.  The area of this quadrilateral is represented by \e
-   *   S12 with a clockwise traversal of the perimeter counting as a positive
-   *   area and it can be used to compute the area of any simple geodesic
-   *   polygon.
+
+   * - <i>area</i>.  The area between the geodesic from point 1 to point 2 and
+   *   the equation is represented by \e S12; it is the area, measured
+   *   counter-clockwise, of the geodesic quadrilateral with corners
+   *   (<i>lat1</i>,<i>lon1</i>), (0,<i>lon1</i>), (0,<i>lon2</i>), and
+   *   (<i>lat2</i>,<i>lon2</i>).  It can be used to compute the area of any
+   *   simple geodesic polygon.
    *
    * Overloaded versions of Geodesic::Direct, Geodesic::ArcDirect, and
    * Geodesic::Inverse allow these quantities to be returned.  In addition
@@ -140,7 +140,8 @@ namespace GeographicLib {
    *     0.05     10 um
    *     0.1     1.5 mm
    *     0.2     300 mm
-   * </pre>For very eccentric ellipsoids, use GeodesicExact instead.
+   * </pre>
+   * For very eccentric ellipsoids, use GeodesicExact instead.
    *
    * The algorithms are described in
    * - C. F. F. Karney,
@@ -234,7 +235,7 @@ namespace GeographicLib {
                       real sbet2, real cbet2, real dn2,
                       real lam12,
                       real& salp1, real& calp1,
-                      real& salp2, real& calp2,
+                      real& salp2, real& calp2, real& dnm,
                       real C1a[], real C2a[]) const throw();
     real Lambda12(real sbet1, real cbet1, real dn1,
                   real sbet2, real cbet2, real dn2,
@@ -321,7 +322,7 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = 1U<<14 | CAP_C4,
       /**
-       * All capabilities.  Calculate everything.
+       * All capabilities, calculate everything.
        * @hideinitializer
        **********************************************************************/
       ALL           = OUT_ALL| CAP_ALL,
@@ -348,7 +349,7 @@ namespace GeographicLib {
     ///@{
     /**
      * Solve the direct geodesic problem where the length of the geodesic
-     * is specify in terms of distance.
+     * is specified in terms of distance.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -372,7 +373,7 @@ namespace GeographicLib {
      * 180&deg;).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
-     * longitude fixed and writing \e lat = &plusmn;(90&deg; &minus; &epsilon;)
+     * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
      * and taking the limit &epsilon; &rarr; 0+.  An arc length greater that
      * 180&deg; signifies a geodesic which is not a shortest path.  (For a
      * prolate ellipsoid, an additional condition is necessary for a shortest
@@ -462,7 +463,7 @@ namespace GeographicLib {
     ///@{
     /**
      * Solve the direct geodesic problem where the length of the geodesic
-     * is specify in terms of arc length.
+     * is specified in terms of arc length.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -486,7 +487,7 @@ namespace GeographicLib {
      * 180&deg;).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
-     * longitude fixed and writing \e lat = &plusmn;(90&deg; &minus; &epsilon;)
+     * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
      * and taking the limit &epsilon; &rarr; 0+.  An arc length greater that
      * 180&deg; signifies a geodesic which is not a shortest path.  (For a
      * prolate ellipsoid, an additional condition is necessary for a shortest
@@ -610,15 +611,16 @@ namespace GeographicLib {
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
      * The Geodesic::mask values possible for \e outmask are
-     * - \e outmask |= Geodesic::LATITUDE for the latitude \e lat2.
-     * - \e outmask |= Geodesic::LONGITUDE for the latitude \e lon2.
-     * - \e outmask |= Geodesic::AZIMUTH for the latitude \e azi2.
-     * - \e outmask |= Geodesic::DISTANCE for the distance \e s12.
+     * - \e outmask |= Geodesic::LATITUDE for the latitude \e lat2;
+     * - \e outmask |= Geodesic::LONGITUDE for the latitude \e lon2;
+     * - \e outmask |= Geodesic::AZIMUTH for the latitude \e azi2;
+     * - \e outmask |= Geodesic::DISTANCE for the distance \e s12;
      * - \e outmask |= Geodesic::REDUCEDLENGTH for the reduced length \e
-     *   m12.
+     *   m12;
      * - \e outmask |= Geodesic::GEODESICSCALE for the geodesic scales \e
-     *   M12 and \e M21.
-     * - \e outmask |= Geodesic::AREA for the area \e S12.
+     *   M12 and \e M21;
+     * - \e outmask |= Geodesic::AREA for the area \e S12;
+     * - \e outmask |= Geodesic::ALL for all of the above.
      * .
      * The function value \e a12 is always computed and returned and this
      * equals \e s12_a12 is \e arcmode is true.  If \e outmask includes
@@ -660,7 +662,7 @@ namespace GeographicLib {
      * [&minus;180&deg;, 180&deg;).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
-     * longitude fixed and writing \e lat = &plusmn;(90&deg; &minus; &epsilon;)
+     * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
      * and taking the limit &epsilon; &rarr; 0+.
      *
      * The solution to the inverse problem is found using Newton's method.  If
@@ -778,13 +780,14 @@ namespace GeographicLib {
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
      * The Geodesic::mask values possible for \e outmask are
-     * - \e outmask |= Geodesic::DISTANCE for the distance \e s12.
-     * - \e outmask |= Geodesic::AZIMUTH for the latitude \e azi2.
+     * - \e outmask |= Geodesic::DISTANCE for the distance \e s12;
+     * - \e outmask |= Geodesic::AZIMUTH for the latitude \e azi2;
      * - \e outmask |= Geodesic::REDUCEDLENGTH for the reduced length \e
-     *   m12.
+     *   m12;
      * - \e outmask |= Geodesic::GEODESICSCALE for the geodesic scales \e
-     *   M12 and \e M21.
-     * - \e outmask |= Geodesic::AREA for the area \e S12.
+     *   M12 and \e M21;
+     * - \e outmask |= Geodesic::AREA for the area \e S12;
+     * - \e outmask |= Geodesic::ALL for all of the above.
      * .
      * The arc length is always computed and returned as the function value.
      **********************************************************************/
@@ -800,7 +803,7 @@ namespace GeographicLib {
     ///@{
 
     /**
-     * Set up to compute several points on a singe geodesic.
+     * Set up to compute several points on a single geodesic.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -808,32 +811,33 @@ namespace GeographicLib {
      * @param[in] caps bitor'ed combination of Geodesic::mask values
      *   specifying the capabilities the GeodesicLine object should possess,
      *   i.e., which quantities can be returned in calls to
-     *   GeodesicLib::Position.
+     *   GeodesicLine::Position.
+     * @return a GeodesicLine object.
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
      * azi1 should be in the range [&minus;540&deg;, 540&deg;).
      *
      * The Geodesic::mask values are
      * - \e caps |= Geodesic::LATITUDE for the latitude \e lat2; this is
-     *   added automatically
-     * - \e caps |= Geodesic::LONGITUDE for the latitude \e lon2
+     *   added automatically;
+     * - \e caps |= Geodesic::LONGITUDE for the latitude \e lon2;
      * - \e caps |= Geodesic::AZIMUTH for the azimuth \e azi2; this is
-     *   added automatically
-     * - \e caps |= Geodesic::DISTANCE for the distance \e s12
-     * - \e caps |= Geodesic::REDUCEDLENGTH for the reduced length \e m12
+     *   added automatically;
+     * - \e caps |= Geodesic::DISTANCE for the distance \e s12;
+     * - \e caps |= Geodesic::REDUCEDLENGTH for the reduced length \e m12;
      * - \e caps |= Geodesic::GEODESICSCALE for the geodesic scales \e M12
-     *   and \e M21
-     * - \e caps |= Geodesic::AREA for the area \e S12
+     *   and \e M21;
+     * - \e caps |= Geodesic::AREA for the area \e S12;
      * - \e caps |= Geodesic::DISTANCE_IN permits the length of the
      *   geodesic to be given in terms of \e s12; without this capability the
-     *   length can only be specified in terms of arc length.
+     *   length can only be specified in terms of arc length;
+     * - \e caps |= Geodesic::ALL for all of the above.
      * .
-     * The default value of \e caps is Geodesic::ALL which turns on all the
-     * capabilities.
+     * The default value of \e caps is Geodesic::ALL.
      *
-     * If the point is at a pole, the azimuth is defined by keeping the \e lon1
-     * fixed and writing \e lat1 = &plusmn;&(90 &minus; &epsilon;) and taking
-     * the limit &epsilon; &rarr; 0+.
+     * If the point is at a pole, the azimuth is defined by keeping \e lon1
+     * fixed, writing \e lat1 = &plusmn;(90 &minus; &epsilon;), and taking the
+     * limit &epsilon; &rarr; 0+.
      **********************************************************************/
     GeodesicLine Line(real lat1, real lon1, real azi1, unsigned caps = ALL)
       const throw();

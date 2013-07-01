@@ -4,14 +4,20 @@ project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 30)
+set (GeographicLib_VERSION_MINOR 31)
+set (GeographicLib_VERSION_PATCH 0)
 set (GeographicLib_VERSION
   "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
+if (GeographicLib_VERSION_PATCH GREATER 0)
+  set (GeographicLib_VERSION
+    "${GeographicLib_VERSION}.${GeographicLib_VERSION_PATCH}")
+endif ()
+
 set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
-set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.8.2)
+set (LIBVERSION 10)
+set (LIBVERSIONFULL 10.0.0)
 
 # User-settable variables
 
@@ -139,7 +145,25 @@ endif ()
 # The debug version of the library is called Geographic_d.
 set (CMAKE_DEBUG_POSTFIX _d)
 
-# Determine system properties
+if (NOT WIN32)
+  # Set the run time path for shared libraries for non-Windows machines.
+  # (1) include link path for external packages (not needed with
+  # GeographicLib because there are no external packages).
+  set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  # (2) include installed path for GeographicLib
+  if (GEOGRAPHIC_SHARED_LIB)
+    # Alternatively set CMAKE_INSTALL_RPATH to
+    # $ORIGIN/../lib${LIB_SUFFIX}.  But this might not work on all
+    # systems and the check for system directories should be skipped in
+    # this case.
+    list (FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES
+      "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" SYSDIR)
+    if (SYSDIR LESS 0)
+      set (CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+    endif ()
+  endif ()
+endif ()
+
 if (NOT CYGWIN)
   # cygwin has a long double but the support for ::cbrtl etc is missing
   include (CheckTypeSize)
@@ -210,8 +234,15 @@ if (MATLAB_COMPILER)
       PATHS "${MATLABDIR}")
     execute_process (COMMAND "${MEXEXTPROG}"
       OUTPUT_VARIABLE MEXEXT OUTPUT_STRIP_TRAILING_WHITESPACE)
+    set (MEXOPTIONS "-largeArrayDims")
   else ()
     set (MEXEXT "mex")
+    set (MEXOPTIONS "--mex")
+  endif ()
+  if (NOT GEOGRAPHIC_SHARED_LIB AND NOT WIN32)
+    # mex files are shared objects => require static lib to be built with
+    # position independent code
+    set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS}")
   endif ()
   if (NOT MEX)
     message (WARNING
@@ -294,7 +325,7 @@ include (InstallRequiredSystemLibraries)
 # the include (CPack).
 set (CPACK_PACKAGE_VERSION_MAJOR ${GeographicLib_VERSION_MAJOR})
 set (CPACK_PACKAGE_VERSION_MINOR ${GeographicLib_VERSION_MINOR})
-set (CPACK_PACKAGE_VERSION_PATCH 0)
+set (CPACK_PACKAGE_VERSION_PATCH ${GeographicLib_VERSION_PATCH})
 set (CPACK_PACKAGE_CONTACT charles@karney.com)
 set (CPACK_PACKAGE_VENDOR "GeographicLib")
 set (CPACK_PACKAGE_DESCRIPTION_SUMMARY
@@ -379,6 +410,9 @@ if (MAINTAINER)
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
       echo include Makefile.mk > Makefile &&
       sed -e "s/Unconfigured/${PACKAGE_VERSION}/"
+      -e "s/MAJOR .*/MAJOR ${CPACK_PACKAGE_VERSION_MAJOR}/"
+      -e "s/MINOR .*/MINOR ${CPACK_PACKAGE_VERSION_MINOR}/"
+      -e "s/PATCH .*/PATCH ${CPACK_PACKAGE_VERSION_PATCH}/"
       include/GeographicLib/Config.h > include/GeographicLib/Config.h.new &&
       mv include/GeographicLib/Config.h.new include/GeographicLib/Config.h
     COMMAND

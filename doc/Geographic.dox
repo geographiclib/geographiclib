@@ -11,8 +11,8 @@
 /**
 \mainpage Geographic library
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.30
-\date 2013-02-27
+\version 1.31
+\date 2013-07-01
 
 \section abstract Abstract
 
@@ -26,7 +26,7 @@ returning accurate results with errors close to round-off (about
 \ref transversemercator have been developed for this library.  The
 functionality of the library can be accessed from user code, from the
 \ref utilities provided, or via the \ref other.  For a sample of the
-geodesic capabilities in Javascript, check out the
+geodesic capabilities in JavaScript, check out the
 <a href="../scripts/geod-calc.html">online geodesic calculator</a> and
 the script for displaying
 <a href="../scripts/geod-google.html">geodesics in Google Maps</a>
@@ -43,23 +43,22 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.30.tar.gz">
-  GeographicLib-1.30.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.30.zip">
-  GeographicLib-1.30.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.31.tar.gz">
+  GeographicLib-1.31.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.31.zip">
+  GeographicLib-1.31.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
 line endings.)  Alternatively you can get the latest release using git
 \verbatim
-  git clone git://git.code.sf.net/p/geographiclib/code geographiclib
-  cd geographiclib; git checkout -q r1.30
+  git clone -b r1.31 git://git.code.sf.net/p/geographiclib/code geographiclib
 \endverbatim
 There are also binary installers for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.30-win32.exe">
-  GeographicLib-1.30-win32.exe</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.30-win64.exe">
-  GeographicLib-1.30-win64.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.31-win32.exe">
+  GeographicLib-1.31-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.31-win64.exe">
+  GeographicLib-1.31-win64.exe</a>
 .
 It is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -136,7 +135,7 @@ and the utilities have been tested with g++ 4.4 under Linux, with g++
 fails with Visual Studio 11.  This is a bug in the I/O library and is
 unlikely to affect most users (bug reported 2013-01-10).
 
-Matlab, Javascript, and Python interfaces are provided to portions of
+Matlab, JavaScript, and Python interfaces are provided to portions of
 %GeographicLib; see \ref other.
 
 The section \ref geodesic documents the method of solving the geodesic
@@ -177,19 +176,18 @@ Forward to \ref install.  Up to \ref contents.
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
 
-%GeographicLib has been developed under Linux with the g++ compiler (versions
-4.0 and later) and under Windows with Visual Studio 2005, 2008, and
-2010.  Earlier versions were tested also under Darwin and Solaris.  It
-should compile on a wide range of other systems.  First
-download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.30.tar.gz">
-GeographicLib-1.30.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.30.zip">
-GeographicLib-1.30.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.30-win32.exe">
-GeographicLib-1.30-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.30-win64.exe">
-GeographicLib-1.30-win64.exe</a> for binary installation under Windows).
+%GeographicLib has been developed under Linux with the g++ compiler
+(versions 4.0 and later) and under Windows with Visual Studio 2005, 2008,
+and 2010.  Earlier versions were tested also under Darwin and Solaris.  It
+should compile on a wide range of other systems.  First download either
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.31.tar.gz">
+GeographicLib-1.31.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.31.zip">
+GeographicLib-1.31.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.31-win32.exe">
+GeographicLib-1.31-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.31-win64.exe">
+GeographicLib-1.31-win64.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -262,10 +260,10 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.30.tar.gz
-  unzip -q GeographicLib-1.30.zip \endverbatim
+  tar xfpz GeographicLib-1.31.tar.gz
+  unzip -q GeographicLib-1.31.zip \endverbatim
   then enter the directory created with one of \verbatim
-  cd GeographicLib-1.30 \endverbatim
+  cd GeographicLib-1.31 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -273,8 +271,8 @@ Here are the steps to compile and install %GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically one of \verbatim
-  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.30 ..
-  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.30 ..
+  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.31 ..
+  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.31 ..
 \endverbatim
   Instead of setting CMAKE_INSTALL_PREFIX, you can (on Windows) set
   PACKAGE_PATH to point to its parent directory, e.g., \verbatim
@@ -294,12 +292,12 @@ Here are the steps to compile and install %GeographicLib:
     convention.  If it is on ON (the Linux default), the installation
     is to a common directory, e.g., /usr/local.  If it is OFF (the
     Windows default), the installation directory contains the package
-    name, e.g., C:/pkg/GeographicLib-1.30.  The installation
+    name, e.g., C:/pkg/GeographicLib-1.31.  The installation
     directories for the documentation, cmake configuration, python and
     matlab interfaces all depend on the variable with deeper paths
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
-    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib-1.30;
+    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib-1.31;
     - python interface: OFF: python; ON: lib/python/site-packages;
     - matlab interface: OFF: matlab; ON: libexec/GeographicLib/matlab;
     .
@@ -309,7 +307,7 @@ Here are the steps to compile and install %GeographicLib:
     systems, it is recommended to use a prefix which includes the
     compiler version, as shown above (and also, possibly, whether this
     is a 64-bit build, e.g., <code>cmake -G "Visual Studio 10 Win64" -D
-    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.30 ..</code>).
+    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.31 ..</code>).
     If you just want to try the library to see if it suits your needs,
     pick, for example, <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
   - <code>PACKAGE_PATH</code> and <code>INSTALL_PATH</code> provide an
@@ -322,14 +320,14 @@ Here are the steps to compile and install %GeographicLib:
     - If INSTALL_PATH is not specified but PACKAGE_PATH is, then
       INSTALL_PATH is set to
       ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON, and to
-      ${PACKAGE_PATH}/GeographicLib-1.30, otherwise.
+      ${PACKAGE_PATH}/GeographicLib-1.31, otherwise.
     - If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
       INSTALL_PATH.
     .
     Typically, only PACKAGE_PATH needs to be specified, e.g.,
     - Linux: cmake -D PACKAGE_PATH=/opt .. => CMAKE_INSTALL_PREFIX=/opt
     - Windows: cmake -D PACKAGE_PATH=C:/pkg .. =>
-      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.30
+      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.31
     .
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
@@ -406,9 +404,9 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.30.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.31.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.30 \endverbatim
+  cd GeographicLib-1.31 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -437,9 +435,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.30.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.31.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.30 \endverbatim
+  cd GeographicLib-1.31 \endverbatim
 - Edit \verbatim
   include/GeographicLib/Config.h \endverbatim
   If your C++ compiler does not recognize the long double type
@@ -470,8 +468,8 @@ static library and the utilities.  If you only have Visual Studio 2003,
 use cmake to create the necessary solution file, see \ref cmake.  (cmake
 is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.30.zip \endverbatim
-- Open GeographicLib-1.30/windows/GeographicLib-vc10.sln in Visual Studio
+  unzip -q GeographicLib-1.31.zip \endverbatim
+- Open GeographicLib-1.31/windows/GeographicLib-vc10.sln in Visual Studio
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
@@ -494,14 +492,14 @@ library, it is advisable to build it with the compiler you are using for
 your own code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.30-win32.exe">
-GeographicLib-1.30-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.30-win64.exe">
-GeographicLib-1.30-win64.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.31-win32.exe">
+GeographicLib-1.31-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.31-win64.exe">
+GeographicLib-1.31-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc10\\GeographicLib-1.30 or C:\\pkg-vc10-x64\\GeographicLib-1.30,
+   C:\\pkg-vc10\\GeographicLib-1.31 or C:\\pkg-vc10-x64\\GeographicLib-1.31,
  - select the start menu folder,
  - and install.
  .
@@ -509,13 +507,13 @@ GeographicLib-1.30-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc10/GeographicLib-1.30/bin where the utilities are
+will include C:/pkg-vc10/GeographicLib-1.31/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the matlab folder.  Add this to your
 path in Matlab to access this interface.  The binaries were built
 using Visual Studio 10 (2010) in Release mode.  The Matlab interface
-was compiled with Matlab R2010b 64-bit, however it may work with some
+was compiled with Matlab R2013a 64-bit, however it may work with some
 other 64-bit versions of Matlab.
 
 \section qt Building the library for use with Qt
@@ -556,7 +554,7 @@ Check the code out of git with \verbatim
 Here the "master" branch is checked out.  There are three branches in
 the git repository:
 - <b>master</b>: the main branch for code maintainence.  Releases are
-  tagged on this branch as, e.g., v1.30.
+  tagged on this branch as, e.g., v1.31.
 - <b>devel</b>: the development branch; changes made here are merged
   into master.
 - <b>release</b>: the release branch created by unpacking the source
@@ -566,7 +564,7 @@ the git repository:
   specifying a branch).  This differs from the master branch in that
   some administrative files are excluded while some intermediate files
   are included (in order to aid building on as many platforms as
-  possible).  Releases are tagged on this branch as, e.g., r1.30.
+  possible).  Releases are tagged on this branch as, e.g., r1.31.
 .
 The autoconf configuration script and the formatted man pages are not
 checked into master branch of the repository.  In order to create the
@@ -582,8 +580,8 @@ In the case of cmake, you then run \verbatim
 which will copy the man pages from the build directory back into the
 source tree and package the resulting source tree for distribution as
 \verbatim
-  GeographicLib-1.30.tar.gz
-  GeographicLib-1.30.zip \endverbatim
+  GeographicLib-1.31.tar.gz
+  GeographicLib-1.31.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -594,7 +592,7 @@ With configure, run \verbatim
   make dist-gzip \endverbatim
 which will create the additional files and packages the results ready
 for distribution as \verbatim
-  geographiclib-1.30.tar.gz \endverbatim
+  geographiclib-1.31.tar.gz \endverbatim
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
@@ -1002,25 +1000,38 @@ compiler.  System dependencies come into
    the WORDS_BIGENDIAN macro (which sets the compile-time constant
    GeographicLib::Math::bigendian).
 
+An attempt is made to maintain backward compatibility with
+%GeographicLib (especially at the level of your source code).  Sometimes
+it's necessary to take actions that depend on what version of
+%GeographicLib is being used; for example, you may want to use a new
+feature of %GeographicLib, but want your code still to work with older
+versions.  In that case, you can test the values of the macros
+GEOGRAPHICLIB_VERSION_MAJOR, GEOGRAPHICLIB_VERSION_MINOR, and
+GEOGRAPHICLIB_VERSION_PATCH; these expand to numbers (and the last one
+is usually 0); these macros appeared starting in version 1.31.  There's
+also a macro GEOGRAPHICLIB_VERSION_STRING which expands to, e.g.,
+"1.31"; this macro has been defined since version 1.9.
+
 <center>
 Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page other Other interfaces (C, Fortran, Javascript, Python, Matlab, Maxima)
+\page other Implementations in C, Fortran, Java, JavaScript, Python, Matlab, Maxima
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 </center>
 
-Interfaces to subsets of %GeographicLib are available in other languages
+Implementations of subsets of %GeographicLib are available in other languages
 - \ref c-fortran
+- \ref java.
 - \ref javascript.
 - \ref python.
 - \ref matlab.
 - \ref maxima.
 
-\section c-fortran C and Fortran
+\section c-fortran C and Fortran implementation
 
 The directories <code>legacy/C</code> and <code>legacy/Fortran</code>
 contain implementations of GeographicLib::Geodesic,
@@ -1036,7 +1047,19 @@ For documentation, see
  - <a href="C/index.html">C library for geodesics</a>,
  - <a href="Fortran/index.html">Fortran library for geodesics</a>.
 
-\section javascript Javascript interface
+\section java Java implementation
+
+The directory <code>java</code> contains implementations of
+GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
+GeographicLib::PolygonArea in Java.  This implementation is entirely
+self-contained and does not depend on the rest of %GeographicLib.
+Sample main programs to solve the direct and inverse geodesic problems
+and to compute polygonal areas are provided.
+
+For documentation, see
+ - <a href="java/index.html">Java library for geodesics</a>.
+
+\section javascript JavaScript implementation
 
 The directory doc/scripts/GeographicLib contains the classes
 - GeographicLib::Math
@@ -1046,7 +1069,7 @@ The directory doc/scripts/GeographicLib contains the classes
 - GeographicLib::PolygonArea
 - GeographicLib::DMS
 .
-translated into Javascript.  See Interface.js for a simple Javascript
+translated into JavaScript.  See Interface.js for a simple JavaScript
 interface to these routines (documented near the top of the file).
 Examples of using this interface are
 - a <a href="../scripts/geod-calc.html">geodesic calculator</a> showing
@@ -1057,13 +1080,13 @@ Examples of using this interface are
   Maps</a> which shows the geodesic, the geodesic circle, and various
   geodesic envelopes.
 .
-These examples include a "stripped" version of the Javascript code, \code
+These examples include a "stripped" version of the JavaScript code, \code
 <script type="text/javascript"
         src="http://geographiclib.sf.net/scripts/geographiclib.js">
 </script> \endcode
 which loads faster.
 
-\section python Python interface
+\section python Python implementation
 
 A python implementation of the geodesic routines from GeographicLib
 are provided in the python/geographiclib directory (which is installed
@@ -1112,16 +1135,33 @@ An example of using this interface is \code
 ... help(Geodesic)
 \endcode
 
+Another illustrative exercise is finding the point midway between JFK
+Airport to Singapore Changi Airport
+\code
+from geographiclib.geodesic import Geodesic
+
+# Coordinates of airports
+lat1, lon1 = 40.640, -73.779  # JFK
+lat2, lon2 =  1.359, 103.989  # SIN
+
+# Compute path from 1 to 2
+g = Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2)
+
+# Compute midpoint starting at 1
+h = Geodesic.WGS84.Direct(lat1, lon1, g['azi1'], g['s12']/2)
+print(h['lat2'], h['lon2']);
+\endcode
+
 (Note: The initial version of setup.py was provided by Andrew MacIntyre
 of the Australian Communications and Media Authority.)
 
-\section matlab Matlab and Octave interfaces
+\section matlab Matlab and Octave implementations
 
-The matlab directory contains
+The <code>matlab</code> directory contains
  - Native Matlab implementations of the geodesic routines.  To use
    these, start Matlab or Octave and run one of (for example) \verbatim
    addpath /usr/local/libexec/GeographicLib/matlab
-   addpath 'C:/pkg-vc10-x64/GeographicLib-1.30/libexec/GeographicLib/matlab'
+   addpath 'C:/pkg-vc10-x64/GeographicLib-1.31/libexec/GeographicLib/matlab'
    \endverbatim
    The available functions are:
    - geoddoc: briefly descibe the routines
@@ -1164,11 +1204,12 @@ There are two ways of compiling the interface code: (1) using cmake and
    %GeographicLib.  For example \verbatim
    mex.bat -setup
 
-   Please choose your compiler for building external interface (MEX) files:
+   Please choose your compiler for building MEX-files:
    Would you like mex to locate installed compilers [y]/n? y
    Select a compiler:
-   [1] Lcc-win32 C 2.4.1 in C:\PROGRA~1\MATLAB\R2010b\sys\lcc
-   [2] Microsoft Visual C++ 2010 in C:\Program Files\Microsoft Visual Studio 10.0
+   [1] Microsoft Visual C++ 2012 in C:\Program Files (x86)\Microsoft Visual Studio 11.0
+   [2] Microsoft Visual C++ 2010 in C:\Program Files (x86)\Microsoft Visual Studio 10.0
+
    [0] None
 
    Compiler: 2
@@ -1181,16 +1222,16 @@ There are two ways of compiling the interface code: (1) using cmake and
    64-bit generator with cmake, e.g., "Visual Studio 10 Win64".  Finally
    compile %GeographicLib with Visual Studio.  (The binary installer for
    64-bit Windows includes the compiled interface built with Visual
-   Studio 10 and Matlab R2010b 64-bit).<br>
+   Studio 10 and Matlab R2013a 64-bit).<br>
    On Linux systems, you can compile the interface for use with octave
    instead by using \verbatim
    cmake -D MATLAB_COMPILER=mkoctfile .. \endverbatim
  - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
    Octave and run, e.g., \code
    mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-1.30/matlab'
+   cd 'C:/pkg-vc10-x64/GeographicLib-1.31/matlab'
    help geographiclibinterface
-   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.30');
+   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.31');
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
@@ -1199,7 +1240,7 @@ There are two ways of compiling the interface code: (1) using cmake and
 To use the interface routines for %GeographicLib, run one of (for
 example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-1.30/libexec/GeographicLib/matlab'
+  addpath 'C:/pkg-vc10-x64/GeographicLib-1.31/libexec/GeographicLib/matlab'
 \endverbatim
 in Octave or Matlab.  The available functions are:
  - geodesicdirect: solve direct geodesic problem
@@ -1457,7 +1498,7 @@ will prompt for an installation directory with the default being one of
 \endverbatim
 (which you probably should not change) and the data is installed in the
 "geoids" sub-directory.  (The second directory name is an alternate name
-that Windows 7 for the "Application Data" directory.)
+that Windows 7 uses for the "Application Data" directory.)
 
 Otherwise download \e either the tar.bz2 file \e or the zip file (they
 have the same contents).  If possible use the tar.bz2 files, since these
@@ -1945,7 +1986,7 @@ will prompt for an installation directory with the default being one of
 \endverbatim
 (which you probably should not change) and the data is installed in the
 "gravity" sub-directory.  (The second directory name is an alternate name
-that Windows 7 for the "Application Data" directory.)
+that Windows 7 uses for the "Application Data" directory.)
 
 Otherwise download \e either the tar.bz2 file \e or the zip file (they
 have the same contents).  To unpack these, run, for example
@@ -2426,7 +2467,7 @@ will prompt for an installation directory with the default being one of
 \endverbatim
 (which you probably should not change) and the data is installed in the
 "magnetic" sub-directory.  (The second directory name is an alternate name
-that Windows 7 for the "Application Data" directory.)
+that Windows 7 uses for the "Application Data" directory.)
 
 Otherwise download \e either the tar.bz2 file \e or the zip file (they
 have the same contents).  To unpack these, run, for example
@@ -2630,6 +2671,7 @@ Go to
  - \ref geodseries
  - \ref geodellip
  - \ref meridian
+ - \ref geodshort
  .
 For some background information on geodesics on triaxial ellipsoids, see
 \ref triaxial.
@@ -3317,6 +3359,237 @@ for evaluate the meridian distance
 
 <img src="meridian-measures.png" width=576 height=596
      alt="comparison of meridian measures">
+
+\section geodshort Short geodesics
+
+Here we describe Bowring's method for solving the inverse geodesic
+problem in the limit of short geodesics and contrast it with the great
+circle solution using Bessel's auxiliary sphere.  References:
+ - B. R. Bowring, The Direct and Inverse Problems for Short Geodesic
+   Lines on the Ellipsoid, Surveying and Mapping 41(2), 135--141 (1981).
+ - R. H. Rapp,
+   <a href="http://hdl.handle.net/1811/24333">
+   Geometric Geodesy, Part I</a>, Ohio State Univ. (1991), Sec. 6.5.
+
+Bowring considers the conformal mapping of the ellipsoid to a sphere of
+radius \f$ R \f$ such that circles of latitude and meridians are
+preserved (and hence the azimuth of a line is preserved).  Let \f$
+(\phi, \lambda) \f$ and \f$ (\phi', \lambda') \f$ be the latitude and
+longitude on the ellipsoid and sphere respectively.  Define isometric
+latitudes for the sphere and the ellipsoid as
+\f[
+\begin{aligned}
+  \psi' &= \sinh^{-1} \tan \phi', \\
+  \psi &= \sinh^{-1} \tan \phi - e \tanh^{-1}(e \sin\phi).
+\end{aligned}
+\f]
+The most general conformal mapping satisfying Bowring's conditions is
+\f[
+\psi' = A \psi + K, \quad \lambda' = A \lambda,
+\f]
+where \f$ A \f$ and \f$ K \f$ are constants.  (In fact a constant can be
+added to the equation for \f$ \lambda' \f$, but this does affect the
+analysis.)  The scale of this mapping is
+\f[
+m(\phi) = \frac{AR}{\nu}\frac{\cos\phi'}{\cos\phi},
+\f]
+where \f$ \nu = a/\sqrt{1 - e^2\sin^2\phi} \f$ is the transverse radius
+of curvature.  (Note that in Bowring's Eq. (10), \f$ \phi \f$ should be
+replaced by \f$ \phi' \f$.)  The mapping from the ellipsoid to the sphere
+depends on three parameters \f$ R, A, K \f$.  These will be selected to
+satisfy certain conditions at some representative latitude \f$ \phi_0
+\f$.  Two possible choices are given below.
+
+\subsection bowring Bowring's method
+
+Bowring (1981) requires that
+\f[
+m(\phi_0) = 1,\quad
+\left.\frac{dm(\phi)}{d\phi}\right|_{\phi=\phi_0} = 0,\quad
+\left.\frac{d^2m(\phi)}{d\phi^2}\right|_{\phi=\phi_0} = 0,
+\f]
+i.e, \f$m\approx 1\f$ in the vicinity of \f$\phi = \phi_0\f$.
+This gives
+\f[
+\begin{aligned}
+R &= \frac{\sqrt{1 + e'^2}}{B^2} a, \\
+A &= \sqrt{1 + e'^2 \cos^4\phi_0}, \\
+\tan\phi'_0 &= \frac1B \tan\phi_0,
+\end{aligned}
+\f]
+where \f$ e' = e/\sqrt{1-e^2} \f$ is the second eccentricity, \f$ B =
+\sqrt{1+e'^2\cos^2\phi_0} \f$, and \f$ K \f$ is defined implicitly by
+the equation for \f$\phi'_0\f$.  The radius \f$ R \f$ is the (Gaussian)
+mean radius of curvature of the ellipsoid at \f$\phi_0\f$ (so near
+\f$\phi_0\f$ the ellipsoid can be deformed to fit the sphere snugly).
+The third derivative of \f$ m \f$ is given by
+\f[
+\left.\frac{d^3m(\phi)}{d\phi^3}\right|_{\phi=\phi_0} =
+\frac{-2e'^2\sin2\phi_0}{B^4}.
+\f]
+
+The method for solving the inverse problem between two nearby points \f$
+(\phi_1, \lambda_1) \f$ and \f$ (\phi_2, \lambda_2) \f$ is as follows:
+Set \f$\phi_0 = (\phi_1 + \phi_2)/2\f$.  Compute \f$ R, A, \phi'_0 \f$,
+and hence find \f$ (\phi'_1, \lambda'_1) \f$ and \f$ (\phi'_2,
+\lambda'_2) \f$.  Finally, solve for the great circle on a sphere of
+radius \f$ R \f$; the resulting distance and azimuths are good
+approximations for the corresponding quantities for the ellipsoidal
+geodesic.
+
+Consistent with the accuracy of this method, we can compute
+\f$\phi'_1\f$ and \f$\phi'_2\f$ using a Taylor expansion about
+\f$\phi_0\f$.  This also avoids numerical errors that arise from
+subtracting nearly equal quantities when using the equation for
+\f$\phi'\f$ directly.  Write \f$\Delta \phi = \phi - \phi_0\f$ and
+\f$\Delta \phi' = \phi' - \phi'_0\f$; then we have
+\f[
+\Delta\phi' \approx
+\frac{\Delta\phi}B \biggl[1 +
+\frac{\Delta\phi}{B^2}\frac{e'^2}2
+  \biggl(3\sin\phi_0\cos\phi_0 +
+   \frac{\Delta\phi}{B^2}
+   \bigl(B^2 - \sin^2\phi_0(2 - 3 e'^2 \cos^2\phi_0)\bigr)\biggr)\biggr],
+\f]
+where the error is \f$O(f\Delta\phi^4)\f$.
+This is essentially Bowring's method.  Significant differences between
+this result, "Bowring (improved)", compared to Bowring's paper, "Bowring
+(original)", are:
+ - Bowring elects to use \f$\phi_0 = \phi_1\f$.  This simplifies the
+   calculations somewhat but increases the error by about a factor of
+   4.
+ - Bowring's expression for \f$ \Delta\phi' \f$ is only accurate in the
+   limit \f$ e' \rightarrow 0 \f$.
+ .
+In fact, arguably, the highest order \f$O(f\Delta\phi^3)\f$ terms should
+be dropped altogether.  Their inclusion does result in a better estimate
+for the distance.  However, if your goal is to generate both accurate
+distances \e and accurate azimuths, then \f$\Delta\phi\f$ needs to be
+restricted sufficiently to allow these terms to be dropped to give the
+"Bowring (truncated)" method.
+
+With highly eccentric ellipsoids, the parametric latitude \f$ \beta \f$
+is a better behaved independent variable to use.  In this case, \f$
+\phi_0 \f$ is naturally defined using \f$\beta_0 = (\beta_1 +
+\beta_2)/2\f$ and in terms of \f$\Delta\beta = \beta - \beta_0\f$, we
+have
+\f[
+\Delta\phi' \approx
+\frac{\Delta\beta}{B'} \biggl[1 +
+\frac{\Delta\beta}{B'^2}\frac{e'^2}2
+  \biggl(\sin\beta_0\cos\beta_0 +
+   \frac{\Delta\beta}{3B'^2}
+    \bigl( \cos^2\beta_0 - \sin^2\beta_0 B'^2\bigr)
+\biggr)\biggr],
+\f]
+where \f$B' = \sqrt{1+e'^2\sin^2\beta_0} = \sqrt{1+e'^2}/B\f$, and the
+error once again is \f$O(f\Delta\phi^4)\f$.  This is the &quot;Bowring
+(using \f$\beta\f$)&quot; method.
+
+\subsection auxsphere Bessel's auxiliary sphere
+
+%GeographicLib's uses the auxiliary sphere method of Legendre, Bessel,
+and Helmert.  For short geodesics, this is equivalent to picking
+\f$ R, A, K \f$ so that
+\f[
+m(\phi_0) = 1,\quad
+\left.\frac{dm(\phi)}{d\phi}\right|_{\phi=\phi_0} = 0,\quad
+\tan\phi'_0 = (1 - f) \tan\phi_0.
+\f]
+Bowring's requirement that the second derivative of \f$m\f$ vanish has
+been replaced by the last relation which states that \f$\phi'_0 =
+\beta_0\f$, the parametric latitude corresponding to \f$\phi_0\f$.  This
+gives
+\f[
+\begin{aligned}
+R &= B'(1-f)a, \\
+A &= \frac1{B'(1-f)}, \\
+\left.\frac{d^2m(\phi)}{d\phi^2}\right|_{\phi=\phi_0} &=
+-e^2B'^2\sin^2\phi_0.
+\end{aligned}
+\f]
+
+Similar to Bowring's method, we can compute \f$\phi'_1\f$ and
+\f$\phi'_2\f$ using a Taylor expansion about \f$\beta_0\f$.  This results
+in the simple expression
+\f[
+\Delta\phi' \approx \Delta\beta,
+\f]
+where the error is \f$O(f\Delta\beta^2)\f$.
+
+\subsection shorterr Estimating the accuracy
+
+In assessing the accuracy of these methods we use two metrics:
+ - The absolute error in the distance.
+ - The consistency of the predicted azimuths.  Imagine starting
+   ellipsoidal geodesics at \f$ (\phi_1, \lambda_1) \f$ and \f$ (\phi_2,
+   \lambda_2) \f$ with the predicted azimuths.  What is the distance
+   between them when they are extended a distance \f$ a \f$ beyond the
+   second point?
+ .
+(The second metric is much more stringent.)  We may now compare the
+methods by asking for a bound to the length of a geodesic which ensures
+that the one or other of the errors fall below 1 mm (an "engineering"
+definition of accurate) or 1 nm (1 nanometer, about the round-off
+limit).
+
+<center>
+<table>
+<caption>Maximum distance that can be used in various methods for
+computing short geodesics while keeping the errors within prescribed
+bounds</caption>
+<tr>
+ <th rowspan="2">method
+ <th colspan="2"><center>distance metric</center></th>
+ <th colspan="2"><center>azimuth metric</center></th>
+<tr>
+ <th>1 mm error</th>
+ <th>1 nm error</th>
+ <th>1 mm error</th>
+ <th>1 nm error</th>
+<tr>
+ <td>Bowring (original)
+ <td><center>87 km</center>
+ <td><center>870 m</center>
+ <td><center>35 km</center>
+ <td><center>350 m</center>
+<tr>
+ <td>Bowring (improved)
+ <td><center>180 km</center>
+ <td><center>1.8 km</center>
+ <td><center>58 km</center>
+ <td><center>580 m</center>
+<tr>
+ <td>Bowring (truncated)
+ <td><center>52 km</center>
+ <td><center>520 m</center>
+ <td><center>52 km</center>
+ <td><center>520 m</center>
+<tr>
+ <td>Bowring (using \f$\beta\f$)
+ <td><center>380 km</center>
+ <td><center>24 km</center>
+ <td><center>60 km</center>
+ <td><center>600 m</center>
+<tr>
+ <td>Bessel's aux. sphere
+ <td><center>42 km</center>
+ <td><center>420 m</center>
+ <td><center>1.7 km</center>
+ <td><center>1.7 m</center>
+</table>
+</center>
+
+For example, if you're only interested in measuring distances and an
+accuracy of 1 mm is sufficient, then Bowring's improved method can be
+used for distances up to 180 km.  On the other hand, %GeographicLib uses
+Bessel's auxiliary sphere and we require both the distance and the
+azimuth to be accurate, so the great circle approximation can only be
+used for distances less than 1.7 m.  The reason that %GeographicLib does
+not use Bowring's method is that the information necessary for auxiliary
+sphere method is already available as part of the general solution and,
+as much as possible, we allow all geodesics to be computed by the
+general method.
 
 <center>
 Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
@@ -4383,10 +4656,60 @@ been migrated to the archive subdirectory).  All the releases are
 available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
 
+ - <a href="http://geographiclib.sf.net/1.31">Version 1.31</a>
+   (released 2013-07-01)
+   - Changes breaking binary compatibility (source compatibility is
+     maintained):
+     - overloaded versions of GeographicLib::DMS::Encode,
+       GeographicLib::EllipticFunction::EllipticFunction, and
+       GeographicLib::GeoCoords::DMSRepresentation, have been eliminated
+       by the use of optional arguments;
+     - correct the declaration of first arg to
+       GeographicLib::UTMUPS::DecodeEPSG.
+   - FIX BUG in GeographicLib::GravityCircle constructor (found by
+     Mathieu Peyr&eacute;ga) which caused bogus results for the gravity
+     disturbance and gravity anomaly vectors.  (This only affected
+     calculations using GravityCircle.  GravityModel calculations did
+     not suffer from this bug.)
+   - Improvements to the build:
+     - add macros GEOGRAPHICLIB_VERSION_{MAJOR,MINOR,PATCH} to Config.h;
+     - fix documentation for new version of perlpod;
+     - improving setting of runtime path for Unix-like systems with cmake;
+     - install PDB files when compiling with Visual Studio to aid
+       debugging;
+     - Windows binary release now uses Matlab R2013a (64-bit) and
+       uses the -largeArrayDims option.
+     - fixes to the way the Matlab interface routines are built (thanks
+       to Phil Miller and Chris F.).
+   - Changes to the geodesic routines:
+     - add \ref java of the geodesic routines (thanks to Skip Breidbach
+       for the maven support);
+     - FIX BUG: avoid altering input args in Fortran implementation;
+     - more systematic treatment of very short geodesic;
+     - fixes to python port so that they work with version 3.x, in
+       addition to 2.x (courtesy of Amato);
+     - accumulate the perimeter and area of polygons via a double-wide
+       accumulator in Fortran, C, and Matlab implementations (this is
+       already included in the other implementations);
+     - port GeographicLib::PolygonArea::AddEdge and
+       GeographicLib::PolygonArea::TestEdge to JavaScript and python
+       interfaces;
+     - include documentation on \ref geodshort.
+   - Unix scripts for downloading datasets,
+     geographiclib-get-{geoids,gravity,magnetic}, skip already download
+     models by default, unless the -f flag is given.
+   - FIX BUGS: meridian convergence and scale returned by
+     GeographicLib::TransverseMercatorExact was wrong at a pole.
+   - Improve efficiency of GeographicLib::MGRS::Forward by avoiding the
+     calculation of the latitude if possible (adapting an idea of Craig
+     Rollins).
+   - Fixes to the way the Matlab interface routines are built (thanks to
+     Phil Miller and Chris F.).
+
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)
    - Changes to geodesic routines:
-     - fix BUG in fail-safe mechanisms in GeographicLib::Geodesic::Inverse;
+     - FIX BUG in fail-safe mechanisms in GeographicLib::Geodesic::Inverse;
      - the command line utility Geod is now called
        <a href="GeodSolve.1.html">GeodSolve</a>;
      - allow addition of polygon edges in GeographicLib::PolygonArea;
@@ -4395,17 +4718,16 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.29">Version 1.29</a>
    (released 2013-01-16)
    - Changes to allow compilation with libc++ (courtesy of Kal Conley).
-   - Add description of geodesics on triaxial ellipsoid to
-     documentation.
+   - Add description of \ref triaxial to documentation.
    - Update journal reference for "Algorithms for geodesics".
 
  - <a href="http://geographiclib.sf.net/1.28">Version 1.28</a>
    (released 2012-12-11)
    - Changes to geodesic routines:
      - compute longitude difference exactly;
-     - hence fix BUG in area calculations for polygons with vertices very
+     - hence FIX BUG in area calculations for polygons with vertices very
        close to the prime meridian;
-     - fix BUG is geoddistance.m where the value of m12 was wrong for
+     - FIX BUG is geoddistance.m where the value of m12 was wrong for
        meridional geodesics;
      - add Matlab implementations of the geodesic projections;
      - remove unneeded special code for geodesics which start at a pole;
@@ -4502,7 +4824,7 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.22">Version 1.22</a>
    (released 2012-05-27)
   - Add GeographicLib::Geohash and GeographicLib::Ellipsoid classes.
-  - Fix bug in GeographicLib::AlbersEqualArea for very prolate
+  - FIX BUG in GeographicLib::AlbersEqualArea for very prolate
     ellipsoids (<i>b</i><sup>2</sup> > 2 <i>a</i><sup>2</sup>).
   - cmake changes:
     - optionally use PACKAGE_PATH and INSTALL_PATH to determine
@@ -4657,7 +4979,7 @@ of the git repository for %GeographicLib.
       longitude precede latitude;
     - <a href="GeoConvert.1.html">GeoConvert</a> now has a -w option to
       make longitude precede latitude on input and output;
-    - include a Javascript version of GeographicLib::DMS.
+    - include a JavaScript version of GeographicLib::DMS.
   - Slight improvement in starting guess for solution of geographic
     latitude in terms of conformal latitude in TransverseMercator,
     TransverseMercatorExact, and LambertConformalConic.
@@ -4678,7 +5000,7 @@ of the git repository for %GeographicLib.
    (released 2011-07-21)
   - Change license to MIT/X11.
   - Add GeographicLib::PolygonArea class and equivalent Matlab function.
-  - Provide Javascript and Python implementations of geodesic routines.
+  - Provide JavaScript and Python implementations of geodesic routines.
   - Fix Windows installer to include runtime dlls for Matlab.
   - Fix (innocuous) unassigned variable in Geodesic::GenInverse.
   - Geodesic routines in Matlab return a12 as first column of aux return

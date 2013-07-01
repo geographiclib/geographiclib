@@ -33,4 +33,4 @@ include ("${_DIR}/geographiclib-depends.cmake")
 set (GeographicLib_LIBRARIES Geographic)
 
 # GeographicLib_FOUND is set to 1 automatically
-set (GEOGRAPHICLIB_FOUND 1)	# for backwards compatibility
+set (GEOGRAPHICLIB_FOUND 1)     # for backwards compatibility

@@ -341,6 +341,10 @@
    4 papers.[[BR]]
    http://books.google.com/books?id=vX4EAAAAYAAJ&pg=PR6
  * J. Ivory,[[BR]]
+   ''A new series for the rectification of the ellipsis'',
+   Trans. Roy. Soc. Edinburgh '''4''', 177--190 (1798).[[BR]]
+   http://books.google.com/books?id=FaUaqZZYYPAC&pg=PA177
+ * J. Ivory,[[BR]]
    ''Solution of a geodetical problem'',
    Phil. Mag. '''64'''(315), 35--39 (1824).[[BR]]
    http://books.google.com/books?id=xk0wAAAAIAAJ&pg=PA35 [[BR]]
@@ -474,7 +478,7 @@
    Jour. Crelle '''5''', 297--304 (1830).[[BR]]
    http://books.google.com/books?id=Y6wGAAAAYAAJ&pg=PA297 [[BR]]
    http://dx.doi.org/10.1515/crll.1830.5.297
- * F. Minding,
+ * F. Minding,[[BR]]
    ''Beiträge zur Theorie der kürzesten Linien auf krummen Flächen
    [Contributions to the theory of shortest lines on curved suraces]'',
    Jour. Crelle '''20''', 323--327 (1840).[[BR]]
@@ -673,7 +677,7 @@
    ''A Treatise on Infinitesimal Calculus'', Vol. 2
    (2nd edition, Oxford, 1865), Chap. 14, Sec. 2.[[BR]]
    http://books.google.com/books?id=fho1AAAAIAAJ&pg=PA475
- * G. Salmon,
+ * G. Salmon,[[BR]]
    ''A Treatise on the Analytic Geometry of Three Dimensions''
    (2nd Edition, Dublin, 1865), Chap. 12, Sec. 4.[[BR]]
    http://books.google.com/books?id=Y54LAAAAYAAJ&pg=PA305
@@ -930,7 +934,7 @@
    by M. Lukat,
    (Teubner, Leipzig 1899), Chap. 6.[[BR]]
    http://books.google.com/books?id=Xa4LAAAAYAAJ&pg=PA146
- * H. Poincaré,[[BR]]
+ * J. H. Poincaré,[[BR]]
    ''Sur les lignes géodésiques des surfaces convexes
    [Geodesics lines on convex surfaces]'',
    Trans. AMS '''6'''(3), 237--274 (1905).[[BR]]
@@ -989,7 +993,7 @@
    http://geographiclib.sf.net/geodesic-papers/vincenty75b.pdf
  * R. H. Rapp,[[BR]]
    ''Geometric geodesy, Part I'',
-   Ohio State Univ. (1991), Chap. 4.[[BR]]
+   Ohio State Univ. (1991), Chaps. 4 & 6.[[BR]]
    http://hdl.handle.net/1811/24333
  * R. H. Rapp,[[BR]]
    ''Geometric geodesy, Part II'',

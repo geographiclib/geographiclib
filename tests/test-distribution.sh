@@ -40,7 +40,7 @@ set -e
 #   python/setup.py
 #   tests/test-distribution.sh
 
-VERSION=1.30
+VERSION=1.31
 BRANCH=devel
 TEMP=/scratch/geographic-dist
 DEVELSOURCE=/u/geographiclib
@@ -63,6 +63,11 @@ cmake ..
 make dist
 cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
 make doc
+(
+    cd ../java
+    mvn package
+    rsync -a target/apidocs/ ../BUILD/doc/html/java/
+)
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
 
 mkdir $TEMP/rel{a,b,c,x,y}
@@ -192,7 +197,8 @@ def p(lat,lon): return {'lat': lat, 'lon': lon}
 
 print(Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)]))
 EOF
-python tester.py
+python2 tester.py
+python3 tester.py
 
 cp -pr $TEMP/relc/GeographicLib-$VERSION/legacy $TEMP/
 for l in C Fortran; do
@@ -203,6 +209,7 @@ for l in C Fortran; do
       make -j$NUMCPUS
     )
 done
+
 cd $TEMP/instc
 find . -type f | sort -u > ../files.c
 cd $TEMP/inste
@@ -279,7 +286,7 @@ echo
 echo Files with tabs:
 find . -type f |
 egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf' |
-egrep -v '\.sh|depcomp|install-sh|config\.|configure|missing' |
+egrep -v '\.sh|depcomp|install-sh|/config\.|configure|missing' |
 xargs grep -l  '	' || true
 echo
 

@@ -52,7 +52,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     f = mxGetScalar(prhs[2]);
   }
 
-  int m = mxGetM(prhs[0]);
+  mwSize m = mxGetM(prhs[0]);
 
   double* lat = mxGetPr(prhs[0]);
   double* lon = lat + m;
@@ -76,11 +76,11 @@ void mexFunction( int nlhs, mxArray* plhs[],
   try {
     std::vector<double> rotv(rotp ? 9 : 0);
     const Geocentric c(a, f);
-    for (int i = 0; i < m; ++i) {
+    for (mwIndex i = 0; i < m; ++i) {
       if (abs(lat[i]) <= 90 && lon[i] >= -540 && lon[i] < 540) {
         c.Forward(lat[i], lon[i], haveh ? h[i] : 0.0, x[i], y[i], z[i], rotv);
         if (rotp) {
-          for (int k = 0; k < 9; ++k)
+          for (mwIndex k = 0; k < 9; ++k)
             rot[m * k + i] = rotv[k];
         }
       }

@@ -1,3 +1,4 @@
+"""geomath.py: transcription of GeographicLib::Math class."""
 # geomath.py
 #
 # This is a rather literal translation of the GeographicLib::Math class to
@@ -75,6 +76,7 @@ class Math(object):
   atanh = staticmethod(atanh)
 
   def sum(u, v):
+    """Error free transformation of a sum."""
     # Error free transformation of a sum.  Note that t can be the same as one
     # of the first two arguments.
     s = u + v

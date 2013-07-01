@@ -154,8 +154,8 @@ cat <<EOF
       is one of the utilities provided
       with <a href="http://geographiclib.sourceforge.net/">
         GeographicLib</a>.
-      Geodesic areas can also be computed using Javascript; see the
-      <a href="../scripts/geod-calc.html">Javascript geodesic
+      Geodesic areas can also be computed using JavaScript; see the
+      <a href="../scripts/geod-calc.html">JavaScript geodesic
 	calculator</a>.
       If you wish to use Planimeter directly,
       <a href="http://sourceforge.net/projects/geographiclib/files/distrib">

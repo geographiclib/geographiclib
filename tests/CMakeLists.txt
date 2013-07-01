@@ -3,6 +3,24 @@
 set (TESTPROGRAMS
   ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest)
 
+if (NOT WIN32)
+  # check for C++11 support
+  include (CheckCXXCompilerFlag)
+  check_cxx_compiler_flag ("-std=c++11" CXX11FLAG)
+  if (CXX11FLAG)
+    set (CXX11FLAG "-std=c++11")
+  else ()
+    check_cxx_compiler_flag ("-std=c++0x" CXX11FLAG)
+    if (CXX11FLAG)
+      set (CXX11FLAG "-std=c++0x")
+    endif ()
+  endif ()
+  if (CXX11FLAG)
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11FLAG}")
+    set (TESTPROGRAMS ${TESTPROGRAMS} GeodShort)
+  endif ()
+endif ()
+
 # Loop over all the tools, specifying the source and library.
 add_custom_target (testprograms ALL)
 foreach (TESTPROGRAM ${TESTPROGRAMS})
@@ -20,19 +38,13 @@ add_dependencies (testprograms GeodExact)
 target_link_libraries (GeodExact Geographic)
 set (TESTPROGRAMS ${TESTPROGRAMS} GeodExact)
 
-if (GEOGRAPHIC_SHARED_LIB)
-  if (WIN32)
-    # Copy the shared library on Windows systems to this directory
-    # (tools) so that the tests can be run.
-    add_custom_command (TARGET testprograms POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E
-	copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
-      COMMENT "Copying shared library to tools directory")
-  else ()
-    # Set the run time path for shared libraries for non-Windows machines.
-    set_target_properties (${TESTPROGRAMS} GeodExact PROPERTIES
-      INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
-  endif ()
+if (GEOGRAPHIC_SHARED_LIB AND WIN32)
+  # Copy the shared library on Windows systems to this directory (tests)
+  # so that the tests can be run.
+  add_custom_command (TARGET testprograms POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E
+    copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
+    COMMENT "Copying shared library to tools directory")
 endif ()
 
 # Put all the tools into a folder in the IDE

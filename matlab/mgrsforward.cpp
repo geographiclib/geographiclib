@@ -52,7 +52,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
       mexErrMsgTxt("Precision outside the legal range [0, 11].");
   }
 
-  int m = mxGetM(prhs[0]);
+  mwSize m = mxGetM(prhs[0]);
 
   double* x = mxGetPr(prhs[0]);
   double* y = x + m;
@@ -63,7 +63,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   plhs[0] = mxCreateCellArray(1, &m);
   mxArray* mgrs = plhs[0];
 
-  for (int i = 0; i < m; ++i) {
+  for (mwIndex i = 0; i < m; ++i) {
     try {
       mgrsstr = "INVALID";
       int ZONE = int(zone[i]);

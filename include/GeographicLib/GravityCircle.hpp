@@ -71,7 +71,7 @@ namespace GeographicLib {
       , _h(h)
       , _Z(Z)
       , _Px(P)
-      , _invR(Math::hypot(_Px, _Z))
+      , _invR(1 / Math::hypot(_Px, _Z))
       , _cpsi(_Px * _invR)
       , _spsi(_Z * _invR)
       , _cphi(cphi)

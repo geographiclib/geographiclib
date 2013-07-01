@@ -127,8 +127,8 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * A synonym for WGS84_r<real>().
      **********************************************************************/
-    /// \endcond
     static inline Math::real WGS84_r() throw() { return WGS84_r<real>(); }
+    /// \endcond
     /**
      * @tparam T the type of the returned value.
      * @return the equatorial radius of GRS80 ellipsoid, \e a, in m.
@@ -308,7 +308,7 @@ namespace GeographicLib {
      * Constructor
      *
      * @param[in] msg a string message, which is accessible in the catch
-     *   clause, via what().
+     *   clause via what().
      **********************************************************************/
     GeographicErr(const std::string& msg) : std::runtime_error(msg) {}
   };

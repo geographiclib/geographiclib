@@ -29,19 +29,13 @@ set_source_files_properties (Geod.cpp PROPERTIES
   OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/GeodSolve.usage)
 target_link_libraries (Geod Geographic)
 
-if (GEOGRAPHIC_SHARED_LIB)
-  if (WIN32)
-    # Copy the shared library on Windows systems to this directory
-    # (tools) so that the tests can be run.
-    add_custom_command (TARGET tools POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E
-        copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
-      COMMENT "Copying shared library to tools directory")
-  else ()
-    # Set the run time path for shared libraries for non-Windows machines.
-    set_target_properties (${TOOLS} Geod PROPERTIES
-      INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
-  endif ()
+if (GEOGRAPHIC_SHARED_LIB AND WIN32)
+  # Copy the shared library on Windows systems to this directory (tools)
+  # so that the tests can be run.
+  add_custom_command (TARGET tools POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E
+    copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
+    COMMENT "Copying shared library to tools directory")
 endif ()
 
 # Specify where the tools are installed
@@ -93,7 +87,7 @@ set_tests_properties (GeoConvert5 PROPERTIES WILL_FAIL ON)
 # Check fix for DMS::Decode double rounding bug fixed on 2012-11-15
 add_test (GeoConvert6 GeoConvert -p 9 --input-string "0 179.99999999999998578")
 set_tests_properties (GeoConvert6
-  PROPERTIES PASS_REGULAR_EXPRESSION  "179\\.99999999999997")
+  PROPERTIES PASS_REGULAR_EXPRESSION  "179\\.9999999999999[7-9]")
 
 add_test (Geod0 Geod -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")
 set_tests_properties (Geod0
@@ -117,8 +111,7 @@ add_test (Geod4
   Geod -i --input-string "36.493349428792 0 36.49334942879201 .0000008")
 set_tests_properties (Geod4 PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 0\\.072")
 # Check fix for point2=pole bug found 2010-05-03 (but only with long double)
-add_test (Geod5
-  Geod -p 0 --input-string "0.01777745589997 30 0 10e6")
+add_test (Geod5 Geod -p 0 --input-string "0.01777745589997 30 0 10e6")
 set_tests_properties (Geod5
   PROPERTIES PASS_REGULAR_EXPRESSION
   "90\\.00000 -150\\.00000 -180\\.00000;90\\.00000 30\\.00000 0\\.00000")
@@ -208,33 +201,26 @@ add_test (ConicProj1
 set_tests_properties (ConicProj1
   PROPERTIES PASS_REGULAR_EXPRESSION "^85\\.00")
 # Check fix for LambertConformalConic::Forward bug found 2012-07-14
-add_test (ConicProj2
-  ConicProj -c -30 -30 --input-string "-30 0")
+add_test (ConicProj2 ConicProj -c -30 -30 --input-string "-30 0")
 set_tests_properties (ConicProj2
   PROPERTIES PASS_REGULAR_EXPRESSION "^-?0\\.0+ -?0\\.0+ -?0\\.0+ 1\\.0+")
 # Check fixes for LambertConformalConic::Reverse overflow bugs found 2012-07-14
-add_test (ConicProj3
-  ConicProj -r -c 0 0 --input-string "1113195 -1e10")
+add_test (ConicProj3 ConicProj -r -c 0 0 --input-string "1113195 -1e10")
 set_tests_properties (ConicProj3
   PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ 10\\.00[0-9]+ ")
-add_test (ConicProj4
-  ConicProj -r -c 0 0 --input-string "1113195 inf")
+add_test (ConicProj4 ConicProj -r -c 0 0 --input-string "1113195 inf")
 set_tests_properties (ConicProj4
   PROPERTIES PASS_REGULAR_EXPRESSION "^90\\.0+ 10\\.00[0-9]+ ")
-add_test (ConicProj5
-  ConicProj -r -c 45 45 --input-string "0 -1e100")
+add_test (ConicProj5 ConicProj -r -c 45 45 --input-string "0 -1e100")
 set_tests_properties (ConicProj5
   PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ -?0\\.00[0-9]+ ")
-add_test (ConicProj6
-  ConicProj -r -c 45 45 --input-string "0 -inf")
+add_test (ConicProj6 ConicProj -r -c 45 45 --input-string "0 -inf")
 set_tests_properties (ConicProj6
   PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ -?0\\.00[0-9]+ ")
-add_test (ConicProj7
-  ConicProj -r -c 90 90 --input-string "0 -1e150")
+add_test (ConicProj7 ConicProj -r -c 90 90 --input-string "0 -1e150")
 set_tests_properties (ConicProj7
   PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ -?0\\.00[0-9]+ ")
-add_test (ConicProj8
-  ConicProj -r -c 90 90 --input-string "0 -inf")
+add_test (ConicProj8 ConicProj -r -c 90 90 --input-string "0 -inf")
 set_tests_properties (ConicProj8
   PROPERTIES PASS_REGULAR_EXPRESSION "^-90\\.0+ -?0\\.00[0-9]+ ")
 
@@ -248,6 +234,20 @@ set_tests_properties (CartConvert0
 set_tests_properties (CartConvert1
   PROPERTIES PASS_REGULAR_EXPRESSION
   "4\\.42[0-9]+ 0\\.0[0]+ -6398614\\.[0-9]+")
+
+# Test fix to bad meridian convergence at pole with
+# TransverseMercatorExact found 2013-06-26
+add_test (TransverseMercatorProj0
+  TransverseMercatorProj -k 1 --input-string "90 75")
+set_tests_properties (TransverseMercatorProj0
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "^0\\.0+ 10001965\\.7293[0-9]+ 75\\.0+ 1\\.0+")
+# Test fix to bad scale at pole with TransverseMercatorExact
+# found 2013-06-30 (quarter meridian = 10001965.7293127228128889202m)
+add_test (TransverseMercatorProj1
+  TransverseMercatorProj -k 1 -r --input-string "0 10001965.7293127228")
+set_tests_properties (TransverseMercatorProj1
+  PROPERTIES PASS_REGULAR_EXPRESSION "90\\.0+ 0\\.0+ 0\\.0+ (1\\.0+|0\\.9999+)")
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
   # Check fix for single-cell cache bug found 2010-11-23
@@ -282,9 +282,15 @@ endif ()
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
   # Verify no overflow at poles with high degree model
-  add_test (Gravity0
-    Gravity -n egm2008 -p 6 --input-string "90 110 0")
+  add_test (Gravity0 Gravity -n egm2008 -p 6 --input-string "90 110 0")
   set_tests_properties (Gravity0
-    PROPERTIES PASS_REGULAR_EXPRESSION
-    "-0\\.000146 0\\.000078 -9\\.832294")
+    PROPERTIES PASS_REGULAR_EXPRESSION "-0\\.000146 0\\.000078 -9\\.832294")
+  # Check fix for invR bug in GravityCircle found by Mathieu Peyrega on
+  # 2013-04-09
+  add_test (Gravity1 Gravity -n egm2008 -A -c -18 4000 --input-string "-86")
+  set_tests_properties (Gravity1
+    PROPERTIES PASS_REGULAR_EXPRESSION "-7\\.438 1\\.305 -1\\.563")
+  add_test (Gravity2 Gravity -n egm2008 -D -c -18 4000 --input-string "-86")
+  set_tests_properties (Gravity2
+    PROPERTIES PASS_REGULAR_EXPRESSION "7\\.404 -6\\.168 7\\.616")
 endif ()
