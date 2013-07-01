@@ -12,7 +12,7 @@
 \mainpage Geographic library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.31
-\date 2013-mm-dd
+\date 2013-07-01
 
 \section abstract Abstract
 
@@ -3528,9 +3528,10 @@ In assessing the accuracy of these methods we use two metrics:
    second point?
  .
 (The second metric is much more stringent.)  We may now compare the
-methods by asking for a limit to the length of a geodesic which ensures
-that the 2 errors fall below 1 mm and 1 nm (1 nanometer, about the
-round-off limit).
+methods by asking for a bound to the length of a geodesic which ensures
+that the one or other of the errors fall below 1 mm (an "engineering"
+definition of accurate) or 1 nm (1 nanometer, about the round-off
+limit).
 
 <center>
 <table>
@@ -4656,7 +4657,7 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.31">Version 1.31</a>
-   (released 2013-mm-dd)
+   (released 2013-07-01)
    - Changes breaking binary compatibility (source compatibility is
      maintained):
      - overloaded versions of GeographicLib::DMS::Encode,
@@ -4677,11 +4678,14 @@ of the git repository for %GeographicLib.
      - install PDB files when compiling with Visual Studio to aid
        debugging;
      - Windows binary release now uses Matlab R2013a (64-bit) and
-       uses the -largeArrayDims option.
+       uses the -largeArrayDims option;
+     - fixes to the way the Matlab interface routines are built (thanks
+       to Phil Miller and Chris F.).
    - Changes to the geodesic routines:
-     - add \ref java of the geodesic routines;
+     - add \ref java of the geodesic routines (thanks to Skip Breidbach
+       for the maven support);
      - FIX BUG: avoid altering input args in Fortran implementation;
-     - more systematic treatment of very short geodesics;
+     - more systematic treatment of very short geodesic;
      - fixes to python port so that they work with version 3.x, in
        addition to 2.x (courtesy of Amato);
      - accumulate the perimeter and area of polygons via a double-wide
@@ -4690,16 +4694,15 @@ of the git repository for %GeographicLib.
      - port GeographicLib::PolygonArea::AddEdge and
        GeographicLib::PolygonArea::TestEdge to JavaScript and python
        interfaces;
-     - write up stuff about short geodesics.
+     - include documentation on \ref geodshort.
    - Unix scripts for downloading datasets,
      geographiclib-get-{geoids,gravity,magnetic}, skip already download
      models by default, unless the -f flag is given.
-   - Fixes to the way the Matlab interface routine are build (thanks to
-     Phil Miller and Chris F.).
-   - FIX BUG: meridian convergence returned by
-     GeographicLib::TransverseMercatorExact::Forward was wrong at a pole.
-   - Improve efficiency of GeographicLib::MGRS::Forward by seeing if the
-     band letter can be determined from the northing.
+   - FIX BUGS: meridian convergence and scale returned by
+     GeographicLib::TransverseMercatorExact was wrong at a pole.
+   - Improve efficiency of GeographicLib::MGRS::Forward by avoiding the
+     calculation of the latitude if possible (adapting an idea of Craig
+     Rollins).
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)

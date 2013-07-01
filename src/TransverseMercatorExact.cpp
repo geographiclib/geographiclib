@@ -412,14 +412,16 @@ namespace GeographicLib {
     y = xi * _a * _k0 * latsign;
     x = eta * _a * _k0 * lonsign;
 
-    // Recompute (tau, lam) from (u, v) to improve accuracy of Scale
-    zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
-    tau=taupinv(tau);
-    Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-    if (lat == 90)
+    if (lat == 90) {
       gamma = lon;
-    else
+      k = 1;
+    } else {
+      // Recompute (tau, lam) from (u, v) to improve accuracy of Scale
+      zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
+      tau=taupinv(tau);
+      Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
       gamma /= Math::degree<real>();
+    }
     if (backside)
       gamma = 180 - gamma;
     gamma *= latsign * lonsign;
@@ -462,14 +464,16 @@ namespace GeographicLib {
       phi = atan(tau);
       lat = phi / Math::degree<real>();
       lon = lam / Math::degree<real>();
+      Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
+      gamma /= Math::degree<real>();
     } else {
       tau = overflow_;
       phi = Math::pi<real>()/2;
       lat = 90;
-      lon = lam = 0;
+      lon = lam = gamma = 0;
+      k = 1;
     }
-    Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-    gamma /= Math::degree<real>();
+
     if (backside)
       lon = 180 - lon;
     lon *= lonsign;

@@ -235,6 +235,19 @@ set_tests_properties (CartConvert1
   PROPERTIES PASS_REGULAR_EXPRESSION
   "4\\.42[0-9]+ 0\\.0[0]+ -6398614\\.[0-9]+")
 
+# Test fix to bad meridian convergence at pole with
+# TransverseMercatorExact found 2013-06-26
+add_test (TransverseMercatorProj0
+  TransverseMercatorProj --input-string "90 75")
+set_tests_properties (TransverseMercatorProj0
+  PROPERTIES PASS_REGULAR_EXPRESSION "^0.0+ 9997964.9[0-9]+ 75.0+ 0.999[56]")
+# Test fix to bad scale at pole with TransverseMercatorExact
+# found 2013-06-30
+add_test (TransverseMercatorProj1
+  TransverseMercatorProj -r --input-string "0 9997964.943021")
+set_tests_properties (TransverseMercatorProj1
+  PROPERTIES PASS_REGULAR_EXPRESSION "[89][09].[0-9]+ 0.0+ 0.0+ 0.999[56]")
+
 if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
   # Check fix for single-cell cache bug found 2010-11-23
   add_test (GeoidEval0 GeoidEval -n egm96-5 --input-string "0d1 0d1;0d4 0d4")
