@@ -4201,27 +4201,36 @@ degrees.  These results are computed using Lee's formulas with
 bfloats and fpprec set to 80 (so the errors in the data are probably 1/2
 of the values quoted above).  The Maxima code,
 <a href="tm.mac">tm.mac</a> and <a href="ellint.mac">ellint.mac</a>,
-used to prepare this data set is included in the distribution.  You will
-need to have Maxima installed to use this code.  The comments at the top
-of <a href="tm.mac">tm.mac</a> illustrate how to run it.
+was used to prepare this data set is included in the distribution; you
+will need to have Maxima installed to use this code.  The comments at
+the top of <a href="tm.mac">tm.mac</a> illustrate how to run it.
 
 The contents of the file are as follows:
- - 250000 entries randomly distributed in lat in [0, 90], lon in [0, 90];
- - 1000 entries randomly distributed on lat in [0, 90], lon = 0;
- - 1000 entries randomly distributed on lat = 0, lon in [0, 90];
- - 1000 entries randomly distributed on lat in [0, 90], lon = 90;
- - 1000 entries close to lat = 90 with lon in [0, 90];
- - 1000 entries close to lat = 0, lon = 0 with lat &ge; 0, lon &ge; 0;
- - 1000 entries close to lat = 0, lon = 90 with lat &ge; 0, lon &le; 90;
- - 2000 entries close to lat = 0, lon = 90 (1 &minus; \e e) with lat &ge; 0;
- - 25000 entries randomly distributed in lat
-   in [&minus;89, 0], lon in [90 (1 &minus; \e e), 90];
- - 1000 entries randomly distributed on lat in [&minus;89, 0], lon = 90;
- - 1000 entries randomly distributed on lat in [&minus;89, 0], lon = 90
-   (1 &minus; \e e);
- - 1000 entries close to lat = 0, lon = 90 (lat < 0, lon &le; 90);
- - 1000 entries close to lat = 0, lon = 90 (1 &minus; \e e)
-   (lat < 0, lon &le; 90 (1 &minus; \e e));
+ - 250000 entries randomly distributed in lat in [0&deg;, 90&deg;], lon
+   in [0&deg;, 90&deg;];
+ - 1000 entries randomly distributed on lat in [0&deg;, 90&deg;], lon =
+   0&deg;;
+ - 1000 entries randomly distributed on lat = 0&deg;, lon in [0&deg;,
+   90&deg;];
+ - 1000 entries randomly distributed on lat in [0&deg;, 90&deg;], lon =
+   90&deg;;
+ - 1000 entries close to lat = 90&deg; with lon in [0&deg;, 90&deg;];
+ - 1000 entries close to lat = 0&deg;, lon = 0&deg; with lat &ge;
+   0&deg;, lon &ge; 0&deg;;
+ - 1000 entries close to lat = 0&deg;, lon = 90&deg; with lat &ge;
+   0&deg;, lon &le; 90&deg;;
+ - 2000 entries close to lat = 0&deg;, lon = 90&deg; (1 &minus; \e e)
+   with lat &ge; 0&deg;;
+ - 25000 entries randomly distributed in lat in [&minus;89&deg;,
+   0&deg;], lon in [90&deg; (1 &minus; \e e), 90&deg;];
+ - 1000 entries randomly distributed on lat in [&minus;89&deg;, 0&deg;],
+   lon = 90&deg;;
+ - 1000 entries randomly distributed on lat in [&minus;89&deg;, 0&deg;],
+   lon = 90&deg; (1 &minus; \e e);
+ - 1000 entries close to lat = 0&deg;, lon = 90&deg; (lat < 0&deg;, lon
+   &le; 90&deg;);
+ - 1000 entries close to lat = 0&deg;, lon = 90&deg; (1 &minus; \e e)
+   (lat < 0&deg;, lon &le; 90&deg; (1 &minus; \e e));
  .
 (a total of 287000 entries).  The entries for lat < 0&deg; and
 lon in [90&deg; (1 &minus; \e e), 90&deg;] use the "extended"
