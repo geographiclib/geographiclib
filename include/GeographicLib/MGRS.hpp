@@ -106,7 +106,7 @@ namespace GeographicLib {
     // function isn't currently used.
     static int ApproxLatitudeBand(real y) throw() {
       // northing at tile center in units of tile = 100km
-      real ya = std::floor( std::min(real(88), std::abs(y/tile_)) ) + 0.5;
+      real ya = std::floor( std::min(real(88), std::abs(y/tile_)) ) + real(0.5);
       // convert to lat (mult by 90/100) and then to band (divide by 8)
       // the +1 fine tunes the boundary between bands 3 and 4
       int b = int(std::floor( ((ya * 9 + 1) / 10) / 8 ));

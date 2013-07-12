@@ -142,7 +142,8 @@ namespace GeographicLib {
      * a running result for the perimeter and area as the user moves the mouse
      * cursor.  Ordinary floating point arithmetic is used to accumulate the
      * data for the test point; thus the area and perimeter returned are less
-     * accurate than if AddPoint and Compute are used.
+     * accurate than if PolygonArea::AddPoint and PolygonArea::Compute are
+     * used.
      *
      * @param[in] lat the latitude of the test point (degrees).
      * @param[in] lon the longitude of the test point (degrees).
@@ -170,7 +171,8 @@ namespace GeographicLib {
      * This lets you report a running result for the perimeter and area as the
      * user moves the mouse cursor.  Ordinary floating point arithmetic is used
      * to accumulate the data for the test point; thus the area and perimeter
-     * returned are less accurate than if AddPoint and Compute are used.
+     * returned are less accurate than if PolygonArea::AddEdge and
+     * PolygonArea::Compute are used.
      *
      * @param[in] azi azimuth at current point (degrees).
      * @param[in] s distance from current point to final test point (meters).

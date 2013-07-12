@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in C
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.31
+\version 1.32
 
 \section abstract Abstract
 
@@ -27,13 +27,13 @@ about any C compiler.
 \section download Downloading the source
 
 The C library is part of %GeographicLib which available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.31.tar.gz">
-  GeographicLib-1.31.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.31.zip">
-  GeographicLib-1.31.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.32.tar.gz">
+  GeographicLib-1.32.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.32.zip">
+  GeographicLib-1.32.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
-the source, the C library can be found in GeographicLib-1.31/legacy/C.
+the source, the C library can be found in GeographicLib-1.32/legacy/C.
 The library consists of two files geodesic.c and geodesic.h.
 
 The library is also included as part of

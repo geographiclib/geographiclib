@@ -12,12 +12,14 @@ cat <<'EOF'
   <body topmargin=10 leftmargin=10>
     <h3>An online geodesic bibliography</h3>
     <p>
-      Here is a list of the older mathematical treatments of the geodesic
-      problem for an ellipsoid, together with links to online copies.  This
-      includes also some more recent works which are available online (chiefly
-      works funded by the US Government).  Unfortunately, the fold-out pages of
-      figures in some books are usually not scanned properly by Google; in
-      some cases I have been able to scan the missing pages, see
+      Here is a list of the older mathematical treatments of the
+      geodesic problem for an ellipsoid, together with links to online
+      copies.  This includes some more recent works which are available
+      online (chiefly works funded by the US Government).  Where
+      available, links to translations, especially into English, have
+      been added.  Unfortunately, the fold-out pages of figures in some
+      books are usually not scanned properly by Google; in some cases I
+      have been able to scan the missing pages, see
       <a href=".">geodesic-papers</a>. Please let me, Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>,
       know of errors, omissions, etc.  In particular, I'm interested to

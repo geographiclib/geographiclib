@@ -319,7 +319,7 @@ namespace GeographicLib {
     //   zeta = xi + i*eta
     //   zeta' = xi' + i*eta'
     //
-    // The conversion from conformal to rectifying latitude can be expresses as
+    // The conversion from conformal to rectifying latitude can be expressed as
     // a series in _n:
     //
     //   zeta = zeta' + sum(h[j-1]' * sin(2 * j * zeta'), j = 1..maxpow_)
