@@ -4,7 +4,14 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.31.
+The current version of the library is 1.32.
+
+Changes between 1.32 (released 2013-07-12) and 1.31 versions:
+
+   * Generalize C interface for polygon areas to allow vertices to be
+     specified incrementally.
+
+   * Fix way flags for C++11 support are determined.
 
 Changes between 1.31 (released 2013-07-01) and 1.30 versions:
 
