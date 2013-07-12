@@ -568,7 +568,7 @@ extern "C" {
    * geod_polygon_init(), respectively.  The same \e g must be used for all the
    * points and edges in a polygon.  \e azi should be in the range
    * [&minus;540&deg;, 540&deg;).  This does nothing if no points have been
-   * added yet.  The \e lat and \e lon fields of \e p give the locatation of
+   * added yet.  The \e lat and \e lon fields of \e p give the location of
    * the new vertex.
    **********************************************************************/
   void geod_polygon_addedge(const struct geod_geodesic* g,
@@ -723,7 +723,7 @@ extern "C" {
                         double* pA, double* pP);
 
   /**
-   * mask values for the the \e caps argumnt to geod_lineinit().
+   * mask values for the the \e caps argument to geod_lineinit().
    **********************************************************************/
   enum geod_mask {
     GEOD_NONE         = 0U,                     /**< Calculate nothing */

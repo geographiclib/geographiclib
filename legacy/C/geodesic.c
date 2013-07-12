@@ -223,7 +223,10 @@ static real A2m1f(real eps);
 static void C2f(real eps, real c[]);
 static int transit(real lon1, real lon2);
 static void accini(real s[]);
+static void acccopy(const real s[], real t[]);
 static void accadd(real s[], real y);
+static real accsum(const real s[], real y);
+static void accneg(real s[]);
 
 void geod_init(struct geod_geodesic* g, real a, real f) {
   if (!init) Init();

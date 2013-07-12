@@ -12,7 +12,7 @@
 \mainpage Geographic library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.32
-\date 2013-07-dd
+\date 2013-07-12
 
 \section abstract Abstract
 
@@ -4666,9 +4666,9 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.32">Version 1.32</a>
-   (released 2013-07-dd)
-   - Add capabilities to C interface for computing the areas of
-     polygons.
+   (released 2013-07-12)
+   - Generalize C interface for polygon areas to allow vertices to be
+     specified incrementally.
    - Fix way flags for C++11 support are determined.
 
  - <a href="http://geographiclib.sf.net/1.31">Version 1.31</a>
