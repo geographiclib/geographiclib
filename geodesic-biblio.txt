@@ -43,7 +43,7 @@
    alt: http://gallica.bnf.fr/ark:/12148/bpt6k3536g
  * A. C. Clairaut,[[BR]]
    ''Théorie de la Figure de la Terre Tirée des Principes de
-   l'Hydrostatique [The Theory of Figure of the Earth Drawn from
+   l'Hydrostatique [The Theory of the Figure of the Earth Drawn from
    Hydrostatic Principles]''
    (Durand, Paris, 1743).[[BR]]
    http://books.google.com/books?id=X6wWAAAAQAAJ
@@ -353,7 +353,7 @@
  * J. Ivory,[[BR]]
    ''On the properties of a line of shortest distance traced on the
    surface of an oblate spheroid'',
-   Phil. Mag. '''67'''(336), 241--249 and '''67'''(337), 340--352 (1826).[[BR]]
+   Phil. Mag. '''67'''(336), 241--249 & '''67'''(337), 340--352 (1826).[[BR]]
    http://books.google.com/books?id=PkwwAAAAIAAJ&pg=PA241 [[BR]]
    http://books.google.com/books?id=PkwwAAAAIAAJ&pg=PA340 [[BR]]
    ''Mr. Ivory's mode of finding the length of the geodetic curve'',
@@ -368,7 +368,7 @@
    ''A direct method of finding the shortest distance between two points on
    the Earth's surface when their geographical position is given'',
    Phil. Mag. '''8''',
-   30--34 and 114--117 (misprinted as 134--137) (1830).[[BR]]
+   30--34 & 114--117 (misprinted as 134--137) (1830).[[BR]]
    http://books.google.com/books?id=j4EqAAAAYAAJ&pg=PA30 [[BR]]
    http://books.google.com/books?id=j4EqAAAAYAAJ&pg=PA134
  * F. T. Poselger,[[BR]]
@@ -728,6 +728,14 @@
    Vol. 7 (Cambridge Univ. Press, 1894), paper 478, pp. 493--510.[[BR]]
    http://books.google.com/books?id=S4znAAAAMAAJ&pg=PA31 [[BR]]
    http://books.google.com/books?id=4XGIOoCMYYAC&pg=PA493
+ * A. Cayley,[[BR]]
+   ''On geodesic lines, in particular those of a quadric surface'',
+   Proc. London Math. Soc. '''4''', 191--211 & 368--380 (1871--1873),
+   in ''The Collected Mathematical Papers of Arthur Cayley'',
+   Vol. 8 (Cambridge Univ. Press, 1895),
+   papers 508 & 511, pp. 156--178 & 188--199.[[BR]]
+   http://books.google.com/books?id=4gWd3fZi4zIC&pg=PA156 [[BR]]
+   http://books.google.com/books?id=4gWd3fZi4zIC&pg=PA188
  * A. R. Clarke,[[BR]]
    ''On the course of geodetic lines on the earth's surface'',
    Phil. Mag. '''39''' (4th ser.), 352--363 (1870).[[BR]]
@@ -895,6 +903,10 @@
    [Lessons on the general theory of surfaces]'',
    Vol. 3 (Gauthier-Villars, 1894), Book 6, Chaps. 1--3.[[BR]]
    http://books.google.com/books?id=hGMSAAAAIAAJ&pg=PA1
+ * A. R. Forsyth,[[BR]]
+   ''Geodesics on Quadrics, not of Revolution'',
+   Proc. London Math. Soc. '''27''', 250--280 (1896).[[BR]]
+   http://books.google.com/books?id=vUOcAAAAMAAJ&pg=PA250
  * A. R. Forsyth,[[BR]]
    ''Geodesics on an oblate spheroid'', Mess. Math. '''25''', 81--124 (1896);
    ''Conjugate points of geodesics on an oblate spheroid'',
