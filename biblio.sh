@@ -27,8 +27,8 @@ cat <<'EOF'
     </p>
     <p>This bibliography was started on 2009-06-06 (at
       <a href=" http://trac.osgeo.org/proj/wiki/GeodesicCalculations">
-        http://trac.osgeo.org/proj/wiki/GeodesicCalculations</a>).
-      The last update was on
+        http://trac.osgeo.org/proj/wiki/GeodesicCalculations</a>) and
+      moved to this site on 2011-02-01.  The last update was on
 EOF
 git log --date=short $1 | head -3 | tail -1 | tr -s ' ' '	' |
 cut -f2 | sed 's/$/./'
@@ -54,7 +54,8 @@ sed -e 's/\*/<li>/' -e 's/  *\[\[BR\]\]/ <br>/' \
     -e 's/Ü/\&Uuml;/g' \
     -e 's/ï/\&iuml;/g' \
     -e 's/ö/\&ouml;/g' \
-    -e 's/ü/\&uuml;/g' | awk '
+    -e 's/ü/\&uuml;/g' \
+    -e 's/ß/\&szlig;/g' | awk '
 BEGIN {
     quote=0;
 }

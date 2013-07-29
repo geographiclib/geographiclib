@@ -19,8 +19,8 @@ namespace GeographicLib {
   /**
    * \brief Polygon areas
    *
-   * This computes the area of a geodesic polygon using the method given
-   * Section 6 of
+   * This computes the area of a polygon whose edges are geodesics using the
+   * method given in Section 6 of
    * - C. F. F. Karney,
    *   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    *   Algorithms for geodesics</a>,
@@ -30,12 +30,20 @@ namespace GeographicLib {
    *   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
    *   geod-addenda.html</a>.
    *
-   * This class lets you add vertices one at a time to the polygon.  The area
-   * and perimeter are accumulated in two times the standard floating point
-   * precision to guard against the loss of accuracy with many-sided polygons.
-   * At any point you can ask for the perimeter and area so far.  There's an
-   * option to treat the points as defining a polyline instead of a polygon; in
-   * that case, only the perimeter is computed.
+   * This class lets you add vertices and edges one at a time to the polygon.
+   * The sequence must start with a vertex and thereafter vertices and edges
+   * can be added in any order.  Any vertex after the first creates a new edge
+   * which is the ''shortest'' geodesic from the previous vertex.  In some
+   * cases there may be two or many such shortest geodesics and the area is
+   * then not uniquely defined.  In this case, either add an intermediate
+   * vertex or add the edge ''as'' an edge (by defining its direction and
+   * length).
+   *
+   * The area and perimeter are accumulated in two times the standard floating
+   * point precision to guard against the loss of accuracy with many-sided
+   * polygons.  At any point you can ask for the perimeter and area so far.
+   * There's an option to treat the points as defining a polyline instead of a
+   * polygon; in that case, only the perimeter is computed.
    *
    * Example of use:
    * \include example-PolygonArea.cpp

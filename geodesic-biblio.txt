@@ -222,7 +222,8 @@
    ''Auszug aus einem Briefe des Herrn Oriani an den Herausgeber
    [Excerpt from a letter to the editor]'',
    Astron. Nachr. '''4'''(94), 461--466 (1826).[[BR]]
-   http://adsabs.harvard.edu/full/1826AN......4..461O
+   http://adsabs.harvard.edu/full/1826AN......4..461O [[BR]]
+   http://dx.doi.org/10.1002/asna.18260043201
  * B. Oriani,[[BR]]
    ''Essempi di calcolo nella soluzione di alcuni problemi di trigonometria
    sferoidica [Examples of solving some problems in spheroidal trigonometry]'',
@@ -297,12 +298,14 @@
    ''Ueber Berechnung geodätischer Vermessungen
    [Calculating geodesic surveys]'',
    Astron. Nachr. '''1'''(3), 33--36 (1823).[[BR]]
-   http://books.google.com/books?id=D58RAAAAYAAJ&pg=PA37
+   http://books.google.com/books?id=D58RAAAAYAAJ&pg=PA37 [[BR]]
+   http://dx.doi.org/10.1002/asna.18230010302
  * F. W. Bessel,[[BR]]
    ''Berechnung eines Dreiecks, dessen Seiten geodätischer Linien sind
    [Calculations of a geodesic triangle]'',
    Astron. Nachr. '''1'''(6), 85--90 (1823).[[BR]]
-   http://books.google.com/books?id=D58RAAAAYAAJ&pg=PA64
+   http://books.google.com/books?id=D58RAAAAYAAJ&pg=PA64 [[BR]]
+   http://dx.doi.org/10.1002/asna.18230010603
  * F. W. Bessel,[[BR]]
    ''Ueber die Berechnung der geographischen Längen und Breiten aus
    geodätischen Vermessungen [The calculation of longitude and latitude
@@ -316,7 +319,7 @@
    Quart. Jour. Roy. Inst. '''21'''(41), 138--152 (1826).[[BR]]
    http://geographiclib.sf.net/geodesic-papers/quartjour26-extracts.pdf
    [[BR]]
-   Modern English translation: by C. F. F. Karney and D. E. Deakin,
+   Modern English translation: by C. F. F. Karney and R. E. Deakin,
    Astron. Nachr. '''331'''(8), 852--861 (2010).[[BR]]
    http://dx.doi.org/10.1002/asna.201011352 [[BR]]
    preprint: http://arxiv.org/abs/0908.1824
@@ -327,14 +330,16 @@
    on geodetic work and their comparison with the astronomical
    measurements]'',
    Astron. Nachr. '''14'''(329), 269--312 (1837).[[BR]]
-   http://articles.adsabs.harvard.edu/full/1837AN.....14..269B
+   http://articles.adsabs.harvard.edu/full/1837AN.....14..269B [[BR]]
+   http://dx.doi.org/10.1002/asna.18370141901
  * F. W. Bessel,[[BR]]
    ''Bestimmung der Axen des elliptischen Rotationssphäroids, welches
    den vorhandenen Messungen von Meridianbögen der Erde am meisten
    entspricht [Estimation of the axes of the ellipsoid through
    measurements of the meridian arc]'',
    Astron. Nachr. '''14'''(333), 333--346 (1837).[[BR]]
-   http://articles.adsabs.harvard.edu/full/1837AN.....14..333B
+   http://articles.adsabs.harvard.edu/full/1837AN.....14..333B [[BR]]
+   http://dx.doi.org/10.1002/asna.18370142301
  * F. W. Bessel,[[BR]]
    ''Abhandlungen von Friedrich Wilhelm Bessel [The Works of Bessel]'',
    Vol. 3 (W. Engelmann, Leipzig, 1876), Part 6 contains the previous
@@ -348,14 +353,18 @@
    ''Solution of a geodetical problem'',
    Phil. Mag. '''64'''(315), 35--39 (1824).[[BR]]
    http://books.google.com/books?id=xk0wAAAAIAAJ&pg=PA35 [[BR]]
+   http://dx.doi.org/10.1080/14786442408644549 [[BR]]
    Errata: Phil. Mag. '''65'''(324), 249--250 (1825).[[BR]]
-   http://books.google.com/books?id=_UwwAAAAIAAJ&pg=PA249
+   http://books.google.com/books?id=_UwwAAAAIAAJ&pg=PA249 [[BR]]
+   http://dx.doi.org/10.1080/14786442508628431
  * J. Ivory,[[BR]]
    ''On the properties of a line of shortest distance traced on the
    surface of an oblate spheroid'',
    Phil. Mag. '''67'''(336), 241--249 & '''67'''(337), 340--352 (1826).[[BR]]
    http://books.google.com/books?id=PkwwAAAAIAAJ&pg=PA241 [[BR]]
    http://books.google.com/books?id=PkwwAAAAIAAJ&pg=PA340 [[BR]]
+   http://dx.doi.org/10.1080/14786442608674051 [[BR]]
+   http://dx.doi.org/10.1080/14786442608674069 [[BR]]
    ''Mr. Ivory's mode of finding the length of the geodetic curve'',
    Quart. Jour. Roy. Inst. '''21'''(42), 361--363 (1826).[[BR]]
    http://geographiclib.sf.net/geodesic-papers/quartjour26-extracts.pdf
@@ -363,19 +372,46 @@
    ''Ueber einen Aufsatz von Ivory im Philosophical Magazine
    [Comments on a paper by Ivory in the Philosophical Magazine]'',
    Astron. Nachr. '''5'''(108), 177--180 (1927).[[BR]]
-   http://adsabs.harvard.edu/full/1826AN......5..177B
+   http://adsabs.harvard.edu/full/1826AN......5..177B [[BR]]
+   http://dx.doi.org/10.1002/asna.18270051202
  * J. Ivory,[[BR]]
    ''A direct method of finding the shortest distance between two points on
    the Earth's surface when their geographical position is given'',
-   Phil. Mag. '''8''',
+   Phil. Mag. '''8''' (2nd ser.),
    30--34 & 114--117 (misprinted as 134--137) (1830).[[BR]]
    http://books.google.com/books?id=j4EqAAAAYAAJ&pg=PA30 [[BR]]
-   http://books.google.com/books?id=j4EqAAAAYAAJ&pg=PA134
+   http://books.google.com/books?id=j4EqAAAAYAAJ&pg=PA134 [[BR]]
+   http://dx.doi.org/10.1080/10.1080/14786443008675355 [[BR]]
+   http://dx.doi.org/10.1080/10.1080/14786443008675378
  * F. T. Poselger,[[BR]]
    ''Anleitung zu Rechnungen der Geodäsie
    [Guide to the Calculations of Geodesy]''
    (Dümmler, Berlin, 1831), Chap. 4.[[BR]]
    http://books.google.com/books?id=OVkOAAAAYAAJ&pg=PA39
+ * C. F. Gauss,[[BR]]
+   ''Allgemeine Auflösung der Aufgabe: die Theile einer gegebnen Fläche
+   auf einer andern gegebnen Fläche so abzubilden, daß die Abbildung dem
+   Abgebildeten in den kleinsten Theilen ähnlich wird [The general
+   solution of the problem of mapping one surface to another so that
+   small shapes are preserved]'',
+   Schumacher's Astron. Abhandlungen '''3''', 1--30 (Altona, 1825)
+   Reprint: edited by A. Wangerin, Ostwald's Klass. ex. Wiss., No. 55
+   (Engelmann, Leipzig, 1894).[[BR]]
+   http://books.google.com/books?id=odTPAAAAMAAJ&pg=RA2-PA1 [[BR]]
+   http://books.google.com/books?id=O4AOAAAAYAAJ&pg=PA57
+ * C. F. Gauss,[[BR]]
+   ''Conforme Abbildung des Sphäroids in der Ebene
+   (Projectionsmethode der Hannoverschen Landesvermessung)
+   [Conformal mapping of the spheroid to the plane (The projection
+   for the survey of Hannover)]'',
+   König. Ges. Wiss., Göttingen (1828),
+   in ''Carl Friedrich Gauss Werke'',
+   Vol. 9 (Ges. Wiss., Göttingen, 1903), pp. 142--194.[[BR]]
+   http://books.google.com/books?id=ICwPAAAAIAAJ&pg=PA141 [[BR]]
+   Remarks by Krüger:
+   http://books.google.com/books?id=ICwPAAAAIAAJ&pg=PA195 [[BR]]
+   Letters to Schumacher:
+   http://books.google.com/books?id=ICwPAAAAIAAJ&pg=PA205
  * C. F. Gauss,[[BR]]
    ''Disquisitiones generales circa superficies curvas''
    (Dieterich, Göttingen, 1828).[[BR]]
@@ -400,7 +436,7 @@
    [Investigations on Higher Geodesy, Parts 1 & 2]'',
    Abhandl. Math. Cl. Kön. Ges. Wiss. zu Göttingen
    '''2''', 3--45 (1843); '''3''', 3--43 (1846).[[BR]]
-   Reprint:  edited by J. Frischauf, Ostwald's Klass. ex. Wiss., No. 177
+   Reprint: edited by J. Frischauf, Ostwald's Klass. ex. Wiss., No. 177
    (Engelmann, Leipzig, 1910).[[BR]]
    http://gdz.sub.uni-goettingen.de/dms/load/img/?IDDOC=39018 [[BR]]
    http://gdz.sub.uni-goettingen.de/dms/load/img/?IDDOC=39036 [[BR]]
@@ -643,13 +679,15 @@
    ''Über die Auflösung grosser sphäroidischer Dreiecke
    [Solving large spheroidal triangles]'',
    Astron. Nachr. '''61'''(1455) 225--240 (1864).[[BR]]
-   http://adsabs.harvard.edu/full/1864AN.....61..225V
+   http://adsabs.harvard.edu/full/1864AN.....61..225V [[BR]]
+   http://dx.doi.org/10.1002/asna.18640611502
  * J. J. Baeyer,[[BR]]
    ''Über die Berechnung sphäroidischer Dreiecke und den Lauf der
    geodätischen Linie [Geodesic triangles and the course of the
    geodesic]'',
    Astron. Nachr. '''71'''(1699--1700), 289--314 (1868).[[BR]]
-   http://adsabs.harvard.edu/full/1868AN.....71..289V
+   http://adsabs.harvard.edu/full/1868AN.....71..289V [[BR]]
+   http://dx.doi.org/10.1002/asna.18680711902
  * J. Weingarten,[[BR]]
    ''Über die Oberflächen für welche einer der beiden
    Hauptkrümmungshalbmesser eine Function des anderen ist
@@ -662,7 +700,8 @@
    eines ebenen oder sphärischen [Reducing the angles of a spheroidal
    triangle to those of a plane or spherical triangle]'',
    Astron. Nachr. '''75'''(1782) 91--96 (1869).[[BR]]
-   http://adsabs.harvard.edu/full/1869AN.....75...91W
+   http://adsabs.harvard.edu/full/1869AN.....75...91W [[BR]]
+   http://dx.doi.org/10.1002/asna.18690750604
  * P. A. Hansen,[[BR]]
    ''Geodätische Untersuchungen [Geodetic investigations]''
    (Hirzel, Leipzig, 1865), Sec. 1.[[BR]]
@@ -713,14 +752,16 @@
    in ''The Collected Mathematical Papers of Arthur Cayley'',
    Vol. 7 (Cambridge Univ. Press, 1894), paper 422, pp. 15--25.[[BR]]
    http://books.google.com/books?id=Zk0wAAAAIAAJ&pg=PA329 [[BR]]
-   http://books.google.com/books?id=4XGIOoCMYYAC&pg=PA15
+   http://books.google.com/books?id=4XGIOoCMYYAC&pg=PA15 [[BR]]
+   http://dx.doi.org/10.1080/14786447008640411
  * A. Cayley,[[BR]]
    ''Note on the geodesic lines on an ellipsoid'',
    Phil. Mag. '''41''' (4th ser.), 534--535 (1871),
    in ''The Collected Mathematical Papers of Arthur Cayley'',
    Vol. 7 (Cambridge Univ. Press, 1894), paper 425, pp. 34--35.[[BR]]
    http://books.google.com/books?id=oHUvAQAAIAAJ&pg=PA534 [[BR]]
-   http://books.google.com/books?id=4XGIOoCMYYAC&pg=PA34
+   http://books.google.com/books?id=4XGIOoCMYYAC&pg=PA34 [[BR]]
+   http://dx.doi.org/10.1080/10.1080/14786447108640519
  * A. Cayley,[[BR]]
    ''On the geodesic lines on an ellipsoid'',
    Mem. Roy. Astron. Soc. '''39''', 31--53 & plate 2 (1872),
@@ -735,11 +776,14 @@
    Vol. 8 (Cambridge Univ. Press, 1895),
    papers 508 & 511, pp. 156--178 & 188--199.[[BR]]
    http://books.google.com/books?id=4gWd3fZi4zIC&pg=PA156 [[BR]]
-   http://books.google.com/books?id=4gWd3fZi4zIC&pg=PA188
+   http://books.google.com/books?id=4gWd3fZi4zIC&pg=PA188 [[BR]]
+   http://dx.doi.org/10.1112/plms/s1-4.1.191 [[BR]]
+   http://dx.doi.org/10.1112/plms/s1-4.1.368 
  * A. R. Clarke,[[BR]]
    ''On the course of geodetic lines on the earth's surface'',
    Phil. Mag. '''39''' (4th ser.), 352--363 (1870).[[BR]]
-   http://books.google.com/books?id=i2swAAAAIAAJ&pg=PA352
+   http://books.google.com/books?id=i2swAAAAIAAJ&pg=PA352 [[BR]]
+   http://dx.doi.org/10.1080/10.1080/14786447008640325
  * A. R. Clarke,[[BR]]
    ''Geodesy'' (Clarendon Press, Oxford, 1880), Chap. 6.[[BR]]
    http://books.google.com/books?id=lfIoAAAAYAAJ&pg=PA124
@@ -775,14 +819,17 @@
    Astron. Nachr. '''89'''(2119), 103--110;
    '''89'''(2120), 113--128 (1877).[[BR]]
    http://adsabs.harvard.edu/full/1877AN.....89..103W [[BR]]
-   http://adsabs.harvard.edu/full/1877AN.....89..113W
+   http://adsabs.harvard.edu/full/1877AN.....89..113W [[BR]]
+   http://dx.doi.org/10.1002/asna.18770890703 [[BR]]
+   http://dx.doi.org/10.1002/asna.18770890802
  * C. Winterberg,[[BR]]
    ''Über die geodätische Linie: Bestimmung der Bogenlänge und der
    Azimuthe beider Endpuncte einer geodätische Linie in Function der
    Breiten und der Längendifferenz dieser Puncte [The inverse geodesic
    problem]'',
    Astron. Nachr. '''91'''(2168), 113--120 (1878).[[BR]]
-   http://adsabs.harvard.edu/full/1877AN.....91..113W
+   http://adsabs.harvard.edu/full/1877AN.....91..113W [[BR]]
+   http://dx.doi.org/10.1002/asna.18780910803
  * C. Winterberg,[[BR]]
    ''Über die geodätische Linie: Dritte allgemeine Aufgabe. Auflösung
    der sphäroidischen Dreicke [Solution of geodesic triangles]'',
@@ -790,7 +837,10 @@
    '''95'''(2272) 239--250; '''95'''(2274) 271--280 (1879).[[BR]]
    http://adsabs.harvard.edu/full/1879AN.....95..223W [[BR]]
    http://adsabs.harvard.edu/full/1879AN.....95..239W [[BR]]
-   http://adsabs.harvard.edu/full/1879AN.....95..271W
+   http://adsabs.harvard.edu/full/1879AN.....95..271W [[BR]]
+   http://dx.doi.org/10.1002/asna.18790951502 [[BR]]
+   http://dx.doi.org/10.1002/asna.18790951602 [[BR]]
+   http://dx.doi.org/10.1002/asna.18790951802
  * A. v. Braunmühl,[[BR]]
    ''Ueber Enveloppen geodätischer Linien
    [The envelopes of geodesic lines]'',
@@ -807,7 +857,8 @@
    ''Die geodätische Uebertragung geographischer Coordinaten
    [The geodesic applied to geographic coordinates]'',
    Astron. Nachr. '''94'''(2252), 313--320 (1879).[[BR]]
-   http://adsabs.harvard.edu/full/1879AN.....94..313H
+   http://adsabs.harvard.edu/full/1879AN.....94..313H [[BR]]
+   http://dx.doi.org/10.1002/asna.18790942003
  * F. R. Helmert,[[BR]]
    ''Die Mathematischen und Physikalischen Theorieen der Höheren
    Geodäsie [Mathematical and Physical Theories of Higher Geodesy]'',
@@ -821,13 +872,15 @@
    sphärischen Längenunterschiede zweier Punkte auf der Erdoberfläche
    [Table of differences between the spheroidal and spherical longitude
    differences of two points on the Earth]'',
-   Astron. Nachr. '''95'''(2270), 209--220 (1879).[[BR]]
-   http://adsabs.harvard.edu/full/1879AN.....95..207S
+   Astron. Nachr. '''95'''(2270), 207--220 (1879).[[BR]]
+   http://adsabs.harvard.edu/full/1879AN.....95..207S [[BR]]
+   http://dx.doi.org/10.1002/asna.18790951402
  * C. T. Albrecht,[[BR]]
    ''Über die Umkehrung der Bessel'schen Methode der sphäroidischen Übertragung
    [Inverting Bessel's method for the spheroidal problem]'',
    Astron. Nachr. '''96'''(2294), 209--218 (1880).[[BR]]
-   http://adsabs.harvard.edu/full/1880AN.....96..209A
+   http://adsabs.harvard.edu/full/1880AN.....96..209A [[BR]]
+   http://dx.doi.org/10.1002/asna.18790961402
  * C. T. Albrecht,[[BR]]
    ''Formeln und Hülfstafeln für geographische Ortsbestimmungen
    [Formulas and tables for geographic calculations]''
@@ -864,7 +917,8 @@
    ''On the determination of the shortest distance
    between two points on a spheroid'',
    Astron. Nachr. '''112'''(2671), 97--108 (1885).[[BR]]
-   http://books.google.com/books?id=kN4zAQAAIAAJ&pg=PA206
+   http://books.google.com/books?id=kN4zAQAAIAAJ&pg=PA206 [[BR]]
+   http://dx.doi.org/10.1002/asna.18851120702
  * P. Frost,[[BR]]
    ''Solid Geometry''
    (3rd edition, Macmillan, 1886), Chap. 23.[[BR]]
@@ -906,7 +960,8 @@
  * A. R. Forsyth,[[BR]]
    ''Geodesics on Quadrics, not of Revolution'',
    Proc. London Math. Soc. '''27''', 250--280 (1896).[[BR]]
-   http://books.google.com/books?id=vUOcAAAAMAAJ&pg=PA250
+   http://books.google.com/books?id=vUOcAAAAMAAJ&pg=PA250 [[BR]]
+   http://dx.doi.org/10.1112/plms/s1-27.1.250 
  * A. R. Forsyth,[[BR]]
    ''Geodesics on an oblate spheroid'', Mess. Math. '''25''', 81--124 (1896);
    ''Conjugate points of geodesics on an oblate spheroid'',

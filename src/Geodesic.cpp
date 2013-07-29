@@ -798,7 +798,7 @@ namespace GeographicLib {
   Math::real Geodesic::A3f(real eps) const throw() {
     // Evaluate sum(_A3x[k] * eps^k, k, 0, nA3x_-1) by Horner's method
     real v = 0;
-    for (int i = nA3x_; i; )
+    for (int i = nA3x_; i > 0; )
       v = eps * v + _A3x[--i];
     return v;
   }
@@ -806,10 +806,11 @@ namespace GeographicLib {
   void Geodesic::C3f(real eps, real c[]) const throw() {
     // Evaluate C3 coeffs by Horner's method
     // Elements c[1] thru c[nC3_ - 1] are set
-    for (int j = nC3x_, k = nC3_ - 1; k; ) {
+    for (int j = nC3x_, k = nC3_ - 1; k > 0; ) {
       real t = 0;
-      for (int i = nC3_ - k; i; --i)
+      for (int i = nC3_ - k; i > 0; --i) {
         t = eps * t + _C3x[--j];
+      }
       c[k--] = t;
     }
 
@@ -823,9 +824,9 @@ namespace GeographicLib {
   void Geodesic::C4f(real eps, real c[]) const throw() {
     // Evaluate C4 coeffs by Horner's method
     // Elements c[0] thru c[nC4_ - 1] are set
-    for (int j = nC4x_, k = nC4_; k; ) {
+    for (int j = nC4x_, k = nC4_; k > 0; ) {
       real t = 0;
-      for (int i = nC4_ - k + 1; i; --i)
+      for (int i = nC4_ - k + 1; i > 0; --i)
         t = eps * t + _C4x[--j];
       c[--k] = t;
     }

@@ -208,6 +208,66 @@ namespace GeographicLib {
                           Constants::WGS84_f<real>(),
                           Constants::UTM_k0<real>());
 
+  // Engsager and Poder (2007) use trigonometric series to convert between phi
+  // and phip.
+
+  // Conversion from phi to phip:
+  //
+  //     phip = phi + sum(c[j] * sin(2*j*phi), j, 1, 6)
+  //
+  //       c[1] = - 2 * n
+  //              + 2/3 * n^2
+  //              + 4/3 * n^3
+  //              - 82/45 * n^4
+  //              + 32/45 * n^5
+  //              + 4642/4725 * n^6;
+  //       c[2] =   5/3 * n^2
+  //              - 16/15 * n^3
+  //              - 13/9 * n^4
+  //              + 904/315 * n^5
+  //              - 1522/945 * n^6;
+  //       c[3] = - 26/15 * n^3
+  //              + 34/21 * n^4
+  //              + 8/5 * n^5
+  //              - 12686/2835 * n^6;
+  //       c[4] =   1237/630 * n^4
+  //              - 12/5 * n^5
+  //              - 24832/14175 * n^6;
+  //       c[5] = - 734/315 * n^5
+  //              + 109598/31185 * n^6;
+  //       c[6] =   444337/155925 * n^6;
+
+  // Conversion from phip to phi:
+  //
+  //     phi = phip + sum(d[j] * sin(2*j*phip), j, 1, 6)
+  //
+  //       d[1] =   2 * n
+  //              - 2/3 * n^2
+  //              - 2 * n^3
+  //              + 116/45 * n^4
+  //              + 26/45 * n^5
+  //              - 2854/675 * n^6;
+  //       d[2] =   7/3 * n^2
+  //              - 8/5 * n^3
+  //              - 227/45 * n^4
+  //              + 2704/315 * n^5
+  //              + 2323/945 * n^6;
+  //       d[3] =   56/15 * n^3
+  //              - 136/35 * n^4
+  //              - 1262/105 * n^5
+  //              + 73814/2835 * n^6;
+  //       d[4] =   4279/630 * n^4
+  //              - 332/35 * n^5
+  //              - 399572/14175 * n^6;
+  //       d[5] =   4174/315 * n^5
+  //              - 144838/6237 * n^6;
+  //       d[6] =   601676/22275 * n^6;
+
+  // In order to maintain sufficient relative accuracy close to the pole use
+  //
+  //     S = sum(c[i]*sin(2*i*phi),i,1,6)
+  //     taup = (tau + tan(S)) / (1 - tau * tan(S))
+
   // taupf and tauf are adapted from TransverseMercatorExact (taup and
   // taupinv).  tau = tan(phi), taup = sinh(psi)
   Math::real TransverseMercator::taupf(real tau) const throw() {
