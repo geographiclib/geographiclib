@@ -269,7 +269,7 @@ those cases:
 
 =over
 
-=item I<lat1> = -I<lat2> (with neither at a pole)
+=item I<lat1> = -I<lat2> (with neither point at a pole)
 
 If I<azi1> = I<azi2>, the geodesic is unique.  Otherwise there are two
 geodesics and the second one is obtained by setting [I<azi1>,I<azi2>] =
@@ -277,12 +277,12 @@ geodesics and the second one is obtained by setting [I<azi1>,I<azi2>] =
 (This occurs when the longitude difference is near +/-180 for oblate
 ellipsoids.)
 
-=item I<lon2> = I<lon1> +/- 180 (with neither at a pole)
+=item I<lon2> = I<lon1> +/- 180 (with neither point at a pole)
 
 If I<azi1> = 0 or +/-180, the geodesic is unique.  Otherwise there are
 two geodesics and the second one is obtained by setting
 [I<azi1>,I<azi2>] = [-I<azi1>,-I<azi2>], I<S12> = -I<S12>.  (This occurs
-when the I<lat2> is near -I<lat1> for prolate ellipsoids.)
+when I<lat2> is near -I<lat1> for prolate ellipsoids.)
 
 =item Points 1 and 2 at opposite poles
 
