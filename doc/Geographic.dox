@@ -3604,7 +3604,7 @@ Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
 </center>
 
 Jacobi (1839) showed that the problem of geodesics on a triaxial
-ellipsoids (with 3 unequal axes) can be reduced by quadrature.  Despite
+ellipsoid (with 3 unequal axes) can be reduced to quadrature.  Despite
 this, the detailed behavior of the geodesics is not very well known.  In
 this section, I briefly give Jacobi's solution and illustrate the
 behavior of the geodesics and outline an algorithm for the solution of
@@ -3701,7 +3701,7 @@ defined by
 \begin{aligned}
  x &= a \cos\phi' \cos\lambda', \\
  y &= b \cos\phi' \sin\lambda', \\
- z &= c \sin\phi'. \\
+ z &= c \sin\phi'.
 \end{aligned}
 \f]
 Jacobi employed the \e ellipsoidal latitude and longitude \f$(\beta,
@@ -3885,7 +3885,7 @@ closed geodesics, the three principal sections of the ellipsoid given by
 geodesics, it is convenient to consider geodesics which intersect the
 middle principal section, \f$y = 0\f$, at right angles.  Such geodesics
 are shown in Figs. 2--6, where I use the same ellipsoid parameters as in
-Fig. 1 and the same viewing direction.  In addition, The three principal
+Fig. 1 and the same viewing direction.  In addition, the three principal
 ellipses are shown in red in each of these figures.
 
 If the starting point is \f$\beta_1 \in (-90^\circ, 90^\circ)\f$,
