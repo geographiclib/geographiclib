@@ -3959,7 +3959,7 @@ If the starting point is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
 0^\circ\f$ (an umbilical point), and \f$\alpha_1 = 45^\circ\f$ (the
 geodesic leaves the ellipse \f$y = 0\f$ at right angles), then the
 geodesic repeatedly intersects the opposite umbilical point and returns to
-its starting point.  However on each circuit the angle at which
+its starting point.  However on each circuit the angle at which it
 intersects \f$y = 0\f$ becomes closer to \f$0^\circ\f$ or
 \f$180^\circ\f$ so that asymptotically the geodesic lies on the ellipse
 \f$y = 0\f$.  This is shown in Fig. 6.  Note that a single geodesic does
