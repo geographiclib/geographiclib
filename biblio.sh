@@ -19,7 +19,9 @@ cat <<'EOF'
       available, links to translations, especially into English, have
       been added.  Unfortunately, the fold-out pages of figures in some
       books are usually not scanned properly by Google; in some cases I
-      have been able to scan the missing pages, see
+      have been able to scan the missing pages.  In addition, some
+      readers do have not have access to the full text of Google Books;
+      in those cases, I have provided a "pdf" link.   See the files in
       <a href=".">geodesic-papers</a>. Please let me, Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>,
       know of errors, omissions, etc.  In particular, I'm interested to
@@ -42,6 +44,7 @@ sed -e 's/\*/<li>/' -e 's/  *\[\[BR\]\]/ <br>/' \
     -e "s%'''\([0-9][0-9]*\)'''%<b>\1</b>%g" \
     -e "s% ''% <i>%g" -e "s%\([^ ]\)''%\1</i>%g" \
     -e 's%http://\([a-zA-Z][^ ]*\)%<a href="http://\1">http://\1</a>%' \
+    -e 's%(PDF \([^)]*\))%(<a href="http://geographiclib.sf.net/geodesic-papers/\1">pdf</a>)%' \
     -e 's/&/\&amp;/g' \
     -e 's/\([0-9]\)--\([0-9]\)/\1\&ndash;\2/g' \
     -e 's/É/\&Eacute;/g' \
