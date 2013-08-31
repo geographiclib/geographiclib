@@ -19,10 +19,10 @@ cat <<'EOF'
       available, links to translations, especially into English, have
       been added.  Unfortunately, the fold-out pages of figures in some
       books are usually not scanned properly by Google; in some cases I
-      have been able to scan the missing pages.  In addition, some
-      readers do have not have access to the full text of Google Books;
-      in those cases, I have provided a "pdf" link.   See the files in
-      <a href=".">geodesic-papers</a>. Please let me, Charles Karney
+      have been able to scan the missing pages.  In addition, readers
+      may not have access to the full text of some Google Books; in
+      those cases, I have provided a "pdf" link.  See the files in <a
+      href=".">geodesic-papers</a>. Please let me, Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>,
       know of errors, omissions, etc.  In particular, I'm interested to
       learn of any cases where I have mis-translated the title of a paper.
