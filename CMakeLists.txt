@@ -4,7 +4,7 @@ project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 32)
+set (GeographicLib_VERSION_MINOR 33)
 set (GeographicLib_VERSION_PATCH 0)
 set (GeographicLib_VERSION
   "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
@@ -17,7 +17,7 @@ set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 10)
-set (LIBVERSIONFULL 10.0.1)
+set (LIBVERSIONFULL 10.0.2)
 
 # User-settable variables
 
@@ -302,6 +302,9 @@ endif ()
 add_subdirectory (cmake)
 if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
   add_subdirectory (tests)
+endif ()
+if (WIN32)
+  add_subdirectory (dotnet/src)
 endif ()
 
 # Packaging support; we deal with

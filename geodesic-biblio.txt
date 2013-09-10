@@ -640,6 +640,11 @@
    Comptes Rendus '''40''', 1311--1313 (1855).[[BR]]
    http://books.google.com/books?id=v28kAQAAIAAJ&pg=PA1311
  * J. Bertrand,[[BR]]
+   ''Démonstration géométrique de quelques théorèmes relatifs à la
+   théorie des surfaces [Geometric proof of some theorems for surfaces]'',
+   Jour. Liouville '''13''', 78--79 (1848).[[BR]]
+   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1848_1_13_A11_0
+ * J. Bertrand,[[BR]]
    ''Démonstration d'un théorème de M. Gauss [Proof of a theorem of
    C. F. Gauss]'',
    Jour. Liouville '''13''', 80--82 (1848).[[BR]]
