@@ -66,6 +66,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NETGeographic", "NETGeograp
 		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1} = {4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projections", "Projections.csproj", "{74B48389-E1D1-491F-B198-ADD4878C3F2B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1} = {4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -170,6 +175,14 @@ Global
 		{BC1ADBEC-537D-487E-AF21-8B7025AAF46D}.Release|Win32.Build.0 = Release|Win32
 		{BC1ADBEC-537D-487E-AF21-8B7025AAF46D}.Release|x64.ActiveCfg = Release|x64
 		{BC1ADBEC-537D-487E-AF21-8B7025AAF46D}.Release|x64.Build.0 = Release|x64
+		{74B48389-E1D1-491F-B198-ADD4878C3F2B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{74B48389-E1D1-491F-B198-ADD4878C3F2B}.Debug|Win32.Build.0 = Debug|Win32
+		{74B48389-E1D1-491F-B198-ADD4878C3F2B}.Debug|x64.ActiveCfg = Debug|x64
+		{74B48389-E1D1-491F-B198-ADD4878C3F2B}.Debug|x64.Build.0 = Debug|x64
+		{74B48389-E1D1-491F-B198-ADD4878C3F2B}.Release|Win32.ActiveCfg = Release|Win32
+		{74B48389-E1D1-491F-B198-ADD4878C3F2B}.Release|Win32.Build.0 = Release|Win32
+		{74B48389-E1D1-491F-B198-ADD4878C3F2B}.Release|x64.ActiveCfg = Release|x64
+		{74B48389-E1D1-491F-B198-ADD4878C3F2B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
