@@ -63,37 +63,37 @@ void Accumulator::Multiply( int i )
 }
 
 //*****************************************************************************
-bool Accumulator::operator == ( const Accumulator^ lhs, double a )
+bool Accumulator::operator == ( Accumulator^ lhs, double a )
 {
 	return lhs->m_pAccumulator->operator==( a );
 }
 
 //*****************************************************************************
-bool Accumulator::operator != ( const Accumulator^ lhs, double a )
+bool Accumulator::operator != ( Accumulator^ lhs, double a )
 {
 	return lhs->m_pAccumulator->operator!=( a );
 }
 
 //*****************************************************************************
-bool Accumulator::operator < ( const Accumulator^ lhs, double a )
+bool Accumulator::operator < ( Accumulator^ lhs, double a )
 {
 	return lhs->m_pAccumulator->operator<( a );
 }
 
 //*****************************************************************************
-bool Accumulator::operator <= ( const Accumulator^ lhs, double a )
+bool Accumulator::operator <= ( Accumulator^ lhs, double a )
 {
 	return lhs->m_pAccumulator->operator<=( a );
 }
 
 //*****************************************************************************
-bool Accumulator::operator > ( const Accumulator^ lhs, double a )
+bool Accumulator::operator > ( Accumulator^ lhs, double a )
 {
 	return lhs->m_pAccumulator->operator>( a );
 }
 
 //*****************************************************************************
-bool Accumulator::operator >= ( const Accumulator^ lhs, double a )
+bool Accumulator::operator >= ( Accumulator^ lhs, double a )
 {
 	return lhs->m_pAccumulator->operator>=( a );
 }

@@ -69,42 +69,42 @@ namespace NETGeographicLib
 		\param[in] a The value to be compared to.
 		\return true if the accumulated value is equal to a.
 		*/
-		static bool operator == ( const Accumulator^ lhs, double a ); 
+		static bool operator == ( Accumulator^ lhs, double a ); 
 		/*!
 		\brief Inequality operator.
 		\param[in] lhs The accumulator.
 		\param[in] a The value to be compared to.
 		\return true if the accumulated value is not equal to a.
 		*/
-		static bool operator != ( const Accumulator^ lhs, double a ); 
+		static bool operator != ( Accumulator^ lhs, double a ); 
 		/*!
 		\brief Less than operator.
 		\param[in] lhs The accumulator.
 		\param[in] a The value to be compared to.
 		\return true if the accumulated value is less than a.
 		*/
-		static bool operator < ( const Accumulator^ lhs, double a ); 
+		static bool operator < ( Accumulator^ lhs, double a ); 
 		/*!
 		\brief Less than or equal to operator.
 		\param[in] lhs The accumulator.
 		\param[in] a The value to be compared to.
 		\return true if the accumulated value is less than or equal to a.
 		*/
-		static bool operator <= ( const Accumulator^ lhs, double a ); 
+		static bool operator <= ( Accumulator^ lhs, double a ); 
 		/*!
 		\brief Greater than operator.
 		\param[in] lhs The accumulator.
 		\param[in] a The value to be compared to.
 		\return true if the accumulated value is greater than a.
 		*/
-		static bool operator > ( const Accumulator^ lhs, double a ); 
+		static bool operator > ( Accumulator^ lhs, double a ); 
 		/*!
 		\brief Greater than or equal to operator.
 		\param[in] lhs The accumulator.
 		\param[in] a The value to be compared to.
 		\return true if the accumulated value is greater than or equal to a.
 		*/
-		static bool operator >= ( const Accumulator^ lhs, double a ); 
+		static bool operator >= ( Accumulator^ lhs, double a ); 
 	};
 } //namespace NETGeographicLib
 

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BC1ADBEC-537D-487E-AF21-8B7025AAF46D}</ProjectGuid>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <Keyword>ManagedCProj</Keyword>
+    <RootNamespace>NETGeographic</RootNamespace>
+    <ProjectName>NETGeographic</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_d</TargetName>
+    <IntDir>$(Configuration)\dotnet\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_d</TargetName>
+    <OutDir>$(SolutionDir)$(Configuration)64\</OutDir>
+    <IntDir>$(Configuration)64\dotnet\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(Configuration)\dotnet\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)64\</OutDir>
+    <IntDir>$(Configuration)64\dotnet\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>../include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Geographic_d.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>../include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Geographic_d.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Geographic.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Geographic.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="../dotnet/src/Accumulator.h" />
+    <ClInclude Include="../dotnet/src/AlbersEqualArea.h" />
+    <ClInclude Include="../dotnet/src/AzimuthalEquidistant.h" />
+    <ClInclude Include="../dotnet/src/CassiniSoldner.h" />
+    <ClInclude Include="../dotnet/src/CircularEngine.h" />
+    <ClInclude Include="../dotnet/src/DMS.h" />
+    <ClInclude Include="../dotnet/src/Ellipsoid.h" />
+    <ClInclude Include="../dotnet/src/EllipticFunction.h" />
+    <ClInclude Include="../dotnet/src/Geocentric.h" />
+    <ClInclude Include="../dotnet/src/GeoCoords.h" />
+    <ClInclude Include="../dotnet/src/Geodesic.h" />
+    <ClInclude Include="../dotnet/src/GeodesicExact.h" />
+    <ClInclude Include="../dotnet/src/GeodesicLine.h" />
+    <ClInclude Include="../dotnet/src/GeodesicLineExact.h" />
+    <ClInclude Include="../dotnet/src/Geohash.h" />
+    <ClInclude Include="../dotnet/src/Geoid.h" />
+    <ClInclude Include="../dotnet/src/Gnomonic.h" />
+    <ClInclude Include="../dotnet/src/GravityCircle.h" />
+    <ClInclude Include="../dotnet/src/GravityModel.h" />
+    <ClInclude Include="../dotnet/src/LambertConformalConic.h" />
+    <ClInclude Include="../dotnet/src/LocalCartesian.h" />
+    <ClInclude Include="../dotnet/src/MagneticCircle.h" />
+    <ClInclude Include="../dotnet/src/MagneticModel.h" />
+    <ClInclude Include="../dotnet/src/MGRS.h" />
+    <ClInclude Include="../dotnet/src/NETGeographicLib.h" />
+    <ClInclude Include="../dotnet/src/NormalGravity.h" />
+    <ClInclude Include="../dotnet/src/OSGB.h" />
+    <ClInclude Include="../dotnet/src/PolarStereographic.h" />
+    <ClInclude Include="../dotnet/src/PolygonArea.h" />
+    <ClInclude Include="../dotnet/src/SphericalCoefficients.h" />
+    <ClInclude Include="../dotnet/src/SphericalHarmonic.h" />
+    <ClInclude Include="../dotnet/src/SphericalHarmonic1.h" />
+    <ClInclude Include="../dotnet/src/SphericalHarmonic2.h" />
+    <ClInclude Include="../dotnet/src/Stdafx.h" />
+    <ClInclude Include="../dotnet/src/TransverseMercator.h" />
+    <ClInclude Include="../dotnet/src/TransverseMercatorExact.h" />
+    <ClInclude Include="../dotnet/src/UTMUPS.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="../dotnet/src/Accumulator.cpp" />
+    <ClCompile Include="../dotnet/src/AlbersEqualArea.cpp" />
+    <ClCompile Include="../dotnet/src/AssemblyInfo.cpp" />
+    <ClCompile Include="../dotnet/src/AzimuthalEquidistant.cpp" />
+    <ClCompile Include="../dotnet/src/CassiniSoldner.cpp" />
+    <ClCompile Include="../dotnet/src/CircularEngine.cpp" />
+    <ClCompile Include="../dotnet/src/DMS.cpp" />
+    <ClCompile Include="../dotnet/src/Ellipsoid.cpp" />
+    <ClCompile Include="../dotnet/src/EllipticFunction.cpp" />
+    <ClCompile Include="../dotnet/src/Geocentric.cpp" />
+    <ClCompile Include="../dotnet/src/GeoCoords.cpp" />
+    <ClCompile Include="../dotnet/src/Geodesic.cpp" />
+    <ClCompile Include="../dotnet/src/GeodesicExact.cpp" />
+    <ClCompile Include="../dotnet/src/GeodesicLine.cpp" />
+    <ClCompile Include="../dotnet/src/GeodesicLineExact.cpp" />
+    <ClCompile Include="../dotnet/src/Geohash.cpp" />
+    <ClCompile Include="../dotnet/src/Geoid.cpp" />
+    <ClCompile Include="../dotnet/src/Gnomonic.cpp" />
+    <ClCompile Include="../dotnet/src/GravityCircle.cpp" />
+    <ClCompile Include="../dotnet/src/GravityModel.cpp" />
+    <ClCompile Include="../dotnet/src/LambertConformalConic.cpp" />
+    <ClCompile Include="../dotnet/src/LocalCartesian.cpp" />
+    <ClCompile Include="../dotnet/src/MagneticCircle.cpp" />
+    <ClCompile Include="../dotnet/src/MagneticModel.cpp" />
+    <ClCompile Include="../dotnet/src/MGRS.cpp" />
+    <ClCompile Include="../dotnet/src/NETGeographicLib.cpp" />
+    <ClCompile Include="../dotnet/src/NormalGravity.cpp" />
+    <ClCompile Include="../dotnet/src/OSGB.cpp" />
+    <ClCompile Include="../dotnet/src/PolarStereographic.cpp" />
+    <ClCompile Include="../dotnet/src/PolygonArea.cpp" />
+    <ClCompile Include="../dotnet/src/SphericalCoefficients.cpp" />
+    <ClCompile Include="../dotnet/src/SphericalHarmonic.cpp" />
+    <ClCompile Include="../dotnet/src/SphericalHarmonic1.cpp" />
+    <ClCompile Include="../dotnet/src/SphericalHarmonic2.cpp" />
+    <ClCompile Include="../dotnet/src/TransverseMercator.cpp" />
+    <ClCompile Include="../dotnet/src/TransverseMercatorExact.cpp" />
+    <ClCompile Include="../dotnet/src/UTMUPS.cpp" />
+    <ClCompile Include="../dotnet/src/stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../dotnet/src/ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Geographic-vc10.vcxproj">
+      <Project>{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
