@@ -3,8 +3,8 @@
  * \brief Header for NETGeographicLib::DMS class
  *
  * NETGeographicLib is copyright (c) Scott Heiman (2013)
- * GeographicLib is Copyright (c) Charles Karney (2010-2012) 
- * <charles@karney.com> and licensed under the MIT/X11 License.  
+ * GeographicLib is Copyright (c) Charles Karney (2010-2012)
+ * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -144,8 +144,8 @@ public:
      * The codes with a leading zero byte, e.g., U+00b0, are accepted in their
      * UTF-8 coded form 0xc2 0xb0 and as a single byte 0xb0.
      **********************************************************************/
-    static double Decode(System::String^ dms, 
-		[System::Runtime::InteropServices::Out] Flag% ind);
+    static double Decode(System::String^ dms,
+        [System::Runtime::InteropServices::Out] Flag% ind);
 
     /**
      * Convert DMS to an angle.
@@ -200,9 +200,9 @@ public:
      * unchanged.
      **********************************************************************/
     static void DecodeLatLon(System::String^ dmsa, System::String^ dmsb,
-                     [System::Runtime::InteropServices::Out] double% lat, 
-					 [System::Runtime::InteropServices::Out] double% lon, 
-					 bool swaplatlong );
+                     [System::Runtime::InteropServices::Out] double% lat,
+                     [System::Runtime::InteropServices::Out] double% lon,
+                     bool swaplatlong );
 
     /**
      * Convert a string to an angle in degrees.
@@ -291,10 +291,10 @@ public:
      * @param[out] d degrees (an integer returned as a double)
      * @param[out] m arc minutes.
      **********************************************************************/
-    static void Encode(double ang, 
-		[System::Runtime::InteropServices::Out] double% d, 
-		[System::Runtime::InteropServices::Out] double% m)
-	{
+    static void Encode(double ang,
+        [System::Runtime::InteropServices::Out] double% d,
+        [System::Runtime::InteropServices::Out] double% m)
+    {
       d = int(ang); m = 60 * (ang - d);
     }
 
@@ -306,14 +306,13 @@ public:
      * @param[out] m arc minutes (an integer returned as a double)
      * @param[out] s arc seconds.
      **********************************************************************/
-    static void Encode(double ang, 
-		[System::Runtime::InteropServices::Out] double% d, 
-		[System::Runtime::InteropServices::Out] double% m, 
-		[System::Runtime::InteropServices::Out] double% s)
-	{
+    static void Encode(double ang,
+        [System::Runtime::InteropServices::Out] double% d,
+        [System::Runtime::InteropServices::Out] double% m,
+        [System::Runtime::InteropServices::Out] double% s)
+    {
       d = int(ang); ang = 60 * (ang - d);
       m = int(ang); s = 60 * (ang - m);
     }
 };
 } // namespace NETGeographicLib
-

@@ -8,7 +8,6 @@ MANIFEST.in text
 *.cmake.in text
 doxyfile.in text
 *.cpp text
-*.cs text
 *.dox text
 *.h text
 *.hpp text
@@ -37,5 +36,8 @@ doxyfile.in text
 *.vcxproj eol=crlf
 *.csproj eol=crlf
 *.resx eol=crlf
+*.settings eol=crlf
 *.kml text
 *.kmz -text
+*.cs text
+

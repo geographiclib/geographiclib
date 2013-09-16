@@ -5,10 +5,10 @@
  * NETGeographicLib.UTMUPS,
  * NETGeographicLib.MGRS, and
  * NETGeographicLib.OSGB example.
- * 
+ *
  * NETGeographicLib is copyright (c) Scott Heiman (2013)
- * GeographicLib is Copyright (c) Charles Karney (2010-2012) 
- * <charles@karney.com> and licensed under the MIT/X11 License.  
+ * GeographicLib is Copyright (c) Charles Karney (2010-2012)
+ * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -146,7 +146,7 @@ namespace Projections
                 MGRS.Forward(zone, northp, x, y, 32.0, 8, out str);
                 MGRS.Reverse(str, out zone, out northp, out x, out y, out prec, true);
 
-                MessageBox.Show("Noe errors detected", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No errors detected", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception xcpt)
             {

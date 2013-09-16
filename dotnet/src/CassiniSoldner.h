@@ -3,8 +3,8 @@
  * \brief Header for NETGeographicLib::CassiniSoldner class
  *
  * NETGeographicLib is copyright (c) Scott Heiman (2013)
- * GeographicLib is Copyright (c) Charles Karney (2010-2012) 
- * <charles@karney.com> and licensed under the MIT/X11 License.  
+ * GeographicLib is Copyright (c) Charles Karney (2010-2012)
+ * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -57,138 +57,137 @@ namespace NETGeographicLib
    * respectively, (\e lat1, \e lon1) and (\e lat, \e lon).
    *
    * INTERFACE DIFFERENCES:
-   * The LatitudeOrigin, LongitudeOrigin, MajorRadius and Flattening 
+   * The LatitudeOrigin, LongitudeOrigin, MajorRadius and Flattening
    * functions are implimented as properties.
    **********************************************************************/
-	public ref class CassiniSoldner
-	{
-		// A pointer to the unmanaged GeographicLib::CassiniSoldner
-		GeographicLib::CassiniSoldner* m_pCassiniSoldner;
+    public ref class CassiniSoldner
+    {
+        // A pointer to the unmanaged GeographicLib::CassiniSoldner
+        GeographicLib::CassiniSoldner* m_pCassiniSoldner;
 
-		// The finalizer frees the unmanaged memory when the object is destroyed.
-		!CassiniSoldner();
-	public:
-		/**
-		 * Constructor for CassiniSoldner specifying a center point and 
-		 * assuming the WGS84 ellipsoid.
-		 *
-		 * @param[in] lat0 latitude of center point of projection (degrees).
-		 * @param[in] lon0 longitude of center point of projection (degrees).
-		 **********************************************************************/
-		CassiniSoldner(double lat0, double lon0);
+        // The finalizer frees the unmanaged memory when the object is destroyed.
+        !CassiniSoldner();
+    public:
+        /**
+         * Constructor for CassiniSoldner specifying a center point and
+         * assuming the WGS84 ellipsoid.
+         *
+         * @param[in] lat0 latitude of center point of projection (degrees).
+         * @param[in] lon0 longitude of center point of projection (degrees).
+         **********************************************************************/
+        CassiniSoldner(double lat0, double lon0);
 
-		/**
-		 * Constructor for CassiniSoldner specifying a center point.
-		 *
-		 * @param[in] lat0 latitude of center point of projection (degrees).
-		 * @param[in] lon0 longitude of center point of projection (degrees).
-		 * @param[in] earth the Geodesic object to use for geodesic calculations.
-		 *   By default this uses the WGS84 ellipsoid.
-		 *
-		 * \e lat0 should be in the range [&minus;90&deg;, 90&deg;] and \e
-		 * lon0 should be in the range [&minus;540&deg;, 540&deg;).
-		 **********************************************************************/
-		CassiniSoldner(double lat0, double lon0, Geodesic^ earth );
+        /**
+         * Constructor for CassiniSoldner specifying a center point.
+         *
+         * @param[in] lat0 latitude of center point of projection (degrees).
+         * @param[in] lon0 longitude of center point of projection (degrees).
+         * @param[in] earth the Geodesic object to use for geodesic calculations.
+         *   By default this uses the WGS84 ellipsoid.
+         *
+         * \e lat0 should be in the range [&minus;90&deg;, 90&deg;] and \e
+         * lon0 should be in the range [&minus;540&deg;, 540&deg;).
+         **********************************************************************/
+        CassiniSoldner(double lat0, double lon0, Geodesic^ earth );
 
-		/**
-		 * The destructor calls the finalizer.
-		 **********************************************************************/
-		~CassiniSoldner()
-		{ this->!CassiniSoldner(); }
+        /**
+         * The destructor calls the finalizer.
+         **********************************************************************/
+        ~CassiniSoldner()
+        { this->!CassiniSoldner(); }
 
-		/**
-		 * Set the central point of the projection
-		 *
-		 * @param[in] lat0 latitude of center point of projection (degrees).
-		 * @param[in] lon0 longitude of center point of projection (degrees).
-		 *
-		 * \e lat0 should be in the range [&minus;90&deg;, 90&deg;] and \e
-		 * lon0 should be in the range [&minus;540&deg;, 540&deg;).
-		 **********************************************************************/
-		void Reset(double lat0, double lon0);
+        /**
+         * Set the central point of the projection
+         *
+         * @param[in] lat0 latitude of center point of projection (degrees).
+         * @param[in] lon0 longitude of center point of projection (degrees).
+         *
+         * \e lat0 should be in the range [&minus;90&deg;, 90&deg;] and \e
+         * lon0 should be in the range [&minus;540&deg;, 540&deg;).
+         **********************************************************************/
+        void Reset(double lat0, double lon0);
 
-		/**
-		 * Forward projection, from geographic to Cassini-Soldner.
-		 *
-		 * @param[in] lat latitude of point (degrees).
-		 * @param[in] lon longitude of point (degrees).
-		 * @param[out] x easting of point (meters).
-		 * @param[out] y northing of point (meters).
-		 * @param[out] azi azimuth of easting direction at point (degrees).
-		 * @param[out] rk reciprocal of azimuthal northing scale at point.
-		 *
-		 * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
-		 * lon should be in the range [&minus;540&deg;, 540&deg;).  A call
-		 * to Forward followed by a call to Reverse will return the original (\e
-		 * lat, \e lon) (to within roundoff).  The routine does nothing if the
-		 * origin has not been set.
-		 **********************************************************************/
-		void Forward(double lat, double lon,
-					 [System::Runtime::InteropServices::Out] double% x, 
-					 [System::Runtime::InteropServices::Out] double% y, 
-					 [System::Runtime::InteropServices::Out] double% azi, 
-					 [System::Runtime::InteropServices::Out] double% rk);
+        /**
+         * Forward projection, from geographic to Cassini-Soldner.
+         *
+         * @param[in] lat latitude of point (degrees).
+         * @param[in] lon longitude of point (degrees).
+         * @param[out] x easting of point (meters).
+         * @param[out] y northing of point (meters).
+         * @param[out] azi azimuth of easting direction at point (degrees).
+         * @param[out] rk reciprocal of azimuthal northing scale at point.
+         *
+         * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
+         * lon should be in the range [&minus;540&deg;, 540&deg;).  A call
+         * to Forward followed by a call to Reverse will return the original (\e
+         * lat, \e lon) (to within roundoff).  The routine does nothing if the
+         * origin has not been set.
+         **********************************************************************/
+        void Forward(double lat, double lon,
+                     [System::Runtime::InteropServices::Out] double% x,
+                     [System::Runtime::InteropServices::Out] double% y,
+                     [System::Runtime::InteropServices::Out] double% azi,
+                     [System::Runtime::InteropServices::Out] double% rk);
 
-		/**
-		 * Reverse projection, from Cassini-Soldner to geographic.
-		 *
-		 * @param[in] x easting of point (meters).
-		 * @param[in] y northing of point (meters).
-		 * @param[out] lat latitude of point (degrees).
-		 * @param[out] lon longitude of point (degrees).
-		 * @param[out] azi azimuth of easting direction at point (degrees).
-		 * @param[out] rk reciprocal of azimuthal northing scale at point.
-		 *
-		 * A call to Reverse followed by a call to Forward will return the original
-		 * (\e x, \e y) (to within roundoff), provided that \e x and \e y are
-		 * sufficiently small not to "wrap around" the earth.  The routine does
-		 * nothing if the origin has not been set.
-		 **********************************************************************/
-		void Reverse(double x, double y,
-					 [System::Runtime::InteropServices::Out] double% lat, 
-					 [System::Runtime::InteropServices::Out] double% lon, 
-					 [System::Runtime::InteropServices::Out] double% azi, 
-					 [System::Runtime::InteropServices::Out] double% rk);
+        /**
+         * Reverse projection, from Cassini-Soldner to geographic.
+         *
+         * @param[in] x easting of point (meters).
+         * @param[in] y northing of point (meters).
+         * @param[out] lat latitude of point (degrees).
+         * @param[out] lon longitude of point (degrees).
+         * @param[out] azi azimuth of easting direction at point (degrees).
+         * @param[out] rk reciprocal of azimuthal northing scale at point.
+         *
+         * A call to Reverse followed by a call to Forward will return the original
+         * (\e x, \e y) (to within roundoff), provided that \e x and \e y are
+         * sufficiently small not to "wrap around" the earth.  The routine does
+         * nothing if the origin has not been set.
+         **********************************************************************/
+        void Reverse(double x, double y,
+                     [System::Runtime::InteropServices::Out] double% lat,
+                     [System::Runtime::InteropServices::Out] double% lon,
+                     [System::Runtime::InteropServices::Out] double% azi,
+                     [System::Runtime::InteropServices::Out] double% rk);
 
-		/**
-		 * CassiniSoldner::Forward without returning the azimuth and scale.
-		 **********************************************************************/
-		void Forward(double lat, double lon, 
-			[System::Runtime::InteropServices::Out] double% x, 
-			[System::Runtime::InteropServices::Out] double% y);
+        /**
+         * CassiniSoldner::Forward without returning the azimuth and scale.
+         **********************************************************************/
+        void Forward(double lat, double lon,
+            [System::Runtime::InteropServices::Out] double% x,
+            [System::Runtime::InteropServices::Out] double% y);
 
-		/**
-		 * CassiniSoldner::Reverse without returning the azimuth and scale.
-		 **********************************************************************/
-		void Reverse(double x, double y, 
-			[System::Runtime::InteropServices::Out] double% lat, 
-			[System::Runtime::InteropServices::Out] double% lon);
+        /**
+         * CassiniSoldner::Reverse without returning the azimuth and scale.
+         **********************************************************************/
+        void Reverse(double x, double y,
+            [System::Runtime::InteropServices::Out] double% lat,
+            [System::Runtime::InteropServices::Out] double% lon);
 
-		/** \name Inspector functions
-		 **********************************************************************/
-		///@{
-		/**
-		 * @return \e lat0 the latitude of origin (degrees).
-		 **********************************************************************/
-		property double LatitudeOrigin { double get(); }
+        /** \name Inspector functions
+         **********************************************************************/
+        ///@{
+        /**
+         * @return \e lat0 the latitude of origin (degrees).
+         **********************************************************************/
+        property double LatitudeOrigin { double get(); }
 
-		/**
-		 * @return \e lon0 the longitude of origin (degrees).
-		 **********************************************************************/
-		property double LongitudeOrigin { double get(); }
+        /**
+         * @return \e lon0 the longitude of origin (degrees).
+         **********************************************************************/
+        property double LongitudeOrigin { double get(); }
 
-		/**
-		 * @return \e a the equatorial radius of the ellipsoid (meters).  This is
-		 *   the value inherited from the Geodesic object used in the constructor.
-		 **********************************************************************/
-		property double MajorRadius { double get(); }
+        /**
+         * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+         *   the value inherited from the Geodesic object used in the constructor.
+         **********************************************************************/
+        property double MajorRadius { double get(); }
 
-		/**
-		 * @return \e f the flattening of the ellipsoid.  This is the value
-		 *   inherited from the Geodesic object used in the constructor.
-		 **********************************************************************/
-		property double Flattening { double get(); }
-		///@}
-	};
+        /**
+         * @return \e f the flattening of the ellipsoid.  This is the value
+         *   inherited from the Geodesic object used in the constructor.
+         **********************************************************************/
+        property double Flattening { double get(); }
+        ///@}
+    };
 } // namespace NETGeographicLib
-

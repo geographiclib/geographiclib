@@ -3,8 +3,8 @@
  * \brief Header for NETGeographicLib::Geocentric class
  *
  * NETGeographicLib is copyright (c) Scott Heiman (2013)
- * GeographicLib is Copyright (c) Charles Karney (2010-2012) 
- * <charles@karney.com> and licensed under the MIT/X11 License.  
+ * GeographicLib is Copyright (c) Charles Karney (2010-2012)
+ * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -55,166 +55,166 @@ namespace NETGeographicLib
    *
    * The MajorRadius and Flattening functions are implemented as properties.
    *
-   * The Forward and Reverse functions return rotation matrices as 2D, 
+   * The Forward and Reverse functions return rotation matrices as 2D,
    * 3X3 arrays rather than vectors.
    **********************************************************************/
-	public ref class Geocentric
-	{
-	private:
-		// pointer to the unmanaged GeographicLib::Geocentric
-		const GeographicLib::Geocentric* m_pGeocentric;
+    public ref class Geocentric
+    {
+    private:
+        // pointer to the unmanaged GeographicLib::Geocentric
+        const GeographicLib::Geocentric* m_pGeocentric;
 
-		// The finalizer frees unmanaged memory when the object is destroyed.
-		!Geocentric();
-	public:
-		/**
-		 * Constructor for a ellipsoid with
-		 *
-		 * @param[in] a equatorial radius (meters).
-		 * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-		 *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-		 *   to 1/\e f.
-		 * @exception GeographicErr if \e a or (1 &minus; \e f ) \e a is not
-		 *   positive.
-		 **********************************************************************/
-		Geocentric(double a, double f);
+        // The finalizer frees unmanaged memory when the object is destroyed.
+        !Geocentric();
+    public:
+        /**
+         * Constructor for a ellipsoid with
+         *
+         * @param[in] a equatorial radius (meters).
+         * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
+         *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+         *   to 1/\e f.
+         * @exception GeographicErr if \e a or (1 &minus; \e f ) \e a is not
+         *   positive.
+         **********************************************************************/
+        Geocentric(double a, double f);
 
-		/**
-		 * A default constructor which assumes WGS84.
-		 **********************************************************************/
-		Geocentric();
+        /**
+         * A default constructor which assumes WGS84.
+         **********************************************************************/
+        Geocentric();
 
-		/**
-		 * A constructor that is initialized from an unmanaged 
-		 * GeographicLib::Geocentric.  For internal use only.
-		 * @param[in] g An existiong GeographicLib::Geocentric.
-		 **********************************************************************/
-		Geocentric( const GeographicLib::Geocentric& g );
+        /**
+         * A constructor that is initialized from an unmanaged
+         * GeographicLib::Geocentric.  For internal use only.
+         * @param[in] g An existiong GeographicLib::Geocentric.
+         **********************************************************************/
+        Geocentric( const GeographicLib::Geocentric& g );
 
-		/**
-		 * The destructor calls the finalizer.
-		 **********************************************************************/
-		~Geocentric()
-		{ this->!Geocentric(); }
+        /**
+         * The destructor calls the finalizer.
+         **********************************************************************/
+        ~Geocentric()
+        { this->!Geocentric(); }
 
-		/**
-		 * Convert from geodetic to geocentric coordinates.
-		 *
-		 * @param[in] lat latitude of point (degrees).
-		 * @param[in] lon longitude of point (degrees).
-		 * @param[in] h height of point above the ellipsoid (meters).
-		 * @param[out] X geocentric coordinate (meters).
-		 * @param[out] Y geocentric coordinate (meters).
-		 * @param[out] Z geocentric coordinate (meters).
-		 *
-		 * \e lat should be in the range [&minus;90&deg;, 90&deg;]; \e lon
-		 * should be in the range [&minus;540&deg;, 540&deg;).
-		 **********************************************************************/
-		void Forward(double lat, double lon, double h, 
-			[System::Runtime::InteropServices::Out] double% X, 
-			[System::Runtime::InteropServices::Out] double% Y, 
-			[System::Runtime::InteropServices::Out] double% Z);
+        /**
+         * Convert from geodetic to geocentric coordinates.
+         *
+         * @param[in] lat latitude of point (degrees).
+         * @param[in] lon longitude of point (degrees).
+         * @param[in] h height of point above the ellipsoid (meters).
+         * @param[out] X geocentric coordinate (meters).
+         * @param[out] Y geocentric coordinate (meters).
+         * @param[out] Z geocentric coordinate (meters).
+         *
+         * \e lat should be in the range [&minus;90&deg;, 90&deg;]; \e lon
+         * should be in the range [&minus;540&deg;, 540&deg;).
+         **********************************************************************/
+        void Forward(double lat, double lon, double h,
+            [System::Runtime::InteropServices::Out] double% X,
+            [System::Runtime::InteropServices::Out] double% Y,
+            [System::Runtime::InteropServices::Out] double% Z);
 
-		/**
-		 * Convert from geodetic to geocentric coordinates and return rotation
-		 * matrix.
-		 *
-		 * @param[in] lat latitude of point (degrees).
-		 * @param[in] lon longitude of point (degrees).
-		 * @param[in] h height of point above the ellipsoid (meters).
-		 * @param[out] X geocentric coordinate (meters).
-		 * @param[out] Y geocentric coordinate (meters).
-		 * @param[out] Z geocentric coordinate (meters).
-		 * @param[out] M a 3x3 rotation matrix.
-		 *
-		 * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can
-		 * express \e v as \e column vectors in one of two ways
-		 * - in east, north, up coordinates (where the components are relative to a
-		 *   local coordinate system at (\e lat, \e lon, \e h)); call this
-		 *   representation \e v1.
-		 * - in geocentric \e X, \e Y, \e Z coordinates; call this representation
-		 *   \e v0.
-		 * .
-		 * Then we have \e v0 = \e M &sdot; \e v1.
-		 **********************************************************************/
-		void Forward(double lat, double lon, double h, 
-			[System::Runtime::InteropServices::Out] double% X, 
-			[System::Runtime::InteropServices::Out] double% Y, 
-			[System::Runtime::InteropServices::Out] double% Z,
-			[System::Runtime::InteropServices::Out] array<double,2>^% M);
+        /**
+         * Convert from geodetic to geocentric coordinates and return rotation
+         * matrix.
+         *
+         * @param[in] lat latitude of point (degrees).
+         * @param[in] lon longitude of point (degrees).
+         * @param[in] h height of point above the ellipsoid (meters).
+         * @param[out] X geocentric coordinate (meters).
+         * @param[out] Y geocentric coordinate (meters).
+         * @param[out] Z geocentric coordinate (meters).
+         * @param[out] M a 3x3 rotation matrix.
+         *
+         * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can
+         * express \e v as \e column vectors in one of two ways
+         * - in east, north, up coordinates (where the components are relative to a
+         *   local coordinate system at (\e lat, \e lon, \e h)); call this
+         *   representation \e v1.
+         * - in geocentric \e X, \e Y, \e Z coordinates; call this representation
+         *   \e v0.
+         * .
+         * Then we have \e v0 = \e M &sdot; \e v1.
+         **********************************************************************/
+        void Forward(double lat, double lon, double h,
+            [System::Runtime::InteropServices::Out] double% X,
+            [System::Runtime::InteropServices::Out] double% Y,
+            [System::Runtime::InteropServices::Out] double% Z,
+            [System::Runtime::InteropServices::Out] array<double,2>^% M);
 
-		/**
-		 * Convert from geocentric to geodetic to coordinates.
-		 *
-		 * @param[in] X geocentric coordinate (meters).
-		 * @param[in] Y geocentric coordinate (meters).
-		 * @param[in] Z geocentric coordinate (meters).
-		 * @param[out] lat latitude of point (degrees).
-		 * @param[out] lon longitude of point (degrees).
-		 * @param[out] h height of point above the ellipsoid (meters).
-		 *
-		 * In general there are multiple solutions and the result which maximizes
-		 * \e h is returned.  If there are still multiple solutions with different
-		 * latitudes (applies only if \e Z = 0), then the solution with \e lat > 0
-		 * is returned.  If there are still multiple solutions with different
-		 * longitudes (applies only if \e X = \e Y = 0) then \e lon = 0 is
-		 * returned.  The value of \e h returned satisfies \e h &ge; &minus; \e a
-		 * (1 &minus; <i>e</i><sup>2</sup>) / sqrt(1 &minus; <i>e</i><sup>2</sup>
-		 * sin<sup>2</sup>\e lat).  The value of \e lon returned is in the range
-		 * [&minus;180&deg;, 180&deg;).
-		 **********************************************************************/
-		void Reverse(double X, double Y, double Z, 
-			[System::Runtime::InteropServices::Out] double% lat, 
-			[System::Runtime::InteropServices::Out] double% lon, 
-			[System::Runtime::InteropServices::Out] double% h);
+        /**
+         * Convert from geocentric to geodetic to coordinates.
+         *
+         * @param[in] X geocentric coordinate (meters).
+         * @param[in] Y geocentric coordinate (meters).
+         * @param[in] Z geocentric coordinate (meters).
+         * @param[out] lat latitude of point (degrees).
+         * @param[out] lon longitude of point (degrees).
+         * @param[out] h height of point above the ellipsoid (meters).
+         *
+         * In general there are multiple solutions and the result which maximizes
+         * \e h is returned.  If there are still multiple solutions with different
+         * latitudes (applies only if \e Z = 0), then the solution with \e lat > 0
+         * is returned.  If there are still multiple solutions with different
+         * longitudes (applies only if \e X = \e Y = 0) then \e lon = 0 is
+         * returned.  The value of \e h returned satisfies \e h &ge; &minus; \e a
+         * (1 &minus; <i>e</i><sup>2</sup>) / sqrt(1 &minus; <i>e</i><sup>2</sup>
+         * sin<sup>2</sup>\e lat).  The value of \e lon returned is in the range
+         * [&minus;180&deg;, 180&deg;).
+         **********************************************************************/
+        void Reverse(double X, double Y, double Z,
+            [System::Runtime::InteropServices::Out] double% lat,
+            [System::Runtime::InteropServices::Out] double% lon,
+            [System::Runtime::InteropServices::Out] double% h);
 
-		/**
-		 * Convert from geocentric to geodetic to coordinates.
-		 *
-		 * @param[in] X geocentric coordinate (meters).
-		 * @param[in] Y geocentric coordinate (meters).
-		 * @param[in] Z geocentric coordinate (meters).
-		 * @param[out] lat latitude of point (degrees).
-		 * @param[out] lon longitude of point (degrees).
-		 * @param[out] h height of point above the ellipsoid (meters).
-		 * @param[out] M a 3x3 rotation matrix.
-		 *
-		 * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can
-		 * express \e v as \e column vectors in one of two ways
-		 * - in east, north, up coordinates (where the components are relative to a
-		 *   local coordinate system at (\e lat, \e lon, \e h)); call this
-		 *   representation \e v1.
-		 * - in geocentric \e X, \e Y, \e Z coordinates; call this representation
-		 *   \e v0.
-		 * .
-		 * Then we have \e v1 = \e M<sup>T</sup> &sdot; \e v0, where \e
-		 * M<sup>T</sup> is the transpose of \e M.
-		 **********************************************************************/
-		void Reverse(double X, double Y, double Z, 
-			[System::Runtime::InteropServices::Out] double% lat, 
-			[System::Runtime::InteropServices::Out] double% lon, 
-			[System::Runtime::InteropServices::Out] double% h,
-			[System::Runtime::InteropServices::Out] array<double,2>^% M);
+        /**
+         * Convert from geocentric to geodetic to coordinates.
+         *
+         * @param[in] X geocentric coordinate (meters).
+         * @param[in] Y geocentric coordinate (meters).
+         * @param[in] Z geocentric coordinate (meters).
+         * @param[out] lat latitude of point (degrees).
+         * @param[out] lon longitude of point (degrees).
+         * @param[out] h height of point above the ellipsoid (meters).
+         * @param[out] M a 3x3 rotation matrix.
+         *
+         * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can
+         * express \e v as \e column vectors in one of two ways
+         * - in east, north, up coordinates (where the components are relative to a
+         *   local coordinate system at (\e lat, \e lon, \e h)); call this
+         *   representation \e v1.
+         * - in geocentric \e X, \e Y, \e Z coordinates; call this representation
+         *   \e v0.
+         * .
+         * Then we have \e v1 = \e M<sup>T</sup> &sdot; \e v0, where \e
+         * M<sup>T</sup> is the transpose of \e M.
+         **********************************************************************/
+        void Reverse(double X, double Y, double Z,
+            [System::Runtime::InteropServices::Out] double% lat,
+            [System::Runtime::InteropServices::Out] double% lon,
+            [System::Runtime::InteropServices::Out] double% h,
+            [System::Runtime::InteropServices::Out] array<double,2>^% M);
 
-		/** \name Inspector functions
-		 **********************************************************************/
-		///@{
-		/**
-		 * @return a pointer to the unmanaged GeographicLib::Geocentric.
-		 **********************************************************************/
-		System::IntPtr^ GetUnmanaged();
+        /** \name Inspector functions
+         **********************************************************************/
+        ///@{
+        /**
+         * @return a pointer to the unmanaged GeographicLib::Geocentric.
+         **********************************************************************/
+        System::IntPtr^ GetUnmanaged();
 
-		/**
-		 * @return \e a the equatorial radius of the ellipsoid (meters).  This is
-		 *   the value used in the constructor.
-		 **********************************************************************/
-		property double MajorRadius { double get(); }
+        /**
+         * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+         *   the value used in the constructor.
+         **********************************************************************/
+        property double MajorRadius { double get(); }
 
-		/**
-		 * @return \e f the  flattening of the ellipsoid.  This is the
-		 *   value used in the constructor.
-		 **********************************************************************/
-		property double Flattening { double get(); }
-		///@}
-	};
+        /**
+         * @return \e f the  flattening of the ellipsoid.  This is the
+         *   value used in the constructor.
+         **********************************************************************/
+        property double Flattening { double get(); }
+        ///@}
+    };
 } // namespace NETGeographicLib

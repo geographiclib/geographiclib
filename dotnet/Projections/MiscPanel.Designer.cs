@@ -2,12 +2,12 @@ namespace Projections
 {
     partial class MiscPanel
     {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -22,8 +22,8 @@ namespace Projections
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
@@ -45,89 +45,89 @@ namespace Projections
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
+            //
             // label1
-            // 
+            //
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 33);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(54, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Longitude";
-            // 
+            //
             // label2
-            // 
+            //
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(120, 4);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(31, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "DMS";
-            // 
+            //
             // label3
-            // 
+            //
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(229, 4);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(88, 13);
             this.label3.TabIndex = 2;
             this.label3.Text = "Decimal Degrees";
-            // 
+            //
             // m_longitudeDMSTextBox
-            // 
+            //
             this.m_longitudeDMSTextBox.Location = new System.Drawing.Point(86, 29);
             this.m_longitudeDMSTextBox.Name = "m_longitudeDMSTextBox";
             this.m_longitudeDMSTextBox.Size = new System.Drawing.Size(100, 20);
             this.m_longitudeDMSTextBox.TabIndex = 3;
-            // 
+            //
             // label4
-            // 
+            //
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(13, 63);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(45, 13);
             this.label4.TabIndex = 4;
             this.label4.Text = "Latitude";
-            // 
+            //
             // m_latitudeDMSTextBox
-            // 
+            //
             this.m_latitudeDMSTextBox.Location = new System.Drawing.Point(86, 56);
             this.m_latitudeDMSTextBox.Name = "m_latitudeDMSTextBox";
             this.m_latitudeDMSTextBox.Size = new System.Drawing.Size(100, 20);
             this.m_latitudeDMSTextBox.TabIndex = 5;
-            // 
+            //
             // m_LongitudeTextBox
-            // 
+            //
             this.m_LongitudeTextBox.Location = new System.Drawing.Point(203, 29);
             this.m_LongitudeTextBox.Name = "m_LongitudeTextBox";
             this.m_LongitudeTextBox.Size = new System.Drawing.Size(137, 20);
             this.m_LongitudeTextBox.TabIndex = 6;
-            // 
+            //
             // m_latitudeTextBox
-            // 
+            //
             this.m_latitudeTextBox.Location = new System.Drawing.Point(203, 55);
             this.m_latitudeTextBox.Name = "m_latitudeTextBox";
             this.m_latitudeTextBox.Size = new System.Drawing.Size(137, 20);
             this.m_latitudeTextBox.TabIndex = 7;
-            // 
+            //
             // m_geohashTextBox
-            // 
+            //
             this.m_geohashTextBox.Location = new System.Drawing.Point(360, 43);
             this.m_geohashTextBox.Name = "m_geohashTextBox";
             this.m_geohashTextBox.Size = new System.Drawing.Size(155, 20);
             this.m_geohashTextBox.TabIndex = 8;
-            // 
+            //
             // label5
-            // 
+            //
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(409, 4);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(50, 13);
             this.label5.TabIndex = 9;
             this.label5.Text = "Geohash";
-            // 
+            //
             // button1
-            // 
+            //
             this.button1.Location = new System.Drawing.Point(96, 83);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
@@ -135,9 +135,9 @@ namespace Projections
             this.button1.Text = "Convert ->";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.OnConvertDMS);
-            // 
+            //
             // button2
-            // 
+            //
             this.button2.Location = new System.Drawing.Point(229, 83);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(85, 23);
@@ -145,9 +145,9 @@ namespace Projections
             this.button2.Text = "<- Convert ->";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.OnConvert);
-            // 
+            //
             // button3
-            // 
+            //
             this.button3.Location = new System.Drawing.Point(400, 83);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
@@ -155,9 +155,9 @@ namespace Projections
             this.button3.Text = "<- Convert";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.OnConvertGeohash);
-            // 
+            //
             // button4
-            // 
+            //
             this.button4.Location = new System.Drawing.Point(541, 4);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
@@ -165,9 +165,9 @@ namespace Projections
             this.button4.Text = "Validate";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.OnValidate);
-            // 
+            //
             // MiscPanel
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.button4);

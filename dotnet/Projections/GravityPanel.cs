@@ -5,10 +5,10 @@
  * NETGeographicLib.GravityModel,
  * NETGeographicLib.NormalGravity, and
  * NETGeographicLib.GravityCircle example.
- * 
+ *
  * NETGeographicLib is copyright (c) Scott Heiman (2013)
- * GeographicLib is Copyright (c) Charles Karney (2010-2012) 
- * <charles@karney.com> and licensed under the MIT/X11 License.  
+ * GeographicLib is Copyright (c) Charles Karney (2010-2012)
+ * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/

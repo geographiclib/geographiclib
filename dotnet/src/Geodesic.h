@@ -3,8 +3,8 @@
  * \brief Header for NETGeographicLib::Geodesic class
  *
  * NETGeographicLib is copyright (c) Scott Heiman (2013)
- * GeographicLib is Copyright (c) Charles Karney (2010-2012) 
- * <charles@karney.com> and licensed under the MIT/X11 License.  
+ * GeographicLib is Copyright (c) Charles Karney (2010-2012)
+ * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -13,7 +13,7 @@
 
 namespace NETGeographicLib
 {
-	ref class GeodesicLine;
+    ref class GeodesicLine;
   /**
    * \brief .NET wrapper for GeographicLib::Geodesic.
    *
@@ -150,529 +150,529 @@ namespace NETGeographicLib
    * INTERFACE DIFFERENCES:
    * A drfault constructor has been provided that assumes WGS84 parameters.
    *
-   * The MajorRadius, Flattening, and EllipsoidArea functions are 
+   * The MajorRadius, Flattening, and EllipsoidArea functions are
    * implemented as properties.
    *
-   * The GenDirect, GenInverse, and Line functions accept the 
-   * "capabilities mask" as a NETGeographicLib::Mask rather than an 
+   * The GenDirect, GenInverse, and Line functions accept the
+   * "capabilities mask" as a NETGeographicLib::Mask rather than an
    * unsigned.
    **********************************************************************/
-	public ref class Geodesic
-	{
-		// The pointer to the unmanaged GeographicLib::Geodesic.
-		const GeographicLib::Geodesic* m_pGeodesic;
+    public ref class Geodesic
+    {
+        // The pointer to the unmanaged GeographicLib::Geodesic.
+        const GeographicLib::Geodesic* m_pGeodesic;
 
-		// Frees the unmeneged memory when this object is destroyed.
-		!Geodesic();
-	public:
-		/** \name Constructor
-		 **********************************************************************/
-		///@{
-		/**
-		 * Constructor for a ellipsoid with
-		 *
-		 * @param[in] a equatorial radius (meters).
-		 * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-		 *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-		 *   to 1/\e f.
-		 * @exception GeographicErr if \e a or (1 &minus; \e f ) \e a is not
-		 *   positive.
-		 **********************************************************************/
-		Geodesic(double a, double f);
+        // Frees the unmeneged memory when this object is destroyed.
+        !Geodesic();
+    public:
+        /** \name Constructor
+         **********************************************************************/
+        ///@{
+        /**
+         * Constructor for a ellipsoid with
+         *
+         * @param[in] a equatorial radius (meters).
+         * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
+         *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+         *   to 1/\e f.
+         * @exception GeographicErr if \e a or (1 &minus; \e f ) \e a is not
+         *   positive.
+         **********************************************************************/
+        Geodesic(double a, double f);
 
-		/**
-		 * Constructor for the WGS84 ellipsoid.
-		 **********************************************************************/
-		Geodesic();
-		///@}
+        /**
+         * Constructor for the WGS84 ellipsoid.
+         **********************************************************************/
+        Geodesic();
+        ///@}
 
-		/**
-		 * \brief the destructor calls !Geodesic
-		 **********************************************************************/
-		~Geodesic() { this->!Geodesic(); }
+        /**
+         * \brief the destructor calls !Geodesic
+         **********************************************************************/
+        ~Geodesic() { this->!Geodesic(); }
 
-		/** \name Direct geodesic problem specified in terms of distance.
-		 **********************************************************************/
-		///@{
-		/**
-		 * Solve the direct geodesic problem where the length of the geodesic
-		 * is specified in terms of distance.
-		 *
-		 * @param[in] lat1 latitude of point 1 (degrees).
-		 * @param[in] lon1 longitude of point 1 (degrees).
-		 * @param[in] azi1 azimuth at point 1 (degrees).
-		 * @param[in] s12 distance between point 1 and point 2 (meters); it can be
-		 *   negative.
-		 * @param[out] lat2 latitude of point 2 (degrees).
-		 * @param[out] lon2 longitude of point 2 (degrees).
-		 * @param[out] azi2 (forward) azimuth at point 2 (degrees).
-		 * @param[out] m12 reduced length of geodesic (meters).
-		 * @param[out] M12 geodesic scale of point 2 relative to point 1
-		 *   (dimensionless).
-		 * @param[out] M21 geodesic scale of point 1 relative to point 2
-		 *   (dimensionless).
-		 * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
-		 * @return \e a12 arc length of between point 1 and point 2 (degrees).
-		 *
-		 * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-		 * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
-		 * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
-		 * 180&deg;).
-		 *
-		 * If either point is at a pole, the azimuth is defined by keeping the
-		 * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
-		 * and taking the limit &epsilon; &rarr; 0+.  An arc length greater that
-		 * 180&deg; signifies a geodesic which is not a shortest path.  (For a
-		 * prolate ellipsoid, an additional condition is necessary for a shortest
-		 * path: the longitudinal extent must not exceed of 180&deg;.)
-		 *
-		 * The following functions are overloaded versions of Geodesic::Direct
-		 * which omit some of the output parameters.  Note, however, that the arc
-		 * length is always computed and returned as the function value.
-		 **********************************************************************/
-		double Direct(double lat1, double lon1, double azi1, double s12,
-						  [System::Runtime::InteropServices::Out] double% lat2, 
-						  [System::Runtime::InteropServices::Out] double% lon2, 
-						  [System::Runtime::InteropServices::Out] double% azi2,
-						  [System::Runtime::InteropServices::Out] double% m12, 
-						  [System::Runtime::InteropServices::Out] double% M12, 
-						  [System::Runtime::InteropServices::Out] double% M21, 
-						  [System::Runtime::InteropServices::Out] double% S12);
+        /** \name Direct geodesic problem specified in terms of distance.
+         **********************************************************************/
+        ///@{
+        /**
+         * Solve the direct geodesic problem where the length of the geodesic
+         * is specified in terms of distance.
+         *
+         * @param[in] lat1 latitude of point 1 (degrees).
+         * @param[in] lon1 longitude of point 1 (degrees).
+         * @param[in] azi1 azimuth at point 1 (degrees).
+         * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+         *   negative.
+         * @param[out] lat2 latitude of point 2 (degrees).
+         * @param[out] lon2 longitude of point 2 (degrees).
+         * @param[out] azi2 (forward) azimuth at point 2 (degrees).
+         * @param[out] m12 reduced length of geodesic (meters).
+         * @param[out] M12 geodesic scale of point 2 relative to point 1
+         *   (dimensionless).
+         * @param[out] M21 geodesic scale of point 1 relative to point 2
+         *   (dimensionless).
+         * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
+         * @return \e a12 arc length of between point 1 and point 2 (degrees).
+         *
+         * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
+         * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
+         * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
+         * 180&deg;).
+         *
+         * If either point is at a pole, the azimuth is defined by keeping the
+         * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
+         * and taking the limit &epsilon; &rarr; 0+.  An arc length greater that
+         * 180&deg; signifies a geodesic which is not a shortest path.  (For a
+         * prolate ellipsoid, an additional condition is necessary for a shortest
+         * path: the longitudinal extent must not exceed of 180&deg;.)
+         *
+         * The following functions are overloaded versions of Geodesic::Direct
+         * which omit some of the output parameters.  Note, however, that the arc
+         * length is always computed and returned as the function value.
+         **********************************************************************/
+        double Direct(double lat1, double lon1, double azi1, double s12,
+                          [System::Runtime::InteropServices::Out] double% lat2,
+                          [System::Runtime::InteropServices::Out] double% lon2,
+                          [System::Runtime::InteropServices::Out] double% azi2,
+                          [System::Runtime::InteropServices::Out] double% m12,
+                          [System::Runtime::InteropServices::Out] double% M12,
+                          [System::Runtime::InteropServices::Out] double% M21,
+                          [System::Runtime::InteropServices::Out] double% S12);
 
-		/**
-		 * See the documentation for Geodesic::Direct.
-		 **********************************************************************/
-		double Direct(double lat1, double lon1, double azi1, double s12,
-						  [System::Runtime::InteropServices::Out] double% lat2, 
-						  [System::Runtime::InteropServices::Out] double% lon2);
+        /**
+         * See the documentation for Geodesic::Direct.
+         **********************************************************************/
+        double Direct(double lat1, double lon1, double azi1, double s12,
+                          [System::Runtime::InteropServices::Out] double% lat2,
+                          [System::Runtime::InteropServices::Out] double% lon2);
 
-		/**
-		 * See the documentation for Geodesic::Direct.
-		 **********************************************************************/
-		double Direct(double lat1, double lon1, double azi1, double s12,
-						  [System::Runtime::InteropServices::Out] double% lat2, 
-						  [System::Runtime::InteropServices::Out] double% lon2, 
-						  [System::Runtime::InteropServices::Out] double% azi2);
+        /**
+         * See the documentation for Geodesic::Direct.
+         **********************************************************************/
+        double Direct(double lat1, double lon1, double azi1, double s12,
+                          [System::Runtime::InteropServices::Out] double% lat2,
+                          [System::Runtime::InteropServices::Out] double% lon2,
+                          [System::Runtime::InteropServices::Out] double% azi2);
 
-		/**
-		 * See the documentation for Geodesic::Direct.
-		 **********************************************************************/
-		double Direct(double lat1, double lon1, double azi1, double s12,
-						  [System::Runtime::InteropServices::Out] double% lat2, 
-						  [System::Runtime::InteropServices::Out] double% lon2, 
-						  [System::Runtime::InteropServices::Out] double% azi2, 
-						  [System::Runtime::InteropServices::Out] double% m12);
+        /**
+         * See the documentation for Geodesic::Direct.
+         **********************************************************************/
+        double Direct(double lat1, double lon1, double azi1, double s12,
+                          [System::Runtime::InteropServices::Out] double% lat2,
+                          [System::Runtime::InteropServices::Out] double% lon2,
+                          [System::Runtime::InteropServices::Out] double% azi2,
+                          [System::Runtime::InteropServices::Out] double% m12);
 
-		/**
-		 * See the documentation for Geodesic::Direct.
-		 **********************************************************************/
-		double Direct(double lat1, double lon1, double azi1, double s12,
-						  [System::Runtime::InteropServices::Out] double% lat2, 
-						  [System::Runtime::InteropServices::Out] double% lon2, 
-						  [System::Runtime::InteropServices::Out] double% azi2,
-						  [System::Runtime::InteropServices::Out] double% M12, 
-						  [System::Runtime::InteropServices::Out] double% M21);
+        /**
+         * See the documentation for Geodesic::Direct.
+         **********************************************************************/
+        double Direct(double lat1, double lon1, double azi1, double s12,
+                          [System::Runtime::InteropServices::Out] double% lat2,
+                          [System::Runtime::InteropServices::Out] double% lon2,
+                          [System::Runtime::InteropServices::Out] double% azi2,
+                          [System::Runtime::InteropServices::Out] double% M12,
+                          [System::Runtime::InteropServices::Out] double% M21);
 
-		/**
-		 * See the documentation for Geodesic::Direct.
-		 **********************************************************************/
-		double Direct(double lat1, double lon1, double azi1, double s12,
-						  [System::Runtime::InteropServices::Out] double% lat2, 
-						  [System::Runtime::InteropServices::Out] double% lon2, 
-						  [System::Runtime::InteropServices::Out] double% azi2,
-						  [System::Runtime::InteropServices::Out] double% m12, 
-						  [System::Runtime::InteropServices::Out] double% M12, 
-						  [System::Runtime::InteropServices::Out] double% M21);
-		///@}
+        /**
+         * See the documentation for Geodesic::Direct.
+         **********************************************************************/
+        double Direct(double lat1, double lon1, double azi1, double s12,
+                          [System::Runtime::InteropServices::Out] double% lat2,
+                          [System::Runtime::InteropServices::Out] double% lon2,
+                          [System::Runtime::InteropServices::Out] double% azi2,
+                          [System::Runtime::InteropServices::Out] double% m12,
+                          [System::Runtime::InteropServices::Out] double% M12,
+                          [System::Runtime::InteropServices::Out] double% M21);
+        ///@}
 
-		/** \name Direct geodesic problem specified in terms of arc length.
-		 **********************************************************************/
-		///@{
-		/**
-		 * Solve the direct geodesic problem where the length of the geodesic
-		 * is specified in terms of arc length.
-		 *
-		 * @param[in] lat1 latitude of point 1 (degrees).
-		 * @param[in] lon1 longitude of point 1 (degrees).
-		 * @param[in] azi1 azimuth at point 1 (degrees).
-		 * @param[in] a12 arc length between point 1 and point 2 (degrees); it can
-		 *   be negative.
-		 * @param[out] lat2 latitude of point 2 (degrees).
-		 * @param[out] lon2 longitude of point 2 (degrees).
-		 * @param[out] azi2 (forward) azimuth at point 2 (degrees).
-		 * @param[out] s12 distance between point 1 and point 2 (meters).
-		 * @param[out] m12 reduced length of geodesic (meters).
-		 * @param[out] M12 geodesic scale of point 2 relative to point 1
-		 *   (dimensionless).
-		 * @param[out] M21 geodesic scale of point 1 relative to point 2
-		 *   (dimensionless).
-		 * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
-		 *
-		 * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-		 * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
-		 * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
-		 * 180&deg;).
-		 *
-		 * If either point is at a pole, the azimuth is defined by keeping the
-		 * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
-		 * and taking the limit &epsilon; &rarr; 0+.  An arc length greater that
-		 * 180&deg; signifies a geodesic which is not a shortest path.  (For a
-		 * prolate ellipsoid, an additional condition is necessary for a shortest
-		 * path: the longitudinal extent must not exceed of 180&deg;.)
-		 *
-		 * The following functions are overloaded versions of Geodesic::Direct
-		 * which omit some of the output parameters.
-		 **********************************************************************/
-		void ArcDirect(double lat1, double lon1, double azi1, double a12,
-					   [System::Runtime::InteropServices::Out] double% lat2, 
-					   [System::Runtime::InteropServices::Out] double% lon2, 
-					   [System::Runtime::InteropServices::Out] double% azi2, 
-					   [System::Runtime::InteropServices::Out] double% s12,
-					   [System::Runtime::InteropServices::Out] double% m12, 
-					   [System::Runtime::InteropServices::Out] double% M12, 
-					   [System::Runtime::InteropServices::Out] double% M21, 
-					   [System::Runtime::InteropServices::Out] double% S12);
+        /** \name Direct geodesic problem specified in terms of arc length.
+         **********************************************************************/
+        ///@{
+        /**
+         * Solve the direct geodesic problem where the length of the geodesic
+         * is specified in terms of arc length.
+         *
+         * @param[in] lat1 latitude of point 1 (degrees).
+         * @param[in] lon1 longitude of point 1 (degrees).
+         * @param[in] azi1 azimuth at point 1 (degrees).
+         * @param[in] a12 arc length between point 1 and point 2 (degrees); it can
+         *   be negative.
+         * @param[out] lat2 latitude of point 2 (degrees).
+         * @param[out] lon2 longitude of point 2 (degrees).
+         * @param[out] azi2 (forward) azimuth at point 2 (degrees).
+         * @param[out] s12 distance between point 1 and point 2 (meters).
+         * @param[out] m12 reduced length of geodesic (meters).
+         * @param[out] M12 geodesic scale of point 2 relative to point 1
+         *   (dimensionless).
+         * @param[out] M21 geodesic scale of point 1 relative to point 2
+         *   (dimensionless).
+         * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
+         *
+         * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
+         * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
+         * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
+         * 180&deg;).
+         *
+         * If either point is at a pole, the azimuth is defined by keeping the
+         * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
+         * and taking the limit &epsilon; &rarr; 0+.  An arc length greater that
+         * 180&deg; signifies a geodesic which is not a shortest path.  (For a
+         * prolate ellipsoid, an additional condition is necessary for a shortest
+         * path: the longitudinal extent must not exceed of 180&deg;.)
+         *
+         * The following functions are overloaded versions of Geodesic::Direct
+         * which omit some of the output parameters.
+         **********************************************************************/
+        void ArcDirect(double lat1, double lon1, double azi1, double a12,
+                       [System::Runtime::InteropServices::Out] double% lat2,
+                       [System::Runtime::InteropServices::Out] double% lon2,
+                       [System::Runtime::InteropServices::Out] double% azi2,
+                       [System::Runtime::InteropServices::Out] double% s12,
+                       [System::Runtime::InteropServices::Out] double% m12,
+                       [System::Runtime::InteropServices::Out] double% M12,
+                       [System::Runtime::InteropServices::Out] double% M21,
+                       [System::Runtime::InteropServices::Out] double% S12);
 
-		/**
-		 * See the documentation for Geodesic::ArcDirect.
-		 **********************************************************************/
-		void ArcDirect(double lat1, double lon1, double azi1, double a12,
-					   [System::Runtime::InteropServices::Out] double% lat2, 
-					   [System::Runtime::InteropServices::Out] double% lon2);
+        /**
+         * See the documentation for Geodesic::ArcDirect.
+         **********************************************************************/
+        void ArcDirect(double lat1, double lon1, double azi1, double a12,
+                       [System::Runtime::InteropServices::Out] double% lat2,
+                       [System::Runtime::InteropServices::Out] double% lon2);
 
-		/**
-		 * See the documentation for Geodesic::ArcDirect.
-		 **********************************************************************/
-		void ArcDirect(double lat1, double lon1, double azi1, double a12,
-					   [System::Runtime::InteropServices::Out] double% lat2, 
-					   [System::Runtime::InteropServices::Out] double% lon2, 
-					   [System::Runtime::InteropServices::Out] double% azi2);
+        /**
+         * See the documentation for Geodesic::ArcDirect.
+         **********************************************************************/
+        void ArcDirect(double lat1, double lon1, double azi1, double a12,
+                       [System::Runtime::InteropServices::Out] double% lat2,
+                       [System::Runtime::InteropServices::Out] double% lon2,
+                       [System::Runtime::InteropServices::Out] double% azi2);
 
-		/**
-		 * See the documentation for Geodesic::ArcDirect.
-		 **********************************************************************/
-		void ArcDirect(double lat1, double lon1, double azi1, double a12,
-					   [System::Runtime::InteropServices::Out] double% lat2, 
-					   [System::Runtime::InteropServices::Out] double% lon2, 
-					   [System::Runtime::InteropServices::Out] double% azi2, 
-					   [System::Runtime::InteropServices::Out] double% s12);
+        /**
+         * See the documentation for Geodesic::ArcDirect.
+         **********************************************************************/
+        void ArcDirect(double lat1, double lon1, double azi1, double a12,
+                       [System::Runtime::InteropServices::Out] double% lat2,
+                       [System::Runtime::InteropServices::Out] double% lon2,
+                       [System::Runtime::InteropServices::Out] double% azi2,
+                       [System::Runtime::InteropServices::Out] double% s12);
 
-		/**
-		 * See the documentation for Geodesic::ArcDirect.
-		 **********************************************************************/
-		void ArcDirect(double lat1, double lon1, double azi1, double a12,
-					   [System::Runtime::InteropServices::Out] double% lat2, 
-					   [System::Runtime::InteropServices::Out] double% lon2, 
-					   [System::Runtime::InteropServices::Out] double% azi2,
-					   [System::Runtime::InteropServices::Out] double% s12, 
-					   [System::Runtime::InteropServices::Out] double% m12);
+        /**
+         * See the documentation for Geodesic::ArcDirect.
+         **********************************************************************/
+        void ArcDirect(double lat1, double lon1, double azi1, double a12,
+                       [System::Runtime::InteropServices::Out] double% lat2,
+                       [System::Runtime::InteropServices::Out] double% lon2,
+                       [System::Runtime::InteropServices::Out] double% azi2,
+                       [System::Runtime::InteropServices::Out] double% s12,
+                       [System::Runtime::InteropServices::Out] double% m12);
 
-		/**
-		 * See the documentation for Geodesic::ArcDirect.
-		 **********************************************************************/
-		void ArcDirect(double lat1, double lon1, double azi1, double a12,
-					   [System::Runtime::InteropServices::Out] double% lat2, 
-					   [System::Runtime::InteropServices::Out] double% lon2, 
-					   [System::Runtime::InteropServices::Out] double% azi2, 
-					   [System::Runtime::InteropServices::Out] double% s12,
-					   [System::Runtime::InteropServices::Out] double% M12, 
-					   [System::Runtime::InteropServices::Out] double% M21);
+        /**
+         * See the documentation for Geodesic::ArcDirect.
+         **********************************************************************/
+        void ArcDirect(double lat1, double lon1, double azi1, double a12,
+                       [System::Runtime::InteropServices::Out] double% lat2,
+                       [System::Runtime::InteropServices::Out] double% lon2,
+                       [System::Runtime::InteropServices::Out] double% azi2,
+                       [System::Runtime::InteropServices::Out] double% s12,
+                       [System::Runtime::InteropServices::Out] double% M12,
+                       [System::Runtime::InteropServices::Out] double% M21);
 
-		/**
-		 * See the documentation for Geodesic::ArcDirect.
-		 **********************************************************************/
-		void ArcDirect(double lat1, double lon1, double azi1, double a12,
-					   [System::Runtime::InteropServices::Out] double% lat2, 
-					   [System::Runtime::InteropServices::Out] double% lon2, 
-					   [System::Runtime::InteropServices::Out] double% azi2, 
-					   [System::Runtime::InteropServices::Out] double% s12,
-					   [System::Runtime::InteropServices::Out] double% m12, 
-					   [System::Runtime::InteropServices::Out] double% M12, 
-					   [System::Runtime::InteropServices::Out] double% M21);
-		///@}
+        /**
+         * See the documentation for Geodesic::ArcDirect.
+         **********************************************************************/
+        void ArcDirect(double lat1, double lon1, double azi1, double a12,
+                       [System::Runtime::InteropServices::Out] double% lat2,
+                       [System::Runtime::InteropServices::Out] double% lon2,
+                       [System::Runtime::InteropServices::Out] double% azi2,
+                       [System::Runtime::InteropServices::Out] double% s12,
+                       [System::Runtime::InteropServices::Out] double% m12,
+                       [System::Runtime::InteropServices::Out] double% M12,
+                       [System::Runtime::InteropServices::Out] double% M21);
+        ///@}
 
-		/** \name General version of the direct geodesic solution.
-		 **********************************************************************/
-		///@{
+        /** \name General version of the direct geodesic solution.
+         **********************************************************************/
+        ///@{
 
-		/**
-		 * The general direct geodesic problem.  Geodesic::Direct and
-		 * Geodesic::ArcDirect are defined in terms of this function.
-		 *
-		 * @param[in] lat1 latitude of point 1 (degrees).
-		 * @param[in] lon1 longitude of point 1 (degrees).
-		 * @param[in] azi1 azimuth at point 1 (degrees).
-		 * @param[in] arcmode boolean flag determining the meaning of the \e
-		 *   s12_a12.
-		 * @param[in] s12_a12 if \e arcmode is false, this is the distance between
-		 *   point 1 and point 2 (meters); otherwise it is the arc length between
-		 *   point 1 and point 2 (degrees); it can be negative.
-		 * @param[in] outmask a bitor'ed combination of NETGeographicLib::Mask values
-		 *   specifying which of the following parameters should be set.
-		 * @param[out] lat2 latitude of point 2 (degrees).
-		 * @param[out] lon2 longitude of point 2 (degrees).
-		 * @param[out] azi2 (forward) azimuth at point 2 (degrees).
-		 * @param[out] s12 distance between point 1 and point 2 (meters).
-		 * @param[out] m12 reduced length of geodesic (meters).
-		 * @param[out] M12 geodesic scale of point 2 relative to point 1
-		 *   (dimensionless).
-		 * @param[out] M21 geodesic scale of point 1 relative to point 2
-		 *   (dimensionless).
-		 * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
-		 * @return \e a12 arc length of between point 1 and point 2 (degrees).
-		 *
-		 * The NETGeographicLib::Mask values possible for \e outmask are
-		 * - \e outmask |= NETGeographicLib::Mask::LATITUDE for the latitude \e lat2;
-		 * - \e outmask |= NETGeographicLib::Mask::LONGITUDE for the latitude \e lon2;
-		 * - \e outmask |= NETGeographicLib::Mask::AZIMUTH for the latitude \e azi2;
-		 * - \e outmask |= NETGeographicLib::Mask::DISTANCE for the distance \e s12;
-		 * - \e outmask |= NETGeographicLib::Mask::REDUCEDLENGTH for the reduced length \e
-		 *   m12;
-		 * - \e outmask |= NETGeographicLib::Mask::GEODESICSCALE for the geodesic scales \e
-		 *   M12 and \e M21;
-		 * - \e outmask |= NETGeographicLib::Mask::AREA for the area \e S12;
-		 * - \e outmask |= NETGeographicLib::Mask::ALL for all of the above.
-		 * .
-		 * The function value \e a12 is always computed and returned and this
-		 * equals \e s12_a12 is \e arcmode is true.  If \e outmask includes
-		 * NETGeographicLib::Mask::DISTANCE and \e arcmode is false, then 
-		 * \e s12 = \e s12_a12.  It is not necessary to include 
-		 * NETGeographicLib::Mask::DISTANCE_IN in \e outmask; this is 
-		 * automatically included is \e arcmode is false.
-		 **********************************************************************/
-		double GenDirect(double lat1, double lon1, double azi1,
-						bool arcmode, double s12_a12, 
-						NETGeographicLib::Mask outmask,
-						[System::Runtime::InteropServices::Out] double% lat2, 
-						[System::Runtime::InteropServices::Out] double% lon2, 
-						[System::Runtime::InteropServices::Out] double% azi2,
-						[System::Runtime::InteropServices::Out] double% s12, 
-						[System::Runtime::InteropServices::Out] double% m12, 
-						[System::Runtime::InteropServices::Out] double% M12, 
-						[System::Runtime::InteropServices::Out] double% M21,
-						[System::Runtime::InteropServices::Out] double% S12);
-		///@}
+        /**
+         * The general direct geodesic problem.  Geodesic::Direct and
+         * Geodesic::ArcDirect are defined in terms of this function.
+         *
+         * @param[in] lat1 latitude of point 1 (degrees).
+         * @param[in] lon1 longitude of point 1 (degrees).
+         * @param[in] azi1 azimuth at point 1 (degrees).
+         * @param[in] arcmode boolean flag determining the meaning of the \e
+         *   s12_a12.
+         * @param[in] s12_a12 if \e arcmode is false, this is the distance between
+         *   point 1 and point 2 (meters); otherwise it is the arc length between
+         *   point 1 and point 2 (degrees); it can be negative.
+         * @param[in] outmask a bitor'ed combination of NETGeographicLib::Mask values
+         *   specifying which of the following parameters should be set.
+         * @param[out] lat2 latitude of point 2 (degrees).
+         * @param[out] lon2 longitude of point 2 (degrees).
+         * @param[out] azi2 (forward) azimuth at point 2 (degrees).
+         * @param[out] s12 distance between point 1 and point 2 (meters).
+         * @param[out] m12 reduced length of geodesic (meters).
+         * @param[out] M12 geodesic scale of point 2 relative to point 1
+         *   (dimensionless).
+         * @param[out] M21 geodesic scale of point 1 relative to point 2
+         *   (dimensionless).
+         * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
+         * @return \e a12 arc length of between point 1 and point 2 (degrees).
+         *
+         * The NETGeographicLib::Mask values possible for \e outmask are
+         * - \e outmask |= NETGeographicLib::Mask::LATITUDE for the latitude \e lat2;
+         * - \e outmask |= NETGeographicLib::Mask::LONGITUDE for the latitude \e lon2;
+         * - \e outmask |= NETGeographicLib::Mask::AZIMUTH for the latitude \e azi2;
+         * - \e outmask |= NETGeographicLib::Mask::DISTANCE for the distance \e s12;
+         * - \e outmask |= NETGeographicLib::Mask::REDUCEDLENGTH for the reduced length \e
+         *   m12;
+         * - \e outmask |= NETGeographicLib::Mask::GEODESICSCALE for the geodesic scales \e
+         *   M12 and \e M21;
+         * - \e outmask |= NETGeographicLib::Mask::AREA for the area \e S12;
+         * - \e outmask |= NETGeographicLib::Mask::ALL for all of the above.
+         * .
+         * The function value \e a12 is always computed and returned and this
+         * equals \e s12_a12 is \e arcmode is true.  If \e outmask includes
+         * NETGeographicLib::Mask::DISTANCE and \e arcmode is false, then
+         * \e s12 = \e s12_a12.  It is not necessary to include
+         * NETGeographicLib::Mask::DISTANCE_IN in \e outmask; this is
+         * automatically included is \e arcmode is false.
+         **********************************************************************/
+        double GenDirect(double lat1, double lon1, double azi1,
+                        bool arcmode, double s12_a12,
+                        NETGeographicLib::Mask outmask,
+                        [System::Runtime::InteropServices::Out] double% lat2,
+                        [System::Runtime::InteropServices::Out] double% lon2,
+                        [System::Runtime::InteropServices::Out] double% azi2,
+                        [System::Runtime::InteropServices::Out] double% s12,
+                        [System::Runtime::InteropServices::Out] double% m12,
+                        [System::Runtime::InteropServices::Out] double% M12,
+                        [System::Runtime::InteropServices::Out] double% M21,
+                        [System::Runtime::InteropServices::Out] double% S12);
+        ///@}
 
-		/** \name Inverse geodesic problem.
-		 **********************************************************************/
-		///@{
-		/**
-		 * Solve the inverse geodesic problem.
-		 *
-		 * @param[in] lat1 latitude of point 1 (degrees).
-		 * @param[in] lon1 longitude of point 1 (degrees).
-		 * @param[in] lat2 latitude of point 2 (degrees).
-		 * @param[in] lon2 longitude of point 2 (degrees).
-		 * @param[out] s12 distance between point 1 and point 2 (meters).
-		 * @param[out] azi1 azimuth at point 1 (degrees).
-		 * @param[out] azi2 (forward) azimuth at point 2 (degrees).
-		 * @param[out] m12 reduced length of geodesic (meters).
-		 * @param[out] M12 geodesic scale of point 2 relative to point 1
-		 *   (dimensionless).
-		 * @param[out] M21 geodesic scale of point 1 relative to point 2
-		 *   (dimensionless).
-		 * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
-		 * @return \e a12 arc length of between point 1 and point 2 (degrees).
-		 *
-		 * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;]; \e
-		 * lon1 and \e lon2 should be in the range [&minus;540&deg;, 540&deg;).
-		 * The values of \e azi1 and \e azi2 returned are in the range
-		 * [&minus;180&deg;, 180&deg;).
-		 *
-		 * If either point is at a pole, the azimuth is defined by keeping the
-		 * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
-		 * and taking the limit &epsilon; &rarr; 0+.
-		 *
-		 * The solution to the inverse problem is found using Newton's method.  If
-		 * this fails to converge (this is very unlikely in geodetic applications
-		 * but does occur for very eccentric ellipsoids), then the bisection method
-		 * is used to refine the solution.
-		 *
-		 * The following functions are overloaded versions of Geodesic::Inverse
-		 * which omit some of the output parameters.  Note, however, that the arc
-		 * length is always computed and returned as the function value.
-		 **********************************************************************/
-		double Inverse(double lat1, double lon1, double lat2, double lon2,
-						   [System::Runtime::InteropServices::Out] double% s12, 
-						   [System::Runtime::InteropServices::Out] double% azi1, 
-						   [System::Runtime::InteropServices::Out] double% azi2, 
-						   [System::Runtime::InteropServices::Out] double% m12,
-						   [System::Runtime::InteropServices::Out] double% M12, 
-						   [System::Runtime::InteropServices::Out] double% M21, 
-						   [System::Runtime::InteropServices::Out] double% S12);
+        /** \name Inverse geodesic problem.
+         **********************************************************************/
+        ///@{
+        /**
+         * Solve the inverse geodesic problem.
+         *
+         * @param[in] lat1 latitude of point 1 (degrees).
+         * @param[in] lon1 longitude of point 1 (degrees).
+         * @param[in] lat2 latitude of point 2 (degrees).
+         * @param[in] lon2 longitude of point 2 (degrees).
+         * @param[out] s12 distance between point 1 and point 2 (meters).
+         * @param[out] azi1 azimuth at point 1 (degrees).
+         * @param[out] azi2 (forward) azimuth at point 2 (degrees).
+         * @param[out] m12 reduced length of geodesic (meters).
+         * @param[out] M12 geodesic scale of point 2 relative to point 1
+         *   (dimensionless).
+         * @param[out] M21 geodesic scale of point 1 relative to point 2
+         *   (dimensionless).
+         * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
+         * @return \e a12 arc length of between point 1 and point 2 (degrees).
+         *
+         * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;]; \e
+         * lon1 and \e lon2 should be in the range [&minus;540&deg;, 540&deg;).
+         * The values of \e azi1 and \e azi2 returned are in the range
+         * [&minus;180&deg;, 180&deg;).
+         *
+         * If either point is at a pole, the azimuth is defined by keeping the
+         * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
+         * and taking the limit &epsilon; &rarr; 0+.
+         *
+         * The solution to the inverse problem is found using Newton's method.  If
+         * this fails to converge (this is very unlikely in geodetic applications
+         * but does occur for very eccentric ellipsoids), then the bisection method
+         * is used to refine the solution.
+         *
+         * The following functions are overloaded versions of Geodesic::Inverse
+         * which omit some of the output parameters.  Note, however, that the arc
+         * length is always computed and returned as the function value.
+         **********************************************************************/
+        double Inverse(double lat1, double lon1, double lat2, double lon2,
+                           [System::Runtime::InteropServices::Out] double% s12,
+                           [System::Runtime::InteropServices::Out] double% azi1,
+                           [System::Runtime::InteropServices::Out] double% azi2,
+                           [System::Runtime::InteropServices::Out] double% m12,
+                           [System::Runtime::InteropServices::Out] double% M12,
+                           [System::Runtime::InteropServices::Out] double% M21,
+                           [System::Runtime::InteropServices::Out] double% S12);
 
-		/**
-		 * See the documentation for Geodesic::Inverse.
-		 **********************************************************************/
-		double Inverse(double lat1, double lon1, double lat2, double lon2,
-						   [System::Runtime::InteropServices::Out] double% s12);
+        /**
+         * See the documentation for Geodesic::Inverse.
+         **********************************************************************/
+        double Inverse(double lat1, double lon1, double lat2, double lon2,
+                           [System::Runtime::InteropServices::Out] double% s12);
 
-		/**
-		 * See the documentation for Geodesic::Inverse.
-		 **********************************************************************/
-		double Inverse(double lat1, double lon1, double lat2, double lon2,
-						   [System::Runtime::InteropServices::Out] double% azi1, 
-						   [System::Runtime::InteropServices::Out] double% azi2);
+        /**
+         * See the documentation for Geodesic::Inverse.
+         **********************************************************************/
+        double Inverse(double lat1, double lon1, double lat2, double lon2,
+                           [System::Runtime::InteropServices::Out] double% azi1,
+                           [System::Runtime::InteropServices::Out] double% azi2);
 
-		/**
-		 * See the documentation for Geodesic::Inverse.
-		 **********************************************************************/
-		double Inverse(double lat1, double lon1, double lat2, double lon2,
-						   [System::Runtime::InteropServices::Out] double% s12, 
-						   [System::Runtime::InteropServices::Out] double% azi1, 
-						   [System::Runtime::InteropServices::Out] double% azi2);
+        /**
+         * See the documentation for Geodesic::Inverse.
+         **********************************************************************/
+        double Inverse(double lat1, double lon1, double lat2, double lon2,
+                           [System::Runtime::InteropServices::Out] double% s12,
+                           [System::Runtime::InteropServices::Out] double% azi1,
+                           [System::Runtime::InteropServices::Out] double% azi2);
 
-		/**
-		 * See the documentation for Geodesic::Inverse.
-		 **********************************************************************/
-		double Inverse(double lat1, double lon1, double lat2, double lon2,
-						   [System::Runtime::InteropServices::Out] double% s12, 
-						   [System::Runtime::InteropServices::Out] double% azi1, 
-						   [System::Runtime::InteropServices::Out] double% azi2, 
-						   [System::Runtime::InteropServices::Out] double% m12);
+        /**
+         * See the documentation for Geodesic::Inverse.
+         **********************************************************************/
+        double Inverse(double lat1, double lon1, double lat2, double lon2,
+                           [System::Runtime::InteropServices::Out] double% s12,
+                           [System::Runtime::InteropServices::Out] double% azi1,
+                           [System::Runtime::InteropServices::Out] double% azi2,
+                           [System::Runtime::InteropServices::Out] double% m12);
 
-		/**
-		 * See the documentation for Geodesic::Inverse.
-		 **********************************************************************/
-		double Inverse(double lat1, double lon1, double lat2, double lon2,
-						   [System::Runtime::InteropServices::Out] double% s12, 
-						   [System::Runtime::InteropServices::Out] double% azi1, 
-						   [System::Runtime::InteropServices::Out] double% azi2,
-						   [System::Runtime::InteropServices::Out] double% M12, 
-						   [System::Runtime::InteropServices::Out] double% M21);
+        /**
+         * See the documentation for Geodesic::Inverse.
+         **********************************************************************/
+        double Inverse(double lat1, double lon1, double lat2, double lon2,
+                           [System::Runtime::InteropServices::Out] double% s12,
+                           [System::Runtime::InteropServices::Out] double% azi1,
+                           [System::Runtime::InteropServices::Out] double% azi2,
+                           [System::Runtime::InteropServices::Out] double% M12,
+                           [System::Runtime::InteropServices::Out] double% M21);
 
-		/**
-		 * See the documentation for Geodesic::Inverse.
-		 **********************************************************************/
-		double Inverse(double lat1, double lon1, double lat2, double lon2,
-						   [System::Runtime::InteropServices::Out] double% s12, 
-						   [System::Runtime::InteropServices::Out] double% azi1, 
-						   [System::Runtime::InteropServices::Out] double% azi2, 
-						   [System::Runtime::InteropServices::Out] double% m12,
-						   [System::Runtime::InteropServices::Out] double% M12, 
-						   [System::Runtime::InteropServices::Out] double% M21);
-		///@}
+        /**
+         * See the documentation for Geodesic::Inverse.
+         **********************************************************************/
+        double Inverse(double lat1, double lon1, double lat2, double lon2,
+                           [System::Runtime::InteropServices::Out] double% s12,
+                           [System::Runtime::InteropServices::Out] double% azi1,
+                           [System::Runtime::InteropServices::Out] double% azi2,
+                           [System::Runtime::InteropServices::Out] double% m12,
+                           [System::Runtime::InteropServices::Out] double% M12,
+                           [System::Runtime::InteropServices::Out] double% M21);
+        ///@}
 
-		/** \name General version of inverse geodesic solution.
-		 **********************************************************************/
-		///@{
-		/**
-		 * The general inverse geodesic calculation.  Geodesic::Inverse is defined
-		 * in terms of this function.
-		 *
-		 * @param[in] lat1 latitude of point 1 (degrees).
-		 * @param[in] lon1 longitude of point 1 (degrees).
-		 * @param[in] lat2 latitude of point 2 (degrees).
-		 * @param[in] lon2 longitude of point 2 (degrees).
-		 * @param[in] outmask a bitor'ed combination of Geodesic::mask values
-		 *   specifying which of the following parameters should be set.
-		 * @param[out] s12 distance between point 1 and point 2 (meters).
-		 * @param[out] azi1 azimuth at point 1 (degrees).
-		 * @param[out] azi2 (forward) azimuth at point 2 (degrees).
-		 * @param[out] m12 reduced length of geodesic (meters).
-		 * @param[out] M12 geodesic scale of point 2 relative to point 1
-		 *   (dimensionless).
-		 * @param[out] M21 geodesic scale of point 1 relative to point 2
-		 *   (dimensionless).
-		 * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
-		 * @return \e a12 arc length of between point 1 and point 2 (degrees).
-		 *
-		 * The Geodesic::mask values possible for \e outmask are
-		 * - \e outmask |= Geodesic::DISTANCE for the distance \e s12;
-		 * - \e outmask |= Geodesic::AZIMUTH for the latitude \e azi2;
-		 * - \e outmask |= Geodesic::REDUCEDLENGTH for the reduced length \e
-		 *   m12;
-		 * - \e outmask |= Geodesic::GEODESICSCALE for the geodesic scales \e
-		 *   M12 and \e M21;
-		 * - \e outmask |= Geodesic::AREA for the area \e S12;
-		 * - \e outmask |= Geodesic::ALL for all of the above.
-		 * .
-		 * The arc length is always computed and returned as the function value.
-		 **********************************************************************/
-		double GenInverse(double lat1, double lon1, double lat2, double lon2,
-						NETGeographicLib::Mask outmask,
-						[System::Runtime::InteropServices::Out] double% s12, 
-						[System::Runtime::InteropServices::Out] double% azi1, 
-						[System::Runtime::InteropServices::Out] double% azi2,
-						[System::Runtime::InteropServices::Out] double% m12, 
-						[System::Runtime::InteropServices::Out] double% M12, 
-						[System::Runtime::InteropServices::Out] double% M21, 
-						[System::Runtime::InteropServices::Out] double% S12);
-		///@}
+        /** \name General version of inverse geodesic solution.
+         **********************************************************************/
+        ///@{
+        /**
+         * The general inverse geodesic calculation.  Geodesic::Inverse is defined
+         * in terms of this function.
+         *
+         * @param[in] lat1 latitude of point 1 (degrees).
+         * @param[in] lon1 longitude of point 1 (degrees).
+         * @param[in] lat2 latitude of point 2 (degrees).
+         * @param[in] lon2 longitude of point 2 (degrees).
+         * @param[in] outmask a bitor'ed combination of Geodesic::mask values
+         *   specifying which of the following parameters should be set.
+         * @param[out] s12 distance between point 1 and point 2 (meters).
+         * @param[out] azi1 azimuth at point 1 (degrees).
+         * @param[out] azi2 (forward) azimuth at point 2 (degrees).
+         * @param[out] m12 reduced length of geodesic (meters).
+         * @param[out] M12 geodesic scale of point 2 relative to point 1
+         *   (dimensionless).
+         * @param[out] M21 geodesic scale of point 1 relative to point 2
+         *   (dimensionless).
+         * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
+         * @return \e a12 arc length of between point 1 and point 2 (degrees).
+         *
+         * The Geodesic::mask values possible for \e outmask are
+         * - \e outmask |= Geodesic::DISTANCE for the distance \e s12;
+         * - \e outmask |= Geodesic::AZIMUTH for the latitude \e azi2;
+         * - \e outmask |= Geodesic::REDUCEDLENGTH for the reduced length \e
+         *   m12;
+         * - \e outmask |= Geodesic::GEODESICSCALE for the geodesic scales \e
+         *   M12 and \e M21;
+         * - \e outmask |= Geodesic::AREA for the area \e S12;
+         * - \e outmask |= Geodesic::ALL for all of the above.
+         * .
+         * The arc length is always computed and returned as the function value.
+         **********************************************************************/
+        double GenInverse(double lat1, double lon1, double lat2, double lon2,
+                        NETGeographicLib::Mask outmask,
+                        [System::Runtime::InteropServices::Out] double% s12,
+                        [System::Runtime::InteropServices::Out] double% azi1,
+                        [System::Runtime::InteropServices::Out] double% azi2,
+                        [System::Runtime::InteropServices::Out] double% m12,
+                        [System::Runtime::InteropServices::Out] double% M12,
+                        [System::Runtime::InteropServices::Out] double% M21,
+                        [System::Runtime::InteropServices::Out] double% S12);
+        ///@}
 
-		/** \name Interface to GeodesicLine.
-		 **********************************************************************/
-		///@{
+        /** \name Interface to GeodesicLine.
+         **********************************************************************/
+        ///@{
 
-		/**
-		 * Set up to compute several points on a single geodesic.
-		 *
-		 * @param[in] lat1 latitude of point 1 (degrees).
-		 * @param[in] lon1 longitude of point 1 (degrees).
-		 * @param[in] azi1 azimuth at point 1 (degrees).
-		 * @param[in] caps bitor'ed combination of NETGeographicLib::Mask values
-		 *   specifying the capabilities the GeodesicLine object should possess,
-		 *   i.e., which quantities can be returned in calls to
-		 *   GeodesicLine::Position.
-		 * @return a GeodesicLine object.
-		 *
-		 * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-		 * azi1 should be in the range [&minus;540&deg;, 540&deg;).
-		 *
-		 * The NETGeographicLib::Mask values are
-		 * - \e caps |= NETGeographicLib::Mask::LATITUDE for the latitude \e lat2; this is
-		 *   added automatically;
-		 * - \e caps |= NETGeographicLib::Mask::LONGITUDE for the latitude \e lon2;
-		 * - \e caps |= NETGeographicLib::Mask::AZIMUTH for the azimuth \e azi2; this is
-		 *   added automatically;
-		 * - \e caps |= NETGeographicLib::Mask::DISTANCE for the distance \e s12;
-		 * - \e caps |= NETGeographicLib::Mask::REDUCEDLENGTH for the reduced length \e m12;
-		 * - \e caps |= NETGeographicLib::Mask::GEODESICSCALE for the geodesic scales \e M12
-		 *   and \e M21;
-		 * - \e caps |= NETGeographicLib::Mask::AREA for the area \e S12;
-		 * - \e caps |= NETGeographicLib::Mask::DISTANCE_IN permits the length of the
-		 *   geodesic to be given in terms of \e s12; without this capability the
-		 *   length can only be specified in terms of arc length;
-		 * - \e caps |= NETGeographicLib::Mask::ALL for all of the above.
-		 * .
-		 *
-		 * If the point is at a pole, the azimuth is defined by keeping \e lon1
-		 * fixed, writing \e lat1 = &plusmn;(90 &minus; &epsilon;), and taking the
-		 * limit &epsilon; &rarr; 0+.
-		 **********************************************************************/
-		GeodesicLine^ Line(double lat1, double lon1, double azi1, 
-			               NETGeographicLib::Mask caps );
+        /**
+         * Set up to compute several points on a single geodesic.
+         *
+         * @param[in] lat1 latitude of point 1 (degrees).
+         * @param[in] lon1 longitude of point 1 (degrees).
+         * @param[in] azi1 azimuth at point 1 (degrees).
+         * @param[in] caps bitor'ed combination of NETGeographicLib::Mask values
+         *   specifying the capabilities the GeodesicLine object should possess,
+         *   i.e., which quantities can be returned in calls to
+         *   GeodesicLine::Position.
+         * @return a GeodesicLine object.
+         *
+         * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
+         * azi1 should be in the range [&minus;540&deg;, 540&deg;).
+         *
+         * The NETGeographicLib::Mask values are
+         * - \e caps |= NETGeographicLib::Mask::LATITUDE for the latitude \e lat2; this is
+         *   added automatically;
+         * - \e caps |= NETGeographicLib::Mask::LONGITUDE for the latitude \e lon2;
+         * - \e caps |= NETGeographicLib::Mask::AZIMUTH for the azimuth \e azi2; this is
+         *   added automatically;
+         * - \e caps |= NETGeographicLib::Mask::DISTANCE for the distance \e s12;
+         * - \e caps |= NETGeographicLib::Mask::REDUCEDLENGTH for the reduced length \e m12;
+         * - \e caps |= NETGeographicLib::Mask::GEODESICSCALE for the geodesic scales \e M12
+         *   and \e M21;
+         * - \e caps |= NETGeographicLib::Mask::AREA for the area \e S12;
+         * - \e caps |= NETGeographicLib::Mask::DISTANCE_IN permits the length of the
+         *   geodesic to be given in terms of \e s12; without this capability the
+         *   length can only be specified in terms of arc length;
+         * - \e caps |= NETGeographicLib::Mask::ALL for all of the above.
+         * .
+         *
+         * If the point is at a pole, the azimuth is defined by keeping \e lon1
+         * fixed, writing \e lat1 = &plusmn;(90 &minus; &epsilon;), and taking the
+         * limit &epsilon; &rarr; 0+.
+         **********************************************************************/
+        GeodesicLine^ Line(double lat1, double lon1, double azi1,
+                           NETGeographicLib::Mask caps );
 
-		///@}
+        ///@}
 
-		/** \name Inspector functions.
-		 **********************************************************************/
-		///@{
+        /** \name Inspector functions.
+         **********************************************************************/
+        ///@{
 
-		/**
-		 * @return \e a the equatorial radius of the ellipsoid (meters).  This is
-		 *   the value used in the constructor.
-		 **********************************************************************/
-		property double MajorRadius { double get(); }
+        /**
+         * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+         *   the value used in the constructor.
+         **********************************************************************/
+        property double MajorRadius { double get(); }
 
-		/**
-		 * @return \e f the  flattening of the ellipsoid.  This is the
-		 *   value used in the constructor.
-		 **********************************************************************/
-		property double Flattening { double get(); }
+        /**
+         * @return \e f the  flattening of the ellipsoid.  This is the
+         *   value used in the constructor.
+         **********************************************************************/
+        property double Flattening { double get(); }
 
-		/**
-		 * @return total area of ellipsoid in meters<sup>2</sup>.  The area of a
-		 *   polygon encircling a pole can be found by adding
-		 *   Geodesic::EllipsoidArea()/2 to the sum of \e S12 for each side of the
-		 *   polygon.
-		 **********************************************************************/
-		property double EllipsoidArea { double get(); }
+        /**
+         * @return total area of ellipsoid in meters<sup>2</sup>.  The area of a
+         *   polygon encircling a pole can be found by adding
+         *   Geodesic::EllipsoidArea()/2 to the sum of \e S12 for each side of the
+         *   polygon.
+         **********************************************************************/
+        property double EllipsoidArea { double get(); }
 
-		/**
-		 * Return The unmanaged pointer to the GeographicLib::Geodesic
-		 **********************************************************************/
-		System::IntPtr^ GetUnmanaged();
-		///@}
-	};
+        /**
+         * Return The unmanaged pointer to the GeographicLib::Geodesic
+         **********************************************************************/
+        System::IntPtr^ GetUnmanaged();
+        ///@}
+    };
 } // namespace NETGeographicLib

@@ -3,8 +3,8 @@
  * \brief NETGeographicLib.Geoid example
  *
  * NETGeographicLib is copyright (c) Scott Heiman (2013)
- * GeographicLib is Copyright (c) Charles Karney (2010-2012) 
- * <charles@karney.com> and licensed under the MIT/X11 License.  
+ * GeographicLib is Copyright (c) Charles Karney (2010-2012)
+ * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -49,7 +49,7 @@ namespace Projections
 
             try
             {
-                m_geoid = new Geoid(m_fileName, m_path, true, m_threadSafeCheckBox.Checked); 
+                m_geoid = new Geoid(m_fileName, m_path, true, m_threadSafeCheckBox.Checked);
             }
             catch (Exception xcpt)
             {

@@ -4,8 +4,8 @@
  * \brief Header for NETGeographicLib::NETGeographicLib objects
  *
  * NETGeographicLib is copyright (c) Scott Heiman (2013)
- * GeographicLib is Copyright (c) Charles Karney (2010-2012) 
- * <charles@karney.com> and licensed under the MIT/X11 License.  
+ * GeographicLib is Copyright (c) Charles Karney (2010-2012)
+ * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -13,7 +13,7 @@
 
 using namespace System;
 
-namespace NETGeographicLib 
+namespace NETGeographicLib
 {
     enum class captype {
       CAP_NONE = 0U,
@@ -25,20 +25,20 @@ namespace NETGeographicLib
       CAP_ALL  = 0x1FU,
       OUT_ALL  = 0x7F80U,
     };
-	/**
-	* The version string.
+    /**
+    * The version string.
      **********************************************************************/
-	public ref class VersionInfo
-	{
-		VersionInfo() {}
-	public:
-		static System::String^ GetString();
-		static int MajorVersion();
-		static int MinorVersion();
-		static int Patch();
-	};
+    public ref class VersionInfo
+    {
+        VersionInfo() {}
+    public:
+        static System::String^ GetString();
+        static int MajorVersion();
+        static int MinorVersion();
+        static int Patch();
+    };
 
-	/**
+    /**
      * Bit masks for what calculations to do.  These masks do double duty.
      * They signify to the GeodesicLine::GeodesicLine constructor and to
      * Geodesic::Line what capabilities should be included in the GeodesicLine
@@ -102,19 +102,19 @@ namespace NETGeographicLib
       ALL           = captype::OUT_ALL| captype::CAP_ALL,
     };
 
-	public ref class GeographicErr : public System::Exception
-	{
-	public:
-		GeographicErr( const char* msg ) : System::Exception( gcnew System::String( msg ) ) {}
-		GeographicErr( System::String^ msg ) : System::Exception( msg ) {}
-	};
+    public ref class GeographicErr : public System::Exception
+    {
+    public:
+        GeographicErr( const char* msg ) : System::Exception( gcnew System::String( msg ) ) {}
+        GeographicErr( System::String^ msg ) : System::Exception( msg ) {}
+    };
 
-	ref class StringConvert
-	{
-		StringConvert() {}
-	public:
-		static std::string ManagedToUnmanaged( System::String^ s );
-		static System::String^ UnmanagedToManaged( const std::string& s )
-		{ 	return gcnew System::String( s.c_str() ); }
-	};
+    ref class StringConvert
+    {
+        StringConvert() {}
+    public:
+        static std::string ManagedToUnmanaged( System::String^ s );
+        static System::String^ UnmanagedToManaged( const std::string& s )
+        {   return gcnew System::String( s.c_str() ); }
+    };
 }  // namespace NETGeographicLib

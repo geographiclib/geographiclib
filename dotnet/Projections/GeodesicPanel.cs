@@ -1,15 +1,15 @@
 /**
  * \file NETGeographicLib\GeodesicPanel.cs
  * \brief NETGeographicLib.Geodesic example
- * 
+ *
  * NETGeographicLib.Geodesic,
  * NETGeographicLib.GeodesicLine,
  * NETGeographicLib.GeodesicExact,
  * NETGeographicLib.GeodesicLineExact
  *
  * NETGeographicLib is copyright (c) Scott Heiman (2013)
- * GeographicLib is Copyright (c) Charles Karney (2010-2012) 
- * <charles@karney.com> and licensed under the MIT/X11 License.  
+ * GeographicLib is Copyright (c) Charles Karney (2010-2012)
+ * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -98,7 +98,7 @@ namespace Projections
         // Gets the input parameters and calls the appropriate function
         private void OnForward(object sender, EventArgs e)
         {
-            double origLatitude = 0.0, origLongitude = 0.0, origAzimuth = 0.0, 
+            double origLatitude = 0.0, origLongitude = 0.0, origAzimuth = 0.0,
                 distance = 0.0, finalLatitude = 0.0, finalLongitude = 0.0;
             // get & validate inputs
             try
@@ -374,7 +374,7 @@ namespace Projections
                     faz != finalAzimuth || frd != reducedLength || fm12 != M12 || fm21 != M21 ||
                     outd != 20000.0 || fs12 != S12)
                     throw new Exception("Geodesic.GenDirect (false) failed");
-                g.ArcDirect(32.0, -86.0, 45.0, 1.0, out finalLatitude, out finalLongitude, out finalAzimuth, 
+                g.ArcDirect(32.0, -86.0, 45.0, 1.0, out finalLatitude, out finalLongitude, out finalAzimuth,
                     out arcDistance, out reducedLength, out M12, out M21, out S12);
                 g.ArcDirect(32.0, -86.0, 45.0, 1.0, out flat, out flon);
                 if (flat != finalLatitude || flon != finalLongitude)
@@ -394,7 +394,7 @@ namespace Projections
                 if (flat != finalLatitude || flon != finalLongitude || faz != finalAzimuth ||
                     fad != arcDistance || fm12 != M12 || fm21 != M21)
                     throw new Exception("Geodesic.ArcDirect #5 failed");
-                fad = g.GenDirect(32.0, -86.0, 45.0, true, 1.0, Mask.ALL, out flat, out flon, 
+                fad = g.GenDirect(32.0, -86.0, 45.0, true, 1.0, Mask.ALL, out flat, out flon,
                     out faz, out outd, out frd, out fm12, out fm21, out fs12);
                 if (outd != arcDistance || flat != finalLatitude || flon != finalLongitude ||
                     faz != finalAzimuth || frd != reducedLength || fm12 != M12 || fm21 != M21 ||
@@ -451,7 +451,7 @@ namespace Projections
                     throw new Exception("GeodesicLine.Position #5 failed");
                 fad = gl.GenPosition(false, 10000.0, Mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
                 if (fad != arcDistance || flat != finalLatitude || flon != finalLongitude ||
-                    faz != finalAzimuth || outd != 10000.0 || fm12 != M12 || fm21 != M21 || 
+                    faz != finalAzimuth || outd != 10000.0 || fm12 != M12 || fm21 != M21 ||
                     frd != reducedLength || fs12 != S12 )
                     throw new Exception("GeodesicLine.GenPosition (false) failed");
                 gl.ArcPosition(1.0, out finalLatitude, out finalLongitude, out finalAzimuth,
