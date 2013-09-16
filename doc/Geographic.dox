@@ -1017,7 +1017,7 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page other Implementations in C, Fortran, Java, JavaScript, Python, Matlab, Maxima
+\page other Implementations in other languages
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -1030,6 +1030,7 @@ Implementations of subsets of %GeographicLib are available in other languages
 - \ref python.
 - \ref matlab.
 - \ref maxima.
+- \ref dotnet.
 
 \section c-fortran C and Fortran implementation
 
@@ -1295,6 +1296,11 @@ geodesic.mac</a>).  The latter uses Maxima's bigfloat arithmetic
 together with series extended to high order or solutions in terms of
 elliptic integrals (<a href="ellint.mac"> ellint.mac</a>).  These files
 contain brief instructions on how to use them.
+
+\section dotnet .NET wrapper
+
+For documentation, see
+ - <a href="NET/index.html">NETGeographicLib .NET wrapper</a>.
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.

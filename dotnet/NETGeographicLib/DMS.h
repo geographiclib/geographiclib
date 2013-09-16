@@ -172,6 +172,7 @@ public:
      * @return decoded number.
      **********************************************************************/
     static double Decode(System::String^ str);
+    /// \endcond
 
     /**
      * Convert a pair of strings to latitude and longitude.
