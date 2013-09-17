@@ -11,7 +11,7 @@
 /**
 \mainpage NETGeographic library
 \author Scott Heiman (mrmtdew2@outlook.com)
-\version 1.32
+\version 1.33
 \date 2013-09-02
 
 \section abstract Abstract
@@ -26,9 +26,9 @@ to the GeographicLib classes.  GeographicLib and NETGeographicLib is an
 integrated product.
 
 The NETGeographic project in the GeographicLib-vc10.sln file located in
-\<install folder\>/GeographicLib-1.32/windows will create the NETGeographicLib
+\<install folder\>/GeographicLib-1.33/windows will create the NETGeographicLib
 DLL.  The project files and source code for NETGeographicLib are located in
-\<install folder\>/GeographicLib-1.32/windows/NETGeographic.  NETGeographicLib
+\<install folder\>/GeographicLib-1.33/windows/NETGeographic.  NETGeographicLib
 is not available for older versions of Microsoft Visual Studio.
 
 \section differences Differences between NETGeographicLib and GeographicLib
@@ -128,7 +128,7 @@ to any C++ source that uses NETGeographicLib classes.
 
 A C# sample application is provided that demonstrates NETGeographicLib classes.
 The source code for the sample application is located in
-\<install folder\>/GeographicLib-1.32/examples/CSharp/Projections.  The sample
+\<install folder\>/GeographicLib-1.33/examples/CSharp/Projections.  The sample
 application creates a tabbed dialog.  Each tab provides data entry fields that
 allow the user to exercise one or more NETGeographicLib classes.
 

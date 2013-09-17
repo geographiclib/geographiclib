@@ -6,13 +6,7 @@ EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html \
 	$(srcdir)/gauss-krueger-graticule-a.png \
 	$(srcdir)/thompson-tm-graticule-a.png \
 	$(srcdir)/gauss-krueger-error.png \
-	$(srcdir)/meridian-measures.png \
-	$(srcdir)/triaxial-grid.png \
-	$(srcdir)/triaxial-equatorial-a.png \
-	$(srcdir)/triaxial-equatorial-b.png \
-	$(srcdir)/triaxial-polar-a.png \
-	$(srcdir)/triaxial-polar-b.png \
-	$(srcdir)/triaxial-umbilical.png
+	$(srcdir)/meridian-measures.png
 
 SCRIPTDRIVERS = \
 	$(srcdir)/scripts/geod-calc.html \
