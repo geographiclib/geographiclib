@@ -35,5 +35,8 @@ doxyfile.in text
 *.vcproj eol=crlf
 *.vcxproj eol=crlf
 *.csproj eol=crlf
+*.resx eol=crlf
+*.settings eol=crlf
 *.kml text
 *.kmz -text
+*.cs text

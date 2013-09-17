@@ -303,9 +303,6 @@ add_subdirectory (cmake)
 if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
   add_subdirectory (tests)
 endif ()
-if (WIN32)
-  add_subdirectory (dotnet/src)
-endif ()
 
 # Packaging support; we deal with
 # (1) a source distribution: cmake make a tar.gz file and the zip file
@@ -433,7 +430,7 @@ if (MAINTAINER)
       _CPack_Packages/Linux-Source/TGZ.DOS/ &&
       cd _CPack_Packages/Linux-Source/TGZ.DOS &&
       find . -type f |
-      egrep  '/\(doxyfile.in|MANIFEST.in|NEWS|AUTHORS|INSTALL|.*\\.\(cpp|hpp|h.in|txt|pro|usage|pod|py|m|mac|cmake.in|cmake|h|js|c|for\)\)$$' |
+      egrep  '/\(doxyfile.*\\.in|MANIFEST.in|NEWS|AUTHORS|INSTALL|pom\\.xml|dummy.*\\.in|.*\\.\(cpp|hpp|h\\.in|txt|pro|usage|pod|py|m|mac|cmake\\.in|cmake|h|js|c|for|dox|cs|inc|java|html\\.in\)\)$$' |
       xargs unix2dos -q -k &&
       find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
       zip -q ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip -@
