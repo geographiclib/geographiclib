@@ -328,6 +328,8 @@ GeoConvert(1).  The algorithms are described in C. F. F. Karney,
 I<Algorithms for geodesics>, J. Geodesy 87, 43-55 (2013); DOI:
 L<http://dx.doi.org/10.1007/s00190-012-0578-z>;
 addenda: L<http://geographiclib.sf.net/geod-addenda.html>.
+The wikipedia page, Geodesics on an ellipsoid,
+L<http://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid>.
 
 =head1 AUTHOR
 

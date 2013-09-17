@@ -2709,7 +2709,10 @@ References
    <a href="http://geographiclib.sf.net/geod.html"> geod.html</a>.
  - A collection of some papers on geodesics is available at
    http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
-
+ - The wikipedia page,
+   <a href="http://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
+   Geodesics on an ellipsoid</a>.
+   
 \section testgeod Test data for geodesics
 
 A test set a geodesics is available at
@@ -3615,6 +3618,11 @@ this, the detailed behavior of the geodesics is not very well known.  In
 this section, I briefly give Jacobi's solution and illustrate the
 behavior of the geodesics and outline an algorithm for the solution of
 the inverse problem.
+
+See also
+ - The wikipedia page,
+   <a href="http://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid#Geodesics_on_a_triaxial_ellipsoid">
+   Geodesics on  a triaxial ellipsoid</a>.
 
 Go to
  - \ref triaxial-coords
