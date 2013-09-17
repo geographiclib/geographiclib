@@ -16,108 +16,108 @@
 
 \section abstract Abstract
 
-%NETGeographicLib is a .NET wrapper for GeographicLib.  It allows 
-.NET developers to access GeographicLib classes within C#, Visual 
+%NETGeographicLib is a .NET wrapper for GeographicLib.  It allows
+.NET developers to access GeographicLib classes within C#, Visual
 Basic, Managed C++, and other Microsoft .NET languages.
 
-NETGeographicLib is written in Managed C++.  It IS NOT a reimplementation 
-of the GeographicLib software.  It is a container that provides interfaces 
-to the GeographicLib classes.  GeographicLib and NETGeographicLib is an 
+NETGeographicLib is written in Managed C++.  It IS NOT a reimplementation
+of the GeographicLib software.  It is a container that provides interfaces
+to the GeographicLib classes.  GeographicLib and NETGeographicLib is an
 integrated product.
 
-The NETGeographic project in the GeographicLib-vc10.sln file located in 
-\<install folder\>/GeographicLib-1.32/windows will create the NETGeographicLib 
-DLL.  The project files and source code for NETGeographicLib are located in 
-\<install folder\>/GeographicLib-1.32/windows/NETGeographic.  NETGeographicLib 
+The NETGeographic project in the GeographicLib-vc10.sln file located in
+\<install folder\>/GeographicLib-1.32/windows will create the NETGeographicLib
+DLL.  The project files and source code for NETGeographicLib are located in
+\<install folder\>/GeographicLib-1.32/windows/NETGeographic.  NETGeographicLib
 is not available for older versions of Microsoft Visual Studio.
 
 \section differences Differences between NETGeographicLib and GeographicLib
 
-The NETGeographicLib class names are identical to the GeographicLib class names.  
+The NETGeographicLib class names are identical to the GeographicLib class names.
 All NETGeographicLib classes are in the NETGeographicLib namespace.
 
-NETGeographicLib exposes most of the GeographicLib classes.  The exceptions 
-are SphericalEngine, GeographicLib::Math, and GeographicLib::Utility.  The 
-SphericalEngine class is a template class which (according to the comments in 
-the SphericalEngine.h file) is not usually accessible to developers.  The 
-GeographicLib::Math class contains several specialized functions required by 
-GeographicLib classes.  They have limited use outside GeographicLib.  This class 
-may be exposed in a future release if there is demand for it.  The functions 
-provided by GeographicLib::Utility duplicate functions provided by existing .NET 
+NETGeographicLib exposes most of the GeographicLib classes.  The exceptions
+are SphericalEngine, GeographicLib::Math, and GeographicLib::Utility.  The
+SphericalEngine class is a template class which (according to the comments in
+the SphericalEngine.h file) is not usually accessible to developers.  The
+GeographicLib::Math class contains several specialized functions required by
+GeographicLib classes.  They have limited use outside GeographicLib.  This class
+may be exposed in a future release if there is demand for it.  The functions
+provided by GeographicLib::Utility duplicate functions provided by existing .NET
 controls (DateTime).
 
 The SphericalCoefficients class replaces the SphericalEngine::coeff class.
 
-The NETGeographicLib class function interfaces are similar, and in many cases, 
-identical to the GeographicLib interfaces.  There are differences because of 
-limitations in .NET and other differences that are discretionary.  The comments 
-in the header files contain a section labeled "INTERFACE DIFFERENCES" that detail 
-the differences between the NETGeographicLib interfaces and the GeographicLib 
+The NETGeographicLib class function interfaces are similar, and in many cases,
+identical to the GeographicLib interfaces.  There are differences because of
+limitations in .NET and other differences that are discretionary.  The comments
+in the header files contain a section labeled "INTERFACE DIFFERENCES" that detail
+the differences between the NETGeographicLib interfaces and the GeographicLib
 interfaces.  The differences are summarized in the text that follows.
 
 Default values for function parameters are not supported in .NET.
 
-Several GeographicLib class functions accept or return a "capabilities mask" as 
-an unsigned integer.  The NETGeographicLib classes accept and return the capabilities 
-mask as an enumeration.  
+Several GeographicLib class functions accept or return a "capabilities mask" as
+an unsigned integer.  The NETGeographicLib classes accept and return the capabilities
+mask as an enumeration.
 
-The Geocentric and LocalCartesian classes have functions that return a rotation matrix.  
+The Geocentric and LocalCartesian classes have functions that return a rotation matrix.
 The NETGeographicLib versions return a two-dimensional, 3X3 array rather than a vector.
 
-A lot of GeographicLib classes have inspector functions (MajorRadius, 
-Flattening, etc.).  These inspector functions are implemented as 
+A lot of GeographicLib classes have inspector functions (MajorRadius,
+Flattening, etc.).  These inspector functions are implemented as
 properties in NETGeographicLib.
 
 NETGeographicLib classes do not implement constructors that create "uninitialized" objects.
 
 Many NETGeographicLib classes implement a default constructor that assumes WGS84 parameters.
 
-Several GeographicLib classes implement the () operator.  NETGeographicLib classes 
-replace the () operator with a specific function.  Managed C++ allows developers to 
-overload the () operator; however, the () operator is not 'elegantly' supported in 
-other .NET languages.  For example, if the () operator was implemented in the 
+Several GeographicLib classes implement the () operator.  NETGeographicLib classes
+replace the () operator with a specific function.  Managed C++ allows developers to
+overload the () operator; however, the () operator is not 'elegantly' supported in
+other .NET languages.  For example, if the () operator was implemented in the
 NETGeographicLib::Geoid class, then C# code would look like
 \code
 Geoid geoid = new Geoid();
 double h = geoid.op_FuncCall(latitude,longitude);  // if () operator was implemented.
 h = geoid.Height(latitude,longitude); // with () operator replaced with Height
 \endcode
-The author felt that the op_FuncCall syntax did not appropriately define the purpose 
+The author felt that the op_FuncCall syntax did not appropriately define the purpose
 of the function call.
 
-.NET does not allow developers to overload the assignment operators (=,+=,-=,*=).  
+.NET does not allow developers to overload the assignment operators (=,+=,-=,*=).
 These operators have been replaced with functions in the NETGeographicLib::Accumulator class.
 
 \section library Using NETGeographicLib in a .NET Application
 
-<I>Caveat: The Author is fluent in ANSI C++, Managed C++, and C#.  He has no idea if the 
-following statements are true for Visual Basic or F#.  Furthermore, NETGeographicLib has only 
-been tested in C# applications.  The author has been told that NETGeographicLib will work in 
-all .NET languages.  The author would appreciate any feedback concerning the success or 
+<I>Caveat: The Author is fluent in ANSI C++, Managed C++, and C#.  He has no idea if the
+following statements are true for Visual Basic or F#.  Furthermore, NETGeographicLib has only
+been tested in C# applications.  The author has been told that NETGeographicLib will work in
+all .NET languages.  The author would appreciate any feedback concerning the success or
 failure of using NETGeographicLib in Visual Basic or F#.</I>
 
 If you have access to the NETGeographicLib and GeographicLib projects then
-1.	Create a new solution.
-2.	Create a new project using any .NET language.  For this example, call it MyApp.
-3.	Add the NETGeographicLib and GeographicLib projects to the solution.  Verify that NETGeographicLib depends upon GeographicLib.
-4.	Right-Click MyApp in the Solution View and select "Add Reference..." in the pop-up menu.
-5.	Select NETGeographic in the Projects Tab.
+1. Create a new solution.
+2. Create a new project using any .NET language.  For this example, call it MyApp.
+3. Add the NETGeographicLib and GeographicLib projects to the solution.  Verify that NETGeographicLib depends upon GeographicLib.
+4. Right-Click MyApp in the Solution View and select "Add Reference..." in the pop-up menu.
+5. Select NETGeographic in the Projects Tab.
 \image html NETGeographicLib1.png
-6.	Click OK.
+6. Click OK.
 
 If you only have access to the NETGeographic.dll then
-1.	Create a new solution.
-2.	Create a new project using any .NET language.  For this example, call it MyApp.
-3.	Right-Click MyApp in the Solution View and select "Add Reference..." in the popup menu.
-4.	Click the Browse Tab and navigate to the folder containing NETGeographic.dll. 
+1. Create a new solution.
+2. Create a new project using any .NET language.  For this example, call it MyApp.
+3. Right-Click MyApp in the Solution View and select "Add Reference..." in the popup menu.
+4. Click the Browse Tab and navigate to the folder containing NETGeographic.dll.
 \image html NETGeographicLib2.png
-5.	Select NETGeographic.dll and click OK.
+5. Select NETGeographic.dll and click OK.
 
-The MyApp project will have access to all public NETGeographicLib classes after the 
+The MyApp project will have access to all public NETGeographicLib classes after the
 NETGeographic reference is added to MyApp.
 
-C# developers should add 
-\code using NETGeographicLib; \endcode  
+C# developers should add
+\code using NETGeographicLib; \endcode
 to any C# source file that uses NETGeographicLib.
 
 Managed C++ developers should add
@@ -126,10 +126,10 @@ to any C++ source that uses NETGeographicLib classes.
 
 \section sample C# Sample Application
 
-A C# sample application is provided that demonstrates NETGeographicLib classes.  
-The source code for the sample application is located in 
-\<install folder\>/GeographicLib-1.32/examples/CSharp/Projections.  The sample 
-application creates a tabbed dialog.  Each tab provides data entry fields that 
+A C# sample application is provided that demonstrates NETGeographicLib classes.
+The source code for the sample application is located in
+\<install folder\>/GeographicLib-1.32/examples/CSharp/Projections.  The sample
+application creates a tabbed dialog.  Each tab provides data entry fields that
 allow the user to exercise one or more NETGeographicLib classes.
 
 The following table lists the source code that demonstrates specific classes.
