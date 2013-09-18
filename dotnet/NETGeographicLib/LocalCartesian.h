@@ -36,7 +36,7 @@ namespace NETGeographicLib
    * and Flattening.
    *
    * The rotation matrices returned by the Forward and Reverse functions
-   * are 2D, 3X3 arrays rather than vectors.
+   * are 2D, 3 &times; 3 arrays rather than vectors.
    **********************************************************************/
     public ref class LocalCartesian
     {
@@ -137,7 +137,7 @@ namespace NETGeographicLib
          * @param[out] x local cartesian coordinate (meters).
          * @param[out] y local cartesian coordinate (meters).
          * @param[out] z local cartesian coordinate (meters).
-         * @param[out] M a 3x3 rotation matrix.
+         * @param[out] M a 3 &times; 3 rotation matrix.
          *
          * \e lat should be in the range [&minus;90&deg;, 90&deg;]; \e lon
          * should be in the range [&minus;540&deg;, 540&deg;).
@@ -187,7 +187,7 @@ namespace NETGeographicLib
          * @param[out] lat latitude of point (degrees).
          * @param[out] lon longitude of point (degrees).
          * @param[out] h height of point above the ellipsoid (meters).
-         * @param[out] M a 3x3 rotation matrix.
+         * @param[out] M a 3 &times; 3 rotation matrix.
          *
          * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can
          * express \e v as \e column vectors in one of two ways

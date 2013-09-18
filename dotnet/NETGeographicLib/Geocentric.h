@@ -56,7 +56,7 @@ namespace NETGeographicLib
    * The MajorRadius and Flattening functions are implemented as properties.
    *
    * The Forward and Reverse functions return rotation matrices as 2D,
-   * 3X3 arrays rather than vectors.
+   * 3 &times; 3 arrays rather than vectors.
    **********************************************************************/
     public ref class Geocentric
     {
@@ -125,7 +125,7 @@ namespace NETGeographicLib
          * @param[out] X geocentric coordinate (meters).
          * @param[out] Y geocentric coordinate (meters).
          * @param[out] Z geocentric coordinate (meters).
-         * @param[out] M a 3x3 rotation matrix.
+         * @param[out] M a 3 &times; 3 rotation matrix.
          *
          * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can
          * express \e v as \e column vectors in one of two ways
@@ -177,7 +177,7 @@ namespace NETGeographicLib
          * @param[out] lat latitude of point (degrees).
          * @param[out] lon longitude of point (degrees).
          * @param[out] h height of point above the ellipsoid (meters).
-         * @param[out] M a 3x3 rotation matrix.
+         * @param[out] M a 3 &times; 3 rotation matrix.
          *
          * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can
          * express \e v as \e column vectors in one of two ways

@@ -1064,7 +1064,7 @@
  * P. D. Thomas,[[BR]]
    ''Spheroidal Geodesics, Reference Systems, and Local Geometry'',
    SP-138 (U.S. Naval Oceanographic Office, 1970).[[BR]]
-   http://handle.dtic.mil/100.2/AD703541
+   http://handle.dtic.mil/100.2/AD0703541
  * G. V. Bagratuni,[[BR]]
    ''Kurs Sferoidicheskoi Geodezii''
    (Moscow, 1962).[[BR]]
