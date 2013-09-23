@@ -80,7 +80,7 @@ unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
 (
     echo "#! /bin/sh -e"
-    echo cmake -G \"Visual Studio 10\" -D PACKAGE_PATH=u:/pkg-vc10 -D GEOGRAPHICLIB_EXAMPLES=ON ..
+    echo cmake -G \"Visual Studio 10\" -D PACKAGE_PATH=u:/pkg-vc10 -D GEOGRAPHICLIB_EXAMPLES=ON -D BUILD_NETGEOGRAPHICLIB=ON ..
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
@@ -91,7 +91,7 @@ chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared
 (
     echo "#! /bin/sh -e"
-    echo cmake -G \"Visual Studio 10\" -D PACKAGE_PATH=u:/pkg-vc10-shared -D GEOGRAPHICLIB_EXAMPLES=ON -D GEOGRAPHIC_SHARED_LIB=ON ..
+    echo cmake -G \"Visual Studio 10\" -D PACKAGE_PATH=u:/pkg-vc10-shared -D GEOGRAPHICLIB_EXAMPLES=ON -D GEOGRAPHIC_SHARED_LIB=ON -D BUILD_NETGEOGRAPHICLIB=ON ..
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
@@ -100,7 +100,7 @@ chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared/build
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
 (
     echo "#! /bin/sh -e"
-    echo cmake -G \"Visual Studio 10 Win64\" -D PACKAGE_PATH=u:/pkg-vc10-x64 -D GEOGRAPHICLIB_EXAMPLES=ON -D MATLAB_COMPILER=mex ..
+    echo cmake -G \"Visual Studio 10 Win64\" -D PACKAGE_PATH=u:/pkg-vc10-x64 -D GEOGRAPHICLIB_EXAMPLES=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHICLIB=ON ..
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target matlab-all
     echo cmake --build . --config Release --target RUN_TESTS
