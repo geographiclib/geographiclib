@@ -3366,8 +3366,7 @@ for evaluate the meridian distance
 \f$ y = b E(\beta, ie') \f$, namely \f$ s = b E(\sigma, ik) \f$.  See
 \ref geodellip.
 
-<img src="meridian-measures.png" width=576 height=596
-     alt="comparison of meridian measures">
+\image html meridian-measures.png "Comparison of meridian measures"
 
 \section geodshort Short geodesics
 
@@ -4421,12 +4420,7 @@ be displayed quickly.  Vector versions of these figures are available in
 type="application/pdf"> tm-figs.pdf</a>.  This allows you to magnify the
 figures to show the details more clearly.
 
-<center>
-<img src="gauss-schreiber-graticule-a.png"
-width=667 height=305 alt="Gauss-Schreiber transverse Mercator graticule
-(scaled)">
-Fig. 1(a)
-</center>\n
+\image html gauss-schreiber-graticule-a.png "Fig. 1(a)"
 Fig. 1(a):
 The graticule for the spherical transverse Mercator projection.
 The equator lies on \e y = 0.
@@ -4438,12 +4432,7 @@ conformal transformation from an ellipsoid to a sphere merely relabels
 the lines of latitude.)  This projection places the point latitude =
 0&deg;, longitude = 90&deg; at infinity.
 
-<center>
-<img src="gauss-krueger-graticule-a.png"
-width=667 height=305 alt="Gauss-Krueger transverse Mercator graticule
-(scaled)">
-Fig. 1(b)
-</center>\n
+\image html gauss-krueger-graticule-a.png "Fig. 1(b)"
 Fig. 1(b):
 The graticule for the Gauss-Kr&uuml;ger transverse Mercator projection.
 The equator lies on \e y = 0 for longitude < 81&deg;; beyond
@@ -4452,12 +4441,7 @@ this, it arcs up to meet \e y = 1.  Compare this with Lee, Fig. 45
 Fig. 46, shows the graticule for the entire ellipsoid.  This projection
 (like the Thompson projection) projects the ellipsoid to a finite area.
 
-<center>
-<img src="thompson-tm-graticule-a.png"
-width=667 height=305 alt="Thompson transverse Mercator graticule
-(scaled)">
-Fig. 1(c)
-</center>\n
+\image html thompson-tm-graticule-a.png "Fig. 1(c)"
 Fig. 1(c):
 The graticule for the Thompson transverse Mercator projection.  The
 equator lies on \e y = 0 for longitude < 81&deg;; at longitude =
@@ -4467,11 +4451,7 @@ International Ellipsoid.  Lee, Fig. 44, shows the graticule for the
 entire ellipsoid.  This projection (like the Gauss-Kr&uuml;ger
 projection) projects the ellipsoid to a finite area.
 
-<center>
-<img src="gauss-krueger-error.png"
-width=672 height=552 alt="Truncation error for Gauss-Krueger series">
-Fig. 2
-</center>\n
+\image html gauss-krueger-error.png "Fig. 2"
 Fig. 2:
 The truncation error for the series for the Gauss-Kr&uuml;ger transverse
 Mercator projection.  The blue curves show the truncation error for the
@@ -4481,24 +4461,14 @@ curves show the combined truncation and round-off errors for
  - double and \e J = 6 (middle)
  - long double and \e J = 8 (bottom)
 
-<center>
-<img src="gauss-krueger-graticule.png"
-width=673 height=323 alt="Gauss-Krueger transverse Mercator extended
-graticule">\n
-Fig. 3(a)
-</center>
+\image html gauss-krueger-graticule.png "Fig. 3(a)"
 Fig. 3(a):
 The graticule for the extended domain.  The blue lines show
 latitude and longitude at multiples of 10&deg;.  The green lines
 show 1&deg; intervals for longitude in [80&deg;, 90&deg;] and latitude in
 [&minus;5&deg;, 10&deg;].
 
-<center>
-<img src="gauss-krueger-convergence-scale.png"
-width=673 height=323 alt="Gauss-Krueger transverse Mercator
-convergence and scale">
-Fig. 3(b)
-</center>\n
+\image html gauss-krueger-convergence-scale.png "Fig. 3(b)"
 Fig. 3(b):
 The convergence and scale for the Gauss-Kr&uuml;ger
 transverse Mercator projection in the extended domain.  The blue lines
@@ -4517,11 +4487,7 @@ shows the equator between lon = 81&deg; and 90&deg;.  The
 scale and convergence at the branch point are 1/\e e = 10 and
 0&deg;, respectively.
 
-<center>
-<img src="thompson-tm-graticule.png"
-width=661 height=321 alt="Thompson transverse Mercator extended graticule">
-Fig. 3(c)
-</center>\n
+\image html thompson-tm-graticule.png "Fig. 3(c)"
 Fig. 3(c):
 The graticule for the Thompson transverse Mercator
 projection for the extended domain.  The range of the projection is the

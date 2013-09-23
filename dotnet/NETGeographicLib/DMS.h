@@ -18,6 +18,9 @@ namespace NETGeographicLib
    * Parse a string representing degree, minutes, and seconds and return the
    * angle in degrees and format an angle in degrees as degree, minutes, and
    * seconds.  In addition, handle NANs and infinities on input and output.
+   *
+   * Example of use:
+   * \include example-DMS.cs
    **********************************************************************/
 public ref class DMS
 {
@@ -245,7 +248,7 @@ public:
      * @param[in] ind DMS::flag value indicated additional formatting.
      * @param[in] dmssep if non-null, use as the DMS separator character
      *   (instead of d, ', &quot; delimiters).
-     * @exception std::bad_alloc if memory for the string can't be allocated.
+     * @exception GeographicErr if memory for the string can't be allocated.
      * @return formatted string
      *
      * The interpretation of \e ind is as follows:

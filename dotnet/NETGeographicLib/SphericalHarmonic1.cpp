@@ -1,6 +1,6 @@
 /**
- * \file NETGeographicLib/SphericalHarmonic1.h
- * \brief Header for NETGeographicLib::SphericalHarmonic1 class
+ * \file NETGeographicLib/SphericalHarmonic1.cpp
+ * \brief Implementation for NETGeographicLib::SphericalHarmonic1 class
  *
  * NETGeographicLib is copyright (c) Scott Heiman (2013)
  * GeographicLib is Copyright (c) Charles Karney (2010-2012)

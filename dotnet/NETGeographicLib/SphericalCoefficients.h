@@ -28,11 +28,12 @@ namespace NETGeographicLib
     or SphericalHarmonic2::Coefficient* to obtain an instance of this
     class.
 
-    INTERFACE DIFFERENCES:
+    <B>INTERFACE DIFFERENCES:</B><BR>
     This class does not implement readcoeffs.
     */
     public ref class SphericalCoefficients
     {
+        private:
         // The cosine coefficients.
         array<double>^ m_C; // size = Csize(m_nmx,m_mmx)
         // The sine coefficients

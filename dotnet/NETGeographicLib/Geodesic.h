@@ -147,8 +147,11 @@ namespace NETGeographicLib
    * .
    * For more information on geodesics see \ref geodesic.
    *
-   * INTERFACE DIFFERENCES:
-   * A drfault constructor has been provided that assumes WGS84 parameters.
+   * Example of use:
+   * \include example-Geodesic.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
+   * A default constructor has been provided that assumes WGS84 parameters.
    *
    * The MajorRadius, Flattening, and EllipsoidArea functions are
    * implemented as properties.
@@ -159,10 +162,11 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class Geodesic
     {
+        private:
         // The pointer to the unmanaged GeographicLib::Geodesic.
         const GeographicLib::Geodesic* m_pGeodesic;
 
-        // Frees the unmeneged memory when this object is destroyed.
+        // Frees the unmanaged memory when this object is destroyed.
         !Geodesic();
     public:
         /** \name Constructor
@@ -187,7 +191,7 @@ namespace NETGeographicLib
         ///@}
 
         /**
-         * \brief the destructor calls !Geodesic
+         * \brief the destructor calls the finalizer.
          **********************************************************************/
         ~Geodesic() { this->!Geodesic(); }
 
@@ -670,7 +674,9 @@ namespace NETGeographicLib
         property double EllipsoidArea { double get(); }
 
         /**
-         * Return The unmanaged pointer to the GeographicLib::Geodesic
+         * %return The unmanaged pointer to the GeographicLib::Geodesic.
+         *
+         * This function is for internal use only.
          **********************************************************************/
         System::IntPtr^ GetUnmanaged();
         ///@}

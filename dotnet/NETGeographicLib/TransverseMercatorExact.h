@@ -62,12 +62,15 @@ namespace NETGeographicLib
    * type="application/vnd.google-earth.kmz"> tm-grid.kmz</a>, for an
    * illustration of the transverse Mercator grid in Google Earth.
    *
-   * See TransverseMercatorExact.cpp for more information on the
+   * See GeographicLib::TransverseMercatorExact.cpp for more information on the
    * implementation.
    *
    * See \ref transversemercator for a discussion of this projection.
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-TransverseMercatorExact.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor is provided that assumes WGS84 parameters and
    * a UTM scale factor.
    *
@@ -76,6 +79,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class TransverseMercatorExact
     {
+        private:
         // a pointer to the unmanaged GeographicLib::TransverseMercatorExact.
         GeographicLib::TransverseMercatorExact* m_pTransverseMercatorExact;
         // the finalizer frees the unmanaged memory when the object is destroyed.

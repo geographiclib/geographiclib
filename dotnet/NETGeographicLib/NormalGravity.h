@@ -53,7 +53,10 @@ namespace NETGeographicLib
    * - H. Moritz, Geodetic Reference System 1980, J. Geodesy 54(3), 395-405
    *   (1980) http://dx.doi.org/10.1007/BF02521480
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-NormalGravity.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * A constructor has been provided for creating standard WGS84 and GRS80
    * gravity models.
    *
@@ -63,6 +66,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class NormalGravity
     {
+        private:
         // a pointer to the unmanaged GeographicLib::NormalGravity.
         const GeographicLib::NormalGravity* m_pNormalGravity;
 

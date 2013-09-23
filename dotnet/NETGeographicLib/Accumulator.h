@@ -17,8 +17,8 @@ namespace NETGeographicLib
 
     This class allows .NET applications to access GeographicLib::Accumulator<double>.
 
-    This allow many numbers of floating point type \e T to be added together
-    with twice the normal precision.  Thus if \e T is double, the effective
+    This allow many numbers of floating point type \e double to be added together
+    with twice the normal precision.  The effective
     precision of the sum is 106 bits or about 32 decimal places.
 
     The implementation follows J. R. Shewchuk,
@@ -26,11 +26,14 @@ namespace NETGeographicLib
     Floating-Point Arithmetic and Fast Robust Geometric Predicates</a>,
     Discrete & Computational Geometry 18(3) 305--363 (1997).
 
-    INTERFACE DIFFERENCES:
-    Since assignmenet operators (=,+=,-=,*=) are not supported in managed classes;
-    the Assign() method replaces the = operator,
-    the Sum() method replaces the += and -= operators, and
-    the Multiply() method replaces the *= operator,
+    Example of use:
+    \include example-Accumulator.cs
+
+    <B>INTERFACE DIFFERENCES:</B><BR>
+    Since assignment operators (=,+=,-=,*=) are not supported in managed classes;
+    - the Assign() method replaces the = operator,
+    - the Sum() method replaces the += and -= operators, and
+    - the Multiply() method replaces the *= operator,
 
     Use Result() instead of the () operator to obtain the summed value from the accumulator.
     */

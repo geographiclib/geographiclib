@@ -12,14 +12,6 @@
 
 namespace NETGeographicLib
 {
-    /*!
-    \brief .NET wrapper for GeographicLib::MagneticCircle.
-
-    This class allows .NET applications to access GeographicLib::MagneticCircle.
-
-    INTERFACE DIFFERENCE:
-    The () operator has been replaced with Field.
-    */
   /**
    * \brief .NET wrapper for GeographicLib::MagneticCircle.
    *
@@ -33,7 +25,10 @@ namespace NETGeographicLib
    * Use MagneticModel::Circle to create a MagneticCircle object.  (The
    * constructor for this class is for internal use only.)
    *
-   * INTERFACE DIFFERENCE:
+   * Example of use:
+   * \include example-MagneticCircle.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * The () operator has been replaced with Field.
    *
    * The following functions are implemented as properties:
@@ -41,6 +36,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class MagneticCircle
     {
+        private:
         // pointer to the unmanaged GeographicLib::MagneticCircle.
         const GeographicLib::MagneticCircle* m_pMagneticCircle;
 
@@ -49,15 +45,16 @@ namespace NETGeographicLib
     public:
 
         /**
-         * A constructor that is initialized from an unmanaged
+         * %brief A constructor that is initialized from an unmanaged
          * GeographicLib::MagneticCircle. This is for internal use only.
-         * developers should use MagneticModel::Circle to create a
+         *
+         * Developers should use MagneticModel::Circle to create a
          * MagneticCircle.
          **********************************************************************/
         MagneticCircle( const GeographicLib::MagneticCircle& c );
 
         /**
-         * The destructor calls the finalizer.
+         * %brief The destructor calls the finalizer.
          **********************************************************************/
         ~MagneticCircle()
         { this->!MagneticCircle(); }
@@ -66,8 +63,8 @@ namespace NETGeographicLib
          **********************************************************************/
         ///@{
         /**
-         * Evaluate the components of the geomagnetic field at a particular
-         * longitude.
+         * %brief Evaluate the components of the geomagnetic field at a
+         * particular longitude.
          *
          * @param[in] lon longitude of the point (degrees).
          * @param[out] Bx the easterly component of the magnetic field (nanotesla).

@@ -56,12 +56,16 @@ namespace NETGeographicLib
    * of the reduced lengths for the two geodesics between that point and,
    * respectively, (\e lat1, \e lon1) and (\e lat, \e lon).
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-CassiniSoldner.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * The LatitudeOrigin, LongitudeOrigin, MajorRadius and Flattening
    * functions are implimented as properties.
    **********************************************************************/
     public ref class CassiniSoldner
     {
+        private:
         // A pointer to the unmanaged GeographicLib::CassiniSoldner
         GeographicLib::CassiniSoldner* m_pCassiniSoldner;
 

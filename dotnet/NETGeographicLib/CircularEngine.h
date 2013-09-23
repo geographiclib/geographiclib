@@ -21,23 +21,26 @@ namespace NETGeographicLib
    * spherical harmonic sum are needed for several points on a circle of
    * constant latitude \e lat and height \e h, then SphericalEngine::Circle can
    * compute the inner sum, which is independent of longitude \e lon, and
-   * produce a CircularEngine object.  CircularEngine::operator()() can
-   * then be used to perform the outer sum for particular vales of \e lon.
+   * produce a CircularEngine object.  CircularEngine::LongitudeSum() can
+   * then be used to perform the outer sum for particular values of \e lon.
    * This can lead to substantial improvements in computational speed for high
    * degree sum (approximately by a factor of \e N / 2 where \e N is the
    * maximum degree).
    *
    * CircularEngine is tightly linked to the internals of SphericalEngine.  For
-   * that reason, the constructor for this class is private.  Use
+   * that reason, the constructor for this class is for internal use only.  Use
    * SphericalHarmonic::Circle, SphericalHarmonic1::Circle, and
    * SphericalHarmonic2::Circle to create instances of this class.
    *
    * CircularEngine stores the coefficients needed to allow the summation over
    * order to be performed in 2 or 6 vectors of length \e M + 1 (depending on
    * whether gradients are to be calculated).  For this reason the constructor
-   * may throw a std::bad_alloc exception.
+   * may throw a GeographicErr exception.
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-CircularEngine.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * The () operator has been replaced with with LongitudeSum.
    *
    * This class does not have a constructor that can be used in a .NET
@@ -46,6 +49,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class CircularEngine
     {
+        private:
         // pointer to the unmanaged GeographicLib::CircularEngine
         const GeographicLib::CircularEngine* m_pCircularEngine;
 
@@ -55,7 +59,7 @@ namespace NETGeographicLib
         /**
          * The constructor.
          *
-         * This constructor should not be should not be used in .NET applications.
+         * This constructor should not be used in .NET applications.
          * Use SphericalHarmonic::Circle, SphericalHarmonic1::Circle or
          * SphericalHarmonic2::Circle to create instances of this class.
          *

@@ -89,13 +89,17 @@ namespace NETGeographicLib
    *   point to appear as straight lines in the projection; i.e., it
    *   generalizes the spherical great circle to a geodesic.
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-Gnomonic.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor has been provided that assumes WGS84 parameters.
    *
    * The MajorRadius and Flattening functions are implemented as properties.
    **********************************************************************/
     public ref class Gnomonic
     {
+        private:
         // the pointer to the unmanaged GeographicLib::Gnomonic.
         const GeographicLib::Gnomonic* m_pGnomonic;
 

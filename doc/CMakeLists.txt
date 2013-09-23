@@ -37,9 +37,11 @@ if (DOXYGEN_FOUND)
     ../src/[A-Za-z]*.cpp ../include/GeographicLib/[A-Za-z]*.hpp
     ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp
     ../legacy/C/*.[ch] ../legacy/Fortran/*.for ../legacy/Fortran/*.inc
-    ../dotnet/NETGeographicLib/*.cpp ../dotnet/NETGeographicLib/*.h)
+    ../dotnet/NETGeographicLib/*.cpp ../dotnet/NETGeographicLib/*.h
+    ../dotnet/examples/*.cs)
   file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac
-    tmseries30.html geodseries30.html *.png ../LICENSE.txt)
+    tmseries30.html geodseries30.html ../LICENSE.txt)
+  file (GLOB FIGURES *.png)
   file (COPY ${EXTRA_FILES} DESTINATION html-stage)
   add_custom_target (doc ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
@@ -50,7 +52,7 @@ if (DOXYGEN_FOUND)
       ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-for
       ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-net
       Geographic.dox geodesic-c.dox geodesic-for.dox NETGeographic.dox
-      ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
+      ${SOURCES} ${EXTRA_FILES} ${FIGURES} ${HTMLMAN}
     COMMAND ${CMAKE_COMMAND} -E remove_directory html
     COMMAND ${CMAKE_COMMAND} -E copy_directory html-stage html
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile > doxygen.log

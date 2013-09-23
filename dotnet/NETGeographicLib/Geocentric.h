@@ -50,7 +50,10 @@ namespace NETGeographicLib
    * the WGS84 ellipsoid.  See \ref geocentric for further information on the
    * errors.
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-Geocentric.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor is provided that assumes WGS84 parameters.
    *
    * The MajorRadius and Flattening functions are implemented as properties.
@@ -87,7 +90,7 @@ namespace NETGeographicLib
         /**
          * A constructor that is initialized from an unmanaged
          * GeographicLib::Geocentric.  For internal use only.
-         * @param[in] g An existiong GeographicLib::Geocentric.
+         * @param[in] g An existing GeographicLib::Geocentric.
          **********************************************************************/
         Geocentric( const GeographicLib::Geocentric& g );
 

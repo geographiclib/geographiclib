@@ -54,7 +54,10 @@ namespace NETGeographicLib
    * single-cell caching which results in a Geoid object which \e is thread
    * safe.
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-Geoid.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * The () operator has been replaced with Height method.
    *
    * The following functions are implemented as properties:
@@ -65,6 +68,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class Geoid
     {
+        private:
         // a pointer to the unmanaged GeographicLib::Geoid.
         const GeographicLib::Geoid* m_pGeoid;
 

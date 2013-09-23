@@ -25,18 +25,6 @@ namespace NETGeographicLib
       CAP_ALL  = 0x1FU,
       OUT_ALL  = 0x7F80U,
     };
-    /**
-    * The version string.
-     **********************************************************************/
-    public ref class VersionInfo
-    {
-        VersionInfo() {}
-    public:
-        static System::String^ GetString();
-        static int MajorVersion();
-        static int MinorVersion();
-        static int Patch();
-    };
 
     /**
      * Bit masks for what calculations to do.  These masks do double duty.
@@ -102,10 +90,47 @@ namespace NETGeographicLib
       ALL           = captype::OUT_ALL| captype::CAP_ALL,
     };
 
+    /**
+     * @brief The version information.
+     **********************************************************************/
+    public ref class VersionInfo
+    {
+        VersionInfo() {}
+    public:
+        /**
+         * @return The version string.
+         *******************************************************************/
+        static System::String^ GetString();
+        /**
+         * @return The major version.
+         *******************************************************************/
+        static int MajorVersion();
+        /**
+         * @return The minor version.
+         *******************************************************************/
+        static int MinorVersion();
+        /**
+         * @return The patch number.
+         *******************************************************************/
+        static int Patch();
+    };
+
+    /**
+     * @brief Exception class for NETGeographicLib
+     **********************************************************************/
     public ref class GeographicErr : public System::Exception
     {
     public:
-        GeographicErr( const char* msg ) : System::Exception( gcnew System::String( msg ) ) {}
+        /**
+         * @brief Creates an exception using an unmanaged string.
+         * @param[in] msg The error string.
+         ******************************************************************/
+        GeographicErr( const char* msg ) :
+            System::Exception( gcnew System::String( msg ) ) {}
+        /**
+         * @brief Creates an exception using a managed string.
+         * @param[in] msg The error string.
+         ******************************************************************/
         GeographicErr( System::String^ msg ) : System::Exception( msg ) {}
     };
 

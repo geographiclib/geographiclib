@@ -39,7 +39,10 @@ namespace NETGeographicLib
    * Once the input string has been parsed, you can print the result out in any
    * of the formats, decimal degrees, degrees minutes seconds, MGRS, UTM/UPS.
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-GeoCoords.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * The following functions are implemented as properties: MajorRadius,
    * Flattening, Latitude, Longitude, Easting, Northing, Convergence,
    * Scale, Northp, Hemisphere, Zone, AltZone, AltEasting, AltNorthing,
@@ -47,6 +50,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class GeoCoords
     {
+        private:
         // pointer to the unmanaged  GeographicLib::GeoCoords
         GeographicLib::GeoCoords* m_pGeoCoords;
 

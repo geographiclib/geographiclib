@@ -48,9 +48,9 @@ namespace NETGeographicLib
    * calling function.  For example the Pennsylvania South state coordinate
    * system (<a href="http://www.spatialreference.org/ref/epsg/3364/">
    * EPSG:3364</a>) is obtained by:
-   * \include example-LambertConformalConic.cpp
+   * \include example-LambertConformalConic.cs
    *
-   * INTERFACE DIFFERENCES:
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor has been provided that assumes a Mercator
    * projection.
    *
@@ -59,6 +59,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class LambertConformalConic
     {
+        private:
         // Pointer to the unmanaged GeographicLib::LambertConformalConic.
         GeographicLib::LambertConformalConic* m_pLambertConformalConic;
 

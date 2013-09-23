@@ -55,11 +55,15 @@ namespace NETGeographicLib
    * EPSG:7405</a>) which requires the use of a latitude of origin.  This is
    * implemented by the GeographicLib::OSGB class.
    *
-   * See TransverseMercator.cpp for more information on the implementation.
+   * See GeographicLib::TransverseMercator.cpp for more information on the
+   * implementation.
    *
    * See \ref transversemercator for a discussion of this projection.
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-TransverseMercator.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor is provided that assumes WGS84 parameters and
    * a UTM scale factor.
    *
@@ -68,6 +72,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class TransverseMercator
     {
+        private:
         // pointer to the unmanaged GeographicLib::TransverseMercator.
         const GeographicLib::TransverseMercator* m_pTransverseMercator;
         // the finalizer frees the unmanaged memory when the object is destroyed.

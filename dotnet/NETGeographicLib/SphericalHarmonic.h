@@ -39,8 +39,8 @@ namespace NETGeographicLib
    *
    * Clenshaw summation is used for the sums over both \e n and \e m.  This
    * allows the computation to be carried out without the need for any
-   * temporary arrays.  See SphericalEngine.cpp for more information on the
-   * implementation.
+   * temporary arrays.  See GeographicLib::SphericalEngine.cpp for more
+   * information on the implementation.
    *
    * References:
    * - C. W. Clenshaw, A note on the summation of Chebyshev series,
@@ -56,7 +56,10 @@ namespace NETGeographicLib
    * - C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw
    *   summation, Boll. Geod. Sci. Aff. 41(4), 349--375 (1982).
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-SphericalHarmonic.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * This class replaces the GeographicLib::SphericalHarmonic::operator() with
    * HarmonicSum.
    *
@@ -67,9 +70,10 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class SphericalHarmonic
     {
-        // a pointer to the unamanaged GeographicLib::SphericalHarmonic
+        private:
+        // a pointer to the unmanaged GeographicLib::SphericalHarmonic
         const GeographicLib::SphericalHarmonic* m_pSphericalHarmonic;
-        // the finalizer fress the unmanaged memory when the object is destroyrd.
+        // the finalizer frees the unmanaged memory when the object is destroyed.
         !SphericalHarmonic();
         // local containers for the cosine and sine coefficients.  The
         // GeographicLib::SphericalEngine::coeffs class uses a

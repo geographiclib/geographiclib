@@ -19,20 +19,23 @@ namespace NETGeographicLib
    *
    * This class allows .NET applications to access GeographicLib::SphericalHarmonic2.
    *
-   * This classes is similar to SphericalHarmonic, except that the coefficients
+   * This class is similar to SphericalHarmonic, except that the coefficients
    * \e C<sub>\e nm</sub> are replaced by \e C<sub>\e nm</sub> + \e tau'
    * C'<sub>\e nm</sub> + \e tau'' C''<sub>\e nm</sub> (and similarly for \e
    * S<sub>\e nm</sub>).
    *
-   * INTERFACE DIFFERENCES:
-   * This class replaces the GeographicLib::SphericalHarmonic1::operator() with
-   * HarmonicSum.
+   * Example of use:
+   * \include example-SphericalHarmonic2.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
+   * This class replaces the () operator with HarmonicSum().
    *
    * Coefficients, Coefficients1, and Coefficients2 return a SphericalCoefficients
    * object.
    **********************************************************************/
     public ref class SphericalHarmonic2
     {
+        private:
         // pointer to the unmanaged GeographicLib::SphericalHarmonic2
         const GeographicLib::SphericalHarmonic2* m_pSphericalHarmonic2;
         // the finalizer destroys the unmanaged memory when the object is destroyed.

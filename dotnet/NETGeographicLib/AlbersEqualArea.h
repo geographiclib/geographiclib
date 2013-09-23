@@ -13,7 +13,7 @@
 namespace NETGeographicLib
 {
   /**
-   * \brief .NET Wrapper for the GeographicLib::AlbersEqualArea class
+   * \brief .NET Wrapper for GeographicLib::AlbersEqualArea.
    *
    * This class allows .NET applications to access
    * GeographicLib::AlbersEqualArea
@@ -51,10 +51,14 @@ namespace NETGeographicLib
    * for specifying a false easting or false northing or a different latitude
    * of origin.
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-AlbersEqualArea.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * A constructor has been provided that creates the standard projections.
+   *
    * The MajorRadius, Flattening, OriginLatitude, and CentralScale functions
-   * are implimented as properties.
+   * are implemented as properties.
    **********************************************************************/
     public ref class AlbersEqualArea
     {

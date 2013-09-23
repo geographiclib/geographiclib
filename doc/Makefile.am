@@ -1,5 +1,6 @@
-EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html \
-	$(srcdir)/gauss-krueger-graticule.png \
+EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html
+
+FIGURES = $(srcdir)/gauss-krueger-graticule.png \
 	$(srcdir)/thompson-tm-graticule.png \
 	$(srcdir)/gauss-krueger-convergence-scale.png \
 	$(srcdir)/gauss-schreiber-graticule-a.png \
@@ -116,7 +117,7 @@ manpages: $(MANPAGES)
 	touch $@
 
 html/index.html: manpages doxyfile.in Geographic.dox \
-	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) \
+	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(FIGURES) \
 	doxyfile-c.in geodesic-c.dox doxyfile-for.in geodesic-for.dox \
 	$(LEGACYFILES)
 	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \

@@ -66,7 +66,10 @@ namespace NETGeographicLib
    * See \ref geodellip for the formulation.  See the documentation on the
    * Geodesic class for additional information on the geodesics problems.
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-GeodesicExact.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor is provided that assumes WGS84 parameters.
    *
    * The MajorRadius, Flattening, and EllipsoidArea functions are
@@ -78,10 +81,11 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class GeodesicExact
     {
+        private:
         // pointer to the unmanaged GeographicLib::GeodesicExact.
         const GeographicLib::GeodesicExact* m_pGeodesicExact;
 
-        // the finalizer deletes the unamanged memory.
+        // the finalizer deletes the unmanaged memory.
         !GeodesicExact();
     public:
         /** \name Constructor
@@ -586,10 +590,9 @@ namespace NETGeographicLib
         ///@}
 
         /**
-         * @return total area of ellipsoid in meters<sup>2</sup>.  The area of a
-         *   polygon encircling a pole can be found by adding
-         *   GeodesicExact::EllipsoidArea()/2 to the sum of \e S12 for each side of
-         *   the polygon.
+         * @return A pointer to the unmanaged GeographicLib::GeodesicExact.
+         *
+         * This function is for internal use only.
          **********************************************************************/
         System::IntPtr^ GetUnmanaged();
     };

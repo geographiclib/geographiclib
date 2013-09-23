@@ -25,7 +25,10 @@ namespace NETGeographicLib
    * Use GravityModel::Circle to create a GravityCircle object.  (The
    * constructor for this class is for internal use only.)
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-GravityCircle.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * The following functions are implemented as properties:
    * Init, MajorRadius, Flattening, Latitude, and Height.
    *
@@ -34,6 +37,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class GravityCircle
     {
+        private:
         // the pointer to the unmanaged GeographicLib::GravityCircle.
         const GeographicLib::GravityCircle* m_pGravityCircle;
 

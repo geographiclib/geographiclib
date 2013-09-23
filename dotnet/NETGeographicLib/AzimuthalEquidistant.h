@@ -31,13 +31,18 @@ namespace NETGeographicLib
    * The conversions all take place using a Geodesic object (by default
    * Geodesic::WGS84).  For more information on geodesics see \ref geodesic.
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-AzimuthalEquidistant.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor is provided that assumes a WGS84 ellipsoid.
-   * The MajorRadius and Flattening functions are implimented as
+   *
+   * The MajorRadius and Flattening functions are implemented as
    * properties.
    **********************************************************************/
     public ref class AzimuthalEquidistant
     {
+    private:
         // Pointer to the unmanaged GeographicLib::AzimuthalEquidistant
         const GeographicLib::AzimuthalEquidistant* m_pAzimuthalEquidistant;
 

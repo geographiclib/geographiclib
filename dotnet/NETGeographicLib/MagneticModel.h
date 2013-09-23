@@ -1,17 +1,19 @@
 #pragma once
+/**
+ * \file NETGeographicLib/MagneticModel.h
+ * \brief Header for NETGeographicLib::MagneticModel class
+ *
+ * NETGeographicLib is copyright (c) Scott Heiman (2013)
+ * GeographicLib is Copyright (c) Charles Karney (2010-2012)
+ * <charles@karney.com> and licensed under the MIT/X11 License.
+ * For more information, see
+ * http://geographiclib.sourceforge.net/
+ **********************************************************************/
 
 namespace NETGeographicLib
 {
     ref class MagneticCircle;
     ref class Geocentric;
-    /*!
-    \brief .NET wrapper for GeographicLib::MagneticModel.
-
-    This class allows .NET applications to access GeographicLib::MagneticModel.
-
-    INTERFACE DIFFERENCE:
-    The () operator has been replaced with Field.
-    */
   /**
    * \brief .NET wrapper for GeographicLib::MagneticModel.
    *
@@ -40,7 +42,10 @@ namespace NETGeographicLib
    *   - http://ngdc.noaa.gov/geomag/EMM/index.html
    *   - http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-MagneticModel.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * The () operator has been replaced with Field.
    *
    * The following functions are implemented as properties:
@@ -50,6 +55,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class MagneticModel
     {
+        private:
         // The pointer to the unmanaged GeographicLib::MagneticModel.
         const GeographicLib::MagneticModel* m_pMagneticModel;
 

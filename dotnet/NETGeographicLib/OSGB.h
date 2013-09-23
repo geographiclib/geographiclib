@@ -21,19 +21,23 @@ namespace NETGeographicLib
    * maps of Great Britain and conversions to the grid reference system.
    *
    * See
-   * - <a href="http://www.ordnancesurvey.co.uk/oswebsite/gps/docs/A_Guide_to_Coordinate_Systems_in_Great_Britain.pdf">
-   * A guide to coordinate systems in Great Britain</a>
-   * - <a href="http://www.ordnancesurvey.co.uk/oswebsite/gps/information/coordinatesystemsinfo/guidetonationalgrid/page1.html">
-   * Guide to National Grid</a>
+   * - <a href="http://www.ordnancesurvey.co.uk/docs/support/guide-coordinate-systems-great-britain.pdf">
+   *   A guide to coordinate systems in Great Britain</a>
+   * - <a href="http://www.ordnancesurvey.co.uk/docs/support/national-grid.pdf">
+   *   Guide to the National Grid</a>
    *
    * \b WARNING: the latitudes and longitudes for the Ordnance Survey grid
    * system do not use the WGS84 datum.  Do not use the values returned by this
    * class in the UTMUPS, MGRS, or Geoid classes without first converting the
    * datum (and vice versa).
+   *
+   * Example of use:
+   * \include example-OSGB.cs
    **********************************************************************/
     public ref class OSGB
     {
-        // hide the constructoe since all member are static
+        private:
+        // hide the constructor since all member are static
         OSGB(void) {}
     public:
 

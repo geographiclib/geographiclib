@@ -31,7 +31,10 @@ namespace NETGeographicLib
    * This is a straightforward implementation of the equations in Snyder except
    * that Newton's method is used to invert the projection.
    *
-   * IMPLEMENTATION DIFFERENCES:
+   * Example of use:
+   * \include example-PolarStereographic.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor is provided that assumes WGS84 parameters and
    * a UPS scale factor.
    *
@@ -40,6 +43,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class PolarStereographic
     {
+        private:
         // pointer to the unmanaged GeographicLib::PolarStereographic
         GeographicLib::PolarStereographic* m_pPolarStereographic;
 

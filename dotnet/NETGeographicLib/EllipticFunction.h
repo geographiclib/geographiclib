@@ -56,11 +56,15 @@ namespace NETGeographicLib
    * .
    * The notation follows http://dlmf.nist.gov/19 and http://dlmf.nist.gov/22
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-EllipticFunction.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * The k2, kp2, alpha2, and alphap2 functions are implemented as properties.
    **********************************************************************/
     public ref class EllipticFunction
     {
+    private:
         // a pointer to the unmanaged GeographicLib::EllipticFunction.
         GeographicLib::EllipticFunction* m_pEllipticFunction;
 

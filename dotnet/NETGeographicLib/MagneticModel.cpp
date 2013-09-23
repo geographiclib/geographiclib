@@ -1,3 +1,13 @@
+/**
+ * \file NETGeographicLib/MagneticModel.cpp
+ * \brief Implementation for NETGeographicLib::MagneticModel class
+ *
+ * NETGeographicLib is copyright (c) Scott Heiman (2013)
+ * GeographicLib is Copyright (c) Charles Karney (2010-2012)
+ * <charles@karney.com> and licensed under the MIT/X11 License.
+ * For more information, see
+ * http://geographiclib.sourceforge.net/
+ **********************************************************************/
 #include "stdafx.h"
 #include "GeographicLib/MagneticModel.hpp"
 #include "MagneticModel.h"

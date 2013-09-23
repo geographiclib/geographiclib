@@ -25,10 +25,11 @@ namespace NETGeographicLib
    * remains nearby.
    *
    * Example of use:
-   * \include example-Geohash.cpp
+   * \include example-Geohash.cs
    **********************************************************************/
     public ref class Geohash
     {
+        private:
         // hide the constructor since all members of this class are static.
         Geohash() {}
     public:

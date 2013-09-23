@@ -64,7 +64,10 @@ namespace NETGeographicLib
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
    *   Francisco, 1967).
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-GravityModel.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * The following functions are implemented as properties:
    * Description, DateTime, GravityFile, GravityModelName,
    * GravityModelDirectory, MajorRadius, MassConstant,
@@ -75,6 +78,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class GravityModel
     {
+        private:
         // pointer to the unmanaged GeographicLib::GravityModel.
         const GeographicLib::GravityModel* m_pGravityModel;
 

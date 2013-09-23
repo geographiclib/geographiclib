@@ -28,7 +28,10 @@ namespace NETGeographicLib
    * The conversions all take place via geocentric coordinates using a
    * Geocentric object.
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-LocalCartesian.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * Constructors have been provided that assume WGS84 parameters.
    *
    * The following functions are implemented as properties:
@@ -40,6 +43,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class LocalCartesian
     {
+        private:
         // the pointer to the GeographicLib::LocalCartesian.
         GeographicLib::LocalCartesian* m_pLocalCartesian;
 

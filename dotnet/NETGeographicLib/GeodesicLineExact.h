@@ -24,7 +24,10 @@ namespace NETGeographicLib
    * additional information on this class see the documentation on the
    * GeodesicLine class.
    *
-   * INTERFACE DIFFERENCES:
+   * Example of use:
+   * \include example-GeodesicLineExact.cs
+   *
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * A constructor has been provided that assumes WGS84 parameters.
    *
    * The following functions are implemented as properties:
@@ -38,6 +41,7 @@ namespace NETGeographicLib
    **********************************************************************/
     public ref class GeodesicLineExact
     {
+        private:
         // a pointer to the GeographicLib::GeodesicLineExact.
         const GeographicLib::GeodesicLineExact* m_pGeodesicLineExact;
 

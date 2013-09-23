@@ -49,7 +49,7 @@ namespace NETGeographicLib
    * .
    * For more information on geodesics see \ref geodesic.
    *
-   * INTERFACE DIFFERENCES:
+   * <B>INTERFACE DIFFERENCES:</B><BR>
    * A constructor has been provided which assumes WGS84 parameters.
    *
    * The following functions are implemented as properties:
@@ -58,11 +58,12 @@ namespace NETGeographicLib
    *
    * The constructors, Capabilities, and GenPosition functions accept the
    * "capabilities mask" as a NETGeographicLib::Mask rather than an
-   * unsigned.  The Capabilites function returns a  NETGeographicLib::Mask
+   * unsigned.  The Capabilities function returns a  NETGeographicLib::Mask
    * rather than an unsigned.
    **********************************************************************/
     public ref class GeodesicLine
     {
+        private:
         // pointer to the unmanaged GeographicLib::GeodesicLine.
         const GeographicLib::GeodesicLine* m_pGeodesicLine;
 

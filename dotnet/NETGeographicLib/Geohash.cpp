@@ -1,6 +1,6 @@
 /**
- * \file NETGeographicLib/Geohash.h
- * \brief Header for NETGeographicLib::Geohash class
+ * \file NETGeographicLib/Geohash.cpp
+ * \brief Implementation for NETGeographicLib::Geohash class
  *
  * NETGeographicLib is copyright (c) Scott Heiman (2013)
  * GeographicLib is Copyright (c) Charles Karney (2010-2012)

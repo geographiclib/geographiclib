@@ -49,10 +49,14 @@ namespace NETGeographicLib
    *   coordinate is legal.  A more systematic approach is taken here.
    * - The underlying projections are not very accurately implemented.
    *
+   * Example of use:
+   * \include example-MGRS.cs
+   *
    **********************************************************************/
     public ref class MGRS
     {
-        // Hide the constructor since all mebers are static.
+        private:
+        // Hide the constructor since all members are static.
         MGRS(void) {}
     public:
 
@@ -132,7 +136,7 @@ namespace NETGeographicLib
          **********************************************************************/
         static void Forward(int zone, bool northp, double x, double y,
                             int prec,
-                    [System::Runtime::InteropServices::Out] System::String^% mgrs);
+                [System::Runtime::InteropServices::Out] System::String^% mgrs);
 
         /**
          * Convert UTM or UPS coordinate to an MGRS coordinate when the latitude is
@@ -149,7 +153,6 @@ namespace NETGeographicLib
          *   allowed range.
          * @exception GeographicErr if \e lat is inconsistent with the given UTM
          *   coordinates.
-         * @exception std::bad_alloc if the memory for \e mgrs can't be allocated.
          *
          * The latitude is ignored for \e zone = 0 (UPS); otherwise the latitude is
          * used to determine the latitude band and this is checked for consistency

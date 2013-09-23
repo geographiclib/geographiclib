@@ -116,7 +116,7 @@
    [Navigation on the ellipsoid, its loxodromes, and the shortest path]'',
    Mém. l'Acad. Roy. des Sciences de Turin '''4''', 325--368 + figures
    (1788--89, publ. 1790).[[BR]]
-   http://books.google.com/books?id=ZO-DiSOtC0kC&pg=RA1-PA313-IA4
+   http://books.google.com/books?id=ZO-DiSOtC0kC&pg=PA327
    (figures missing)
  * T. Valperga di Caluso,[[BR]]
    ''Applications des formules du plus court chemin sur le spheroïde elliptique
@@ -282,7 +282,7 @@
    Mém. l'Acad. Roy. des Sciences de l'Inst. de France '''10''',
    457--529 (1831).[[BR]]
    http://books.google.com/books?id=KcjOAAAAMAAJ&pg=RA2-PA457 [[BR]]
-   errata: http://books.google.com/books?id=KcjOAAAAMAAJ&pg=PR7
+   errata: http://books.google.com/books?id=KcjOAAAAMAAJ&pg=PP11
  * J. J. Littrow,[[BR]]
    ''Theoretische und practishe Astronomie
    [Theoretical and Practical Astronomy]'',
@@ -380,7 +380,7 @@
    Phil. Mag. '''8''' (2nd ser.),
    30--34 & 114--117 (misprinted as 134--137) (1830).[[BR]]
    http://books.google.com/books?id=j4EqAAAAYAAJ&pg=PA30 [[BR]]
-   http://books.google.com/books?id=j4EqAAAAYAAJ&pg=PA134 [[BR]]
+   http://books.google.com/books?id=j4EqAAAAYAAJ&pg=PA114 [[BR]]
    http://dx.doi.org/10.1080/14786443008675355 [[BR]]
    http://dx.doi.org/10.1080/14786443008675378
  * F. T. Poselger,[[BR]]
@@ -1086,6 +1086,11 @@
    ''Geodesics on an Equipotential Surface of Revolution'',
    Special Report 144, Smithsonian Astrophysical Observatory (1964).[[BR]]
    http://adsabs.harvard.edu/full/1964SAOSR.144.....K
+ * E. J. Krakiwsky and D. B. Thomson,[[BR]]
+   ''Geodetic position computations'',
+   Dept. of Geodesy and Geomatics Engineering, Lecture Notes 39,
+   Univ. of New Brunswick (1974), Sec. 3.[[BR]]
+   http://www2.unb.ca/gge/Pubs/LN39.pdf
  * T. Vincenty,[[BR]]
    ''Direct and Inverse Solutions of Geodesics on the Ellipsoid with
    Application of Nested Equations'',
@@ -1098,10 +1103,12 @@
    http://geographiclib.sf.net/geodesic-papers/vincenty75b.pdf
  * R. H. Rapp,[[BR]]
    ''Geometric geodesy, Part I'',
+   Dept. of Geodetic Science and Surveying,
    Ohio State Univ. (1991), Chaps. 4 & 6.[[BR]]
    http://hdl.handle.net/1811/24333
  * R. H. Rapp,[[BR]]
    ''Geometric geodesy, Part II'',
+   Dept. of Geodetic Science and Surveying,
    Ohio State Univ. (1993), Chap. 1.[[BR]]
    http://hdl.handle.net/1811/24409
  * C. F. F. Karney,[[BR]]
