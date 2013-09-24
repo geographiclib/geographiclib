@@ -8,7 +8,8 @@ INCLUDEPATH = ../include
 PREFIX = /usr/local
 GEOGRAPHICLIB_DATA = $(PREFIX)/share/GeographicLib
 
-MODULES = AlbersEqualArea \
+MODULES = Accumulator \
+	AlbersEqualArea \
 	AzimuthalEquidistant \
 	CassiniSoldner \
 	CircularEngine \
@@ -40,8 +41,7 @@ MODULES = AlbersEqualArea \
 	TransverseMercatorExact \
 	UTMUPS \
 	Utility
-EXTRAHEADERS = Accumulator \
-	Constants \
+EXTRAHEADERS = Constants \
 	Math \
 	SphericalHarmonic \
 	SphericalHarmonic1 \

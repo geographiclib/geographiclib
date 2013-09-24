@@ -180,6 +180,7 @@
     <ClInclude Include="../include/GeographicLib/Config.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="../src/Accumulator.cpp" />
     <ClCompile Include="../src/AlbersEqualArea.cpp" />
     <ClCompile Include="../src/AzimuthalEquidistant.cpp" />
     <ClCompile Include="../src/CassiniSoldner.cpp" />
