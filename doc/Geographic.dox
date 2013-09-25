@@ -4643,6 +4643,10 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.33">Version 1.33</a>
    (released 2013-mm-dd)
    - Add .NET wrappers.
+   - Make inspector functions in GeographicLib::Ellipsoid const.
+   - Add Accumulator.cpp to instantiate GeographicLib::Accumulator.
+   - STILL TO DO: document BUILD_NETGEOGRAPHIC and other aspect of using
+     this library.
 
  - <a href="http://geographiclib.sf.net/1.32">Version 1.32</a>
    (released 2013-07-12)

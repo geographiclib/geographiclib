@@ -142,16 +142,16 @@ if (NOT CMAKE_VERSION VERSION_LESS 2.8)
   set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3)
 endif ()
 
-# (9) Build .NET wrapper library NETGeographicLib.  This only applies to
+# (9) Build .NET wrapper library NETGeographic.  This only applies to
 # Windows.  Default is OFF for Visual Studio 10 (because it triggers lot
 # of warnings, but possibly these may be safely igored?) and ON for
 # other Visual Studio generators
 if (CMAKE_GENERATOR MATCHES "Visual Studio 10")
-  option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib" OFF)
+  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" OFF)
 elseif (CMAKE_GENERATOR MATCHES "Visual Studio")
-  option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib" ON)
+  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" ON)
 else ()
-  option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib" OFF)
+  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" OFF)
 endif ()
 
 set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
@@ -321,7 +321,7 @@ add_subdirectory (cmake)
 if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
   add_subdirectory (tests)
 endif ()
-if (BUILD_NETGEOGRAPHICLIB)
+if (BUILD_NETGEOGRAPHIC)
   add_subdirectory (dotnet/NETGeographicLib)
 endif ()
 

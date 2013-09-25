@@ -121,21 +121,21 @@ namespace GeographicLib {
      *   positive, or negative for a sphere, oblate ellipsoid, or prolate
      *   ellipsoid.
      **********************************************************************/
-    Math::real Flattening() { return _f; }
+    Math::real Flattening() const throw() { return _f; }
 
     /**
      * @return \e f ' = (\e a &minus; \e b) / \e b, the second flattening of
      *   the ellipsoid.  This is zero, positive, or negative for a sphere,
      *   oblate ellipsoid, or prolate ellipsoid.
      **********************************************************************/
-    Math::real SecondFlattening() { return _f / (1 - _f); }
+    Math::real SecondFlattening() const throw() { return _f / (1 - _f); }
 
     /**
      * @return \e n = (\e a &minus; \e b) / (\e a + \e b), the third flattening
      *   of the ellipsoid.  This is zero, positive, or negative for a sphere,
      *   oblate ellipsoid, or prolate ellipsoid.
      **********************************************************************/
-    Math::real ThirdFlattening() { return _n; }
+    Math::real ThirdFlattening() const throw() { return _n; }
 
     /**
      * @return <i>e</i><sup>2</sup> = (<i>a</i><sup>2</sup> &minus;
@@ -143,7 +143,7 @@ namespace GeographicLib {
      *   of the ellipsoid.  This is zero, positive, or negative for a sphere,
      *   oblate ellipsoid, or prolate ellipsoid.
      **********************************************************************/
-    Math::real EccentricitySq() { return _e2; }
+    Math::real EccentricitySq() const throw() { return _e2; }
 
     /**
      * @return <i>e'</i> <sup>2</sup> = (<i>a</i><sup>2</sup> &minus;
@@ -151,7 +151,7 @@ namespace GeographicLib {
      *   squared of the ellipsoid.  This is zero, positive, or negative for a
      *   sphere, oblate ellipsoid, or prolate ellipsoid.
      **********************************************************************/
-    Math::real SecondEccentricitySq() { return _e12; }
+    Math::real SecondEccentricitySq() const throw() { return _e12; }
 
     /**
      * @return <i>e''</i> <sup>2</sup> = (<i>a</i><sup>2</sup> &minus;
@@ -160,7 +160,7 @@ namespace GeographicLib {
      *   positive, or negative for a sphere, oblate ellipsoid, or prolate
      *   ellipsoid.
      **********************************************************************/
-    Math::real ThirdEccentricitySq() { return _e2 / (2 - _e2); }
+    Math::real ThirdEccentricitySq() const throw() { return _e2 / (2 - _e2); }
     ///@}
 
     /** \name Latitude conversion.

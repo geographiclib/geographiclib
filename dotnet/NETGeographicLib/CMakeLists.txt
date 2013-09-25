@@ -1,14 +1,16 @@
 # Build the .NET library...
 
-# By default this is only invoked for Visual Studio generators othan
+# By default this is only invoked for Visual Studio generators other
 # than Visual Studio 10.  Visual Studio 10 generates triggers a bunch of
-# (ignorable?) warnings of the form
-
+# warnings of the form:
+#
 # 3>  Geodesic.cpp
 # 3>c:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll : warning C4945: 'ExtensionAttribute' : cannot import symbol from 'c:\program files (x86)\reference assemblies\microsoft\framework\.netframework\v4.0\system.core.dll': as 'System::Runtime::CompilerServices::ExtensionAttribute' has already been imported from another assembly 'mscorlib'
 # 3> c:\windows\microsoft.net\framework\v4.0.30319\mscorlib.dll : see declaration of 'System::Runtime::CompilerServices::ExtensionAttribute'
 # 3> first seen type is used; re-order imported assemblies to use the current type
 # 3> This diagnostic occurred while importing type 'System.Runtime.CompilerServices.ExtensionAttribute' from assembly 'System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'.
+#
+# It appears however that these warnings can be safely ignored.
 
 # Include all the .cpp files in the library.
 file (GLOB SOURCES [A-Za-z]*.cpp)
