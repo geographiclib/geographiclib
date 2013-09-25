@@ -95,6 +95,8 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
+    echo cmake --build . --config Release --target PACKAGE
+    echo '#' cp GeographicLib-$VERSION-win32.exe $DEVELSOURCE/GeographicLib-$VERSION-win32-shared.exe
 ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared/build
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared/build
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
