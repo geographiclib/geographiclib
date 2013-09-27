@@ -658,7 +658,9 @@ In order to use %GeographicLib from C++ code, you will need to
   instead of the previous three steps, insert \verbatim
   # Put in your top-level CMakeLists.txt
   find_package (GeographicLib 1.9 REQUIRED)
-  # In the top-level CMakeLists.txt or wherever your code is compiled
+  if (NOT WIN32)
+    set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  endif ()
   include_directories (${GeographicLib_INCLUDE_DIRS})
   # In the CMakeLists.txt where you define your executable targets
   target_link_libraries (program1 ${GeographicLib_LIBRARIES})
@@ -4649,6 +4651,7 @@ of the git repository for %GeographicLib.
      this library.
    - Defer some of the initialization of GeographicLib::OSGB to when it
      is first called.
+   - Fix bug in autoconf make builds under MacOS.
 
  - <a href="http://geographiclib.sf.net/1.32">Version 1.32</a>
    (released 2013-07-12)

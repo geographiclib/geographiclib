@@ -83,7 +83,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 
 ../include/GeographicLib/Config.h: ../include/GeographicLib/Config-ac.h
 	( egrep '\bVERSION\b|\bGEOGRAPHICLIB_|\bHAVE_LONG_DOUBLE\b' $< | \
-	  sed -e 's/\bVERSION\b/GEOGRAPHICLIB_VERSION_STRING/'; \
+	  sed -e 's/ VERSION / GEOGRAPHICLIB_VERSION_STRING /'; \
 	  grep WORDS_BIGENDIAN $< | tail -1 ) > $@
 
 $(libGeographic_la_OBJECTS): ../include/GeographicLib/Config.h

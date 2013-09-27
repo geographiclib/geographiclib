@@ -75,6 +75,7 @@ clean:
 TAGS: $(HEADERS) $(SOURCES)
 	etags $^
 
+Accumulator.o: Accumulator.hpp Config.h Constants.hpp Math.hpp
 AlbersEqualArea.o: AlbersEqualArea.hpp Config.h Constants.hpp Math.hpp
 AzimuthalEquidistant.o: AzimuthalEquidistant.hpp Config.h Constants.hpp \
 	Geodesic.hpp Math.hpp
