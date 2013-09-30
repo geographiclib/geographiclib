@@ -54,8 +54,12 @@ namespace NETGeographicLib
    * single-cell caching which results in a Geoid object which \e is thread
    * safe.
    *
-   * Example of use:
+   * C# Example:
    * \include example-Geoid.cs
+   * Managed C++ Example:
+   * \include example-Geoid.cpp
+   * Visual Basic Example:
+   * \include example-Geoid.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * The () operator has been replaced with Height method.

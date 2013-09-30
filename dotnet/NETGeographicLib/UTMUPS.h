@@ -55,8 +55,12 @@ namespace NETGeographicLib
    *   UPS coordinate is legal.  A more systematic approach is taken here.
    * - The underlying projections are not very accurately implemented.
    *
-   * Example of use:
+   * C# Example:
    * \include example-UTMUPS.cs
+   * Managed C++ Example:
+   * \include example-UTMUPS.cpp
+   * Visual Basic Example:
+   * \include example-UTMUPS.vb
    *
    **********************************************************************/
     public ref class UTMUPS

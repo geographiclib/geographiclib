@@ -53,8 +53,12 @@ namespace NETGeographicLib
    * - H. Moritz, Geodetic Reference System 1980, J. Geodesy 54(3), 395-405
    *   (1980) http://dx.doi.org/10.1007/BF02521480
    *
-   * Example of use:
+   * C# Example:
    * \include example-NormalGravity.cs
+   * Managed C++ Example:
+   * \include example-NormalGravity.cpp
+   * Visual Basic Example:
+   * \include example-NormalGravity.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A constructor has been provided for creating standard WGS84 and GRS80

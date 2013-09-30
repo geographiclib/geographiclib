@@ -50,8 +50,12 @@ namespace NETGeographicLib
    * the WGS84 ellipsoid.  See \ref geocentric for further information on the
    * errors.
    *
-   * Example of use:
+   * C# Example:
    * \include example-Geocentric.cs
+   * Managed C++ Example:
+   * \include example-Geocentric.cpp
+   * Visual Basic Example:
+   * \include example-Geocentric.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor is provided that assumes WGS84 parameters.

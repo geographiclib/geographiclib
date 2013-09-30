@@ -31,8 +31,12 @@ namespace NETGeographicLib
    * class in the UTMUPS, MGRS, or Geoid classes without first converting the
    * datum (and vice versa).
    *
-   * Example of use:
+   * C# Example:
    * \include example-OSGB.cs
+   * Managed C++ Example:
+   * \include example-OSGB.cpp
+   * Visual Basic Example:
+   * \include example-OSGB.vb
    **********************************************************************/
     public ref class OSGB
     {

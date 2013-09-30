@@ -49,8 +49,12 @@ namespace NETGeographicLib
    *   coordinate is legal.  A more systematic approach is taken here.
    * - The underlying projections are not very accurately implemented.
    *
-   * Example of use:
+   * C# Example:
    * \include example-MGRS.cs
+   * Managed C++ Example:
+   * \include example-MGRS.cpp
+   * Visual Basic Example:
+   * \include example-MGRS.vb
    *
    **********************************************************************/
     public ref class MGRS

@@ -56,8 +56,12 @@ namespace NETGeographicLib
    * of the reduced lengths for the two geodesics between that point and,
    * respectively, (\e lat1, \e lon1) and (\e lat, \e lon).
    *
-   * Example of use:
+   * C# Example:
    * \include example-CassiniSoldner.cs
+   * Managed C++ Example:
+   * \include example-CassiniSoldner.cpp
+   * Visual Basic Example:
+   * \include example-CassiniSoldner.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * The LatitudeOrigin, LongitudeOrigin, MajorRadius and Flattening

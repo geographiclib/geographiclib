@@ -51,8 +51,12 @@ namespace NETGeographicLib
    * for specifying a false easting or false northing or a different latitude
    * of origin.
    *
-   * Example of use:
+   * C# Example:
    * \include example-AlbersEqualArea.cs
+   * Managed C++ Example:
+   * \include example-AlbersEqualArea.cpp
+   * Visual Basic Example:
+   * \include example-AlbersEqualArea.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A constructor has been provided that creates the standard projections.

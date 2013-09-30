@@ -28,8 +28,12 @@ namespace NETGeographicLib
    * The conversions all take place via geocentric coordinates using a
    * Geocentric object.
    *
-   * Example of use:
+   * C# Example:
    * \include example-LocalCartesian.cs
+   * Managed C++ Example:
+   * \include example-LocalCartesian.cpp
+   * Visual Basic Example:
+   * \include example-LocalCartesian.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * Constructors have been provided that assume WGS84 parameters.

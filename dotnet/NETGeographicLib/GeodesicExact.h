@@ -66,8 +66,12 @@ namespace NETGeographicLib
    * See \ref geodellip for the formulation.  See the documentation on the
    * Geodesic class for additional information on the geodesics problems.
    *
-   * Example of use:
+   * C# Example:
    * \include example-GeodesicExact.cs
+   * Managed C++ Example:
+   * \include example-GeodesicExact.cpp
+   * Visual Basic Example:
+   * \include example-GeodesicExact.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor is provided that assumes WGS84 parameters.

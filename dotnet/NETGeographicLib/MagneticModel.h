@@ -42,8 +42,12 @@ namespace NETGeographicLib
    *   - http://ngdc.noaa.gov/geomag/EMM/index.html
    *   - http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip
    *
-   * Example of use:
+   * C# Example:
    * \include example-MagneticModel.cs
+   * Managed C++ Example:
+   * \include example-MagneticModel.cpp
+   * Visual Basic Example:
+   * \include example-MagneticModel.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * The () operator has been replaced with Field.

@@ -31,6 +31,9 @@ DLL.  The source code for NETGeographicLib is located in
 \<install folder\>/GeographicLib-1.33/dotnet/NETGeographicLib.  NETGeographicLib
 is not available for older versions of Microsoft Visual Studio.
 
+NETGeographic has been tested with C#, Managed C++, and Visual Basic.  Sample code 
+snippets can be found in \<install folder\>/GeographicLib-1.33/dotnet/examples.
+
 \section differences Differences between NETGeographicLib and GeographicLib
 
 The NETGeographicLib class names are identical to the GeographicLib class names.
@@ -90,18 +93,14 @@ These operators have been replaced with functions in the NETGeographicLib::Accum
 
 \section library Using NETGeographicLib in a .NET Application
 
-<I>Caveat: The Author is fluent in ANSI C++, Managed C++, and C#.  He has no idea if the
-following statements are true for Visual Basic or F#.  Furthermore, NETGeographicLib has only
-been tested in C# applications.  The author has been told that NETGeographicLib will work in
-all .NET languages.  The author would appreciate any feedback concerning the success or
-failure of using NETGeographicLib in Visual Basic or F#.</I>
-
 If you have access to the NETGeographicLib and GeographicLib projects then
 -# Create a new solution.
 -# Create a new project using any .NET language.  For this example, call it MyApp.
 -# Add the NETGeographicLib and GeographicLib projects to the solution.  Verify that NETGeographicLib depends upon GeographicLib.
--# Right-Click MyApp in the Solution View and select "Add Reference..." in the pop-up menu.
--# Select NETGeographic in the Projects Tab.
+-# Right-Click MyApp in the Solution View and select "Add Reference..." (C#/VB) or "References..." (Managed C++) in the pop-up menu.
+-# (Managed C++) Click the "Add New Reference..." button in the Properties dialog.
+\image html NETGeographicLib3.png
+-# Click the Projects Tab and select NETGeographic.
    \image html NETGeographicLib1.png
 -# Click OK.
 
@@ -109,6 +108,9 @@ If you only have access to the NETGeographic.dll then
 -# Create a new solution.
 -# Create a new project using any .NET language.  For this example, call it MyApp.
 -# Right-Click MyApp in the Solution View and select "Add Reference..." in the popup menu.
+-# Right-Click MyApp in the Solution View and select "Add Reference..." (C#/VB) or "References..." (Managed C++) in the pop-up menu.
+-# (Managed C++) Click the "Add New Reference..." button in the Properties dialog.
+\image html NETGeographicLib3.png
 -# Click the Browse Tab and navigate to the folder containing NETGeographic.dll.
 \image html NETGeographicLib2.png
 -# Select NETGeographic.dll and click OK.
@@ -123,6 +125,10 @@ to any C# source file that uses NETGeographicLib.
 Managed C++ developers should add
 \code using namespace NETGeographicLib; \endcode
 to any C++ source that uses NETGeographicLib classes.
+
+Visual Basic developers should add
+\code Imports NETGeographicLib \endcode
+to any Visual Basic source that uses NETGeographicLib classes.
 
 \section sample C# Sample Application
 

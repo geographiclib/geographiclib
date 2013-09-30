@@ -49,6 +49,13 @@ namespace NETGeographicLib
    * .
    * For more information on geodesics see \ref geodesic.
    *
+   * C# Example:
+   * \include example-GeodesicLine.cs
+   * Managed C++ Example:
+   * \include example-GeodesicLine.cpp
+   * Visual Basic Example:
+   * \include example-GeodesicLine.vb
+   *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A constructor has been provided which assumes WGS84 parameters.
    *

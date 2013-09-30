@@ -8,14 +8,15 @@ namespace example_Geocentric
         static void Main(string[] args)
         {
             try {
-                Geocentric earth = new Geocentric(6378137.0, 1.0 / 298.257223563);
+                Geocentric earth = new Geocentric( Constants.WGS84.MajorRadius,
+                                                   Constants.WGS84.Flattening);
                 // Alternatively: Geocentric earth = new Geocentric();
                 {
                     // Sample forward calculation
                     double lat = 27.99, lon = 86.93, h = 8820; // Mt Everest
                     double X, Y, Z;
                     earth.Forward(lat, lon, h, out X, out Y, out Z);
-                    Console.WriteLine( String.Format( "{0} {1} {2}",
+                    Console.WriteLine( String.Format( "{0} {1} {2}", 
                         Math.Floor(X / 1000 + 0.5),
                         Math.Floor(Y / 1000 + 0.5),
                         Math.Floor(Z / 1000 + 0.5) ) );

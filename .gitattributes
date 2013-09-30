@@ -40,3 +40,4 @@ doxyfile.in text
 *.kml text
 *.kmz -text
 *.cs text
+*.vb text

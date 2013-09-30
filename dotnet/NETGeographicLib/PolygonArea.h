@@ -36,8 +36,12 @@ namespace NETGeographicLib
    * option to treat the points as defining a polyline instead of a polygon; in
    * that case, only the perimeter is computed.
    *
-   * Example of use:
+   * C# Example:
    * \include example-PolygonArea.cs
+   * Managed C++ Example:
+   * \include example-PolygonArea.cpp
+   * Visual Basic Example:
+   * \include example-PolygonArea.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * The MajorRadius and Flattening functions are implemented as properties.

@@ -11,14 +11,14 @@ namespace example_LambertConformalConic
                 // Define the Pennsylvania South state coordinate system EPSG:3364
                 // http://www.spatialreference.org/ref/epsg/3364/
                 const double
-                    a = 6378137.0,
-                    f = 1/298.257222101,                      // GRS80
                     lat1 = 40 + 58/60.0, lat2 = 39 + 56/60.0, // standard parallels
                     k1 = 1,                                   // scale
                     lat0 = 39 + 20/60.0, lon0 =-77 - 45/60.0, // origin
                     fe = 600000, fn = 0;                      // false easting and northing
                 // Set up basic projection
-                LambertConformalConic PASouth = new LambertConformalConic(a, f, lat1, lat2, k1);
+                LambertConformalConic PASouth = new LambertConformalConic( Constants.WGS84.MajorRadius,
+                                                                           Constants.WGS84.Flattening, 
+                                                                           lat1, lat2, k1);
                 double x0, y0;
                 // Transform origin point
                 PASouth.Forward(lon0, lat0, lon0, out x0, out y0);

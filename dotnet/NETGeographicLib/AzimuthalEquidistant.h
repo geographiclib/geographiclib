@@ -31,8 +31,12 @@ namespace NETGeographicLib
    * The conversions all take place using a Geodesic object (by default
    * Geodesic::WGS84).  For more information on geodesics see \ref geodesic.
    *
-   * Example of use:
+   * C# Example:
    * \include example-AzimuthalEquidistant.cs
+   * Managed C++ Example:
+   * \include example-AzimuthalEquidistant.cpp
+   * Visual Basic Example:
+   * \include example-AzimuthalEquidistant.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor is provided that assumes a WGS84 ellipsoid.

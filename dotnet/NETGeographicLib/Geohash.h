@@ -24,8 +24,12 @@ namespace NETGeographicLib
    * trailing characters are dropped from the string the geographic location
    * remains nearby.
    *
-   * Example of use:
+   * C# Example:
    * \include example-Geohash.cs
+   * Managed C++ Example:
+   * \include example-Geohash.cpp
+   * Visual Basic Example:
+   * \include example-Geohash.vb
    **********************************************************************/
     public ref class Geohash
     {

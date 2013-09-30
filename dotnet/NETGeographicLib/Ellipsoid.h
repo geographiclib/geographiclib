@@ -29,8 +29,12 @@ namespace NETGeographicLib
    * provides accurate results even when \e f is large.  Use of this class
    * should be limited to &minus;3 < \e f < 3/4 (i.e., 1/4 < b/a < 4).
    *
-   * Example of use:
+   * C# Example:
    * \include example-Ellipsoid.cs
+   * Managed C++ Example:
+   * \include example-Ellipsoid.cpp
+   * Visual Basic Example:
+   * \include example-Ellipsoid.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor has been provided that assumes a WGS84 ellipsoid.

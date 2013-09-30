@@ -56,8 +56,12 @@ namespace NETGeographicLib
    * .
    * The notation follows http://dlmf.nist.gov/19 and http://dlmf.nist.gov/22
    *
-   * Example of use:
+   * C# Example:
    * \include example-EllipticFunction.cs
+   * Managed C++ Example:
+   * \include example-EllipticFunction.cpp
+   * Visual Basic Example:
+   * \include example-EllipticFunction.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * The k2, kp2, alpha2, and alphap2 functions are implemented as properties.

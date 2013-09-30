@@ -37,8 +37,12 @@ namespace NETGeographicLib
    * whether gradients are to be calculated).  For this reason the constructor
    * may throw a GeographicErr exception.
    *
-   * Example of use:
+   * C# Example:
    * \include example-CircularEngine.cs
+   * Managed C++ Example:
+   * \include example-CircularEngine.cpp
+   * Visual Basic Example:
+   * \include example-CircularEngine.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * The () operator has been replaced with with LongitudeSum.

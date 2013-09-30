@@ -64,8 +64,12 @@ namespace NETGeographicLib
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
    *   Francisco, 1967).
    *
-   * Example of use:
+   * C# Example:
    * \include example-GravityModel.cs
+   * Managed C++ Example:
+   * \include example-GravityModel.cpp
+   * Visual Basic Example:
+   * \include example-GravityModel.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * The following functions are implemented as properties:

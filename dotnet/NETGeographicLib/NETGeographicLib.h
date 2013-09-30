@@ -98,6 +98,7 @@ namespace NETGeographicLib
      **********************************************************************/
     public ref class VersionInfo
     {
+    private:
         VersionInfo() {}
     public:
         /**
@@ -144,5 +145,112 @@ namespace NETGeographicLib
         static std::string ManagedToUnmanaged( System::String^ s );
         static System::String^ UnmanagedToManaged( const std::string& s )
         {   return gcnew System::String( s.c_str() ); }
+    };
+
+    /**
+     * @brief Physical constants
+     *
+     * References:<br>
+     * http://www.orekit.org/static/apidocs/org/orekit/utils/Constants.html<br>
+     * A COMPENDIUM OF EARTH CONSTANTS RELEVANT TO AUSTRALIAN GEODETIC SCIENCE<br>
+     * http://espace.library.curtin.edu.au/R?func=dbin-jump-full&local_base=gen01-era02&object_id=146669
+     **********************************************************************/
+    public ref class Constants
+    {
+    private:
+        Constants() {}
+    public:
+
+        /**
+         * @brief WGS72 Parameters
+         **********************************************************************/
+        ref class WGS72
+        {
+        private:
+            WGS72() {}
+            // The equatorial radius in meters.
+            static const double m_MajorRadius = 6378135.0;
+            // The flattening of the ellipsoid
+            static const double m_Flattening = 1.0 / 298.26;
+            // The gravitational constant in meters<sup>3</sup>/second<sup>2</sup>.
+            static const double m_GravitationalConstant = 3.986008e+14;
+            // The spin rate of the Earth in radians/second.
+            static const double m_EarthRate = 7.292115147e-5;
+            // dynamical form factor
+            static const double m_J2 = 1.0826158e-3;
+        public:
+            //! The equatorial radius in meters.
+            static property double MajorRadius { double get() { return m_MajorRadius; } }
+            //! The flattening of the ellipsoid
+            static property double Flattening { double get() { return m_Flattening; } }
+            //! The gravitational constant in meters<sup>3</sup>/second<sup>2</sup>.
+            static property double GravitationalConstant { double get() { return m_GravitationalConstant; } }
+            //! The spin rate of the Earth in radians/second.
+            static property double EarthRate { double get() { return m_EarthRate; } }
+            //! The dynamical form factor (J2).
+            static property double J2 { double get() { return m_J2; } }
+        };
+
+        /**
+         * @brief WGS84 Parameters
+         **********************************************************************/
+        ref class WGS84
+        {
+        private:
+            WGS84() {}
+            // The equatorial radius in meters.
+            static const double m_MajorRadius = 6378137.0;
+            // The flattening of the ellipsoid
+            static const double m_Flattening = 1.0 / 298.257223563;
+            // The gravitational constant in meters<sup>3</sup>/second<sup>2</sup>.
+            // I have also seen references that set this value to 3.986004418e+14.
+            // The following value is used to maintain consistency with GeographicLib.
+            static const double m_GravitationalConstant = 3.986005e+14;
+            // The spin rate of the Earth in radians/second.
+            static const double m_EarthRate = 7.292115e-5;
+            // dynamical form factor
+            static const double m_J2 = 1.08263e-3;
+        public:
+            //! The equatorial radius in meters.
+            static property double MajorRadius { double get() { return m_MajorRadius; } }
+            //! The flattening of the ellipsoid
+            static property double Flattening { double get() { return m_Flattening; } }
+            //! The gravitational constant in meters<sup>3</sup>/second<sup>2</sup>.
+            static property double GravitationalConstant { double get() { return m_GravitationalConstant; } }
+            //! The spin rate of the Earth in radians/second.
+            static property double EarthRate { double get() { return m_EarthRate; } }
+            //! The dynamical form factor (J2).
+            static property double J2 { double get() { return m_J2; } }
+        };
+
+        /**
+         * @brief GRS80 Parameters
+         **********************************************************************/
+        ref class GRS80
+        {
+        private:
+            GRS80() {}
+            // The equatorial radius in meters.
+            static const double m_MajorRadius = 6378137.0;
+            // The flattening of the ellipsoid
+            static const double m_Flattening = 1.0 / 298.257222100882711;
+            // The gravitational constant in meters<sup>3</sup>/second<sup>2</sup>.
+            static const double m_GravitationalConstant = 3.986005e+14;
+            // The spin rate of the Earth in radians/second.
+            static const double m_EarthRate = 7.292115e-5;
+            // dynamical form factor
+            static const double m_J2 = 1.08263e-3;
+        public:
+            //! The equatorial radius in meters.
+            static property double MajorRadius { double get() { return m_MajorRadius; } }
+            //! The flattening of the ellipsoid
+            static property double Flattening { double get() { return m_Flattening; } }
+            //! The gravitational constant in meters<sup>3</sup>/second<sup>2</sup>.
+            static property double GravitationalConstant { double get() { return m_GravitationalConstant; } }
+            //! The spin rate of the Earth in radians/second.
+            static property double EarthRate { double get() { return m_EarthRate; } }
+            //! The dynamical form factor (J2).
+            static property double J2 { double get() { return m_J2; } }
+        };
     };
 }  // namespace NETGeographicLib

@@ -25,8 +25,12 @@ namespace NETGeographicLib
    * Use GravityModel::Circle to create a GravityCircle object.  (The
    * constructor for this class is for internal use only.)
    *
-   * Example of use:
+   * C# Example:
    * \include example-GravityCircle.cs
+   * Managed C++ Example:
+   * \include example-GravityCircle.cpp
+   * Visual Basic Example:
+   * \include example-GravityCircle.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * The following functions are implemented as properties:

@@ -89,8 +89,12 @@ namespace NETGeographicLib
    *   point to appear as straight lines in the projection; i.e., it
    *   generalizes the spherical great circle to a geodesic.
    *
-   * Example of use:
+   * C# Example:
    * \include example-Gnomonic.cs
+   * Managed C++ Example:
+   * \include example-Gnomonic.cpp
+   * Visual Basic Example:
+   * \include example-Gnomonic.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor has been provided that assumes WGS84 parameters.

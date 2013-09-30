@@ -67,8 +67,12 @@ namespace NETGeographicLib
    *
    * See \ref transversemercator for a discussion of this projection.
    *
-   * Example of use:
+   * C# Example:
    * \include example-TransverseMercatorExact.cs
+   * Managed C++ Example:
+   * \include example-TransverseMercatorExact.cpp
+   * Visual Basic Example:
+   * \include example-TransverseMercatorExact.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor is provided that assumes WGS84 parameters and

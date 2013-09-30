@@ -19,8 +19,12 @@ namespace NETGeographicLib
    * angle in degrees and format an angle in degrees as degree, minutes, and
    * seconds.  In addition, handle NANs and infinities on input and output.
    *
-   * Example of use:
+   * C# Example:
    * \include example-DMS.cs
+   * Managed C++ Example:
+   * \include example-DMS.cpp
+   * Visual Basic Example:
+   * \include example-DMS.vb
    **********************************************************************/
 public ref class DMS
 {

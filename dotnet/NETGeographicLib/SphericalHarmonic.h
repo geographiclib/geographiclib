@@ -56,8 +56,12 @@ namespace NETGeographicLib
    * - C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw
    *   summation, Boll. Geod. Sci. Aff. 41(4), 349--375 (1982).
    *
-   * Example of use:
+   * C# Example:
    * \include example-SphericalHarmonic.cs
+   * Managed C++ Example:
+   * \include example-SphericalHarmonic.cpp
+   * Visual Basic Example:
+   * \include example-SphericalHarmonic.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * This class replaces the GeographicLib::SphericalHarmonic::operator() with

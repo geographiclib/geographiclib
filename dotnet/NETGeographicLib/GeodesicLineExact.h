@@ -24,8 +24,12 @@ namespace NETGeographicLib
    * additional information on this class see the documentation on the
    * GeodesicLine class.
    *
-   * Example of use:
+   * C# Example:
    * \include example-GeodesicLineExact.cs
+   * Managed C++ Example:
+   * \include example-GeodesicLineExact.cpp
+   * Visual Basic Example:
+   * \include example-GeodesicLineExact.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A constructor has been provided that assumes WGS84 parameters.

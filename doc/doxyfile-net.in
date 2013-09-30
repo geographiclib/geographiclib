@@ -722,7 +722,9 @@ EXCLUDE_SYMBOLS        =
 # directories that contain example code fragments that are included (see
 # the \include command).
 
-EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@/dotnet/examples
+EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@/dotnet/examples/CS \
+                         @PROJECT_SOURCE_DIR@/dotnet/examples/ManagedCPP \
+                         @PROJECT_SOURCE_DIR@/dotnet/examples/VB
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp

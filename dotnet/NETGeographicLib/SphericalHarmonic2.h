@@ -24,8 +24,12 @@ namespace NETGeographicLib
    * C'<sub>\e nm</sub> + \e tau'' C''<sub>\e nm</sub> (and similarly for \e
    * S<sub>\e nm</sub>).
    *
-   * Example of use:
+   * C# Example:
    * \include example-SphericalHarmonic2.cs
+   * Managed C++ Example:
+   * \include example-SphericalHarmonic2.cpp
+   * Visual Basic Example:
+   * \include example-SphericalHarmonic2.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * This class replaces the () operator with HarmonicSum().

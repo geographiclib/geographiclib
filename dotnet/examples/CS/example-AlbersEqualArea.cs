@@ -9,13 +9,13 @@ namespace example_AlbersEqualArea
         {
             try {
                 const double
-                    a = 6378137.0,
-                    f = 1.0 / 298.257223563,
                     lat1 = 40 + 58/60.0, lat2 = 39 + 56/60.0, // standard parallels
                     k1 = 1,                                   // scale
                     lon0 = -77 - 45/60.0;                     // Central meridan
                 // Set up basic projection
-                AlbersEqualArea albers = new AlbersEqualArea( a, f, lat1, lat2, k1);
+                AlbersEqualArea albers = new AlbersEqualArea( Constants.WGS84.MajorRadius,
+                                                              Constants.WGS84.Flattening, 
+                                                              lat1, lat2, k1);
                 {
                     // Sample conversion from geodetic to Albers Equal Area
                     double lat = 39.95, lon = -75.17;    // Philadelphia

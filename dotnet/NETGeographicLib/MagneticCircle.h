@@ -25,8 +25,12 @@ namespace NETGeographicLib
    * Use MagneticModel::Circle to create a MagneticCircle object.  (The
    * constructor for this class is for internal use only.)
    *
-   * Example of use:
+   * C# Example:
    * \include example-MagneticCircle.cs
+   * Managed C++ Example:
+   * \include example-MagneticCircle.cpp
+   * Visual Basic Example:
+   * \include example-MagneticCircle.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * The () operator has been replaced with Field.

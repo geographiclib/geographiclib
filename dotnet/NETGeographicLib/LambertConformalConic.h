@@ -48,7 +48,12 @@ namespace NETGeographicLib
    * calling function.  For example the Pennsylvania South state coordinate
    * system (<a href="http://www.spatialreference.org/ref/epsg/3364/">
    * EPSG:3364</a>) is obtained by:
+   * C# Example:
    * \include example-LambertConformalConic.cs
+   * Managed C++ Example:
+   * \include example-LambertConformalConic.cpp
+   * Visual Basic Example:
+   * \include example-LambertConformalConic.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor has been provided that assumes a Mercator

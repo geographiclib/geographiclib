@@ -39,8 +39,12 @@ namespace NETGeographicLib
    * Once the input string has been parsed, you can print the result out in any
    * of the formats, decimal degrees, degrees minutes seconds, MGRS, UTM/UPS.
    *
-   * Example of use:
+   * C# Example:
    * \include example-GeoCoords.cs
+   * Managed C++ Example:
+   * \include example-GeoCoords.cpp
+   * Visual Basic Example:
+   * \include example-GeoCoords.vb
    *
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * The following functions are implemented as properties: MajorRadius,

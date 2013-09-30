@@ -26,8 +26,12 @@ namespace NETGeographicLib
     Floating-Point Arithmetic and Fast Robust Geometric Predicates</a>,
     Discrete & Computational Geometry 18(3) 305--363 (1997).
 
-    Example of use:
+    C# Example:
     \include example-Accumulator.cs
+    Managed C++ Example:
+    \include example-Accumulator.cpp
+    Visual Basic Example:
+    \include example-Accumulator.vb
 
     <B>INTERFACE DIFFERENCES:</B><BR>
     Since assignment operators (=,+=,-=,*=) are not supported in managed classes;
