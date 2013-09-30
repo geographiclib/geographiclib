@@ -1,7 +1,7 @@
 using namespace System;
 using namespace NETGeographicLib;
 
-int main(array<System::String ^> ^args)
+int main(array<System::String ^> ^/*args*/)
 {
     try {
         // Compare using Accumulator and ordinary summation for a sum of large and

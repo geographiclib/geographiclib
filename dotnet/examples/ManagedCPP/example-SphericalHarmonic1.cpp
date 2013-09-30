@@ -1,7 +1,7 @@
 using namespace System;
 using namespace NETGeographicLib;
 
-int main(array<System::String ^> ^args)
+int main(array<System::String ^> ^/*args*/)
 {
     try {
         int N = 3, N1 = 2;                  // The maximum degrees

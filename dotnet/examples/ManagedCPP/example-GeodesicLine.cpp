@@ -1,7 +1,7 @@
 using namespace System;
 using namespace NETGeographicLib;
 
-int main(array<System::String ^> ^args)
+int main(array<System::String ^> ^/*args*/)
 {
     try {
         // Print waypoints between JFK and SIN

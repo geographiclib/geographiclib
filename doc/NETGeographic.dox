@@ -31,7 +31,7 @@ DLL.  The source code for NETGeographicLib is located in
 \<install folder\>/GeographicLib-1.33/dotnet/NETGeographicLib.  NETGeographicLib
 is not available for older versions of Microsoft Visual Studio.
 
-NETGeographic has been tested with C#, Managed C++, and Visual Basic.  Sample code 
+NETGeographic has been tested with C#, Managed C++, and Visual Basic.  Sample code
 snippets can be found in \<install folder\>/GeographicLib-1.33/dotnet/examples.
 
 \section differences Differences between NETGeographicLib and GeographicLib

@@ -16,7 +16,7 @@ namespace example_Geocentric
                     double lat = 27.99, lon = 86.93, h = 8820; // Mt Everest
                     double X, Y, Z;
                     earth.Forward(lat, lon, h, out X, out Y, out Z);
-                    Console.WriteLine( String.Format( "{0} {1} {2}", 
+                    Console.WriteLine( String.Format( "{0} {1} {2}",
                         Math.Floor(X / 1000 + 0.5),
                         Math.Floor(Y / 1000 + 0.5),
                         Math.Floor(Z / 1000 + 0.5) ) );

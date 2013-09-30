@@ -1,7 +1,7 @@
 using namespace System;
 using namespace NETGeographicLib;
 
-int main(array<System::String ^> ^args)
+int main(array<System::String ^> ^/*args*/)
 {
     try {
         EllipticFunction^ ell = gcnew EllipticFunction(0.1, 1.0);  // parameter m = 0.1

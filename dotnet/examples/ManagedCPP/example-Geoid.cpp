@@ -1,7 +1,7 @@
 using namespace System;
 using namespace NETGeographicLib;
 
-int main(array<System::String ^> ^args)
+int main(array<System::String ^> ^/*args*/)
 {
     try {
         Geoid^ egm96 = gcnew Geoid("egm96-5", "", true, false);
@@ -9,7 +9,7 @@ int main(array<System::String ^> ^args)
         double lat = 42, lon = -75, height_above_geoid = 20;
         double
             geoid_height = egm96->Height(lat, lon),
-            height_above_ellipsoid = (height_above_geoid
+            height_above_ellipsoid = (height_above_geoid +
                 (double)Geoid::ConvertFlag::GEOIDTOELLIPSOID * geoid_height);
         Console::WriteLine(height_above_ellipsoid);
     }

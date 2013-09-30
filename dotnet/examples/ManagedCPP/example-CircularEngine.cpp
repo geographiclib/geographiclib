@@ -1,7 +1,7 @@
 using namespace System;
 using namespace NETGeographicLib;
 
-int main(array<System::String ^> ^args)
+int main(array<System::String ^> ^/*args*/)
 {
     // This computes the same value as example-SphericalHarmonic.cpp using a
     // CircularEngine (which will be faster if many values on a circle of

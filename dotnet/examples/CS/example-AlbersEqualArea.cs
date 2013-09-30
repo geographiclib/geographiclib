@@ -14,7 +14,7 @@ namespace example_AlbersEqualArea
                     lon0 = -77 - 45/60.0;                     // Central meridan
                 // Set up basic projection
                 AlbersEqualArea albers = new AlbersEqualArea( Constants.WGS84.MajorRadius,
-                                                              Constants.WGS84.Flattening, 
+                                                              Constants.WGS84.Flattening,
                                                               lat1, lat2, k1);
                 {
                     // Sample conversion from geodetic to Albers Equal Area

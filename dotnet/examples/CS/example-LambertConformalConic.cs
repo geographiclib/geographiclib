@@ -17,7 +17,7 @@ namespace example_LambertConformalConic
                     fe = 600000, fn = 0;                      // false easting and northing
                 // Set up basic projection
                 LambertConformalConic PASouth = new LambertConformalConic( Constants.WGS84.MajorRadius,
-                                                                           Constants.WGS84.Flattening, 
+                                                                           Constants.WGS84.Flattening,
                                                                            lat1, lat2, k1);
                 double x0, y0;
                 // Transform origin point

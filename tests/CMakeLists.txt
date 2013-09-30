@@ -44,7 +44,7 @@ if (GEOGRAPHIC_SHARED_LIB AND WIN32)
   add_custom_command (TARGET testprograms POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E
     copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
-    COMMENT "Copying shared library to tools directory")
+    COMMENT "Copying shared library to tests directory")
 endif ()
 
 # Put all the tools into a folder in the IDE

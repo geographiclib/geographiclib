@@ -1,7 +1,7 @@
 using namespace System;
 using namespace NETGeographicLib;
 
-int main(array<System::String ^> ^args)
+int main(array<System::String ^> ^/*args*/)
 {
     try {
         GeodesicExact^ geod = gcnew GeodesicExact( Constants::WGS84::MajorRadius,

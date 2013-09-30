@@ -31,6 +31,13 @@ endif ()
 # Read in the exported definition of the library
 include ("${_DIR}/geographiclib-depends.cmake")
 set (GeographicLib_LIBRARIES Geographic)
-
+if (@BUILD_NETGEOGRAPHIC@)
+  set (NETGeographicLib_LIBRARIES NETGeographic)
+  set (NETGeographicLib_FOUND 1)
+  set (NETGEOGRAPHICLIB_FOUND 1)
+else ()
+  set (NETGeographicLib_FOUND 0)
+  set (NETGEOGRAPHICLIB_FOUND 0)
+endif ()
 # GeographicLib_FOUND is set to 1 automatically
 set (GEOGRAPHICLIB_FOUND 1)     # for backwards compatibility
