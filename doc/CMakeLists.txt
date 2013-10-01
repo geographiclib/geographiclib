@@ -38,7 +38,8 @@ if (DOXYGEN_FOUND)
     ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp
     ../legacy/C/*.[ch] ../legacy/Fortran/*.for ../legacy/Fortran/*.inc
     ../dotnet/NETGeographicLib/*.cpp ../dotnet/NETGeographicLib/*.h
-    ../dotnet/examples/*.cs)
+    ../dotnet/examples/CS/*.cs ../dotnet/examples/ManagedCPP/*.cpp
+    ../dotnet/examples/VB/*.vb)
   file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac
     tmseries30.html geodseries30.html ../LICENSE.txt)
   file (GLOB FIGURES *.png)

@@ -22,13 +22,8 @@ set (CMAKE_DEBUG_POSTFIX)
 add_library (NETGeographic SHARED ${SOURCES} ${HEADERS})
 set_target_properties (NETGeographic PROPERTIES COMPILE_FLAGS "/clr")
 
-if (CMAKE_CXX_FLAGS_DEBUG MATCHES "/RTC1")
-  string (REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-endif ()
-
-if (CMAKE_CXX_FLAGS MATCHES "/EHsc")
-  string(REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-endif ()
+string (REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+string (REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 target_link_libraries (NETGeographic Geographic)
 

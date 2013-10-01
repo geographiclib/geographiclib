@@ -160,4 +160,52 @@ The following table lists the source code that demonstrates specific classes.
 <TR><TD>TypeIIIProjPanel.cs</TD><TD>UTMUPS, MGRS, OSGB</TD></TR>
 </TABLE>
 </center>
+
+\section cmake Using cmake to build a Managed C++ Application
+
+In order to use NETGeographicLib with cmake, ask for the NETGeographic
+"component" of GeographicLib using \verbatim
+find_package(GeographicLib COMPONENTS NETGeographic) \endverbatim
+If NETGeographic is found, then
+<code>GeographicLib_NETGeographic_FOUND</code> will be set to true and
+<code>GeographicLib_NETGeographic_LIBRARIES</code> will be set to the
+NETGeographic shared library.  This is the name of the cmake target from
+which the pathname of the dll can be obtained.
+
+Here is a very simple test code, which uses the Geodesic class:
+\include example-Geodesic-small.cpp
+This example is
+<code>dotnet/examples/ManagedCPP/example-Geodesic-small.cpp</code>.  If
+you build and run it according to the instructions above, it should
+print out \verbatim
+  5551.76... km \endverbatim
+
+Here is a complete CMakeList.txt files you can use to build this test
+code using the installed library: \verbatim
+cmake_minimum_required (VERSION 2.6)
+project (geodesictest)
+
+find_package(GeographicLib 1.33 REQUIRED COMPONENTS NETGeographic)
+
+add_executable (${PROJECT_NAME} example-Geodesic-small.cpp)
+set_target_properties (${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/clr")
+string(REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+
+get_target_property (NETGeographicLib_LOCATION
+  "${GeographicLib_NETGeographic_LIBRARIES}" IMPORTED_LOCATION_RELEASE)
+set_target_properties (${PROJECT_NAME} PROPERTIES VS_DOTNET_REFERENCES
+  "${NETGeographicLib_LOCATION}")
+
+get_target_property (GeographicLib_LOCATION
+  "${GeographicLib_NETGeographic_LIBRARIES}"
+  IMPORTED_LINK_INTERFACE_LIBRARIES_RELEASE)
+get_target_property (GeographicLib_LOCATION
+  "${GeographicLib_LOCATION}" IMPORTED_LOCATION_RELEASE)
+
+if (GeographicLib_LOCATION MATCHES "\\.[Dd][Ll][Ll]\$")
+  add_custom_command (TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E
+    copy "${GeographicLib_LOCATION}" ${CMAKE_CFG_INTDIR}
+    COMMENT "Copying shared library for GeographicLib")
+endif () \endverbatim
 **********************************************************************/

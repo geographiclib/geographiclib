@@ -701,8 +701,33 @@ class:
 This example is <code>examples/example-Geodesic-small.cpp</code>.  If you
 compile, link, and run it according to the instructions above, it should
 print out \verbatim
-  5551.76 km
-\endverbatim
+  5551.76 km \endverbatim
+Here is a complete CMakeList.txt files you can use to build this test
+code using the installed library: \verbatim
+cmake_minimum_required (VERSION 2.6)
+project (geodesictest)
+
+find_package (GeographicLib 1.9 REQUIRED)
+
+if (NOT WIN32)
+  set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+endif ()
+
+include_directories (${GeographicLib_INCLUDE_DIRS})
+add_executable (${PROJECT_NAME} example-Geodesic-small.cpp)
+target_link_libraries (${PROJECT_NAME} ${GeographicLib_LIBRARIES})
+
+if (WIN32)
+  # Copy the shared library on Windows systems.
+  get_target_property (GeographicLib_LOCATION
+    "${GeographicLib_LIBRARIES}" IMPORTED_LOCATION_RELEASE)
+  if (GeographicLib_LOCATION MATCHES "\\.[Dd][Ll][Ll]\$")
+    add_custom_command (TARGET ${PROJECT_NAME} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E
+      copy "${GeographicLib_LOCATION}" ${CMAKE_CFG_INTDIR}
+      COMMENT "Copying shared library for GeographicLib")
+  endif ()
+endif () \endverbatim
 
 The next steps are:
  - Learn about and run the \ref utilities.

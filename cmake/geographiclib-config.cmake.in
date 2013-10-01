@@ -31,13 +31,23 @@ endif ()
 # Read in the exported definition of the library
 include ("${_DIR}/geographiclib-depends.cmake")
 set (GeographicLib_LIBRARIES Geographic)
-if (@BUILD_NETGEOGRAPHIC@)
-  set (NETGeographicLib_LIBRARIES NETGeographic)
-  set (NETGeographicLib_FOUND 1)
-  set (NETGEOGRAPHICLIB_FOUND 1)
-else ()
-  set (NETGeographicLib_FOUND 0)
-  set (NETGEOGRAPHICLIB_FOUND 0)
+
+# Check for the components requested.  The convention (for now) is that
+# each component should be a target?  No need to check if the component
+# is required or not.  The version file took care of that.
+# GeographicLib_${comp}_FOUND is set appropriately for each component.
+if (GeographicLib_FIND_COMPONENTS)
+  foreach (comp ${GeographicLib_FIND_COMPONENTS})
+    if (TARGET ${comp})
+      set (GeographicLib_${comp}_FOUND 1)
+      set (GeographicLib_${comp}_LIBRARIES ${comp})
+      message (STATUS "GeographicLib component ${comp} found")
+    else ()
+      set (GeographicLib_${comp}_FOUND 0)
+      message (WARNING "GeographicLib component ${comp} not found")
+    endif ()
+  endforeach ()
 endif ()
+
 # GeographicLib_FOUND is set to 1 automatically
 set (GEOGRAPHICLIB_FOUND 1)     # for backwards compatibility

@@ -147,17 +147,11 @@ endif ()
 # of warnings, but possibly these may be safely igored?) and ON for
 # other Visual Studio generators
 if (CMAKE_GENERATOR MATCHES "Visual Studio 10")
-  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" 0)
+  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" OFF)
 elseif (CMAKE_GENERATOR MATCHES "Visual Studio")
-  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" 1)
+  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" ON)
 else ()
-  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" 0)
-endif ()
-if (BUILD_NETGEOGRAPHIC)
-  # Sanitize value so it can be used in cmake config file
-  set (BUILD_NETGEOGRAPHIC 1)
-else ()
-  set (BUILD_NETGEOGRAPHIC 0)
+  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" OFF)
 endif ()
 
 set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
