@@ -127,7 +127,9 @@ Files
     java/.../*.java -- Java implementation of geodesic routines
 
     dotnet/NETGeographicLib/*.{cpp,h} -- .NET wrapper for GeographicLib
-    dotnet/examples/*.cs -- simple C# examples for each class
+    dotnet/examples/CS/*.cs -- simple C# examples for each class
+    dotnet/examples/ManagedCPP/*.cpp -- Managed C++ examples for each class
+    dotnet/examples/VB/*.vb -- simple Visual Basic examples for each class
     dotnet/Projection/* -- a more complex C# application
 
     legacy/C/* -- C implementation of geodesic routines

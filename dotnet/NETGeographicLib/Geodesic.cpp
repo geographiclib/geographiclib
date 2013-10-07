@@ -290,7 +290,6 @@ void Geodesic::ArcDirect(double lat1, double lon1, double azi1, double a12,
     M21 = lM21;
 }
 
-
 //*****************************************************************************
 double Geodesic::GenDirect(double lat1, double lon1, double azi1,
                         bool arcmode, double s12_a12,

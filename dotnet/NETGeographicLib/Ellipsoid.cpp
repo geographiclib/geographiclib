@@ -69,7 +69,6 @@ double Ellipsoid::InverseParametricLatitude(double beta)
     return m_pEllipsoid->InverseParametricLatitude( beta );
 }
 
-
 //*****************************************************************************
 double Ellipsoid::GeocentricLatitude(double phi)
 {
@@ -94,13 +93,11 @@ double Ellipsoid::InverseRectifyingLatitude(double mu)
     return m_pEllipsoid->InverseRectifyingLatitude( mu );
 }
 
-
 //*****************************************************************************
 double Ellipsoid::AuthalicLatitude(double phi)
 {
     return m_pEllipsoid->AuthalicLatitude( phi );
 }
-
 
 //*****************************************************************************
 double Ellipsoid::InverseAuthalicLatitude(double xi)

@@ -84,7 +84,6 @@ MagneticModel::MagneticModel(System::String^ name,
     }
 }
 
-
 //*****************************************************************************
 void MagneticModel::Field(double t, double lat, double lon, double h,
                 [System::Runtime::InteropServices::Out] double% Bx,

@@ -58,7 +58,6 @@ PolarStereographic::PolarStereographic()
     }
 }
 
-
 //*****************************************************************************
 void PolarStereographic::SetScale(double lat, double k)
 {

@@ -178,7 +178,7 @@ This example is
 <code>dotnet/examples/ManagedCPP/example-Geodesic-small.cpp</code>.  If
 you build and run it according to the instructions above, it should
 print out \verbatim
-  5551.76... km \endverbatim
+  5551.75940031868 km \endverbatim
 
 Here is a complete CMakeList.txt files you can use to build this test
 code using the installed library: \verbatim
@@ -208,4 +208,14 @@ if (GeographicLib_LOCATION MATCHES "\\.[Dd][Ll][Ll]\$")
     copy "${GeographicLib_LOCATION}" ${CMAKE_CFG_INTDIR}
     COMMENT "Copying shared library for GeographicLib")
 endif () \endverbatim
+The typical invocation of cmake is \verbatim
+mkdir BUILD
+cd BUILD
+cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 ..
+cmake --build . --config Release
+Release\geodesictest.exe \endverbatim
+<b>NOTE:</b> With Visual Studio 10, this results in warnings such as
+\verbation
+warning C4945: 'ExtensionAttribute' : cannot import symbol from ... \endverbatim
+which can (?) be ignored.
 **********************************************************************/

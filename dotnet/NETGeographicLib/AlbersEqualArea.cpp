@@ -66,7 +66,6 @@ AlbersEqualArea::AlbersEqualArea(double a, double f, double stdlat1, double stdl
     }
 }
 
-
 //*****************************************************************************
 AlbersEqualArea::AlbersEqualArea(double a, double f, double stdlat, double k0)
 {

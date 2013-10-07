@@ -61,7 +61,6 @@ TransverseMercatorExact::TransverseMercatorExact()
     }
 }
 
-
 //*****************************************************************************
 void TransverseMercatorExact::Forward(double lon0, double lat, double lon,
                 [System::Runtime::InteropServices::Out] double% x,

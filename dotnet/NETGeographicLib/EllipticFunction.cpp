@@ -252,7 +252,6 @@ double EllipticFunction::Delta(double sn, double cn)
     return m_pEllipticFunction->Delta( sn, cn );
 }
 
-
 //*****************************************************************************
 double EllipticFunction::RF(double x, double y, double z)
 {

@@ -83,7 +83,6 @@ double GravityModel::GeoidHeight(double lat, double lon)
     return m_pGravityModel->GeoidHeight( lat, lon );
 }
 
-
 //*****************************************************************************
 void GravityModel::SphericalAnomaly(double lat, double lon, double h,
         [System::Runtime::InteropServices::Out] double% Dg01,

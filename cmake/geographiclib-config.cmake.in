@@ -33,9 +33,10 @@ include ("${_DIR}/geographiclib-depends.cmake")
 set (GeographicLib_LIBRARIES Geographic)
 
 # Check for the components requested.  The convention (for now) is that
-# each component should be a target?  No need to check if the component
-# is required or not.  The version file took care of that.
-# GeographicLib_${comp}_FOUND is set appropriately for each component.
+# each component should be a target(?).  No need to check if the component
+# is required or not--the version file took care of that.
+# GeographicLib_${comp}_FOUND is set appropriately for each component and
+# GeographicLib_${comp}_LIBRARIES is set to the target name itself.
 if (GeographicLib_FIND_COMPONENTS)
   foreach (comp ${GeographicLib_FIND_COMPONENTS})
     if (TARGET ${comp})

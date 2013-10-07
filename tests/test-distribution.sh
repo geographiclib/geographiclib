@@ -47,6 +47,7 @@ DEVELSOURCE=/u/geographiclib
 GITSOURCE=file://$DEVELSOURCE
 WEBDIST=/home/ckarney/web/geographic-web
 WINDOWSBUILD=/u/temp
+WINDOWSBUILDWIN=u:/temp
 NUMCPUS=4
 
 test -d $TEMP || mkdir $TEMP
@@ -80,7 +81,11 @@ unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
 (
     echo "#! /bin/sh -e"
-    echo cmake -G \"Visual Studio 10\" -D PACKAGE_PATH=u:/pkg-vc10 -D GEOGRAPHICLIB_EXAMPLES=ON -D BUILD_NETGEOGRAPHICLIB=ON ..
+    echo 'b=geog-`pwd | sed s%.*/%%`'
+    echo 'rm -rf /tmp/$b'
+    echo 'mkdir /tmp/$b'
+    echo 'cd /tmp/$b'
+    echo cmake -G \"Visual Studio 10\" -D PACKAGE_PATH=u:/pkg-vc10 -D GEOGRAPHICLIB_EXAMPLES=ON -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
@@ -91,7 +96,11 @@ chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared
 (
     echo "#! /bin/sh -e"
-    echo cmake -G \"Visual Studio 10\" -D PACKAGE_PATH=u:/pkg-vc10-shared -D GEOGRAPHICLIB_EXAMPLES=ON -D GEOGRAPHIC_SHARED_LIB=ON -D BUILD_NETGEOGRAPHICLIB=ON ..
+    echo 'b=geog-`pwd | sed s%.*/%%`'
+    echo 'rm -rf /tmp/$b'
+    echo 'mkdir /tmp/$b'
+    echo 'cd /tmp/$b'
+    echo cmake -G \"Visual Studio 10\" -D PACKAGE_PATH=u:/pkg-vc10-shared -D GEOGRAPHICLIB_EXAMPLES=ON -D GEOGRAPHIC_SHARED_LIB=ON -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
@@ -102,7 +111,11 @@ chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared/build
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
 (
     echo "#! /bin/sh -e"
-    echo cmake -G \"Visual Studio 10 Win64\" -D PACKAGE_PATH=u:/pkg-vc10-x64 -D GEOGRAPHICLIB_EXAMPLES=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHICLIB=ON ..
+    echo 'b=geog-`pwd | sed s%.*/%%`'
+    echo 'rm -rf /tmp/$b'
+    echo 'mkdir /tmp/$b'
+    echo 'cd /tmp/$b'
+    echo cmake -G \"Visual Studio 10 Win64\" -D PACKAGE_PATH=u:/pkg-vc10-x64 -D GEOGRAPHICLIB_EXAMPLES=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target matlab-all
     echo cmake --build . --config Release --target RUN_TESTS
@@ -290,6 +303,14 @@ find . -type f |
 egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf' |
 egrep -v '\.sh|depcomp|install-sh|/config\.|configure|missing' |
 xargs grep -l  '	' || true
+echo
+echo Files with multiple newlines:
+find . -type f |
+egrep -v '/Makefile\.in|\.1\.html|\.png|\.pdf|/ltmain|/config|\.m4|Settings' |
+egrep -v '(Resources|Settings)\.Designer\.cs' |
+while read f;do
+    tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
+done
 echo
 
 DATE=`date +%F`

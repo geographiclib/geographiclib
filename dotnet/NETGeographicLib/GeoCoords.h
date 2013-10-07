@@ -281,7 +281,6 @@ namespace NETGeographicLib
          **********************************************************************/
         property int Zone { int get(); }
 
-
         /**
          * Gets/Sets the current alternate zone (0 = UPS).
          * @exception GeographicErr if \e zone cannot be used for this location.
