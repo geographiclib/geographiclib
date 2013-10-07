@@ -161,10 +161,24 @@ The following table lists the source code that demonstrates specific classes.
 </TABLE>
 </center>
 
-\section cmake Using cmake to build a Managed C++ Application
+\section netcmake Using cmake to build a Managed C++ Application
 
-In order to use NETGeographicLib with cmake, ask for the NETGeographic
-"component" of GeographicLib using \verbatim
+The following assumes that you have installed %GeographicLib in one of
+two ways:
+- you have built and installed %GeographicLib using cmake with
+  <code>-D BUILD_NETGEOGRAPHIC=ON</code> (see
+  \ref cmake "Installation with cmake" in the %GeographicLib
+  documentation).  You can use any version of Visual Studio to build
+  %GeographicLib and should use the same version to build your
+  application.  You can build %GeographicLib as a shared library using
+  <code>-D GEOGRAPHIC_SHARED_LIB=ON</code>.
+- you have installed %GeographicLib using one of the binary installers (see
+  \ref windowsbin "Using a binary installer for Windows" in the
+  %GeographicLib documentation).  In this case, you are restricted to using
+  Visual Studio 10 in Release mode.
+
+In order to build an application that uses NETGeographic with cmake, ask
+for the NETGeographic "component" of %GeographicLib using \verbatim
 find_package(GeographicLib COMPONENTS NETGeographic) \endverbatim
 If NETGeographic is found, then
 <code>GeographicLib_NETGeographic_FOUND</code> will be set to true and
@@ -172,13 +186,11 @@ If NETGeographic is found, then
 NETGeographic shared library.  This is the name of the cmake target from
 which the pathname of the dll can be obtained.
 
-Here is a very simple test code, which uses the Geodesic class:
+Here is a very simple test code, which uses the
+NETGeographicLib::Geodesic class:
 \include example-Geodesic-small.cpp
 This example is
-<code>dotnet/examples/ManagedCPP/example-Geodesic-small.cpp</code>.  If
-you build and run it according to the instructions above, it should
-print out \verbatim
-  5551.75940031868 km \endverbatim
+<code>dotnet/examples/ManagedCPP/example-Geodesic-small.cpp</code>.
 
 Here is a complete CMakeList.txt files you can use to build this test
 code using the installed library: \verbatim
@@ -212,10 +224,15 @@ The typical invocation of cmake is \verbatim
 mkdir BUILD
 cd BUILD
 cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 ..
-cmake --build . --config Release
-Release\geodesictest.exe \endverbatim
-<b>NOTE:</b> With Visual Studio 10, this results in warnings such as
-\verbation
+cmake --build . --config Release \endverbatim
+The version of Visual Studio should match that used to build
+NETGeographic.  <b>NOTE:</b> With Visual Studio 10, this results in
+warnings such as \verbatim
 warning C4945: 'ExtensionAttribute' : cannot import symbol from ... \endverbatim
-which can (?) be ignored.
+which can be safely(?) ignored.
+
+Running the example with \verbatim
+Release\geodesictest.exe  \endverbatim
+should give \verbatim
+  5551.75940031868 km \endverbatim
 **********************************************************************/

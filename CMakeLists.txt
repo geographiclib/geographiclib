@@ -134,15 +134,7 @@ else ()
     "Use doxygen to create the documentation" ON)
 endif ()
 
-# (8) Set the default "real" precision.  This should probably be left
-# at 2 (double).
-set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
-  "Default real precision: 1 = float, 2 = double, 3 = long double")
-if (NOT CMAKE_VERSION VERSION_LESS 2.8)
-  set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3)
-endif ()
-
-# (9) Build .NET wrapper library NETGeographic.  This only applies to
+# (8) Build .NET wrapper library NETGeographic.  This only applies to
 # Windows.  Default is OFF for Visual Studio 10 (because it triggers lot
 # of warnings, but possibly these may be safely igored?) and ON for
 # other Visual Studio generators
@@ -154,6 +146,8 @@ else ()
   option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" OFF)
 endif ()
 
+# (9) Set the default "real" precision.  This should probably be left
+# at 2 (double).
 set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
   "Default real precision: 1 = float, 2 = double, 3 = long double")
 if (NOT CMAKE_VERSION VERSION_LESS 2.8)

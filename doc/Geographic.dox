@@ -21,12 +21,14 @@ classes</a> for performing conversions between geographic, UTM, UPS,
 MGRS, geocentric, and local cartesian coordinates, for gravity (e.g.,
 EGM2008), geoid height and geomagnetic field (e.g., WMM2010)
 calculations, and for solving geodesic problems.  The emphasis is on
-returning accurate results with errors close to round-off (about
-5--15 nanometers).  New accurate algorithms for \ref geodesic and
-\ref transversemercator have been developed for this library.  The
+returning accurate results with errors close to round-off (about 5--15
+nanometers).  New accurate algorithms for \ref geodesic and \ref
+transversemercator have been developed for this library.  The
 functionality of the library can be accessed from user code, from the
-\ref utilities provided, or via the \ref other.  For a sample of the
-geodesic capabilities in JavaScript, check out the
+\ref utilities provided, or via the \ref other.  Also included is a
+managed C++ wrapper library <a href="NET/index.html">NETGeographic</a>
+which exposes the functionality to .NET applications.  For a sample of
+the geodesic capabilities in JavaScript, check out the
 <a href="../scripts/geod-calc.html">online geodesic calculator</a> and
 the script for displaying
 <a href="../scripts/geod-google.html">geodesics in Google Maps</a>
@@ -367,6 +369,15 @@ Here are the steps to compile and install %GeographicLib:
     sufficiently recent version of doxygen can be found.  Otherwise, the
     html documentation will redirect to the appropriate version of the
     online documentation.
+  - <code>BUILD_NETGEOGRAPHIC</code> (default: OFF for non-Windows
+    systems and ON for Windows systems, except for Visual Studio 10
+    generators).  If set to ON, build the managed C++ wrapper library
+    <a href="NET/index.html">NETGeographic</a>.  This only makes sense
+    for Windows systems.  The default is OFF if using Visual Studio 10,
+    because this generate a myriad of warnings.  However the warnings
+    can (probably) be ignored.  If <code>GEOGRAPHICLIB_EXAMPLES</code>
+    is ON then the managed C++ examples for NETGeographic are built
+    also.
   - <code>GEOGRAPHICLIB_PRECISION</code> specifies the precision to be
     used for "real" (i.e., floating point) numbers.  1 means float
     (single precision); 2 (the default) means double; 3 means long
@@ -483,6 +494,9 @@ is needed to build the Matlab interface and to run the tests.)
   <a href="index.html">doc/html/index.html</a> in a web
   browser.
 
+The Visual Studio 10 (2010) solution also contains projects to build <a
+href="NET/index.html">NETGeographic</a> and the C# example project.
+
 \section windowsbin Using a binary installer for Windows
 
 Use this method if you only need to use the %GeographicLib utilities.
@@ -514,7 +528,9 @@ Matlab interface is installed in the matlab folder.  Add this to your
 path in Matlab to access this interface.  The binaries were built
 using Visual Studio 10 (2010) in Release mode.  The Matlab interface
 was compiled with Matlab R2013a 64-bit, however it may work with some
-other 64-bit versions of Matlab.
+other 64-bit versions of Matlab.  The
+<a href="NET/index.html">NETGeographic</a> library dll is included with
+the binary installers.
 
 \section qt Building the library for use with Qt
 
@@ -1326,8 +1342,10 @@ contain brief instructions on how to use them.
 
 \section dotnet .NET wrapper
 
-For documentation, see
- - <a href="NET/index.html">NETGeographicLib .NET wrapper</a>.
+This is a comprehensive wrapper library, written and maintained by Scott
+Heiman, which exposes all of the functionality of %GeographicLib to the
+.NET family of languages.  For documentation, see
+ - <a href="NET/index.html">NETGeographic .NET wrapper library</a>.
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -4669,14 +4687,12 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.33">Version 1.33</a>
    (released 2013-mm-dd)
-   - Add .NET wrappers.
+   - Add <a href="NET/index.html">NETGeographic .NET wrapper library</a>.
    - Make inspector functions in GeographicLib::Ellipsoid const.
    - Add Accumulator.cpp to instantiate GeographicLib::Accumulator.
-   - STILL TO DO: document BUILD_NETGEOGRAPHIC and other aspect of using
-     this library.
    - Defer some of the initialization of GeographicLib::OSGB to when it
      is first called.
-   - Fix bug in autoconf make builds under MacOS.
+   - Fix bug in autoconf builds under MacOS.
 
  - <a href="http://geographiclib.sf.net/1.32">Version 1.32</a>
    (released 2013-07-12)
