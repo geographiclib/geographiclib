@@ -15,3 +15,16 @@ elseif (PACKAGE_FIND_VERSION)
     set (PACKAGE_VERSION_COMPATIBLE TRUE)
   endif ()
 endif ()
+
+set (GeographicLib_NETGeographic_FOUND @BUILD_NETGEOGRAPHIC@)
+
+# Check for the components requested.  The convention is that
+# GeographicLib_${comp}_FOUND should be true for all the required
+# components.
+if (GeographicLib_FIND_COMPONENTS)
+  foreach (comp ${GeographicLib_FIND_COMPONENTS})
+    if (GeographicLib_FIND_REQUIRED_${comp} AND NOT GeographicLib_${comp}_FOUND)
+      set (PACKAGE_VERSION_UNSUITABLE TRUE)
+    endif ()
+  endforeach ()
+endif ()

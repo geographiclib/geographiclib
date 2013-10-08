@@ -99,7 +99,7 @@ namespace GeographicLib {
      * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
     static Math::real LatitudeResolution(int len) throw() {
-      len = std::max(0, std::min(int(maxlen_), len));
+      len = (std::max)(0, (std::min)(int(maxlen_), len));
       return 180 * std::pow(0.5, 5 * len / 2);
     }
 
@@ -112,7 +112,7 @@ namespace GeographicLib {
      * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
     static Math::real LongitudeResolution(int len) throw() {
-      len = std::max(0, std::min(int(maxlen_), len));
+      len = (std::max)(0, (std::min)(int(maxlen_), len));
       return 360 * std::pow(0.5, 5 * len - 5 * len / 2);
     }
 

@@ -35,7 +35,7 @@ if (MSVC)
   get_filename_component(PDB ${PDB} NAME_WE)
   set(PDB ${_P}/${PDB}.pdb)
   INSTALL(FILES ${PDB} DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
-endif()
+endif ()
 
 # Put all the library into a folder in the IDE
 set_property (TARGET Geographic PROPERTY FOLDER library)

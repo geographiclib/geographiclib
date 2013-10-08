@@ -53,7 +53,7 @@ namespace GeographicLib {
    **********************************************************************/
 
   template<typename real>
-  class GEOGRAPHIC_EXPORT GeodesicLine30 {
+  class GeodesicLine30 {
   private:
     friend class Geodesic30<real>;
     static const int nC1_ = Geodesic30<real>::nC1_;

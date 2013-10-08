@@ -1,18 +1,13 @@
-EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html \
-	$(srcdir)/gauss-krueger-graticule.png \
+EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html
+
+FIGURES = $(srcdir)/gauss-krueger-graticule.png \
 	$(srcdir)/thompson-tm-graticule.png \
 	$(srcdir)/gauss-krueger-convergence-scale.png \
 	$(srcdir)/gauss-schreiber-graticule-a.png \
 	$(srcdir)/gauss-krueger-graticule-a.png \
 	$(srcdir)/thompson-tm-graticule-a.png \
 	$(srcdir)/gauss-krueger-error.png \
-	$(srcdir)/meridian-measures.png \
-	$(srcdir)/triaxial-grid.png \
-	$(srcdir)/triaxial-equatorial-a.png \
-	$(srcdir)/triaxial-equatorial-b.png \
-	$(srcdir)/triaxial-polar-a.png \
-	$(srcdir)/triaxial-polar-b.png \
-	$(srcdir)/triaxial-umbilical.png
+	$(srcdir)/meridian-measures.png
 
 SCRIPTDRIVERS = \
 	$(srcdir)/scripts/geod-calc.html \
@@ -122,7 +117,7 @@ manpages: $(MANPAGES)
 	touch $@
 
 html/index.html: manpages doxyfile.in Geographic.dox \
-	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) \
+	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(FIGURES) \
 	doxyfile-c.in geodesic-c.dox doxyfile-for.in geodesic-for.dox \
 	$(LEGACYFILES)
 	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \

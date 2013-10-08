@@ -21,8 +21,7 @@
 
 namespace GeographicLib {
 
-  template<typename real>
-  class GeodesicLine30;
+  template<typename real> class GeodesicLine30;
 
   /**
    * \brief %Geodesic calculations
@@ -122,7 +121,7 @@ namespace GeographicLib {
    **********************************************************************/
 
   template<typename real>
-  class GEOGRAPHIC_EXPORT Geodesic30 {
+  class Geodesic30 {
   private:
     friend class GeodesicLine30<real>;
     static const int nA1_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;

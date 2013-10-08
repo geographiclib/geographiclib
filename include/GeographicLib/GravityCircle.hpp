@@ -209,7 +209,6 @@ namespace GeographicLib {
       return V(clam, slam, GX, GY, GZ);
     }
 
-
     /**
      * Evaluate the components of the gravity disturbance in geocentric
      * coordinates.

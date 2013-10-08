@@ -341,7 +341,6 @@ int main(int argc, char* argv[]) {
 
     const GeographicLibL::Geodesic geodl(al, fl);
     const GeographicLibL::GeodesicExact geodel(al, fl);
-    typedef GeographicLibL::Math::real reale;
     const unsigned NUMERR = 7;
 
     cout << fixed << setprecision(2);

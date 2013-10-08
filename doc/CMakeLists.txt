@@ -32,12 +32,17 @@ if (DOXYGEN_FOUND)
   configure_file (doxyfile.in doxyfile)
   configure_file (doxyfile-c.in doxyfile-c)
   configure_file (doxyfile-for.in doxyfile-for)
+  configure_file (doxyfile-net.in doxyfile-net)
   file (GLOB SOURCES
     ../src/[A-Za-z]*.cpp ../include/GeographicLib/[A-Za-z]*.hpp
     ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp
-    ../legacy/C/*.[ch] ../legacy/Fortran/*.for ../legacy/Fortran/*.inc)
+    ../legacy/C/*.[ch] ../legacy/Fortran/*.for ../legacy/Fortran/*.inc
+    ../dotnet/NETGeographicLib/*.cpp ../dotnet/NETGeographicLib/*.h
+    ../dotnet/examples/CS/*.cs ../dotnet/examples/ManagedCPP/*.cpp
+    ../dotnet/examples/VB/*.vb)
   file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac
-    tmseries30.html geodseries30.html *.png ../LICENSE.txt)
+    tmseries30.html geodseries30.html ../LICENSE.txt)
+  file (GLOB FIGURES *.png)
   file (COPY ${EXTRA_FILES} DESTINATION html-stage)
   add_custom_target (doc ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
@@ -46,13 +51,15 @@ if (DOXYGEN_FOUND)
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxyfile
       ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-c
       ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-for
-      Geographic.dox geodesic-c.dox geodesic-for.dox
-      ${SOURCES} ${EXTRA_FILES} ${HTMLMAN}
+      ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-net
+      Geographic.dox geodesic-c.dox geodesic-for.dox NETGeographic.dox
+      ${SOURCES} ${EXTRA_FILES} ${FIGURES} ${HTMLMAN}
     COMMAND ${CMAKE_COMMAND} -E remove_directory html
     COMMAND ${CMAKE_COMMAND} -E copy_directory html-stage html
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile > doxygen.log
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile-c > doxygen-c.log
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile-for > doxygen-for.log
+    COMMAND ${DOXYGEN_EXECUTABLE} doxyfile-net > doxygen-net.log
     COMMENT "Generating html documentation tree")
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
     DESTINATION ${INSTALL_DOC_DIR})

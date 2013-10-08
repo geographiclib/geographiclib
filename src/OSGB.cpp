@@ -20,13 +20,18 @@ namespace GeographicLib {
   const TransverseMercator
   OSGB::OSGBTM_(MajorRadius(), Flattening(), CentralScale());
 
-  Math::real OSGB::computenorthoffset() throw() {
-    real x, y;
-    OSGBTM_.Forward(real(0), OriginLatitude(), real(0), x, y);
-    return FalseNorthing() - y;
-  }
+  Math::real OSGB::northoffset_ = 0;
+  bool OSGB::init_ = false;
 
-  const Math::real OSGB::northoffset_ = computenorthoffset();
+  Math::real OSGB::computenorthoffset() throw() {
+    if (!init_) {
+      real x, y;
+      OSGBTM_.Forward(real(0), OriginLatitude(), real(0), x, y);
+      northoffset_ = FalseNorthing() - y;
+      init_ = true;
+    }
+    return northoffset_;
+  }
 
   void OSGB::GridReference(real x, real y, int prec, std::string& gridref) {
     CheckCoords(x, y);

@@ -61,7 +61,6 @@ namespace GeographicLib {
     , _mu(_f * (2 - _f))        // e^2
     , _mv(1 - _mu)              // 1 - e^2
     , _e(sqrt(_mu))
-    , _ep2(_mu / _mv)           // e^2 / (1 - e^2)
     , _extendp(extendp)
     , _Eu(_mu)
     , _Ev(_mv)

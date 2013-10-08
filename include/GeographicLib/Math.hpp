@@ -160,13 +160,21 @@ namespace GeographicLib {
       x = std::abs(x); y = std::abs(y);
       T a = (std::max)(x, y), b = (std::min)(x, y) / (a ? a : 1);
       return a * std::sqrt(1 + b * b);
-      // For an alternative method see
+      // For an alternative (square-root free) method see
       // C. Moler and D. Morrision (1983) http://dx.doi.org/10.1147/rd.276.0577
       // and A. A. Dubrulle (1983) http://dx.doi.org/10.1147/rd.276.0582
     }
-#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
+#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH || (defined(_MSC_VER) && _MSC_VER >= 1700)
     template<typename T> static inline T hypot(T x, T y) throw()
     { return std::hypot(x, y); }
+#  if HAVE_LONG_DOUBLE && defined(_MSC_VER)
+    // Visual C++ 11&12 don't have a long double overload for std::hypot --
+    // reported to MS on 2013-07-18
+    // http://connect.microsoft.com/VisualStudio/feedback/details/794416
+    // suppress the resulting "loss of data warning" with
+    static inline long double hypot(long double x, long double y) throw()
+    { return std::hypot(double(x), double(y)); }
+#  endif
 #elif defined(_MSC_VER)
     static inline double hypot(double x, double y) throw()
     { return _hypot(x, y); }

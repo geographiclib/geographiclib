@@ -17,8 +17,8 @@ Files
       Config.h.in, Config.h -- system dependent configuration
       Constants.hpp -- WGS84 constants
       Math.hpp -- math routines
-      Accumulator.hpp -- quad precision adder
       Utility.hpp -- I/O and date routines
+      Accumulator.[ch]pp -- quad precision adder
       PolarStereographic.[ch]pp -- polar stereographic projection
       TransverseMercator.[ch]pp -- transverse Mercator projection
       UTMUPS.[ch]pp -- UTM and UPS
@@ -54,7 +54,7 @@ Files
     tools/
       GeoConvert.cpp -- geographic conversion utility
       TransverseMercatorTest.cpp -- TM tester
-      Geod.cpp -- geodesic utility
+      GeodSolve.cpp -- geodesic utility
       CartConvert.cpp -- convert to geocentric and local cartesian
       EquidistantTest.cpp -- exercise AzimuthalEquidistant and CassiniSoldner
       GeoidEval.cpp -- evaluate geoid heights
@@ -78,12 +78,14 @@ Files
       MagneticField-vc9.vcproj -- project for MagneticField
       also files for MS Studio 2005 (with vc8)
       also files for MS Studio 2010 (with vc10)
+      NETGeographic-vc10.vcxproj -- project for .NET wrapper
 
     maxima/
       tm.mac -- Maxima code for high precision TM
       ellint.mac -- Maxima code for elliptic functions needed by tm.mac
       tmseries.mac -- Maxima code for series approximations for TM
-      geod.mac -- Maxima code for series approximates for Geodesic
+      geod.mac -- Maxima code for series approximations for Geodesic
+      geodesic.mac -- Maxima code for geodesic problems
 
     matlab/
       geographiclibinterface.m -- Matlab code to compile Matlab interfaces
@@ -96,12 +98,14 @@ Files
       geodesicline.{cpp,m} -- Matlab code for geodesic lines
       geoidheight.{cpp,m} -- Matlab code to look up geoid heights
       polygonarea.{cpp,m} -- Matlab code for polygon areas
-      geoddoc.m -- Documentation for native Matlab geodesic routines
-      geodreckon.m -- Native Matlab implementation of direct geodesic problem
-      geoddistance.m -- Native Matlab implementation of inverse geodesic problem
-      geodarea.m -- Native Matlab implementation of polygon area
+      geoddoc.m -- documentation for native Matlab geodesic routines
+      geodreckon.m -- native Matlab implementation of direct geodesic problem
+      geoddistance.m -- native Matlab implementation of inverse geodesic problem
+      geodarea.m -- native Matlab implementation of polygon area
       defaultellipsoid.m, ecc2flat.m, flat2ecc.m -- auxiliary functions
-      private/*.m -- Internal function for geodesic routines
+      geodproj.m -- documentation for geodesic projections
+      *_{fwd,inv}.m -- native Matlab implementation of geodesic projections
+      private/*.m -- internal functions for geodesic routines
 
     doc/
       doxyfile.in -- Doxygen config file
@@ -119,6 +123,14 @@ Files
       *.usage -- documentation for incorporation into executables
 
     python/GeographicLib/*.py -- Python implementation of geodesic routines
+
+    java/.../*.java -- Java implementation of geodesic routines
+
+    dotnet/NETGeographicLib/*.{cpp,h} -- .NET wrapper for GeographicLib
+    dotnet/examples/CS/*.cs -- simple C# examples for each class
+    dotnet/examples/ManagedCPP/*.cpp -- Managed C++ examples for each class
+    dotnet/examples/VB/*.vb -- simple Visual Basic examples for each class
+    dotnet/Projection/* -- a more complex C# application
 
     legacy/C/* -- C implementation of geodesic routines
     legacy/Fortran/* -- Fortran implementation of geodesic routines
