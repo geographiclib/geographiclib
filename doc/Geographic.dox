@@ -12,7 +12,7 @@
 \mainpage Geographic library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.33
-\date 2013-mm-dd
+\date 2013-10-08
 
 \section abstract Abstract
 
@@ -25,8 +25,8 @@ returning accurate results with errors close to round-off (about 5--15
 nanometers).  New accurate algorithms for \ref geodesic and \ref
 transversemercator have been developed for this library.  The
 functionality of the library can be accessed from user code, from the
-\ref utilities provided, or via the \ref other.  Also included is a
-managed C++ wrapper library <a href="NET/index.html">NETGeographic</a>
+\ref utilities provided, or via the \ref other.  Also included is a .NET
+wrapper library <a href="NET/index.html">NETGeographic</a>
 which exposes the functionality to .NET applications.  For a sample of
 the geodesic capabilities in JavaScript, check out the
 <a href="../scripts/geod-calc.html">online geodesic calculator</a> and
@@ -4686,8 +4686,9 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.33">Version 1.33</a>
-   (released 2013-mm-dd)
-   - Add <a href="NET/index.html">NETGeographic .NET wrapper library</a>.
+   (released 2013-10-08)
+   - Add <a href="NET/index.html">NETGeographic .NET wrapper library</a>
+     (courtesy of Scott Heiman).
    - Make inspector functions in GeographicLib::Ellipsoid const.
    - Add Accumulator.cpp to instantiate GeographicLib::Accumulator.
    - Defer some of the initialization of GeographicLib::OSGB to when it

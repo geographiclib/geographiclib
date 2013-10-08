@@ -4,7 +4,20 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.32.
+The current version of the library is 1.33.
+
+Changes between 1.33 (released 2013-10-08) and 1.32 versions:
+
+   * Add NETGeographic .NET wrapper library (courtesy of Scott Heiman).
+
+   * Make inspector functions in GeographicLib::Ellipsoid const.
+
+   * Add Accumulator.cpp to instantiate GeographicLib::Accumulator.
+
+   * Defer some of the initialization of GeographicLib::OSGB to when it
+     is first called.
+
+   * Fix bug in autoconf builds under MacOS.
 
 Changes between 1.32 (released 2013-07-12) and 1.31 versions:
 
