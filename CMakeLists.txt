@@ -4,7 +4,7 @@ project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 32)
+set (GeographicLib_VERSION_MINOR 33)
 set (GeographicLib_VERSION_PATCH 0)
 set (GeographicLib_VERSION
   "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
@@ -17,7 +17,7 @@ set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 10)
-set (LIBVERSIONFULL 10.0.1)
+set (LIBVERSIONFULL 10.1.0)
 
 # User-settable variables
 
@@ -134,7 +134,19 @@ else ()
     "Use doxygen to create the documentation" ON)
 endif ()
 
-# (8) Set the default "real" precision.  This should probably be left
+# (8) Build .NET wrapper library NETGeographic.  This only applies to
+# Windows.  Default is OFF for Visual Studio 10 (because it triggers lot
+# of warnings, but possibly these may be safely igored?) and ON for
+# other Visual Studio generators
+if (CMAKE_GENERATOR MATCHES "Visual Studio 10")
+  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" OFF)
+elseif (CMAKE_GENERATOR MATCHES "Visual Studio")
+  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" ON)
+else ()
+  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" OFF)
+endif ()
+
+# (9) Set the default "real" precision.  This should probably be left
 # at 2 (double).
 set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
   "Default real precision: 1 = float, 2 = double, 3 = long double")
@@ -303,6 +315,12 @@ add_subdirectory (cmake)
 if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
   add_subdirectory (tests)
 endif ()
+if (BUILD_NETGEOGRAPHIC)
+  add_subdirectory (dotnet/NETGeographicLib)
+  if (GEOGRAPHICLIB_EXAMPLES AND GEOGRAPHICLIB_PRECISION EQUAL 2)
+    add_subdirectory (dotnet/examples/ManagedCPP)
+  endif ()
+endif ()
 
 # Packaging support; we deal with
 # (1) a source distribution: cmake make a tar.gz file and the zip file
@@ -430,7 +448,7 @@ if (MAINTAINER)
       _CPack_Packages/Linux-Source/TGZ.DOS/ &&
       cd _CPack_Packages/Linux-Source/TGZ.DOS &&
       find . -type f |
-      egrep  '/\(doxyfile.in|MANIFEST.in|NEWS|AUTHORS|INSTALL|.*\\.\(cpp|hpp|h.in|txt|pro|usage|pod|py|m|mac|cmake.in|cmake|h|js|c|for\)\)$$' |
+      egrep  '/\(doxyfile.*\\.in|MANIFEST.in|NEWS|AUTHORS|INSTALL|pom\\.xml|dummy.*\\.in|.*\\.\(cpp|hpp|h\\.in|txt|pro|usage|pod|py|m|mac|cmake\\.in|cmake|h|js|c|for|dox|cs|vb|inc|java|html\\.in\)\)$$' |
       xargs unix2dos -q -k &&
       find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
       zip -q ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip -@

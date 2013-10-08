@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "PLANIMETER 1"
-.TH PLANIMETER 1 "2013-07-12" "GeographicLib 1.32" "GeographicLib Utilities"
+.TH PLANIMETER 1 "2013-10-08" "GeographicLib 1.33" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -150,6 +150,15 @@ which can't be interpreted as a vertex signals the end of one polygon
 and the start of the next.  For each polygon print a summary line with
 the number of points, the perimeter (in meters), and the area (in
 meters^2).
+.PP
+The edges of the polygon are given by the \fIshortest\fR geodesic between
+consecutive vertices.  In certain cases, there may be two or many such
+shortest geodesics, and in that case, the polygon is not uniquely
+specified by its vertices.  This only happens with very long edges (for
+the \s-1WGS84\s0 ellipsoid, any edge shorter than 19970 km is uniquely
+specified by its end points).  In such cases, insert an additional
+vertex near the middle of the long edge to define the boundary of the
+polygon.
 .PP
 By default, polygons traversed in a counter-clockwise direction return a
 positive area and those traversed in a clockwise direction return a

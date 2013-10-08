@@ -100,7 +100,7 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libGeographic_la_LIBADD =
-am_libGeographic_la_OBJECTS = AlbersEqualArea.lo \
+am_libGeographic_la_OBJECTS = Accumulator.lo AlbersEqualArea.lo \
 	AzimuthalEquidistant.lo CassiniSoldner.lo CircularEngine.lo \
 	DMS.lo Ellipsoid.lo EllipticFunction.lo GeoCoords.lo \
 	Geocentric.lo Geodesic.lo GeodesicExact.lo GeodesicLine.lo \
@@ -283,7 +283,8 @@ top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include -Wall -Wextra
 lib_LTLIBRARIES = libGeographic.la
 libGeographic_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
-libGeographic_la_SOURCES = AlbersEqualArea.cpp \
+libGeographic_la_SOURCES = Accumulator.cpp \
+		AlbersEqualArea.cpp \
 		AzimuthalEquidistant.cpp \
 		CassiniSoldner.cpp \
 		CircularEngine.cpp \
@@ -434,6 +435,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Accumulator.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AlbersEqualArea.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AzimuthalEquidistant.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CassiniSoldner.Plo@am__quote@
@@ -717,7 +719,7 @@ uninstall-am: uninstall-libLTLIBRARIES
 
 ../include/GeographicLib/Config.h: ../include/GeographicLib/Config-ac.h
 	( egrep '\bVERSION\b|\bGEOGRAPHICLIB_|\bHAVE_LONG_DOUBLE\b' $< | \
-	  sed -e 's/\bVERSION\b/GEOGRAPHICLIB_VERSION_STRING/'; \
+	  sed -e 's/ VERSION / GEOGRAPHICLIB_VERSION_STRING /'; \
 	  grep WORDS_BIGENDIAN $< | tail -1 ) > $@
 
 $(libGeographic_la_OBJECTS): ../include/GeographicLib/Config.h

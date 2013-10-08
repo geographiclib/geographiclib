@@ -28,10 +28,10 @@ namespace GeographicLib {
    * maps of Great Britain and conversions to the grid reference system.
    *
    * See
-   * - <a href="http://www.ordnancesurvey.co.uk/oswebsite/gps/docs/A_Guide_to_Coordinate_Systems_in_Great_Britain.pdf">
-   * A guide to coordinate systems in Great Britain</a>
-   * - <a href="http://www.ordnancesurvey.co.uk/oswebsite/gps/information/coordinatesystemsinfo/guidetonationalgrid/page1.html">
-   * Guide to National Grid</a>
+   * - <a href="http://www.ordnancesurvey.co.uk/docs/support/guide-coordinate-systems-great-britain.pdf">
+   *   A guide to coordinate systems in Great Britain</a>
+   * - <a href="http://www.ordnancesurvey.co.uk/docs/support/national-grid.pdf">
+   *   Guide to the National Grid</a>
    *
    * \b WARNING: the latitudes and longitudes for the Ordnance Survey grid
    * system do not use the WGS84 datum.  Do not use the values returned by this
@@ -47,7 +47,8 @@ namespace GeographicLib {
     static const std::string letters_;
     static const std::string digits_;
     static const TransverseMercator OSGBTM_;
-    static const real northoffset_;
+    static real northoffset_;
+    static bool init_;
     enum {
       base_ = 10,
       tile_ = 100000,
@@ -65,7 +66,6 @@ namespace GeographicLib {
     static real computenorthoffset() throw();
     static void CheckCoords(real x, real y);
     OSGB();                     // Disable constructor
-
   public:
 
     /**
@@ -85,7 +85,7 @@ namespace GeographicLib {
                         real& x, real& y, real& gamma, real& k) throw() {
       OSGBTM_.Forward(OriginLongitude(), lat, lon, x, y, gamma, k);
       x += FalseEasting();
-      y += northoffset_;
+      y += computenorthoffset();
     }
 
     /**
@@ -105,7 +105,7 @@ namespace GeographicLib {
     static void Reverse(real x, real y,
                         real& lat, real& lon, real& gamma, real& k) throw() {
       x -= FalseEasting();
-      y -= northoffset_;
+      y -= computenorthoffset();
       OSGBTM_.Reverse(OriginLongitude(), x, y, lat, lon, gamma, k);
     }
 

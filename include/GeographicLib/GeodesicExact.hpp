@@ -30,7 +30,7 @@ namespace GeographicLib {
    * The equations for geodesics on an ellipsoid can be expressed in terms of
    * incomplete elliptic integrals.  The Geodesic class expands these integrals
    * in a series in the flattening \e f and this provides an accurate solution
-   * for \e f &isin [-0.01, 0.01].  The GeodesicExact class computes the
+   * for \e f &isin; [-0.01, 0.01].  The GeodesicExact class computes the
    * ellitpic integrals directly and so provides a solution which is valid for
    * all \e f.  However, in practice, its use should be limited to about \e
    * b/\e a &isin; [0.01, 100] or \e f &isin; [-99, 0.99].

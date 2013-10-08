@@ -11,8 +11,8 @@
 /**
 \mainpage Geographic library
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.32
-\date 2013-07-12
+\version 1.33
+\date 2013-10-08
 
 \section abstract Abstract
 
@@ -21,12 +21,14 @@ classes</a> for performing conversions between geographic, UTM, UPS,
 MGRS, geocentric, and local cartesian coordinates, for gravity (e.g.,
 EGM2008), geoid height and geomagnetic field (e.g., WMM2010)
 calculations, and for solving geodesic problems.  The emphasis is on
-returning accurate results with errors close to round-off (about
-5--15 nanometers).  New accurate algorithms for \ref geodesic and
-\ref transversemercator have been developed for this library.  The
+returning accurate results with errors close to round-off (about 5--15
+nanometers).  New accurate algorithms for \ref geodesic and \ref
+transversemercator have been developed for this library.  The
 functionality of the library can be accessed from user code, from the
-\ref utilities provided, or via the \ref other.  For a sample of the
-geodesic capabilities in JavaScript, check out the
+\ref utilities provided, or via the \ref other.  Also included is a .NET
+wrapper library <a href="NET/index.html">NETGeographic</a>
+which exposes the functionality to .NET applications.  For a sample of
+the geodesic capabilities in JavaScript, check out the
 <a href="../scripts/geod-calc.html">online geodesic calculator</a> and
 the script for displaying
 <a href="../scripts/geod-google.html">geodesics in Google Maps</a>
@@ -43,22 +45,22 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.32.tar.gz">
-  GeographicLib-1.32.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.32.zip">
-  GeographicLib-1.32.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.33.tar.gz">
+  GeographicLib-1.33.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.33.zip">
+  GeographicLib-1.33.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
 line endings.)  Alternatively you can get the latest release using git
 \verbatim
-  git clone -b r1.32 git://git.code.sf.net/p/geographiclib/code geographiclib
+  git clone -b r1.33 git://git.code.sf.net/p/geographiclib/code geographiclib
 \endverbatim
 There are also binary installers for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.32-win32.exe">
-  GeographicLib-1.32-win32.exe</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.32-win64.exe">
-  GeographicLib-1.32-win64.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.33-win32.exe">
+  GeographicLib-1.33-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.33-win64.exe">
+  GeographicLib-1.33-win64.exe</a>
 .
 It is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -180,14 +182,14 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 (versions 4.0 and later) and under Windows with Visual Studio 2005, 2008,
 and 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.32.tar.gz">
-GeographicLib-1.32.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.32.zip">
-GeographicLib-1.32.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.32-win32.exe">
-GeographicLib-1.32-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.32-win64.exe">
-GeographicLib-1.32-win64.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.33.tar.gz">
+GeographicLib-1.33.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.33.zip">
+GeographicLib-1.33.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.33-win32.exe">
+GeographicLib-1.33-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.33-win64.exe">
+GeographicLib-1.33-win64.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -260,10 +262,10 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.32.tar.gz
-  unzip -q GeographicLib-1.32.zip \endverbatim
+  tar xfpz GeographicLib-1.33.tar.gz
+  unzip -q GeographicLib-1.33.zip \endverbatim
   then enter the directory created with one of \verbatim
-  cd GeographicLib-1.32 \endverbatim
+  cd GeographicLib-1.33 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -271,8 +273,8 @@ Here are the steps to compile and install %GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically one of \verbatim
-  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.32 ..
-  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.32 ..
+  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.33 ..
+  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.33 ..
 \endverbatim
   Instead of setting CMAKE_INSTALL_PREFIX, you can (on Windows) set
   PACKAGE_PATH to point to its parent directory, e.g., \verbatim
@@ -292,12 +294,12 @@ Here are the steps to compile and install %GeographicLib:
     convention.  If it is on ON (the Linux default), the installation
     is to a common directory, e.g., /usr/local.  If it is OFF (the
     Windows default), the installation directory contains the package
-    name, e.g., C:/pkg/GeographicLib-1.32.  The installation
+    name, e.g., C:/pkg/GeographicLib-1.33.  The installation
     directories for the documentation, cmake configuration, python and
     matlab interfaces all depend on the variable with deeper paths
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
-    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib-1.32;
+    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib-1.33;
     - python interface: OFF: python; ON: lib/python/site-packages;
     - matlab interface: OFF: matlab; ON: libexec/GeographicLib/matlab;
     .
@@ -307,7 +309,7 @@ Here are the steps to compile and install %GeographicLib:
     systems, it is recommended to use a prefix which includes the
     compiler version, as shown above (and also, possibly, whether this
     is a 64-bit build, e.g., <code>cmake -G "Visual Studio 10 Win64" -D
-    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.32 ..</code>).
+    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.33 ..</code>).
     If you just want to try the library to see if it suits your needs,
     pick, for example, <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
   - <code>PACKAGE_PATH</code> and <code>INSTALL_PATH</code> provide an
@@ -320,14 +322,14 @@ Here are the steps to compile and install %GeographicLib:
     - If INSTALL_PATH is not specified but PACKAGE_PATH is, then
       INSTALL_PATH is set to
       ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON, and to
-      ${PACKAGE_PATH}/GeographicLib-1.32, otherwise.
+      ${PACKAGE_PATH}/GeographicLib-1.33, otherwise.
     - If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
       INSTALL_PATH.
     .
     Typically, only PACKAGE_PATH needs to be specified, e.g.,
     - Linux: cmake -D PACKAGE_PATH=/opt .. => CMAKE_INSTALL_PREFIX=/opt
     - Windows: cmake -D PACKAGE_PATH=C:/pkg .. =>
-      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.32
+      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.33
     .
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
@@ -367,6 +369,15 @@ Here are the steps to compile and install %GeographicLib:
     sufficiently recent version of doxygen can be found.  Otherwise, the
     html documentation will redirect to the appropriate version of the
     online documentation.
+  - <code>BUILD_NETGEOGRAPHIC</code> (default: OFF for non-Windows
+    systems and ON for Windows systems, except for Visual Studio 10
+    generators).  If set to ON, build the managed C++ wrapper library
+    <a href="NET/index.html">NETGeographic</a>.  This only makes sense
+    for Windows systems.  The default is OFF if using Visual Studio 10,
+    because this generate a myriad of warnings.  However the warnings
+    can (probably) be ignored.  If <code>GEOGRAPHICLIB_EXAMPLES</code>
+    is ON then the managed C++ examples for NETGeographic are built
+    also.
   - <code>GEOGRAPHICLIB_PRECISION</code> specifies the precision to be
     used for "real" (i.e., floating point) numbers.  1 means float
     (single precision); 2 (the default) means double; 3 means long
@@ -404,9 +415,9 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.32.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.33.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.32 \endverbatim
+  cd GeographicLib-1.33 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -435,9 +446,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.32.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.33.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.32 \endverbatim
+  cd GeographicLib-1.33 \endverbatim
 - Edit \verbatim
   include/GeographicLib/Config.h \endverbatim
   If your C++ compiler does not recognize the long double type
@@ -468,8 +479,8 @@ static library and the utilities.  If you only have Visual Studio 2003,
 use cmake to create the necessary solution file, see \ref cmake.  (cmake
 is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.32.zip \endverbatim
-- Open GeographicLib-1.32/windows/GeographicLib-vc10.sln in Visual Studio
+  unzip -q GeographicLib-1.33.zip \endverbatim
+- Open GeographicLib-1.33/windows/GeographicLib-vc10.sln in Visual Studio
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
@@ -483,6 +494,9 @@ is needed to build the Matlab interface and to run the tests.)
   <a href="index.html">doc/html/index.html</a> in a web
   browser.
 
+The Visual Studio 10 (2010) solution also contains projects to build <a
+href="NET/index.html">NETGeographic</a> and the C# example project.
+
 \section windowsbin Using a binary installer for Windows
 
 Use this method if you only need to use the %GeographicLib utilities.
@@ -492,14 +506,14 @@ library, it is advisable to build it with the compiler you are using for
 your own code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.32-win32.exe">
-GeographicLib-1.32-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.32-win64.exe">
-GeographicLib-1.32-win64.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.33-win32.exe">
+GeographicLib-1.33-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.33-win64.exe">
+GeographicLib-1.33-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc10\\GeographicLib-1.32 or C:\\pkg-vc10-x64\\GeographicLib-1.32,
+   C:\\pkg-vc10\\GeographicLib-1.33 or C:\\pkg-vc10-x64\\GeographicLib-1.33,
  - select the start menu folder,
  - and install.
  .
@@ -507,14 +521,16 @@ GeographicLib-1.32-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc10/GeographicLib-1.32/bin where the utilities are
+will include C:/pkg-vc10/GeographicLib-1.33/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the matlab folder.  Add this to your
 path in Matlab to access this interface.  The binaries were built
 using Visual Studio 10 (2010) in Release mode.  The Matlab interface
 was compiled with Matlab R2013a 64-bit, however it may work with some
-other 64-bit versions of Matlab.
+other 64-bit versions of Matlab.  The
+<a href="NET/index.html">NETGeographic</a> library dll is included with
+the binary installers.
 
 \section qt Building the library for use with Qt
 
@@ -554,7 +570,7 @@ Check the code out of git with \verbatim
 Here the "master" branch is checked out.  There are three branches in
 the git repository:
 - <b>master</b>: the main branch for code maintainence.  Releases are
-  tagged on this branch as, e.g., v1.32.
+  tagged on this branch as, e.g., v1.33.
 - <b>devel</b>: the development branch; changes made here are merged
   into master.
 - <b>release</b>: the release branch created by unpacking the source
@@ -564,7 +580,7 @@ the git repository:
   specifying a branch).  This differs from the master branch in that
   some administrative files are excluded while some intermediate files
   are included (in order to aid building on as many platforms as
-  possible).  Releases are tagged on this branch as, e.g., r1.32.
+  possible).  Releases are tagged on this branch as, e.g., r1.33.
 .
 The autoconf configuration script and the formatted man pages are not
 checked into master branch of the repository.  In order to create the
@@ -580,8 +596,8 @@ In the case of cmake, you then run \verbatim
 which will copy the man pages from the build directory back into the
 source tree and package the resulting source tree for distribution as
 \verbatim
-  GeographicLib-1.32.tar.gz
-  GeographicLib-1.32.zip \endverbatim
+  GeographicLib-1.33.tar.gz
+  GeographicLib-1.33.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -592,7 +608,7 @@ With configure, run \verbatim
   make dist-gzip \endverbatim
 which will create the additional files and packages the results ready
 for distribution as \verbatim
-  geographiclib-1.32.tar.gz \endverbatim
+  geographiclib-1.33.tar.gz \endverbatim
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
@@ -658,7 +674,9 @@ In order to use %GeographicLib from C++ code, you will need to
   instead of the previous three steps, insert \verbatim
   # Put in your top-level CMakeLists.txt
   find_package (GeographicLib 1.9 REQUIRED)
-  # In the top-level CMakeLists.txt or wherever your code is compiled
+  if (NOT WIN32)
+    set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  endif ()
   include_directories (${GeographicLib_INCLUDE_DIRS})
   # In the CMakeLists.txt where you define your executable targets
   target_link_libraries (program1 ${GeographicLib_LIBRARIES})
@@ -699,8 +717,33 @@ class:
 This example is <code>examples/example-Geodesic-small.cpp</code>.  If you
 compile, link, and run it according to the instructions above, it should
 print out \verbatim
-  5551.76 km
-\endverbatim
+  5551.76 km \endverbatim
+Here is a complete CMakeList.txt files you can use to build this test
+code using the installed library: \verbatim
+cmake_minimum_required (VERSION 2.6)
+project (geodesictest)
+
+find_package (GeographicLib 1.9 REQUIRED)
+
+if (NOT WIN32)
+  set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+endif ()
+
+include_directories (${GeographicLib_INCLUDE_DIRS})
+add_executable (${PROJECT_NAME} example-Geodesic-small.cpp)
+target_link_libraries (${PROJECT_NAME} ${GeographicLib_LIBRARIES})
+
+if (WIN32)
+  # Copy the shared library on Windows systems.
+  get_target_property (GeographicLib_LOCATION
+    "${GeographicLib_LIBRARIES}" IMPORTED_LOCATION_RELEASE)
+  if (GeographicLib_LOCATION MATCHES "\\.[Dd][Ll][Ll]\$")
+    add_custom_command (TARGET ${PROJECT_NAME} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E
+      copy "${GeographicLib_LOCATION}" ${CMAKE_CFG_INTDIR}
+      COMMENT "Copying shared library for GeographicLib")
+  endif ()
+endif () \endverbatim
 
 The next steps are:
  - Learn about and run the \ref utilities.
@@ -1008,16 +1051,16 @@ feature of %GeographicLib, but want your code still to work with older
 versions.  In that case, you can test the values of the macros
 GEOGRAPHICLIB_VERSION_MAJOR, GEOGRAPHICLIB_VERSION_MINOR, and
 GEOGRAPHICLIB_VERSION_PATCH; these expand to numbers (and the last one
-is usually 0); these macros appeared starting in version 1.32.  There's
+is usually 0); these macros appeared starting in version 1.33.  There's
 also a macro GEOGRAPHICLIB_VERSION_STRING which expands to, e.g.,
-"1.32"; this macro has been defined since version 1.9.
+"1.33"; this macro has been defined since version 1.9.
 
 <center>
 Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page other Implementations in C, Fortran, Java, JavaScript, Python, Matlab, Maxima
+\page other Implementations in other languages
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -1030,6 +1073,7 @@ Implementations of subsets of %GeographicLib are available in other languages
 - \ref python.
 - \ref matlab.
 - \ref maxima.
+- \ref dotnet.
 
 \section c-fortran C and Fortran implementation
 
@@ -1161,7 +1205,7 @@ The <code>matlab</code> directory contains
  - Native Matlab implementations of the geodesic routines.  To use
    these, start Matlab or Octave and run one of (for example) \verbatim
    addpath /usr/local/libexec/GeographicLib/matlab
-   addpath 'C:/pkg-vc10-x64/GeographicLib-1.32/libexec/GeographicLib/matlab'
+   addpath 'C:/pkg-vc10-x64/GeographicLib-1.33/libexec/GeographicLib/matlab'
    \endverbatim
    The available functions are:
    - geoddoc: briefly descibe the routines
@@ -1229,9 +1273,9 @@ There are two ways of compiling the interface code: (1) using cmake and
  - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
    Octave and run, e.g., \code
    mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-1.32/matlab'
+   cd 'C:/pkg-vc10-x64/GeographicLib-1.33/matlab'
    help geographiclibinterface
-   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.32');
+   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.33');
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
@@ -1240,7 +1284,7 @@ There are two ways of compiling the interface code: (1) using cmake and
 To use the interface routines for %GeographicLib, run one of (for
 example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-1.32/libexec/GeographicLib/matlab'
+  addpath 'C:/pkg-vc10-x64/GeographicLib-1.33/libexec/GeographicLib/matlab'
 \endverbatim
 in Octave or Matlab.  The available functions are:
  - geodesicdirect: solve direct geodesic problem
@@ -1295,6 +1339,13 @@ geodesic.mac</a>).  The latter uses Maxima's bigfloat arithmetic
 together with series extended to high order or solutions in terms of
 elliptic integrals (<a href="ellint.mac"> ellint.mac</a>).  These files
 contain brief instructions on how to use them.
+
+\section dotnet .NET wrapper
+
+This is a comprehensive wrapper library, written and maintained by Scott
+Heiman, which exposes all of the functionality of %GeographicLib to the
+.NET family of languages.  For documentation, see
+ - <a href="NET/index.html">NETGeographic .NET wrapper library</a>.
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -2703,6 +2754,9 @@ References
    <a href="http://geographiclib.sf.net/geod.html"> geod.html</a>.
  - A collection of some papers on geodesics is available at
    http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
+ - The wikipedia page,
+   <a href="http://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
+   Geodesics on an ellipsoid</a>.
 
 \section testgeod Test data for geodesics
 
@@ -3357,8 +3411,7 @@ for evaluate the meridian distance
 \f$ y = b E(\beta, ie') \f$, namely \f$ s = b E(\sigma, ik) \f$.  See
 \ref geodellip.
 
-<img src="meridian-measures.png" width=576 height=596
-     alt="comparison of meridian measures">
+\image html meridian-measures.png "Comparison of meridian measures"
 
 \section geodshort Short geodesics
 
@@ -3604,16 +3657,16 @@ Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
 </center>
 
 Jacobi (1839) showed that the problem of geodesics on a triaxial
-ellipsoids (with 3 unequal axes) can be reduced by quadrature.  Despite
+ellipsoid (with 3 unequal axes) can be reduced to quadrature.  Despite
 this, the detailed behavior of the geodesics is not very well known.  In
 this section, I briefly give Jacobi's solution and illustrate the
 behavior of the geodesics and outline an algorithm for the solution of
-the inverse problem.  The figures in this section are relatively small
-in order to allow them to be displayed quickly.  Vector versions of
-these figures are available in
-<a href="http://geographiclib.sourceforge.net/triaxial-figs.pdf"
-type="application/pdf"> triaxial-figs.pdf</a>.  This allows you to
-magnify the figures to show the details more clearly.
+the inverse problem.
+
+See also
+ - The wikipedia page,
+   <a href="http://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid#Geodesics_on_a_triaxial_ellipsoid">
+   Geodesics on  a triaxial ellipsoid</a>.
 
 Go to
  - \ref triaxial-coords
@@ -3701,7 +3754,7 @@ defined by
 \begin{aligned}
  x &= a \cos\phi' \cos\lambda', \\
  y &= b \cos\phi' \sin\lambda', \\
- z &= c \sin\phi'. \\
+ z &= c \sin\phi'.
 \end{aligned}
 \f]
 Jacobi employed the \e ellipsoidal latitude and longitude \f$(\beta,
@@ -3720,7 +3773,7 @@ Jacobi employed the \e ellipsoidal latitude and longitude \f$(\beta,
 Grid lines of constant \f$\beta\f$ and \f$\omega\f$ are given in Fig. 1.
 
 <center>
-<img src="triaxial-grid.png"
+<img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Triaxial_ellipsoid_coordinate_system.svg"
 width=419 height=397 alt="Geodesic grid on a triaxial ellipsoid">
 Fig. 1
 </center>\n
@@ -3885,7 +3938,7 @@ closed geodesics, the three principal sections of the ellipsoid given by
 geodesics, it is convenient to consider geodesics which intersect the
 middle principal section, \f$y = 0\f$, at right angles.  Such geodesics
 are shown in Figs. 2--6, where I use the same ellipsoid parameters as in
-Fig. 1 and the same viewing direction.  In addition, The three principal
+Fig. 1 and the same viewing direction.  In addition, the three principal
 ellipses are shown in red in each of these figures.
 
 If the starting point is \f$\beta_1 \in (-90^\circ, 90^\circ)\f$,
@@ -3901,7 +3954,7 @@ the starting point is at a higher latitude (Fig. 3) the distortions
 resulting from \f$a \ne b\f$ are evident.
 
 <center>
-<img src="triaxial-equatorial-a.png"
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Circumpolar_geodesic_on_a_triaxial_ellipsoid_case_A.svg"
 width=419 height=397 alt="Example of a circumpolar geodesic on a
 triaxial ellipsoid">
 Fig. 2
@@ -3912,7 +3965,7 @@ point of this geodesic is \f$\beta_1 = 45.1^\circ\f$, \f$\omega_1 =
 0^\circ\f$, and \f$\alpha_1 = 90^\circ\f$.
 
 <center>
-<img src="triaxial-equatorial-b.png"
+<img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/Circumpolar_geodesic_on_a_triaxial_ellipsoid_case_B.svg"
 width=419 height=397 alt="Another example of a circumpolar geodesic on a
 triaxial ellipsoid">
 Fig. 3
@@ -3934,7 +3987,7 @@ causes such geodesics to oscillate east and west.  Two examples are
 given in Figs. 4 and 5.
 
 <center>
-<img src="triaxial-polar-a.png"
+<img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Transpolar_geodesic_on_a_triaxial_ellipsoid_case_A.svg"
 width=419 height=397 alt="Example of a transpolar geodesic on a
 triaxial ellipsoid">
 Fig. 4
@@ -3945,7 +3998,7 @@ starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
 39.9^\circ\f$, and \f$\alpha_1 = 0^\circ\f$.
 
 <center>
-<img src="triaxial-polar-b.png"
+<img src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Transpolar_geodesic_on_a_triaxial_ellipsoid_case_B.svg"
 width=419 height=397 alt="Another example of a transpolar geodesic on a
 triaxial ellipsoid">
 Fig. 5
@@ -3959,14 +4012,14 @@ If the starting point is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
 0^\circ\f$ (an umbilical point), and \f$\alpha_1 = 45^\circ\f$ (the
 geodesic leaves the ellipse \f$y = 0\f$ at right angles), then the
 geodesic repeatedly intersects the opposite umbilical point and returns to
-its starting point.  However on each circuit the angle at which
+its starting point.  However on each circuit the angle at which it
 intersects \f$y = 0\f$ becomes closer to \f$0^\circ\f$ or
 \f$180^\circ\f$ so that asymptotically the geodesic lies on the ellipse
 \f$y = 0\f$.  This is shown in Fig. 6.  Note that a single geodesic does
 not fill an area on the ellipsoid.
 
 <center>
-<img src="triaxial-umbilical.png"
+<img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Unstable_umbilical_geodesic_on_a_triaxial_ellipsoid.svg"
 width=419 height=397 alt="Example of an umbilical geodesic on a
 triaxial ellipsoid">
 Fig. 6
@@ -4412,12 +4465,7 @@ be displayed quickly.  Vector versions of these figures are available in
 type="application/pdf"> tm-figs.pdf</a>.  This allows you to magnify the
 figures to show the details more clearly.
 
-<center>
-<img src="gauss-schreiber-graticule-a.png"
-width=667 height=305 alt="Gauss-Schreiber transverse Mercator graticule
-(scaled)">
-Fig. 1(a)
-</center>\n
+\image html gauss-schreiber-graticule-a.png "Fig. 1(a)"
 Fig. 1(a):
 The graticule for the spherical transverse Mercator projection.
 The equator lies on \e y = 0.
@@ -4429,12 +4477,7 @@ conformal transformation from an ellipsoid to a sphere merely relabels
 the lines of latitude.)  This projection places the point latitude =
 0&deg;, longitude = 90&deg; at infinity.
 
-<center>
-<img src="gauss-krueger-graticule-a.png"
-width=667 height=305 alt="Gauss-Krueger transverse Mercator graticule
-(scaled)">
-Fig. 1(b)
-</center>\n
+\image html gauss-krueger-graticule-a.png "Fig. 1(b)"
 Fig. 1(b):
 The graticule for the Gauss-Kr&uuml;ger transverse Mercator projection.
 The equator lies on \e y = 0 for longitude < 81&deg;; beyond
@@ -4443,12 +4486,7 @@ this, it arcs up to meet \e y = 1.  Compare this with Lee, Fig. 45
 Fig. 46, shows the graticule for the entire ellipsoid.  This projection
 (like the Thompson projection) projects the ellipsoid to a finite area.
 
-<center>
-<img src="thompson-tm-graticule-a.png"
-width=667 height=305 alt="Thompson transverse Mercator graticule
-(scaled)">
-Fig. 1(c)
-</center>\n
+\image html thompson-tm-graticule-a.png "Fig. 1(c)"
 Fig. 1(c):
 The graticule for the Thompson transverse Mercator projection.  The
 equator lies on \e y = 0 for longitude < 81&deg;; at longitude =
@@ -4458,11 +4496,7 @@ International Ellipsoid.  Lee, Fig. 44, shows the graticule for the
 entire ellipsoid.  This projection (like the Gauss-Kr&uuml;ger
 projection) projects the ellipsoid to a finite area.
 
-<center>
-<img src="gauss-krueger-error.png"
-width=672 height=552 alt="Truncation error for Gauss-Krueger series">
-Fig. 2
-</center>\n
+\image html gauss-krueger-error.png "Fig. 2"
 Fig. 2:
 The truncation error for the series for the Gauss-Kr&uuml;ger transverse
 Mercator projection.  The blue curves show the truncation error for the
@@ -4472,24 +4506,14 @@ curves show the combined truncation and round-off errors for
  - double and \e J = 6 (middle)
  - long double and \e J = 8 (bottom)
 
-<center>
-<img src="gauss-krueger-graticule.png"
-width=673 height=323 alt="Gauss-Krueger transverse Mercator extended
-graticule">\n
-Fig. 3(a)
-</center>
+\image html gauss-krueger-graticule.png "Fig. 3(a)"
 Fig. 3(a):
 The graticule for the extended domain.  The blue lines show
 latitude and longitude at multiples of 10&deg;.  The green lines
 show 1&deg; intervals for longitude in [80&deg;, 90&deg;] and latitude in
 [&minus;5&deg;, 10&deg;].
 
-<center>
-<img src="gauss-krueger-convergence-scale.png"
-width=673 height=323 alt="Gauss-Krueger transverse Mercator
-convergence and scale">
-Fig. 3(b)
-</center>\n
+\image html gauss-krueger-convergence-scale.png "Fig. 3(b)"
 Fig. 3(b):
 The convergence and scale for the Gauss-Kr&uuml;ger
 transverse Mercator projection in the extended domain.  The blue lines
@@ -4508,11 +4532,7 @@ shows the equator between lon = 81&deg; and 90&deg;.  The
 scale and convergence at the branch point are 1/\e e = 10 and
 0&deg;, respectively.
 
-<center>
-<img src="thompson-tm-graticule.png"
-width=661 height=321 alt="Thompson transverse Mercator extended graticule">
-Fig. 3(c)
-</center>\n
+\image html thompson-tm-graticule.png "Fig. 3(c)"
 Fig. 3(c):
 The graticule for the Thompson transverse Mercator
 projection for the extended domain.  The range of the projection is the
@@ -4664,6 +4684,16 @@ particular the links for the source code will not work if the code has
 been migrated to the archive subdirectory).  All the releases are
 available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
+
+ - <a href="http://geographiclib.sf.net/1.33">Version 1.33</a>
+   (released 2013-10-08)
+   - Add <a href="NET/index.html">NETGeographic .NET wrapper library</a>
+     (courtesy of Scott Heiman).
+   - Make inspector functions in GeographicLib::Ellipsoid const.
+   - Add Accumulator.cpp to instantiate GeographicLib::Accumulator.
+   - Defer some of the initialization of GeographicLib::OSGB to when it
+     is first called.
+   - Fix bug in autoconf builds under MacOS.
 
  - <a href="http://geographiclib.sf.net/1.32">Version 1.32</a>
    (released 2013-07-12)

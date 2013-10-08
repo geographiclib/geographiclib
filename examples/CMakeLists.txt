@@ -30,8 +30,17 @@ if (OPENMP_FOUND)
   endif ()
 endif ()
 
-add_custom_target (examples DEPENDS ${EXAMPLES})
+add_custom_target (examples ALL DEPENDS ${EXAMPLES})
 add_dependencies (examples Geographic)
+
+if (GEOGRAPHIC_SHARED_LIB AND WIN32)
+  # Copy the shared library on Windows systems to this directory (examples)
+  # so that the tests can be run.
+  add_custom_command (TARGET examples POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E
+    copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
+    COMMENT "Copying shared library to examples directory")
+endif ()
 
 # Put all the examples into a folder in the IDE
 set_property (TARGET examples ${EXAMPLES} PROPERTY FOLDER examples)
