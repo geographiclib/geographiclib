@@ -21,7 +21,7 @@ export (TARGETS Geographic ${TOOLS}
 # path to the root from there.  (Note that the whole install tree can
 # be relocated.)
 if (COMMON_INSTALL_PATH)
-  set (INSTALL_CMAKE_DIR "share/cmake/${PROJECT_NAME}-${PACKAGE_VERSION}")
+  set (INSTALL_CMAKE_DIR "share/cmake/${PROJECT_NAME}")
   set (GEOGRAPHICLIB_ROOT_DIR "../../..")
 else ()
   set (INSTALL_CMAKE_DIR "cmake")

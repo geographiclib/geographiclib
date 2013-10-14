@@ -4,7 +4,7 @@ project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 33)
+set (GeographicLib_VERSION_MINOR 34)
 set (GeographicLib_VERSION_PATCH 0)
 set (GeographicLib_VERSION
   "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
@@ -17,7 +17,7 @@ set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 10)
-set (LIBVERSIONFULL 10.1.0)
+set (LIBVERSIONFULL 10.1.1)
 
 # User-settable variables
 
@@ -363,8 +363,7 @@ set (CPACK_SOURCE_IGNORE_FILES
 set (CPACK_SOURCE_GENERATOR TGZ)
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
-set (CPACK_PACKAGE_INSTALL_DIRECTORY
-  "${PROJECT_NAME}-${PACKAGE_VERSION}")
+set (CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}-${PACKAGE_VERSION}")
 set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
 
 if (WIN32)
@@ -377,16 +376,14 @@ if (WIN32)
     # Hardcode the prefix for Visual Studio 10
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10-x64")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
-    set (CPACK_NSIS_PACKAGE_NAME
-      "${PROJECT_NAME} x64 ${PACKAGE_VERSION}")
+    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} x64 ${PACKAGE_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
       "${PROJECT_NAME}-x64-${PACKAGE_VERSION}")
   else ()
     # Hardcode the prefix for Visual Studio 10
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
-    set (CPACK_NSIS_PACKAGE_NAME
-      "${PROJECT_NAME} ${PACKAGE_VERSION}")
+    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} ${PACKAGE_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
       "${PROJECT_NAME}-${PACKAGE_VERSION}")
   endif ()
