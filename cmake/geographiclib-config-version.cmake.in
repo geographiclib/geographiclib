@@ -29,10 +29,11 @@ if (GeographicLib_FIND_COMPONENTS)
   endforeach ()
 endif ()
 
-# Check that PACKAGE_VERSION corresponds to the installed files.  This
-# is only necessary if COMMON_INSTALL_PATH is ON and if the package is
-# installed (instead of being in the build tree).  In that case the
-# directory layout (after installing versions 1.32 and 1.33) might be
+# Perhaps(?), check that PACKAGE_VERSION corresponds to the installed
+# files.  This is only necessary if COMMON_INSTALL_PATH is ON and if the
+# package is installed (instead of being in the build tree).  In that
+# case the directory layout (after installing versions 1.32 and 1.33)
+# might be
 #
 # /usr/local/
 #    include/GeographicLib
