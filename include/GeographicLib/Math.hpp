@@ -18,7 +18,11 @@
  * Are C++11 math functions available?
  **********************************************************************/
 #if !defined(GEOGRAPHICLIB_CPLUSPLUS11_MATH)
-#  if defined(__GXX_EXPERIMENTAL_CXX0X__)
+#  if __cplusplus >= 201103
+#    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
+#  elif defined(__GXX_EXPERIMENTAL_CXX0X__)
+#    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
+#  elif defined(_MSC_VER) && _MSC_VER >= 1800
 #    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
 #  else
 #    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 0
@@ -167,8 +171,8 @@ namespace GeographicLib {
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH || (defined(_MSC_VER) && _MSC_VER >= 1700)
     template<typename T> static inline T hypot(T x, T y) throw()
     { return std::hypot(x, y); }
-#  if HAVE_LONG_DOUBLE && defined(_MSC_VER)
-    // Visual C++ 11&12 don't have a long double overload for std::hypot --
+#  if HAVE_LONG_DOUBLE && defined(_MSC_VER) && _MSC_VER == 1700
+    // Visual C++ 11 doesn't have a long double overload for std::hypot --
     // reported to MS on 2013-07-18
     // http://connect.microsoft.com/VisualStudio/feedback/details/794416
     // suppress the resulting "loss of data warning" with

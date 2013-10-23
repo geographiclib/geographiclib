@@ -37,4 +37,7 @@ using namespace System::Security::Permissions;
 
 [assembly:CLSCompliantAttribute(true)];
 
+#if _MSC_VER < 1800
+// RequestMinium marked as obsolete in Visual Studio 12 (2013)
 [assembly:SecurityPermission(SecurityAction::RequestMinimum, UnmanagedCode = true)];
+#endif

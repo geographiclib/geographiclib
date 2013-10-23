@@ -16,7 +16,9 @@
  * A compile-time assert.  Use C++11 static_assert, if available.
  **********************************************************************/
 #if !defined(STATIC_ASSERT)
-#  if defined(__GXX_EXPERIMENTAL_CXX0X__)
+#  if __cplusplus >= 201103
+#    define STATIC_ASSERT static_assert
+#  elif defined(__GXX_EXPERIMENTAL_CXX0X__)
 #    define STATIC_ASSERT static_assert
 #  elif defined(_MSC_VER) && _MSC_VER >= 1600
 #    define STATIC_ASSERT static_assert

@@ -3,22 +3,8 @@
 set (TESTPROGRAMS
   ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest)
 
-if (NOT WIN32)
-  # check for C++11 support
-  include (CheckCXXCompilerFlag)
-  set (CXX11FLAG "-std=c++11")
-  check_cxx_compiler_flag (${CXX11FLAG} CXX11TEST1)
-  if (NOT CXX11TEST1)
-    set (CXX11FLAG "-std=c++0x")
-    check_cxx_compiler_flag (${CXX11FLAG} CXX11TEST2)
-    if (NOT CXX11TEST2)
-      unset (CXX11FLAG)
-    endif ()
-  endif ()
-  if (CXX11FLAG)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11FLAG}")
-    set (TESTPROGRAMS ${TESTPROGRAMS} GeodShort)
-  endif ()
+if (NOT WIN32 AND CXX11FLAG)
+  set (TESTPROGRAMS ${TESTPROGRAMS} GeodShort)
 endif ()
 
 # Loop over all the tools, specifying the source and library.
