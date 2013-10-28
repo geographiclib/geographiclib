@@ -20,15 +20,6 @@ foreach (TOOL ${TOOLS})
 
 endforeach ()
 
-add_executable (Geod GeodSolve.cpp)
-if (MAINTAINER)
-  add_dependencies (Geod usage)
-endif ()
-add_dependencies (tools Geod)
-set_source_files_properties (Geod.cpp PROPERTIES
-  OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/GeodSolve.usage)
-target_link_libraries (Geod Geographic)
-
 if (GEOGRAPHIC_SHARED_LIB AND WIN32)
   # Copy the shared library on Windows systems to this directory (tools)
   # so that the tests can be run.
@@ -39,10 +30,10 @@ if (GEOGRAPHIC_SHARED_LIB AND WIN32)
 endif ()
 
 # Specify where the tools are installed
-install (TARGETS ${TOOLS} Geod EXPORT depends DESTINATION bin)
+install (TARGETS ${TOOLS} EXPORT depends DESTINATION bin)
 
 # Put all the tools into a folder in the IDE
-set_property (TARGET tools ${TOOLS} Geod PROPERTY FOLDER tools)
+set_property (TARGET tools ${TOOLS} PROPERTY FOLDER tools)
 
 # Create the scripts for downloading the data files on non-Windows
 # systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the
@@ -96,71 +87,75 @@ if (CMAKE_GENERATOR MATCHES "Visual Studio 1[12]")
     PROPERTIES PASS_REGULAR_EXPRESSION  "179\\.9999999999999[7-9]")
 endif ()
 
-add_test (Geod0 Geod -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")
-set_tests_properties (Geod0
+add_test (GeodSolve0
+  GeodSolve -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")
+set_tests_properties (GeodSolve0
   PROPERTIES PASS_REGULAR_EXPRESSION "53\\.47022 111\\.59367 5853226")
-add_test (Geod1
-  Geod -p 0 --input-string "40d38'23\"N 073d46'44\"W 53d30' 5850e3")
-set_tests_properties (Geod1
+add_test (GeodSolve1
+  GeodSolve -p 0 --input-string "40d38'23\"N 073d46'44\"W 53d30' 5850e3")
+set_tests_properties (GeodSolve1
   PROPERTIES PASS_REGULAR_EXPRESSION "49\\.01467 2\\.56106 111\\.62947")
 # Check fix for antipodal prolate bug found 2010-09-04
-add_test (Geod2
-  Geod -i -p 0 -e 6.4e6 -1/150 --input-string "0.07476 0 -0.07476 180")
-set_tests_properties (Geod2
+add_test (GeodSolve2
+  GeodSolve -i -p 0 -e 6.4e6 -1/150 --input-string "0.07476 0 -0.07476 180")
+set_tests_properties (GeodSolve2
   PROPERTIES PASS_REGULAR_EXPRESSION "90\\.00078 90\\.00078 20106193")
 # Another check for similar bug
-add_test (Geod3
-  Geod -i -p 0 -e 6.4e6 -1/150 --input-string "0.1 0 -0.1 180")
-set_tests_properties (Geod3
+add_test (GeodSolve3
+  GeodSolve -i -p 0 -e 6.4e6 -1/150 --input-string "0.1 0 -0.1 180")
+set_tests_properties (GeodSolve3
   PROPERTIES PASS_REGULAR_EXPRESSION "90\\.00105 90\\.00105 20106193")
 # Check fix for short line bug found 2010-05-21
-add_test (Geod4
-  Geod -i --input-string "36.493349428792 0 36.49334942879201 .0000008")
-set_tests_properties (Geod4 PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 0\\.072")
+add_test (GeodSolve4
+  GeodSolve -i --input-string "36.493349428792 0 36.49334942879201 .0000008")
+set_tests_properties (GeodSolve4
+  PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 0\\.072")
 # Check fix for point2=pole bug found 2010-05-03 (but only with long double)
-add_test (Geod5 Geod -p 0 --input-string "0.01777745589997 30 0 10e6")
-set_tests_properties (Geod5
+add_test (GeodSolve5 GeodSolve -p 0 --input-string "0.01777745589997 30 0 10e6")
+set_tests_properties (GeodSolve5
   PROPERTIES PASS_REGULAR_EXPRESSION
   "90\\.00000 -150\\.00000 -180\\.00000;90\\.00000 30\\.00000 0\\.00000")
 
 # Check fix for volatile sbet12a bug found 2011-06-25 (gcc 4.4.4 x86 -O3)
 # Found again on 2012-03-27 with tdm-mingw32 (g++ 4.6.1).
-add_test (Geod6 Geod -i --input-string
+add_test (GeodSolve6 GeodSolve -i --input-string
   "88.202499451857 0 -88.202499451857 179.981022032992859592")
-add_test (Geod7 Geod -i --input-string
+add_test (GeodSolve7 GeodSolve -i --input-string
   "89.262080389218 0 -89.262080389218 179.992207982775375662")
-add_test (Geod8 Geod -i --input-string
+add_test (GeodSolve8 GeodSolve -i --input-string
   "89.333123580033 0 -89.333123580032997687 179.99295812360148422")
-set_tests_properties (Geod6
+set_tests_properties (GeodSolve6
   PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 20003898.214")
-set_tests_properties (Geod7
+set_tests_properties (GeodSolve7
   PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 20003925.854")
-set_tests_properties (Geod8
+set_tests_properties (GeodSolve8
   PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 20003926.881")
 
 # Check fix for volatile x bug found 2011-06-25 (gcc 4.4.4 x86 -O3)
-add_test (Geod9 Geod -i --input-string
+add_test (GeodSolve9 GeodSolve -i --input-string
   "56.320923501171 0 -56.320923501171 179.664747671772880215")
-set_tests_properties (Geod9
+set_tests_properties (GeodSolve9
   PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 19993558.287")
 
 # Check fix for adjust tol1_ bug found 2011-06-25 (Visual Studio 10 rel + debug)
-add_test (Geod10 Geod -i --input-string
+add_test (GeodSolve10 GeodSolve -i --input-string
   "52.784459512564 0 -52.784459512563990912 179.634407464943777557")
-set_tests_properties (Geod10
+set_tests_properties (GeodSolve10
   PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 19991596.095")
 
 # Check fix for bet2 = -bet1 bug found 2011-06-25 (Visual Studio 10 rel + debug)
-add_test (Geod11 Geod -i --input-string
+add_test (GeodSolve11 GeodSolve -i --input-string
   "48.522876735459 0 -48.52287673545898293 179.599720456223079643")
-set_tests_properties (Geod11
+set_tests_properties (GeodSolve11
   PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 19989144.774")
 
 # Check fix for inverse geodesics on extreme prolate/oblate ellipsoids
 # Reported 2012-08-29 Stefan Guenther <stefan.gunther@embl.de>; fixed 2012-10-07
-add_test (Geod12 Geod -i -e 89.8 -1.83 -p 0 --input-string "0 0 -10 160")
-add_test (Geod13 Geod -i -e 89.8 -1.83 -p 0 --input-string "0 0 -10 160" -E)
-set_tests_properties (Geod12 Geod13
+add_test (GeodSolve12
+  GeodSolve -i -e 89.8 -1.83 -p 0 --input-string "0 0 -10 160")
+add_test (GeodSolve13
+  GeodSolve -i -e 89.8 -1.83 -p 0 --input-string "0 0 -10 160" -E)
+set_tests_properties (GeodSolve12 GeodSolve13
   PROPERTIES PASS_REGULAR_EXPRESSION "120\\.27.* 105\\.15.* 267")
 
 # Check fix for pole-encircling bug found 2011-03-16
