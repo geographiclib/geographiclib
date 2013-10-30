@@ -60,7 +60,7 @@ cd $TEMP/gita/geographiclib
 sh autogen.sh
 mkdir BUILD
 cd BUILD
-cmake ..
+cmake -D GEOGRAPHICLIB_EXAMPLES=ON ..
 make dist
 cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
 make doc

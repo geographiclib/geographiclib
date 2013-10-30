@@ -357,10 +357,9 @@ Here are the steps to compile and install %GeographicLib:
     "mex" (for Matlab) or "mkoctfile" (for Octave) to specify the
     compiler to use for the Matlab/Octave interface.  See \ref matlab
     for more information.
-  - <code>GEOGRAPHICLIB_EXAMPLES</code> (default: ON for non-Windows
-    systems and OFF for Windows systems).  If set to ON, then the
-    short example programs in the <code>examples</code> directory are
-    built.
+  - <code>GEOGRAPHICLIB_EXAMPLES</code> (default: OFF).  If set to ON,
+    then the short example programs in the <code>examples</code>
+    directory are built.
   - <code>GEOGRAPHICLIB_DOCUMENTATION</code> (default: ON for
     non-Windows systems and OFF for Windows systems).  If set to ON,
     then html documentation is created from the source files, provided a
@@ -4688,6 +4687,9 @@ of the git repository for %GeographicLib.
    - On Unix/Linux, don't include the version number in directory for
      the cmake configuration files.
    - Use a more precise value for GeographicLib::OSGB::CentralScale().
+   - Minimum version of cmake needed increased to 2.8 (released in
+     2009-11).
+   - GEOGRAPHICLIB_EXAMPLES now defaults to OFF.
 
  - <a href="http://geographiclib.sf.net/1.33">Version 1.33</a>
    (released 2013-10-08)

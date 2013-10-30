@@ -114,13 +114,8 @@ set (MATLAB_COMPILER OFF CACHE STRING
 set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
 
 # (6) Compile the short example programs?
-if (WIN32 OR APPLE)
-  option (GEOGRAPHICLIB_EXAMPLES
-    "Build example programs in examples directory" OFF)
-else ()
-  option (GEOGRAPHICLIB_EXAMPLES
-    "Build example programs in examples directory" ON)
-endif ()
+option (GEOGRAPHICLIB_EXAMPLES
+  "Build example programs in examples directory" OFF)
 
 # (7) Create the documentation?  This depends on whether doxygen can be
 # found.  If this is OFF, then links will be provided to the online
