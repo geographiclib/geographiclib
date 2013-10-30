@@ -41,9 +41,7 @@ set_property (TARGET tools ${TOOLS} PROPERTY FOLDER tools)
 # expected to be run with write access to /usr/local.
 if (NOT WIN32)
   foreach (SCRIPT ${SCRIPTS})
-    # Need to absolute path on destination to support old versions of cmake
-    configure_file (${SCRIPT}.sh ${CMAKE_CURRENT_BINARY_DIR}/scripts/${SCRIPT}
-      @ONLY)
+    configure_file (${SCRIPT}.sh scripts/${SCRIPT} @ONLY)
     add_custom_command (OUTPUT ${SCRIPT}
       COMMAND ${CMAKE_COMMAND} -E
         copy scripts/${SCRIPT} ${SCRIPT} && chmod +x ${SCRIPT}

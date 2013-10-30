@@ -32,10 +32,9 @@ endif ()
 # config files
 set (GeographicLib_INCLUDE_DIRS IGNORE)
 # Need to absolute path on destination to support old versions of cmake
-configure_file (geographiclib-config.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/geographiclib-config.cmake @ONLY)
+configure_file (geographiclib-config.cmake.in geographiclib-config.cmake @ONLY)
 configure_file (geographiclib-config-version.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/geographiclib-config-version.cmake @ONLY)
+  geographiclib-config-version.cmake @ONLY)
 install (FILES
   "${CMAKE_CURRENT_BINARY_DIR}/geographiclib-config.cmake"
   "${CMAKE_CURRENT_BINARY_DIR}/geographiclib-config-version.cmake"

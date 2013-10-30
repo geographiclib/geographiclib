@@ -1,5 +1,3 @@
-cmake_minimum_required (VERSION 2.6)
-set(CMAKE_LEGACY_CYGWIN_WIN32 0) # Remove when CMake >= 2.8.4 is required
 project (GeographicLib)
 
 # Version information
@@ -18,6 +16,9 @@ set (PACKAGE_VERSION ${GeographicLib_VERSION})
 # autoconf set up.
 set (LIBVERSION 10)
 set (LIBVERSIONFULL 10.1.1)
+
+cmake_minimum_required (VERSION 2.8)
+set(CMAKE_LEGACY_CYGWIN_WIN32 0) # Remove when CMake >= 2.8.4 is required
 
 # User-settable variables
 
@@ -110,9 +111,7 @@ endif ()
 # (5) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
 set (MATLAB_COMPILER OFF CACHE STRING
   "Compiler for matlab/octave interface: mex or mkoctfile or OFF")
-if (NOT CMAKE_VERSION VERSION_LESS 2.8)
-  set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
-endif ()
+set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
 
 # (6) Compile the short example programs?
 if (WIN32 OR APPLE)
@@ -150,9 +149,7 @@ endif ()
 # at 2 (double).
 set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
   "Default real precision: 1 = float, 2 = double, 3 = long double")
-if (NOT CMAKE_VERSION VERSION_LESS 2.8)
-  set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3)
-endif ()
+set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3)
 
 # The debug version of the library is called Geographic_d.
 set (CMAKE_DEBUG_POSTFIX _d)
@@ -190,8 +187,7 @@ configure_file (
   include/GeographicLib/Config.h )
 
 # The documentation depends on doxygen.  Need version 1.8.1.2 or later
-# for support of greek letters and math symbols.  Also require cmake
-# 2.8 or later for support of file (COPY ...).
+# for support of greek letters and math symbols.
 if (GEOGRAPHICLIB_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
   find_package (Doxygen 1.8.1.2)
@@ -201,10 +197,6 @@ if (GEOGRAPHICLIB_DOCUMENTATION)
     if (DOXYGEN_VERSION VERSION_LESS 1.4.0)
       set (DOXYGEN_FOUND FALSE)
       message (STATUS "Doxygen version found, ${DOXYGEN_VERSION}, is too old")
-    elseif (CMAKE_VERSION VERSION_LESS 2.8)
-      set (DOXYGEN_FOUND FALSE)
-      message (STATUS
-        "CMake version ${CMAKE_VERSION} too old for building documentation")
     endif ()
   endif ()
 endif ()
@@ -220,8 +212,7 @@ if (NOT WIN32 AND NOT APPLE)
   find_program (HAVE_POD2HTML pod2html)
   find_program (HAVE_COL col)
 endif ()
-if (HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_COL AND
-    NOT CMAKE_VERSION VERSION_LESS 2.8)
+if (HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_COL)
   set (MAINTAINER ON)
 else ()
   set (MAINTAINER OFF)

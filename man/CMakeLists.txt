@@ -46,28 +46,20 @@ foreach (TOOL ${TOOLS})
       COMMENT "Building usage code for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
   else ()
-    # Replace configure_file (... COPYONLY) with file (COPY ...)  once
-    # cmake version 2.8 is required
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.usage)
-      configure_file (${TOOL}.usage ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.usage
-        COPYONLY)
+      file (COPY ${TOOL}.usage DESTINATION .)
     else ()
-      configure_file (dummy.usage.in ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.usage
-        @ONLY)
+      configure_file (dummy.usage.in ${TOOL}.usage @ONLY)
     endif ()
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.1)
-      configure_file (${TOOL}.1 ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1
-        COPYONLY)
+      file (COPY ${TOOL}.1 DESTINATION .)
     else ()
-      configure_file (dummy.1.in ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1
-        @ONLY)
+      configure_file (dummy.1.in ${TOOL}.1 @ONLY)
     endif ()
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.1.html)
-      configure_file (${TOOL}.1.html ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html
-        COPYONLY)
+      file (COPY ${TOOL}.1.html DESTINATION .)
     else ()
-      configure_file (dummy.1.html.in ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html
-        @ONLY)
+      configure_file (dummy.1.html.in ${TOOL}.1.html @ONLY)
     endif ()
     if (DOXYGEN_FOUND)
       file (COPY ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html

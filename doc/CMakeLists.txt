@@ -64,13 +64,10 @@ if (DOXYGEN_FOUND)
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
     DESTINATION ${INSTALL_DOC_DIR})
 else ()
-  # Replace with file (COPY ...) once cmake version 2.8 is required
-  configure_file (../LICENSE.txt ${CMAKE_CURRENT_BINARY_DIR}/html/LICENSE.txt
-    COPYONLY)
+  file (COPY ../LICENSE.txt DESTINATION html)
   # Need to absolute path on destination to support old versions of cmake
-  configure_file (index.html.in ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
-  configure_file (utilities.html.in
-    ${CMAKE_CURRENT_BINARY_DIR}/html/utilities.html)
+  configure_file (index.html.in html/index.html)
+  configure_file (utilities.html.in html/utilities.html)
   install (FILES
     ${CMAKE_CURRENT_BINARY_DIR}/html/LICENSE.txt
     ${CMAKE_CURRENT_BINARY_DIR}/html/index.html
