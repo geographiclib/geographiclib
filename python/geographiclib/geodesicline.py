@@ -13,7 +13,7 @@
 #    http://dx.doi.org/10.1007/s00190-012-0578-z
 #    Addenda: http://geographiclib.sf.net/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2013) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 ######################################################################
@@ -303,7 +303,6 @@ class GeodesicLine(object):
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
       Geodesic.AZIMUTH
-      Geodesic.DISTANCE
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
@@ -326,3 +325,56 @@ class GeodesicLine(object):
       result['M12'] = M12; result['M21'] = M21
     if outmask & Geodesic.AREA: result['S12'] = S12
     return result
+
+  def ArcPosition(self, a12,
+                  outmask = GeodesicCapability.LATITUDE |
+                  GeodesicCapability.LONGITUDE | GeodesicCapability.AZIMUTH |
+                  GeodesicCapability.DISTANCE):
+    """
+    Return the point a spherical arc length a12 along the geodesic line.
+    Return a dictionary with (some) of the following entries:
+
+      lat1 latitude of point 1
+      lon1 longitude of point 1
+      azi1 azimuth of line at point 1
+      lat2 latitude of point 2
+      lon2 longitude of point 2
+      azi2 azimuth of line at point 2
+      s12 distance from 1 to 2
+      a12 arc length on auxiliary sphere from 1 to 2
+      m12 reduced length of geodesic
+      M12 geodesic scale 2 relative to 1
+      M21 geodesic scale 1 relative to 2
+      S12 area between geodesic and equator
+
+    outmask determines which fields get included and if outmask is
+    omitted, then only the basic geodesic fields are computed.  The mask
+    is an or'ed combination of the following values
+
+      Geodesic.LATITUDE
+      Geodesic.LONGITUDE
+      Geodesic.AZIMUTH
+      Geodesic.DISTANCE
+      Geodesic.REDUCEDLENGTH
+      Geodesic.GEODESICSCALE
+      Geodesic.AREA
+      Geodesic.ALL
+    """
+
+    from geographiclib.geodesic import Geodesic
+    Geodesic.CheckDistance(a12)
+    result = {'lat1': self._lat1, 'lon1': self._lon1, 'azi1': self._azi1,
+              'a12': a12}
+    a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenPosition(
+      True, a12, outmask)
+    outmask &= Geodesic.OUT_ALL
+    if outmask & Geodesic.DISTANCE: result['s12'] = s12
+    if outmask & Geodesic.LATITUDE: result['lat2'] = lat2
+    if outmask & Geodesic.LONGITUDE: result['lon2'] = lon2
+    if outmask & Geodesic.AZIMUTH: result['azi2'] = azi2
+    if outmask & Geodesic.REDUCEDLENGTH: result['m12'] = m12
+    if outmask & Geodesic.GEODESICSCALE:
+      result['M12'] = M12; result['M21'] = M21
+    if outmask & Geodesic.AREA: result['S12'] = S12
+    return result
+
