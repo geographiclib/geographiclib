@@ -1,0 +1,124 @@
+<project 
+    xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.sri.vt</groupId>
+    <artifactId>geographiclib</artifactId>
+    <version>1.33-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>GeographicLib</name>
+
+    <repositories>
+        <repository>
+            <id>artifactory-vt</id>
+            <name>SRI VT Repository</name>
+            <url>https://artifactory-vt.sarnoff.internal/artifactory/repo</url>
+        </repository>
+    </repositories>
+
+    <properties>
+    </properties>
+    
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.sri.vt.majic</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>0.1.2-SNAPSHOT</version>
+                </plugin>
+
+                <!-- needed for the majic build-helper -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.2.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>com.sri.vt.majic</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>cmake-configure-debug</id>
+                        <goals>
+                            <goal>cmake-configure</goal>
+                        </goals>
+                        <configuration>
+                            <config>Debug</config>
+                            <options>
+			        <GEOGRAPHIC_SHARED_LIB>ON</GEOGRAPHIC_SHARED_LIB>
+                            </options>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>cmake-configure-release</id>
+                        <goals>
+                            <goal>cmake-configure</goal>
+                        </goals>
+                        <configuration>
+                            <config>Release</config>
+                            <options>
+			        <GEOGRAPHIC_SHARED_LIB>ON</GEOGRAPHIC_SHARED_LIB>
+				<GEOGRAPHICLIB_DOCUMENTATION>ON</GEOGRAPHICLIB_DOCUMENTATION>
+                            </options>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>cmake-compile-debug</id>
+                        <goals>
+                            <goal>cmake-compile</goal>
+                        </goals>
+                        <configuration>
+                            <config>Debug</config>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>cmake-compile-release</id>
+                        <goals>
+                            <goal>cmake-compile</goal>
+                        </goals>
+                        <configuration>
+                            <config>Release</config>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>cmake-install-debug</id>
+                        <goals>
+                            <goal>cmake-install</goal>
+                        </goals>
+                        <configuration>
+                            <config>Debug</config>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>cmake-install-release</id>
+                        <goals>
+                            <goal>cmake-install</goal>
+                        </goals>
+                        <configuration>
+                            <config>Release</config>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>cmake-tar</id>
+                        <goals>
+                            <goal>cmake-tar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
