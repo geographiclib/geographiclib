@@ -18,6 +18,14 @@
     </repository>
   </repositories>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>artifactory-vt</id>
+      <name>SRI VT Repository</name>
+      <url>https://artifactory-vt.sarnoff.internal/artifactory/repo</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <properties>
     <!-- <cmake.build.root>${project.build.directory}</cmake.build.root> -->
   </properties>
