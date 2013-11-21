@@ -10,6 +10,10 @@
     <packaging>pom</packaging>
     <name>GeographicLib</name>
 
+    <properties>
+        <majic.version>0.1.2</majic.version>
+    </properties>
+    
     <repositories>
         <repository>
             <id>artifactory-vt</id>
@@ -31,7 +35,7 @@
             <extension>
                 <groupId>com.sri.vt.majic</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>0.1.2-SNAPSHOT</version>
+                <version>${majic.version}</version>
             </extension>
         </extensions>
 
@@ -40,7 +44,7 @@
                 <plugin>
                     <groupId>com.sri.vt.majic</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>0.1.2-SNAPSHOT</version>
+                    <version>${majic.version}</version>
                 </plugin>
 
                 <plugin>
