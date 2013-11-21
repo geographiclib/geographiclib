@@ -44,7 +44,6 @@
             <groupId>com.sri.vt.majic</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
             <executions>
-
               <execution>
                 <id>cmake-configure</id>
                 <goals>
@@ -58,47 +57,18 @@
                 </configuration>
               </execution>
 
-              <execution>
-                <id>cmake-compile</id>
-                <goals>
-                  <goal>cmake-compile</goal>
-                </goals>
-                <configuration>
-                  <configs>
-                    <config>Debug</config>
-                    <config>Release</config>
-                  </configs>
-                </configuration>
-              </execution>
-
+			  <!--
               <execution>
                 <id>cmake-build-doc</id>
-                <phase>prepare-package</phase>
                 <goals>
-                  <goal>cmake-runtarget</goal>
+                  <goal>cmake-doc</goal>
                 </goals>
                 <configuration>
                   <configs>
                     <config>Release</config>
                   </configs>
-                  <options>
-                    <target>doc</target>
-                  </options>
                 </configuration>
-              </execution>
-
-              <execution>
-                <id>cmake-install</id>
-                <goals>
-                  <goal>cmake-install</goal>
-                </goals>
-                <configuration>
-                  <configs>
-                    <config>Debug</config>
-                    <config>Release</config>
-                  </configs>
-                </configuration>
-              </execution>
+              </execution>-->
             </executions>
           </plugin>
         </plugins>
@@ -118,44 +88,11 @@
             <groupId>com.sri.vt.majic</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
             <executions>
-
               <execution>
                 <id>cmake-configure</id>
                 <goals>
                   <goal>cmake-configure</goal>
                 </goals>
-                <configuration>
-                  <configs>
-                    <config>Release</config>
-                  </configs>
-                  <options>
-                    <!--<BUILD_NEW_PYTHON_SUPPORT>${python}</BUILD_NEW_PYTHON_SUPPORT>-->
-                  </options>
-                </configuration>
-              </execution>
-
-              <execution>
-                <id>cmake-compile</id>
-                <goals>
-                  <goal>cmake-compile</goal>
-                </goals>
-                <configuration>
-                  <configs>
-                    <config>Release</config>
-                  </configs>
-                </configuration>
-              </execution>
-
-              <execution>
-                <id>cmake-install</id>
-                <goals>
-                  <goal>cmake-install</goal>
-                </goals>
-                <configuration>
-                  <configs>
-                    <config>Release</config>
-                  </configs>
-                </configuration>
               </execution>
             </executions>
           </plugin>
@@ -165,6 +102,12 @@
   </profiles>
 
   <build>
+   <extensions>
+		<extension>
+			<groupId>com.sri.vt.majic</groupId>
+			<artifactId>build-helper-maven-plugin</artifactId>
+		</extension>
+	</extensions>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -187,7 +130,19 @@
         <groupId>com.sri.vt.majic</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
-          <execution>
+		  <execution>
+			<id>cmake-compile</id>
+			  <goals>
+				<goal>cmake-compile</goal>
+			  </goals>
+		  </execution>
+		  <execution>
+			<id>cmake-install</id>
+			  <goals>
+				<goal>cmake-install</goal>
+			  </goals>
+		  </execution>
+		  <execution>
             <id>cmake-tar</id>
             <goals>
               <goal>cmake-tar</goal>
@@ -195,6 +150,22 @@
           </execution>
         </executions>
       </plugin>
-    </plugins>
+
+	  <!--<plugin>
+	  	<groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-clean-plugin</artifactId>
+			<configuration>
+			  <filesets>
+				<fileset>
+		  		  <directory>${cmake.build.root}</directory>
+					<excludes>${cmake.pkg.root}</excludes>
+				  </fileset>
+				  <fileset>
+					<directory>${cmake.project.bin.directory}</directory>
+				  </fileset>
+				</filesets>
+			</configuration>
+		</plugin>-->
+	  </plugins>
   </build>
 </project>
