@@ -16,9 +16,6 @@
 file (GLOB SOURCES [A-Za-z]*.cpp)
 file (GLOB HEADERS [A-Za-z]*.h)
 
-# Cancel the debug suffix
-set (CMAKE_DEBUG_POSTFIX)
-
 add_library (NETGeographic SHARED ${SOURCES} ${HEADERS})
 set_target_properties (NETGeographic PROPERTIES COMPILE_FLAGS "/clr")
 

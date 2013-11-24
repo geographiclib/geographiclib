@@ -20,7 +20,7 @@ foreach (EXAMPLE_SOURCE ${OTHER_EXAMPLES})
   target_link_libraries (${EXAMPLE} Geographic)
 endforeach ()
 
-find_package (OpenMP)
+find_package (OpenMP QUIET)
 
 if (OPENMP_FOUND)
   set_target_properties (GeoidToGTX PROPERTIES

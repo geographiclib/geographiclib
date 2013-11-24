@@ -3,6 +3,7 @@
 set (PACKAGE_VERSION "@GeographicLib_VERSION@")
 set (PACKAGE_VERSION_MAJOR "@GeographicLib_VERSION_MAJOR@")
 set (PACKAGE_VERSION_MINOR "@GeographicLib_VERSION_MINOR@")
+set (PACKAGE_VERSION_PATCH "@GeographicLib_VERSION_PATCH@")
 
 if (WIN32 AND NOT "${CMAKE_GENERATOR}" STREQUAL "@CMAKE_GENERATOR@")
   # Reject if there's a mismatch on compiler versions (Windows only)
@@ -27,68 +28,4 @@ if (GeographicLib_FIND_COMPONENTS)
       set (PACKAGE_VERSION_UNSUITABLE TRUE)
     endif ()
   endforeach ()
-endif ()
-
-# Perhaps(?), check that PACKAGE_VERSION corresponds to the installed
-# files.  This is only necessary if COMMON_INSTALL_PATH is ON and if the
-# package is installed (instead of being in the build tree).  In that
-# case the directory layout (after installing versions 1.32 and 1.33)
-# might be
-#
-# /usr/local/
-#    include/GeographicLib
-#       Config.h                    -- corresponds to version 1.33
-#       ...
-#    lib/
-#       libGeographic.so.10.0.1     -- corresponds to version 1.32
-#       libGeographic.so.10.1.0     -- corresponds to version 1.33
-#    bin/
-#    share/cmake/
-#       GeographicLib-1.31/
-#          geographiclib-config-version.cmake
-#       GeographicLib-1.32/
-#          geographiclib-config-version.cmake
-#       GeographicLib-1.33/
-#          geographiclib-config-version.cmake
-#
-# The problem is that find_package might find version 1.32 even though
-# the subsequent install of 1.33 has overwritten the include files.  The
-# developer then might think the version is 1.32, but the include files
-# correspond to 1.33.  Linking against the shared library might then
-# fail because it will be using the out-of-date library for 1.32 (which
-# needs to be kept around for applications that have been built
-# previously).
-#
-# There are two ways to avoid this problem:
-#
-# (1) remove the version suffix from the directory where the cmake
-# config files are installed, i.e., set INSTALL_CMAKE_DIR to
-# share/cmake/GeographicLib in cmake/CMakeLists.txt.
-#
-# (2) check that PACKAGE_VERSION matches the version listed in
-# include/GeographicLib/Config.h which is accomplished by the following
-# (comment out) code.
-#
-# Only fix (1) is implemented for now.  Unfortunately, neither of fixes
-# really solve the problem of overwritten versions prior to 1.34.  This
-# would require the deletion of the directories
-# share/cmake/GeographicLib-VERSION for all the overwritten versions.
-if (0)
-  set (COMMON_INSTALL_PATH @COMMON_INSTALL_PATH@)
-  if (COMMON_INSTALL_PATH AND NOT IS_ABSOLUTE "@GEOGRAPHICLIB_ROOT_DIR@")
-    get_filename_component (_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
-    get_filename_component (GEOGRAPHICLIB_ROOT_DIR
-      "${_DIR}/@GEOGRAPHICLIB_ROOT_DIR@" ABSOLUTE)
-    set (CONFIG "${GEOGRAPHICLIB_ROOT_DIR}/include/GeographicLib/Config.h")
-    if (EXISTS "${CONFIG}")
-      file (STRINGS "${CONFIG}" VERSION
-        REGEX "#define +GEOGRAPHICLIB_VERSION_STRING +\"[0-9.]*\"")
-      string (REGEX MATCH "[0-9.]+" VERSION ${VERSION})
-      if (NOT PACKAGE_VERSION STREQUAL VERSION)
-        set (PACKAGE_VERSION_UNSUITABLE TRUE)
-      endif ()
-    else ()
-      set (PACKAGE_VERSION_UNSUITABLE TRUE)
-    endif ()
-  endif ()
 endif ()

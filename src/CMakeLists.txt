@@ -30,11 +30,11 @@ install (TARGETS Geographic
 
 if (MSVC)
   # Install pdb files in debug mode
-  get_property(PDB TARGET Geographic PROPERTY LOCATION_DEBUG)
-  get_filename_component(_P ${PDB} PATH)
-  get_filename_component(PDB ${PDB} NAME_WE)
-  set(PDB ${_P}/${PDB}.pdb)
-  INSTALL(FILES ${PDB} DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
+  get_property (PDB TARGET Geographic PROPERTY LOCATION_DEBUG)
+  get_filename_component (_P ${PDB} PATH)
+  get_filename_component (PDB ${PDB} NAME_WE)
+  set (PDB ${_P}/${PDB}.pdb)
+  install (FILES ${PDB} DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Debug)
 endif ()
 
 # Put all the library into a folder in the IDE

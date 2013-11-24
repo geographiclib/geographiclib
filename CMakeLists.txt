@@ -37,6 +37,7 @@ else ()
   option (COMMON_INSTALL_PATH "Use a common installation path for packages" ON)
 endif ()
 
+# The use of PACKAGE_PATH and INSTALL_PATH is now DEPRECATED.
 # (2) PACKAGE_PATH and INSTALL_PATH govern the find_package search
 # path and the installation directory.  (find_package is not used by
 # GeographicLib since it doesn't depend on other packages.  However
@@ -62,11 +63,6 @@ endif ()
 if (DEFINED PACKAGE_PATH)
   set (CMAKE_PREFIX_PATH ${PACKAGE_PATH} ${CMAKE_PREFIX_PATH})
   message (STATUS "CMAKE_PREFIX_PATH set to ${CMAKE_PREFIX_PATH}")
-elseif (DEFINED CMAKE_PREFIX_PATH
-    AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  # Backwards compatibility (support the mechanism advertised in
-  # versions 1.20 and 1.21).
-  list (GET CMAKE_PREFIX_PATH 0 PACKAGE_PATH)
 endif ()
 
 if (NOT DEFINED INSTALL_PATH AND DEFINED PACKAGE_PATH)
@@ -259,6 +255,7 @@ endif ()
 
 # Make the compiler more picky.
 if (WIN32)
+  string (REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
@@ -335,8 +332,7 @@ if (NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
   # squelch the warning.
   set (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS ON)
 endif ()
-# To include debug versions of runtime support on Windows, do...
-# set (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
+set (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
 include (InstallRequiredSystemLibraries)
 
 # The configuration of CPack is via variable that need to be set before

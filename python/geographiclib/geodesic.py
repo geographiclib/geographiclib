@@ -24,7 +24,8 @@ from geographiclib.constants import Constants
 from geographiclib.geodesiccapability import GeodesicCapability
 
 class Geodesic(object):
-  """Solve geodesic problems.  The following illustrates its use
+  """
+  Solve geodesic problems.  The following illustrates its use
 
     import sys
     sys.path.append("/usr/local/lib/python/site-packages")

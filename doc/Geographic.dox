@@ -200,8 +200,7 @@ Then pick one of the first five options below:
   Visual Studio 2005, 2008, and 2010 under Windows.
 - \ref windowsbin.  Use this installation method if you only need to use
   the \ref utilities supplied with %GeographicLib.  (This method also
-  installs the header files and the static library for use by Visual
-  Studio 2010.)
+  installs the header files and the library for use by Visual Studio 10.)
 - \ref qt.  How to compile %GeographicLib so that it can be used by Qt
   programs.
 - \ref maintainer.  This describes addition tasks of interest only to
@@ -274,10 +273,6 @@ Here are the steps to compile and install %GeographicLib:
   cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.34 ..
   cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.34 ..
 \endverbatim
-  Instead of setting CMAKE_INSTALL_PREFIX, you can (on Windows) set
-  PACKAGE_PATH to point to its parent directory, e.g., \verbatim
-  cmake -G "Visual Studio 10" -D PACKAGE_PATH=C:/pkg-vc10 ..
-\endverbatim
   The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
   settings given above are recommended to ensure that packages that use
   %GeographicLib use the version compiled with the right compiler.
@@ -301,34 +296,16 @@ Here are the steps to compile and install %GeographicLib:
     - python interface: OFF: python; ON: lib/python/site-packages;
     - matlab interface: OFF: matlab; ON: libexec/GeographicLib/matlab;
     .
-  - <code>CMAKE_INSTALL_PREFIX</code> (default: /usr/local on
-    non-Windows systems, C:/Program Files/GeographicLib on Windows
-    systems) specifies where the library will be installed.  For windows
-    systems, it is recommended to use a prefix which includes the
-    compiler version, as shown above (and also, possibly, whether this
-    is a 64-bit build, e.g., <code>cmake -G "Visual Studio 10 Win64" -D
-    CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.34 ..</code>).
-    If you just want to try the library to see if it suits your needs,
-    pick, for example, <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
-  - <code>PACKAGE_PATH</code> and <code>INSTALL_PATH</code> provide an
-    alternative mechanism for setting the find_package search path and
-    the installation directory.  (find_package is not used by
-    %GeographicLib since it doesn't depend on other packages.  However
-    PACKAGE_PATH is used here for uniformity with other packages which
-    adopt the same conventions.)
-    - If PACKAGE_PATH is defined, it is prepended to CMAKE_PREFIX_PATH.
-    - If INSTALL_PATH is not specified but PACKAGE_PATH is, then
-      INSTALL_PATH is set to
-      ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON, and to
-      ${PACKAGE_PATH}/GeographicLib-1.34, otherwise.
-    - If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
-      INSTALL_PATH.
-    .
-    Typically, only PACKAGE_PATH needs to be specified, e.g.,
-    - Linux: cmake -D PACKAGE_PATH=/opt .. => CMAKE_INSTALL_PREFIX=/opt
-    - Windows: cmake -D PACKAGE_PATH=C:/pkg .. =>
-      CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.34
-    .
+  - <code>CMAKE_INSTALL_PREFIX</code> (default: <code>/usr/local</code>
+    on non-Windows systems, <code>C:/Program Files/GeographicLib</code>
+    on Windows systems) specifies where the library will be installed.
+    For windows systems, it is recommended to use a prefix which
+    includes the compiler version, as shown above (and also, possibly,
+    whether this is a 64-bit build, e.g., <code>cmake -G "Visual Studio
+    10 Win64" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.34
+    ..</code>).  If you just want to try the library to see if it suits
+    your needs, pick, for example,
+    <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
     C:/Documents and Settings/All Users/Application
@@ -396,8 +373,13 @@ Here are the steps to compile and install %GeographicLib:
   Visual Studio compiler from the command line with \verbatim
   cmake --build . --config Release --target ALL_BUILD
   cmake --build . --config Release --target RUN_TESTS
-  cmake --build . --config Release --target INSTALL
-\endverbatim
+  cmake --build . --config Release --target INSTALL \endverbatim
+  For maximum flexibility, it's a good idea to build and install both
+  the Debug and Release versions of the library (in that order).  The
+  installation directories will then contain the release versions of the
+  tools and <i>both</i> versions (debug and release) of the libraries.
+  If you use cmake to configure and build your programs, then the right
+  version of the library (debug vs. release) will automatically be used.
 - The headers, library, and utilities are installed in the
   include/GeographicLib, lib, and bin directories under
   <code>CMAKE_INSTALL_PREFIX</code>.  (dll dynamic libraries are
@@ -491,16 +473,17 @@ is needed to build the Matlab interface and to run the tests.)
   <a href="index.html">doc/html/index.html</a> in a web
   browser.
 
-The Visual Studio 10 (2010) solution also contains projects to build <a
-href="NET/index.html">NETGeographic</a> and the C# example project.
+The Visual Studio 10 solution also contains projects to build
+<a href="NET/index.html">NETGeographic</a> and the C# example project.
 
 \section windowsbin Using a binary installer for Windows
 
 Use this method if you only need to use the %GeographicLib utilities.
-The header files and static library are provided, but can only be used
-by Visual Studio 2010 in release mode.   However, if you plan to use the
-library, it is advisable to build it with the compiler you are using for
-your own code using either \ref cmake or \ref windows.
+The header files and static and shared versions of library are also
+provided; these can only be used by Visual Studio 2010 (in either
+release or debug mode).  However, if you plan to use the library, it may
+be advisable to build it with the compiler you are using for your own
+code using either \ref cmake or \ref windows.
 
 Download and run
 <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.34-win32.exe">
@@ -522,12 +505,14 @@ will include C:/pkg-vc10/GeographicLib-1.34/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the matlab folder.  Add this to your
-path in Matlab to access this interface.  The binaries were built
-using Visual Studio 10 (2010) in Release mode.  The Matlab interface
+path in Matlab to access this interface.  The libraries were built using
+using Visual Studio 10 in release and debug modes.  The utilities were
+linked against the release-mode shared library.  The Matlab interface
 was compiled with Matlab R2013a 64-bit, however it may work with some
-other 64-bit versions of Matlab.  The
-<a href="NET/index.html">NETGeographic</a> library dll is included with
-the binary installers.
+other 64-bit versions of Matlab.
+<a href="NET/index.html">NETGeographic</a> library dlls (release and
+debug) are included with the binary installers; these are linked against
+the shared library for %GeographicLib.
 
 \section qt Building the library for use with Qt
 
@@ -688,14 +673,28 @@ In order to use %GeographicLib from C++ code, you will need to
   \verbatim
   cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/XYZProject ..
   \endverbatim
-  You can direct find_package to a specific version of %GeographicLib
-  by specifying the cmake variable <code>GeographicLib_DIR</code> to
-  point to the directory containing the configuration file
-  <code>geographiclib-config.cmake</code>; this should normally the
-  cmake directory in the installation tree, but can also be a build
-  directory for %GeographicLib.  On Windows systems, find_package will
-  only look for versions of %GeographicLib built with the right
-  version of the compiler.  (If you used a non-cmake method of
+  The cmake documentation describes the locations searched by
+  find_package (the appropriate rule for %GeographicLib are those for
+  "Config" mode lookups).  In brief, the locations that are searched are
+  (in <i>reverse</i> order) are
+  - under the system paths, i.e., locations such as <code>C:/Program
+    Files</code> and <code>/usr/local</code>);
+  - under the (semicolon separated) list of directories specified by the
+    cmake variable <code>CMAKE_PREFIX_PATH</code>;
+  - under the directory given by the <i>environment variable</i>
+    <code>GeographicLib_DIR</code>;
+  - in the directory given by the <i>cmake variable</i>
+    <code>GeographicLib_DIR</code>, which specifies the directory
+    containing the configuration file
+    <code>geographiclib-config.cmake</code> (this can either be in the
+    installation tree for %GeographicLib or the top-level build
+    directory).
+  .
+  Typically, specifying nothing or <code>CMAKE_PREFIX_PATH</code>
+  suffices.  However the two <code>GeographicLib_DIR</code> variables
+  allow for a specific version to be chosen.  On Windows systems,
+  find_package will only find versions of %GeographicLib built with the
+  right version of the compiler.  (If you used a non-cmake method of
   installing %GeographicLib, you can try copying
   cmake/FindGeographicLib.cmake to somewhere in your
   <code>CMAKE_MODULE_PATH</code> in order for find_package to work.
@@ -732,14 +731,10 @@ target_link_libraries (${PROJECT_NAME} ${GeographicLib_LIBRARIES})
 
 if (WIN32)
   # Copy the shared library on Windows systems.
-  get_target_property (GeographicLib_LOCATION
-    "${GeographicLib_LIBRARIES}" IMPORTED_LOCATION_RELEASE)
-  if (GeographicLib_LOCATION MATCHES "\\.[Dd][Ll][Ll]\$")
-    add_custom_command (TARGET ${PROJECT_NAME} POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E
-      copy "${GeographicLib_LOCATION}" ${CMAKE_CFG_INTDIR}
-      COMMENT "Copying shared library for GeographicLib")
-  endif ()
+  add_custom_command (TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E
+    copy $<TARGET_FILE:${GeographicLib_LIBRARIES}> ${CMAKE_CFG_INTDIR}
+    COMMENT "Copying shared library for GeographicLib")
 endif () \endverbatim
 
 The next steps are:
@@ -4684,12 +4679,17 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.34">Version 1.34</a>
    (released 2013-mm-dd)
+   - both shared and static libraries (release plus debug) included in
+     binary installer.
    - On Unix/Linux, don't include the version number in directory for
      the cmake configuration files.
    - Use a more precise value for GeographicLib::OSGB::CentralScale().
    - Minimum version of cmake needed increased to 2.8 (released in
      2009-11).
    - GEOGRAPHICLIB_EXAMPLES now defaults to OFF.
+   - deprecate PACKAGE_PATH and INSTALL_PATH.
+   - Add Arc routines to python interface.
+   - Geod utility retired (used GeodSolve instead)
 
  - <a href="http://geographiclib.sf.net/1.33">Version 1.33</a>
    (released 2013-10-08)

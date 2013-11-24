@@ -85,7 +85,7 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
     echo 'rm -rf /tmp/$b'
     echo 'mkdir /tmp/$b'
     echo 'cd /tmp/$b'
-    echo cmake -G \"Visual Studio 10\" -D PACKAGE_PATH=u:/pkg-vc10 -D GEOGRAPHICLIB_EXAMPLES=ON -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake -G \"Visual Studio 10\" -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10/GeographicLib-$VERSION -D GEOGRAPHICLIB_EXAMPLES=ON -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
@@ -100,7 +100,7 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared
     echo 'rm -rf /tmp/$b'
     echo 'mkdir /tmp/$b'
     echo 'cd /tmp/$b'
-    echo cmake -G \"Visual Studio 10\" -D PACKAGE_PATH=u:/pkg-vc10-shared -D GEOGRAPHICLIB_EXAMPLES=ON -D GEOGRAPHIC_SHARED_LIB=ON -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake -G \"Visual Studio 10\" -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10-shared/GeographicLib-$VERSION -D GEOGRAPHICLIB_EXAMPLES=ON -D GEOGRAPHIC_SHARED_LIB=ON -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
@@ -115,7 +115,7 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
     echo 'rm -rf /tmp/$b'
     echo 'mkdir /tmp/$b'
     echo 'cd /tmp/$b'
-    echo cmake -G \"Visual Studio 10 Win64\" -D PACKAGE_PATH=u:/pkg-vc10-x64 -D GEOGRAPHICLIB_EXAMPLES=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake -G \"Visual Studio 10 Win64\" -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10-x64/GeographicLib-$VERSION -D GEOGRAPHICLIB_EXAMPLES=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target matlab-all
     echo cmake --build . --config Release --target RUN_TESTS
