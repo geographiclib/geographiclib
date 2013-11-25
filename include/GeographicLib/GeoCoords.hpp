@@ -46,7 +46,7 @@ namespace GeographicLib {
    * <a href="GeoConvert.1.html">GeoConvert</a> is a command-line utility
    * providing access to the functionality of GeoCoords.
    **********************************************************************/
-  class GEOGRAPHIC_EXPORT GeoCoords {
+  class GEOGRAPHICLIB_EXPORT GeoCoords {
   private:
     typedef Math::real real;
     real _lat, _long, _easting, _northing, _gamma, _k;

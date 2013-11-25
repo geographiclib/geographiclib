@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Geographic", "Geographic-vc9.vcproj", "{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeographicLib", "GeographicLib-vc9.vcproj", "{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoConvert", "GeoConvert-vc9.vcproj", "{C7BBC1C8-0E3A-4338-B47F-9DE092DC7034}"
 	ProjectSection(ProjectDependencies) = postProject

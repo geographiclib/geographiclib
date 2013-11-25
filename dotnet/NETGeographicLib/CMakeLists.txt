@@ -16,19 +16,21 @@
 file (GLOB SOURCES [A-Za-z]*.cpp)
 file (GLOB HEADERS [A-Za-z]*.h)
 
-add_library (NETGeographic SHARED ${SOURCES} ${HEADERS})
-set_target_properties (NETGeographic PROPERTIES COMPILE_FLAGS "/clr")
+add_library (${NETGEOGRAPHICLIB_LIBRARIES} SHARED ${SOURCES} ${HEADERS})
+set_target_properties (${NETGEOGRAPHILIBC_LIBRARIES}
+  PROPERTIES COMPILE_FLAGS "/clr")
 
 string (REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 string (REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-target_link_libraries (NETGeographic Geographic)
+target_link_libraries (${NETGEOGRAPHICLIB_LIBRARIES} ${PROJECT_LIBRARIES})
 
 # Set the version number on the library
-set_target_properties (NETGeographic PROPERTIES VERSION "${LIBVERSIONFULL}" )
+set_target_properties (${NETGEOGRAPHICLIB_LIBRARIES}
+  PROPERTIES VERSION "${LIBVERSIONFULL}" )
 
 # Specify where the library is installed, adding it to the export depends
-install (TARGETS NETGeographic
+install (TARGETS ${NETGEOGRAPHICLIB_LIBRARIES}
   EXPORT depends
   RUNTIME DESTINATION bin)
 
@@ -42,4 +44,4 @@ if (MSVC)
 endif ()
 
 # Put all the library into a folder in the IDE
-set_property (TARGET NETGeographic PROPERTY FOLDER library)
+set_property (TARGET ${NETGEOGRAPHICLIB_LIBRARIES} PROPERTY FOLDER library)

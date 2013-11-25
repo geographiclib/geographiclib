@@ -14,7 +14,7 @@ SCRIPTS = geographiclib-get-geoids \
 
 all: $(PROGRAMS) $(SCRIPTS)
 
-LIBSTEM = Geographic
+LIBSTEM = GeographicLib
 LIBRARY = lib$(LIBSTEM).a
 
 INCLUDEPATH = ../include

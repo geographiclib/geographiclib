@@ -31,7 +31,7 @@ namespace GeographicLib {
    * Example of use:
    * \include example-DMS.cpp
    **********************************************************************/
-  class GEOGRAPHIC_EXPORT DMS {
+  class GEOGRAPHICLIB_EXPORT DMS {
   private:
     typedef Math::real real;
     // Replace all occurrences of pat by c

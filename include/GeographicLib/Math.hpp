@@ -68,7 +68,7 @@ namespace GeographicLib {
    * Example of use:
    * \include example-Math.cpp
    **********************************************************************/
-  class GEOGRAPHIC_EXPORT Math {
+  class GEOGRAPHICLIB_EXPORT Math {
   private:
     void dummy() {
       STATIC_ASSERT(GEOGRAPHICLIB_PRECISION >= 1 &&

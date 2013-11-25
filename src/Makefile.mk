@@ -1,4 +1,4 @@
-LIBSTEM = Geographic
+LIBSTEM = GeographicLib
 LIBRARY = lib$(LIBSTEM).a
 
 all: $(LIBRARY)

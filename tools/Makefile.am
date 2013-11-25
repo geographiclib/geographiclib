@@ -7,8 +7,8 @@ AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 INCLUDES = -I$(top_builddir)/include -I$(top_srcdir)/include \
            -I$(top_builddir)/man -I$(top_srcdir)/man
 
-LDADD = $(top_builddir)/src/libGeographic.la
-DEPS = $(top_builddir)/src/libGeographic.la
+LDADD = $(top_builddir)/src/libGeographicLib.la
+DEPS = $(top_builddir)/src/libGeographicLib.la
 
 bin_PROGRAMS = CartConvert \
 	ConicProj \

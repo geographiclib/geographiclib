@@ -57,7 +57,7 @@ namespace GeographicLib {
    * \include example-NormalGravity.cpp
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT NormalGravity {
+  class GEOGRAPHICLIB_EXPORT NormalGravity {
   private:
     static const int maxit_ = 10;
     typedef Math::real real;

@@ -8,7 +8,7 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
   add_executable (${EXAMPLE} ${EXAMPLE_SOURCE})
-  target_link_libraries (${EXAMPLE} Geographic)
+  target_link_libraries (${EXAMPLE} ${PROJECT_LIBRARIES})
 endforeach ()
 
 set (OTHER_EXAMPLES GeoidToGTX.cpp)
@@ -17,7 +17,7 @@ foreach (EXAMPLE_SOURCE ${OTHER_EXAMPLES})
   get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
   add_executable (${EXAMPLE} ${EXAMPLE_SOURCE})
-  target_link_libraries (${EXAMPLE} Geographic)
+  target_link_libraries (${EXAMPLE} ${PROJECT_LIBRARIES})
 endforeach ()
 
 find_package (OpenMP QUIET)
@@ -31,15 +31,26 @@ if (OPENMP_FOUND)
 endif ()
 
 add_custom_target (examples ALL DEPENDS ${EXAMPLES})
-add_dependencies (examples Geographic)
 
-if (GEOGRAPHIC_SHARED_LIB AND WIN32)
-  # Copy the shared library on Windows systems to this directory (examples)
-  # so that the tests can be run.
-  add_custom_command (TARGET examples POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E
-    copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
-    COMMENT "Copying shared library to examples directory")
+if (MSVC)
+  get_target_property(_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
+  if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
+    # Copy the shared library on Windows systems to this directory
+    # (examples) so that the tests can be run.
+    if (CMAKE_VERSION VERSION_LESS 2.8.11)
+      get_target_property (_LOCR ${PROJECT_LIBRARIES} LOCATION_RELEASE)
+      get_target_property (_LOCD ${PROJECT_LIBRARIES} LOCATION_DEBUG)
+      add_custom_command (TARGET examples POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy "${_LOCR}" ${CMAKE_CFG_INTDIR}
+        COMMAND ${CMAKE_COMMAND} -E copy "${_LOCD}" ${CMAKE_CFG_INTDIR}
+        COMMENT "Copying shared library to examples directory")
+    else ()
+      add_custom_command (TARGET examples POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E
+        copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
+        COMMENT "Copying shared library to examples directory")
+    endif ()
+  endif ()
 endif ()
 
 # Put all the examples into a folder in the IDE

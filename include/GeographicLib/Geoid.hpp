@@ -80,7 +80,7 @@ namespace GeographicLib {
    * providing access to the functionality of Geoid.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT Geoid {
+  class GEOGRAPHICLIB_EXPORT Geoid {
   private:
     typedef Math::real real;
 #if PGM_PIXEL_WIDTH != 4

@@ -41,7 +41,7 @@ namespace GeographicLib {
    * Example of use:
    * \include example-OSGB.cpp
    **********************************************************************/
-  class GEOGRAPHIC_EXPORT OSGB {
+  class GEOGRAPHICLIB_EXPORT OSGB {
   private:
     typedef Math::real real;
     static const std::string letters_;

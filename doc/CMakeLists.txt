@@ -52,7 +52,7 @@ if (DOXYGEN_FOUND)
       ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-c
       ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-for
       ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-net
-      Geographic.dox geodesic-c.dox geodesic-for.dox NETGeographic.dox
+      GeographicLib.dox geodesic-c.dox geodesic-for.dox NETGeographicLib.dox
       ${SOURCES} ${EXTRA_FILES} ${FIGURES} ${HTMLMAN}
     COMMAND ${CMAKE_COMMAND} -E remove_directory html
     COMMAND ${CMAKE_COMMAND} -E copy_directory html-stage html

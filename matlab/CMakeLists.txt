@@ -21,11 +21,12 @@ install (FILES ${PRIVATE_MATLAB_FILES}
 # On Windows systems, need also to copy the shared library to where the
 # mex files live (in the build and install trees).
 if (MEX)
-  if (WIN32)
+  if (MSVC)
+    set (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
     include (InstallRequiredSystemLibraries)
     install (PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
       DESTINATION ${INSTALL_MATLAB_DIR})
-    add_custom_target (matlab-all)
+    add_custom_target (matlab-all ALL)
   else ()
     set (INTERFACE_LIST)
   endif ()
@@ -38,11 +39,11 @@ if (MEX)
         COMMAND
           ${MEX} ${MEXOPTIONS}
             -I${PROJECT_BINARY_DIR}/include -I${PROJECT_SOURCE_DIR}/include
-            -L${PROJECT_BINARY_DIR}/src/Release -lGeographic
+            -L${PROJECT_BINARY_DIR}/src/Release -lGeographicLib
             ${INTERFACE}
         COMMENT "Building matlab interface for ${TARGET}"
-        DEPENDS ${INTERFACE} Geographic)
-      add_dependencies (matlab-${TARGET} Geographic)
+        DEPENDS ${INTERFACE} GeographicLib)
+      add_dependencies (matlab-${TARGET} GeographicLib)
       add_dependencies (matlab-all matlab-${TARGET})
       install (PROGRAMS ${TARGET_INTERFACE}
         DESTINATION ${INSTALL_MATLAB_DIR} CONFIGURATIONS Release)
@@ -57,21 +58,21 @@ if (MEX)
         COMMAND
           ${MEX} ${MEXOPTIONS}
             -I${PROJECT_BINARY_DIR}/include -I${PROJECT_SOURCE_DIR}/include
-            -L${PROJECT_BINARY_DIR}/src -lGeographic
+            -L${PROJECT_BINARY_DIR}/src -lGeographicLib
             ${RPATH_OPTS}
             ${INTERFACE}
         COMMENT "Building matlab interface for ${TARGET}"
-        DEPENDS ${INTERFACE} Geographic)
+        DEPENDS ${INTERFACE} GeographicLib)
     endif ()
   endforeach ()
   if (NOT WIN32)
-    add_custom_target (matlab-all DEPENDS ${INTERFACE_LIST})
-    add_dependencies (matlab-all Geographic)
+    add_custom_target (matlab-all ALL DEPENDS ${INTERFACE_LIST})
+    add_dependencies (matlab-all GeographicLib)
     install (PROGRAMS ${INTERFACE_LIST}
       DESTINATION ${INSTALL_MATLAB_DIR} CONFIGURATIONS Release)
   endif ()
   if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
-    get_target_property (GEOGRAPHIC_LIBRARY_FILE Geographic LOCATION_RELEASE)
+    get_target_property (GEOGRAPHIC_LIBRARY_FILE GeographicLib LOCATION_RELEASE)
     add_custom_command (TARGET matlab-all POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy ${GEOGRAPHIC_LIBRARY_FILE} ./)
     get_filename_component (GEOGRAPHIC_LIBRARY_NAME

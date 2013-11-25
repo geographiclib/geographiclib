@@ -66,7 +66,7 @@ namespace GeographicLib {
    * and CassiniSoldner.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT CassiniSoldner {
+  class GEOGRAPHICLIB_EXPORT CassiniSoldner {
   private:
     typedef Math::real real;
     Geodesic _earth;

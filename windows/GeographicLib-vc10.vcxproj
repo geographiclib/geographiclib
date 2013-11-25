@@ -22,8 +22,8 @@
     <ProjectGuid>{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}</ProjectGuid>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>Geographic</RootNamespace>
-    <ProjectName>Geographic</ProjectName>
+    <RootNamespace>GeographicLib</RootNamespace>
+    <ProjectName>GeographicLib</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

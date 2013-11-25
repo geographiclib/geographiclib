@@ -16,17 +16,29 @@ foreach (TOOL ${TOOLS})
   set_source_files_properties (${TOOL}.cpp PROPERTIES
     OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/${TOOL}.usage)
 
-  target_link_libraries (${TOOL} Geographic)
+  target_link_libraries (${TOOL} ${PROJECT_LIBRARIES})
 
 endforeach ()
 
-if (GEOGRAPHIC_SHARED_LIB AND WIN32)
-  # Copy the shared library on Windows systems to this directory (tools)
-  # so that the tests can be run.
-  add_custom_command (TARGET tools POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E
-    copy $<TARGET_FILE:Geographic> ${CMAKE_CFG_INTDIR}
-    COMMENT "Copying shared library to tools directory")
+if (MSVC)
+  get_target_property(_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
+  if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
+    # Copy the shared library on Windows systems to this directory
+    # (examples) so that the tests can be run.
+    if (CMAKE_VERSION VERSION_LESS 2.8.11)
+      get_target_property (_LOCR ${PROJECT_LIBRARIES} LOCATION_RELEASE)
+      get_target_property (_LOCD ${PROJECT_LIBRARIES} LOCATION_DEBUG)
+      add_custom_command (TARGET examples POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy "${_LOCR}" ${CMAKE_CFG_INTDIR}
+        COMMAND ${CMAKE_COMMAND} -E copy "${_LOCD}" ${CMAKE_CFG_INTDIR}
+        COMMENT "Copying shared library to examples directory")
+    else ()
+      add_custom_command (TARGET examples POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E
+        copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
+        COMMENT "Copying shared library to examples directory")
+    endif ()
+  endif ()
 endif ()
 
 # Specify where the tools are installed

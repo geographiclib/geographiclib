@@ -35,7 +35,7 @@ namespace GeographicLib {
    * providing access to the functionality of Geocentric and LocalCartesian.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT LocalCartesian {
+  class GEOGRAPHICLIB_EXPORT LocalCartesian {
   private:
     typedef Math::real real;
     static const size_t dim_ = 3;

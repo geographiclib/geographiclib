@@ -1,6 +1,6 @@
 // -*- text -*-
 /**
- * \file Geographic.dox
+ * \file GeographicLib.dox
  * \brief Documentation for GeographicLib
  *
  * Written by Charles Karney <charles@karney.com> and licensed under the
@@ -9,7 +9,7 @@
  **********************************************************************/
 
 /**
-\mainpage Geographic library
+\mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.34
 \date 2013-mm-dd
@@ -26,7 +26,7 @@ nanometers).  New accurate algorithms for \ref geodesic and \ref
 transversemercator have been developed for this library.  The
 functionality of the library can be accessed from user code, from the
 \ref utilities provided, or via the \ref other.  Also included is a .NET
-wrapper library <a href="NET/index.html">NETGeographic</a>
+wrapper library <a href="NET/index.html">NETGeographicLib</a>
 which exposes the functionality to .NET applications.  For a sample of
 the geodesic capabilities in JavaScript, check out the
 <a href="../scripts/geod-calc.html">online geodesic calculator</a> and
@@ -314,10 +314,12 @@ Here are the steps to compile and install %GeographicLib:
     GeographicLib::GravityModel, and GeographicLib::MagneticModel.
     See \ref geoidinst, \ref gravityinst, and \ref magneticinst for more
     information.
-  - <code>GEOGRAPHIC_SHARED_LIB</code> (default: ON for non-Windows
-    systems, OFF for Windows systems) determines whether a shared or
-    static library is built.  The default is OFF for Windows because
-    there's no standard place to install the dlls.
+  - <code>GEOGRAPHICLIB_LIB_TYPE</code> (allowed values: SHARED, STATIC, or
+    BOTH), specifies the types of libraries build.  If %GeographicLib is
+    built and installed with <code>GEOGRAPHICLIB_LIB_TYPE</code>=BOTH (the
+    default), then two libraries are available as
+    <code>${GeographicLib_SHARED_LIBRARIES}</code> and
+    <code>${GeographicLib_STATIC_LIBRARIES}</code>.
   - <code>CMAKE_BUILD_TYPE</code> (default: Release).  This
     flags only affects non-IDE compile environments (like make + g++).
     The default is actually blank, but this is treated as
@@ -343,14 +345,14 @@ Here are the steps to compile and install %GeographicLib:
     sufficiently recent version of doxygen can be found.  Otherwise, the
     html documentation will redirect to the appropriate version of the
     online documentation.
-  - <code>BUILD_NETGEOGRAPHIC</code> (default: OFF for non-Windows
+  - <code>BUILD_NETGEOGRAPHICLIB</code> (default: OFF for non-Windows
     systems and ON for Windows systems, except for Visual Studio 10
     generators).  If set to ON, build the managed C++ wrapper library
-    <a href="NET/index.html">NETGeographic</a>.  This only makes sense
+    <a href="NET/index.html">NETGeographicLib</a>.  This only makes sense
     for Windows systems.  The default is OFF if using Visual Studio 10,
     because this generate a myriad of warnings.  However the warnings
     can (probably) be ignored.  If <code>GEOGRAPHICLIB_EXAMPLES</code>
-    is ON then the managed C++ examples for NETGeographic are built
+    is ON then the managed C++ examples for NETGeographicLib are built
     also.
   - <code>GEOGRAPHICLIB_PRECISION</code> specifies the precision to be
     used for "real" (i.e., floating point) numbers.  1 means float
@@ -463,7 +465,7 @@ is needed to build the Matlab interface and to run the tests.)
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
-- Copy the library windows/Release/Geographic.lib and the
+- Copy the library windows/Release/GeographicLib.lib and the
   headers in include/GeographicLib somewhere convenient.  The
   headers should remain in a directory named %GeographicLib.  If you
   expect to use the Matlab/Octave interface, copy matlab/*.m and
@@ -474,7 +476,7 @@ is needed to build the Matlab interface and to run the tests.)
   browser.
 
 The Visual Studio 10 solution also contains projects to build
-<a href="NET/index.html">NETGeographic</a> and the C# example project.
+<a href="NET/index.html">NETGeographicLib</a> and the C# example project.
 
 \section windowsbin Using a binary installer for Windows
 
@@ -510,7 +512,7 @@ using Visual Studio 10 in release and debug modes.  The utilities were
 linked against the release-mode shared library.  The Matlab interface
 was compiled with Matlab R2013a 64-bit, however it may work with some
 other 64-bit versions of Matlab.
-<a href="NET/index.html">NETGeographic</a> library dlls (release and
+<a href="NET/index.html">NETGeographicLib</a> library dlls (release and
 debug) are included with the binary installers; these are linked against
 the shared library for %GeographicLib.
 
@@ -538,8 +540,8 @@ If cmake complains that sh mustn't be in your path, invoke cmake with
 If cmake is not available, there is a simple project file that compiles
 the %GeographicLib library <i>only</i> with the Qt compiler: \verbatim
   cd src
-  qmake Geographic.pro   # configure the project
-  make                   # build the library \endverbatim
+  qmake GeographicLib.pro # configure the project
+  make                    # build the library \endverbatim
 The library will be in the src directory (or the src/release or
 src/debug directory under Windows).  The headers are in
 include/GeographicLib.
@@ -626,30 +628,29 @@ In order to use %GeographicLib from C++ code, you will need to
   \verbatim
   C/C++ -> General -> Additional Include Directories = C:\pkg-vc10\GeographicLib\include
   \endverbatim
-- Tell the linker the name, Geographic, and location of the
+- Tell the linker the name, GeographicLib, and location of the
   library.  Using g++ as the linker, you would use \verbatim
-  g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographic
+  g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographicLib
   \endverbatim
   With Visual Studio, you supply this information in the IDE via,
   e.g.,
   \verbatim
-  Linker -> Input -> Additional Dependencies = Geographic.lib
+  Linker -> Input -> Additional Dependencies = GeographicLib.lib
   Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\lib
   \endverbatim
-  Note that the library name is <b>Geographic</b> and not
-  %GeographicLib.  If the library was configured and built with cmake,
-  then the debug version of the library is called Geographic_d.lib.
+  If the library was configured and built with cmake,
+  then the debug version of the library is called GeographicLib_d.lib.
 - Tell the runtime environment where to find the shared library
   (assuming you compiled %GeographicLib as a shared library).  With g++,
   this is accomplished by modifying the link line above to read \verbatim
-  g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic
+  g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographicLib
   \endverbatim
   (There are two other ways to specify the location of shared libraries
   at runtime: (1) define the environment variable
   <code>LD_LIBRARY_PATH</code> to be a colon-separated list of
   directories to search; (2) as <b>root</b>, specify /usr/local/lib as a
   directory searched by ldconfig(8).)  On Windows, you need to ensure
-  that Geographic.dll is in the same directory as your executable or
+  that GeographicLib.dll is in the same directory as your executable or
   else include the directory containing the dll in your
   <code>PATH</code>.
 - If you're using cmake to configure and build your project, then
@@ -705,7 +706,7 @@ In order to use %GeographicLib from C++ code, you will need to
   compiling your code in debug mode.  The configuration of cmake
   described above ensures that the right version of the compiler is used
   and, assuming you built and installed %GeographicLib in debug mode, the
-  debug version of the library Geographic_d.lib will be used.
+  debug version of the library GeographicLib_d.lib will be used.
 
 Here is a very simple test code, which uses the GeographicLib::Geodesic
 class:
@@ -1337,7 +1338,7 @@ contain brief instructions on how to use them.
 This is a comprehensive wrapper library, written and maintained by Scott
 Heiman, which exposes all of the functionality of %GeographicLib to the
 .NET family of languages.  For documentation, see
- - <a href="NET/index.html">NETGeographic .NET wrapper library</a>.
+ - <a href="NET/index.html">NETGeographicLib .NET wrapper library</a>.
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -1564,7 +1565,7 @@ locate the datasets.  This is
   for Windows systems
 .
 consistent with the examples above.  This may be overridden at run-time
-by defining the GEOID_PATH or the GEOGRAPHIC_DATA environment variables;
+by defining the GEOID_PATH or the GEOGRAPHICLIB_DATA environment variables;
 see GeographicLib::Geoid::DefaultGeoidPath() for details.  Finally, the
 path may be set using the optional second argument to the
 GeographicLib::Geoid constructor or with the "-d" flag to
@@ -2050,7 +2051,7 @@ locate the datasets.  This is
   for Windows systems
 .
 consistent with the examples above.  This may be overridden at run-time
-by defining the GRAVITY_PATH or the GEOGRAPHIC_DATA environment
+by defining the GRAVITY_PATH or the GEOGRAPHICLIB_DATA environment
 variables; see GeographicLib::GravityModel::DefaultGravityPath() for
 details.  Finally, the path may be set using the optional second
 argument to the GeographicLib::GravityModel constructor or with the "-d"

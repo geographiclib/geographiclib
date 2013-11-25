@@ -116,7 +116,7 @@ manpages: $(MANPAGES)
 	cp $^ html/
 	touch $@
 
-html/index.html: manpages doxyfile.in Geographic.dox \
+html/index.html: manpages doxyfile.in GeographicLib.dox \
 	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(FIGURES) \
 	doxyfile-c.in geodesic-c.dox doxyfile-for.in geodesic-for.dox \
 	$(LEGACYFILES)

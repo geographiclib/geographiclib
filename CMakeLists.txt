@@ -1,21 +1,24 @@
 project (GeographicLib)
 
 # Version information
-set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 34)
-set (GeographicLib_VERSION_PATCH 0)
-set (GeographicLib_VERSION
-  "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
-if (GeographicLib_VERSION_PATCH GREATER 0)
-  set (GeographicLib_VERSION
-    "${GeographicLib_VERSION}.${GeographicLib_VERSION_PATCH}")
+set (PROJECT_VERSION_MAJOR 1)
+set (PROJECT_VERSION_MINOR 34)
+set (PROJECT_VERSION_PATCH 0)
+set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
+if (PROJECT_VERSION_PATCH GREATER 0)
+  set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
 
-set (PACKAGE_VERSION ${GeographicLib_VERSION})
+set (CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set (CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set (CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 10)
 set (LIBVERSIONFULL 10.1.1)
+string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
+string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
 cmake_minimum_required (VERSION 2.8)
 set(CMAKE_LEGACY_CYGWIN_WIN32 0) # Remove when CMake >= 2.8.4 is required
@@ -26,7 +29,7 @@ set(CMAKE_LEGACY_CYGWIN_WIN32 0) # Remove when CMake >= 2.8.4 is required
 # is on ON (the Linux default), the installation is to a common
 # directory, e.g., /usr/local.  If it is OFF (the Windows default),
 # the installation directory contains the package name, e.g.,
-# C:/pkg/GeographicLib-1.22.  The installation directories for the
+# c:/pkg/GeographicLib-1.22.  The installation directories for the
 # documentation, cmake configuration, python and matlab interfaces all
 # depend on the variable with deeper paths relative to
 # CMAKE_INSTALL_PREFIX being used when it's ON.
@@ -49,7 +52,7 @@ endif ()
 # If INSTALL_PATH is not specified but PACKAGE_PATH is, then
 # INSTALL_PATH is set to
 #   ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON;
-#   ${PACKAGE_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}, otherwise.
+#   ${PACKAGE_PATH}/${PROJECT_NAME}-${PROJECT_VERSION}, otherwise.
 #
 # If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
 # INSTALL_PATH.
@@ -60,20 +63,20 @@ endif ()
 # cmake -D PACKAGE_PATH=C:/pkg .. (on Windows)
 #   => CMAKE_PREFIX_PATH=C:/pkg CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.22
 
-if (DEFINED PACKAGE_PATH)
+if (PACKAGE_PATH)
   set (CMAKE_PREFIX_PATH ${PACKAGE_PATH} ${CMAKE_PREFIX_PATH})
   message (STATUS "CMAKE_PREFIX_PATH set to ${CMAKE_PREFIX_PATH}")
 endif ()
 
-if (NOT DEFINED INSTALL_PATH AND DEFINED PACKAGE_PATH)
+if (NOT INSTALL_PATH AND PACKAGE_PATH)
   if (COMMON_INSTALL_PATH)
     set (INSTALL_PATH ${PACKAGE_PATH} CACHE PATH "Installation directory" FORCE)
   else ()
-    set (INSTALL_PATH ${PACKAGE_PATH}/${PROJECT_NAME}-${PACKAGE_VERSION}
+    set (INSTALL_PATH ${PACKAGE_PATH}/${PROJECT_NAME}-${PROJECT_VERSION}
       CACHE PATH "Installation directory" FORCE)
   endif ()
 endif ()
-if (DEFINED INSTALL_PATH)
+if (INSTALL_PATH)
   file (TO_CMAKE_PATH ${INSTALL_PATH} CMAKE_INSTALL_PREFIX)
 endif ()
 message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
@@ -96,12 +99,48 @@ else ()
     CACHE PATH "Location for data for GeographicLib")
 endif ()
 
-# (4) Build as a shared library?  On Windows systems, this is typically
-# more trouble than it's worth.
-if (WIN32 OR CYGWIN)
-  option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
+# (4) Build which libraries?  Possible values are SHARED, STATIC, BOTH.
+set (GEOGRAPHICLIB_LIB_TYPE BOTH CACHE STRING
+  "Types of library generated: SHARED, STATIC, or BOTH (default)")
+set_property (CACHE GEOGRAPHICLIB_LIB_TYPE
+  PROPERTY STRINGS "SHARED" "STATIC" "BOTH")
+
+if (GEOGRAPHICLIB_LIB_TYPE STREQUAL "BOTH")
+  set (GEOGRAPHICLIB_SHARED_LIB ON)
+  set (GEOGRAPHICLIB_STATIC_LIB ON)
+  set (GEOGRAPHICLIB_LIB_TYPE_VAL 2)
+elseif (GEOGRAPHICLIB_LIB_TYPE STREQUAL "SHARED")
+  set (GEOGRAPHICLIB_SHARED_LIB ON)
+  set (GEOGRAPHICLIB_STATIC_LIB OFF)
+  set (GEOGRAPHICLIB_LIB_TYPE_VAL 1)
+elseif (GEOGRAPHICLIB_LIB_TYPE STREQUAL "STATIC")
+  set (GEOGRAPHICLIB_SHARED_LIB OFF)
+  set (GEOGRAPHICLIB_STATIC_LIB ON)
+  set (GEOGRAPHICLIB_LIB_TYPE_VAL 0)
 else ()
-  option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" ON)
+  message (FATAL_ERROR
+    "Bad value of GEOGRAPHICLIB_LIB_TYPE, \"${GEOGRAPHICLIB_LIB_TYPE}\" "
+    "(should be SHARED, STATIC or BOTH)")
+endif ()
+
+if (GEOGRAPHICLIB_STATIC_LIB)
+  set (PROJECT_STATIC_LIBRARIES GeographicLib_STATIC)
+  set (PROJECT_STATIC_DEFINITIONS -DGEOGRAPHICLIB_SHARED_LIB=0)
+else ()
+  set (PROJECT_STATIC_LIBRARIES)
+  set (PROJECT_STATIC_DEFINITIONS)
+endif ()
+
+if (GEOGRAPHICLIB_SHARED_LIB)
+  set (PROJECT_SHARED_LIBRARIES GeographicLib)
+  set (PROJECT_LIBRARIES ${PROJECT_SHARED_LIBRARIES})
+  set (PROJECT_SHARED_DEFINITIONS -DGEOGRAPHICLIB_SHARED_LIB=1)
+  set (PROJECT_DEFINITIONS ${PROJECT_SHARED_DEFINITIONS})
+else ()
+  set (PROJECT_SHARED_LIBRARIES)
+  set (PROJECT_LIBRARIES ${PROJECT_STATIC_LIBRARIES})
+  set (PROJECT_SHARED_DEFINITIONS)
+  set (PROJECT_DEFINITIONS ${PROJECT_STATIC_DEFINITIONS})
 endif ()
 
 # (5) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
@@ -124,16 +163,16 @@ else ()
     "Use doxygen to create the documentation" ON)
 endif ()
 
-# (8) Build .NET wrapper library NETGeographic.  This only applies to
+# (8) Build .NET wrapper library NETGeographicLib.  This only applies to
 # Windows.  Default is OFF for Visual Studio 10 (because it triggers lot
 # of warnings, but possibly these may be safely igored?) and ON for
 # other Visual Studio generators
 if (CMAKE_GENERATOR MATCHES "Visual Studio 10")
-  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" OFF)
+  option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib library" OFF)
 elseif (CMAKE_GENERATOR MATCHES "Visual Studio")
-  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" ON)
+  option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib library" ON)
 else ()
-  option (BUILD_NETGEOGRAPHIC "Build NETGeographic library" OFF)
+  option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib library" OFF)
 endif ()
 
 # (9) Set the default "real" precision.  This should probably be left
@@ -142,25 +181,33 @@ set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
   "Default real precision: 1 = float, 2 = double, 3 = long double")
 set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3)
 
+# (10) When making a binary package, should we include the debug version
+# of the library?  This applies to MSVC only, because that's the
+# platform where debug and release compilations do not inter-operate.
+# It requires building as follows:
+#   cmake --build . --config Debug   --target ALL_BUILD
+#   cmake --build . --config Release --target ALL_BUILD
+#   cmake --build . --config Release --target PACKAGE
+option (PACKAGE_DEBUG_LIBS
+  "Include debug versions of library in binary package" OFF)
+
 # The debug version of the library is called Geographic_d.
 set (CMAKE_DEBUG_POSTFIX _d)
 
-if (NOT WIN32)
+if (NOT MSVC)
   # Set the run time path for shared libraries for non-Windows machines.
   # (1) include link path for external packages (not needed with
   # GeographicLib because there are no external packages).
   set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
   # (2) include installed path for GeographicLib
-  if (GEOGRAPHIC_SHARED_LIB)
-    # Alternatively set CMAKE_INSTALL_RPATH to
-    # $ORIGIN/../lib${LIB_SUFFIX}.  But this might not work on all
-    # systems and the check for system directories should be skipped in
-    # this case.
-    list (FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES
-      "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" SYSDIR)
-    if (SYSDIR LESS 0)
-      set (CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
-    endif ()
+  # (Alternatively set CMAKE_INSTALL_RPATH to
+  # $ORIGIN/../lib${LIB_SUFFIX}.  But this might not work on all
+  # systems and the check for system directories should be skipped in
+  # this case.)
+  list (FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES
+    "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" SYSDIR)
+  if (SYSDIR LESS 0)
+    set (CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
   endif ()
 endif ()
 
@@ -233,7 +280,7 @@ if (MATLAB_COMPILER)
     set (MEXEXT "mex")
     set (MEXOPTIONS "--mex")
   endif ()
-  if (NOT GEOGRAPHIC_SHARED_LIB AND NOT WIN32)
+  if (NOT MSVC)
     # mex files are shared objects => require static lib to be built with
     # position independent code
     set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS}")
@@ -254,7 +301,7 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif ()
 
 # Make the compiler more picky.
-if (WIN32)
+if (MSVC)
   string (REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 else ()
@@ -312,7 +359,8 @@ add_subdirectory (cmake)
 if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
   add_subdirectory (tests)
 endif ()
-if (BUILD_NETGEOGRAPHIC)
+if (BUILD_NETGEOGRAPHICLIB)
+  set (NETGEOGRAPHICLIB_LIBRARIES NETGeographicLib)
   add_subdirectory (dotnet/NETGeographicLib)
   if (GEOGRAPHICLIB_EXAMPLES AND GEOGRAPHICLIB_PRECISION EQUAL 2)
     add_subdirectory (dotnet/examples/ManagedCPP)
@@ -337,13 +385,10 @@ include (InstallRequiredSystemLibraries)
 
 # The configuration of CPack is via variable that need to be set before
 # the include (CPack).
-set (CPACK_PACKAGE_VERSION_MAJOR ${GeographicLib_VERSION_MAJOR})
-set (CPACK_PACKAGE_VERSION_MINOR ${GeographicLib_VERSION_MINOR})
-set (CPACK_PACKAGE_VERSION_PATCH ${GeographicLib_VERSION_PATCH})
 set (CPACK_PACKAGE_CONTACT charles@karney.com)
 set (CPACK_PACKAGE_VENDOR "GeographicLib")
 set (CPACK_PACKAGE_DESCRIPTION_SUMMARY
-  "Geographic library, utilities, and documentation")
+  "GeographicLib library, utilities, and documentation")
 # The list of files to be excluded from the source distribution.
 set (CPACK_SOURCE_IGNORE_FILES
   "#"
@@ -359,7 +404,7 @@ set (CPACK_SOURCE_IGNORE_FILES
 set (CPACK_SOURCE_GENERATOR TGZ)
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
-set (CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}-${PACKAGE_VERSION}")
+set (CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}-${PROJECT_VERSION}")
 set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
 
 if (WIN32)
@@ -372,22 +417,22 @@ if (WIN32)
     # Hardcode the prefix for Visual Studio 10
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10-x64")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
-    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} x64 ${PACKAGE_VERSION}")
+    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} x64 ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
-      "${PROJECT_NAME}-x64-${PACKAGE_VERSION}")
+      "${PROJECT_NAME}-x64-${PROJECT_VERSION}")
   else ()
     # Hardcode the prefix for Visual Studio 10
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
-    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} ${PACKAGE_VERSION}")
+    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
-      "${PROJECT_NAME}-${PACKAGE_VERSION}")
+      "${PROJECT_NAME}-${PROJECT_VERSION}")
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_NSIS_MENU_LINKS
-    "http://geographiclib.sf.net/${PACKAGE_VERSION}/index.html"
+    "http://geographiclib.sf.net/${PROJECT_VERSION}/index.html"
     "Library documentation"
-    "http://geographiclib.sf.net/${PACKAGE_VERSION}/utilities.html"
+    "http://geographiclib.sf.net/${PROJECT_VERSION}/utilities.html"
     "Utilities documentation"
     "http://geographiclib.sf.net" "GeographicLib home page"
     "http://sf.net/projects/geographiclib/" "Main project page")
@@ -420,7 +465,7 @@ if (MAINTAINER)
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
       echo include Makefile.mk > Makefile &&
-      sed -e "s/Unconfigured/${PACKAGE_VERSION}/"
+      sed -e "s/Unconfigured/${PROJECT_VERSION}/"
       -e "s/MAJOR .*/MAJOR ${CPACK_PACKAGE_VERSION_MAJOR}/"
       -e "s/MINOR .*/MINOR ${CPACK_PACKAGE_VERSION_MINOR}/"
       -e "s/PATCH .*/PATCH ${CPACK_PACKAGE_VERSION_PATCH}/"

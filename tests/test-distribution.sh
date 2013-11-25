@@ -36,16 +36,16 @@ set -e
 #   CMakeLists.txt
 #   NEWS
 #   configure.ac
-#   doc/Geographic.dox
+#   doc/GeographicLib.dox
 #   python/setup.py
 #   tests/test-distribution.sh
 
 VERSION=1.34
 BRANCH=devel
-TEMP=/scratch/geographic-dist
+TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
 GITSOURCE=file://$DEVELSOURCE
-WEBDIST=/home/ckarney/web/geographic-web
+WEBDIST=/home/ckarney/web/geographiclib-web
 WINDOWSBUILD=/u/temp
 WINDOWSBUILDWIN=u:/temp
 NUMCPUS=4
@@ -85,7 +85,10 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
     echo 'rm -rf /tmp/$b'
     echo 'mkdir /tmp/$b'
     echo 'cd /tmp/$b'
-    echo cmake -G \"Visual Studio 10\" -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10/GeographicLib-$VERSION -D GEOGRAPHICLIB_EXAMPLES=ON -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake -G \"Visual Studio 10\" -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D GEOGRAPHICLIB_EXAMPLES=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake --build . --config Debug   --target ALL_BUILD
+    echo cmake --build . --config Debug   --target RUN_TESTS
+    echo cmake --build . --config Debug   --target INSTALL
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
@@ -93,21 +96,6 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
     echo cp GeographicLib-$VERSION-win32.exe $DEVELSOURCE/
 ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
-mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared
-(
-    echo "#! /bin/sh -e"
-    echo 'b=geog-`pwd | sed s%.*/%%`'
-    echo 'rm -rf /tmp/$b'
-    echo 'mkdir /tmp/$b'
-    echo 'cd /tmp/$b'
-    echo cmake -G \"Visual Studio 10\" -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10-shared/GeographicLib-$VERSION -D GEOGRAPHICLIB_EXAMPLES=ON -D GEOGRAPHIC_SHARED_LIB=ON -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
-    echo cmake --build . --config Release --target ALL_BUILD
-    echo cmake --build . --config Release --target RUN_TESTS
-    echo cmake --build . --config Release --target INSTALL
-    echo cmake --build . --config Release --target PACKAGE
-    echo '#' cp GeographicLib-$VERSION-win32.exe $DEVELSOURCE/GeographicLib-$VERSION-win32-shared.exe
-) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared/build
-chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared/build
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
 (
     echo "#! /bin/sh -e"
@@ -115,9 +103,11 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
     echo 'rm -rf /tmp/$b'
     echo 'mkdir /tmp/$b'
     echo 'cd /tmp/$b'
-    echo cmake -G \"Visual Studio 10 Win64\" -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10-x64/GeographicLib-$VERSION -D GEOGRAPHICLIB_EXAMPLES=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake -G \"Visual Studio 10 Win64\" -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10-x64/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D GEOGRAPHICLIB_EXAMPLES=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake --build . --config Debug   --target ALL_BUILD
+    echo cmake --build . --config Debug   --target RUN_TESTS
+    echo cmake --build . --config Debug   --target INSTALL
     echo cmake --build . --config Release --target ALL_BUILD
-    echo cmake --build . --config Release --target matlab-all
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
     echo cmake --build . --config Release --target PACKAGE
@@ -167,13 +157,11 @@ mkdir ../BUILD-matlab
 cd ../BUILD-matlab
 cmake -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
 make -j$NUMCPUS
-make -j$(((NUMCPUS+2)/3)) matlab-all
 make install
 mkdir ../BUILD-system
 cd ../BUILD-system
 cmake -D MATLAB_COMPILER=mkoctfile ..
 make -j$NUMCPUS
-make -j$(((NUMCPUS+2)/3)) matlab-all
 
 mkdir -p $TEMP/geographiclib-matlab/private
 cd $TEMP/instc/libexec/GeographicLib/matlab
@@ -289,7 +277,7 @@ EOF
 for i in a b c e f; do
     cp testprogram.cpp testprogram$i.cpp
     g++ -c -g -O3 -I$TEMP/inst$i/include testprogram$i.cpp
-    g++ -g -o testprogram$i testprogram$i.o -Wl,-rpath=$TEMP/inst$i/lib -L$TEMP/inst$i/lib -lGeographic
+    g++ -g -o testprogram$i testprogram$i.o -Wl,-rpath=$TEMP/inst$i/lib -L$TEMP/inst$i/lib -lGeographicLib
     ./testprogram$i
 done
 

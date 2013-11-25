@@ -28,14 +28,15 @@
 #  endif
 #endif
 
-#if defined(_WIN32) && defined(GEOGRAPHIC_SHARED_LIB) && GEOGRAPHIC_SHARED_LIB
-#  if defined(Geographic_EXPORTS)
-#    define GEOGRAPHIC_EXPORT __declspec(dllexport)
+#if defined(_MSC_VER) && defined(GEOGRAPHICLIB_SHARED_LIB) && \
+  GEOGRAPHICLIB_SHARED_LIB
+#  if defined(GeographicLib_EXPORTS)
+#    define GEOGRAPHICLIB_EXPORT __declspec(dllexport)
 #  else
-#    define GEOGRAPHIC_EXPORT __declspec(dllimport)
+#    define GEOGRAPHICLIB_EXPORT __declspec(dllimport)
 #  endif
 #else
-#  define GEOGRAPHIC_EXPORT
+#  define GEOGRAPHICLIB_EXPORT
 #endif
 
 #include <stdexcept>
@@ -60,7 +61,7 @@ namespace GeographicLib {
    * Example of use:
    * \include example-Constants.cpp
    **********************************************************************/
-  class GEOGRAPHIC_EXPORT Constants {
+  class GEOGRAPHICLIB_EXPORT Constants {
   private:
     typedef Math::real real;
     Constants();                // Disable constructor

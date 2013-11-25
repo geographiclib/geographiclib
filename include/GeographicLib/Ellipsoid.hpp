@@ -36,7 +36,7 @@ namespace GeographicLib {
    * \include example-Ellipsoid.cpp
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT Ellipsoid {
+  class GEOGRAPHICLIB_EXPORT Ellipsoid {
   private:
     typedef Math::real real;
     static const int numit_ = 10;
