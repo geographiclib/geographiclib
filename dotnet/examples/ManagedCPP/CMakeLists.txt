@@ -10,11 +10,11 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
   set (EXAMPLE "net${EXAMPLE}")
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
-  add_executable (${EXAMPLE} ${EXAMPLE_SOURCE})
+  add_executable (${EXAMPLE} EXCLUDE_FROM_ALL ${EXAMPLE_SOURCE})
   add_dependencies (${EXAMPLE} ${NETGEOGRAPHICLIB_LIBRARIES})
   set_target_properties (${EXAMPLE} PROPERTIES COMPILE_FLAGS "/clr")
   set_target_properties (${EXAMPLE} PROPERTIES VS_DOTNET_REFERENCES
-    "${CMAKE_CURRENT_BINARY_DIR}/../../NETGeographicLib/${CMAKE_CFG_INTDIR}/NETGeographic.dll")
+    "${CMAKE_CURRENT_BINARY_DIR}/../../NETGeographicLib/Release/NETGeographicLib.dll;${CMAKE_CURRENT_BINARY_DIR}/../../NETGeographicLib/Debug/NETGeographicLib_d.dll")
 endforeach ()
 
 if (CMAKE_CXX_FLAGS_DEBUG MATCHES "/RTC1")
@@ -25,7 +25,7 @@ if (CMAKE_CXX_FLAGS MATCHES "/EHsc")
   string(REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 endif ()
 
-add_custom_target (netexamples ALL DEPENDS ${EXAMPLES})
+add_custom_target (netexamples DEPENDS ${EXAMPLES})
 
 if (MSVC)
   get_target_property(_LIBTYPE ${PROJECT_LIBRARIES} TYPE)

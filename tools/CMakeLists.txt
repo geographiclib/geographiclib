@@ -28,15 +28,15 @@ if (MSVC)
     if (CMAKE_VERSION VERSION_LESS 2.8.11)
       get_target_property (_LOCR ${PROJECT_LIBRARIES} LOCATION_RELEASE)
       get_target_property (_LOCD ${PROJECT_LIBRARIES} LOCATION_DEBUG)
-      add_custom_command (TARGET examples POST_BUILD
+      add_custom_command (TARGET tools POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy "${_LOCR}" ${CMAKE_CFG_INTDIR}
         COMMAND ${CMAKE_COMMAND} -E copy "${_LOCD}" ${CMAKE_CFG_INTDIR}
-        COMMENT "Copying shared library to examples directory")
+        COMMENT "Copying shared library to tools directory")
     else ()
-      add_custom_command (TARGET examples POST_BUILD
+      add_custom_command (TARGET tools POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E
         copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
-        COMMENT "Copying shared library to examples directory")
+        COMMENT "Copying shared library to tools directory")
     endif ()
   endif ()
 endif ()

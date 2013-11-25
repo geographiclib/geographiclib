@@ -148,40 +148,24 @@ set (MATLAB_COMPILER OFF CACHE STRING
   "Compiler for matlab/octave interface: mex or mkoctfile or OFF")
 set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
 
-# (6) Compile the short example programs?
-option (GEOGRAPHICLIB_EXAMPLES
-  "Build example programs in examples directory" OFF)
-
-# (7) Create the documentation?  This depends on whether doxygen can be
+# (6) Create the documentation?  This depends on whether doxygen can be
 # found.  If this is OFF, then links will be provided to the online
 # documentation on Sourceforge.
-if (WIN32)
-  option (GEOGRAPHICLIB_DOCUMENTATION
-    "Use doxygen to create the documentation" OFF)
-else ()
-  option (GEOGRAPHICLIB_DOCUMENTATION
-    "Use doxygen to create the documentation" ON)
-endif ()
+option (GEOGRAPHICLIB_DOCUMENTATION
+  "Use doxygen to create the documentation" OFF)
 
-# (8) Build .NET wrapper library NETGeographicLib.  This only applies to
-# Windows.  Default is OFF for Visual Studio 10 (because it triggers lot
-# of warnings, but possibly these may be safely igored?) and ON for
-# other Visual Studio generators
-if (CMAKE_GENERATOR MATCHES "Visual Studio 10")
-  option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib library" OFF)
-elseif (CMAKE_GENERATOR MATCHES "Visual Studio")
-  option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib library" ON)
-else ()
-  option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib library" OFF)
-endif ()
+# (7) Build .NET wrapper library NETGeographicLib.  This only applies to
+# Windows.  Default is OFF, because, currently, most people don't use
+# this interface.
+option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib library" OFF)
 
-# (9) Set the default "real" precision.  This should probably be left
+# (8) Set the default "real" precision.  This should probably be left
 # at 2 (double).
 set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
   "Default real precision: 1 = float, 2 = double, 3 = long double")
 set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3)
 
-# (10) When making a binary package, should we include the debug version
+# (9) When making a binary package, should we include the debug version
 # of the library?  This applies to MSVC only, because that's the
 # platform where debug and release compilations do not inter-operate.
 # It requires building as follows:
@@ -351,7 +335,7 @@ add_subdirectory (man)
 add_subdirectory (doc)
 add_subdirectory (matlab)
 add_subdirectory (python/geographiclib)
-if (GEOGRAPHICLIB_EXAMPLES AND GEOGRAPHICLIB_PRECISION EQUAL 2)
+if (GEOGRAPHICLIB_PRECISION EQUAL 2)
   # The examples assume double precision
   add_subdirectory (examples)
 endif ()
@@ -362,7 +346,7 @@ endif ()
 if (BUILD_NETGEOGRAPHICLIB)
   set (NETGEOGRAPHICLIB_LIBRARIES NETGeographicLib)
   add_subdirectory (dotnet/NETGeographicLib)
-  if (GEOGRAPHICLIB_EXAMPLES AND GEOGRAPHICLIB_PRECISION EQUAL 2)
+  if (GEOGRAPHICLIB_PRECISION EQUAL 2)
     add_subdirectory (dotnet/examples/ManagedCPP)
   endif ()
 endif ()

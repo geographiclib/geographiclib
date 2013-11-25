@@ -336,24 +336,15 @@ Here are the steps to compile and install %GeographicLib:
     "mex" (for Matlab) or "mkoctfile" (for Octave) to specify the
     compiler to use for the Matlab/Octave interface.  See \ref matlab
     for more information.
-  - <code>GEOGRAPHICLIB_EXAMPLES</code> (default: OFF).  If set to ON,
-    then the short example programs in the <code>examples</code>
-    directory are built.
-  - <code>GEOGRAPHICLIB_DOCUMENTATION</code> (default: ON for
-    non-Windows systems and OFF for Windows systems).  If set to ON,
-    then html documentation is created from the source files, provided a
-    sufficiently recent version of doxygen can be found.  Otherwise, the
-    html documentation will redirect to the appropriate version of the
-    online documentation.
-  - <code>BUILD_NETGEOGRAPHICLIB</code> (default: OFF for non-Windows
-    systems and ON for Windows systems, except for Visual Studio 10
-    generators).  If set to ON, build the managed C++ wrapper library
-    <a href="NET/index.html">NETGeographicLib</a>.  This only makes sense
-    for Windows systems.  The default is OFF if using Visual Studio 10,
-    because this generate a myriad of warnings.  However the warnings
-    can (probably) be ignored.  If <code>GEOGRAPHICLIB_EXAMPLES</code>
-    is ON then the managed C++ examples for NETGeographicLib are built
-    also.
+  - <code>GEOGRAPHICLIB_DOCUMENTATION</code> (default: OFF).  If set to
+    ON, then html documentation is created from the source files,
+    provided a sufficiently recent version of doxygen can be found.
+    Otherwise, the html documentation will redirect to the appropriate
+    version of the online documentation.
+  - <code>BUILD_NETGEOGRAPHICLIB</code> (default: OFF).  If set to ON,
+    build the managed C++ wrapper library
+    <a href="NET/index.html">NETGeographicLib</a>.  This only makes
+    sense for Windows systems.
   - <code>GEOGRAPHICLIB_PRECISION</code> specifies the precision to be
     used for "real" (i.e., floating point) numbers.  1 means float
     (single precision); 2 (the default) means double; 3 means long
@@ -367,6 +358,11 @@ Here are the steps to compile and install %GeographicLib:
   make test    # run some tests
   make install # as root, if CMAKE_INSTALL_PREFIX is a system directory
 \endverbatim
+  Possible additional targets are \verbatim
+  make matlab-all
+  make dist
+  make examples
+  make netexamples \endverbatim
   On IDE environments, run your IDE (e.g., Visual Studio), load
   GeographicLib.sln, pick the build type (e.g., Release), and select
   "Build Solution".  If this succeeds, select "RUN_TESTS" to build;
@@ -4687,7 +4683,9 @@ of the git repository for %GeographicLib.
    - Use a more precise value for GeographicLib::OSGB::CentralScale().
    - Minimum version of cmake needed increased to 2.8 (released in
      2009-11).
-   - GEOGRAPHICLIB_EXAMPLES now defaults to OFF.
+   - BUILD_NETGEOGRAPHICLIB and GEOGRAPHICLIB_DOCUMENTATION default to OFF.
+   - Library name is now GeographicLib instead of Geographic.
+   - GEOGRAPHICLIB_EXAMPLES now defaults to OFF (remove?)
    - deprecate PACKAGE_PATH and INSTALL_PATH.
    - Add Arc routines to python interface.
    - Geod utility retired (used GeodSolve instead)

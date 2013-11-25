@@ -60,7 +60,7 @@ cd $TEMP/gita/geographiclib
 sh autogen.sh
 mkdir BUILD
 cd BUILD
-cmake -D GEOGRAPHICLIB_EXAMPLES=ON ..
+cmake -D GEOGRAPHICLIB_DOCUMENTATION=ON ..
 make dist
 cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
 make doc
@@ -80,13 +80,15 @@ rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip 
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
 (
-    echo "#! /bin/sh -e"
+    echo "#! /bin/sh -exv"
     echo 'b=geog-`pwd | sed s%.*/%%`'
     echo 'rm -rf /tmp/$b'
     echo 'mkdir /tmp/$b'
     echo 'cd /tmp/$b'
-    echo cmake -G \"Visual Studio 10\" -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D GEOGRAPHICLIB_EXAMPLES=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake -G \"Visual Studio 10\" -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Debug   --target ALL_BUILD
+    echo cmake --build . --config Debug   --target exampleprograms
+    echo cmake --build . --config Debug   --target netexamples
     echo cmake --build . --config Debug   --target RUN_TESTS
     echo cmake --build . --config Debug   --target INSTALL
     echo cmake --build . --config Release --target ALL_BUILD
@@ -98,16 +100,19 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
 (
-    echo "#! /bin/sh -e"
+    echo "#! /bin/sh -exv"
     echo 'b=geog-`pwd | sed s%.*/%%`'
     echo 'rm -rf /tmp/$b'
     echo 'mkdir /tmp/$b'
     echo 'cd /tmp/$b'
-    echo cmake -G \"Visual Studio 10 Win64\" -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10-x64/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D GEOGRAPHICLIB_EXAMPLES=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake -G \"Visual Studio 10 Win64\" -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10-x64/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Debug   --target ALL_BUILD
     echo cmake --build . --config Debug   --target RUN_TESTS
     echo cmake --build . --config Debug   --target INSTALL
     echo cmake --build . --config Release --target ALL_BUILD
+    echo cmake --build . --config Release --target matlabinterface
+    echo cmake --build . --config Release --target exampleprograms
+    echo cmake --build . --config Release --target netexamples
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
     echo cmake --build . --config Release --target PACKAGE
@@ -150,18 +155,18 @@ find . -type f | sort -u > ../files.b
 cd $TEMP/relc/GeographicLib-$VERSION
 mkdir BUILD
 cd BUILD
-cmake -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
-make -j$NUMCPUS
+cmake -D GEOGRAPHICLIB_DOCUMENTATION=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
+make -j$NUMCPUS all exampleprograms
 make install
 mkdir ../BUILD-matlab
 cd ../BUILD-matlab
-cmake -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
-make -j$NUMCPUS
+cmake -D GEOGRAPHICLIB_DOCUMENTATION=ON -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
+make -j$NUMCPUS all matlabinterface
 make install
 mkdir ../BUILD-system
 cd ../BUILD-system
 cmake -D MATLAB_COMPILER=mkoctfile ..
-make -j$NUMCPUS
+make -j$NUMCPUS all matlabinterface
 
 mkdir -p $TEMP/geographiclib-matlab/private
 cd $TEMP/instc/libexec/GeographicLib/matlab

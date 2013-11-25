@@ -1,13 +1,14 @@
-# Compile (but don't install) a bunch of tiny example programs.  These
-# are mainly for including as examples within the doxygen documentation;
-# however, compiling them catches most obvious blunders.
+# Compile a bunch of tiny example programs.  These are built with the
+# "exampleprograms" target.  These are mainly for including as examples
+# within the doxygen documentation; however, compiling them catches some
+# obvious blunders.
 file (GLOB EXAMPLE_SOURCES example-*.cpp)
 set (EXAMPLES)
 
 foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
-  add_executable (${EXAMPLE} ${EXAMPLE_SOURCE})
+  add_executable (${EXAMPLE} EXCLUDE_FROM_ALL ${EXAMPLE_SOURCE})
   target_link_libraries (${EXAMPLE} ${PROJECT_LIBRARIES})
 endforeach ()
 
@@ -16,7 +17,7 @@ set (OTHER_EXAMPLES GeoidToGTX.cpp)
 foreach (EXAMPLE_SOURCE ${OTHER_EXAMPLES})
   get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
-  add_executable (${EXAMPLE} ${EXAMPLE_SOURCE})
+  add_executable (${EXAMPLE} EXCLUDE_FROM_ALL ${EXAMPLE_SOURCE})
   target_link_libraries (${EXAMPLE} ${PROJECT_LIBRARIES})
 endforeach ()
 
@@ -30,7 +31,7 @@ if (OPENMP_FOUND)
   endif ()
 endif ()
 
-add_custom_target (examples ALL DEPENDS ${EXAMPLES})
+add_custom_target (exampleprograms DEPENDS ${EXAMPLES})
 
 if (MSVC)
   get_target_property(_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
@@ -40,12 +41,12 @@ if (MSVC)
     if (CMAKE_VERSION VERSION_LESS 2.8.11)
       get_target_property (_LOCR ${PROJECT_LIBRARIES} LOCATION_RELEASE)
       get_target_property (_LOCD ${PROJECT_LIBRARIES} LOCATION_DEBUG)
-      add_custom_command (TARGET examples POST_BUILD
+      add_custom_command (TARGET exampleprograms POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy "${_LOCR}" ${CMAKE_CFG_INTDIR}
         COMMAND ${CMAKE_COMMAND} -E copy "${_LOCD}" ${CMAKE_CFG_INTDIR}
         COMMENT "Copying shared library to examples directory")
     else ()
-      add_custom_command (TARGET examples POST_BUILD
+      add_custom_command (TARGET exampleprograms POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E
         copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
         COMMENT "Copying shared library to examples directory")
@@ -54,4 +55,4 @@ if (MSVC)
 endif ()
 
 # Put all the examples into a folder in the IDE
-set_property (TARGET examples ${EXAMPLES} PROPERTY FOLDER examples)
+set_property (TARGET exampleprograms ${EXAMPLES} PROPERTY FOLDER examples)
