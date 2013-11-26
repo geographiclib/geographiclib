@@ -293,7 +293,7 @@ xargs grep -l ' $' || true
 echo
 echo Files with tabs:
 find . -type f |
-egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf' |
+egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
 egrep -v '\.sh|depcomp|install-sh|/config\.|configure|missing' |
 xargs grep -l  '	' || true
 echo
