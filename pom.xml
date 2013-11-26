@@ -52,6 +52,7 @@
                 <configuration>
                   <options>
                     <BUILD_NETGEOGRAPHICLIB>ON</BUILD_NETGEOGRAPHICLIB>
+                    <GEOGRAPHICLIB_LIB_TYPE>STATIC</GEOGRAPHICLIB_LIB_TYPE>
                   </options>
                 </configuration>
               </execution>
@@ -114,7 +115,7 @@
     <plugins>
       <plugin>
         <groupId>com.sri.vt.majic</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
+       <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
 	  <execution>
 	    <id>cmake-compile</id>
