@@ -20,8 +20,6 @@ set (LIBVERSIONFULL 10.1.1)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
-message (STATUS "cmake version: ${CMAKE_VERSION}")
-
 cmake_minimum_required (VERSION 2.8)
 set(CMAKE_LEGACY_CYGWIN_WIN32 0) # Remove when CMake >= 2.8.4 is required
 
@@ -102,8 +100,8 @@ else ()
 endif ()
 
 # (4) Build which libraries?  Possible values are SHARED, STATIC, BOTH.
-set (GEOGRAPHICLIB_LIB_TYPE BOTH CACHE STRING
-  "Types of library generated: SHARED, STATIC, or BOTH (default)")
+set (GEOGRAPHICLIB_LIB_TYPE SHARED CACHE STRING
+  "Types of library generated: SHARED (default), STATIC, or BOTH")
 set_property (CACHE GEOGRAPHICLIB_LIB_TYPE
   PROPERTY STRINGS "SHARED" "STATIC" "BOTH")
 
@@ -190,10 +188,14 @@ if (NOT MSVC)
   # $ORIGIN/../lib${LIB_SUFFIX}.  But this might not work on all
   # systems and the check for system directories should be skipped in
   # this case.)
-  list (FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES
-    "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" SYSDIR)
-  if (SYSDIR LESS 0)
-    set (CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+  if (0)
+    list (FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES
+      "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" SYSDIR)
+    if (SYSDIR LESS 0)
+      set (CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+    endif ()
+  else ()
+    set (CMAKE_INSTALL_RPATH "\$ORIGIN/../lib${LIB_SUFFIX}")
   endif ()
 endif ()
 

@@ -51,6 +51,9 @@
                 </goals>
                 <configuration>
                   <options>
+		    <COMMON_INSTALL_PATH>ON</COMMON_INSTALL_PATH>
+                    <GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
+		    <MATLAB_COMPILER>OFF</MATLAB_COMPILER>
                     <BUILD_NETGEOGRAPHICLIB>ON</BUILD_NETGEOGRAPHICLIB>
                   </options>
                 </configuration>
@@ -79,6 +82,14 @@
                 <goals>
                   <goal>cmake-configure</goal>
                 </goals>
+                <configuration>
+                  <options>
+		    <COMMON_INSTALL_PATH>ON</COMMON_INSTALL_PATH>
+                    <GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
+		    <MATLAB_COMPILER>OFF</MATLAB_COMPILER>
+                    <BUILD_NETGEOGRAPHICLIB>OFF</BUILD_NETGEOGRAPHICLIB>
+                  </options>
+                </configuration>
               </execution>
             </executions>
           </plugin>
