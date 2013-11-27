@@ -58,6 +58,7 @@
             <plugin>
                 <groupId>com.sri.vt.majic</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
+                <extensions>true</extensions>
                 <executions>
                     <execution>
                         <id>default-cmake-configure</id>
