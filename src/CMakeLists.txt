@@ -69,7 +69,7 @@ if (MSVC AND PACKAGE_DEBUG_LIBS)
   endif ()
 endif ()
 
-if (MSVC AND NOT CMAKE_VERSION VERSION_LESS 2.8.11)
+if (MSVC AND NOT CMAKE_VERSION VERSION_EQUAL 2.8.11)
   # Install pdb files in debug mode.  Names of PDB files are wrong for
   # cmake 2.8.0 (presumably because the PDB_NAME property on the library
   # is ignored; so require version >= 2.8.11 (but this is likely to be

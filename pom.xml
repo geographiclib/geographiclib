@@ -52,7 +52,6 @@
                 <configuration>
                   <options>
                     <BUILD_NETGEOGRAPHICLIB>ON</BUILD_NETGEOGRAPHICLIB>
-                    <GEOGRAPHICLIB_LIB_TYPE>STATIC</GEOGRAPHICLIB_LIB_TYPE>
                   </options>
                 </configuration>
               </execution>
