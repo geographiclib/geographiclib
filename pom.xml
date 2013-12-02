@@ -34,66 +34,68 @@
     <profile>
       <id>os-windows</id>
       <activation>
-        <os>
-          <family>Windows</family>
-        </os>
+	<os>
+	  <family>Windows</family>
+	</os>
       </activation>
       <build>
-        <plugins>
-          <plugin>
-            <groupId>com.sri.vt.majic</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>cmake-configure</id>
-                <goals>
-                  <goal>cmake-configure</goal>
-                </goals>
-                <configuration>
-                  <options>
+	<plugins>
+	  <plugin>
+	    <groupId>com.sri.vt.majic</groupId>
+	    <artifactId>build-helper-maven-plugin</artifactId>
+	    <executions>
+	      <execution>
+		<id>cmake-configure</id>
+		<goals>
+		  <goal>cmake-configure</goal>
+		</goals>
+		<configuration>
+		  <options>
 		    <COMMON_INSTALL_PATH>ON</COMMON_INSTALL_PATH>
-                    <GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
+		    <GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
 		    <MATLAB_COMPILER>OFF</MATLAB_COMPILER>
-                    <BUILD_NETGEOGRAPHICLIB>ON</BUILD_NETGEOGRAPHICLIB>
-                  </options>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
+		    <GEOGRAPHICLIB_DOCUMENTATION>OFF</GEOGRAPHICLIB_DOCUMENTATION>
+		    <BUILD_NETGEOGRAPHICLIB>ON</BUILD_NETGEOGRAPHICLIB>
+		  </options>
+		</configuration>
+	      </execution>
+	    </executions>
+	  </plugin>
+	</plugins>
       </build>
     </profile>
 
     <profile>
       <id>os-linux</id>
       <activation>
-        <os>
-          <family>Linux</family>
-        </os>
+	<os>
+	  <family>Linux</family>
+	</os>
       </activation>
       <build>
-        <plugins>
-          <plugin>
-            <groupId>com.sri.vt.majic</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>cmake-configure</id>
-                <goals>
-                  <goal>cmake-configure</goal>
-                </goals>
-                <configuration>
-                  <options>
+	<plugins>
+	  <plugin>
+	    <groupId>com.sri.vt.majic</groupId>
+	    <artifactId>build-helper-maven-plugin</artifactId>
+	    <executions>
+	      <execution>
+		<id>cmake-configure</id>
+		<goals>
+		  <goal>cmake-configure</goal>
+		</goals>
+		<configuration>
+		  <options>
 		    <COMMON_INSTALL_PATH>ON</COMMON_INSTALL_PATH>
-                    <GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
+		    <GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
 		    <MATLAB_COMPILER>OFF</MATLAB_COMPILER>
-                    <BUILD_NETGEOGRAPHICLIB>OFF</BUILD_NETGEOGRAPHICLIB>
-                  </options>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
+		    <GEOGRAPHICLIB_DOCUMENTATION>OFF</GEOGRAPHICLIB_DOCUMENTATION>
+		    <BUILD_NETGEOGRAPHICLIB>OFF</BUILD_NETGEOGRAPHICLIB>
+		  </options>
+		</configuration>
+	      </execution>
+	    </executions>
+	  </plugin>
+	</plugins>
       </build>
     </profile>
   </profiles>
@@ -107,26 +109,26 @@
     </extensions>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>com.sri.vt.majic</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <version>0.1.2-SNAPSHOT</version>
-        </plugin>
+	<plugin>
+	  <groupId>com.sri.vt.majic</groupId>
+	  <artifactId>build-helper-maven-plugin</artifactId>
+	  <version>0.1.2-SNAPSHOT</version>
+	</plugin>
 
-        <!-- needed for the majic build-helper -->
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <version>1.2.1</version>
-        </plugin>
+	<!-- needed for the majic build-helper -->
+	<plugin>
+	  <groupId>org.codehaus.mojo</groupId>
+	  <artifactId>exec-maven-plugin</artifactId>
+	  <version>1.2.1</version>
+	</plugin>
       </plugins>
     </pluginManagement>
 
     <plugins>
       <plugin>
-        <groupId>com.sri.vt.majic</groupId>
+	<groupId>com.sri.vt.majic</groupId>
        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
+	<executions>
 	  <execution>
 	    <id>cmake-compile</id>
 	    <goals>
@@ -140,12 +142,12 @@
 	    </goals>
 	  </execution>
 	  <execution>
-            <id>cmake-tar</id>
-            <goals>
-              <goal>cmake-tar</goal>
-            </goals>
-          </execution>
-        </executions>
+	    <id>cmake-tar</id>
+	    <goals>
+	      <goal>cmake-tar</goal>
+	    </goals>
+	  </execution>
+	</executions>
       </plugin>
     </plugins>
   </build>

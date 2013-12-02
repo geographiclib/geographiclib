@@ -78,8 +78,8 @@ if (NOT INSTALL_PATH AND PACKAGE_PATH)
 endif ()
 if (INSTALL_PATH)
   file (TO_CMAKE_PATH ${INSTALL_PATH} CMAKE_INSTALL_PREFIX)
+  message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
 endif ()
-message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
 
 # (3) Where to look for data files.  Various classes look in the geoids,
 # gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
@@ -338,10 +338,6 @@ if (GEOGRAPHICLIB_PRECISION EQUAL 2)
   # The examples assume double precision
   add_subdirectory (examples)
 endif ()
-add_subdirectory (cmake)
-if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
-  add_subdirectory (tests)
-endif ()
 if (BUILD_NETGEOGRAPHICLIB)
   set (NETGEOGRAPHICLIB_LIBRARIES NETGeographicLib)
   set (NETLIBNAME NETGeographic)
@@ -349,6 +345,10 @@ if (BUILD_NETGEOGRAPHICLIB)
   if (GEOGRAPHICLIB_PRECISION EQUAL 2)
     add_subdirectory (dotnet/examples/ManagedCPP)
   endif ()
+endif ()
+add_subdirectory (cmake)
+if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
+  add_subdirectory (tests)
 endif ()
 
 # Packaging support; we deal with

@@ -39,7 +39,7 @@ endif ()
 
 set (@PROJECT_NAME@_SHARED_FOUND @GEOGRAPHICLIB_SHARED_LIB@)
 set (@PROJECT_NAME@_STATIC_FOUND @GEOGRAPHICLIB_STATIC_LIB@)
-set (@PROJECT_NAME@_NETGeographic_FOUND @BUILD_NETGEOGRAPHIC@)
+set (@PROJECT_NAME@_NETGeographicLib_FOUND @BUILD_NETGEOGRAPHICLIB@)
 
 # Check for the components requested.  The convention is that
 # GeographicLib_${comp}_FOUND should be true for all the required

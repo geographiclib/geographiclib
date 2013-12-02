@@ -4,6 +4,7 @@
 # obvious blunders.
 file (GLOB EXAMPLE_SOURCES example-*.cpp)
 set (EXAMPLES)
+add_definitions (${PROJECT_DEFINITIONS})
 
 foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)

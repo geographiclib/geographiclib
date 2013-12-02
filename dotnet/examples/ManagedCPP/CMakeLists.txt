@@ -14,37 +14,30 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   add_dependencies (${EXAMPLE} ${NETGEOGRAPHICLIB_LIBRARIES})
   set_target_properties (${EXAMPLE} PROPERTIES COMPILE_FLAGS "/clr")
   set_target_properties (${EXAMPLE} PROPERTIES VS_DOTNET_REFERENCES
-    "${CMAKE_CURRENT_BINARY_DIR}/../../NETGeographicLib/Release/NETGeographicLib.dll;${CMAKE_CURRENT_BINARY_DIR}/../../NETGeographicLib/Debug/NETGeographicLib_d.dll")
+    "${CMAKE_CURRENT_BINARY_DIR}/../../NETGeographicLib/Release/NETGeographic.dll;${CMAKE_CURRENT_BINARY_DIR}/../../NETGeographicLib/Debug/NETGeographic_d.dll")
 endforeach ()
 
-if (CMAKE_CXX_FLAGS_DEBUG MATCHES "/RTC1")
-  string (REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-endif ()
-
-if (CMAKE_CXX_FLAGS MATCHES "/EHsc")
-  string(REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-endif ()
+string (REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+string (REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 add_custom_target (netexamples DEPENDS ${EXAMPLES})
 
-if (MSVC)
-  get_target_property(_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
-  if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
-    # Copy the shared library on Windows systems to this directory
-    # (examples) so that the tests can be run.
-    if (CMAKE_VERSION VERSION_LESS 2.8.11)
-      get_target_property (_LOCR ${PROJECT_LIBRARIES} LOCATION_RELEASE)
-      get_target_property (_LOCD ${PROJECT_LIBRARIES} LOCATION_DEBUG)
-      add_custom_command (TARGET examples POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy "${_LOCR}" ${CMAKE_CFG_INTDIR}
-        COMMAND ${CMAKE_COMMAND} -E copy "${_LOCD}" ${CMAKE_CFG_INTDIR}
-        COMMENT "Copying shared library to examples directory")
-    else ()
-      add_custom_command (TARGET examples POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E
-        copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
-        COMMENT "Copying shared library to examples directory")
-    endif ()
+get_target_property(_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
+if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
+  # Copy the shared library on Windows systems to this directory
+  # (examples) so that the tests can be run.
+  if (CMAKE_VERSION VERSION_LESS 2.8.11)
+    get_target_property (_LOCR ${PROJECT_LIBRARIES} LOCATION_RELEASE)
+    get_target_property (_LOCD ${PROJECT_LIBRARIES} LOCATION_DEBUG)
+    add_custom_command (TARGET netexamples POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy "${_LOCR}" ${CMAKE_CFG_INTDIR}
+      COMMAND ${CMAKE_COMMAND} -E copy "${_LOCD}" ${CMAKE_CFG_INTDIR}
+      COMMENT "Copying shared library to examples directory")
+  else ()
+    add_custom_command (TARGET netexamples POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E
+      copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
+      COMMENT "Copying shared library to examples directory")
   endif ()
 endif ()
 
