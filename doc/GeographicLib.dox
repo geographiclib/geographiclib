@@ -624,29 +624,30 @@ In order to use %GeographicLib from C++ code, you will need to
   \verbatim
   C/C++ -> General -> Additional Include Directories = C:\pkg-vc10\GeographicLib\include
   \endverbatim
-- Tell the linker the name, GeographicLib, and location of the
+- Tell the linker the name, Geographic, and location of the
   library.  Using g++ as the linker, you would use \verbatim
-  g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographicLib
+  g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographic
   \endverbatim
   With Visual Studio, you supply this information in the IDE via,
   e.g.,
   \verbatim
-  Linker -> Input -> Additional Dependencies = GeographicLib.lib
+  Linker -> Input -> Additional Dependencies = Geographic.lib
   Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\lib
   \endverbatim
-  If the library was configured and built with cmake,
-  then the debug version of the library is called GeographicLib_d.lib.
+  Note that the library name is <b>Geographic</b> and not
+  %GeographicLib.  If the library was configured and built with cmake,
+  then the debug version of the library is called Geographic_d.lib.
 - Tell the runtime environment where to find the shared library
   (assuming you compiled %GeographicLib as a shared library).  With g++,
   this is accomplished by modifying the link line above to read \verbatim
-  g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographicLib
+  g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic
   \endverbatim
   (There are two other ways to specify the location of shared libraries
   at runtime: (1) define the environment variable
   <code>LD_LIBRARY_PATH</code> to be a colon-separated list of
   directories to search; (2) as <b>root</b>, specify /usr/local/lib as a
   directory searched by ldconfig(8).)  On Windows, you need to ensure
-  that GeographicLib.dll is in the same directory as your executable or
+  that Geographic.dll is in the same directory as your executable or
   else include the directory containing the dll in your
   <code>PATH</code>.
 - If you're using cmake to configure and build your project, then
@@ -702,7 +703,7 @@ In order to use %GeographicLib from C++ code, you will need to
   compiling your code in debug mode.  The configuration of cmake
   described above ensures that the right version of the compiler is used
   and, assuming you built and installed %GeographicLib in debug mode, the
-  debug version of the library GeographicLib_d.lib will be used.
+  debug version of the library Geographic_d.lib will be used.
 
 Here is a very simple test code, which uses the GeographicLib::Geodesic
 class:

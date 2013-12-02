@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeographicLib", "GeographicLib-vc10.vcxproj", "{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Geographic", "Geographic-vc10.vcxproj", "{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{E6598B23-7D6F-4801-8579-C0C6BEBDE659}"
 EndProject
@@ -65,7 +65,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gravity", "Gravity-vc10.vcx
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dotnet", "dotnet", "{ED7891B2-897F-4B32-87C9-1FB393720C62}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NETGeographicLib", "NETGeographicLib-vc10.vcxproj", "{BC1ADBEC-537D-487E-AF21-8B7025AAF46D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NETGeographic", "NETGeographic-vc10.vcxproj", "{BC1ADBEC-537D-487E-AF21-8B7025AAF46D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1} = {4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}
 	EndProjectSection

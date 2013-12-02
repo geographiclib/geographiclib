@@ -175,6 +175,7 @@ set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3)
 option (PACKAGE_DEBUG_LIBS
   "Include debug versions of library in binary package" OFF)
 
+set (LIBNAME Geographic)
 # The debug version of the library is called Geographic_d.
 set (CMAKE_DEBUG_POSTFIX _d)
 
@@ -183,19 +184,13 @@ if (NOT MSVC)
   # (1) include link path for external packages (not needed with
   # GeographicLib because there are no external packages).
   set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-  # (2) include installed path for GeographicLib
-  # (Alternatively set CMAKE_INSTALL_RPATH to
-  # $ORIGIN/../lib${LIB_SUFFIX}.  But this might not work on all
-  # systems and the check for system directories should be skipped in
-  # this case.)
-  if (0)
-    list (FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES
-      "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" SYSDIR)
-    if (SYSDIR LESS 0)
-      set (CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
-    endif ()
-  else ()
+  # (2) include installed path for GeographicLib.
+  if (NOT APPLE)
+    # Use relative path so that package is relocatable
     set (CMAKE_INSTALL_RPATH "\$ORIGIN/../lib${LIB_SUFFIX}")
+  else ()
+    # Need absolute path with MacOSx
+    set (CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
   endif ()
 endif ()
 
@@ -349,6 +344,7 @@ if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
 endif ()
 if (BUILD_NETGEOGRAPHICLIB)
   set (NETGEOGRAPHICLIB_LIBRARIES NETGeographicLib)
+  set (NETLIBNAME NETGeographic)
   add_subdirectory (dotnet/NETGeographicLib)
   if (GEOGRAPHICLIB_PRECISION EQUAL 2)
     add_subdirectory (dotnet/examples/ManagedCPP)

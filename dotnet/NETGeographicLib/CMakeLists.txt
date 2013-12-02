@@ -27,7 +27,7 @@ target_link_libraries (${NETGEOGRAPHICLIB_LIBRARIES} ${PROJECT_LIBRARIES})
 
 # Set the version number on the library
 set_target_properties (${NETGEOGRAPHICLIB_LIBRARIES} PROPERTIES
-  VERSION "${LIBVERSIONFULL}" PDB_NAME NETGeographicLib)
+  VERSION "${LIBVERSIONFULL}" OUTPUT_NAME ${NETLIBNAME} PDB_NAME ${NETLIBNAME})
 
 # Specify where the library is installed, adding it to the export depends
 install (TARGETS ${NETGEOGRAPHICLIB_LIBRARIES}
@@ -36,21 +36,18 @@ install (TARGETS ${NETGEOGRAPHICLIB_LIBRARIES}
 
 if (MSVC AND PACKAGE_DEBUG_LIBS)
   install (PROGRAMS
-    "${CMAKE_CURRENT_BINARY_DIR}/Debug/NETGeographicLib${CMAKE_DEBUG_POSTFIX}.dll"
+    "${CMAKE_CURRENT_BINARY_DIR}/Debug/${NETLIBNAME}${CMAKE_DEBUG_POSTFIX}.dll"
     DESTINATION bin CONFIGURATIONS Release)
 endif ()
 
-if (MSVC AND CMAKE_VERSION VERSION_EQUAL 2.8.11)
-  # Install pdb files in debug mode.  Names of PDB files are wrong for
-  # cmake 2.8.0 (presumably because the PDB_NAME property on the library
-  # is ignored; so require version >= 2.8.11 (but this is likely to be
-  # too conservative).
-  get_target_property (_P NETGeographicLib LOCATION_DEBUG)
+if (MSVC)
+  # Install pdb file in debug mode.
+  get_target_property (_P ${NETGEOGRAPHICLIB_LIBRARIES} LOCATION_DEBUG)
   get_filename_component (_P ${_P} PATH)
-  get_target_property (_N NETGeographicLib PDB_NAME)
+  get_target_property (_N ${NETGEOGRAPHICLIB_LIBRARIES} PDB_NAME)
   set (_PDB ${_P}/${_N}.pdb)
   install (FILES ${_PDB} DESTINATION bin
-    RENAME NETGeographicLib${CMAKE_DEBUG_POSTFIX}.pdb CONFIGURATIONS Debug)
+    RENAME ${NETLIBNAME}${CMAKE_DEBUG_POSTFIX}.pdb CONFIGURATIONS Debug)
 endif()
 
 # Put all the library into a folder in the IDE
