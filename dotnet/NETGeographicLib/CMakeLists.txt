@@ -23,6 +23,7 @@ set_target_properties (${NETGEOGRAPHICLIB_LIBRARIES}
 string (REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 string (REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
+add_definitions (${PROJECT_DEFINITIONS})
 target_link_libraries (${NETGEOGRAPHICLIB_LIBRARIES} ${PROJECT_LIBRARIES})
 
 # Set the version number on the library
