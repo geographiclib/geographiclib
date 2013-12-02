@@ -2,6 +2,7 @@
 
 # Where to find the *.usage files for the --help option.
 include_directories (${PROJECT_BINARY_DIR}/man)
+add_definitions (${PROJECT_DEFINITIONS})
 
 # Loop over all the tools, specifying the source and library.
 add_custom_target (tools ALL)

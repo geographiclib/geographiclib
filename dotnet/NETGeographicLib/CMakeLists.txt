@@ -27,7 +27,8 @@ target_link_libraries (${NETGEOGRAPHICLIB_LIBRARIES} ${PROJECT_LIBRARIES})
 
 # Set the version number on the library
 set_target_properties (${NETGEOGRAPHICLIB_LIBRARIES} PROPERTIES
-  VERSION "${LIBVERSIONFULL}" OUTPUT_NAME ${NETLIBNAME} PDB_NAME ${NETLIBNAME})
+  VERSION "${LIBVERSIONFULL}" OUTPUT_NAME ${NETLIBNAME}
+  PDB_NAME ${NETLIBNAME}${CMAKE_DEBUG_POSTFIX})
 
 # Specify where the library is installed, adding it to the export depends
 install (TARGETS ${NETGEOGRAPHICLIB_LIBRARIES}

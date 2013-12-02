@@ -5,11 +5,11 @@
 
 AM_CPPFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include -Wall -Wextra
 
-lib_LTLIBRARIES = libGeographicLib.la
+lib_LTLIBRARIES = libGeographic.la
 
-libGeographicLib_la_LDFLAGS = \
+libGeographic_la_LDFLAGS = \
 		-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
-libGeographicLib_la_SOURCES = Accumulator.cpp \
+libGeographic_la_SOURCES = Accumulator.cpp \
 		AlbersEqualArea.cpp \
 		AzimuthalEquidistant.cpp \
 		CassiniSoldner.cpp \
@@ -87,7 +87,7 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	  sed -e 's/ VERSION / GEOGRAPHICLIB_VERSION_STRING /'; \
 	  grep WORDS_BIGENDIAN $< | tail -1 ) > $@
 
-$(libGeographicLib_la_OBJECTS): ../include/GeographicLib/Config.h
+$(libGeographic_la_OBJECTS): ../include/GeographicLib/Config.h
 
 geographiclib_data=$(datadir)/GeographicLib
 

@@ -282,7 +282,7 @@ EOF
 for i in a b c e f; do
     cp testprogram.cpp testprogram$i.cpp
     g++ -c -g -O3 -I$TEMP/inst$i/include testprogram$i.cpp
-    g++ -g -o testprogram$i testprogram$i.o -Wl,-rpath=$TEMP/inst$i/lib -L$TEMP/inst$i/lib -lGeographicLib
+    g++ -g -o testprogram$i testprogram$i.o -Wl,-rpath=$TEMP/inst$i/lib -L$TEMP/inst$i/lib -lGeographic
     ./testprogram$i
 done
 
