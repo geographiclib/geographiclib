@@ -1,5 +1,5 @@
-cmake_minimum_required (VERSION 2.6)
 project (geodesictest)
+cmake_minimum_required (VERSION 2.8.11)
 
 find_package(GeographicLib 1.34 REQUIRED COMPONENTS NETGeographicLib)
 
@@ -17,15 +17,8 @@ get_target_property (_LIB "${GeographicLib_NETGeographicLib_LIBRARIES}"
 get_target_property(_LIBTYPE ${_LIB} TYPE)
 if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
   # On Windows systems, copy the shared library to build directory
-  if (CMAKE_VERSION VERSION_LESS 2.8.11)
-    get_target_property (_LOCR ${_LIB} IMPORTED_LOCATION_RELEASE)
-    add_custom_command (TARGET ${PROJECT_NAME} POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy "${_LOCR}" ${CMAKE_CFG_INTDIR}
-      COMMENT "Copying shared library for GeographicLib")
-  else ()
-    add_custom_command (TARGET ${PROJECT_NAME} POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E
-      copy $<TARGET_FILE:${_LIB}> ${CMAKE_CFG_INTDIR}
-      COMMENT "Copying shared library for GeographicLib")
-  endif ()
+  add_custom_command (TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E
+    copy $<TARGET_FILE:${_LIB}> ${CMAKE_CFG_INTDIR}
+    COMMENT "Copying shared library for GeographicLib")
 endif ()

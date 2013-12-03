@@ -1,5 +1,5 @@
-cmake_minimum_required (VERSION 2.6)
 project (geodesictest)
+cmake_minimum_required (VERSION 2.8)
 
 find_package (GeographicLib 1.34 REQUIRED)
 
