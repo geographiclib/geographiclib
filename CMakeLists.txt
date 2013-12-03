@@ -20,8 +20,7 @@ set (LIBVERSIONFULL 10.1.1)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
-cmake_minimum_required (VERSION 2.8)
-set(CMAKE_LEGACY_CYGWIN_WIN32 0) # Remove when CMake >= 2.8.4 is required
+cmake_minimum_required (VERSION 2.8.4) # This version was released 2011-02-16
 
 # User-settable variables
 

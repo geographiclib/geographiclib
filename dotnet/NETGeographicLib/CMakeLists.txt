@@ -24,21 +24,19 @@ install (TARGETS ${NETGEOGRAPHICLIB_LIBRARIES}
   EXPORT depends
   RUNTIME DESTINATION bin)
 
-if (MSVC AND PACKAGE_DEBUG_LIBS)
+if (PACKAGE_DEBUG_LIBS)
   install (PROGRAMS
     "${CMAKE_CURRENT_BINARY_DIR}/Debug/${NETLIBNAME}${CMAKE_DEBUG_POSTFIX}.dll"
     DESTINATION bin CONFIGURATIONS Release)
 endif ()
 
-if (MSVC)
-  # Install pdb file in debug mode.
-  get_target_property (_P ${NETGEOGRAPHICLIB_LIBRARIES} LOCATION_DEBUG)
-  get_filename_component (_P ${_P} PATH)
-  get_target_property (_N ${NETGEOGRAPHICLIB_LIBRARIES} PDB_NAME)
-  set (_PDB ${_P}/${_N}.pdb)
-  install (FILES ${_PDB} DESTINATION bin
-    RENAME ${NETLIBNAME}${CMAKE_DEBUG_POSTFIX}.pdb CONFIGURATIONS Debug)
-endif()
+# Install pdb file in debug mode.
+get_target_property (_P ${NETGEOGRAPHICLIB_LIBRARIES} LOCATION_DEBUG)
+get_filename_component (_P ${_P} PATH)
+get_target_property (_N ${NETGEOGRAPHICLIB_LIBRARIES} PDB_NAME)
+set (_PDB ${_P}/${_N}.pdb)
+install (FILES ${_PDB} DESTINATION bin
+  RENAME ${NETLIBNAME}${CMAKE_DEBUG_POSTFIX}.pdb CONFIGURATIONS Debug)
 
 # Put all the library into a folder in the IDE
 set_property (TARGET ${NETGEOGRAPHICLIB_LIBRARIES} PROPERTY FOLDER library)

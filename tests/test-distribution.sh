@@ -88,10 +88,10 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
     echo cmake -G \"Visual Studio 10\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Debug   --target ALL_BUILD
     echo cmake --build . --config Debug   --target exampleprograms
-    echo cmake --build . --config Debug   --target netexamples
     echo cmake --build . --config Debug   --target RUN_TESTS
     echo cmake --build . --config Debug   --target INSTALL
     echo cmake --build . --config Release --target ALL_BUILD
+    echo cmake --build . --config Debug   --target netexamples
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
     echo cmake --build . --config Release --target PACKAGE

@@ -39,19 +39,10 @@ if (MSVC)
   if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
     # Copy the shared library on Windows systems to this directory
     # (examples) so that the tests can be run.
-    if (CMAKE_VERSION VERSION_LESS 2.8.11)
-      get_target_property (_LOCR ${PROJECT_LIBRARIES} LOCATION_RELEASE)
-      get_target_property (_LOCD ${PROJECT_LIBRARIES} LOCATION_DEBUG)
-      add_custom_command (TARGET exampleprograms POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy "${_LOCR}" ${CMAKE_CFG_INTDIR}
-        COMMAND ${CMAKE_COMMAND} -E copy "${_LOCD}" ${CMAKE_CFG_INTDIR}
-        COMMENT "Copying shared library to examples directory")
-    else ()
-      add_custom_command (TARGET exampleprograms POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E
-        copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
-        COMMENT "Copying shared library to examples directory")
-    endif ()
+    add_custom_command (TARGET exampleprograms POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E
+      copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
+      COMMENT "Copying shared library to examples directory")
   endif ()
 endif ()
 

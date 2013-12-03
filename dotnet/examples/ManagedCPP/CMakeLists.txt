@@ -13,8 +13,11 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   add_executable (${EXAMPLE} EXCLUDE_FROM_ALL ${EXAMPLE_SOURCE})
   add_dependencies (${EXAMPLE} ${NETGEOGRAPHICLIB_LIBRARIES})
   set_target_properties (${EXAMPLE} PROPERTIES COMPILE_FLAGS "/clr")
+  # This is set up for Release builds only.  Change
+  # Release/NETGeographic.dll to Debug/NETGeographic_d.dll for Debug
+  # builds.
   set_target_properties (${EXAMPLE} PROPERTIES VS_DOTNET_REFERENCES
-    "${CMAKE_CURRENT_BINARY_DIR}/../../NETGeographicLib/Release/NETGeographic.dll;${CMAKE_CURRENT_BINARY_DIR}/../../NETGeographicLib/Debug/NETGeographic_d.dll")
+    "${CMAKE_CURRENT_BINARY_DIR}/../../NETGeographicLib/Release/NETGeographic.dll")
 endforeach ()
 
 string (REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
@@ -26,19 +29,10 @@ get_target_property(_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
 if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
   # Copy the shared library on Windows systems to this directory
   # (examples) so that the tests can be run.
-  if (CMAKE_VERSION VERSION_LESS 2.8.11)
-    get_target_property (_LOCR ${PROJECT_LIBRARIES} LOCATION_RELEASE)
-    get_target_property (_LOCD ${PROJECT_LIBRARIES} LOCATION_DEBUG)
-    add_custom_command (TARGET netexamples POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy "${_LOCR}" ${CMAKE_CFG_INTDIR}
-      COMMAND ${CMAKE_COMMAND} -E copy "${_LOCD}" ${CMAKE_CFG_INTDIR}
-      COMMENT "Copying shared library to examples directory")
-  else ()
-    add_custom_command (TARGET netexamples POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E
-      copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
-      COMMENT "Copying shared library to examples directory")
-  endif ()
+  add_custom_command (TARGET netexamples POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E
+    copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
+    COMMENT "Copying shared library to examples directory")
 endif ()
 
 # Put all the examples into a folder in the IDE
