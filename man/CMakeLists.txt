@@ -42,7 +42,8 @@ foreach (TOOL ${TOOLS})
       MAIN_DEPENDENCY ${TOOL}.pod)
     add_custom_command (OUTPUT ${TOOL}.usage
       COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/makeusage.sh
-        ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod > ${TOOL}.usage
+        ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod ${PROJECT_VERSION}
+        > ${TOOL}.usage
       COMMENT "Building usage code for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
   else ()
