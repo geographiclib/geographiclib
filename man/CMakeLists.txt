@@ -28,7 +28,7 @@ foreach (TOOL ${TOOLS})
   if (MAINTAINER)
     add_custom_command (OUTPUT ${TOOL}.1
       COMMAND pod2man --center=\"GeographicLib Utilities\"
-        --release=\"GeographicLib ${GeographicLib_VERSION}\"
+        --release=\"GeographicLib ${PROJECT_VERSION\"
         ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod > ${TOOL}.1
       COMMENT "Building man page for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
