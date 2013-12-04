@@ -1,4 +1,4 @@
-# config file support for find_package(GeographicLib).  This needs to
+# config file support for find_package (GeographicLib).  This needs to
 # deal with two environments: (1) finding the build tree and (2)
 # finding the install tree.  geographiclib-config.cmake detects which
 # situation it is handing by looking at @PROJECT_ROOT_DIR@.  If

@@ -30,12 +30,15 @@ if (OPENMP_FOUND)
   if (NOT WIN32)
     set_target_properties (GeoidToGTX PROPERTIES LINK_FLAGS ${OpenMP_CXX_FLAGS})
   endif ()
+  message (STATUS "Example program GeoidToGTX will use OpenMP")
+else ()
+  message (STATUS "Example program GeoidToGTX will not use OpenMP")
 endif ()
 
 add_custom_target (exampleprograms DEPENDS ${EXAMPLES})
 
 if (MSVC)
-  get_target_property(_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
+  get_target_property (_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
   if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
     # Copy the shared library on Windows systems to this directory
     # (examples) so that the tests can be run.

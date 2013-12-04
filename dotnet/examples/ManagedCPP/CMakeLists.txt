@@ -25,7 +25,7 @@ string (REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 add_custom_target (netexamples DEPENDS ${EXAMPLES})
 
-get_target_property(_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
+get_target_property (_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
 if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
   # Copy the shared library on Windows systems to this directory
   # (examples) so that the tests can be run.

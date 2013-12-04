@@ -21,7 +21,7 @@ install (FILES ${PRIVATE_MATLAB_FILES}
 # On Windows systems, need also to copy the shared library to where the
 # mex files live (in the build and install trees).
 if (MEX)
-  get_target_property(_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
+  get_target_property (_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
   if (MSVC)
     set (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
     include (InstallRequiredSystemLibraries)
@@ -79,12 +79,10 @@ if (MEX)
       DESTINATION ${INSTALL_MATLAB_DIR} CONFIGURATIONS Release)
   endif ()
   if (MSVC AND _LIBTYPE STREQUAL "SHARED_LIBRARY")
-    get_target_property (_LOC ${PROJECT_LIBRARIES}
-      LOCATION_RELEASE)
+    get_target_property (_LOC ${PROJECT_LIBRARIES} LOCATION_RELEASE)
     add_custom_command (TARGET matlabinterface POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy ${_LOC} ./)
     get_filename_component (_NAME ${_LOC} NAME)
-    message(STATUS "DEBUG: L=${_LOC} N=${_NAME}")
     install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${_NAME}
       DESTINATION ${INSTALL_MATLAB_DIR} CONFIGURATIONS Release)
   endif ()

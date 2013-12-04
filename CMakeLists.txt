@@ -99,8 +99,13 @@ else ()
 endif ()
 
 # (4) Build which libraries?  Possible values are SHARED, STATIC, BOTH.
-set (GEOGRAPHICLIB_LIB_TYPE SHARED CACHE STRING
-  "Types of library generated: SHARED (default), STATIC, or BOTH")
+if (MSVC)
+  set (GEOGRAPHICLIB_LIB_TYPE STATIC CACHE STRING
+    "Types of library generated: SHARED, STATIC (default), or BOTH")
+else ()
+  set (GEOGRAPHICLIB_LIB_TYPE SHARED CACHE STRING
+    "Types of library generated: SHARED (default), STATIC, or BOTH")
+endif ()
 set_property (CACHE GEOGRAPHICLIB_LIB_TYPE
   PROPERTY STRINGS "SHARED" "STATIC" "BOTH")
 
@@ -175,8 +180,11 @@ option (PACKAGE_DEBUG_LIBS
   "Include debug versions of library in binary package" OFF)
 
 set (LIBNAME Geographic)
-# The debug version of the library is called Geographic_d.
-set (CMAKE_DEBUG_POSTFIX _d)
+if (MSVC OR CMAKE_CONFIGURATION_TYPES)
+  # For multi-config systems and for Visual Studio, the debug version of
+  # the library is called Geographic_d.
+  set (CMAKE_DEBUG_POSTFIX _d)
+endif ()
 
 if (NOT MSVC)
   # Set the run time path for shared libraries for non-Windows machines.

@@ -13,7 +13,7 @@ add_executable (${PROJECT_NAME} example-Geodesic-small.cpp)
 target_link_libraries (${PROJECT_NAME} ${GeographicLib_LIBRARIES})
 
 if (MSVC)
-  get_target_property(_LIBTYPE ${GeographicLib_LIBRARIES} TYPE)
+  get_target_property (_LIBTYPE ${GeographicLib_LIBRARIES} TYPE)
   if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
     # On Windows systems, copy the shared library to build directory
     add_custom_command (TARGET ${PROJECT_NAME} POST_BUILD

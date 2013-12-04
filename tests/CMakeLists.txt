@@ -25,7 +25,7 @@ target_link_libraries (GeodExact ${PROJECT_LIBRARIES})
 set (TESTPROGRAMS ${TESTPROGRAMS} GeodExact)
 
 if (MSVC)
-  get_target_property(_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
+  get_target_property (_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
   if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
     # Copy the shared library on Windows systems to this directory
     # (examples) so that the tests can be run.
