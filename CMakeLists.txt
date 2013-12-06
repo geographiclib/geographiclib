@@ -273,7 +273,7 @@ if (MATLAB_COMPILER)
   if (NOT MSVC)
     # mex files are shared objects => require static lib to be built with
     # position independent code
-    set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS}")
+    set (CMAKE_POSITION_INDEPENDENT_CODE ON)
   endif ()
   if (NOT MEX)
     message (WARNING

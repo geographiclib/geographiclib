@@ -77,7 +77,7 @@ if (MSVC AND GEOGRAPHICLIB_SHARED_LIB)
   set (_PDB ${_P}/${_N}.pdb)
   install (FILES ${_PDB} DESTINATION bin
     RENAME ${LIBNAME}${CMAKE_DEBUG_POSTFIX}.pdb CONFIGURATIONS Debug)
-endif()
+endif ()
 
 # Put the library into a folder in the IDE
 set_target_properties (

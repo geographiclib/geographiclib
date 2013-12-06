@@ -642,8 +642,8 @@ In order to use %GeographicLib from C++ code, you will need to
     add_definitions (${GeographicLib_DEFINITIONS})
     add_executable (program source1.cpp source2.cpp)
     target_link_libraries (program ${GeographicLib_LIBRARIES}) \endverbatim
-    (If you're using cmake version 2.8.11 or later, then the
-    <code>add_definitions</code> line can be omitted.)
+    (The <code>add_definitions</code> line is only needed for Windows
+    and can be omitted if you're using cmake version 2.8.11 or later.)
   - configure your package, e.g., with \verbatim
     mkdir BUILD
     cd BUILD
@@ -744,7 +744,7 @@ In order to use %GeographicLib from C++ code, you will need to
     \endverbatim
   - If using the shared (or static) library with Visual Studio, define
     the macro <code>GEOGRAPHICLIB_SHARED_LIB=1</code> (or
-    <code>0</code>)
+    <code>0</code>), e.g.,
     \verbatim
     C/C++ -> Preprocessor -> Preprocessor Definitions = GEOGRAPHICLIB_SHARED_LIB=1
     \endverbatim
@@ -753,7 +753,7 @@ In order to use %GeographicLib from C++ code, you will need to
     cmake, this definition is added automatically.)
   - Tell the linker the name, Geographic, and location of the
     library.  Using g++ as the linker, you would use \verbatim
-    g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic
+    g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographic
     \endverbatim
     With Visual Studio, you supply this information in the IDE via,
     e.g., \verbatim
@@ -768,7 +768,8 @@ In order to use %GeographicLib from C++ code, you will need to
   - Tell the runtime environment where to find the shared library
     (assuming you compiled %Geographic as a shared library).  With g++,
     this is accomplished by modifying the link line above to read \verbatim
-    g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic
+    g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib \
+      -L/usr/local/lib -lGeographic
     \endverbatim
     (There are two other ways to specify the location of shared libraries
     at runtime: (1) define the environment variable
@@ -4765,6 +4766,12 @@ of the git repository for %GeographicLib.
        GEOGRAPHICLIB_LIB_TYPE=BOTH</code>;
      - both shared and static libraries (Release plus Debug) included in
        binary installer;
+     - find_package uses COMPONENTS and GeographicLib_USE_STATIC_LIBS to
+       select the library to use;
+     - find_package version checking allows nmake and Visual Studio
+       generators to interoperate on Windows;
+     - find_package (GeographicLib ...) requires that GeographicLib be
+       capitalized correctly;
      - on Unix/Linux, don't include the version number in directory for
        the cmake configuration files;
      - defaults for GEOGRAPHICLIB_DOCUMENTATION and
@@ -4775,7 +4782,8 @@ of the git repository for %GeographicLib.
        netexamples);
      - matlab-all target renamed to matlabinterface;
      - the configuration parameters PACKAGE_PATH and INSTALL_PATH are
-       now deprecated (use CMAKE_INSTALL_PREFIX instead).
+       now deprecated (use CMAKE_INSTALL_PREFIX instead);
+     - xxx
    - Use a more precise value for GeographicLib::OSGB::CentralScale().
    - Add Arc routines to python interface.
    - The Geod utility has been removed; the same functionality lives on

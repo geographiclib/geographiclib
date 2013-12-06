@@ -50,7 +50,6 @@ if (MEX)
             ${INTERFACE}
         COMMENT "Building matlab interface for ${TARGET}"
         DEPENDS ${INTERFACE} ${PROJECT_LIBRARIES})
-      add_dependencies (matlab-${TARGET} ${PROJECT_LIBRARIES})
       add_dependencies (matlabinterface matlab-${TARGET})
       install (PROGRAMS ${TARGET_INTERFACE}
         DESTINATION ${INSTALL_MATLAB_DIR} CONFIGURATIONS Release)
@@ -74,7 +73,6 @@ if (MEX)
   endforeach ()
   if (NOT MSVC)
     add_custom_target (matlabinterface DEPENDS ${INTERFACE_LIST})
-    add_dependencies (matlabinterface ${PROJECT_LIBRARIES})
     install (PROGRAMS ${INTERFACE_LIST}
       DESTINATION ${INSTALL_MATLAB_DIR} CONFIGURATIONS Release)
   endif ()

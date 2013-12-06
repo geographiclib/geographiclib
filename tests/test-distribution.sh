@@ -77,7 +77,7 @@ tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relb # Version for autoconf
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relc # Version for cmake
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relx
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
-unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip 
+unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
 (
     echo "#! /bin/sh -exv"
@@ -156,17 +156,20 @@ cd $TEMP/relc/GeographicLib-$VERSION
 mkdir BUILD
 cd BUILD
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
-make -j$NUMCPUS all exampleprograms
+make -j$NUMCPUS all
+make -j$NUMCPUS exampleprograms
 make install
 mkdir ../BUILD-matlab
 cd ../BUILD-matlab
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
-make -j$NUMCPUS all matlabinterface
+make -j$NUMCPUS all
+make -j$NUMCPUS matlabinterface
 make install
 mkdir ../BUILD-system
 cd ../BUILD-system
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D MATLAB_COMPILER=mkoctfile ..
-make -j$NUMCPUS all matlabinterface
+make -j$NUMCPUS all
+make -j$NUMCPUS matlabinterface
 
 mkdir -p $TEMP/geographiclib-matlab/private
 cd $TEMP/instc/libexec/GeographicLib/matlab
@@ -252,7 +255,7 @@ cat > testprogram.cpp <<EOF
 
 int main() {
   using namespace GeographicLib;
-  double 
+  double
     // These are the constants for Pennsylvania South, EPSG:3364
     // http://www.spatialreference.org/ref/epsg/3364/
     a = Constants::WGS84_a(),   // major radius
