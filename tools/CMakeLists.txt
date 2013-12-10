@@ -78,7 +78,7 @@ set_tests_properties (GeoConvert4 PROPERTIES WILL_FAIL ON)
 # Check fix for DMS::Decode bug fixed on 2011-03-22
 add_test (GeoConvert5 GeoConvert --input-string "5d. 0")
 set_tests_properties (GeoConvert5 PROPERTIES WILL_FAIL ON)
-if (CMAKE_GENERATOR MATCHES "Visual Studio 1[12]")
+if (NOT (MSVC AND MSVC_VERSION MATCHES "1[78].."))
   # Check fix for DMS::Decode double rounding bug fixed on 2012-11-15
   # This test is known to fail for VS 11 and 12 bug reported 2013-01-10
   # http://connect.microsoft.com/VisualStudio/feedback/details/776287
