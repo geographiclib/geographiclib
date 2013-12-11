@@ -60,8 +60,7 @@ target_triplet = @target@
 bin_PROGRAMS = CartConvert$(EXEEXT) ConicProj$(EXEEXT) \
 	GeoConvert$(EXEEXT) GeodSolve$(EXEEXT) GeodesicProj$(EXEEXT) \
 	GeoidEval$(EXEEXT) Gravity$(EXEEXT) MagneticField$(EXEEXT) \
-	Planimeter$(EXEEXT) TransverseMercatorProj$(EXEEXT) \
-	Geod$(EXEEXT)
+	Planimeter$(EXEEXT) TransverseMercatorProj$(EXEEXT)
 subdir = tools
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(top_srcdir)/depcomp
@@ -90,10 +89,6 @@ am_GeoConvert_OBJECTS = GeoConvert.$(OBJEXT)
 GeoConvert_OBJECTS = $(am_GeoConvert_OBJECTS)
 GeoConvert_LDADD = $(LDADD)
 GeoConvert_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
-am_Geod_OBJECTS = GeodSolve.$(OBJEXT)
-Geod_OBJECTS = $(am_Geod_OBJECTS)
-Geod_LDADD = $(LDADD)
-Geod_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
 am_GeodSolve_OBJECTS = GeodSolve.$(OBJEXT)
 GeodSolve_OBJECTS = $(am_GeodSolve_OBJECTS)
 GeodSolve_LDADD = $(LDADD)
@@ -174,12 +169,12 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(CartConvert_SOURCES) $(ConicProj_SOURCES) \
-	$(GeoConvert_SOURCES) $(Geod_SOURCES) $(GeodSolve_SOURCES) \
+	$(GeoConvert_SOURCES) $(GeodSolve_SOURCES) \
 	$(GeodesicProj_SOURCES) $(GeoidEval_SOURCES) \
 	$(Gravity_SOURCES) $(MagneticField_SOURCES) \
 	$(Planimeter_SOURCES) $(TransverseMercatorProj_SOURCES)
 DIST_SOURCES = $(CartConvert_SOURCES) $(ConicProj_SOURCES) \
-	$(GeoConvert_SOURCES) $(Geod_SOURCES) $(GeodSolve_SOURCES) \
+	$(GeoConvert_SOURCES) $(GeodSolve_SOURCES) \
 	$(GeodesicProj_SOURCES) $(GeoidEval_SOURCES) \
 	$(Gravity_SOURCES) $(MagneticField_SOURCES) \
 	$(Planimeter_SOURCES) $(TransverseMercatorProj_SOURCES)
@@ -451,18 +446,6 @@ TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
 	../include/GeographicLib/TransverseMercatorExact.hpp \
 	../include/GeographicLib/Utility.hpp
 
-Geod_SOURCES = GeodSolve.cpp \
-	../man/GeodSolve.usage \
-	../include/GeographicLib/Config.h \
-	../include/GeographicLib/Constants.hpp \
-	../include/GeographicLib/DMS.hpp \
-	../include/GeographicLib/Geodesic.hpp \
-	../include/GeographicLib/GeodesicExact.hpp \
-	../include/GeographicLib/GeodesicLine.hpp \
-	../include/GeographicLib/GeodesicLineExact.hpp \
-	../include/GeographicLib/Math.hpp \
-	../include/GeographicLib/Utility.hpp
-
 sbin_SCRIPTS = geographiclib-get-geoids \
 	geographiclib-get-gravity \
 	geographiclib-get-magnetic
@@ -562,9 +545,6 @@ ConicProj$(EXEEXT): $(ConicProj_OBJECTS) $(ConicProj_DEPENDENCIES) $(EXTRA_Conic
 GeoConvert$(EXEEXT): $(GeoConvert_OBJECTS) $(GeoConvert_DEPENDENCIES) $(EXTRA_GeoConvert_DEPENDENCIES) 
 	@rm -f GeoConvert$(EXEEXT)
 	$(CXXLINK) $(GeoConvert_OBJECTS) $(GeoConvert_LDADD) $(LIBS)
-Geod$(EXEEXT): $(Geod_OBJECTS) $(Geod_DEPENDENCIES) $(EXTRA_Geod_DEPENDENCIES) 
-	@rm -f Geod$(EXEEXT)
-	$(CXXLINK) $(Geod_OBJECTS) $(Geod_LDADD) $(LIBS)
 GeodSolve$(EXEEXT): $(GeodSolve_OBJECTS) $(GeodSolve_DEPENDENCIES) $(EXTRA_GeodSolve_DEPENDENCIES) 
 	@rm -f GeodSolve$(EXEEXT)
 	$(CXXLINK) $(GeodSolve_OBJECTS) $(GeodSolve_LDADD) $(LIBS)

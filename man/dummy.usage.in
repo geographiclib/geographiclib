@@ -3,6 +3,6 @@
 int usage(int retval, bool /* brief */) {
   ( retval ? std::cerr : std::cout )
     << "For full documentation visit on @TOOL@, see\n"
-    << "    http://geographiclib.sf.net/html/@TOOL@.1.html\n";
+    << "    http://geographiclib.sf.net/@PROJECT_VERSION@/@TOOL@.1.html\n";
   return retval;
 }

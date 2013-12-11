@@ -77,7 +77,7 @@ namespace GeographicLib {
    * option).
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT GeodesicExact {
+  class GEOGRAPHICLIB_EXPORT GeodesicExact {
   private:
     typedef Math::real real;
     friend class GeodesicLineExact;

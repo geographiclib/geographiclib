@@ -37,7 +37,7 @@ namespace GeographicLib {
    * \include example-SphericalEngine.cpp
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT SphericalEngine {
+  class GEOGRAPHICLIB_EXPORT SphericalEngine {
   private:
     typedef Math::real real;
     // A table of the square roots of integers
@@ -88,7 +88,7 @@ namespace GeographicLib {
      * The storage layout of the coefficients is documented in
      * SphericalHarmonic and SphericalHarmonic::SphericalHarmonic.
      **********************************************************************/
-    class GEOGRAPHIC_EXPORT coeff {
+    class GEOGRAPHICLIB_EXPORT coeff {
     private:
       int _Nx, _nmx, _mmx;
       std::vector<real>::const_iterator _Cnm;

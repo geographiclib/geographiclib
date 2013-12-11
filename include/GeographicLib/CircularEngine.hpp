@@ -49,7 +49,7 @@ namespace GeographicLib {
    * \include example-CircularEngine.cpp
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT CircularEngine {
+  class GEOGRAPHICLIB_EXPORT CircularEngine {
   private:
     typedef Math::real real;
     enum normalization {

@@ -1,6 +1,6 @@
 // -*- text -*-
 /**
- * \file NETGeographic.dox
+ * \file NETGeographicLib.dox
  * \brief Documentation for NETGeographicLib
  *
  * Written by Scott Heiman <mrmtdew2@outlook.com> and licensed under the
@@ -9,10 +9,10 @@
  **********************************************************************/
 
 /**
-\mainpage NETGeographic library
+\mainpage NETGeographicLib library
 \author Scott Heiman (mrmtdew2@outlook.com)
-\version 1.33
-\date 2013-09-22
+\version 1.34
+\date 2013-12-11
 
 \section abstract Abstract
 
@@ -26,13 +26,14 @@ to the GeographicLib classes.  GeographicLib and NETGeographicLib is an
 integrated product.
 
 The NETGeographic project in the GeographicLib-vc10.sln file located in
-\<install folder\>/GeographicLib-1.33/windows will create the NETGeographicLib
+\<install folder\>/GeographicLib-1.34/windows will create the NETGeographicLib
 DLL.  The source code for NETGeographicLib is located in
-\<install folder\>/GeographicLib-1.33/dotnet/NETGeographicLib.  NETGeographicLib
+\<install folder\>/GeographicLib-1.34/dotnet/NETGeographicLib.  NETGeographicLib
 is not available for older versions of Microsoft Visual Studio.
 
-NETGeographic has been tested with C#, Managed C++, and Visual Basic.  Sample code
-snippets can be found in \<install folder\>/GeographicLib-1.33/dotnet/examples.
+NETGeographicLib has been tested with C#, Managed C++, and Visual Basic.
+Sample code snippets can be found in
+\<install folder\>/GeographicLib-1.34/dotnet/examples.
 
 \section differences Differences between NETGeographicLib and GeographicLib
 
@@ -96,7 +97,7 @@ These operators have been replaced with functions in the NETGeographicLib::Accum
 If you have access to the NETGeographicLib and GeographicLib projects then
 -# Create a new solution.
 -# Create a new project using any .NET language.  For this example, call it MyApp.
--# Add the NETGeographicLib and GeographicLib projects to the solution.  Verify that NETGeographicLib depends upon GeographicLib.
+-# Add the NETGeographic and Geographic projects to the solution.  Verify that NETGeographicLib depends upon GeographicLib.
 -# Right-Click MyApp in the Solution View and select "Add Reference..." (C#/VB) or "References..." (Managed C++) in the pop-up menu.
 -# (Managed C++) Click the "Add New Reference..." button in the Properties dialog.
 \image html NETGeographicLib3.png
@@ -134,7 +135,7 @@ to any Visual Basic source that uses NETGeographicLib classes.
 
 A C# sample application is provided that demonstrates NETGeographicLib classes.
 The source code for the sample application is located in
-\<install folder\>/GeographicLib-1.33/dotnet/Projections.  The sample
+\<install folder\>/GeographicLib-1.34/dotnet/Projections.  The sample
 application creates a tabbed dialog.  Each tab provides data entry fields that
 allow the user to exercise one or more NETGeographicLib classes.
 
@@ -166,23 +167,25 @@ The following table lists the source code that demonstrates specific classes.
 The following assumes that you have installed %GeographicLib in one of
 two ways:
 - you have built and installed %GeographicLib using cmake with
-  <code>-D BUILD_NETGEOGRAPHIC=ON</code> (see
+  <code>-D BUILD_NETGEOGRAPHICLIB=ON</code> (see
   \ref cmake "Installation with cmake" in the %GeographicLib
   documentation).  You can use any version of Visual Studio to build
   %GeographicLib and should use the same version to build your
   application.  You can build %GeographicLib as a shared library using
-  <code>-D GEOGRAPHIC_SHARED_LIB=ON</code>.
+  <code>-D GEOGRAPHICLIB_LIB_TYPE=SHARED</code> or <code>BOTH</code>.
 - you have installed %GeographicLib using one of the binary installers (see
   \ref windowsbin "Using a binary installer for Windows" in the
   %GeographicLib documentation).  In this case, you are restricted to using
-  Visual Studio 10 in Release mode.
+  Visual Studio 10.
 
-In order to build an application that uses NETGeographic with cmake, ask
-for the NETGeographic "component" of %GeographicLib using \verbatim
-find_package(GeographicLib COMPONENTS NETGeographic) \endverbatim
-If NETGeographic is found, then
-<code>GeographicLib_NETGeographic_FOUND</code> will be set to true and
-<code>GeographicLib_NETGeographic_LIBRARIES</code> will be set to the
+The minimum recommended version of cmake for use with NETGeographicLib
+is 2.8.7.  In order to build an application that uses NETGeographicLib
+with cmake, ask for the NETGeographicLib "component" of %GeographicLib
+using \verbatim
+find_package(GeographicLib COMPONENTS NETGeographicLib) \endverbatim
+If NETGeographicLib is found, then
+<code>GeographicLib_NETGeographicLib_FOUND</code> will be set to true and
+<code>GeographicLib_NETGeographicLib_LIBRARIES</code> will be set to the
 NETGeographic shared library.  This is the name of the cmake target from
 which the pathname of the dll can be obtained.
 
@@ -194,30 +197,30 @@ This example is
 
 Here is a complete CMakeList.txt files you can use to build this test
 code using the installed library: \verbatim
-cmake_minimum_required (VERSION 2.6)
 project (geodesictest)
+cmake_minimum_required (VERSION 2.8.7) # required for VS_DOTNET_REFERENCES
 
-find_package(GeographicLib 1.33 REQUIRED COMPONENTS NETGeographic)
+find_package (GeographicLib 1.34 REQUIRED COMPONENTS NETGeographicLib)
 
 add_executable (${PROJECT_NAME} example-Geodesic-small.cpp)
 set_target_properties (${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/clr")
-string(REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+string (REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+string (REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-get_target_property (NETGeographicLib_LOCATION
-  "${GeographicLib_NETGeographic_LIBRARIES}" IMPORTED_LOCATION_RELEASE)
-set_target_properties (${PROJECT_NAME} PROPERTIES VS_DOTNET_REFERENCES
-  "${NETGeographicLib_LOCATION}")
+# This is set up for Release builds only.  Change RELEASE to DEBUG for
+# Debug builds.
+get_target_property (_LOC "${GeographicLib_NETGeographicLib_LIBRARIES}"
+  IMPORTED_LOCATION_RELEASE)
+set_target_properties (${PROJECT_NAME} PROPERTIES VS_DOTNET_REFERENCES ${_LOC})
 
-get_target_property (GeographicLib_LOCATION
-  "${GeographicLib_NETGeographic_LIBRARIES}"
+get_target_property (_LIB "${GeographicLib_NETGeographicLib_LIBRARIES}"
   IMPORTED_LINK_INTERFACE_LIBRARIES_RELEASE)
-get_target_property (GeographicLib_LOCATION
-  "${GeographicLib_LOCATION}" IMPORTED_LOCATION_RELEASE)
-
-if (GeographicLib_LOCATION MATCHES "\\.[Dd][Ll][Ll]\$")
+get_target_property (_LIBTYPE ${_LIB} TYPE)
+if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
+  # On Windows systems, copy the shared library to build directory
   add_custom_command (TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E
-    copy "${GeographicLib_LOCATION}" ${CMAKE_CFG_INTDIR}
+    copy $<TARGET_FILE:${_LIB}> ${CMAKE_CFG_INTDIR}
     COMMENT "Copying shared library for GeographicLib")
 endif () \endverbatim
 The typical invocation of cmake is \verbatim
@@ -226,7 +229,7 @@ cd BUILD
 cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 ..
 cmake --build . --config Release \endverbatim
 The version of Visual Studio should match that used to build
-NETGeographic.  <b>NOTE:</b> With Visual Studio 10, this results in
+NETGeographicLib.  <b>NOTE:</b> With Visual Studio 10, this results in
 warnings such as \verbatim
 warning C4945: 'ExtensionAttribute' : cannot import symbol from ... \endverbatim
 which can be safely(?) ignored.

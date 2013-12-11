@@ -8,9 +8,9 @@ doc: html/index.html
 html/index.html: index.html.in utilities.html.in
 	if test -d html; then rm -rf html/*; else mkdir html; fi
 	cp ../LICENSE.txt html/
-	sed -e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	sed -e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 	utilities.html.in > html/utilities.html
-	sed -e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	sed -e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 	index.html.in > html/index.html
 
 PREFIX = /usr/local

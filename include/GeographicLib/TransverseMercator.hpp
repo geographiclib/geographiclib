@@ -76,7 +76,7 @@ namespace GeographicLib {
    * TransverseMercator and TransverseMercatorExact.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT TransverseMercator {
+  class GEOGRAPHICLIB_EXPORT TransverseMercator {
   private:
     typedef Math::real real;
     static const int maxpow_ = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;

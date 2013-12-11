@@ -3,6 +3,7 @@
 
 SOURCE=$1
 NAME=`basename $SOURCE .pod`
+VERSION=$2
 
 (
 cat<<EOF
@@ -19,7 +20,7 @@ cat <<EOF
 For full documentation type:\n\\
     $NAME --help\n\\
 or visit:\n\\
-    http://geographiclib.sf.net/html/$NAME.1.html\n";
+    http://geographiclib.sf.net/$VERSION/$NAME.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n\\
 EOF

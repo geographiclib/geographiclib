@@ -80,7 +80,7 @@ namespace GeographicLib {
    * access to the functionality of GravityModel and GravityCircle.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT GravityModel {
+  class GEOGRAPHICLIB_EXPORT GravityModel {
   private:
     typedef Math::real real;
     friend class GravityCircle;

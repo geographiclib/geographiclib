@@ -166,7 +166,7 @@ namespace GeographicLib {
    * to the functionality of Geodesic and GeodesicLine.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT Geodesic {
+  class GEOGRAPHICLIB_EXPORT Geodesic {
   private:
     typedef Math::real real;
     friend class GeodesicLine;

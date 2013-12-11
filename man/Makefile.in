@@ -561,7 +561,7 @@ usage: $(USAGE)
 htmlman: $(HTMLMAN)
 
 @HAVE_PODPROGS_TRUE@.pod.usage:
-@HAVE_PODPROGS_TRUE@	sh $(srcdir)/makeusage.sh $< > $@
+@HAVE_PODPROGS_TRUE@	sh $(srcdir)/makeusage.sh $< $(VERSION) > $@
 
 @HAVE_PODPROGS_TRUE@.pod.1:
 @HAVE_PODPROGS_TRUE@	$(POD2MAN) $^ > $@

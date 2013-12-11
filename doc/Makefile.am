@@ -116,28 +116,28 @@ manpages: $(MANPAGES)
 	cp $^ html/
 	touch $@
 
-html/index.html: manpages doxyfile.in Geographic.dox \
+html/index.html: manpages doxyfile.in GeographicLib.dox \
 	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(FIGURES) \
 	doxyfile-c.in geodesic-c.dox doxyfile-for.in geodesic-for.dox \
 	$(LEGACYFILES)
 	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \
 	$(top_srcdir)/LICENSE.txt html/
 	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
-	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 	$(srcdir)/doxyfile.in | $(DOXYGEN) -
 	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
-	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 	$(srcdir)/doxyfile-c.in | $(DOXYGEN) -
 	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
-	-e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 	$(srcdir)/doxyfile-for.in | $(DOXYGEN) -
 else
 html/index.html: index.html.in utilities.html.in
 	if test -d html; then rm -rf html/*; else mkdir html; fi
 	cp $(top_srcdir)/LICENSE.txt html/
-	sed -e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	sed -e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 	$(srcdir)/utilities.html.in > html/utilities.html
-	sed -e "s%@GeographicLib_VERSION@%$(VERSION)%g" \
+	sed -e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 	$(srcdir)/index.html.in > html/index.html
 endif
 
