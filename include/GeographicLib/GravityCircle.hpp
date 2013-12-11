@@ -38,7 +38,7 @@ namespace GeographicLib {
    * access to the functionality of GravityModel and GravityCircle.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT GravityCircle {
+  class GEOGRAPHICLIB_EXPORT GravityCircle {
   private:
     typedef Math::real real;
     enum mask {

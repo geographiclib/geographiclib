@@ -39,7 +39,7 @@ namespace GeographicLib {
    * and CassiniSoldner.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT AzimuthalEquidistant {
+  class GEOGRAPHICLIB_EXPORT AzimuthalEquidistant {
   private:
     typedef Math::real real;
     Geodesic _earth;

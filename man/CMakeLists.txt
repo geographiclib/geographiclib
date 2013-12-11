@@ -28,7 +28,7 @@ foreach (TOOL ${TOOLS})
   if (MAINTAINER)
     add_custom_command (OUTPUT ${TOOL}.1
       COMMAND pod2man --center=\"GeographicLib Utilities\"
-        --release=\"GeographicLib ${GeographicLib_VERSION}\"
+        --release=\"GeographicLib ${PROJECT_VERSION}\"
         ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod > ${TOOL}.1
       COMMENT "Building man page for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
@@ -42,32 +42,25 @@ foreach (TOOL ${TOOLS})
       MAIN_DEPENDENCY ${TOOL}.pod)
     add_custom_command (OUTPUT ${TOOL}.usage
       COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/makeusage.sh
-        ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod > ${TOOL}.usage
+        ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod ${PROJECT_VERSION}
+        > ${TOOL}.usage
       COMMENT "Building usage code for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
   else ()
-    # Replace configure_file (... COPYONLY) with file (COPY ...)  once
-    # cmake version 2.8 is required
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.usage)
-      configure_file (${TOOL}.usage ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.usage
-        COPYONLY)
+      file (COPY ${TOOL}.usage DESTINATION .)
     else ()
-      configure_file (dummy.usage.in ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.usage
-        @ONLY)
+      configure_file (dummy.usage.in ${TOOL}.usage @ONLY)
     endif ()
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.1)
-      configure_file (${TOOL}.1 ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1
-        COPYONLY)
+      file (COPY ${TOOL}.1 DESTINATION .)
     else ()
-      configure_file (dummy.1.in ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1
-        @ONLY)
+      configure_file (dummy.1.in ${TOOL}.1 @ONLY)
     endif ()
     if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.1.html)
-      configure_file (${TOOL}.1.html ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html
-        COPYONLY)
+      file (COPY ${TOOL}.1.html DESTINATION .)
     else ()
-      configure_file (dummy.1.html.in ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html
-        @ONLY)
+      configure_file (dummy.1.html.in ${TOOL}.1.html @ONLY)
     endif ()
     if (DOXYGEN_FOUND)
       file (COPY ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html
@@ -91,7 +84,8 @@ if (MAINTAINER)
   add_custom_command (TARGET distrib-man
     COMMAND
       for f in ${MANPAGES} ${USAGE} ${HTMLMAN}\; do
-        cmp "$$f" ${CMAKE_CURRENT_SOURCE_DIR}/`basename "$$f"` >/dev/null 2>&1||
+        cmp "$$f" ${CMAKE_CURRENT_SOURCE_DIR}/`basename "$$f" `
+        >/dev/null 2>&1 ||
         install -m 644 "$$f" ${CMAKE_CURRENT_SOURCE_DIR}\; done
     COMMENT "Installing man documentation page in source tree")
 endif ()

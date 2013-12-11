@@ -56,7 +56,7 @@ htmlman: $(HTMLMAN)
 if HAVE_PODPROGS
 
 .pod.usage:
-	sh $(srcdir)/makeusage.sh $< > $@
+	sh $(srcdir)/makeusage.sh $< $(VERSION) > $@
 
 .pod.1:
 	$(POD2MAN) $^ > $@

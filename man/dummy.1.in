@@ -8,5 +8,5 @@
 For documentation, see
 .PP
 .Vb 2
-\&   http://geographiclib.sf.net/html/@TOOL@.1.html
+\&   http://geographiclib.sf.net/@PROJECT_VERSION@/@TOOL@.1.html
 .Ve

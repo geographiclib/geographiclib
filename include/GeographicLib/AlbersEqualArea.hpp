@@ -57,7 +57,7 @@ namespace GeographicLib {
    * providing access to the functionality of LambertConformalConic and
    * AlbersEqualArea.
    **********************************************************************/
-  class GEOGRAPHIC_EXPORT AlbersEqualArea {
+  class GEOGRAPHICLIB_EXPORT AlbersEqualArea {
   private:
     typedef Math::real real;
     real _a, _f, _fm, _e2, _e, _e2m, _qZ, _qx;

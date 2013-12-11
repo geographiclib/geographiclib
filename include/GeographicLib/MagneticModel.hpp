@@ -57,7 +57,7 @@ namespace GeographicLib {
    * providing access to the functionality of MagneticModel and MagneticCircle.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT MagneticModel {
+  class GEOGRAPHICLIB_EXPORT MagneticModel {
   private:
     typedef Math::real real;
     static const int idlength_ = 8;

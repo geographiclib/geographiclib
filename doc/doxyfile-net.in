@@ -32,7 +32,7 @@ PROJECT_NAME           = NETGeographicLib
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER         = @GeographicLib_VERSION@
+PROJECT_NUMBER         = @PROJECT_VERSION@
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer
@@ -662,7 +662,7 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT                  = @PROJECT_SOURCE_DIR@/dotnet/NETGeographicLib \
-                         @PROJECT_SOURCE_DIR@/doc/NETGeographic.dox
+                         @PROJECT_SOURCE_DIR@/doc/NETGeographicLib.dox
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is
@@ -1562,12 +1562,12 @@ SKIP_FUNCTION_MACROS   = YES
 # NOT include the path). If a tag file is not located in the directory in which
 # doxygen is run, you must also specify the path to the tagfile here.
 
-TAGFILES               = html/Geographic.tag=..
+TAGFILES               = html/GeographicLib.tag=..
 
 # When a file name is specified after GENERATE_TAGFILE, doxygen will create
 # a tag file that is based on the input files it reads.
 
-GENERATE_TAGFILE       = html/NET/NETGeographic.tag
+GENERATE_TAGFILE       = html/NET/NETGeographicLib.tag
 
 # If the ALLEXTERNALS tag is set to YES all external classes will be listed
 # in the class index. If set to NO only the inherited external classes

@@ -58,7 +58,7 @@ namespace GeographicLib {
    * Example of use:
    * \include example-UTMUPS.cpp
    **********************************************************************/
-  class GEOGRAPHIC_EXPORT UTMUPS {
+  class GEOGRAPHICLIB_EXPORT UTMUPS {
   private:
     typedef Math::real real;
     static const real falseeasting_[4];
