@@ -91,7 +91,7 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
     echo cmake --build . --config Debug   --target RUN_TESTS
     echo cmake --build . --config Debug   --target INSTALL
     echo cmake --build . --config Release --target ALL_BUILD
-    echo cmake --build . --config Debug   --target netexamples
+    echo cmake --build . --config Release --target netexamples
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
     echo cmake --build . --config Release --target PACKAGE
@@ -132,7 +132,7 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12
     echo cmake --build . --config Debug   --target RUN_TESTS
     echo cmake --build . --config Debug   --target INSTALL
     echo cmake --build . --config Release --target ALL_BUILD
-    echo cmake --build . --config Debug   --target dotnet/examples/ManagedCPP/netexamples
+    echo cmake --build . --config Release --target dotnet/examples/ManagedCPP/netexamples
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
     echo cmake --build . --config Release --target PACKAGE

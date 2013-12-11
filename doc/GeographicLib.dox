@@ -4770,7 +4770,7 @@ of the git repository for %GeographicLib.
        select the library to use;
      - find_package version checking allows nmake and Visual Studio
        generators to interoperate on Windows;
-     - find_package (GeographicLib ...) requires that GeographicLib be
+     - find_package (%GeographicLib ...) requires that %GeographicLib be
        capitalized correctly;
      - on Unix/Linux, don't include the version number in directory for
        the cmake configuration files;
@@ -4782,11 +4782,14 @@ of the git repository for %GeographicLib.
        netexamples);
      - matlab-all target renamed to matlabinterface;
      - the configuration parameters PACKAGE_PATH and INSTALL_PATH are
-       now deprecated (use CMAKE_INSTALL_PREFIX instead).
+       now deprecated (use CMAKE_INSTALL_PREFIX instead);
+     - on Linux, the installed package is relocatable;
+     - on MacOSX, the installed utilities can find the shared library.
    - Use a more precise value for GeographicLib::OSGB::CentralScale().
    - Add Arc routines to python interface.
    - The Geod utility has been removed; the same functionality lives on
-     with <a href="GeodSolve.1.html">GeodSolve</a>.
+     with <a href="GeodSolve.1.html">GeodSolve</a> (introduced in
+     version 1.30).
 
  - <a href="http://geographiclib.sf.net/1.33">Version 1.33</a>
    (released 2013-10-08)
