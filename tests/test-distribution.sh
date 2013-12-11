@@ -40,7 +40,7 @@ set -e
 #   python/setup.py
 #   tests/test-distribution.sh
 
-VERSION=1.34
+VERSION=1.35
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
@@ -363,7 +363,7 @@ git push --tags
 # tag master branch
 cd $DEVELSOURCE
 git checkout master
-git merge --no-ff $BRANCH
+git merge --no-ff $BRANCH -m "Merge from devel for version $VERSION"
 git tag -m "Version $VERSION ($DATE)" v$VERSION
 git push --all
 git push --tags
