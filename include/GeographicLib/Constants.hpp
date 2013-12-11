@@ -16,7 +16,9 @@
  * A compile-time assert.  Use C++11 static_assert, if available.
  **********************************************************************/
 #if !defined(STATIC_ASSERT)
-#  if defined(__GXX_EXPERIMENTAL_CXX0X__)
+#  if __cplusplus >= 201103
+#    define STATIC_ASSERT static_assert
+#  elif defined(__GXX_EXPERIMENTAL_CXX0X__)
 #    define STATIC_ASSERT static_assert
 #  elif defined(_MSC_VER) && _MSC_VER >= 1600
 #    define STATIC_ASSERT static_assert
@@ -26,14 +28,17 @@
 #  endif
 #endif
 
-#if defined(_WIN32) && defined(GEOGRAPHIC_SHARED_LIB) && GEOGRAPHIC_SHARED_LIB
-#  if defined(Geographic_EXPORTS)
-#    define GEOGRAPHIC_EXPORT __declspec(dllexport)
+#if defined(_MSC_VER) && defined(GEOGRAPHICLIB_SHARED_LIB) && \
+  GEOGRAPHICLIB_SHARED_LIB
+#  if GEOGRAPHICLIB_SHARED_LIB > 1
+#    error GEOGRAPHICLIB_SHARED_LIB must be 0 or 1
+#  elif defined(GeographicLib_EXPORTS)
+#    define GEOGRAPHICLIB_EXPORT __declspec(dllexport)
 #  else
-#    define GEOGRAPHIC_EXPORT __declspec(dllimport)
+#    define GEOGRAPHICLIB_EXPORT __declspec(dllimport)
 #  endif
 #else
-#  define GEOGRAPHIC_EXPORT
+#  define GEOGRAPHICLIB_EXPORT
 #endif
 
 #include <stdexcept>
@@ -58,7 +63,7 @@ namespace GeographicLib {
    * Example of use:
    * \include example-Constants.cpp
    **********************************************************************/
-  class GEOGRAPHIC_EXPORT Constants {
+  class GEOGRAPHICLIB_EXPORT Constants {
   private:
     typedef Math::real real;
     Constants();                // Disable constructor

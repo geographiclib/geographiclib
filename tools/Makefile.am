@@ -19,8 +19,7 @@ bin_PROGRAMS = CartConvert \
 	Gravity \
 	MagneticField \
 	Planimeter \
-	TransverseMercatorProj \
-	Geod
+	TransverseMercatorProj
 
 CartConvert_SOURCES = CartConvert.cpp \
 	../man/CartConvert.usage \
@@ -131,17 +130,6 @@ TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
 	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/TransverseMercator.hpp \
 	../include/GeographicLib/TransverseMercatorExact.hpp \
-	../include/GeographicLib/Utility.hpp
-Geod_SOURCES = GeodSolve.cpp \
-	../man/GeodSolve.usage \
-	../include/GeographicLib/Config.h \
-	../include/GeographicLib/Constants.hpp \
-	../include/GeographicLib/DMS.hpp \
-	../include/GeographicLib/Geodesic.hpp \
-	../include/GeographicLib/GeodesicExact.hpp \
-	../include/GeographicLib/GeodesicLine.hpp \
-	../include/GeographicLib/GeodesicLineExact.hpp \
-	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/Utility.hpp
 
 sbin_SCRIPTS = geographiclib-get-geoids \

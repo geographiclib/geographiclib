@@ -76,7 +76,7 @@ namespace GeographicLib {
    * TransverseMercator and TransverseMercatorExact.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT TransverseMercatorExact {
+  class GEOGRAPHICLIB_EXPORT TransverseMercatorExact {
   private:
     typedef Math::real real;
     static const real tol_;

@@ -112,12 +112,6 @@ namespace GeographicLib {
    *   geod-addenda.html</a>.
    * .
    * For more information on geodesics see \ref geodesic.
-   *
-   * Example of use:
-   * \include example-Geodesic30.cpp
-   *
-   * <a href="Geod.1.html">Geod</a> is a command-line utility providing access
-   * to the functionality of Geodesic30 and GeodesicLine30.
    **********************************************************************/
 
   template<typename real>

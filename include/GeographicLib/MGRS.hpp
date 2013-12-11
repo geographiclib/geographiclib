@@ -59,7 +59,7 @@ namespace GeographicLib {
    * Example of use:
    * \include example-MGRS.cpp
    **********************************************************************/
-  class GEOGRAPHIC_EXPORT MGRS {
+  class GEOGRAPHICLIB_EXPORT MGRS {
   private:
     typedef Math::real real;
     // The smallest length s.t., 1.0e7 - eps_ < 1.0e7 (approx 1.9 nm)

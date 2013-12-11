@@ -626,7 +626,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
       s12x:r[1], m12x:r[2], M12:r[4], M21:r[5]),
     /* Add the check for sig12 since zero length geodesics might yield m12 <
     0.  Test case was
-       echo 20.001 0 20.001 0 | Geod -i
+       echo 20.001 0 20.001 0 | GeodTest -i
     In fact, we will have sig12 > pi/2 for meridional geodesic which is
     not a shortest path. */
     if sig12 < 1b0 or m12x >= 0b0 then (

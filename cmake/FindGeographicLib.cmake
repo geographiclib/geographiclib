@@ -12,14 +12,15 @@ find_library (GeographicLib_LIBRARIES Geographic
 if (GeographicLib_LIBRARIES)
   get_filename_component (GeographicLib_LIBRARY_DIRS
     "${GeographicLib_LIBRARIES}" PATH)
-  get_filename_component (GEOGRAPHICLIB_ROOT_DIR
-    "${GeographicLib_LIBRARY_DIRS}" PATH)
-  set (GeographicLib_INCLUDE_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/include")
-  unset (GEOGRAPHICLIB_ROOT_DIR)
+  get_filename_component (_ROOT_DIR "${GeographicLib_LIBRARY_DIRS}" PATH)
+  set (GeographicLib_INCLUDE_DIRS "${_ROOT_DIR}/include")
+  set (GeographicLib_BINARY_DIRS "${_ROOT_DIR}/bin")
+  unset (_ROOT_DIR)
   if (NOT EXISTS "${GeographicLib_INCLUDE_DIRS}/GeographicLib/Config.h")
     unset (GeographicLib_INCLUDE_DIRS)
     unset (GeographicLib_LIBRARIES)
     unset (GeographicLib_LIBRARY_DIRS)
+    unset (GeographicLib_BINARY_DIRS)
   endif ()
 endif ()
 

@@ -1,18 +1,18 @@
 <html>
   <head>
-    <title>GeographicLib-@GeographicLib_VERSION@ documentation</title>
+    <title>GeographicLib-@PROJECT_VERSION@ documentation</title>
     <meta HTTP-EQUIV="Refresh"
-	  CONTENT="0; URL=http://geographiclib.sourceforge.net/@GeographicLib_VERSION@/index.html">
+	  CONTENT="0; URL=http://geographiclib.sourceforge.net/@PROJECT_VERSION@/index.html">
   </head>
   <body topmargin=10 leftmargin=10>
     <h3>
       <blockquote>
 	<em>
 	  Online documentation for GeographicLib version
-	  @GeographicLib_VERSION@ is available at
+	  @PROJECT_VERSION@ is available at
 	  <center>
-	    <a href="http://geographiclib.sourceforge.net/@GeographicLib_VERSION@/index.html">
-	      http://geographiclib.sourceforge.net/@GeographicLib_VERSION@/index.html</a>.
+	    <a href="http://geographiclib.sourceforge.net/@PROJECT_VERSION@/index.html">
+	      http://geographiclib.sourceforge.net/@PROJECT_VERSION@/index.html</a>.
 	  </center>
 	  <br>
 	  You will be redirected there.  Click on the link to go there

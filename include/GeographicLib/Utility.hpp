@@ -30,7 +30,7 @@ namespace GeographicLib {
    * Example of use:
    * \include example-Utility.cpp
    **********************************************************************/
-  class GEOGRAPHIC_EXPORT Utility {
+  class GEOGRAPHICLIB_EXPORT Utility {
   private:
     static bool gregorian(int y, int m, int d) {
       // The original cut over to the Gregorian calendar in Pope Gregory XIII's

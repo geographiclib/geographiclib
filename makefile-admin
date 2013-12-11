@@ -5,8 +5,8 @@
 
 USER=karney
 STAGE=$(HOME)/web
-WEBSTAGE=$(STAGE)/geographic-web
-DATASTAGE=$(STAGE)/geographic-files
+WEBSTAGE=$(STAGE)/geographiclib-web
+DATASTAGE=$(STAGE)/geographiclib-files
 
 geodesic-papers/biblio.html: geodesic-biblio.txt biblio.sh
 	sh biblio.sh $< > $@

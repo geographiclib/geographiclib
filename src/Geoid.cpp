@@ -12,7 +12,7 @@
 #include <GeographicLib/Utility.hpp>
 
 #if !defined(GEOGRAPHICLIB_DATA)
-#  if defined(_MSC_VER)
+#  if defined(_WIN32)
 #    define GEOGRAPHICLIB_DATA \
   "C:/Documents and Settings/All Users/Application Data/GeographicLib"
 #  else

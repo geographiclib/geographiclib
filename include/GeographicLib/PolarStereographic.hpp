@@ -29,7 +29,7 @@ namespace GeographicLib {
    * Example of use:
    * \include example-PolarStereographic.cpp
    **********************************************************************/
-  class GEOGRAPHIC_EXPORT PolarStereographic {
+  class GEOGRAPHICLIB_EXPORT PolarStereographic {
   private:
     typedef Math::real real;
     // _Cx used to be _C but g++ 3.4 has a macro of that name

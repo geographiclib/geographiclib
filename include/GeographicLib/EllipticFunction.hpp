@@ -59,7 +59,7 @@ namespace GeographicLib {
    * Example of use:
    * \include example-EllipticFunction.cpp
    **********************************************************************/
-  class GEOGRAPHIC_EXPORT EllipticFunction {
+  class GEOGRAPHICLIB_EXPORT EllipticFunction {
   private:
     typedef Math::real real;
     static const real tol_;

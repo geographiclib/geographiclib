@@ -36,7 +36,7 @@ namespace GeographicLib {
    * \include example-Geohash.cpp
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT Geohash {
+  class GEOGRAPHICLIB_EXPORT Geohash {
   private:
     typedef Math::real real;
     static const int maxlen_ = 18;

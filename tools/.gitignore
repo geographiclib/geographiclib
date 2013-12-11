@@ -12,7 +12,7 @@ geographiclib-get-magnetic
 CartConvert
 ConicProj
 GeoConvert
-Geod
+GeodSolve
 GeodesicProj
 GeoidEval
 Gravity

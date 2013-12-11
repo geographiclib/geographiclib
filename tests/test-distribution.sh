@@ -36,16 +36,16 @@ set -e
 #   CMakeLists.txt
 #   NEWS
 #   configure.ac
-#   doc/Geographic.dox
+#   doc/GeographicLib.dox
 #   python/setup.py
 #   tests/test-distribution.sh
 
-VERSION=1.33
+VERSION=1.34
 BRANCH=devel
-TEMP=/scratch/geographic-dist
+TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
 GITSOURCE=file://$DEVELSOURCE
-WEBDIST=/home/ckarney/web/geographic-web
+WEBDIST=/home/ckarney/web/geographiclib-web
 WINDOWSBUILD=/u/temp
 WINDOWSBUILDWIN=u:/temp
 NUMCPUS=4
@@ -60,7 +60,7 @@ cd $TEMP/gita/geographiclib
 sh autogen.sh
 mkdir BUILD
 cd BUILD
-cmake ..
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON ..
 make dist
 cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
 make doc
@@ -77,53 +77,67 @@ tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relb # Version for autoconf
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relc # Version for cmake
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relx
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
-unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip 
+unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
 (
-    echo "#! /bin/sh -e"
+    echo "#! /bin/sh -exv"
     echo 'b=geog-`pwd | sed s%.*/%%`'
     echo 'rm -rf /tmp/$b'
     echo 'mkdir /tmp/$b'
     echo 'cd /tmp/$b'
-    echo cmake -G \"Visual Studio 10\" -D PACKAGE_PATH=u:/pkg-vc10 -D GEOGRAPHICLIB_EXAMPLES=ON -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake -G \"Visual Studio 10\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake --build . --config Debug   --target ALL_BUILD
+    echo cmake --build . --config Debug   --target exampleprograms
+    echo cmake --build . --config Debug   --target RUN_TESTS
+    echo cmake --build . --config Debug   --target INSTALL
     echo cmake --build . --config Release --target ALL_BUILD
+    echo cmake --build . --config Release --target netexamples
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
     echo cmake --build . --config Release --target PACKAGE
     echo cp GeographicLib-$VERSION-win32.exe $DEVELSOURCE/
 ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
-mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared
-(
-    echo "#! /bin/sh -e"
-    echo 'b=geog-`pwd | sed s%.*/%%`'
-    echo 'rm -rf /tmp/$b'
-    echo 'mkdir /tmp/$b'
-    echo 'cd /tmp/$b'
-    echo cmake -G \"Visual Studio 10\" -D PACKAGE_PATH=u:/pkg-vc10-shared -D GEOGRAPHICLIB_EXAMPLES=ON -D GEOGRAPHIC_SHARED_LIB=ON -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
-    echo cmake --build . --config Release --target ALL_BUILD
-    echo cmake --build . --config Release --target RUN_TESTS
-    echo cmake --build . --config Release --target INSTALL
-    echo cmake --build . --config Release --target PACKAGE
-    echo '#' cp GeographicLib-$VERSION-win32.exe $DEVELSOURCE/GeographicLib-$VERSION-win32-shared.exe
-) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared/build
-chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-shared/build
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
 (
-    echo "#! /bin/sh -e"
+    echo "#! /bin/sh -exv"
     echo 'b=geog-`pwd | sed s%.*/%%`'
     echo 'rm -rf /tmp/$b'
     echo 'mkdir /tmp/$b'
     echo 'cd /tmp/$b'
-    echo cmake -G \"Visual Studio 10 Win64\" -D PACKAGE_PATH=u:/pkg-vc10-x64 -D GEOGRAPHICLIB_EXAMPLES=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHIC=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake -G \"Visual Studio 10 Win64\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10-x64/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake --build . --config Debug   --target ALL_BUILD
+    echo cmake --build . --config Debug   --target RUN_TESTS
+    echo cmake --build . --config Debug   --target INSTALL
     echo cmake --build . --config Release --target ALL_BUILD
-    echo cmake --build . --config Release --target matlab-all
+    echo cmake --build . --config Release --target matlabinterface
+    echo cmake --build . --config Release --target exampleprograms
+    echo cmake --build . --config Release --target netexamples
     echo cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
     echo cmake --build . --config Release --target PACKAGE
     echo cp GeographicLib-$VERSION-win64.exe $DEVELSOURCE/
 ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/build
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/build
+mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12
+(
+    echo "#! /bin/sh -exv"
+    echo 'b=geog-`pwd | sed s%.*/%%`'
+    echo 'rm -rf /tmp/$b'
+    echo 'mkdir /tmp/$b'
+    echo 'cd /tmp/$b'
+    echo cmake -G \"Visual Studio 12\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc12/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+    echo cmake --build . --config Debug   --target ALL_BUILD
+    echo cmake --build . --config Debug   --target examples/exampleprograms
+    echo cmake --build . --config Debug   --target RUN_TESTS
+    echo cmake --build . --config Debug   --target INSTALL
+    echo cmake --build . --config Release --target ALL_BUILD
+    echo cmake --build . --config Release --target dotnet/examples/ManagedCPP/netexamples
+    echo cmake --build . --config Release --target RUN_TESTS
+    echo cmake --build . --config Release --target INSTALL
+    echo cmake --build . --config Release --target PACKAGE
+) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12/build
+chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12/build
 
 mkdir $TEMP/gitr
 cd $TEMP/gitr
@@ -160,20 +174,21 @@ find . -type f | sort -u > ../files.b
 cd $TEMP/relc/GeographicLib-$VERSION
 mkdir BUILD
 cd BUILD
-cmake -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
-make -j$NUMCPUS
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
+make -j$NUMCPUS all
+make -j$NUMCPUS exampleprograms
 make install
 mkdir ../BUILD-matlab
 cd ../BUILD-matlab
-cmake -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
-make -j$NUMCPUS
-make -j$(((NUMCPUS+2)/3)) matlab-all
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
+make -j$NUMCPUS all
+make -j$NUMCPUS matlabinterface
 make install
 mkdir ../BUILD-system
 cd ../BUILD-system
-cmake -D MATLAB_COMPILER=mkoctfile ..
-make -j$NUMCPUS
-make -j$(((NUMCPUS+2)/3)) matlab-all
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D MATLAB_COMPILER=mkoctfile ..
+make -j$NUMCPUS all
+make -j$NUMCPUS matlabinterface
 
 mkdir -p $TEMP/geographiclib-matlab/private
 cd $TEMP/instc/libexec/GeographicLib/matlab
@@ -259,7 +274,7 @@ cat > testprogram.cpp <<EOF
 
 int main() {
   using namespace GeographicLib;
-  double 
+  double
     // These are the constants for Pennsylvania South, EPSG:3364
     // http://www.spatialreference.org/ref/epsg/3364/
     a = Constants::WGS84_a(),   // major radius
@@ -300,7 +315,7 @@ xargs grep -l ' $' || true
 echo
 echo Files with tabs:
 find . -type f |
-egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf' |
+egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
 egrep -v '\.sh|depcomp|install-sh|/config\.|configure|missing' |
 xargs grep -l  '	' || true
 echo

@@ -52,7 +52,7 @@ namespace GeographicLib {
    * providing access to the functionality of PolygonArea.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT PolygonArea {
+  class GEOGRAPHICLIB_EXPORT PolygonArea {
   private:
     typedef Math::real real;
     Geodesic _earth;

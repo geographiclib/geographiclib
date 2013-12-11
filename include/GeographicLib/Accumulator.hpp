@@ -37,7 +37,7 @@ namespace GeographicLib {
    * \include example-Accumulator.cpp
    **********************************************************************/
   template<typename T = Math::real>
-  class GEOGRAPHIC_EXPORT Accumulator {
+  class GEOGRAPHICLIB_EXPORT Accumulator {
   private:
     // _s + _t accumulators for the sum.
     T _s, _t;

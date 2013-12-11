@@ -41,7 +41,7 @@ namespace GeographicLib {
    * Example of use:
    * \include example-OSGB.cpp
    **********************************************************************/
-  class GEOGRAPHIC_EXPORT OSGB {
+  class GEOGRAPHICLIB_EXPORT OSGB {
   private:
     typedef Math::real real;
     static const std::string letters_;
@@ -206,10 +206,13 @@ namespace GeographicLib {
     /// \endcond
 
     /**
-     * @return \e k0 central scale for the OSGB projection (0.9996012717).
+     * @return \e k0 central scale for the OSGB projection (0.9996012717...).
+     *
+     * C. J. Mugnier, Grids &amp; Datums, PE&amp;RS, Oct. 2003, states that
+     * this is defined as 10<sup>9.9998268&minus;10</sup>.
      **********************************************************************/
     static Math::real CentralScale() throw()
-    { return real(0.9996012717L); }
+    { return std::pow(real(10), real(9998268 - 10000000) / real(10000000)); }
 
     /**
      * @return latitude of the origin for the OSGB projection (49 degrees).

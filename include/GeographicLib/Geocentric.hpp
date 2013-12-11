@@ -58,7 +58,7 @@ namespace GeographicLib {
    * providing access to the functionality of Geocentric and LocalCartesian.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT Geocentric {
+  class GEOGRAPHICLIB_EXPORT Geocentric {
   private:
     typedef Math::real real;
     friend class LocalCartesian;
