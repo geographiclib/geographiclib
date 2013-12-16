@@ -72,9 +72,9 @@ namespace GeographicLib {
    * Example of use:
    * \include example-GeodesicExact.cpp
    *
-   * <a href="Geod.1.html">Geod</a> is a command-line utility providing access
-   * to the functionality of GeodesicExact and GeodesicLineExact (via the -E
-   * option).
+   * <a href="GeodSolve.1.html">GeodSolve</a> is a command-line utility
+   * providing access to the functionality of GeodesicExact and
+   * GeodesicLineExact (via the -E option).
    **********************************************************************/
 
   class GEOGRAPHICLIB_EXPORT GeodesicExact {
