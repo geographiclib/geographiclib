@@ -687,6 +687,14 @@
    Jour. Crelle '''42''', 279 (1851).[[BR]]
    http://books.google.com/books?id=gKBGAAAAcAAJ&pg=PA279 [[BR]]
    http://dx.doi.org/10.1515/crll.1851.42.279
+ * C. Gudermann,[[BR]]
+   ''Fundamenta Trigonometriae sphaeroïdicae exacta; imprimis de lineis
+   brevissimis, vulgo dictis geodaeticis, in superficie sphaeroïdica
+   [Foundations of exact spheroidal trigonometry, in particular,
+   concerning geodesic lines on a spheroidal surface]'',
+   Jour. Crelle '''43''', 294--339 (1852).[[BR]]
+   http://books.google.com/books?id=ygVCAAAAcAAJ&pg=PA294 [[BR]]
+   http://dx.doi.org/10.1515/crll.1852.43.294
  * W. Roberts,[[BR]]
    ''Sur une ligne géodésique de l'ellipsoïde
    [The geodesic line of the ellipsoid]'',
@@ -1120,7 +1128,7 @@
  * E. J. Krakiwsky and D. B. Thomson,[[BR]]
    ''Geodetic position computations'',
    Dept. of Geodesy and Geomatics Engineering, Lecture Notes 39,
-   Univ. of New Brunswick (1974), Sec. 3.[[BR]]
+   Univ. of New Brunswick (1974), Secs. 3--4.[[BR]]
    http://www2.unb.ca/gge/Pubs/LN39.pdf
  * T. Vincenty,[[BR]]
    ''Direct and Inverse Solutions of Geodesics on the Ellipsoid with
