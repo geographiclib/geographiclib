@@ -1150,6 +1150,21 @@
    Dept. of Geodetic Science and Surveying,
    Ohio State Univ. (1993), Chap. 1.[[BR]]
    http://hdl.handle.net/1811/24409
+ * K. Borre,[[BR]]
+   ''Ellipsoidal Geometry and Conformal Mapping''
+   (Mar. 2001).[[BR]]
+   http://old.gps.aau.dk/downloads/notes.pdf
+ * C. M. Rollins,[[BR]]
+   ''An integral for geodesic length'',
+   Survey Review '''42'''(315) 20--26 (2010).[[BR]]
+   http://earth-info.nga.mil/GandG/publications/An_Integral_for_Geodesic_Length_ePrint.pdf
+   [[BR]] http://dx.doi.org/10.1179/003962609X451663
+ * L. E. Sjöberg,[[BR]]
+   ''Solutions to the ellipsoidal Clairaut constant and the inverse geodetic
+   problem by numerical integration'',
+   J. Geodetic Science '''2'''(3), 162--171 (2012).[[BR]]
+   http://dx.doi.org/10.2478/v10156-011-0037-4 [[BR]]
+   Errata: http://dx.doi.org/10.2478/jogs-2013-0014
  * C. F. F. Karney,[[BR]]
    ''Geodesics on an ellipsoid of revolution''
    (Feb. 2011).[[BR]]
@@ -1160,3 +1175,12 @@
    J. Geodesy '''87'''(1), 43--55 (2013).[[BR]]
    http://dx.doi.org/10.1007/s00190-012-0578-z [[BR]]
    Addenda: http://geographiclib.sf.net/geod-addenda.html
+ * G. Panou, D. Delikaraoglou, and R. Korakitis,[[BR]]
+   ''Solving the geodesics on the ellipsoid as a boundary value problem'',
+   J. Geodetic Science '''3'''(1), 40--47 (2013).[[BR]]
+   http://dx.doi.org/10.2478/jogs-2013-0007
+ * G. Panou,[[BR]]
+   ''The geodesic boundary value problem and its solution on a triaxial
+   ellipsoid'',
+   J. Geodetic Science '''3'''(3), 240--249 (2013).[[BR]]
+   http://dx.doi.org/10.2478/jogs-2013-0028
