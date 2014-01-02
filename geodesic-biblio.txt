@@ -675,11 +675,16 @@
    Jour. Liouville '''13''', 83--86 (1848).[[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1848_1_13_A12_0
  * A. S. Hart,[[BR]]
-   Geometrical demonstration of some properties of geodesics lines
+   ''On the form of geodesic lines through the umbilic of an ellipsoid'',
+   Proc. Roy. Irish Acad. '''4''', 274 (1849).[[BR]]
+   http://books.google.com/books?id=V16tNNTxUbQC&pg=PA274 [[BR]]
+   http://www.jstor.org/stable/20520288
+ * A. S. Hart,[[BR]]
+   ''Geometrical demonstration of some properties of geodesics lines'',
    Camb. Dublin Math. Jour. '''4''', 80--84 (1849).[[BR]]
    http://books.google.com/books?id=ClAeAQAAMAAJ&pg=PA80
  * A. S. Hart,[[BR]]
-   On geodesics lines traced on a surface of the second degree
+   ''On geodesics lines traced on a surface of the second degree'',
    Camb. Dublin Math. Jour. '''4''', 192--194 (1849).[[BR]]
    http://books.google.com/books?id=ClAeAQAAMAAJ&pg=PA192
  * C. Graves,[[BR]]
@@ -958,7 +963,7 @@
    ''Die geodätische Linie des Sphäroids und Untersuchung darüber, wann
    dieselbe aufhört, kürzeste Linie zu sein [The geodesic line on a
    spheroid and an investigation on the properties when it ceases being
-   the shortest path],''
+   the shortest path]'',
    Inaugural-Dissertation, Univ. Tübingen (Schade, Berlin, 1883).[[BR]]
    http://geographiclib.sf.net/geodesic-papers/krueger83.pdf
  * J. H. L. Krüger,[[BR]]
@@ -1058,7 +1063,7 @@
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1897_5_3_A12_0
  * J. S. Hadamard,[[BR]]
    ''Les surfaces à courbures opposées et leurs lignes géodésiques
-   [Surfaces with negative curvature and their geodesics],''
+   [Surfaces with negative curvature and their geodesics]'',
    J. Math. Pures Appl. (Ser. 5) '''4''', 27--74 (1898).[[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1898_5_4_A3_0
  * R. Fricke,[[BR]]
@@ -1099,28 +1104,28 @@
  * P. D. Thomas,[[BR]]
    ''Mathematical Models for Navigation Systems'',
    TR-182 (U.S. Naval Oceanographic Office, 1965).[[BR]]
-   http://handle.dtic.mil/100.2/AD0627893
+   http://www.dtic.mil/docs/citations/AD0627893
  * P. D. Thomas,[[BR]]
    ''Spheroidal Geodesics, Reference Systems, and Local Geometry'',
    SP-138 (U.S. Naval Oceanographic Office, 1970).[[BR]]
-   http://handle.dtic.mil/100.2/AD0703541
+   http://www.dtic.mil/docs/citations/AD0703541
  * G. V. Bagratuni,[[BR]]
    ''Kurs Sferoidicheskoi Geodezii''
    (Moscow, 1962).[[BR]]
    English translation: ''Course in Spheroidal Geodesy'',
    FTD-MT-64-390 (US Air Force, Feb. 1967).[[BR]]
-   http://handle.dtic.mil/100.2/AD650520 [[BR]]
+   http://www.dtic.mil/docs/citations/AD0650520 [[BR]]
    clean copy:
    http://geographiclib.sf.net/geodesic-papers/bagratuni67.pdf
  * E. M. Sodano and T. A. Robinson,[[BR]]
    ''Direct and Inverse Solutions of Geodesics'',
    Tech. Rep. 7 Rev. (Army Map Service, 1963).[[BR]]
-   http://handle.dtic.mil/100.2/AD657591
+   http://www.dtic.mil/docs/citations/AD0657591
  * E. A. Lewis,[[BR]]
    ''Parametric Formulas for Geodesic Curves and Distances on a
    Slightly Oblate Earth'',
    AFCRL-63-485 (US Air Force, Apr. 1963).[[BR]]
-   http://handle.dtic.mil/100.2/AD0412501
+   http://www.dtic.mil/docs/citations/AD0412501
  * W. Köhnlein,[[BR]]
    ''Geodesics on an Equipotential Surface of Revolution'',
    Special Report 144, Smithsonian Astrophysical Observatory (1964).[[BR]]
@@ -1156,7 +1161,7 @@
    http://old.gps.aau.dk/downloads/notes.pdf
  * C. M. Rollins,[[BR]]
    ''An integral for geodesic length'',
-   Survey Review '''42'''(315) 20--26 (2010).[[BR]]
+   Survey Review '''42'''(315), 20--26 (2010).[[BR]]
    http://earth-info.nga.mil/GandG/publications/An_Integral_for_Geodesic_Length_ePrint.pdf
    [[BR]] http://dx.doi.org/10.1179/003962609X451663
  * L. E. Sjöberg,[[BR]]
