@@ -222,11 +222,12 @@ done <<EOF
 1 100mm 0.01"
 2 10mm 0.001"
 3 1mm 0.0001"
-4 100um 0.00001"
-5 10um 0.000001"
-6 1um 0.0000001"
+4 100&mu;m 0.00001"
+5 10&mu;m 0.000001"
+6 1&mu;m 0.0000001"
 7 100nm 0.00000001"
 8 10nm 0.000000001"
+9 1nm 0.0000000001"
 EOF
 cat <<EOF
               </select>
@@ -256,16 +257,17 @@ cat <<EOF
       <p>
         Geodesic (input in black, output in ${F}blue${G}):<br>
         <font size="4"><pre>
-    ellipsoid (a f) = `encodevalue "$RADIUS"` `encodevalue "$FLATTENING"`$TAG
-    status          = `encodevalue "$STATUS"`
-    lat1 lon1 fazi1 = $POSITION1
-    lat2 lon2 $AZIX = $POSITION2
-    s12 (m)         = $DIST12
+    ellipsoid (a f)     = `encodevalue "$RADIUS"` `encodevalue "$FLATTENING"`$TAG
+    status              = `encodevalue "$STATUS"`
 
-    a12 (deg)       = $F$a12$G
-    m12 (m)         = $F$m12$G
-    M12 M21         = $F$M1221$G
-    S12 (m^2)       = $F$S12$G</pre></font>
+    lat1 lon1 fazi1 (&deg;) = $POSITION1
+    lat2 lon2 $AZIX (&deg;) = $POSITION2
+    s12 (m)             = $DIST12
+
+    a12 (&deg;)             = $F$a12$G
+    m12 (m)             = $F$m12$G
+    M12 M21             = $F$M1221$G
+    S12 (m^2)           = $F$S12$G</pre></font>
       </p>
     </form>
     <hr>
@@ -316,7 +318,8 @@ cat <<EOF
       (corresponding to 0.01&nbsp;&le; <em>b</em>/<em>a</em>&nbsp;&le;
       100).  Note that <em>f</em> is negative for a prolate ellipsoid
       (<em>b</em>&nbsp;&gt; <em>a</em>) and that it can be entered as a
-      fraction, e.g., 1/297.
+      fraction, e.g., 1/297.  (If the value entered for <em>f</em> is
+      greater than 1, its reciprocal is used.)
     </p>
     <p>
       GeodSolve is accurate to about 15&nbsp;nanometers (for the WGS84

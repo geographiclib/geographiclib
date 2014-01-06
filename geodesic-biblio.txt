@@ -145,7 +145,7 @@
    pp. 127--180 (early use of ''geodesic line'' in French).[[BR]]
    http://books.google.com/books?id=qZQAAAAAMAAJ&pg=RA1-PA127 [[BR]]
      Nous désignerons cette ligne sous le nom de ''ligne géodésique'' [We
-     call this line the ''geodesic line''].
+     will call this line the ''geodesic line''].
    Translation with commentary: ''Celestial Mechanics'' by N. Bowditch, Vol. 2
    (Boston, 1832), pp. 358--491.[[BR]]
    http://geographiclib.sf.net/geodesic-papers/laplace99a.pdf
