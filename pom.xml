@@ -26,6 +26,31 @@
     </pluginRepository>
   </pluginRepositories>
 
+  <profiles>
+    <profile>
+      <id>os-windows</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+        </os>
+      </activation>
+      <properties>
+        <build.netgeographiclib>ON</build.netgeographiclib>
+      </properties>
+    </profile>
+    <profile>
+      <id>os-linux</id>
+      <activation>
+        <os>
+          <family>Linux</family>
+        </os>
+      </activation>
+      <properties>
+        <build.netgeographiclib>OFF</build.netgeographiclib>
+      </properties>
+    </profile>
+  </profiles>
+
   <build>
     <pluginManagement>
       <plugins>
@@ -64,7 +89,7 @@
 				<GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
 				<MATLAB_COMPILER>OFF</MATLAB_COMPILER>
 				<GEOGRAPHICLIB_DOCUMENTATION>OFF</GEOGRAPHICLIB_DOCUMENTATION>
-				<BUILD_NETGEOGRAPHICLIB>ON</BUILD_NETGEOGRAPHICLIB>
+				<BUILD_NETGEOGRAPHICLIB>${build.netgeographiclib}</BUILD_NETGEOGRAPHICLIB>
 			  </options>
 			</configuration>
 	      </execution>
