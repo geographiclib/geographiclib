@@ -680,7 +680,7 @@
    http://books.google.com/books?id=V16tNNTxUbQC&pg=PA274 [[BR]]
    http://www.jstor.org/stable/20520288
  * A. S. Hart,[[BR]]
-   ''Geometrical demonstration of some properties of geodesics lines'',
+   ''Geometrical demonstration of some properties of geodesic lines'',
    Camb. Dublin Math. Jour. '''4''', 80--84 (1849).[[BR]]
    http://books.google.com/books?id=ClAeAQAAMAAJ&pg=PA80
  * A. S. Hart,[[BR]]
