@@ -4,27 +4,17 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>com.sri.vt.majic</groupId>
+    <artifactId>majic-parent</artifactId>
+    <version>0.1.8-SNAPSHOT</version>
+  </parent>
+
   <groupId>com.sri.vt</groupId>
   <artifactId>geographiclib</artifactId>
   <version>1.34-SNAPSHOT</version>
   <packaging>majic-cmake</packaging>
   <name>GeographicLib</name>
-
-  <repositories>
-    <repository>
-      <id>artifactory-vt</id>
-      <name>SRI VT Repository</name>
-      <url>https://artifactory-vt.sarnoff.internal/artifactory/repo</url>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>artifactory-vt</id>
-      <name>SRI VT Repository</name>
-      <url>https://artifactory-vt.sarnoff.internal/artifactory/repo</url>
-    </pluginRepository>
-  </pluginRepositories>
 
   <profiles>
     <profile>
@@ -50,32 +40,16 @@
       </properties>
     </profile>
   </profiles>
+    
+  <repositories>
+    <repository>
+      <id>artifactory-vt</id>
+      <name>SRI VT Repository</name>
+      <url>https://artifactory-vt.sarnoff.internal/artifactory/repo</url>
+    </repository>
+  </repositories>
 
   <build>
-    <pluginManagement>
-      <plugins>
-	    <plugin>
-          <groupId>com.sri.vt.majic</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <version>0.1.7-SNAPSHOT</version>
-          <extensions>true</extensions>
-		</plugin>
-		
-		<!-- needed for the majic build-helper -->
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <version>1.2.1</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>2.5</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-
     <plugins>
 	  <plugin>
 	    <groupId>com.sri.vt.majic</groupId>
