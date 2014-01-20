@@ -341,7 +341,6 @@ cat <<EOF
       is one of the utilities provided
       with <a href="http://geographiclib.sourceforge.net/">
         GeographicLib</a>.
-      This web interface illustrates a subset of its capabilities.
       Geodesics can also be computed using JavaScript; see the
       <a href="../scripts/geod-calc.html">JavaScript geodesic
 	calculator</a> and

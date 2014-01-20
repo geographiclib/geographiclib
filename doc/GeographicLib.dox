@@ -1120,9 +1120,9 @@ feature of %GeographicLib, but want your code still to work with older
 versions.  In that case, you can test the values of the macros
 GEOGRAPHICLIB_VERSION_MAJOR, GEOGRAPHICLIB_VERSION_MINOR, and
 GEOGRAPHICLIB_VERSION_PATCH; these expand to numbers (and the last one
-is usually 0); these macros appeared starting in version 1.34.  There's
+is usually 0); these macros appeared starting in version 1.31.  There's
 also a macro GEOGRAPHICLIB_VERSION_STRING which expands to, e.g.,
-"1.34"; this macro has been defined since version 1.9.
+"1.35"; this macro has been defined since version 1.9.
 
 <center>
 Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
@@ -4763,6 +4763,8 @@ of the git repository for %GeographicLib.
      for <a href="GeodSolve.1.html">GeodSolve</a>).
    - Matlab wrapper routines geodesic{direct,inverse,line} switch to
      "exact" routes if |f| > 0.02.
+   - Fix blunder in UTMUPS::EncodeEPSG (found by Ben Adler).
+   - Set title in HTML versions of man pages for \ref utilities.
 
  - <a href="http://geographiclib.sf.net/1.34">Version 1.34</a>
    (released 2013-12-11)

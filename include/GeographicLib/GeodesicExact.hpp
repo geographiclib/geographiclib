@@ -25,7 +25,7 @@ namespace GeographicLib {
   class GeodesicLineExact;
 
   /**
-   * \brief Exact %Geodesic calculations
+   * \brief Exact geodesic calculations
    *
    * The equations for geodesics on an ellipsoid can be expressed in terms of
    * incomplete elliptic integrals.  The Geodesic class expands these integrals
@@ -67,7 +67,7 @@ namespace GeographicLib {
    * about 8 decimal digits for \e b/\e a &isin; [1/4, 4].
    *
    * See \ref geodellip for the formulation.  See the documentation on the
-   * Geodesic class for additional information on the geodesics problems.
+   * Geodesic class for additional information on the geodesic problems.
    *
    * Example of use:
    * \include example-GeodesicExact.cpp
