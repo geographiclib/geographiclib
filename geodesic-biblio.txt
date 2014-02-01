@@ -769,12 +769,6 @@
    ''A Treatise on the Analytic Geometry of Three Dimensions''
    (2nd Edition, Dublin, 1865), Chap. 12, Sec. 4.[[BR]]
    http://books.google.com/books?id=Y54LAAAAYAAJ&pg=PA305
- * E. B. Christoffel,[[BR]]
-   ''Allgemeine Theorie der geodätischen Dreiecke
-   [General theory of geodesic triangles]'',
-   Math. Abhand. König. Akad. der Wiss. zu Berlin '''8''',
-   119--176 (1868).[[BR]]
-   http://books.google.com/books?id=EEtFAAAAcAAJ&pg=PA119
  * E. Beltrami,[[BR]]
    ''Risoluzione del Problema: Riportare i punti di una superficie sopra
    un piano in modo che le linee geodetiche vengano rappresentate da
@@ -790,6 +784,12 @@
    in ''Opere matematiche di Eugenio Beltrami'' (Vol. 1, Hoepli, Milan, 1902),
    pp. 366--373.[[BR]]
    http://books.google.com/books?id=c48vHvLN--kC&pg=PA366 (PDF beltrami-V1.pdf)
+ * E. B. Christoffel,[[BR]]
+   ''Allgemeine Theorie der geodätischen Dreiecke
+   [General theory of geodesic triangles]'',
+   Math. Abhand. König. Akad. der Wiss. zu Berlin '''8''',
+   119--176 (1868).[[BR]]
+   http://books.google.com/books?id=EEtFAAAAcAAJ&pg=PA119
  * U. Dini,[[BR]]
    ''Sopra un problema che si presenta nella teoria generale delle
    rappresentazioni geografiche di una superfìcie su di un altra [The
@@ -864,6 +864,46 @@
    Comptes Rendus '''80''', 36--40 (1875).[[BR]]
    http://books.google.com/books?id=vE9EAQAAIAAJ&pg=PA36
    (PDF comprendus-V80.pdf)
+ * F. R. Helmert,[[BR]]
+   ''Einfache Ableitung Gaussischen Formeln für die Auflösung einer
+   Hauptaufgabe der sphärischen Geodäsie [A simple derivation of the
+   Gaussian formulas for the solving a principal problem in spherical
+   geodesy]'',
+   Z. f. Vermessungswesen '''4''', 153--156 (1875).[[BR]]
+   http://books.google.com/books?id=wpJIAAAAMAAJ&pg=153 (PDF zvermess-V4.pdf)
+ * F. R. Helmert,[[BR]]
+   ''Einfache Ableitung eines bekannten Satzes für die Krümmung des
+   Rotationsellipsoids [A simple derivation of the known formula for the
+   curvature of an ellipsoid of revolution]'',
+   Z. f. Vermessungswesen '''6'''(1), 26--28 (1877).[[BR]]
+   http://books.google.com/books?id=WKxIAAAAMAAJ&pg=PA26 (PDF zvermess-V6.pdf)
+ * F. R. Helmert,[[BR]]
+   ''Die geodätische Uebertragung geographischer Coordinaten
+   [The geodesic applied to geographic coordinates]'',
+   Astron. Nachr. '''94'''(2252), 313--320 (1879).[[BR]]
+   http://adsabs.harvard.edu/abs/1879AN.....94..313H [[BR]]
+   http://dx.doi.org/10.1002/asna.18790942003
+ * F. R. Helmert,[[BR]]
+   ''Nochmals der Fundamentalsatz für die geodätische Linie auf
+   Umdrehungsflächen [Revisiting the fundamental theorem for the geodesic
+   line on surfaces of revolution]'',
+   Z. f. Vermessungswesen '''9'''(8), 338--339 (1880).[[BR]]
+   http://books.google.com/books?id=r5RIAAAAMAAJ&pg=PA338 (PDF zvermess-V9.pdf)
+ * F. R. Helmert,[[BR]]
+   ''Die Mathematischen und Physikalischen Theorieen der Höheren
+   Geodäsie [Mathematical and Physical Theories of Higher Geodesy]'',
+   Vol. 1 (Teubner, Leipzig, 1880), Chaps. 5--7.[[BR]]
+   http://books.google.com/books?id=qt2CAAAAIAAJ&pg=PA212 (PDF helmert80.pdf)
+   [[BR]]English translation:
+   by Aeronautical Chart and Information Center (St. Louis, 1964).[[BR]]
+   http://geographiclib.sf.net/geodesic-papers/helmert80-en.html
+ * F. R. Helmert,[[BR]]
+   ''Entwicklung der ersten Glieder für die Reduction eines sphäroidischen
+   Dreiecks auf ein sphärisches mit denselben Seiten [Development of the
+   first terms for the reduction of a spheroidal triangle to a spherical
+   one with the same sides],''
+   Z. f. Vermessungswesen '''18'''(9), 257--268 (1889).[[BR]]
+   http://books.google.com/books?id=L5xIAAAAMAAJ&pg=257 (PDF zvermess-V18.pdf)
  * F. J. van den Berg,[[BR]]
    ''Sur les écarts de la ligne géodésique et des sections planes normales
    entre deux points rapprochés d'une surface courbe
@@ -902,6 +942,14 @@
    http://dx.doi.org/10.1002/asna.18790951502 [[BR]]
    http://dx.doi.org/10.1002/asna.18790951602 [[BR]]
    http://dx.doi.org/10.1002/asna.18790951802
+ * M. Sadebeck,[[BR]]
+   ''Hilfstafel für die Differenz zwischen dem sphäroidischen und dem
+   sphärischen Längenunterschiede zweier Punkte auf der Erdoberfläche
+   [Table of differences between the spheroidal and spherical longitude
+   differences of two points on the Earth]'',
+   Astron. Nachr. '''95'''(2270), 207--220 (1879).[[BR]]
+   http://adsabs.harvard.edu/abs/1879AN.....95..207S [[BR]]
+   http://dx.doi.org/10.1002/asna.18790951402
  * A. v. Braunmühl,[[BR]]
    ''Ueber Enveloppen geodätischer Linien
    [The envelopes of geodesic lines]'',
@@ -917,37 +965,11 @@
    http://books.google.com/books?id=YQkPAAAAIAAJ&pg=PA557 (PDF mathann-V20.pdf)
    [[BR]] http://dx.doi.org/10.1007/BF01540145 [[BR]]
    figures: http://geographiclib.sf.net/geodesic-papers/braunmuehl82-fig.pdf
- * H. v. Mangoldt,[[BR]]
-   ''Ueber diejenigen Punkte auf positiv gekrümmten Flächen, welche die
-   Eigenschaft haben, dass die von ihnen ausgehenden geodätischen Linien
-   nie aufhören, kürzeste Linien zu sein [The points on positively
-   curved surfaces, which have the property that the geodesic lines
-   emanating from them never cease to be shortest lines]'',
-   Jour. Crelle '''91''', 23--53 (1881).[[BR]]
-   http://books.google.com/books?id=vQYPAAAAIAAJ&pg=PA23 (PDF crelle-V91.pdf)
-   [[BR]] http://dx.doi.org/10.1515/crll.1881.91.23
- * F. R. Helmert,[[BR]]
-   ''Die geodätische Uebertragung geographischer Coordinaten
-   [The geodesic applied to geographic coordinates]'',
-   Astron. Nachr. '''94'''(2252), 313--320 (1879).[[BR]]
-   http://adsabs.harvard.edu/abs/1879AN.....94..313H [[BR]]
-   http://dx.doi.org/10.1002/asna.18790942003
- * F. R. Helmert,[[BR]]
-   ''Die Mathematischen und Physikalischen Theorieen der Höheren
-   Geodäsie [Mathematical and Physical Theories of Higher Geodesy]'',
-   Vol. 1 (Teubner, Leipzig, 1880), Chaps. 5--7.[[BR]]
-   http://books.google.com/books?id=qt2CAAAAIAAJ&pg=PA212 (PDF helmert80.pdf)
-   [[BR]]English translation:
-   by Aeronautical Chart and Information Center (St. Louis, 1964).[[BR]]
-   http://geographiclib.sf.net/geodesic-papers/helmert80-en.html
- * M. Sadebeck,[[BR]]
-   ''Hilfstafel für die Differenz zwischen dem sphäroidischen und dem
-   sphärischen Längenunterschiede zweier Punkte auf der Erdoberfläche
-   [Table of differences between the spheroidal and spherical longitude
-   differences of two points on the Earth]'',
-   Astron. Nachr. '''95'''(2270), 207--220 (1879).[[BR]]
-   http://adsabs.harvard.edu/abs/1879AN.....95..207S [[BR]]
-   http://dx.doi.org/10.1002/asna.18790951402
+ * H. Bruns,[[BR]]
+   ''Bemerkung über die geodätische Linie [A remark about the geodesic
+   line]'',
+   Z. f. Vermessungswesen '''10'''(7), 298--301 (1881).[[BR]]
+   http://books.google.com/books?id=spZIAAAAMAAJ&pg=298 (PDF zvermess-V10.pdf)
  * C. T. Albrecht,[[BR]]
    ''Über die Umkehrung der Bessel'schen Methode der sphäroidischen Übertragung
    [Inverting Bessel's method for the spheroidal problem]'',
@@ -959,6 +981,37 @@
    [Formulas and tables for geographic calculations]''
    (3rd edition, Engelmann, Leipzig, 1894).[[BR]]
    http://books.google.com/books?id=muYRAAAAYAAJ (PDF albrecht94.pdf)
+ * H. v. Mangoldt,[[BR]]
+   ''Ueber diejenigen Punkte auf positiv gekrümmten Flächen, welche die
+   Eigenschaft haben, dass die von ihnen ausgehenden geodätischen Linien
+   nie aufhören, kürzeste Linien zu sein [The points on positively
+   curved surfaces, which have the property that the geodesic lines
+   emanating from them never cease to be shortest lines]'',
+   Jour. Crelle '''91''', 23--53 (1881).[[BR]]
+   http://books.google.com/books?id=vQYPAAAAIAAJ&pg=PA23 (PDF crelle-V91.pdf)
+   [[BR]] http://dx.doi.org/10.1515/crll.1881.91.23
+ * W. Jordan,[[BR]]
+   ''Elementare Begründung des Fundamentalsatzes über die geodätische Linie
+   auf einer Umdrehungsfläche [Elementary derivation of the fundamental
+   theorem for the geodesic line on a surface of revolution]'',
+   Z. f. Vermessungswesen '''9'''(7), 297--298 (1880).[[BR]]
+   http://books.google.com/books?id=r5RIAAAAMAAJ&pg=PA297 (PDF zvermess-V9.pdf)
+ * W. Jordan,[[BR]]
+   ''Neue Auflösung der geodätischen Hauptaufgabe und ihrer Umkehrung [A
+   new solution for the principal geodesic problem and its inverse]'',
+   Z. f. Vermessungswesen '''12'''(3), 65--82 (1883).[[BR]]
+   http://books.google.com/books?id=QrBIAAAAMAAJ&pg=PA65 (PDF zvermess-V12.pdf)
+ * W. Jordan,[[BR]]
+   ''Elementare Begründung der Beziehungen zwischen der Linie und den
+   Normalschnitten [Elementary derivation of the relationship between the
+   line and the normal sections]'',
+   Z. f. Vermessungswesen '''13'''(10), 238--241 (1884).[[BR]]
+   http://books.google.com/books?id=7YNNAAAAYAAJ&pg=238 (PDF zvermess-V13.pdf)
+ * W. Jordan,[[BR]]
+   ''Handbuch der Vermessungskunde [Handbook of Surveying]'',
+   Vol. 3 (4th edition, Metzler, Stuggart, 1896), Chaps. 6 & 9.[[BR]]
+   http://books.google.com/books?id=4KgRAAAAYAAJ&pg=PA361 (PDF jordan4-V3.pdf)
+   [[BR]] http://books.google.com/books?id=4KgRAAAAYAAJ&pg=PA518
  * J. H. L. Krüger,[[BR]]
    ''Die geodätische Linie des Sphäroids und Untersuchung darüber, wann
    dieselbe aufhört, kürzeste Linie zu sein [The geodesic line on a
@@ -972,16 +1025,6 @@
    Royal Prussian Geodetic Institute, New Series 52, 172 pp. (1912),
    Secs. 24--40.[[BR]]
    http://dx.doi.org/10.2312/GFZ.b103-krueger28
- * W. Jordan,[[BR]]
-   ''Neue Auflösung der geodätischen Hauptaufgabe und ihrer Umkehrung
-   [A new solution of the geodesic problem and its inverse]'', Z. f.
-   Vermessungswesen '''12'''(3), 65--82 (1883).[[BR]]
-   http://books.google.com/books?id=QrBIAAAAMAAJ&pg=PA65 (PDF zvermess-V12.pdf)
- * W. Jordan,[[BR]]
-   ''Handbuch der Vermessungskunde [Handbook of Surveying]'',
-   Vol. 3 (4th edition, Metzler, Stuggart, 1896), Chaps. 6 & 9.[[BR]]
-   http://books.google.com/books?id=4KgRAAAAYAAJ&pg=PA361 (PDF jordan4-V3.pdf)
-   [[BR]] http://books.google.com/books?id=4KgRAAAAYAAJ&pg=PA518
  * C. H. Kummell,[[BR]]
    ''Solution of Problem 155'',
    Tha Analyst '''4'''(4), 117--120 (1877).[[BR]]
@@ -999,6 +1042,12 @@
    Astron. Nachr. '''112'''(2671), 97--108 (1885).[[BR]]
    http://adsabs.harvard.edu/abs/1885AN....112...97K [[BR]]
    http://dx.doi.org/10.1002/asna.18851120702
+ * J. Lüroth,[[BR]]
+   ''Eine Gleichung zwischen den Längen, Breiten und Azimuten dreier
+   Erdorte [An equation between the longitudes, latitudes, and azimuths
+   for three points on the earth]'',
+   Z. f. Vermessungswesen '''15'''(21), 529--535 (1886).[[BR]]
+   http://books.google.com/books?id=m5hIAAAAMAAJ&pg=529 (PDF zvermess-V15.pdf)
  * P. Frost,[[BR]]
    ''Solid Geometry''
    (3rd edition, Macmillan, 1886), Chap. 23.[[BR]]
@@ -1056,6 +1105,11 @@
    ''Lectures on the Differential Geometry of Curves and Surfaces'',
    (Cambridge Univ. Press, 1912), Chap. 5.[[BR]]
    http://archive.org/details/cu31924060289141
+ * A. Klingatsch,[[BR]]
+   ''Zur Identität der kürzesten mit der geodätischen Linie [On the
+   indentity of the shortest line with the geodesic]'',
+   Z. f. Vermessungswesen '''26'''(21), 614--615 (1897).[[BR]]
+   http://books.google.com/books?id=YJVIAAAAMAAJ&pg=614 (PDF zvermess-V26.pdf)
  * J. S. Hadamard,[[BR]]
    ''Sur certaines propriétés des trajectoires en Dynamique
    [On certain properties of trajectories in dynamics]'',
@@ -1089,6 +1143,11 @@
    Trans. AMS '''6'''(3), 237--274 (1905).[[BR]]
    http://books.google.com/books?id=o0MLAAAAYAAJ&pg=PA237 (PDF transams-V6.pdf)
    [[BR]] http://dx.doi.org/10.2307/1986219
+ * J. Frischauf,[[BR]]
+   ''Zur Berechnung sphäroidischer Dreiecke [Calculating spheroidal
+   triangles]'',
+   Z. f. Vermessungswesen '''37'''(20), 534--539 (1908).[[BR]]
+   http://books.google.com/books?id=EKJIAAAAMAAJ&pg=534 (PDF zvermess-V37.pdf)
  * L. P. Eisenhart,[[BR]]
    ''A Treatise on the Differential Geometry of Curves and Surfaces''
    (Ginn & Co., Boston, 1909).[[BR]]
