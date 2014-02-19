@@ -4759,11 +4759,12 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.35">Version 1.35</a>
    (released 2014-mm-dd)
+   - Fix blunder in GeographicLib::UTMUPS::EncodeEPSG (found by Ben
+     Adler).
+   - Matlab wrapper routines geodesic{direct,inverse,line} switch to
+     "exact" routes if |<i>f</i>| &gt; 0.02.
    - GeodSolve.cgi allows ellipsoid to be set (and uses the -E option
      for <a href="GeodSolve.1.html">GeodSolve</a>).
-   - Matlab wrapper routines geodesic{direct,inverse,line} switch to
-     "exact" routes if |f| > 0.02.
-   - Fix blunder in UTMUPS::EncodeEPSG (found by Ben Adler).
    - Set title in HTML versions of man pages for \ref utilities.
 
  - <a href="http://geographiclib.sf.net/1.34">Version 1.34</a>

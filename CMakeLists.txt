@@ -16,7 +16,7 @@ set (CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 10)
-set (LIBVERSIONFULL 10.1.1)
+set (LIBVERSIONFULL 10.1.2)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
