@@ -4048,7 +4048,7 @@ starting point of this geodesic is \f$\beta_1 = 87.48^\circ\f$, \f$\omega_1 =
 0^\circ\f$, and \f$\alpha_1 = 90^\circ\f$.
 
 If the starting point is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 \in
-(0^\circ, 180^\circ)\f$, and \f$\alpha_1 = 0^\circ\f$, then the geodesic
+(0^\circ, 180^\circ)\f$, and \f$\alpha_1 = 180^\circ\f$, then the geodesic
 encircles the ellipsoid in a "transpolar" sense.  The geodesic
 oscillates east and west of the ellipse \f$x = 0\f$; on each oscillation
 it completes slightly more that a full circuit around the ellipsoid
@@ -4067,7 +4067,7 @@ Fig. 4
 Fig. 4:
 Example of a transpolar geodesic on a triaxial ellipsoid.  The
 starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
-39.9^\circ\f$, and \f$\alpha_1 = 0^\circ\f$.
+39.9^\circ\f$, and \f$\alpha_1 = 180^\circ\f$.
 
 <center>
 <img src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Transpolar_geodesic_on_a_triaxial_ellipsoid_case_B.svg"
@@ -4078,10 +4078,10 @@ Fig. 5
 Fig. 5:
 Another example of a transpolar geodesic on a triaxial ellipsoid.  The
 starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
-9.966^\circ\f$, and \f$\alpha_1 = 0^\circ\f$.
+9.966^\circ\f$, and \f$\alpha_1 = 180^\circ\f$.
 
 If the starting point is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
-0^\circ\f$ (an umbilical point), and \f$\alpha_1 = 45^\circ\f$ (the
+0^\circ\f$ (an umbilical point), and \f$\alpha_1 = 135^\circ\f$ (the
 geodesic leaves the ellipse \f$y = 0\f$ at right angles), then the
 geodesic repeatedly intersects the opposite umbilical point and returns to
 its starting point.  However on each circuit the angle at which it
@@ -4099,11 +4099,11 @@ Fig. 6
 Fig. 6:
 Example of an umbilical geodesic on a triaxial ellipsoid.  The
 starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
-0^\circ\f$, and \f$\alpha_1 = 45^\circ\f$ and the geodesics is followed
+0^\circ\f$, and \f$\alpha_1 = 135^\circ\f$ and the geodesics is followed
 forwards and backwards until it lies close to the plane \f$y = 0\f$ in
 both directions.
 
-Umbilical geodesic enjoy several interesting properties.
+Umbilical geodesics enjoy several interesting properties.
  - Through any point on the ellipsoid, there are two umbilical geodesics.
  - The geodesic distance between opposite umbilical points is the same
    regardless of the initial direction of the geodesic.
@@ -4217,11 +4217,14 @@ geodesics</a>).
  - If only one point is an umbilicial point, the azimuth at the
    non-umbilical point is found using the generalization of Clairaut's
    equation (given above) with \f$\gamma = 0\f$.
- - If both points lie on the equator \f$\beta = 0\f$, then determine the
-   reduced length \f$m_{12}\f$ for the geodesic which is the shorter
-   path along the ellipse \f$z = 0\f$.  If \f$m_{12} \ge 0\f$, then this
-   is the shortest path on the ellipsoid; otherwise proceed to the
-   general case (next).
+ - Treat the cases where the geodesic might follow a line of constant
+   \f$\beta\f$.  There are two such cases: (a) the points lie on the
+   ellipse \f$z = 0\f$ on a general ellipsoid and (b) the points lie on
+   an ellipse whose major axis is the \f$x\f$ axis on a prolate ellipsoid
+   (\f$a = b > c\f$).  Determine the reduced length \f$m_{12}\f$ for the
+   geodesic which is the shorter path along the ellipse.  If \f$m_{12}
+   \ge 0\f$, then this is the shortest path on the ellipsoid; otherwise
+   proceed to the general case (next).
  - Swap the points, if necessary, so that the first point is the one
    closest to a pole.  Estimate \f$\alpha_1\f$ (by some means) and solve
    the \e hybrid problem, i.e., determine the longitude \f$\omega_2\f$
@@ -4238,6 +4241,12 @@ The shortest path found by this method is unique unless:
  - The points are opposite umbilical points.  In this case,
    \f$\alpha_1\f$ can take on any value and \f$\alpha_2\f$ needs to be
    adjusted to maintain the value of \f$\tan\alpha_1 / \tan\alpha_2\f$.
+   Note that \f$\alpha\f$ increases by \f$\pm 90^\circ\f$ as the
+   geodesic passes through an umbilical point, depending on whether the
+   geodesic is considered as passing to the right or left of the point.
+   Here \f$\alpha_2\f$ is the \e forward azimuth at the second umbilical
+   point, i.e., its azimuth immediately \e after passage through the
+   umbilical point.
  - \f$\beta_1 + \beta_2 = 0\f$ and \f$\cos\alpha_1\f$ and
    \f$\cos\alpha_2\f$ have opposite signs.  In this case, there another
    shortest geodesic with azimuths \f$\pi - \alpha_1\f$ and
@@ -4766,6 +4775,7 @@ of the git repository for %GeographicLib.
    - GeodSolve.cgi allows ellipsoid to be set (and uses the -E option
      for <a href="GeodSolve.1.html">GeodSolve</a>).
    - Set title in HTML versions of man pages for \ref utilities.
+   - Add _d to names of executables in debug mode of Visual Studio.
 
  - <a href="http://geographiclib.sf.net/1.34">Version 1.34</a>
    (released 2013-12-11)

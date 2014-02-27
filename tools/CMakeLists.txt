@@ -22,6 +22,12 @@ foreach (TOOL ${TOOLS})
 
 endforeach ()
 
+if (MSVC OR CMAKE_CONFIGURATION_TYPES)
+  # Add _d suffix for your debug versions of the tools
+  set_target_properties (${TOOLS} PROPERTIES
+    DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+endif ()
+
 if (MSVC)
   get_target_property (_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
   if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
