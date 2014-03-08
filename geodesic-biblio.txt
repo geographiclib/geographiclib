@@ -302,7 +302,7 @@
    (Mainz, 1825), Part 2, Chap 2.[[BR]]
    http://books.google.com/books?id=2S9NAAAAMAAJ&pg=PA80 (figures missing)
  * F. W. Bessel,[[BR]]
-   ''Ueber Berechnung geodätischer Vermessungen
+   ''Über Berechnung geodätischer Vermessungen
    [Calculating geodesic surveys]'',
    Astron. Nachr. '''1'''(3), 33--36 (1823).[[BR]]
    http://books.google.com/books?id=D58RAAAAYAAJ&pg=PA37 [[BR]]
@@ -314,7 +314,7 @@
    http://books.google.com/books?id=D58RAAAAYAAJ&pg=PA64 [[BR]]
    http://dx.doi.org/10.1002/asna.18230010603
  * F. W. Bessel,[[BR]]
-   ''Ueber die Berechnung der geographischen Längen und Breiten aus
+   ''Über die Berechnung der geographischen Längen und Breiten aus
    geodätischen Vermessungen [The calculation of longitude and latitude
    from geodesic measurements]'',
    Astron. Nachr. '''4'''(86), 241--254 + tables (1825).[[BR]]
@@ -331,7 +331,7 @@
    http://dx.doi.org/10.1002/asna.201011352 [[BR]]
    preprint: http://arxiv.org/abs/0908.1824
  * F. W. Bessel,[[BR]]
-   ''Ueber den Einfluss der Unregelmässigkeiten der Figur der Erde auf
+   ''Über den Einfluss der Unregelmässigkeiten der Figur der Erde auf
    geodätische Arbeiten und ihre Vergleichung mit den astronomischen
    Bestimmungen [The effect of irregularities in the shape of the earth
    on geodetic work and their comparison with the astronomical
@@ -348,7 +348,7 @@
    http://adsabs.harvard.edu/abs/1837AN.....14..333B [[BR]]
    http://dx.doi.org/10.1002/asna.18370142301
  * F. W. Bessel,[[BR]]
-   ''Ueber einen Fehler in der Berechnung der französischen Gradmessung
+   ''Über einen Fehler in der Berechnung der französischen Gradmessung
    und seinen Einfluß auf die Bestimmung der Figur der Erde [Concerning
    an error in the calculation of the French survey and its influence on
    the determination of the figure of the Earth]'',
@@ -390,7 +390,7 @@
    Quart. Jour. Roy. Inst. '''21'''(42), 361--363 (1826).[[BR]]
    http://geographiclib.sf.net/geodesic-papers/quartjour26-extracts.pdf
    [[BR]]F. W. Bessel,
-   ''Ueber einen Aufsatz von Ivory im Philosophical Magazine
+   ''Über einen Aufsatz von Ivory im Philosophical Magazine
    [Comments on a paper by Ivory in the Philosophical Magazine]'',
    Astron. Nachr. '''5'''(108), 177--180 (1927).[[BR]]
    http://adsabs.harvard.edu/abs/1826AN......5..177B [[BR]]
@@ -745,7 +745,7 @@
    http://books.google.com/books?id=ggRCAAAAcAAJ&pg=PA160 [[BR]]
    http://dx.doi.org/10.1515/crll.1863.62.160
  * J. Weingarten,[[BR]]
-   ''Ueber die Reduction der Winkel eines sphäroidischen Dreiecks auf die
+   ''Über die Reduction der Winkel eines sphäroidischen Dreiecks auf die
    eines ebenen oder sphärischen [Reducing the angles of a spheroidal
    triangle to those of a plane or spherical triangle]'',
    Astron. Nachr. '''75'''(1782) 91--96 (1869).[[BR]]
@@ -878,7 +878,7 @@
    Z. f. Vermessungswesen '''6'''(1), 26--28 (1877).[[BR]]
    http://books.google.com/books?id=WKxIAAAAMAAJ&pg=PA26 (PDF zvermess-V6.pdf)
  * F. R. Helmert,[[BR]]
-   ''Die geodätische Uebertragung geographischer Coordinaten
+   ''Die geodätische Übertragung geographischer Coordinaten
    [The geodesic applied to geographic coordinates]'',
    Astron. Nachr. '''94'''(2252), 313--320 (1879).[[BR]]
    http://adsabs.harvard.edu/abs/1879AN.....94..313H [[BR]]
@@ -951,7 +951,7 @@
    http://adsabs.harvard.edu/abs/1879AN.....95..207S [[BR]]
    http://dx.doi.org/10.1002/asna.18790951402
  * A. v. Braunmühl,[[BR]]
-   ''Ueber Enveloppen geodätischer Linien
+   ''Über Enveloppen geodätischer Linien
    [The envelopes of geodesic lines]'',
    Math. Ann. '''14'''(4), 557--566 (1879).[[BR]]
    http://books.google.com/books?id=CwgPAAAAIAAJ&pg=PA557 (PDF mathann-V14.pdf)
@@ -982,7 +982,7 @@
    (3rd edition, Engelmann, Leipzig, 1894).[[BR]]
    http://books.google.com/books?id=muYRAAAAYAAJ (PDF albrecht94.pdf)
  * H. v. Mangoldt,[[BR]]
-   ''Ueber diejenigen Punkte auf positiv gekrümmten Flächen, welche die
+   ''Über diejenigen Punkte auf positiv gekrümmten Flächen, welche die
    Eigenschaft haben, dass die von ihnen ausgehenden geodätischen Linien
    nie aufhören, kürzeste Linien zu sein [The points on positively
    curved surfaces, which have the property that the geodesic lines

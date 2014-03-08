@@ -7,12 +7,12 @@
   <parent>
     <groupId>com.sri.vt.majic</groupId>
     <artifactId>majic-parent</artifactId>
-    <version>0.1.8-SNAPSHOT</version>
+    <version>0.1.9-SNAPSHOT</version>
   </parent>
 
   <groupId>com.sri.vt</groupId>
   <artifactId>geographiclib</artifactId>
-  <version>1.35.0-SNAPSHOT</version>
+  <version>1.35-SNAPSHOT</version>
   <packaging>majic-cmake</packaging>
   <name>GeographicLib</name>
 

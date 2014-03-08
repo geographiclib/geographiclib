@@ -9,9 +9,36 @@ if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
 
-set (CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
-set (CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
-set (CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+if (DEFINED CPACK_PACKAGE_VERSION_COUNT)
+
+  # majic (version 0.1.9 and later) invokes cmake defining, e.g.,
+  #   -D CPACK_PACKAGE_VERSION=1.35-SNAPSHOT
+  #   -D CPACK_PACKAGE_VERSION_COUNT=2
+  #   -D CPACK_PACKAGE_VERSION_MAJOR=1
+  #   -D CPACK_PACKAGE_VERSION_MINOR=35
+  #   -D CPACK_PACKAGE_VERSION_SUFFIX=-SNAPSHOT
+  # Check that the version numbers are consistent.
+  if (CPACK_PACKAGE_VERSION_COUNT EQUAL 2)
+    set (CPACK_PACKAGE_VERSION_PATCH 0)
+  elseif (NOT CPACK_PACKAGE_VERSION_COUNT EQUAL 3)
+    message (FATAL_ERROR "CPACK_PACKAGE_VERSION_COUNT must be 2 or 3")
+  endif ()
+  if (NOT (
+	CPACK_PACKAGE_VERSION_MAJOR EQUAL PROJECT_VERSION_MAJOR AND
+	CPACK_PACKAGE_VERSION_MINOR EQUAL PROJECT_VERSION_MINOR AND
+	CPACK_PACKAGE_VERSION_PATCH EQUAL PROJECT_VERSION_PATCH))
+    message (FATAL_ERROR "Inconsistency in CPACK and PROJECT version numbers")
+  endif ()
+  set (PROJECT_VERSION "${PROJECT_VERSION}${CPACK_PACKAGE_VERSION_SUFFIX}")
+
+else ()
+
+  set (CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+  set (CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+  set (CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+  set (CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+
+endif ()
 
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
@@ -388,7 +415,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/BUILD"
   "${PROJECT_SOURCE_DIR}/(tests|testdata|cgi-bin|.*\\\\.cache)/"
   "${PROJECT_SOURCE_DIR}/(distrib|.*-distrib|.*-installer|geodesic-papers)/"
-  "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(html|kmz|pdf|xml)\$"
+  "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(html|kmz|pdf)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio|js-compress)\\\\.sh\$"
   "${PROJECT_SOURCE_DIR}/(geodesic-biblio.txt|makefile-admin|[^/]*\\\\.png)\$"
   "${PROJECT_SOURCE_DIR}/matlab/matlab-.*blurb.txt\$" )
