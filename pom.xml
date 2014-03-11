@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.sri.vt.majic</groupId>
     <artifactId>majic-parent</artifactId>
-    <version>0.1.8-SNAPSHOT</version>
+    <version>0.1.9-SNAPSHOT</version>
   </parent>
 
   <groupId>com.sri.vt</groupId>
@@ -40,7 +40,7 @@
       </properties>
     </profile>
   </profiles>
-    
+  
   <repositories>
     <repository>
       <id>artifactory-vt</id>
@@ -51,32 +51,32 @@
 
   <build>
     <plugins>
-	  <plugin>
-	    <groupId>com.sri.vt.majic</groupId>
-	    <artifactId>build-helper-maven-plugin</artifactId>
-	    <executions>
-	      <execution>
-			<id>default-cmake-configure</id>
-			<configuration>
-			  <options>
-				<COMMON_INSTALL_PATH>ON</COMMON_INSTALL_PATH>
-				<GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
-				<MATLAB_COMPILER>OFF</MATLAB_COMPILER>
-				<GEOGRAPHICLIB_DOCUMENTATION>OFF</GEOGRAPHICLIB_DOCUMENTATION>
-				<BUILD_NETGEOGRAPHICLIB>${build.netgeographiclib}</BUILD_NETGEOGRAPHICLIB>
-			  </options>
-			</configuration>
-	      </execution>
-	      <execution>
-			<id>default-cmake-test</id>
+      <plugin>
+        <groupId>com.sri.vt.majic</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-cmake-configure</id>
+            <configuration>
+              <options>
+                <COMMON_INSTALL_PATH>ON</COMMON_INSTALL_PATH>
+                <GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
+                <MATLAB_COMPILER>OFF</MATLAB_COMPILER>
+                <GEOGRAPHICLIB_DOCUMENTATION>OFF</GEOGRAPHICLIB_DOCUMENTATION>
+                <BUILD_NETGEOGRAPHICLIB>${build.netgeographiclib}</BUILD_NETGEOGRAPHICLIB>
+              </options>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-cmake-test</id>
             <configuration>
               <configs>
                 <config>Release</config>
               </configs>
             </configuration>
           </execution>
-	    </executions>
-	  </plugin>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
