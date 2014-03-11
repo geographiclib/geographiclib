@@ -18,7 +18,7 @@
  * Are C++11 math functions available?
  **********************************************************************/
 #if !defined(GEOGRAPHICLIB_CPLUSPLUS11_MATH)
-#  if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ >= 8 \
+#  if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ >= 7 \
   && __cplusplus >= 201103
 #    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
 #  elif defined(_MSC_VER) && _MSC_VER >= 1800
