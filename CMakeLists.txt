@@ -228,8 +228,9 @@ if (NOT MSVC)
   endif ()
 endif ()
 
-if (NOT CYGWIN)
-  # cygwin has a long double but the support for ::cbrtl etc is missing
+if (NOT (CYGWIN OR ANDROID))
+  # cygwin and android have a long double but the support for ::cbrtl,
+  # etc., is missing
   include (CheckTypeSize)
   check_type_size ("long double" LONG_DOUBLE BUILTIN_TYPES_ONLY)
 endif ()

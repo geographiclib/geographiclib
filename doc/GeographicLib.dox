@@ -4777,6 +4777,7 @@ of the git repository for %GeographicLib.
    - Set title in HTML versions of man pages for \ref utilities.
    - Add _d to names of executables in debug mode of Visual Studio.
    - Changes in cmake support:
+     - add support for Android (cmake-only), thanks to Pullan Yu;
      - check CPACK version numbers supplied on command line;
      - configured version of project-config.cmake.in is
        project-config.cmake (instead of geographiclib-config.cmake), to
