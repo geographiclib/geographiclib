@@ -4775,8 +4775,8 @@ of the git repository for %GeographicLib.
    - GeodSolve.cgi allows ellipsoid to be set (and uses the -E option
      for <a href="GeodSolve.1.html">GeodSolve</a>).
    - Set title in HTML versions of man pages for \ref utilities.
-   - Add _d to names of executables in debug mode of Visual Studio.
    - Changes in cmake support:
+     - add _d to names of executables in debug mode of Visual Studio;
      - add support for Android (cmake-only), thanks to Pullan Yu;
      - check CPACK version numbers supplied on command line;
      - configured version of project-config.cmake.in is
