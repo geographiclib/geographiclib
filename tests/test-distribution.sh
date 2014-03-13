@@ -40,7 +40,7 @@ set -e
 #   python/setup.py
 #   tests/test-distribution.sh
 
-VERSION=1.34
+VERSION=1.35
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
@@ -82,9 +82,9 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
 (
     echo "#! /bin/sh -exv"
     echo 'b=geog-`pwd | sed s%.*/%%`'
-    echo 'rm -rf /tmp/$b'
-    echo 'mkdir /tmp/$b'
-    echo 'cd /tmp/$b'
+    echo 'rm -rf c:/scratch/$b'
+    echo 'mkdir -p c:/scratch/$b'
+    echo 'cd c:/scratch/$b'
     echo cmake -G \"Visual Studio 10\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Debug   --target ALL_BUILD
     echo cmake --build . --config Debug   --target exampleprograms
@@ -102,9 +102,9 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
 (
     echo "#! /bin/sh -exv"
     echo 'b=geog-`pwd | sed s%.*/%%`'
-    echo 'rm -rf /tmp/$b'
-    echo 'mkdir /tmp/$b'
-    echo 'cd /tmp/$b'
+    echo 'rm -rf c:/scratch/$b'
+    echo 'mkdir -p c:/scratch/$b'
+    echo 'cd c:/scratch/$b'
     echo cmake -G \"Visual Studio 10 Win64\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10-x64/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Debug   --target ALL_BUILD
     echo cmake --build . --config Debug   --target RUN_TESTS
@@ -123,9 +123,9 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12
 (
     echo "#! /bin/sh -exv"
     echo 'b=geog-`pwd | sed s%.*/%%`'
-    echo 'rm -rf /tmp/$b'
-    echo 'mkdir /tmp/$b'
-    echo 'cd /tmp/$b'
+    echo 'rm -rf c:/scratch/$b'
+    echo 'mkdir -p c:/scratch/$b'
+    echo 'cd c:/scratch/$b'
     echo cmake -G \"Visual Studio 12\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc12/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Debug   --target ALL_BUILD
     echo cmake --build . --config Debug   --target examples/exampleprograms
@@ -363,7 +363,7 @@ git push --tags
 # tag master branch
 cd $DEVELSOURCE
 git checkout master
-git merge --no-ff $BRANCH
+git merge --no-ff $BRANCH -m "Merge from devel for version $VERSION"
 git tag -m "Version $VERSION ($DATE)" v$VERSION
 git push --all
 git push --tags

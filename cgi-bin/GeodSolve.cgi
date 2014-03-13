@@ -3,35 +3,48 @@
 # GeodSolve.cgi
 # cgi script for geodesic calculations
 #
-# Copyright (c) Charles Karney (2011-2013) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 
 . ./utils.sh
+DEFAULTRADIUS=6378137
+DEFAULTFLATTENING=1/298.257223563
 OPTION=`lookupkey "$QUERY_STRING" option`
 if test "$OPTION" = Reset; then
     INPUT=
+    RADIUS=
+    FLATTENING=
 else
     INPUT=`lookupcheckkey "$QUERY_STRING" input`
+    RADIUS=`lookupellipsoid "$QUERY_STRING" radius`
+    FLATTENING=`lookupellipsoid "$QUERY_STRING" flattening`
     FORMAT=`lookupkey "$QUERY_STRING" format`
     AZF2=`lookupkey "$QUERY_STRING" azi2`
     PREC=`lookupkey "$QUERY_STRING" prec`
     TYPE=`lookupkey "$QUERY_STRING" type`
 fi
+test "$RADIUS" || RADIUS=$DEFAULTRADIUS
+test "$FLATTENING" || FLATTENING=$DEFAULTFLATTENING
 test "$FORMAT" || FORMAT=g
 test "$AZF2" || AZF2=f
 test "$PREC" || PREC=3
 test "$TYPE" || TYPE=I
-AZX="faz2"
-test "$AZF2" = b && AZX="baz2"
+AZIX="fazi2"
+test "$AZF2" = b && AZIX="bazi2"
+TAG=
+if test "$RADIUS" = "$DEFAULTRADIUS" -a \
+  "$FLATTENING" = "$DEFAULTFLATTENING"; then
+  TAG=" (WGS84)"
+fi
 
 INPUTENC=`encodevalue "$INPUT"`
-COMMAND=GeodSolve
+COMMAND="GeodSolve -E -f"
 EXECDIR=../bin
 F='<font color="blue">'
 G='</font>'
 test $TYPE = D || COMMAND="$COMMAND -i"
-COMMANDX="$COMMAND -f -p 1"
+COMMANDX="$COMMAND -p 1"
 test $FORMAT = g || COMMAND="$COMMAND -$FORMAT"
 test $AZF2 = f || COMMAND="$COMMAND -$AZF2"
 test $PREC = 3 || COMMAND="$COMMAND -p $PREC"
@@ -39,12 +52,18 @@ STATUS=
 POSITION1=
 POSITION2=
 DIST12=
+a12=
+m12=
+M1221=
+S12=
 set -o pipefail
 if test "$INPUT"; then
-    OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND -f | head -1`
+    OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND -e "$RADIUS" "$FLATTENING" 2>&1 |
+            head -1`
     if test $? -eq 0; then
 	STATUS=OK
-	OUTPUTG=`echo $INPUT | $EXECDIR/$COMMANDX | head -1`
+	OUTPUTG=`echo $INPUT | $EXECDIR/$COMMANDX -e "$RADIUS" "$FLATTENING" |
+                 head -1`
 	POS1="`echo $OUTPUT | cut -f1-2 -d' '`"
 	POS2="`echo $OUTPUT | cut -f4-5 -d' '`"
 	POSG1="`echo $OUTPUTG | cut -f1-2 -d' '`"
@@ -52,6 +71,10 @@ if test "$INPUT"; then
 	AZI1="`echo $OUTPUT | cut -f3 -d' '`"
 	AZI2="`echo $OUTPUT | cut -f6 -d' '`"
 	DIST12="`echo $OUTPUT | cut -f7 -d' '`"
+	a12="`echo $OUTPUT | cut -f8 -d' '`"
+	m12="`echo $OUTPUT | cut -f9 -d' '`"
+	M1221="`echo $OUTPUT | cut -f10-11 -d' '`"
+	S12="`echo $OUTPUT | cut -f12 -d' '`"
 	if test "$TYPE" = D; then
 	    POSITION1=$(geohack $POSG1 $POS1 Black)\ $(convertdeg "$AZI1")
 	    POSITION2=$F$(geohack $POSG2 $POS2 Blue)\ $(convertdeg "$AZI2")$G
@@ -153,19 +176,17 @@ cat <<EOF
               Output format:
             </td>
 EOF
-(
-    cat <<EOF
-g Decimal degrees
-d Degrees minutes seconds
-EOF
-) | while read c desc; do
+while read c desc; do
     CHECKED=
     test "$c" = "$FORMAT" && CHECKED=CHECKED
     echo "<td>&nbsp;<label for='$c'>"
     echo "<input type='radio' name='format' value='$c' id='$c' $CHECKED>"
     echo "$desc</label>"
     echo "</td>"
-done
+done <<EOF
+g Decimal degrees
+d Degrees minutes seconds
+EOF
 cat <<EOF
           </tr>
           <tr>
@@ -173,18 +194,16 @@ cat <<EOF
               Heading at point 2:
             </td>
 EOF
-(
-    cat <<EOF
-f Forward azimuth
-b Back azimuth
-EOF
-) | while read c desc; do
+while read c desc; do
     CHECKED=
     test "$c" = "$AZF2" && CHECKED=CHECKED
     echo "<td>&nbsp;<label for='$c'>"
     echo "<input type='radio' name='azi2' value='$c' id='$c' $CHECKED>"
     echo "$desc</label></td>"
-done
+done <<EOF
+f Forward azimuth
+b Back azimuth
+EOF
 cat <<EOF
           </tr>
           <tr>
@@ -194,27 +213,39 @@ cat <<EOF
             <td colspan="2">&nbsp;
               <select name="prec" size=1>
 EOF
-(
-    cat <<EOF
+while read p desc; do
+    SELECTED=
+    test "$p" = "$PREC" && SELECTED=SELECTED
+    echo "<option $SELECTED value='$p'> $desc</option>"
+done <<EOF
 0 1m 0.00001d 0.1"
 1 100mm 0.01"
 2 10mm 0.001"
 3 1mm 0.0001"
-4 100um 0.00001"
-5 10um 0.000001"
-6 1um 0.0000001"
+4 100&mu;m 0.00001"
+5 10&mu;m 0.000001"
+6 1&mu;m 0.0000001"
 7 100nm 0.00000001"
 8 10nm 0.000000001"
+9 1nm 0.0000000001"
 EOF
-) | while read p desc; do
-    SELECTED=
-    test "$p" = "$PREC" && SELECTED=SELECTED
-    echo "<option $SELECTED value='$p'> $desc</option>"
-done
 cat <<EOF
               </select>
             </td>
           </tr>
+	  <tr>
+	    <td>Equatorial radius:</td>
+	    <td>
+	      <input type=text name="radius" size=20 value="$RADIUS">
+            </td>
+	    <td>meters</td>
+	  </tr>
+	  <tr>
+	    <td>Flattening:</td>
+	    <td>
+	      <input type=text name="flattening" size=20 value="$FLATTENING">
+            </td>
+	  </tr>
         </table>
       </p>
       <p>
@@ -226,19 +257,26 @@ cat <<EOF
       <p>
         Geodesic (input in black, output in ${F}blue${G}):<br>
         <font size="4"><pre>
-    status         = `encodevalue "$STATUS"`
-    lat1 lon1 faz1 = $POSITION1
-    lat2 lon2 $AZX = $POSITION2
-    s12 (m)        = $DIST12</pre></font>
+    ellipsoid (a f)     = `encodevalue "$RADIUS"` `encodevalue "$FLATTENING"`$TAG
+    status              = `encodevalue "$STATUS"`
+
+    lat1 lon1 fazi1 (&deg;) = $POSITION1
+    lat2 lon2 $AZIX (&deg;) = $POSITION2
+    s12 (m)             = $DIST12
+
+    a12 (&deg;)             = $F$a12$G
+    m12 (m)             = $F$m12$G
+    M12 M21             = $F$M1221$G
+    S12 (m^2)           = $F$S12$G</pre></font>
       </p>
     </form>
     <hr>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">
         GeodSolve</a>
-      performs geodesic calculations for the WGS84 ellipsoid.  The
-      shortest path between two points on the ellipsoid at
-      (<em>lat1</em>, <em>lon1</em>) and (<em>lat2</em>,
+      performs geodesic calculations for an arbitrary ellipsoid of
+      revolution.  The shortest path between two points on the ellipsoid
+      at (<em>lat1</em>, <em>lon1</em>) and (<em>lat2</em>,
       <em>lon2</em>) is called the geodesic; its length is <em>s12</em>
       and the geodesic from point 1 to point 2 has azimuths
       <em>azi1</em> and <em>azi2</em> at the two end points.
@@ -260,16 +298,39 @@ cat <<EOF
       distance <em>s12</em> is in meters.
     </p>
     <p>
-      GeodSolve is accurate to about 15&nbsp;nm and gives solutions for the
-      inverse problem for any pair of points.  Many other geodesic
-      calculators (based in Vincenty's method) fail for some inputs; for
-      example, the
+      The additional quantities computed are:
+      <ul>
+	<li> <em>a12</em>, the arc length on the auxiliary sphere (&deg;),
+	<li> <em>m12</em>, the reduced length (m),
+	<li> <em>M12</em> and <em>M21</em>, the geodesic scales,
+	<li> <em>S12</em>, the area between the geodesic
+	  and the equator (m<sup>2</sup>).
+      </ul>
+    </p>
+    <p>
+      The ellipsoid is specified by its equatorial radius, <em>a</em>,
+      and its flattening,
+      <em>f</em>&nbsp;=
+      (<em>a</em>&nbsp;&minus;&nbsp;<em>b</em>)/<em>a</em>,
+      where <em>b</em> is the polar semi-axis.  The default values for
+      these parameters correspond to the WGS84 ellipsoid.  The method is
+      accurate for &minus;99&nbsp;&le; <em>f</em>&nbsp;&le; 0.99
+      (corresponding to 0.01&nbsp;&le; <em>b</em>/<em>a</em>&nbsp;&le;
+      100).  Note that <em>f</em> is negative for a prolate ellipsoid
+      (<em>b</em>&nbsp;&gt; <em>a</em>) and that it can be entered as a
+      fraction, e.g., 1/297.  (If the value entered for <em>f</em> is
+      greater than 1, its reciprocal is used.)
+    </p>
+    <p>
+      GeodSolve is accurate to about 15&nbsp;nanometers (for the WGS84
+      ellipsoid) and gives solutions for the inverse problem for any
+      pair of points.  Many other geodesic calculators (based on
+      Vincenty's method) fail for some inputs; for example, the
       <a href="http://www.ngs.noaa.gov/">
         NGS</a> online
       <a href="http://www.ngs.noaa.gov/TOOLS/Inv_Fwd/Inv_Fwd.html">
         inverse geodesic calculator</a>
-      sometimes fails to terminate.  (NGS has removed its inverse
-      geodesic calculator in order to address this problem.)
+      sometimes fails to terminate.
     </p>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">
@@ -280,7 +341,6 @@ cat <<EOF
       is one of the utilities provided
       with <a href="http://geographiclib.sourceforge.net/">
         GeographicLib</a>.
-      This web interface illustrates a subset of its capabilities.
       Geodesics can also be computed using JavaScript; see the
       <a href="../scripts/geod-calc.html">JavaScript geodesic
 	calculator</a> and
@@ -292,7 +352,7 @@ cat <<EOF
       in C. F. F. Karney,
       <a href="http://dx.doi.org/10.1007/s00190-012-0578-z"><i>Algorithms for
       geodesics</i></a>,
-      J. Geodesy <b>87</b>, 43-55 (2013); DOI:
+      J. Geodesy <b>87</b>, 43&ndash;55 (2013); DOI:
       <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
 	10.1007/s00190-012-0578-z</a>;
       addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">

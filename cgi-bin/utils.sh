@@ -21,6 +21,7 @@ decodevalue () {
 # %26%23730%3B (&#730;) -> d
 # %91 %92 [%C2]%B4 %E2%80%B2 %26%238242%3B (&#8242;) %81%8C -> ' (%27)
 # %93 %94 %E2%80%B3 %26%238243%3B (&#8243;) %81%8D -> " (%22)
+# %26%238722%3B (&#8722;) -> -
 # Remove left/right guillemot symbols %AB %BB used to quote examples.
 # Then convert ' ' -> "
 translate () {
@@ -35,7 +36,7 @@ translate () {
 	-e 's/%E2%80%B2/%27/g' -e 's/%E2%80%B3/%22/g' \
 	-e 's/%26%238242%3B/%27/g' -e 's/%26%238243%3B/%22/g' \
 	-e 's/%81%8B/d/g' -e 's/%81%8C/%27/g' -e 's/%81%8D/%22/g' \
-	-e 's/%B4/%27/g' -e 's/%27%27/%22/g'
+	-e 's/%B4/%27/g' -e 's/%27%27/%22/g' -e 's/%26%238722%3B/-/g'
 }
 
 # Look up and decode a key
@@ -51,6 +52,15 @@ lookupcheckkey () {
     VALUE=`decodevalue "$VALUE"`
     test `echo "$VALUE" | tr -d '[ -~\n\t]' | wc -c` -ne 0 &&
     echo `date +"%F %T"` Unprintable "$RAWVAL" >> ../persistent/utilities.log
+    echo "$VALUE"
+}
+
+# Look up ellipsoid parameter leaving only allowed characters (--/ -> -, ., /)
+lookupellipsoid () {
+    VALUE=`lookuprawkey "$1" "$2"`
+    VALUE=`echo "$VALUE" | sed -e 's/%26%238722%3B/-/g'`
+    VALUE=`decodevalue "$VALUE"`
+    VALUE=`echo "$VALUE" | tr -cd '[0-9--/Ee]'`
     echo "$VALUE"
 }
 

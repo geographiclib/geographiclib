@@ -149,8 +149,8 @@ cat <<EOF
       <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
         Planimeter</a>,
       which is a simple wrapper of the
-      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Geodesic.html">
-        GeographicLib::Geodesic</a> class,
+      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1PolygonArea.html">
+        GeographicLib::PolygonArea</a> class,
       is one of the utilities provided
       with <a href="http://geographiclib.sourceforge.net/">
         GeographicLib</a>.
@@ -164,7 +164,7 @@ cat <<EOF
       in C. F. F. Karney,
       <a href="http://dx.doi.org/10.1007/s00190-012-0578-z"><i>Algorithms for
       geodesics</i></a>,
-      J. Geodesy <b>87</b>, 43-55 (2013); DOI:
+      J. Geodesy <b>87</b>, 43&ndash;55 (2013); DOI:
       <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
 	10.1007/s00190-012-0578-z</a>;
       addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
