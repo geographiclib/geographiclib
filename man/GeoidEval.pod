@@ -226,9 +226,9 @@ takes precedence.
 
 =item B<GEOGRAPHICLIB_DATA>
 
-Another way of overriding the compile-time default magnetic path.  If it
-is set (and if B<MAGNETIC_PATH> is not set), then
-$B<GEOGRAPHICLIB_DATA>/magnetic is used.
+Another way of overriding the compile-time default geoid path.  If it
+is set (and if B<GEOID_PATH> is not set), then
+$B<GEOGRAPHICLIB_DATA>/geoids is used.
 
 =back
 

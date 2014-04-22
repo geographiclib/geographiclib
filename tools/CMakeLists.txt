@@ -273,7 +273,8 @@ set_tests_properties (TransverseMercatorProj0
 add_test (NAME TransverseMercatorProj1 COMMAND
   TransverseMercatorProj -k 1 -r --input-string "0 10001965.7293127228")
 set_tests_properties (TransverseMercatorProj1
-  PROPERTIES PASS_REGULAR_EXPRESSION "90\\.0+ 0\\.0+ 0\\.0+ (1\\.0+|0\\.9999+)")
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "(90\\.0+ 0\\.0+ 0\\.0+|89\\.99999999999[0-9]+ -?180\\.0+ -?180\\.0+) (1\\.0000+|0\\.9999+)")
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
   # Check fix for single-cell cache bug found 2010-11-23

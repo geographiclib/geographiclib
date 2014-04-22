@@ -1,7 +1,7 @@
 #! /bin/sh
 #
 # tar.gz and zip distrib files copied to $DEVELSOURCE
-# html documentation rsync'ed to  $WEBDIST/htdocs/$VERSION-pre/
+# html documentation rsync'ed to $WEBDIST/htdocs/$VERSION-pre/
 #
 # Windows version ready to build in
 # $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10{,-x64}
@@ -40,7 +40,7 @@ set -e
 #   python/setup.py
 #   tests/test-distribution.sh
 
-VERSION=1.35
+VERSION=1.36
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib

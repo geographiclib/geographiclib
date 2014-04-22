@@ -18,11 +18,13 @@
  * Are C++11 math functions available?
  **********************************************************************/
 #if !defined(GEOGRAPHICLIB_CPLUSPLUS11_MATH)
+// Recent versions of g++ -std=c++11 (4.7 and later?) set __cplusplus to 201103
+// and support the new C++11 mathematical functions, std::atanh, etc.  However
+// the Android toolchain, which uses g++ -std=c++11 (4.8 as of 2014-03-11,
+// according to Pullan Lu), does not support std::atanh.  Android toolchains
+// might define __ANDROID__ or ANDROID; so need to check both.
 #  if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ >= 7 \
   && __cplusplus >= 201103 && !(defined(__ANDROID__) || defined(ANDROID))
-// The android toolchain uses g++ and supports C++11, but not, apparently, the
-// new mathematical functions introduced with C++11.  Android toolchains might
-// define __ANDROID__ or ANDROID; so need to check both.
 #    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
 #  elif defined(_MSC_VER) && _MSC_VER >= 1800
 #    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
