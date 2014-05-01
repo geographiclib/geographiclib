@@ -332,6 +332,7 @@ namespace GeographicLib {
      *
      * @param[in] zone the UTM zone (zero means UPS).
      * @param[in] northp hemisphere (true means north, false means south).
+     * @param[in] abbrev use abbreviated (n/s) notation for hemisphere.
      * @exception GeographicErr if \e zone is out of range (see below).
      * @exception std::bad_alloc if memoy for the string can't be allocated.
      * @return string representation of zone and hemisphere.
@@ -339,10 +340,10 @@ namespace GeographicLib {
      * \e zone must be in the range [UTMUPS::MINZONE, UTMUPS::MAXZONE] = [0,
      * 60] with \e zone = UTMUPS::UPS, 0, indicating UPS (but the resulting
      * string does not contain "0").  \e zone may also be UTMUPS::INVALID, in
-     * which case the returned string is "INV".  This reverses
+     * which case the returned string is "inv".  This reverses
      * UTMUPS::DecodeZone.
      **********************************************************************/
-    static std::string EncodeZone(int zone, bool northp);
+    static std::string EncodeZone(int zone, bool northp, bool abbrev = true);
 
     /**
      * Decode EPSG.

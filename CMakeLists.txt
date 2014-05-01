@@ -42,8 +42,8 @@ endif ()
 
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
-set (LIBVERSION 10)
-set (LIBVERSIONFULL 10.1.2)
+set (LIBVERSION 12)
+set (LIBVERSIONFULL 12.0.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 

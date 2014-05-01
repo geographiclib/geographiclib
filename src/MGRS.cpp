@@ -47,7 +47,6 @@ namespace GeographicLib {
                      int prec, std::string& mgrs) {
     if (zone == UTMUPS::INVALID ||
         Math::isnan(x) || Math::isnan(y) || Math::isnan(lat)) {
-      prec = -1;
       mgrs = "INVALID";
       return;
     }
@@ -55,9 +54,9 @@ namespace GeographicLib {
     CheckCoords(utmp, northp, x, y);
     if (!(zone >= UTMUPS::MINZONE && zone <= UTMUPS::MAXZONE))
       throw GeographicErr("Zone " + Utility::str(zone) + " not in [0,60]");
-    if (!(prec >= 0 && prec <= maxprec_))
+    if (!(prec >= -1 && prec <= maxprec_))
       throw GeographicErr("MGRS precision " + Utility::str(prec)
-                          + " not in [0, "
+                          + " not in [-1, "
                           + Utility::str(int(maxprec_)) + "]");
     // Fixed char array for accumulating string.  Allow space for zone, 3 block
     // letters, easting + northing.  Don't need to allow for terminating null.
@@ -99,27 +98,29 @@ namespace GeographicLib {
                                          (northp ? minupsNind_ : minupsSind_))];
       mgrs1[z++] = upsrows_[northp][yh - (northp ? minupsNind_ : minupsSind_)];
     }
-    real mult = pow(real(base_), max(tilelevel_ - prec, 0));
-    int
-      ix = int(floor(xf / mult)),
-      iy = int(floor(yf / mult));
-    for (int c = min(prec, int(tilelevel_)); c--;) {
-      mgrs1[z + c] = digits_[ ix % base_ ];
-      ix /= base_;
-      mgrs1[z + c + prec] = digits_[ iy % base_ ];
-      iy /= base_;
-    }
-    if (prec > tilelevel_) {
-      xf -= floor(xf / mult);
-      yf -= floor(yf / mult);
-      mult = pow(real(base_), prec - tilelevel_);
-      ix = int(floor(xf * mult));
-      iy = int(floor(yf * mult));
-      for (int c = prec - tilelevel_; c--;) {
-        mgrs1[z + c + tilelevel_] = digits_[ ix % base_ ];
+    if (prec > 0) {
+      real mult = pow(real(base_), max(tilelevel_ - prec, 0));
+      int
+        ix = int(floor(xf / mult)),
+        iy = int(floor(yf / mult));
+      for (int c = min(prec, int(tilelevel_)); c--;) {
+        mgrs1[z + c] = digits_[ ix % base_ ];
         ix /= base_;
-        mgrs1[z + c + tilelevel_ + prec] = digits_[ iy % base_ ];
+        mgrs1[z + c + prec] = digits_[ iy % base_ ];
         iy /= base_;
+      }
+      if (prec > tilelevel_) {
+        xf -= floor(xf / mult);
+        yf -= floor(yf / mult);
+        mult = pow(real(base_), prec - tilelevel_);
+        ix = int(floor(xf * mult));
+        iy = int(floor(yf * mult));
+        for (int c = prec - tilelevel_; c--;) {
+          mgrs1[z + c + tilelevel_] = digits_[ ix % base_ ];
+          ix /= base_;
+          mgrs1[z + c + tilelevel_ + prec] = digits_[ iy % base_ ];
+          iy /= base_;
+        }
       }
     }
     mgrs.resize(mlen);
@@ -143,7 +144,7 @@ namespace GeographicLib {
         lat = 0.9 * ys;         // accurate enough estimate near equator
       else {
         real
-          // The poleward bound a fit from above of lat(x,y)
+          // The poleward bound is a fit from above of lat(x,y)
           // for x = 500km and y = [0km, 950km]
           latp = real(0.901) * ys + (ys > 0 ? 1 : -1) * real(0.135),
           // The equatorward bound is a fit from below of lat(x,y)
@@ -174,7 +175,7 @@ namespace GeographicLib {
       zone = UTMUPS::INVALID;
       northp = false;
       x = y = Math::NaN<real>();
-      prec = -1;
+      prec = -2;
       return;
     }
     int zone1 = 0;
@@ -190,7 +191,7 @@ namespace GeographicLib {
     if (p > 2)
       throw GeographicErr("More than 2 digits_ at start of MGRS "
                           + mgrs.substr(0, p));
-    if (len - p < 3)
+    if (len - p < 1)
       throw GeographicErr("MGRS string too short " + mgrs);
     bool utmp = zone1 != UTMUPS::UPS;
     int zonem1 = zone1 - 1;
@@ -200,6 +201,28 @@ namespace GeographicLib {
       throw GeographicErr("Band letter " + Utility::str(mgrs[p-1]) + " not in "
                           + (utmp ? "UTM" : "UPS") + " set " + band);
     bool northp1 = iband >= (utmp ? 10 : 2);
+    if (p == len) {             // Grid zone only (ignore centerp)
+      // Approx length of a degree of meridian arc in units of tile.
+      real deg = real(1e7) / (90 * tile_);
+      zone = zone1;
+      northp = northp1;
+      if (utmp) {
+        // Pick central meridian except for 31V
+        x = ((zone == 31 && iband == 17) ? 4 : 5) * tile_;
+        // Pick center of 8deg latitude bands
+        y = floor(8 * (iband - real(9.5)) * deg + real(0.5)) * tile_
+          + (northp ? 0 : utmNshift_);
+      } else {
+        // Pick point at lat 86N or 86S
+        x = ((iband & 1 ? 1 : -1) * floor(4 * deg + real(0.5))
+             + upseasting_) * tile_;
+        // Pick point at lon 90E or 90W.
+        y = upseasting_ * tile_;
+      }
+      prec = -1;
+      return;
+    } else if (len - p < 2)
+      throw GeographicErr("Missing row letter in " + mgrs);
     const string& col = utmp ? utmcols_[zonem1 % 3] : upscols_[iband];
     const string& row = utmp ? utmrow_ : upsrows_[northp1];
     int icol = Utility::lookup(col, mgrs[p++]);

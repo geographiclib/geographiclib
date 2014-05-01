@@ -26,6 +26,7 @@
 #  if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ >= 7 \
   && __cplusplus >= 201103 && !(defined(__ANDROID__) || defined(ANDROID))
 #    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
+// Visual C++ 12 supports these functions
 #  elif defined(_MSC_VER) && _MSC_VER >= 1800
 #    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
 #  else
@@ -179,7 +180,7 @@ namespace GeographicLib {
     // Visual C++ 11 doesn't have a long double overload for std::hypot --
     // reported to MS on 2013-07-18
     // http://connect.microsoft.com/VisualStudio/feedback/details/794416
-    // suppress the resulting "loss of data warning" with
+    // (Visual C++ 12 is OK) Suppress the resulting "loss of data warning" with
     static inline long double hypot(long double x, long double y) throw()
     { return std::hypot(double(x), double(y)); }
 #  endif

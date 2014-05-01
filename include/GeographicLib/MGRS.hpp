@@ -162,6 +162,7 @@ namespace GeographicLib {
      *   allocated.
      *
      * \e prec specifies the precision of the MGRS string as follows:
+     * - prec = &minus;1 (min), only the grid zone is returned
      * - prec = 0 (min), 100 km
      * - prec = 1, 10 km
      * - prec = 2, 1 km

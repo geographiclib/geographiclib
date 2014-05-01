@@ -6,6 +6,7 @@ GeoConvert -- convert geographic coordinates
 
 B<GeoConvert> [ B<-g> | B<-d> | B<-:> | B<-u> | B<-m> | B<-c> ]
 [ B<-p> I<prec> ] [ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ] [ B<-w> ]
+[ B<-l> | B<-a> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -49,13 +50,13 @@ the longitude.  For example, the following are all equivalent
 
 3 tokens (output option B<-u>) given as I<zone>+I<hemisphere> I<easting>
 I<northing> or I<easting> I<northing> I<zone>+I<hemisphere>, where
-I<hemisphere> is either I<N> or I<S>.  The I<zone> is absent for a UPS
-specification.  For example,
+I<hemisphere> is either I<north> (or I<n>) or I<south> (or I<s>).  The
+I<zone> is absent for a UPS specification.  For example,
 
-    38N 444140.54 3684706.36
-    444140.54 3684706.36 38N
-    S 2173854.98 2985980.58
-    2173854.98 2985980.58 S
+    38n 444140.54 3684706.36
+    444140.54 3684706.36 38n
+    s 2173854.98 2985980.58
+    2173854.98 2985980.58 s
 
 =item B<MRGS>
 
@@ -127,6 +128,17 @@ square instead of the center; see L</MGRS>.
 on input and output, longitude precedes latitude (except that on input
 this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
 I<W>).
+
+=item B<-l>
+
+on output, UTM/UPS uses the long forms I<north> and I<south> to
+designate the hemisphere instead of I<n> or I<s>.
+
+=item B<-a>
+
+on output, UTM/UPS uses the abbreviations I<n> and I<s> to designate the
+hemisphere instead of I<north> or I<south>; this is the default
+representation.
 
 =item B<--comment-delimiter>
 
@@ -224,15 +236,15 @@ then
 Is I<zone> is specified with a hemisphere, then this is honored when
 printing UTM coordinates:
 
-   echo -1 3 | GeoConvert -u         => 31S 500000 9889470
-   echo -1 3 | GeoConvert -u -z 31   => 31S 500000 9889470
-   echo -1 3 | GeoConvert -u -z 31S  => 31S 500000 9889470
-   echo -1 3 | GeoConvert -u -z 31N  => 31N 500000 -110530
+   echo -1 3 | GeoConvert -u         => 31s 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31   => 31s 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31s  => 31s 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31n  => 31n 500000 -110530
 
 B<NOTE>: the letter in the zone specification for UTM is a hemisphere
-designator I<N> or I<S> and I<not> an MGRS latitude band letter.
+designator I<n> or I<s> and I<not> an MGRS latitude band letter.
 Convert the MGRS latitude band letter to a hemisphere as follows:
-replace I<C> thru I<M> by I<S>; replace I<N> thru I<X> by I<N>.
+replace I<C> thru I<M> by I<south>; replace I<N> thru I<X> by I<north>.
 
 =head1 QUOTING
 

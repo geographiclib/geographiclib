@@ -215,56 +215,59 @@ namespace GeographicLib {
     unsigned zlen = unsigned(zonestr.size());
     if (zlen == 0)
       throw GeographicErr("Empty zone specification");
-    if (zlen > 3)
-      throw GeographicErr("More than 3 characters in zone specification "
+    // Longest zone spec is 32north, 42south, invalid = 7
+    if (zlen > 7)
+      throw GeographicErr("More than 7 characters in zone specification "
                           + zonestr);
-    if (zlen == 3 &&
-        toupper(zonestr[0]) == 'I' &&
-        toupper(zonestr[1]) == 'N' &&
-        toupper(zonestr[2]) == 'V') {
+
+    const char* c = zonestr.c_str();
+    char* q;
+    int zone1 = strtol(c, &q, 10);
+    // if (zone1 == 0) zone1 = UPS; (not necessary)
+
+    if (zone1 == UPS) {
+      if (!(q == c))
+        // Don't allow 0N as an alternative to N for UPS coordinates
+        throw GeographicErr("Illegal zone 0 in " + zonestr +
+                            ", use just the hemisphere for UPS");
+    } else if (!(zone1 >= MINUTMZONE && zone1 <= MAXUTMZONE))
+      throw GeographicErr("Zone " + Utility::str(zone1)
+                          + " not in range [1, 60]");
+    else if (!isdigit(zonestr[0]))
+      throw GeographicErr("Must use unsigned number for zone "
+                          + Utility::str(zone1));
+    else if (q - c > 2)
+      throw GeographicErr("More than 2 digits use to specify zone "
+                          + Utility::str(zone1));
+
+    string hemi = zonestr.substr(q - c);
+    transform(hemi.begin(), hemi.end(), hemi.begin(), (int(*)(int))tolower);
+    if (q == c && (hemi == "inv" || hemi == "invalid")) {
       zone = INVALID;
       northp = false;
       return;
     }
-    char hemi = char(toupper(zonestr[zlen - 1]));
-    bool northp1 = hemi == 'N';
-    if (! (northp1 || hemi == 'S'))
-      throw GeographicErr(string("Illegal hemisphere letter ") + hemi + " in "
-                          + zonestr + ", specify N or S");
-    if (zlen == 1)
-      zone = UPS;
-    else {
-      const char* c = zonestr.c_str();
-      char* q;
-      int zone1 = strtol(c, &q, 10);
-      if (q == c)
-        throw GeographicErr("No zone number found in " + zonestr);
-      if (q - c != int(zlen) - 1)
-        throw GeographicErr("Extra text " +
-                            zonestr.substr(q - c, int(zlen) - 1 - (q - c)) +
-                            " in UTM/UPS zone " + zonestr);
-      if (zone1 == UPS)
-        // Don't allow 0N as an alternative to N for UPS coordinates
-        throw GeographicErr("Illegal zone 0 in " + zonestr +
-                            ", use just " + hemi + " for UPS");
-      if (!(zone1 >= MINUTMZONE && zone1 <= MAXUTMZONE))
-        throw GeographicErr("Zone " + Utility::str(zone1)
-                            + " not in range [1, 60]");
-      zone = zone1;
-    }
+    bool northp1 = hemi == "north" || hemi == "n";
+    if (!(northp1 || hemi == "south" || hemi == "s"))
+      throw GeographicErr(string("Illegal hemisphere ") + hemi + " in "
+                          + zonestr + ", specify north or south");
+    zone = zone1;
     northp = northp1;
   }
 
-  std::string UTMUPS::EncodeZone(int zone, bool northp) {
+  std::string UTMUPS::EncodeZone(int zone, bool northp, bool abbrev) {
     if (zone == INVALID)
-      return string("INV");
+      return string(abbrev ? "inv" : "invalid");
     if (!(zone >= MINZONE && zone <= MAXZONE))
-        throw GeographicErr("Zone " + Utility::str(zone)
-                            + " not in range [0, 60]");
+      throw GeographicErr("Zone " + Utility::str(zone)
+                          + " not in range [0, 60]");
     ostringstream os;
     if (zone != UPS)
       os << setfill('0') << setw(2) << zone;
-    os << (northp ? 'N' : 'S');
+    if (abbrev)
+      os << (northp ? 'n' : 's');
+    else
+      os << (northp ? "north" : "south");
     return os.str();
   }
 
