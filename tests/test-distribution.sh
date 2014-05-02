@@ -88,11 +88,11 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
     echo cmake -G \"Visual Studio 10\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Debug   --target ALL_BUILD
     echo cmake --build . --config Debug   --target exampleprograms
-    echo cmake --build . --config Debug   --target RUN_TESTS
+    echo env -u GEOGRAPHICLIB_DATA cmake --build . --config Debug   --target RUN_TESTS
     echo cmake --build . --config Debug   --target INSTALL
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target netexamples
-    echo cmake --build . --config Release --target RUN_TESTS
+    echo env -u GEOGRAPHICLIB_DATA cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
     echo cmake --build . --config Release --target PACKAGE
     echo cp GeographicLib-$VERSION-win32.exe $DEVELSOURCE/
@@ -107,13 +107,13 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
     echo 'cd c:/scratch/$b'
     echo cmake -G \"Visual Studio 10 Win64\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10-x64/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Debug   --target ALL_BUILD
-    echo cmake --build . --config Debug   --target RUN_TESTS
+    echo env -u GEOGRAPHICLIB_DATA cmake --build . --config Debug   --target RUN_TESTS
     echo cmake --build . --config Debug   --target INSTALL
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target matlabinterface
     echo cmake --build . --config Release --target exampleprograms
     echo cmake --build . --config Release --target netexamples
-    echo cmake --build . --config Release --target RUN_TESTS
+    echo env -u GEOGRAPHICLIB_DATA cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
     echo cmake --build . --config Release --target PACKAGE
     echo cp GeographicLib-$VERSION-win64.exe $DEVELSOURCE/
@@ -129,11 +129,11 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12
     echo cmake -G \"Visual Studio 12\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc12/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Debug   --target ALL_BUILD
     echo cmake --build . --config Debug   --target examples/exampleprograms
-    echo cmake --build . --config Debug   --target RUN_TESTS
+    echo env -u GEOGRAPHICLIB_DATA cmake --build . --config Debug   --target RUN_TESTS
     echo cmake --build . --config Debug   --target INSTALL
     echo cmake --build . --config Release --target ALL_BUILD
     echo cmake --build . --config Release --target dotnet/examples/ManagedCPP/netexamples
-    echo cmake --build . --config Release --target RUN_TESTS
+    echo env -u GEOGRAPHICLIB_DATA cmake --build . --config Release --target RUN_TESTS
     echo cmake --build . --config Release --target INSTALL
     echo cmake --build . --config Release --target PACKAGE
 ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12/build
@@ -176,18 +176,21 @@ mkdir BUILD
 cd BUILD
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
 make -j$NUMCPUS all
+make -j$NUMCPUS test
 make -j$NUMCPUS exampleprograms
 make install
 mkdir ../BUILD-matlab
 cd ../BUILD-matlab
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
 make -j$NUMCPUS all
+make -j$NUMCPUS test
 make -j$NUMCPUS matlabinterface
 make install
 mkdir ../BUILD-system
 cd ../BUILD-system
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D MATLAB_COMPILER=mkoctfile ..
 make -j$NUMCPUS all
+make -j$NUMCPUS test
 make -j$NUMCPUS matlabinterface
 
 mkdir -p $TEMP/geographiclib-matlab/private
