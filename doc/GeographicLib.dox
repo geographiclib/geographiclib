@@ -4768,27 +4768,28 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
    (released 2014-mm-dd)
-   - Changes to comply with NGA's prohibition with the use of the
+   - Changes to comply with NGA's prohibition of the use of the
      upper-case letters N/S to designate the hemisphere when displaying
      UTM/UPS coordinates:
      - GeographicLib::UTMUPS::DecodeZone allows north/south as hemisphere
        designators (in addition to n/s);
-     - GeographicLib::UTMUPS::EncodeZone encodes the hemisphere in lower
-       case (to distinguish this use from a grid zone designator);
+     - GeographicLib::UTMUPS::EncodeZone now encodes the hemisphere in
+       <i>lower case</i> (to distinguish this use from a grid zone
+       designator);
      - GeographicLib::UTMUPS::EncodeZone takes an optional parameter \e
-       abbrev to indicate whether to is n/s or north/south as the
+       abbrev to indicate whether to use n/s or north/south as the
        hemisphere designator;
      - GeographicLib::GeoCoords::UTMUPSRepresentation and
        GeographicLib::GeoCoords::AltUTMUPSRepresentation similarly accept
        the \e abbrev parameter;
-     - <a href="GeodSolve.1.html">GeoConvert</a> uses the
+     - <a href="GeoConvert.1.html">GeoConvert</a> uses the
        flags -a and -l to govern whether UTM/UPS output uses n/s
        (the -a flag) or north/south (the -l flag) to denote the
        hemisphere;
      - Fixed a bug what allowed +3N to be accepted as an alternation UTM
        zone designation (instead of 3N).
      .
-     <b>WARNING</b> The use of lower case n/s for the hemisphere might
+     <b>WARNING:</b> The use of lower case n/s for the hemisphere might
      cause compatibility problems.  However DecodeZone has always
      accepted either case; so the issue will only arise with other
      software reading the zone information.  To avoid possible
@@ -5369,10 +5370,10 @@ of the git repository for %GeographicLib.
        GeodesicLine;
      - deprecate -n option for <a href="GeodSolve.1.html">Geod</a>.
      .
-     WARNING: These changes may break binary compatibility with previous
-     versions of %GeographicLib.  However, the library is source
-     compatible (with the proviso that GeographicLib/GeodesicLine.hpp may
-     now need to be included).
+     <b>WARNING</b>: These changes may break binary compatibility with
+     previous versions of %GeographicLib.  However, the library is
+     source compatible (with the proviso that
+     GeographicLib/GeodesicLine.hpp may now need to be included).
    - Add the <a href="Planimeter.1.html">Planimeter</a> utility for
      computing the areas of geodesic polygons.
    - Improve iterative solution of GeographicLib::Gnomonic::Reverse.
