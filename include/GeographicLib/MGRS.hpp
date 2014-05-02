@@ -221,9 +221,10 @@ namespace GeographicLib {
      * of a band boundary.  For prec in [6, 11], the conversion is accurate to
      * roundoff.
      *
-     * If \e prec = -1, then the "grid zone" is returned.  This consists of the
-     * UTM zone number (absent for UPS) and the first letter of the MGRS string
-     * which labels the latitude band for UTM and the hemisphere for UPS.
+     * If \e prec = -1, then the "grid zone designation", e.g., 18T, is
+     * returned.  This consists of the UTM zone number (absent for UPS) and the
+     * first letter of the MGRS string which labels the latitude band for UTM
+     * and the hemisphere for UPS.
      *
      * If \e x or \e y is NaN or if \e zone is UTMUPS::INVALID, the returned
      * MGRS string is "INVALID".
@@ -292,10 +293,11 @@ namespace GeographicLib {
      * centerp = true the conversion from MGRS to geographic and back is
      * stable.  This is not assured if \e centerp = false.
      *
-     * If a "grid zone" (for example, 18T or A) is given, then some suitable
-     * (but essentially arbitrary) point within that zone is returned.  The
-     * main utility of the conversion is to allow \e zone and \e northp to be
-     * determined.  In this case, the \e centerp parameter is ignored.
+     * If a "grid zone designation" (for example, 18T or A) is given, then some
+     * suitable (but essentially arbitrary) point within that grid zone is
+     * returned.  The main utility of the conversion is to allow \e zone and \e
+     * northp to be determined.  In this case, the \e centerp parameter is
+     * ignored.
      *
      * If the first 3 characters of \e mgrs are "INV", then \e x and \e y are
      * set to NaN and \e zone is set to UTMUPS::INVALID.
