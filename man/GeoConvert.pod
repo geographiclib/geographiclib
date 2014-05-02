@@ -50,7 +50,7 @@ the longitude.  For example, the following are all equivalent
 
 3 tokens (output option B<-u>) given as I<zone>+I<hemisphere> I<easting>
 I<northing> or I<easting> I<northing> I<zone>+I<hemisphere>, where
-I<hemisphere> is either I<north> (or I<n>) or I<south> (or I<s>).  The
+I<hemisphere> is either I<n> (or I<north>) or I<s> (or I<south>).  The
 I<zone> is absent for a UPS specification.  For example,
 
     38n 444140.54 3684706.36
@@ -108,7 +108,7 @@ precision relative to 1 m.  See L</PRECISION>.
 
 set the zone to I<zone> for output.  Use either 0 E<lt> I<zone> E<lt>=
 60 for a UTM zone or I<zone> = 0 for UPS.  Alternatively use a
-I<zone>+I<hemisphere> designation, e.g., 38N.  See L</ZONE>.
+I<zone>+I<hemisphere> designation, e.g., 38n.  See L</ZONE>.
 
 =item B<-s>
 
@@ -201,13 +201,13 @@ I<prec>, digits after the decimal point.  The minimum value of I<prec> is
 =head1 MGRS
 
 MGRS coordinates represent a square patch of the earth, thus C<38SMB4488>
-is in zone C<38N> with 444km E<lt>= I<easting> E<lt> 445km and 3688km E<lt>=
+is in zone C<38n> with 444km E<lt>= I<easting> E<lt> 445km and 3688km E<lt>=
 I<northing> E<lt> 3689km.  Consistent with this representation,
 coordinates are I<truncated> (instead of I<rounded>) to the requested
 precision.  Similarly, on input an MGRS coordinate represents the
-I<center> of the square (C<38N 444500 3688500> in the example above).
+I<center> of the square (C<38n 444500 3688500> in the example above).
 However, if the B<-n> option is given then the south-west corner of the
-square is returned instead (C<38N 444000 3688000> in the example above).
+square is returned instead (C<38n 444000 3688000> in the example above).
 
 =head1 ZONE
 
@@ -244,7 +244,8 @@ printing UTM coordinates:
 B<NOTE>: the letter in the zone specification for UTM is a hemisphere
 designator I<n> or I<s> and I<not> an MGRS latitude band letter.
 Convert the MGRS latitude band letter to a hemisphere as follows:
-replace I<C> thru I<M> by I<south>; replace I<N> thru I<X> by I<north>.
+replace I<C> thru I<M> by I<s> (or I<south>); replace I<N> thru I<X> by
+I<n> (or I<north>).
 
 =head1 QUOTING
 
@@ -297,7 +298,7 @@ file C<input.txt> should just contain the plain coordinates.
 
    echo 38SMB4488 | GeoConvert         => 33.33424 44.40363
    echo 38SMB4488 | GeoConvert -: -p 1 => 33:20:03.25N 044:2413.06E
-   echo 38SMB4488 | GeoConvert -u      => 38N 444500 3688500
+   echo 38SMB4488 | GeoConvert -u      => 38n 444500 3688500
    echo E44d24 N33d20 | GeoConvert -m -p -3 => 38SMB4488
 
 =head1 ERRORS

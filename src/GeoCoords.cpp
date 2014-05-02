@@ -45,7 +45,7 @@ namespace GeographicLib {
       } else
         throw GeographicErr("Neither " + sa[0] + " nor " + sa[2]
                             + " of the form UTM/UPS Zone + Hemisphere"
-                            + " (ex: 38N, 09S, N)");
+                            + " (ex: 38n, 09s, n)");
       UTMUPS::DecodeZone(sa[zoneind], _zone, _northp);
       for (unsigned i = 0; i < 2; ++i)
         (i ? _northing : _easting) = DMS::Decode(sa[coordind + i]);

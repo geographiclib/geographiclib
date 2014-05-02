@@ -4975,7 +4975,7 @@ of the git repository for %GeographicLib.
      - add GeographicLib::GeoCoords::UTMUPSRepresentation(bool, int) and
        GeographicLib::GeoCoords::AltUTMUPSRepresentation(bool, int);
      - use the hemisphere letter in, e.g.,
-       <a href="GeoConvert.1.html">GeoConvert</a> -u -z 31N.
+       <a href="GeoConvert.1.html">GeoConvert</a> -u -z 31n.
    - Add GeographicLib::UTMUPS::DecodeEPSG and
      GeographicLib::UTMUPS::EncodeEPSG.
    - cmake changes:

@@ -227,7 +227,7 @@ namespace GeographicLib {
 
     if (zone1 == UPS) {
       if (!(q == c))
-        // Don't allow 0N as an alternative to N for UPS coordinates
+        // Don't allow 0n as an alternative to n for UPS coordinates
         throw GeographicErr("Illegal zone 0 in " + zonestr +
                             ", use just the hemisphere for UPS");
     } else if (!(zone1 >= MINUTMZONE && zone1 <= MAXUTMZONE))

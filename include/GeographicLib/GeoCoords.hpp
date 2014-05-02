@@ -114,8 +114,8 @@ namespace GeographicLib {
      *   -  38SLC3918701405
      *   -  37SHT9708
      * - UTM
-     *   -  38N 339188 3701405
-     *   -  897039 3708229 37N
+     *   -  38n 339188 3701405
+     *   -  897039 3708229 37n
      *
      * <b>Latitude and Longitude parsing</b>: Latitude precedes longitude,
      * unless a N, S, E, W hemisphere designator is used on one or both
@@ -151,24 +151,25 @@ namespace GeographicLib {
      *
      * <b>UTM/UPS parsing</b>: For UTM zones (&minus;80&deg; &le; Lat <
      * 84&deg;), the zone designator is made up of a zone number (for 1 to 60)
-     * and a hemisphere letter (N or S), e.g., 38N.  The latitude zone designer
-     * ([C--M] in the southern hemisphere and [N--X] in the northern) should
-     * NOT be used.  (This is part of the MGRS coordinate.)  The zone
-     * designator for the poles (where UPS is employed) is a hemisphere letter
-     * by itself, i.e., N or S.
+     * and a hemisphere letter (n or s), e.g., 38n (38north can also be used).
+     * The latitude band designer ([C--M] in the southern hemisphere and [N--X]
+     * in the northern) should NOT be used.  (This is part of the MGRS
+     * coordinate.)  The zone designator for the poles (where UPS is employed)
+     * is a hemisphere letter by itself, i.e., n or s (north or south can also
+     * be used).
      *
      * <b>MGRS parsing</b> interprets the grid references as square area at the
      * specified precision (1m, 10m, 100m, etc.).  If \e centerp = true (the
      * default), the center of this square is then taken to be the precise
      * position; thus:
-     * - 38SMB           = 38N 450000 3650000
-     * - 38SMB4484       = 38N 444500 3684500
-     * - 38SMB44148470   = 38N 444145 3684705
+     * - 38SMB           = 38n 450000 3650000
+     * - 38SMB4484       = 38n 444500 3684500
+     * - 38SMB44148470   = 38n 444145 3684705
      * .
      * Otherwise, the "south-west" corner of the square is used, i.e.,
-     * - 38SMB           = 38N 400000 3600000
-     * - 38SMB4484       = 38N 444000 3684000
-     * - 38SMB44148470   = 38N 444140 3684700
+     * - 38SMB           = 38n 400000 3600000
+     * - 38SMB4484       = 38n 444000 3684000
+     * - 38SMB44148470   = 38n 444140 3684700
      **********************************************************************/
     explicit GeoCoords(const std::string& s,
                        bool centerp = true, bool swaplatlong = false)
@@ -306,9 +307,9 @@ namespace GeographicLib {
     bool Northp() const throw() { return _northp; }
 
     /**
-     * @return hemisphere letter N or S.
+     * @return hemisphere letter n or s.
      **********************************************************************/
-    char Hemisphere() const throw() { return _northp ? 'N' : 'S'; }
+    char Hemisphere() const throw() { return _northp ? 'n' : 's'; }
 
     /**
      * @return the zone corresponding to the input (return 0 for UPS).
@@ -426,7 +427,7 @@ namespace GeographicLib {
      * @return MGRS string.
      *
      * This gives the coordinates of the enclosing grid square with size given
-     * by the precision.  Thus 38N 444180 3684790 converted to a MGRS
+     * by the precision.  Thus 38n 444180 3684790 converted to a MGRS
      * coordinate at precision &minus;2 (100m) is 38SMB441847 and not
      * 38SMB442848.  \e prec specifies the precision of the MGRS string as
      * follows:
@@ -445,7 +446,8 @@ namespace GeographicLib {
      * UTM/UPS string.
      *
      * @param[in] prec precision (relative to about 1m)
-     * @param[in] abbrev use abbreviated (n/s) notation for hemisphere.
+     * @param[in] abbrev if true (the default) use abbreviated (n/s) notation
+     *   for hemisphere; otherwise spell out the hemisphere (north/south)
      * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return UTM/UPS string representation: zone designator, easting, and
      *   northing.
@@ -465,9 +467,10 @@ namespace GeographicLib {
      *
      * @param[in] northp hemisphere override
      * @param[in] prec precision (relative to about 1m)
-     * @param[in] abbrev use abbreviated (n/s) notation for hemisphere.
+     * @param[in] abbrev if true (the default) use abbreviated (n/s) notation
+     *   for hemisphere; otherwise spell out the hemisphere (north/south)
      * @exception GeographicErr if the hemisphere override attempts to change
-     *   UPS N to UPS S or vice verse.
+     *   UPS N to UPS S or vice versa.
      * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return UTM/UPS string representation: zone designator, easting, and
      *   northing.
@@ -489,7 +492,8 @@ namespace GeographicLib {
      * GeoCoords::UTMUPSRepresentation.
      *
      * @param[in] prec precision (relative to about 1m)
-     * @param[in] abbrev use abbreviated (n/s) notation for hemisphere.
+     * @param[in] abbrev if true (the default) use abbreviated (n/s) notation
+     *   for hemisphere; otherwise spell out the hemisphere (north/south)
      * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return UTM/UPS string representation: zone designator, easting, and
      *   northing.
@@ -501,9 +505,10 @@ namespace GeographicLib {
      *
      * @param[in] northp hemisphere override
      * @param[in] prec precision (relative to about 1m)
-     * @param[in] abbrev use abbreviated (n/s) notation for hemisphere.
+     * @param[in] abbrev if true (the default) use abbreviated (n/s) notation
+     *   for hemisphere; otherwise spell out the hemisphere (north/south)
      * @exception GeographicErr if the hemisphere override attempts to change
-     *   UPS N to UPS S or vice verse.
+     *   UPS n to UPS s or vice verse.
      * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return UTM/UPS string representation: zone designator, easting, and
      *   northing.

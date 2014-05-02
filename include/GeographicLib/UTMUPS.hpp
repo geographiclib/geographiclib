@@ -29,6 +29,10 @@ namespace GeographicLib {
    * transverse Mercator and polar stereographic projections.  Here we
    * substitute much more accurate algorithms given by
    * GeographicLib:TransverseMercator and GeographicLib:PolarStereographic.
+   * These are the algorithms recommended by the NGA document
+   * - <a href="https://nsgreg.nga.mil/doc/view?i=4056"> The Universal Grids
+   *   and the Transverse Mercator and Polar Stereographic Map Projections</a>,
+   *   NGA.SIG.0012_2.0.0_UTMUPS (2014).
    *
    * In this implementation, the conversions are closed, i.e., output from
    * Forward is legal input for Reverse and vice versa.  The error is about 5nm
@@ -54,6 +58,16 @@ namespace GeographicLib {
    * - Inconsistent rules are used to determine the whether a particular UTM or
    *   UPS coordinate is legal.  A more systematic approach is taken here.
    * - The underlying projections are not very accurately implemented.
+   *
+   * The GeographicLib::UTMUPS::EncodeZone encodes the UTM zone and hemisphere
+   * to allow UTM/UPS coordinated to be displayed as, for example, "38N 444500
+   * 3688500".  According to NGA.SIG.0012_2.0.0_UTMUPS the use of "N" to denote
+   * "north" in the context is not allowed (since a upper case letter in this
+   * context denotes the MGRS latitude band).  Consequently, as of version
+   * 1.36, EncodeZone uses the lower case letters "n" and "s" to denote the
+   * hemisphere.  In addition EncodeZone accepts an optional final argument \e
+   * abbrev, which, if false, results in the hemisphere being spelled out as in
+   * "38north".
    *
    * Example of use:
    * \include example-UTMUPS.cpp
@@ -318,12 +332,13 @@ namespace GeographicLib {
      *
      * For UTM, \e zonestr has the form of a zone number in the range
      * [UTMUPS::MINUTMZONE, UTMUPS::MAXUTMZONE] = [1, 60] followed by a
-     * hemisphere letter, N or S.  For UPS, it consists just of the hemisphere
-     * letter.  The returned value of \e zone is UTMUPS::UPS = 0 for UPS.  Note
-     * well that "38S" indicates the southern hemisphere of zone 38 and not
-     * latitude band S, [32, 40].  N, 01S, 2N, 38S are legal.  0N, 001S, 61N,
-     * 38P are illegal.  INV is a special value for which the returned value of
-     * \e is UTMUPS::INVALID.
+     * hemisphere letter, n or s (or "north" or "south" spelled out).  For UPS,
+     * it consists just of the hemisphere letter (or the spelled out
+     * hemisphere).  The returned value of \e zone is UTMUPS::UPS = 0 for UPS.
+     * Note well that "38s" indicates the southern hemisphere of zone 38 and
+     * not latitude band S, 32&deg; &le; \e lat &lt; 40&deg;.  n, 01s, 2n, 38s,
+     * south, 3north are legal.  0n, 001s, +3n, 61n, 38P are illegal.  INV is a
+     * special value for which the returned value of \e is UTMUPS::INVALID.
      **********************************************************************/
     static void DecodeZone(const std::string& zonestr, int& zone, bool& northp);
 
@@ -332,7 +347,8 @@ namespace GeographicLib {
      *
      * @param[in] zone the UTM zone (zero means UPS).
      * @param[in] northp hemisphere (true means north, false means south).
-     * @param[in] abbrev use abbreviated (n/s) notation for hemisphere.
+     * @param[in] abbrev if true (the default) use abbreviated (n/s) notation
+     *   for hemisphere; otherwise spell out the hemisphere (north/south)
      * @exception GeographicErr if \e zone is out of range (see below).
      * @exception std::bad_alloc if memoy for the string can't be allocated.
      * @return string representation of zone and hemisphere.
@@ -374,8 +390,8 @@ namespace GeographicLib {
     static int EncodeEPSG(int zone, bool northp) throw();
 
     /**
-     * @return shift (meters) necessary to align N and S halves of a UTM zone
-     * (10<sup>7</sup>).
+     * @return shift (meters) necessary to align north and south halves of a
+     * UTM zone (10<sup>7</sup>).
      **********************************************************************/
     static Math::real UTMShift() throw();
 

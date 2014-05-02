@@ -25,7 +25,7 @@ int main() {
     }
     {
       // Sample reverse calculation
-      string zonestr = "38N";
+      string zonestr = "38n";
       int zone;
       bool northp;
       UTMUPS::DecodeZone(zonestr, zone, northp);

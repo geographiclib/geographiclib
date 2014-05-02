@@ -203,7 +203,7 @@ namespace GeographicLib {
     bool northp1 = iband >= (utmp ? 10 : 2);
     if (p == len) {             // Grid zone only (ignore centerp)
       // Approx length of a degree of meridian arc in units of tile.
-      real deg = real(1e7) / (90 * tile_);
+      real deg = real(utmNshift_) / (90 * tile_);
       zone = zone1;
       northp = northp1;
       if (utmp) {
