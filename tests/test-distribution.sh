@@ -364,7 +364,6 @@ cd $TEMP/gitr/geographiclib
 git add .
 git commit -m "Version $VERSION ($DATE)"
 git tag -m "Version $VERSION ($DATE)" r$VERSION
-git tag -m "Mark stable version" -f stable
 git push
 git push --tags
 
