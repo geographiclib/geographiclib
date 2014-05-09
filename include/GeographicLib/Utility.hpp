@@ -55,7 +55,7 @@ namespace GeographicLib {
      * @param[in] d the day of the month (must be positive).  Default = 1.
      * @return the sequential day number.
      **********************************************************************/
-    static int day(int y, int m = 1, int d = 1) throw() {
+    static int day(int y, int m = 1, int d = 1) {
       // Convert from date to sequential day and vice versa
       //
       // Here is some code to convert a date to sequential day and vice
@@ -141,7 +141,7 @@ namespace GeographicLib {
      * @param[out] m the month, Jan = 1, etc.
      * @param[out] d the day of the month.
      **********************************************************************/
-    static void date(int s, int& y, int& m, int& d) throw() {
+    static void date(int s, int& y, int& m, int& d) {
       int c = 0;
       bool greg = gregorian(s);
       s += 305;                 // s = 0 on March 1, 1BC
@@ -213,7 +213,7 @@ namespace GeographicLib {
      * @return the day of the week with Sunday, Monday--Saturday = 0,
      *   1--6.
      **********************************************************************/
-    static int dow(int y, int m, int d) throw() { return dow(day(y, m, d)); }
+    static int dow(int y, int m, int d) { return dow(day(y, m, d)); }
 
     /**
      * Given the sequential day, return the day of the week.
@@ -222,7 +222,7 @@ namespace GeographicLib {
      * @return the day of the week with Sunday, Monday--Saturday = 0,
      *   1--6.
      **********************************************************************/
-    static int dow(int s) throw() {
+    static int dow(int s) {
       return (s + 5) % 7;  // The 5 offset makes day 1 (0001-01-01) a Saturday.
     }
 
@@ -361,7 +361,7 @@ namespace GeographicLib {
      * \e c is converted to upper case before search \e s.  Therefore, it is
      * intended that \e s should not contain any lower case letters.
      **********************************************************************/
-    static int lookup(const std::string& s, char c) throw() {
+    static int lookup(const std::string& s, char c) {
       std::string::size_type r = s.find(char(toupper(c)));
       return r == std::string::npos ? -1 : int(r);
     }

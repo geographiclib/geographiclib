@@ -64,7 +64,7 @@ namespace GeographicLib {
     real _q, _uq, _uq2;
 
     Math::real Value(bool gradp, real cl, real sl,
-                     real& gradx, real& grady, real& gradz) const throw();
+                     real& gradx, real& grady, real& gradz) const;
 
     static inline void cossin(real x, real& cosx, real& sinx) {
       x = x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
@@ -134,7 +134,7 @@ namespace GeographicLib {
      * The arguments must satisfy <i>coslon</i><sup>2</sup> +
      * <i>sinlon</i><sup>2</sup> = 1.
      **********************************************************************/
-    Math::real operator()(real coslon, real sinlon) const throw() {
+    Math::real operator()(real coslon, real sinlon) const {
       real dummy;
       return Value(false, coslon, sinlon, dummy, dummy, dummy);
     }
@@ -145,7 +145,7 @@ namespace GeographicLib {
      * @param[in] lon the longitude (degrees).
      * @return \e V the value of the sum.
      **********************************************************************/
-    Math::real operator()(real lon) const throw() {
+    Math::real operator()(real lon) const {
       real coslon, sinlon;
       cossin(lon, coslon, sinlon);
       return (*this)(coslon, sinlon);
@@ -169,7 +169,7 @@ namespace GeographicLib {
      * <i>sinlon</i><sup>2</sup> = 1.
      **********************************************************************/
     Math::real operator()(real coslon, real sinlon,
-                          real& gradx, real& grady, real& gradz) const throw() {
+                          real& gradx, real& grady, real& gradz) const {
       return Value(true, coslon, sinlon, gradx, grady, gradz);
     }
 
@@ -188,7 +188,7 @@ namespace GeographicLib {
      * touched.
      **********************************************************************/
     Math::real operator()(real lon,
-                          real& gradx, real& grady, real& gradz) const throw() {
+                          real& gradx, real& grady, real& gradz) const {
       real coslon, sinlon;
       cossin(lon, coslon, sinlon);
       return (*this)(coslon, sinlon, gradx, grady, gradz);

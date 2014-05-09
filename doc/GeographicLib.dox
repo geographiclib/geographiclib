@@ -4799,6 +4799,8 @@ of the git repository for %GeographicLib.
    - GeographicLib::MGRS::Forward with \e prec = -1 will produce a grid
      zone designation.  Similarly GeographicLib::MGRS::Reverse will
      decode a grid zone designation (and return \e prec = -1).
+   - Stop using the throw() declaration specification which is
+     deprecated in C++11.
 
  - <a href="http://geographiclib.sf.net/1.35">Version 1.35</a>
    (released 2014-03-13)

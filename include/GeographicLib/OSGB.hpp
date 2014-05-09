@@ -63,7 +63,7 @@ namespace GeographicLib {
       // Maximum precision is um
       maxprec_ = 5 + 6,
     };
-    static real computenorthoffset() throw();
+    static real computenorthoffset();
     static void CheckCoords(real x, real y);
     OSGB();                     // Disable constructor
   public:
@@ -82,7 +82,7 @@ namespace GeographicLib {
      * should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     static void Forward(real lat, real lon,
-                        real& x, real& y, real& gamma, real& k) throw() {
+                        real& x, real& y, real& gamma, real& k) {
       OSGBTM_.Forward(OriginLongitude(), lat, lon, x, y, gamma, k);
       x += FalseEasting();
       y += computenorthoffset();
@@ -103,7 +103,7 @@ namespace GeographicLib {
      **********************************************************************/
 
     static void Reverse(real x, real y,
-                        real& lat, real& lon, real& gamma, real& k) throw() {
+                        real& lat, real& lon, real& gamma, real& k) {
       x -= FalseEasting();
       y -= computenorthoffset();
       OSGBTM_.Reverse(OriginLongitude(), x, y, lat, lon, gamma, k);
@@ -112,7 +112,7 @@ namespace GeographicLib {
     /**
      * OSGB::Forward without returning the convergence and scale.
      **********************************************************************/
-    static void Forward(real lat, real lon, real& x, real& y) throw() {
+    static void Forward(real lat, real lon, real& x, real& y) {
       real gamma, k;
       Forward(lat, lon, x, y, gamma, k);
     }
@@ -120,7 +120,7 @@ namespace GeographicLib {
     /**
      * OSGB::Reverse without returning the convergence and scale.
      **********************************************************************/
-    static void Reverse(real x, real y, real& lat, real& lon) throw() {
+    static void Reverse(real x, real y, real& lat, real& lon) {
       real gamma, k;
       Reverse(x, y, lat, lon, gamma, k);
     }
@@ -182,7 +182,7 @@ namespace GeographicLib {
      * 10<sup>9.48401603&minus;10</sup> m.  (The Airy 1830 value is returned
      * because the OSGB projection is based on this ellipsoid.)
      **********************************************************************/
-    static Math::real MajorRadius() throw()
+    static Math::real MajorRadius()
     // result is about 6377563.3960320664406 m
     { return real(20923713) * std::pow(real(10), real(0.48401603L) - 1); }
 
@@ -194,7 +194,7 @@ namespace GeographicLib {
      * 7767/2324857 = 1/299.32496459...  (The Airy 1830 value is returned
      * because the OSGB projection is based on this ellipsoid.)
      **********************************************************************/
-    static Math::real Flattening() throw()
+    static Math::real Flattening()
     { return real(20923713 - 20853810) / real(20923713); }
 
     /// \cond SKIP
@@ -202,7 +202,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the Airy 1830 ellipsoid.
      **********************************************************************/
-    static Math::real InverseFlattening() throw() { return 1/Flattening(); }
+    static Math::real InverseFlattening() { return 1/Flattening(); }
     /// \endcond
 
     /**
@@ -211,29 +211,29 @@ namespace GeographicLib {
      * C. J. Mugnier, Grids &amp; Datums, PE&amp;RS, Oct. 2003, states that
      * this is defined as 10<sup>9.9998268&minus;10</sup>.
      **********************************************************************/
-    static Math::real CentralScale() throw()
+    static Math::real CentralScale()
     { return std::pow(real(10), real(9998268 - 10000000) / real(10000000)); }
 
     /**
      * @return latitude of the origin for the OSGB projection (49 degrees).
      **********************************************************************/
-    static Math::real OriginLatitude() throw() { return real(49); }
+    static Math::real OriginLatitude() { return real(49); }
 
     /**
      * @return longitude of the origin for the OSGB projection (&minus;2
      *   degrees).
      **********************************************************************/
-    static Math::real OriginLongitude() throw() { return real(-2); }
+    static Math::real OriginLongitude() { return real(-2); }
 
     /**
      * @return false northing the OSGB projection (&minus;100000 meters).
      **********************************************************************/
-    static Math::real FalseNorthing() throw() { return real(-100000); }
+    static Math::real FalseNorthing() { return real(-100000); }
 
     /**
      * @return false easting the OSGB projection (400000 meters).
      **********************************************************************/
-    static Math::real FalseEasting() throw() { return real(400000); }
+    static Math::real FalseEasting() { return real(400000); }
     ///@}
 
   };

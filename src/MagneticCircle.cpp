@@ -18,7 +18,7 @@ namespace GeographicLib {
 
   void MagneticCircle::Field(real lon, bool diffp,
                              real& Bx, real& By, real& Bz,
-                             real& Bxt, real& Byt, real& Bzt) const throw() {
+                             real& Bxt, real& Byt, real& Bzt) const {
     real clam, slam;
     CircularEngine::cossin(lon, clam, slam);
     real M[Geocentric::dim2_];

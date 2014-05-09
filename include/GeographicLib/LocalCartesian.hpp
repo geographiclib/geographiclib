@@ -44,10 +44,10 @@ namespace GeographicLib {
     real _lat0, _lon0, _h0;
     real _x0, _y0, _z0, _r[dim2_];
     void IntForward(real lat, real lon, real h, real& x, real& y, real& z,
-                    real M[dim2_]) const throw();
+                    real M[dim2_]) const;
     void IntReverse(real x, real y, real z, real& lat, real& lon, real& h,
-                    real M[dim2_]) const throw();
-    void MatrixMultiply(real M[dim2_]) const throw();
+                    real M[dim2_]) const;
+    void MatrixMultiply(real M[dim2_]) const;
   public:
 
     /**
@@ -63,7 +63,7 @@ namespace GeographicLib {
      * lon0 should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     LocalCartesian(real lat0, real lon0, real h0 = 0,
-                   const Geocentric& earth = Geocentric::WGS84) throw()
+                   const Geocentric& earth = Geocentric::WGS84)
       : _earth(earth)
     { Reset(lat0, lon0, h0); }
 
@@ -76,7 +76,6 @@ namespace GeographicLib {
      * Sets \e lat0 = 0, \e lon0 = 0, \e h0 = 0.
      **********************************************************************/
     explicit LocalCartesian(const Geocentric& earth = Geocentric::WGS84)
-      throw()
       : _earth(earth)
     { Reset(real(0), real(0), real(0)); }
 
@@ -90,7 +89,7 @@ namespace GeographicLib {
      * \e lat0 should be in the range [&minus;90&deg;, 90&deg;]; \e
      * lon0 should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
-    void Reset(real lat0, real lon0, real h0 = 0) throw();
+    void Reset(real lat0, real lon0, real h0 = 0);
 
     /**
      * Convert from geodetic to local cartesian coordinates.
@@ -106,7 +105,7 @@ namespace GeographicLib {
      * should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& x, real& y, real& z)
-      const throw() {
+      const {
       IntForward(lat, lon, h, x, y, z, NULL);
     }
 
@@ -139,7 +138,7 @@ namespace GeographicLib {
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& x, real& y, real& z,
                  std::vector<real>& M)
-      const throw()  {
+      const  {
       if (M.end() == M.begin() + dim2_) {
         real t[dim2_];
         IntForward(lat, lon, h, x, y, z, t);
@@ -162,7 +161,7 @@ namespace GeographicLib {
      * 180&deg;).
      **********************************************************************/
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h)
-      const throw() {
+      const {
       IntReverse(x, y, z, lat, lon, h, NULL);
     }
 
@@ -193,7 +192,7 @@ namespace GeographicLib {
      **********************************************************************/
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h,
                  std::vector<real>& M)
-      const throw() {
+      const {
       if (M.end() == M.begin() + dim2_) {
         real t[dim2_];
         IntReverse(x, y, z, lat, lon, h, t);
@@ -208,30 +207,30 @@ namespace GeographicLib {
     /**
      * @return latitude of the origin (degrees).
      **********************************************************************/
-    Math::real LatitudeOrigin() const throw() { return _lat0; }
+    Math::real LatitudeOrigin() const { return _lat0; }
 
     /**
      * @return longitude of the origin (degrees).
      **********************************************************************/
-    Math::real LongitudeOrigin() const throw() { return _lon0; }
+    Math::real LongitudeOrigin() const { return _lon0; }
 
     /**
      * @return height of the origin (meters).
      **********************************************************************/
-    Math::real HeightOrigin() const throw() { return _h0; }
+    Math::real HeightOrigin() const { return _h0; }
 
     /**
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value of \e a inherited from the Geocentric object used in the
      *   constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
+    Math::real MajorRadius() const { return _earth.MajorRadius(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the Geocentric object used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw() { return _earth.Flattening(); }
+    Math::real Flattening() const { return _earth.Flattening(); }
     ///@}
 
     /// \cond SKIP
@@ -239,7 +238,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw()
+    Math::real InverseFlattening() const
     { return _earth.InverseFlattening(); }
     /// \endcond
   };

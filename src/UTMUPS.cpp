@@ -271,7 +271,7 @@ namespace GeographicLib {
     return os.str();
   }
 
-  void UTMUPS::DecodeEPSG(int epsg, int& zone, bool& northp) throw() {
+  void UTMUPS::DecodeEPSG(int epsg, int& zone, bool& northp) {
     northp = false;
     if (epsg >= epsg01N && epsg <= epsg60N) {
       zone = (epsg - epsg01N) + MINUTMZONE;
@@ -288,7 +288,7 @@ namespace GeographicLib {
     }
   }
 
-  int UTMUPS::EncodeEPSG(int zone, bool northp) throw() {
+  int UTMUPS::EncodeEPSG(int zone, bool northp) {
     int epsg = -1;
     if (zone == UPS)
       epsg = epsgS;
@@ -299,6 +299,6 @@ namespace GeographicLib {
     return epsg;
   }
 
-  Math::real UTMUPS::UTMShift() throw() { return real(MGRS::utmNshift_); }
+  Math::real UTMUPS::UTMShift() { return real(MGRS::utmNshift_); }
 
 } // namespace GeographicLib

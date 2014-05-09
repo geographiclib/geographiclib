@@ -98,7 +98,7 @@ namespace GeographicLib {
      *
      * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
-    static Math::real LatitudeResolution(int len) throw() {
+    static Math::real LatitudeResolution(int len) {
       len = (std::max)(0, (std::min)(int(maxlen_), len));
       return 180 * std::pow(0.5, 5 * len / 2);
     }
@@ -111,7 +111,7 @@ namespace GeographicLib {
      *
      * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
-    static Math::real LongitudeResolution(int len) throw() {
+    static Math::real LongitudeResolution(int len) {
       len = (std::max)(0, (std::min)(int(maxlen_), len));
       return 360 * std::pow(0.5, 5 * len - 5 * len / 2);
     }
@@ -125,7 +125,7 @@ namespace GeographicLib {
      *
      * The returned length is in the range [0, 18].
      **********************************************************************/
-    static int GeohashLength(real res) throw() {
+    static int GeohashLength(real res) {
       res = std::abs(res);
       for (int len = 0; len < maxlen_; ++len)
         if (LongitudeResolution(len) <= res)
@@ -142,7 +142,7 @@ namespace GeographicLib {
      *
      * The returned length is in the range [0, 18].
      **********************************************************************/
-    static int GeohashLength(real latres, real lonres) throw() {
+    static int GeohashLength(real latres, real lonres) {
       latres = std::abs(latres);
       lonres = std::abs(lonres);
       for (int len = 0; len < maxlen_; ++len)
@@ -163,7 +163,7 @@ namespace GeographicLib {
      * Internally, \e len is first put in the range [0, 18].  The returned
      * decimal precision is in the range [&minus;2, 12].
      **********************************************************************/
-    static int DecimalPrecision(int len) throw() {
+    static int DecimalPrecision(int len) {
       return -int(std::floor(std::log(LatitudeResolution(len))/
                              std::log(Math::real(10))));
     }

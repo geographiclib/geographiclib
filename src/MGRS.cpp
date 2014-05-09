@@ -345,7 +345,7 @@ namespace GeographicLib {
     }
   }
 
-  int MGRS::UTMRow(int iband, int icol, int irow) throw() {
+  int MGRS::UTMRow(int iband, int icol, int irow) {
     // Input is MGRS (periodic) row index and output is true row index.  Band
     // index is in [-10, 10) (as returned by LatitudeBand).  Column index
     // origin is easting = 100km.  Returns maxutmSrow_ if irow and iband are

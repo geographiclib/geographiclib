@@ -87,7 +87,7 @@ namespace GeographicLib {
     static const int epsg01S = 32701; // EPSG code for UTM 01S
     static const int epsg60S = 32760; // EPSG code for UTM 60S
     static const int epsgS   = 32761; // EPSG code for UPS   S
-    static real CentralMeridian(int zone) throw()
+    static real CentralMeridian(int zone)
     { return real(6 * zone - 183); }
     static void CheckLatLon(real lat, real lon);
     // Throw an error if easting or northing are outside standard ranges.  If
@@ -374,7 +374,7 @@ namespace GeographicLib {
      * of these projections, \e zone is set to UTMUPS::INVALID.  See
      * http://spatialreference.org/ref/epsg/
      **********************************************************************/
-    static void DecodeEPSG(int epsg, int& zone, bool& northp) throw();
+    static void DecodeEPSG(int epsg, int& zone, bool& northp);
 
     /**
      * Encode zone as EPSG.
@@ -387,13 +387,13 @@ namespace GeographicLib {
      * Convert \e zone and \e northp to the corresponding EPSG (European
      * Petroleum Survery Group) codes
      **********************************************************************/
-    static int EncodeEPSG(int zone, bool northp) throw();
+    static int EncodeEPSG(int zone, bool northp);
 
     /**
      * @return shift (meters) necessary to align north and south halves of a
      * UTM zone (10<sup>7</sup>).
      **********************************************************************/
-    static Math::real UTMShift() throw();
+    static Math::real UTMShift();
 
     /** \name Inspector functions
      **********************************************************************/
@@ -404,7 +404,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
-    static Math::real MajorRadius() throw()
+    static Math::real MajorRadius()
     { return Constants::WGS84_a<real>(); }
 
     /**
@@ -413,7 +413,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
-    static Math::real Flattening() throw()
+    static Math::real Flattening()
     { return Constants::WGS84_f<real>(); }
     ///@}
 
@@ -422,7 +422,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      **********************************************************************/
-    static Math::real InverseFlattening() throw()
+    static Math::real InverseFlattening()
     { return 1/Constants::WGS84_f<real>(); }
     /// \endcond
   };

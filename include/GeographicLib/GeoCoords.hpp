@@ -55,7 +55,7 @@ namespace GeographicLib {
     mutable real _alt_easting, _alt_northing, _alt_gamma, _alt_k;
     mutable int _alt_zone;
 
-    void CopyToAlt() const throw() {
+    void CopyToAlt() const {
       _alt_easting = _easting;
       _alt_northing = _northing;
       _alt_gamma = _gamma;
@@ -74,7 +74,7 @@ namespace GeographicLib {
      * The default constructor is equivalent to \e latitude = 90&deg;,
      * \e longitude = 0&deg;.
      **********************************************************************/
-    GeoCoords() throw()
+    GeoCoords()
       // This is the N pole
       : _lat(90)
       , _long(0)
@@ -274,47 +274,47 @@ namespace GeographicLib {
     /**
      * @return latitude (degrees)
      **********************************************************************/
-    Math::real Latitude() const throw() { return _lat; }
+    Math::real Latitude() const { return _lat; }
 
     /**
      * @return longitude (degrees)
      **********************************************************************/
-    Math::real Longitude() const throw() { return _long; }
+    Math::real Longitude() const { return _long; }
 
     /**
      * @return easting (meters)
      **********************************************************************/
-    Math::real Easting() const throw() { return _easting; }
+    Math::real Easting() const { return _easting; }
 
     /**
      * @return northing (meters)
      **********************************************************************/
-    Math::real Northing() const throw() { return _northing; }
+    Math::real Northing() const { return _northing; }
 
     /**
      * @return meridian convergence (degrees) for the UTM/UPS projection.
      **********************************************************************/
-    Math::real Convergence() const throw() { return _gamma; }
+    Math::real Convergence() const { return _gamma; }
 
     /**
      * @return scale for the UTM/UPS projection.
      **********************************************************************/
-    Math::real Scale() const throw() { return _k; }
+    Math::real Scale() const { return _k; }
 
     /**
      * @return hemisphere (false means south, true means north).
      **********************************************************************/
-    bool Northp() const throw() { return _northp; }
+    bool Northp() const { return _northp; }
 
     /**
      * @return hemisphere letter n or s.
      **********************************************************************/
-    char Hemisphere() const throw() { return _northp ? 'n' : 's'; }
+    char Hemisphere() const { return _northp ? 'n' : 's'; }
 
     /**
      * @return the zone corresponding to the input (return 0 for UPS).
      **********************************************************************/
-    int Zone() const throw() { return _zone; }
+    int Zone() const { return _zone; }
 
     ///@}
 
@@ -351,27 +351,27 @@ namespace GeographicLib {
     /**
      * @return current alternate zone (return 0 for UPS).
      **********************************************************************/
-    int AltZone() const throw() { return _alt_zone; }
+    int AltZone() const { return _alt_zone; }
 
     /**
      * @return easting (meters) for alternate zone.
      **********************************************************************/
-    Math::real AltEasting() const throw() { return _alt_easting; }
+    Math::real AltEasting() const { return _alt_easting; }
 
     /**
      * @return northing (meters) for alternate zone.
      **********************************************************************/
-    Math::real AltNorthing() const throw() { return _alt_northing; }
+    Math::real AltNorthing() const { return _alt_northing; }
 
     /**
      * @return meridian convergence (degrees) for alternate zone.
      **********************************************************************/
-    Math::real AltConvergence() const throw() { return _alt_gamma; }
+    Math::real AltConvergence() const { return _alt_gamma; }
 
     /**
      * @return scale for alternate zone.
      **********************************************************************/
-    Math::real AltScale() const throw() { return _alt_k; }
+    Math::real AltScale() const { return _alt_k; }
     ///@}
 
     /** \name String representations of the GeoCoords object
@@ -526,7 +526,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return UTMUPS::MajorRadius(); }
+    Math::real MajorRadius() const { return UTMUPS::MajorRadius(); }
 
     /**
      * @return \e f the flattening of the WGS84 ellipsoid.
@@ -534,7 +534,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
-    Math::real Flattening() const throw() { return UTMUPS::Flattening(); }
+    Math::real Flattening() const { return UTMUPS::Flattening(); }
     ///@}
 
     /// \cond SKIP
@@ -542,7 +542,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw()
+    Math::real InverseFlattening() const
     { return UTMUPS::InverseFlattening(); }
     /// \endcond
   };

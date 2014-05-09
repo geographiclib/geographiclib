@@ -266,7 +266,7 @@ namespace GeographicLib {
      * Clear the cache.  This never throws an error.  (This does nothing with a
      * thread safe Geoid.)
      **********************************************************************/
-    void CacheClear() const throw();
+    void CacheClear() const;
 
     ///@}
 
@@ -343,28 +343,28 @@ namespace GeographicLib {
      * @return geoid description, if available, in the data file; if
      *   absent, return "NONE".
      **********************************************************************/
-    const std::string& Description() const throw() { return _description; }
+    const std::string& Description() const { return _description; }
 
     /**
      * @return date of the data file; if absent, return "UNKNOWN".
      **********************************************************************/
-    const std::string& DateTime() const throw() { return _datetime; }
+    const std::string& DateTime() const { return _datetime; }
 
     /**
      * @return full file name used to load the geoid data.
      **********************************************************************/
-    const std::string& GeoidFile() const throw() { return _filename; }
+    const std::string& GeoidFile() const { return _filename; }
 
     /**
      * @return "name" used to load the geoid data (from the first argument of
      *   the constructor).
      **********************************************************************/
-    const std::string& GeoidName() const throw() { return _name; }
+    const std::string& GeoidName() const { return _name; }
 
     /**
      * @return directory used to load the geoid data.
      **********************************************************************/
-    const std::string& GeoidDirectory() const throw() { return _dir; }
+    const std::string& GeoidDirectory() const { return _dir; }
 
     /**
      * @return interpolation method ("cubic" or "bilinear").
@@ -379,7 +379,7 @@ namespace GeographicLib {
      * This relies on the value being stored in the data file.  If the value is
      * absent, return &minus;1.
      **********************************************************************/
-    Math::real MaxError() const throw() { return _maxerror; }
+    Math::real MaxError() const { return _maxerror; }
 
     /**
      * @return estimate of the RMS interpolation and quantization error
@@ -388,7 +388,7 @@ namespace GeographicLib {
      * This relies on the value being stored in the data file.  If the value is
      * absent, return &minus;1.
      **********************************************************************/
-    Math::real RMSError() const throw() { return _rmserror; }
+    Math::real RMSError() const { return _rmserror; }
 
     /**
      * @return offset (meters).
@@ -396,7 +396,7 @@ namespace GeographicLib {
      * This in used in converting from the pixel values in the data file to
      * geoid heights.
      **********************************************************************/
-    Math::real Offset() const throw() { return _offset; }
+    Math::real Offset() const { return _offset; }
 
     /**
      * @return scale (meters).
@@ -404,22 +404,22 @@ namespace GeographicLib {
      * This in used in converting from the pixel values in the data file to
      * geoid heights.
      **********************************************************************/
-    Math::real Scale() const throw() { return _scale; }
+    Math::real Scale() const { return _scale; }
 
     /**
      * @return true if the object is constructed to be thread safe.
      **********************************************************************/
-    bool ThreadSafe() const throw() { return _threadsafe; }
+    bool ThreadSafe() const { return _threadsafe; }
 
     /**
      * @return true if a data cache is active.
      **********************************************************************/
-    bool Cache() const throw() { return _cache; }
+    bool Cache() const { return _cache; }
 
     /**
      * @return west edge of the cached area; the cache includes this edge.
      **********************************************************************/
-    Math::real CacheWest() const throw() {
+    Math::real CacheWest() const {
       return _cache ? ((_xoffset + (_xsize == _width ? 0 : _cubic)
                         + _width/2) % _width - _width/2) / _rlonres :
         0;
@@ -428,7 +428,7 @@ namespace GeographicLib {
     /**
      * @return east edge of the cached area; the cache excludes this edge.
      **********************************************************************/
-    Math::real CacheEast() const throw() {
+    Math::real CacheEast() const {
       return  _cache ?
         CacheWest() +
         (_xsize - (_xsize == _width ? 0 : 1 + 2 * _cubic)) / _rlonres :
@@ -438,7 +438,7 @@ namespace GeographicLib {
     /**
      * @return north edge of the cached area; the cache includes this edge.
      **********************************************************************/
-    Math::real CacheNorth() const throw() {
+    Math::real CacheNorth() const {
       return _cache ? 90 - (_yoffset + _cubic) / _rlatres : 0;
     }
 
@@ -446,7 +446,7 @@ namespace GeographicLib {
      * @return south edge of the cached area; the cache excludes this edge
      *   unless it's the south pole.
      **********************************************************************/
-    Math::real CacheSouth() const throw() {
+    Math::real CacheSouth() const {
       return _cache ? 90 - ( _yoffset + _ysize - 1 - _cubic) / _rlatres : 0;
     }
 
@@ -456,7 +456,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the supported geoid models are all
      * based on this ellipsoid.)
      **********************************************************************/
-    Math::real MajorRadius() const throw()
+    Math::real MajorRadius() const
     { return Constants::WGS84_a<real>(); }
 
     /**
@@ -465,7 +465,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the supported geoid models are all
      * based on this ellipsoid.)
      **********************************************************************/
-    Math::real Flattening() const throw() { return Constants::WGS84_f<real>(); }
+    Math::real Flattening() const { return Constants::WGS84_f<real>(); }
     ///@}
 
     /// \cond SKIP
@@ -473,7 +473,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw()
+    Math::real InverseFlattening() const
     { return 1/Constants::WGS84_f<real>(); }
     /// \endcond
 

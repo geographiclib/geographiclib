@@ -97,12 +97,12 @@ namespace GeographicLib {
       maxprec_ = 5 + 6,
     };
     static void CheckCoords(bool utmp, bool& northp, real& x, real& y);
-    static int UTMRow(int iband, int icol, int irow) throw();
+    static int UTMRow(int iband, int icol, int irow);
 
     friend class UTMUPS;        // UTMUPS::StandardZone calls LatitudeBand
     // Return latitude band number [-10, 10) for the given latitude (degrees).
     // The bands are reckoned in include their southern edges.
-    static int LatitudeBand(real lat) throw() {
+    static int LatitudeBand(real lat) {
       int ilat = int(std::floor(lat));
       return (std::max)(-10, (std::min)(9, (ilat + 80)/8 - 10));
     }
@@ -110,7 +110,7 @@ namespace GeographicLib {
     // (meters).  With this rule, each 100km tile would have a unique band
     // letter corresponding to the latitude at the center of the tile.  This
     // function isn't currently used.
-    static int ApproxLatitudeBand(real y) throw() {
+    static int ApproxLatitudeBand(real y) {
       // northing at tile center in units of tile = 100km
       real ya = std::floor( (std::min)(real(88), std::abs(y/tile_)) ) +
         real(0.5);
@@ -317,7 +317,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
-    static Math::real MajorRadius() throw() { return UTMUPS::MajorRadius(); }
+    static Math::real MajorRadius() { return UTMUPS::MajorRadius(); }
 
     /**
      * @return \e f the flattening of the WGS84 ellipsoid.
@@ -325,7 +325,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
-    static Math::real Flattening() throw() { return UTMUPS::Flattening(); }
+    static Math::real Flattening() { return UTMUPS::Flattening(); }
     ///@}
 
     /// \cond SKIP
@@ -333,7 +333,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      **********************************************************************/
-    static Math::real InverseFlattening() throw()
+    static Math::real InverseFlattening()
     { return UTMUPS::InverseFlattening(); }
     /// \endcond
   };
