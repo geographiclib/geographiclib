@@ -59,7 +59,6 @@
             <id>default-cmake-configure</id>
             <configuration>
               <options>
-                <COMMON_INSTALL_PATH>ON</COMMON_INSTALL_PATH>
                 <GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
                 <MATLAB_COMPILER>OFF</MATLAB_COMPILER>
                 <GEOGRAPHICLIB_DOCUMENTATION>OFF</GEOGRAPHICLIB_DOCUMENTATION>

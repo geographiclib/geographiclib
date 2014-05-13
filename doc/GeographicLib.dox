@@ -12,7 +12,7 @@
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.36
-\date 2014-mm-dd
+\date 2014-05-13
 
 \section abstract Abstract
 
@@ -4767,7 +4767,7 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
-   (released 2014-mm-dd)
+   (released 2014-05-13)
    - Changes to comply with NGA's prohibition of the use of the
      upper-case letters N/S to designate the hemisphere when displaying
      UTM/UPS coordinates:
@@ -4801,6 +4801,8 @@ of the git repository for %GeographicLib.
      decode a grid zone designation (and return \e prec = -1).
    - Stop using the throw() declaration specification which is
      deprecated in C++11.
+   - Add missing std:: qualifications to copy in LocalCartesion and
+     Geocentric headers (bug found by Clemens).
 
  - <a href="http://geographiclib.sf.net/1.35">Version 1.35</a>
    (released 2014-03-13)

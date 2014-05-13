@@ -142,7 +142,7 @@ namespace GeographicLib {
       if (M.end() == M.begin() + dim2_) {
         real t[dim2_];
         IntForward(lat, lon, h, x, y, z, t);
-        copy(t, t + dim2_, M.begin());
+        std::copy(t, t + dim2_, M.begin());
       } else
         IntForward(lat, lon, h, x, y, z, NULL);
     }
@@ -196,7 +196,7 @@ namespace GeographicLib {
       if (M.end() == M.begin() + dim2_) {
         real t[dim2_];
         IntReverse(x, y, z, lat, lon, h, t);
-        copy(t, t + dim2_, M.begin());
+        std::copy(t, t + dim2_, M.begin());
       } else
         IntReverse(x, y, z, lat, lon, h, NULL);
     }
