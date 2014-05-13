@@ -175,11 +175,11 @@ void UTMUPS::DecodeZone(System::String^ zonestr,
 }
 
 //*****************************************************************************
-System::String^ UTMUPS::EncodeZone(int zone, bool northp)
+System::String^ UTMUPS::EncodeZone(int zone, bool northp, bool abbrev)
 {
     try
     {
-        return StringConvert::UnmanagedToManaged( GeographicLib::UTMUPS::EncodeZone( zone, northp ) );
+        return StringConvert::UnmanagedToManaged( GeographicLib::UTMUPS::EncodeZone( zone, northp, abbrev ) );
     }
     catch ( const std::exception& err )
     {

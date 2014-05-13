@@ -7,12 +7,12 @@
   <parent>
     <groupId>com.sri.vt.majic</groupId>
     <artifactId>majic-parent</artifactId>
-    <version>0.1.9-SNAPSHOT</version>
+    <version>0.1.11</version>
   </parent>
 
   <groupId>com.sri.vt</groupId>
   <artifactId>geographiclib</artifactId>
-  <version>1.35-SNAPSHOT</version>
+  <version>1.36-001-SNAPSHOT</version>
   <packaging>majic-cmake</packaging>
   <name>GeographicLib</name>
 
@@ -59,7 +59,6 @@
             <id>default-cmake-configure</id>
             <configuration>
               <options>
-                <COMMON_INSTALL_PATH>ON</COMMON_INSTALL_PATH>
                 <GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
                 <MATLAB_COMPILER>OFF</MATLAB_COMPILER>
                 <GEOGRAPHICLIB_DOCUMENTATION>OFF</GEOGRAPHICLIB_DOCUMENTATION>

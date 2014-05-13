@@ -71,7 +71,7 @@ namespace GeographicLib {
     std::vector<SphericalHarmonic> _harm;
     void Field(real t, real lat, real lon, real h, bool diffp,
                real& Bx, real& By, real& Bz,
-               real& Bxt, real& Byt, real& Bzt) const throw();
+               real& Bxt, real& Byt, real& Bzt) const;
     void ReadMetadata(const std::string& name);
     MagneticModel(const MagneticModel&); // copy constructor not allowed
     MagneticModel& operator=(const MagneticModel&); // nor copy assignment
@@ -128,7 +128,7 @@ namespace GeographicLib {
      *   (nanotesla).
      **********************************************************************/
     void operator()(real t, real lat, real lon, real h,
-                    real& Bx, real& By, real& Bz) const throw() {
+                    real& Bx, real& By, real& Bz) const {
       real dummy;
       Field(t, lat, lon, h, false, Bx, By, Bz, dummy, dummy, dummy);
     }
@@ -151,7 +151,7 @@ namespace GeographicLib {
      **********************************************************************/
     void operator()(real t, real lat, real lon, real h,
                     real& Bx, real& By, real& Bz,
-                    real& Bxt, real& Byt, real& Bzt) const throw() {
+                    real& Bxt, real& Byt, real& Bzt) const {
       Field(t, lat, lon, h, true, Bx, By, Bz, Bxt, Byt, Bzt);
     }
 
@@ -189,7 +189,7 @@ namespace GeographicLib {
      *   horizontal).
      **********************************************************************/
     static void FieldComponents(real Bx, real By, real Bz,
-                                real& H, real& F, real& D, real& I) throw() {
+                                real& H, real& F, real& D, real& I) {
       real Ht, Ft, Dt, It;
       FieldComponents(Bx, By, Bz, real(0), real(1), real(0),
                       H, F, D, I, Ht, Ft, Dt, It);
@@ -219,7 +219,7 @@ namespace GeographicLib {
     static void FieldComponents(real Bx, real By, real Bz,
                                 real Bxt, real Byt, real Bzt,
                                 real& H, real& F, real& D, real& I,
-                                real& Ht, real& Ft, real& Dt, real& It) throw();
+                                real& Ht, real& Ft, real& Dt, real& It);
     ///@}
 
     /** \name Inspector functions
@@ -229,29 +229,29 @@ namespace GeographicLib {
      * @return the description of the magnetic model, if available, from the
      *   Description file in the data file; if absent, return "NONE".
      **********************************************************************/
-    const std::string& Description() const throw() { return _description; }
+    const std::string& Description() const { return _description; }
 
     /**
      * @return date of the model, if available, from the ReleaseDate field in
      *   the data file; if absent, return "UNKNOWN".
      **********************************************************************/
-    const std::string& DateTime() const throw() { return _date; }
+    const std::string& DateTime() const { return _date; }
 
     /**
      * @return full file name used to load the magnetic model.
      **********************************************************************/
-    const std::string& MagneticFile() const throw() { return _filename; }
+    const std::string& MagneticFile() const { return _filename; }
 
     /**
      * @return "name" used to load the magnetic model (from the first argument
      *   of the constructor, but this may be overridden by the model file).
      **********************************************************************/
-    const std::string& MagneticModelName() const throw() { return _name; }
+    const std::string& MagneticModelName() const { return _name; }
 
     /**
      * @return directory used to load the magnetic model.
      **********************************************************************/
-    const std::string& MagneticModelDirectory() const throw() { return _dir; }
+    const std::string& MagneticModelDirectory() const { return _dir; }
 
     /**
      * @return the minimum height above the ellipsoid (in meters) for which
@@ -262,7 +262,7 @@ namespace GeographicLib {
      * argument is made by MagneticModel::operator()() or
      * MagneticModel::Circle.
      **********************************************************************/
-    Math::real MinHeight() const throw() { return _hmin; }
+    Math::real MinHeight() const { return _hmin; }
 
     /**
      * @return the maximum height above the ellipsoid (in meters) for which
@@ -273,7 +273,7 @@ namespace GeographicLib {
      * argument is made by MagneticModel::operator()() or
      * MagneticModel::Circle.
      **********************************************************************/
-    Math::real MaxHeight() const throw() { return _hmax; }
+    Math::real MaxHeight() const { return _hmax; }
 
     /**
      * @return the minimum time (in years) for which this MagneticModel should
@@ -284,7 +284,7 @@ namespace GeographicLib {
      * argument is made by MagneticModel::operator()() or
      * MagneticModel::Circle.
      **********************************************************************/
-    Math::real MinTime() const throw() { return _tmin; }
+    Math::real MinTime() const { return _tmin; }
 
     /**
      * @return the maximum time (in years) for which this MagneticModel should
@@ -295,20 +295,20 @@ namespace GeographicLib {
      * argument is made by MagneticModel::operator()() or
      * MagneticModel::Circle.
      **********************************************************************/
-    Math::real MaxTime() const throw() { return _tmax; }
+    Math::real MaxTime() const { return _tmax; }
 
     /**
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value of \e a inherited from the Geocentric object used in the
      *   constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
+    Math::real MajorRadius() const { return _earth.MajorRadius(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the Geocentric object used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw() { return _earth.Flattening(); }
+    Math::real Flattening() const { return _earth.Flattening(); }
     ///@}
 
     /**

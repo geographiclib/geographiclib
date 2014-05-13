@@ -23,7 +23,7 @@ namespace GeographicLib {
   Math::real OSGB::northoffset_ = 0;
   bool OSGB::init_ = false;
 
-  Math::real OSGB::computenorthoffset() throw() {
+  Math::real OSGB::computenorthoffset() {
     if (!init_) {
       real x, y;
       OSGBTM_.Forward(real(0), OriginLatitude(), real(0), x, y);

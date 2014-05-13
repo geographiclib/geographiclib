@@ -36,12 +36,12 @@ class GeodShort {
 private:
   real _a, _f, _f1, _b, _e2, _ep2, _e;
   EllipticFunction _E;
-  inline real eatanhe(real x) const throw()
+  inline real eatanhe(real x) const
   { return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x); }
   static inline real psi0f(real phi) { return Math::asinh(tan(phi)); }
   static inline real invpsi0f(real psi) { return atan(sinh(psi)); }
   inline real psif(real phi) { return psi0f(phi) - eatanhe(sin(phi)); }
-  static inline void SinCosNorm(real& sinx, real& cosx) throw() {
+  static inline void SinCosNorm(real& sinx, real& cosx) {
     real r = Math::hypot(sinx, cosx);
     sinx /= r;
     cosx /= r;

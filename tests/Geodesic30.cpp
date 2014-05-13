@@ -87,7 +87,7 @@ namespace GeographicLib {
   template<typename real>
   real Geodesic30<real>::SinCosSeries(bool sinp,
                                       real sinx, real cosx,
-                                      const real c[], int n) throw() {
+                                      const real c[], int n) {
     // Evaluate
     // y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
     //            sum(c[i] * cos((2*i+1) * x), i, 0, n-1) :
@@ -111,7 +111,7 @@ namespace GeographicLib {
 
   template<typename real>
   GeodesicLine30<real> Geodesic30<real>::Line(real lat1, real lon1, real azi1,
-                                              unsigned caps) const throw() {
+                                              unsigned caps) const {
     return GeodesicLine30<real>(*this, lat1, lon1, azi1, caps);
   }
 
@@ -122,7 +122,7 @@ namespace GeographicLib {
                                    real& lat2, real& lon2, real& azi2,
                                    real& s12, real& m12,
                                    real& M12, real& M21,
-                                   real& S12) const throw() {
+                                   real& S12) const {
     return GeodesicLine30<real>(*this, lat1, lon1, azi1,
                                 // Automatically supply DISTANCE_IN if necessary
                                 outmask | (arcmode ? NONE : DISTANCE_IN))
@@ -137,7 +137,7 @@ namespace GeographicLib {
                                     unsigned outmask,
                                     real& s12, real& azi1, real& azi2,
                                     real& m12, real& M12, real& M21,
-                                    real& S12) const throw() {
+                                    real& S12) const {
     outmask &= OUT_ALL;
     lon1 = Math::AngNormalize(lon1);
     real lon12 = Math::AngNormalize(Math::AngNormalize(lon2) - lon1);
@@ -442,7 +442,7 @@ namespace GeographicLib {
                                  real& s12b, real& m12a, real& m0,
                                  bool scalep, real& M12, real& M21,
                                  // Scratch areas of the right size
-                                 real C1a[], real C2a[]) const throw() {
+                                 real C1a[], real C2a[]) const {
     // Return m12a = (reduced length)/_a; also calculate s12b = distance/_b,
     // and m0 = coefficient of secular term in expression for reduced length.
     C1f(eps, C1a);
@@ -480,7 +480,7 @@ namespace GeographicLib {
   }
 
   template<typename real>
-  real Geodesic30<real>::Astroid(real x, real y) throw() {
+  real Geodesic30<real>::Astroid(real x, real y) {
     // Solve k^4+2*k^3-(x^2+y^2-1)*k^2-2*y^2*k-y^2 = 0 for positive root k.
     // This solution is adapted from Geocentric::Reverse.
     real k;
@@ -540,7 +540,7 @@ namespace GeographicLib {
                                       // Only updated if return val >= 0
                                       real& salp2, real& calp2,
                                       // Scratch areas of the right size
-                                      real C1a[], real C2a[]) const throw() {
+                                      real C1a[], real C2a[]) const {
     // Return a starting point for Newton's method in salp1 and calp1 (function
     // value is -1).  If Newton's method doesn't need to be used, return also
     // salp2 and calp2 and function value is sig12.
@@ -698,7 +698,7 @@ namespace GeographicLib {
                                   bool diffp, real& dlam12,
                                   // Scratch areas of the right size
                                   real C1a[], real C2a[], real C3a[]) const
-    throw() {
+    {
 
     if (sbet1 == 0 && calp1 == 0)
       // Break degeneracy of equatorial line.  This case has already been
@@ -772,7 +772,7 @@ namespace GeographicLib {
   }
 
   template<typename real>
-  real Geodesic30<real>::A3f(real eps) const throw() {
+  real Geodesic30<real>::A3f(real eps) const {
     // Evaluation sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner's method
     real v = 0;
     for (int i = nA3x_; i; )
@@ -781,7 +781,7 @@ namespace GeographicLib {
   }
 
   template<typename real>
-  void Geodesic30<real>::C3f(real eps, real c[]) const throw() {
+  void Geodesic30<real>::C3f(real eps, real c[]) const {
     // Evaluation C3 coeffs by Horner's method
     // Elements c[1] thru c[nC3_ - 1] are set
     for (int j = nC3x_, k = nC3_ - 1; k; ) {
@@ -799,7 +799,7 @@ namespace GeographicLib {
   }
 
   template<typename real>
-  void Geodesic30<real>::C4f(real k2, real c[]) const throw() {
+  void Geodesic30<real>::C4f(real k2, real c[]) const {
     // Evaluation C4 coeffs by Horner's method
     // Elements c[0] thru c[nC4_ - 1] are set
     for (int j = nC4x_, k = nC4_; k; ) {
@@ -820,7 +820,7 @@ namespace GeographicLib {
 
   // The scale factor A1-1 = mean value of (d/dsigma)I1 - 1
   template<typename real>
-  real Geodesic30<real>::A1m1f(real eps) throw() {
+  real Geodesic30<real>::A1m1f(real eps) {
     real
       eps2 = Math::sq(eps),
       t;
@@ -843,7 +843,7 @@ namespace GeographicLib {
 
   // The coefficients C1[l] in the Fourier expansion of B1
   template<typename real>
-  void Geodesic30<real>::C1f(real eps, real c[]) throw() {
+  void Geodesic30<real>::C1f(real eps, real c[]) {
     real
       eps2 = Math::sq(eps),
       d = eps;
@@ -1021,7 +1021,7 @@ namespace GeographicLib {
 
   // The coefficients C1p[l] in the Fourier expansion of B1p
   template<typename real>
-  void Geodesic30<real>::C1pf(real eps, real c[]) throw() {
+  void Geodesic30<real>::C1pf(real eps, real c[]) {
     real
       eps2 = Math::sq(eps),
       d = eps;
@@ -1356,7 +1356,7 @@ namespace GeographicLib {
 
   // The scale factor A2-1 = mean value of (d/dsigma)I2 - 1
   template<typename real>
-  real Geodesic30<real>::A2m1f(real eps) throw() {
+  real Geodesic30<real>::A2m1f(real eps) {
     real
       eps2 = Math::sq(eps),
       t;
@@ -1381,7 +1381,7 @@ namespace GeographicLib {
 
   // The coefficients C2[l] in the Fourier expansion of B2
   template<typename real>
-  void Geodesic30<real>::C2f(real eps, real c[]) throw() {
+  void Geodesic30<real>::C2f(real eps, real c[]) {
     real
       eps2 = Math::sq(eps),
       d = eps;
@@ -1574,7 +1574,7 @@ namespace GeographicLib {
 
   // The scale factor A3 = mean value of (d/dsigma)I3
   template<typename real>
-  void Geodesic30<real>::A3coeff() throw() {
+  void Geodesic30<real>::A3coeff() {
     switch (nA3_) {
     case 30:
       _A3x[0] = 1;
@@ -1681,7 +1681,7 @@ namespace GeographicLib {
 
   // The coefficients C3[l] in the Fourier expansion of B3
   template<typename real>
-  void Geodesic30<real>::C3coeff() throw() {
+  void Geodesic30<real>::C3coeff() {
     switch (nC3_) {
     case 30:
       _C3x[0] = (1-_n)/real(4.L);
@@ -3226,7 +3226,7 @@ namespace GeographicLib {
 
   // The coefficients C4[l] in the Fourier expansion of I4
   template<typename real>
-  void Geodesic30<real>::C4coeff() throw() {
+  void Geodesic30<real>::C4coeff() {
     switch (nC4_) {
     case 30:
       _C4x[0] = (_ep2*(_ep2*(_ep2*(_ep2*(_ep2*(_ep2*(_ep2*(_ep2*(_ep2*(_ep2*

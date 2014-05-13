@@ -109,7 +109,7 @@ namespace GeographicLib {
   }
 
   void AlbersEqualArea::Init(real sphi1, real cphi1,
-                             real sphi2, real cphi2, real k1) throw() {
+                             real sphi2, real cphi2, real k1) {
     {
       real r;
       r = Math::hypot(sphi1, cphi1);
@@ -282,7 +282,7 @@ namespace GeographicLib {
                                            real(-1), real(0), real(-1), real(0),
                                            real(1));
 
-  Math::real AlbersEqualArea::txif(real tphi) const throw() {
+  Math::real AlbersEqualArea::txif(real tphi) const {
     // sxi = ( sphi/(1-e2*sphi^2) + atanhee(sphi) ) /
     //       ( 1/(1-e2) + atanhee(1) )
     //
@@ -309,7 +309,7 @@ namespace GeographicLib {
             ( es1m1 / es2m1a + atanhee(es1p1) ) );
   }
 
-  Math::real AlbersEqualArea::tphif(real txi) const throw() {
+  Math::real AlbersEqualArea::tphif(real txi) const {
     real
       tphi = txi,
       stol = tol_ * max(real(1), abs(txi));
@@ -332,7 +332,7 @@ namespace GeographicLib {
 
   // return atanh(sqrt(x))/sqrt(x) - 1 = y/3 + y^2/5 + y^3/7 + ...
   // typical x < e^2 = 2*f
-  Math::real AlbersEqualArea::atanhxm1(real x) throw() {
+  Math::real AlbersEqualArea::atanhxm1(real x) {
     real s = 0;
     if (abs(x) < real(0.5)) {
       real os = -1, y = 1, k = 1;
@@ -350,7 +350,7 @@ namespace GeographicLib {
   }
 
   // return (Datanhee(1,y) - Datanhee(1,x))/(y-x)
-  Math::real AlbersEqualArea::DDatanhee(real x, real y) const throw() {
+  Math::real AlbersEqualArea::DDatanhee(real x, real y) const {
     real s = 0;
     if (_e2 * (abs(x) + abs(y)) < real(0.5)) {
       real os = -1, z = 1, k = 1, t = 0, c = 0, en = 1;
@@ -372,7 +372,7 @@ namespace GeographicLib {
 
   void AlbersEqualArea::Forward(real lon0, real lat, real lon,
                                 real& x, real& y, real& gamma, real& k)
-    const throw() {
+    const {
     lon = Math::AngDiff(Math::AngNormalize(lon0), Math::AngNormalize(lon));
     lat *= _sign;
     real
@@ -398,7 +398,7 @@ namespace GeographicLib {
   void AlbersEqualArea::Reverse(real lon0, real x, real y,
                                 real& lat, real& lon,
                                 real& gamma, real& k)
-    const throw() {
+    const {
     y *= _sign;
     real
       nx = _k0 * _n0 * x, ny = _k0 * _n0 * y, y1 =  _nrho0 - ny,

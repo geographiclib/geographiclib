@@ -45,7 +45,7 @@ namespace GeographicLib {
       } else
         throw GeographicErr("Neither " + sa[0] + " nor " + sa[2]
                             + " of the form UTM/UPS Zone + Hemisphere"
-                            + " (ex: 38N, 09S, N)");
+                            + " (ex: 38n, 09s, n)");
       UTMUPS::DecodeZone(sa[zoneind], _zone, _northp);
       for (unsigned i = 0; i < 2; ++i)
         (i ? _northing : _easting) = DMS::Decode(sa[coordind + i]);
@@ -86,7 +86,7 @@ namespace GeographicLib {
 
   string GeoCoords::MGRSRepresentation(int prec) const {
     // Max precision is um
-    prec = max(0, min(6, prec) + 5);
+    prec = max(-1, min(6, prec) + 5);
     string mgrs;
     MGRS::Forward(_zone, _northp, _easting, _northing, _lat, prec, mgrs);
     return mgrs;
@@ -94,7 +94,7 @@ namespace GeographicLib {
 
   string GeoCoords::AltMGRSRepresentation(int prec) const {
     // Max precision is um
-    prec = max(0, min(6, prec) + 5);
+    prec = max(-1, min(6, prec) + 5);
     string mgrs;
     MGRS::Forward(_alt_zone, _northp, _alt_easting, _alt_northing, _lat, prec,
                   mgrs);
@@ -103,11 +103,11 @@ namespace GeographicLib {
 
   void GeoCoords::UTMUPSString(int zone, bool northp,
                                real easting, real northing, int prec,
-                               std::string& utm) {
+                               bool abbrev, std::string& utm) {
     ostringstream os;
     prec = max(-5, min(9 + Math::extradigits, prec));
     real scale = prec < 0 ? pow(real(10), -prec) : real(1);
-    os << UTMUPS::EncodeZone(zone, northp) << fixed << setfill('0');
+    os << UTMUPS::EncodeZone(zone, northp, abbrev) << fixed << setfill('0');
     if (Math::isfinite(easting)) {
       os << " " << setprecision(max(0, prec)) << easting / scale;
       if (prec < 0 && abs(easting / scale) > real(0.5))
@@ -123,35 +123,38 @@ namespace GeographicLib {
     utm = os.str();
   }
 
-  string GeoCoords::UTMUPSRepresentation(int prec) const {
+  string GeoCoords::UTMUPSRepresentation(int prec, bool abbrev) const {
     string utm;
-    UTMUPSString(_zone, _northp, _easting, _northing, prec, utm);
+    UTMUPSString(_zone, _northp, _easting, _northing, prec, abbrev, utm);
     return utm;
   }
 
-  string GeoCoords::UTMUPSRepresentation(bool northp, int prec) const {
+  string GeoCoords::UTMUPSRepresentation(bool northp, int prec, bool abbrev)
+    const {
     real e, n;
     int z;
     UTMUPS::Transfer(_zone, _northp, _easting, _northing,
                      _zone,  northp,  e,        n,       z);
     string utm;
-    UTMUPSString(_zone, northp, e, n, prec, utm);
+    UTMUPSString(_zone, northp, e, n, prec, abbrev, utm);
     return utm;
   }
 
-  string GeoCoords::AltUTMUPSRepresentation(int prec) const {
+  string GeoCoords::AltUTMUPSRepresentation(int prec, bool abbrev) const {
     string utm;
-    UTMUPSString(_alt_zone, _northp, _alt_easting, _alt_northing, prec, utm);
+    UTMUPSString(_alt_zone, _northp, _alt_easting, _alt_northing, prec,
+                 abbrev, utm);
     return utm;
   }
 
-  string GeoCoords::AltUTMUPSRepresentation(bool northp, int prec) const {
+  string GeoCoords::AltUTMUPSRepresentation(bool northp, int prec, bool abbrev)
+    const {
     real e, n;
     int z;
     UTMUPS::Transfer(_alt_zone, _northp, _alt_easting, _alt_northing,
                      _alt_zone,  northp,      e,            n,       z);
     string utm;
-    UTMUPSString(_alt_zone, northp, e, n, prec, utm);
+    UTMUPSString(_alt_zone, northp, e, n, prec, abbrev, utm);
     return utm;
   }
 

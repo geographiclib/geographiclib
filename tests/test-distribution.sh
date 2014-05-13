@@ -1,7 +1,7 @@
 #! /bin/sh
 #
 # tar.gz and zip distrib files copied to $DEVELSOURCE
-# html documentation rsync'ed to  $WEBDIST/htdocs/$VERSION-pre/
+# html documentation rsync'ed to $WEBDIST/htdocs/$VERSION-pre/
 #
 # Windows version ready to build in
 # $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10{,-x64}
@@ -40,7 +40,7 @@ set -e
 #   python/setup.py
 #   tests/test-distribution.sh
 
-VERSION=1.35
+VERSION=1.36
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
@@ -85,6 +85,7 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
     echo 'rm -rf c:/scratch/$b'
     echo 'mkdir -p c:/scratch/$b'
     echo 'cd c:/scratch/$b'
+    echo 'unset GEOGRAPHICLIB_DATA'
     echo cmake -G \"Visual Studio 10\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Debug   --target ALL_BUILD
     echo cmake --build . --config Debug   --target exampleprograms
@@ -105,6 +106,9 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
     echo 'rm -rf c:/scratch/$b'
     echo 'mkdir -p c:/scratch/$b'
     echo 'cd c:/scratch/$b'
+    echo 'unset GEOGRAPHICLIB_DATA'
+    echo 'MATLAB_ROOT=`cygpath "c:/Program Files/MATLAB/R2013a"`'
+    echo 'export PATH="$PATH:$MATLAB_ROOT/runtime/win64:$MATLAB_ROOT/bin"'
     echo cmake -G \"Visual Studio 10 Win64\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10-x64/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Debug   --target ALL_BUILD
     echo cmake --build . --config Debug   --target RUN_TESTS
@@ -126,6 +130,7 @@ mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12
     echo 'rm -rf c:/scratch/$b'
     echo 'mkdir -p c:/scratch/$b'
     echo 'cd c:/scratch/$b'
+    echo 'unset GEOGRAPHICLIB_DATA'
     echo cmake -G \"Visual Studio 12\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc12/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
     echo cmake --build . --config Debug   --target ALL_BUILD
     echo cmake --build . --config Debug   --target examples/exampleprograms
@@ -176,18 +181,21 @@ mkdir BUILD
 cd BUILD
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
 make -j$NUMCPUS all
+make -j$NUMCPUS test
 make -j$NUMCPUS exampleprograms
 make install
 mkdir ../BUILD-matlab
 cd ../BUILD-matlab
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
 make -j$NUMCPUS all
+make -j$NUMCPUS test
 make -j$NUMCPUS matlabinterface
 make install
 mkdir ../BUILD-system
 cd ../BUILD-system
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D MATLAB_COMPILER=mkoctfile ..
 make -j$NUMCPUS all
+make -j$NUMCPUS test
 make -j$NUMCPUS matlabinterface
 
 mkdir -p $TEMP/geographiclib-matlab/private
@@ -356,7 +364,6 @@ cd $TEMP/gitr/geographiclib
 git add .
 git commit -m "Version $VERSION ($DATE)"
 git tag -m "Version $VERSION ($DATE)" r$VERSION
-git tag -m "Mark stable version" -f stable
 git push
 git push --tags
 

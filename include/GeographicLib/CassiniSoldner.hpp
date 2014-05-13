@@ -77,7 +77,7 @@ namespace GeographicLib {
     static const unsigned maxit_ = 10;
 
     // The following private helper functions are copied from Geodesic.
-    static inline real AngRound(real x) throw() {
+    static inline real AngRound(real x) {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
       // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
       // is about 1000 times more resolution than we get with angles around 90
@@ -89,7 +89,7 @@ namespace GeographicLib {
       y = y < z ? z - (z - y) : y;
       return x < 0 ? -y : y;
     }
-    static inline void SinCosNorm(real& sinx, real& cosx) throw() {
+    static inline void SinCosNorm(real& sinx, real& cosx) {
       real r = Math::hypot(sinx, cosx);
       sinx /= r;
       cosx /= r;
@@ -105,7 +105,7 @@ namespace GeographicLib {
      * This constructor makes an "uninitialized" object.  Call Reset to set the
      * central latitude and longitude, prior to calling Forward and Reverse.
      **********************************************************************/
-    explicit CassiniSoldner(const Geodesic& earth = Geodesic::WGS84) throw()
+    explicit CassiniSoldner(const Geodesic& earth = Geodesic::WGS84)
       : _earth(earth) {}
 
     /**
@@ -120,7 +120,7 @@ namespace GeographicLib {
      * lon0 should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     CassiniSoldner(real lat0, real lon0,
-                   const Geodesic& earth = Geodesic::WGS84) throw()
+                   const Geodesic& earth = Geodesic::WGS84)
       : _earth(earth) {
       Reset(lat0, lon0);
     }
@@ -134,7 +134,7 @@ namespace GeographicLib {
      * \e lat0 should be in the range [&minus;90&deg;, 90&deg;] and \e
      * lon0 should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
-    void Reset(real lat0, real lon0) throw();
+    void Reset(real lat0, real lon0);
 
     /**
      * Forward projection, from geographic to Cassini-Soldner.
@@ -153,7 +153,7 @@ namespace GeographicLib {
      * origin has not been set.
      **********************************************************************/
     void Forward(real lat, real lon,
-                 real& x, real& y, real& azi, real& rk) const throw();
+                 real& x, real& y, real& azi, real& rk) const;
 
     /**
      * Reverse projection, from Cassini-Soldner to geographic.
@@ -171,13 +171,13 @@ namespace GeographicLib {
      * nothing if the origin has not been set.
      **********************************************************************/
     void Reverse(real x, real y,
-                 real& lat, real& lon, real& azi, real& rk) const throw();
+                 real& lat, real& lon, real& azi, real& rk) const;
 
     /**
      * CassiniSoldner::Forward without returning the azimuth and scale.
      **********************************************************************/
     void Forward(real lat, real lon,
-                 real& x, real& y) const throw() {
+                 real& x, real& y) const {
       real azi, rk;
       Forward(lat, lon, x, y, azi, rk);
     }
@@ -186,7 +186,7 @@ namespace GeographicLib {
      * CassiniSoldner::Reverse without returning the azimuth and scale.
      **********************************************************************/
     void Reverse(real x, real y,
-                 real& lat, real& lon) const throw() {
+                 real& lat, real& lon) const {
       real azi, rk;
       Reverse(x, y, lat, lon, azi, rk);
     }
@@ -197,31 +197,31 @@ namespace GeographicLib {
     /**
      * @return true if the object has been initialized.
      **********************************************************************/
-    bool Init() const throw() { return _meridian.Init(); }
+    bool Init() const { return _meridian.Init(); }
 
     /**
      * @return \e lat0 the latitude of origin (degrees).
      **********************************************************************/
-    Math::real LatitudeOrigin() const throw()
+    Math::real LatitudeOrigin() const
     { return _meridian.Latitude(); }
 
     /**
      * @return \e lon0 the longitude of origin (degrees).
      **********************************************************************/
-    Math::real LongitudeOrigin() const throw()
+    Math::real LongitudeOrigin() const
     { return _meridian.Longitude(); }
 
     /**
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
+    Math::real MajorRadius() const { return _earth.MajorRadius(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw() { return _earth.Flattening(); }
+    Math::real Flattening() const { return _earth.Flattening(); }
     ///@}
 
     /// \cond SKIP
@@ -229,7 +229,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw()
+    Math::real InverseFlattening() const
     { return _earth.InverseFlattening(); }
     /// \endcond
   };

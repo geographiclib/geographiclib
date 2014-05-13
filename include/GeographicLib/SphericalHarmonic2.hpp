@@ -195,7 +195,7 @@ namespace GeographicLib {
      * exception.
      **********************************************************************/
     Math::real operator()(real tau1, real tau2, real x, real y, real z)
-      const throw() {
+      const {
       real f[] = {1, tau1, tau2};
       real v = 0;
       real dummy;
@@ -232,7 +232,7 @@ namespace GeographicLib {
      * an exception.
      **********************************************************************/
     Math::real operator()(real tau1, real tau2, real x, real y, real z,
-                          real& gradx, real& grady, real& gradz) const throw() {
+                          real& gradx, real& grady, real& gradz) const {
       real f[] = {1, tau1, tau2};
       real v = 0;
       switch (_norm) {
@@ -297,17 +297,17 @@ namespace GeographicLib {
     /**
      * @return the zeroth SphericalEngine::coeff object.
      **********************************************************************/
-    const SphericalEngine::coeff& Coefficients() const throw()
+    const SphericalEngine::coeff& Coefficients() const
     { return _c[0]; }
     /**
      * @return the first SphericalEngine::coeff object.
      **********************************************************************/
-    const SphericalEngine::coeff& Coefficients1() const throw()
+    const SphericalEngine::coeff& Coefficients1() const
     { return _c[1]; }
     /**
      * @return the second SphericalEngine::coeff object.
      **********************************************************************/
-    const SphericalEngine::coeff& Coefficients2() const throw()
+    const SphericalEngine::coeff& Coefficients2() const
     { return _c[2]; }
   };
 

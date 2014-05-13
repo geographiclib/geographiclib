@@ -79,7 +79,7 @@ cat <<EOF
     </h3>
     <form action="/cgi-bin/GeoConvert" method="get">
       <p>
-        Location (ex. &laquo;<tt>33.33 44.4</tt>&raquo;, &laquo;<tt>33d19'47"N 44d23.9'E</tt>&raquo;, &laquo;<tt>38SMB4488</tt>&raquo;, &laquo;<tt>38N 444000 3688000</tt>&raquo;):<br>
+        Location (ex. &laquo;<tt>33.33 44.4</tt>&raquo;, &laquo;<tt>33d19'47"N 44d23.9'E</tt>&raquo;, &laquo;<tt>38SMB4488</tt>&raquo;, &laquo;<tt>38n 444000 3688000</tt>&raquo;):<br>
         &nbsp;&nbsp;&nbsp;
         <input type=text name="input" size=40 value="$INPUTENC">
       </p>
@@ -180,20 +180,21 @@ cat <<EOF
         83.627 -32.664                24XWT783908
         W32d40 N83d37.6               YUB17770380
         83&deg;37'39"N 32&deg;39'52"W     UTM:
-        87:37:39 32:39:52             25N 504158 9286521
-        32:39.9W 83:37.6N             430000 9290000 26N
+        87:37:39 32:39:52             25n 504158 9286521
+        32:39.9W 83:37.6N             430000 9290000 26n
                                   UPS:
-                                      N 1617772 1403805</pre>
+                                      n 1617772 1403805</pre>
       <b>Notes:</b>
       <ul>
 	<li>
-	  The letter in following the zone number in the UTM position is a
-	  hemisphere designator (N or S) and <em>not</em> the MGRS latitude
-	  band letter.
+	  The letter in following the zone number in the UTM position is
+	  a hemisphere designator (n or s) and <em>not</em> the MGRS
+	  latitude band letter.  "north" or "south" can also be used,
+	  e.g., 25north.
 	<li>
 	  MGRS coordinates are taken to refer to <em>grid squares</em>
 	  (<em>not</em> to the intersections of grid lines).  Thus in UTM
-	  zone 38N, the square area with easting in [444 km, 445 km) and
+	  zone 38n, the square area with easting in [444 km, 445 km) and
 	  northing in [3688 km, 3689 km) corresponds to the MGRS square
 	  38SMB4488 (at 1 km precision).
 	  <ul>

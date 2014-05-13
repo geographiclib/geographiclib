@@ -13,7 +13,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  void PolygonArea::AddPoint(real lat, real lon) throw() {
+  void PolygonArea::AddPoint(real lat, real lon) {
     lon = Math::AngNormalize(lon);
     if (_num == 0) {
       _lat0 = _lat1 = lat;
@@ -31,7 +31,7 @@ namespace GeographicLib {
     ++_num;
   }
 
-  void PolygonArea::AddEdge(real azi, real s) throw() {
+  void PolygonArea::AddEdge(real azi, real s) {
     if (_num) {                 // Do nothing if _num is zero
       real lat, lon, S12, t;
       _earth.GenDirect(_lat1, _lon1, azi, false, s, _mask,
@@ -47,7 +47,7 @@ namespace GeographicLib {
   }
 
   unsigned PolygonArea::Compute(bool reverse, bool sign,
-                                real& perimeter, real& area) const throw() {
+                                real& perimeter, real& area) const {
     real s12, S12, t;
     if (_num < 2) {
       perimeter = 0;
@@ -88,7 +88,7 @@ namespace GeographicLib {
   }
 
   unsigned PolygonArea::TestPoint(real lat, real lon, bool reverse, bool sign,
-                                  real& perimeter, real& area) const throw() {
+                                  real& perimeter, real& area) const {
     if (_num == 0) {
       perimeter = 0;
       if (!_polyline)
@@ -138,7 +138,7 @@ namespace GeographicLib {
   }
 
   unsigned PolygonArea::TestEdge(real azi, real s, bool reverse, bool sign,
-                                 real& perimeter, real& area) const throw() {
+                                 real& perimeter, real& area) const {
     if (_num == 0) {            // we don't have a starting point!
       perimeter = Math::NaN<real>();
       if (!_polyline)

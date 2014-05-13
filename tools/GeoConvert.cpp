@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     bool centerp = true, swaplatlong = false;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
-    bool sethemisphere = false, northp = false;
+    bool sethemisphere = false, northp = false, abbrev = true;
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -69,6 +69,10 @@ int main(int argc, char* argv[]) {
         centerp = false;
       else if (arg == "-w")
         swaplatlong = true;
+      else if (arg == "-l")
+        abbrev = false;
+      else if (arg == "-a")
+        abbrev = true;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
@@ -196,8 +200,8 @@ int main(int argc, char* argv[]) {
           break;
         case UTMUPS:
           os = (sethemisphere
-                ? p.AltUTMUPSRepresentation(northp, prec)
-                : p.AltUTMUPSRepresentation(prec));
+                ? p.AltUTMUPSRepresentation(northp, prec, abbrev)
+                : p.AltUTMUPSRepresentation(prec, abbrev));
           break;
         case MGRS:
           os = p.AltMGRSRepresentation(prec);

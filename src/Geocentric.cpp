@@ -33,7 +33,7 @@ namespace GeographicLib {
 
   void Geocentric::IntForward(real lat, real lon, real h,
                               real& X, real& Y, real& Z,
-                              real M[dim2_]) const throw() {
+                              real M[dim2_]) const {
     lon = Math::AngNormalize(lon);
     real
       phi = lat * Math::degree<real>(),
@@ -53,7 +53,7 @@ namespace GeographicLib {
 
   void Geocentric::IntReverse(real X, real Y, real Z,
                               real& lat, real& lon, real& h,
-                              real M[dim2_]) const throw() {
+                              real M[dim2_]) const {
     real
       R = Math::hypot(X, Y),
       slam = R ? Y / R : 0,
@@ -157,7 +157,7 @@ namespace GeographicLib {
   }
 
   void Geocentric::Rotation(real sphi, real cphi, real slam, real clam,
-                            real M[dim2_]) throw() {
+                            real M[dim2_]) {
     // This rotation matrix is given by the following quaternion operations
     // qrot(lam, [0,0,1]) * qrot(phi, [0,-1,0]) * [1,1,1,1]/2
     // or

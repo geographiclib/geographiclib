@@ -150,8 +150,8 @@ namespace GeographicLib {
 
     static real SinCosSeries(bool sinp,
                              real sinx, real cosx, const real c[], int n)
-      throw();
-    static inline real AngRound(real x) throw() {
+     ;
+    static inline real AngRound(real x) {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
       // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
       // is about 1000 times more resolution than we get with angles around 90
@@ -163,12 +163,12 @@ namespace GeographicLib {
       y = y < z ? z - (z - y) : y;
       return x < 0 ? -y : y;
     }
-    static inline void SinCosNorm(real& sinx, real& cosx) throw() {
+    static inline void SinCosNorm(real& sinx, real& cosx) {
       real r = Math::hypot(sinx, cosx);
       sinx /= r;
       cosx /= r;
     }
-    static real Astroid(real x, real y) throw();
+    static real Astroid(real x, real y);
 
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
     real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
@@ -178,34 +178,34 @@ namespace GeographicLib {
                  real cbet1, real cbet2,
                  real& s12s, real& m12a, real& m0,
                  bool scalep, real& M12, real& M21,
-                 real C1a[], real C2a[]) const throw();
+                 real C1a[], real C2a[]) const;
     real InverseStart(real sbet1, real cbet1, real sbet2, real cbet2,
                       real lam12,
                       real& salp1, real& calp1,
                       real& salp2, real& calp2,
-                      real C1a[], real C2a[]) const throw();
+                      real C1a[], real C2a[]) const;
     real Lambda12(real sbet1, real cbet1, real sbet2, real cbet2,
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
                   real& eps, real& domg12, bool diffp, real& dlam12,
                   real C1a[], real C2a[], real C3a[])
-      const throw();
+      const;
 
     // These are Maxima generated functions to provide series approximations to
     // the integrals for the ellipsoidal geodesic.
-    static real A1m1f(real eps) throw();
-    static void C1f(real eps, real c[]) throw();
-    static void C1pf(real eps, real c[]) throw();
-    static real A2m1f(real eps) throw();
-    static void C2f(real eps, real c[]) throw();
+    static real A1m1f(real eps);
+    static void C1f(real eps, real c[]);
+    static void C1pf(real eps, real c[]);
+    static real A2m1f(real eps);
+    static void C2f(real eps, real c[]);
 
-    void A3coeff() throw();
-    real A3f(real eps) const throw();
-    void C3coeff() throw();
-    void C3f(real eps, real c[]) const throw();
-    void C4coeff() throw();
-    void C4f(real k2, real c[]) const throw();
+    void A3coeff();
+    real A3f(real eps) const;
+    void C3coeff();
+    void C3f(real eps, real c[]) const;
+    void C4coeff();
+    void C4f(real k2, real c[]) const;
 
   public:
 
@@ -334,7 +334,7 @@ namespace GeographicLib {
     real Direct(real lat1, real lon1, real azi1, real s12,
                       real& lat2, real& lon2, real& azi2,
                       real& m12, real& M12, real& M21, real& S12)
-      const throw() {
+      const {
       real t;
       return GenDirect(lat1, lon1, azi1, false, s12,
                        LATITUDE | LONGITUDE | AZIMUTH |
@@ -347,7 +347,7 @@ namespace GeographicLib {
      **********************************************************************/
     real Direct(real lat1, real lon1, real azi1, real s12,
                       real& lat2, real& lon2)
-      const throw() {
+      const {
       real t;
       return GenDirect(lat1, lon1, azi1, false, s12,
                        LATITUDE | LONGITUDE,
@@ -359,7 +359,7 @@ namespace GeographicLib {
      **********************************************************************/
     real Direct(real lat1, real lon1, real azi1, real s12,
                       real& lat2, real& lon2, real& azi2)
-      const throw() {
+      const {
       real t;
       return GenDirect(lat1, lon1, azi1, false, s12,
                        LATITUDE | LONGITUDE | AZIMUTH,
@@ -371,7 +371,7 @@ namespace GeographicLib {
      **********************************************************************/
     real Direct(real lat1, real lon1, real azi1, real s12,
                       real& lat2, real& lon2, real& azi2, real& m12)
-      const throw() {
+      const {
       real t;
       return GenDirect(lat1, lon1, azi1, false, s12,
                        LATITUDE | LONGITUDE | AZIMUTH | REDUCEDLENGTH,
@@ -384,7 +384,7 @@ namespace GeographicLib {
     real Direct(real lat1, real lon1, real azi1, real s12,
                       real& lat2, real& lon2, real& azi2,
                       real& M12, real& M21)
-      const throw() {
+      const {
       real t;
       return GenDirect(lat1, lon1, azi1, false, s12,
                        LATITUDE | LONGITUDE | AZIMUTH | GEODESICSCALE,
@@ -397,7 +397,7 @@ namespace GeographicLib {
     real Direct(real lat1, real lon1, real azi1, real s12,
                       real& lat2, real& lon2, real& azi2,
                       real& m12, real& M12, real& M21)
-      const throw() {
+      const {
       real t;
       return GenDirect(lat1, lon1, azi1, false, s12,
                        LATITUDE | LONGITUDE | AZIMUTH |
@@ -448,7 +448,7 @@ namespace GeographicLib {
     void ArcDirect(real lat1, real lon1, real azi1, real a12,
                    real& lat2, real& lon2, real& azi2, real& s12,
                    real& m12, real& M12, real& M21, real& S12)
-      const throw() {
+      const {
       GenDirect(lat1, lon1, azi1, true, a12,
                 LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
                 REDUCEDLENGTH | GEODESICSCALE | AREA,
@@ -459,7 +459,7 @@ namespace GeographicLib {
      * See the documentation for Geodesic30::ArcDirect.
      **********************************************************************/
     void ArcDirect(real lat1, real lon1, real azi1, real a12,
-                   real& lat2, real& lon2) const throw() {
+                   real& lat2, real& lon2) const {
       real t;
       GenDirect(lat1, lon1, azi1, true, a12,
                 LATITUDE | LONGITUDE,
@@ -470,7 +470,7 @@ namespace GeographicLib {
      * See the documentation for Geodesic30::ArcDirect.
      **********************************************************************/
     void ArcDirect(real lat1, real lon1, real azi1, real a12,
-                   real& lat2, real& lon2, real& azi2) const throw() {
+                   real& lat2, real& lon2, real& azi2) const {
       real t;
       GenDirect(lat1, lon1, azi1, true, a12,
                 LATITUDE | LONGITUDE | AZIMUTH,
@@ -482,7 +482,7 @@ namespace GeographicLib {
      **********************************************************************/
     void ArcDirect(real lat1, real lon1, real azi1, real a12,
                    real& lat2, real& lon2, real& azi2, real& s12)
-      const throw() {
+      const {
       real t;
       GenDirect(lat1, lon1, azi1, true, a12,
                 LATITUDE | LONGITUDE | AZIMUTH | DISTANCE,
@@ -494,7 +494,7 @@ namespace GeographicLib {
      **********************************************************************/
     void ArcDirect(real lat1, real lon1, real azi1, real a12,
                    real& lat2, real& lon2, real& azi2,
-                   real& s12, real& m12) const throw() {
+                   real& s12, real& m12) const {
       real t;
       GenDirect(lat1, lon1, azi1, true, a12,
                 LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
@@ -507,7 +507,7 @@ namespace GeographicLib {
      **********************************************************************/
     void ArcDirect(real lat1, real lon1, real azi1, real a12,
                    real& lat2, real& lon2, real& azi2, real& s12,
-                   real& M12, real& M21) const throw() {
+                   real& M12, real& M21) const {
       real t;
       GenDirect(lat1, lon1, azi1, true, a12,
                 LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
@@ -520,7 +520,7 @@ namespace GeographicLib {
      **********************************************************************/
     void ArcDirect(real lat1, real lon1, real azi1, real a12,
                    real& lat2, real& lon2, real& azi2, real& s12,
-                   real& m12, real& M12, real& M21) const throw() {
+                   real& m12, real& M12, real& M21) const {
       real t;
       GenDirect(lat1, lon1, azi1, true, a12,
                 LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
@@ -580,7 +580,7 @@ namespace GeographicLib {
                          bool arcmode, real s12_a12, unsigned outmask,
                          real& lat2, real& lon2, real& azi2,
                          real& s12, real& m12, real& M12, real& M21,
-                         real& S12) const throw();
+                         real& S12) const;
     ///@}
 
     /** \name Inverse geodesic problem.
@@ -623,7 +623,7 @@ namespace GeographicLib {
      **********************************************************************/
     real Inverse(real lat1, real lon1, real lat2, real lon2,
                        real& s12, real& azi1, real& azi2, real& m12,
-                       real& M12, real& M21, real& S12) const throw() {
+                       real& M12, real& M21, real& S12) const {
       return GenInverse(lat1, lon1, lat2, lon2,
                         DISTANCE | AZIMUTH |
                         REDUCEDLENGTH | GEODESICSCALE | AREA,
@@ -634,7 +634,7 @@ namespace GeographicLib {
      * See the documentation for Geodesic30::Inverse.
      **********************************************************************/
     real Inverse(real lat1, real lon1, real lat2, real lon2,
-                       real& s12) const throw() {
+                       real& s12) const {
       real t;
       return GenInverse(lat1, lon1, lat2, lon2,
                         DISTANCE,
@@ -645,7 +645,7 @@ namespace GeographicLib {
      * See the documentation for Geodesic30::Inverse.
      **********************************************************************/
     real Inverse(real lat1, real lon1, real lat2, real lon2,
-                       real& azi1, real& azi2) const throw() {
+                       real& azi1, real& azi2) const {
       real t;
       return GenInverse(lat1, lon1, lat2, lon2,
                         AZIMUTH,
@@ -657,7 +657,7 @@ namespace GeographicLib {
      **********************************************************************/
     real Inverse(real lat1, real lon1, real lat2, real lon2,
                        real& s12, real& azi1, real& azi2)
-      const throw() {
+      const {
       real t;
       return GenInverse(lat1, lon1, lat2, lon2,
                         DISTANCE | AZIMUTH,
@@ -669,7 +669,7 @@ namespace GeographicLib {
      **********************************************************************/
     real Inverse(real lat1, real lon1, real lat2, real lon2,
                        real& s12, real& azi1, real& azi2, real& m12)
-      const throw() {
+      const {
       real t;
       return GenInverse(lat1, lon1, lat2, lon2,
                         DISTANCE | AZIMUTH | REDUCEDLENGTH,
@@ -681,7 +681,7 @@ namespace GeographicLib {
      **********************************************************************/
     real Inverse(real lat1, real lon1, real lat2, real lon2,
                        real& s12, real& azi1, real& azi2,
-                       real& M12, real& M21) const throw() {
+                       real& M12, real& M21) const {
       real t;
       return GenInverse(lat1, lon1, lat2, lon2,
                         DISTANCE | AZIMUTH | GEODESICSCALE,
@@ -693,7 +693,7 @@ namespace GeographicLib {
      **********************************************************************/
     real Inverse(real lat1, real lon1, real lat2, real lon2,
                        real& s12, real& azi1, real& azi2, real& m12,
-                       real& M12, real& M21) const throw() {
+                       real& M12, real& M21) const {
       real t;
       return GenInverse(lat1, lon1, lat2, lon2,
                         DISTANCE | AZIMUTH |
@@ -741,7 +741,7 @@ namespace GeographicLib {
                           unsigned outmask,
                           real& s12, real& azi1, real& azi2,
                           real& m12, real& M12, real& M21, real& S12)
-      const throw();
+      const;
     ///@}
 
     /** \name Interface to GeodesicLine30.
@@ -786,7 +786,7 @@ namespace GeographicLib {
      **********************************************************************/
     GeodesicLine30<real>
       Line(real lat1, real lon1, real azi1, unsigned caps = ALL)
-      const throw();
+      const;
 
     ///@}
 
@@ -798,20 +798,20 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value used in the constructor.
      **********************************************************************/
-    real MajorRadius() const throw() { return _a; }
+    real MajorRadius() const { return _a; }
 
     /**
      * @return \e f the  flattening of the ellipsoid.  This is the
      *   value used in the constructor.
      **********************************************************************/
-    real Flattening() const throw() { return _f; }
+    real Flattening() const { return _f; }
 
     /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    real InverseFlattening() const throw() { return 1/_f; }
+    real InverseFlattening() const { return 1/_f; }
     /// \endcond
 
     /**
@@ -820,7 +820,7 @@ namespace GeographicLib {
      *   Geodesic30::EllipsoidArea()/2 to the sum of \e S12 for each side of
      *   the polygon.
      **********************************************************************/
-    real EllipsoidArea() const throw()
+    real EllipsoidArea() const
     { return 4 * Math::pi<real>() * _c2; }
     ///@}
 

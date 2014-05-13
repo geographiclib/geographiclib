@@ -1120,6 +1120,12 @@
    [Surfaces with negative curvature and their geodesics]'',
    J. Math. Pures Appl. (Ser. 5) '''4''', 27--74 (1898).[[BR]]
    http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1898_5_4_A3_0
+ * J. S. Hadamard,[[BR]]
+   ''Sur la forme des lignes géodésiques à l'infini et sur les
+   géodésiques des surfaces réglées du second ordre [On geodesics at
+   infinity and on geodesics on ruled surfaces of second order],''
+   Bull. Soc. Math. France '''26''', 195--216 (1898).[[BR]]
+   http://www.numdam.org/item?id=BSMF_1898__26__195_0
  * R. Fricke,[[BR]]
    ''Kurzgefasste Vorlesungen über verschiedene Gebiete der
    höheren Mathematik mit Berücksichtigung der Anwendungen

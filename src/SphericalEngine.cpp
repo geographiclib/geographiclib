@@ -157,7 +157,7 @@ namespace GeographicLib {
   Math::real SphericalEngine::Value(const coeff c[], const real f[],
                                     real x, real y, real z, real a,
                                     real& gradx, real& grady, real& gradz)
-    throw() {
+    {
     STATIC_ASSERT(L > 0, "L must be positive");
     STATIC_ASSERT(norm == FULL || norm == SCHMIDT, "Unknown normalization");
     int N = c[0].nmx(), M = c[0].mmx();

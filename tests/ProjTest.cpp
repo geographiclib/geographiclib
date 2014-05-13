@@ -99,28 +99,28 @@ public:
       }
     }
   }
-  bool Next(real &x, real &y) throw() {
+  bool Next(real &x, real &y) {
     char c;
     // Avoid a warning about void* changed to bool
     return (*_istr >> x >> c >> y) ? true : false;
   }
-  bool Next(real &x, real &y, real &z) throw() {
+  bool Next(real &x, real &y, real &z) {
     char c, d;
     // Avoid a warning about void* changed to bool
     return (*_istr >> x >> c >> y >> d >> z) ? true : false;
   }
-  const std::string& coords() const throw() { return _coords; }
-  const std::string& proj() const throw() { return _proj; }
-  const std::string& datum() const throw() { return _datum; }
-  real lon0() const throw() { return _lon0; }
-  real fe() const throw() { return _fe; }
-  real fn() const throw() { return _fn; }
-  real latts() const throw() { return _latts; }
-  real lonfp() const throw() { return _lonfp; }
-  real lat0() const throw() { return _lat0; }
-  real k0() const throw() { return _k0; }
-  real lat1() const throw() { return _lat1; }
-  real lat2() const throw() { return _lat2; }
+  const std::string& coords() const { return _coords; }
+  const std::string& proj() const { return _proj; }
+  const std::string& datum() const { return _datum; }
+  real lon0() const { return _lon0; }
+  real fe() const { return _fe; }
+  real fn() const { return _fn; }
+  real latts() const { return _latts; }
+  real lonfp() const { return _lonfp; }
+  real lat0() const { return _lat0; }
+  real k0() const { return _k0; }
+  real lat1() const { return _lat1; }
+  real lat2() const { return _lat2; }
 };
 
 GeographicLib::Math::real

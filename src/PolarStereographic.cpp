@@ -65,7 +65,7 @@ namespace GeographicLib {
 
   void PolarStereographic::Forward(bool northp, real lat, real lon,
                                    real& x, real& y, real& gamma, real& k)
-    const throw() {
+    const {
     lat *= northp ? 1 : -1;
     real
       phi = lat * Math::degree<real>(),
@@ -88,7 +88,7 @@ namespace GeographicLib {
 
   void PolarStereographic::Reverse(bool northp, real x, real y,
                                    real& lat, real& lon, real& gamma, real& k)
-    const throw() {
+    const {
     real
       rho = Math::hypot(x, y),
       t = rho / (2 * _k0 * _a / _c),

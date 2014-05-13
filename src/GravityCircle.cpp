@@ -17,7 +17,7 @@ namespace GeographicLib {
   using namespace std;
 
   Math::real GravityCircle::Gravity(real lon, real& gx, real& gy, real& gz)
-    const throw() {
+    const {
     real clam, slam, M[Geocentric::dim2_];
     CircularEngine::cossin(lon, clam, slam);
     real Wres = W(clam, slam, gx, gy, gz);
@@ -27,7 +27,7 @@ namespace GeographicLib {
   }
 
   Math::real GravityCircle::Disturbance(real lon, real& deltax, real& deltay,
-                                        real& deltaz) const throw() {
+                                        real& deltaz) const {
     real clam, slam, M[Geocentric::dim2_];
     CircularEngine::cossin(lon, clam, slam);
     real Tres = InternalT(clam, slam, deltax, deltay, deltaz, true, true);
@@ -36,7 +36,7 @@ namespace GeographicLib {
     return Tres;
   }
 
-  Math::real GravityCircle::GeoidHeight(real lon) const throw() {
+  Math::real GravityCircle::GeoidHeight(real lon) const {
     if ((_caps & GEOID_HEIGHT) != GEOID_HEIGHT)
       return Math::NaN<real>();
     real clam, slam, dummy;
@@ -48,7 +48,7 @@ namespace GeographicLib {
 
   void GravityCircle::SphericalAnomaly(real lon,
                                        real& Dg01, real& xi, real& eta)
-    const throw() {
+    const {
     if ((_caps & SPHERICAL_ANOMALY) != SPHERICAL_ANOMALY) {
       Dg01 = xi = eta = Math::NaN<real>();
       return;
@@ -69,7 +69,7 @@ namespace GeographicLib {
   }
 
   Math::real GravityCircle::W(real clam, real slam,
-                              real& gX, real& gY, real& gZ) const throw() {
+                              real& gX, real& gY, real& gZ) const {
     real Wres = V(clam, slam, gX, gY, gZ) + _frot * _Px / 2;
     gX += _frot * clam;
     gY += _frot * slam;
@@ -78,7 +78,7 @@ namespace GeographicLib {
 
   Math::real GravityCircle::V(real clam, real slam,
                               real& GX, real& GY, real& GZ)
-    const throw() {
+    const {
     if ((_caps & GRAVITY) != GRAVITY) {
       GX = GY = GZ = Math::NaN<real>();
       return Math::NaN<real>();
@@ -95,7 +95,7 @@ namespace GeographicLib {
 
   Math::real GravityCircle::InternalT(real clam, real slam,
                                       real& deltaX, real& deltaY, real& deltaZ,
-                                      bool gradp, bool correct) const throw() {
+                                      bool gradp, bool correct) const {
     if (gradp) {
       if ((_caps & DISTURBANCE) != DISTURBANCE) {
         deltaX = deltaY = deltaZ = Math::NaN<real>();

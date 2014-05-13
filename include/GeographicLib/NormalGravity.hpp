@@ -65,9 +65,9 @@ namespace GeographicLib {
     real _a, _GM, _omega, _f, _J2, _omega2, _aomega2;
     real _e2, _ep2, _b, _E, _U0, _gammae, _gammap, _q0, _m, _k, _fstar;
     Geocentric _earth;
-    static Math::real qf(real ep2) throw();
-    static Math::real qpf(real ep2) throw();
-    Math::real Jn(int n) const throw();
+    static Math::real qf(real ep2);
+    static Math::real qpf(real ep2);
+    Math::real Jn(int n) const;
   public:
 
     /** \name Setting up the normal gravity
@@ -123,7 +123,7 @@ namespace GeographicLib {
      * surface of the ellipsoid.  It includes the effects of the earth's
      * rotation.
      **********************************************************************/
-    Math::real SurfaceGravity(real lat) const throw();
+    Math::real SurfaceGravity(real lat) const;
 
     /**
      * Evaluate the gravity at an arbitrary point above (or below) the
@@ -144,7 +144,7 @@ namespace GeographicLib {
      * 0 and the returned value matches that of NormalGravity::SurfaceGravity.
      **********************************************************************/
     Math::real Gravity(real lat, real h, real& gammay, real& gammaz)
-      const throw();
+      const;
 
     /**
      * Evaluate the components of the acceleration due to gravity and the
@@ -167,7 +167,7 @@ namespace GeographicLib {
      * &nabla;<i>V</i><sub>0</sub> + &nabla;&Phi; = <b>&Gamma;</b> + <b>f</b>.
      **********************************************************************/
     Math::real U(real X, real Y, real Z,
-                 real& gammaX, real& gammaY, real& gammaZ) const throw();
+                 real& gammaX, real& gammaY, real& gammaZ) const;
 
     /**
      * Evaluate the components of the acceleration due to gravity alone in
@@ -191,7 +191,7 @@ namespace GeographicLib {
      * used.
      **********************************************************************/
     Math::real V0(real X, real Y, real Z,
-                  real& GammaX, real& GammaY, real& GammaZ) const throw();
+                  real& GammaX, real& GammaY, real& GammaZ) const;
 
     /**
      * Evaluate the centrifugal acceleration in geocentric coordinates.
@@ -209,7 +209,7 @@ namespace GeographicLib {
      * NormalGravity::U sums the results of NormalGravity::V0 and
      * NormalGravity::Phi.
      **********************************************************************/
-    Math::real Phi(real X, real Y, real& fX, real& fY) const throw();
+    Math::real Phi(real X, real Y, real& fX, real& fY) const;
     ///@}
 
     /** \name Inspector functions
@@ -218,13 +218,13 @@ namespace GeographicLib {
     /**
      * @return true if the object has been initialized.
      **********************************************************************/
-    bool Init() const throw() { return _a > 0; }
+    bool Init() const { return _a > 0; }
 
     /**
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw()
+    Math::real MajorRadius() const
     { return Init() ? _a : Math::NaN<real>(); }
 
     /**
@@ -232,7 +232,7 @@ namespace GeographicLib {
      *   (m<sup>3</sup> s<sup>&minus;2</sup>).  This is the value used in the
      *   constructor.
      **********************************************************************/
-    Math::real MassConstant() const throw()
+    Math::real MassConstant() const
     { return Init() ? _GM : Math::NaN<real>(); }
 
     /**
@@ -246,55 +246,55 @@ namespace GeographicLib {
      * coefficient is <i>C</i><sub><i>n</i>0</sub> = &minus;\e J<sub>n</sub> /
      * sqrt(2 \e n + 1).
      **********************************************************************/
-    Math::real DynamicalFormFactor(int n = 2) const throw()
+    Math::real DynamicalFormFactor(int n = 2) const
     { return Init() ? ( n == 2 ? _J2 : Jn(n)) : Math::NaN<real>(); }
 
     /**
      * @return &omega; the angular velocity of the ellipsoid (rad
      *   s<sup>&minus;1</sup>).  This is the value used in the constructor.
      **********************************************************************/
-    Math::real AngularVelocity() const throw()
+    Math::real AngularVelocity() const
     { return Init() ? _omega : Math::NaN<real>(); }
 
     /**
      * @return <i>f</i> the flattening of the ellipsoid (\e a &minus; \e b)/\e
      *   a.
      **********************************************************************/
-    Math::real Flattening() const throw()
+    Math::real Flattening() const
     { return Init() ? _f : Math::NaN<real>(); }
 
     /**
      * @return &gamma;<sub>e</sub> the normal gravity at equator (m
      *   s<sup>&minus;2</sup>).
      **********************************************************************/
-    Math::real EquatorialGravity() const throw()
+    Math::real EquatorialGravity() const
     { return Init() ? _gammae : Math::NaN<real>(); }
 
     /**
      * @return &gamma;<sub>p</sub> the normal gravity at poles (m
      *   s<sup>&minus;2</sup>).
      **********************************************************************/
-    Math::real PolarGravity() const throw()
+    Math::real PolarGravity() const
     { return Init() ? _gammap : Math::NaN<real>(); }
 
     /**
      * @return <i>f*</i> the gravity flattening (&gamma;<sub>p</sub> &minus;
      *   &gamma;<sub>e</sub>) / &gamma;<sub>e</sub>.
      **********************************************************************/
-    Math::real GravityFlattening() const throw()
+    Math::real GravityFlattening() const
     { return Init() ? _fstar : Math::NaN<real>(); }
 
     /**
      * @return <i>U</i><sub>0</sub> the constant normal potential for the
      *   surface of the ellipsoid (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
-    Math::real SurfacePotential() const throw()
+    Math::real SurfacePotential() const
     { return Init() ? _U0 : Math::NaN<real>(); }
 
     /**
      * @return the Geocentric object used by this instance.
      **********************************************************************/
-    const Geocentric& Earth() const throw() { return _earth; }
+    const Geocentric& Earth() const { return _earth; }
     ///@}
 
     /**

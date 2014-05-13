@@ -53,7 +53,7 @@ namespace GeographicLib {
      *   By default this uses the WGS84 ellipsoid.
      **********************************************************************/
     explicit AzimuthalEquidistant(const Geodesic& earth = Geodesic::WGS84)
-      throw() : _earth(earth) {}
+      : _earth(earth) {}
 
     /**
      * Forward projection, from geographic to azimuthal equidistant.
@@ -76,7 +76,7 @@ namespace GeographicLib {
      * within roundoff).
      **********************************************************************/
     void Forward(real lat0, real lon0, real lat, real lon,
-                 real& x, real& y, real& azi, real& rk) const throw();
+                 real& x, real& y, real& azi, real& rk) const;
 
     /**
      * Reverse projection, from azimuthal equidistant to geographic.
@@ -101,13 +101,13 @@ namespace GeographicLib {
      * path.
      **********************************************************************/
     void Reverse(real lat0, real lon0, real x, real y,
-                 real& lat, real& lon, real& azi, real& rk) const throw();
+                 real& lat, real& lon, real& azi, real& rk) const;
 
     /**
      * AzimuthalEquidistant::Forward without returning the azimuth and scale.
      **********************************************************************/
     void Forward(real lat0, real lon0, real lat, real lon,
-                 real& x, real& y) const throw() {
+                 real& x, real& y) const {
       real azi, rk;
       Forward(lat0, lon0, lat, lon, x, y, azi, rk);
     }
@@ -116,7 +116,7 @@ namespace GeographicLib {
      * AzimuthalEquidistant::Reverse without returning the azimuth and scale.
      **********************************************************************/
     void Reverse(real lat0, real lon0, real x, real y,
-                 real& lat, real& lon) const throw() {
+                 real& lat, real& lon) const {
       real azi, rk;
       Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
     }
@@ -128,13 +128,13 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
+    Math::real MajorRadius() const { return _earth.MajorRadius(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw() { return _earth.Flattening(); }
+    Math::real Flattening() const { return _earth.Flattening(); }
     ///@}
 
     /// \cond SKIP
@@ -142,7 +142,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw()
+    Math::real InverseFlattening() const
     { return _earth.InverseFlattening(); }
     /// \endcond
   };

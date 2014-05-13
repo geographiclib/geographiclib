@@ -190,7 +190,7 @@ namespace GeographicLib {
      * -3d20' would need to be represented as - DMS::Decode(3.0, 20.0) or
      * DMS::Decode(-3.0, -20.0).
      **********************************************************************/
-    static Math::real Decode(real d, real m = 0, real s = 0) throw()
+    static Math::real Decode(real d, real m = 0, real s = 0)
     { return d + (m + s/real(60))/real(60); }
 
     /// \cond SKIP
@@ -340,7 +340,7 @@ namespace GeographicLib {
      * @param[out] d degrees (an integer returned as a real)
      * @param[out] m arc minutes.
      **********************************************************************/
-    static void Encode(real ang, real& d, real& m) throw() {
+    static void Encode(real ang, real& d, real& m) {
       d = int(ang); m = 60 * (ang - d);
     }
 
@@ -352,7 +352,7 @@ namespace GeographicLib {
      * @param[out] m arc minutes (an integer returned as a real)
      * @param[out] s arc seconds.
      **********************************************************************/
-    static void Encode(real ang, real& d, real& m, real& s) throw() {
+    static void Encode(real ang, real& d, real& m, real& s) {
       d = int(ang); ang = 60 * (ang - d);
       m = int(ang); s = 60 * (ang - m);
     }
