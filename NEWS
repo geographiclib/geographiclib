@@ -4,7 +4,44 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.35.
+The current version of the library is 1.36.
+
+Changes between 1.36 (released 2014-05-13) and 1.35 versions:
+
+  * Changes to comply with NGA's prohibition of the use of the
+    upper-case letters N/S to designate the hemisphere when displaying
+    UTM/UPS coordinates:
+    + UTMUPS::DecodeZone allows north/south as hemisphere designators
+      (in addition to n/s);
+    + UTMUPS::EncodeZone now encodes the hemisphere in lower case (to
+      distinguish this use from a grid zone designator);
+    + UTMUPS::EncodeZone takes an optional parameter abbrev to
+      indicate whether to use n/s or north/south as the hemisphere
+      designator;
+    + GeoCoords::UTMUPSRepresentation and AltUTMUPSRepresentation
+      similarly accept the abbrev parameter;
+    + GeoConvert uses the flags -a and -l to govern whether UTM/UPS
+      output uses n/s (the -a flag) or north/south (the -l flag) to
+      denote the hemisphere;
+    + Fixed a bug what allowed +3N to be accepted as an alternation
+      UTM zone designation (instead of 3N).
+    WARNING: The use of lower case n/s for the hemisphere might cause
+    compatibility problems.  However DecodeZone has always accepted
+    either case; so the issue will only arise with other software
+    reading the zone information.  To avoid possible misinterpretation
+    of the zone designator, consider calling EncodeZone with abbrev =
+    false and GeoConvert with -l, so that north/south are used to
+    denote the hemisphere.
+
+  * MGRS::Forward with prec = -1 will produce a grid zone designation.
+    Similarly MGRS::Reverse will decode a grid zone designation (and
+    return prec = -1).
+
+  * Stop using the throw() declaration specification which is
+    deprecated in C++11.
+
+  * Add missing std:: qualifications to copy in LocalCartesion and
+    Geocentric headers (bug found by Clemens).
 
 Changes between 1.35 (released 2014-03-13) and 1.34 versions:
 
@@ -664,7 +701,7 @@ Changes between 1.4 (released 2010-09-12) and 1.3 versions:
 
   * Add GeographicLib::Geoid::ConvertHeight.
 
-  * Add -msltohae, -haetomsl, and -z options to \ref geoideval.
+  * Add -msltohae, -haetomsl, and -z options to GeoidEval.
 
   * Constructors check that minor radius is positive.
 
