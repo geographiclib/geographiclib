@@ -62,7 +62,7 @@ namespace GeographicLib {
 
     void Field(real lon, bool diffp,
                real& Bx, real& By, real& Bz,
-               real& Bxt, real& Byt, real& Bzt) const throw();
+               real& Bxt, real& Byt, real& Bzt) const;
 
     friend class MagneticModel; // MagneticModel calls the private constructor
 
@@ -88,7 +88,7 @@ namespace GeographicLib {
      * @param[out] Bz the vertical (up) component of the magnetic field
      *   (nanotesla).
      **********************************************************************/
-    void operator()(real lon, real& Bx, real& By, real& Bz) const throw() {
+    void operator()(real lon, real& Bx, real& By, real& Bz) const {
       real dummy;
       Field(lon, false, Bx, By, Bz, dummy, dummy, dummy);
     }
@@ -107,7 +107,7 @@ namespace GeographicLib {
      * @param[out] Bzt the rate of change of \e Bz (nT/yr).
      **********************************************************************/
     void operator()(real lon, real& Bx, real& By, real& Bz,
-                    real& Bxt, real& Byt, real& Bzt) const throw() {
+                    real& Bxt, real& Byt, real& Bzt) const {
       Field(lon, true, Bx, By, Bz, Bxt, Byt, Bzt);
     }
     ///@}
@@ -118,34 +118,34 @@ namespace GeographicLib {
     /**
      * @return true if the object has been initialized.
      **********************************************************************/
-    bool Init() const throw() { return _a > 0; }
+    bool Init() const { return _a > 0; }
     /**
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value inherited from the MagneticModel object used in the
      *   constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw()
+    Math::real MajorRadius() const
     { return Init() ? _a : Math::NaN<real>(); }
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the MagneticModel object used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw()
+    Math::real Flattening() const
     { return Init() ? _f : Math::NaN<real>(); }
     /**
      * @return the latitude of the circle (degrees).
      **********************************************************************/
-    Math::real Latitude() const throw()
+    Math::real Latitude() const
     { return Init() ? _lat : Math::NaN<real>(); }
     /**
      * @return the height of the circle (meters).
      **********************************************************************/
-    Math::real Height() const throw()
+    Math::real Height() const
     { return Init() ? _h : Math::NaN<real>(); }
     /**
      * @return the time (fractional years).
      **********************************************************************/
-    Math::real Time() const throw()
+    Math::real Time() const
     { return Init() ? _t : Math::NaN<real>(); }
 
     ///@}

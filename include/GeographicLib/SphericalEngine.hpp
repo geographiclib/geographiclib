@@ -165,15 +165,15 @@ namespace GeographicLib {
       /**
        * @return \e N the degree giving storage layout for \e C and \e S.
        **********************************************************************/
-      inline int N() const throw() { return _Nx; }
+      inline int N() const { return _Nx; }
       /**
        * @return \e nmx the maximum degree to be used.
        **********************************************************************/
-      inline int nmx() const throw() { return _nmx; }
+      inline int nmx() const { return _nmx; }
       /**
        * @return \e mmx the maximum order to be used.
        **********************************************************************/
-      inline int mmx() const throw() { return _mmx; }
+      inline int mmx() const { return _mmx; }
       /**
        * The one-dimensional index into \e C and \e S.
        *
@@ -181,7 +181,7 @@ namespace GeographicLib {
        * @param[in] m the order.
        * @return the one-dimensional index.
        **********************************************************************/
-      inline int index(int n, int m) const throw()
+      inline int index(int n, int m) const
       { return m * _Nx - m * (m - 1) / 2 + n; }
       /**
        * An element of \e C.
@@ -230,7 +230,7 @@ namespace GeographicLib {
        * @return the size of the vector of cosine terms as stored in column
        *   major order.
        **********************************************************************/
-      static inline int Csize(int N, int M) throw()
+      static inline int Csize(int N, int M)
       { return (M + 1) * (2 * N - M + 2) / 2; }
 
       /**
@@ -241,7 +241,7 @@ namespace GeographicLib {
        * @return the size of the vector of cosine terms as stored in column
        *   major order.
        **********************************************************************/
-      static inline int Ssize(int N, int M) throw ()
+      static inline int Ssize(int N, int M)
       { return Csize(N, M) - (N + 1); }
 
       /**
@@ -301,7 +301,7 @@ namespace GeographicLib {
     template<bool gradp, normalization norm, int L>
       static Math::real Value(const coeff c[], const real f[],
                               real x, real y, real z, real a,
-                              real& gradx, real& grady, real& gradz) throw();
+                              real& gradx, real& grady, real& gradz);
 
     /**
      * Create a CircularEngine object

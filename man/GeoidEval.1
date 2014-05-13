@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOIDEVAL 1"
-.TH GEOIDEVAL 1 "2014-03-13" "GeographicLib 1.35" "GeographicLib Utilities"
+.TH GEOIDEVAL 1 "2014-05-13" "GeographicLib 1.36" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -188,7 +188,7 @@ in large quantization errors.  This is particularly acute at high
 latitudes and for the easterly gradient.
 .IP "\fB\-z\fR" 4
 .IX Item "-z"
-prefix each line of input by \fIzone\fR, e.g., \f(CW\*(C`38N\*(C'\fR.  This should be used
+prefix each line of input by \fIzone\fR, e.g., \f(CW\*(C`38n\*(C'\fR.  This should be used
 when the input consists of \s-1UTM/UPS\s0 eastings and northings.
 .IP "\fB\-\-msltohae\fR" 4
 .IX Item "--msltohae"
@@ -328,9 +328,9 @@ compile-time value.  If the \fB\-d\fR \fIdir\fR option is used, then \fIdir\fR
 takes precedence.
 .IP "\fB\s-1GEOGRAPHICLIB_DATA\s0\fR" 4
 .IX Item "GEOGRAPHICLIB_DATA"
-Another way of overriding the compile-time default magnetic path.  If it
-is set (and if \fB\s-1MAGNETIC_PATH\s0\fR is not set), then
-$\fB\s-1GEOGRAPHICLIB_DATA\s0\fR/magnetic is used.
+Another way of overriding the compile-time default geoid path.  If it
+is set (and if \fB\s-1GEOID_PATH\s0\fR is not set), then
+$\fB\s-1GEOGRAPHICLIB_DATA\s0\fR/geoids is used.
 .SH "ERRORS"
 .IX Header "ERRORS"
 An illegal line of input will print an error message to standard output
@@ -377,10 +377,10 @@ The height of the \s-1EGM96\s0 geoid at Timbuktu
 The first number returned is the height of the geoid and the 2nd and 3rd
 are its slopes in the northerly and easterly directions.
 .PP
-Convert a point in \s-1UTM\s0 zone 18N from \s-1MSL\s0 to \s-1HAE\s0
+Convert a point in \s-1UTM\s0 zone 18n from \s-1MSL\s0 to \s-1HAE\s0
 .PP
 .Vb 2
-\&   echo 531595 4468135 23 | GeoidEval \-\-msltohae \-z 18N
+\&   echo 531595 4468135 23 | GeoidEval \-\-msltohae \-z 18n
 \&   => 531595 4468135 \-10.842
 .Ve
 .SH "SEE ALSO"

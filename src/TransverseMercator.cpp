@@ -270,7 +270,7 @@ namespace GeographicLib {
 
   // taupf and tauf are adapted from TransverseMercatorExact (taup and
   // taupinv).  tau = tan(phi), taup = sinh(psi)
-  Math::real TransverseMercator::taupf(real tau) const throw() {
+  Math::real TransverseMercator::taupf(real tau) const {
     if (!(abs(tau) < overflow_))
       return tau;
     real
@@ -279,7 +279,7 @@ namespace GeographicLib {
     return Math::hypot(real(1), sig) * tau - sig * tau1;
   }
 
-  Math::real TransverseMercator::tauf(real taup) const throw() {
+  Math::real TransverseMercator::tauf(real taup) const {
     if (!(abs(taup) < overflow_))
       return taup;
     real
@@ -307,7 +307,7 @@ namespace GeographicLib {
 
   void TransverseMercator::Forward(real lon0, real lat, real lon,
                                    real& x, real& y, real& gamma, real& k)
-    const throw() {
+    const {
     lon = Math::AngDiff(Math::AngNormalize(lon0), Math::AngNormalize(lon));
     // Explicitly enforce the parity
     int
@@ -469,7 +469,7 @@ namespace GeographicLib {
 
   void TransverseMercator::Reverse(real lon0, real x, real y,
                                    real& lat, real& lon, real& gamma, real& k)
-    const throw() {
+    const {
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
     // reverted series to express zeta' in terms of zeta. (2) Newton's method
     // to solve for phi in terms of tan(phi).

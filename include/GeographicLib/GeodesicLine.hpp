@@ -195,7 +195,7 @@ namespace GeographicLib {
      **********************************************************************/
     GeodesicLine(const Geodesic& g, real lat1, real lon1, real azi1,
                  unsigned caps = ALL)
-      throw();
+     ;
 
     /**
      * A default constructor.  If GeodesicLine::Position is called on the
@@ -203,7 +203,7 @@ namespace GeographicLib {
      * calculations).  The object can be set with a call to Geodesic::Line.
      * Use Init() to test whether object is still in this uninitialized state.
      **********************************************************************/
-    GeodesicLine() throw() : _caps(0U) {}
+    GeodesicLine() : _caps(0U) {}
     ///@}
 
     /** \name Position in terms of distance
@@ -252,7 +252,7 @@ namespace GeographicLib {
     Math::real Position(real s12,
                         real& lat2, real& lon2, real& azi2,
                         real& m12, real& M12, real& M21,
-                        real& S12) const throw() {
+                        real& S12) const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE | AZIMUTH |
@@ -263,7 +263,7 @@ namespace GeographicLib {
     /**
      * See the documentation for GeodesicLine::Position.
      **********************************************************************/
-    Math::real Position(real s12, real& lat2, real& lon2) const throw() {
+    Math::real Position(real s12, real& lat2, real& lon2) const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE,
@@ -274,7 +274,7 @@ namespace GeographicLib {
      * See the documentation for GeodesicLine::Position.
      **********************************************************************/
     Math::real Position(real s12, real& lat2, real& lon2,
-                        real& azi2) const throw() {
+                        real& azi2) const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE | AZIMUTH,
@@ -285,7 +285,7 @@ namespace GeographicLib {
      * See the documentation for GeodesicLine::Position.
      **********************************************************************/
     Math::real Position(real s12, real& lat2, real& lon2,
-                        real& azi2, real& m12) const throw() {
+                        real& azi2, real& m12) const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE |
@@ -298,7 +298,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Position(real s12, real& lat2, real& lon2,
                         real& azi2, real& M12, real& M21)
-      const throw() {
+      const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE |
@@ -312,7 +312,7 @@ namespace GeographicLib {
     Math::real Position(real s12,
                         real& lat2, real& lon2, real& azi2,
                         real& m12, real& M12, real& M21)
-      const throw() {
+      const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE | AZIMUTH |
@@ -365,7 +365,7 @@ namespace GeographicLib {
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
                      real& s12, real& m12, real& M12, real& M21,
-                     real& S12) const throw() {
+                     real& S12) const {
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
                   REDUCEDLENGTH | GEODESICSCALE | AREA,
@@ -376,7 +376,7 @@ namespace GeographicLib {
      * See the documentation for GeodesicLine::ArcPosition.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2)
-      const throw() {
+      const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE,
@@ -388,7 +388,7 @@ namespace GeographicLib {
      **********************************************************************/
     void ArcPosition(real a12,
                      real& lat2, real& lon2, real& azi2)
-      const throw() {
+      const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH,
@@ -399,7 +399,7 @@ namespace GeographicLib {
      * See the documentation for GeodesicLine::ArcPosition.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-                     real& s12) const throw() {
+                     real& s12) const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE,
@@ -410,7 +410,7 @@ namespace GeographicLib {
      * See the documentation for GeodesicLine::ArcPosition.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-                     real& s12, real& m12) const throw() {
+                     real& s12, real& m12) const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH |
@@ -423,7 +423,7 @@ namespace GeographicLib {
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
                      real& s12, real& M12, real& M21)
-      const throw() {
+      const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH |
@@ -436,7 +436,7 @@ namespace GeographicLib {
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
                      real& s12, real& m12, real& M12, real& M21)
-      const throw() {
+      const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH |
@@ -503,7 +503,7 @@ namespace GeographicLib {
     Math::real GenPosition(bool arcmode, real s12_a12, unsigned outmask,
                            real& lat2, real& lon2, real& azi2,
                            real& s12, real& m12, real& M12, real& M21,
-                           real& S12) const throw();
+                           real& S12) const;
 
     ///@}
 
@@ -514,31 +514,31 @@ namespace GeographicLib {
     /**
      * @return true if the object has been initialized.
      **********************************************************************/
-    bool Init() const throw() { return _caps != 0U; }
+    bool Init() const { return _caps != 0U; }
 
     /**
      * @return \e lat1 the latitude of point 1 (degrees).
      **********************************************************************/
-    Math::real Latitude() const throw()
+    Math::real Latitude() const
     { return Init() ? _lat1 : Math::NaN<real>(); }
 
     /**
      * @return \e lon1 the longitude of point 1 (degrees).
      **********************************************************************/
-    Math::real Longitude() const throw()
+    Math::real Longitude() const
     { return Init() ? _lon1 : Math::NaN<real>(); }
 
     /**
      * @return \e azi1 the azimuth (degrees) of the geodesic line at point 1.
      **********************************************************************/
-    Math::real Azimuth() const throw()
+    Math::real Azimuth() const
     { return Init() ? _azi1 : Math::NaN<real>(); }
 
     /**
      * @return \e azi0 the azimuth (degrees) of the geodesic line as it crosses
      *   the equator in a northward direction.
      **********************************************************************/
-    Math::real EquatorialAzimuth() const throw() {
+    Math::real EquatorialAzimuth() const {
       return Init() ?
         atan2(_salp0, _calp0) / Math::degree<real>() : Math::NaN<real>();
     }
@@ -547,7 +547,7 @@ namespace GeographicLib {
      * @return \e a1 the arc length (degrees) between the northward equatorial
      *   crossing and point 1.
      **********************************************************************/
-    Math::real EquatorialArc() const throw() {
+    Math::real EquatorialArc() const {
       return Init() ?
         atan2(_ssig1, _csig1) / Math::degree<real>() : Math::NaN<real>();
     }
@@ -556,14 +556,14 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw()
+    Math::real MajorRadius() const
     { return Init() ? _a : Math::NaN<real>(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw()
+    Math::real Flattening() const
     { return Init() ? _f : Math::NaN<real>(); }
 
     /// \cond SKIP
@@ -571,7 +571,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw()
+    Math::real InverseFlattening() const
     { return Init() ? 1/_f : Math::NaN<real>(); }
     /// \endcond
 
@@ -579,13 +579,13 @@ namespace GeographicLib {
      * @return \e caps the computational capabilities that this object was
      *   constructed with.  LATITUDE and AZIMUTH are always included.
      **********************************************************************/
-    unsigned Capabilities() const throw() { return _caps; }
+    unsigned Capabilities() const { return _caps; }
 
     /**
      * @param[in] testcaps a set of bitor'ed GeodesicLine::mask values.
      * @return true if the GeodesicLine object has all these capabilities.
      **********************************************************************/
-    bool Capabilities(unsigned testcaps) const throw() {
+    bool Capabilities(unsigned testcaps) const {
       testcaps &= OUT_ALL;
       return (_caps & testcaps) == testcaps;
     }

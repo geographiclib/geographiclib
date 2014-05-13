@@ -42,7 +42,7 @@ set (@PROJECT_NAME@_STATIC_FOUND @GEOGRAPHICLIB_STATIC_LIB@)
 set (@PROJECT_NAME@_NETGeographicLib_FOUND @BUILD_NETGEOGRAPHICLIB@)
 
 # Check for the components requested.  The convention is that
-# GeographicLib_${comp}_FOUND should be true for all the required
+# @PROJECT_NAME@_${comp}_FOUND should be true for all the required
 # components.
 if (@PROJECT_NAME@_FIND_COMPONENTS)
   foreach (comp ${@PROJECT_NAME@_FIND_COMPONENTS})

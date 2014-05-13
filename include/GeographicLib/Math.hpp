@@ -18,12 +18,15 @@
  * Are C++11 math functions available?
  **********************************************************************/
 #if !defined(GEOGRAPHICLIB_CPLUSPLUS11_MATH)
+// Recent versions of g++ -std=c++11 (4.7 and later?) set __cplusplus to 201103
+// and support the new C++11 mathematical functions, std::atanh, etc.  However
+// the Android toolchain, which uses g++ -std=c++11 (4.8 as of 2014-03-11,
+// according to Pullan Lu), does not support std::atanh.  Android toolchains
+// might define __ANDROID__ or ANDROID; so need to check both.
 #  if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ >= 7 \
   && __cplusplus >= 201103 && !(defined(__ANDROID__) || defined(ANDROID))
-// The android toolchain uses g++ and supports C++11, but not, apparently, the
-// new mathematical functions introduced with C++11.  Android toolchains might
-// define __ANDROID__ or ANDROID; so need to check both.
 #    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
+// Visual C++ 12 supports these functions
 #  elif defined(_MSC_VER) && _MSC_VER >= 1800
 #    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
 #  else
@@ -125,23 +128,23 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return &pi;.
      **********************************************************************/
-    template<typename T> static inline T pi() throw()
+    template<typename T> static inline T pi()
     { return std::atan2(T(0), -T(1)); }
     /**
      * A synonym for pi<real>().
      **********************************************************************/
-    static inline real pi() throw() { return pi<real>(); }
+    static inline real pi() { return pi<real>(); }
 
     /**
      * @tparam T the type of the returned value.
      * @return the number of radians in a degree.
      **********************************************************************/
-    template<typename T> static inline T degree() throw()
+    template<typename T> static inline T degree()
     { return pi<T>() / T(180); }
     /**
      * A synonym for degree<real>().
      **********************************************************************/
-    static inline real degree() throw() { return degree<real>(); }
+    static inline real degree() { return degree<real>(); }
 
     /**
      * Square a number.
@@ -150,7 +153,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return <i>x</i><sup>2</sup>.
      **********************************************************************/
-    template<typename T> static inline T sq(T x) throw()
+    template<typename T> static inline T sq(T x)
     { return x * x; }
 
 #if defined(DOXYGEN)
@@ -162,7 +165,7 @@ namespace GeographicLib {
      * @param[in] y
      * @return sqrt(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>).
      **********************************************************************/
-    template<typename T> static inline T hypot(T x, T y) throw() {
+    template<typename T> static inline T hypot(T x, T y) {
       x = std::abs(x); y = std::abs(y);
       T a = (std::max)(x, y), b = (std::min)(x, y) / (a ? a : 1);
       return a * std::sqrt(1 + b * b);
@@ -171,39 +174,39 @@ namespace GeographicLib {
       // and A. A. Dubrulle (1983) http://dx.doi.org/10.1147/rd.276.0582
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH || (defined(_MSC_VER) && _MSC_VER >= 1700)
-    template<typename T> static inline T hypot(T x, T y) throw()
+    template<typename T> static inline T hypot(T x, T y)
     { return std::hypot(x, y); }
 #  if HAVE_LONG_DOUBLE && defined(_MSC_VER) && _MSC_VER == 1700
     // Visual C++ 11 doesn't have a long double overload for std::hypot --
     // reported to MS on 2013-07-18
     // http://connect.microsoft.com/VisualStudio/feedback/details/794416
-    // suppress the resulting "loss of data warning" with
-    static inline long double hypot(long double x, long double y) throw()
+    // (Visual C++ 12 is OK) Suppress the resulting "loss of data warning" with
+    static inline long double hypot(long double x, long double y)
     { return std::hypot(double(x), double(y)); }
 #  endif
 #elif defined(_MSC_VER)
-    static inline double hypot(double x, double y) throw()
+    static inline double hypot(double x, double y)
     { return _hypot(x, y); }
 #  if _MSC_VER < 1400
     // Visual C++ 7.1/VS .NET 2003 does not have _hypotf()
-    static inline float hypot(float x, float y) throw()
+    static inline float hypot(float x, float y)
     { return float(_hypot(x, y)); }
 #  else
-    static inline float hypot(float x, float y) throw()
+    static inline float hypot(float x, float y)
     { return _hypotf(x, y); }
 #  endif
 #  if HAVE_LONG_DOUBLE
-    static inline long double hypot(long double x, long double y) throw()
+    static inline long double hypot(long double x, long double y)
     { return _hypot(double(x), double(y)); } // Suppress loss of data warning
 #  endif
 #else
     // Use overloading to define generic versions
-    static inline double hypot(double x, double y) throw()
+    static inline double hypot(double x, double y)
     { return ::hypot(x, y); }
-    static inline float hypot(float x, float y) throw()
+    static inline float hypot(float x, float y)
     { return ::hypotf(x, y); }
 #  if HAVE_LONG_DOUBLE
-    static inline long double hypot(long double x, long double y) throw()
+    static inline long double hypot(long double x, long double y)
     { return ::hypotl(x, y); }
 #  endif
 #endif
@@ -218,7 +221,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return exp(\e x) &minus; 1.
      **********************************************************************/
-    template<typename T> static inline T expm1(T x) throw() {
+    template<typename T> static inline T expm1(T x) {
       volatile T
         y = std::exp(x),
         z = y - 1;
@@ -229,13 +232,13 @@ namespace GeographicLib {
       return std::abs(x) > 1 ? z : (z == 0 ? x : x * z / std::log(y));
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
-    template<typename T> static inline T expm1(T x) throw()
+    template<typename T> static inline T expm1(T x)
     { return std::expm1(x); }
 #else
-    static inline double expm1(double x) throw() { return ::expm1(x); }
-    static inline float expm1(float x) throw() { return ::expm1f(x); }
+    static inline double expm1(double x) { return ::expm1(x); }
+    static inline float expm1(float x) { return ::expm1f(x); }
 #  if HAVE_LONG_DOUBLE
-    static inline long double expm1(long double x) throw()
+    static inline long double expm1(long double x)
     { return ::expm1l(x); }
 #  endif
 #endif
@@ -253,7 +256,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return log(1 + \e x).
      **********************************************************************/
-    template<typename T> static inline T log1p(T x) throw() {
+    template<typename T> static inline T log1p(T x) {
       volatile T
         y = 1 + x,
         z = y - 1;
@@ -264,13 +267,13 @@ namespace GeographicLib {
       return z == 0 ? x : x * std::log(y) / z;
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
-    template<typename T> static inline T log1p(T x) throw()
+    template<typename T> static inline T log1p(T x)
     { return std::log1p(x); }
 #else
-    static inline double log1p(double x) throw() { return ::log1p(x); }
-    static inline float log1p(float x) throw() { return ::log1pf(x); }
+    static inline double log1p(double x) { return ::log1p(x); }
+    static inline float log1p(float x) { return ::log1pf(x); }
 #  if HAVE_LONG_DOUBLE
-    static inline long double log1p(long double x) throw()
+    static inline long double log1p(long double x)
     { return ::log1pl(x); }
 #  endif
 #endif
@@ -285,19 +288,19 @@ namespace GeographicLib {
      * @param[in] x
      * @return asinh(\e x).
      **********************************************************************/
-    template<typename T> static inline T asinh(T x) throw() {
+    template<typename T> static inline T asinh(T x) {
       T y = std::abs(x);     // Enforce odd parity
       y = log1p(y * (1 + y/(hypot(T(1), y) + 1)));
       return x < 0 ? -y : y;
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
-    template<typename T> static inline T asinh(T x) throw()
+    template<typename T> static inline T asinh(T x)
     { return std::asinh(x); }
 #else
-    static inline double asinh(double x) throw() { return ::asinh(x); }
-    static inline float asinh(float x) throw() { return ::asinhf(x); }
+    static inline double asinh(double x) { return ::asinh(x); }
+    static inline float asinh(float x) { return ::asinhf(x); }
 #  if HAVE_LONG_DOUBLE
-    static inline long double asinh(long double x) throw()
+    static inline long double asinh(long double x)
     { return ::asinhl(x); }
 #  endif
 #endif
@@ -312,19 +315,19 @@ namespace GeographicLib {
      * @param[in] x
      * @return atanh(\e x).
      **********************************************************************/
-    template<typename T> static inline T atanh(T x) throw() {
+    template<typename T> static inline T atanh(T x) {
       T y = std::abs(x);     // Enforce odd parity
       y = log1p(2 * y/(1 - y))/2;
       return x < 0 ? -y : y;
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
-    template<typename T> static inline T atanh(T x) throw()
+    template<typename T> static inline T atanh(T x)
     { return std::atanh(x); }
 #else
-    static inline double atanh(double x) throw() { return ::atanh(x); }
-    static inline float atanh(float x) throw() { return ::atanhf(x); }
+    static inline double atanh(double x) { return ::atanh(x); }
+    static inline float atanh(float x) { return ::atanhf(x); }
 #  if HAVE_LONG_DOUBLE
-    static inline long double atanh(long double x) throw()
+    static inline long double atanh(long double x)
     { return ::atanhl(x); }
 #  endif
 #endif
@@ -337,18 +340,18 @@ namespace GeographicLib {
      * @param[in] x
      * @return the real cube root of \e x.
      **********************************************************************/
-    template<typename T> static inline T cbrt(T x) throw() {
+    template<typename T> static inline T cbrt(T x) {
       T y = std::pow(std::abs(x), 1/T(3)); // Return the real cube root
       return x < 0 ? -y : y;
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
-    template<typename T> static inline T cbrt(T x) throw()
+    template<typename T> static inline T cbrt(T x)
     { return std::cbrt(x); }
 #else
-    static inline double cbrt(double x) throw() { return ::cbrt(x); }
-    static inline float cbrt(float x) throw() { return ::cbrtf(x); }
+    static inline double cbrt(double x) { return ::cbrt(x); }
+    static inline float cbrt(float x) { return ::cbrtf(x); }
 #  if HAVE_LONG_DOUBLE
-    static inline long double cbrt(long double x) throw() { return ::cbrtl(x); }
+    static inline long double cbrt(long double x) { return ::cbrtl(x); }
 #  endif
 #endif
 
@@ -364,7 +367,7 @@ namespace GeographicLib {
      * See D. E. Knuth, TAOCP, Vol 2, 4.2.2, Theorem B.  (Note that \e t can be
      * the same as one of the first two arguments.)
      **********************************************************************/
-    template<typename T> static inline T sum(T u, T v, T& t) throw() {
+    template<typename T> static inline T sum(T u, T v, T& t) {
       volatile T s = u + v;
       volatile T up = s - v;
       volatile T vpp = s - up;
@@ -385,7 +388,7 @@ namespace GeographicLib {
      *
      * \e x must lie in [&minus;540&deg;, 540&deg;).
      **********************************************************************/
-    template<typename T> static inline T AngNormalize(T x) throw()
+    template<typename T> static inline T AngNormalize(T x)
     { return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x); }
 
     /**
@@ -397,7 +400,7 @@ namespace GeographicLib {
      *
      * The range of \e x is unrestricted.
      **********************************************************************/
-    template<typename T> static inline T AngNormalize2(T x) throw()
+    template<typename T> static inline T AngNormalize2(T x)
     { return AngNormalize<T>(std::fmod(x, T(360))); }
 
     /**
@@ -415,7 +418,7 @@ namespace GeographicLib {
      * prescription allows &minus;180&deg; to be returned (e.g., if \e x is
      * tiny and negative and \e y = 180&deg;).
      **********************************************************************/
-    template<typename T> static inline T AngDiff(T x, T y) throw() {
+    template<typename T> static inline T AngDiff(T x, T y) {
       T t, d = sum(-x, y, t);
       if ((d - T(180)) + t > T(0)) // y - x > 180
         d -= T(360);            // exact
@@ -432,11 +435,11 @@ namespace GeographicLib {
      * @param[in] x
      * @return true if number is finite, false if NaN or infinite.
      **********************************************************************/
-    template<typename T> static inline bool isfinite(T x) throw() {
+    template<typename T> static inline bool isfinite(T x) {
       return std::abs(x) <= (std::numeric_limits<T>::max)();
     }
 #elif (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
-    template<typename T> static inline bool isfinite(T x) throw() {
+    template<typename T> static inline bool isfinite(T x) {
       return _finite(double(x)) != 0;
     }
 #elif defined(_LIBCPP_VERSION)
@@ -446,16 +449,16 @@ namespace GeographicLib {
     // allow Math::isfinite to work on integers.
     template<typename T> static inline
     typename std::enable_if<std::is_floating_point<T>::value, bool>::type
-      isfinite(T x) throw() {
+      isfinite(T x) {
       return std::isfinite(x);
     }
     template<typename T> static inline
     typename std::enable_if<!std::is_floating_point<T>::value, bool>::type
-      isfinite(T /*x*/) throw() {
+      isfinite(T /*x*/) {
       return true;
     }
 #else
-    template<typename T> static inline bool isfinite(T x) throw() {
+    template<typename T> static inline bool isfinite(T x) {
       return std::isfinite(x);
     }
 #endif
@@ -466,7 +469,7 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return NaN if available, otherwise return the max real of type T.
      **********************************************************************/
-    template<typename T> static inline T NaN() throw() {
+    template<typename T> static inline T NaN() {
       return std::numeric_limits<T>::has_quiet_NaN ?
         std::numeric_limits<T>::quiet_NaN() :
         (std::numeric_limits<T>::max)();
@@ -474,7 +477,7 @@ namespace GeographicLib {
     /**
      * A synonym for NaN<real>().
      **********************************************************************/
-    static inline real NaN() throw() { return NaN<real>(); }
+    static inline real NaN() { return NaN<real>(); }
 
     /**
      * Test for NaN.
@@ -483,7 +486,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return true if argument is a NaN.
      **********************************************************************/
-    template<typename T> static inline bool isnan(T x) throw() {
+    template<typename T> static inline bool isnan(T x) {
 #if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
       return x != x;
 #else
@@ -497,7 +500,7 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return infinity if available, otherwise return the max real.
      **********************************************************************/
-    template<typename T> static inline T infinity() throw() {
+    template<typename T> static inline T infinity() {
       return std::numeric_limits<T>::has_infinity ?
         std::numeric_limits<T>::infinity() :
         (std::numeric_limits<T>::max)();
@@ -505,7 +508,7 @@ namespace GeographicLib {
     /**
      * A synonym for infinity<real>().
      **********************************************************************/
-    static inline real infinity() throw() { return infinity<real>(); }
+    static inline real infinity() { return infinity<real>(); }
 
     /**
      * Swap the bytes of a quantity

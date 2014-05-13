@@ -23,7 +23,7 @@ namespace GeographicLib {
 
   void Gnomonic::Forward(real lat0, real lon0, real lat, real lon,
                          real& x, real& y, real& azi, real& rk)
-    const throw() {
+    const {
     real azi0, m, M, t;
     _earth.GenInverse(lat0, lon0, lat, lon,
                       Geodesic::AZIMUTH | Geodesic::REDUCEDLENGTH |
@@ -42,7 +42,7 @@ namespace GeographicLib {
 
   void Gnomonic::Reverse(real lat0, real lon0, real x, real y,
                          real& lat, real& lon, real& azi, real& rk)
-    const throw() {
+    const {
     real
       azi0 = atan2(x, y) / Math::degree<real>(),
       rho = Math::hypot(x, y),

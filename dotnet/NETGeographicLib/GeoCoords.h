@@ -390,6 +390,8 @@ namespace NETGeographicLib
          * UTM/UPS string.
          *
          * @param[in] prec precision (relative to about 1m)
+         * @param[in] abbrev if true (the default) use abbreviated (n/s) notation
+         *   for hemisphere; otherwise spell out the hemisphere (north/south)
          * @exception std::bad_alloc if memory for the string can't be allocated.
          * @return UTM/UPS string representation: zone designator, easting, and
          *   northing.
@@ -402,20 +404,22 @@ namespace NETGeographicLib
          * - prec = 6, 1&mu;m
          * - prec = 9 (max), 1nm
          **********************************************************************/
-        System::String^ UTMUPSRepresentation(int prec);
+        System::String^ UTMUPSRepresentation(int prec, bool abbrev);
 
         /**
          * UTM/UPS string with hemisphere override.
          *
-         * @param[in] prec precision (relative to about 1m)
          * @param[in] northp hemisphere override
+         * @param[in] prec precision (relative to about 1m)
+         * @param[in] abbrev if true (the default) use abbreviated (n/s) notation
+         *   for hemisphere; otherwise spell out the hemisphere (north/south)
          * @exception GeographicErr if the hemisphere override attempts to change
-         *   UPS N to UPS S or vice verse.
+         *   UPS N to UPS S or vice versa.
          * @exception std::bad_alloc if memory for the string can't be allocated.
          * @return UTM/UPS string representation: zone designator, easting, and
          *   northing.
          **********************************************************************/
-        System::String^ UTMUPSRepresentation(bool northp, int prec);
+        System::String^ UTMUPSRepresentation(bool northp, int prec, bool abbrev);
 
         /**
          * MGRS string for the alternate zone.  See GeoCoords::MGRSRepresentation.
@@ -431,24 +435,28 @@ namespace NETGeographicLib
          * GeoCoords::UTMUPSRepresentation.
          *
          * @param[in] prec precision (relative to about 1m)
+         * @param[in] abbrev if true (the default) use abbreviated (n/s) notation
+         *   for hemisphere; otherwise spell out the hemisphere (north/south)
          * @exception std::bad_alloc if memory for the string can't be allocated.
          * @return UTM/UPS string representation: zone designator, easting, and
          *   northing.
          **********************************************************************/
-        System::String^ AltUTMUPSRepresentation(int prec);
+        System::String^ AltUTMUPSRepresentation(int prec, bool abbrev);
 
         /**
          * UTM/UPS string for the alternate zone, with hemisphere override.
          *
-         * @param[in] prec precision (relative to about 1m)
          * @param[in] northp hemisphere override
+         * @param[in] prec precision (relative to about 1m)
+         * @param[in] abbrev if true (the default) use abbreviated (n/s) notation
+         *   for hemisphere; otherwise spell out the hemisphere (north/south)
          * @exception GeographicErr if the hemisphere override attempts to change
-         *   UPS N to UPS S or vice verse.
+         *   UPS n to UPS s or vice verse.
          * @exception std::bad_alloc if memory for the string can't be allocated.
          * @return UTM/UPS string representation: zone designator, easting, and
          *   northing.
          **********************************************************************/
-        System::String^ AltUTMUPSRepresentation(bool northp, int prec);
+        System::String^ AltUTMUPSRepresentation(bool northp, int prec, bool abbrev);
         ///@}
 
         /** \name Inspector functions

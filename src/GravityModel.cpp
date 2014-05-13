@@ -193,7 +193,7 @@ namespace GeographicLib {
 
   Math::real GravityModel::InternalT(real X, real Y, real Z,
                                      real& deltaX, real& deltaY, real& deltaZ,
-                                     bool gradp, bool correct) const throw() {
+                                     bool gradp, bool correct) const {
     // If correct, then produce the correct T = W - U.  Otherwise, neglect the
     // n = 0 term (which is proportial to the difference in the model and
     // reference values of GM).
@@ -222,7 +222,7 @@ namespace GeographicLib {
   }
 
   Math::real GravityModel::V(real X, real Y, real Z,
-                             real& GX, real& GY, real& GZ) const throw() {
+                             real& GX, real& GY, real& GZ) const {
     real
       Vres = _gravitational(X, Y, Z, GX, GY, GZ),
       f = _GMmodel / _amodel;
@@ -234,7 +234,7 @@ namespace GeographicLib {
   }
 
   Math::real GravityModel::W(real X, real Y, real Z,
-                             real& gX, real& gY, real& gZ) const throw() {
+                             real& gX, real& gY, real& gZ) const {
     real fX, fY,
       Wres = V(X, Y, Z, gX, gY, gZ) + _earth.Phi(X, Y, fX, fY);
     gX += fX;
@@ -244,7 +244,7 @@ namespace GeographicLib {
 
   void GravityModel::SphericalAnomaly(real lat, real lon, real h,
                                       real& Dg01, real& xi, real& eta)
-    const throw() {
+    const {
     real X, Y, Z, M[Geocentric::dim2_];
     _earth.Earth().IntForward(lat, lon, h, X, Y, Z, M);
     real
@@ -269,7 +269,7 @@ namespace GeographicLib {
     eta = -(deltax/gamma) / Math::degree<real>();
   }
 
-  Math::real GravityModel::GeoidHeight(real lat, real lon) const throw()
+  Math::real GravityModel::GeoidHeight(real lat, real lon) const
   {
     real X, Y, Z;
     _earth.Earth().IntForward(lat, lon, 0, X, Y, Z, NULL);
@@ -284,7 +284,7 @@ namespace GeographicLib {
   }
 
   Math::real GravityModel::Gravity(real lat, real lon, real h,
-                                   real& gx, real& gy, real& gz) const throw() {
+                                   real& gx, real& gy, real& gz) const {
     real X, Y, Z, M[Geocentric::dim2_];
     _earth.Earth().IntForward(lat, lon, h, X, Y, Z, M);
     real Wres = W(X, Y, Z, gx, gy, gz);
@@ -293,7 +293,7 @@ namespace GeographicLib {
   }
   Math::real GravityModel::Disturbance(real lat, real lon, real h,
                                        real& deltax, real& deltay, real& deltaz)
-    const throw() {
+    const {
     real X, Y, Z, M[Geocentric::dim2_];
     _earth.Earth().IntForward(lat, lon, h, X, Y, Z, M);
     real Tres = InternalT(X, Y, Z, deltax, deltay, deltaz, true, true);

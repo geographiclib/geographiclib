@@ -105,7 +105,7 @@ namespace GeographicLib {
   }
 
   void LambertConformalConic::Init(real sphi1, real cphi1,
-                                   real sphi2, real cphi2, real k1) throw() {
+                                   real sphi2, real cphi2, real k1) {
     {
       real r;
       r = Math::hypot(sphi1, cphi1);
@@ -332,7 +332,7 @@ namespace GeographicLib {
 
   void LambertConformalConic::Forward(real lon0, real lat, real lon,
                                       real& x, real& y, real& gamma, real& k)
-    const throw() {
+    const {
     lon = Math::AngDiff(Math::AngNormalize(lon0), Math::AngNormalize(lon));
     // From Snyder, we have
     //
@@ -374,7 +374,7 @@ namespace GeographicLib {
   void LambertConformalConic::Reverse(real lon0, real x, real y,
                                       real& lat, real& lon,
                                       real& gamma, real& k)
-    const throw() {
+    const {
     // From Snyder, we have
     //
     //        x = rho * sin(theta)

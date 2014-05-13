@@ -425,7 +425,7 @@ namespace GeographicLib {
     }
   }
 
-  void Geoid::CacheClear() const throw() {
+  void Geoid::CacheClear() const {
     if (!_threadsafe) {
       _cache = false;
       try {

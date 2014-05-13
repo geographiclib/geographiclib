@@ -138,7 +138,7 @@ namespace Projections
                 if (lat != x1 || lon != y1)
                     throw new Exception("Error in UTMUPS.Reverse");
                 UTMUPS.Transfer(zone, northp, x, y, zone + 1, true, out x1, out y1, out zout);
-                str = UTMUPS.EncodeZone(zone, northp);
+                str = UTMUPS.EncodeZone(zone, northp, true);
                 prec = UTMUPS.EncodeEPSG(zone, northp);
                 UTMUPS.DecodeZone(str, out zone, out northp);
                 UTMUPS.DecodeEPSG(prec, out zone, out northp);

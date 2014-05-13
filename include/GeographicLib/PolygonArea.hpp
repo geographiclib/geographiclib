@@ -63,7 +63,7 @@ namespace GeographicLib {
     int _crossings;
     Accumulator<real> _areasum, _perimetersum;
     real _lat0, _lon0, _lat1, _lon1;
-    static inline int transit(real lon1, real lon2) throw() {
+    static inline int transit(real lon1, real lon2) {
       // Return 1 or -1 if crossing prime meridian in east or west direction.
       // Otherwise return zero.
       // Compute lon12 the same way as Geodesic::Inverse.
@@ -85,7 +85,7 @@ namespace GeographicLib {
      * @param[in] polyline if true that treat the points as defining a polyline
      *   instead of a polygon (default = false).
      **********************************************************************/
-    PolygonArea(const Geodesic& earth, bool polyline = false) throw()
+    PolygonArea(const Geodesic& earth, bool polyline = false)
       : _earth(earth)
       , _area0(_earth.EllipsoidArea())
       , _polyline(polyline)
@@ -96,7 +96,7 @@ namespace GeographicLib {
     /**
      * Clear PolygonArea, allowing a new polygon to be started.
      **********************************************************************/
-    void Clear() throw() {
+    void Clear() {
       _num = 0;
       _crossings = 0;
       _areasum = 0;
@@ -113,7 +113,7 @@ namespace GeographicLib {
      * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
      * lon should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
-    void AddPoint(real lat, real lon) throw();
+    void AddPoint(real lat, real lon);
 
     /**
      * Add an edge to the polygon or polyline.
@@ -125,7 +125,7 @@ namespace GeographicLib {
      * nothing if no points have been added yet.  Use PolygonArea::CurrentPoint
      * to determine the position of the new vertex.
      **********************************************************************/
-    void AddEdge(real azi, real s) throw();
+    void AddEdge(real azi, real s);
 
     /**
      * Return the results so far.
@@ -142,7 +142,7 @@ namespace GeographicLib {
      * @return the number of points.
      **********************************************************************/
     unsigned Compute(bool reverse, bool sign,
-                     real& perimeter, real& area) const throw();
+                     real& perimeter, real& area) const;
 
     /**
      * Return the results assuming a tentative final test point is added;
@@ -171,7 +171,7 @@ namespace GeographicLib {
      * lon should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     unsigned TestPoint(real lat, real lon, bool reverse, bool sign,
-                       real& perimeter, real& area) const throw();
+                       real& perimeter, real& area) const;
 
     /**
      * Return the results assuming a tentative final test point is added via an
@@ -199,7 +199,7 @@ namespace GeographicLib {
      * \e azi should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     unsigned TestEdge(real azi, real s, bool reverse, bool sign,
-                      real& perimeter, real& area) const throw();
+                      real& perimeter, real& area) const;
 
     /// \cond SKIP
     /**
@@ -207,7 +207,7 @@ namespace GeographicLib {
      * The old name for PolygonArea::TestPoint.
      **********************************************************************/
     unsigned TestCompute(real lat, real lon, bool reverse, bool sign,
-                         real& perimeter, real& area) const throw() {
+                         real& perimeter, real& area) const {
       return TestPoint(lat, lon, reverse, sign, perimeter, area);
     }
     /// \endcond
@@ -220,13 +220,13 @@ namespace GeographicLib {
      *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
 
-    Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
+    Math::real MajorRadius() const { return _earth.MajorRadius(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw() { return _earth.Flattening(); }
+    Math::real Flattening() const { return _earth.Flattening(); }
 
     /**
      * Report the previous vertex added to the polygon or polyline.
@@ -237,7 +237,7 @@ namespace GeographicLib {
      * If no points have been added, then NaNs are returned.  Otherwise, \e lon
      * will be in the range [&minus;180&deg;, 180&deg;).
      **********************************************************************/
-    void CurrentPoint(real& lat, real& lon) const throw()
+    void CurrentPoint(real& lat, real& lon) const
     { lat = _lat1; lon = _lon1; }
     ///@}
   };

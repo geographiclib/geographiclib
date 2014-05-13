@@ -17,7 +17,7 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<p><b>GeoConvert</b> [ <b>-g</b> | <b>-d</b> | <b>-:</b> | <b>-u</b> | <b>-m</b> | <b>-c</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-z</b> <i>zone</i> | <b>-s</b> | <b>-t</b> ] [ <b>-n</b> ] [ <b>-w</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
+<p><b>GeoConvert</b> [ <b>-g</b> | <b>-d</b> | <b>-:</b> | <b>-u</b> | <b>-m</b> | <b>-c</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-z</b> <i>zone</i> | <b>-s</b> | <b>-t</b> ] [ <b>-n</b> ] [ <b>-w</b> ] [ <b>-l</b> | <b>-a</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
@@ -40,12 +40,12 @@
 <dt id="UTM-UPS"><b>UTM/UPS</b></dt>
 <dd>
 
-<p>3 tokens (output option <b>-u</b>) given as <i>zone</i>+<i>hemisphere</i> <i>easting</i> <i>northing</i> or <i>easting</i> <i>northing</i> <i>zone</i>+<i>hemisphere</i>, where <i>hemisphere</i> is either <i>N</i> or <i>S</i>. The <i>zone</i> is absent for a UPS specification. For example,</p>
+<p>3 tokens (output option <b>-u</b>) given as <i>zone</i>+<i>hemisphere</i> <i>easting</i> <i>northing</i> or <i>easting</i> <i>northing</i> <i>zone</i>+<i>hemisphere</i>, where <i>hemisphere</i> is either <i>n</i> (or <i>north</i>) or <i>s</i> (or <i>south</i>). The <i>zone</i> is absent for a UPS specification. For example,</p>
 
-<pre><code>    38N 444140.54 3684706.36
-    444140.54 3684706.36 38N
-    S 2173854.98 2985980.58
-    2173854.98 2985980.58 S</code></pre>
+<pre><code>    38n 444140.54 3684706.36
+    444140.54 3684706.36 38n
+    s 2173854.98 2985980.58
+    2173854.98 2985980.58 s</code></pre>
 
 </dd>
 <dt id="MRGS"><b>MRGS</b></dt>
@@ -108,7 +108,7 @@
 <dt id="z"><b>-z</b></dt>
 <dd>
 
-<p>set the zone to <i>zone</i> for output. Use either 0 &lt; <i>zone</i> &lt;= 60 for a UTM zone or <i>zone</i> = 0 for UPS. Alternatively use a <i>zone</i>+<i>hemisphere</i> designation, e.g., 38N. See <a href="#ZONE">&quot;ZONE&quot;</a>.</p>
+<p>set the zone to <i>zone</i> for output. Use either 0 &lt; <i>zone</i> &lt;= 60 for a UTM zone or <i>zone</i> = 0 for UPS. Alternatively use a <i>zone</i>+<i>hemisphere</i> designation, e.g., 38n. See <a href="#ZONE">&quot;ZONE&quot;</a>.</p>
 
 </dd>
 <dt id="s"><b>-s</b></dt>
@@ -133,6 +133,18 @@
 <dd>
 
 <p>on input and output, longitude precedes latitude (except that on input this can be overridden by a hemisphere designator, <i>N</i>, <i>S</i>, <i>E</i>, <i>W</i>).</p>
+
+</dd>
+<dt id="l"><b>-l</b></dt>
+<dd>
+
+<p>on output, UTM/UPS uses the long forms <i>north</i> and <i>south</i> to designate the hemisphere instead of <i>n</i> or <i>s</i>.</p>
+
+</dd>
+<dt id="a"><b>-a</b></dt>
+<dd>
+
+<p>on output, UTM/UPS uses the abbreviations <i>n</i> and <i>s</i> to designate the hemisphere instead of <i>north</i> or <i>south</i>; this is the default representation.</p>
 
 </dd>
 <dt id="comment-delimiter"><b>--comment-delimiter</b></dt>
@@ -191,7 +203,7 @@
 
 <h1 id="MGRS">MGRS</h1>
 
-<p>MGRS coordinates represent a square patch of the earth, thus <code>38SMB4488</code> is in zone <code>38N</code> with 444km &lt;= <i>easting</i> &lt; 445km and 3688km &lt;= <i>northing</i> &lt; 3689km. Consistent with this representation, coordinates are <i>truncated</i> (instead of <i>rounded</i>) to the requested precision. Similarly, on input an MGRS coordinate represents the <i>center</i> of the square (<code>38N 444500 3688500</code> in the example above). However, if the <b>-n</b> option is given then the south-west corner of the square is returned instead (<code>38N 444000 3688000</code> in the example above).</p>
+<p>MGRS coordinates represent a square patch of the earth, thus <code>38SMB4488</code> is in zone <code>38n</code> with 444km &lt;= <i>easting</i> &lt; 445km and 3688km &lt;= <i>northing</i> &lt; 3689km. Consistent with this representation, coordinates are <i>truncated</i> (instead of <i>rounded</i>) to the requested precision. Similarly, on input an MGRS coordinate represents the <i>center</i> of the square (<code>38n 444500 3688500</code> in the example above). However, if the <b>-n</b> option is given then the south-west corner of the square is returned instead (<code>38n 444000 3688000</code> in the example above).</p>
 
 <h1 id="ZONE">ZONE</h1>
 
@@ -214,12 +226,12 @@
 
 <p>Is <i>zone</i> is specified with a hemisphere, then this is honored when printing UTM coordinates:</p>
 
-<pre><code>   echo -1 3 | GeoConvert -u         =&gt; 31S 500000 9889470
-   echo -1 3 | GeoConvert -u -z 31   =&gt; 31S 500000 9889470
-   echo -1 3 | GeoConvert -u -z 31S  =&gt; 31S 500000 9889470
-   echo -1 3 | GeoConvert -u -z 31N  =&gt; 31N 500000 -110530</code></pre>
+<pre><code>   echo -1 3 | GeoConvert -u         =&gt; 31s 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31   =&gt; 31s 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31s  =&gt; 31s 500000 9889470
+   echo -1 3 | GeoConvert -u -z 31n  =&gt; 31n 500000 -110530</code></pre>
 
-<p><b>NOTE</b>: the letter in the zone specification for UTM is a hemisphere designator <i>N</i> or <i>S</i> and <i>not</i> an MGRS latitude band letter. Convert the MGRS latitude band letter to a hemisphere as follows: replace <i>C</i> thru <i>M</i> by <i>S</i>; replace <i>N</i> thru <i>X</i> by <i>N</i>.</p>
+<p><b>NOTE</b>: the letter in the zone specification for UTM is a hemisphere designator <i>n</i> or <i>s</i> and <i>not</i> an MGRS latitude band letter. Convert the MGRS latitude band letter to a hemisphere as follows: replace <i>C</i> thru <i>M</i> by <i>s</i> (or <i>south</i>); replace <i>N</i> thru <i>X</i> by <i>n</i> (or <i>north</i>).</p>
 
 <h1 id="QUOTING">QUOTING</h1>
 
@@ -269,7 +281,7 @@
 
 <pre><code>   echo 38SMB4488 | GeoConvert         =&gt; 33.33424 44.40363
    echo 38SMB4488 | GeoConvert -: -p 1 =&gt; 33:20:03.25N 044:2413.06E
-   echo 38SMB4488 | GeoConvert -u      =&gt; 38N 444500 3688500
+   echo 38SMB4488 | GeoConvert -u      =&gt; 38n 444500 3688500
    echo E44d24 N33d20 | GeoConvert -m -p -3 =&gt; 38SMB4488</code></pre>
 
 <h1 id="ERRORS">ERRORS</h1>

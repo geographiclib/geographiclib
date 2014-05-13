@@ -70,7 +70,7 @@
 <dt id="z"><b>-z</b></dt>
 <dd>
 
-<p>prefix each line of input by <i>zone</i>, e.g., <code>38N</code>. This should be used when the input consists of UTM/UPS eastings and northings.</p>
+<p>prefix each line of input by <i>zone</i>, e.g., <code>38n</code>. This should be used when the input consists of UTM/UPS eastings and northings.</p>
 
 </dd>
 <dt id="msltohae"><b>--msltohae</b></dt>
@@ -199,7 +199,7 @@
 <dt id="GEOGRAPHICLIB_DATA"><b>GEOGRAPHICLIB_DATA</b></dt>
 <dd>
 
-<p>Another way of overriding the compile-time default magnetic path. If it is set (and if <b>MAGNETIC_PATH</b> is not set), then $<b>GEOGRAPHICLIB_DATA</b>/magnetic is used.</p>
+<p>Another way of overriding the compile-time default geoid path. If it is set (and if <b>GEOID_PATH</b> is not set), then $<b>GEOGRAPHICLIB_DATA</b>/geoids is used.</p>
 
 </dd>
 </dl>
@@ -261,9 +261,9 @@
 
 <p>The first number returned is the height of the geoid and the 2nd and 3rd are its slopes in the northerly and easterly directions.</p>
 
-<p>Convert a point in UTM zone 18N from MSL to HAE</p>
+<p>Convert a point in UTM zone 18n from MSL to HAE</p>
 
-<pre><code>   echo 531595 4468135 23 | GeoidEval --msltohae -z 18N
+<pre><code>   echo 531595 4468135 23 | GeoidEval --msltohae -z 18n
    =&gt; 531595 4468135 -10.842</code></pre>
 
 <h1 id="SEE-ALSO">SEE ALSO</h1>

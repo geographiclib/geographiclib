@@ -166,7 +166,7 @@ namespace GeographicLib {
 
   void MagneticModel::Field(real t, real lat, real lon, real h, bool diffp,
                             real& Bx, real& By, real& Bz,
-                            real& Bxt, real& Byt, real& Bzt) const throw() {
+                            real& Bxt, real& Byt, real& Bzt) const {
     t -= _t0;
     int n = max(min(int(floor(t / _dt0)), _Nmodels - 1), 0);
     bool interpolate = n + 1 < _Nmodels;
@@ -217,7 +217,7 @@ namespace GeographicLib {
                                       real Bxt, real Byt, real Bzt,
                                       real& H, real& F, real& D, real& I,
                                       real& Ht, real& Ft,
-                                      real& Dt, real& It) throw() {
+                                      real& Dt, real& It) {
     H = Math::hypot(Bx, By);
     Ht = H ? (Bx * Bxt + By * Byt) / H : Math::hypot(Bxt, Byt);
     D = (0 - (H ? atan2(-Bx, By) : atan2(-Bxt, Byt))) / Math::degree<real>();

@@ -13,7 +13,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  void LocalCartesian::Reset(real lat0, real lon0, real h0) throw() {
+  void LocalCartesian::Reset(real lat0, real lon0, real h0) {
     _lat0 = lat0;
     _lon0 = Math::AngNormalize(lon0);
     _h0 = h0;
@@ -28,7 +28,7 @@ namespace GeographicLib {
     _earth.Rotation(sphi, cphi, slam, clam, _r);
   }
 
-  void LocalCartesian::MatrixMultiply(real M[dim2_]) const throw() {
+  void LocalCartesian::MatrixMultiply(real M[dim2_]) const {
     real t[dim2_];
     copy(M, M + dim2_, t);
     for (size_t i = 0; i < dim2_; ++i) {
@@ -39,7 +39,7 @@ namespace GeographicLib {
 
   void LocalCartesian::IntForward(real lat, real lon, real h,
                                   real& x, real& y, real& z,
-                                  real M[dim2_]) const throw() {
+                                  real M[dim2_]) const {
     real xc, yc, zc;
     _earth.IntForward(lat, lon, h, xc, yc, zc, M);
     xc -= _x0; yc -= _y0; zc -= _z0;
@@ -52,7 +52,7 @@ namespace GeographicLib {
 
   void LocalCartesian::IntReverse(real x, real y, real z,
                                   real& lat, real& lon, real& h,
-                                  real M[dim2_]) const throw() {
+                                  real M[dim2_]) const {
     real
       xc = _x0 + _r[0] * x + _r[1] * y + _r[2] * z,
       yc = _y0 + _r[3] * x + _r[4] * y + _r[5] * z,
