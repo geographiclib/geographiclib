@@ -18,7 +18,7 @@ namespace GeographicLib {
 
   void AzimuthalEquidistant::Forward(real lat0, real lon0, real lat, real lon,
                                      real& x, real& y, real& azi, real& rk)
-    const throw() {
+    const {
     real sig, s, azi0, m;
     sig = _earth.Inverse(lat0, lon0, lat, lon, s, azi0, azi, m);
     azi0 *= Math::degree<real>();
@@ -29,7 +29,7 @@ namespace GeographicLib {
 
   void AzimuthalEquidistant::Reverse(real lat0, real lon0, real x, real y,
                                      real& lat, real& lon, real& azi, real& rk)
-    const throw() {
+    const {
     real
       azi0 = atan2(x, y) / Math::degree<real>(),
       s = Math::hypot(x, y);

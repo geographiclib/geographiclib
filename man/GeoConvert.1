@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOCONVERT 1"
-.TH GEOCONVERT 1 "2014-03-13" "GeographicLib 1.35" "GeographicLib Utilities"
+.TH GEOCONVERT 1 "2014-05-13" "GeographicLib 1.36" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -135,6 +135,7 @@ GeoConvert \-\- convert geographic coordinates
 .IX Header "SYNOPSIS"
 \&\fBGeoConvert\fR [ \fB\-g\fR | \fB\-d\fR | \fB\-:\fR | \fB\-u\fR | \fB\-m\fR | \fB\-c\fR ]
 [ \fB\-p\fR \fIprec\fR ] [ \fB\-z\fR \fIzone\fR | \fB\-s\fR | \fB\-t\fR ] [ \fB\-n\fR ] [ \fB\-w\fR ]
+[ \fB\-l\fR | \fB\-a\fR ]
 [ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
 [ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
@@ -175,14 +176,14 @@ the longitude.  For example, the following are all equivalent
 .IX Item "UTM/UPS"
 3 tokens (output option \fB\-u\fR) given as \fIzone\fR+\fIhemisphere\fR \fIeasting\fR
 \&\fInorthing\fR or \fIeasting\fR \fInorthing\fR \fIzone\fR+\fIhemisphere\fR, where
-\&\fIhemisphere\fR is either \fIN\fR or \fIS\fR.  The \fIzone\fR is absent for a \s-1UPS\s0
-specification.  For example,
+\&\fIhemisphere\fR is either \fIn\fR (or \fInorth\fR) or \fIs\fR (or \fIsouth\fR).  The
+\&\fIzone\fR is absent for a \s-1UPS\s0 specification.  For example,
 .Sp
 .Vb 4
-\&    38N 444140.54 3684706.36
-\&    444140.54 3684706.36 38N
-\&    S 2173854.98 2985980.58
-\&    2173854.98 2985980.58 S
+\&    38n 444140.54 3684706.36
+\&    444140.54 3684706.36 38n
+\&    s 2173854.98 2985980.58
+\&    2173854.98 2985980.58 s
 .Ve
 .IP "\fB\s-1MRGS\s0\fR" 4
 .IX Item "MRGS"
@@ -224,7 +225,7 @@ precision relative to 1 m.  See \*(L"\s-1PRECISION\s0\*(R".
 .IX Item "-z"
 set the zone to \fIzone\fR for output.  Use either 0 < \fIzone\fR <=
 60 for a \s-1UTM\s0 zone or \fIzone\fR = 0 for \s-1UPS\s0.  Alternatively use a
-\&\fIzone\fR+\fIhemisphere\fR designation, e.g., 38N.  See \*(L"\s-1ZONE\s0\*(R".
+\&\fIzone\fR+\fIhemisphere\fR designation, e.g., 38n.  See \*(L"\s-1ZONE\s0\*(R".
 .IP "\fB\-s\fR" 4
 .IX Item "-s"
 use the standard \s-1UPS\s0 and \s-1UTM\s0 zones.
@@ -240,6 +241,15 @@ square instead of the center; see \*(L"\s-1MGRS\s0\*(R".
 on input and output, longitude precedes latitude (except that on input
 this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR, \fIE\fR,
 \&\fIW\fR).
+.IP "\fB\-l\fR" 4
+.IX Item "-l"
+on output, \s-1UTM/UPS\s0 uses the long forms \fInorth\fR and \fIsouth\fR to
+designate the hemisphere instead of \fIn\fR or \fIs\fR.
+.IP "\fB\-a\fR" 4
+.IX Item "-a"
+on output, \s-1UTM/UPS\s0 uses the abbreviations \fIn\fR and \fIs\fR to designate the
+hemisphere instead of \fInorth\fR or \fIsouth\fR; this is the default
+representation.
 .IP "\fB\-\-comment\-delimiter\fR" 4
 .IX Item "--comment-delimiter"
 set the comment delimiter to \fIcommentdelim\fR (e.g., \*(L"#\*(R" or \*(L"//\*(R").  If
@@ -290,13 +300,13 @@ component.  Print convergence, resp. scale, with 5 + \fIprec\fR, resp. 7 +
 .SH "MGRS"
 .IX Header "MGRS"
 \&\s-1MGRS\s0 coordinates represent a square patch of the earth, thus \f(CW\*(C`38SMB4488\*(C'\fR
-is in zone \f(CW\*(C`38N\*(C'\fR with 444km <= \fIeasting\fR < 445km and 3688km <=
+is in zone \f(CW\*(C`38n\*(C'\fR with 444km <= \fIeasting\fR < 445km and 3688km <=
 \&\fInorthing\fR < 3689km.  Consistent with this representation,
 coordinates are \fItruncated\fR (instead of \fIrounded\fR) to the requested
 precision.  Similarly, on input an \s-1MGRS\s0 coordinate represents the
-\&\fIcenter\fR of the square (\f(CW\*(C`38N 444500 3688500\*(C'\fR in the example above).
+\&\fIcenter\fR of the square (\f(CW\*(C`38n 444500 3688500\*(C'\fR in the example above).
 However, if the \fB\-n\fR option is given then the south-west corner of the
-square is returned instead (\f(CW\*(C`38N 444000 3688000\*(C'\fR in the example above).
+square is returned instead (\f(CW\*(C`38n 444000 3688000\*(C'\fR in the example above).
 .SH "ZONE"
 .IX Header "ZONE"
 If the input is \fBgeographic\fR, \fBGeoConvert\fR uses the standard rules of
@@ -331,16 +341,17 @@ Is \fIzone\fR is specified with a hemisphere, then this is honored when
 printing \s-1UTM\s0 coordinates:
 .PP
 .Vb 4
-\&   echo \-1 3 | GeoConvert \-u         => 31S 500000 9889470
-\&   echo \-1 3 | GeoConvert \-u \-z 31   => 31S 500000 9889470
-\&   echo \-1 3 | GeoConvert \-u \-z 31S  => 31S 500000 9889470
-\&   echo \-1 3 | GeoConvert \-u \-z 31N  => 31N 500000 \-110530
+\&   echo \-1 3 | GeoConvert \-u         => 31s 500000 9889470
+\&   echo \-1 3 | GeoConvert \-u \-z 31   => 31s 500000 9889470
+\&   echo \-1 3 | GeoConvert \-u \-z 31s  => 31s 500000 9889470
+\&   echo \-1 3 | GeoConvert \-u \-z 31n  => 31n 500000 \-110530
 .Ve
 .PP
 \&\fB\s-1NOTE\s0\fR: the letter in the zone specification for \s-1UTM\s0 is a hemisphere
-designator \fIN\fR or \fIS\fR and \fInot\fR an \s-1MGRS\s0 latitude band letter.
+designator \fIn\fR or \fIs\fR and \fInot\fR an \s-1MGRS\s0 latitude band letter.
 Convert the \s-1MGRS\s0 latitude band letter to a hemisphere as follows:
-replace \fIC\fR thru \fIM\fR by \fIS\fR; replace \fIN\fR thru \fIX\fR by \fIN\fR.
+replace \fIC\fR thru \fIM\fR by \fIs\fR (or \fIsouth\fR); replace \fIN\fR thru \fIX\fR by
+\&\fIn\fR (or \fInorth\fR).
 .SH "QUOTING"
 .IX Header "QUOTING"
 Unfortunately the characters ' and \*(L" have special meanings in many
@@ -395,7 +406,7 @@ file \f(CW\*(C`input.txt\*(C'\fR should just contain the plain coordinates.
 .Vb 4
 \&   echo 38SMB4488 | GeoConvert         => 33.33424 44.40363
 \&   echo 38SMB4488 | GeoConvert \-: \-p 1 => 33:20:03.25N 044:2413.06E
-\&   echo 38SMB4488 | GeoConvert \-u      => 38N 444500 3688500
+\&   echo 38SMB4488 | GeoConvert \-u      => 38n 444500 3688500
 \&   echo E44d24 N33d20 | GeoConvert \-m \-p \-3 => 38SMB4488
 .Ve
 .SH "ERRORS"

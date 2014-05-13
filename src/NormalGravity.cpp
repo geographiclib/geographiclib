@@ -80,7 +80,7 @@ namespace GeographicLib {
                        Constants::GRS80_omega<real>(),
                        0, Constants::GRS80_J2<real>());
 
-  Math::real NormalGravity::qf(real ep2) throw() {
+  Math::real NormalGravity::qf(real ep2) {
     // Compute
     //
     //   ((1 + 3/e'^2) * atan(e') - 3/e')/2
@@ -107,7 +107,7 @@ namespace GeographicLib {
     }
   }
 
-  Math::real NormalGravity::qpf(real ep2) throw() {
+  Math::real NormalGravity::qpf(real ep2) {
     // Compute
     //
     //   3*(1 + 1/e'^2) * (1 - atan(e')/e') - 1
@@ -134,7 +134,7 @@ namespace GeographicLib {
     }
   }
 
-  Math::real NormalGravity::Jn(int n) const throw() {
+  Math::real NormalGravity::Jn(int n) const {
     // Note Jn(0) = -1; Jn(2) = _J2; Jn(odd) = 0
     if (n & 1 || n < 0)
       return 0;
@@ -146,7 +146,7 @@ namespace GeographicLib {
       -3 * e2n * (1 - n + 5 * n * _J2 / _e2) / ((2 * n + 1) * (2 * n + 3));
   }
 
-  Math::real NormalGravity::SurfaceGravity(real lat) const throw() {
+  Math::real NormalGravity::SurfaceGravity(real lat) const {
     real
       phi = lat * Math::degree<real>(),
       sphi2 = abs(lat) == 90 ? 1 : Math::sq(sin(phi));
@@ -156,7 +156,7 @@ namespace GeographicLib {
 
   Math::real NormalGravity::V0(real X, real Y, real Z,
                                real& GammaX, real& GammaY, real& GammaZ)
-    const throw() {
+    const {
     // See H+M, Sec 6-2
     real
       p = Math::hypot(X, Y),
@@ -200,7 +200,7 @@ namespace GeographicLib {
   }
 
   Math::real NormalGravity::Phi(real X, real Y, real& fX, real& fY)
-    const throw() {
+    const {
     fX = _omega2 * X;
     fY = _omega2 * Y;
     // N.B. fZ = 0;
@@ -209,7 +209,7 @@ namespace GeographicLib {
 
   Math::real NormalGravity::U(real X, real Y, real Z,
                               real& gammaX, real& gammaY, real& gammaZ)
-    const throw() {
+    const {
     real fX, fY;
     real Ures = V0(X, Y, Z, gammaX, gammaY, gammaZ) + Phi(X, Y, fX, fY);
     gammaX += fX;
@@ -219,7 +219,7 @@ namespace GeographicLib {
 
   Math::real NormalGravity::Gravity(real lat, real h,
                                     real& gammay, real& gammaz)
-    const throw() {
+    const {
     real X, Y, Z;
     real M[Geocentric::dim2_];
     _earth.IntForward(lat, 0, h, X, Y, Z, M);

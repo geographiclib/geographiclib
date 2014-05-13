@@ -17,7 +17,7 @@ namespace GeographicLib {
     real(0.01) * sqrt(numeric_limits<real>::epsilon());
   const Math::real CassiniSoldner::tiny_ = sqrt(numeric_limits<real>::min());
 
-  void CassiniSoldner::Reset(real lat0, real lon0) throw() {
+  void CassiniSoldner::Reset(real lat0, real lon0) {
     _meridian = _earth.Line(lat0, lon0, real(0),
                             Geodesic::LATITUDE | Geodesic::LONGITUDE |
                             Geodesic::DISTANCE | Geodesic::DISTANCE_IN |
@@ -31,7 +31,7 @@ namespace GeographicLib {
   }
 
   void CassiniSoldner::Forward(real lat, real lon, real& x, real& y,
-                               real& azi, real& rk) const throw() {
+                               real& azi, real& rk) const {
     if (!Init())
       return;
     real dlon = Math::AngDiff(LongitudeOrigin(), Math::AngNormalize(lon));
@@ -79,7 +79,7 @@ namespace GeographicLib {
   }
 
   void CassiniSoldner::Reverse(real x, real y, real& lat, real& lon,
-                               real& azi, real& rk) const throw() {
+                               real& azi, real& rk) const {
     if (!Init())
       return;
     real lat1, lon1;

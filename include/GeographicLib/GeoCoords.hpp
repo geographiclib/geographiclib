@@ -55,7 +55,7 @@ namespace GeographicLib {
     mutable real _alt_easting, _alt_northing, _alt_gamma, _alt_k;
     mutable int _alt_zone;
 
-    void CopyToAlt() const throw() {
+    void CopyToAlt() const {
       _alt_easting = _easting;
       _alt_northing = _northing;
       _alt_gamma = _gamma;
@@ -63,7 +63,7 @@ namespace GeographicLib {
       _alt_zone = _zone;
     }
     static void UTMUPSString(int zone, bool northp, real easting, real northing,
-                             int prec, std::string& utm);
+                             int prec, bool abbrev, std::string& utm);
     void FixHemisphere();
   public:
 
@@ -74,7 +74,7 @@ namespace GeographicLib {
      * The default constructor is equivalent to \e latitude = 90&deg;,
      * \e longitude = 0&deg;.
      **********************************************************************/
-    GeoCoords() throw()
+    GeoCoords()
       // This is the N pole
       : _lat(90)
       , _long(0)
@@ -114,8 +114,8 @@ namespace GeographicLib {
      *   -  38SLC3918701405
      *   -  37SHT9708
      * - UTM
-     *   -  38N 339188 3701405
-     *   -  897039 3708229 37N
+     *   -  38n 339188 3701405
+     *   -  897039 3708229 37n
      *
      * <b>Latitude and Longitude parsing</b>: Latitude precedes longitude,
      * unless a N, S, E, W hemisphere designator is used on one or both
@@ -151,24 +151,25 @@ namespace GeographicLib {
      *
      * <b>UTM/UPS parsing</b>: For UTM zones (&minus;80&deg; &le; Lat <
      * 84&deg;), the zone designator is made up of a zone number (for 1 to 60)
-     * and a hemisphere letter (N or S), e.g., 38N.  The latitude zone designer
-     * ([C--M] in the southern hemisphere and [N--X] in the northern) should
-     * NOT be used.  (This is part of the MGRS coordinate.)  The zone
-     * designator for the poles (where UPS is employed) is a hemisphere letter
-     * by itself, i.e., N or S.
+     * and a hemisphere letter (n or s), e.g., 38n (38north can also be used).
+     * The latitude band designer ([C--M] in the southern hemisphere and [N--X]
+     * in the northern) should NOT be used.  (This is part of the MGRS
+     * coordinate.)  The zone designator for the poles (where UPS is employed)
+     * is a hemisphere letter by itself, i.e., n or s (north or south can also
+     * be used).
      *
      * <b>MGRS parsing</b> interprets the grid references as square area at the
      * specified precision (1m, 10m, 100m, etc.).  If \e centerp = true (the
      * default), the center of this square is then taken to be the precise
      * position; thus:
-     * - 38SMB           = 38N 450000 3650000
-     * - 38SMB4484       = 38N 444500 3684500
-     * - 38SMB44148470   = 38N 444145 3684705
+     * - 38SMB           = 38n 450000 3650000
+     * - 38SMB4484       = 38n 444500 3684500
+     * - 38SMB44148470   = 38n 444145 3684705
      * .
      * Otherwise, the "south-west" corner of the square is used, i.e.,
-     * - 38SMB           = 38N 400000 3600000
-     * - 38SMB4484       = 38N 444000 3684000
-     * - 38SMB44148470   = 38N 444140 3684700
+     * - 38SMB           = 38n 400000 3600000
+     * - 38SMB4484       = 38n 444000 3684000
+     * - 38SMB44148470   = 38n 444140 3684700
      **********************************************************************/
     explicit GeoCoords(const std::string& s,
                        bool centerp = true, bool swaplatlong = false)
@@ -273,47 +274,47 @@ namespace GeographicLib {
     /**
      * @return latitude (degrees)
      **********************************************************************/
-    Math::real Latitude() const throw() { return _lat; }
+    Math::real Latitude() const { return _lat; }
 
     /**
      * @return longitude (degrees)
      **********************************************************************/
-    Math::real Longitude() const throw() { return _long; }
+    Math::real Longitude() const { return _long; }
 
     /**
      * @return easting (meters)
      **********************************************************************/
-    Math::real Easting() const throw() { return _easting; }
+    Math::real Easting() const { return _easting; }
 
     /**
      * @return northing (meters)
      **********************************************************************/
-    Math::real Northing() const throw() { return _northing; }
+    Math::real Northing() const { return _northing; }
 
     /**
      * @return meridian convergence (degrees) for the UTM/UPS projection.
      **********************************************************************/
-    Math::real Convergence() const throw() { return _gamma; }
+    Math::real Convergence() const { return _gamma; }
 
     /**
      * @return scale for the UTM/UPS projection.
      **********************************************************************/
-    Math::real Scale() const throw() { return _k; }
+    Math::real Scale() const { return _k; }
 
     /**
      * @return hemisphere (false means south, true means north).
      **********************************************************************/
-    bool Northp() const throw() { return _northp; }
+    bool Northp() const { return _northp; }
 
     /**
-     * @return hemisphere letter N or S.
+     * @return hemisphere letter n or s.
      **********************************************************************/
-    char Hemisphere() const throw() { return _northp ? 'N' : 'S'; }
+    char Hemisphere() const { return _northp ? 'n' : 's'; }
 
     /**
      * @return the zone corresponding to the input (return 0 for UPS).
      **********************************************************************/
-    int Zone() const throw() { return _zone; }
+    int Zone() const { return _zone; }
 
     ///@}
 
@@ -350,27 +351,27 @@ namespace GeographicLib {
     /**
      * @return current alternate zone (return 0 for UPS).
      **********************************************************************/
-    int AltZone() const throw() { return _alt_zone; }
+    int AltZone() const { return _alt_zone; }
 
     /**
      * @return easting (meters) for alternate zone.
      **********************************************************************/
-    Math::real AltEasting() const throw() { return _alt_easting; }
+    Math::real AltEasting() const { return _alt_easting; }
 
     /**
      * @return northing (meters) for alternate zone.
      **********************************************************************/
-    Math::real AltNorthing() const throw() { return _alt_northing; }
+    Math::real AltNorthing() const { return _alt_northing; }
 
     /**
      * @return meridian convergence (degrees) for alternate zone.
      **********************************************************************/
-    Math::real AltConvergence() const throw() { return _alt_gamma; }
+    Math::real AltConvergence() const { return _alt_gamma; }
 
     /**
      * @return scale for alternate zone.
      **********************************************************************/
-    Math::real AltScale() const throw() { return _alt_k; }
+    Math::real AltScale() const { return _alt_k; }
     ///@}
 
     /** \name String representations of the GeoCoords object
@@ -426,7 +427,7 @@ namespace GeographicLib {
      * @return MGRS string.
      *
      * This gives the coordinates of the enclosing grid square with size given
-     * by the precision.  Thus 38N 444180 3684790 converted to a MGRS
+     * by the precision.  Thus 38n 444180 3684790 converted to a MGRS
      * coordinate at precision &minus;2 (100m) is 38SMB441847 and not
      * 38SMB442848.  \e prec specifies the precision of the MGRS string as
      * follows:
@@ -445,6 +446,8 @@ namespace GeographicLib {
      * UTM/UPS string.
      *
      * @param[in] prec precision (relative to about 1m)
+     * @param[in] abbrev if true (the default) use abbreviated (n/s) notation
+     *   for hemisphere; otherwise spell out the hemisphere (north/south)
      * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return UTM/UPS string representation: zone designator, easting, and
      *   northing.
@@ -457,20 +460,23 @@ namespace GeographicLib {
      * - prec = 6, 1&mu;m
      * - prec = 9 (max), 1nm
      **********************************************************************/
-    std::string UTMUPSRepresentation(int prec = 0) const;
+    std::string UTMUPSRepresentation(int prec = 0, bool abbrev = true) const;
 
     /**
      * UTM/UPS string with hemisphere override.
      *
-     * @param[in] prec precision (relative to about 1m)
      * @param[in] northp hemisphere override
+     * @param[in] prec precision (relative to about 1m)
+     * @param[in] abbrev if true (the default) use abbreviated (n/s) notation
+     *   for hemisphere; otherwise spell out the hemisphere (north/south)
      * @exception GeographicErr if the hemisphere override attempts to change
-     *   UPS N to UPS S or vice verse.
+     *   UPS N to UPS S or vice versa.
      * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return UTM/UPS string representation: zone designator, easting, and
      *   northing.
      **********************************************************************/
-    std::string UTMUPSRepresentation(bool northp, int prec = 0) const;
+    std::string UTMUPSRepresentation(bool northp, int prec = 0,
+                                     bool abbrev = true) const;
 
     /**
      * MGRS string for the alternate zone.  See GeoCoords::MGRSRepresentation.
@@ -486,24 +492,29 @@ namespace GeographicLib {
      * GeoCoords::UTMUPSRepresentation.
      *
      * @param[in] prec precision (relative to about 1m)
+     * @param[in] abbrev if true (the default) use abbreviated (n/s) notation
+     *   for hemisphere; otherwise spell out the hemisphere (north/south)
      * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return UTM/UPS string representation: zone designator, easting, and
      *   northing.
      **********************************************************************/
-    std::string AltUTMUPSRepresentation(int prec = 0) const;
+    std::string AltUTMUPSRepresentation(int prec = 0, bool abbrev = true) const;
 
     /**
      * UTM/UPS string for the alternate zone, with hemisphere override.
      *
-     * @param[in] prec precision (relative to about 1m)
      * @param[in] northp hemisphere override
+     * @param[in] prec precision (relative to about 1m)
+     * @param[in] abbrev if true (the default) use abbreviated (n/s) notation
+     *   for hemisphere; otherwise spell out the hemisphere (north/south)
      * @exception GeographicErr if the hemisphere override attempts to change
-     *   UPS N to UPS S or vice verse.
+     *   UPS n to UPS s or vice verse.
      * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return UTM/UPS string representation: zone designator, easting, and
      *   northing.
      **********************************************************************/
-    std::string AltUTMUPSRepresentation(bool northp, int prec = 0) const;
+    std::string AltUTMUPSRepresentation(bool northp, int prec = 0,
+                                        bool abbrev = true) const;
     ///@}
 
     /** \name Inspector functions
@@ -515,7 +526,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return UTMUPS::MajorRadius(); }
+    Math::real MajorRadius() const { return UTMUPS::MajorRadius(); }
 
     /**
      * @return \e f the flattening of the WGS84 ellipsoid.
@@ -523,7 +534,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
-    Math::real Flattening() const throw() { return UTMUPS::Flattening(); }
+    Math::real Flattening() const { return UTMUPS::Flattening(); }
     ///@}
 
     /// \cond SKIP
@@ -531,7 +542,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw()
+    Math::real InverseFlattening() const
     { return UTMUPS::InverseFlattening(); }
     /// \endcond
   };

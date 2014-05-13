@@ -81,14 +81,14 @@ namespace GeographicLib {
                                Constants::UTM_k0<real>());
 
   // tau = tan(phi), taup = sinh(psi)
-  Math::real TransverseMercatorExact::taup(real tau) const throw() {
+  Math::real TransverseMercatorExact::taup(real tau) const {
     real
       tau1 = Math::hypot(real(1), tau),
       sig = sinh( _e * Math::atanh(_e * tau / tau1) );
     return Math::hypot(real(1), sig) * tau - sig * tau1;
   }
 
-  Math::real TransverseMercatorExact::taupinv(real taup) const throw() {
+  Math::real TransverseMercatorExact::taupinv(real taup) const {
     real
       // See comment in TransverseMercator.cpp about the initial guess
       tau = taup/_mv,
@@ -110,7 +110,7 @@ namespace GeographicLib {
 
   void TransverseMercatorExact::zeta(real /*u*/, real snu, real cnu, real dnu,
                                      real /*v*/, real snv, real cnv, real dnv,
-                                     real& taup, real& lam) const throw() {
+                                     real& taup, real& lam) const {
     // Lee 54.17 but write
     // atanh(snu * dnv) = asinh(snu * dnv / sqrt(cnu^2 + _mv * snu^2 * snv^2))
     // atanh(_e * snu / dnv) =
@@ -133,7 +133,7 @@ namespace GeographicLib {
                                         real snu, real cnu, real dnu,
                                         real /*v*/,
                                         real snv, real cnv, real dnv,
-                                        real& du, real& dv) const throw() {
+                                        real& du, real& dv) const {
     // Lee 54.21 but write (1 - dnu^2 * snv^2) = (cnv^2 + _mu * snu^2 * snv^2)
     // (see A+S 16.21.4)
     real d = _mv * Math::sq(Math::sq(cnv) + _mu * Math::sq(snu * snv));
@@ -143,7 +143,7 @@ namespace GeographicLib {
 
   // Starting point for zetainv
   bool TransverseMercatorExact::zetainv0(real psi, real lam, real& u, real& v)
-    const throw() {
+    const {
     bool retval = false;
     if (psi < -_e * Math::pi<real>()/4 &&
         lam > (1 - 2 * _e) * Math::pi<real>()/2 &&
@@ -208,7 +208,7 @@ namespace GeographicLib {
 
   // Invert zeta using Newton's method
   void TransverseMercatorExact::zetainv(real taup, real lam, real& u, real& v)
-    const throw()  {
+    const  {
     real
       psi = Math::asinh(taup),
       scal = 1/Math::hypot(real(1), taup);
@@ -241,7 +241,7 @@ namespace GeographicLib {
 
   void TransverseMercatorExact::sigma(real /*u*/, real snu, real cnu, real dnu,
                                       real v, real snv, real cnv, real dnv,
-                                      real& xi, real& eta) const throw() {
+                                      real& xi, real& eta) const {
     // Lee 55.4 writing
     // dnu^2 + dnv^2 - 1 = _mu * cnu^2 + _mv * cnv^2
     real d = _mu * Math::sq(cnu) + _mv * Math::sq(cnv);
@@ -253,7 +253,7 @@ namespace GeographicLib {
                                          real snu, real cnu, real dnu,
                                          real /*v*/,
                                          real snv, real cnv, real dnv,
-                                         real& du, real& dv) const throw() {
+                                         real& du, real& dv) const {
     // Reciprocal of 55.9: dw/ds = dn(w)^2/_mv, expanding complex dn(w) using
     // A+S 16.21.4
     real d = _mv * Math::sq(Math::sq(cnv) + _mu * Math::sq(snu * snv));
@@ -266,7 +266,7 @@ namespace GeographicLib {
 
   // Starting point for sigmainv
   bool TransverseMercatorExact::sigmainv0(real xi, real eta, real& u, real& v)
-    const throw() {
+    const {
     bool retval = false;
     if (eta > real(1.25) * _Ev.KE() ||
         (xi < -real(0.25) * _Eu.E() && xi < eta - _Ev.KE())) {
@@ -316,7 +316,7 @@ namespace GeographicLib {
 
   // Invert sigma using Newton's method
   void TransverseMercatorExact::sigmainv(real xi, real eta, real& u, real& v)
-    const throw() {
+    const {
     if (sigmainv0(xi, eta, u, v))
       return;
     // min iterations = 2, max iterations = 7; mean = 3.9
@@ -345,7 +345,7 @@ namespace GeographicLib {
   void TransverseMercatorExact::Scale(real tau, real /*lam*/,
                                       real snu, real cnu, real dnu,
                                       real snv, real cnv, real dnv,
-                                      real& gamma, real& k) const throw() {
+                                      real& gamma, real& k) const {
     real sec2 = 1 + Math::sq(tau);    // sec(phi)^2
     // Lee 55.12 -- negated for our sign convention.  gamma gives the bearing
     // (clockwise from true north) of grid north
@@ -370,7 +370,7 @@ namespace GeographicLib {
 
   void TransverseMercatorExact::Forward(real lon0, real lat, real lon,
                                         real& x, real& y, real& gamma, real& k)
-    const throw() {
+    const {
     lon = Math::AngDiff(Math::AngNormalize(lon0), Math::AngNormalize(lon));
     // Explicitly enforce the parity
     int
@@ -430,7 +430,7 @@ namespace GeographicLib {
   void TransverseMercatorExact::Reverse(real lon0, real x, real y,
                                         real& lat, real& lon,
                                         real& gamma, real& k)
-    const throw() {
+    const {
     // This undoes the steps in Forward.
     real
       xi = y / (_a * _k0),

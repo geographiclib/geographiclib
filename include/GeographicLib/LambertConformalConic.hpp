@@ -65,10 +65,10 @@ namespace GeographicLib {
     static const real tol_;
     static const real ahypover_;
     static const int numit_ = 5;
-    static inline real hyp(real x) throw() { return Math::hypot(real(1), x); }
+    static inline real hyp(real x) { return Math::hypot(real(1), x); }
     // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0
     // - sqrt(-e2) * atan( sqrt(-e2) * x)                    if f < 0
-    inline real eatanhe(real x) const throw()
+    inline real eatanhe(real x) const
     { return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x); }
     // Divided differences
     // Definition: Df(x,y) = (f(x)-f(y))/(x-y)
@@ -87,23 +87,23 @@ namespace GeographicLib {
     //                = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2
     //
     // hyp(x) = sqrt(1+x^2): Dhyp(x,y) = (x+y)/(hyp(x)+hyp(y))
-    static inline real Dhyp(real x, real y, real hx, real hy) throw()
+    static inline real Dhyp(real x, real y, real hx, real hy)
     // hx = hyp(x)
     { return (x + y) / (hx + hy); }
     // sn(x) = x/sqrt(1+x^2): Dsn(x,y) = (x+y)/((sn(x)+sn(y))*(1+x^2)*(1+y^2))
-    static inline real Dsn(real x, real y, real sx, real sy) throw() {
+    static inline real Dsn(real x, real y, real sx, real sy) {
       // sx = x/hyp(x)
       real t = x * y;
       return t > 0 ? (x + y) * Math::sq( (sx * sy)/t ) / (sx + sy) :
         (x - y != 0 ? (sx - sy) / (x - y) : 1);
     }
     // Dlog1p(x,y) = log1p((x-y)/(1+y)/(x-y)
-    static inline real Dlog1p(real x, real y) throw() {
+    static inline real Dlog1p(real x, real y) {
       real t = x - y; if (t < 0) { t = -t; y = x; }
       return t != 0 ? Math::log1p(t / (1 + y)) / t : 1 / (1 + x);
     }
     // Dexp(x,y) = exp((x+y)/2) * 2*sinh((x-y)/2)/(x-y)
-    static inline real Dexp(real x, real y) throw() {
+    static inline real Dexp(real x, real y) {
       real t = (x - y)/2;
       return (t != 0 ? sinh(t)/t : real(1)) * exp((x + y)/2);
     }
@@ -113,7 +113,7 @@ namespace GeographicLib {
     //   cosh((x+y)/2) = sqrt( (sinh(x)*sinh(y) + cosh(x)*cosh(y) + 1)/2 )
     static inline real Dsinh(real x, real y, real sx, real sy, real cx, real cy)
       // sx = sinh(x), cx = cosh(x)
-      throw() {
+      {
       // real t = (x - y)/2, c = sqrt((1 + cx) * (1 + cy));
       // return (t != 0 ? sinh(t)/t : real(1)) * (c + sx * sy / c) /2;
       real t = (x - y)/2;
@@ -121,7 +121,7 @@ namespace GeographicLib {
     }
     // Dasinh(x,y) = asinh((x-y)*(x+y)/(x*sqrt(1+y^2)+y*sqrt(1+x^2)))/(x-y)
     //             = asinh((x*sqrt(1+y^2)-y*sqrt(1+x^2)))/(x-y)
-    static inline real Dasinh(real x, real y, real hx, real hy) throw() {
+    static inline real Dasinh(real x, real y, real hx, real hy) {
       // hx = hyp(x)
       real t = x - y;
       return t != 0 ?
@@ -129,11 +129,11 @@ namespace GeographicLib {
         1/hx;
     }
     // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
-    inline real Deatanhe(real x, real y) const throw() {
+    inline real Deatanhe(real x, real y) const {
       real t = x - y, d = 1 - _e2 * x * y;
       return t != 0 ? eatanhe(t / d) / t : _e2 / d;
     }
-    void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) throw();
+    void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1);
   public:
 
     /**
@@ -236,7 +236,7 @@ namespace GeographicLib {
      * (i.e., one or both of the poles) will be large but finite.
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
-                 real& x, real& y, real& gamma, real& k) const throw();
+                 real& x, real& y, real& gamma, real& k) const;
 
     /**
      * Reverse projection, from Lambert conformal conic to geographic.
@@ -258,14 +258,14 @@ namespace GeographicLib {
      * this.
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
-                 real& lat, real& lon, real& gamma, real& k) const throw();
+                 real& lat, real& lon, real& gamma, real& k) const;
 
     /**
      * LambertConformalConic::Forward without returning the convergence and
      * scale.
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
-                 real& x, real& y) const throw() {
+                 real& x, real& y) const {
       real gamma, k;
       Forward(lon0, lat, lon, x, y, gamma, k);
     }
@@ -275,7 +275,7 @@ namespace GeographicLib {
      * scale.
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
-                 real& lat, real& lon) const throw() {
+                 real& lat, real& lon) const {
       real gamma, k;
       Reverse(lon0, x, y, lat, lon, gamma, k);
     }
@@ -287,20 +287,20 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return _a; }
+    Math::real MajorRadius() const { return _a; }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the
      *   value used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw() { return _f; }
+    Math::real Flattening() const { return _f; }
 
     /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw() { return 1/_f; }
+    Math::real InverseFlattening() const { return 1/_f; }
     /// \endcond
 
     /**
@@ -310,13 +310,13 @@ namespace GeographicLib {
      * 1-parallel constructor and lies between \e stdlat1 and \e stdlat2 in the
      * 2-parallel constructors.
      **********************************************************************/
-    Math::real OriginLatitude() const throw() { return _lat0; }
+    Math::real OriginLatitude() const { return _lat0; }
 
     /**
      * @return central scale for the projection.  This is the scale on the
      *   latitude of origin.
      **********************************************************************/
-    Math::real CentralScale() const throw() { return _k0; }
+    Math::real CentralScale() const { return _k0; }
     ///@}
 
     /**

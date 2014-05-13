@@ -69,7 +69,7 @@ latitudes and for the easterly gradient.
 
 =item B<-z>
 
-prefix each line of input by I<zone>, e.g., C<38N>.  This should be used
+prefix each line of input by I<zone>, e.g., C<38n>.  This should be used
 when the input consists of UTM/UPS eastings and northings.
 
 =item B<--msltohae>
@@ -226,9 +226,9 @@ takes precedence.
 
 =item B<GEOGRAPHICLIB_DATA>
 
-Another way of overriding the compile-time default magnetic path.  If it
-is set (and if B<MAGNETIC_PATH> is not set), then
-$B<GEOGRAPHICLIB_DATA>/magnetic is used.
+Another way of overriding the compile-time default geoid path.  If it
+is set (and if B<GEOID_PATH> is not set), then
+$B<GEOGRAPHICLIB_DATA>/geoids is used.
 
 =back
 
@@ -288,9 +288,9 @@ The height of the EGM96 geoid at Timbuktu
 The first number returned is the height of the geoid and the 2nd and 3rd
 are its slopes in the northerly and easterly directions.
 
-Convert a point in UTM zone 18N from MSL to HAE
+Convert a point in UTM zone 18n from MSL to HAE
 
-   echo 531595 4468135 23 | GeoidEval --msltohae -z 18N
+   echo 531595 4468135 23 | GeoidEval --msltohae -z 18n
    => 531595 4468135 -10.842
 
 =head1 SEE ALSO

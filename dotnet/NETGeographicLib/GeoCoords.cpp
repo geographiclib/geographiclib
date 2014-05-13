@@ -213,15 +213,15 @@ System::String^ GeoCoords::MGRSRepresentation(int prec)
 }
 
 //*****************************************************************************
-System::String^ GeoCoords::UTMUPSRepresentation(int prec)
+System::String^ GeoCoords::UTMUPSRepresentation(int prec, bool abbrev)
 {
-    return gcnew System::String( m_pGeoCoords->UTMUPSRepresentation(prec).c_str() );
+    return gcnew System::String( m_pGeoCoords->UTMUPSRepresentation(prec, abbrev).c_str() );
 }
 
 //*****************************************************************************
-System::String^ GeoCoords::UTMUPSRepresentation(bool northp, int prec)
+System::String^ GeoCoords::UTMUPSRepresentation(bool northp, int prec, bool abbrev)
 {
-    return gcnew System::String( m_pGeoCoords->UTMUPSRepresentation(northp, prec).c_str() );
+    return gcnew System::String( m_pGeoCoords->UTMUPSRepresentation(northp, prec, abbrev).c_str() );
 }
 
 //*****************************************************************************
@@ -231,13 +231,13 @@ System::String^ GeoCoords::AltMGRSRepresentation(int prec)
 }
 
 //*****************************************************************************
-System::String^ GeoCoords::AltUTMUPSRepresentation(int prec)
+System::String^ GeoCoords::AltUTMUPSRepresentation(int prec, bool abbrev)
 {
-    return gcnew System::String( m_pGeoCoords->AltUTMUPSRepresentation(prec).c_str() );
+    return gcnew System::String( m_pGeoCoords->AltUTMUPSRepresentation(prec, abbrev).c_str() );
 }
 
 //*****************************************************************************
-System::String^ GeoCoords::AltUTMUPSRepresentation(bool northp, int prec)
+System::String^ GeoCoords::AltUTMUPSRepresentation(bool northp, int prec, bool abbrev)
 {
-    return gcnew System::String( m_pGeoCoords->AltUTMUPSRepresentation(northp, prec).c_str() );
+    return gcnew System::String( m_pGeoCoords->AltUTMUPSRepresentation(northp, prec, abbrev).c_str() );
 }

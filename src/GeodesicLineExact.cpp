@@ -34,7 +34,7 @@ namespace GeographicLib {
 
   GeodesicLineExact::GeodesicLineExact(const GeodesicExact& g,
                                        real lat1, real lon1, real azi1,
-                                       unsigned caps) throw()
+                                       unsigned caps)
     : _a(g._a)
     , _f(g._f)
     , _b(g._b)
@@ -126,7 +126,7 @@ namespace GeographicLib {
                                             real& s12, real& m12,
                                             real& M12, real& M21,
                                             real& S12)
-  const throw() {
+  const {
     outmask &= _caps & OUT_ALL;
     if (!( Init() && (arcmode || (_caps & DISTANCE_IN & OUT_ALL)) ))
       // Uninitialized or impossible distance calculation requested

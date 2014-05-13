@@ -4,241 +4,278 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.35.
+The current version of the library is 1.36.
+
+Changes between 1.36 (released 2014-05-13) and 1.35 versions:
+
+  * Changes to comply with NGA's prohibition of the use of the
+    upper-case letters N/S to designate the hemisphere when displaying
+    UTM/UPS coordinates:
+    + UTMUPS::DecodeZone allows north/south as hemisphere designators
+      (in addition to n/s);
+    + UTMUPS::EncodeZone now encodes the hemisphere in lower case (to
+      distinguish this use from a grid zone designator);
+    + UTMUPS::EncodeZone takes an optional parameter abbrev to
+      indicate whether to use n/s or north/south as the hemisphere
+      designator;
+    + GeoCoords::UTMUPSRepresentation and AltUTMUPSRepresentation
+      similarly accept the abbrev parameter;
+    + GeoConvert uses the flags -a and -l to govern whether UTM/UPS
+      output uses n/s (the -a flag) or north/south (the -l flag) to
+      denote the hemisphere;
+    + Fixed a bug what allowed +3N to be accepted as an alternation
+      UTM zone designation (instead of 3N).
+    WARNING: The use of lower case n/s for the hemisphere might cause
+    compatibility problems.  However DecodeZone has always accepted
+    either case; so the issue will only arise with other software
+    reading the zone information.  To avoid possible misinterpretation
+    of the zone designator, consider calling EncodeZone with abbrev =
+    false and GeoConvert with -l, so that north/south are used to
+    denote the hemisphere.
+
+  * MGRS::Forward with prec = -1 will produce a grid zone designation.
+    Similarly MGRS::Reverse will decode a grid zone designation (and
+    return prec = -1).
+
+  * Stop using the throw() declaration specification which is
+    deprecated in C++11.
+
+  * Add missing std:: qualifications to copy in LocalCartesion and
+    Geocentric headers (bug found by Clemens).
 
 Changes between 1.35 (released 2014-03-13) and 1.34 versions:
 
-   * Fix blunder in UTMUPS::EncodeEPSG (found by Ben Adler).
+  * Fix blunder in UTMUPS::EncodeEPSG (found by Ben Adler).
 
-   * Matlab wrapper routines geodesic{direct,inverse,line} switch to
-     "exact" routes if |f| > 0.02.
+  * Matlab wrapper routines geodesic{direct,inverse,line} switch to
+    "exact" routes if |f| > 0.02.
 
-   * GeodSolve.cgi allows ellipsoid to be set (and uses the -E option
-     for GeodSolve).
+  * GeodSolve.cgi allows ellipsoid to be set (and uses the -E option
+    for GeodSolve).
 
-   * Set title in HTML versions of man pages for the utility programs.
+  * Set title in HTML versions of man pages for the utility programs.
 
-   * Changes in cmake support:
-     + add _d to names of executables in debug mode of Visual Studio;
-     + add support for Android (cmake-only), thanks to Pullan Yu;
-     + check CPACK version numbers supplied on command line;
-     + configured version of project-config.cmake.in is
-       project-config.cmake (instead of geographiclib-config.cmake), to
-       prevent find_package incorrectly using this file;
-     + fix tests with multi-line output;
-     + this release includes a file, pom.xml, which is used by an
-       experimental build system (based on maven) at SRI.
+  * Changes in cmake support:
+    + add _d to names of executables in debug mode of Visual Studio;
+    + add support for Android (cmake-only), thanks to Pullan Yu;
+    + check CPACK version numbers supplied on command line;
+    + configured version of project-config.cmake.in is
+      project-config.cmake (instead of geographiclib-config.cmake), to
+      prevent find_package incorrectly using this file;
+    + fix tests with multi-line output;
+    + this release includes a file, pom.xml, which is used by an
+      experimental build system (based on maven) at SRI.
 
 Changes between 1.34 (released 2013-12-11) and 1.33 versions:
 
-   * Many changes in cmake support:
-     + minimum version of cmake needed increased to 2.8.4 (which was
-       released in 2011-02);
-     + allow building both shared and static librarys with
-       -D GEOGRAPHICLIB_LIB_TYPE=BOTH;
-     + both shared and static libraries (Release plus Debug) included in
-       binary installer;
-     + find_package uses COMPONENTS and GeographicLib_USE_STATIC_LIBS to
-       select the library to use;
-     + find_package version checking allows nmake and Visual Studio
-       generators to interoperate on Windows;
-     + find_package (GeographicLib ...) requires that GeographicLib be
-       capitalized correctly;
-     + on Unix/Linux, don't include the version number in directory for
-       the cmake configuration files;
-     + defaults for GEOGRAPHICLIB_DOCUMENTATION and
-       BUILD_NETGEOGRAPHICLIB are now OFF;
-     + the GEOGRAPHICLIB_EXAMPLES configuration parameter is no longer
-       used; cmake always configures to build the examples, but they are
-       not built by default (instead build targets: exampleprograms and
-       netexamples);
-     + matlab-all target renamed to matlabinterface;
-     + the configuration parameters PACKAGE_PATH and INSTALL_PATH are
-       now deprecated (use CMAKE_INSTALL_PREFIX instead);
-     + on Linux, the installed package is relocatable;
-     + on MacOSX, the installed utilities can find the shared library.
+  * Many changes in cmake support:
+    + minimum version of cmake needed increased to 2.8.4 (which was
+      released in 2011-02);
+    + allow building both shared and static librarys with
+      -D GEOGRAPHICLIB_LIB_TYPE=BOTH;
+    + both shared and static libraries (Release plus Debug) included in
+      binary installer;
+    + find_package uses COMPONENTS and GeographicLib_USE_STATIC_LIBS to
+      select the library to use;
+    + find_package version checking allows nmake and Visual Studio
+      generators to interoperate on Windows;
+    + find_package (GeographicLib ...) requires that GeographicLib be
+      capitalized correctly;
+    + on Unix/Linux, don't include the version number in directory for
+      the cmake configuration files;
+    + defaults for GEOGRAPHICLIB_DOCUMENTATION and
+      BUILD_NETGEOGRAPHICLIB are now OFF;
+    + the GEOGRAPHICLIB_EXAMPLES configuration parameter is no longer
+      used; cmake always configures to build the examples, but they are
+      not built by default (instead build targets: exampleprograms and
+      netexamples);
+    + matlab-all target renamed to matlabinterface;
+    + the configuration parameters PACKAGE_PATH and INSTALL_PATH are
+      now deprecated (use CMAKE_INSTALL_PREFIX instead);
+    + on Linux, the installed package is relocatable;
+    + on MacOSX, the installed utilities can find the shared library.
 
-   * Use a more precise value for OSGB::CentralScale().
+  * Use a more precise value for OSGB::CentralScale().
 
-   * Add Arc routines to python interface.
+  * Add Arc routines to python interface.
 
-   * The Geod utility has been removed; the same functionality lives on
-     with GeodSolve (introduced in version 1.30).
+  * The Geod utility has been removed; the same functionality lives on
+    with GeodSolve (introduced in version 1.30).
 
 Changes between 1.33 (released 2013-10-08) and 1.32 versions:
 
-   * Add NETGeographic .NET wrapper library (courtesy of Scott Heiman).
+  * Add NETGeographic .NET wrapper library (courtesy of Scott Heiman).
 
-   * Make inspector functions in GeographicLib::Ellipsoid const.
+  * Make inspector functions in GeographicLib::Ellipsoid const.
 
-   * Add Accumulator.cpp to instantiate GeographicLib::Accumulator.
+  * Add Accumulator.cpp to instantiate GeographicLib::Accumulator.
 
-   * Defer some of the initialization of GeographicLib::OSGB to when it
-     is first called.
+  * Defer some of the initialization of GeographicLib::OSGB to when it
+    is first called.
 
-   * Fix bug in autoconf builds under MacOS.
+  * Fix bug in autoconf builds under MacOS.
 
 Changes between 1.32 (released 2013-07-12) and 1.31 versions:
 
-   * Generalize C interface for polygon areas to allow vertices to be
-     specified incrementally.
+  * Generalize C interface for polygon areas to allow vertices to be
+    specified incrementally.
 
-   * Fix way flags for C++11 support are determined.
+  * Fix way flags for C++11 support are determined.
 
 Changes between 1.31 (released 2013-07-01) and 1.30 versions:
 
-   * Changes breaking binary compatibility (source compatibility is
-     maintained):
-     + overloaded versions of DMS::Encode,
-       EllipticFunction::EllipticFunction, and
-       GeoCoords::DMSRepresentation, have been eliminated by the use of
-       optional arguments;
-     + correct the declaration of first arg to UTMUPS::DecodeEPSG.
+  * Changes breaking binary compatibility (source compatibility is
+    maintained):
+    + overloaded versions of DMS::Encode,
+      EllipticFunction::EllipticFunction, and
+      GeoCoords::DMSRepresentation, have been eliminated by the use of
+      optional arguments;
+    + correct the declaration of first arg to UTMUPS::DecodeEPSG.
 
-   * FIX BUG in GeographicLib::GravityCircle constructor (found by
-     Mathieu Peyréga) which caused bogus results for the gravity
-     disturbance and gravity anomaly vectors. (This only affected
-     calculations using GravityCircle. GravityModel calculations did not
-     suffer from this bug.)
+  * FIX BUG in GeographicLib::GravityCircle constructor (found by
+    Mathieu Peyréga) which caused bogus results for the gravity
+    disturbance and gravity anomaly vectors. (This only affected
+    calculations using GravityCircle. GravityModel calculations did not
+    suffer from this bug.)
 
-   * Improvements to the build:
-     + add macros GEOGRAPHICLIB_VERSION_{MAJOR,MINOR,PATCH} to Config.h;
-     + fix documentation for new version of perlpod;
-     + improving setting of runtime path for Unix-like systems with
-       cmake;
-     + install PDB files when compiling with Visual Studio to aid
-       debugging;
-     + Windows binary release now uses Matlab R2013a (64-bit) and uses
-       the -largeArrayDims option.
+  * Improvements to the build:
+    + add macros GEOGRAPHICLIB_VERSION_{MAJOR,MINOR,PATCH} to Config.h;
+    + fix documentation for new version of perlpod;
+    + improving setting of runtime path for Unix-like systems with
+      cmake;
+    + install PDB files when compiling with Visual Studio to aid
+      debugging;
+    + Windows binary release now uses Matlab R2013a (64-bit) and uses
+      the -largeArrayDims option.
 
-   * Changes to the geodesic routines:
-     + add Java implementation of the geodesic routines (thanks to Skip
-       Breidbach for the maven support);
-     + FIX BUG: avoid altering input args in Fortran implementation;
-     + more systematic treatment of very short geodesic;
-     + fixes to python port so that they work with version 3.x, in
-       addition to 2.x (courtesy of Amato);
-     + accumulate the perimeter and area of polygons via a double-wide
-       accumulator in Fortran, C, and Matlab implementations (this is
-       already included in the other implementations);
-     + port PolygonArea::AddEdge and PolygonArea::TestEdge to JavaScript
-       and python interfaces;
-     + include documentation on short geodesics.
+  * Changes to the geodesic routines:
+    + add Java implementation of the geodesic routines (thanks to Skip
+      Breidbach for the maven support);
+    + FIX BUG: avoid altering input args in Fortran implementation;
+    + more systematic treatment of very short geodesic;
+    + fixes to python port so that they work with version 3.x, in
+      addition to 2.x (courtesy of Amato);
+    + accumulate the perimeter and area of polygons via a double-wide
+      accumulator in Fortran, C, and Matlab implementations (this is
+      already included in the other implementations);
+    + port PolygonArea::AddEdge and PolygonArea::TestEdge to JavaScript
+      and python interfaces;
+    + include documentation on short geodesics.
 
-   * Unix scripts for downloading datasets,
-     geographiclib-get-{geoids,gravity,magnetic}, skip already download
-     models by default, unless the -f flag is given.
+  * Unix scripts for downloading datasets,
+    geographiclib-get-{geoids,gravity,magnetic}, skip already download
+    models by default, unless the -f flag is given.
 
-   * FIX BUGS: meridian convergence and scale returned by
-     TransverseMercatorExact was wrong at a pole.
+  * FIX BUGS: meridian convergence and scale returned by
+    TransverseMercatorExact was wrong at a pole.
 
-   * Improve efficiency of MGRS::Forward by avoiding the calculation of
-     the latitude if possible (adapting an idea of Craig Rollins).
+  * Improve efficiency of MGRS::Forward by avoiding the calculation of
+    the latitude if possible (adapting an idea of Craig Rollins).
 
-   * Fixes to the way the Matlab interface routines are built (thanks to
-     Phil Miller and Chris F.).
+  * Fixes to the way the Matlab interface routines are built (thanks to
+    Phil Miller and Chris F.).
 
 Changes between 1.30 (released 2013-02-27) and 1.29 versions:
 
-   * Changes to geodesic routines:
-     + fix BUG in fail-safe mechanisms in Geodesic::Inverse;
-     + the command line utility Geod is now called GeodSolve;
-     + allow addition of polygon edges in PolygonArea;
-     + add full Maxima implementation of geodesic algorithms.
+  * Changes to geodesic routines:
+    + fix BUG in fail-safe mechanisms in Geodesic::Inverse;
+    + the command line utility Geod is now called GeodSolve;
+    + allow addition of polygon edges in PolygonArea;
+    + add full Maxima implementation of geodesic algorithms.
 
 Changes between 1.29 (released 2013-01-16) and 1.28 versions:
 
-   * Changes to allow compilation with libc++ (courtesy of Kal Conley).
+  * Changes to allow compilation with libc++ (courtesy of Kal Conley).
 
-   * Add description of geodesics on triaxial ellipsoid to
-     documentation.
+  * Add description of geodesics on triaxial ellipsoid to
+    documentation.
 
-   * Update journal reference for "Algorithms for geodesics".
+  * Update journal reference for "Algorithms for geodesics".
 
 Changes between 1.28 (released 2012-12-11) and 1.27 versions:
 
-   * Changes to geodesic routines:
-     + compute longitude difference exactly;
-     + hence fix BUG in area calculations for polygons with vertices very
-       close to the prime meridian;
-     + fix BUG is geoddistance.m where the value of m12 was wrong for
-       meridional geodesics;
-     + add Matlab implementations of the geodesic projections;
-     + remove unneeded special code for geodesics which start at a pole;
-     + include polygon area routine in C and Fortran implementations;
-     + add doxygen documentation for C and Fortran libraries.
+  * Changes to geodesic routines:
+    + compute longitude difference exactly;
+    + hence fix BUG in area calculations for polygons with vertices very
+      close to the prime meridian;
+    + fix BUG is geoddistance.m where the value of m12 was wrong for
+      meridional geodesics;
+    + add Matlab implementations of the geodesic projections;
+    + remove unneeded special code for geodesics which start at a pole;
+    + include polygon area routine in C and Fortran implementations;
+    + add doxygen documentation for C and Fortran libraries.
 
 Changes between 1.27 (released 2012-11-29) and 1.26 versions:
 
-   * Changes to geodesic routines:
-     + add native Matlab implementations: geoddistance.m, geodreckon.m,
-       geodarea.m;
-     + add C and Fortran implementations;
-     + improve the solution of the direct problem so that the series
-       solution is accurate to round off for |f| < 1/50;
-     + tighten up the convergence criteria for solution of the inverse
-       problem;
-     + no longer signal failures of convergence with NaNs (a slightly
-       less accurate answer is returned instead).
+  * Changes to geodesic routines:
+    + add native Matlab implementations: geoddistance.m, geodreckon.m,
+      geodarea.m;
+    + add C and Fortran implementations;
+    + improve the solution of the direct problem so that the series
+      solution is accurate to round off for |f| < 1/50;
+    + tighten up the convergence criteria for solution of the inverse
+      problem;
+    + no longer signal failures of convergence with NaNs (a slightly
+      less accurate answer is returned instead).
 
-   * Fix DMS::Decode double rounding BUG.
+  * Fix DMS::Decode double rounding BUG.
 
-   * On MacOSX platforms with the cmake configuration, universal
-     binaries are built.
+  * On MacOSX platforms with the cmake configuration, universal
+    binaries are built.
 
 Changes between 1.26 (released 2012-10-22) and 1.25 versions:
 
-   * Replace the series used for geodesic areas by one with better
-     convergence (this only makes an appreciable difference if |f| >
-     1/150).
+  * Replace the series used for geodesic areas by one with better
+    convergence (this only makes an appreciable difference if |f| >
+    1/150).
 
 Changes between 1.25 (released 2012-10-16) and 1.24 versions:
 
-   * Changes to geodesic calculations:
-     + restart Newton's method in Geodesic::Inverse when it goes awry;
-     + back up Newton's method with the bisection method;
-     + Geodesic::Inverse now converges for any value of f;
-     + add GeodesicExact and GeodesicLineExact which are formulated in
-       terms of elliptic integrals and thus yield accurate results
-       even for very eccentric ellipsoids.
-     + the -E option to Geod invokes these exact classes.
+  * Changes to geodesic calculations:
+    + restart Newton's method in Geodesic::Inverse when it goes awry;
+    + back up Newton's method with the bisection method;
+    + Geodesic::Inverse now converges for any value of f;
+    + add GeodesicExact and GeodesicLineExact which are formulated in
+      terms of elliptic integrals and thus yield accurate results
+      even for very eccentric ellipsoids.
+    + the -E option to Geod invokes these exact classes.
 
-   * Add functionality to EllipticFunction:
-     + add all the traditional elliptic integrals;
-     + remove restrictions on argument range for incomplete elliptic
-       integrals;
-     + allow imaginary modulus for elliptic integrals and elliptic
-       functions;
-     + make interface to the symmetric elliptic integrals public.
+  * Add functionality to EllipticFunction:
+    + add all the traditional elliptic integrals;
+    + remove restrictions on argument range for incomplete elliptic
+      integrals;
+    + allow imaginary modulus for elliptic integrals and elliptic
+      functions;
+    + make interface to the symmetric elliptic integrals public.
 
-   * Allow GeographicLib::Ellipsoid to be copied.
+  * Allow GeographicLib::Ellipsoid to be copied.
 
-   * Changes to the build tools:
-     + cmake uses folders in Visual Studio to reduce clutter;
-     + allow precision of reals to be set in cmake;
-     + fail gracefully in the absence of pod documentation tools;
-     + remove support for maintainer tasks in Makefile.mk.
+  * Changes to the build tools:
+    + cmake uses folders in Visual Studio to reduce clutter;
+    + allow precision of reals to be set in cmake;
+    + fail gracefully in the absence of pod documentation tools;
+    + remove support for maintainer tasks in Makefile.mk.
 
 Changes between 1.24 (released 2012-09-22) and 1.23 versions:
 
-   * Allow the specification of the hemisphere in UTM coordinates in
-     order to provide continuity across the equator:
-     + add UTMUPS::Transfer;
-     + add GeoCoords::UTMUPSRepresentation(bool, int) and
-       GeoCoords::AltUTMUPSRepresentation(bool, int);
-     + use the hemisphere letter in, e.g., GeoConvert -u -z 31N.
+  * Allow the specification of the hemisphere in UTM coordinates in
+    order to provide continuity across the equator:
+    + add UTMUPS::Transfer;
+    + add GeoCoords::UTMUPSRepresentation(bool, int) and
+      GeoCoords::AltUTMUPSRepresentation(bool, int);
+    + use the hemisphere letter in, e.g., GeoConvert -u -z 31N.
 
-   * Add UTMUPS::DecodeEPSG and UTMUPS::EncodeEPSG.
+  * Add UTMUPS::DecodeEPSG and UTMUPS::EncodeEPSG.
 
-   * cmake changes:
-     + restore support for cmake 2.4.x;
-     + explicitly check version of doxygen.
+  * cmake changes:
+    + restore support for cmake 2.4.x;
+    + explicitly check version of doxygen.
 
-   * Fix building under cygwin.
+  * Fix building under cygwin.
 
-   * Document restrictions on f in the Introduction.
+  * Document restrictions on f in the Introduction.
 
-   * Fix python interface to work with version 2.6.x.
+  * Fix python interface to work with version 2.6.x.
 
 Changes between 1.23 (released 2012-07-17) and 1.22 versions:
 
@@ -509,16 +546,16 @@ Changes between 1.11 (released 2011-06-27) and 1.10 versions:
 Changes between 1.10 (released 2011-06-11) and 1.9 versions:
 
   * Improvements to Matlab/Octave interface:
-     + add {geocentric,localcartesian}{forward,reverse};
-     + make geographiclibinterface more general;
-     + install the source for the interface;
-     + cmake compiles the interface if ENABLE_MATLAB=ON;
-     + include compiled interface with Windows binary installer.
+    + add {geocentric,localcartesian}{forward,reverse};
+    + make geographiclibinterface more general;
+    + install the source for the interface;
+    + cmake compiles the interface if ENABLE_MATLAB=ON;
+    + include compiled interface with Windows binary installer.
 
   * Fix various configuration issues
-     + autoconf did not install Config.h;
-     + cmake installed in man/man1 instead of share/man/man1;
-     + cmake did not set the rpath on the tools.
+    + autoconf did not install Config.h;
+    + cmake installed in man/man1 instead of share/man/man1;
+    + cmake did not set the rpath on the tools.
 
 Changes between 1.9 (released 2011-05-28) and 1.8 versions:
 
@@ -664,7 +701,7 @@ Changes between 1.4 (released 2010-09-12) and 1.3 versions:
 
   * Add GeographicLib::Geoid::ConvertHeight.
 
-  * Add -msltohae, -haetomsl, and -z options to \ref geoideval.
+  * Add -msltohae, -haetomsl, and -z options to GeoidEval.
 
   * Constructors check that minor radius is positive.
 

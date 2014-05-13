@@ -87,17 +87,17 @@ namespace GeographicLib {
     // _alp[0] and _bet[0] unused
     real _a1, _b1, _alp[maxpow_ + 1], _bet[maxpow_ + 1];
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
-    static inline real tanx(real x) throw() {
+    static inline real tanx(real x) {
       real t = std::tan(x);
       // Write the tests this way to ensure that tanx(NaN()) is NaN()
       return x >= 0 ? (!(t < 0) ? t : overflow_) : (!(t >= 0) ? t : -overflow_);
     }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
-    inline real eatanhe(real x) const throw()
+    inline real eatanhe(real x) const
     { return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x); }
-    real taupf(real tau) const throw();
-    real tauf(real taup) const throw();
+    real taupf(real tau) const;
+    real tauf(real taup) const;
 
     friend class Ellipsoid;           // For access to taupf, tauf.
   public:
@@ -131,7 +131,7 @@ namespace GeographicLib {
      * range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
-                 real& x, real& y, real& gamma, real& k) const throw();
+                 real& x, real& y, real& gamma, real& k) const;
 
     /**
      * Reverse projection, from transverse Mercator to geographic.
@@ -149,13 +149,13 @@ namespace GeographicLib {
      * the range [&minus;180&deg;, 180&deg;).
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
-                 real& lat, real& lon, real& gamma, real& k) const throw();
+                 real& lat, real& lon, real& gamma, real& k) const;
 
     /**
      * TransverseMercator::Forward without returning the convergence and scale.
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
-                 real& x, real& y) const throw() {
+                 real& x, real& y) const {
       real gamma, k;
       Forward(lon0, lat, lon, x, y, gamma, k);
     }
@@ -164,7 +164,7 @@ namespace GeographicLib {
      * TransverseMercator::Reverse without returning the convergence and scale.
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
-                 real& lat, real& lon) const throw() {
+                 real& lat, real& lon) const {
       real gamma, k;
       Reverse(lon0, x, y, lat, lon, gamma, k);
     }
@@ -176,27 +176,27 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return _a; }
+    Math::real MajorRadius() const { return _a; }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value used in
      *   the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw() { return _f; }
+    Math::real Flattening() const { return _f; }
 
     /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw() { return 1/_f; }
+    Math::real InverseFlattening() const { return 1/_f; }
     /// \endcond
 
     /**
      * @return \e k0 central scale for the projection.  This is the value of \e
      *   k0 used in the constructor and is the scale on the central meridian.
      **********************************************************************/
-    Math::real CentralScale() const throw() { return _k0; }
+    Math::real CentralScale() const { return _k0; }
     ///@}
 
     /**
