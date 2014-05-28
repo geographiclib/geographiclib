@@ -247,14 +247,6 @@ configure_file (
 if (GEOGRAPHICLIB_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
   find_package (Doxygen 1.8.1.2)
-  if (DOXYGEN_FOUND)
-    execute_process (COMMAND ${DOXYGEN_EXECUTABLE} --version
-      OUTPUT_VARIABLE DOXYGEN_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-    if (DOXYGEN_VERSION VERSION_LESS 1.4.0)
-      set (DOXYGEN_FOUND FALSE)
-      message (STATUS "Doxygen version found, ${DOXYGEN_VERSION}, is too old")
-    endif ()
-  endif ()
 endif ()
 
 # The man pages are written as pod files and converted to nroff format,

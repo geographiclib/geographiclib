@@ -2300,9 +2300,9 @@ issues that I encountered using the NGA code:
     \e h = 400 km).
  -# There are several expressions which will return inaccurate results
     due to cancellation.  For example, subroutine <code>grs</code>
-    computes the flattening using \e f = 1 - sqrt(1 -
+    computes the flattening using \e f = 1 &minus; sqrt(1 &minus;
     <i>e</i><sup>2</sup>).  Much better is to use \e f =
-    <i>e</i><sup>2</sup>/(1 + sqrt(1 - <i>e</i><sup>2</sup>)).  The
+    <i>e</i><sup>2</sup>/(1 + sqrt(1 &minus; <i>e</i><sup>2</sup>)).  The
     expressions for \e q and \e q' in <code>grs</code> and
     <code>radgrav</code> suffer from similar problems.  The resulting
     errors are tiny (about 50 pm in the geoid height); however, given
@@ -2310,7 +2310,7 @@ issues that I encountered using the NGA code:
     expressions, it's preferable to do so.
  -# hsynth_WGS84 returns an "undefined" value for \e xi and \e eta at the
     poles.  Better would be to return the value obtained by taking the
-    limit \e lat -> +/- 90&deg;.
+    limit \e lat &rarr; &plusmn; 90&deg;.
  .
 Issues 1--4 have been reported to the authors of hsynth_WGS84.
 Issue 1 is peculiar to Fortran and is not encountered in C++ code and
@@ -2351,11 +2351,11 @@ to use a consistent definition of the geoid height.
    represented by a spherical harmonic sum of degree and order 2160 (and
    so it misses short wavelength terrain variations).  In addition, it
    entails estimating the isostatic equilibrium of the earth's crust.
-   The correction lies in the range [-5.05 m, 0.05 m], however for 99.9%
+   The correction lies in the range [&minus;5.05 m, 0.05 m], however for 99.9%
    of the earth's surface the correction is less than 10 mm in
    magnitude.
  - The resulting surface lies above the observed mean sea level,
-   so -0.41m is added to the geoid height.  (Better would be to change
+   so &minus;0.41m is added to the geoid height.  (Better would be to change
    the potential used to define the geoid; but this would only change
    the result by about 2mm.)
  .
@@ -2399,12 +2399,12 @@ example, \e deltaz is the \e radial component of <b>delta</b> (not the
 component perpendicular to the ellipsoid) and \e deltay is similarly
 slightly different from the usual northerly component.  The components
 of the anomaly are then given by
- - gravity anomaly, \e Dg01 = \e deltaz - 2<i>T</i>/\e R, where \e R
+ - gravity anomaly, \e Dg01 = \e deltaz &minus; 2<i>T</i>/\e R, where \e R
    distance to the center of the earth;
- - northerly component of the deflection of the vertical, \e xi = -
+ - northerly component of the deflection of the vertical, \e xi = &minus;
    <i>deltay</i>/\e gamma, where \e gamma is the magnitude of the normal
    gravity;
- - easterly component of the deflection of the vertical, \e eta = -
+ - easterly component of the deflection of the vertical, \e eta = &minus;
    <i>deltax</i>/\e gamma.
  .
 GeographicLib::NormalGravity computes the normal gravity accurately and
@@ -5583,7 +5583,7 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/2009-02">Version 2009-02</a>
    (released 2009-01-30)
-   - Fix documentation of constructors (flattening -> inverse
+   - Fix documentation of constructors (flattening &rarr; inverse
      flattening).
    - Use std versions of math functions.
    - Add GeographicLib::ECEF and GeographicLib::LocalCartesian classes
