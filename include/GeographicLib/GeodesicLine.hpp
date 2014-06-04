@@ -540,7 +540,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real EquatorialAzimuth() const {
       return Init() ?
-        atan2(_salp0, _calp0) / Math::degree<real>() : Math::NaN<real>();
+        std::atan2(_salp0, _calp0) / Math::degree<real>() : Math::NaN<real>();
     }
 
     /**
@@ -549,7 +549,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real EquatorialArc() const {
       return Init() ?
-        atan2(_ssig1, _csig1) / Math::degree<real>() : Math::NaN<real>();
+        std::atan2(_ssig1, _csig1) / Math::degree<real>() : Math::NaN<real>();
     }
 
     /**
