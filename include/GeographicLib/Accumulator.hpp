@@ -44,8 +44,8 @@ namespace GeographicLib {
     // Same as Math::sum, but requires abs(u) >= abs(v).  This isn't currently
     // used.
     static inline T fastsum(T u, T v, T& t) {
-      volatile T s = u + v;
-      volatile T vp = s - u;
+      VOLATILE T s = u + v;
+      VOLATILE T vp = s - u;
       t = v - vp;
       return s;
     }

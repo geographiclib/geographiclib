@@ -103,7 +103,8 @@ namespace GeographicLib {
     // Return latitude band number [-10, 10) for the given latitude (degrees).
     // The bands are reckoned in include their southern edges.
     static int LatitudeBand(real lat) {
-      int ilat = int(std::floor(lat));
+      using std::floor;
+      int ilat = int(floor(lat));
       return (std::max)(-10, (std::min)(9, (ilat + 80)/8 - 10));
     }
     // Return approximate latitude band number [-10, 10) for the given northing
@@ -112,11 +113,12 @@ namespace GeographicLib {
     // function isn't currently used.
     static int ApproxLatitudeBand(real y) {
       // northing at tile center in units of tile = 100km
-      real ya = std::floor( (std::min)(real(88), std::abs(y/tile_)) ) +
+      using std::floor; using std::abs;
+      real ya = floor( (std::min)(real(88), abs(y/tile_)) ) +
         real(0.5);
       // convert to lat (mult by 90/100) and then to band (divide by 8)
       // the +1 fine tunes the boundary between bands 3 and 4
-      int b = int(std::floor( ((ya * 9 + 1) / 10) / 8 ));
+      int b = int(floor( ((ya * 9 + 1) / 10) / 8 ));
       // For the northern hemisphere we have
       // band rows  num
       // N 0   0:8    9

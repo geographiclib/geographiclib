@@ -10,7 +10,7 @@
 // Constants.hpp includes Math.hpp.  Place this include outside Math.hpp's
 // include guard to enforce this ordering.
 #include <GeographicLib/Constants.hpp>
-
+#include <iostream>
 #if !defined(GEOGRAPHICLIB_MATH_HPP)
 #define GEOGRAPHICLIB_MATH_HPP 1
 
@@ -57,8 +57,15 @@
 #include <cmath>
 #include <algorithm>
 #include <limits>
-#if defined(_LIBCPP_VERSION)
-#include <type_traits>
+
+#if GEOGRAPHICLIB_PRECISION == 4
+#include <boost/multiprecision/float128.hpp>
+#include <boost/math/special_functions/hypot.hpp>
+#include <boost/math/special_functions/expm1.hpp>
+#include <boost/math/special_functions/log1p.hpp>
+#include <boost/math/special_functions/atanh.hpp>
+#include <boost/math/special_functions/asinh.hpp>
+#include <boost/math/special_functions/cbrt.hpp>
 #endif
 
 namespace GeographicLib {
@@ -77,7 +84,7 @@ namespace GeographicLib {
   private:
     void dummy() {
       STATIC_ASSERT(GEOGRAPHICLIB_PRECISION >= 1 &&
-                    GEOGRAPHICLIB_PRECISION <= 3,
+                    GEOGRAPHICLIB_PRECISION <= 4,
                     "Bad value of precision");
     }
     Math();                     // Disable constructor
@@ -93,6 +100,15 @@ namespace GeographicLib {
     typedef double extended;
 #endif
 
+#if defined(BOOST_MP_FLOAT128_HPP)
+#define HAVE_QUAD_PREC 1
+#define VOLATILE
+    typedef boost::multiprecision::float128 quad;
+#else
+#define HAVE_QUAD_PREC 0
+#define VOLATILE volatile
+#endif
+
 #if GEOGRAPHICLIB_PRECISION == 2
     /**
      * The real type for %GeographicLib. Nearly all the testing has been done
@@ -105,6 +121,8 @@ namespace GeographicLib {
     typedef float real;
 #elif GEOGRAPHICLIB_PRECISION == 3
     typedef extended real;
+#elif GEOGRAPHICLIB_PRECISION == 4 && HAVE_QUAD_PREC
+    typedef quad real;
 #else
     typedef double real;
 #endif
@@ -129,7 +147,7 @@ namespace GeographicLib {
      * @return &pi;.
      **********************************************************************/
     template<typename T> static inline T pi()
-    { return std::atan2(T(0), -T(1)); }
+    { using std::atan2; return atan2(T(0), -T(1)); }
     /**
      * A synonym for pi<real>().
      **********************************************************************/
@@ -166,16 +184,17 @@ namespace GeographicLib {
      * @return sqrt(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>).
      **********************************************************************/
     template<typename T> static inline T hypot(T x, T y) {
-      x = std::abs(x); y = std::abs(y);
+      using std::abs; using std::sqrt;
+      x = abs(x); y = abs(y);
       T a = (std::max)(x, y), b = (std::min)(x, y) / (a ? a : 1);
-      return a * std::sqrt(1 + b * b);
+      return a * sqrt(1 + b * b);
       // For an alternative (square-root free) method see
       // C. Moler and D. Morrision (1983) http://dx.doi.org/10.1147/rd.276.0577
       // and A. A. Dubrulle (1983) http://dx.doi.org/10.1147/rd.276.0582
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH || (defined(_MSC_VER) && _MSC_VER >= 1700)
     template<typename T> static inline T hypot(T x, T y)
-    { return std::hypot(x, y); }
+    { using std::hypot; return hypot(x, y); }
 #  if HAVE_LONG_DOUBLE && defined(_MSC_VER) && _MSC_VER == 1700
     // Visual C++ 11 doesn't have a long double overload for std::hypot --
     // reported to MS on 2013-07-18
@@ -233,7 +252,7 @@ namespace GeographicLib {
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
     template<typename T> static inline T expm1(T x)
-    { return std::expm1(x); }
+    { using std::expm1; return expm1(x); }
 #else
     static inline double expm1(double x) { return ::expm1(x); }
     static inline float expm1(float x) { return ::expm1f(x); }
@@ -268,7 +287,7 @@ namespace GeographicLib {
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
     template<typename T> static inline T log1p(T x)
-    { return std::log1p(x); }
+    { using std::log1p; return log1p(x); }
 #else
     static inline double log1p(double x) { return ::log1p(x); }
     static inline float log1p(float x) { return ::log1pf(x); }
@@ -295,7 +314,7 @@ namespace GeographicLib {
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
     template<typename T> static inline T asinh(T x)
-    { return std::asinh(x); }
+    { using std::asinh; return asinh(x); }
 #else
     static inline double asinh(double x) { return ::asinh(x); }
     static inline float asinh(float x) { return ::asinhf(x); }
@@ -322,7 +341,7 @@ namespace GeographicLib {
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
     template<typename T> static inline T atanh(T x)
-    { return std::atanh(x); }
+    { using std::atanh; return atanh(x); }
 #else
     static inline double atanh(double x) { return ::atanh(x); }
     static inline float atanh(float x) { return ::atanhf(x); }
@@ -346,7 +365,7 @@ namespace GeographicLib {
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
     template<typename T> static inline T cbrt(T x)
-    { return std::cbrt(x); }
+    { using std::cbrt; return cbrt(x); }
 #else
     static inline double cbrt(double x) { return ::cbrt(x); }
     static inline float cbrt(float x) { return ::cbrtf(x); }
@@ -368,9 +387,9 @@ namespace GeographicLib {
      * the same as one of the first two arguments.)
      **********************************************************************/
     template<typename T> static inline T sum(T u, T v, T& t) {
-      volatile T s = u + v;
-      volatile T up = s - v;
-      volatile T vpp = s - up;
+      VOLATILE T s = u + v;
+      VOLATILE T up = s - v;
+      VOLATILE T vpp = s - up;
       up -= u;
       vpp -= v;
       t = -(up + vpp);
@@ -401,7 +420,7 @@ namespace GeographicLib {
      * The range of \e x is unrestricted.
      **********************************************************************/
     template<typename T> static inline T AngNormalize2(T x)
-    { return AngNormalize<T>(std::fmod(x, T(360))); }
+    { using std::fmod; return AngNormalize<T>(fmod(x, T(360))); }
 
     /**
      * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]
@@ -442,25 +461,9 @@ namespace GeographicLib {
     template<typename T> static inline bool isfinite(T x) {
       return _finite(double(x)) != 0;
     }
-#elif defined(_LIBCPP_VERSION)
-    // libc++ implements std::isfinite() as a template that only allows
-    // floating-point types.  isfinite is invoked by Utility::str to format
-    // numbers conveniently and this allows integer arguments, so we need to
-    // allow Math::isfinite to work on integers.
-    template<typename T> static inline
-    typename std::enable_if<std::is_floating_point<T>::value, bool>::type
-      isfinite(T x) {
-      return std::isfinite(x);
-    }
-    template<typename T> static inline
-    typename std::enable_if<!std::is_floating_point<T>::value, bool>::type
-      isfinite(T /*x*/) {
-      return true;
-    }
 #else
-    template<typename T> static inline bool isfinite(T x) {
-      return std::isfinite(x);
-    }
+    template<typename T> static inline bool isfinite(T x)
+    { using std::isfinite; return isfinite(x); }
 #endif
 
     /**
@@ -490,7 +493,7 @@ namespace GeographicLib {
 #if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
       return x != x;
 #else
-      return std::isnan(x);
+      using std::isnan; return isnan(x);
 #endif
     }
 
@@ -527,6 +530,34 @@ namespace GeographicLib {
         std::swap(b.c[i], b.c[sizeof(T) - 1 - i]);
       return b.r;
     }
+
+#if HAVE_QUAD_PREC
+    typedef boost::math::policies::policy
+      < boost::math::policies::domain_error
+        <boost::math::policies::errno_on_error>,
+        boost::math::policies::pole_error
+        <boost::math::policies::errno_on_error>,
+        boost::math::policies::overflow_error
+        <boost::math::policies::errno_on_error>,
+        boost::math::policies::evaluation_error
+        <boost::math::policies::errno_on_error> >
+      boost_special_functions_policy;
+
+    static inline quad hypot(quad x, quad y)
+    { return boost::math::hypot(x, y, boost_special_functions_policy()); }
+    static inline quad expm1(quad x)
+    { return boost::math::expm1(x, boost_special_functions_policy()); }
+    static inline quad log1p(quad x)
+    { return boost::math::log1p(x, boost_special_functions_policy()); }
+    static inline quad asinh(quad x)
+    { return boost::math::asinh(x, boost_special_functions_policy()); }
+    static inline quad atanh(quad x)
+    { return boost::math::atanh(x, boost_special_functions_policy()); }
+    static inline quad cbrt(quad x)
+    { return boost::math::cbrt(x, boost_special_functions_policy()); }
+    static inline bool isnan(quad x) { return boost::math::isnan(x); }
+    static inline bool isfinite(quad x) { return boost::math::isfinite(x); }
+#endif
   };
 
 } // namespace GeographicLib

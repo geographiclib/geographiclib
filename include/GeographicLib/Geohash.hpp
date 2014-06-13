@@ -126,7 +126,8 @@ namespace GeographicLib {
      * The returned length is in the range [0, 18].
      **********************************************************************/
     static int GeohashLength(real res) {
-      res = std::abs(res);
+      using std::abs;
+      res = abs(res);
       for (int len = 0; len < maxlen_; ++len)
         if (LongitudeResolution(len) <= res)
           return len;
@@ -143,8 +144,9 @@ namespace GeographicLib {
      * The returned length is in the range [0, 18].
      **********************************************************************/
     static int GeohashLength(real latres, real lonres) {
-      latres = std::abs(latres);
-      lonres = std::abs(lonres);
+      using std::abs;
+      latres = abs(latres);
+      lonres = abs(lonres);
       for (int len = 0; len < maxlen_; ++len)
         if (LatitudeResolution(len) <= latres &&
             LongitudeResolution(len) <= lonres)
@@ -164,8 +166,8 @@ namespace GeographicLib {
      * decimal precision is in the range [&minus;2, 12].
      **********************************************************************/
     static int DecimalPrecision(int len) {
-      return -int(std::floor(std::log(LatitudeResolution(len))/
-                             std::log(Math::real(10))));
+      using std::floor; using std::log;
+      return -int(floor(log(LatitudeResolution(len))/log(Math::real(10))));
     }
 
   };

@@ -176,17 +176,17 @@ int main(int argc, char* argv[]) {
             lc.Reverse(x, y, z, lat, lon, h);
           else
             ec.Reverse(x, y, z, lat, lon, h);
-          *output << Utility::str<real>(lat, 15) << " "
-                  << Utility::str<real>(lon, 15) << " "
-                  << Utility::str<real>(h, 12) << eol;
+          *output << Utility::str(lat, 15) << " "
+                  << Utility::str(lon, 15) << " "
+                  << Utility::str(h, 12) << eol;
         } else {
           if (localcartesian)
             lc.Forward(lat, lon, h, x, y, z);
           else
             ec.Forward(lat, lon, h, x, y, z);
-          *output << Utility::str<real>(x, 10) << " "
-                  << Utility::str<real>(y, 10) << " "
-                  << Utility::str<real>(z, 10) << eol;
+          *output << Utility::str(x, 10) << " "
+                  << Utility::str(y, 10) << " "
+                  << Utility::str(z, 10) << eol;
         }
       }
       catch (const std::exception& e) {

@@ -264,12 +264,34 @@ namespace GeographicLib {
      * precision.  With p < 0, there is no manipulation of the format.
      **********************************************************************/
     template<typename T> static std::string str(T x, int p = -1) {
-      if (!std::numeric_limits<T>::is_integer && !Math::isfinite<T>(x))
+      std::ostringstream s;
+      if (p >= 0) s << std::fixed << std::setprecision(p);
+      s << x; return s.str();
+    }
+
+    /**
+     * Convert a Math::real object to a string.
+     *
+     * @param[in] x the value to be converted.
+     * @param[in] p the precision used (default &minus;1).
+     * @exception std::bad_alloc if memory for the string can't be allocated.
+     * @return the string representation.
+     *
+     * If \e p &ge; 0, then the number fixed format is used with p bits of
+     * precision.  With p < 0, there is no manipulation of the format.  This is
+     * an overload of str<T> which deals with inf and nan.
+     **********************************************************************/
+    static std::string str(Math::real x, int p = -1) {
+      if (!Math::isfinite(x))
         return x < 0 ? std::string("-inf") :
           (x > 0 ? std::string("inf") : std::string("nan"));
       std::ostringstream s;
       if (p >= 0) s << std::fixed << std::setprecision(p);
-      s << x; return s.str();
+      if (p == 0)
+        s << int(round(x));
+      else
+        s << x;
+      return s.str();
     }
 
     /**
@@ -382,34 +404,39 @@ namespace GeographicLib {
     template<typename ExtT, typename IntT, bool bigendp>
       static inline void readarray(std::istream& str,
                                    IntT array[], size_t num) {
+#if GEOGRAPHICLIB_PRECISION < 4
       if (sizeof(IntT) == sizeof(ExtT) &&
           std::numeric_limits<IntT>::is_integer ==
-          std::numeric_limits<ExtT>::is_integer) {
-        // Data is compatible (aside from the issue of endian-ness).
-        str.read(reinterpret_cast<char *>(array), num * sizeof(ExtT));
-        if (!str.good())
-          throw GeographicErr("Failure reading data");
-        if (bigendp != Math::bigendian) { // endian mismatch -> swap bytes
-          for (size_t i = num; i--;)
-            array[i] = Math::swab<IntT>(array[i]);
-        }
-      } else {
-        const int bufsize = 1024; // read this many values at a time
-        ExtT buffer[bufsize];     // temporary buffer
-        int k = int(num);         // data values left to read
-        int i = 0;                // index into output array
-        while (k) {
-          int n = (std::min)(k, bufsize);
-          str.read(reinterpret_cast<char *>(buffer), n * sizeof(ExtT));
+          std::numeric_limits<ExtT>::is_integer)
+        {
+          // Data is compatible (aside from the issue of endian-ness).
+          str.read(reinterpret_cast<char *>(array), num * sizeof(ExtT));
           if (!str.good())
             throw GeographicErr("Failure reading data");
-          for (int j = 0; j < n; ++j)
-            // fix endian-ness and cast to IntT
-            array[i++] = IntT(bigendp == Math::bigendian ? buffer[j] :
-                              Math::swab<ExtT>(buffer[j]));
-          k -= n;
+          if (bigendp != Math::bigendian) { // endian mismatch -> swap bytes
+            for (size_t i = num; i--;)
+              array[i] = Math::swab<IntT>(array[i]);
+          }
         }
-      }
+      else
+#endif
+        {
+          const int bufsize = 1024; // read this many values at a time
+          ExtT buffer[bufsize];     // temporary buffer
+          int k = int(num);         // data values left to read
+          int i = 0;                // index into output array
+          while (k) {
+            int n = (std::min)(k, bufsize);
+            str.read(reinterpret_cast<char *>(buffer), n * sizeof(ExtT));
+            if (!str.good())
+              throw GeographicErr("Failure reading data");
+            for (int j = 0; j < n; ++j)
+              // fix endian-ness and cast to IntT
+              array[i++] = IntT(bigendp == Math::bigendian ? buffer[j] :
+                                Math::swab<ExtT>(buffer[j]));
+            k -= n;
+          }
+        }
       return;
     }
 

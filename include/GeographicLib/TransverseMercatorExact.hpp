@@ -90,7 +90,8 @@ namespace GeographicLib {
     EllipticFunction _Eu, _Ev;
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
     static inline real tanx(real x) {
-      real t = std::tan(x);
+      using std::tan;
+      real t = tan(x);
       // Write the tests this way to ensure that tanx(NaN()) is NaN()
       return x >= 0 ? (!(t < 0) ? t : overflow_) : (!(t >= 0) ? t : -overflow_);
     }

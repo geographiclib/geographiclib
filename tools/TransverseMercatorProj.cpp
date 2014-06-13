@@ -203,19 +203,19 @@ int main(int argc, char* argv[]) {
             TMS.Reverse(lon0, x, y, lat, lon, gamma, k);
           else
             TME.Reverse(lon0, x, y, lat, lon, gamma, k);
-          *output << Utility::str<real>(lat, 15) << " "
-                  << Utility::str<real>(lon, 15) << " "
-                  << Utility::str<real>(gamma, 16) << " "
-                  << Utility::str<real>(k, 16) << eol;
+          *output << Utility::str(lat, 15) << " "
+                  << Utility::str(lon, 15) << " "
+                  << Utility::str(gamma, 16) << " "
+                  << Utility::str(k, 16) << eol;
         } else {
           if (series)
             TMS.Forward(lon0, lat, lon, x, y, gamma, k);
           else
             TME.Forward(lon0, lat, lon, x, y, gamma, k);
-          *output << Utility::str<real>(x, 10) << " "
-                  << Utility::str<real>(y, 10) << " "
-                  << Utility::str<real>(gamma, 16) << " "
-                  << Utility::str<real>(k, 16) << eol;
+          *output << Utility::str(x, 10) << " "
+                  << Utility::str(y, 10) << " "
+                  << Utility::str(gamma, 16) << " "
+                  << Utility::str(k, 16) << eol;
         }
       }
       catch (const std::exception& e) {

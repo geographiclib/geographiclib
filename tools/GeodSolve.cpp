@@ -59,7 +59,7 @@ std::string DistanceStrings(real s12, real a12,
   using namespace GeographicLib;
   std::string s;
   if (full || !arcmode)
-    s += Utility::str<real>(s12, prec);
+    s += Utility::str(s12, prec);
   if (full)
     s += " ";
   if (full || arcmode)
@@ -254,10 +254,10 @@ int main(int argc, char* argv[]) {
           *output << AzimuthString(azi2 + azi2sense, prec, dms, dmssep) << " "
                   << DistanceStrings(s12, a12, full, arcmode, prec, dms);
           if (full)
-            *output << " " << Utility::str<real>(m12, prec)
-                    << " " << Utility::str<real>(M12, prec+7)
-                    << " " << Utility::str<real>(M21, prec+7)
-                    << " " << Utility::str<real>(S12, std::max(prec-7, 0));
+            *output << " " << Utility::str(m12, prec)
+                    << " " << Utility::str(M12, prec+7)
+                    << " " << Utility::str(M21, prec+7)
+                    << " " << Utility::str(S12, std::max(prec-7, 0));
           *output << eol;
         } else {
           if (linecalc) {
@@ -309,10 +309,10 @@ int main(int argc, char* argv[]) {
           if (full)
             *output << " "
                     << DistanceStrings(s12, a12, full, arcmode, prec, dms)
-                    << " " << Utility::str<real>(m12, prec)
-                    << " " << Utility::str<real>(M12, prec+7)
-                    << " " << Utility::str<real>(M21, prec+7)
-                    << " " << Utility::str<real>(S12, std::max(prec-7, 0));
+                    << " " << Utility::str(m12, prec)
+                    << " " << Utility::str(M12, prec+7)
+                    << " " << Utility::str(M21, prec+7)
+                    << " " << Utility::str(S12, std::max(prec-7, 0));
           *output << eol;
         }
       }

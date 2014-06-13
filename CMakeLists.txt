@@ -193,8 +193,8 @@ option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib library" OFF)
 # (8) Set the default "real" precision.  This should probably be left
 # at 2 (double).
 set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
-  "Default real precision: 1 = float, 2 = double, 3 = long double")
-set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3)
+  "Default real precision: 1 = float, 2 = double, 3 = extended, 4 = quadruple")
+set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3 4)
 
 # (9) When making a binary package, should we include the debug version
 # of the library?  This applies to MSVC only, because that's the
@@ -357,6 +357,15 @@ set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 # Set the include directories.  Look in ${PROJECT_BINARY_DIR}/include
 # first because that's where Config.h will be
 include_directories ("${PROJECT_BINARY_DIR}/include" include)
+
+if (GEOGRAPHICLIB_PRECISION EQUAL 4 AND
+CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+  find_package (Boost 1.54)
+  include_directories ("${Boost_INCLUDE_DIRS}")
+  set (QUAD_LIBRARY quadmath)
+  set (CMAKE_CXX_FLAGS
+    "${CMAKE_CXX_FLAGS} -fext-numeric-literals -Wno-unused-local-typedefs")
+endif ()
 
 # The list of subdirectories to process
 add_subdirectory (src)

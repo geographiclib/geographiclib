@@ -76,14 +76,14 @@ int main() {
       cout << fixed << setprecision(8);
       for (int i = 0; i <= 90; i += 5) {
         real
-          beta = i * Math::degree<real>(),
+          beta = i * Math::degree(),
           phi = atan(sqrt(1 + ep2) * tan(beta)),
           u = elle.F(phi),
           y = b * ellep.E(beta),
           M = a*elle.E();
         cout << (y / M) * 90 << " "
                   << i << " "
-                  << phi / Math::degree<real>() << " "
+                  << phi / Math::degree() << " "
                   << (u / elle.K()) * 90 << "\n";
       }
       /* Create plot with
@@ -117,7 +117,7 @@ print meridian-measures.png -dpng
       cout << setprecision(10);
       for (int i = -179; i <= 180; i += 10) {
         real
-          phi = i * Math::degree<real>(),
+          phi = i * Math::degree(),
           sn = sin(phi), cn = cos(phi), dn = ellG.Delta(sn, cn),
           g = ellG.G(phi),
           h = (k2/alpha2)*ellH.H(phi) + sqrt(1-k2/alpha2)/sqrt(1-alpha2)*
@@ -135,7 +135,7 @@ print meridian-measures.png -dpng
         alpha2 = 0.3;
 
       EllipticFunction ell(k2, alpha2);
-      real dphi = Math::degree<real>();
+      real dphi = Math::degree();
       cout << fixed << setprecision(10);
       for (int i = 0; i <= 90; i += 15) {
         real phi = i * dphi;

@@ -13,7 +13,7 @@ foreach (TESTPROGRAM ${TESTPROGRAMS})
 
   add_executable (${TESTPROGRAM} EXCLUDE_FROM_ALL ${TESTPROGRAM}.cpp)
   add_dependencies (testprograms ${TESTPROGRAM})
-  target_link_libraries (${TESTPROGRAM} ${PROJECT_LIBRARIES})
+  target_link_libraries (${TESTPROGRAM} ${PROJECT_LIBRARIES} ${QUAD_LIBRARY})
 
 endforeach ()
 
@@ -21,7 +21,7 @@ add_executable (GeodExact EXCLUDE_FROM_ALL GeodExact.cpp
   Geodesic30.cpp GeodesicLine30.cpp
   Geodesic30.hpp GeodesicLine30.hpp)
 add_dependencies (testprograms GeodExact)
-target_link_libraries (GeodExact ${PROJECT_LIBRARIES})
+target_link_libraries (GeodExact ${PROJECT_LIBRARIES} ${QUAD_LIBRARY})
 set (TESTPROGRAMS ${TESTPROGRAMS} GeodExact)
 
 if (MSVC)

@@ -83,8 +83,9 @@ namespace GeographicLib {
       // is about 1000 times more resolution than we get with angles around 90
       // degrees.)  We use this to avoid having to deal with near singular
       // cases when x is non-zero but tiny (e.g., 1.0e-200).
+      using std::abs;
       const real z = 1/real(16);
-      volatile real y = std::abs(x);
+      VOLATILE real y = abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
       return x < 0 ? -y : y;

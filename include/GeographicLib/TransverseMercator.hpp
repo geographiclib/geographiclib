@@ -18,7 +18,8 @@
  * GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER can be set to any integer in [4, 8].
  **********************************************************************/
 #  define GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER \
-  (GEOGRAPHICLIB_PRECISION == 2 ? 6 : (GEOGRAPHICLIB_PRECISION == 1 ? 4 : 8))
+  (GEOGRAPHICLIB_PRECISION == 2 ? 6 : \
+   (GEOGRAPHICLIB_PRECISION == 1 ? 4 : 8))
 #endif
 
 namespace GeographicLib {
@@ -88,14 +89,17 @@ namespace GeographicLib {
     real _a1, _b1, _alp[maxpow_ + 1], _bet[maxpow_ + 1];
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
     static inline real tanx(real x) {
-      real t = std::tan(x);
+      using std::tan;
+      real t = tan(x);
       // Write the tests this way to ensure that tanx(NaN()) is NaN()
       return x >= 0 ? (!(t < 0) ? t : overflow_) : (!(t >= 0) ? t : -overflow_);
     }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
-    inline real eatanhe(real x) const
-    { return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x); }
+    inline real eatanhe(real x) const {
+      using std::atan;
+      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * atan(_e * x);
+    }
     real taupf(real tau) const;
     real tauf(real taup) const;
 

@@ -192,10 +192,10 @@ int main(int argc, char* argv[]) {
             az.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
           else
             gn.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
-          *output << Utility::str<real>(lat, 15) << " "
-                  << Utility::str<real>(lon, 15) << " "
-                  << Utility::str<real>(azi, 15) << " "
-                  << Utility::str<real>(rk, 16) << eol;
+          *output << Utility::str(lat, 15) << " "
+                  << Utility::str(lon, 15) << " "
+                  << Utility::str(azi, 15) << " "
+                  << Utility::str(rk, 16) << eol;
         } else {
           if (cassini)
             cs.Forward(lat, lon, x, y, azi, rk);
@@ -203,10 +203,10 @@ int main(int argc, char* argv[]) {
             az.Forward(lat0, lon0, lat, lon, x, y, azi, rk);
           else
             gn.Forward(lat0, lon0, lat, lon, x, y, azi, rk);
-          *output << Utility::str<real>(x, 10) << " "
-                  << Utility::str<real>(y, 10) << " "
-                  << Utility::str<real>(azi, 15) << " "
-                  << Utility::str<real>(rk, 16) << eol;
+          *output << Utility::str(x, 10) << " "
+                  << Utility::str(y, 10) << " "
+                  << Utility::str(azi, 15) << " "
+                  << Utility::str(rk, 16) << eol;
         }
       }
       catch (const std::exception& e) {

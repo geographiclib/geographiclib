@@ -46,14 +46,15 @@ namespace GeographicLib {
     EllipticFunction _ell;
     AlbersEqualArea _au;
     static real tand(real x) {
+      using std::abs; using std::tan;
       return
-        std::abs(x) == real(90) ? (x < 0 ?
-                                   - TransverseMercator::overflow_
-                                   : TransverseMercator::overflow_) :
-        std::tan(x * Math::degree<real>());
+        abs(x) == real(90) ? (x < 0 ?
+                              - TransverseMercator::overflow_
+                              : TransverseMercator::overflow_) :
+        tan(x * Math::degree<real>());
     }
     static real atand(real x)
-    { return std::atan(x) / Math::degree<real>(); }
+    { using std::atan; return atan(x) / Math::degree<real>(); }
 
   public:
     /** \name Constructor
@@ -460,7 +461,7 @@ namespace GeographicLib {
      * The returned value \e f lies in (&minus;&infin;, 1).
      **********************************************************************/
     static Math::real EccentricitySqToFlattening(real e2)
-    { return e2 / (std::sqrt(1 - e2) + 1); }
+    { using std::sqrt; return e2 / (sqrt(1 - e2) + 1); }
 
     /**
      * @param[in] f = (\e a &minus; \e b) / \e a, the flattening.
@@ -484,7 +485,7 @@ namespace GeographicLib {
      * The returned value \e f lies in (&minus;&infin;, 1).
      **********************************************************************/
     static Math::real SecondEccentricitySqToFlattening(real ep2)
-    { return ep2 / (std::sqrt(1 + ep2) + 1 + ep2); }
+    { using std::sqrt; return ep2 / (sqrt(1 + ep2) + 1 + ep2); }
 
     /**
      * @param[in] f = (\e a &minus; \e b) / \e a, the flattening.

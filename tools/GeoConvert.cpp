@@ -212,8 +212,8 @@ int main(int argc, char* argv[]) {
               gamma = p.AltConvergence(),
               k = p.AltScale();
             int prec1 = std::max(-5, std::min( Math::extradigits + 8, prec ));
-            os = Utility::str<real>(gamma, prec1 + 5) + " "
-              + Utility::str<real>(k, prec1 + 7);
+            os = Utility::str(gamma, prec1 + 5) + " "
+              + Utility::str(k, prec1 + 7);
           }
         }
       }

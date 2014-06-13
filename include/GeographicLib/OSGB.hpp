@@ -182,9 +182,12 @@ namespace GeographicLib {
      * 10<sup>9.48401603&minus;10</sup> m.  (The Airy 1830 value is returned
      * because the OSGB projection is based on this ellipsoid.)
      **********************************************************************/
-    static Math::real MajorRadius()
+    static Math::real MajorRadius() {
     // result is about 6377563.3960320664406 m
-    { return real(20923713) * std::pow(real(10), real(0.48401603L) - 1); }
+      using std::pow;
+      return real(20923713) *
+        pow(real(10), real(48401603 - 100000000) / real (100000000));
+    }
 
     /**
      * @return \e f the inverse flattening of the Airy 1830 ellipsoid.
@@ -211,8 +214,10 @@ namespace GeographicLib {
      * C. J. Mugnier, Grids &amp; Datums, PE&amp;RS, Oct. 2003, states that
      * this is defined as 10<sup>9.9998268&minus;10</sup>.
      **********************************************************************/
-    static Math::real CentralScale()
-    { return std::pow(real(10), real(9998268 - 10000000) / real(10000000)); }
+    static Math::real CentralScale() {
+      using std::pow;
+      return pow(real(10), real(9998268 - 10000000) / real(10000000));
+    }
 
     /**
      * @return latitude of the origin for the OSGB projection (49 degrees).

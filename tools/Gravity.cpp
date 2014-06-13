@@ -77,11 +77,12 @@ int main(int argc, char* argv[]) {
       else if (arg == "-c") {
         if (m + 2 >= argc) return usage(1, true);
         try {
+          using std::abs;
           DMS::flag ind;
           lat = DMS::Decode(std::string(argv[++m]), ind);
           if (ind == DMS::LONGITUDE)
             throw GeographicErr("Bad hemisphere letter on latitude");
-          if (!(std::abs(lat) <= 90))
+          if (!(abs(lat) <= 90))
             throw GeographicErr("Latitude not in [-90d, 90d]");
           h = Utility::num<real>(std::string(argv[++m]));
           circle = true;
@@ -192,7 +193,7 @@ int main(int argc, char* argv[]) {
     try {
       const GravityModel g(model, dir);
       if (circle) {
-        if (!Math::isfinite<real>(h))
+        if (!Math::isfinite(h))
           throw GeographicErr("Bad height");
         else if (mode == UNDULATION && h != 0)
           throw GeographicErr("Height should be zero for geoid undulations");
@@ -252,9 +253,9 @@ int main(int argc, char* argv[]) {
               } else {
                 g.Gravity(lat, lon, h, gx, gy, gz);
               }
-              *output << Utility::str<real>(gx, prec) << " "
-                      << Utility::str<real>(gy, prec) << " "
-                      << Utility::str<real>(gz, prec) << eol;
+              *output << Utility::str(gx, prec) << " "
+                      << Utility::str(gy, prec) << " "
+                      << Utility::str(gz, prec) << eol;
             }
             break;
           case DISTURBANCE:
@@ -266,9 +267,9 @@ int main(int argc, char* argv[]) {
                 g.Disturbance(lat, lon, h, deltax, deltay, deltaz);
               }
               // Convert to mGals
-              *output << Utility::str<real>(deltax * 1e5, prec) << " "
-                      << Utility::str<real>(deltay * 1e5, prec) << " "
-                      << Utility::str<real>(deltaz * 1e5, prec)
+              *output << Utility::str(deltax * 1e5, prec) << " "
+                      << Utility::str(deltay * 1e5, prec) << " "
+                      << Utility::str(deltaz * 1e5, prec)
                       << eol;
             }
             break;
@@ -282,16 +283,16 @@ int main(int argc, char* argv[]) {
               Dg01 *= 1e5;      // Convert to mGals
               xi *= 3600;       // Convert to arcsecs
               eta *= 3600;
-              *output << Utility::str<real>(Dg01, prec) << " "
-                      << Utility::str<real>(xi, prec) << " "
-                      << Utility::str<real>(eta, prec) << eol;
+              *output << Utility::str(Dg01, prec) << " "
+                      << Utility::str(xi, prec) << " "
+                      << Utility::str(eta, prec) << eol;
             }
             break;
           case UNDULATION:
           default:
             {
               real N = circle ? c.GeoidHeight(lon) : g.GeoidHeight(lat, lon);
-              *output << Utility::str<real>(N, prec) << eol;
+              *output << Utility::str(N, prec) << eol;
             }
             break;
           }

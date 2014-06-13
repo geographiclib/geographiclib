@@ -594,8 +594,10 @@ namespace GeographicLib {
      * @return &Delta; = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
      **********************************************************************/
-    Math::real Delta(real sn, real cn) const
-    { return std::sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn); }
+    Math::real Delta(real sn, real cn) const {
+      using std::sqrt;
+      return sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn);
+    }
     ///@}
 
     /** \name Symmetric elliptic integrals.
