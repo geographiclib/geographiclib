@@ -237,6 +237,24 @@ endif ()
 include (TestBigEndian)
 test_big_endian (WORDS_BIGENDIAN)
 
+if (GEOGRAPHICLIB_PRECISION EQUAL 4 AND
+    CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+  find_package (Boost 1.54)
+  if (Boost_FOUND)
+    include_directories ("${Boost_INCLUDE_DIRS}")
+    set (QUAD_LIBRARY quadmath)
+    if (NOT (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8))
+      # Enable Q suffix for quad precision in g++ 4.8 and later
+      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fext-numeric-literals")
+    endif ()
+    # Suppress the warnings that boost can spew out, e.g.,
+    #   "typedef 'boost_concept_check905' locally defined but not used"
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs")
+  else ()
+    set (GEOGRAPHICLIB_PRECISION 3)
+  endif ()
+endif ()
+
 # Create a Config.h to expose system information to the compiler
 configure_file (
   include/GeographicLib/Config.h.in
@@ -357,15 +375,6 @@ set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 # Set the include directories.  Look in ${PROJECT_BINARY_DIR}/include
 # first because that's where Config.h will be
 include_directories ("${PROJECT_BINARY_DIR}/include" include)
-
-if (GEOGRAPHICLIB_PRECISION EQUAL 4 AND
-CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-  find_package (Boost 1.54)
-  include_directories ("${Boost_INCLUDE_DIRS}")
-  set (QUAD_LIBRARY quadmath)
-  set (CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -fext-numeric-literals -Wno-unused-local-typedefs")
-endif ()
 
 # The list of subdirectories to process
 add_subdirectory (src)
