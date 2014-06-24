@@ -266,7 +266,7 @@ namespace GeographicLib {
      * @return the number of meters in an international foot.
      **********************************************************************/
     static inline Math::real foot()
-    { return real(0.0254L) * 12 * meter<real>(); }
+    { return real(254 * 12) / 10000 * meter<real>(); }
     /**
      * @return the number of meters in a yard.
      **********************************************************************/
@@ -304,7 +304,7 @@ namespace GeographicLib {
      * @return the number of meters in a US survey foot.
      **********************************************************************/
     static inline Math::real surveyfoot()
-    { return real(1200) / real(3937) * meter<real>(); }
+    { return real(1200) / 3937 * meter<real>(); }
     ///@}
   };
 

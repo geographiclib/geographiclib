@@ -185,8 +185,8 @@ namespace GeographicLib {
     static Math::real MajorRadius() {
     // result is about 6377563.3960320664406 m
       using std::pow;
-      return real(20923713) *
-        pow(real(10), real(48401603 - 100000000) / real (100000000));
+      return pow(real(10), real(48401603 - 100000000) / 100000000) 
+        * 20923713;
     }
 
     /**
@@ -198,7 +198,7 @@ namespace GeographicLib {
      * because the OSGB projection is based on this ellipsoid.)
      **********************************************************************/
     static Math::real Flattening()
-    { return real(20923713 - 20853810) / real(20923713); }
+    { return real(20923713 - 20853810) / 20923713; }
 
     /// \cond SKIP
     /**
@@ -216,7 +216,7 @@ namespace GeographicLib {
      **********************************************************************/
     static Math::real CentralScale() {
       using std::pow;
-      return pow(real(10), real(9998268 - 10000000) / real(10000000));
+      return pow(real(10), real(9998268 - 10000000) / 10000000);
     }
 
     /**

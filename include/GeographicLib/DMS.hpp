@@ -191,7 +191,7 @@ namespace GeographicLib {
      * DMS::Decode(-3.0, -20.0).
      **********************************************************************/
     static Math::real Decode(real d, real m = 0, real s = 0)
-    { return d + (m + s/real(60))/real(60); }
+    { return d + (m + s / 60) / 60; }
 
     /// \cond SKIP
     /**

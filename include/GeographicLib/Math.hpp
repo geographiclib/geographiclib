@@ -102,11 +102,11 @@ namespace GeographicLib {
 
 #if defined(BOOST_MP_FLOAT128_HPP)
 #define HAVE_QUAD_PREC 1
-#define VOLATILE
+#define GEOGRAPHICLIB_VOLATILE
     typedef boost::multiprecision::float128 quad;
 #else
 #define HAVE_QUAD_PREC 0
-#define VOLATILE volatile
+#define GEOGRAPHICLIB_VOLATILE volatile
 #endif
 
 #if GEOGRAPHICLIB_PRECISION == 2
@@ -387,9 +387,9 @@ namespace GeographicLib {
      * the same as one of the first two arguments.)
      **********************************************************************/
     template<typename T> static inline T sum(T u, T v, T& t) {
-      VOLATILE T s = u + v;
-      VOLATILE T up = s - v;
-      VOLATILE T vpp = s - up;
+      GEOGRAPHICLIB_VOLATILE T s = u + v;
+      GEOGRAPHICLIB_VOLATILE T up = s - v;
+      GEOGRAPHICLIB_VOLATILE T vpp = s - up;
       up -= u;
       vpp -= v;
       t = -(up + vpp);

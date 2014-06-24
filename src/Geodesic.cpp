@@ -569,8 +569,8 @@ namespace GeographicLib {
     // and g++ 4.4.0 (mingw) and g++ 4.6.1 (tdm mingw).
     real sbet12a;
     {
-      VOLATILE real xx1 = sbet2 * cbet1;
-      VOLATILE real xx2 = cbet2 * sbet1;
+      GEOGRAPHICLIB_VOLATILE real xx1 = sbet2 * cbet1;
+      GEOGRAPHICLIB_VOLATILE real xx2 = cbet2 * sbet1;
       sbet12a = xx1 + xx2;
     }
 #else
@@ -617,7 +617,7 @@ namespace GeographicLib {
       // Volatile declaration needed to fix inverse case
       // 56.320923501171 0 -56.320923501171 179.664747671772880215
       // which otherwise fails with g++ 4.4.4 x86 -O3
-      VOLATILE real x;
+      GEOGRAPHICLIB_VOLATILE real x;
       if (_f >= 0) {            // In fact f == 0 does not get here
         // x = dlong, y = dlat
         {

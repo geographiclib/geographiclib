@@ -217,7 +217,7 @@ namespace GeographicLib {
       // cases when x is non-zero but tiny (e.g., 1.0e-200).
       using std::abs;
       const real z = 1/real(16);
-      VOLATILE real y = abs(x);
+      GEOGRAPHICLIB_VOLATILE real y = abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
       return x < 0 ? -y : y;

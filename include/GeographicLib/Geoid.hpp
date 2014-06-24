@@ -20,7 +20,7 @@
 #  pragma warning (disable: 4251 4127)
 #endif
 
-#if !defined(PGM_PIXEL_WIDTH)
+#if !defined(GEOGRAPHICLIB_GEOID_PGM_PIXEL_WIDTH)
 /**
  * The size of the pixel data in the pgm data files for the geoids.  2 is the
  * standard size corresponding to a maxval 2<sup>16</sup>&minus;1.  Setting it
@@ -28,7 +28,7 @@
  * the data files from .pgm to .pgm4.  Note that the format of these pgm4 files
  * is a non-standard extension of the pgm format.
  **********************************************************************/
-#  define PGM_PIXEL_WIDTH 2
+#  define GEOGRAPHICLIB_GEOID_PGM_PIXEL_WIDTH 2
 #endif
 
 namespace GeographicLib {
@@ -83,7 +83,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Geoid {
   private:
     typedef Math::real real;
-#if PGM_PIXEL_WIDTH != 4
+#if GEOGRAPHICLIB_GEOID_PGM_PIXEL_WIDTH != 4
     typedef unsigned short pixel_t;
     static const unsigned pixel_size_ = 2;
     static const unsigned pixel_max_ = 0xffffu;
