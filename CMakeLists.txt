@@ -233,9 +233,10 @@ if (NOT (CYGWIN OR ANDROID))
   # etc., is missing
   include (CheckTypeSize)
   check_type_size ("long double" LONG_DOUBLE BUILTIN_TYPES_ONLY)
+  set (GEOGRAPHICLIB_HAVE_LONG_DOUBLE ${HAVE_LONG_DOUBLE})
 endif ()
 include (TestBigEndian)
-test_big_endian (WORDS_BIGENDIAN)
+test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
 if (GEOGRAPHICLIB_PRECISION EQUAL 4 AND
     CMAKE_CXX_COMPILER_ID STREQUAL GNU)

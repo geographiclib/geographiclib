@@ -432,9 +432,9 @@ Here are the steps to compile and install %GeographicLib:
   include/GeographicLib/Config.h \endverbatim
   If your C++ compiler does not recognize the long double type
   (unlikely), insert \code
-  #undef HAVE_LONG_DOUBLE \endcode
+  #undef GEOGRAPHICLIB_HAVE_LONG_DOUBLE \endcode
   If your machine using big endian ordering, then insert \code
-  #define WORDS_BIGENDIAN 1 \endcode
+  #define GEOGRAPHICLIB_WORDS_BIGENDIAN 1 \endcode
 - Build and install the software: \verbatim
   make             # compile the library and the examples
   make install     # as root \endverbatim
@@ -1109,8 +1109,8 @@ compiler.  System dependencies come into
  - GeographicLib::Utility::readarray reads numerical data from binary
    files.  This assumes that floating point numbers are in IEEE format.
    It attempts to handled the "endianness" of the target platform using
-   the WORDS_BIGENDIAN macro (which sets the compile-time constant
-   GeographicLib::Math::bigendian).
+   the GEOGRAPHICLIB_WORDS_BIGENDIAN macro (which sets the compile-time
+   constant GeographicLib::Math::bigendian).
 
 An attempt is made to maintain backward compatibility with
 %GeographicLib (especially at the level of your source code).  Sometimes

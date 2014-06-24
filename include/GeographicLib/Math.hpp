@@ -34,12 +34,12 @@
 #  endif
 #endif
 
-#if !defined(WORDS_BIGENDIAN)
-#  define WORDS_BIGENDIAN 0
+#if !defined(GEOGRAPHICLIB_WORDS_BIGENDIAN)
+#  define GEOGRAPHICLIB_WORDS_BIGENDIAN 0
 #endif
 
-#if !defined(HAVE_LONG_DOUBLE)
-#  define HAVE_LONG_DOUBLE 0
+#if !defined(GEOGRAPHICLIB_HAVE_LONG_DOUBLE)
+#  define GEOGRAPHICLIB_HAVE_LONG_DOUBLE 0
 #endif
 
 #if !defined(GEOGRAPHICLIB_PRECISION)
@@ -48,8 +48,9 @@
  * float (single precision); 2 (the default) means double; 3 means long double;
  * 4 is reserved for quadruple precision.  Nearly all the testing has been
  * carried out with doubles and that's the recommended configuration.  In order
- * for long double to be used, HAVE_LONG_DOUBLE needs to be defined.  Note that
- * with Microsoft Visual Studio, long double is the same as double.
+ * for long double to be used, GEOGRAPHICLIB_HAVE_LONG_DOUBLE needs to be
+ * defined.  Note that with Microsoft Visual Studio, long double is the same as
+ * double.
  **********************************************************************/
 #  define GEOGRAPHICLIB_PRECISION 2
 #endif
@@ -90,7 +91,7 @@ namespace GeographicLib {
     Math();                     // Disable constructor
   public:
 
-#if HAVE_LONG_DOUBLE
+#if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
     /**
      * The extended precision type for real numbers, used for some testing.
      * This is long double on computers with this type; otherwise it is double.
@@ -101,11 +102,11 @@ namespace GeographicLib {
 #endif
 
 #if defined(BOOST_MP_FLOAT128_HPP)
-#define HAVE_QUAD_PREC 1
+#define GEOGRAPHICLIB_HAVE_QUAD_PREC 1
 #define GEOGRAPHICLIB_VOLATILE
     typedef boost::multiprecision::float128 quad;
 #else
-#define HAVE_QUAD_PREC 0
+#define GEOGRAPHICLIB_HAVE_QUAD_PREC 0
 #define GEOGRAPHICLIB_VOLATILE volatile
 #endif
 
@@ -121,7 +122,7 @@ namespace GeographicLib {
     typedef float real;
 #elif GEOGRAPHICLIB_PRECISION == 3
     typedef extended real;
-#elif GEOGRAPHICLIB_PRECISION == 4 && HAVE_QUAD_PREC
+#elif GEOGRAPHICLIB_PRECISION == 4 && GEOGRAPHICLIB_HAVE_QUAD_PREC
     typedef quad real;
 #else
     typedef double real;
@@ -140,7 +141,7 @@ namespace GeographicLib {
     /**
      * true if the machine is big-endian.
      **********************************************************************/
-    static const bool bigendian = WORDS_BIGENDIAN;
+    static const bool bigendian = GEOGRAPHICLIB_WORDS_BIGENDIAN;
 
     /**
      * @tparam T the type of the returned value.
@@ -195,7 +196,7 @@ namespace GeographicLib {
 #elif GEOGRAPHICLIB_CPLUSPLUS11_MATH || (defined(_MSC_VER) && _MSC_VER >= 1700)
     template<typename T> static inline T hypot(T x, T y)
     { using std::hypot; return hypot(x, y); }
-#  if HAVE_LONG_DOUBLE && defined(_MSC_VER) && _MSC_VER == 1700
+#  if GEOGRAPHICLIB_HAVE_LONG_DOUBLE && defined(_MSC_VER) && _MSC_VER == 1700
     // Visual C++ 11 doesn't have a long double overload for std::hypot --
     // reported to MS on 2013-07-18
     // http://connect.microsoft.com/VisualStudio/feedback/details/794416
@@ -214,7 +215,7 @@ namespace GeographicLib {
     static inline float hypot(float x, float y)
     { return _hypotf(x, y); }
 #  endif
-#  if HAVE_LONG_DOUBLE
+#  if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
     static inline long double hypot(long double x, long double y)
     { return _hypot(double(x), double(y)); } // Suppress loss of data warning
 #  endif
@@ -224,7 +225,7 @@ namespace GeographicLib {
     { return ::hypot(x, y); }
     static inline float hypot(float x, float y)
     { return ::hypotf(x, y); }
-#  if HAVE_LONG_DOUBLE
+#  if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
     static inline long double hypot(long double x, long double y)
     { return ::hypotl(x, y); }
 #  endif
@@ -256,7 +257,7 @@ namespace GeographicLib {
 #else
     static inline double expm1(double x) { return ::expm1(x); }
     static inline float expm1(float x) { return ::expm1f(x); }
-#  if HAVE_LONG_DOUBLE
+#  if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
     static inline long double expm1(long double x)
     { return ::expm1l(x); }
 #  endif
@@ -291,7 +292,7 @@ namespace GeographicLib {
 #else
     static inline double log1p(double x) { return ::log1p(x); }
     static inline float log1p(float x) { return ::log1pf(x); }
-#  if HAVE_LONG_DOUBLE
+#  if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
     static inline long double log1p(long double x)
     { return ::log1pl(x); }
 #  endif
@@ -318,7 +319,7 @@ namespace GeographicLib {
 #else
     static inline double asinh(double x) { return ::asinh(x); }
     static inline float asinh(float x) { return ::asinhf(x); }
-#  if HAVE_LONG_DOUBLE
+#  if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
     static inline long double asinh(long double x)
     { return ::asinhl(x); }
 #  endif
@@ -345,7 +346,7 @@ namespace GeographicLib {
 #else
     static inline double atanh(double x) { return ::atanh(x); }
     static inline float atanh(float x) { return ::atanhf(x); }
-#  if HAVE_LONG_DOUBLE
+#  if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
     static inline long double atanh(long double x)
     { return ::atanhl(x); }
 #  endif
@@ -369,7 +370,7 @@ namespace GeographicLib {
 #else
     static inline double cbrt(double x) { return ::cbrt(x); }
     static inline float cbrt(float x) { return ::cbrtf(x); }
-#  if HAVE_LONG_DOUBLE
+#  if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
     static inline long double cbrt(long double x) { return ::cbrtl(x); }
 #  endif
 #endif
@@ -531,7 +532,7 @@ namespace GeographicLib {
       return b.r;
     }
 
-#if HAVE_QUAD_PREC
+#if GEOGRAPHICLIB_HAVE_QUAD_PREC
     typedef boost::math::policies::policy
       < boost::math::policies::domain_error
         <boost::math::policies::errno_on_error>,
