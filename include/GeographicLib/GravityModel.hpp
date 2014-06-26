@@ -490,19 +490,18 @@ namespace GeographicLib {
     /**
      * @return the default path for gravity model data files.
      *
-     * This is the value of the environment variable GRAVITY_PATH, if set;
+     * This is the value of the environment variable GEOGRAPHICLIB_GRAVITY_PATH, if set;
      * otherwise, it is $GEOGRAPHICLIB_DATA/gravity if the environment variable
      * GEOGRAPHICLIB_DATA is set; otherwise, it is a compile-time default
      * (/usr/local/share/GeographicLib/gravity on non-Windows systems and
-     * C:/Documents and Settings/All Users/Application
-     * Data/GeographicLib/gravity on Windows systems).
+     * C:/ProgramData/GeographicLib/gravity on Windows systems).
      **********************************************************************/
     static std::string DefaultGravityPath();
 
     /**
      * @return the default name for the gravity model.
      *
-     * This is the value of the environment variable GRAVITY_NAME, if set,
+     * This is the value of the environment variable GEOGRAPHICLIB_GRAVITY_NAME, if set,
      * otherwise, it is "egm96".  The GravityModel class does not use
      * this function; it is just provided as a convenience for a calling
      * program when constructing a GravityModel object.

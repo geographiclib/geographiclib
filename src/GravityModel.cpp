@@ -15,8 +15,7 @@
 
 #if !defined(GEOGRAPHICLIB_DATA)
 #  if defined(_WIN32)
-#    define GEOGRAPHICLIB_DATA \
-  "C:/Documents and Settings/All Users/Application Data/GeographicLib"
+#    define GEOGRAPHICLIB_DATA "C:/ProgramData/GeographicLib"
 #  else
 #    define GEOGRAPHICLIB_DATA "/usr/local/share/GeographicLib"
 #  endif
@@ -337,23 +336,23 @@ namespace GeographicLib {
 
   std::string GravityModel::DefaultGravityPath() {
     string path;
-    char* gravitypath = getenv("GRAVITY_PATH");
+    char* gravitypath = getenv("GEOGRAPHICLIB_GRAVITY_PATH");
     if (gravitypath)
       path = string(gravitypath);
-    if (path.length())
+    if (!path.empty())
       return path;
     char* datapath = getenv("GEOGRAPHICLIB_DATA");
     if (datapath)
       path = string(datapath);
-    return (path.length() ? path : string(GEOGRAPHICLIB_DATA)) + "/gravity";
+    return (!path.empty() ? path : string(GEOGRAPHICLIB_DATA)) + "/gravity";
   }
 
   std::string GravityModel::DefaultGravityName() {
     string name;
-    char* gravityname = getenv("GRAVITY_NAME");
+    char* gravityname = getenv("GEOGRAPHICLIB_GRAVITY_NAME");
     if (gravityname)
       name = string(gravityname);
-    return name.length() ? name : string(GRAVITY_DEFAULT_NAME);
+    return !name.empty() ? name : string(GRAVITY_DEFAULT_NAME);
   }
 
 } // namespace GeographicLib

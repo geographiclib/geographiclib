@@ -15,8 +15,7 @@
 
 #if !defined(GEOGRAPHICLIB_DATA)
 #  if defined(_WIN32)
-#    define GEOGRAPHICLIB_DATA \
-  "C:/Documents and Settings/All Users/Application Data/GeographicLib"
+#    define GEOGRAPHICLIB_DATA "C:/ProgramData/GeographicLib"
 #  else
 #    define GEOGRAPHICLIB_DATA "/usr/local/share/GeographicLib"
 #  endif
@@ -230,23 +229,23 @@ namespace GeographicLib {
 
   std::string MagneticModel::DefaultMagneticPath() {
     string path;
-    char* magneticpath = getenv("MAGNETIC_PATH");
+    char* magneticpath = getenv("GEOGRAPHICLIB_MAGNETIC_PATH");
     if (magneticpath)
       path = string(magneticpath);
-    if (path.length())
+    if (!path.empty())
       return path;
     char* datapath = getenv("GEOGRAPHICLIB_DATA");
     if (datapath)
       path = string(datapath);
-    return (path.length() ? path : string(GEOGRAPHICLIB_DATA)) + "/magnetic";
+    return (!path.empty() ? path : string(GEOGRAPHICLIB_DATA)) + "/magnetic";
   }
 
   std::string MagneticModel::DefaultMagneticName() {
     string name;
-    char* magneticname = getenv("MAGNETIC_NAME");
+    char* magneticname = getenv("GEOGRAPHICLIB_MAGNETIC_NAME");
     if (magneticname)
       name = string(magneticname);
-    return name.length() ? name : string(MAGNETIC_DEFAULT_NAME);
+    return !name.empty() ? name : string(MAGNETIC_DEFAULT_NAME);
   }
 
 } // namespace GeographicLib

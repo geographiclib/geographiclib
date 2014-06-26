@@ -13,8 +13,7 @@
 
 #if !defined(GEOGRAPHICLIB_DATA)
 #  if defined(_WIN32)
-#    define GEOGRAPHICLIB_DATA \
-  "C:/Documents and Settings/All Users/Application Data/GeographicLib"
+#    define GEOGRAPHICLIB_DATA "C:/ProgramData/GeographicLib"
 #  else
 #    define GEOGRAPHICLIB_DATA "/usr/local/share/GeographicLib"
 #  endif
@@ -519,23 +518,23 @@ namespace GeographicLib {
 
   std::string Geoid::DefaultGeoidPath() {
     string path;
-    char* geoidpath = getenv("GEOID_PATH");
+    char* geoidpath = getenv("GEOGRAPHICLIB_GEOID_PATH");
     if (geoidpath)
       path = string(geoidpath);
-    if (path.length())
+    if (!path.empty())
       return path;
     char* datapath = getenv("GEOGRAPHICLIB_DATA");
     if (datapath)
       path = string(datapath);
-    return (path.length() ? path : string(GEOGRAPHICLIB_DATA)) + "/geoids";
+    return (!path.empty() ? path : string(GEOGRAPHICLIB_DATA)) + "/geoids";
   }
 
   std::string Geoid::DefaultGeoidName() {
     string name;
-    char* geoidname = getenv("GEOID_NAME");
+    char* geoidname = getenv("GEOGRAPHICLIB_GEOID_NAME");
     if (geoidname)
       name = string(geoidname);
-    return name.length() ? name : string(GEOID_DEFAULT_NAME);
+    return !name.empty() ? name : string(GEOID_DEFAULT_NAME);
   }
 
 } // namespace GeographicLib

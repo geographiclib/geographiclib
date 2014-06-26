@@ -111,13 +111,10 @@ endif ()
 # gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
 if (WIN32)
   # The binary installers for the data files for Windows are created
-  # with Inno Setup which uses {commonappdata}.  On most Windows
-  # systems this is
-  # "C:/Documents and Settings/All Users/Application Data", while on
-  # newer systems (Windows 7), it is C:/ProgramData.  However the
-  # longer name "works" on all Windows systems.
+  # with Inno Setup which uses {commonappdata} which (since Windows
+  # Vista) is C:/ProgramData.
   set (GEOGRAPHICLIB_DATA
-    "C:/Documents and Settings/All Users/Application Data/GeographicLib"
+    "C:/ProgramData/GeographicLib"
     CACHE PATH "Location for data for GeographicLib")
 else ()
   set (GEOGRAPHICLIB_DATA

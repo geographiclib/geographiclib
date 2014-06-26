@@ -149,14 +149,14 @@ B<MagneticField> computes the geomagnetic field using one of the
 following models
 
     wmm2010, the World Magnetic Model 2010, which approximates the
-      main magnetic field for the period 2010–2015.  See
+      main magnetic field for the period 2010-2015.  See
       http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
     igrf11, the International Geomagnetic Reference Field (11th
       generation) which approximates the main magnetic field for
-      the period 1900–2015.  See
+      the period 1900-2015.  See
       http://ngdc.noaa.gov/IAGA/vmod/igrf.html
     emm2010, the Enhanced Magnetic Model 2010, which approximates the
-      main and crustal magnetic fields for the period 2010–2015.  See
+      main and crustal magnetic fields for the period 2010-2015.  See
       http://ngdc.noaa.gov/geomag/EMM/index.html
 
 These models approximate the magnetic field due to the earth's core and
@@ -165,14 +165,15 @@ the ionosphere, the magnetosphere, nearby magnetized materials,
 electrical machinery, etc.
 
 By default, the C<wmm2010> magnetic model is used.  This may changed by
-setting the environment variable C<MAGNETIC_NAME> or with the B<-n>
-option.
+setting the environment variable C<GEOGRAPHICLIB_MAGNETIC_NAME> or with
+the B<-n> option.
 
 The magnetic models will be loaded from a directory specified at compile
 time.  This may changed by setting the environment variables
-C<MAGNETIC_PATH> or C<GEOGRAPHICLIB_DATA>, or with the B<-d> option.
-The B<-h> option prints the default magnetic path and name.  Use the
-B<-v> option to ascertain the full path name of the data file.
+C<GEOGRAPHICLIB_MAGNETIC_PATH> or C<GEOGRAPHICLIB_DATA>, or with the
+B<-d> option.  The B<-h> option prints the default magnetic path and
+name.  Use the B<-v> option to ascertain the full path name of the data
+file.
 
 Instructions for downloading and installing magnetic models are
 available at
@@ -182,27 +183,26 @@ L<http://geographiclib.sf.net/html/magnetic.html#magneticinst>.
 
 =over
 
-=item B<MAGNETIC_NAME>
+=item B<GEOGRAPHICLIB_MAGNETIC_NAME>
 
-Override the compile-time default magnetic name of C<wmm2010>.  The B<-h>
-option reports the value of B<MAGNETIC_NAME>, if defined, otherwise it
-reports the compile-time value.  If the B<-n> I<name> option is used,
-then I<name> takes precedence.
+Override the compile-time default magnetic name of C<wmm2010>.  The
+B<-h> option reports the value of B<GEOGRAPHICLIB_MAGNETIC_NAME>, if
+defined, otherwise it reports the compile-time value.  If the B<-n>
+I<name> option is used, then I<name> takes precedence.
 
-=item B<MAGNETIC_PATH>
+=item B<GEOGRAPHICLIB_MAGNETIC_PATH>
 
 Override the compile-time default magnetic path.  This is typically
 C</usr/local/share/GeographicLib/magnetic> on Unix-like systems and
-C<C:/Documents and Settings/All Users/Application
-Data/GeographicLib/magnetic> on Windows systems.  The B<-h> option reports
-the value of B<MAGNETIC_PATH>, if defined, otherwise it reports the
-compile-time value.  If the B<-d> I<dir> option is used, then I<dir>
-takes precedence.
+C<C:/ProgramData/GeographicLib/magnetic> on Windows systems.  The B<-h>
+option reports the value of B<GEOGRAPHICLIB_MAGNETIC_PATH>, if defined,
+otherwise it reports the compile-time value.  If the B<-d> I<dir> option
+is used, then I<dir> takes precedence.
 
 =item B<GEOGRAPHICLIB_DATA>
 
 Another way of overriding the compile-time default magnetic path.  If it
-is set (and if B<MAGNETIC_PATH> is not set), then
+is set (and if B<GEOGRAPHICLIB_MAGNETIC_PATH> is not set), then
 $B<GEOGRAPHICLIB_DATA>/magnetic is used.
 
 =back
