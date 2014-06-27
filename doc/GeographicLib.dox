@@ -7,7 +7,7 @@
  * MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
-
+namespace GeographicLib {
 /**
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
@@ -16,7 +16,7 @@
 
 \section abstract Abstract
 
-%GeographicLib is a small set of <a href="annotated.html">C++
+GeographicLib is a small set of <a href="annotated.html">C++
 classes</a> for performing conversions between geographic, UTM, UPS,
 MGRS, geocentric, and local cartesian coordinates, for gravity (e.g.,
 EGM2008), geoid height and geomagnetic field (e.g., WMM2010)
@@ -95,37 +95,37 @@ Forward to \ref intro.
 Forward to \ref install.  Up to \ref contents.
 </center>
 
-%GeographicLib offers a C++ interfaces to a small (but important!) set
+GeographicLib offers a C++ interfaces to a small (but important!) set
 of geographic transformations.  It grew out of a desire to improve on
 the <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
 package for transforming between geographic and MGRS coordinates.  At
-present, %GeographicLib provides UTM, UPS, MGRS, geocentric, and local
+present, GeographicLib provides UTM, UPS, MGRS, geocentric, and local
 cartesian projections, gravity and geomagnetic models, and classes for
 geodesic calculations.
 
-The goals of %GeographicLib are:
+The goals of GeographicLib are:
  - Accuracy.  In most applications the accuracy is close to round-off,
    about 5 nm (5 nanometers).  Even though in many geographic
    applications 1 cm is considered "accurate enough", there is little
    penalty in providing much better accuracy.  In situations where a
-   faster approximate algorithm is necessary, %GeographicLib offers an
+   faster approximate algorithm is necessary, GeographicLib offers an
    accurate benchmark to guide the development.
  - Completeness.  For each of the projections included, an attempt is
    made to provide a complete solution.  For example,
-   GeographicLib::Geodesic::Inverse works for anti-podal points.
-   Similarly, GeographicLib::Geocentric.Reverse will return accurate
+   Geodesic::Inverse works for anti-podal points.
+   Similarly, Geocentric.Reverse will return accurate
    geodetic coordinates even for points close to the center of the
    earth.
  - C++ interface.  For the projection methods, this allows encapsulation
    of the ellipsoid parameters.
  - Emphasis on projections necessary for analyzing military data.
- - Uniform treatment of UTM/UPS.  The GeographicLib::UTMUPS class treats
+ - Uniform treatment of UTM/UPS.  The UTMUPS class treats
    UPS as zone 0.  This simplifies conversions between UTM and UPS
    coordinates, etc.
  - Well defined and stable conventions for the conversion between
    UTM/UPS to MGRS coordinates.
  - Detailed internal documentation on the algorithms.  For the most part
-   %GeographicLib uses published algorithms and references are given.  If
+   GeographicLib uses published algorithms and references are given.  If
    changes have been made (usually to improve the numerical accuracy),
    these are described in the code.
 
@@ -136,7 +136,7 @@ and the utilities have been tested with g++ 4.4 under Linux, with g++
 (2012), and 12 (2013) compiled for 32 bit and 64 bit.
 
 Matlab, JavaScript, and Python interfaces are provided to portions of
-%GeographicLib; see \ref other.
+GeographicLib; see \ref other.
 
 The section \ref geodesic documents the method of solving the geodesic
 problem.
@@ -146,13 +146,13 @@ projection.
 
 The bulk of the testing has used geographically relevant values of the
 flattening.  Thus, you can expect close to full accuracy for -0.01 &le;
-\e f &le; 0.01 (but note that GeographicLib::TransverseMercatorExact is
+\e f &le; 0.01 (but note that TransverseMercatorExact is
 restricted to \e f > 0).  However, reasonably accurate results can be
 expected if -0.1 &le; \e f &le; 0.1.  Outside this range, you should
 attempt to verify the accuracy of the routines independently.  Two types
 of problems may occur with larger values of \e f:
- - Some classes, specifically GeographicLib::Geodesic,
-   GeographicLib::GeodesicLine, and GeographicLib::TransverseMercator,
+ - Some classes, specifically Geodesic,
+   GeodesicLine, and TransverseMercator,
    use series expansions using \e f as a small parameter.  The accuracy
    of these routines will degrade as \e f becomes large.
  - Even when exact formulas are used, many of the classes need to invert
@@ -170,13 +170,13 @@ Forward to \ref install.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page install Installing %GeographicLib
+\page install Installing GeographicLib
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
 
-%GeographicLib has been developed under Linux with the g++ compiler
+GeographicLib has been developed under Linux with the g++ compiler
 (versions 4.0 and later) and under Windows with Visual Studio 2005, 2008,
 and 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First download either
@@ -199,15 +199,15 @@ Then pick one of the first five options below:
 - \ref windows.  This is a simple installation method that works with
   Visual Studio 2005, 2008, and 2010 under Windows.
 - \ref windowsbin.  Use this installation method if you only need to use
-  the \ref utilities supplied with %GeographicLib.  (This method also
+  the \ref utilities supplied with GeographicLib.  (This method also
   installs the header files and the library for use by Visual Studio 10.)
-- \ref qt.  How to compile %GeographicLib so that it can be used by Qt
+- \ref qt.  How to compile GeographicLib so that it can be used by Qt
   programs.
 - \ref maintainer.  This describes addition tasks of interest only to
   the maintainers of this code.
 .
 This section documents only how to install the <i>software</i>.  If you
-wish to use %GeographicLib to evaluate geoid heights or the earth's
+wish to use GeographicLib to evaluate geoid heights or the earth's
 gravitational or magnetic fields, then you must also install the
 relevant data files.  See \ref geoidinst, \ref gravityinst, and \ref
 magneticinst for instructions.
@@ -229,7 +229,7 @@ make software maintanence simpler
   separate <i>install</i> step which copies the headers, libraries,
   tools, and documentation to a "central" location.  You may at this
   point delete the source and build directories.  If you have
-  administrative privileges, you can install %GeographicLib for the use
+  administrative privileges, you can install GeographicLib for the use
   of all users (e.g., in /usr/local).  Otherwise, you can install it for
   your personal use (e.g., in $HOME/packages).
 
@@ -237,7 +237,7 @@ make software maintanence simpler
 
 This is the recommended method of installation; however it requires that
 <a href="http://www.cmake.org">cmake</a> be installed on your system.
-This permits %GeographicLib to be built either as a shared or a static
+This permits GeographicLib to be built either as a shared or a static
 library on a wide variety of systems.  cmake can also determine the
 capabilities of your system and adjust the compilation of the
 libraries and examples appropriately.
@@ -248,7 +248,7 @@ command like
   \verbatim
   yum install cmake \endverbatim
 (executed as root).  The minimum version of cmake supported for building
-%GeographicLib is 2.8.4 (which was released on 2011-02-16).  (Actually,
+GeographicLib is 2.8.4 (which was released on 2011-02-16).  (Actually,
 a few earlier versions will also work for non-Windows platforms.)
 
 On other systems, download a binary installer from http://www.cmake.org
@@ -260,7 +260,7 @@ cmake.  Building under cmake depends on whether it is targeting an IDE
 makefiles.  The instructions below have been tested with makefiles and
 g++ on Linux and with the Visual Studio IDE on Windows.
 
-Here are the steps to compile and install %GeographicLib:
+Here are the steps to compile and install GeographicLib:
 - Unpack the source, running one of \verbatim
   tar xfpz GeographicLib-1.37.tar.gz
   unzip -q GeographicLib-1.37.zip \endverbatim
@@ -278,11 +278,11 @@ Here are the steps to compile and install %GeographicLib:
 \endverbatim
   The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
   settings given above are recommended to ensure that packages that use
-  %GeographicLib use the version compiled with the right compiler.
+  GeographicLib use the version compiled with the right compiler.
   If you need to rerun cmake, use \verbatim
   cmake . \endverbatim
   possibly including some options via <code>-D</code> (see the next step).
-- cmake allows you to configure how %GeographicLib is built and installed by
+- cmake allows you to configure how GeographicLib is built and installed by
   supplying options, for example \verbatim
   cmake -D CMAKE_INSTALL_PREFIX=/tmp/geographic . \endverbatim
   The options you might need to change are
@@ -312,13 +312,13 @@ Here are the steps to compile and install %GeographicLib:
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
     C:/ProgramData/GeographicLib for Windows systems) specifies the default
-    location for the various datasets for use by GeographicLib::Geoid,
-    GeographicLib::GravityModel, and GeographicLib::MagneticModel.
+    location for the various datasets for use by Geoid,
+    GravityModel, and MagneticModel.
     See \ref geoidinst, \ref gravityinst, and \ref magneticinst for more
     information.
   - <code>GEOGRAPHICLIB_LIB_TYPE</code> (allowed values: SHARED, STATIC, or
     BOTH), specifies the types of libraries build.  The default is
-    STATIC for Windows and SHARED otherwise.  If building %GeographicLib
+    STATIC for Windows and SHARED otherwise.  If building GeographicLib
     for sytem-wide use, BOTH is recommended, because this provides users
     with the choice of which library to use.
   - <code>CMAKE_BUILD_TYPE</code> (default: Release).  This
@@ -391,7 +391,7 @@ Here are the steps to compile and install %GeographicLib:
 \section autoconf Installation using the autoconfigure tools
 
 The method works on most Unix-like systems including Linux and Mac OS X.
-Here are the steps to compile and install %GeographicLib:
+Here are the steps to compile and install GeographicLib:
 - Unpack the source, running \verbatim
   tar xfpz GeographicLib-1.37.tar.gz \endverbatim
   then enter the directory created \verbatim
@@ -402,7 +402,7 @@ Here are the steps to compile and install %GeographicLib:
 - Configure the software, specifing the path of the source directory,
   with \verbatim
   ../configure \endverbatim
-- By default %GeographicLib will be installed under /usr/local.
+- By default GeographicLib will be installed under /usr/local.
   You can change this with, for example \verbatim
   ../configure --prefix=/tmp/geographic \endverbatim
 - Compile and install the software with \verbatim
@@ -422,7 +422,7 @@ Here are the steps to compile and install %GeographicLib:
 This method requires the standard GNU suite of tools, in particular make
 and g++.  This builds a static library and the examples.
 
-Here are the steps to compile and install %GeographicLib:
+Here are the steps to compile and install GeographicLib:
 - Unpack the source, running \verbatim
   tar xfpz GeographicLib-1.37.tar.gz \endverbatim
   then enter the directory created \verbatim
@@ -464,7 +464,7 @@ is needed to build the Matlab interface and to run the tests.)
 - The library and the compiled examples are in the windows/Release.
 - Copy the library windows/Release/GeographicLib.lib and the
   headers in include/GeographicLib somewhere convenient.  The
-  headers should remain in a directory named %GeographicLib.  If you
+  headers should remain in a directory named GeographicLib.  If you
   expect to use the Matlab/Octave interface, copy *.m and *.cpp from the
   matlab directory to a directory in your matlab/octave path, see \ref
   matlab for instructions on compiling the interface.  For
@@ -477,7 +477,7 @@ The Visual Studio 10 solution also contains projects to build
 
 \section windowsbin Using a binary installer for Windows
 
-Use this method if you only need to use the %GeographicLib utilities.
+Use this method if you only need to use the GeographicLib utilities.
 The header files and static and shared versions of library are also
 provided; these can only be used by Visual Studio 2010 (in either
 release or debug mode).  However, if you plan to use the library, it may
@@ -511,15 +511,15 @@ was compiled with Matlab R2013a 64-bit, however it may work with some
 other 64-bit versions of Matlab.
 <a href="NET/index.html">NETGeographicLib</a> library dlls (release and
 debug) are included with the binary installers; these are linked against
-the shared library for %GeographicLib.
+the shared library for GeographicLib.
 
 \section qt Building the library for use with Qt
 
-If Qt is using a standard compiler, then build %GeographicLib with that
+If Qt is using a standard compiler, then build GeographicLib with that
 same compiler (and optimization flags) as Qt.
 
 If you are using the mingw compiler on Windows for Qt, then you need to
-build %GeographicLib with mingw.  You can accomplish this with cmake
+build GeographicLib with mingw.  You can accomplish this with cmake
 under cygwin with, for example, \verbatim
   export PATH="`cygpath -m c:/QtSDK/mingw/bin`:$PATH"
   mkdir BUILD
@@ -535,7 +535,7 @@ If cmake complains that sh mustn't be in your path, invoke cmake with
   cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX=C:/pkg-mingw/GeographicLib ..
 \endverbatim
 If cmake is not available, there is a simple project file that compiles
-the %GeographicLib library <i>only</i> with the Qt compiler: \verbatim
+the GeographicLib library <i>only</i> with the Qt compiler: \verbatim
   cd src
   qmake GeographicLib.pro # configure the project
   make                    # build the library \endverbatim
@@ -582,9 +582,9 @@ source tree and package the resulting source tree for distribution as
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
-%GeographicLib.  For Windows, this requires in the installation of
+GeographicLib.  For Windows, this requires in the installation of
 <a href="http://nsis.sourceforge.net">NSIS</a>.  On Windows, you should
-configure %GeographicLib with <code>PACKAGE_DEBUG_LIBS</code>=ON, build both
+configure GeographicLib with <code>PACKAGE_DEBUG_LIBS</code>=ON, build both
 Release and Debug versions of the library and finally build PACKAGE in
 Release mode.  This will get the release and debug versions of the
 library included in the package.  For example, the 64-bit binary
@@ -617,16 +617,16 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 Back to \ref install.  Forward to \ref utilities.  Up to \ref contents.
 </center>
 
-Much (but not all!) of the useful functionality of %GeographicLib is
+Much (but not all!) of the useful functionality of GeographicLib is
 available via simple command line utilities.  Interfaces to some of them
 are available via the web.  See \ref utilities for documentation on
 these.
 
-In order to use %GeographicLib from C++ code, you will need to
-- Include the header files for the %GeographicLib classes in your code.
+In order to use GeographicLib from C++ code, you will need to
+- Include the header files for the GeographicLib classes in your code.
   E.g., \code
   #include <GeographicLib/LambertConformalConic.hpp> \endcode
-- Include the GeographicLib:: namespace prefix to the %GeographicLib classes,
+- Include the GeographicLib:: namespace prefix to the GeographicLib classes,
   or include \code
   using namespace GeographicLib; \endcode
   in your code.
@@ -663,7 +663,7 @@ In order to use %GeographicLib from C++ code, you will need to
   .
   The most import step is the find_package command.  The cmake
   documentation describes the locations searched by find_package (the
-  appropriate rule for %GeographicLib are those for "Config" mode lookups).
+  appropriate rule for GeographicLib are those for "Config" mode lookups).
   In brief, the locations that are searched are (from least specific to
   most specific, i.e., in <i>reverse</i> order) are
   - under the system paths, i.e., locations such as <code>C:/Program
@@ -672,32 +672,32 @@ In order to use %GeographicLib from C++ code, you will need to
     (or set of directories) for external dependencies; this is given by
     a (semicolon separated) list of directories specified by the cmake
     variable <code>CMAKE_PREFIX_PATH</code> (illustrated above);
-  - the package directory for %GeographicLib can be overridden with the
+  - the package directory for GeographicLib can be overridden with the
     <i>environment variable</i> <code>GeographicLib_DIR</code> (which is the
-    directory under which %GeographicLib is installed);
-  - finally, if you need to point to a particular build of %GeographicLib,
+    directory under which GeographicLib is installed);
+  - finally, if you need to point to a particular build of GeographicLib,
     define the <i>cmake variable</i> <code>GeographicLib_DIR</code>, which
     specifies the directory containing the configuration file
     <code>geographiclib-config.cmake</code> (for debugging this may be the
     top-level <i>build</i> directory, as opposed to <i>installation</i>
-    directory, for %GeographicLib).
+    directory, for GeographicLib).
   .
   Typically, specifying nothing or <code>CMAKE_PREFIX_PATH</code>
   suffices.  However the two <code>GeographicLib_DIR</code> variables allow
   for a specific version to be chosen.  On Windows systems (with Visual
-  Studio), find_package will only find versions of %GeographicLib built with
+  Studio), find_package will only find versions of GeographicLib built with
   the right version of the compiler.  (If you used a non-cmake method of
-  installing %GeographicLib, you can try copying cmake/FindGeographicLib.cmake
+  installing GeographicLib, you can try copying cmake/FindGeographicLib.cmake
   to somewhere in your <code>CMAKE_MODULE_PATH</code> in order for
   find_package to work.  However, this method has not been thoroughly
   tested.)
 
-  If %GeographicLib is found, then the following cmake variables are set:
+  If GeographicLib is found, then the following cmake variables are set:
   - <code>GeographicLib_FOUND</code> = 1
   - <code>GeographicLib_VERSION</code> = 1.37
   - <code>GeographicLib_INCLUDE_DIRS</code>
   - <code>GeographicLib_LIBRARIES</code> = one of the following two:
-  - <code>GeographicLib_SHARED_LIBRARIES</code> = %GeographicLib
+  - <code>GeographicLib_SHARED_LIBRARIES</code> = GeographicLib
   - <code>GeographicLib_STATIC_LIBRARIES</code> = GeographicLib_STATIC
   - <code>GeographicLib_DEFINITIONS</code> = one of the following two:
   - <code>GeographicLib_SHARED_DEFINITIONS</code> = -DGEOGRAPHICLIB_SHARED_LIB=1
@@ -727,9 +727,9 @@ In order to use %GeographicLib from C++ code, you will need to
   On Windows, cmake takes care of linking to the release or debug
   version of the library as appropriate.  (This assumes that the Release
   and Debug versions of the libraries were built and installed.  This is
-  true for the Windows binary installer for %GeographicLib version 1.34 and
+  true for the Windows binary installer for GeographicLib version 1.34 and
   later.)
-- Here are the steps to compile and link your code using %GeographicLib
+- Here are the steps to compile and link your code using GeographicLib
   "manually".
   - Tell the compiler where to find the header files.  With g++ and with
     /usr/local specified as the installation directory,
@@ -761,7 +761,7 @@ In order to use %GeographicLib from C++ code, you will need to
     Linker -> General -> Additional Library Directories = C:\pkg-vc10\Geographic\lib
     \endverbatim
     Note that the library name is <b>Geographic</b> and not
-    %GeographicLib.  For the Debug version of your program on Windows
+    GeographicLib.  For the Debug version of your program on Windows
     add "_d" to the library, e.g., Geographic_d-i.lib or
     Geographic_d.lib.
   - Tell the runtime environment where to find the shared library
@@ -779,7 +779,7 @@ In order to use %GeographicLib from C++ code, you will need to
     your executable or else include the directory containing the dll in
     your <code>PATH</code>.
 
-Here is a very simple test code, which uses the GeographicLib::Geodesic
+Here is a very simple test code, which uses the Geodesic
 class:
 \include example-Geodesic-small.cpp
 This example is <code>examples/example-Geodesic-small.cpp</code>.  If you
@@ -819,10 +819,10 @@ The next steps are:
  - Browse the <a href="annotated.html">Class List</a> for full documentation
    on the classes in the library.
  - Look at the example code in the examples directory.  Each file
-   provides a very simple standalone example of using one %GeographicLib
+   provides a very simple standalone example of using one GeographicLib
    class.  These are included in the descriptions of the classes.
  - Look at the source code for the utilities in the tools directory for
-   more examples of using %GeographicLib from C++ code, e.g.,
+   more examples of using GeographicLib from C++ code, e.g.,
    GeodesicProj.cpp is a program to performing various geodesic
    projections.
 
@@ -854,7 +854,7 @@ Back to \ref install.  Forward to \ref utilities.  Up to \ref contents.
 Back to \ref start.  Forward to \ref organization.  Up to \ref contents.
 </center>
 
-Various utility programs are provided with %GeographicLib.  These should
+Various utility programs are provided with GeographicLib.  These should
 be installed in a directory included in your PATH (e.g.,
 /usr/local/bin).  These programs are wrapper programs that invoke
 the underlying functionality provided by the library.
@@ -862,46 +862,47 @@ the underlying functionality provided by the library.
 The utilities are
  - <a href="GeoConvert.1.html">
    <b>GeoConvert</b></a>: convert geographic coordinates using
-   GeographicLib::GeoCoords.
+   GeoCoords.
  - <a href="GeodSolve.1.html">
    <b>GeodSolve</b></a>: perform geodesic calculations using
-   GeographicLib::Geodesic and GeographicLib::GeodesicLine.
+   Geodesic and GeodesicLine.
  - <a href="Planimeter.1.html">
    <b>Planimeter</b></a>: compute the area of geodesic polygons using
-   GeographicLib::PolygonArea.
+   PolygonArea.
  - <a href="TransverseMercatorProj.1.html">
    <b>TransverseMercatorProj</b></a>: convert between geographic
    and transverse Mercator.  This is for testing
-   GeographicLib::TransverseMercatorExact and
-   GeographicLib::TransverseMercator.
+   TransverseMercatorExact and
+   TransverseMercator.
  - <a href="CartConvert.1.html">
    <b>CartConvert</b></a>: convert geodetic coordinates to geocentric or
-   local cartesian using GeographicLib::Geocentric and
-   GeographicLib::LocalCartesian.
+   local cartesian using Geocentric and
+   LocalCartesian.
  - <a href="GeodesicProj.1.html">
    <b>GeodesicProj</b></a>: perform projections based on geodesics
-   using GeographicLib::AzimuthalEquidistant, GeographicLib::Gnomonic,
-   and GeographicLib::CassiniSoldner.
+   using AzimuthalEquidistant, Gnomonic,
+   and CassiniSoldner.
  - <a href="ConicProj.1.html">
    <b>ConicProj</b></a>: perform conic projections using
-   GeographicLib::LambertConformalConic and
-   GeographicLib::AlbersEqualArea.
+   LambertConformalConic and
+   AlbersEqualArea.
  - <a href="GeoidEval.1.html">
    <b>GeoidEval</b></a>: look up geoid heights using
-   GeographicLib::Geoid.
+   Geoid.
  - <a href="Gravity.1.html">
    <b>Gravity</b></a>: compute the earth's gravitational field using
-   GeographicLib::GravityModel and GeographicLib::GravityCircle.
+   GravityModel and GravityCircle.
  - <a href="MagneticField.1.html">
    <b>MagneticField</b></a>: compute the earth's magnetic field using
-   GeographicLib::MagneticModel and GeographicLib::MagneticCircle.
+   MagneticModel and MagneticCircle.
  .
 The documentation for these utilities is in the form of man pages.  This
 documentation can be accessed by clicking on the utility name in the
 list above, running the man command on Unix-like systems, or by invoking
-the utility with the --help option.  A brief summary of usage is given
-by invoking the utility with the -h option.  The version of the utility
-is given by the --version option.
+the utility with the <code>--help</code> option.  A brief summary of
+usage is given by invoking the utility with the <code>-h</code> option.
+The version of the utility is given by the <code>--version</code>
+option.
 
 The utilities all accept data on standard input, transform it in some
 way, and print the results on standard output.  This makes the utilities
@@ -928,11 +929,11 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
 
 Here is a brief description of the relationship between the various
-components of %GeographicLib.  All of these are defined in the
+components of GeographicLib.  All of these are defined in the
 GeographicLib namespace.
 
-GeographicLib::TransverseMercator, GeographicLib::PolarStereographic,
-GeographicLib::LambertConformalConic, and GeographicLib::AlbersEqualArea
+TransverseMercator, PolarStereographic,
+LambertConformalConic, and AlbersEqualArea
 provide the basic projections.  The constructors for these classes
 specify the ellipsoid and the forward and reverse projections are
 implemented as const member functions.  TransverseMercator uses
@@ -941,18 +942,18 @@ square of the eccentricity.  PolarStereographic, LambertConformalConic,
 and AlbersEqualArea use the exact formulas for the projections (e.g.,
 from Snyder).
 
-GeographicLib::TransverseMercator::UTM and
-GeographicLib::PolarStereographic::UPS are const static instantiations
+TransverseMercator::UTM and
+PolarStereographic::UPS are const static instantiations
 specific for the WGS84 ellipsoid with the UTM and UPS scale factors.
 (These do \e not add the standard false eastings or false northings for
-UTM and UPS.)  Similarly GeographicLib::LambertConformalConic::Mercator
+UTM and UPS.)  Similarly LambertConformalConic::Mercator
 is a const static instantiation of this projection for a WGS84 ellipsoid
 and a standard parallel of 0 (which gives the Mercator projection).
-GeographicLib::AlbersEqualArea::CylindricalEqualArea,
+AlbersEqualArea::CylindricalEqualArea,
 AzimuthalEqualAreaNorth, and AzimuthalEqualAreaSouth, likewise provide
 special cases of the equal area projection.
 
-GeographicLib::UTMUPS uses TransverseMercator::UTM and
+UTMUPS uses TransverseMercator::UTM and
 PolarStereographic::UPS to perform the UTM and UPS
 projections.  The class offers a uniform interface to UTM and UPS by
 treating UPS as UTM zone 0.  This class stores no internal state and the
@@ -960,128 +961,128 @@ forward and reverse projections are provided via static member
 functions.  The forward projection offers the ability to override the
 standard UTM/UPS choice and the UTM zone.
 
-GeographicLib::MGRS transforms between UTM/UPS coordinates and MGRS.
+MGRS transforms between UTM/UPS coordinates and MGRS.
 UPS coordinates are handled as UTM zone 0.  This class stores no
 internal state and the forward (UTM/UPS to MGRS) and reverse (MGRS to
 UTM/UPS) conversions are provided via static member functions.
 
-GeographicLib::GeoCoords holds a single geographic location which may be
+GeoCoords holds a single geographic location which may be
 specified as latitude and longitude, UTM or UPS, or MGRS.  Member
 functions are provided to convert between coordinate systems and to
 provide formatted representations of them.
 <a href="GeoConvert.1.html">GeoConvert</a> is a simple command line
 utility to provide access to the GeoCoords class.
 
-GeographicLib::TransverseMercatorExact is a drop in replacement for
+TransverseMercatorExact is a drop in replacement for
 TransverseMercator which uses the exact formulas, based on elliptic
 functions, for the projection as given by Lee.
 <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a> is a
 simple command line utility to test to the TransverseMercator and
 TransverseMercatorExact.
 
-GeographicLib::Geodesic and GeographicLib::GeodesicLine perform geodesic
-calculations.  The constructor for GeographicLib::Geodesic specifies the
+Geodesic and GeodesicLine perform geodesic
+calculations.  The constructor for Geodesic specifies the
 ellipsoid and the direct and inverse calculations are implemented as
-const member functions.  GeographicLib::Geocentric::WGS84 is a const
+const member functions.  Geocentric::WGS84 is a const
 static instantiation of Geodesic specific for the WGS84 ellipsoid.  In
 order to perform a series of direct geodesic calculations on a single
-line, the GeographicLib::GeodesicLine class can be used.  This packages
+line, the GeodesicLine class can be used.  This packages
 all the information needed to specify a geodesic.  A const member
 function returns the coordinates a specified distance from the starting
 point.  <a href="GeodSolve.1.html">GeodSolve</a> is a simple command
 line utility to perform geodesic calculations.
-GeographicLib::PolygonArea is a class which compute the area of geodesic
+PolygonArea is a class which compute the area of geodesic
 polygons using the Geodesic class and
 <a href="Planimeter.1.html">Planimeter</a> is a command line utility for
-the same purpose.  GeographicLib::AzimuthalEquidistant,
-GeographicLib::CassiniSoldner, and GeographicLib::Gnomonic are
+the same purpose.  AzimuthalEquidistant,
+CassiniSoldner, and Gnomonic are
 projections based on the Geodesic class.
 <a href="GeodesicProj.1.html">GeodesicProj</a> is a command line utility
 to exercise these projections.
 
-GeographicLib::GeodesicExact and GeographicLib::GeodesicLineExact are
-drop in replacements for GeographicLib::Geodesic and
-GeographicLib::GeodesicLine in which the solution is given in terms of
-elliptic integrals (computed by GeographicLib::EllipticFunction).
+GeodesicExact and GeodesicLineExact are
+drop in replacements for Geodesic and
+GeodesicLine in which the solution is given in terms of
+elliptic integrals (computed by EllipticFunction).
 These classes should be used if the absolute value of the flattening
 exceeds 0.02.  The -E option to <a href="GeodSolve.1.html">GeodSolve</a>
 uses these classes.
 
-GeographicLib::Geocentric and GeographicLib::LocalCartesian convert between
+Geocentric and LocalCartesian convert between
 geodetic and geocentric or a local cartesian system.  The constructor for
 specifies the ellipsoid and the forward and reverse projections are
-implemented as const member functions.  GeographicLib::Geocentric::WGS84 is a
+implemented as const member functions.  Geocentric::WGS84 is a
 const static instantiation of Geocentric specific for the WGS84 ellipsoid.
 <a href="CartConvert.1.html">CartConvert</a> is a simple command line
 utility to provide access to these classes.
 
-GeographicLib::Geoid evaluates geoid heights by interpolation.  This is
+Geoid evaluates geoid heights by interpolation.  This is
 provided by the operator() member function.
 <a href="GeoidEval.1.html">GeoidEval</a> is a simple command line
 utility to provide access to this class.  This class requires
 installation of data files for the various geoid models; see \ref
 geoidinst for details.
 
-GeographicLib::Ellipsoid is a class which performs latitude
+Ellipsoid is a class which performs latitude
 conversions and returns various properties of the ellipsoid.
 
-GeographicLib::GravityModel evaluates the earth's gravitational field
+GravityModel evaluates the earth's gravitational field
 using a particular gravity model.  Various member functions return the
 gravitational field, the gravity disturbance, the gravity anomaly, and
 the geoid height <a href="Gravity.1.html">Gravity</a> is a simple
 command line utility to provide access to this class.  If the field
 several points on a circle of latitude are sought then use
-GeographicLib::GravityModel::Circle to return a
-GeographicLib::GravityCircle object whose member functions performs the
+GravityModel::Circle to return a
+GravityCircle object whose member functions performs the
 calculations efficiently.  (This is particularly important for high
 degree models such as EGM2008.)  These classes requires installation of
 data files for the various gravity models; see \ref gravityinst for
 details.
 
-GeographicLib::MagneticModel evaluates the earth's magnetic field using
+MagneticModel evaluates the earth's magnetic field using
 a particular magnetic model.  The field is provided by the operator()
 member function.  <a href="MagneticField.1.html">MagneticField</a> is a
 simple command line utility to provide access to this class.  If the
 field several points on a circle of latitude are sought then use
-GeographicLib::MagneticModel::Circle to return a
-GeographicLib::MagneticCircle object whose operator() member function
+MagneticModel::Circle to return a
+MagneticCircle object whose operator() member function
 performs the calculation efficiently.  (This is particularly important
 for high degree models such as emm2010.)  These classes requires
 installation of data files for the various magnetic models; see \ref
 magneticinst for details.
 
-GeographicLib::Constants, GeographicLib::Math, GeographicLib::Utility,
-GeographicLib::DMS, are general utility class which are used
-internally by the library; in addition GeographicLib::EllipticFunction
-is used by GeographicLib::TransverseMercatorExact,
-GeographicLib::Ellipsoid, and GeographicLib::GeodesicExact, and
-GeographicLib::GeodesicLineExact; GeographicLib::Accumulator is used
-by GeographicLib::PolygonArea, and GeographicLib::SphericalEngine,
-GeographicLib::CircularEngine, GeographicLib::SphericalHarmonic,
-GeographicLib::SphericalHarmonic1, and
-GeographicLib::SphericalHarmonic2 facilitate the summation of
+Constants, Math, Utility,
+DMS, are general utility class which are used
+internally by the library; in addition EllipticFunction
+is used by TransverseMercatorExact,
+Ellipsoid, and GeodesicExact, and
+GeodesicLineExact; Accumulator is used
+by PolygonArea, and SphericalEngine,
+CircularEngine, SphericalHarmonic,
+SphericalHarmonic1, and
+SphericalHarmonic2 facilitate the summation of
 spherical harmonic series which is needed by and
-GeographicLib::MagneticModel and GeographicLib::MagneticCircle.  One
-important definition is GeographicLib::Math::real which is the type
+MagneticModel and MagneticCircle.  One
+important definition is Math::real which is the type
 used for real numbers.  This allows the library to be easily switched
 to using floats, doubles, or long doubles.  However all the testing
 has been with real set to double and the library should be installed
 in this way.
 
-In general, the constructors for the classes in %GeographicLib check
-their arguments and throw GeographicLib::GeographicErr exceptions with a
+In general, the constructors for the classes in GeographicLib check
+their arguments and throw GeographicErr exceptions with a
 explanatory message if these are illegal.  The member functions, e.g.,
 the projections implemented by TransverseMercator and
 PolarStereographic, the solutions to the geodesic problem, etc.,
 typically do <i>not</i> check their arguments; the calling program
 should ensure that the arguments are legitimate.  However, the functions
 implemented by UTMUPS, MGRS, and GeoCoords do check their arguments and
-may throw GeographicLib::GeographicErr exceptions.  Similarly Geoid may
+may throw GeographicErr exceptions.  Similarly Geoid may
 throw exceptions on file errors.  If a function does throw an exception,
 then the function arguments used for return values will not have been
 altered.
 
-%GeographicLib attempts to act sensibly with NaNs.  NaNs in constructors
+GeographicLib attempts to act sensibly with NaNs.  NaNs in constructors
 typically throw errors (an exception is GeodesicLine).  However, calling
 the class functions with NaNs as arguments is not an error; NaNs are
 returned as appropriate.  "INV" is treated as an invalid zone
@@ -1093,7 +1094,7 @@ they can be easily plotted in Matlab.
 A note about portability.  For the most part, the code uses standard C++
 and should be able to be deployed on any system with a modern C++
 compiler.  System dependencies come into
- - GeographicLib::Math -- GeographicLib needs to define functions such
+ - Math -- GeographicLib needs to define functions such
    as atanh for systems that lack them.  The system dependence will
    disappear with the adoption of C++11 because the needed functions are
    part of that standard.
@@ -1101,21 +1102,21 @@ compiler.  System dependencies come into
    which lack this data type the cmake and autoconf configuration
    methods should detect its absence and omit the code that depends on
    it.
- - GeographicLib::Geoid, GeographicLib::GravityModel, and
-   GeographicLib::MagneticModel -- these class uses system-dependent
+ - Geoid, GravityModel, and
+   MagneticModel -- these class uses system-dependent
    default paths for looking up the respective datasets.  It also relies
    on getenv to find the value of the environment variables.
- - GeographicLib::Utility::readarray reads numerical data from binary
+ - Utility::readarray reads numerical data from binary
    files.  This assumes that floating point numbers are in IEEE format.
    It attempts to handled the "endianness" of the target platform using
    the GEOGRAPHICLIB_WORDS_BIGENDIAN macro (which sets the compile-time
-   constant GeographicLib::Math::bigendian).
+   constant Math::bigendian).
 
 An attempt is made to maintain backward compatibility with
-%GeographicLib (especially at the level of your source code).  Sometimes
+GeographicLib (especially at the level of your source code).  Sometimes
 it's necessary to take actions that depend on what version of
-%GeographicLib is being used; for example, you may want to use a new
-feature of %GeographicLib, but want your code still to work with older
+GeographicLib is being used; for example, you may want to use a new
+feature of GeographicLib, but want your code still to work with older
 versions.  In that case, you can test the values of the macros
 GEOGRAPHICLIB_VERSION_MAJOR, GEOGRAPHICLIB_VERSION_MINOR, and
 GEOGRAPHICLIB_VERSION_PATCH; these expand to numbers (and the last one
@@ -1134,7 +1135,7 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 </center>
 
-Implementations of subsets of %GeographicLib are available in other languages
+Implementations of subsets of GeographicLib are available in other languages
 - \ref c-fortran
 - \ref java.
 - \ref javascript.
@@ -1146,12 +1147,12 @@ Implementations of subsets of %GeographicLib are available in other languages
 \section c-fortran C and Fortran implementation
 
 The directories <code>legacy/C</code> and <code>legacy/Fortran</code>
-contain implementations of GeographicLib::Geodesic,
-GeographicLib::GeodesicLine, and GeographicLib::PolygonArea in C and
+contain implementations of Geodesic,
+GeodesicLine, and PolygonArea in C and
 Fortran respectively.  These are intended for use in old codes written
 in these languages and should work any reasonably modern compiler.
 These implementations are entirely self-contained and do not depend on
-the rest of %GeographicLib.  Sample main programs to solve the direct
+the rest of GeographicLib.  Sample main programs to solve the direct
 and inverse geodesic problems and to compute polygonal areas are
 provided.
 
@@ -1162,9 +1163,9 @@ For documentation, see
 \section java Java implementation
 
 The directory <code>java</code> contains implementations of
-GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
-GeographicLib::PolygonArea in Java.  This implementation is entirely
-self-contained and does not depend on the rest of %GeographicLib.
+Geodesic, GeodesicLine, and
+PolygonArea in Java.  This implementation is entirely
+self-contained and does not depend on the rest of GeographicLib.
 Sample main programs to solve the direct and inverse geodesic problems
 and to compute polygonal areas are provided.
 
@@ -1174,12 +1175,12 @@ For documentation, see
 \section javascript JavaScript implementation
 
 The directory doc/scripts/GeographicLib contains the classes
-- GeographicLib::Math
-- GeographicLib::Accumulator
-- GeographicLib::Geodesic
-- GeographicLib::GeodesicLine
-- GeographicLib::PolygonArea
-- GeographicLib::DMS
+- Math
+- Accumulator
+- Geodesic
+- GeodesicLine
+- PolygonArea
+- DMS
 .
 translated into JavaScript.  See Interface.js for a simple JavaScript
 interface to these routines (documented near the top of the file).
@@ -1205,14 +1206,14 @@ are provided in the python/geographiclib directory (which is installed
 as PREFIX/lib/python/site-packages/geographiclib, if
 COMMON_INSTALL_PATH is ON, and as PREFIX/python/geographiclib,
 otherwise).  This contains implementations of the classes
-- GeographicLib::Math
-- GeographicLib::Accumulator
-- GeographicLib::Geodesic
-- GeographicLib::GeodesicLine
-- GeographicLib::PolygonArea
+- Math
+- Accumulator
+- Geodesic
+- GeodesicLine
+- PolygonArea
 .
 You can also download the python interface independent of the rest of
-%GeographicLib from
+GeographicLib from
 - <a href="http://pypi.python.org/pypi/geographiclib">
   http://pypi.python.org/pypi/geographiclib</a>
 .
@@ -1305,7 +1306,7 @@ The <code>matlab</code> directory contains
      http://www.mathworks.com/matlabcentral/fileexchange/39366</a>
    .
    (This requires that the previous package also be installed.)
- - Interface code so that some %GeographicLib classes can be accessed
+ - Interface code so that some GeographicLib classes can be accessed
    from Matlab or Octave.  The rest of this section describes how to
    compile and use these interfaces.
 
@@ -1313,7 +1314,7 @@ There are two ways of compiling the interface code: (1) using cmake and
 (2) invoking the compiler from Matlab.
  - <b>Using cmake:</b> Before running cmake, configure MATLAB on
    Windows to use the same compiler that you're going to use for compiling
-   %GeographicLib.  For example \verbatim
+   GeographicLib.  For example \verbatim
    mex.bat -setup
 
    Please choose your compiler for building MEX-files:
@@ -1334,7 +1335,7 @@ There are two ways of compiling the interface code: (1) using cmake and
    (Note that only the Release configuration is supported for Matlab.)
    If you are running a 64-bit version of Matlab, be sure to select a
    64-bit generator with cmake, e.g., "Visual Studio 10 Win64".  Finally
-   compile %GeographicLib with Visual Studio.  (The binary installer for
+   compile GeographicLib with Visual Studio.  (The binary installer for
    64-bit Windows includes the compiled interface built with Visual
    Studio 10 and Matlab R2013a 64-bit).<br>
    On Linux systems, you can compile the interface for use with octave
@@ -1350,40 +1351,40 @@ There are two ways of compiling the interface code: (1) using cmake and
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
-   should be the same as that used to compile %GeographicLib).
+   should be the same as that used to compile GeographicLib).
 
-To use the interface routines for %GeographicLib, run one of (for
+To use the interface routines for GeographicLib, run one of (for
 example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
   addpath 'C:/pkg-vc10-x64/GeographicLib-1.37/libexec/GeographicLib/matlab'
 \endverbatim
 in Octave or Matlab.  The available functions are:
  - geodesicdirect: solve direct geodesic problem
-   (see GeographicLib::Geodesic::Direct)
+   (see Geodesic::Direct)
  - geodesicinverse: solve inverse geodesic problem
-   (see GeographicLib::Geodesic::Inverse)
+   (see Geodesic::Inverse)
  - geodesicline: compute points along a geodesic
-   (see GeographicLib::GeodesicLine::Position)
+   (see GeodesicLine::Position)
  - polygonarea: compute area of a geodesic polygon
-   (see GeographicLib::PolygonArea)
+   (see PolygonArea)
  - utmupsforward: convert geographic coordinates to UTM/UPS
-   (see GeographicLib::UTMUPS::Forward)
+   (see UTMUPS::Forward)
  - utmupsreverse: convert UTM/UPS coordinates to geographic
-   (see GeographicLib::UTMUPS::Reverse)
+   (see UTMUPS::Reverse)
  - mgrsforward: convert UTM/UPS coordinates to MGRS
-   (see GeographicLib::MGRS::Forward)
+   (see MGRS::Forward)
  - mgrsreverse: convert MGRS coordinates to UTM/UPS
-   (see GeographicLib::MGRS::Reverse)
+   (see MGRS::Reverse)
  - geoidheight: compute geoid height
-   (see GeographicLib::Geoid::operator()())
+   (see Geoid::operator()())
  - geocentricforward: convert geographic coordinates to geocentric
-   (see GeographicLib::Geocentric::Forward)
+   (see Geocentric::Forward)
  - geocentricreverse: convert geocentric coordinates to geographic
-   (see GeographicLib::Geocentric::Reverse)
+   (see Geocentric::Reverse)
  - localcartesianforward: convert geographic coordinates to local cartesian
-   (see GeographicLib::LocalCartesian::Forward)
+   (see LocalCartesian::Forward)
  - localcartesianreverse: convert local cartesian coordinates to geographic
-   (see GeographicLib::LocalCartesian::Reverse)
+   (see LocalCartesian::Reverse)
  .
 These routines just offer a simple interface to the corresponding C++
 class.  Use the help function to get documentation, e.g., \code
@@ -1402,8 +1403,8 @@ Visual Studio 2010.)
 
 Maxima is a free computer algebra system which can be downloaded from
 http://maxima.sf.net.  Maxima was used to generate the series used by
-GeographicLib::TransverseMercator (<a href="tmseries.mac">
-tmseries.mac</a>) and GeographicLib::Geodesic (<a href="geod.mac">
+TransverseMercator (<a href="tmseries.mac">
+tmseries.mac</a>) and Geodesic (<a href="geod.mac">
 geod.mac</a>) and to generate accurate data for testing
 (<a href="tm.mac"> tm.mac</a> and <a href="geodesic.mac">
 geodesic.mac</a>).  The latter uses Maxima's bigfloat arithmetic
@@ -1414,7 +1415,7 @@ contain brief instructions on how to use them.
 \section dotnet .NET wrapper
 
 This is a comprehensive wrapper library, written and maintained by Scott
-Heiman, which exposes all of the functionality of %GeographicLib to the
+Heiman, which exposes all of the functionality of GeographicLib to the
 .NET family of languages.  For documentation, see
  - <a href="NET/index.html">NETGeographicLib .NET wrapper library</a>.
 
@@ -1430,7 +1431,7 @@ Back to \ref other.  Forward to \ref gravity.  Up to \ref contents.
 </center>
 
 The gravitational equipotential surface approximately coinciding with
-mean sea level is called the geoid.  The GeographicLib::Geoid class and
+mean sea level is called the geoid.  The Geoid class and
 the <a href="GeoidEval.1.html">GeoidEval</a> utility evaluate the height
 of the geoid above the WGS84 ellipsoid.  This can be used to convert
 heights above mean sea level to heights above the WGS84 ellipsoid.
@@ -1448,21 +1449,21 @@ The models published by the NGA are:
 - <b>EGM2008</b>:
   http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
 .
-GeographicLib::Geoid offers a uniform way to handle all 3 geoids at a
+Geoid offers a uniform way to handle all 3 geoids at a
 variety of grid resolutions.  (In contrast, the software tools that NGA
 offers are different for each geoid, and the interpolation programs are
 different for each grid resolution.  In addition these tools are written
 in Fortran with is nowadays difficult to integrate with other software.)
 
-Unlike other components of %GeographicLib, there is a appreciable error
+Unlike other components of GeographicLib, there is a appreciable error
 in the results obtained (at best, the RMS error is 1 mm).  However the
 class provides methods to report the maximum and RMS errors in the
 results.  The class also returns the gradient of the geoid.  This can be
 used to estimate the direction of a plumb line relative to the WGS84
 ellipsoid.
 
-The GeographicLib::GravityModel class calculates geoid heights using the
-underlying gravity model.  This is slower then GeographicLib::Geoid but
+The GravityModel class calculates geoid heights using the
+underlying gravity model.  This is slower then Geoid but
 considerably more accurate.  This class also can accurately compute all
 the components of the acceleration due to gravity (and hence the
 direction of plumb line).
@@ -1594,12 +1595,12 @@ EGM2008.  These data files are available for download:
 </center>
 The "size" column is the size of the uncompressed data and it also
 gives the memory requirements for caching the entire dataset using the
-GeographicLib::Geoid::CacheAll method.
+Geoid::CacheAll method.
 At a minimum you should install egm96-5 and either egm2008-1 or
 egm2008-2_5.  Many applications use the EGM96 geoid, however the use of
 EGM2008 is growing. (EGM84 is rarely used now.)
 
-For Linux and Unix systems, %GeographicLib provides a shell script
+For Linux and Unix systems, GeographicLib provides a shell script
 geographiclib-get-geoids (typically installed in /usr/local/sbin) which
 automates the process of downloading and installing the geoid data.  For
 example
@@ -1634,7 +1635,7 @@ run, for example
 and, again, the data will be placed in the "geoids" subdirectory.
 
 However you install the geoid data, all the datasets should
-be installed in the same directory.  GeographicLib::Geoid and
+be installed in the same directory.  Geoid and
 <a href="GeoidEval.1.html">GeoidEval</a> uses a compile time default to
 locate the datasets.  This is
 - /usr/local/share/GeographicLib/geoids, for non-Windows systems
@@ -1642,9 +1643,9 @@ locate the datasets.  This is
 .
 consistent with the examples above.  This may be overridden at run-time
 by defining the GEOGRAPHICLIB_GEOID_PATH or the GEOGRAPHICLIB_DATA
-environment variables; see GeographicLib::Geoid::DefaultGeoidPath() for
+environment variables; see Geoid::DefaultGeoidPath() for
 details.  Finally, the path may be set using the optional second
-argument to the GeographicLib::Geoid constructor or with the "-d" flag
+argument to the Geoid constructor or with the "-d" flag
 to <a href="GeoidEval.1.html">GeoidEval</a>.  Supplying the "-h" flag to
 <a href="GeoidEval.1.html">GeoidEval</a> reports the default geoid path
 for that utility.  The "-v" flag causes GeoidEval to report the full
@@ -1652,7 +1653,7 @@ path name of the data file it uses.
 
 \section geoidformat The format of the geoid data files
 
-The gridded data used by the GeographicLib::Geoid class is stored in
+The gridded data used by the Geoid class is stored in
 16-bit PGM files.  Thus the data for egm96-5 might be stored in the file
 - /usr/local/share/GeographicLib/geoids/egm96-5.pgm
 .
@@ -1666,7 +1667,7 @@ PGM simple graphic format with the following properties
 - it is sufficiently simple that it can be easily read without using the
   <a href="http://netpbm.sf.net/doc/libnetpbm.html">libnetpbm</a>
   library (and thus we avoid adding a software dependency to
-  %GeographicLib).
+  GeographicLib).
 .
 The major drawback of this format is that since there are only 65535
 possible pixel values, the height must be quantized to 3 mm.  However,
@@ -1693,15 +1694,15 @@ conversion from pixel value to height (in meters) using \e height =
 \e offset + \e scale \e pixel.  The Geoid constructor also reads the
 Description, DateTime, and error lines (if present) and stores the
 resulting data so that it can be returned by
-GeographicLib::Geoid::Description, GeographicLib::Geoid::DateTime,
-GeographicLib::Geoid::MaxError, and GeographicLib::Geoid::RMSError
+Geoid::Description, Geoid::DateTime,
+Geoid::MaxError, and Geoid::RMSError
 methods.  The other lines serve as additional documentation but are not
 used by this class.  Accompanying egm96-5.pgm (and similarly with the
 other geoid data files) are two files egm96-5.wld and
 egm96-5.pgm.aux.xml.  The first is an ESRI "world" file and the second
 supplies complete projection metadata for use by
 <a href="http://www.gdal.org">GDAL</a>.  Neither of these files is read
-by GeographicLib::Geoid.
+by Geoid.
 
 You can use gdal_translate to convert the data files to a standard
 GeoTiff, e.g., with
@@ -1758,22 +1759,22 @@ The resulting files sizes are
     egm2008-2_5    75 MB    28 MB
     egm2008-1     470 MB    97 MB
 \endverbatim
-Currently, there are no plans for %GeographicLib to support this
+Currently, there are no plans for GeographicLib to support this
 compressed format.
 
 \section geoidinterp Interpolating the geoid data
 
-GeographicLib::Geoid evaluates the geoid height using bilinear or cubic
+Geoid evaluates the geoid height using bilinear or cubic
 interpolation.  The gradient of the geoid height is obtained by
 differentiating the interpolated height and referencing the result to
 distance on the WGS84 ellipsoid.
 
-<b>WARNING</b>: Although GeographicLib::Geoid computes the gradient of
+<b>WARNING</b>: Although Geoid computes the gradient of
 the geoid height, this is subject to large quantization errors as a
 result of the way that the geoid data is stored.  This is particularly
 acute for fine grids, at high latitudes, and for the easterly gradient.
 If you need to compute the direction of the acceleration due to gravity
-accurately, you should use GeographicLib::GravityModel::Gravity.
+accurately, you should use GravityModel::Gravity.
 
 The bilinear interpolation is based on the values at the 4 corners of
 the enclosing cell.  The interpolated height is a continuous function of
@@ -1798,7 +1799,7 @@ quantization errors on average.
 
 The algorithm for the least squares fit is taken from, F. H. Lesh,
 Multi-dimensional least-squares polynomial curve fitting, CACM 2, 29-30
-(1959).  This algorithm is not part of GeographicLib::Geoid; instead it is
+(1959).  This algorithm is not part of Geoid; instead it is
 implemented as
 <a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>
 code which is used to precompute the matrices to convert the function
@@ -1857,8 +1858,8 @@ EGM2008 is about 0.5 m.  The RMS difference between EGM84 and EGM96 is
 about 1.5 m.)
 
 The errors in the table above include the quantization errors that arise
-because the height data that GeographicLib::Geoid uses are quantized to
-3 mm.  If, instead, GeographicLib::Geoid were to use data files without
+because the height data that Geoid uses are quantized to
+3 mm.  If, instead, Geoid were to use data files without
 such quantization artifacts, the overall error would be reduced <i>but
 only modestly</i> as shown in the following table, where only the
 changed rows are included and where the changed entries are given in
@@ -1913,8 +1914,8 @@ followed.
 
 If a large quantity of geoid calculations are needed, the calculation
 can be sped up by preloading the data for a rectangular block with
-GeographicLib::Geoid::CacheArea or the entire dataset with
-GeographicLib::Geoid::CacheAll.  If the requested points lie within the
+Geoid::CacheArea or the entire dataset with
+Geoid::CacheAll.  If the requested points lie within the
 cached area, the cached data values are used; otherwise the data is read
 from disk as before.  Caching all the data is a reasonable choice for
 the 5' grids and coarser.  Caching all the data for the 1' grid will
@@ -1927,7 +1928,7 @@ safe; i.e., a single instantiation cannot be safely used by multiple
 threads.  If multiple threads need to calculate geoid heights, there are
 two alternatives:
  - they should all construct thread-local instantiations.
- - GeographicLib::Geoid should be constructed with \e threadsafe = true.
+ - Geoid should be constructed with \e threadsafe = true.
    This causes all the data to be read at the time of construction (and
    if this fails, an exception is thrown), the data file to be closed
    and the single-cell caching to be turned off.  The resulting object
@@ -1971,9 +1972,9 @@ Back to \ref other.  Forward to \ref gravity.  Up to \ref contents.
 Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
 </center>
 
-%GeographicLib can compute the earth's gravitational field with an
-earth gravity model using the GeographicLib::GravityModel and
-GeographicLib::GravityCircle classes and with the
+GeographicLib can compute the earth's gravitational field with an
+earth gravity model using the GravityModel and
+GravityCircle classes and with the
 <a href="Gravity.1.html">Gravity</a> utility.  These models expand the
 gravitational potential of the earth as sum of spherical harmonics.  The
 models also specify a reference ellipsoid, relative to which geoid
@@ -1993,7 +1994,7 @@ The supported models are
    <a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/tr8350_2.html">
    WGS84 Reference Ellipsoid</a>.  This is just reproduces the normal
    gravitational field for the reference ellipsoid.  Usually
-   GeographicLib::NormalGravity::WGS84 should be used instead.
+   NormalGravity::WGS84 should be used instead.
 
 See
  - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
@@ -2085,7 +2086,7 @@ These gravity models are available for download:
 </center>
 The "size" column is the size of the uncompressed data.
 
-For Linux and Unix systems, %GeographicLib provides a shell script
+For Linux and Unix systems, GeographicLib provides a shell script
 geographiclib-get-gravity (typically installed in /usr/local/sbin)
 which automates the process of downloading and installing the gravity
 models.  For example
@@ -2118,7 +2119,7 @@ have the same contents).  To unpack these, run, for example
 and, again, the data will be placed in the "gravity" subdirectory.
 
 However you install the gravity models, all the datasets should be
-installed in the same directory.  GeographicLib::GravityModel and
+installed in the same directory.  GravityModel and
 <a href="Gravity.1.html">Gravity</a> uses a compile time default to
 locate the datasets.  This is
 - /usr/local/share/GeographicLib/gravity, for non-Windows systems
@@ -2127,9 +2128,9 @@ locate the datasets.  This is
 consistent with the examples above.  This may be overridden at run-time
 by defining the GEOGRAPHICLIB_GRAVITY_PATH or the GEOGRAPHICLIB_DATA
 environment variables; see
-GeographicLib::GravityModel::DefaultGravityPath() for details.  Finally,
+GravityModel::DefaultGravityPath() for details.  Finally,
 the path may be set using the optional second argument to the
-GeographicLib::GravityModel constructor or with the "-d" flag to
+GravityModel constructor or with the "-d" flag to
 <a href="Gravity.1.html">Gravity</a>.  Supplying the "-h" flag to
 <a href="Gravity.1.html">Gravity</a> reports the default path for
 gravity models for that utility.  The "-v" flag causes Gravity to report
@@ -2137,7 +2138,7 @@ the full path name of the data file it uses.
 
 \section gravityformat The format of the gravity model files
 
-The constructor for GeographicLib::GravityModel reads a file called
+The constructor for GravityModel reads a file called
 NAME.egm which specifies various properties for the gravity model.  It
 then opens a binary file NAME.egm.cof to obtain the coefficients of the
 spherical harmonic sum.
@@ -2151,7 +2152,7 @@ everything after it are discarded.  If the result is just white space it
 is discarded.  The remaining lines are of the form "KEY WHITESPACE
 VALUE".  In general, the KEY and the VALUE are case-sensitive.
 
-GeographicLib::GravityModel only pays attention to the following
+GravityModel only pays attention to the following
 keywords
  - keywords that affect the field calculation, namely:
    - <b>ModelRadius</b> (required), the normalizing radius for the model
@@ -2242,7 +2243,7 @@ for each set of coefficients is:
    <i>S</i><sub>32</sub>,
    <i>S</i><sub>33</sub>.
  .
-Although the coefficient file is in little endian order, %GeographicLib
+Although the coefficient file is in little endian order, GeographicLib
 can read it on big endian machines.  It can only be read on machines
 which store doubles in IEEE format.
 
@@ -2275,7 +2276,7 @@ ID              EGM2008A
 
 \section gravitynga Comments on the NGA harmonic synthesis code
 
-GeographicLib::GravityModel attempts to reproduce the results of NGA's
+GravityModel attempts to reproduce the results of NGA's
 harmonic synthesis code for EGM2008, hsynth_WGS84.f.  Listed here are
 issues that I encountered using the NGA code:
  -# A compiler which allocates local variables on the stack produces an
@@ -2309,23 +2310,23 @@ issues that I encountered using the NGA code:
  .
 Issues 1--4 have been reported to the authors of hsynth_WGS84.
 Issue 1 is peculiar to Fortran and is not encountered in C++ code and
-GeographicLib::GravityModel corrects issues 3--5.  On issue 2,
-GeographicLib::GravityModel neglects the 1/\e r term in \e T in
-GeographicLib::GravityModel::GeoidHeight and
-GeographicLib::GravityModel::SphericalAnomaly in order to produce
+GravityModel corrects issues 3--5.  On issue 2,
+GravityModel neglects the 1/\e r term in \e T in
+GravityModel::GeoidHeight and
+GravityModel::SphericalAnomaly in order to produce
 results which match NGA's for these quantities.  On the other hand,
-GeographicLib::GravityModel::Disturbance and
-GeographicLib::GravityModel::T <i>do</i> include this term.
+GravityModel::Disturbance and
+GravityModel::T <i>do</i> include this term.
 
 \section gravitygeoid Details of the geoid height and anomaly calculations
 
 Ideally, the geoid represents a surface of constant gravitational
 potential which approximates mean sea level.  In reality some
 approximations are taken in determining this surface.  The steps taking
-by GeographicLib::GravityModel in computing the geoid height are
+by GravityModel in computing the geoid height are
 described here (in the context of EGM2008).  This mimics NGA's code
 hsynth_WGS84 closely because most users of EGM2008 use the gridded data
-generated by this code (e.g., GeographicLib::Geoid) and it is desirable
+generated by this code (e.g., Geoid) and it is desirable
 to use a consistent definition of the geoid height.
  - The model potential is band limited; the minimum wavelength that is
    represented is 360&deg;/2160 = 10' (i.e., about 10NM or
@@ -2361,7 +2362,7 @@ There is no such thing as "The" EGM96 geoid: Subtle points on the use of
 a global geopotential model</a>, IGeS Bulletin No. 8, International
 Geoid Service, Milan, Italy, pp. 17--28 (1998).
 
-GeographicLib::GravityModel::GeoidHeight reproduces the results of the
+GravityModel::GeoidHeight reproduces the results of the
 several NGA codes for harmonic synthesis with the following maximum
 discrepancies:
  - egm84 = 1.1mm.  This is probably due to inconsistent parameters for the
@@ -2380,7 +2381,7 @@ between the points unknown <i>ab initio</i>).  Since the gravity anomaly
 is already a small quantity it is sometimes acceptable to employ
 approximations that change the quantities by \e O(\e f).  The NGA code
 uses the spherical approximation described by Heiskanen and Moritz,
-Sec. 2-14 and GeographicLib::GravityModel::SphericalAnomaly uses the
+Sec. 2-14 and GravityModel::SphericalAnomaly uses the
 same approximation for compatibility.  In this approximation, the
 gravity disturbance <b>delta</b> = <b>grad</b> \e T is calculated.
 Here, \e T once again excludes the 1/\e r term (this is issue 2 in \ref
@@ -2402,9 +2403,9 @@ of the anomaly are then given by
  - easterly component of the deflection of the vertical, \e eta = &minus;
    <i>deltax</i>/\e gamma.
  .
-GeographicLib::NormalGravity computes the normal gravity accurately and
+NormalGravity computes the normal gravity accurately and
 avoids issue 3 of \ref gravitynga.  Thus while
-GeographicLib::GravityModel::SphericalAnomaly reproduces the results for
+GravityModel::SphericalAnomaly reproduces the results for
 \e xi and \e eta at \e h = 0, there is a slight discrepancy if \e h is
 non-zero.
 
@@ -2439,7 +2440,7 @@ The egm2008 model includes many terms (over 2 million spherical
 harmonics).  For that reason computations using this model may be slow;
 for example it takes about 78 ms to compute the geoid height at a single
 point.  There are two ways to speed up this computation:
- - Use a GeographicLib::GravityCircle to compute the geoid height at
+ - Use a GravityCircle to compute the geoid height at
    several points on a circle of latitude.  This reduces the cost per
    point to about 92 &mu;s (a reduction by a factor of over 800).
  - Compute the values on several circles of latitude in parallel.  One
@@ -2472,14 +2473,14 @@ Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
 Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
-%GeographicLib can compute the earth's magnetic field by a magnetic
-model using the GeographicLib::MagneticModel and
-GeographicLib::MagneticCircle classes and with the
+GeographicLib can compute the earth's magnetic field by a magnetic
+model using the MagneticModel and
+MagneticCircle classes and with the
 <a href="MagneticField.1.html">MagneticField</a> utility.  These models
 expand the internal magnetic potential of the earth as sum of spherical
 harmonics.  They neglect magnetic fields due to the ionosphere, the
 magnetosphere, nearby magnetized materials, electric machinery, etc.
-Users of GeographicLib::MagneticModel are advised to read the
+Users of MagneticModel are advised to read the
 <a href="http://www.ngdc.noaa.gov/IAGA/vmod/igrfhw.html">"Health
 Warning"</a> this is provided with igrf11.  Although the advice is
 specific to igrf11, many of the comments apply to all magnetic field
@@ -2564,7 +2565,7 @@ These magnetic models are available for download:
 </center>
 The "size" column is the size of the uncompressed data.
 
-For Linux and Unix systems, %GeographicLib provides a shell script
+For Linux and Unix systems, GeographicLib provides a shell script
 geographiclib-get-magnetic (typically installed in /usr/local/sbin)
 which automates the process of downloading and installing the magnetic
 models.  For example
@@ -2597,7 +2598,7 @@ have the same contents).  To unpack these, run, for example
 and, again, the data will be placed in the "magnetic" subdirectory.
 
 However you install the magnetic models, all the datasets should be
-installed in the same directory.  GeographicLib::MagneticModel and
+installed in the same directory.  MagneticModel and
 <a href="MagneticField.1.html">MagneticField</a> uses a compile time
 default to locate the datasets.  This is
 - /usr/local/share/GeographicLib/magnetic, for non-Windows systems
@@ -2606,9 +2607,9 @@ default to locate the datasets.  This is
 consistent with the examples above.  This may be overridden at run-time
 by defining the GEOGRAPHICLIB_MAGNETIC_PATH or the GEOGRAPHIC_DATA
 environment variables; see
-GeographicLib::MagneticModel::DefaultMagneticPath() for details.
+MagneticModel::DefaultMagneticPath() for details.
 Finally, the path may be set using the optional second argument to the
-GeographicLib::MagneticModel constructor or with the "-d" flag to
+MagneticModel constructor or with the "-d" flag to
 <a href="MagneticField.1.html">MagneticField</a>.  Supplying the "-h"
 flag to
 <a href="MagneticField.1.html">MagneticField</a> reports the default
@@ -2617,7 +2618,7 @@ MagneticField to report the full path name of the data file it uses.
 
 \section magneticformat The format of the magnetic model files
 
-The constructor for GeographicLib::MagneticModel reads a file called
+The constructor for MagneticModel reads a file called
 NAME.wmm which specifies various properties for the magnetic model.  It
 then opens a binary file NAME.wmm.cof to obtain the coefficients of the
 spherical harmonic sum.
@@ -2631,7 +2632,7 @@ everything after it are discarded.  If the result is just white space it
 is discarded.  The remaining lines are of the form "KEY WHITESPACE
 VALUE".  In general, the KEY and the VALUE are case-sensitive.
 
-GeographicLib::MagneticModel only pays attention to the following
+MagneticModel only pays attention to the following
 keywords
  - keywords that affect the field calculation, namely:
    - <b>Radius</b> (required), the normalizing radius of the model in
@@ -2662,7 +2663,7 @@ keywords
    - <b>MaxHeight</b>, the maximum height above the ellipsoid for which
      the model should be used.
    .
-   GeographicLib::MagneticModel does not enforce the restrictions
+   MagneticModel does not enforce the restrictions
    implied by last four quantities.  However,
    <a href="MagneticField.1.html">MagneticField</a> issues a warning if
    these limits are exceeded.
@@ -2716,7 +2717,7 @@ is:
    <i>S</i><sub>32</sub>,
    <i>S</i><sub>33</sub>.
  .
-Although the coefficient file is in little endian order, %GeographicLib
+Although the coefficient file is in little endian order, GeographicLib
 can read it on big endian machines.  It can only be read on machines
 which store doubles in IEEE format.
 
@@ -2760,25 +2761,25 @@ Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
 Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
 </center>
 
-GeographicLib::Geodesic and GeographicLib::GeodesicLine provide accurate
+Geodesic and GeodesicLine provide accurate
 solutions to the direct and inverse geodesic problems.  The
 <a href="GeodSolve.1.html">GeodSolve</a> utility provides an interface
-to these classes.  GeographicLib::AzimuthalEquidistant implements the
+to these classes.  AzimuthalEquidistant implements the
 azimuthal equidistant projection in terms of geodesics.
-GeographicLib::CassiniSoldner implements a transverse cylindrical
+CassiniSoldner implements a transverse cylindrical
 equidistant projection in terms of geodesics.  The
 <a href="GeodesicProj.1.html">GeodesicProj</a> utility provides an
 interface to these projections.
 
-The algorithms used by GeographicLib::Geodesic and
-GeographicLib::GeodesicLine are based on a Taylor expansion of the
+The algorithms used by Geodesic and
+GeodesicLine are based on a Taylor expansion of the
 geodesic integrals valid when the flattening \e f is small.
-GeographicLib::GeodesicExact and GeographicLib::GeodesicLineExact
+GeodesicExact and GeodesicLineExact
 evaluate the integrals exactly (in terms of incomplete elliptic
 integrals).  For the WGS84 ellipsoid, the series solutions are about
 2--3 times faster and 2--3 times more accurate (because it's easier to
 control round-off errors with series solutions); thus
-GeographicLib::Geodesic and GeographicLib::GeodesicLine are
+Geodesic and GeodesicLine are
 recommended for most geodetic applications.  However, in applications
 where the absolute value of \e f is greater than about 0.02, the exact
 classes should be used.
@@ -2917,9 +2918,9 @@ in <a href="geodesic.mac"> geodesic.mac</a> (this depends on
 <a href="ellint.mac"> ellint.mac</a> and uses the series computed by
 <a href="geod.mac"> geod.mac</a>).  This solve both the direct and
 inverse geodesic problems and offers the ability to solve the problems
-either using series expansions (similar to GeographicLib::Geodesic) or
+either using series expansions (similar to Geodesic) or
 in terms of elliptic integrals (similar to
-GeographicLib::GeodesicExact).
+GeodesicExact).
 
 \section geodseries Expansions for geodesics
 
@@ -3250,7 +3251,7 @@ C4[9] = + 32768/92147055 * eps^9;
 
 \section geodellip Geodesics in terms of elliptic integrals
 
-GeographicLib::GeodesicExact and GeographicLib::GeodesicLineExact solve
+GeodesicExact and GeodesicLineExact solve
 the geodesic problem using elliptic integrals.  The formulation of
 geodesic in terms of incomplete elliptic integrals is given in
  - C. F. F. Karney,
@@ -3265,7 +3266,7 @@ with an imaginary modulus.  However, the integrals themselves are real
 and the algorithms used to compute the elliptic integrals handles the
 case of an imaginary modulus using real arithmetic.
 
-The key relations used by %GeographicLib are
+The key relations used by GeographicLib are
 \f[
  \begin{aligned}
   \frac sb &= E(\sigma, ik), \\
@@ -3307,17 +3308,17 @@ integrals.  The second (equivalent) expression for \f$ \lambda \f$,
 which was given by Cayley (1870), is useful in that the elliptic
 integral is relegated to a small correction term.  This form allows
 the longitude to be computed more accurately and is used in
-%GeographicLib.  (The equivalence of the two expressions for \f$
+GeographicLib.  (The equivalence of the two expressions for \f$
 \lambda \f$ follows from http://dlmf.nist.gov/19.7.E8.)
 
-Nominally, GeographicLib::GeodesicExact and
-GeographicLib::GeodesicLineExact will give "exact" results for any value
+Nominally, GeodesicExact and
+GeodesicLineExact will give "exact" results for any value
 of the flattening.  However, the geographic latitude is a distorted
 measure of distance from the equator with very eccentric ellipsoids and
 this introducing an irreducible representational error in the algorithms
 in this case.  It is therefore recommended to restrict the use of these
 classes to \e b/\e a &isin; [0.01, 100] or \e f &isin; [-99, 0.99].
-Note that GeographicLib::GeodesicExact still uses a series expansion for
+Note that GeodesicExact still uses a series expansion for
 the area \e S12.  However the series is taken out to 30th order and
 gives accurate results for \e b/\e a &isin; [1/2, 2]; the accuracy is
 about 8 decimal digits for \e b/\e a &isin; [1/4, 4].  Additional work
@@ -3450,7 +3451,7 @@ There are several considerations in the choice of independent variable
 for evaluate the meridian distance
 - The use of an imaginary modulus (namely, \f$ ie' \f$, above) is of no
   practical concern.  The integrals are real in this case and modern
-  methods (%GeographicLib uses the method given in
+  methods (GeographicLib uses the method given in
   http://dlmf.nist.gov/19.36.i) for computing integrals handles this
   case using just real arithmetic.
 - If the "natural" origin is the equator, choose one of \f$ \phi, \beta,
@@ -3473,7 +3474,7 @@ for evaluate the meridian distance
   choices (see the figure below).  The choice of \f$ \phi \f$ is
   probably a poor one in this case.
 .
-%GeographicLib uses the geodesic generalization of
+GeographicLib uses the geodesic generalization of
 \f$ y = b E(\beta, ie') \f$, namely \f$ s = b E(\sigma, ik) \f$.  See
 \ref geodellip.
 
@@ -3607,7 +3608,7 @@ error once again is \f$O(f\Delta\phi^4)\f$.  This is the &quot;Bowring
 
 \subsection auxsphere Bessel's auxiliary sphere
 
-%GeographicLib's uses the auxiliary sphere method of Legendre, Bessel,
+GeographicLib's uses the auxiliary sphere method of Legendre, Bessel,
 and Helmert.  For short geodesics, this is equivalent to picking
 \f$ R, A, K \f$ so that
 \f[
@@ -3701,10 +3702,10 @@ bounds</caption>
 
 For example, if you're only interested in measuring distances and an
 accuracy of 1 mm is sufficient, then Bowring's improved method can be
-used for distances up to 180 km.  On the other hand, %GeographicLib uses
+used for distances up to 180 km.  On the other hand, GeographicLib uses
 Bessel's auxiliary sphere and we require both the distance and the
 azimuth to be accurate, so the great circle approximation can only be
-used for distances less than 1.7 m.  The reason that %GeographicLib does
+used for distances less than 1.7 m.  The reason that GeographicLib does
 not use Bowring's method is that the information necessary for auxiliary
 sphere method is already available as part of the general solution and,
 as much as possible, we allow all geodesics to be computed by the
@@ -3788,7 +3789,7 @@ Go to
     ensure that the long time behavior is correctly modeled with such an
     approach.
  -# At this point, I have no plans to add the solution of triaxial
-    geodesic problem to %GeographicLib.
+    geodesic problem to GeographicLib.
  -# If you only want to learn about geodesics on a biaxial ellipsoid (an
     ellipsoid of revolution), then see \ref geodesic or the paper
     - C. F. F. Karney,
@@ -4258,8 +4259,8 @@ Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
 Back to \ref triaxial.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 
-GeographicLib::TransverseMercator and
-GeographicLib::TransverseMercatorExact provide accurate implementations
+TransverseMercator and
+TransverseMercatorExact provide accurate implementations
 of the transverse Mercator projection.  The
  <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
 utility provides an interface to these classes.
@@ -4293,8 +4294,8 @@ References
    resource page:
    <a href="http://geographiclib.sf.net/tm.html"> tm.html</a>.
  .
-The algorithm for GeographicLib::TransverseMercator is based on
-Kr&uuml;ger (1912); that for GeographicLib::TransverseMercatorExact is
+The algorithm for TransverseMercator is based on
+Kr&uuml;ger (1912); that for TransverseMercatorExact is
 based on Lee (1976).
 
 See <a href="http://geographiclib.sourceforge.net/tm-grid.kmz"
@@ -4372,7 +4373,7 @@ implementations following the standard convention.
 Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
 Mercator projection.  This is accurate to about 200 nm (200
 nanometers) within the UTM domain.  Here we present the series
-extended to 10th order.  By default, GeographicLib::TransverseMercator
+extended to 10th order.  By default, TransverseMercator
 uses the 6th-order approximation. The preprocessor macro
 GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER can be used to select an order
 from 4 thru 8.  The series expanded to order <i>n</i><sup>30</sup> are
@@ -4632,7 +4633,7 @@ Back to \ref triaxial.  Forward to \ref geocentric.  Up to \ref contents.
 Back to \ref transversemercator.  Forward to \ref old.  Up to \ref contents.
 </center>
 
-The implementation of GeographicLib::Geocentric::Reverse is adapted from
+The implementation of Geocentric::Reverse is adapted from
  - H. Vermeille,
    <a href="http://dx.doi.org/10.1007/s00190-002-0273-6">
    Direct transformation from geocentric coordinates to geodetic
@@ -4745,7 +4746,7 @@ Back to \ref geocentric.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
-number.)  Recent versions of %GeographicLib are available at
+number.)  Recent versions of GeographicLib are available at
 <a href="http://sf.net/projects/geographiclib/files/distrib/">
 http://sourceforge.net/projects/geographiclib/files/distrib/</a>.
 Older versions are in
@@ -4758,7 +4759,7 @@ the links in the documentaion of older versions may be out of date (in
 particular the links for the source code will not work if the code has
 been migrated to the archive subdirectory).  All the releases are
 available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
-of the git repository for %GeographicLib.
+of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-mm-dd)
@@ -4771,16 +4772,16 @@ of the git repository for %GeographicLib.
    - Changes to comply with NGA's prohibition of the use of the
      upper-case letters N/S to designate the hemisphere when displaying
      UTM/UPS coordinates:
-     - GeographicLib::UTMUPS::DecodeZone allows north/south as hemisphere
+     - UTMUPS::DecodeZone allows north/south as hemisphere
        designators (in addition to n/s);
-     - GeographicLib::UTMUPS::EncodeZone now encodes the hemisphere in
+     - UTMUPS::EncodeZone now encodes the hemisphere in
        <i>lower case</i> (to distinguish this use from a grid zone
        designator);
-     - GeographicLib::UTMUPS::EncodeZone takes an optional parameter \e
+     - UTMUPS::EncodeZone takes an optional parameter \e
        abbrev to indicate whether to use n/s or north/south as the
        hemisphere designator;
-     - GeographicLib::GeoCoords::UTMUPSRepresentation and
-       GeographicLib::GeoCoords::AltUTMUPSRepresentation similarly accept
+     - GeoCoords::UTMUPSRepresentation and
+       GeoCoords::AltUTMUPSRepresentation similarly accept
        the \e abbrev parameter;
      - <a href="GeoConvert.1.html">GeoConvert</a> uses the
        flags -a and -l to govern whether UTM/UPS output uses n/s
@@ -4796,8 +4797,8 @@ of the git repository for %GeographicLib.
      misinterpretation of the zone designator, consider calling
      EncodeZone with \e abbrev = false and GeoConvert with -l, so that
      north/south are used to denote the hemisphere.
-   - GeographicLib::MGRS::Forward with \e prec = -1 will produce a grid
-     zone designation.  Similarly GeographicLib::MGRS::Reverse will
+   - MGRS::Forward with \e prec = -1 will produce a grid
+     zone designation.  Similarly MGRS::Reverse will
      decode a grid zone designation (and return \e prec = -1).
    - Stop using the throw() declaration specification which is
      deprecated in C++11.
@@ -4806,7 +4807,7 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.35">Version 1.35</a>
    (released 2014-03-13)
-   - Fix blunder in GeographicLib::UTMUPS::EncodeEPSG (found by Ben
+   - Fix blunder in UTMUPS::EncodeEPSG (found by Ben
      Adler).
    - Matlab wrapper routines geodesic{direct,inverse,line} switch to
      "exact" routes if |<i>f</i>| &gt; 0.02.
@@ -4837,7 +4838,7 @@ of the git repository for %GeographicLib.
        select the library to use;
      - find_package version checking allows nmake and Visual Studio
        generators to interoperate on Windows;
-     - find_package (%GeographicLib ...) requires that %GeographicLib be
+     - find_package (GeographicLib ...) requires that GeographicLib be
        capitalized correctly;
      - on Unix/Linux, don't include the version number in directory for
        the cmake configuration files;
@@ -4852,7 +4853,7 @@ of the git repository for %GeographicLib.
        now deprecated (use CMAKE_INSTALL_PREFIX instead);
      - on Linux, the installed package is relocatable;
      - on MacOSX, the installed utilities can find the shared library.
-   - Use a more precise value for GeographicLib::OSGB::CentralScale().
+   - Use a more precise value for OSGB::CentralScale().
    - Add Arc routines to python interface.
    - The Geod utility has been removed; the same functionality lives on
      with <a href="GeodSolve.1.html">GeodSolve</a> (introduced in
@@ -4862,9 +4863,9 @@ of the git repository for %GeographicLib.
    (released 2013-10-08)
    - Add <a href="NET/index.html">NETGeographic .NET wrapper library</a>
      (courtesy of Scott Heiman).
-   - Make inspector functions in GeographicLib::Ellipsoid const.
-   - Add Accumulator.cpp to instantiate GeographicLib::Accumulator.
-   - Defer some of the initialization of GeographicLib::OSGB to when it
+   - Make inspector functions in Ellipsoid const.
+   - Add Accumulator.cpp to instantiate Accumulator.
+   - Defer some of the initialization of OSGB to when it
      is first called.
    - Fix bug in autoconf builds under MacOS.
 
@@ -4878,13 +4879,13 @@ of the git repository for %GeographicLib.
    (released 2013-07-01)
    - Changes breaking binary compatibility (source compatibility is
      maintained):
-     - overloaded versions of GeographicLib::DMS::Encode,
-       GeographicLib::EllipticFunction::EllipticFunction, and
-       GeographicLib::GeoCoords::DMSRepresentation, have been eliminated
+     - overloaded versions of DMS::Encode,
+       EllipticFunction::EllipticFunction, and
+       GeoCoords::DMSRepresentation, have been eliminated
        by the use of optional arguments;
      - correct the declaration of first arg to
-       GeographicLib::UTMUPS::DecodeEPSG.
-   - FIX BUG in GeographicLib::GravityCircle constructor (found by
+       UTMUPS::DecodeEPSG.
+   - FIX BUG in GravityCircle constructor (found by
      Mathieu Peyr&eacute;ga) which caused bogus results for the gravity
      disturbance and gravity anomaly vectors.  (This only affected
      calculations using GravityCircle.  GravityModel calculations did
@@ -4909,16 +4910,16 @@ of the git repository for %GeographicLib.
      - accumulate the perimeter and area of polygons via a double-wide
        accumulator in Fortran, C, and Matlab implementations (this is
        already included in the other implementations);
-     - port GeographicLib::PolygonArea::AddEdge and
-       GeographicLib::PolygonArea::TestEdge to JavaScript and python
+     - port PolygonArea::AddEdge and
+       PolygonArea::TestEdge to JavaScript and python
        interfaces;
      - include documentation on \ref geodshort.
    - Unix scripts for downloading datasets,
      geographiclib-get-{geoids,gravity,magnetic}, skip already download
      models by default, unless the -f flag is given.
    - FIX BUGS: meridian convergence and scale returned by
-     GeographicLib::TransverseMercatorExact was wrong at a pole.
-   - Improve efficiency of GeographicLib::MGRS::Forward by avoiding the
+     TransverseMercatorExact was wrong at a pole.
+   - Improve efficiency of MGRS::Forward by avoiding the
      calculation of the latitude if possible (adapting an idea of Craig
      Rollins).
    - Fixes to the way the Matlab interface routines are built (thanks to
@@ -4927,10 +4928,10 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
    (released 2013-02-27)
    - Changes to geodesic routines:
-     - FIX BUG in fail-safe mechanisms in GeographicLib::Geodesic::Inverse;
+     - FIX BUG in fail-safe mechanisms in Geodesic::Inverse;
      - the command line utility Geod is now called
        <a href="GeodSolve.1.html">GeodSolve</a>;
-     - allow addition of polygon edges in GeographicLib::PolygonArea;
+     - allow addition of polygon edges in PolygonArea;
      - add full Maxima implementation of geodesic algorithms.
 
  - <a href="http://geographiclib.sf.net/1.29">Version 1.29</a>
@@ -4964,7 +4965,7 @@ of the git repository for %GeographicLib.
        problem;
      - no longer signal failures of convergence with NaNs (a slightly
        less accurate answer is returned instead).
-   - Fix GeographicLib::DMS::Decode double rounding BUG.
+   - Fix DMS::Decode double rounding BUG.
    - On MacOSX platforms with the cmake configuration, universal
      binaries are built.
 
@@ -4979,19 +4980,19 @@ of the git repository for %GeographicLib.
    - Changes to geodesic calculations:
      - restart Newton's method in Geodesic::Inverse when it goes awry;
      - back up Newton's method with the bisection method;
-     - GeographicLib::Geodesic::Inverse now converges for any value of \e f;
-     - add GeographicLib::GeodesicExact and
-       GeographicLib::GeodesicLineExact which are formulated in terms
+     - Geodesic::Inverse now converges for any value of \e f;
+     - add GeodesicExact and
+       GeodesicLineExact which are formulated in terms
        of elliptic integrals and thus yield accurate results even for
        very eccentric ellipsoids.
      - the -E option to <a href="GeodSolve.1.html">Geod</a> invokes these
        exact classes.
-   - Add functionality to GeographicLib::EllipticFunction:
+   - Add functionality to EllipticFunction:
      - add all the traditional elliptic integrals;
      - remove restrictions on argument range for incomplete elliptic integrals;
      - allow imaginary modulus for elliptic integrals and elliptic functions;
      - make interface to the symmetric elliptic integrals public.
-   - Allow GeographicLib::Ellipsoid to be copied.
+   - Allow Ellipsoid to be copied.
    - Changes to the build tools:
      - cmake uses folders in Visual Studio to reduce clutter;
      - allow precision of reals to be set in cmake;
@@ -5002,13 +5003,13 @@ of the git repository for %GeographicLib.
    (released 2012-09-22)
    - Allow the specification of the hemisphere in UTM coordinates in
      order to provide continuity across the equator:
-     - add GeographicLib::UTMUPS::Transfer;
-     - add GeographicLib::GeoCoords::UTMUPSRepresentation(bool, int) and
-       GeographicLib::GeoCoords::AltUTMUPSRepresentation(bool, int);
+     - add UTMUPS::Transfer;
+     - add GeoCoords::UTMUPSRepresentation(bool, int) and
+       GeoCoords::AltUTMUPSRepresentation(bool, int);
      - use the hemisphere letter in, e.g.,
        <a href="GeoConvert.1.html">GeoConvert</a> -u -z 31n.
-   - Add GeographicLib::UTMUPS::DecodeEPSG and
-     GeographicLib::UTMUPS::EncodeEPSG.
+   - Add UTMUPS::DecodeEPSG and
+     UTMUPS::EncodeEPSG.
    - cmake changes:
      - restore support for cmake 2.4.x;
      - explicitly check version of doxygen.
@@ -5024,25 +5025,25 @@ of the git repository for %GeographicLib.
      - use doxygen tags to document exceptions;
      - begin migrating the documentation to using Greek letters where
        appropriate (requires doxygen 1.8.1.2 or later).
-   - Add GeographicLib::Math::AngNormalize and
-     GeographicLib::Math::AngNormalize2; the allowed range for longitudes
+   - Add Math::AngNormalize and
+     Math::AngNormalize2; the allowed range for longitudes
      and azimuths widened to [&minus;540&deg;, 540&deg;).
-   - GeographicLib::DMS::Decode understands more unicode symbols.
-   - GeographicLib::Geohash uses geohash code "nan" to stand for not a
+   - DMS::Decode understands more unicode symbols.
+   - Geohash uses geohash code "nan" to stand for not a
      number.
-   - Add GeographicLib::Ellipsoid::NormalCurvatureRadius.
-   - Various fixes in GeographicLib::LambertConformalConic,
-     GeographicLib::TransverseMercator,
-     GeographicLib::PolarStereographic, and GeographicLib::Ellipsoid to
+   - Add Ellipsoid::NormalCurvatureRadius.
+   - Various fixes in LambertConformalConic,
+     TransverseMercator,
+     PolarStereographic, and Ellipsoid to
      handle reverse projections of points near infinity.
-   - Fix programming blunder in GeographicLib::LambertConformalConic::Forward
+   - Fix programming blunder in LambertConformalConic::Forward
      (incorrect results were returned if the tangent latitude was
      negative).
 
  - <a href="http://geographiclib.sf.net/1.22">Version 1.22</a>
    (released 2012-05-27)
-   - Add GeographicLib::Geohash and GeographicLib::Ellipsoid classes.
-   - FIX BUG in GeographicLib::AlbersEqualArea for very prolate
+   - Add Geohash and Ellipsoid classes.
+   - FIX BUG in AlbersEqualArea for very prolate
      ellipsoids (<i>b</i><sup>2</sup> > 2 <i>a</i><sup>2</sup>).
    - cmake changes:
      - optionally use PACKAGE_PATH and INSTALL_PATH to determine
@@ -5060,14 +5061,14 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.21">Version 1.21</a>
    (released 2012-04-25)
    - Support colon-separated DMS output:
-     - GeographicLib::DMS::Encode and
-       GeographicLib::GeoCoords::DMSRepresentation generalized;
+     - DMS::Encode and
+       GeoCoords::DMSRepresentation generalized;
      - <a href="GeoConvert.1.html">GeoConvert</a> and
        <a href="GeodSolve.1.html">Geod</a> now accept a -: option.
    - <a href="GeoidEval.1.html">GeoidEval</a> does not print the gradient
      of the geoid height by default (because it's subject to large
      errors); give the -g option to get the gradient printed.
-   - Work around optimization BUG in GeographicLib::Geodesic::Inverse
+   - Work around optimization BUG in Geodesic::Inverse
      with tdm mingw g++ version 4.6.1.
    - autoconf fixed to ensure that that out-of-sources builds work;
      document this as the preferred method of using autoconf.
@@ -5083,15 +5084,15 @@ of the git repository for %GeographicLib.
      - CMAKE_INSTALL_PREFIX set from CMAKE_PREFIX_PATH if available;
      - add "x64" to the package name for the 64-bit binary installer;
      - fix cmake warning with Visual Studio Express.
-   - Fix GeographicLib::SphericalEngine to deal with aggessive iterator
+   - Fix SphericalEngine to deal with aggessive iterator
      checking by Visual Studio.
    - Fix transcription BUG is Geodesic.js.
 
  - <a href="http://geographiclib.sf.net/1.19">Version 1.19</a>
    (released 2012-03-13)
-   - Slight improvement in GeographicLib::Geodesic::Inverse for very
+   - Slight improvement in Geodesic::Inverse for very
      short lines.
-   - Fix argument checking tests in GeographicLib::MGRS::Forward.
+   - Fix argument checking tests in MGRS::Forward.
    - Add --comment-delimiter and --line-separator options to the \ref
      utilities.
    - Add installer for 64-bit Windows; the compiled Matlab interface is
@@ -5106,23 +5107,23 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.17">Version 1.17</a>
    (released 2012-01-21)
-   - Work around optimization BUG in GeographicLib::Geodesic::Inverse
+   - Work around optimization BUG in Geodesic::Inverse
      with g++ version 4.4.0 (mingw).
-   - Fix BUG in argument checking with GeographicLib::OSGB::GridReference.
-   - Fix missing include file in GeographicLib::SphericalHarmonic2.
+   - Fix BUG in argument checking with OSGB::GridReference.
+   - Fix missing include file in SphericalHarmonic2.
    - Add simple examples of usage for each class.
    - Add internal documentation to the cmake configuration files.
 
  - <a href="http://geographiclib.sf.net/1.16">Version 1.16</a>
    (released 2011-12-07)
    - Add calculation of the earth's gravitational field:
-     - add GeographicLib::NormalGravity GeographicLib::GravityModel and
-       GeographicLib::GravityCircle classes;
+     - add NormalGravity GravityModel and
+       GravityCircle classes;
      - add command line utility
        <a href="Gravity.1.html">Gravity</a>;
      - add \ref gravity;
-     - add GeographicLib::Constants::WGS84_GM(),
-       GeographicLib::Constants::WGS84_omega(), and similarly for GRS80.
+     - add Constants::WGS84_GM(),
+       Constants::WGS84_omega(), and similarly for GRS80.
    - Build uses GEOGRAPHICLIB_DATA to specify a common parent directory
       for geoid, gravity, and magnetic data (instead of
       GEOGRAPHICLIB_GEOID_PATH, etc.); similarly,
@@ -5131,18 +5132,18 @@ of the git repository for %GeographicLib.
       <a href="MagneticField.1.html">MagneticField</a>, look at the
       environment variable GEOGRAPHICLIB_DATA to locate the data.
    - Spherical harmonic software changes:
-     - capitalize enums GeographicLib::SphericalHarmonic::FULL and
-       GeographicLib::SphericalHarmonic::SCHMIDT (the lower case names
+     - capitalize enums SphericalHarmonic::FULL and
+       SphericalHarmonic::SCHMIDT (the lower case names
        are retained but deprecated);
      - optimize the sum by using a static table of square roots which is
-       updated by GeographicLib::SphericalEngine::RootTable;
+       updated by SphericalEngine::RootTable;
      - avoid overflow for high degree models.
    - Magnetic software fixes:
-     - fix documentation BUG in GeographicLib::MagneticModel::Circle;
-     - make GeographicLib::MagneticModel constructor explicit;
-     - provide default GeographicLib::MagneticCircle constructor;
+     - fix documentation BUG in MagneticModel::Circle;
+     - make MagneticModel constructor explicit;
+     - provide default MagneticCircle constructor;
      - add additional inspector functions to
-       GeographicLib::MagneticCircle;
+       MagneticCircle;
      - add -c option to <a href="MagneticField.1.html">MagneticField</a>;
      - default height to zero in
        <a href="MagneticField.1.html">MagneticField</a>.
@@ -5150,19 +5151,19 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.15">Version 1.15</a>
    (released 2011-11-08)
    - Add calculation of the earth's magnetic field:
-     - add GeographicLib::MagneticModel and GeographicLib::MagneticCircle
+     - add MagneticModel and MagneticCircle
        classes;
      - add command line utility
        <a href="MagneticField.1.html">MagneticField</a>;
      - add \ref magnetic;
      - add \ref magneticinst;
      - add \ref magneticformat;
-     - add classes GeographicLib::SphericalEngine,
-       GeographicLib::CircularEngine, GeographicLib::SphericalHarmonic,
-       GeographicLib::SphericalHarmonic1, and
-       GeographicLib::SphericalHarmonic2. which sum spherical harmonic
+     - add classes SphericalEngine,
+       CircularEngine, SphericalHarmonic,
+       SphericalHarmonic1, and
+       SphericalHarmonic2. which sum spherical harmonic
        series.
-   - Add GeographicLib::Utility class to support I/O and date
+   - Add Utility class to support I/O and date
      manipulation.
    - Cmake configuration includes a _d suffix on the library built in
      debug mode.
@@ -5173,7 +5174,7 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.14">Version 1.14</a>
    (released 2011-09-30)
    - Ensure that geographiclib-config.cmake is relocatable.
-   - Allow more unicode symbols to be used in GeographicLib::DMS::Decode.
+   - Allow more unicode symbols to be used in DMS::Decode.
    - Modify <a href="GeoidEval.1.html">GeoidEval</a> so that it can be
      used to convert the height datum for LIDAR data.
    - Modest speed-up of Geodesic::Inverse.
@@ -5189,23 +5190,23 @@ of the git repository for %GeographicLib.
    (released 2011-08-13)
    - Changes to I/O:
      - allow : (colon) to be used as a DMS separator in
-       GeographicLib::DMS::Decode(const std::string&, flag&);
+       DMS::Decode(const std::string&, flag&);
      - also accept Unicode symbols for degrees, minutes, and seconds
        (coded as UTF-8);
      - provide optional \e swaplatlong argument to various
-       GeographicLib::DMS and GeographicLib::GeoCoords functions to make
+       DMS and GeoCoords functions to make
        longitude precede latitude;
      - <a href="GeoConvert.1.html">GeoConvert</a> now has a -w option to
        make longitude precede latitude on input and output;
-     - include a JavaScript version of GeographicLib::DMS.
+     - include a JavaScript version of DMS.
    - Slight improvement in starting guess for solution of geographic
      latitude in terms of conformal latitude in TransverseMercator,
      TransverseMercatorExact, and LambertConformalConic.
    - For most classes, get rid of const member variables so that the
      default copy assignment works.
-   - Put GeographicLib::Math and GeographicLib::Accumulator in their own
+   - Put Math and Accumulator in their own
      header files.
-   - Remove unused "fast" GeographicLib::Accumulator method.
+   - Remove unused "fast" Accumulator method.
    - Reorganize the \ref python.
    - Withdraw some deprecated routines.
    - cmake changes:
@@ -5217,7 +5218,7 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/1.12">Version 1.12</a>
    (released 2011-07-21)
    - Change license to MIT/X11.
-   - Add GeographicLib::PolygonArea class and equivalent Matlab function.
+   - Add PolygonArea class and equivalent Matlab function.
    - Provide JavaScript and Python implementations of geodesic routines.
    - Fix Windows installer to include runtime dlls for Matlab.
    - Fix (innocuous) unassigned variable in Geodesic::GenInverse.
@@ -5246,7 +5247,7 @@ of the git repository for %GeographicLib.
      - the -e arguments to the \ref utilities are handled similarly; in
        addition, simple fractions, e.g., 1/297, can be used for the
        flattening;
-     - introduce GeographicLib::Constants::WGS84_f() for the WGS84
+     - introduce Constants::WGS84_f() for the WGS84
        flattening (and deprecate Constants::WGS84_r() for the inverse
        flattening);
      - most classes have a Flattening() member function;
@@ -5274,10 +5275,10 @@ of the git repository for %GeographicLib.
      "5d.".
    - FIX BUG in AlbersEqualArea::Reverse (lon0 not being used).
    - Ensure that all exceptions thrown in the \ref utilities are caught.
-   - Avoid using catch within GeographicLib::DMS.
-   - Move GeographicLib::Accumulator class from Planimeter.cpp to
+   - Avoid using catch within DMS.
+   - Move Accumulator class from Planimeter.cpp to
      Constants.hpp.
-   - Add GeographicLib::Math::sq<T>.
+   - Add Math::sq<T>.
    - Simplify \ref geoidinst
      - add geographiclib-get-geoids for Unix-like systems;
      - add installers for Windows.
@@ -5298,16 +5299,16 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.8">Version 1.8</a>
    (released 2011-02-22)
-   - Optionally return rotation matrix from GeographicLib::Geocentric and
-     GeographicLib::LocalCartesian.
+   - Optionally return rotation matrix from Geocentric and
+     LocalCartesian.
    - For the \ref utilities, supply man pages, -h prints the synopsis,
      --help prints the man page, --version prints the version.
    - Use accurate summation in <a href="Planimeter.1.html">Planimeter</a>.
    - Add 64-bit targets for Visual Studio 2010.
    - Use templates for defining math functions and some constants.
-   - GeographicLib::Geoid updates
-     - Add GeographicLib::Geoid::DefaultGeoidPath and
-       GeographicLib::Geoid::DefaultGeoidName;
+   - Geoid updates
+     - Add Geoid::DefaultGeoidPath and
+       Geoid::DefaultGeoidName;
      - <a href="GeoidEval.1.html">GeoidEval</a> uses environment variable
        GEOGRAPHICLIB_GEOID_NAME as the default geoid;
      - Add --msltohae and --haetomsl as
@@ -5318,8 +5319,8 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.7">Version 1.7</a>
    (released 2010-12-21)
-   - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.
-   - Add GeographicLib::AlbersEqualArea projection.
+   - FIX BUG in scale returned by LambertConformalConic::Reverse.
+   - Add AlbersEqualArea projection.
    - Library created by Visual Studio is Geographic.lib instead of
      GeographicLib.lib (compatible with makefiles).
    - Make classes NaN aware.
@@ -5329,38 +5330,38 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.6">Version 1.6</a>
    (released 2010-11-23)
-   - FIX BUG introduced in GeographicLib::Geoid in version 1.5 (found by
+   - FIX BUG introduced in Geoid in version 1.5 (found by
      Dave Edwards).
 
  - <a href="http://geographiclib.sf.net/1.5">Version 1.5</a>
    (released 2010-11-19)
    - Improve area calculations for small polygons.
    - Add -s and -r flags to <a href="Planimeter.1.html">Planimeter</a>.
-   - Improve the accuracy of GeographicLib::LambertConformalConic using
+   - Improve the accuracy of LambertConformalConic using
      divided differences.
    - FIX BUG in meridian convergence returned by
      LambertConformalConic::Forward.
-   - Add optional threadsafe parameter to GeographicLib::Geoid
+   - Add optional threadsafe parameter to Geoid
      constructor.  WARNING: This changes may break binary compatibility
-     with previous versions of %GeographicLib.  However, the library is
+     with previous versions of GeographicLib.  However, the library is
      source compatible.
-   - Add GeographicLib::OSGB.
-   - Matlab and Octave interfaces to GeographicLib::UTMUPS,
-     GeographicLib::MGRS, GeographicLib::Geoid, GeographicLib::Geodesic
+   - Add OSGB.
+   - Matlab and Octave interfaces to UTMUPS,
+     MGRS, Geoid, Geodesic
      provided.
    - Minor changes
      - explicitly turn on optimization in Visual Studio 2008 projects;
      - add missing dependencies in some Makefiles;
-     - move pi() and degree() from GeographicLib::Constants to
-       GeographicLib::Math;
-     - introduce GeographicLib::Math::extended type to aid testing;
-     - add GeographicLib::Math::epi() and GeographicLib::Math::edegree().
+     - move pi() and degree() from Constants to
+       Math;
+     - introduce Math::extended type to aid testing;
+     - add Math::epi() and Math::edegree().
      - fixes to compile under cygwin;
      - tweak expression used to find latitude from conformal latitude.
 
  - <a href="http://geographiclib.sf.net/1.4">Version 1.4</a>
    (released 2010-09-12)
-   - Changes to GeographicLib::Geodesic and GeographicLib::GeodesicLine:
+   - Changes to Geodesic and GeodesicLine:
      - FIX BUG in Geodesic::Inverse with prolate ellipsoids;
      - add area computations to Geodesic::Direct and Geodesic::Inverse;
      - add geodesic areas to geodesic test set;
@@ -5375,13 +5376,13 @@ of the git repository for %GeographicLib.
      - deprecate -n option for <a href="GeodSolve.1.html">Geod</a>.
      .
      <b>WARNING</b>: These changes may break binary compatibility with
-     previous versions of %GeographicLib.  However, the library is
+     previous versions of GeographicLib.  However, the library is
      source compatible (with the proviso that
      GeographicLib/GeodesicLine.hpp may now need to be included).
    - Add the <a href="Planimeter.1.html">Planimeter</a> utility for
      computing the areas of geodesic polygons.
-   - Improve iterative solution of GeographicLib::Gnomonic::Reverse.
-   - Add GeographicLib::Geoid::ConvertHeight.
+   - Improve iterative solution of Gnomonic::Reverse.
+   - Add Geoid::ConvertHeight.
    - Add -msltohae, -haetomsl, and -z options to
      <a href="GeoidEval.1.html">GeoidEval</a>.
    - Constructors check that minor radius is positive.
@@ -5391,7 +5392,7 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.3">Version 1.3</a>
    (released 2010-07-21)
-   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the
+   - Add Gnomonic, the ellipsoid generalization of the
      gnomonic projection.
    - Add -g and -e options to
      <a href="GeodesicProj.1.html">EquidistantTest</a>.
@@ -5403,7 +5404,7 @@ of the git repository for %GeographicLib.
      - Improved conversion to conformal coordinates;
      - Fix bug with scale at opposite pole;
      - Complain if latitude out of range in SetScale.
-   - Add GeographicLib::Math::NaN().
+   - Add Math::NaN().
    - Add long double version of hypot for Windows.
    - Add EllipticFunction::E(real).
    - Update references to Geotrans in MGRS documentation.
@@ -5411,25 +5412,25 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.2">Version 1.2</a>
    (released 2010-05-21)
-   - FIX BUGS in GeographicLib::Geodesic,
+   - FIX BUGS in Geodesic,
      - wrong azimuth returned by Direct if point 2 is on a pole;
      - Inverse sometimes fails with very close points.
-   - Improve calculation of scale in GeographicLib::CassiniSoldner,
-     - add GeographicLib::GeodesicLine::Scale,
-       GeographicLib::GeodesicLine::EquatorialAzimuth, and
-       GeographicLib::GeodesicLine::EquatorialArc;
+   - Improve calculation of scale in CassiniSoldner,
+     - add GeodesicLine::Scale,
+       GeodesicLine::EquatorialAzimuth, and
+       GeodesicLine::EquatorialArc;
      - break friend connection between CassiniSoldner and Geodesic.
-   - Add GeographicLib::DMS::DecodeAngle and
-     GeographicLib::DMS::DecodeAzimuth.  Extend
-     GeographicLib::DMS::Decode and GeographicLib::DMS::Encode to deal
+   - Add DMS::DecodeAngle and
+     DMS::DecodeAzimuth.  Extend
+     DMS::Decode and DMS::Encode to deal
      with distances.
-   - Code and documentation changes in GeographicLib::Geodesic and
-     GeographicLib::Geocentric for consistency with
+   - Code and documentation changes in Geodesic and
+     Geocentric for consistency with
      the forthcoming paper on geodesics.
-   - Increase order of series using in GeographicLib::Geodesic to 6 (full
+   - Increase order of series using in Geodesic to 6 (full
      accuracy maintained for ellipsoid flattening < 0.01).
    - Macro __NO_LONG_DOUBLE_MATH to disable use of long double.
-   - Correct declaration of GeographicLib::Math::isfinite to return a bool.
+   - Correct declaration of Math::isfinite to return a bool.
    - Changes in the \ref utilities,
      - improve error reporting when parsing command line arguments;
      - accept latitudes and longitudes in decimal degrees or degrees,
@@ -5460,13 +5461,13 @@ of the git repository for %GeographicLib.
      problems with their arguments and throw an exception if necessary.
    - Most classes now include inspector functions such as MajorRadius()
      so that you can determine how instances were constructed.
-   - Add GeographicLib::LambertConformalConic class.
-   - Add GeographicLib::PolarStereographic::SetScale to allow the
+   - Add LambertConformalConic class.
+   - Add PolarStereographic::SetScale to allow the
      latitude of true scale to be specified.
    - Add solution and project files for Visual Studio 2008.
-   - Add GeographicLib::GeographicErr for exceptions.
-   - GeographicLib::Geoid changes:
-     - BUG FIX: fix typo in GeographicLib::Geoid::Cache which could cause
+   - Add GeographicErr for exceptions.
+   - Geoid changes:
+     - BUG FIX: fix typo in Geoid::Cache which could cause
        a segmentation fault in some cases when the cached area spanned
        the prime meridian.
      - Include sufficient edge data to allow heights to be returned for
@@ -5475,18 +5476,18 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/2009-11">Version 2009-11</a>
    (released 2009-11-03)
-   - Allow specification of "closest UTM zone" in GeographicLib::UTMUPS
+   - Allow specification of "closest UTM zone" in UTMUPS
      and <a href="GeoConvert.1.html">GeoConvert</a> (via -t option).
    - Utilities now complain is there are too many tokens on input lines.
-   - Include real-to-real versions of GeographicLib::DMS::Decode and
-     GeographicLib::DMS::Encode.
+   - Include real-to-real versions of DMS::Decode and
+     DMS::Encode.
    - More house-cleaning changes:
      - Ensure that functions which return results through reference
        arguments do not alter the arguments when an exception is thrown.
-     - Improve accuracy of GeographicLib::MGRS::Forward.
+     - Improve accuracy of MGRS::Forward.
      - Include more information in some error messages.
      - Improve accuracy of inverse hyperbolic functions.
-     - Fix the way GeographicLib::Math functions handle different precisions.
+     - Fix the way Math functions handle different precisions.
 
  - <a href="http://geographiclib.sf.net/2009-10">Version 2009-10</a>
    (released 2009-10-18)
@@ -5512,14 +5513,14 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/2009-09">Version 2009-09</a>
    (released 2009-09-01)
-   - Add GeographicLib::Geoid and
+   - Add Geoid and
      <a href="GeoidEval.1.html">GeoidEval</a> utility.
 
  - <a href="http://geographiclib.sf.net/2009-08">Version 2009-08</a>
    (released 2009-08-14)
-   - Add GeographicLib::CassiniSoldner class and
+   - Add CassiniSoldner class and
      <a href="GeodesicProj.1.html">EquidistantTest</a> utility.
-   - Fix bug in GeographicLib::Geodesic::Inverse where NaNs were
+   - Fix bug in Geodesic::Inverse where NaNs were
      sometimes returned.
    - INCOMPATIBLE CHANGE: AzimuthalEquidistant now returns the reciprocal
      of the azimuthal scale instead of the reduced length.
@@ -5532,20 +5533,20 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/2009-06">Version 2009-06</a>
    (released 2009-06-01)
-   - Add routines to decode and encode zone+hemisphere to GeographicLib::UTMUPS.
-   - Clean up code in GeographicLib::Geodesic.
+   - Add routines to decode and encode zone+hemisphere to UTMUPS.
+   - Clean up code in Geodesic.
 
  - <a href="http://geographiclib.sf.net/2009-05">Version 2009-05</a>
    (released 2009-05-01)
-   - Improvements to GeographicLib::Geodesic:
+   - Improvements to Geodesic:
      - more economical series expansions,
      - return reduced length (as does the
        <a href="GeodSolve.1.html">Geod</a> utility),
      - improved calculation of starting point for inverse method,
      - use reduced length to give derivative for Newton's method.
-   - Add GeographicLib::AzimuthalEquidistant class.
-   - Make GeographicLib::Geocentric, GeographicLib::TransverseMercator,
-     and GeographicLib::PolarStereographic classes work with prolate
+   - Add AzimuthalEquidistant class.
+   - Make Geocentric, TransverseMercator,
+     and PolarStereographic classes work with prolate
      ellipsoids.
    - <a href="CartConvert.1.html">CartConvert</a> checks its inputs more
      carefully.
@@ -5554,11 +5555,11 @@ of the git repository for %GeographicLib.
  - <a href="http://geographiclib.sf.net/2009-04">Version 2009-04</a>
    (released 2009-04-01)
    - Use compile-time constants to select the order of series in
-     GeographicLib::TransverseMercator.
+     TransverseMercator.
    - 2x unroll of Clenshaw summation to avoid data shuffling.
-   - Simplification of GeographicLib::EllipticFunction::E.
+   - Simplification of EllipticFunction::E.
    - Use STATIC_ASSERT for compile-time checking of constants.
-   - Improvements to GeographicLib::Geodesic:
+   - Improvements to Geodesic:
      - compile-time option to change order of series used,
      - post Maxima code for generating the series,
      - tune the order of series for double,
@@ -5571,13 +5572,13 @@ of the git repository for %GeographicLib.
 
  - <a href="http://geographiclib.sf.net/2009-03">Version 2009-03</a>
    (released 2009-03-01)
-   - Add GeographicLib::Geodesic and the
+   - Add Geodesic and the
      <a href="GeodSolve.1.html">Geod</a> utility.
    - Declare when no exceptions are thrown by functions.
-   - Minor changes to GeographicLib::DMS class.
+   - Minor changes to DMS class.
    - Use invf = 0 to mean a sphere in constructors to some classes.
    - The makefile creates a library and includes an install target.
-   - Rename GeographicLib::ECEF to GeographicLib::Geocentric, ECEFConvert
+   - Rename ECEF to Geocentric, ECEFConvert
      to <a href="CartConvert.1.html">CartConvert</a>.
    - Use inline functions to define constant doubles in Constants.hpp.
 
@@ -5586,14 +5587,14 @@ of the git repository for %GeographicLib.
    - Fix documentation of constructors (flattening &rarr; inverse
      flattening).
    - Use std versions of math functions.
-   - Add GeographicLib::ECEF and GeographicLib::LocalCartesian classes
+   - Add ECEF and LocalCartesian classes
      and the ECEFConvert utility.
    - Gather the documentation on the \ref utilities onto one page.
 
  - <a href="http://geographiclib.sf.net/2009-01">Version 2009-01</a>
    (released 2009-01-12)
    - First proper release of library.
-   - More robust GeographicLib::TransverseMercatorExact:
+   - More robust TransverseMercatorExact:
      - Introduce \e extendp version of constructor,
      - Test against extended test data,
      - Optimize starting positions for Newton's method,
@@ -5601,7 +5602,7 @@ of the git repository for %GeographicLib.
      - Fix order dependence in C++ start-up code,
      - Improved method of computing scale and convergence.
    - Documentation on transverse Mercator projection.
-   - Add GeographicLib::MGRS, GeographicLib::UTMUPS, etc.
+   - Add MGRS, UTMUPS, etc.
 
  - Version 2008-09
    - Ad hoc posting of information on the transverse Mercator projection.
@@ -5610,3 +5611,4 @@ of the git repository for %GeographicLib.
 Back to \ref geocentric.  Up to \ref contents.
 </center>
 **********************************************************************/
+}
