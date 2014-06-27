@@ -258,11 +258,11 @@ configure_file (
   include/GeographicLib/Config.h.in
   include/GeographicLib/Config.h )
 
-# The documentation depends on doxygen.  Need version 1.8.1.2 or later
-# for support of greek letters and math symbols.
+# The documentation depends on doxygen.  Need version 1.8.2 or later for
+# support of greek letters and math symbols.
 if (GEOGRAPHICLIB_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
-  find_package (Doxygen 1.8.1.2)
+  find_package (Doxygen 1.8.2)
 endif ()
 
 # The man pages are written as pod files and converted to nroff format,
