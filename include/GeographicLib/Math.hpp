@@ -129,8 +129,26 @@ namespace GeographicLib {
 #endif
 
     /**
+     * Number of additional decimal digits of precision for type T relative to
+     * double (0 for float).
+     **********************************************************************/
+    template<typename T> static inline int extra_digits() {
+      return
+        std::numeric_limits<T>::digits10 >
+        std::numeric_limits<double>::digits10 ?
+        std::numeric_limits<T>::digits10 -
+        std::numeric_limits<double>::digits10 : 0;
+    }
+    /**
+     * A synonym for extra_digits<real>().
+     **********************************************************************/
+    static inline int extra_digits() { return extra_digits<real>(); }
+
+    /**
      * Number of additional decimal digits of precision of real relative to
      * double (0 for float).
+     *
+     * <b>DEPRECATED</b>: use extra_digits() instead
      **********************************************************************/
     static const int extradigits =
       std::numeric_limits<real>::digits10 >

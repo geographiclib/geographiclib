@@ -218,7 +218,7 @@ int main(int argc, char* argv[]) {
 
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
-    prec = std::min(10 + Math::extradigits, std::max(0, prec));
+    prec = std::min(10 + Math::extra_digits<Math::real>(), std::max(0, prec));
     std::string s;
     int retval = 0;
     while (std::getline(*input, s)) {
