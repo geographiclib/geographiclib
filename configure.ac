@@ -71,6 +71,7 @@ AX_CHECK_COMPILE_FLAG([-std=c++0x], [CXXFLAGS="$CXXFLAGS -std=c++0x"])
 
 # Check for doxygen.
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
+AM_CONDITIONAL([HAVE_DOXYGEN], [test "$DOXYGEN"])
 
 AC_CHECK_PROGS([POD2MAN], [pod2man])
 AC_CHECK_PROGS([POD2HTML], [pod2html])

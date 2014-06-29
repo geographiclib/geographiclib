@@ -3,9 +3,8 @@
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 
-AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
-INCLUDES = -I$(top_builddir)/include -I$(top_srcdir)/include \
-           -I$(top_builddir)/man -I$(top_srcdir)/man
+AM_CPPFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include \
+           -I$(top_builddir)/man -I$(top_srcdir)/man -Wall -Wextra
 
 LDADD = $(top_builddir)/src/libGeographic.la
 DEPS = $(top_builddir)/src/libGeographic.la

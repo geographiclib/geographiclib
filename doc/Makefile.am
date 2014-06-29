@@ -110,7 +110,7 @@ LEGACYFILES = \
 
 doc: html/index.html
 
-if DOXYGEN
+if HAVE_DOXYGEN
 manpages: $(MANPAGES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi
 	cp $^ html/
