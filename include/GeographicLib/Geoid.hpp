@@ -457,7 +457,7 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     Math::real MajorRadius() const
-    { return Constants::WGS84_a<real>(); }
+    { return Constants::WGS84_a(); }
 
     /**
      * @return \e f the flattening of the WGS84 ellipsoid.
@@ -465,7 +465,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the supported geoid models are all
      * based on this ellipsoid.)
      **********************************************************************/
-    Math::real Flattening() const { return Constants::WGS84_f<real>(); }
+    Math::real Flattening() const { return Constants::WGS84_f(); }
     ///@}
 
     /// \cond SKIP
@@ -474,7 +474,7 @@ namespace GeographicLib {
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const
-    { return 1/Constants::WGS84_f<real>(); }
+    { return 1/Constants::WGS84_f(); }
     /// \endcond
 
     /**

@@ -62,7 +62,7 @@ namespace GeographicLib {
     _earth.GenInverse(_lat1, _lon1, _lat0, _lon0, _mask,
                       s12, t, t, t, t, t, S12);
     perimeter = _perimetersum(s12);
-    Accumulator<real> tempsum(_areasum);
+    Accumulator<> tempsum(_areasum);
     tempsum += S12;
     int crossings = _crossings + transit(_lon1, _lon0);
     if (crossings & 1)
@@ -140,9 +140,9 @@ namespace GeographicLib {
   unsigned PolygonArea::TestEdge(real azi, real s, bool reverse, bool sign,
                                  real& perimeter, real& area) const {
     if (_num == 0) {            // we don't have a starting point!
-      perimeter = Math::NaN<real>();
+      perimeter = Math::NaN();
       if (!_polyline)
-        area = Math::NaN<real>();
+        area = Math::NaN();
       return 0;
     }
     unsigned num = _num + 1;

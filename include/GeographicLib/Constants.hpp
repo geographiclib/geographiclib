@@ -83,17 +83,17 @@ namespace GeographicLib {
     /**
      * A synonym for Math::degree<real>().
      **********************************************************************/
-    static inline Math::real degree() { return Math::degree<real>(); }
+    static inline Math::real degree() { return Math::degree(); }
     /**
      * @return the number of radians in an arcminute.
      **********************************************************************/
     static inline Math::real arcminute()
-    { return Math::degree<real>() / 60; }
+    { return Math::degree() / 60; }
     /**
      * @return the number of radians in an arcsecond.
      **********************************************************************/
     static inline Math::real arcsecond()
-    { return Math::degree<real>() / 3600; }
+    { return Math::degree() / 3600; }
 
     /** \name Ellipsoid parameters
      **********************************************************************/
@@ -126,12 +126,20 @@ namespace GeographicLib {
     template<typename T> static inline T WGS84_GM()
     { return T(3986004) * T(100000000) + T(41800000); }
     /**
+     * A synonym for WGS84_GM<real>().
+     **********************************************************************/
+    static inline Math::real WGS84_GM() { return WGS84_GM<real>(); }
+    /**
      * @tparam T the type of the returned value.
      * @return the angular velocity of the WGS84 ellipsoid, &omega;, in rad
      *   s<sup>&minus;1</sup>.
      **********************************************************************/
     template<typename T> static inline T WGS84_omega()
     { return T(7292115) / (T(1000000) * T(100000)); }
+    /**
+     * A synonym for WGS84_omega<real>().
+     **********************************************************************/
+    static inline Math::real WGS84_omega() { return WGS84_omega<real>(); }
     /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
@@ -152,12 +160,20 @@ namespace GeographicLib {
     template<typename T> static inline T GRS80_a()
     { return T(6378137); }
     /**
+     * A synonym for GRS80_a<real>().
+     **********************************************************************/
+    static inline Math::real GRS80_a() { return GRS80_a<real>(); }
+    /**
      * @tparam T the type of the returned value.
      * @return the gravitational constant of the GRS80 ellipsoid, \e GM, in
      *   m<sup>3</sup> s<sup>&minus;2</sup>.
      **********************************************************************/
     template<typename T> static inline T GRS80_GM()
     { return T(3986005) * T(100000000); }
+    /**
+     * A synonym for GRS80_GM<real>().
+     **********************************************************************/
+    static inline Math::real GRS80_GM() { return GRS80_GM<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the angular velocity of the GRS80 ellipsoid, &omega;, in rad
@@ -173,12 +189,20 @@ namespace GeographicLib {
     template<typename T> static inline T GRS80_omega()
     { return T(7292115) / (T(1000000) * T(100000)); }
     /**
+     * A synonym for GRS80_omega<real>().
+     **********************************************************************/
+    static inline Math::real GRS80_omega() { return GRS80_omega<real>(); }
+    /**
      * @tparam T the type of the returned value.
      * @return the dynamical form factor of the GRS80 ellipsoid,
      *   <i>J</i><sub>2</sub>.
      **********************************************************************/
     template<typename T> static inline T GRS80_J2()
     { return T(108263) / T(100000000); }
+    /**
+     * A synonym for GRS80_J2<real>().
+     **********************************************************************/
+    static inline Math::real GRS80_J2() { return GRS80_J2<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the central scale factor for UTM (0.9996).

@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 36)
+set (PROJECT_VERSION_MINOR 37)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -12,7 +12,7 @@ endif ()
 if (DEFINED CPACK_PACKAGE_VERSION_COUNT)
 
   # majic (version 0.1.9 and later) invokes cmake defining, e.g.,
-  #   -D CPACK_PACKAGE_VERSION=1.36-001-SNAPSHOT
+  #   -D CPACK_PACKAGE_VERSION=1.37-001-SNAPSHOT
   #   -D CPACK_PACKAGE_VERSION_COUNT=2
   #   -D CPACK_PACKAGE_VERSION_MAJOR=1
   #   -D CPACK_PACKAGE_VERSION_MINOR=36
@@ -258,11 +258,10 @@ configure_file (
   include/GeographicLib/Config.h.in
   include/GeographicLib/Config.h )
 
-# The documentation depends on doxygen.  Need version 1.8.2 or later for
-# support of greek letters and math symbols.
+# The documentation depends on doxygen.
 if (GEOGRAPHICLIB_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
-  find_package (Doxygen 1.8.2)
+  find_package (Doxygen)
 endif ()
 
 # The man pages are written as pod files and converted to nroff format,

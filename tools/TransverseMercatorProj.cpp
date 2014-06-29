@@ -43,9 +43,9 @@ int main(int argc, char* argv[]) {
     typedef Math::real real;
     bool exact = true, extended = false, series = false, reverse = false;
     real
-      a = Constants::WGS84_a<real>(),
-      f = Constants::WGS84_f<real>(),
-      k0 = Constants::UTM_k0<real>(),
+      a = Constants::WGS84_a(),
+      f = Constants::WGS84_f(),
+      k0 = Constants::UTM_k0(),
       lon0 = 0;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';

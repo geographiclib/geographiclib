@@ -39,8 +39,8 @@ namespace GeographicLib {
     , _dir(path)
     , _description("NONE")
     , _date("UNKNOWN")
-    , _amodel(Math::NaN<real>())
-    , _GMmodel(Math::NaN<real>())
+    , _amodel(Math::NaN())
+    , _GMmodel(Math::NaN())
     , _zeta0(0)
     , _corrmult(1)
     , _norm(SphericalHarmonic::FULL)
@@ -131,7 +131,7 @@ namespace GeographicLib {
     if (version != "1")
       throw GeographicErr("Unknown version in " + _filename + ": " + version);
     string key, val;
-    real a = Math::NaN<real>(), GM = a, omega = a, f = a, J2 = a;
+    real a = Math::NaN(), GM = a, omega = a, f = a, J2 = a;
     while (getline(metastr, line)) {
       if (!Utility::ParseLine(line, key, val))
         continue;
@@ -264,8 +264,8 @@ namespace GeographicLib {
     real gammaX, gammaY, gammaZ;
     _earth.U(X, Y, Z, gammaX, gammaY, gammaZ);
     real gamma = Math::hypot( Math::hypot(gammaX, gammaY), gammaZ);
-    xi  = -(deltay/gamma) / Math::degree<real>();
-    eta = -(deltax/gamma) / Math::degree<real>();
+    xi  = -(deltay/gamma) / Math::degree();
+    eta = -(deltax/gamma) / Math::degree();
   }
 
   Math::real GravityModel::GeoidHeight(real lat, real lon) const
@@ -310,13 +310,13 @@ namespace GeographicLib {
     real
       invR = 1 / Math::hypot(X, Z),
       gamma0 = (caps & CAP_GAMMA0 ?_earth.SurfaceGravity(lat)
-                : Math::NaN<real>()),
+                : Math::NaN()),
       fx, fy, fz, gamma;
     if (caps & CAP_GAMMA) {
       _earth.U(X, Y, Z, fx, fy, fz); // fy = 0
       gamma = Math::hypot(fx, fz);
     } else
-      gamma = Math::NaN<real>();
+      gamma = Math::NaN();
     _earth.Phi(X, Y, fx, fy);
     return GravityCircle(GravityCircle::mask(caps),
                          _earth._a, _earth._f, lat, h, Z, X, M[7], M[8],

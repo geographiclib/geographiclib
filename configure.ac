@@ -1,7 +1,7 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 
-AC_INIT([GeographicLib],[1.36],[charles@karney.com])
+AC_INIT([GeographicLib],[1.37],[charles@karney.com])
 AC_CANONICAL_SYSTEM
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
@@ -9,7 +9,7 @@ AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE
 
 GEOGRAPHICLIB_VERSION_MAJOR=1
-GEOGRAPHICLIB_VERSION_MINOR=36
+GEOGRAPHICLIB_VERSION_MINOR=37
 GEOGRAPHICLIB_VERSION_PATCH=0
 AC_DEFINE_UNQUOTED([GEOGRAPHICLIB_VERSION_MAJOR],
 	[$GEOGRAPHICLIB_VERSION_MAJOR],[major version number])
@@ -66,12 +66,11 @@ AC_SEARCH_LIBS([sqrt],[m])
 # Check endianness
 AC_C_BIGENDIAN
 
+# Check for C++11
+AX_CHECK_COMPILE_FLAG([-std=c++0x], [CXXFLAGS="$CXXFLAGS -std=c++0x"])
+
 # Check for doxygen.
-# Need version 1.8.1.2 or later for greek and math symbols.
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
-AM_CONDITIONAL([HAVE_DOXYGEN],
-	[test "$DOXYGEN" && test `"$DOXYGEN" --version |
-	sed 's/^\([[0-9]]\)\.\([[0-9]]\)\./\1.0\2./'` '>' 1.08.1.1])
 
 AC_CHECK_PROGS([POD2MAN], [pod2man])
 AC_CHECK_PROGS([POD2HTML], [pod2html])

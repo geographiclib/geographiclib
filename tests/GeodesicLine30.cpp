@@ -263,7 +263,7 @@ namespace GeographicLib {
   }
 
   template class GeodesicLine30<double>;
-#if HAVE_LONG_DOUBLE
+#if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
   template class GeodesicLine30<long double>;
 #endif
 

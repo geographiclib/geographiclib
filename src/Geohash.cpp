@@ -68,7 +68,7 @@ namespace GeographicLib {
         toupper(geohash[0]) == 'N' &&
         toupper(geohash[1]) == 'A' &&
         toupper(geohash[2]) == 'N') {
-      lat = lon = Math::NaN<real>();
+      lat = lon = Math::NaN();
       return;
     }
     unsigned long long ulon = 0, ulat = 0;

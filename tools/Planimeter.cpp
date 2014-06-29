@@ -44,8 +44,8 @@ int main(int argc, char* argv[]) {
     using namespace GeographicLib;
     typedef Math::real real;
     real
-      a = Constants::WGS84_a<real>(),
-      f = Constants::WGS84_f<real>();
+      a = Constants::WGS84_a(),
+      f = Constants::WGS84_f();
     bool reverse = false, sign = true, polyline = false;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
@@ -165,12 +165,9 @@ int main(int argc, char* argv[]) {
         num = poly.Compute(reverse, sign, perimeter, area);
         if (num > 0) {
           *output << num << " "
-                  << Utility::str(perimeter,
-                                  8 + Math::extra_digits<Math::real>()+1);
+                  << Utility::str(perimeter, 8 + Math::extra_digits()+1);
           if (!polyline)
-            *output << " "
-                    << Utility::str(area,
-                                    3 + Math::extra_digits<Math::real>()+1);
+            *output << " " << Utility::str(area, 3 + Math::extra_digits()+1);
           *output << eol;
         }
         poly.Clear();
@@ -181,11 +178,9 @@ int main(int argc, char* argv[]) {
     num = poly.Compute(reverse, sign, perimeter, area);
     if (num > 0) {
       *output << num << " "
-              << Utility::str(perimeter,
-                              8 + Math::extra_digits<Math::real>()+1);
+              << Utility::str(perimeter, 8 + Math::extra_digits()+1);
       if (!polyline)
-        *output << " "
-                << Utility::str(area, 3 + Math::extra_digits<Math::real>()+1);
+        *output << " " << Utility::str(area, 3 + Math::extra_digits()+1);
       *output << eol;
     }
     poly.Clear();

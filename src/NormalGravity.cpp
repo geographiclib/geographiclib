@@ -71,14 +71,14 @@ namespace GeographicLib {
     }
 
   const NormalGravity
-  NormalGravity::WGS84(Constants::WGS84_a<real>(), Constants::WGS84_GM<real>(),
-                       Constants::WGS84_omega<real>(),
-                       Constants::WGS84_f<real>(), 0);
+  NormalGravity::WGS84(Constants::WGS84_a(), Constants::WGS84_GM(),
+                       Constants::WGS84_omega(),
+                       Constants::WGS84_f(), 0);
 
   const NormalGravity
-  NormalGravity::GRS80(Constants::GRS80_a<real>(), Constants::GRS80_GM<real>(),
-                       Constants::GRS80_omega<real>(),
-                       0, Constants::GRS80_J2<real>());
+  NormalGravity::GRS80(Constants::GRS80_a(), Constants::GRS80_GM(),
+                       Constants::GRS80_omega(),
+                       0, Constants::GRS80_J2());
 
   Math::real NormalGravity::qf(real ep2) {
     // Compute
@@ -148,7 +148,7 @@ namespace GeographicLib {
 
   Math::real NormalGravity::SurfaceGravity(real lat) const {
     real
-      phi = lat * Math::degree<real>(),
+      phi = lat * Math::degree(),
       sphi2 = abs(lat) == 90 ? 1 : Math::sq(sin(phi));
     // H+M, Eq 2-78
     return _gammae * (1 + _k * sphi2) / sqrt(1 - _e2 * sphi2);

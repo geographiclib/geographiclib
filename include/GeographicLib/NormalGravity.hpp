@@ -225,7 +225,7 @@ namespace GeographicLib {
      *   the value used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const
-    { return Init() ? _a : Math::NaN<real>(); }
+    { return Init() ? _a : Math::NaN(); }
 
     /**
      * @return \e GM the mass constant of the ellipsoid
@@ -233,7 +233,7 @@ namespace GeographicLib {
      *   constructor.
      **********************************************************************/
     Math::real MassConstant() const
-    { return Init() ? _GM : Math::NaN<real>(); }
+    { return Init() ? _GM : Math::NaN(); }
 
     /**
      * @return \e J<sub>n</sub> the dynamical form factors of the ellipsoid.
@@ -247,49 +247,49 @@ namespace GeographicLib {
      * sqrt(2 \e n + 1).
      **********************************************************************/
     Math::real DynamicalFormFactor(int n = 2) const
-    { return Init() ? ( n == 2 ? _J2 : Jn(n)) : Math::NaN<real>(); }
+    { return Init() ? ( n == 2 ? _J2 : Jn(n)) : Math::NaN(); }
 
     /**
      * @return &omega; the angular velocity of the ellipsoid (rad
      *   s<sup>&minus;1</sup>).  This is the value used in the constructor.
      **********************************************************************/
     Math::real AngularVelocity() const
-    { return Init() ? _omega : Math::NaN<real>(); }
+    { return Init() ? _omega : Math::NaN(); }
 
     /**
      * @return <i>f</i> the flattening of the ellipsoid (\e a &minus; \e b)/\e
      *   a.
      **********************************************************************/
     Math::real Flattening() const
-    { return Init() ? _f : Math::NaN<real>(); }
+    { return Init() ? _f : Math::NaN(); }
 
     /**
      * @return &gamma;<sub>e</sub> the normal gravity at equator (m
      *   s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real EquatorialGravity() const
-    { return Init() ? _gammae : Math::NaN<real>(); }
+    { return Init() ? _gammae : Math::NaN(); }
 
     /**
      * @return &gamma;<sub>p</sub> the normal gravity at poles (m
      *   s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real PolarGravity() const
-    { return Init() ? _gammap : Math::NaN<real>(); }
+    { return Init() ? _gammap : Math::NaN(); }
 
     /**
      * @return <i>f*</i> the gravity flattening (&gamma;<sub>p</sub> &minus;
      *   &gamma;<sub>e</sub>) / &gamma;<sub>e</sub>.
      **********************************************************************/
     Math::real GravityFlattening() const
-    { return Init() ? _fstar : Math::NaN<real>(); }
+    { return Init() ? _fstar : Math::NaN(); }
 
     /**
      * @return <i>U</i><sub>0</sub> the constant normal potential for the
      *   surface of the ellipsoid (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real SurfacePotential() const
-    { return Init() ? _U0 : Math::NaN<real>(); }
+    { return Init() ? _U0 : Math::NaN(); }
 
     /**
      * @return the Geocentric object used by this instance.

@@ -51,13 +51,13 @@ namespace GeographicLib {
     _lon1 = lon1;
     _azi1 = azi1;
     // alp1 is in [0, pi]
-    real alp1 = azi1 * Math::degree<real>();
+    real alp1 = azi1 * Math::degree();
     // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
     // problems directly than to skirt them.
     _salp1 =     azi1  == -180 ? 0 : sin(alp1);
     _calp1 = abs(azi1) ==   90 ? 0 : cos(alp1);
     real cbet1, sbet1, phi;
-    phi = lat1 * Math::degree<real>();
+    phi = lat1 * Math::degree();
     // Ensure cbet1 = +epsilon at poles
     sbet1 = _f1 * sin(phi);
     cbet1 = abs(lat1) == 90 ? GeodesicExact::tiny_ : cos(phi);
@@ -91,7 +91,7 @@ namespace GeographicLib {
     _E.Reset(-_k2, -g._ep2, 1 + _k2, 1 + g._ep2);
 
     if (_caps & CAP_E) {
-      _E0 = _E.E() / (Math::pi<real>() / 2);
+      _E0 = _E.E() / (Math::pi() / 2);
       _E1 = _E.deltaE(_ssig1, _csig1, _dn1);
       real s = sin(_E1), c = cos(_E1);
       // tau1 = sig1 + B11
@@ -102,12 +102,12 @@ namespace GeographicLib {
     }
 
     if (_caps & CAP_D) {
-      _D0 = _E.D() / (Math::pi<real>() / 2);
+      _D0 = _E.D() / (Math::pi() / 2);
       _D1 = _E.deltaD(_ssig1, _csig1, _dn1);
     }
 
     if (_caps & CAP_H) {
-      _H0 = _E.H() / (Math::pi<real>() / 2);
+      _H0 = _E.H() / (Math::pi() / 2);
       _H1 = _E.deltaH(_ssig1, _csig1, _dn1);
     }
 
@@ -130,13 +130,13 @@ namespace GeographicLib {
     outmask &= _caps & OUT_ALL;
     if (!( Init() && (arcmode || (_caps & DISTANCE_IN & OUT_ALL)) ))
       // Uninitialized or impossible distance calculation requested
-      return Math::NaN<real>();
+      return Math::NaN();
 
     // Avoid warning about uninitialized B12.
     real sig12, ssig12, csig12, E2 = 0, AB1 = 0;
     if (arcmode) {
       // Interpret s12_a12 as spherical arc length
-      sig12 = s12_a12 * Math::degree<real>();
+      sig12 = s12_a12 * Math::degree();
       real s12a = abs(s12_a12);
       s12a -= 180 * floor(s12a / 180);
       ssig12 = s12a ==  0 ? 0 : sin(sig12);
@@ -186,7 +186,7 @@ namespace GeographicLib {
       lam12 = atan2(somg2 * _cchi1 - cchi2 * _somg1,
                     cchi2 * _cchi1 + somg2 * _somg1) -
         _e2/_f1 * _salp0 * _H0 * (sig12 + _E.deltaH(ssig2, csig2, dn2) - _H1 );
-      lon12 = lam12 / Math::degree<real>();
+      lon12 = lam12 / Math::degree();
       // Use Math::AngNormalize2 because longitude might have wrapped multiple
       // times.
       lon12 = Math::AngNormalize2(lon12);
@@ -194,11 +194,11 @@ namespace GeographicLib {
     }
 
     if (outmask & LATITUDE)
-      lat2 = atan2(sbet2, _f1 * cbet2) / Math::degree<real>();
+      lat2 = atan2(sbet2, _f1 * cbet2) / Math::degree();
 
     if (outmask & AZIMUTH)
       // minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi2 = 0 - atan2(-salp2, calp2) / Math::degree<real>();
+      azi2 = 0 - atan2(-salp2, calp2) / Math::degree();
 
     if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
       real J12 = _k2 * _D0 * (sig12 + _E.deltaD(ssig2, csig2, dn2) - _D1);
@@ -246,7 +246,7 @@ namespace GeographicLib {
       S12 = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
     }
 
-    return arcmode ? s12_a12 : sig12 / Math::degree<real>();
+    return arcmode ? s12_a12 : sig12 / Math::degree();
   }
 
 } // namespace GeographicLib

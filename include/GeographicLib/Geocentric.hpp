@@ -244,14 +244,14 @@ namespace GeographicLib {
      *   the value used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const
-    { return Init() ? _a : Math::NaN<real>(); }
+    { return Init() ? _a : Math::NaN(); }
 
     /**
      * @return \e f the  flattening of the ellipsoid.  This is the
      *   value used in the constructor.
      **********************************************************************/
     Math::real Flattening() const
-    { return Init() ? _f : Math::NaN<real>(); }
+    { return Init() ? _f : Math::NaN(); }
     ///@}
 
     /// \cond SKIP
@@ -260,7 +260,7 @@ namespace GeographicLib {
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const
-    { return Init() ? 1/_f : Math::NaN<real>(); }
+    { return Init() ? 1/_f : Math::NaN(); }
     /// \endcond
 
     /**

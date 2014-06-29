@@ -201,9 +201,9 @@ namespace GeographicLib {
     : _name(name)
     , _dir(path)
     , _cubic(cubic)
-    , _a( Constants::WGS84_a<real>() )
-    , _e2( (2 - Constants::WGS84_f<real>()) * Constants::WGS84_f<real>() )
-    , _degree( Math::degree<real>() )
+    , _a( Constants::WGS84_a() )
+    , _e2( (2 - Constants::WGS84_f()) * Constants::WGS84_f() )
+    , _degree( Math::degree() )
     , _eps( sqrt(numeric_limits<real>::epsilon()) )
     , _threadsafe(false)        // Set after cache is read
   {
@@ -304,8 +304,8 @@ namespace GeographicLib {
   Math::real Geoid::height(real lat, real lon, bool gradp,
                            real& gradn, real& grade) const {
     if (Math::isnan(lat) || Math::isnan(lon)) {
-      if (gradp) gradn = grade = Math::NaN<real>();
-      return Math::NaN<real>();
+      if (gradp) gradn = grade = Math::NaN();
+      return Math::NaN();
     }
     lon = Math::AngNormalize(lon);
     real

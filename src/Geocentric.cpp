@@ -28,16 +28,16 @@ namespace GeographicLib {
       throw GeographicErr("Minor radius is not positive");
   }
 
-  const Geocentric Geocentric::WGS84(Constants::WGS84_a<real>(),
-                                     Constants::WGS84_f<real>());
+  const Geocentric Geocentric::WGS84(Constants::WGS84_a(),
+                                     Constants::WGS84_f());
 
   void Geocentric::IntForward(real lat, real lon, real h,
                               real& X, real& Y, real& Z,
                               real M[dim2_]) const {
     lon = Math::AngNormalize(lon);
     real
-      phi = lat * Math::degree<real>(),
-      lam = lon * Math::degree<real>(),
+      phi = lat * Math::degree(),
+      lam = lon * Math::degree(),
       sphi = sin(phi),
       cphi = abs(lat) == 90 ? 0 : cos(phi),
       n = _a/sqrt(1 - _e2 * Math::sq(sphi)),
@@ -149,9 +149,9 @@ namespace GeographicLib {
         h = - _a * (_f >= 0 ? _e2m : 1) * H / _e2a;
       }
     }
-    lat = atan2(sphi, cphi) / Math::degree<real>();
+    lat = atan2(sphi, cphi) / Math::degree();
     // Negative signs return lon in [-180, 180).
-    lon = -atan2(-slam, clam) / Math::degree<real>();
+    lon = -atan2(-slam, clam) / Math::degree();
     if (M)
       Rotation(sphi, cphi, slam, clam, M);
   }

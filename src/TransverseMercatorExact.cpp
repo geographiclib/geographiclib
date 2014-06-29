@@ -76,9 +76,9 @@ namespace GeographicLib {
   }
 
   const TransverseMercatorExact
-  TransverseMercatorExact::UTM(Constants::WGS84_a<real>(),
-                               Constants::WGS84_f<real>(),
-                               Constants::UTM_k0<real>());
+  TransverseMercatorExact::UTM(Constants::WGS84_a(),
+                               Constants::WGS84_f(),
+                               Constants::UTM_k0());
 
   // tau = tan(phi), taup = sinh(psi)
   Math::real TransverseMercatorExact::taup(real tau) const {
@@ -145,9 +145,9 @@ namespace GeographicLib {
   bool TransverseMercatorExact::zetainv0(real psi, real lam, real& u, real& v)
     const {
     bool retval = false;
-    if (psi < -_e * Math::pi<real>()/4 &&
-        lam > (1 - 2 * _e) * Math::pi<real>()/2 &&
-        psi < lam - (1 - _e) * Math::pi<real>()/2) {
+    if (psi < -_e * Math::pi()/4 &&
+        lam > (1 - 2 * _e) * Math::pi()/2 &&
+        psi < lam - (1 - _e) * Math::pi()/2) {
       // N.B. this branch is normally not taken because psi < 0 is converted
       // psi > 0 by Forward.
       //
@@ -159,14 +159,14 @@ namespace GeographicLib {
       // Inverting this gives:
       real
         psix = 1 - psi / _e,
-        lamx = (Math::pi<real>()/2 - lam) / _e;
+        lamx = (Math::pi()/2 - lam) / _e;
       u = Math::asinh(sin(lamx) / Math::hypot(cos(lamx), sinh(psix))) *
         (1 + _mu/2);
       v = atan2(cos(lamx), sinh(psix)) * (1 + _mu/2);
       u = _Eu.K() - u;
       v = _Ev.K() - v;
-    } else if (psi < _e * Math::pi<real>()/2 &&
-               lam > (1 - 2 * _e) * Math::pi<real>()/2) {
+    } else if (psi < _e * Math::pi()/2 &&
+               lam > (1 - 2 * _e) * Math::pi()/2) {
       // At w = w0 = i * Ev.K(), we have
       //
       //     zeta = zeta0 = i * (1 - _e) * pi/2
@@ -179,14 +179,14 @@ namespace GeographicLib {
       // When inverting this, we map arg(w - w0) = [-90, 0] to
       // arg(zeta - zeta0) = [-90, 180]
       real
-        dlam = lam - (1 - _e) * Math::pi<real>()/2,
+        dlam = lam - (1 - _e) * Math::pi()/2,
         rad = Math::hypot(psi, dlam),
         // atan2(dlam-psi, psi+dlam) + 45d gives arg(zeta - zeta0) in range
         // [-135, 225).  Subtracting 180 (since multiplier is negative) makes
         // range [-315, 45).  Multiplying by 1/3 (for cube root) gives range
         // [-105, 15).  In particular the range [-90, 180] in zeta space maps
         // to [-90, 0] in w space as required.
-        ang = atan2(dlam-psi, psi+dlam) - real(0.75) * Math::pi<real>();
+        ang = atan2(dlam-psi, psi+dlam) - real(0.75) * Math::pi();
       // Error using this guess is about 0.21 * (rad/e)^(5/3)
       retval = rad < _e * taytol_;
       rad = Math::cbrt(3 / (_mv * _e) * rad);
@@ -200,8 +200,8 @@ namespace GeographicLib {
       v = Math::asinh(sin(lam) / Math::hypot(cos(lam), sinh(psi)));
       u = atan2(sinh(psi), cos(lam));
       // But scale to put 90,0 on the right place
-      u *= _Eu.K() / (Math::pi<real>()/2);
-      v *= _Eu.K() / (Math::pi<real>()/2);
+      u *= _Eu.K() / (Math::pi()/2);
+      v *= _Eu.K() / (Math::pi()/2);
     }
     return retval;
   }
@@ -299,7 +299,7 @@ namespace GeographicLib {
         rad = Math::hypot(xi, deta),
         // Map the range [-90, 180] in sigma space to [-90, 0] in w space.  See
         // discussion in zetainv0 on the cut for ang.
-        ang = atan2(deta-xi, xi+deta) - real(0.75) * Math::pi<real>();
+        ang = atan2(deta-xi, xi+deta) - real(0.75) * Math::pi();
       // Error using this guess is about 0.068 * rad^(5/3)
       retval = rad < 2 * taytol_;
       rad = Math::cbrt(3 / _mv * rad);
@@ -385,8 +385,8 @@ namespace GeographicLib {
       lon = 180 - lon;
     }
     real
-      phi = lat * Math::degree<real>(),
-      lam = lon * Math::degree<real>(),
+      phi = lat * Math::degree(),
+      lam = lon * Math::degree(),
       tau = tanx(phi);
 
     // u,v = coordinates for the Thompson TM, Lee 54
@@ -419,7 +419,7 @@ namespace GeographicLib {
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
       tau=taupinv(tau);
       Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-      gamma /= Math::degree<real>();
+      gamma /= Math::degree();
     }
     if (backside)
       gamma = 180 - gamma;
@@ -461,13 +461,13 @@ namespace GeographicLib {
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
       tau = taupinv(tau);
       phi = atan(tau);
-      lat = phi / Math::degree<real>();
-      lon = lam / Math::degree<real>();
+      lat = phi / Math::degree();
+      lon = lam / Math::degree();
       Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-      gamma /= Math::degree<real>();
+      gamma /= Math::degree();
     } else {
       tau = overflow_;
-      phi = Math::pi<real>()/2;
+      phi = Math::pi()/2;
       lat = 90;
       lon = lam = gamma = 0;
       k = 1;

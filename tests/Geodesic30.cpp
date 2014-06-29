@@ -6165,7 +6165,7 @@ namespace GeographicLib {
   }
 
   template class Geodesic30<double>;
-#if HAVE_LONG_DOUBLE
+#if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
   template class Geodesic30<long double>;
 #endif
 

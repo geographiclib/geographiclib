@@ -61,7 +61,7 @@ namespace GeographicLib {
     unsigned _mask;
     unsigned _num;
     int _crossings;
-    Accumulator<real> _areasum, _perimetersum;
+    Accumulator<> _areasum, _perimetersum;
     real _lat0, _lon0, _lat1, _lon1;
     static inline int transit(real lon1, real lon2) {
       // Return 1 or -1 if crossing prime meridian in east or west direction.
@@ -101,7 +101,7 @@ namespace GeographicLib {
       _crossings = 0;
       _areasum = 0;
       _perimetersum = 0;
-      _lat0 = _lon0 = _lat1 = _lon1 = Math::NaN<real>();
+      _lat0 = _lon0 = _lat1 = _lon1 = Math::NaN();
     }
 
     /**

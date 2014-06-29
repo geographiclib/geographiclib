@@ -73,7 +73,7 @@ namespace GeographicLib {
       yn = sqrt(xn * yn);
       xn = t;
     }
-    return Math::pi<real>() / (xn + yn);
+    return Math::pi() / (xn + yn);
   }
 
   Math::real EllipticFunction::RC(real x, real y) {
@@ -114,7 +114,7 @@ namespace GeographicLib {
       t = xn - yn;
       s += mul * t * t;
     }
-    return (Math::sq( (x0 + y0)/2 ) - s) * Math::pi<real>() / (2 * (xn + yn));
+    return (Math::sq( (x0 + y0)/2 ) - s) * Math::pi() / (2 * (xn + yn));
   }
 
   Math::real EllipticFunction::RJ(real x, real y, real z, real p) {
@@ -242,16 +242,16 @@ namespace GeographicLib {
   bool EllipticFunction::Init() const {
     // Complete elliptic integral K(k), Carlson eq. 4.1
     // http://dlmf.nist.gov/19.25.E1
-    _Kc = _kp2 ? RF(_kp2, 1) : Math::infinity<real>();
+    _Kc = _kp2 ? RF(_kp2, 1) : Math::infinity();
     // Complete elliptic integral E(k), Carlson eq. 4.2
     // http://dlmf.nist.gov/19.25.E1
     _Ec = _kp2 ? 2 * RG(_kp2, 1) : 1;
     // D(k) = (K(k) - E(k))/m, Carlson eq.4.3
     // http://dlmf.nist.gov/19.25.E1
-    _Dc = _kp2 ? RD(real(0), _kp2, 1) / 3 : Math::infinity<real>();
+    _Dc = _kp2 ? RD(real(0), _kp2, 1) / 3 : Math::infinity();
     if (_alpha2) {
       // http://dlmf.nist.gov/19.25.E2
-      real rj = _kp2 ? RJ(0, _kp2, 1, _alphap2) : Math::infinity<real>();
+      real rj = _kp2 ? RJ(0, _kp2, 1, _alphap2) : Math::infinity();
       // Pi(alpha^2, k)
       _Pic = _Kc + _alpha2 * rj / 3;
       // G(alpha^2, k)
@@ -419,55 +419,55 @@ namespace GeographicLib {
   Math::real EllipticFunction::deltaF(real sn, real cn, real dn) const {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
-    return F(sn, cn, dn) * (Math::pi<real>()/2) / K() - atan2(sn, cn);
+    return F(sn, cn, dn) * (Math::pi()/2) / K() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaE(real sn, real cn, real dn) const {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
-    return E(sn, cn, dn) * (Math::pi<real>()/2) / E() - atan2(sn, cn);
+    return E(sn, cn, dn) * (Math::pi()/2) / E() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaPi(real sn, real cn, real dn)
     const {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
-    return Pi(sn, cn, dn) * (Math::pi<real>()/2) / Pi() - atan2(sn, cn);
+    return Pi(sn, cn, dn) * (Math::pi()/2) / Pi() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaD(real sn, real cn, real dn) const {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
-    return D(sn, cn, dn) * (Math::pi<real>()/2) / D() - atan2(sn, cn);
+    return D(sn, cn, dn) * (Math::pi()/2) / D() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaG(real sn, real cn, real dn) const {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
-    return G(sn, cn, dn) * (Math::pi<real>()/2) / G() - atan2(sn, cn);
+    return G(sn, cn, dn) * (Math::pi()/2) / G() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaH(real sn, real cn, real dn) const {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
-    return H(sn, cn, dn) * (Math::pi<real>()/2) / H() - atan2(sn, cn);
+    return H(sn, cn, dn) * (Math::pi()/2) / H() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::F(real phi) const {
     real sn = sin(phi), cn = cos(phi);
-    return (deltaF(sn, cn, Delta(sn, cn)) + phi) * K() / (Math::pi<real>()/2);
+    return (deltaF(sn, cn, Delta(sn, cn)) + phi) * K() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::E(real phi) const {
     real sn = sin(phi), cn = cos(phi);
-    return (deltaE(sn, cn, Delta(sn, cn)) + phi) * E() / (Math::pi<real>()/2);
+    return (deltaE(sn, cn, Delta(sn, cn)) + phi) * E() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::Ed(real ang) const {
     real n = ceil(ang/360 - real(0.5));
     ang -= 360 * n;
     real
-      phi = ang * Math::degree<real>(),
+      phi = ang * Math::degree(),
       sn = abs(ang) == 180 ? 0 : sin(phi),
       cn = abs(ang) ==  90 ? 0 : cos(phi);
     return E(sn, cn, Delta(sn, cn)) + 4 * E() * n;
@@ -475,22 +475,22 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::Pi(real phi) const {
     real sn = sin(phi), cn = cos(phi);
-    return (deltaPi(sn, cn, Delta(sn, cn)) + phi) * Pi() / (Math::pi<real>()/2);
+    return (deltaPi(sn, cn, Delta(sn, cn)) + phi) * Pi() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::D(real phi) const {
     real sn = sin(phi), cn = cos(phi);
-    return (deltaD(sn, cn, Delta(sn, cn)) + phi) * D() / (Math::pi<real>()/2);
+    return (deltaD(sn, cn, Delta(sn, cn)) + phi) * D() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::G(real phi) const {
     real sn = sin(phi), cn = cos(phi);
-    return (deltaG(sn, cn, Delta(sn, cn)) + phi) * G() / (Math::pi<real>()/2);
+    return (deltaG(sn, cn, Delta(sn, cn)) + phi) * G() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::H(real phi) const {
     real sn = sin(phi), cn = cos(phi);
-    return (deltaH(sn, cn, Delta(sn, cn)) + phi) * H() / (Math::pi<real>()/2);
+    return (deltaH(sn, cn, Delta(sn, cn)) + phi) * H() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::Einv(real x) const {
@@ -498,7 +498,7 @@ namespace GeographicLib {
     real n = floor(x / (2 * _Ec) + 0.5);
     x -= 2 * _Ec * n;           // x now in [-ec, ec)
     // Linear approximation
-    real phi = Math::pi<real>() * x / (2 * _Ec); // phi in [-pi/2, pi/2)
+    real phi = Math::pi() * x / (2 * _Ec); // phi in [-pi/2, pi/2)
     // First order correction
     phi -= _eps * sin(2 * phi) / 2;
     for (int i = 0; i < num_; ++i) {
@@ -511,14 +511,14 @@ namespace GeographicLib {
       if (abs(err) < tolJAC_)
         break;
     }
-    return n * Math::pi<real>() + phi;
+    return n * Math::pi() + phi;
   }
 
   Math::real EllipticFunction::deltaEinv(real stau, real ctau) const {
     // Function is periodic with period pi
     if (ctau < 0) { ctau = -ctau; stau = -stau; }
     real tau = atan2(stau, ctau);
-    return Einv( tau * E() / (Math::pi<real>()/2) ) - tau;
+    return Einv( tau * E() / (Math::pi()/2) ) - tau;
   }
 
 } // namespace GeographicLib

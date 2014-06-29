@@ -30,14 +30,14 @@ namespace GeographicLib {
     , _au(_a, _f, real(0), real(1), real(0), real(1), real(1))
   {}
 
-  const Ellipsoid Ellipsoid::WGS84(Constants::WGS84_a<real>(),
-                                   Constants::WGS84_f<real>());
+  const Ellipsoid Ellipsoid::WGS84(Constants::WGS84_a(),
+                                   Constants::WGS84_f());
 
   Math::real Ellipsoid::QuarterMeridian() const
   { return _b * _ell.E(); }
 
   Math::real Ellipsoid::Area() const {
-    return 4 * Math::pi<real>() *
+    return 4 * Math::pi() *
       ((Math::sq(_a) + Math::sq(_b) *
         (_e2 == 0 ? 1 :
          (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
@@ -65,7 +65,7 @@ namespace GeographicLib {
     if (abs(mu) == 90)
       return mu;
     return InverseParametricLatitude(_ell.Einv(mu * _ell.E() / 90) /
-                                     Math::degree<real>());
+                                     Math::degree());
   }
 
   Math::real Ellipsoid::AuthalicLatitude(real phi) const
@@ -81,10 +81,10 @@ namespace GeographicLib {
   { return atand(_tm.tauf(tand(chi))); }
 
   Math::real Ellipsoid::IsometricLatitude(real phi) const
-  { return Math::asinh(_tm.taupf(tand(phi))) / Math::degree<real>(); }
+  { return Math::asinh(_tm.taupf(tand(phi))) / Math::degree(); }
 
   Math::real Ellipsoid::InverseIsometricLatitude(real psi) const
-  { return atand(_tm.tauf(sinh(psi * Math::degree<real>()))); }
+  { return atand(_tm.tauf(sinh(psi * Math::degree()))); }
 
   Math::real Ellipsoid::CircleRadius(real phi) const {
     return abs(phi) == 90 ? 0 :
@@ -102,20 +102,20 @@ namespace GeographicLib {
   { return _b * _ell.Ed( ParametricLatitude(phi) ); }
 
   Math::real Ellipsoid::MeridionalCurvatureRadius(real phi) const {
-    real v = 1 - _e2 * Math::sq(sin(phi * Math::degree<real>()));
+    real v = 1 - _e2 * Math::sq(sin(phi * Math::degree()));
     return _a * (1 - _e2) / (v * sqrt(v));
   }
 
   Math::real Ellipsoid::TransverseCurvatureRadius(real phi) const {
-    real v = 1 - _e2 * Math::sq(sin(phi * Math::degree<real>()));
+    real v = 1 - _e2 * Math::sq(sin(phi * Math::degree()));
     return _a / sqrt(v);
   }
 
   Math::real Ellipsoid::NormalCurvatureRadius(real phi, real azi)
     const {
     real
-      alpha = azi * Math::degree<real>(),
-      v = 1 - _e2 * Math::sq(sin(phi * Math::degree<real>()));
+      alpha = azi * Math::degree(),
+      v = 1 - _e2 * Math::sq(sin(phi * Math::degree()));
     return _a / (sqrt(v) *
                  (Math::sq(cos(alpha)) * v / (1 - _e2) + Math::sq(sin(alpha))));
   }

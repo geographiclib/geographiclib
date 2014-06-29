@@ -42,8 +42,8 @@ int main(int argc, char* argv[]) {
     bool lcc = false, albers = false, reverse = false;
     real lat1 = 0, lat2 = 0, lon0 = 0, k1 = 1;
     real
-      a = Constants::WGS84_a<real>(),
-      f = Constants::WGS84_f<real>();
+      a = Constants::WGS84_a(),
+      f = Constants::WGS84_f();
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
 

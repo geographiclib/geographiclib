@@ -39,7 +39,7 @@ namespace GeographicLib {
     if (!(abs(stdlat) <= 90))
       throw GeographicErr("Standard latitude not in [-90d, 90d]");
     real
-      phi = stdlat * Math::degree<real>(),
+      phi = stdlat * Math::degree(),
       sphi = sin(phi),
       cphi = abs(stdlat) != 90 ? cos(phi) : 0;
     Init(sphi, cphi, sphi, cphi, k0);
@@ -66,8 +66,8 @@ namespace GeographicLib {
     if (!(abs(stdlat2) <= 90))
       throw GeographicErr("Standard latitude 2 not in [-90d, 90d]");
     real
-      phi1 = stdlat1 * Math::degree<real>(),
-      phi2 = stdlat2 * Math::degree<real>();
+      phi1 = stdlat1 * Math::degree(),
+      phi2 = stdlat2 * Math::degree();
     Init(sin(phi1), abs(stdlat1) != 90 ? cos(phi1) : 0,
          sin(phi2), abs(stdlat2) != 90 ? cos(phi2) : 0, k1);
   }
@@ -290,7 +290,7 @@ namespace GeographicLib {
     _tchi0 = tphi0 * hyp(shxi0) - shxi0 * hyp(tphi0); _scchi0 = hyp(_tchi0);
     _psi0 = Math::asinh(_tchi0);
 
-    _lat0 = atan(_sign * tphi0) / Math::degree<real>();
+    _lat0 = atan(_sign * tphi0) / Math::degree();
     _t0nm1 = Math::expm1(- _n * _psi0); // Snyder's t0^n - 1
     // a * k1 * m1/t1^n = a * k1 * m2/t2^n = a * k1 * n * (Snyder's F)
     // = a * k1 / (scbet1 * exp(-n * psi1))
@@ -326,8 +326,8 @@ namespace GeographicLib {
   }
 
   const LambertConformalConic
-  LambertConformalConic::Mercator(Constants::WGS84_a<real>(),
-                                  Constants::WGS84_f<real>(),
+  LambertConformalConic::Mercator(Constants::WGS84_a(),
+                                  Constants::WGS84_f(),
                                   real(0), real(1));
 
   void LambertConformalConic::Forward(real lon0, real lat, real lon,
@@ -345,8 +345,8 @@ namespace GeographicLib {
     // where nrho0 = n * rho0, drho = rho - rho0
     // and drho is evaluated with divided differences
     real
-      lam = lon * Math::degree<real>(),
-      phi = _sign * lat * Math::degree<real>(),
+      lam = lon * Math::degree(),
+      phi = _sign * lat * Math::degree(),
       sphi = sin(phi), cphi = abs(lat) != 90 ? cos(phi) : epsx_,
       tphi = sphi/cphi, scbet = hyp(_fm * tphi),
       scphi = 1/cphi, shxi = sinh(eatanhe(sphi)),
@@ -368,7 +368,7 @@ namespace GeographicLib {
       (exp( - (Math::sq(_nc)/(1 + _n)) * dpsi )
        * (tchi >= 0 ? scchi + tchi : 1 / (scchi - tchi)) / (_scchi0 + _tchi0));
     y *= _sign;
-    gamma = _sign * theta / Math::degree<real>();
+    gamma = _sign * theta / Math::degree();
   }
 
   void LambertConformalConic::Reverse(real lon0, real x, real y,
@@ -448,13 +448,13 @@ namespace GeographicLib {
       phi = _sign * atan(tphi),
       scbet = hyp(_fm * tphi), scchi = hyp(tchi),
       lam = _n != 0 ? gamma / _n : x / y1;
-    lat = phi / Math::degree<real>();
-    lon = lam / Math::degree<real>();
+    lat = phi / Math::degree();
+    lon = lam / Math::degree();
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
     k = _k0 * (scbet/_scbet0) /
       (exp(_nc != 0 ? - (Math::sq(_nc)/(1 + _n)) * dpsi : 0)
        * (tchi >= 0 ? scchi + tchi : 1 / (scchi - tchi)) / (_scchi0 + _tchi0));
-    gamma /= _sign * Math::degree<real>();
+    gamma /= _sign * Math::degree();
   }
 
   void LambertConformalConic::SetScale(real lat, real k) {

@@ -47,8 +47,8 @@ int main(int argc, char* argv[]) {
     bool azimuthal = false, cassini = false, gnomonic = false, reverse = false;
     real lat0 = 0, lon0 = 0;
     real
-      a = Constants::WGS84_a<real>(),
-      f = Constants::WGS84_f<real>();
+      a = Constants::WGS84_a(),
+      f = Constants::WGS84_f();
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
 

@@ -51,10 +51,10 @@ namespace GeographicLib {
         abs(x) == real(90) ? (x < 0 ?
                               - TransverseMercator::overflow_
                               : TransverseMercator::overflow_) :
-        tan(x * Math::degree<real>());
+        tan(x * Math::degree());
     }
     static real atand(real x)
-    { using std::atan; return atan(x) / Math::degree<real>(); }
+    { using std::atan; return atan(x) / Math::degree(); }
 
   public:
     /** \name Constructor
@@ -109,7 +109,7 @@ namespace GeographicLib {
      *   a sphere with the same volume is cbrt(\e V / (4&pi;/3)).
      **********************************************************************/
     Math::real Volume() const
-    { return (4 * Math::pi<real>()) * Math::sq(_a) * _b / 3; }
+    { return (4 * Math::pi()) * Math::sq(_a) * _b / 3; }
     ///@}
 
     /** \name %Ellipsoid shape

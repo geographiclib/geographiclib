@@ -883,7 +883,7 @@ namespace GeographicLib {
      *   polygon.
      **********************************************************************/
     Math::real EllipsoidArea() const
-    { return 4 * Math::pi<real>() * _c2; }
+    { return 4 * Math::pi() * _c2; }
     ///@}
 
     /**

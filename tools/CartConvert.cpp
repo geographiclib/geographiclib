@@ -41,8 +41,8 @@ int main(int argc, char* argv[]) {
     typedef Math::real real;
     bool localcartesian = false, reverse = false;
     real
-      a = Constants::WGS84_a<real>(),
-      f = Constants::WGS84_f<real>();
+      a = Constants::WGS84_a(),
+      f = Constants::WGS84_f();
     real lat0 = 0, lon0 = 0, h0 = 0;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';

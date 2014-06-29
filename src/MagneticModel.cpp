@@ -40,13 +40,13 @@ namespace GeographicLib {
     , _dir(path)
     , _description("NONE")
     , _date("UNKNOWN")
-    , _t0(Math::NaN<real>())
+    , _t0(Math::NaN())
     , _dt0(1)
-    , _tmin(Math::NaN<real>())
-    , _tmax(Math::NaN<real>())
-    , _a(Math::NaN<real>())
-    , _hmin(Math::NaN<real>())
-    , _hmax(Math::NaN<real>())
+    , _tmin(Math::NaN())
+    , _tmax(Math::NaN())
+    , _a(Math::NaN())
+    , _hmin(Math::NaN())
+    , _hmax(Math::NaN())
     , _Nmodels(1)
     , _norm(SphericalHarmonic::SCHMIDT)
     , _earth(earth)
@@ -219,12 +219,12 @@ namespace GeographicLib {
                                       real& Dt, real& It) {
     H = Math::hypot(Bx, By);
     Ht = H ? (Bx * Bxt + By * Byt) / H : Math::hypot(Bxt, Byt);
-    D = (0 - (H ? atan2(-Bx, By) : atan2(-Bxt, Byt))) / Math::degree<real>();
-    Dt = (H ? (By * Bxt - Bx * Byt) / Math::sq(H) : 0) / Math::degree<real>();
+    D = (0 - (H ? atan2(-Bx, By) : atan2(-Bxt, Byt))) / Math::degree();
+    Dt = (H ? (By * Bxt - Bx * Byt) / Math::sq(H) : 0) / Math::degree();
     F = Math::hypot(H, Bz);
     Ft = F ? (H * Ht + Bz * Bzt) / F : Math::hypot(Ht, Bzt);
-    I = (F ? atan2(-Bz, H) : atan2(-Bzt, Ht)) / Math::degree<real>();
-    It = (F ? (Bz * Ht - H * Bzt) / Math::sq(F) : 0) / Math::degree<real>();
+    I = (F ? atan2(-Bz, H) : atan2(-Bzt, Ht)) / Math::degree();
+    It = (F ? (Bz * Ht - H * Bzt) / Math::sq(F) : 0) / Math::degree();
   }
 
   std::string MagneticModel::DefaultMagneticPath() {

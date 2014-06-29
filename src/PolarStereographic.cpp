@@ -38,9 +38,9 @@ namespace GeographicLib {
   }
 
   const PolarStereographic
-  PolarStereographic::UPS(Constants::WGS84_a<real>(),
-                          Constants::WGS84_f<real>(),
-                          Constants::UPS_k0<real>());
+  PolarStereographic::UPS(Constants::WGS84_a(),
+                          Constants::WGS84_f(),
+                          Constants::UPS_k0());
 
   // This formulation converts to conformal coordinates by tau = tan(phi) and
   // tau' = tan(phi') where phi' is the conformal latitude.  The formulas are:
@@ -68,7 +68,7 @@ namespace GeographicLib {
     const {
     lat *= northp ? 1 : -1;
     real
-      phi = lat * Math::degree<real>(),
+      phi = lat * Math::degree(),
       tau = lat != -90 ? tanx(phi) : -overflow_,
       secphi = Math::hypot(real(1), tau),
       sig = sinh( eatanhe(tau / secphi) ),
@@ -80,7 +80,7 @@ namespace GeographicLib {
       _k0;
     lon = Math::AngNormalize(lon);
     real
-      lam = lon * Math::degree<real>();
+      lam = lon * Math::degree();
     x = rho * (lon == -180 ? 0 : sin(lam));
     y = (northp ? -rho : rho) * (abs(lon) == 90 ? 0 : cos(lam));
     gamma = northp ? lon : -lon;
@@ -114,8 +114,8 @@ namespace GeographicLib {
       secphi = Math::hypot(real(1), tau);
     k = rho != 0 ?
       (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) : _k0;
-    lat = (northp ? 1 : -1) * (rho != 0 ? phi / Math::degree<real>() : 90);
-    lon = -atan2( -x, northp ? -y : y ) / Math::degree<real>();
+    lat = (northp ? 1 : -1) * (rho != 0 ? phi / Math::degree() : 90);
+    lon = -atan2( -x, northp ? -y : y ) / Math::degree();
     gamma = northp ? lon : -lon;
   }
 

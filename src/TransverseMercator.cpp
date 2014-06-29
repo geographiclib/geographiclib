@@ -204,9 +204,9 @@ namespace GeographicLib {
   }
 
   const TransverseMercator
-  TransverseMercator::UTM(Constants::WGS84_a<real>(),
-                          Constants::WGS84_f<real>(),
-                          Constants::UTM_k0<real>());
+  TransverseMercator::UTM(Constants::WGS84_a(),
+                          Constants::WGS84_f(),
+                          Constants::UTM_k0());
 
   // Engsager and Poder (2007) use trigonometric series to convert between phi
   // and phip.
@@ -322,8 +322,8 @@ namespace GeographicLib {
       lon = 180 - lon;
     }
     real
-      phi = lat * Math::degree<real>(),
-      lam = lon * Math::degree<real>();
+      phi = lat * Math::degree(),
+      lam = lon * Math::degree();
     // phi = latitude
     // phi' = conformal latitude
     // psi = isometric latitude
@@ -366,7 +366,7 @@ namespace GeographicLib {
       k = sqrt(_e2m + _e2 * Math::sq(cos(phi))) * Math::hypot(real(1), tau)
         / Math::hypot(taup, c);
     } else {
-      xip = Math::pi<real>()/2;
+      xip = Math::pi()/2;
       etap = 0;
       gamma = lam;
       k = _c;
@@ -458,8 +458,8 @@ namespace GeographicLib {
     // Gauss-Krueger TM.
     gamma -= atan2(yi1, yr1);
     k *= _b1 * Math::hypot(yr1, yi1);
-    gamma /= Math::degree<real>();
-    y = _a1 * _k0 * (backside ? Math::pi<real>() - xi : xi) * latsign;
+    gamma /= Math::degree();
+    y = _a1 * _k0 * (backside ? Math::pi() - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
     if (backside)
       gamma = 180 - gamma;
@@ -482,9 +482,9 @@ namespace GeographicLib {
       etasign = eta < 0 ? -1 : 1;
     xi *= xisign;
     eta *= etasign;
-    bool backside = xi > Math::pi<real>()/2;
+    bool backside = xi > Math::pi()/2;
     if (backside)
-      xi = Math::pi<real>() - xi;
+      xi = Math::pi() - xi;
     real
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
       s0 = sin(2 * xi), sh0 = sinh(2 * eta),
@@ -540,17 +540,17 @@ namespace GeographicLib {
       k *= sqrt(_e2m + _e2 * Math::sq(cos(phi))) *
         Math::hypot(real(1), tau) * r;
     } else {
-      phi = Math::pi<real>()/2;
+      phi = Math::pi()/2;
       lam = 0;
       k *= _c;
     }
-    lat = phi / Math::degree<real>() * xisign;
-    lon = lam / Math::degree<real>();
+    lat = phi / Math::degree() * xisign;
+    lon = lam / Math::degree();
     if (backside)
       lon = 180 - lon;
     lon *= etasign;
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
-    gamma /= Math::degree<real>();
+    gamma /= Math::degree();
     if (backside)
       gamma = 180 - gamma;
     gamma *= xisign * etasign;

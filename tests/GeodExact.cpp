@@ -15,6 +15,7 @@ int main() {
       std::cout << s12 << " " << azi1 << " " << azi2 << "\n";
     }
   }
+  /*
   {
     GeographicLib::Geodesic30<long double> g(6.4e6L, 0.01L);
     {
@@ -28,5 +29,6 @@ int main() {
       std::cout << s12 << " " << azi1 << " " << azi2 << "\n";
     }
   }
+  */
   return 0;
 }

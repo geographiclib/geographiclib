@@ -78,8 +78,8 @@ int main(int argc, char* argv[]) {
     bool linecalc = false, inverse = false, arcmode = false,
       dms = false, full = false, exact = false;
     real
-      a = Constants::WGS84_a<real>(),
-      f = Constants::WGS84_f<real>();
+      a = Constants::WGS84_a(),
+      f = Constants::WGS84_f();
     real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12, M12, M21, S12;
     real azi2sense = 0;
     int prec = 3;
@@ -218,7 +218,7 @@ int main(int argc, char* argv[]) {
 
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
-    prec = std::min(10 + Math::extra_digits<Math::real>(), std::max(0, prec));
+    prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     std::string s;
     int retval = 0;
     while (std::getline(*input, s)) {

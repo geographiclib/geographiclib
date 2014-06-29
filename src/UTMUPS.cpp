@@ -74,7 +74,7 @@ namespace GeographicLib {
     if (zone1 == INVALID) {
       zone = zone1;
       northp = northp1;
-      x = y = gamma = k = Math::NaN<real>();
+      x = y = gamma = k = Math::NaN();
       return;
     }
     real x1, y1, gamma1, k1;
@@ -119,7 +119,7 @@ namespace GeographicLib {
                        real& lat, real& lon, real& gamma, real& k,
                        bool mgrslimits) {
     if (zone == INVALID || Math::isnan(x) || Math::isnan(y)) {
-      lat = lon = gamma = k = Math::NaN<real>();
+      lat = lon = gamma = k = Math::NaN();
       return;
     }
     if (!(zone >= MINZONE && zone <= MAXZONE))

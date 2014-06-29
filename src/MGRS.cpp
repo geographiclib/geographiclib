@@ -174,7 +174,7 @@ namespace GeographicLib {
         toupper(mgrs[2]) == 'V') {
       zone = UTMUPS::INVALID;
       northp = false;
-      x = y = Math::NaN<real>();
+      x = y = Math::NaN();
       prec = -2;
       return;
     }
