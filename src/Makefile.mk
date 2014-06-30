@@ -52,7 +52,7 @@ SOURCES = $(addsuffix .cpp,$(MODULES))
 OBJECTS = $(addsuffix .o,$(MODULES))
 
 CC = g++ -g
-CXXFLAGS = -g -Wall -Wextra -O3
+CXXFLAGS = -g -Wall -Wextra -O3 -std=c++0x
 
 CPPFLAGS = -I$(INCLUDEPATH) $(DEFINES) \
 	-DGEOGRAPHICLIB_DATA=\"$(GEOGRAPHICLIB_DATA)\"

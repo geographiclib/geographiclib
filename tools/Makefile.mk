@@ -28,7 +28,7 @@ PREFIX = /usr/local
 GEOGRAPHICLIB_DATA = $(PREFIX)/share/GeographicLib
 
 CC = g++ -g
-CXXFLAGS = -g -Wall -Wextra -O3
+CXXFLAGS = -g -Wall -Wextra -O3 -std=c++0x
 
 CPPFLAGS = -I$(INCLUDEPATH) -I../man $(DEFINES)
 LDLIBS = -L$(LIBPATH) -l$(LIBSTEM)
