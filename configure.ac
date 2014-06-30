@@ -47,28 +47,23 @@ AC_PROG_MAKE_SET
 AC_PROG_INSTALL
 AC_PROG_CXX
 AC_PROG_LIBTOOL
+AC_LANG_CPLUSPLUS
 
-# Checks for header files.
-AC_CHECK_HEADERS([float.h])
-
-# Checks for typedefs, structures, and compiler characteristics.
-AC_HEADER_STDBOOL
-AC_C_INLINE
+# Checks for long double
 AC_TYPE_LONG_DOUBLE
-
-# Checks for library functions.
-AC_FUNC_STRTOD
-AC_CHECK_FUNCS([strtol])
-AC_SEARCH_LIBS([floor],[m])
-AC_SEARCH_LIBS([pow],[m])
-AC_SEARCH_LIBS([sqrt],[m])
 
 # Check endianness
 AC_C_BIGENDIAN
 
-# Check for C++11
-AX_CHECK_COMPILE_FLAG([-std=c++0x],
-	[CXXFLAGS="$CXXFLAGS -std=c++0x -DGEOGRAPHICLIB_CXX11_MATH=1"])
+# Check flag for C++11
+AX_CHECK_COMPILE_FLAG([-std=c++0x], [CXXFLAGS="$CXXFLAGS -std=c++0x"])
+# Check for C++11 math functions
+AC_TRY_COMPILE([#include <cmath>],
+	[return int(std::hypot(3.0, 4.0) + std::expm1(0.5) +
+                    std::log1p(2.0) + std::asinh(10.0) + std::atanh(0.8) +
+                    std::cbrt(8.0)) + std::isfinite(4.0) + std::isnan(0.0);],
+	[CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=1"],
+	[CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=0"])
 
 # Check for doxygen.
 AC_CHECK_PROGS([DOXYGEN], [doxygen])

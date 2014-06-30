@@ -52,12 +52,10 @@ SOURCES = $(addsuffix .cpp,$(MODULES))
 OBJECTS = $(addsuffix .o,$(MODULES))
 
 CC = g++ -g
-# The use of -std=c++0x and -DGEOGRAPHICLIB_CXX11_MATH=1 go together
 CXXFLAGS = -g -Wall -Wextra -O3 -std=c++0x
 
 CPPFLAGS = -I$(INCLUDEPATH) $(DEFINES) \
 	-DGEOGRAPHICLIB_DATA=\"$(GEOGRAPHICLIB_DATA)\" 
-	-DGEOGRAPHICLIB_CXX11_MATH=1
 LDFLAGS = $(LIBRARY)
 
 $(LIBRARY): $(OBJECTS)

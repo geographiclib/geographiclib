@@ -225,18 +225,13 @@ if (NOT MSVC)
   endif ()
 endif ()
 
-if (NOT (CYGWIN OR ANDROID))
-  # cygwin and android have a long double but the support for ::cbrtl,
-  # etc., is missing
-  include (CheckTypeSize)
-  check_type_size ("long double" LONG_DOUBLE BUILTIN_TYPES_ONLY)
-  set (GEOGRAPHICLIB_HAVE_LONG_DOUBLE ${HAVE_LONG_DOUBLE})
-endif ()
+include (CheckTypeSize)
+check_type_size ("long double" LONG_DOUBLE BUILTIN_TYPES_ONLY)
+set (GEOGRAPHICLIB_HAVE_LONG_DOUBLE ${HAVE_LONG_DOUBLE})
 include (TestBigEndian)
 test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
-if (GEOGRAPHICLIB_PRECISION EQUAL 4 AND
-    CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+if (GEOGRAPHICLIB_PRECISION EQUAL 4 AND CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   find_package (Boost 1.54)
   if (Boost_FOUND)
     include_directories ("${Boost_INCLUDE_DIRS}")
@@ -331,26 +326,44 @@ if (MSVC)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-  # check for C++11 support.  If available, the C++11 static_assert and
-  # various math functions (std::atanh, etc.) are used.  This flag is
-  # *not* propagated to clients that use GeographicLib.  However, this
-  # is of no consequence.  When the client code is being compiled (and
-  # the GeographicLib headers being included), work-alike substitutions
-  # for static_assert and std::atanh are used.
+  # check for C++11 support.  If available, the C++11 static_assert is
+  # used.  This flag is *not* propagated to clients that use
+  # GeographicLib.  However, this is of no consequence.  When the client
+  # code is being compiled (and the GeographicLib headers being
+  # included), a work-alike substitution is used.
   include (CheckCXXCompilerFlag)
-  set (CXX11FLAG "-std=c++11")
-  check_cxx_compiler_flag (${CXX11FLAG} CXX11TEST1)
+  set (CXX11_FLAG "-std=c++11")
+  check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST1)
   if (NOT CXX11TEST1)
-    set (CXX11FLAG "-std=c++0x")
-    check_cxx_compiler_flag (${CXX11FLAG} CXX11TEST2)
+    set (CXX11_FLAG "-std=c++0x")
+    check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST2)
     if (NOT CXX11TEST2)
-      unset (CXX11FLAG)
+      unset (CXX11_FLAG)
     endif ()
   endif ()
-  if (CXX11FLAG)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11FLAG}")
-    add_definitions (-DGEOGRAPHICLIB_CPLUSPLUS11_MATH=1)
+  if (CXX11_FLAG)
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
   endif ()
+endif ()
+
+# Check whether the C++11 math function: std::expm1, std::atanh,
+# etc. are available.  This flag is *not* propagated to clients that use
+# GeographicLib.  However, this is of no consequence.  When the client
+# code is being compiled (and the GeographicLib headers being included),
+# work-alike substitutions are used.
+include (CheckCXXSourceCompiles)
+set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS}")
+check_cxx_source_compiles (
+  "#include <cmath>
+int main() {
+  return int(std::hypot(3.0, 4.0) + std::expm1(0.5) + std::log1p(2.0) +
+             std::asinh(10.0) + std::atanh(0.8) + std::cbrt(8.0)) +
+         std::isfinite(4.0) + std::isnan(0.0);
+}\n" CXX11_MATH)
+if (CXX11_MATH)
+  add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)
+else ()
+  add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=0)
 endif ()
 
 if (APPLE)

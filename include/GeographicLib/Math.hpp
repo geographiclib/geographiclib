@@ -24,7 +24,8 @@
 // according to Pullan Lu), does not support std::atanh.  Android toolchains
 // might define __ANDROID__ or ANDROID; so need to check both.
 #  if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ >= 7 \
-  && __cplusplus >= 201103 && !(defined(__ANDROID__) || defined(ANDROID))
+  && __cplusplus >= 201103 && \
+  !(defined(__ANDROID__) || defined(ANDROID) || defined(__CYGWIN__))
 #    define GEOGRAPHICLIB_CXX11_MATH 1
 // Visual C++ 12 supports these functions
 #  elif defined(_MSC_VER) && _MSC_VER >= 1800
