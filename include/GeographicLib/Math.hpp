@@ -17,7 +17,7 @@
 /**
  * Are C++11 math functions available?
  **********************************************************************/
-#if !defined(GEOGRAPHICLIB_CPLUSPLUS11_MATH)
+#if !defined(GEOGRAPHICLIB_CXX11_MATH)
 // Recent versions of g++ -std=c++11 (4.7 and later?) set __cplusplus to 201103
 // and support the new C++11 mathematical functions, std::atanh, etc.  However
 // the Android toolchain, which uses g++ -std=c++11 (4.8 as of 2014-03-11,
@@ -25,12 +25,12 @@
 // might define __ANDROID__ or ANDROID; so need to check both.
 #  if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ >= 7 \
   && __cplusplus >= 201103 && !(defined(__ANDROID__) || defined(ANDROID))
-#    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
+#    define GEOGRAPHICLIB_CXX11_MATH 1
 // Visual C++ 12 supports these functions
 #  elif defined(_MSC_VER) && _MSC_VER >= 1800
-#    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
+#    define GEOGRAPHICLIB_CXX11_MATH 1
 #  else
-#    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 0
+#    define GEOGRAPHICLIB_CXX11_MATH 0
 #  endif
 #endif
 
@@ -202,7 +202,7 @@ namespace GeographicLib {
      * @return sqrt(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>).
      **********************************************************************/
     template<typename T> static inline T hypot(T x, T y) {
-#if GEOGRAPHICLIB_CPLUSPLUS11_MATH
+#if GEOGRAPHICLIB_CXX11_MATH
       using std::hypot; return hypot(x, y);
 #else
       x = abs(x); y = abs(y);
@@ -222,7 +222,7 @@ namespace GeographicLib {
      * @return exp(\e x) &minus; 1.
      **********************************************************************/
     template<typename T> static inline T expm1(T x) {
-#if GEOGRAPHICLIB_CPLUSPLUS11_MATH
+#if GEOGRAPHICLIB_CXX11_MATH
       using std::expm1; return expm1(x);
 #else
       volatile T
@@ -244,7 +244,7 @@ namespace GeographicLib {
      * @return log(1 + \e x).
      **********************************************************************/
     template<typename T> static inline T log1p(T x) {
-#if GEOGRAPHICLIB_CPLUSPLUS11_MATH
+#if GEOGRAPHICLIB_CXX11_MATH
       using std::log1p; return log1p(x);
 #else
       volatile T
@@ -266,7 +266,7 @@ namespace GeographicLib {
      * @return asinh(\e x).
      **********************************************************************/
     template<typename T> static inline T asinh(T x) {
-#if GEOGRAPHICLIB_CPLUSPLUS11_MATH
+#if GEOGRAPHICLIB_CXX11_MATH
       using std::asinh; return asinh(x);
 #else
       T y = std::abs(x);     // Enforce odd parity
@@ -283,7 +283,7 @@ namespace GeographicLib {
      * @return atanh(\e x).
      **********************************************************************/
     template<typename T> static inline T atanh(T x) {
-#if GEOGRAPHICLIB_CPLUSPLUS11_MATH
+#if GEOGRAPHICLIB_CXX11_MATH
       using std::atanh; return atanh(x);
 #else
       T y = std::abs(x);     // Enforce odd parity
@@ -300,7 +300,7 @@ namespace GeographicLib {
      * @return the real cube root of \e x.
      **********************************************************************/
     template<typename T> static inline T cbrt(T x) {
-#if GEOGRAPHICLIB_CPLUSPLUS11_MATH
+#if GEOGRAPHICLIB_CXX11_MATH
       using std::cbrt; return cbrt(x);
 #else
       T y = std::pow(std::abs(x), 1/T(3)); // Return the real cube root
@@ -388,7 +388,7 @@ namespace GeographicLib {
      * @return true if number is finite, false if NaN or infinite.
      **********************************************************************/
     template<typename T> static inline bool isfinite(T x) {
-#if GEOGRAPHICLIB_CPLUSPLUS11_MATH
+#if GEOGRAPHICLIB_CXX11_MATH
       using std::isfinite; return isfinite(x);
 #else
       return std::abs(x) <= (std::numeric_limits<T>::max)();
@@ -419,7 +419,7 @@ namespace GeographicLib {
      * @return true if argument is a NaN.
      **********************************************************************/
     template<typename T> static inline bool isnan(T x) {
-#if GEOGRAPHICLIB_CPLUSPLUS11_MATH
+#if GEOGRAPHICLIB_CXX11_MATH
       using std::isnan; return isnan(x);
 #else
       return x != x;

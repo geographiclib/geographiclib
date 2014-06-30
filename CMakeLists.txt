@@ -349,6 +349,7 @@ else ()
   endif ()
   if (CXX11FLAG)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11FLAG}")
+    add_definitions (-DGEOGRAPHICLIB_CPLUSPLUS11_MATH=1)
   endif ()
 endif ()
 

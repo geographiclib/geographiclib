@@ -67,7 +67,8 @@ AC_SEARCH_LIBS([sqrt],[m])
 AC_C_BIGENDIAN
 
 # Check for C++11
-AX_CHECK_COMPILE_FLAG([-std=c++0x], [CXXFLAGS="$CXXFLAGS -std=c++0x"])
+AX_CHECK_COMPILE_FLAG([-std=c++0x],
+	[CXXFLAGS="$CXXFLAGS -std=c++0x -DGEOGRAPHICLIB_CXX11_MATH=1"])
 
 # Check for doxygen.
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
