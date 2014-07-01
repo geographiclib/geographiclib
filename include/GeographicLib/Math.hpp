@@ -10,7 +10,7 @@
 // Constants.hpp includes Math.hpp.  Place this include outside Math.hpp's
 // include guard to enforce this ordering.
 #include <GeographicLib/Constants.hpp>
-#include <iostream>
+
 #if !defined(GEOGRAPHICLIB_MATH_HPP)
 #define GEOGRAPHICLIB_MATH_HPP 1
 
@@ -206,9 +206,11 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::hypot; return hypot(x, y);
 #else
+      using std::abs; using std::sqrt;
       x = abs(x); y = abs(y);
-      T a = (std::max)(x, y), b = (std::min)(x, y) / (a ? a : 1);
-      return a * sqrt(1 + b * b);
+      if (x < y) std::swap(x, y); // Now x >= y >= 0
+      y /= (x != 0 ? x : 1);
+      return x * sqrt(1 + y * y);
       // For an alternative (square-root free) method see
       // C. Moler and D. Morrision (1983) http://dx.doi.org/10.1147/rd.276.0577
       // and A. A. Dubrulle (1983) http://dx.doi.org/10.1147/rd.276.0582
@@ -226,14 +228,15 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::expm1; return expm1(x);
 #else
+      using std::exp; using std::abs; using std::log;
       volatile T
-        y = std::exp(x),
+        y = exp(x),
         z = y - 1;
       // The reasoning here is similar to that for log1p.  The expression
       // mathematically reduces to exp(x) - 1, and the factor z/log(y) = (y -
       // 1)/log(y) is a slowly varying quantity near y = 1 and is accurately
       // computed.
-      return std::abs(x) > 1 ? z : (z == 0 ? x : x * z / std::log(y));
+      return abs(x) > 1 ? z : (z == 0 ? x : x * z / log(y));
 #endif
     }
 
@@ -248,6 +251,7 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::log1p; return log1p(x);
 #else
+      using std::log;
       volatile T
         y = 1 + x,
         z = y - 1;
@@ -255,7 +259,7 @@ namespace GeographicLib {
       // approx x, thus log(y)/z (which is nearly constant near z = 0) returns
       // a good approximation to the true log(1 + x)/x.  The multiplication x *
       // (log(y)/z) introduces little additional error.
-      return z == 0 ? x : x * std::log(y) / z;
+      return z == 0 ? x : x * log(y) / z;
 #endif
     }
 
@@ -270,7 +274,7 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::asinh; return asinh(x);
 #else
-      T y = std::abs(x);     // Enforce odd parity
+      using std::abs; T y = abs(x); // Enforce odd parity
       y = log1p(y * (1 + y/(hypot(T(1), y) + 1)));
       return x < 0 ? -y : y;
 #endif
@@ -287,7 +291,7 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::atanh; return atanh(x);
 #else
-      T y = std::abs(x);     // Enforce odd parity
+      using std::abs; T y = abs(x); // Enforce odd parity
       y = log1p(2 * y/(1 - y))/2;
       return x < 0 ? -y : y;
 #endif
@@ -304,7 +308,8 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::cbrt; return cbrt(x);
 #else
-      T y = std::pow(std::abs(x), 1/T(3)); // Return the real cube root
+      using std::abs; using std::pow;
+      T y = pow(abs(x), 1/T(3)); // Return the real cube root
       return x < 0 ? -y : y;
 #endif
     }
@@ -392,7 +397,8 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::isfinite; return isfinite(x);
 #else
-      return std::abs(x) <= (std::numeric_limits<T>::max)();
+      using std::abs;
+      return abs(x) <= (std::numeric_limits<T>::max)();
 #endif
     }
 
