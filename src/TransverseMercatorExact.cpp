@@ -45,17 +45,13 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real TransverseMercatorExact::tol_ =
-    numeric_limits<real>::epsilon();
-  const Math::real TransverseMercatorExact::tol1_ = real(0.1) * sqrt(tol_);
-  const Math::real TransverseMercatorExact::tol2_ = real(0.1) * tol_;
-  const Math::real TransverseMercatorExact::taytol_ = pow(tol_, real(0.6));
-  // Overflow value s.t. atan(overflow_) = pi/2
-  const Math::real TransverseMercatorExact::overflow_ = 1 / Math::sq(tol_);
-
   TransverseMercatorExact::TransverseMercatorExact(real a, real f, real k0,
                                                    bool extendp)
-    : _a(a)
+    : tol_(numeric_limits<real>::epsilon())
+    , tol1_(real(0.1) * sqrt(tol_))
+    , tol2_(real(0.1) * tol_)
+    , taytol_(pow(tol_, real(0.6)))
+    , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _k0(k0)
     , _mu(_f * (2 - _f))        // e^2
@@ -118,9 +114,9 @@ namespace GeographicLib {
     real
       d1 = sqrt(Math::sq(cnu) + _mv * Math::sq(snu * snv)),
       d2 = sqrt(_mu * Math::sq(cnu) + _mv * Math::sq(cnv)),
-      t1 = (d1 ? snu * dnv / d1 : (snu < 0 ? -overflow_ : overflow_)),
+      t1 = (d1 ? snu * dnv / d1 : (snu < 0 ? -overflow() : overflow())),
       t2 = (d2 ? sinh( _e * Math::asinh(_e * snu / d2) ) :
-            (snu < 0 ? -overflow_ : overflow_));
+            (snu < 0 ? -overflow() : overflow()));
     // psi = asinh(t1) - asinh(t2)
     // taup = sinh(psi)
     taup = t1 * Math::hypot(real(1), t2) - t2 * Math::hypot(real(1), t1);
@@ -466,7 +462,7 @@ namespace GeographicLib {
       Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
       gamma /= Math::degree();
     } else {
-      tau = overflow_;
+      tau = overflow();
       phi = Math::pi()/2;
       lat = 90;
       lon = lam = gamma = 0;

@@ -13,17 +13,13 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real LambertConformalConic::eps_ =
-    numeric_limits<real>::epsilon();
-  const Math::real LambertConformalConic::epsx_ = Math::sq(eps_);
-  const Math::real LambertConformalConic::tol_ = real(0.1) * sqrt(eps_);
-  const Math::real LambertConformalConic::ahypover_ =
-    real(Math::digits()) * log(real(numeric_limits<real>::radix))
-    + 2;
-
   LambertConformalConic::LambertConformalConic(real a, real f,
                                                real stdlat, real k0)
-    : _a(a)
+    : eps_(numeric_limits<real>::epsilon())
+    , epsx_(Math::sq(eps_))
+    , tol_(real(0.1) * sqrt(eps_))
+    , ahypover_(Math::digits() * log(real(numeric_limits<real>::radix)) + 2)
+    , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
@@ -48,7 +44,11 @@ namespace GeographicLib {
   LambertConformalConic::LambertConformalConic(real a, real f,
                                                real stdlat1, real stdlat2,
                                                real k1)
-    : _a(a)
+    : eps_(numeric_limits<real>::epsilon())
+    , epsx_(Math::sq(eps_))
+    , tol_(real(0.1) * sqrt(eps_))
+    , ahypover_(Math::digits() * log(real(numeric_limits<real>::radix)) + 2)
+    , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
@@ -76,7 +76,11 @@ namespace GeographicLib {
                                                real sinlat1, real coslat1,
                                                real sinlat2, real coslat2,
                                                real k1)
-    : _a(a)
+    : eps_(numeric_limits<real>::epsilon())
+    , epsx_(Math::sq(eps_))
+    , tol_(real(0.1) * sqrt(eps_))
+    , ahypover_(Math::digits() * log(real(numeric_limits<real>::radix)) + 2)
+    , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))

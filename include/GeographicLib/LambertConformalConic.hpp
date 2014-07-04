@@ -57,13 +57,10 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT LambertConformalConic {
   private:
     typedef Math::real real;
+    real eps_, epsx_, tol_, ahypover_;
     real _a, _f, _fm, _e2, _e, _e2m;
     real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
     real _scbet0, _tchi0, _scchi0, _psi0, _nrho0, _drhomax;
-    static const real eps_;
-    static const real epsx_;
-    static const real tol_;
-    static const real ahypover_;
     static const int numit_ = 5;
     static inline real hyp(real x) { return Math::hypot(real(1), x); }
     // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0

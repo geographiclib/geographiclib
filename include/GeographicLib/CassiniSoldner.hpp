@@ -69,11 +69,10 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT CassiniSoldner {
   private:
     typedef Math::real real;
+    real eps1_, tiny_;
     Geodesic _earth;
     GeodesicLine _meridian;
     real _sbet0, _cbet0;
-    static const real eps1_;
-    static const real tiny_;
     static const unsigned maxit_ = 10;
 
     // The following private helper functions are copied from Geodesic.
@@ -106,8 +105,7 @@ namespace GeographicLib {
      * This constructor makes an "uninitialized" object.  Call Reset to set the
      * central latitude and longitude, prior to calling Forward and Reverse.
      **********************************************************************/
-    explicit CassiniSoldner(const Geodesic& earth = Geodesic::WGS84)
-      : _earth(earth) {}
+    explicit CassiniSoldner(const Geodesic& earth = Geodesic::WGS84);
 
     /**
      * Constructor for CassiniSoldner specifying a center point.
@@ -121,10 +119,7 @@ namespace GeographicLib {
      * lon0 should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     CassiniSoldner(real lat0, real lon0,
-                   const Geodesic& earth = Geodesic::WGS84)
-      : _earth(earth) {
-      Reset(lat0, lon0);
-    }
+                   const Geodesic& earth = Geodesic::WGS84);
 
     /**
      * Set the central point of the projection

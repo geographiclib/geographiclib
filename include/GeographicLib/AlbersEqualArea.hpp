@@ -60,14 +60,10 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT AlbersEqualArea {
   private:
     typedef Math::real real;
+    real eps_, epsx_, epsx2_, tol_, tol0_;
     real _a, _f, _fm, _e2, _e, _e2m, _qZ, _qx;
     real _sign, _lat0, _k0;
     real _n0, _m02, _nrho0, _k2, _txi0, _scxi0, _sxi0;
-    static const real eps_;
-    static const real epsx_;
-    static const real epsx2_;
-    static const real tol_;
-    static const real tol0_;
     static const int numit_ = 5;   // Newton iterations in Reverse
     static const int numit0_ = 20; // Newton iterations in Init
     static inline real hyp(real x) { return Math::hypot(real(1), x); }

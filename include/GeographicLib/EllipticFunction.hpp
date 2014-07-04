@@ -62,11 +62,6 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT EllipticFunction {
   private:
     typedef Math::real real;
-    static const real tol_;
-    static const real tolRF_;
-    static const real tolRD_;
-    static const real tolRG0_;
-    static const real tolJAC_;
     enum { num_ = 13 }; // Max depth required for sncndn.  Probably 5 is enough.
     real _k2, _kp2, _alpha2, _alphap2, _eps;
     mutable bool _init;

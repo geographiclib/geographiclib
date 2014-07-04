@@ -101,10 +101,9 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Gnomonic {
   private:
     typedef Math::real real;
+    real eps0_, eps_;
     Geodesic _earth;
     real _a, _f;
-    static const real eps0_;
-    static const real eps_;
     static const int numit_ = 10;
   public:
 
@@ -114,11 +113,7 @@ namespace GeographicLib {
      * @param[in] earth the Geodesic object to use for geodesic calculations.
      *   By default this uses the WGS84 ellipsoid.
      **********************************************************************/
-    explicit Gnomonic(const Geodesic& earth = Geodesic::WGS84)
-      : _earth(earth)
-      , _a(_earth.MajorRadius())
-      , _f(_earth.Flattening())
-    {}
+    explicit Gnomonic(const Geodesic& earth = Geodesic::WGS84);
 
     /**
      * Forward projection, from geographic to gnomonic.

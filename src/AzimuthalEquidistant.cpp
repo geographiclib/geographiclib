@@ -13,8 +13,9 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real AzimuthalEquidistant::eps_ =
-    real(0.01) * sqrt(numeric_limits<real>::min());
+  AzimuthalEquidistant::AzimuthalEquidistant(const Geodesic& earth)
+      : eps_(real(0.01) * sqrt(numeric_limits<real>::min()))
+      , _earth(earth) {}
 
   void AzimuthalEquidistant::Forward(real lat0, real lon0, real lat, real lon,
                                      real& x, real& y, real& azi, real& rk)

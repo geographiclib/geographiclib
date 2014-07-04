@@ -40,7 +40,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     static const int numit_ = 10;
-    static const real stol_;
+    real stol_;
     real _a, _f, _f1, _f12, _e2, _e12, _n, _b;
     TransverseMercator _tm;
     EllipticFunction _ell;
@@ -49,8 +49,8 @@ namespace GeographicLib {
       using std::abs; using std::tan;
       return
         abs(x) == real(90) ? (x < 0 ?
-                              - TransverseMercator::overflow_
-                              : TransverseMercator::overflow_) :
+                              - TransverseMercator::overflow()
+                              : TransverseMercator::overflow()) :
         tan(x * Math::degree());
     }
     static real atand(real x)

@@ -79,21 +79,22 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT TransverseMercatorExact {
   private:
     typedef Math::real real;
-    static const real tol_;
-    static const real tol1_;
-    static const real tol2_;
-    static const real taytol_;
-    static const real overflow_;
     static const int numit_ = 10;
+    real tol_, tol1_, tol2_, taytol_;
     real _a, _f, _k0, _mu, _mv, _e;
     bool _extendp;
     EllipticFunction _Eu, _Ev;
+    static inline real overflow()
+    // Overflow value s.t. atan(overflow_) = pi/2
+    { return 1 / Math::sq(std::numeric_limits<real>::epsilon()); }
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
     static inline real tanx(real x) {
       using std::tan;
       real t = tan(x);
       // Write the tests this way to ensure that tanx(NaN()) is NaN()
-      return x >= 0 ? (!(t < 0) ? t : overflow_) : (!(t >= 0) ? t : -overflow_);
+      return x >= 0 ?
+        (!(t <  0) ? t :  overflow()) :
+        (!(t >= 0) ? t : -overflow());
     }
 
     real taup(real tau) const;

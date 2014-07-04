@@ -13,11 +13,9 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real Ellipsoid::stol_ =
-    0.01 * sqrt(numeric_limits<real>::epsilon());
-
   Ellipsoid::Ellipsoid(real a, real f)
-    : _a(a)
+    : stol_(real(0.01) * sqrt(numeric_limits<real>::epsilon()))
+    , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _f1(1 - _f)
     , _f12(Math::sq(_f1))

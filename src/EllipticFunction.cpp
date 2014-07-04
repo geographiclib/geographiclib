@@ -13,13 +13,6 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real EllipticFunction::tol_ =
-    numeric_limits<real>::epsilon() * real(0.01);
-  const Math::real EllipticFunction::tolRF_ = pow(3 * tol_, 1/real(8));
-  const Math::real EllipticFunction::tolRD_ = pow(real(0.2) * tol_, 1/real(8));
-  const Math::real EllipticFunction::tolRG0_ = real(2.7) * sqrt(tol_);
-  const Math::real EllipticFunction::tolJAC_ = sqrt(tol_);
-
   /*
    * Implementation of methods given in
    *
@@ -30,10 +23,12 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::RF(real x, real y, real z) {
     // Carlson, eqs 2.2 - 2.7
+    real tolRF =
+      pow(3 * numeric_limits<real>::epsilon() * real(0.01), 1/real(8));
     real
       A0 = (x + y + z)/3,
       An = A0,
-      Q = max(max(abs(A0-x), abs(A0-y)), abs(A0-z)) / tolRF_,
+      Q = max(max(abs(A0-x), abs(A0-y)), abs(A0-z)) / tolRF,
       x0 = x,
       y0 = y,
       z0 = z,
@@ -65,9 +60,11 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::RF(real x, real y) {
     // Carlson, eqs 2.36 - 2.38
+    real tolRG0 =
+      real(2.7) * sqrt((numeric_limits<real>::epsilon() * real(0.01)));
     real xn = sqrt(x), yn = sqrt(y);
     if (xn < yn) swap(xn, yn);
-    while (abs(xn-yn) > tolRG0_ * xn) {
+    while (abs(xn-yn) > tolRG0 * xn) {
       // Max 4 trips
       real t = (xn + yn) /2;
       yn = sqrt(xn * yn);
@@ -98,6 +95,8 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::RG(real x, real y) {
     // Carlson, eqs 2.36 - 2.39
+    real tolRG0 =
+      real(2.7) * sqrt((numeric_limits<real>::epsilon() * real(0.01)));
     real
       x0 = sqrt(max(x, y)),
       y0 = sqrt(min(x, y)),
@@ -105,7 +104,7 @@ namespace GeographicLib {
       yn = y0,
       s = 0,
       mul = real(0.25);
-    while (abs(xn-yn) > tolRG0_ * xn) {
+    while (abs(xn-yn) > tolRG0 * xn) {
       // Max 4 trips
       real t = (xn + yn) /2;
       yn = sqrt(xn * yn);
@@ -119,11 +118,13 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::RJ(real x, real y, real z, real p) {
     // Carlson, eqs 2.17 - 2.25
+    real tolRD = pow(real(0.2) * (numeric_limits<real>::epsilon() * real(0.01)),
+                     1/real(8));
     real
       A0 = (x + y + z + 2*p)/5,
       An = A0,
       delta = (p-x) * (p-y) * (p-z),
-      Q = max(max(abs(A0-x), abs(A0-y)), max(abs(A0-z), abs(A0-p))) / tolRD_,
+      Q = max(max(abs(A0-x), abs(A0-y)), max(abs(A0-z), abs(A0-p))) / tolRD,
       x0 = x,
       y0 = y,
       z0 = z,
@@ -169,10 +170,12 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::RD(real x, real y, real z) {
     // Carlson, eqs 2.28 - 2.34
+    real tolRD = pow(real(0.2) * (numeric_limits<real>::epsilon() * real(0.01)),
+                     1/real(8));
     real
       A0 = (x + y + 3*z)/5,
       An = A0,
-      Q = max(max(abs(A0-x), abs(A0-y)), abs(A0-z)) / tolRD_,
+      Q = max(max(abs(A0-x), abs(A0-y)), abs(A0-z)) / tolRD,
       x0 = x,
       y0 = y,
       z0 = z,
@@ -214,8 +217,6 @@ namespace GeographicLib {
     , _alpha2(alpha2)
     , _alphap2(1 - alpha2)
     , _eps(_k2/Math::sq(sqrt(_kp2) + 1))
-      // Don't initialize _Kc, _Ec, _Dc since this constructor might be called
-      // before the static real constants tolRF_, etc., are initialized.
     , _init(false)
   {}
 
@@ -275,6 +276,7 @@ namespace GeographicLib {
   void EllipticFunction::sncndn(real x, real& sn, real& cn, real& dn)
     const {
     // Bulirsch's sncndn routine, p 89.
+    real tolJAC = sqrt(numeric_limits<real>::epsilon() * real(0.01));
     if (_kp2 != 0) {
       real mc = _kp2, d = 0;
       if (_kp2 < 0) {
@@ -291,7 +293,7 @@ namespace GeographicLib {
         m[l] = a;
         n[l] = mc = sqrt(mc);
         c = (a + mc) / 2;
-        if (!(abs(a - mc) > tolJAC_ * a)) {
+        if (!(abs(a - mc) > tolJAC * a)) {
           ++l;
           break;
         }
@@ -495,6 +497,7 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::Einv(real x) const {
     _init || Init();
+    real tolJAC = sqrt(numeric_limits<real>::epsilon() * real(0.01));
     real n = floor(x / (2 * _Ec) + 0.5);
     x -= 2 * _Ec * n;           // x now in [-ec, ec)
     // Linear approximation
@@ -508,7 +511,7 @@ namespace GeographicLib {
         dn = Delta(sn, cn),
         err = (E(sn, cn, dn) - x)/dn;
       phi = phi - err;
-      if (abs(err) < tolJAC_)
+      if (abs(err) < tolJAC)
         break;
     }
     return n * Math::pi() + phi;

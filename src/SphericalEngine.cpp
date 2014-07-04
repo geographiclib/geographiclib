@@ -144,13 +144,6 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real SphericalEngine::scale_ =
-    pow(real(numeric_limits<real>::radix),
-        -3 * (numeric_limits<real>::max_exponent < (1<<14) ?
-              numeric_limits<real>::max_exponent : (1<<14)) / 5);
-  const Math::real SphericalEngine::eps_ =
-    numeric_limits<real>::epsilon() * sqrt(numeric_limits<real>::epsilon());
-
   const vector<Math::real> SphericalEngine::Z_(0);
   vector<Math::real> SphericalEngine::root_(0);
 
@@ -169,7 +162,7 @@ namespace GeographicLib {
       sl = p ? y / p : 0,       // sin(lambda)
       r = Math::hypot(z, p),
       t = r ? z / r : 0,            // cos(theta); at origin, pick theta = pi/2
-      u = r ? max(p / r, eps_) : 1, // sin(theta); but avoid the pole
+      u = r ? max(p / r, eps()) : 1, // sin(theta); but avoid the pole
       q = a / r;
     real
       q2 = Math::sq(q),
@@ -212,7 +205,7 @@ namespace GeographicLib {
         R = c[0].Cv(--k[0]);
         for (int l = 1; l < L; ++l)
           R += c[l].Cv(--k[l], n, m, f[l]);
-        R *= scale_;
+        R *= scale();
         w = A * wc + B * wc2 + R; wc2 = wc; wc = w;
         if (gradp) {
           w = A * wrc + B * wrc2 + (n + 1) * R; wrc2 = wrc; wrc = w;
@@ -222,7 +215,7 @@ namespace GeographicLib {
           R = c[0].Sv(k[0]);
           for (int l = 1; l < L; ++l)
             R += c[l].Sv(k[l], n, m, f[l]);
-          R *= scale_;
+          R *= scale();
           w = A * ws + B * ws2 + R; ws2 = ws; ws = w;
           if (gradp) {
             w = A * wrs + B * wrs2 + (n + 1) * R; wrs2 = wrs; wrs = w;
@@ -272,7 +265,7 @@ namespace GeographicLib {
           break;
         default: break;       // To suppress warning message from Visual Studio
         }
-        qs = q / scale_;
+        qs = q / scale();
         vc = qs * (wc + A * (cl * vc + sl * vs ) + B * vc2);
         if (gradp) {
           qs /= r;
@@ -307,7 +300,7 @@ namespace GeographicLib {
     real
       r = Math::hypot(z, p),
       t = r ? z / r : 0,            // cos(theta); at origin, pick theta = pi/2
-      u = r ? max(p / r, eps_) : 1, // sin(theta); but avoid the pole
+      u = r ? max(p / r, eps()) : 1, // sin(theta); but avoid the pole
       q = a / r;
     real
       q2 = Math::sq(q),
@@ -342,7 +335,7 @@ namespace GeographicLib {
         R = c[0].Cv(--k[0]);
         for (int l = 1; l < L; ++l)
           R += c[l].Cv(--k[l], n, m, f[l]);
-        R *= scale_;
+        R *= scale();
         w = A * wc + B * wc2 + R; wc2 = wc; wc = w;
         if (gradp) {
           w = A * wrc + B * wrc2 + (n + 1) * R; wrc2 = wrc; wrc = w;
@@ -352,7 +345,7 @@ namespace GeographicLib {
           R = c[0].Sv(k[0]);
           for (int l = 1; l < L; ++l)
             R += c[l].Sv(k[l], n, m, f[l]);
-          R *= scale_;
+          R *= scale();
           w = A * ws + B * ws2 + R; ws2 = ws; ws = w;
           if (gradp) {
             w = A * wrs + B * wrs2 + (n + 1) * R; wrs2 = wrs; wrs = w;
@@ -379,6 +372,11 @@ namespace GeographicLib {
       return;
     root_.resize(L);
     for (int l = oldL; l < L; ++l)
+      root_[l] = sqrt(real(l));
+  }
+
+  void SphericalEngine::UpdateRootTable() {
+    for (int l = root_.size(); l--;)
       root_[l] = sqrt(real(l));
   }
 

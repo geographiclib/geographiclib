@@ -13,14 +13,9 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real PolarStereographic::tol_ =
-    real(0.1)*sqrt(numeric_limits<real>::epsilon());
-  // Overflow value s.t. atan(overflow_) = pi/2
-  const Math::real PolarStereographic::overflow_ =
-    1 / Math::sq(numeric_limits<real>::epsilon());
-
   PolarStereographic::PolarStereographic(real a, real f, real k0)
-    : _a(a)
+    : tol_(real(0.1)*sqrt(numeric_limits<real>::epsilon()))
+    , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -69,7 +64,7 @@ namespace GeographicLib {
     lat *= northp ? 1 : -1;
     real
       phi = lat * Math::degree(),
-      tau = lat != -90 ? tanx(phi) : -overflow_,
+      tau = lat != -90 ? tanx(phi) : -overflow(),
       secphi = Math::hypot(real(1), tau),
       sig = sinh( eatanhe(tau / secphi) ),
       taup = Math::hypot(real(1), sig) * tau - sig * secphi,
@@ -95,7 +90,7 @@ namespace GeographicLib {
       taup = (1 / t - t) / 2,
       tau = taup * _Cx,
       stol = tol_ * max(real(1), abs(taup));
-    if (abs(tau) < overflow_) {
+    if (abs(tau) < overflow()) {
       // min iterations = 1, max iterations = 2; mean = 1.99
       for (int i = 0; i < numit_; ++i) {
         real

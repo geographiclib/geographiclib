@@ -45,14 +45,9 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real TransverseMercator::tol_ =
-    real(0.1)*sqrt(numeric_limits<real>::epsilon());
-  // Overflow value s.t. atan(overflow_) = pi/2
-  const Math::real TransverseMercator::overflow_ =
-    1 / Math::sq(numeric_limits<real>::epsilon());
-
   TransverseMercator::TransverseMercator(real a, real f, real k0)
-    : _a(a)
+    : tol_(real(0.1)*sqrt(numeric_limits<real>::epsilon()))
+    , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _k0(k0)
     , _e2(_f * (2 - _f))
@@ -271,7 +266,7 @@ namespace GeographicLib {
   // taupf and tauf are adapted from TransverseMercatorExact (taup and
   // taupinv).  tau = tan(phi), taup = sinh(psi)
   Math::real TransverseMercator::taupf(real tau) const {
-    if (!(abs(tau) < overflow_))
+    if (!(abs(tau) < overflow()))
       return tau;
     real
       tau1 = Math::hypot(real(1), tau),
@@ -280,7 +275,7 @@ namespace GeographicLib {
   }
 
   Math::real TransverseMercator::tauf(real taup) const {
-    if (!(abs(taup) < overflow_))
+    if (!(abs(taup) < overflow()))
       return taup;
     real
       // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use

@@ -42,8 +42,8 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT AzimuthalEquidistant {
   private:
     typedef Math::real real;
+    real eps_;
     Geodesic _earth;
-    static const real eps_;
   public:
 
     /**
@@ -52,8 +52,7 @@ namespace GeographicLib {
      * @param[in] earth the Geodesic object to use for geodesic calculations.
      *   By default this uses the WGS84 ellipsoid.
      **********************************************************************/
-    explicit AzimuthalEquidistant(const Geodesic& earth = Geodesic::WGS84)
-      : _earth(earth) {}
+    explicit AzimuthalEquidistant(const Geodesic& earth = Geodesic::WGS84);
 
     /**
      * Forward projection, from geographic to azimuthal equidistant.

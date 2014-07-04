@@ -18,8 +18,13 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real Gnomonic::eps0_ = numeric_limits<real>::epsilon();
-  const Math::real Gnomonic::eps_ = real(0.01) * sqrt(eps0_);
+  Gnomonic::Gnomonic(const Geodesic& earth)
+    : eps0_(numeric_limits<real>::epsilon())
+    , eps_(real(0.01) * sqrt(eps0_))
+    , _earth(earth)
+    , _a(_earth.MajorRadius())
+    , _f(_earth.Flattening())
+  {}
 
   void Gnomonic::Forward(real lat0, real lon0, real lat, real lon,
                          real& x, real& y, real& azi, real& rk)

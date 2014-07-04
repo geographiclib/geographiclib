@@ -38,22 +38,23 @@ namespace GeographicLib {
 
   using namespace std;
 
-  // Underflow guard.  We require
-  //   tiny_ * epsilon() > 0
-  //   tiny_ + epsilon() == epsilon()
-  const Math::real GeodesicExact::tiny_ = sqrt(numeric_limits<real>::min());
-  const Math::real GeodesicExact::tol0_ = numeric_limits<real>::epsilon();
-  // Increase multiplier in defn of tol1_ from 100 to 200 to fix inverse case
-  // 52.784459512564 0 -52.784459512563990912 179.634407464943777557
-  // which otherwise failed for Visual Studio 10 (Release and Debug)
-  const Math::real GeodesicExact::tol1_ = 200 * tol0_;
-  const Math::real GeodesicExact::tol2_ = sqrt(tol0_);
-  // Check on bisection interval
-  const Math::real GeodesicExact::tolb_ = tol0_ * tol2_;
-  const Math::real GeodesicExact::xthresh_ = 1000 * tol2_;
 
   GeodesicExact::GeodesicExact(real a, real f)
-    : _a(a)
+    : maxit2_(maxit1_ + Math::digits() + 10)
+      // Underflow guard.  We require
+      //   tiny_ * epsilon() > 0
+      //   tiny_ + epsilon() == epsilon()
+    , tiny_(sqrt(numeric_limits<real>::min()))
+    , tol0_(numeric_limits<real>::epsilon())
+      // Increase multiplier in defn of tol1_ from 100 to 200 to fix inverse
+      // case 52.784459512564 0 -52.784459512563990912 179.634407464943777557
+      // which otherwise failed for Visual Studio 10 (Release and Debug)
+    , tol1_(200 * tol0_)
+    , tol2_(sqrt(tol0_))
+      // Check on bisection interval
+    , tolb_(tol0_ * tol2_)
+    , xthresh_(1000 * tol2_)
+    , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
