@@ -185,14 +185,14 @@ namespace GeographicLib {
     static const int nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
     static const unsigned maxit1_ = 20;
-    const unsigned maxit2_ = maxit1_ + Math::digits() + 10;
+    const unsigned maxit2_;
 
-    static const real tiny_;
-    static const real tol0_;
-    static const real tol1_;
-    static const real tol2_;
-    static const real tolb_;
-    static const real xthresh_;
+    const real tiny_;
+    const real tol0_;
+    const real tol1_;
+    const real tol2_;
+    const real tolb_;
+    const real xthresh_;
 
     enum captype {
       CAP_NONE = 0U,

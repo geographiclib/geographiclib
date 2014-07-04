@@ -66,6 +66,7 @@ namespace GeographicLib {
     static const int nC3_ = Geodesic::nC3_;
     static const int nC4_ = Geodesic::nC4_;
 
+    real tiny_;
     real _lat1, _lon1, _azi1;
     real _a, _f, _b, _c2, _f1, _salp0, _calp0, _k2,
       _salp1, _calp1, _ssig1, _csig1, _dn1, _stau1, _ctau1, _somg1, _comg1,

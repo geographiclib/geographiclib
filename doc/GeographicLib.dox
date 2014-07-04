@@ -4765,6 +4765,8 @@ of the git repository for GeographicLib.
    (released 2014-mm-dd)
    - Macro names all start with GEOGRPAHICLIB_
    - Support quad precision.
+   - Support mpreal
+   - Add PolygonAreaT and PolygonAreaExact
    - Retire Windows XP common data path.
    - Simplify cross-platform support for C++11 mathematical functions.
 
