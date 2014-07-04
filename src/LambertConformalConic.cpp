@@ -18,7 +18,7 @@ namespace GeographicLib {
   const Math::real LambertConformalConic::epsx_ = Math::sq(eps_);
   const Math::real LambertConformalConic::tol_ = real(0.1) * sqrt(eps_);
   const Math::real LambertConformalConic::ahypover_ =
-    real(numeric_limits<real>::digits) * log(real(numeric_limits<real>::radix))
+    real(Math::digits()) * log(real(numeric_limits<real>::radix))
     + 2;
 
   LambertConformalConic::LambertConformalConic(real a, real f,
@@ -359,9 +359,9 @@ namespace GeographicLib {
                           (tchi > 0 ? 1/(scchi + tchi) : (scchi - tchi))
                           - (_t0nm1 + 1))/(-_n) :
                          Dexp(-_n * psi, -_n * _psi0) * dpsi);
-    x = (_nrho0 + _n * drho) * (_n != 0 ? stheta / _n : lam);
+    x = (_nrho0 + _n * drho) * (_n ? stheta / _n : lam);
     y = _nrho0 *
-      (_n != 0 ?
+      (_n ?
        (ctheta < 0 ? 1 - ctheta : Math::sq(stheta)/(1 + ctheta)) / _n : 0)
       - drho * ctheta;
     k = _k0 * (scbet/_scbet0) /
@@ -447,12 +447,12 @@ namespace GeographicLib {
     real
       phi = _sign * atan(tphi),
       scbet = hyp(_fm * tphi), scchi = hyp(tchi),
-      lam = _n != 0 ? gamma / _n : x / y1;
+      lam = _n ? gamma / _n : x / y1;
     lat = phi / Math::degree();
     lon = lam / Math::degree();
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
     k = _k0 * (scbet/_scbet0) /
-      (exp(_nc != 0 ? - (Math::sq(_nc)/(1 + _n)) * dpsi : 0)
+      (exp(_nc ? - (Math::sq(_nc)/(1 + _n)) * dpsi : 0)
        * (tchi >= 0 ? scchi + tchi : 1 / (scchi - tchi)) / (_scchi0 + _tchi0));
     gamma /= _sign * Math::degree();
   }

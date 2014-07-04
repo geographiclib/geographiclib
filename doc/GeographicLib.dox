@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.37
-\date 2014-05-13
+\date 2014-mm-dd
 
 \section abstract Abstract
 
@@ -4764,8 +4764,9 @@ of the git repository for GeographicLib.
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-mm-dd)
    - Macro names all start with GEOGRPAHICLIB_
-   - Support quad precision
-   - Retire Windows XP common data path
+   - Support quad precision.
+   - Retire Windows XP common data path.
+   - Simplify cross-platform support for C++11 mathematical functions.
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
    (released 2014-05-13)

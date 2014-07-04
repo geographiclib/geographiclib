@@ -18,9 +18,6 @@ namespace GeographicLib {
   const Math::real AlbersEqualArea::epsx2_ = Math::sq(epsx_);
   const Math::real AlbersEqualArea::tol_ = sqrt(eps_);
   const Math::real AlbersEqualArea::tol0_ = tol_ * sqrt(sqrt(eps_));
-  const Math::real AlbersEqualArea::ahypover_ =
-    real(numeric_limits<real>::digits) * log(real(numeric_limits<real>::radix))
-    + 2;
 
   AlbersEqualArea::AlbersEqualArea(real a, real f, real stdlat, real k0)
     : _a(a)
@@ -384,13 +381,13 @@ namespace GeographicLib {
       drho = - _a * dq / (sqrt(_m02 - _n0 * dq) + _nrho0 / _a),
       theta = _k2 * _n0 * lam, stheta = sin(theta), ctheta = cos(theta),
       t = _nrho0 + _n0 * drho;
-    x = t * (_n0 != 0 ? stheta / _n0 : _k2 * lam) / _k0;
+    x = t * (_n0 ? stheta / _n0 : _k2 * lam) / _k0;
     y = (_nrho0 *
-         (_n0 != 0 ?
+         (_n0 ?
           (ctheta < 0 ? 1 - ctheta : Math::sq(stheta)/(1 + ctheta)) / _n0 :
           0)
          - drho * ctheta) / _k0;
-    k = _k0 * (t != 0 ? t * hyp(_fm * tphi) / _a : 1);
+    k = _k0 * (t ? t * hyp(_fm * tphi) / _a : 1);
     y *= _sign;
     gamma = _sign * theta / Math::degree();
   }
@@ -403,7 +400,7 @@ namespace GeographicLib {
     real
       nx = _k0 * _n0 * x, ny = _k0 * _n0 * y, y1 =  _nrho0 - ny,
       den = Math::hypot(nx, y1) + _nrho0, // 0 implies origin with polar aspect
-      drho = den != 0 ? (_k0*x*nx - 2*_k0*y*_nrho0 + _k0*y*ny) / den : 0,
+      drho = den ? (_k0*x*nx - 2*_k0*y*_nrho0 + _k0*y*ny) / den : 0,
       // dsxia = scxi0 * dsxi
       dsxia = - _scxi0 * (2 * _nrho0 + _n0 * drho) * drho /
               (Math::sq(_a) * _qZ),
@@ -411,12 +408,12 @@ namespace GeographicLib {
       tphi = tphif(txi),
       phi = _sign * atan(tphi),
       theta = atan2(nx, y1),
-      lam = _n0 != 0 ? theta / (_k2 * _n0) : x / (y1 * _k0);
+      lam = _n0 ? theta / (_k2 * _n0) : x / (y1 * _k0);
     gamma = _sign * theta / Math::degree();
     lat = phi / Math::degree();
     lon = lam / Math::degree();
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
-    k = _k0 * (den != 0 ? (_nrho0 + _n0 * drho) * hyp(_fm * tphi) / _a : 1);
+    k = _k0 * (den ? (_nrho0 + _n0 * drho) * hyp(_fm * tphi) / _a : 1);
   }
 
   void AlbersEqualArea::SetScale(real lat, real k) {

@@ -68,7 +68,6 @@ namespace GeographicLib {
     static const real epsx2_;
     static const real tol_;
     static const real tol0_;
-    static const real ahypover_;
     static const int numit_ = 5;   // Newton iterations in Reverse
     static const int numit0_ = 20; // Newton iterations in Init
     static inline real hyp(real x) { return Math::hypot(real(1), x); }
@@ -113,7 +112,7 @@ namespace GeographicLib {
     // Datanhee(x,y) = atanhee((x-y)/(1-e^2*x*y))/(x-y)
     inline real Datanhee(real x, real y) const {
       real t = x - y, d = 1 - _e2 * x * y;
-      return t != 0 ? atanhee(t / d) / t : 1 / d;
+      return t ? atanhee(t / d) / t : 1 / d;
     }
     // DDatanhee(x,y) = (Datanhee(1,y) - Datanhee(1,x))/(y-x)
     real DDatanhee(real x, real y) const;

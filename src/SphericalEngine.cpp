@@ -146,7 +146,8 @@ namespace GeographicLib {
 
   const Math::real SphericalEngine::scale_ =
     pow(real(numeric_limits<real>::radix),
-        -3 * numeric_limits<real>::max_exponent / 5);
+        -3 * (numeric_limits<real>::max_exponent < (1<<14) ?
+              numeric_limits<real>::max_exponent : (1<<14)) / 5);
   const Math::real SphericalEngine::eps_ =
     numeric_limits<real>::epsilon() * sqrt(numeric_limits<real>::epsilon());
 

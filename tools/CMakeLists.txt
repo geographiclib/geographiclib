@@ -18,7 +18,8 @@ foreach (TOOL ${TOOLS})
   set_source_files_properties (${TOOL}.cpp PROPERTIES
     OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/${TOOL}.usage)
 
-  target_link_libraries (${TOOL} ${PROJECT_LIBRARIES} ${QUAD_LIBRARY})
+  target_link_libraries (${TOOL} ${PROJECT_LIBRARIES}
+    ${QUAD_LIBRARIES} ${MPFR_LIBRARIES})
 
 endforeach ()
 

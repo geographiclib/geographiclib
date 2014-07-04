@@ -112,9 +112,8 @@ namespace GeographicLib {
     real
       phi = atan(tau),
       secphi = Math::hypot(real(1), tau);
-    k = rho != 0 ?
-      (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) : _k0;
-    lat = (northp ? 1 : -1) * (rho != 0 ? phi / Math::degree() : 90);
+    k = rho ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) : _k0;
+    lat = (northp ? 1 : -1) * (rho ? phi / Math::degree() : 90);
     lon = -atan2( -x, northp ? -y : y ) / Math::degree();
     gamma = northp ? lon : -lon;
   }

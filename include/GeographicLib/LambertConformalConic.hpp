@@ -102,12 +102,12 @@ namespace GeographicLib {
     // Dlog1p(x,y) = log1p((x-y)/(1+y)/(x-y)
     static inline real Dlog1p(real x, real y) {
       real t = x - y; if (t < 0) { t = -t; y = x; }
-      return t != 0 ? Math::log1p(t / (1 + y)) / t : 1 / (1 + x);
+      return t ? Math::log1p(t / (1 + y)) / t : 1 / (1 + x);
     }
     // Dexp(x,y) = exp((x+y)/2) * 2*sinh((x-y)/2)/(x-y)
     static inline real Dexp(real x, real y) {
       real t = (x - y)/2;
-      return (t != 0 ? sinh(t)/t : real(1)) * exp((x + y)/2);
+      return (t ? sinh(t)/t : 1) * exp((x + y)/2);
     }
     // Dsinh(x,y) = 2*sinh((x-y)/2)/(x-y) * cosh((x+y)/2)
     //   cosh((x+y)/2) = (c+sinh(x)*sinh(y)/c)/2
@@ -117,23 +117,23 @@ namespace GeographicLib {
       // sx = sinh(x), cx = cosh(x)
       {
       // real t = (x - y)/2, c = sqrt((1 + cx) * (1 + cy));
-      // return (t != 0 ? sinh(t)/t : real(1)) * (c + sx * sy / c) /2;
+      // return (t ? sinh(t)/t : real(1)) * (c + sx * sy / c) /2;
       real t = (x - y)/2;
-      return (t != 0 ? sinh(t)/t : real(1)) * sqrt((sx * sy + cx * cy + 1) /2);
+      return (t ? sinh(t)/t : real(1)) * sqrt((sx * sy + cx * cy + 1) /2);
     }
     // Dasinh(x,y) = asinh((x-y)*(x+y)/(x*sqrt(1+y^2)+y*sqrt(1+x^2)))/(x-y)
     //             = asinh((x*sqrt(1+y^2)-y*sqrt(1+x^2)))/(x-y)
     static inline real Dasinh(real x, real y, real hx, real hy) {
       // hx = hyp(x)
       real t = x - y;
-      return t != 0 ?
+      return t ?
         Math::asinh(x*y > 0 ? t * (x+y) / (x*hy + y*hx) : x*hy - y*hx) / t :
         1/hx;
     }
     // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
     inline real Deatanhe(real x, real y) const {
       real t = x - y, d = 1 - _e2 * x * y;
-      return t != 0 ? eatanhe(t / d) / t : _e2 / d;
+      return t ? eatanhe(t / d) / t : _e2 / d;
     }
     void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1);
   public:

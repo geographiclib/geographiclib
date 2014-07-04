@@ -78,8 +78,8 @@ int main(int argc, char* argv[]) {
     bool linecalc = false, inverse = false, arcmode = false,
       dms = false, full = false, exact = false;
     real
-      a = Constants::WGS84_a(),
-      f = Constants::WGS84_f();
+      a = Math::NaN(),
+      f = Math::NaN();
     real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12, M12, M21, S12;
     real azi2sense = 0;
     int prec = 3;
@@ -205,6 +205,9 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
+    Math::set_digits10(std::max(19, prec + 12));
+    if (Math::isnan(a)) a = Constants::WGS84_a();
+    if (Math::isnan(f)) f = Constants::WGS84_f();
     const Geodesic geod(a, f);
     const GeodesicExact geode(a, f);
     GeodesicLine l;

@@ -517,7 +517,7 @@ namespace GeographicLib {
         // N.B. cbrt always returns the real root.  cbrt(-8) = -2.
         real T = Math::cbrt(T3); // T = r * t
         // T can be zero; but then r2 / T -> 0.
-        u += T + (T != 0 ? r2 / T : 0);
+        u += T + (T ? r2 / T : 0);
       } else {
         // T is complex, but the way u is defined the result is real.
         real ang = atan2(sqrt(-disc), -(S + r3));

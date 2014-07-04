@@ -68,6 +68,8 @@
 #include <boost/math/special_functions/atanh.hpp>
 #include <boost/math/special_functions/asinh.hpp>
 #include <boost/math/special_functions/cbrt.hpp>
+#elif GEOGRAPHICLIB_PRECISION == 5
+#include <mpreal.h>
 #endif
 
 namespace GeographicLib {
@@ -86,7 +88,7 @@ namespace GeographicLib {
   private:
     void dummy() {
       STATIC_ASSERT(GEOGRAPHICLIB_PRECISION >= 1 &&
-                    GEOGRAPHICLIB_PRECISION <= 4,
+                    GEOGRAPHICLIB_PRECISION <= 5,
                     "Bad value of precision");
     }
     Math();                     // Disable constructor
@@ -104,10 +106,18 @@ namespace GeographicLib {
 
 #if defined(BOOST_MP_FLOAT128_HPP)
 #define GEOGRAPHICLIB_HAVE_QUAD_PREC 1
+#define GEOGRAPHICLIB_HAVE_MPFR 0
 #define GEOGRAPHICLIB_VOLATILE
     typedef boost::multiprecision::float128 quad;
+#elif GEOGRAPHICLIB_PRECISION == 5
+// defined(MPREAL_VERSION_STRING)
+#define GEOGRAPHICLIB_HAVE_QUAD_PREC 0
+#define GEOGRAPHICLIB_HAVE_MPFR 1
+#define GEOGRAPHICLIB_VOLATILE
+    typedef mpfr::mpreal mpreal;
 #else
 #define GEOGRAPHICLIB_HAVE_QUAD_PREC 0
+#define GEOGRAPHICLIB_HAVE_MPFR 0
 #define GEOGRAPHICLIB_VOLATILE volatile
 #endif
 
@@ -125,26 +135,57 @@ namespace GeographicLib {
     typedef extended real;
 #elif GEOGRAPHICLIB_PRECISION == 4 && GEOGRAPHICLIB_HAVE_QUAD_PREC
     typedef quad real;
+#elif GEOGRAPHICLIB_PRECISION == 5 && GEOGRAPHICLIB_HAVE_MPFR
+    typedef mpreal real;
 #else
     typedef double real;
 #endif
+
+    static inline int digits() {
+#if GEOGRAPHICLIB_PRECISION < 5
+      return std::numeric_limits<real>::digits;
+#else
+      return std::numeric_limits<real>::digits();
+#endif
+    }
+    static inline int digits10() {
+#if GEOGRAPHICLIB_PRECISION < 5
+      return std::numeric_limits<real>::digits10;
+#else
+      return std::numeric_limits<real>::digits10();
+#endif
+    }
+
+    static inline void set_digits10(int prec) {
+#if GEOGRAPHICLIB_PRECISION < 5
+      (void)prec;
+#else
+      mpfr::mpreal::set_default_prec(mpfr::digits2bits(prec));
+#endif
+    }
 
     /**
      * Number of additional decimal digits of precision for type T relative to
      * double (0 for float).
      **********************************************************************/
-    template<typename T> static inline int extra_digits() {
+    /*    template<typename T> static inline int extra_digits() {
       return
         std::numeric_limits<T>::digits10 >
         std::numeric_limits<double>::digits10 ?
         std::numeric_limits<T>::digits10 -
         std::numeric_limits<double>::digits10 : 0;
     }
+    */
     /**
      * A synonym for extra_digits<real>().
      **********************************************************************/
-    static inline int extra_digits() { return extra_digits<real>(); }
+    static inline int extra_digits() {
+      return
+        digits10() > std::numeric_limits<double>::digits10 ?
+        digits10() - std::numeric_limits<double>::digits10 : 0;
+    }
 
+#if GEOGRAPHICLIB_PRECISION <= 3
     /**
      * Number of additional decimal digits of precision of real relative to
      * double (0 for float).
@@ -156,6 +197,7 @@ namespace GeographicLib {
       std::numeric_limits<double>::digits10 ?
       std::numeric_limits<real>::digits10 -
       std::numeric_limits<double>::digits10 : 0;
+#endif
 
     /**
      * true if the machine is big-endian.
@@ -209,7 +251,7 @@ namespace GeographicLib {
       using std::abs; using std::sqrt;
       x = abs(x); y = abs(y);
       if (x < y) std::swap(x, y); // Now x >= y >= 0
-      y /= (x != 0 ? x : 1);
+      y /= (x ? x : 1);
       return x * sqrt(1 + y * y);
       // For an alternative (square-root free) method see
       // C. Moler and D. Morrision (1983) http://dx.doi.org/10.1147/rd.276.0577
@@ -496,6 +538,15 @@ namespace GeographicLib {
 #endif
   };
 
+#if 0 && GEOGRAPHICLIB_PRECISION == 5
+  template<> inline int Math::extra_digits<Math::mpreal>() {
+      return 5/*
+        std::numeric_limits<Math::mpreal>::digits10() >
+        std::numeric_limits<double>::digits10 ?
+        std::numeric_limits<Math::mpreal>::digits10() -
+        std::numeric_limits<double>::digits10 : 0*/;
+    }
+#endif
 } // namespace GeographicLib
 
 #endif  // GEOGRAPHICLIB_MATH_HPP

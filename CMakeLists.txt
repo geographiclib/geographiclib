@@ -42,8 +42,8 @@ endif ()
 
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
-set (LIBVERSION 12)
-set (LIBVERSIONFULL 12.0.0)
+set (LIBVERSION 13)
+set (LIBVERSIONFULL 13.0.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -190,8 +190,8 @@ option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib library" OFF)
 # (8) Set the default "real" precision.  This should probably be left
 # at 2 (double).
 set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
-  "Default real precision: 1 = float, 2 = double, 3 = extended, 4 = quadruple")
-set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3 4)
+  "Precision: 1 = float, 2 = double, 3 = extended, 4 = quadruple, 5 = variable")
+set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3 4 5)
 
 # (9) When making a binary package, should we include the debug version
 # of the library?  This applies to MSVC only, because that's the
@@ -235,7 +235,7 @@ if (GEOGRAPHICLIB_PRECISION EQUAL 4 AND CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   find_package (Boost 1.54)
   if (Boost_FOUND)
     include_directories ("${Boost_INCLUDE_DIRS}")
-    set (QUAD_LIBRARY quadmath)
+    set (QUAD_LIBRARIES quadmath)
     if (NOT (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8))
       # Enable Q suffix for quad precision in g++ 4.8 and later
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fext-numeric-literals")
@@ -246,6 +246,10 @@ if (GEOGRAPHICLIB_PRECISION EQUAL 4 AND CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   else ()
     set (GEOGRAPHICLIB_PRECISION 3)
   endif ()
+endif ()
+
+if (GEOGRAPHICLIB_PRECISION EQUAL 5)
+  set (MPFR_LIBRARIES mpfr gmp)
 endif ()
 
 # Create a Config.h to expose system information to the compiler

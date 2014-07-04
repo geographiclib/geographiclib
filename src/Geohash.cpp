@@ -16,9 +16,9 @@ namespace GeographicLib {
 
   const int Geohash::decprec_[] = {-2, -1, 0, 0, 1, 2, 3, 3, 4, 5,
                                    6, 6, 7, 8, 9, 9, 10, 11, 12};
-  const Math::real Geohash::loneps_ = 180 * std::pow(0.5, 45);
-  const Math::real Geohash::lateps_ = 90 * std::pow(0.5, 45);
-  const Math::real Geohash::shift_ = std::pow(2.0, 45);
+  const Math::real Geohash::shift_ = pow(real(2), 45);
+  const Math::real Geohash::loneps_ = 180 / shift_;
+  const Math::real Geohash::lateps_ = 90 / shift_;
   const string Geohash::lcdigits_ = "0123456789bcdefghjkmnpqrstuvwxyz";
   const string Geohash::ucdigits_ = "0123456789BCDEFGHJKMNPQRSTUVWXYZ";
 
@@ -92,8 +92,8 @@ namespace GeographicLib {
     int s = 5 * (maxlen_ - len);
     ulon <<=     (s / 2);
     ulat <<= s - (s / 2);
-    lon = ulon * loneps_ - 180;
-    lat = ulat * lateps_ - 90;
+    lon = (unsigned long)(ulon) * loneps_ - 180;
+    lat = (unsigned long)(ulat) * lateps_ - 90;
   }
 
 } // namespace GeographicLib

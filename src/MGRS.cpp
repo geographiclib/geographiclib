@@ -17,10 +17,10 @@ namespace GeographicLib {
   const Math::real MGRS::eps_ =
     // 25 = ceil(log_2(2e7)) -- use half circumference here because northing
     // 195e5 is a legal in the "southern" hemisphere.
-    pow(real(0.5), numeric_limits<real>::digits - 25);
+    pow(real(0.5), Math::digits() - 25);
   const Math::real MGRS::angeps_ =
     // 7 = ceil(log_2(90))
-    pow(real(0.5), numeric_limits<real>::digits - 7);
+    pow(real(0.5), Math::digits() - 7);
   const string MGRS::hemispheres_ = "SN";
   const string MGRS::utmcols_[3] = { "ABCDEFGH", "JKLMNPQR", "STUVWXYZ" };
   const string MGRS::utmrow_ = "ABCDEFGHJKLMNPQRSTUV";

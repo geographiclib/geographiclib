@@ -287,11 +287,7 @@ namespace GeographicLib {
           (x > 0 ? std::string("inf") : std::string("nan"));
       std::ostringstream s;
       if (p >= 0) s << std::fixed << std::setprecision(p);
-      if (p == 0)
-        s << int(round(x));
-      else
-        s << x;
-      return s.str();
+      s << x; return s.str();
     }
 
     /**
