@@ -45,6 +45,12 @@ namespace GeographicLib {
    * There's an option to treat the points as defining a polyline instead of a
    * polygon; in that case, only the perimeter is computed.
    *
+   * This is a templated class to allow it to be used with either Geodesic and
+   * GeodesicExact.  GeographicLib::PolygonArea and
+   * GeographicLib::PolygonAreaExact are typedefs for these two cases.
+   *
+   * @tparam GeodType the geodesic class to use.
+   *
    * Example of use:
    * \include example-PolygonArea.cpp
    *
@@ -242,8 +248,16 @@ namespace GeographicLib {
     ///@}
   };
 
-  typedef  PolygonAreaT<Geodesic> PolygonArea;
-  typedef  PolygonAreaT<GeodesicExact> PolygonAreaExact;
+  /**
+   * Polygon areas using Geodesic.
+   **********************************************************************/
+  typedef PolygonAreaT<Geodesic> PolygonArea;
+  /**
+   * Polygon areas using GeodesicExact.  (But note that the implementation of
+   * areas in GeodesicExact uses a high order series and this is only accurate
+   * for modest flattenings.)
+   **********************************************************************/
+  typedef PolygonAreaT<GeodesicExact> PolygonAreaExact;
 
 } // namespace GeographicLib
 

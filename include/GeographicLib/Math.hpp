@@ -141,23 +141,52 @@ namespace GeographicLib {
     typedef double real;
 #endif
 
+    /**
+     * @return the number of bits of precision in a real number.
+     **********************************************************************/
     static inline int digits() {
-#if GEOGRAPHICLIB_PRECISION < 5
+#if GEOGRAPHICLIB_PRECISION != 5
       return std::numeric_limits<real>::digits;
 #else
       return std::numeric_limits<real>::digits();
 #endif
     }
+
+    /**
+     * Set the binary precision of a real number.
+     *
+     * @param[in] prec the number of bits of precision.
+     *
+     * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.
+     **********************************************************************/
+    static inline void set_digits(int prec) {
+#if GEOGRAPHICLIB_PRECISION != 5
+      (void)prec;
+#else
+      mpfr::mpreal::set_default_prec(prec);
+#endif
+    }
+
+    /**
+     * @return the number of decimal digits of precision in a real number.
+     **********************************************************************/
     static inline int digits10() {
-#if GEOGRAPHICLIB_PRECISION < 5
+#if GEOGRAPHICLIB_PRECISION != 5
       return std::numeric_limits<real>::digits10;
 #else
       return std::numeric_limits<real>::digits10();
 #endif
     }
 
+    /**
+     * Set the decimal precision of a real number.
+     *
+     * @param[in] prec the number of decimal digits of precision.
+     *
+     * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.
+     **********************************************************************/
     static inline void set_digits10(int prec) {
-#if GEOGRAPHICLIB_PRECISION < 5
+#if GEOGRAPHICLIB_PRECISION != 5
       (void)prec;
 #else
       mpfr::mpreal::set_default_prec(mpfr::digits2bits(prec));
@@ -165,19 +194,8 @@ namespace GeographicLib {
     }
 
     /**
-     * Number of additional decimal digits of precision for type T relative to
+     * Number of additional decimal digits of precision for real relative to
      * double (0 for float).
-     **********************************************************************/
-    /*    template<typename T> static inline int extra_digits() {
-      return
-        std::numeric_limits<T>::digits10 >
-        std::numeric_limits<double>::digits10 ?
-        std::numeric_limits<T>::digits10 -
-        std::numeric_limits<double>::digits10 : 0;
-    }
-    */
-    /**
-     * A synonym for extra_digits<real>().
      **********************************************************************/
     static inline int extra_digits() {
       return

@@ -44,9 +44,10 @@ int main(int argc, char* argv[]) {
     using namespace GeographicLib;
     typedef Math::real real;
     real
-      a = Constants::WGS84_a(),
-      f = Constants::WGS84_f();
-    bool reverse = false, sign = true, polyline = false;
+      a = Math::NaN(),
+      f = Math::NaN();
+    bool reverse = false, sign = true, polyline = false, exact = false;
+    int prec = 6;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
 
@@ -69,7 +70,18 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 2;
-      } else if (arg == "--input-string") {
+      } else if (arg == "-p") {
+        if (++m == argc) return usage(1, true);
+        try {
+          prec = Utility::num<int>(std::string(argv[m]));
+        }
+        catch (const std::exception&) {
+          std::cerr << "Precision " << argv[m] << " is not a number\n";
+          return 1;
+        }
+      } else if (arg == "-E")
+        exact = true;
+      else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
       } else if (arg == "--input-file") {
@@ -134,10 +146,18 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
+    Math::set_digits10(std::max(19, prec + 12));
+    if (Math::isnan(a)) a = Constants::WGS84_a();
+    if (Math::isnan(f)) f = Constants::WGS84_f();
     const Geodesic geod(a, f);
+    const GeodesicExact geode(a, f);
     PolygonArea poly(geod, polyline);
+    PolygonAreaExact polye(geode, polyline);
     GeoCoords p;
 
+    // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
+    // 10^-11 sec (= 0.3 nm).
+    prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     std::string s;
     real perimeter, area;
     unsigned num;
@@ -162,28 +182,29 @@ int main(int argc, char* argv[]) {
         }
       }
       if (endpoly) {
-        num = poly.Compute(reverse, sign, perimeter, area);
+        num = exact ? polye.Compute(reverse, sign, perimeter, area) :
+          poly.Compute(reverse, sign, perimeter, area);
         if (num > 0) {
-          *output << num << " "
-                  << Utility::str(perimeter, 8 + Math::extra_digits()+1);
+          *output << num << " " << Utility::str(perimeter, prec);
           if (!polyline)
-            *output << " " << Utility::str(area, 3 + Math::extra_digits()+1);
+            *output << " " << Utility::str(area, std::max(0, prec - 5));
           *output << eol;
         }
-        poly.Clear();
+        exact ? polye.Clear() : poly.Clear();
         eol = "\n";
       } else
-        poly.AddPoint(p.Latitude(), p.Longitude());
+        exact ? polye.AddPoint(p.Latitude(), p.Longitude()) :
+          poly.AddPoint(p.Latitude(), p.Longitude());
     }
-    num = poly.Compute(reverse, sign, perimeter, area);
+    num = exact ? polye.Compute(reverse, sign, perimeter, area):
+      poly.Compute(reverse, sign, perimeter, area);
     if (num > 0) {
-      *output << num << " "
-              << Utility::str(perimeter, 8 + Math::extra_digits()+1);
+      *output << num << " " << Utility::str(perimeter, prec);
       if (!polyline)
-        *output << " " << Utility::str(area, 3 + Math::extra_digits()+1);
+        *output << " " << Utility::str(area, std::max(0, prec - 5));
       *output << eol;
     }
-    poly.Clear();
+    exact ? polye.Clear() : poly.Clear();
     eol = "\n";
     return 0;
   }
