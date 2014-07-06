@@ -4768,6 +4768,8 @@ of the git repository for GeographicLib.
    - Support mpreal
    - Add PolygonAreaT and PolygonAreaExact
    - Add -E and -p options to Planimeter
+   - Add -Q option to Planimeter
+   - Add -p option to TransverseMercatorProj
    - Retire Windows XP common data path.
    - Simplify cross-platform support for C++11 mathematical functions.
 

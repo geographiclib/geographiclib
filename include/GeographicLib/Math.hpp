@@ -163,7 +163,7 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_PRECISION != 5
       (void)prec;
 #else
-      mpfr::mpreal::set_default_prec(prec);
+      mpfr::mpreal::set_default_prec(prec >= 2 ? prec : 2);
 #endif
     }
 
@@ -189,7 +189,7 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_PRECISION != 5
       (void)prec;
 #else
-      mpfr::mpreal::set_default_prec(mpfr::digits2bits(prec));
+      set_digits(mpfr::digits2bits(prec));
 #endif
     }
 
@@ -556,15 +556,6 @@ namespace GeographicLib {
 #endif
   };
 
-#if 0 && GEOGRAPHICLIB_PRECISION == 5
-  template<> inline int Math::extra_digits<Math::mpreal>() {
-      return 5/*
-        std::numeric_limits<Math::mpreal>::digits10() >
-        std::numeric_limits<double>::digits10 ?
-        std::numeric_limits<Math::mpreal>::digits10() -
-        std::numeric_limits<double>::digits10 : 0*/;
-    }
-#endif
 } // namespace GeographicLib
 
 #endif  // GEOGRAPHICLIB_MATH_HPP

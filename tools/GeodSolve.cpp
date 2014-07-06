@@ -85,6 +85,7 @@ int main(int argc, char* argv[]) {
     int prec = 3;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
+    Math::set_digits10(19);
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -138,6 +139,7 @@ int main(int argc, char* argv[]) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
+        Math::set_digits10(std::max(19, prec + 12));
       } else if (arg == "-E")
         exact = true;
       else if (arg == "--input-string") {
@@ -205,7 +207,6 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    Math::set_digits10(std::max(19, prec + 12));
     if (Math::isnan(a)) a = Constants::WGS84_a();
     if (Math::isnan(f)) f = Constants::WGS84_f();
     const Geodesic geod(a, f);

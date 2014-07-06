@@ -31,6 +31,7 @@
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/GeoCoords.hpp>
+#include <GeographicLib/Ellipsoid.hpp>
 
 #if defined(_MSC_VER)
 // Squelch warnings about constant conditional expressions
@@ -46,10 +47,12 @@ int main(int argc, char* argv[]) {
     real
       a = Math::NaN(),
       f = Math::NaN();
-    bool reverse = false, sign = true, polyline = false, exact = false;
+    bool reverse = false, sign = true, polyline = false,
+      exact = false, authalic = false;
     int prec = 6;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
+    Math::set_digits10(19);
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -79,9 +82,14 @@ int main(int argc, char* argv[]) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
-      } else if (arg == "-E")
+        Math::set_digits10(std::max(19, prec + 12));
+      } else if (arg == "-E") {
         exact = true;
-      else if (arg == "--input-string") {
+        authalic = false;
+      } else if (arg == "-Q") {
+        exact = false;
+        authalic = true;
+      } else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
       } else if (arg == "--input-file") {
@@ -146,9 +154,14 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    Math::set_digits10(std::max(19, prec + 12));
     if (Math::isnan(a)) a = Constants::WGS84_a();
     if (Math::isnan(f)) f = Constants::WGS84_f();
+    const Ellipsoid ellip(a, f);
+    if (authalic) {
+      using std::sqrt;
+      a = sqrt(ellip.Area() / (4 * Math::pi()));
+      f = 0;
+    }
     const Geodesic geod(a, f);
     const GeodesicExact geode(a, f);
     PolygonArea poly(geod, polyline);
@@ -186,22 +199,27 @@ int main(int argc, char* argv[]) {
           poly.Compute(reverse, sign, perimeter, area);
         if (num > 0) {
           *output << num << " " << Utility::str(perimeter, prec);
-          if (!polyline)
+          if (!polyline) {
             *output << " " << Utility::str(area, std::max(0, prec - 5));
+          }
           *output << eol;
         }
         exact ? polye.Clear() : poly.Clear();
         eol = "\n";
-      } else
+      } else {
         exact ? polye.AddPoint(p.Latitude(), p.Longitude()) :
-          poly.AddPoint(p.Latitude(), p.Longitude());
+          poly.AddPoint(authalic ? ellip.AuthalicLatitude(p.Latitude()) :
+                        p.Latitude(),
+                        p.Longitude());
+      }
     }
     num = exact ? polye.Compute(reverse, sign, perimeter, area):
       poly.Compute(reverse, sign, perimeter, area);
     if (num > 0) {
       *output << num << " " << Utility::str(perimeter, prec);
-      if (!polyline)
+      if (!polyline) {
         *output << " " << Utility::str(area, std::max(0, prec - 5));
+      }
       *output << eol;
     }
     exact ? polye.Clear() : poly.Clear();
