@@ -32,9 +32,10 @@ CXXFLAGS = -g -Wall -Wextra -O3 -std=c++0x
 
 CPPFLAGS = -I$(INCLUDEPATH) -I../man $(DEFINES)
 LDLIBS = -L$(LIBPATH) -l$(LIBSTEM)
+EXTRALIBS =
 
 $(PROGRAMS): $(LIBPATH)/$(LIBRARY)
-	$(CC) $(LDFLAGS) -o $@ $@.o $(LDLIBS)
+	$(CC) $(LDFLAGS) -o $@ $@.o $(LDLIBS) $(EXTRALIBS)
 
 VPATH = ../include/GeographicLib ../man
 
