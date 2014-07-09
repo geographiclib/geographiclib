@@ -21,8 +21,8 @@
 #  endif
 #endif
 
-#if !defined(MAGNETIC_DEFAULT_NAME)
-#  define MAGNETIC_DEFAULT_NAME "wmm2010"
+#if !defined(GEOGRAPHICLIB_MAGNETIC_DEFAULT_NAME)
+#  define GEOGRAPHICLIB_MAGNETIC_DEFAULT_NAME "wmm2010"
 #endif
 
 #if defined(_MSC_VER)
@@ -245,7 +245,7 @@ namespace GeographicLib {
     char* magneticname = getenv("GEOGRAPHICLIB_MAGNETIC_NAME");
     if (magneticname)
       name = string(magneticname);
-    return !name.empty() ? name : string(MAGNETIC_DEFAULT_NAME);
+    return !name.empty() ? name : string(GEOGRAPHICLIB_MAGNETIC_DEFAULT_NAME);
   }
 
 } // namespace GeographicLib

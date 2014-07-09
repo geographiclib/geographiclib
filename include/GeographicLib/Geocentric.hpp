@@ -43,6 +43,12 @@ namespace GeographicLib {
    *   preprint
    *   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
    * .
+   * Vermeille similarly updated his method in
+   * - H. Vermeille,
+   *   <a href="http://dx.doi.org/10.1007/s00190-010-0419-x">
+   *   An analytical method to transform geocentric into
+   *   geodetic coordinates</a>, J. Geodesy 85, 105--117 (2011).
+   * .
    * See \ref geocentric for more information.
    *
    * The errors in these routines are close to round-off.  Specifically, for

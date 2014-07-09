@@ -19,8 +19,8 @@
 #  endif
 #endif
 
-#if !defined(GEOID_DEFAULT_NAME)
-#  define GEOID_DEFAULT_NAME "egm96-5"
+#if !defined(GEOGRAPHICLIB_GEOID_DEFAULT_NAME)
+#  define GEOGRAPHICLIB_GEOID_DEFAULT_NAME "egm96-5"
 #endif
 
 #if defined(_MSC_VER)
@@ -207,7 +207,8 @@ namespace GeographicLib {
     , _eps( sqrt(numeric_limits<real>::epsilon()) )
     , _threadsafe(false)        // Set after cache is read
   {
-    STATIC_ASSERT(sizeof(pixel_t) == pixel_size_, "pixel_t has the wrong size");
+    GEOGRAPHICLIB_STATIC_ASSERT(sizeof(pixel_t) == pixel_size_,
+                                "pixel_t has the wrong size");
     if (_dir.empty())
       _dir = DefaultGeoidPath();
     _filename = _dir + "/" + _name + (pixel_size_ != 4 ? ".pgm" : ".pgm4");
@@ -534,7 +535,7 @@ namespace GeographicLib {
     char* geoidname = getenv("GEOGRAPHICLIB_GEOID_NAME");
     if (geoidname)
       name = string(geoidname);
-    return !name.empty() ? name : string(GEOID_DEFAULT_NAME);
+    return !name.empty() ? name : string(GEOGRAPHICLIB_GEOID_DEFAULT_NAME);
   }
 
 } // namespace GeographicLib

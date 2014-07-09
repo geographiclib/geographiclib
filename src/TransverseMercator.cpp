@@ -191,7 +191,8 @@ namespace GeographicLib {
       _bet[8] = 191773887257.0*nx/3719607091200.0;
       break;
     default:
-      STATIC_ASSERT(maxpow_ >= 4 && maxpow_ <= 8, "Bad value of maxpow_");
+      GEOGRAPHICLIB_STATIC_ASSERT(maxpow_ >= 4 && maxpow_ <= 8,
+                                  "Bad value of maxpow_");
     }
     // _a1 is the equivalent radius for computing the circumference of
     // ellipse.

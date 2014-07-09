@@ -33,25 +33,13 @@ namespace GeographicLib {
         throw GeographicErr("Must specify one of f and J2");
       if (!(Math::isfinite(_omega) && _omega != 0))
         throw GeographicErr("Angular velocity is not non-zero");
-      real K = 2 * _aomega2 * _a / (15 * _GM);
-      if (flatp) {
-        _e2 = _f * (2 - _f);
-        _ep2 = _e2 / (1 - _e2);
-        _q0 = qf(_ep2);
-        _J2 = _e2 * ( 1 - K * sqrt(_e2) / _q0) / 3; // H+M, Eq 2-90
-      } else {
-        _e2 = 3 * _J2;          // See Moritz (1980), p 398.
-        for (int j = 0; j < maxit_; ++j) {
-          real e2a = _e2;
-          real q0 = qf(_e2 / (1 - _e2));
-          _e2 = 3 * _J2 + K * _e2 * sqrt(_e2) / q0;
-          if (_e2 == e2a)
-            break;
-        }
-        _f = _e2 / (1 + sqrt(1 - _e2));
-        _ep2 = _e2 / (1 - _e2);
-        _q0 = qf(_ep2);
-      }
+      if (flatp)
+        _J2 = FlatteningToJ2(a, GM, omega, f);
+      else
+        _f = J2ToFlattening(a, GM, omega, J2);
+      _e2 = _f * (2 - _f);
+      _ep2 = _e2 / (1 - _e2);
+      _q0 = qf(_ep2);
       _earth = Geocentric(_a, _f);
       _b = _a * (1 - _f);
       _E = a * sqrt(_e2);                               // H+M, Eq 2-54
@@ -80,6 +68,24 @@ namespace GeographicLib {
                        Constants::GRS80_omega(),
                        0, Constants::GRS80_J2());
 
+  // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-x/7+x^2/9-x^3/11
+  Math::real NormalGravity::atan5(real x) {
+    if (abs(x) >= real(0.5)) {
+      real y = sqrt(abs(x));
+      return ((x > 0 ? atan(y) : atanh(y)) - y * (1 - x / 3)) / (x * x * y);
+    } else {
+      real xn = 1, q = 0;
+      for (int n = 5; ; n += 2) {
+        real qn = q + xn / n;
+        if (qn == q)
+          break;
+        q = qn;
+        xn *= -x;
+      }
+      return q;
+    }
+  }
+    
   Math::real NormalGravity::qf(real ep2) {
     // Compute
     //
@@ -88,23 +94,7 @@ namespace GeographicLib {
     // See H+M, Eq 2-57, with E/u = e'.  This suffers from two levels of
     // cancelation.  The e'^-1 and e'^1 terms drop out, so that the leading
     // term is O(e'^3).
-    real ep = sqrt(ep2);
-    if (abs(ep2) > real(0.5))  // Use the closed expression
-      return ((1 + 3 / ep2) * atan(ep) - 3 / ep)/2;
-    else {
-      real ep2n = 1, q = 0;     // The series expansion H+M, Eq 2-86
-      for (int n = 1; ; ++n) {
-        ep2n *= -ep2;
-        real
-          t = (ep2n * n) / ((2 * n + 1) * (2 * n + 3)),
-          qn = q + t;
-        if (qn == q)
-          break;
-        q = qn;
-      }
-      q *= -2 * ep;
-      return q;
-    }
+    return sqrt(ep2) * ep2 * (3 * (3 + ep2) * atan5(ep2) - 1) / 6;
   }
 
   Math::real NormalGravity::qpf(real ep2) {
@@ -115,23 +105,7 @@ namespace GeographicLib {
     // See H+M, Eq 2-67, with E/u = e'.  This suffers from two levels of
     // cancelation.  The e'^-2 and e'^0 terms drop out, so that the leading
     // term is O(e'^2).
-    if (abs(ep2) > real(0.5)) { // Use the closed expression
-      real ep = sqrt(ep2);
-      return 3 * (1 + 1 / ep2) * (1 - atan(ep) / ep) - 1;
-    } else {
-      real ep2n = 1, qp = 0;    // The series expansion H+M, Eq 2-101c
-      for (int n = 1; ; ++n) {
-        ep2n *= -ep2;
-        real
-          t = ep2n / ((2 * n + 1) * (2 * n + 3)),
-          qpn = qp + t;
-        if (qpn == qp)
-          break;
-        qp = qpn;
-      }
-      qp *= -6;
-      return qp;
-    }
+    return ep2 * (1 - 3 * (1 + ep2) * atan5(ep2));
   }
 
   Math::real NormalGravity::Jn(int n) const {
@@ -229,6 +203,30 @@ namespace GeographicLib {
     gammay = M[1] * gammaX + M[4] * gammaY + M[7] * gammaZ;
     gammaz = M[2] * gammaX + M[5] * gammaY + M[8] * gammaZ;
     return Ures;
+  }
+
+  Math::real NormalGravity::J2ToFlattening(real a, real GM,
+                                           real omega, real J2) {
+    real
+      K = 2 * Math::sq(a * omega) * a / (15 * GM),
+      e2 = 3 * J2;              // See Moritz (1980), p 398.
+    for (int j = 0; j < maxit_; ++j) {
+      real e2a = e2;
+      real q0 = qf(e2 / (1 - e2));
+      e2 = 3 * J2 + K * e2 * sqrt(e2) / q0;
+      if (e2 == e2a)
+        break;
+    }
+    return e2 / (1 + sqrt(1 - e2));
+  }
+
+  Math::real NormalGravity::FlatteningToJ2(real a, real GM,
+                                           real omega, real f) {
+    real
+      K = 2 * Math::sq(a * omega) * a / (15 * GM),
+      e2 = f * (2 - f),
+      q0 = qf(e2 / (1 - e2));
+    return e2 * (1 - K * sqrt(e2) / q0) / 3; // H+M, Eq 2-90
   }
 
 } // namespace GeographicLib

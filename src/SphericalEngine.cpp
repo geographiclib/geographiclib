@@ -152,8 +152,9 @@ namespace GeographicLib {
                                     real x, real y, real z, real a,
                                     real& gradx, real& grady, real& gradz)
     {
-    STATIC_ASSERT(L > 0, "L must be positive");
-    STATIC_ASSERT(norm == FULL || norm == SCHMIDT, "Unknown normalization");
+    GEOGRAPHICLIB_STATIC_ASSERT(L > 0, "L must be positive");
+    GEOGRAPHICLIB_STATIC_ASSERT(norm == FULL || norm == SCHMIDT,
+                                "Unknown normalization");
     int N = c[0].nmx(), M = c[0].mmx();
 
     real
@@ -293,8 +294,9 @@ namespace GeographicLib {
   CircularEngine SphericalEngine::Circle(const coeff c[], const real f[],
                                          real p, real z, real a) {
 
-    STATIC_ASSERT(L > 0, "L must be positive");
-    STATIC_ASSERT(norm == FULL || norm == SCHMIDT, "Unknown normalization");
+    GEOGRAPHICLIB_STATIC_ASSERT(L > 0, "L must be positive");
+    GEOGRAPHICLIB_STATIC_ASSERT(norm == FULL || norm == SCHMIDT,
+                                "Unknown normalization");
     int N = c[0].nmx(), M = c[0].mmx();
 
     real

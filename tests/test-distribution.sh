@@ -349,6 +349,8 @@ ln -s $VERSION $WEBDIST/htdocs/html &&
 make -C $DEVELSOURCE -f makefile-admin distrib-doc
 
 # deploy release packages
+chmod 755 $DEVELSOURCE/GeographicLib-$VERSION-win{32,64}.exe
+chmod 644 $DEVELSOURCE/GeographicLib-$VERSION{.tar.gz,.zip}
 mv $DEVELSOURCE/GeographicLib-$VERSION{.tar.gz,.zip,-win{32,64}.exe} $DEVELSOURCE/distrib
 make -C $DEVELSOURCE -f makefile-admin distrib-files
 

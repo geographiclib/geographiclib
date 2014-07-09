@@ -7958,8 +7958,8 @@ namespace GeographicLib {
       _C4x[464] = REAL(9007199254740992)/REAL(399032089736190248415);
       break;
     default:
-      STATIC_ASSERT(nC4_ == 24 || nC4_ == 27 || nC4_ == 30,
-                    "Bad value of nC4_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nC4_ == 24 || nC4_ == 27 || nC4_ == 30,
+                                  "Bad value of nC4_");
     }
   }
 #undef REAL

@@ -65,9 +65,11 @@ namespace GeographicLib {
     real _a, _GM, _omega, _f, _J2, _omega2, _aomega2;
     real _e2, _ep2, _b, _E, _U0, _gammae, _gammap, _q0, _m, _k, _fstar;
     Geocentric _earth;
-    static Math::real qf(real ep2);
-    static Math::real qpf(real ep2);
-    Math::real Jn(int n) const;
+    // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-y/7+y^2/9-y^3/11
+    static real atan5(real x);
+    static real qf(real ep2);
+    static real qpf(real ep2);
+    real Jn(int n) const;
   public:
 
     /** \name Setting up the normal gravity
@@ -83,7 +85,7 @@ namespace GeographicLib {
      *   including the mass of the earth's atmosphere).
      * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
      * @param[in] f the flattening of the ellipsoid.
-     * @param[in] J2 dynamical form factor.
+     * @param[in] J2 the dynamical form factor.
      * @exception if \e a is not positive or the other constants are
      *   inconsistent (see below).
      *
@@ -306,6 +308,34 @@ namespace GeographicLib {
      * A global instantiation of NormalGravity for the GRS80 ellipsoid.
      **********************************************************************/
     static const NormalGravity GRS80;
+
+    /**
+     * Compute the flattening from the dynamical form factor.
+     *
+     * @param[in] a equatorial radius (meters).
+     * @param[in] GM mass constant of the ellipsoid
+     *   (meters<sup>3</sup>/seconds<sup>2</sup>); this is the product of \e G
+     *   the gravitational constant and \e M the mass of the earth (usually
+     *   including the mass of the earth's atmosphere).
+     * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
+     * @param[in] J2 the dynamical form factor.
+     * @return \e f the flattening of the ellipsoid.
+     **********************************************************************/
+    static Math::real J2ToFlattening(real a, real GM, real omega, real J2);
+
+    /**
+     * Compute the dynamical form factor from the flattening.
+     *
+     * @param[in] a equatorial radius (meters).
+     * @param[in] GM mass constant of the ellipsoid
+     *   (meters<sup>3</sup>/seconds<sup>2</sup>); this is the product of \e G
+     *   the gravitational constant and \e M the mass of the earth (usually
+     *   including the mass of the earth's atmosphere).
+     * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
+     * @param[in] f the flattening of the ellipsoid.
+     * @return \e J2 the dynamical form factor.
+     **********************************************************************/
+    static Math::real FlatteningToJ2(real a, real GM, real omega, real f);
   };
 
 } // namespace GeographicLib

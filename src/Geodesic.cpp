@@ -862,7 +862,7 @@ namespace GeographicLib {
       t = eps2*(eps2*(eps2*(25*eps2+64)+256)+4096)/16384;
       break;
     default:
-      STATIC_ASSERT(nA1_ >= 0 && nA1_ <= 8, "Bad value of nA1_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nA1_ >= 0 && nA1_ <= 8, "Bad value of nA1_");
       t = 0;
     }
     return (t + eps) / (1 - eps);
@@ -957,7 +957,7 @@ namespace GeographicLib {
       c[8] = -429*d/262144;
       break;
     default:
-      STATIC_ASSERT(nC1_ >= 0 && nC1_ <= 8, "Bad value of nC1_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nC1_ >= 0 && nC1_ <= 8, "Bad value of nC1_");
     }
   }
 
@@ -1050,7 +1050,7 @@ namespace GeographicLib {
       c[8] = 109167851*d/82575360;
       break;
     default:
-      STATIC_ASSERT(nC1p_ >= 0 && nC1p_ <= 8, "Bad value of nC1p_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nC1p_ >= 0 && nC1p_ <= 8, "Bad value of nC1p_");
     }
   }
 
@@ -1076,7 +1076,7 @@ namespace GeographicLib {
       t = eps2*(eps2*(eps2*(1225*eps2+1600)+2304)+4096)/16384;
       break;
     default:
-      STATIC_ASSERT(nA2_ >= 0 && nA2_ <= 8, "Bad value of nA2_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nA2_ >= 0 && nA2_ <= 8, "Bad value of nA2_");
       t = 0;
     }
     return t * (1 - eps) - eps;
@@ -1171,7 +1171,7 @@ namespace GeographicLib {
       c[8] = 6435*d/262144;
       break;
     default:
-      STATIC_ASSERT(nC2_ >= 0 && nC2_ <= 8, "Bad value of nC2_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nC2_ >= 0 && nC2_ <= 8, "Bad value of nC2_");
     }
   }
 
@@ -1233,7 +1233,7 @@ namespace GeographicLib {
       _A3x[7] = -25/real(2048);
       break;
     default:
-      STATIC_ASSERT(nA3_ >= 0 && nA3_ <= 8, "Bad value of nA3_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nA3_ >= 0 && nA3_ <= 8, "Bad value of nA3_");
     }
   }
 
@@ -1343,7 +1343,7 @@ namespace GeographicLib {
       _C3x[27] = 429/real(114688);
       break;
     default:
-      STATIC_ASSERT(nC3_ >= 0 && nC3_ <= 8, "Bad value of nC3_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nC3_ >= 0 && nC3_ <= 8, "Bad value of nC3_");
     }
   }
 
@@ -1498,7 +1498,7 @@ namespace GeographicLib {
       _C4x[35] = 1024/real(1640925);
       break;
     default:
-      STATIC_ASSERT(nC4_ >= 0 && nC4_ <= 8, "Bad value of nC4_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nC4_ >= 0 && nC4_ <= 8, "Bad value of nC4_");
     }
   }
 

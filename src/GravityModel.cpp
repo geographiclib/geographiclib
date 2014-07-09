@@ -21,8 +21,8 @@
 #  endif
 #endif
 
-#if !defined(GRAVITY_DEFAULT_NAME)
-#  define GRAVITY_DEFAULT_NAME "egm96"
+#if !defined(GEOGRAPHICLIB_GRAVITY_DEFAULT_NAME)
+#  define GEOGRAPHICLIB_GRAVITY_DEFAULT_NAME "egm96"
 #endif
 
 #if defined(_MSC_VER)
@@ -352,7 +352,7 @@ namespace GeographicLib {
     char* gravityname = getenv("GEOGRAPHICLIB_GRAVITY_NAME");
     if (gravityname)
       name = string(gravityname);
-    return !name.empty() ? name : string(GRAVITY_DEFAULT_NAME);
+    return !name.empty() ? name : string(GEOGRAPHICLIB_GRAVITY_DEFAULT_NAME);
   }
 
 } // namespace GeographicLib

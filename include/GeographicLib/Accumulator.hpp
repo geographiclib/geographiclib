@@ -99,8 +99,8 @@ namespace GeographicLib {
      * @param[in] y set \e sum = \e y.
      **********************************************************************/
     Accumulator(T y = T(0)) : _s(y), _t(0) {
-      STATIC_ASSERT(!std::numeric_limits<T>::is_integer,
-                    "Accumulator type is not floating point");
+      GEOGRAPHICLIB_STATIC_ASSERT(!std::numeric_limits<T>::is_integer,
+                                  "Accumulator type is not floating point");
     }
     /**
      * Set the accumulator to a number.

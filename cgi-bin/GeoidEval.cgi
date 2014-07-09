@@ -16,7 +16,7 @@ else
 fi
 INPUTENC=`encodevalue "$INPUT"`
 COMMAND=GeoidEval
-GEOID_PATH=../geoids
+export GEOGRAPHICLIB_DATA=..
 EXECDIR=../bin
 F='<font color="blue">'
 G='</font>'
@@ -28,15 +28,15 @@ HEIGHT2008=
 set -o pipefail
 if test "$INPUT"; then
     HEIGHT96=`echo $INPUT |
-    GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm96-5 | head -1`
+    $EXECDIR/$COMMAND -n egm96-5 | head -1`
     if test $? -eq 0; then
 	POSITION1=`echo $INPUT | $EXECDIR/GeoConvert | head -1`
 	POSITION1=`geohack $POSITION1 $POSITION1 Black`
 	POSITION2=\(`echo $INPUT | $EXECDIR/GeoConvert -d -p -1 | head -1`\)
 	HEIGHT2008=`echo $INPUT |
-	GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm2008-1 | head -1`
+	$EXECDIR/$COMMAND -n egm2008-1 | head -1`
 	HEIGHT84=`echo $INPUT |
-	GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm84-15 | head -1`
+	$EXECDIR/$COMMAND -n egm84-15 | head -1`
     else
 	POSITION1=`encodevalue "$HEIGHT96"`
 	HEIGHT96=

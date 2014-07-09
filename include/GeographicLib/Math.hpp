@@ -87,9 +87,9 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Math {
   private:
     void dummy() {
-      STATIC_ASSERT(GEOGRAPHICLIB_PRECISION >= 1 &&
-                    GEOGRAPHICLIB_PRECISION <= 5,
-                    "Bad value of precision");
+      GEOGRAPHICLIB_STATIC_ASSERT(GEOGRAPHICLIB_PRECISION >= 1 &&
+                                  GEOGRAPHICLIB_PRECISION <= 5,
+                                  "Bad value of precision");
     }
     Math();                     // Disable constructor
   public:

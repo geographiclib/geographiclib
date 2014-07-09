@@ -4649,6 +4649,12 @@ described in Appendix B of
    on an ellipsoid of revolution</a>,
    Feb. 2011; preprint
    <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
+ .
+Vermeille similarly updated his method in
+ - H. Vermeille,
+   <a href="http://dx.doi.org/10.1007/s00190-010-0419-x">
+   An analytical method to transform geocentric into
+   geodetic coordinates</a>, J. Geodesy 85, 105--117 (2011).
 
 The problems encountered near the center of the ellipsoid are:
  - There's a potential division by zero in the definition of \e s. The
@@ -4711,14 +4717,14 @@ To obtain a practical measure of the error for the general case we define
 We then find <i>err</i><sub>h</sub> < 8 nm, <i>err</i><sub>out</sub> < 4 nm,
 and <i>err</i><sub>in</sub> < 7 nm.  (1 nm = 1 nanometer.)
 
-The testing has been confined to the WGS84 ellipsoid.  The method will work
-for all ellipsoids used in terrestrial geodesy.  However, the central region,
-which leads to multiple real roots for the cubic equation in Reverse, pokes
-outside the ellipsoid (at the poles) for ellipsoids with \e e > 1/sqrt(2).
-Reverse has not been analyzed for this case.  Similarly ellipsoids which are
-very nearly spherical near yield inaccurate results due to underflow; in the
-other hand, the case of the sphere, \e f = 0, is treated specially and gives
-accurate results.
+The testing has been confined to the WGS84 ellipsoid.  The method will
+work for all ellipsoids used in terrestrial geodesy.  However, the
+central region, which leads to multiple real roots for the cubic
+equation in Reverse, pokes outside the ellipsoid (at the poles) for
+ellipsoids with \e e > 1/sqrt(2); Reverse has not been analyzed for this
+case.  Similarly ellipsoids which are very nearly spherical may yield
+inaccurate results due to underflow; in the other hand, the case of the
+sphere, \e f = 0, is treated specially and gives accurate results.
 
 Other comparable methods are K. M. Borkowski,
 <a href="http://dx.doi.org/10.1007/BF00643807"> Transformation
@@ -4764,6 +4770,8 @@ of the git repository for GeographicLib.
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-mm-dd)
    - Macro names all start with GEOGRPAHICLIB_
+   - Environment {GEOID,GRAVITY,MAGNETIC}_{NAME,PATH} are now prefixed
+     with GEOGRAPHICLIB_ (incompatible change).
    - Support quad precision.
    - Support mpreal
    - Add PolygonAreaT and PolygonAreaExact
@@ -4772,6 +4780,7 @@ of the git repository for GeographicLib.
    - Add -p option to TransverseMercatorProj
    - Retire Windows XP common data path.
    - Simplify cross-platform support for C++11 mathematical functions.
+   - Add NormalGravity::J2ToFlattening and NormalGravity::FlatteningToJ2.
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
    (released 2014-05-13)

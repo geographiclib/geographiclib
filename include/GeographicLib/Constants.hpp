@@ -15,11 +15,11 @@
 /**
  * A compile-time assert.  Use C++11 static_assert, if available.
  **********************************************************************/
-#if !defined(STATIC_ASSERT)
+#if !defined(GEOGRAPHICLIB_STATIC_ASSERT)
 #  if __cplusplus >= 201103
-#    define STATIC_ASSERT static_assert
+#    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
 #  elif defined(__GXX_EXPERIMENTAL_CXX0X__)
-#    define STATIC_ASSERT static_assert
+#    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
 #  elif defined(_MSC_VER) && _MSC_VER >= 1600
 // For reference, here is a table of Visual Studio and _MSC_VER
 // correspondences:
@@ -32,10 +32,10 @@
 //   1600     vc10  (2010)
 //   1700     vc11  (2012)
 //   1800     vc12  (2013)
-#    define STATIC_ASSERT static_assert
+#    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
 #  else
-#    define STATIC_ASSERT(cond,reason) \
-            { enum{ STATIC_ASSERT_ENUM = 1/int(cond) }; }
+#    define GEOGRAPHICLIB_STATIC_ASSERT(cond,reason) \
+            { enum{ GEOGRAPHICLIB_STATIC_ASSERT_ENUM = 1/int(cond) }; }
 #  endif
 #endif
 
