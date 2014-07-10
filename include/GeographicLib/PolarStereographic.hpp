@@ -37,9 +37,12 @@ namespace GeographicLib {
     real _a, _f, _e2, _e, _e2m, _Cx, _c;
     real _k0;
     static const int numit_ = 5;
-    static inline real overflow()
+    static inline real overflow() {
     // Overflow value s.t. atan(overflow_) = pi/2
-    { return 1 / Math::sq(std::numeric_limits<real>::epsilon()); }
+      static const real overflow
+	=  1 / Math::sq(std::numeric_limits<real>::epsilon());
+      return overflow;
+    }
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
     static inline real tanx(real x) {
       using std::tan;

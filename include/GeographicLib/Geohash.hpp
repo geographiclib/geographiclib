@@ -42,9 +42,19 @@ namespace GeographicLib {
     static const int maxlen_ = 18;
     static const unsigned long long mask_ = 1ULL << 45;
     static const int decprec_[];
-    static const real loneps_;
+    static inline real shift() {
+      using std::pow; static const real shift = pow(real(2), 45);
+      return shift;
+    }
+    static inline real loneps() {
+      static const real loneps = 180 / shift();
+      return loneps;
+    }
+    static inline real lateps() {
+      static const real lateps = 90 / shift();
+      return lateps;
+    }
     static const real lateps_;
-    static const real shift_;
     static const std::string lcdigits_;
     static const std::string ucdigits_;
     Geohash();                     // Disable constructor

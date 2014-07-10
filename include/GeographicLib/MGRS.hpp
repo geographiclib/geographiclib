@@ -68,10 +68,21 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT MGRS {
   private:
     typedef Math::real real;
-    // The smallest length s.t., 1.0e7 - eps_ < 1.0e7 (approx 1.9 nm)
-    static const real eps_;
-    // The smallest angle s.t., 90 - eps_ < 90 (approx 50e-12 arcsec)
-    static const real angeps_;
+    // The smallest length s.t., 1.0e7 - eps() < 1.0e7 (approx 1.9 nm)
+    static inline real eps() {
+      using std::pow;
+      // 25 = ceil(log_2(2e7)) -- use half circumference here because
+      // northing 195e5 is a legal in the "southern" hemisphere.
+      static const real eps = pow(real(0.5), Math::digits() - 25);
+      return eps;
+    }
+    // The smallest angle s.t., 90 - angeps() < 90 (approx 50e-12 arcsec)
+    static inline real angeps() {
+      using std::pow;
+      // 7 = ceil(log_2(90))
+      static const real angeps = pow(real(0.5), Math::digits() - 7);
+      return angeps;
+    }
     static const std::string hemispheres_;
     static const std::string utmcols_[3];
     static const std::string utmrow_;

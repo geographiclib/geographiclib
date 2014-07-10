@@ -16,9 +16,6 @@ namespace GeographicLib {
 
   const int Geohash::decprec_[] = {-2, -1, 0, 0, 1, 2, 3, 3, 4, 5,
                                    6, 6, 7, 8, 9, 9, 10, 11, 12};
-  const Math::real Geohash::shift_ = pow(real(2), 45);
-  const Math::real Geohash::loneps_ = 180 / shift_;
-  const Math::real Geohash::lateps_ = 90 / shift_;
   const string Geohash::lcdigits_ = "0123456789bcdefghjkmnpqrstuvwxyz";
   const string Geohash::ucdigits_ = "0123456789BCDEFGHJKMNPQRSTUVWXYZ";
 
@@ -33,14 +30,14 @@ namespace GeographicLib {
       geohash = "nan";
       return;
     }
-    if (lat == 90) lat -= lateps_ / 2;
+    if (lat == 90) lat -= lateps() / 2;
     lon = Math::AngNormalize(lon); // lon in [-180,180)
-    // lon/loneps_ in [-2^45,2^45); lon/eps + shift_ in [0,2^46)
+    // lon/loneps in [-2^45,2^45); lon/loneps + shift in [0,2^46)
     // similarly for lat
     len = max(0, min(int(maxlen_), len));
     unsigned long long
-      ulon = (unsigned long long)(floor(lon/loneps_) + shift_),
-      ulat = (unsigned long long)(floor(lat/lateps_) + shift_);
+      ulon = (unsigned long long)(floor(lon/loneps()) + shift()),
+      ulat = (unsigned long long)(floor(lat/lateps()) + shift());
     char geohash1[maxlen_];
     unsigned byte = 0;
     for (unsigned i = 0; i < 5 * unsigned(len);) {
@@ -92,8 +89,8 @@ namespace GeographicLib {
     int s = 5 * (maxlen_ - len);
     ulon <<=     (s / 2);
     ulat <<= s - (s / 2);
-    lon = (unsigned long)(ulon) * loneps_ - 180;
-    lat = (unsigned long)(ulat) * lateps_ - 90;
+    lon = (unsigned long)(ulon) * loneps() - 180;
+    lat = (unsigned long)(ulat) * lateps() - 90;
   }
 
 } // namespace GeographicLib

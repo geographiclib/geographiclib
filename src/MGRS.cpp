@@ -14,13 +14,6 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real MGRS::eps_ =
-    // 25 = ceil(log_2(2e7)) -- use half circumference here because northing
-    // 195e5 is a legal in the "southern" hemisphere.
-    pow(real(0.5), Math::digits() - 25);
-  const Math::real MGRS::angeps_ =
-    // 7 = ceil(log_2(90))
-    pow(real(0.5), Math::digits() - 7);
   const string MGRS::hemispheres_ = "SN";
   const string MGRS::utmcols_[3] = { "ABCDEFGH", "JKLMNPQR", "STUVWXYZ" };
   const string MGRS::utmrow_ = "ABCDEFGHJKLMNPQRSTUV";
@@ -80,7 +73,7 @@ namespace GeographicLib {
     if (utmp) {
       int
         // Correct fuzziness in latitude near equator
-        iband = abs(lat) > angeps_ ? LatitudeBand(lat) : (northp ? 0 : -1),
+        iband = abs(lat) > angeps() ? LatitudeBand(lat) : (northp ? 0 : -1),
         icol = xh - minutmcol_,
         irow = UTMRow(iband, icol, yh % utmrowperiod_);
       if (irow != yh - (northp ? minutmNrow_ : maxutmSrow_))
@@ -295,7 +288,7 @@ namespace GeographicLib {
     // Limits are all multiples of 100km and are all closed on the lower end
     // and open on the upper end -- and this is reflected in the error
     // messages.  However if a coordinate lies on the excluded upper end (e.g.,
-    // after rounding), it is shifted down by eps_.  This also folds UTM
+    // after rounding), it is shifted down by eps().  This also folds UTM
     // northings to the correct N/S hemisphere.
     int
       ix = int(floor(x / tile_)),
@@ -303,7 +296,7 @@ namespace GeographicLib {
       ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
     if (! (ix >= mineasting_[ind] && ix < maxeasting_[ind]) ) {
       if (ix == maxeasting_[ind] && x == maxeasting_[ind] * tile_)
-        x -= eps_;
+        x -= eps();
       else
         throw GeographicErr("Easting " + Utility::str(int(floor(x/1000)))
                             + "km not in MGRS/"
@@ -316,7 +309,7 @@ namespace GeographicLib {
     }
     if (! (iy >= minnorthing_[ind] && iy < maxnorthing_[ind]) ) {
       if (iy == maxnorthing_[ind] && y == maxnorthing_[ind] * tile_)
-        y -= eps_;
+        y -= eps();
       else
         throw GeographicErr("Northing " + Utility::str(int(floor(y/1000)))
                             + "km not in MGRS/"
@@ -336,7 +329,7 @@ namespace GeographicLib {
       } else if (!northp && iy >= maxutmSrow_) {
         if (y == maxutmSrow_ * tile_)
           // If on equator retain S hemisphere
-          y -= eps_;
+          y -= eps();
         else {
           northp = true;
           y -= utmNshift_;
