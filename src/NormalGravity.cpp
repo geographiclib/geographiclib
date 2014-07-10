@@ -78,7 +78,8 @@ namespace GeographicLib {
   Math::real NormalGravity::atan5(real x) {
     if (abs(x) >= real(0.5)) {
       real y = sqrt(abs(x));
-      return ((x > 0 ? atan(y) : atanh(y)) - y * (1 - x / 3)) / (x * x * y);
+      return ((x > 0 ? atan(y) : Math::atanh(y))- y * (1 - x / 3)) /
+        (x * x * y);
     } else {
       real xn = 1, q = 0;
       for (int n = 5; ; n += 2) {
