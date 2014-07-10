@@ -243,7 +243,7 @@ int main(int argc, char* argv[]) {
     return usage(1);
 
   if (timing) {
-    const Geodesic& geod = Geodesic::WGS84;
+    const Geodesic& geod = Geodesic::WGS84();
     unsigned cnt = 0;
     Math::real s = 0;
     Math::real dl;

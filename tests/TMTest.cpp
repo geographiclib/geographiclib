@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
     int count = 0;
     real dlat = 0.015, dlon = 0.015, dx = 2e3, dy = 2e3;
     if (series) {
-      const TransverseMercator& tm = TransverseMercator::UTM;
+      const TransverseMercator& tm = TransverseMercator::UTM();
       if (timefor) {
         real x, y, gam, k;
         for (real lat = -80.0; lat <= 84.0; lat += dlat)
@@ -146,7 +146,7 @@ int main(int argc, char* argv[]) {
       d[i] = 100e3 * i;
     d[0] = 10e3;
     d[nbins - 1] = 10001966;
-    const TransverseMercator& tm = TransverseMercator::UTM;
+    const TransverseMercator& tm = TransverseMercator::UTM();
     const TransverseMercatorExact tme(Constants::WGS84_a<real>(),
                                       Constants::WGS84_f<real>(),
                                       Constants::UTM_k0<real>(),
