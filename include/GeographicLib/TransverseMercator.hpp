@@ -89,7 +89,7 @@ namespace GeographicLib {
     static inline real overflow() {
     // Overflow value s.t. atan(overflow_) = pi/2
       static const real
-	overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
+        overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
       return overflow;
     }
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
