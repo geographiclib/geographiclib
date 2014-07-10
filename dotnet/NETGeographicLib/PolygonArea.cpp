@@ -50,7 +50,7 @@ PolygonArea::PolygonArea(const bool polyline )
     try
     {
         m_pPolygonArea = new GeographicLib::PolygonArea(
-            GeographicLib::Geodesic::WGS84, polyline );
+            GeographicLib::Geodesic::WGS84(), polyline );
     }
     catch (std::bad_alloc)
     {

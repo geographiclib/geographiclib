@@ -212,7 +212,7 @@ namespace GeographicLib {
      * and the UTM scale factor.  However, unlike UTM, no false easting or
      * northing is added.
      **********************************************************************/
-    static const TransverseMercator UTM;
+    static const TransverseMercator& UTM();
   };
 
 } // namespace GeographicLib

@@ -226,8 +226,11 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return &pi;.
      **********************************************************************/
-    template<typename T> static inline T pi()
-    { using std::atan2; return atan2(T(0), -T(1)); }
+    template<typename T> static inline T pi() {
+      using std::atan2;
+      static const T pi = atan2(T(0), -T(1));
+      return pi;
+    }
     /**
      * A synonym for pi<real>().
      **********************************************************************/
@@ -237,8 +240,10 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return the number of radians in a degree.
      **********************************************************************/
-    template<typename T> static inline T degree()
-    { return pi<T>() / T(180); }
+    template<typename T> static inline T degree() {
+      static const T degree = pi<T>() / T(180);
+      return degree;
+    }
     /**
      * A synonym for degree<real>().
      **********************************************************************/

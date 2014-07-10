@@ -329,10 +329,12 @@ namespace GeographicLib {
     }
   }
 
-  const LambertConformalConic
-  LambertConformalConic::Mercator(Constants::WGS84_a(),
-                                  Constants::WGS84_f(),
-                                  real(0), real(1));
+  const LambertConformalConic& LambertConformalConic::Mercator() {
+    static const LambertConformalConic mercator(Constants::WGS84_a(),
+                                                Constants::WGS84_f(),
+                                                real(0), real(1));
+    return mercator;
+  }
 
   void LambertConformalConic::Forward(real lon0, real lat, real lon,
                                       real& x, real& y, real& gamma, real& k)

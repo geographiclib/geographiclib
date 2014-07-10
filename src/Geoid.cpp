@@ -96,8 +96,8 @@ namespace GeographicLib {
   // genmatrix(yc,1,length(warr)).abs(c3).genmatrix(yd,length(pows),1)),2)$
   // c3:c0*c3$
 
-  const Math::real Geoid::c0_ = 240; // Common denominator
-  const Math::real Geoid::c3_[stencilsize_ * nterms_] = {
+  const int Geoid::c0_ = 240; // Common denominator
+  const int Geoid::c3_[stencilsize_ * nterms_] = {
       9, -18, -88,    0,  96,   90,   0,   0, -60, -20,
      -9,  18,   8,    0, -96,   30,   0,   0,  60, -20,
       9, -88, -18,   90,  96,    0, -20, -60,   0,   0,
@@ -146,8 +146,8 @@ namespace GeographicLib {
   //     genmatrix(yc,1,length(warr)).abs(c3n).genmatrix(yd,length(pows),1)),2)$
   // c3n:c0n*c3n$
 
-  const Math::real Geoid::c0n_ = 372; // Common denominator
-  const Math::real Geoid::c3n_[stencilsize_ * nterms_] = {
+  const int Geoid::c0n_ = 372; // Common denominator
+  const int Geoid::c3n_[stencilsize_ * nterms_] = {
       0, 0, -131, 0,  138,  144, 0,   0, -102, -31,
       0, 0,    7, 0, -138,   42, 0,   0,  102, -31,
      62, 0,  -31, 0,    0,  -62, 0,   0,    0,  31,
@@ -180,8 +180,8 @@ namespace GeographicLib {
   //     genmatrix(yc,1,length(warr)).abs(c3s).genmatrix(yd,length(pows),1)),2)$
   // c3s:c0s*c3s$
 
-  const Math::real Geoid::c0s_ = 372; // Common denominator
-  const Math::real Geoid::c3s_[stencilsize_ * nterms_] = {
+  const int Geoid::c0s_ = 372; // Common denominator
+  const int Geoid::c3s_[stencilsize_ * nterms_] = {
      18,  -36, -122,   0,  120,  135, 0,   0,  -84, -31,
     -18,   36,   -2,   0, -120,   51, 0,   0,   84, -31,
      36, -165,  -27,  93,  147,   -9, 0, -93,   18,   0,
@@ -344,8 +344,8 @@ namespace GeographicLib {
         v[k++] = rawval(ix    , iy + 2);
         v[k++] = rawval(ix + 1, iy + 2);
 
-        const real* c3x = iy == 0 ? c3n_ : (iy == _height - 2 ? c3s_ : c3_);
-        real c0x = iy == 0 ? c0n_ : (iy == _height - 2 ? c0s_ : c0_);
+        const int* c3x = iy == 0 ? c3n_ : (iy == _height - 2 ? c3s_ : c3_);
+        int c0x = iy == 0 ? c0n_ : (iy == _height - 2 ? c0s_ : c0_);
         for (unsigned i = 0; i < nterms_; ++i) {
           t[i] = 0;
           for (unsigned j = 0; j < stencilsize_; ++j)

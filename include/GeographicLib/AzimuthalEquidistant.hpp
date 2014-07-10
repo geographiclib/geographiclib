@@ -29,7 +29,7 @@ namespace GeographicLib {
    * projected coordinates.
    *
    * The conversions all take place using a Geodesic object (by default
-   * Geodesic::WGS84).  For more information on geodesics see \ref geodesic.
+   * Geodesic::WGS84()).  For more information on geodesics see \ref geodesic.
    *
    * Example of use:
    * \include example-AzimuthalEquidistant.cpp
@@ -52,7 +52,7 @@ namespace GeographicLib {
      * @param[in] earth the Geodesic object to use for geodesic calculations.
      *   By default this uses the WGS84 ellipsoid.
      **********************************************************************/
-    explicit AzimuthalEquidistant(const Geodesic& earth = Geodesic::WGS84);
+    explicit AzimuthalEquidistant(const Geodesic& earth = Geodesic::WGS84());
 
     /**
      * Forward projection, from geographic to azimuthal equidistant.

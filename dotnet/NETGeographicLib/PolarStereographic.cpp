@@ -50,7 +50,7 @@ PolarStereographic::PolarStereographic()
     try
     {
         m_pPolarStereographic = new GeographicLib::PolarStereographic(
-            GeographicLib::PolarStereographic::UPS );
+            GeographicLib::PolarStereographic::UPS() );
     }
     catch (std::bad_alloc)
     {

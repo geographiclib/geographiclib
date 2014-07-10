@@ -58,15 +58,21 @@ namespace GeographicLib {
       _fstar = (_m + 3 * Q / 2 - _f * (1 + Q)) / G;
     }
 
-  const NormalGravity
-  NormalGravity::WGS84(Constants::WGS84_a(), Constants::WGS84_GM(),
-                       Constants::WGS84_omega(),
-                       Constants::WGS84_f(), 0);
+  const NormalGravity& NormalGravity::WGS84() {
+    static const NormalGravity wgs84(Constants::WGS84_a(),
+                                     Constants::WGS84_GM(),
+                                     Constants::WGS84_omega(),
+                                     Constants::WGS84_f(), 0);
+    return wgs84;
+  }
 
-  const NormalGravity
-  NormalGravity::GRS80(Constants::GRS80_a(), Constants::GRS80_GM(),
-                       Constants::GRS80_omega(),
-                       0, Constants::GRS80_J2());
+  const NormalGravity& NormalGravity::GRS80() {
+    static const NormalGravity grs80(Constants::GRS80_a(),
+                                     Constants::GRS80_GM(),
+                                     Constants::GRS80_omega(),
+                                     0, Constants::GRS80_J2());
+    return grs80;
+  }
 
   // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-x/7+x^2/9-x^3/11
   Math::real NormalGravity::atan5(real x) {

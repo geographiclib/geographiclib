@@ -28,8 +28,10 @@ namespace GeographicLib {
     , _au(_a, _f, real(0), real(1), real(0), real(1), real(1))
   {}
 
-  const Ellipsoid Ellipsoid::WGS84(Constants::WGS84_a(),
-                                   Constants::WGS84_f());
+  const Ellipsoid& Ellipsoid::WGS84() {
+    static const Ellipsoid wgs84(Constants::WGS84_a(), Constants::WGS84_f());
+    return wgs84;
+  }
 
   Math::real Ellipsoid::QuarterMeridian() const
   { return _b * _ell.E(); }

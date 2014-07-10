@@ -75,12 +75,12 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT UTMUPS {
   private:
     typedef Math::real real;
-    static const real falseeasting_[4];
-    static const real falsenorthing_[4];
-    static const real mineasting_[4];
-    static const real maxeasting_[4];
-    static const real minnorthing_[4];
-    static const real maxnorthing_[4];
+    static const int falseeasting_[4];
+    static const int falsenorthing_[4];
+    static const int mineasting_[4];
+    static const int maxeasting_[4];
+    static const int minnorthing_[4];
+    static const int maxnorthing_[4];
     static const int epsg01N = 32601; // EPSG code for UTM 01N
     static const int epsg60N = 32660; // EPSG code for UTM 60N
     static const int epsgN   = 32661; // EPSG code for UPS   N

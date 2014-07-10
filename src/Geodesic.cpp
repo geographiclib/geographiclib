@@ -86,8 +86,10 @@ namespace GeographicLib {
     C4coeff();
   }
 
-  const Geodesic Geodesic::WGS84(Constants::WGS84_a(),
-                                 Constants::WGS84_f());
+  const Geodesic& Geodesic::WGS84() {
+    static const Geodesic wgs84(Constants::WGS84_a(), Constants::WGS84_f());
+    return wgs84;
+  }
 
   Math::real Geodesic::SinCosSeries(bool sinp,
                                     real sinx, real cosx,

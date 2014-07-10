@@ -270,23 +270,26 @@ namespace GeographicLib {
     _lat0 = _sign * atan(tphi0)/Math::degree();
   }
 
-  const AlbersEqualArea
-  AlbersEqualArea::CylindricalEqualArea(Constants::WGS84_a(),
-                                        Constants::WGS84_f(),
-                                        real(0), real(1), real(0), real(1),
-                                        real(1));
+  const AlbersEqualArea& AlbersEqualArea::CylindricalEqualArea() {
+    static const AlbersEqualArea
+      cylindricalequalarea(Constants::WGS84_a(), Constants::WGS84_f(),
+                           real(0), real(1), real(0), real(1), real(1));
+    return cylindricalequalarea;
+  }
 
-  const AlbersEqualArea
-  AlbersEqualArea::AzimuthalEqualAreaNorth(Constants::WGS84_a(),
-                                           Constants::WGS84_f(),
-                                           real(1), real(0), real(1), real(0),
-                                           real(1));
+  const AlbersEqualArea& AlbersEqualArea::AzimuthalEqualAreaNorth() {
+    static const AlbersEqualArea
+      azimuthalequalareanorth(Constants::WGS84_a(), Constants::WGS84_f(),
+                              real(1), real(0), real(1), real(0), real(1));
+    return azimuthalequalareanorth;
+  }
 
-  const AlbersEqualArea
-  AlbersEqualArea::AzimuthalEqualAreaSouth(Constants::WGS84_a(),
-                                           Constants::WGS84_f(),
-                                           real(-1), real(0), real(-1), real(0),
-                                           real(1));
+  const AlbersEqualArea& AlbersEqualArea::AzimuthalEqualAreaSouth() {
+    static const AlbersEqualArea
+      azimuthalequalareasouth(Constants::WGS84_a(), Constants::WGS84_f(),
+                              real(-1), real(0), real(-1), real(0), real(1));
+    return azimuthalequalareasouth;
+  }
 
   Math::real AlbersEqualArea::txif(real tphi) const {
     // sxi = ( sphi/(1-e2*sphi^2) + atanhee(sphi) ) /

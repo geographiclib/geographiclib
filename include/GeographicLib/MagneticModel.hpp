@@ -86,7 +86,7 @@ namespace GeographicLib {
      * @param[in] name the name of the model.
      * @param[in] path (optional) directory for data file.
      * @param[in] earth (optional) Geocentric object for converting
-     *   coordinates; default Geocentric::WGS84.
+     *   coordinates; default Geocentric::WGS84().
      * @exception GeographicErr if the data file cannot be found, is
      *   unreadable, or is corrupt.
      * @exception std::bad_alloc if the memory necessary for storing the model
@@ -109,7 +109,7 @@ namespace GeographicLib {
      **********************************************************************/
     explicit MagneticModel(const std::string& name,
                            const std::string& path = "",
-                           const Geocentric& earth = Geocentric::WGS84);
+                           const Geocentric& earth = Geocentric::WGS84());
     ///@}
 
     /** \name Compute the magnetic field

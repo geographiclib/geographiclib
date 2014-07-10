@@ -94,12 +94,12 @@ namespace GeographicLib {
 #endif
     static const unsigned stencilsize_ = 12;
     static const unsigned nterms_ = ((3 + 1) * (3 + 2))/2; // for a cubic fit
-    static const real c0_;
-    static const real c0n_;
-    static const real c0s_;
-    static const real c3_[stencilsize_ * nterms_];
-    static const real c3n_[stencilsize_ * nterms_];
-    static const real c3s_[stencilsize_ * nterms_];
+    static const int c0_;
+    static const int c0n_;
+    static const int c0s_;
+    static const int c3_[stencilsize_ * nterms_];
+    static const int c3n_[stencilsize_ * nterms_];
+    static const int c3s_[stencilsize_ * nterms_];
 
     std::string _name, _dir, _filename;
     const bool _cubic;

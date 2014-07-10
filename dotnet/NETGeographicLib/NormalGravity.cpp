@@ -51,8 +51,8 @@ NormalGravity::NormalGravity(StandardModels model)
     try
     {
         m_pNormalGravity = model == StandardModels::WGS84 ?
-            new GeographicLib::NormalGravity( GeographicLib::NormalGravity::WGS84 ) :
-            new GeographicLib::NormalGravity( GeographicLib::NormalGravity::GRS80 );
+            new GeographicLib::NormalGravity( GeographicLib::NormalGravity::WGS84() ) :
+            new GeographicLib::NormalGravity( GeographicLib::NormalGravity::GRS80() );
     }
     catch ( std::bad_alloc )
     {

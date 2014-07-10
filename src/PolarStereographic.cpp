@@ -32,10 +32,12 @@ namespace GeographicLib {
       throw GeographicErr("Scale is not positive");
   }
 
-  const PolarStereographic
-  PolarStereographic::UPS(Constants::WGS84_a(),
-                          Constants::WGS84_f(),
-                          Constants::UPS_k0());
+  const PolarStereographic& PolarStereographic::UPS() {
+    static const PolarStereographic ups(Constants::WGS84_a(),
+                                        Constants::WGS84_f(),
+                                        Constants::UPS_k0());
+    return ups;
+  }
 
   // This formulation converts to conformal coordinates by tau = tan(phi) and
   // tau' = tan(phi') where phi' is the conformal latitude.  The formulas are:

@@ -11,6 +11,13 @@ using namespace GeographicLib;
 
 int main() {
   try {
+    EllipticFunction ell0;  // parameter m = 0
+    cout << setprecision(15);
+    // See Abramowitz and Stegun, table 17.1
+    cout << ell0.K() << " " << ell0.E() << " "
+         << ell0.D() << " " << ell0.KE() << " "
+         << ell0.Pi() << " " << ell0.G() << " " << ell0.H() << "\n";
+
     EllipticFunction ell(0.1);  // parameter m = 0.1
     // See Abramowitz and Stegun, table 17.1
     cout << ell.K() << " " << ell.E() << "\n";

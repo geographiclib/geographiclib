@@ -28,8 +28,10 @@ namespace GeographicLib {
       throw GeographicErr("Minor radius is not positive");
   }
 
-  const Geocentric Geocentric::WGS84(Constants::WGS84_a(),
-                                     Constants::WGS84_f());
+  const Geocentric& Geocentric::WGS84() {
+    static const Geocentric wgs84(Constants::WGS84_a(), Constants::WGS84_f());
+    return wgs84;
+  }
 
   void Geocentric::IntForward(real lat, real lon, real h,
                               real& X, real& Y, real& Z,

@@ -323,7 +323,7 @@ namespace GeographicLib {
      * ellipsoid, \e stdlat = 0, and \e k0 = 1.  This degenerates to the
      * Mercator projection.
      **********************************************************************/
-    static const LambertConformalConic Mercator;
+    static const LambertConformalConic& Mercator();
   };
 
 } // namespace GeographicLib

@@ -302,12 +302,12 @@ namespace GeographicLib {
     /**
      * A global instantiation of NormalGravity for the WGS84 ellipsoid.
      **********************************************************************/
-    static const NormalGravity WGS84;
+    static const NormalGravity& WGS84();
 
     /**
      * A global instantiation of NormalGravity for the GRS80 ellipsoid.
      **********************************************************************/
-    static const NormalGravity GRS80;
+    static const NormalGravity& GRS80();
 
     /**
      * Compute the flattening from the dynamical form factor.

@@ -49,7 +49,7 @@ namespace GeographicLib {
    * reciprocal of the scale in the northing direction.
    *
    * The conversions all take place using a Geodesic object (by default
-   * Geodesic::WGS84).  For more information on geodesics see \ref geodesic.
+   * Geodesic::WGS84()).  For more information on geodesics see \ref geodesic.
    * The determination of (\e lat1, \e lon1) in the forward projection is by
    * solving the inverse geodesic problem for (\e lat, \e lon) and its twin
    * obtained by reflection in the meridional plane.  The scale is found by
@@ -105,7 +105,7 @@ namespace GeographicLib {
      * This constructor makes an "uninitialized" object.  Call Reset to set the
      * central latitude and longitude, prior to calling Forward and Reverse.
      **********************************************************************/
-    explicit CassiniSoldner(const Geodesic& earth = Geodesic::WGS84);
+    explicit CassiniSoldner(const Geodesic& earth = Geodesic::WGS84());
 
     /**
      * Constructor for CassiniSoldner specifying a center point.
@@ -119,7 +119,7 @@ namespace GeographicLib {
      * lon0 should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     CassiniSoldner(real lat0, real lon0,
-                   const Geodesic& earth = Geodesic::WGS84);
+                   const Geodesic& earth = Geodesic::WGS84());
 
     /**
      * Set the central point of the projection

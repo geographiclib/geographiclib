@@ -13,7 +13,7 @@ int main() {
     NormalGravity grav(Constants::WGS84_a(), Constants::WGS84_GM<double>(),
                        Constants::WGS84_omega<double>(),
                        Constants::WGS84_f(), 0);
-    // Alternatively: const NormalGravity& grav = NormalGravity::WGS84;
+    // Alternatively: const NormalGravity& grav = NormalGravity::WGS84();
     double lat = 27.99, h = 8820; // Mt Everest
     double gammay, gammaz;
     grav.Gravity(lat, h, gammay, gammaz);

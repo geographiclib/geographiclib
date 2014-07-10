@@ -199,10 +199,12 @@ namespace GeographicLib {
     _a1 = _b1 * _a;
   }
 
-  const TransverseMercator
-  TransverseMercator::UTM(Constants::WGS84_a(),
-                          Constants::WGS84_f(),
-                          Constants::UTM_k0());
+  const TransverseMercator& TransverseMercator::UTM() {
+    static const TransverseMercator utm(Constants::WGS84_a(),
+                                        Constants::WGS84_f(),
+                                        Constants::UTM_k0());
+    return utm;
+  }
 
   // Engsager and Poder (2007) use trigonometric series to convert between phi
   // and phip.

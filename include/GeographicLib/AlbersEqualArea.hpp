@@ -304,21 +304,21 @@ namespace GeographicLib {
      * stdlat = 0, and \e k0 = 1.  This degenerates to the cylindrical equal
      * area projection.
      **********************************************************************/
-    static const AlbersEqualArea CylindricalEqualArea;
+    static const AlbersEqualArea& CylindricalEqualArea();
 
     /**
      * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e
      * stdlat = 90&deg;, and \e k0 = 1.  This degenerates to the
      * Lambert azimuthal equal area projection.
      **********************************************************************/
-    static const AlbersEqualArea AzimuthalEqualAreaNorth;
+    static const AlbersEqualArea& AzimuthalEqualAreaNorth();
 
     /**
      * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e
      * stdlat = &minus;90&deg;, and \e k0 = 1.  This degenerates to the
      * Lambert azimuthal equal area projection.
      **********************************************************************/
-    static const AlbersEqualArea AzimuthalEqualAreaSouth;
+    static const AlbersEqualArea& AzimuthalEqualAreaSouth();
   };
 
 } // namespace GeographicLib

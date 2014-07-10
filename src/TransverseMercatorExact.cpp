@@ -71,10 +71,12 @@ namespace GeographicLib {
       throw GeographicErr("Scale is not positive");
   }
 
-  const TransverseMercatorExact
-  TransverseMercatorExact::UTM(Constants::WGS84_a(),
-                               Constants::WGS84_f(),
-                               Constants::UTM_k0());
+  const TransverseMercatorExact& TransverseMercatorExact::UTM() {
+    static const TransverseMercatorExact utm(Constants::WGS84_a(),
+                                             Constants::WGS84_f(),
+                                             Constants::UTM_k0());
+    return utm;
+  }
 
   // tau = tan(phi), taup = sinh(psi)
   Math::real TransverseMercatorExact::taup(real tau) const {

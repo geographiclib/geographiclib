@@ -46,7 +46,7 @@ namespace GeographicLib {
     typedef Math::real real;
     static const std::string letters_;
     static const std::string digits_;
-    static const TransverseMercator OSGBTM_;
+    static const TransverseMercator& OSGBTM();
     static real northoffset_;
     static bool init_;
     enum {
@@ -83,7 +83,7 @@ namespace GeographicLib {
      **********************************************************************/
     static void Forward(real lat, real lon,
                         real& x, real& y, real& gamma, real& k) {
-      OSGBTM_.Forward(OriginLongitude(), lat, lon, x, y, gamma, k);
+      OSGBTM().Forward(OriginLongitude(), lat, lon, x, y, gamma, k);
       x += FalseEasting();
       y += computenorthoffset();
     }
@@ -106,7 +106,7 @@ namespace GeographicLib {
                         real& lat, real& lon, real& gamma, real& k) {
       x -= FalseEasting();
       y -= computenorthoffset();
-      OSGBTM_.Reverse(OriginLongitude(), x, y, lat, lon, gamma, k);
+      OSGBTM().Reverse(OriginLongitude(), x, y, lat, lon, gamma, k);
     }
 
     /**

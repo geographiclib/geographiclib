@@ -66,7 +66,7 @@ namespace GeographicLib {
    * (<i>r</i>/2<i>a</i>)<sup>3</sup> \e r.
    *
    * The conversions all take place using a Geodesic object (by default
-   * Geodesic::WGS84).  For more information on geodesics see \ref geodesic.
+   * Geodesic::WGS84()).  For more information on geodesics see \ref geodesic.
    *
    * <b>CAUTION:</b> The definition of this projection for a sphere is
    * standard.  However, there is no standard for how it should be extended to
@@ -113,7 +113,7 @@ namespace GeographicLib {
      * @param[in] earth the Geodesic object to use for geodesic calculations.
      *   By default this uses the WGS84 ellipsoid.
      **********************************************************************/
-    explicit Gnomonic(const Geodesic& earth = Geodesic::WGS84);
+    explicit Gnomonic(const Geodesic& earth = Geodesic::WGS84());
 
     /**
      * Forward projection, from geographic to gnomonic.

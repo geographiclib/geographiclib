@@ -768,7 +768,7 @@ namespace GeographicLib {
      * A global instantiation of GeodesicExact with the parameters for the WGS84
      * ellipsoid.
      **********************************************************************/
-    static const GeodesicExact WGS84;
+    static const GeodesicExact& WGS84();
 
   };
 

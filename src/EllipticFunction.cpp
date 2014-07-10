@@ -211,25 +211,6 @@ namespace GeographicLib {
       (4084080 * mul * An * sqrt(An)) + 3 * s;
   }
 
-  EllipticFunction::EllipticFunction(real k2, real alpha2)
-    : _k2(k2)
-    , _kp2(1 - k2)
-    , _alpha2(alpha2)
-    , _alphap2(1 - alpha2)
-    , _eps(_k2/Math::sq(sqrt(_kp2) + 1))
-    , _init(false)
-  {}
-
-  EllipticFunction::EllipticFunction(real k2, real alpha2,
-                                     real kp2, real alphap2)
-    : _k2(k2)
-    , _kp2(kp2)
-    , _alpha2(alpha2)
-    , _alphap2(alphap2)
-    , _eps(_k2/Math::sq(sqrt(_kp2) + 1))
-    , _init(false)
-  {}
-
   void EllipticFunction::Reset(real k2, real alpha2,
                                real kp2, real alphap2) {
     _k2 = k2;
@@ -237,19 +218,19 @@ namespace GeographicLib {
     _alpha2 = alpha2;
     _alphap2 = alphap2;
     _eps = _k2/Math::sq(sqrt(_kp2) + 1);
-    _init = false;
-  }
-
-  bool EllipticFunction::Init() const {
-    // Complete elliptic integral K(k), Carlson eq. 4.1
-    // http://dlmf.nist.gov/19.25.E1
-    _Kc = _kp2 ? RF(_kp2, 1) : Math::infinity();
-    // Complete elliptic integral E(k), Carlson eq. 4.2
-    // http://dlmf.nist.gov/19.25.E1
-    _Ec = _kp2 ? 2 * RG(_kp2, 1) : 1;
-    // D(k) = (K(k) - E(k))/m, Carlson eq.4.3
-    // http://dlmf.nist.gov/19.25.E1
-    _Dc = _kp2 ? RD(real(0), _kp2, 1) / 3 : Math::infinity();
+    if (_k2) {
+      // Complete elliptic integral K(k), Carlson eq. 4.1
+      // http://dlmf.nist.gov/19.25.E1
+      _Kc = _kp2 ? RF(_kp2, 1) : Math::infinity();
+      // Complete elliptic integral E(k), Carlson eq. 4.2
+      // http://dlmf.nist.gov/19.25.E1
+      _Ec = _kp2 ? 2 * RG(_kp2, 1) : 1;
+      // D(k) = (K(k) - E(k))/k^2, Carlson eq.4.3
+      // http://dlmf.nist.gov/19.25.E1
+      _Dc = _kp2 ? RD(real(0), _kp2, 1) / 3 : Math::infinity();
+    } else {
+      _Kc = _Ec = Math::pi()/2; _Dc = _Kc/2;
+    }
     if (_alpha2) {
       // http://dlmf.nist.gov/19.25.E2
       real rj = _kp2 ? RJ(0, _kp2, 1, _alphap2) : Math::infinity();
@@ -262,7 +243,6 @@ namespace GeographicLib {
     } else {
       _Pic = _Kc; _Gc = _Ec; _Hc = _Kc - _Dc;
     }
-    return _init = true;
   }
 
   /*
@@ -496,7 +476,6 @@ namespace GeographicLib {
   }
 
   Math::real EllipticFunction::Einv(real x) const {
-    _init || Init();
     real tolJAC = sqrt(numeric_limits<real>::epsilon() * real(0.01));
     real n = floor(x / (2 * _Ec) + 0.5);
     x -= 2 * _Ec * n;           // x now in [-ec, ec)
