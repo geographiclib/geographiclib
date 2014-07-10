@@ -38,7 +38,6 @@ namespace GeographicLib {
 
   using namespace std;
 
-
   GeodesicExact::GeodesicExact(real a, real f)
     : maxit2_(maxit1_ + Math::digits() + 10)
       // Underflow guard.  We require

@@ -318,7 +318,7 @@ done
 
 cd $TEMP/relx/GeographicLib-$VERSION
 echo Files with trailing spaces:
-find . -type f | egrep -v 'Makefile\.in|\.m4|\.png|\.pdf' |
+find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.pdf' |
 xargs grep -l ' $' || true
 echo
 echo Files with tabs:

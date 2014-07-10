@@ -92,7 +92,7 @@ namespace GeographicLib {
       return q;
     }
   }
-    
+
   Math::real NormalGravity::qf(real ep2) {
     // Compute
     //

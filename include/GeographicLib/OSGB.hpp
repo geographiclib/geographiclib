@@ -185,7 +185,7 @@ namespace GeographicLib {
     static Math::real MajorRadius() {
     // result is about 6377563.3960320664406 m
       using std::pow;
-      return pow(real(10), real(48401603 - 100000000) / 100000000) 
+      return pow(real(10), real(48401603 - 100000000) / 100000000)
         * 20923713;
     }
 
