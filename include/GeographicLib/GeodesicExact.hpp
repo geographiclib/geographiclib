@@ -98,8 +98,7 @@ namespace GeographicLib {
       OUT_ALL  = 0x7F80U,
     };
 
-    static real CosSeries(real sinx, real cosx, const real c[], int n)
-     ;
+    static real CosSeries(real sinx, real cosx, const real c[], int n);
     static inline real AngRound(real x) {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
       // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
@@ -142,13 +141,21 @@ namespace GeographicLib {
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
                   EllipticFunction& E,
-                  real& omg12, bool diffp, real& dlam12)
-      const;
+                  real& omg12, bool diffp, real& dlam12) const;
 
     // These are Maxima generated functions to provide series approximations to
     // the integrals for the area.
     void C4coeff();
     void C4f(real k2, real c[]) const;
+    // Large coefficients are split so that lo contains the low 52 bits and hi
+    // the rest.  This choice avoids double rounding with doubles and higher
+    // precision types.  float coefficients will suffer double rounding;
+    // however the accuracy is already lousy for floats.
+    static Math::real inline reale(long long hi, long long lo) {
+      using std::ldexp;
+      return ldexp(real(hi), 52) + lo;
+    }
+    static const Math::real* rawC4coeff();
 
   public:
 

@@ -165,11 +165,11 @@ set_tests_properties (GeodSolve11
 # Check fix for inverse geodesics on extreme prolate/oblate ellipsoids
 # Reported 2012-08-29 Stefan Guenther <stefan.gunther@embl.de>; fixed 2012-10-07
 add_test (NAME GeodSolve12 COMMAND
-  GeodSolve -i -e 89.8 -1.83 -p 0 --input-string "0 0 -10 160")
+  GeodSolve -i -e 89.8 -1.83 -p 1 --input-string "0 0 -10 160")
 add_test (NAME GeodSolve13 COMMAND
-  GeodSolve -i -e 89.8 -1.83 -p 0 --input-string "0 0 -10 160" -E)
+  GeodSolve -i -e 89.8 -1.83 -p 1 --input-string "0 0 -10 160" -E)
 set_tests_properties (GeodSolve12 GeodSolve13
-  PROPERTIES PASS_REGULAR_EXPRESSION "120\\.27.* 105\\.15.* 267")
+  PROPERTIES PASS_REGULAR_EXPRESSION "120\\.27.* 105\\.15.* 266\\.7")
 
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0

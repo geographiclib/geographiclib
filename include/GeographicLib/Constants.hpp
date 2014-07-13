@@ -103,7 +103,7 @@ namespace GeographicLib {
      * @return the equatorial radius of WGS84 ellipsoid (6378137 m).
      **********************************************************************/
     template<typename T> static inline T WGS84_a()
-    { return T(6378137) * meter<T>(); }
+    { return 6378137 * meter<T>(); }
     /**
      * A synonym for WGS84_a<real>().
      **********************************************************************/
@@ -113,7 +113,7 @@ namespace GeographicLib {
      * @return the flattening of WGS84 ellipsoid (1/298.257223563).
      **********************************************************************/
     template<typename T> static inline T WGS84_f()
-    { return T(1) / ( T(298) + T(257223563) / T(1000000000) ); }
+    { return 1 / ( 298 + T(257223563) / 1000000000 ); }
     /**
      * A synonym for WGS84_f<real>().
      **********************************************************************/
@@ -124,7 +124,7 @@ namespace GeographicLib {
      *   m<sup>3</sup> s<sup>&minus;2</sup>.
      **********************************************************************/
     template<typename T> static inline T WGS84_GM()
-    { return T(3986004) * T(100000000) + T(41800000); }
+    { return T(3986004) * 100000000 + 41800000; }
     /**
      * A synonym for WGS84_GM<real>().
      **********************************************************************/
@@ -135,7 +135,7 @@ namespace GeographicLib {
      *   s<sup>&minus;1</sup>.
      **********************************************************************/
     template<typename T> static inline T WGS84_omega()
-    { return T(7292115) / (T(1000000) * T(100000)); }
+    { return 7292115 / (T(1000000) * 100000); }
     /**
      * A synonym for WGS84_omega<real>().
      **********************************************************************/
@@ -158,7 +158,7 @@ namespace GeographicLib {
      * @return the equatorial radius of GRS80 ellipsoid, \e a, in m.
      **********************************************************************/
     template<typename T> static inline T GRS80_a()
-    { return T(6378137); }
+    { return 6378137 * meter<T>(); }
     /**
      * A synonym for GRS80_a<real>().
      **********************************************************************/
@@ -169,7 +169,7 @@ namespace GeographicLib {
      *   m<sup>3</sup> s<sup>&minus;2</sup>.
      **********************************************************************/
     template<typename T> static inline T GRS80_GM()
-    { return T(3986005) * T(100000000); }
+    { return T(3986005) * 100000000; }
     /**
      * A synonym for GRS80_GM<real>().
      **********************************************************************/
@@ -187,7 +187,7 @@ namespace GeographicLib {
      * earth's axis).
      **********************************************************************/
     template<typename T> static inline T GRS80_omega()
-    { return T(7292115) / (T(1000000) * T(100000)); }
+    { return 7292115 / (T(1000000) * 100000); }
     /**
      * A synonym for GRS80_omega<real>().
      **********************************************************************/
@@ -198,7 +198,7 @@ namespace GeographicLib {
      *   <i>J</i><sub>2</sub>.
      **********************************************************************/
     template<typename T> static inline T GRS80_J2()
-    { return T(108263) / T(100000000); }
+    { return T(108263) / 100000000; }
     /**
      * A synonym for GRS80_J2<real>().
      **********************************************************************/
@@ -208,7 +208,7 @@ namespace GeographicLib {
      * @return the central scale factor for UTM (0.9996).
      **********************************************************************/
     template<typename T> static inline T UTM_k0()
-    {return T(9996) / T(10000); }
+    {return T(9996) / 10000; }
     /**
      * A synonym for UTM_k0<real>().
      **********************************************************************/
@@ -218,7 +218,7 @@ namespace GeographicLib {
      * @return the central scale factor for UPS (0.994).
      **********************************************************************/
     template<typename T> static inline T UPS_k0()
-    { return T(994) / T(1000); }
+    { return T(994) / 1000; }
     /**
      * A synonym for UPS_k0<real>().
      **********************************************************************/

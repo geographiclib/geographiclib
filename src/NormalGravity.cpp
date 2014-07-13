@@ -26,17 +26,19 @@ namespace GeographicLib {
         throw GeographicErr("Major radius is not positive");
       if (!(Math::isfinite(_GM) && _GM > 0))
         throw GeographicErr("Gravitational constants is not positive");
-      bool flatp = _f > 0 && Math::isfinite(_f);
-      if (_J2 > 0 && Math::isfinite(_J2) && flatp)
-        throw GeographicErr("Cannot specify both f and J2");
-      if (!(_J2 > 0 && Math::isfinite(_J2)) && !flatp)
-        throw GeographicErr("Must specify one of f and J2");
-      if (!(Math::isfinite(_omega) && _omega != 0))
-        throw GeographicErr("Angular velocity is not non-zero");
-      if (flatp)
-        _J2 = FlatteningToJ2(a, GM, omega, f);
-      else
-        _f = J2ToFlattening(a, GM, omega, J2);
+      if (!(_omega == 0 && _f == 0 && _J2 == 0)) {
+        bool flatp = _f > 0 && Math::isfinite(_f);
+        if (_J2 > 0 && Math::isfinite(_J2) && flatp)
+          throw GeographicErr("Cannot specify both f and J2");
+        if (!(_J2 > 0 && Math::isfinite(_J2)) && !flatp)
+          throw GeographicErr("Must specify one of f and J2");
+        if (!(Math::isfinite(_omega) && _omega != 0))
+          throw GeographicErr("Angular velocity is not non-zero");
+        if (flatp)
+          _J2 = FlatteningToJ2(a, GM, omega, f);
+        else
+          _f = J2ToFlattening(a, GM, omega, J2);
+      } // else we have a sphere: omega = f = J2 = 0
       _e2 = _f * (2 - _f);
       _ep2 = _e2 / (1 - _e2);
       _q0 = qf(_ep2);
@@ -74,15 +76,15 @@ namespace GeographicLib {
     return grs80;
   }
 
-  // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-x/7+x^2/9-x^3/11
-  Math::real NormalGravity::atan5(real x) {
+  // (atan(y)-(y-y^3/3+y^5/5))/y^7 (y = sqrt(x)) = -1/7+x/9-x^2/11+x^3/13...
+  Math::real NormalGravity::atan7(real x) {
     if (abs(x) >= real(0.5)) {
-      real y = sqrt(abs(x));
-      return ((x > 0 ? atan(y) : Math::atanh(y))- y * (1 - x / 3)) /
-        (x * x * y);
+      real y = sqrt(abs(x)), x2 = Math::sq(x);
+      return ((x > 0 ? atan(y) : Math::atanh(y))- y * (1 - x / 3 + x2 / 5)) /
+        (x * x2 * y);
     } else {
-      real xn = 1, q = 0;
-      for (int n = 5; ; n += 2) {
+      real xn = -1, q = 0;
+      for (int n = 7; ; n += 2) {
         real qn = q + xn / n;
         if (qn == q)
           break;
@@ -93,6 +95,10 @@ namespace GeographicLib {
     }
   }
 
+  // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-x/7+x^2/9-x^3/11...
+  Math::real NormalGravity::atan5(real x)
+  { return 1/real(5) + x * atan7(x); }
+
   Math::real NormalGravity::qf(real ep2) {
     // Compute
     //
@@ -100,8 +106,15 @@ namespace GeographicLib {
     //
     // See H+M, Eq 2-57, with E/u = e'.  This suffers from two levels of
     // cancelation.  The e'^-1 and e'^1 terms drop out, so that the leading
-    // term is O(e'^3).
+    // term is O(e'^3).  Substitute atan(e') = e' - e'^3/3 + e'^5*atan5(e'^2)
     return sqrt(ep2) * ep2 * (3 * (3 + ep2) * atan5(ep2) - 1) / 6;
+  }
+
+  Math::real NormalGravity::dq(real ep2) {
+    // Compute d qf(ep2) / d ep2 and substitute
+    // atan(e') = e' - e'^3/3 + e'^5/5 + e'^7*atan7(e'^2)
+    return sqrt(ep2) * (5 - 3 * (1 + ep2) * (1 + 5 * ep2 * atan7(ep2))) /
+      (10 * (1 + ep2));
   }
 
   Math::real NormalGravity::qpf(real ep2) {
@@ -124,7 +137,7 @@ namespace GeographicLib {
     for (int j = n; j--;)
       e2n *= -_e2;
     return                      // H+M, Eq 2-92
-      -3 * e2n * (1 - n + 5 * n * _J2 / _e2) / ((2 * n + 1) * (2 * n + 3));
+      -3 * e2n * ((1 - n) + 5 * n * _J2 / _e2) / ((2 * n + 1) * (2 * n + 3));
   }
 
   Math::real NormalGravity::SurfaceGravity(real lat) const {
@@ -217,10 +230,16 @@ namespace GeographicLib {
     real
       K = 2 * Math::sq(a * omega) * a / (15 * GM),
       e2 = 3 * J2;              // See Moritz (1980), p 398.
+    // Solve using Newton's method
     for (int j = 0; j < maxit_; ++j) {
-      real e2a = e2;
-      real q0 = qf(e2 / (1 - e2));
-      e2 = 3 * J2 + K * e2 * sqrt(e2) / q0;
+      real e2a = e2,
+        ep2 = e2 / (1 - e2),
+        q0 = qf(ep2),
+        dq0 = dq(ep2) / Math::sq(1 - e2),
+        h = e2 * (1 - sqrt(e2) * K / q0) - 3 * J2,
+        dh = 1 - sqrt(e2) * K * (3 * q0 - 2 * e2 * dq0) / (2 * Math::sq(q0)),
+        de2 = - h / dh;
+      e2 = e2a + de2;
       if (e2 == e2a)
         break;
     }

@@ -200,8 +200,7 @@ namespace GeographicLib {
     };
 
     static real SinCosSeries(bool sinp,
-                             real sinx, real cosx, const real c[], int n)
-     ;
+                             real sinx, real cosx, const real c[], int n);
     static inline real AngRound(real x) {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
       // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This

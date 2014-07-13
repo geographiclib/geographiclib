@@ -195,8 +195,7 @@ namespace GeographicLib {
      * the limit &epsilon; &rarr; 0+.
      **********************************************************************/
     GeodesicLine(const Geodesic& g, real lat1, real lon1, real azi1,
-                 unsigned caps = ALL)
-     ;
+                 unsigned caps = ALL);
 
     /**
      * A default constructor.  If GeodesicLine::Position is called on the

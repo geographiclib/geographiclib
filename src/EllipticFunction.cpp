@@ -269,7 +269,7 @@ namespace GeographicLib {
       real m[num_], n[num_];
       unsigned l = 0;
       for (real a = 1; l < num_; ++l) {
-        // Max 5 trips
+        // This converges quadratically.  Max 5 trips
         m[l] = a;
         n[l] = mc = sqrt(mc);
         c = (a + mc) / 2;

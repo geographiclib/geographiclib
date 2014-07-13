@@ -1993,7 +1993,10 @@ The supported models are
  - <b>wgs84</b>, the
    <a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/tr8350_2.html">
    WGS84 Reference Ellipsoid</a>.  This is just reproduces the normal
-   gravitational field for the reference ellipsoid.  Usually
+   gravitational field for the reference ellipsoid.  This includes the
+   zonal coefficients up to order 20.  These are given by
+   <i>C</i><sub><i>n</i>0</sub> = &minus; <i>J</i><sub><i>n</i></sub> /
+   sqrt(2<i>n</i> + 1), for <i>n</i> &gt; 0 and even.  Usually
    NormalGravity::WGS84 should be used instead.
 
 See
@@ -4780,7 +4783,11 @@ of the git repository for GeographicLib.
    - Add -p option to TransverseMercatorProj
    - Retire Windows XP common data path.
    - Simplify cross-platform support for C++11 mathematical functions.
+   - In NormalGravity, use Newton's method to determine f from J2.
    - Add NormalGravity::J2ToFlattening and NormalGravity::FlatteningToJ2.
+   - In NormalGravity constructor allow omega = 0 (i.e., treat spherical case).
+   - Change way area coefficients are given in GeodesicExact to improve
+     compile times.
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
    (released 2014-05-13)

@@ -65,10 +65,14 @@ namespace GeographicLib {
     real _a, _GM, _omega, _f, _J2, _omega2, _aomega2;
     real _e2, _ep2, _b, _E, _U0, _gammae, _gammap, _q0, _m, _k, _fstar;
     Geocentric _earth;
-    // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-y/7+y^2/9-y^3/11
+    // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-y/7+y^2/9-y^3/11...
     static real atan5(real x);
+    // (atan(y)-(y-y^3/3+y^5/5))/y^7 (y = sqrt(x)) = -1/7+x/9-x^2/11+x^3/13...
+    static real atan7(real x);
     static real qf(real ep2);
+    static real dq(real ep2);
     static real qpf(real ep2);
+  public:
     real Jn(int n) const;
   public:
 
@@ -89,9 +93,9 @@ namespace GeographicLib {
      * @exception if \e a is not positive or the other constants are
      *   inconsistent (see below).
      *
-     * Exactly one of \e f and \e J2 should be positive and this will be used
-     * to define the ellipsoid.  The shape of the ellipsoid can be given in one
-     * of two ways:
+     * If \e omega is non-zero, then exactly one of \e f and \e J2 should be
+     * positive and this will be used to define the ellipsoid.  The shape of
+     * the ellipsoid can be given in one of two ways:
      * - geometrically, the ellipsoid is defined by the flattening \e f = (\e a
      *   &minus; \e b) / \e a, where \e a and \e b are the equatorial radius
      *   and the polar semi-axis.
