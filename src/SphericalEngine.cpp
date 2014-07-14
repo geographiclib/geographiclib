@@ -378,7 +378,7 @@ namespace GeographicLib {
   }
 
   void SphericalEngine::UpdateRootTable() {
-    for (int l = root_.size(); l--;)
+    for (int l = int(root_.size()); l--;)
       root_[l] = sqrt(real(l));
   }
 

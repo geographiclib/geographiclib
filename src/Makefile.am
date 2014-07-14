@@ -21,6 +21,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		Geocentric.cpp \
 		Geodesic.cpp \
 		GeodesicExact.cpp \
+		GeodesicExactC4.cpp \
 		GeodesicLine.cpp \
 		GeodesicLineExact.cpp \
 		Geohash.cpp \

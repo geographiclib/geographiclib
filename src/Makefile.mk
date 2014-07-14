@@ -46,10 +46,10 @@ EXTRAHEADERS = Constants \
 	SphericalHarmonic \
 	SphericalHarmonic1 \
 	SphericalHarmonic2
-
+EXTRASOURCES = GeodesicExactC4
 HEADERS = Config.h $(addsuffix .hpp,$(EXTRAHEADERS) $(MODULES))
-SOURCES = $(addsuffix .cpp,$(MODULES))
-OBJECTS = $(addsuffix .o,$(MODULES))
+SOURCES = $(addsuffix .cpp,$(MODULES) $(EXTRASOURCES))
+OBJECTS = $(addsuffix .o,$(MODULES) $(EXTRASOURCES))
 
 CC = g++ -g
 CXXFLAGS = -g -Wall -Wextra -O3 -std=c++0x
@@ -93,6 +93,7 @@ Geocentric.o: Config.h Constants.hpp Geocentric.hpp Math.hpp
 Geodesic.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Math.hpp
 GeodesicExact.o: Config.h Constants.hpp GeodesicExact.hpp \
 	GeodesicLineExact.hpp Math.hpp
+GeodesicExactC4.o: Config.h Constants.hpp GeodesicExact.hpp Math.hpp
 GeodesicLine.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Math.hpp
 GeodesicLineExact.o: Config.h Constants.hpp GeodesicExact.hpp \
 	GeodesicLineExact.hpp Math.hpp
