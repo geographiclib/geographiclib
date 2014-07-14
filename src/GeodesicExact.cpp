@@ -839,7 +839,7 @@ namespace GeographicLib {
     for (int m = 0, k = 0, h = 0; m < nC4_; ++m) {
       // eps^j coefficient
       for (int j = m; j < nC4_; ++j) {
-      	real t = 0;
+        real t = 0;
         // n^l coefficient
         for (int l = nC4_ - j; l--;)
           t = _n * t + cc[h++];

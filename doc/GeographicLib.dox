@@ -177,9 +177,10 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
 
 GeographicLib has been developed under Linux with the g++ compiler
-(versions 4.0 and later) and under Windows with Visual Studio 2005, 2008,
-and 2010.  Earlier versions were tested also under Darwin and Solaris.  It
-should compile on a wide range of other systems.  First download either
+(versions 4.0 and later) and under Windows with Visual Studio 2010,
+2012, and 2013.  Earlier versions were tested also under Visual Studio
+2005 and 2008 and under Darwin and Solaris.  It should compile on a wide
+range of other systems.  First download either
 <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37.tar.gz">
 GeographicLib-1.37.tar.gz</a> or
 <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37.zip">

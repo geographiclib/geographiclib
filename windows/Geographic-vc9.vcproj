@@ -312,6 +312,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\GeodesicExactC4.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\GeodesicLine.cpp"
 				>
 			</File>

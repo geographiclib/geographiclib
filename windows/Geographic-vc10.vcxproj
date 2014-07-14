@@ -192,6 +192,7 @@
     <ClCompile Include="../src/Geocentric.cpp" />
     <ClCompile Include="../src/Geodesic.cpp" />
     <ClCompile Include="../src/GeodesicExact.cpp" />
+    <ClCompile Include="../src/GeodesicExactC4.cpp" />
     <ClCompile Include="../src/GeodesicLine.cpp" />
     <ClCompile Include="../src/GeodesicLineExact.cpp" />
     <ClCompile Include="../src/Geohash.cpp" />
