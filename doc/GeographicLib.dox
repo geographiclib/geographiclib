@@ -4789,6 +4789,8 @@ of the git repository for GeographicLib.
    - In NormalGravity constructor allow omega = 0 (i.e., treat spherical case).
    - Change way area coefficients are given in GeodesicExact to improve
      compile times.
+   - STILL TO DO: add GravityModel for grs80.
+   - STILL TO DO: add -p prec for other utilities (where applicable)
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
    (released 2014-05-13)
