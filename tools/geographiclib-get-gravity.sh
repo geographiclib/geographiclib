@@ -28,6 +28,7 @@ table:
   egm96      360     2100    2100
   egm2008   2190    76000   75000
   wgs84      20        1       1
+  grs80      20        1       1
 
 The size columns give the download and installed sizes of the datasets.
 In addition you can specify
@@ -114,6 +115,7 @@ cat > $TEMP/all <<EOF
 egm84
 egm96
 egm2008
+grs80
 wgs84
 EOF
 

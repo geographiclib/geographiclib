@@ -492,7 +492,7 @@ namespace GeographicLib {
      * @return the default name for the geoid.
      *
      * This is the value of the environment variable GEOGRAPHICLIB_GEOID_NAME,
-     * if set, otherwise, it is "egm96-5".  The Geoid class does not use this
+     * if set; otherwise, it is "egm96-5".  The Geoid class does not use this
      * function; it is just provided as a convenience for a calling program
      * when constructing a Geoid object.
      **********************************************************************/

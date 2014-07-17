@@ -207,8 +207,8 @@ namespace GeographicLib {
   }
 
   // Engsager and Poder (2007) use trigonometric series to convert between phi
-  // and phip.
-
+  // and phip.  Here are the series...
+  //
   // Conversion from phi to phip:
   //
   //     phip = phi + sum(c[j] * sin(2*j*phi), j, 1, 6)
@@ -234,7 +234,7 @@ namespace GeographicLib {
   //       c[5] = - 734/315 * n^5
   //              + 109598/31185 * n^6;
   //       c[6] =   444337/155925 * n^6;
-
+  //
   // Conversion from phip to phi:
   //
   //     phi = phip + sum(d[j] * sin(2*j*phip), j, 1, 6)
@@ -260,12 +260,15 @@ namespace GeographicLib {
   //       d[5] =   4174/315 * n^5
   //              - 144838/6237 * n^6;
   //       d[6] =   601676/22275 * n^6;
-
+  //
   // In order to maintain sufficient relative accuracy close to the pole use
   //
   //     S = sum(c[i]*sin(2*i*phi),i,1,6)
   //     taup = (tau + tan(S)) / (1 - tau * tan(S))
 
+  // Here we evaluate the forward transform explicitly and solve the reverse
+  // one by Newton's method.
+  //
   // taupf and tauf are adapted from TransverseMercatorExact (taup and
   // taupinv).  tau = tan(phi), taup = sinh(psi)
   Math::real TransverseMercator::taupf(real tau) const {

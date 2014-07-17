@@ -152,15 +152,16 @@ tables are available (however, some may not be installed):
    egm2008-1    EGM2008   1'      0.025 m  0.8 mm   .0022 m  0.7 mm
 
 By default, the C<egm96-5> geoid is used.  This may changed by setting
-the environment variable C<GEOGRAPHICLIB_GEOID_NAME> or with the B<-n> option.  The
-errors listed here are estimates of the quantization and interpolation
-errors in the reported heights compared to the specified geoid.
+the environment variable C<GEOGRAPHICLIB_GEOID_NAME> or with the B<-n>
+option.  The errors listed here are estimates of the quantization and
+interpolation errors in the reported heights compared to the specified
+geoid.
 
 The geoid data will be loaded from a directory specified at compile
 time.  This may changed by setting the environment variables
-C<GEOGRAPHICLIB_GEOID_PATH> or C<GEOGRAPHICLIB_DATA>, or with the B<-d> option.  The
-B<-h> option prints the default geoid path and name.  Use the B<-v>
-option to ascertain the full path name of the data file.
+C<GEOGRAPHICLIB_GEOID_PATH> or C<GEOGRAPHICLIB_DATA>, or with the B<-d>
+option.  The B<-h> option prints the default geoid path and name.  Use
+the B<-v> option to ascertain the full path name of the data file.
 
 Instructions for downloading and installing geoid data are available at
 L<http://geographiclib.sf.net/html/geoid.html#geoidinst>.
@@ -210,9 +211,9 @@ disk overhead.
 =item B<GEOGRAPHICLIB_GEOID_NAME>
 
 Override the compile-time default geoid name of C<egm96-5>.  The B<-h>
-option reports the value of B<GEOGRAPHICLIB_GEOID_NAME>, if defined, otherwise it
-reports the compile-time value.  If the B<-n> I<name> option is used,
-then I<name> takes precedence.
+option reports the value of B<GEOGRAPHICLIB_GEOID_NAME>, if defined,
+otherwise it reports the compile-time value.  If the B<-n> I<name>
+option is used, then I<name> takes precedence.
 
 =item B<GEOGRAPHICLIB_GEOID_PATH>
 

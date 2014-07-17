@@ -29,9 +29,9 @@ in this case only the longitude should be given on the input lines.  The
 quantities printed out are governed by the B<-G> (default), B<-D>,
 B<-A>, or B<-H> options.
 
-All the supported gravity models use WGS84 as the reference ellipsoid
-I<a> = 6378137 m, I<f> = 1/298.257223563, I<omega> = 7292115e-11 rad/s,
-and I<GM> = 3986004.418e8 m^3/s^2.
+All the supported gravity models, except for grs80, use WGS84 as the
+reference ellipsoid I<a> = 6378137 m, I<f> = 1/298.257223563, I<omega> =
+7292115e-11 rad/s, and I<GM> = 3986004.418e8 m^3/s^2.
 
 =head1 OPTIONS
 
@@ -159,17 +159,20 @@ B<Gravity> computes the gravity field using one of the following models
       http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
     wgs84, world geodetic system 1984.  This returns the normal
       gravity for the WGS84 ellipsoid.
+    GRS80, geodetic reference system 1980.  This returns the normal
+      gravity for the GRS80 ellipsoid.
 
 These models approximate the gravitation field above the surface of the
 earth.  By default, the C<egm96> gravity model is used.  This may
-changed by setting the environment variable C<GEOGRAPHICLIB_GRAVITY_NAME> or with the
-B<-n> option.
+changed by setting the environment variable
+C<GEOGRAPHICLIB_GRAVITY_NAME> or with the B<-n> option.
 
 The gravity models will be loaded from a directory specified at compile
 time.  This may changed by setting the environment variables
-C<GEOGRAPHICLIB_GRAVITY_PATH> or C<GEOGRAPHICLIB_DATA>, or with the B<-d> option.
-The B<-h> option prints the default gravity path and name.  Use the
-B<-v> option to ascertain the full path name of the data file.
+C<GEOGRAPHICLIB_GRAVITY_PATH> or C<GEOGRAPHICLIB_DATA>, or with the
+B<-d> option.  The B<-h> option prints the default gravity path and
+name.  Use the B<-v> option to ascertain the full path name of the data
+file.
 
 Instructions for downloading and installing gravity models are
 available at
@@ -182,9 +185,9 @@ L<http://geographiclib.sf.net/html/gravity.html#gravityinst>.
 =item B<GEOGRAPHICLIB_GRAVITY_NAME>
 
 Override the compile-time default gravity name of C<egm96>.  The B<-h>
-option reports the value of B<GEOGRAPHICLIB_GRAVITY_NAME>, if defined, otherwise it
-reports the compile-time value.  If the B<-n> I<name> option is used,
-then I<name> takes precedence.
+option reports the value of B<GEOGRAPHICLIB_GRAVITY_NAME>, if defined,
+otherwise it reports the compile-time value.  If the B<-n> I<name>
+option is used, then I<name> takes precedence.
 
 =item B<GEOGRAPHICLIB_GRAVITY_PATH>
 

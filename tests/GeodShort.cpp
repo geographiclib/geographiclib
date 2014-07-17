@@ -56,7 +56,7 @@ private:
       sbet12 = sbet2 * cbet1 - cbet2 * sbet1,
       sbet12a = sbet2 * cbet1 + cbet2 * sbet1,
       somg12 = sin(omg12), comg12 = cos(omg12);
-    real 
+    real
       salp1 = cbet2 * somg12,
       calp1 = (comg12 >= 0 ?
                sbet12 + cbet2 * sbet1 * Math::sq(somg12) / (1 + comg12) :

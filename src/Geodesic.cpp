@@ -1052,7 +1052,8 @@ namespace GeographicLib {
       c[8] = 109167851*d/82575360;
       break;
     default:
-      GEOGRAPHICLIB_STATIC_ASSERT(nC1p_ >= 0 && nC1p_ <= 8, "Bad value of nC1p_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nC1p_ >= 0 && nC1p_ <= 8,
+                                  "Bad value of nC1p_");
     }
   }
 

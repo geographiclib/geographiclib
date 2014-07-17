@@ -81,6 +81,7 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref triaxial
  - \ref transversemercator
  - \ref geocentric
+ - \ref multiprec
  - \ref old
 
 <center>
@@ -1995,10 +1996,13 @@ The supported models are
    <a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/tr8350_2.html">
    WGS84 Reference Ellipsoid</a>.  This is just reproduces the normal
    gravitational field for the reference ellipsoid.  This includes the
-   zonal coefficients up to order 20.  These are given by
-   <i>C</i><sub><i>n</i>0</sub> = &minus; <i>J</i><sub><i>n</i></sub> /
-   sqrt(2<i>n</i> + 1), for <i>n</i> &gt; 0 and even.  Usually
-   NormalGravity::WGS84 should be used instead.
+   zonal coefficients up to order 20.  Usually NormalGravity::WGS84()
+   should be used instead.
+ - <b>grs80</b>, the
+   GRS80 Reference Ellipsoid.  This is just reproduces the normal
+   gravitational field for the GRS80 ellipsoid.  This includes the
+   zonal coefficients up to order 20.  Usually NormalGravity::GRS80()
+   should be used instead.
 
 See
  - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
@@ -2277,6 +2281,10 @@ HeightOffset    -0.41
 # the egm2008 distribution.
 ID              EGM2008A
 \endverbatim
+
+The code to produce the coefficient files for the wgs84 and grs80 models
+is
+\include make-egmcof.cpp
 
 \section gravitynga Comments on the NGA harmonic synthesis code
 
@@ -4634,7 +4642,7 @@ Back to \ref triaxial.  Forward to \ref geocentric.  Up to \ref contents.
 \page geocentric Geocentric coordinates
 
 <center>
-Back to \ref transversemercator.  Forward to \ref old.  Up to \ref contents.
+Back to \ref transversemercator.  Forward to \ref multiprec.  Up to \ref contents.
 </center>
 
 The implementation of Geocentric::Reverse is adapted from
@@ -4742,7 +4750,47 @@ However the choice of independent variables in these methods leads
 to a loss of accuracy for points near the equatorial plane.
 
 <center>
-Back to \ref transversemercator.  Forward to \ref old.  Up to \ref contents.
+Back to \ref transversemercator.  Forward to \ref multiprec.  Up to \ref contents.
+
+</center>
+**********************************************************************/
+/**
+\page multiprec Support for high precision
+
+<center>
+Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
+</center>
+
+Goals are
+ - Support for high-precision arithmetic as a developer (routine use
+   should be with double).
+ - As much as possible, avoid messing up the code base.
+ - For multi-precision types, only support setting the precision before
+   any invocation of GeographicLib routines.
+ - Support up to about 100 decimal digits.
+ - OK to require C++11 support
+ - OK not to work on Windows
+
+The following steps needed to be taken
+ - Change std::sqrt(...), etc. to using std::sqrt; sqrt(...)
+ - Don't set any static const real variables; in particular tolerances.
+ - Don't define any static instances of classes; instead use "Construct
+   On First Use Idiom".
+ - constants in GeodesicExact can't be specified as long doubles nor
+   long longs (since they have more than 64 significant bits
+   - first tried macro which expanded to a string
+   - now use inline function to combine two long long ints each with at
+     most 52 significant bits.
+ - g++ took inordinately long (15 minutes) to compile one routine,
+   needed to simplify
+ - Visual Studio 12 then complained (with internal compiler error
+   presumably due to whole-file optimization); fixed by splitting one
+   function into a separate file.
+ - Simple iterative method to determine the flattening in NormalGravity
+   converges too slowly; use Newton's method instead.
+
+<center>
+Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
 
 </center>
 **********************************************************************/
@@ -4750,7 +4798,7 @@ Back to \ref transversemercator.  Forward to \ref old.  Up to \ref contents.
 \page old Old versions
 
 <center>
-Back to \ref geocentric.  Up to \ref contents.
+Back to \ref multiprec.  Up to \ref contents.
 </center>
 
 List of versions in reverse chronological order together with a brief
@@ -4812,7 +4860,7 @@ of the git repository for GeographicLib.
        flags -a and -l to govern whether UTM/UPS output uses n/s
        (the -a flag) or north/south (the -l flag) to denote the
        hemisphere;
-     - Fixed a bug what allowed +3N to be accepted as an alternation UTM
+     - Fixed a bug what allowed +3N to be accepted as an alternative UTM
        zone designation (instead of 3N).
      .
      <b>WARNING:</b> The use of lower case n/s for the hemisphere might
@@ -5633,7 +5681,7 @@ of the git repository for GeographicLib.
    - Ad hoc posting of information on the transverse Mercator projection.
 
 <center>
-Back to \ref geocentric.  Up to \ref contents.
+Back to \ref multiprec.  Up to \ref contents.
 </center>
 **********************************************************************/
 }

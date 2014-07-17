@@ -113,7 +113,7 @@ print meridian-measures.png -dpng
       real alpha2 = 0.8, k2 = -0.4;
       EllipticFunction ellG(k2,alpha2);
       EllipticFunction ellH(k2,k2/alpha2);
-      
+
       cout << setprecision(10);
       for (int i = -179; i <= 180; i += 10) {
         real
@@ -122,7 +122,7 @@ print meridian-measures.png -dpng
           g = ellG.G(phi),
           h = (k2/alpha2)*ellH.H(phi) + sqrt(1-k2/alpha2)/sqrt(1-alpha2)*
           atan2(sqrt(1-alpha2)*sqrt(1-k2/alpha2)*sn, dn*cn);
-        
+
         cout << i << " " << g << " " << h << " " << h-g << "\n";
       }
       return 0;

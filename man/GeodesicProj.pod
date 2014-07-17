@@ -16,10 +16,10 @@ B<GeodesicProj> ( B<-z> | B<-c> | B<-g> ) I<lat0> I<lon0> [ B<-r> ]
 
 Perform projections based on geodesics.  Convert geodetic coordinates to
 either azimuthal equidistant, Cassini-Soldner, or gnomonic coordinates.
-The center of the projection (I<lat0>, I<lon0>) is specified by either the B<-c>
-option (for Cassini-Soldner), the B<-z> option (for azimuthal equidistant),
-or the B<-g> option (for gnomonic).  At least one of these options must be
-given (the last one given is used).
+The center of the projection (I<lat0>, I<lon0>) is specified by either
+the B<-c> option (for Cassini-Soldner), the B<-z> option (for azimuthal
+equidistant), or the B<-g> option (for gnomonic).  At least one of these
+options must be given (the last one given is used).
 
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) I<latitude> and I<longitude> (decimal
