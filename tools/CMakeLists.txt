@@ -73,9 +73,14 @@ add_test (NAME GeoConvert0
   COMMAND GeoConvert -p -3 -m --input-string "33.3 44.4")
 set_tests_properties (GeoConvert0
   PROPERTIES PASS_REGULAR_EXPRESSION "38SMB4484")
-add_test (NAME GeoConvert1 COMMAND GeoConvert -d --input-string "38smb")
-set_tests_properties (GeoConvert1
-  PROPERTIES PASS_REGULAR_EXPRESSION "32d59'14\\.1\"N 044d27'53\\.4\"E")
+if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
+  # I/O for boost-quad has a bug where precision 0 is interpreted as
+  # printed all the digits of the number (instead of printing the
+  # integer portion).
+  add_test (NAME GeoConvert1 COMMAND GeoConvert -d --input-string "38smb")
+  set_tests_properties (GeoConvert1
+    PROPERTIES PASS_REGULAR_EXPRESSION "32d59'14\\.1\"N 044d27'53\\.4\"E")
+endif ()
 add_test (NAME GeoConvert2
   COMMAND GeoConvert -p -2 --input-string "30d30'30\" 30.50833")
 set_tests_properties (GeoConvert2

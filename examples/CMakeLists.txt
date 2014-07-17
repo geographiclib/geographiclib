@@ -2,20 +2,11 @@
 # "exampleprograms" target.  These are mainly for including as examples
 # within the doxygen documentation; however, compiling them catches some
 # obvious blunders.
-file (GLOB EXAMPLE_SOURCES example-*.cpp)
+file (GLOB EXAMPLE_SOURCES example-*.cpp GeoidToGTX.cpp make-egmcof.cpp)
 set (EXAMPLES)
 add_definitions (${PROJECT_DEFINITIONS})
 
 foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
-  get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
-  set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
-  add_executable (${EXAMPLE} EXCLUDE_FROM_ALL ${EXAMPLE_SOURCE})
-  target_link_libraries (${EXAMPLE} ${PROJECT_LIBRARIES})
-endforeach ()
-
-set (OTHER_EXAMPLES GeoidToGTX.cpp)
-
-foreach (EXAMPLE_SOURCE ${OTHER_EXAMPLES})
   get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
   add_executable (${EXAMPLE} EXCLUDE_FROM_ALL ${EXAMPLE_SOURCE})
