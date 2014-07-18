@@ -155,11 +155,12 @@ namespace GeographicLib {
     /**
      * Set the binary precision of a real number.
      *
-     * @param[in] prec the number of bits of precision.
+     * @param[in] prec the number of bits of precision.  The default is 256 (or
+     *   about 77 decimal digits).
      *
      * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.
      **********************************************************************/
-    static inline void set_digits(int prec) {
+    static inline void set_digits(int prec = 256) {
 #if GEOGRAPHICLIB_PRECISION != 5
       (void)prec;
 #else
@@ -175,21 +176,6 @@ namespace GeographicLib {
       return std::numeric_limits<real>::digits10;
 #else
       return std::numeric_limits<real>::digits10();
-#endif
-    }
-
-    /**
-     * Set the decimal precision of a real number.
-     *
-     * @param[in] prec the number of decimal digits of precision.
-     *
-     * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.
-     **********************************************************************/
-    static inline void set_digits10(int prec) {
-#if GEOGRAPHICLIB_PRECISION != 5
-      (void)prec;
-#else
-      set_digits(mpfr::digits2bits(prec));
 #endif
     }
 

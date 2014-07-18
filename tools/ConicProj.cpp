@@ -39,6 +39,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
+    Math::set_digits();
     bool lcc = false, albers = false, reverse = false;
     real lat1 = 0, lat2 = 0, lon0 = 0, k1 = 1;
     real

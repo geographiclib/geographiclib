@@ -44,15 +44,15 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
+    Math::set_digits();
     real
-      a = Math::NaN(),
-      f = Math::NaN();
+      a = Constants::WGS84_a(),
+      f = Constants::WGS84_f();
     bool reverse = false, sign = true, polyline = false,
       exact = false, authalic = false;
     int prec = 6;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
-    Math::set_digits10(19);
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -82,7 +82,6 @@ int main(int argc, char* argv[]) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
-        Math::set_digits10(std::max(19, prec + 12));
       } else if (arg == "-E") {
         exact = true;
         authalic = false;
@@ -154,8 +153,6 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    if (Math::isnan(a)) a = Constants::WGS84_a();
-    if (Math::isnan(f)) f = Constants::WGS84_f();
     const Ellipsoid ellip(a, f);
     if (authalic) {
       using std::sqrt;
