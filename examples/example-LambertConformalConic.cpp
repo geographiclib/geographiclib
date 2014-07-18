@@ -12,7 +12,7 @@ int main() {
     // Define the Pennsylvania South state coordinate system EPSG:3364
     // http://www.spatialreference.org/ref/epsg/3364/
     const double
-      a = Constants::WGS84_a<double>(),
+      a = Constants::WGS84_a(),
       f = 1/298.257222101,                      // GRS80
       lat1 = 40 + 58/60.0, lat2 = 39 + 56/60.0, // standard parallels
       k1 = 1,                                   // scale

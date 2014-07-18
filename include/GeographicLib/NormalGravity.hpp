@@ -72,7 +72,6 @@ namespace GeographicLib {
     static real qf(real ep2);
     static real dq(real ep2);
     static real qpf(real ep2);
-  public:
     real Jn(int n) const;
   public:
 
@@ -103,6 +102,9 @@ namespace GeographicLib {
      *   <i>J</i><sub>2</sub> = (\e C &minus; \e A) / <i>Ma</i><sup>2</sup>,
      *   where \e A and \e C are the equatorial and polar moments of inertia
      *   and \e M is the mass of the earth.
+     * .
+     * If \e omega, \e f, and \e J2 are all zero, then the ellipsoid becomes a
+     * sphere.
      **********************************************************************/
     NormalGravity(real a, real GM, real omega, real f, real J2);
 

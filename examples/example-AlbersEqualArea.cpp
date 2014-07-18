@@ -10,8 +10,8 @@ using namespace GeographicLib;
 int main() {
   try {
    const double
-     a = Constants::WGS84_a<double>(),
-     f = Constants::WGS84_f<double>(),
+     a = Constants::WGS84_a(),
+     f = Constants::WGS84_f(),
      lat1 = 40 + 58/60.0, lat2 = 39 + 56/60.0, // standard parallels
      k1 = 1,                                   // scale
      lon0 = -77 - 45/60.0;                     // Central meridan
