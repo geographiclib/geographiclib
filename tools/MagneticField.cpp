@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
+    Math::set_digits();
     bool verbose = false;
     std::string dir;
     std::string model = MagneticModel::DefaultMagneticName();

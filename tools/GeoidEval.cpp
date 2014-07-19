@@ -42,6 +42,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
+    Math::set_digits();
     bool cacheall = false, cachearea = false, verbose = false,
       cubic = true, gradp = false;
     real caches, cachew, cachen, cachee;

@@ -41,16 +41,16 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
+    Math::set_digits();
     bool exact = true, extended = false, series = false, reverse = false;
     real
-      a = Math::NaN(),
-      f = Math::NaN(),
-      k0 = Math::NaN(),
-      lon0 = Math::NaN();
+      a = Constants::WGS84_a(),
+      f = Constants::WGS84_f(),
+      k0 = Constants::UTM_k0(),
+      lon0 = 0;
     int prec = 6;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
-    Math::set_digits10(19);
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -110,7 +110,6 @@ int main(int argc, char* argv[]) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
-        Math::set_digits10(std::max(19, prec + 12));
       } else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
@@ -176,10 +175,6 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    if (Math::isnan(a)) a = Constants::WGS84_a();
-    if (Math::isnan(f)) f = Constants::WGS84_f();
-    if (Math::isnan(k0)) k0 = Constants::UTM_k0();
-    if (Math::isnan(lon0)) lon0 = 0;
     const TransverseMercator& TMS =
       series ? TransverseMercator(a, f, k0) : TransverseMercator(1, 0, 1);
 

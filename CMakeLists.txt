@@ -231,25 +231,60 @@ set (GEOGRAPHICLIB_HAVE_LONG_DOUBLE ${HAVE_LONG_DOUBLE})
 include (TestBigEndian)
 test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
-if (GEOGRAPHICLIB_PRECISION EQUAL 4 AND CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-  find_package (Boost 1.54)
-  if (Boost_FOUND)
-    include_directories ("${Boost_INCLUDE_DIRS}")
-    set (QUAD_LIBRARIES quadmath)
-    if (NOT (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8))
-      # Enable Q suffix for quad precision in g++ 4.8 and later
-      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fext-numeric-literals")
-    endif ()
-    # Suppress the warnings that boost can spew out, e.g.,
-    #   "typedef 'boost_concept_check905' locally defined but not used"
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs")
-  else ()
-    set (GEOGRAPHICLIB_PRECISION 3)
+if (GEOGRAPHICLIB_PRECISION EQUAL 1)
+  message (WARNING "Compiling with floats which results in poor accuracy")
+elseif (GEOGRAPHICLIB_PRECISION EQUAL 2)
+  # This is the default
+elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
+  if (WIN32)
+    message (WARNING "Cannot support long double, switching to double")
+    set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
-endif ()
-
-if (GEOGRAPHICLIB_PRECISION EQUAL 5)
-  set (MPFR_LIBRARIES mpfr gmp)
+elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
+  if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+    # quad precision numbers appeared in Boost 1.54.
+    find_package (Boost 1.54)
+    if (Boost_FOUND)
+      include_directories ("${Boost_INCLUDE_DIRS}")
+      set (QUAD_LIBRARIES quadmath)
+      if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8)
+        # Enable Q suffix for quad precision in g++ 4.8 and later
+        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fext-numeric-literals")
+      endif ()
+      # Suppress the warnings that boost can spew out, e.g.,
+      #   "typedef 'boost_concept_check905' locally defined but not used"
+      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs")
+    endif ()
+  endif ()
+  if (NOT QUAD_LIBRARIES)
+    message (WARNING "Cannot support quad precision, switching to double")
+    set (GEOGRAPHICLIB_PRECISION 2)
+  endif ()
+elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
+  if (WIN32)
+    if (MSCV AND NOT MSVC_VERSION LESS 1800)
+      if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set (_ARCH x64)
+      else ()
+        set (_ARCH Win32)
+      endif ()
+      include_directories (mpfr_mpir_x86_x64_msvc2010/mpfr
+        mpfr_mpir_x86_x64_msvc2010/mpir/dll/${_ARCH}/Release)
+      # These are C libraries so it's OK to use release versions for debug
+      # builds.  Also these will presumably work for later versions of
+      # Visual Studio.
+      link_directories (mpfr_mpir_x86_x64_msvc2010/mpfr/dll/${_ARCH}/Release
+        mpfr_mpir_x86_x64_msvc2010/mpir/dll/${_ARCH}/Release)
+      set (MPFR_LIBRARIES mpfr mpir)
+      # Suppress the myriad of "conditional expression is constant" warnings
+      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4127")
+    else ()
+      message (WARNING "Cannot support mpfr, switching to double")
+      set (GEOGRAPHICLIB_PRECISION 2)
+    endif ()
+  else ()
+    set (MPFR_LIBRARIES mpfr gmp)
+  endif ()
 endif ()
 
 # Create a Config.h to expose system information to the compiler

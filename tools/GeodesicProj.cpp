@@ -44,6 +44,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
+    Math::set_digits();
     bool azimuthal = false, cassini = false, gnomonic = false, reverse = false;
     real lat0 = 0, lon0 = 0;
     real

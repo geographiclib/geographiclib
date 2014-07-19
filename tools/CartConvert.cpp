@@ -39,6 +39,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
+    Math::set_digits();
     bool localcartesian = false, reverse = false;
     real
       a = Constants::WGS84_a(),
