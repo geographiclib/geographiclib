@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
-    Math::set_digits();
+    Utility::set_digits();
     bool localcartesian = false, reverse = false;
     real
       a = Constants::WGS84_a(),
@@ -177,17 +177,17 @@ int main(int argc, char* argv[]) {
             lc.Reverse(x, y, z, lat, lon, h);
           else
             ec.Reverse(x, y, z, lat, lon, h);
-          *output << Utility::str(lat, 15) << " "
-                  << Utility::str(lon, 15) << " "
-                  << Utility::str(h, 12) << eol;
+          *output << Utility::str(lat, 15 + Math::extra_digits()) << " "
+                  << Utility::str(lon, 15 + Math::extra_digits()) << " "
+                  << Utility::str(h, 12 + Math::extra_digits()) << eol;
         } else {
           if (localcartesian)
             lc.Forward(lat, lon, h, x, y, z);
           else
             ec.Forward(lat, lon, h, x, y, z);
-          *output << Utility::str(x, 10) << " "
-                  << Utility::str(y, 10) << " "
-                  << Utility::str(z, 10) << eol;
+          *output << Utility::str(x, 10 + Math::extra_digits()) << " "
+                  << Utility::str(y, 10 + Math::extra_digits()) << " "
+                  << Utility::str(z, 10 + Math::extra_digits()) << eol;
         }
       }
       catch (const std::exception& e) {

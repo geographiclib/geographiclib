@@ -4827,9 +4827,9 @@ of the git repository for GeographicLib.
    - Support quad precision.
    - Support mpreal
    - Add PolygonAreaT and PolygonAreaExact
-   - Add -E and -p options to Planimeter
-   - Add -Q option to Planimeter
-   - Add -p option to TransverseMercatorProj
+   - Add -E and -Q options to Planimeter
+   - Add -p option to Planimeter, ConicProj, GeodesicProj, and
+     TransverseMercatorProj.
    - Retire Windows XP common data path.
    - Simplify cross-platform support for C++11 mathematical functions.
    - In NormalGravity, use Newton's method to determine f from J2.
@@ -4837,8 +4837,7 @@ of the git repository for GeographicLib.
    - In NormalGravity constructor allow omega = 0 (i.e., treat spherical case).
    - Change way area coefficients are given in GeodesicExact to improve
      compile times.
-   - STILL TO DO: add GravityModel for grs80.
-   - STILL TO DO: add -p prec for other utilities (where applicable)
+   - Add GravityModel for grs80.
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
    (released 2014-05-13)

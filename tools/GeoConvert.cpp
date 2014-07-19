@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
-    Math::set_digits();
+    Utility::set_digits();
     enum { GEOGRAPHIC, DMS, UTMUPS, MGRS, CONVERGENCE };
     int outputmode = GEOGRAPHIC;
     int prec = 0;

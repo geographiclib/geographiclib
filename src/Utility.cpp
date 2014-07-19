@@ -7,6 +7,7 @@
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
+#include <cstdlib>
 #include <GeographicLib/Utility.hpp>
 
 namespace GeographicLib {
@@ -37,6 +38,21 @@ namespace GeographicLib {
     n1 = val.find_last_not_of(spaces);
     val = val.substr(n0, n1 + 1 - n0);
     return true;
+  }
+
+  void Utility::set_digits(int digits) {
+#if GEOGRAPHICLIB_PRECISION != 5
+    (void)digits;
+#else
+    if (digits <= 0) {
+      char* digitenv = getenv("GEOGRAPHICLIB_DIGITS");
+      if (digitenv)
+        digits = strtol(digitenv, NULL, 0);
+      if (digits <= 0)
+        digits = 256;
+    }
+    Math::set_digits(digits);
+#endif
   }
 
 } // namespace GeographicLib

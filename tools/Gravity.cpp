@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
-    Math::set_digits();
+    Utility::set_digits();
     bool verbose = false;
     std::string dir;
     std::string model = GravityModel::DefaultGravityName();
@@ -179,15 +179,15 @@ int main(int argc, char* argv[]) {
 
     switch (mode) {
     case GRAVITY:
-      prec = std::min(16, prec < 0 ? 5 : prec);
+      prec = std::min(16 + Math::extra_digits(), prec < 0 ? 5 : prec);
       break;
     case DISTURBANCE:
     case ANOMALY:
-      prec = std::min(14, prec < 0 ? 3 : prec);
+      prec = std::min(14 + Math::extra_digits(), prec < 0 ? 3 : prec);
       break;
     case UNDULATION:
     default:
-      prec = std::min(12, prec < 0 ? 4 : prec);
+      prec = std::min(12 + Math::extra_digits(), prec < 0 ? 4 : prec);
       break;
     }
     int retval = 0;

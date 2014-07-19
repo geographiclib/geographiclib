@@ -75,7 +75,7 @@ real ReadDistance(const std::string& s, bool arcmode) {
 int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
-    Math::set_digits();
+    Utility::set_digits();
     bool linecalc = false, inverse = false, arcmode = false,
       dms = false, full = false, exact = false;
     real

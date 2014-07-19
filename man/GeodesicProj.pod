@@ -5,7 +5,7 @@ GeodesicProj -- perform projections based on geodesics
 =head1 SYNOPSIS
 
 B<GeodesicProj> ( B<-z> | B<-c> | B<-g> ) I<lat0> I<lon0> [ B<-r> ]
-[ B<-e> I<a> I<f> ]
+[ B<-e> I<a> I<f> ] [ B<-p> I<prec> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -67,6 +67,14 @@ I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
 1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137 m,
 I<f> = 1/298.257223563.
+
+=item B<-p>
+
+set the output precision to I<prec> (default 6).  I<prec> is the number
+of digits after the decimal point for lengths (in meters).  For
+latitudes, longitudes, and azimuths (in degrees), the number of digits
+after the decimal point is I<prec> + 5.  For the scale, the number of
+digits after the decimal point is I<prec> + 6.
 
 =item B<--comment-delimiter>
 

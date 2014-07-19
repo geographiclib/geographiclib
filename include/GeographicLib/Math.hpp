@@ -155,16 +155,15 @@ namespace GeographicLib {
     /**
      * Set the binary precision of a real number.
      *
-     * @param[in] prec the number of bits of precision.  The default is 256 (or
-     *   about 77 decimal digits).
+     * @param[in] digits the number of bits of precision.
      *
      * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.
      **********************************************************************/
-    static inline void set_digits(int prec = 256) {
+    static inline void set_digits(int digits) {
 #if GEOGRAPHICLIB_PRECISION != 5
-      (void)prec;
+      (void)digits;
 #else
-      mpfr::mpreal::set_default_prec(prec >= 2 ? prec : 2);
+      mpfr::mpreal::set_default_prec(digits >= 2 ? digits : 2);
 #endif
     }
 

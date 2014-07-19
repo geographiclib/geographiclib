@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
-    Math::set_digits();
+    Utility::set_digits();
     bool verbose = false;
     std::string dir;
     std::string model = MagneticModel::DefaultMagneticName();
@@ -200,7 +200,7 @@ int main(int argc, char* argv[]) {
 
     tguard = std::max(real(0), tguard);
     hguard = std::max(real(0), hguard);
-    prec = std::min(10, std::max(0, prec));
+    prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     int retval = 0;
     try {
       const MagneticModel m(model, dir);

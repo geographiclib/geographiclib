@@ -231,6 +231,56 @@ set (GEOGRAPHICLIB_HAVE_LONG_DOUBLE ${HAVE_LONG_DOUBLE})
 include (TestBigEndian)
 test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
+# Make the compiler more picky.
+if (MSVC)
+  string (REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+else ()
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+  # check for C++11 support.  If available, the C++11 static_assert is
+  # used.  This flag is *not* propagated to clients that use
+  # GeographicLib.  However, this is of no consequence.  When the client
+  # code is being compiled (and the GeographicLib headers being
+  # included), a work-alike substitution is used.
+  include (CheckCXXCompilerFlag)
+  set (CXX11_FLAG "-std=c++11")
+  check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST1)
+  if (NOT CXX11TEST1)
+    set (CXX11_FLAG "-std=c++0x")
+    check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST2)
+    if (NOT CXX11TEST2)
+      unset (CXX11_FLAG)
+    endif ()
+  endif ()
+  if (CXX11_FLAG)
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
+  endif ()
+endif ()
+
+# Check whether the C++11 math function: std::expm1, std::atanh,
+# etc. are available.  This flag is *not* propagated to clients that use
+# GeographicLib.  However, this is of no consequence.  When the client
+# code is being compiled (and the GeographicLib headers being included),
+# work-alike substitutions are used.
+include (CheckCXXSourceCompiles)
+set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS}")
+check_cxx_source_compiles (
+  "#include <cmath>
+int main() {
+  return int(std::hypot(3.0, 4.0) + std::expm1(0.5) + std::log1p(2.0) +
+             std::asinh(10.0) + std::atanh(0.8) + std::cbrt(8.0)) +
+         std::isfinite(4.0) + std::isnan(0.0);
+}\n" CXX11_MATH)
+if (CXX11_MATH)
+  add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)
+else ()
+  add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=0)
+endif ()
+
+# Set the include directories.  Look in ${PROJECT_BINARY_DIR}/include
+# first because that's where Config.h will be
+include_directories ("${PROJECT_BINARY_DIR}/include" include)
+
 if (GEOGRAPHICLIB_PRECISION EQUAL 1)
   message (WARNING "Compiling with floats which results in poor accuracy")
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 2)
@@ -241,7 +291,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
     set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
-  if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+  if (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND CXX11_MATH)
     # quad precision numbers appeared in Boost 1.54.
     find_package (Boost 1.54)
     if (Boost_FOUND)
@@ -261,29 +311,55 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
     set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
-  if (WIN32)
-    if (MSCV AND NOT MSVC_VERSION LESS 1800)
-      if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set (_ARCH x64)
-      else ()
-        set (_ARCH Win32)
+  if (CXX11_MATH)
+    # Install MPFR C++ version 3.5.9 or later from
+    # http://www.holoborodko.com/pavel/mpfr and install mpreal.h in the
+    # include directory.  NOTE: MPFR C++ is covered by the GPL; be sure
+    # to abide by the terms of this license.
+    #
+    # For Linux, use system versions of mpfr and gmp.  For Apple, use
+    # brew install mpfr.  For Windows, download
+    # MPFR-MPIR-x86-x64-MSVC2010.zip from the MPFR C++ site and unpack
+    # in the top-level directory.  NOTE: mpfr, gmp, and mpir are covered
+    # by the LGPL; be sure to abide by the terms of this license.
+    if (WIN32)
+      if (MSCV AND NOT MSVC_VERSION LESS 1800)
+	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+          set (_ARCH x64)
+	else ()
+          set (_ARCH Win32)
+	endif ()
+	include_directories (mpfr_mpir_x86_x64_msvc2010/mpfr
+          mpfr_mpir_x86_x64_msvc2010/mpir/dll/${_ARCH}/Release)
+	# These are C libraries so it's OK to use release versions for
+	# debug builds.  Also these work for later versions of Visual
+	# Studio (specifically version 12).
+	link_directories (mpfr_mpir_x86_x64_msvc2010/mpfr/dll/${_ARCH}/Release
+          mpfr_mpir_x86_x64_msvc2010/mpir/dll/${_ARCH}/Release)
+	set (MPFR_LIBRARIES mpfr mpir)
+	# Suppress the myriad of "conditional expression is constant"
+	# warnings
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4127")
       endif ()
-      include_directories (mpfr_mpir_x86_x64_msvc2010/mpfr
-        mpfr_mpir_x86_x64_msvc2010/mpir/dll/${_ARCH}/Release)
-      # These are C libraries so it's OK to use release versions for debug
-      # builds.  Also these will presumably work for later versions of
-      # Visual Studio.
-      link_directories (mpfr_mpir_x86_x64_msvc2010/mpfr/dll/${_ARCH}/Release
-        mpfr_mpir_x86_x64_msvc2010/mpir/dll/${_ARCH}/Release)
-      set (MPFR_LIBRARIES mpfr mpir)
-      # Suppress the myriad of "conditional expression is constant" warnings
-      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4127")
     else ()
-      message (WARNING "Cannot support mpfr, switching to double")
-      set (GEOGRAPHICLIB_PRECISION 2)
+      if (APPLE)
+	include_directories (/usr/local/include)
+	link_directories (/usr/local/lib)
+      endif ()
+      set (MPFR_LIBRARIES mpfr gmp)
     endif ()
-  else ()
-    set (MPFR_LIBRARIES mpfr gmp)
+  endif ()
+  if (NOT MPFR_LIBRARIES)
+    message (WARNING "Cannot support mpfr, switching to double")
+    set (GEOGRAPHICLIB_PRECISION 2)
+  endif ()
+endif ()
+
+if (APPLE AND GEOGRAPHICLIB_PRECISION EQUAL 2)
+  if (CMAKE_SYSTEM_PROCESSOR MATCHES "i.86" OR
+      CMAKE_SYSTEM_PROCESSOR MATCHES "amd64" OR
+      CMAKE_SYSTEM_PROCESSOR MATCHES "x86")
+    set (CMAKE_OSX_ARCHITECTURES "i386 -arch x86_64")
   endif ()
 endif ()
 
@@ -359,60 +435,6 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release)
 endif ()
 
-# Make the compiler more picky.
-if (MSVC)
-  string (REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
-else ()
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-  # check for C++11 support.  If available, the C++11 static_assert is
-  # used.  This flag is *not* propagated to clients that use
-  # GeographicLib.  However, this is of no consequence.  When the client
-  # code is being compiled (and the GeographicLib headers being
-  # included), a work-alike substitution is used.
-  include (CheckCXXCompilerFlag)
-  set (CXX11_FLAG "-std=c++11")
-  check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST1)
-  if (NOT CXX11TEST1)
-    set (CXX11_FLAG "-std=c++0x")
-    check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST2)
-    if (NOT CXX11TEST2)
-      unset (CXX11_FLAG)
-    endif ()
-  endif ()
-  if (CXX11_FLAG)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
-  endif ()
-endif ()
-
-# Check whether the C++11 math function: std::expm1, std::atanh,
-# etc. are available.  This flag is *not* propagated to clients that use
-# GeographicLib.  However, this is of no consequence.  When the client
-# code is being compiled (and the GeographicLib headers being included),
-# work-alike substitutions are used.
-include (CheckCXXSourceCompiles)
-set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS}")
-check_cxx_source_compiles (
-  "#include <cmath>
-int main() {
-  return int(std::hypot(3.0, 4.0) + std::expm1(0.5) + std::log1p(2.0) +
-             std::asinh(10.0) + std::atanh(0.8) + std::cbrt(8.0)) +
-         std::isfinite(4.0) + std::isnan(0.0);
-}\n" CXX11_MATH)
-if (CXX11_MATH)
-  add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)
-else ()
-  add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=0)
-endif ()
-
-if (APPLE)
-  if (CMAKE_SYSTEM_PROCESSOR MATCHES "i.86" OR
-      CMAKE_SYSTEM_PROCESSOR MATCHES "amd64" OR
-      CMAKE_SYSTEM_PROCESSOR MATCHES "x86")
-    set (CMAKE_OSX_ARCHITECTURES "i386 -arch x86_64")
-  endif ()
-endif ()
-
 # The list of tools (to be installed into, e.g., /usr/local/bin)
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
   GeoidEval Gravity MagneticField Planimeter TransverseMercatorProj)
@@ -421,10 +443,6 @@ set (SCRIPTS
   geographiclib-get-geoids geographiclib-get-gravity geographiclib-get-magnetic)
 
 set_property (GLOBAL PROPERTY USE_FOLDERS ON)
-
-# Set the include directories.  Look in ${PROJECT_BINARY_DIR}/include
-# first because that's where Config.h will be
-include_directories ("${PROJECT_BINARY_DIR}/include" include)
 
 # The list of subdirectories to process
 add_subdirectory (src)

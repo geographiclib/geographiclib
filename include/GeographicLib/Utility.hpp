@@ -538,6 +538,18 @@ namespace GeographicLib {
     static bool ParseLine(const std::string& line,
                           std::string& key, std::string& val);
 
+    /**
+     * Set the binary precision of a real number.
+     *
+     * @param[in] digits the number of bits of precision.  If digits is 0 (the
+     *   default), then determine the precision from the environment variable
+     *   GEOGRAPHICLIB_DIGITS.  If this is undefined, use digits = 256 (i.e.,
+     *   about 77 decimal digits).
+     *
+     * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.
+     **********************************************************************/
+    static void set_digits(int digits = 0);
+
   };
 
 } // namespace GeographicLib

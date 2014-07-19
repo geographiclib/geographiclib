@@ -39,12 +39,13 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
-    Math::set_digits();
+    Utility::set_digits();
     bool lcc = false, albers = false, reverse = false;
     real lat1 = 0, lat2 = 0, lon0 = 0, k1 = 1;
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
+    int prec = 6;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
 
@@ -106,6 +107,15 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 2;
+      } else if (arg == "-p") {
+        if (++m == argc) return usage(1, true);
+        try {
+          prec = Utility::num<int>(std::string(argv[m]));
+        }
+        catch (const std::exception&) {
+          std::cerr << "Precision " << argv[m] << " is not a number\n";
+          return 1;
+        }
       } else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
@@ -184,6 +194,9 @@ int main(int argc, char* argv[]) {
       albers ? AlbersEqualArea(a, f, lat1, lat2, k1)
       : AlbersEqualArea(1, 0, 0, 0, 1);
 
+    // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
+    // 10^-11 sec (= 0.3 nm).
+    prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     std::string s;
     int retval = 0;
     std::cout << std::fixed;
@@ -215,19 +228,19 @@ int main(int argc, char* argv[]) {
             lproj.Reverse(lon0, x, y, lat, lon, gamma, k);
           else
             aproj.Reverse(lon0, x, y, lat, lon, gamma, k);
-          *output << Utility::str(lat, 15) << " "
-                  << Utility::str(lon, 15) << " "
-                  << Utility::str(gamma, 16) << " "
-                  << Utility::str(k, 16) << eol;
+          *output << Utility::str(lat, prec + 5) << " "
+                  << Utility::str(lon, prec + 5) << " "
+                  << Utility::str(gamma, prec + 6) << " "
+                  << Utility::str(k, prec + 6) << eol;
         } else {
           if (lcc)
             lproj.Forward(lon0, lat, lon, x, y, gamma, k);
           else
             aproj.Forward(lon0, lat, lon, x, y, gamma, k);
-          *output << Utility::str(x, 10) << " "
-                  << Utility::str(y, 10) << " "
-                  << Utility::str(gamma, 16) << " "
-                  << Utility::str(k, 16) << eol;
+          *output << Utility::str(x, prec) << " "
+                  << Utility::str(y, prec) << " "
+                  << Utility::str(gamma, prec + 6) << " "
+                  << Utility::str(k, prec + 6) << eol;
         }
       }
       catch (const std::exception& e) {

@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
-    Math::set_digits();
+    Utility::set_digits();
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
