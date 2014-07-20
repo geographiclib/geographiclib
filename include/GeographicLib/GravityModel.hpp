@@ -51,13 +51,13 @@ namespace GeographicLib {
    * - <b>&gamma;</b> = &nabla;\e U;
    * - <b>&delta;</b> = &nabla;\e T = gravity disturbance vector
    *   = <b>g</b><sub><i>P</i></sub> &minus; <b>&gamma;</b><sub><i>P</i></sub>;
-   * - &delta;\e g = gravity disturbance = \e g<sub><i>P</i></sub> &minus;
+   * - &delta;\e g = gravity disturbance = <i>g</i><sub><i>P</i></sub> &minus;
    *   &gamma;<sub><i>P</i></sub>;
    * - &Delta;<b>g</b> = gravity anomaly vector = <b>g</b><sub><i>P</i></sub>
    *   &minus; <b>&gamma;</b><sub><i>Q</i></sub>; here the line \e PQ is
    *   perpendicular to ellipsoid and the potential at \e P equals the normal
    *   potential at \e Q;
-   * - &Delta;\e g = gravity anomaly = \e g<sub><i>P</i></sub> &minus;
+   * - &Delta;\e g = gravity anomaly = <i>g</i><sub><i>P</i></sub> &minus;
    *   &gamma;<sub><i>Q</i></sub>;
    * - (&xi;, &eta;) deflection of the vertical, the difference in
    *   directions of <b>g</b><sub><i>P</i></sub> and

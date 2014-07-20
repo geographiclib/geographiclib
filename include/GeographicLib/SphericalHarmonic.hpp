@@ -32,10 +32,10 @@ namespace GeographicLib {
    * - \e q = <i>a</i>/<i>r</i>,
    * - &theta; = atan2(\e p, \e z) = the spherical \e colatitude,
    * - &lambda; = atan2(\e y, \e x) = the longitude.
-   * - P<sub>\e nm</sub>(\e t) is the associated Legendre polynomial of degree
-   *   \e n and order \e m.
+   * - P<sub><i>nm</i></sub>(\e t) is the associated Legendre polynomial of
+   *   degree \e n and order \e m.
    *
-   * Two normalizations are supported for P<sub>\e nm</sub>
+   * Two normalizations are supported for P<sub><i>nm</i></sub>
    * - fully normalized denoted by SphericalHarmonic::FULL.
    * - Schmidt semi-normalized denoted by SphericalHarmonic::SCHMIDT.
    *
@@ -71,9 +71,10 @@ namespace GeographicLib {
       /**
        * Fully normalized associated Legendre polynomials.
        *
-       * These are defined by <i>P</i><sub><i>nm</i></sub><sup>full</sup>(\e z)
-       * = (&minus;1)<sup><i>m</i></sup> sqrt(\e k (2\e n + 1) (\e n &minus; \e
-       * m)! / (\e n + \e m)!)
+       * These are defined by
+       * <i>P</i><sub><i>nm</i></sub><sup>full</sup>(\e z)
+       * = (&minus;1)<sup><i>m</i></sup>
+       * sqrt(\e k (2\e n + 1) (\e n &minus; \e m)! / (\e n + \e m)!)
        * <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z), where
        * <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z) is Ferrers
        * function (also known as the Legendre function on the cut or the
@@ -92,10 +93,12 @@ namespace GeographicLib {
       /**
        * Schmidt semi-normalized associated Legendre polynomials.
        *
-       * These are defined by <i>P</i><sub><i>nm</i></sub><sup>schmidt</sup>(\e
-       * z) = (&minus;1)<sup><i>m</i></sup> sqrt(\e k (\e n &minus; \e m)! /
-       * (\e n + \e m)!)  <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z),
-       * where <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z) is Ferrers
+       * These are defined by
+       * <i>P</i><sub><i>nm</i></sub><sup>schmidt</sup>(\e z)
+       * = (&minus;1)<sup><i>m</i></sup>
+       * sqrt(\e k (\e n &minus; \e m)! / (\e n + \e m)!)
+       * <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z), where
+       * <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z) is Ferrers
        * function (also known as the Legendre function on the cut or the
        * associated Legendre polynomial) http://dlmf.nist.gov/14.7.E10 and \e k
        * = 1 for \e m = 0 and \e k = 2 otherwise.
@@ -126,8 +129,8 @@ namespace GeographicLib {
     /**
      * Constructor with a full set of coefficients specified.
      *
-     * @param[in] C the coefficients \e C<sub>\e nm</sub>.
-     * @param[in] S the coefficients \e S<sub>\e nm</sub>.
+     * @param[in] C the coefficients <i>C</i><sub><i>nm</i></sub>.
+     * @param[in] S the coefficients <i>S</i><sub><i>nm</i></sub>.
      * @param[in] N the maximum degree and order of the sum
      * @param[in] a the reference radius appearing in the definition of the
      *   sum.
@@ -138,10 +141,11 @@ namespace GeographicLib {
      * @exception GeographicErr if \e C or \e S is not big enough to hold the
      *   coefficients.
      *
-     * The coefficients \e C<sub>\e nm</sub> and \e S<sub>\e nm</sub> are
-     * stored in the one-dimensional vectors \e C and \e S which must contain
-     * (\e N + 1)(\e N + 2)/2 and N (\e N + 1)/2 elements, respectively, stored
-     * in "column-major" order.  Thus for \e N = 3, the order would be:
+     * The coefficients <i>C</i><sub><i>nm</i></sub> and
+     * <i>S</i><sub><i>nm</i></sub> are stored in the one-dimensional vectors
+     * \e C and \e S which must contain (\e N + 1)(\e N + 2)/2 and \e N (\e N +
+     * 1)/2 elements, respectively, stored in "column-major" order.  Thus for
+     * \e N = 3, the order would be:
      * <i>C</i><sub>00</sub>,
      * <i>C</i><sub>10</sub>,
      * <i>C</i><sub>20</sub>,
@@ -171,8 +175,8 @@ namespace GeographicLib {
     /**
      * Constructor with a subset of coefficients specified.
      *
-     * @param[in] C the coefficients \e C<sub>\e nm</sub>.
-     * @param[in] S the coefficients \e S<sub>\e nm</sub>.
+     * @param[in] C the coefficients <i>C</i><sub><i>nm</i></sub>.
+     * @param[in] S the coefficients <i>S</i><sub><i>nm</i></sub>.
      * @param[in] N the degree used to determine the layout of \e C and \e S.
      * @param[in] nmx the maximum degree used in the sum.  The sum over \e n is
      *   from 0 thru \e nmx.

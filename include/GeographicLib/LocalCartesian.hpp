@@ -187,8 +187,8 @@ namespace GeographicLib {
      *   the local coordinate system at (\e lat0, \e lon0, \e h0)); call this
      *   representation \e v0.
      * .
-     * Then we have \e v1 = \e M<sup>T</sup> &sdot; \e v0, where \e
-     * M<sup>T</sup> is the transpose of \e M.
+     * Then we have \e v1 = <i>M</i><sup>T</sup> &sdot; \e v0, where
+     * <i>M</i><sup>T</sup> is the transpose of \e M.
      **********************************************************************/
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h,
                  std::vector<real>& M)

@@ -32,8 +32,8 @@ namespace GeographicLib {
    * in a series in the flattening \e f and this provides an accurate solution
    * for \e f &isin; [-0.01, 0.01].  The GeodesicExact class computes the
    * ellitpic integrals directly and so provides a solution which is valid for
-   * all \e f.  However, in practice, its use should be limited to about \e
-   * b/\e a &isin; [0.01, 100] or \e f &isin; [-99, 0.99].
+   * all \e f.  However, in practice, its use should be limited to about
+   * <i>b</i>/\e a &isin; [0.01, 100] or \e f &isin; [-99, 0.99].
    *
    * For the WGS84 ellipsoid, these classes are 2--3 times \e slower than the
    * series solution and 2--3 times \e less \e accurate (because it's less easy
@@ -41,8 +41,8 @@ namespace GeographicLib {
    * the error is about 40 nm (40 nanometers) instead of 15 nm.  However the
    * error in the series solution scales as <i>f</i><sup>7</sup> while the
    * error in the elliptic integral solution depends weakly on \e f.  If the
-   * quarter meridian distance is 10000 km and the ratio \e b/\e a = 1 &minus;
-   * \e f is varied then the approximate maximum error (expressed as a
+   * quarter meridian distance is 10000 km and the ratio <i>b</i>/\e a = 1
+   * &minus; \e f is varied then the approximate maximum error (expressed as a
    * distance) is <pre>
    *       1 - f  error (nm)
    *       1/128     387
@@ -63,8 +63,8 @@ namespace GeographicLib {
    * </pre>
    *
    * The computation of the area in these classes is via a 30th order series.
-   * This gives accurate results for \e b/\e a &isin; [1/2, 2]; the accuracy is
-   * about 8 decimal digits for \e b/\e a &isin; [1/4, 4].
+   * This gives accurate results for <i>b</i>/\e a &isin; [1/2, 2]; the
+   * accuracy is about 8 decimal digits for <i>b</i>/\e a &isin; [1/4, 4].
    *
    * See \ref geodellip for the formulation.  See the documentation on the
    * Geodesic class for additional information on the geodesic problems.

@@ -151,7 +151,7 @@ flattening.  Thus, you can expect close to full accuracy for -0.01 &le;
 restricted to \e f > 0).  However, reasonably accurate results can be
 expected if -0.1 &le; \e f &le; 0.1.  Outside this range, you should
 attempt to verify the accuracy of the routines independently.  Two types
-of problems may occur with larger values of \e f:
+of problems may occur with larger values of <i>f</i>:
  - Some classes, specifically Geodesic,
    GeodesicLine, and TransverseMercator,
    use series expansions using \e f as a small parameter.  The accuracy
@@ -349,12 +349,21 @@ Here are the steps to compile and install GeographicLib:
     <a href="NET/index.html">NETGeographicLib</a>.  This only makes
     sense for Windows systems.
   - <code>GEOGRAPHICLIB_PRECISION</code> specifies the precision to be
-    used for "real" (i.e., floating point) numbers.  1 means float
-    (single precision); 2 (the default) means double; 3 means long
-    double; 4 is reserved for quadruple precision.  Nearly all the
-    testing has been carried out with doubles and that's the
-    recommended configuration.  In particular you should avoid
-    "installing" the library with a precision different from double.
+    used for "real" (i.e., floating point) numbers.  Here are the
+    possible values
+    -# float (24-bit precision); typically this is far to inaccurate
+       for geodetic applications.
+    -# double precision (53-bit precision, the default).
+    -# long double (64-bit precision); this does not apply for Visual
+       Studio (long double is the same as double with that compiler).
+    -# quad precision (113-bit precision).
+    -# arbitrary precision.
+    .
+    See \ref multiprec for addition information about the last two
+    values.  Nearly all the testing has been carried out with doubles
+    and that's the recommended configuration.  In particular you should
+    avoid "installing" the library with a precision different from
+    double.
 - Build and install the software.  In non-IDE environments, run
   \verbatim
   make         # compile the library and the examples
@@ -2224,11 +2233,11 @@ for each set of coefficients is:
    This must satisfy \e N &ge; &minus;1.
  - \e M, the maximum order of the sum stored as a 4-byte signed integer.
    This must satisfy \e N &ge; \e M &ge; &minus;1.
- - \e C<sub>\e nm</sub>, the coefficients of the cosine coefficients of
-   the sum in column (i.e., \e m) major order.  There are (\e M + 1)
-   (2\e N - \e M + 2) / 2 elements which are stored as IEEE doubles (8
-   bytes).  For example for \e N = \e M = 3, there are 10 coefficients
-   arranged as
+ - <i>C</i><sub><i>nm</i></sub>, the coefficients of the cosine
+   coefficients of the sum in column (i.e., \e m) major order.  There
+   are (\e M + 1) (2\e N - \e M + 2) / 2 elements which are stored as
+   IEEE doubles (8 bytes).  For example for \e N = \e M = 3, there are
+   10 coefficients arranged as
    <i>C</i><sub>00</sub>,
    <i>C</i><sub>10</sub>,
    <i>C</i><sub>20</sub>,
@@ -2239,11 +2248,11 @@ for each set of coefficients is:
    <i>C</i><sub>22</sub>,
    <i>C</i><sub>32</sub>,
    <i>C</i><sub>33</sub>.
- - \e S<sub>\e nm</sub>, the coefficients of the sine coefficients of
-   the sum in column (i.e., \e m) major order starting at \e m = 1.
-   There are \e M (2\e N - \e M + 1) / 2 elements which are stored as
-   IEEE doubles (8 bytes).  For example for \e N = \e M = 3, there are 6
-   coefficients arranged as
+ - <i>S</i><sub><i>nm</i></sub>, the coefficients of the sine
+   coefficients of the sum in column (i.e., \e m) major order starting
+   at \e m = 1.  There are \e M (2\e N - \e M + 1) / 2 elements which
+   are stored as IEEE doubles (8 bytes).  For example for \e N = \e M =
+   3, there are 6 coefficients arranged as
    <i>S</i><sub>11</sub>,
    <i>S</i><sub>21</sub>,
    <i>S</i><sub>31</sub>,
@@ -2702,11 +2711,11 @@ is:
    This must satisfy \e N &ge; &minus;1.
  - \e M, the maximum order of the sum stored as a 4-byte signed integer.
    This must satisfy \e N &ge; \e M &ge; &minus;1.
- - \e C<sub>\e nm</sub>, the coefficients of the cosine coefficients of
-   the sum in column (i.e., \e m) major order.  There are (\e M + 1)
-   (2\e N &minus; \e M + 2) / 2 elements which are stored as IEEE doubles (8
-   bytes).  For example for \e N = \e M = 3, there are 10 coefficients
-   arranged as
+ - <i>C</i><sub><i>nm</i></sub>, the coefficients of the cosine
+   coefficients of the sum in column (i.e., \e m) major order.  There
+   are (\e M + 1) (2\e N &minus; \e M + 2) / 2 elements which are stored
+   as IEEE doubles (8 bytes).  For example for \e N = \e M = 3, there
+   are 10 coefficients arranged as
    <i>C</i><sub>00</sub>,
    <i>C</i><sub>10</sub>,
    <i>C</i><sub>20</sub>,
@@ -2717,11 +2726,11 @@ is:
    <i>C</i><sub>22</sub>,
    <i>C</i><sub>32</sub>,
    <i>C</i><sub>33</sub>.
- - \e S<sub>\e nm</sub>, the coefficients of the sine coefficients of
-   the sum in column (i.e., \e m) major order starting at \e m = 1.
-   There are \e M (2\e N &minus; \e M + 1) / 2 elements which are stored as
-   IEEE doubles (8 bytes).  For example for \e N = \e M = 3, there are 6
-   coefficients arranged as
+ - <i>S</i><sub><i>nm</i></sub>, the coefficients of the sine
+   coefficients of the sum in column (i.e., \e m) major order starting
+   at \e m = 1.  There are \e M (2\e N &minus; \e M + 1) / 2 elements
+   which are stored as IEEE doubles (8 bytes).  For example for \e N =
+   \e M = 3, there are 6 coefficients arranged as
    <i>S</i><sub>11</sub>,
    <i>S</i><sub>21</sub>,
    <i>S</i><sub>31</sub>,
@@ -2946,7 +2955,7 @@ used to select any order up to 8.  (If using long doubles, with a
 order <i>f</i><sup>30</sup> are given in <a href="geodseries30.html">
 geodseries30.html</a>.
 
-In the formulas below ^ indicates exponentiation (\e f^3 =
+In the formulas below ^ indicates exponentiation (<i>f</i>^3 =
 <i>f</i><sup>3</sup>) and / indicates real division (3/5 = 0.6).  The
 equations need to be converted to Horner form, but are here left in
 expanded form so that they can be easily truncated to lower order.
@@ -3323,18 +3332,17 @@ the longitude to be computed more accurately and is used in
 GeographicLib.  (The equivalence of the two expressions for \f$
 \lambda \f$ follows from http://dlmf.nist.gov/19.7.E8.)
 
-Nominally, GeodesicExact and
-GeodesicLineExact will give "exact" results for any value
-of the flattening.  However, the geographic latitude is a distorted
-measure of distance from the equator with very eccentric ellipsoids and
-this introducing an irreducible representational error in the algorithms
-in this case.  It is therefore recommended to restrict the use of these
-classes to \e b/\e a &isin; [0.01, 100] or \e f &isin; [-99, 0.99].
-Note that GeodesicExact still uses a series expansion for
-the area \e S12.  However the series is taken out to 30th order and
-gives accurate results for \e b/\e a &isin; [1/2, 2]; the accuracy is
-about 8 decimal digits for \e b/\e a &isin; [1/4, 4].  Additional work
-planned for this aspect of the geodesic problem:
+Nominally, GeodesicExact and GeodesicLineExact will give "exact" results
+for any value of the flattening.  However, the geographic latitude is a
+distorted measure of distance from the equator with very eccentric
+ellipsoids and this introducing an irreducible representational error in
+the algorithms in this case.  It is therefore recommended to restrict
+the use of these classes to <i>b</i>/\e a &isin; [0.01, 100] or \e f
+&isin; [-99, 0.99].  Note that GeodesicExact still uses a series
+expansion for the area \e S12.  However the series is taken out to 30th
+order and gives accurate results for <i>b</i>/\e a &isin; [1/2, 2]; the
+accuracy is about 8 decimal digits for <i>b</i>/\e a &isin; [1/4, 4].
+Additional work planned for this aspect of the geodesic problem:
 - formulate the area integral \e S12 in terms of elliptic integrals;
 - generate accurate test geodesics for highly eccentric ellipsoids so
   that the roundoff errors can be quantified.
@@ -4391,12 +4399,12 @@ GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER can be used to select an order
 from 4 thru 8.  The series expanded to order <i>n</i><sup>30</sup> are
 given in <a href="tmseries30.html"> tmseries30.html</a>.
 
-In the formulas below ^ indicates exponentiation (\e n^3 = \e n*\e n*\e
-n) and / indicates real division (3/5 = 0.6).  The equations need to be
-converted to Horner form, but are here left in expanded form so that
-they can be easily truncated to lower order in \e n.  Some of the
-integers here are not representable as 32-bit integers and will need to
-be included as double literals.
+In the formulas below ^ indicates exponentiation (<i>n</i>^3 =
+<i>n</i>*<i>n</i>*<i>n</i>) and / indicates real division (3/5 = 0.6).
+The equations need to be converted to Horner form, but are here left in
+expanded form so that they can be easily truncated to lower order in \e
+n.  Some of the integers here are not representable as 32-bit integers
+and will need to be included as double literals.
 
 \e A in Kr&uuml;ger, p. 12, eq. (5)
 \verbatim
@@ -4675,10 +4683,10 @@ The problems encountered near the center of the ellipsoid are:
    real root.
  - The solution for \e t may be complex.  However this leads to 3 real roots
    for <i>u</i>/\e r.  It's then just a matter of picking the one that computes
-   the geodetic result which minimizes |\e h| and which avoids large
+   the geodetic result which minimizes |<i>h</i>| and which avoids large
    round-off errors.
  - Some of the equations result in a large loss of accuracy due to
-   subtracting nearly equal quantities.  E.g., \e k= sqrt(\e u + \e v +
+   subtracting nearly equal quantities.  E.g., \e k = sqrt(\e u + \e v +
    <i>w</i><sup>2</sup>) &minus; \e w is inaccurate if \e u + \e v is small;
    we can fix this by writing \e k = (\e u + \e v)/(sqrt(\e u + \e v +
    <i>w</i><sup>2</sup>) + \e w).
@@ -4701,7 +4709,7 @@ Apply the double version of WGS84.Reverse to (\e x0, \e y0, \e z0) to
 compute the approximate geodetic coordinates (\e lat1, \e lon1, \e h1).
 Convert (\e lat1 &minus; \e lat0, \e lon1 &minus; \e lon0) to a
 distance, \e ds, on the surface of the ellipsoid and define \e err =
-hypot(\e ds, \e h1 &minus; \e h0).  For |\e h0| < 5000 km, we have \e
+hypot(\e ds, \e h1 &minus; \e h0).  For |<i>h0</i>| < 5000 km, we have \e
 err < 7 nm (7 nanometers).
 
 This methodology is not very useful very far from the globe, because the
@@ -4719,7 +4727,7 @@ geodetic latitude becomes 7.45", a distance of 229 m from the equator.
 In light of this, Reverse does quite well in this vicinity.
 
 To obtain a practical measure of the error for the general case we define
-- <i>err</i><sub>h</sub> = |\e h1 &minus; \e h0| / max(1, \e h0 / \e a)
+- <i>err</i><sub>h</sub> = |\e h1 &minus; <i>h0</i>| / max(1, \e h0 / \e a)
 - for \e h0 > 0, <i>err</i><sub>out</sub> = \e ds
 - for \e h0 < 0, apply the long double version of WGS84.Forward to (\e
   lat1, \e lon1, \e h1) to give (\e x1, \e y1, \e z1) and compute
@@ -4761,15 +4769,78 @@ Back to \ref transversemercator.  Forward to \ref multiprec.  Up to \ref content
 Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
 </center>
 
-Goals are
- - Support for high-precision arithmetic as a developer (routine use
-   should be with double).
- - As much as possible, avoid messing up the code base.
- - For multi-precision types, only support setting the precision before
-   any invocation of GeographicLib routines.
- - Support up to about 100 decimal digits.
- - OK to require C++11 support
- - OK not to work on Windows
+Many of the algorithms implemented in GeographicLib were tested by
+comparing the output of the algorithms with test sets obtained using
+Maxima's bfloat capability which support arbitrary precision floating
+point arithmetic.  Similar test data can be generated directly by
+GeographicLib by compiling it with <code>GEOGRAPHICLIB_PRECISION</code>
+equal to 4 or 5.
+
+Here's what you should know:
+ - <code>GEOGRAPHICLIB_PRECISION=4</code> gives quad precision (113-bit
+   precision) via boost::multiprecision::float128; this requires
+   <a href="http://www.boost.org"> boost</a> (version 1.54 or later) and
+   the quadmath library (which requires the use of g++).
+ - <code>GEOGRAPHICLIB_PRECISION=5</code> gives arbitrary precision via
+   mpfr::mpreal; this requires <a href="http://www.mpfr.org"> MPFR</a>
+   and <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
+   (version 3.5.9 or later).
+ - This is mainly for use for algorithm developers.  It's not
+   recommended for installation for all users on a system.
+ - The indicated precision is used for <b>all</b> floating point
+   arithmetic.  Thus, it's not straightforward to compare the results of
+   different precisions within a single invocation of a program.
+   Instead, you can create a file of accurate test data at a high
+   precision and use this to test the algorithms at double precision.
+ - The arbitrary precision arithmetic, the precision should be set
+   (using Utility::set_digits) just once before any other GeographicLib
+   routines are called.  Calling this function after other GeographicLib
+   routines will lead to inconsistent results (because the precision of
+   some constants like Math::pi() is set when the functions are first
+   called).
+ - All the \ref utilities call Utility::set_digits().  This causes the
+   precision (in bits) to be determined by the
+   <code>GEOGRAPHICLIB_DIGITS</code> environment variable.  If this is
+   not defined the precision is set to 256 bits.
+ - Some classes (namely, Geodesic and TransverseMercator) use series.
+   Additional terms in the series are used for high precision, however
+   the accuracy is still bounded away from zero.  On the other hand,
+   GeodesicExact and TransverseMercatorExact are somewhat slower classes
+   offering the same functionality implemented with EllipticFunction.
+   These classes provide arbitrary accuracy.
+ - However, a caveat is that the evaluation of the area in GeodesicExact
+   still uses a series (albeit of considerably higher order).  So the
+   area calculations are always bounded away from zero.
+ - All the physical constants used by GeographicLib, e.g., the
+   flattening of the WGS84 ellipsoid, are evaluated as exact decimal
+   numbers.
+ - Geoid, GravityModel, and MagneticModel all depend on external data
+   files.  The coefficient files for GravityModel and MagneticModel
+   store the coefficients as IEEE double.  With Geoid, the data files
+   for the geoid heights are quantized at 3mm.
+ - Many classes solve equations iteratively and typically the number of
+   iterations is limited.  However, the iterative methods converge
+   quadratically (the number of correct digits doubles on each
+   iteration) so that full convergence is obtained for "reasonable"
+   precisions (no more than, say, 100 decimal digits or about 340 bits).
+ - Where might high accuracy be important:
+   - checking the truncation error of series approximations;
+   - checking for excessive round-off errors (typically due to subtraction);
+   - checking the round-off error in computing areas of many-sided polygons;
+   - checking the summation of high order spherical harmonic expansions
+     (where underflow and overflow may also be a problem).
+ - Because only a tiny number of people will be interested in using this
+   facility:
+   - the cmake support for the required libraries is rudimentary;
+   - support for the C++11 mathematical functions and the explicit cast
+     operator is required;
+   - quad precision is only available on Linux;
+   - mpfr has been mostly tested on Linux (but it works on Windows and
+     MacOS too);
+   - the boost library (used for quad precision) interprets fixed +
+     setprecision(0) to mean "print all the digits you've got" instead
+     of "print the nearest integer", the output from some utilities is
+     wrong.
 
 The following steps needed to be taken
  - Change std::sqrt(...), etc. to using std::sqrt; sqrt(...)

@@ -599,14 +599,14 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Symmetric integral of the first kind <i>R<sub>F</sub></i>.
+     * Symmetric integral of the first kind <i>R</i><sub><i>F</i></sub>.
      *
      * @param[in] x
      * @param[in] y
      * @param[in] z
-     * @return <i>R<sub>F</sub></i>(\e x, \e y, \e z)
+     * @return <i>R</i><sub><i>F</i></sub>(\e x, \e y, \e z)
      *
-     * <i>R<sub>F</sub></i> is defined in http://dlmf.nist.gov/19.16.E1
+     * <i>R</i><sub><i>F</i></sub> is defined in http://dlmf.nist.gov/19.16.E1
      * \f[ R_F(x, y, z) = \frac12
      *       \int_0^\infty\frac1{\sqrt{(t + x) (t + y) (t + z)}}\, dt \f]
      * If one of the arguments is zero, it is more efficient to call the
@@ -615,38 +615,39 @@ namespace GeographicLib {
     static real RF(real x, real y, real z);
 
     /**
-     * Complete symmetric integral of the first kind, <i>R<sub>F</sub></i> with
-     * one argument zero.
+     * Complete symmetric integral of the first kind,
+     * <i>R</i><sub><i>F</i></sub> with one argument zero.
      *
      * @param[in] x
      * @param[in] y
-     * @return <i>R<sub>F</sub></i>(\e x, \e y, 0)
+     * @return <i>R</i><sub><i>F</i></sub>(\e x, \e y, 0)
      **********************************************************************/
     static real RF(real x, real y);
 
     /**
-     * Degenerate symmetric integral of the first kind <i>R<sub>C</sub></i>.
+     * Degenerate symmetric integral of the first kind
+     * <i>R</i><sub><i>C</i></sub>.
      *
      * @param[in] x
      * @param[in] y
-     * @return <i>R<sub>C</sub></i>(\e x, \e y) = <i>R<sub>F</sub></i>(\e x, \e
-     *   y, \e y)
+     * @return <i>R</i><sub><i>C</i></sub>(\e x, \e y) =
+     *   <i>R</i><sub><i>F</i></sub>(\e x, \e y, \e y)
      *
-     * <i>R<sub>C</sub></i> is defined in http://dlmf.nist.gov/19.2.E17
+     * <i>R</i><sub><i>C</i></sub> is defined in http://dlmf.nist.gov/19.2.E17
      * \f[ R_C(x, y) = \frac12
      *       \int_0^\infty\frac1{\sqrt{t + x}(t + y)}\,dt \f]
      **********************************************************************/
     static real RC(real x, real y);
 
     /**
-     * Symmetric integral of the second kind <i>R<sub>G</sub></i>.
+     * Symmetric integral of the second kind <i>R</i><sub><i>G</i></sub>.
      *
      * @param[in] x
      * @param[in] y
      * @param[in] z
-     * @return <i>R<sub>G</sub></i>(\e x, \e y, \e z)
+     * @return <i>R</i><sub><i>G</i></sub>(\e x, \e y, \e z)
      *
-     * <i>R<sub>G</sub></i> is defined in Carlson, eq 1.5
+     * <i>R</i><sub><i>G</i></sub> is defined in Carlson, eq 1.5
      * \f[ R_G(x, y, z) = \frac14
      *       \int_0^\infty[(t + x) (t + y) (t + z)]^{-1/2}
      *        \biggl(
@@ -659,40 +660,41 @@ namespace GeographicLib {
     static real RG(real x, real y, real z);
 
     /**
-     * Complete symmetric integral of the second kind, <i>R<sub>G</sub></i>
-     * with one argument zero.
+     * Complete symmetric integral of the second kind,
+     * <i>R</i><sub><i>G</i></sub> with one argument zero.
      *
      * @param[in] x
      * @param[in] y
-     * @return <i>R<sub>G</sub></i>(\e x, \e y, 0)
+     * @return <i>R</i><sub><i>G</i></sub>(\e x, \e y, 0)
      **********************************************************************/
     static real RG(real x, real y);
 
     /**
-     * Symmetric integral of the third kind <i>R<sub>J</sub></i>.
+     * Symmetric integral of the third kind <i>R</i><sub><i>J</i></sub>.
      *
      * @param[in] x
      * @param[in] y
      * @param[in] z
      * @param[in] p
-     * @return <i>R<sub>J</sub></i>(\e x, \e y, \e z, \e p)
+     * @return <i>R</i><sub><i>J</i></sub>(\e x, \e y, \e z, \e p)
      *
-     * <i>R<sub>J</sub></i> is defined in http://dlmf.nist.gov/19.16.E2
+     * <i>R</i><sub><i>J</i></sub> is defined in http://dlmf.nist.gov/19.16.E2
      * \f[ R_J(x, y, z, p) = \frac32
      *       \int_0^\infty[(t + x) (t + y) (t + z)]^{-1/2} (t + p)^{-1}\, dt \f]
      **********************************************************************/
     static real RJ(real x, real y, real z, real p);
 
     /**
-     * Degenerate symmetric integral of the third kind <i>R<sub>D</sub></i>.
+     * Degenerate symmetric integral of the third kind
+     * <i>R</i><sub><i>D</i></sub>.
      *
      * @param[in] x
      * @param[in] y
      * @param[in] z
-     * @return <i>R<sub>D</sub></i>(\e x, \e y, \e z) = <i>R<sub>J</sub></i>(\e
-     *   x, \e y, \e z, \e z)
+     * @return <i>R</i><sub><i>D</i></sub>(\e x, \e y, \e z) =
+     *   <i>R</i><sub><i>J</i></sub>(\e x, \e y, \e z, \e z)
      *
-     * <i>R<sub>D</sub></i> is defined in http://dlmf.nist.gov/19.16.E5
+     * <i>R</i><sub><i>D</i></sub> is defined in http://dlmf.nist.gov/19.16.E5
      * \f[ R_D(x, y, z) = \frac32
      *       \int_0^\infty[(t + x) (t + y)]^{-1/2} (t + z)^{-3/2}\, dt \f]
      **********************************************************************/

@@ -156,7 +156,7 @@ namespace GeographicLib {
      * lon0 should be in the range [&minus;540&deg;, 540&deg;).  \e lat
      * will be in the range [&minus;90&deg;, 90&deg;] and \e lon will
      * be in the range [&minus;180&deg;, 180&deg;).  The scale of the
-     * projection is 1/\e rk<sup>2</sup> in the "radial" direction, \e azi
+     * projection is 1/<i>rk</i><sup>2</sup> in the "radial" direction, \e azi
      * clockwise from true north, and is 1/\e rk in the direction perpendicular
      * to this.  Even though all inputs should return a valid \e lat and \e
      * lon, it's possible that the procedure fails to converge for very large

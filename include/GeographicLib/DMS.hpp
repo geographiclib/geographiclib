@@ -186,8 +186,8 @@ namespace GeographicLib {
      * @param[in] s arc seconds.
      * @return angle (degrees)
      *
-     * This does not propagate the sign on \e d to the other components, so
-     * -3d20' would need to be represented as - DMS::Decode(3.0, 20.0) or
+     * This does not propagate the sign on \e d to the other components,
+     * so -3d20' would need to be represented as - DMS::Decode(3.0, 20.0) or
      * DMS::Decode(-3.0, -20.0).
      **********************************************************************/
     static Math::real Decode(real d, real m = 0, real s = 0)
