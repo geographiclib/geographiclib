@@ -213,7 +213,7 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static inline T pi() {
       using std::atan2;
-      static const T pi = atan2(T(0), -T(1));
+      static const T pi = atan2(T(0), T(-1));
       return pi;
     }
     /**
@@ -226,7 +226,7 @@ namespace GeographicLib {
      * @return the number of radians in a degree.
      **********************************************************************/
     template<typename T> static inline T degree() {
-      static const T degree = pi<T>() / T(180);
+      static const T degree = pi<T>() / 180;
       return degree;
     }
     /**
@@ -531,17 +531,24 @@ namespace GeographicLib {
 
     static inline quad hypot(quad x, quad y)
     { return boost::math::hypot(x, y, boost_special_functions_policy()); }
+
     static inline quad expm1(quad x)
     { return boost::math::expm1(x, boost_special_functions_policy()); }
+
     static inline quad log1p(quad x)
     { return boost::math::log1p(x, boost_special_functions_policy()); }
+
     static inline quad asinh(quad x)
     { return boost::math::asinh(x, boost_special_functions_policy()); }
+
     static inline quad atanh(quad x)
     { return boost::math::atanh(x, boost_special_functions_policy()); }
+
     static inline quad cbrt(quad x)
     { return boost::math::cbrt(x, boost_special_functions_policy()); }
+
     static inline bool isnan(quad x) { return boost::math::isnan(x); }
+
     static inline bool isfinite(quad x) { return boost::math::isfinite(x); }
 #endif
   };

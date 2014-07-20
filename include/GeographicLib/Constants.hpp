@@ -113,7 +113,7 @@ namespace GeographicLib {
      * @return the flattening of WGS84 ellipsoid (1/298.257223563).
      **********************************************************************/
     template<typename T> static inline T WGS84_f()
-    { return 1 / ( 298 + T(257223563) / 1000000000 ); }
+    { return 1 / ( T(298257223563LL) / 1000000000 ); }
     /**
      * A synonym for WGS84_f<real>().
      **********************************************************************/

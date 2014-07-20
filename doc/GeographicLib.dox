@@ -4843,22 +4843,98 @@ Here's what you should know:
      wrong.
 
 The following steps needed to be taken
- - Change std::sqrt(...), etc. to using std::sqrt; sqrt(...)
- - Don't set any static const real variables; in particular tolerances.
- - Don't define any static instances of classes; instead use "Construct
-   On First Use Idiom".
- - constants in GeodesicExact can't be specified as long doubles nor
-   long longs (since they have more than 64 significant bits
-   - first tried macro which expanded to a string
-   - now use inline function to combine two long long ints each with at
-     most 52 significant bits.
- - g++ took inordinately long (15 minutes) to compile one routine,
-   needed to simplify
- - Visual Studio 12 then complained (with internal compiler error
-   presumably due to whole-file optimization); fixed by splitting one
-   function into a separate file.
- - Simple iterative method to determine the flattening in NormalGravity
-   converges too slowly; use Newton's method instead.
+
+ - Phase 1, make sure you can switch easily between double, float, and
+   long double.
+   - use #<code>include &lt;cmath&gt;</code> instead of #<code>include
+     &lt;math.h&gt;</code>;
+   - use, e.g., <code>std::sqrt</code> instead of <code>sqrt</code> in
+     header files (similarly for <code>sin</code>, <code>cos</code>,
+     <code>atan2</code>, etc.);
+   - use <code>using namespace std;</code> and plain <code>sqrt</code>,
+     etc., in code files;
+   - express all convergence criteria in terms of\code
+     numeric_limits<double>::epsilon() \endcode
+     etc., instead of using "magic constants", such as 1.0e-15;
+   - use <code>typedef double real;</code> and replace all occurences of
+     <code>double</code> by <code>real</code>;
+   - write all literals by, e.g., <code>real(0.5)</code>.  Some
+     constants might need the L suffix, e.g., <code>real f =
+     1/real(298.257223563L)</code> (but see below);
+   - Change the typedef of <code>real</code> to <code>float</code> or
+     <code>long double</code>, compile, and test.
+
+ - Phase 2, changes to support arbitrary, but fixed, precision
+   - Use, e.g., \code
+     typedef boost::multiprecision::float128 real; \endcode
+   - Change <code>std::sqrt(...)</code>, etc. to \code
+     using std::sqrt;
+     sqrt(...) \endcode
+     (but note that <code>std::max</code> can stay).  It's only necessary
+     to do this in header files (code files already have <code>using
+     namespace std;</code>).
+   - In the case of boost's multiprecision numbers, the C++11
+     mathematical functions need special treatment, see Math.hpp.
+   - If necessary, use series with additional terms to improve the
+     accuracy.
+   - Replace slowing converging root finding methods with rapidly
+     converging methods.  In particular, the simple iterative method to
+     determine the flattening from the dynamical form factor in
+     NormalGravity converged too slowly; this was replaced by Newton's
+     method.
+   - If necessary, increase the maximum allowed iteration count in root
+     finding loops.
+   - Write literal constants in a way that works for any precision, e.g.,
+     \code
+     real f = 1/( real(298257223563LL) / 1000000000 ); \endcode
+     [Note that \code
+     real f = 1/( 298 + real(257223563) / 1000000000 ); \endcode
+     and <code>1/real(298.257223563L)</code> are susceptible to
+     double rounding errors.  We normally want to avoid such errors when
+     real is a double.]
+   - For arbitrary constants, you might have to resort to macros \code
+     #if   GEOGRAPHICLIB_PRECISION == 1
+     #define REAL(x) x##f
+     #elif GEOGRAPHICLIB_PRECISION == 2
+     #define REAL(x) x
+     #elif GEOGRAPHICLIB_PRECISION == 3
+     #define REAL(x) x##L
+     #elif GEOGRAPHICLIB_PRECISION == 4
+     #define REAL(x) x##Q
+     #else
+     #define REAL(x) real(#x)
+     #endif \endcode
+     and then use \code
+     real f = 1/REAL(298.257223563); \endcode
+   - It might make sense to use local static declarations to avoid the
+     overhead of reevaluating constants, e.g., \code
+     static inline real pi() {
+       using std::atan2;
+       // pi is computed just once
+       static const real pi = atan2(real(0), real(-1));
+       return pi;
+     } \endcode
+     This is <b>not</b> necessary for built-in floating point types,
+     since the atan2 function will be evaluated at compile time.
+
+ - Phase 3, changes to support arbitrary precision which can be set at
+   runtime.
+   - Don't set any static const real variables; in particular tolerances.
+   - Don't define any static instances of classes; instead use "Construct
+     On First Use Idiom".
+   - constants in GeodesicExact, e.g., 831281402884796906843926125, can't
+     be specified as long doubles nor long longs (since they have more
+     than 64 significant bits)
+     - first tried macro which expanded to a string
+     - now use inline function to combine two long long ints each with at
+       most 52 significant bits.
+   - g++ took inordinately long (15 minutes) to compile one routine,
+     needed to simplify
+   - Visual Studio 12 then complained (with an <a
+     href="http://connect.microsoft.com/VisualStudio/feedback/details/920594">
+     internal compiler error</a> presumably due to overly agressive
+     whole-file optimization); fixed by splitting one function into a
+     separate file.
 
 <center>
 Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
