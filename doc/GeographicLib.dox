@@ -4985,6 +4985,7 @@ of the git repository for GeographicLib.
    - Change way area coefficients are given in GeodesicExact to improve
      compile times.
    - Add GravityModel for grs80.
+   - Make geographiclib-get-XXXX scripts work on MacOS.
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
    (released 2014-05-13)
