@@ -4772,9 +4772,12 @@ Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
 Many of the algorithms implemented in GeographicLib were tested by
 comparing the output of the algorithms with test sets obtained using
 Maxima's bfloat capability which support arbitrary precision floating
-point arithmetic.  Similar test data can be generated directly by
-GeographicLib by compiling it with <code>GEOGRAPHICLIB_PRECISION</code>
-equal to 4 or 5.
+point arithmetic.  As of version 1.37, similar test data can be
+generated directly by GeographicLib by compiling it with
+<code>GEOGRAPHICLIB_PRECISION</code> equal to 4 or 5.  (While Mathieu
+Peyr&eacute;ga and I were collaborating on GravityModel in 2011-09, he
+wrote a templated version which could be used with MPFR C++ for
+testing.)
 
 Here's what you should know:
  - <code>GEOGRAPHICLIB_PRECISION=4</code> gives quad precision (113-bit
@@ -4792,6 +4795,11 @@ Here's what you should know:
    different precisions within a single invocation of a program.
    Instead, you can create a file of accurate test data at a high
    precision and use this to test the algorithms at double precision.
+ - An alternative approach, which would have allowed mixing precisions,
+   would have been to make all the GeographicLib classes take a template
+   parameter for the float-point type.  However, given that the vast
+   majority of users are only interested in using doubles, this would
+   end up needlessly complicating the library.
  - The arbitrary precision arithmetic, the precision should be set
    (using Utility::set_digits) just once before any other GeographicLib
    routines are called.  Calling this function after other GeographicLib
@@ -4894,7 +4902,7 @@ The following steps needed to be taken
      real is a double.]
    - For arbitrary constants, you might have to resort to macros \code
      #if   GEOGRAPHICLIB_PRECISION == 1
-     #define REAL(x) x##f
+     #define REAL(x) x##F
      #elif GEOGRAPHICLIB_PRECISION == 2
      #define REAL(x) x
      #elif GEOGRAPHICLIB_PRECISION == 3
