@@ -324,27 +324,27 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
     # by the LGPL; be sure to abide by the terms of this license.
     if (WIN32)
       if (MSCV AND NOT MSVC_VERSION LESS 1800)
-	if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+        if (CMAKE_SIZEOF_VOID_P EQUAL 8)
           set (_ARCH x64)
-	else ()
+        else ()
           set (_ARCH Win32)
-	endif ()
-	include_directories (mpfr_mpir_x86_x64_msvc2010/mpfr
+        endif ()
+        include_directories (mpfr_mpir_x86_x64_msvc2010/mpfr
           mpfr_mpir_x86_x64_msvc2010/mpir/dll/${_ARCH}/Release)
-	# These are C libraries so it's OK to use release versions for
-	# debug builds.  Also these work for later versions of Visual
-	# Studio (specifically version 12).
-	link_directories (mpfr_mpir_x86_x64_msvc2010/mpfr/dll/${_ARCH}/Release
+        # These are C libraries so it's OK to use release versions for
+        # debug builds.  Also these work for later versions of Visual
+        # Studio (specifically version 12).
+        link_directories (mpfr_mpir_x86_x64_msvc2010/mpfr/dll/${_ARCH}/Release
           mpfr_mpir_x86_x64_msvc2010/mpir/dll/${_ARCH}/Release)
-	set (MPFR_LIBRARIES mpfr mpir)
-	# Suppress the myriad of "conditional expression is constant"
-	# warnings
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4127")
+        set (MPFR_LIBRARIES mpfr mpir)
+        # Suppress the myriad of "conditional expression is constant"
+        # warnings
+        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4127")
       endif ()
     else ()
       if (APPLE)
-	include_directories (/usr/local/include)
-	link_directories (/usr/local/lib)
+        include_directories (/usr/local/include)
+        link_directories (/usr/local/lib)
       endif ()
       set (MPFR_LIBRARIES mpfr gmp)
     endif ()

@@ -44,6 +44,7 @@ EXAMPLE_FILES = \
 	example-TransverseMercatorExact.cpp \
 	example-UTMUPS.cpp \
 	example-Utility.cpp \
-	GeoidToGTX.cpp
+	GeoidToGTX.cpp \
+	make-egmcof.cpp
 
 EXTRA_DIST = CMakeLists.txt $(EXAMPLE_FILES)

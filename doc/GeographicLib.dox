@@ -81,7 +81,7 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref triaxial
  - \ref transversemercator
  - \ref geocentric
- - \ref multiprec
+ - \ref highprec
  - \ref old
 
 <center>
@@ -359,7 +359,7 @@ Here are the steps to compile and install GeographicLib:
     -# quad precision (113-bit precision).
     -# arbitrary precision.
     .
-    See \ref multiprec for addition information about the last two
+    See \ref highprec for addition information about the last two
     values.  Nearly all the testing has been carried out with doubles
     and that's the recommended configuration.  In particular you should
     avoid "installing" the library with a precision different from
@@ -4650,7 +4650,7 @@ Back to \ref triaxial.  Forward to \ref geocentric.  Up to \ref contents.
 \page geocentric Geocentric coordinates
 
 <center>
-Back to \ref transversemercator.  Forward to \ref multiprec.  Up to \ref contents.
+Back to \ref transversemercator.  Forward to \ref highprec.  Up to \ref contents.
 </center>
 
 The implementation of Geocentric::Reverse is adapted from
@@ -4758,12 +4758,12 @@ However the choice of independent variables in these methods leads
 to a loss of accuracy for points near the equatorial plane.
 
 <center>
-Back to \ref transversemercator.  Forward to \ref multiprec.  Up to \ref contents.
+Back to \ref transversemercator.  Forward to \ref highprec.  Up to \ref contents.
 
 </center>
 **********************************************************************/
 /**
-\page multiprec Support for high precision
+\page highprec Support for high precision
 
 <center>
 Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
@@ -4772,14 +4772,13 @@ Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
 Many of the algorithms implemented in GeographicLib were tested by
 comparing the output of the algorithms with test sets obtained using
 Maxima's bfloat capability which support arbitrary precision floating
-point arithmetic.  As of version 1.37, similar test data can be
+point arithmetic.  As of version 1.37, high-precision test data can be
 generated directly by GeographicLib by compiling it with
-<code>GEOGRAPHICLIB_PRECISION</code> equal to 4 or 5.  (While Mathieu
-Peyr&eacute;ga and I were collaborating on GravityModel in 2011-09, he
-wrote a templated version which could be used with MPFR C++ for
-testing.)
+<code>GEOGRAPHICLIB_PRECISION</code> equal to 4 or 5.
 
 Here's what you should know:
+ - This is mainly for use for algorithm developers.  It's not
+   recommended for installation for all users on a system.
  - <code>GEOGRAPHICLIB_PRECISION=4</code> gives quad precision (113-bit
    precision) via boost::multiprecision::float128; this requires
    <a href="http://www.boost.org"> boost</a> (version 1.54 or later) and
@@ -4788,18 +4787,11 @@ Here's what you should know:
    mpfr::mpreal; this requires <a href="http://www.mpfr.org"> MPFR</a>
    and <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
    (version 3.5.9 or later).
- - This is mainly for use for algorithm developers.  It's not
-   recommended for installation for all users on a system.
  - The indicated precision is used for <b>all</b> floating point
    arithmetic.  Thus, it's not straightforward to compare the results of
    different precisions within a single invocation of a program.
    Instead, you can create a file of accurate test data at a high
    precision and use this to test the algorithms at double precision.
- - An alternative approach, which would have allowed mixing precisions,
-   would have been to make all the GeographicLib classes take a template
-   parameter for the float-point type.  However, given that the vast
-   majority of users are only interested in using doubles, this would
-   end up needlessly complicating the library.
  - The arbitrary precision arithmetic, the precision should be set
    (using Utility::set_digits) just once before any other GeographicLib
    routines are called.  Calling this function after other GeographicLib
@@ -4854,7 +4846,7 @@ The following steps needed to be taken
 
  - Phase 1, make sure you can switch easily between double, float, and
    long double.
-   - use #<code>include &lt;cmath&gt;</code> instead of #<code>include
+   - use <code>\#include &lt;cmath&gt;</code> instead of <code>\#include
      &lt;math.h&gt;</code>;
    - use, e.g., <code>std::sqrt</code> instead of <code>sqrt</code> in
      header files (similarly for <code>sin</code>, <code>cos</code>,
@@ -4870,7 +4862,17 @@ The following steps needed to be taken
      constants might need the L suffix, e.g., <code>real f =
      1/real(298.257223563L)</code> (but see below);
    - Change the typedef of <code>real</code> to <code>float</code> or
-     <code>long double</code>, compile, and test.
+     <code>long double</code>, compile, and test.  In this way, the
+     library can be run with any of the three basic floating point
+     types.
+   - If you want to run the library with multiple floating point types
+     within a single executable, then make all your classes take a
+     template parameter specifying the floating-point type and
+     instantiate your classes with the floating-point types that you
+     plan to use.  I did not take this approach with GeographicLib
+     because double precision is suitable for the vast majority of
+     applications and turning all the classes into templates classes
+     would end up needlessly complicating (and bloating) the library.
 
  - Phase 2, changes to support arbitrary, but fixed, precision
    - Use, e.g., \code
@@ -4885,7 +4887,7 @@ The following steps needed to be taken
      mathematical functions need special treatment, see Math.hpp.
    - If necessary, use series with additional terms to improve the
      accuracy.
-   - Replace slowing converging root finding methods with rapidly
+   - Replace slowly converging root finding methods with rapidly
      converging methods.  In particular, the simple iterative method to
      determine the flattening from the dynamical form factor in
      NormalGravity converged too slowly; this was replaced by Newton's
@@ -4914,8 +4916,8 @@ The following steps needed to be taken
      #endif \endcode
      and then use \code
      real f = 1/REAL(298.257223563); \endcode
-   - It might make sense to use local static declarations to avoid the
-     overhead of reevaluating constants, e.g., \code
+   - Perhaps use local static declarations to avoid the overhead of
+     reevaluating constants, e.g., \code
      static inline real pi() {
        using std::atan2;
        // pi is computed just once
@@ -4924,12 +4926,57 @@ The following steps needed to be taken
      } \endcode
      This is <b>not</b> necessary for built-in floating point types,
      since the atan2 function will be evaluated at compile time.
+   - In Utility::readarray and Utility::writearray, arrays of reals were
+     treated as plain old data.  This assumption now no longer holds and
+     these functions needed special treatment.
 
  - Phase 3, changes to support arbitrary precision which can be set at
    runtime.
-   - Don't set any static const real variables; in particular tolerances.
-   - Don't define any static instances of classes; instead use "Construct
-     On First Use Idiom".
+
+   - The big change now is that the precision is not known at compile
+     time.  All static initializations which involve floating point
+     numbers need to be eliminated.
+     - Some static variables (e.g., tolerances which are expressed in
+       terms of <code>numeric_limits&lt;double&gt;\::epsilon()</code>)
+       were made member variables and so initialized which the
+       constructor was called.
+     - Some simple static real arrays (e.g., the interpolating stencils
+       for Geoid) were changes into integer arrays.
+     - Some static variables where converted to static functions similar
+       to the definition of pi() above.
+     - All the static instances of classes where converted as follows
+       \code
+       // declaration
+       static const Geodesic WGS84;
+       // definition
+       const Geodesic Geodesic::WGS84(Constants::WGS84_a(),
+                                      Constants::WGS84_f());
+       // use
+       const Geodesic& geod = Geodesic::WGS84; \endcode
+       becomes \code
+       // declaration
+       static const Geodesic& WGS84();
+       // definition
+       const Geodesic& Geodesic::WGS84() {
+         static const Geodesic wgs84(Constants::WGS84_a(),
+                                     Constants::WGS84_f());
+         return wgs84;
+         static const Geodesic& WGS84();
+       }
+       // use
+       const Geodesic& geod = Geodesic::WGS84(); \endcode
+       This is the so-called
+       <a href="http://www.parashift.com/c++-faq/static-init-order-on-first-use.html">
+       "Construct On First Use Idiom"</a>.  This is the most disruptive
+       of the changes since it requires a different calling convention
+       in user code.  However the old static initializations were
+       invoked everytime a code linking to GeographicLib was started,
+       even if the objects were not subsequently used.  The new method
+       only initializes the static objects if they are used.
+     .
+   - <code>numeric_limits&lt;double&gt;\::digits</code> is now longer a
+     compile-time constant.  It becomes
+     <code>numeric_limits&lt;double&gt;\::digits()</code>.
    - constants in GeodesicExact, e.g., 831281402884796906843926125, can't
      be specified as long doubles nor long longs (since they have more
      than 64 significant bits)
@@ -4953,7 +5000,7 @@ Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
 \page old Old versions
 
 <center>
-Back to \ref multiprec.  Up to \ref contents.
+Back to \ref highprec.  Up to \ref contents.
 </center>
 
 List of versions in reverse chronological order together with a brief
@@ -5836,7 +5883,7 @@ of the git repository for GeographicLib.
    - Ad hoc posting of information on the transverse Mercator projection.
 
 <center>
-Back to \ref multiprec.  Up to \ref contents.
+Back to \ref highprec.  Up to \ref contents.
 </center>
 **********************************************************************/
 }
