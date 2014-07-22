@@ -98,8 +98,10 @@ exclusive.
 
 =item B<-Q>
 
-perform the calculation on the authalic sphere.  B<-E> and B<-Q> are
-mutually exclusive.
+perform the calculation on the authalic sphere.  The area calculation is
+accurate even if the flattening is large, I<provided> the edges are
+sufficiently short.  The perimeter calculation is not accurate.  B<-E>
+and B<-Q> are mutually exclusive.
 
 =item B<--comment-delimiter>
 

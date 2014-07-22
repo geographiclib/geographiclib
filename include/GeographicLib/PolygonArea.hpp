@@ -249,10 +249,16 @@ namespace GeographicLib {
   };
 
   /**
-   * Polygon areas using Geodesic.
+   * @relates PolygonAreaT
+   *
+   * Polygon areas using Geodesic.  This should be used if the flattening is
+   * small.
    **********************************************************************/
   typedef PolygonAreaT<Geodesic> PolygonArea;
+
   /**
+   * @relates PolygonAreaT
+   *
    * Polygon areas using GeodesicExact.  (But note that the implementation of
    * areas in GeodesicExact uses a high order series and this is only accurate
    * for modest flattenings.)

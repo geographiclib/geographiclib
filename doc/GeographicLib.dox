@@ -82,7 +82,7 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref transversemercator
  - \ref geocentric
  - \ref highprec
- - \ref old
+ - \ref changes
 
 <center>
 Forward to \ref intro.
@@ -4763,10 +4763,10 @@ Back to \ref transversemercator.  Forward to \ref highprec.  Up to \ref contents
 </center>
 **********************************************************************/
 /**
-\page highprec Support for high precision
+\page highprec Support for high precision arithmetic
 
 <center>
-Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
+Back to \ref geocentric.  Forward to \ref changes.  Up to \ref contents.
 </center>
 
 Many of the algorithms implemented in GeographicLib were tested by
@@ -4779,50 +4779,58 @@ generated directly by GeographicLib by compiling it with
 Here's what you should know:
  - This is mainly for use for algorithm developers.  It's not
    recommended for installation for all users on a system.
- - <code>GEOGRAPHICLIB_PRECISION=4</code> gives quad precision (113-bit
-   precision) via boost::multiprecision::float128; this requires
-   <a href="http://www.boost.org"> boost</a> (version 1.54 or later) and
-   the quadmath library (which requires the use of g++).
- - <code>GEOGRAPHICLIB_PRECISION=5</code> gives arbitrary precision via
-   mpfr::mpreal; this requires <a href="http://www.mpfr.org"> MPFR</a>
-   and <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
+ - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=4</code> gives quad
+   precision (113-bit precision) via boost::multiprecision::float128;
+   this requires <a href="http://www.boost.org"> boost</a> (version 1.54
+   or later) and the quadmath library (which requires the use of g++).
+ - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=5</code> gives
+   arbitrary precision via mpfr::mpreal; this requires
+   <a href="http://www.mpfr.org"> MPFR</a> and
+   <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
    (version 3.5.9 or later).
  - The indicated precision is used for <b>all</b> floating point
-   arithmetic.  Thus, it's not straightforward to compare the results of
-   different precisions within a single invocation of a program.
-   Instead, you can create a file of accurate test data at a high
-   precision and use this to test the algorithms at double precision.
- - The arbitrary precision arithmetic, the precision should be set
-   (using Utility::set_digits) just once before any other GeographicLib
-   routines are called.  Calling this function after other GeographicLib
-   routines will lead to inconsistent results (because the precision of
-   some constants like Math::pi() is set when the functions are first
-   called).
+   arithmetic.  Thus, you can't compare the results of different
+   precisions within a single invocation of a program.  Instead, you can
+   create a file of accurate test data at a high precision and use this
+   to test the algorithms at double precision.
+ - With MPFR, the precision should be set (using Utility::set_digits)
+   just once before any other GeographicLib routines are called.
+   Calling this function after other GeographicLib routines will lead to
+   inconsistent results (because the precision of some constants like
+   Math::pi() is set when the functions are first called).
  - All the \ref utilities call Utility::set_digits().  This causes the
    precision (in bits) to be determined by the
    <code>GEOGRAPHICLIB_DIGITS</code> environment variable.  If this is
    not defined the precision is set to 256 bits.
- - Some classes (namely, Geodesic and TransverseMercator) use series.
-   Additional terms in the series are used for high precision, however
-   the accuracy is still bounded away from zero.  On the other hand,
-   GeodesicExact and TransverseMercatorExact are somewhat slower classes
-   offering the same functionality implemented with EllipticFunction.
-   These classes provide arbitrary accuracy.
- - However, a caveat is that the evaluation of the area in GeodesicExact
-   still uses a series (albeit of considerably higher order).  So the
-   area calculations are always bounded away from zero.
- - All the physical constants used by GeographicLib, e.g., the
-   flattening of the WGS84 ellipsoid, are evaluated as exact decimal
-   numbers.
- - Geoid, GravityModel, and MagneticModel all depend on external data
-   files.  The coefficient files for GravityModel and MagneticModel
-   store the coefficients as IEEE double.  With Geoid, the data files
-   for the geoid heights are quantized at 3mm.
- - Many classes solve equations iteratively and typically the number of
-   iterations is limited.  However, the iterative methods converge
-   quadratically (the number of correct digits doubles on each
-   iteration) so that full convergence is obtained for "reasonable"
-   precisions (no more than, say, 100 decimal digits or about 340 bits).
+
+ - The accuracy of most calculations should increase as the precision
+   increases (and typically only a few bits of accuracy should be lost).
+   However note the following:
+   - All the physical constants used by GeographicLib, e.g., the
+     flattening of the WGS84 ellipsoid, are evaluated as exact decimal
+     numbers.
+   - Many classes solve equations iteratively and typically the number
+     of iterations is limited.  However, the iterative methods converge
+     quadratically (the number of correct digits doubles on each
+     iteration) so that full convergence is obtained for "reasonable"
+     precisions (no more than, say, 100 decimal digits or about 340
+     bits).
+   - Some classes (namely, Geodesic and TransverseMercator) use series.
+     Additional terms in the series are used for high precision, however
+     the accuracy is still bounded away from zero.  On the other hand,
+     GeodesicExact and TransverseMercatorExact are somewhat slower
+     classes offering the same functionality implemented with
+     EllipticFunction.  These classes provide arbitrary accuracy.
+   - However, a caveat is that the evaluation of the area in
+     GeodesicExact still uses a series (albeit of considerably higher
+     order).  So the area calculations are always bounded away from
+     zero.
+   - Geoid, GravityModel, and MagneticModel all depend on external data
+     files.  The coefficient files for GravityModel and MagneticModel
+     store the coefficients as IEEE double (and perhaps these
+     coefficients can be regarded as exact).  However, with Geoid, the
+     data files for the geoid heights are quantized at 3mm leading to an
+     irreducible &plusmn;1.5mm quantization error.
  - Where might high accuracy be important:
    - checking the truncation error of series approximations;
    - checking for excessive round-off errors (typically due to subtraction);
@@ -4837,10 +4845,10 @@ Here's what you should know:
    - quad precision is only available on Linux;
    - mpfr has been mostly tested on Linux (but it works on Windows and
      MacOS too);
-   - the boost library (used for quad precision) interprets fixed +
+   - because the boost library (used for quad precision) interprets fixed +
      setprecision(0) to mean "print all the digits you've got" instead
-     of "print the nearest integer", the output from some utilities is
-     wrong.
+     of "print the nearest integer", some of the formatted output is
+     wrong with <code>GEOGRAPHICLIB_PRECISION=4.</code>
 
 The following steps needed to be taken
 
@@ -4932,13 +4940,12 @@ The following steps needed to be taken
 
  - Phase 3, changes to support arbitrary precision which can be set at
    runtime.
-
    - The big change now is that the precision is not known at compile
      time.  All static initializations which involve floating point
      numbers need to be eliminated.
      - Some static variables (e.g., tolerances which are expressed in
        terms of <code>numeric_limits&lt;double&gt;\::epsilon()</code>)
-       were made member variables and so initialized which the
+       were made member variables and so initialized when the
        constructor was called.
      - Some simple static real arrays (e.g., the interpolating stencils
        for Geoid) were changes into integer arrays.
@@ -4979,25 +4986,26 @@ The following steps needed to be taken
      <code>numeric_limits&lt;double&gt;\::digits()</code>.
    - constants in GeodesicExact, e.g., 831281402884796906843926125, can't
      be specified as long doubles nor long longs (since they have more
-     than 64 significant bits)
-     - first tried macro which expanded to a string
+     than 64 significant bits):
+     - first tried macro which expanded to a string (see the macro REAL
+       above);
      - now use inline function to combine two long long ints each with at
-       most 52 significant bits.
-   - g++ took inordinately long (15 minutes) to compile one routine,
-     needed to simplify
-   - Visual Studio 12 then complained (with an <a
-     href="http://connect.microsoft.com/VisualStudio/feedback/details/920594">
-     internal compiler error</a> presumably due to overly agressive
-     whole-file optimization); fixed by splitting one function into a
-     separate file.
+       most 52 significant bits;
+     - also needed to simply one routine in GeodesicExact which took
+       inordinately long (15 minutes) to compile using g++;
+     - but Visual Studio 12 then complained (with an <a
+       href="http://connect.microsoft.com/VisualStudio/feedback/details/920594">
+       internal compiler error</a> presumably due to overly agressive
+       whole-file optimization); fixed by splitting one function into a
+       separate file.
 
 <center>
-Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
+Back to \ref geocentric.  Forward to \ref changes.  Up to \ref contents.
 
 </center>
 **********************************************************************/
 /**
-\page old Old versions
+\page changes Change log
 
 <center>
 Back to \ref highprec.  Up to \ref contents.
@@ -5024,13 +5032,13 @@ of the git repository for GeographicLib.
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-mm-dd)
 
-   - <b>INCOMPATIBLE</b> change: the static instantiations of various
+   - <b>INCOMPATIBLE CHANGE</b>: the static instantiations of various
      classes for the WGS84 ellipsoid have been changed to a
      <a href="http://www.parashift.com/c++-faq/static-init-order-on-first-use.html">
      "construct on first use idiom"</a>.  This avoids a lot of wasteful
      initialization before the user's code starts.  Unfortunately it
-     means that existing source code that relies on any of these static
-     instantiations will need to be changed:
+     means that existing source code that relies on any of the following
+     static variables will need to be changed to a function call:
      - AlbersEqualArea::AzimuthalEqualAreaNorth
      - AlbersEqualArea::AzimuthalEqualAreaSouth
      - AlbersEqualArea::CylindricalEqualArea
@@ -5045,22 +5053,22 @@ of the git repository for GeographicLib.
      - TransverseMercator::UTM
      - TransverseMercatorExact::UTM
      .
-     Occurrences of, for example, \code
+     Thus, occurrences of, for example, \code
      const Geodesic& geod = Geodesic::WGS84; // version 1.36 and earlier
      \endcode
      need to be changed to \code
      const Geodesic& geod = Geodesic::WGS84(); // version 1.37 and later
      \endcode
-     (note the parentheses); alternatively use \code
+     (note the parentheses!); alternatively use \code
      // works with all versions
      const Geodesic geod(Constants::WGS84_a(), Constants::WGS84_a()); \endcode
    - Incompatible change: the environment variables
      <code>{GEOID,GRAVITY,MAGNETIC}_{NAME,PATH}</code> are now prefixed
      with <code>GEOGRAPHICLIB_</code>.
-   - Incompatible change: retire the Windows XP common data path.  If
-     you're still using Windows XP, then you might have to move the
-     folder <code>C:\\Documents and Settings\\All Users\\Application
-     Data\\GeographicLib</code> to
+   - Incompatible change for Windows XP: retire the Windows XP common
+     data path.  If you're still using Windows XP, then you might have
+     to move the folder <code>C:\\Documents and Settings\\All
+     Users\\Application Data\\GeographicLib</code> to
      <code>C:\\ProgramData\\GeographicLib</code>.
    - All macro names affecting the compilation now start with
      <code>GEOGRAPHICLIB_</code>; this applies to
@@ -5069,20 +5077,29 @@ of the git repository for GeographicLib.
      <code>HAVE_LONG_DOUBLE</code>, <code>STATIC_ASSERT</code>,
      <code>WORDS_BIGENDIAN</code>.
    - Add \ref highprec.
-   - Add PolygonAreaT and PolygonAreaExact
-   - Add -E and -Q options to Planimeter
-   - Add -p option to Planimeter, ConicProj, GeodesicProj, and
-     TransverseMercatorProj.
-   - Simplify cross-platform support for C++11 mathematical functions.
+   - Changes to PolygonArea:
+     - introduce PolygonAreaT which takes a geodesic class as a parameter;
+     - PolygonArea and PolygonAreaExact are typedef'ed to
+       PolygonAreaT<Geodesic> and PolygonAreaT<GeodesicExact>;
+     - add -E option to <a href="Planimeter.1.html">Planimeter</a> to use
+       PolygonAreaExact;
+     - add -Q option to <a href="Planimeter.1.html">Planimeter</a> to
+       calculate the area on the authalic sphere.
+   - Add -p option to <a href="Planimeter.1.html">Planimeter</a>,
+     <a href="ConicProj.1.html">ConicProj</a>,
+     <a href="GeodesicProj.1.html">GeodesicProj</a>,
+     <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>,
    - Minor changes to NormalGravity:
      - add NormalGravity::J2ToFlattening and NormalGravity::FlatteningToJ2;
      - use Newton's method to determine \e f from \e J2;
      - in constructor, allow \e omega = 0 (i.e., treat the spherical case).
-   - Add grs80 GravityModel.
-   - Change way area coefficients are given in GeodesicExact to improve
-     compile times.
-   - Make geographiclib-get-XXXX scripts work on MacOS.
-   - Enable searching the online documentation.
+   - Add grs80 GravityModel, see \ref gravity.
+   - Make geographiclib-get-{geoids,gravity,magnetic} scripts work on MacOS.
+   - Minor changes:
+     - simplify cross-platform support for C++11 mathematical functions;
+     - change way area coefficients are given in GeodesicExact to improve
+       compile times;
+     - enable searching the online documentation.
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
    (released 2014-05-13)
@@ -5439,8 +5456,8 @@ of the git repository for GeographicLib.
      - add command line utility
        <a href="Gravity.1.html">Gravity</a>;
      - add \ref gravity;
-     - add Constants::WGS84_GM(),
-       Constants::WGS84_omega(), and similarly for GRS80.
+     - add Constants::WGS84_GM(), Constants::WGS84_omega(), and
+       similarly for GRS80.
    - Build uses GEOGRAPHICLIB_DATA to specify a common parent directory
       for geoid, gravity, and magnetic data (instead of
       GEOGRAPHICLIB_GEOID_PATH, etc.); similarly,
