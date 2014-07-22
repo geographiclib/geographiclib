@@ -4967,7 +4967,7 @@ The following steps needed to be taken
        const Geodesic& geod = Geodesic::WGS84(); \endcode
        This is the so-called
        <a href="http://www.parashift.com/c++-faq/static-init-order-on-first-use.html">
-       "Construct On First Use Idiom"</a>.  This is the most disruptive
+       "construct on first use idiom"</a>.  This is the most disruptive
        of the changes since it requires a different calling convention
        in user code.  However the old static initializations were
        invoked everytime a code linking to GeographicLib was started,
@@ -5023,24 +5023,66 @@ of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-mm-dd)
-   - Macro names all start with GEOGRPAHICLIB_
-   - Environment {GEOID,GRAVITY,MAGNETIC}_{NAME,PATH} are now prefixed
-     with GEOGRAPHICLIB_ (incompatible change).
-   - Support quad precision.
-   - Support mpreal
+
+   - <b>INCOMPATIBLE</b> change: the static instantiations of various
+     classes for the WGS84 ellipsoid have been changed to a
+     <a href="http://www.parashift.com/c++-faq/static-init-order-on-first-use.html">
+     "construct on first use idiom"</a>.  This avoids a lot of wasteful
+     initialization before the user's code starts.  Unfortunately it
+     means that existing source code that relies on any of these static
+     instantiations will need to be changed:
+     - AlbersEqualArea::AzimuthalEqualAreaNorth
+     - AlbersEqualArea::AzimuthalEqualAreaSouth
+     - AlbersEqualArea::CylindricalEqualArea
+     - Ellipsoid::WGS84
+     - Geocentric::WGS84
+     - Geodesic::WGS84
+     - GeodesicExact::WGS84
+     - LambertConformalConic::Mercator
+     - NormalGravity::GRS80
+     - NormalGravity::WGS84
+     - PolarStereographic::UPS
+     - TransverseMercator::UTM
+     - TransverseMercatorExact::UTM
+     .
+     Occurrences of, for example, \code
+     const Geodesic& geod = Geodesic::WGS84; // version 1.36 and earlier
+     \endcode
+     need to be changed to \code
+     const Geodesic& geod = Geodesic::WGS84(); // version 1.37 and later
+     \endcode
+     (note the parentheses); alternatively use \code
+     // works with all versions
+     const Geodesic geod(Constants::WGS84_a(), Constants::WGS84_a()); \endcode
+   - Incompatible change: the environment variables
+     <code>{GEOID,GRAVITY,MAGNETIC}_{NAME,PATH}</code> are now prefixed
+     with <code>GEOGRAPHICLIB_</code>.
+   - Incompatible change: retire the Windows XP common data path.  If
+     you're still using Windows XP, then you might have to move the
+     folder <code>C:\\Documents and Settings\\All Users\\Application
+     Data\\GeographicLib</code> to
+     <code>C:\\ProgramData\\GeographicLib</code>.
+   - All macro names affecting the compilation now start with
+     <code>GEOGRAPHICLIB_</code>; this applies to
+     <code>GEOID_DEFAULT_NAME</code>, <code>GRAVITY_DEFAULT_NAME</code>,
+     <code>MAGNETIC_DEFAULT_NAME</code>, <code>PGM_PIXEL_WIDTH</code>,
+     <code>HAVE_LONG_DOUBLE</code>, <code>STATIC_ASSERT</code>,
+     <code>WORDS_BIGENDIAN</code>.
+   - Add \ref highprec.
    - Add PolygonAreaT and PolygonAreaExact
    - Add -E and -Q options to Planimeter
    - Add -p option to Planimeter, ConicProj, GeodesicProj, and
      TransverseMercatorProj.
-   - Retire Windows XP common data path.
    - Simplify cross-platform support for C++11 mathematical functions.
-   - In NormalGravity, use Newton's method to determine f from J2.
-   - Add NormalGravity::J2ToFlattening and NormalGravity::FlatteningToJ2.
-   - In NormalGravity constructor allow omega = 0 (i.e., treat spherical case).
+   - Minor changes to NormalGravity:
+     - add NormalGravity::J2ToFlattening and NormalGravity::FlatteningToJ2;
+     - use Newton's method to determine \e f from \e J2;
+     - in constructor, allow \e omega = 0 (i.e., treat the spherical case).
+   - Add grs80 GravityModel.
    - Change way area coefficients are given in GeodesicExact to improve
      compile times.
-   - Add GravityModel for grs80.
    - Make geographiclib-get-XXXX scripts work on MacOS.
+   - Enable searching the online documentation.
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
    (released 2014-05-13)
