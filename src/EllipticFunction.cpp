@@ -268,7 +268,7 @@ namespace GeographicLib {
       real c = 0;           // To suppress warning about uninitialized variable
       real m[num_], n[num_];
       unsigned l = 0;
-      for (real a = 1; l < num_; ++l) {
+      for (real a = 1; l < num_ || GEOGRAPHICLIB_PANIC; ++l) {
         // This converges quadratically.  Max 5 trips
         m[l] = a;
         n[l] = mc = sqrt(mc);
@@ -483,7 +483,7 @@ namespace GeographicLib {
     real phi = Math::pi() * x / (2 * _Ec); // phi in [-pi/2, pi/2)
     // First order correction
     phi -= _eps * sin(2 * phi) / 2;
-    for (int i = 0; i < num_; ++i) {
+    for (int i = 0; i < num_ || GEOGRAPHICLIB_PANIC; ++i) {
       real
         sn = sin(phi),
         cn = cos(phi),

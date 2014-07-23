@@ -309,7 +309,9 @@ namespace GeographicLib {
         unsigned numit = 0;
         // Bracketing range
         real salp1a = tiny_, calp1a = 1, salp1b = tiny_, calp1b = -1;
-        for (bool tripn = false, tripb = false; numit < maxit2_; ++numit) {
+        for (bool tripn = false, tripb = false;
+             numit < maxit2_ || GEOGRAPHICLIB_PANIC;
+             ++numit) {
           // the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
           // WGS84 and random input: mean = 2.85, sd = 0.60
           real dv;

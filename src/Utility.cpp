@@ -10,6 +10,11 @@
 #include <cstdlib>
 #include <GeographicLib/Utility.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about unsafe use of getenv
+#  pragma warning (disable: 4996)
+#endif
+
 namespace GeographicLib {
 
   using namespace std;

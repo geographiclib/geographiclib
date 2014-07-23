@@ -200,7 +200,7 @@ namespace GeographicLib {
       C = den / (2 * scbet12 * scbet22 * dsxi);
       tphi0 = (tphi2 + tphi1)/2;
       real stol = tol0_ * max(real(1), abs(tphi0));
-      for (int i = 0; i < 2*numit0_; ++i) {
+      for (int i = 0; i < 2*numit0_ || GEOGRAPHICLIB_PANIC; ++i) {
         // Solve (scbet0^2 * sphi0) / (1/qZ + scbet0^2 * sphi0 * sxi0) = s
         // for tphi0 by Newton's method on
         // v(tphi0) = (scbet0^2 * sphi0) - s * (1/qZ + scbet0^2 * sphi0 * sxi0)
@@ -323,7 +323,7 @@ namespace GeographicLib {
       tphi = txi,
       stol = tol_ * max(real(1), abs(txi));
     // CHECK: min iterations = 1, max iterations = 2; mean = 1.99
-    for (int i = 0; i < numit_; ++i) {
+    for (int i = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
       // dtxi/dtphi = (scxi/scphi)^3 * 2*(1-e^2)/(qZ*(1-e^2*sphi^2)^2)
       real
         txia = txif(tphi),

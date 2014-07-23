@@ -1137,7 +1137,7 @@ has been defined since version 1.9.  Since version 1.37, there's also
 been a macro GEOGRAPHICLIB_VERSION which encode the vesion as a single
 number, e.g, 1003700.  The macro GEOGRAPHICLIB_VERSION_NUM allows you to
 compare versions, e.g., \code
-#if GEOGRAPHICLIB_VERSION > GEOGRAPHICLIB_VERSION_NUM(1,36,0)
+#if GEOGRAPHICLIB_VERSION >= GEOGRAPHICLIB_VERSION_NUM(1,36,0)
 ... \endcode
 
 <center>
@@ -4819,7 +4819,8 @@ Here's what you should know:
      quadratically (the number of correct digits doubles on each
      iteration) so that full convergence is obtained for "reasonable"
      precisions (no more than, say, 100 decimal digits or about 340
-     bits).
+     bits).  An exception is thrown if the convergence criterion is not
+     met when using high precision arithmetic.
    - Some classes (namely, Geodesic and TransverseMercator) use series.
      Additional terms in the series are used for high precision, however
      the accuracy is still bounded away from zero.  On the other hand,

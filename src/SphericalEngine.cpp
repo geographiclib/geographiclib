@@ -377,11 +377,6 @@ namespace GeographicLib {
       root_[l] = sqrt(real(l));
   }
 
-  void SphericalEngine::UpdateRootTable() {
-    for (int l = int(root_.size()); l--;)
-      root_[l] = sqrt(real(l));
-  }
-
   void SphericalEngine::coeff::readcoeffs(std::istream& stream, int& N, int& M,
                                           std::vector<real>& C,
                                           std::vector<real>& S) {

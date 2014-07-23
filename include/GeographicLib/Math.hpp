@@ -72,6 +72,20 @@
 #include <mpreal.h>
 #endif
 
+#if GEOGRAPHICLIB_PRECISION > 3
+// volatile keyword makes no sense for multiprec types
+#define GEOGRAPHICLIB_VOLATILE
+// Signal a convergence failure with multiprec types by throwing an exception
+// at loop exit.
+#define GEOGRAPHICLIB_PANIC \
+  (throw GeographicLib::GeographicErr("Convergence failure"), false)
+#else
+#define GEOGRAPHICLIB_VOLATILE volatile
+// Ignore convergence failures with standard floating points types by allowing
+// loop to exit cleanly
+#define GEOGRAPHICLIB_PANIC false
+#endif
+
 namespace GeographicLib {
 
   /**
@@ -104,23 +118,6 @@ namespace GeographicLib {
     typedef double extended;
 #endif
 
-#if defined(BOOST_MP_FLOAT128_HPP)
-#define GEOGRAPHICLIB_HAVE_QUAD_PREC 1
-#define GEOGRAPHICLIB_HAVE_MPFR 0
-#define GEOGRAPHICLIB_VOLATILE
-    typedef boost::multiprecision::float128 quad;
-#elif GEOGRAPHICLIB_PRECISION == 5
-// defined(MPREAL_VERSION_STRING)
-#define GEOGRAPHICLIB_HAVE_QUAD_PREC 0
-#define GEOGRAPHICLIB_HAVE_MPFR 1
-#define GEOGRAPHICLIB_VOLATILE
-    typedef mpfr::mpreal mpreal;
-#else
-#define GEOGRAPHICLIB_HAVE_QUAD_PREC 0
-#define GEOGRAPHICLIB_HAVE_MPFR 0
-#define GEOGRAPHICLIB_VOLATILE volatile
-#endif
-
 #if GEOGRAPHICLIB_PRECISION == 2
     /**
      * The real type for %GeographicLib. Nearly all the testing has been done
@@ -133,10 +130,10 @@ namespace GeographicLib {
     typedef float real;
 #elif GEOGRAPHICLIB_PRECISION == 3
     typedef extended real;
-#elif GEOGRAPHICLIB_PRECISION == 4 && GEOGRAPHICLIB_HAVE_QUAD_PREC
-    typedef quad real;
-#elif GEOGRAPHICLIB_PRECISION == 5 && GEOGRAPHICLIB_HAVE_MPFR
-    typedef mpreal real;
+#elif GEOGRAPHICLIB_PRECISION == 4
+    typedef boost::multiprecision::float128 real;
+#elif GEOGRAPHICLIB_PRECISION == 5
+    typedef mpfr::mpreal real;
 #else
     typedef double real;
 #endif
@@ -517,7 +514,7 @@ namespace GeographicLib {
       return b.r;
     }
 
-#if GEOGRAPHICLIB_HAVE_QUAD_PREC
+#if GEOGRAPHICLIB_PRECISION == 4
     typedef boost::math::policies::policy
       < boost::math::policies::domain_error
         <boost::math::policies::errno_on_error>,
@@ -529,27 +526,27 @@ namespace GeographicLib {
         <boost::math::policies::errno_on_error> >
       boost_special_functions_policy;
 
-    static inline quad hypot(quad x, quad y)
+    static inline real hypot(real x, real y)
     { return boost::math::hypot(x, y, boost_special_functions_policy()); }
 
-    static inline quad expm1(quad x)
+    static inline real expm1(real x)
     { return boost::math::expm1(x, boost_special_functions_policy()); }
 
-    static inline quad log1p(quad x)
+    static inline real log1p(real x)
     { return boost::math::log1p(x, boost_special_functions_policy()); }
 
-    static inline quad asinh(quad x)
+    static inline real asinh(real x)
     { return boost::math::asinh(x, boost_special_functions_policy()); }
 
-    static inline quad atanh(quad x)
+    static inline real atanh(real x)
     { return boost::math::atanh(x, boost_special_functions_policy()); }
 
-    static inline quad cbrt(quad x)
+    static inline real cbrt(real x)
     { return boost::math::cbrt(x, boost_special_functions_policy()); }
 
-    static inline bool isnan(quad x) { return boost::math::isnan(x); }
+    static inline bool isnan(real x) { return boost::math::isnan(x); }
 
-    static inline bool isfinite(quad x) { return boost::math::isfinite(x); }
+    static inline bool isfinite(real x) { return boost::math::isfinite(x); }
 #endif
   };
 

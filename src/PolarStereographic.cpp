@@ -94,7 +94,7 @@ namespace GeographicLib {
       stol = tol_ * max(real(1), abs(taup));
     if (abs(tau) < overflow()) {
       // min iterations = 1, max iterations = 2; mean = 1.99
-      for (int i = 0; i < numit_; ++i) {
+      for (int i = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
         real
           tau1 = Math::hypot(real(1), tau),
           sig = sinh( eatanhe( tau / tau1 ) ),

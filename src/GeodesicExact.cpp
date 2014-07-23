@@ -309,7 +309,9 @@ namespace GeographicLib {
         unsigned numit = 0;
         // Bracketing range
         real salp1a = tiny_, calp1a = 1, salp1b = tiny_, calp1b = -1;
-        for (bool tripn = false, tripb = false; numit < maxit2_; ++numit) {
+        for (bool tripn = false, tripb = false;
+             numit < maxit2_ || GEOGRAPHICLIB_PANIC;
+             ++numit) {
           // 1/4 meridan = 10e6 m and random input.  max err is estimated max
           // error in nm (checking solution of inverse problem by direct
           // solution).  iter is mean and sd of number of iterations

@@ -292,7 +292,7 @@ namespace GeographicLib {
       tau = taup/_e2m,
       stol = tol_ * max(real(1), abs(taup));
     // min iterations = 1, max iterations = 2; mean = 1.94
-    for (int i = 0; i < numit_; ++i) {
+    for (int i = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
       real
         tau1 = Math::hypot(real(1), tau),
         sig = sinh( eatanhe( tau / tau1 ) ),

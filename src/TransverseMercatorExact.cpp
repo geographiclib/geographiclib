@@ -92,7 +92,7 @@ namespace GeographicLib {
       tau = taup/_mv,
       stol = tol_ * max(real(1), abs(taup));
     // min iterations = 1, max iterations = 2; mean = 1.94
-    for (int i = 0; i < numit_; ++i) {
+    for (int i = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
       real
         tau1 = Math::hypot(real(1), tau),
         sig = sinh( _e * Math::atanh(_e * tau / tau1 ) ),
@@ -214,7 +214,7 @@ namespace GeographicLib {
       return;
     real stol2 = tol2_ / Math::sq(max(psi, real(1)));
     // min iterations = 2, max iterations = 6; mean = 4.0
-    for (int i = 0, trip = 0; i < numit_; ++i) {
+    for (int i = 0, trip = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
       real snu, cnu, dnu, snv, cnv, dnv;
       _Eu.sncndn(u, snu, cnu, dnu);
       _Ev.sncndn(v, snv, cnv, dnv);
@@ -318,7 +318,7 @@ namespace GeographicLib {
     if (sigmainv0(xi, eta, u, v))
       return;
     // min iterations = 2, max iterations = 7; mean = 3.9
-    for (int i = 0, trip = 0; i < numit_; ++i) {
+    for (int i = 0, trip = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
       real snu, cnu, dnu, snv, cnv, dnv;
       _Eu.sncndn(u, snu, cnu, dnu);
       _Ev.sncndn(v, snv, cnv, dnv);

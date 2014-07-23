@@ -360,12 +360,6 @@ namespace GeographicLib {
     static void RootTable(int N);
 
     /**
-     * Recompute the table of square roots.  This is only necessary if the
-     * precision is changed.
-     **********************************************************************/
-    static void UpdateRootTable();
-
-    /**
      * Clear the static table of square roots and release the memory.  Call
      * this only when you are sure you no longer will be using SphericalEngine.
      * Your program will crash if you call SphericalEngine after calling this

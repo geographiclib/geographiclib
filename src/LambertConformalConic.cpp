@@ -437,7 +437,7 @@ namespace GeographicLib {
       tphi = tchi/_e2m,
       stol = tol_ * max(real(1), abs(tchi));
     // min iterations = 1, max iterations = 2; mean = 1.94
-    for (int i = 0; i < numit_; ++i) {
+    for (int i = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
       real
         scphi = hyp(tphi),
         shxi = sinh( eatanhe( tphi / scphi ) ),

@@ -231,7 +231,7 @@ namespace GeographicLib {
       K = 2 * Math::sq(a * omega) * a / (15 * GM),
       e2 = 3 * J2;              // See Moritz (1980), p 398.
     // Solve using Newton's method
-    for (int j = 0; j < maxit_; ++j) {
+    for (int j = 0; j < maxit_ || GEOGRAPHICLIB_PANIC; ++j) {
       real e2a = e2,
         ep2 = e2 / (1 - e2),
         q0 = qf(ep2),
