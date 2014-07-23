@@ -13,6 +13,24 @@
 #include <GeographicLib/Config.h>
 
 /**
+ * @relates GeographicLib::Constants
+ * Pack the version components into a single integer.
+ **********************************************************************/
+#define GEOGRAPHICLIB_VERSION_NUM(a,b,c) ((((a) * 10000 + (b)) * 100) + (c))
+
+/**
+ * @relates GeographicLib::Constants
+ * The version of GeographicLib as a single integer, packed as MMmmmmpp where
+ * MM is the major version, mmmm is the minor version, and pp is the patch
+ * level.
+ **********************************************************************/
+#define GEOGRAPHICLIB_VERSION \
+ GEOGRAPHICLIB_VERSION_NUM(GEOGRAPHICLIB_VERSION_MAJOR, \
+                           GEOGRAPHICLIB_VERSION_MINOR, \
+                           GEOGRAPHICLIB_VERSION_PATCH)
+
+/**
+ * @relates GeographicLib::Constants
  * A compile-time assert.  Use C++11 static_assert, if available.
  **********************************************************************/
 #if !defined(GEOGRAPHICLIB_STATIC_ASSERT)

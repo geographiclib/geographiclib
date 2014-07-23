@@ -1123,17 +1123,22 @@ compiler.  System dependencies come into
    the GEOGRAPHICLIB_WORDS_BIGENDIAN macro (which sets the compile-time
    constant Math::bigendian).
 
-An attempt is made to maintain backward compatibility with
-GeographicLib (especially at the level of your source code).  Sometimes
-it's necessary to take actions that depend on what version of
-GeographicLib is being used; for example, you may want to use a new
-feature of GeographicLib, but want your code still to work with older
-versions.  In that case, you can test the values of the macros
-GEOGRAPHICLIB_VERSION_MAJOR, GEOGRAPHICLIB_VERSION_MINOR, and
-GEOGRAPHICLIB_VERSION_PATCH; these expand to numbers (and the last one
-is usually 0); these macros appeared starting in version 1.31.  There's
-also a macro GEOGRAPHICLIB_VERSION_STRING which expands to, e.g.,
-"1.37"; this macro has been defined since version 1.9.
+An attempt is made to maintain backward compatibility with GeographicLib
+(especially at the level of your source code).  Sometimes it's necessary
+to take actions that depend on what version of GeographicLib is being
+used; for example, you may want to use a new feature of GeographicLib,
+but want your code still to work with older versions.  In that case, you
+can test the values of the macros GEOGRAPHICLIB_VERSION_MAJOR,
+GEOGRAPHICLIB_VERSION_MINOR, and GEOGRAPHICLIB_VERSION_PATCH; these
+expand to numbers (and the last one is usually 0); these macros appeared
+starting in version 1.31.  There's also a macro
+GEOGRAPHICLIB_VERSION_STRING which expands to, e.g., "1.37"; this macro
+has been defined since version 1.9.  Since version 1.37, there's also
+been a macro GEOGRAPHICLIB_VERSION which encode the vesion as a single
+number, e.g, 1003700.  The macro GEOGRAPHICLIB_VERSION_NUM allows you to
+compare versions, e.g., \code
+#if GEOGRAPHICLIB_VERSION > GEOGRAPHICLIB_VERSION_NUM(1,36,0)
+... \endcode
 
 <center>
 Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
@@ -4937,6 +4942,7 @@ The following steps needed to be taken
    - In Utility::readarray and Utility::writearray, arrays of reals were
      treated as plain old data.  This assumption now no longer holds and
      these functions needed special treatment.
+   - volatile declaraions don't apply.
 
  - Phase 3, changes to support arbitrary precision which can be set at
    runtime.
@@ -5031,7 +5037,6 @@ of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-mm-dd)
-
    - <b>INCOMPATIBLE CHANGE</b>: the static instantiations of various
      classes for the WGS84 ellipsoid have been changed to a
      <a href="http://www.parashift.com/c++-faq/static-init-order-on-first-use.html">
@@ -5099,7 +5104,11 @@ of the git repository for GeographicLib.
      - simplify cross-platform support for C++11 mathematical functions;
      - change way area coefficients are given in GeodesicExact to improve
        compile times;
-     - enable searching the online documentation.
+     - enable searching the online documentation;
+     - add macros <code>GEOGRAPHICLIB_VERSION</code> and
+       <code>GEOGRAPHICLIB_VERSION_NUM</code>.
+   - TODO: Add GEOGRAPHICLIB_CHECK_ITERATION macro to change when loops
+     fail to converge.
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
    (released 2014-05-13)
