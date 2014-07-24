@@ -320,7 +320,8 @@ namespace GeographicLib {
      * @param[in] psi the isometric latitude (degrees).
      * @return &phi; the geographic latitude (degrees).
      *
-     * The returned value &phi; lies in [&minus;90&deg;, 90&deg;].
+     * The returned value &phi; lies in [&minus;90&deg;, 90&deg;].  For a
+     * sphere &phi; = tan<sup>&minus;1</sup> sinh &psi;.
      **********************************************************************/
     Math::real InverseIsometricLatitude(real psi) const;
     ///@}

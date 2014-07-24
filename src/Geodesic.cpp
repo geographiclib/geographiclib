@@ -724,8 +724,7 @@ namespace GeographicLib {
                                 real& eps, real& domg12,
                                 bool diffp, real& dlam12,
                                 // Scratch areas of the right size
-                                real C1a[], real C2a[], real C3a[]) const
-    {
+                                real C1a[], real C2a[], real C3a[]) const {
 
     if (sbet1 == 0 && calp1 == 0)
       // Break degeneracy of equatorial line.  This case has already been
