@@ -906,6 +906,9 @@ The utilities are
  - <a href="MagneticField.1.html">
    <b>MagneticField</b></a>: compute the earth's magnetic field using
    MagneticModel and MagneticCircle.
+ - <a href="RhumbSolve.1.html">
+   <b>RhumbSolve</b></a>: perform rhumb line calculations using
+   Ellipsoid.
  .
 The documentation for these utilities is in the form of man pages.  This
 documentation can be accessed by clicking on the utility name in the
@@ -3418,7 +3421,7 @@ and are linearly related by
 - \f$ u + u' = K(e) ,\quad v + v' = K(ie') \f$
 - \f$ v = \sqrt{1-e^2} u ,\quad u = \sqrt{1+e'^2} v \f$.
 .
-The cartesian coordinates for the meridian \f$ (x, y) \f$ are given by
+The cartesian coordinates for the meridian \f$ (x, z) \f$ are given by
 \f[
 \begin{aligned}
   x &= a \cos\beta = a \cos\phi / \sqrt{1 - e^2 \sin^2\phi} \\
@@ -5095,6 +5098,7 @@ of the git repository for GeographicLib.
      <a href="ConicProj.1.html">ConicProj</a>,
      <a href="GeodesicProj.1.html">GeodesicProj</a>,
      <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>,
+   - Add <a href="RhumbSolve.1.html">RhumbSolve</a> utility.
    - Minor changes to NormalGravity:
      - add NormalGravity::J2ToFlattening and NormalGravity::FlatteningToJ2;
      - use Newton's method to determine \e f from \e J2;

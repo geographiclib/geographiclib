@@ -437,7 +437,7 @@ endif ()
 
 # The list of tools (to be installed into, e.g., /usr/local/bin)
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
-  GeoidEval Gravity MagneticField Planimeter TransverseMercatorProj)
+  GeoidEval Gravity MagneticField Planimeter RhumbSolve TransverseMercatorProj)
 # The list of scripts (to be installed into, e.g., /usr/local/sbin)
 set (SCRIPTS
   geographiclib-get-geoids geographiclib-get-gravity geographiclib-get-magnetic)

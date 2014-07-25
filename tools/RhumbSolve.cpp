@@ -22,13 +22,7 @@
 #  pragma warning (disable: 4127 4701)
 #endif
 
-int usage(int retval, bool) {
-  ( retval ? std::cerr : std::cout ) << "Usage\n"
-"    RhumbSolve [ -i | -l lat1 lon1 azi ] [ -e a f ] [ -d | -: ]\n"
-"    [ -p prec ] [ -h | --help ]\n"
-"\n";
-  return retval;
-}
+#include "RhumbSolve.usage"
 
 using namespace GeographicLib;
 typedef Math::real real;
@@ -122,10 +116,10 @@ int main(int argc, char* argv[]) {
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
-    real lat1, lon1, azi, lat2, lon2, s12;
+    real lat1, lon1, azi = Math::NaN(), lat2, lon2, s12;
     int prec = 3;
     std::string istring, ifile, ofile, cdelim;
-    char dmssep = char(0);
+    char lsep = ';', dmssep = char(0);
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -173,9 +167,70 @@ int main(int argc, char* argv[]) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
+      } else if (arg == "--input-string") {
+        if (++m == argc) return usage(1, true);
+        istring = argv[m];
+      } else if (arg == "--input-file") {
+        if (++m == argc) return usage(1, true);
+        ifile = argv[m];
+      } else if (arg == "--output-file") {
+        if (++m == argc) return usage(1, true);
+        ofile = argv[m];
+      } else if (arg == "--line-separator") {
+        if (++m == argc) return usage(1, true);
+        if (std::string(argv[m]).size() != 1) {
+          std::cerr << "Line separator must be a single character\n";
+          return 1;
+        }
+        lsep = argv[m][0];
+      } else if (arg == "--comment-delimiter") {
+        if (++m == argc) return usage(1, true);
+        cdelim = argv[m];
+      } else if (arg == "--version") {
+        std::cout
+          << argv[0] << ": GeographicLib version "
+          << GEOGRAPHICLIB_VERSION_STRING << "\n";
+        return 0;
       } else
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
+
+    if (!ifile.empty() && !istring.empty()) {
+      std::cerr << "Cannot specify --input-string and --input-file together\n";
+      return 1;
+    }
+    if (ifile == "-") ifile.clear();
+    std::ifstream infile;
+    std::istringstream instring;
+    if (!ifile.empty()) {
+      infile.open(ifile.c_str());
+      if (!infile.is_open()) {
+        std::cerr << "Cannot open " << ifile << " for reading\n";
+        return 1;
+      }
+    } else if (!istring.empty()) {
+      std::string::size_type m = 0;
+      while (true) {
+        m = istring.find(lsep, m);
+        if (m == std::string::npos)
+          break;
+        istring[m] = '\n';
+      }
+      instring.str(istring);
+    }
+    std::istream* input = !ifile.empty() ? &infile :
+      (!istring.empty() ? &instring : &std::cin);
+
+    std::ofstream outfile;
+    if (ofile == "-") ofile.clear();
+    if (!ofile.empty()) {
+      outfile.open(ofile.c_str());
+      if (!outfile.is_open()) {
+        std::cerr << "Cannot open " << ofile << " for writing\n";
+        return 1;
+      }
+    }
+    std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
     const Rhumb rh(a, f);
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
@@ -185,7 +240,7 @@ int main(int argc, char* argv[]) {
     std::string s;
     if (linecalc) {
       const RhumbLine rhl(rh.Line(lat1, lon1, azi));
-      while (std::getline(std::cin, s)) {
+      while (std::getline(*input, s)) {
         try {
           std::istringstream str(s);
           if (!(str >> s12))
@@ -194,16 +249,16 @@ int main(int argc, char* argv[]) {
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
           rhl.Position(s12, lat2, lon2);
-          std::cout << LatLonString(lat2, lon2, prec, dms, dmssep) << "\n";
+          *output << LatLonString(lat2, lon2, prec, dms, dmssep) << "\n";
         }
         catch (const std::exception& e) {
           // Write error message cout so output lines match input lines
-          std::cout << "ERROR: " << e.what() << "\n";
+          *output << "ERROR: " << e.what() << "\n";
           retval = 1;
         }
       }
     } else if (inverse) {
-      while (std::getline(std::cin, s)) {
+      while (std::getline(*input, s)) {
         try {
           std::istringstream str(s);
           std::string slat1, slon1, slat2, slon2;
@@ -215,17 +270,17 @@ int main(int argc, char* argv[]) {
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
           DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
           rh.Inverse(lat1, lon1, lat2, lon2, s12, azi);
-          std::cout << AzimuthString(azi, prec, dms, dmssep) << " "
+          *output << AzimuthString(azi, prec, dms, dmssep) << " "
                     << Utility::str(s12, prec) << "\n";
         }
         catch (const std::exception& e) {
           // Write error message cout so output lines match input lines
-          std::cout << "ERROR: " << e.what() << "\n";
+          *output << "ERROR: " << e.what() << "\n";
           retval = 1;
         }
       }
     } else {
-      while (std::getline(std::cin, s)) {
+      while (std::getline(*input, s)) {
         try {
           std::istringstream str(s);
           std::string slat1, slon1, sazi;
@@ -237,11 +292,11 @@ int main(int argc, char* argv[]) {
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
           azi = DMS::DecodeAzimuth(sazi);
           rh.Direct(lat1, lon1, azi, s12, lat2, lon2);
-          std::cout << LatLonString(lat2, lon2, prec, dms, dmssep) << "\n";
+          *output << LatLonString(lat2, lon2, prec, dms, dmssep) << "\n";
         }
         catch (const std::exception& e) {
           // Write error message cout so output lines match input lines
-          std::cout << "ERROR: " << e.what() << "\n";
+          *output << "ERROR: " << e.what() << "\n";
           retval = 1;
         }
       }
