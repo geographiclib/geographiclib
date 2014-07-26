@@ -82,7 +82,7 @@
 #else
 #define GEOGRAPHICLIB_VOLATILE volatile
 // Ignore convergence failures with standard floating points types by allowing
-// loop to exit cleanly
+// loop to exit cleanly.
 #define GEOGRAPHICLIB_PANIC false
 #endif
 

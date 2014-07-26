@@ -31,6 +31,7 @@ class RhumbLine {
 private:
   const Ellipsoid& _ell;
   real _lat1, _lon1, _salp, _calp, _mu1, _psi1, _r1;
+  RhumbLine& operator=(const RhumbLine&); // copy assignment not allowed
 public:
   RhumbLine(const Ellipsoid& ell, real lat1, real lon1, real azi)
     : _ell(ell)
@@ -60,11 +61,11 @@ public:
     } else
       lat2 = lon2 = Math::NaN();
   }
-};    
+};
 
 class Rhumb {
 private:
-  const Ellipsoid _ell;
+  Ellipsoid _ell;
   friend class RhumbLine;
 public:
   Rhumb(real a, real f)
@@ -92,7 +93,6 @@ public:
   { Line(lat1, lon1, azi).Position(s12, lat2, lon2); }
 };
 
-    
 std::string LatLonString(real lat, real lon, int prec, bool dms, char dmssep) {
   using namespace GeographicLib;
   return dms ?

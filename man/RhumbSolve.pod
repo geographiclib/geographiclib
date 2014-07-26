@@ -16,11 +16,13 @@ B<RhumbSolve> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi> ]
 =head1 DESCRIPTION
 
 The path with constant heading between two points on the ellipsoid at
-(I<lat1>, I<lon1>) and (I<lat2>, I<lon2>) is called the rhumb line.
-Its length is I<s12> and the rhumb line has a forward azimuth I<azi>
-along its length.  The longitude becomes indeterminate when a rhumb
-line passes through a pole, and B<RhumbSolve> reports NaNs for the
-positions in this case.
+(I<lat1>, I<lon1>) and (I<lat2>, I<lon2>) is called the rhumb line.  Its
+length is I<s12> and the rhumb line has a forward azimuth I<azi> along
+its length.  The longitude becomes indeterminate when a rhumb line
+passes through a pole, and B<RhumbSolve> reports NaNs for the positions
+in this case.  <B>NOTE:</B> the rhumb line is <B>not</B> the shortest
+path between two points; that is the geodesic and it is calculated by
+GeodSolve(1).
 
 B<RhumbSolve> operates in one of three modes:
 

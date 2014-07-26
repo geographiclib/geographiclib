@@ -13,6 +13,7 @@ USAGE = \
 	Gravity.usage \
 	MagneticField.usage \
 	Planimeter.usage \
+	RhumbSolve.usage \
 	TransverseMercatorProj.usage
 
 MANPAGES = \
@@ -25,6 +26,7 @@ MANPAGES = \
 	Gravity.1 \
 	MagneticField.1 \
 	Planimeter.1 \
+	RhumbSolve.1 \
 	TransverseMercatorProj.1
 
 HTMLMAN = \
@@ -37,6 +39,7 @@ HTMLMAN = \
 	Gravity.1.html \
 	MagneticField.1.html \
 	Planimeter.1.html \
+	RhumbSolve.1.html \
 	TransverseMercatorProj.1.html
 
 POD2MAN = pod2man --center="GeographicLib Utilities" \
@@ -91,6 +94,8 @@ MagneticField.usage:
 	$(USAGECMD)
 Planimeter.usage:
 	$(USAGECMD)
+RhumbSolve.usage:
+	$(USAGECMD)
 TransverseMercatorProj.usage:
 	$(USAGECMD)
 
@@ -111,6 +116,8 @@ Gravity.1:
 MagneticField.1:
 	$(MANCMD)
 Planimeter.1:
+	$(MANCMD)
+RhumbSolve.1:
 	$(MANCMD)
 TransverseMercatorProj.1:
 	$(MANCMD)
@@ -133,6 +140,8 @@ MagneticField.1.html:
 	$(HTMLCMD)
 Planimeter.1.html:
 	$(HTMLCMD)
+RhumbSolve.1.html:
+	$(HTMLCMD)
 TransverseMercatorProj.1.html:
 	$(HTMLCMD)
 
@@ -142,7 +151,7 @@ EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	GeoConvert.pod TransverseMercatorProj.pod \
 	CartConvert.pod ConicProj.pod GeodSolve.pod GeodesicProj.pod \
 	GeoidEval.pod Gravity.pod MagneticField.pod Planimeter.pod \
-	$(MANPAGES) $(USAGE) $(HTMLMAN) \
+	GeodSolve.pod $(MANPAGES) $(USAGE) $(HTMLMAN) \
 	dummy.usage.in dummy.1.in dummy.1.html.in
 
 maintainer-clean-local:

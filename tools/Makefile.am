@@ -18,6 +18,7 @@ bin_PROGRAMS = CartConvert \
 	Gravity \
 	MagneticField \
 	Planimeter \
+	RhumbSolve \
 	TransverseMercatorProj
 
 CartConvert_SOURCES = CartConvert.cpp \
@@ -114,11 +115,20 @@ Planimeter_SOURCES = Planimeter.cpp \
 	../include/GeographicLib/Accumulator.hpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/Ellipsoid.hpp \
 	../include/GeographicLib/GeoCoords.hpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/PolygonArea.hpp \
 	../include/GeographicLib/UTMUPS.hpp \
+	../include/GeographicLib/Utility.hpp
+RhumbSolve_SOURCES = RhumbSolve.cpp \
+	../man/RhumbSolve.usage \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/Ellipsoid.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/Utility.hpp
 TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
 	../man/TransverseMercatorProj.usage \

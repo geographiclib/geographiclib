@@ -7,6 +7,7 @@ PROGRAMS = CartConvert \
 	Gravity \
 	MagneticField \
 	Planimeter \
+	RhumbSolve \
 	TransverseMercatorProj
 SCRIPTS = geographiclib-get-geoids \
 	geographiclib-get-gravity \
@@ -51,6 +52,7 @@ GeoidEval: GeoidEval.o
 Gravity: Gravity.o
 MagneticField: MagneticField.o
 Planimeter: Planimeter.o
+RhumbSolve: RhumbSolve.o
 ConicProj: ConicProj.o
 
 CartConvert.o: CartConvert.usage Config.h Constants.hpp DMS.hpp Geocentric.hpp \
@@ -75,8 +77,10 @@ MagneticField.o: MagneticField.usage Config.h CircularEngine.hpp Constants.hpp \
 	DMS.hpp Geocentric.hpp MagneticCircle.hpp MagneticModel.hpp Math.hpp \
 	SphericalEngine.hpp SphericalHarmonic.hpp Utility.hpp
 Planimeter.o: Planimeter.usage Config.h Accumulator.hpp Constants.hpp DMS.hpp \
-	GeoCoords.hpp Geodesic.hpp Math.hpp PolygonArea.hpp UTMUPS.hpp \
-	Utility.hpp
+	Ellipsoid.hpp GeoCoords.hpp Geodesic.hpp Math.hpp PolygonArea.hpp \
+	UTMUPS.hpp Utility.hpp
+RhumbSolve.o: RhumbSolve.usage Config.h Constants.hpp DMS.hpp Ellipsoid.hpp \
+	Math.hpp Utility.hpp
 TransverseMercatorProj.o: TransverseMercatorProj.usage Config.h Constants.hpp \
 	DMS.hpp EllipticFunction.hpp Math.hpp TransverseMercator.hpp \
 	TransverseMercatorExact.hpp Utility.hpp
