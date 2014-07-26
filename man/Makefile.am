@@ -151,7 +151,7 @@ EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	GeoConvert.pod TransverseMercatorProj.pod \
 	CartConvert.pod ConicProj.pod GeodSolve.pod GeodesicProj.pod \
 	GeoidEval.pod Gravity.pod MagneticField.pod Planimeter.pod \
-	GeodSolve.pod $(MANPAGES) $(USAGE) $(HTMLMAN) \
+	RhumbSolve.pod $(MANPAGES) $(USAGE) $(HTMLMAN) \
 	dummy.usage.in dummy.1.in dummy.1.html.in
 
 maintainer-clean-local:

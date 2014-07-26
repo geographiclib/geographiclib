@@ -43,9 +43,9 @@ VPATH = ../include/GeographicLib ../man
 clean:
 	rm -f *.o $(SCRIPTS)
 
-GeoConvert: GeoConvert.o
-TransverseMercatorProj: TransverseMercatorProj.o
 CartConvert: CartConvert.o
+ConicProj: ConicProj.o
+GeoConvert: GeoConvert.o
 GeodSolve: GeodSolve.o
 GeodesicProj: GeodesicProj.o
 GeoidEval: GeoidEval.o
@@ -53,7 +53,7 @@ Gravity: Gravity.o
 MagneticField: MagneticField.o
 Planimeter: Planimeter.o
 RhumbSolve: RhumbSolve.o
-ConicProj: ConicProj.o
+TransverseMercatorProj: TransverseMercatorProj.o
 
 CartConvert.o: CartConvert.usage Config.h Constants.hpp DMS.hpp Geocentric.hpp \
 	LocalCartesian.hpp Math.hpp Utility.hpp
