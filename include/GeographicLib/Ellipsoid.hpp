@@ -45,7 +45,7 @@ namespace GeographicLib {
     TransverseMercator _tm;
     EllipticFunction _ell;
     AlbersEqualArea _au;
-    static real tand(real x) {
+    static inline real tand(real x) {
       using std::abs; using std::tan;
       return
         abs(x) == real(90) ? (x < 0 ?
@@ -53,7 +53,7 @@ namespace GeographicLib {
                               : TransverseMercator::overflow()) :
         tan(x * Math::degree());
     }
-    static real atand(real x)
+    static inline real atand(real x)
     { using std::atan; return atan(x) / Math::degree(); }
 
   public:
@@ -311,8 +311,10 @@ namespace GeographicLib {
      * defines the Mercator projection.  For a sphere &psi; =
      * sinh<sup>&minus;1</sup> tan &phi;.
      *
-     * &phi; must lie in the range [&minus;90&deg;, 90&deg;]; the
-     * result is undefined if this condition does not hold.
+     * &phi; must lie in the range [&minus;90&deg;, 90&deg;]; the result is
+     * undefined if this condition does not hold.  The value returned for &phi;
+     * = &plusmn;90&deg; is some (positive or negative) large but finite value,
+     * such that InverseIsometricLatitude returns the original value of &phi;.
      **********************************************************************/
     Math::real IsometricLatitude(real phi) const;
 
@@ -532,6 +534,15 @@ namespace GeographicLib {
      **********************************************************************/
     static const Ellipsoid& WGS84();
 
+    /// \cond SKIP
+
+    // These are the alpha and beta coefficients in the Krueger series from
+    // TransverseMercator.  Thy are used by RhumbSolve to compute
+    // (psi2-psi1)/(mu2-mu1).  The interface may change, so don't document them
+    // for now.
+    const Math::real* ConformalToRectifyingCoeffs() const { return _tm._alp; }
+    const Math::real* RectifyingToConformalCoeffs() const { return _tm._bet; }
+    /// \endcond
   };
 
 } // namespace GeographicLib

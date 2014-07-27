@@ -34,6 +34,7 @@ class Rhumb;
 class RhumbLine {
 private:
   const Ellipsoid& _ell;
+  bool _exact;
   real _lat1, _lon1, _salp, _calp, _mu1, _psi1, _r1;
   RhumbLine& operator=(const RhumbLine&); // copy assignment not allowed
   friend Rhumb;
@@ -43,9 +44,67 @@ private:
       tol = 90 * Math::cbrt(std::numeric_limits<real>::epsilon());
     return tol;
   }
+  static const int tm_maxord = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
+  static inline real overflow() {
+    // Overflow value s.t. atan(overflow_) = pi/2
+    static const real
+      overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
+    return overflow;
+  }
+  static inline real tano(real x) {
+    using std::abs; using std::tan;
+    return
+      2 * abs(x) == Math::pi() ? (x < 0 ? - overflow() : overflow()) :
+      tan(x);
+  }
+  static inline real sinc(real x) { using std::sin; return x ? sin(x) / x : 1; }
+
+  // Use divided differences to determine (psi2 - psi1) / (mu2 - mu1)
+  // accurately
+  //
+  // Definition: Ef(p,m) = (f((p+m)/2)-f((p-m)/2))/m
+  // See:
+  //   W. M. Kahan and R. J. Fateman,
+  //   Symbolic computation of divided differences,
+  //   SIGSAM Bull. 33(3), 7-28 (1999)
+  //   http://dx.doi.org/10.1145/334714.334716
+  //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
+
+  static inline real Etan(real p, real m) {
+    real x = (p + m)/2, y = (p - m)/2,
+      tx = tano(x), ty = tano(y), txy = tx * ty;
+    return m ? (2 * txy > -1 ? (1 + txy) * tano(m) : tx - ty) / m :
+      1 + txy;
+  }
+  static inline real Easinh(real p, real m) {
+    real x = (p + m)/2, y = (p - m)/2,
+      hx = Math::hypot(real(1), x), hy = Math::hypot(real(1), y);
+    return m ? Math::asinh(x*y > 0 ? m * p / (x*hy + y*hx) : x*hy - y*hx) / m :
+      1 / hx;
+  }
+  static inline real Egdinv(real p, real m) {
+    real x = (p + m)/2, y = (p - m)/2, dt = Etan(p, m);
+    return Easinh(tano(x) + tano(y), dt * m) * dt;
+  }
+  real ERectifyingToConformal(real p, real m) const {
+    real s = 0;
+    for (int j = tm_maxord; j; --j)
+      s += j * _ell.RectifyingToConformalCoeffs()[j] * cos(j * p) * sinc(j * m);
+    return 1 - 2 * s;
+  }
+  real ERectifyingToIsometric(real p, real m) const {
+    real x = (p + m)/2, y = (p - m)/2, dchi = ERectifyingToConformal(p, m),
+      chix = _ell.ConformalLatitude
+      (_ell.InverseRectifyingLatitude(x/Math::degree())) * Math::degree(),
+      chiy = _ell.ConformalLatitude
+      (_ell.InverseRectifyingLatitude(y/Math::degree())) * Math::degree();
+    return Egdinv(chix + chiy, dchi * m) * dchi;
+  }
 public:
-  RhumbLine(const Ellipsoid& ell, real lat1, real lon1, real azi)
+  RhumbLine(const Ellipsoid& ell, real lat1, real lon1, real azi,
+            bool exact = false)
     : _ell(ell)
+    , _exact(exact)
     , _lat1(lat1)
     , _lon1(Math::AngNormalize(lon1))
   {
@@ -66,11 +125,16 @@ public:
     if (abs(mu2) <= 90) {
       if (_calp) {
         lat2 = _ell.InverseRectifyingLatitude(mu2);
-        real psi12 = !(abs(mu12) <= tol()) ?
-          _ell.IsometricLatitude(lat2) - _psi1 :
-          // use dpsi/dmu = (2/pi)*Q/R
-          mu12 * 4 * _ell.QuarterMeridian() /
-          (Math::pi() * (_r1 + _ell.CircleRadius(lat2)));
+        real psi12;
+        if (_exact)
+          psi12 = !(abs(mu12) <= tol()) ?
+            _ell.IsometricLatitude(lat2) - _psi1 :
+            // use dpsi/dmu = (2/pi)*Q/R
+            mu12 * 4 * _ell.QuarterMeridian() /
+            (Math::pi() * (_r1 + _ell.CircleRadius(lat2)));
+        else
+          psi12 = ERectifyingToIsometric((_mu1 + mu2) * Math::degree(),
+                                         mu12 * Math::degree()) * mu12;
         lon2 = _salp * psi12 / _calp;
       } else {
         lat2 = _lat1;
@@ -85,28 +149,76 @@ public:
 class Rhumb {
 private:
   Ellipsoid _ell;
+  bool _exact;
+  static inline real gd(real x)
+  { using std::atan; using std::sinh; return atan(sinh(x)); }
+
+  // Use divided differences to determine (mu2 - mu1) / (psi2 - psi1)
+  // accurately
+  //
+  // Definition: Ef(p,m) = (f((p+m)/2)-f((p-m)/2))/m
+  // See:
+  //   W. M. Kahan and R. J. Fateman,
+  //   Symbolic computation of divided differences,
+  //   SIGSAM Bull. 33(3), 7-28 (1999)
+  //   http://dx.doi.org/10.1145/334714.334716
+  //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
+
+  static inline real Eatan(real p, real m) {
+    using std::atan;
+    real x = (p + m)/2, y = (p - m)/2, xy = x*y;
+    return m ? (2 * xy > -1 ? atan( m / (1 + xy) ) : atan(x) - atan(y)) / m :
+      1 / (1 + xy);
+  }
+  static inline real Esinh(real p, real m) {
+    using std::sinh; using std::cosh;
+    return cosh(p/2) * (m ? 2 * sinh(m/2) / m : 1);
+  }
+  static inline real Egd(real p, real m) {
+    using std::sinh;
+    real x = (p + m)/2, y = (p - m)/2, ds = Esinh(p, m);
+    return Eatan(sinh(x) + sinh(y), ds * m) * ds;
+  }
+  real EConformalToRectifying(real p, real m) const {
+    real s = 0;
+    for (int j = RhumbLine::tm_maxord; j; --j)
+      s += j * _ell.ConformalToRectifyingCoeffs()[j] * cos(j * p) *
+        RhumbLine::sinc(j * m);
+    return 1 + 2 * s;
+  }
+  real EIsometricToRectifying(real p, real m) const {
+    real x = (p + m)/2, y = (p - m)/2, dchi = Egd(p, m),
+      chix = gd(x), chiy = gd(y);
+    return EConformalToRectifying(chix + chiy, dchi * m) * dchi;
+  }
 public:
-  Rhumb(real a, real f) : _ell(a, f) {}
+  Rhumb(real a, real f, bool exact = false) : _ell(a, f), _exact(exact) {}
   void Inverse(real lat1, real lon1, real lat2, real lon2,
                real& s12, real& azi) const {
     using std::atan2; using std::abs;
     real
-      lon12 = Math::AngDiff(Math::AngNormalize(lon1),
-                            Math::AngNormalize(lon2)),
-      psi12 = _ell.IsometricLatitude(lat2) - _ell.IsometricLatitude(lat1),
-      mu12 = _ell.RectifyingLatitude(lat2) - _ell.RectifyingLatitude(lat1),
+      lon12 = Math::AngDiff(Math::AngNormalize(lon1), Math::AngNormalize(lon2)),
+      psi1 = _ell.IsometricLatitude(lat1),
+      psi2 = _ell.IsometricLatitude(lat2),
+      psi12 = psi2 - psi1,
       h = Math::hypot(lon12, psi12);
     azi = 0 - atan2(-lon12, psi12) / Math::degree();
     lon12 = abs(lon12);
-    real dmudpsi = !(abs(mu12) <= RhumbLine::tol()) ? mu12 / psi12 :
-      // use dmu/dpsi = (pi/2)*R/Q
-      Math::pi() * (_ell.CircleRadius(lat1) + _ell.CircleRadius(lat2)) /
-      (4 * _ell.QuarterMeridian());
+    real dmudpsi;
+    if (_exact) {
+      real mu12 = _ell.RectifyingLatitude(lat2) - _ell.RectifyingLatitude(lat1);
+      dmudpsi = !(abs(mu12) <= RhumbLine::tol()) ? mu12 / psi12 :
+        // use dmu/dpsi = (pi/2)*R/Q
+        Math::pi() * (_ell.CircleRadius(lat1) + _ell.CircleRadius(lat2)) /
+        (4 * _ell.QuarterMeridian());
+    } else
+      dmudpsi = EIsometricToRectifying((psi1+psi2) * Math::degree(),
+                                       psi12 * Math::degree());
     s12 = h * dmudpsi * _ell.QuarterMeridian() / 90;
   }
 
   RhumbLine Line(real lat1, real lon1, real azi) const
-  { return RhumbLine(_ell, lat1, lon1, azi); }
+  { return RhumbLine(_ell, lat1, lon1, azi, _exact); }
 
   void Direct(real lat1, real lon1, real azi, real s12,
               real& lat2, real& lon2) const
@@ -129,7 +241,7 @@ std::string AzimuthString(real azi, int prec, bool dms, char dmssep) {
 int main(int argc, char* argv[]) {
   try {
     Utility::set_digits();
-    bool linecalc = false, inverse = false, dms = false;
+    bool linecalc = false, inverse = false, dms = false, exact = false;
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
@@ -184,7 +296,9 @@ int main(int argc, char* argv[]) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
-      } else if (arg == "--input-string") {
+      } else if (arg == "-E")
+        exact = true;
+      else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
       } else if (arg == "--input-file") {
@@ -249,7 +363,7 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    const Rhumb rh(a, f);
+    const Rhumb rh(a, f, exact);
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));

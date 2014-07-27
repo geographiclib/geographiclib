@@ -6,7 +6,7 @@ RhumbSolve -- perform geodesic calculations
 
 B<RhumbSolve> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi> ]
 [ B<-e> I<a> I<f> ]
-[ B<-d> | B<-:> ] [ B<-f> ] [ B<-p> I<prec> ]
+[ B<-d> | B<-:> ] [ B<-f> ] [ B<-p> I<prec> ] [ B<-E> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -84,6 +84,13 @@ delimiters.
 
 set the output precision to I<prec> (default 3); I<prec> is the
 precision relative to 1 m.  See L</PRECISION>.
+
+=item B<-E>
+
+use "exact" algorithms (based on elliptic integrals) for the
+calculations.  These are more accurate than the (default) series
+expansions for |I<f>| > 0.02.  However they are subject to greater
+round-off errors if I<lat1> and I<lat2> are close.
 
 =item B<--comment-delimiter>
 
@@ -166,7 +173,7 @@ following lines will be converted.
 
 The algorithm used by B<RhumbSolve> applies for any value of the
 flattening.  However, the accuracy is substantially less then
-GeodSolve(1), particularly if I<lat1> and I<lat2> within a few
+GeodSolve(1), particularly if I<lat1> and I<lat2> are within a few
 arcseconds.  Typically the errors in the distance are less than 0.1 mm.
 The accuracy could be improved for small flattening by using a series
 for the rectifying latitude and by using divided differences to compute

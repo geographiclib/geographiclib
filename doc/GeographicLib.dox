@@ -4812,34 +4812,39 @@ Here's what you should know:
    not defined the precision is set to 256 bits.
  - The accuracy of most calculations should increase as the precision
    increases (and typically only a few bits of accuracy should be lost).
-   However note the following:
-   - All the physical constants used by GeographicLib, e.g., the
-     flattening of the WGS84 ellipsoid, are evaluated as exact decimal
-     numbers.
-   - Many classes solve equations iteratively and typically the number
-     of iterations is limited.  However, the iterative methods converge
-     quadratically (the number of correct digits doubles on each
-     iteration) so that full convergence is obtained for "reasonable"
-     precisions (no more than, say, 100 decimal digits or about 340
-     bits).  An exception is thrown if the convergence criterion is not
-     met when using high precision arithmetic.
-   - Some classes (namely, Geodesic and TransverseMercator) use series.
-     Additional terms in the series are used for high precision, however
-     there's always a finite truncation error which varies as some power
-     of the flattening.  On the other hand, GeodesicExact and
-     TransverseMercatorExact are somewhat slower classes offering the
-     same functionality implemented with EllipticFunction.  These
-     classes provide arbitrary accuracy.
-   - However, a caveat is that the evaluation of the area in
+   We can distinguish 4 sources of error:
+   - Round-off errors; these are reliably reduced when the precision is
+     increased.  For the most part, the algorithms used by GeographicLib
+     are carefully tuned to minimize round-off errors, so that only a
+     few bits of accuracy are lost.
+   - Convergence errors due to not iterating certain algorithms to
+     convergence.  However, all iterative methods used by GeographicLib
+     converge quadratically (the number of correct digits doubles on
+     each iteration) so that full convergence is obtained for
+     "reasonable" precisions (no more than, say, 100 decimal digits or
+     about 340 bits).  An exception is thrown if the convergence
+     criterion is not met when using high precision arithmetic.
+   - Truncation errors.  Some classes (namely, Geodesic and
+     TransverseMercator) use series expansion to approximate the tune
+     solution.  Additional terms in the series are used for high
+     precision, however there's always a finite truncation error which
+     varies as some power of the flattening.  On the other hand,
+     GeodesicExact and TransverseMercatorExact are somewhat slower
+     classes offering the same functionality implemented with
+     EllipticFunction.  These classes provide arbitrary accuracy.
+     (However, a caveat is that the evaluation of the area in
      GeodesicExact still uses a series (albeit of considerably higher
      order).  So the area calculations are always have a finite
-     truncation error.
-   - Geoid, GravityModel, and MagneticModel all depend on external data
-     files.  The coefficient files for GravityModel and MagneticModel
-     store the coefficients as IEEE double (and perhaps these
-     coefficients can be regarded as exact).  However, with Geoid, the
-     data files for the geoid heights are quantized at 3mm leading to an
-     irreducible &plusmn;1.5mm quantization error.
+     truncation error.)
+   - Quantization errors.  Geoid, GravityModel, and MagneticModel all
+     depend on external data files.  The coefficient files for
+     GravityModel and MagneticModel store the coefficients as IEEE
+     doubles (and perhaps these coefficients can be regarded as exact).
+     However, with Geoid, the data files for the geoid heights are
+     quantized at 3mm leading to an irreducible &plusmn;1.5mm
+     quantization error.  On the other hand, all the physical constants
+     used by GeographicLib, e.g., the flattening of the WGS84 ellipsoid,
+     are evaluated as exact decimal numbers.
  - Where might high accuracy be important?
    - checking the truncation error of series approximations;
    - checking for excessive round-off errors (typically due to subtraction);

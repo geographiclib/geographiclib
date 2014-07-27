@@ -87,7 +87,7 @@ namespace GeographicLib {
     // _alp[0] and _bet[0] unused
     real _a1, _b1, _alp[maxpow_ + 1], _bet[maxpow_ + 1];
     static inline real overflow() {
-    // Overflow value s.t. atan(overflow_) = pi/2
+      // Overflow value s.t. atan(overflow_) = pi/2
       static const real
         overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
       return overflow;
