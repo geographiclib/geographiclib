@@ -2,7 +2,7 @@
  * \file RhumbSolve.cpp
  * \brief Command line utility for rhumb line calculations
  *
- * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -12,6 +12,8 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <cmath>
+#include <limits>
 #include <GeographicLib/Ellipsoid.hpp>
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
@@ -27,17 +29,27 @@
 using namespace GeographicLib;
 typedef Math::real real;
 
+class Rhumb;
+
 class RhumbLine {
 private:
   const Ellipsoid& _ell;
   real _lat1, _lon1, _salp, _calp, _mu1, _psi1, _r1;
   RhumbLine& operator=(const RhumbLine&); // copy assignment not allowed
+  friend Rhumb;
+  // Threshold for using dmu/dpsi instead of mu12/psi12.
+  static inline real tol() {
+    static const real
+      tol = 90 * Math::cbrt(std::numeric_limits<real>::epsilon());
+    return tol;
+  }
 public:
   RhumbLine(const Ellipsoid& ell, real lat1, real lon1, real azi)
     : _ell(ell)
     , _lat1(lat1)
     , _lon1(Math::AngNormalize(lon1))
   {
+    using std::abs; using std::sin; using std::cos;
     azi = Math::AngNormalize(azi);
     real alp = azi * Math::degree();
     _salp =     azi  == -180 ? 0 : sin(alp);
@@ -48,16 +60,23 @@ public:
   }
   void Position(real s12, real& lat2, real& lon2) const {
     using std::abs;
-    real mu2 = _mu1 + s12 * _calp * 90 / _ell.QuarterMeridian();
+    real
+      mu12 = s12 * _calp * 90 / _ell.QuarterMeridian(),
+      mu2 = _mu1 + mu12;
     if (abs(mu2) <= 90) {
       if (_calp) {
         lat2 = _ell.InverseRectifyingLatitude(mu2);
-        real psi12 = _ell.IsometricLatitude(lat2) - _psi1;
-        lon2 = Math::AngNormalize(_lon1 + _salp * psi12 / _calp);
+        real psi12 = !(abs(mu12) <= tol()) ?
+          _ell.IsometricLatitude(lat2) - _psi1 :
+          // use dpsi/dmu = (2/pi)*Q/R
+          mu12 * 4 * _ell.QuarterMeridian() /
+          (Math::pi() * (_r1 + _ell.CircleRadius(lat2)));
+        lon2 = _salp * psi12 / _calp;
       } else {
         lat2 = _lat1;
-        lon2 = Math::AngNormalize(_lon1 + s12 / (_r1 * Math::degree()));
+        lon2 = _salp * s12 / (_r1 * Math::degree());
       }
+      lon2 = Math::AngNormalize2(_lon1 + lon2);
     } else
       lat2 = lon2 = Math::NaN();
   }
@@ -66,23 +85,24 @@ public:
 class Rhumb {
 private:
   Ellipsoid _ell;
-  friend class RhumbLine;
 public:
-  Rhumb(real a, real f)
-    : _ell(a, f)
-  {}
+  Rhumb(real a, real f) : _ell(a, f) {}
   void Inverse(real lat1, real lon1, real lat2, real lon2,
                real& s12, real& azi) const {
-    using std::atan2;
+    using std::atan2; using std::abs;
     real
       lon12 = Math::AngDiff(Math::AngNormalize(lon1),
                             Math::AngNormalize(lon2)),
       psi12 = _ell.IsometricLatitude(lat2) - _ell.IsometricLatitude(lat1),
-      mu12 =  _ell.RectifyingLatitude(lat2) - _ell.RectifyingLatitude(lat1);
+      mu12 = _ell.RectifyingLatitude(lat2) - _ell.RectifyingLatitude(lat1),
+      h = Math::hypot(lon12, psi12);
     azi = 0 - atan2(-lon12, psi12) / Math::degree();
-    s12 = psi12 ?
-      mu12 * (Math::hypot(lon12, psi12) / psi12) * _ell.QuarterMeridian() / 90 :
-      (lon12 * Math::degree()) * _ell.CircleRadius(lat1);
+    lon12 = abs(lon12);
+    real dmudpsi = !(abs(mu12) <= RhumbLine::tol()) ? mu12 / psi12 :
+      // use dmu/dpsi = (pi/2)*R/Q
+      Math::pi() * (_ell.CircleRadius(lat1) + _ell.CircleRadius(lat2)) /
+      (4 * _ell.QuarterMeridian());
+    s12 = h * dmudpsi * _ell.QuarterMeridian() / 90;
   }
 
   RhumbLine Line(real lat1, real lon1, real azi) const
@@ -94,7 +114,6 @@ public:
 };
 
 std::string LatLonString(real lat, real lon, int prec, bool dms, char dmssep) {
-  using namespace GeographicLib;
   return dms ?
     DMS::Encode(lat, prec + 5, DMS::LATITUDE, dmssep) + " " +
     DMS::Encode(lon, prec + 5, DMS::LONGITUDE, dmssep) :
@@ -103,14 +122,12 @@ std::string LatLonString(real lat, real lon, int prec, bool dms, char dmssep) {
 }
 
 std::string AzimuthString(real azi, int prec, bool dms, char dmssep) {
-  using namespace GeographicLib;
   return dms ? DMS::Encode(azi, prec + 5, DMS::AZIMUTH, dmssep) :
     DMS::Encode(azi >= 180 ? azi - 360 : azi, prec + 5, DMS::NUMBER);
 }
 
 int main(int argc, char* argv[]) {
   try {
-    using namespace GeographicLib;
     Utility::set_digits();
     bool linecalc = false, inverse = false, dms = false;
     real
@@ -271,7 +288,7 @@ int main(int argc, char* argv[]) {
           DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
           rh.Inverse(lat1, lon1, lat2, lon2, s12, azi);
           *output << AzimuthString(azi, prec, dms, dmssep) << " "
-                    << Utility::str(s12, prec) << "\n";
+                  << Utility::str(s12, prec) << "\n";
         }
         catch (const std::exception& e) {
           // Write error message cout so output lines match input lines

@@ -4810,7 +4810,6 @@ Here's what you should know:
    precision (in bits) to be determined by the
    <code>GEOGRAPHICLIB_DIGITS</code> environment variable.  If this is
    not defined the precision is set to 256 bits.
-
  - The accuracy of most calculations should increase as the precision
    increases (and typically only a few bits of accuracy should be lost).
    However note the following:
@@ -4826,21 +4825,22 @@ Here's what you should know:
      met when using high precision arithmetic.
    - Some classes (namely, Geodesic and TransverseMercator) use series.
      Additional terms in the series are used for high precision, however
-     the accuracy is still bounded away from zero.  On the other hand,
-     GeodesicExact and TransverseMercatorExact are somewhat slower
-     classes offering the same functionality implemented with
-     EllipticFunction.  These classes provide arbitrary accuracy.
+     there's always a finite truncation error which varies as some power
+     of the flattening.  On the other hand, GeodesicExact and
+     TransverseMercatorExact are somewhat slower classes offering the
+     same functionality implemented with EllipticFunction.  These
+     classes provide arbitrary accuracy.
    - However, a caveat is that the evaluation of the area in
      GeodesicExact still uses a series (albeit of considerably higher
-     order).  So the area calculations are always bounded away from
-     zero.
+     order).  So the area calculations are always have a finite
+     truncation error.
    - Geoid, GravityModel, and MagneticModel all depend on external data
      files.  The coefficient files for GravityModel and MagneticModel
      store the coefficients as IEEE double (and perhaps these
      coefficients can be regarded as exact).  However, with Geoid, the
      data files for the geoid heights are quantized at 3mm leading to an
      irreducible &plusmn;1.5mm quantization error.
- - Where might high accuracy be important:
+ - Where might high accuracy be important?
    - checking the truncation error of series approximations;
    - checking for excessive round-off errors (typically due to subtraction);
    - checking the round-off error in computing areas of many-sided polygons;
@@ -5112,8 +5112,6 @@ of the git repository for GeographicLib.
      - enable searching the online documentation;
      - add macros <code>GEOGRAPHICLIB_VERSION</code> and
        <code>GEOGRAPHICLIB_VERSION_NUM</code>.
-   - TODO: Add GEOGRAPHICLIB_CHECK_ITERATION macro to change when loops
-     fail to converge.
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
    (released 2014-05-13)
