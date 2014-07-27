@@ -4825,7 +4825,7 @@ Here's what you should know:
      about 340 bits).  An exception is thrown if the convergence
      criterion is not met when using high precision arithmetic.
    - Truncation errors.  Some classes (namely, Geodesic and
-     TransverseMercator) use series expansion to approximate the tune
+     TransverseMercator) use series expansion to approximate the true
      solution.  Additional terms in the series are used for high
      precision, however there's always a finite truncation error which
      varies as some power of the flattening.  On the other hand,
