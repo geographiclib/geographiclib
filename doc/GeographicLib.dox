@@ -4795,6 +4795,8 @@ Here's what you should know:
    <a href="http://www.mpfr.org"> MPFR</a> and
    <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
    (version 3.5.9 or later).
+ - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
+   to respect these.
  - The indicated precision is used for <b>all</b> floating point
    arithmetic.  Thus, you can't compare the results of different
    precisions within a single invocation of a program.  Instead, you can

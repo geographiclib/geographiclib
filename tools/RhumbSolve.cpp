@@ -133,7 +133,7 @@ public:
             mu12 * 4 * _ell.QuarterMeridian() /
             (Math::pi() * (_r1 + _ell.CircleRadius(lat2)));
         else
-          psi12 = DRectifyingToIsometric(mu2 * Math::degree(),
+          psi12 = DRectifyingToIsometric( mu2 * Math::degree(),
                                          _mu1 * Math::degree(),
                                          mu12 * Math::degree()) * mu12;
         lon2 = _salp * psi12 / _calp;
@@ -209,7 +209,6 @@ public:
       psi12 = psi2 - psi1,
       h = Math::hypot(lon12, psi12);
     azi = 0 - atan2(-lon12, psi12) / Math::degree();
-    lon12 = abs(lon12);
     real dmudpsi;
     if (_exact) {
       real mu12 = _ell.RectifyingLatitude(lat2) - _ell.RectifyingLatitude(lat1);
@@ -218,8 +217,8 @@ public:
         Math::pi() * (_ell.CircleRadius(lat1) + _ell.CircleRadius(lat2)) /
         (4 * _ell.QuarterMeridian());
     } else
-      dmudpsi = DIsometricToRectifying(psi2 * Math::degree(),
-                                       psi1 * Math::degree(),
+      dmudpsi = DIsometricToRectifying(psi2  * Math::degree(),
+                                       psi1  * Math::degree(),
                                        psi12 * Math::degree());
     s12 = h * dmudpsi * _ell.QuarterMeridian() / 90;
   }

@@ -18,7 +18,7 @@ B<RhumbSolve> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi> ]
 The path with constant heading between two points on the ellipsoid at
 (I<lat1>, I<lon1>) and (I<lat2>, I<lon2>) is called the rhumb line or
 loxodrome.  Its length is I<s12> and the rhumb line has a forward
-azimuth I<azi> along its length.  A point at a pole is treating as a
+azimuth I<azi> along its length.  A point at a pole is treated as a
 point a tiny distance away from the pole on the given line of longitude.
 The longitude becomes indeterminate when a rhumb line passes through a
 pole, and B<RhumbSolve> reports NaNs for the longitude in this case.
@@ -45,9 +45,10 @@ generates a sequence of points on a rhumb line.
 
 =item 3.
 
-With the B<-i> command line argument, B<RhumbSolve> performs the
-inverse calculation.  It reads lines containing I<lat1> I<lon1>
-I<lat2> I<lon2> and prints the corresponding values of I<azi> I<s12>.
+With the B<-i> command line argument, B<RhumbSolve> performs the inverse
+calculation.  It reads lines containing I<lat1> I<lon1> I<lat2> I<lon2>
+and prints the values of I<azi> I<s12> for the corresponding shortest
+rhumb lines
 
 =back
 
@@ -89,9 +90,9 @@ precision relative to 1 m.  See L</PRECISION>.
 
 =item B<-E>
 
-By default, a series expansion is used to compute a key ratio of
+By default, series expansions are used to compute a key ratio of
 differences accurately.  The series are only accurate for |I<f>| E<lt>
-0.02.  If B<-E> is supplied, the ratio is computed directly using exact
+0.01.  If B<-E> is supplied, the ratio is computed directly using exact
 expressions.  However this calculation is subject to large round-off
 errors if I<lat1> and I<lat2> are close.  See L</ACCURACY>.
 
@@ -182,7 +183,7 @@ flattening.  However the computation of rhumb lines involves the ratio
 round-off errors if I<lat1> is close to I<lat2>.  So, by default, the
 ratio is computed using divided differences using the series expansions
 used by TransverseMercatorProj(1) for the conversions between rectifying
-and conformal latitudes.  These are accurate for |I<f>| E<lt> 0.02.  If
+and conformal latitudes.  These are accurate for |I<f>| E<lt> 0.01.  If
 the B<-E> option is supplied then the ratio of the differences will be
 computed directly if I<lat1> is far from I<lat2> and will be
 approximated by the derivative otherwise.  This results in appreciable
