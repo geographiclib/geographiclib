@@ -541,14 +541,15 @@ namespace GeographicLib {
     /**
      * Set the binary precision of a real number.
      *
-     * @param[in] digits the number of bits of precision.  If digits is 0 (the
-     *   default), then determine the precision from the environment variable
-     *   GEOGRAPHICLIB_DIGITS.  If this is undefined, use digits = 256 (i.e.,
-     *   about 77 decimal digits).
+     * @param[in] ndigits the number of bits of precision.  If ndigits is 0
+     *   (the default), then determine the precision from the environment
+     *   variable GEOGRAPHICLIB_DIGITS.  If this is undefined, use ndigits =
+     *   256 (i.e., about 77 decimal digits).
+     * @return the resulting number of bits of precision.
      *
      * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.
      **********************************************************************/
-    static void set_digits(int digits = 0);
+    static int set_digits(int ndigits = 0);
 
   };
 

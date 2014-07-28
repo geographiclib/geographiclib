@@ -45,19 +45,17 @@ namespace GeographicLib {
     return true;
   }
 
-  void Utility::set_digits(int digits) {
-#if GEOGRAPHICLIB_PRECISION != 5
-    (void)digits;
-#else
-    if (digits <= 0) {
+  int Utility::set_digits(int ndigits) {
+#if GEOGRAPHICLIB_PRECISION == 5
+    if (ndigits <= 0) {
       char* digitenv = getenv("GEOGRAPHICLIB_DIGITS");
       if (digitenv)
-        digits = strtol(digitenv, NULL, 0);
-      if (digits <= 0)
-        digits = 256;
+        ndigits = strtol(digitenv, NULL, 0);
+      if (ndigits <= 0)
+        ndigits = 256;
     }
-    Math::set_digits(digits);
 #endif
+    return Math::set_digits(ndigits);
   }
 
 } // namespace GeographicLib

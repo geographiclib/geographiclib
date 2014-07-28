@@ -42,7 +42,8 @@ int main(int argc, char* argv[]) {
     return 1;
   }
   try {
-    Utility::set_digits();
+    // Will need to set the precision for each thread, so save return value
+    int ndigits = Utility::set_digits();
     string model(argv[1]);
     // Number of intervals per degree
     int ndeg = Utility::num<int>(string(argv[2]));
@@ -68,7 +69,6 @@ int main(int argc, char* argv[]) {
 
     // Compute and store results for nbatch latitudes at a time
     const int nbatch = 64;
-    int ndigits = Math::digits(); // Need to set the precision for each thread
     vector< vector<float> > N(nbatch, vector<float>(nlon));
 
     for (int ilat0 = 0; ilat0 < nlat; ilat0 += nbatch) { // Loop over batches

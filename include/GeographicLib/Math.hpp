@@ -152,16 +152,18 @@ namespace GeographicLib {
     /**
      * Set the binary precision of a real number.
      *
-     * @param[in] digits the number of bits of precision.
+     * @param[in] ndigits the number of bits of precision.
+     * @return the resulting number of bits of precision.
      *
      * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.
      **********************************************************************/
-    static inline void set_digits(int digits) {
+    static inline int set_digits(int ndigits) {
 #if GEOGRAPHICLIB_PRECISION != 5
-      (void)digits;
+      (void)ndigits;
 #else
-      mpfr::mpreal::set_default_prec(digits >= 2 ? digits : 2);
+      mpfr::mpreal::set_default_prec(ndigits >= 2 ? ndigits : 2);
 #endif
+      return digits();
     }
 
     /**
