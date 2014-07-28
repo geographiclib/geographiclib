@@ -142,8 +142,14 @@ public:
         lon2 = _salp * s12 / (_r1 * Math::degree());
       }
       lon2 = Math::AngNormalize2(_lon1 + lon2);
-    } else
-      lat2 = lon2 = Math::NaN();
+    } else {
+      // Reduce to the interval [-180, 180)
+      mu2 = Math::AngNormalize2(mu2);
+      // Deal with points on the anti-meridian
+      if (abs(mu2) > 90) mu2 = Math::AngNormalize(180 - mu2);
+      lat2 = _ell.InverseRectifyingLatitude(mu2);
+      lon2 = Math::NaN();
+    }
   }
 };
 
