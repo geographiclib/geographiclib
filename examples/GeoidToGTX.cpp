@@ -68,6 +68,7 @@ int main(int argc, char* argv[]) {
 
     // Compute and store results for nbatch latitudes at a time
     const int nbatch = 64;
+    int ndigits = Math::digits(); // Need to set the precision for each thread
     vector< vector<float> > N(nbatch, vector<float>(nlon));
 
     for (int ilat0 = 0; ilat0 < nlat; ilat0 += nbatch) { // Loop over batches
@@ -77,6 +78,7 @@ int main(int argc, char* argv[]) {
 #  pragma omp parallel for
 #endif
       for (int ilat = ilat0; ilat < nlat0; ++ilat) { // Loop over latitudes
+        Utility::set_digits(ndigits);                // Set the precision
         Math::real
           lat = latorg + (ilat / ndeg) + delta * (ilat - ndeg * (ilat / ndeg)),
           h = 0;

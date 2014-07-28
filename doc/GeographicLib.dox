@@ -4915,7 +4915,8 @@ The following steps needed to be taken
      NormalGravity converged too slowly; this was replaced by Newton's
      method.
    - If necessary, increase the maximum allowed iteration count in root
-     finding loops.
+     finding loops.  Also throw an exception of the maximum iteration
+     count is exceeded.
    - Write literal constants in a way that works for any precision, e.g.,
      \code
      real f = 1/( real(298257223563LL) / 1000000000 ); \endcode
@@ -4999,9 +5000,15 @@ The following steps needed to be taken
    - <code>numeric_limits&lt;double&gt;\::digits</code> is no longer a
      compile-time constant.  It becomes
      <code>numeric_limits&lt;double&gt;\::digits()</code>.
-   - constants in GeodesicExact, e.g., 831281402884796906843926125, can't
-     be specified as long doubles nor long longs (since they have more
-     than 64 significant bits):
+   - The precision needs to be set in each thread in a multi-processing
+     applications (for an example, see \ref GeoidToGTX.cpp).
+   - Passing numbers to functions by value incurs a substantially higher
+     overhead than with doubles.  This could be avoided by passing such
+     arguments by reference.  This was <b>not</b> done here because it
+     would junk up the code to benefit a narrow application.
+   - The constants in GeodesicExact, e.g., 831281402884796906843926125,
+     can't be specified as long doubles nor long longs (since they have
+     more than 64 significant bits):
      - first tried macro which expanded to a string (see the macro REAL
        above);
      - now use inline function to combine two long long ints each with at
