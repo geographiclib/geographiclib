@@ -2487,9 +2487,8 @@ the geoid height for EGM2008 on a 1' gride.  (Without these
 optimizations, the computation would have taken about 200 days!)
 \include GeoidToGTX.cpp
 
-This example, <code>examples/GeoidToGTX.cpp</code>, is built if cmake
-is configured with <code>-D GEOGRAPHICLIB_EXAMPLES=ON</code>.  cmake
-will add in support for OpenMP, if it is available.
+cmake will add in support for OpenMP for
+<code>examples/GeoidToGTX.cpp</code>, if it is available.
 
 <center>
 Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
@@ -5001,7 +5000,8 @@ The following steps needed to be taken
      compile-time constant.  It becomes
      <code>numeric_limits&lt;double&gt;\::digits()</code>.
    - The precision needs to be set in each thread in a multi-processing
-     applications (for an example, see \ref GeoidToGTX.cpp).
+     applications (for an example, see
+     <code>examples/GeoidToGTX.cpp</code>).
    - Passing numbers to functions by value incurs a substantially higher
      overhead than with doubles.  This could be avoided by passing such
      arguments by reference.  This was <b>not</b> done here because it
