@@ -62,7 +62,7 @@ private:
   // Use divided differences to determine (psi2 - psi1) / (mu2 - mu1)
   // accurately
   //
-  // Definition: Ef(p,m) = (f((p+m)/2)-f((p-m)/2))/m
+  // Definition: Df(x,y,p,m) = (f(x)-f(y))/m with p = x+y, m=x-y
   // See:
   //   W. M. Kahan and R. J. Fateman,
   //   Symbolic computation of divided differences,
@@ -70,35 +70,34 @@ private:
   //   http://dx.doi.org/10.1145/334714.334716
   //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
 
-  static inline real Etan(real p, real m) {
-    real x = (p + m)/2, y = (p - m)/2,
-      tx = tano(x), ty = tano(y), txy = tx * ty;
+  static inline real Dtan(real x, real y, real /*p*/, real m) {
+    real tx = tano(x), ty = tano(y), txy = tx * ty;
     return m ? (2 * txy > -1 ? (1 + txy) * tano(m) : tx - ty) / m :
       1 + txy;
   }
-  static inline real Easinh(real p, real m) {
-    real x = (p + m)/2, y = (p - m)/2,
-      hx = Math::hypot(real(1), x), hy = Math::hypot(real(1), y);
+  static inline real Dasinh(real x, real y, real p, real m) {
+    real hx = Math::hypot(real(1), x), hy = Math::hypot(real(1), y);
     return m ? Math::asinh(x*y > 0 ? m * p / (x*hy + y*hx) : x*hy - y*hx) / m :
       1 / hx;
   }
-  static inline real Egdinv(real p, real m) {
-    real x = (p + m)/2, y = (p - m)/2, dt = Etan(p, m);
-    return Easinh(tano(x) + tano(y), dt * m) * dt;
+  static inline real Dgdinv(real x, real y, real p, real m) {
+    real tx = tano(x), ty = tano(y), dt = Dtan(x, y, p, m);
+    return Dasinh(tx, ty, tx + ty, dt * m) * dt;
   }
-  real ERectifyingToConformal(real p, real m) const {
+  real DRectifyingToConformal(real /*x*/, real /*y*/, real p, real m) const {
     real s = 0;
     for (int j = tm_maxord; j; --j)
       s += j * _ell.RectifyingToConformalCoeffs()[j] * cos(j * p) * sinc(j * m);
     return 1 - 2 * s;
   }
-  real ERectifyingToIsometric(real p, real m) const {
-    real x = (p + m)/2, y = (p - m)/2, dchi = ERectifyingToConformal(p, m),
+  real DRectifyingToIsometric(real x, real y, real p, real m) const {
+    real
       chix = _ell.ConformalLatitude
       (_ell.InverseRectifyingLatitude(x/Math::degree())) * Math::degree(),
       chiy = _ell.ConformalLatitude
-      (_ell.InverseRectifyingLatitude(y/Math::degree())) * Math::degree();
-    return Egdinv(chix + chiy, dchi * m) * dchi;
+      (_ell.InverseRectifyingLatitude(y/Math::degree())) * Math::degree(),
+      dchi = DRectifyingToConformal(x, y, p, m);
+    return Dgdinv(chix, chiy, chix + chiy, dchi * m) * dchi;
   }
 public:
   RhumbLine(const Ellipsoid& ell, real lat1, real lon1, real azi,
@@ -133,7 +132,9 @@ public:
             mu12 * 4 * _ell.QuarterMeridian() /
             (Math::pi() * (_r1 + _ell.CircleRadius(lat2)));
         else
-          psi12 = ERectifyingToIsometric((_mu1 + mu2) * Math::degree(),
+          psi12 = DRectifyingToIsometric(mu2 * Math::degree(),
+                                         _mu1 * Math::degree(),
+                                         (_mu1 + mu2) * Math::degree(),
                                          mu12 * Math::degree()) * mu12;
         lon2 = _salp * psi12 / _calp;
       } else {
@@ -156,7 +157,7 @@ private:
   // Use divided differences to determine (mu2 - mu1) / (psi2 - psi1)
   // accurately
   //
-  // Definition: Ef(p,m) = (f((p+m)/2)-f((p-m)/2))/m
+  // Definition: Df(x,y,p,m) = (f(x)-f(y))/m with p = x+y, m=x-y
   // See:
   //   W. M. Kahan and R. J. Fateman,
   //   Symbolic computation of divided differences,
@@ -164,32 +165,31 @@ private:
   //   http://dx.doi.org/10.1145/334714.334716
   //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
 
-  static inline real Eatan(real p, real m) {
+  static inline real Datan(real x, real y, real /*p*/, real m) {
     using std::atan;
-    real x = (p + m)/2, y = (p - m)/2, xy = x*y;
+    real xy = x * y;
     return m ? (2 * xy > -1 ? atan( m / (1 + xy) ) : atan(x) - atan(y)) / m :
       1 / (1 + xy);
   }
-  static inline real Esinh(real p, real m) {
+  static inline real Dsinh(real /*x*/, real /*y*/, real p, real m) {
     using std::sinh; using std::cosh;
     return cosh(p/2) * (m ? 2 * sinh(m/2) / m : 1);
   }
-  static inline real Egd(real p, real m) {
+  static inline real Dgd(real x, real y, real p, real m) {
     using std::sinh;
-    real x = (p + m)/2, y = (p - m)/2, ds = Esinh(p, m);
-    return Eatan(sinh(x) + sinh(y), ds * m) * ds;
+    real sx = sinh(x), sy = sinh(y), ds = Dsinh(x, y, p, m);
+    return Datan(sx, sy, sx + sy, ds * m) * ds;
   }
-  real EConformalToRectifying(real p, real m) const {
+  real DConformalToRectifying(real /*x*/, real /*y*/, real p, real m) const {
     real s = 0;
     for (int j = RhumbLine::tm_maxord; j; --j)
       s += j * _ell.ConformalToRectifyingCoeffs()[j] * cos(j * p) *
         RhumbLine::sinc(j * m);
     return 1 + 2 * s;
   }
-  real EIsometricToRectifying(real p, real m) const {
-    real x = (p + m)/2, y = (p - m)/2, dchi = Egd(p, m),
-      chix = gd(x), chiy = gd(y);
-    return EConformalToRectifying(chix + chiy, dchi * m) * dchi;
+  real DIsometricToRectifying(real x, real y, real p, real m) const {
+    real chix = gd(x), chiy = gd(y), dchi = Dgd(x, y, p, m);
+    return DConformalToRectifying(chix, chiy, chix + chiy, dchi * m) * dchi;
   }
 public:
   Rhumb(real a, real f, bool exact = false) : _ell(a, f), _exact(exact) {}
@@ -212,7 +212,9 @@ public:
         Math::pi() * (_ell.CircleRadius(lat1) + _ell.CircleRadius(lat2)) /
         (4 * _ell.QuarterMeridian());
     } else
-      dmudpsi = EIsometricToRectifying((psi1+psi2) * Math::degree(),
+      dmudpsi = DIsometricToRectifying(psi2 * Math::degree(),
+                                       psi1 * Math::degree(),
+                                       (psi1+psi2) * Math::degree(),
                                        psi12 * Math::degree());
     s12 = h * dmudpsi * _ell.QuarterMeridian() / 90;
   }
