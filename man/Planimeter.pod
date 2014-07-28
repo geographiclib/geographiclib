@@ -91,7 +91,7 @@ given (in meters^2) with (I<prec> - 5) digits after the decimal point.
 
 use "exact" algorithms (based on elliptic integrals) for the geodesic
 calculations.  These are more accurate than the (default) series
-expansions for |I<f>| > 0.02.  (But note that the implementation of
+expansions for |I<f>| E<gt> 0.02.  (But note that the implementation of
 areas in GeodesicExact uses a high order series and this is only
 accurate for modest flattenings.)  B<-E> and B<-Q> are mutually
 exclusive.

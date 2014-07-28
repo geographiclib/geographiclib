@@ -102,7 +102,7 @@ precision relative to 1 m.  See L</PRECISION>.
 
 use "exact" algorithms (based on elliptic integrals) for the geodesic
 calculations.  These are more accurate than the (default) series
-expansions for |I<f>| > 0.02.
+expansions for |I<f>| E<gt> 0.02.
 
 =item B<--comment-delimiter>
 

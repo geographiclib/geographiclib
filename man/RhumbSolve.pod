@@ -23,8 +23,8 @@ away from the pole on the given line of longitude.  The longitude
 becomes indeterminate when a rhumb line passes through a pole, and
 B<RhumbSolve> reports NaNs for the longitude in this case.
 
-<B>NOTE:</B> the rhumb line is <B>not</B> the shortest path between two
-points; that is the geodesic and it is calculated by GeodSolve(1).
+B<NOTE:> the rhumb line is B<not> the shortest path between two points;
+that is the geodesic and it is calculated by GeodSolve(1).
 
 B<RhumbSolve> operates in one of three modes:
 
@@ -90,8 +90,8 @@ precision relative to 1 m.  See L</PRECISION>.
 =item B<-E>
 
 By default, a series expansion is used to compute a key ratio of
-differences accurately.  The series are only accurate for |I<f>| < 0.01.
-If B<-E> is supplied, the ratio is computed directly using exact
+differences accurately.  The series are only accurate for |I<f>| E<lt>
+0.02.  If B<-E> is supplied, the ratio is computed directly using exact
 expressions.  However this calculation is subject to large round-off
 errors if I<lat1> and I<lat2> are close.  See L</ACCURACY>.
 
@@ -182,8 +182,8 @@ flattening.  However the computation of rhumb lines involves the ratio
 round-off errors if I<lat1> is close to I<lat2>.  So, by default, the
 ratio is computed using divided differences using the series expansions
 used by TransverseMercatorProj(1) for the conversions between rectifying
-and conformal latitudes.  These are accurate for |I<f>| < 0.01.  If the
-B<-E> option is supplied then the ratio of the differences will be
+and conformal latitudes.  These are accurate for |I<f>| E<lt> 0.02.  If
+the B<-E> option is supplied then the ratio of the differences will be
 computed directly if I<lat1> is far from I<lat2> and will be
 approximated by the derivative otherwise.  This results in appreciable
 errors (about 0.1 mm) if I<lat1> and I<lat2> are within a few

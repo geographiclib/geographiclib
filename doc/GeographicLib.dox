@@ -4996,7 +4996,7 @@ The following steps needed to be taken
        even if the objects were not subsequently used.  The new method
        only initializes the static objects if they are used.
      .
-   - <code>numeric_limits&lt;double&gt;\::digits</code> is now longer a
+   - <code>numeric_limits&lt;double&gt;\::digits</code> is no longer a
      compile-time constant.  It becomes
      <code>numeric_limits&lt;double&gt;\::digits()</code>.
    - constants in GeodesicExact, e.g., 831281402884796906843926125, can't

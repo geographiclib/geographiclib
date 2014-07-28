@@ -2,7 +2,7 @@
  * \file GeodesicExact.cpp
  * \brief Implementation for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012-2013) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
