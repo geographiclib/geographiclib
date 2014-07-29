@@ -103,6 +103,7 @@ namespace GeographicLib {
     }
     // Dexp(x,y) = exp((x+y)/2) * 2*sinh((x-y)/2)/(x-y)
     static inline real Dexp(real x, real y) {
+      using std::sinh; using std::exp;
       real t = (x - y)/2;
       return (t ? sinh(t)/t : 1) * exp((x + y)/2);
     }
@@ -111,12 +112,13 @@ namespace GeographicLib {
     //   c=sqrt((1+cosh(x))*(1+cosh(y)))
     //   cosh((x+y)/2) = sqrt( (sinh(x)*sinh(y) + cosh(x)*cosh(y) + 1)/2 )
     static inline real Dsinh(real x, real y, real sx, real sy, real cx, real cy)
-      // sx = sinh(x), cx = cosh(x)
-      {
+    // sx = sinh(x), cx = cosh(x)
+    {
       // real t = (x - y)/2, c = sqrt((1 + cx) * (1 + cy));
       // return (t ? sinh(t)/t : real(1)) * (c + sx * sy / c) /2;
+      using std::sinh; using std::sqrt;
       real t = (x - y)/2;
-      return (t ? sinh(t)/t : real(1)) * sqrt((sx * sy + cx * cy + 1) /2);
+      return (t ? sinh(t)/t : 1) * sqrt((sx * sy + cx * cy + 1) /2);
     }
     // Dasinh(x,y) = asinh((x-y)*(x+y)/(x*sqrt(1+y^2)+y*sqrt(1+x^2)))/(x-y)
     //             = asinh((x*sqrt(1+y^2)-y*sqrt(1+x^2)))/(x-y)
