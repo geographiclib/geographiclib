@@ -169,6 +169,7 @@
     <ClInclude Include="../include/GeographicLib/OSGB.hpp" />
     <ClInclude Include="../include/GeographicLib/PolarStereographic.hpp" />
     <ClInclude Include="../include/GeographicLib/PolygonArea.hpp" />
+    <ClInclude Include="../include/GeographicLib/Rhumb.hpp" />
     <ClInclude Include="../include/GeographicLib/SphericalEngine.hpp" />
     <ClInclude Include="../include/GeographicLib/SphericalHarmonic.hpp" />
     <ClInclude Include="../include/GeographicLib/SphericalHarmonic1.hpp" />
@@ -209,6 +210,7 @@
     <ClCompile Include="../src/OSGB.cpp" />
     <ClCompile Include="../src/PolarStereographic.cpp" />
     <ClCompile Include="../src/PolygonArea.cpp" />
+    <ClCompile Include="../src/Rhumb.cpp" />
     <ClCompile Include="../src/SphericalEngine.cpp" />
     <ClCompile Include="../src/TransverseMercator.cpp" />
     <ClCompile Include="../src/TransverseMercatorExact.cpp" />

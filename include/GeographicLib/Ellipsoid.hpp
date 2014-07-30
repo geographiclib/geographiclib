@@ -56,6 +56,12 @@ namespace GeographicLib {
     static inline real atand(real x)
     { using std::atan; return atan(x) / Math::degree(); }
 
+    // These are the alpha and beta coefficients in the Krueger series from
+    // TransverseMercator.  Thy are used by RhumbSolve to compute
+    // (psi2-psi1)/(mu2-mu1).
+    const Math::real* ConformalToRectifyingCoeffs() const { return _tm._alp; }
+    const Math::real* RectifyingToConformalCoeffs() const { return _tm._bet; }
+    friend class Rhumb; friend class RhumbLine;
   public:
     /** \name Constructor
      **********************************************************************/
@@ -66,9 +72,9 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
-     * @exception GeographicErr if \e a or (1 &minus; \e f ) \e a is not
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
+     * @exception GeographicErr if \e a or (1 &minus; \e f) \e a is not
      *   positive.
      **********************************************************************/
     Ellipsoid(real a, real f);
@@ -533,16 +539,6 @@ namespace GeographicLib {
      * ellipsoid.
      **********************************************************************/
     static const Ellipsoid& WGS84();
-
-    /// \cond SKIP
-
-    // These are the alpha and beta coefficients in the Krueger series from
-    // TransverseMercator.  Thy are used by RhumbSolve to compute
-    // (psi2-psi1)/(mu2-mu1).  The interface may change, so don't document them
-    // for now.
-    const Math::real* ConformalToRectifyingCoeffs() const { return _tm._alp; }
-    const Math::real* RectifyingToConformalCoeffs() const { return _tm._bet; }
-    /// \endcond
   };
 
 } // namespace GeographicLib

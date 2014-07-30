@@ -377,6 +377,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Rhumb.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\SphericalEngine.cpp"
 				>
 			</File>
@@ -520,6 +524,10 @@
 			</File>
 			<File
 				RelativePath="../include/GeographicLib/PolygonArea.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/Rhumb.hpp"
 				>
 			</File>
 			<File

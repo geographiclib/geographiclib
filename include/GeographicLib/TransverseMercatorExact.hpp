@@ -136,7 +136,7 @@ namespace GeographicLib {
      * Constructor for a ellipsoid with
      *
      * @param[in] a equatorial radius (meters).
-     * @param[in] f flattening of ellipsoid.  If \e f > 1, set flattening
+     * @param[in] f flattening of ellipsoid.  If \e f &gt; 1, set flattening
      *   to 1/\e f.
      * @param[in] k0 central scale factor.
      * @param[in] extendp use extended domain.

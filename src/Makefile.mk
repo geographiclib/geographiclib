@@ -36,6 +36,7 @@ MODULES = Accumulator \
 	OSGB \
 	PolarStereographic \
 	PolygonArea \
+	Rhumb \
 	SphericalEngine \
 	TransverseMercator \
 	TransverseMercatorExact \
@@ -125,6 +126,8 @@ OSGB.o: Config.h Constants.hpp Math.hpp OSGB.hpp TransverseMercator.hpp \
 PolarStereographic.o: Config.h Constants.hpp Math.hpp PolarStereographic.hpp
 PolygonArea.o: Accumulator.hpp Config.h Constants.hpp Geodesic.hpp Math.hpp \
 	PolygonArea.hpp
+Rhumb.o: Config.h Constants.hpp Ellipsoid.hpp Math.hpp Rhumb.hpp \
+	AlbersEqualArea.hpp EllipticFunction.hpp TransverseMercator.hpp
 SphericalEngine.o: CircularEngine.hpp Config.h Constants.hpp Math.hpp \
 	SphericalEngine.hpp Utility.hpp
 TransverseMercator.o: Config.h Constants.hpp Math.hpp TransverseMercator.hpp

@@ -38,6 +38,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		OSGB.cpp \
 		PolarStereographic.cpp \
 		PolygonArea.cpp \
+		Rhumb.cpp \
 		SphericalEngine.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
@@ -73,6 +74,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \
 		../include/GeographicLib/PolygonArea.hpp \
+		../include/GeographicLib/Rhumb.hpp \
 		../include/GeographicLib/SphericalEngine.hpp \
 		../include/GeographicLib/SphericalHarmonic.hpp \
 		../include/GeographicLib/SphericalHarmonic1.hpp \

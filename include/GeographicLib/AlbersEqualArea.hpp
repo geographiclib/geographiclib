@@ -124,11 +124,11 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set flattening
      *   to 1/\e f.
      * @param[in] stdlat standard parallel (degrees), the circle of tangency.
      * @param[in] k0 azimuthal scale on the standard parallel.
-     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k0 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f) \e a, or \e k0 is
      *   not positive.
      * @exception GeographicErr if \e stdlat is not in [&minus;90&deg;,
      *   90&deg;].
@@ -140,12 +140,12 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set flattening
      *   to 1/\e f.
      * @param[in] stdlat1 first standard parallel (degrees).
      * @param[in] stdlat2 second standard parallel (degrees).
      * @param[in] k1 azimuthal scale on the standard parallels.
-     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k1 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f) \e a, or \e k1 is
      *   not positive.
      * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
      *   [&minus;90&deg;, 90&deg;], or if \e stdlat1 and \e stdlat2 are
@@ -158,14 +158,14 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
      * @param[in] sinlat1 sine of first standard parallel.
      * @param[in] coslat1 cosine of first standard parallel.
      * @param[in] sinlat2 sine of second standard parallel.
      * @param[in] coslat2 cosine of second standard parallel.
      * @param[in] k1 azimuthal scale on the standard parallels.
-     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k1 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f) \e a, or \e k1 is
      *   not positive.
      * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
      *   [&minus;90&deg;, 90&deg;], or if \e stdlat1 and \e stdlat2 are

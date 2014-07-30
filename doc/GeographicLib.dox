@@ -79,6 +79,7 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref magnetic
  - \ref geodesic
  - \ref triaxial
+ - \ref rhumb
  - \ref transversemercator
  - \ref geocentric
  - \ref highprec
@@ -873,42 +874,42 @@ the underlying functionality provided by the library.
 The utilities are
  - <a href="GeoConvert.1.html">
    <b>GeoConvert</b></a>: convert geographic coordinates using
-   GeoCoords.
+   GeoCoords.  See \ref GeoConvert.cpp.
  - <a href="GeodSolve.1.html">
    <b>GeodSolve</b></a>: perform geodesic calculations using
-   Geodesic and GeodesicLine.
+   Geodesic and GeodesicLine.  See \ref GeodSolve.cpp.
  - <a href="Planimeter.1.html">
    <b>Planimeter</b></a>: compute the area of geodesic polygons using
-   PolygonArea.
+   PolygonArea.  See \ref Planimeter.cpp.
  - <a href="TransverseMercatorProj.1.html">
    <b>TransverseMercatorProj</b></a>: convert between geographic
    and transverse Mercator.  This is for testing
    TransverseMercatorExact and
-   TransverseMercator.
+   TransverseMercator.  See \ref TransverseMercatorProj.cpp.
  - <a href="CartConvert.1.html">
    <b>CartConvert</b></a>: convert geodetic coordinates to geocentric or
    local cartesian using Geocentric and
-   LocalCartesian.
+   LocalCartesian.  See \ref CartConvert.cpp.
  - <a href="GeodesicProj.1.html">
    <b>GeodesicProj</b></a>: perform projections based on geodesics
    using AzimuthalEquidistant, Gnomonic,
-   and CassiniSoldner.
+   and CassiniSoldner.  See \ref GeodesicProj.cpp.
  - <a href="ConicProj.1.html">
    <b>ConicProj</b></a>: perform conic projections using
    LambertConformalConic and
-   AlbersEqualArea.
+   AlbersEqualArea.  See \ref ConicProj.cpp.
  - <a href="GeoidEval.1.html">
    <b>GeoidEval</b></a>: look up geoid heights using
-   Geoid.
+   Geoid.  See \ref GeoidEval.cpp.
  - <a href="Gravity.1.html">
    <b>Gravity</b></a>: compute the earth's gravitational field using
-   GravityModel and GravityCircle.
+   GravityModel and GravityCircle.  See \ref Gravity.cpp.
  - <a href="MagneticField.1.html">
    <b>MagneticField</b></a>: compute the earth's magnetic field using
-   MagneticModel and MagneticCircle.
+   MagneticModel and MagneticCircle.  See \ref MagneticField.cpp.
  - <a href="RhumbSolve.1.html">
-   <b>RhumbSolve</b></a>: perform rhumb line calculations using
-   Ellipsoid.
+   <b>RhumbSolve</b></a>: perform rhumb line calculations using Rhumb
+   and RhumbLine.  See \ref RhumbSolve.cpp.
  .
 The documentation for these utilities is in the form of man pages.  This
 documentation can be accessed by clicking on the utility name in the
@@ -3746,8 +3747,7 @@ Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
 \page triaxial Geodesics on a triaxial ellipsoid
 
 <center>
-Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
-\ref contents.
+Back to \ref geodesic.  Forward to \ref rhumb.  Up to \ref contents.
 </center>
 
 Jacobi (1839) showed that the problem of geodesics on a triaxial
@@ -4275,7 +4275,62 @@ The shortest path found by this method is unique unless:
    \f$\pi - \alpha_2\f$.
 
 <center>
-Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
+Back to \ref geodesic.  Forward to \ref rhumb.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page rhumb Rhumb lines
+
+<center>
+Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
+\ref contents.
+</center>
+
+References:
+ - V.A. Botnev, S.M. Ustinov,
+   <a href="http://ntv.spbstu.ru/fulltext/T3.198.2014_05.PDF">
+   Methods for direct and inverse geodesic problems solving with high
+   precision</a>, St. Petersburg State Polytechnical University Journal
+   3(198), 49--58 (2014).
+ - P. Osborne,
+   <a href="http://www.mercator99.webspace.virginmedia.com/">
+   The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5.
+ - T. H. Meyer and C. M. Rollins,
+   The direct and indirect problem for loxodromes,
+   Navigation 58(1), 1--6 (2011).
+ .
+
+<a href="RhumbSolve.1.html">RhumbSolve</a> is a command line utility to
+perform rhumb line calculations.  A rhumb line (also called a loxodrome)
+is a line of constant azithmuth on the surface of the ellipsoid.  It is
+important for historical reasons because sailing with a constant compass
+heading is simpler than sailing a geodesic course.
+
+Solving for the rhumb line is easy because rhumb lines are straight line
+in the Mercator projection, which maps a point with geographical
+coordinates \f$ (\phi,\lambda) \f$ on the ellipsoid to a point \f$
+(\psi,\lambda) \f$ on the plane where \f$\psi\f$ is the isometric
+latitude,
+\f[
+\psi = \sinh^{-1}\tan\phi - e\tanh^{-1}(e \sin\phi),
+\f]
+where \f$e\f$ is the eccentricity.  The azimuth \f$\alpha_{12}\f$ of a
+rhumb line from \f$ (\phi_1,\lambda_1) \f$ to \f$ (\phi_2,\lambda_2) \f$
+is thus given by
+\f[
+\tan\alpha_{12} = \frac{\lambda_2 - \lambda_1}{\psi_2 - \psi_2},
+\f]
+where, typically, \f$\lambda_2 - \lambda_1\f$ is reduced to the range
+\f$[-\pi,\pi]\f$.
+
+The information is sufficient to determine the course of a rhumb line.
+To complete the solution, we need also to find the distance.
+\f[ y = b E(\beta, ie'); \mu = \frac12 \pi E(\beta, ie') \f]
+
+\f[ \frac{d\psi}{d\phi} = \frac{\rho}R \f]
+\f[ \frac{dy}{d\phi} = \rho \f]
+<center>
+Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
 \ref contents.
 </center>
 **********************************************************************/
@@ -4283,7 +4338,7 @@ Back to \ref geodesic.  Forward to \ref transversemercator.  Up to
 \page transversemercator Transverse Mercator projection
 
 <center>
-Back to \ref triaxial.  Forward to \ref geocentric.  Up to \ref contents.
+Back to \ref rhumb.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 
 TransverseMercator and
@@ -4411,7 +4466,7 @@ In the formulas below ^ indicates exponentiation (<i>n</i>^3 =
 The equations need to be converted to Horner form, but are here left in
 expanded form so that they can be easily truncated to lower order in \e
 n.  Some of the integers here are not representable as 32-bit integers
-and will need to be included as double literals.
+and will need to be included as 64-bit integers.
 
 \e A in Kr&uuml;ger, p. 12, eq. (5)
 \verbatim
@@ -4650,14 +4705,15 @@ projection (Fig. 3(a)).  The extended Thompson projection figure has
 reflection symmetry on all the four sides of Fig. 3(c).
 
 <center>
-Back to \ref triaxial.  Forward to \ref geocentric.  Up to \ref contents.
+Back to \ref rhumb.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page geocentric Geocentric coordinates
 
 <center>
-Back to \ref transversemercator.  Forward to \ref highprec.  Up to \ref contents.
+Back to \ref transversemercator.  Forward to \ref highprec.  Up to
+\ref contents.
 </center>
 
 The implementation of Geocentric::Reverse is adapted from
@@ -4765,7 +4821,8 @@ However the choice of independent variables in these methods leads
 to a loss of accuracy for points near the equatorial plane.
 
 <center>
-Back to \ref transversemercator.  Forward to \ref highprec.  Up to \ref contents.
+Back to \ref transversemercator.  Forward to \ref highprec.  Up to
+\ref contents.
 
 </center>
 **********************************************************************/
@@ -5112,7 +5169,9 @@ of the git repository for GeographicLib.
      <a href="ConicProj.1.html">ConicProj</a>,
      <a href="GeodesicProj.1.html">GeodesicProj</a>,
      <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>,
-   - Add <a href="RhumbSolve.1.html">RhumbSolve</a> utility.
+   - Add Rhumb and RhumbLine classes and the
+     <a href="RhumbSolve.1.html">RhumbSolve</a> utility; see \ref rhumb
+     for more information.
    - Minor changes to NormalGravity:
      - add NormalGravity::J2ToFlattening and NormalGravity::FlatteningToJ2;
      - use Newton's method to determine \e f from \e J2;
