@@ -30,9 +30,9 @@ namespace GeographicLib {
    * substitute much more accurate algorithms given by
    * GeographicLib:TransverseMercator and GeographicLib:PolarStereographic.
    * These are the algorithms recommended by the NGA document
-   * - <a href="https://nsgreg.nga.mil/doc/view?i=4056"> The Universal Grids
-   *   and the Transverse Mercator and Polar Stereographic Map Projections</a>,
-   *   NGA.SIG.0012_2.0.0_UTMUPS (2014).
+   * - <a href="http://earth-info.nga.mil/GandG/publications/NGA_SIG_0012_2_0_0_UTMUPS/NGA.SIG.0012_2.0.0_UTMUPS.pdf">
+   *   The Universal Grids and the Transverse Mercator and Polar Stereographic
+   *   Map Projections</a>, NGA.SIG.0012_2.0.0_UTMUPS (2014).
    *
    * In this implementation, the conversions are closed, i.e., output from
    * Forward is legal input for Reverse and vice versa.  The error is about 5nm

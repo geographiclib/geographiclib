@@ -31,11 +31,12 @@ namespace GeographicLib {
    *   Defense Mapping Agency, Technical Manual TM8358.1 (1990).
    * .
    * This document has been updated by the two NGA documents
-   * - <a href="https://nsgreg.nga.mil/doc/view?i=4057"> Universal Grids and
-   *   Grid Reference Systems</a>, NGA.STND.0037_2.0.0_GRIDS (2014).
-   * - <a href="https://nsgreg.nga.mil/doc/view?i=4056"> The Universal Grids
-   *   and the Transverse Mercator and Polar Stereographic Map Projections</a>,
-   *   NGA.SIG.0012_2.0.0_UTMUPS (2014).
+   * - <a href="http://earth-info.nga.mil/GandG/publications/NGA_STND_0037_2_0_0_GRIDS/NGA.STND.0037_2.0.0_GRIDS.pdf">
+   *   Universal Grids and Grid Reference Systems</a>,
+   *   NGA.STND.0037_2.0.0_GRIDS (2014).
+   * - <a href="http://earth-info.nga.mil/GandG/publications/NGA_SIG_0012_2_0_0_UTMUPS/NGA.SIG.0012_2.0.0_UTMUPS.pdf">
+   *   The Universal Grids and the Transverse Mercator and Polar Stereographic
+   *   Map Projections</a>, NGA.SIG.0012_2.0.0_UTMUPS (2014).
    *
    * This implementation has the following properties:
    * - The conversions are closed, i.e., output from Forward is legal input for
