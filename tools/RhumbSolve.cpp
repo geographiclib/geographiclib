@@ -45,7 +45,7 @@ std::string AzimuthString(real azi, int prec, bool dms, char dmssep) {
 int main(int argc, char* argv[]) {
   try {
     Utility::set_digits();
-    bool linecalc = false, inverse = false, dms = false, exact = false;
+    bool linecalc = false, inverse = false, dms = false, exact = true;
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
@@ -100,8 +100,8 @@ int main(int argc, char* argv[]) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
-      } else if (arg == "-E")
-        exact = true;
+      } else if (arg == "-s")
+        exact = false;
       else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];

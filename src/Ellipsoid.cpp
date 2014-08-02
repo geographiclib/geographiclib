@@ -20,6 +20,7 @@ namespace GeographicLib {
     , _f1(1 - _f)
     , _f12(Math::sq(_f1))
     , _e2(_f * (2 - _f))
+    , _e(sqrt(abs(_e2)))
     , _e12(_e2 / (1 - _e2))
     , _n(_f / (2  - _f))
     , _b(_a * _f1)

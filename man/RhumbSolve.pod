@@ -6,7 +6,7 @@ RhumbSolve -- perform rhumb line calculations
 
 B<RhumbSolve> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi12> ]
 [ B<-e> I<a> I<f> ]
-[ B<-d> | B<-:> ] [ B<-f> ] [ B<-p> I<prec> ] [ B<-E> ]
+[ B<-d> | B<-:> ] [ B<-f> ] [ B<-p> I<prec> ] [ B<-s> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -88,13 +88,15 @@ delimiters.
 set the output precision to I<prec> (default 3); I<prec> is the
 precision relative to 1 m.  See L</PRECISION>.
 
-=item B<-E>
+=item B<-s>
 
-By default, series expansions are used to compute a key ratio of
-differences accurately.  The series are only accurate for |I<f>| E<lt>
-0.01.  If B<-E> is supplied, the ratio is computed directly using exact
-expressions.  However this calculation is subject to large round-off
-errors if I<lat1> and I<lat2> are close.  See L</ACCURACY>.
+By default, the rhumb line calculations are carried out exactly in terms
+of elliptic integrals.  This includes the use of the addition theorem
+for elliptic integrals to compute the divided difference of the
+isometric and rectifying latitudes.  If B<-s> is supplied this divided
+difference is computed using Krueger series for the transverse Mercator
+projection which is only accurate for |I<f>| E<lt> 0.01.  See
+L</ACCURACY>.
 
 =item B<--comment-delimiter>
 
@@ -178,19 +180,16 @@ following lines will be converted.
 The algorithm used by B<RhumbSolve> uses exact formulas for converting
 between the latitude, rectifying latitude (I<mu>), and isometric
 latitude (I<psi>).  These formulas are accurate for any value of the
-flattening.  However the computation of rhumb lines involves the ratio
-(I<psi1> - I<psi2>) / (I<mu1> - I<mu2>) and this is subject to large
-round-off errors if I<lat1> is close to I<lat2>.  So, by default, the
-ratio is computed using divided differences using the series expansions
-used by TransverseMercatorProj(1) for the conversions between rectifying
-and conformal latitudes.  These are accurate for |I<f>| E<lt> 0.01.  If
-the B<-E> option is supplied then the ratio of the differences will be
-computed directly if I<lat1> is far from I<lat2> and will be
-approximated by the derivative otherwise.  This results in appreciable
-errors (about 0.1 mm) if I<lat1> and I<lat2> are within a few
-arcseconds.  Recommendation: do not supply the B<-E> option for
-terrestrial applications; for highly eccentric ellipsoids, use B<-E> and
-be suspicious of the result if I<lat1> and I<lat2> are close.
+flattening.  The computation of rhumb lines involves the ratio (I<psi1>
+- I<psi2>) / (I<mu1> - I<mu2>) and this is subject to large round-off
+errors if I<lat1> is close to I<lat2>.  So this ratio is computed using
+divided differences using one of two methods: by default this uses the
+addition theorem for elliptics integrals (this is accurate for all
+values of I<f>); however, with the B<-s> options, it is computed using
+the series expansions used by TransverseMercatorProj(1) for the
+conversions between rectifying and conformal latitudes (these are
+accurate for |I<f>| E<lt> 0.01).  For the WGS84 ellipsoid the error is
+about 10 nanometers using either method.
 
 =head1 EXAMPLES
 

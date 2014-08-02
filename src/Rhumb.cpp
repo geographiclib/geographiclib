@@ -30,7 +30,7 @@ namespace GeographicLib {
       h = Math::hypot(lon12, psi12);
     azi12 = 0 - atan2(-lon12, psi12) / Math::degree();
     real dmudpsi;
-    if (_exact) {
+    if (false) {
       real mu12 = _ell.RectifyingLatitude(lat2) - _ell.RectifyingLatitude(lat1);
       dmudpsi = !(abs(mu12) <= tol()) ? mu12 / psi12 :
         // use dmu/dpsi = (pi/2)*R/Q
@@ -43,7 +43,7 @@ namespace GeographicLib {
   }
 
   RhumbLine Rhumb::Line(real lat1, real lon1, real azi12) const
-  { return RhumbLine(_ell, lat1, lon1, azi12, _exact); }
+  { return RhumbLine(*this, _ell, lat1, lon1, azi12, _exact); }
 
   void Rhumb::Direct(real lat1, real lon1, real azi12, real s12,
                      real& lat2, real& lon2) const
@@ -112,12 +112,61 @@ namespace GeographicLib {
   }
 
   Math::real Rhumb::DIsometricToRectifying(real x, real y) const {
-    return DConformalToRectifying(gd(x), gd(y)) * Dgd(x, y);
+    if (_exact) {
+      real
+        lat1 = _ell.InverseIsometricLatitude(x/Math::degree()),
+        lat2 = _ell.InverseIsometricLatitude(y/Math::degree());
+      return DRectifying(lat1, lat2) / DIsometric(lat1, lat2);
+    } else
+      return DConformalToRectifying(gd(x), gd(y)) * Dgd(x, y);
   }
 
-  RhumbLine::RhumbLine(const Ellipsoid& ell, real lat1, real lon1, real azi12,
+  Math::real Rhumb::DE(real x, real y) const {
+    const EllipticFunction& ell = _ell._ell;
+    real d = x - y;
+    if (x * y <= 0)
+      return d ? (ell.E(x) - ell.E(y)) / (x - y) : 1;
+    // See DLMF: Eqs (19.11.2) and (19.11.4) letting
+    // theta -> x, phi -> -y, psi -> z
+    //
+    // (E(x) - E(y)) / d = E(z)/d - k2 * sin(x) * sin(y) * sin(z)/d
+    //
+    // tan(z/2) = (sin(x)*Delta(y) - sin(y)*Delta(x)) / (cos(x) + cos(y))
+    //          = d * Dsin(x,y) * (sin(x) + sin(y))/(cos(x) + cos(y)) /
+    //             (sin(x)*Delta(y) + sin(y)*Delta(x))
+    //          = t = d * Dt
+    // sin(z) = 2*t/(1+t^2); cos(z) = (1-t^2)/(1+t^2)
+    real sx = sin(x), sy = sin(y), cx = cos(x), cy = cos(y);
+    real Dt = Dsin(x, y) * (sx + sy) /
+      ((cx + cy) * (sx * ell.Delta(sy, cy) + sy * ell.Delta(sx, cx))),
+      t = d * Dt, Dsz = 2 * Dt / (1 + t*t),
+      sz = d * Dsz, cz = (1 - t) * (1 + t) / (1 + t*t);
+    return ((sz ? ell.E(sz, cz, ell.Delta(sz, cz)) / sz : 1)
+            - ell.k2() * sx * sy) * Dsz;
+  }
+  Math::real Rhumb::DRectifying(real lat1, real lat2) const {
+    real phi1 = lat1 * Math::degree(), phi2 = lat2 * Math::degree(),
+      bet1 = _ell.ParametricLatitude(lat1) * Math::degree(),
+      bet2 =  _ell.ParametricLatitude(lat2) * Math::degree();
+    return _ell._b * _ell._f1 * DE(bet1, bet2) * Math::pi()
+      * RhumbLine::Dtan(phi1, phi2)
+      * Datan(_ell._f1 * RhumbLine::tano(phi1),
+              _ell._f1 * RhumbLine::tano(phi2))
+      / (2 * _ell.QuarterMeridian());
+  }
+  Math::real Rhumb::DIsometric(real lat1, real lat2) const {
+    real phi1 = lat1 * Math::degree(), phi2 = lat2 * Math::degree(),
+      t1 = RhumbLine::tano(phi1), t2 = RhumbLine::tano(phi2);
+    return RhumbLine::Dasinh(t1, t2) * RhumbLine::Dtan(phi1, phi2)
+      - Deatanhe(sin(phi1), sin(phi2)) * Dsin(phi1, phi2);
+  }
+
+
+  RhumbLine::RhumbLine(const Rhumb& rh, const Ellipsoid& ell,
+                       real lat1, real lon1, real azi12,
                        bool exact)
-    : _ell(ell)
+    : _rh(rh)
+    , _ell(ell)
     , _exact(exact)
     , _lat1(lat1)
     , _lon1(Math::AngNormalize(lon1))
@@ -139,7 +188,7 @@ namespace GeographicLib {
       if (_calp) {
         lat2 = _ell.InverseRectifyingLatitude(mu2);
         real psi12;
-        if (_exact)
+        if (false)
           psi12 = !(abs(mu12) <= Rhumb::tol()) ?
             _ell.IsometricLatitude(lat2) - _psi1 :
             // use dpsi/dmu = (2/pi)*Q/R
@@ -170,12 +219,19 @@ namespace GeographicLib {
   }
 
   Math::real RhumbLine::DRectifyingToIsometric(real x, real y) const {
-    real
-      chix = _ell.ConformalLatitude
-      (_ell.InverseRectifyingLatitude(x/Math::degree())) * Math::degree(),
-      chiy = _ell.ConformalLatitude
-      (_ell.InverseRectifyingLatitude(y/Math::degree())) * Math::degree();
-    return Dgdinv(chix, chiy) * DRectifyingToConformal(x, y);
+    if (_exact) {
+      real
+        lat1 = _ell.InverseRectifyingLatitude(x/Math::degree()),
+        lat2 = _ell.InverseRectifyingLatitude(y/Math::degree());
+      return _rh.DIsometric(lat1, lat2) / _rh.DRectifying(lat1, lat2);
+    } else {
+      real
+        chix = _ell.ConformalLatitude
+        (_ell.InverseRectifyingLatitude(x/Math::degree())) * Math::degree(),
+        chiy = _ell.ConformalLatitude
+        (_ell.InverseRectifyingLatitude(y/Math::degree())) * Math::degree();
+      return Dgdinv(chix, chiy) * DRectifyingToConformal(x, y);
+    }
   }
 
 } // namespace GeographicLib

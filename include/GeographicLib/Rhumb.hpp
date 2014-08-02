@@ -90,6 +90,28 @@ namespace GeographicLib {
     real DConformalToRectifying(real x, real y) const;
     real DIsometricToRectifying(real x, real y) const;
     static real SinSeries(real x, real y, const real c[], int n);
+    static inline real Dsin(real x, real y) {
+      using std::sin; using std::cos;
+      real d = (x - y)/2;
+      return cos((x + y)/2) * (d ? sin(d) / d : 1);
+    }
+    // Copied from LambertConformalConic...
+    // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0
+    // - sqrt(-e2) * atan( sqrt(-e2) * x)                    if f < 0
+    inline real eatanhe(real x) const {
+      using std::atan;
+      return _ell._f >= 0 ? _ell._e * Math::atanh(_ell._e * x) :
+        - _ell._e * atan(_ell._e * x);
+    }
+    // Copied from LambertConformalConic...
+    // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
+    inline real Deatanhe(real x, real y) const {
+      real t = x - y, d = 1 - _ell._e2 * x * y;
+      return t ? eatanhe(t / d) / t : _ell._e2 / d;
+    }
+    real DE(real x, real y) const;
+    real DRectifying(real lat1, real lat2) const;
+    real DIsometric(real lat1, real lat2) const;
 
   public:
 
@@ -100,15 +122,15 @@ namespace GeographicLib {
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
      *   flattening to 1/\e f.
-     * @param[in] exact if false (the default) use divided differences in the
-     *   calculation (accurate for |<i>f</i>| < 0.01), otherwise use direct
-     *   evaluation (inaccurate if \e lat1 and \e lat2 are nearly equal).
+     * @param[in] exact if true (the default) use an addition theorem for
+     *   elliptic integrals to compute divided differences; otherwise use
+     *   series expansion (accurate for |<i>f</i>| < 0.01).
      * @exception GeographicErr if \e a or (1 &minus; \e f) \e a is not
      *   positive.
      *
      * See \ref rhumb, for a detailed description of the \e exact parameter.
      **********************************************************************/
-    Rhumb(real a, real f, bool exact = false) : _ell(a, f), _exact(exact) {}
+    Rhumb(real a, real f, bool exact = true) : _ell(a, f), _exact(exact) {}
 
     /**
      * Solve the direct rhumb problem.
@@ -221,6 +243,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend Rhumb;
+    const Rhumb& _rh;
     const Ellipsoid& _ell;
     bool _exact;
     real _lat1, _lon1, _azi12, _salp, _calp, _mu1, _psi1, _r1;
@@ -266,7 +289,8 @@ namespace GeographicLib {
     }
     real DRectifyingToConformal(real x, real y) const;
     real DRectifyingToIsometric(real x, real y) const;
-    RhumbLine(const Ellipsoid& ell, real lat1, real lon1, real azi12,
+    RhumbLine(const Rhumb& rh,const Ellipsoid& ell,
+              real lat1, real lon1, real azi12,
               bool exact);
   public:
     /**
