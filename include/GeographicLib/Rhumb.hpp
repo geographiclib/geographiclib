@@ -51,13 +51,19 @@ namespace GeographicLib {
     friend RhumbLine;
     Ellipsoid _ell;
     bool _exact;
-    // Threshold for using dmu/dpsi instead of mu12/psi12.
-    static inline real tol() {
-      static const real
-        tol = 90 * Math::cbrt(std::numeric_limits<real>::epsilon());
-      return tol;
-    }
     static const int tm_maxord = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
+    static inline real overflow() {
+      // Overflow value s.t. atan(overflow_) = pi/2
+      static const real
+        overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
+      return overflow;
+    }
+    static inline real tano(real x) {
+      using std::abs; using std::tan;
+      return
+        2 * abs(x) == Math::pi() ? (x < 0 ? - overflow() : overflow()) :
+        tan(x);
+    }
     static inline real gd(real x)
     { using std::atan; using std::sinh; return atan(sinh(x)); }
 
@@ -72,28 +78,40 @@ namespace GeographicLib {
     //   http://dx.doi.org/10.1145/334714.334716
     //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
 
+    static inline real Dtan(real x, real y) {
+      real d = x - y, tx = tano(x), ty = tano(y), txy = tx * ty;
+      return d ? (2 * txy > -1 ? (1 + txy) * tano(d) : tx - ty) / d :
+        1 + txy;
+    }
     static inline real Datan(real x, real y) {
       using std::atan;
       real d = x - y, xy = x * y;
       return d ? (2 * xy > -1 ? atan( d / (1 + xy) ) : atan(x) - atan(y)) / d :
         1 / (1 + xy);
     }
+    static inline real Dsin(real x, real y) {
+      using std::sin; using std::cos;
+      real d = (x - y)/2;
+      return cos((x + y)/2) * (d ? sin(d) / d : 1);
+    }
     static inline real Dsinh(real x, real y) {
       using std::sinh; using std::cosh;
       real d = (x - y)/2;
       return cosh((x + y)/2) * (d ? sinh(d) / d : 1);
     }
+    static inline real Dasinh(real x, real y) {
+      real d = x - y,
+        hx = Math::hypot(real(1), x), hy = Math::hypot(real(1), y);
+      return d ? Math::asinh(x*y > 0 ? d * (x + y) / (x*hy + y*hx) :
+                             x*hy - y*hx) / d :
+        1 / hx;
+    }
     static inline real Dgd(real x, real y) {
       using std::sinh;
       return Datan(sinh(x), sinh(y)) * Dsinh(x, y);
     }
-    real DConformalToRectifying(real x, real y) const;
-    real DIsometricToRectifying(real x, real y) const;
-    static real SinSeries(real x, real y, const real c[], int n);
-    static inline real Dsin(real x, real y) {
-      using std::sin; using std::cos;
-      real d = (x - y)/2;
-      return cos((x + y)/2) * (d ? sin(d) / d : 1);
+    static inline real Dgdinv(real x, real y) {
+      return Dasinh(tano(x), tano(y)) * Dtan(x, y);
     }
     // Copied from LambertConformalConic...
     // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0
@@ -109,9 +127,25 @@ namespace GeographicLib {
       real t = x - y, d = 1 - _ell._e2 * x * y;
       return t ? eatanhe(t / d) / t : _ell._e2 / d;
     }
+    // (E(x) - E(y)) / (x - y) -- E = incomplete elliptic integral of 2nd kind
     real DE(real x, real y) const;
-    real DRectifying(real lat1, real lat2) const;
-    real DIsometric(real lat1, real lat2) const;
+    // (mux - muy) / (phix - phiy) using elliptic integrals
+    real DRectifying(real latx, real laty) const;
+    // (psix - psiy) / (phix - phiy)
+    real DIsometric(real latx, real laty) const;
+
+    // (mux - muy) / (chix - chiy) using Krueger's series
+    real DConformalToRectifying(real chix, real chiy) const;
+    // (chix - chiy) / (mux - muy) using Krueger's series
+    real DRectifyingToConformal(real mux, real muy) const;
+
+    // (mux - muy) / (psix - psiy)
+    real DIsometricToRectifying(real psix, real psiy) const;
+    // (psix - psiy) / (mux - muy)
+    real DRectifyingToIsometric(real mux, real muy) const;
+
+    // (sum(c[j]*sin(2*j*x),j=1..n) - sum(c[j]*sin(2*j*x),j=1..n)) / (x - y)
+    static real SinSeries(real x, real y, const real c[], int n);
 
   public:
 
@@ -244,53 +278,10 @@ namespace GeographicLib {
     typedef Math::real real;
     friend Rhumb;
     const Rhumb& _rh;
-    const Ellipsoid& _ell;
     bool _exact;
     real _lat1, _lon1, _azi12, _salp, _calp, _mu1, _psi1, _r1;
     RhumbLine& operator=(const RhumbLine&); // copy assignment not allowed
-    static inline real overflow() {
-      // Overflow value s.t. atan(overflow_) = pi/2
-      static const real
-        overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
-      return overflow;
-    }
-    static inline real tano(real x) {
-      using std::abs; using std::tan;
-      return
-        2 * abs(x) == Math::pi() ? (x < 0 ? - overflow() : overflow()) :
-        tan(x);
-    }
-
-    // Use divided differences to determine (psi2 - psi1) / (mu2 - mu1)
-    // accurately
-    //
-    // Definition: Df(x,y,d) = (f(x) - f(y)) / (x - y)
-    // See:
-    //   W. M. Kahan and R. J. Fateman,
-    //   Symbolic computation of divided differences,
-    //   SIGSAM Bull. 33(3), 7-28 (1999)
-    //   http://dx.doi.org/10.1145/334714.334716
-    //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
-
-    static inline real Dtan(real x, real y) {
-      real d = x - y, tx = tano(x), ty = tano(y), txy = tx * ty;
-      return d ? (2 * txy > -1 ? (1 + txy) * tano(d) : tx - ty) / d :
-        1 + txy;
-    }
-    static inline real Dasinh(real x, real y) {
-      real d = x - y,
-        hx = Math::hypot(real(1), x), hy = Math::hypot(real(1), y);
-      return d ? Math::asinh(x*y > 0 ? d * (x + y) / (x*hy + y*hx) :
-                             x*hy - y*hx) / d :
-        1 / hx;
-    }
-    static inline real Dgdinv(real x, real y) {
-      return Dasinh(tano(x), tano(y)) * Dtan(x, y);
-    }
-    real DRectifyingToConformal(real x, real y) const;
-    real DRectifyingToIsometric(real x, real y) const;
-    RhumbLine(const Rhumb& rh,const Ellipsoid& ell,
-              real lat1, real lon1, real azi12,
+    RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12,
               bool exact);
   public:
     /**
@@ -333,13 +324,13 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const { return _ell.MajorRadius(); }
+    Math::real MajorRadius() const { return _rh.MajorRadius(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const { return _ell.Flattening(); }
+    Math::real Flattening() const { return _rh.Flattening(); }
   };
 
 } // namespace GeographicLib

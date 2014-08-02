@@ -183,13 +183,13 @@ latitude (I<psi>).  These formulas are accurate for any value of the
 flattening.  The computation of rhumb lines involves the ratio (I<psi1>
 - I<psi2>) / (I<mu1> - I<mu2>) and this is subject to large round-off
 errors if I<lat1> is close to I<lat2>.  So this ratio is computed using
-divided differences using one of two methods: by default this uses the
-addition theorem for elliptics integrals (this is accurate for all
-values of I<f>); however, with the B<-s> options, it is computed using
-the series expansions used by TransverseMercatorProj(1) for the
-conversions between rectifying and conformal latitudes (these are
-accurate for |I<f>| E<lt> 0.01).  For the WGS84 ellipsoid the error is
-about 10 nanometers using either method.
+divided differences using one of two methods: by default, this uses the
+addition theorem for elliptic integrals (accurate for all values of
+I<f>); however, with the B<-s> options, it is computed using the series
+expansions used by TransverseMercatorProj(1) for the conversions between
+rectifying and conformal latitudes (accurate for |I<f>| E<lt> 0.01).
+For the WGS84 ellipsoid, the error is about 10 nanometers using either
+method.
 
 =head1 EXAMPLES
 

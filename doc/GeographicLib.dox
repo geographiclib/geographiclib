@@ -4324,11 +4324,31 @@ where, typically, \f$\lambda_2 - \lambda_1\f$ is reduced to the range
 \f$[-\pi,\pi]\f$.
 
 The information is sufficient to determine the course of a rhumb line.
-To complete the solution, we need also to find the distance.
-\f[ y = b E(\beta, ie'); \mu = \frac12 \pi E(\beta, ie') \f]
+To complete the solution, we need also to find the distance.  This is
+given by
+\f[ s_{12} = \frac {2M}{\pi} \sec\alpha_{12} (\mu_2 - \mu_1), \f]
 
-\f[ \frac{d\psi}{d\phi} = \frac{\rho}R \f]
-\f[ \frac{dy}{d\phi} = \rho \f]
+where \f$\mu\f$ is the rectifying latitude and \f$M\f$ is the quarter
+meridian.  This relation is indeterminate if \f$\phi_1 = \phi_2\f$, so
+we substitute \f$\sec\alpha_{12} = \left|\lambda_2 -
+\lambda_1\right|/(\psi_2 - \psi_1)\f$ take the limit
+\f[
+\begin{aligned}
+ s_{12} &= \frac {2M}{\pi} \frac{d\mu}{d\psi}
+\left|\lambda_2 - \lambda_1\right|\\
+&=R \left|\lambda_2 - \lambda_1\right|,
+\end{aligned}
+\f]
+where the last relation is given by the defining equations for
+\f$\psi\f$ and \f$\mu\f$,
+\f[
+\begin{aligned}
+ \frac{d\psi}{d\phi} &= \frac{\rho}R, \\
+ \frac{d\mu}{d\phi}  &= \frac{\pi}{2M}\rho, \\
+ \frac{d\mu}{d\psi}  &= \frac{\pi}{2M}R.
+\end{aligned}
+\f]
+
 <center>
 Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
 \ref contents.

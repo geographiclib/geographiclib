@@ -158,8 +158,8 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set flattening
-     *   to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
      * @param[in] stdlat1 first standard parallel (degrees).
      * @param[in] stdlat2 second standard parallel (degrees).
      * @param[in] k1 scale on the standard parallels.
@@ -176,8 +176,8 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set flattening
-     *   to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
      * @param[in] sinlat1 sine of first standard parallel.
      * @param[in] coslat1 cosine of first standard parallel.
      * @param[in] sinlat2 sine of second standard parallel.
