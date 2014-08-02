@@ -5058,6 +5058,10 @@ The following steps needed to be taken
    - <code>numeric_limits&lt;double&gt;\::digits</code> is no longer a
      compile-time constant.  It becomes
      <code>numeric_limits&lt;double&gt;\::digits()</code>.
+   - Depending on the precision cos(&pi;/2) might be negative.
+     Similarly atan(tan(&pi;/2)) may evaluate to &minus;&pi/2.
+     GeographicLib already handles this, because this happens with long
+     doubles (64 bits in the fraction).
    - The precision needs to be set in each thread in a multi-processing
      applications (for an example, see
      <code>examples/GeoidToGTX.cpp</code>).

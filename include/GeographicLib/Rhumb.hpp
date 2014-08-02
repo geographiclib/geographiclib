@@ -48,8 +48,16 @@ namespace GeographicLib {
   class  GEOGRAPHICLIB_EXPORT Rhumb {
   private:
     typedef Math::real real;
+    friend RhumbLine;
     Ellipsoid _ell;
     bool _exact;
+    // Threshold for using dmu/dpsi instead of mu12/psi12.
+    static inline real tol() {
+      static const real
+        tol = 90 * Math::cbrt(std::numeric_limits<real>::epsilon());
+      return tol;
+    }
+    static const int tm_maxord = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
     static inline real gd(real x)
     { using std::atan; using std::sinh; return atan(sinh(x)); }
 
@@ -81,6 +89,7 @@ namespace GeographicLib {
     }
     real DConformalToRectifying(real x, real y) const;
     real DIsometricToRectifying(real x, real y) const;
+    static real SinSeries(real x, real y, const real c[], int n);
 
   public:
 
@@ -189,7 +198,6 @@ namespace GeographicLib {
      * ellipsoid.
      **********************************************************************/
     static const Rhumb& WGS84();
-
   };
 
   /**
@@ -212,18 +220,11 @@ namespace GeographicLib {
   class  GEOGRAPHICLIB_EXPORT RhumbLine {
   private:
     typedef Math::real real;
+    friend Rhumb;
     const Ellipsoid& _ell;
     bool _exact;
     real _lat1, _lon1, _azi12, _salp, _calp, _mu1, _psi1, _r1;
     RhumbLine& operator=(const RhumbLine&); // copy assignment not allowed
-    friend Rhumb;
-    // Threshold for using dmu/dpsi instead of mu12/psi12.
-    static inline real tol() {
-      static const real
-        tol = 90 * Math::cbrt(std::numeric_limits<real>::epsilon());
-      return tol;
-    }
-    static const int tm_maxord = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
     static inline real overflow() {
       // Overflow value s.t. atan(overflow_) = pi/2
       static const real
@@ -236,8 +237,6 @@ namespace GeographicLib {
         2 * abs(x) == Math::pi() ? (x < 0 ? - overflow() : overflow()) :
         tan(x);
     }
-    static inline real sinc(real x)
-    { using std::sin; return x ? sin(x) / x : 1; }
 
     // Use divided differences to determine (psi2 - psi1) / (mu2 - mu1)
     // accurately
