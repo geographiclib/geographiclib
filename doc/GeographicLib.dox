@@ -2828,7 +2828,7 @@ References
    <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation
    of longitude and latitude from geodesic measurements (1825)</a>,
    Astron. Nachr. 331(8), 852-861 (2010);
-   translated by C. F. F. Karney and R. E. Deakin.  Preprint:
+   translated by C. F. F. Karney and R. E. Deakin; preprint:
    <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - F. R. Helmert,
    <a href="http://geographiclib.sf.net/geodesic-papers/helmert80-en.pdf">
@@ -4286,68 +4286,401 @@ Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
 \ref contents.
 </center>
 
+The Rhumb and RhumbLine classes together with the
+<a href="RhumbSolve.1.html">RhumbSolve</a> utility perform rhumb line
+calculations.  A rhumb line (also called a loxodrome) is a line of
+constant azimuth on the surface of the ellipsoid.  It is important for
+historical reasons because sailing with a constant compass heading is
+simpler than sailing the shorter geodesic course; see Osborne (2013).
+My interest in this problem was piqued by Botnev and Ustinov (2014) who
+discuss various techniques to improve the accuracy of rhumb line
+calculations.  The items of interest here are:
+ - Review of accurate formulas for the auxiliary latitudes.
+ - Using divided differences to compute \f$\mu_{12}/\psi_{12}\f$
+   maintaining full accuracy.
+ - Applying divided differences to Kr&uuml;ger's series for the
+   transverse Mercator projection to connect \f$\chi\f$ and \f$\mu\f$
+   (valid for small \f$f\f$).
+ - The divided difference formula for incomplete elliptic integrals of
+   the second kind to connect \f$\beta\f$ and \f$\mu\f$ (valid for
+   arbitrary \f$f\f$).
+ - Extending Clenshaw summation to compute the divided difference of a
+   trigonometric sum.
+
+Jump to
+ - \ref rhumbform
+ - \ref rhumblat
+ - \ref divideddiffs
+ - \ref dividedclenshaw
+
 References:
+ - F. W. Bessel,
+   <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation
+   of longitude and latitude from geodesic measurements (1825)</a>,
+   Astron. Nachr. 331(8), 852-861 (2010);
+   translated by C. F. F. Karney and R. E. Deakin; preprint:
+   <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - V.A. Botnev, S.M. Ustinov,
    <a href="http://ntv.spbstu.ru/fulltext/T3.198.2014_05.PDF">
-   Methods for direct and inverse geodesic problems solving with high
-   precision</a>, St. Petersburg State Polytechnical University Journal
-   3(198), 49--58 (2014).
- - P. Osborne,
-   <a href="http://www.mercator99.webspace.virginmedia.com/">
-   The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5.
+   Metody reshenija prjamoj i obratnoj geodezicheskih zadach s vysokoj
+   tochnost'ju</a> (Methods for direct and inverse geodesic problems
+   solving with high precision), St. Petersburg State Polytechnical
+   University Journal 3(198), 49--58 (2014).
+ - K. E. Engsager and K. Poder,
+   <a href="http://icaci.org/files/documents/ICC_proceedings/ICC2007/documents/doc/THEME 2/oral 1/2.1.2 A HIGHLY ACCURATE WORLD WIDE ALGORITHM FOR THE TRANSVE.doc">
+   A highly accurate world wide algorithm for the
+   transverse Mercator mapping (almost)</a>,
+   Proc. XXIII Intl. Cartographic Conf. (ICC2007), Moscow (2007).
+ - F. R. Helmert,
+   <a href="http://geographiclib.sf.net/geodesic-papers/helmert80-en.pdf">
+   Mathematical and Physical Theories of Higher Geodesy, Part 1 (1880)</a>,
+   Aeronautical Chart and Information Center (St. Louis, 1964),
+   Chaps. 5--7.
+ - W. M. Kahan and R. J. Fateman,
+   <a href="http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf">
+   Symbolic computation of divided differences</a>,
+   SIGSAM Bull. 33(3), 7--28 (1999)
+   DOI: <a href="http://dx.doi.org/10.1145/334714.334716">
+   10.1145/334714.334716</a>;
+ - C. F. F. Karney,
+   <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
+   Transverse Mercator with an accuracy of a few nanometers,</a>
+   J. Geodesy 85(8), 475--485 (Aug. 2011);
+   addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
+   tm-addenda.html</a>;
+   preprint:
+   <a href="http://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
+   resource page:
+   <a href="http://geographiclib.sf.net/tm.html"> tm.html</a>.
+ - C. F. F. Karney,
+   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   Algorithms for geodesics</a>,
+   J. Geodesy 87(1), 43--55 (Jan. 2013);
+   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   10.1007/s00190-012-0578-z</a>;
+   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+   geod-addenda.html</a>;
+   resource page:
+   <a href="http://geographiclib.sf.net/geod.html"> geod.html</a>.
+ - L. Kr&uuml;ger,
+   <a href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+   Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
+   the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
+   New Series 52, 172 pp. (1912).
  - T. H. Meyer and C. M. Rollins,
    The direct and indirect problem for loxodromes,
    Navigation 58(1), 1--6 (2011).
- .
+ - P. Osborne,
+   <a href="http://www.mercator99.webspace.virginmedia.com/">
+   The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5.
 
-<a href="RhumbSolve.1.html">RhumbSolve</a> is a command line utility to
-perform rhumb line calculations.  A rhumb line (also called a loxodrome)
-is a line of constant azithmuth on the surface of the ellipsoid.  It is
-important for historical reasons because sailing with a constant compass
-heading is simpler than sailing a geodesic course.
+\section rhumbform Formulation of the rhumb line problem
 
-Solving for the rhumb line is easy because rhumb lines are straight line
-in the Mercator projection, which maps a point with geographical
-coordinates \f$ (\phi,\lambda) \f$ on the ellipsoid to a point \f$
-(\psi,\lambda) \f$ on the plane where \f$\psi\f$ is the isometric
-latitude,
-\f[
-\psi = \sinh^{-1}\tan\phi - e\tanh^{-1}(e \sin\phi),
-\f]
-where \f$e\f$ is the eccentricity.  The azimuth \f$\alpha_{12}\f$ of a
-rhumb line from \f$ (\phi_1,\lambda_1) \f$ to \f$ (\phi_2,\lambda_2) \f$
-is thus given by
-\f[
-\tan\alpha_{12} = \frac{\lambda_2 - \lambda_1}{\psi_2 - \psi_2},
-\f]
-where, typically, \f$\lambda_2 - \lambda_1\f$ is reduced to the range
-\f$[-\pi,\pi]\f$.
-
-The information is sufficient to determine the course of a rhumb line.
-To complete the solution, we need also to find the distance.  This is
-given by
-\f[ s_{12} = \frac {2M}{\pi} \sec\alpha_{12} (\mu_2 - \mu_1), \f]
-
-where \f$\mu\f$ is the rectifying latitude and \f$M\f$ is the quarter
-meridian.  This relation is indeterminate if \f$\phi_1 = \phi_2\f$, so
-we substitute \f$\sec\alpha_{12} = \left|\lambda_2 -
-\lambda_1\right|/(\psi_2 - \psi_1)\f$ take the limit
-\f[
-\begin{aligned}
- s_{12} &= \frac {2M}{\pi} \frac{d\mu}{d\psi}
-\left|\lambda_2 - \lambda_1\right|\\
-&=R \left|\lambda_2 - \lambda_1\right|,
-\end{aligned}
-\f]
-where the last relation is given by the defining equations for
-\f$\psi\f$ and \f$\mu\f$,
+The rhumb line can formulated in terms of three types of latitude, the
+isometric latitude \f$\psi\f$ (this serves to define the course of rhumb
+lines), the rectifying latitude \f$\mu\f$ (needed for computing
+distances along rhumb lines), and the parametric latitude \f$\beta\f$
+(needed for dealing with rhumb lines that run along a parallel).  These
+are defined in terms of the geographical latitude \f$\phi\f$ by
 \f[
 \begin{aligned}
  \frac{d\psi}{d\phi} &= \frac{\rho}R, \\
  \frac{d\mu}{d\phi}  &= \frac{\pi}{2M}\rho, \\
- \frac{d\mu}{d\psi}  &= \frac{\pi}{2M}R.
 \end{aligned}
 \f]
+where \f$\rho\f$ is the meridional radius of curvature, \f$R =
+a\cos\beta\f$ is the radius of a circle of latitude, and \f$M\f$ is the
+length of a quarter meridian (from the equator to the pole).
+
+Rhumb lines are straight in the Mercator projection, which maps a point
+with geographical coordinates \f$ (\phi,\lambda) \f$ on the ellipsoid to
+a point \f$ (\psi,\lambda) \f$.  The azimuth \f$\alpha_{12}\f$ of a
+rhumb line from \f$ (\phi_1,\lambda_1) \f$ to \f$ (\phi_2,\lambda_2) \f$
+is thus given by
+\f[
+\tan\alpha_{12} = \frac{\lambda_{12}}{\psi_{12}},
+\f]
+where the quadrant of \f$\alpha_{12}\f$ is determined by the signs of
+the numerator and denominator of the right-hand side, \f$\lambda_{12} =
+\lambda_2 - \lambda_1\f$, \f$\psi_{12} = \psi_2 - \psi_1\f$, and,
+typically, \f$\lambda_{12}\f$ is reduced to the range \f$[-\pi,\pi]\f$
+(thus giving the course of the <i>shortest</i> rhumb line).
+
+The distance is given by
+\f[
+\begin{aligned}
+s_{12} &= \frac {2M}{\pi} \mu_{12} \sec\alpha_{12} \\
+  &= \frac {2M}{\pi} \mu_{12}
+\frac{\sqrt{\lambda_{12}^2 + \psi_{12}^2}}{\psi_{12}},
+\end{aligned}
+\f]
+where \f$\mu_{12} = \mu_2 - \mu_1\f$.  This relation is indeterminate if
+\f$\phi_1 = \phi_2\f$, so we take the limits
+\f$\psi_{12}\rightarrow0\f$ and \f$\mu_{12}\rightarrow0\f$ and apply
+L'H&ocirc;pital's rule to yield
+\f[
+\begin{aligned}
+ s_{12} &= \frac {2M}{\pi} \left|\lambda_{12}\right| \frac{d\mu}{d\psi}\\
+&=a \left|\lambda_{12}\right| \cos\beta,
+\end{aligned}
+\f]
+where the last relation is given by the defining equations for
+\f$\psi\f$ and \f$\mu\f$.
+
+This provides a complete solution for rhumb lines.  This formulation
+entirely encapsulates the ellipsoidal shape of the earth via the
+auxiliary latitudes; thus in the Rhumb class, the ellipsoidal
+generalization is handled by the Ellipsoid class where the auxiliary
+latitudes are defined.
+
+\section rhumblat Determining the latitudes
+
+Here we brief develop the necessary formulas for the auxiliary
+latitudes.
+
+<b>Isometric latitude:</b> The equation for \f$\psi\f$ can be integrated
+to give
+\f[
+\psi = \sinh^{-1}\tan\phi - e\tanh^{-1}(e \sin\phi),
+\f]
+where \f$e = \sqrt{f(2-f)}\f$ is the eccentricity of the ellipsoid.  To
+invert this equation (to give \f$\phi\f$ in terms of \f$\psi\f$), it is
+convenient to introduce the variables \f$\tau=\tan\phi\f$ and \f$\tau' =
+\tan\chi = \sinh\psi\f$ (\f$\chi\f$ is the conformal latitude) which are
+related by (Karney, 2011)
+\f[
+\begin{aligned}
+\tau' &= \tau \sqrt{1 + \sigma^2} - \sigma \sqrt{1 + \tau^2}, \\
+\sigma &= \sinh\bigl(e \tanh^{-1}(e \tau/\sqrt{1 + \tau^2}) \bigr).
+\end{aligned}
+\f]
+The equation for \f$\tau'\f$ can easily be inverted using by Newton's
+method using \f$\tau_0 = \tau'/(1-e^2)\f$ as a starting guess; and, of
+course, \f$\phi\f$ and \f$\psi\f$ are then given by
+\f[
+\begin{aligned}
+\phi &= \tan^{-1}\tau,\\
+\psi &= \sinh^{-1}\tau'.
+\end{aligned}
+\f]
+This allows conversions to and from \f$\psi\f$ to be carried out for
+any value of the flattening \f$f\f$.  (For prolate ellipsoids, \f$f\f$
+is negative and \f$e\f$ is imaginary, and the equation for \f$\sigma\f$
+needs to be recast in terms of the tangent function.)
+
+For small values of \f$f\f$, Engsager and Poder (2007) express
+\f$\chi\f$ as a trigonometric series in \f$\phi\f$.  This series can be
+reverted to give a series for \f$\phi\f$ in terms of \f$\chi\f$.  Both
+series can be efficiently evaluated using Clenshaw summation and this
+provides a fast non-iterative way of making the conversions.
+
+<b>Parametric latitude:</b> This is given by
+\f[
+\tan\beta = (1-f)\tan\phi,
+\f]
+which allows rapid and accurate conversions.
+
+<b>Rectified latitude:</b> Solving for distances on the meridian is
+naturally carried out in terms of the parametric latitude instead of the
+geographical latitude.  This leads to a simpler elliptic integral which
+is easier to evaluate and to invert.  Helmert (1880, &sect;5.11) notes
+that the series for meridian distance in terms of \f$\beta\f$ converge
+faster than the corresponding ones in terms of \f$\phi\f$.
+
+The rectifying latitude in terms of \f$\beta\f$ is given by
+\f[
+\mu = \frac{\pi}{2E(ie')} E(\beta,ie'),
+\f]
+where \f$e'=e/\sqrt{1-e^2}\f$ is the second eccentricity and \f$E(k)\f$
+and \f$E(\phi,k)\f$ are the complete and incomplete elliptic integrals
+of the second kind; see http://dlmf.nist.gov/19.2.ii.  These can be
+evaluated accurately for arbitrary flattening using the method given in
+http://dlmf.nist.gov/19.36.i.  To find \f$\beta\f$ in terms of
+\f$\mu\f$, Newton's method can be used (noting that \f$dE(\phi,k)/d\phi
+= \sqrt{1 - k^2\sin^2\phi}\f$); for a starting guess use \f$\beta_0 =
+\mu\f$ (or use the first terms in the reverted series; see below).
+
+If the flattening is small, \f$\mu\f$ can be expressed as a series in
+various ways.  The most economical series is in terms of the second
+flattening \f$ n = f/(2-f)\f$ and was found by Bessel (1825); see
+Eq. 5.5.7 of Helmert (1880).  Helmert (1880, Eq. 5.6.8) also gives the
+reverted series (finding \f$\beta\f$ given \f$\mu\f$).  These series are
+used by the Geodesic class where the coefficients are \f$C_{1j}\f$ and
+\f$C_{1j}'\f$; see Eqs. (18) and (21) of Karney (2013) and \ref
+geodseries.  (Make the replacements, \f$\sigma\rightarrow\beta\f$,
+\f$\tau\rightarrow\mu\f$, \f$\epsilon\rightarrow n\f$, to convert the
+notation of the geodesic problem to the problem at hand.)  The series
+are evaluated by Clenshaw summation.
+
+These relations allow inter-conversions between the various latitudes
+\f$\phi\f$, \f$\psi\f$, \f$\chi\f$, \f$\beta\f$, \f$\mu\f$ to be carried
+out simply.  The approaches using series apply only if \f$f\f$ is small.
+The others apply for arbitrary values of \f$f\f$.
+
+\section divideddiffs Use of divided differences
+
+Despite our ability to compute latitudes accurately, the way that
+distances enter into the solution involves the ratio
+\f$\mu_{12}/\psi_{12}\f$; the numerical calculation of this term is
+subject to catastrophic round-off errors when \f$\phi_1\f$ and
+\f$\phi_2\f$ are close.  A simple solution, suggested by Meyer and
+Rollins (2011), is to extend the treatment of rhumb lines along
+parallels to this case, i.e., to replace the ratio by the derivative
+evaluated at the midpoint.  (Meyer and Rollins only offer this solution
+when dealing with the inverse problem; but it can also be applied with
+the direct problem.)  However this is not entirely satisfactory: you
+have to pick the transition point where the derivative takes over from
+the ratio of differences; and near this transition point the many bits
+of accuracy will be lost (I estimate that about 1/3 of bits are lost,
+leading to errors on the order of 0.1 mm for double precision).  Note
+too that this problem crops up even in the spherical limit.
+
+It turns out that we can do substantially better than this and maintain
+full double precision accuracy.  Indeed Botnev and Ustinov provide
+formulas which allow \f$\mu_{12}/\psi_{12}\f$ to be computed accurately
+(but the formula for \f$\mu_{12}\f$ applies only for small flattening).
+
+Here I give a more systematic treatment using the algebra of <i>divided
+differences</i>.  Many readers will be already using this technique,
+e.g., when writing, for example,
+\f[
+  \frac{\sin(2x) - \sin(2y)}{x-y} = 2\frac{\sin(x-y)}{x-y}\cos(x+y).
+\f]
+However, Kahan and Fateman (1999) provide an extensive set of rules
+which allow the technique to be applied to a wide range of problems.
+(The classes LambertConformalConic and AlbersEqualArea use this
+technique to improve the accuracy.)
+
+To illustrate the technique, consider the relation between \f$\psi\f$
+and \f$\chi\f$,
+\f[
+  \psi = \sinh^{-1}\tan\chi.
+\f]
+Define a divided difference operator
+\f[
+ \Delta[f](x,y) =
+\begin{cases}
+df(x)/dx, & \text{if $x=y$,} \\
+\displaystyle\frac{f(x)-f(y)}{x-y}, & \text{otherwise.}
+\end{cases}
+\f]
+Many of the rules for differentiation apply to divided differences; in
+particular, we can use the chain rule to write
+\f[
+\frac{\psi_1 - \psi_2}{\chi_1 - \chi_2}
+= \Delta[\sinh^{-1}](\tan\chi_1,\tan\chi_2) \times
+  \Delta[\tan](\chi_1,\chi_2).
+\f]
+
+Kahan and Fateman catalog the divided difference formulas for all the
+elementary functions.  In this case, we need
+\f[
+\begin{aligned}
+\Delta[\tan](x,y) &= \frac{\tan(x-y)}{x-y} (1 + \tan x\tan y),\\
+\Delta[\sinh^{-1}](x,y) &= \frac1{x-y}
+\sinh^{-1}\biggl(\frac{(x-y)(x+y)}{x\sqrt{1+y^2}+y\sqrt{1+x^2}}\biggr).
+\end{aligned}
+\f]
+The crucial point in these formulas is that the right hand sides can be
+evaluated accurately even if \f$x-y\f$ is small.  (I've only included
+the basic results here; Kahan and Fateman supplement these with the
+derivatives if \f$x-y\f$ vanishes or the direct ratios if \f$x-y\f$ is
+not small.)
+
+To complete the computation of \f$\mu_{12}/\psi_{12}\f$, we now need
+\f$(\mu_1 - \mu_2)/(\chi_1 - \chi_2)\f$, i.e., we need the divided
+difference of the function that converts the conformal latitude to
+rectifying latitude.  We could go through the chain of relations between
+these quantities.  However, we can take a short cut and recognize that
+this function was given as a trigonometric series by Kr&uuml;ger (1912)
+in his development of the transverse Mercator projection.  This is also
+given by Eqs. (5) and (35) of Karney (2011) with the replacements
+\f$\zeta \rightarrow \mu\f$ and \f$\zeta' \rightarrow \chi\f$.  The
+coefficients appearing in this series and the reverted series Eqs. (6)
+and (36) are already computed by the TransverseMercator class.  The
+series can be readily converted to divided difference form (see the
+example at the beginning of this section) and Clenshaw summation can be
+used to evaluate it (see below).
+
+The approach of using the series for the transverse Mercator projection
+limits the applicability of the method to \f$\left|f\right|\lt 0.01\f$.
+If we want to extend the method to arbitrary flattening we need to
+compute \f$\Delta[E](x,y)\f$.  The necessary relation is the "addition
+theorem" for the incomplete elliptic integral of the second kind given
+in http://dlmf.nist.gov/19.11.E2.  This can be converted in a divided
+difference \f$\bigl(E(x,k)-E(y,k)\bigr)/(x-y)\f$ by setting \f$\theta
+\rightarrow x\f$ and \f$\phi \rightarrow -y\f$ (the supplementary angle
+in this formula is most conveniently determined via
+\f$\tan\frac12\psi\f$, http://dlmf.nist.gov/19.11.E4).  We also need to
+apply the divided difference formulas to the conversions from \f$\phi\f$
+to \f$\beta\f$ and \f$\phi\f$ to \f$\psi\f$; but these all involve
+elementary functions and the techniques given in Kahan and Fateman can
+be used.
+
+The end result is that the Rhumb class allows the computation of all
+rhumb lines for any flattening with full double precision accuracy.
+I've kept the implementation rather simple, which results in rather a lot
+of repeated evaluations of quantities.  However, in this case, the need
+for clarity trumps the desire for speed..
+
+\section dividedclenshaw Clenshaw evaluation of differenced sums
+
+The use of
+<a href="https://en.wikipedia.org/wiki/Clenshaw_algorithm#Geodetic_applications">
+Clenshaw summation</a> for summing series of the form,
+\f[
+g(x) = \sum_{k=1}^N c_k \sin(2kx),
+\f]
+is well established.  However when computing divided differences, we are
+interested in evaluating
+\f[
+g(x)-g(y) = \sum_{k=1}^N 2 c_k \sin\bigl(k(x-y)\bigr)\cos\bigl(k(x+y)\bigr)
+\f]
+and the applicability of Clenshaw summation is not so clear.  Botnev and
+Ustinov assert that the method can be used in this case (but they give
+no details).  It turns out that Clenshaw summation can be used if we
+simultaneously compute the sum \f$g(x)+g(y)\f$ and perform a matrix
+summation,
+\f[
+\mathsf G(x,y) = \begin{bmatrix}
+(g(x) + g(y)) / 2\\
+(g(x) - g(y)) / (x - y)
+\end{bmatrix} = \sum_{k=1}^N c_k \mathsf F_k(x,y),
+\f]
+where
+\f[
+\mathsf F_k(x,y)=
+\begin{bmatrix}
+     \sin kp \cos kd\\
+(2/d)\sin kd \cos kp
+\end{bmatrix},
+\f]
+and \f$p=x+y\f$ and \f$d=x-y\f$.  The first element of \f$\mathsf
+G(x,y)\f$ is the mean value of \f$g\f$ and the second is the mean slope.
+\f$\mathsf F_k(x,y)\f$ satisfies the recurrence relation
+\f[
+  \mathsf F_{k+1}(x,y) =
+  \mathsf A(x,y) \mathsf F_k(x,y) - \mathsf F_{k-1}(x,y),
+\f]
+where
+\f[
+ \mathsf A(x,y) = \begin{bmatrix}
+     2 \cos p \cos d &  -d\sin p \sin d \\
+-(4/d) \sin p \sin d &  2 \cos p \cos d
+\end{bmatrix}.
+\f]
+The standard Clenshaw algorithm can now be applied to yield
+\f[
+\begin{aligned}
+\mathsf B_{N+1} &= \mathsf B_{N+2} = \mathsf 0, \\
+\mathsf B_k &= \mathsf A \mathsf B_{k+1} - \mathsf B_{k+2} +
+\mathsf c_k \mathsf I, \qquad\text{for $N\ge k \ge 1$},\\
+\mathsf G(x,y) &= \mathsf B_1 \mathsf F_1(x,y),
+\end{aligned}
+\f]
+where \f$B_k\f$ are \f$2\times2\f$ matrices.  The divided difference
+\f$\Delta[g](x,y)\f$ is given by the second element of \f$\mathsf
+G(x,y)\f$.
 
 <center>
 Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
@@ -4391,6 +4724,8 @@ References
    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers,</a>
    J. Geodesy 85(8), 475--485 (Aug. 2011);
+   addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
+   tm-addenda.html</a>;
    preprint:
    <a href="http://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
@@ -4630,6 +4965,8 @@ This section gives color versions of the figures in
    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers,</a>
    J. Geodesy 85(8), 475--485 (Aug. 2011);
+   addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
+   tm-addenda.html</a>;
    preprint:
    <a href="http://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
@@ -4853,12 +5190,13 @@ Back to \ref transversemercator.  Forward to \ref highprec.  Up to
 Back to \ref geocentric.  Forward to \ref changes.  Up to \ref contents.
 </center>
 
-Many of the algorithms implemented in GeographicLib were tested by
-comparing the output of the algorithms with test sets obtained using
-Maxima's bfloat capability which support arbitrary precision floating
-point arithmetic.  As of version 1.37, high-precision test data can be
-generated directly by GeographicLib by compiling it with
-<code>GEOGRAPHICLIB_PRECISION</code> equal to 4 or 5.
+One of the goals with the algorithms in GeographicLib is to deliver
+accuracy close to the limits for double precision.  In order to develop
+such algorithms it is very useful to be have accurate test data.  For
+this purpose, I used Maxima's bfloat capability, which support arbitrary
+precision floating point arithmetic.  As of version 1.37, such
+high-precision test data can be generated directly by GeographicLib by
+compiling it with <code>GEOGRAPHICLIB_PRECISION</code> equal to 4 or 5.
 
 Here's what you should know:
  - This is mainly for use for algorithm developers.  It's not

@@ -134,6 +134,8 @@ namespace GeographicLib {
     // (psix - psiy) / (phix - phiy)
     real DIsometric(real latx, real laty) const;
 
+    // (sum(c[j]*sin(2*j*x),j=1..n) - sum(c[j]*sin(2*j*x),j=1..n)) / (x - y)
+    static real SinSeries(real x, real y, const real c[], int n);
     // (mux - muy) / (chix - chiy) using Krueger's series
     real DConformalToRectifying(real chix, real chiy) const;
     // (chix - chiy) / (mux - muy) using Krueger's series
@@ -143,9 +145,6 @@ namespace GeographicLib {
     real DIsometricToRectifying(real psix, real psiy) const;
     // (psix - psiy) / (mux - muy)
     real DRectifyingToIsometric(real mux, real muy) const;
-
-    // (sum(c[j]*sin(2*j*x),j=1..n) - sum(c[j]*sin(2*j*x),j=1..n)) / (x - y)
-    static real SinSeries(real x, real y, const real c[], int n);
 
   public:
 
