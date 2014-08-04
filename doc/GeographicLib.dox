@@ -4433,7 +4433,7 @@ auxiliary latitudes; thus in the Rhumb class, the ellipsoidal
 generalization is handled by the Ellipsoid class where the auxiliary
 latitudes are defined.
 
-\section rhumblat Determining the latitudes
+\section rhumblat Determining the auxiliary latitudes
 
 Here we brief develop the necessary formulas for the auxiliary
 latitudes.
@@ -4463,10 +4463,12 @@ course, \f$\phi\f$ and \f$\psi\f$ are then given by
 \psi &= \sinh^{-1}\tau'.
 \end{aligned}
 \f]
-This allows conversions to and from \f$\psi\f$ to be carried out for
-any value of the flattening \f$f\f$.  (For prolate ellipsoids, \f$f\f$
-is negative and \f$e\f$ is imaginary, and the equation for \f$\sigma\f$
-needs to be recast in terms of the tangent function.)
+This allows conversions to and from \f$\psi\f$ to be carried out for any
+value of the flattening \f$f\f$; these conversions are implemented by
+Ellipsoid::IsometricLatitude and Ellipsoid::InverseIsometricLatitude.
+(For prolate ellipsoids, \f$f\f$ is negative and \f$e\f$ is imaginary,
+and the equation for \f$\sigma\f$ needs to be recast in terms of the
+tangent function.)
 
 For small values of \f$f\f$, Engsager and Poder (2007) express
 \f$\chi\f$ as a trigonometric series in \f$\phi\f$.  This series can be
@@ -4478,7 +4480,9 @@ provides a fast non-iterative way of making the conversions.
 \f[
 \tan\beta = (1-f)\tan\phi,
 \f]
-which allows rapid and accurate conversions.
+which allows rapid and accurate conversions; these conversions are
+implemented by Ellipsoid::ParametricLatitude and
+Ellipsoid::InverseParametricLatitude.
 
 <b>Rectified latitude:</b> Solving for distances on the meridian is
 naturally carried out in terms of the parametric latitude instead of the
@@ -4499,6 +4503,8 @@ http://dlmf.nist.gov/19.36.i.  To find \f$\beta\f$ in terms of
 \f$\mu\f$, Newton's method can be used (noting that \f$dE(\phi,k)/d\phi
 = \sqrt{1 - k^2\sin^2\phi}\f$); for a starting guess use \f$\beta_0 =
 \mu\f$ (or use the first terms in the reverted series; see below).
+These conversions are implemented by Ellipsoid::RectifyingLatitude and
+Ellipsoid::InverseRectifyingLatitude.
 
 If the flattening is small, \f$\mu\f$ can be expressed as a series in
 various ways.  The most economical series is in terms of the second
