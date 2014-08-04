@@ -83,7 +83,7 @@ namespace NETGeographicLib
    * "capabilities mask" as a NETGeographicLib::Mask rather than an
    * unsigned.
    **********************************************************************/
-    public ref class GeodesicExact
+	public ref class GeodesicExact
     {
         private:
         // pointer to the unmanaged GeographicLib::GeodesicExact.

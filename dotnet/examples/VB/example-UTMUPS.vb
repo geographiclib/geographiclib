@@ -1,4 +1,4 @@
-Imports NETGeographicLib
+﻿Imports NETGeographicLib
 
 Module example_UTMUPS
     Sub Main()
