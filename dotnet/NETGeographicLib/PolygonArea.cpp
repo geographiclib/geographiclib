@@ -237,5 +237,5 @@ double PolygonAreaExact::MajorRadius::get()
 { return m_pPolygonArea->MajorRadius(); }
 
 //*****************************************************************************
-double PolygonAreaExact::Flattening::get() 
+double PolygonAreaExact::Flattening::get()
 { return m_pPolygonArea->Flattening(); }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,7 +30,7 @@ namespace example_RhumbLine
               for (int i = 0; i <= num; ++i) {
                 double lat, lon;
                 line.Position(i * ds, out lat, out lon);
-		        Console.WriteLine( "{0} {1} {2}", i, lat, lon );
+                        Console.WriteLine( "{0} {1} {2}", i, lat, lon );
               }
             }
           }

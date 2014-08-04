@@ -26,11 +26,11 @@ namespace GeographicLib {
    * and \e azi2.  (The azimuth is the heading measured clockwise from north.)
    *
    * Given \e lat1, \e lon1, \e azi12, and \e s12, we can determine \e lat2,
-   * and \e lon2.  This is the \e direct geodesic problem and its solution is
+   * and \e lon2.  This is the \e direct rhumb problem and its solution is
    * given by the function Rhumb::Direct.
    *
    * Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi12
-   * and \e s12.  This is the \e inverse geodesic problem, whose solution is
+   * and \e s12.  This is the \e inverse rhumb problem, whose solution is
    * given by Rhumb::Inverse.  This finds the shortest such rhumb line, i.e.,
    * the one that wraps no more than half way around the earth .
    *
@@ -39,7 +39,7 @@ namespace GeographicLib {
    * and Tokyo Narita via the rhumb line is 11400 km which is 18% longer than
    * the geodesic distance 9600 km.
    *
-   * For more information on geodesics see \ref rhumb.
+   * For more information on rhumb lines see \ref rhumb.
    *
    * Example of use:
    * \include example-Rhumb.cpp
@@ -192,7 +192,7 @@ namespace GeographicLib {
                 real& lat2, real& lon2) const;
 
     /**
-     * Solve the inverse geodesic problem.
+     * Solve the inverse rhumb problem.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -215,7 +215,7 @@ namespace GeographicLib {
                  real& s12, real& azi12) const;
 
     /**
-     * Set up to compute several points on a single geodesic.
+     * Set up to compute several points on a single rhumb line.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -321,13 +321,13 @@ namespace GeographicLib {
 
     /**
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
-     *   the value inherited from the Geodesic object used in the constructor.
+     *   the value inherited from the Rhumb object used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const { return _rh.MajorRadius(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
-     *   inherited from the Geodesic object used in the constructor.
+     *   inherited from the Rhumb object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const { return _rh.Flattening(); }
   };

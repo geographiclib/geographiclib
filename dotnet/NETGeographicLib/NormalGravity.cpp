@@ -176,25 +176,25 @@ double NormalGravity::SurfacePotential::get()
 //*****************************************************************************
 NormalGravity^ NormalGravity::WGS84()
 {
-	return gcnew NormalGravity( StandardModels::WGS84 );
+    return gcnew NormalGravity( StandardModels::WGS84 );
 }
 
 //*****************************************************************************
 NormalGravity^ NormalGravity::GRS80()
 {
-	return gcnew NormalGravity( StandardModels::GRS80 );
+    return gcnew NormalGravity( StandardModels::GRS80 );
 }
 
 //*****************************************************************************
-double NormalGravity::J2ToFlattening(double a, double GM, double omega, 
-			                         double J2)
+double NormalGravity::J2ToFlattening(double a, double GM, double omega,
+                                     double J2)
 {
-	return GeographicLib::NormalGravity::J2ToFlattening( a, GM, omega, J2);
+    return GeographicLib::NormalGravity::J2ToFlattening( a, GM, omega, J2);
 }
 
 //*****************************************************************************
-double NormalGravity::FlatteningToJ2(double a, double GM, double omega, 
-			                         double f)
+double NormalGravity::FlatteningToJ2(double a, double GM, double omega,
+                                     double f)
 {
-	return GeographicLib::NormalGravity::FlatteningToJ2( a, GM, omega, f);
+    return GeographicLib::NormalGravity::FlatteningToJ2( a, GM, omega, f);
 }

@@ -44,8 +44,8 @@ Rhumb::Rhumb(double a, double f, bool exact)
 
 //*****************************************************************************
 void Rhumb::Direct(double lat1, double lon1, double azi12, double s12,
-            [System::Runtime::InteropServices::Out] double% lat2, 
-			[System::Runtime::InteropServices::Out] double% lon2)
+            [System::Runtime::InteropServices::Out] double% lat2,
+            [System::Runtime::InteropServices::Out] double% lon2)
 {
     double ilat2, ilon2;
     m_pRhumb->Direct( lat1, lon1, azi12, s12, ilat2, ilon2 );
@@ -55,8 +55,8 @@ void Rhumb::Direct(double lat1, double lon1, double azi12, double s12,
 
 //*****************************************************************************
 void Rhumb::Inverse(double lat1, double lon1, double lat2, double lon2,
-                [System::Runtime::InteropServices::Out] double% s12, 
-				[System::Runtime::InteropServices::Out] double% azi12)
+                [System::Runtime::InteropServices::Out] double% s12,
+                [System::Runtime::InteropServices::Out] double% azi12)
 {
     double is12, iazi12;
     m_pRhumb->Inverse( lat1, lon1, lat2, lon2, is12, iazi12 );
@@ -79,7 +79,7 @@ double Rhumb::Flattening::get() { return m_pRhumb->Flattening(); }
 //*****************************************************************************
 Rhumb^ Rhumb::WGS84()
 {
-    return gcnew Rhumb( GeographicLib::Constants::WGS84_a(), 
+    return gcnew Rhumb( GeographicLib::Constants::WGS84_a(),
                         GeographicLib::Constants::WGS84_f(), false );
 }
 
@@ -104,8 +104,8 @@ RhumbLine::RhumbLine( GeographicLib::RhumbLine* pRhumbLine )
 }
 
 //*****************************************************************************
-void RhumbLine::Position(double s12,  
-        [System::Runtime::InteropServices::Out] double% lat2,  
+void RhumbLine::Position(double s12,
+        [System::Runtime::InteropServices::Out] double% lat2,
         [System::Runtime::InteropServices::Out] double% lon2)
 {
     double ilat2, ilon2;

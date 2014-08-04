@@ -27,11 +27,11 @@ namespace NETGeographicLib {
    * and \e azi2.  (The azimuth is the heading measured clockwise from north.)
    *
    * Given \e lat1, \e lon1, \e azi12, and \e s12, we can determine \e lat2,
-   * and \e lon2.  This is the \e direct geodesic problem and its solution is
+   * and \e lon2.  This is the \e direct rhumb problem and its solution is
    * given by the function Rhumb::Direct.
    *
    * Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi12
-   * and \e s12.  This is the \e inverse geodesic problem, whose solution is
+   * and \e s12.  This is the \e inverse rhumb problem, whose solution is
    * given by Rhumb::Inverse.  This finds the shortest such rhumb line, i.e.,
    * the one that wraps no more than half way around the earth .
    *
@@ -40,7 +40,7 @@ namespace NETGeographicLib {
    * and Tokyo Narita via the rhumb line is 11400 km which is 18% longer than
    * the geodesic distance 9600 km.
    *
-   * For more information on geodesics see \ref rhumb.
+   * For more information on rhumb lines see \ref rhumb.
    *
    * C# Example:
    * \include example-Rhumb.cs
@@ -108,11 +108,11 @@ namespace NETGeographicLib {
      * is indeterminate (a NaN is returned for \e lon2).
      **********************************************************************/
     void Direct(double lat1, double lon1, double azi12, double s12,
-                [System::Runtime::InteropServices::Out] double% lat2, 
-				[System::Runtime::InteropServices::Out] double% lon2);
+                [System::Runtime::InteropServices::Out] double% lat2,
+                [System::Runtime::InteropServices::Out] double% lon2);
 
     /**
-     * Solve the inverse geodesic problem.
+     * Solve the inverse rhumb problem.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -132,11 +132,11 @@ namespace NETGeographicLib {
      * calculation to be carried out in finite terms.
      **********************************************************************/
     void Inverse(double lat1, double lon1, double lat2, double lon2,
-                 [System::Runtime::InteropServices::Out] double% s12, 
-				 [System::Runtime::InteropServices::Out] double% azi12);
+                 [System::Runtime::InteropServices::Out] double% s12,
+                 [System::Runtime::InteropServices::Out] double% azi12);
 
     /**
-     * Set up to compute several points on a single geodesic.
+     * Set up to compute several points on a single rhumb line.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -161,13 +161,13 @@ namespace NETGeographicLib {
      * @return the equatorial radius of the ellipsoid (meters).  This is
      *   the value used in the constructor.
      **********************************************************************/
-	property double MajorRadius { double get(); }
+    property double MajorRadius { double get(); }
 
     /**
      * @return f the  flattening of the ellipsoid.  This is the
      *   value used in the constructor.
      **********************************************************************/
-	property double Flattening { double get(); }
+    property double Flattening { double get(); }
 
     /**
      * A global instantiation of Rhumb with the parameters for the WGS84
@@ -204,17 +204,17 @@ namespace NETGeographicLib {
     !RhumbLine(void);
   public:
     /**
-	 * \brief Constructor.
+     * \brief Constructor.
      *
      * For internal use only.  Developers should not call this constructor
      * directly.  Use the Rhumb::Line function to create RhumbLine objects.
      **********************************************************************/
-	RhumbLine( GeographicLib::RhumbLine* pRhumbLine );
+    RhumbLine( GeographicLib::RhumbLine* pRhumbLine );
 
     /**
      * \brief The destructor calls the finalizer.
      **********************************************************************/
-	~RhumbLine() { this->!RhumbLine(); }
+    ~RhumbLine() { this->!RhumbLine(); }
 
     /**
      * Compute the position of point 2 which is a distance \e s12 (meters) from
@@ -231,8 +231,8 @@ namespace NETGeographicLib {
      * If \e s12 is large enough that the rhumb line crosses a pole, the
      * longitude of point 2 is indeterminate (a NaN is returned for \e lon2).
      **********************************************************************/
-    void Position(double s12,  
-                  [System::Runtime::InteropServices::Out] double% lat2,  
+    void Position(double s12,
+                  [System::Runtime::InteropServices::Out] double% lat2,
                   [System::Runtime::InteropServices::Out] double% lon2);
 
     /** \name Inspector functions
@@ -256,16 +256,15 @@ namespace NETGeographicLib {
 
     /**
      * @return the equatorial radius of the ellipsoid (meters).  This is
-     *   the value inherited from the Geodesic object used in the constructor.
+     *   the value inherited from the Rhumb object used in the constructor.
      **********************************************************************/
     property double MajorRadius { double get(); }
 
     /**
      * @return the flattening of the ellipsoid.  This is the value
-     *   inherited from the Geodesic object used in the constructor.
+     *   inherited from the Rhumb object used in the constructor.
      **********************************************************************/
     property double Flattening { double get(); }
   };
 
 } // namespace NETGeographicLib
-

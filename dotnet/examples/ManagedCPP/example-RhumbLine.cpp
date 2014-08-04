@@ -23,7 +23,7 @@ int main(array<System::String ^> ^args)
       for (int i = 0; i <= num; ++i) {
         double lat, lon;
         line->Position(i * ds, lat, lon);
-		Console::WriteLine( "{0} {1} {2}", i, lat, lon );
+        Console::WriteLine( "{0} {1} {2}", i, lat, lon );
       }
     }
   }

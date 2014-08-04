@@ -213,12 +213,12 @@ namespace NETGeographicLib
         ///@}
     };
 
-	//*************************************************************************
-	// PolygonAreaExact
-	//*************************************************************************
+    //*************************************************************************
+    // PolygonAreaExact
+    //*************************************************************************
     ref class GeodesicExact;
 
-	public ref class PolygonAreaExact
+    public ref class PolygonAreaExact
     {
         private:
         // a pointer to the unmanaged GeographicLib::PolygonArea

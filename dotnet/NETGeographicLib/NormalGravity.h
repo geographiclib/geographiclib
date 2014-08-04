@@ -84,6 +84,7 @@ namespace NETGeographicLib
             WGS84,  //!< WGS84 gravity model.
             GRS80   //!< GRS80 gravity model.
         };
+        /// \endcond
 
         /** \name Setting up the normal gravity
          **********************************************************************/
@@ -316,7 +317,7 @@ namespace NETGeographicLib
          **********************************************************************/
         Geocentric^ Earth();
         ///@}
-        
+
         /**
          * A global instantiation of NormalGravity for the WGS84 ellipsoid.
         **********************************************************************/
@@ -339,8 +340,8 @@ namespace NETGeographicLib
          * @param[in] J2 the dynamical form factor.
          * @return \e f the flattening of the ellipsoid.
          **********************************************************************/
-        static double J2ToFlattening(double a, double GM, double omega, 
-			                         double J2);
+        static double J2ToFlattening(double a, double GM, double omega,
+                                     double J2);
 
         /**
          * Compute the dynamical form factor from the flattening.
@@ -354,7 +355,7 @@ namespace NETGeographicLib
          * @param[in] f the flattening of the ellipsoid.
          * @return \e J2 the dynamical form factor.
          **********************************************************************/
-        static double FlatteningToJ2(double a, double GM, double omega, 
-			                         double f);
+        static double FlatteningToJ2(double a, double GM, double omega,
+                                     double f);
     };
 } //namespace NETGeographicLib

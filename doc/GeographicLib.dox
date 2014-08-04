@@ -4341,10 +4341,10 @@ References:
    Symbolic computation of divided differences</a>,
    SIGSAM Bull. 33(3), 7--28 (1999)
    DOI: <a href="http://dx.doi.org/10.1145/334714.334716">
-   10.1145/334714.334716</a>;
+   10.1145/334714.334716</a>.
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
-   Transverse Mercator with an accuracy of a few nanometers,</a>
+   Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
    addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
    tm-addenda.html</a>;
@@ -4728,7 +4728,7 @@ References
    Projections Based On Jacobian Elliptic Functions</a>.
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
-   Transverse Mercator with an accuracy of a few nanometers,</a>
+   Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
    addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
    tm-addenda.html</a>;
@@ -4969,7 +4969,7 @@ Further instructions are included at the top of the file.
 This section gives color versions of the figures in
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
-   Transverse Mercator with an accuracy of a few nanometers,</a>
+   Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
    addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
    tm-addenda.html</a>;
@@ -5279,8 +5279,8 @@ Here's what you should know:
    - support for the C++11 mathematical functions and the explicit cast
      operator is required;
    - quad precision is only available on Linux;
-   - mpfr has been mostly tested on Linux (but it works on Windows and
-     MacOS too);
+   - mpfr has been mostly tested on Linux (but it works on Windows with
+     Visual Studio 12 and MacOS too);
    - because the boost library (used for quad precision) interprets fixed +
      setprecision(0) to mean "print all the digits you've got" instead
      of "print the nearest integer", some of the formatted output is
