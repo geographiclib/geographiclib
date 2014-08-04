@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -157,6 +157,12 @@
       <DependentUpon>ProjectionsPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties/AssemblyInfo.cs" />
+    <Compile Include="RhumbPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RhumbPanel.Designer.cs">
+      <DependentUpon>RhumbPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="SphericalHarmonicsPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -223,6 +229,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RhumbPanel.resx">
+      <DependentUpon>RhumbPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SphericalHarmonicsPanel.resx">
       <DependentUpon>SphericalHarmonicsPanel.cs</DependentUpon>
     </EmbeddedResource>

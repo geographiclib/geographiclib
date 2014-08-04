@@ -159,6 +159,7 @@ The following table lists the source code that demonstrates specific classes.
 <TR><TD>ProjectionsPanel.cs</TD><TD>AzimuthalEquidistant, CassiniSoldner, Gnomonic</TD></TR>
 <TR><TD>SphericalHarmonicsPanel.cs</TD><TD>SphericalHarmonic, SphericalHarmonic1, SphericalHarmonic2, CircularEngine, SphericalCoefficients</TD></TR>
 <TR><TD>TypeIIIProjPanel.cs</TD><TD>UTMUPS, MGRS, OSGB</TD></TR>
+<TR><TD>RhumbPanel.cs</TD><TD>Rhumb, RhumbLine</TD></TR>
 </TABLE>
 </center>
 
