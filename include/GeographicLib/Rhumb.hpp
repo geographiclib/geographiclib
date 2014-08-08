@@ -48,7 +48,7 @@ namespace GeographicLib {
   class  GEOGRAPHICLIB_EXPORT Rhumb {
   private:
     typedef Math::real real;
-    friend RhumbLine;
+    friend class RhumbLine;
     Ellipsoid _ell;
     bool _exact;
     static const int tm_maxord = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
@@ -275,7 +275,7 @@ namespace GeographicLib {
   class  GEOGRAPHICLIB_EXPORT RhumbLine {
   private:
     typedef Math::real real;
-    friend Rhumb;
+    friend class Rhumb;
     const Rhumb& _rh;
     bool _exact;
     real _lat1, _lon1, _azi12, _salp, _calp, _mu1, _psi1, _r1;
