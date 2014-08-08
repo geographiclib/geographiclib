@@ -56,6 +56,11 @@ namespace GeographicLib {
     //             (sin(x)*Delta(y) + sin(y)*Delta(x))
     //          = t = d * Dt
     // sin(z) = 2*t/(1+t^2); cos(z) = (1-t^2)/(1+t^2)
+    // Alt (this only works for |z| <= pi/2 -- however, this conditions holds
+    // if x*y > 0):
+    // sin(z) = d * Dsin(x,y) * (sin(x) + sin(y))/
+    //          (sin(x)*cos(y)*Delta(y) + sin(y)*cos(x)*Delta(x))
+    // cos(z) = sqrt((1-sin(z))*(1+sin(z)))
     real sx = sin(x), sy = sin(y), cx = cos(x), cy = cos(y);
     real Dt = Dsin(x, y) * (sx + sy) /
       ((cx + cy) * (sx * ei.Delta(sy, cy) + sy * ei.Delta(sx, cx))),

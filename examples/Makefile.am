@@ -36,6 +36,8 @@ EXAMPLE_FILES = \
 	example-OSGB.cpp \
 	example-PolarStereographic.cpp \
 	example-PolygonArea.cpp \
+	example-Rhumb.cpp \
+	example-RhumbLine.cpp \
 	example-SphericalEngine.cpp \
 	example-SphericalHarmonic.cpp \
 	example-SphericalHarmonic1.cpp \

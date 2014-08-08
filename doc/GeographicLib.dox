@@ -261,7 +261,8 @@ ccmake and cmake-gui which offer curses and graphical interfaces to
 cmake.  Building under cmake depends on whether it is targeting an IDE
 (interactive development environment) or generating Unix-style
 makefiles.  The instructions below have been tested with makefiles and
-g++ on Linux and with the Visual Studio IDE on Windows.
+g++ on Linux and with the Visual Studio IDE on Windows.  It is known to
+work also for Visual Studio 12 Express (2013).
 
 Here are the steps to compile and install GeographicLib:
 - Unpack the source, running one of \verbatim
@@ -471,7 +472,8 @@ is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
   unzip -q GeographicLib-1.37.zip \endverbatim
 - Open GeographicLib-1.37/windows/GeographicLib-vc10.sln in Visual Studio
-  2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).
+  2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9;
+  for Visual Studio Express 2010, replace -vc10 by -vc10x).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
 - Copy the library windows/Release/GeographicLib.lib and the
@@ -4297,13 +4299,13 @@ discuss various techniques to improve the accuracy of rhumb line
 calculations.  The items of interest here are:
  - Review of accurate formulas for the auxiliary latitudes.
  - Using divided differences to compute \f$\mu_{12}/\psi_{12}\f$
-   maintaining full accuracy.
- - Applying divided differences to Kr&uuml;ger's series for the
-   transverse Mercator projection to connect \f$\chi\f$ and \f$\mu\f$
-   (valid for small \f$f\f$).
- - The divided difference formula for incomplete elliptic integrals of
-   the second kind to connect \f$\beta\f$ and \f$\mu\f$ (valid for
-   arbitrary \f$f\f$).
+   maintaining full accuracy.  Two cases are treated:
+   - If \f$f\f$ is small, Kr&uuml;ger's series for the transverse
+     Mercator projection relate \f$\chi\f$ and \f$\mu\f$.
+   - For arbitrary \f$f\f$, the divided difference formula for
+     incomplete elliptic integrals of the second relates \f$\beta\f$ and
+     \f$\mu\f$.
+   .
  - Extending Clenshaw summation to compute the divided difference of a
    trigonometric sum.
 
@@ -4454,9 +4456,10 @@ related by (Karney, 2011)
 \sigma &= \sinh\bigl(e \tanh^{-1}(e \tau/\sqrt{1 + \tau^2}) \bigr).
 \end{aligned}
 \f]
-The equation for \f$\tau'\f$ can easily be inverted using by Newton's
-method using \f$\tau_0 = \tau'/(1-e^2)\f$ as a starting guess; and, of
-course, \f$\phi\f$ and \f$\psi\f$ are then given by
+The equation for \f$\tau'\f$ can be inverted to give \f$\tau\f$ in terms
+of \f$\tau'\f$ using Newton's method with \f$\tau_0 = \tau'/(1-e^2)\f$
+as a starting guess; and, of course, \f$\phi\f$ and \f$\psi\f$ are then
+given by
 \f[
 \begin{aligned}
 \phi &= \tan^{-1}\tau,\\
@@ -4484,14 +4487,14 @@ which allows rapid and accurate conversions; these conversions are
 implemented by Ellipsoid::ParametricLatitude and
 Ellipsoid::InverseParametricLatitude.
 
-<b>Rectified latitude:</b> Solving for distances on the meridian is
+<b>Rectifying latitude:</b> Solving for distances on the meridian is
 naturally carried out in terms of the parametric latitude instead of the
 geographical latitude.  This leads to a simpler elliptic integral which
 is easier to evaluate and to invert.  Helmert (1880, &sect;5.11) notes
 that the series for meridian distance in terms of \f$\beta\f$ converge
 faster than the corresponding ones in terms of \f$\phi\f$.
 
-The rectifying latitude in terms of \f$\beta\f$ is given by
+In terms of \f$\beta\f$, the rectifying latitude  is given by
 \f[
 \mu = \frac{\pi}{2E(ie')} E(\beta,ie'),
 \f]
@@ -4520,8 +4523,8 @@ are evaluated by Clenshaw summation.
 
 These relations allow inter-conversions between the various latitudes
 \f$\phi\f$, \f$\psi\f$, \f$\chi\f$, \f$\beta\f$, \f$\mu\f$ to be carried
-out simply.  The approaches using series apply only if \f$f\f$ is small.
-The others apply for arbitrary values of \f$f\f$.
+out simply and accurately.  The approaches using series apply only if
+\f$f\f$ is small.  The others apply for arbitrary values of \f$f\f$.
 
 \section divideddiffs Use of divided differences
 
@@ -4536,8 +4539,8 @@ evaluated at the midpoint.  (Meyer and Rollins only offer this solution
 when dealing with the inverse problem; but it can also be applied with
 the direct problem.)  However this is not entirely satisfactory: you
 have to pick the transition point where the derivative takes over from
-the ratio of differences; and near this transition point the many bits
-of accuracy will be lost (I estimate that about 1/3 of bits are lost,
+the ratio of differences; and, near this transition point, many bits of
+accuracy will be lost (I estimate that about 1/3 of bits are lost,
 leading to errors on the order of 0.1 mm for double precision).  Note
 too that this problem crops up even in the spherical limit.
 
@@ -4562,7 +4565,7 @@ and \f$\chi\f$,
 \f[
   \psi = \sinh^{-1}\tan\chi.
 \f]
-Define a divided difference operator
+The divided difference operator is defined by
 \f[
  \Delta[f](x,y) =
 \begin{cases}
@@ -4611,23 +4614,42 @@ used to evaluate it (see below).
 The approach of using the series for the transverse Mercator projection
 limits the applicability of the method to \f$\left|f\right|\lt 0.01\f$.
 If we want to extend the method to arbitrary flattening we need to
-compute \f$\Delta[E](x,y)\f$.  The necessary relation is the "addition
+compute \f$\Delta[E](x,y;k)\f$.  The necessary relation is the "addition
 theorem" for the incomplete elliptic integral of the second kind given
-in http://dlmf.nist.gov/19.11.E2.  This can be converted in a divided
-difference \f$\bigl(E(x,k)-E(y,k)\bigr)/(x-y)\f$ by setting \f$\theta
-\rightarrow x\f$ and \f$\phi \rightarrow -y\f$ (the supplementary angle
-in this formula is most conveniently determined via
-\f$\tan\frac12\psi\f$, http://dlmf.nist.gov/19.11.E4).  We also need to
-apply the divided difference formulas to the conversions from \f$\phi\f$
-to \f$\beta\f$ and \f$\phi\f$ to \f$\psi\f$; but these all involve
-elementary functions and the techniques given in Kahan and Fateman can
-be used.
+in http://dlmf.nist.gov/19.11.E2.  This can be converted in the followinging divided
+difference formula
+\f[
+\Delta[E](x,y;k)
+=\begin{cases}
+\sqrt{1 - k^2\sin^2x}, & \text{if $x=y$,} \\
+\displaystyle \frac{E(x,k)-E(y,k)}{x-y}, & \text{if $xy \le0$,}\\
+\displaystyle
+\biggl(\frac{E(z,k)}{\sin z} - k^2 \sin x \sin y\biggr)\frac{\sin z}{x-y},
+&\text{otherwise,}
+\end{cases}
+\f]
+where the angle \f$z\f$ is given by
+\f[
+\begin{aligned}
+\sin z &= \frac{2t}{1 + t^2},\\
+\cos z &= \frac{(1-t)(1+t)}{1 + t^2},\\
+t &=
+\frac{(x-y)\Delta[\sin](x,y)}
+{\sin x\sqrt{1 - k^2\sin^2y} + \sin y\sqrt{1 - k^2\sin^2x}}
+\frac{\sin x + \sin y}{\cos x + \cos y}.
+\end{aligned}
+\f]
+We also need to apply the divided difference formulas to the conversions
+from \f$\phi\f$ to \f$\beta\f$ and \f$\phi\f$ to \f$\psi\f$; but these
+all involve elementary functions and the techniques given in Kahan and
+Fateman can be used.
 
 The end result is that the Rhumb class allows the computation of all
-rhumb lines for any flattening with full double precision accuracy.
-I've kept the implementation rather simple, which results in rather a lot
-of repeated evaluations of quantities.  However, in this case, the need
-for clarity trumps the desire for speed..
+rhumb lines for any flattening with full double precision accuracy (the
+maximum error is about 10 nanometers).  I've kept the implementation
+simple, which results in rather a lot of repeated evaluations of
+quantities.  However, in this case, the need for clarity trumps the
+desire for speed..
 
 \section dividedclenshaw Clenshaw evaluation of differenced sums
 
@@ -4662,8 +4684,9 @@ where
 \end{bmatrix},
 \f]
 and \f$p=x+y\f$ and \f$d=x-y\f$.  The first element of \f$\mathsf
-G(x,y)\f$ is the mean value of \f$g\f$ and the second is the mean slope.
-\f$\mathsf F_k(x,y)\f$ satisfies the recurrence relation
+G(x,y)\f$ is the average value of \f$g\f$ and the second element, the
+divided difference, is the average slope.  \f$\mathsf F_k(x,y)\f$
+satisfies the recurrence relation
 \f[
   \mathsf F_{k+1}(x,y) =
   \mathsf A(x,y) \mathsf F_k(x,y) - \mathsf F_{k-1}(x,y),
@@ -5552,7 +5575,8 @@ of the git repository for GeographicLib.
        compile times;
      - enable searching the online documentation;
      - add macros <code>GEOGRAPHICLIB_VERSION</code> and
-       <code>GEOGRAPHICLIB_VERSION_NUM</code>.
+       <code>GEOGRAPHICLIB_VERSION_NUM</code>;
+     - add solution and project files for Visual Studio Express 2010 .
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
    (released 2014-05-13)
