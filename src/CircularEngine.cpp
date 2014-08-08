@@ -69,7 +69,7 @@ namespace GeographicLib {
         default:
           A = B = 0;
         }
-        qs = _q / SphericalEngine::scale_;
+        qs = _q / SphericalEngine::scale();
         vc = qs * (_wc[m] + A * (cl * vc + sl * vs ) + B * vc2);
         if (gradp) {
           qs /= _r;

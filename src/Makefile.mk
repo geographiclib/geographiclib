@@ -36,6 +36,7 @@ MODULES = Accumulator \
 	OSGB \
 	PolarStereographic \
 	PolygonArea \
+	Rhumb \
 	SphericalEngine \
 	TransverseMercator \
 	TransverseMercatorExact \
@@ -46,13 +47,13 @@ EXTRAHEADERS = Constants \
 	SphericalHarmonic \
 	SphericalHarmonic1 \
 	SphericalHarmonic2
-
+EXTRASOURCES = GeodesicExactC4
 HEADERS = Config.h $(addsuffix .hpp,$(EXTRAHEADERS) $(MODULES))
-SOURCES = $(addsuffix .cpp,$(MODULES))
-OBJECTS = $(addsuffix .o,$(MODULES))
+SOURCES = $(addsuffix .cpp,$(MODULES) $(EXTRASOURCES))
+OBJECTS = $(addsuffix .o,$(MODULES) $(EXTRASOURCES))
 
 CC = g++ -g
-CXXFLAGS = -g -Wall -Wextra -O3
+CXXFLAGS = -g -Wall -Wextra -O3 -std=c++0x
 
 CPPFLAGS = -I$(INCLUDEPATH) $(DEFINES) \
 	-DGEOGRAPHICLIB_DATA=\"$(GEOGRAPHICLIB_DATA)\"
@@ -93,6 +94,7 @@ Geocentric.o: Config.h Constants.hpp Geocentric.hpp Math.hpp
 Geodesic.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Math.hpp
 GeodesicExact.o: Config.h Constants.hpp GeodesicExact.hpp \
 	GeodesicLineExact.hpp Math.hpp
+GeodesicExactC4.o: Config.h Constants.hpp GeodesicExact.hpp Math.hpp
 GeodesicLine.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Math.hpp
 GeodesicLineExact.o: Config.h Constants.hpp GeodesicExact.hpp \
 	GeodesicLineExact.hpp Math.hpp
@@ -124,6 +126,8 @@ OSGB.o: Config.h Constants.hpp Math.hpp OSGB.hpp TransverseMercator.hpp \
 PolarStereographic.o: Config.h Constants.hpp Math.hpp PolarStereographic.hpp
 PolygonArea.o: Accumulator.hpp Config.h Constants.hpp Geodesic.hpp Math.hpp \
 	PolygonArea.hpp
+Rhumb.o: Config.h Constants.hpp Ellipsoid.hpp Math.hpp Rhumb.hpp \
+	AlbersEqualArea.hpp EllipticFunction.hpp TransverseMercator.hpp
 SphericalEngine.o: CircularEngine.hpp Config.h Constants.hpp Math.hpp \
 	SphericalEngine.hpp Utility.hpp
 TransverseMercator.o: Config.h Constants.hpp Math.hpp TransverseMercator.hpp

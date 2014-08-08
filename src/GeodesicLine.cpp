@@ -35,7 +35,8 @@ namespace GeographicLib {
   GeodesicLine::GeodesicLine(const Geodesic& g,
                              real lat1, real lon1, real azi1,
                              unsigned caps)
-    : _a(g._a)
+    : tiny_(g.tiny_)
+    , _a(g._a)
     , _f(g._f)
     , _b(g._b)
     , _c2(g._c2)
@@ -50,16 +51,16 @@ namespace GeographicLib {
     _lon1 = lon1;
     _azi1 = azi1;
     // alp1 is in [0, pi]
-    real alp1 = azi1 * Math::degree<real>();
+    real alp1 = azi1 * Math::degree();
     // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
     // problems directly than to skirt them.
     _salp1 =     azi1  == -180 ? 0 : sin(alp1);
     _calp1 = abs(azi1) ==   90 ? 0 : cos(alp1);
     real cbet1, sbet1, phi;
-    phi = lat1 * Math::degree<real>();
+    phi = lat1 * Math::degree();
     // Ensure cbet1 = +epsilon at poles
     sbet1 = _f1 * sin(phi);
-    cbet1 = abs(lat1) == 90 ? Geodesic::tiny_ : cos(phi);
+    cbet1 = abs(lat1) == 90 ? tiny_ : cos(phi);
     Geodesic::SinCosNorm(sbet1, cbet1);
     _dn1 = sqrt(1 + g._ep2 * Math::sq(sbet1));
 
@@ -130,13 +131,13 @@ namespace GeographicLib {
     outmask &= _caps & OUT_ALL;
     if (!( Init() && (arcmode || (_caps & DISTANCE_IN & OUT_ALL)) ))
       // Uninitialized or impossible distance calculation requested
-      return Math::NaN<real>();
+      return Math::NaN();
 
     // Avoid warning about uninitialized B12.
     real sig12, ssig12, csig12, B12 = 0, AB1 = 0;
     if (arcmode) {
       // Interpret s12_a12 as spherical arc length
-      sig12 = s12_a12 * Math::degree<real>();
+      sig12 = s12_a12 * Math::degree();
       real s12a = abs(s12_a12);
       s12a -= 180 * floor(s12a / 180);
       ssig12 = s12a ==  0 ? 0 : sin(sig12);
@@ -204,7 +205,7 @@ namespace GeographicLib {
     cbet2 = Math::hypot(_salp0, _calp0 * csig2);
     if (cbet2 == 0)
       // I.e., salp0 = 0, csig2 = 0.  Break the degeneracy in this case
-      cbet2 = csig2 = Geodesic::tiny_;
+      cbet2 = csig2 = tiny_;
     // tan(omg2) = sin(alp0) * tan(sig2)
     somg2 = _salp0 * ssig2; comg2 = csig2;  // No need to normalize
     // tan(alp0) = cos(sig2)*tan(alp2)
@@ -220,7 +221,7 @@ namespace GeographicLib {
       lam12 = omg12 + _A3c *
         ( sig12 + (Geodesic::SinCosSeries(true, ssig2, csig2, _C3a, nC3_-1)
                    - _B31));
-      lon12 = lam12 / Math::degree<real>();
+      lon12 = lam12 / Math::degree();
       // Use Math::AngNormalize2 because longitude might have wrapped multiple
       // times.
       lon12 = Math::AngNormalize2(lon12);
@@ -228,11 +229,11 @@ namespace GeographicLib {
     }
 
     if (outmask & LATITUDE)
-      lat2 = atan2(sbet2, _f1 * cbet2) / Math::degree<real>();
+      lat2 = atan2(sbet2, _f1 * cbet2) / Math::degree();
 
     if (outmask & AZIMUTH)
       // minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi2 = 0 - atan2(-salp2, calp2) / Math::degree<real>();
+      azi2 = 0 - atan2(-salp2, calp2) / Math::degree();
 
     if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
       real
@@ -263,7 +264,7 @@ namespace GeographicLib {
         // salp12 = -0 and alp12 = -180.  However this depends on the sign being
         // attached to 0 correctly.  The following ensures the correct behavior.
         if (salp12 == 0 && calp12 < 0) {
-          salp12 = Geodesic::tiny_ * _calp1;
+          salp12 = tiny_ * _calp1;
           calp12 = -1;
         }
       } else {
@@ -283,7 +284,7 @@ namespace GeographicLib {
       S12 = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
     }
 
-    return arcmode ? s12_a12 : sig12 / Math::degree<real>();
+    return arcmode ? s12_a12 : sig12 / Math::degree();
   }
 
 } // namespace GeographicLib

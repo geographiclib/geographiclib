@@ -10,6 +10,8 @@ endif ()
 
 set (CMAKE_Fortran_FLAGS
   "${CMAKE_Fortran_FLAGS} -Wall -Wextra -pedantic -std=f95 -fimplicit-none")
+# -Wextra now turns on warnings about comparing reals for equality
+set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wno-compare-reals")
 
 set (TOOLS geoddirect geodinverse planimeter)
 

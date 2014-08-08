@@ -39,10 +39,11 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
+    Utility::set_digits();
     bool localcartesian = false, reverse = false;
     real
-      a = Constants::WGS84_a<real>(),
-      f = Constants::WGS84_f<real>();
+      a = Constants::WGS84_a(),
+      f = Constants::WGS84_f();
     real lat0 = 0, lon0 = 0, h0 = 0;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
@@ -176,17 +177,17 @@ int main(int argc, char* argv[]) {
             lc.Reverse(x, y, z, lat, lon, h);
           else
             ec.Reverse(x, y, z, lat, lon, h);
-          *output << Utility::str<real>(lat, 15) << " "
-                  << Utility::str<real>(lon, 15) << " "
-                  << Utility::str<real>(h, 12) << eol;
+          *output << Utility::str(lat, 15 + Math::extra_digits()) << " "
+                  << Utility::str(lon, 15 + Math::extra_digits()) << " "
+                  << Utility::str(h, 12 + Math::extra_digits()) << eol;
         } else {
           if (localcartesian)
             lc.Forward(lat, lon, h, x, y, z);
           else
             ec.Forward(lat, lon, h, x, y, z);
-          *output << Utility::str<real>(x, 10) << " "
-                  << Utility::str<real>(y, 10) << " "
-                  << Utility::str<real>(z, 10) << eol;
+          *output << Utility::str(x, 10 + Math::extra_digits()) << " "
+                  << Utility::str(y, 10 + Math::extra_digits()) << " "
+                  << Utility::str(z, 10 + Math::extra_digits()) << eol;
         }
       }
       catch (const std::exception& e) {

@@ -6,7 +6,7 @@ ConicProj -- perform conic projections
 
 B<ConicProj> ( B<-c> | B<-a> ) I<lat1> I<lat2>
 [ B<-l> I<lon0> ] [ B<-k> I<k1> ] [ B<-r> ]
-[ B<-e> I<a> I<f> ]
+[ B<-e> I<a> I<f> ] [ B<-p> I<prec> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -81,6 +81,14 @@ I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
 1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137 m,
 I<f> = 1/298.257223563.
+
+=item B<-p>
+
+set the output precision to I<prec> (default 6).  I<prec> is the number
+of digits after the decimal point for lengths (in meters).  For
+latitudes and longitudes (in degrees), the number of digits after the
+decimal point is I<prec> + 5.  For the convergence (in degrees) and
+scale, the number of digits after the decimal point is I<prec> + 6.
 
 =item B<--comment-delimiter>
 

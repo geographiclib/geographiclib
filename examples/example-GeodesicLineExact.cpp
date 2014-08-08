@@ -15,7 +15,7 @@ int main() {
   try {
     // Print waypoints between JFK and SIN
     GeodesicExact geod(Constants::WGS84_a(), Constants::WGS84_f());
-    // Alternatively: const GeodesicExact& geod = GeodesicExact::WGS84;
+    // Alternatively: const GeodesicExact& geod = GeodesicExact::WGS84();
     double
       lat1 = 40.640, lon1 = -73.779, // JFK
       lat2 =  1.359, lon2 = 103.989; // SIN
@@ -23,7 +23,7 @@ int main() {
       a12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2);
     const GeographicLib::GeodesicLineExact line(geod, lat1, lon1, azi1);
     // Alternatively
-    // const GeographicLib::GeodesicLineExact line = geod.Line(lat1, lon1, azi1);
+    // const GeographicLib::GeodesicLineExact line = geod.Line(lat1,lon1,azi1);
     double ds = 500e3;          // Nominal distance between points = 500 km
     int num = int(ceil(s12 / ds)); // The number of intervals
     cout << fixed << setprecision(3);

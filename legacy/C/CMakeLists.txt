@@ -12,7 +12,8 @@ endif ()
 if (WIN32)
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
 else ()
-  set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -ansi")
+  set (CMAKE_C_FLAGS
+    "${CMAKE_C_FLAGS} -Wall -Wextra -Wno-array-bounds -pedantic -ansi")
 endif ()
 
 set (TOOLS direct inverse planimeter)

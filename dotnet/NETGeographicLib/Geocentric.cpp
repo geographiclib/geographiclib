@@ -33,7 +33,7 @@ Geocentric::Geocentric(void)
     try
     {
         m_pGeocentric = new GeographicLib::Geocentric(
-            GeographicLib::Geocentric::WGS84 );
+            GeographicLib::Geocentric::WGS84() );
     }
     catch (std::bad_alloc)
     {

@@ -18,7 +18,8 @@ foreach (TOOL ${TOOLS})
   set_source_files_properties (${TOOL}.cpp PROPERTIES
     OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/${TOOL}.usage)
 
-  target_link_libraries (${TOOL} ${PROJECT_LIBRARIES})
+  target_link_libraries (${TOOL} ${PROJECT_LIBRARIES}
+    ${QUAD_LIBRARIES} ${MPFR_LIBRARIES})
 
 endforeach ()
 
@@ -72,9 +73,14 @@ add_test (NAME GeoConvert0
   COMMAND GeoConvert -p -3 -m --input-string "33.3 44.4")
 set_tests_properties (GeoConvert0
   PROPERTIES PASS_REGULAR_EXPRESSION "38SMB4484")
-add_test (NAME GeoConvert1 COMMAND GeoConvert -d --input-string "38smb")
-set_tests_properties (GeoConvert1
-  PROPERTIES PASS_REGULAR_EXPRESSION "32d59'14\\.1\"N 044d27'53\\.4\"E")
+if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
+  # I/O for boost-quad has a bug where precision 0 is interpreted as
+  # printed all the digits of the number (instead of printing the
+  # integer portion).
+  add_test (NAME GeoConvert1 COMMAND GeoConvert -d --input-string "38smb")
+  set_tests_properties (GeoConvert1
+    PROPERTIES PASS_REGULAR_EXPRESSION "32d59'14\\.1\"N 044d27'53\\.4\"E")
+endif ()
 add_test (NAME GeoConvert2
   COMMAND GeoConvert -p -2 --input-string "30d30'30\" 30.50833")
 set_tests_properties (GeoConvert2
@@ -164,11 +170,11 @@ set_tests_properties (GeodSolve11
 # Check fix for inverse geodesics on extreme prolate/oblate ellipsoids
 # Reported 2012-08-29 Stefan Guenther <stefan.gunther@embl.de>; fixed 2012-10-07
 add_test (NAME GeodSolve12 COMMAND
-  GeodSolve -i -e 89.8 -1.83 -p 0 --input-string "0 0 -10 160")
+  GeodSolve -i -e 89.8 -1.83 -p 1 --input-string "0 0 -10 160")
 add_test (NAME GeodSolve13 COMMAND
-  GeodSolve -i -e 89.8 -1.83 -p 0 --input-string "0 0 -10 160" -E)
+  GeodSolve -i -e 89.8 -1.83 -p 1 --input-string "0 0 -10 160" -E)
 set_tests_properties (GeodSolve12 GeodSolve13
-  PROPERTIES PASS_REGULAR_EXPRESSION "120\\.27.* 105\\.15.* 267")
+  PROPERTIES PASS_REGULAR_EXPRESSION "120\\.27.* 105\\.15.* 266\\.7")
 
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0
@@ -201,13 +207,13 @@ set_tests_properties (Planimeter5
   "3 539297\\.[0-9]+ 1247615283[89]\\.[0-9]+")
 # Check fix for Planimeter lon12 rounding bug found 2012-12-03
 add_test (NAME Planimeter6
-  COMMAND Planimeter --input-string "9 -0.00000000000001;9 180;9 0")
+  COMMAND Planimeter -p 8 --input-string "9 -0.00000000000001;9 180;9 0")
 add_test (NAME Planimeter7
-  COMMAND Planimeter --input-string "9  0.00000000000001;9 0;9 180")
+  COMMAND Planimeter -p 8 --input-string "9  0.00000000000001;9 0;9 180")
 add_test (NAME Planimeter8
-  COMMAND Planimeter --input-string "9  0.00000000000001;9 180;9 0")
+  COMMAND Planimeter -p 8 --input-string "9  0.00000000000001;9 180;9 0")
 add_test (NAME Planimeter9
-  COMMAND Planimeter --input-string "9 -0.00000000000001;9 0;9 180")
+  COMMAND Planimeter -p 8 --input-string "9 -0.00000000000001;9 0;9 180")
 set_tests_properties (Planimeter6 Planimeter7 Planimeter8 Planimeter9
   PROPERTIES PASS_REGULAR_EXPRESSION "3 36026861\\.[0-9]+ -?0.0[0-9]+")
 

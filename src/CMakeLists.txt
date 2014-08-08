@@ -6,6 +6,7 @@ file (GLOB HEADERS
   ${PROJECT_BINARY_DIR}/include/GeographicLib/Config.h
   ../include/GeographicLib/[A-Za-z]*.hpp)
 
+add_definitions(-DGEOGRAPHICLIB_DATA="${GEOGRAPHICLIB_DATA}")
 # Define the library and specify whether it is shared or not.
 if (GEOGRAPHICLIB_SHARED_LIB)
   add_library (${PROJECT_SHARED_LIBRARIES} SHARED ${SOURCES} ${HEADERS})
@@ -44,6 +45,14 @@ else ()
     ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES} PROPERTIES
     VERSION "${LIBVERSIONFULL}" SOVERSION "${LIBVERSION}"
     OUTPUT_NAME ${LIBNAME})
+  if (APPLE AND GEOGRAPHICLIB_PRECISION EQUAL 5)
+    if (GEOGRAPHICLIB_SHARED_LIB)
+      target_link_libraries (${PROJECT_SHARED_LIBRARIES} ${MPFR_LIBRARIES})
+    endif ()
+    if (GEOGRAPHICLIB_STATIC_LIB)
+      target_link_libraries (${PROJECT_STATIC_LIBRARIES} ${MPFR_LIBRARIES})
+    endif ()
+  endif ()
 endif ()
 
 # Specify where the library is installed, adding it to the export depends

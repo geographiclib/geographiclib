@@ -125,28 +125,28 @@ namespace GeographicLib {
      *   constructor.
      **********************************************************************/
     Math::real MajorRadius() const
-    { return Init() ? _a : Math::NaN<real>(); }
+    { return Init() ? _a : Math::NaN(); }
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the MagneticModel object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const
-    { return Init() ? _f : Math::NaN<real>(); }
+    { return Init() ? _f : Math::NaN(); }
     /**
      * @return the latitude of the circle (degrees).
      **********************************************************************/
     Math::real Latitude() const
-    { return Init() ? _lat : Math::NaN<real>(); }
+    { return Init() ? _lat : Math::NaN(); }
     /**
      * @return the height of the circle (meters).
      **********************************************************************/
     Math::real Height() const
-    { return Init() ? _h : Math::NaN<real>(); }
+    { return Init() ? _h : Math::NaN(); }
     /**
      * @return the time (fractional years).
      **********************************************************************/
     Math::real Time() const
-    { return Init() ? _t : Math::NaN<real>(); }
+    { return Init() ? _t : Math::NaN(); }
 
     ///@}
   };

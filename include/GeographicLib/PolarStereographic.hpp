@@ -32,22 +32,32 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT PolarStereographic {
   private:
     typedef Math::real real;
+    real tol_;
     // _Cx used to be _C but g++ 3.4 has a macro of that name
     real _a, _f, _e2, _e, _e2m, _Cx, _c;
     real _k0;
-    static const real tol_;
-    static const real overflow_;
     static const int numit_ = 5;
+    static inline real overflow() {
+    // Overflow value s.t. atan(overflow_) = pi/2
+      static const real
+        overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
+      return overflow;
+    }
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
     static inline real tanx(real x) {
-      real t = std::tan(x);
+      using std::tan;
+      real t = tan(x);
       // Write the tests this way to ensure that tanx(NaN()) is NaN()
-      return x >= 0 ? (!(t < 0) ? t : overflow_) : (!(t >= 0) ? t : -overflow_);
+      return x >= 0 ?
+        (!(t <  0) ? t :  overflow()) :
+        (!(t >= 0) ? t : -overflow());
     }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
-    inline real eatanhe(real x) const
-    { return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x); }
+    inline real eatanhe(real x) const {
+      using std::atan;
+      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * atan(_e * x);
+    }
   public:
 
     /**
@@ -55,10 +65,10 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
      * @param[in] k0 central scale factor.
-     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k0 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f) \e a, or \e k0 is
      *   not positive.
      **********************************************************************/
     PolarStereographic(real a, real f, real k0);
@@ -166,7 +176,7 @@ namespace GeographicLib {
      * and the UPS scale factor.  However, unlike UPS, no false easting or
      * northing is added.
      **********************************************************************/
-    static const PolarStereographic UPS;
+    static const PolarStereographic& UPS();
   };
 
 } // namespace GeographicLib

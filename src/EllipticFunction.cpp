@@ -9,16 +9,14 @@
 
 #include <GeographicLib/EllipticFunction.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about constant conditional expressions
+#  pragma warning (disable: 4127)
+#endif
+
 namespace GeographicLib {
 
   using namespace std;
-
-  const Math::real EllipticFunction::tol_ =
-    numeric_limits<real>::epsilon() * real(0.01);
-  const Math::real EllipticFunction::tolRF_ = pow(3 * tol_, 1/real(8));
-  const Math::real EllipticFunction::tolRD_ = pow(real(0.2) * tol_, 1/real(8));
-  const Math::real EllipticFunction::tolRG0_ = real(2.7) * sqrt(tol_);
-  const Math::real EllipticFunction::tolJAC_ = sqrt(tol_);
 
   /*
    * Implementation of methods given in
@@ -30,10 +28,12 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::RF(real x, real y, real z) {
     // Carlson, eqs 2.2 - 2.7
+    real tolRF =
+      pow(3 * numeric_limits<real>::epsilon() * real(0.01), 1/real(8));
     real
       A0 = (x + y + z)/3,
       An = A0,
-      Q = max(max(abs(A0-x), abs(A0-y)), abs(A0-z)) / tolRF_,
+      Q = max(max(abs(A0-x), abs(A0-y)), abs(A0-z)) / tolRF,
       x0 = x,
       y0 = y,
       z0 = z,
@@ -65,15 +65,17 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::RF(real x, real y) {
     // Carlson, eqs 2.36 - 2.38
+    real tolRG0 =
+      real(2.7) * sqrt((numeric_limits<real>::epsilon() * real(0.01)));
     real xn = sqrt(x), yn = sqrt(y);
     if (xn < yn) swap(xn, yn);
-    while (abs(xn-yn) > tolRG0_ * xn) {
+    while (abs(xn-yn) > tolRG0 * xn) {
       // Max 4 trips
       real t = (xn + yn) /2;
       yn = sqrt(xn * yn);
       xn = t;
     }
-    return Math::pi<real>() / (xn + yn);
+    return Math::pi() / (xn + yn);
   }
 
   Math::real EllipticFunction::RC(real x, real y) {
@@ -98,6 +100,8 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::RG(real x, real y) {
     // Carlson, eqs 2.36 - 2.39
+    real tolRG0 =
+      real(2.7) * sqrt((numeric_limits<real>::epsilon() * real(0.01)));
     real
       x0 = sqrt(max(x, y)),
       y0 = sqrt(min(x, y)),
@@ -105,7 +109,7 @@ namespace GeographicLib {
       yn = y0,
       s = 0,
       mul = real(0.25);
-    while (abs(xn-yn) > tolRG0_ * xn) {
+    while (abs(xn-yn) > tolRG0 * xn) {
       // Max 4 trips
       real t = (xn + yn) /2;
       yn = sqrt(xn * yn);
@@ -114,16 +118,18 @@ namespace GeographicLib {
       t = xn - yn;
       s += mul * t * t;
     }
-    return (Math::sq( (x0 + y0)/2 ) - s) * Math::pi<real>() / (2 * (xn + yn));
+    return (Math::sq( (x0 + y0)/2 ) - s) * Math::pi() / (2 * (xn + yn));
   }
 
   Math::real EllipticFunction::RJ(real x, real y, real z, real p) {
     // Carlson, eqs 2.17 - 2.25
+    real tolRD = pow(real(0.2) * (numeric_limits<real>::epsilon() * real(0.01)),
+                     1/real(8));
     real
       A0 = (x + y + z + 2*p)/5,
       An = A0,
       delta = (p-x) * (p-y) * (p-z),
-      Q = max(max(abs(A0-x), abs(A0-y)), max(abs(A0-z), abs(A0-p))) / tolRD_,
+      Q = max(max(abs(A0-x), abs(A0-y)), max(abs(A0-z), abs(A0-p))) / tolRD,
       x0 = x,
       y0 = y,
       z0 = z,
@@ -169,10 +175,12 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::RD(real x, real y, real z) {
     // Carlson, eqs 2.28 - 2.34
+    real tolRD = pow(real(0.2) * (numeric_limits<real>::epsilon() * real(0.01)),
+                     1/real(8));
     real
       A0 = (x + y + 3*z)/5,
       An = A0,
-      Q = max(max(abs(A0-x), abs(A0-y)), abs(A0-z)) / tolRD_,
+      Q = max(max(abs(A0-x), abs(A0-y)), abs(A0-z)) / tolRD,
       x0 = x,
       y0 = y,
       z0 = z,
@@ -208,27 +216,6 @@ namespace GeographicLib {
       (4084080 * mul * An * sqrt(An)) + 3 * s;
   }
 
-  EllipticFunction::EllipticFunction(real k2, real alpha2)
-    : _k2(k2)
-    , _kp2(1 - k2)
-    , _alpha2(alpha2)
-    , _alphap2(1 - alpha2)
-    , _eps(_k2/Math::sq(sqrt(_kp2) + 1))
-      // Don't initialize _Kc, _Ec, _Dc since this constructor might be called
-      // before the static real constants tolRF_, etc., are initialized.
-    , _init(false)
-  {}
-
-  EllipticFunction::EllipticFunction(real k2, real alpha2,
-                                     real kp2, real alphap2)
-    : _k2(k2)
-    , _kp2(kp2)
-    , _alpha2(alpha2)
-    , _alphap2(alphap2)
-    , _eps(_k2/Math::sq(sqrt(_kp2) + 1))
-    , _init(false)
-  {}
-
   void EllipticFunction::Reset(real k2, real alpha2,
                                real kp2, real alphap2) {
     _k2 = k2;
@@ -236,22 +223,22 @@ namespace GeographicLib {
     _alpha2 = alpha2;
     _alphap2 = alphap2;
     _eps = _k2/Math::sq(sqrt(_kp2) + 1);
-    _init = false;
-  }
-
-  bool EllipticFunction::Init() const {
-    // Complete elliptic integral K(k), Carlson eq. 4.1
-    // http://dlmf.nist.gov/19.25.E1
-    _Kc = _kp2 ? RF(_kp2, 1) : Math::infinity<real>();
-    // Complete elliptic integral E(k), Carlson eq. 4.2
-    // http://dlmf.nist.gov/19.25.E1
-    _Ec = _kp2 ? 2 * RG(_kp2, 1) : 1;
-    // D(k) = (K(k) - E(k))/m, Carlson eq.4.3
-    // http://dlmf.nist.gov/19.25.E1
-    _Dc = _kp2 ? RD(real(0), _kp2, 1) / 3 : Math::infinity<real>();
+    if (_k2) {
+      // Complete elliptic integral K(k), Carlson eq. 4.1
+      // http://dlmf.nist.gov/19.25.E1
+      _Kc = _kp2 ? RF(_kp2, 1) : Math::infinity();
+      // Complete elliptic integral E(k), Carlson eq. 4.2
+      // http://dlmf.nist.gov/19.25.E1
+      _Ec = _kp2 ? 2 * RG(_kp2, 1) : 1;
+      // D(k) = (K(k) - E(k))/k^2, Carlson eq.4.3
+      // http://dlmf.nist.gov/19.25.E1
+      _Dc = _kp2 ? RD(real(0), _kp2, 1) / 3 : Math::infinity();
+    } else {
+      _Kc = _Ec = Math::pi()/2; _Dc = _Kc/2;
+    }
     if (_alpha2) {
       // http://dlmf.nist.gov/19.25.E2
-      real rj = _kp2 ? RJ(0, _kp2, 1, _alphap2) : Math::infinity<real>();
+      real rj = _kp2 ? RJ(0, _kp2, 1, _alphap2) : Math::infinity();
       // Pi(alpha^2, k)
       _Pic = _Kc + _alpha2 * rj / 3;
       // G(alpha^2, k)
@@ -261,7 +248,6 @@ namespace GeographicLib {
     } else {
       _Pic = _Kc; _Gc = _Ec; _Hc = _Kc - _Dc;
     }
-    return _init = true;
   }
 
   /*
@@ -275,6 +261,7 @@ namespace GeographicLib {
   void EllipticFunction::sncndn(real x, real& sn, real& cn, real& dn)
     const {
     // Bulirsch's sncndn routine, p 89.
+    real tolJAC = sqrt(numeric_limits<real>::epsilon() * real(0.01));
     if (_kp2 != 0) {
       real mc = _kp2, d = 0;
       if (_kp2 < 0) {
@@ -286,12 +273,12 @@ namespace GeographicLib {
       real c = 0;           // To suppress warning about uninitialized variable
       real m[num_], n[num_];
       unsigned l = 0;
-      for (real a = 1; l < num_; ++l) {
-        // Max 5 trips
+      for (real a = 1; l < num_ || GEOGRAPHICLIB_PANIC; ++l) {
+        // This converges quadratically.  Max 5 trips
         m[l] = a;
         n[l] = mc = sqrt(mc);
         c = (a + mc) / 2;
-        if (!(abs(a - mc) > tolJAC_ * a)) {
+        if (!(abs(a - mc) > tolJAC * a)) {
           ++l;
           break;
         }
@@ -419,55 +406,55 @@ namespace GeographicLib {
   Math::real EllipticFunction::deltaF(real sn, real cn, real dn) const {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
-    return F(sn, cn, dn) * (Math::pi<real>()/2) / K() - atan2(sn, cn);
+    return F(sn, cn, dn) * (Math::pi()/2) / K() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaE(real sn, real cn, real dn) const {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
-    return E(sn, cn, dn) * (Math::pi<real>()/2) / E() - atan2(sn, cn);
+    return E(sn, cn, dn) * (Math::pi()/2) / E() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaPi(real sn, real cn, real dn)
     const {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
-    return Pi(sn, cn, dn) * (Math::pi<real>()/2) / Pi() - atan2(sn, cn);
+    return Pi(sn, cn, dn) * (Math::pi()/2) / Pi() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaD(real sn, real cn, real dn) const {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
-    return D(sn, cn, dn) * (Math::pi<real>()/2) / D() - atan2(sn, cn);
+    return D(sn, cn, dn) * (Math::pi()/2) / D() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaG(real sn, real cn, real dn) const {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
-    return G(sn, cn, dn) * (Math::pi<real>()/2) / G() - atan2(sn, cn);
+    return G(sn, cn, dn) * (Math::pi()/2) / G() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaH(real sn, real cn, real dn) const {
     // Function is periodic with period pi
     if (cn < 0) { cn = -cn; sn = -sn; }
-    return H(sn, cn, dn) * (Math::pi<real>()/2) / H() - atan2(sn, cn);
+    return H(sn, cn, dn) * (Math::pi()/2) / H() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::F(real phi) const {
     real sn = sin(phi), cn = cos(phi);
-    return (deltaF(sn, cn, Delta(sn, cn)) + phi) * K() / (Math::pi<real>()/2);
+    return (deltaF(sn, cn, Delta(sn, cn)) + phi) * K() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::E(real phi) const {
     real sn = sin(phi), cn = cos(phi);
-    return (deltaE(sn, cn, Delta(sn, cn)) + phi) * E() / (Math::pi<real>()/2);
+    return (deltaE(sn, cn, Delta(sn, cn)) + phi) * E() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::Ed(real ang) const {
     real n = ceil(ang/360 - real(0.5));
     ang -= 360 * n;
     real
-      phi = ang * Math::degree<real>(),
+      phi = ang * Math::degree(),
       sn = abs(ang) == 180 ? 0 : sin(phi),
       cn = abs(ang) ==  90 ? 0 : cos(phi);
     return E(sn, cn, Delta(sn, cn)) + 4 * E() * n;
@@ -475,50 +462,50 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::Pi(real phi) const {
     real sn = sin(phi), cn = cos(phi);
-    return (deltaPi(sn, cn, Delta(sn, cn)) + phi) * Pi() / (Math::pi<real>()/2);
+    return (deltaPi(sn, cn, Delta(sn, cn)) + phi) * Pi() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::D(real phi) const {
     real sn = sin(phi), cn = cos(phi);
-    return (deltaD(sn, cn, Delta(sn, cn)) + phi) * D() / (Math::pi<real>()/2);
+    return (deltaD(sn, cn, Delta(sn, cn)) + phi) * D() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::G(real phi) const {
     real sn = sin(phi), cn = cos(phi);
-    return (deltaG(sn, cn, Delta(sn, cn)) + phi) * G() / (Math::pi<real>()/2);
+    return (deltaG(sn, cn, Delta(sn, cn)) + phi) * G() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::H(real phi) const {
     real sn = sin(phi), cn = cos(phi);
-    return (deltaH(sn, cn, Delta(sn, cn)) + phi) * H() / (Math::pi<real>()/2);
+    return (deltaH(sn, cn, Delta(sn, cn)) + phi) * H() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::Einv(real x) const {
-    _init || Init();
+    real tolJAC = sqrt(numeric_limits<real>::epsilon() * real(0.01));
     real n = floor(x / (2 * _Ec) + 0.5);
     x -= 2 * _Ec * n;           // x now in [-ec, ec)
     // Linear approximation
-    real phi = Math::pi<real>() * x / (2 * _Ec); // phi in [-pi/2, pi/2)
+    real phi = Math::pi() * x / (2 * _Ec); // phi in [-pi/2, pi/2)
     // First order correction
     phi -= _eps * sin(2 * phi) / 2;
-    for (int i = 0; i < num_; ++i) {
+    for (int i = 0; i < num_ || GEOGRAPHICLIB_PANIC; ++i) {
       real
         sn = sin(phi),
         cn = cos(phi),
         dn = Delta(sn, cn),
         err = (E(sn, cn, dn) - x)/dn;
       phi = phi - err;
-      if (abs(err) < tolJAC_)
+      if (abs(err) < tolJAC)
         break;
     }
-    return n * Math::pi<real>() + phi;
+    return n * Math::pi() + phi;
   }
 
   Math::real EllipticFunction::deltaEinv(real stau, real ctau) const {
     // Function is periodic with period pi
     if (ctau < 0) { ctau = -ctau; stau = -stau; }
     real tau = atan2(stau, ctau);
-    return Einv( tau * E() / (Math::pi<real>()/2) ) - tau;
+    return Einv( tau * E() / (Math::pi()/2) ) - tau;
   }
 
 } // namespace GeographicLib

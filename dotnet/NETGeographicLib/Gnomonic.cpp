@@ -49,7 +49,7 @@ Gnomonic::Gnomonic()
 {
     try
     {
-        m_pGnomonic = new GeographicLib::Gnomonic( GeographicLib::Geodesic::WGS84 );
+        m_pGnomonic = new GeographicLib::Gnomonic( GeographicLib::Geodesic::WGS84() );
     }
     catch ( std::bad_alloc )
     {

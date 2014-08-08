@@ -52,7 +52,7 @@ GeodesicLineExact::GeodesicLineExact(double lat1, double lon1, double azi1,
     try
     {
         m_pGeodesicLineExact = new GeographicLib::GeodesicLineExact(
-            GeographicLib::GeodesicExact::WGS84, lat1, lon1, azi1,
+            GeographicLib::GeodesicExact::WGS84(), lat1, lon1, azi1,
             static_cast<unsigned>(caps) );
     }
     catch ( std::bad_alloc )

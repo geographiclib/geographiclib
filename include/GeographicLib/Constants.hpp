@@ -13,13 +13,31 @@
 #include <GeographicLib/Config.h>
 
 /**
+ * @relates GeographicLib::Constants
+ * Pack the version components into a single integer.
+ **********************************************************************/
+#define GEOGRAPHICLIB_VERSION_NUM(a,b,c) ((((a) * 10000 + (b)) * 100) + (c))
+
+/**
+ * @relates GeographicLib::Constants
+ * The version of GeographicLib as a single integer, packed as MMmmmmpp where
+ * MM is the major version, mmmm is the minor version, and pp is the patch
+ * level.
+ **********************************************************************/
+#define GEOGRAPHICLIB_VERSION \
+ GEOGRAPHICLIB_VERSION_NUM(GEOGRAPHICLIB_VERSION_MAJOR, \
+                           GEOGRAPHICLIB_VERSION_MINOR, \
+                           GEOGRAPHICLIB_VERSION_PATCH)
+
+/**
+ * @relates GeographicLib::Constants
  * A compile-time assert.  Use C++11 static_assert, if available.
  **********************************************************************/
-#if !defined(STATIC_ASSERT)
+#if !defined(GEOGRAPHICLIB_STATIC_ASSERT)
 #  if __cplusplus >= 201103
-#    define STATIC_ASSERT static_assert
+#    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
 #  elif defined(__GXX_EXPERIMENTAL_CXX0X__)
-#    define STATIC_ASSERT static_assert
+#    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
 #  elif defined(_MSC_VER) && _MSC_VER >= 1600
 // For reference, here is a table of Visual Studio and _MSC_VER
 // correspondences:
@@ -32,10 +50,10 @@
 //   1600     vc10  (2010)
 //   1700     vc11  (2012)
 //   1800     vc12  (2013)
-#    define STATIC_ASSERT static_assert
+#    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
 #  else
-#    define STATIC_ASSERT(cond,reason) \
-            { enum{ STATIC_ASSERT_ENUM = 1/int(cond) }; }
+#    define GEOGRAPHICLIB_STATIC_ASSERT(cond,reason) \
+            { enum{ GEOGRAPHICLIB_STATIC_ASSERT_ENUM = 1/int(cond) }; }
 #  endif
 #endif
 
@@ -83,17 +101,17 @@ namespace GeographicLib {
     /**
      * A synonym for Math::degree<real>().
      **********************************************************************/
-    static inline Math::real degree() { return Math::degree<real>(); }
+    static inline Math::real degree() { return Math::degree(); }
     /**
      * @return the number of radians in an arcminute.
      **********************************************************************/
     static inline Math::real arcminute()
-    { return Math::degree<real>() / 60; }
+    { return Math::degree() / 60; }
     /**
      * @return the number of radians in an arcsecond.
      **********************************************************************/
     static inline Math::real arcsecond()
-    { return Math::degree<real>() / 3600; }
+    { return Math::degree() / 3600; }
 
     /** \name Ellipsoid parameters
      **********************************************************************/
@@ -103,7 +121,7 @@ namespace GeographicLib {
      * @return the equatorial radius of WGS84 ellipsoid (6378137 m).
      **********************************************************************/
     template<typename T> static inline T WGS84_a()
-    { return T(6378137) * meter<T>(); }
+    { return 6378137 * meter<T>(); }
     /**
      * A synonym for WGS84_a<real>().
      **********************************************************************/
@@ -113,7 +131,7 @@ namespace GeographicLib {
      * @return the flattening of WGS84 ellipsoid (1/298.257223563).
      **********************************************************************/
     template<typename T> static inline T WGS84_f()
-    { return T(1) / ( T(298) + T(257223563) / T(1000000000) ); }
+    { return 1 / ( T(298257223563LL) / 1000000000 ); }
     /**
      * A synonym for WGS84_f<real>().
      **********************************************************************/
@@ -124,14 +142,22 @@ namespace GeographicLib {
      *   m<sup>3</sup> s<sup>&minus;2</sup>.
      **********************************************************************/
     template<typename T> static inline T WGS84_GM()
-    { return T(3986004) * T(100000000) + T(41800000); }
+    { return T(3986004) * 100000000 + 41800000; }
+    /**
+     * A synonym for WGS84_GM<real>().
+     **********************************************************************/
+    static inline Math::real WGS84_GM() { return WGS84_GM<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the angular velocity of the WGS84 ellipsoid, &omega;, in rad
      *   s<sup>&minus;1</sup>.
      **********************************************************************/
     template<typename T> static inline T WGS84_omega()
-    { return T(7292115) / (T(1000000) * T(100000)); }
+    { return 7292115 / (T(1000000) * 100000); }
+    /**
+     * A synonym for WGS84_omega<real>().
+     **********************************************************************/
+    static inline Math::real WGS84_omega() { return WGS84_omega<real>(); }
     /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
@@ -150,14 +176,22 @@ namespace GeographicLib {
      * @return the equatorial radius of GRS80 ellipsoid, \e a, in m.
      **********************************************************************/
     template<typename T> static inline T GRS80_a()
-    { return T(6378137); }
+    { return 6378137 * meter<T>(); }
+    /**
+     * A synonym for GRS80_a<real>().
+     **********************************************************************/
+    static inline Math::real GRS80_a() { return GRS80_a<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the gravitational constant of the GRS80 ellipsoid, \e GM, in
      *   m<sup>3</sup> s<sup>&minus;2</sup>.
      **********************************************************************/
     template<typename T> static inline T GRS80_GM()
-    { return T(3986005) * T(100000000); }
+    { return T(3986005) * 100000000; }
+    /**
+     * A synonym for GRS80_GM<real>().
+     **********************************************************************/
+    static inline Math::real GRS80_GM() { return GRS80_GM<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the angular velocity of the GRS80 ellipsoid, &omega;, in rad
@@ -171,20 +205,28 @@ namespace GeographicLib {
      * earth's axis).
      **********************************************************************/
     template<typename T> static inline T GRS80_omega()
-    { return T(7292115) / (T(1000000) * T(100000)); }
+    { return 7292115 / (T(1000000) * 100000); }
+    /**
+     * A synonym for GRS80_omega<real>().
+     **********************************************************************/
+    static inline Math::real GRS80_omega() { return GRS80_omega<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the dynamical form factor of the GRS80 ellipsoid,
      *   <i>J</i><sub>2</sub>.
      **********************************************************************/
     template<typename T> static inline T GRS80_J2()
-    { return T(108263) / T(100000000); }
+    { return T(108263) / 100000000; }
+    /**
+     * A synonym for GRS80_J2<real>().
+     **********************************************************************/
+    static inline Math::real GRS80_J2() { return GRS80_J2<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the central scale factor for UTM (0.9996).
      **********************************************************************/
     template<typename T> static inline T UTM_k0()
-    {return T(9996) / T(10000); }
+    {return T(9996) / 10000; }
     /**
      * A synonym for UTM_k0<real>().
      **********************************************************************/
@@ -194,7 +236,7 @@ namespace GeographicLib {
      * @return the central scale factor for UPS (0.994).
      **********************************************************************/
     template<typename T> static inline T UPS_k0()
-    { return T(994) / T(1000); }
+    { return T(994) / 1000; }
     /**
      * A synonym for UPS_k0<real>().
      **********************************************************************/
@@ -266,7 +308,7 @@ namespace GeographicLib {
      * @return the number of meters in an international foot.
      **********************************************************************/
     static inline Math::real foot()
-    { return real(0.0254L) * 12 * meter<real>(); }
+    { return real(254 * 12) / 10000 * meter<real>(); }
     /**
      * @return the number of meters in a yard.
      **********************************************************************/
@@ -304,7 +346,7 @@ namespace GeographicLib {
      * @return the number of meters in a US survey foot.
      **********************************************************************/
     static inline Math::real surveyfoot()
-    { return real(1200) / real(3937) * meter<real>(); }
+    { return real(1200) / 3937 * meter<real>(); }
     ///@}
   };
 

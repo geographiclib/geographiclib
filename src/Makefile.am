@@ -21,6 +21,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		Geocentric.cpp \
 		Geodesic.cpp \
 		GeodesicExact.cpp \
+		GeodesicExactC4.cpp \
 		GeodesicLine.cpp \
 		GeodesicLineExact.cpp \
 		Geohash.cpp \
@@ -37,6 +38,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		OSGB.cpp \
 		PolarStereographic.cpp \
 		PolygonArea.cpp \
+		Rhumb.cpp \
 		SphericalEngine.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
@@ -72,6 +74,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \
 		../include/GeographicLib/PolygonArea.hpp \
+		../include/GeographicLib/Rhumb.hpp \
 		../include/GeographicLib/SphericalEngine.hpp \
 		../include/GeographicLib/SphericalHarmonic.hpp \
 		../include/GeographicLib/SphericalHarmonic1.hpp \
@@ -84,8 +87,10 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 
 ../include/GeographicLib/Config.h: ../include/GeographicLib/Config-ac.h
 	( egrep '\bVERSION\b|\bGEOGRAPHICLIB_|\bHAVE_LONG_DOUBLE\b' $< | \
-	  sed -e 's/ VERSION / GEOGRAPHICLIB_VERSION_STRING /'; \
-	  grep WORDS_BIGENDIAN $< | tail -1 ) > $@
+	  sed -e 's/ VERSION / GEOGRAPHICLIB_VERSION_STRING /' \
+	      -e 's/ HAVE_LONG_DOUBLE / GEOGRAPHICLIB_HAVE_LONG_DOUBLE /'; \
+	  grep WORDS_BIGENDIAN $< | tail -1 | \
+	  sed -e 's/ WORDS_BIGENDIAN / GEOGRAPHICLIB_WORDS_BIGENDIAN /' ) > $@
 
 $(libGeographic_la_OBJECTS): ../include/GeographicLib/Config.h
 
@@ -93,4 +98,4 @@ geographiclib_data=$(datadir)/GeographicLib
 
 DEFS=-DGEOGRAPHICLIB_DATA=\"$(geographiclib_data)\" @DEFS@
 
-EXTRA_DIST = Makefile.mk CMakeLists.txt Geographic.pro
+EXTRA_DIST = Makefile.mk CMakeLists.txt GeographicLib.pro

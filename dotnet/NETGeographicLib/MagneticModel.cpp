@@ -72,7 +72,7 @@ MagneticModel::MagneticModel(System::String^ name,
         m_pMagneticModel = new GeographicLib::MagneticModel(
             StringConvert::ManagedToUnmanaged( name ),
             StringConvert::ManagedToUnmanaged( path ),
-            GeographicLib::Geocentric::WGS84 );
+            GeographicLib::Geocentric::WGS84() );
     }
     catch ( std::bad_alloc )
     {

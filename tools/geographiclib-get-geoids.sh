@@ -103,7 +103,7 @@ if test -z "$DEBUG"; then
 trap 'trap "" 0; test "$TEMP" && rm -rf "$TEMP"; exit 1' 1 2 3 9 15
 trap            'test "$TEMP" && rm -rf "$TEMP"'            0
 fi
-TEMP=`mktemp --tmpdir --quiet --directory $NAME-XXXXXXXX`
+TEMP=`mktemp -d -q -t $NAME-XXXXXXXX`
 
 if test -z "$TEMP" -o ! -d "$TEMP"; then
     echo Cannot create temporary directory 1>&2

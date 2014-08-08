@@ -9,18 +9,18 @@
 
 #include <GeographicLib/PolarStereographic.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about constant conditional expressions
+#  pragma warning (disable: 4127)
+#endif
+
 namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real PolarStereographic::tol_ =
-    real(0.1)*sqrt(numeric_limits<real>::epsilon());
-  // Overflow value s.t. atan(overflow_) = pi/2
-  const Math::real PolarStereographic::overflow_ =
-    1 / Math::sq(numeric_limits<real>::epsilon());
-
   PolarStereographic::PolarStereographic(real a, real f, real k0)
-    : _a(a)
+    : tol_(real(0.1)*sqrt(numeric_limits<real>::epsilon()))
+    , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -37,10 +37,12 @@ namespace GeographicLib {
       throw GeographicErr("Scale is not positive");
   }
 
-  const PolarStereographic
-  PolarStereographic::UPS(Constants::WGS84_a<real>(),
-                          Constants::WGS84_f<real>(),
-                          Constants::UPS_k0<real>());
+  const PolarStereographic& PolarStereographic::UPS() {
+    static const PolarStereographic ups(Constants::WGS84_a(),
+                                        Constants::WGS84_f(),
+                                        Constants::UPS_k0());
+    return ups;
+  }
 
   // This formulation converts to conformal coordinates by tau = tan(phi) and
   // tau' = tan(phi') where phi' is the conformal latitude.  The formulas are:
@@ -68,8 +70,8 @@ namespace GeographicLib {
     const {
     lat *= northp ? 1 : -1;
     real
-      phi = lat * Math::degree<real>(),
-      tau = lat != -90 ? tanx(phi) : -overflow_,
+      phi = lat * Math::degree(),
+      tau = lat != -90 ? tanx(phi) : -overflow(),
       secphi = Math::hypot(real(1), tau),
       sig = sinh( eatanhe(tau / secphi) ),
       taup = Math::hypot(real(1), sig) * tau - sig * secphi,
@@ -80,7 +82,7 @@ namespace GeographicLib {
       _k0;
     lon = Math::AngNormalize(lon);
     real
-      lam = lon * Math::degree<real>();
+      lam = lon * Math::degree();
     x = rho * (lon == -180 ? 0 : sin(lam));
     y = (northp ? -rho : rho) * (abs(lon) == 90 ? 0 : cos(lam));
     gamma = northp ? lon : -lon;
@@ -95,9 +97,9 @@ namespace GeographicLib {
       taup = (1 / t - t) / 2,
       tau = taup * _Cx,
       stol = tol_ * max(real(1), abs(taup));
-    if (abs(tau) < overflow_) {
+    if (abs(tau) < overflow()) {
       // min iterations = 1, max iterations = 2; mean = 1.99
-      for (int i = 0; i < numit_; ++i) {
+      for (int i = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
         real
           tau1 = Math::hypot(real(1), tau),
           sig = sinh( eatanhe( tau / tau1 ) ),
@@ -112,10 +114,9 @@ namespace GeographicLib {
     real
       phi = atan(tau),
       secphi = Math::hypot(real(1), tau);
-    k = rho != 0 ?
-      (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) : _k0;
-    lat = (northp ? 1 : -1) * (rho != 0 ? phi / Math::degree<real>() : 90);
-    lon = -atan2( -x, northp ? -y : y ) / Math::degree<real>();
+    k = rho ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) : _k0;
+    lat = (northp ? 1 : -1) * (rho ? phi / Math::degree() : 90);
+    lon = -atan2( -x, northp ? -y : y ) / Math::degree();
     gamma = northp ? lon : -lon;
   }
 

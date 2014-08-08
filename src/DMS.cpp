@@ -272,7 +272,7 @@ namespace GeographicLib {
 
     // 15 - 2 * trailing = ceiling(log10(2^53/90/60^trailing)).
     // This suffices to give full real precision for numbers in [-90,90]
-    prec = min(15 + Math::extradigits - 2 * unsigned(trailing), prec);
+    prec = min(15 + Math::extra_digits() - 2 * unsigned(trailing), prec);
     real scale = 1;
     for (unsigned i = 0; i < unsigned(trailing); ++i)
       scale *= 60;

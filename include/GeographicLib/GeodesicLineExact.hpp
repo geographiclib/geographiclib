@@ -38,6 +38,7 @@ namespace GeographicLib {
     friend class GeodesicExact;
     static const int nC4_ = GeodesicExact::nC4_;
 
+    real tiny_;
     real _lat1, _lon1, _azi1;
     real _a, _f, _b, _c2, _f1, _e2, _salp0, _calp0, _k2,
       _salp1, _calp1, _ssig1, _csig1, _dn1, _stau1, _ctau1,
@@ -167,8 +168,7 @@ namespace GeographicLib {
      * the limit &epsilon; &rarr; 0+.
      **********************************************************************/
     GeodesicLineExact(const GeodesicExact& g, real lat1, real lon1, real azi1,
-                      unsigned caps = ALL)
-     ;
+                      unsigned caps = ALL);
 
     /**
      * A default constructor.  If GeodesicLineExact::Position is called on the
@@ -494,27 +494,28 @@ namespace GeographicLib {
      * @return \e lat1 the latitude of point 1 (degrees).
      **********************************************************************/
     Math::real Latitude() const
-    { return Init() ? _lat1 : Math::NaN<real>(); }
+    { return Init() ? _lat1 : Math::NaN(); }
 
     /**
      * @return \e lon1 the longitude of point 1 (degrees).
      **********************************************************************/
     Math::real Longitude() const
-    { return Init() ? _lon1 : Math::NaN<real>(); }
+    { return Init() ? _lon1 : Math::NaN(); }
 
     /**
      * @return \e azi1 the azimuth (degrees) of the geodesic line at point 1.
      **********************************************************************/
     Math::real Azimuth() const
-    { return Init() ? _azi1 : Math::NaN<real>(); }
+    { return Init() ? _azi1 : Math::NaN(); }
 
     /**
      * @return \e azi0 the azimuth (degrees) of the geodesic line as it crosses
      * the equator in a northward direction.
      **********************************************************************/
     Math::real EquatorialAzimuth() const {
+      using std::atan2;
       return Init() ?
-        atan2(_salp0, _calp0) / Math::degree<real>() : Math::NaN<real>();
+        atan2(_salp0, _calp0) / Math::degree() : Math::NaN();
     }
 
     /**
@@ -522,8 +523,9 @@ namespace GeographicLib {
      * crossing and point 1.
      **********************************************************************/
     Math::real EquatorialArc() const {
+      using std::atan2;
       return Init() ?
-        atan2(_ssig1, _csig1) / Math::degree<real>() : Math::NaN<real>();
+        atan2(_ssig1, _csig1) / Math::degree() : Math::NaN();
     }
 
     /**
@@ -532,14 +534,14 @@ namespace GeographicLib {
      *   constructor.
      **********************************************************************/
     Math::real MajorRadius() const
-    { return Init() ? _a : Math::NaN<real>(); }
+    { return Init() ? _a : Math::NaN(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the GeodesicExact object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const
-    { return Init() ? _f : Math::NaN<real>(); }
+    { return Init() ? _f : Math::NaN(); }
 
     /// \cond SKIP
     /**
@@ -547,7 +549,7 @@ namespace GeographicLib {
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const
-    { return Init() ? 1/_f : Math::NaN<real>(); }
+    { return Init() ? 1/_f : Math::NaN(); }
     /// \endcond
 
     /**

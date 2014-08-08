@@ -44,11 +44,13 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
+    Utility::set_digits();
     bool azimuthal = false, cassini = false, gnomonic = false, reverse = false;
     real lat0 = 0, lon0 = 0;
     real
-      a = Constants::WGS84_a<real>(),
-      f = Constants::WGS84_f<real>();
+      a = Constants::WGS84_a(),
+      f = Constants::WGS84_f();
+    int prec = 6;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
 
@@ -82,6 +84,15 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 2;
+      } else if (arg == "-p") {
+        if (++m == argc) return usage(1, true);
+        try {
+          prec = Utility::num<int>(std::string(argv[m]));
+        }
+        catch (const std::exception&) {
+          std::cerr << "Precision " << argv[m] << " is not a number\n";
+          return 1;
+        }
       } else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
@@ -159,6 +170,9 @@ int main(int argc, char* argv[]) {
     const AzimuthalEquidistant az(geod);
     const Gnomonic gn(geod);
 
+    // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
+    // 10^-11 sec (= 0.3 nm).
+    prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     std::string s;
     int retval = 0;
     std::cout << std::fixed;
@@ -192,10 +206,10 @@ int main(int argc, char* argv[]) {
             az.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
           else
             gn.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
-          *output << Utility::str<real>(lat, 15) << " "
-                  << Utility::str<real>(lon, 15) << " "
-                  << Utility::str<real>(azi, 15) << " "
-                  << Utility::str<real>(rk, 16) << eol;
+          *output << Utility::str(lat, prec + 5) << " "
+                  << Utility::str(lon, prec + 5) << " "
+                  << Utility::str(azi, prec + 5) << " "
+                  << Utility::str(rk, prec + 6) << eol;
         } else {
           if (cassini)
             cs.Forward(lat, lon, x, y, azi, rk);
@@ -203,10 +217,10 @@ int main(int argc, char* argv[]) {
             az.Forward(lat0, lon0, lat, lon, x, y, azi, rk);
           else
             gn.Forward(lat0, lon0, lat, lon, x, y, azi, rk);
-          *output << Utility::str<real>(x, 10) << " "
-                  << Utility::str<real>(y, 10) << " "
-                  << Utility::str<real>(azi, 15) << " "
-                  << Utility::str<real>(rk, 16) << eol;
+          *output << Utility::str(x, prec) << " "
+                  << Utility::str(y, prec) << " "
+                  << Utility::str(azi, prec + 5) << " "
+                  << Utility::str(rk, prec + 6) << eol;
         }
       }
       catch (const std::exception& e) {

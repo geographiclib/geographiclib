@@ -13,9 +13,16 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real CassiniSoldner::eps1_ =
-    real(0.01) * sqrt(numeric_limits<real>::epsilon());
-  const Math::real CassiniSoldner::tiny_ = sqrt(numeric_limits<real>::min());
+  CassiniSoldner::CassiniSoldner(const Geodesic& earth)
+    : eps1_(real(0.01) * sqrt(numeric_limits<real>::epsilon()))
+    , tiny_(sqrt(numeric_limits<real>::min()))
+    , _earth(earth) {}
+
+  CassiniSoldner::CassiniSoldner(real lat0, real lon0, const Geodesic& earth)
+    : eps1_(real(0.01) * sqrt(numeric_limits<real>::epsilon()))
+    , tiny_(sqrt(numeric_limits<real>::min()))
+    , _earth(earth)
+  { Reset(lat0, lon0); }
 
   void CassiniSoldner::Reset(real lat0, real lon0) {
     _meridian = _earth.Line(lat0, lon0, real(0),
@@ -23,7 +30,7 @@ namespace GeographicLib {
                             Geodesic::DISTANCE | Geodesic::DISTANCE_IN |
                             Geodesic::AZIMUTH);
     real
-      phi = LatitudeOrigin() * Math::degree<real>(),
+      phi = LatitudeOrigin() * Math::degree(),
       f = _earth.Flattening();
     _sbet0 = (1 - f) * sin(phi);
     _cbet0 = abs(LatitudeOrigin()) == 90 ? 0 : cos(phi);
@@ -66,13 +73,13 @@ namespace GeographicLib {
                      t, t, t, t, t, t, rk, t);
 
     real
-      alp0 = perp.EquatorialAzimuth() * Math::degree<real>(),
+      alp0 = perp.EquatorialAzimuth() * Math::degree(),
       calp0 = cos(alp0), salp0 = sin(alp0),
       sbet1 = lat >=0 ? calp0 : -calp0,
       cbet1 = abs(dlon) <= 90 ? abs(salp0) : -abs(salp0),
       sbet01 = sbet1 * _cbet0 - cbet1 * _sbet0,
       cbet01 = cbet1 * _cbet0 + sbet1 * _sbet0,
-      sig01 = atan2(sbet01, cbet01) / Math::degree<real>();
+      sig01 = atan2(sbet01, cbet01) / Math::degree();
     _meridian.GenPosition(true, sig01,
                           Geodesic::DISTANCE,
                           t, t, t, y, t, t, t, t);

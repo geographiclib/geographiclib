@@ -15,7 +15,7 @@ int main() {
   try {
     // Print waypoints between JFK and SIN
     Geodesic geod(Constants::WGS84_a(), Constants::WGS84_f());
-    // Alternatively: const Geodesic& geod = Geodesic::WGS84;
+    // Alternatively: const Geodesic& geod = Geodesic::WGS84();
     double
       lat1 = 40.640, lon1 = -73.779, // JFK
       lat2 =  1.359, lon2 = 103.989; // SIN

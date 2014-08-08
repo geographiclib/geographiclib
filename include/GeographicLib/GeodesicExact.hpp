@@ -32,8 +32,8 @@ namespace GeographicLib {
    * in a series in the flattening \e f and this provides an accurate solution
    * for \e f &isin; [-0.01, 0.01].  The GeodesicExact class computes the
    * ellitpic integrals directly and so provides a solution which is valid for
-   * all \e f.  However, in practice, its use should be limited to about \e
-   * b/\e a &isin; [0.01, 100] or \e f &isin; [-99, 0.99].
+   * all \e f.  However, in practice, its use should be limited to about
+   * <i>b</i>/\e a &isin; [0.01, 100] or \e f &isin; [-99, 0.99].
    *
    * For the WGS84 ellipsoid, these classes are 2--3 times \e slower than the
    * series solution and 2--3 times \e less \e accurate (because it's less easy
@@ -41,8 +41,8 @@ namespace GeographicLib {
    * the error is about 40 nm (40 nanometers) instead of 15 nm.  However the
    * error in the series solution scales as <i>f</i><sup>7</sup> while the
    * error in the elliptic integral solution depends weakly on \e f.  If the
-   * quarter meridian distance is 10000 km and the ratio \e b/\e a = 1 &minus;
-   * \e f is varied then the approximate maximum error (expressed as a
+   * quarter meridian distance is 10000 km and the ratio <i>b</i>/\e a = 1
+   * &minus; \e f is varied then the approximate maximum error (expressed as a
    * distance) is <pre>
    *       1 - f  error (nm)
    *       1/128     387
@@ -63,8 +63,8 @@ namespace GeographicLib {
    * </pre>
    *
    * The computation of the area in these classes is via a 30th order series.
-   * This gives accurate results for \e b/\e a &isin; [1/2, 2]; the accuracy is
-   * about 8 decimal digits for \e b/\e a &isin; [1/4, 4].
+   * This gives accurate results for <i>b</i>/\e a &isin; [1/2, 2]; the
+   * accuracy is about 8 decimal digits for <i>b</i>/\e a &isin; [1/4, 4].
    *
    * See \ref geodellip for the formulation.  See the documentation on the
    * Geodesic class for additional information on the geodesic problems.
@@ -84,15 +84,8 @@ namespace GeographicLib {
     static const int nC4_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
     static const unsigned maxit1_ = 20;
-    static const unsigned maxit2_ = maxit1_ +
-      std::numeric_limits<real>::digits + 10;
-
-    static const real tiny_;
-    static const real tol0_;
-    static const real tol1_;
-    static const real tol2_;
-    static const real tolb_;
-    static const real xthresh_;
+    unsigned maxit2_;
+    real tiny_, tol0_, tol1_, tol2_, tolb_, xthresh_;
 
     enum captype {
       CAP_NONE = 0U,
@@ -105,16 +98,16 @@ namespace GeographicLib {
       OUT_ALL  = 0x7F80U,
     };
 
-    static real CosSeries(real sinx, real cosx, const real c[], int n)
-     ;
+    static real CosSeries(real sinx, real cosx, const real c[], int n);
     static inline real AngRound(real x) {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
       // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
       // is about 1000 times more resolution than we get with angles around 90
       // degrees.)  We use this to avoid having to deal with near singular
       // cases when x is non-zero but tiny (e.g., 1.0e-200).
+      using std::abs;
       const real z = 1/real(16);
-      volatile real y = std::abs(x);
+      GEOGRAPHICLIB_VOLATILE real y = abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
       return x < 0 ? -y : y;
@@ -148,13 +141,21 @@ namespace GeographicLib {
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
                   EllipticFunction& E,
-                  real& omg12, bool diffp, real& dlam12)
-      const;
+                  real& omg12, bool diffp, real& dlam12) const;
 
     // These are Maxima generated functions to provide series approximations to
     // the integrals for the area.
     void C4coeff();
     void C4f(real k2, real c[]) const;
+    // Large coefficients are split so that lo contains the low 52 bits and hi
+    // the rest.  This choice avoids double rounding with doubles and higher
+    // precision types.  float coefficients will suffer double rounding;
+    // however the accuracy is already lousy for floats.
+    static Math::real inline reale(long long hi, long long lo) {
+      using std::ldexp;
+      return ldexp(real(hi), 52) + lo;
+    }
+    static const Math::real* rawC4coeff();
 
   public:
 
@@ -232,9 +233,9 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
-     * @exception GeographicErr if \e a or (1 &minus; \e f ) \e a is not
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
+     * @exception GeographicErr if \e a or (1 &minus; \e f) \e a is not
      *   positive.
      **********************************************************************/
     GeodesicExact(real a, real f);
@@ -767,14 +768,14 @@ namespace GeographicLib {
      *   the polygon.
      **********************************************************************/
     Math::real EllipsoidArea() const
-    { return 4 * Math::pi<real>() * _c2; }
+    { return 4 * Math::pi() * _c2; }
     ///@}
 
     /**
      * A global instantiation of GeodesicExact with the parameters for the WGS84
      * ellipsoid.
      **********************************************************************/
-    static const GeodesicExact WGS84;
+    static const GeodesicExact& WGS84();
 
   };
 

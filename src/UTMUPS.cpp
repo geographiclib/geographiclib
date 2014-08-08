@@ -17,24 +17,24 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real UTMUPS::falseeasting_[4] =
+  const int UTMUPS::falseeasting_[4] =
     { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
       MGRS::utmeasting_ * MGRS::tile_, MGRS::utmeasting_ * MGRS::tile_ };
-  const Math::real UTMUPS::falsenorthing_[4] =
+  const int UTMUPS::falsenorthing_[4] =
     { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
       MGRS::maxutmSrow_ * MGRS::tile_, MGRS::minutmNrow_ * MGRS::tile_ };
-  const Math::real UTMUPS::mineasting_[4] =
+  const int UTMUPS::mineasting_[4] =
     { MGRS::minupsSind_ * MGRS::tile_, MGRS::minupsNind_ * MGRS::tile_,
       MGRS::minutmcol_ * MGRS::tile_, MGRS::minutmcol_ * MGRS::tile_ };
-  const Math::real UTMUPS::maxeasting_[4] =
+  const int UTMUPS::maxeasting_[4] =
     { MGRS::maxupsSind_ * MGRS::tile_, MGRS::maxupsNind_ * MGRS::tile_,
       MGRS::maxutmcol_ * MGRS::tile_, MGRS::maxutmcol_ * MGRS::tile_ };
-  const Math::real UTMUPS::minnorthing_[4] =
+  const int UTMUPS::minnorthing_[4] =
     { MGRS::minupsSind_ * MGRS::tile_, MGRS::minupsNind_ * MGRS::tile_,
       MGRS::minutmSrow_ * MGRS::tile_,
       (MGRS::minutmNrow_ + MGRS::minutmSrow_ - MGRS::maxutmSrow_)
       * MGRS::tile_ };
-  const Math::real UTMUPS::maxnorthing_[4] =
+  const int UTMUPS::maxnorthing_[4] =
     { MGRS::maxupsSind_ * MGRS::tile_, MGRS::maxupsNind_ * MGRS::tile_,
       (MGRS::maxutmSrow_ + MGRS::maxutmNrow_ - MGRS::minutmNrow_) * MGRS::tile_,
       MGRS::maxutmNrow_ * MGRS::tile_ };
@@ -74,7 +74,7 @@ namespace GeographicLib {
     if (zone1 == INVALID) {
       zone = zone1;
       northp = northp1;
-      x = y = gamma = k = Math::NaN<real>();
+      x = y = gamma = k = Math::NaN();
       return;
     }
     real x1, y1, gamma1, k1;
@@ -90,14 +90,14 @@ namespace GeographicLib {
         throw GeographicErr("Longitude " + Utility::str(lon)
                             + "d more than 60d from center of UTM zone "
                             + Utility::str(zone1));
-      TransverseMercator::UTM.Forward(lon0, lat, lon, x1, y1, gamma1, k1);
+      TransverseMercator::UTM().Forward(lon0, lat, lon, x1, y1, gamma1, k1);
     } else {
       if (abs(lat) < 70)
         // Check isn't really necessary ... (see above).
         throw GeographicErr("Latitude " + Utility::str(lat)
                             + "d more than 20d from "
                             + (northp1 ? "N" : "S") + " pole");
-      PolarStereographic::UPS.Forward(northp1, lat, lon, x1, y1, gamma1, k1);
+      PolarStereographic::UPS().Forward(northp1, lat, lon, x1, y1, gamma1, k1);
     }
     int ind = (utmp ? 2 : 0) + (northp1 ? 1 : 0);
     x1 += falseeasting_[ind];
@@ -119,7 +119,7 @@ namespace GeographicLib {
                        real& lat, real& lon, real& gamma, real& k,
                        bool mgrslimits) {
     if (zone == INVALID || Math::isnan(x) || Math::isnan(y)) {
-      lat = lon = gamma = k = Math::NaN<real>();
+      lat = lon = gamma = k = Math::NaN();
       return;
     }
     if (!(zone >= MINZONE && zone <= MAXZONE))
@@ -131,10 +131,10 @@ namespace GeographicLib {
     x -= falseeasting_[ind];
     y -= falsenorthing_[ind];
     if (utmp)
-      TransverseMercator::UTM.Reverse(CentralMeridian(zone),
-                                      x, y, lat, lon, gamma, k);
+      TransverseMercator::UTM().Reverse(CentralMeridian(zone),
+                                        x, y, lat, lon, gamma, k);
     else
-      PolarStereographic::UPS.Reverse(northp, x, y, lat, lon, gamma, k);
+      PolarStereographic::UPS().Reverse(northp, x, y, lat, lon, gamma, k);
   }
 
   void UTMUPS::CheckLatLon(real lat, real lon) {

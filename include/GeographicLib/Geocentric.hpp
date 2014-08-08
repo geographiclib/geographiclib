@@ -43,6 +43,12 @@ namespace GeographicLib {
    *   preprint
    *   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
    * .
+   * Vermeille similarly updated his method in
+   * - H. Vermeille,
+   *   <a href="http://dx.doi.org/10.1007/s00190-010-0419-x">
+   *   An analytical method to transform geocentric into
+   *   geodetic coordinates</a>, J. Geodesy 85, 105--117 (2011).
+   * .
    * See \ref geocentric for more information.
    *
    * The errors in these routines are close to round-off.  Specifically, for
@@ -103,9 +109,9 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
-     * @exception GeographicErr if \e a or (1 &minus; \e f ) \e a is not
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
+     * @exception GeographicErr if \e a or (1 &minus; \e f) \e a is not
      *   positive.
      **********************************************************************/
     Geocentric(real a, real f);
@@ -216,8 +222,8 @@ namespace GeographicLib {
      * - in geocentric \e X, \e Y, \e Z coordinates; call this representation
      *   \e v0.
      * .
-     * Then we have \e v1 = \e M<sup>T</sup> &sdot; \e v0, where \e
-     * M<sup>T</sup> is the transpose of \e M.
+     * Then we have \e v1 = <i>M</i><sup>T</sup> &sdot; \e v0, where
+     * <i>M</i><sup>T</sup> is the transpose of \e M.
      **********************************************************************/
     void Reverse(real X, real Y, real Z, real& lat, real& lon, real& h,
                  std::vector<real>& M)
@@ -244,14 +250,14 @@ namespace GeographicLib {
      *   the value used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const
-    { return Init() ? _a : Math::NaN<real>(); }
+    { return Init() ? _a : Math::NaN(); }
 
     /**
      * @return \e f the  flattening of the ellipsoid.  This is the
      *   value used in the constructor.
      **********************************************************************/
     Math::real Flattening() const
-    { return Init() ? _f : Math::NaN<real>(); }
+    { return Init() ? _f : Math::NaN(); }
     ///@}
 
     /// \cond SKIP
@@ -260,14 +266,14 @@ namespace GeographicLib {
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const
-    { return Init() ? 1/_f : Math::NaN<real>(); }
+    { return Init() ? 1/_f : Math::NaN(); }
     /// \endcond
 
     /**
      * A global instantiation of Geocentric with the parameters for the WGS84
      * ellipsoid.
      **********************************************************************/
-    static const Geocentric WGS84;
+    static const Geocentric& WGS84();
   };
 
 } // namespace GeographicLib

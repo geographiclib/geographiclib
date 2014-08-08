@@ -17,7 +17,7 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<p><b>Planimeter</b> [ <b>-r</b> ] [ <b>-s</b> ] [ <b>-l</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
+<p><b>Planimeter</b> [ <b>-r</b> ] [ <b>-s</b> ] [ <b>-l</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] [ <b>-p</b> <i>prec</i> ] [ <b>-E</b> ] [ <b>-Q</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
@@ -57,6 +57,24 @@
 <dd>
 
 <p>specify the ellipsoid via <i>a</i> <i>f</i>; the equatorial radius is <i>a</i> and the flattening is <i>f</i>. Setting <i>f</i> = 0 results in a sphere. Specify <i>f</i> &lt; 0 for a prolate ellipsoid. A simple fraction, e.g., 1/297, is allowed for <i>f</i>. (Also, if <i>f</i> &gt; 1, the flattening is set to 1/<i>f</i>.) By default, the WGS84 ellipsoid is used, <i>a</i> = 6378137 m, <i>f</i> = 1/298.257223563. If entering vertices as UTM/UPS or MGRS coordinates, use the default ellipsoid, since the conversion of these coordinates to latitude and longitude always uses the WGS84 parameters.</p>
+
+</dd>
+<dt id="p"><b>-p</b></dt>
+<dd>
+
+<p>set the output precision to <i>prec</i> (default 6); the perimeter is given (in meters) with <i>prec</i> digits after the decimal point; the area is given (in meters^2) with (<i>prec</i> - 5) digits after the decimal point.</p>
+
+</dd>
+<dt id="E"><b>-E</b></dt>
+<dd>
+
+<p>use &quot;exact&quot; algorithms (based on elliptic integrals) for the geodesic calculations. These are more accurate than the (default) series expansions for |<i>f</i>| &gt; 0.02. (But note that the implementation of areas in GeodesicExact uses a high order series and this is only accurate for modest flattenings.) <b>-E</b> and <b>-Q</b> are mutually exclusive.</p>
+
+</dd>
+<dt id="Q"><b>-Q</b></dt>
+<dd>
+
+<p>perform the calculation on the authalic sphere. The area calculation is accurate even if the flattening is large, <i>provided</i> the edges are sufficiently short. The perimeter calculation is not accurate. <b>-E</b> and <b>-Q</b> are mutually exclusive.</p>
 
 </dd>
 <dt id="comment-delimiter"><b>--comment-delimiter</b></dt>

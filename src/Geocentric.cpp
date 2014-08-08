@@ -28,16 +28,18 @@ namespace GeographicLib {
       throw GeographicErr("Minor radius is not positive");
   }
 
-  const Geocentric Geocentric::WGS84(Constants::WGS84_a<real>(),
-                                     Constants::WGS84_f<real>());
+  const Geocentric& Geocentric::WGS84() {
+    static const Geocentric wgs84(Constants::WGS84_a(), Constants::WGS84_f());
+    return wgs84;
+  }
 
   void Geocentric::IntForward(real lat, real lon, real h,
                               real& X, real& Y, real& Z,
                               real M[dim2_]) const {
     lon = Math::AngNormalize(lon);
     real
-      phi = lat * Math::degree<real>(),
-      lam = lon * Math::degree<real>(),
+      phi = lat * Math::degree(),
+      lam = lon * Math::degree(),
       sphi = sin(phi),
       cphi = abs(lat) == 90 ? 0 : cos(phi),
       n = _a/sqrt(1 - _e2 * Math::sq(sphi)),
@@ -107,7 +109,7 @@ namespace GeographicLib {
           // N.B. cbrt always returns the real root.  cbrt(-8) = -2.
           real T = Math::cbrt(T3); // T = r * t
           // T can be zero; but then r2 / T -> 0.
-          u += T + (T != 0 ? r2 / T : 0);
+          u += T + (T ? r2 / T : 0);
         } else {
           // T is complex, but the way u is defined the result is real.
           real ang = atan2(sqrt(-disc), -(S + r3));
@@ -149,9 +151,9 @@ namespace GeographicLib {
         h = - _a * (_f >= 0 ? _e2m : 1) * H / _e2a;
       }
     }
-    lat = atan2(sphi, cphi) / Math::degree<real>();
+    lat = atan2(sphi, cphi) / Math::degree();
     // Negative signs return lon in [-180, 180).
-    lon = -atan2(-slam, clam) / Math::degree<real>();
+    lon = -atan2(-slam, clam) / Math::degree();
     if (M)
       Rotation(sphi, cphi, slam, clam, M);
   }
