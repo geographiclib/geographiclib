@@ -2,7 +2,14 @@
 # "exampleprograms" target.  These are mainly for including as examples
 # within the doxygen documentation; however, compiling them catches some
 # obvious blunders.
-file (GLOB EXAMPLE_SOURCES example-*.cpp)
+if (GEOGRAPHICLIB_PRECISION EQUAL 2)
+  # These examples all assume real = double
+  file (GLOB EXAMPLE_SOURCES example-*.cpp)
+else ()
+  set (EXAMPLE_SOURCES)
+endif ()
+set (EXAMPLE_SOURCES ${EXAMPLE_SOURCES} GeoidToGTX.cpp make-egmcof.cpp)
+
 set (EXAMPLES)
 add_definitions (${PROJECT_DEFINITIONS})
 
@@ -10,16 +17,8 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
   add_executable (${EXAMPLE} EXCLUDE_FROM_ALL ${EXAMPLE_SOURCE})
-  target_link_libraries (${EXAMPLE} ${PROJECT_LIBRARIES})
-endforeach ()
-
-set (OTHER_EXAMPLES GeoidToGTX.cpp)
-
-foreach (EXAMPLE_SOURCE ${OTHER_EXAMPLES})
-  get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
-  set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
-  add_executable (${EXAMPLE} EXCLUDE_FROM_ALL ${EXAMPLE_SOURCE})
-  target_link_libraries (${EXAMPLE} ${PROJECT_LIBRARIES})
+  target_link_libraries (${EXAMPLE} ${PROJECT_LIBRARIES}
+    ${QUAD_LIBRARIES} ${MPFR_LIBRARIES})
 endforeach ()
 
 find_package (OpenMP QUIET)

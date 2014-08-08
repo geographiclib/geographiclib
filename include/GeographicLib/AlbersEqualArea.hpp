@@ -60,15 +60,10 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT AlbersEqualArea {
   private:
     typedef Math::real real;
+    real eps_, epsx_, epsx2_, tol_, tol0_;
     real _a, _f, _fm, _e2, _e, _e2m, _qZ, _qx;
     real _sign, _lat0, _k0;
     real _n0, _m02, _nrho0, _k2, _txi0, _scxi0, _sxi0;
-    static const real eps_;
-    static const real epsx_;
-    static const real epsx2_;
-    static const real tol_;
-    static const real tol0_;
-    static const real ahypover_;
     static const int numit_ = 5;   // Newton iterations in Reverse
     static const int numit0_ = 20; // Newton iterations in Init
     static inline real hyp(real x) { return Math::hypot(real(1), x); }
@@ -76,12 +71,13 @@ namespace GeographicLib {
     // atan (sqrt(-e2) * x)/sqrt(-e2) if f < 0
     // x                              if f = 0
     inline real atanhee(real x) const {
+      using std::atan2; using std::abs;
       return _f > 0 ? Math::atanh(_e * x)/_e :
         // We only invoke atanhee in txif for positive latitude.  Then x is
         // only negative for very prolate ellipsoids (_b/_a >= sqrt(2)) and we
         // still need to return a positive result in this case; hence the need
         // for the call to atan2.
-        (_f < 0 ? (std::atan2(_e * std::abs(x), x < 0 ? -1 : 1)/_e) : x);
+        (_f < 0 ? (atan2(_e * abs(x), x < 0 ? -1 : 1)/_e) : x);
     }
     // return atanh(sqrt(x))/sqrt(x) - 1, accurate for small x
     static real atanhxm1(real x);
@@ -112,7 +108,7 @@ namespace GeographicLib {
     // Datanhee(x,y) = atanhee((x-y)/(1-e^2*x*y))/(x-y)
     inline real Datanhee(real x, real y) const {
       real t = x - y, d = 1 - _e2 * x * y;
-      return t != 0 ? atanhee(t / d) / t : 1 / d;
+      return t ? atanhee(t / d) / t : 1 / d;
     }
     // DDatanhee(x,y) = (Datanhee(1,y) - Datanhee(1,x))/(y-x)
     real DDatanhee(real x, real y) const;
@@ -128,11 +124,11 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
      * @param[in] stdlat standard parallel (degrees), the circle of tangency.
      * @param[in] k0 azimuthal scale on the standard parallel.
-     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k0 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f) \e a, or \e k0 is
      *   not positive.
      * @exception GeographicErr if \e stdlat is not in [&minus;90&deg;,
      *   90&deg;].
@@ -144,12 +140,12 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
      * @param[in] stdlat1 first standard parallel (degrees).
      * @param[in] stdlat2 second standard parallel (degrees).
      * @param[in] k1 azimuthal scale on the standard parallels.
-     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k1 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f) \e a, or \e k1 is
      *   not positive.
      * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
      *   [&minus;90&deg;, 90&deg;], or if \e stdlat1 and \e stdlat2 are
@@ -162,14 +158,14 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
      * @param[in] sinlat1 sine of first standard parallel.
      * @param[in] coslat1 cosine of first standard parallel.
      * @param[in] sinlat2 sine of second standard parallel.
      * @param[in] coslat2 cosine of second standard parallel.
      * @param[in] k1 azimuthal scale on the standard parallels.
-     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k1 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f) \e a, or \e k1 is
      *   not positive.
      * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
      *   [&minus;90&deg;, 90&deg;], or if \e stdlat1 and \e stdlat2 are
@@ -308,21 +304,21 @@ namespace GeographicLib {
      * stdlat = 0, and \e k0 = 1.  This degenerates to the cylindrical equal
      * area projection.
      **********************************************************************/
-    static const AlbersEqualArea CylindricalEqualArea;
+    static const AlbersEqualArea& CylindricalEqualArea();
 
     /**
      * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e
      * stdlat = 90&deg;, and \e k0 = 1.  This degenerates to the
      * Lambert azimuthal equal area projection.
      **********************************************************************/
-    static const AlbersEqualArea AzimuthalEqualAreaNorth;
+    static const AlbersEqualArea& AzimuthalEqualAreaNorth();
 
     /**
      * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e
      * stdlat = &minus;90&deg;, and \e k0 = 1.  This degenerates to the
      * Lambert azimuthal equal area projection.
      **********************************************************************/
-    static const AlbersEqualArea AzimuthalEqualAreaSouth;
+    static const AlbersEqualArea& AzimuthalEqualAreaSouth();
   };
 
 } // namespace GeographicLib

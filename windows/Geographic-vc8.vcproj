@@ -309,6 +309,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\GeodesicExactC4.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\GeodesicLine.cpp"
 				>
 			</File>
@@ -370,6 +374,10 @@
 			</File>
 			<File
 				RelativePath="..\src\PolygonArea.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Rhumb.cpp"
 				>
 			</File>
 			<File
@@ -516,6 +524,10 @@
 			</File>
 			<File
 				RelativePath="../include/GeographicLib/PolygonArea.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/Rhumb.hpp"
 				>
 			</File>
 			<File

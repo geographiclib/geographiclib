@@ -4,7 +4,84 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.36.
+The current version of the library is 1.37.
+
+Changes between 1.37 (released 2014-08-08) and 1.36 versions:
+
+  * Add support for high precision arithmetic.
+
+  * INCOMPATIBLE CHANGE: the static instantiations of various classes
+    for the WGS84 ellipsoid have been changed to a "construct on first
+    use idiom".  This avoids a lot of wasteful initialization before the
+    user's code starts.  Unfortunately it means that existing source
+    code that relies on any of the following static variables will need
+    to be changed to a function call:
+    + AlbersEqualArea::AzimuthalEqualAreaNorth
+    + AlbersEqualArea::AzimuthalEqualAreaSouth
+    + AlbersEqualArea::CylindricalEqualArea
+    + Ellipsoid::WGS84
+    + Geocentric::WGS84
+    + Geodesic::WGS84
+    + GeodesicExact::WGS84
+    + LambertConformalConic::Mercator
+    + NormalGravity::GRS80
+    + NormalGravity::WGS84
+    + PolarStereographic::UPS
+    + TransverseMercator::UTM
+    + TransverseMercatorExact::UTM
+    Thus, occurrences of, for example,
+    const Geodesic& geod = Geodesic::WGS84; // version 1.36 and earlier
+    need to be changed to
+    const Geodesic& geod = Geodesic::WGS84(); // version 1.37 and later
+    (note the parentheses!); alternatively use
+    // works with all versions
+    const Geodesic geod(Constants::WGS84_a(), Constants::WGS84_a());
+
+  * Incompatible change: the environment variables
+    {GEOID,GRAVITY,MAGNETIC}_{NAME,PATH} are now prefixed with
+    GEOGRAPHICLIB_.
+
+  * Incompatible change for Windows XP: retire the Windows XP common
+    data path.  If you're still using Windows XP, then you might have to
+    move the folder C:\Documents and Settings\All Users\Application
+    Data\GeographicLib to C:\ProgramData\GeographicLib.
+
+  * All macro names affecting the compilation now start with
+    GEOGRAPHICLIB_; this applies to GEOID_DEFAULT_NAME,
+    GRAVITY_DEFAULT_NAME, MAGNETIC_DEFAULT_NAME, PGM_PIXEL_WIDTH,
+    HAVE_LONG_DOUBLE, STATIC_ASSERT, WORDS_BIGENDIAN.
+
+  * Changes to PolygonArea:
+    + introduce PolygonAreaT which takes a geodesic class as a
+      parameter;
+    + PolygonArea and PolygonAreaExact are typedef'ed to
+      PolygonAreaT<Geodesic> and PolygonAreaT<GeodesicExact>;
+    + add -E option to Planimeter to use PolygonAreaExact;
+    + add -Q option to Planimeter to calculate the area on the authalic
+      sphere.
+
+  * Add -p option to Planimeter, ConicProj, GeodesicProj,
+    TransverseMercatorProj.
+
+  * Add Rhumb and RhumbLine classes and the RhumbSolve utility.
+
+  * Minor changes to NormalGravity:
+    + add J2ToFlattening and FlatteningToJ2;
+    + use Newton's method to determine f from J2;
+    + in constructor, allow omega = 0 (i.e., treat the spherical case).
+
+  * Add grs80 GravityModel.
+
+  * Make geographiclib-get-{geoids,gravity,magnetic} scripts work on
+    MacOS.
+
+  * Minor changes:
+    + simplify cross-platform support for C++11 mathematical functions;
+    + change way area coefficients are given in GeodesicExact to improve
+      compile times;
+    + enable searching the online documentation;
+    + add macros GEOGRAPHICLIB_VERSION and GEOGRAPHICLIB_VERSION_NUM;
+    + add solution and project files for Visual Studio Express 2010.
 
 Changes between 1.36 (released 2014-05-13) and 1.35 versions:
 

@@ -26,7 +26,7 @@ namespace GeographicLib {
    * due north.  The plane \e z = - \e h0 is tangent to the ellipsoid.
    *
    * The conversions all take place via geocentric coordinates using a
-   * Geocentric object (by default Geocentric::WGS84).
+   * Geocentric object (by default Geocentric::WGS84()).
    *
    * Example of use:
    * \include example-LocalCartesian.cpp
@@ -57,13 +57,13 @@ namespace GeographicLib {
      * @param[in] lon0 longitude at origin (degrees).
      * @param[in] h0 height above ellipsoid at origin (meters); default 0.
      * @param[in] earth Geocentric object for the transformation; default
-     *   Geocentric::WGS84.
+     *   Geocentric::WGS84().
      *
      * \e lat0 should be in the range [&minus;90&deg;, 90&deg;]; \e
      * lon0 should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     LocalCartesian(real lat0, real lon0, real h0 = 0,
-                   const Geocentric& earth = Geocentric::WGS84)
+                   const Geocentric& earth = Geocentric::WGS84())
       : _earth(earth)
     { Reset(lat0, lon0, h0); }
 
@@ -71,11 +71,11 @@ namespace GeographicLib {
      * Default constructor.
      *
      * @param[in] earth Geocentric object for the transformation; default
-     *   Geocentric::WGS84.
+     *   Geocentric::WGS84().
      *
      * Sets \e lat0 = 0, \e lon0 = 0, \e h0 = 0.
      **********************************************************************/
-    explicit LocalCartesian(const Geocentric& earth = Geocentric::WGS84)
+    explicit LocalCartesian(const Geocentric& earth = Geocentric::WGS84())
       : _earth(earth)
     { Reset(real(0), real(0), real(0)); }
 
@@ -187,8 +187,8 @@ namespace GeographicLib {
      *   the local coordinate system at (\e lat0, \e lon0, \e h0)); call this
      *   representation \e v0.
      * .
-     * Then we have \e v1 = \e M<sup>T</sup> &sdot; \e v0, where \e
-     * M<sup>T</sup> is the transpose of \e M.
+     * Then we have \e v1 = <i>M</i><sup>T</sup> &sdot; \e v0, where
+     * <i>M</i><sup>T</sup> is the transpose of \e M.
      **********************************************************************/
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h,
                  std::vector<real>& M)

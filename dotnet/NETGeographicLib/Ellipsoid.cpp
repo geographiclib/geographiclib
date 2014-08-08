@@ -32,7 +32,7 @@ Ellipsoid::Ellipsoid()
 {
     try
     {
-        m_pEllipsoid = new GeographicLib::Ellipsoid( GeographicLib::Ellipsoid::WGS84 );
+        m_pEllipsoid = new GeographicLib::Ellipsoid( GeographicLib::Ellipsoid::WGS84() );
     }
     catch ( std::bad_alloc )
     {

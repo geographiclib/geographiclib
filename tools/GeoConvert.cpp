@@ -40,6 +40,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
+    Utility::set_digits();
     enum { GEOGRAPHIC, DMS, UTMUPS, MGRS, CONVERGENCE };
     int outputmode = GEOGRAPHIC;
     int prec = 0;
@@ -211,9 +212,9 @@ int main(int argc, char* argv[]) {
             real
               gamma = p.AltConvergence(),
               k = p.AltScale();
-            int prec1 = std::max(-5, std::min( Math::extradigits + 8, prec ));
-            os = Utility::str<real>(gamma, prec1 + 5) + " "
-              + Utility::str<real>(k, prec1 + 7);
+            int prec1 = std::max(-5, std::min(Math::extra_digits() + 8, prec));
+            os = Utility::str(gamma, prec1 + 5) + " "
+              + Utility::str(k, prec1 + 7);
           }
         }
       }

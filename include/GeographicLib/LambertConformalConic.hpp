@@ -57,19 +57,18 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT LambertConformalConic {
   private:
     typedef Math::real real;
+    real eps_, epsx_, tol_, ahypover_;
     real _a, _f, _fm, _e2, _e, _e2m;
     real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
     real _scbet0, _tchi0, _scchi0, _psi0, _nrho0, _drhomax;
-    static const real eps_;
-    static const real epsx_;
-    static const real tol_;
-    static const real ahypover_;
     static const int numit_ = 5;
     static inline real hyp(real x) { return Math::hypot(real(1), x); }
     // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0
     // - sqrt(-e2) * atan( sqrt(-e2) * x)                    if f < 0
-    inline real eatanhe(real x) const
-    { return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x); }
+    inline real eatanhe(real x) const {
+      using std::atan;
+      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * atan(_e * x);
+    }
     // Divided differences
     // Definition: Df(x,y) = (f(x)-f(y))/(x-y)
     // See:
@@ -100,38 +99,40 @@ namespace GeographicLib {
     // Dlog1p(x,y) = log1p((x-y)/(1+y)/(x-y)
     static inline real Dlog1p(real x, real y) {
       real t = x - y; if (t < 0) { t = -t; y = x; }
-      return t != 0 ? Math::log1p(t / (1 + y)) / t : 1 / (1 + x);
+      return t ? Math::log1p(t / (1 + y)) / t : 1 / (1 + x);
     }
     // Dexp(x,y) = exp((x+y)/2) * 2*sinh((x-y)/2)/(x-y)
     static inline real Dexp(real x, real y) {
+      using std::sinh; using std::exp;
       real t = (x - y)/2;
-      return (t != 0 ? sinh(t)/t : real(1)) * exp((x + y)/2);
+      return (t ? sinh(t)/t : 1) * exp((x + y)/2);
     }
     // Dsinh(x,y) = 2*sinh((x-y)/2)/(x-y) * cosh((x+y)/2)
     //   cosh((x+y)/2) = (c+sinh(x)*sinh(y)/c)/2
     //   c=sqrt((1+cosh(x))*(1+cosh(y)))
     //   cosh((x+y)/2) = sqrt( (sinh(x)*sinh(y) + cosh(x)*cosh(y) + 1)/2 )
     static inline real Dsinh(real x, real y, real sx, real sy, real cx, real cy)
-      // sx = sinh(x), cx = cosh(x)
-      {
+    // sx = sinh(x), cx = cosh(x)
+    {
       // real t = (x - y)/2, c = sqrt((1 + cx) * (1 + cy));
-      // return (t != 0 ? sinh(t)/t : real(1)) * (c + sx * sy / c) /2;
+      // return (t ? sinh(t)/t : real(1)) * (c + sx * sy / c) /2;
+      using std::sinh; using std::sqrt;
       real t = (x - y)/2;
-      return (t != 0 ? sinh(t)/t : real(1)) * sqrt((sx * sy + cx * cy + 1) /2);
+      return (t ? sinh(t)/t : 1) * sqrt((sx * sy + cx * cy + 1) /2);
     }
     // Dasinh(x,y) = asinh((x-y)*(x+y)/(x*sqrt(1+y^2)+y*sqrt(1+x^2)))/(x-y)
     //             = asinh((x*sqrt(1+y^2)-y*sqrt(1+x^2)))/(x-y)
     static inline real Dasinh(real x, real y, real hx, real hy) {
       // hx = hyp(x)
       real t = x - y;
-      return t != 0 ?
+      return t ?
         Math::asinh(x*y > 0 ? t * (x+y) / (x*hy + y*hx) : x*hy - y*hx) / t :
         1/hx;
     }
     // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
     inline real Deatanhe(real x, real y) const {
       real t = x - y, d = 1 - _e2 * x * y;
-      return t != 0 ? eatanhe(t / d) / t : _e2 / d;
+      return t ? eatanhe(t / d) / t : _e2 / d;
     }
     void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1);
   public:
@@ -141,11 +142,11 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
      * @param[in] stdlat standard parallel (degrees), the circle of tangency.
      * @param[in] k0 scale on the standard parallel.
-     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k0 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f) \e a, or \e k0 is
      *   not positive.
      * @exception GeographicErr if \e stdlat is not in [&minus;90&deg;,
      *   90&deg;].
@@ -157,12 +158,12 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
      * @param[in] stdlat1 first standard parallel (degrees).
      * @param[in] stdlat2 second standard parallel (degrees).
      * @param[in] k1 scale on the standard parallels.
-     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k1 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f) \e a, or \e k1 is
      *   not positive.
      * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
      *   [&minus;90&deg;, 90&deg;], or if either \e stdlat1 or \e
@@ -175,14 +176,14 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
      * @param[in] sinlat1 sine of first standard parallel.
      * @param[in] coslat1 cosine of first standard parallel.
      * @param[in] sinlat2 sine of second standard parallel.
      * @param[in] coslat2 cosine of second standard parallel.
      * @param[in] k1 scale on the standard parallels.
-     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k1 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f) \e a, or \e k1 is
      *   not positive.
      * @exception GeographicErr if \e stdlat1 or \e stdlat2 is not in
      *   [&minus;90&deg;, 90&deg;], or if either \e stdlat1 or \e
@@ -324,7 +325,7 @@ namespace GeographicLib {
      * ellipsoid, \e stdlat = 0, and \e k0 = 1.  This degenerates to the
      * Mercator projection.
      **********************************************************************/
-    static const LambertConformalConic Mercator;
+    static const LambertConformalConic& Mercator();
   };
 
 } // namespace GeographicLib

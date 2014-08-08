@@ -1,7 +1,7 @@
 int usage(int retval, bool brief) {
   if (brief)
     ( retval ? std::cerr : std::cout ) << "Usage:\n"
-"    GeodesicProj ( -z | -c | -g ) lat0 lon0 [ -r ] [ -e a f ] [\n"
+"    GeodesicProj ( -z | -c | -g ) lat0 lon0 [ -r ] [ -e a f ] [ -p prec ] [\n"
 "    --comment-delimiter commentdelim ] [ --version | -h | --help ] [\n"
 "    --input-file infile | --input-string instring ] [ --line-separator\n"
 "    linesep ] [ --output-file outfile ]\n"
@@ -9,14 +9,14 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeodesicProj --help\n"
 "or visit:\n"
-"    http://geographiclib.sf.net/1.36/GeodesicProj.1.html\n";
+"    http://geographiclib.sf.net/1.37/GeodesicProj.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
 "       GeodesicProj -- perform projections based on geodesics\n"
 "\n"
 "SYNOPSIS\n"
-"       GeodesicProj ( -z | -c | -g ) lat0 lon0 [ -r ] [ -e a f ] [\n"
+"       GeodesicProj ( -z | -c | -g ) lat0 lon0 [ -r ] [ -e a f ] [ -p prec ] [\n"
 "       --comment-delimiter commentdelim ] [ --version | -h | --help ] [\n"
 "       --input-file infile | --input-string instring ] [ --line-separator\n"
 "       linesep ] [ --output-file outfile ]\n"
@@ -62,6 +62,12 @@ int usage(int retval, bool brief) {
 "           allowed for f.  (Also, if f > 1, the flattening is set to 1/f.)  By\n"
 "           default, the WGS84 ellipsoid is used, a = 6378137 m, f =\n"
 "           1/298.257223563.\n"
+"\n"
+"       -p  set the output precision to prec (default 6).  prec is the number\n"
+"           of digits after the decimal point for lengths (in meters).  For\n"
+"           latitudes, longitudes, and azimuths (in degrees), the number of\n"
+"           digits after the decimal point is prec + 5.  For the scale, the\n"
+"           number of digits after the decimal point is prec + 6.\n"
 "\n"
 "       --comment-delimiter\n"
 "           set the comment delimiter to commentdelim (e.g., \"#\" or \"//\").  If\n"
@@ -111,9 +117,7 @@ int usage(int retval, bool brief) {
 "SEE ALSO\n"
 "       The ellipsoidal gnomonic projection is derived in Section 8 of C. F. F.\n"
 "       Karney, Algorithms for geodesics, J. Geodesy 87, 43-55 (2013); DOI\n"
-"       http://dx.doi.org/10.1007/s00190-012-0578-z\n"
 "       <http://dx.doi.org/10.1007/s00190-012-0578-z>; addenda:\n"
-"       http://geographiclib.sf.net/geod-addenda.html\n"
 "       <http://geographiclib.sf.net/geod-addenda.html>.\n"
 "\n"
 "AUTHOR\n"

@@ -15,15 +15,14 @@
 
 #if !defined(GEOGRAPHICLIB_DATA)
 #  if defined(_WIN32)
-#    define GEOGRAPHICLIB_DATA \
-  "C:/Documents and Settings/All Users/Application Data/GeographicLib"
+#    define GEOGRAPHICLIB_DATA "C:/ProgramData/GeographicLib"
 #  else
 #    define GEOGRAPHICLIB_DATA "/usr/local/share/GeographicLib"
 #  endif
 #endif
 
-#if !defined(GRAVITY_DEFAULT_NAME)
-#  define GRAVITY_DEFAULT_NAME "egm96"
+#if !defined(GEOGRAPHICLIB_GRAVITY_DEFAULT_NAME)
+#  define GEOGRAPHICLIB_GRAVITY_DEFAULT_NAME "egm96"
 #endif
 
 #if defined(_MSC_VER)
@@ -40,8 +39,8 @@ namespace GeographicLib {
     , _dir(path)
     , _description("NONE")
     , _date("UNKNOWN")
-    , _amodel(Math::NaN<real>())
-    , _GMmodel(Math::NaN<real>())
+    , _amodel(Math::NaN())
+    , _GMmodel(Math::NaN())
     , _zeta0(0)
     , _corrmult(1)
     , _norm(SphericalHarmonic::FULL)
@@ -132,7 +131,7 @@ namespace GeographicLib {
     if (version != "1")
       throw GeographicErr("Unknown version in " + _filename + ": " + version);
     string key, val;
-    real a = Math::NaN<real>(), GM = a, omega = a, f = a, J2 = a;
+    real a = Math::NaN(), GM = a, omega = a, f = a, J2 = a;
     while (getline(metastr, line)) {
       if (!Utility::ParseLine(line, key, val))
         continue;
@@ -265,8 +264,8 @@ namespace GeographicLib {
     real gammaX, gammaY, gammaZ;
     _earth.U(X, Y, Z, gammaX, gammaY, gammaZ);
     real gamma = Math::hypot( Math::hypot(gammaX, gammaY), gammaZ);
-    xi  = -(deltay/gamma) / Math::degree<real>();
-    eta = -(deltax/gamma) / Math::degree<real>();
+    xi  = -(deltay/gamma) / Math::degree();
+    eta = -(deltax/gamma) / Math::degree();
   }
 
   Math::real GravityModel::GeoidHeight(real lat, real lon) const
@@ -311,13 +310,13 @@ namespace GeographicLib {
     real
       invR = 1 / Math::hypot(X, Z),
       gamma0 = (caps & CAP_GAMMA0 ?_earth.SurfaceGravity(lat)
-                : Math::NaN<real>()),
+                : Math::NaN()),
       fx, fy, fz, gamma;
     if (caps & CAP_GAMMA) {
       _earth.U(X, Y, Z, fx, fy, fz); // fy = 0
       gamma = Math::hypot(fx, fz);
     } else
-      gamma = Math::NaN<real>();
+      gamma = Math::NaN();
     _earth.Phi(X, Y, fx, fy);
     return GravityCircle(GravityCircle::mask(caps),
                          _earth._a, _earth._f, lat, h, Z, X, M[7], M[8],
@@ -337,23 +336,23 @@ namespace GeographicLib {
 
   std::string GravityModel::DefaultGravityPath() {
     string path;
-    char* gravitypath = getenv("GRAVITY_PATH");
+    char* gravitypath = getenv("GEOGRAPHICLIB_GRAVITY_PATH");
     if (gravitypath)
       path = string(gravitypath);
-    if (path.length())
+    if (!path.empty())
       return path;
     char* datapath = getenv("GEOGRAPHICLIB_DATA");
     if (datapath)
       path = string(datapath);
-    return (path.length() ? path : string(GEOGRAPHICLIB_DATA)) + "/gravity";
+    return (!path.empty() ? path : string(GEOGRAPHICLIB_DATA)) + "/gravity";
   }
 
   std::string GravityModel::DefaultGravityName() {
     string name;
-    char* gravityname = getenv("GRAVITY_NAME");
+    char* gravityname = getenv("GEOGRAPHICLIB_GRAVITY_NAME");
     if (gravityname)
       name = string(gravityname);
-    return name.length() ? name : string(GRAVITY_DEFAULT_NAME);
+    return !name.empty() ? name : string(GEOGRAPHICLIB_GRAVITY_DEFAULT_NAME);
   }
 
 } // namespace GeographicLib

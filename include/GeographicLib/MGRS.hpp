@@ -31,11 +31,12 @@ namespace GeographicLib {
    *   Defense Mapping Agency, Technical Manual TM8358.1 (1990).
    * .
    * This document has been updated by the two NGA documents
-   * - <a href="https://nsgreg.nga.mil/doc/view?i=4057"> Universal Grids and
-   *   Grid Reference Systems</a>, NGA.STND.0037_2.0.0_GRIDS (2014).
-   * - <a href="https://nsgreg.nga.mil/doc/view?i=4056"> The Universal Grids
-   *   and the Transverse Mercator and Polar Stereographic Map Projections</a>,
-   *   NGA.SIG.0012_2.0.0_UTMUPS (2014).
+   * - <a href="http://earth-info.nga.mil/GandG/publications/NGA_STND_0037_2_0_0_GRIDS/NGA.STND.0037_2.0.0_GRIDS.pdf">
+   *   Universal Grids and Grid Reference Systems</a>,
+   *   NGA.STND.0037_2.0.0_GRIDS (2014).
+   * - <a href="http://earth-info.nga.mil/GandG/publications/NGA_SIG_0012_2_0_0_UTMUPS/NGA.SIG.0012_2.0.0_UTMUPS.pdf">
+   *   The Universal Grids and the Transverse Mercator and Polar Stereographic
+   *   Map Projections</a>, NGA.SIG.0012_2.0.0_UTMUPS (2014).
    *
    * This implementation has the following properties:
    * - The conversions are closed, i.e., output from Forward is legal input for
@@ -68,10 +69,21 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT MGRS {
   private:
     typedef Math::real real;
-    // The smallest length s.t., 1.0e7 - eps_ < 1.0e7 (approx 1.9 nm)
-    static const real eps_;
-    // The smallest angle s.t., 90 - eps_ < 90 (approx 50e-12 arcsec)
-    static const real angeps_;
+    // The smallest length s.t., 1.0e7 - eps() < 1.0e7 (approx 1.9 nm)
+    static inline real eps() {
+      using std::pow;
+      // 25 = ceil(log_2(2e7)) -- use half circumference here because
+      // northing 195e5 is a legal in the "southern" hemisphere.
+      static const real eps = pow(real(0.5), Math::digits() - 25);
+      return eps;
+    }
+    // The smallest angle s.t., 90 - angeps() < 90 (approx 50e-12 arcsec)
+    static inline real angeps() {
+      using std::pow;
+      // 7 = ceil(log_2(90))
+      static const real angeps = pow(real(0.5), Math::digits() - 7);
+      return angeps;
+    }
     static const std::string hemispheres_;
     static const std::string utmcols_[3];
     static const std::string utmrow_;
@@ -103,7 +115,8 @@ namespace GeographicLib {
     // Return latitude band number [-10, 10) for the given latitude (degrees).
     // The bands are reckoned in include their southern edges.
     static int LatitudeBand(real lat) {
-      int ilat = int(std::floor(lat));
+      using std::floor;
+      int ilat = int(floor(lat));
       return (std::max)(-10, (std::min)(9, (ilat + 80)/8 - 10));
     }
     // Return approximate latitude band number [-10, 10) for the given northing
@@ -112,11 +125,12 @@ namespace GeographicLib {
     // function isn't currently used.
     static int ApproxLatitudeBand(real y) {
       // northing at tile center in units of tile = 100km
-      real ya = std::floor( (std::min)(real(88), std::abs(y/tile_)) ) +
+      using std::floor; using std::abs;
+      real ya = floor( (std::min)(real(88), abs(y/tile_)) ) +
         real(0.5);
       // convert to lat (mult by 90/100) and then to band (divide by 8)
       // the +1 fine tunes the boundary between bands 3 and 4
-      int b = int(std::floor( ((ya * 9 + 1) / 10) / 8 ));
+      int b = int(floor( ((ya * 9 + 1) / 10) / 8 ));
       // For the northern hemisphere we have
       // band rows  num
       // N 0   0:8    9

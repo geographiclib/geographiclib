@@ -5,7 +5,7 @@ GeodesicProj -- perform projections based on geodesics
 =head1 SYNOPSIS
 
 B<GeodesicProj> ( B<-z> | B<-c> | B<-g> ) I<lat0> I<lon0> [ B<-r> ]
-[ B<-e> I<a> I<f> ]
+[ B<-e> I<a> I<f> ] [ B<-p> I<prec> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -16,10 +16,10 @@ B<GeodesicProj> ( B<-z> | B<-c> | B<-g> ) I<lat0> I<lon0> [ B<-r> ]
 
 Perform projections based on geodesics.  Convert geodetic coordinates to
 either azimuthal equidistant, Cassini-Soldner, or gnomonic coordinates.
-The center of the projection (I<lat0>, I<lon0>) is specified by either the B<-c>
-option (for Cassini-Soldner), the B<-z> option (for azimuthal equidistant),
-or the B<-g> option (for gnomonic).  At least one of these options must be
-given (the last one given is used).
+The center of the projection (I<lat0>, I<lon0>) is specified by either
+the B<-c> option (for Cassini-Soldner), the B<-z> option (for azimuthal
+equidistant), or the B<-g> option (for gnomonic).  At least one of these
+options must be given (the last one given is used).
 
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) I<latitude> and I<longitude> (decimal
@@ -67,6 +67,14 @@ I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
 1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137 m,
 I<f> = 1/298.257223563.
+
+=item B<-p>
+
+set the output precision to I<prec> (default 6).  I<prec> is the number
+of digits after the decimal point for lengths (in meters).  For
+latitudes, longitudes, and azimuths (in degrees), the number of digits
+after the decimal point is I<prec> + 5.  For the scale, the number of
+digits after the decimal point is I<prec> + 6.
 
 =item B<--comment-delimiter>
 

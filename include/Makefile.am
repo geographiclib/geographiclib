@@ -33,6 +33,7 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/OSGB.hpp \
 			GeographicLib/PolarStereographic.hpp \
 			GeographicLib/PolygonArea.hpp \
+			GeographicLib/Rhumb.hpp \
 			GeographicLib/SphericalEngine.hpp \
 			GeographicLib/SphericalHarmonic.hpp \
 			GeographicLib/SphericalHarmonic1.hpp \

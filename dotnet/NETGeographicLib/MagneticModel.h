@@ -343,22 +343,23 @@ namespace NETGeographicLib
         /**
          * @return the default path for magnetic model data files.
          *
-         * This is the value of the environment variable MAGNETIC_PATH, if set;
-         * otherwise, it is $GEOGRAPHICLIB_DATA/magnetic if the environment
-         * variable GEOGRAPHICLIB_DATA is set; otherwise, it is a compile-time
-         * default (/usr/local/share/GeographicLib/magnetic on non-Windows systems
-         * and C:/Documents and Settings/All Users/Application
-         * Data/GeographicLib/magnetic on Windows systems).
+         * This is the value of the environment variable
+         * GEOGRAPHICLIB_MAGNETIC_PATH, if set; otherwise, it is
+         * $GEOGRAPHICLIB_DATA/magnetic if the environment variable
+         * GEOGRAPHICLIB_DATA is set; otherwise, it is a compile-time default
+         * (/usr/local/share/GeographicLib/magnetic on non-Windows systems and
+         * C:/ProgramData/GeographicLib/magnetic on Windows systems).
          **********************************************************************/
         static System::String^ DefaultMagneticPath();
 
         /**
          * @return the default name for the magnetic model.
          *
-         * This is the value of the environment variable MAGNETIC_NAME, if set,
-         * otherwise, it is "wmm2010".  The MagneticModel class does not use this
-         * function; it is just provided as a convenience for a calling program
-         * when constructing a MagneticModel object.
+         * This is the value of the environment variable
+         * GEOGRAPHICLIB_MAGNETIC_NAME, if set, otherwise, it is "wmm2010".
+         * The MagneticModel class does not use this function; it is just
+         * provided as a convenience for a calling program when constructing a
+         * MagneticModel object.
          **********************************************************************/
         static System::String^ DefaultMagneticName();
     };

@@ -46,7 +46,7 @@ namespace GeographicLib {
     typedef Math::real real;
     static const std::string letters_;
     static const std::string digits_;
-    static const TransverseMercator OSGBTM_;
+    static const TransverseMercator& OSGBTM();
     static real northoffset_;
     static bool init_;
     enum {
@@ -83,7 +83,7 @@ namespace GeographicLib {
      **********************************************************************/
     static void Forward(real lat, real lon,
                         real& x, real& y, real& gamma, real& k) {
-      OSGBTM_.Forward(OriginLongitude(), lat, lon, x, y, gamma, k);
+      OSGBTM().Forward(OriginLongitude(), lat, lon, x, y, gamma, k);
       x += FalseEasting();
       y += computenorthoffset();
     }
@@ -106,7 +106,7 @@ namespace GeographicLib {
                         real& lat, real& lon, real& gamma, real& k) {
       x -= FalseEasting();
       y -= computenorthoffset();
-      OSGBTM_.Reverse(OriginLongitude(), x, y, lat, lon, gamma, k);
+      OSGBTM().Reverse(OriginLongitude(), x, y, lat, lon, gamma, k);
     }
 
     /**
@@ -182,9 +182,12 @@ namespace GeographicLib {
      * 10<sup>9.48401603&minus;10</sup> m.  (The Airy 1830 value is returned
      * because the OSGB projection is based on this ellipsoid.)
      **********************************************************************/
-    static Math::real MajorRadius()
+    static Math::real MajorRadius() {
     // result is about 6377563.3960320664406 m
-    { return real(20923713) * std::pow(real(10), real(0.48401603L) - 1); }
+      using std::pow;
+      return pow(real(10), real(48401603 - 100000000) / 100000000)
+        * 20923713;
+    }
 
     /**
      * @return \e f the inverse flattening of the Airy 1830 ellipsoid.
@@ -195,7 +198,7 @@ namespace GeographicLib {
      * because the OSGB projection is based on this ellipsoid.)
      **********************************************************************/
     static Math::real Flattening()
-    { return real(20923713 - 20853810) / real(20923713); }
+    { return real(20923713 - 20853810) / 20923713; }
 
     /// \cond SKIP
     /**
@@ -211,8 +214,10 @@ namespace GeographicLib {
      * C. J. Mugnier, Grids &amp; Datums, PE&amp;RS, Oct. 2003, states that
      * this is defined as 10<sup>9.9998268&minus;10</sup>.
      **********************************************************************/
-    static Math::real CentralScale()
-    { return std::pow(real(10), real(9998268 - 10000000) / real(10000000)); }
+    static Math::real CentralScale() {
+      using std::pow;
+      return pow(real(10), real(9998268 - 10000000) / 10000000);
+    }
 
     /**
      * @return latitude of the origin for the OSGB projection (49 degrees).

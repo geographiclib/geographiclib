@@ -118,6 +118,16 @@ namespace Projections
                 pa.Compute(false, false, out perim, out area);
                 pa.TestEdge(-70.0, 5000.0, false, false, out perim, out area);
                 pa.TestPoint(31.0, -86.5, false, false, out perim, out area);
+
+                PolygonAreaExact p2 = new PolygonAreaExact(new GeodesicExact(), false);
+                p2.AddPoint(32.0, -86.0);
+                p2.AddEdge(20.0, 10000.0);
+                p2.AddEdge(-45.0, 10000.0);
+                p2.CurrentPoint(out lat, out lon);
+                p2.Compute(false, false, out perim, out area);
+                p2.TestEdge(-70.0, 5000.0, false, false, out perim, out area);
+                p2.TestPoint(31.0, -86.5, false, false, out perim, out area);
+
                 MessageBox.Show("No errors detected", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception xcpt)

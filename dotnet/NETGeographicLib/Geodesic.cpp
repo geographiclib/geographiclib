@@ -50,7 +50,7 @@ Geodesic::Geodesic()
 {
     try
     {
-        m_pGeodesic = new GeographicLib::Geodesic( GeographicLib::Geodesic::WGS84 );
+        m_pGeodesic = new GeographicLib::Geodesic( GeographicLib::Geodesic::WGS84() );
     }
     catch ( std::bad_alloc )
     {

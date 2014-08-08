@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
+    Utility::set_digits();
     bool verbose = false;
     std::string dir;
     std::string model = MagneticModel::DefaultMagneticName();
@@ -74,12 +75,13 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-c") {
         if (m + 3 >= argc) return usage(1, true);
         try {
+          using std::abs;
           time = Utility::fractionalyear<real>(std::string(argv[++m]));
           DMS::flag ind;
           lat = DMS::Decode(std::string(argv[++m]), ind);
           if (ind == DMS::LONGITUDE)
             throw GeographicErr("Bad hemisphere letter on latitude");
-          if (!(std::abs(lat) <= 90))
+          if (!(abs(lat) <= 90))
             throw GeographicErr("Latitude not in [-90d, 90d]");
           h = Utility::num<real>(std::string(argv[++m]));
           timeset = false;
@@ -198,12 +200,12 @@ int main(int argc, char* argv[]) {
 
     tguard = std::max(real(0), tguard);
     hguard = std::max(real(0), hguard);
-    prec = std::min(10, std::max(0, prec));
+    prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     int retval = 0;
     try {
       const MagneticModel m(model, dir);
       if ((timeset || circle)
-          && (!Math::isfinite<real>(time) ||
+          && (!Math::isfinite(time) ||
               time < m.MinTime() - tguard ||
               time > m.MaxTime() + tguard))
         throw GeographicErr("Time " + Utility::str(time) +
@@ -211,7 +213,7 @@ int main(int argc, char* argv[]) {
                             Utility::str(m.MinTime()) + "," +
                             Utility::str(m.MaxTime()) + "]");
       if (circle
-          && (!Math::isfinite<real>(h) ||
+          && (!Math::isfinite(h) ||
               h < m.MinHeight() - hguard ||
               h > m.MaxHeight() + hguard))
         throw GeographicErr("Height " + Utility::str(h/1000) +
@@ -312,19 +314,19 @@ int main(int argc, char* argv[]) {
 
           *output << DMS::Encode(D, prec + 1, DMS::NUMBER) << " "
                   << DMS::Encode(I, prec + 1, DMS::NUMBER) << " "
-                  << Utility::str<real>(H, prec) << " "
-                  << Utility::str<real>(by, prec) << " "
-                  << Utility::str<real>(bx, prec) << " "
-                  << Utility::str<real>(-bz, prec) << " "
-                  << Utility::str<real>(F, prec) << eol;
+                  << Utility::str(H, prec) << " "
+                  << Utility::str(by, prec) << " "
+                  << Utility::str(bx, prec) << " "
+                  << Utility::str(-bz, prec) << " "
+                  << Utility::str(F, prec) << eol;
           if (rate)
             *output << DMS::Encode(Dt, prec + 1, DMS::NUMBER) << " "
                     << DMS::Encode(It, prec + 1, DMS::NUMBER) << " "
-                    << Utility::str<real>(Ht, prec) << " "
-                    << Utility::str<real>(byt, prec) << " "
-                    << Utility::str<real>(bxt, prec) << " "
-                    << Utility::str<real>(-bzt, prec) << " "
-                    << Utility::str<real>(Ft, prec) << eol;
+                    << Utility::str(Ht, prec) << " "
+                    << Utility::str(byt, prec) << " "
+                    << Utility::str(bxt, prec) << " "
+                    << Utility::str(-bzt, prec) << " "
+                    << Utility::str(Ft, prec) << eol;
         }
         catch (const std::exception& e) {
           *output << "ERROR: " << e.what() << "\n";

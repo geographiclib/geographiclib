@@ -1,7 +1,7 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 
-AC_INIT([GeographicLib],[1.36],[charles@karney.com])
+AC_INIT([GeographicLib],[1.37],[charles@karney.com])
 AC_CANONICAL_SYSTEM
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
@@ -9,7 +9,7 @@ AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE
 
 GEOGRAPHICLIB_VERSION_MAJOR=1
-GEOGRAPHICLIB_VERSION_MINOR=36
+GEOGRAPHICLIB_VERSION_MINOR=37
 GEOGRAPHICLIB_VERSION_PATCH=0
 AC_DEFINE_UNQUOTED([GEOGRAPHICLIB_VERSION_MAJOR],
 	[$GEOGRAPHICLIB_VERSION_MAJOR],[major version number])
@@ -34,7 +34,7 @@ dnl Library code modified:              REVISION++
 dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
-LT_CURRENT=12
+LT_CURRENT=13
 LT_REVISION=0
 LT_AGE=0
 AC_SUBST(LT_CURRENT)
@@ -47,31 +47,27 @@ AC_PROG_MAKE_SET
 AC_PROG_INSTALL
 AC_PROG_CXX
 AC_PROG_LIBTOOL
+AC_LANG_CPLUSPLUS
 
-# Checks for header files.
-AC_CHECK_HEADERS([float.h])
-
-# Checks for typedefs, structures, and compiler characteristics.
-AC_HEADER_STDBOOL
-AC_C_INLINE
+# Checks for long double
 AC_TYPE_LONG_DOUBLE
-
-# Checks for library functions.
-AC_FUNC_STRTOD
-AC_CHECK_FUNCS([strtol])
-AC_SEARCH_LIBS([floor],[m])
-AC_SEARCH_LIBS([pow],[m])
-AC_SEARCH_LIBS([sqrt],[m])
 
 # Check endianness
 AC_C_BIGENDIAN
 
+# Check flag for C++11
+AX_CHECK_COMPILE_FLAG([-std=c++0x], [CXXFLAGS="$CXXFLAGS -std=c++0x"])
+# Check for C++11 math functions
+AC_TRY_COMPILE([#include <cmath>],
+	[return int(std::hypot(3.0, 4.0) + std::expm1(0.5) +
+                    std::log1p(2.0) + std::asinh(10.0) + std::atanh(0.8) +
+                    std::cbrt(8.0)) + std::isfinite(4.0) + std::isnan(0.0);],
+	[CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=1"],
+	[CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=0"])
+
 # Check for doxygen.
-# Need version 1.8.1.2 or later for greek and math symbols.
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
-AM_CONDITIONAL([HAVE_DOXYGEN],
-	[test "$DOXYGEN" && test `"$DOXYGEN" --version |
-	sed 's/^\([[0-9]]\)\.\([[0-9]]\)\./\1.0\2./'` '>' 1.08.1.1])
+AM_CONDITIONAL([HAVE_DOXYGEN], [test "$DOXYGEN"])
 
 AC_CHECK_PROGS([POD2MAN], [pod2man])
 AC_CHECK_PROGS([POD2HTML], [pod2html])

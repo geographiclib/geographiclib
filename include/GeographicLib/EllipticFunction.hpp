@@ -62,16 +62,9 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT EllipticFunction {
   private:
     typedef Math::real real;
-    static const real tol_;
-    static const real tolRF_;
-    static const real tolRD_;
-    static const real tolRG0_;
-    static const real tolJAC_;
     enum { num_ = 13 }; // Max depth required for sncndn.  Probably 5 is enough.
     real _k2, _kp2, _alpha2, _alphap2, _eps;
-    mutable bool _init;
-    mutable real _Kc, _Ec, _Dc, _Pic, _Gc, _Hc;
-    bool Init() const;
+    real _Kc, _Ec, _Dc, _Pic, _Gc, _Hc;
   public:
     /** \name Constructor
      **********************************************************************/
@@ -91,7 +84,8 @@ namespace GeographicLib {
      * E(&phi;, \e k), and \e H(&phi;, 0, \e k) = \e F(&phi;, \e k) - \e
      * D(&phi;, \e k).
      **********************************************************************/
-    EllipticFunction(real k2 = 0, real alpha2 = 0);
+    EllipticFunction(real k2 = 0, real alpha2 = 0)
+      { Reset(k2, alpha2); }
 
     /**
      * Constructor specifying the modulus and parameter and their complements.
@@ -111,7 +105,8 @@ namespace GeographicLib {
      * constructor is provided to enable accuracy to be maintained, e.g., when
      * \e k is very close to unity.
      **********************************************************************/
-    EllipticFunction(real k2, real alpha2, real kp2, real alphap2);
+    EllipticFunction(real k2, real alpha2, real kp2, real alphap2)
+      { Reset(k2, alpha2, kp2, alphap2); }
 
     /**
      * Reset the modulus and parameter.
@@ -202,7 +197,7 @@ namespace GeographicLib {
      *   K(k) = \int_0^{\pi/2} \frac1{\sqrt{1-k^2\sin^2\phi}}\,d\phi.
      * \f]
      **********************************************************************/
-    Math::real K() const { _init || Init(); return _Kc; }
+    Math::real K() const { return _Kc; }
 
     /**
      * The complete integral of the second kind.
@@ -214,7 +209,7 @@ namespace GeographicLib {
      *   E(k) = \int_0^{\pi/2} \sqrt{1-k^2\sin^2\phi}\,d\phi.
      * \f]
      **********************************************************************/
-    Math::real E() const { _init || Init(); return _Ec; }
+    Math::real E() const { return _Ec; }
 
     /**
      * Jahnke's complete integral.
@@ -226,7 +221,7 @@ namespace GeographicLib {
      *   D(k) = \int_0^{\pi/2} \frac{\sin^2\phi}{\sqrt{1-k^2\sin^2\phi}}\,d\phi.
      * \f]
      **********************************************************************/
-    Math::real D() const { _init || Init(); return _Dc; }
+    Math::real D() const { return _Dc; }
 
     /**
      * The difference between the complete integrals of the first and second
@@ -234,7 +229,7 @@ namespace GeographicLib {
      *
      * @return \e K(\e k) &minus; \e E(\e k).
      **********************************************************************/
-    Math::real KE() const { _init || Init(); return _k2 * _Dc; }
+    Math::real KE() const { return _k2 * _Dc; }
 
     /**
      * The complete integral of the third kind.
@@ -248,7 +243,7 @@ namespace GeographicLib {
      *     \frac1{\sqrt{1-k^2\sin^2\phi}(1 - \alpha^2\sin^2\phi_)}\,d\phi.
      * \f]
      **********************************************************************/
-    Math::real Pi() const { _init || Init(); return _Pic; }
+    Math::real Pi() const { return _Pic; }
 
     /**
      * Legendre's complete geodesic longitude integral.
@@ -261,7 +256,7 @@ namespace GeographicLib {
      *     \frac{\sqrt{1-k^2\sin^2\phi}}{1 - \alpha^2\sin^2\phi}\,d\phi.
      * \f]
      **********************************************************************/
-    Math::real G() const { _init || Init(); return _Gc; }
+    Math::real G() const { return _Gc; }
 
     /**
      * Cayley's complete geodesic longitude difference integral.
@@ -275,7 +270,7 @@ namespace GeographicLib {
      *     \,d\phi.
      * \f]
      **********************************************************************/
-    Math::real H() const { _init || Init(); return _Hc; }
+    Math::real H() const { return _Hc; }
     ///@}
 
     /** \name Incomplete elliptic integrals.
@@ -594,22 +589,24 @@ namespace GeographicLib {
      * @return &Delta; = sqrt(1 &minus; <i>k</i><sup>2</sup>
      *   sin<sup>2</sup>&phi;)
      **********************************************************************/
-    Math::real Delta(real sn, real cn) const
-    { return std::sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn); }
+    Math::real Delta(real sn, real cn) const {
+      using std::sqrt;
+      return sqrt(_k2 < 0 ? 1 - _k2 * sn*sn : _kp2 + _k2 * cn*cn);
+    }
     ///@}
 
     /** \name Symmetric elliptic integrals.
      **********************************************************************/
     ///@{
     /**
-     * Symmetric integral of the first kind <i>R<sub>F</sub></i>.
+     * Symmetric integral of the first kind <i>R</i><sub><i>F</i></sub>.
      *
      * @param[in] x
      * @param[in] y
      * @param[in] z
-     * @return <i>R<sub>F</sub></i>(\e x, \e y, \e z)
+     * @return <i>R</i><sub><i>F</i></sub>(\e x, \e y, \e z)
      *
-     * <i>R<sub>F</sub></i> is defined in http://dlmf.nist.gov/19.16.E1
+     * <i>R</i><sub><i>F</i></sub> is defined in http://dlmf.nist.gov/19.16.E1
      * \f[ R_F(x, y, z) = \frac12
      *       \int_0^\infty\frac1{\sqrt{(t + x) (t + y) (t + z)}}\, dt \f]
      * If one of the arguments is zero, it is more efficient to call the
@@ -618,38 +615,39 @@ namespace GeographicLib {
     static real RF(real x, real y, real z);
 
     /**
-     * Complete symmetric integral of the first kind, <i>R<sub>F</sub></i> with
-     * one argument zero.
+     * Complete symmetric integral of the first kind,
+     * <i>R</i><sub><i>F</i></sub> with one argument zero.
      *
      * @param[in] x
      * @param[in] y
-     * @return <i>R<sub>F</sub></i>(\e x, \e y, 0)
+     * @return <i>R</i><sub><i>F</i></sub>(\e x, \e y, 0)
      **********************************************************************/
     static real RF(real x, real y);
 
     /**
-     * Degenerate symmetric integral of the first kind <i>R<sub>C</sub></i>.
+     * Degenerate symmetric integral of the first kind
+     * <i>R</i><sub><i>C</i></sub>.
      *
      * @param[in] x
      * @param[in] y
-     * @return <i>R<sub>C</sub></i>(\e x, \e y) = <i>R<sub>F</sub></i>(\e x, \e
-     *   y, \e y)
+     * @return <i>R</i><sub><i>C</i></sub>(\e x, \e y) =
+     *   <i>R</i><sub><i>F</i></sub>(\e x, \e y, \e y)
      *
-     * <i>R<sub>C</sub></i> is defined in http://dlmf.nist.gov/19.2.E17
+     * <i>R</i><sub><i>C</i></sub> is defined in http://dlmf.nist.gov/19.2.E17
      * \f[ R_C(x, y) = \frac12
      *       \int_0^\infty\frac1{\sqrt{t + x}(t + y)}\,dt \f]
      **********************************************************************/
     static real RC(real x, real y);
 
     /**
-     * Symmetric integral of the second kind <i>R<sub>G</sub></i>.
+     * Symmetric integral of the second kind <i>R</i><sub><i>G</i></sub>.
      *
      * @param[in] x
      * @param[in] y
      * @param[in] z
-     * @return <i>R<sub>G</sub></i>(\e x, \e y, \e z)
+     * @return <i>R</i><sub><i>G</i></sub>(\e x, \e y, \e z)
      *
-     * <i>R<sub>G</sub></i> is defined in Carlson, eq 1.5
+     * <i>R</i><sub><i>G</i></sub> is defined in Carlson, eq 1.5
      * \f[ R_G(x, y, z) = \frac14
      *       \int_0^\infty[(t + x) (t + y) (t + z)]^{-1/2}
      *        \biggl(
@@ -662,40 +660,41 @@ namespace GeographicLib {
     static real RG(real x, real y, real z);
 
     /**
-     * Complete symmetric integral of the second kind, <i>R<sub>G</sub></i>
-     * with one argument zero.
+     * Complete symmetric integral of the second kind,
+     * <i>R</i><sub><i>G</i></sub> with one argument zero.
      *
      * @param[in] x
      * @param[in] y
-     * @return <i>R<sub>G</sub></i>(\e x, \e y, 0)
+     * @return <i>R</i><sub><i>G</i></sub>(\e x, \e y, 0)
      **********************************************************************/
     static real RG(real x, real y);
 
     /**
-     * Symmetric integral of the third kind <i>R<sub>J</sub></i>.
+     * Symmetric integral of the third kind <i>R</i><sub><i>J</i></sub>.
      *
      * @param[in] x
      * @param[in] y
      * @param[in] z
      * @param[in] p
-     * @return <i>R<sub>J</sub></i>(\e x, \e y, \e z, \e p)
+     * @return <i>R</i><sub><i>J</i></sub>(\e x, \e y, \e z, \e p)
      *
-     * <i>R<sub>J</sub></i> is defined in http://dlmf.nist.gov/19.16.E2
+     * <i>R</i><sub><i>J</i></sub> is defined in http://dlmf.nist.gov/19.16.E2
      * \f[ R_J(x, y, z, p) = \frac32
      *       \int_0^\infty[(t + x) (t + y) (t + z)]^{-1/2} (t + p)^{-1}\, dt \f]
      **********************************************************************/
     static real RJ(real x, real y, real z, real p);
 
     /**
-     * Degenerate symmetric integral of the third kind <i>R<sub>D</sub></i>.
+     * Degenerate symmetric integral of the third kind
+     * <i>R</i><sub><i>D</i></sub>.
      *
      * @param[in] x
      * @param[in] y
      * @param[in] z
-     * @return <i>R<sub>D</sub></i>(\e x, \e y, \e z) = <i>R<sub>J</sub></i>(\e
-     *   x, \e y, \e z, \e z)
+     * @return <i>R</i><sub><i>D</i></sub>(\e x, \e y, \e z) =
+     *   <i>R</i><sub><i>J</i></sub>(\e x, \e y, \e z, \e z)
      *
-     * <i>R<sub>D</sub></i> is defined in http://dlmf.nist.gov/19.16.E5
+     * <i>R</i><sub><i>D</i></sub> is defined in http://dlmf.nist.gov/19.16.E5
      * \f[ R_D(x, y, z) = \frac32
      *       \int_0^\infty[(t + x) (t + y)]^{-1/2} (t + z)^{-3/2}\, dt \f]
      **********************************************************************/

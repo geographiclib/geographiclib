@@ -44,8 +44,8 @@ namespace GeographicLib {
     // Same as Math::sum, but requires abs(u) >= abs(v).  This isn't currently
     // used.
     static inline T fastsum(T u, T v, T& t) {
-      volatile T s = u + v;
-      volatile T vp = s - u;
+      GEOGRAPHICLIB_VOLATILE T s = u + v;
+      GEOGRAPHICLIB_VOLATILE T vp = s - u;
       t = v - vp;
       return s;
     }
@@ -99,8 +99,8 @@ namespace GeographicLib {
      * @param[in] y set \e sum = \e y.
      **********************************************************************/
     Accumulator(T y = T(0)) : _s(y), _t(0) {
-      STATIC_ASSERT(!std::numeric_limits<T>::is_integer,
-                    "Accumulator type is not floating point");
+      GEOGRAPHICLIB_STATIC_ASSERT(!std::numeric_limits<T>::is_integer,
+                                  "Accumulator type is not floating point");
     }
     /**
      * Set the accumulator to a number.

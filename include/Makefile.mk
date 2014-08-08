@@ -25,6 +25,7 @@ MODULES = AlbersEqualArea \
 	OSGB \
 	PolarStereographic \
 	PolygonArea \
+	Rhumb \
 	SphericalEngine \
 	TransverseMercator \
 	TransverseMercatorExact \

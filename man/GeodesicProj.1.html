@@ -17,7 +17,7 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<p><b>GeodesicProj</b> ( <b>-z</b> | <b>-c</b> | <b>-g</b> ) <i>lat0</i> <i>lon0</i> [ <b>-r</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
+<p><b>GeodesicProj</b> ( <b>-z</b> | <b>-c</b> | <b>-g</b> ) <i>lat0</i> <i>lon0</i> [ <b>-r</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] [ <b>-p</b> <i>prec</i> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
@@ -57,6 +57,12 @@
 <dd>
 
 <p>specify the ellipsoid via <i>a</i> <i>f</i>; the equatorial radius is <i>a</i> and the flattening is <i>f</i>. Setting <i>f</i> = 0 results in a sphere. Specify <i>f</i> &lt; 0 for a prolate ellipsoid. A simple fraction, e.g., 1/297, is allowed for <i>f</i>. (Also, if <i>f</i> &gt; 1, the flattening is set to 1/<i>f</i>.) By default, the WGS84 ellipsoid is used, <i>a</i> = 6378137 m, <i>f</i> = 1/298.257223563.</p>
+
+</dd>
+<dt id="p"><b>-p</b></dt>
+<dd>
+
+<p>set the output precision to <i>prec</i> (default 6). <i>prec</i> is the number of digits after the decimal point for lengths (in meters). For latitudes, longitudes, and azimuths (in degrees), the number of digits after the decimal point is <i>prec</i> + 5. For the scale, the number of digits after the decimal point is <i>prec</i> + 6.</p>
 
 </dd>
 <dt id="comment-delimiter"><b>--comment-delimiter</b></dt>

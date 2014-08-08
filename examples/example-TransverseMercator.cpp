@@ -13,7 +13,8 @@ int main() {
   try {
     TransverseMercator proj(Constants::WGS84_a(), Constants::WGS84_f(),
                             Constants::UTM_k0());
-    // Alternatively: const TransverseMercator& proj = TransverseMercator::UTM;
+    // Alternatively:
+    // const TransverseMercator& proj = TransverseMercator::UTM();
     double lon0 = -75;          // Central meridian for UTM zone 18
     {
       // Sample forward calculation

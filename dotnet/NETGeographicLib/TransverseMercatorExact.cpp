@@ -53,7 +53,7 @@ TransverseMercatorExact::TransverseMercatorExact()
     {
         m_pTransverseMercatorExact =
             new GeographicLib::TransverseMercatorExact(
-                GeographicLib::TransverseMercatorExact::UTM );
+                GeographicLib::TransverseMercatorExact::UTM() );
     }
     catch (std::bad_alloc)
     {

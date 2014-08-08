@@ -5,8 +5,8 @@
 #define GEOGRAPHICLIB_DATA "@GEOGRAPHICLIB_DATA@"
 
 // These are macros which affect the building of the library
-#cmakedefine01 HAVE_LONG_DOUBLE
-#cmakedefine01 WORDS_BIGENDIAN
+#cmakedefine01 GEOGRAPHICLIB_HAVE_LONG_DOUBLE
+#cmakedefine01 GEOGRAPHICLIB_WORDS_BIGENDIAN
 #define GEOGRAPHICLIB_PRECISION @GEOGRAPHICLIB_PRECISION@
 
 // Specify whether GeographicLib is a shared or static library.  When compiling

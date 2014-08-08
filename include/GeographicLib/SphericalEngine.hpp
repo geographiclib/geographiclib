@@ -45,9 +45,18 @@ namespace GeographicLib {
     friend class CircularEngine; // CircularEngine needs access to root_, scale_
     // An internal scaling of the coefficients to avoid overflow in
     // intermediate calculations.
-    static const real scale_;
+    static real scale() {
+      using std::pow;
+      return pow(real(std::numeric_limits<real>::radix),
+                 -3 * (std::numeric_limits<real>::max_exponent < (1<<14) ?
+                       std::numeric_limits<real>::max_exponent : (1<<14)) / 5);
+    }
     // Move latitudes near the pole off the axis by this amount.
-    static const real eps_;
+    static real eps() {
+      using std::sqrt;
+      return std::numeric_limits<real>::epsilon() *
+        sqrt(std::numeric_limits<real>::epsilon());
+    }
     static const std::vector<real> Z_;
     SphericalEngine();          // Disable constructor
   public:

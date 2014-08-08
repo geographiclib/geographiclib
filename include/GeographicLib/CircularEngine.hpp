@@ -67,10 +67,11 @@ namespace GeographicLib {
                      real& gradx, real& grady, real& gradz) const;
 
     static inline void cossin(real x, real& cosx, real& sinx) {
+      using std::abs; using std::cos; using std::sin;
       x = x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
-      real xi = x * Math::degree<real>();
-      cosx = std::abs(x) ==   90 ? 0 : cos(xi);
-      sinx =          x  == -180 ? 0 : sin(xi);
+      real xi = x * Math::degree();
+      cosx = abs(x) ==   90 ? 0 : cos(xi);
+      sinx =     x  == -180 ? 0 : sin(xi);
     }
 
     friend class SphericalEngine;

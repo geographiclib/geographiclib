@@ -41,18 +41,18 @@
 
 #include <GeographicLib/TransverseMercator.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about constant conditional expressions
+#  pragma warning (disable: 4127)
+#endif
+
 namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real TransverseMercator::tol_ =
-    real(0.1)*sqrt(numeric_limits<real>::epsilon());
-  // Overflow value s.t. atan(overflow_) = pi/2
-  const Math::real TransverseMercator::overflow_ =
-    1 / Math::sq(numeric_limits<real>::epsilon());
-
   TransverseMercator::TransverseMercator(real a, real f, real k0)
-    : _a(a)
+    : tol_(real(0.1)*sqrt(numeric_limits<real>::epsilon()))
+    , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _k0(k0)
     , _e2(_f * (2 - _f))
@@ -148,11 +148,11 @@ namespace GeographicLib {
       _alp[5] = nx*(_n*(102508609*_n-109404448)+27505368)/63866880;
       _bet[5] = nx*((-8005831*_n-1741552)*_n+1814868)/63866880;
       nx *= _n;
-      _alp[6] = (2760926233.0-12282192400.0*_n)*nx/4151347200.0;
-      _bet[6] = (268433009-261810608*_n)*nx/8302694400.0;
+      _alp[6] = (2760926233LL-12282192400LL*_n)*nx/4151347200LL;
+      _bet[6] = (268433009-261810608*_n)*nx/8302694400LL;
       nx *= _n;
-      _alp[7] = 1522256789.0*nx/1383782400.0;
-      _bet[7] = 219941297*nx/5535129600.0;
+      _alp[7] = 1522256789LL*nx/1383782400LL;
+      _bet[7] = 219941297*nx/5535129600LL;
       break;
     case 8:
       _b1 = 1/(1+_n)*(nx*(nx*(nx*(25*nx+64)+256)+4096)+16384)/16384;
@@ -174,43 +174,46 @@ namespace GeographicLib {
       _bet[3] = nx*(_n*(_n*(_n*((101880889-232468668*_n)*_n+39205760)-
                             29795040)-28131840)+22619520)/638668800;
       nx *= _n;
-      _alp[4] = nx*(_n*(_n*((14967552000.0-40176129013.0*_n)*_n+6971354016.0)-
-                        8165836800.0)+2355138720.0)/7664025600.0;
-      _bet[4] = nx*(_n*(_n*(_n*(324154477*_n+1433121792.0)-876745056)-
-                        167270400)+208945440)/7664025600.0;
+      _alp[4] = nx*(_n*(_n*((14967552000LL-40176129013LL*_n)*_n+6971354016LL)-
+                        8165836800LL)+2355138720LL)/7664025600LL;
+      _bet[4] = nx*(_n*(_n*(_n*(324154477*_n+1433121792LL)-876745056)-
+                        167270400)+208945440)/7664025600LL;
       nx *= _n;
-      _alp[5] = nx*(_n*(_n*(10421654396.0*_n+3997835751.0)-4266773472.0)+
-                    1072709352.0)/2490808320.0;
+      _alp[5] = nx*(_n*(_n*(10421654396LL*_n+3997835751LL)-4266773472LL)+
+                    1072709352LL)/2490808320LL;
       _bet[5] = nx*(_n*(_n*(457888660*_n-312227409)-67920528)+70779852)/
-        2490808320.0;
+        2490808320LL;
       nx *= _n;
-      _alp[6] = nx*(_n*(175214326799.0*_n-171950693600.0)+38652967262.0)/
-        58118860800.0;
-      _bet[6] = nx*((-19841813847.0*_n-3665348512.0)*_n+3758062126.0)/
-        116237721600.0;
+      _alp[6] = nx*(_n*(175214326799LL*_n-171950693600LL)+38652967262LL)/
+        58118860800LL;
+      _bet[6] = nx*((-19841813847LL*_n-3665348512LL)*_n+3758062126LL)/
+        116237721600LL;
       nx *= _n;
-      _alp[7] = (13700311101.0-67039739596.0*_n)*nx/12454041600.0;
-      _bet[7] = (1979471673.0-1989295244.0*_n)*nx/49816166400.0;
+      _alp[7] = (13700311101LL-67039739596LL*_n)*nx/12454041600LL;
+      _bet[7] = (1979471673LL-1989295244LL*_n)*nx/49816166400LL;
       nx *= _n;
-      _alp[8] = 1424729850961.0*nx/743921418240.0;
-      _bet[8] = 191773887257.0*nx/3719607091200.0;
+      _alp[8] = 1424729850961LL*nx/743921418240LL;
+      _bet[8] = 191773887257LL*nx/3719607091200LL;
       break;
     default:
-      STATIC_ASSERT(maxpow_ >= 4 && maxpow_ <= 8, "Bad value of maxpow_");
+      GEOGRAPHICLIB_STATIC_ASSERT(maxpow_ >= 4 && maxpow_ <= 8,
+                                  "Bad value of maxpow_");
     }
     // _a1 is the equivalent radius for computing the circumference of
     // ellipse.
     _a1 = _b1 * _a;
   }
 
-  const TransverseMercator
-  TransverseMercator::UTM(Constants::WGS84_a<real>(),
-                          Constants::WGS84_f<real>(),
-                          Constants::UTM_k0<real>());
+  const TransverseMercator& TransverseMercator::UTM() {
+    static const TransverseMercator utm(Constants::WGS84_a(),
+                                        Constants::WGS84_f(),
+                                        Constants::UTM_k0());
+    return utm;
+  }
 
   // Engsager and Poder (2007) use trigonometric series to convert between phi
-  // and phip.
-
+  // and phip.  Here are the series...
+  //
   // Conversion from phi to phip:
   //
   //     phip = phi + sum(c[j] * sin(2*j*phi), j, 1, 6)
@@ -236,7 +239,7 @@ namespace GeographicLib {
   //       c[5] = - 734/315 * n^5
   //              + 109598/31185 * n^6;
   //       c[6] =   444337/155925 * n^6;
-
+  //
   // Conversion from phip to phi:
   //
   //     phi = phip + sum(d[j] * sin(2*j*phip), j, 1, 6)
@@ -262,16 +265,19 @@ namespace GeographicLib {
   //       d[5] =   4174/315 * n^5
   //              - 144838/6237 * n^6;
   //       d[6] =   601676/22275 * n^6;
-
+  //
   // In order to maintain sufficient relative accuracy close to the pole use
   //
   //     S = sum(c[i]*sin(2*i*phi),i,1,6)
   //     taup = (tau + tan(S)) / (1 - tau * tan(S))
 
+  // Here we evaluate the forward transform explicitly and solve the reverse
+  // one by Newton's method.
+  //
   // taupf and tauf are adapted from TransverseMercatorExact (taup and
   // taupinv).  tau = tan(phi), taup = sinh(psi)
   Math::real TransverseMercator::taupf(real tau) const {
-    if (!(abs(tau) < overflow_))
+    if (!(abs(tau) < overflow()))
       return tau;
     real
       tau1 = Math::hypot(real(1), tau),
@@ -280,7 +286,7 @@ namespace GeographicLib {
   }
 
   Math::real TransverseMercator::tauf(real taup) const {
-    if (!(abs(taup) < overflow_))
+    if (!(abs(taup) < overflow()))
       return taup;
     real
       // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
@@ -291,7 +297,7 @@ namespace GeographicLib {
       tau = taup/_e2m,
       stol = tol_ * max(real(1), abs(taup));
     // min iterations = 1, max iterations = 2; mean = 1.94
-    for (int i = 0; i < numit_; ++i) {
+    for (int i = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
       real
         tau1 = Math::hypot(real(1), tau),
         sig = sinh( eatanhe( tau / tau1 ) ),
@@ -322,8 +328,8 @@ namespace GeographicLib {
       lon = 180 - lon;
     }
     real
-      phi = lat * Math::degree<real>(),
-      lam = lon * Math::degree<real>();
+      phi = lat * Math::degree(),
+      lam = lon * Math::degree();
     // phi = latitude
     // phi' = conformal latitude
     // psi = isometric latitude
@@ -366,7 +372,7 @@ namespace GeographicLib {
       k = sqrt(_e2m + _e2 * Math::sq(cos(phi))) * Math::hypot(real(1), tau)
         / Math::hypot(taup, c);
     } else {
-      xip = Math::pi<real>()/2;
+      xip = Math::pi()/2;
       etap = 0;
       gamma = lam;
       k = _c;
@@ -458,8 +464,8 @@ namespace GeographicLib {
     // Gauss-Krueger TM.
     gamma -= atan2(yi1, yr1);
     k *= _b1 * Math::hypot(yr1, yi1);
-    gamma /= Math::degree<real>();
-    y = _a1 * _k0 * (backside ? Math::pi<real>() - xi : xi) * latsign;
+    gamma /= Math::degree();
+    y = _a1 * _k0 * (backside ? Math::pi() - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
     if (backside)
       gamma = 180 - gamma;
@@ -482,9 +488,9 @@ namespace GeographicLib {
       etasign = eta < 0 ? -1 : 1;
     xi *= xisign;
     eta *= etasign;
-    bool backside = xi > Math::pi<real>()/2;
+    bool backside = xi > Math::pi()/2;
     if (backside)
-      xi = Math::pi<real>() - xi;
+      xi = Math::pi() - xi;
     real
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
       s0 = sin(2 * xi), sh0 = sinh(2 * eta),
@@ -540,17 +546,17 @@ namespace GeographicLib {
       k *= sqrt(_e2m + _e2 * Math::sq(cos(phi))) *
         Math::hypot(real(1), tau) * r;
     } else {
-      phi = Math::pi<real>()/2;
+      phi = Math::pi()/2;
       lam = 0;
       k *= _c;
     }
-    lat = phi / Math::degree<real>() * xisign;
-    lon = lam / Math::degree<real>();
+    lat = phi / Math::degree() * xisign;
+    lon = lam / Math::degree();
     if (backside)
       lon = 180 - lon;
     lon *= etasign;
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
-    gamma /= Math::degree<real>();
+    gamma /= Math::degree();
     if (backside)
       gamma = 180 - gamma;
     gamma *= xisign * etasign;

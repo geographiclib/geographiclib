@@ -30,9 +30,9 @@ namespace GeographicLib {
    * substitute much more accurate algorithms given by
    * GeographicLib:TransverseMercator and GeographicLib:PolarStereographic.
    * These are the algorithms recommended by the NGA document
-   * - <a href="https://nsgreg.nga.mil/doc/view?i=4056"> The Universal Grids
-   *   and the Transverse Mercator and Polar Stereographic Map Projections</a>,
-   *   NGA.SIG.0012_2.0.0_UTMUPS (2014).
+   * - <a href="http://earth-info.nga.mil/GandG/publications/NGA_SIG_0012_2_0_0_UTMUPS/NGA.SIG.0012_2.0.0_UTMUPS.pdf">
+   *   The Universal Grids and the Transverse Mercator and Polar Stereographic
+   *   Map Projections</a>, NGA.SIG.0012_2.0.0_UTMUPS (2014).
    *
    * In this implementation, the conversions are closed, i.e., output from
    * Forward is legal input for Reverse and vice versa.  The error is about 5nm
@@ -75,12 +75,12 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT UTMUPS {
   private:
     typedef Math::real real;
-    static const real falseeasting_[4];
-    static const real falsenorthing_[4];
-    static const real mineasting_[4];
-    static const real maxeasting_[4];
-    static const real minnorthing_[4];
-    static const real maxnorthing_[4];
+    static const int falseeasting_[4];
+    static const int falsenorthing_[4];
+    static const int mineasting_[4];
+    static const int maxeasting_[4];
+    static const int minnorthing_[4];
+    static const int maxnorthing_[4];
     static const int epsg01N = 32601; // EPSG code for UTM 01N
     static const int epsg60N = 32660; // EPSG code for UTM 60N
     static const int epsgN   = 32661; // EPSG code for UPS   N
@@ -405,7 +405,7 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     static Math::real MajorRadius()
-    { return Constants::WGS84_a<real>(); }
+    { return Constants::WGS84_a(); }
 
     /**
      * @return \e f the flattening of the WGS84 ellipsoid.
@@ -414,7 +414,7 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     static Math::real Flattening()
-    { return Constants::WGS84_f<real>(); }
+    { return Constants::WGS84_f(); }
     ///@}
 
     /// \cond SKIP
@@ -423,7 +423,7 @@ namespace GeographicLib {
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      **********************************************************************/
     static Math::real InverseFlattening()
-    { return 1/Constants::WGS84_f<real>(); }
+    { return 1/Constants::WGS84_f(); }
     /// \endcond
   };
 

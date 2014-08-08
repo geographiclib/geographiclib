@@ -52,7 +52,7 @@ GeodesicLine::GeodesicLine(double lat1, double lon1, double azi1,
     try
     {
         m_pGeodesicLine = new GeographicLib::GeodesicLine(
-            GeographicLib::Geodesic::WGS84, lat1, lon1, azi1,
+            GeographicLib::Geodesic::WGS84(), lat1, lon1, azi1,
             static_cast<unsigned>(caps) );
     }
     catch ( std::bad_alloc )

@@ -155,9 +155,9 @@
    egm2008-2_5  EGM2008   2.5&#39;    0.135 m  3.2 mm   0.031 m  0.8 mm
    egm2008-1    EGM2008   1&#39;      0.025 m  0.8 mm   .0022 m  0.7 mm</code></pre>
 
-<p>By default, the <code>egm96-5</code> geoid is used. This may changed by setting the environment variable <code>GEOID_NAME</code> or with the <b>-n</b> option. The errors listed here are estimates of the quantization and interpolation errors in the reported heights compared to the specified geoid.</p>
+<p>By default, the <code>egm96-5</code> geoid is used. This may changed by setting the environment variable <code>GEOGRAPHICLIB_GEOID_NAME</code> or with the <b>-n</b> option. The errors listed here are estimates of the quantization and interpolation errors in the reported heights compared to the specified geoid.</p>
 
-<p>The geoid data will be loaded from a directory specified at compile time. This may changed by setting the environment variables <code>GEOID_PATH</code> or <code>GEOGRAPHICLIB_DATA</code>, or with the <b>-d</b> option. The <b>-h</b> option prints the default geoid path and name. Use the <b>-v</b> option to ascertain the full path name of the data file.</p>
+<p>The geoid data will be loaded from a directory specified at compile time. This may changed by setting the environment variables <code>GEOGRAPHICLIB_GEOID_PATH</code> or <code>GEOGRAPHICLIB_DATA</code>, or with the <b>-d</b> option. The <b>-h</b> option prints the default geoid path and name. Use the <b>-v</b> option to ascertain the full path name of the data file.</p>
 
 <p>Instructions for downloading and installing geoid data are available at <a href="http://geographiclib.sf.net/html/geoid.html#geoidinst">http://geographiclib.sf.net/html/geoid.html#geoidinst</a>.</p>
 
@@ -184,22 +184,22 @@
 
 <dl>
 
-<dt id="GEOID_NAME"><b>GEOID_NAME</b></dt>
+<dt id="GEOGRAPHICLIB_GEOID_NAME"><b>GEOGRAPHICLIB_GEOID_NAME</b></dt>
 <dd>
 
-<p>Override the compile-time default geoid name of <code>egm96-5</code>. The <b>-h</b> option reports the value of <b>GEOID_NAME</b>, if defined, otherwise it reports the compile-time value. If the <b>-n</b> <i>name</i> option is used, then <i>name</i> takes precedence.</p>
+<p>Override the compile-time default geoid name of <code>egm96-5</code>. The <b>-h</b> option reports the value of <b>GEOGRAPHICLIB_GEOID_NAME</b>, if defined, otherwise it reports the compile-time value. If the <b>-n</b> <i>name</i> option is used, then <i>name</i> takes precedence.</p>
 
 </dd>
-<dt id="GEOID_PATH"><b>GEOID_PATH</b></dt>
+<dt id="GEOGRAPHICLIB_GEOID_PATH"><b>GEOGRAPHICLIB_GEOID_PATH</b></dt>
 <dd>
 
-<p>Override the compile-time default geoid path. This is typically <code>/usr/local/share/GeographicLib/geoids</code> on Unix-like systems and <code>C:/Documents and Settings/All Users/Application Data/GeographicLib/geoids</code> on Windows systems. The <b>-h</b> option reports the value of <b>GEOID_PATH</b>, if defined, otherwise it reports the compile-time value. If the <b>-d</b> <i>dir</i> option is used, then <i>dir</i> takes precedence.</p>
+<p>Override the compile-time default geoid path. This is typically <code>/usr/local/share/GeographicLib/geoids</code> on Unix-like systems and <code>C:/ProgramData/GeographicLib/geoids</code> on Windows systems. The <b>-h</b> option reports the value of <b>GEOGRAPHICLIB_GEOID_PATH</b>, if defined, otherwise it reports the compile-time value. If the <b>-d</b> <i>dir</i> option is used, then <i>dir</i> takes precedence.</p>
 
 </dd>
 <dt id="GEOGRAPHICLIB_DATA"><b>GEOGRAPHICLIB_DATA</b></dt>
 <dd>
 
-<p>Another way of overriding the compile-time default geoid path. If it is set (and if <b>GEOID_PATH</b> is not set), then $<b>GEOGRAPHICLIB_DATA</b>/geoids is used.</p>
+<p>Another way of overriding the compile-time default geoid path. If it is set (and if <b>GEOGRAPHICLIB_GEOID_PATH</b> is not set), then $<b>GEOGRAPHICLIB_DATA</b>/geoids is used.</p>
 
 </dd>
 </dl>

@@ -2,8 +2,8 @@
  * \file NormalGravity.hpp
  * \brief Header for GeographicLib::NormalGravity class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -65,9 +65,14 @@ namespace GeographicLib {
     real _a, _GM, _omega, _f, _J2, _omega2, _aomega2;
     real _e2, _ep2, _b, _E, _U0, _gammae, _gammap, _q0, _m, _k, _fstar;
     Geocentric _earth;
-    static Math::real qf(real ep2);
-    static Math::real qpf(real ep2);
-    Math::real Jn(int n) const;
+    // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-y/7+y^2/9-y^3/11...
+    static real atan5(real x);
+    // (atan(y)-(y-y^3/3+y^5/5))/y^7 (y = sqrt(x)) = -1/7+x/9-x^2/11+x^3/13...
+    static real atan7(real x);
+    static real qf(real ep2);
+    static real dq(real ep2);
+    static real qpf(real ep2);
+    real Jn(int n) const;
   public:
 
     /** \name Setting up the normal gravity
@@ -83,13 +88,13 @@ namespace GeographicLib {
      *   including the mass of the earth's atmosphere).
      * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
      * @param[in] f the flattening of the ellipsoid.
-     * @param[in] J2 dynamical form factor.
+     * @param[in] J2 the dynamical form factor.
      * @exception if \e a is not positive or the other constants are
      *   inconsistent (see below).
      *
-     * Exactly one of \e f and \e J2 should be positive and this will be used
-     * to define the ellipsoid.  The shape of the ellipsoid can be given in one
-     * of two ways:
+     * If \e omega is non-zero, then exactly one of \e f and \e J2 should be
+     * positive and this will be used to define the ellipsoid.  The shape of
+     * the ellipsoid can be given in one of two ways:
      * - geometrically, the ellipsoid is defined by the flattening \e f = (\e a
      *   &minus; \e b) / \e a, where \e a and \e b are the equatorial radius
      *   and the polar semi-axis.
@@ -97,6 +102,9 @@ namespace GeographicLib {
      *   <i>J</i><sub>2</sub> = (\e C &minus; \e A) / <i>Ma</i><sup>2</sup>,
      *   where \e A and \e C are the equatorial and polar moments of inertia
      *   and \e M is the mass of the earth.
+     * .
+     * If \e omega, \e f, and \e J2 are all zero, then the ellipsoid becomes a
+     * sphere.
      **********************************************************************/
     NormalGravity(real a, real GM, real omega, real f, real J2);
 
@@ -225,7 +233,7 @@ namespace GeographicLib {
      *   the value used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const
-    { return Init() ? _a : Math::NaN<real>(); }
+    { return Init() ? _a : Math::NaN(); }
 
     /**
      * @return \e GM the mass constant of the ellipsoid
@@ -233,63 +241,64 @@ namespace GeographicLib {
      *   constructor.
      **********************************************************************/
     Math::real MassConstant() const
-    { return Init() ? _GM : Math::NaN<real>(); }
+    { return Init() ? _GM : Math::NaN(); }
 
     /**
-     * @return \e J<sub>n</sub> the dynamical form factors of the ellipsoid.
+     * @return <i>J</i><sub><i>n</i></sub> the dynamical form factors of the
+     *   ellipsoid.
      *
      * If \e n = 2 (the default), this is the value of <i>J</i><sub>2</sub>
      * used in the constructor.  Otherwise it is the zonal coefficient of the
      * Legendre harmonic sum of the normal gravitational potential.  Note that
-     * \e J<sub>n</sub> = 0 if \e n is odd.  In most gravity applications,
-     * fully normalized Legendre functions are used and the corresponding
-     * coefficient is <i>C</i><sub><i>n</i>0</sub> = &minus;\e J<sub>n</sub> /
-     * sqrt(2 \e n + 1).
+     * <i>J</i><sub><i>n</i></sub> = 0 if \e n is odd.  In most gravity
+     * applications, fully normalized Legendre functions are used and the
+     * corresponding coefficient is <i>C</i><sub><i>n</i>0</sub> =
+     * &minus;<i>J</i><sub><i>n</i></sub> / sqrt(2 \e n + 1).
      **********************************************************************/
     Math::real DynamicalFormFactor(int n = 2) const
-    { return Init() ? ( n == 2 ? _J2 : Jn(n)) : Math::NaN<real>(); }
+    { return Init() ? ( n == 2 ? _J2 : Jn(n)) : Math::NaN(); }
 
     /**
      * @return &omega; the angular velocity of the ellipsoid (rad
      *   s<sup>&minus;1</sup>).  This is the value used in the constructor.
      **********************************************************************/
     Math::real AngularVelocity() const
-    { return Init() ? _omega : Math::NaN<real>(); }
+    { return Init() ? _omega : Math::NaN(); }
 
     /**
      * @return <i>f</i> the flattening of the ellipsoid (\e a &minus; \e b)/\e
      *   a.
      **********************************************************************/
     Math::real Flattening() const
-    { return Init() ? _f : Math::NaN<real>(); }
+    { return Init() ? _f : Math::NaN(); }
 
     /**
      * @return &gamma;<sub>e</sub> the normal gravity at equator (m
      *   s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real EquatorialGravity() const
-    { return Init() ? _gammae : Math::NaN<real>(); }
+    { return Init() ? _gammae : Math::NaN(); }
 
     /**
      * @return &gamma;<sub>p</sub> the normal gravity at poles (m
      *   s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real PolarGravity() const
-    { return Init() ? _gammap : Math::NaN<real>(); }
+    { return Init() ? _gammap : Math::NaN(); }
 
     /**
      * @return <i>f*</i> the gravity flattening (&gamma;<sub>p</sub> &minus;
      *   &gamma;<sub>e</sub>) / &gamma;<sub>e</sub>.
      **********************************************************************/
     Math::real GravityFlattening() const
-    { return Init() ? _fstar : Math::NaN<real>(); }
+    { return Init() ? _fstar : Math::NaN(); }
 
     /**
      * @return <i>U</i><sub>0</sub> the constant normal potential for the
      *   surface of the ellipsoid (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real SurfacePotential() const
-    { return Init() ? _U0 : Math::NaN<real>(); }
+    { return Init() ? _U0 : Math::NaN(); }
 
     /**
      * @return the Geocentric object used by this instance.
@@ -300,12 +309,40 @@ namespace GeographicLib {
     /**
      * A global instantiation of NormalGravity for the WGS84 ellipsoid.
      **********************************************************************/
-    static const NormalGravity WGS84;
+    static const NormalGravity& WGS84();
 
     /**
      * A global instantiation of NormalGravity for the GRS80 ellipsoid.
      **********************************************************************/
-    static const NormalGravity GRS80;
+    static const NormalGravity& GRS80();
+
+    /**
+     * Compute the flattening from the dynamical form factor.
+     *
+     * @param[in] a equatorial radius (meters).
+     * @param[in] GM mass constant of the ellipsoid
+     *   (meters<sup>3</sup>/seconds<sup>2</sup>); this is the product of \e G
+     *   the gravitational constant and \e M the mass of the earth (usually
+     *   including the mass of the earth's atmosphere).
+     * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
+     * @param[in] J2 the dynamical form factor.
+     * @return \e f the flattening of the ellipsoid.
+     **********************************************************************/
+    static Math::real J2ToFlattening(real a, real GM, real omega, real J2);
+
+    /**
+     * Compute the dynamical form factor from the flattening.
+     *
+     * @param[in] a equatorial radius (meters).
+     * @param[in] GM mass constant of the ellipsoid
+     *   (meters<sup>3</sup>/seconds<sup>2</sup>); this is the product of \e G
+     *   the gravitational constant and \e M the mass of the earth (usually
+     *   including the mass of the earth's atmosphere).
+     * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
+     * @param[in] f the flattening of the ellipsoid.
+     * @return \e J2 the dynamical form factor.
+     **********************************************************************/
+    static Math::real FlatteningToJ2(real a, real GM, real omega, real f);
   };
 
 } // namespace GeographicLib

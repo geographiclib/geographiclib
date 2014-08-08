@@ -46,6 +46,7 @@ Files
       OSGB.[ch]pp -- Ordnance Survey grid system
       Geohash.[ch]pp -- conversions for geohashes
       Ellipsoid.[ch]pp -- ellipsoid properties
+      Rhumb.[ch]pp -- rhumb line calculations
 
     examples/
       example-*.cpp -- simple usage examples for all the classes
@@ -61,6 +62,7 @@ Files
       Gravity.cpp -- evaluate gravity
       MagneticField.cpp -- evaluate magnetic field
       Planimeter.cpp -- computer polygon areas
+      RhumbSolve.cpp -- calculate rhumb lines
       geographiclib-get-geoids -- download geoid datasets
       geographiclib-get-magnetic -- download geomagnetic models
 
@@ -109,7 +111,7 @@ Files
 
     doc/
       doxyfile.in -- Doxygen config file
-      Geographic.dox -- main page of Doxygen documentation
+      GeographicLib.dox -- main page of Doxygen documentation
       geodseries30.html -- geodesic series to 30th order
       tmseries30.html -- transverse Mercator series to 30th order
       html/* -- directory with built documentation

@@ -32,7 +32,7 @@ GeodesicExact::GeodesicExact()
 {
     try
     {
-        m_pGeodesicExact = new GeographicLib::GeodesicExact( GeographicLib::GeodesicExact::WGS84 );
+        m_pGeodesicExact = new GeographicLib::GeodesicExact( GeographicLib::GeodesicExact::WGS84() );
     }
     catch ( std::bad_alloc err )
     {

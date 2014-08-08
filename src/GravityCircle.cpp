@@ -38,7 +38,7 @@ namespace GeographicLib {
 
   Math::real GravityCircle::GeoidHeight(real lon) const {
     if ((_caps & GEOID_HEIGHT) != GEOID_HEIGHT)
-      return Math::NaN<real>();
+      return Math::NaN();
     real clam, slam, dummy;
     CircularEngine::cossin(lon, clam, slam);
     real T = InternalT(clam, slam, dummy, dummy, dummy, false, false);
@@ -50,7 +50,7 @@ namespace GeographicLib {
                                        real& Dg01, real& xi, real& eta)
     const {
     if ((_caps & SPHERICAL_ANOMALY) != SPHERICAL_ANOMALY) {
-      Dg01 = xi = eta = Math::NaN<real>();
+      Dg01 = xi = eta = Math::NaN();
       return;
     }
     real clam, slam;
@@ -64,8 +64,8 @@ namespace GeographicLib {
     Geocentric::Unrotate(MC, deltax, deltay, deltaz, deltax, deltay, deltaz);
     // H+M, Eq 2-151c
     Dg01 = - deltaz - 2 * T * _invR;
-    xi  = -(deltay/_gamma) / Math::degree<real>();
-    eta = -(deltax/_gamma) / Math::degree<real>();
+    xi  = -(deltay/_gamma) / Math::degree();
+    eta = -(deltax/_gamma) / Math::degree();
   }
 
   Math::real GravityCircle::W(real clam, real slam,
@@ -80,8 +80,8 @@ namespace GeographicLib {
                               real& GX, real& GY, real& GZ)
     const {
     if ((_caps & GRAVITY) != GRAVITY) {
-      GX = GY = GZ = Math::NaN<real>();
-      return Math::NaN<real>();
+      GX = GY = GZ = Math::NaN();
+      return Math::NaN();
     }
     real
       Vres = _gravitational(clam, slam, GX, GY, GZ),
@@ -98,12 +98,12 @@ namespace GeographicLib {
                                       bool gradp, bool correct) const {
     if (gradp) {
       if ((_caps & DISTURBANCE) != DISTURBANCE) {
-        deltaX = deltaY = deltaZ = Math::NaN<real>();
-        return Math::NaN<real>();
+        deltaX = deltaY = deltaZ = Math::NaN();
+        return Math::NaN();
       }
     } else {
       if ((_caps & DISTURBING_POTENTIAL) != DISTURBING_POTENTIAL)
-        return Math::NaN<real>();
+        return Math::NaN();
     }
     if (_dzonal0 == 0)
       correct = false;

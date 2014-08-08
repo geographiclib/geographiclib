@@ -50,7 +50,7 @@ TransverseMercator::TransverseMercator()
     try
     {
         m_pTransverseMercator = new GeographicLib::TransverseMercator(
-            GeographicLib::TransverseMercator::UTM );
+            GeographicLib::TransverseMercator::UTM() );
     }
     catch (std::bad_alloc )
     {

@@ -33,7 +33,7 @@ CassiniSoldner::CassiniSoldner(double lat0, double lon0)
 {
     try
     {
-        m_pCassiniSoldner = new GeographicLib::CassiniSoldner( GeographicLib::Geodesic::WGS84 );
+        m_pCassiniSoldner = new GeographicLib::CassiniSoldner( GeographicLib::Geodesic::WGS84() );
         m_pCassiniSoldner->Reset(lat0, lon0);
     }
     catch ( std::bad_alloc )

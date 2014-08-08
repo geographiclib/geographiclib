@@ -42,6 +42,7 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
+    Utility::set_digits();
     bool cacheall = false, cachearea = false, verbose = false,
       cubic = true, gradp = false;
     real caches, cachew, cachen, cachee;
@@ -260,21 +261,21 @@ int main(int argc, char* argv[]) {
           if (heightmult) {
             real h = g(p.Latitude(), p.Longitude());
             *output << s
-                    << Utility::str<real>(height + real(heightmult) * h, 4)
+                    << Utility::str(height + real(heightmult) * h, 4)
                     << suff << eol;
           } else {
             if (gradp) {
             real gradn, grade;
             real h = g(p.Latitude(), p.Longitude(), gradn, grade);
-            *output << Utility::str<real>(h, 4) << " "
-                    << Utility::str<real>(gradn * 1e6, 2)
+            *output << Utility::str(h, 4) << " "
+                    << Utility::str(gradn * 1e6, 2)
                     << (Math::isnan(gradn) ? " " : "e-6 ")
-                    << Utility::str<real>(grade * 1e6, 2)
+                    << Utility::str(grade * 1e6, 2)
                     << (Math::isnan(grade) ? "" : "e-6")
                     << eol;
             } else {
             real h = g(p.Latitude(), p.Longitude());
-            *output << Utility::str<real>(h, 4) << eol;
+            *output << Utility::str(h, 4) << eol;
             }
           }
         }
