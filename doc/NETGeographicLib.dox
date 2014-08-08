@@ -11,8 +11,8 @@
 /**
 \mainpage NETGeographicLib library
 \author Scott Heiman (mrmtdew2@outlook.com)
-\version 1.36
-\date 2014-05-13
+\version 1.37
+\date 2014-08-08
 
 \section abstract Abstract
 
@@ -26,14 +26,14 @@ to the GeographicLib classes.  GeographicLib and NETGeographicLib is an
 integrated product.
 
 The NETGeographic project in the GeographicLib-vc10.sln file located in
-\<install folder\>/GeographicLib-1.36/windows will create the NETGeographicLib
+\<install folder\>/GeographicLib-1.37/windows will create the NETGeographicLib
 DLL.  The source code for NETGeographicLib is located in
-\<install folder\>/GeographicLib-1.36/dotnet/NETGeographicLib.  NETGeographicLib
+\<install folder\>/GeographicLib-1.37/dotnet/NETGeographicLib.  NETGeographicLib
 is not available for older versions of Microsoft Visual Studio.
 
 NETGeographicLib has been tested with C#, Managed C++, and Visual Basic.
 Sample code snippets can be found in
-\<install folder\>/GeographicLib-1.36/dotnet/examples.
+\<install folder\>/GeographicLib-1.37/dotnet/examples.
 
 \section differences Differences between NETGeographicLib and GeographicLib
 
@@ -135,7 +135,7 @@ to any Visual Basic source that uses NETGeographicLib classes.
 
 A C# sample application is provided that demonstrates NETGeographicLib classes.
 The source code for the sample application is located in
-\<install folder\>/GeographicLib-1.36/dotnet/Projections.  The sample
+\<install folder\>/GeographicLib-1.37/dotnet/Projections.  The sample
 application creates a tabbed dialog.  Each tab provides data entry fields that
 allow the user to exercise one or more NETGeographicLib classes.
 
@@ -159,6 +159,7 @@ The following table lists the source code that demonstrates specific classes.
 <TR><TD>ProjectionsPanel.cs</TD><TD>AzimuthalEquidistant, CassiniSoldner, Gnomonic</TD></TR>
 <TR><TD>SphericalHarmonicsPanel.cs</TD><TD>SphericalHarmonic, SphericalHarmonic1, SphericalHarmonic2, CircularEngine, SphericalCoefficients</TD></TR>
 <TR><TD>TypeIIIProjPanel.cs</TD><TD>UTMUPS, MGRS, OSGB</TD></TR>
+<TR><TD>RhumbPanel.cs</TD><TD>Rhumb, RhumbLine</TD></TR>
 </TABLE>
 </center>
 

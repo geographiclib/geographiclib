@@ -20,7 +20,7 @@
 #  pragma warning (disable: 4251 4127)
 #endif
 
-#if !defined(PGM_PIXEL_WIDTH)
+#if !defined(GEOGRAPHICLIB_GEOID_PGM_PIXEL_WIDTH)
 /**
  * The size of the pixel data in the pgm data files for the geoids.  2 is the
  * standard size corresponding to a maxval 2<sup>16</sup>&minus;1.  Setting it
@@ -28,7 +28,7 @@
  * the data files from .pgm to .pgm4.  Note that the format of these pgm4 files
  * is a non-standard extension of the pgm format.
  **********************************************************************/
-#  define PGM_PIXEL_WIDTH 2
+#  define GEOGRAPHICLIB_GEOID_PGM_PIXEL_WIDTH 2
 #endif
 
 namespace GeographicLib {
@@ -83,7 +83,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Geoid {
   private:
     typedef Math::real real;
-#if PGM_PIXEL_WIDTH != 4
+#if GEOGRAPHICLIB_GEOID_PGM_PIXEL_WIDTH != 4
     typedef unsigned short pixel_t;
     static const unsigned pixel_size_ = 2;
     static const unsigned pixel_max_ = 0xffffu;
@@ -94,12 +94,12 @@ namespace GeographicLib {
 #endif
     static const unsigned stencilsize_ = 12;
     static const unsigned nterms_ = ((3 + 1) * (3 + 2))/2; // for a cubic fit
-    static const real c0_;
-    static const real c0n_;
-    static const real c0s_;
-    static const real c3_[stencilsize_ * nterms_];
-    static const real c3n_[stencilsize_ * nterms_];
-    static const real c3s_[stencilsize_ * nterms_];
+    static const int c0_;
+    static const int c0n_;
+    static const int c0s_;
+    static const int c3_[stencilsize_ * nterms_];
+    static const int c3n_[stencilsize_ * nterms_];
+    static const int c3s_[stencilsize_ * nterms_];
 
     std::string _name, _dir, _filename;
     const bool _cubic;
@@ -457,7 +457,7 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     Math::real MajorRadius() const
-    { return Constants::WGS84_a<real>(); }
+    { return Constants::WGS84_a(); }
 
     /**
      * @return \e f the flattening of the WGS84 ellipsoid.
@@ -465,7 +465,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the supported geoid models are all
      * based on this ellipsoid.)
      **********************************************************************/
-    Math::real Flattening() const { return Constants::WGS84_f<real>(); }
+    Math::real Flattening() const { return Constants::WGS84_f(); }
     ///@}
 
     /// \cond SKIP
@@ -474,28 +474,27 @@ namespace GeographicLib {
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const
-    { return 1/Constants::WGS84_f<real>(); }
+    { return 1/Constants::WGS84_f(); }
     /// \endcond
 
     /**
      * @return the default path for geoid data files.
      *
-     * This is the value of the environment variable GEOID_PATH, if set;
-     * otherwise, it is $GEOGRAPHICLIB_DATA/geoids if the environment variable
-     * GEOGRAPHICLIB_DATA is set; otherwise, it is a compile-time default
-     * (/usr/local/share/GeographicLib/geoids on non-Windows systems and
-     * C:/Documents and Settings/All Users/Application
-     * Data/GeographicLib/geoids on Windows systems).
+     * This is the value of the environment variable GEOGRAPHICLIB_GEOID_PATH,
+     * if set; otherwise, it is $GEOGRAPHICLIB_DATA/geoids if the environment
+     * variable GEOGRAPHICLIB_DATA is set; otherwise, it is a compile-time
+     * default (/usr/local/share/GeographicLib/geoids on non-Windows systems
+     * and C:/ProgramData/GeographicLib/geoids on Windows systems).
      **********************************************************************/
     static std::string DefaultGeoidPath();
 
     /**
      * @return the default name for the geoid.
      *
-     * This is the value of the environment variable GEOID_NAME, if set,
-     * otherwise, it is "egm96-5".  The Geoid class does not use this function;
-     * it is just provided as a convenience for a calling program when
-     * constructing a Geoid object.
+     * This is the value of the environment variable GEOGRAPHICLIB_GEOID_NAME,
+     * if set; otherwise, it is "egm96-5".  The Geoid class does not use this
+     * function; it is just provided as a convenience for a calling program
+     * when constructing a Geoid object.
      **********************************************************************/
     static std::string DefaultGeoidName();
 

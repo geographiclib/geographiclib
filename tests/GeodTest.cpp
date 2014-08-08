@@ -11,8 +11,7 @@
 #include "GeographicLib/GeodesicLine.hpp"
 #include "GeographicLib/GeodesicExact.hpp"
 #include "GeographicLib/Constants.hpp"
-// Allow for mixed libraries?
-namespace GeographicLibL = GeographicLib;
+
 #include <cmath>
 #include <vector>
 #include <utility>
@@ -41,8 +40,8 @@ Check GeographicLib::Geodesic class.\n\
   return retval;
 }
 
-Math::extended angdiff(Math::extended a1, Math::extended a2) {
-  Math::extended d = a2 - a1;
+Math::real angdiff(Math::real a1, Math::real a2) {
+  Math::real d = a2 - a1;
   if (d >= 180)
     d -= 360;
   else if (d < -180)
@@ -50,46 +49,46 @@ Math::extended angdiff(Math::extended a1, Math::extended a2) {
   return d;
 }
 
-Math::extended azidiff(Math::extended lat,
-                       Math::extended lon1, Math::extended lon2,
-                       Math::extended azi1, Math::extended azi2) {
-  Math::extended
-    phi = lat * Math::degree<Math::extended>(),
-    alpha1 = azi1 * Math::degree<Math::extended>(),
-    alpha2 = azi2 * Math::degree<Math::extended>(),
-    dlam = angdiff(lon1, lon2) * Math::degree<Math::extended>();
-  Math::extended res = sin(alpha2-alpha1)*cos(dlam)
+Math::real azidiff(Math::real lat,
+                   Math::real lon1, Math::real lon2,
+                   Math::real azi1, Math::real azi2) {
+  Math::real
+    phi = lat * Math::degree(),
+    alpha1 = azi1 * Math::degree(),
+    alpha2 = azi2 * Math::degree(),
+    dlam = angdiff(lon1, lon2) * Math::degree();
+  Math::real res = sin(alpha2-alpha1)*cos(dlam)
     -cos(alpha2-alpha1)*sin(dlam)*sin(phi)
     // -sin(alpha1)*cos(alpha2)*(1-cos(dlam))*cos(phi)*cos(phi)
     ;
   return res;
 }
 
-Math::extended dist(Math::extended a, Math::extended f,
-                    Math::extended lat0, Math::extended lon0,
-                    Math::extended lat1, Math::extended lon1) {
-  //  typedef GeographicLibL::Math::real real;
+Math::real dist(Math::real a, Math::real f,
+                Math::real lat0, Math::real lon0,
+                Math::real lat1, Math::real lon1) {
+  //  typedef GeographicLib::Math::real real;
   //  real s12;
-  //  GeographicLibL::Geodesic::
+  //  GeographicLib::Geodesic::
   //    WGS84.Inverse(real(lat0), real(lon0), real(lat1), real(lon1), s12);
-  //  return Math::extended(s12);
-  a *= Math::degree<Math::extended>();
-  if (abs(lat0 + lat1) > Math::extended(179.998)) {
+  //  return Math::real(s12);
+  a *= Math::degree();
+  if (abs(lat0 + lat1) > Math::real(179.998)) {
     // Near pole, transform into polar coordinates
-    Math::extended
+    Math::real
       r0 = 90 - abs(lat0),
       r1 = 90 - abs(lat1),
-      lam0 = lon0 * Math::degree<Math::extended>(),
-      lam1 = lon1 * Math::degree<Math::extended>();
+      lam0 = lon0 * Math::degree(),
+      lam1 = lon1 * Math::degree();
     return (a / (1 - f)) *
       Math::hypot
       (r0 * cos(lam0) - r1 * cos(lam1), r0 * sin(lam0) - r1 * sin(lam1));
   } else {
     // Otherwise use cylindrical formula
-    Math::extended
-      phi = lat0 * Math::degree<Math::extended>(),
+    Math::real
+      phi = lat0 * Math::degree(),
       cphi = abs(lat0) <= 45 ? cos(phi)
-      : sin((90 - abs(lat0)) * Math::degree<Math::extended>()),
+      : sin((90 - abs(lat0)) * Math::degree()),
       e2 = f * (2 - f),
       sinphi = sin(phi),
       n = 1/sqrt(1 - e2 * sinphi * sinphi),
@@ -104,10 +103,6 @@ Math::extended dist(Math::extended a, Math::extended f,
   }
 }
 
-// wreal is precision of args.
-// treal is precision of test class.
-// rreal is precision of reference class.
-//
 // err[0] error in position of point 2 for the direct problem.
 // err[1] error in azimuth at point 2 for the direct problem.
 // err[2] error in m12 for the direct problem & inverse (except near conjugacy)
@@ -115,84 +110,78 @@ Math::extended dist(Math::extended a, Math::extended f,
 // err[4] error in the azimuths for the inverse problem scaled by m12.
 // err[5] consistency of the azimuths for the inverse problem.
 // err[6] area error direct & inverse (except near conjugacy)
-template<class wreal, class test, class treal, class ref, class rreal>
-void GeodError(const test& tgeod, const ref& rgeod,
-               wreal lat1, wreal lon1, wreal azi1,
-               wreal lat2, wreal lon2, wreal azi2,
-               wreal s12, wreal /*a12*/, wreal m12, wreal S12,
-               vector<wreal>& err) {
-  treal tlat1, tlon1, tazi1, tlat2, tlon2, tazi2, ts12, tm12a, tm12b,
+template<class test>
+void GeodError(const test& tgeod,
+               Math::real lat1, Math::real lon1, Math::real azi1,
+               Math::real lat2, Math::real lon2, Math::real azi2,
+               Math::real s12, Math::real /*a12*/, Math::real m12, Math::real S12,
+               vector<Math::real>& err) {
+  Math::real tlat1, tlon1, tazi1, tlat2, tlon2, tazi2, ts12, tm12a, tm12b,
     tM12, tM21, tS12a, tS12b /*, ta12*/;
-  rreal rlat1, rlon1, razi1, rlat2, rlon2, razi2, rm12;
-  tgeod.Direct(treal(lat1), treal(lon1), treal(azi1),  treal(s12),
+  Math::real rlat1, rlon1, razi1, rlat2, rlon2, razi2, rm12;
+  tgeod.Direct(lat1, lon1, azi1,  s12,
                tlat2, tlon2, tazi2, tm12a,
                tM12, tM21, tS12a);
-  tS12a -= treal(rgeod.EllipsoidArea() * (tazi2-azi2)/720);
-  tgeod.Direct(treal(lat2), treal(lon2), treal(azi2), -treal(s12),
+  tS12a -= tgeod.EllipsoidArea() * (tazi2-azi2)/720;
+  tgeod.Direct(lat2, lon2, azi2, -s12,
                tlat1, tlon1, tazi1, tm12b,
                tM12, tM21, tS12b);
-  tS12b -= treal(rgeod.EllipsoidArea() * (tazi1-azi1)/720);
-  err[0] = max(dist(rgeod.MajorRadius(), rgeod.Flattening(),
+  tS12b -= tgeod.EllipsoidArea() * (tazi1-azi1)/720;
+  err[0] = max(dist(tgeod.MajorRadius(), tgeod.Flattening(),
                     lat2, lon2, tlat2, tlon2),
-               dist(rgeod.MajorRadius(), rgeod.Flattening(),
+               dist(tgeod.MajorRadius(), tgeod.Flattening(),
                     lat1, lon1, tlat1, tlon1));
   err[1] = max(abs(azidiff(lat2, lon2, tlon2, azi2, tazi2)),
                abs(azidiff(lat1, lon1, tlon1, azi1, tazi1))) *
-    rgeod.MajorRadius();
+    tgeod.MajorRadius();
   err[2] = max(abs(tm12a - m12), abs(tm12b + m12));
   if (!Math::isnan(S12))
-    err[6] = max(abs(tS12a - S12), abs(tS12b + S12)) / rgeod.MajorRadius();
+    err[6] = max(abs(tS12a - S12), abs(tS12b + S12)) / tgeod.MajorRadius();
 
-  /* ta12 = */ tgeod.Inverse(treal(lat1), treal(lon1), treal(lat2), treal(lon2),
+  /* ta12 = */ tgeod.Inverse(lat1, lon1, lat2, lon2,
                              ts12, tazi1, tazi2, tm12a,
                              tM12, tM21, tS12a);
-  tS12a -= treal(rgeod.EllipsoidArea() * ((tazi2-azi2)-(tazi1-azi1))/720);
+  tS12a -= tgeod.EllipsoidArea() * ((tazi2-azi2)-(tazi1-azi1))/720;
   err[3] = abs(ts12 - s12);
   err[4] = max(abs(angdiff(azi1, tazi1)), abs(angdiff(azi2, tazi2))) *
-    Math::degree<Math::extended>() * abs(m12);
-  if (treal(lat1) + treal(lat2) == 0)
+    Math::degree() * abs(m12);
+  if (lat1 + lat2 == 0)
     err[4] = min(err[4],
                  max(abs(angdiff(azi1, tazi2)), abs(angdiff(azi2, tazi1))) *
-                 Math::degree<Math::extended>() * abs(m12));
+                 Math::degree() * abs(m12));
   // m12 and S12 are very sensitive with the inverse problem near conjugacy
-  if (!(s12 > rgeod.MajorRadius() && m12 < 10e3)) {
-    err[2] = max(err[2], wreal(abs(tm12a - m12)));
+  if (!(s12 > tgeod.MajorRadius() && m12 < 10e3)) {
+    err[2] = max(err[2], abs(tm12a - m12));
     if (!Math::isnan(S12))
-      err[6] = max(err[6], wreal(abs(tS12a - S12) / rgeod.MajorRadius()));
+      err[6] = max(err[6], abs(tS12a - S12) / tgeod.MajorRadius());
   }
-  if (s12 > rgeod.MajorRadius()) {
-    rgeod.Direct(rreal(lat1), rreal(lon1), rreal(tazi1),   rreal(ts12)/2,
-                 rlat2, rlon2, razi2, rm12);
-    rgeod.Direct(rreal(lat2), rreal(lon2), rreal(tazi2), - rreal(ts12)/2,
-                 rlat1, rlon1, razi1, rm12);
-    err[5] = dist(rgeod.MajorRadius(), rgeod.Flattening(),
+  if (s12 > tgeod.MajorRadius()) {
+    tgeod.Direct(lat1, lon1, tazi1,   ts12/2, rlat2, rlon2, razi2, rm12);
+    tgeod.Direct(lat2, lon2, tazi2, - ts12/2, rlat1, rlon1, razi1, rm12);
+    err[5] = dist(tgeod.MajorRadius(), tgeod.Flattening(),
                   rlat1, rlon1, rlat2, rlon2);
   } else {
-    rgeod.Direct(rreal(lat1), rreal(lon1), rreal(tazi1),
-                 rreal(ts12) + rgeod.MajorRadius(),
+    tgeod.Direct(lat1, lon1, tazi1,
+                 ts12 + tgeod.MajorRadius(),
                  rlat2, rlon2, razi2, rm12);
-    rgeod.Direct(rreal(lat2), rreal(lon2), rreal(tazi2), rgeod.MajorRadius(),
+    tgeod.Direct(lat2, lon2, tazi2, tgeod.MajorRadius(),
                  rlat1, rlon1, razi1, rm12);
-    err[5] = dist(rgeod.MajorRadius(), rgeod.Flattening(),
+    err[5] = dist(tgeod.MajorRadius(), tgeod.Flattening(),
                   rlat1, rlon1, rlat2, rlon2);
-    rgeod.Direct(rreal(lat1), rreal(lon1), rreal(tazi1), - rgeod.MajorRadius(),
+    tgeod.Direct(lat1, lon1, tazi1, - tgeod.MajorRadius(),
                  rlat2, rlon2, razi2, rm12);
-    rgeod.Direct(rreal(lat2), rreal(lon2), rreal(tazi2),
-                 - rreal(ts12) - rgeod.MajorRadius(),
+    tgeod.Direct(lat2, lon2, tazi2,
+                 - ts12 - tgeod.MajorRadius(),
                  rlat1, rlon1, razi1, rm12);
-    err[5] = max(err[5], wreal(dist(rgeod.MajorRadius(), rgeod.Flattening(),
-                                    rlat1, rlon1, rlat2, rlon2)));
+    err[5] = max(err[5], dist(tgeod.MajorRadius(), tgeod.Flattening(),
+                              rlat1, rlon1, rlat2, rlon2));
   }
 }
 
 
 int main(int argc, char* argv[]) {
-  Math::real a = Constants::WGS84_a<Math::real>();
-  Math::real f = Constants::WGS84_f<Math::real>();
-  Math::real al =
-    GeographicLibL::Constants::WGS84_a<GeographicLibL::Math::real>();
-  Math::real fl =
-    GeographicLibL::Constants::WGS84_f<GeographicLibL::Math::real>();
+  Math::real a = Constants::WGS84_a();
+  Math::real f = Constants::WGS84_f();
   bool timing = false;
   int timecase = 0; // 0 = line, 1 = line ang, 2 = direct, 3 = inverse
   bool accuracytest = true;
@@ -218,8 +207,7 @@ int main(int argc, char* argv[]) {
       string s;
       getline(cin, s);
       istringstream str(s);
-      str >> al >> fl;
-      a = al; f = fl;
+      str >> a >> f;
     } else if (arg == "-c") {
       accuracytest = false;
       coverage = true;
@@ -255,7 +243,7 @@ int main(int argc, char* argv[]) {
     return usage(1);
 
   if (timing) {
-    const Geodesic& geod = Geodesic::WGS84;
+    const Geodesic& geod = Geodesic::WGS84();
     unsigned cnt = 0;
     Math::real s = 0;
     Math::real dl;
@@ -339,19 +327,17 @@ int main(int argc, char* argv[]) {
     const Geodesic geod(a, f);
     const GeodesicExact geode(a, f);
 
-    const GeographicLibL::Geodesic geodl(al, fl);
-    const GeographicLibL::GeodesicExact geodel(al, fl);
     const unsigned NUMERR = 7;
 
     cout << fixed << setprecision(2);
-    vector<Math::extended> erra(NUMERR);
-    vector<Math::extended> err(NUMERR, 0.0);
+    vector<Math::real> erra(NUMERR);
+    vector<Math::real> err(NUMERR, 0.0);
     vector<unsigned> errind(NUMERR);
     unsigned cnt = 0;
     string s;
     while (getline(cin, s)) {
       istringstream str(s);
-      Math::extended lat1l, lon1l, azi1l, lat2l, lon2l, azi2l,
+      Math::real lat1l, lon1l, azi1l, lat2l, lon2l, azi2l,
         s12l, a12l, m12l, S12l;
       if (!(str >> lat1l >> lon1l >> azi1l
                 >> lat2l >> lon2l >> azi2l
@@ -370,17 +356,13 @@ int main(int argc, char* argv[]) {
 #endif
       } else {
         exact ?
-          GeodError< Math::extended,
-                     GeodesicExact, Math::real,
-                     GeographicLibL::GeodesicExact, GeographicLibL::Math::real >
-          (geode, geodel, lat1l, lon1l, azi1l,
+          GeodError< GeodesicExact >
+          (geode, lat1l, lon1l, azi1l,
            lat2l, lon2l, azi2l,
            s12l, a12l, m12l, S12l,
            erra) :
-          GeodError< Math::extended,
-                     Geodesic, Math::real,
-                     GeographicLibL::Geodesic, GeographicLibL::Math::real >
-          (geod, geodl, lat1l, lon1l, azi1l,
+          GeodError< Geodesic >
+          (geod, lat1l, lon1l, azi1l,
            lat2l, lon2l, azi2l,
            s12l, a12l, m12l, S12l,
            erra);
@@ -394,7 +376,7 @@ int main(int argc, char* argv[]) {
       }
     }
     if (accuracytest) {
-      Math::extended mult = sizeof(Math::real) > sizeof(double) ? 1e12l : 1e9l;
+      Math::real mult = sizeof(Math::real) > sizeof(double) ? 1e12l : 1e9l;
       for (unsigned i = 0; i < NUMERR; ++i)
         cout << i << " " << mult * err[i]
              << " " << errind[i] << "\n";

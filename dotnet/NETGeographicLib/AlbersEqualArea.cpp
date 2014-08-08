@@ -33,13 +33,13 @@ AlbersEqualArea::AlbersEqualArea( StandardTypes type )
         switch ( type )
         {
         case StandardTypes::CylindricalEqualArea:
-            m_pAlbersEqualArea = new GeographicLib::AlbersEqualArea( GeographicLib::AlbersEqualArea::CylindricalEqualArea );
+            m_pAlbersEqualArea = new GeographicLib::AlbersEqualArea( GeographicLib::AlbersEqualArea::CylindricalEqualArea() );
             break;
         case StandardTypes::AzimuthalEqualAreaNorth:
-            m_pAlbersEqualArea = new GeographicLib::AlbersEqualArea( GeographicLib::AlbersEqualArea::AzimuthalEqualAreaNorth );
+            m_pAlbersEqualArea = new GeographicLib::AlbersEqualArea( GeographicLib::AlbersEqualArea::AzimuthalEqualAreaNorth() );
             break;
         case StandardTypes::AzimuthalEqualAreaSouth:
-            m_pAlbersEqualArea = new GeographicLib::AlbersEqualArea( GeographicLib::AlbersEqualArea::AzimuthalEqualAreaSouth );
+            m_pAlbersEqualArea = new GeographicLib::AlbersEqualArea( GeographicLib::AlbersEqualArea::AzimuthalEqualAreaSouth() );
             break;
         }
     }

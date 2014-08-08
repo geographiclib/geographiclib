@@ -7,7 +7,7 @@ using namespace std;
 using namespace GeographicLib;
 
 int main() {
-  const Geodesic& geod = Geodesic::WGS84;
+  const Geodesic& geod = Geodesic::WGS84();
   // Distance from JFK to LHR
   double
     lat1 = 40.6, lon1 = -73.8, // JFK Airport

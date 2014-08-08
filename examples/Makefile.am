@@ -36,6 +36,8 @@ EXAMPLE_FILES = \
 	example-OSGB.cpp \
 	example-PolarStereographic.cpp \
 	example-PolygonArea.cpp \
+	example-Rhumb.cpp \
+	example-RhumbLine.cpp \
 	example-SphericalEngine.cpp \
 	example-SphericalHarmonic.cpp \
 	example-SphericalHarmonic1.cpp \
@@ -44,6 +46,7 @@ EXAMPLE_FILES = \
 	example-TransverseMercatorExact.cpp \
 	example-UTMUPS.cpp \
 	example-Utility.cpp \
-	GeoidToGTX.cpp
+	GeoidToGTX.cpp \
+	make-egmcof.cpp
 
 EXTRA_DIST = CMakeLists.txt $(EXAMPLE_FILES)

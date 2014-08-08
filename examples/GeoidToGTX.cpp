@@ -42,6 +42,8 @@ int main(int argc, char* argv[]) {
     return 1;
   }
   try {
+    // Will need to set the precision for each thread, so save return value
+    int ndigits = Utility::set_digits();
     string model(argv[1]);
     // Number of intervals per degree
     int ndeg = Utility::num<int>(string(argv[2]));
@@ -50,8 +52,8 @@ int main(int argc, char* argv[]) {
     int
       nlat = 180 * ndeg + 1,
       nlon = 360 * ndeg;
-    double
-      delta = 1 / double(ndeg), // Grid spacing
+    Math::real
+      delta = 1 / Math::real(ndeg), // Grid spacing
       latorg = -90,
       lonorg = -180;
     // Write results as floats in binary mode
@@ -59,9 +61,9 @@ int main(int argc, char* argv[]) {
 
     // Write header
     {
-      double transform[] = {latorg, lonorg, delta, delta};
+      Math::real transform[] = {latorg, lonorg, delta, delta};
       unsigned sizes[] = {unsigned(nlat), unsigned(nlon)};
-      Utility::writearray<double, double, true>(file, transform, 4);
+      Utility::writearray<double, Math::real, true>(file, transform, 4);
       Utility::writearray<unsigned, unsigned, true>(file, sizes, 2);
     }
 
@@ -76,12 +78,13 @@ int main(int argc, char* argv[]) {
 #  pragma omp parallel for
 #endif
       for (int ilat = ilat0; ilat < nlat0; ++ilat) { // Loop over latitudes
-        double
+        Utility::set_digits(ndigits);                // Set the precision
+        Math::real
           lat = latorg + (ilat / ndeg) + delta * (ilat - ndeg * (ilat / ndeg)),
           h = 0;
         GravityCircle c(g.Circle(lat, h, GravityModel::GEOID_HEIGHT));
         for (int ilon = 0; ilon < nlon; ++ilon) { // Loop over longitudes
-          double lon = lonorg
+          Math::real lon = lonorg
             + (ilon / ndeg) + delta * (ilon - ndeg * (ilon / ndeg));
           N[ilat - ilat0][ilon] = float(c.GeoidHeight(lon));
         } // longitude loop

@@ -2,7 +2,7 @@
  * \file PolygonArea.hpp
  * \brief Header for GeographicLib::PolygonArea class
  *
- * Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -11,7 +11,7 @@
 #define GEOGRAPHICLIB_POLYGONAREA_HPP 1
 
 #include <GeographicLib/Geodesic.hpp>
-#include <GeographicLib/Constants.hpp>
+#include <GeographicLib/GeodesicExact.hpp>
 #include <GeographicLib/Accumulator.hpp>
 
 namespace GeographicLib {
@@ -45,6 +45,12 @@ namespace GeographicLib {
    * There's an option to treat the points as defining a polyline instead of a
    * polygon; in that case, only the perimeter is computed.
    *
+   * This is a templated class to allow it to be used with either Geodesic and
+   * GeodesicExact.  GeographicLib::PolygonArea and
+   * GeographicLib::PolygonAreaExact are typedefs for these two cases.
+   *
+   * @tparam GeodType the geodesic class to use.
+   *
    * Example of use:
    * \include example-PolygonArea.cpp
    *
@@ -52,16 +58,17 @@ namespace GeographicLib {
    * providing access to the functionality of PolygonArea.
    **********************************************************************/
 
-  class GEOGRAPHICLIB_EXPORT PolygonArea {
+  template <class GeodType = Geodesic>
+  class PolygonAreaT {
   private:
     typedef Math::real real;
-    Geodesic _earth;
+    GeodType _earth;
     real _area0;                // Full ellipsoid area
     bool _polyline;             // Assume polyline (don't close and skip area)
     unsigned _mask;
     unsigned _num;
     int _crossings;
-    Accumulator<real> _areasum, _perimetersum;
+    Accumulator<> _areasum, _perimetersum;
     real _lat0, _lon0, _lat1, _lon1;
     static inline int transit(real lon1, real lon2) {
       // Return 1 or -1 if crossing prime meridian in east or west direction.
@@ -78,30 +85,29 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for PolygonArea.
+     * Constructor for PolygonAreaT.
      *
      * @param[in] earth the Geodesic object to use for geodesic calculations.
-     *   By default this uses the WGS84 ellipsoid.
      * @param[in] polyline if true that treat the points as defining a polyline
      *   instead of a polygon (default = false).
      **********************************************************************/
-    PolygonArea(const Geodesic& earth, bool polyline = false)
+    PolygonAreaT(const GeodType& earth, bool polyline = false)
       : _earth(earth)
       , _area0(_earth.EllipsoidArea())
       , _polyline(polyline)
-      , _mask(Geodesic::LATITUDE | Geodesic::LONGITUDE | Geodesic::DISTANCE |
-              (_polyline ? Geodesic::NONE : Geodesic::AREA))
+      , _mask(GeodType::LATITUDE | GeodType::LONGITUDE | GeodType::DISTANCE |
+              (_polyline ? GeodType::NONE : GeodType::AREA))
     { Clear(); }
 
     /**
-     * Clear PolygonArea, allowing a new polygon to be started.
+     * Clear PolygonAreaT, allowing a new polygon to be started.
      **********************************************************************/
     void Clear() {
       _num = 0;
       _crossings = 0;
       _areasum = 0;
       _perimetersum = 0;
-      _lat0 = _lon0 = _lat1 = _lon1 = Math::NaN<real>();
+      _lat0 = _lon0 = _lat1 = _lon1 = Math::NaN();
     }
 
     /**
@@ -122,7 +128,7 @@ namespace GeographicLib {
      * @param[in] s distance from current point to next point (meters).
      *
      * \e azi should be in the range [&minus;540&deg;, 540&deg;).  This does
-     * nothing if no points have been added yet.  Use PolygonArea::CurrentPoint
+     * nothing if no points have been added yet.  Use PolygonAreaT::CurrentPoint
      * to determine the position of the new vertex.
      **********************************************************************/
     void AddEdge(real azi, real s);
@@ -150,7 +156,7 @@ namespace GeographicLib {
      * a running result for the perimeter and area as the user moves the mouse
      * cursor.  Ordinary floating point arithmetic is used to accumulate the
      * data for the test point; thus the area and perimeter returned are less
-     * accurate than if PolygonArea::AddPoint and PolygonArea::Compute are
+     * accurate than if PolygonAreaT::AddPoint and PolygonAreaT::Compute are
      * used.
      *
      * @param[in] lat the latitude of the test point (degrees).
@@ -179,8 +185,8 @@ namespace GeographicLib {
      * This lets you report a running result for the perimeter and area as the
      * user moves the mouse cursor.  Ordinary floating point arithmetic is used
      * to accumulate the data for the test point; thus the area and perimeter
-     * returned are less accurate than if PolygonArea::AddEdge and
-     * PolygonArea::Compute are used.
+     * returned are less accurate than if PolygonAreaT::AddEdge and
+     * PolygonAreaT::Compute are used.
      *
      * @param[in] azi azimuth at current point (degrees).
      * @param[in] s distance from current point to final test point (meters).
@@ -204,7 +210,7 @@ namespace GeographicLib {
     /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
-     * The old name for PolygonArea::TestPoint.
+     * The old name for PolygonAreaT::TestPoint.
      **********************************************************************/
     unsigned TestCompute(real lat, real lon, bool reverse, bool sign,
                          real& perimeter, real& area) const {
@@ -241,6 +247,23 @@ namespace GeographicLib {
     { lat = _lat1; lon = _lon1; }
     ///@}
   };
+
+  /**
+   * @relates PolygonAreaT
+   *
+   * Polygon areas using Geodesic.  This should be used if the flattening is
+   * small.
+   **********************************************************************/
+  typedef PolygonAreaT<Geodesic> PolygonArea;
+
+  /**
+   * @relates PolygonAreaT
+   *
+   * Polygon areas using GeodesicExact.  (But note that the implementation of
+   * areas in GeodesicExact uses a high order series and this is only accurate
+   * for modest flattenings.)
+   **********************************************************************/
+  typedef PolygonAreaT<GeodesicExact> PolygonAreaExact;
 
 } // namespace GeographicLib
 

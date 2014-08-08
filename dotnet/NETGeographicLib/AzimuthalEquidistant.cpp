@@ -32,7 +32,7 @@ AzimuthalEquidistant::AzimuthalEquidistant(void)
 {
     try
     {
-        m_pAzimuthalEquidistant = new GeographicLib::AzimuthalEquidistant( GeographicLib::Geodesic::WGS84 );
+        m_pAzimuthalEquidistant = new GeographicLib::AzimuthalEquidistant( GeographicLib::Geodesic::WGS84() );
     }
     catch ( std::bad_alloc )
     {

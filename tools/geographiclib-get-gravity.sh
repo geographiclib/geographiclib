@@ -28,6 +28,7 @@ table:
   egm96      360     2100    2100
   egm2008   2190    76000   75000
   wgs84      20        1       1
+  grs80      20        1       1
 
 The size columns give the download and installed sizes of the datasets.
 In addition you can specify
@@ -93,7 +94,7 @@ if test -z "$DEBUG"; then
 trap 'trap "" 0; test "$TEMP" && rm -rf "$TEMP"; exit 1' 1 2 3 9 15
 trap            'test "$TEMP" && rm -rf "$TEMP"'            0
 fi
-TEMP=`mktemp --tmpdir --quiet --directory $NAME-XXXXXXXX`
+TEMP=`mktemp -d -q -t $NAME-XXXXXXXX`
 
 if test -z "$TEMP" -o ! -d "$TEMP"; then
     echo Cannot create temporary directory 1>&2
@@ -114,6 +115,7 @@ cat > $TEMP/all <<EOF
 egm84
 egm96
 egm2008
+grs80
 wgs84
 EOF
 

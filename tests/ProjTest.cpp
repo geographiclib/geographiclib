@@ -128,19 +128,20 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
      GeographicLib::Math::real lat0, GeographicLib::Math::real lon0,
      GeographicLib::Math::real lat1, GeographicLib::Math::real lon1) {
   using namespace GeographicLib;
+  using std::cos;
   typedef Math::real real;
   real
-    phi = lat0 * Math::degree<real>(),
+    phi = lat0 * Math::degree(),
     e2 = f * (2 - f),
     sinphi = sin(phi),
     n = 1/sqrt(1 - e2 * sinphi * sinphi),
       // See Wikipedia article on latitude
-    hlon = std::cos(phi) * n,
+    hlon = cos(phi) * n,
     hlat = (1 - e2) * n * n * n,
     dlon = lon1 - lon0;
   if (dlon >= 180) dlon -= 360;
   else if (dlon < -180) dlon += 360;
-  return a * Math::degree<real>() *
+  return a * Math::degree() *
     Math::hypot((lat1 - lat0) * hlat, dlon * hlon);
 }
 
@@ -171,10 +172,10 @@ int main(int argc, char* argv[]) {
       throw std::out_of_range("Unsupported coordinates " + geo.coords());
     real a, f;
     if (geo.datum() == "WGE") {
-      a = Constants::WGS84_a<real>();
-      f = Constants::WGS84_f<real>();
+      a = Constants::WGS84_a();
+      f = Constants::WGS84_f();
     } else if (geo.datum() == "Test_sphere") {
-      a = 20000000/Math::pi<real>();
+      a = 20000000/Math::pi();
       f = 0;
     } else if (geo.datum() == "Test_SRMmax") {
       a = 6400000;
@@ -260,6 +261,7 @@ int main(int argc, char* argv[]) {
     real maxerrx = 0, maxerry = 0, maxerr = 0, maxerrk = 0, maxerrr = 0;
     std::cout << std::fixed << std::setprecision(7);
     while (geo.Next(lata, lona) && proj.Next(xa, ya)) {
+      using std::abs;
       ++count;
       // Suppress bogus uninitialized warnings for lat and lon
       real lat = 0, lon = 0, x, y, xx, yy;
@@ -306,8 +308,8 @@ int main(int argc, char* argv[]) {
       x += fe;
       y += fn;
       real
-        errx = std::abs(x - xa),
-        erry = std::abs(y - ya),
+        errx = abs(x - xa),
+        erry = abs(y - ya),
         err = Math::hypot(errx, erry),
         errk = err/std::max(real(1),k);
       std::ostringstream sx, sxa, sy, sya;

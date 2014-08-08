@@ -13,15 +13,14 @@
 
 #if !defined(GEOGRAPHICLIB_DATA)
 #  if defined(_WIN32)
-#    define GEOGRAPHICLIB_DATA \
-  "C:/Documents and Settings/All Users/Application Data/GeographicLib"
+#    define GEOGRAPHICLIB_DATA "C:/ProgramData/GeographicLib"
 #  else
 #    define GEOGRAPHICLIB_DATA "/usr/local/share/GeographicLib"
 #  endif
 #endif
 
-#if !defined(GEOID_DEFAULT_NAME)
-#  define GEOID_DEFAULT_NAME "egm96-5"
+#if !defined(GEOGRAPHICLIB_GEOID_DEFAULT_NAME)
+#  define GEOGRAPHICLIB_GEOID_DEFAULT_NAME "egm96-5"
 #endif
 
 #if defined(_MSC_VER)
@@ -97,8 +96,8 @@ namespace GeographicLib {
   // genmatrix(yc,1,length(warr)).abs(c3).genmatrix(yd,length(pows),1)),2)$
   // c3:c0*c3$
 
-  const Math::real Geoid::c0_ = 240; // Common denominator
-  const Math::real Geoid::c3_[stencilsize_ * nterms_] = {
+  const int Geoid::c0_ = 240; // Common denominator
+  const int Geoid::c3_[stencilsize_ * nterms_] = {
       9, -18, -88,    0,  96,   90,   0,   0, -60, -20,
      -9,  18,   8,    0, -96,   30,   0,   0,  60, -20,
       9, -88, -18,   90,  96,    0, -20, -60,   0,   0,
@@ -147,8 +146,8 @@ namespace GeographicLib {
   //     genmatrix(yc,1,length(warr)).abs(c3n).genmatrix(yd,length(pows),1)),2)$
   // c3n:c0n*c3n$
 
-  const Math::real Geoid::c0n_ = 372; // Common denominator
-  const Math::real Geoid::c3n_[stencilsize_ * nterms_] = {
+  const int Geoid::c0n_ = 372; // Common denominator
+  const int Geoid::c3n_[stencilsize_ * nterms_] = {
       0, 0, -131, 0,  138,  144, 0,   0, -102, -31,
       0, 0,    7, 0, -138,   42, 0,   0,  102, -31,
      62, 0,  -31, 0,    0,  -62, 0,   0,    0,  31,
@@ -181,8 +180,8 @@ namespace GeographicLib {
   //     genmatrix(yc,1,length(warr)).abs(c3s).genmatrix(yd,length(pows),1)),2)$
   // c3s:c0s*c3s$
 
-  const Math::real Geoid::c0s_ = 372; // Common denominator
-  const Math::real Geoid::c3s_[stencilsize_ * nterms_] = {
+  const int Geoid::c0s_ = 372; // Common denominator
+  const int Geoid::c3s_[stencilsize_ * nterms_] = {
      18,  -36, -122,   0,  120,  135, 0,   0,  -84, -31,
     -18,   36,   -2,   0, -120,   51, 0,   0,   84, -31,
      36, -165,  -27,  93,  147,   -9, 0, -93,   18,   0,
@@ -202,13 +201,14 @@ namespace GeographicLib {
     : _name(name)
     , _dir(path)
     , _cubic(cubic)
-    , _a( Constants::WGS84_a<real>() )
-    , _e2( (2 - Constants::WGS84_f<real>()) * Constants::WGS84_f<real>() )
-    , _degree( Math::degree<real>() )
+    , _a( Constants::WGS84_a() )
+    , _e2( (2 - Constants::WGS84_f()) * Constants::WGS84_f() )
+    , _degree( Math::degree() )
     , _eps( sqrt(numeric_limits<real>::epsilon()) )
     , _threadsafe(false)        // Set after cache is read
   {
-    STATIC_ASSERT(sizeof(pixel_t) == pixel_size_, "pixel_t has the wrong size");
+    GEOGRAPHICLIB_STATIC_ASSERT(sizeof(pixel_t) == pixel_size_,
+                                "pixel_t has the wrong size");
     if (_dir.empty())
       _dir = DefaultGeoidPath();
     _filename = _dir + "/" + _name + (pixel_size_ != 4 ? ".pgm" : ".pgm4");
@@ -305,8 +305,8 @@ namespace GeographicLib {
   Math::real Geoid::height(real lat, real lon, bool gradp,
                            real& gradn, real& grade) const {
     if (Math::isnan(lat) || Math::isnan(lon)) {
-      if (gradp) gradn = grade = Math::NaN<real>();
-      return Math::NaN<real>();
+      if (gradp) gradn = grade = Math::NaN();
+      return Math::NaN();
     }
     lon = Math::AngNormalize(lon);
     real
@@ -344,8 +344,8 @@ namespace GeographicLib {
         v[k++] = rawval(ix    , iy + 2);
         v[k++] = rawval(ix + 1, iy + 2);
 
-        const real* c3x = iy == 0 ? c3n_ : (iy == _height - 2 ? c3s_ : c3_);
-        real c0x = iy == 0 ? c0n_ : (iy == _height - 2 ? c0s_ : c0_);
+        const int* c3x = iy == 0 ? c3n_ : (iy == _height - 2 ? c3s_ : c3_);
+        int c0x = iy == 0 ? c0n_ : (iy == _height - 2 ? c0s_ : c0_);
         for (unsigned i = 0; i < nterms_; ++i) {
           t[i] = 0;
           for (unsigned j = 0; j < stencilsize_; ++j)
@@ -519,23 +519,23 @@ namespace GeographicLib {
 
   std::string Geoid::DefaultGeoidPath() {
     string path;
-    char* geoidpath = getenv("GEOID_PATH");
+    char* geoidpath = getenv("GEOGRAPHICLIB_GEOID_PATH");
     if (geoidpath)
       path = string(geoidpath);
-    if (path.length())
+    if (!path.empty())
       return path;
     char* datapath = getenv("GEOGRAPHICLIB_DATA");
     if (datapath)
       path = string(datapath);
-    return (path.length() ? path : string(GEOGRAPHICLIB_DATA)) + "/geoids";
+    return (!path.empty() ? path : string(GEOGRAPHICLIB_DATA)) + "/geoids";
   }
 
   std::string Geoid::DefaultGeoidName() {
     string name;
-    char* geoidname = getenv("GEOID_NAME");
+    char* geoidname = getenv("GEOGRAPHICLIB_GEOID_NAME");
     if (geoidname)
       name = string(geoidname);
-    return name.length() ? name : string(GEOID_DEFAULT_NAME);
+    return !name.empty() ? name : string(GEOGRAPHICLIB_GEOID_DEFAULT_NAME);
   }
 
 } // namespace GeographicLib

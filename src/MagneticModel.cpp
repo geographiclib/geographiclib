@@ -15,15 +15,14 @@
 
 #if !defined(GEOGRAPHICLIB_DATA)
 #  if defined(_WIN32)
-#    define GEOGRAPHICLIB_DATA \
-  "C:/Documents and Settings/All Users/Application Data/GeographicLib"
+#    define GEOGRAPHICLIB_DATA "C:/ProgramData/GeographicLib"
 #  else
 #    define GEOGRAPHICLIB_DATA "/usr/local/share/GeographicLib"
 #  endif
 #endif
 
-#if !defined(MAGNETIC_DEFAULT_NAME)
-#  define MAGNETIC_DEFAULT_NAME "wmm2010"
+#if !defined(GEOGRAPHICLIB_MAGNETIC_DEFAULT_NAME)
+#  define GEOGRAPHICLIB_MAGNETIC_DEFAULT_NAME "wmm2010"
 #endif
 
 #if defined(_MSC_VER)
@@ -41,13 +40,13 @@ namespace GeographicLib {
     , _dir(path)
     , _description("NONE")
     , _date("UNKNOWN")
-    , _t0(Math::NaN<real>())
+    , _t0(Math::NaN())
     , _dt0(1)
-    , _tmin(Math::NaN<real>())
-    , _tmax(Math::NaN<real>())
-    , _a(Math::NaN<real>())
-    , _hmin(Math::NaN<real>())
-    , _hmax(Math::NaN<real>())
+    , _tmin(Math::NaN())
+    , _tmax(Math::NaN())
+    , _a(Math::NaN())
+    , _hmin(Math::NaN())
+    , _hmax(Math::NaN())
     , _Nmodels(1)
     , _norm(SphericalHarmonic::SCHMIDT)
     , _earth(earth)
@@ -220,33 +219,33 @@ namespace GeographicLib {
                                       real& Dt, real& It) {
     H = Math::hypot(Bx, By);
     Ht = H ? (Bx * Bxt + By * Byt) / H : Math::hypot(Bxt, Byt);
-    D = (0 - (H ? atan2(-Bx, By) : atan2(-Bxt, Byt))) / Math::degree<real>();
-    Dt = (H ? (By * Bxt - Bx * Byt) / Math::sq(H) : 0) / Math::degree<real>();
+    D = (0 - (H ? atan2(-Bx, By) : atan2(-Bxt, Byt))) / Math::degree();
+    Dt = (H ? (By * Bxt - Bx * Byt) / Math::sq(H) : 0) / Math::degree();
     F = Math::hypot(H, Bz);
     Ft = F ? (H * Ht + Bz * Bzt) / F : Math::hypot(Ht, Bzt);
-    I = (F ? atan2(-Bz, H) : atan2(-Bzt, Ht)) / Math::degree<real>();
-    It = (F ? (Bz * Ht - H * Bzt) / Math::sq(F) : 0) / Math::degree<real>();
+    I = (F ? atan2(-Bz, H) : atan2(-Bzt, Ht)) / Math::degree();
+    It = (F ? (Bz * Ht - H * Bzt) / Math::sq(F) : 0) / Math::degree();
   }
 
   std::string MagneticModel::DefaultMagneticPath() {
     string path;
-    char* magneticpath = getenv("MAGNETIC_PATH");
+    char* magneticpath = getenv("GEOGRAPHICLIB_MAGNETIC_PATH");
     if (magneticpath)
       path = string(magneticpath);
-    if (path.length())
+    if (!path.empty())
       return path;
     char* datapath = getenv("GEOGRAPHICLIB_DATA");
     if (datapath)
       path = string(datapath);
-    return (path.length() ? path : string(GEOGRAPHICLIB_DATA)) + "/magnetic";
+    return (!path.empty() ? path : string(GEOGRAPHICLIB_DATA)) + "/magnetic";
   }
 
   std::string MagneticModel::DefaultMagneticName() {
     string name;
-    char* magneticname = getenv("MAGNETIC_NAME");
+    char* magneticname = getenv("GEOGRAPHICLIB_MAGNETIC_NAME");
     if (magneticname)
       name = string(magneticname);
-    return name.length() ? name : string(MAGNETIC_DEFAULT_NAME);
+    return !name.empty() ? name : string(GEOGRAPHICLIB_MAGNETIC_DEFAULT_NAME);
   }
 
 } // namespace GeographicLib

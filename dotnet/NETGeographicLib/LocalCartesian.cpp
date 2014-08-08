@@ -51,7 +51,7 @@ LocalCartesian::LocalCartesian(double lat0, double lon0, double h0 )
     try
     {
         m_pLocalCartesian = new GeographicLib::LocalCartesian( lat0, lon0, h0,
-            GeographicLib::Geocentric::WGS84 );
+            GeographicLib::Geocentric::WGS84() );
     }
     catch ( std::bad_alloc )
     {
@@ -81,7 +81,7 @@ LocalCartesian::LocalCartesian()
     try
     {
         m_pLocalCartesian = new GeographicLib::LocalCartesian(
-            GeographicLib::Geocentric::WGS84 );
+            GeographicLib::Geocentric::WGS84() );
     }
     catch ( std::bad_alloc )
     {

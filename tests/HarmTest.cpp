@@ -180,8 +180,8 @@ int main() {
     std::vector<real> Z;
     while (std::cin >> lat >> lon) {
       real
-        phi = Math::degree<real>() * lat,
-        lam = Math::degree<real>() * lon,
+        phi = Math::degree() * lat,
+        lam = Math::degree() * lon,
         x = r * (abs(lat) == 90 ? 0 : cos(phi)) * cos(lam),
         y = r * (abs(lat) == 90 ? 0 : cos(phi)) * sin(lam),
         z = r * sin(phi);
@@ -207,12 +207,12 @@ int main() {
     }
     std::cout << "start timing" << std::endl;
     real phi, lam, sum, z, p, dx, dy, dz;
-    lat = 33; phi = lat * Math::degree<real>();
+    lat = 33; phi = lat * Math::degree();
     z = r * sin(phi);
     p = r * cos(phi);
     sum = 0;
     for (int i = 0; i < 100; ++i) {
-      lam = (44 + 0.01*i) * Math::degree<real>();
+      lam = (44 + 0.01*i) * Math::degree();
       sum += harm(p * cos(lam), p * sin(lam), z, dx, dy, dz);
     }
     std::cout << "sum a " << sum << std::endl;

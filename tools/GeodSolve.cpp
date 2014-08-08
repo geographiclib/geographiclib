@@ -59,7 +59,7 @@ std::string DistanceStrings(real s12, real a12,
   using namespace GeographicLib;
   std::string s;
   if (full || !arcmode)
-    s += Utility::str<real>(s12, prec);
+    s += Utility::str(s12, prec);
   if (full)
     s += " ";
   if (full || arcmode)
@@ -75,11 +75,12 @@ real ReadDistance(const std::string& s, bool arcmode) {
 int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
+    Utility::set_digits();
     bool linecalc = false, inverse = false, arcmode = false,
       dms = false, full = false, exact = false;
     real
-      a = Constants::WGS84_a<real>(),
-      f = Constants::WGS84_f<real>();
+      a = Constants::WGS84_a(),
+      f = Constants::WGS84_f();
     real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12, M12, M21, S12;
     real azi2sense = 0;
     int prec = 3;
@@ -218,7 +219,7 @@ int main(int argc, char* argv[]) {
 
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
-    prec = std::min(10 + Math::extradigits, std::max(0, prec));
+    prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     std::string s;
     int retval = 0;
     while (std::getline(*input, s)) {
@@ -254,10 +255,10 @@ int main(int argc, char* argv[]) {
           *output << AzimuthString(azi2 + azi2sense, prec, dms, dmssep) << " "
                   << DistanceStrings(s12, a12, full, arcmode, prec, dms);
           if (full)
-            *output << " " << Utility::str<real>(m12, prec)
-                    << " " << Utility::str<real>(M12, prec+7)
-                    << " " << Utility::str<real>(M21, prec+7)
-                    << " " << Utility::str<real>(S12, std::max(prec-7, 0));
+            *output << " " << Utility::str(m12, prec)
+                    << " " << Utility::str(M12, prec+7)
+                    << " " << Utility::str(M21, prec+7)
+                    << " " << Utility::str(S12, std::max(prec-7, 0));
           *output << eol;
         } else {
           if (linecalc) {
@@ -309,10 +310,10 @@ int main(int argc, char* argv[]) {
           if (full)
             *output << " "
                     << DistanceStrings(s12, a12, full, arcmode, prec, dms)
-                    << " " << Utility::str<real>(m12, prec)
-                    << " " << Utility::str<real>(M12, prec+7)
-                    << " " << Utility::str<real>(M21, prec+7)
-                    << " " << Utility::str<real>(S12, std::max(prec-7, 0));
+                    << " " << Utility::str(m12, prec)
+                    << " " << Utility::str(M12, prec+7)
+                    << " " << Utility::str(M21, prec+7)
+                    << " " << Utility::str(S12, std::max(prec-7, 0));
           *output << eol;
         }
       }

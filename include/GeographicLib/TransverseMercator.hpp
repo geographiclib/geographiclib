@@ -18,7 +18,8 @@
  * GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER can be set to any integer in [4, 8].
  **********************************************************************/
 #  define GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER \
-  (GEOGRAPHICLIB_PRECISION == 2 ? 6 : (GEOGRAPHICLIB_PRECISION == 1 ? 4 : 8))
+  (GEOGRAPHICLIB_PRECISION == 2 ? 6 : \
+   (GEOGRAPHICLIB_PRECISION == 1 ? 4 : 8))
 #endif
 
 namespace GeographicLib {
@@ -80,22 +81,32 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     static const int maxpow_ = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
-    static const real tol_;
-    static const real overflow_;
     static const int numit_ = 5;
+    real tol_;
     real _a, _f, _k0, _e2, _e, _e2m,  _c, _n;
     // _alp[0] and _bet[0] unused
     real _a1, _b1, _alp[maxpow_ + 1], _bet[maxpow_ + 1];
+    static inline real overflow() {
+      // Overflow value s.t. atan(overflow_) = pi/2
+      static const real
+        overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
+      return overflow;
+    }
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
     static inline real tanx(real x) {
-      real t = std::tan(x);
+      using std::tan;
+      real t = tan(x);
       // Write the tests this way to ensure that tanx(NaN()) is NaN()
-      return x >= 0 ? (!(t < 0) ? t : overflow_) : (!(t >= 0) ? t : -overflow_);
+      return x >= 0 ?
+        (!(t <  0) ? t :  overflow()) :
+        (!(t >= 0) ? t : -overflow());
     }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
-    inline real eatanhe(real x) const
-    { return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x); }
+    inline real eatanhe(real x) const {
+      using std::atan;
+      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * atan(_e * x);
+    }
     real taupf(real tau) const;
     real tauf(real taup) const;
 
@@ -107,10 +118,10 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
      * @param[in] k0 central scale factor.
-     * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k0 is
+     * @exception GeographicErr if \e a, (1 &minus; \e f) \e a, or \e k0 is
      *   not positive.
      **********************************************************************/
     TransverseMercator(real a, real f, real k0);
@@ -204,7 +215,7 @@ namespace GeographicLib {
      * and the UTM scale factor.  However, unlike UTM, no false easting or
      * northing is added.
      **********************************************************************/
-    static const TransverseMercator UTM;
+    static const TransverseMercator& UTM();
   };
 
 } // namespace GeographicLib

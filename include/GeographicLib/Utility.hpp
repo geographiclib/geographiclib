@@ -264,7 +264,25 @@ namespace GeographicLib {
      * precision.  With p < 0, there is no manipulation of the format.
      **********************************************************************/
     template<typename T> static std::string str(T x, int p = -1) {
-      if (!std::numeric_limits<T>::is_integer && !Math::isfinite<T>(x))
+      std::ostringstream s;
+      if (p >= 0) s << std::fixed << std::setprecision(p);
+      s << x; return s.str();
+    }
+
+    /**
+     * Convert a Math::real object to a string.
+     *
+     * @param[in] x the value to be converted.
+     * @param[in] p the precision used (default &minus;1).
+     * @exception std::bad_alloc if memory for the string can't be allocated.
+     * @return the string representation.
+     *
+     * If \e p &ge; 0, then the number fixed format is used with p bits of
+     * precision.  With p < 0, there is no manipulation of the format.  This is
+     * an overload of str<T> which deals with inf and nan.
+     **********************************************************************/
+    static std::string str(Math::real x, int p = -1) {
+      if (!Math::isfinite(x))
         return x < 0 ? std::string("-inf") :
           (x > 0 ? std::string("inf") : std::string("nan"));
       std::ostringstream s;
@@ -382,34 +400,39 @@ namespace GeographicLib {
     template<typename ExtT, typename IntT, bool bigendp>
       static inline void readarray(std::istream& str,
                                    IntT array[], size_t num) {
+#if GEOGRAPHICLIB_PRECISION < 4
       if (sizeof(IntT) == sizeof(ExtT) &&
           std::numeric_limits<IntT>::is_integer ==
-          std::numeric_limits<ExtT>::is_integer) {
-        // Data is compatible (aside from the issue of endian-ness).
-        str.read(reinterpret_cast<char *>(array), num * sizeof(ExtT));
-        if (!str.good())
-          throw GeographicErr("Failure reading data");
-        if (bigendp != Math::bigendian) { // endian mismatch -> swap bytes
-          for (size_t i = num; i--;)
-            array[i] = Math::swab<IntT>(array[i]);
-        }
-      } else {
-        const int bufsize = 1024; // read this many values at a time
-        ExtT buffer[bufsize];     // temporary buffer
-        int k = int(num);         // data values left to read
-        int i = 0;                // index into output array
-        while (k) {
-          int n = (std::min)(k, bufsize);
-          str.read(reinterpret_cast<char *>(buffer), n * sizeof(ExtT));
+          std::numeric_limits<ExtT>::is_integer)
+        {
+          // Data is compatible (aside from the issue of endian-ness).
+          str.read(reinterpret_cast<char *>(array), num * sizeof(ExtT));
           if (!str.good())
             throw GeographicErr("Failure reading data");
-          for (int j = 0; j < n; ++j)
-            // fix endian-ness and cast to IntT
-            array[i++] = IntT(bigendp == Math::bigendian ? buffer[j] :
-                              Math::swab<ExtT>(buffer[j]));
-          k -= n;
+          if (bigendp != Math::bigendian) { // endian mismatch -> swap bytes
+            for (size_t i = num; i--;)
+              array[i] = Math::swab<IntT>(array[i]);
+          }
         }
-      }
+      else
+#endif
+        {
+          const int bufsize = 1024; // read this many values at a time
+          ExtT buffer[bufsize];     // temporary buffer
+          int k = int(num);         // data values left to read
+          int i = 0;                // index into output array
+          while (k) {
+            int n = (std::min)(k, bufsize);
+            str.read(reinterpret_cast<char *>(buffer), n * sizeof(ExtT));
+            if (!str.good())
+              throw GeographicErr("Failure reading data");
+            for (int j = 0; j < n; ++j)
+              // fix endian-ness and cast to IntT
+              array[i++] = IntT(bigendp == Math::bigendian ? buffer[j] :
+                                Math::swab<ExtT>(buffer[j]));
+            k -= n;
+          }
+        }
       return;
     }
 
@@ -446,32 +469,37 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
       static inline void writearray(std::ostream& str,
-                                   const IntT array[], size_t num) {
+                                    const IntT array[], size_t num) {
+#if GEOGRAPHICLIB_PRECISION < 4
       if (sizeof(IntT) == sizeof(ExtT) &&
           std::numeric_limits<IntT>::is_integer ==
           std::numeric_limits<ExtT>::is_integer &&
-          bigendp == Math::bigendian) {
-        // Data is compatible (including endian-ness).
-        str.write(reinterpret_cast<const char *>(array), num * sizeof(ExtT));
-        if (!str.good())
-          throw GeographicErr("Failure writing data");
-      } else {
-        const int bufsize = 1024; // write this many values at a time
-        ExtT buffer[bufsize];     // temporary buffer
-        int k = int(num);         // data values left to write
-        int i = 0;                // index into output array
-        while (k) {
-          int n = (std::min)(k, bufsize);
-          for (int j = 0; j < n; ++j)
-            // cast to ExtT and fix endian-ness
-            buffer[j] = bigendp == Math::bigendian ? ExtT(array[i++]) :
-              Math::swab<ExtT>(ExtT(array[i++]));
-          str.write(reinterpret_cast<const char *>(buffer), n * sizeof(ExtT));
+          bigendp == Math::bigendian)
+        {
+          // Data is compatible (including endian-ness).
+          str.write(reinterpret_cast<const char *>(array), num * sizeof(ExtT));
           if (!str.good())
             throw GeographicErr("Failure writing data");
-          k -= n;
         }
-      }
+      else
+#endif
+        {
+          const int bufsize = 1024; // write this many values at a time
+          ExtT buffer[bufsize];     // temporary buffer
+          int k = int(num);         // data values left to write
+          int i = 0;                // index into output array
+          while (k) {
+            int n = (std::min)(k, bufsize);
+            for (int j = 0; j < n; ++j)
+              // cast to ExtT and fix endian-ness
+              buffer[j] = bigendp == Math::bigendian ? ExtT(array[i++]) :
+                Math::swab<ExtT>(ExtT(array[i++]));
+            str.write(reinterpret_cast<const char *>(buffer), n * sizeof(ExtT));
+            if (!str.good())
+              throw GeographicErr("Failure writing data");
+            k -= n;
+          }
+        }
       return;
     }
 
@@ -502,13 +530,26 @@ namespace GeographicLib {
      *   allocated.
      * @return whether a key was found.
      *
-     * A # character and everything after it are discarded.  If the results is
+     * A # character and everything after it are discarded.  If the result is
      * just white space, the routine returns false (and \e key and \e val are
      * not set).  Otherwise the first token is taken to be the key and the rest
      * of the line (trimmed of leading and trailing white space) is the value.
      **********************************************************************/
     static bool ParseLine(const std::string& line,
                           std::string& key, std::string& val);
+
+    /**
+     * Set the binary precision of a real number.
+     *
+     * @param[in] ndigits the number of bits of precision.  If ndigits is 0
+     *   (the default), then determine the precision from the environment
+     *   variable GEOGRAPHICLIB_DIGITS.  If this is undefined, use ndigits =
+     *   256 (i.e., about 77 decimal digits).
+     * @return the resulting number of bits of precision.
+     *
+     * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.
+     **********************************************************************/
+    static int set_digits(int ndigits = 0);
 
   };
 

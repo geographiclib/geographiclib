@@ -77,12 +77,14 @@ namespace NETGeographicLib
         // the finalizer frees the unmanaged memory when the object is destroyed.
         !NormalGravity(void);
     public:
+        /// \cond SKIP
         //! The enumerated standard gravity models.
         enum class StandardModels
         {
             WGS84,  //!< WGS84 gravity model.
             GRS80   //!< GRS80 gravity model.
         };
+        /// \endcond
 
         /** \name Setting up the normal gravity
          **********************************************************************/
@@ -315,5 +317,45 @@ namespace NETGeographicLib
          **********************************************************************/
         Geocentric^ Earth();
         ///@}
+
+        /**
+         * A global instantiation of NormalGravity for the WGS84 ellipsoid.
+        **********************************************************************/
+        static NormalGravity^ WGS84();
+
+        /**
+         * A global instantiation of NormalGravity for the GRS80 ellipsoid.
+        **********************************************************************/
+        static NormalGravity^ GRS80();
+
+        /**
+         * Compute the flattening from the dynamical form factor.
+         *
+         * @param[in] a equatorial radius (meters).
+         * @param[in] GM mass constant of the ellipsoid
+         *   (meters<sup>3</sup>/seconds<sup>2</sup>); this is the product of \e G
+         *   the gravitational constant and \e M the mass of the earth (usually
+         *   including the mass of the earth's atmosphere).
+         * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
+         * @param[in] J2 the dynamical form factor.
+         * @return \e f the flattening of the ellipsoid.
+         **********************************************************************/
+        static double J2ToFlattening(double a, double GM, double omega,
+                                     double J2);
+
+        /**
+         * Compute the dynamical form factor from the flattening.
+         *
+         * @param[in] a equatorial radius (meters).
+         * @param[in] GM mass constant of the ellipsoid
+         *   (meters<sup>3</sup>/seconds<sup>2</sup>); this is the product of \e G
+         *   the gravitational constant and \e M the mass of the earth (usually
+         *   including the mass of the earth's atmosphere).
+         * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
+         * @param[in] f the flattening of the ellipsoid.
+         * @return \e J2 the dynamical form factor.
+         **********************************************************************/
+        static double FlatteningToJ2(double a, double GM, double omega,
+                                     double f);
     };
 } //namespace NETGeographicLib

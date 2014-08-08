@@ -109,7 +109,7 @@ namespace GeographicLib {
      *   -  43d16'12&quot;E 33d26'24&quot;N
      *   -  43:16:12E  33:26:24
      * - MGRS
-     *   -  38SLC301
+     *   -  38SLC30
      *   -  38SLC391014
      *   -  38SLC3918701405
      *   -  37SHT9708

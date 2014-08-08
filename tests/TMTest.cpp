@@ -28,19 +28,20 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
      GeographicLib::Math::extended lat0, GeographicLib::Math::extended lon0,
      GeographicLib::Math::real lat1, GeographicLib::Math::real lon1) {
   using namespace GeographicLib;
+  using std::cos; using std::sqrt;
   typedef Math::real real;
   real
-    phi = real(lat0) * Math::degree<real>(),
+    phi = real(lat0) * Math::degree(),
     e2 = f * (2 - f),
     sinphi = sin(phi),
     n = 1/sqrt(1 - e2 * sinphi * sinphi),
       // See Wikipedia article on latitude
-    hlon = std::cos(phi) * n,
+    hlon = cos(phi) * n,
     hlat = (1 - e2) * n * n * n;
   Math::extended dlon = Math::extended(lon1) - lon0;
   if (dlon >= 180) dlon -= 360;
   else if (dlon < -180) dlon += 360;
-  return a * Math::degree<real>() *
+  return a * Math::degree() *
     Math::hypot(real(Math::extended(lat1) - lat0) * hlat, real(dlon) * hlon);
 }
 
@@ -87,7 +88,7 @@ int main(int argc, char* argv[]) {
     int count = 0;
     real dlat = 0.015, dlon = 0.015, dx = 2e3, dy = 2e3;
     if (series) {
-      const TransverseMercator& tm = TransverseMercator::UTM;
+      const TransverseMercator& tm = TransverseMercator::UTM();
       if (timefor) {
         real x, y, gam, k;
         for (real lat = -80.0; lat <= 84.0; lat += dlat)
@@ -145,7 +146,7 @@ int main(int argc, char* argv[]) {
       d[i] = 100e3 * i;
     d[0] = 10e3;
     d[nbins - 1] = 10001966;
-    const TransverseMercator& tm = TransverseMercator::UTM;
+    const TransverseMercator& tm = TransverseMercator::UTM();
     const TransverseMercatorExact tme(Constants::WGS84_a<real>(),
                                       Constants::WGS84_f<real>(),
                                       Constants::UTM_k0<real>(),
@@ -156,6 +157,7 @@ int main(int argc, char* argv[]) {
     const Geodesic geod(a, f);
     Math::extended lat0l, lon0l, x0l, y0l, gam0l, k0l;
     while (std::cin >> lat0l >> lon0l >> x0l >> y0l >> gam0l >> k0l) {
+      using std::abs; using std::sin;
       real
         lat0 = real(lat0l),
         lon0 = real(lon0l),
@@ -177,21 +179,21 @@ int main(int argc, char* argv[]) {
         tme.Forward(0, lat0, lon0, x, y, gam, k);
       errf = real(Math::hypot(Math::extended(x) - x0l,
                               Math::extended(y) - y0l)) / k0;
-      errgf = real(std::abs(Math::extended(gam) - gam0));
-      errkf = real(std::abs(Math::extended(k) - k0));
+      errgf = real(abs(Math::extended(gam) - gam0));
+      errkf = real(abs(Math::extended(k) - k0));
       if (series) {
         tm.Reverse(0, x0, y0, lat, lon, gam, k);
       } else
         tme.Reverse(0, x0, y0, lat, lon, gam, k);
       errr = dist(a, f, lat0l, lon0l, lat, lon);
-      errgr = real(std::abs(Math::extended(gam) - gam0));
-      errkr = real(std::abs(Math::extended(k) - k0));
+      errgr = real(abs(Math::extended(gam) - gam0));
+      errkr = real(abs(Math::extended(k) - k0));
 
       real
         err = std::max(errf, errr),
         errg = std::max(errgf, errgr)
-        - esterr/(a * std::sin((90 - lat0) * Math::degree<real>())
-                  * Math::degree<real>()),
+        - esterr/(a * sin((90 - lat0) * Math::degree())
+                  * Math::degree()),
         errk = std::max(errkf, errkr) / k0;
       if (dump)
         std::cout << std::fixed << std::setprecision(12)

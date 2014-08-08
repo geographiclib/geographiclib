@@ -51,13 +51,13 @@ namespace GeographicLib {
    * - <b>&gamma;</b> = &nabla;\e U;
    * - <b>&delta;</b> = &nabla;\e T = gravity disturbance vector
    *   = <b>g</b><sub><i>P</i></sub> &minus; <b>&gamma;</b><sub><i>P</i></sub>;
-   * - &delta;\e g = gravity disturbance = \e g<sub><i>P</i></sub> &minus;
+   * - &delta;\e g = gravity disturbance = <i>g</i><sub><i>P</i></sub> &minus;
    *   &gamma;<sub><i>P</i></sub>;
    * - &Delta;<b>g</b> = gravity anomaly vector = <b>g</b><sub><i>P</i></sub>
    *   &minus; <b>&gamma;</b><sub><i>Q</i></sub>; here the line \e PQ is
    *   perpendicular to ellipsoid and the potential at \e P equals the normal
    *   potential at \e Q;
-   * - &Delta;\e g = gravity anomaly = \e g<sub><i>P</i></sub> &minus;
+   * - &Delta;\e g = gravity anomaly = <i>g</i><sub><i>P</i></sub> &minus;
    *   &gamma;<sub><i>Q</i></sub>;
    * - (&xi;, &eta;) deflection of the vertical, the difference in
    *   directions of <b>g</b><sub><i>P</i></sub> and
@@ -490,22 +490,23 @@ namespace GeographicLib {
     /**
      * @return the default path for gravity model data files.
      *
-     * This is the value of the environment variable GRAVITY_PATH, if set;
-     * otherwise, it is $GEOGRAPHICLIB_DATA/gravity if the environment variable
+     * This is the value of the environment variable
+     * GEOGRAPHICLIB_GRAVITY_PATH, if set; otherwise, it is
+     * $GEOGRAPHICLIB_DATA/gravity if the environment variable
      * GEOGRAPHICLIB_DATA is set; otherwise, it is a compile-time default
      * (/usr/local/share/GeographicLib/gravity on non-Windows systems and
-     * C:/Documents and Settings/All Users/Application
-     * Data/GeographicLib/gravity on Windows systems).
+     * C:/ProgramData/GeographicLib/gravity on Windows systems).
      **********************************************************************/
     static std::string DefaultGravityPath();
 
     /**
      * @return the default name for the gravity model.
      *
-     * This is the value of the environment variable GRAVITY_NAME, if set,
-     * otherwise, it is "egm96".  The GravityModel class does not use
-     * this function; it is just provided as a convenience for a calling
-     * program when constructing a GravityModel object.
+     * This is the value of the environment variable
+     * GEOGRAPHICLIB_GRAVITY_NAME, if set; otherwise, it is "egm96".  The
+     * GravityModel class does not use this function; it is just provided as a
+     * convenience for a calling program when constructing a GravityModel
+     * object.
      **********************************************************************/
     static std::string DefaultGravityName();
   };

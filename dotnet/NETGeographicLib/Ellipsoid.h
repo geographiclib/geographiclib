@@ -50,7 +50,7 @@ namespace NETGeographicLib
         // A pointer to the unmanaged GeographicLib::Ellipsoid
         GeographicLib::Ellipsoid* m_pEllipsoid;
 
-        // Th efinalizer frees the unmanaged memory when the object is destroyed.
+        // The finalizer frees the unmanaged memory when the object is destroyed.
         !Ellipsoid();
     public:
         /** \name Constructor

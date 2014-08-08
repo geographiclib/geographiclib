@@ -14,7 +14,7 @@ int main() {
     PolarStereographic proj(Constants::WGS84_a(), Constants::WGS84_f(),
                             Constants::UPS_k0());
     // Alternatively:
-    // const PolarStereographic& proj = PolarStereographic::UPS;
+    // const PolarStereographic& proj = PolarStereographic::UPS();
     bool northp = true;
     {
       // Sample forward calculation

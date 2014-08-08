@@ -40,7 +40,7 @@ set -e
 #   python/setup.py
 #   tests/test-distribution.sh
 
-VERSION=1.36
+VERSION=1.37
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
@@ -318,7 +318,7 @@ done
 
 cd $TEMP/relx/GeographicLib-$VERSION
 echo Files with trailing spaces:
-find . -type f | egrep -v 'Makefile\.in|\.m4|\.png|\.pdf' |
+find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.pdf' |
 xargs grep -l ' $' || true
 echo
 echo Files with tabs:
@@ -349,6 +349,8 @@ ln -s $VERSION $WEBDIST/htdocs/html &&
 make -C $DEVELSOURCE -f makefile-admin distrib-doc
 
 # deploy release packages
+chmod 755 $DEVELSOURCE/GeographicLib-$VERSION-win{32,64}.exe
+chmod 644 $DEVELSOURCE/GeographicLib-$VERSION{.tar.gz,.zip}
 mv $DEVELSOURCE/GeographicLib-$VERSION{.tar.gz,.zip,-win{32,64}.exe} $DEVELSOURCE/distrib
 make -C $DEVELSOURCE -f makefile-admin distrib-files
 

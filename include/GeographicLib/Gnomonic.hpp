@@ -66,7 +66,7 @@ namespace GeographicLib {
    * (<i>r</i>/2<i>a</i>)<sup>3</sup> \e r.
    *
    * The conversions all take place using a Geodesic object (by default
-   * Geodesic::WGS84).  For more information on geodesics see \ref geodesic.
+   * Geodesic::WGS84()).  For more information on geodesics see \ref geodesic.
    *
    * <b>CAUTION:</b> The definition of this projection for a sphere is
    * standard.  However, there is no standard for how it should be extended to
@@ -101,10 +101,9 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Gnomonic {
   private:
     typedef Math::real real;
+    real eps0_, eps_;
     Geodesic _earth;
     real _a, _f;
-    static const real eps0_;
-    static const real eps_;
     static const int numit_ = 10;
   public:
 
@@ -114,11 +113,7 @@ namespace GeographicLib {
      * @param[in] earth the Geodesic object to use for geodesic calculations.
      *   By default this uses the WGS84 ellipsoid.
      **********************************************************************/
-    explicit Gnomonic(const Geodesic& earth = Geodesic::WGS84)
-      : _earth(earth)
-      , _a(_earth.MajorRadius())
-      , _f(_earth.Flattening())
-    {}
+    explicit Gnomonic(const Geodesic& earth = Geodesic::WGS84());
 
     /**
      * Forward projection, from geographic to gnomonic.
@@ -161,7 +156,7 @@ namespace GeographicLib {
      * lon0 should be in the range [&minus;540&deg;, 540&deg;).  \e lat
      * will be in the range [&minus;90&deg;, 90&deg;] and \e lon will
      * be in the range [&minus;180&deg;, 180&deg;).  The scale of the
-     * projection is 1/\e rk<sup>2</sup> in the "radial" direction, \e azi
+     * projection is 1/<i>rk</i><sup>2</sup> in the "radial" direction, \e azi
      * clockwise from true north, and is 1/\e rk in the direction perpendicular
      * to this.  Even though all inputs should return a valid \e lat and \e
      * lon, it's possible that the procedure fails to converge for very large

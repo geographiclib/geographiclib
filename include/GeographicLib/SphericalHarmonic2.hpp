@@ -21,9 +21,10 @@ namespace GeographicLib {
    * \brief Spherical harmonic series with two corrections to the coefficients
    *
    * This classes is similar to SphericalHarmonic, except that the coefficients
-   * \e C<sub>\e nm</sub> are replaced by \e C<sub>\e nm</sub> + \e tau'
-   * C'<sub>\e nm</sub> + \e tau'' C''<sub>\e nm</sub> (and similarly for \e
-   * S<sub>\e nm</sub>).
+   * <i>C</i><sub><i>nm</i></sub> are replaced by
+   * <i>C</i><sub><i>nm</i></sub> + \e tau' <i>C'</i><sub><i>nm</i></sub> + \e
+   * tau'' <i>C''</i><sub><i>nm</i></sub> (and similarly for
+   * <i>S</i><sub><i>nm</i></sub>).
    *
    * Example of use:
    * \include example-SphericalHarmonic2.cpp
@@ -68,17 +69,19 @@ namespace GeographicLib {
     /**
      * Constructor with a full set of coefficients specified.
      *
-     * @param[in] C the coefficients \e C<sub>\e nm</sub>.
-     * @param[in] S the coefficients \e S<sub>\e nm</sub>.
+     * @param[in] C the coefficients <i>C</i><sub><i>nm</i></sub>.
+     * @param[in] S the coefficients <i>S</i><sub><i>nm</i></sub>.
      * @param[in] N the maximum degree and order of the sum
-     * @param[in] C1 the coefficients \e C'<sub>\e nm</sub>.
-     * @param[in] S1 the coefficients \e S'<sub>\e nm</sub>.
+     * @param[in] C1 the coefficients <i>C'</i><sub><i>nm</i></sub>.
+     * @param[in] S1 the coefficients <i>S'</i><sub><i>nm</i></sub>.
      * @param[in] N1 the maximum degree and order of the first correction
-     *   coefficients \e C'<sub>\e nm</sub> and \e S'<sub>\e nm</sub>.
-     * @param[in] C2 the coefficients \e C''<sub>\e nm</sub>.
-     * @param[in] S2 the coefficients \e S''<sub>\e nm</sub>.
+     *   coefficients <i>C'</i><sub><i>nm</i></sub> and
+     *   <i>S'</i><sub><i>nm</i></sub>.
+     * @param[in] C2 the coefficients <i>C''</i><sub><i>nm</i></sub>.
+     * @param[in] S2 the coefficients <i>S''</i><sub><i>nm</i></sub>.
      * @param[in] N2 the maximum degree and order of the second correction
-     *   coefficients \e C'<sub>\e nm</sub> and \e S'<sub>\e nm</sub>.
+     *   coefficients <i>C'</i><sub><i>nm</i></sub> and
+     *   <i>S'</i><sub><i>nm</i></sub>.
      * @param[in] a the reference radius appearing in the definition of the
      *   sum.
      * @param[in] norm the normalization for the associated Legendre
@@ -118,21 +121,21 @@ namespace GeographicLib {
     /**
      * Constructor with a subset of coefficients specified.
      *
-     * @param[in] C the coefficients \e C<sub>\e nm</sub>.
-     * @param[in] S the coefficients \e S<sub>\e nm</sub>.
+     * @param[in] C the coefficients <i>C</i><sub><i>nm</i></sub>.
+     * @param[in] S the coefficients <i>S</i><sub><i>nm</i></sub>.
      * @param[in] N the degree used to determine the layout of \e C and \e S.
      * @param[in] nmx the maximum degree used in the sum.  The sum over \e n is
      *   from 0 thru \e nmx.
      * @param[in] mmx the maximum order used in the sum.  The sum over \e m is
      *   from 0 thru min(\e n, \e mmx).
-     * @param[in] C1 the coefficients \e C'<sub>\e nm</sub>.
-     * @param[in] S1 the coefficients \e S'<sub>\e nm</sub>.
+     * @param[in] C1 the coefficients <i>C'</i><sub><i>nm</i></sub>.
+     * @param[in] S1 the coefficients <i>S'</i><sub><i>nm</i></sub>.
      * @param[in] N1 the degree used to determine the layout of \e C' and \e
      *   S'.
      * @param[in] nmx1 the maximum degree used for \e C' and \e S'.
      * @param[in] mmx1 the maximum order used for \e C' and \e S'.
-     * @param[in] C2 the coefficients \e C''<sub>\e nm</sub>.
-     * @param[in] S2 the coefficients \e S''<sub>\e nm</sub>.
+     * @param[in] C2 the coefficients <i>C''</i><sub><i>nm</i></sub>.
+     * @param[in] S2 the coefficients <i>S''</i><sub><i>nm</i></sub>.
      * @param[in] N2 the degree used to determine the layout of \e C'' and \e
      *   S''.
      * @param[in] nmx2 the maximum degree used for \e C'' and \e S''.

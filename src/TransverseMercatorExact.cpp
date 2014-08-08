@@ -41,21 +41,22 @@
 
 #include <GeographicLib/TransverseMercatorExact.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about constant conditional expressions
+#  pragma warning (disable: 4127)
+#endif
+
 namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real TransverseMercatorExact::tol_ =
-    numeric_limits<real>::epsilon();
-  const Math::real TransverseMercatorExact::tol1_ = real(0.1) * sqrt(tol_);
-  const Math::real TransverseMercatorExact::tol2_ = real(0.1) * tol_;
-  const Math::real TransverseMercatorExact::taytol_ = pow(tol_, real(0.6));
-  // Overflow value s.t. atan(overflow_) = pi/2
-  const Math::real TransverseMercatorExact::overflow_ = 1 / Math::sq(tol_);
-
   TransverseMercatorExact::TransverseMercatorExact(real a, real f, real k0,
                                                    bool extendp)
-    : _a(a)
+    : tol_(numeric_limits<real>::epsilon())
+    , tol1_(real(0.1) * sqrt(tol_))
+    , tol2_(real(0.1) * tol_)
+    , taytol_(pow(tol_, real(0.6)))
+    , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _k0(k0)
     , _mu(_f * (2 - _f))        // e^2
@@ -75,10 +76,12 @@ namespace GeographicLib {
       throw GeographicErr("Scale is not positive");
   }
 
-  const TransverseMercatorExact
-  TransverseMercatorExact::UTM(Constants::WGS84_a<real>(),
-                               Constants::WGS84_f<real>(),
-                               Constants::UTM_k0<real>());
+  const TransverseMercatorExact& TransverseMercatorExact::UTM() {
+    static const TransverseMercatorExact utm(Constants::WGS84_a(),
+                                             Constants::WGS84_f(),
+                                             Constants::UTM_k0());
+    return utm;
+  }
 
   // tau = tan(phi), taup = sinh(psi)
   Math::real TransverseMercatorExact::taup(real tau) const {
@@ -94,7 +97,7 @@ namespace GeographicLib {
       tau = taup/_mv,
       stol = tol_ * max(real(1), abs(taup));
     // min iterations = 1, max iterations = 2; mean = 1.94
-    for (int i = 0; i < numit_; ++i) {
+    for (int i = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
       real
         tau1 = Math::hypot(real(1), tau),
         sig = sinh( _e * Math::atanh(_e * tau / tau1 ) ),
@@ -118,9 +121,9 @@ namespace GeographicLib {
     real
       d1 = sqrt(Math::sq(cnu) + _mv * Math::sq(snu * snv)),
       d2 = sqrt(_mu * Math::sq(cnu) + _mv * Math::sq(cnv)),
-      t1 = (d1 ? snu * dnv / d1 : (snu < 0 ? -overflow_ : overflow_)),
+      t1 = (d1 ? snu * dnv / d1 : (snu < 0 ? -overflow() : overflow())),
       t2 = (d2 ? sinh( _e * Math::asinh(_e * snu / d2) ) :
-            (snu < 0 ? -overflow_ : overflow_));
+            (snu < 0 ? -overflow() : overflow()));
     // psi = asinh(t1) - asinh(t2)
     // taup = sinh(psi)
     taup = t1 * Math::hypot(real(1), t2) - t2 * Math::hypot(real(1), t1);
@@ -145,9 +148,9 @@ namespace GeographicLib {
   bool TransverseMercatorExact::zetainv0(real psi, real lam, real& u, real& v)
     const {
     bool retval = false;
-    if (psi < -_e * Math::pi<real>()/4 &&
-        lam > (1 - 2 * _e) * Math::pi<real>()/2 &&
-        psi < lam - (1 - _e) * Math::pi<real>()/2) {
+    if (psi < -_e * Math::pi()/4 &&
+        lam > (1 - 2 * _e) * Math::pi()/2 &&
+        psi < lam - (1 - _e) * Math::pi()/2) {
       // N.B. this branch is normally not taken because psi < 0 is converted
       // psi > 0 by Forward.
       //
@@ -159,14 +162,14 @@ namespace GeographicLib {
       // Inverting this gives:
       real
         psix = 1 - psi / _e,
-        lamx = (Math::pi<real>()/2 - lam) / _e;
+        lamx = (Math::pi()/2 - lam) / _e;
       u = Math::asinh(sin(lamx) / Math::hypot(cos(lamx), sinh(psix))) *
         (1 + _mu/2);
       v = atan2(cos(lamx), sinh(psix)) * (1 + _mu/2);
       u = _Eu.K() - u;
       v = _Ev.K() - v;
-    } else if (psi < _e * Math::pi<real>()/2 &&
-               lam > (1 - 2 * _e) * Math::pi<real>()/2) {
+    } else if (psi < _e * Math::pi()/2 &&
+               lam > (1 - 2 * _e) * Math::pi()/2) {
       // At w = w0 = i * Ev.K(), we have
       //
       //     zeta = zeta0 = i * (1 - _e) * pi/2
@@ -179,14 +182,14 @@ namespace GeographicLib {
       // When inverting this, we map arg(w - w0) = [-90, 0] to
       // arg(zeta - zeta0) = [-90, 180]
       real
-        dlam = lam - (1 - _e) * Math::pi<real>()/2,
+        dlam = lam - (1 - _e) * Math::pi()/2,
         rad = Math::hypot(psi, dlam),
         // atan2(dlam-psi, psi+dlam) + 45d gives arg(zeta - zeta0) in range
         // [-135, 225).  Subtracting 180 (since multiplier is negative) makes
         // range [-315, 45).  Multiplying by 1/3 (for cube root) gives range
         // [-105, 15).  In particular the range [-90, 180] in zeta space maps
         // to [-90, 0] in w space as required.
-        ang = atan2(dlam-psi, psi+dlam) - real(0.75) * Math::pi<real>();
+        ang = atan2(dlam-psi, psi+dlam) - real(0.75) * Math::pi();
       // Error using this guess is about 0.21 * (rad/e)^(5/3)
       retval = rad < _e * taytol_;
       rad = Math::cbrt(3 / (_mv * _e) * rad);
@@ -200,8 +203,8 @@ namespace GeographicLib {
       v = Math::asinh(sin(lam) / Math::hypot(cos(lam), sinh(psi)));
       u = atan2(sinh(psi), cos(lam));
       // But scale to put 90,0 on the right place
-      u *= _Eu.K() / (Math::pi<real>()/2);
-      v *= _Eu.K() / (Math::pi<real>()/2);
+      u *= _Eu.K() / (Math::pi()/2);
+      v *= _Eu.K() / (Math::pi()/2);
     }
     return retval;
   }
@@ -216,7 +219,7 @@ namespace GeographicLib {
       return;
     real stol2 = tol2_ / Math::sq(max(psi, real(1)));
     // min iterations = 2, max iterations = 6; mean = 4.0
-    for (int i = 0, trip = 0; i < numit_; ++i) {
+    for (int i = 0, trip = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
       real snu, cnu, dnu, snv, cnv, dnv;
       _Eu.sncndn(u, snu, cnu, dnu);
       _Ev.sncndn(v, snv, cnv, dnv);
@@ -299,7 +302,7 @@ namespace GeographicLib {
         rad = Math::hypot(xi, deta),
         // Map the range [-90, 180] in sigma space to [-90, 0] in w space.  See
         // discussion in zetainv0 on the cut for ang.
-        ang = atan2(deta-xi, xi+deta) - real(0.75) * Math::pi<real>();
+        ang = atan2(deta-xi, xi+deta) - real(0.75) * Math::pi();
       // Error using this guess is about 0.068 * rad^(5/3)
       retval = rad < 2 * taytol_;
       rad = Math::cbrt(3 / _mv * rad);
@@ -320,7 +323,7 @@ namespace GeographicLib {
     if (sigmainv0(xi, eta, u, v))
       return;
     // min iterations = 2, max iterations = 7; mean = 3.9
-    for (int i = 0, trip = 0; i < numit_; ++i) {
+    for (int i = 0, trip = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
       real snu, cnu, dnu, snv, cnv, dnv;
       _Eu.sncndn(u, snu, cnu, dnu);
       _Ev.sncndn(v, snv, cnv, dnv);
@@ -385,8 +388,8 @@ namespace GeographicLib {
       lon = 180 - lon;
     }
     real
-      phi = lat * Math::degree<real>(),
-      lam = lon * Math::degree<real>(),
+      phi = lat * Math::degree(),
+      lam = lon * Math::degree(),
       tau = tanx(phi);
 
     // u,v = coordinates for the Thompson TM, Lee 54
@@ -419,7 +422,7 @@ namespace GeographicLib {
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
       tau=taupinv(tau);
       Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-      gamma /= Math::degree<real>();
+      gamma /= Math::degree();
     }
     if (backside)
       gamma = 180 - gamma;
@@ -461,13 +464,13 @@ namespace GeographicLib {
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
       tau = taupinv(tau);
       phi = atan(tau);
-      lat = phi / Math::degree<real>();
-      lon = lam / Math::degree<real>();
+      lat = phi / Math::degree();
+      lon = lam / Math::degree();
       Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-      gamma /= Math::degree<real>();
+      gamma /= Math::degree();
     } else {
-      tau = overflow_;
-      phi = Math::pi<real>()/2;
+      tau = overflow();
+      phi = Math::pi()/2;
       lat = 90;
       lon = lam = gamma = 0;
       k = 1;

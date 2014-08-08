@@ -2,7 +2,7 @@
  * \file Planimeter.cpp
  * \brief Command line utility for measuring the area of geodesic polygons
  *
- * Copyright (c) Charles Karney (2010-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -31,6 +31,7 @@
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/GeoCoords.hpp>
+#include <GeographicLib/Ellipsoid.hpp>
 
 #if defined(_MSC_VER)
 // Squelch warnings about constant conditional expressions
@@ -43,10 +44,13 @@ int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
+    Utility::set_digits();
     real
-      a = Constants::WGS84_a<real>(),
-      f = Constants::WGS84_f<real>();
-    bool reverse = false, sign = true, polyline = false;
+      a = Constants::WGS84_a(),
+      f = Constants::WGS84_f();
+    bool reverse = false, sign = true, polyline = false,
+      exact = false, authalic = false;
+    int prec = 6;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
 
@@ -69,6 +73,21 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 2;
+      } else if (arg == "-p") {
+        if (++m == argc) return usage(1, true);
+        try {
+          prec = Utility::num<int>(std::string(argv[m]));
+        }
+        catch (const std::exception&) {
+          std::cerr << "Precision " << argv[m] << " is not a number\n";
+          return 1;
+        }
+      } else if (arg == "-E") {
+        exact = true;
+        authalic = false;
+      } else if (arg == "-Q") {
+        exact = false;
+        authalic = true;
       } else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
@@ -134,10 +153,21 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
+    const Ellipsoid ellip(a, f);
+    if (authalic) {
+      using std::sqrt;
+      a = sqrt(ellip.Area() / (4 * Math::pi()));
+      f = 0;
+    }
     const Geodesic geod(a, f);
+    const GeodesicExact geode(a, f);
     PolygonArea poly(geod, polyline);
+    PolygonAreaExact polye(geode, polyline);
     GeoCoords p;
 
+    // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
+    // 10^-11 sec (= 0.3 nm).
+    prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     std::string s;
     real perimeter, area;
     unsigned num;
@@ -162,28 +192,34 @@ int main(int argc, char* argv[]) {
         }
       }
       if (endpoly) {
-        num = poly.Compute(reverse, sign, perimeter, area);
+        num = exact ? polye.Compute(reverse, sign, perimeter, area) :
+          poly.Compute(reverse, sign, perimeter, area);
         if (num > 0) {
-          *output << num << " "
-                  << Utility::str<real>(perimeter, 8 + Math::extradigits+1);
-          if (!polyline)
-            *output << " " << Utility::str<real>(area, 3  + Math::extradigits+1);
+          *output << num << " " << Utility::str(perimeter, prec);
+          if (!polyline) {
+            *output << " " << Utility::str(area, std::max(0, prec - 5));
+          }
           *output << eol;
         }
-        poly.Clear();
+        exact ? polye.Clear() : poly.Clear();
         eol = "\n";
-      } else
-        poly.AddPoint(p.Latitude(), p.Longitude());
+      } else {
+        exact ? polye.AddPoint(p.Latitude(), p.Longitude()) :
+          poly.AddPoint(authalic ? ellip.AuthalicLatitude(p.Latitude()) :
+                        p.Latitude(),
+                        p.Longitude());
+      }
     }
-    num = poly.Compute(reverse, sign, perimeter, area);
+    num = exact ? polye.Compute(reverse, sign, perimeter, area):
+      poly.Compute(reverse, sign, perimeter, area);
     if (num > 0) {
-      *output << num << " "
-              << Utility::str<real>(perimeter, 8 + Math::extradigits+1);
-      if (!polyline)
-        *output << " " << Utility::str<real>(area, 3 + Math::extradigits+1);
+      *output << num << " " << Utility::str(perimeter, prec);
+      if (!polyline) {
+        *output << " " << Utility::str(area, std::max(0, prec - 5));
+      }
       *output << eol;
     }
-    poly.Clear();
+    exact ? polye.Clear() : poly.Clear();
     eol = "\n";
     return 0;
   }

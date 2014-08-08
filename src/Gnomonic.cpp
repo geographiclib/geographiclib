@@ -18,8 +18,13 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real Gnomonic::eps0_ = numeric_limits<real>::epsilon();
-  const Math::real Gnomonic::eps_ = real(0.01) * sqrt(eps0_);
+  Gnomonic::Gnomonic(const Geodesic& earth)
+    : eps0_(numeric_limits<real>::epsilon())
+    , eps_(real(0.01) * sqrt(eps0_))
+    , _earth(earth)
+    , _a(_earth.MajorRadius())
+    , _f(_earth.Flattening())
+  {}
 
   void Gnomonic::Forward(real lat0, real lon0, real lat, real lon,
                          real& x, real& y, real& azi, real& rk)
@@ -31,10 +36,10 @@ namespace GeographicLib {
                       t, azi0, azi, m, M, t, t);
     rk = M;
     if (M <= 0)
-      x = y = Math::NaN<real>();
+      x = y = Math::NaN();
     else {
       real rho = m/M;
-      azi0 *= Math::degree<real>();
+      azi0 *= Math::degree();
       x = rho * sin(azi0);
       y = rho * cos(azi0);
     }
@@ -44,7 +49,7 @@ namespace GeographicLib {
                          real& lat, real& lon, real& azi, real& rk)
     const {
     real
-      azi0 = atan2(x, y) / Math::degree<real>(),
+      azi0 = atan2(x, y) / Math::degree(),
       rho = Math::hypot(x, y),
       s = _a * atan(rho/_a);
     bool little = rho <= _a;
@@ -73,7 +78,7 @@ namespace GeographicLib {
     if (trip) {
       lat = lat1; lon = lon1; azi = azi1; rk = M;
     } else
-      lat = lon = azi = rk = Math::NaN<real>();
+      lat = lon = azi = rk = Math::NaN();
     return;
   }
 

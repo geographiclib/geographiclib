@@ -835,7 +835,7 @@ namespace GeographicLib {
         real(1125899906842624.L))/real(4503599627370496.L);
       break;
     default:
-      STATIC_ASSERT(nA1_ == 30, "Bad value of nA1_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nA1_ == 30, "Bad value of nA1_");
       t = 0;
     }
     return (t + eps) / (1 - eps);
@@ -1015,7 +1015,7 @@ namespace GeographicLib {
       c[30] = -real(125280277081421.L)*d/real(2161727821137838080.L);
       break;
     default:
-      STATIC_ASSERT(nC1_ == 30, "Bad value of nC1_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nC1_ == 30, "Bad value of nC1_");
     }
   }
 
@@ -1350,7 +1350,7 @@ namespace GeographicLib {
         real(182929433787470496587153418485760.L);
       break;
     default:
-      STATIC_ASSERT(nC1p_ == 30, "Bad value of nC1p_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nC1p_ == 30, "Bad value of nC1p_");
     }
   }
 
@@ -1373,7 +1373,7 @@ namespace GeographicLib {
         real(1125899906842624.L))/real(4503599627370496.L);
       break;
     default:
-      STATIC_ASSERT(nA2_ == 30, "Bad value of nA2_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nA2_ == 30, "Bad value of nA2_");
       t = 0;
     }
     return t * (1 - eps) - eps;
@@ -1568,7 +1568,7 @@ namespace GeographicLib {
       c[30] = real(7391536347803839.L)*d/real(2161727821137838080.L);
       break;
     default:
-      STATIC_ASSERT(nC2_ == 30, "Bad value of nC2_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nC2_ == 30, "Bad value of nC2_");
     }
   }
 
@@ -1675,7 +1675,7 @@ namespace GeographicLib {
       _A3x[29] = -real(1676397495375.L)/real(2251799813685248.L);
       break;
     default:
-      STATIC_ASSERT(nA3_ == 30, "Bad value of nA3_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nA3_ == 30, "Bad value of nA3_");
     }
   }
 
@@ -3220,7 +3220,7 @@ namespace GeographicLib {
       _C3x[434] = real(125280277081421.L)/real(1044835113549955072.L);
       break;
     default:
-      STATIC_ASSERT(nC3_ == 30, "Bad value of nC3_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nC3_ == 30, "Bad value of nC3_");
     }
   }
 
@@ -6160,12 +6160,12 @@ namespace GeographicLib {
       _C4x[464] = 1/real(12769026871558087949280.L);
       break;
     default:
-      STATIC_ASSERT(nC4_ == 30, "Bad value of nC4_");
+      GEOGRAPHICLIB_STATIC_ASSERT(nC4_ == 30, "Bad value of nC4_");
     }
   }
 
   template class Geodesic30<double>;
-#if HAVE_LONG_DOUBLE
+#if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
   template class Geodesic30<long double>;
 #endif
 

@@ -102,7 +102,7 @@ precision relative to 1 m.  See L</PRECISION>.
 
 use "exact" algorithms (based on elliptic integrals) for the geodesic
 calculations.  These are more accurate than the (default) series
-expansions for |I<f>| > 0.02.
+expansions for |I<f>| E<gt> 0.02.
 
 =item B<--comment-delimiter>
 
@@ -212,9 +212,9 @@ the geodesic quadrilateral with corners (I<lat1>,I<lon1>), (0,I<lon1>),
 I<prec> gives precision of the output with I<prec> = 0 giving 1 m
 precision, I<prec> = 3 giving 1 mm precision, etc.  I<prec> is the
 number of digits after the decimal point for lengths.  For decimal
-degrees, the number of digits after the decimal point is 5 + I<prec>.
+degrees, the number of digits after the decimal point is I<prec> + 5.
 For DMS (degree, minute, seconds) output, the number of digits after the
-decimal point in the seconds component is 1 + I<prec>.  The minimum
+decimal point in the seconds component is I<prec> + 1.  The minimum
 value of I<prec> is 0 and the maximum is 10.
 
 =head1 ERRORS

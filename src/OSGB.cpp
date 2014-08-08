@@ -17,8 +17,11 @@ namespace GeographicLib {
   const string OSGB::letters_ = "ABCDEFGHJKLMNOPQRSTUVWXYZ";
   const string OSGB::digits_ = "0123456789";
 
-  const TransverseMercator
-  OSGB::OSGBTM_(MajorRadius(), Flattening(), CentralScale());
+  const TransverseMercator& OSGB::OSGBTM() {
+    static const TransverseMercator osgbtm(MajorRadius(), Flattening(),
+                                           CentralScale());
+    return osgbtm;
+  }
 
   Math::real OSGB::northoffset_ = 0;
   bool OSGB::init_ = false;
@@ -26,7 +29,7 @@ namespace GeographicLib {
   Math::real OSGB::computenorthoffset() {
     if (!init_) {
       real x, y;
-      OSGBTM_.Forward(real(0), OriginLatitude(), real(0), x, y);
+      OSGBTM().Forward(real(0), OriginLatitude(), real(0), x, y);
       northoffset_ = FalseNorthing() - y;
       init_ = true;
     }

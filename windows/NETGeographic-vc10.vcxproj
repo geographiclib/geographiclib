@@ -177,6 +177,7 @@
     <ClInclude Include="../dotnet/NETGeographicLib/TransverseMercator.h" />
     <ClInclude Include="../dotnet/NETGeographicLib/TransverseMercatorExact.h" />
     <ClInclude Include="../dotnet/NETGeographicLib/UTMUPS.h" />
+    <ClInclude Include="..\dotnet\NETGeographicLib\Rhumb.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="../dotnet/NETGeographicLib/Accumulator.cpp" />
@@ -222,6 +223,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\dotnet\NETGeographicLib\Rhumb.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="../dotnet/NETGeographicLib/ReadMe.txt" />

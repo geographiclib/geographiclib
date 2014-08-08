@@ -44,6 +44,7 @@ namespace Projections
             m_magneticPage.Controls.Add(new MagneticPanel());
             m_polyPage.Controls.Add(new PolyPanel());
             m_accumPage.Controls.Add(new AccumPanel());
+            m_rhumbTabPage.Controls.Add(new RhumbPanel());
         }
     }
 }

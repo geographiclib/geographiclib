@@ -40,21 +40,28 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     static const int numit_ = 10;
-    static const real stol_;
-    real _a, _f, _f1, _f12, _e2, _e12, _n, _b;
+    real stol_;
+    real _a, _f, _f1, _f12, _e2, _e, _e12, _n, _b;
     TransverseMercator _tm;
     EllipticFunction _ell;
     AlbersEqualArea _au;
-    static real tand(real x) {
+    static inline real tand(real x) {
+      using std::abs; using std::tan;
       return
-        std::abs(x) == real(90) ? (x < 0 ?
-                                   - TransverseMercator::overflow_
-                                   : TransverseMercator::overflow_) :
-        std::tan(x * Math::degree<real>());
+        abs(x) == real(90) ? (x < 0 ?
+                              - TransverseMercator::overflow()
+                              : TransverseMercator::overflow()) :
+        tan(x * Math::degree());
     }
-    static real atand(real x)
-    { return std::atan(x) / Math::degree<real>(); }
+    static inline real atand(real x)
+    { using std::atan; return atan(x) / Math::degree(); }
 
+    // These are the alpha and beta coefficients in the Krueger series from
+    // TransverseMercator.  Thy are used by RhumbSolve to compute
+    // (psi2-psi1)/(mu2-mu1).
+    const Math::real* ConformalToRectifyingCoeffs() const { return _tm._alp; }
+    const Math::real* RectifyingToConformalCoeffs() const { return _tm._bet; }
+    friend class Rhumb; friend class RhumbLine;
   public:
     /** \name Constructor
      **********************************************************************/
@@ -65,9 +72,9 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
-     * @exception GeographicErr if \e a or (1 &minus; \e f ) \e a is not
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
+     * @exception GeographicErr if \e a or (1 &minus; \e f) \e a is not
      *   positive.
      **********************************************************************/
     Ellipsoid(real a, real f);
@@ -108,7 +115,7 @@ namespace GeographicLib {
      *   a sphere with the same volume is cbrt(\e V / (4&pi;/3)).
      **********************************************************************/
     Math::real Volume() const
-    { return (4 * Math::pi<real>()) * Math::sq(_a) * _b / 3; }
+    { return (4 * Math::pi()) * Math::sq(_a) * _b / 3; }
     ///@}
 
     /** \name %Ellipsoid shape
@@ -310,8 +317,10 @@ namespace GeographicLib {
      * defines the Mercator projection.  For a sphere &psi; =
      * sinh<sup>&minus;1</sup> tan &phi;.
      *
-     * &phi; must lie in the range [&minus;90&deg;, 90&deg;]; the
-     * result is undefined if this condition does not hold.
+     * &phi; must lie in the range [&minus;90&deg;, 90&deg;]; the result is
+     * undefined if this condition does not hold.  The value returned for &phi;
+     * = &plusmn;90&deg; is some (positive or negative) large but finite value,
+     * such that InverseIsometricLatitude returns the original value of &phi;.
      **********************************************************************/
     Math::real IsometricLatitude(real phi) const;
 
@@ -319,7 +328,8 @@ namespace GeographicLib {
      * @param[in] psi the isometric latitude (degrees).
      * @return &phi; the geographic latitude (degrees).
      *
-     * The returned value &phi; lies in [&minus;90&deg;, 90&deg;].
+     * The returned value &phi; lies in [&minus;90&deg;, 90&deg;].  For a
+     * sphere &phi; = tan<sup>&minus;1</sup> sinh &psi;.
      **********************************************************************/
     Math::real InverseIsometricLatitude(real psi) const;
     ///@}
@@ -460,7 +470,7 @@ namespace GeographicLib {
      * The returned value \e f lies in (&minus;&infin;, 1).
      **********************************************************************/
     static Math::real EccentricitySqToFlattening(real e2)
-    { return e2 / (std::sqrt(1 - e2) + 1); }
+    { using std::sqrt; return e2 / (sqrt(1 - e2) + 1); }
 
     /**
      * @param[in] f = (\e a &minus; \e b) / \e a, the flattening.
@@ -484,7 +494,7 @@ namespace GeographicLib {
      * The returned value \e f lies in (&minus;&infin;, 1).
      **********************************************************************/
     static Math::real SecondEccentricitySqToFlattening(real ep2)
-    { return ep2 / (std::sqrt(1 + ep2) + 1 + ep2); }
+    { using std::sqrt; return ep2 / (sqrt(1 + ep2) + 1 + ep2); }
 
     /**
      * @param[in] f = (\e a &minus; \e b) / \e a, the flattening.
@@ -528,8 +538,7 @@ namespace GeographicLib {
      * A global instantiation of Ellipsoid with the parameters for the WGS84
      * ellipsoid.
      **********************************************************************/
-    static const Ellipsoid WGS84;
-
+    static const Ellipsoid& WGS84();
   };
 
 } // namespace GeographicLib

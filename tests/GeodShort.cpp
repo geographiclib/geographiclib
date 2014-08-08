@@ -20,7 +20,6 @@
 
 using namespace GeographicLib;
 using namespace std;
-typedef Math::real real;
 
 // a class to produce random reals in [0,1)
 template<typename T> class rand_num {
@@ -34,10 +33,13 @@ public:
 
 class GeodShort {
 private:
+  typedef Math::real real;
   real _a, _f, _f1, _b, _e2, _ep2, _e;
   EllipticFunction _E;
-  inline real eatanhe(real x) const
-  { return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x); }
+  inline real eatanhe(real x) const {
+    using std::atan;
+    return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * atan(_e * x);
+  }
   static inline real psi0f(real phi) { return Math::asinh(tan(phi)); }
   static inline real invpsi0f(real psi) { return atan(sinh(psi)); }
   inline real psif(real phi) { return psi0f(phi) - eatanhe(sin(phi)); }
@@ -54,7 +56,7 @@ private:
       sbet12 = sbet2 * cbet1 - cbet2 * sbet1,
       sbet12a = sbet2 * cbet1 + cbet2 * sbet1,
       somg12 = sin(omg12), comg12 = cos(omg12);
-    real 
+    real
       salp1 = cbet2 * somg12,
       calp1 = (comg12 >= 0 ?
                sbet12 + cbet2 * sbet1 * Math::sq(somg12) / (1 + comg12) :
@@ -68,8 +70,8 @@ private:
       calp2 = sbet12 - cbet1 * sbet2 * Math::sq(somg12) / (1 + comg12),
       sig12 = atan2(ssig12, csig12);
 
-    azi1 = atan2(salp1, calp1) / Math::degree<real>();
-    azi2 = atan2(salp2, calp2) / Math::degree<real>();
+    azi1 = atan2(salp1, calp1) / Math::degree();
+    azi2 = atan2(salp2, calp2) / Math::degree();
     return sig12;
   }
 public:
@@ -86,9 +88,9 @@ public:
                real& azi1, real& azi2) {
     int mode = 1;
     real
-      phi1 = Math::degree<real>() * lat1,
-      phi2 = Math::degree<real>() * lat2,
-      lam12 = Math::degree<real>() * Math::AngNormalize(lon2 - lon1),
+      phi1 = Math::degree() * lat1,
+      phi2 = Math::degree() * lat2,
+      lam12 = Math::degree() * Math::AngNormalize(lon2 - lon1),
       sbet1 = _f1 * sin(phi1), cbet1 = cos(phi1),
       sbet2 = _f1 * sin(phi2), cbet2 = cos(phi2);
     SinCosNorm(sbet1, cbet1); SinCosNorm(sbet2, cbet2);
@@ -110,9 +112,9 @@ public:
   real Inverse2(real lat1, real lon1, real lat2, real lon2,
                real& azi1, real& azi2) {
     real
-      phi1 = Math::degree<real>() * lat1,
-      phi2 = Math::degree<real>() * lat2,
-      lam12 = Math::degree<real>() * Math::AngNormalize(lon2 - lon1),
+      phi1 = Math::degree() * lat1,
+      phi2 = Math::degree() * lat2,
+      lam12 = Math::degree() * Math::AngNormalize(lon2 - lon1),
       sbet1 = _f1 * sin(phi1), cbet1 = cos(phi1),
       sbet2 = _f1 * sin(phi2), cbet2 = cos(phi2);
     SinCosNorm(sbet1, cbet1); SinCosNorm(sbet2, cbet2);
@@ -140,9 +142,9 @@ public:
                 real& azi1, real& azi2) {
     int mode = 2;
     real
-      phi1 = Math::degree<real>() * lat1,
-      phi2 = Math::degree<real>() * lat2,
-      lam12 = Math::degree<real>() * Math::AngNormalize(lon2 - lon1),
+      phi1 = Math::degree() * lat1,
+      phi2 = Math::degree() * lat2,
+      lam12 = Math::degree() * Math::AngNormalize(lon2 - lon1),
       m = 0.5,
       phim = ( abs(phi1) >= abs(phi2) ?
                (1 - m) * phi1 + m * phi2 :
@@ -185,9 +187,9 @@ public:
   real Bowring1(real lat1, real lon1, real lat2, real lon2,
                 real& azi1, real& azi2) {
     real
-      phi1 = Math::degree<real>() * lat1,
-      phi2 = Math::degree<real>() * lat2,
-      lam12 = Math::degree<real>() * Math::AngNormalize(lon2 - lon1),
+      phi1 = Math::degree() * lat1,
+      phi2 = Math::degree() * lat2,
+      lam12 = Math::degree() * Math::AngNormalize(lon2 - lon1),
       bet1 = atan(_f1 * tan(phi1)),
       bet2 = atan(_f1 * tan(phi2)),
       betm = (bet1 + bet2)/2,
@@ -211,9 +213,9 @@ public:
                 real& azi1, real& azi2) {
     real highfact = 1;
     real
-      phi1 = Math::degree<real>() * lat1,
-      phi2 = Math::degree<real>() * lat2,
-      lam12 = Math::degree<real>() * Math::AngNormalize(lon2 - lon1),
+      phi1 = Math::degree() * lat1,
+      phi2 = Math::degree() * lat2,
+      lam12 = Math::degree() * Math::AngNormalize(lon2 - lon1),
       bet1 = atan(_f1 * tan(phi1)),
       bet2 = atan(_f1 * tan(phi2)),
       betm = (bet1 + bet2)/2,
@@ -251,6 +253,7 @@ int main(int argc, char* argv[]) {
       cerr << "Usage: GeodShort f sig\n";
       return 1;
     }
+    typedef Math::real real;
     real
       f = Utility::fract<real>(string(argv[1])),
       sig = Utility::num<real>(string(argv[2]));
@@ -265,9 +268,9 @@ int main(int argc, char* argv[]) {
         ge.Inverse(0, 0, 90, 0, m);
       else
         g.Inverse(0, 0, 90, 0, m);
-      norm = max(m, Math::pi<real>()/2 * g.MajorRadius());
-      consist = min(m, Math::pi<real>()/2 * g.MajorRadius()) /
-        (Math::pi<real>()/2);
+      norm = max(m, Math::pi()/2 * g.MajorRadius());
+      consist = min(m, Math::pi()/2 * g.MajorRadius()) /
+        (Math::pi()/2);
     }
     unsigned seed = time(0);
     rand_num<real> U(seed);

@@ -93,7 +93,7 @@ LambertConformalConic::LambertConformalConic()
     try
     {
         m_pLambertConformalConic = new GeographicLib::LambertConformalConic(
-            GeographicLib::LambertConformalConic::Mercator );
+            GeographicLib::LambertConformalConic::Mercator() );
     }
     catch ( std::bad_alloc )
     {

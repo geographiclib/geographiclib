@@ -17,29 +17,30 @@
 /**
  * Are C++11 math functions available?
  **********************************************************************/
-#if !defined(GEOGRAPHICLIB_CPLUSPLUS11_MATH)
+#if !defined(GEOGRAPHICLIB_CXX11_MATH)
 // Recent versions of g++ -std=c++11 (4.7 and later?) set __cplusplus to 201103
 // and support the new C++11 mathematical functions, std::atanh, etc.  However
 // the Android toolchain, which uses g++ -std=c++11 (4.8 as of 2014-03-11,
 // according to Pullan Lu), does not support std::atanh.  Android toolchains
 // might define __ANDROID__ or ANDROID; so need to check both.
 #  if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ >= 7 \
-  && __cplusplus >= 201103 && !(defined(__ANDROID__) || defined(ANDROID))
-#    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
+  && __cplusplus >= 201103 && \
+  !(defined(__ANDROID__) || defined(ANDROID) || defined(__CYGWIN__))
+#    define GEOGRAPHICLIB_CXX11_MATH 1
 // Visual C++ 12 supports these functions
 #  elif defined(_MSC_VER) && _MSC_VER >= 1800
-#    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
+#    define GEOGRAPHICLIB_CXX11_MATH 1
 #  else
-#    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 0
+#    define GEOGRAPHICLIB_CXX11_MATH 0
 #  endif
 #endif
 
-#if !defined(WORDS_BIGENDIAN)
-#  define WORDS_BIGENDIAN 0
+#if !defined(GEOGRAPHICLIB_WORDS_BIGENDIAN)
+#  define GEOGRAPHICLIB_WORDS_BIGENDIAN 0
 #endif
 
-#if !defined(HAVE_LONG_DOUBLE)
-#  define HAVE_LONG_DOUBLE 0
+#if !defined(GEOGRAPHICLIB_HAVE_LONG_DOUBLE)
+#  define GEOGRAPHICLIB_HAVE_LONG_DOUBLE 0
 #endif
 
 #if !defined(GEOGRAPHICLIB_PRECISION)
@@ -48,8 +49,9 @@
  * float (single precision); 2 (the default) means double; 3 means long double;
  * 4 is reserved for quadruple precision.  Nearly all the testing has been
  * carried out with doubles and that's the recommended configuration.  In order
- * for long double to be used, HAVE_LONG_DOUBLE needs to be defined.  Note that
- * with Microsoft Visual Studio, long double is the same as double.
+ * for long double to be used, GEOGRAPHICLIB_HAVE_LONG_DOUBLE needs to be
+ * defined.  Note that with Microsoft Visual Studio, long double is the same as
+ * double.
  **********************************************************************/
 #  define GEOGRAPHICLIB_PRECISION 2
 #endif
@@ -57,8 +59,31 @@
 #include <cmath>
 #include <algorithm>
 #include <limits>
-#if defined(_LIBCPP_VERSION)
-#include <type_traits>
+
+#if GEOGRAPHICLIB_PRECISION == 4
+#include <boost/multiprecision/float128.hpp>
+#include <boost/math/special_functions/hypot.hpp>
+#include <boost/math/special_functions/expm1.hpp>
+#include <boost/math/special_functions/log1p.hpp>
+#include <boost/math/special_functions/atanh.hpp>
+#include <boost/math/special_functions/asinh.hpp>
+#include <boost/math/special_functions/cbrt.hpp>
+#elif GEOGRAPHICLIB_PRECISION == 5
+#include <mpreal.h>
+#endif
+
+#if GEOGRAPHICLIB_PRECISION > 3
+// volatile keyword makes no sense for multiprec types
+#define GEOGRAPHICLIB_VOLATILE
+// Signal a convergence failure with multiprec types by throwing an exception
+// at loop exit.
+#define GEOGRAPHICLIB_PANIC \
+  (throw GeographicLib::GeographicErr("Convergence failure"), false)
+#else
+#define GEOGRAPHICLIB_VOLATILE volatile
+// Ignore convergence failures with standard floating points types by allowing
+// loop to exit cleanly.
+#define GEOGRAPHICLIB_PANIC false
 #endif
 
 namespace GeographicLib {
@@ -76,14 +101,14 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Math {
   private:
     void dummy() {
-      STATIC_ASSERT(GEOGRAPHICLIB_PRECISION >= 1 &&
-                    GEOGRAPHICLIB_PRECISION <= 3,
-                    "Bad value of precision");
+      GEOGRAPHICLIB_STATIC_ASSERT(GEOGRAPHICLIB_PRECISION >= 1 &&
+                                  GEOGRAPHICLIB_PRECISION <= 5,
+                                  "Bad value of precision");
     }
     Math();                     // Disable constructor
   public:
 
-#if HAVE_LONG_DOUBLE
+#if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
     /**
      * The extended precision type for real numbers, used for some testing.
      * This is long double on computers with this type; otherwise it is double.
@@ -105,31 +130,91 @@ namespace GeographicLib {
     typedef float real;
 #elif GEOGRAPHICLIB_PRECISION == 3
     typedef extended real;
+#elif GEOGRAPHICLIB_PRECISION == 4
+    typedef boost::multiprecision::float128 real;
+#elif GEOGRAPHICLIB_PRECISION == 5
+    typedef mpfr::mpreal real;
 #else
     typedef double real;
 #endif
 
     /**
+     * @return the number of bits of precision in a real number.
+     **********************************************************************/
+    static inline int digits() {
+#if GEOGRAPHICLIB_PRECISION != 5
+      return std::numeric_limits<real>::digits;
+#else
+      return std::numeric_limits<real>::digits();
+#endif
+    }
+
+    /**
+     * Set the binary precision of a real number.
+     *
+     * @param[in] ndigits the number of bits of precision.
+     * @return the resulting number of bits of precision.
+     *
+     * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.
+     **********************************************************************/
+    static inline int set_digits(int ndigits) {
+#if GEOGRAPHICLIB_PRECISION != 5
+      (void)ndigits;
+#else
+      mpfr::mpreal::set_default_prec(ndigits >= 2 ? ndigits : 2);
+#endif
+      return digits();
+    }
+
+    /**
+     * @return the number of decimal digits of precision in a real number.
+     **********************************************************************/
+    static inline int digits10() {
+#if GEOGRAPHICLIB_PRECISION != 5
+      return std::numeric_limits<real>::digits10;
+#else
+      return std::numeric_limits<real>::digits10();
+#endif
+    }
+
+    /**
+     * Number of additional decimal digits of precision for real relative to
+     * double (0 for float).
+     **********************************************************************/
+    static inline int extra_digits() {
+      return
+        digits10() > std::numeric_limits<double>::digits10 ?
+        digits10() - std::numeric_limits<double>::digits10 : 0;
+    }
+
+#if GEOGRAPHICLIB_PRECISION <= 3
+    /**
      * Number of additional decimal digits of precision of real relative to
      * double (0 for float).
+     *
+     * <b>DEPRECATED</b>: use extra_digits() instead
      **********************************************************************/
     static const int extradigits =
       std::numeric_limits<real>::digits10 >
       std::numeric_limits<double>::digits10 ?
       std::numeric_limits<real>::digits10 -
       std::numeric_limits<double>::digits10 : 0;
+#endif
 
     /**
      * true if the machine is big-endian.
      **********************************************************************/
-    static const bool bigendian = WORDS_BIGENDIAN;
+    static const bool bigendian = GEOGRAPHICLIB_WORDS_BIGENDIAN;
 
     /**
      * @tparam T the type of the returned value.
      * @return &pi;.
      **********************************************************************/
-    template<typename T> static inline T pi()
-    { return std::atan2(T(0), -T(1)); }
+    template<typename T> static inline T pi() {
+      using std::atan2;
+      static const T pi = atan2(T(0), T(-1));
+      return pi;
+    }
     /**
      * A synonym for pi<real>().
      **********************************************************************/
@@ -139,8 +224,10 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return the number of radians in a degree.
      **********************************************************************/
-    template<typename T> static inline T degree()
-    { return pi<T>() / T(180); }
+    template<typename T> static inline T degree() {
+      static const T degree = pi<T>() / 180;
+      return degree;
+    }
     /**
      * A synonym for degree<real>().
      **********************************************************************/
@@ -156,7 +243,6 @@ namespace GeographicLib {
     template<typename T> static inline T sq(T x)
     { return x * x; }
 
-#if defined(DOXYGEN)
     /**
      * The hypotenuse function avoiding underflow and overflow.
      *
@@ -166,97 +252,55 @@ namespace GeographicLib {
      * @return sqrt(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>).
      **********************************************************************/
     template<typename T> static inline T hypot(T x, T y) {
-      x = std::abs(x); y = std::abs(y);
-      T a = (std::max)(x, y), b = (std::min)(x, y) / (a ? a : 1);
-      return a * std::sqrt(1 + b * b);
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::hypot; return hypot(x, y);
+#else
+      using std::abs; using std::sqrt;
+      x = abs(x); y = abs(y);
+      if (x < y) std::swap(x, y); // Now x >= y >= 0
+      y /= (x ? x : 1);
+      return x * sqrt(1 + y * y);
       // For an alternative (square-root free) method see
       // C. Moler and D. Morrision (1983) http://dx.doi.org/10.1147/rd.276.0577
       // and A. A. Dubrulle (1983) http://dx.doi.org/10.1147/rd.276.0582
-    }
-#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH || (defined(_MSC_VER) && _MSC_VER >= 1700)
-    template<typename T> static inline T hypot(T x, T y)
-    { return std::hypot(x, y); }
-#  if HAVE_LONG_DOUBLE && defined(_MSC_VER) && _MSC_VER == 1700
-    // Visual C++ 11 doesn't have a long double overload for std::hypot --
-    // reported to MS on 2013-07-18
-    // http://connect.microsoft.com/VisualStudio/feedback/details/794416
-    // (Visual C++ 12 is OK) Suppress the resulting "loss of data warning" with
-    static inline long double hypot(long double x, long double y)
-    { return std::hypot(double(x), double(y)); }
-#  endif
-#elif defined(_MSC_VER)
-    static inline double hypot(double x, double y)
-    { return _hypot(x, y); }
-#  if _MSC_VER < 1400
-    // Visual C++ 7.1/VS .NET 2003 does not have _hypotf()
-    static inline float hypot(float x, float y)
-    { return float(_hypot(x, y)); }
-#  else
-    static inline float hypot(float x, float y)
-    { return _hypotf(x, y); }
-#  endif
-#  if HAVE_LONG_DOUBLE
-    static inline long double hypot(long double x, long double y)
-    { return _hypot(double(x), double(y)); } // Suppress loss of data warning
-#  endif
-#else
-    // Use overloading to define generic versions
-    static inline double hypot(double x, double y)
-    { return ::hypot(x, y); }
-    static inline float hypot(float x, float y)
-    { return ::hypotf(x, y); }
-#  if HAVE_LONG_DOUBLE
-    static inline long double hypot(long double x, long double y)
-    { return ::hypotl(x, y); }
-#  endif
 #endif
+    }
 
-#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
     /**
-     * exp(\e x) &minus; 1 accurate near \e x = 0.  This is taken from
-     * N. J. Higham, Accuracy and Stability of Numerical Algorithms, 2nd
-     * Edition (SIAM, 2002), Sec 1.14.1, p 19.
+     * exp(\e x) &minus; 1 accurate near \e x = 0.
      *
      * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return exp(\e x) &minus; 1.
      **********************************************************************/
     template<typename T> static inline T expm1(T x) {
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::expm1; return expm1(x);
+#else
+      using std::exp; using std::abs; using std::log;
       volatile T
-        y = std::exp(x),
+        y = exp(x),
         z = y - 1;
       // The reasoning here is similar to that for log1p.  The expression
       // mathematically reduces to exp(x) - 1, and the factor z/log(y) = (y -
       // 1)/log(y) is a slowly varying quantity near y = 1 and is accurately
       // computed.
-      return std::abs(x) > 1 ? z : (z == 0 ? x : x * z / std::log(y));
-    }
-#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
-    template<typename T> static inline T expm1(T x)
-    { return std::expm1(x); }
-#else
-    static inline double expm1(double x) { return ::expm1(x); }
-    static inline float expm1(float x) { return ::expm1f(x); }
-#  if HAVE_LONG_DOUBLE
-    static inline long double expm1(long double x)
-    { return ::expm1l(x); }
-#  endif
+      return abs(x) > 1 ? z : (z == 0 ? x : x * z / log(y));
 #endif
+    }
 
-#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
     /**
      * log(1 + \e x) accurate near \e x = 0.
-     *
-     * This is taken from D. Goldberg,
-     * <a href="http://dx.doi.org/10.1145/103162.103163">What every computer
-     * scientist should know about floating-point arithmetic</a> (1991),
-     * Theorem 4.  See also, Higham (op. cit.), Answer to Problem 1.5, p 528.
      *
      * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return log(1 + \e x).
      **********************************************************************/
     template<typename T> static inline T log1p(T x) {
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::log1p; return log1p(x);
+#else
+      using std::log;
       volatile T
         y = 1 + x,
         z = y - 1;
@@ -264,75 +308,44 @@ namespace GeographicLib {
       // approx x, thus log(y)/z (which is nearly constant near z = 0) returns
       // a good approximation to the true log(1 + x)/x.  The multiplication x *
       // (log(y)/z) introduces little additional error.
-      return z == 0 ? x : x * std::log(y) / z;
-    }
-#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
-    template<typename T> static inline T log1p(T x)
-    { return std::log1p(x); }
-#else
-    static inline double log1p(double x) { return ::log1p(x); }
-    static inline float log1p(float x) { return ::log1pf(x); }
-#  if HAVE_LONG_DOUBLE
-    static inline long double log1p(long double x)
-    { return ::log1pl(x); }
-#  endif
+      return z == 0 ? x : x * log(y) / z;
 #endif
+    }
 
-#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
     /**
-     * The inverse hyperbolic sine function.  This is defined in terms of
-     * Math::log1p(\e x) in order to maintain accuracy near \e x = 0.  In
-     * addition, the odd parity of the function is enforced.
+     * The inverse hyperbolic sine function.
      *
      * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return asinh(\e x).
      **********************************************************************/
     template<typename T> static inline T asinh(T x) {
-      T y = std::abs(x);     // Enforce odd parity
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::asinh; return asinh(x);
+#else
+      using std::abs; T y = abs(x); // Enforce odd parity
       y = log1p(y * (1 + y/(hypot(T(1), y) + 1)));
       return x < 0 ? -y : y;
-    }
-#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
-    template<typename T> static inline T asinh(T x)
-    { return std::asinh(x); }
-#else
-    static inline double asinh(double x) { return ::asinh(x); }
-    static inline float asinh(float x) { return ::asinhf(x); }
-#  if HAVE_LONG_DOUBLE
-    static inline long double asinh(long double x)
-    { return ::asinhl(x); }
-#  endif
 #endif
+    }
 
-#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
     /**
-     * The inverse hyperbolic tangent function.  This is defined in terms of
-     * Math::log1p(\e x) in order to maintain accuracy near \e x = 0.  In
-     * addition, the odd parity of the function is enforced.
+     * The inverse hyperbolic tangent function.
      *
      * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return atanh(\e x).
      **********************************************************************/
     template<typename T> static inline T atanh(T x) {
-      T y = std::abs(x);     // Enforce odd parity
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::atanh; return atanh(x);
+#else
+      using std::abs; T y = abs(x); // Enforce odd parity
       y = log1p(2 * y/(1 - y))/2;
       return x < 0 ? -y : y;
-    }
-#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
-    template<typename T> static inline T atanh(T x)
-    { return std::atanh(x); }
-#else
-    static inline double atanh(double x) { return ::atanh(x); }
-    static inline float atanh(float x) { return ::atanhf(x); }
-#  if HAVE_LONG_DOUBLE
-    static inline long double atanh(long double x)
-    { return ::atanhl(x); }
-#  endif
 #endif
+    }
 
-#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
     /**
      * The cube root function.
      *
@@ -341,19 +354,14 @@ namespace GeographicLib {
      * @return the real cube root of \e x.
      **********************************************************************/
     template<typename T> static inline T cbrt(T x) {
-      T y = std::pow(std::abs(x), 1/T(3)); // Return the real cube root
-      return x < 0 ? -y : y;
-    }
-#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
-    template<typename T> static inline T cbrt(T x)
-    { return std::cbrt(x); }
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::cbrt; return cbrt(x);
 #else
-    static inline double cbrt(double x) { return ::cbrt(x); }
-    static inline float cbrt(float x) { return ::cbrtf(x); }
-#  if HAVE_LONG_DOUBLE
-    static inline long double cbrt(long double x) { return ::cbrtl(x); }
-#  endif
+      using std::abs; using std::pow;
+      T y = pow(abs(x), 1/T(3)); // Return the real cube root
+      return x < 0 ? -y : y;
 #endif
+    }
 
     /**
      * The error-free sum of two numbers.
@@ -368,9 +376,9 @@ namespace GeographicLib {
      * the same as one of the first two arguments.)
      **********************************************************************/
     template<typename T> static inline T sum(T u, T v, T& t) {
-      volatile T s = u + v;
-      volatile T up = s - v;
-      volatile T vpp = s - up;
+      GEOGRAPHICLIB_VOLATILE T s = u + v;
+      GEOGRAPHICLIB_VOLATILE T up = s - v;
+      GEOGRAPHICLIB_VOLATILE T vpp = s - up;
       up -= u;
       vpp -= v;
       t = -(up + vpp);
@@ -401,7 +409,7 @@ namespace GeographicLib {
      * The range of \e x is unrestricted.
      **********************************************************************/
     template<typename T> static inline T AngNormalize2(T x)
-    { return AngNormalize<T>(std::fmod(x, T(360))); }
+    { using std::fmod; return AngNormalize<T>(fmod(x, T(360))); }
 
     /**
      * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]
@@ -427,7 +435,6 @@ namespace GeographicLib {
       return d + t;
     }
 
-#if defined(DOXYGEN)
     /**
      * Test for finiteness.
      *
@@ -436,32 +443,13 @@ namespace GeographicLib {
      * @return true if number is finite, false if NaN or infinite.
      **********************************************************************/
     template<typename T> static inline bool isfinite(T x) {
-      return std::abs(x) <= (std::numeric_limits<T>::max)();
-    }
-#elif (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
-    template<typename T> static inline bool isfinite(T x) {
-      return _finite(double(x)) != 0;
-    }
-#elif defined(_LIBCPP_VERSION)
-    // libc++ implements std::isfinite() as a template that only allows
-    // floating-point types.  isfinite is invoked by Utility::str to format
-    // numbers conveniently and this allows integer arguments, so we need to
-    // allow Math::isfinite to work on integers.
-    template<typename T> static inline
-    typename std::enable_if<std::is_floating_point<T>::value, bool>::type
-      isfinite(T x) {
-      return std::isfinite(x);
-    }
-    template<typename T> static inline
-    typename std::enable_if<!std::is_floating_point<T>::value, bool>::type
-      isfinite(T /*x*/) {
-      return true;
-    }
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::isfinite; return isfinite(x);
 #else
-    template<typename T> static inline bool isfinite(T x) {
-      return std::isfinite(x);
-    }
+      using std::abs;
+      return abs(x) <= (std::numeric_limits<T>::max)();
 #endif
+    }
 
     /**
      * The NaN (not a number)
@@ -487,10 +475,10 @@ namespace GeographicLib {
      * @return true if argument is a NaN.
      **********************************************************************/
     template<typename T> static inline bool isnan(T x) {
-#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
-      return x != x;
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::isnan; return isnan(x);
 #else
-      return std::isnan(x);
+      return x != x;
 #endif
     }
 
@@ -527,6 +515,41 @@ namespace GeographicLib {
         std::swap(b.c[i], b.c[sizeof(T) - 1 - i]);
       return b.r;
     }
+
+#if GEOGRAPHICLIB_PRECISION == 4
+    typedef boost::math::policies::policy
+      < boost::math::policies::domain_error
+        <boost::math::policies::errno_on_error>,
+        boost::math::policies::pole_error
+        <boost::math::policies::errno_on_error>,
+        boost::math::policies::overflow_error
+        <boost::math::policies::errno_on_error>,
+        boost::math::policies::evaluation_error
+        <boost::math::policies::errno_on_error> >
+      boost_special_functions_policy;
+
+    static inline real hypot(real x, real y)
+    { return boost::math::hypot(x, y, boost_special_functions_policy()); }
+
+    static inline real expm1(real x)
+    { return boost::math::expm1(x, boost_special_functions_policy()); }
+
+    static inline real log1p(real x)
+    { return boost::math::log1p(x, boost_special_functions_policy()); }
+
+    static inline real asinh(real x)
+    { return boost::math::asinh(x, boost_special_functions_policy()); }
+
+    static inline real atanh(real x)
+    { return boost::math::atanh(x, boost_special_functions_policy()); }
+
+    static inline real cbrt(real x)
+    { return boost::math::cbrt(x, boost_special_functions_policy()); }
+
+    static inline bool isnan(real x) { return boost::math::isnan(x); }
+
+    static inline bool isfinite(real x) { return boost::math::isfinite(x); }
+#endif
   };
 
 } // namespace GeographicLib

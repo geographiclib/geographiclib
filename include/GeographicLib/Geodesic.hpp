@@ -15,9 +15,12 @@
 #if !defined(GEOGRAPHICLIB_GEODESIC_ORDER)
 /**
  * The order of the expansions used by Geodesic.
+ * GEOGRAPHICLIB_GEODESIC_ORDER can be set to any integer in [0, 8].
  **********************************************************************/
 #  define GEOGRAPHICLIB_GEODESIC_ORDER \
-  (GEOGRAPHICLIB_PRECISION == 2 ? 6 : (GEOGRAPHICLIB_PRECISION == 1 ? 3 : 7))
+  (GEOGRAPHICLIB_PRECISION == 2 ? 6 : \
+   (GEOGRAPHICLIB_PRECISION == 1 ? 3 : \
+    (GEOGRAPHICLIB_PRECISION == 3 ? 7 : 8)))
 #endif
 
 namespace GeographicLib {
@@ -182,15 +185,8 @@ namespace GeographicLib {
     static const int nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
     static const unsigned maxit1_ = 20;
-    static const unsigned maxit2_ = maxit1_ +
-      std::numeric_limits<real>::digits + 10;
-
-    static const real tiny_;
-    static const real tol0_;
-    static const real tol1_;
-    static const real tol2_;
-    static const real tolb_;
-    static const real xthresh_;
+    unsigned maxit2_;
+    real tiny_, tol0_, tol1_, tol2_, tolb_, xthresh_;
 
     enum captype {
       CAP_NONE = 0U,
@@ -204,16 +200,16 @@ namespace GeographicLib {
     };
 
     static real SinCosSeries(bool sinp,
-                             real sinx, real cosx, const real c[], int n)
-     ;
+                             real sinx, real cosx, const real c[], int n);
     static inline real AngRound(real x) {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
       // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
       // is about 1000 times more resolution than we get with angles around 90
       // degrees.)  We use this to avoid having to deal with near singular
       // cases when x is non-zero but tiny (e.g., 1.0e-200).
+      using std::abs;
       const real z = 1/real(16);
-      volatile real y = std::abs(x);
+      GEOGRAPHICLIB_VOLATILE real y = abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
       return x < 0 ? -y : y;
@@ -340,9 +336,9 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-     *   to 1/\e f.
-     * @exception GeographicErr if \e a or (1 &minus; \e f ) \e a is not
+     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
+     *   flattening to 1/\e f.
+     * @exception GeographicErr if \e a or (1 &minus; \e f) \e a is not
      *   positive.
      **********************************************************************/
     Geodesic(real a, real f);
@@ -879,14 +875,14 @@ namespace GeographicLib {
      *   polygon.
      **********************************************************************/
     Math::real EllipsoidArea() const
-    { return 4 * Math::pi<real>() * _c2; }
+    { return 4 * Math::pi() * _c2; }
     ///@}
 
     /**
      * A global instantiation of Geodesic with the parameters for the WGS84
      * ellipsoid.
      **********************************************************************/
-    static const Geodesic WGS84;
+    static const Geodesic& WGS84();
 
   };
 

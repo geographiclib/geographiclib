@@ -12,6 +12,7 @@
 #include "GeographicLib/PolygonArea.hpp"
 #include "PolygonArea.h"
 #include "Geodesic.h"
+#include "GeodesicExact.h"
 #include "NETGeographicLib.h"
 
 using namespace NETGeographicLib;
@@ -50,7 +51,7 @@ PolygonArea::PolygonArea(const bool polyline )
     try
     {
         m_pPolygonArea = new GeographicLib::PolygonArea(
-            GeographicLib::Geodesic::WGS84, polyline );
+            GeographicLib::Geodesic::WGS84(), polyline );
     }
     catch (std::bad_alloc)
     {
@@ -126,3 +127,115 @@ double PolygonArea::MajorRadius::get()
 
 //*****************************************************************************
 double PolygonArea::Flattening::get() { return m_pPolygonArea->Flattening(); }
+
+//*****************************************************************************
+// PolygonAreaExact
+//*****************************************************************************
+PolygonAreaExact::!PolygonAreaExact(void)
+{
+    if ( m_pPolygonArea != NULL )
+    {
+        delete m_pPolygonArea;
+        m_pPolygonArea = NULL;
+    }
+}
+
+//*****************************************************************************
+PolygonAreaExact::PolygonAreaExact(GeodesicExact^ earth, bool polyline )
+{
+    try
+    {
+        const GeographicLib::GeodesicExact* pGeodesic =
+            reinterpret_cast<const GeographicLib::GeodesicExact*>(
+                earth->GetUnmanaged()->ToPointer() );
+        m_pPolygonArea = new GeographicLib::PolygonAreaExact( *pGeodesic, polyline );
+    }
+    catch (std::bad_alloc)
+    {
+        throw gcnew GeographicErr( BADALLOC );
+    }
+}
+
+//*****************************************************************************
+PolygonAreaExact::PolygonAreaExact(const bool polyline )
+{
+    try
+    {
+        m_pPolygonArea = new GeographicLib::PolygonAreaExact(
+            GeographicLib::GeodesicExact::WGS84(), polyline );
+    }
+    catch (std::bad_alloc)
+    {
+        throw gcnew GeographicErr( BADALLOC );
+    }
+}
+
+//*****************************************************************************
+void PolygonAreaExact::Clear() { m_pPolygonArea->Clear(); }
+
+//*****************************************************************************
+void PolygonAreaExact::AddPoint(double lat, double lon)
+{
+    m_pPolygonArea->AddPoint( lat, lon );
+}
+
+//*****************************************************************************
+void PolygonAreaExact::AddEdge(double azi, double s)
+{
+    m_pPolygonArea->AddEdge( azi, s );
+}
+
+//*****************************************************************************
+unsigned PolygonAreaExact::Compute(bool reverse, bool sign,
+                    [System::Runtime::InteropServices::Out] double% perimeter,
+                    [System::Runtime::InteropServices::Out] double% area)
+{
+    double lperimeter, larea;
+    unsigned out = m_pPolygonArea->Compute( reverse, sign, lperimeter, larea );
+    perimeter = lperimeter;
+    area = larea;
+    return out;
+}
+
+//*****************************************************************************
+unsigned PolygonAreaExact::TestPoint(double lat, double lon, bool reverse, bool sign,
+                    [System::Runtime::InteropServices::Out] double% perimeter,
+                    [System::Runtime::InteropServices::Out] double% area)
+{
+    double lperimeter, larea;
+    unsigned out = m_pPolygonArea->TestPoint( lat, lon, reverse, sign, lperimeter, larea );
+    perimeter = lperimeter;
+    area = larea;
+    return out;
+}
+
+//*****************************************************************************
+unsigned PolygonAreaExact::TestEdge(double azi, double s, bool reverse, bool sign,
+                    [System::Runtime::InteropServices::Out] double% perimeter,
+                    [System::Runtime::InteropServices::Out] double% area)
+{
+    double lperimeter, larea;
+    unsigned out = m_pPolygonArea->TestEdge( azi, s, reverse, sign, lperimeter, larea );
+    perimeter = lperimeter;
+    area = larea;
+    return out;
+}
+
+//*****************************************************************************
+void PolygonAreaExact::CurrentPoint(
+    [System::Runtime::InteropServices::Out] double% lat,
+    [System::Runtime::InteropServices::Out] double% lon)
+{
+    double llat, llon;
+    m_pPolygonArea->CurrentPoint( llat, llon );
+    lat = llat;
+    lon = llon;
+}
+
+//*****************************************************************************
+double PolygonAreaExact::MajorRadius::get()
+{ return m_pPolygonArea->MajorRadius(); }
+
+//*****************************************************************************
+double PolygonAreaExact::Flattening::get()
+{ return m_pPolygonArea->Flattening(); }
