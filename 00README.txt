@@ -62,6 +62,7 @@ Files
       Gravity.cpp -- evaluate gravity
       MagneticField.cpp -- evaluate magnetic field
       Planimeter.cpp -- computer polygon areas
+      RhumbSolve.cpp -- calculate rhumb lines
       geographiclib-get-geoids -- download geoid datasets
       geographiclib-get-magnetic -- download geomagnetic models
 

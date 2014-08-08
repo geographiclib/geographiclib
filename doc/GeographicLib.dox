@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.37
-\date 2014-mm-dd
+\date 2014-08-08
 
 \section abstract Abstract
 
@@ -4631,8 +4631,7 @@ difference formula
 where the angle \f$z\f$ is given by
 \f[
 \begin{aligned}
-\sin z &= \frac{2t}{1 + t^2},\\
-\cos z &= \frac{(1-t)(1+t)}{1 + t^2},\\
+\sin z &= \frac{2t}{1 + t^2},\quad\cos z = \frac{(1-t)(1+t)}{1 + t^2},\\
 t &=
 \frac{(x-y)\Delta[\sin](x,y)}
 {\sin x\sqrt{1 - k^2\sin^2y} + \sin y\sqrt{1 - k^2\sin^2x}}
@@ -5446,8 +5445,8 @@ The following steps needed to be taken
      compile-time constant.  It becomes
      <code>numeric_limits&lt;double&gt;\::digits()</code>.
    - Depending on the precision cos(&pi;/2) might be negative.
-     Similarly atan(tan(&pi;/2)) may evaluate to &minus;&pi/2.
-     GeographicLib already handles this, because this happens with long
+     Similarly atan(tan(&pi;/2)) may evaluate to &minus;&pi;/2.
+     GeographicLib already handled this, because this happens with long
      doubles (64 bits in the fraction).
    - The precision needs to be set in each thread in a multi-processing
      applications (for an example, see
@@ -5463,7 +5462,7 @@ The following steps needed to be taken
        above);
      - now use inline function to combine two long long ints each with at
        most 52 significant bits;
-     - also needed to simply one routine in GeodesicExact which took
+     - also needed to simplify one routine in GeodesicExact which took
        inordinately long (15 minutes) to compile using g++;
      - but Visual Studio 12 then complained (with an <a
        href="http://connect.microsoft.com/VisualStudio/feedback/details/920594">
@@ -5502,7 +5501,8 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
-   (released 2014-mm-dd)
+   (released 2014-08-08)
+   - Add \ref highprec.
    - <b>INCOMPATIBLE CHANGE</b>: the static instantiations of various
      classes for the WGS84 ellipsoid have been changed to a
      <a href="http://www.parashift.com/c++-faq/static-init-order-on-first-use.html">
@@ -5547,7 +5547,6 @@ of the git repository for GeographicLib.
      <code>MAGNETIC_DEFAULT_NAME</code>, <code>PGM_PIXEL_WIDTH</code>,
      <code>HAVE_LONG_DOUBLE</code>, <code>STATIC_ASSERT</code>,
      <code>WORDS_BIGENDIAN</code>.
-   - Add \ref highprec.
    - Changes to PolygonArea:
      - introduce PolygonAreaT which takes a geodesic class as a parameter;
      - PolygonArea and PolygonAreaExact are typedef'ed to
@@ -5559,7 +5558,7 @@ of the git repository for GeographicLib.
    - Add -p option to <a href="Planimeter.1.html">Planimeter</a>,
      <a href="ConicProj.1.html">ConicProj</a>,
      <a href="GeodesicProj.1.html">GeodesicProj</a>,
-     <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>,
+     <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>.
    - Add Rhumb and RhumbLine classes and the
      <a href="RhumbSolve.1.html">RhumbSolve</a> utility; see \ref rhumb
      for more information.
@@ -5576,7 +5575,7 @@ of the git repository for GeographicLib.
      - enable searching the online documentation;
      - add macros <code>GEOGRAPHICLIB_VERSION</code> and
        <code>GEOGRAPHICLIB_VERSION_NUM</code>;
-     - add solution and project files for Visual Studio Express 2010 .
+     - add solution and project files for Visual Studio Express 2010.
 
  - <a href="http://geographiclib.sf.net/1.36">Version 1.36</a>
    (released 2014-05-13)
