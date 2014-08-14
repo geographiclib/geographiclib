@@ -24,7 +24,8 @@
    letter to S. Klingenstierna (1728),
    in ''Johannis Bernoulli, Opera Omnia'', Vol. 4 (Bousquet, Geneva, 1742),
    108--128.[[BR]]
-   http://books.google.com/books?id=Yw1bAAAAQAAJ&pg=PA108 (figures missing)
+   http://books.google.com/books?id=Yw1bAAAAQAAJ&pg=PA108 [[BR]]
+   figures: http://geographiclib.sf.net/geodesic-papers/bernoulli28-figs.pdf
  * J. Cassini,[[BR]]
    ''De la carte de la France et de la perpendiculaire a la méridienne
    de Paris [The map of France and the perpendicular to the meridian of
