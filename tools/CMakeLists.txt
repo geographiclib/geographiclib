@@ -29,6 +29,12 @@ if (MSVC OR CMAKE_CONFIGURATION_TYPES)
     DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 endif ()
 
+if (APPLE AND NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+  # Ensure that the package is relocatable
+  set_target_properties (${TOOLS} PROPERTIES
+    INSTALL_RPATH "@loader_path/../lib${LIB_SUFFIX}")
+endif ()
+
 if (MSVC)
   get_target_property (_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
   if (_LIBTYPE STREQUAL "SHARED_LIBRARY")

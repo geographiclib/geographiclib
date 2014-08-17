@@ -220,8 +220,14 @@ if (NOT MSVC)
     # Use relative path so that package is relocatable
     set (CMAKE_INSTALL_RPATH "\$ORIGIN/../lib${LIB_SUFFIX}")
   else ()
-    # Need absolute path with MacOSx
-    set (CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+    if (CMAKE_VERSION VERSION_LESS 2.8.12)
+      # Use absolute path with MacOSx
+      set (CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+    else ()
+      # cmake 2.8.12 introduced a way to make the package relocatable.
+      # See also INSTALL_RPATH property on the tools.
+      set (CMAKE_MACOSX_RPATH ON)
+    endif ()
   endif ()
 endif ()
 
