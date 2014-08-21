@@ -4656,18 +4656,19 @@ The use of
 <a href="https://en.wikipedia.org/wiki/Clenshaw_algorithm#Geodetic_applications">
 Clenshaw summation</a> for summing series of the form,
 \f[
-g(x) = \sum_{k=1}^N c_k \sin(2kx),
+g(x) = \sum_{k=1}^N c_k \sin kx,
 \f]
 is well established.  However when computing divided differences, we are
 interested in evaluating
 \f[
-g(x)-g(y) = \sum_{k=1}^N 2 c_k \sin\bigl(k(x-y)\bigr)\cos\bigl(k(x+y)\bigr)
+g(x)-g(y) = \sum_{k=1}^N 2 c_k
+\sin\bigl({\textstyle\frac12}k(x-y)\bigr)
+\cos\bigl({\textstyle\frac12}k(x+y)\bigr)
 \f]
 and the applicability of Clenshaw summation is not so clear.  Botnev and
 Ustinov assert that the method can be used in this case (but they give
 no details).  It turns out that Clenshaw summation can be used if we
-simultaneously compute the sum \f$g(x)+g(y)\f$ and perform a matrix
-summation,
+simultaneously compute \f$g(x)+g(y)\f$ and perform a matrix summation,
 \f[
 \mathsf G(x,y) = \begin{bmatrix}
 (g(x) + g(y)) / 2\\
@@ -4678,37 +4679,39 @@ where
 \f[
 \mathsf F_k(x,y)=
 \begin{bmatrix}
-     \sin kp \cos kd\\
-(2/d)\sin kd \cos kp
+     \cos kd \sin kp\\
+\frac{\sin kd}d \cos kp
 \end{bmatrix},
 \f]
-and \f$p=x+y\f$ and \f$d=x-y\f$.  The first element of \f$\mathsf
-G(x,y)\f$ is the average value of \f$g\f$ and the second element, the
-divided difference, is the average slope.  \f$\mathsf F_k(x,y)\f$
-satisfies the recurrence relation
+\f$d=\frac12(x-y)\f$, \f$p=\frac12(x+y)\f$, and, in the limit
+\f$d\rightarrow0\f$, \f$(\sin kd)/d \rightarrow k\f$.  The first element
+of \f$\mathsf G(x,y)\f$ is the average value of \f$g\f$ and the second
+element, the divided difference, is the average slope.  \f$\mathsf
+F_k(x,y)\f$ satisfies the recurrence relation
 \f[
   \mathsf F_{k+1}(x,y) =
   \mathsf A(x,y) \mathsf F_k(x,y) - \mathsf F_{k-1}(x,y),
 \f]
 where
 \f[
- \mathsf A(x,y) = \begin{bmatrix}
-     2 \cos p \cos d &  -d\sin p \sin d \\
--(4/d) \sin p \sin d &  2 \cos p \cos d
-\end{bmatrix}.
+ \mathsf A(x,y) = 2\begin{bmatrix}
+  \cos d \cos p & -d\sin d \sin p \\
+- \frac{\sin d}d \sin p &   \cos d \cos p
+\end{bmatrix},
 \f]
-The standard Clenshaw algorithm can now be applied to yield
+and \f$\lim_{d\rightarrow0}(\sin d)/d = 1\f$.  The standard Clenshaw
+algorithm can now be applied to yield
 \f[
 \begin{aligned}
 \mathsf B_{N+1} &= \mathsf B_{N+2} = \mathsf 0, \\
 \mathsf B_k &= \mathsf A \mathsf B_{k+1} - \mathsf B_{k+2} +
-\mathsf c_k \mathsf I, \qquad\text{for $N\ge k \ge 1$},\\
+c_k \mathsf I, \qquad\text{for $N\ge k \ge 1$},\\
 \mathsf G(x,y) &= \mathsf B_1 \mathsf F_1(x,y),
 \end{aligned}
 \f]
-where \f$B_k\f$ are \f$2\times2\f$ matrices.  The divided difference
-\f$\Delta[g](x,y)\f$ is given by the second element of \f$\mathsf
-G(x,y)\f$.
+where \f$\mathsf B_k\f$ are \f$2\times2\f$ matrices.  The divided
+difference \f$\Delta[g](x,y)\f$ is given by the second element of
+\f$\mathsf G(x,y)\f$.
 
 <center>
 Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
