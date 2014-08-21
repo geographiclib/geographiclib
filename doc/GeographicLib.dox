@@ -2996,10 +2996,10 @@ The formula for distance is
 \f]
 where
 \f[
-\begin{aligned}
+\begin{align}
   I_1(\sigma) &= A_1\bigl(\sigma + B_1(\sigma)\bigr) \\
   B_1(\sigma) &= \sum_{j=1} C_{1j} \sin 2j\sigma
-\end{aligned}
+\end{align}
 \f]
 and
 \verbatim
@@ -3083,19 +3083,19 @@ C1'[10] = + 9303339907/2972712960 * eps^10;
 
 The reduced length is given by
 \f[
-\begin{aligned}
+\begin{align}
   \frac mb &= \sqrt{1 + k^2 \sin^2\sigma_2} \cos\sigma_1 \sin\sigma_2 \\
   &\quad {}-\sqrt{1 + k^2 \sin^2\sigma_1} \sin\sigma_1 \cos\sigma_2 \\
   &\quad {}-\cos\sigma_1 \cos\sigma_2 \bigl(J(\sigma_2) - J(\sigma_1)\bigr)
-\end{aligned}
+\end{align}
 \f]
 where
 \f[
-\begin{aligned}
+\begin{align}
  J(\sigma) &= I_1(\sigma) - I_2(\sigma) \\
  I_2(\sigma) &= A_2\bigl(\sigma + B_2(\sigma)\bigr) \\
  B_2(\sigma) &= \sum_{j=1} C_{2j} \sin 2j\sigma
-\end{aligned}
+\end{align}
 \f]
 \verbatim
 A2 = (1 + 1/4 * eps^2
@@ -3143,10 +3143,10 @@ The longitude is given in terms of the spherical longitude by
 \f]
 where
 \f[
-\begin{aligned}
+\begin{align}
  I_3(\sigma) &= A_3\bigl(\sigma + B_3(\sigma)\bigr) \\
  B_3(\sigma) &= \sum_{j=1} C_{3j} \sin 2j\sigma
-\end{aligned}
+\end{align}
 \f]
 and
 \verbatim
@@ -3299,13 +3299,13 @@ case of an imaginary modulus using real arithmetic.
 
 The key relations used by GeographicLib are
 \f[
- \begin{aligned}
+ \begin{align}
   \frac sb &= E(\sigma, ik), \\
   \lambda &= (1 - f) \sin\alpha_0  G(\sigma, \cos^2\alpha_0, ik) \\
           &= \chi
            - \frac{e'^2}{\sqrt{1+e'^2}}\sin\alpha_0 H(\sigma, -e'^2, ik), \\
   J(\sigma) &= k^2 D(\sigma, ik),
- \end{aligned}
+ \end{align}
 \f]
 where \f$ \chi \f$ is a modified spherical longitude given by
 \f[
@@ -3313,7 +3313,7 @@ where \f$ \chi \f$ is a modified spherical longitude given by
 \f]
 and
 \f[
- \begin{aligned}
+ \begin{align}
  D(\phi,k) &= \int_0^\phi
  \frac{\sin^2\theta}{\sqrt{1 - k^2\sin^2\theta}}\,d\theta\\
  &=\frac{F(\phi, k) - E(\phi, k)}{k^2},\\
@@ -3328,7 +3328,7 @@ and
  &=
  \frac1{\alpha^2} F(\phi, k) +
       \biggl(1 - \frac1{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k),
- \end{aligned}
+ \end{align}
 \f]
 and \f$F(\phi, k)\f$, \f$E(\phi, k)\f$, \f$D(\phi, k)\f$, and
 \f$\Pi(\phi, \alpha^2, k)\f$, are incomplete elliptic integrals (see
@@ -3363,30 +3363,30 @@ for geodesics, \f$\theta\f$ instead of \f$\sigma\f$, where \f$
 expressions for \f$ s \f$ and \f$ \lambda \f$ are given here for
 completeness:
 \f[
-\begin{aligned}
+\begin{align}
 \frac sb &= \sqrt{1-k'^2} \Pi(\theta, k'^2, k'), \\
 \lambda &= (1-f) \sqrt{1-k'^2} \sin\alpha_0 \Pi(\theta, k'^2/e^2, k'),
-\end{aligned}
+\end{align}
 \f]
 where \f$ k' = k/\sqrt{1 + k^2} \f$.  The expression for \f$ s \f$
 can be written in terms of elliptic integrals of the second kind and
 Cayley's technique can be used to subtract out the leading order
 behavior of \f$ \lambda \f$ to give
 \f[
-\begin{aligned}
+\begin{align}
 \frac sb &=\frac1{\sqrt{1-k'^2}}
   \biggl( E(\theta, k') -
     \frac{k'^2 \sin\theta \cos\theta}{\sqrt{1-k'^2\sin^2\theta}} \biggr), \\
 \lambda &= \psi + (1-f) \sqrt{1-k'^2} \sin\alpha_0
 \bigl( F(\theta, k') - \Pi(\theta, e^2, k') \bigr),
-\end{aligned}
+\end{align}
 \f]
 where
 \f[
-\begin{aligned}
+\begin{align}
 \tan\psi &= \sqrt{\frac{1+k^2\sin^2\sigma}{1+e'^2}}\tan\omega \\
          &= \sqrt{\frac{1-e^2}{1+k^2\cos^2\theta}}\sin\alpha_0\tan\theta.
-\end{aligned}
+\end{align}
 \f]
 The tangents of the three "longitude-like" angles are in geometric
 progression, \f$ \tan\chi/\tan\omega = \tan\omega/\tan\psi \f$.
@@ -3425,24 +3425,24 @@ and are linearly related by
 .
 The cartesian coordinates for the meridian \f$ (x, z) \f$ are given by
 \f[
-\begin{aligned}
+\begin{align}
   x &= a \cos\beta = a \cos\phi / \sqrt{1 - e^2 \sin^2\phi} \\
     &= a \sin\beta' = (a^2/b) \sin\phi' / \sqrt{1 + e'^2 \sin^2\phi'} \\
     &= a \,\mathrm{cn}(v, ie) = a \,\mathrm{cd}(u, e) \\
     &= a \,\mathrm{sn}(u', e) = (a^2/b) \,\mathrm{sd}(v', ie'),
-\end{aligned}
+\end{align}
 \f]
 \f[
-\begin{aligned}
+\begin{align}
   z &= b \sin\beta = (b^2/a) \sin\phi / \sqrt{1 - e^2 \sin^2\phi} \\
     &= b \cos\beta' = b \cos\phi' / \sqrt{1 + e'^2 \sin^2\phi'} \\
     &= b \,\mathrm{sn}(v, ie) = (b^2/a) \,\mathrm{sd}(u, e)  \\
     &= b \,\mathrm{cn}(u', e) = b \,\mathrm{cd}(v', ie').
-\end{aligned}
+\end{align}
 \f]
 The distance along the meridian can be expressed variously as
 \f[
-\begin{aligned}
+\begin{align}
   y  &=   b   \int \sqrt{1 + e'^2  \sin^2\beta}\, d\beta
      =   b E(\beta, ie') \\
      &= \frac{b^2}a \int \frac1{(1 - e^2 \sin^2\phi)^{3/2}}\, d\phi
@@ -3452,10 +3452,10 @@ The distance along the meridian can be expressed variously as
      &=  b \int \mathrm{dn}^2(v, ie')\, dv
       = \frac{b^2}a \int \mathrm{nd}^2(u, e)\, du
       = \cal E(v, ie'),
-\end{aligned}
+\end{align}
 \f]
 \f[
-\begin{aligned}
+\begin{align}
   y' &=   a   \int \sqrt{1 - e^2  \sin^2\beta'}\, d\beta'
      =   a E(\beta', e) \\
      &= \frac{a^2}b \int \frac1{(1 + e'^2 \sin^2\phi')^{3/2}}\, d\phi'
@@ -3465,7 +3465,7 @@ The distance along the meridian can be expressed variously as
      &=  a \int \mathrm{dn}^2(u', e)\, du'
       = \frac{a^2}b \int \mathrm{nd}^2(v', ie')\, dv'
       = \cal E(u', e),
-\end{aligned}
+\end{align}
 \f]
 with the quarter meridian distance given by
 \f[
@@ -3528,10 +3528,10 @@ preserved (and hence the azimuth of a line is preserved).  Let \f$
 longitude on the ellipsoid and sphere respectively.  Define isometric
 latitudes for the sphere and the ellipsoid as
 \f[
-\begin{aligned}
+\begin{align}
   \psi' &= \sinh^{-1} \tan \phi', \\
   \psi &= \sinh^{-1} \tan \phi - e \tanh^{-1}(e \sin\phi).
-\end{aligned}
+\end{align}
 \f]
 The most general conformal mapping satisfying Bowring's conditions is
 \f[
@@ -3561,11 +3561,11 @@ m(\phi_0) = 1,\quad
 i.e, \f$m\approx 1\f$ in the vicinity of \f$\phi = \phi_0\f$.
 This gives
 \f[
-\begin{aligned}
+\begin{align}
 R &= \frac{\sqrt{1 + e'^2}}{B^2} a, \\
 A &= \sqrt{1 + e'^2 \cos^4\phi_0}, \\
 \tan\phi'_0 &= \frac1B \tan\phi_0,
-\end{aligned}
+\end{align}
 \f]
 where \f$ e' = e/\sqrt{1-e^2} \f$ is the second eccentricity, \f$ B =
 \sqrt{1+e'^2\cos^2\phi_0} \f$, and \f$ K \f$ is defined implicitly by
@@ -3651,12 +3651,12 @@ been replaced by the last relation which states that \f$\phi'_0 =
 \beta_0\f$, the parametric latitude corresponding to \f$\phi_0\f$.  This
 gives
 \f[
-\begin{aligned}
+\begin{align}
 R &= B'(1-f)a, \\
 A &= \frac1{B'(1-f)}, \\
 \left.\frac{d^2m(\phi)}{d\phi^2}\right|_{\phi=\phi_0} &=
 -e^2B'^2\sin^2\phi_0.
-\end{aligned}
+\end{align}
 \f]
 
 Similar to Bowring's method, we can compute \f$\phi'_1\f$ and
@@ -3847,16 +3847,16 @@ geographical latitude and longitude \f$(\phi, \lambda)\f$ are defined by
 The \e parametric latitude and longitude \f$(\phi', \lambda')\f$ are
 defined by
 \f[
-\begin{aligned}
+\begin{align}
  x &= a \cos\phi' \cos\lambda', \\
  y &= b \cos\phi' \sin\lambda', \\
  z &= c \sin\phi'.
-\end{aligned}
+\end{align}
 \f]
 Jacobi employed the \e ellipsoidal latitude and longitude \f$(\beta,
 \omega)\f$ defined by
 \f[
-\begin{aligned}
+\begin{align}
   x &= a \cos\omega
       \frac{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}}
            {\sqrt{a^2 - c^2}}, \\
@@ -3864,7 +3864,7 @@ Jacobi employed the \e ellipsoidal latitude and longitude \f$(\beta,
   z &= c \sin\beta
       \frac{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}}
            {\sqrt{a^2 - c^2}}.
-\end{aligned}
+\end{align}
 \f]
 Grid lines of constant \f$\beta\f$ and \f$\omega\f$ are given in Fig. 1.
 
@@ -3934,7 +3934,7 @@ Here is the solution, exactly as given by Jacobi
 <a href="http://books.google.com/books?id=Rh8GAAAAYAAJ&pg=PA268"> here</a>
 (with minor changes in notation):
 \f[
-\begin{aligned}
+\begin{align}
 \delta &= \int \frac
 {\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}\,d\beta}
 {\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}
@@ -3944,7 +3944,7 @@ Here is the solution, exactly as given by Jacobi
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}\,d\omega}
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}
  \sqrt{(a^2-b^2)\sin^2\omega + \gamma}}
-\end{aligned}
+\end{align}
 \f]
 As Jacobi notes &quot;a function of the angle \f$\beta\f$ equals a
 function of the angle \f$\omega\f$.  These two functions are just
@@ -3967,7 +3967,7 @@ relation.  A nice derivation of Jacobi's result is given by Darboux
 (1846) for general quadratic surfaces.  In this formulation, the
 distance along the geodesic, \f$s\f$, is also found using
 \f[
-\begin{aligned}
+\begin{align}
 \frac{ds}{(b^2-c^2)\cos^2\beta + (a^2-b^2)\sin^2\omega}
 &= \frac
 {\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}\,d\beta}
@@ -3977,11 +3977,11 @@ distance along the geodesic, \f$s\f$, is also found using
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}\,d\omega}
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}
  \sqrt{(a^2-b^2)\sin^2\omega + \gamma}}
-\end{aligned}
+\end{align}
 \f]
 An alternative expression for the distance is
 \f[
-\begin{aligned}
+\begin{align}
 ds
 &= \frac
 {\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}
@@ -3991,7 +3991,7 @@ ds
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}
  \sqrt{(a^2-b^2)\sin^2\omega + \gamma}\,d\omega}
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}}
-\end{aligned}
+\end{align}
 \f]
 
 Jacobi's solution is a convenient way to compute geodesics on an
@@ -4385,10 +4385,10 @@ distances along rhumb lines), and the parametric latitude \f$\beta\f$
 (needed for dealing with rhumb lines that run along a parallel).  These
 are defined in terms of the geographical latitude \f$\phi\f$ by
 \f[
-\begin{aligned}
+\begin{align}
  \frac{d\psi}{d\phi} &= \frac{\rho}R, \\
  \frac{d\mu}{d\phi}  &= \frac{\pi}{2M}\rho, \\
-\end{aligned}
+\end{align}
 \f]
 where \f$\rho\f$ is the meridional radius of curvature, \f$R =
 a\cos\beta\f$ is the radius of a circle of latitude, and \f$M\f$ is the
@@ -4410,21 +4410,21 @@ typically, \f$\lambda_{12}\f$ is reduced to the range \f$[-\pi,\pi]\f$
 
 The distance is given by
 \f[
-\begin{aligned}
+\begin{align}
 s_{12} &= \frac {2M}{\pi} \mu_{12} \sec\alpha_{12} \\
   &= \frac {2M}{\pi}
 \frac{\mu_{12}}{\psi_{12}} \sqrt{\lambda_{12}^2 + \psi_{12}^2},
-\end{aligned}
+\end{align}
 \f]
 where \f$\mu_{12} = \mu_2 - \mu_1\f$.  This relation is indeterminate if
 \f$\phi_1 = \phi_2\f$, so we take the limits
 \f$\psi_{12}\rightarrow0\f$ and \f$\mu_{12}\rightarrow0\f$ and apply
 L'H&ocirc;pital's rule to yield
 \f[
-\begin{aligned}
+\begin{align}
  s_{12} &= \frac {2M}{\pi} \frac{d\mu}{d\psi} \left|\lambda_{12}\right|\\
 &=a \cos\beta \left|\lambda_{12}\right|,
-\end{aligned}
+\end{align}
 \f]
 where the last relation is given by the defining equations for
 \f$\psi\f$ and \f$\mu\f$.
@@ -4451,20 +4451,20 @@ convenient to introduce the variables \f$\tau=\tan\phi\f$ and \f$\tau' =
 \tan\chi = \sinh\psi\f$ (\f$\chi\f$ is the conformal latitude) which are
 related by (Karney, 2011)
 \f[
-\begin{aligned}
+\begin{align}
 \tau' &= \tau \sqrt{1 + \sigma^2} - \sigma \sqrt{1 + \tau^2}, \\
 \sigma &= \sinh\bigl(e \tanh^{-1}(e \tau/\sqrt{1 + \tau^2}) \bigr).
-\end{aligned}
+\end{align}
 \f]
 The equation for \f$\tau'\f$ can be inverted to give \f$\tau\f$ in terms
 of \f$\tau'\f$ using Newton's method with \f$\tau_0 = \tau'/(1-e^2)\f$
 as a starting guess; and, of course, \f$\phi\f$ and \f$\psi\f$ are then
 given by
 \f[
-\begin{aligned}
+\begin{align}
 \phi &= \tan^{-1}\tau,\\
 \psi &= \sinh^{-1}\tau'.
-\end{aligned}
+\end{align}
 \f]
 This allows conversions to and from \f$\psi\f$ to be carried out for any
 value of the flattening \f$f\f$; these conversions are implemented by
@@ -4584,11 +4584,11 @@ particular, we can use the chain rule to write
 Kahan and Fateman catalog the divided difference formulas for all the
 elementary functions.  In this case, we need
 \f[
-\begin{aligned}
+\begin{align}
 \Delta[\tan](x,y) &= \frac{\tan(x-y)}{x-y} (1 + \tan x\tan y),\\
 \Delta[\sinh^{-1}](x,y) &= \frac1{x-y}
 \sinh^{-1}\biggl(\frac{(x-y)(x+y)}{x\sqrt{1+y^2}+y\sqrt{1+x^2}}\biggr).
-\end{aligned}
+\end{align}
 \f]
 The crucial point in these formulas is that the right hand sides can be
 evaluated accurately even if \f$x-y\f$ is small.  (I've only included
@@ -4630,13 +4630,13 @@ difference formula
 \f]
 where the angle \f$z\f$ is given by
 \f[
-\begin{aligned}
+\begin{align}
 \sin z &= \frac{2t}{1 + t^2},\quad\cos z = \frac{(1-t)(1+t)}{1 + t^2},\\
 t &=
 \frac{(x-y)\Delta[\sin](x,y)}
 {\sin x\sqrt{1 - k^2\sin^2y} + \sin y\sqrt{1 - k^2\sin^2x}}
 \frac{\sin x + \sin y}{\cos x + \cos y}.
-\end{aligned}
+\end{align}
 \f]
 We also need to apply the divided difference formulas to the conversions
 from \f$\phi\f$ to \f$\beta\f$ and \f$\phi\f$ to \f$\psi\f$; but these
@@ -4702,12 +4702,12 @@ where
 and \f$\lim_{d\rightarrow0}(\sin d)/d = 1\f$.  The standard Clenshaw
 algorithm can now be applied to yield
 \f[
-\begin{aligned}
+\begin{align}
 \mathsf B_{N+1} &= \mathsf B_{N+2} = \mathsf 0, \\
 \mathsf B_k &= \mathsf A \mathsf B_{k+1} - \mathsf B_{k+2} +
 c_k \mathsf I, \qquad\text{for $N\ge k \ge 1$},\\
 \mathsf G(x,y) &= \mathsf B_1 \mathsf F_1(x,y),
-\end{aligned}
+\end{align}
 \f]
 where \f$\mathsf B_k\f$ are \f$2\times2\f$ matrices.  The divided
 difference \f$\Delta[g](x,y)\f$ is given by the second element of

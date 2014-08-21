@@ -357,13 +357,13 @@ namespace GeographicLib {
      *
      * \e G(&phi;, &alpha;<sup>2</sup>, \e k) is defined by
      * \f[
-     *   \begin{aligned}
+     *   \begin{align}
      *   G(\phi, \alpha^2, k) &=
      *   \frac{k^2}{\alpha^2} F(\phi, k) +
      *      \biggl(1 - \frac{k^2}{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k) \\
      *    &= \int_0^\phi
      *     \frac{\sqrt{1-k^2\sin^2\theta}}{1 - \alpha^2\sin^2\theta}\,d\theta.
-     *   \end{aligned}
+     *   \end{align}
      * \f]
      *
      * Legendre expresses the longitude of a point on the geodesic in terms of
@@ -384,14 +384,14 @@ namespace GeographicLib {
      *
      * \e H(&phi;, &alpha;<sup>2</sup>, \e k) is defined by
      * \f[
-     *   \begin{aligned}
+     *   \begin{align}
      *   H(\phi, \alpha^2, k) &=
      *   \frac1{\alpha^2} F(\phi, k) +
      *        \biggl(1 - \frac1{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k) \\
      *   &= \int_0^\phi
      *     \frac{\cos^2\theta}{(1-\alpha^2\sin^2\theta)\sqrt{1-k^2\sin^2\theta}}
      *     \,d\theta.
-     *   \end{aligned}
+     *   \end{align}
      * \f]
      *
      * Cayley expresses the longitude difference of a point on the geodesic in
