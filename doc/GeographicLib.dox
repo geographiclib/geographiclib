@@ -5507,7 +5507,7 @@ of the git repository for GeographicLib.
    (released 2014-mm-dd)
    - On MacOSX, the installed package is relocatable (for cmake version
      2.8.12 and later).
-   - GeographicLib added to homebrew (pending).
+   - GeographicLib added to homebrew (PENDING).
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-08-08)
