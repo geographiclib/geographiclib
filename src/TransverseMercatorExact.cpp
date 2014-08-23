@@ -469,8 +469,6 @@ namespace GeographicLib {
       Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
       gamma /= Math::degree();
     } else {
-      tau = overflow();
-      phi = Math::pi()/2;
       lat = 90;
       lon = lam = gamma = 0;
       k = 1;
@@ -481,10 +479,6 @@ namespace GeographicLib {
     lon *= lonsign;
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
     lat *= latsign;
-    if (backside)
-      y = 2 * _Eu.E() - y;
-    y *= _a * _k0 * latsign;
-    x *= _a * _k0 * lonsign;
     if (backside)
       gamma = 180 - gamma;
     gamma *= latsign * lonsign;
