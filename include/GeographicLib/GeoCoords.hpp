@@ -80,6 +80,8 @@ namespace GeographicLib {
       , _long(0)
       , _easting(2000000)
       , _northing(2000000)
+      , _gamma(0)
+      , _k(Constants::UPS_k0())
       , _northp(true)
       , _zone(0)
     { CopyToAlt(); }

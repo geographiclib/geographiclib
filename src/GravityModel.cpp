@@ -199,13 +199,11 @@ namespace GeographicLib {
     if (_dzonal0 == 0)
       // No need to do the correction
       correct = false;
-    real
-      invR = correct ? 1 / Math::hypot(Math::hypot(X, Y), Z) : 1,
-      T = (gradp
-           ? _disturbing(-1, X, Y, Z, deltaX, deltaY, deltaZ)
-           : _disturbing(-1, X, Y, Z));
-    T = (T / _amodel - (correct ? _dzonal0 : 0) * invR) * _GMmodel;
+    real T, invR = correct ? 1 / Math::hypot(Math::hypot(X, Y), Z) : 1;
     if (gradp) {
+      // initial values to suppress warnings
+      deltaX = deltaY = deltaZ = 0;
+      T = _disturbing(-1, X, Y, Z, deltaX, deltaY, deltaZ);
       real f = _GMmodel / _amodel;
       deltaX *= f;
       deltaY *= f;
@@ -216,7 +214,9 @@ namespace GeographicLib {
         deltaY += Y * invR;
         deltaZ += Z * invR;
       }
-    }
+    } else
+      T = _disturbing(-1, X, Y, Z);
+    T = (T / _amodel - (correct ? _dzonal0 : 0) * invR) * _GMmodel;
     return T;
   }
 
