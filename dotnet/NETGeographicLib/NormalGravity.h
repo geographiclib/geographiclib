@@ -77,14 +77,12 @@ namespace NETGeographicLib
         // the finalizer frees the unmanaged memory when the object is destroyed.
         !NormalGravity(void);
     public:
-        /// \cond SKIP
         //! The enumerated standard gravity models.
         enum class StandardModels
         {
             WGS84,  //!< WGS84 gravity model.
             GRS80   //!< GRS80 gravity model.
         };
-        /// \endcond
 
         /** \name Setting up the normal gravity
          **********************************************************************/

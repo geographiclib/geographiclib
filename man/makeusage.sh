@@ -25,8 +25,10 @@ or visit:\n\\
     ( retval ? std::cerr : std::cout ) << "Man page:\n\\
 EOF
 
-pod2man $SOURCE | nroff -c -man 2>/dev/null | col -b -x | head --lines -4 |
-tail --lines +5 | sed -e 's/\\/\\\\/g' -e 's/$/\\n\\/' -e 's/"/\\"/g'
+TAILOPT=
+test "`uname`" = Darwin || TAILOPT=--lines
+pod2man $SOURCE | nroff -c -man 2>/dev/null | col -b -x | head -4 |
+tail $TAILOPT +5 | sed -e 's/\\/\\\\/g' -e 's/$/\\n\\/' -e 's/"/\\"/g'
 
 cat <<EOF
 ";

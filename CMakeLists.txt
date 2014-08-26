@@ -389,7 +389,7 @@ endif ()
 # documentation is therefore only done in "MAINTAINER" mode.  The
 # maintainer runs "make distrib-all" which installs the transformed
 # documentation files into the source tree.
-if (NOT WIN32 AND NOT APPLE)
+if (NOT WIN32)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
   find_program (HAVE_COL col)

@@ -88,6 +88,8 @@ if (MAINTAINER)
         >/dev/null 2>&1 ||
         install -m 644 "$$f" ${CMAKE_CURRENT_SOURCE_DIR}\; done
     COMMENT "Installing man documentation page in source tree")
+else ()
+  add_custom_target (htmlman ALL DEPENDS ${HTMLMAN})
 endif ()
 
 # Install the man pages.
