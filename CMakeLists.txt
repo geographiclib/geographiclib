@@ -388,8 +388,10 @@ endif ()
 # available on an end-user's system, the creation of the final
 # documentation is therefore only done in "MAINTAINER" mode.  The
 # maintainer runs "make distrib-all" which installs the transformed
-# documentation files into the source tree.
-if (NOT WIN32)
+# documentation files into the source tree.  Skip Apple here because
+# man/makeusage.sh uses "head --lines -4" to drop the last 4 lines of a
+# file and there's no simple equivalent for MacOSX
+if (NOT WIN32 AND NOT APPLE)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
   find_program (HAVE_COL col)
