@@ -1212,7 +1212,7 @@
    http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf
  * T. Vincenty,[[BR]]
    ''Geodetic inverse solution between antipodal points'',
-   unpublished report dated Aug. 28, 1975.[[BR]]
+   unpublished report, DMAAC (Aug. 28, 1975).[[BR]]
    http://geographiclib.sf.net/geodesic-papers/vincenty75b.pdf
  * R. H. Rapp,[[BR]]
    ''Geometric geodesy, Part I'',
