@@ -4294,9 +4294,12 @@ calculations.  A rhumb line (also called a loxodrome) is a line of
 constant azimuth on the surface of the ellipsoid.  It is important for
 historical reasons because sailing with a constant compass heading is
 simpler than sailing the shorter geodesic course; see Osborne (2013).
-My interest in this problem was piqued by Botnev and Ustinov (2014) who
-discuss various techniques to improve the accuracy of rhumb line
-calculations.  The items of interest here are:
+The formulation of the problem on an ellipsoid is covered by Smart
+(1946) and Carlton-Wippern (1992).  Computational approaches are given
+by Williams (1950) and Bennett (1996).  My interest in this problem was
+piqued by Botnev and Ustinov (2014) who discuss various techniques to
+improve the accuracy of rhumb line calculations.  The items of interest
+here are:
  - Review of accurate formulas for the auxiliary latitudes.
  - Using divided differences to compute \f$\mu_{12}/\psi_{12}\f$
    maintaining full accuracy.  Two cases are treated:
@@ -4316,6 +4319,10 @@ Jump to
  - \ref dividedclenshaw
 
 References:
+ - G. G. Bennett,
+   <a href="http://dx.doi.org/10.1017/S0373463300013151">
+   Practical Rhumb Line Calculations on the Spheroid</a>
+   J. Navigation 49(1), 112--119 (1996).
  - F. W. Bessel,
    <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation
    of longitude and latitude from geodesic measurements (1825)</a>,
@@ -4328,6 +4335,10 @@ References:
    tochnost'ju</a> (Methods for direct and inverse geodesic problems
    solving with high precision), St. Petersburg State Polytechnical
    University Journal 3(198), 49--58 (2014).
+ - K. C. Carlton-Wippern
+   <a href="http://dx.doi.org/10.1017/S0373463300010791">
+   On Loxodromic Navigation</a>,
+   J. Navigation 45(2), 292--297 (1992).
  - K. E. Engsager and K. Poder,
    <a href="http://icaci.org/files/documents/ICC_proceedings/ICC2007/documents/doc/THEME 2/oral 1/2.1.2 A HIGHLY ACCURATE WORLD WIDE ALGORITHM FOR THE TRANSVE.doc">
    A highly accurate world wide algorithm for the
@@ -4369,12 +4380,17 @@ References:
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
    the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
    New Series 52, 172 pp. (1912).
- - T. H. Meyer and C. M. Rollins,
-   The direct and indirect problem for loxodromes,
-   Navigation 58(1), 1--6 (2011).
  - P. Osborne,
    <a href="http://www.mercator99.webspace.virginmedia.com/">
    The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5.
+ - W. M. Smart
+   <a href="http://dx.doi.org/10.1093/mnras/106.2.124">
+   On a Problem in Navigation</a>
+   MNRAS 106(2), 124--127 (1946).
+ - J. E. D. Williams
+   <a href="http://dx.doi.org/10.1017/S0373463300045549">
+   Loxodromic Distances on the Terrestrial Spheroid Journal</a>,
+   J. Navigation 3(2), 133--140 (1950)
 
 \section rhumbform Formulation of the rhumb line problem
 
@@ -4532,17 +4548,15 @@ Despite our ability to compute latitudes accurately, the way that
 distances enter into the solution involves the ratio
 \f$\mu_{12}/\psi_{12}\f$; the numerical calculation of this term is
 subject to catastrophic round-off errors when \f$\phi_1\f$ and
-\f$\phi_2\f$ are close.  A simple solution, suggested by Meyer and
-Rollins (2011), is to extend the treatment of rhumb lines along
-parallels to this case, i.e., to replace the ratio by the derivative
-evaluated at the midpoint.  (Meyer and Rollins only offer this solution
-when dealing with the inverse problem; but it can also be applied with
-the direct problem.)  However this is not entirely satisfactory: you
-have to pick the transition point where the derivative takes over from
-the ratio of differences; and, near this transition point, many bits of
-accuracy will be lost (I estimate that about 1/3 of bits are lost,
-leading to errors on the order of 0.1 mm for double precision).  Note
-too that this problem crops up even in the spherical limit.
+\f$\phi_2\f$ are close.  A simple solution, suggested by Bennett (1996),
+is to extend the treatment of rhumb lines along parallels to this case,
+i.e., to replace the ratio by the derivative evaluated at the midpoint.
+However this is not entirely satisfactory: you have to pick the
+transition point where the derivative takes over from the ratio of
+differences; and, near this transition point, many bits of accuracy will
+be lost (I estimate that about 1/3 of bits are lost, leading to errors
+on the order of 0.1 mm for double precision).  Note too that this
+problem crops up even in the spherical limit.
 
 It turns out that we can do substantially better than this and maintain
 full double precision accuracy.  Indeed Botnev and Ustinov provide
