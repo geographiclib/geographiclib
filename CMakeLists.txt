@@ -453,12 +453,12 @@ endif ()
 # Set output directories for Windows so that executables and dlls are
 # put in the same place
 if (WIN32)
-  foreach (_c ${CMAKE_CONFIGURATION_TYPES})
-    string (TOUPPER ${_c} _C)
-    set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${_C} "${PROJECT_BINARY_DIR}/lib/${_c}")
-    set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_${_C} "${PROJECT_BINARY_DIR}/bin/${_c}")
-    set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_${_C} "${PROJECT_BINARY_DIR}/lib/${_c}")
-  endforeach ()
+  # static libaries
+  set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+  # shared libraries
+  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+  # executables and dlls
+  set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 endif ()
 
 # The list of tools (to be installed into, e.g., /usr/local/bin)
