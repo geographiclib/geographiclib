@@ -17,7 +17,7 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   # Release/NETGeographic.dll to Debug/NETGeographic_d.dll for Debug
   # builds.
   set_target_properties (${EXAMPLE} PROPERTIES VS_DOTNET_REFERENCES
-    "${CMAKE_CURRENT_BINARY_DIR}/../../NETGeographicLib/Release/NETGeographic.dll")
+    "${PROJECT_BINARY_DIR}/bin/Release/NETGeographic.dll")
 endforeach ()
 
 string (REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")

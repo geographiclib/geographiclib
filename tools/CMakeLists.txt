@@ -35,18 +35,6 @@ if (APPLE AND NOT CMAKE_VERSION VERSION_LESS 2.8.12)
     INSTALL_RPATH "@loader_path/../lib${LIB_SUFFIX}")
 endif ()
 
-if (MSVC)
-  get_target_property (_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
-  if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
-    # Copy the shared library on Windows systems to this directory
-    # (examples) so that the tests can be run.
-    add_custom_command (TARGET tools POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E
-      copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
-      COMMENT "Copying shared library to tools directory")
-  endif ()
-endif ()
-
 # Specify where the tools are installed
 install (TARGETS ${TOOLS} EXPORT depends DESTINATION bin)
 
