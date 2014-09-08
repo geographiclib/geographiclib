@@ -78,6 +78,8 @@ if (MSVC AND PACKAGE_DEBUG_LIBS)
 endif ()
 
 if (MSVC AND GEOGRAPHICLIB_SHARED_LIB)
+  # Suppress 3.0 warnings about use of the LOCATION target property
+  cmake_policy (SET CMP0026 OLD)
   # Install pdb file for shared library.
   foreach (_c ${CMAKE_CONFIGURATION_TYPES})
     string (TOUPPER ${_c} _C)

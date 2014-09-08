@@ -4677,12 +4677,10 @@ interested in evaluating
 \f[
 g(x)-g(y) = \sum_{k=1}^N 2 c_k
 \sin\bigl({\textstyle\frac12}k(x-y)\bigr)
-\cos\bigl({\textstyle\frac12}k(x+y)\bigr)
+\cos\bigl({\textstyle\frac12}k(x+y)\bigr).
 \f]
-and the applicability of Clenshaw summation is not so clear.  Botnev and
-Ustinov assert that the method can be used in this case (but they give
-no details).  It turns out that Clenshaw summation can be used if we
-simultaneously compute \f$g(x)+g(y)\f$ and perform a matrix summation,
+Clenshaw summation can be used in this case if we simultaneously compute
+\f$g(x)+g(y)\f$ and perform a matrix summation,
 \f[
 \mathsf G(x,y) = \begin{bmatrix}
 (g(x) + g(y)) / 2\\
@@ -5523,6 +5521,9 @@ of the git repository for GeographicLib.
      2.8.12 and later).
    - GeographicLib added to homebrew (still need to document).
    - In cmake configures, set output directories for Windows builds.
+   - Fix cmake 0026 warning
+   - Treat &minus; in DMS.cpp e2 88 92 = U+2212
+
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-08-08)
