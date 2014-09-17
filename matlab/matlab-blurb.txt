@@ -34,4 +34,4 @@ projections for an ellipsoid",
 
   http://www.mathworks.com/matlabcentral/fileexchange/39366
 
-Use GEODDOC to obtain a more detailed desciption.
+Use GEODDOC to obtain a more detailed description.

@@ -48,4 +48,4 @@ computations:
 
   http://www.mathworks.com/matlabcentral/fileexchange/39108
 
-Use GEODPROJ to obtain a more detailed desciption.
+Use GEODPROJ to obtain a more detailed description.
