@@ -27,7 +27,19 @@ function [s12, azi1, azi2] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 %
 %     http://www.mathworks.com/matlabcentral/fileexchange/39108
 %
-%   See also GERECKON, DEFAULTELLIPSOID.
+%   for the DEFAULTELLIPSOID routine.  gedistance.m and gereckon.m should
+%   be installed in the SAME FOLDER as package 39108 because these routines
+%   also require access to the following general purpose private utility
+%   routines:
+%
+%     AngDiff AngNormalize2 AngNormalize AngRound SinCosNorm sumx
+%
+%   in addition they use the following private routines to compute meridian
+%   arcs:
+%
+%     A1m1f C1f C1pf SinCosSeries
+%
+%   See also GEODDOC, GERECKON, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2014) <charles@karney.com>.
 %
@@ -81,7 +93,7 @@ function [s12, azi1, azi2] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
   % no need to normalize [ssig12, csig12]
 
   calp0 = hypot(calp1, salp1 .* sbet1);
-  
+
   ssig1 = sbet1; csig1 = cbet1 .* calp1;
   [ssig1, csig1] = SinCosNorm(ssig1, csig1);
   ssig2 = ssig1 .* csig12 + csig1 .* ssig12;
