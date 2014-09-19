@@ -81,11 +81,20 @@ function gedoc
 %   in the following example which plots the track from Sydney to
 %   Valparaiso.
 %
+%       % 1 = Sydney, 2 = Valparaiso
 %       lat1 = -33.83; lon1 = 151.29;
 %       lat2 = -33.02; lon2 = -71.64;
-%       [s12,  azi1] = gedistance(lat1, lon1, lat2, lon2);
-%       [lats, lons] = gereckon(lat1, lon1, s12 * [0:100]/100, azi1);
-%       plot(lons+360*(lons<0), lats);
+%       [s12g, azi1g] = geoddistance(lat1, lon1, lat2, lon2);
+%       [s12e, azi1e] =   gedistance(lat1, lon1, lat2, lon2);
+%       fprintf('Difference in lengths = %.1f m\n', s12e - s12g);
+%       [latg, long] = geodreckon(lat1, lon1, s12g * [0:100]/100, azi1g);
+%       [late, lone] =   gereckon(lat1, lon1, s12e * [0:100]/100, azi1e);
+%       plot(long+360*(long<0), latg, lone+360*(lone<0), late);
+%       legend('geodesic', 'great ellipse', 'Location', 'SouthEast');
+%       title('Sydney to Valparaiso');
+%       xlabel('longitude'); ylabel('latitude');
+%       fprintf('Maximum separation = %.1f km\n', ...
+%               geoddistance(latg(51), long(51), late(51), lone(51))/1000);
 %
 %   The restriction on e above arises because the formulation is in terms
 %   of series expansions in e^2.  The exact solutions (valid for any e) can

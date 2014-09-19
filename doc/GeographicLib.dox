@@ -4284,7 +4284,7 @@ Back to \ref geodesic.  Forward to \ref rhumb.  Up to \ref contents.
 \page rhumb Rhumb lines
 
 <center>
-Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
+Back to \ref triaxial.  Forward to \ref greatellipse.  Up to
 \ref contents.
 </center>
 
@@ -4331,8 +4331,9 @@ References:
    <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - V.A. Botnev, S.M. Ustinov,
    <a href="http://ntv.spbstu.ru/fulltext/T3.198.2014_05.PDF">
-   Metody reshenija prjamoj i obratnoj geodezicheskih zadach s vysokoj
-   tochnost'ju</a> (Methods for direct and inverse geodesic problems
+   Metody resheniya pryamoy i obratnoy geodezicheskikh zadach s vysokoy
+   tochnost'yu
+   </a> (Methods for direct and inverse geodesic problems
    solving with high precision), St. Petersburg State Polytechnical
    University Journal 3(198), 49--58 (2014).
  - K. C. Carlton-Wippern
@@ -4726,7 +4727,83 @@ difference \f$\Delta[g](x,y)\f$ is given by the second element of
 \f$\mathsf G(x,y)\f$.
 
 <center>
-Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
+Back to \ref triaxial.  Forward to \ref greatellipse.  Up to
+\ref contents.
+</center>
+**********************************************************************/
+/**
+\page greatellipse Great Ellipses
+
+<center>
+Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
+\ref contents.
+</center>
+
+Great Ellipses
+
+Refs:
+ - Admiralty Manual of Navigation. Vol 1, General Navigation, Coastal
+   Navigation and Pilotage (1987), p. 97.
+ - M. Kallay, Defining edges on a round earth, Proc. 15th International
+   Symposium on Advances in GIS, ACM GIS, 400&ndash;402 (2007).
+ - A. Pallikaris, L. Tsoulos, and D. Paradissis, New meridian arc
+   formulas for sailing calculatiosn in navigational GIS, International
+   Hydrographic Review, 24&ndash;34 (May 2009).
+ - A. Pallikaris & G. Latsas, New algorithm for great elliptic sailing
+   (GES), J. Navigation 62(3), 493&ndash;507 (2009).
+ - W. K. Tseng & H. S. Lee, Navigation on a great ellipse. J. Marine
+   Science and Technology 18(3), 369&ndash;375 (2010).
+ - A. Weintrit & P. Kopacz, A novel approach to loxodrome (rhumb Line),
+   orthodrome (great circle) and geodesic line in ECDIS and navigation
+   in general, Int. J. Marine Navigation and Safety of Sea
+   Transportation 5(4), 507&ndash;517 (2011).
+ - L. E. Sj&ouml;berg, Solutions to the direct and inverse navigation
+   problems on the great ellipse, J. Geodetic Science 2(3),
+   200&ndash;205 (2012).
+
+
+Misstatments (except for the last one):
+
+ - Kallay (2007): "Computing points along geodesic curves is notoriously
+   difficult and expensive.  An exact differentiable parameterizations
+   is not known, and approximate ones are difficult and expensive to
+   compute."
+
+ - Admiralty Manual of Navigation (1987): "There are a variety of
+   solutions for computing the shortest distance (the geodesic) and
+   course on the spheroid.  Some of these use the geodetic and some the
+   parametric latitutde, terms described in Chapter 3.  Some of the
+   formulae required are much too complex for general use."
+
+ - Pallikaris, Tsoulos, & Paradissis (2009): "...it is required to adopt
+   realistic accuracy standards in order not only to eliminate the
+   significant errors of the spherical model but also to avoid the
+   exaggerated and unrealistic requirements of sub meter accuracy."
+   "Calculation of shortest sailings paths on the ellipsoid by a
+   geodetic inverse method involve formulas that are too much complex."
+   "Despite the fact that contemporary computers are fast enough to
+   handle more complete geodetic formulas of sub meter accuracy, a basic
+   principle for the design of navigational systems is the avoidance of
+   unnecessary consumption of computing power."
+
+ - Pallikaris & Latsas (2009): "Seeking the higher accuracies of the
+   geodesic for sailing calculations does not have any practical value
+   for marine navigation and simply adds more complexity to the
+   calculations."
+
+ - Tseng & Lee (2010): "Seeking extremely high accuracy for marine
+   navigation purpose does not offer any real benefit and requires more
+   computing power and processing time." "The computation of geodesic
+   needs many iterative procedures." "Using very accurate methods for
+   the calculation of long geodesics, as the method of Vincenty (1975)
+   spending a lot of processing time, ..."
+
+ - Weintrit & Kopacz (2011): "So, let's start navigation based on
+   geodesics.  It is high time to forget the rhumb line navigation and
+   great circle navigation, too."
+
+<center>
+Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
 \ref contents.
 </center>
 **********************************************************************/
@@ -4737,10 +4814,9 @@ Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
 Back to \ref rhumb.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 
-TransverseMercator and
-TransverseMercatorExact provide accurate implementations
-of the transverse Mercator projection.  The
- <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
+TransverseMercator and TransverseMercatorExact provide accurate
+implementations of the transverse Mercator projection.  The
+<a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
 utility provides an interface to these classes.
 
 Go to
