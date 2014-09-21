@@ -4,7 +4,7 @@ ellipsoid of revolution.
 
 The problem and method of solution is described in
 
-  http://geographiclib.sf.net/1.38/greatellipse.html#geformulation
+  http://geographiclib.sf.net/1.38/greatellipse.html
 
 This package depends on the MATLAB File Exchange package "Geodesics on
 an ellipsoid of revolution" for performing meridian arc computations:
