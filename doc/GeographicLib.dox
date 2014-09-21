@@ -4794,9 +4794,9 @@ References:
    <a href="http://dx.doi.org/1017/S0373463309005323">
    New algorithm for great elliptic sailing (GES)</a>,
    J. Navigation 62(3), 493--507 (2009).
- - A. Pallikaris, L. Tsoulos, and D. Paradissis,
-   New meridian arc formulas for sailing calculatiosn in navigational
-   GIS, International Hydrographic Review, 24--34 (2009).
+ - A. Pallikaris, L. Tsoulos, & D. Paradissis,
+   New meridian arc formulas for sailing calculations in navigational
+   GIS, International Hydrographic Review, 24--34 (May 2009).
  - L. E. Sj&ouml;berg,
    <a href="http://dx.doi.org/10.2478/v10156-011-0040-9">
    Solutions to the direct and inverse navigation problems on the great
@@ -4836,9 +4836,9 @@ great circle and tranferring them directly on the chart.  In this
 exercise the flattening of the ellipsoid can be <i>ignored</i>!
 
 Bowring (1984), Williams (1996), Earle (2000, 2008) and Pallikaris &
-G. Latsas (2009), scale the ellipsoid radially onto a sphere preserving
-the geocentric latitude \f$\theta\f$.  More convenient than this is to
-scale the ellipsoid along \f$\hat z\f$ onto the sphere, as is done by
+Latsas (2009), scale the ellipsoid radially onto a sphere preserving the
+geocentric latitude \f$\theta\f$.  More convenient than this is to scale
+the ellipsoid along \f$\hat z\f$ onto the sphere, as is done by
 Sj&ouml;berg (2012), thus preserving the parametric latitude
 \f$\beta\f$.  The advantage of this "parametric" mapping is that
 Bessel's rapidly converging series for meridian arc in terms of
