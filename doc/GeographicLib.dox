@@ -1338,10 +1338,10 @@ The <code>matlab</code> directory contains
    These functions are also available as a package from
    <a href="http://www.mathworks.com/matlabcentral/fileexchange/">
    Matlab File Exchange</a> using the link
-   - <a href="http://www.mathworks.com/matlabcentral/fileexchange/NNNNN">
-     http://www.mathworks.com/matlabcentral/fileexchange/NNNNN</a>
+   - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
+     http://www.mathworks.com/matlabcentral/fileexchange/47898</a>
    .
-   (This requires that the package 39108 also be installed.)
+   (This requires that package 39108 also be installed.)
  - Interface code so that some GeographicLib classes can be accessed
    from Matlab or Octave.  The rest of this section describes how to
    compile and use these interfaces.
@@ -4767,8 +4767,8 @@ Octave are provided by
  - gedistance: solve the inverse great circle problem
  .
 These functions are also available as a package
-<a href="http://www.mathworks.com/matlabcentral/fileexchange/NNNNN">
-NNNNN</a> on Matlab File Exchange.  This requires also the installation
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
+47898</a> on Matlab File Exchange.  This requires also the installation
 of package
 <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
 39108</a>.
