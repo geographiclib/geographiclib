@@ -1,18 +1,34 @@
 function gedoc
 %GEDOC  Great ellipses on an ellipsoid of revolution
 %
-%   This package includes two routines GEDISTANCE and GERECKON which the
-%   inverse and direct problem for great ellipses on the surface of an
+%   This package includes two routines GEDISTANCE and GERECKON which solve
+%   the inverse and direct problem for great ellipses on the surface of an
 %   ellipsoid of revolution.
+%
+%   Great ellipses are sometimes proposed as alternatives to computing
+%   ellipsoidal geodesics.  However geodesic calculations are easy to
+%   perform using GEODDISTANCE and GEODRECKON, and these should normally be
+%   used instead of GEDISTANCE and GERECKON.  For a discussion, see
+%
+%     http://geographiclib.sf.net/1.38/greatellipse.html#gevsgeodesic
 %
 %   The method involves stretching the ellipse along the axis until it
 %   becomes a sphere, solving the corresponding great circle problem on the
-%   sphere and mapping the results back to the ellipsoid.  Finding the
-%   distance involves computing the arc length of an ellipse and this
-%   package uses the series solution employed by MATLAB File Exchange
-%   package "Geodesics on an ellipsoid of revolution":
+%   sphere and mapping the results back to the ellipsoid.  For details,
+%   see
+%
+%     http://geographiclib.sf.net/1.38/greatellipse.html#geformulation
+%
+%   Finding the distance involves computing the arc length of an ellipse
+%   and this package uses the rapidly converging series employed by MATLAB
+%   File Exchange package "Geodesics on an ellipsoid of revolution" (which
+%   provides GEODDISTANCE and GEODRECKON):
 %
 %     http://www.mathworks.com/matlabcentral/fileexchange/39108
+%
+%   gedistance.m and gereckon.m should be installed in the SAME DIRECTORY
+%   as package 39108 because these routines require access to its private
+%   utility routines.
 %
 %   Consider two points on the ellipsoid at (lat1, lon1) and (lat2, lon2).
 %   The plane containing these points and the center of the ellipsoid
@@ -31,13 +47,12 @@ function gedoc
 %   argument to the routines.  This is a two-element vector of the form
 %   [a,e], where a is the equatorial radius, e is the eccentricity e =
 %   sqrt(a^2-b^2)/a, and b is the polar semi-axis.  Typically, a and b are
-%   measured in meters and the linear and area quantities returned by the
-%   routines are then in meters and meters^2.  However, other units can be
-%   employed.  If ELLIPSOID is omitted, then the WGS84 ellipsoid (more
-%   precisely, the value returned by DEFAULTELLIPSOID) is assumed [6378137,
-%   0.0818191908426215] corresponding to a = 6378137 meters and a
-%   flattening f = (a-b)/a = 1/298.257223563.  The flattening and
-%   eccentricity are related by
+%   measured in meters and the distances returned by the routines are then
+%   in meters.  However, other units can be employed.  If ELLIPSOID is
+%   omitted, then the WGS84 ellipsoid (more precisely, the value returned
+%   by DEFAULTELLIPSOID) is assumed [6378137, 0.0818191908426215]
+%   corresponding to a = 6378137 meters and a flattening f = (a-b)/a =
+%   1/298.257223563.  The flattening and eccentricity are related by
 %
 %       e = sqrt(f * (2 - f))
 %       f = e^2 / (1 + sqrt(1 - e^2))
@@ -96,11 +111,13 @@ function gedoc
 %       fprintf('Maximum separation = %.1f km\n', ...
 %               geoddistance(latg(51), long(51), late(51), lone(51))/1000);
 %
-%   The restriction on e above arises because the formulation is in terms
-%   of series expansions in e^2.  The exact solutions (valid for any e) can
-%   be expressed in terms of elliptic integrals.
+%   The restriction on e above arises because the meridian distance is
+%   given as a series expansion in the third flattening.  The exact
+%   distance (valid for any e) can be expressed in terms of the elliptic
+%   integral of the second kind .
 %
-%   See also GEDISTANCE, GERECKON, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC.
+%   See also GEDISTANCE, GERECKON, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
+%     GEODDISTANCE, GEODRECKON.
 
 % Copyright (c) Charles Karney (2014) <charles@karney.com>.
 %

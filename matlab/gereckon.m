@@ -12,7 +12,9 @@ function [lat2, lon2, azi2] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
 %   precisely, the value returned by DEFAULTELLIPSOID) is used.  lat2,
 %   lon2, and azi2 give the position and forward azimuths at the end point
-%   in degrees.
+%   in degrees.  GEDOC gives an example and provides additional background
+%   information.  GEDOC also gives the restrictions on the allowed ranges
+%   of the arguments.
 %
 %   When given a combination of scalar and array inputs, GERECKON behaves
 %   as though the inputs were expanded to match the size of the arrays.
@@ -22,28 +24,19 @@ function [lat2, lon2, azi2] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
 %   of points along a single geodesic is efficiently computed by specifying
 %   an array for S12 only.)
 %
-%   This is an implementation of the algorithm given in
-%
-%     https://en.wikipedia.org/wiki/Great_ellipse
+%   GEODRECKON solves the equivalent geodesic problem and usually this is
+%   preferable to using GERECKON.
 %
 %   This routine depends on the MATLAB File Exchange package "Geodesics on
 %   an ellipsoid of revolution":
 %
 %     http://www.mathworks.com/matlabcentral/fileexchange/39108
 %
-%   for the DEFAULTELLIPSOID routine.  gedistance.m and gereckon.m should
-%   be installed in the SAME FOLDER as package 39108 because these routines
-%   also require access to the following general purpose private utility
-%   routines:
+%   This routine should be installed in the SAME DIRECTORY as package
+%   39108.
 %
-%     AngDiff AngNormalize2 AngNormalize AngRound SinCosNorm sumx
-%
-%   in addition they use the following private routines to compute meridian
-%   arcs:
-%
-%     A1m1f C1f C1pf SinCosSeries
-%
-%   See also GEODDOC, GEDISTANCE, DEFAULTELLIPSOID.
+%   See also GEDOC, GEDISTANCE, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
+%     GEODDISTANCE, GEODRECKON.
 
 % Copyright (c) Charles Karney (2014) <charles@karney.com>.
 %

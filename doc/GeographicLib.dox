@@ -80,6 +80,7 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref geodesic
  - \ref triaxial
  - \ref rhumb
+ - \ref greatellipse
  - \ref transversemercator
  - \ref geocentric
  - \ref highprec
@@ -1328,6 +1329,19 @@ The <code>matlab</code> directory contains
      http://www.mathworks.com/matlabcentral/fileexchange/39366</a>
    .
    (This requires that the previous package also be installed.)
+ - Matlab implementations of solutions to the great ellipse problems.
+   These are
+   - gedoc: briefly descibe the routines
+   - gereckon: solve the direct great circle problem
+   - gedistance: solve the inverse great circle problem
+   .
+   These functions are also available as a package from
+   <a href="http://www.mathworks.com/matlabcentral/fileexchange/">
+   Matlab File Exchange</a> using the link
+   - <a href="http://www.mathworks.com/matlabcentral/fileexchange/NNNNN">
+     http://www.mathworks.com/matlabcentral/fileexchange/NNNNN</a>
+   .
+   (This requires that the package 39108 also be installed.)
  - Interface code so that some GeographicLib classes can be accessed
    from Matlab or Octave.  The rest of this section describes how to
    compile and use these interfaces.
@@ -2825,7 +2839,7 @@ Go to
 For some background information on geodesics on triaxial ellipsoids, see
 \ref triaxial.
 
-References
+References:
  - F. W. Bessel,
    <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation
    of longitude and latitude from geodesic measurements (1825)</a>,
@@ -2843,7 +2857,7 @@ References
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
-   J. Geodesy 87(1), 43--55 (Jan. 2013);
+   J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
    addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
@@ -3824,7 +3838,7 @@ Go to
     - C. F. F. Karney,
       <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
       Algorithms for geodesics</a>,
-      J. Geodesy 87(1), 43--55 (Jan. 2013);
+      J. Geodesy 87(1), 43--55 (2013);
       DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
       10.1007/s00190-012-0578-z</a>;
       addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
@@ -4369,7 +4383,7 @@ References:
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
-   J. Geodesy 87(1), 43--55 (Jan. 2013);
+   J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
    addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
@@ -4739,68 +4753,222 @@ Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
 \ref contents.
 </center>
 
-Great Ellipses
+Great ellipses are sometimes proposed (Williams, 1996; Pallikaris &
+Latsas, 2009) as alternatives to geodesics for the purposes of
+navigation.  This is predicated on the assumption that solving the
+geodesic problems is complex and costly.  These assumptions are no
+longer true, and geodesics should normally be used in place of great
+ellipses.  This is discussed in more detail in \ref gevsgeodesic.
 
-Refs:
- - Admiralty Manual of Navigation. Vol 1, General Navigation, Coastal
-   Navigation and Pilotage (1987), p. 97.
- - M. Kallay, Defining edges on a round earth, Proc. 15th International
-   Symposium on Advances in GIS, ACM GIS, 400&ndash;402 (2007).
- - A. Pallikaris, L. Tsoulos, and D. Paradissis, New meridian arc
-   formulas for sailing calculatiosn in navigational GIS, International
-   Hydrographic Review, 24&ndash;34 (May 2009).
- - A. Pallikaris & G. Latsas, New algorithm for great elliptic sailing
-   (GES), J. Navigation 62(3), 493&ndash;507 (2009).
- - W. K. Tseng & H. S. Lee, Navigation on a great ellipse. J. Marine
-   Science and Technology 18(3), 369&ndash;375 (2010).
- - A. Weintrit & P. Kopacz, A novel approach to loxodrome (rhumb Line),
-   orthodrome (great circle) and geodesic line in ECDIS and navigation
-   in general, Int. J. Marine Navigation and Safety of Sea
-   Transportation 5(4), 507&ndash;517 (2011).
- - L. E. Sj&ouml;berg, Solutions to the direct and inverse navigation
-   problems on the great ellipse, J. Geodetic Science 2(3),
-   200&ndash;205 (2012).
+Solutions of the great ellipse problems implemented for Matlab and
+Octave are provided by
+ - gedoc: briefly descibe the routines
+ - gereckon: solve the direct great circle problem
+ - gedistance: solve the inverse great circle problem
+ .
+These functions are also available as a package
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/NNNNN">
+NNNNN</a> on Matlab File Exchange.  This requires also the installation
+of package
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
+39108</a>.
+
+References:
+ - B. R. Bowring,
+   <a href="http://dx.doi.org/10.1007/BF02521760">
+   The direct and inverse solutions for the great elliptic line on the
+   reference ellipsoid</a>, Bull. Geod. 58, 101--108 (1984).
+ - M. A. Earle,
+   A vector solution for navigation on a great ellipse,
+   J. Navigation 53(3), 473--481 (2000).
+ - M. A. Earle,
+   <a href="http://dx.doi.org/10.1017/S037346330800475X">
+   Vector solutions for azimuth</a>,
+   J. Navigation 61(3), 537--545 (2008).
+ - C. F. F. Karney,
+   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   Algorithms for geodesics</a>, J. Geodesy 87(1), 43--55 (2013);
+   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+   geod-addenda.html</a>.
+ - A. Pallikaris & G. Latsas,
+   <a href="http://dx.doi.org/1017/S0373463309005323">
+   New algorithm for great elliptic sailing (GES)</a>,
+   J. Navigation 62(3), 493--507 (2009).
+ - A. Pallikaris, L. Tsoulos, and D. Paradissis,
+   New meridian arc formulas for sailing calculatiosn in navigational
+   GIS, International Hydrographic Review, 24--34 (2009).
+ - L. E. Sj&ouml;berg,
+   <a href="http://dx.doi.org/10.2478/v10156-011-0040-9">
+   Solutions to the direct and inverse navigation problems on the great
+   ellipse</a>, J. Geodetic Science 2(3), 200--205 (2012).
+ - R. Williams,
+   <a href="http://dx.doi.org/10.1017/S0373463300013333">
+   The Great Ellipse on the Surface of the Spheroid</a>,
+   J. Navigation 49(2), 229--234 (1996).
+ - T. Vincenty,
+   <a href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">
+   Direct and Inverse Solutions of Geodesics on the Ellipsoid with
+   Application of Nested Equations</a>,
+   Survey Review 23(176), 88--93 (1975).
+   
 
 
-Misstatments (except for the last one):
+Jump to
+ - \ref geformulation
+ - \ref gevsgeodesic
 
- - Kallay (2007): "Computing points along geodesic curves is notoriously
-   difficult and expensive.  An exact differentiable parameterizations
-   is not known, and approximate ones are difficult and expensive to
-   compute."
+\section geformulation Solution of great ellipse problems
 
- - Admiralty Manual of Navigation (1987): "There are a variety of
-   solutions for computing the shortest distance (the geodesic) and
-   course on the spheroid.  Some of these use the geodetic and some the
-   parametric latitutde, terms described in Chapter 3.  Some of the
-   formulae required are much too complex for general use."
+Adopt the usual notation for the ellipsoid: equatorial semi-axis
+\f$a\f$, polar semi-axis \f$b\f$, flattening \f$f = (a-b)/a\f$,
+eccentricity \f$e = \sqrt{f(2-f)}\f$, second eccentricity \f$e' =
+e/(1-f)\f$.
 
- - Pallikaris, Tsoulos, & Paradissis (2009): "...it is required to adopt
-   realistic accuracy standards in order not only to eliminate the
-   significant errors of the spherical model but also to avoid the
-   exaggerated and unrealistic requirements of sub meter accuracy."
-   "Calculation of shortest sailings paths on the ellipsoid by a
-   geodetic inverse method involve formulas that are too much complex."
-   "Despite the fact that contemporary computers are fast enough to
+There are several ways in which an ellipsoid can be mapped into a sphere
+converting the great ellipse into a great circle.  The simplest ones
+entail scaling the ellipsoid in the \f$\hat z\f$ direction, the
+direction of the axis of rotation, scaling the ellipsoid radially, or a
+combination of the two.
+
+One such combination (scaling by \f$a^2/b\f$ in the \f$\hat z\f$
+direction, following by a radial scaling to the sphere) preserves the
+geographical latitude \f$\phi\f$.  This enables an great ellipse to be
+plotted on a chart merely by determining way points on the corresponding
+great circle and tranferring them directly on the chart.  In this
+exercise the flattening of the ellipsoid can be <i>ignored</i>!
+
+Bowring (1984), Williams (1996), Earle (2000, 2008) and Pallikaris &
+G. Latsas (2009), scale the ellipsoid radially onto a sphere preserving
+the geocentric latitude \f$\theta\f$.  More convenient than this is to
+scale the ellipsoid along \f$\hat z\f$ onto the sphere, as is done by
+Sj&ouml;berg (2012), thus preserving the parametric latitude
+\f$\beta\f$.  The advantage of this "parametric" mapping is that
+Bessel's rapidly converging series for meridian arc in terms of
+parametric latitude can be used (a possibility that is overlooked by
+Sj&ouml;berg).
+
+The full parametric mapping is:
+ - The geographic latitude \f$\phi\f$ on the ellipsoid maps to the
+   parametric latitude \f$\beta\f$ on the sphere,
+   where
+   \f[a\tan\beta = b\tan\phi.\f]
+ - The longitude \f$\lambda\f$ is unchanged.
+ - The azimuth \f$\alpha\f$ on the ellipsoid maps to an azimuth
+   \f$\gamma\f$ on the sphere where
+   \f[
+   \begin{align}
+   \tan\alpha &= \frac{\tan\gamma}{\sqrt{1-e^2\cos^2\beta}}, \\
+   \tan\gamma &= \frac{\tan\alpha}{\sqrt{1+e'^2\cos^2\phi}},
+   \end{align}
+   \f]
+   and the quadrants of \f$\alpha\f$ and \f$\gamma\f$ are the same.
+ - Positions on the great circle of radius \f$a\f$ are parametrized by
+   arc length \f$\sigma\f$ measured from the northward crossing of the
+   equator.  The great ellipse has a semi-axes \f$a\f$ and \f$a \sqrt{1 -
+   e^2\cos^2\gamma_0}\f$, where \f$\gamma_0\f$ is the great-circle
+   azimuth at the northward equator crossing, and \f$\sigma\f$ is the
+   parametric angle on the ellipse.
+ .
+To determine the distance along the ellipse in terms of \f$\sigma\f$ and
+vice versa, the series for distance \f$s\f$ and for \f$\tau\f$ given in
+\ref geodseries can be used.  The direct and inverse great ellipse
+problems are now simply solved by mapping the problem to the sphere,
+solving the resulting great circle problem, and mapping this back onto
+the ellipsoid.
+
+\section gevsgeodesic Great ellipses vs geodesics
+
+Some papers advocating the use of great ellipses for navigation exhibit
+a prejudice against the use of geodesics.  These quotes from Pallikaris,
+Tsoulos, & Paradissis (2009) give the flavor
+ - ... it is required to adopt realistic accuracy standards in order not
+   only to eliminate the significant errors of the spherical model but
+   also to avoid the exaggerated and unrealistic requirements of sub
+   meter accuracy.
+ - Calculation of shortest sailings paths on the ellipsoid by a geodetic
+   inverse method involve formulas that are much too complex.
+ - Despite the fact that contemporary computers are fast enough to
    handle more complete geodetic formulas of sub meter accuracy, a basic
    principle for the design of navigational systems is the avoidance of
-   unnecessary consumption of computing power."
+   unnecessary consumption of computing power.
+ .
+This prejudice was probably due to the fact that the most well-known
+algorithms for geodesics, by Vincenty (1975), come with some
+"asterisks":
+ - no derivation was given (although they follow in a straightforward
+   fashion from classic 19th century methods);
+ - the accuracy is "only" 0.5 mm or so, surely good enough for most
+   applications, but still a reason for a user to worry and a spur to
+   numerous studies "validating" the algorithms;
+ - no indication is given for how to extend the series to improve the
+   accuracy;
+ - there was a belief in some quarters (erroneous!) that the Vincenty
+   algorithms could not be used to compute waypoints;
+ - the algorithm for the inverse problem fails to converge for some
+   inputs.
+ .
+These problems meant that users were reluctant to bundle the algorithms
+into a library and treat them as a part of the software infrastructure
+(much as you might regard the computation of \f$\sin x\f$ as a given).
+In particular, I regard the last issue (lack of convergence of the
+inverse solution) as fatal.  Even though the problem only arises for
+nearly antipodal points, it means all users of the library must have
+some way to handle this problem.
 
- - Pallikaris & Latsas (2009): "Seeking the higher accuracies of the
-   geodesic for sailing calculations does not have any practical value
-   for marine navigation and simply adds more complexity to the
-   calculations."
+For these reasons, substitution of a great ellipse for the geodesic
+makes some sense.  The solution of the great ellipse is, in principle,
+no more difficult than solving for the great circle and, for paths of
+less then 10000 km, the error in the distance is less than 13.5 m.
 
- - Tseng & Lee (2010): "Seeking extremely high accuracy for marine
-   navigation purpose does not offer any real benefit and requires more
-   computing power and processing time." "The computation of geodesic
-   needs many iterative procedures." "Using very accurate methods for
-   the calculation of long geodesics, as the method of Vincenty (1975)
-   spending a lot of processing time, ..."
+Now (2014), however, the situation has reversed.  The algorithms given
+by Karney (2013) (and used in GeographicLib since 2009) explicitly
+resolve the issues with Vincenty's algorithm.  The geodesic problem is
+conveniently bundled into a library.  Users can call this with an
+assurance of an accurate result much as they would when evaluating
+\f$\sin x\f$.  On the other, great ellipses come with their own set of
+asterisks:
+ - To the extent that they are regarded as approximations to geodesics,
+   the errors need to be quantified, the limits of allowable use
+   documented, etc.
+ - The user is now left with decisions on when to trust the results and
+   to find alternative solutions if necessary.
+ - Even though the great ellipse is no more that 13.5 m longer than a
+   10000 km geodesic, the path of the great ellipse can deviate from the
+   geodesics by as much as 8.3 km.  This might disqualify great ellipses
+   for use in congested air corridors where the
+   <a href="https://en.wikipedia.org/wiki/Strategic_lateral_offset_procedure">
+   strategic lateral offset procedure</a> is in effect and in any
+   situation which demands coordination in the routes of vessels.
+ - Because geodesics obey the triangle inequality while great ellipses
+   do not, the solutions for realistic navigational problems, e.g.,
+   determining the time of closest approach of two vessels, are often
+   simpler in terms of geodesics.
 
- - Weintrit & Kopacz (2011): "So, let's start navigation based on
-   geodesics.  It is high time to forget the rhumb line navigation and
-   great circle navigation, too."
+Let me also address some other of the objections in the quotes from
+Pallikaris et al. given above.
+ - "exaggerated and unrealistic requirements of sub meter accuracy": This
+   is a straw man.  The geodesic algorithms allow full double precision
+   accuracy at essentially no cost.  This is because Clenshaw summation
+   allows additional terms to be added to the series without the need
+   for addition trigonometric evaluations.  Full accuracy is important
+   to maintain because it allows the results to be used reliably in more
+   complex problems (e.g., in the determination of maritime boundaries).
+ - "unnecessary consumption of computing power": Another straw man.  The
+   solution of the inverse geodesic problem takes 2.3 &mu;s; multiple
+   points on a geodesic can be computed at a rate of 0.4 &mu;s per
+   point.  The actual power consumed in these calculations is miniscule
+   compared to the power needed to drive the display of a navigational
+   computer.
+ - "formulas that are much too complex": There's no question that the
+   solution of the geodesic problem is more complex than for great
+   ellipses.  However this complexity is only an issue when
+   <i>implementing</i> the algorithms.  For the <i>end user</i>,
+   navigational software employing geodesics is <i>less</i> complex
+   ("the shortest path is given") compared with that employing great
+   ellipses ("a path which closely approximates the shortest path is
+   given; the error in distance is no more than ... and the deviation
+   the route is no more than ... provided the distance is less than
+   ...")
 
 <center>
 Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
@@ -4824,7 +4992,7 @@ Go to
  - \ref tmseries
  - \ref tmfigures
 
-References
+References:
  - L. Kr&uuml;ger,
    <a href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
@@ -5597,9 +5765,7 @@ of the git repository for GeographicLib.
      2.8.12 and later).
    - GeographicLib added to homebrew (still need to document).
    - In cmake configures, set output directories for Windows builds.
-   - Fix cmake 0026 warning
-   - Treat &minus; in DMS.cpp e2 88 92 = U+2212
-
+   - Replace &minus; by - in DMS.{cpp,js}.
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-08-08)
