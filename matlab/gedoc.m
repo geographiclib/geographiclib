@@ -2,7 +2,7 @@ function gedoc
 %GEDOC  Great ellipses on an ellipsoid of revolution
 %
 %   This package includes two routines GEDISTANCE and GERECKON which solve
-%   the inverse and direct problem for great ellipses on the surface of an
+%   the inverse and direct problems for great ellipses on the surface of an
 %   ellipsoid of revolution.  For more information, see
 %
 %     http://geographiclib.sf.net/1.38/greatellipse.html
