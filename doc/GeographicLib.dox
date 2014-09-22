@@ -4937,26 +4937,25 @@ asterisks:
    <a href="https://en.wikipedia.org/wiki/Strategic_lateral_offset_procedure">
    strategic lateral offset procedure</a> is in effect and in any
    situation which demands coordination in the routes of vessels.
- - Because geodesics obey the triangle inequality while great ellipses
+ - Because geodesics obey the triangle inequality, while great ellipses
    do not, the solutions for realistic navigational problems, e.g.,
    determining the time of closest approach of two vessels, are often
    simpler in terms of geodesics.
 
 Let me also address some other of the objections in the quotes from
 Pallikaris et al. given above.
- - "exaggerated and unrealistic requirements of sub meter accuracy": This
-   is a straw man.  The geodesic algorithms allow full double precision
-   accuracy at essentially no cost.  This is because Clenshaw summation
-   allows additional terms to be added to the series without the need
-   for addition trigonometric evaluations.  Full accuracy is important
-   to maintain because it allows the results to be used reliably in more
+ - "exaggerated and unrealistic requirements of sub meter accuracy": The
+   geodesic algorithms allow full double precision accuracy at
+   essentially no cost.  This is because Clenshaw summation allows
+   additional terms to be added to the series without the need for
+   addition trigonometric evaluations.  Full accuracy is important to
+   maintain because it allows the results to be used reliably in more
    complex problems (e.g., in the determination of maritime boundaries).
- - "unnecessary consumption of computing power": Another straw man.  The
-   solution of the inverse geodesic problem takes 2.3 &mu;s; multiple
-   points on a geodesic can be computed at a rate of 0.4 &mu;s per
-   point.  The actual power consumed in these calculations is miniscule
-   compared to the power needed to drive the display of a navigational
-   computer.
+ - "unnecessary consumption of computing power": The solution of the
+   inverse geodesic problem takes 2.3 &mu;s; multiple points on a
+   geodesic can be computed at a rate of one point per 0.4 &mu;s.  The
+   actual power consumed in these calculations is miniscule compared to
+   the power needed to drive the display of a navigational computer.
  - "formulas that are much too complex": There's no question that the
    solution of the geodesic problem is more complex than for great
    ellipses.  However this complexity is only an issue when
@@ -4964,9 +4963,9 @@ Pallikaris et al. given above.
    navigational software employing geodesics is <i>less</i> complex
    ("the shortest path is given") compared with that employing great
    ellipses ("a path which closely approximates the shortest path is
-   given; the error in distance is no more than ... and the deviation
-   the route is no more than ... provided the distance is less than
-   ...")
+   given; provided that the distance is less than ..., the error in
+   distance is no more than ... and the deviation the route is no more
+   than ... ")
 
 <center>
 Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
