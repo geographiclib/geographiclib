@@ -4771,7 +4771,8 @@ These functions are also available as a package
 47898</a> on Matlab File Exchange.  This requires also the installation
 of package
 <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
-39108</a>.
+39108</a>.  There are no C++ support in GeographicLib for great
+ellipses.
 
 References:
  - B. R. Bowring,
@@ -4942,8 +4943,8 @@ asterisks:
    determining the time of closest approach of two vessels, are often
    simpler in terms of geodesics.
 
-Let me also address some other of the objections in the quotes from
-Pallikaris et al. given above.
+To address some other of the objections in the quotes from Pallikaris et
+al. given above:
  - "exaggerated and unrealistic requirements of sub meter accuracy": The
    geodesic algorithms allow full double precision accuracy at
    essentially no cost.  This is because Clenshaw summation allows
@@ -4966,6 +4967,13 @@ Pallikaris et al. given above.
    given; provided that the distance is less than ..., the error in
    distance is no more than ... and the deviation the route is no more
    than ... ")
+
+Having all the geodesic functions bundled up into a reliable "black box"
+enables users to concentrate on how to solve problems using geodesics
+(instead of figuring out how to solve for the geodesics).  A wide range
+of problems (intersection of paths, the path for an interception, the
+time of closest approach, median lines, tri-points, etc.) are all
+amenable to simple and fast solutions in terms of geodesics.
 
 <center>
 Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
