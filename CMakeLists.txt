@@ -325,12 +325,12 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
     # to abide by the terms of this license.
     #
     # For Linux, use system versions of mpfr and gmp.  For Apple, use
-    # brew install mpfr.  For Windows, download
-    # MPFR-MPIR-x86-x64-MSVC2010.zip from the MPFR C++ site and unpack
-    # in the top-level directory.  The Windows build only works with
-    # GEOGRAPHICLIB_LIB_TYPE=STATIC.  NOTE: mpfr, gmp, and mpir are
-    # covered by the LGPL; be sure to abide by the terms of this
-    # license.
+    # brew install mpfr.  Recent versions of mpfr (3.0 or later) work
+    # fine.  For Windows, download MPFR-MPIR-x86-x64-MSVC2010.zip from
+    # the MPFR C++ site and unpack in the top-level directory.  The
+    # Windows build only works with GEOGRAPHICLIB_LIB_TYPE=STATIC.
+    # NOTE: mpfr, gmp, and mpir are covered by the LGPL; be sure to
+    # abide by the terms of this license.
     if (WIN32)
       if (MSVC AND NOT MSVC_VERSION LESS 1800)
         if (CMAKE_SIZEOF_VOID_P EQUAL 8)

@@ -5499,7 +5499,7 @@ Here's what you should know:
    or later) and the quadmath library (which requires the use of g++).
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=5</code> gives
    arbitrary precision via mpfr::mpreal; this requires
-   <a href="http://www.mpfr.org"> MPFR</a> and
+   <a href="http://www.mpfr.org"> MPFR</a> (version 3.0 or later) and
    <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
    (version 3.5.9 or later).
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
