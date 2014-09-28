@@ -4962,12 +4962,13 @@ al. given above:
    ellipses.  However this complexity is only an issue when
    <i>implementing</i> the algorithms.  For the <i>end user</i>,
    navigational software employing geodesics is <i>less</i> complex
-   ("the shortest path is found") compared with that employing great
-   ellipses ("a path which closely approximates the shortest path is
-   found; provided that the distance is less than 10000 km, the error in
-   distance is no more than 14 m and the deviation the route from that
-   of the shortest path is no more than 9 km; for details see Appendix
-   E.")
+   (<i>The shortest path is found.</i>) compared with that employing
+   great ellipses (<i>A path which closely approximates the shortest
+   path is found.  Provided that the distance is less than 10000 km, the
+   error in distance is no more than 14 m and the deviation the route
+   from that of the shortest path is no more than 9 km.  These bounds
+   apply to the WGS84 ellipsoid.  For more discussion of the errors and
+   steps that may be taken to mitigate them, see Appendix E.</i>)
 
 Having all the geodesic functions bundled up into a reliable "black box"
 enables users to concentrate on how to solve problems using geodesics
