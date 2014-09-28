@@ -4771,8 +4771,8 @@ These functions are also available as a package
 47898</a> on Matlab File Exchange.  This requires also the installation
 of package
 <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
-39108</a>.  There are no C++ support in GeographicLib for great
-ellipses.
+39108</a>.  In this time, there are no C++ support in GeographicLib for
+great ellipses.
 
 References:
  - B. R. Bowring,
@@ -4933,8 +4933,8 @@ own set of asterisks:
    to find alternative solutions if necessary.
  - Even though the great ellipse is no more that 13.5 m longer than a
    10000 km geodesic, the path of the great ellipse can deviate from the
-   geodesics by as much as 8.3 km.  This might disqualify great ellipses
-   for use in congested air corridors where the
+   geodesic by as much as 8.3 km.  This disqualifies great ellipses from
+   use in congested air corridors where the
    <a href="https://en.wikipedia.org/wiki/Strategic_lateral_offset_procedure">
    strategic lateral offset procedure</a> is in effect and in any
    situation which demands coordination in the routes of vessels.
@@ -4962,11 +4962,12 @@ al. given above:
    ellipses.  However this complexity is only an issue when
    <i>implementing</i> the algorithms.  For the <i>end user</i>,
    navigational software employing geodesics is <i>less</i> complex
-   ("the shortest path is given") compared with that employing great
+   ("the shortest path is found") compared with that employing great
    ellipses ("a path which closely approximates the shortest path is
-   given; provided that the distance is less than ..., the error in
-   distance is no more than ... and the deviation the route is no more
-   than ... ")
+   found; provided that the distance is less than 10000 km, the error in
+   distance is no more than 14 m and the deviation the route from that
+   of the shortest path is no more than 9 km; for details see Appendix
+   E.")
 
 Having all the geodesic functions bundled up into a reliable "black box"
 enables users to concentrate on how to solve problems using geodesics
@@ -5772,6 +5773,7 @@ of the git repository for GeographicLib.
    - In cmake configures, set output directories for Windows builds.
    - Replace &minus; by - in DMS.{cpp,js}.
    - geographiclib-targets.cmake
+   - Matlab/Octave routines for great ellipses added.
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-08-08)
