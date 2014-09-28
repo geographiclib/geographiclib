@@ -54,9 +54,9 @@ else ()
   endif ()
 endif ()
 
-# Specify where the library is installed, adding it to the export depends
+# Specify where the library is installed, adding it to the export targets
 install (TARGETS ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES}
-  EXPORT depends
+  EXPORT targets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib${LIB_SUFFIX}
   ARCHIVE DESTINATION lib${LIB_SUFFIX})

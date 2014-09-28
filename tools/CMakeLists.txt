@@ -35,8 +35,8 @@ if (APPLE AND NOT CMAKE_VERSION VERSION_LESS 2.8.12)
     INSTALL_RPATH "@loader_path/../lib${LIB_SUFFIX}")
 endif ()
 
-# Specify where the tools are installed
-install (TARGETS ${TOOLS} EXPORT depends DESTINATION bin)
+# Specify where the tools are installed, adding them to the export targets
+install (TARGETS ${TOOLS} EXPORT targets DESTINATION bin)
 
 # Put all the tools into a folder in the IDE
 set_property (TARGET tools ${TOOLS} PROPERTY FOLDER tools)

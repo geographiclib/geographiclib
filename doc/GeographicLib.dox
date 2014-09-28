@@ -4878,8 +4878,8 @@ the ellipsoid.
 \section gevsgeodesic Great ellipses vs geodesics
 
 Some papers advocating the use of great ellipses for navigation exhibit
-a prejudice against the use of geodesics.  These quotes from Pallikaris,
-Tsoulos, & Paradissis (2009) give the flavor
+a prejudice against the use of geodesics.  These excerpts from
+Pallikaris, Tsoulos, & Paradissis (2009) give the flavor
  - ... it is required to adopt realistic accuracy standards in order not
    only to eliminate the significant errors of the spherical model but
    also to avoid the exaggerated and unrealistic requirements of sub
@@ -4909,8 +4909,8 @@ algorithms for geodesics, by Vincenty (1975), come with some
 These problems meant that users were reluctant to bundle the algorithms
 into a library and treat them as a part of the software infrastructure
 (much as you might regard the computation of \f$\sin x\f$ as a given).
-In particular, I regard the last issue (lack of convergence of the
-inverse solution) as fatal.  Even though the problem only arises for
+In particular, I regard the last issue, lack of convergence of the
+inverse solution, as fatal.  Even though the problem only arises for
 nearly antipodal points, it means all users of the library must have
 some way to handle this problem.
 
@@ -4920,12 +4920,12 @@ no more difficult than solving for the great circle and, for paths of
 less then 10000 km, the error in the distance is less than 13.5 m.
 
 Now (2014), however, the situation has reversed.  The algorithms given
-by Karney (2013) (and used in GeographicLib since 2009) explicitly
-resolve the issues with Vincenty's algorithm.  The geodesic problem is
-conveniently bundled into a library.  Users can call this with an
-assurance of an accurate result much as they would when evaluating
-\f$\sin x\f$.  On the other, great ellipses come with their own set of
-asterisks:
+by Karney (2013)&mdash;and used in GeographicLib since
+2009&mdash;explicitly resolve the issues with Vincenty's algorithm.  The
+geodesic problem is conveniently bundled into a library.  Users can call
+this with an assurance of an accurate result much as they would when
+evaluating \f$\sin x\f$.  On the other, great ellipses come with their
+own set of asterisks:
  - To the extent that they are regarded as approximations to geodesics,
    the errors need to be quantified, the limits of allowable use
    documented, etc.
@@ -5771,6 +5771,7 @@ of the git repository for GeographicLib.
    - GeographicLib added to homebrew (still need to document).
    - In cmake configures, set output directories for Windows builds.
    - Replace &minus; by - in DMS.{cpp,js}.
+   - geographiclib-targets.cmake
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-08-08)

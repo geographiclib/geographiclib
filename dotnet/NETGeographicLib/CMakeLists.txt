@@ -18,9 +18,9 @@ target_link_libraries (${NETGEOGRAPHICLIB_LIBRARIES} ${PROJECT_LIBRARIES})
 set_target_properties (${NETGEOGRAPHICLIB_LIBRARIES} PROPERTIES
   VERSION "${LIBVERSIONFULL}" OUTPUT_NAME ${NETLIBNAME})
 
-# Specify where the library is installed, adding it to the export depends
+# Specify where the library is installed, adding it to the export targets
 install (TARGETS ${NETGEOGRAPHICLIB_LIBRARIES}
-  EXPORT depends
+  EXPORT targets
   RUNTIME DESTINATION bin)
 
 if (PACKAGE_DEBUG_LIBS)

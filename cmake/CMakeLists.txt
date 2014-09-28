@@ -14,7 +14,7 @@ configure_file (project-config.cmake.in
 configure_file (project-config-version.cmake.in
   "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config-version.cmake" @ONLY)
 export (TARGETS ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES} ${TOOLS}
-  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-depends.cmake")
+  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-targets.cmake")
 
 # geographiclib-config.cmake for the install tree.  It's installed in
 # ${INSTALL_CMAKE_DIR} and @PROJECT_ROOT_DIR@ is the relative
@@ -44,12 +44,12 @@ install (FILES
   RENAME "${PROJECT_NAME_LOWER}-config-version.cmake")
 # Make information about the cmake targets (the library and the tools)
 # available.
-install (EXPORT depends
-  FILE ${PROJECT_NAME_LOWER}-depends.cmake
+install (EXPORT targets
+  FILE ${PROJECT_NAME_LOWER}-targets.cmake
   DESTINATION "${INSTALL_CMAKE_DIR}")
 
 if (MSVC AND PACKAGE_DEBUG_LIBS)
   install (FILES
-    "${PROJECT_BINARY_DIR}/cmake/CMakeFiles/Export/cmake/${PROJECT_NAME_LOWER}-depends-debug.cmake"
+    "${PROJECT_BINARY_DIR}/cmake/CMakeFiles/Export/cmake/${PROJECT_NAME_LOWER}-targets-debug.cmake"
     DESTINATION "${INSTALL_CMAKE_DIR}" CONFIGURATIONS Release)
 endif ()
