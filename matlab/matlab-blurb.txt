@@ -29,9 +29,13 @@ geodesics.
 Also provided are 3 auxiliary routines, DEFAULTELLIPSOID, ECC2FLAT, and
 FLAT2ECC.
 
-This package is used by the MATLAB File Exchange package "Geodesic
+This package is used by the MATLAB File Exchange packages "Geodesic
 projections for an ellipsoid",
 
   http://www.mathworks.com/matlabcentral/fileexchange/39366
+
+and "Great ellipses",
+
+  http://www.mathworks.com/matlabcentral/fileexchange/47898
 
 Use GEODDOC to obtain a more detailed description.

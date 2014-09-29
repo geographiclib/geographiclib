@@ -1293,13 +1293,18 @@ of the Australian Communications and Media Authority.)
 
 \section matlab Matlab and Octave implementations
 
-The <code>matlab</code> directory contains
- - Native Matlab implementations of the geodesic routines.  To use
-   these, start Matlab or Octave and run one of (for example) \verbatim
+The <code>matlab</code> directory Matlab and Octave implementations of
+some of the functions of GeographicLib.  To use
+these, start Matlab or Octave and run one of (for example) \verbatim
    addpath /usr/local/libexec/GeographicLib/matlab
    addpath 'C:/pkg-vc10-x64/GeographicLib-1.38/libexec/GeographicLib/matlab'
    \endverbatim
-   The available functions are:
+
+The functions fall into the following groups
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
+   Geodesics on an ellipsoid of revolution</a>, native Matlab
+   implementations of the geodesic routines.  The available functions
+   are
    - geoddoc: briefly descibe the routines
    - geodreckon: solve the direct geodesic problem
    - geoddistance: solve the inverse geodesic problem
@@ -1308,13 +1313,13 @@ The <code>matlab</code> directory contains
    Use the help function to get documentation, e.g., \code
    help geoddistance \endcode
    to obtain documentation.  These functions are also available as a
-   standalone package from
-   <a href="http://www.mathworks.com/matlabcentral/fileexchange/">
-   Matlab File Exchange</a> using the link
+   Matlab File Exchange package from
    - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
      http://www.mathworks.com/matlabcentral/fileexchange/39108</a>
- - Native Matlab implementations of projections which are related to
-   geodesics.  These are
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
+   Geodesic projections for an ellipsoid</a>, native Matlab
+   implementations of projections which are related to geodesics.  These
+   are
    - geodproj: briefly descibe the routines
    - eqdazim_fwd, eqdazim_inv: azimuthal equidistant
    - cassini_fwd, cassini_inv: Cassini-Soldner
@@ -1322,29 +1327,29 @@ The <code>matlab</code> directory contains
    - gnomonic_fwd, gnomonic_inv: ellipsoidal gnomonic
    - utm_fwd, utm_inv: universal transverse Mercator
    .
-   These functions are also available as a package from
-   <a href="http://www.mathworks.com/matlabcentral/fileexchange/">
-   Matlab File Exchange</a> using the link
+   These functions are also available as a Matlab File Exchange package
+   from
    - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
      http://www.mathworks.com/matlabcentral/fileexchange/39366</a>
    .
    (This requires that the previous package also be installed.)
- - Matlab implementations of solutions to the great ellipse problems.
-   These are
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
+   Great ellipses</a>, implementations of solutions to the great ellipse
+   problems.  The functions are
    - gedoc: briefly descibe the routines
    - gereckon: solve the direct great circle problem
    - gedistance: solve the inverse great circle problem
    .
-   These functions are also available as a package from
-   <a href="http://www.mathworks.com/matlabcentral/fileexchange/">
-   Matlab File Exchange</a> using the link
+   The functionality provided by these routines is <i>not</i> available
+   through GeographicLib's C++ library.  These functions are also
+   available as a Matlab File Exchange package from
    - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
      http://www.mathworks.com/matlabcentral/fileexchange/47898</a>
    .
    (This requires that package 39108 also be installed.)
- - Interface code so that some GeographicLib classes can be accessed
-   from Matlab or Octave.  The rest of this section describes how to
-   compile and use these interfaces.
+ - Finally, interface code so that some GeographicLib classes can be
+   accessed directly from Matlab or Octave.  The rest of this section
+   describes how to compile and use these interfaces.
 
 There are two ways of compiling the interface code: (1) using cmake and
 (2) invoking the compiler from Matlab.

@@ -12,14 +12,14 @@ function gedoc
 %   perform using GEODDISTANCE and GEODRECKON, and these should normally be
 %   used instead of GEDISTANCE and GERECKON.  For a discussion, see
 %
-%     http://geographiclib.sf.net/1.38/greatellipse.html#gevsgeodesic
+%     http://geographiclib.sf.net/html/greatellipse.html#gevsgeodesic
 %
 %   The method involves stretching the ellipse along the axis until it
 %   becomes a sphere, solving the corresponding great circle problem on the
 %   sphere and mapping the results back to the ellipsoid.  For details,
 %   see
 %
-%     http://geographiclib.sf.net/1.38/greatellipse.html#geformulation
+%     http://geographiclib.sf.net/html/greatellipse.html#geformulation
 %
 %   Finding the distance involves computing the arc length of an ellipse
 %   and this package uses the rapidly converging series employed by MATLAB
@@ -96,7 +96,7 @@ function gedoc
 %
 %   In order to compute intermediate points on a great ellipse, proceed as
 %   in the following example which plots the track from Sydney to
-%   Valparaiso.
+%   Valparaiso and computes the deviation from the corresponding geodesic.
 %
 %       % 1 = Sydney, 2 = Valparaiso
 %       lat1 = -33.83; lon1 = 151.29;
@@ -111,7 +111,7 @@ function gedoc
 %       title('Sydney to Valparaiso');
 %       xlabel('longitude'); ylabel('latitude');
 %       fprintf('Maximum separation = %.1f km\n', ...
-%               geoddistance(latg(51), long(51), late(51), lone(51))/1000);
+%               max(geoddistance(latg, long, late, lone))/1000);
 %
 %   The restriction on e above arises because the meridian distance is
 %   given as a series expansion in the third flattening.  The exact
