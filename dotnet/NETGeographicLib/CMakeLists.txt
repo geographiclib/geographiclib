@@ -29,8 +29,11 @@ if (PACKAGE_DEBUG_LIBS)
     DESTINATION bin CONFIGURATIONS Release)
 endif ()
 
-# Suppress 3.0 warnings about use of the LOCATION target property
-cmake_policy (SET CMP0026 OLD)
+if (NOT CMAKE_VERSION VERSION_LESS 3.0)
+  # Suppress 3.0 warnings about use of the LOCATION target property
+  cmake_policy (SET CMP0026 OLD)
+endif()
+
 # Install pdb file.
 foreach (_c ${CMAKE_CONFIGURATION_TYPES})
   string (TOUPPER ${_c} _C)
