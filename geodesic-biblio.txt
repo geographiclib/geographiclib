@@ -1225,8 +1225,10 @@
    Ohio State Univ. (1993), Chap. 1.[[BR]]
    http://hdl.handle.net/1811/24409
  * K. Borre,[[BR]]
-   ''Ellipsoidal Geometry and Conformal Mapping''
-   (Mar. 2001).[[BR]]
+   ''Ellipsoidal Geometry and Conformal Mapping'' (Mar. 2001);
+   these notes, with some modifications, constitute Chaps. 11 & 12
+   of K. Borre & W. G. Strang, ''Algorithms for Global Positioning''
+   (Wellesley-Cambridge Press, 2012) [[BR]]
    http://old.gps.aau.dk/downloads/notes.pdf
  * C. M. Rollins,[[BR]]
    ''An integral for geodesic length'',
