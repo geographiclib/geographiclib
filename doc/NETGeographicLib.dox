@@ -175,7 +175,7 @@ two ways:
   application.  You can build %GeographicLib as a shared library using
   <code>-D GEOGRAPHICLIB_LIB_TYPE=SHARED</code> or <code>BOTH</code>.
 - you have installed %GeographicLib using one of the binary installers (see
-  \ref windowsbin "Using a binary installer for Windows" in the
+  \ref binaryinstwin "Using a binary installer for Windows" in the
   %GeographicLib documentation).  In this case, you are restricted to using
   Visual Studio 10.
 

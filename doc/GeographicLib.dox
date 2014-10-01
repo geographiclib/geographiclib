@@ -56,13 +56,9 @@ line endings.)  Alternatively you can get the latest release using git
 \verbatim
   git clone -b r1.38 git://git.code.sf.net/p/geographiclib/code geographiclib
 \endverbatim
-There are also binary installers for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.38-win32.exe">
-  GeographicLib-1.38-win32.exe</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.38-win64.exe">
-  GeographicLib-1.38-win64.exe</a>
-.
-It is licensed under the
+There are also binary installers available for some platforms.  See \ref binaryinst.
+
+GeographicLib is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
 see <a href="LICENSE.txt">LICENSE.txt</a> for the terms.
 For more information, see http://geographiclib.sourceforge.net/.
@@ -202,7 +198,7 @@ Then pick one of the first five options below:
   and GNU make on Linux and many Unix platforms.
 - \ref windows.  This is a simple installation method that works with
   Visual Studio 2005, 2008, and 2010 under Windows.
-- \ref windowsbin.  Use this installation method if you only need to use
+- \ref binaryinst.  Use this installation method if you only need to use
   the \ref utilities supplied with GeographicLib.  (This method also
   installs the header files and the library for use by Visual Studio 10.)
 - \ref qt.  How to compile GeographicLib so that it can be used by Qt
@@ -490,7 +486,11 @@ is needed to build the Matlab interface and to run the tests.)
 The Visual Studio 10 solution also contains projects to build
 <a href="NET/index.html">NETGeographicLib</a> and the C# example project.
 
-\section windowsbin Using a binary installer for Windows
+\section binaryinst Using a binary installer
+
+Binary installers are available for some platforms
+
+\subsection binaryinstwin Windows
 
 Use this method if you only need to use the GeographicLib utilities.
 The header files and static and shared versions of library are also
@@ -527,6 +527,20 @@ other 64-bit versions of Matlab.
 <a href="NET/index.html">NETGeographicLib</a> library dlls (release and
 debug) are included with the binary installers; these are linked against
 the shared library for GeographicLib.
+
+\subsection binaryinstosx MacOSX
+
+You can install using Homebrew.  Follow the directions on
+http://brew.sh/ for installing this package manager.  Then type
+\verbatim
+brew install geographiclib \endverbatim
+Now links to GeographicLib are installed under /usr/local.
+
+\subsection binaryinstlin Linux
+
+Some Linux distributions, Debian and Ubuntu, offer GeographicLib as a
+standard package.  Typically these will be one or two verions behind the
+latest.
 
 \section qt Building the library for use with Qt
 
@@ -4331,7 +4345,7 @@ here are:
  - Extending Clenshaw summation to compute the divided difference of a
    trigonometric sum.
 
-Jump to
+Go to
  - \ref rhumbform
  - \ref rhumblat
  - \ref divideddiffs
@@ -4817,7 +4831,7 @@ References:
    Application of Nested Equations</a>,
    Survey Review 23(176), 88--93 (1975).
 
-Jump to
+Go to
  - \ref geformulation
  - \ref gevsgeodesic
 
@@ -5775,11 +5789,14 @@ of the git repository for GeographicLib.
    (released 2014-mm-dd)
    - On MacOSX, the installed package is relocatable (for cmake version
      2.8.12 and later).
-   - GeographicLib added to homebrew (still need to document).
-   - In cmake configures, set output directories for Windows builds.
-   - Replace &minus; by - in DMS.{cpp,js}.
-   - geographiclib-targets.cmake
-   - Matlab/Octave routines for great ellipses added.
+   - On Mac OSX, GeographicLib can be installed using homebrew.
+   - In cmake builds under Windows, set the output directories so that
+     binaries and shared libraries are together.
+   - Accept the minus sign as a synomym for - in DMS.{cpp,js}.
+   - The cmake configuration file geographiclib-depends.cmake has been
+     renamed to geographiclib-targets.cmake.
+   - Matlab/Octave routines for great ellipses added; see \ref
+     greatellipse.
    - Add man pages for geographiclib-get-{geoids,gravity,magnetic}.
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
