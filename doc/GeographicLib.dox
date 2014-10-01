@@ -5780,6 +5780,7 @@ of the git repository for GeographicLib.
    - Replace &minus; by - in DMS.{cpp,js}.
    - geographiclib-targets.cmake
    - Matlab/Octave routines for great ellipses added.
+   - Add man pages for geographiclib-get-{geoids,gravity,magnetic}.
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-08-08)

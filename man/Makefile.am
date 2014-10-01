@@ -163,11 +163,11 @@ SCRIPTMANCMD = \
 	$(srcdir)/script.8.in > $@
 
 geographiclib-get-geoids.8:
-	$(SYSMANCMD)
+	$(SCRIPTMANCMD)
 geographiclib-get-gravity.8:
-	$(SYSMANCMD)
+	$(SCRIPTMANCMD)
 geographiclib-get-magnetic.8:
-	$(SYSMANCMD)
+	$(SCRIPTMANCMD)
 
 EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	GeoConvert.pod TransverseMercatorProj.pod \
