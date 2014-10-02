@@ -146,7 +146,8 @@ namespace GeographicLib {
         }
         try {
           filepos(ix, iy);
-          char a, b;
+          // initial values to suppress warnings in case get fails
+          char a = 0, b = 0;
           _file.get(a);
           _file.get(b);
           unsigned r = ((unsigned char)(a) << 8) | (unsigned char)(b);

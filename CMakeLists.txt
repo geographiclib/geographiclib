@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 37)
+set (PROJECT_VERSION_MINOR 38)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -43,7 +43,7 @@ endif ()
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 13)
-set (LIBVERSIONFULL 13.0.0)
+set (LIBVERSIONFULL 13.0.1)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -220,8 +220,14 @@ if (NOT MSVC)
     # Use relative path so that package is relocatable
     set (CMAKE_INSTALL_RPATH "\$ORIGIN/../lib${LIB_SUFFIX}")
   else ()
-    # Need absolute path with MacOSx
-    set (CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+    if (CMAKE_VERSION VERSION_LESS 2.8.12)
+      # Use absolute path with MacOSx
+      set (CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+    else ()
+      # cmake 2.8.12 introduced a way to make the package relocatable.
+      # See also INSTALL_RPATH property on the tools.
+      set (CMAKE_MACOSX_RPATH ON)
+    endif ()
   endif ()
 endif ()
 
@@ -319,12 +325,12 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
     # to abide by the terms of this license.
     #
     # For Linux, use system versions of mpfr and gmp.  For Apple, use
-    # brew install mpfr.  For Windows, download
-    # MPFR-MPIR-x86-x64-MSVC2010.zip from the MPFR C++ site and unpack
-    # in the top-level directory.  The Windows build only works with
-    # GEOGRAPHICLIB_LIB_TYPE=STATIC.  NOTE: mpfr, gmp, and mpir are
-    # covered by the LGPL; be sure to abide by the terms of this
-    # license.
+    # brew install mpfr.  Recent versions of mpfr (3.0 or later) work
+    # fine.  For Windows, download MPFR-MPIR-x86-x64-MSVC2010.zip from
+    # the MPFR C++ site and unpack in the top-level directory.  The
+    # Windows build only works with GEOGRAPHICLIB_LIB_TYPE=STATIC.
+    # NOTE: mpfr, gmp, and mpir are covered by the LGPL; be sure to
+    # abide by the terms of this license.
     if (WIN32)
       if (MSVC AND NOT MSVC_VERSION LESS 1800)
         if (CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -362,7 +368,7 @@ if (APPLE AND GEOGRAPHICLIB_PRECISION EQUAL 2)
   if (CMAKE_SYSTEM_PROCESSOR MATCHES "i.86" OR
       CMAKE_SYSTEM_PROCESSOR MATCHES "amd64" OR
       CMAKE_SYSTEM_PROCESSOR MATCHES "x86")
-    set (CMAKE_OSX_ARCHITECTURES "i386 -arch x86_64")
+    set (CMAKE_OSX_ARCHITECTURES "i386;x86_64")
   endif ()
 endif ()
 
@@ -382,7 +388,9 @@ endif ()
 # available on an end-user's system, the creation of the final
 # documentation is therefore only done in "MAINTAINER" mode.  The
 # maintainer runs "make distrib-all" which installs the transformed
-# documentation files into the source tree.
+# documentation files into the source tree.  Skip Apple here because
+# man/makeusage.sh uses "head --lines -4" to drop the last 4 lines of a
+# file and there's no simple equivalent for MacOSX
 if (NOT WIN32 AND NOT APPLE)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
@@ -440,6 +448,17 @@ endif ()
 # no build type is set.
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release)
+endif ()
+
+# Set output directories for Windows so that executables and dlls are
+# put in the same place
+if (WIN32)
+  # static libaries
+  set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+  # shared libraries
+  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
+  # executables and dlls
+  set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 endif ()
 
 # The list of tools (to be installed into, e.g., /usr/local/bin)

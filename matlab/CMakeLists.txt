@@ -46,7 +46,7 @@ if (MEX)
         COMMAND
           ${MEX} ${MEXOPTIONS} ${PROJECT_DEFINITIONS}
             -I${PROJECT_BINARY_DIR}/include -I${PROJECT_SOURCE_DIR}/include
-            -L${PROJECT_BINARY_DIR}/src/Release -l${_LIB}
+            -L${PROJECT_BINARY_DIR}/lib/Release -l${_LIB}
             ${INTERFACE}
         COMMENT "Building matlab interface for ${TARGET}"
         DEPENDS ${INTERFACE} ${PROJECT_LIBRARIES})

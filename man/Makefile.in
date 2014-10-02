@@ -143,9 +143,10 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 man1dir = $(mandir)/man1
-am__installdirs = "$(DESTDIR)$(man1dir)"
+am__installdirs = "$(DESTDIR)$(man1dir)" "$(DESTDIR)$(man8dir)"
+man8dir = $(mandir)/man8
 NROFF = nroff
-MANS = $(man1_MANS)
+MANS = $(man1_MANS) $(man8_MANS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
@@ -323,29 +324,43 @@ HTMLMAN = \
 	RhumbSolve.1.html \
 	TransverseMercatorProj.1.html
 
+SYSMANPAGES = geographiclib-get-geoids.8 \
+	geographiclib-get-gravity.8 \
+	geographiclib-get-magnetic.8
+
 PODFIX = sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%' -e 's%<code>\([^<>]*\)(\(.\))</code>%<a href="\1.\2.html">&</a>%'g
 man1_MANS = $(MANPAGES)
-SUFFIXES = .pod .1 .usage .1.html
+man8_MANS = $(SYSMANPAGES)
+SUFFIXES = .pod .1 .usage .1.html .8
 @HAVE_PODPROGS_FALSE@USAGECMD = cat $(srcdir)/$@ 2> /dev/null || \
-@HAVE_PODPROGS_FALSE@	sed "s/@TOOL@/$*/g" $(srcdir)/dummy.usage.in > $@
+@HAVE_PODPROGS_FALSE@	sed -e "s/@TOOL@/$*/g" -e "s/@PROJECT_VERSION@/$(VERSION)/g" \
+@HAVE_PODPROGS_FALSE@	$(srcdir)/dummy.usage.in > $@
 
 @HAVE_PODPROGS_FALSE@MANCMD = cat $(srcdir)/$@ 2> /dev/null || \
-@HAVE_PODPROGS_FALSE@	sed "s/@TOOL@/$*/g" $(srcdir)/dummy.1.in > $@
+@HAVE_PODPROGS_FALSE@	sed -e "s/@TOOL@/$*/g" -e "s/@PROJECT_VERSION@/$(VERSION)/g" \
+@HAVE_PODPROGS_FALSE@	$(srcdir)/dummy.1.in > $@
 
 @HAVE_PODPROGS_FALSE@HTMLCMD = cat $(srcdir)/$@ 2> /dev/null || \
-@HAVE_PODPROGS_FALSE@	sed "s/@TOOL@/$*/g" $(srcdir)/dummy.1.html.in > $@
+@HAVE_PODPROGS_FALSE@	sed -e "s/@TOOL@/$*/g" -e "s/@PROJECT_VERSION@/$(VERSION)/g" \
+@HAVE_PODPROGS_FALSE@	$(srcdir)/dummy.1.html.in > $@
+
+geographiclib_data = $(datadir)/GeographicLib
+SCRIPTMANCMD = sed -e "s/@SCRIPT@/$*/g" \
+	-e "s/@DATA@/`echo $* | cut -f3 -d-`/g" \
+	-e "s%@GEOGRAPHICLIB_DATA@%$(geographiclib_data)%g" \
+	$(srcdir)/script.8.in > $@
 
 EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	GeoConvert.pod TransverseMercatorProj.pod \
 	CartConvert.pod ConicProj.pod GeodSolve.pod GeodesicProj.pod \
 	GeoidEval.pod Gravity.pod MagneticField.pod Planimeter.pod \
 	RhumbSolve.pod $(MANPAGES) $(USAGE) $(HTMLMAN) \
-	dummy.usage.in dummy.1.in dummy.1.html.in
+	dummy.usage.in dummy.1.in dummy.1.html.in script.8.in
 
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .pod .1 .usage .1.html
+.SUFFIXES: .pod .1 .usage .1.html .8
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -423,6 +438,47 @@ uninstall-man1:
 	} | sed -e 's,.*/,,;h;s,.*\.,,;s,^[^1][0-9a-z]*$$,1,;x' \
 	      -e 's,\.[0-9a-z]*$$,,;$(transform);G;s,\n,.,'`; \
 	dir='$(DESTDIR)$(man1dir)'; $(am__uninstall_files_from_dir)
+install-man8: $(man8_MANS)
+	@$(NORMAL_INSTALL)
+	@list1='$(man8_MANS)'; \
+	list2=''; \
+	test -n "$(man8dir)" \
+	  && test -n "`echo $$list1$$list2`" \
+	  || exit 0; \
+	echo " $(MKDIR_P) '$(DESTDIR)$(man8dir)'"; \
+	$(MKDIR_P) "$(DESTDIR)$(man8dir)" || exit 1; \
+	{ for i in $$list1; do echo "$$i"; done;  \
+	if test -n "$$list2"; then \
+	  for i in $$list2; do echo "$$i"; done \
+	    | sed -n '/\.8[a-z]*$$/p'; \
+	fi; \
+	} | while read p; do \
+	  if test -f $$p; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; echo "$$p"; \
+	done | \
+	sed -e 'n;s,.*/,,;p;h;s,.*\.,,;s,^[^8][0-9a-z]*$$,8,;x' \
+	      -e 's,\.[0-9a-z]*$$,,;$(transform);G;s,\n,.,' | \
+	sed 'N;N;s,\n, ,g' | { \
+	list=; while read file base inst; do \
+	  if test "$$base" = "$$inst"; then list="$$list $$file"; else \
+	    echo " $(INSTALL_DATA) '$$file' '$(DESTDIR)$(man8dir)/$$inst'"; \
+	    $(INSTALL_DATA) "$$file" "$(DESTDIR)$(man8dir)/$$inst" || exit $$?; \
+	  fi; \
+	done; \
+	for i in $$list; do echo "$$i"; done | $(am__base_list) | \
+	while read files; do \
+	  test -z "$$files" || { \
+	    echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(man8dir)'"; \
+	    $(INSTALL_DATA) $$files "$(DESTDIR)$(man8dir)" || exit $$?; }; \
+	done; }
+
+uninstall-man8:
+	@$(NORMAL_UNINSTALL)
+	@list='$(man8_MANS)'; test -n "$(man8dir)" || exit 0; \
+	files=`{ for i in $$list; do echo "$$i"; done; \
+	} | sed -e 's,.*/,,;h;s,.*\.,,;s,^[^8][0-9a-z]*$$,8,;x' \
+	      -e 's,\.[0-9a-z]*$$,,;$(transform);G;s,\n,.,'`; \
+	dir='$(DESTDIR)$(man8dir)'; $(am__uninstall_files_from_dir)
 tags TAGS:
 
 ctags CTAGS:
@@ -464,7 +520,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(MANS)
 installdirs:
-	for dir in "$(DESTDIR)$(man1dir)"; do \
+	for dir in "$(DESTDIR)$(man1dir)" "$(DESTDIR)$(man8dir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -533,7 +589,7 @@ install-info: install-info-am
 
 install-info-am:
 
-install-man: install-man1
+install-man: install-man1 install-man8
 
 install-pdf: install-pdf-am
 
@@ -564,7 +620,7 @@ ps-am:
 
 uninstall-am: uninstall-man
 
-uninstall-man: uninstall-man1
+uninstall-man: uninstall-man1 uninstall-man8
 
 .MAKE: install-am install-strip
 
@@ -574,20 +630,22 @@ uninstall-man: uninstall-man1
 	install install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
-	install-man1 install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	maintainer-clean-local mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags-am uninstall \
-	uninstall-am uninstall-man uninstall-man1
+	install-man1 install-man8 install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic maintainer-clean-local mostlyclean \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags-am uninstall uninstall-am uninstall-man uninstall-man1 \
+	uninstall-man8
 
 
 all: man
-man: manpages usage htmlman
+man: manpages usage htmlman sysmanpages
 
 manpages: $(MANPAGES)
 usage: $(USAGE)
 htmlman: $(HTMLMAN)
+sysmanpages: $(SYSMANPAGES)
 
 @HAVE_PODPROGS_TRUE@.pod.usage:
 @HAVE_PODPROGS_TRUE@	sh $(srcdir)/makeusage.sh $< $(VERSION) > $@
@@ -667,8 +725,15 @@ htmlman: $(HTMLMAN)
 @HAVE_PODPROGS_FALSE@TransverseMercatorProj.1.html:
 @HAVE_PODPROGS_FALSE@	$(HTMLCMD)
 
+geographiclib-get-geoids.8:
+	$(SCRIPTMANCMD)
+geographiclib-get-gravity.8:
+	$(SCRIPTMANCMD)
+geographiclib-get-magnetic.8:
+	$(SCRIPTMANCMD)
+
 maintainer-clean-local:
-	rm -rf *.usage *.1.html *.1
+	rm -rf *.usage *.1.html *.1 *.8
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

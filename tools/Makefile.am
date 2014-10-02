@@ -145,7 +145,7 @@ sbin_SCRIPTS = geographiclib-get-geoids \
 	geographiclib-get-gravity \
 	geographiclib-get-magnetic
 
-geographiclib_data=$(datadir)/GeographicLib
+geographiclib_data = $(datadir)/GeographicLib
 geographiclib-get-geoids: geographiclib-get-geoids.sh
 	sed -e "s%@GEOGRAPHICLIB_DATA@%$(geographiclib_data)%" $< > $@
 	chmod +x $@

@@ -11,8 +11,8 @@ namespace GeographicLib {
 /**
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.37
-\date 2014-08-08
+\version 1.38
+\date 2014-10-02
 
 \section abstract Abstract
 
@@ -45,24 +45,20 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.37.tar.gz">
-  GeographicLib-1.37.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.37.zip">
-  GeographicLib-1.37.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.38.tar.gz">
+  GeographicLib-1.38.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.38.zip">
+  GeographicLib-1.38.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
 line endings.)  Alternatively you can get the latest release using git
 \verbatim
-  git clone -b r1.37 git://git.code.sf.net/p/geographiclib/code geographiclib
+  git clone -b r1.38 git://git.code.sf.net/p/geographiclib/code geographiclib
 \endverbatim
-There are also binary installers for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.37-win32.exe">
-  GeographicLib-1.37-win32.exe</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.37-win64.exe">
-  GeographicLib-1.37-win64.exe</a>
-.
-It is licensed under the
+There are also binary installers available for some platforms.  See \ref binaryinst.
+
+GeographicLib is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
 see <a href="LICENSE.txt">LICENSE.txt</a> for the terms.
 For more information, see http://geographiclib.sourceforge.net/.
@@ -80,6 +76,7 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref geodesic
  - \ref triaxial
  - \ref rhumb
+ - \ref greatellipse
  - \ref transversemercator
  - \ref geocentric
  - \ref highprec
@@ -183,14 +180,14 @@ GeographicLib has been developed under Linux with the g++ compiler
 2012, and 2013.  Earlier versions were tested also under Visual Studio
 2005 and 2008 and under Darwin and Solaris.  It should compile on a wide
 range of other systems.  First download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37.tar.gz">
-GeographicLib-1.37.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37.zip">
-GeographicLib-1.37.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37-win32.exe">
-GeographicLib-1.37-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37-win64.exe">
-GeographicLib-1.37-win64.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.38.tar.gz">
+GeographicLib-1.38.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.38.zip">
+GeographicLib-1.38.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.38-win32.exe">
+GeographicLib-1.38-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.38-win64.exe">
+GeographicLib-1.38-win64.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -201,7 +198,7 @@ Then pick one of the first five options below:
   and GNU make on Linux and many Unix platforms.
 - \ref windows.  This is a simple installation method that works with
   Visual Studio 2005, 2008, and 2010 under Windows.
-- \ref windowsbin.  Use this installation method if you only need to use
+- \ref binaryinst.  Use this installation method if you only need to use
   the \ref utilities supplied with GeographicLib.  (This method also
   installs the header files and the library for use by Visual Studio 10.)
 - \ref qt.  How to compile GeographicLib so that it can be used by Qt
@@ -266,10 +263,10 @@ work also for Visual Studio 12 Express (2013).
 
 Here are the steps to compile and install GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.37.tar.gz
-  unzip -q GeographicLib-1.37.zip \endverbatim
+  tar xfpz GeographicLib-1.38.tar.gz
+  unzip -q GeographicLib-1.38.zip \endverbatim
   then enter the directory created with one of \verbatim
-  cd GeographicLib-1.37 \endverbatim
+  cd GeographicLib-1.38 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -277,8 +274,8 @@ Here are the steps to compile and install GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically one of \verbatim
-  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.37 ..
-  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.37 ..
+  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.38 ..
+  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.38 ..
 \endverbatim
   The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
   settings given above are recommended to ensure that packages that use
@@ -294,7 +291,7 @@ Here are the steps to compile and install GeographicLib:
     convention.  If it is on ON (the Linux default), the installation
     is to a common directory, e.g., /usr/local.  If it is OFF (the
     Windows default), the installation directory contains the package
-    name, e.g., C:/pkg/GeographicLib-1.37.  The installation
+    name, e.g., C:/pkg/GeographicLib-1.38.  The installation
     directories for the documentation, cmake configuration, python and
     matlab interfaces all depend on the variable with deeper paths
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
@@ -309,7 +306,7 @@ Here are the steps to compile and install GeographicLib:
     For windows systems, it is recommended to use a prefix which
     includes the compiler version, as shown above (and also, possibly,
     whether this is a 64-bit build, e.g., <code>cmake -G "Visual Studio
-    10 Win64" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.37
+    10 Win64" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.38
     ..</code>).  If you just want to try the library to see if it suits
     your needs, pick, for example,
     <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
@@ -406,9 +403,9 @@ Here are the steps to compile and install GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.37.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.38.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.37 \endverbatim
+  cd GeographicLib-1.38 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -437,9 +434,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.37.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.38.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.37 \endverbatim
+  cd GeographicLib-1.38 \endverbatim
 - Edit \verbatim
   include/GeographicLib/Config.h \endverbatim
   If your C++ compiler does not recognize the long double type
@@ -470,8 +467,8 @@ static library and the utilities.  If you only have Visual Studio 2003,
 use cmake to create the necessary solution file, see \ref cmake.  (cmake
 is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.37.zip \endverbatim
-- Open GeographicLib-1.37/windows/GeographicLib-vc10.sln in Visual Studio
+  unzip -q GeographicLib-1.38.zip \endverbatim
+- Open GeographicLib-1.38/windows/GeographicLib-vc10.sln in Visual Studio
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9;
   for Visual Studio Express 2010, replace -vc10 by -vc10x).
 - Pick the build type (e.g., Release), and select "Build Solution".
@@ -489,7 +486,11 @@ is needed to build the Matlab interface and to run the tests.)
 The Visual Studio 10 solution also contains projects to build
 <a href="NET/index.html">NETGeographicLib</a> and the C# example project.
 
-\section windowsbin Using a binary installer for Windows
+\section binaryinst Using a binary installer
+
+Binary installers are available for some platforms
+
+\subsection binaryinstwin Windows
 
 Use this method if you only need to use the GeographicLib utilities.
 The header files and static and shared versions of library are also
@@ -499,14 +500,14 @@ be advisable to build it with the compiler you are using for your own
 code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37-win32.exe">
-GeographicLib-1.37-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37-win64.exe">
-GeographicLib-1.37-win64.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.38-win32.exe">
+GeographicLib-1.38-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.38-win64.exe">
+GeographicLib-1.38-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc10\\GeographicLib-1.37 or C:\\pkg-vc10-x64\\GeographicLib-1.37,
+   C:\\pkg-vc10\\GeographicLib-1.38 or C:\\pkg-vc10-x64\\GeographicLib-1.38,
  - select the start menu folder,
  - and install.
  .
@@ -514,7 +515,7 @@ GeographicLib-1.37-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc10/GeographicLib-1.37/bin where the utilities are
+will include C:/pkg-vc10/GeographicLib-1.38/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the matlab folder.  Add this to your
@@ -526,6 +527,20 @@ other 64-bit versions of Matlab.
 <a href="NET/index.html">NETGeographicLib</a> library dlls (release and
 debug) are included with the binary installers; these are linked against
 the shared library for GeographicLib.
+
+\subsection binaryinstosx MacOSX
+
+You can install using Homebrew.  Follow the directions on
+http://brew.sh/ for installing this package manager.  Then type
+\verbatim
+brew install geographiclib \endverbatim
+Now links to GeographicLib are installed under /usr/local.
+
+\subsection binaryinstlin Linux
+
+Some Linux distributions, Debian and Ubuntu, offer GeographicLib as a
+standard package.  Typically these will be one or two verions behind the
+latest.
 
 \section qt Building the library for use with Qt
 
@@ -565,7 +580,7 @@ Check the code out of git with \verbatim
 Here the "master" branch is checked out.  There are three branches in
 the git repository:
 - <b>master</b>: the main branch for code maintainence.  Releases are
-  tagged on this branch as, e.g., v1.37.
+  tagged on this branch as, e.g., v1.38.
 - <b>devel</b>: the development branch; changes made here are merged
   into master.
 - <b>release</b>: the release branch created by unpacking the source
@@ -575,7 +590,7 @@ the git repository:
   specifying a branch).  This differs from the master branch in that
   some administrative files are excluded while some intermediate files
   are included (in order to aid building on as many platforms as
-  possible).  Releases are tagged on this branch as, e.g., r1.37.
+  possible).  Releases are tagged on this branch as, e.g., r1.38.
 .
 The autoconf configuration script and the formatted man pages are not
 checked into master branch of the repository.  In order to create the
@@ -591,8 +606,8 @@ In the case of cmake, you then run \verbatim
 which will copy the man pages from the build directory back into the
 source tree and package the resulting source tree for distribution as
 \verbatim
-  GeographicLib-1.37.tar.gz
-  GeographicLib-1.37.zip \endverbatim
+  GeographicLib-1.38.tar.gz
+  GeographicLib-1.38.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -618,7 +633,7 @@ With configure, run \verbatim
   make dist-gzip \endverbatim
 which will create the additional files and packages the results ready
 for distribution as \verbatim
-  geographiclib-1.37.tar.gz \endverbatim
+  geographiclib-1.38.tar.gz \endverbatim
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
@@ -708,7 +723,7 @@ In order to use GeographicLib from C++ code, you will need to
 
   If GeographicLib is found, then the following cmake variables are set:
   - <code>GeographicLib_FOUND</code> = 1
-  - <code>GeographicLib_VERSION</code> = 1.37
+  - <code>GeographicLib_VERSION</code> = 1.38
   - <code>GeographicLib_INCLUDE_DIRS</code>
   - <code>GeographicLib_LIBRARIES</code> = one of the following two:
   - <code>GeographicLib_SHARED_LIBRARIES</code> = GeographicLib
@@ -1138,9 +1153,9 @@ can test the values of the macros GEOGRAPHICLIB_VERSION_MAJOR,
 GEOGRAPHICLIB_VERSION_MINOR, and GEOGRAPHICLIB_VERSION_PATCH; these
 expand to numbers (and the last one is usually 0); these macros appeared
 starting in version 1.31.  There's also a macro
-GEOGRAPHICLIB_VERSION_STRING which expands to, e.g., "1.37"; this macro
+GEOGRAPHICLIB_VERSION_STRING which expands to, e.g., "1.38"; this macro
 has been defined since version 1.9.  Since version 1.37, there's also
-been a macro GEOGRAPHICLIB_VERSION which encode the vesion as a single
+been a macro GEOGRAPHICLIB_VERSION which encode the version as a single
 number, e.g, 1003700.  The macro GEOGRAPHICLIB_VERSION_NUM allows you to
 compare versions, e.g., \code
 #if GEOGRAPHICLIB_VERSION >= GEOGRAPHICLIB_VERSION_NUM(1,36,0)
@@ -1292,13 +1307,18 @@ of the Australian Communications and Media Authority.)
 
 \section matlab Matlab and Octave implementations
 
-The <code>matlab</code> directory contains
- - Native Matlab implementations of the geodesic routines.  To use
-   these, start Matlab or Octave and run one of (for example) \verbatim
+The <code>matlab</code> directory Matlab and Octave implementations of
+some of the functions of GeographicLib.  To use
+these, start Matlab or Octave and run one of (for example) \verbatim
    addpath /usr/local/libexec/GeographicLib/matlab
-   addpath 'C:/pkg-vc10-x64/GeographicLib-1.37/libexec/GeographicLib/matlab'
+   addpath 'C:/pkg-vc10-x64/GeographicLib-1.38/libexec/GeographicLib/matlab'
    \endverbatim
-   The available functions are:
+
+The functions fall into the following groups
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
+   Geodesics on an ellipsoid of revolution</a>, native Matlab
+   implementations of the geodesic routines.  The available functions
+   are
    - geoddoc: briefly descibe the routines
    - geodreckon: solve the direct geodesic problem
    - geoddistance: solve the inverse geodesic problem
@@ -1307,13 +1327,13 @@ The <code>matlab</code> directory contains
    Use the help function to get documentation, e.g., \code
    help geoddistance \endcode
    to obtain documentation.  These functions are also available as a
-   standalone package from
-   <a href="http://www.mathworks.com/matlabcentral/fileexchange/">
-   Matlab File Exchange</a> using the link
+   Matlab File Exchange package from
    - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
      http://www.mathworks.com/matlabcentral/fileexchange/39108</a>
- - Native Matlab implementations of projections which are related to
-   geodesics.  These are
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
+   Geodesic projections for an ellipsoid</a>, native Matlab
+   implementations of projections which are related to geodesics.  These
+   are
    - geodproj: briefly descibe the routines
    - eqdazim_fwd, eqdazim_inv: azimuthal equidistant
    - cassini_fwd, cassini_inv: Cassini-Soldner
@@ -1321,16 +1341,29 @@ The <code>matlab</code> directory contains
    - gnomonic_fwd, gnomonic_inv: ellipsoidal gnomonic
    - utm_fwd, utm_inv: universal transverse Mercator
    .
-   These functions are also available as a package from
-   <a href="http://www.mathworks.com/matlabcentral/fileexchange/">
-   Matlab File Exchange</a> using the link
+   These functions are also available as a Matlab File Exchange package
+   from
    - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
      http://www.mathworks.com/matlabcentral/fileexchange/39366</a>
    .
    (This requires that the previous package also be installed.)
- - Interface code so that some GeographicLib classes can be accessed
-   from Matlab or Octave.  The rest of this section describes how to
-   compile and use these interfaces.
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
+   Great ellipses</a>, implementations of solutions to the great ellipse
+   problems.  The functions are
+   - gedoc: briefly descibe the routines
+   - gereckon: solve the direct great circle problem
+   - gedistance: solve the inverse great circle problem
+   .
+   The functionality provided by these routines is <i>not</i> available
+   through GeographicLib's C++ library.  These functions are also
+   available as a Matlab File Exchange package from
+   - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
+     http://www.mathworks.com/matlabcentral/fileexchange/47898</a>
+   .
+   (This requires that package 39108 also be installed.)
+ - Finally, interface code so that some GeographicLib classes can be
+   accessed directly from Matlab or Octave.  The rest of this section
+   describes how to compile and use these interfaces.
 
 There are two ways of compiling the interface code: (1) using cmake and
 (2) invoking the compiler from Matlab.
@@ -1367,9 +1400,9 @@ There are two ways of compiling the interface code: (1) using cmake and
  - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
    Octave and run, e.g., \code
    mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-1.37/matlab'
+   cd 'C:/pkg-vc10-x64/GeographicLib-1.38/matlab'
    help geographiclibinterface
-   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.37');
+   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.38');
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
@@ -1378,7 +1411,7 @@ There are two ways of compiling the interface code: (1) using cmake and
 To use the interface routines for GeographicLib, run one of (for
 example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-1.37/libexec/GeographicLib/matlab'
+  addpath 'C:/pkg-vc10-x64/GeographicLib-1.38/libexec/GeographicLib/matlab'
 \endverbatim
 in Octave or Matlab.  The available functions are:
  - geodesicdirect: solve direct geodesic problem
@@ -2825,7 +2858,7 @@ Go to
 For some background information on geodesics on triaxial ellipsoids, see
 \ref triaxial.
 
-References
+References:
  - F. W. Bessel,
    <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation
    of longitude and latitude from geodesic measurements (1825)</a>,
@@ -2843,7 +2876,7 @@ References
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
-   J. Geodesy 87(1), 43--55 (Jan. 2013);
+   J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
    addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
@@ -2996,10 +3029,10 @@ The formula for distance is
 \f]
 where
 \f[
-\begin{aligned}
+\begin{align}
   I_1(\sigma) &= A_1\bigl(\sigma + B_1(\sigma)\bigr) \\
   B_1(\sigma) &= \sum_{j=1} C_{1j} \sin 2j\sigma
-\end{aligned}
+\end{align}
 \f]
 and
 \verbatim
@@ -3083,19 +3116,19 @@ C1'[10] = + 9303339907/2972712960 * eps^10;
 
 The reduced length is given by
 \f[
-\begin{aligned}
+\begin{align}
   \frac mb &= \sqrt{1 + k^2 \sin^2\sigma_2} \cos\sigma_1 \sin\sigma_2 \\
   &\quad {}-\sqrt{1 + k^2 \sin^2\sigma_1} \sin\sigma_1 \cos\sigma_2 \\
   &\quad {}-\cos\sigma_1 \cos\sigma_2 \bigl(J(\sigma_2) - J(\sigma_1)\bigr)
-\end{aligned}
+\end{align}
 \f]
 where
 \f[
-\begin{aligned}
+\begin{align}
  J(\sigma) &= I_1(\sigma) - I_2(\sigma) \\
  I_2(\sigma) &= A_2\bigl(\sigma + B_2(\sigma)\bigr) \\
  B_2(\sigma) &= \sum_{j=1} C_{2j} \sin 2j\sigma
-\end{aligned}
+\end{align}
 \f]
 \verbatim
 A2 = (1 + 1/4 * eps^2
@@ -3143,10 +3176,10 @@ The longitude is given in terms of the spherical longitude by
 \f]
 where
 \f[
-\begin{aligned}
+\begin{align}
  I_3(\sigma) &= A_3\bigl(\sigma + B_3(\sigma)\bigr) \\
  B_3(\sigma) &= \sum_{j=1} C_{3j} \sin 2j\sigma
-\end{aligned}
+\end{align}
 \f]
 and
 \verbatim
@@ -3299,13 +3332,13 @@ case of an imaginary modulus using real arithmetic.
 
 The key relations used by GeographicLib are
 \f[
- \begin{aligned}
+ \begin{align}
   \frac sb &= E(\sigma, ik), \\
   \lambda &= (1 - f) \sin\alpha_0  G(\sigma, \cos^2\alpha_0, ik) \\
           &= \chi
            - \frac{e'^2}{\sqrt{1+e'^2}}\sin\alpha_0 H(\sigma, -e'^2, ik), \\
   J(\sigma) &= k^2 D(\sigma, ik),
- \end{aligned}
+ \end{align}
 \f]
 where \f$ \chi \f$ is a modified spherical longitude given by
 \f[
@@ -3313,7 +3346,7 @@ where \f$ \chi \f$ is a modified spherical longitude given by
 \f]
 and
 \f[
- \begin{aligned}
+ \begin{align}
  D(\phi,k) &= \int_0^\phi
  \frac{\sin^2\theta}{\sqrt{1 - k^2\sin^2\theta}}\,d\theta\\
  &=\frac{F(\phi, k) - E(\phi, k)}{k^2},\\
@@ -3328,7 +3361,7 @@ and
  &=
  \frac1{\alpha^2} F(\phi, k) +
       \biggl(1 - \frac1{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k),
- \end{aligned}
+ \end{align}
 \f]
 and \f$F(\phi, k)\f$, \f$E(\phi, k)\f$, \f$D(\phi, k)\f$, and
 \f$\Pi(\phi, \alpha^2, k)\f$, are incomplete elliptic integrals (see
@@ -3363,30 +3396,30 @@ for geodesics, \f$\theta\f$ instead of \f$\sigma\f$, where \f$
 expressions for \f$ s \f$ and \f$ \lambda \f$ are given here for
 completeness:
 \f[
-\begin{aligned}
+\begin{align}
 \frac sb &= \sqrt{1-k'^2} \Pi(\theta, k'^2, k'), \\
 \lambda &= (1-f) \sqrt{1-k'^2} \sin\alpha_0 \Pi(\theta, k'^2/e^2, k'),
-\end{aligned}
+\end{align}
 \f]
 where \f$ k' = k/\sqrt{1 + k^2} \f$.  The expression for \f$ s \f$
 can be written in terms of elliptic integrals of the second kind and
 Cayley's technique can be used to subtract out the leading order
 behavior of \f$ \lambda \f$ to give
 \f[
-\begin{aligned}
+\begin{align}
 \frac sb &=\frac1{\sqrt{1-k'^2}}
   \biggl( E(\theta, k') -
     \frac{k'^2 \sin\theta \cos\theta}{\sqrt{1-k'^2\sin^2\theta}} \biggr), \\
 \lambda &= \psi + (1-f) \sqrt{1-k'^2} \sin\alpha_0
 \bigl( F(\theta, k') - \Pi(\theta, e^2, k') \bigr),
-\end{aligned}
+\end{align}
 \f]
 where
 \f[
-\begin{aligned}
+\begin{align}
 \tan\psi &= \sqrt{\frac{1+k^2\sin^2\sigma}{1+e'^2}}\tan\omega \\
          &= \sqrt{\frac{1-e^2}{1+k^2\cos^2\theta}}\sin\alpha_0\tan\theta.
-\end{aligned}
+\end{align}
 \f]
 The tangents of the three "longitude-like" angles are in geometric
 progression, \f$ \tan\chi/\tan\omega = \tan\omega/\tan\psi \f$.
@@ -3425,24 +3458,24 @@ and are linearly related by
 .
 The cartesian coordinates for the meridian \f$ (x, z) \f$ are given by
 \f[
-\begin{aligned}
+\begin{align}
   x &= a \cos\beta = a \cos\phi / \sqrt{1 - e^2 \sin^2\phi} \\
     &= a \sin\beta' = (a^2/b) \sin\phi' / \sqrt{1 + e'^2 \sin^2\phi'} \\
     &= a \,\mathrm{cn}(v, ie) = a \,\mathrm{cd}(u, e) \\
     &= a \,\mathrm{sn}(u', e) = (a^2/b) \,\mathrm{sd}(v', ie'),
-\end{aligned}
+\end{align}
 \f]
 \f[
-\begin{aligned}
+\begin{align}
   z &= b \sin\beta = (b^2/a) \sin\phi / \sqrt{1 - e^2 \sin^2\phi} \\
     &= b \cos\beta' = b \cos\phi' / \sqrt{1 + e'^2 \sin^2\phi'} \\
     &= b \,\mathrm{sn}(v, ie) = (b^2/a) \,\mathrm{sd}(u, e)  \\
     &= b \,\mathrm{cn}(u', e) = b \,\mathrm{cd}(v', ie').
-\end{aligned}
+\end{align}
 \f]
 The distance along the meridian can be expressed variously as
 \f[
-\begin{aligned}
+\begin{align}
   y  &=   b   \int \sqrt{1 + e'^2  \sin^2\beta}\, d\beta
      =   b E(\beta, ie') \\
      &= \frac{b^2}a \int \frac1{(1 - e^2 \sin^2\phi)^{3/2}}\, d\phi
@@ -3452,10 +3485,10 @@ The distance along the meridian can be expressed variously as
      &=  b \int \mathrm{dn}^2(v, ie')\, dv
       = \frac{b^2}a \int \mathrm{nd}^2(u, e)\, du
       = \cal E(v, ie'),
-\end{aligned}
+\end{align}
 \f]
 \f[
-\begin{aligned}
+\begin{align}
   y' &=   a   \int \sqrt{1 - e^2  \sin^2\beta'}\, d\beta'
      =   a E(\beta', e) \\
      &= \frac{a^2}b \int \frac1{(1 + e'^2 \sin^2\phi')^{3/2}}\, d\phi'
@@ -3465,7 +3498,7 @@ The distance along the meridian can be expressed variously as
      &=  a \int \mathrm{dn}^2(u', e)\, du'
       = \frac{a^2}b \int \mathrm{nd}^2(v', ie')\, dv'
       = \cal E(u', e),
-\end{aligned}
+\end{align}
 \f]
 with the quarter meridian distance given by
 \f[
@@ -3528,10 +3561,10 @@ preserved (and hence the azimuth of a line is preserved).  Let \f$
 longitude on the ellipsoid and sphere respectively.  Define isometric
 latitudes for the sphere and the ellipsoid as
 \f[
-\begin{aligned}
+\begin{align}
   \psi' &= \sinh^{-1} \tan \phi', \\
   \psi &= \sinh^{-1} \tan \phi - e \tanh^{-1}(e \sin\phi).
-\end{aligned}
+\end{align}
 \f]
 The most general conformal mapping satisfying Bowring's conditions is
 \f[
@@ -3561,11 +3594,11 @@ m(\phi_0) = 1,\quad
 i.e, \f$m\approx 1\f$ in the vicinity of \f$\phi = \phi_0\f$.
 This gives
 \f[
-\begin{aligned}
+\begin{align}
 R &= \frac{\sqrt{1 + e'^2}}{B^2} a, \\
 A &= \sqrt{1 + e'^2 \cos^4\phi_0}, \\
 \tan\phi'_0 &= \frac1B \tan\phi_0,
-\end{aligned}
+\end{align}
 \f]
 where \f$ e' = e/\sqrt{1-e^2} \f$ is the second eccentricity, \f$ B =
 \sqrt{1+e'^2\cos^2\phi_0} \f$, and \f$ K \f$ is defined implicitly by
@@ -3651,12 +3684,12 @@ been replaced by the last relation which states that \f$\phi'_0 =
 \beta_0\f$, the parametric latitude corresponding to \f$\phi_0\f$.  This
 gives
 \f[
-\begin{aligned}
+\begin{align}
 R &= B'(1-f)a, \\
 A &= \frac1{B'(1-f)}, \\
 \left.\frac{d^2m(\phi)}{d\phi^2}\right|_{\phi=\phi_0} &=
 -e^2B'^2\sin^2\phi_0.
-\end{aligned}
+\end{align}
 \f]
 
 Similar to Bowring's method, we can compute \f$\phi'_1\f$ and
@@ -3824,7 +3857,7 @@ Go to
     - C. F. F. Karney,
       <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
       Algorithms for geodesics</a>,
-      J. Geodesy 87(1), 43--55 (Jan. 2013);
+      J. Geodesy 87(1), 43--55 (2013);
       DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
       10.1007/s00190-012-0578-z</a>;
       addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
@@ -3847,16 +3880,16 @@ geographical latitude and longitude \f$(\phi, \lambda)\f$ are defined by
 The \e parametric latitude and longitude \f$(\phi', \lambda')\f$ are
 defined by
 \f[
-\begin{aligned}
+\begin{align}
  x &= a \cos\phi' \cos\lambda', \\
  y &= b \cos\phi' \sin\lambda', \\
  z &= c \sin\phi'.
-\end{aligned}
+\end{align}
 \f]
 Jacobi employed the \e ellipsoidal latitude and longitude \f$(\beta,
 \omega)\f$ defined by
 \f[
-\begin{aligned}
+\begin{align}
   x &= a \cos\omega
       \frac{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}}
            {\sqrt{a^2 - c^2}}, \\
@@ -3864,7 +3897,7 @@ Jacobi employed the \e ellipsoidal latitude and longitude \f$(\beta,
   z &= c \sin\beta
       \frac{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}}
            {\sqrt{a^2 - c^2}}.
-\end{aligned}
+\end{align}
 \f]
 Grid lines of constant \f$\beta\f$ and \f$\omega\f$ are given in Fig. 1.
 
@@ -3934,7 +3967,7 @@ Here is the solution, exactly as given by Jacobi
 <a href="http://books.google.com/books?id=Rh8GAAAAYAAJ&pg=PA268"> here</a>
 (with minor changes in notation):
 \f[
-\begin{aligned}
+\begin{align}
 \delta &= \int \frac
 {\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}\,d\beta}
 {\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}
@@ -3944,7 +3977,7 @@ Here is the solution, exactly as given by Jacobi
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}\,d\omega}
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}
  \sqrt{(a^2-b^2)\sin^2\omega + \gamma}}
-\end{aligned}
+\end{align}
 \f]
 As Jacobi notes &quot;a function of the angle \f$\beta\f$ equals a
 function of the angle \f$\omega\f$.  These two functions are just
@@ -3967,7 +4000,7 @@ relation.  A nice derivation of Jacobi's result is given by Darboux
 (1846) for general quadratic surfaces.  In this formulation, the
 distance along the geodesic, \f$s\f$, is also found using
 \f[
-\begin{aligned}
+\begin{align}
 \frac{ds}{(b^2-c^2)\cos^2\beta + (a^2-b^2)\sin^2\omega}
 &= \frac
 {\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}\,d\beta}
@@ -3977,11 +4010,11 @@ distance along the geodesic, \f$s\f$, is also found using
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}\,d\omega}
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}
  \sqrt{(a^2-b^2)\sin^2\omega + \gamma}}
-\end{aligned}
+\end{align}
 \f]
 An alternative expression for the distance is
 \f[
-\begin{aligned}
+\begin{align}
 ds
 &= \frac
 {\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}
@@ -3991,7 +4024,7 @@ ds
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}
  \sqrt{(a^2-b^2)\sin^2\omega + \gamma}\,d\omega}
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}}
-\end{aligned}
+\end{align}
 \f]
 
 Jacobi's solution is a convenient way to compute geodesics on an
@@ -4284,7 +4317,7 @@ Back to \ref geodesic.  Forward to \ref rhumb.  Up to \ref contents.
 \page rhumb Rhumb lines
 
 <center>
-Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
+Back to \ref triaxial.  Forward to \ref greatellipse.  Up to
 \ref contents.
 </center>
 
@@ -4294,9 +4327,12 @@ calculations.  A rhumb line (also called a loxodrome) is a line of
 constant azimuth on the surface of the ellipsoid.  It is important for
 historical reasons because sailing with a constant compass heading is
 simpler than sailing the shorter geodesic course; see Osborne (2013).
-My interest in this problem was piqued by Botnev and Ustinov (2014) who
-discuss various techniques to improve the accuracy of rhumb line
-calculations.  The items of interest here are:
+The formulation of the problem on an ellipsoid is covered by Smart
+(1946) and Carlton-Wippern (1992).  Computational approaches are given
+by Williams (1950) and Bennett (1996).  My interest in this problem was
+piqued by Botnev and Ustinov (2014) who discuss various techniques to
+improve the accuracy of rhumb line calculations.  The items of interest
+here are:
  - Review of accurate formulas for the auxiliary latitudes.
  - Using divided differences to compute \f$\mu_{12}/\psi_{12}\f$
    maintaining full accuracy.  Two cases are treated:
@@ -4309,13 +4345,17 @@ calculations.  The items of interest here are:
  - Extending Clenshaw summation to compute the divided difference of a
    trigonometric sum.
 
-Jump to
+Go to
  - \ref rhumbform
  - \ref rhumblat
  - \ref divideddiffs
  - \ref dividedclenshaw
 
 References:
+ - G. G. Bennett,
+   <a href="http://dx.doi.org/10.1017/S0373463300013151">
+   Practical Rhumb Line Calculations on the Spheroid</a>
+   J. Navigation 49(1), 112--119 (1996).
  - F. W. Bessel,
    <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation
    of longitude and latitude from geodesic measurements (1825)</a>,
@@ -4324,10 +4364,15 @@ References:
    <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - V.A. Botnev, S.M. Ustinov,
    <a href="http://ntv.spbstu.ru/fulltext/T3.198.2014_05.PDF">
-   Metody reshenija prjamoj i obratnoj geodezicheskih zadach s vysokoj
-   tochnost'ju</a> (Methods for direct and inverse geodesic problems
+   Metody resheniya pryamoy i obratnoy geodezicheskikh zadach s vysokoy
+   tochnost'yu
+   </a> (Methods for direct and inverse geodesic problems
    solving with high precision), St. Petersburg State Polytechnical
    University Journal 3(198), 49--58 (2014).
+ - K. C. Carlton-Wippern
+   <a href="http://dx.doi.org/10.1017/S0373463300010791">
+   On Loxodromic Navigation</a>,
+   J. Navigation 45(2), 292--297 (1992).
  - K. E. Engsager and K. Poder,
    <a href="http://icaci.org/files/documents/ICC_proceedings/ICC2007/documents/doc/THEME 2/oral 1/2.1.2 A HIGHLY ACCURATE WORLD WIDE ALGORITHM FOR THE TRANSVE.doc">
    A highly accurate world wide algorithm for the
@@ -4357,7 +4402,7 @@ References:
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
-   J. Geodesy 87(1), 43--55 (Jan. 2013);
+   J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
    addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
@@ -4369,12 +4414,17 @@ References:
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
    the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
    New Series 52, 172 pp. (1912).
- - T. H. Meyer and C. M. Rollins,
-   The direct and indirect problem for loxodromes,
-   Navigation 58(1), 1--6 (2011).
  - P. Osborne,
    <a href="http://www.mercator99.webspace.virginmedia.com/">
    The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5.
+ - W. M. Smart
+   <a href="http://dx.doi.org/10.1093/mnras/106.2.124">
+   On a Problem in Navigation</a>
+   MNRAS 106(2), 124--127 (1946).
+ - J. E. D. Williams
+   <a href="http://dx.doi.org/10.1017/S0373463300045549">
+   Loxodromic Distances on the Terrestrial Spheroid Journal</a>,
+   J. Navigation 3(2), 133--140 (1950)
 
 \section rhumbform Formulation of the rhumb line problem
 
@@ -4385,10 +4435,10 @@ distances along rhumb lines), and the parametric latitude \f$\beta\f$
 (needed for dealing with rhumb lines that run along a parallel).  These
 are defined in terms of the geographical latitude \f$\phi\f$ by
 \f[
-\begin{aligned}
+\begin{align}
  \frac{d\psi}{d\phi} &= \frac{\rho}R, \\
  \frac{d\mu}{d\phi}  &= \frac{\pi}{2M}\rho, \\
-\end{aligned}
+\end{align}
 \f]
 where \f$\rho\f$ is the meridional radius of curvature, \f$R =
 a\cos\beta\f$ is the radius of a circle of latitude, and \f$M\f$ is the
@@ -4410,21 +4460,21 @@ typically, \f$\lambda_{12}\f$ is reduced to the range \f$[-\pi,\pi]\f$
 
 The distance is given by
 \f[
-\begin{aligned}
+\begin{align}
 s_{12} &= \frac {2M}{\pi} \mu_{12} \sec\alpha_{12} \\
   &= \frac {2M}{\pi}
 \frac{\mu_{12}}{\psi_{12}} \sqrt{\lambda_{12}^2 + \psi_{12}^2},
-\end{aligned}
+\end{align}
 \f]
 where \f$\mu_{12} = \mu_2 - \mu_1\f$.  This relation is indeterminate if
 \f$\phi_1 = \phi_2\f$, so we take the limits
 \f$\psi_{12}\rightarrow0\f$ and \f$\mu_{12}\rightarrow0\f$ and apply
 L'H&ocirc;pital's rule to yield
 \f[
-\begin{aligned}
+\begin{align}
  s_{12} &= \frac {2M}{\pi} \frac{d\mu}{d\psi} \left|\lambda_{12}\right|\\
 &=a \cos\beta \left|\lambda_{12}\right|,
-\end{aligned}
+\end{align}
 \f]
 where the last relation is given by the defining equations for
 \f$\psi\f$ and \f$\mu\f$.
@@ -4451,20 +4501,20 @@ convenient to introduce the variables \f$\tau=\tan\phi\f$ and \f$\tau' =
 \tan\chi = \sinh\psi\f$ (\f$\chi\f$ is the conformal latitude) which are
 related by (Karney, 2011)
 \f[
-\begin{aligned}
+\begin{align}
 \tau' &= \tau \sqrt{1 + \sigma^2} - \sigma \sqrt{1 + \tau^2}, \\
 \sigma &= \sinh\bigl(e \tanh^{-1}(e \tau/\sqrt{1 + \tau^2}) \bigr).
-\end{aligned}
+\end{align}
 \f]
 The equation for \f$\tau'\f$ can be inverted to give \f$\tau\f$ in terms
 of \f$\tau'\f$ using Newton's method with \f$\tau_0 = \tau'/(1-e^2)\f$
 as a starting guess; and, of course, \f$\phi\f$ and \f$\psi\f$ are then
 given by
 \f[
-\begin{aligned}
+\begin{align}
 \phi &= \tan^{-1}\tau,\\
 \psi &= \sinh^{-1}\tau'.
-\end{aligned}
+\end{align}
 \f]
 This allows conversions to and from \f$\psi\f$ to be carried out for any
 value of the flattening \f$f\f$; these conversions are implemented by
@@ -4532,17 +4582,15 @@ Despite our ability to compute latitudes accurately, the way that
 distances enter into the solution involves the ratio
 \f$\mu_{12}/\psi_{12}\f$; the numerical calculation of this term is
 subject to catastrophic round-off errors when \f$\phi_1\f$ and
-\f$\phi_2\f$ are close.  A simple solution, suggested by Meyer and
-Rollins (2011), is to extend the treatment of rhumb lines along
-parallels to this case, i.e., to replace the ratio by the derivative
-evaluated at the midpoint.  (Meyer and Rollins only offer this solution
-when dealing with the inverse problem; but it can also be applied with
-the direct problem.)  However this is not entirely satisfactory: you
-have to pick the transition point where the derivative takes over from
-the ratio of differences; and, near this transition point, many bits of
-accuracy will be lost (I estimate that about 1/3 of bits are lost,
-leading to errors on the order of 0.1 mm for double precision).  Note
-too that this problem crops up even in the spherical limit.
+\f$\phi_2\f$ are close.  A simple solution, suggested by Bennett (1996),
+is to extend the treatment of rhumb lines along parallels to this case,
+i.e., to replace the ratio by the derivative evaluated at the midpoint.
+However this is not entirely satisfactory: you have to pick the
+transition point where the derivative takes over from the ratio of
+differences; and, near this transition point, many bits of accuracy will
+be lost (I estimate that about 1/3 of bits are lost, leading to errors
+on the order of 0.1 mm for double precision).  Note too that this
+problem crops up even in the spherical limit.
 
 It turns out that we can do substantially better than this and maintain
 full double precision accuracy.  Indeed Botnev and Ustinov provide
@@ -4584,11 +4632,11 @@ particular, we can use the chain rule to write
 Kahan and Fateman catalog the divided difference formulas for all the
 elementary functions.  In this case, we need
 \f[
-\begin{aligned}
+\begin{align}
 \Delta[\tan](x,y) &= \frac{\tan(x-y)}{x-y} (1 + \tan x\tan y),\\
 \Delta[\sinh^{-1}](x,y) &= \frac1{x-y}
 \sinh^{-1}\biggl(\frac{(x-y)(x+y)}{x\sqrt{1+y^2}+y\sqrt{1+x^2}}\biggr).
-\end{aligned}
+\end{align}
 \f]
 The crucial point in these formulas is that the right hand sides can be
 evaluated accurately even if \f$x-y\f$ is small.  (I've only included
@@ -4630,13 +4678,13 @@ difference formula
 \f]
 where the angle \f$z\f$ is given by
 \f[
-\begin{aligned}
+\begin{align}
 \sin z &= \frac{2t}{1 + t^2},\quad\cos z = \frac{(1-t)(1+t)}{1 + t^2},\\
 t &=
 \frac{(x-y)\Delta[\sin](x,y)}
 {\sin x\sqrt{1 - k^2\sin^2y} + \sin y\sqrt{1 - k^2\sin^2x}}
 \frac{\sin x + \sin y}{\cos x + \cos y}.
-\end{aligned}
+\end{align}
 \f]
 We also need to apply the divided difference formulas to the conversions
 from \f$\phi\f$ to \f$\beta\f$ and \f$\phi\f$ to \f$\psi\f$; but these
@@ -4656,18 +4704,17 @@ The use of
 <a href="https://en.wikipedia.org/wiki/Clenshaw_algorithm#Geodetic_applications">
 Clenshaw summation</a> for summing series of the form,
 \f[
-g(x) = \sum_{k=1}^N c_k \sin(2kx),
+g(x) = \sum_{k=1}^N c_k \sin kx,
 \f]
 is well established.  However when computing divided differences, we are
 interested in evaluating
 \f[
-g(x)-g(y) = \sum_{k=1}^N 2 c_k \sin\bigl(k(x-y)\bigr)\cos\bigl(k(x+y)\bigr)
+g(x)-g(y) = \sum_{k=1}^N 2 c_k
+\sin\bigl({\textstyle\frac12}k(x-y)\bigr)
+\cos\bigl({\textstyle\frac12}k(x+y)\bigr).
 \f]
-and the applicability of Clenshaw summation is not so clear.  Botnev and
-Ustinov assert that the method can be used in this case (but they give
-no details).  It turns out that Clenshaw summation can be used if we
-simultaneously compute the sum \f$g(x)+g(y)\f$ and perform a matrix
-summation,
+Clenshaw summation can be used in this case if we simultaneously compute
+\f$g(x)+g(y)\f$ and perform a matrix summation,
 \f[
 \mathsf G(x,y) = \begin{bmatrix}
 (g(x) + g(y)) / 2\\
@@ -4678,40 +4725,284 @@ where
 \f[
 \mathsf F_k(x,y)=
 \begin{bmatrix}
-     \sin kp \cos kd\\
-(2/d)\sin kd \cos kp
+     \cos kd \sin kp\\
+\frac{\sin kd}d \cos kp
 \end{bmatrix},
 \f]
-and \f$p=x+y\f$ and \f$d=x-y\f$.  The first element of \f$\mathsf
-G(x,y)\f$ is the average value of \f$g\f$ and the second element, the
-divided difference, is the average slope.  \f$\mathsf F_k(x,y)\f$
-satisfies the recurrence relation
+\f$d=\frac12(x-y)\f$, \f$p=\frac12(x+y)\f$, and, in the limit
+\f$d\rightarrow0\f$, \f$(\sin kd)/d \rightarrow k\f$.  The first element
+of \f$\mathsf G(x,y)\f$ is the average value of \f$g\f$ and the second
+element, the divided difference, is the average slope.  \f$\mathsf
+F_k(x,y)\f$ satisfies the recurrence relation
 \f[
   \mathsf F_{k+1}(x,y) =
   \mathsf A(x,y) \mathsf F_k(x,y) - \mathsf F_{k-1}(x,y),
 \f]
 where
 \f[
- \mathsf A(x,y) = \begin{bmatrix}
-     2 \cos p \cos d &  -d\sin p \sin d \\
--(4/d) \sin p \sin d &  2 \cos p \cos d
-\end{bmatrix}.
+ \mathsf A(x,y) = 2\begin{bmatrix}
+  \cos d \cos p & -d\sin d \sin p \\
+- \frac{\sin d}d \sin p &   \cos d \cos p
+\end{bmatrix},
 \f]
-The standard Clenshaw algorithm can now be applied to yield
+and \f$\lim_{d\rightarrow0}(\sin d)/d = 1\f$.  The standard Clenshaw
+algorithm can now be applied to yield
 \f[
-\begin{aligned}
+\begin{align}
 \mathsf B_{N+1} &= \mathsf B_{N+2} = \mathsf 0, \\
 \mathsf B_k &= \mathsf A \mathsf B_{k+1} - \mathsf B_{k+2} +
-\mathsf c_k \mathsf I, \qquad\text{for $N\ge k \ge 1$},\\
+c_k \mathsf I, \qquad\text{for $N\ge k \ge 1$},\\
 \mathsf G(x,y) &= \mathsf B_1 \mathsf F_1(x,y),
-\end{aligned}
+\end{align}
 \f]
-where \f$B_k\f$ are \f$2\times2\f$ matrices.  The divided difference
-\f$\Delta[g](x,y)\f$ is given by the second element of \f$\mathsf
-G(x,y)\f$.
+where \f$\mathsf B_k\f$ are \f$2\times2\f$ matrices.  The divided
+difference \f$\Delta[g](x,y)\f$ is given by the second element of
+\f$\mathsf G(x,y)\f$.
 
 <center>
-Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
+Back to \ref triaxial.  Forward to \ref greatellipse.  Up to
+\ref contents.
+</center>
+**********************************************************************/
+/**
+\page greatellipse Great Ellipses
+
+<center>
+Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
+\ref contents.
+</center>
+
+Great ellipses are sometimes proposed (Williams, 1996; Pallikaris &
+Latsas, 2009) as alternatives to geodesics for the purposes of
+navigation.  This is predicated on the assumption that solving the
+geodesic problems is complex and costly.  These assumptions are no
+longer true, and geodesics should normally be used in place of great
+ellipses.  This is discussed in more detail in \ref gevsgeodesic.
+
+Solutions of the great ellipse problems implemented for Matlab and
+Octave are provided by
+ - gedoc: briefly descibe the routines
+ - gereckon: solve the direct great circle problem
+ - gedistance: solve the inverse great circle problem
+ .
+These functions are also available as a package
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
+47898</a> on Matlab File Exchange.  This requires also the installation
+of package
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
+39108</a>.  In this time, there are no C++ support in GeographicLib for
+great ellipses.
+
+References:
+ - B. R. Bowring,
+   <a href="http://dx.doi.org/10.1007/BF02521760">
+   The direct and inverse solutions for the great elliptic line on the
+   reference ellipsoid</a>, Bull. Geod. 58, 101--108 (1984).
+ - M. A. Earle,
+   A vector solution for navigation on a great ellipse,
+   J. Navigation 53(3), 473--481 (2000).
+ - M. A. Earle,
+   <a href="http://dx.doi.org/10.1017/S037346330800475X">
+   Vector solutions for azimuth</a>,
+   J. Navigation 61(3), 537--545 (2008).
+ - C. F. F. Karney,
+   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   Algorithms for geodesics</a>, J. Geodesy 87(1), 43--55 (2013);
+   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+   geod-addenda.html</a>.
+ - A. Pallikaris & G. Latsas,
+   <a href="http://dx.doi.org/1017/S0373463309005323">
+   New algorithm for great elliptic sailing (GES)</a>,
+   J. Navigation 62(3), 493--507 (2009).
+ - A. Pallikaris, L. Tsoulos, & D. Paradissis,
+   New meridian arc formulas for sailing calculations in navigational
+   GIS, International Hydrographic Review, 24--34 (May 2009).
+ - L. E. Sj&ouml;berg,
+   <a href="http://dx.doi.org/10.2478/v10156-011-0040-9">
+   Solutions to the direct and inverse navigation problems on the great
+   ellipse</a>, J. Geodetic Science 2(3), 200--205 (2012).
+ - R. Williams,
+   <a href="http://dx.doi.org/10.1017/S0373463300013333">
+   The Great Ellipse on the Surface of the Spheroid</a>,
+   J. Navigation 49(2), 229--234 (1996).
+ - T. Vincenty,
+   <a href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">
+   Direct and Inverse Solutions of Geodesics on the Ellipsoid with
+   Application of Nested Equations</a>,
+   Survey Review 23(176), 88--93 (1975).
+
+Go to
+ - \ref geformulation
+ - \ref gevsgeodesic
+
+\section geformulation Solution of great ellipse problems
+
+Adopt the usual notation for the ellipsoid: equatorial semi-axis
+\f$a\f$, polar semi-axis \f$b\f$, flattening \f$f = (a-b)/a\f$,
+eccentricity \f$e = \sqrt{f(2-f)}\f$, second eccentricity \f$e' =
+e/(1-f)\f$.
+
+There are several ways in which an ellipsoid can be mapped into a sphere
+converting the great ellipse into a great circle.  The simplest ones
+entail scaling the ellipsoid in the \f$\hat z\f$ direction, the
+direction of the axis of rotation, scaling the ellipsoid radially, or a
+combination of the two.
+
+One such combination (scaling by \f$a^2/b\f$ in the \f$\hat z\f$
+direction, following by a radial scaling to the sphere) preserves the
+geographical latitude \f$\phi\f$.  This enables an great ellipse to be
+plotted on a chart merely by determining way points on the corresponding
+great circle and tranferring them directly on the chart.  In this
+exercise the flattening of the ellipsoid can be <i>ignored</i>!
+
+Bowring (1984), Williams (1996), Earle (2000, 2008) and Pallikaris &
+Latsas (2009), scale the ellipsoid radially onto a sphere preserving the
+geocentric latitude \f$\theta\f$.  More convenient than this is to scale
+the ellipsoid along \f$\hat z\f$ onto the sphere, as is done by
+Sj&ouml;berg (2012), thus preserving the parametric latitude
+\f$\beta\f$.  The advantage of this "parametric" mapping is that
+Bessel's rapidly converging series for meridian arc in terms of
+parametric latitude can be used (a possibility that is overlooked by
+Sj&ouml;berg).
+
+The full parametric mapping is:
+ - The geographic latitude \f$\phi\f$ on the ellipsoid maps to the
+   parametric latitude \f$\beta\f$ on the sphere,
+   where
+   \f[a\tan\beta = b\tan\phi.\f]
+ - The longitude \f$\lambda\f$ is unchanged.
+ - The azimuth \f$\alpha\f$ on the ellipsoid maps to an azimuth
+   \f$\gamma\f$ on the sphere where
+   \f[
+   \begin{align}
+   \tan\alpha &= \frac{\tan\gamma}{\sqrt{1-e^2\cos^2\beta}}, \\
+   \tan\gamma &= \frac{\tan\alpha}{\sqrt{1+e'^2\cos^2\phi}},
+   \end{align}
+   \f]
+   and the quadrants of \f$\alpha\f$ and \f$\gamma\f$ are the same.
+ - Positions on the great circle of radius \f$a\f$ are parametrized by
+   arc length \f$\sigma\f$ measured from the northward crossing of the
+   equator.  The great ellipse has a semi-axes \f$a\f$ and \f$a \sqrt{1 -
+   e^2\cos^2\gamma_0}\f$, where \f$\gamma_0\f$ is the great-circle
+   azimuth at the northward equator crossing, and \f$\sigma\f$ is the
+   parametric angle on the ellipse.
+ .
+To determine the distance along the ellipse in terms of \f$\sigma\f$ and
+vice versa, the series for distance \f$s\f$ and for \f$\tau\f$ given in
+\ref geodseries can be used.  The direct and inverse great ellipse
+problems are now simply solved by mapping the problem to the sphere,
+solving the resulting great circle problem, and mapping this back onto
+the ellipsoid.
+
+\section gevsgeodesic Great ellipses vs geodesics
+
+Some papers advocating the use of great ellipses for navigation exhibit
+a prejudice against the use of geodesics.  These excerpts from
+Pallikaris, Tsoulos, & Paradissis (2009) give the flavor
+ - ... it is required to adopt realistic accuracy standards in order not
+   only to eliminate the significant errors of the spherical model but
+   also to avoid the exaggerated and unrealistic requirements of sub
+   meter accuracy.
+ - Calculation of shortest sailings paths on the ellipsoid by a geodetic
+   inverse method involve formulas that are much too complex.
+ - Despite the fact that contemporary computers are fast enough to
+   handle more complete geodetic formulas of sub meter accuracy, a basic
+   principle for the design of navigational systems is the avoidance of
+   unnecessary consumption of computing power.
+ .
+This prejudice was probably due to the fact that the most well-known
+algorithms for geodesics, by Vincenty (1975), come with some
+"asterisks":
+ - no derivation was given (although they follow in a straightforward
+   fashion from classic 19th century methods);
+ - the accuracy is "only" 0.5 mm or so, surely good enough for most
+   applications, but still a reason for a user to worry and a spur to
+   numerous studies "validating" the algorithms;
+ - no indication is given for how to extend the series to improve the
+   accuracy;
+ - there was a belief in some quarters (erroneous!) that the Vincenty
+   algorithms could not be used to compute waypoints;
+ - the algorithm for the inverse problem fails to converge for some
+   inputs.
+ .
+These problems meant that users were reluctant to bundle the algorithms
+into a library and treat them as a part of the software infrastructure
+(much as you might regard the computation of \f$\sin x\f$ as a given).
+In particular, I regard the last issue, lack of convergence of the
+inverse solution, as fatal.  Even though the problem only arises for
+nearly antipodal points, it means all users of the library must have
+some way to handle this problem.
+
+For these reasons, substitution of a great ellipse for the geodesic
+makes some sense.  The solution of the great ellipse is, in principle,
+no more difficult than solving for the great circle and, for paths of
+less then 10000 km, the error in the distance is less than 13.5 m.
+
+Now (2014), however, the situation has reversed.  The algorithms given
+by Karney (2013)&mdash;and used in GeographicLib since
+2009&mdash;explicitly resolve the issues with Vincenty's algorithm.  The
+geodesic problem is conveniently bundled into a library.  Users can call
+this with an assurance of an accurate result much as they would when
+evaluating \f$\sin x\f$.  On the other, great ellipses come with their
+own set of asterisks:
+ - To the extent that they are regarded as approximations to geodesics,
+   the errors need to be quantified, the limits of allowable use
+   documented, etc.
+ - The user is now left with decisions on when to trust the results and
+   to find alternative solutions if necessary.
+ - Even though the great ellipse is no more that 13.5 m longer than a
+   10000 km geodesic, the path of the great ellipse can deviate from the
+   geodesic by as much as 8.3 km.  This disqualifies great ellipses from
+   use in congested air corridors where the
+   <a href="https://en.wikipedia.org/wiki/Strategic_lateral_offset_procedure">
+   strategic lateral offset procedure</a> is in effect and in any
+   situation which demands coordination in the routes of vessels.
+ - Because geodesics obey the triangle inequality, while great ellipses
+   do not, the solutions for realistic navigational problems, e.g.,
+   determining the time of closest approach of two vessels, are often
+   simpler in terms of geodesics.
+
+To address some other of the objections in the quotes from Pallikaris et
+al. given above:
+ - "exaggerated and unrealistic requirements of sub meter accuracy": The
+   geodesic algorithms allow full double precision accuracy at
+   essentially no cost.  This is because Clenshaw summation allows
+   additional terms to be added to the series without the need for
+   addition trigonometric evaluations.  Full accuracy is important to
+   maintain because it allows the results to be used reliably in more
+   complex problems (e.g., in the determination of maritime boundaries).
+ - "unnecessary consumption of computing power": The solution of the
+   inverse geodesic problem takes 2.3 &mu;s; multiple points on a
+   geodesic can be computed at a rate of one point per 0.4 &mu;s.  The
+   actual power consumed in these calculations is miniscule compared to
+   the power needed to drive the display of a navigational computer.
+ - "formulas that are much too complex": There's no question that the
+   solution of the geodesic problem is more complex than for great
+   ellipses.  However this complexity is only an issue when
+   <b>implementing</b> the algorithms.  For the <b>end user</b>,
+   navigational software employing geodesics is <b>less</b> complex
+   compared with that employing great ellipses.  Here is what the user
+   needs to know about the geodesic solution:
+   <blockquote>"The shortest path is found."</blockquote>
+   And here is the corresponding documentation for great ellipses:
+   <blockquote>"A path which closely approximates the shortest path is
+   found.  Provided that the distance is less than 10000 km, the error
+   in distance is no more than 14 m and the deviation the route from
+   that of the shortest path is no more than 9 km.  These bounds apply
+   to the WGS84 ellipsoid.  The deviation of the path means that it
+   should be used with caution when planning routes.  In addition, great
+   ellipses do not obey the triangle inequality; this disqualifies them
+   from use in some applications."</blockquote>
+
+Having all the geodesic functions bundled up into a reliable "black box"
+enables users to concentrate on how to solve problems using geodesics
+(instead of figuring out how to solve for the geodesics).  A wide range
+of problems (intersection of paths, the path for an interception, the
+time of closest approach, median lines, tri-points, etc.) are all
+amenable to simple and fast solutions in terms of geodesics.
+
+<center>
+Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
 \ref contents.
 </center>
 **********************************************************************/
@@ -4722,10 +5013,9 @@ Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
 Back to \ref rhumb.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 
-TransverseMercator and
-TransverseMercatorExact provide accurate implementations
-of the transverse Mercator projection.  The
- <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
+TransverseMercator and TransverseMercatorExact provide accurate
+implementations of the transverse Mercator projection.  The
+<a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
 utility provides an interface to these classes.
 
 Go to
@@ -4733,7 +5023,7 @@ Go to
  - \ref tmseries
  - \ref tmfigures
 
-References
+References:
  - L. Kr&uuml;ger,
    <a href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
@@ -5235,7 +5525,7 @@ Here's what you should know:
    or later) and the quadmath library (which requires the use of g++).
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=5</code> gives
    arbitrary precision via mpfr::mpreal; this requires
-   <a href="http://www.mpfr.org"> MPFR</a> and
+   <a href="http://www.mpfr.org"> MPFR</a> (version 3.0 or later) and
    <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
    (version 3.5.9 or later).
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
@@ -5499,6 +5789,20 @@ particular the links for the source code will not work if the code has
 been migrated to the archive subdirectory).  All the releases are
 available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for GeographicLib.
+
+ - <a href="http://geographiclib.sf.net/1.38">Version 1.38</a>
+   (released 2014-10-02)
+   - On MacOSX, the installed package is relocatable (for cmake version
+     2.8.12 and later).
+   - On Mac OSX, GeographicLib can be installed using homebrew.
+   - In cmake builds under Windows, set the output directories so that
+     binaries and shared libraries are together.
+   - Accept the minus sign as a synomym for - in DMS.{cpp,js}.
+   - The cmake configuration file geographiclib-depends.cmake has been
+     renamed to geographiclib-targets.cmake.
+   - Matlab/Octave routines for great ellipses added; see \ref
+     greatellipse.
+   - Provide man pages for geographiclib-get-{geoids,gravity,magnetic}.
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-08-08)

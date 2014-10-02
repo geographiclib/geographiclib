@@ -42,19 +42,25 @@ HTMLMAN = \
 	RhumbSolve.1.html \
 	TransverseMercatorProj.1.html
 
+SYSMANPAGES = geographiclib-get-geoids.8 \
+	geographiclib-get-gravity.8 \
+	geographiclib-get-magnetic.8
+
 POD2MAN = pod2man --center="GeographicLib Utilities" \
 	--release="$(PACKAGE_STRING)"
-PODFIX= sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%' -e 's%<code>\([^<>]*\)(\(.\))</code>%<a href="\1.\2.html">&</a>%'g
+PODFIX = sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%' -e 's%<code>\([^<>]*\)(\(.\))</code>%<a href="\1.\2.html">&</a>%'g
 man1_MANS = $(MANPAGES)
+man8_MANS = $(SYSMANPAGES)
 
-SUFFIXES = .pod .1 .usage .1.html
+SUFFIXES = .pod .1 .usage .1.html .8
 
 all: man
-man: manpages usage htmlman
+man: manpages usage htmlman sysmanpages
 
 manpages: $(MANPAGES)
 usage: $(USAGE)
 htmlman: $(HTMLMAN)
+sysmanpages: $(SYSMANPAGES)
 
 if HAVE_PODPROGS
 
@@ -70,11 +76,14 @@ if HAVE_PODPROGS
 else
 
 USAGECMD = cat $(srcdir)/$@ 2> /dev/null || \
-	sed "s/@TOOL@/$*/g" $(srcdir)/dummy.usage.in > $@
+	sed -e "s/@TOOL@/$*/g" -e "s/@PROJECT_VERSION@/$(VERSION)/g" \
+	$(srcdir)/dummy.usage.in > $@
 MANCMD = cat $(srcdir)/$@ 2> /dev/null || \
-	sed "s/@TOOL@/$*/g" $(srcdir)/dummy.1.in > $@
+	sed -e "s/@TOOL@/$*/g" -e "s/@PROJECT_VERSION@/$(VERSION)/g" \
+	$(srcdir)/dummy.1.in > $@
 HTMLCMD = cat $(srcdir)/$@ 2> /dev/null || \
-	sed "s/@TOOL@/$*/g" $(srcdir)/dummy.1.html.in > $@
+	sed -e "s/@TOOL@/$*/g" -e "s/@PROJECT_VERSION@/$(VERSION)/g" \
+	$(srcdir)/dummy.1.html.in > $@
 
 CartConvert.usage:
 	$(USAGECMD)
@@ -147,12 +156,25 @@ TransverseMercatorProj.1.html:
 
 endif
 
+geographiclib_data = $(datadir)/GeographicLib
+SCRIPTMANCMD = sed -e "s/@SCRIPT@/$*/g" \
+	-e "s/@DATA@/`echo $* | cut -f3 -d-`/g" \
+	-e "s%@GEOGRAPHICLIB_DATA@%$(geographiclib_data)%g" \
+	$(srcdir)/script.8.in > $@
+
+geographiclib-get-geoids.8:
+	$(SCRIPTMANCMD)
+geographiclib-get-gravity.8:
+	$(SCRIPTMANCMD)
+geographiclib-get-magnetic.8:
+	$(SCRIPTMANCMD)
+
 EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	GeoConvert.pod TransverseMercatorProj.pod \
 	CartConvert.pod ConicProj.pod GeodSolve.pod GeodesicProj.pod \
 	GeoidEval.pod Gravity.pod MagneticField.pod Planimeter.pod \
 	RhumbSolve.pod $(MANPAGES) $(USAGE) $(HTMLMAN) \
-	dummy.usage.in dummy.1.in dummy.1.html.in
+	dummy.usage.in dummy.1.in dummy.1.html.in script.8.in
 
 maintainer-clean-local:
-	rm -rf *.usage *.1.html *.1
+	rm -rf *.usage *.1.html *.1 *.8

@@ -105,7 +105,7 @@ function geoddoc
 %    The following table gives the approximate maximum error in
 %    GEODDISTANCE and GEODRECKON (expressed as a distance) for an ellipsoid
 %    with the same major radius as the WGS84 ellipsoid and different values
-%    of the flattening.
+%    of the flattening (nm means nanometer and um means micrometer).
 %
 %         |f|     error
 %         0.01    25 nm
@@ -190,9 +190,9 @@ function geoddoc
 %     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
 %     GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, POLYGONAREA.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2014) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.31.
+% This file was distributed with GeographicLib 1.38.
 
   help geoddoc
 end
