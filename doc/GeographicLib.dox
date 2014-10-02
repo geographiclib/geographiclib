@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.38
-\date 2014-mm-dd
+\date 2014-10-02
 
 \section abstract Abstract
 
@@ -4979,15 +4979,20 @@ al. given above:
  - "formulas that are much too complex": There's no question that the
    solution of the geodesic problem is more complex than for great
    ellipses.  However this complexity is only an issue when
-   <i>implementing</i> the algorithms.  For the <i>end user</i>,
-   navigational software employing geodesics is <i>less</i> complex
-   (<i>The shortest path is found.</i>) compared with that employing
-   great ellipses (<i>A path which closely approximates the shortest
-   path is found.  Provided that the distance is less than 10000 km, the
-   error in distance is no more than 14 m and the deviation the route
-   from that of the shortest path is no more than 9 km.  These bounds
-   apply to the WGS84 ellipsoid.  For more discussion of the errors and
-   steps that may be taken to mitigate them, see Appendix E.</i>)
+   <b>implementing</b> the algorithms.  For the <b>end user</b>,
+   navigational software employing geodesics is <b>less</b> complex
+   compared with that employing great ellipses.  Here is what the user
+   needs to know about the geodesic solution:
+   <blockquote>"The shortest path is found."</blockquote>
+   And here is the corresponding documentation for great ellipses:
+   <blockquote>"A path which closely approximates the shortest path is
+   found.  Provided that the distance is less than 10000 km, the error
+   in distance is no more than 14 m and the deviation the route from
+   that of the shortest path is no more than 9 km.  These bounds apply
+   to the WGS84 ellipsoid.  The deviation of the path means that it
+   should be used with caution when planning routes.  In addition, great
+   ellipses do not obey the triangle inequality; this disqualifies them
+   from use in some applications."</blockquote>
 
 Having all the geodesic functions bundled up into a reliable "black box"
 enables users to concentrate on how to solve problems using geodesics
@@ -5786,7 +5791,7 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.38">Version 1.38</a>
-   (released 2014-mm-dd)
+   (released 2014-10-02)
    - On MacOSX, the installed package is relocatable (for cmake version
      2.8.12 and later).
    - On Mac OSX, GeographicLib can be installed using homebrew.
@@ -5797,7 +5802,7 @@ of the git repository for GeographicLib.
      renamed to geographiclib-targets.cmake.
    - Matlab/Octave routines for great ellipses added; see \ref
      greatellipse.
-   - Add man pages for geographiclib-get-{geoids,gravity,magnetic}.
+   - Provide man pages for geographiclib-get-{geoids,gravity,magnetic}.
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-08-08)
