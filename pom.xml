@@ -12,7 +12,7 @@
 
   <groupId>com.sri.vt</groupId>
   <artifactId>geographiclib</artifactId>
-  <version>1.38-SNAPSHOT</version>
+  <version>1.39-PRERELEASE-SNAPSHOT</version>
   <packaging>majic-cmake</packaging>
   <name>GeographicLib</name>
 

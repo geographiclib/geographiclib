@@ -5,7 +5,7 @@ function gedoc
 %   the inverse and direct problems for great ellipses on the surface of an
 %   ellipsoid of revolution.  For more information, see
 %
-%     http://geographiclib.sf.net/1.38/greatellipse.html
+%     http://geographiclib.sf.net/html/greatellipse.html
 %
 %   Great ellipses are sometimes proposed as alternatives to computing
 %   ellipsoidal geodesics.  However geodesic calculations are easy to
