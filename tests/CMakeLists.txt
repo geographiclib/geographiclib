@@ -26,27 +26,6 @@ target_link_libraries (GeodExact ${PROJECT_LIBRARIES}
     ${QUAD_LIBRARIES} ${MPFR_LIBRARIES})
 set (TESTPROGRAMS ${TESTPROGRAMS} GeodExact)
 
-if (MSVC)
-  get_target_property (_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
-  if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
-    # Copy the shared library on Windows systems to this directory
-    # (examples) so that the tests can be run.
-    if (CMAKE_VERSION VERSION_LESS 2.8.11)
-      get_target_property (_LOCR ${PROJECT_LIBRARIES} LOCATION_RELEASE)
-      get_target_property (_LOCD ${PROJECT_LIBRARIES} LOCATION_DEBUG)
-      add_custom_command (TARGET examples POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy "${_LOCR}" ${CMAKE_CFG_INTDIR}
-        COMMAND ${CMAKE_COMMAND} -E copy "${_LOCD}" ${CMAKE_CFG_INTDIR}
-        COMMENT "Copying shared library to examples directory")
-    else ()
-      add_custom_command (TARGET examples POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E
-        copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
-        COMMENT "Copying shared library to examples directory")
-    endif ()
-  endif ()
-endif ()
-
 # Put all the tools into a folder in the IDE
 set_property (TARGET testprograms ${TESTPROGRAMS} PROPERTY FOLDER tests)
 

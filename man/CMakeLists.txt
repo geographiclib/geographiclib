@@ -15,6 +15,7 @@ endif ()
 set (MANPAGES)
 set (USAGE)
 set (HTMLMAN)
+set (SYSMANPAGES)
 
 # Loop over the tools building up lists of the derived files.  Also in
 # maintainer mode, specify how the derived files are created.  The sed
@@ -69,6 +70,14 @@ foreach (TOOL ${TOOLS})
   endif ()
 endforeach ()
 
+if (NOT WIN32)
+  foreach (SCRIPT ${SCRIPTS})
+    string (REPLACE geographiclib-get- "" DATA ${SCRIPT})
+    set (SYSMANPAGES ${SYSMANPAGES} ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT}.8)
+    configure_file (script.8.in ${SCRIPT}.8 @ONLY)
+  endforeach ()
+endif()
+
 # Add the extra maintainer tasks into the dependency list.  The
 # distrib-man target copies the derived documentation files into the
 # source tree.
@@ -88,7 +97,12 @@ if (MAINTAINER)
         >/dev/null 2>&1 ||
         install -m 644 "$$f" ${CMAKE_CURRENT_SOURCE_DIR}\; done
     COMMENT "Installing man documentation page in source tree")
+else ()
+  add_custom_target (htmlman ALL DEPENDS ${HTMLMAN})
 endif ()
 
 # Install the man pages.
 install (FILES ${MANPAGES} DESTINATION share/man/man1)
+if (NOT WIN32)
+  install (FILES ${SYSMANPAGES} DESTINATION share/man/man8)
+endif ()

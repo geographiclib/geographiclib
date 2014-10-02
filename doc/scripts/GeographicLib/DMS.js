@@ -5,7 +5,7 @@
  * See the documentation for the C++ class.  The conversion is a literal
  * conversion from C++.
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -52,6 +52,7 @@ GeographicLib.DMS = {};
     dmsa = dmsa.replace(/\u2019/g, '\'');
     dmsa = dmsa.replace(/\u2033/g, '"');
     dmsa = dmsa.replace(/\u201d/g, '"');
+    dmsa = dmsa.replace(/\u2212/g, '-');
     dmsa = dmsa.replace(/''/g, '"');
     dmsa = dmsa.replace(/^\s+/, "");
     dmsa = dmsa.replace(/\s+$/, "");

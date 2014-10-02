@@ -11,6 +11,7 @@
 #include "GeographicLib/GeodesicLine.hpp"
 #include "GeographicLib/GeodesicExact.hpp"
 #include "GeographicLib/Constants.hpp"
+#include <GeographicLib/Utility.hpp>
 
 #include <cmath>
 #include <vector>
@@ -180,6 +181,7 @@ void GeodError(const test& tgeod,
 
 
 int main(int argc, char* argv[]) {
+  Utility::set_digits();
   Math::real a = Constants::WGS84_a();
   Math::real f = Constants::WGS84_f();
   bool timing = false;
@@ -376,7 +378,8 @@ int main(int argc, char* argv[]) {
       }
     }
     if (accuracytest) {
-      Math::real mult = sizeof(Math::real) > sizeof(double) ? 1e12l : 1e9l;
+      Math::real mult = Math::extra_digits() == 0 ? 1e9l :
+        Math::extra_digits() <= 3 ? 1e12l : 1e15l;
       for (unsigned i = 0; i < NUMERR; ++i)
         cout << i << " " << mult * err[i]
              << " " << errind[i] << "\n";

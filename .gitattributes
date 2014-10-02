@@ -24,6 +24,7 @@ doxyfile.in text
 *.pod text
 *.tex text
 *.txt text
+*.md text
 [Mm]akefile* eol=lf
 *.ac eol=lf
 *.am eol=lf

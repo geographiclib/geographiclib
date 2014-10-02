@@ -217,7 +217,8 @@ namespace GeographicLib {
       slam12 = abs(lon12) == 180 ? 0 : sin(lam12),
       clam12 = cos(lam12);      // lon12 == 90 isn't interesting
 
-    real a12, sig12, calp1, salp1, calp2, salp2;
+    // initial values to suppress warning
+    real a12, sig12, calp1, salp1, calp2 = 0, salp2 = 0;
 
     bool meridian = lat1 == -90 || slam12 == 0;
 
@@ -259,7 +260,7 @@ namespace GeographicLib {
         meridian = false;
     }
 
-    real omg12;
+    real omg12 = 0;             // initial value to suppress warning
     if (!meridian &&
         sbet1 == 0 &&   // and sbet2 == 0
         // Mimic the way Lambda12 works with calp1 = 0
@@ -306,7 +307,9 @@ namespace GeographicLib {
         // value of alp1 is then further from the solution) or if the new
         // estimate of alp1 lies outside (0,pi); in this case, the new starting
         // guess is taken to be (alp1a + alp1b) / 2.
-        real ssig1, csig1, ssig2, csig2;
+        //
+        // initial values to suppress warnings (if loop is executed 0 times)
+        real ssig1 = 0, csig1 = 0, ssig2 = 0, csig2 = 0;
         unsigned numit = 0;
         // Bracketing range
         real salp1a = tiny_, calp1a = 1, salp1b = tiny_, calp1b = -1;
@@ -338,7 +341,7 @@ namespace GeographicLib {
           real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                             E, omg12, numit < maxit1_, dv) - lam12;
-         // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
+          // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
           // Reversed test to allow escape with NaNs
           if (tripb || !(abs(v) >= (tripn ? 8 : 2) * tol0_)) break;
           // Update bracketing values

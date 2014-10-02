@@ -29,20 +29,14 @@ if (MSVC OR CMAKE_CONFIGURATION_TYPES)
     DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 endif ()
 
-if (MSVC)
-  get_target_property (_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
-  if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
-    # Copy the shared library on Windows systems to this directory
-    # (examples) so that the tests can be run.
-    add_custom_command (TARGET tools POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E
-      copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
-      COMMENT "Copying shared library to tools directory")
-  endif ()
+if (APPLE AND NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+  # Ensure that the package is relocatable
+  set_target_properties (${TOOLS} PROPERTIES
+    INSTALL_RPATH "@loader_path/../lib${LIB_SUFFIX}")
 endif ()
 
-# Specify where the tools are installed
-install (TARGETS ${TOOLS} EXPORT depends DESTINATION bin)
+# Specify where the tools are installed, adding them to the export targets
+install (TARGETS ${TOOLS} EXPORT targets DESTINATION bin)
 
 # Put all the tools into a folder in the IDE
 set_property (TARGET tools ${TOOLS} PROPERTY FOLDER tools)

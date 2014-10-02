@@ -40,7 +40,7 @@ set -e
 #   python/setup.py
 #   tests/test-distribution.sh
 
-VERSION=1.37
+VERSION=1.38
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
@@ -214,6 +214,13 @@ cp -p {geodproj,*_{fwd,inv}}.m $TEMP/proj/geographiclib-matlab
 cd $TEMP/proj
 rm -f $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip
 zip $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip \
+    geographiclib-matlab/*.m
+mkdir -p $TEMP/greatellipse/geographiclib-matlab
+cd $TEMP/instc/libexec/GeographicLib/matlab
+cp -p ge{doc,reckon,distance}.m $TEMP/greatellipse/geographiclib-matlab
+cd $TEMP/greatellipse
+rm -f $DEVELSOURCE/matlab/geographiclib_matlabge_$VERSION.zip
+zip $DEVELSOURCE/matlab/geographiclib_matlabge_$VERSION.zip \
     geographiclib-matlab/*.m
 
 cd $TEMP
