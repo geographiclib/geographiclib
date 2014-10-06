@@ -1209,7 +1209,8 @@
    Application of Nested Equations'',
    Survey Review '''23''' (misprinted as '''22''') (176), 88--93 (1975);
    Addendum: Survey Review '''23'''(180), 294 (1976).[[BR]]
-   http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf
+   http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf [[BR]]
+   http://dx.doi.org/10.1179/sre.1975.23.176.88
  * T. Vincenty,[[BR]]
    ''Geodetic inverse solution between antipodal points'',
    unpublished report, DMAAC (Aug. 28, 1975).[[BR]]
