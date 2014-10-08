@@ -63,6 +63,28 @@ cmake ..
 make
 echo 30 0 29.5 179.5 | ./geodinverse \endverbatim
 
+Finally, the two programs
+ - ngsforward
+ - ngsinverse
+ .
+which are also built with cmake, provide drop-in replacements for
+replacements for the NGS tools FORWARD and INVERSE available from
+http://www.ngs.noaa.gov/PC_PROD/Inv_Fwd/.
+These cure two problems of the Vincenty algorithms used by NGS:
+ - the accuracy is "only" 0.1 mm;
+ - the inverse program sometimes goes into an infinite loop.
+ .
+The corresponding source files
+ - ngsforward.for
+ - ngsinverse.for
+ - ngscommon.for
+ .
+are derived from the NGS source files
+ - forward.for, version 2.0, dated 2002-10-28
+ - inverse.for, version 3.0, dated 2012-11-27
+ .
+and are therefore in the public domain.
+
 \section library Using the library
 
 - Optionall put @verbatim

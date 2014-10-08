@@ -1,13 +1,14 @@
 <project
     xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                        http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>com.sri.vt.majic</groupId>
     <artifactId>majic-parent</artifactId>
-    <version>0.1.11</version>
+    <version>0.2.0</version>
   </parent>
 
   <groupId>com.sri.vt</groupId>
@@ -41,14 +42,6 @@
     </profile>
   </profiles>
 
-  <repositories>
-    <repository>
-      <id>artifactory-vt</id>
-      <name>SRI VT Repository</name>
-      <url>https://artifactory-vt.sarnoff.internal/artifactory/repo</url>
-    </repository>
-  </repositories>
-
   <build>
     <plugins>
       <plugin>
@@ -62,7 +55,9 @@
                 <GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
                 <MATLAB_COMPILER>OFF</MATLAB_COMPILER>
                 <GEOGRAPHICLIB_DOCUMENTATION>OFF</GEOGRAPHICLIB_DOCUMENTATION>
-                <BUILD_NETGEOGRAPHICLIB>${build.netgeographiclib}</BUILD_NETGEOGRAPHICLIB>
+                <BUILD_NETGEOGRAPHICLIB>
+                  ${build.netgeographiclib}
+                </BUILD_NETGEOGRAPHICLIB>
               </options>
             </configuration>
           </execution>

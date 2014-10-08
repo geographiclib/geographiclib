@@ -764,6 +764,7 @@
    Geodäsie in neuer Darstellung [Shortest lines on the spheroid
    together with the geodesic problems in a new representation]'',
    (Istwann, Coesfeld, 1865).[[BR]]
+   http://books.google.com/books?id=l35aAAAAcAAJ [[BR]]
    http://sammlungen.uni-muenster.de/hd/content/titleinfo/1012467
  * B. Price,[[BR]]
    ''A Treatise on Infinitesimal Calculus'', Vol. 2
