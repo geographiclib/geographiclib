@@ -79,6 +79,7 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref greatellipse
  - \ref transversemercator
  - \ref geocentric
+ - \ref auxlat
  - \ref highprec
  - \ref changes
 
@@ -5387,7 +5388,7 @@ Back to \ref rhumb.  Forward to \ref geocentric.  Up to \ref contents.
 \page geocentric Geocentric coordinates
 
 <center>
-Back to \ref transversemercator.  Forward to \ref highprec.  Up to
+Back to \ref transversemercator.  Forward to \ref auxlat.  Up to
 \ref contents.
 </center>
 
@@ -5496,7 +5497,496 @@ However the choice of independent variables in these methods leads
 to a loss of accuracy for points near the equatorial plane.
 
 <center>
-Back to \ref transversemercator.  Forward to \ref highprec.  Up to
+Back to \ref transversemercator.  Forward to \ref auxlat.  Up to
+\ref contents.
+
+</center>
+**********************************************************************/
+/**
+\page auxlat Auxiliary latitudes
+
+<center>
+Back to \ref geocentric.  Forward to \ref highprec.  Up to
+\ref contents.
+</center>
+
+See <a href="auxlat.mac"> auxlat.mac</a>.
+
+\f[
+\begin{align}
+\beta-\phi&=\textstyle{}
+-n\sin 2\phi
++\frac{1}{2}n^{2}\sin 4\phi
+-\frac{1}{3}n^{3}\sin 6\phi
++\frac{1}{4}n^{4}\sin 8\phi
++\ldots\\
+\phi-\beta&=\textstyle{}
++n\sin 2\beta
++\frac{1}{2}n^{2}\sin 4\beta
++\frac{1}{3}n^{3}\sin 6\beta
++\frac{1}{4}n^{4}\sin 8\beta
++\ldots\\
+\theta-\phi&=\textstyle{}
+-\bigl(2n-2n^{3}\bigr)\sin 2\phi
++\bigl(2n^{2}-4n^{4}\bigr)\sin 4\phi
+-\frac{8}{3}n^{3}\sin 6\phi
++4n^{4}\sin 8\phi
++\ldots\\
+\phi-\theta&=\textstyle{}
++\bigl(2n-2n^{3}\bigr)\sin 2\theta
++\bigl(2n^{2}-4n^{4}\bigr)\sin 4\theta
++\frac{8}{3}n^{3}\sin 6\theta
++4n^{4}\sin 8\theta
++\ldots\\
+\theta-\beta&=\textstyle{}
+-n\sin 2\beta
++\frac{1}{2}n^{2}\sin 4\beta
+-\frac{1}{3}n^{3}\sin 6\beta
++\frac{1}{4}n^{4}\sin 8\beta
++\ldots\\
+\beta-\theta&=\textstyle{}
++n\sin 2\theta
++\frac{1}{2}n^{2}\sin 4\theta
++\frac{1}{3}n^{3}\sin 6\theta
++\frac{1}{4}n^{4}\sin 8\theta
++\ldots\\
+\mu-\phi&=\textstyle{}
+-\bigl(\frac{3}{2}n-\frac{9}{16}n^{3}\bigr)\sin 2\phi
++\bigl(\frac{15}{16}n^{2}-\frac{15}{32}n^{4}\bigr)\sin 4\phi
+-\frac{35}{48}n^{3}\sin 6\phi
++\frac{315}{512}n^{4}\sin 8\phi
++\ldots\\
+\phi-\mu&=\textstyle{}
++\bigl(\frac{3}{2}n-\frac{27}{32}n^{3}\bigr)\sin 2\mu
++\bigl(\frac{21}{16}n^{2}-\frac{55}{32}n^{4}\bigr)\sin 4\mu
++\frac{151}{96}n^{3}\sin 6\mu
++\frac{1097}{512}n^{4}\sin 8\mu
++\ldots\\
+\mu-\beta&=\textstyle{}
+-\bigl(\frac{1}{2}n-\frac{3}{16}n^{3}\bigr)\sin 2\beta
+-\bigl(\frac{1}{16}n^{2}-\frac{1}{32}n^{4}\bigr)\sin 4\beta
+-\frac{1}{48}n^{3}\sin 6\beta
+-\frac{5}{512}n^{4}\sin 8\beta
++\ldots\\
+\beta-\mu&=\textstyle{}
++\bigl(\frac{1}{2}n-\frac{9}{32}n^{3}\bigr)\sin 2\mu
++\bigl(\frac{5}{16}n^{2}-\frac{37}{96}n^{4}\bigr)\sin 4\mu
++\frac{29}{96}n^{3}\sin 6\mu
++\frac{539}{1536}n^{4}\sin 8\mu
++\ldots\\
+\mu-\theta&=\textstyle{}
++\bigl(\frac{1}{2}n+\frac{13}{16}n^{3}\bigr)\sin 2\theta
+-\bigl(\frac{1}{16}n^{2}-\frac{33}{32}n^{4}\bigr)\sin 4\theta
+-\frac{5}{16}n^{3}\sin 6\theta
+-\frac{261}{512}n^{4}\sin 8\theta
++\ldots\\
+\theta-\mu&=\textstyle{}
+-\bigl(\frac{1}{2}n+\frac{23}{32}n^{3}\bigr)\sin 2\mu
++\bigl(\frac{5}{16}n^{2}-\frac{5}{96}n^{4}\bigr)\sin 4\mu
++\frac{1}{32}n^{3}\sin 6\mu
++\frac{283}{1536}n^{4}\sin 8\mu
++\ldots\\
+\end{align}
+\f]
+
+\f[
+\begin{align}
+\chi-\phi&=\textstyle{}
+-\bigl(2n-\frac{2}{3}n^{2}-\frac{4}{3}n^{3}\bigr)\sin 2\phi
++\bigl(\frac{5}{3}n^{2}-\frac{16}{15}n^{3}\bigr)\sin 4\phi
+-\frac{26}{15}n^{3}\sin 6\phi
++\ldots\\
+\phi-\chi&=\textstyle{}
++\bigl(2n-\frac{2}{3}n^{2}-2n^{3}\bigr)\sin 2\chi
++\bigl(\frac{7}{3}n^{2}-\frac{8}{5}n^{3}\bigr)\sin 4\chi
++\frac{56}{15}n^{3}\sin 6\chi
++\ldots\\
+\chi-\beta&=\textstyle{}
+-\bigl(n-\frac{2}{3}n^{2}\bigr)\sin 2\beta
++\bigl(\frac{1}{6}n^{2}-\frac{2}{5}n^{3}\bigr)\sin 4\beta
+-\frac{1}{15}n^{3}\sin 6\beta
++\ldots\\
+\beta-\chi&=\textstyle{}
++\bigl(n-\frac{2}{3}n^{2}-\frac{1}{3}n^{3}\bigr)\sin 2\chi
++\bigl(\frac{5}{6}n^{2}-\frac{14}{15}n^{3}\bigr)\sin 4\chi
++\frac{16}{15}n^{3}\sin 6\chi
++\ldots\\
+\chi-\theta&=\textstyle{}
++\bigl(\frac{2}{3}n^{2}+\frac{2}{3}n^{3}\bigr)\sin 2\theta
+-\bigl(\frac{1}{3}n^{2}-\frac{4}{15}n^{3}\bigr)\sin 4\theta
+-\frac{2}{5}n^{3}\sin 6\theta
++\ldots\\
+\theta-\chi&=\textstyle{}
+-\bigl(\frac{2}{3}n^{2}+\frac{2}{3}n^{3}\bigr)\sin 2\chi
++\bigl(\frac{1}{3}n^{2}-\frac{4}{15}n^{3}\bigr)\sin 4\chi
++\frac{2}{5}n^{3}\sin 6\chi
++\ldots\\
+\chi-\mu&=\textstyle{}
+-\bigl(\frac{1}{2}n-\frac{2}{3}n^{2}+\frac{37}{96}n^{3}\bigr)\sin 2\mu
+-\bigl(\frac{1}{48}n^{2}+\frac{1}{15}n^{3}\bigr)\sin 4\mu
+-\frac{17}{480}n^{3}\sin 6\mu
++\ldots\\
+\mu-\chi&=\textstyle{}
++\bigl(\frac{1}{2}n-\frac{2}{3}n^{2}+\frac{5}{16}n^{3}\bigr)\sin 2\chi
++\bigl(\frac{13}{48}n^{2}-\frac{3}{5}n^{3}\bigr)\sin 4\chi
++\frac{61}{240}n^{3}\sin 6\chi
++\ldots\\
+\xi-\phi&=\textstyle{}
+-\bigl(\frac{4}{3}n+\frac{4}{45}n^{2}-\frac{88}{315}n^{3}\bigr)\sin 2\phi
++\bigl(\frac{34}{45}n^{2}+\frac{8}{105}n^{3}\bigr)\sin 4\phi
+-\frac{1532}{2835}n^{3}\sin 6\phi
++\ldots\\
+\phi-\xi&=\textstyle{}
++\bigl(\frac{4}{3}n+\frac{4}{45}n^{2}-\frac{16}{35}n^{3}\bigr)\sin 2\xi
++\bigl(\frac{46}{45}n^{2}+\frac{152}{945}n^{3}\bigr)\sin 4\xi
++\frac{3044}{2835}n^{3}\sin 6\xi
++\ldots\\
+\xi-\beta&=\textstyle{}
+-\bigl(\frac{1}{3}n+\frac{4}{45}n^{2}-\frac{32}{315}n^{3}\bigr)\sin 2\beta
+-\bigl(\frac{7}{90}n^{2}+\frac{4}{315}n^{3}\bigr)\sin 4\beta
+-\frac{83}{2835}n^{3}\sin 6\beta
++\ldots\\
+\beta-\xi&=\textstyle{}
++\bigl(\frac{1}{3}n+\frac{4}{45}n^{2}-\frac{46}{315}n^{3}\bigr)\sin 2\xi
++\bigl(\frac{17}{90}n^{2}+\frac{68}{945}n^{3}\bigr)\sin 4\xi
++\frac{461}{2835}n^{3}\sin 6\xi
++\ldots\\
+\xi-\theta&=\textstyle{}
++\bigl(\frac{2}{3}n-\frac{4}{45}n^{2}+\frac{62}{105}n^{3}\bigr)\sin 2\theta
++\bigl(\frac{4}{45}n^{2}-\frac{32}{315}n^{3}\bigr)\sin 4\theta
+-\frac{524}{2835}n^{3}\sin 6\theta
++\ldots\\
+\theta-\xi&=\textstyle{}
+-\bigl(\frac{2}{3}n-\frac{4}{45}n^{2}+\frac{158}{315}n^{3}\bigr)\sin 2\xi
++\bigl(\frac{16}{45}n^{2}-\frac{16}{945}n^{3}\bigr)\sin 4\xi
+-\frac{232}{2835}n^{3}\sin 6\xi
++\ldots\\
+\xi-\mu&=\textstyle{}
++\bigl(\frac{1}{6}n-\frac{4}{45}n^{2}-\frac{817}{10080}n^{3}\bigr)\sin 2\mu
++\bigl(\frac{49}{720}n^{2}-\frac{2}{35}n^{3}\bigr)\sin 4\mu
++\frac{4463}{90720}n^{3}\sin 6\mu
++\ldots\\
+\mu-\xi&=\textstyle{}
+-\bigl(\frac{1}{6}n-\frac{4}{45}n^{2}-\frac{121}{1680}n^{3}\bigr)\sin 2\xi
+-\bigl(\frac{29}{720}n^{2}-\frac{26}{945}n^{3}\bigr)\sin 4\xi
+-\frac{1003}{45360}n^{3}\sin 6\xi
++\ldots\\
+\xi-\chi&=\textstyle{}
++\bigl(\frac{2}{3}n-\frac{34}{45}n^{2}+\frac{46}{315}n^{3}\bigr)\sin 2\chi
++\bigl(\frac{19}{45}n^{2}-\frac{256}{315}n^{3}\bigr)\sin 4\chi
++\frac{248}{567}n^{3}\sin 6\chi
++\ldots\\
+\chi-\xi&=\textstyle{}
+-\bigl(\frac{2}{3}n-\frac{34}{45}n^{2}+\frac{88}{315}n^{3}\bigr)\sin 2\xi
++\bigl(\frac{1}{45}n^{2}-\frac{184}{945}n^{3}\bigr)\sin 4\xi
+-\frac{106}{2835}n^{3}\sin 6\xi
++\ldots\\
+\end{align}
+\f]
+
+<p>&beta;&nbsp;&minus;&nbsp;&phi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1, 0, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/2, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/3, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/4, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/5, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/6, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/7, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/8]<br>
+</small></tt>
+<p>&phi;&nbsp;&minus;&nbsp;&beta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1, 0, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/2, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/3, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/4, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/5, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/6, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/7, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/8]<br>
+</small></tt>
+<p>&theta;&nbsp;&minus;&nbsp;&phi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-2, 0, 2, 0, -2, 0, 2, 0]<br>
+&nbsp;&nbsp;&nbsp;[2, 0, -4, 0, 6, 0, -8]<br>
+&nbsp;&nbsp;&nbsp;[-8/3, 0, 8, 0, -16, 0]<br>
+&nbsp;&nbsp;&nbsp;[4, 0, -16, 0, 40]<br>
+&nbsp;&nbsp;&nbsp;[-32/5, 0, 32, 0]<br>
+&nbsp;&nbsp;&nbsp;[32/3, 0, -64]<br>
+&nbsp;&nbsp;&nbsp;[-128/7, 0]<br>
+&nbsp;&nbsp;&nbsp;[32]<br>
+</small></tt>
+<p>&phi;&nbsp;&minus;&nbsp;&theta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[2, 0, -2, 0, 2, 0, -2, 0]<br>
+&nbsp;&nbsp;&nbsp;[2, 0, -4, 0, 6, 0, -8]<br>
+&nbsp;&nbsp;&nbsp;[8/3, 0, -8, 0, 16, 0]<br>
+&nbsp;&nbsp;&nbsp;[4, 0, -16, 0, 40]<br>
+&nbsp;&nbsp;&nbsp;[32/5, 0, -32, 0]<br>
+&nbsp;&nbsp;&nbsp;[32/3, 0, -64]<br>
+&nbsp;&nbsp;&nbsp;[128/7, 0]<br>
+&nbsp;&nbsp;&nbsp;[32]<br>
+</small></tt>
+<p>&theta;&nbsp;&minus;&nbsp;&beta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1, 0, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/2, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/3, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/4, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/5, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/6, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/7, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/8]<br>
+</small></tt>
+<p>&beta;&nbsp;&minus;&nbsp;&theta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1, 0, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/2, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/3, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/4, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/5, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/6, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/7, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/8]<br>
+</small></tt>
+<p>&mu;&nbsp;&minus;&nbsp;&phi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-3/2, 0, 9/16, 0, -3/32, 0, 57/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[15/16, 0, -15/32, 0, 135/2048, 0, -105/4096]<br>
+&nbsp;&nbsp;&nbsp;[-35/48, 0, 105/256, 0, -105/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[315/512, 0, -189/512, 0, 693/16384]<br>
+&nbsp;&nbsp;&nbsp;[-693/1280, 0, 693/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[1001/2048, 0, -1287/4096]<br>
+&nbsp;&nbsp;&nbsp;[-6435/14336, 0]<br>
+&nbsp;&nbsp;&nbsp;[109395/262144]<br>
+</small></tt>
+<p>&phi;&nbsp;&minus;&nbsp;&mu;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[3/2, 0, -27/32, 0, 269/512, 0, -6607/24576, 0]<br>
+&nbsp;&nbsp;&nbsp;[21/16, 0, -55/32, 0, 6759/4096, 0, -155113/122880]<br>
+&nbsp;&nbsp;&nbsp;[151/96, 0, -417/128, 0, 87963/20480, 0]<br>
+&nbsp;&nbsp;&nbsp;[1097/512, 0, -15543/2560, 0, 2514467/245760]<br>
+&nbsp;&nbsp;&nbsp;[8011/2560, 0, -69119/6144, 0]<br>
+&nbsp;&nbsp;&nbsp;[293393/61440, 0, -5962461/286720]<br>
+&nbsp;&nbsp;&nbsp;[6459601/860160, 0]<br>
+&nbsp;&nbsp;&nbsp;[332287993/27525120]<br>
+</small></tt>
+<p>&mu;&nbsp;&minus;&nbsp;&beta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1/2, 0, 3/16, 0, -1/32, 0, 19/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/16, 0, 1/32, 0, -9/2048, 0, 7/4096]<br>
+&nbsp;&nbsp;&nbsp;[-1/48, 0, 3/256, 0, -3/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[-5/512, 0, 3/512, 0, -11/16384]<br>
+&nbsp;&nbsp;&nbsp;[-7/1280, 0, 7/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[-7/2048, 0, 9/4096]<br>
+&nbsp;&nbsp;&nbsp;[-33/14336, 0]<br>
+&nbsp;&nbsp;&nbsp;[-429/262144]<br>
+</small></tt>
+<p>&beta;&nbsp;&minus;&nbsp;&mu;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1/2, 0, -9/32, 0, 205/1536, 0, -4879/73728, 0]<br>
+&nbsp;&nbsp;&nbsp;[5/16, 0, -37/96, 0, 1335/4096, 0, -86171/368640]<br>
+&nbsp;&nbsp;&nbsp;[29/96, 0, -75/128, 0, 2901/4096, 0]<br>
+&nbsp;&nbsp;&nbsp;[539/1536, 0, -2391/2560, 0, 1082857/737280]<br>
+&nbsp;&nbsp;&nbsp;[3467/7680, 0, -28223/18432, 0]<br>
+&nbsp;&nbsp;&nbsp;[38081/61440, 0, -733437/286720]<br>
+&nbsp;&nbsp;&nbsp;[459485/516096, 0]<br>
+&nbsp;&nbsp;&nbsp;[109167851/82575360]<br>
+</small></tt>
+<p>&mu;&nbsp;&minus;&nbsp;&theta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1/2, 0, 13/16, 0, -15/32, 0, 509/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/16, 0, 33/32, 0, -1673/2048, 0, 2599/4096]<br>
+&nbsp;&nbsp;&nbsp;[-5/16, 0, 349/256, 0, -2989/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[-261/512, 0, 963/512, 0, -43531/16384]<br>
+&nbsp;&nbsp;&nbsp;[-921/1280, 0, 5545/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[-6037/6144, 0, 16617/4096]<br>
+&nbsp;&nbsp;&nbsp;[-19279/14336, 0]<br>
+&nbsp;&nbsp;&nbsp;[-490925/262144]<br>
+</small></tt>
+<p>&theta;&nbsp;&minus;&nbsp;&mu;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1/2, 0, -23/32, 0, 499/1536, 0, -14321/73728, 0]<br>
+&nbsp;&nbsp;&nbsp;[5/16, 0, -5/96, 0, 6565/12288, 0, -201467/368640]<br>
+&nbsp;&nbsp;&nbsp;[1/32, 0, -77/128, 0, 2939/4096, 0]<br>
+&nbsp;&nbsp;&nbsp;[283/1536, 0, -4037/7680, 0, 1155049/737280]<br>
+&nbsp;&nbsp;&nbsp;[1301/7680, 0, -19465/18432, 0]<br>
+&nbsp;&nbsp;&nbsp;[17089/61440, 0, -442269/286720]<br>
+&nbsp;&nbsp;&nbsp;[198115/516096, 0]<br>
+&nbsp;&nbsp;&nbsp;[48689387/82575360]<br>
+</small></tt>
+<p>&chi;&nbsp;&minus;&nbsp;&phi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-2, 2/3, 4/3, -82/45, 32/45, 4642/4725, -8384/4725, 1514/1323]<br>
+&nbsp;&nbsp;&nbsp;[5/3, -16/15, -13/9, 904/315, -1522/945, -2288/1575, 142607/42525]<br>
+&nbsp;&nbsp;&nbsp;[-26/15, 34/21, 8/5, -12686/2835, 44644/14175, 120202/51975]<br>
+&nbsp;&nbsp;&nbsp;[1237/630, -12/5, -24832/14175, 1077964/155925, -1097407/187110]<br>
+&nbsp;&nbsp;&nbsp;[-734/315, 109598/31185, 1040/567, -12870194/1216215]<br>
+&nbsp;&nbsp;&nbsp;[444337/155925, -941912/184275, -126463/72765]<br>
+&nbsp;&nbsp;&nbsp;[-2405834/675675, 3463678/467775]<br>
+&nbsp;&nbsp;&nbsp;[256663081/56756700]<br>
+</small></tt>
+<p>&phi;&nbsp;&minus;&nbsp;&chi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[2, -2/3, -2, 116/45, 26/45, -2854/675, 16822/4725, 189416/99225]<br>
+&nbsp;&nbsp;&nbsp;[7/3, -8/5, -227/45, 2704/315, 2323/945, -31256/1575, 141514/8505]<br>
+&nbsp;&nbsp;&nbsp;[56/15, -136/35, -1262/105, 73814/2835, 98738/14175, -2363828/31185]<br>
+&nbsp;&nbsp;&nbsp;[4279/630, -332/35, -399572/14175, 11763988/155925, 14416399/935550]<br>
+&nbsp;&nbsp;&nbsp;[4174/315, -144838/6237, -2046082/31185, 258316372/1216215]<br>
+&nbsp;&nbsp;&nbsp;[601676/22275, -115444544/2027025, -2155215124/14189175]<br>
+&nbsp;&nbsp;&nbsp;[38341552/675675, -170079376/1216215]<br>
+&nbsp;&nbsp;&nbsp;[1383243703/11351340]<br>
+</small></tt>
+<p>&chi;&nbsp;&minus;&nbsp;&beta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1, 2/3, 0, -16/45, 2/5, -998/4725, -34/4725, 1384/11025]<br>
+&nbsp;&nbsp;&nbsp;[1/6, -2/5, 19/45, -22/105, -2/27, 1268/4725, -12616/42525]<br>
+&nbsp;&nbsp;&nbsp;[-1/15, 16/105, -22/105, 116/567, -1858/14175, 1724/51975]<br>
+&nbsp;&nbsp;&nbsp;[17/1260, -8/105, 2123/14175, -26836/155925, 115249/935550]<br>
+&nbsp;&nbsp;&nbsp;[-1/105, 128/4455, -424/6237, 140836/1216215]<br>
+&nbsp;&nbsp;&nbsp;[149/311850, -31232/2027025, 210152/4729725]<br>
+&nbsp;&nbsp;&nbsp;[-499/225225, 30208/6081075]<br>
+&nbsp;&nbsp;&nbsp;[-68251/113513400]<br>
+</small></tt>
+<p>&beta;&nbsp;&minus;&nbsp;&chi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1, -2/3, -1/3, 38/45, -1/3, -3118/4725, 4769/4725, -25666/99225]<br>
+&nbsp;&nbsp;&nbsp;[5/6, -14/15, -7/9, 50/21, -247/270, -14404/4725, 193931/42525]<br>
+&nbsp;&nbsp;&nbsp;[16/15, -34/21, -5/3, 17564/2835, -36521/14175, -1709614/155925]<br>
+&nbsp;&nbsp;&nbsp;[2069/1260, -28/9, -49877/14175, 2454416/155925, -637699/85050]<br>
+&nbsp;&nbsp;&nbsp;[883/315, -28244/4455, -20989/2835, 48124558/1216215]<br>
+&nbsp;&nbsp;&nbsp;[797222/155925, -2471888/184275, -16969807/1091475]<br>
+&nbsp;&nbsp;&nbsp;[2199332/225225, -1238578/42525]<br>
+&nbsp;&nbsp;&nbsp;[87600385/4540536]<br>
+</small></tt>
+<p>&chi;&nbsp;&minus;&nbsp;&theta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[0, 2/3, 2/3, -2/9, -14/45, 1042/4725, 18/175, -1738/11025]<br>
+&nbsp;&nbsp;&nbsp;[-1/3, 4/15, 43/45, -4/45, -712/945, 332/945, 23159/42525]<br>
+&nbsp;&nbsp;&nbsp;[-2/5, 2/105, 124/105, 274/2835, -1352/945, 13102/31185]<br>
+&nbsp;&nbsp;&nbsp;[-55/126, -16/105, 21068/14175, 1528/4725, -2414843/935550]<br>
+&nbsp;&nbsp;&nbsp;[-22/45, -9202/31185, 20704/10395, 60334/93555]<br>
+&nbsp;&nbsp;&nbsp;[-90263/155925, -299444/675675, 40458083/14189175]<br>
+&nbsp;&nbsp;&nbsp;[-8962/12285, -3818498/6081075]<br>
+&nbsp;&nbsp;&nbsp;[-4259027/4365900]<br>
+</small></tt>
+<p>&theta;&nbsp;&minus;&nbsp;&chi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[0, -2/3, -2/3, 4/9, 2/9, -3658/4725, 76/225, 64424/99225]<br>
+&nbsp;&nbsp;&nbsp;[1/3, -4/15, -23/45, 68/45, 61/135, -2728/945, 2146/1215]<br>
+&nbsp;&nbsp;&nbsp;[2/5, -24/35, -46/35, 9446/2835, 428/945, -95948/10395]<br>
+&nbsp;&nbsp;&nbsp;[83/126, -80/63, -34712/14175, 4472/525, 29741/85050]<br>
+&nbsp;&nbsp;&nbsp;[52/45, -2362/891, -17432/3465, 280108/13365]<br>
+&nbsp;&nbsp;&nbsp;[335882/155925, -548752/96525, -48965632/4729725]<br>
+&nbsp;&nbsp;&nbsp;[51368/12285, -197456/15795]<br>
+&nbsp;&nbsp;&nbsp;[1461335/174636]<br>
+</small></tt>
+<p>&chi;&nbsp;&minus;&nbsp;&mu;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1/2, 2/3, -37/96, 1/360, 81/512, -96199/604800, 5406467/38707200, -7944359/67737600]<br>
+&nbsp;&nbsp;&nbsp;[-1/48, -1/15, 437/1440, -46/105, 1118711/3870720, -51841/1209600, -24749483/348364800]<br>
+&nbsp;&nbsp;&nbsp;[-17/480, 37/840, 209/4480, -5569/90720, -9261899/58060800, 6457463/17740800]<br>
+&nbsp;&nbsp;&nbsp;[-4397/161280, 11/504, 830251/7257600, -466511/2494800, -324154477/7664025600]<br>
+&nbsp;&nbsp;&nbsp;[-4583/161280, 108847/3991680, 8005831/63866880, -22894433/124540416]<br>
+&nbsp;&nbsp;&nbsp;[-20648693/638668800, 16363163/518918400, 2204645983/12915302400]<br>
+&nbsp;&nbsp;&nbsp;[-219941297/5535129600, 497323811/12454041600]<br>
+&nbsp;&nbsp;&nbsp;[-191773887257/3719607091200]<br>
+</small></tt>
+<p>&mu;&nbsp;&minus;&nbsp;&chi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1/2, -2/3, 5/16, 41/180, -127/288, 7891/37800, 72161/387072, -18975107/50803200]<br>
+&nbsp;&nbsp;&nbsp;[13/48, -3/5, 557/1440, 281/630, -1983433/1935360, 13769/28800, 148003883/174182400]<br>
+&nbsp;&nbsp;&nbsp;[61/240, -103/140, 15061/26880, 167603/181440, -67102379/29030400, 79682431/79833600]<br>
+&nbsp;&nbsp;&nbsp;[49561/161280, -179/168, 6601661/7257600, 97445/49896, -40176129013/7664025600]<br>
+&nbsp;&nbsp;&nbsp;[34729/80640, -3418889/1995840, 14644087/9123840, 2605413599/622702080]<br>
+&nbsp;&nbsp;&nbsp;[212378941/319334400, -30705481/10378368, 175214326799/58118860800]<br>
+&nbsp;&nbsp;&nbsp;[1522256789/1383782400, -16759934899/3113510400]<br>
+&nbsp;&nbsp;&nbsp;[1424729850961/743921418240]<br>
+</small></tt>
+<p>&xi;&nbsp;&minus;&nbsp;&phi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-4/3, -4/45, 88/315, 538/4725, 20824/467775, -44732/2837835, -86728/16372125, -88002076/13956067125]<br>
+&nbsp;&nbsp;&nbsp;[34/45, 8/105, -2482/14175, -37192/467775, -12467764/212837625, -895712/147349125, -2641983469/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-1532/2835, -898/14175, 54968/467775, 100320856/1915538625, 240616/4209975, 8457703444/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[6007/14175, 24496/467775, -5884124/70945875, -4832848/147349125, -4910552477/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-23356/66825, -839792/19348875, 816824/13395375, 9393713176/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[570284222/1915538625, 1980656/54729675, -4532926649/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-496894276/1915538625, -14848113968/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[224557742191/976924698750]<br>
+</small></tt>
+<p>&phi;&nbsp;&minus;&nbsp;&xi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[4/3, 4/45, -16/35, -2582/14175, 60136/467775, 28112932/212837625, 22947844/1915538625, -1683291094/37574026875]<br>
+&nbsp;&nbsp;&nbsp;[46/45, 152/945, -11966/14175, -21016/51975, 251310128/638512875, 1228352/3007125, -14351220203/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[3044/2835, 3802/14175, -94388/66825, -8797648/10945935, 138128272/147349125, 505559334506/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[6059/4725, 41072/93555, -1472637812/638512875, -45079184/29469825, 973080708361/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[768272/467775, 455935736/638512875, -550000184/147349125, -1385645336626/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[4210684958/1915538625, 443810768/383107725, -2939205114427/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[387227992/127702575, 101885255158/54273594375]<br>
+&nbsp;&nbsp;&nbsp;[1392441148867/325641566250]<br>
+</small></tt>
+<p>&xi;&nbsp;&minus;&nbsp;&beta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1/3, -4/45, 32/315, 34/675, 2476/467775, -70496/8513505, -18484/4343625, 29232878/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-7/90, -4/315, 74/2025, 3992/467775, 53836/212837625, -4160804/1915538625, -324943819/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-83/2835, 2/14175, 7052/467775, -661844/1915538625, 237052/383107725, -168643106/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-797/56700, 934/467775, 1425778/212837625, -2915326/1915538625, 113042383/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-3673/467775, 390088/212837625, 6064888/1915538625, -558526274/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-18623681/3831077250, 41288/29469825, 155665021/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-6205669/1915538625, 504234982/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-8913001661/3907698795000]<br>
+</small></tt>
+<p>&beta;&nbsp;&minus;&nbsp;&xi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1/3, 4/45, -46/315, -1082/14175, 11824/467775, 7947332/212837625, 9708931/1915538625, -5946082372/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[17/90, 68/945, -338/2025, -16672/155925, 39946703/638512875, 164328266/1915538625, 190673521/69780335625]<br>
+&nbsp;&nbsp;&nbsp;[461/2835, 1102/14175, -101069/467775, -255454/1563705, 236067184/1915538625, 86402898356/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[3161/18900, 1786/18711, -189032762/638512875, -98401826/383107725, 110123070361/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[88868/467775, 80274086/638512875, -802887278/1915538625, -200020620676/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[880980241/3831077250, 66263486/383107725, -296107325077/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[37151038/127702575, 4433064236/18091198125]<br>
+&nbsp;&nbsp;&nbsp;[495248998393/1302566265000]<br>
+</small></tt>
+<p>&xi;&nbsp;&minus;&nbsp;&theta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[2/3, -4/45, 62/105, 778/4725, -193082/467775, -4286228/42567525, 53702182/212837625, 182466964/8881133625]<br>
+&nbsp;&nbsp;&nbsp;[4/45, -32/315, 12338/14175, 92696/467775, -61623938/70945875, -32500616/273648375, 367082779691/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-524/2835, -1618/14175, 612536/467775, 427003576/1915538625, -663111728/383107725, -42668482796/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-5933/14175, -8324/66825, 427770788/212837625, 421877252/1915538625, -327791986997/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-320044/467775, -9153184/70945875, 6024982024/1915538625, 74612072536/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-1978771378/1915538625, -46140784/383107725, 489898512247/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-2926201612/1915538625, -42056042768/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-2209250801969/976924698750]<br>
+</small></tt>
+<p>&theta;&nbsp;&minus;&nbsp;&xi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-2/3, 4/45, -158/315, -2102/14175, 109042/467775, 216932/2627625, -189115382/1915538625, -230886326/6343666875]<br>
+&nbsp;&nbsp;&nbsp;[16/45, -16/945, 934/14175, -7256/155925, 117952358/638512875, 288456008/1915538625, -11696145869/69780335625]<br>
+&nbsp;&nbsp;&nbsp;[-232/2835, 922/14175, -25286/66825, -7391576/54729675, 478700902/1915538625, 91546732346/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[719/4725, 268/18711, -67048172/638512875, -67330724/383107725, 218929662961/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[14354/467775, 46774256/638512875, -117954842/273648375, -129039188386/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[253129538/1915538625, 2114368/34827975, -178084928947/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[13805944/127702575, 6489189398/54273594375]<br>
+&nbsp;&nbsp;&nbsp;[59983985827/325641566250]<br>
+</small></tt>
+<p>&xi;&nbsp;&minus;&nbsp;&mu;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1/6, -4/45, -817/10080, 1297/18900, 7764059/239500800, -9292991/302702400, -25359310709/1743565824000, 39534358147/2858202547200]<br>
+&nbsp;&nbsp;&nbsp;[49/720, -2/35, -29609/453600, 35474/467775, 36019108271/871782912000, -14814966289/245188944000, -13216941177599/571640509440000]<br>
+&nbsp;&nbsp;&nbsp;[4463/90720, -2917/56700, -4306823/59875200, 3026004511/30648618000, 99871724539/1569209241600, -27782109847927/250092722880000]<br>
+&nbsp;&nbsp;&nbsp;[331799/7257600, -102293/1871100, -368661577/4036032000, 2123926699/15324309000, 168979300892599/1600593426432000]<br>
+&nbsp;&nbsp;&nbsp;[11744233/239500800, -875457073/13621608000, -493031379277/3923023104000, 1959350112697/9618950880000]<br>
+&nbsp;&nbsp;&nbsp;[453002260127/7846046208000, -793693009/9807557760, -145659994071373/800296713216000]<br>
+&nbsp;&nbsp;&nbsp;[103558761539/1426553856000, -53583096419057/500185445760000]<br>
+&nbsp;&nbsp;&nbsp;[12272105438887727/128047474114560000]<br>
+</small></tt>
+<p>&mu;&nbsp;&minus;&nbsp;&xi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1/6, 4/45, 121/1680, -1609/28350, -384229/14968800, 12674323/851350500, 7183403063/560431872000, -375027460897/125046361440000]<br>
+&nbsp;&nbsp;&nbsp;[-29/720, 26/945, 16463/453600, -431/17325, -31621753811/1307674368000, 1117820213/122594472000, 30410873385097/2000741783040000]<br>
+&nbsp;&nbsp;&nbsp;[-1003/45360, 449/28350, 3746047/119750400, -32844781/1751349600, -116359346641/3923023104000, 151567502183/17863765920000]<br>
+&nbsp;&nbsp;&nbsp;[-40457/2419200, 629/53460, 10650637121/326918592000, -13060303/766215450, -317251099510901/8002967132160000]<br>
+&nbsp;&nbsp;&nbsp;[-1800439/119750400, 205072597/20432412000, 146875240637/3923023104000, -2105440822861/125046361440000]<br>
+&nbsp;&nbsp;&nbsp;[-59109051671/3923023104000, 228253559/24518894400, 91496147778023/2000741783040000]<br>
+&nbsp;&nbsp;&nbsp;[-4255034947/261534873600, 126430355893/13894040160000]<br>
+&nbsp;&nbsp;&nbsp;[-791820407649841/42682491371520000]<br>
+</small></tt>
+<p>&xi;&nbsp;&minus;&nbsp;&chi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[2/3, -34/45, 46/315, 2458/4725, -55222/93555, 2706758/42567525, 16676974/30405375, -64724382148/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[19/45, -256/315, 3413/14175, 516944/467775, -340492279/212837625, 158999572/1915538625, 85904355287/37574026875]<br>
+&nbsp;&nbsp;&nbsp;[248/567, -15958/14175, 206834/467775, 4430783356/1915538625, -7597644214/1915538625, 2986003168/37574026875]<br>
+&nbsp;&nbsp;&nbsp;[16049/28350, -832976/467775, 62016436/70945875, 851209552/174139875, -375566203/39037950]<br>
+&nbsp;&nbsp;&nbsp;[15602/18711, -651151712/212837625, 3475643362/1915538625, 5106181018156/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[2561772812/1915538625, -10656173804/1915538625, 34581190223/8881133625]<br>
+&nbsp;&nbsp;&nbsp;[873037408/383107725, -5150169424688/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[7939103697617/1953849397500]<br>
+</small></tt>
+<p>&chi;&nbsp;&minus;&nbsp;&xi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-2/3, 34/45, -88/315, -2312/14175, 27128/93555, -55271278/212837625, 308365186/1915538625, -17451293242/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[1/45, -184/945, 6079/14175, -65864/155925, 106691108/638512875, 149984636/1915538625, -101520127208/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-106/2835, 772/14175, -14246/467775, 5921152/54729675, -99534832/383107725, 10010741462/37574026875]<br>
+&nbsp;&nbsp;&nbsp;[-167/9450, -5312/467775, 75594328/638512875, -35573728/273648375, 1615002539/75148053750]<br>
+&nbsp;&nbsp;&nbsp;[-248/13365, 2837636/638512875, 130601488/1915538625, -3358119706/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-34761247/1915538625, -3196/3553875, 46771947158/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-2530364/127702575, -18696014/18091198125]<br>
+&nbsp;&nbsp;&nbsp;[-14744861191/651283132500]<br>
+</small></tt>
+
+<center>
+Back to \ref geocentric.  Forward to \ref highprec.  Up to
 \ref contents.
 
 </center>
@@ -5505,7 +5995,7 @@ Back to \ref transversemercator.  Forward to \ref highprec.  Up to
 \page highprec Support for high precision arithmetic
 
 <center>
-Back to \ref geocentric.  Forward to \ref changes.  Up to \ref contents.
+Back to \ref auxlat.  Forward to \ref changes.  Up to \ref contents.
 </center>
 
 One of the goals with the algorithms in GeographicLib is to deliver
@@ -5761,7 +6251,7 @@ The following steps needed to be taken
        separate file.
 
 <center>
-Back to \ref geocentric.  Forward to \ref changes.  Up to \ref contents.
+Back to \ref auxlat.  Forward to \ref changes.  Up to \ref contents.
 
 </center>
 **********************************************************************/
@@ -5792,6 +6282,15 @@ of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-mm-dd)
+   - Update GeographicLib.pro.
+   - TODO: Testing should automatically check so version (cmake,
+     autoconf, qt).
+   - TODO: Unconfuse geoid height arithmetic.
+   - Include CMAKE_CROSSCOMPILING checks in cmake config file
+   - TODO: Checkout on cmake's project(xxx VERSION ...) stuff.
+   - legacy/Fortran contains replacements for NGS utilities
+   - Connect taup/(1-e^2) starting guess in TransverseMercator::tauf
+     with near identity of chi and theta (also update tm-addenda.html)
 
  - <a href="http://geographiclib.sf.net/1.38">Version 1.38</a>
    (released 2014-10-02)
