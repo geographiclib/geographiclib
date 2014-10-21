@@ -281,7 +281,7 @@ texa(i,j,pow):=block([x:j,y:i,v:tt[i,j],s:"\\",sn:"\\sin "],
     if nterm > 1 then str:concat(str,"\\bigr)"),
     str:concat(str,sn,2*k,x)),
   print(str)),
-print("+\\ldots\\\\"))$
+print(concat(if v[pow+1][1] < 0 then "-" else "+","\\ldots\\\\")))$
 cf(i,j):= (
   print(concat("<p>&",i,";&nbsp;&minus;&nbsp;&",j,";:<br><tt><small>")),
   for x in tt[i,j] do block([str:"&nbsp;&nbsp;&nbsp;["],
@@ -300,12 +300,11 @@ block([linel:1000],
 dispcoeffs(ll):=
 block([linel:1000],
   for xx in ll do (cf(xx[1],xx[2]),cf(xx[2],xx[1])))$
-(writefile("/tmp/out.txt"),
+dispall():=(
   print(""),
   disptex(ll1,4),
   print(""),
   disptex(ll2,3),
   print(""),
   dispcoeffs(append(ll1,ll2)),
-  print(""),
-  closefile())$
+  print(""))$
