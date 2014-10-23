@@ -323,6 +323,15 @@ for i in a b c e f; do
     ./testprogram$i
 done
 
+libversion=`find $TEMP/instc/lib -type f \
+-name 'libGeographic.so.*' -printf "%f" |
+sed 's/libGeographic\.so\.//'`
+test -f $TEMP/instb/lib/libGeographic.so.$libversion ||
+echo autoconf/cmake library so mismatch
+grep "^ *VERSION *= *$libversion *\$" \
+    $TEMP/gitb/geographiclib/src/GeographicLib.pro > /dev/null ||
+echo autoconf/Qt library so mismatch
+
 cd $TEMP/relx/GeographicLib-$VERSION
 echo Files with trailing spaces:
 find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.pdf' |

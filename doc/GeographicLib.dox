@@ -5524,18 +5524,18 @@ quantities are all defined in the
 Wikipedia article on latitudes</a>.  (In addition there's the isometric
 latitude, &psi; = sinh<sup>&minus;1</sup>&nbsp;tan&chi;; but this is not
 an angle-like variable and we don't consider it further here.)  The
-relations between &phi;, &beta;, and &theta; are simple relations
-involving elementary functions which are easy to invert.  The relations
-between &phi; and &chi; and &phi; and &xi; are simple relations
-involving elementary functions which can only be inverted iteratively.
-The relation between &phi; (or &beta;) and &mu; involves the incomplete
-elliptic integral of the second kind (which is not an elementary
-function) and this needs to be inverted iterativley.  The Ellipsoid
-class evaluates all the auxiliary latitudes (and the corresponding
-inverse relations) in terms of their basic definitions.
+relations between &phi;, &beta;, and &theta; are all simple elementary
+functions.  The latitudes &chi; and &xi; can be expressed as elementary
+functions of &phi;; however, these functions can only be inverted
+iteratively.  The rectifying latitude &mu; as a function of phi; (or
+&beta;) involves the incomplete elliptic integral of the second kind
+(which is not an elementary function) and this needs to be inverted
+iterativley.  The Ellipsoid class evaluates all the auxiliary latitudes
+(and the corresponding inverse relations) in terms of their basic
+definitions.
 
 An alternative method of evaluating these auxiliarly latitudes is in
-terms of trigonometric series.  This offer some advantages:
+terms of trigonometric series.  This offers some advantages:
 - these series give a uniform way of expressing any latitude in terms of
   any other latitude;
 - the evaluation may be faster, particularly if Clenshaw summation is
@@ -6338,8 +6338,6 @@ of the git repository for GeographicLib.
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-mm-dd)
    - Update GeographicLib.pro.
-   - TODO: Testing should automatically check so version (cmake,
-     autoconf, qt).
    - TODO: Unconfuse geoid height arithmetic.
    - Include CMAKE_CROSSCOMPILING checks in cmake config file
    - TODO: Checkout on cmake's project(xxx VERSION ...) stuff.

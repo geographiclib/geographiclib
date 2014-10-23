@@ -274,7 +274,7 @@ texa(i,j,pow):=block([x:j,y:i,v:tt[i,j],s:"\\",sn:"\\sin "],
         f:false,
         if c # 1 then if integerp(c) then str:concat(str,c) else
         str:concat(str,"\\frac{",num(c),"}{",denom(c),"}"),
-        if l+k-1 > 1 then 
+        if l+k-1 > 1 then
         str:concat(str,"n^{",l+k-1,"}")
         else
         str:concat(str,"n"))),
