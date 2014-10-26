@@ -411,7 +411,7 @@ namespace GeographicLib {
 
       if (!meridian &&
           omg12 < real(0.75) * Math::pi() && // Long difference too big
-          sbet2 - sbet1 < real(1.75)) {            // Lat difference too big
+          sbet2 - sbet1 < real(1.75)) {      // Lat difference too big
         // Use tan(Gamma/2) = tan(omg12/2)
         // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
         // with tan(x/2) = sin(x)/(1+cos(x))

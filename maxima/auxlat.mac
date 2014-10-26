@@ -1,10 +1,35 @@
 /*
-phi     geog
-beta    parametric
-theta   geocentric
-chi     conformal
-mu      rectifying
-xi      authalic
+Compute series expansions for the auxiliary latitudes.
+
+Copyright (c) Charles Karney (2014) <charles@karney.com> and licensed
+under the MIT/X11 License.  For more information, see
+http://geographiclib.sourceforge.net/
+
+This maxima program compute the coefficients for trigonometric series
+relating the six latitudes
+
+  phi     geographic
+  beta    parametric
+  theta   geocentric
+  mu      rectifying
+  chi     conformal
+  xi      authalic
+
+All 30 inter-relations are found.  The coefficients are expressed as
+Taylor series in the third flattening n.  This generates the series
+given on the page
+
+  http://geographiclib.sourceforge.net/html/auxlat.html
+
+Instructions:
+
+ * [optional] edit to set the desired value of maxpow (currently 8)
+ * start maxima and run
+     batch("auxlat.mac")$
+     writefile("auxlat.txt")$
+     dispall()$
+     closefile()$
+
 */
 
 /*
@@ -75,14 +100,16 @@ mu_beta:expand(ratdisrep(
 /* beta in terms of mu */
 beta_mu:reverta(mu_beta,beta,mu,n,maxpow)$
 
-asinexp(x,eps):=''(sqrt(1-x^2)*sum(ratsimp(diff(asin(x),x,i)/i!/sqrt(1-x^2))*eps^i,i,0,maxpow))$
+asinexp(x,eps):=''(sqrt(1-x^2)*
+  sum(ratsimp(diff(asin(x),x,i)/i!/sqrt(1-x^2))*eps^i,i,0,maxpow))$
 sinxi:(sin(phi)/2*(1/(1-e^2*sin(phi)^2) + atanh(e*sin(phi))/(e*sin(phi))))/
 (1/2*(1/(1-e^2) + atanh(e)/e))$
 sinxi:ratdisrep(taylor(sinxi,e,0,2*maxpow))$
 sinxi:subst([e=2*sqrt(n)/(1+n)],sinxi)$
 sinxi:expand(trigreduce(ratdisrep(taylor(sinxi,n,0,maxpow))))$
 xi_phi:asinexp(sin(phi),sinxi-sin(phi))$
-xi_phi:taylor(subst([sqrt(1-sin(phi)^2)=cos(phi),asin(sin(phi))=phi],xi_phi),n,0,maxpow)$
+xi_phi:taylor(subst([sqrt(1-sin(phi)^2)=cos(phi),asin(sin(phi))=phi],
+    xi_phi),n,0,maxpow)$
 xi_phi:expand(ratdisrep(coeff(xi_phi,n,0))+sum(
   ratsimp(trigreduce(sin(phi)*ratsimp(
         subst([sin(phi)=sqrt(1-cos(phi)^2)],
@@ -95,7 +122,8 @@ chi_mu:expand(trigreduce(taylor(subst([phi=phi_mu],chi_phi),n,0,maxpow)))$
 mu_chi:expand(trigreduce(taylor(subst([phi=phi_chi],mu_phi),n,0,maxpow)))$
 beta_chi:expand(trigreduce(taylor(subst([phi=phi_chi],beta_phi),n,0,maxpow)))$
 chi_beta:expand(trigreduce(taylor(subst([phi=phi_beta],chi_phi),n,0,maxpow)))$
-beta_theta:expand(trigreduce(taylor(subst([phi=phi_theta],beta_phi),n,0,maxpow)))$
+beta_theta:expand(trigreduce
+  (taylor(subst([phi=phi_theta],beta_phi),n,0,maxpow)))$
 beta_xi:expand(trigreduce(taylor(subst([phi=phi_xi],beta_phi),n,0,maxpow)))$
 chi_theta:expand(trigreduce(taylor(subst([phi=phi_theta],chi_phi),n,0,maxpow)))$
 chi_xi:expand(trigreduce(taylor(subst([phi=phi_xi],chi_phi),n,0,maxpow)))$
@@ -109,15 +137,8 @@ xi_chi:expand(trigreduce(taylor(subst([phi=phi_chi],xi_phi),n,0,maxpow)))$
 xi_mu:expand(trigreduce(taylor(subst([phi=phi_mu],xi_phi),n,0,maxpow)))$
 xi_theta:expand(trigreduce(taylor(subst([phi=phi_theta],xi_phi),n,0,maxpow)))$
 
-nexp:ratdisrep(taylor(e2/(-e2+2*sqrt(1-e2)+2),e2,0,maxpow))$
-ndxp:ratdisrep(taylor((1-sqrt(-(d-1)/(d+1)))/(sqrt(-(d-1)/(d+1))+1),
-    d,0,maxpow))$
-
-norm(x):=block([z:subst([n=0],x)],z+sum(coeff(expand(x),sin(2*i*z))*sin(2*i*z),i,1,maxpow))$
-norme(x):=(x:ratdisrep(taylor(subst([n=nexp],x),e2,0,maxpow)),
-  block([z:subst([e2=0],x)],z+sum(coeff(expand(x),sin(2*i*z))*sin(2*i*z),i,1,maxpow)))$
-normd(x):=(x:ratdisrep(taylor(subst([n=ndxp],x),d,0,maxpow)),
-  block([z:subst([d=0],x)],z+sum(coeff(expand(x),sin(2*i*z))*sin(2*i*z),i,1,maxpow)))$
+norm(x):=block([z:subst([n=0],x)],
+  z+sum(coeff(expand(x),sin(2*i*z))*sin(2*i*z),i,1,maxpow))$
 
 (
 tx[beta,chi]:norm(beta_chi),
@@ -156,81 +177,6 @@ tx[xi,mu]:norm(xi_mu),
 tx[xi,phi]:norm(xi_phi),
 tx[xi,theta]:norm(xi_theta))$
 
-(
-txe[beta,chi]:norme(beta_chi),
-txe[beta,mu]:norme(beta_mu),
-txe[beta,phi]:norme(beta_phi),
-txe[beta,theta]:norme(beta_theta),
-txe[beta,xi]:norme(beta_xi),
-
-txe[chi,beta]:norme(chi_beta),
-txe[chi,mu]:norme(chi_mu),
-txe[chi,phi]:norme(chi_phi),
-txe[chi,theta]:norme(chi_theta),
-txe[chi,xi]:norme(chi_xi),
-
-txe[mu,beta]:norme(mu_beta),
-txe[mu,chi]:norme(mu_chi),
-txe[mu,phi]:norme(mu_phi),
-txe[mu,theta]:norme(mu_theta),
-txe[mu,xi]:norme(mu_xi),
-
-txe[phi,beta]:norme(phi_beta),
-txe[phi,chi]:norme(phi_chi),
-txe[phi,mu]:norme(phi_mu),
-txe[phi,theta]:norme(phi_theta),
-txe[phi,xi]:norme(phi_xi),
-
-txe[theta,beta]:norme(theta_beta),
-txe[theta,chi]:norme(theta_chi),
-txe[theta,mu]:norme(theta_mu),
-txe[theta,phi]:norme(theta_phi),
-txe[theta,xi]:norme(theta_xi),
-
-txe[xi,beta]:norme(xi_beta),
-txe[xi,chi]:norme(xi_chi),
-txe[xi,mu]:norme(xi_mu),
-txe[xi,phi]:norme(xi_phi),
-txe[xi,theta]:norme(xi_theta))$
-
-(
-txd[beta,chi]:normd(beta_chi),
-txd[beta,mu]:normd(beta_mu),
-txd[beta,phi]:normd(beta_phi),
-txd[beta,theta]:normd(beta_theta),
-txd[beta,xi]:normd(beta_xi),
-
-txd[chi,beta]:normd(chi_beta),
-txd[chi,mu]:normd(chi_mu),
-txd[chi,phi]:normd(chi_phi),
-txd[chi,theta]:normd(chi_theta),
-txd[chi,xi]:normd(chi_xi),
-
-txd[mu,beta]:normd(mu_beta),
-txd[mu,chi]:normd(mu_chi),
-txd[mu,phi]:normd(mu_phi),
-txd[mu,theta]:normd(mu_theta),
-txd[mu,xi]:normd(mu_xi),
-
-txd[phi,beta]:normd(phi_beta),
-txd[phi,chi]:normd(phi_chi),
-txd[phi,mu]:normd(phi_mu),
-txd[phi,theta]:normd(phi_theta),
-txd[phi,xi]:normd(phi_xi),
-
-txd[theta,beta]:normd(theta_beta),
-txd[theta,chi]:normd(theta_chi),
-txd[theta,mu]:normd(theta_mu),
-txd[theta,phi]:normd(theta_phi),
-txd[theta,xi]:normd(theta_xi),
-
-txd[xi,beta]:normd(xi_beta),
-txd[xi,chi]:normd(xi_chi),
-txd[xi,mu]:normd(xi_mu),
-txd[xi,phi]:normd(xi_phi),
-txd[xi,theta]:normd(xi_theta))$
-
-varlist:[phi,beta,theta,mu,chi,xi]$
 ll1:[
 [beta,phi],
 [theta,phi],

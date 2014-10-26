@@ -123,7 +123,7 @@ function gedoc
 
 % Copyright (c) Charles Karney (2014) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.38.
+% This file was distributed with GeographicLib 1.39.
 
   help gedoc
 end

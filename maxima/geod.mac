@@ -34,8 +34,8 @@ To run the code, start Maxima and enter
 
 taylordepth:5$
 ataylor(expr,var,ord):=expand(ratdisrep(taylor(expr,var,0,ord)))$
-jtaylor(expr,var1,var2,ord):=expand(subst([zz=1],
-    ratdisrep(taylor(subst([var1=zz*var1,var2=zz*var2],expr),zz,0,ord))))$
+jtaylor(expr,var1,var2,ord):=block([zz],expand(subst([zz=1],
+    ratdisrep(taylor(subst([var1=zz*var1,var2=zz*var2],expr),zz,0,ord)))))$
 
 /*
 

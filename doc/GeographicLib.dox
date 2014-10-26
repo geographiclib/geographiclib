@@ -858,19 +858,19 @@ The next steps are:
 
 Here's a list of some of the abbreviations used here with links to the
 corresponding Wikipedia articles:
- - <a href="http://en.wikipedia.org/wiki/WGS84">
+ - <a href="https://en.wikipedia.org/wiki/WGS84">
    WGS84</a>, World Geodetic System 1984.
- - <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">
+ - <a href="https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">
    UTM</a>, Universal Transverse Mercator coordinate system.
- - <a href="http://en.wikipedia.org/wiki/Universal_Polar_Stereographic">
+ - <a href="https://en.wikipedia.org/wiki/Universal_Polar_Stereographic">
    UPS</a>, Universal Polar Stereographic coordinate system.
- - <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">
+ - <a href="https://en.wikipedia.org/wiki/Military_grid_reference_system">
    MGRS</a>, Military Grid Reference System.
- - <a href="http://en.wikipedia.org/wiki/Geoid">
+ - <a href="https://en.wikipedia.org/wiki/Geoid">
    EGM</a>, Earth Gravity Model.
- - <a href="http://en.wikipedia.org/wiki/World_Magnetic_Model">
+ - <a href="https://en.wikipedia.org/wiki/World_Magnetic_Model">
    WMM</a>, World Magnetic Model.
- - <a href="http://en.wikipedia.org/wiki/IGRF">
+ - <a href="https://en.wikipedia.org/wiki/IGRF">
    IGRF</a>, International Geomagnetic Reference Field.
 
 <center>
@@ -1857,7 +1857,7 @@ The algorithm for the least squares fit is taken from, F. H. Lesh,
 Multi-dimensional least-squares polynomial curve fitting, CACM 2, 29-30
 (1959).  This algorithm is not part of Geoid; instead it is
 implemented as
-<a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>
+<a href="https://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>
 code which is used to precompute the matrices to convert the function
 values on the stencil into the coefficients from the cubic polynomial.
 This code is included as a comment in Geoid.cpp.
@@ -2887,7 +2887,7 @@ References:
  - A collection of some papers on geodesics is available at
    http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
  - The wikipedia page,
-   <a href="http://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
+   <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
    Geodesics on an ellipsoid</a>.
 
 \section testgeod Test data for geodesics
@@ -2933,7 +2933,7 @@ lon2 in [0&deg;, 180&deg;] and \e azi2 in [0&deg;, 180&deg;].
 The direct calculation uses an expansion of the geodesic equations
 accurate to <i>f</i><sup>30</sup> (approximately 1 part in 10<sup>50</sup>)
 and is computed with with
-<a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
+<a href="https://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
 bfloats and fpprec set to 100 (so the errors in the data are probably
 1/2 of the values quoted above).
 
@@ -3795,7 +3795,7 @@ the inverse problem.
 
 See also
  - The wikipedia page,
-   <a href="http://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid#Geodesics_on_a_triaxial_ellipsoid">
+   <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid#Geodesics_on_a_triaxial_ellipsoid">
    Geodesics on  a triaxial ellipsoid</a>.
 
 Go to
@@ -4831,9 +4831,12 @@ References:
    Direct and Inverse Solutions of Geodesics on the Ellipsoid with
    Application of Nested Equations</a>,
    Survey Review 23(176), 88--93 (1975).
+ - Wikipedia page, <a href="https://en.wikipedia.org/wiki/Great_ellipse">
+   Great ellipse</a>.
 
 Go to
  - \ref geformulation
+ - \ref gearea
  - \ref gevsgeodesic
 
 \section geformulation Solution of great ellipse problems
@@ -4883,10 +4886,12 @@ The full parametric mapping is:
    and the quadrants of \f$\alpha\f$ and \f$\gamma\f$ are the same.
  - Positions on the great circle of radius \f$a\f$ are parametrized by
    arc length \f$\sigma\f$ measured from the northward crossing of the
-   equator.  The great ellipse has a semi-axes \f$a\f$ and \f$a \sqrt{1 -
-   e^2\cos^2\gamma_0}\f$, where \f$\gamma_0\f$ is the great-circle
-   azimuth at the northward equator crossing, and \f$\sigma\f$ is the
-   parametric angle on the ellipse.
+   equator.  The great ellipse has semi-axes \f$a\f$ and
+   \f$a\sqrt{1-e^2\cos^2\gamma_0}\f$, where \f$\gamma_0\f$ is the
+   great-circle azimuth at the northward equator crossing, and
+   \f$\sigma\f$ is the parametric angle on the ellipse.  [In constrast,
+   the ellipse giving distances on a geodesic has semi-axes
+   \f$b\sqrt{1+e'^2\cos^2\alpha_0}\f$ and \f$b\f$.]
  .
 To determine the distance along the ellipse in terms of \f$\sigma\f$ and
 vice versa, the series for distance \f$s\f$ and for \f$\tau\f$ given in
@@ -4894,6 +4899,95 @@ vice versa, the series for distance \f$s\f$ and for \f$\tau\f$ given in
 problems are now simply solved by mapping the problem to the sphere,
 solving the resulting great circle problem, and mapping this back onto
 the ellipsoid.
+
+\section gearea The area under a great ellipse
+
+\f[
+\begin{align}
+S_{12} &= S(\sigma_2) - S(\sigma_1) \\
+S(\sigma) &= c^2\gamma + e^2 a^2 \cos\gamma_0 \sin\gamma_0 I_4(\sigma)\\
+c^2 &= {\textstyle\frac12}\bigl(a^2 + b^2 (\tanh^{-1}e)/e\bigr)
+\end{align}
+\f]
+\f[
+I_4(\sigma) = - \sqrt{1+e'^2}\int
+\frac{r(e'^2) - r(k^2\sin^2\sigma')}{e'^2 - k^2\sin^2\sigma'}
+\frac{\sin\sigma'}2 \,d\sigma'
+\f]
+\f[
+\begin{align}
+k^2 &= e'^2 \cos^2\gamma_0,\\
+r(x) &= \sqrt{1+x} + (\sinh^{-1}\sqrt x)/\sqrt x.
+\end{align}
+\f]
+Expand in terms of the third flattening of the ellipsoid, \f$n\f$, and the
+third flattening of the great ellipse, \f$\epsilon\f$, by substituting
+\f[
+\begin{align}
+e'^2&=\frac{4n}{(1-n)^2}\\
+k^2&=\frac{(1+n)^2}{(1-n)^2} \frac{4\epsilon}{(1+\epsilon)^2}
+\end{align}
+\f]
+
+The series expansion found by <a href="gearea.mac">gearea.mac</a>.
+
+\verbatim
+G4[0] = + (1/6 + 7/30 * n + 8/105 * n^2 + 4/315 * n^3 + 16/3465 * n^4 + 20/9009 * n^5 + 8/6435 * n^6 + 28/36465 * n^7 + 32/62985 * n^8 + 4/11305 * n^9)
+        - (3/40 + 12/35 * n + 589/840 * n^2 + 1063/1155 * n^3 + 14743/15015 * n^4 + 14899/15015 * n^5 + 254207/255255 * n^6 + 691127/692835 * n^7 + 1614023/1616615 * n^8) * eps
+        + (67/280 + 7081/5040 * n + 5519/1320 * n^2 + 6417449/720720 * n^3 + 708713/45045 * n^4 + 2700154/109395 * n^5 + 519037063/14549535 * n^6 + 78681626/1616615 * n^7) * eps^2
+        - (29597/40320 + 30013/5280 * n + 33759497/1441440 * n^2 + 100611307/1441440 * n^3 + 16639623457/98017920 * n^4 + 3789780779/10581480 * n^5 + 1027832503/1511640 * n^6) * eps^3
+        + (357407/147840 + 19833349/823680 * n + 61890679/480480 * n^2 + 97030756063/196035840 * n^3 + 2853930388817/1862340480 * n^4 + 15123282583393/3724680960 * n^5) * eps^4
+        - (13200233/1537536 + 306285589/2882880 * n + 26279482199/37340160 * n^2 + 3091446335399/931170240 * n^3 + 93089556575647/7449361920 * n^4) * eps^5
+        + (107042267/3294720 + 253176989449/522762240 * n + 57210830762263/14898723840 * n^2 + 641067300459403/29797447680 * n^3) * eps^6
+        - (51544067373/398295040 + 38586720036247/17027112960 * n + 104152290127363/4966241280 * n^2) * eps^7
+        + (369575321823/687964160 + 1721481081751393/158919720960 * n) * eps^8
+        - 10251814360817/4445306880 * eps^9;
+G4[1] = + (1/120 + 4/105 * n + 589/7560 * n^2 + 1063/10395 * n^3 + 14743/135135 * n^4 + 14899/135135 * n^5 + 254207/2297295 * n^6 + 691127/6235515 * n^7 + 1614023/14549535 * n^8) * eps
+        - (53/1680 + 847/4320 * n + 102941/166320 * n^2 + 1991747/1441440 * n^3 + 226409/90090 * n^4 + 3065752/765765 * n^5 + 24256057/4157010 * n^6 + 349229428/43648605 * n^7) * eps^2
+        + (4633/40320 + 315851/332640 * n + 5948333/1441440 * n^2 + 11046565/864864 * n^3 + 9366910279/294053760 * n^4 + 23863367599/349188840 * n^5 + 45824943037/349188840 * n^6) * eps^3
+        - (8021/18480 + 39452953/8648640 * n + 3433618/135135 * n^2 + 29548772933/294053760 * n^3 + 44355142973/139675536 * n^4 + 4771229132843/5587021440 * n^5) * eps^4
+        + (2625577/1537536 + 5439457/247104 * n + 353552588953/2352430080 * n^2 + 405002114215/558702144 * n^3 + 61996934629789/22348085760 * n^4) * eps^5
+        - (91909777/13178880 + 2017395395921/18819440640 * n + 51831652526149/59594895360 * n^2 + 1773086701957889/357569372160 * n^3) * eps^6
+        + (35166639971/1194885120 + 26948019211109/51081338880 * n + 7934238355871/1596291840 * n^2) * eps^7
+        - (131854991623/1031946240 + 312710596037369/119189790720 * n) * eps^8
+        + 842282436291/1481768960 * eps^9;
+G4[2] = + (1/560 + 29/2016 * n + 1027/18480 * n^2 + 203633/1441440 * n^3 + 124051/450450 * n^4 + 1738138/3828825 * n^5 + 98011493/145495350 * n^6 + 4527382/4849845 * n^7) * eps^2
+        - (533/40320 + 14269/110880 * n + 908669/1441440 * n^2 + 15253627/7207200 * n^3 + 910103119/163363200 * n^4 + 2403810527/193993800 * n^5 + 746888717/30630600 * n^6) * eps^3
+        + (2669/36960 + 2443153/2882880 * n + 1024791/200200 * n^2 + 10517570057/490089600 * n^3 + 164668999127/2327925600 * n^4 + 1826633124599/9311702400 * n^5) * eps^4
+        - (5512967/15375360 + 28823749/5765760 * n + 31539382001/871270400 * n^2 + 1699098121381/9311702400 * n^3 + 287618085731/398361600 * n^4) * eps^5
+        + (22684703/13178880 + 25126873327/896163840 * n + 10124249914577/42567782400 * n^2 + 836412216748957/595948953600 * n^3) * eps^6
+        - (3259030001/398295040 + 2610375232847/17027112960 * n + 2121882247763/1418926080 * n^2) * eps^7
+        + (13387413913/343982080 + 939097138279/1135140864 * n) * eps^8
+        - 82722916855/444530688 * eps^9;
+G4[3] = + (5/8064 + 23/3168 * n + 1715/41184 * n^2 + 76061/480480 * n^3 + 812779/1782144 * n^4 + 9661921/8953560 * n^5 + 40072069/18106088 * n^6) * eps^3
+        - (409/59136 + 10211/109824 * n + 46381/73920 * n^2 + 124922951/43563520 * n^3 + 12524132449/1241560320 * n^4 + 30022391821/1022461440 * n^5) * eps^4
+        + (22397/439296 + 302399/384384 * n + 461624513/74680320 * n^2 + 1375058687/41385344 * n^3 + 4805085120841/34763688960 * n^4) * eps^5
+        - (14650421/46126080 + 17533571183/3136573440 * n + 1503945368767/29797447680 * n^2 + 43536234862451/139054755840 * n^3) * eps^6
+        + (5074867067/2788065280 + 479752611137/13243310080 * n + 1228808683449/3310827520 * n^2) * eps^7
+        - (12004715823/1203937280 + 17671119291563/79459860480 * n) * eps^8
+        + 118372499107/2222653440 * eps^9;
+G4[4] = + (7/25344 + 469/109824 * n + 13439/411840 * n^2 + 9282863/56010240 * n^3 + 37558503/59121920 * n^4 + 44204289461/22348085760 * n^5) * eps^4
+        - (5453/1317888 + 58753/823680 * n + 138158857/224040960 * n^2 + 191056103/53209728 * n^3 + 712704605341/44696171520 * n^4) * eps^5
+        + (28213/732160 + 331920271/448081920 * n + 2046013913/283785216 * n^2 + 11489035343/241274880 * n^3) * eps^6
+        - (346326947/1194885120 + 11716182499/1891901440 * n + 860494893431/12770334720 * n^2) * eps^7
+        + (750128501/386979840 + 425425087409/9287516160 * n) * eps^8
+        - 80510858479/6667960320 * eps^9;
+G4[5] = + (21/146432 + 23/8320 * n + 59859/2263040 * n^2 + 452691/2687360 * n^3 + 21458911/26557440 * n^4) * eps^5
+        - (3959/1464320 + 516077/9052160 * n + 51814927/85995520 * n^2 + 15444083489/3611811840 * n^3) * eps^6
+        + (1103391/36208640 + 120920041/171991040 * n + 18522863/2263040 * n^2) * eps^7
+        - (92526613/343982080 + 24477436759/3611811840 * n) * eps^8
+        + 1526273559/740884480 * eps^9;
+G4[6] = + (11/133120 + 1331/696320 * n + 145541/6615040 * n^2 + 46863487/277831680 * n^3) * eps^6
+        - (68079/36208640 + 621093/13230080 * n + 399883/680960 * n^2) * eps^7
+        + (658669/26460160 + 186416197/277831680 * n) * eps^8
+        - 748030679/2963537920 * eps^9;
+G4[7] = + (143/2785280 + 11011/7938048 * n + 972829/52093440 * n^2) * eps^7
+        - (434863/317521920 + 263678129/6667960320 * n) * eps^8
+        + 185257501/8890613760 * eps^9;
+G4[8] = + (715/21168128 + 27313/26148864 * n) * eps^8
+        - 1838551/1778122752 * eps^9;
+G4[9] = + 2431/104595456 * eps^9;
+\endverbatim
 
 \section gevsgeodesic Great ellipses vs geodesics
 
@@ -5082,7 +5176,7 @@ The latitude and longitude are all multiples of 10<sup>&minus;12</sup>
 deg and should be regarded as exact, except that longitude =
 82.63627282416406551 should be interpreted as exactly 90 (1 - \e e)
 degrees.  These results are computed using Lee's formulas with
-<a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
+<a href="https://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
 bfloats and fpprec set to 80 (so the errors in the data are probably 1/2
 of the values quoted above).  The Maxima code,
 <a href="tm.mac">tm.mac</a> and <a href="ellint.mac">ellint.mac</a>,
@@ -5511,7 +5605,7 @@ Back to \ref geocentric.  Forward to \ref highprec.  Up to
 </center>
 
 Six latitudes are used by GeographicLib:
-- &phi;, the (geographiclic) latitude;
+- &phi;, the (geographic) latitude;
 - &beta;, the parametric latitude;
 - &theta;, the geocentric latitude;
 - &mu;, the rectifying latitude;
@@ -5527,14 +5621,14 @@ an angle-like variable and we don't consider it further here.)  The
 relations between &phi;, &beta;, and &theta; are all simple elementary
 functions.  The latitudes &chi; and &xi; can be expressed as elementary
 functions of &phi;; however, these functions can only be inverted
-iteratively.  The rectifying latitude &mu; as a function of phi; (or
+iteratively.  The rectifying latitude &mu; as a function of &phi; (or
 &beta;) involves the incomplete elliptic integral of the second kind
 (which is not an elementary function) and this needs to be inverted
-iterativley.  The Ellipsoid class evaluates all the auxiliary latitudes
+iteratively.  The Ellipsoid class evaluates all the auxiliary latitudes
 (and the corresponding inverse relations) in terms of their basic
 definitions.
 
-An alternative method of evaluating these auxiliarly latitudes is in
+An alternative method of evaluating these auxiliary latitudes is in
 terms of trigonometric series.  This offers some advantages:
 - these series give a uniform way of expressing any latitude in terms of
   any other latitude;
@@ -5549,7 +5643,7 @@ expansions are in terms of the third flattening <i>n</i> =
 (<i>a</i>&nbsp;&minus;&nbsp;<i>b</i>)/(<i>a</i>&nbsp;+&nbsp;<i>b</i>).
 This results in expansions in which half the coefficients vanish for all
 relations between &phi;, &beta;, &theta;, and &mu;.  In addition, the
-exansions converge for <i>b</i>/<i>a</i> &isin; (0,&nbsp;&infin;).
+expansions converge for <i>b</i>/<i>a</i> &isin; (0,&nbsp;&infin;).
 (Some authors use the eccentricity as the expansion parameter, but the
 resulting series only converge for <i>b</i>/<i>a</i> &isin;
 (0,&nbsp;&radic;2).  These expansions were obtained with the the maxima
@@ -6344,6 +6438,9 @@ of the git repository for GeographicLib.
    - legacy/Fortran contains replacements for NGS utilities
    - Connect taup/(1-e^2) starting guess in TransverseMercator::tauf
      with near identity of chi and theta (also update tm-addenda.html)
+   - Fix BUG in area calculation in Matlab routine geodreckon.
+   - Add area calculation to Matlab/Octave routines for great ellipses
+     (still to do: update documentation)
 
  - <a href="http://geographiclib.sf.net/1.38">Version 1.38</a>
    (released 2014-10-02)
