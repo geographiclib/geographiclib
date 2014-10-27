@@ -4911,12 +4911,12 @@ c^2 &= {\textstyle\frac12}\bigl(a^2 + b^2 (\tanh^{-1}e)/e\bigr)
 \f]
 \f[
 I_4(\sigma) = - \sqrt{1+e'^2}\int
-\frac{r(e'^2) - r(k^2\sin^2\sigma')}{e'^2 - k^2\sin^2\sigma'}
-\frac{\sin\sigma'}2 \,d\sigma'
+\frac{r(e'^2) - r(k^2\sin^2\sigma)}{e'^2 - k^2\sin^2\sigma}
+\frac{\sin\sigma}2 \,d\sigma
 \f]
 \f[
 \begin{align}
-k^2 &= e'^2 \cos^2\gamma_0,\\
+k &= e' \cos\gamma_0,\\
 r(x) &= \sqrt{1+x} + (\sinh^{-1}\sqrt x)/\sqrt x.
 \end{align}
 \f]
@@ -4924,10 +4924,25 @@ Expand in terms of the third flattening of the ellipsoid, \f$n\f$, and the
 third flattening of the great ellipse, \f$\epsilon\f$, by substituting
 \f[
 \begin{align}
-e'^2&=\frac{4n}{(1-n)^2}\\
-k^2&=\frac{(1+n)^2}{(1-n)^2} \frac{4\epsilon}{(1+\epsilon)^2}
+e'&=\frac{2\sqrt n}{1-n}\\
+k&=\frac{1+n}{1-n} \frac{2\sqrt{\epsilon}}{1+\epsilon}
 \end{align}
 \f]
+Compared to the area under a geodesic, we have
+- \f$\gamma\f$ and \f$\gamma_0\f$ instead of \f$\alpha\f$ and
+  \f$\alpha_0\f$.  In both cases, these are azimuths on the auxiliary
+  sphere; however, for the geodesic, they are also the azimuths on the
+  ellipsoid.
+- \f$r(x) = \bigl(1+t(x)\bigr)/\sqrt{1+x}\f$ instead of \f$t(x)\f$ with
+  a balancing factor of \f$\sqrt{1+e'^2}\f$ appearing in front of the
+  integral.  These changes are because expressing
+  \f$\sin\phi\,d\lambda\f$ in terms of \f$\sigma\f$ is a little more
+  complicated with great ellipses.  (Don't worry about the addition of
+  \f$1\f$ to \f$t(x)\f$; that's immaterial.)
+- the factors involving \f$n\f$ in the expression for \f$k\f$ in terms
+  of \f$\epsilon\f$.  This is because \f$k\f$ is defined in terms of
+  \f$e'\f$, whereas it is \f$e\cos\gamma_0\f$ that plays the role of the
+  eccentricity for the great ellipse.
 
 The series expansion found by <a href="gearea.mac">gearea.mac</a>.
 
