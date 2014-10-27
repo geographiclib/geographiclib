@@ -24,7 +24,7 @@ namespace GeographicLib {
    * \brief Conversions for geohashes
    *
    * Geohashes are described in
-   * - http://en.wikipedia.org/wiki/Geohash
+   * - https://en.wikipedia.org/wiki/Geohash
    * - http://geohash.org/
    * .
    * They provide a compact string representation of a particular geographic

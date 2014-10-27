@@ -225,7 +225,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 
   if areap
     C4x = C4coeff(n);
-    C4a = C4f(eps, C4x);
+    C4a = C4f(epsi, C4x);
     A4 = (a^2 * e2) * calp0 .* salp0;
     B41 = SinCosSeries(false, ssig1, csig1, C4a);
     B42 = SinCosSeries(false, ssig2, csig2, C4a);

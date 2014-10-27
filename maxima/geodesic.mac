@@ -19,10 +19,10 @@ Note that the area calculation always uses the series expansion (I don't
 know how to express the integrals in terms of elliptic integrals).
 
 Before running this file, you need to compute and save the series
-expansions by editing god.mac setting maxpow appropriately (near the end
-of the file) and uncommenting the last line (to save the results).  If
-you're testing the accuracy of the series expansions (exact : false) or
-if you're interested in accurate results for the area, that pick a
+expansions by editing geod.mac setting maxpow appropriately (near the
+end of the file) and uncommenting the last line (to save the results).
+If you're testing the accuracy of the series expansions (exact : false)
+or if you're interested in accurate results for the area, that pick a
 largish value of maxpow (e.g., 20).  This program can truncate the
 series to a smaller power.  If you just want to compute accurate
 geodesics and are not interested in the area, then use elliptic

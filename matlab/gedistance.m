@@ -1,8 +1,8 @@
-function [s12, azi1, azi2] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
+function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 %GEDISTANCE  Great ellipse distance between points on an ellipsoid
 %
 %   [s12, azi1, azi2] = GEDISTANCE(lat1, lon1, lat2, lon2)
-%   [s12, azi1, azi2] = GEDISTANCE(lat1, lon1, lat2, lon2, ellipsoid)
+%   [s12, azi1, azi2, S12] = GEDISTANCE(lat1, lon1, lat2, lon2, ellipsoid)
 %
 %   solves the inverse great ellipse problem of finding of length and
 %   azimuths of the great ellipse between points specified by lat1, lon1,
@@ -62,6 +62,8 @@ function [s12, azi1, azi2] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 
   f1 = 1 - f;
 
+  areap = nargout >= 4;
+
   lon12 = AngDiff(AngNormalize(lon1(:)), AngNormalize(lon2(:)));
   lon12 = AngRound(lon12);
 
@@ -77,32 +79,59 @@ function [s12, azi1, azi2] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
   slam12 = sin(lam12); slam12(lon12 == 180) = 0; clam12 = cos(lam12);
 
   % Solve great circle
-  salp1 = cbet2 .* slam12; calp1 = +cbet1 .* sbet2 - sbet1 .* cbet2 .* clam12;
-  salp2 = cbet1 .* slam12; calp2 = -sbet1 .* cbet2 + cbet1 .* sbet2 .* clam12;
-  ssig12 = hypot(salp1, calp1);
+  sgam1 = cbet2 .* slam12; cgam1 = +cbet1 .* sbet2 - sbet1 .* cbet2 .* clam12;
+  sgam2 = cbet1 .* slam12; cgam2 = -sbet1 .* cbet2 + cbet1 .* sbet2 .* clam12;
+  ssig12 = hypot(sgam1, cgam1);
   csig12 = sbet1 .* sbet2 + cbet1 .* cbet2 .* clam12;
-  [salp1, calp1] = SinCosNorm(salp1, calp1);
-  [salp2, calp2] = SinCosNorm(salp2, calp2);
+  [sgam1, cgam1] = SinCosNorm(sgam1, cgam1);
+  [sgam2, cgam2] = SinCosNorm(sgam2, cgam2);
   % no need to normalize [ssig12, csig12]
 
-  calp0 = hypot(calp1, salp1 .* sbet1);
+  cgam0 = hypot(cgam1, sgam1 .* sbet1);
 
-  ssig1 = sbet1; csig1 = cbet1 .* calp1;
+  ssig1 = sbet1; csig1 = cbet1 .* cgam1;
   [ssig1, csig1] = SinCosNorm(ssig1, csig1);
   ssig2 = ssig1 .* csig12 + csig1 .* ssig12;
   csig2 = csig1 .* csig12 - ssig1 .* ssig12;
 
-  k2 = e2 * calp0.^2;
-  n = k2 ./ (2 * (1 + sqrt(1 - k2)) - k2);
-  C1a = C1f(n);
-  A1 = a * (1 + A1m1f(n)) .* (1 - n)./(1 + n);
+  k2 = e2 * cgam0.^2;
+  epsi = k2 ./ (2 * (1 + sqrt(1 - k2)) - k2);
+  C1a = C1f(epsi);
+  A1 = a * (1 + A1m1f(epsi)) .* (1 - epsi)./(1 + epsi);
   s12 = A1 .* (atan2(ssig12, csig12) + ...
                (SinCosSeries(true, ssig2, csig2, C1a) - ...
                 SinCosSeries(true, ssig1, csig1, C1a)));
-  calp1 = calp1 .* sqrt(1 - e2 * cbet1.^2);
-  calp2 = calp2 .* sqrt(1 - e2 * cbet2.^2);
-  azi1 = atan2(salp1, calp1) / degree;
-  azi2 = atan2(salp2, calp2) / degree;
+  azi1 = atan2(sgam1, cgam1 .* sqrt(1 - e2 * cbet1.^2)) / degree;
+  azi2 = atan2(sgam2, cgam2 .* sqrt(1 - e2 * cbet2.^2)) / degree;
 
   s12 = reshape(s12, S); azi1 = reshape(azi1, S); azi2 = reshape(azi2, S);
+
+  if areap
+    sgam0 = sgam1 .* cbet1;
+    A4 = (a^2 * e2) * cgam0 .* sgam0;
+
+    n = f / (2 - f);
+    G4x = G4coeff(n);
+    G4a = C4f(epsi, G4x);
+    B41 = SinCosSeries(false, ssig1, csig1, G4a);
+    B42 = SinCosSeries(false, ssig2, csig2, G4a);
+    S12 = A4 .* (B42 - B41);
+    S12(cgam0 == 0 | sgam0 == 0) = 0;
+
+    sgam12 = sgam2 .* cgam1 - cgam2 .* sgam1;
+    cgam12 = cgam2 .* cgam1 + sgam2 .* sgam1;
+    s = sgam12 == 0 & cgam12 < 0;
+    sgam12(s) = tiny * cgam1(s); cgam12(s) = -1;
+    gam12 = atan2(sgam12, cgam12);
+
+    l = abs(gam12) < 1;
+    dlam12 = 1 + clam12(l); dbet1 = 1 + cbet1(l); dbet2 = 1 + cbet2(l);
+    gam12(l) = ...
+        2 * atan2(slam12(l) .* (sbet1(l) .* dbet2 + sbet2(l) .* dbet1), ...
+                  dlam12    .* (sbet1(l) .* sbet2(l) + dbet1 .* dbet2));
+
+    c2 = a^2 * (1 + (1 - e2) * atanhee(1, e2)) / 2;
+    S12 = S12 + c2 * gam12;
+    S12 = reshape(S12, S);
+  end
 end
