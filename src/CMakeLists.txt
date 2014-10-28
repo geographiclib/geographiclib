@@ -57,6 +57,9 @@ endif ()
 # Specify where the library is installed, adding it to the export targets
 install (TARGETS ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES}
   EXPORT targets
+  # A potentially useful option.  However it's only supported in recent
+  # versions of cmake (2.8.12 and later?).  So comment out for now.
+  # INCLUDES DESTINATION include
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib${LIB_SUFFIX}
   ARCHIVE DESTINATION lib${LIB_SUFFIX})
