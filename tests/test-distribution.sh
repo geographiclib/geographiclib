@@ -198,6 +198,12 @@ make -j$NUMCPUS all
 make -j$NUMCPUS test
 make -j$NUMCPUS matlabinterface
 
+cd $TEMP/gita/geographiclib/tests/sandbox
+mkdir BUILD
+cd BUILD
+cmake -D CMAKE_PREFIX_PATH=$TEMP/inste ..
+make
+
 mkdir -p $TEMP/geographiclib-matlab/private
 cd $TEMP/instc/libexec/GeographicLib/matlab
 cp -p geod{doc,reckon,distance,area}.m \

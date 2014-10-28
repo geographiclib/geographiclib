@@ -60,6 +60,6 @@ endif ()
 
 # If unsuitable, append the reason to the package version so that it's
 # visible to the user.
-if (PACKAGE_VERSION_UNSUITABLE TRUE)
+if (PACKAGE_VERSION_UNSUITABLE)
   set (PACKAGE_VERSION "${PACKAGE_VERSION} (${REASON})")
 endif ()
