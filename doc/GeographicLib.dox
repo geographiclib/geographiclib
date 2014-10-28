@@ -105,7 +105,7 @@ geodesic calculations.
 
 The goals of GeographicLib are:
  - Accuracy.  In most applications the accuracy is close to round-off,
-   about 5 nm (5 nanometers).  Even though in many geographic
+   about 5&nbsp;nm (5 nanometers).  Even though in many geographic
    applications 1 cm is considered "accurate enough", there is little
    penalty in providing much better accuracy.  In situations where a
    faster approximate algorithm is necessary, GeographicLib offers an
@@ -1493,8 +1493,8 @@ of the geoid above the WGS84 ellipsoid.  This can be used to convert
 heights above mean sea level to heights above the WGS84 ellipsoid.
 Because the normal to the ellipsoid differs from the normal to the geoid
 (the direction of a plumb line) there is a slight ambiguity in the
-measurement of heights; however for heights up to 10 km this ambiguity
-is only 1 mm.
+measurement of heights; however for heights up to 10&nbsp;km this ambiguity
+is only 1&nbsp;mm.
 
 The geoid is usually approximated by an "earth gravity model" (EGM).
 The models published by the NGA are:
@@ -1512,7 +1512,7 @@ different for each grid resolution.  In addition these tools are written
 in Fortran with is nowadays difficult to integrate with other software.)
 
 Unlike other components of GeographicLib, there is a appreciable error
-in the results obtained (at best, the RMS error is 1 mm).  However the
+in the results obtained (at best, the RMS error is 1&nbsp;mm).  However the
 class provides methods to report the maximum and RMS errors in the
 results.  The class also returns the gradient of the geoid.  This can be
 used to estimate the direction of a plumb line relative to the WGS84
@@ -1726,8 +1726,8 @@ PGM simple graphic format with the following properties
   GeographicLib).
 .
 The major drawback of this format is that since there are only 65535
-possible pixel values, the height must be quantized to 3 mm.  However,
-the resulting quantization error (up to 1.5 mm) is typically smaller
+possible pixel values, the height must be quantized to 3&nbsp;mm.  However,
+the resulting quantization error (up to 1.5&nbsp;mm) is typically smaller
 than the linear interpolation errors.  The comments in the header for
 egm96-5 are
 \verbatim
@@ -1910,12 +1910,12 @@ The errors are with respect to the specific NGA earth gravity model
 uniformly distributed random points.  The maximum values are obtained by
 evaluating the errors using a different grid with points at the
 centers of the original grid.  (The RMS difference between EGM96 and
-EGM2008 is about 0.5 m.  The RMS difference between EGM84 and EGM96 is
-about 1.5 m.)
+EGM2008 is about 0.5&nbsp;m.  The RMS difference between EGM84 and EGM96 is
+about 1.5&nbsp;m.)
 
 The errors in the table above include the quantization errors that arise
 because the height data that Geoid uses are quantized to
-3 mm.  If, instead, Geoid were to use data files without
+3&nbsp;mm.  If, instead, Geoid were to use data files without
 such quantization artifacts, the overall error would be reduced <i>but
 only modestly</i> as shown in the following table, where only the
 changed rows are included and where the changed entries are given in
@@ -2352,14 +2352,14 @@ issues that I encountered using the NGA code:
     1 part in 10<sup>9</sup>), there should be a 1/\e r contribution to
     the disturbing potential \e T.  However, this term is set to zero in
     hsynth_WGS84 (effectively altering the normal potential).  This
-    shifts the surface \e W = <i>U</i><sub>0</sub> outward by about 5 mm.
-    Note too that the reference ellipsoid is no longer a level surface of
-    the effective normal potential.
+    shifts the surface \e W = <i>U</i><sub>0</sub> outward by about
+    5&nbsp;mm.  Note too that the reference ellipsoid is no longer a
+    level surface of the effective normal potential.
  -# Subroutine <code>radgrav</code> computes the ellipsoidal coordinate
     &beta; incorrectly.  This leads to small errors in the deflection
     of the vertical, &xi; and &eta;, when the height above the
     ellipsoid, \e h, is non-zero (about 10<sup>&minus;7</sup> arcsec at
-    \e h = 400 km).
+    \e h = 400&nbsp;km).
  -# There are several expressions which will return inaccurate results
     due to cancellation.  For example, subroutine <code>grs</code>
     computes the flattening using \e f = 1 &minus; sqrt(1 &minus;
@@ -2367,7 +2367,7 @@ issues that I encountered using the NGA code:
     <i>e</i><sup>2</sup>/(1 + sqrt(1 &minus; <i>e</i><sup>2</sup>)).  The
     expressions for \e q and \e q' in <code>grs</code> and
     <code>radgrav</code> suffer from similar problems.  The resulting
-    errors are tiny (about 50 pm in the geoid height); however, given
+    errors are tiny (about 50&nbsp;pm in the geoid height); however, given
     that's there's essentially no cost to using more accurate
     expressions, it's preferable to do so.
  -# hsynth_WGS84 returns an "undefined" value for \e xi and \e eta at the
@@ -2406,16 +2406,16 @@ to use a consistent definition of the geoid height.
  - The surface \e W = <i>U</i><sub>0</sub> is determined by Bruns'
    formula, which is roughly equivalent to a single iteration of
    Newton's method.  The RMS error in this approximation is about 1.5mm
-   with a maximum error of about 10 mm.
+   with a maximum error of about 10&nbsp;mm.
  - The model potential is only valid above the earth's surface.  A
    correction therefore needs to be included where the geoid lies
    beneath the terrain.  This is NGA's "zeta-to-N" correction, which is
    represented by a spherical harmonic sum of degree and order 2160 (and
    so it misses short wavelength terrain variations).  In addition, it
    entails estimating the isostatic equilibrium of the earth's crust.
-   The correction lies in the range [&minus;5.05 m, 0.05 m], however for 99.9%
-   of the earth's surface the correction is less than 10 mm in
-   magnitude.
+   The correction lies in the range [&minus;5.05&nbsp;m, 0.05&nbsp;m],
+   however for 99.9% of the earth's surface the correction is less than
+   10&nbsp;mm in magnitude.
  - The resulting surface lies above the observed mean sea level,
    so &minus;0.41m is added to the geoid height.  (Better would be to change
    the potential used to define the geoid; but this would only change
@@ -2492,13 +2492,14 @@ The value of \e GM includes the mass of the atmosphere and so strictly
 only applies above the earth's atmosphere.  Near the surface of the
 earth, the value of \e g will be less (in absolute value) than the value
 predicted by these models by about &delta;\e g = (4&pi;<i>G</i>/\e
-g) \e A = 8.552 &times; 10<sup>&minus;11</sup> \e A m<sup>2</sup>/kg,
-where \e G is the gravitational constant, \e g is the earth's gravity,
-and \e A is the pressure of the atmosphere.  At sea level we have \e A =
-101.3 kPa, and &delta;\e g = 8.7 &times; 10<sup>&minus;6</sup> m
-s<sup>&minus;2</sup>, approximately.  (In other words the effect is
-about 1&nbsp;part in a million; by way of comparison, buoyancy effects
-are about 100 times larger.)
+g) \e A = 8.552&nbsp;&times;&nbsp;10<sup>&minus;11</sup> \e
+A&nbsp;m<sup>2</sup>/kg, where \e G is the gravitational constant, \e g
+is the earth's gravity, and \e A is the pressure of the atmosphere.  At
+sea level we have \e A = 101.3&nbsp;kPa, and &delta;\e g =
+8.7&minus;&times;&minus;10<sup>&minus;6</sup>&nbsp;m&nbsp;s<sup>&minus;2</sup>,
+approximately.  (In other words the effect is about 1&nbsp;part in a
+million; by way of comparison, buoyancy effects are about 100 times
+larger.)
 
 \section gravityparallel Geoid heights on a multi-processor system
 
@@ -2508,7 +2509,7 @@ for example it takes about 78 ms to compute the geoid height at a single
 point.  There are two ways to speed up this computation:
  - Use a GravityCircle to compute the geoid height at
    several points on a circle of latitude.  This reduces the cost per
-   point to about 92 &mu;s (a reduction by a factor of over 800).
+   point to about 92&nbsp;&mu;s (a reduction by a factor of over 800).
  - Compute the values on several circles of latitude in parallel.  One
    of the simplest ways of doing this is with
    <a href="http://openmp.org"> OpenMP</a>; on an 8-processor system,
@@ -2915,9 +2916,9 @@ Each line of the test set gives 10 space delimited numbers
  - geodesic distance from point 1 to point 2, \e s12 (meters, exact)
  - arc distance on the auxiliary sphere, \e a12 (degrees, accurate to
    10<sup>&minus;18</sup> deg)
- - reduced length of the geodesic, \e m12 (meters, accurate to 0.1 pm)
+ - reduced length of the geodesic, \e m12 (meters, accurate to 0.1&nbsp;pm)
  - the area under the geodesic, \e S12 (m<sup>2</sup>, accurate to
-   1 mm<sup>2</sup>)
+   1&nbsp;mm<sup>2</sup>)
  .
 These are computed using as direct geodesic calculations with the given
 \e lat1, \e lon1, \e azi1, and \e s12.  The distance \e s12 always
@@ -2927,8 +2928,9 @@ simplicity and without loss of generality, \e lat1 is chosen in
 [0&deg;, 90&deg;], \e lon1 is taken to be zero, \e azi1 is
 chosen in [0&deg;, 180&deg;].  Furthermore, \e lat1 and \e
 azi1 are taken to be multiples of 10<sup>&minus;12</sup> deg and \e s12
-is a multiple of 0.1 &mu;m in [0 m, 20003931.4586254 m].  This results \e
-lon2 in [0&deg;, 180&deg;] and \e azi2 in [0&deg;, 180&deg;].
+is a multiple of 0.1&nbsp;&mu;m in [0&nbsp;m, 20003931.4586254&nbsp;m].
+This results \e lon2 in [0&deg;, 180&deg;] and \e azi2 in [0&deg;,
+180&deg;].
 
 The direct calculation uses an expansion of the geodesic equations
 accurate to <i>f</i><sup>30</sup> (approximately 1 part in 10<sup>50</sup>)
@@ -2949,7 +2951,7 @@ The contents of the file are as follows:
  - 50000 entries ending close to vertices
  .
 (a total of 500000 entries).  The values for \e s12 for the geodesics
-running between vertices are truncated to a multiple of 0.1 pm and this
+running between vertices are truncated to a multiple of 0.1&nbsp;pm and this
 is used to determine point 2.
 
 This data can be fed to the <a href="GeodSolve.1.html">GeodSolve</a>
@@ -2992,7 +2994,7 @@ GeodesicExact).
 We give here the series expansions for the various geodesic integrals
 valid to order <i>f</i><sup>10</sup>.  In this release of the code, we
 use a 6th-order expansions.  This is sufficient to maintain accuracy
-for doubles for the SRMmax ellipsoid (\e a = 6400 km, \e f = 1/150).
+for doubles for the SRMmax ellipsoid (\e a = 6400&nbsp;km, \e f = 1/150).
 However, the preprocessor macro GEOGRAPHICLIB_GEODESIC_ORDER can be
 used to select any order up to 8.  (If using long doubles, with a
 64-bit fraction, the default order is 7.)  The series expanded to
@@ -3713,8 +3715,8 @@ In assessing the accuracy of these methods we use two metrics:
  .
 (The second metric is much more stringent.)  We may now compare the
 methods by asking for a bound to the length of a geodesic which ensures
-that the one or other of the errors fall below 1 mm (an "engineering"
-definition of accurate) or 1 nm (1 nanometer, about the round-off
+that the one or other of the errors fall below 1&nbsp;mm (an "engineering"
+definition of accurate) or 1&nbsp;nm (1 nanometer, about the round-off
 limit).
 
 <center>
@@ -3765,15 +3767,15 @@ bounds</caption>
 </center>
 
 For example, if you're only interested in measuring distances and an
-accuracy of 1 mm is sufficient, then Bowring's improved method can be
-used for distances up to 180 km.  On the other hand, GeographicLib uses
-Bessel's auxiliary sphere and we require both the distance and the
-azimuth to be accurate, so the great circle approximation can only be
-used for distances less than 1.7 m.  The reason that GeographicLib does
-not use Bowring's method is that the information necessary for auxiliary
-sphere method is already available as part of the general solution and,
-as much as possible, we allow all geodesics to be computed by the
-general method.
+accuracy of 1&nbsp;mm is sufficient, then Bowring's improved method can
+be used for distances up to 180&nbsp;km.  On the other hand,
+GeographicLib uses Bessel's auxiliary sphere and we require both the
+distance and the azimuth to be accurate, so the great circle
+approximation can only be used for distances less than 1.7&nbsp;m.  The
+reason that GeographicLib does not use Bowring's method is that the
+information necessary for auxiliary sphere method is already available
+as part of the general solution and, as much as possible, we allow all
+geodesics to be computed by the general method.
 
 <center>
 Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
@@ -4590,7 +4592,7 @@ However this is not entirely satisfactory: you have to pick the
 transition point where the derivative takes over from the ratio of
 differences; and, near this transition point, many bits of accuracy will
 be lost (I estimate that about 1/3 of bits are lost, leading to errors
-on the order of 0.1 mm for double precision).  Note too that this
+on the order of 0.1&nbsp;mm for double precision).  Note too that this
 problem crops up even in the spherical limit.
 
 It turns out that we can do substantially better than this and maintain
@@ -4665,8 +4667,8 @@ limits the applicability of the method to \f$\left|f\right|\lt 0.01\f$.
 If we want to extend the method to arbitrary flattening we need to
 compute \f$\Delta[E](x,y;k)\f$.  The necessary relation is the "addition
 theorem" for the incomplete elliptic integral of the second kind given
-in http://dlmf.nist.gov/19.11.E2.  This can be converted in the followinging divided
-difference formula
+in http://dlmf.nist.gov/19.11.E2.  This can be converted in the
+followinging divided difference formula
 \f[
 \Delta[E](x,y;k)
 =\begin{cases}
@@ -5025,7 +5027,7 @@ algorithms for geodesics, by Vincenty (1975), come with some
 "asterisks":
  - no derivation was given (although they follow in a straightforward
    fashion from classic 19th century methods);
- - the accuracy is "only" 0.5 mm or so, surely good enough for most
+ - the accuracy is "only" 0.5&nbsp;mm or so, surely good enough for most
    applications, but still a reason for a user to worry and a spur to
    numerous studies "validating" the algorithms;
  - no indication is given for how to extend the series to improve the
@@ -5046,24 +5048,25 @@ some way to handle this problem.
 For these reasons, substitution of a great ellipse for the geodesic
 makes some sense.  The solution of the great ellipse is, in principle,
 no more difficult than solving for the great circle and, for paths of
-less then 10000 km, the error in the distance is less than 13.5 m.
+less then 10000&nbsp;km, the error in the distance is less than
+13.5&nbsp;m.
 
 Now (2014), however, the situation has reversed.  The algorithms given
 by Karney (2013)&mdash;and used in GeographicLib since
 2009&mdash;explicitly resolve the issues with Vincenty's algorithm.  The
 geodesic problem is conveniently bundled into a library.  Users can call
 this with an assurance of an accurate result much as they would when
-evaluating \f$\sin x\f$.  On the other, great ellipses come with their
-own set of asterisks:
+evaluating \f$\sin x\f$.  On the other hand, great ellipses come with
+their own set of asterisks:
  - To the extent that they are regarded as approximations to geodesics,
    the errors need to be quantified, the limits of allowable use
    documented, etc.
  - The user is now left with decisions on when to trust the results and
    to find alternative solutions if necessary.
- - Even though the great ellipse is no more that 13.5 m longer than a
-   10000 km geodesic, the path of the great ellipse can deviate from the
-   geodesic by as much as 8.3 km.  This disqualifies great ellipses from
-   use in congested air corridors where the
+ - Even though the great ellipse is no more that 13.5&nbsp;m longer than
+   a 10000&nbsp;km geodesic, the path of the great ellipse can deviate
+   from the geodesic by as much as 8.3&nbsp;km.  This disqualifies great
+   ellipses from use in congested air corridors where the
    <a href="https://en.wikipedia.org/wiki/Strategic_lateral_offset_procedure">
    strategic lateral offset procedure</a> is in effect and in any
    situation which demands coordination in the routes of vessels.
@@ -5082,10 +5085,10 @@ al. given above:
    maintain because it allows the results to be used reliably in more
    complex problems (e.g., in the determination of maritime boundaries).
  - "unnecessary consumption of computing power": The solution of the
-   inverse geodesic problem takes 2.3 &mu;s; multiple points on a
-   geodesic can be computed at a rate of one point per 0.4 &mu;s.  The
-   actual power consumed in these calculations is miniscule compared to
-   the power needed to drive the display of a navigational computer.
+   inverse geodesic problem takes 2.3&nbsp;&mu;s; multiple points on a
+   geodesic can be computed at a rate of one point per 0.4&nbsp;&mu;s.
+   The actual power consumed in these calculations is miniscule compared
+   to the power needed to drive the display of a navigational computer.
  - "formulas that are much too complex": There's no question that the
    solution of the geodesic problem is more complex than for great
    ellipses.  However this complexity is only an issue when
@@ -5096,13 +5099,13 @@ al. given above:
    <blockquote>"The shortest path is found."</blockquote>
    And here is the corresponding documentation for great ellipses:
    <blockquote>"A path which closely approximates the shortest path is
-   found.  Provided that the distance is less than 10000 km, the error
-   in distance is no more than 14 m and the deviation the route from
-   that of the shortest path is no more than 9 km.  These bounds apply
-   to the WGS84 ellipsoid.  The deviation of the path means that it
-   should be used with caution when planning routes.  In addition, great
-   ellipses do not obey the triangle inequality; this disqualifies them
-   from use in some applications."</blockquote>
+   found.  Provided that the distance is less than 10000&nbsp;km, the
+   error in distance is no more than 14&nbsp;m and the deviation the
+   route from that of the shortest path is no more than 9&nbsp;km.
+   These bounds apply to the WGS84 ellipsoid.  The deviation of the path
+   means that it should be used with caution when planning routes.  In
+   addition, great ellipses do not obey the triangle inequality; this
+   disqualifies them from use in some applications."</blockquote>
 
 Having all the geodesic functions bundled up into a reliable "black box"
 enables users to concentrate on how to solve problems using geodesics
@@ -5177,13 +5180,13 @@ This is about 17 MB (compressed).  This test set consists of a set of
 geographic coordinates together with the corresponding transverse
 Mercator coordinates.  The WGS84 ellipsoid is used, with central
 meridian 0&deg;, central scale factor 0.9996 (the UTM value),
-false easting = false northing = 0 m.
+false easting = false northing = 0&nbsp;m.
 
 Each line of the test set gives 6 space delimited numbers
  - latitude (degrees, exact)
  - longitude (degrees, exact &mdash; see below)
- - easting (meters, accurate to 0.1 pm)
- - northing (meters, accurate to 0.1 pm)
+ - easting (meters, accurate to 0.1&nbsp;pm)
+ - northing (meters, accurate to 0.1&nbsp;pm)
  - meridian convergence (degrees, accurate to 10<sup>&minus;18</sup> deg)
  - scale (accurate to 10<sup>&minus;20</sup>)
  .
@@ -5236,7 +5239,7 @@ implementations following the standard convention.
 \section tmseries Series approximation for transverse Mercator
 
 Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
-Mercator projection.  This is accurate to about 200 nm (200
+Mercator projection.  This is accurate to about 200&nbsp;nm (200
 nanometers) within the UTM domain.  Here we present the series
 extended to 10th order.  By default, TransverseMercator
 uses the 6th-order approximation. The preprocessor macro
@@ -5544,8 +5547,8 @@ Geocentric::WGS84.Forward which uses long doubles (including using long
 doubles for the WGS84 parameters).  Generate random (long double)
 geodetic coordinates (\e lat0, \e lon0, \e h0) and use the "long double"
 WGS84.Forward to obtain the corresponding (long double) geocentric
-coordinates (\e x0, \e y0, \e z0).  [We restrict \e h0 so that
-\e h0 &ge; &minus; \e a (1 &minus; <i>e</i><sup>2</sup>) / sqrt(1 &minus;
+coordinates (\e x0, \e y0, \e z0).  [We restrict \e h0 so that \e h0
+&ge; &minus; \e a (1 &minus; <i>e</i><sup>2</sup>) / sqrt(1 &minus;
 <i>e</i><sup>2</sup> sin<sup>2</sup>\e lat0), which ensures that (\e
 lat0, \e lon0, \e h0) is the principal geodetic inverse of (\e x0, \e
 y0, \e z0).]  Because the forward calculation is numerically stable and
@@ -5557,22 +5560,23 @@ Apply the double version of WGS84.Reverse to (\e x0, \e y0, \e z0) to
 compute the approximate geodetic coordinates (\e lat1, \e lon1, \e h1).
 Convert (\e lat1 &minus; \e lat0, \e lon1 &minus; \e lon0) to a
 distance, \e ds, on the surface of the ellipsoid and define \e err =
-hypot(\e ds, \e h1 &minus; \e h0).  For |<i>h0</i>| < 5000 km, we have \e
-err < 7 nm (7 nanometers).
+hypot(\e ds, \e h1 &minus; \e h0).  For |<i>h0</i>| < 5000&nbsp;km, we
+have \e err < 7&nbsp;nm (7 nanometers).
 
 This methodology is not very useful very far from the globe, because the
 absolute errors in the approximate geodetic height become large, or
-within 50 km of the center of the earth, because of errors in computing
-the approximate geodetic latitude.  To illustrate the second issue, the
-maximum value of \e err for \e h0 < 0 is about 80 mm.  The error is
-maximum close to the circle given by geocentric coordinates satisfying
-hypot(\e x, \e y) = \e a <i>e</i><sup>2</sup> (= 42.7 km), \e z = 0.
-(This is the center of meridional curvature for \e lat = 0.)  The
-geodetic latitude for these points is \e lat = 0.  However, if we move 1
-nm towards the center of the earth, the geodetic latitude becomes 0.04",
-a distance of 1.4 m from the equator.  If, instead, we move 1 nm up, the
-geodetic latitude becomes 7.45", a distance of 229 m from the equator.
-In light of this, Reverse does quite well in this vicinity.
+within 50&nbsp;km of the center of the earth, because of errors in
+computing the approximate geodetic latitude.  To illustrate the second
+issue, the maximum value of \e err for \e h0 < 0 is about 80&nbsp;mm.
+The error is maximum close to the circle given by geocentric coordinates
+satisfying hypot(\e x, \e y) = \e a <i>e</i><sup>2</sup> (=
+42.7&nbsp;km), \e z = 0.  (This is the center of meridional curvature
+for \e lat = 0.)  The geodetic latitude for these points is \e lat = 0.
+However, if we move 1&nbsp;nm towards the center of the earth, the
+geodetic latitude becomes 0.04", a distance of 1.4&nbsp;m from the
+equator.  If, instead, we move 1&nbsp;nm up, the geodetic latitude
+becomes 7.45", a distance of 229&nbsp;m from the equator.  In light of
+this, Reverse does quite well in this vicinity.
 
 To obtain a practical measure of the error for the general case we define
 - <i>err</i><sub>h</sub> = |\e h1 &minus; <i>h0</i>| / max(1, \e h0 / \e a)
@@ -5582,8 +5586,9 @@ To obtain a practical measure of the error for the general case we define
   <i>err</i><sub>in</sub> = hypot(\e x1 &minus; \e x0, \e y1 &minus; \e
   y0, \e z1 &minus; \e z0).
 .
-We then find <i>err</i><sub>h</sub> < 8 nm, <i>err</i><sub>out</sub> < 4 nm,
-and <i>err</i><sub>in</sub> < 7 nm.  (1 nm = 1 nanometer.)
+We then find <i>err</i><sub>h</sub> < 8&nbsp;nm,
+<i>err</i><sub>out</sub> < 4&nbsp;nm, and <i>err</i><sub>in</sub> <
+7&nbsp;nm.  (1&nbsp;nm = 1 nanometer.)
 
 The testing has been confined to the WGS84 ellipsoid.  The method will
 work for all ellipsoids used in terrestrial geodesy.  However, the
@@ -6448,12 +6453,12 @@ of the git repository for GeographicLib.
    (released 2014-mm-dd)
    - Update GeographicLib.pro.
    - TODO: Unconfuse geoid height arithmetic.
-   - Include CMAKE_CROSSCOMPILING checks in cmake config file
-   - TODO: Checkout on cmake's project(xxx VERSION ...) stuff.
+   - Include cross-compiling checks in cmake config file
+   - Change way unsuitable versions are reported.
    - legacy/Fortran contains replacements for NGS utilities
-   - Connect taup/(1-e^2) starting guess in TransverseMercator::tauf
+   - TODO: Connect taup/(1-e^2) starting guess in TransverseMercator::tauf
      with near identity of chi and theta (also update tm-addenda.html)
-   - Fix BUG in area calculation in Matlab routine geodreckon.
+   - Fix BLUNDER in area calculation in Matlab routine geodreckon.
    - Add area calculation to Matlab/Octave routines for great ellipses
      (still to do: update documentation)
 
