@@ -201,7 +201,7 @@ make -j$NUMCPUS matlabinterface
 cd $TEMP/gita/geographiclib/tests/sandbox
 mkdir BUILD
 cd BUILD
-cmake -D CMAKE_PREFIX_PATH=$TEMP/inste ..
+cmake -D CMAKE_PREFIX_PATH=$TEMP/instc ..
 make
 
 mkdir -p $TEMP/geographiclib-matlab/private
