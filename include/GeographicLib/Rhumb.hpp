@@ -13,6 +13,16 @@
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Ellipsoid.hpp>
 
+#if !defined(GEOGRAPHICLIB_RHUMBAREA_ORDER)
+/**
+ * The order of the series approximation used in rhumb area calculations.
+ * GEOGRAPHICLIB_RHUMBAREA_ORDER can be set to any integer in [4, 8].
+ **********************************************************************/
+#  define GEOGRAPHICLIB_RHUMBAREA_ORDER \
+  (GEOGRAPHICLIB_PRECISION == 2 ? 6 : \
+   (GEOGRAPHICLIB_PRECISION == 1 ? 4 : 8))
+#endif
+
 namespace GeographicLib {
 
   class RhumbLine;
@@ -52,6 +62,9 @@ namespace GeographicLib {
     Ellipsoid _ell;
     bool _exact;
     static const int tm_maxord = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
+    static const int maxpow_ = GEOGRAPHICLIB_RHUMBAREA_ORDER;
+    // _c[0] unused
+    real _R[maxpow_ + 1];
     static inline real overflow() {
       // Overflow value s.t. atan(overflow_) = pi/2
       static const real
@@ -163,7 +176,7 @@ namespace GeographicLib {
      *
      * See \ref rhumb, for a detailed description of the \e exact parameter.
      **********************************************************************/
-    Rhumb(real a, real f, bool exact = true) : _ell(a, f), _exact(exact) {}
+    Rhumb(real a, real f, bool exact = true);
 
     /**
      * Solve the direct rhumb problem.

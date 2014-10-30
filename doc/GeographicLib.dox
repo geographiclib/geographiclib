@@ -4762,6 +4762,39 @@ where \f$\mathsf B_k\f$ are \f$2\times2\f$ matrices.  The divided
 difference \f$\Delta[g](x,y)\f$ is given by the second element of
 \f$\mathsf G(x,y)\f$.
 
+The same basic recursion applies to the more general case,
+\f[
+g(x) = \sum_{k=0}^N c_k \sin\bigl( (k+k_0)x + x_0\bigr).
+\f]
+For example, the sum area arising in the computation of geodesic areas,
+\f[
+\sum_{k=0}^N c_k\cos\bigl((2k+1)\sigma)
+\f]
+is given by \f$x=2\sigma\f$, \f$x_0=\frac12\pi\f$, \f$k_0=\frac12\f$.
+Again we consider the matrix sum,
+\f[
+\mathsf G(x,y) = \begin{bmatrix}
+(g(x) + g(y)) / 2\\
+(g(x) - g(y)) / (x - y)
+\end{bmatrix} = \sum_{k=0}^N c_k \mathsf F_k(x,y),
+\f]
+where
+\f[
+\mathsf F_k(x,y)=
+\begin{bmatrix}
+     \cos\bigl( (k+k_0)d \bigr) \sin \bigl( (k+k_0)p + x_0 \bigr)\\
+     \frac{\sin\bigl( (k+k_0)d \bigr)}d \cos \bigl( (k+k_0)p + x_0 \bigr)
+\end{bmatrix}.
+\f]
+The recursion for \f$\mathsf B_k\f$ is identical to the previous case;
+in particular, the expression for \f$\mathsf A(x,y)\f$ remains
+unchanged.  The result for the sum is
+\f[
+\mathsf G(x,y) =
+  (c_0\mathsf I - \mathsf B_2) \mathsf F_0(x,y)
+  + \mathsf B_1 \mathsf F_1(x,y).
+\f]
+
 <center>
 Back to \ref triaxial.  Forward to \ref greatellipse.  Up to
 \ref contents.
@@ -4926,9 +4959,13 @@ Expand in terms of the third flattening of the ellipsoid, \f$n\f$, and the
 third flattening of the great ellipse, \f$\epsilon\f$, by substituting
 \f[
 \begin{align}
-e'&=\frac{2\sqrt n}{1-n}\\
-k&=\frac{1+n}{1-n} \frac{2\sqrt{\epsilon}}{1+\epsilon}
+e'&=\frac{2\sqrt n}{1-n},\\
+k&=\frac{1+n}{1-n} \frac{2\sqrt{\epsilon}}{1+\epsilon},
 \end{align}
+\f]
+to give
+\f[
+I_4(\sigma) = \sum_{l = 0}^\infty G_{4l}\cos \bigl((2l+1)\sigma\bigr).
 \f]
 Compared to the area under a geodesic, we have
 - \f$\gamma\f$ and \f$\gamma_0\f$ instead of \f$\alpha\f$ and
@@ -5123,7 +5160,7 @@ Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
 \page transversemercator Transverse Mercator projection
 
 <center>
-Back to \ref rhumb.  Forward to \ref geocentric.  Up to \ref contents.
+Back to \ref greatellipse.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 
 TransverseMercator and TransverseMercatorExact provide accurate
@@ -5493,7 +5530,7 @@ projection (Fig. 3(a)).  The extended Thompson projection figure has
 reflection symmetry on all the four sides of Fig. 3(c).
 
 <center>
-Back to \ref rhumb.  Forward to \ref geocentric.  Up to \ref contents.
+Back to \ref greatellipse.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
@@ -6451,6 +6488,8 @@ of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-mm-dd)
+   - Windows binaries now built with Visual Studio 11 2012.  Compiled
+     Matlab support still with version 2013a (64-bit).  TODO: document.
    - Update GeographicLib.pro.
    - TODO: Unconfuse geoid height arithmetic.
    - Include cross-compiling checks in cmake config file
@@ -6460,7 +6499,8 @@ of the git repository for GeographicLib.
      with near identity of chi and theta (also update tm-addenda.html)
    - Fix BLUNDER in area calculation in Matlab routine geodreckon.
    - Add area calculation to Matlab/Octave routines for great ellipses
-     (still to do: update documentation)
+     (still to do: update documentation).
+   - TODO: Add area calculation to Rhumb and RhumbLine.
 
  - <a href="http://geographiclib.sf.net/1.38">Version 1.38</a>
    (released 2014-10-02)
