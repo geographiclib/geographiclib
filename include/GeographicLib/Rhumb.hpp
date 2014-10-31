@@ -61,9 +61,10 @@ namespace GeographicLib {
     friend class RhumbLine;
     Ellipsoid _ell;
     bool _exact;
+    real _c2;
     static const int tm_maxord = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
     static const int maxpow_ = GEOGRAPHICLIB_RHUMBAREA_ORDER;
-    // _c[0] unused
+    // _R[0] unused
     real _R[maxpow_ + 1];
     static inline real overflow() {
       // Overflow value s.t. atan(overflow_) = pi/2
@@ -91,6 +92,10 @@ namespace GeographicLib {
     //   http://dx.doi.org/10.1145/334714.334716
     //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
 
+    static inline real Dlog(real x, real y) {
+      real t = x - y;
+      return t ? 2 * Math::atanh(t / (x + y)) / t : 1 / x;
+    }
     static inline real Dtan(real x, real y) {
       real d = x - y, tx = tano(x), ty = tano(y), txy = tx * ty;
       return d ? (2 * txy > -1 ? (1 + txy) * tano(d) : tx - ty) / d :
@@ -104,13 +109,24 @@ namespace GeographicLib {
     }
     static inline real Dsin(real x, real y) {
       using std::sin; using std::cos;
-      real d = (x - y)/2;
+      real d = (x - y) / 2;
       return cos((x + y)/2) * (d ? sin(d) / d : 1);
+    }
+    static inline real Dcos(real x, real y) {
+      using std::sin;
+      real d = (x - y) / 2;
+      return - sin((x + y) / 2) * (d ? sin(d) / d : 1);
     }
     static inline real Dsinh(real x, real y) {
       using std::sinh; using std::cosh;
-      real d = (x - y)/2;
-      return cosh((x + y)/2) * (d ? sinh(d) / d : 1);
+      real d = (x - y) / 2;
+      return cosh((x + y) / 2) * (d ? sinh(d) / d : 1);
+    }
+    // Dcosh(x,y) = sinh((x+y)/2) * sinh((x-y)/2)/((x-y)/2)
+    static inline real Dcosh(real x, real y) {
+      using std::sinh;
+      real d = (x - y) / 2;
+      return sinh((x + y) / 2) * (d ? sinh(d) / d : 1);
     }
     static inline real Dasinh(real x, real y) {
       real d = x - y,
@@ -139,17 +155,6 @@ namespace GeographicLib {
     inline real Deatanhe(real x, real y) const {
       real t = x - y, d = 1 - _ell._e2 * x * y;
       return t ? eatanhe(t / d) / t : _ell._e2 / d;
-    }
-    // Dlog(x,y) = 2*atanh((x-y)/(x+y))/(x-y)
-    inline real Dlog(real x, real y) const {
-      real t = x - y;
-      return t ? 2 * Math::atanh(t / (x + y)) / t : 1 / x;
-    }
-    // Dcos(x,y) = - sin((x+y)/2) * sin((x-y)/2)/((x-y)/2)
-    inline real Dcos(real x, real y) const {
-      using std::sin;
-      real t = (x - y)/2;
-      return - sin((x + y) / 2) * (t ? sin(t) / t : 1);
     }
     // (E(x) - E(y)) / (x - y) -- E = incomplete elliptic integral of 2nd kind
     real DE(real x, real y) const;
@@ -237,7 +242,18 @@ namespace GeographicLib {
      * calculation to be carried out in finite terms.
      **********************************************************************/
     void Inverse(real lat1, real lon1, real lat2, real lon2,
-                 real& s12, real& azi12) const;
+                 real& s12, real& azi12) const {
+      real dummy;
+      GenInverse(lat1, lon1, lat2, lon2, false, s12, azi12, dummy);
+    }
+
+    void Inverse(real lat1, real lon1, real lat2, real lon2,
+                 real& s12, real& azi12, real& S12) const {
+      GenInverse(lat1, lon1, lat2, lon2, true, s12, azi12, S12);
+    }
+
+    void GenInverse(real lat1, real lon1, real lat2, real lon2, bool areap,
+                    real& s12, real& azi12, real& S12) const;
 
     /**
      * Set up to compute several points on a single rhumb line.

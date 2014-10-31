@@ -18,6 +18,7 @@ namespace GeographicLib {
   Rhumb::Rhumb(real a, real f, bool exact)
     : _ell(a, f)
     , _exact(exact)
+    , _c2(_ell.Area() / (4 * Math::pi()))
   {
     real n = _ell._n, nx = n;
     switch (maxpow_) {
@@ -97,8 +98,8 @@ namespace GeographicLib {
     return wgs84;
   }
 
-  void Rhumb::Inverse(real lat1, real lon1, real lat2, real lon2,
-                      real& s12, real& azi12) const {
+  void Rhumb::GenInverse(real lat1, real lon1, real lat2, real lon2, bool areap,
+                         real& s12, real& azi12, real& S12) const {
     real
       lon12 = Math::AngDiff(Math::AngNormalize(lon1), Math::AngNormalize(lon2)),
       psi1 = _ell.IsometricLatitude(lat1),
@@ -109,6 +110,19 @@ namespace GeographicLib {
     real dmudpsi = DIsometricToRectifying(psi2 * Math::degree(),
                                           psi1 * Math::degree());
     s12 = h * dmudpsi * _ell.QuarterMeridian() / 90;
+    if (areap) {
+      psi1 *= Math::degree(); real chi1 = gd(psi1);
+      psi2 *= Math::degree(); real chi2 = gd(psi2);
+      lon12 *= Math::degree();
+      real s1 = 0, s2 = 0;
+      for (int i = 1; i <= maxpow_; ++i) {
+        s1 += _R[i] * cos(2*i*chi1);
+        s2 += _R[i] * cos(2*i*chi2);
+      }
+      s1 -= log(cos(chi1));
+      s2 -= log(cos(chi2));
+      S12 = _c2 * lon12 * (s2 - s1) / (psi2 - psi1);
+    }
   }
 
   RhumbLine Rhumb::Line(real lat1, real lon1, real azi12) const
@@ -206,28 +220,30 @@ namespace GeographicLib {
     const real a[4] = {m, -s * d * d, -4 * s, m};
     real ba[4] = {0, 0, 0, 0};
     real bb[4] = {0, 0, 0, 0};
-    real* b0 = ba;
-    real* b1 = bb;
-    if (n > 0) b0[0] = b0[3] = c[n];
+    real* b1 = ba;
+    real* b2 = bb;
+    if (n > 0) b1[0] = b1[3] = c[n];
     for (int j = n - 1; j > 0; --j) { // j = n-1 .. 1
-      std::swap(b0, b1);
-      // b0 = A * b1 - b0 + c[j] * I
-      b0[0] = a[0] * b1[0] + a[1] * b1[2] - b0[0] + c[j];
-      b0[1] = a[0] * b1[1] + a[1] * b1[3] - b0[1];
-      b0[2] = a[2] * b1[0] + a[3] * b1[2] - b0[2];
-      b0[3] = a[2] * b1[1] + a[3] * b1[3] - b0[3] + c[j];
+      std::swap(b1, b2);
+      // b1 = A * b2 - b1 + c[j] * I
+      b1[0] = a[0] * b2[0] + a[1] * b2[2] - b1[0] + c[j];
+      b1[1] = a[0] * b2[1] + a[1] * b2[3] - b1[1];
+      b1[2] = a[2] * b2[0] + a[3] * b2[2] - b1[2];
+      b1[3] = a[2] * b2[1] + a[3] * b2[3] - b1[3] + c[j];
     }
-    // Store [f[0], f[1]] in b1
     // Here are the full expressions for m and s
-    // t =  (c[0] * I  - b[2]) * f[0](x,y) + b[1] * f[1](x,y)
-    // m =   (c[0] - b1[0]) * f01 - b1[1] * f02 + b0[0] * f11 + b0[1] * f12;
-    // s = - b1[2] * f01 + (c[0] - b1[3]) * f02 + b0[2] * f11 + b0[3] * f12;
+    // m =   (c[0] - b2[0]) * f01 - b2[1] * f02 + b1[0] * f11 + b1[1] * f12;
+    // s = - b2[2] * f01 + (c[0] - b2[3]) * f02 + b1[2] * f11 + b1[3] * f12;
     if (sinp) {
-      real f11 = sp * cd, f12 = 2 * sd * cp; /* and f01 = f02 = 0 */
-      s = b0[2] * f11 + b0[3] * f12;
+      // real f01 = 0, f02 = 0;
+      real f11 = sp * cd, f12 = 2 * sd * cp;
+      // m = b1[0] * f11 + b1[1] * f12;
+      s = b1[2] * f11 + b1[3] * f12;
     } else {
-      real f11 = cp * cd, f12 = 2 * sd * sp; /* and f01 = 1, f02 = 0 */
-      s = - b1[2] + b0[2] * f11 + b0[3] * f12;
+      // real f01 = 1, f02 = 0;
+      real f11 = cp * cd, f12 = 2 * sd * sp;
+      // m = c[0] - b2[0] + b1[0] * f11 + b1[1] * f12;
+      s = - b2[2] + b1[2] * f11 + b1[3] * f12;
     }
     return s;
   }
