@@ -87,13 +87,13 @@ mvn -Dcmake.compiler=vc2012 install
 mvn -Dcmake.compiler=vc2013 install
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
-while read ver x64 matlab; do
+while read ver x64; do
     gen="Visual Studio $ver"
     test "$x64" && gen="$gen Win64" || true
     pkg=vc$ver
     test "$x64" && pkg="$pkg-x64" || true
-    MATLAB=
-    test "$matlab" && MATLAB="-D MATLAB_COMPILER=mex" || true
+    matlab=
+    test "$pkg" = vc11-x64 && matlab="-D MATLAB_COMPILER=mex" || true
     installer=
     if test "$ver" -eq 11; then
 	if test "$x64"; then
@@ -102,6 +102,8 @@ while read ver x64 matlab; do
 	    installer=GeographicLib-$VERSION-win32.exe
 	fi
     fi
+    cmake=cmake
+    test "$ver" -eq 14 && cmake=cmake3 || true
     mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg
     (
 	echo "#! /bin/sh -exv"
@@ -110,22 +112,22 @@ while read ver x64 matlab; do
 	echo 'mkdir -p v:/data/scratch/$b'
 	echo 'cd v:/data/scratch/$b'
 	echo 'unset GEOGRAPHICLIB_DATA'
-	if test "$MATLAB"; then
+	if test "$matlab"; then
 	    echo 'MATLAB_ROOT=`cygpath "c:/Program Files/MATLAB/R2013a"`'
 	    echo 'export PATH="$PATH:$MATLAB_ROOT/runtime/win64:$MATLAB_ROOT/bin"'
 	fi
-	echo cmake -G \"$gen\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON $MATLAB -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
-	echo cmake --build . --config Debug   --target ALL_BUILD
-	echo cmake --build . --config Debug   --target RUN_TESTS
-	echo cmake --build . --config Debug   --target INSTALL
-	echo cmake --build . --config Release --target ALL_BUILD
-	test "$MATLAB" &&
-	echo cmake --build . --config Release --target matlabinterface || true
-	echo cmake --build . --config Release --target exampleprograms
-	echo cmake --build . --config Release --target netexamples
-	echo cmake --build . --config Release --target RUN_TESTS
-	echo cmake --build . --config Release --target INSTALL
-	echo cmake --build . --config Release --target PACKAGE
+	echo $cmake -G \"$gen\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON $matlab -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+	echo $cmake --build . --config Debug   --target ALL_BUILD
+	echo $cmake --build . --config Debug   --target RUN_TESTS
+	echo $cmake --build . --config Debug   --target INSTALL
+	echo $cmake --build . --config Release --target ALL_BUILD
+	test "$matlab" &&
+	echo $cmake --build . --config Release --target matlabinterface || true
+	echo $cmake --build . --config Release --target exampleprograms
+	echo $cmake --build . --config Release --target netexamples
+	echo $cmake --build . --config Release --target RUN_TESTS
+	echo $cmake --build . --config Release --target INSTALL
+	echo $cmake --build . --config Release --target PACKAGE
 	test "$installer" &&
 	echo cp "$installer" $DEVELSOURCE/ || true
     ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
@@ -133,76 +135,10 @@ while read ver x64 matlab; do
 done <<EOF
 10 y
 11
-11 y y
+11 y
 12 y
+14 y
 EOF
-if false;then
-mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
-(
-    echo "#! /bin/sh -exv"
-    echo 'b=geog-`pwd | sed s%.*/%%`'
-    echo 'rm -rf c:/scratch/$b'
-    echo 'mkdir -p c:/scratch/$b'
-    echo 'cd c:/scratch/$b'
-    echo 'unset GEOGRAPHICLIB_DATA'
-    echo cmake -G \"Visual Studio 10\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
-    echo cmake --build . --config Debug   --target ALL_BUILD
-    echo cmake --build . --config Debug   --target exampleprograms
-    echo cmake --build . --config Debug   --target RUN_TESTS
-    echo cmake --build . --config Debug   --target INSTALL
-    echo cmake --build . --config Release --target ALL_BUILD
-    echo cmake --build . --config Release --target netexamples
-    echo cmake --build . --config Release --target RUN_TESTS
-    echo cmake --build . --config Release --target INSTALL
-    echo cmake --build . --config Release --target PACKAGE
-    echo cp GeographicLib-$VERSION-win32.exe $DEVELSOURCE/
-) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
-chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
-mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
-(
-    echo "#! /bin/sh -exv"
-    echo 'b=geog-`pwd | sed s%.*/%%`'
-    echo 'rm -rf c:/scratch/$b'
-    echo 'mkdir -p c:/scratch/$b'
-    echo 'cd c:/scratch/$b'
-    echo 'unset GEOGRAPHICLIB_DATA'
-    echo 'MATLAB_ROOT=`cygpath "c:/Program Files/MATLAB/R2013a"`'
-    echo 'export PATH="$PATH:$MATLAB_ROOT/runtime/win64:$MATLAB_ROOT/bin"'
-    echo cmake -G \"Visual Studio 10 Win64\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10-x64/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
-    echo cmake --build . --config Debug   --target ALL_BUILD
-    echo cmake --build . --config Debug   --target RUN_TESTS
-    echo cmake --build . --config Debug   --target INSTALL
-    echo cmake --build . --config Release --target ALL_BUILD
-    echo cmake --build . --config Release --target matlabinterface
-    echo cmake --build . --config Release --target exampleprograms
-    echo cmake --build . --config Release --target netexamples
-    echo cmake --build . --config Release --target RUN_TESTS
-    echo cmake --build . --config Release --target INSTALL
-    echo cmake --build . --config Release --target PACKAGE
-    echo cp GeographicLib-$VERSION-win64.exe $DEVELSOURCE/
-) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/build
-chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/build
-mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12
-(
-    echo "#! /bin/sh -exv"
-    echo 'b=geog-`pwd | sed s%.*/%%`'
-    echo 'rm -rf c:/scratch/$b'
-    echo 'mkdir -p c:/scratch/$b'
-    echo 'cd c:/scratch/$b'
-    echo 'unset GEOGRAPHICLIB_DATA'
-    echo cmake -G \"Visual Studio 12\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc12/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
-    echo cmake --build . --config Debug   --target ALL_BUILD
-    echo cmake --build . --config Debug   --target examples/exampleprograms
-    echo cmake --build . --config Debug   --target RUN_TESTS
-    echo cmake --build . --config Debug   --target INSTALL
-    echo cmake --build . --config Release --target ALL_BUILD
-    echo cmake --build . --config Release --target dotnet/examples/ManagedCPP/netexamples
-    echo cmake --build . --config Release --target RUN_TESTS
-    echo cmake --build . --config Release --target INSTALL
-    echo cmake --build . --config Release --target PACKAGE
-) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12/build
-chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12/build
-fi
 
 mkdir $TEMP/gitr
 cd $TEMP/gitr

@@ -171,7 +171,7 @@ namespace GeographicLib {
     //   m = (g(x) + g(y)) / 2         -- mean value
     //   s = (g(x) - g(y)) / (x - y)   -- average slope
     // where
-    //   g(x) = sum(c[j]*SC(2*j*x), j = 1..n) 
+    //   g(x) = sum(c[j]*SC(2*j*x), j = 1..n)
     //   SC = sinp ? sin : cos
     //   CS = sinp ? cos : sin
     //
@@ -217,7 +217,7 @@ namespace GeographicLib {
       b0[2] = a[2] * b1[0] + a[3] * b1[2] - b0[2];
       b0[3] = a[2] * b1[1] + a[3] * b1[3] - b0[3] + c[j];
     }
-    // Store [f[0], f[1]] in b1    
+    // Store [f[0], f[1]] in b1
     // Here are the full expressions for m and s
     // t =  (c[0] * I  - b[2]) * f[0](x,y) + b[1] * f[1](x,y)
     // m =   (c[0] - b1[0]) * f01 - b1[1] * f02 + b0[0] * f11 + b0[1] * f12;

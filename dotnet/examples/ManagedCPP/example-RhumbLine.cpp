@@ -15,8 +15,8 @@ int main(array<System::String ^> ^/*args*/)
     RhumbLine^ line = rhumb->Line(lat1, lon1, azi12);
     // Alternatively
     // const GeographicLib::RhumbLine line = rhumb.Line(lat1, lon1, azi1);
-    double ds = 500e3;          // Nominal distance between points = 500 km
-    int num = int(Math::Ceiling(s12 / ds)); // The number of intervals
+    double ds0 = 500e3;         // Nominal distance between points = 500 km
+    int num = int(Math::Ceiling(s12 / ds0)); // The number of intervals
     {
       // Use intervals of equal length
       double ds = s12 / num;
