@@ -163,14 +163,17 @@ namespace GeographicLib {
       - Deatanhe(sin(phix), sin(phiy)) * Dsin(phix, phiy);
   }
 
-  Math::real Rhumb::SinSeries(real x, real y, const real c[], int n) {
+  Math::real Rhumb::SinCosSeries(bool sinp,
+                                 real x, real y, const real c[], int n) {
     // N.B. n >= 0 and c[] has n+1 elements 0..n, of which c[0] is ignored.
     //
     // Use Clenshaw summation to evaluate
     //   m = (g(x) + g(y)) / 2         -- mean value
     //   s = (g(x) - g(y)) / (x - y)   -- average slope
     // where
-    //   g(x) = sum(c[j]*sin(2*j*x), j = 1..n)
+    //   g(x) = sum(c[j]*SC(2*j*x), j = 1..n) 
+    //   SC = sinp ? sin : cos
+    //   CS = sinp ? cos : sin
     //
     // This function returns only s and m is discarded.
     //
@@ -178,11 +181,11 @@ namespace GeographicLib {
     //   t = [m; s]
     //   t = sum(c[j] * f[j](x,y), j = 1..n)
     // where
-    //   f[j](x,y) = [ (sin(2*j*x)+sin(2*j*y))/2 ]
-    //               [ (sin(2*j*x)-sin(2*j*y))/d ]
+    //   f[j](x,y) = [ (SC(2*j*x)+SC(2*j*y))/2 ]
+    //               [ (SC(2*j*x)-SC(2*j*y))/d ]
     //
-    //             = [       sin(j*p)*cos(j*d) ]
-    //               [ (2/d)*sin(j*d)*cos(j*p) ]
+    //             = [        SC(j*p)*cos(j*d)]
+    //               [ (2/d)*sin(j*d)*CS(j*p) ]
     // and
     //    p = x+y, d = x-y
     //
@@ -193,7 +196,8 @@ namespace GeographicLib {
     //
     // Let b[n+1] = b[n+2] = [0 0; 0 0]
     //     b[j] = A * b[j+1] - b[j+2] + c[j] * I for j = n..1
-    //    t =  b[1] * f[1](x,y)
+    //    t =  (c[0] * I  - b[2]) * f[0](x,y) + b[1] * f[1](x,y)
+    // c[0] is not accessed for s = t[2]
     real p = x + y, d = x - y,
       cp = cos(p), cd =     cos(d),
       sp = sin(p), sd = d ? sin(d)/d : 1,
@@ -213,21 +217,29 @@ namespace GeographicLib {
       b0[2] = a[2] * b1[0] + a[3] * b1[2] - b0[2];
       b0[3] = a[2] * b1[1] + a[3] * b1[3] - b0[3] + c[j];
     }
-    b1[0] = sp * cd; b1[2] = 2 * sd * cp;
-    // Here is the (unused) expression for m
-    // m = b0[0] * b1[0] + b0[1] * b1[2];
-    s = b0[2] * b1[0] + b0[3] * b1[2];
+    // Store [f[0], f[1]] in b1    
+    // Here are the full expressions for m and s
+    // t =  (c[0] * I  - b[2]) * f[0](x,y) + b[1] * f[1](x,y)
+    // m =   (c[0] - b1[0]) * f01 - b1[1] * f02 + b0[0] * f11 + b0[1] * f12;
+    // s = - b1[2] * f01 + (c[0] - b1[3]) * f02 + b0[2] * f11 + b0[3] * f12;
+    if (sinp) {
+      real f11 = sp * cd, f12 = 2 * sd * cp; /* and f01 = f02 = 0 */
+      s = b0[2] * f11 + b0[3] * f12;
+    } else {
+      real f11 = cp * cd, f12 = 2 * sd * sp; /* and f01 = 1, f02 = 0 */
+      s = - b1[2] + b0[2] * f11 + b0[3] * f12;
+    }
     return s;
   }
 
   Math::real Rhumb::DConformalToRectifying(real chix, real chiy) const {
-    return 1 + SinSeries(chix, chiy,
-                         _ell.ConformalToRectifyingCoeffs(), tm_maxord);
+    return 1 + SinCosSeries(true, chix, chiy,
+                            _ell.ConformalToRectifyingCoeffs(), tm_maxord);
   }
 
   Math::real Rhumb::DRectifyingToConformal(real mux, real muy) const {
-    return 1 - SinSeries(mux, muy,
-                         _ell.RectifyingToConformalCoeffs(), tm_maxord);
+    return 1 - SinCosSeries(true, mux, muy,
+                            _ell.RectifyingToConformalCoeffs(), tm_maxord);
   }
 
   Math::real Rhumb::DIsometricToRectifying(real psix, real psiy) const {

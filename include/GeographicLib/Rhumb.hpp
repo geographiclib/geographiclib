@@ -140,6 +140,17 @@ namespace GeographicLib {
       real t = x - y, d = 1 - _ell._e2 * x * y;
       return t ? eatanhe(t / d) / t : _ell._e2 / d;
     }
+    // Dlog(x,y) = 2*atanh((x-y)/(x+y))/(x-y)
+    inline real Dlog(real x, real y) const {
+      real t = x - y;
+      return t ? 2 * Math::atanh(t / (x + y)) / t : 1 / x;
+    }
+    // Dcos(x,y) = - sin((x+y)/2) * sin((x-y)/2)/((x-y)/2)
+    inline real Dcos(real x, real y) const {
+      using std::sin;
+      real t = (x - y)/2;
+      return - sin((x + y) / 2) * (t ? sin(t) / t : 1);
+    }
     // (E(x) - E(y)) / (x - y) -- E = incomplete elliptic integral of 2nd kind
     real DE(real x, real y) const;
     // (mux - muy) / (phix - phiy) using elliptic integrals
@@ -148,7 +159,8 @@ namespace GeographicLib {
     real DIsometric(real latx, real laty) const;
 
     // (sum(c[j]*sin(2*j*x),j=1..n) - sum(c[j]*sin(2*j*x),j=1..n)) / (x - y)
-    static real SinSeries(real x, real y, const real c[], int n);
+    static real SinCosSeries(bool sinp,
+                             real x, real y, const real c[], int n);
     // (mux - muy) / (chix - chiy) using Krueger's series
     real DConformalToRectifying(real chix, real chiy) const;
     // (chix - chiy) / (mux - muy) using Krueger's series
