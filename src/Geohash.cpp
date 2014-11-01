@@ -73,7 +73,7 @@ namespace GeographicLib {
       int byte = Utility::lookup(ucdigits_, geohash[k]);
       if (byte < 0)
         throw GeographicErr("Illegal character in geohash " + geohash);
-      for (unsigned i = 0, m = 16; i < 5; ++i, m >>= 1) {
+      for (unsigned m = 16; m; m >>= 1) {
         if (j == 0)
           ulon = (ulon << 1) + unsigned((byte & m) != 0);
         else

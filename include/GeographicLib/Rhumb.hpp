@@ -42,7 +42,12 @@ namespace GeographicLib {
    * Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi12
    * and \e s12.  This is the \e inverse rhumb problem, whose solution is
    * given by Rhumb::Inverse.  This finds the shortest such rhumb line, i.e.,
-   * the one that wraps no more than half way around the earth .
+   * the one that wraps no more than half way around the earth.
+   *
+   * These routines also optionally calculate the area under the rhumb line, \e
+   * S12.  This is the area, measured counter-clockwise, of the rhumb line
+   * quadrilateral with corners (<i>lat1</i>,<i>lon1</i>), (0,<i>lon1</i>),
+   * (0,<i>lon2</i>), and (<i>lat2</i>,<i>lon2</i>).
    *
    * Note that rhumb lines may be appreciably longer (up to 50%) than the
    * corresponding Geodesic.  For example the distance between London Heathrow
@@ -176,6 +181,7 @@ namespace GeographicLib {
     // (psix - psiy) / (mux - muy)
     real DRectifyingToIsometric(real mux, real muy) const;
 
+    real MeanSinXi(real psi1, real psi2) const;
   public:
 
     /**
@@ -196,7 +202,7 @@ namespace GeographicLib {
     Rhumb(real a, real f, bool exact = true);
 
     /**
-     * Solve the direct rhumb problem.
+     * Solve the direct rhumb problem returning also the area.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -205,6 +211,7 @@ namespace GeographicLib {
      *   negative.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees).
+     * @param[out] S12 the area under the rhumb line (meters<sup>2</sup>).
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
      * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
@@ -219,10 +226,39 @@ namespace GeographicLib {
      * is indeterminate (a NaN is returned for \e lon2).
      **********************************************************************/
     void Direct(real lat1, real lon1, real azi12, real s12,
-                real& lat2, real& lon2) const;
+                real& lat2, real& lon2, real& S12) const {
+      GenDirect(lat1, lon1, azi12, s12, true, lat2, lon2, S12);
+    }
 
     /**
-     * Solve the inverse rhumb problem.
+     * Solve the direct rhumb problem without the area.
+     **********************************************************************/
+    void Direct(real lat1, real lon1, real azi12, real s12,
+                real& lat2, real& lon2) const {
+      real dummy;
+      GenDirect(lat1, lon1, azi12, s12, false, lat2, lon2, dummy);
+    }
+
+    /**
+     * The general direct rhumb problem.  Rhumb::Direct is defined in terms
+     * of this function.
+     *
+     * @param[in] lat1 latitude of point 1 (degrees).
+     * @param[in] lon1 longitude of point 1 (degrees).
+     * @param[in] azi12 azimuth of the rhumb line (degrees).
+     * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+     *   negative.
+     * @param[in] areap should S12 be computed?
+     * @param[out] lat2 latitude of point 2 (degrees).
+     * @param[out] lon2 longitude of point 2 (degrees).
+     * @param[out] S12 if \e areap, then the area under the rhumb line
+     *   (meters<sup>2</sup>); otherwise its value is unchanged.
+     **********************************************************************/
+    void GenDirect(real lat1, real lon1, real azi12, real s12, bool areap,
+                   real& lat2, real& lon2, real& S12) const;
+
+    /**
+     * Solve the inverse rhumb problem returning also the area.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -230,6 +266,7 @@ namespace GeographicLib {
      * @param[in] lon2 longitude of point 2 (degrees).
      * @param[out] s12 rhumb distance between point 1 and point 2 (meters).
      * @param[out] azi12 azimuth of the rhumb line (degrees).
+     * @param[out] S12 the area under the rhumb line (meters<sup>2</sup>).
      *
      * The shortest rhumb line is found.  \e lat1 and \e lat2 should be in the
      * range [&minus;90&deg;, 90&deg;]; \e lon1 and \e lon2 should be in the
@@ -242,16 +279,33 @@ namespace GeographicLib {
      * calculation to be carried out in finite terms.
      **********************************************************************/
     void Inverse(real lat1, real lon1, real lat2, real lon2,
+                 real& s12, real& azi12, real& S12) const {
+      GenInverse(lat1, lon1, lat2, lon2, true, s12, azi12, S12);
+    }
+
+    /**
+     * Solve the inverse rhumb problem without the area.
+     **********************************************************************/
+    void Inverse(real lat1, real lon1, real lat2, real lon2,
                  real& s12, real& azi12) const {
       real dummy;
       GenInverse(lat1, lon1, lat2, lon2, false, s12, azi12, dummy);
     }
 
-    void Inverse(real lat1, real lon1, real lat2, real lon2,
-                 real& s12, real& azi12, real& S12) const {
-      GenInverse(lat1, lon1, lat2, lon2, true, s12, azi12, S12);
-    }
-
+    /**
+     * The general inverse rhumb problem.  Rhumb::Inverse is defined in terms
+     * of this function.
+     *
+     * @param[in] lat1 latitude of point 1 (degrees).
+     * @param[in] lon1 longitude of point 1 (degrees).
+     * @param[in] lat2 latitude of point 2 (degrees).
+     * @param[in] lon2 longitude of point 2 (degrees).
+     * @param[in] areap should S12 be computed?
+     * @param[out] s12 rhumb distance between point 1 and point 2 (meters).
+     * @param[out] azi12 azimuth of the rhumb line (degrees).
+     * @param[out] S12 if \e areap, then the area under the rhumb line
+     *   (meters<sup>2</sup>); otherwise its value is unchanged.
+     **********************************************************************/
     void GenInverse(real lat1, real lon1, real lat2, real lon2, bool areap,
                     real& s12, real& azi12, real& S12) const;
 
@@ -302,9 +356,10 @@ namespace GeographicLib {
    * RhumbLine facilitates the determination of a series of points on a single
    * rhumb line.  The starting point (\e lat1, \e lon1) and the azimuth \e
    * azi12 are specified in the call to Rhumb::Line which returns a RhumbLine
-   * object.  RhumbLine.Position returns the location of point 2 a distance \e
-   * s12 along the rhumb line.
-
+   * object.  RhumbLine.Position returns the location of point 2 (and,
+   * optionally, the corresponding area, \e S12) a distance \e s12 along the
+   * rhumb line.
+   *
    * There is no public constructor for this class.  (Use Rhumb::Line to create
    * an instance.)  The Rhumb object used to create a RhumbLine must stay in
    * scope as long as the RhumbLine.
@@ -326,12 +381,13 @@ namespace GeographicLib {
   public:
     /**
      * Compute the position of point 2 which is a distance \e s12 (meters) from
-     * point 1.
+     * point 1.  The area is also computed.
      *
      * @param[in] s12 distance between point 1 and point 2 (meters); it can be
      *   negative.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees).
+     * @param[out] S12 the area under the rhumb line (meters<sup>2</sup>).
      *
      * The values of \e lon2 and \e azi2 returned are in the range
      * [&minus;180&deg;, 180&deg;).
@@ -339,7 +395,39 @@ namespace GeographicLib {
      * If \e s12 is large enough that the rhumb line crosses a pole, the
      * longitude of point 2 is indeterminate (a NaN is returned for \e lon2).
      **********************************************************************/
-    void Position(real s12, real& lat2, real& lon2) const;
+    void Position(real s12, real& lat2, real& lon2, real& S12) const {
+      GenPosition(s12, true, lat2, lon2, S12);
+    }
+
+    /**
+     * Compute the position of point 2 which is a distance \e s12 (meters) from
+     * point 1.  The area is not computed.
+     **********************************************************************/
+    void Position(real s12, real& lat2, real& lon2) const {
+      real dummy;
+      GenPosition(s12, false, lat2, lon2, dummy);
+    }
+
+    /**
+     * The general position routine.  RhumbLine::Position is defined in term so
+     * this function.
+     *
+     * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+     *   negative.
+     * @param[in] areap should S12 be computed?
+     * @param[out] lat2 latitude of point 2 (degrees).
+     * @param[out] lon2 longitude of point 2 (degrees).
+     * @param[out] S12 if \e areap, then the area under the rhumb line
+     *   (meters<sup>2</sup>); otherwise its value is unchanged.
+     *
+     * The values of \e lon2 and \e azi2 returned are in the range
+     * [&minus;180&deg;, 180&deg;).
+     *
+     * If \e s12 is large enough that the rhumb line crosses a pole, the
+     * longitude of point 2 is indeterminate (a NaN is returned for \e lon2).
+     **********************************************************************/
+    void GenPosition(real s12, bool areap,
+                     real& lat2, real& lon2, real& S12) const;
 
     /** \name Inspector functions
      **********************************************************************/

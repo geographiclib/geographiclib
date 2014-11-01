@@ -6500,9 +6500,12 @@ of the git repository for GeographicLib.
    - Fix BLUNDER in area calculation in Matlab routine geodreckon.
    - Add area calculation to Matlab/Octave routines for great ellipses
      (still to do: update documentation).
-   - TODO: Add area calculation to Rhumb and RhumbLine.
+   - Add area calculation to Rhumb and RhumbLine.
    - geographiclib-get-{geoids,gravity,magnetic} with no arguments
      prints the usage instead of loading the minimal sets.
+   - Fix bad BUG in Geohash::Reverse; this was introduced in version
+     1.37 and affected all platforms where unsigned longs are 32-bits.
+     Thanks to Christian Csar for reporting and diagnosing this.
 
  - <a href="http://geographiclib.sf.net/1.38">Version 1.38</a>
    (released 2014-10-02)

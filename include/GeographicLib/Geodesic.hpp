@@ -82,7 +82,6 @@ namespace GeographicLib {
    *   defined similarly (with the geodesics being parallel at point 2).  On a
    *   flat surface, we have \e M12 = \e M21 = 1.  The quantity 1/\e M12 gives
    *   the scale of the Cassini-Soldner projection.
-
    * - <i>area</i>.  The area between the geodesic from point 1 to point 2 and
    *   the equation is represented by \e S12; it is the area, measured
    *   counter-clockwise, of the geodesic quadrilateral with corners
