@@ -12,9 +12,10 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
 %   precisely, the value returned by DEFAULTELLIPSOID) is used.  lat2,
 %   lon2, and azi2 give the position and forward azimuths at the end point
-%   in degrees.  GEDOC gives an example and provides additional background
-%   information.  GEDOC also gives the restrictions on the allowed ranges
-%   of the arguments.
+%   in degrees.  The optional output S12 is the area between the great
+%   ellipse and the equator (in meters^2).  GEDOC gives an example and
+%   provides additional background information.  GEDOC also gives the
+%   restrictions on the allowed ranges of the arguments.
 %
 %   When given a combination of scalar and array inputs, GERECKON behaves
 %   as though the inputs were expanded to match the size of the arrays.

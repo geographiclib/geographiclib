@@ -45,6 +45,12 @@ function gedoc
 %     * the inverse problem -- given lat1, lon1, lat2, lon2, determine s12,
 %       azi1, and azi2.  This is solved by GEDISTANCE.
 %
+%   The routines also optionally calculate S12 ,the area between the great
+%   ellipse from point 1 to point 2 and the equator; i.e., it is the area,
+%   measured counter-clockwise, of the quadrilateral with corners
+%   (lat1,lon1), (0,lon1), (0,lon2), and (lat2,lon2).  It is given in
+%   meters^2.
+
 %   The parameters of the ellipsoid are specified by the optional ELLIPSOID
 %   argument to the routines.  This is a two-element vector of the form
 %   [a,e], where a is the equatorial radius, e is the eccentricity e =

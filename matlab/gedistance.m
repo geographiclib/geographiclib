@@ -13,9 +13,10 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 %   omitted, the WGS84 ellipsoid (more precisely, the value returned by
 %   DEFAULTELLIPSOID) is used.  The output s12 is the distance in meters
 %   and azi1 and azi2 are the forward azimuths at the end points in
-%   degrees.  GEDOC gives an example and provides additional background
-%   information.  GEDOC also gives the restrictions on the allowed ranges
-%   of the arguments.
+%   degrees.  The optional output S12 is the area between the great ellipse
+%   and the equator (in meters^2).  GEDOC gives an example and provides
+%   additional background information.  GEDOC also gives the restrictions
+%   on the allowed ranges of the arguments.
 %
 %   When given a combination of scalar and array inputs, the scalar inputs
 %   are automatically expanded to match the size of the arrays.
