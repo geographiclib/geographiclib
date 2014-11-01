@@ -89,8 +89,8 @@ namespace GeographicLib {
     int s = 5 * (maxlen_ - len);
     ulon <<=     (s / 2);
     ulat <<= s - (s / 2);
-    lon = (unsigned long)(ulon) * loneps() - 180;
-    lat = (unsigned long)(ulat) * lateps() - 90;
+    lon = ulon * loneps() - 180;
+    lat = ulat * lateps() - 90;
   }
 
 } // namespace GeographicLib
