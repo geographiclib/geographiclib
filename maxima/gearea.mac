@@ -77,7 +77,7 @@ jtaylor(expr,var1,var2,ord):=block([zz],expand(subst([zz=1],
     ratdisrep(taylor(subst([var1=zz*var1,var2=zz*var2],expr),zz,0,ord)))))$
 
 /* Great ellipse via r */
-computeI4(maxpow):=block([int,r,intexp,area, x,ep2,k2],
+computeG4(maxpow):=block([int,r,intexp,area, x,ep2,k2],
   maxpow:maxpow-1,
   r : sqrt(1+x) + asinh(sqrt(x))/sqrt(x),
   int:-(rf(ep2) - rf(k2*sin(sigma)^2)) / (ep2 - k2*sin(sigma)^2)
@@ -92,7 +92,7 @@ computeI4(maxpow):=block([int,r,intexp,area, x,ep2,k2],
   area:expand(area-subst(sigma=%pi/2,area)),
   for i:0 thru maxpow do G4[i]:coeff(area,cos((2*i+1)*sigma)),
   if expand(area-sum(G4[i]*cos((2*i+1)*sigma),i,0,maxpow)) # 0
-  then error("left over terms in I4"),
+  then error("left over terms in G4"),
   'done)$
 
 codeG4(maxpow):=block([tab1:"  ",nn:maxpow,c],
@@ -131,7 +131,7 @@ block([tt:jtaylor(G4[i],n,eps,ord),
       print(concat(s,if j = ord then ";" else ""))))))$
 
 maxpow:6$
-(computeI4(maxpow),
+(computeG4(maxpow),
   print(""),
   codeG4(maxpow),
   print(""),

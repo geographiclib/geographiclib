@@ -56,7 +56,8 @@ line endings.)  Alternatively you can get the latest release using git
 \verbatim
   git clone -b r1.39 git://git.code.sf.net/p/geographiclib/code geographiclib
 \endverbatim
-There are also binary installers available for some platforms.  See \ref binaryinst.
+There are also binary installers available for some platforms.  See \ref
+binaryinst.
 
 GeographicLib is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -4351,6 +4352,7 @@ here are:
 Go to
  - \ref rhumbform
  - \ref rhumblat
+ - \ref rhumbarea
  - \ref divideddiffs
  - \ref dividedclenshaw
 
@@ -4579,6 +4581,115 @@ These relations allow inter-conversions between the various latitudes
 out simply and accurately.  The approaches using series apply only if
 \f$f\f$ is small.  The others apply for arbitrary values of \f$f\f$.
 
+\section rhumbarea The area under a rhumb line
+
+The area between a rhumb line and the equation is given by
+\f[
+S_{12} = \int_{\lambda_1}^{\lambda_2} c^2 \sin\xi \,d\lambda,
+\f]
+where \f$c\f$ is the authalic radius and \f$\xi\f$ is the authalic
+latitude.  Express \f$\sin\xi\f$ in terms of the conformal latitude
+\f$\chi\f$ and expand as a series in the third flattening \f$n\f$.  This
+can be expressed in terms of powers of \f$\sin\chi\f$.  Substitute
+\f$\sin\chi=\tanh\psi\f$, where \f$\psi\f$ is the isometric latitude.
+For a rhumb line we have
+\f[
+\begin{align}
+\psi &= m(\lambda-\lambda_0),\\
+m &= \frac{\psi_2 - \psi_1}{\lambda_2 - \lambda_1}.
+\end{align}
+\f]
+Performing the integral over \f$\lambda\f$ gives
+\f[
+S_{12} = c^2 \lambda_{12} \left<\sin\xi\right>_{12},
+\f]
+where \f$\left<\sin\xi\right>_{12}\f$ is the mean value of \f$\sin\xi\f$
+given by
+\f[
+\left<\sin\xi\right>_{12} = \frac{S(\chi_2) - S(\chi_1)}{\psi_2 - \psi_1},
+\f]
+with
+\f[
+S(\chi) = \log\sec\chi + \sum_{j=1} R_j\cos(2j\chi),
+\f]
+and \f$R_j = O(n^j)\f$ is given as a series in \f$n\f$ below.
+
+Note the simple way that longitude enters into the expression for the
+area.  In the limit \f$\chi_2 \rightarrow \chi_1\f$, we can apply
+l'H&ocirc;pital's rule
+\f[
+\left<\sin\xi\right>_{12}
+\rightarrow \frac{dS(\chi_1)/d\chi_1}{\sec\chi_1}
+=\sin\xi_1,
+\f]
+as expected.
+
+In order to maintain accuracy, particularly for rhumb lines which nearly
+follow a parallel, evaluate \f$\left<\sin\xi\right>_{12}\f$ using
+divided differences (see the \ref divideddiffs "next section") and use
+Clenshaw summation to evaluate the sum, see the \ref dividedclenshaw
+"last section".
+
+Here is the series expansion accurate to 10th order, found by <a
+href="rhumbarea.mac">rhumbarea.mac</a>:
+
+\verbatim
+R[1] = - 1/3 * n 
+       + 22/45 * n^2 
+       - 356/945 * n^3 
+       + 1772/14175 * n^4 
+       + 41662/467775 * n^5 
+       - 114456994/638512875 * n^6 
+       + 258618446/1915538625 * n^7 
+       - 1053168268/37574026875 * n^8 
+       - 9127715873002/194896477400625 * n^9 
+       + 33380126058386/656284056553125 * n^10; 
+R[2] = - 2/15 * n^2 
+       + 106/315 * n^3 
+       - 1747/4725 * n^4 
+       + 18118/155925 * n^5 
+       + 51304574/212837625 * n^6 
+       - 248174686/638512875 * n^7 
+       + 2800191349/14801889375 * n^8 
+       + 10890707749202/64965492466875 * n^9 
+       - 3594078400868794/10719306257034375 * n^10; 
+R[3] = - 31/315 * n^3 
+       + 104/315 * n^4 
+       - 23011/51975 * n^5 
+       + 1554472/14189175 * n^6 
+       + 114450437/212837625 * n^7 
+       - 8934064508/10854718875 * n^8 
+       + 4913033737121/21655164155625 * n^9 
+       + 591251098891888/714620417135625 * n^10; 
+R[4] = - 41/420 * n^4 
+       + 274/693 * n^5 
+       - 1228489/2027025 * n^6 
+       + 3861434/42567525 * n^7 
+       + 1788295991/1550674125 * n^8 
+       - 215233237178/123743795175 * n^9 
+       + 95577582133463/714620417135625 * n^10; 
+R[5] = - 668/5775 * n^5 
+       + 1092376/2027025 * n^6 
+       - 3966679/4343625 * n^7 
+       + 359094172/10854718875 * n^8 
+       + 7597613999411/3093594879375 * n^9 
+       - 378396252233936/102088631019375 * n^10; 
+R[6] = - 313076/2027025 * n^6 
+       + 4892722/6081075 * n^7 
+       - 1234918799/834978375 * n^8 
+       - 74958999806/618718975875 * n^9 
+       + 48696857431916/9280784638125 * n^10; 
+R[7] = - 3189007/14189175 * n^7 
+       + 930092876/723647925 * n^8 
+       - 522477774212/206239658625 * n^9 
+       - 2163049830386/4331032831125 * n^10; 
+R[8] = - 673429061/1929727800 * n^8 
+       + 16523158892/7638505875 * n^9 
+       - 85076917909/18749059875 * n^10; 
+R[9] = - 39191022457/68746552875 * n^9 
+       + 260863656866/68746552875 * n^10; 
+R[10] = - 22228737368/22915517625 * n^10; 
+\endverbatim
 \section divideddiffs Use of divided differences
 
 Despite our ability to compute latitudes accurately, the way that
@@ -4699,7 +4810,7 @@ rhumb lines for any flattening with full double precision accuracy (the
 maximum error is about 10 nanometers).  I've kept the implementation
 simple, which results in rather a lot of repeated evaluations of
 quantities.  However, in this case, the need for clarity trumps the
-desire for speed..
+desire for speed.
 
 \section dividedclenshaw Clenshaw evaluation of differenced sums
 
@@ -4983,7 +5094,8 @@ Compared to the area under a geodesic, we have
   \f$e'\f$, whereas it is \f$e\cos\gamma_0\f$ that plays the role of the
   eccentricity for the great ellipse.
 
-The series expansion found by <a href="gearea.mac">gearea.mac</a>.
+Here is the series expansion accurate to 10th order, found by <a
+href="gearea.mac">gearea.mac</a>:
 
 \verbatim
 G4[0] = + (1/6 + 7/30 * n + 8/105 * n^2 + 4/315 * n^3 + 16/3465 * n^4 + 20/9009 * n^5 + 8/6435 * n^6 + 28/36465 * n^7 + 32/62985 * n^8 + 4/11305 * n^9)
