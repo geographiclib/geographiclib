@@ -1362,7 +1362,8 @@ The functions fall into the following groups
    - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
      http://www.mathworks.com/matlabcentral/fileexchange/47898</a>
    .
-   (This requires that package 39108 also be installed.)
+   (This requires that package 39108 also be installed.)  Background on
+   this problem is provided in \ref greatellipse.
  - Finally, interface code so that some GeographicLib classes can be
    accessed directly from Matlab or Octave.  The rest of this section
    describes how to compile and use these interfaces.
@@ -4585,7 +4586,7 @@ out simply and accurately.  The approaches using series apply only if
 
 \section rhumbarea The area under a rhumb line
 
-The area between a rhumb line and the equation is given by
+The area between a rhumb line and the equator is given by
 \f[
 S_{12} = \int_{\lambda_1}^{\lambda_2} c^2 \sin\xi \,d\lambda,
 \f]
@@ -4612,9 +4613,9 @@ given by
 \f]
 with
 \f[
-S(\chi) = \log\sec\chi + \sum_{j=1} R_j\cos(2j\chi),
+S(\chi) = \log\sec\chi + \sum_{l=1} R_l\cos(2l\chi),
 \f]
-and \f$R_j = O(n^j)\f$ is given as a series in \f$n\f$ below.  In the
+and \f$R_l = O(n^l)\f$ is given as a series in \f$n\f$ below.  In the
 spherical limit, the sum vanishes.
 
 Note the simple way that longitude enters into the expression for the
@@ -4693,6 +4694,7 @@ R[9] = - 39191022457/68746552875 * n^9
        + 260863656866/68746552875 * n^10;
 R[10] = - 22228737368/22915517625 * n^10;
 \endverbatim
+
 \section divideddiffs Use of divided differences
 
 Despite our ability to compute latitudes accurately, the way that
