@@ -53,9 +53,10 @@ namespace GeographicLib {
    *
    * The geoid height, \e N, can be used to convert a height above the
    * ellipsoid, \e h, to the corresponding height above the geoid (roughly the
-   * height above mean sea level), \e H, using the relation
+   * height above mean sea level), \e H, using the relations
    *
-   * &nbsp;&nbsp;&nbsp;\e h = \e N + \e H.
+   * &nbsp;&nbsp;&nbsp;\e h = \e N + \e H;
+   * &nbsp;&nbsp;\e H = &minus;\e N + \e h.
    *
    * See \ref geoid for details of how to install the data sets, the data
    * format, estimates of the interpolation errors, and how to use caching.

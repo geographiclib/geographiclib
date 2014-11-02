@@ -1514,10 +1514,10 @@ different for each grid resolution.  In addition these tools are written
 in Fortran with is nowadays difficult to integrate with other software.)
 
 The geoid height, \e N, can be used to convert a height above the
-ellipsoid, \e h, to the corresponding height above the geoid (roughly
-the height above mean sea level), \e H, using the relation
+ellipsoid, \e h, to the corresponding height above the geoid (roughly,
+the height above mean sea level), \e H, using the relations
 
-&nbsp;&nbsp;&nbsp;\e h = \e N + \e H.
+&nbsp;&nbsp;&nbsp;\e h = \e N + \e H; &nbsp;&nbsp;\e H = &minus;\e N + \e h.
 
 Unlike other components of GeographicLib, there is a appreciable error
 in the results obtained (at best, the RMS error is 1&nbsp;mm).  However the
