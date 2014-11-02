@@ -1,0 +1,17 @@
+.IX Title "@DATA@ 8"
+.TH @SCRIPT@ 8 "" "GeographicLib" "GeographicLib"
+.SH "NAME"
+@SCRIPT@ \-\- a GeographicLib administrative tool
+.SH "DESCRIPTION"
+.IX Header "DESCRIPTION"
+\&\fB@SCRIPT@\fR downloads and installs the @DATA@ datasets used by
+GeographicLib, <http://geographiclib.sf.net>.  For documentation, supply
+the \fB-h\fR option:
+.PP
+.Vb 2
+\&   @SCRIPT@ -h
+.Ve
+.PP
+By default, the datasets are installed in
+\&\f(CW\*(C`@GEOGRAPHICLIB_DATA@/@DATA@\*(C'\fR and
+the script requires write access to this directory.

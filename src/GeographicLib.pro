@@ -1,10 +1,11 @@
-VERSION = 9.2.4
+VERSION = 14.0.0
 
 TEMPLATE = lib
 
 INCLUDEPATH = ../include
 INCLUDEDIR = $$INCLUDEPATH/GeographicLib
 
+SOURCES += Accumulator.cpp
 SOURCES += AlbersEqualArea.cpp
 SOURCES += AzimuthalEquidistant.cpp
 SOURCES += CassiniSoldner.cpp
@@ -15,7 +16,10 @@ SOURCES += EllipticFunction.cpp
 SOURCES += GeoCoords.cpp
 SOURCES += Geocentric.cpp
 SOURCES += Geodesic.cpp
+SOURCES += GeodesicExact.cpp
+SOURCES += GeodesicExactC4.cpp
 SOURCES += GeodesicLine.cpp
+SOURCES += GeodesicLineExact.cpp
 SOURCES += Geohash.cpp
 SOURCES += Geoid.cpp
 SOURCES += Gnomonic.cpp
@@ -49,7 +53,9 @@ HEADERS += $$INCLUDEDIR/EllipticFunction.hpp
 HEADERS += $$INCLUDEDIR/GeoCoords.hpp
 HEADERS += $$INCLUDEDIR/Geocentric.hpp
 HEADERS += $$INCLUDEDIR/Geodesic.hpp
+HEADERS += $$INCLUDEDIR/GeodesicExact.hpp
 HEADERS += $$INCLUDEDIR/GeodesicLine.hpp
+HEADERS += $$INCLUDEDIR/GeodesicLineExact.hpp
 HEADERS += $$INCLUDEDIR/Geohash.hpp
 HEADERS += $$INCLUDEDIR/Geoid.hpp
 HEADERS += $$INCLUDEDIR/Gnomonic.hpp

@@ -75,8 +75,10 @@ public:
   bool BackUp() {
     if (!_valid || _usesaved)
       return false;             // Can't backup up again
-    else
-      return _usesaved = true;  // Set flag for GetNext
+    else {
+      _usesaved = true;         // Set flag for GetNext
+      return true;
+    }
   }
 };
 

@@ -157,7 +157,8 @@ int main(int argc, char* argv[]) {
           }
         }
         std::istringstream str(s);
-        real lat, lon, h, x, y, z;
+        // initial values to suppress warnings
+        real lat, lon, h, x = 0, y = 0, z = 0;
         std::string stra, strb, strc;
         if (!(str >> stra >> strb >> strc))
           throw GeographicErr("Incomplete input: " + s);

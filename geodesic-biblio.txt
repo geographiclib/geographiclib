@@ -24,7 +24,8 @@
    letter to S. Klingenstierna (1728),
    in ''Johannis Bernoulli, Opera Omnia'', Vol. 4 (Bousquet, Geneva, 1742),
    108--128.[[BR]]
-   http://books.google.com/books?id=Yw1bAAAAQAAJ&pg=PA108 (figures missing)
+   http://books.google.com/books?id=Yw1bAAAAQAAJ&pg=PA108 [[BR]]
+   figures: http://geographiclib.sf.net/geodesic-papers/bernoulli28-fig.pdf
  * J. Cassini,[[BR]]
    ''De la carte de la France et de la perpendiculaire a la méridienne
    de Paris [The map of France and the perpendicular to the meridian of
@@ -60,8 +61,8 @@
    maximum or minimum]''
    (Bousquet, Lausanne, 1744).[[BR]]
    http://books.google.com/books?id=dA1bAAAAQAAJ [[BR]]
-   alt: http://math.dartmouth.edu/~euler/pages/E065.html [[BR]]
-   figures: http://math.dartmouth.edu/~euler/docs/originals/E065h
+   alt: http://eulerarchive.maa.org/pages/E065.html [[BR]]
+   figures: http://eulerarchive.maa.org/docs/originals/E065h
    pp. 15, 17, 19, 21, 23.
  * L. Euler,[[BR]]
    ''Principes de la trigonométrie sphérique tirés de la méthode des
@@ -71,7 +72,9 @@
    223--257 (1753, publ. 1755).[[BR]]
    http://books.google.com/books?id=QIIfAAAAYAAJ&pg=PA223 [[BR]]
    figures: http://books.google.com/books?id=QIIfAAAAYAAJ&pg=PA361 [[BR]]
-   alt: http://math.dartmouth.edu/~euler/pages/E214.html [[BR]]
+   alt: http://eulerarchive.maa.org/pages/E214.html [[BR]]
+   English translation: by G. W. Heine.[[BR]]
+   http://eulerarchive.maa.org/docs/translations/E214en.pdf [[BR]]
    German translation: ''Grundzüge der sphärischen Trigonometrie'' in
    ''Zwei Abhandlungen über sphärische Trigonometrie'' by E. Hammer,
    Ostwald's Klass. ex. Wiss., No. 73 (Engelmann, Leipzig 1896),
@@ -85,14 +88,15 @@
    258--293 (1753, publ. 1755).[[BR]]
    http://books.google.com/books?id=QIIfAAAAYAAJ&pg=PA258 [[BR]]
    figures: http://books.google.com/books?id=QIIfAAAAYAAJ&pg=PA362-IA1 [[BR]]
-   alt: http://math.dartmouth.edu/~euler/pages/E215.html
+   alt: http://eulerarchive.maa.org/pages/E215.html [[BR]]
+   Partial English translation: by J. Lodder.[[BR]]
+   http://eulerarchive.maa.org/docs/translations/E333.pdf
  * L. Euler,[[BR]]
-   ''Recherches sur la courbure des surfaces
-   [The curvature of surfaces]'',
+   ''Recherches sur la courbure des surfaces [The curvature of surfaces]'',
    Mém. de l'Acad. Roy. des Sciences de Berlin '''16''',
    119--143 (1760, publ. 1767).[[BR]]
    http://books.google.com/books&pg=PA119 [[BR]]
-   figures: http://math.dartmouth.edu/~euler/pages/E333.html
+   figures: http://eulerarchive.maa.org/pages/E333.html
  * J. L. Lagrange,[[BR]]
    ''Nouvelle méthode pour résoudre les équations littérales par le moyen
    des séries [New method for solving explicit equations by means of a
@@ -760,6 +764,7 @@
    Geodäsie in neuer Darstellung [Shortest lines on the spheroid
    together with the geodesic problems in a new representation]'',
    (Istwann, Coesfeld, 1865).[[BR]]
+   http://books.google.com/books?id=l35aAAAAcAAJ [[BR]]
    http://sammlungen.uni-muenster.de/hd/content/titleinfo/1012467
  * B. Price,[[BR]]
    ''A Treatise on Infinitesimal Calculus'', Vol. 2
@@ -1205,10 +1210,11 @@
    Application of Nested Equations'',
    Survey Review '''23''' (misprinted as '''22''') (176), 88--93 (1975);
    Addendum: Survey Review '''23'''(180), 294 (1976).[[BR]]
-   http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf
+   http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf [[BR]]
+   http://dx.doi.org/10.1179/sre.1975.23.176.88
  * T. Vincenty,[[BR]]
    ''Geodetic inverse solution between antipodal points'',
-   unpublished report dated Aug. 28, 1975.[[BR]]
+   unpublished report, DMAAC (Aug. 28, 1975).[[BR]]
    http://geographiclib.sf.net/geodesic-papers/vincenty75b.pdf
  * R. H. Rapp,[[BR]]
    ''Geometric geodesy, Part I'',
@@ -1221,8 +1227,10 @@
    Ohio State Univ. (1993), Chap. 1.[[BR]]
    http://hdl.handle.net/1811/24409
  * K. Borre,[[BR]]
-   ''Ellipsoidal Geometry and Conformal Mapping''
-   (Mar. 2001).[[BR]]
+   ''Ellipsoidal Geometry and Conformal Mapping'' (Mar. 2001);
+   these notes, with some modifications, constitute Chaps. 11 & 12
+   of K. Borre & W. G. Strang, ''Algorithms for Global Positioning''
+   (Wellesley-Cambridge Press, 2012) [[BR]]
    http://old.gps.aau.dk/downloads/notes.pdf
  * C. M. Rollins,[[BR]]
    ''An integral for geodesic length'',

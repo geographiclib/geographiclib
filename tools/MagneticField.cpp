@@ -248,10 +248,10 @@ int main(int argc, char* argv[]) {
         try {
           std::string eol("\n");
           if (!cdelim.empty()) {
-            std::string::size_type m = s.find(cdelim);
-            if (m != std::string::npos) {
-              eol = " " + s.substr(m) + "\n";
-              s = s.substr(0, m);
+            std::string::size_type n = s.find(cdelim);
+            if (n != std::string::npos) {
+              eol = " " + s.substr(n) + "\n";
+              s = s.substr(0, n);
             }
           }
           std::istringstream str(s);

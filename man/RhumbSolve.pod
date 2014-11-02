@@ -18,10 +18,15 @@ B<RhumbSolve> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi12> ]
 The path with constant heading between two points on the ellipsoid at
 (I<lat1>, I<lon1>) and (I<lat2>, I<lon2>) is called the rhumb line or
 loxodrome.  Its length is I<s12> and the rhumb line has a forward
-azimuth I<azi12> along its length.  A point at a pole is treated as a
-point a tiny distance away from the pole on the given line of longitude.
-The longitude becomes indeterminate when a rhumb line passes through a
-pole, and B<RhumbSolve> reports NaNs for the longitude in this case.
+azimuth I<azi12> along its length.  Also computed is I<S12> is the area
+between the rhumb line from point 1 to point 2 and the equator; i.e., it
+is the area, measured counter-clockwise, of the geodesic quadrilateral
+with corners (I<lat1>,I<lon1>), (0,I<lon1>), (0,I<lon2>), and
+(I<lat2>,I<lon2>).  A point at a pole is treated as a point a tiny
+distance away from the pole on the given line of longitude.  The
+longitude becomes indeterminate when a rhumb line passes through a pole,
+and B<RhumbSolve> reports NaNs for the longitude and the area in this
+case.
 
 B<NOTE:> the rhumb line is B<not> the shortest path between two points;
 that is the geodesic and it is calculated by GeodSolve(1).
@@ -32,23 +37,23 @@ B<RhumbSolve> operates in one of three modes:
 
 =item 1.
 
-By default, B<RhumbSolve> accepts lines on the standard input
-containing I<lat1> I<lon1> I<azi12> I<s12> and prints I<lat2> I<lon2> on
+By default, B<RhumbSolve> accepts lines on the standard input containing
+I<lat1> I<lon1> I<azi12> I<s12> and prints I<lat2> I<lon2> I<S12> on
 standard output.  This is the direct calculation.
 
 =item 2.
 
 Command line arguments B<-l> I<lat1> I<lon1> I<azi12> specify a rhumb
 line.  B<RhumbSolve> then accepts a sequence of I<s12> values (one per
-line) on standard input and prints I<lat2> I<lon2> for each.  This
-generates a sequence of points on a rhumb line.
+line) on standard input and prints I<lat2> I<lon2> I<S12> for each.
+This generates a sequence of points on a rhumb line.
 
 =item 3.
 
 With the B<-i> command line argument, B<RhumbSolve> performs the inverse
 calculation.  It reads lines containing I<lat1> I<lon1> I<lat2> I<lon2>
-and prints the values of I<azi12> I<s12> for the corresponding shortest
-rhumb lines
+and prints the values of I<azi12> I<s12> I<S12> for the corresponding
+shortest rhumb lines
 
 =back
 
@@ -143,17 +148,17 @@ file name of "-" stands for standard output.
 
 =head1 INPUT
 
-B<RhumbSolve> measures all angles in degrees and all lengths (I<s12>)
-in meters.  On input angles (latitude, longitude, azimuth) can be as
-decimal degrees or degrees (d), minutes ('), seconds (").  A decimal
-point can only appear in the least significant component and the
-designator (d, ', or ") for this component is optional; thus C<40d30>,
-C<40d30'>, C<40.5d>, and C<40.5> are all equivalent.  By default,
-latitude precedes longitude for each point; however on input either
-may be given first by appending (or prepending) I<N> or I<S> to the
-latitude and I<E> or I<W> to the longitude.  Azimuths are measured
-clockwise from north; however this may be overridden with I<E> or
-I<W>.
+B<RhumbSolve> measures all angles in degrees, all lengths (I<s12>) in
+meters, and all areas (I<S12>) in meters^2.  On input angles (latitude,
+longitude, azimuth) can be as decimal degrees or degrees (d), minutes
+('), seconds (").  A decimal point can only appear in the least
+significant component and the designator (d, ', or ") for this component
+is optional; thus C<40d30>, C<40d30'>, C<40.5d>, and C<40.5> are all
+equivalent.  By default, latitude precedes longitude for each point;
+however on input either may be given first by appending (or prepending)
+I<N> or I<S> to the latitude and I<E> or I<W> to the longitude.
+Azimuths are measured clockwise from north; however this may be
+overridden with I<E> or I<W>.
 
 See the C<QUOTING> section of GeoConvert(1) for how to quote the DMS
 designators ' and ".

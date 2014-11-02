@@ -147,13 +147,25 @@ maintainer-clean-local:
 install-doc: html/index.html
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html
 	$(INSTALL) -m 644 `dirname $<`/*.* $(DESTDIR)$(docdir)/html
+	-test -f `dirname $<`/search/search.js && \
+	$(INSTALL) -d $(DESTDIR)$(docdir)/html/search && \
+	$(INSTALL) -m 644 `dirname $<`/search/*.* \
+	$(DESTDIR)$(docdir)/html/search
 	-test -f `dirname $<`/C/index.html && \
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html/C && \
 	$(INSTALL) -m 644 `dirname $<`/C/*.* $(DESTDIR)$(docdir)/html/C
+	-test -f `dirname $<`/C/search/search.js && \
+	$(INSTALL) -d $(DESTDIR)$(docdir)/html/C/search && \
+	$(INSTALL) -m 644 `dirname $<`/C/search/*.* \
+	$(DESTDIR)$(docdir)/html/C/search
 	-test -f `dirname $<`/Fortran/index.html && \
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html/Fortran && \
 	$(INSTALL) -m 644 `dirname $<`/Fortran/*.* \
 	$(DESTDIR)$(docdir)/html/Fortran
+	-test -f `dirname $<`/Fortran/search/search.js && \
+	$(INSTALL) -d $(DESTDIR)$(docdir)/html/Fortran/search && \
+	$(INSTALL) -m 644 `dirname $<`/Fortran/search/*.* \
+	$(DESTDIR)$(docdir)/html/Fortran/search
 	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts
 	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(DESTDIR)$(docdir)/scripts
 	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts/GeographicLib

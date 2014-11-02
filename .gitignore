@@ -19,6 +19,7 @@
 *~
 .#*
 .nfs*
+.DS_Store
 /BUILD*/
 /autom4te.cache/
 /geoids-distrib/

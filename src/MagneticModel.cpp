@@ -173,7 +173,9 @@ namespace GeographicLib {
     real X, Y, Z;
     real M[Geocentric::dim2_];
     _earth.IntForward(lat, lon, h, X, Y, Z, M);
-    real BX0, BY0, BZ0, BX1, BY1, BZ1; // Components in geocentric basis
+    // Components in geocentric basis
+    // initial values to suppress warning
+    real BX0 = 0, BY0 = 0, BZ0 = 0, BX1 = 0, BY1 = 0, BZ1 = 0;
     _harm[n](X, Y, Z, BX0, BY0, BZ0);
     _harm[n + 1](X, Y, Z, BX1, BY1, BZ1);
     if (interpolate) {

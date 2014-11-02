@@ -4,6 +4,7 @@ IndexIgnore HEADER.html FOOTER.html helmert80-en.pdf helmert84-en.pdf
 ReadmeName FOOTER.html
 AddDescription "An online geodesic bibliography" biblio.html
 AddDescription "Bagratuni, Course in Spheroidal Geodesy (1967)" bagratuni67.pdf
+AddDescription "Bernoulli (1728), missing figures from Google scan" bernoulli28-fig.pdf
 AddDescription "Braunmühl (1879), missing figures from Google scan" braunmuehl79-fig.pdf
 AddDescription "Braunmühl (1882), missing figures from Google scan" braunmuehl82-fig.pdf
 AddDescription "du Séjour (1789), missing page from Google scan" dusejour89-add.pdf

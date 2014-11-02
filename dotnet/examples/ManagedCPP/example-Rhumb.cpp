@@ -1,7 +1,8 @@
 using namespace System;
 using namespace NETGeographicLib;
 
-int main(array<System::String ^> ^args)
+int main(array<System::String ^> ^/*args*/
+)
 {
   try {
     Rhumb^ rhumb = gcnew Rhumb(Constants::WGS84::MajorRadius, Constants::WGS84::Flattening, true);

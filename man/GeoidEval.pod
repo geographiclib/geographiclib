@@ -30,6 +30,16 @@ eastings and northings in a single zone to be used as standard input.
 More accurate results for the geoid height are provided by Gravity(1).
 This utility can also compute the direction of gravity accurately.
 
+The geoid height, I<N>, can be used to convert a height above the
+ellipsoid, I<h>, to the corresponding height above the geoid (roughly
+the height above mean sea level), I<H>, using the relations
+
+=over
+
+I<h> = I<N> + I<H>, E<nbsp>E<nbsp>I<H> = -I<N> + I<h>.
+
+=back
+
 =head1 OPTIONS
 
 =over

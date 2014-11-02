@@ -51,6 +51,13 @@ namespace GeographicLib {
    * this class evaluates the height by interpolation into a grid of
    * precomputed values.
    *
+   * The geoid height, \e N, can be used to convert a height above the
+   * ellipsoid, \e h, to the corresponding height above the geoid (roughly the
+   * height above mean sea level), \e H, using the relations
+   *
+   * &nbsp;&nbsp;&nbsp;\e h = \e N + \e H;
+   * &nbsp;&nbsp;\e H = &minus;\e N + \e h.
+   *
    * See \ref geoid for details of how to install the data sets, the data
    * format, estimates of the interpolation errors, and how to use caching.
    *
@@ -146,7 +153,8 @@ namespace GeographicLib {
         }
         try {
           filepos(ix, iy);
-          char a, b;
+          // initial values to suppress warnings in case get fails
+          char a = 0, b = 0;
           _file.get(a);
           _file.get(b);
           unsigned r = ((unsigned char)(a) << 8) | (unsigned char)(b);

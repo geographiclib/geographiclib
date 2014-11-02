@@ -11,8 +11,8 @@ namespace GeographicLib {
 /**
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.37
-\date 2014-08-08
+\version 1.39
+\date 2014-mm-dd
 
 \section abstract Abstract
 
@@ -45,24 +45,21 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.37.tar.gz">
-  GeographicLib-1.37.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.37.zip">
-  GeographicLib-1.37.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.39.tar.gz">
+  GeographicLib-1.39.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.39.zip">
+  GeographicLib-1.39.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
 line endings.)  Alternatively you can get the latest release using git
 \verbatim
-  git clone -b r1.37 git://git.code.sf.net/p/geographiclib/code geographiclib
+  git clone -b r1.39 git://git.code.sf.net/p/geographiclib/code geographiclib
 \endverbatim
-There are also binary installers for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.37-win32.exe">
-  GeographicLib-1.37-win32.exe</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.37-win64.exe">
-  GeographicLib-1.37-win64.exe</a>
-.
-It is licensed under the
+There are also binary installers available for some platforms.  See \ref
+binaryinst.
+
+GeographicLib is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
 see <a href="LICENSE.txt">LICENSE.txt</a> for the terms.
 For more information, see http://geographiclib.sourceforge.net/.
@@ -80,8 +77,10 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref geodesic
  - \ref triaxial
  - \ref rhumb
+ - \ref greatellipse
  - \ref transversemercator
  - \ref geocentric
+ - \ref auxlat
  - \ref highprec
  - \ref changes
 
@@ -107,7 +106,7 @@ geodesic calculations.
 
 The goals of GeographicLib are:
  - Accuracy.  In most applications the accuracy is close to round-off,
-   about 5 nm (5 nanometers).  Even though in many geographic
+   about 5&nbsp;nm (5 nanometers).  Even though in many geographic
    applications 1 cm is considered "accurate enough", there is little
    penalty in providing much better accuracy.  In situations where a
    faster approximate algorithm is necessary, GeographicLib offers an
@@ -183,14 +182,14 @@ GeographicLib has been developed under Linux with the g++ compiler
 2012, and 2013.  Earlier versions were tested also under Visual Studio
 2005 and 2008 and under Darwin and Solaris.  It should compile on a wide
 range of other systems.  First download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37.tar.gz">
-GeographicLib-1.37.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37.zip">
-GeographicLib-1.37.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37-win32.exe">
-GeographicLib-1.37-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37-win64.exe">
-GeographicLib-1.37-win64.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.39.tar.gz">
+GeographicLib-1.39.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.39.zip">
+GeographicLib-1.39.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.39-win32.exe">
+GeographicLib-1.39-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.39-win64.exe">
+GeographicLib-1.39-win64.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -201,7 +200,7 @@ Then pick one of the first five options below:
   and GNU make on Linux and many Unix platforms.
 - \ref windows.  This is a simple installation method that works with
   Visual Studio 2005, 2008, and 2010 under Windows.
-- \ref windowsbin.  Use this installation method if you only need to use
+- \ref binaryinst.  Use this installation method if you only need to use
   the \ref utilities supplied with GeographicLib.  (This method also
   installs the header files and the library for use by Visual Studio 10.)
 - \ref qt.  How to compile GeographicLib so that it can be used by Qt
@@ -266,10 +265,10 @@ work also for Visual Studio 12 Express (2013).
 
 Here are the steps to compile and install GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.37.tar.gz
-  unzip -q GeographicLib-1.37.zip \endverbatim
+  tar xfpz GeographicLib-1.39.tar.gz
+  unzip -q GeographicLib-1.39.zip \endverbatim
   then enter the directory created with one of \verbatim
-  cd GeographicLib-1.37 \endverbatim
+  cd GeographicLib-1.39 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -277,8 +276,8 @@ Here are the steps to compile and install GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically one of \verbatim
-  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.37 ..
-  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.37 ..
+  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.39 ..
+  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.39 ..
 \endverbatim
   The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
   settings given above are recommended to ensure that packages that use
@@ -294,7 +293,7 @@ Here are the steps to compile and install GeographicLib:
     convention.  If it is on ON (the Linux default), the installation
     is to a common directory, e.g., /usr/local.  If it is OFF (the
     Windows default), the installation directory contains the package
-    name, e.g., C:/pkg/GeographicLib-1.37.  The installation
+    name, e.g., C:/pkg/GeographicLib-1.39.  The installation
     directories for the documentation, cmake configuration, python and
     matlab interfaces all depend on the variable with deeper paths
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
@@ -309,7 +308,7 @@ Here are the steps to compile and install GeographicLib:
     For windows systems, it is recommended to use a prefix which
     includes the compiler version, as shown above (and also, possibly,
     whether this is a 64-bit build, e.g., <code>cmake -G "Visual Studio
-    10 Win64" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.37
+    10 Win64" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.39
     ..</code>).  If you just want to try the library to see if it suits
     your needs, pick, for example,
     <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
@@ -406,9 +405,9 @@ Here are the steps to compile and install GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.37.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.39.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.37 \endverbatim
+  cd GeographicLib-1.39 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -437,9 +436,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.37.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.39.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.37 \endverbatim
+  cd GeographicLib-1.39 \endverbatim
 - Edit \verbatim
   include/GeographicLib/Config.h \endverbatim
   If your C++ compiler does not recognize the long double type
@@ -470,8 +469,8 @@ static library and the utilities.  If you only have Visual Studio 2003,
 use cmake to create the necessary solution file, see \ref cmake.  (cmake
 is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.37.zip \endverbatim
-- Open GeographicLib-1.37/windows/GeographicLib-vc10.sln in Visual Studio
+  unzip -q GeographicLib-1.39.zip \endverbatim
+- Open GeographicLib-1.39/windows/GeographicLib-vc10.sln in Visual Studio
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9;
   for Visual Studio Express 2010, replace -vc10 by -vc10x).
 - Pick the build type (e.g., Release), and select "Build Solution".
@@ -489,24 +488,28 @@ is needed to build the Matlab interface and to run the tests.)
 The Visual Studio 10 solution also contains projects to build
 <a href="NET/index.html">NETGeographicLib</a> and the C# example project.
 
-\section windowsbin Using a binary installer for Windows
+\section binaryinst Using a binary installer
+
+Binary installers are available for some platforms
+
+\subsection binaryinstwin Windows
 
 Use this method if you only need to use the GeographicLib utilities.
 The header files and static and shared versions of library are also
-provided; these can only be used by Visual Studio 2010 (in either
+provided; these can only be used by Visual Studio 11 2012 (in either
 release or debug mode).  However, if you plan to use the library, it may
 be advisable to build it with the compiler you are using for your own
 code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37-win32.exe">
-GeographicLib-1.37-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.37-win64.exe">
-GeographicLib-1.37-win64.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.39-win32.exe">
+GeographicLib-1.39-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.39-win64.exe">
+GeographicLib-1.39-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc10\\GeographicLib-1.37 or C:\\pkg-vc10-x64\\GeographicLib-1.37,
+   C:\\pkg-vc10\\GeographicLib-1.39 or C:\\pkg-vc10-x64\\GeographicLib-1.39,
  - select the start menu folder,
  - and install.
  .
@@ -514,18 +517,32 @@ GeographicLib-1.37-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc10/GeographicLib-1.37/bin where the utilities are
+will include C:/pkg-vc11/GeographicLib-1.39/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the matlab folder.  Add this to your
 path in Matlab to access this interface.  The libraries were built using
-using Visual Studio 10 in release and debug modes.  The utilities were
+using Visual Studio 11 2012 in release and debug modes.  The utilities were
 linked against the release-mode shared library.  The Matlab interface
 was compiled with Matlab R2013a 64-bit, however it may work with some
 other 64-bit versions of Matlab.
 <a href="NET/index.html">NETGeographicLib</a> library dlls (release and
 debug) are included with the binary installers; these are linked against
 the shared library for GeographicLib.
+
+\subsection binaryinstosx MacOSX
+
+You can install using Homebrew.  Follow the directions on
+http://brew.sh/ for installing this package manager.  Then type
+\verbatim
+brew install geographiclib \endverbatim
+Now links to GeographicLib are installed under /usr/local.
+
+\subsection binaryinstlin Linux
+
+Some Linux distributions, Debian and Ubuntu, offer GeographicLib as a
+standard package.  Typically these will be one or two verions behind the
+latest.
 
 \section qt Building the library for use with Qt
 
@@ -565,7 +582,7 @@ Check the code out of git with \verbatim
 Here the "master" branch is checked out.  There are three branches in
 the git repository:
 - <b>master</b>: the main branch for code maintainence.  Releases are
-  tagged on this branch as, e.g., v1.37.
+  tagged on this branch as, e.g., v1.39.
 - <b>devel</b>: the development branch; changes made here are merged
   into master.
 - <b>release</b>: the release branch created by unpacking the source
@@ -575,7 +592,7 @@ the git repository:
   specifying a branch).  This differs from the master branch in that
   some administrative files are excluded while some intermediate files
   are included (in order to aid building on as many platforms as
-  possible).  Releases are tagged on this branch as, e.g., r1.37.
+  possible).  Releases are tagged on this branch as, e.g., r1.39.
 .
 The autoconf configuration script and the formatted man pages are not
 checked into master branch of the repository.  In order to create the
@@ -591,8 +608,8 @@ In the case of cmake, you then run \verbatim
 which will copy the man pages from the build directory back into the
 source tree and package the resulting source tree for distribution as
 \verbatim
-  GeographicLib-1.37.tar.gz
-  GeographicLib-1.37.zip \endverbatim
+  GeographicLib-1.39.tar.gz
+  GeographicLib-1.39.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -618,7 +635,7 @@ With configure, run \verbatim
   make dist-gzip \endverbatim
 which will create the additional files and packages the results ready
 for distribution as \verbatim
-  geographiclib-1.37.tar.gz \endverbatim
+  geographiclib-1.39.tar.gz \endverbatim
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
@@ -708,7 +725,7 @@ In order to use GeographicLib from C++ code, you will need to
 
   If GeographicLib is found, then the following cmake variables are set:
   - <code>GeographicLib_FOUND</code> = 1
-  - <code>GeographicLib_VERSION</code> = 1.37
+  - <code>GeographicLib_VERSION</code> = 1.39
   - <code>GeographicLib_INCLUDE_DIRS</code>
   - <code>GeographicLib_LIBRARIES</code> = one of the following two:
   - <code>GeographicLib_SHARED_LIBRARIES</code> = GeographicLib
@@ -842,19 +859,19 @@ The next steps are:
 
 Here's a list of some of the abbreviations used here with links to the
 corresponding Wikipedia articles:
- - <a href="http://en.wikipedia.org/wiki/WGS84">
+ - <a href="https://en.wikipedia.org/wiki/WGS84">
    WGS84</a>, World Geodetic System 1984.
- - <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">
+ - <a href="https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">
    UTM</a>, Universal Transverse Mercator coordinate system.
- - <a href="http://en.wikipedia.org/wiki/Universal_Polar_Stereographic">
+ - <a href="https://en.wikipedia.org/wiki/Universal_Polar_Stereographic">
    UPS</a>, Universal Polar Stereographic coordinate system.
- - <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">
+ - <a href="https://en.wikipedia.org/wiki/Military_grid_reference_system">
    MGRS</a>, Military Grid Reference System.
- - <a href="http://en.wikipedia.org/wiki/Geoid">
+ - <a href="https://en.wikipedia.org/wiki/Geoid">
    EGM</a>, Earth Gravity Model.
- - <a href="http://en.wikipedia.org/wiki/World_Magnetic_Model">
+ - <a href="https://en.wikipedia.org/wiki/World_Magnetic_Model">
    WMM</a>, World Magnetic Model.
- - <a href="http://en.wikipedia.org/wiki/IGRF">
+ - <a href="https://en.wikipedia.org/wiki/IGRF">
    IGRF</a>, International Geomagnetic Reference Field.
 
 <center>
@@ -1138,10 +1155,10 @@ can test the values of the macros GEOGRAPHICLIB_VERSION_MAJOR,
 GEOGRAPHICLIB_VERSION_MINOR, and GEOGRAPHICLIB_VERSION_PATCH; these
 expand to numbers (and the last one is usually 0); these macros appeared
 starting in version 1.31.  There's also a macro
-GEOGRAPHICLIB_VERSION_STRING which expands to, e.g., "1.37"; this macro
+GEOGRAPHICLIB_VERSION_STRING which expands to, e.g., "1.39"; this macro
 has been defined since version 1.9.  Since version 1.37, there's also
-been a macro GEOGRAPHICLIB_VERSION which encode the vesion as a single
-number, e.g, 1003700.  The macro GEOGRAPHICLIB_VERSION_NUM allows you to
+been a macro GEOGRAPHICLIB_VERSION which encode the version as a single
+number, e.g, 1003900.  The macro GEOGRAPHICLIB_VERSION_NUM allows you to
 compare versions, e.g., \code
 #if GEOGRAPHICLIB_VERSION >= GEOGRAPHICLIB_VERSION_NUM(1,36,0)
 ... \endcode
@@ -1292,13 +1309,18 @@ of the Australian Communications and Media Authority.)
 
 \section matlab Matlab and Octave implementations
 
-The <code>matlab</code> directory contains
- - Native Matlab implementations of the geodesic routines.  To use
-   these, start Matlab or Octave and run one of (for example) \verbatim
+The <code>matlab</code> directory Matlab and Octave implementations of
+some of the functions of GeographicLib.  To use
+these, start Matlab or Octave and run one of (for example) \verbatim
    addpath /usr/local/libexec/GeographicLib/matlab
-   addpath 'C:/pkg-vc10-x64/GeographicLib-1.37/libexec/GeographicLib/matlab'
+   addpath 'C:/pkg-vc10-x64/GeographicLib-1.39/libexec/GeographicLib/matlab'
    \endverbatim
-   The available functions are:
+
+The functions fall into the following groups
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
+   Geodesics on an ellipsoid of revolution</a>, native Matlab
+   implementations of the geodesic routines.  The available functions
+   are
    - geoddoc: briefly descibe the routines
    - geodreckon: solve the direct geodesic problem
    - geoddistance: solve the inverse geodesic problem
@@ -1307,13 +1329,13 @@ The <code>matlab</code> directory contains
    Use the help function to get documentation, e.g., \code
    help geoddistance \endcode
    to obtain documentation.  These functions are also available as a
-   standalone package from
-   <a href="http://www.mathworks.com/matlabcentral/fileexchange/">
-   Matlab File Exchange</a> using the link
+   Matlab File Exchange package from
    - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
      http://www.mathworks.com/matlabcentral/fileexchange/39108</a>
- - Native Matlab implementations of projections which are related to
-   geodesics.  These are
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
+   Geodesic projections for an ellipsoid</a>, native Matlab
+   implementations of projections which are related to geodesics.  These
+   are
    - geodproj: briefly descibe the routines
    - eqdazim_fwd, eqdazim_inv: azimuthal equidistant
    - cassini_fwd, cassini_inv: Cassini-Soldner
@@ -1321,16 +1343,30 @@ The <code>matlab</code> directory contains
    - gnomonic_fwd, gnomonic_inv: ellipsoidal gnomonic
    - utm_fwd, utm_inv: universal transverse Mercator
    .
-   These functions are also available as a package from
-   <a href="http://www.mathworks.com/matlabcentral/fileexchange/">
-   Matlab File Exchange</a> using the link
+   These functions are also available as a Matlab File Exchange package
+   from
    - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
      http://www.mathworks.com/matlabcentral/fileexchange/39366</a>
    .
    (This requires that the previous package also be installed.)
- - Interface code so that some GeographicLib classes can be accessed
-   from Matlab or Octave.  The rest of this section describes how to
-   compile and use these interfaces.
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
+   Great ellipses</a>, implementations of solutions to the great ellipse
+   problems.  The functions are
+   - gedoc: briefly descibe the routines
+   - gereckon: solve the direct great circle problem
+   - gedistance: solve the inverse great circle problem
+   .
+   The functionality provided by these routines is <i>not</i> available
+   through GeographicLib's C++ library.  These functions are also
+   available as a Matlab File Exchange package from
+   - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
+     http://www.mathworks.com/matlabcentral/fileexchange/47898</a>
+   .
+   (This requires that package 39108 also be installed.)  Background on
+   this problem is provided in \ref greatellipse.
+ - Finally, interface code so that some GeographicLib classes can be
+   accessed directly from Matlab or Octave.  The rest of this section
+   describes how to compile and use these interfaces.
 
 There are two ways of compiling the interface code: (1) using cmake and
 (2) invoking the compiler from Matlab.
@@ -1367,9 +1403,9 @@ There are two ways of compiling the interface code: (1) using cmake and
  - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
    Octave and run, e.g., \code
    mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-1.37/matlab'
+   cd 'C:/pkg-vc10-x64/GeographicLib-1.39/matlab'
    help geographiclibinterface
-   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.37');
+   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.39');
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
@@ -1378,7 +1414,7 @@ There are two ways of compiling the interface code: (1) using cmake and
 To use the interface routines for GeographicLib, run one of (for
 example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-1.37/libexec/GeographicLib/matlab'
+  addpath 'C:/pkg-vc10-x64/GeographicLib-1.39/libexec/GeographicLib/matlab'
 \endverbatim
 in Octave or Matlab.  The available functions are:
  - geodesicdirect: solve direct geodesic problem
@@ -1459,8 +1495,8 @@ of the geoid above the WGS84 ellipsoid.  This can be used to convert
 heights above mean sea level to heights above the WGS84 ellipsoid.
 Because the normal to the ellipsoid differs from the normal to the geoid
 (the direction of a plumb line) there is a slight ambiguity in the
-measurement of heights; however for heights up to 10 km this ambiguity
-is only 1 mm.
+measurement of heights; however for heights up to 10&nbsp;km this ambiguity
+is only 1&nbsp;mm.
 
 The geoid is usually approximated by an "earth gravity model" (EGM).
 The models published by the NGA are:
@@ -1477,8 +1513,14 @@ offers are different for each geoid, and the interpolation programs are
 different for each grid resolution.  In addition these tools are written
 in Fortran with is nowadays difficult to integrate with other software.)
 
+The geoid height, \e N, can be used to convert a height above the
+ellipsoid, \e h, to the corresponding height above the geoid (roughly,
+the height above mean sea level), \e H, using the relations
+
+&nbsp;&nbsp;&nbsp;\e h = \e N + \e H; &nbsp;&nbsp;\e H = &minus;\e N + \e h.
+
 Unlike other components of GeographicLib, there is a appreciable error
-in the results obtained (at best, the RMS error is 1 mm).  However the
+in the results obtained (at best, the RMS error is 1&nbsp;mm).  However the
 class provides methods to report the maximum and RMS errors in the
 results.  The class also returns the gradient of the geoid.  This can be
 used to estimate the direction of a plumb line relative to the WGS84
@@ -1692,8 +1734,8 @@ PGM simple graphic format with the following properties
   GeographicLib).
 .
 The major drawback of this format is that since there are only 65535
-possible pixel values, the height must be quantized to 3 mm.  However,
-the resulting quantization error (up to 1.5 mm) is typically smaller
+possible pixel values, the height must be quantized to 3&nbsp;mm.  However,
+the resulting quantization error (up to 1.5&nbsp;mm) is typically smaller
 than the linear interpolation errors.  The comments in the header for
 egm96-5 are
 \verbatim
@@ -1823,7 +1865,7 @@ The algorithm for the least squares fit is taken from, F. H. Lesh,
 Multi-dimensional least-squares polynomial curve fitting, CACM 2, 29-30
 (1959).  This algorithm is not part of Geoid; instead it is
 implemented as
-<a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>
+<a href="https://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>
 code which is used to precompute the matrices to convert the function
 values on the stencil into the coefficients from the cubic polynomial.
 This code is included as a comment in Geoid.cpp.
@@ -1876,12 +1918,12 @@ The errors are with respect to the specific NGA earth gravity model
 uniformly distributed random points.  The maximum values are obtained by
 evaluating the errors using a different grid with points at the
 centers of the original grid.  (The RMS difference between EGM96 and
-EGM2008 is about 0.5 m.  The RMS difference between EGM84 and EGM96 is
-about 1.5 m.)
+EGM2008 is about 0.5&nbsp;m.  The RMS difference between EGM84 and EGM96 is
+about 1.5&nbsp;m.)
 
 The errors in the table above include the quantization errors that arise
 because the height data that Geoid uses are quantized to
-3 mm.  If, instead, Geoid were to use data files without
+3&nbsp;mm.  If, instead, Geoid were to use data files without
 such quantization artifacts, the overall error would be reduced <i>but
 only modestly</i> as shown in the following table, where only the
 changed rows are included and where the changed entries are given in
@@ -2318,14 +2360,14 @@ issues that I encountered using the NGA code:
     1 part in 10<sup>9</sup>), there should be a 1/\e r contribution to
     the disturbing potential \e T.  However, this term is set to zero in
     hsynth_WGS84 (effectively altering the normal potential).  This
-    shifts the surface \e W = <i>U</i><sub>0</sub> outward by about 5 mm.
-    Note too that the reference ellipsoid is no longer a level surface of
-    the effective normal potential.
+    shifts the surface \e W = <i>U</i><sub>0</sub> outward by about
+    5&nbsp;mm.  Note too that the reference ellipsoid is no longer a
+    level surface of the effective normal potential.
  -# Subroutine <code>radgrav</code> computes the ellipsoidal coordinate
     &beta; incorrectly.  This leads to small errors in the deflection
     of the vertical, &xi; and &eta;, when the height above the
     ellipsoid, \e h, is non-zero (about 10<sup>&minus;7</sup> arcsec at
-    \e h = 400 km).
+    \e h = 400&nbsp;km).
  -# There are several expressions which will return inaccurate results
     due to cancellation.  For example, subroutine <code>grs</code>
     computes the flattening using \e f = 1 &minus; sqrt(1 &minus;
@@ -2333,7 +2375,7 @@ issues that I encountered using the NGA code:
     <i>e</i><sup>2</sup>/(1 + sqrt(1 &minus; <i>e</i><sup>2</sup>)).  The
     expressions for \e q and \e q' in <code>grs</code> and
     <code>radgrav</code> suffer from similar problems.  The resulting
-    errors are tiny (about 50 pm in the geoid height); however, given
+    errors are tiny (about 50&nbsp;pm in the geoid height); however, given
     that's there's essentially no cost to using more accurate
     expressions, it's preferable to do so.
  -# hsynth_WGS84 returns an "undefined" value for \e xi and \e eta at the
@@ -2372,16 +2414,16 @@ to use a consistent definition of the geoid height.
  - The surface \e W = <i>U</i><sub>0</sub> is determined by Bruns'
    formula, which is roughly equivalent to a single iteration of
    Newton's method.  The RMS error in this approximation is about 1.5mm
-   with a maximum error of about 10 mm.
+   with a maximum error of about 10&nbsp;mm.
  - The model potential is only valid above the earth's surface.  A
    correction therefore needs to be included where the geoid lies
    beneath the terrain.  This is NGA's "zeta-to-N" correction, which is
    represented by a spherical harmonic sum of degree and order 2160 (and
    so it misses short wavelength terrain variations).  In addition, it
    entails estimating the isostatic equilibrium of the earth's crust.
-   The correction lies in the range [&minus;5.05 m, 0.05 m], however for 99.9%
-   of the earth's surface the correction is less than 10 mm in
-   magnitude.
+   The correction lies in the range [&minus;5.05&nbsp;m, 0.05&nbsp;m],
+   however for 99.9% of the earth's surface the correction is less than
+   10&nbsp;mm in magnitude.
  - The resulting surface lies above the observed mean sea level,
    so &minus;0.41m is added to the geoid height.  (Better would be to change
    the potential used to define the geoid; but this would only change
@@ -2458,13 +2500,14 @@ The value of \e GM includes the mass of the atmosphere and so strictly
 only applies above the earth's atmosphere.  Near the surface of the
 earth, the value of \e g will be less (in absolute value) than the value
 predicted by these models by about &delta;\e g = (4&pi;<i>G</i>/\e
-g) \e A = 8.552 &times; 10<sup>&minus;11</sup> \e A m<sup>2</sup>/kg,
-where \e G is the gravitational constant, \e g is the earth's gravity,
-and \e A is the pressure of the atmosphere.  At sea level we have \e A =
-101.3 kPa, and &delta;\e g = 8.7 &times; 10<sup>&minus;6</sup> m
-s<sup>&minus;2</sup>, approximately.  (In other words the effect is
-about 1&nbsp;part in a million; by way of comparison, buoyancy effects
-are about 100 times larger.)
+g) \e A = 8.552&nbsp;&times;&nbsp;10<sup>&minus;11</sup> \e
+A&nbsp;m<sup>2</sup>/kg, where \e G is the gravitational constant, \e g
+is the earth's gravity, and \e A is the pressure of the atmosphere.  At
+sea level we have \e A = 101.3&nbsp;kPa, and &delta;\e g =
+8.7&minus;&times;&minus;10<sup>&minus;6</sup>&nbsp;m&nbsp;s<sup>&minus;2</sup>,
+approximately.  (In other words the effect is about 1&nbsp;part in a
+million; by way of comparison, buoyancy effects are about 100 times
+larger.)
 
 \section gravityparallel Geoid heights on a multi-processor system
 
@@ -2474,7 +2517,7 @@ for example it takes about 78 ms to compute the geoid height at a single
 point.  There are two ways to speed up this computation:
  - Use a GravityCircle to compute the geoid height at
    several points on a circle of latitude.  This reduces the cost per
-   point to about 92 &mu;s (a reduction by a factor of over 800).
+   point to about 92&nbsp;&mu;s (a reduction by a factor of over 800).
  - Compute the values on several circles of latitude in parallel.  One
    of the simplest ways of doing this is with
    <a href="http://openmp.org"> OpenMP</a>; on an 8-processor system,
@@ -2825,7 +2868,7 @@ Go to
 For some background information on geodesics on triaxial ellipsoids, see
 \ref triaxial.
 
-References
+References:
  - F. W. Bessel,
    <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation
    of longitude and latitude from geodesic measurements (1825)</a>,
@@ -2840,10 +2883,12 @@ References
  - J. Danielsen,
    The Area under the Geodesic,
    Survey Review 30(232), 61--66 (1989).
+   DOI: <a href="http://dx.doi.org/10.1179/003962689791474267">
+   10.1179/003962689791474267</a>
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
-   J. Geodesy 87(1), 43--55 (Jan. 2013);
+   J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
    addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
@@ -2853,7 +2898,7 @@ References
  - A collection of some papers on geodesics is available at
    http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
  - The wikipedia page,
-   <a href="http://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
+   <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
    Geodesics on an ellipsoid</a>.
 
 \section testgeod Test data for geodesics
@@ -2881,9 +2926,9 @@ Each line of the test set gives 10 space delimited numbers
  - geodesic distance from point 1 to point 2, \e s12 (meters, exact)
  - arc distance on the auxiliary sphere, \e a12 (degrees, accurate to
    10<sup>&minus;18</sup> deg)
- - reduced length of the geodesic, \e m12 (meters, accurate to 0.1 pm)
+ - reduced length of the geodesic, \e m12 (meters, accurate to 0.1&nbsp;pm)
  - the area under the geodesic, \e S12 (m<sup>2</sup>, accurate to
-   1 mm<sup>2</sup>)
+   1&nbsp;mm<sup>2</sup>)
  .
 These are computed using as direct geodesic calculations with the given
 \e lat1, \e lon1, \e azi1, and \e s12.  The distance \e s12 always
@@ -2893,13 +2938,14 @@ simplicity and without loss of generality, \e lat1 is chosen in
 [0&deg;, 90&deg;], \e lon1 is taken to be zero, \e azi1 is
 chosen in [0&deg;, 180&deg;].  Furthermore, \e lat1 and \e
 azi1 are taken to be multiples of 10<sup>&minus;12</sup> deg and \e s12
-is a multiple of 0.1 &mu;m in [0 m, 20003931.4586254 m].  This results \e
-lon2 in [0&deg;, 180&deg;] and \e azi2 in [0&deg;, 180&deg;].
+is a multiple of 0.1&nbsp;&mu;m in [0&nbsp;m, 20003931.4586254&nbsp;m].
+This results \e lon2 in [0&deg;, 180&deg;] and \e azi2 in [0&deg;,
+180&deg;].
 
 The direct calculation uses an expansion of the geodesic equations
 accurate to <i>f</i><sup>30</sup> (approximately 1 part in 10<sup>50</sup>)
 and is computed with with
-<a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
+<a href="https://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
 bfloats and fpprec set to 100 (so the errors in the data are probably
 1/2 of the values quoted above).
 
@@ -2915,7 +2961,7 @@ The contents of the file are as follows:
  - 50000 entries ending close to vertices
  .
 (a total of 500000 entries).  The values for \e s12 for the geodesics
-running between vertices are truncated to a multiple of 0.1 pm and this
+running between vertices are truncated to a multiple of 0.1&nbsp;pm and this
 is used to determine point 2.
 
 This data can be fed to the <a href="GeodSolve.1.html">GeodSolve</a>
@@ -2958,7 +3004,7 @@ GeodesicExact).
 We give here the series expansions for the various geodesic integrals
 valid to order <i>f</i><sup>10</sup>.  In this release of the code, we
 use a 6th-order expansions.  This is sufficient to maintain accuracy
-for doubles for the SRMmax ellipsoid (\e a = 6400 km, \e f = 1/150).
+for doubles for the SRMmax ellipsoid (\e a = 6400&nbsp;km, \e f = 1/150).
 However, the preprocessor macro GEOGRAPHICLIB_GEODESIC_ORDER can be
 used to select any order up to 8.  (If using long doubles, with a
 64-bit fraction, the default order is 7.)  The series expanded to
@@ -2996,10 +3042,10 @@ The formula for distance is
 \f]
 where
 \f[
-\begin{aligned}
+\begin{align}
   I_1(\sigma) &= A_1\bigl(\sigma + B_1(\sigma)\bigr) \\
   B_1(\sigma) &= \sum_{j=1} C_{1j} \sin 2j\sigma
-\end{aligned}
+\end{align}
 \f]
 and
 \verbatim
@@ -3083,19 +3129,19 @@ C1'[10] = + 9303339907/2972712960 * eps^10;
 
 The reduced length is given by
 \f[
-\begin{aligned}
+\begin{align}
   \frac mb &= \sqrt{1 + k^2 \sin^2\sigma_2} \cos\sigma_1 \sin\sigma_2 \\
   &\quad {}-\sqrt{1 + k^2 \sin^2\sigma_1} \sin\sigma_1 \cos\sigma_2 \\
   &\quad {}-\cos\sigma_1 \cos\sigma_2 \bigl(J(\sigma_2) - J(\sigma_1)\bigr)
-\end{aligned}
+\end{align}
 \f]
 where
 \f[
-\begin{aligned}
+\begin{align}
  J(\sigma) &= I_1(\sigma) - I_2(\sigma) \\
  I_2(\sigma) &= A_2\bigl(\sigma + B_2(\sigma)\bigr) \\
  B_2(\sigma) &= \sum_{j=1} C_{2j} \sin 2j\sigma
-\end{aligned}
+\end{align}
 \f]
 \verbatim
 A2 = (1 + 1/4 * eps^2
@@ -3143,10 +3189,10 @@ The longitude is given in terms of the spherical longitude by
 \f]
 where
 \f[
-\begin{aligned}
+\begin{align}
  I_3(\sigma) &= A_3\bigl(\sigma + B_3(\sigma)\bigr) \\
  B_3(\sigma) &= \sum_{j=1} C_{3j} \sin 2j\sigma
-\end{aligned}
+\end{align}
 \f]
 and
 \verbatim
@@ -3299,13 +3345,13 @@ case of an imaginary modulus using real arithmetic.
 
 The key relations used by GeographicLib are
 \f[
- \begin{aligned}
+ \begin{align}
   \frac sb &= E(\sigma, ik), \\
   \lambda &= (1 - f) \sin\alpha_0  G(\sigma, \cos^2\alpha_0, ik) \\
           &= \chi
            - \frac{e'^2}{\sqrt{1+e'^2}}\sin\alpha_0 H(\sigma, -e'^2, ik), \\
   J(\sigma) &= k^2 D(\sigma, ik),
- \end{aligned}
+ \end{align}
 \f]
 where \f$ \chi \f$ is a modified spherical longitude given by
 \f[
@@ -3313,7 +3359,7 @@ where \f$ \chi \f$ is a modified spherical longitude given by
 \f]
 and
 \f[
- \begin{aligned}
+ \begin{align}
  D(\phi,k) &= \int_0^\phi
  \frac{\sin^2\theta}{\sqrt{1 - k^2\sin^2\theta}}\,d\theta\\
  &=\frac{F(\phi, k) - E(\phi, k)}{k^2},\\
@@ -3328,7 +3374,7 @@ and
  &=
  \frac1{\alpha^2} F(\phi, k) +
       \biggl(1 - \frac1{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k),
- \end{aligned}
+ \end{align}
 \f]
 and \f$F(\phi, k)\f$, \f$E(\phi, k)\f$, \f$D(\phi, k)\f$, and
 \f$\Pi(\phi, \alpha^2, k)\f$, are incomplete elliptic integrals (see
@@ -3363,30 +3409,30 @@ for geodesics, \f$\theta\f$ instead of \f$\sigma\f$, where \f$
 expressions for \f$ s \f$ and \f$ \lambda \f$ are given here for
 completeness:
 \f[
-\begin{aligned}
+\begin{align}
 \frac sb &= \sqrt{1-k'^2} \Pi(\theta, k'^2, k'), \\
 \lambda &= (1-f) \sqrt{1-k'^2} \sin\alpha_0 \Pi(\theta, k'^2/e^2, k'),
-\end{aligned}
+\end{align}
 \f]
 where \f$ k' = k/\sqrt{1 + k^2} \f$.  The expression for \f$ s \f$
 can be written in terms of elliptic integrals of the second kind and
 Cayley's technique can be used to subtract out the leading order
 behavior of \f$ \lambda \f$ to give
 \f[
-\begin{aligned}
+\begin{align}
 \frac sb &=\frac1{\sqrt{1-k'^2}}
   \biggl( E(\theta, k') -
     \frac{k'^2 \sin\theta \cos\theta}{\sqrt{1-k'^2\sin^2\theta}} \biggr), \\
 \lambda &= \psi + (1-f) \sqrt{1-k'^2} \sin\alpha_0
 \bigl( F(\theta, k') - \Pi(\theta, e^2, k') \bigr),
-\end{aligned}
+\end{align}
 \f]
 where
 \f[
-\begin{aligned}
+\begin{align}
 \tan\psi &= \sqrt{\frac{1+k^2\sin^2\sigma}{1+e'^2}}\tan\omega \\
          &= \sqrt{\frac{1-e^2}{1+k^2\cos^2\theta}}\sin\alpha_0\tan\theta.
-\end{aligned}
+\end{align}
 \f]
 The tangents of the three "longitude-like" angles are in geometric
 progression, \f$ \tan\chi/\tan\omega = \tan\omega/\tan\psi \f$.
@@ -3425,24 +3471,24 @@ and are linearly related by
 .
 The cartesian coordinates for the meridian \f$ (x, z) \f$ are given by
 \f[
-\begin{aligned}
+\begin{align}
   x &= a \cos\beta = a \cos\phi / \sqrt{1 - e^2 \sin^2\phi} \\
     &= a \sin\beta' = (a^2/b) \sin\phi' / \sqrt{1 + e'^2 \sin^2\phi'} \\
     &= a \,\mathrm{cn}(v, ie) = a \,\mathrm{cd}(u, e) \\
     &= a \,\mathrm{sn}(u', e) = (a^2/b) \,\mathrm{sd}(v', ie'),
-\end{aligned}
+\end{align}
 \f]
 \f[
-\begin{aligned}
+\begin{align}
   z &= b \sin\beta = (b^2/a) \sin\phi / \sqrt{1 - e^2 \sin^2\phi} \\
     &= b \cos\beta' = b \cos\phi' / \sqrt{1 + e'^2 \sin^2\phi'} \\
     &= b \,\mathrm{sn}(v, ie) = (b^2/a) \,\mathrm{sd}(u, e)  \\
     &= b \,\mathrm{cn}(u', e) = b \,\mathrm{cd}(v', ie').
-\end{aligned}
+\end{align}
 \f]
 The distance along the meridian can be expressed variously as
 \f[
-\begin{aligned}
+\begin{align}
   y  &=   b   \int \sqrt{1 + e'^2  \sin^2\beta}\, d\beta
      =   b E(\beta, ie') \\
      &= \frac{b^2}a \int \frac1{(1 - e^2 \sin^2\phi)^{3/2}}\, d\phi
@@ -3452,10 +3498,10 @@ The distance along the meridian can be expressed variously as
      &=  b \int \mathrm{dn}^2(v, ie')\, dv
       = \frac{b^2}a \int \mathrm{nd}^2(u, e)\, du
       = \cal E(v, ie'),
-\end{aligned}
+\end{align}
 \f]
 \f[
-\begin{aligned}
+\begin{align}
   y' &=   a   \int \sqrt{1 - e^2  \sin^2\beta'}\, d\beta'
      =   a E(\beta', e) \\
      &= \frac{a^2}b \int \frac1{(1 + e'^2 \sin^2\phi')^{3/2}}\, d\phi'
@@ -3465,7 +3511,7 @@ The distance along the meridian can be expressed variously as
      &=  a \int \mathrm{dn}^2(u', e)\, du'
       = \frac{a^2}b \int \mathrm{nd}^2(v', ie')\, dv'
       = \cal E(u', e),
-\end{aligned}
+\end{align}
 \f]
 with the quarter meridian distance given by
 \f[
@@ -3528,10 +3574,10 @@ preserved (and hence the azimuth of a line is preserved).  Let \f$
 longitude on the ellipsoid and sphere respectively.  Define isometric
 latitudes for the sphere and the ellipsoid as
 \f[
-\begin{aligned}
+\begin{align}
   \psi' &= \sinh^{-1} \tan \phi', \\
   \psi &= \sinh^{-1} \tan \phi - e \tanh^{-1}(e \sin\phi).
-\end{aligned}
+\end{align}
 \f]
 The most general conformal mapping satisfying Bowring's conditions is
 \f[
@@ -3561,11 +3607,11 @@ m(\phi_0) = 1,\quad
 i.e, \f$m\approx 1\f$ in the vicinity of \f$\phi = \phi_0\f$.
 This gives
 \f[
-\begin{aligned}
+\begin{align}
 R &= \frac{\sqrt{1 + e'^2}}{B^2} a, \\
 A &= \sqrt{1 + e'^2 \cos^4\phi_0}, \\
 \tan\phi'_0 &= \frac1B \tan\phi_0,
-\end{aligned}
+\end{align}
 \f]
 where \f$ e' = e/\sqrt{1-e^2} \f$ is the second eccentricity, \f$ B =
 \sqrt{1+e'^2\cos^2\phi_0} \f$, and \f$ K \f$ is defined implicitly by
@@ -3651,12 +3697,12 @@ been replaced by the last relation which states that \f$\phi'_0 =
 \beta_0\f$, the parametric latitude corresponding to \f$\phi_0\f$.  This
 gives
 \f[
-\begin{aligned}
+\begin{align}
 R &= B'(1-f)a, \\
 A &= \frac1{B'(1-f)}, \\
 \left.\frac{d^2m(\phi)}{d\phi^2}\right|_{\phi=\phi_0} &=
 -e^2B'^2\sin^2\phi_0.
-\end{aligned}
+\end{align}
 \f]
 
 Similar to Bowring's method, we can compute \f$\phi'_1\f$ and
@@ -3679,8 +3725,8 @@ In assessing the accuracy of these methods we use two metrics:
  .
 (The second metric is much more stringent.)  We may now compare the
 methods by asking for a bound to the length of a geodesic which ensures
-that the one or other of the errors fall below 1 mm (an "engineering"
-definition of accurate) or 1 nm (1 nanometer, about the round-off
+that the one or other of the errors fall below 1&nbsp;mm (an "engineering"
+definition of accurate) or 1&nbsp;nm (1 nanometer, about the round-off
 limit).
 
 <center>
@@ -3731,15 +3777,15 @@ bounds</caption>
 </center>
 
 For example, if you're only interested in measuring distances and an
-accuracy of 1 mm is sufficient, then Bowring's improved method can be
-used for distances up to 180 km.  On the other hand, GeographicLib uses
-Bessel's auxiliary sphere and we require both the distance and the
-azimuth to be accurate, so the great circle approximation can only be
-used for distances less than 1.7 m.  The reason that GeographicLib does
-not use Bowring's method is that the information necessary for auxiliary
-sphere method is already available as part of the general solution and,
-as much as possible, we allow all geodesics to be computed by the
-general method.
+accuracy of 1&nbsp;mm is sufficient, then Bowring's improved method can
+be used for distances up to 180&nbsp;km.  On the other hand,
+GeographicLib uses Bessel's auxiliary sphere and we require both the
+distance and the azimuth to be accurate, so the great circle
+approximation can only be used for distances less than 1.7&nbsp;m.  The
+reason that GeographicLib does not use Bowring's method is that the
+information necessary for auxiliary sphere method is already available
+as part of the general solution and, as much as possible, we allow all
+geodesics to be computed by the general method.
 
 <center>
 Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
@@ -3761,7 +3807,7 @@ the inverse problem.
 
 See also
  - The wikipedia page,
-   <a href="http://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid#Geodesics_on_a_triaxial_ellipsoid">
+   <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid#Geodesics_on_a_triaxial_ellipsoid">
    Geodesics on  a triaxial ellipsoid</a>.
 
 Go to
@@ -3824,7 +3870,7 @@ Go to
     - C. F. F. Karney,
       <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
       Algorithms for geodesics</a>,
-      J. Geodesy 87(1), 43--55 (Jan. 2013);
+      J. Geodesy 87(1), 43--55 (2013);
       DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
       10.1007/s00190-012-0578-z</a>;
       addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
@@ -3847,16 +3893,16 @@ geographical latitude and longitude \f$(\phi, \lambda)\f$ are defined by
 The \e parametric latitude and longitude \f$(\phi', \lambda')\f$ are
 defined by
 \f[
-\begin{aligned}
+\begin{align}
  x &= a \cos\phi' \cos\lambda', \\
  y &= b \cos\phi' \sin\lambda', \\
  z &= c \sin\phi'.
-\end{aligned}
+\end{align}
 \f]
 Jacobi employed the \e ellipsoidal latitude and longitude \f$(\beta,
 \omega)\f$ defined by
 \f[
-\begin{aligned}
+\begin{align}
   x &= a \cos\omega
       \frac{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}}
            {\sqrt{a^2 - c^2}}, \\
@@ -3864,7 +3910,7 @@ Jacobi employed the \e ellipsoidal latitude and longitude \f$(\beta,
   z &= c \sin\beta
       \frac{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}}
            {\sqrt{a^2 - c^2}}.
-\end{aligned}
+\end{align}
 \f]
 Grid lines of constant \f$\beta\f$ and \f$\omega\f$ are given in Fig. 1.
 
@@ -3934,7 +3980,7 @@ Here is the solution, exactly as given by Jacobi
 <a href="http://books.google.com/books?id=Rh8GAAAAYAAJ&pg=PA268"> here</a>
 (with minor changes in notation):
 \f[
-\begin{aligned}
+\begin{align}
 \delta &= \int \frac
 {\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}\,d\beta}
 {\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}
@@ -3944,7 +3990,7 @@ Here is the solution, exactly as given by Jacobi
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}\,d\omega}
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}
  \sqrt{(a^2-b^2)\sin^2\omega + \gamma}}
-\end{aligned}
+\end{align}
 \f]
 As Jacobi notes &quot;a function of the angle \f$\beta\f$ equals a
 function of the angle \f$\omega\f$.  These two functions are just
@@ -3967,7 +4013,7 @@ relation.  A nice derivation of Jacobi's result is given by Darboux
 (1846) for general quadratic surfaces.  In this formulation, the
 distance along the geodesic, \f$s\f$, is also found using
 \f[
-\begin{aligned}
+\begin{align}
 \frac{ds}{(b^2-c^2)\cos^2\beta + (a^2-b^2)\sin^2\omega}
 &= \frac
 {\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}\,d\beta}
@@ -3977,11 +4023,11 @@ distance along the geodesic, \f$s\f$, is also found using
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}\,d\omega}
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}
  \sqrt{(a^2-b^2)\sin^2\omega + \gamma}}
-\end{aligned}
+\end{align}
 \f]
 An alternative expression for the distance is
 \f[
-\begin{aligned}
+\begin{align}
 ds
 &= \frac
 {\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}
@@ -3991,7 +4037,7 @@ ds
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}
  \sqrt{(a^2-b^2)\sin^2\omega + \gamma}\,d\omega}
 {\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}}
-\end{aligned}
+\end{align}
 \f]
 
 Jacobi's solution is a convenient way to compute geodesics on an
@@ -4284,7 +4330,7 @@ Back to \ref geodesic.  Forward to \ref rhumb.  Up to \ref contents.
 \page rhumb Rhumb lines
 
 <center>
-Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
+Back to \ref triaxial.  Forward to \ref greatellipse.  Up to
 \ref contents.
 </center>
 
@@ -4294,9 +4340,12 @@ calculations.  A rhumb line (also called a loxodrome) is a line of
 constant azimuth on the surface of the ellipsoid.  It is important for
 historical reasons because sailing with a constant compass heading is
 simpler than sailing the shorter geodesic course; see Osborne (2013).
-My interest in this problem was piqued by Botnev and Ustinov (2014) who
-discuss various techniques to improve the accuracy of rhumb line
-calculations.  The items of interest here are:
+The formulation of the problem on an ellipsoid is covered by Smart
+(1946) and Carlton-Wippern (1992).  Computational approaches are given
+by Williams (1950) and Bennett (1996).  My interest in this problem was
+piqued by Botnev and Ustinov (2014) who discuss various techniques to
+improve the accuracy of rhumb line calculations.  The items of interest
+here are:
  - Review of accurate formulas for the auxiliary latitudes.
  - Using divided differences to compute \f$\mu_{12}/\psi_{12}\f$
    maintaining full accuracy.  Two cases are treated:
@@ -4309,13 +4358,18 @@ calculations.  The items of interest here are:
  - Extending Clenshaw summation to compute the divided difference of a
    trigonometric sum.
 
-Jump to
+Go to
  - \ref rhumbform
  - \ref rhumblat
+ - \ref rhumbarea
  - \ref divideddiffs
  - \ref dividedclenshaw
 
 References:
+ - G. G. Bennett,
+   <a href="http://dx.doi.org/10.1017/S0373463300013151">
+   Practical Rhumb Line Calculations on the Spheroid</a>
+   J. Navigation 49(1), 112--119 (1996).
  - F. W. Bessel,
    <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation
    of longitude and latitude from geodesic measurements (1825)</a>,
@@ -4324,10 +4378,15 @@ References:
    <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - V.A. Botnev, S.M. Ustinov,
    <a href="http://ntv.spbstu.ru/fulltext/T3.198.2014_05.PDF">
-   Metody reshenija prjamoj i obratnoj geodezicheskih zadach s vysokoj
-   tochnost'ju</a> (Methods for direct and inverse geodesic problems
+   Metody resheniya pryamoy i obratnoy geodezicheskikh zadach s vysokoy
+   tochnost'yu
+   </a> (Methods for direct and inverse geodesic problems
    solving with high precision), St. Petersburg State Polytechnical
    University Journal 3(198), 49--58 (2014).
+ - K. C. Carlton-Wippern
+   <a href="http://dx.doi.org/10.1017/S0373463300010791">
+   On Loxodromic Navigation</a>,
+   J. Navigation 45(2), 292--297 (1992).
  - K. E. Engsager and K. Poder,
    <a href="http://icaci.org/files/documents/ICC_proceedings/ICC2007/documents/doc/THEME 2/oral 1/2.1.2 A HIGHLY ACCURATE WORLD WIDE ALGORITHM FOR THE TRANSVE.doc">
    A highly accurate world wide algorithm for the
@@ -4357,7 +4416,7 @@ References:
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
-   J. Geodesy 87(1), 43--55 (Jan. 2013);
+   J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
    addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
@@ -4369,12 +4428,17 @@ References:
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
    the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
    New Series 52, 172 pp. (1912).
- - T. H. Meyer and C. M. Rollins,
-   The direct and indirect problem for loxodromes,
-   Navigation 58(1), 1--6 (2011).
  - P. Osborne,
    <a href="http://www.mercator99.webspace.virginmedia.com/">
    The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5.
+ - W. M. Smart
+   <a href="http://dx.doi.org/10.1093/mnras/106.2.124">
+   On a Problem in Navigation</a>
+   MNRAS 106(2), 124--127 (1946).
+ - J. E. D. Williams
+   <a href="http://dx.doi.org/10.1017/S0373463300045549">
+   Loxodromic Distances on the Terrestrial Spheroid Journal</a>,
+   J. Navigation 3(2), 133--140 (1950)
 
 \section rhumbform Formulation of the rhumb line problem
 
@@ -4385,10 +4449,10 @@ distances along rhumb lines), and the parametric latitude \f$\beta\f$
 (needed for dealing with rhumb lines that run along a parallel).  These
 are defined in terms of the geographical latitude \f$\phi\f$ by
 \f[
-\begin{aligned}
+\begin{align}
  \frac{d\psi}{d\phi} &= \frac{\rho}R, \\
  \frac{d\mu}{d\phi}  &= \frac{\pi}{2M}\rho, \\
-\end{aligned}
+\end{align}
 \f]
 where \f$\rho\f$ is the meridional radius of curvature, \f$R =
 a\cos\beta\f$ is the radius of a circle of latitude, and \f$M\f$ is the
@@ -4410,21 +4474,21 @@ typically, \f$\lambda_{12}\f$ is reduced to the range \f$[-\pi,\pi]\f$
 
 The distance is given by
 \f[
-\begin{aligned}
+\begin{align}
 s_{12} &= \frac {2M}{\pi} \mu_{12} \sec\alpha_{12} \\
   &= \frac {2M}{\pi}
 \frac{\mu_{12}}{\psi_{12}} \sqrt{\lambda_{12}^2 + \psi_{12}^2},
-\end{aligned}
+\end{align}
 \f]
 where \f$\mu_{12} = \mu_2 - \mu_1\f$.  This relation is indeterminate if
 \f$\phi_1 = \phi_2\f$, so we take the limits
 \f$\psi_{12}\rightarrow0\f$ and \f$\mu_{12}\rightarrow0\f$ and apply
 L'H&ocirc;pital's rule to yield
 \f[
-\begin{aligned}
+\begin{align}
  s_{12} &= \frac {2M}{\pi} \frac{d\mu}{d\psi} \left|\lambda_{12}\right|\\
 &=a \cos\beta \left|\lambda_{12}\right|,
-\end{aligned}
+\end{align}
 \f]
 where the last relation is given by the defining equations for
 \f$\psi\f$ and \f$\mu\f$.
@@ -4451,20 +4515,20 @@ convenient to introduce the variables \f$\tau=\tan\phi\f$ and \f$\tau' =
 \tan\chi = \sinh\psi\f$ (\f$\chi\f$ is the conformal latitude) which are
 related by (Karney, 2011)
 \f[
-\begin{aligned}
+\begin{align}
 \tau' &= \tau \sqrt{1 + \sigma^2} - \sigma \sqrt{1 + \tau^2}, \\
 \sigma &= \sinh\bigl(e \tanh^{-1}(e \tau/\sqrt{1 + \tau^2}) \bigr).
-\end{aligned}
+\end{align}
 \f]
 The equation for \f$\tau'\f$ can be inverted to give \f$\tau\f$ in terms
 of \f$\tau'\f$ using Newton's method with \f$\tau_0 = \tau'/(1-e^2)\f$
 as a starting guess; and, of course, \f$\phi\f$ and \f$\psi\f$ are then
 given by
 \f[
-\begin{aligned}
+\begin{align}
 \phi &= \tan^{-1}\tau,\\
 \psi &= \sinh^{-1}\tau'.
-\end{aligned}
+\end{align}
 \f]
 This allows conversions to and from \f$\psi\f$ to be carried out for any
 value of the flattening \f$f\f$; these conversions are implemented by
@@ -4526,23 +4590,132 @@ These relations allow inter-conversions between the various latitudes
 out simply and accurately.  The approaches using series apply only if
 \f$f\f$ is small.  The others apply for arbitrary values of \f$f\f$.
 
+\section rhumbarea The area under a rhumb line
+
+The area between a rhumb line and the equator is given by
+\f[
+S_{12} = \int_{\lambda_1}^{\lambda_2} c^2 \sin\xi \,d\lambda,
+\f]
+where \f$c\f$ is the authalic radius and \f$\xi\f$ is the authalic
+latitude.  Express \f$\sin\xi\f$ in terms of the conformal latitude
+\f$\chi\f$ and expand as a series in the third flattening \f$n\f$.  This
+can be expressed in terms of powers of \f$\sin\chi\f$.  Substitute
+\f$\sin\chi=\tanh\psi\f$, where \f$\psi\f$ is the isometric latitude.
+For a rhumb line we have
+\f[
+\begin{align}
+\psi &= m(\lambda-\lambda_0),\\
+m &= \frac{\psi_2 - \psi_1}{\lambda_2 - \lambda_1}.
+\end{align}
+\f]
+Performing the integral over \f$\lambda\f$ gives
+\f[
+S_{12} = c^2 \lambda_{12} \left<\sin\xi\right>_{12},
+\f]
+where \f$\left<\sin\xi\right>_{12}\f$ is the mean value of \f$\sin\xi\f$
+given by
+\f[
+\left<\sin\xi\right>_{12} = \frac{S(\chi_2) - S(\chi_1)}{\psi_2 - \psi_1},
+\f]
+with
+\f[
+S(\chi) = \log\sec\chi + \sum_{l=1} R_l\cos(2l\chi),
+\f]
+and \f$R_l = O(n^l)\f$ is given as a series in \f$n\f$ below.  In the
+spherical limit, the sum vanishes.
+
+Note the simple way that longitude enters into the expression for the
+area.  In the limit \f$\chi_2 \rightarrow \chi_1\f$, we can apply
+l'H&ocirc;pital's rule
+\f[
+\left<\sin\xi\right>_{12}
+\rightarrow \frac{dS(\chi_1)/d\chi_1}{\sec\chi_1}
+=\sin\xi_1,
+\f]
+as expected.
+
+In order to maintain accuracy, particularly for rhumb lines which nearly
+follow a parallel, evaluate \f$\left<\sin\xi\right>_{12}\f$ using
+divided differences (see the \ref divideddiffs "next section") and use
+Clenshaw summation to evaluate the sum (see the \ref dividedclenshaw
+"last section").
+
+Here is the series expansion accurate to 10th order, found by <a
+href="rhumbarea.mac">rhumbarea.mac</a>:
+
+\verbatim
+R[1] = - 1/3 * n
+       + 22/45 * n^2
+       - 356/945 * n^3
+       + 1772/14175 * n^4
+       + 41662/467775 * n^5
+       - 114456994/638512875 * n^6
+       + 258618446/1915538625 * n^7
+       - 1053168268/37574026875 * n^8
+       - 9127715873002/194896477400625 * n^9
+       + 33380126058386/656284056553125 * n^10;
+R[2] = - 2/15 * n^2
+       + 106/315 * n^3
+       - 1747/4725 * n^4
+       + 18118/155925 * n^5
+       + 51304574/212837625 * n^6
+       - 248174686/638512875 * n^7
+       + 2800191349/14801889375 * n^8
+       + 10890707749202/64965492466875 * n^9
+       - 3594078400868794/10719306257034375 * n^10;
+R[3] = - 31/315 * n^3
+       + 104/315 * n^4
+       - 23011/51975 * n^5
+       + 1554472/14189175 * n^6
+       + 114450437/212837625 * n^7
+       - 8934064508/10854718875 * n^8
+       + 4913033737121/21655164155625 * n^9
+       + 591251098891888/714620417135625 * n^10;
+R[4] = - 41/420 * n^4
+       + 274/693 * n^5
+       - 1228489/2027025 * n^6
+       + 3861434/42567525 * n^7
+       + 1788295991/1550674125 * n^8
+       - 215233237178/123743795175 * n^9
+       + 95577582133463/714620417135625 * n^10;
+R[5] = - 668/5775 * n^5
+       + 1092376/2027025 * n^6
+       - 3966679/4343625 * n^7
+       + 359094172/10854718875 * n^8
+       + 7597613999411/3093594879375 * n^9
+       - 378396252233936/102088631019375 * n^10;
+R[6] = - 313076/2027025 * n^6
+       + 4892722/6081075 * n^7
+       - 1234918799/834978375 * n^8
+       - 74958999806/618718975875 * n^9
+       + 48696857431916/9280784638125 * n^10;
+R[7] = - 3189007/14189175 * n^7
+       + 930092876/723647925 * n^8
+       - 522477774212/206239658625 * n^9
+       - 2163049830386/4331032831125 * n^10;
+R[8] = - 673429061/1929727800 * n^8
+       + 16523158892/7638505875 * n^9
+       - 85076917909/18749059875 * n^10;
+R[9] = - 39191022457/68746552875 * n^9
+       + 260863656866/68746552875 * n^10;
+R[10] = - 22228737368/22915517625 * n^10;
+\endverbatim
+
 \section divideddiffs Use of divided differences
 
 Despite our ability to compute latitudes accurately, the way that
 distances enter into the solution involves the ratio
 \f$\mu_{12}/\psi_{12}\f$; the numerical calculation of this term is
 subject to catastrophic round-off errors when \f$\phi_1\f$ and
-\f$\phi_2\f$ are close.  A simple solution, suggested by Meyer and
-Rollins (2011), is to extend the treatment of rhumb lines along
-parallels to this case, i.e., to replace the ratio by the derivative
-evaluated at the midpoint.  (Meyer and Rollins only offer this solution
-when dealing with the inverse problem; but it can also be applied with
-the direct problem.)  However this is not entirely satisfactory: you
-have to pick the transition point where the derivative takes over from
-the ratio of differences; and, near this transition point, many bits of
-accuracy will be lost (I estimate that about 1/3 of bits are lost,
-leading to errors on the order of 0.1 mm for double precision).  Note
-too that this problem crops up even in the spherical limit.
+\f$\phi_2\f$ are close.  A simple solution, suggested by Bennett (1996),
+is to extend the treatment of rhumb lines along parallels to this case,
+i.e., to replace the ratio by the derivative evaluated at the midpoint.
+However this is not entirely satisfactory: you have to pick the
+transition point where the derivative takes over from the ratio of
+differences; and, near this transition point, many bits of accuracy will
+be lost (I estimate that about 1/3 of bits are lost, leading to errors
+on the order of 0.1&nbsp;mm for double precision).  Note too that this
+problem crops up even in the spherical limit.
 
 It turns out that we can do substantially better than this and maintain
 full double precision accuracy.  Indeed Botnev and Ustinov provide
@@ -4584,11 +4757,11 @@ particular, we can use the chain rule to write
 Kahan and Fateman catalog the divided difference formulas for all the
 elementary functions.  In this case, we need
 \f[
-\begin{aligned}
+\begin{align}
 \Delta[\tan](x,y) &= \frac{\tan(x-y)}{x-y} (1 + \tan x\tan y),\\
 \Delta[\sinh^{-1}](x,y) &= \frac1{x-y}
 \sinh^{-1}\biggl(\frac{(x-y)(x+y)}{x\sqrt{1+y^2}+y\sqrt{1+x^2}}\biggr).
-\end{aligned}
+\end{align}
 \f]
 The crucial point in these formulas is that the right hand sides can be
 evaluated accurately even if \f$x-y\f$ is small.  (I've only included
@@ -4616,8 +4789,8 @@ limits the applicability of the method to \f$\left|f\right|\lt 0.01\f$.
 If we want to extend the method to arbitrary flattening we need to
 compute \f$\Delta[E](x,y;k)\f$.  The necessary relation is the "addition
 theorem" for the incomplete elliptic integral of the second kind given
-in http://dlmf.nist.gov/19.11.E2.  This can be converted in the followinging divided
-difference formula
+in http://dlmf.nist.gov/19.11.E2.  This can be converted in the
+followinging divided difference formula
 \f[
 \Delta[E](x,y;k)
 =\begin{cases}
@@ -4630,13 +4803,13 @@ difference formula
 \f]
 where the angle \f$z\f$ is given by
 \f[
-\begin{aligned}
+\begin{align}
 \sin z &= \frac{2t}{1 + t^2},\quad\cos z = \frac{(1-t)(1+t)}{1 + t^2},\\
 t &=
 \frac{(x-y)\Delta[\sin](x,y)}
 {\sin x\sqrt{1 - k^2\sin^2y} + \sin y\sqrt{1 - k^2\sin^2x}}
 \frac{\sin x + \sin y}{\cos x + \cos y}.
-\end{aligned}
+\end{align}
 \f]
 We also need to apply the divided difference formulas to the conversions
 from \f$\phi\f$ to \f$\beta\f$ and \f$\phi\f$ to \f$\psi\f$; but these
@@ -4648,7 +4821,7 @@ rhumb lines for any flattening with full double precision accuracy (the
 maximum error is about 10 nanometers).  I've kept the implementation
 simple, which results in rather a lot of repeated evaluations of
 quantities.  However, in this case, the need for clarity trumps the
-desire for speed..
+desire for speed.
 
 \section dividedclenshaw Clenshaw evaluation of differenced sums
 
@@ -4656,18 +4829,17 @@ The use of
 <a href="https://en.wikipedia.org/wiki/Clenshaw_algorithm#Geodetic_applications">
 Clenshaw summation</a> for summing series of the form,
 \f[
-g(x) = \sum_{k=1}^N c_k \sin(2kx),
+g(x) = \sum_{k=1}^N c_k \sin kx,
 \f]
 is well established.  However when computing divided differences, we are
 interested in evaluating
 \f[
-g(x)-g(y) = \sum_{k=1}^N 2 c_k \sin\bigl(k(x-y)\bigr)\cos\bigl(k(x+y)\bigr)
+g(x)-g(y) = \sum_{k=1}^N 2 c_k
+\sin\bigl({\textstyle\frac12}k(x-y)\bigr)
+\cos\bigl({\textstyle\frac12}k(x+y)\bigr).
 \f]
-and the applicability of Clenshaw summation is not so clear.  Botnev and
-Ustinov assert that the method can be used in this case (but they give
-no details).  It turns out that Clenshaw summation can be used if we
-simultaneously compute the sum \f$g(x)+g(y)\f$ and perform a matrix
-summation,
+Clenshaw summation can be used in this case if we simultaneously compute
+\f$g(x)+g(y)\f$ and perform a matrix summation,
 \f[
 \mathsf G(x,y) = \begin{bmatrix}
 (g(x) + g(y)) / 2\\
@@ -4678,40 +4850,438 @@ where
 \f[
 \mathsf F_k(x,y)=
 \begin{bmatrix}
-     \sin kp \cos kd\\
-(2/d)\sin kd \cos kp
+     \cos kd \sin kp\\
+\frac{\sin kd}d \cos kp
 \end{bmatrix},
 \f]
-and \f$p=x+y\f$ and \f$d=x-y\f$.  The first element of \f$\mathsf
-G(x,y)\f$ is the average value of \f$g\f$ and the second element, the
-divided difference, is the average slope.  \f$\mathsf F_k(x,y)\f$
-satisfies the recurrence relation
+\f$d=\frac12(x-y)\f$, \f$p=\frac12(x+y)\f$, and, in the limit
+\f$d\rightarrow0\f$, \f$(\sin kd)/d \rightarrow k\f$.  The first element
+of \f$\mathsf G(x,y)\f$ is the average value of \f$g\f$ and the second
+element, the divided difference, is the average slope.  \f$\mathsf
+F_k(x,y)\f$ satisfies the recurrence relation
 \f[
   \mathsf F_{k+1}(x,y) =
   \mathsf A(x,y) \mathsf F_k(x,y) - \mathsf F_{k-1}(x,y),
 \f]
 where
 \f[
- \mathsf A(x,y) = \begin{bmatrix}
-     2 \cos p \cos d &  -d\sin p \sin d \\
--(4/d) \sin p \sin d &  2 \cos p \cos d
-\end{bmatrix}.
+ \mathsf A(x,y) = 2\begin{bmatrix}
+  \cos d \cos p & -d\sin d \sin p \\
+- \frac{\sin d}d \sin p &   \cos d \cos p
+\end{bmatrix},
 \f]
-The standard Clenshaw algorithm can now be applied to yield
+and \f$\lim_{d\rightarrow0}(\sin d)/d = 1\f$.  The standard Clenshaw
+algorithm can now be applied to yield
 \f[
-\begin{aligned}
+\begin{align}
 \mathsf B_{N+1} &= \mathsf B_{N+2} = \mathsf 0, \\
 \mathsf B_k &= \mathsf A \mathsf B_{k+1} - \mathsf B_{k+2} +
-\mathsf c_k \mathsf I, \qquad\text{for $N\ge k \ge 1$},\\
+c_k \mathsf I, \qquad\text{for $N\ge k \ge 1$},\\
 \mathsf G(x,y) &= \mathsf B_1 \mathsf F_1(x,y),
-\end{aligned}
+\end{align}
 \f]
-where \f$B_k\f$ are \f$2\times2\f$ matrices.  The divided difference
-\f$\Delta[g](x,y)\f$ is given by the second element of \f$\mathsf
-G(x,y)\f$.
+where \f$\mathsf B_k\f$ are \f$2\times2\f$ matrices.  The divided
+difference \f$\Delta[g](x,y)\f$ is given by the second element of
+\f$\mathsf G(x,y)\f$.
+
+The same basic recursion applies to the more general case,
+\f[
+g(x) = \sum_{k=0}^N c_k \sin\bigl( (k+k_0)x + x_0\bigr).
+\f]
+For example, the sum area arising in the computation of geodesic areas,
+\f[
+\sum_{k=0}^N c_k\cos\bigl((2k+1)\sigma)
+\f]
+is given by \f$x=2\sigma\f$, \f$x_0=\frac12\pi\f$, \f$k_0=\frac12\f$.
+Again we consider the matrix sum,
+\f[
+\mathsf G(x,y) = \begin{bmatrix}
+(g(x) + g(y)) / 2\\
+(g(x) - g(y)) / (x - y)
+\end{bmatrix} = \sum_{k=0}^N c_k \mathsf F_k(x,y),
+\f]
+where
+\f[
+\mathsf F_k(x,y)=
+\begin{bmatrix}
+     \cos\bigl( (k+k_0)d \bigr) \sin \bigl( (k+k_0)p + x_0 \bigr)\\
+     \frac{\sin\bigl( (k+k_0)d \bigr)}d \cos \bigl( (k+k_0)p + x_0 \bigr)
+\end{bmatrix}.
+\f]
+The recursion for \f$\mathsf B_k\f$ is identical to the previous case;
+in particular, the expression for \f$\mathsf A(x,y)\f$ remains
+unchanged.  The result for the sum is
+\f[
+\mathsf G(x,y) =
+  (c_0\mathsf I - \mathsf B_2) \mathsf F_0(x,y)
+  + \mathsf B_1 \mathsf F_1(x,y).
+\f]
 
 <center>
-Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
+Back to \ref triaxial.  Forward to \ref greatellipse.  Up to
+\ref contents.
+</center>
+**********************************************************************/
+/**
+\page greatellipse Great Ellipses
+
+<center>
+Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
+\ref contents.
+</center>
+
+Great ellipses are sometimes proposed (Williams, 1996; Pallikaris &
+Latsas, 2009) as alternatives to geodesics for the purposes of
+navigation.  This is predicated on the assumption that solving the
+geodesic problems is complex and costly.  These assumptions are no
+longer true, and geodesics should normally be used in place of great
+ellipses.  This is discussed in more detail in \ref gevsgeodesic.
+
+Solutions of the great ellipse problems implemented for Matlab and
+Octave are provided by
+ - gedoc: briefly descibe the routines
+ - gereckon: solve the direct great circle problem
+ - gedistance: solve the inverse great circle problem
+ .
+These functions are also available as a package
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
+47898</a> on Matlab File Exchange.  This requires also the installation
+of package
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
+39108</a>.  In this time, there are no C++ support in GeographicLib for
+great ellipses.
+
+References:
+ - B. R. Bowring,
+   <a href="http://dx.doi.org/10.1007/BF02521760">
+   The direct and inverse solutions for the great elliptic line on the
+   reference ellipsoid</a>, Bull. Geod. 58, 101--108 (1984).
+ - M. A. Earle,
+   A vector solution for navigation on a great ellipse,
+   J. Navigation 53(3), 473--481 (2000).
+ - M. A. Earle,
+   <a href="http://dx.doi.org/10.1017/S037346330800475X">
+   Vector solutions for azimuth</a>,
+   J. Navigation 61(3), 537--545 (2008).
+ - C. F. F. Karney,
+   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   Algorithms for geodesics</a>, J. Geodesy 87(1), 43--55 (2013);
+   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+   geod-addenda.html</a>.
+ - A. Pallikaris & G. Latsas,
+   <a href="http://dx.doi.org/1017/S0373463309005323">
+   New algorithm for great elliptic sailing (GES)</a>,
+   J. Navigation 62(3), 493--507 (2009).
+ - A. Pallikaris, L. Tsoulos, & D. Paradissis,
+   New meridian arc formulas for sailing calculations in navigational
+   GIS, International Hydrographic Review, 24--34 (May 2009).
+ - L. E. Sj&ouml;berg,
+   <a href="http://dx.doi.org/10.2478/v10156-011-0040-9">
+   Solutions to the direct and inverse navigation problems on the great
+   ellipse</a>, J. Geodetic Science 2(3), 200--205 (2012).
+ - R. Williams,
+   <a href="http://dx.doi.org/10.1017/S0373463300013333">
+   The Great Ellipse on the Surface of the Spheroid</a>,
+   J. Navigation 49(2), 229--234 (1996).
+ - T. Vincenty,
+   <a href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">
+   Direct and Inverse Solutions of Geodesics on the Ellipsoid with
+   Application of Nested Equations</a>,
+   Survey Review 23(176), 88--93 (1975).
+ - Wikipedia page, <a href="https://en.wikipedia.org/wiki/Great_ellipse">
+   Great ellipse</a>.
+
+Go to
+ - \ref geformulation
+ - \ref gearea
+ - \ref gevsgeodesic
+
+\section geformulation Solution of great ellipse problems
+
+Adopt the usual notation for the ellipsoid: equatorial semi-axis
+\f$a\f$, polar semi-axis \f$b\f$, flattening \f$f = (a-b)/a\f$,
+eccentricity \f$e = \sqrt{f(2-f)}\f$, second eccentricity \f$e' =
+e/(1-f)\f$.
+
+There are several ways in which an ellipsoid can be mapped into a sphere
+converting the great ellipse into a great circle.  The simplest ones
+entail scaling the ellipsoid in the \f$\hat z\f$ direction, the
+direction of the axis of rotation, scaling the ellipsoid radially, or a
+combination of the two.
+
+One such combination (scaling by \f$a^2/b\f$ in the \f$\hat z\f$
+direction, following by a radial scaling to the sphere) preserves the
+geographical latitude \f$\phi\f$.  This enables an great ellipse to be
+plotted on a chart merely by determining way points on the corresponding
+great circle and tranferring them directly on the chart.  In this
+exercise the flattening of the ellipsoid can be <i>ignored</i>!
+
+Bowring (1984), Williams (1996), Earle (2000, 2008) and Pallikaris &
+Latsas (2009), scale the ellipsoid radially onto a sphere preserving the
+geocentric latitude \f$\theta\f$.  More convenient than this is to scale
+the ellipsoid along \f$\hat z\f$ onto the sphere, as is done by
+Sj&ouml;berg (2012), thus preserving the parametric latitude
+\f$\beta\f$.  The advantage of this "parametric" mapping is that
+Bessel's rapidly converging series for meridian arc in terms of
+parametric latitude can be used (a possibility that is overlooked by
+Sj&ouml;berg).
+
+The full parametric mapping is:
+ - The geographic latitude \f$\phi\f$ on the ellipsoid maps to the
+   parametric latitude \f$\beta\f$ on the sphere,
+   where
+   \f[a\tan\beta = b\tan\phi.\f]
+ - The longitude \f$\lambda\f$ is unchanged.
+ - The azimuth \f$\alpha\f$ on the ellipsoid maps to an azimuth
+   \f$\gamma\f$ on the sphere where
+   \f[
+   \begin{align}
+   \tan\alpha &= \frac{\tan\gamma}{\sqrt{1-e^2\cos^2\beta}}, \\
+   \tan\gamma &= \frac{\tan\alpha}{\sqrt{1+e'^2\cos^2\phi}},
+   \end{align}
+   \f]
+   and the quadrants of \f$\alpha\f$ and \f$\gamma\f$ are the same.
+ - Positions on the great circle of radius \f$a\f$ are parametrized by
+   arc length \f$\sigma\f$ measured from the northward crossing of the
+   equator.  The great ellipse has semi-axes \f$a\f$ and
+   \f$a\sqrt{1-e^2\cos^2\gamma_0}\f$, where \f$\gamma_0\f$ is the
+   great-circle azimuth at the northward equator crossing, and
+   \f$\sigma\f$ is the parametric angle on the ellipse.  [In constrast,
+   the ellipse giving distances on a geodesic has semi-axes
+   \f$b\sqrt{1+e'^2\cos^2\alpha_0}\f$ and \f$b\f$.]
+ .
+To determine the distance along the ellipse in terms of \f$\sigma\f$ and
+vice versa, the series for distance \f$s\f$ and for \f$\tau\f$ given in
+\ref geodseries can be used.  The direct and inverse great ellipse
+problems are now simply solved by mapping the problem to the sphere,
+solving the resulting great circle problem, and mapping this back onto
+the ellipsoid.
+
+\section gearea The area under a great ellipse
+
+The area between the segment of a great ellipse and the equator can be
+found by very similar methods to those used for geodesic areas; see <a
+href="http://dx.doi.org/10.1179/003962689791474267"> Danielsen
+(1989)</a>.  The notation here is similar to that employed by
+<a href="http://dx.doi.org/10.1007/s00190-012-0578-z"> Karney
+(2013)</a>.
+\f[
+\begin{align}
+S_{12} &= S(\sigma_2) - S(\sigma_1) \\
+S(\sigma) &= c^2\gamma + e^2 a^2 \cos\gamma_0 \sin\gamma_0 I_4(\sigma)\\
+c^2 &= {\textstyle\frac12}\bigl(a^2 + b^2 (\tanh^{-1}e)/e\bigr)
+\end{align}
+\f]
+\f[
+I_4(\sigma) = - \sqrt{1+e'^2}\int
+\frac{r(e'^2) - r(k^2\sin^2\sigma)}{e'^2 - k^2\sin^2\sigma}
+\frac{\sin\sigma}2 \,d\sigma
+\f]
+\f[
+\begin{align}
+k &= e' \cos\gamma_0,\\
+r(x) &= \sqrt{1+x} + (\sinh^{-1}\sqrt x)/\sqrt x.
+\end{align}
+\f]
+Expand in terms of the third flattening of the ellipsoid, \f$n\f$, and the
+third flattening of the great ellipse, \f$\epsilon\f$, by substituting
+\f[
+\begin{align}
+e'&=\frac{2\sqrt n}{1-n},\\
+k&=\frac{1+n}{1-n} \frac{2\sqrt{\epsilon}}{1+\epsilon},
+\end{align}
+\f]
+to give
+\f[
+I_4(\sigma) = \sum_{l = 0}^\infty G_{4l}\cos \bigl((2l+1)\sigma\bigr).
+\f]
+Compared to the area under a geodesic, we have
+- \f$\gamma\f$ and \f$\gamma_0\f$ instead of \f$\alpha\f$ and
+  \f$\alpha_0\f$.  In both cases, these are azimuths on the auxiliary
+  sphere; however, for the geodesic, they are also the azimuths on the
+  ellipsoid.
+- \f$r(x) = \bigl(1+t(x)\bigr)/\sqrt{1+x}\f$ instead of \f$t(x)\f$ with
+  a balancing factor of \f$\sqrt{1+e'^2}\f$ appearing in front of the
+  integral.  These changes are because expressing
+  \f$\sin\phi\,d\lambda\f$ in terms of \f$\sigma\f$ is a little more
+  complicated with great ellipses.  (Don't worry about the addition of
+  \f$1\f$ to \f$t(x)\f$; that's immaterial.)
+- the factors involving \f$n\f$ in the expression for \f$k\f$ in terms
+  of \f$\epsilon\f$.  This is because \f$k\f$ is defined in terms of
+  \f$e'\f$, whereas it is \f$e\cos\gamma_0\f$ that plays the role of the
+  eccentricity for the great ellipse.
+
+Here is the series expansion accurate to 10th order, found by <a
+href="gearea.mac">gearea.mac</a>:
+
+\verbatim
+G4[0] = + (1/6 + 7/30 * n + 8/105 * n^2 + 4/315 * n^3 + 16/3465 * n^4 + 20/9009 * n^5 + 8/6435 * n^6 + 28/36465 * n^7 + 32/62985 * n^8 + 4/11305 * n^9)
+        - (3/40 + 12/35 * n + 589/840 * n^2 + 1063/1155 * n^3 + 14743/15015 * n^4 + 14899/15015 * n^5 + 254207/255255 * n^6 + 691127/692835 * n^7 + 1614023/1616615 * n^8) * eps
+        + (67/280 + 7081/5040 * n + 5519/1320 * n^2 + 6417449/720720 * n^3 + 708713/45045 * n^4 + 2700154/109395 * n^5 + 519037063/14549535 * n^6 + 78681626/1616615 * n^7) * eps^2
+        - (29597/40320 + 30013/5280 * n + 33759497/1441440 * n^2 + 100611307/1441440 * n^3 + 16639623457/98017920 * n^4 + 3789780779/10581480 * n^5 + 1027832503/1511640 * n^6) * eps^3
+        + (357407/147840 + 19833349/823680 * n + 61890679/480480 * n^2 + 97030756063/196035840 * n^3 + 2853930388817/1862340480 * n^4 + 15123282583393/3724680960 * n^5) * eps^4
+        - (13200233/1537536 + 306285589/2882880 * n + 26279482199/37340160 * n^2 + 3091446335399/931170240 * n^3 + 93089556575647/7449361920 * n^4) * eps^5
+        + (107042267/3294720 + 253176989449/522762240 * n + 57210830762263/14898723840 * n^2 + 641067300459403/29797447680 * n^3) * eps^6
+        - (51544067373/398295040 + 38586720036247/17027112960 * n + 104152290127363/4966241280 * n^2) * eps^7
+        + (369575321823/687964160 + 1721481081751393/158919720960 * n) * eps^8
+        - 10251814360817/4445306880 * eps^9;
+G4[1] = + (1/120 + 4/105 * n + 589/7560 * n^2 + 1063/10395 * n^3 + 14743/135135 * n^4 + 14899/135135 * n^5 + 254207/2297295 * n^6 + 691127/6235515 * n^7 + 1614023/14549535 * n^8) * eps
+        - (53/1680 + 847/4320 * n + 102941/166320 * n^2 + 1991747/1441440 * n^3 + 226409/90090 * n^4 + 3065752/765765 * n^5 + 24256057/4157010 * n^6 + 349229428/43648605 * n^7) * eps^2
+        + (4633/40320 + 315851/332640 * n + 5948333/1441440 * n^2 + 11046565/864864 * n^3 + 9366910279/294053760 * n^4 + 23863367599/349188840 * n^5 + 45824943037/349188840 * n^6) * eps^3
+        - (8021/18480 + 39452953/8648640 * n + 3433618/135135 * n^2 + 29548772933/294053760 * n^3 + 44355142973/139675536 * n^4 + 4771229132843/5587021440 * n^5) * eps^4
+        + (2625577/1537536 + 5439457/247104 * n + 353552588953/2352430080 * n^2 + 405002114215/558702144 * n^3 + 61996934629789/22348085760 * n^4) * eps^5
+        - (91909777/13178880 + 2017395395921/18819440640 * n + 51831652526149/59594895360 * n^2 + 1773086701957889/357569372160 * n^3) * eps^6
+        + (35166639971/1194885120 + 26948019211109/51081338880 * n + 7934238355871/1596291840 * n^2) * eps^7
+        - (131854991623/1031946240 + 312710596037369/119189790720 * n) * eps^8
+        + 842282436291/1481768960 * eps^9;
+G4[2] = + (1/560 + 29/2016 * n + 1027/18480 * n^2 + 203633/1441440 * n^3 + 124051/450450 * n^4 + 1738138/3828825 * n^5 + 98011493/145495350 * n^6 + 4527382/4849845 * n^7) * eps^2
+        - (533/40320 + 14269/110880 * n + 908669/1441440 * n^2 + 15253627/7207200 * n^3 + 910103119/163363200 * n^4 + 2403810527/193993800 * n^5 + 746888717/30630600 * n^6) * eps^3
+        + (2669/36960 + 2443153/2882880 * n + 1024791/200200 * n^2 + 10517570057/490089600 * n^3 + 164668999127/2327925600 * n^4 + 1826633124599/9311702400 * n^5) * eps^4
+        - (5512967/15375360 + 28823749/5765760 * n + 31539382001/871270400 * n^2 + 1699098121381/9311702400 * n^3 + 287618085731/398361600 * n^4) * eps^5
+        + (22684703/13178880 + 25126873327/896163840 * n + 10124249914577/42567782400 * n^2 + 836412216748957/595948953600 * n^3) * eps^6
+        - (3259030001/398295040 + 2610375232847/17027112960 * n + 2121882247763/1418926080 * n^2) * eps^7
+        + (13387413913/343982080 + 939097138279/1135140864 * n) * eps^8
+        - 82722916855/444530688 * eps^9;
+G4[3] = + (5/8064 + 23/3168 * n + 1715/41184 * n^2 + 76061/480480 * n^3 + 812779/1782144 * n^4 + 9661921/8953560 * n^5 + 40072069/18106088 * n^6) * eps^3
+        - (409/59136 + 10211/109824 * n + 46381/73920 * n^2 + 124922951/43563520 * n^3 + 12524132449/1241560320 * n^4 + 30022391821/1022461440 * n^5) * eps^4
+        + (22397/439296 + 302399/384384 * n + 461624513/74680320 * n^2 + 1375058687/41385344 * n^3 + 4805085120841/34763688960 * n^4) * eps^5
+        - (14650421/46126080 + 17533571183/3136573440 * n + 1503945368767/29797447680 * n^2 + 43536234862451/139054755840 * n^3) * eps^6
+        + (5074867067/2788065280 + 479752611137/13243310080 * n + 1228808683449/3310827520 * n^2) * eps^7
+        - (12004715823/1203937280 + 17671119291563/79459860480 * n) * eps^8
+        + 118372499107/2222653440 * eps^9;
+G4[4] = + (7/25344 + 469/109824 * n + 13439/411840 * n^2 + 9282863/56010240 * n^3 + 37558503/59121920 * n^4 + 44204289461/22348085760 * n^5) * eps^4
+        - (5453/1317888 + 58753/823680 * n + 138158857/224040960 * n^2 + 191056103/53209728 * n^3 + 712704605341/44696171520 * n^4) * eps^5
+        + (28213/732160 + 331920271/448081920 * n + 2046013913/283785216 * n^2 + 11489035343/241274880 * n^3) * eps^6
+        - (346326947/1194885120 + 11716182499/1891901440 * n + 860494893431/12770334720 * n^2) * eps^7
+        + (750128501/386979840 + 425425087409/9287516160 * n) * eps^8
+        - 80510858479/6667960320 * eps^9;
+G4[5] = + (21/146432 + 23/8320 * n + 59859/2263040 * n^2 + 452691/2687360 * n^3 + 21458911/26557440 * n^4) * eps^5
+        - (3959/1464320 + 516077/9052160 * n + 51814927/85995520 * n^2 + 15444083489/3611811840 * n^3) * eps^6
+        + (1103391/36208640 + 120920041/171991040 * n + 18522863/2263040 * n^2) * eps^7
+        - (92526613/343982080 + 24477436759/3611811840 * n) * eps^8
+        + 1526273559/740884480 * eps^9;
+G4[6] = + (11/133120 + 1331/696320 * n + 145541/6615040 * n^2 + 46863487/277831680 * n^3) * eps^6
+        - (68079/36208640 + 621093/13230080 * n + 399883/680960 * n^2) * eps^7
+        + (658669/26460160 + 186416197/277831680 * n) * eps^8
+        - 748030679/2963537920 * eps^9;
+G4[7] = + (143/2785280 + 11011/7938048 * n + 972829/52093440 * n^2) * eps^7
+        - (434863/317521920 + 263678129/6667960320 * n) * eps^8
+        + 185257501/8890613760 * eps^9;
+G4[8] = + (715/21168128 + 27313/26148864 * n) * eps^8
+        - 1838551/1778122752 * eps^9;
+G4[9] = + 2431/104595456 * eps^9;
+\endverbatim
+
+\section gevsgeodesic Great ellipses vs geodesics
+
+Some papers advocating the use of great ellipses for navigation exhibit
+a prejudice against the use of geodesics.  These excerpts from
+Pallikaris, Tsoulos, & Paradissis (2009) give the flavor
+ - ... it is required to adopt realistic accuracy standards in order not
+   only to eliminate the significant errors of the spherical model but
+   also to avoid the exaggerated and unrealistic requirements of sub
+   meter accuracy.
+ - Calculation of shortest sailings paths on the ellipsoid by a geodetic
+   inverse method involve formulas that are much too complex.
+ - Despite the fact that contemporary computers are fast enough to
+   handle more complete geodetic formulas of sub meter accuracy, a basic
+   principle for the design of navigational systems is the avoidance of
+   unnecessary consumption of computing power.
+ .
+This prejudice was probably due to the fact that the most well-known
+algorithms for geodesics, by Vincenty (1975), come with some
+"asterisks":
+ - no derivation was given (although they follow in a straightforward
+   fashion from classic 19th century methods);
+ - the accuracy is "only" 0.5&nbsp;mm or so, surely good enough for most
+   applications, but still a reason for a user to worry and a spur to
+   numerous studies "validating" the algorithms;
+ - no indication is given for how to extend the series to improve the
+   accuracy;
+ - there was a belief in some quarters (erroneous!) that the Vincenty
+   algorithms could not be used to compute waypoints;
+ - the algorithm for the inverse problem fails to converge for some
+   inputs.
+ .
+These problems meant that users were reluctant to bundle the algorithms
+into a library and treat them as a part of the software infrastructure
+(much as you might regard the computation of \f$\sin x\f$ as a given).
+In particular, I regard the last issue, lack of convergence of the
+inverse solution, as fatal.  Even though the problem only arises for
+nearly antipodal points, it means all users of the library must have
+some way to handle this problem.
+
+For these reasons, substitution of a great ellipse for the geodesic
+makes some sense.  The solution of the great ellipse is, in principle,
+no more difficult than solving for the great circle and, for paths of
+less then 10000&nbsp;km, the error in the distance is less than
+13.5&nbsp;m.
+
+Now (2014), however, the situation has reversed.  The algorithms given
+by Karney (2013)&mdash;and used in GeographicLib since
+2009&mdash;explicitly resolve the issues with Vincenty's algorithm.  The
+geodesic problem is conveniently bundled into a library.  Users can call
+this with an assurance of an accurate result much as they would when
+evaluating \f$\sin x\f$.  On the other hand, great ellipses come with
+their own set of asterisks:
+ - To the extent that they are regarded as approximations to geodesics,
+   the errors need to be quantified, the limits of allowable use
+   documented, etc.
+ - The user is now left with decisions on when to trust the results and
+   to find alternative solutions if necessary.
+ - Even though the great ellipse is no more that 13.5&nbsp;m longer than
+   a 10000&nbsp;km geodesic, the path of the great ellipse can deviate
+   from the geodesic by as much as 8.3&nbsp;km.  This disqualifies great
+   ellipses from use in congested air corridors where the
+   <a href="https://en.wikipedia.org/wiki/Strategic_lateral_offset_procedure">
+   strategic lateral offset procedure</a> is in effect and in any
+   situation which demands coordination in the routes of vessels.
+ - Because geodesics obey the triangle inequality, while great ellipses
+   do not, the solutions for realistic navigational problems, e.g.,
+   determining the time of closest approach of two vessels, are often
+   simpler in terms of geodesics.
+
+To address some other of the objections in the quotes from Pallikaris et
+al. given above:
+ - "exaggerated and unrealistic requirements of sub meter accuracy": The
+   geodesic algorithms allow full double precision accuracy at
+   essentially no cost.  This is because Clenshaw summation allows
+   additional terms to be added to the series without the need for
+   addition trigonometric evaluations.  Full accuracy is important to
+   maintain because it allows the results to be used reliably in more
+   complex problems (e.g., in the determination of maritime boundaries).
+ - "unnecessary consumption of computing power": The solution of the
+   inverse geodesic problem takes 2.3&nbsp;&mu;s; multiple points on a
+   geodesic can be computed at a rate of one point per 0.4&nbsp;&mu;s.
+   The actual power consumed in these calculations is miniscule compared
+   to the power needed to drive the display of a navigational computer.
+ - "formulas that are much too complex": There's no question that the
+   solution of the geodesic problem is more complex than for great
+   ellipses.  However this complexity is only an issue when
+   <b>implementing</b> the algorithms.  For the <b>end user</b>,
+   navigational software employing geodesics is <b>less</b> complex
+   compared with that employing great ellipses.  Here is what the user
+   needs to know about the geodesic solution:
+   <blockquote>"The shortest path is found."</blockquote>
+   And here is the corresponding documentation for great ellipses:
+   <blockquote>"A path which closely approximates the shortest path is
+   found.  Provided that the distance is less than 10000&nbsp;km, the
+   error in distance is no more than 14&nbsp;m and the deviation the
+   route from that of the shortest path is no more than 9&nbsp;km.
+   These bounds apply to the WGS84 ellipsoid.  The deviation of the path
+   means that it should be used with caution when planning routes.  In
+   addition, great ellipses do not obey the triangle inequality; this
+   disqualifies them from use in some applications."</blockquote>
+
+Having all the geodesic functions bundled up into a reliable "black box"
+enables users to concentrate on how to solve problems using geodesics
+(instead of figuring out how to solve for the geodesics).  A wide range
+of problems (intersection of paths, the path for an interception, the
+time of closest approach, median lines, tri-points, etc.) are all
+amenable to simple and fast solutions in terms of geodesics.
+
+<center>
+Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
 \ref contents.
 </center>
 **********************************************************************/
@@ -4719,13 +5289,12 @@ Back to \ref triaxial.  Forward to \ref transversemercator.  Up to
 \page transversemercator Transverse Mercator projection
 
 <center>
-Back to \ref rhumb.  Forward to \ref geocentric.  Up to \ref contents.
+Back to \ref greatellipse.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 
-TransverseMercator and
-TransverseMercatorExact provide accurate implementations
-of the transverse Mercator projection.  The
- <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
+TransverseMercator and TransverseMercatorExact provide accurate
+implementations of the transverse Mercator projection.  The
+<a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
 utility provides an interface to these classes.
 
 Go to
@@ -4733,7 +5302,7 @@ Go to
  - \ref tmseries
  - \ref tmfigures
 
-References
+References:
  - L. Kr&uuml;ger,
    <a href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
@@ -4777,13 +5346,13 @@ This is about 17 MB (compressed).  This test set consists of a set of
 geographic coordinates together with the corresponding transverse
 Mercator coordinates.  The WGS84 ellipsoid is used, with central
 meridian 0&deg;, central scale factor 0.9996 (the UTM value),
-false easting = false northing = 0 m.
+false easting = false northing = 0&nbsp;m.
 
 Each line of the test set gives 6 space delimited numbers
  - latitude (degrees, exact)
  - longitude (degrees, exact &mdash; see below)
- - easting (meters, accurate to 0.1 pm)
- - northing (meters, accurate to 0.1 pm)
+ - easting (meters, accurate to 0.1&nbsp;pm)
+ - northing (meters, accurate to 0.1&nbsp;pm)
  - meridian convergence (degrees, accurate to 10<sup>&minus;18</sup> deg)
  - scale (accurate to 10<sup>&minus;20</sup>)
  .
@@ -4791,7 +5360,7 @@ The latitude and longitude are all multiples of 10<sup>&minus;12</sup>
 deg and should be regarded as exact, except that longitude =
 82.63627282416406551 should be interpreted as exactly 90 (1 - \e e)
 degrees.  These results are computed using Lee's formulas with
-<a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
+<a href="https://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
 bfloats and fpprec set to 80 (so the errors in the data are probably 1/2
 of the values quoted above).  The Maxima code,
 <a href="tm.mac">tm.mac</a> and <a href="ellint.mac">ellint.mac</a>,
@@ -4836,7 +5405,7 @@ implementations following the standard convention.
 \section tmseries Series approximation for transverse Mercator
 
 Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
-Mercator projection.  This is accurate to about 200 nm (200
+Mercator projection.  This is accurate to about 200&nbsp;nm (200
 nanometers) within the UTM domain.  Here we present the series
 extended to 10th order.  By default, TransverseMercator
 uses the 6th-order approximation. The preprocessor macro
@@ -5090,14 +5659,14 @@ projection (Fig. 3(a)).  The extended Thompson projection figure has
 reflection symmetry on all the four sides of Fig. 3(c).
 
 <center>
-Back to \ref rhumb.  Forward to \ref geocentric.  Up to \ref contents.
+Back to \ref greatellipse.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page geocentric Geocentric coordinates
 
 <center>
-Back to \ref transversemercator.  Forward to \ref highprec.  Up to
+Back to \ref transversemercator.  Forward to \ref auxlat.  Up to
 \ref contents.
 </center>
 
@@ -5144,8 +5713,8 @@ Geocentric::WGS84.Forward which uses long doubles (including using long
 doubles for the WGS84 parameters).  Generate random (long double)
 geodetic coordinates (\e lat0, \e lon0, \e h0) and use the "long double"
 WGS84.Forward to obtain the corresponding (long double) geocentric
-coordinates (\e x0, \e y0, \e z0).  [We restrict \e h0 so that
-\e h0 &ge; &minus; \e a (1 &minus; <i>e</i><sup>2</sup>) / sqrt(1 &minus;
+coordinates (\e x0, \e y0, \e z0).  [We restrict \e h0 so that \e h0
+&ge; &minus; \e a (1 &minus; <i>e</i><sup>2</sup>) / sqrt(1 &minus;
 <i>e</i><sup>2</sup> sin<sup>2</sup>\e lat0), which ensures that (\e
 lat0, \e lon0, \e h0) is the principal geodetic inverse of (\e x0, \e
 y0, \e z0).]  Because the forward calculation is numerically stable and
@@ -5157,22 +5726,23 @@ Apply the double version of WGS84.Reverse to (\e x0, \e y0, \e z0) to
 compute the approximate geodetic coordinates (\e lat1, \e lon1, \e h1).
 Convert (\e lat1 &minus; \e lat0, \e lon1 &minus; \e lon0) to a
 distance, \e ds, on the surface of the ellipsoid and define \e err =
-hypot(\e ds, \e h1 &minus; \e h0).  For |<i>h0</i>| < 5000 km, we have \e
-err < 7 nm (7 nanometers).
+hypot(\e ds, \e h1 &minus; \e h0).  For |<i>h0</i>| < 5000&nbsp;km, we
+have \e err < 7&nbsp;nm (7 nanometers).
 
 This methodology is not very useful very far from the globe, because the
 absolute errors in the approximate geodetic height become large, or
-within 50 km of the center of the earth, because of errors in computing
-the approximate geodetic latitude.  To illustrate the second issue, the
-maximum value of \e err for \e h0 < 0 is about 80 mm.  The error is
-maximum close to the circle given by geocentric coordinates satisfying
-hypot(\e x, \e y) = \e a <i>e</i><sup>2</sup> (= 42.7 km), \e z = 0.
-(This is the center of meridional curvature for \e lat = 0.)  The
-geodetic latitude for these points is \e lat = 0.  However, if we move 1
-nm towards the center of the earth, the geodetic latitude becomes 0.04",
-a distance of 1.4 m from the equator.  If, instead, we move 1 nm up, the
-geodetic latitude becomes 7.45", a distance of 229 m from the equator.
-In light of this, Reverse does quite well in this vicinity.
+within 50&nbsp;km of the center of the earth, because of errors in
+computing the approximate geodetic latitude.  To illustrate the second
+issue, the maximum value of \e err for \e h0 < 0 is about 80&nbsp;mm.
+The error is maximum close to the circle given by geocentric coordinates
+satisfying hypot(\e x, \e y) = \e a <i>e</i><sup>2</sup> (=
+42.7&nbsp;km), \e z = 0.  (This is the center of meridional curvature
+for \e lat = 0.)  The geodetic latitude for these points is \e lat = 0.
+However, if we move 1&nbsp;nm towards the center of the earth, the
+geodetic latitude becomes 0.04", a distance of 1.4&nbsp;m from the
+equator.  If, instead, we move 1&nbsp;nm up, the geodetic latitude
+becomes 7.45", a distance of 229&nbsp;m from the equator.  In light of
+this, Reverse does quite well in this vicinity.
 
 To obtain a practical measure of the error for the general case we define
 - <i>err</i><sub>h</sub> = |\e h1 &minus; <i>h0</i>| / max(1, \e h0 / \e a)
@@ -5182,8 +5752,9 @@ To obtain a practical measure of the error for the general case we define
   <i>err</i><sub>in</sub> = hypot(\e x1 &minus; \e x0, \e y1 &minus; \e
   y0, \e z1 &minus; \e z0).
 .
-We then find <i>err</i><sub>h</sub> < 8 nm, <i>err</i><sub>out</sub> < 4 nm,
-and <i>err</i><sub>in</sub> < 7 nm.  (1 nm = 1 nanometer.)
+We then find <i>err</i><sub>h</sub> < 8&nbsp;nm,
+<i>err</i><sub>out</sub> < 4&nbsp;nm, and <i>err</i><sub>in</sub> <
+7&nbsp;nm.  (1&nbsp;nm = 1 nanometer.)
 
 The testing has been confined to the WGS84 ellipsoid.  The method will
 work for all ellipsoids used in terrestrial geodesy.  However, the
@@ -5206,7 +5777,549 @@ However the choice of independent variables in these methods leads
 to a loss of accuracy for points near the equatorial plane.
 
 <center>
-Back to \ref transversemercator.  Forward to \ref highprec.  Up to
+Back to \ref transversemercator.  Forward to \ref auxlat.  Up to
+\ref contents.
+
+</center>
+**********************************************************************/
+/**
+\page auxlat Auxiliary latitudes
+
+<center>
+Back to \ref geocentric.  Forward to \ref highprec.  Up to
+\ref contents.
+</center>
+
+Six latitudes are used by GeographicLib:
+- &phi;, the (geographic) latitude;
+- &beta;, the parametric latitude;
+- &theta;, the geocentric latitude;
+- &mu;, the rectifying latitude;
+- &chi;, the conformal latitude;
+- &xi;, the authalic latitude.
+.
+The last five of these are called <i>auxiliary latitudes</i>.  These
+quantities are all defined in the
+<a href="https://en.wikipedia.org/wiki/Latitude#Auxiliary_latitudes">
+Wikipedia article on latitudes</a>.  (In addition there's the isometric
+latitude, &psi; = sinh<sup>&minus;1</sup>&nbsp;tan&chi;; but this is not
+an angle-like variable and we don't consider it further here.)  The
+relations between &phi;, &beta;, and &theta; are all simple elementary
+functions.  The latitudes &chi; and &xi; can be expressed as elementary
+functions of &phi;; however, these functions can only be inverted
+iteratively.  The rectifying latitude &mu; as a function of &phi; (or
+&beta;) involves the incomplete elliptic integral of the second kind
+(which is not an elementary function) and this needs to be inverted
+iteratively.  The Ellipsoid class evaluates all the auxiliary latitudes
+(and the corresponding inverse relations) in terms of their basic
+definitions.
+
+An alternative method of evaluating these auxiliary latitudes is in
+terms of trigonometric series.  This offers some advantages:
+- these series give a uniform way of expressing any latitude in terms of
+  any other latitude;
+- the evaluation may be faster, particularly if Clenshaw summation is
+  used;
+- provided that the flattening is sufficiently small, the result may be
+  more accurate.
+
+Here we give the complete matrix of relations between all six latitudes;
+there are 30 (=&nbsp;6&nbsp;&times;&nbsp;5) such relations.  The
+expansions are in terms of the third flattening <i>n</i> =
+(<i>a</i>&nbsp;&minus;&nbsp;<i>b</i>)/(<i>a</i>&nbsp;+&nbsp;<i>b</i>).
+This results in expansions in which half the coefficients vanish for all
+relations between &phi;, &beta;, &theta;, and &mu;.  In addition, the
+expansions converge for <i>b</i>/<i>a</i> &isin; (0,&nbsp;&infin;).
+(Some authors use the eccentricity as the expansion parameter, but the
+resulting series only converge for <i>b</i>/<i>a</i> &isin;
+(0,&nbsp;&radic;2).  These expansions were obtained with the the maxima
+code, <a href="auxlat.mac">auxlat.mac</a>.
+
+Here are the relations between &phi;, &beta;, &theta;, and &mu; carried
+out to 4th order in <i>n</i>:
+\f[
+\begin{align}
+\beta-\phi&=\textstyle{}
+-n\sin 2\phi
++\frac{1}{2}n^{2}\sin 4\phi
+-\frac{1}{3}n^{3}\sin 6\phi
++\frac{1}{4}n^{4}\sin 8\phi
+-\ldots\\
+\phi-\beta&=\textstyle{}
++n\sin 2\beta
++\frac{1}{2}n^{2}\sin 4\beta
++\frac{1}{3}n^{3}\sin 6\beta
++\frac{1}{4}n^{4}\sin 8\beta
++\ldots\\
+\theta-\phi&=\textstyle{}
+-\bigl(2n-2n^{3}\bigr)\sin 2\phi
++\bigl(2n^{2}-4n^{4}\bigr)\sin 4\phi
+-\frac{8}{3}n^{3}\sin 6\phi
++4n^{4}\sin 8\phi
+-\ldots\\
+\phi-\theta&=\textstyle{}
++\bigl(2n-2n^{3}\bigr)\sin 2\theta
++\bigl(2n^{2}-4n^{4}\bigr)\sin 4\theta
++\frac{8}{3}n^{3}\sin 6\theta
++4n^{4}\sin 8\theta
++\ldots\\
+\theta-\beta&=\textstyle{}
+-n\sin 2\beta
++\frac{1}{2}n^{2}\sin 4\beta
+-\frac{1}{3}n^{3}\sin 6\beta
++\frac{1}{4}n^{4}\sin 8\beta
+-\ldots\\
+\beta-\theta&=\textstyle{}
++n\sin 2\theta
++\frac{1}{2}n^{2}\sin 4\theta
++\frac{1}{3}n^{3}\sin 6\theta
++\frac{1}{4}n^{4}\sin 8\theta
++\ldots\\
+\mu-\phi&=\textstyle{}
+-\bigl(\frac{3}{2}n-\frac{9}{16}n^{3}\bigr)\sin 2\phi
++\bigl(\frac{15}{16}n^{2}-\frac{15}{32}n^{4}\bigr)\sin 4\phi
+-\frac{35}{48}n^{3}\sin 6\phi
++\frac{315}{512}n^{4}\sin 8\phi
+-\ldots\\
+\phi-\mu&=\textstyle{}
++\bigl(\frac{3}{2}n-\frac{27}{32}n^{3}\bigr)\sin 2\mu
++\bigl(\frac{21}{16}n^{2}-\frac{55}{32}n^{4}\bigr)\sin 4\mu
++\frac{151}{96}n^{3}\sin 6\mu
++\frac{1097}{512}n^{4}\sin 8\mu
++\ldots\\
+\mu-\beta&=\textstyle{}
+-\bigl(\frac{1}{2}n-\frac{3}{16}n^{3}\bigr)\sin 2\beta
+-\bigl(\frac{1}{16}n^{2}-\frac{1}{32}n^{4}\bigr)\sin 4\beta
+-\frac{1}{48}n^{3}\sin 6\beta
+-\frac{5}{512}n^{4}\sin 8\beta
+-\ldots\\
+\beta-\mu&=\textstyle{}
++\bigl(\frac{1}{2}n-\frac{9}{32}n^{3}\bigr)\sin 2\mu
++\bigl(\frac{5}{16}n^{2}-\frac{37}{96}n^{4}\bigr)\sin 4\mu
++\frac{29}{96}n^{3}\sin 6\mu
++\frac{539}{1536}n^{4}\sin 8\mu
++\ldots\\
+\mu-\theta&=\textstyle{}
++\bigl(\frac{1}{2}n+\frac{13}{16}n^{3}\bigr)\sin 2\theta
+-\bigl(\frac{1}{16}n^{2}-\frac{33}{32}n^{4}\bigr)\sin 4\theta
+-\frac{5}{16}n^{3}\sin 6\theta
+-\frac{261}{512}n^{4}\sin 8\theta
+-\ldots\\
+\theta-\mu&=\textstyle{}
+-\bigl(\frac{1}{2}n+\frac{23}{32}n^{3}\bigr)\sin 2\mu
++\bigl(\frac{5}{16}n^{2}-\frac{5}{96}n^{4}\bigr)\sin 4\mu
++\frac{1}{32}n^{3}\sin 6\mu
++\frac{283}{1536}n^{4}\sin 8\mu
++\ldots\\
+\end{align}
+\f]
+
+Here are the remaining relations (including &chi; and &xi;) carried out
+to 3th order in <i>n</i>:
+\f[
+\begin{align}
+\chi-\phi&=\textstyle{}
+-\bigl(2n-\frac{2}{3}n^{2}-\frac{4}{3}n^{3}\bigr)\sin 2\phi
++\bigl(\frac{5}{3}n^{2}-\frac{16}{15}n^{3}\bigr)\sin 4\phi
+-\frac{26}{15}n^{3}\sin 6\phi
++\ldots\\
+\phi-\chi&=\textstyle{}
++\bigl(2n-\frac{2}{3}n^{2}-2n^{3}\bigr)\sin 2\chi
++\bigl(\frac{7}{3}n^{2}-\frac{8}{5}n^{3}\bigr)\sin 4\chi
++\frac{56}{15}n^{3}\sin 6\chi
++\ldots\\
+\chi-\beta&=\textstyle{}
+-\bigl(n-\frac{2}{3}n^{2}\bigr)\sin 2\beta
++\bigl(\frac{1}{6}n^{2}-\frac{2}{5}n^{3}\bigr)\sin 4\beta
+-\frac{1}{15}n^{3}\sin 6\beta
++\ldots\\
+\beta-\chi&=\textstyle{}
++\bigl(n-\frac{2}{3}n^{2}-\frac{1}{3}n^{3}\bigr)\sin 2\chi
++\bigl(\frac{5}{6}n^{2}-\frac{14}{15}n^{3}\bigr)\sin 4\chi
++\frac{16}{15}n^{3}\sin 6\chi
++\ldots\\
+\chi-\theta&=\textstyle{}
++\bigl(\frac{2}{3}n^{2}+\frac{2}{3}n^{3}\bigr)\sin 2\theta
+-\bigl(\frac{1}{3}n^{2}-\frac{4}{15}n^{3}\bigr)\sin 4\theta
+-\frac{2}{5}n^{3}\sin 6\theta
+-\ldots\\
+\theta-\chi&=\textstyle{}
+-\bigl(\frac{2}{3}n^{2}+\frac{2}{3}n^{3}\bigr)\sin 2\chi
++\bigl(\frac{1}{3}n^{2}-\frac{4}{15}n^{3}\bigr)\sin 4\chi
++\frac{2}{5}n^{3}\sin 6\chi
++\ldots\\
+\chi-\mu&=\textstyle{}
+-\bigl(\frac{1}{2}n-\frac{2}{3}n^{2}+\frac{37}{96}n^{3}\bigr)\sin 2\mu
+-\bigl(\frac{1}{48}n^{2}+\frac{1}{15}n^{3}\bigr)\sin 4\mu
+-\frac{17}{480}n^{3}\sin 6\mu
+-\ldots\\
+\mu-\chi&=\textstyle{}
++\bigl(\frac{1}{2}n-\frac{2}{3}n^{2}+\frac{5}{16}n^{3}\bigr)\sin 2\chi
++\bigl(\frac{13}{48}n^{2}-\frac{3}{5}n^{3}\bigr)\sin 4\chi
++\frac{61}{240}n^{3}\sin 6\chi
++\ldots\\
+\xi-\phi&=\textstyle{}
+-\bigl(\frac{4}{3}n+\frac{4}{45}n^{2}-\frac{88}{315}n^{3}\bigr)\sin 2\phi
++\bigl(\frac{34}{45}n^{2}+\frac{8}{105}n^{3}\bigr)\sin 4\phi
+-\frac{1532}{2835}n^{3}\sin 6\phi
++\ldots\\
+\phi-\xi&=\textstyle{}
++\bigl(\frac{4}{3}n+\frac{4}{45}n^{2}-\frac{16}{35}n^{3}\bigr)\sin 2\xi
++\bigl(\frac{46}{45}n^{2}+\frac{152}{945}n^{3}\bigr)\sin 4\xi
++\frac{3044}{2835}n^{3}\sin 6\xi
++\ldots\\
+\xi-\beta&=\textstyle{}
+-\bigl(\frac{1}{3}n+\frac{4}{45}n^{2}-\frac{32}{315}n^{3}\bigr)\sin 2\beta
+-\bigl(\frac{7}{90}n^{2}+\frac{4}{315}n^{3}\bigr)\sin 4\beta
+-\frac{83}{2835}n^{3}\sin 6\beta
+-\ldots\\
+\beta-\xi&=\textstyle{}
++\bigl(\frac{1}{3}n+\frac{4}{45}n^{2}-\frac{46}{315}n^{3}\bigr)\sin 2\xi
++\bigl(\frac{17}{90}n^{2}+\frac{68}{945}n^{3}\bigr)\sin 4\xi
++\frac{461}{2835}n^{3}\sin 6\xi
++\ldots\\
+\xi-\theta&=\textstyle{}
++\bigl(\frac{2}{3}n-\frac{4}{45}n^{2}+\frac{62}{105}n^{3}\bigr)\sin 2\theta
++\bigl(\frac{4}{45}n^{2}-\frac{32}{315}n^{3}\bigr)\sin 4\theta
+-\frac{524}{2835}n^{3}\sin 6\theta
+-\ldots\\
+\theta-\xi&=\textstyle{}
+-\bigl(\frac{2}{3}n-\frac{4}{45}n^{2}+\frac{158}{315}n^{3}\bigr)\sin 2\xi
++\bigl(\frac{16}{45}n^{2}-\frac{16}{945}n^{3}\bigr)\sin 4\xi
+-\frac{232}{2835}n^{3}\sin 6\xi
++\ldots\\
+\xi-\mu&=\textstyle{}
++\bigl(\frac{1}{6}n-\frac{4}{45}n^{2}-\frac{817}{10080}n^{3}\bigr)\sin 2\mu
++\bigl(\frac{49}{720}n^{2}-\frac{2}{35}n^{3}\bigr)\sin 4\mu
++\frac{4463}{90720}n^{3}\sin 6\mu
++\ldots\\
+\mu-\xi&=\textstyle{}
+-\bigl(\frac{1}{6}n-\frac{4}{45}n^{2}-\frac{121}{1680}n^{3}\bigr)\sin 2\xi
+-\bigl(\frac{29}{720}n^{2}-\frac{26}{945}n^{3}\bigr)\sin 4\xi
+-\frac{1003}{45360}n^{3}\sin 6\xi
+-\ldots\\
+\xi-\chi&=\textstyle{}
++\bigl(\frac{2}{3}n-\frac{34}{45}n^{2}+\frac{46}{315}n^{3}\bigr)\sin 2\chi
++\bigl(\frac{19}{45}n^{2}-\frac{256}{315}n^{3}\bigr)\sin 4\chi
++\frac{248}{567}n^{3}\sin 6\chi
++\ldots\\
+\chi-\xi&=\textstyle{}
+-\bigl(\frac{2}{3}n-\frac{34}{45}n^{2}+\frac{88}{315}n^{3}\bigr)\sin 2\xi
++\bigl(\frac{1}{45}n^{2}-\frac{184}{945}n^{3}\bigr)\sin 4\xi
+-\frac{106}{2835}n^{3}\sin 6\xi
+-\ldots\\
+\end{align}
+\f]
+
+Finally, this is a listing of all the coefficients for the expansions
+carried out to 8th order in <i>n</i>.  Here's how to interpret this
+data: the 5th line for &phi;&nbsp;&minus;&nbsp;&theta; is <tt>[32/5, 0,
+-32, 0]</tt>; this means that the coefficient of sin(10&theta;) is
+[(32/5)<i>n</i><sup>5</sup>&nbsp;&minus;
+32<i>n</i><sup>7</sup>&nbsp;+&nbsp;<i>O</i>(<i>n</i><sup>9</sup>)].
+<p>&beta;&nbsp;&minus;&nbsp;&phi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1, 0, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/2, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/3, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/4, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/5, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/6, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/7, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/8]<br>
+</small></tt>
+<p>&phi;&nbsp;&minus;&nbsp;&beta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1, 0, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/2, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/3, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/4, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/5, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/6, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/7, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/8]<br>
+</small></tt>
+<p>&theta;&nbsp;&minus;&nbsp;&phi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-2, 0, 2, 0, -2, 0, 2, 0]<br>
+&nbsp;&nbsp;&nbsp;[2, 0, -4, 0, 6, 0, -8]<br>
+&nbsp;&nbsp;&nbsp;[-8/3, 0, 8, 0, -16, 0]<br>
+&nbsp;&nbsp;&nbsp;[4, 0, -16, 0, 40]<br>
+&nbsp;&nbsp;&nbsp;[-32/5, 0, 32, 0]<br>
+&nbsp;&nbsp;&nbsp;[32/3, 0, -64]<br>
+&nbsp;&nbsp;&nbsp;[-128/7, 0]<br>
+&nbsp;&nbsp;&nbsp;[32]<br>
+</small></tt>
+<p>&phi;&nbsp;&minus;&nbsp;&theta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[2, 0, -2, 0, 2, 0, -2, 0]<br>
+&nbsp;&nbsp;&nbsp;[2, 0, -4, 0, 6, 0, -8]<br>
+&nbsp;&nbsp;&nbsp;[8/3, 0, -8, 0, 16, 0]<br>
+&nbsp;&nbsp;&nbsp;[4, 0, -16, 0, 40]<br>
+&nbsp;&nbsp;&nbsp;[32/5, 0, -32, 0]<br>
+&nbsp;&nbsp;&nbsp;[32/3, 0, -64]<br>
+&nbsp;&nbsp;&nbsp;[128/7, 0]<br>
+&nbsp;&nbsp;&nbsp;[32]<br>
+</small></tt>
+<p>&theta;&nbsp;&minus;&nbsp;&beta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1, 0, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/2, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/3, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/4, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/5, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/6, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/7, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/8]<br>
+</small></tt>
+<p>&beta;&nbsp;&minus;&nbsp;&theta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1, 0, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/2, 0, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/3, 0, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/4, 0, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/5, 0, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/6, 0, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/7, 0]<br>
+&nbsp;&nbsp;&nbsp;[1/8]<br>
+</small></tt>
+<p>&mu;&nbsp;&minus;&nbsp;&phi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-3/2, 0, 9/16, 0, -3/32, 0, 57/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[15/16, 0, -15/32, 0, 135/2048, 0, -105/4096]<br>
+&nbsp;&nbsp;&nbsp;[-35/48, 0, 105/256, 0, -105/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[315/512, 0, -189/512, 0, 693/16384]<br>
+&nbsp;&nbsp;&nbsp;[-693/1280, 0, 693/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[1001/2048, 0, -1287/4096]<br>
+&nbsp;&nbsp;&nbsp;[-6435/14336, 0]<br>
+&nbsp;&nbsp;&nbsp;[109395/262144]<br>
+</small></tt>
+<p>&phi;&nbsp;&minus;&nbsp;&mu;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[3/2, 0, -27/32, 0, 269/512, 0, -6607/24576, 0]<br>
+&nbsp;&nbsp;&nbsp;[21/16, 0, -55/32, 0, 6759/4096, 0, -155113/122880]<br>
+&nbsp;&nbsp;&nbsp;[151/96, 0, -417/128, 0, 87963/20480, 0]<br>
+&nbsp;&nbsp;&nbsp;[1097/512, 0, -15543/2560, 0, 2514467/245760]<br>
+&nbsp;&nbsp;&nbsp;[8011/2560, 0, -69119/6144, 0]<br>
+&nbsp;&nbsp;&nbsp;[293393/61440, 0, -5962461/286720]<br>
+&nbsp;&nbsp;&nbsp;[6459601/860160, 0]<br>
+&nbsp;&nbsp;&nbsp;[332287993/27525120]<br>
+</small></tt>
+<p>&mu;&nbsp;&minus;&nbsp;&beta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1/2, 0, 3/16, 0, -1/32, 0, 19/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/16, 0, 1/32, 0, -9/2048, 0, 7/4096]<br>
+&nbsp;&nbsp;&nbsp;[-1/48, 0, 3/256, 0, -3/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[-5/512, 0, 3/512, 0, -11/16384]<br>
+&nbsp;&nbsp;&nbsp;[-7/1280, 0, 7/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[-7/2048, 0, 9/4096]<br>
+&nbsp;&nbsp;&nbsp;[-33/14336, 0]<br>
+&nbsp;&nbsp;&nbsp;[-429/262144]<br>
+</small></tt>
+<p>&beta;&nbsp;&minus;&nbsp;&mu;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1/2, 0, -9/32, 0, 205/1536, 0, -4879/73728, 0]<br>
+&nbsp;&nbsp;&nbsp;[5/16, 0, -37/96, 0, 1335/4096, 0, -86171/368640]<br>
+&nbsp;&nbsp;&nbsp;[29/96, 0, -75/128, 0, 2901/4096, 0]<br>
+&nbsp;&nbsp;&nbsp;[539/1536, 0, -2391/2560, 0, 1082857/737280]<br>
+&nbsp;&nbsp;&nbsp;[3467/7680, 0, -28223/18432, 0]<br>
+&nbsp;&nbsp;&nbsp;[38081/61440, 0, -733437/286720]<br>
+&nbsp;&nbsp;&nbsp;[459485/516096, 0]<br>
+&nbsp;&nbsp;&nbsp;[109167851/82575360]<br>
+</small></tt>
+<p>&mu;&nbsp;&minus;&nbsp;&theta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1/2, 0, 13/16, 0, -15/32, 0, 509/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[-1/16, 0, 33/32, 0, -1673/2048, 0, 2599/4096]<br>
+&nbsp;&nbsp;&nbsp;[-5/16, 0, 349/256, 0, -2989/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[-261/512, 0, 963/512, 0, -43531/16384]<br>
+&nbsp;&nbsp;&nbsp;[-921/1280, 0, 5545/2048, 0]<br>
+&nbsp;&nbsp;&nbsp;[-6037/6144, 0, 16617/4096]<br>
+&nbsp;&nbsp;&nbsp;[-19279/14336, 0]<br>
+&nbsp;&nbsp;&nbsp;[-490925/262144]<br>
+</small></tt>
+<p>&theta;&nbsp;&minus;&nbsp;&mu;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1/2, 0, -23/32, 0, 499/1536, 0, -14321/73728, 0]<br>
+&nbsp;&nbsp;&nbsp;[5/16, 0, -5/96, 0, 6565/12288, 0, -201467/368640]<br>
+&nbsp;&nbsp;&nbsp;[1/32, 0, -77/128, 0, 2939/4096, 0]<br>
+&nbsp;&nbsp;&nbsp;[283/1536, 0, -4037/7680, 0, 1155049/737280]<br>
+&nbsp;&nbsp;&nbsp;[1301/7680, 0, -19465/18432, 0]<br>
+&nbsp;&nbsp;&nbsp;[17089/61440, 0, -442269/286720]<br>
+&nbsp;&nbsp;&nbsp;[198115/516096, 0]<br>
+&nbsp;&nbsp;&nbsp;[48689387/82575360]<br>
+</small></tt>
+<p>&chi;&nbsp;&minus;&nbsp;&phi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-2, 2/3, 4/3, -82/45, 32/45, 4642/4725, -8384/4725, 1514/1323]<br>
+&nbsp;&nbsp;&nbsp;[5/3, -16/15, -13/9, 904/315, -1522/945, -2288/1575, 142607/42525]<br>
+&nbsp;&nbsp;&nbsp;[-26/15, 34/21, 8/5, -12686/2835, 44644/14175, 120202/51975]<br>
+&nbsp;&nbsp;&nbsp;[1237/630, -12/5, -24832/14175, 1077964/155925, -1097407/187110]<br>
+&nbsp;&nbsp;&nbsp;[-734/315, 109598/31185, 1040/567, -12870194/1216215]<br>
+&nbsp;&nbsp;&nbsp;[444337/155925, -941912/184275, -126463/72765]<br>
+&nbsp;&nbsp;&nbsp;[-2405834/675675, 3463678/467775]<br>
+&nbsp;&nbsp;&nbsp;[256663081/56756700]<br>
+</small></tt>
+<p>&phi;&nbsp;&minus;&nbsp;&chi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[2, -2/3, -2, 116/45, 26/45, -2854/675, 16822/4725, 189416/99225]<br>
+&nbsp;&nbsp;&nbsp;[7/3, -8/5, -227/45, 2704/315, 2323/945, -31256/1575, 141514/8505]<br>
+&nbsp;&nbsp;&nbsp;[56/15, -136/35, -1262/105, 73814/2835, 98738/14175, -2363828/31185]<br>
+&nbsp;&nbsp;&nbsp;[4279/630, -332/35, -399572/14175, 11763988/155925, 14416399/935550]<br>
+&nbsp;&nbsp;&nbsp;[4174/315, -144838/6237, -2046082/31185, 258316372/1216215]<br>
+&nbsp;&nbsp;&nbsp;[601676/22275, -115444544/2027025, -2155215124/14189175]<br>
+&nbsp;&nbsp;&nbsp;[38341552/675675, -170079376/1216215]<br>
+&nbsp;&nbsp;&nbsp;[1383243703/11351340]<br>
+</small></tt>
+<p>&chi;&nbsp;&minus;&nbsp;&beta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1, 2/3, 0, -16/45, 2/5, -998/4725, -34/4725, 1384/11025]<br>
+&nbsp;&nbsp;&nbsp;[1/6, -2/5, 19/45, -22/105, -2/27, 1268/4725, -12616/42525]<br>
+&nbsp;&nbsp;&nbsp;[-1/15, 16/105, -22/105, 116/567, -1858/14175, 1724/51975]<br>
+&nbsp;&nbsp;&nbsp;[17/1260, -8/105, 2123/14175, -26836/155925, 115249/935550]<br>
+&nbsp;&nbsp;&nbsp;[-1/105, 128/4455, -424/6237, 140836/1216215]<br>
+&nbsp;&nbsp;&nbsp;[149/311850, -31232/2027025, 210152/4729725]<br>
+&nbsp;&nbsp;&nbsp;[-499/225225, 30208/6081075]<br>
+&nbsp;&nbsp;&nbsp;[-68251/113513400]<br>
+</small></tt>
+<p>&beta;&nbsp;&minus;&nbsp;&chi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1, -2/3, -1/3, 38/45, -1/3, -3118/4725, 4769/4725, -25666/99225]<br>
+&nbsp;&nbsp;&nbsp;[5/6, -14/15, -7/9, 50/21, -247/270, -14404/4725, 193931/42525]<br>
+&nbsp;&nbsp;&nbsp;[16/15, -34/21, -5/3, 17564/2835, -36521/14175, -1709614/155925]<br>
+&nbsp;&nbsp;&nbsp;[2069/1260, -28/9, -49877/14175, 2454416/155925, -637699/85050]<br>
+&nbsp;&nbsp;&nbsp;[883/315, -28244/4455, -20989/2835, 48124558/1216215]<br>
+&nbsp;&nbsp;&nbsp;[797222/155925, -2471888/184275, -16969807/1091475]<br>
+&nbsp;&nbsp;&nbsp;[2199332/225225, -1238578/42525]<br>
+&nbsp;&nbsp;&nbsp;[87600385/4540536]<br>
+</small></tt>
+<p>&chi;&nbsp;&minus;&nbsp;&theta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[0, 2/3, 2/3, -2/9, -14/45, 1042/4725, 18/175, -1738/11025]<br>
+&nbsp;&nbsp;&nbsp;[-1/3, 4/15, 43/45, -4/45, -712/945, 332/945, 23159/42525]<br>
+&nbsp;&nbsp;&nbsp;[-2/5, 2/105, 124/105, 274/2835, -1352/945, 13102/31185]<br>
+&nbsp;&nbsp;&nbsp;[-55/126, -16/105, 21068/14175, 1528/4725, -2414843/935550]<br>
+&nbsp;&nbsp;&nbsp;[-22/45, -9202/31185, 20704/10395, 60334/93555]<br>
+&nbsp;&nbsp;&nbsp;[-90263/155925, -299444/675675, 40458083/14189175]<br>
+&nbsp;&nbsp;&nbsp;[-8962/12285, -3818498/6081075]<br>
+&nbsp;&nbsp;&nbsp;[-4259027/4365900]<br>
+</small></tt>
+<p>&theta;&nbsp;&minus;&nbsp;&chi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[0, -2/3, -2/3, 4/9, 2/9, -3658/4725, 76/225, 64424/99225]<br>
+&nbsp;&nbsp;&nbsp;[1/3, -4/15, -23/45, 68/45, 61/135, -2728/945, 2146/1215]<br>
+&nbsp;&nbsp;&nbsp;[2/5, -24/35, -46/35, 9446/2835, 428/945, -95948/10395]<br>
+&nbsp;&nbsp;&nbsp;[83/126, -80/63, -34712/14175, 4472/525, 29741/85050]<br>
+&nbsp;&nbsp;&nbsp;[52/45, -2362/891, -17432/3465, 280108/13365]<br>
+&nbsp;&nbsp;&nbsp;[335882/155925, -548752/96525, -48965632/4729725]<br>
+&nbsp;&nbsp;&nbsp;[51368/12285, -197456/15795]<br>
+&nbsp;&nbsp;&nbsp;[1461335/174636]<br>
+</small></tt>
+<p>&chi;&nbsp;&minus;&nbsp;&mu;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1/2, 2/3, -37/96, 1/360, 81/512, -96199/604800, 5406467/38707200, -7944359/67737600]<br>
+&nbsp;&nbsp;&nbsp;[-1/48, -1/15, 437/1440, -46/105, 1118711/3870720, -51841/1209600, -24749483/348364800]<br>
+&nbsp;&nbsp;&nbsp;[-17/480, 37/840, 209/4480, -5569/90720, -9261899/58060800, 6457463/17740800]<br>
+&nbsp;&nbsp;&nbsp;[-4397/161280, 11/504, 830251/7257600, -466511/2494800, -324154477/7664025600]<br>
+&nbsp;&nbsp;&nbsp;[-4583/161280, 108847/3991680, 8005831/63866880, -22894433/124540416]<br>
+&nbsp;&nbsp;&nbsp;[-20648693/638668800, 16363163/518918400, 2204645983/12915302400]<br>
+&nbsp;&nbsp;&nbsp;[-219941297/5535129600, 497323811/12454041600]<br>
+&nbsp;&nbsp;&nbsp;[-191773887257/3719607091200]<br>
+</small></tt>
+<p>&mu;&nbsp;&minus;&nbsp;&chi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1/2, -2/3, 5/16, 41/180, -127/288, 7891/37800, 72161/387072, -18975107/50803200]<br>
+&nbsp;&nbsp;&nbsp;[13/48, -3/5, 557/1440, 281/630, -1983433/1935360, 13769/28800, 148003883/174182400]<br>
+&nbsp;&nbsp;&nbsp;[61/240, -103/140, 15061/26880, 167603/181440, -67102379/29030400, 79682431/79833600]<br>
+&nbsp;&nbsp;&nbsp;[49561/161280, -179/168, 6601661/7257600, 97445/49896, -40176129013/7664025600]<br>
+&nbsp;&nbsp;&nbsp;[34729/80640, -3418889/1995840, 14644087/9123840, 2605413599/622702080]<br>
+&nbsp;&nbsp;&nbsp;[212378941/319334400, -30705481/10378368, 175214326799/58118860800]<br>
+&nbsp;&nbsp;&nbsp;[1522256789/1383782400, -16759934899/3113510400]<br>
+&nbsp;&nbsp;&nbsp;[1424729850961/743921418240]<br>
+</small></tt>
+<p>&xi;&nbsp;&minus;&nbsp;&phi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-4/3, -4/45, 88/315, 538/4725, 20824/467775, -44732/2837835, -86728/16372125, -88002076/13956067125]<br>
+&nbsp;&nbsp;&nbsp;[34/45, 8/105, -2482/14175, -37192/467775, -12467764/212837625, -895712/147349125, -2641983469/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-1532/2835, -898/14175, 54968/467775, 100320856/1915538625, 240616/4209975, 8457703444/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[6007/14175, 24496/467775, -5884124/70945875, -4832848/147349125, -4910552477/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-23356/66825, -839792/19348875, 816824/13395375, 9393713176/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[570284222/1915538625, 1980656/54729675, -4532926649/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-496894276/1915538625, -14848113968/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[224557742191/976924698750]<br>
+</small></tt>
+<p>&phi;&nbsp;&minus;&nbsp;&xi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[4/3, 4/45, -16/35, -2582/14175, 60136/467775, 28112932/212837625, 22947844/1915538625, -1683291094/37574026875]<br>
+&nbsp;&nbsp;&nbsp;[46/45, 152/945, -11966/14175, -21016/51975, 251310128/638512875, 1228352/3007125, -14351220203/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[3044/2835, 3802/14175, -94388/66825, -8797648/10945935, 138128272/147349125, 505559334506/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[6059/4725, 41072/93555, -1472637812/638512875, -45079184/29469825, 973080708361/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[768272/467775, 455935736/638512875, -550000184/147349125, -1385645336626/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[4210684958/1915538625, 443810768/383107725, -2939205114427/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[387227992/127702575, 101885255158/54273594375]<br>
+&nbsp;&nbsp;&nbsp;[1392441148867/325641566250]<br>
+</small></tt>
+<p>&xi;&nbsp;&minus;&nbsp;&beta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1/3, -4/45, 32/315, 34/675, 2476/467775, -70496/8513505, -18484/4343625, 29232878/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-7/90, -4/315, 74/2025, 3992/467775, 53836/212837625, -4160804/1915538625, -324943819/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-83/2835, 2/14175, 7052/467775, -661844/1915538625, 237052/383107725, -168643106/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-797/56700, 934/467775, 1425778/212837625, -2915326/1915538625, 113042383/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-3673/467775, 390088/212837625, 6064888/1915538625, -558526274/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-18623681/3831077250, 41288/29469825, 155665021/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-6205669/1915538625, 504234982/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-8913001661/3907698795000]<br>
+</small></tt>
+<p>&beta;&nbsp;&minus;&nbsp;&xi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1/3, 4/45, -46/315, -1082/14175, 11824/467775, 7947332/212837625, 9708931/1915538625, -5946082372/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[17/90, 68/945, -338/2025, -16672/155925, 39946703/638512875, 164328266/1915538625, 190673521/69780335625]<br>
+&nbsp;&nbsp;&nbsp;[461/2835, 1102/14175, -101069/467775, -255454/1563705, 236067184/1915538625, 86402898356/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[3161/18900, 1786/18711, -189032762/638512875, -98401826/383107725, 110123070361/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[88868/467775, 80274086/638512875, -802887278/1915538625, -200020620676/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[880980241/3831077250, 66263486/383107725, -296107325077/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[37151038/127702575, 4433064236/18091198125]<br>
+&nbsp;&nbsp;&nbsp;[495248998393/1302566265000]<br>
+</small></tt>
+<p>&xi;&nbsp;&minus;&nbsp;&theta;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[2/3, -4/45, 62/105, 778/4725, -193082/467775, -4286228/42567525, 53702182/212837625, 182466964/8881133625]<br>
+&nbsp;&nbsp;&nbsp;[4/45, -32/315, 12338/14175, 92696/467775, -61623938/70945875, -32500616/273648375, 367082779691/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-524/2835, -1618/14175, 612536/467775, 427003576/1915538625, -663111728/383107725, -42668482796/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-5933/14175, -8324/66825, 427770788/212837625, 421877252/1915538625, -327791986997/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-320044/467775, -9153184/70945875, 6024982024/1915538625, 74612072536/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-1978771378/1915538625, -46140784/383107725, 489898512247/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[-2926201612/1915538625, -42056042768/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-2209250801969/976924698750]<br>
+</small></tt>
+<p>&theta;&nbsp;&minus;&nbsp;&xi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-2/3, 4/45, -158/315, -2102/14175, 109042/467775, 216932/2627625, -189115382/1915538625, -230886326/6343666875]<br>
+&nbsp;&nbsp;&nbsp;[16/45, -16/945, 934/14175, -7256/155925, 117952358/638512875, 288456008/1915538625, -11696145869/69780335625]<br>
+&nbsp;&nbsp;&nbsp;[-232/2835, 922/14175, -25286/66825, -7391576/54729675, 478700902/1915538625, 91546732346/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[719/4725, 268/18711, -67048172/638512875, -67330724/383107725, 218929662961/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[14354/467775, 46774256/638512875, -117954842/273648375, -129039188386/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[253129538/1915538625, 2114368/34827975, -178084928947/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[13805944/127702575, 6489189398/54273594375]<br>
+&nbsp;&nbsp;&nbsp;[59983985827/325641566250]<br>
+</small></tt>
+<p>&xi;&nbsp;&minus;&nbsp;&mu;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[1/6, -4/45, -817/10080, 1297/18900, 7764059/239500800, -9292991/302702400, -25359310709/1743565824000, 39534358147/2858202547200]<br>
+&nbsp;&nbsp;&nbsp;[49/720, -2/35, -29609/453600, 35474/467775, 36019108271/871782912000, -14814966289/245188944000, -13216941177599/571640509440000]<br>
+&nbsp;&nbsp;&nbsp;[4463/90720, -2917/56700, -4306823/59875200, 3026004511/30648618000, 99871724539/1569209241600, -27782109847927/250092722880000]<br>
+&nbsp;&nbsp;&nbsp;[331799/7257600, -102293/1871100, -368661577/4036032000, 2123926699/15324309000, 168979300892599/1600593426432000]<br>
+&nbsp;&nbsp;&nbsp;[11744233/239500800, -875457073/13621608000, -493031379277/3923023104000, 1959350112697/9618950880000]<br>
+&nbsp;&nbsp;&nbsp;[453002260127/7846046208000, -793693009/9807557760, -145659994071373/800296713216000]<br>
+&nbsp;&nbsp;&nbsp;[103558761539/1426553856000, -53583096419057/500185445760000]<br>
+&nbsp;&nbsp;&nbsp;[12272105438887727/128047474114560000]<br>
+</small></tt>
+<p>&mu;&nbsp;&minus;&nbsp;&xi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-1/6, 4/45, 121/1680, -1609/28350, -384229/14968800, 12674323/851350500, 7183403063/560431872000, -375027460897/125046361440000]<br>
+&nbsp;&nbsp;&nbsp;[-29/720, 26/945, 16463/453600, -431/17325, -31621753811/1307674368000, 1117820213/122594472000, 30410873385097/2000741783040000]<br>
+&nbsp;&nbsp;&nbsp;[-1003/45360, 449/28350, 3746047/119750400, -32844781/1751349600, -116359346641/3923023104000, 151567502183/17863765920000]<br>
+&nbsp;&nbsp;&nbsp;[-40457/2419200, 629/53460, 10650637121/326918592000, -13060303/766215450, -317251099510901/8002967132160000]<br>
+&nbsp;&nbsp;&nbsp;[-1800439/119750400, 205072597/20432412000, 146875240637/3923023104000, -2105440822861/125046361440000]<br>
+&nbsp;&nbsp;&nbsp;[-59109051671/3923023104000, 228253559/24518894400, 91496147778023/2000741783040000]<br>
+&nbsp;&nbsp;&nbsp;[-4255034947/261534873600, 126430355893/13894040160000]<br>
+&nbsp;&nbsp;&nbsp;[-791820407649841/42682491371520000]<br>
+</small></tt>
+<p>&xi;&nbsp;&minus;&nbsp;&chi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[2/3, -34/45, 46/315, 2458/4725, -55222/93555, 2706758/42567525, 16676974/30405375, -64724382148/97692469875]<br>
+&nbsp;&nbsp;&nbsp;[19/45, -256/315, 3413/14175, 516944/467775, -340492279/212837625, 158999572/1915538625, 85904355287/37574026875]<br>
+&nbsp;&nbsp;&nbsp;[248/567, -15958/14175, 206834/467775, 4430783356/1915538625, -7597644214/1915538625, 2986003168/37574026875]<br>
+&nbsp;&nbsp;&nbsp;[16049/28350, -832976/467775, 62016436/70945875, 851209552/174139875, -375566203/39037950]<br>
+&nbsp;&nbsp;&nbsp;[15602/18711, -651151712/212837625, 3475643362/1915538625, 5106181018156/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[2561772812/1915538625, -10656173804/1915538625, 34581190223/8881133625]<br>
+&nbsp;&nbsp;&nbsp;[873037408/383107725, -5150169424688/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[7939103697617/1953849397500]<br>
+</small></tt>
+<p>&chi;&nbsp;&minus;&nbsp;&xi;:<br><tt><small>
+&nbsp;&nbsp;&nbsp;[-2/3, 34/45, -88/315, -2312/14175, 27128/93555, -55271278/212837625, 308365186/1915538625, -17451293242/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[1/45, -184/945, 6079/14175, -65864/155925, 106691108/638512875, 149984636/1915538625, -101520127208/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-106/2835, 772/14175, -14246/467775, 5921152/54729675, -99534832/383107725, 10010741462/37574026875]<br>
+&nbsp;&nbsp;&nbsp;[-167/9450, -5312/467775, 75594328/638512875, -35573728/273648375, 1615002539/75148053750]<br>
+&nbsp;&nbsp;&nbsp;[-248/13365, 2837636/638512875, 130601488/1915538625, -3358119706/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-34761247/1915538625, -3196/3553875, 46771947158/488462349375]<br>
+&nbsp;&nbsp;&nbsp;[-2530364/127702575, -18696014/18091198125]<br>
+&nbsp;&nbsp;&nbsp;[-14744861191/651283132500]<br>
+</small></tt>
+
+<center>
+Back to \ref geocentric.  Forward to \ref highprec.  Up to
 \ref contents.
 
 </center>
@@ -5215,7 +6328,7 @@ Back to \ref transversemercator.  Forward to \ref highprec.  Up to
 \page highprec Support for high precision arithmetic
 
 <center>
-Back to \ref geocentric.  Forward to \ref changes.  Up to \ref contents.
+Back to \ref auxlat.  Forward to \ref changes.  Up to \ref contents.
 </center>
 
 One of the goals with the algorithms in GeographicLib is to deliver
@@ -5235,9 +6348,11 @@ Here's what you should know:
    or later) and the quadmath library (which requires the use of g++).
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=5</code> gives
    arbitrary precision via mpfr::mpreal; this requires
-   <a href="http://www.mpfr.org"> MPFR</a> and
+   <a href="http://www.mpfr.org"> MPFR</a> (version 3.0 or later),
    <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
-   (version 3.5.9 or later).
+   (version 3.5.9 or later), and a compiler which supports the explicit
+   cast operator (e.g., g++ 4.5 or later, Visual Studio 12 2013 or
+   later).
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
    to respect these.
  - The indicated precision is used for <b>all</b> floating point
@@ -5471,7 +6586,7 @@ The following steps needed to be taken
        separate file.
 
 <center>
-Back to \ref geocentric.  Forward to \ref changes.  Up to \ref contents.
+Back to \ref auxlat.  Forward to \ref changes.  Up to \ref contents.
 
 </center>
 **********************************************************************/
@@ -5499,6 +6614,45 @@ particular the links for the source code will not work if the code has
 been migrated to the archive subdirectory).  All the releases are
 available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for GeographicLib.
+
+ - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
+   (released 2014-mm-dd)
+   - Fix bad BUG in Geohash::Reverse; this was introduced in version
+     1.37 and affected all platforms where unsigned longs are 32-bits.
+     Thanks to Christian Csar for reporting and diagnosing this.
+   - Fix BLUNDER in area calculation in Matlab routine geodreckon.
+   - Binary installers for Windows are now built with Visual Studio 11
+     2012 (instead of Visual Studio 10 2010).  Compiled Matlab support
+     still with version 2013a (64-bit).
+   - Update GeographicLib.pro for builds with qmake to include all the
+     source files.
+   - Cmake updates
+     - include cross-compiling checks in cmake config file;
+     - improve the way unsuitable versions are reported.
+   - legacy/Fortran now includes drop-in replacements for the geodesic
+     utilities from the NGS.
+   - Add area calculation to the Rhumb and RhumbLine classes and the
+     <a href="RhumbSolve.1.html">RhumbSolve</a> utility; see \ref
+     rhumbarea.
+   - Add area calculation to Matlab/Octave routines for great ellipses;
+     see \ref gearea.
+   - geographiclib-get-{geoids,gravity,magnetic} with no arguments now
+     print the usage instead of loading the minimal sets.
+   - TODO: remove debugging stuff from Rhumb.cpp and RhumbSolve.cpp.
+
+ - <a href="http://geographiclib.sf.net/1.38">Version 1.38</a>
+   (released 2014-10-02)
+   - On MacOSX, the installed package is relocatable (for cmake version
+     2.8.12 and later).
+   - On Mac OSX, GeographicLib can be installed using homebrew.
+   - In cmake builds under Windows, set the output directories so that
+     binaries and shared libraries are together.
+   - Accept the minus sign as a synomym for - in DMS.{cpp,js}.
+   - The cmake configuration file geographiclib-depends.cmake has been
+     renamed to geographiclib-targets.cmake.
+   - Matlab/Octave routines for great ellipses added; see \ref
+     greatellipse.
+   - Provide man pages for geographiclib-get-{geoids,gravity,magnetic}.
 
  - <a href="http://geographiclib.sf.net/1.37">Version 1.37</a>
    (released 2014-08-08)

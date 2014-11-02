@@ -23,8 +23,8 @@ int main() {
     const GeographicLib::RhumbLine line = rhumb.Line(lat1, lon1, azi12);
     // Alternatively
     // const GeographicLib::RhumbLine line = rhumb.Line(lat1, lon1, azi1);
-    double ds = 500e3;          // Nominal distance between points = 500 km
-    int num = int(ceil(s12 / ds)); // The number of intervals
+    double ds0 = 500e3;             // Nominal distance between points = 500 km
+    int num = int(ceil(s12 / ds0)); // The number of intervals
     cout << fixed << setprecision(3);
     {
       // Use intervals of equal length

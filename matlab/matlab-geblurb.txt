@@ -1,0 +1,14 @@
+This package includes two routines GEDISTANCE and GERECKON which solve
+the inverse and direct problems for great ellipses on the surface of an
+ellipsoid of revolution.
+
+The problem and method of solution is described in
+
+  http://geographiclib.sf.net/html/greatellipse.html
+
+This package depends on the MATLAB File Exchange package "Geodesics on
+an ellipsoid of revolution" for performing meridian arc computations:
+
+  http://www.mathworks.com/matlabcentral/fileexchange/39108
+
+Use GEDOC to obtain a more detailed description.
