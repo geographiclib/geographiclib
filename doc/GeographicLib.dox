@@ -496,7 +496,7 @@ Binary installers are available for some platforms
 
 Use this method if you only need to use the GeographicLib utilities.
 The header files and static and shared versions of library are also
-provided; these can only be used by Visual Studio 2010 (in either
+provided; these can only be used by Visual Studio 11 2012 (in either
 release or debug mode).  However, if you plan to use the library, it may
 be advisable to build it with the compiler you are using for your own
 code using either \ref cmake or \ref windows.
@@ -517,12 +517,12 @@ GeographicLib-1.39-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc10/GeographicLib-1.39/bin where the utilities are
+will include C:/pkg-vc11/GeographicLib-1.39/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the matlab folder.  Add this to your
 path in Matlab to access this interface.  The libraries were built using
-using Visual Studio 10 in release and debug modes.  The utilities were
+using Visual Studio 11 2012 in release and debug modes.  The utilities were
 linked against the release-mode shared library.  The Matlab interface
 was compiled with Matlab R2013a 64-bit, however it may work with some
 other 64-bit versions of Matlab.
@@ -1512,6 +1512,12 @@ variety of grid resolutions.  (In contrast, the software tools that NGA
 offers are different for each geoid, and the interpolation programs are
 different for each grid resolution.  In addition these tools are written
 in Fortran with is nowadays difficult to integrate with other software.)
+
+The geoid height, \e N, can be used to convert a height above the
+ellipsoid, \e h, to the corresponding height above the geoid (roughly
+the height above mean sea level), \e H, using the relation
+
+&nbsp;&nbsp;&nbsp;\e h = \e N + \e H.
 
 Unlike other components of GeographicLib, there is a appreciable error
 in the results obtained (at best, the RMS error is 1&nbsp;mm).  However the
@@ -4631,8 +4637,8 @@ as expected.
 In order to maintain accuracy, particularly for rhumb lines which nearly
 follow a parallel, evaluate \f$\left<\sin\xi\right>_{12}\f$ using
 divided differences (see the \ref divideddiffs "next section") and use
-Clenshaw summation to evaluate the sum, see the \ref dividedclenshaw
-"last section".
+Clenshaw summation to evaluate the sum (see the \ref dividedclenshaw
+"last section").
 
 Here is the series expansion accurate to 10th order, found by <a
 href="rhumbarea.mac">rhumbarea.mac</a>:
@@ -6611,24 +6617,27 @@ of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-mm-dd)
-   - Windows binaries now built with Visual Studio 11 2012.  Compiled
-     Matlab support still with version 2013a (64-bit).  TODO: document.
-   - Update GeographicLib.pro.
-   - TODO: Unconfuse geoid height arithmetic.
-   - Include cross-compiling checks in cmake config file
-   - Change way unsuitable versions are reported.
-   - legacy/Fortran contains replacements for NGS utilities
-   - TODO: Connect taup/(1-e^2) starting guess in TransverseMercator::tauf
-     with near identity of chi and theta (also update tm-addenda.html)
-   - Fix BLUNDER in area calculation in Matlab routine geodreckon.
-   - Add area calculation to Matlab/Octave routines for great ellipses
-     (still to do: update documentation).
-   - Add area calculation to Rhumb and RhumbLine.
-   - geographiclib-get-{geoids,gravity,magnetic} with no arguments
-     prints the usage instead of loading the minimal sets.
    - Fix bad BUG in Geohash::Reverse; this was introduced in version
      1.37 and affected all platforms where unsigned longs are 32-bits.
      Thanks to Christian Csar for reporting and diagnosing this.
+   - Fix BLUNDER in area calculation in Matlab routine geodreckon.
+   - Binary installers for Windows are now built with Visual Studio 11
+     2012 (instead of Visual Studio 10 2010).  Compiled Matlab support
+     still with version 2013a (64-bit).
+   - Update GeographicLib.pro for builds with qmake to include all the
+     source files.
+   - Cmake updates
+     - include cross-compiling checks in cmake config file;
+     - improve the way unsuitable versions are reported.
+   - legacy/Fortran now includes drop-in replacements for the geodesic
+     utilities from the NGS.
+   - Add area calculation to the Rhumb and RhumbLine classes and the
+     <a href="RhumbSolve.1.html">RhumbSolve</a> utility; see \ref
+     rhumbarea.
+   - Add area calculation to Matlab/Octave routines for great ellipses;
+     see \ref gearea.
+   - geographiclib-get-{geoids,gravity,magnetic} with no arguments now
+     print the usage instead of loading the minimal sets.
 
  - <a href="http://geographiclib.sf.net/1.38">Version 1.38</a>
    (released 2014-10-02)

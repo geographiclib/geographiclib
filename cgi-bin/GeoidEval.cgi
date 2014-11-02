@@ -122,6 +122,15 @@ cat <<EOF
 	GeoConvert</a> utility).
     </p>
     <p>
+      The geoid height, <i>N</i>, can be used to convert a height above
+      the ellipsoid, <i>h</i>, to the corresponding height above the
+      geoid (roughly the height above mean sea level), <i>H</i>, using
+      the relation
+      <blockquote>
+	<i>h</i> = <i>N</i> + <i>H</i>.
+      </blockquote>
+    </p>
+    <p>
       <a href="http://geographiclib.sourceforge.net/html/GeoidEval.1.html">
         GeoidEval</a>,
       which is a simple wrapper of the

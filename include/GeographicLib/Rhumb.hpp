@@ -117,17 +117,11 @@ namespace GeographicLib {
       real d = (x - y) / 2;
       return cos((x + y)/2) * (d ? sin(d) / d : 1);
     }
-    static inline real Dcos(real x, real y) {
-      using std::sin;
-      real d = (x - y) / 2;
-      return - sin((x + y) / 2) * (d ? sin(d) / d : 1);
-    }
     static inline real Dsinh(real x, real y) {
       using std::sinh; using std::cosh;
       real d = (x - y) / 2;
       return cosh((x + y) / 2) * (d ? sinh(d) / d : 1);
     }
-    // Dcosh(x,y) = sinh((x+y)/2) * sinh((x-y)/2)/((x-y)/2)
     static inline real Dcosh(real x, real y) {
       using std::sinh;
       real d = (x - y) / 2;
