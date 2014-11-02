@@ -17,7 +17,7 @@
 #include <GeographicLib/Rhumb.hpp>
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
-#include <GeographicLib/Geodesic.hpp>
+#include <GeographicLib/Geodesic.hpp> // TEMP FOR DEBUGGING
 
 #if defined(_MSC_VER)
 // Squelch warnings about constant conditional expressions and potentially
@@ -169,24 +169,26 @@ int main(int argc, char* argv[]) {
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
     const Rhumb rh(a, f, exact);
+    const RhumbLine rhl(linecalc ? rh.Line(lat1, lon1, azi12) :
+                        rh.Line(0, 0, 90));
+    const Geodesic g(a, f);     // TEMP FOR DEBUGGING
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     int retval = 0;
     std::string s;
-    if (linecalc) {
-      const RhumbLine rhl(rh.Line(lat1, lon1, azi12));
-      while (std::getline(*input, s)) {
-        try {
-          std::string eol("\n");
-          if (!cdelim.empty()) {
-            std::string::size_type m = s.find(cdelim);
-            if (m != std::string::npos) {
-              eol = " " + s.substr(m) + "\n";
-              s = s.substr(0, m);
-            }
+    while (std::getline(*input, s)) {
+      try {
+        std::string eol("\n");
+        if (!cdelim.empty()) {
+          std::string::size_type m = s.find(cdelim);
+          if (m != std::string::npos) {
+            eol = " " + s.substr(m) + "\n";
+            s = s.substr(0, m);
           }
-          std::istringstream str(s);
+        }
+        std::istringstream str(s);
+        if (linecalc) {
           if (!(str >> s12))
             throw GeographicErr("Incomplete input: " + s);
           std::string strc;
@@ -195,31 +197,12 @@ int main(int argc, char* argv[]) {
           rhl.Position(s12, lat2, lon2, S12);
           *output << LatLonString(lat2, lon2, prec, dms, dmssep) << " "
                   << Utility::str(S12, std::max(prec-7, 0)) << eol;
-        }
-        catch (const std::exception& e) {
-          // Write error message cout so output lines match input lines
-          *output << "ERROR: " << e.what() << "\n";
-          retval = 1;
-        }
-      }
-    } else if (inverse) {
-      const Geodesic g(a, f);
-      while (std::getline(*input, s)) {
-        try {
-          std::string eol("\n");
-          if (!cdelim.empty()) {
-            std::string::size_type m = s.find(cdelim);
-            if (m != std::string::npos) {
-              eol = " " + s.substr(m) + "\n";
-              s = s.substr(0, m);
-            }
-          }
-          std::istringstream str(s);
+        } else if (inverse) {
           std::string slat1, slon1, slat2, slon2;
           if (!(str >> slat1 >> slon1 >> slat2 >> slon2))
             throw GeographicErr("Incomplete input: " + s);
-          int ndiv = 0;
-          str >> ndiv;
+          int ndiv = 0;         // TEMP FOR DEBUGGING
+          str >> ndiv;          // TEMP FOR DEBUGGING
           std::string strc;
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
@@ -229,6 +212,7 @@ int main(int argc, char* argv[]) {
           *output << AzimuthString(azi12, prec, dms, dmssep) << " "
                   << Utility::str(s12, prec) << " "
                   << Utility::str(S12, std::max(prec-7, 0)) << eol;
+          // TEMP FOR DEBUGGING
           const RhumbLine rhl(rh.Line(lat1, lon1, azi12));
           real S12g = 0;
           real lat1g = lat1, lon1g = lon1, lat2g, lon2g;
@@ -244,25 +228,7 @@ int main(int argc, char* argv[]) {
           if (ndiv > 0)
             *output << Utility::str(S12g, std::max(prec-7,0)) << " "
                     << Utility::str(S12g-S12, std::max(prec-7,0)) << "\n";
-        }
-        catch (const std::exception& e) {
-          // Write error message cout so output lines match input lines
-          *output << "ERROR: " << e.what() << "\n";
-          retval = 1;
-        }
-      }
-    } else {
-      while (std::getline(*input, s)) {
-        try {
-          std::string eol("\n");
-          if (!cdelim.empty()) {
-            std::string::size_type m = s.find(cdelim);
-            if (m != std::string::npos) {
-              eol = " " + s.substr(m) + "\n";
-              s = s.substr(0, m);
-            }
-          }
-          std::istringstream str(s);
+        } else {                // direct
           std::string slat1, slon1, sazi;
           if (!(str >> slat1 >> slon1 >> sazi >> s12))
             throw GeographicErr("Incomplete input: " + s);
@@ -275,11 +241,11 @@ int main(int argc, char* argv[]) {
           *output << LatLonString(lat2, lon2, prec, dms, dmssep) << " "
                   << Utility::str(S12, std::max(prec-7, 0)) << eol;
         }
-        catch (const std::exception& e) {
-          // Write error message cout so output lines match input lines
-          *output << "ERROR: " << e.what() << "\n";
-          retval = 1;
-        }
+      }
+      catch (const std::exception& e) {
+        // Write error message cout so output lines match input lines
+        *output << "ERROR: " << e.what() << "\n";
+        retval = 1;
       }
     }
     return retval;

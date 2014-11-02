@@ -41,7 +41,7 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
 
 % Copyright (c) Charles Karney (2014) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.38.
+% This file was distributed with GeographicLib 1.39.
 
   if nargin < 4, error('Too few input arguments'), end
   if nargin < 5, ellipsoid = defaultellipsoid; end

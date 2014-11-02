@@ -50,7 +50,7 @@ function gedoc
 %   measured counter-clockwise, of the quadrilateral with corners
 %   (lat1,lon1), (0,lon1), (0,lon2), and (lat2,lon2).  It is given in
 %   meters^2.
-
+%
 %   The parameters of the ellipsoid are specified by the optional ELLIPSOID
 %   argument to the routines.  This is a two-element vector of the form
 %   [a,e], where a is the equatorial radius, e is the eccentricity e =

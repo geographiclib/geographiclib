@@ -18,7 +18,7 @@ B<RhumbSolve> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi12> ]
 The path with constant heading between two points on the ellipsoid at
 (I<lat1>, I<lon1>) and (I<lat2>, I<lon2>) is called the rhumb line or
 loxodrome.  Its length is I<s12> and the rhumb line has a forward
-azimuth I<azi12> along its length.  Also computer is I<S12> is the area
+azimuth I<azi12> along its length.  Also computed is I<S12> is the area
 between the rhumb line from point 1 to point 2 and the equator; i.e., it
 is the area, measured counter-clockwise, of the geodesic quadrilateral
 with corners (I<lat1>,I<lon1>), (0,I<lon1>), (0,I<lon2>), and

@@ -6638,6 +6638,7 @@ of the git repository for GeographicLib.
      see \ref gearea.
    - geographiclib-get-{geoids,gravity,magnetic} with no arguments now
      print the usage instead of loading the minimal sets.
+   - TODO: remove debugging stuff from Rhumb.cpp and RhumbSolve.cpp.
 
  - <a href="http://geographiclib.sf.net/1.38">Version 1.38</a>
    (released 2014-10-02)

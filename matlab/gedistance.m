@@ -37,7 +37,7 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 
 % Copyright (c) Charles Karney (2014) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.38.
+% This file was distributed with GeographicLib 1.39.
 
   if nargin < 4, error('Too few input arguments'), end
   if nargin < 5, ellipsoid = defaultellipsoid; end
