@@ -86,7 +86,15 @@ namespace GeographicLib {
     // problem.
     static inline int transitdirect(real lon1, real lon2) {
       using std::floor;
-      return int(floor(lon2 / 360) + floor(lon1 / 360));
+      // We want to compute
+      //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
+      // However, the concern is that for integer n and small positive eps, we
+      // might have n*360 - eps < n*360 but (n*360 - eps)/360 = n.  So...
+      real lon1a = Math::AngNormalize2(lon1), lon2a = Math::AngNormalize2(lon2);
+      int cross =
+        (int(floor((lon2 - lon2a + 180) / 360)) + (lon2a < 0 ? -1 : 0)) -
+        (int(floor((lon1 - lon1a + 180) / 360)) + (lon1a < 0 ? -1 : 0));
+      return cross;
     }
   public:
 

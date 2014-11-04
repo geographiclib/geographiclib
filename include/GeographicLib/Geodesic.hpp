@@ -629,15 +629,19 @@ namespace GeographicLib {
      * - \e outmask |= Geodesic::AREA for the area \e S12;
      * - \e outmask |= Geodesic::ALL for all of the above;
      * - \e outmask |= Geodesic::LONG_NOWRAP stops the returned value of \e
-     *   lon2 being wrapped into the range [&minus;180&deg;, 180&deg;); thus
-     *   \e lon2 &minus; \e lon1 indicates how many times the geodesic wrapped
-     *   around the ellipsoid.
+     *   lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
      * .
      * The function value \e a12 is always computed and returned and this
      * equals \e s12_a12 is \e arcmode is true.  If \e outmask includes
      * Geodesic::DISTANCE and \e arcmode is false, then \e s12 = \e s12_a12.
      * It is not necessary to include Geodesic::DISTANCE_IN in \e outmask; this
      * is automatically included is \e arcmode is false.
+     *
+     * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
+     * indicates how many times the geodesic wrapped around the ellipsoid.
+     * Because \e lon2 might be outside the normal allowed range for
+     * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
+     * Math::AngNormalize2 before using it in other GeographicLib calls.
      **********************************************************************/
     Math::real GenDirect(real lat1, real lon1, real azi1,
                          bool arcmode, real s12_a12, unsigned outmask,
