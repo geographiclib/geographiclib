@@ -6,15 +6,7 @@
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile and link with
- *   g++ -g -O3 -I../include -I../man -o GeodSolve \
- *       GeodSolve.cpp \
- *       ../src/DMS.cpp \
- *       ../src/Geodesic.cpp \
- *       ../src/GeodesicLine.cpp
- *
- * See the <a href="GeodSolve.1.html">man page</a> for usage
- * information.
+ * See the <a href="GeodSolve.1.html">man page</a> for usage information.
  **********************************************************************/
 
 #include <iostream>

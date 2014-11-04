@@ -6,19 +6,7 @@
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile and link with
- *   g++ -g -O3 -I../include -I../man -o MagneticField \
- *       MagneticField.cpp \
- *       ../src/CircularEngine.cpp \
- *       ../src/DMS.cpp \
- *       ../src/Geocentric.cpp \
- *       ../src/MagneticCircle.cpp \
- *       ../src/MagneticModel.cpp \
- *       ../src/SphericalEngine.cpp \
- *       ../src/Utility.cpp
- *
- * See the <a href="MagneticField.1.html">man page</a> for usage
- * information.
+ * See the <a href="MagneticField.1.html">man page</a> for usage information.
  **********************************************************************/
 
 #include <iostream>

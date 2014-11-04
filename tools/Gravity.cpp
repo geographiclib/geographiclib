@@ -6,20 +6,7 @@
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile and link with
- *   g++ -g -O3 -I../include -I../man -o Gravity \
- *       Gravity.cpp \
- *       ../src/CircularEngine.cpp \
- *       ../src/DMS.cpp \
- *       ../src/Geocentric.cpp \
- *       ../src/GravityCircle.cpp \
- *       ../src/GravityModel.cpp \
- *       ../src/NormalGravity.cpp \
- *       ../src/SphericalEngine.cpp \
- *       ../src/Utility.cpp
- *
- * See the <a href="Gravity.1.html">man page</a> for usage
- * information.
+ * See the <a href="Gravity.1.html">man page</a> for usage information.
  **********************************************************************/
 
 #include <iostream>

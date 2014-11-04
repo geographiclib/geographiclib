@@ -6617,6 +6617,8 @@ of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-mm-dd)
+   - <a href="MagneticField.1.html">MagneticField</a> accepts the string
+     "now" as a legal time.
    - TODO: fix PolygonArea::AddEdge bug.  Applies to C++, C, Java,
      Javascript, Python (bug not Matlab, Fortran, Maxima)
    - Fix bad BUG in Geohash::Reverse; this was introduced in version
