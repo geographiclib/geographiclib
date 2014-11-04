@@ -475,7 +475,11 @@ namespace GeographicLib {
      * - \e outmask |= GeodesicLineExact::GEODESICSCALE for the geodesic scales
      *   \e M12 and \e M21;
      * - \e outmask |= GeodesicLineExact::AREA for the area \e S12;
-     * - \e outmask |= GeodesicLine::ALL for all of the above.
+     * - \e outmask |= GeodesicLineExact::ALL for all of the above;
+     * - \e outmask |= GeodesicLineExact::LONG_NOWRAP stops the returned value
+     *   of \e lon2 being wrapped into the range [&minus;180&deg;, 180&deg;);
+     *   thus \e lon2 &minus; \e lon1 indicates how many times the geodesic
+     *   wrapped around the ellipsoid.
      * .
      * Requesting a value which the GeodesicLineExact object is not capable of
      * computing is not an error; the corresponding argument will not be
