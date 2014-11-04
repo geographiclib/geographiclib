@@ -377,4 +377,3 @@ class GeodesicLine(object):
       result['M12'] = M12; result['M21'] = M21
     if outmask & Geodesic.AREA: result['S12'] = S12
     return result
-
