@@ -84,7 +84,9 @@ namespace GeographicLib {
       CAP_C3   = Geodesic::CAP_C3,
       CAP_C4   = Geodesic::CAP_C4,
       CAP_ALL  = Geodesic::CAP_ALL,
+      CAP_MASK = Geodesic::CAP_MASK,
       OUT_ALL  = Geodesic::OUT_ALL,
+      OUT_MASK = Geodesic::OUT_MASK,
     };
   public:
 
@@ -145,7 +147,13 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = Geodesic::AREA,
       /**
-       * All capabilities, calculate everything.
+       * Do not wrap \e lon2 in the direct calculation.
+       * @hideinitializer
+       **********************************************************************/
+      LONG_NOWRAP   = Geodesic::LONG_NOWRAP,
+      /**
+       * All capabilities, calculate everything.  (LONG_NOWRAP is not
+       * included in this mask.)
        * @hideinitializer
        **********************************************************************/
       ALL           = Geodesic::ALL,
@@ -493,7 +501,11 @@ namespace GeographicLib {
      * - \e outmask |= GeodesicLine::GEODESICSCALE for the geodesic scales \e
      *   M12 and \e M21;
      * - \e outmask |= GeodesicLine::AREA for the area \e S12;
-     * - \e outmask |= GeodesicLine::ALL for all of the above.
+     * - \e outmask |= GeodesicLine::ALL for all of the above;
+     * - \e outmask |= GeodesicLine::LONG_NOWRAP stops the returned value of \e
+     *   lon2 being wrapped into the range [&minus;180&deg;, 180&deg;); thus
+     *   \e lon2 &minus; \e lon1 indicates how many times the geodesic wrapped
+     *   around the ellipsoid.
      * .
      * Requesting a value which the GeodesicLine object is not capable of
      * computing is not an error; the corresponding argument will not be

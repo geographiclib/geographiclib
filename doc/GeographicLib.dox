@@ -6617,6 +6617,8 @@ of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-mm-dd)
+   - TODO: fix PolygonArea::AddEdge bug.  Applies to C++, C, Java,
+     Javascript, Python (bug not Matlab, Fortran, Maxima)
    - Fix bad BUG in Geohash::Reverse; this was introduced in version
      1.37 and affected all platforms where unsigned longs are 32-bits.
      Thanks to Christian Csar for reporting and diagnosing this.

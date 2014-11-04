@@ -95,7 +95,9 @@ namespace GeographicLib {
       CAP_H    = 1U<<3,
       CAP_C4   = 1U<<4,
       CAP_ALL  = 0x1FU,
+      CAP_MASK = CAP_ALL,
       OUT_ALL  = 0x7F80U,
+      OUT_MASK = 0xFF80U,       // Includes LONG_NOWRAP
     };
 
     static real CosSeries(real sinx, real cosx, const real c[], int n);
@@ -219,7 +221,13 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = 1U<<14 | CAP_C4,
       /**
-       * All capabilities, calculate everything.
+       * Do wrap the \e lon2 in the direct calculation.
+       * @hideinitializer
+       **********************************************************************/
+      LONG_NOWRAP   = 1U<<15,
+      /**
+       * All capabilities, calculate everything.  (LONG_NOWRAP is not
+       * included in this mask.)
        * @hideinitializer
        **********************************************************************/
       ALL           = OUT_ALL| CAP_ALL,
@@ -517,7 +525,11 @@ namespace GeographicLib {
      * - \e outmask |= GeodesicExact::GEODESICSCALE for the geodesic scales \e
      *   M12 and \e M21;
      * - \e outmask |= GeodesicExact::AREA for the area \e S12;
-     * - \e outmask |= GeodesicExact::ALL for all of the above.
+     * - \e outmask |= GeodesicExact::ALL for all of the above;
+     * - \e outmask |= GeodesicExact::LONG_NOWRAP stops the returned value of
+     *   \e lon2 being wrapped into the range [&minus;180&deg;, 180&deg;);
+     *   thus \e lon2 &minus; \e lon1 indicates how many times the geodesic
+     *   wrapped around the ellipsoid.
      * .
      * The function value \e a12 is always computed and returned and this
      * equals \e s12_a12 is \e arcmode is true.  If \e outmask includes

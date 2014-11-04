@@ -82,6 +82,12 @@ namespace GeographicLib {
         (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
       return cross;
     }
+    // an alternate version of transit to deal with longitudes in the direct
+    // problem.
+    static inline int transitdirect(real lon1, real lon2) {
+      using std::floor;
+      return int(floor(lon2 / 360) + floor(lon1 / 360));
+    }
   public:
 
     /**
@@ -96,7 +102,8 @@ namespace GeographicLib {
       , _area0(_earth.EllipsoidArea())
       , _polyline(polyline)
       , _mask(GeodType::LATITUDE | GeodType::LONGITUDE | GeodType::DISTANCE |
-              (_polyline ? GeodType::NONE : GeodType::AREA))
+              (_polyline ? GeodType::NONE :
+               GeodType::AREA | GeodType::LONG_NOWRAP))
     { Clear(); }
 
     /**

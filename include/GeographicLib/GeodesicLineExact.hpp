@@ -55,7 +55,9 @@ namespace GeographicLib {
       CAP_H    = GeodesicExact::CAP_H,
       CAP_C4   = GeodesicExact::CAP_C4,
       CAP_ALL  = GeodesicExact::CAP_ALL,
+      CAP_MASK = GeodesicExact::CAP_MASK,
       OUT_ALL  = GeodesicExact::OUT_ALL,
+      OUT_MASK = GeodesicExact::OUT_MASK,
     };
   public:
 
@@ -117,7 +119,13 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = GeodesicExact::AREA,
       /**
-       * All capabilities, calculate everything.
+       * Do not wrap \e lon2 in the direct calculation.
+       * @hideinitializer
+       **********************************************************************/
+      LONG_NOWRAP = GeodesicExact::LONG_NOWRAP,
+      /**
+       * All capabilities, calculate everything.  (LONG_NOWRAP is not
+       * included in this mask.)
        * @hideinitializer
        **********************************************************************/
       ALL           = GeodesicExact::ALL,

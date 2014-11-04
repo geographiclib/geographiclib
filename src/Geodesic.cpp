@@ -139,7 +139,7 @@ namespace GeographicLib {
                                   real& s12, real& azi1, real& azi2,
                                   real& m12, real& M12, real& M21, real& S12)
     const {
-    outmask &= OUT_ALL;
+    outmask &= OUT_MASK;
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.

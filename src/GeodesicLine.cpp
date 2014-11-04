@@ -36,6 +36,10 @@ namespace GeographicLib {
                              real lat1, real lon1, real azi1,
                              unsigned caps)
     : tiny_(g.tiny_)
+    , _lat1(lat1)
+    , _lon1(lon1)
+    // Guard against underflow in salp0
+    , _azi1(Geodesic::AngRound(Math::AngNormalize(azi1)))
     , _a(g._a)
     , _f(g._f)
     , _b(g._b)
@@ -44,18 +48,11 @@ namespace GeographicLib {
       // Always allow latitude and azimuth
     , _caps(caps | LATITUDE | AZIMUTH)
   {
-    // Guard against underflow in salp0
-    azi1 = Geodesic::AngRound(Math::AngNormalize(azi1));
-    lon1 = Math::AngNormalize(lon1);
-    _lat1 = lat1;
-    _lon1 = lon1;
-    _azi1 = azi1;
-    // alp1 is in [0, pi]
-    real alp1 = azi1 * Math::degree();
+    real alp1 = _azi1 * Math::degree();
     // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
     // problems directly than to skirt them.
-    _salp1 =     azi1  == -180 ? 0 : sin(alp1);
-    _calp1 = abs(azi1) ==   90 ? 0 : cos(alp1);
+    _salp1 =     _azi1  == -180 ? 0 : sin(alp1);
+    _calp1 = abs(_azi1) ==   90 ? 0 : cos(alp1);
     real cbet1, sbet1, phi;
     phi = lat1 * Math::degree();
     // Ensure cbet1 = +epsilon at poles
@@ -128,8 +125,8 @@ namespace GeographicLib {
                                        real& M12, real& M21,
                                        real& S12)
   const {
-    outmask &= _caps & OUT_ALL;
-    if (!( Init() && (arcmode || (_caps & DISTANCE_IN & OUT_ALL)) ))
+    outmask &= _caps & OUT_MASK;
+    if (!( Init() && (arcmode || (_caps & DISTANCE_IN & OUT_MASK)) ))
       // Uninitialized or impossible distance calculation requested
       return Math::NaN();
 
@@ -188,8 +185,7 @@ namespace GeographicLib {
       }
     }
 
-    real omg12, lam12, lon12;
-    real ssig2, csig2, sbet2, cbet2, somg2, comg2, salp2, calp2;
+    real ssig2, csig2, sbet2, cbet2, salp2, calp2;
     // sig2 = sig1 + sig12
     ssig2 = _ssig1 * csig12 + _csig1 * ssig12;
     csig2 = _csig1 * csig12 - _ssig1 * ssig12;
@@ -206,26 +202,30 @@ namespace GeographicLib {
     if (cbet2 == 0)
       // I.e., salp0 = 0, csig2 = 0.  Break the degeneracy in this case
       cbet2 = csig2 = tiny_;
-    // tan(omg2) = sin(alp0) * tan(sig2)
-    somg2 = _salp0 * ssig2; comg2 = csig2;  // No need to normalize
     // tan(alp0) = cos(sig2)*tan(alp2)
     salp2 = _salp0; calp2 = _calp0 * csig2; // No need to normalize
-    // omg12 = omg2 - omg1
-    omg12 = atan2(somg2 * _comg1 - comg2 * _somg1,
-                  comg2 * _comg1 + somg2 * _somg1);
 
     if (outmask & DISTANCE)
       s12 = arcmode ? _b * ((1 + _A1m1) * sig12 + AB1) : s12_a12;
 
     if (outmask & LONGITUDE) {
-      lam12 = omg12 + _A3c *
+      // tan(omg2) = sin(alp0) * tan(sig2)
+      real somg2 = _salp0 * ssig2, comg2 = csig2;  // No need to normalize
+      // omg12 = omg2 - omg1
+      real omg12 = outmask & LONG_NOWRAP ? sig12
+        - (atan2(ssig2, csig2) - atan2(_ssig1, _csig1))
+        + (atan2(somg2, comg2) - atan2(_somg1, _comg1))
+        : atan2(somg2 * _comg1 - comg2 * _somg1,
+                comg2 * _comg1 + somg2 * _somg1);
+      real lam12 = omg12 + _A3c *
         ( sig12 + (Geodesic::SinCosSeries(true, ssig2, csig2, _C3a, nC3_-1)
                    - _B31));
-      lon12 = lam12 / Math::degree();
-      // Use Math::AngNormalize2 because longitude might have wrapped multiple
-      // times.
-      lon12 = Math::AngNormalize2(lon12);
-      lon2 = Math::AngNormalize(_lon1 + lon12);
+      real lon12 = lam12 / Math::degree();
+      // Use Math::AngNormalize2 because longitude might have wrapped
+      // multiple times.
+      lon2 = outmask & LONG_NOWRAP ? _lon1 + lon12 :
+        Math::AngNormalize(Math::AngNormalize(_lon1) +
+                           Math::AngNormalize2(lon12));
     }
 
     if (outmask & LATITUDE)
@@ -257,7 +257,7 @@ namespace GeographicLib {
         B42 = Geodesic::SinCosSeries(false, ssig2, csig2, _C4a, nC4_);
       real salp12, calp12;
       if (_calp0 == 0 || _salp0 == 0) {
-        // alp12 = alp2 - alp1, used in atan2 so no need to normalized
+        // alp12 = alp2 - alp1, used in atan2 so no need to normalize
         salp12 = salp2 * _calp1 - calp2 * _salp1;
         calp12 = calp2 * _calp1 + salp2 * _salp1;
         // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
