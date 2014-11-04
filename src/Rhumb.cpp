@@ -285,27 +285,6 @@ namespace GeographicLib {
   Math::real Rhumb::MeanSinXi(real psix, real psiy) const {
     return Dlog(cosh(psix), cosh(psiy)) * Dcosh(psix, psiy)
       + SinCosSeries(false, gd(psix), gd(psiy), _R, maxpow_) * Dgd(psix, psiy);
-    /* Checking code ...
-    real a = Dlog(cosh(psix), cosh(psiy)) * Dcosh(psix, psiy);
-    real b = SinCosSeries(false, gd(psix), gd(psiy), _R, maxpow_);
-    real c = Dgd(psix, psiy);
-
-    real chix = gd(psix), chiy = gd(psiy);
-    real sx = 0, sy = 0;
-    for (int i = 1; i <= maxpow_; ++i) {
-      sx += _R[i] * cos(2*i*chix);
-      sy += _R[i] * cos(2*i*chiy);
-    }
-    real aa = -(log(cos(chix)) - log(cos(chiy))) / (psix - psiy);
-    real bb = (sx - sy) / (chix - chiy);
-    real cc = (chix - chiy) / (psix - psiy);
-    cout << aa << " " << a << " " << (a-aa)/aa << "\n";
-    cout << bb << " " << b << " " << (b-bb)/bb << "\n";
-    cout << cc << " " << c << " " << (c-cc)/cc << "\n";
-    sx -= log(cos(chix));
-    sy -= log(cos(chiy));
-    return (sx - sy) / (psix - psiy);
-    */
   }
 
   RhumbLine::RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12,

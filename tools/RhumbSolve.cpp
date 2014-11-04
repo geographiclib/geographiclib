@@ -17,7 +17,6 @@
 #include <GeographicLib/Rhumb.hpp>
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
-#include <GeographicLib/Geodesic.hpp> // TEMP FOR DEBUGGING
 
 #if defined(_MSC_VER)
 // Squelch warnings about constant conditional expressions and potentially
@@ -171,7 +170,6 @@ int main(int argc, char* argv[]) {
     const Rhumb rh(a, f, exact);
     const RhumbLine rhl(linecalc ? rh.Line(lat1, lon1, azi12) :
                         rh.Line(0, 0, 90));
-    const Geodesic g(a, f);     // TEMP FOR DEBUGGING
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
@@ -201,8 +199,6 @@ int main(int argc, char* argv[]) {
           std::string slat1, slon1, slat2, slon2;
           if (!(str >> slat1 >> slon1 >> slat2 >> slon2))
             throw GeographicErr("Incomplete input: " + s);
-          int ndiv = 0;         // TEMP FOR DEBUGGING
-          str >> ndiv;          // TEMP FOR DEBUGGING
           std::string strc;
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
@@ -212,22 +208,6 @@ int main(int argc, char* argv[]) {
           *output << AzimuthString(azi12, prec, dms, dmssep) << " "
                   << Utility::str(s12, prec) << " "
                   << Utility::str(S12, std::max(prec-7, 0)) << eol;
-          // TEMP FOR DEBUGGING
-          const RhumbLine rhl(rh.Line(lat1, lon1, azi12));
-          real S12g = 0;
-          real lat1g = lat1, lon1g = lon1, lat2g, lon2g;
-          for (int i = 1; i <= ndiv; ++i) {
-            rhl.Position((s12*i)/ndiv, lat2g, lon2g);
-            real dummy, S12a;
-            g.GenInverse(lat1g, lon1g, lat2g, lon2g, Geodesic::AREA,
-                         dummy, dummy, dummy, dummy, dummy, dummy, S12a);
-            S12g += S12a;
-            lat1g = lat2g;
-            lon1g = lon2g;
-          }
-          if (ndiv > 0)
-            *output << Utility::str(S12g, std::max(prec-7,0)) << " "
-                    << Utility::str(S12g-S12, std::max(prec-7,0)) << "\n";
         } else {                // direct
           std::string slat1, slon1, sazi;
           if (!(str >> slat1 >> slon1 >> sazi >> s12))
