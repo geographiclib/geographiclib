@@ -221,7 +221,7 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = 1U<<14 | CAP_C4,
       /**
-       * Do wrap the \e lon2 in the direct calculation.
+       * Do not wrap the \e lon2 in the direct calculation.
        * @hideinitializer
        **********************************************************************/
       LONG_NOWRAP   = 1U<<15,

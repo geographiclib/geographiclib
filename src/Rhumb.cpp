@@ -111,7 +111,8 @@ namespace GeographicLib {
     return wgs84;
   }
 
-  void Rhumb::GenInverse(real lat1, real lon1, real lat2, real lon2, bool areap,
+  void Rhumb::GenInverse(real lat1, real lon1, real lat2, real lon2,
+                         unsigned outmask,
                          real& s12, real& azi12, real& S12) const {
     real
       lon12 = Math::AngDiff(Math::AngNormalize(lon1), Math::AngNormalize(lon2)),
@@ -119,21 +120,24 @@ namespace GeographicLib {
       psi2 = _ell.IsometricLatitude(lat2),
       psi12 = psi2 - psi1,
       h = Math::hypot(lon12, psi12);
-    azi12 = 0 - atan2(-lon12, psi12) / Math::degree();
+    if (outmask & AZIMUTH)
+      azi12 = 0 - atan2(-lon12, psi12) / Math::degree();
     psi1 *= Math::degree();
     psi2 *= Math::degree();
     real dmudpsi = DIsometricToRectifying(psi2, psi1);
-    s12 = h * dmudpsi * _ell.QuarterMeridian() / 90;
-    if (areap)
+    if (outmask & DISTANCE)
+      s12 = h * dmudpsi * _ell.QuarterMeridian() / 90;
+    if (outmask & AREA)
       S12 = _c2 * lon12 * MeanSinXi(psi2, psi1);
   }
 
   RhumbLine Rhumb::Line(real lat1, real lon1, real azi12) const
   { return RhumbLine(*this, lat1, lon1, azi12, _exact); }
 
-  void Rhumb::GenDirect(real lat1, real lon1, real azi12, real s12, bool areap,
+  void Rhumb::GenDirect(real lat1, real lon1, real azi12, real s12,
+                        unsigned outmask,
                         real& lat2, real& lon2, real& S12) const
-  { Line(lat1, lon1, azi12).GenPosition(s12, areap, lat2, lon2, S12); }
+  { Line(lat1, lon1, azi12).GenPosition(s12, outmask, lat2, lon2, S12); }
 
   Math::real Rhumb::DE(real x, real y) const {
     const EllipticFunction& ei = _ell._ell;
@@ -292,49 +296,52 @@ namespace GeographicLib {
     : _rh(rh)
     , _exact(exact)
     , _lat1(lat1)
-    , _lon1(Math::AngNormalize(lon1))
+    , _lon1(lon1)
     , _azi12(Math::AngNormalize(azi12))
   {
-    real alp12 = azi12 * Math::degree();
-    _salp =     azi12  == -180 ? 0 : sin(alp12);
-    _calp = abs(azi12) ==   90 ? 0 : cos(alp12);
+    real alp12 = _azi12 * Math::degree();
+    _salp =     _azi12  == -180 ? 0 : sin(alp12);
+    _calp = abs(_azi12) ==   90 ? 0 : cos(alp12);
     _mu1 = _rh._ell.RectifyingLatitude(lat1);
     _psi1 = _rh._ell.IsometricLatitude(lat1);
     _r1 = _rh._ell.CircleRadius(lat1);
   }
 
-  void RhumbLine::GenPosition(real s12, bool areap,
+  void RhumbLine::GenPosition(real s12, unsigned outmask,
                               real& lat2, real& lon2, real& S12) const {
     real
       mu12 = s12 * _calp * 90 / _rh._ell.QuarterMeridian(),
       mu2 = _mu1 + mu12;
-    real psi2;
+    real psi2, lat2x, lon2x;
     if (abs(mu2) <= 90) {
       if (_calp) {
-        lat2 = _rh._ell.InverseRectifyingLatitude(mu2);
+        lat2x = _rh._ell.InverseRectifyingLatitude(mu2);
         real psi12 = _rh.DRectifyingToIsometric(  mu2 * Math::degree(),
                                                  _mu1 * Math::degree()) * mu12;
-        lon2 = _salp * psi12 / _calp;
+        lon2x = _salp * psi12 / _calp;
         psi2 = _psi1 + psi12;
       } else {
-        lat2 = _lat1;
-        lon2 = _salp * s12 / (_r1 * Math::degree());
+        lat2x = _lat1;
+        lon2x = _salp * s12 / (_r1 * Math::degree());
         psi2 = _psi1;
       }
-      if (areap)
+      if (outmask & AREA)
         S12 = _rh._c2 * lon2 *
           _rh.MeanSinXi(_psi1 * Math::degree(), psi2 * Math::degree());
-      lon2 = Math::AngNormalize2(_lon1 + lon2);
+      lon2 = outmask & LONG_NOWRAP ? _lon1 + lon2 :
+        Math::AngNormalize2(Math::AngNormalize(_lon1) + lon2);
     } else {
       // Reduce to the interval [-180, 180)
       mu2 = Math::AngNormalize2(mu2);
       // Deal with points on the anti-meridian
       if (abs(mu2) > 90) mu2 = Math::AngNormalize(180 - mu2);
-      lat2 = _rh._ell.InverseRectifyingLatitude(mu2);
-      lon2 = Math::NaN();
-      if (areap)
+      lat2x = _rh._ell.InverseRectifyingLatitude(mu2);
+      lon2x = Math::NaN();
+      if (outmask & AREA)
         S12 = Math::NaN();
     }
+    if (outmask & LATITUDE) lat2 = lat2x;
+    if (outmask & LONGITUDE) lon2 = lon2x;
   }
 
 } // namespace GeographicLib

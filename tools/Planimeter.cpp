@@ -31,11 +31,12 @@ int main(int argc, char* argv[]) {
     using namespace GeographicLib;
     typedef Math::real real;
     Utility::set_digits();
+    enum { GEODESIC, EXACT, AUTHALIC, RHUMB };
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
-    bool reverse = false, sign = true, polyline = false,
-      exact = false, authalic = false;
+    bool reverse = false, sign = true, polyline = false;
+    int linetype = GEODESIC;
     int prec = 6;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
@@ -68,13 +69,15 @@ int main(int argc, char* argv[]) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
-      } else if (arg == "-E") {
-        exact = true;
-        authalic = false;
-      } else if (arg == "-Q") {
-        exact = false;
-        authalic = true;
-      } else if (arg == "--input-string") {
+      } else if (arg == "-G")
+        linetype = GEODESIC;
+      else if (arg == "-E")
+        linetype = EXACT;
+      else if (arg == "-Q")
+        linetype = AUTHALIC;
+      else if (arg == "-R")
+        linetype = RHUMB;
+      else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
       } else if (arg == "--input-file") {
@@ -140,15 +143,17 @@ int main(int argc, char* argv[]) {
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
     const Ellipsoid ellip(a, f);
-    if (authalic) {
+    if (linetype == AUTHALIC) {
       using std::sqrt;
       a = sqrt(ellip.Area() / (4 * Math::pi()));
       f = 0;
     }
     const Geodesic geod(a, f);
     const GeodesicExact geode(a, f);
+    const Rhumb rhumb(a, f);
     PolygonArea poly(geod, polyline);
     PolygonAreaExact polye(geode, polyline);
+    PolygonAreaRhumb polyr(rhumb, polyline);
     GeoCoords p;
 
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
@@ -178,8 +183,10 @@ int main(int argc, char* argv[]) {
         }
       }
       if (endpoly) {
-        num = exact ? polye.Compute(reverse, sign, perimeter, area) :
-          poly.Compute(reverse, sign, perimeter, area);
+        num =
+          linetype == EXACT ? polye.Compute(reverse, sign, perimeter, area) :
+          linetype == RHUMB ? polyr.Compute(reverse, sign, perimeter, area) :
+          poly.Compute(reverse, sign, perimeter, area); // geodesic + authalic
         if (num > 0) {
           *output << num << " " << Utility::str(perimeter, prec);
           if (!polyline) {
@@ -187,16 +194,21 @@ int main(int argc, char* argv[]) {
           }
           *output << eol;
         }
-        exact ? polye.Clear() : poly.Clear();
+        linetype == EXACT ? polye.Clear() :
+          linetype == RHUMB ? polyr.Clear() : poly.Clear();
         eol = "\n";
       } else {
-        exact ? polye.AddPoint(p.Latitude(), p.Longitude()) :
-          poly.AddPoint(authalic ? ellip.AuthalicLatitude(p.Latitude()) :
+        linetype == EXACT ? polye.AddPoint(p.Latitude(), p.Longitude()) :
+          linetype == RHUMB ? polyr.AddPoint(p.Latitude(), p.Longitude()) :
+          poly.AddPoint(linetype == AUTHALIC ?
+                        ellip.AuthalicLatitude(p.Latitude()) :
                         p.Latitude(),
                         p.Longitude());
       }
     }
-    num = exact ? polye.Compute(reverse, sign, perimeter, area):
+    num =
+      linetype == EXACT ? polye.Compute(reverse, sign, perimeter, area) :
+      linetype == RHUMB ? polyr.Compute(reverse, sign, perimeter, area) :
       poly.Compute(reverse, sign, perimeter, area);
     if (num > 0) {
       *output << num << " " << Utility::str(perimeter, prec);
@@ -205,7 +217,8 @@ int main(int argc, char* argv[]) {
       }
       *output << eol;
     }
-    exact ? polye.Clear() : poly.Clear();
+    linetype == EXACT ? polye.Clear() :
+      linetype == RHUMB ? polyr.Clear() : poly.Clear();
     eol = "\n";
     return 0;
   }
