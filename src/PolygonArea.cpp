@@ -198,5 +198,6 @@ namespace GeographicLib {
 
   template class GEOGRAPHICLIB_EXPORT PolygonAreaT<Geodesic>;
   template class GEOGRAPHICLIB_EXPORT PolygonAreaT<GeodesicExact>;
+  template class GEOGRAPHICLIB_EXPORT PolygonAreaT<Rhumb>;
 
 } // namespace GeographicLib

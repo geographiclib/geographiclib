@@ -166,7 +166,8 @@ namespace GeographicLib {
     /**
      * Given a date as a string in the format yyyy, yyyy-mm, or yyyy-mm-dd,
      * return the numeric values for the year, month, and day.  No checking is
-     * done on these values.
+     * done on these values.  The string "now" is interpreted as the present
+     * date (in UTC).
      *
      * @param[in] s the date in string format.
      * @param[out] y the year.

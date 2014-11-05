@@ -933,9 +933,9 @@ The utilities are
 The documentation for these utilities is in the form of man pages.  This
 documentation can be accessed by clicking on the utility name in the
 list above, running the man command on Unix-like systems, or by invoking
-the utility with the <code>--help</code> option.  A brief summary of
+the utility with the <code>\--help</code> option.  A brief summary of
 usage is given by invoking the utility with the <code>-h</code> option.
-The version of the utility is given by the <code>--version</code>
+The version of the utility is given by the <code>\--version</code>
 option.
 
 The utilities all accept data on standard input, transform it in some
@@ -7061,7 +7061,7 @@ of the git repository for GeographicLib.
    - Slight improvement in Geodesic::Inverse for very
      short lines.
    - Fix argument checking tests in MGRS::Forward.
-   - Add --comment-delimiter and --line-separator options to the \ref
+   - Add \--comment-delimiter and \--line-separator options to the \ref
      utilities.
    - Add installer for 64-bit Windows; the compiled Matlab interface is
      supplied with the Windows 64-bit installer only.
@@ -7253,7 +7253,7 @@ of the git repository for GeographicLib.
    - Provide cmake support:
      - build binary installer for Windows;
      - include regression tests;
-     - add --input-string, --input-file, --output-file options to the
+     - add \--input-string, \--input-file, \--output-file options to the
        \ref utilities to support tests.
    - Rename utility EquidistantTest as <a href="GeodesicProj.1.html">
      GeodesicProj</a> and TransverseMercatorTest as
@@ -7270,7 +7270,7 @@ of the git repository for GeographicLib.
    - Optionally return rotation matrix from Geocentric and
      LocalCartesian.
    - For the \ref utilities, supply man pages, -h prints the synopsis,
-     --help prints the man page, --version prints the version.
+     \--help prints the man page, \--version prints the version.
    - Use accurate summation in <a href="Planimeter.1.html">Planimeter</a>.
    - Add 64-bit targets for Visual Studio 2010.
    - Use templates for defining math functions and some constants.
@@ -7279,7 +7279,7 @@ of the git repository for GeographicLib.
        Geoid::DefaultGeoidName;
      - <a href="GeoidEval.1.html">GeoidEval</a> uses environment variable
        GEOGRAPHICLIB_GEOID_NAME as the default geoid;
-     - Add --msltohae and --haetomsl as
+     - Add \--msltohae and \--haetomsl as
        <a href="GeoidEval.1.html">GeoidEval</a> options (and don't
        document the single hyphen versions).
    - Remove documentation that duplicates papers on transverse Mercator

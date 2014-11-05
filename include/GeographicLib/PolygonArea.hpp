@@ -12,6 +12,7 @@
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicExact.hpp>
+#include <GeographicLib/Rhumb.hpp>
 #include <GeographicLib/Accumulator.hpp>
 
 namespace GeographicLib {
@@ -279,6 +280,13 @@ namespace GeographicLib {
    * for modest flattenings.)
    **********************************************************************/
   typedef PolygonAreaT<GeodesicExact> PolygonAreaExact;
+
+  /**
+   * @relates PolygonAreaT
+   *
+   * Polygon areas using Rhumb.
+   **********************************************************************/
+  typedef PolygonAreaT<Rhumb> PolygonAreaRhumb;
 
 } // namespace GeographicLib
 

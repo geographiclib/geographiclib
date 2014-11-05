@@ -26,14 +26,15 @@
 namespace GeographicLib {
 
   class RhumbLine;
+  template <class T> class PolygonAreaT;
 
   /**
    * \brief Solve of the direct and inverse rhumb problems.
    *
    * The path of constant azimuth between two points on a ellipsoid at (\e
    * lat1, \e lon1) and (\e lat2, \e lon2) is called the rhumb line (also
-   * called the loxodrome).  Its length is \e s12 and its azimuth is \e azi12
-   * and \e azi2.  (The azimuth is the heading measured clockwise from north.)
+   * called the loxodrome).  Its length is \e s12 and its azimuth is \e azi12.
+   * (The azimuth is the heading measured clockwise from north.)
    *
    * Given \e lat1, \e lon1, \e azi12, and \e s12, we can determine \e lat2,
    * and \e lon2.  This is the \e direct rhumb problem and its solution is
@@ -64,6 +65,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class RhumbLine;
+    template <class T> friend class PolygonAreaT;
     Ellipsoid _ell;
     bool _exact;
     real _c2;
@@ -176,7 +178,74 @@ namespace GeographicLib {
     real DRectifyingToIsometric(real mux, real muy) const;
 
     real MeanSinXi(real psi1, real psi2) const;
+
+    // The following two functions (with lots of ignored arguments) mimic the
+    // interface to the corresponding Geodesic function.  These are needed by
+    // PolygonAreaT.
+    void GenDirect(real lat1, real lon1, real azi12,
+                   bool, real s12, unsigned outmask,
+                   real& lat2, real& lon2, real&, real&, real&, real&, real&,
+                   real& S12) const {
+      GenDirect(lat1, lon1, azi12, s12, outmask, lat2, lon2, S12);
+    }
+
+
+    void GenInverse(real lat1, real lon1, real lat2, real lon2,
+                    unsigned outmask, real& s12, real& azi12,
+                    real&, real& , real& , real& , real& S12) const {
+      GenInverse(lat1, lon1, lat2, lon2, outmask, s12, azi12, S12);
+    }
+
+
   public:
+
+    /**
+     * Bit masks for what calculations to do.  They specify which results to
+     * return in the general routines Rhumb::GenDirect and Rhumb::GenInverse
+     * routines.  RhumbLine::mask is a duplication of this enum.
+     **********************************************************************/
+    enum mask {
+      /**
+       * No output.
+       * @hideinitializer
+       **********************************************************************/
+      NONE          = 0U,
+      /**
+       * Calculate latitude \e lat2.
+       * @hideinitializer
+       **********************************************************************/
+      LATITUDE      = 1U<<7,
+      /**
+       * Calculate longitude \e lon2.
+       * @hideinitializer
+       **********************************************************************/
+      LONGITUDE     = 1U<<8,
+      /**
+       * Calculate azimuth \e azi12.
+       * @hideinitializer
+       **********************************************************************/
+      AZIMUTH       = 1U<<9,
+      /**
+       * Calculate distance \e s12.
+       * @hideinitializer
+       **********************************************************************/
+      DISTANCE      = 1U<<10,
+      /**
+       * Calculate area \e S12.
+       * @hideinitializer
+       **********************************************************************/
+      AREA          = 1U<<14,
+      /**
+       * Do not wrap the \e lon2 in the direct calculation.
+       * @hideinitializer
+       **********************************************************************/
+      LONG_NOWRAP   = 1U<<15,
+      /**
+       * Calculate everything.  (LONG_NOWRAP is not included in this mask.)
+       * @hideinitializer
+       **********************************************************************/
+      ALL           = 0x7F80U,
+    };
 
     /**
      * Constructor for a ellipsoid with
@@ -205,23 +274,23 @@ namespace GeographicLib {
      *   negative.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees).
-     * @param[out] S12 the area under the rhumb line (meters<sup>2</sup>).
+     * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-     * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
-     * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
-     * 180&deg;).
+     * azi12 should be in the range [&minus;540&deg;, 540&deg;).  The value of
+     * \e lon2 returned is in the range [&minus;180&deg;, 180&deg;).
      *
      * If point 1 is a pole, the cosine of its latitude is taken to be
      * 1/&epsilon;<sup>2</sup> (where &epsilon; is 2<sup>-52</sup>).  This
      * position, which is extremely close to the actual pole, allows the
      * calculation to be carried out in finite terms.  If \e s12 is large
      * enough that the rhumb line crosses a pole, the longitude of point 2
-     * is indeterminate (a NaN is returned for \e lon2).
+     * is indeterminate (a NaN is returned for \e lon2 and \e S12).
      **********************************************************************/
     void Direct(real lat1, real lon1, real azi12, real s12,
                 real& lat2, real& lon2, real& S12) const {
-      GenDirect(lat1, lon1, azi12, s12, true, lat2, lon2, S12);
+      GenDirect(lat1, lon1, azi12, s12,
+                LATITUDE | LONGITUDE | AREA, lat2, lon2, S12);
     }
 
     /**
@@ -229,8 +298,8 @@ namespace GeographicLib {
      **********************************************************************/
     void Direct(real lat1, real lon1, real azi12, real s12,
                 real& lat2, real& lon2) const {
-      real dummy;
-      GenDirect(lat1, lon1, azi12, s12, false, lat2, lon2, dummy);
+      real t;
+      GenDirect(lat1, lon1, azi12, s12, LATITUDE | LONGITUDE, lat2, lon2, t);
     }
 
     /**
@@ -242,13 +311,27 @@ namespace GeographicLib {
      * @param[in] azi12 azimuth of the rhumb line (degrees).
      * @param[in] s12 distance between point 1 and point 2 (meters); it can be
      *   negative.
-     * @param[in] areap should S12 be computed?
+     * @param[in] outmask a bitor'ed combination of Rhumb::mask values
+     *   specifying which of the following parameters should be set.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees).
-     * @param[out] S12 if \e areap, then the area under the rhumb line
-     *   (meters<sup>2</sup>); otherwise its value is unchanged.
+     * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
+     *
+     * The Rhumb::mask values possible for \e outmask are
+     * - \e outmask |= Rhumb::LATITUDE for the latitude \e lat2;
+     * - \e outmask |= Rhumb::LONGITUDE for the latitude \e lon2;
+     * - \e outmask |= Rhumb::AREA for the area \e S12;
+     * - \e outmask |= Rhumb::ALL for all of the above;
+     * - \e outmask |= Rhumb::LONG_NOWRAP stops the returned value of \e
+     *   lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
+     * .
+     * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
+     * indicates how many times the rhumb line wrapped around the ellipsoid.
+     * Because \e lon2 might be outside the normal allowed range for
+     * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
+     * Math::AngNormalize2 before using it in other GeographicLib calls.
      **********************************************************************/
-    void GenDirect(real lat1, real lon1, real azi12, real s12, bool areap,
+    void GenDirect(real lat1, real lon1, real azi12, real s12, unsigned outmask,
                    real& lat2, real& lon2, real& S12) const;
 
     /**
@@ -260,7 +343,7 @@ namespace GeographicLib {
      * @param[in] lon2 longitude of point 2 (degrees).
      * @param[out] s12 rhumb distance between point 1 and point 2 (meters).
      * @param[out] azi12 azimuth of the rhumb line (degrees).
-     * @param[out] S12 the area under the rhumb line (meters<sup>2</sup>).
+     * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
      *
      * The shortest rhumb line is found.  \e lat1 and \e lat2 should be in the
      * range [&minus;90&deg;, 90&deg;]; \e lon1 and \e lon2 should be in the
@@ -274,7 +357,8 @@ namespace GeographicLib {
      **********************************************************************/
     void Inverse(real lat1, real lon1, real lat2, real lon2,
                  real& s12, real& azi12, real& S12) const {
-      GenInverse(lat1, lon1, lat2, lon2, true, s12, azi12, S12);
+      GenInverse(lat1, lon1, lat2, lon2,
+                 DISTANCE | AZIMUTH | AREA, s12, azi12, S12);
     }
 
     /**
@@ -282,8 +366,8 @@ namespace GeographicLib {
      **********************************************************************/
     void Inverse(real lat1, real lon1, real lat2, real lon2,
                  real& s12, real& azi12) const {
-      real dummy;
-      GenInverse(lat1, lon1, lat2, lon2, false, s12, azi12, dummy);
+      real t;
+      GenInverse(lat1, lon1, lat2, lon2, DISTANCE | AZIMUTH, s12, azi12, t);
     }
 
     /**
@@ -294,13 +378,20 @@ namespace GeographicLib {
      * @param[in] lon1 longitude of point 1 (degrees).
      * @param[in] lat2 latitude of point 2 (degrees).
      * @param[in] lon2 longitude of point 2 (degrees).
-     * @param[in] areap should S12 be computed?
+     * @param[in] outmask a bitor'ed combination of Rhumb::mask values
+     *   specifying which of the following parameters should be set.
      * @param[out] s12 rhumb distance between point 1 and point 2 (meters).
      * @param[out] azi12 azimuth of the rhumb line (degrees).
-     * @param[out] S12 if \e areap, then the area under the rhumb line
-     *   (meters<sup>2</sup>); otherwise its value is unchanged.
+     * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
+     *
+     * The Rhumb::mask values possible for \e outmask are
+     * - \e outmask |= Rhumb::DISTANCE for the latitude \e s12;
+     * - \e outmask |= Rhumb::AZIMUTH for the latitude \e azi12;
+     * - \e outmask |= Rhumb::AREA for the area \e S12;
+     * - \e outmask |= Rhumb::ALL for all of the above;
      **********************************************************************/
-    void GenInverse(real lat1, real lon1, real lat2, real lon2, bool areap,
+    void GenInverse(real lat1, real lon1, real lat2, real lon2,
+                    unsigned outmask,
                     real& s12, real& azi12, real& S12) const;
 
     /**
@@ -336,6 +427,8 @@ namespace GeographicLib {
      *   value used in the constructor.
      **********************************************************************/
     Math::real Flattening() const { return _ell.Flattening(); }
+
+    Math::real EllipsoidArea() const { return _ell.Area(); }
 
     /**
      * A global instantiation of Rhumb with the parameters for the WGS84
@@ -373,6 +466,50 @@ namespace GeographicLib {
     RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12,
               bool exact);
   public:
+
+    enum mask {
+      /**
+       * No output.
+       * @hideinitializer
+       **********************************************************************/
+      NONE          = Rhumb::NONE,
+      /**
+       * Calculate latitude \e lat2.
+       * @hideinitializer
+       **********************************************************************/
+      LATITUDE      = Rhumb::LATITUDE,
+      /**
+       * Calculate longitude \e lon2.
+       * @hideinitializer
+       **********************************************************************/
+      LONGITUDE     = Rhumb::LONGITUDE,
+      /**
+       * Calculate azimuth \e azi12.
+       * @hideinitializer
+       **********************************************************************/
+      AZIMUTH       = Rhumb::AZIMUTH,
+      /**
+       * Calculate distance \e s12.
+       * @hideinitializer
+       **********************************************************************/
+      DISTANCE      = Rhumb::DISTANCE,
+      /**
+       * Calculate area \e S12.
+       * @hideinitializer
+       **********************************************************************/
+      AREA          = Rhumb::AREA,
+      /**
+       * Do wrap the \e lon2 in the direct calculation.
+       * @hideinitializer
+       **********************************************************************/
+      LONG_NOWRAP   = Rhumb::LONG_NOWRAP,
+      /**
+       * Calculate everything.  (LONG_NOWRAP is not included in this mask.)
+       * @hideinitializer
+       **********************************************************************/
+      ALL           = Rhumb::ALL,
+    };
+
     /**
      * Compute the position of point 2 which is a distance \e s12 (meters) from
      * point 1.  The area is also computed.
@@ -381,16 +518,17 @@ namespace GeographicLib {
      *   negative.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees).
-     * @param[out] S12 the area under the rhumb line (meters<sup>2</sup>).
+     * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
      *
-     * The values of \e lon2 and \e azi2 returned are in the range
-     * [&minus;180&deg;, 180&deg;).
+     * The value of \e lon2 returned is in the range [&minus;180&deg;,
+     * 180&deg;).
      *
      * If \e s12 is large enough that the rhumb line crosses a pole, the
-     * longitude of point 2 is indeterminate (a NaN is returned for \e lon2).
+     * longitude of point 2 is indeterminate (a NaN is returned for \e lon2 and
+     * \e S12).
      **********************************************************************/
     void Position(real s12, real& lat2, real& lon2, real& S12) const {
-      GenPosition(s12, true, lat2, lon2, S12);
+      GenPosition(s12, LATITUDE | LONGITUDE | AREA, lat2, lon2, S12);
     }
 
     /**
@@ -398,8 +536,8 @@ namespace GeographicLib {
      * point 1.  The area is not computed.
      **********************************************************************/
     void Position(real s12, real& lat2, real& lon2) const {
-      real dummy;
-      GenPosition(s12, false, lat2, lon2, dummy);
+      real t;
+      GenPosition(s12, LATITUDE | LONGITUDE, lat2, lon2, t);
     }
 
     /**
@@ -408,19 +546,31 @@ namespace GeographicLib {
      *
      * @param[in] s12 distance between point 1 and point 2 (meters); it can be
      *   negative.
-     * @param[in] areap should S12 be computed?
+     * @param[in] outmask a bitor'ed combination of Rhumb::mask values
+     *   specifying which of the following parameters should be set.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees).
-     * @param[out] S12 if \e areap, then the area under the rhumb line
-     *   (meters<sup>2</sup>); otherwise its value is unchanged.
+     * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
      *
-     * The values of \e lon2 and \e azi2 returned are in the range
-     * [&minus;180&deg;, 180&deg;).
+     * The Rhumb::mask values possible for \e outmask are
+     * - \e outmask |= Rhumb::LATITUDE for the latitude \e lat2;
+     * - \e outmask |= Rhumb::LONGITUDE for the latitude \e lon2;
+     * - \e outmask |= Rhumb::AREA for the area \e S12;
+     * - \e outmask |= Rhumb::ALL for all of the above;
+     * - \e outmask |= Rhumb::LONG_NOWRAP stops the returned value of \e
+     *   lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
+     * .
+     * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
+     * indicates how many times the rhumb line wrapped around the ellipsoid.
+     * Because \e lon2 might be outside the normal allowed range for
+     * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
+     * Math::AngNormalize2 before using it in other GeographicLib calls.
      *
      * If \e s12 is large enough that the rhumb line crosses a pole, the
-     * longitude of point 2 is indeterminate (a NaN is returned for \e lon2).
+     * longitude of point 2 is indeterminate (a NaN is returned for \e lon2 and
+     * \e S12).
      **********************************************************************/
-    void GenPosition(real s12, bool areap,
+    void GenPosition(real s12, unsigned outmask,
                      real& lat2, real& lon2, real& S12) const;
 
     /** \name Inspector functions
