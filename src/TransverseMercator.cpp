@@ -2,7 +2,7 @@
  * \file TransverseMercator.cpp
  * \brief Implementation for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -290,10 +290,12 @@ namespace GeographicLib {
       return taup;
     real
       // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
-      // tau = taup/_e2m as a starting guess.  Only 1 iteration is needed for
-      // |lat| < 3.35 deg, otherwise 2 iterations are needed.  If, instead, tau
-      // = taup is used the mean number of iterations increases to 1.99 (2
-      // iterations are needed except near tau = 0).
+      // tau = taup/_e2m as a starting guess.  (This starting guess is the
+      // geocentric latitude which, to first order in the flattening, is equal
+      // to the conformal latitude.)  Only 1 iteration is needed for |lat| <
+      // 3.35 deg, otherwise 2 iterations are needed.  If, instead, tau = taup
+      // is used the mean number of iterations increases to 1.99 (2 iterations
+      // are needed except near tau = 0).
       tau = taup/_e2m,
       stol = tol_ * max(real(1), abs(taup));
     // min iterations = 1, max iterations = 2; mean = 1.94

@@ -2,7 +2,7 @@
  * \file DMS.cpp
  * \brief Implementation for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -37,6 +37,7 @@ namespace GeographicLib {
     replace(dmsa, "\xe2\x80\x99", '\''); // U+2019 right single quote
     replace(dmsa, "\xe2\x80\xb3", '"');  // U+2033 double prime
     replace(dmsa, "\xe2\x80\x9d", '"');  // U+201d right double quote
+    replace(dmsa, "\xe2\x88\x92", '-');  // U+2212 minus sign
     replace(dmsa, "\xb0", 'd');          // 0xb0 bare degree symbol
     replace(dmsa, "\xba", 'd');          // 0xba bare alt symbol
     replace(dmsa, "\xb4", '\'');         // 0xb4 bare acute accent

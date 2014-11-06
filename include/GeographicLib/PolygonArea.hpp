@@ -12,6 +12,7 @@
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicExact.hpp>
+#include <GeographicLib/Rhumb.hpp>
 #include <GeographicLib/Accumulator.hpp>
 
 namespace GeographicLib {
@@ -82,6 +83,21 @@ namespace GeographicLib {
         (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
       return cross;
     }
+    // an alternate version of transit to deal with longitudes in the direct
+    // problem.
+    static inline int transitdirect(real lon1, real lon2) {
+      using std::floor;
+      // We want to compute
+      //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
+      // However, the concern is that for integer n and small positive eps, we
+      // might have n*360 - eps < n*360 but (n*360 - eps)/360 = n.  Indeed this
+      // can happen if n = 0 and eps is tiny.  The following works because
+      // 360.0 * int is exactly respresentable by a real.  With C++11 we can
+      // use remquo.  This would only get the low bits of cross right.  But
+      // that's OK because we only need the parity.
+      int n1 = int(floor(lon1 / 360)), n2 = int(floor(lon2 / 360));
+      return (n2 == 0 && lon2 < 0 ? -1 : n2) - (n1 == 0 && lon1 < 0 ? -1 : n1);
+    }
   public:
 
     /**
@@ -96,7 +112,8 @@ namespace GeographicLib {
       , _area0(_earth.EllipsoidArea())
       , _polyline(polyline)
       , _mask(GeodType::LATITUDE | GeodType::LONGITUDE | GeodType::DISTANCE |
-              (_polyline ? GeodType::NONE : GeodType::AREA))
+              (_polyline ? GeodType::NONE :
+               GeodType::AREA | GeodType::LONG_NOWRAP))
     { Clear(); }
 
     /**
@@ -264,6 +281,13 @@ namespace GeographicLib {
    * for modest flattenings.)
    **********************************************************************/
   typedef PolygonAreaT<GeodesicExact> PolygonAreaExact;
+
+  /**
+   * @relates PolygonAreaT
+   *
+   * Polygon areas using Rhumb.
+   **********************************************************************/
+  typedef PolygonAreaT<Rhumb> PolygonAreaRhumb;
 
 } // namespace GeographicLib
 

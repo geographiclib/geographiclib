@@ -2,7 +2,7 @@
  * \file Geodesic.cpp
  * \brief Implementation for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009-2013) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -139,7 +139,7 @@ namespace GeographicLib {
                                   real& s12, real& azi1, real& azi2,
                                   real& m12, real& M12, real& M21, real& S12)
     const {
-    outmask &= OUT_ALL;
+    outmask &= OUT_MASK;
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
@@ -214,7 +214,8 @@ namespace GeographicLib {
       slam12 = abs(lon12) == 180 ? 0 : sin(lam12),
       clam12 = cos(lam12);      // lon12 == 90 isn't interesting
 
-    real a12, sig12, calp1, salp1, calp2, salp2;
+    // initial values to suppress warning
+    real a12, sig12, calp1, salp1, calp2 = 0, salp2 = 0;
     // index zero elements of these arrays are unused
     real C1a[nC1_ + 1], C2a[nC2_ + 1], C3a[nC3_];
 
@@ -258,7 +259,7 @@ namespace GeographicLib {
         meridian = false;
     }
 
-    real omg12;
+    real omg12 = 0;             // initial value to suppress warning
     if (!meridian &&
         sbet1 == 0 &&   // and sbet2 == 0
         // Mimic the way Lambda12 works with calp1 = 0
@@ -306,7 +307,9 @@ namespace GeographicLib {
         // value of alp1 is then further from the solution) or if the new
         // estimate of alp1 lies outside (0,pi); in this case, the new starting
         // guess is taken to be (alp1a + alp1b) / 2.
-        real ssig1, csig1, ssig2, csig2, eps;
+        //
+        // initial values to suppress warnings (if loop is executed 0 times)
+        real ssig1 = 0, csig1 = 0, ssig2 = 0, csig2 = 0, eps = 0;
         unsigned numit = 0;
         // Bracketing range
         real salp1a = tiny_, calp1a = 1, salp1b = tiny_, calp1b = -1;
@@ -408,7 +411,7 @@ namespace GeographicLib {
 
       if (!meridian &&
           omg12 < real(0.75) * Math::pi() && // Long difference too big
-          sbet2 - sbet1 < real(1.75)) {            // Lat difference too big
+          sbet2 - sbet1 < real(1.75)) {      // Lat difference too big
         // Use tan(Gamma/2) = tan(omg12/2)
         // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
         // with tan(x/2) = sin(x)/(1+cos(x))

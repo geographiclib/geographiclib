@@ -287,8 +287,8 @@ namespace GeographicLib {
     unsigned Capabilities() const { return _caps; }
 
     /**
-     * @param[in] testcaps a set of bitor'ed GeodesicLine::mask values.
-     * @return true if the GeodesicLine object has all these capabilities.
+     * @param[in] testcaps a set of bitor'ed GravityModel::mask values.
+     * @return true if the GravityCircle object has all these capabilities.
      **********************************************************************/
     bool Capabilities(unsigned testcaps) const {
       return (_caps & testcaps) == testcaps;

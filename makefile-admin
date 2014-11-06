@@ -19,14 +19,14 @@ pack-js: doc/scripts/geographiclib.js
 
 distrib-html: geodesic-papers/biblio.html
 	rsync -av --exclude .svn --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded index.html tm.html tm-addenda.html tm-grid.kmz geod.html geod-addenda.html bessel-errata.html *-figs.pdf geodesic-papers $(WEBSTAGE)/htdocs/
-	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
+	rsync --delete -a -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-doc:
-	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
+	rsync --delete -a -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-files:
 	rsync -av --exclude .svn --exclude '.git*' --delete distrib testdata geoids-distrib gravity-distrib magnetic-distrib $(DATASTAGE)/
-	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --exclude .svn --exclude '.git*' --delete --delete-excluded -av -e ssh $(DATASTAGE)/{distrib,testdata,{geoids,gravity,magnetic}-distrib} $(USER)@frs.sourceforge.net:/home/frs/project/geographiclib/
+	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --exclude .svn --exclude '.git*' --delete --delete-excluded -a -e ssh $(DATASTAGE)/{distrib,testdata,{geoids,gravity,magnetic}-distrib} $(USER)@frs.sourceforge.net:/home/frs/project/geographiclib/
 
 distrib-cgi:
 	for f in GeoConvert GeodSolve GeoidEval Planimeter printlogs Geod; do \
@@ -35,7 +35,7 @@ distrib-cgi:
 	for f in utils; do \
 	  a=cgi-bin/$$f.sh; b=$(WEBSTAGE)/cgi-bin/$$f.sh; \
 	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
-	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/{cgi-bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
+	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --delete --delete-excluded -a -e ssh $(WEBSTAGE)/{cgi-bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-js: doc/scripts/geographiclib.js
 	for f in geod-calc.html geod-google{,-instructions}.html \
@@ -43,7 +43,7 @@ distrib-js: doc/scripts/geographiclib.js
 	GeographicLib/{Math,Geodesic{,Line},PolygonArea,DMS,Interface}.js; do \
 	  a=doc/scripts/$$f; b=$(WEBSTAGE)/htdocs/scripts/$$f; \
 	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
-	rsync --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/htdocs/scripts $(USER),geographiclib@web.sourceforge.net:./htdocs/
+	rsync --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded -a -e ssh $(WEBSTAGE)/htdocs/scripts $(USER),geographiclib@web.sourceforge.net:./htdocs/
 
 distrib-python: python/setup.py
 	cd python && python setup.py sdist --formats=gztar,zip upload

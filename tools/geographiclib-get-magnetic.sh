@@ -34,8 +34,6 @@ In addition you can specify
   all = all of the supported magnetic models
   minimal = wmm2010 igrf11
 
-If no name is specified then minimal is assumed.
-
 -p parentdir (default $DEFAULTDIR) specifies where the
 datasets should be stored.  The "Default $NAME path" listed when running
 
@@ -79,6 +77,10 @@ while getopts hp:fd c; do
     esac
 done
 shift `expr $OPTIND - 1`
+if test $# -eq 0; then
+    usage 1>&2;
+    exit 1
+fi
 
 test -d "$PARENTDIR"/$SUBDIR || mkdir -p "$PARENTDIR"/$SUBDIR 2> /dev/null
 if test ! -d "$PARENTDIR"/$SUBDIR; then
@@ -113,8 +115,6 @@ wmm2010
 emm2010
 igrf11
 EOF
-
-test $# -eq 0 && set -- minimal
 
 while test $# -gt 0; do
     if grep "^$1\$" $TEMP/all > /dev/null; then

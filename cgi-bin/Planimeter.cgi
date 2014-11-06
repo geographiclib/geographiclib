@@ -15,6 +15,7 @@ else
     INPUT=`lookupcheckkey "$QUERY_STRING" input`
     NORM=`lookupkey "$QUERY_STRING" norm`
     TYPE=`lookupkey "$QUERY_STRING" type`
+    RHUMB=`lookupkey "$QUERY_STRING" rhumb`
 fi
 env > /tmp/env
 
@@ -23,6 +24,11 @@ if test "$TYPE" = "polyline"; then
   LINEFLAG=-l
 else
   LINEFLAG=
+fi
+if test "$RHUMB" = "rhumb"; then
+  RHUMBFLAG=-R
+else
+  RHUMBFLAG=
 fi
 COMMAND=Planimeter
 EXECDIR=../bin
@@ -34,7 +40,8 @@ if test "$INPUT"; then
     STATUS=`echo "$INPUT" | head -1 | $EXECDIR/GeoConvert`
     if test $? -eq 0; then
 	STATUS=OK
-	OUTPUT=`echo "$INPUT" | $EXECDIR/$COMMAND $LINEFLAG | head -1`
+	OUTPUT=`echo "$INPUT" | $EXECDIR/$COMMAND $LINEFLAG $RHUMBFLAG |
+	    head -1`
 	NUM="`echo $OUTPUT | cut -f1 -d' '`"
 	LEN="`echo $OUTPUT | cut -f2 -d' '`"
 	AREA="`echo $OUTPUT | cut -f3 -d' '`"
@@ -67,29 +74,57 @@ cat <<EOF
 		   shortest path,
 		   spheroidal triangle,
 		   latitude and longitude,
+		   rhumb lines,
 		   online calculator,
 		   WGS84 ellipsoid,
 		   GeographicLib" />
   </head>
   <body>
     <h3>
-      Online geodesic polygon and polyline calculations using the
+      Online geodesic polygon calculations using the
       <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
 	 Planimeter</a> utility
     </h3>
     <form action="/cgi-bin/Planimeter" method="get">
       <p>
-	<input type="radio" name="type" value="polygon"
-	       `test "$LINEFLAG" || echo CHECKED`> Polygon
-	&nbsp;&nbsp;&nbsp;
-	<input type="radio" name="type" value="polyline"
-	       `test "$LINEFLAG" && echo CHECKED`> Polyline
+	<table>
+	  <tr>
+	    <td>
+	      Closed/open:
+	    </td>
+	    <td>&nbsp;<label for="c">
+		<input type="radio" name="type" value="polygon" id="c"
+		       `test "$LINEFLAG" || echo CHECKED`>
+		Polygon</label>
+	    </td>
+	    <td>&nbsp;<label for="o">
+		<input type="radio" name="type" value="polyline" id="o"
+		       `test "$LINEFLAG" && echo CHECKED`>
+		Polyline</label>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>
+	      Edge type:
+	    </td>
+	    <td>&nbsp;<label for="g">
+		<input type="radio" name="rhumb" value="geodesic" id="g"
+		       `test "$RHUMBFLAG" || echo CHECKED`>
+		Geodesic</label>
+	    </td>
+	    <td>&nbsp;<label for="r">
+		<input type="radio" name="rhumb" value="rhumb" id="r"
+		       `test "$RHUMBFLAG" && echo CHECKED`>
+		Rhumb line</label>
+	    </td>
+	  </tr>
+	</table>
       </p>
       <p>
         Enter the vertices as latitude longitude pairs, one per line:
 	<br>
         &nbsp;&nbsp;&nbsp;
-        <textarea cols=40 rows=15 name="input">$INPUTENC</textarea>
+        <textarea cols=45 rows=15 name="input">$INPUTENC</textarea>
       </p>
       <p>
 	<input type="checkbox" name="norm" value="decdegrees"
@@ -116,11 +151,12 @@ cat <<EOF
       In polygon mode,
       <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
         Planimeter</a>
-      calculates the perimeter and area of a geodesic polygon for the
-      WGS84 ellipsoid.  Counter-clockwise traversal of a polygon results
-      in a positive area.  Only simple polygons are supported for the
-      area computation.  There is no need to close the polygon.
-      Polygons may include one or both poles.  In polyline mode,
+      calculates the perimeter and area of a polygon whose edges are
+      either geodesics or rhumb lines on the WGS84 ellipsoid.
+      Counter-clockwise traversal of a polygon results in a positive
+      area.  Only simple polygons are supported for the area
+      computation.  There is no need to close the polygon.  Polygons may
+      include one or both poles.  In polyline mode,
       <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
         Planimeter</a>
       calculates the length of the geodesic path joining the points.
@@ -173,7 +209,7 @@ cat <<EOF
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2011-08-14)</address>
+      (2014-11-06)</address>
     <a href="http://geographiclib.sourceforge.net">
       <img
 	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"

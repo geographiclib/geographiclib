@@ -35,4 +35,3 @@ class GeodesicCapability(object):
   GEODESICSCALE = 1 << 13 | CAP_C1 | CAP_C2
   AREA          = 1 << 14 | CAP_C4
   ALL           = OUT_ALL | CAP_ALL
-

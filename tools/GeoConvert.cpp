@@ -2,22 +2,11 @@
  * \file GeoConvert.cpp
  * \brief Command line utility for geographic coordinate conversions
  *
- * Copyright (c) Charles Karney (2008-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile and link with
- *   g++ -g -O3 -I../include -I../man -o GeoConvert \
- *       GeoConvert.cpp \
- *       ../src/DMS.cpp \
- *       ../src/GeoCoords.cpp \
- *       ../src/MGRS.cpp \
- *       ../src/PolarStereographic.cpp \
- *       ../src/TransverseMercator.cpp \
- *       ../src/UTMUPS.cpp
- *
- * See the <a href="GeoConvert.1.html">man page</a> for usage
- * information.
+ * See the <a href="GeoConvert.1.html">man page</a> for usage information.
  **********************************************************************/
 
 #include <iostream>

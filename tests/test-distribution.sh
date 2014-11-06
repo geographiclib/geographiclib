@@ -40,7 +40,7 @@ set -e
 #   python/setup.py
 #   tests/test-distribution.sh
 
-VERSION=1.37
+VERSION=1.39
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
@@ -78,71 +78,68 @@ tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relc # Version for cmake
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relx
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
-mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
-(
-    echo "#! /bin/sh -exv"
-    echo 'b=geog-`pwd | sed s%.*/%%`'
-    echo 'rm -rf c:/scratch/$b'
-    echo 'mkdir -p c:/scratch/$b'
-    echo 'cd c:/scratch/$b'
-    echo 'unset GEOGRAPHICLIB_DATA'
-    echo cmake -G \"Visual Studio 10\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
-    echo cmake --build . --config Debug   --target ALL_BUILD
-    echo cmake --build . --config Debug   --target exampleprograms
-    echo cmake --build . --config Debug   --target RUN_TESTS
-    echo cmake --build . --config Debug   --target INSTALL
-    echo cmake --build . --config Release --target ALL_BUILD
-    echo cmake --build . --config Release --target netexamples
-    echo cmake --build . --config Release --target RUN_TESTS
-    echo cmake --build . --config Release --target INSTALL
-    echo cmake --build . --config Release --target PACKAGE
-    echo cp GeographicLib-$VERSION-win32.exe $DEVELSOURCE/
-) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
-chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
-mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
-(
-    echo "#! /bin/sh -exv"
-    echo 'b=geog-`pwd | sed s%.*/%%`'
-    echo 'rm -rf c:/scratch/$b'
-    echo 'mkdir -p c:/scratch/$b'
-    echo 'cd c:/scratch/$b'
-    echo 'unset GEOGRAPHICLIB_DATA'
-    echo 'MATLAB_ROOT=`cygpath "c:/Program Files/MATLAB/R2013a"`'
-    echo 'export PATH="$PATH:$MATLAB_ROOT/runtime/win64:$MATLAB_ROOT/bin"'
-    echo cmake -G \"Visual Studio 10 Win64\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc10-x64/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D MATLAB_COMPILER=mex -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
-    echo cmake --build . --config Debug   --target ALL_BUILD
-    echo cmake --build . --config Debug   --target RUN_TESTS
-    echo cmake --build . --config Debug   --target INSTALL
-    echo cmake --build . --config Release --target ALL_BUILD
-    echo cmake --build . --config Release --target matlabinterface
-    echo cmake --build . --config Release --target exampleprograms
-    echo cmake --build . --config Release --target netexamples
-    echo cmake --build . --config Release --target RUN_TESTS
-    echo cmake --build . --config Release --target INSTALL
-    echo cmake --build . --config Release --target PACKAGE
-    echo cp GeographicLib-$VERSION-win64.exe $DEVELSOURCE/
-) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/build
-chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/build
-mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12
-(
-    echo "#! /bin/sh -exv"
-    echo 'b=geog-`pwd | sed s%.*/%%`'
-    echo 'rm -rf c:/scratch/$b'
-    echo 'mkdir -p c:/scratch/$b'
-    echo 'cd c:/scratch/$b'
-    echo 'unset GEOGRAPHICLIB_DATA'
-    echo cmake -G \"Visual Studio 12\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-vc12/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
-    echo cmake --build . --config Debug   --target ALL_BUILD
-    echo cmake --build . --config Debug   --target examples/exampleprograms
-    echo cmake --build . --config Debug   --target RUN_TESTS
-    echo cmake --build . --config Debug   --target INSTALL
-    echo cmake --build . --config Release --target ALL_BUILD
-    echo cmake --build . --config Release --target dotnet/examples/ManagedCPP/netexamples
-    echo cmake --build . --config Release --target RUN_TESTS
-    echo cmake --build . --config Release --target INSTALL
-    echo cmake --build . --config Release --target PACKAGE
-) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12/build
-chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc12/build
+
+cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
+#! /bin/sh -exv
+unset GEOGRAPHICLIB_DATA
+for v in 2010 2012 2013; do
+  rm -rf v:/data/build/com.sri.vt/geographiclib/win7-vc$v-64
+  mvn -Dcmake.compiler=vc$v install
+done
+EOF
+chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
+while read ver x64; do
+    gen="Visual Studio $ver"
+    test "$x64" && gen="$gen Win64" || true
+    pkg=vc$ver
+    test "$x64" && pkg="$pkg-x64" || true
+    matlab=
+    test "$pkg" = vc11-x64 && matlab="-D MATLAB_COMPILER=mex" || true
+    installer=
+    if test "$ver" -eq 11; then
+	if test "$x64"; then
+	    installer=GeographicLib-$VERSION-win64.exe
+	else
+	    installer=GeographicLib-$VERSION-win32.exe
+	fi
+    fi
+    cmake=cmake
+    test "$ver" -eq 14 && cmake=cmake3 || true
+    mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg
+    (
+	echo "#! /bin/sh -exv"
+	echo 'b=geog-`pwd | sed s%.*/%%`'
+	echo 'rm -rf v:/data/scratch/$b'
+	echo 'mkdir -p v:/data/scratch/$b'
+	echo 'cd v:/data/scratch/$b'
+	echo 'unset GEOGRAPHICLIB_DATA'
+	if test "$matlab"; then
+	    echo 'MATLAB_ROOT=`cygpath "c:/Program Files/MATLAB/R2013a"`'
+	    echo 'export PATH="$PATH:$MATLAB_ROOT/runtime/win64:$MATLAB_ROOT/bin"'
+	fi
+	echo $cmake -G \"$gen\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON $matlab -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+	echo $cmake --build . --config Debug   --target ALL_BUILD
+	echo $cmake --build . --config Debug   --target RUN_TESTS
+	echo $cmake --build . --config Debug   --target INSTALL
+	echo $cmake --build . --config Release --target ALL_BUILD
+	test "$matlab" &&
+	echo $cmake --build . --config Release --target matlabinterface || true
+	echo $cmake --build . --config Release --target exampleprograms
+	echo $cmake --build . --config Release --target netexamples
+	echo $cmake --build . --config Release --target RUN_TESTS
+	echo $cmake --build . --config Release --target INSTALL
+	echo $cmake --build . --config Release --target PACKAGE
+	test "$installer" &&
+	echo cp "$installer" $DEVELSOURCE/ || true
+    ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
+    chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
+done <<EOF
+10 y
+11
+11 y
+12 y
+14 y
+EOF
 
 mkdir $TEMP/gitr
 cd $TEMP/gitr
@@ -198,12 +195,19 @@ make -j$NUMCPUS all
 make -j$NUMCPUS test
 make -j$NUMCPUS matlabinterface
 
+cd $TEMP/gita/geographiclib/tests/sandbox
+mkdir BUILD
+cd BUILD
+cmake -D CMAKE_PREFIX_PATH=$TEMP/instc ..
+make
+
 mkdir -p $TEMP/geographiclib-matlab/private
 cd $TEMP/instc/libexec/GeographicLib/matlab
 cp -p geod{doc,reckon,distance,area}.m \
     defaultellipsoid.m ecc2flat.m flat2ecc.m \
     $TEMP/geographiclib-matlab/
 cp -p private/*.m $TEMP/geographiclib-matlab/private/
+rm  $TEMP/geographiclib-matlab/private/G4coeff.m
 cd $TEMP
 rm -f $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip
 zip $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip \
@@ -215,6 +219,14 @@ cd $TEMP/proj
 rm -f $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip
 zip $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip \
     geographiclib-matlab/*.m
+mkdir -p $TEMP/greatellipse/geographiclib-matlab/private
+cd $TEMP/instc/libexec/GeographicLib/matlab
+cp -p ge{doc,reckon,distance}.m $TEMP/greatellipse/geographiclib-matlab
+cp -p private/G4coeff.m $TEMP/greatellipse/geographiclib-matlab/private/
+cd $TEMP/greatellipse
+rm -f $DEVELSOURCE/matlab/geographiclib_matlabge_$VERSION.zip
+zip $DEVELSOURCE/matlab/geographiclib_matlabge_$VERSION.zip \
+    geographiclib-matlab/*.m geographiclib-matlab/private/*.m
 
 cd $TEMP
 mkdir python-test
@@ -315,6 +327,15 @@ for i in a b c e f; do
     g++ -g -o testprogram$i testprogram$i.o -Wl,-rpath=$TEMP/inst$i/lib -L$TEMP/inst$i/lib -lGeographic
     ./testprogram$i
 done
+
+libversion=`find $TEMP/instc/lib -type f \
+-name 'libGeographic.so.*' -printf "%f" |
+sed 's/libGeographic\.so\.//'`
+test -f $TEMP/instb/lib/libGeographic.so.$libversion ||
+echo autoconf/cmake library so mismatch
+grep "^ *VERSION *= *$libversion *\$" \
+    $TEMP/gitb/geographiclib/src/GeographicLib.pro > /dev/null ||
+echo autoconf/Qt library so mismatch
 
 cd $TEMP/relx/GeographicLib-$VERSION
 echo Files with trailing spaces:

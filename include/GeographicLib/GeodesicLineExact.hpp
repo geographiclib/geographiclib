@@ -2,8 +2,8 @@
  * \file GeodesicLineExact.hpp
  * \brief Header for GeographicLib::GeodesicLineExact class
  *
- * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2012-2014) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -55,7 +55,9 @@ namespace GeographicLib {
       CAP_H    = GeodesicExact::CAP_H,
       CAP_C4   = GeodesicExact::CAP_C4,
       CAP_ALL  = GeodesicExact::CAP_ALL,
+      CAP_MASK = GeodesicExact::CAP_MASK,
       OUT_ALL  = GeodesicExact::OUT_ALL,
+      OUT_MASK = GeodesicExact::OUT_MASK,
     };
   public:
 
@@ -117,7 +119,13 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = GeodesicExact::AREA,
       /**
-       * All capabilities, calculate everything.
+       * Do not wrap \e lon2 in the direct calculation.
+       * @hideinitializer
+       **********************************************************************/
+      LONG_NOWRAP = GeodesicExact::LONG_NOWRAP,
+      /**
+       * All capabilities, calculate everything.  (LONG_NOWRAP is not
+       * included in this mask.)
        * @hideinitializer
        **********************************************************************/
       ALL           = GeodesicExact::ALL,
@@ -467,12 +475,20 @@ namespace GeographicLib {
      * - \e outmask |= GeodesicLineExact::GEODESICSCALE for the geodesic scales
      *   \e M12 and \e M21;
      * - \e outmask |= GeodesicLineExact::AREA for the area \e S12;
-     * - \e outmask |= GeodesicLine::ALL for all of the above.
+     * - \e outmask |= GeodesicLineExact::ALL for all of the above;
+     * - \e outmask |= GeodesicLineExact::LONG_NOWRAP stops the returned value
+     *   of \e lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
      * .
      * Requesting a value which the GeodesicLineExact object is not capable of
      * computing is not an error; the corresponding argument will not be
      * altered.  Note, however, that the arc length is always computed and
      * returned as the function value.
+     *
+     * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
+     * indicates how many times the geodesic wrapped around the ellipsoid.
+     * Because \e lon2 might be outside the normal allowed range for
+     * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
+     * Math::AngNormalize2 before using it in other GeographicLib calls.
      **********************************************************************/
     Math::real GenPosition(bool arcmode, real s12_a12, unsigned outmask,
                            real& lat2, real& lon2, real& azi2,

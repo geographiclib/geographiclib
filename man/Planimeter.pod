@@ -5,7 +5,7 @@ Planimeter -- compute the area of geodesic polygons
 =head1 SYNOPSIS
 
 B<Planimeter> [ B<-r> ] [ B<-s> ] [ B<-l> ] [ B<-e> I<a> I<f> ]
-[ B<-p> I<prec> ] [ B<-E> ] [ B<-Q> ]
+[ B<-p> I<prec> ] [ B<-G> | B<-E> | B<-Q> | B<-R> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -87,14 +87,18 @@ set the output precision to I<prec> (default 6); the perimeter is given
 (in meters) with I<prec> digits after the decimal point; the area is
 given (in meters^2) with (I<prec> - 5) digits after the decimal point.
 
+=item B<-G>
+
+use the series formulation for the geodesics.  This is the default
+option and recommened for terrestrial applications.
+
 =item B<-E>
 
 use "exact" algorithms (based on elliptic integrals) for the geodesic
 calculations.  These are more accurate than the (default) series
 expansions for |I<f>| E<gt> 0.02.  (But note that the implementation of
 areas in GeodesicExact uses a high order series and this is only
-accurate for modest flattenings.)  B<-E> and B<-Q> are mutually
-exclusive.
+accurate for modest flattenings.)
 
 =item B<-Q>
 
@@ -102,6 +106,10 @@ perform the calculation on the authalic sphere.  The area calculation is
 accurate even if the flattening is large, I<provided> the edges are
 sufficiently short.  The perimeter calculation is not accurate.  B<-E>
 and B<-Q> are mutually exclusive.
+
+=item B<-R>
+
+The lines joining the vertices are rhumb lines instead of geodesics.
 
 =item B<--comment-delimiter>
 

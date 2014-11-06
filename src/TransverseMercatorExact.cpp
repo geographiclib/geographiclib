@@ -2,7 +2,7 @@
  * \file TransverseMercatorExact.cpp
  * \brief Implementation for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -93,7 +93,8 @@ namespace GeographicLib {
 
   Math::real TransverseMercatorExact::taupinv(real taup) const {
     real
-      // See comment in TransverseMercator.cpp about the initial guess
+      // See comment in implementation of TransverseMercator::tauf about the
+      // initial guess
       tau = taup/_mv,
       stol = tol_ * max(real(1), abs(taup));
     // min iterations = 1, max iterations = 2; mean = 1.94
@@ -469,8 +470,6 @@ namespace GeographicLib {
       Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
       gamma /= Math::degree();
     } else {
-      tau = overflow();
-      phi = Math::pi()/2;
       lat = 90;
       lon = lam = gamma = 0;
       k = 1;
@@ -481,10 +480,6 @@ namespace GeographicLib {
     lon *= lonsign;
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
     lat *= latsign;
-    if (backside)
-      y = 2 * _Eu.E() - y;
-    y *= _a * _k0 * latsign;
-    x *= _a * _k0 * lonsign;
     if (backside)
       gamma = 180 - gamma;
     gamma *= latsign * lonsign;

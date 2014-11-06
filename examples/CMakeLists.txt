@@ -36,17 +36,5 @@ endif ()
 
 add_custom_target (exampleprograms DEPENDS ${EXAMPLES})
 
-if (MSVC)
-  get_target_property (_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
-  if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
-    # Copy the shared library on Windows systems to this directory
-    # (examples) so that the tests can be run.
-    add_custom_command (TARGET exampleprograms POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E
-      copy $<TARGET_FILE:${PROJECT_LIBRARIES}> ${CMAKE_CFG_INTDIR}
-      COMMENT "Copying shared library to examples directory")
-  endif ()
-endif ()
-
 # Put all the examples into a folder in the IDE
 set_property (TARGET exampleprograms ${EXAMPLES} PROPERTY FOLDER examples)
