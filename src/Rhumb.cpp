@@ -326,10 +326,10 @@ namespace GeographicLib {
         psi2 = _psi1;
       }
       if (outmask & AREA)
-        S12 = _rh._c2 * lon2 *
+        S12 = _rh._c2 * lon2x *
           _rh.MeanSinXi(_psi1 * Math::degree(), psi2 * Math::degree());
-      lon2 = outmask & LONG_NOWRAP ? _lon1 + lon2 :
-        Math::AngNormalize2(Math::AngNormalize(_lon1) + lon2);
+      lon2x = outmask & LONG_NOWRAP ? _lon1 + lon2x :
+        Math::AngNormalize2(Math::AngNormalize(_lon1) + lon2x);
     } else {
       // Reduce to the interval [-180, 180)
       mu2 = Math::AngNormalize2(mu2);

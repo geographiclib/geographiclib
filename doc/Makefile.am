@@ -94,6 +94,7 @@ MANPAGES = \
 	../man/Gravity.1.html \
 	../man/MagneticField.1.html \
 	../man/Planimeter.1.html \
+	../man/RhumbSolve.1.html \
 	../man/TransverseMercatorProj.1.html
 
 LEGACYFILES = \
@@ -106,6 +107,9 @@ LEGACYFILES = \
 	$(top_srcdir)/legacy/Fortran/geodesic.inc \
 	$(top_srcdir)/legacy/Fortran/geoddirect.for \
 	$(top_srcdir)/legacy/Fortran/geodinverse.for \
+	$(top_srcdir)/legacy/Fortran/ngscommon.for \
+	$(top_srcdir)/legacy/Fortran/ngsforward.for \
+	$(top_srcdir)/legacy/Fortran/ngsinverse.for \
 	$(top_srcdir)/legacy/Fortran/planimeter.for
 
 doc: html/index.html

@@ -53,7 +53,8 @@ This generates a sequence of points on a rhumb line.
 With the B<-i> command line argument, B<RhumbSolve> performs the inverse
 calculation.  It reads lines containing I<lat1> I<lon1> I<lat2> I<lon2>
 and prints the values of I<azi12> I<s12> I<S12> for the corresponding
-shortest rhumb lines
+shortest rhumb lines.  If the end points are on opposite meridians,
+there are two shortest rhumb lines and the east-going one is chosen.
 
 =back
 

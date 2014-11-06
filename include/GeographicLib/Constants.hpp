@@ -34,9 +34,7 @@
  * A compile-time assert.  Use C++11 static_assert, if available.
  **********************************************************************/
 #if !defined(GEOGRAPHICLIB_STATIC_ASSERT)
-#  if __cplusplus >= 201103
-#    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
-#  elif defined(__GXX_EXPERIMENTAL_CXX0X__)
+#  if __cplusplus >= 201103 || defined(__GXX_EXPERIMENTAL_CXX0X__)
 #    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
 #  elif defined(_MSC_VER) && _MSC_VER >= 1600
 // For reference, here is a table of Visual Studio and _MSC_VER

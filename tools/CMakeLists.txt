@@ -210,6 +210,20 @@ add_test (NAME Planimeter9
   COMMAND Planimeter -p 8 --input-string "9 -0.00000000000001;9 0;9 180")
 set_tests_properties (Planimeter6 Planimeter7 Planimeter8 Planimeter9
   PROPERTIES PASS_REGULAR_EXPRESSION "3 36026861\\.[0-9]+ -?0.0[0-9]+")
+# Area of Wyoming
+add_test (NAME Planimeter10 COMMAND Planimeter -R
+  --input-string "41N 111:3W; 41N 104:3W; 45N 104:3W; 45N 111:3W")
+set_tests_properties (Planimeter10
+  PROPERTIES PASS_REGULAR_EXPRESSION "4 2029616.[0-9]+ 2535883763..\\.")
+# Area of arctic circle
+add_test (NAME Planimeter11
+  COMMAND Planimeter -R --input-string "66:33:44 0; 66:33:44 180")
+set_tests_properties (Planimeter11
+  PROPERTIES PASS_REGULAR_EXPRESSION "2 15985058.[0-9]+ 212084182523..\\.")
+add_test (NAME Planimeter12
+  COMMAND Planimeter --input-string "66:33:44 0; 66:33:44 180")
+set_tests_properties (Planimeter12
+  PROPERTIES PASS_REGULAR_EXPRESSION "2 10465729.[0-9]+ 0.0")
 
 # Check fix for AlbersEqualArea::Reverse bug found 2011-05-01
 add_test (NAME ConicProj0 COMMAND

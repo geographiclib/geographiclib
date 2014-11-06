@@ -6617,10 +6617,21 @@ of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-mm-dd)
-   - <a href="MagneticField.1.html">MagneticField</a> accepts the string
-     "now" as a legal time.
-   - TODO: fix PolygonArea::AddEdge bug.  Applies to C++, C, Java,
-     Javascript, Python (bug not Matlab, Fortran, Maxima)
+   - Changes in area calculation:
+     - fix BUG in PolygonAreaT::AddEdge which sometimes causes the wrong
+       area might be returned, if the edge spanned more than 180&deg;;
+     - TODO: make corresponding fixes to the C, C, Java, Javascript,
+       Python interfaces (the bug was not present in Matlab, Fortran,
+       and Maxima interfaces because these don't implement te AddEdge
+       capability);
+     - add area calculation to the Rhumb and RhumbLine classes and the
+       <a href="RhumbSolve.1.html">RhumbSolve</a> utility (see \ref
+       rhumbarea);
+     - add PolygonAreaRhumb typedef for PolygonAreaT<Rhumb>;
+     - add -R option to <a href="Planimeter.1.html">Planimeter</a> to use
+       PolygonAreaRhumb (and -G option for the default geodesic polygon);
+     - add area calculation to Matlab/Octave routines for great ellipses
+       (see \ref gearea).
    - Fix bad BUG in Geohash::Reverse; this was introduced in version
      1.37 and affected all platforms where unsigned longs are 32-bits.
      Thanks to Christian Csar for reporting and diagnosing this.
@@ -6635,14 +6646,11 @@ of the git repository for GeographicLib.
      - improve the way unsuitable versions are reported.
    - legacy/Fortran now includes drop-in replacements for the geodesic
      utilities from the NGS.
-   - Add area calculation to the Rhumb and RhumbLine classes and the
-     <a href="RhumbSolve.1.html">RhumbSolve</a> utility; see \ref
-     rhumbarea.
-   - Add area calculation to Matlab/Octave routines for great ellipses;
-     see \ref gearea.
    - geographiclib-get-{geoids,gravity,magnetic} with no arguments now
      print the usage instead of loading the minimal sets.
-   - TODO: remove debugging stuff from Rhumb.cpp and RhumbSolve.cpp.
+   - Utility::date(const std::string&, int&, int&, int&) and hence
+     <a href="MagneticField.1.html">MagneticField</a> accepts the string
+     "now" as a legal time (meaning today).
 
  - <a href="http://geographiclib.sf.net/1.38">Version 1.38</a>
    (released 2014-10-02)

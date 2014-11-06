@@ -41,9 +41,11 @@ namespace GeographicLib {
    * given by the function Rhumb::Direct.
    *
    * Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi12
-   * and \e s12.  This is the \e inverse rhumb problem, whose solution is
-   * given by Rhumb::Inverse.  This finds the shortest such rhumb line, i.e.,
-   * the one that wraps no more than half way around the earth.
+   * and \e s12.  This is the \e inverse rhumb problem, whose solution is given
+   * by Rhumb::Inverse.  This finds the shortest such rhumb line, i.e., the one
+   * that wraps no more than half way around the earth.  If the end points are
+   * on opposite meridians, there are two shortest rhumb lines and the
+   * east-going one is chosen.
    *
    * These routines also optionally calculate the area under the rhumb line, \e
    * S12.  This is the area, measured counter-clockwise, of the rhumb line
@@ -188,15 +190,11 @@ namespace GeographicLib {
                    real& S12) const {
       GenDirect(lat1, lon1, azi12, s12, outmask, lat2, lon2, S12);
     }
-
-
     void GenInverse(real lat1, real lon1, real lat2, real lon2,
                     unsigned outmask, real& s12, real& azi12,
                     real&, real& , real& , real& , real& S12) const {
       GenInverse(lat1, lon1, lat2, lon2, outmask, s12, azi12, S12);
     }
-
-
   public:
 
     /**
@@ -345,10 +343,12 @@ namespace GeographicLib {
      * @param[out] azi12 azimuth of the rhumb line (degrees).
      * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
      *
-     * The shortest rhumb line is found.  \e lat1 and \e lat2 should be in the
-     * range [&minus;90&deg;, 90&deg;]; \e lon1 and \e lon2 should be in the
-     * range [&minus;540&deg;, 540&deg;).  The value of \e azi12 returned is in
-     * the range [&minus;180&deg;, 180&deg;).
+     * The shortest rhumb line is found.  If the end points are on opposite
+     * meridians, there are two shortest rhumb lines and the east-going one is
+     * chosen.  \e lat1 and \e lat2 should be in the range [&minus;90&deg;,
+     * 90&deg;]; \e lon1 and \e lon2 should be in the range [&minus;540&deg;,
+     * 540&deg;).  The value of \e azi12 returned is in the range
+     * [&minus;180&deg;, 180&deg;).
      *
      * If either point is a pole, the cosine of its latitude is taken to be
      * 1/&epsilon;<sup>2</sup> (where &epsilon; is 2<sup>-52</sup>).  This
