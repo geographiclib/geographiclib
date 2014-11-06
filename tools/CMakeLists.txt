@@ -223,7 +223,7 @@ set_tests_properties (Planimeter11
 add_test (NAME Planimeter12
   COMMAND Planimeter --input-string "66:33:44 0; 66:33:44 180")
 set_tests_properties (Planimeter12
-  PROPERTIES PASS_REGULAR_EXPRESSION "2 10465729.[0-9]+ 0.0")
+  PROPERTIES PASS_REGULAR_EXPRESSION "2 10465729.[0-9]+ -?0.0")
 
 # Check fix for AlbersEqualArea::Reverse bug found 2011-05-01
 add_test (NAME ConicProj0 COMMAND
