@@ -90,12 +90,13 @@ namespace GeographicLib {
       // We want to compute
       //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
       // However, the concern is that for integer n and small positive eps, we
-      // might have n*360 - eps < n*360 but (n*360 - eps)/360 = n.  So...
-      real lon1a = Math::AngNormalize2(lon1), lon2a = Math::AngNormalize2(lon2);
-      int cross =
-        (int(floor((lon2 - lon2a + 180) / 360)) + (lon2a < 0 ? -1 : 0)) -
-        (int(floor((lon1 - lon1a + 180) / 360)) + (lon1a < 0 ? -1 : 0));
-      return cross;
+      // might have n*360 - eps < n*360 but (n*360 - eps)/360 = n.  Indeed this
+      // can happen if n = 0 and eps is tiny.  The following works because
+      // 360.0 * int is exactly respresentable by a real.  With C++11 we can
+      // use remquo.  This would only get the low bits of cross right.  But
+      // that's OK because we only need the parity.
+      int n1 = int(floor(lon1 / 360)), n2 = int(floor(lon2 / 360));
+      return (n2 == 0 && lon2 < 0 ? -1 : n2) - (n1 == 0 && lon1 < 0 ? -1 : n1);
     }
   public:
 

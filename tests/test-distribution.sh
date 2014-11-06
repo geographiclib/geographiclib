@@ -79,12 +79,13 @@ tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relx
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
 
-cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<EOF
+cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
 #! /bin/sh -exv
 unset GEOGRAPHICLIB_DATA
-mvn -Dcmake.compiler=vc2010 install
-mvn -Dcmake.compiler=vc2012 install
-mvn -Dcmake.compiler=vc2013 install
+for v in 2010 2012 2013; do
+  rm -rf v:/data/build/com.sri.vt/geographiclib/win7-vc$v-64
+  mvn -Dcmake.compiler=vc$v install
+done
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
 while read ver x64; do

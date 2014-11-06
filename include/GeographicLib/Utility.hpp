@@ -18,9 +18,9 @@
 #include <ctime>
 
 #if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
+// Squelch warnings about constant conditional expressions and unsafe gmtime
 #  pragma warning (push)
-#  pragma warning (disable: 4127)
+#  pragma warning (disable: 4127 4996)
 #endif
 
 namespace GeographicLib {
