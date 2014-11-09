@@ -13,7 +13,7 @@
 #    http://dx.doi.org/10.1007/s00190-012-0578-z
 #    Addenda: http://geographiclib.sf.net/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2013) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 ######################################################################
@@ -26,7 +26,7 @@ class PolygonArea(object):
   """Area of a geodesic polygon"""
 
   def transit(lon1, lon2):
-    """Count crossings of prime meridian."""
+    """Count crossings of prime meridian for AddPoint."""
     # Return 1 or -1 if crossing prime meridian in east or west direction.
     # Otherwise return zero.
     # Compute lon12 the same way as Geodesic::Inverse.
@@ -38,6 +38,17 @@ class PolygonArea(object):
     return cross
   transit = staticmethod(transit)
 
+  def transitdirect(lon1, lon2):
+    """Count crossings of prime meridian for AddEdge."""
+    # We want to compute exactly
+    #   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
+    # Since we only need the parity of the result we can use std::remquo but
+    # this is buggy with g++ 4.8.3 and requires C++11.  So instead we do
+    lon1 = math.fmod(lon1, 720.0); lon2 = math.fmod(lon2, 720.0)
+    return ( (0 if ((lon2 >= 0 and lon2 < 360) or lon2 < -360) else 1) -
+             (0 if ((lon1 >= 0 and lon1 < 360) or lon1 < -360) else 1) )
+  transitdirect = staticmethod(transitdirect)
+
   def __init__(self, earth, polyline = False):
     from geographiclib.geodesic import Geodesic
     self._earth = earth
@@ -45,7 +56,8 @@ class PolygonArea(object):
     self._polyline = polyline
     self._mask = (Geodesic.LATITUDE | Geodesic.LONGITUDE |
                   Geodesic.DISTANCE |
-                  (Geodesic.EMPTY if self._polyline else Geodesic.AREA))
+                  (Geodesic.EMPTY if self._polyline else
+                   Geodesic.AREA | Geodesic.LONG_NOWRAP))
     if not self._polyline: self._areasum = Accumulator()
     self._perimetersum = Accumulator()
     self.Clear()
@@ -82,7 +94,7 @@ class PolygonArea(object):
       self._perimetersum.Add(s)
       if not self._polyline:
         self._areasum.Add(S12)
-        self._crossings += PolygonArea.transit(self._lon1, lon)
+        self._crossings += PolygonArea.transitdirect(self._lon1, lon)
       self._lat1 = lat
       self._lon1 = lon
       self._num += 1
@@ -191,7 +203,7 @@ class PolygonArea(object):
     _, lat, lon, _, _, _, _, _, S12 = self._earth.GenDirect(
       self._lat1, self._lon1, azi, False, s, self._mask)
     tempsum += S12
-    crossings += PolygonArea.transit(self._lon1, lon)
+    crossings += PolygonArea.transitdirect(self._lon1, lon)
     _, s12, _, _, _, _, _, S12 = self._earth.GenInverse(
       lat, lon, self._lat0, self._lon0, self._mask)
     perimeter += s12

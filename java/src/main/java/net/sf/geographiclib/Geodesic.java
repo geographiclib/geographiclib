@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.Geodesic class
  *
- * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -540,7 +540,7 @@ public class Geodesic {
    **********************************************************************/
   public GeodesicData Inverse(double lat1, double lon1,
                               double lat2, double lon2, int outmask) {
-    outmask &= GeodesicMask.OUT_ALL;
+    outmask &= GeodesicMask.OUT_MASK;
     GeodesicData r = new GeodesicData();
     lon1 = GeoMath.AngNormalize(lon1);
     lon2 = GeoMath.AngNormalize(lon2);

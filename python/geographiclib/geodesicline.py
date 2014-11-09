@@ -13,7 +13,7 @@
 #    http://dx.doi.org/10.1007/s00190-012-0578-z
 #    Addenda: http://geographiclib.sf.net/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2013) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 ######################################################################
@@ -36,7 +36,6 @@ class GeodesicLine(object):
 
     # Guard against underflow in salp0
     azi1 = Geodesic.AngRound(Math.AngNormalize(azi1))
-    lon1 = Math.AngNormalize(lon1)
     self._lat1 = lat1
     self._lon1 = lon1
     self._azi1 = azi1
@@ -123,8 +122,9 @@ class GeodesicLine(object):
     """Private: General solution of position along geodesic"""
     from geographiclib.geodesic import Geodesic
     a12 = lat2 = lon2 = azi2 = s12 = m12 = M12 = M21 = S12 = Math.nan
-    outmask &= self._caps & Geodesic.OUT_ALL
-    if not (arcmode or (self._caps & Geodesic.DISTANCE_IN & Geodesic.OUT_ALL)):
+    outmask &= self._caps & Geodesic.OUT_MASK
+    if not (arcmode or
+            (self._caps & Geodesic.DISTANCE_IN & Geodesic.OUT_MASK)):
       # Uninitialized or impossible distance calculation requested
       return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
 
@@ -199,18 +199,24 @@ class GeodesicLine(object):
     if cbet2 == 0:
       # I.e., salp0 = 0, csig2 = 0.  Break the degeneracy in this case
       cbet2 = csig2 = Geodesic.tiny_
-    # tan(omg2) = sin(alp0) * tan(sig2)
-    somg2 = self._salp0 * ssig2; comg2 = csig2 # No need to normalize
     # tan(alp0) = cos(sig2)*tan(alp2)
     salp2 = self._salp0; calp2 = self._calp0 * csig2 # No need to normalize
-    # omg12 = omg2 - omg1
-    omg12 = math.atan2(somg2 * self._comg1 - comg2 * self._somg1,
-                  comg2 * self._comg1 + somg2 * self._somg1)
 
     if outmask & Geodesic.DISTANCE:
       s12 = self._b * ((1 + self._A1m1) * sig12 + AB1) if arcmode else s12_a12
 
     if outmask & Geodesic.LONGITUDE:
+      # tan(omg2) = sin(alp0) * tan(sig2)
+      somg2 = self._salp0 * ssig2; comg2 = csig2 # No need to normalize
+      # omg12 = omg2 - omg1
+      omg12 = (sig12
+               - (math.atan2(ssig2, csig2) -
+                  math.atan2(self._ssig1, self._csig1))
+               + (math.atan2(somg2, comg2) -
+                  math.atan2(self._somg1, self._comg1))
+               if outmask & Geodesic.LONG_NOWRAP
+               else math.atan2(somg2 * self._comg1 - comg2 * self._somg1,
+                               comg2 * self._comg1 + somg2 * self._somg1))
       lam12 = omg12 + self._A3c * (
         sig12 + (Geodesic.SinCosSeries(True, ssig2, csig2,
                                        self._C3a, Geodesic.nC3_-1)
@@ -218,8 +224,9 @@ class GeodesicLine(object):
       lon12 = lam12 / Math.degree
       # Use Math.AngNormalize2 because longitude might have wrapped
       # multiple times.
-      lon12 = Math.AngNormalize2(lon12)
-      lon2 = Math.AngNormalize(self._lon1 + lon12)
+      lon2 = (self._lon1 + lon12 if outmask & Geodesic.LONG_NOWRAP else
+              Math.AngNormalize(Math.AngNormalize(self._lon1) +
+                                Math.AngNormalize2(lon12)))
 
     if outmask & Geodesic.LATITUDE:
       lat2 = math.atan2(sbet2, self._f1 * cbet2) / Math.degree
@@ -245,7 +252,8 @@ class GeodesicLine(object):
         M21 = csig12 - (t * self._ssig1 - self._csig1 * J12) * ssig2 / dn2
 
     if outmask & Geodesic.AREA:
-      B42 = Geodesic.SinCosSeries(False, ssig2, csig2, self._C4a, Geodesic.nC4_)
+      B42 = Geodesic.SinCosSeries(False,
+                                  ssig2, csig2, self._C4a, Geodesic.nC4_)
       # real salp12, calp12
       if self._calp0 == 0 or self._salp0 == 0:
         # alp12 = alp2 - alp1, used in atan2 so no need to normalized
@@ -271,7 +279,8 @@ class GeodesicLine(object):
           else ssig12 * (self._csig1 * ssig12 / (1 + csig12) + self._ssig1))
         calp12 = (Math.sq(self._salp0) +
                   Math.sq(self._calp0) * self._csig1 * csig2)
-      S12 = self._c2 * math.atan2(salp12, calp12) + self._A4 * (B42 - self._B41)
+      S12 = (self._c2 * math.atan2(salp12, calp12) +
+             self._A4 * (B42 - self._B41))
 
     a12 = s12_a12 if arcmode else sig12 / Math.degree
     return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
@@ -279,9 +288,8 @@ class GeodesicLine(object):
   def Position(self, s12,
                outmask = GeodesicCapability.LATITUDE |
                GeodesicCapability.LONGITUDE | GeodesicCapability.AZIMUTH):
-    """
-    Return the point a distance s12 along the geodesic line.  Return
-    a dictionary with (some) of the following entries:
+    """Return the point a distance s12 along the geodesic line.  Return a
+    dictionary with (some) of the following entries:
 
       lat1 latitude of point 1
       lon1 longitude of point 1
@@ -297,8 +305,10 @@ class GeodesicLine(object):
       S12 area between geodesic and equator
 
     outmask determines which fields get included and if outmask is
-    omitted, then only the basic geodesic fields are computed.  The mask
-    is an or'ed combination of the following values
+    omitted, then only the basic geodesic fields are computed.  The
+    LONG_NOWRAP bit prevents the longitudes being reduced to the range
+    [-180,180).  The mask is an or'ed combination of the following
+    values
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -307,15 +317,19 @@ class GeodesicLine(object):
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.ALL
+      Geodesic.LONG_NOWRAP
+
     """
 
     from geographiclib.geodesic import Geodesic
     Geodesic.CheckDistance(s12)
-    result = {'lat1': self._lat1, 'lon1': self._lon1, 'azi1': self._azi1,
-              's12': s12}
+    result = {'lat1': self._lat1,
+              'lon1': self._lon1 if outmask & Geodesic.LONG_NOWRAP else
+              Math.AngNormalize(self._lon1),
+              'azi1': self._azi1, 's12': s12}
     a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenPosition(
       False, s12, outmask)
-    outmask &= Geodesic.OUT_ALL
+    outmask &= Geodesic.OUT_MASK
     result['a12'] = a12
     if outmask & Geodesic.LATITUDE: result['lat2'] = lat2
     if outmask & Geodesic.LONGITUDE: result['lon2'] = lon2
@@ -330,8 +344,7 @@ class GeodesicLine(object):
                   outmask = GeodesicCapability.LATITUDE |
                   GeodesicCapability.LONGITUDE | GeodesicCapability.AZIMUTH |
                   GeodesicCapability.DISTANCE):
-    """
-    Return the point a spherical arc length a12 along the geodesic line.
+    """Return the point a spherical arc length a12 along the geodesic line.
     Return a dictionary with (some) of the following entries:
 
       lat1 latitude of point 1
@@ -348,8 +361,10 @@ class GeodesicLine(object):
       S12 area between geodesic and equator
 
     outmask determines which fields get included and if outmask is
-    omitted, then only the basic geodesic fields are computed.  The mask
-    is an or'ed combination of the following values
+    omitted, then only the basic geodesic fields are computed.  The
+    LONG_NOWRAP bit prevents the longitudes being reduced to the range
+    [-180,180).  The mask is an or'ed combination of the following
+    values
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -359,15 +374,19 @@ class GeodesicLine(object):
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.ALL
+      Geodesic.LONG_NOWRAP
+
     """
 
     from geographiclib.geodesic import Geodesic
     Geodesic.CheckDistance(a12)
-    result = {'lat1': self._lat1, 'lon1': self._lon1, 'azi1': self._azi1,
-              'a12': a12}
+    result = {'lat1': self._lat1,
+              'lon1': self._lon1 if outmask & Geodesic.LONG_NOWRAP else
+              Math.AngNormalize(self._lon1),
+              'azi1': self._azi1, 'a12': a12}
     a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenPosition(
       True, a12, outmask)
-    outmask &= Geodesic.OUT_ALL
+    outmask &= Geodesic.OUT_MASK
     if outmask & Geodesic.DISTANCE: result['s12'] = s12
     if outmask & Geodesic.LATITUDE: result['lat2'] = lat2
     if outmask & Geodesic.LONGITUDE: result['lon2'] = lon2

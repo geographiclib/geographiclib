@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.GeodesicLine class
  *
- * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -174,7 +174,6 @@ public class GeodesicLine {
 
     // Guard against underflow in salp0
     azi1 = Geodesic.AngRound(GeoMath.AngNormalize(azi1));
-    lon1 = GeoMath.AngNormalize(lon1);
     _lat1 = lat1;
     _lon1 = lon1;
     _azi1 = azi1;
@@ -390,14 +389,16 @@ public class GeodesicLine {
    **********************************************************************/
   public GeodesicData Position(boolean arcmode, double s12_a12,
                                int outmask) {
-    outmask &= _caps & GeodesicMask.OUT_ALL;
+    outmask &= _caps & GeodesicMask.OUT_MASK;
     GeodesicData r = new GeodesicData();
     if (!( Init() &&
            (arcmode ||
-            (_caps & GeodesicMask.DISTANCE_IN & GeodesicMask.OUT_ALL) != 0) ))
+            (_caps & GeodesicMask.DISTANCE_IN & GeodesicMask.OUT_MASK) != 0) ))
       // Uninitialized or impossible distance calculation requested
       return r;
-    r.lat1 = _lat1; r.lon1 = _lon1; r.azi1 = _azi1;
+    r.lat1 = _lat1; r.azi1 = _azi1;
+    r.lon1 = ((outmask & GeodesicMask.LONG_NOWRAP) != 0) ? _lon1 :
+      GeoMath.AngNormalize(_lon1);
 
     // Avoid warning about uninitialized B12.
     double sig12, ssig12, csig12, B12 = 0, AB1 = 0;
@@ -476,26 +477,29 @@ public class GeodesicLine {
     if (cbet2 == 0)
       // I.e., salp0 = 0, csig2 = 0.  Break the degeneracy in this case
       cbet2 = csig2 = Geodesic.tiny_;
-    // tan(omg2) = sin(alp0) * tan(sig2)
-    somg2 = _salp0 * ssig2; comg2 = csig2;  // No need to normalize
     // tan(alp0) = cos(sig2)*tan(alp2)
     salp2 = _salp0; calp2 = _calp0 * csig2; // No need to normalize
-    // omg12 = omg2 - omg1
-    omg12 = Math.atan2(somg2 * _comg1 - comg2 * _somg1,
-                  comg2 * _comg1 + somg2 * _somg1);
 
     if ((outmask & GeodesicMask.DISTANCE) != 0 && arcmode)
       r.s12 = _b * ((1 + _A1m1) * sig12 + AB1);
 
     if ((outmask & GeodesicMask.LONGITUDE) != 0) {
+      // tan(omg2) = sin(alp0) * tan(sig2)
+      somg2 = _salp0 * ssig2; comg2 = csig2;  // No need to normalize
+      // omg12 = omg2 - omg1
+      omg12 = ((outmask & GeodesicMask.LONG_NOWRAP) != 0) ? sig12
+        - (Math.atan2(ssig2, csig2) - Math.atan2(_ssig1, _csig1))
+        + (Math.atan2(somg2, comg2) - Math.atan2(_somg1, _comg1))
+        : Math.atan2(somg2 * _comg1 - comg2 * _somg1,
+                     comg2 * _comg1 + somg2 * _somg1);
       lam12 = omg12 + _A3c *
         ( sig12 + (Geodesic.SinCosSeries(true, ssig2, csig2, _C3a)
                    - _B31));
       lon12 = lam12 / GeoMath.degree;
       // Use GeoMath.AngNormalize2 because longitude might have wrapped
       // multiple times.
-      lon12 = GeoMath.AngNormalize2(lon12);
-      r.lon2 = GeoMath.AngNormalize(_lon1 + lon12);
+      r.lon2 = ((outmask & GeodesicMask.LONG_NOWRAP) != 0) ? _lon1 + lon12 :
+        GeoMath.AngNormalize(r.lon1 + GeoMath.AngNormalize2(lon12));
     }
 
     if ((outmask & GeodesicMask.LATITUDE) != 0)

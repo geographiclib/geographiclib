@@ -1,10 +1,10 @@
 function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
-      (lat1, lon1, s12_a12, azi1, ellipsoid, arcmode)
+      (lat1, lon1, s12_a12, azi1, ellipsoid, flags)
 %GEODRECKON  Point at specified azimuth, range on an ellipsoid
 %
 %   [lat2, lon2, azi2] = GEODRECKON(lat1, lon1, s12, azi1)
 %   [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] =
-%     GEODRECKON(lat1, lon1, s12_a12, azi1, ellipsoid, arcmode)
+%     GEODRECKON(lat1, lon1, s12_a12, azi1, ellipsoid, flags)
 %
 %   solves the direct geodesic problem of finding the final point and
 %   azimuth given lat1, lon1, s12, and azi1.  The input arguments lat1,
@@ -18,15 +18,27 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %   in GEODDOC.  GEODDOC also gives the restrictions on the allowed ranges
 %   of the arguments.
 %
-%   If arcmode if false (the default), then, in the long form of the call,
+%   flags (default 0) is a combination of 2 flags:
+%      arcmode = bitand(flags, 1)
+%      long_nowrap = bitand(flags, 2)
+%
+%   If arcmode is unset (the default), then, in the long form of the call,
 %   the input argument s12_a12 is the distance s12 (in meters) and the
 %   final output variable a12_s12 is the arc length on the auxiliary sphere
-%   a12 (in degrees).  If arcmode is true, then the roles of s12_a12 and
+%   a12 (in degrees).  If arcmode is set, then the roles of s12_a12 and
 %   a12_s12 are reversed; s12_a12 is interpreted as the arc length on the
 %   auxiliary sphere a12 (in degrees) and the corresponding distance s12 is
-%   returned in the final output variable a12_s12 (in meters).  The two
-%   optional arguments, ellispoid and arcmode, may be given in any order
-%   and either or both may be omitted.
+%   returned in the final output variable a12_s12 (in meters).
+%
+%   If long_nowrap is unset (the default), then the value lon2 is in the
+%   range [-180,180).  If long_nowrap is set, the quantity lon2 - lon1
+%   indicates how many times the geodesic wrapped around the ellipsoid.
+%   Because lon2 might be outside the normal allowed range for longitudes,
+%   [-540, 540), be sure to normalize it with rem(lon2, 360) before using
+%   it in other calls.
+%
+%   The two optional arguments, ellipsoid and flags, may be given in any
+%   order and either or both may be omitted.
 %
 %   When given a combination of scalar and array inputs, GEODRECKON behaves
 %   as though the inputs were expanded to match the size of the arrays.
@@ -57,7 +69,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %   See also GEODDOC, GEODDISTANCE, GEODAREA, GEODESICDIRECT, GEODESICLINE,
 %     DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2014) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.39.
 %
@@ -74,30 +86,31 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
     error('lat1, lon1, s12, azi1 have incompatible sizes')
   end
   if nargin <= 4
-    ellipsoid = defaultellipsoid; arcmode = false;
+    ellipsoid = defaultellipsoid; flags = 0;
   elseif nargin == 5
     arg5 = ellipsoid(:);
     if length(arg5) == 2
-      ellipsoid = arg5; arcmode = false;
+      ellipsoid = arg5; flags = 0;
     else
-      arcmode = arg5; ellipsoid = defaultellipsoid;
+      flags = arg5; ellipsoid = defaultellipsoid;
     end
   else
     arg5 = ellipsoid(:);
-    arg6 = arcmode;
+    arg6 = flags;
     if length(arg5) == 2
-      ellipsoid = arg5; arcmode = arg6;
+      ellipsoid = arg5; flags = arg6;
     else
-      arcmode = arg5; ellipsoid = arg6;
+      flags = arg5; ellipsoid = arg6;
     end
   end
   if length(ellipsoid) ~= 2
     error('ellipsoid must be a vector of size 2')
   end
-  arcmode = logical(arcmode);
-  if ~isscalar(arcmode)
-    error('arcmode must be true or false')
+  if ~isscalar(flags)
+    error('flags must be a scalar')
   end
+  arcmode = bitand(flags, 1);
+  long_nowrap = bitand(flags, 2);
 
   degree = pi/180;
   tiny = sqrt(realmin);
@@ -118,7 +131,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   C3x = C3coeff(n);
 
   lat1 = lat1(:);
-  lon1 = AngNormalize(lon1(:));
+  lon1 = lon1(:);
   azi1 = AngRound(AngNormalize(azi1(:)));
   s12_a12 = s12_a12(:);
 
@@ -188,13 +201,23 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   cbet2(cbet2 == 0) = tiny;
   somg2 = salp0 .* ssig2; comg2 = csig2;
   salp2 = salp0; calp2 = calp0 .* csig2;
-  omg12 = atan2(somg2 .* comg1 - comg2 .* somg1, ...
-                comg2 .* comg1 + somg2 .* somg1);
+  if long_nowrap
+    omg12 = sig12 ...
+            - (atan2(ssig2, csig2) - atan2(ssig1, csig1)) ...
+            + (atan2(somg2, comg2) - atan2(somg1, comg1));
+  else
+    omg12 = atan2(somg2 .* comg1 - comg2 .* somg1, ...
+                  comg2 .* comg1 + somg2 .* somg1);
+  end
   lam12 = omg12 + ...
           A3c .* ( sig12 + (SinCosSeries(true, ssig2, csig2, C3a) - B31));
   lon12 = lam12 / degree;
-  lon12 = AngNormalize2(lon12);
-  lon2 = AngNormalize(lon1 + lon12);
+  if long_nowrap
+    lon2 = lon1 + lon12;
+  else
+    lon12 = AngNormalize2(lon12);
+    lon2 = AngNormalize(AngNormalize(lon1) + lon12);
+  end
   lat2 = atan2(sbet2, f1 * cbet2) / degree;
   azi2 = 0 - atan2(-salp2, calp2) / degree;
   if arcmode

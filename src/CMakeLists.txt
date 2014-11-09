@@ -54,6 +54,21 @@ else ()
   endif ()
 endif ()
 
+if (NOT CMAKE_VERSION VERSION_LESS 2.8.11)
+  if (GEOGRAPHICLIB_SHARED_LIB)
+    target_include_directories (${PROJECT_SHARED_LIBRARIES} INTERFACE
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+      $<INSTALL_INTERFACE:include>)
+  endif ()
+  if (GEOGRAPHICLIB_STATIC_LIB)
+    target_include_directories (${PROJECT_STATIC_LIBRARIES} INTERFACE
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+      $<INSTALL_INTERFACE:include>)
+  endif ()
+endif ()
+
 # Specify where the library is installed, adding it to the export targets
 install (TARGETS ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES}
   EXPORT targets

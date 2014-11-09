@@ -17,7 +17,7 @@
  *    http://dx.doi.org/10.1007/s00190-012-0578-z
  *    Addenda: http://geographiclib.sf.net/geod-addenda.html
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************
@@ -106,18 +106,18 @@
     if (!(lon >= -540 && lon < 540))
       throw new Error("longitude " + lon + " not in [-540, 540)");
     return m.AngNormalize(lon);
-  }
+  };
 
   g.Geodesic.CheckAzimuth = function(azi) {
     if (!(azi >= -540 && azi < 540))
       throw new Error("longitude " + azi + " not in [-540, 540)");
     return m.AngNormalize(azi);
-  }
+  };
 
   g.Geodesic.CheckDistance = function(s) {
     if (!(isFinite(s)))
       throw new Error("distance " + s + " not a finite number");
-  }
+  };
 
   g.Geodesic.prototype.Inverse = function(lat1, lon1, lat2, lon2, outmask) {
     if (!outmask) outmask = g.DISTANCE | g.AZIMUTH;
@@ -129,7 +129,7 @@
     result.lat2 = lat2; result.lon2 = lon2;
 
     return result;
-  }
+  };
 
   g.Geodesic.prototype.Direct = function(lat1, lon1, azi1, s12, outmask) {
     if (!outmask) outmask = g.LATITUDE | g.LONGITUDE | g.AZIMUTH;
@@ -142,14 +142,14 @@
     result.azi1 = azi1; result.s12 = s12;
 
     return result;
-  }
+  };
 
   g.Geodesic.prototype.InversePath =
     function(lat1, lon1, lat2, lon2, ds12, maxk) {
     var t = this.Inverse(lat1, lon1, lat2, lon2);
     if (!maxk) maxk = 20;
     if (!(ds12 > 0))
-      throw new Error("ds12 must be a positive number")
+      throw new Error("ds12 must be a positive number");
     var
     k = Math.max(1, Math.min(maxk, Math.ceil(t.s12/ds12))),
     points = new Array(k + 1);
@@ -167,14 +167,14 @@
       }
     }
     return points;
-  }
+  };
 
   g.Geodesic.prototype.DirectPath =
     function(lat1, lon1, azi1, s12, ds12, maxk) {
     var t = this.Direct(lat1, lon1, azi1, s12);
     if (!maxk) maxk = 20;
     if (!(ds12 > 0))
-      throw new Error("ds12 must be a positive number")
+      throw new Error("ds12 must be a positive number");
     var
     k = Math.max(1, Math.min(maxk, Math.ceil(Math.abs(t.s12)/ds12))),
     points = new Array(k + 1);
@@ -192,7 +192,7 @@
       }
     }
     return points;
-  }
+  };
 
   g.Geodesic.prototype.Circle = function(lat1, lon1, azi1, s12, k) {
     if (!(Math.abs(lat1) <= 90))
@@ -216,7 +216,7 @@
       points[i] = {lat: vals.lat2, lon: vals.lon2};
     }
     return points;
-  }
+  };
 
   g.Geodesic.prototype.Envelope = function(lat1, lon1, k, ord) {
     if (!(Math.abs(lat1) <= 90))
@@ -248,10 +248,10 @@
       points[i] = {lat: vals.lat2, lon: vals.lon2};
     }
     return points;
-  }
+  };
 
   g.Geodesic.prototype.Area = function(points, polyline) {
     return GeographicLib.PolygonArea.Area(this, points, polyline);
-  }
+  };
 
 })();

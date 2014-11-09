@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.PolygonArea class
  *
- * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -81,6 +81,17 @@ public class PolygonArea {
       (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
     return cross;
   }
+  // an alternate version of transit to deal with longitudes in the direct
+  // problem.
+  private static int transitdirect(double lon1, double lon2) {
+    // We want to compute exactly
+    //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
+    // Since we only need the parity of the result we can use std::remquo but
+    // this is buggy with g++ 4.8.3 and requires C++11.  So instead we do
+    lon1 = lon1 % 720.0; lon2 = lon2 % 720.0;
+    return ( ((lon2 >= 0 && lon2 < 360) || lon2 < -360 ? 0 : 1) -
+             ((lon1 >= 0 && lon1 < 360) || lon1 < -360 ? 0 : 1) );
+    }
 
   /**
    * Constructor for PolygonArea.
@@ -95,7 +106,8 @@ public class PolygonArea {
     _polyline = polyline;
      _mask = GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
        GeodesicMask.DISTANCE |
-       (_polyline ? GeodesicMask.NONE : GeodesicMask.AREA);
+       (_polyline ? GeodesicMask.NONE :
+        GeodesicMask.AREA | GeodesicMask.LONG_NOWRAP);
      _perimetersum = new Accumulator(0);
      if (!_polyline)
        _areasum = new Accumulator(0);
@@ -155,7 +167,7 @@ public class PolygonArea {
       _perimetersum.Add(g.s12);
       if (!_polyline) {
         _areasum.Add(g.S12);
-        _crossings += transit(_lon1, g.lon2);
+        _crossings += transitdirect(_lon1, g.lon2);
       }
       _lat1 = g.lat2; _lon1 = g.lon2;
       ++_num;
@@ -329,7 +341,7 @@ public class PolygonArea {
       GeodesicData g =
         _earth.Direct(_lat1, _lon1, azi, false, s, _mask);
       tempsum += g.S12;
-      crossings += transit(_lon1, g.lon2);
+      crossings += transitdirect(_lon1, g.lon2);
       g = _earth.Inverse(g.lat2, g.lon2, _lat0, _lon0, _mask);
       perimeter += g.s12;
       tempsum += g.S12;

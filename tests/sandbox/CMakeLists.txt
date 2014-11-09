@@ -9,6 +9,9 @@ endif ()
 
 find_package (GeographicLib 1.25 REQUIRED)
 
-include_directories (${GeographicLib_INCLUDE_DIRS})
+if (CMAKE_VERSION VERSION_LESS 2.8.11)
+  include_directories (${GeographicLib_INCLUDE_DIRS})
+  add_definitions (${GeographicLib_DEFINITIONS})
+endif ()
 add_executable (example example-Geodesic.cpp)
 target_link_libraries (example ${GeographicLib_LIBRARIES})
