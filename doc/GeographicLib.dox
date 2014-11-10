@@ -6637,23 +6637,23 @@ of the git repository for GeographicLib.
      - the Maxima version now returns the longitude unwrapped.
      .
      These changes were necessary to fix the PolygonAreaT::AddEdge (see
-     below).
+     the next item).
    - Changes in area calculation:
      - fix BUG in PolygonAreaT::AddEdge (also in C, Java, Javascript,
        and Python implementations) which sometimes causes the wrong area
-       to be returned, if the edge spanned more than 180&deg;;
+       to be returned if the edge spanned more than 180&deg;;
      - add area calculation to the Rhumb and RhumbLine classes and the
        <a href="RhumbSolve.1.html">RhumbSolve</a> utility (see \ref
        rhumbarea);
      - add PolygonAreaRhumb typedef for PolygonAreaT<Rhumb>;
      - add -R option to <a href="Planimeter.1.html">Planimeter</a> to use
        PolygonAreaRhumb (and -G option for the default geodesic polygon);
+     - fix BLUNDER in area calculation in Matlab routine geodreckon;
      - add area calculation to Matlab/Octave routines for great ellipses
        (see \ref gearea).
    - Fix bad BUG in Geohash::Reverse; this was introduced in version
      1.37 and affected all platforms where unsigned longs are 32-bits.
      Thanks to Christian Csar for reporting and diagnosing this.
-   - Fix BLUNDER in area calculation in Matlab routine geodreckon.
    - Binary installers for Windows are now built with Visual Studio 11
      2012 (instead of Visual Studio 10 2010).  Compiled Matlab support
      still with version 2013a (64-bit).
