@@ -388,7 +388,7 @@ namespace NETGeographicLib
     //*************************************************************************
     // PolygonAreaRhumb
     //*************************************************************************
-	ref class Rhumb;
+    ref class Rhumb;
 
     public ref class PolygonAreaRhumb
     {

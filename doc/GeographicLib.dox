@@ -672,8 +672,9 @@ In order to use GeographicLib from C++ code, you will need to
     add_definitions (${GeographicLib_DEFINITIONS})
     add_executable (program source1.cpp source2.cpp)
     target_link_libraries (program ${GeographicLib_LIBRARIES}) \endverbatim
-    (The <code>add_definitions</code> line is only needed for Windows
-    and can be omitted if you're using cmake version 2.8.11 or later.)
+    If you're using cmake version 2.8.11 or later, you can omit the
+    <code>include_directories </code> and <code>add_definitions</code>
+    lines.
   - configure your package, e.g., with \verbatim
     mkdir BUILD
     cd BUILD
@@ -828,8 +829,10 @@ if (NOT MSVC)
   set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif ()
 
-include_directories (${GeographicLib_INCLUDE_DIRS})
-add_definitions (${GeographicLib_DEFINITIONS})
+if (CMAKE_VERSION VERSION_LESS 2.8.11)
+  include_directories (${GeographicLib_INCLUDE_DIRS})
+  add_definitions (${GeographicLib_DEFINITIONS})
+endif ()
 add_executable (${PROJECT_NAME} example-Geodesic-small.cpp)
 target_link_libraries (${PROJECT_NAME} ${GeographicLib_LIBRARIES})
 
@@ -1249,7 +1252,7 @@ otherwise).  This contains implementations of the classes
 - Accumulator
 - Geodesic
 - GeodesicLine
-- PolygonArea
+- PolygonAreaT
 .
 You can also download the python interface independent of the rest of
 GeographicLib from
@@ -6617,13 +6620,28 @@ of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-mm-dd)
+   - GeographicLib usually normalizes longitudes to the range
+     [&minus;180&deg;, 180&deg;).  However, when solving the direct
+     geodesic and rhumb line problems, it is sometimes necessary to know
+     how many lines the line encircled the earth by returning the
+     longitude "unwrapped".  So the following changes have been made:
+     - add a LONG_NOWRAP flag to \e mask enums for the \e outmask
+       arguments for GeographicLib::Geodesic,
+       GeographicLib::GeodesicLine, GeographicLib::Rhumb, and
+       GeographicLib::RhumbLine;
+     - similar changes have been made to the Python, Javascript, and
+       Java implementations of the geodesic routines;
+     - for the C, Fortran, and Matlab implementations the \e arcmode
+       argument to the routines was generalized to allow a combination
+       of ARCMODE and LONG_NOWRAP bits;
+     - the Maxima version now returns the longitude unwrapped.
+     .
+     These changes were necessary to fix the PolygonAreaT::AddEdge (see
+     below).
    - Changes in area calculation:
-     - fix BUG in PolygonAreaT::AddEdge which sometimes causes the wrong
-       area might be returned, if the edge spanned more than 180&deg;;
-     - TODO: make corresponding fixes to the C, C, Java, Javascript,
-       Python interfaces (the bug was not present in Matlab, Fortran,
-       and Maxima interfaces because these don't implement te AddEdge
-       capability);
+     - fix BUG in PolygonAreaT::AddEdge (also in C, Java, Javascript,
+       and Python implementations) which sometimes causes the wrong area
+       to be returned, if the edge spanned more than 180&deg;;
      - add area calculation to the Rhumb and RhumbLine classes and the
        <a href="RhumbSolve.1.html">RhumbSolve</a> utility (see \ref
        rhumbarea);
@@ -6643,7 +6661,9 @@ of the git repository for GeographicLib.
      source files.
    - Cmake updates
      - include cross-compiling checks in cmake config file;
-     - improve the way unsuitable versions are reported.
+     - improve the way unsuitable versions are reported;
+     - include_directories (${GeographicLib_INCLUDE_DIRS}) is no longer
+       necessary with cmake 2.8.11 or later.
    - legacy/Fortran now includes drop-in replacements for the geodesic
      utilities from the NGS.
    - geographiclib-get-{geoids,gravity,magnetic} with no arguments now

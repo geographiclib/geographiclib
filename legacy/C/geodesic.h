@@ -108,7 +108,7 @@
  * twice about restructuring the internals of the C code since this may make
  * porting fixes from the C++ code more difficult.
  *
- * Copyright (c) Charles Karney (2012-2013) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -381,11 +381,13 @@ extern "C" {
    * @param[in] lat1 latitude of point 1 (degrees).
    * @param[in] lon1 longitude of point 1 (degrees).
    * @param[in] azi1 azimuth at point 1 (degrees).
-   * @param[in] arcmode flag determining the meaning of the \e
-   *   s12_a12.
-   * @param[in] s12_a12 if \e arcmode is 0, this is the distance between
-   *   point 1 and point 2 (meters); otherwise it is the arc length between
-   *   point 1 and point 2 (degrees); it can be negative.
+   * @param[in] flags bitor'ed combination of geod_flags(); \e flags &
+   *   GEOD_ARCMODE determines the meaning of the \e s12_a12 and \e flags &
+   *   GEOD_LONG_NOWRAP prevents the value of \e lon2 being wrapped into the
+   *   range [&minus;180&deg;, 180&deg;).
+   * @param[in] s12_a12 if \e flags & GEOD_ARCMODE is 0, this is the distance
+   *   between point 1 and point 2 (meters); otherwise it is the arc length
+   *   between point 1 and point 2 (degrees); it can be negative.
    * @param[out] plat2 pointer to the latitude of point 2 (degrees).
    * @param[out] plon2 pointer to the longitude of point 2 (degrees).
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
@@ -403,13 +405,19 @@ extern "C" {
    * \e g must have been initialized with a call to geod_init().  \e lat1
    * should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e azi1
    * should be in the range [&minus;540&deg;, 540&deg;).  The function value \e
-   * a12 equals \e s12_a12 is \e arcmode is non-zero.  Any of the "return"
+   * a12 equals \e s12_a12 if \e flags & GEOD_ARCMODE.  Any of the "return"
    * arguments \e plat2, etc., may be replaced by 0, if you do not need some
    * quantities computed.
+   *
+   * With \e flags & GEOD_LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e
+   * lon1 indicates how many times the geodesic wrapped around the ellipsoid.
+   * Because \e lon2 might be outside the normal allowed range for longitudes,
+   * [&minus;540&deg;, 540&deg;), be sure to normalize it, e.g., with fmod(\e
+   * lon2, 360.0) before using it in subsequent calculations
    **********************************************************************/
   double geod_gendirect(const struct geod_geodesic* g,
                         double lat1, double lon1, double azi1,
-                        int arcmode, double s12_a12,
+                        unsigned flags, double s12_a12,
                         double* plat2, double* plon2, double* pazi2,
                         double* ps12, double* pm12, double* pM12, double* pM21,
                         double* pS12);
@@ -453,12 +461,14 @@ extern "C" {
    *
    * @param[in] l a pointer to the geod_geodesicline object specifying the
    *   geodesic line.
-   * @param[in] arcmode flag determining the meaning of the second parameter;
-   *   if arcmode is 0, then \e l must have been initialized with \e caps |=
-   *   GEOD_DISTANCE_IN.
-   * @param[in] s12_a12 if \e arcmode is 0, this is the distance between
-   *   point 1 and point 2 (meters); otherwise it is the arc length between
-   *   point 1 and point 2 (degrees); it can be negative.
+   * @param[in] flags bitor'ed combination of geod_flags(); \e flags &
+   *   GEOD_ARCMODE determines the meaning of the \e s12_a12 and \e flags &
+   *   GEOD_LONG_NOWRAP prevents the value of \e lon2 being wrapped into the
+   *   range [&minus;180&deg;, 180&deg;); if \e flags & GEOD_ARCMODE is 0, then
+   *   \e l must have been initialized with \e caps |= GEOD_DISTANCE_IN.
+   * @param[in] s12_a12 if \e flags & GEOD_ARCMODE is 0, this is the distance
+   *   between point 1 and point 2 (meters); otherwise it is the arc length
+   *   between point 1 and point 2 (degrees); it can be negative.
    * @param[out] plat2 pointer to the latitude of point 2 (degrees).
    * @param[out] plon2 pointer to the longitude of point 2 (degrees); requires
    *   that \e l was initialized with \e caps |= GEOD_LONGITUDE.
@@ -480,11 +490,17 @@ extern "C" {
    * @return \e a12 arc length of between point 1 and point 2 (degrees).
    *
    * \e l must have been initialized with a call to geod_lineinit() with \e
-   * caps |= GEOD_DISTANCE_IN.  The values of \e lon2 and \e azi2 returned are
-   * in the range [&minus;180&deg;, 180&deg;).  Any of the "return" arguments
-   * \e plat2, etc., may be replaced by 0, if you do not need some quantities
-   * computed.  Requesting a value which \e l is not capable of computing is
-   * not an error; the corresponding argument will not be altered.
+   * caps |= GEOD_DISTANCE_IN.  The value \e azi2 returned is in the range
+   * [&minus;180&deg;, 180&deg;).  Any of the "return" arguments \e plat2,
+   * etc., may be replaced by 0, if you do not need some quantities computed.
+   * Requesting a value which \e l is not capable of computing is not an error;
+   * the corresponding argument will not be altered.
+   *
+   * With \e flags & GEOD_LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e
+   * lon1 indicates how many times the geodesic wrapped around the ellipsoid.
+   * Because \e lon2 might be outside the normal allowed range for longitudes,
+   * [&minus;540&deg;, 540&deg;), be sure to normalize it, e.g., with fmod(\e
+   * lon2, 360.0) before using it in subsequent calculations
    *
    * Example, compute way points between JFK and Singapore Changi Airport
    * using geod_genposition().  In this example, the points are evenly space in
@@ -494,7 +510,7 @@ extern "C" {
    @code
    struct geod_geodesic g;
    struct geod_geodesicline l;
-   double a12, azi1, lat[101],lon[101];
+   double a12, azi1, lat[101], lon[101];
    int i;
    geod_init(&g, 6378137, 1/298.257223563);
    a12 = geod_geninverse(&g, 40.64, -73.78, 1.36, 103.99,
@@ -508,7 +524,7 @@ extern "C" {
    @endcode
    **********************************************************************/
   double geod_genposition(const struct geod_geodesicline* l,
-                          int arcmode, double s12_a12,
+                          unsigned flags, double s12_a12,
                           double* plat2, double* plon2, double* pazi2,
                           double* ps12, double* pm12,
                           double* pM12, double* pM21,
@@ -723,7 +739,7 @@ extern "C" {
                         double* pA, double* pP);
 
   /**
-   * mask values for the the \e caps argument to geod_lineinit().
+   * mask values for the \e caps argument to geod_lineinit().
    **********************************************************************/
   enum geod_mask {
     GEOD_NONE         = 0U,                     /**< Calculate nothing */
@@ -736,6 +752,16 @@ extern "C" {
     GEOD_GEODESICSCALE= 1U<<13 | 1U<<0 | 1U<<2, /**< Calculate geodesic scale */
     GEOD_AREA         = 1U<<14 | 1U<<4,         /**< Calculate reduced length */
     GEOD_ALL          = 0x7F80U| 0x1FU          /**< Calculate everything */
+  };
+
+  /**
+   * flag values for the \e flags argument to geod_gendirect() and
+   * geod_genposition()
+   **********************************************************************/
+  enum geod_flags {
+    GEOD_NOFLAGS      = 0U,     /**< No flags */
+    GEOD_ARCMODE      = 1U<<0,  /**< Position given in terms of arc distance */
+    GEOD_LONG_NOWRAP  = 1U<<15  /**< Don't wrap longitude */
   };
 
 #if defined(__cplusplus)

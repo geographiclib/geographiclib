@@ -23,7 +23,9 @@ namespace NETGeographicLib
       CAP_C3   = 1U<<3,
       CAP_C4   = 1U<<4,
       CAP_ALL  = 0x1FU,
+      CAP_MASK = CAP_ALL,
       OUT_ALL  = 0x7F80U,
+      OUT_MASK = 0xFF80U,
     };
 
     /**
@@ -86,6 +88,11 @@ namespace NETGeographicLib
        * @hideinitializer
        **********************************************************************/
       AREA          = 1U<<14 | unsigned(captype::CAP_C4),
+      /**
+       * Do not wrap the \e lon2 in the direct calculation.
+       * @hideinitializer
+       **********************************************************************/
+      LONG_NOWRAP   = 1U<<15,
       /**
        * All capabilities, calculate everything.
        * @hideinitializer

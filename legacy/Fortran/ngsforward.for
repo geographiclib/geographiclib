@@ -296,7 +296,7 @@ c
         edist  = 0.001d0
       endif
 c
-      call direct (a, f, glat1, glon1, faz, edist, .false.,
+      call direct (a, f, glat1, glon1, faz, edist, 0,
      +    glat2, glon2, baz, 0, dummy, dummy, dummy, dummy, dummy)
       if (baz .ge. 0) then
         baz = baz - 180

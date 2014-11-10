@@ -164,9 +164,9 @@ namespace NETGeographicLib {
      * is indeterminate (a NaN is returned for \e lon2 and \e S12).
      **********************************************************************/
     void Direct(double lat1, double lon1, double azi12, double s12,
-                [System::Runtime::InteropServices::Out] double% lat2, 
-				[System::Runtime::InteropServices::Out] double%  lon2, 
-				[System::Runtime::InteropServices::Out] double%  S12);
+                [System::Runtime::InteropServices::Out] double% lat2,
+                [System::Runtime::InteropServices::Out] double% lon2,
+                [System::Runtime::InteropServices::Out] double% S12);
 
     /**
      * Solve the direct rhumb problem without the area.
@@ -224,11 +224,11 @@ namespace NETGeographicLib {
      * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
      * Math::AngNormalize2 before using it in other GeographicLib calls.
      **********************************************************************/
-    void GenDirect(double lat1, double lon1, double azi12, double s12, 
-		           Rhumb::mask outmask,
-                   [System::Runtime::InteropServices::Out] double%  lat2, 
-				   [System::Runtime::InteropServices::Out] double%  lon2, 
-				   [System::Runtime::InteropServices::Out] double%  S12);
+    void GenDirect(double lat1, double lon1, double azi12, double s12,
+                   Rhumb::mask outmask,
+                   [System::Runtime::InteropServices::Out] double% lat2,
+                   [System::Runtime::InteropServices::Out] double% lon2,
+                   [System::Runtime::InteropServices::Out] double% S12);
 
     /**
      * Solve the inverse rhumb problem returning also the area.
@@ -254,9 +254,9 @@ namespace NETGeographicLib {
      * calculation to be carried out in finite terms.
      **********************************************************************/
     void Inverse(double lat1, double lon1, double lat2, double lon2,
-                 [System::Runtime::InteropServices::Out] double%  s12, 
-				 [System::Runtime::InteropServices::Out] double%  azi12, 
-				 [System::Runtime::InteropServices::Out] double%  S12);
+                 [System::Runtime::InteropServices::Out] double% s12,
+                 [System::Runtime::InteropServices::Out] double% azi12,
+                 [System::Runtime::InteropServices::Out] double% S12);
 
     /**
      * Solve the inverse rhumb problem without the area.
@@ -304,9 +304,9 @@ namespace NETGeographicLib {
      **********************************************************************/
     void GenInverse(double lat1, double lon1, double lat2, double lon2,
                     Rhumb::mask outmask,
-                    [System::Runtime::InteropServices::Out] double% s12, 
-					[System::Runtime::InteropServices::Out] double% azi12, 
-					[System::Runtime::InteropServices::Out] double% S12);
+                    [System::Runtime::InteropServices::Out] double% s12,
+                    [System::Runtime::InteropServices::Out] double% azi12,
+                    [System::Runtime::InteropServices::Out] double% S12);
 
     /**
      * Set up to compute several points on a single rhumb line.
@@ -343,9 +343,9 @@ namespace NETGeographicLib {
     property double Flattening { double get(); }
 
     /**
-     * @return the  area of the ellipsoid. 
+     * @return the  area of the ellipsoid.
      **********************************************************************/
-	property double EllipsoidArea { double get(); }
+    property double EllipsoidArea { double get(); }
 
     /**
      * %return The unmanaged pointer to the GeographicLib::Geodesic.
@@ -443,7 +443,6 @@ namespace NETGeographicLib {
      **********************************************************************/
     ~RhumbLine() { this->!RhumbLine(); }
 
-
     /**
      * Compute the position of point 2 which is a distance \e s12 (meters) from
      * point 1.  The area is also computed.
@@ -461,10 +460,10 @@ namespace NETGeographicLib {
      * longitude of point 2 is indeterminate (a NaN is returned for \e lon2 and
      * \e S12).
      **********************************************************************/
-    void Position(double s12, 
-		[System::Runtime::InteropServices::Out] double% lat2, 
-		[System::Runtime::InteropServices::Out] double% lon2, 
-		[System::Runtime::InteropServices::Out] double% S12);
+    void Position(double s12,
+        [System::Runtime::InteropServices::Out] double% lat2,
+        [System::Runtime::InteropServices::Out] double% lon2,
+        [System::Runtime::InteropServices::Out] double% S12);
 
     /**
      * Compute the position of point 2 which is a distance \e s12 (meters) from
@@ -516,9 +515,9 @@ namespace NETGeographicLib {
      * \e S12).
      **********************************************************************/
     void GenPosition(double s12, RhumbLine::mask outmask,
-                     [System::Runtime::InteropServices::Out] double% lat2, 
-                     [System::Runtime::InteropServices::Out] double%  lon2, 
-                     [System::Runtime::InteropServices::Out] double%  S12);
+                     [System::Runtime::InteropServices::Out] double% lat2,
+                     [System::Runtime::InteropServices::Out] double% lon2,
+                     [System::Runtime::InteropServices::Out] double% S12);
 
     /** \name Inspector functions
      **********************************************************************/

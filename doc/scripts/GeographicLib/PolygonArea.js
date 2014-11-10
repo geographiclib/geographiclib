@@ -12,7 +12,7 @@
  *    http://dx.doi.org/10.1007/s00190-012-0578-z
  *    Addenda: http://geographiclib.sf.net/geod-addenda.html
  *
- * Copyright (c) Charles Karney (2011-2013) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -38,19 +38,31 @@ GeographicLib.PolygonArea = {};
       lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
       (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
     return cross;
-  }
+  };
+
+  // an alternate version of transit to deal with longitudes in the direct
+  // problem.
+  p.transitdirect = function(lon1, lon2) {
+    // We want to compute exactly
+    //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
+    // Since we only need the parity of the result we can use std::remquo but
+    // this is buggy with g++ 4.8.3 and requires C++11.  So instead we do
+    lon1 = lon1 % 720.0; lon2 = lon2 % 720.0;
+    return ( ((lon2 >= 0 && lon2 < 360) || lon2 < -360 ? 0 : 1) -
+             ((lon1 >= 0 && lon1 < 360) || lon1 < -360 ? 0 : 1) );
+  };
 
   p.PolygonArea = function(earth, polyline) {
     this._earth = earth;
     this._area0 = 4 * Math.PI * earth._c2;
     this._polyline = !polyline ? false : polyline;
     this._mask = g.LATITUDE | g.LONGITUDE | g.DISTANCE |
-          (this._polyline ? g.NONE : g.AREA);
+          (this._polyline ? g.NONE : g.AREA | g.LONG_NOWRAP);
     if (!this._polyline)
       this._areasum = new a.Accumulator(0);
     this._perimetersum = new a.Accumulator(0);
     this.Clear();
-  }
+  };
 
   p.PolygonArea.prototype.Clear = function() {
     this._num = 0;
@@ -59,10 +71,10 @@ GeographicLib.PolygonArea = {};
       this._areasum.Set(0);
     this._perimetersum.Set(0);
     this._lat0 = this._lon0 = this._lat1 = this._lon1 = Number.NaN;
-  }
+  };
 
   p.PolygonArea.prototype.AddPoint = function(lat, lon) {
-    if (this._num == 0) {
+    if (this._num === 0) {
       this._lat0 = this._lat1 = lat;
       this._lon0 = this._lon1 = lon;
     } else {
@@ -76,7 +88,7 @@ GeographicLib.PolygonArea = {};
       this._lon1 = lon;
     }
     ++this._num;
-  }
+  };
 
   p.PolygonArea.prototype.AddEdge = function(azi, s) {
     if (this._num) {
@@ -84,13 +96,13 @@ GeographicLib.PolygonArea = {};
       this._perimetersum.Add(s);
       if (!this._polyline) {
         this._areasum.Add(t.S12);
-        this._crossings += p.transit(this._lon1, t.lon2);
+        this._crossings += p.transitdirect(this._lon1, t.lon2);
       }
       this._lat1 = t.lat2;
       this._lon1 = t.lon2;
     }
     ++this._num;
-  }
+  };
 
   // return number, perimeter, area
   p.PolygonArea.prototype.Compute = function(reverse, sign) {
@@ -131,12 +143,12 @@ GeographicLib.PolygonArea = {};
     }
     vals.area = tempsum.Sum();
     return vals;
-  }
+  };
 
   // return number, perimeter, area
   p.PolygonArea.prototype.TestPoint = function(lat, lon, reverse, sign) {
     var vals = {number: this._num + 1};
-    if (this._num == 0) {
+    if (this._num === 0) {
       vals.perimeter = 0;
       if (!this._polyline)
         vals.area = 0;
@@ -147,15 +159,15 @@ GeographicLib.PolygonArea = {};
     var crossings = this._crossings;
     var t;
     for (var i = 0; i < (this._polyline ? 1 : 2); ++i) {
-      t = this._earth.Inverse
-      (i == 0 ? this._lat1 : lat, i == 0 ? this._lon1 : lon,
-       i != 0 ? this._lat0 : lat, i != 0 ? this._lon0 : lon,
+      t = this._earth.Inverse(
+       i === 0 ? this._lat1 : lat, i === 0 ? this._lon1 : lon,
+       i !== 0 ? this._lat0 : lat, i !== 0 ? this._lon0 : lon,
        this._mask);
       vals.perimeter += t.s12;
       if (!this._polyline) {
         tempsum += t.S12;
-        crossings += p.transit(i == 0 ? this._lon1 : lon,
-                               i != 0 ? this._lon0 : lon);
+        crossings += p.transit(i === 0 ? this._lon1 : lon,
+                               i !== 0 ? this._lon0 : lon);
       }
     }
 
@@ -182,12 +194,12 @@ GeographicLib.PolygonArea = {};
     }
     vals.area = tempsum;
     return vals;
-  }
+  };
 
   // return number, perimeter, area
   p.PolygonArea.prototype.TestEdge = function(azi, s, reverse, sign) {
     var vals = {number: this._num ? this._num + 1 : 0};
-    if (this._num == 0)
+    if (this._num === 0)
       return vals;
     vals.perimeter = this._perimetersum.Sum() + s;
     if (this._polyline)
@@ -198,7 +210,7 @@ GeographicLib.PolygonArea = {};
     var t;
     t = this._earth.Direct(this._lat1, this._lon1, azi, s, this._mask);
     tempsum += t.S12;
-    crossings += p.transit(this._lon1, t.lon2);
+    crossings += p.transitdirect(this._lon1, t.lon2);
     t = this._earth(t.lat2, t.lon2, this._lat0, this._lon0, this._mask);
     perimeter += t.s12;
     tempsum += t.S12;
@@ -224,18 +236,18 @@ GeographicLib.PolygonArea = {};
     }
     vals.area = tempsum;
     return vals;
-  }
+  };
 
   p.PolygonArea.prototype.CurrentPoint = function() {
     var vals = {lat: this._lat1, lon: this._lon1};
     return vals;
-  }
+  };
 
   p.Area = function(earth, points, polyline) {
     var poly = new p.PolygonArea(earth, polyline);
     for (var i = 0; i < points.length; ++i)
       poly.AddPoint(points[i].lat, points[i].lon);
     return poly.Compute(false, true);
-  }
+  };
 
 })();

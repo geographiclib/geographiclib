@@ -4,5 +4,5 @@ function x = AngNormalize2(x)
 %   X = ANGNORMALIZE(X) reduces arbitrary angles to the range [-180, 180).
 %   X can be any shape.
 
-  x = AngNormalize(mod(x, 360));
+  x = AngNormalize(rem(x, 360));
 end

@@ -86,17 +86,14 @@ namespace GeographicLib {
     // an alternate version of transit to deal with longitudes in the direct
     // problem.
     static inline int transitdirect(real lon1, real lon2) {
-      using std::floor;
-      // We want to compute
+      using std::fmod;
+      // We want to compute exactly
       //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
-      // However, the concern is that for integer n and small positive eps, we
-      // might have n*360 - eps < n*360 but (n*360 - eps)/360 = n.  Indeed this
-      // can happen if n = 0 and eps is tiny.  The following works because
-      // 360.0 * int is exactly respresentable by a real.  With C++11 we can
-      // use remquo.  This would only get the low bits of cross right.  But
-      // that's OK because we only need the parity.
-      int n1 = int(floor(lon1 / 360)), n2 = int(floor(lon2 / 360));
-      return (n2 == 0 && lon2 < 0 ? -1 : n2) - (n1 == 0 && lon1 < 0 ? -1 : n1);
+      // Since we only need the parity of the result we can use std::remquo but
+      // this is buggy with g++ 4.8.3 and requires C++11.  So instead we do
+      lon1 = fmod(lon1, real(720)); lon2 = fmod(lon2, real(720));
+      return ( ((lon2 >= 0 && lon2 < 360) || lon2 < -360 ? 0 : 1) -
+               ((lon1 >= 0 && lon1 < 360) || lon1 < -360 ? 0 : 1) );
     }
   public:
 

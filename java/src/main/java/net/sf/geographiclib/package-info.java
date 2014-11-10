@@ -1,7 +1,7 @@
 /**
  * <h1>Geodesic routines from GeographicLib implemented in Java</h1>
  * @author Charles F. F. Karney (charles@karney.com)
- * @version 1.31
+ * @version 1.39
  *
  * <h2>Abstract</h2>
  * <p>
@@ -16,15 +16,15 @@
  * The Java library is part of GeographicLib which available for download at
  * <ul>
  * <li>
- *   <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.31.tar.gz">
- *   GeographicLib-1.31.tar.gz</a>
+ *   <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.39.tar.gz">
+ *   GeographicLib-1.39.tar.gz</a>
  * <li>
- *   <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.31.zip">
- *   GeographicLib-1.31.zip</a>
+ *   <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.39.zip">
+ *   GeographicLib-1.39.zip</a>
  * </ul>
  * <p>
  * as either a compressed tar file (tar.gz) or a zip file.  After unpacking
- * the source, the Java library can be found in GeographicLib-1.31/java.  (This
+ * the source, the Java library can be found in GeographicLib-1.39/java.  (This
  * library is completely independent from the rest of GeodegraphicLib.)  The
  * library consists of the files in the src/main/java/net/sf/geographiclib
  * subdirectory.
@@ -88,9 +88,9 @@
  * some additional packages to your local repository.)  Then compile and run
  * Inverse.java with <pre>
  * cd inverse/src/main/java
- * javac -cp .:../../../../target/GeographicLib-1.31.jar Inverse.java
+ * javac -cp .:../../../../target/GeographicLib-1.39.jar Inverse.java
  * echo -30 0 29.5 179.5 |
- *   java -cp .:../../../../target/GeographicLib-1.31.jar Inverse </pre>
+ *   java -cp .:../../../../target/GeographicLib-1.39.jar Inverse </pre>
  * <h3>Using maven to build and run {@code Inverse.java}</h3>
  * Use <a href="http://maven.apache.org/">maven</a> to install GeographicLib by
  * running (in the main java directory) <pre>
