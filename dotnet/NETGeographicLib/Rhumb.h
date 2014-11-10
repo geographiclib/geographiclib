@@ -23,22 +23,31 @@ namespace NETGeographicLib {
    *
    * The path of constant azimuth between two points on a ellipsoid at (\e
    * lat1, \e lon1) and (\e lat2, \e lon2) is called the rhumb line (also
-   * called the loxodrome).  Its length is \e s12 and its azimuth is \e azi12
-   * and \e azi2.  (The azimuth is the heading measured clockwise from north.)
+   * called the loxodrome).  Its length is \e s12 and its azimuth is \e azi12.
+   * (The azimuth is the heading measured clockwise from north.)
    *
    * Given \e lat1, \e lon1, \e azi12, and \e s12, we can determine \e lat2,
    * and \e lon2.  This is the \e direct rhumb problem and its solution is
    * given by the function Rhumb::Direct.
    *
    * Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi12
-   * and \e s12.  This is the \e inverse rhumb problem, whose solution is
-   * given by Rhumb::Inverse.  This finds the shortest such rhumb line, i.e.,
-   * the one that wraps no more than half way around the earth .
+   * and \e s12.  This is the \e inverse rhumb problem, whose solution is given
+   * by Rhumb::Inverse.  This finds the shortest such rhumb line, i.e., the one
+   * that wraps no more than half way around the earth.  If the end points are
+   * on opposite meridians, there are two shortest rhumb lines and the
+   * east-going one is chosen.
+   *
+   * These routines also optionally calculate the area under the rhumb line, \e
+   * S12.  This is the area, measured counter-clockwise, of the rhumb line
+   * quadrilateral with corners (<i>lat1</i>,<i>lon1</i>), (0,<i>lon1</i>),
+   * (0,<i>lon2</i>), and (<i>lat2</i>,<i>lon2</i>).
    *
    * Note that rhumb lines may be appreciably longer (up to 50%) than the
    * corresponding Geodesic.  For example the distance between London Heathrow
    * and Tokyo Narita via the rhumb line is 11400 km which is 18% longer than
    * the geodesic distance 9600 km.
+   *
+   * For more information on rhumb lines see \ref rhumb.
    *
    * For more information on rhumb lines see \ref rhumb.
    *
@@ -61,6 +70,53 @@ namespace NETGeographicLib {
     // The finalizer destroys m_pRhumb when this object is destroyed.
     !Rhumb(void);
   public:
+    /**
+     * Bit masks for what calculations to do.  They specify which results to
+     * return in the general routines Rhumb::GenDirect and Rhumb::GenInverse
+     * routines.  RhumbLine::mask is a duplication of this enum.
+     **********************************************************************/
+    enum class mask {
+      /**
+       * No output.
+       * @hideinitializer
+       **********************************************************************/
+      NONE          = 0U,
+      /**
+       * Calculate latitude \e lat2.
+       * @hideinitializer
+       **********************************************************************/
+      LATITUDE      = 1U<<7,
+      /**
+       * Calculate longitude \e lon2.
+       * @hideinitializer
+       **********************************************************************/
+      LONGITUDE     = 1U<<8,
+      /**
+       * Calculate azimuth \e azi12.
+       * @hideinitializer
+       **********************************************************************/
+      AZIMUTH       = 1U<<9,
+      /**
+       * Calculate distance \e s12.
+       * @hideinitializer
+       **********************************************************************/
+      DISTANCE      = 1U<<10,
+      /**
+       * Calculate area \e S12.
+       * @hideinitializer
+       **********************************************************************/
+      AREA          = 1U<<14,
+      /**
+       * Do not wrap the \e lon2 in the direct calculation.
+       * @hideinitializer
+       **********************************************************************/
+      LONG_NOWRAP   = 1U<<15,
+      /**
+       * Calculate everything.  (LONG_NOWRAP is not included in this mask.)
+       * @hideinitializer
+       **********************************************************************/
+      ALL           = 0x7F80U,
+    };
 
     /**
      * Constructor for a ellipsoid with
@@ -85,7 +141,35 @@ namespace NETGeographicLib {
     ~Rhumb() { this->!Rhumb(); }
 
     /**
-     * Solve the direct rhumb problem.
+     * Solve the direct rhumb problem returning also the area.
+     *
+     * @param[in] lat1 latitude of point 1 (degrees).
+     * @param[in] lon1 longitude of point 1 (degrees).
+     * @param[in] azi12 azimuth of the rhumb line (degrees).
+     * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+     *   negative.
+     * @param[out] lat2 latitude of point 2 (degrees).
+     * @param[out] lon2 longitude of point 2 (degrees).
+     * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
+     *
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
+     * azi12 should be in the range [&minus;540&deg;, 540&deg;).  The value of
+     * \e lon2 returned is in the range [&minus;180&deg;, 180&deg;).
+     *
+     * If point 1 is a pole, the cosine of its latitude is taken to be
+     * 1/&epsilon;<sup>2</sup> (where &epsilon; is 2<sup>-52</sup>).  This
+     * position, which is extremely close to the actual pole, allows the
+     * calculation to be carried out in finite terms.  If \e s12 is large
+     * enough that the rhumb line crosses a pole, the longitude of point 2
+     * is indeterminate (a NaN is returned for \e lon2 and \e S12).
+     **********************************************************************/
+    void Direct(double lat1, double lon1, double azi12, double s12,
+                [System::Runtime::InteropServices::Out] double% lat2, 
+				[System::Runtime::InteropServices::Out] double%  lon2, 
+				[System::Runtime::InteropServices::Out] double%  S12);
+
+    /**
+     * Solve the direct rhumb problem without the area.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -112,7 +196,70 @@ namespace NETGeographicLib {
                 [System::Runtime::InteropServices::Out] double% lon2);
 
     /**
-     * Solve the inverse rhumb problem.
+     * The general direct rhumb problem.  Rhumb::Direct is defined in terms
+     * of this function.
+     *
+     * @param[in] lat1 latitude of point 1 (degrees).
+     * @param[in] lon1 longitude of point 1 (degrees).
+     * @param[in] azi12 azimuth of the rhumb line (degrees).
+     * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+     *   negative.
+     * @param[in] outmask a bitor'ed combination of Rhumb::mask values
+     *   specifying which of the following parameters should be set.
+     * @param[out] lat2 latitude of point 2 (degrees).
+     * @param[out] lon2 longitude of point 2 (degrees).
+     * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
+     *
+     * The Rhumb::mask values possible for \e outmask are
+     * - \e outmask |= Rhumb.LATITUDE for the latitude \e lat2;
+     * - \e outmask |= Rhumb.LONGITUDE for the latitude \e lon2;
+     * - \e outmask |= Rhumb.AREA for the area \e S12;
+     * - \e outmask |= Rhumb:.ALL for all of the above;
+     * - \e outmask |= Rhumb.LONG_NOWRAP stops the returned value of \e
+     *   lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
+     * .
+     * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
+     * indicates how many times the rhumb line wrapped around the ellipsoid.
+     * Because \e lon2 might be outside the normal allowed range for
+     * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
+     * Math::AngNormalize2 before using it in other GeographicLib calls.
+     **********************************************************************/
+    void GenDirect(double lat1, double lon1, double azi12, double s12, 
+		           Rhumb::mask outmask,
+                   [System::Runtime::InteropServices::Out] double%  lat2, 
+				   [System::Runtime::InteropServices::Out] double%  lon2, 
+				   [System::Runtime::InteropServices::Out] double%  S12);
+
+    /**
+     * Solve the inverse rhumb problem returning also the area.
+     *
+     * @param[in] lat1 latitude of point 1 (degrees).
+     * @param[in] lon1 longitude of point 1 (degrees).
+     * @param[in] lat2 latitude of point 2 (degrees).
+     * @param[in] lon2 longitude of point 2 (degrees).
+     * @param[out] s12 rhumb distance between point 1 and point 2 (meters).
+     * @param[out] azi12 azimuth of the rhumb line (degrees).
+     * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
+     *
+     * The shortest rhumb line is found.  If the end points are on opposite
+     * meridians, there are two shortest rhumb lines and the east-going one is
+     * chosen.  \e lat1 and \e lat2 should be in the range [&minus;90&deg;,
+     * 90&deg;]; \e lon1 and \e lon2 should be in the range [&minus;540&deg;,
+     * 540&deg;).  The value of \e azi12 returned is in the range
+     * [&minus;180&deg;, 180&deg;).
+     *
+     * If either point is a pole, the cosine of its latitude is taken to be
+     * 1/&epsilon;<sup>2</sup> (where &epsilon; is 2<sup>-52</sup>).  This
+     * position, which is extremely close to the actual pole, allows the
+     * calculation to be carried out in finite terms.
+     **********************************************************************/
+    void Inverse(double lat1, double lon1, double lat2, double lon2,
+                 [System::Runtime::InteropServices::Out] double%  s12, 
+				 [System::Runtime::InteropServices::Out] double%  azi12, 
+				 [System::Runtime::InteropServices::Out] double%  S12);
+
+    /**
+     * Solve the inverse rhumb problem without the area.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -134,6 +281,32 @@ namespace NETGeographicLib {
     void Inverse(double lat1, double lon1, double lat2, double lon2,
                  [System::Runtime::InteropServices::Out] double% s12,
                  [System::Runtime::InteropServices::Out] double% azi12);
+
+    /**
+     * The general inverse rhumb problem.  Rhumb::Inverse is defined in terms
+     * of this function.
+     *
+     * @param[in] lat1 latitude of point 1 (degrees).
+     * @param[in] lon1 longitude of point 1 (degrees).
+     * @param[in] lat2 latitude of point 2 (degrees).
+     * @param[in] lon2 longitude of point 2 (degrees).
+     * @param[in] outmask a bitor'ed combination of Rhumb::mask values
+     *   specifying which of the following parameters should be set.
+     * @param[out] s12 rhumb distance between point 1 and point 2 (meters).
+     * @param[out] azi12 azimuth of the rhumb line (degrees).
+     * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
+     *
+     * The Rhumb::mask values possible for \e outmask are
+     * - \e outmask |= Rhumb::DISTANCE for the latitude \e s12;
+     * - \e outmask |= Rhumb::AZIMUTH for the latitude \e azi12;
+     * - \e outmask |= Rhumb::AREA for the area \e S12;
+     * - \e outmask |= Rhumb::ALL for all of the above;
+     **********************************************************************/
+    void GenInverse(double lat1, double lon1, double lat2, double lon2,
+                    Rhumb::mask outmask,
+                    [System::Runtime::InteropServices::Out] double% s12, 
+					[System::Runtime::InteropServices::Out] double% azi12, 
+					[System::Runtime::InteropServices::Out] double% S12);
 
     /**
      * Set up to compute several points on a single rhumb line.
@@ -170,6 +343,18 @@ namespace NETGeographicLib {
     property double Flattening { double get(); }
 
     /**
+     * @return the  area of the ellipsoid. 
+     **********************************************************************/
+	property double EllipsoidArea { double get(); }
+
+    /**
+     * %return The unmanaged pointer to the GeographicLib::Geodesic.
+     *
+     * This function is for internal use only.
+     **********************************************************************/
+    System::IntPtr^ GetUnmanaged();
+
+    /**
      * A global instantiation of Rhumb with the parameters for the WGS84
      * ellipsoid.
      **********************************************************************/
@@ -203,6 +388,48 @@ namespace NETGeographicLib {
     // The finalizer destroys m_pRhumbLine when this object is destroyed.
     !RhumbLine(void);
   public:
+    enum class mask {
+      /**
+       * No output.
+       * @hideinitializer
+       **********************************************************************/
+      NONE          = 0, //NETGeographicLib::Rhumb::NONE,
+      /**
+       * Calculate latitude \e lat2.
+       * @hideinitializer
+       **********************************************************************/
+      LATITUDE      = 1U<<7, //Rhumb::LATITUDE,
+      /**
+       * Calculate longitude \e lon2.
+       * @hideinitializer
+       **********************************************************************/
+      LONGITUDE     = 1U<<8, //Rhumb::LONGITUDE,
+      /**
+       * Calculate azimuth \e azi12.
+       * @hideinitializer
+       **********************************************************************/
+      AZIMUTH       = 1U<<9, //Rhumb::AZIMUTH,
+      /**
+       * Calculate distance \e s12.
+       * @hideinitializer
+       **********************************************************************/
+      DISTANCE      = 1U<<10, //Rhumb::DISTANCE,
+      /**
+       * Calculate area \e S12.
+       * @hideinitializer
+       **********************************************************************/
+      AREA          = 1U<<14, //Rhumb::AREA,
+      /**
+       * Do wrap the \e lon2 in the direct calculation.
+       * @hideinitializer
+       **********************************************************************/
+      LONG_NOWRAP   = 1U<<14, //Rhumb::LONG_NOWRAP,
+      /**
+       * Calculate everything.  (LONG_NOWRAP is not included in this mask.)
+       * @hideinitializer
+       **********************************************************************/
+      ALL           = 0x7F80U, //Rhumb::ALL,
+    };
     /**
      * \brief Constructor.
      *
@@ -215,6 +442,29 @@ namespace NETGeographicLib {
      * \brief The destructor calls the finalizer.
      **********************************************************************/
     ~RhumbLine() { this->!RhumbLine(); }
+
+
+    /**
+     * Compute the position of point 2 which is a distance \e s12 (meters) from
+     * point 1.  The area is also computed.
+     *
+     * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+     *   negative.
+     * @param[out] lat2 latitude of point 2 (degrees).
+     * @param[out] lon2 longitude of point 2 (degrees).
+     * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
+     *
+     * The value of \e lon2 returned is in the range [&minus;180&deg;,
+     * 180&deg;).
+     *
+     * If \e s12 is large enough that the rhumb line crosses a pole, the
+     * longitude of point 2 is indeterminate (a NaN is returned for \e lon2 and
+     * \e S12).
+     **********************************************************************/
+    void Position(double s12, 
+		[System::Runtime::InteropServices::Out] double% lat2, 
+		[System::Runtime::InteropServices::Out] double% lon2, 
+		[System::Runtime::InteropServices::Out] double% S12);
 
     /**
      * Compute the position of point 2 which is a distance \e s12 (meters) from
@@ -234,6 +484,41 @@ namespace NETGeographicLib {
     void Position(double s12,
                   [System::Runtime::InteropServices::Out] double% lat2,
                   [System::Runtime::InteropServices::Out] double% lon2);
+
+    /**
+     * The general position routine.  RhumbLine::Position is defined in term so
+     * this function.
+     *
+     * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+     *   negative.
+     * @param[in] outmask a bitor'ed combination of Rhumb::mask values
+     *   specifying which of the following parameters should be set.
+     * @param[out] lat2 latitude of point 2 (degrees).
+     * @param[out] lon2 longitude of point 2 (degrees).
+     * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
+     *
+     * The Rhumb::mask values possible for \e outmask are
+     * - \e outmask |= Rhumb::LATITUDE for the latitude \e lat2;
+     * - \e outmask |= Rhumb::LONGITUDE for the latitude \e lon2;
+     * - \e outmask |= Rhumb::AREA for the area \e S12;
+     * - \e outmask |= Rhumb::ALL for all of the above;
+     * - \e outmask |= Rhumb::LONG_NOWRAP stops the returned value of \e
+     *   lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
+     * .
+     * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
+     * indicates how many times the rhumb line wrapped around the ellipsoid.
+     * Because \e lon2 might be outside the normal allowed range for
+     * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
+     * Math::AngNormalize2 before using it in other GeographicLib calls.
+     *
+     * If \e s12 is large enough that the rhumb line crosses a pole, the
+     * longitude of point 2 is indeterminate (a NaN is returned for \e lon2 and
+     * \e S12).
+     **********************************************************************/
+    void GenPosition(double s12, RhumbLine::mask outmask,
+                     [System::Runtime::InteropServices::Out] double% lat2, 
+                     [System::Runtime::InteropServices::Out] double%  lon2, 
+                     [System::Runtime::InteropServices::Out] double%  S12);
 
     /** \name Inspector functions
      **********************************************************************/

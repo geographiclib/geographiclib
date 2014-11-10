@@ -77,6 +77,75 @@ namespace NETGeographicLib
         // The finalizer frees the unmanaged memory when this object is destroyed.
         !GeodesicLine(void);
     public:
+
+        /**
+         * Bit masks for what calculations to do.  They signify to the
+         * GeodesicLine::GeodesicLine constructor and to Geodesic::Line what
+         * capabilities should be included in the GeodesicLine object.  This is
+         * merely a duplication of Geodesic::mask.
+         **********************************************************************/
+        enum class mask {
+         /**
+          * No capabilities, no output.
+          * @hideinitializer
+          **********************************************************************/
+         NONE          = 0U,
+         /**
+          * Calculate latitude \e lat2.  (It's not necessary to include this as a
+          * capability to GeodesicLine because this is included by default.)
+          * @hideinitializer
+          **********************************************************************/
+         LATITUDE      = 1U<<7  | captype::CAP_NONE,
+         /**
+          * Calculate longitude \e lon2.
+          * @hideinitializer
+          **********************************************************************/
+         LONGITUDE     = 1U<<8  | captype::CAP_C3,
+         /**
+          * Calculate azimuths \e azi1 and \e azi2.  (It's not necessary to
+          * include this as a capability to GeodesicLine because this is included
+          * by default.)
+          * @hideinitializer
+          **********************************************************************/
+         AZIMUTH       = 1U<<9  | captype::CAP_NONE,
+         /**
+          * Calculate distance \e s12.
+          * @hideinitializer
+          **********************************************************************/
+         DISTANCE      = 1U<<10 | captype::CAP_C1,
+         /**
+          * Allow distance \e s12 to be used as input in the direct geodesic
+          * problem.
+          * @hideinitializer
+          **********************************************************************/
+         DISTANCE_IN   = 1U<<11 | captype::CAP_C1 | captype::CAP_C1p,
+         /**
+          * Calculate reduced length \e m12.
+          * @hideinitializer
+          **********************************************************************/
+         REDUCEDLENGTH = 1U<<12 | captype::CAP_C1 | captype::CAP_C2,
+         /**
+          * Calculate geodesic scales \e M12 and \e M21.
+          * @hideinitializer
+          **********************************************************************/
+         GEODESICSCALE = 1U<<13 | captype::CAP_C1 | captype::CAP_C2,
+         /**
+          * Calculate area \e S12.
+          * @hideinitializer
+          **********************************************************************/
+         AREA          = 1U<<14 | captype::CAP_C4,
+         /**
+          * Do not wrap the \e lon2 in the direct calculation.
+          * @hideinitializer
+          **********************************************************************/
+         LONG_NOWRAP   = 1U<<15,
+         /**
+          * All capabilities, calculate everything.  (LONG_NOWRAP is not
+          * included in this mask.)
+          * @hideinitializer
+          **********************************************************************/
+         ALL           = captype::OUT_ALL| captype::CAP_ALL,
+        };
         /** \name Constructors
          **********************************************************************/
         ///@{
@@ -358,49 +427,57 @@ namespace NETGeographicLib
          * @param[in] s12_a12 if \e arcmode is false, this is the distance between
          *   point 1 and point 2 (meters); otherwise it is the arc length between
          *   point 1 and point 2 (degrees); it can be negative.
-         * @param[in] outmask a bitor'ed combination of NETGeographicLib::Mask values
+         * @param[in] outmask a bitor'ed combination of GeodesicLine::mask values
          *   specifying which of the following parameters should be set.
          * @param[out] lat2 latitude of point 2 (degrees).
          * @param[out] lon2 longitude of point 2 (degrees); requires that the
          *   GeodesicLine object was constructed with \e caps |=
-         *   NETGeographicLib::Mask::LONGITUDE.
+         *   GeodesicLine::LONGITUDE.
          * @param[out] azi2 (forward) azimuth at point 2 (degrees).
          * @param[out] s12 distance between point 1 and point 2 (meters); requires
          *   that the GeodesicLine object was constructed with \e caps |=
-         *   NETGeographicLib::Mask::DISTANCE.
+         *   GeodesicLine::DISTANCE.
          * @param[out] m12 reduced length of geodesic (meters); requires that the
          *   GeodesicLine object was constructed with \e caps |=
-         *   NETGeographicLib::Mask::REDUCEDLENGTH.
+         *   GeodesicLine::REDUCEDLENGTH.
          * @param[out] M12 geodesic scale of point 2 relative to point 1
          *   (dimensionless); requires that the GeodesicLine object was constructed
-         *   with \e caps |= NETGeographicLib::Mask::GEODESICSCALE.
+         *   with \e caps |= GeodesicLine::GEODESICSCALE.
          * @param[out] M21 geodesic scale of point 1 relative to point 2
          *   (dimensionless); requires that the GeodesicLine object was constructed
-         *   with \e caps |= NETGeographicLib::Mask::GEODESICSCALE.
+         *   with \e caps |= GeodesicLine::GEODESICSCALE.
          * @param[out] S12 area under the geodesic (meters<sup>2</sup>); requires
          *   that the GeodesicLine object was constructed with \e caps |=
-         *   NETGeographicLib::Mask::AREA.
+         *   GeodesicLine::AREA.
          * @return \e a12 arc length of between point 1 and point 2 (degrees).
          *
          * The GeodesicLine::mask values possible for \e outmask are
-         * - \e outmask |= NETGeographicLib::Mask::LATITUDE for the latitude \e lat2;
-         * - \e outmask |= NETGeographicLib::Mask::LONGITUDE for the latitude \e lon2;
-         * - \e outmask |= NETGeographicLib::Mask::AZIMUTH for the latitude \e azi2;
-         * - \e outmask |= NETGeographicLib::Mask::DISTANCE for the distance \e s12;
-         * - \e outmask |= NETGeographicLib::Mask::REDUCEDLENGTH for the reduced length \e
+         * - \e outmask |= GeodesicLine::LATITUDE for the latitude \e lat2;
+         * - \e outmask |= GeodesicLine::LONGITUDE for the latitude \e lon2;
+         * - \e outmask |= GeodesicLine::AZIMUTH for the latitude \e azi2;
+         * - \e outmask |= GeodesicLine::DISTANCE for the distance \e s12;
+         * - \e outmask |= GeodesicLine::REDUCEDLENGTH for the reduced length \e
          *   m12;
-         * - \e outmask |= NETGeographicLib::Mask::GEODESICSCALE for the geodesic scales \e
+         * - \e outmask |= GeodesicLine::GEODESICSCALE for the geodesic scales \e
          *   M12 and \e M21;
-         * - \e outmask |= NETGeographicLib::Mask::AREA for the area \e S12;
-         * - \e outmask |= NETGeographicLib::Mask::ALL for all of the above.
+         * - \e outmask |= GeodesicLine::AREA for the area \e S12;
+         * - \e outmask |= GeodesicLine::ALL for all of the above;
+         * - \e outmask |= GeodesicLine::LONG_NOWRAP stops the returned value of \e
+         *   lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
          * .
          * Requesting a value which the GeodesicLine object is not capable of
          * computing is not an error; the corresponding argument will not be
          * altered.  Note, however, that the arc length is always computed and
          * returned as the function value.
+         *
+         * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
+         * indicates how many times the geodesic wrapped around the ellipsoid.
+         * Because \e lon2 might be outside the normal allowed range for
+         * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
+         * Math::AngNormalize2 before using it in other GeographicLib calls.
          **********************************************************************/
         double GenPosition(bool arcmode, double s12_a12,
-                    NETGeographicLib::Mask outmask,
+                    GeodesicLine::mask outmask,
                     [System::Runtime::InteropServices::Out] double% lat2,
                     [System::Runtime::InteropServices::Out] double% lon2,
                     [System::Runtime::InteropServices::Out] double% azi2,
@@ -465,7 +542,7 @@ namespace NETGeographicLib
          * @param[in] testcaps a set of bitor'ed GeodesicLine::mask values.
          * @return true if the GeodesicLine object has all these capabilities.
          **********************************************************************/
-        bool Capabilities(NETGeographicLib::Mask testcaps);
+        bool Capabilities(GeodesicLine::mask testcaps);
         ///@}
     };
 } // namespace NETGeographicLib

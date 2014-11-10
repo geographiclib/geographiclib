@@ -291,7 +291,7 @@ void GeodesicLine::ArcPosition(double a12,
 
 //*****************************************************************************
 double GeodesicLine::GenPosition(bool arcmode, double s12_a12,
-    NETGeographicLib::Mask outmask,
+    GeodesicLine::mask outmask,
     [System::Runtime::InteropServices::Out] double% lat2,
     [System::Runtime::InteropServices::Out] double% lon2,
     [System::Runtime::InteropServices::Out] double% azi2,
@@ -346,5 +346,5 @@ NETGeographicLib::Mask GeodesicLine::Capabilities()
 { return static_cast<NETGeographicLib::Mask>(m_pGeodesicLine->Capabilities()); }
 
 //*****************************************************************************
-bool GeodesicLine::Capabilities(NETGeographicLib::Mask testcaps)
+bool GeodesicLine::Capabilities(GeodesicLine::mask testcaps)
 { return m_pGeodesicLine->Capabilities( static_cast<unsigned>(testcaps) ); }
