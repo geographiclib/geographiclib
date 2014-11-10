@@ -13,6 +13,7 @@
 #include "PolygonArea.h"
 #include "Geodesic.h"
 #include "GeodesicExact.h"
+#include "Rhumb.h"
 #include "NETGeographicLib.h"
 
 using namespace NETGeographicLib;
@@ -238,4 +239,116 @@ double PolygonAreaExact::MajorRadius::get()
 
 //*****************************************************************************
 double PolygonAreaExact::Flattening::get()
+{ return m_pPolygonArea->Flattening(); }
+
+//*****************************************************************************
+// PolygonAreaRhumb
+//*****************************************************************************
+PolygonAreaRhumb::!PolygonAreaRhumb(void)
+{
+    if ( m_pPolygonArea != NULL )
+    {
+        delete m_pPolygonArea;
+        m_pPolygonArea = NULL;
+    }
+}
+
+//*****************************************************************************
+PolygonAreaRhumb::PolygonAreaRhumb(Rhumb^ earth, bool polyline )
+{
+    try
+    {
+        const GeographicLib::Rhumb* pGeodesic =
+            reinterpret_cast<const GeographicLib::Rhumb*>(
+                earth->GetUnmanaged()->ToPointer() );
+        m_pPolygonArea = new GeographicLib::PolygonAreaRhumb( *pGeodesic, polyline );
+    }
+    catch (std::bad_alloc)
+    {
+        throw gcnew GeographicErr( BADALLOC );
+    }
+}
+
+//*****************************************************************************
+PolygonAreaRhumb::PolygonAreaRhumb(const bool polyline )
+{
+    try
+    {
+        m_pPolygonArea = new GeographicLib::PolygonAreaRhumb(
+            GeographicLib::Rhumb::WGS84(), polyline );
+    }
+    catch (std::bad_alloc)
+    {
+        throw gcnew GeographicErr( BADALLOC );
+    }
+}
+
+//*****************************************************************************
+void PolygonAreaRhumb::Clear() { m_pPolygonArea->Clear(); }
+
+//*****************************************************************************
+void PolygonAreaRhumb::AddPoint(double lat, double lon)
+{
+    m_pPolygonArea->AddPoint( lat, lon );
+}
+
+//*****************************************************************************
+void PolygonAreaRhumb::AddEdge(double azi, double s)
+{
+    m_pPolygonArea->AddEdge( azi, s );
+}
+
+//*****************************************************************************
+unsigned PolygonAreaRhumb::Compute(bool reverse, bool sign,
+                    [System::Runtime::InteropServices::Out] double% perimeter,
+                    [System::Runtime::InteropServices::Out] double% area)
+{
+    double lperimeter, larea;
+    unsigned out = m_pPolygonArea->Compute( reverse, sign, lperimeter, larea );
+    perimeter = lperimeter;
+    area = larea;
+    return out;
+}
+
+//*****************************************************************************
+unsigned PolygonAreaRhumb::TestPoint(double lat, double lon, bool reverse, bool sign,
+                    [System::Runtime::InteropServices::Out] double% perimeter,
+                    [System::Runtime::InteropServices::Out] double% area)
+{
+    double lperimeter, larea;
+    unsigned out = m_pPolygonArea->TestPoint( lat, lon, reverse, sign, lperimeter, larea );
+    perimeter = lperimeter;
+    area = larea;
+    return out;
+}
+
+//*****************************************************************************
+unsigned PolygonAreaRhumb::TestEdge(double azi, double s, bool reverse, bool sign,
+                    [System::Runtime::InteropServices::Out] double% perimeter,
+                    [System::Runtime::InteropServices::Out] double% area)
+{
+    double lperimeter, larea;
+    unsigned out = m_pPolygonArea->TestEdge( azi, s, reverse, sign, lperimeter, larea );
+    perimeter = lperimeter;
+    area = larea;
+    return out;
+}
+
+//*****************************************************************************
+void PolygonAreaRhumb::CurrentPoint(
+    [System::Runtime::InteropServices::Out] double% lat,
+    [System::Runtime::InteropServices::Out] double% lon)
+{
+    double llat, llon;
+    m_pPolygonArea->CurrentPoint( llat, llon );
+    lat = llat;
+    lon = llon;
+}
+
+//*****************************************************************************
+double PolygonAreaRhumb::MajorRadius::get()
+{ return m_pPolygonArea->MajorRadius(); }
+
+//*****************************************************************************
+double PolygonAreaRhumb::Flattening::get()
 { return m_pPolygonArea->Flattening(); }

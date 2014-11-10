@@ -33,19 +33,6 @@ double DMS::Decode( System::String^ dms,
 }
 
 //*****************************************************************************
-double DMS::Decode(System::String^ str)
-{
-    try
-    {
-        return GeographicLib::DMS::Decode(StringConvert::ManagedToUnmanaged(str));
-    }
-    catch ( const std::exception& xcpt )
-    {
-        throw gcnew GeographicErr( xcpt.what() );
-    }
-}
-
-//*****************************************************************************
 void DMS::DecodeLatLon(System::String^ dmsa, System::String^ dmsb,
                         [System::Runtime::InteropServices::Out] double% lat,
                         [System::Runtime::InteropServices::Out] double% lon,

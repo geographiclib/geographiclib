@@ -128,6 +128,15 @@ namespace Projections
                 p2.TestEdge(-70.0, 5000.0, false, false, out perim, out area);
                 p2.TestPoint(31.0, -86.5, false, false, out perim, out area);
 
+                PolygonAreaRhumb p3 = new PolygonAreaRhumb(Rhumb.WGS84(), false);
+                p3.AddPoint(32.0, -86.0);
+                p3.AddEdge(20.0, 10000.0);
+                p3.AddEdge(-45.0, 10000.0);
+                p3.CurrentPoint(out lat, out lon);
+                p3.Compute(false, false, out perim, out area);
+                p3.TestEdge(-70.0, 5000.0, false, false, out perim, out area);
+                p3.TestPoint(31.0, -86.5, false, false, out perim, out area);
+
                 MessageBox.Show("No errors detected", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception xcpt)
