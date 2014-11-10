@@ -195,45 +195,45 @@ namespace NETGeographicLib
           * capability to GeodesicLine because this is included by default.)
           * @hideinitializer
           **********************************************************************/
-         LATITUDE      = 1U<<7  | captype::CAP_NONE,
+         LATITUDE      = 1U<<7  | unsigned(captype::CAP_NONE),
          /**
           * Calculate longitude \e lon2.
           * @hideinitializer
           **********************************************************************/
-         LONGITUDE     = 1U<<8  | captype::CAP_C3,
+         LONGITUDE     = 1U<<8  | unsigned(captype::CAP_C3),
          /**
           * Calculate azimuths \e azi1 and \e azi2.  (It's not necessary to
           * include this as a capability to GeodesicLine because this is included
           * by default.)
           * @hideinitializer
           **********************************************************************/
-         AZIMUTH       = 1U<<9  | captype::CAP_NONE,
+         AZIMUTH       = 1U<<9  | unsigned(captype::CAP_NONE),
          /**
           * Calculate distance \e s12.
           * @hideinitializer
           **********************************************************************/
-         DISTANCE      = 1U<<10 | captype::CAP_C1,
+         DISTANCE      = 1U<<10 | unsigned(captype::CAP_C1),
          /**
           * Allow distance \e s12 to be used as input in the direct geodesic
           * problem.
           * @hideinitializer
           **********************************************************************/
-         DISTANCE_IN   = 1U<<11 | captype::CAP_C1 | captype::CAP_C1p,
+         DISTANCE_IN   = 1U<<11 | unsigned(captype::CAP_C1) | unsigned(captype::CAP_C1p),
          /**
           * Calculate reduced length \e m12.
           * @hideinitializer
           **********************************************************************/
-         REDUCEDLENGTH = 1U<<12 | captype::CAP_C1 | captype::CAP_C2,
+         REDUCEDLENGTH = 1U<<12 | unsigned(captype::CAP_C1) | unsigned(captype::CAP_C2),
          /**
           * Calculate geodesic scales \e M12 and \e M21.
           * @hideinitializer
           **********************************************************************/
-         GEODESICSCALE = 1U<<13 | captype::CAP_C1 | captype::CAP_C2,
+         GEODESICSCALE = 1U<<13 | unsigned(captype::CAP_C1) | unsigned(captype::CAP_C2),
          /**
           * Calculate area \e S12.
           * @hideinitializer
           **********************************************************************/
-         AREA          = 1U<<14 | captype::CAP_C4,
+         AREA          = 1U<<14 | unsigned(captype::CAP_C4),
          /**
           * Do not wrap the \e lon2 in the direct calculation.
           * @hideinitializer
@@ -244,7 +244,7 @@ namespace NETGeographicLib
           * included in this mask.)
           * @hideinitializer
           **********************************************************************/
-         ALL           = captype::OUT_ALL| captype::CAP_ALL,
+         ALL           = unsigned(captype::OUT_ALL)| unsigned(captype::CAP_ALL),
        };
        /** \name Constructor
          **********************************************************************/

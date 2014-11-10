@@ -74,7 +74,7 @@ rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
 mkdir $TEMP/rel{a,b,c,x,y}
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/rela # Version of make build
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relb # Version for autoconf
-tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relc # Version for cmake
+tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relc # Version for cmake + mvn
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relx
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
@@ -82,12 +82,16 @@ unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
 #! /bin/sh -exv
 unset GEOGRAPHICLIB_DATA
-for v in 2010 2012 2013; do
-  rm -rf v:/data/build/com.sri.vt/geographiclib/win7-vc$v-64
-  mvn -Dcmake.compiler=vc$v install
+for v in 2013 2012 2010; do
+  for a in 64 32; do
+    rm -rf v:/data/scratch/geog-mvn-$v-$a
+    mvn -Dcmake.compiler=vc$v -Dcmake.arch=$a \
+      -Dcmake.project.bin.directory=v:/data/scratch/geog-mvn-$v-$a install
+  done
 done
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
+
 while read ver x64; do
     gen="Visual Studio $ver"
     test "$x64" && gen="$gen Win64" || true
@@ -194,6 +198,8 @@ cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D MATLAB_COMPILER=mkoctfile ..
 make -j$NUMCPUS all
 make -j$NUMCPUS test
 make -j$NUMCPUS matlabinterface
+cd ..
+mvn -Dcmake.project.bin.directory=$TEMP/mvn install
 
 cd $TEMP/gita/geographiclib/tests/sandbox
 mkdir BUILD
