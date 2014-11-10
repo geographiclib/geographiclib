@@ -355,7 +355,9 @@ public class Geodesic {
    *   <i>outmask</i> computed.
    * <p>
    * <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>s12</i>, and <i>a12</i> are
-   * always included in the returned result.
+   * always included in the returned result.  The value of <i>lon2</i> returned
+   * is in the range [&minus;180&deg;, 180&deg;), unless the <i>outmask</i>
+   * includes the {@link GeodesicMask#LONG_NOWRAP} flag.
    **********************************************************************/
   public GeodesicData Direct(double lat1, double lon1,
                              double azi1, double s12, int outmask) {
@@ -410,7 +412,9 @@ public class Geodesic {
    *   <i>outmask</i> computed.
    * <p>
    * <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, and <i>a12</i> are always included
-   * in the returned result.
+   * in the returned result.  The value of <i>lon2</i> returned is in the range
+   * [&minus;180&deg;, 180&deg;), unless the <i>outmask</i> includes the {@link
+   * GeodesicMask#LONG_NOWRAP} flag.
    **********************************************************************/
   public GeodesicData ArcDirect(double lat1, double lon1,
                                 double azi1, double a12, int outmask) {
@@ -453,7 +457,10 @@ public class Geodesic {
    * <li>
    *   <i>outmask</i> |= GeodesicMask.AREA for the area <i>S12</i>;
    * <li>
-   *   <i>outmask</i> |= GeodesicMask.ALL for all of the above.
+   *   <i>outmask</i> |= GeodesicMask.ALL for all of the above;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.LONG_NOWRAP to stop <i>lon2</i> from
+   *   being reduced to the range [&minus;180&deg;, 180&deg;).
    * </ul>
    * <p>
    * The function value <i>a12</i> is always computed and returned and this

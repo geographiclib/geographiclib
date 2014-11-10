@@ -73,7 +73,7 @@ public class GeodesicMask {
    **********************************************************************/
   public static final int AREA          = 1<<14 | CAP_C4;
   /**
-   * No not wrap <i>lon2</i>.
+   * Do not wrap <i>lon2</i>.
    **********************************************************************/
   public static final int LONG_NOWRAP   = 1<<15;
   /**

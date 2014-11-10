@@ -760,7 +760,7 @@ extern "C" {
    **********************************************************************/
   enum geod_flags {
     GEOD_NOFLAGS      = 0U,     /**< No flags */
-    GEOD_ARCMODE      = 1U<<0,  /**< Calculate latitude */
+    GEOD_ARCMODE      = 1U<<0,  /**< Position given in terms of arc distance */
     GEOD_LONG_NOWRAP  = 1U<<15  /**< Don't wrap longitude */
   };
 

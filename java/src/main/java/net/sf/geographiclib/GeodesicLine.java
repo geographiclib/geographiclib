@@ -301,7 +301,9 @@ public class GeodesicLine {
    * The GeodesicLine object <i>must</i> have been constructed with <i>caps</i>
    * |= {@link GeodesicMask#DISTANCE_IN}; otherwise no parameters are set.
    * Requesting a value which the GeodesicLine object is not capable of
-   * computing is not an error (no parameters will be set).
+   * computing is not an error (no parameters will be set).  The value of
+   * <i>lon2</i> returned is in the range [&minus;180&deg;, 180&deg;), unless
+   * the <i>outmask</i> includes the {@link GeodesicMask#LONG_NOWRAP} flag.
    **********************************************************************/
   public GeodesicData Position(double s12, int outmask) {
     return Position(false, s12, outmask);
@@ -343,7 +345,9 @@ public class GeodesicLine {
    * The GeodesicLine object <i>must</i> have been constructed with <i>caps</i>
    * |= {@link GeodesicMask#DISTANCE_IN}; otherwise no parameters are set.
    * Requesting a value which the GeodesicLine object is not capable of
-   * computing is not an error (no parameters will be set).
+   * computing is not an error (no parameters will be set).  The value of
+   * <i>lon2</i> returned is in the range [&minus;180&deg;, 180&deg;), unless
+   * the <i>outmask</i> includes the {@link GeodesicMask#LONG_NOWRAP} flag.
    **********************************************************************/
   public GeodesicData ArcPosition(double a12, int outmask) {
     return Position(true, a12, outmask);
@@ -381,7 +385,10 @@ public class GeodesicLine {
    *   <i>outmask</i> |= GeodesicMask.GEODESICSCALE for the geodesic scales
    *   <i>M12</i> and <i>M21</i>.
    * <li>
-   *   <i>outmask</i> |= GeodesicMask.AREA for the area <i>S12</i>.
+   *   <i>outmask</i> |= GeodesicMask.ALL for all of the above;
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.LONG_NOWRAP to stop <i>lon2</i> from
+   *   being reduced to the range [&minus;180&deg;, 180&deg;).
    * </ul>
    * <p>
    * Requesting a value which the GeodesicLine object is not capable of
