@@ -63,7 +63,6 @@ Changes between 1.39 (released 2014-11-11) and 1.38 versions:
     MagneticField utility accepts the string "now" as a legal time
     (meaning today).
 
-
 Changes between 1.38 (released 2014-10-02) and 1.37 versions:
 
   * On MacOSX, the installed package is relocatable (for cmake version
