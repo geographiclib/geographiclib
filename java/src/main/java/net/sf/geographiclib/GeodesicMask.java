@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.GeodesicMask class
  *
- * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -28,7 +28,9 @@ public class GeodesicMask {
   protected static final int CAP_C3   = 1<<3;
   protected static final int CAP_C4   = 1<<4;
   protected static final int CAP_ALL  = 0x1F;
+  protected static final int CAP_MASK = CAP_ALL;
   protected static final int OUT_ALL  = 0x7F80;
+  protected static final int OUT_MASK = 0xFF80; // Include LONG_NOWRAP
 
   /**
    * No capabilities, no output.
@@ -70,6 +72,10 @@ public class GeodesicMask {
    * Calculate area <i>S12</i>.
    **********************************************************************/
   public static final int AREA          = 1<<14 | CAP_C4;
+  /**
+   * Do not wrap <i>lon2</i>.
+   **********************************************************************/
+  public static final int LONG_NOWRAP   = 1<<15;
   /**
    * All capabilities, calculate everything.
    **********************************************************************/

@@ -369,7 +369,7 @@ namespace Projections
                     faz != finalAzimuth || frd != reducedLength || fm12 != M12 || fm21 != M21)
                     throw new Exception("Geodesic.Direct #5 failed");
                 double outd = 0.0;
-                fad = g.GenDirect(32.0, -86.0, 45.0, false, 20000.0, Mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
+                fad = g.GenDirect(32.0, -86.0, 45.0, false, 20000.0, Geodesic.mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
                 if (fad != arcDistance || flat != finalLatitude || flon != finalLongitude ||
                     faz != finalAzimuth || frd != reducedLength || fm12 != M12 || fm21 != M21 ||
                     outd != 20000.0 || fs12 != S12)
@@ -394,7 +394,7 @@ namespace Projections
                 if (flat != finalLatitude || flon != finalLongitude || faz != finalAzimuth ||
                     fad != arcDistance || fm12 != M12 || fm21 != M21)
                     throw new Exception("Geodesic.ArcDirect #5 failed");
-                fad = g.GenDirect(32.0, -86.0, 45.0, true, 1.0, Mask.ALL, out flat, out flon,
+                fad = g.GenDirect(32.0, -86.0, 45.0, true, 1.0, Geodesic.mask.ALL, out flat, out flon,
                     out faz, out outd, out frd, out fm12, out fm21, out fs12);
                 if (outd != arcDistance || flat != finalLatitude || flon != finalLongitude ||
                     faz != finalAzimuth || frd != reducedLength || fm12 != M12 || fm21 != M21 ||
@@ -449,7 +449,7 @@ namespace Projections
                 if (fad != arcDistance || flat != finalLatitude || flon != finalLongitude ||
                     faz != finalAzimuth || fm12 != M12 || fm21 != M21 || frd != reducedLength )
                     throw new Exception("GeodesicLine.Position #5 failed");
-                fad = gl.GenPosition(false, 10000.0, Mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
+                fad = gl.GenPosition(false, 10000.0, GeodesicLine.mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
                 if (fad != arcDistance || flat != finalLatitude || flon != finalLongitude ||
                     faz != finalAzimuth || outd != 10000.0 || fm12 != M12 || fm21 != M21 ||
                     frd != reducedLength || fs12 != S12 )
@@ -478,7 +478,7 @@ namespace Projections
                 if (flat != finalLatitude || flon != finalLongitude || faz != finalAzimuth ||
                     outd != distance || fm12 != M12 || fm21 != M21 || frd != reducedLength)
                     throw new Exception("GeodesicLine.ArcPosition #6 failed");
-                fad = gl.GenPosition(true, 1.0, Mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
+                fad = gl.GenPosition(true, 1.0, GeodesicLine.mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
                 if (fad != 1.0 || flat != finalLatitude || flon != finalLongitude ||
                     faz != finalAzimuth || outd != distance || fm12 != M12 || fm21 != M21 ||
                     frd != reducedLength || fs12 != S12)
@@ -508,7 +508,7 @@ namespace Projections
                 if (fad != arcDistance || flat != finalLatitude || flon != finalLongitude ||
                     faz != finalAzimuth || frd != reducedLength || fm12 != M12 || fm21 != M21)
                     throw new Exception("GeodesicExact.Direct #5 failed");
-                fad = ge.GenDirect(32.0, -86.0, 45.0, false, 20000.0, Mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
+                fad = ge.GenDirect(32.0, -86.0, 45.0, false, 20000.0, GeodesicExact.mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
                 if (fad != arcDistance || flat != finalLatitude || flon != finalLongitude ||
                     faz != finalAzimuth || frd != reducedLength || fm12 != M12 || fm21 != M21 ||
                     outd != 20000.0 || fs12 != S12)
@@ -533,7 +533,7 @@ namespace Projections
                 if (flat != finalLatitude || flon != finalLongitude || faz != finalAzimuth ||
                     fad != arcDistance || fm12 != M12 || fm21 != M21)
                     throw new Exception("GeodesicExact.ArcDirect #5 failed");
-                fad = ge.GenDirect(32.0, -86.0, 45.0, true, 1.0, Mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
+                fad = ge.GenDirect(32.0, -86.0, 45.0, true, 1.0, GeodesicExact.mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
                 if (outd != arcDistance || flat != finalLatitude || flon != finalLongitude ||
                     faz != finalAzimuth || frd != reducedLength || fm12 != M12 || fm21 != M21 ||
                     fad != 1.0 || fs12 != S12)
@@ -586,7 +586,7 @@ namespace Projections
                 if (fad != arcDistance || flat != finalLatitude || flon != finalLongitude ||
                     faz != finalAzimuth || fm12 != M12 || fm21 != M21 || frd != reducedLength)
                     throw new Exception("GeodesicLineExact.Position #5 failed");
-                fad = gle.GenPosition(false, 10000.0, Mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
+                fad = gle.GenPosition(false, 10000.0, GeodesicLineExact.mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
                 if (fad != arcDistance || flat != finalLatitude || flon != finalLongitude ||
                     faz != finalAzimuth || outd != 10000.0 || fm12 != M12 || fm21 != M21 ||
                     frd != reducedLength || fs12 != S12)
@@ -615,7 +615,7 @@ namespace Projections
                 if (flat != finalLatitude || flon != finalLongitude || faz != finalAzimuth ||
                     outd != distance || fm12 != M12 || fm21 != M21 || frd != reducedLength)
                     throw new Exception("GeodesicLineExact.ArcPosition #6 failed");
-                fad = gle.GenPosition(true, 1.0, Mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
+                fad = gle.GenPosition(true, 1.0, GeodesicLineExact.mask.ALL, out flat, out flon, out faz, out outd, out frd, out fm12, out fm21, out fs12);
                 if (fad != 1.0 || flat != finalLatitude || flon != finalLongitude ||
                     faz != finalAzimuth || outd != distance || fm12 != M12 || fm21 != M21 ||
                     frd != reducedLength || fs12 != S12)

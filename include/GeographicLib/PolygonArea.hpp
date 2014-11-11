@@ -1,6 +1,6 @@
 /**
  * \file PolygonArea.hpp
- * \brief Header for GeographicLib::PolygonArea class
+ * \brief Header for GeographicLib::PolygonAreaT class
  *
  * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
@@ -12,6 +12,7 @@
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicExact.hpp>
+#include <GeographicLib/Rhumb.hpp>
 #include <GeographicLib/Accumulator.hpp>
 
 namespace GeographicLib {
@@ -39,15 +40,16 @@ namespace GeographicLib {
    * vertex or add the edge ''as'' an edge (by defining its direction and
    * length).
    *
-   * The area and perimeter are accumulated in two times the standard floating
+   * The area and perimeter are accumulated at two times the standard floating
    * point precision to guard against the loss of accuracy with many-sided
    * polygons.  At any point you can ask for the perimeter and area so far.
    * There's an option to treat the points as defining a polyline instead of a
    * polygon; in that case, only the perimeter is computed.
    *
-   * This is a templated class to allow it to be used with either Geodesic and
-   * GeodesicExact.  GeographicLib::PolygonArea and
-   * GeographicLib::PolygonAreaExact are typedefs for these two cases.
+   * This is a templated class to allow it to be used with Geodesic,
+   * GeodesicExact, and Rhumb.  GeographicLib::PolygonArea,
+   * GeographicLib::PolygonAreaExact, and GeographicLib::PolygonAreaRhumb are
+   * typedefs for these cases.
    *
    * @tparam GeodType the geodesic class to use.
    *
@@ -55,7 +57,7 @@ namespace GeographicLib {
    * \include example-PolygonArea.cpp
    *
    * <a href="Planimeter.1.html">Planimeter</a> is a command-line utility
-   * providing access to the functionality of PolygonArea.
+   * providing access to the functionality of PolygonAreaT.
    **********************************************************************/
 
   template <class GeodType = Geodesic>
@@ -82,6 +84,18 @@ namespace GeographicLib {
         (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
       return cross;
     }
+    // an alternate version of transit to deal with longitudes in the direct
+    // problem.
+    static inline int transitdirect(real lon1, real lon2) {
+      using std::fmod;
+      // We want to compute exactly
+      //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
+      // Since we only need the parity of the result we can use std::remquo but
+      // this is buggy with g++ 4.8.3 and requires C++11.  So instead we do
+      lon1 = fmod(lon1, real(720)); lon2 = fmod(lon2, real(720));
+      return ( ((lon2 >= 0 && lon2 < 360) || lon2 < -360 ? 0 : 1) -
+               ((lon1 >= 0 && lon1 < 360) || lon1 < -360 ? 0 : 1) );
+    }
   public:
 
     /**
@@ -96,7 +110,8 @@ namespace GeographicLib {
       , _area0(_earth.EllipsoidArea())
       , _polyline(polyline)
       , _mask(GeodType::LATITUDE | GeodType::LONGITUDE | GeodType::DISTANCE |
-              (_polyline ? GeodType::NONE : GeodType::AREA))
+              (_polyline ? GeodType::NONE :
+               GeodType::AREA | GeodType::LONG_NOWRAP))
     { Clear(); }
 
     /**
@@ -264,6 +279,13 @@ namespace GeographicLib {
    * for modest flattenings.)
    **********************************************************************/
   typedef PolygonAreaT<GeodesicExact> PolygonAreaExact;
+
+  /**
+   * @relates PolygonAreaT
+   *
+   * Polygon areas using Rhumb.
+   **********************************************************************/
+  typedef PolygonAreaT<Rhumb> PolygonAreaRhumb;
 
 } // namespace GeographicLib
 

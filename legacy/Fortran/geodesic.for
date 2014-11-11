@@ -107,17 +107,17 @@
 *! However, in the process of transcription some documentation has been
 *! lost and the documentation for the C++ classes,
 *! GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
-*! GeographicLib::PolygonArea, should be consulted.  The C++ code
+*! GeographicLib::PolygonAreaT, should be consulted.  The C++ code
 *! remains the "reference implementation".  Think twice about
 *! restructuring the internals of the Fortran code since this may make
 *! porting fixes from the C++ code more difficult.
 *!
-*! Copyright (c) Charles Karney (2012-2013) <charles@karney.com> and
+*! Copyright (c) Charles Karney (2012-2014) <charles@karney.com> and
 *! licensed under the MIT/X11 License.  For more information, see
 *! http://geographiclib.sourceforge.net/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.31.
+*! <a href="../index.html">GeographicLib</a> 1.39.
 
 *> Solve the direct geodesic problem
 *!
@@ -127,17 +127,17 @@
 *! @param[in] lat1 latitude of point 1 (degrees).
 *! @param[in] lon1 longitude of point 1 (degrees).
 *! @param[in] azi1 azimuth at point 1 (degrees).
-*! @param[in] s12a12 if \e arcmod is false, this is the distance between
-*!   point 1 and point 2 (meters); otherwise it is the arc length
-*!   between point 1 and point 2 (degrees); it can be negative.
-*! @param[in] arcmod logical flag determining the meaning of the \e
-*!   s12a12.
+*! @param[in] s12a12 if \e arcmode is not set, this is the distance
+*!   between point 1 and point 2 (meters); otherwise it is the arc
+*!   length between point 1 and point 2 (degrees); it can be negative.
+*! @param[in] flags a bitor'ed combination of the \e arcmode and \e
+*!   nowrap flags.
 *! @param[out] lat2 latitude of point 2 (degrees).
 *! @param[out] lon2 longitude of point 2 (degrees).
 *! @param[out] azi2 (forward) azimuth at point 2 (degrees).
 *! @param[in] omask a bitor'ed combination of mask values
 *!   specifying which of the following parameters should be set.
-*! @param[out] a12s12 if \e arcmod is false, this is the arc length
+*! @param[out] a12s12 if \e arcmode is not set, this is the arc length
 *!   between point 1 and point 2 (degrees); otherwise it is the distance
 *!   between point 1 and point 2 (meters).
 *! @param[out] m12 reduced length of geodesic (meters).
@@ -146,6 +146,20 @@
 *! @param[out] MM21 geodesic scale of point 1 relative to point 2
 *!   (dimensionless).
 *! @param[out] SS12 area under the geodesic (meters<sup>2</sup>).
+*!
+*! \e flags is an integer in [0, 4) whose binary bits are interpreted
+*! as follows
+*! - 1 the \e arcmode flag
+*! - 2 the \e nowrap flag
+*! .
+*! If \e arcmode is not set, \e s12a12 is \e s12 and \e a12s12 is \e
+*! a12; otherwise, \e s12a12 is \e a12 and \e a12s12 is \e s12.  It \e
+*! nowrap is not set, the value \e lon2 returned is in the range
+*! [&minus;180&deg;, 180&deg;); otherwise \e lon2 &minus \e lon1
+*! indicates how many times the geodesic wrapped around the ellipsoid.
+*! Because \e lon2 might be outside the normal allowed range for
+*! longitudes, [&minus;540&deg;, 540&deg;), be sure to reduces its range
+*! with mod(\e lon2, 360d0) before using it in other calls.
 *!
 *! \e omask is an integer in [0, 16) whose binary bits are interpreted
 *! as follows
@@ -156,8 +170,7 @@
 *!
 *! \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and
 *! \e azi1 should be in the range [&minus;540&deg;, 540&deg;).  The
-*! values of \e lon2 and \e azi2 returned are in the range
-*! [&minus;180&deg;, 180&deg;).
+*! value \e azi2 returned is in the range [&minus;180&deg;, 180&deg;).
 *!
 *! If either point is at a pole, the azimuth is defined by keeping the
 *! longitude fixed, writing \e lat = \e lat = &plusmn;(90&deg; &minus;
@@ -167,12 +180,11 @@
 *! for a shortest path: the longitudinal extent must not exceed of
 *! 180&deg;.)
 
-      subroutine direct(a, f, lat1, lon1, azi1, s12a12, arcmod,
+      subroutine direct(a, f, lat1, lon1, azi1, s12a12, flags,
      +    lat2, lon2, azi2, omask, a12s12, m12, MM12, MM21, SS12)
 * input
       double precision a, f, lat1, lon1, azi1, s12a12
-      logical arcmod
-      integer omask
+      integer flags, omask
 * output
       double precision lat2, lon2, azi2
 * optional output
@@ -188,7 +200,7 @@
 
       double precision csmgt, atanhx, hypotx,
      +    AngNm, AngNm2, AngRnd, TrgSum, A1m1f, A2m1f, A3f
-      logical arcp, redlp, scalp, areap
+      logical arcmod, nowrap, arcp, redlp, scalp, areap
       double precision e2, f1, ep2, n, b, c2,
      +    lon1x, azi1x, phi, alp1, salp0, calp0, k2, eps,
      +    salp1, calp1, ssig1, csig1, cbet1, sbet1, dn1, somg1, comg1,
@@ -213,6 +225,9 @@
       n = f / (2 - f)
       b = a * f1
       c2 = 0
+
+      arcmod = mod(flags/1, 2) == 1
+      nowrap = mod(flags/2, 2) == 1
 
       arcp = mod(omask/1, 2) == 1
       redlp = mod(omask/2, 2) == 1
@@ -394,8 +409,12 @@
       salp2 = salp0
       calp2 = calp0 * csig2
 * omg12 = omg2 - omg1
-      omg12 = atan2(somg2 * comg1 - comg2 * somg1,
-     +    comg2 * comg1 + somg2 * somg1)
+      omg12 = csmgt(sig12
+     +    - (atan2(ssig2, csig2) - atan2(ssig1, csig1))
+     +    + (atan2(somg2, comg2) - atan2(somg1, comg1)),
+     +    atan2(somg2 * comg1 - comg2 * somg1,
+     +    comg2 * comg1 + somg2 * somg1),
+     +    nowrap)
 
       lam12 = omg12 + A3c *
      +    ( sig12 + (TrgSum(.true., ssig2, csig2, C3a, nC3-1)
@@ -403,8 +422,7 @@
       lon12 = lam12 / degree
 * Use Math::AngNm2 because longitude might have wrapped multiple
 * times.
-      lon12 = AngNm2(lon12)
-      lon2 = AngNm(lon1x + lon12)
+      lon2 = csmgt(lon1 + lon12, AngNm(lon1x + AngNm2(lon12)), nowrap)
       lat2 = atan2(sbet2, f1 * cbet2) / degree
 * minus signs give range [-180, 180). 0- converts -0 to +0.
       azi2 = 0 - atan2(-salp2, calp2) / degree
@@ -1997,4 +2015,5 @@
 *    SinCosSeries  TrgSum
 *    xthresh       xthrsh
 *    transit       trnsit
+*    LONG_NOWRAP   nowrap
 *> @endcond SKIP

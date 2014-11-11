@@ -21,7 +21,7 @@
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
-<p>The path with constant heading between two points on the ellipsoid at (<i>lat1</i>, <i>lon1</i>) and (<i>lat2</i>, <i>lon2</i>) is called the rhumb line or loxodrome. Its length is <i>s12</i> and the rhumb line has a forward azimuth <i>azi12</i> along its length. A point at a pole is treated as a point a tiny distance away from the pole on the given line of longitude. The longitude becomes indeterminate when a rhumb line passes through a pole, and <b>RhumbSolve</b> reports NaNs for the longitude in this case.</p>
+<p>The path with constant heading between two points on the ellipsoid at (<i>lat1</i>, <i>lon1</i>) and (<i>lat2</i>, <i>lon2</i>) is called the rhumb line or loxodrome. Its length is <i>s12</i> and the rhumb line has a forward azimuth <i>azi12</i> along its length. Also computed is <i>S12</i> is the area between the rhumb line from point 1 to point 2 and the equator; i.e., it is the area, measured counter-clockwise, of the geodesic quadrilateral with corners (<i>lat1</i>,<i>lon1</i>), (0,<i>lon1</i>), (0,<i>lon2</i>), and (<i>lat2</i>,<i>lon2</i>). A point at a pole is treated as a point a tiny distance away from the pole on the given line of longitude. The longitude becomes indeterminate when a rhumb line passes through a pole, and <b>RhumbSolve</b> reports NaNs for the longitude and the area in this case.</p>
 
 <p><b>NOTE:</b> the rhumb line is <b>not</b> the shortest path between two points; that is the geodesic and it is calculated by GeodSolve(1).</p>
 
@@ -29,13 +29,13 @@
 
 <ol>
 
-<li><p>By default, <b>RhumbSolve</b> accepts lines on the standard input containing <i>lat1</i> <i>lon1</i> <i>azi12</i> <i>s12</i> and prints <i>lat2</i> <i>lon2</i> on standard output. This is the direct calculation.</p>
+<li><p>By default, <b>RhumbSolve</b> accepts lines on the standard input containing <i>lat1</i> <i>lon1</i> <i>azi12</i> <i>s12</i> and prints <i>lat2</i> <i>lon2</i> <i>S12</i> on standard output. This is the direct calculation.</p>
 
 </li>
-<li><p>Command line arguments <b>-l</b> <i>lat1</i> <i>lon1</i> <i>azi12</i> specify a rhumb line. <b>RhumbSolve</b> then accepts a sequence of <i>s12</i> values (one per line) on standard input and prints <i>lat2</i> <i>lon2</i> for each. This generates a sequence of points on a rhumb line.</p>
+<li><p>Command line arguments <b>-l</b> <i>lat1</i> <i>lon1</i> <i>azi12</i> specify a rhumb line. <b>RhumbSolve</b> then accepts a sequence of <i>s12</i> values (one per line) on standard input and prints <i>lat2</i> <i>lon2</i> <i>S12</i> for each. This generates a sequence of points on a rhumb line.</p>
 
 </li>
-<li><p>With the <b>-i</b> command line argument, <b>RhumbSolve</b> performs the inverse calculation. It reads lines containing <i>lat1</i> <i>lon1</i> <i>lat2</i> <i>lon2</i> and prints the values of <i>azi12</i> <i>s12</i> for the corresponding shortest rhumb lines</p>
+<li><p>With the <b>-i</b> command line argument, <b>RhumbSolve</b> performs the inverse calculation. It reads lines containing <i>lat1</i> <i>lon1</i> <i>lat2</i> <i>lon2</i> and prints the values of <i>azi12</i> <i>s12</i> <i>S12</i> for the corresponding shortest rhumb lines. If the end points are on opposite meridians, there are two shortest rhumb lines and the east-going one is chosen.</p>
 
 </li>
 </ol>
@@ -138,7 +138,7 @@
 
 <h1 id="INPUT">INPUT</h1>
 
-<p><b>RhumbSolve</b> measures all angles in degrees and all lengths (<i>s12</i>) in meters. On input angles (latitude, longitude, azimuth) can be as decimal degrees or degrees (d), minutes (&#39;), seconds (&quot;). A decimal point can only appear in the least significant component and the designator (d, &#39;, or &quot;) for this component is optional; thus <code>40d30</code>, <code>40d30&#39;</code>, <code>40.5d</code>, and <code>40.5</code> are all equivalent. By default, latitude precedes longitude for each point; however on input either may be given first by appending (or prepending) <i>N</i> or <i>S</i> to the latitude and <i>E</i> or <i>W</i> to the longitude. Azimuths are measured clockwise from north; however this may be overridden with <i>E</i> or <i>W</i>.</p>
+<p><b>RhumbSolve</b> measures all angles in degrees, all lengths (<i>s12</i>) in meters, and all areas (<i>S12</i>) in meters^2. On input angles (latitude, longitude, azimuth) can be as decimal degrees or degrees (d), minutes (&#39;), seconds (&quot;). A decimal point can only appear in the least significant component and the designator (d, &#39;, or &quot;) for this component is optional; thus <code>40d30</code>, <code>40d30&#39;</code>, <code>40.5d</code>, and <code>40.5</code> are all equivalent. By default, latitude precedes longitude for each point; however on input either may be given first by appending (or prepending) <i>N</i> or <i>S</i> to the latitude and <i>E</i> or <i>W</i> to the longitude. Azimuths are measured clockwise from north; however this may be overridden with <i>E</i> or <i>W</i>.</p>
 
 <p>See the <code>QUOTING</code> section of GeoConvert(1) for how to quote the DMS designators &#39; and &quot;.</p>
 

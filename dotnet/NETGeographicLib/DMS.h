@@ -169,18 +169,6 @@ public:
     static double Decode(double d, double m, double s )
     { return d + (m + s/double(60))/double(60); }
 
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b> (use Utility::num, instead).
-     * Convert a string to a double number.
-     *
-     * @param[in] str string input.
-     * @exception GeographicErr if \e str is malformed.
-     * @return decoded number.
-     **********************************************************************/
-    static double Decode(System::String^ str);
-    /// \endcond
-
     /**
      * Convert a pair of strings to latitude and longitude.
      *

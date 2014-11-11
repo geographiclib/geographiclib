@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "MAGNETICFIELD 1"
-.TH MAGNETICFIELD 1 "2014-10-02" "GeographicLib 1.38" "GeographicLib Utilities"
+.TH MAGNETICFIELD 1 "2014-11-11" "GeographicLib 1.39" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -158,16 +158,16 @@ prints out the geomagnetic field on standard output and, optionally, its
 rate of change.
 .PP
 The input line is of the form \fItime\fR \fIlat\fR \fIlon\fR \fIh\fR. \fItime\fR is a
-date of the form 2012\-07\-03 or a fractional year such as 2012.5.  \fIlat\fR
-and \fIlon\fR are the latitude and longitude expressed as decimal degrees
-or degrees, minutes, and seconds; see \fIGeoConvert\fR\|(1) for details.  \fIh\fR
-is the height above the ellipsoid in meters; this is optional and
-defaults to zero.  Alternatively, \fItime\fR can be given on the command
-line as the argument to the \fB\-t\fR option, in which case it should not be
-included on the input lines.  Finally, the magnetic field can be
-computed at various points on a circle of latitude (constant \fItime\fR,
-\&\fIlat\fR, and \fIh\fR) via the \fB\-c\fR option; in this case only the longitude
-should be given on the input lines.
+date of the form 2012\-07\-03, a fractional year such as 2012.5, or the
+string \*(L"now\*(R".  \fIlat\fR and \fIlon\fR are the latitude and longitude
+expressed as decimal degrees or degrees, minutes, and seconds; see
+\&\fIGeoConvert\fR\|(1) for details.  \fIh\fR is the height above the ellipsoid in
+meters; this is optional and defaults to zero.  Alternatively, \fItime\fR
+can be given on the command line as the argument to the \fB\-t\fR option, in
+which case it should not be included on the input lines.  Finally, the
+magnetic field can be computed at various points on a circle of latitude
+(constant \fItime\fR, \fIlat\fR, and \fIh\fR) via the \fB\-c\fR option; in this case
+only the longitude should be given on the input lines.
 .PP
 The output consists of the following 7 items:
 .PP

@@ -23,6 +23,12 @@ endforeach ()
 string (REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 string (REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
+if (MSVC AND NOT MSVC_VERSION GREATER 1600)
+  # Disable "already imported" and "unsupported default parameter"
+  # warnings with VS 10
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4945 /wd4564")
+endif ()
+
 add_custom_target (netexamples DEPENDS ${EXAMPLES})
 
 get_target_property (_LIBTYPE ${PROJECT_LIBRARIES} TYPE)

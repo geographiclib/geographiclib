@@ -292,7 +292,7 @@ void GeodesicLineExact::ArcPosition(double a12,
 
 //*****************************************************************************
 double GeodesicLineExact::GenPosition(bool arcmode, double s12_a12,
-    NETGeographicLib::Mask outmask,
+    GeodesicLineExact::mask outmask,
     [System::Runtime::InteropServices::Out] double% lat2,
     [System::Runtime::InteropServices::Out] double% lon2,
     [System::Runtime::InteropServices::Out] double% azi2,

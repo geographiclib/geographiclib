@@ -93,7 +93,8 @@ namespace GeographicLib {
 
   Math::real TransverseMercatorExact::taupinv(real taup) const {
     real
-      // See comment in TransverseMercator.cpp about the initial guess
+      // See comment in implementation of TransverseMercator::tauf about the
+      // initial guess
       tau = taup/_mv,
       stol = tol_ * max(real(1), abs(taup));
     // min iterations = 1, max iterations = 2; mean = 1.94

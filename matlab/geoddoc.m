@@ -159,7 +159,7 @@ function geoddoc
 %   GEODDISTANCE, GEODRECKON, and GEODAREA are native implementations which
 %   will work on any MATLAB platform.  They are fully vectorized so that
 %   their speed is competitive with the compiled C++ code.  Implementations
-%   of these routines in Python and Javascript are also available; see
+%   of these routines in Python and JavaScript are also available; see
 %
 %     http://geographiclib.sf.net/html/other.html
 %
@@ -192,7 +192,7 @@ function geoddoc
 
 % Copyright (c) Charles Karney (2012-2014) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.38.
+% This file was distributed with GeographicLib 1.39.
 
   help geoddoc
 end

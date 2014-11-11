@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeoidEval --help\n"
 "or visit:\n"
-"    http://geographiclib.sf.net/1.38/GeoidEval.1.html\n";
+"    http://geographiclib.sf.net/1.39/GeoidEval.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -37,6 +37,12 @@ int usage(int retval, bool brief) {
 "\n"
 "       More accurate results for the geoid height are provided by Gravity(1).\n"
 "       This utility can also compute the direction of gravity accurately.\n"
+"\n"
+"       The geoid height, N, can be used to convert a height above the\n"
+"       ellipsoid, h, to the corresponding height above the geoid (roughly the\n"
+"       height above mean sea level), H, using the relations\n"
+"\n"
+"           h = N + H,   H = -N + h.\n"
 "\n"
 "OPTIONS\n"
 "       -n  use geoid name instead of the default \"egm96-5\".  See \"GEOIDS\".\n"

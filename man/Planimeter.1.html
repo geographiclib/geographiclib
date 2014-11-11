@@ -17,7 +17,7 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<p><b>Planimeter</b> [ <b>-r</b> ] [ <b>-s</b> ] [ <b>-l</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] [ <b>-p</b> <i>prec</i> ] [ <b>-E</b> ] [ <b>-Q</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
+<p><b>Planimeter</b> [ <b>-r</b> ] [ <b>-s</b> ] [ <b>-l</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] [ <b>-p</b> <i>prec</i> ] [ <b>-G</b> | <b>-E</b> | <b>-Q</b> | <b>-R</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
@@ -65,16 +65,28 @@
 <p>set the output precision to <i>prec</i> (default 6); the perimeter is given (in meters) with <i>prec</i> digits after the decimal point; the area is given (in meters^2) with (<i>prec</i> - 5) digits after the decimal point.</p>
 
 </dd>
+<dt id="G"><b>-G</b></dt>
+<dd>
+
+<p>use the series formulation for the geodesics. This is the default option and recommened for terrestrial applications.</p>
+
+</dd>
 <dt id="E"><b>-E</b></dt>
 <dd>
 
-<p>use &quot;exact&quot; algorithms (based on elliptic integrals) for the geodesic calculations. These are more accurate than the (default) series expansions for |<i>f</i>| &gt; 0.02. (But note that the implementation of areas in GeodesicExact uses a high order series and this is only accurate for modest flattenings.) <b>-E</b> and <b>-Q</b> are mutually exclusive.</p>
+<p>use &quot;exact&quot; algorithms (based on elliptic integrals) for the geodesic calculations. These are more accurate than the (default) series expansions for |<i>f</i>| &gt; 0.02. (But note that the implementation of areas in GeodesicExact uses a high order series and this is only accurate for modest flattenings.)</p>
 
 </dd>
 <dt id="Q"><b>-Q</b></dt>
 <dd>
 
 <p>perform the calculation on the authalic sphere. The area calculation is accurate even if the flattening is large, <i>provided</i> the edges are sufficiently short. The perimeter calculation is not accurate. <b>-E</b> and <b>-Q</b> are mutually exclusive.</p>
+
+</dd>
+<dt id="R"><b>-R</b></dt>
+<dd>
+
+<p>The lines joining the vertices are rhumb lines instead of geodesics.</p>
 
 </dd>
 <dt id="comment-delimiter"><b>--comment-delimiter</b></dt>

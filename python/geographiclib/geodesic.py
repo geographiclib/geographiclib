@@ -13,7 +13,7 @@
 #    http://dx.doi.org/10.1007/s00190-012-0578-z
 #    Addenda: http://geographiclib.sf.net/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2013) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 ######################################################################
@@ -24,8 +24,7 @@ from geographiclib.constants import Constants
 from geographiclib.geodesiccapability import GeodesicCapability
 
 class Geodesic(object):
-  """
-  Solve geodesic problems.  The following illustrates its use
+  """Solve geodesic problems.  The following illustrates its use
 
     import sys
     sys.path.append("/usr/local/lib/python/site-packages")
@@ -56,9 +55,10 @@ class Geodesic(object):
     help(line.Position)
     help(Geodesic.Area)
 
-  All angles (latitudes, longitudes, azimuths, spherical arc lengths) are
-  measured in degrees.  All lengths (distance, reduced length) are measured in
-  meters.  All areas are measures in square meters.
+  All angles (latitudes, longitudes, azimuths, spherical arc lengths)
+  are measured in degrees.  All lengths (distance, reduced length) are
+  measured in meters.  All areas are measures in square meters.
+
   """
 
   GEOGRAPHICLIB_GEODESIC_ORDER = 6
@@ -85,22 +85,25 @@ class Geodesic(object):
 
   CAP_NONE = GeodesicCapability.CAP_NONE
   CAP_C1   = GeodesicCapability.CAP_C1
-  CAP_C1p  = 1 << 1
-  CAP_C2   = 1 << 2
-  CAP_C3   = 1 << 3
-  CAP_C4   = 1 << 4
-  CAP_ALL  = 0x1F
-  OUT_ALL  = 0x7F80
-  EMPTY         = 0
-  LATITUDE      = 1 << 7  | CAP_NONE
-  LONGITUDE     = 1 << 8  | CAP_C3
-  AZIMUTH       = 1 << 9  | CAP_NONE
-  DISTANCE      = 1 << 10 | CAP_C1
-  DISTANCE_IN   = 1 << 11 | CAP_C1 | CAP_C1p
-  REDUCEDLENGTH = 1 << 12 | CAP_C1 | CAP_C2
-  GEODESICSCALE = 1 << 13 | CAP_C1 | CAP_C2
-  AREA          = 1 << 14 | CAP_C4
-  ALL           = OUT_ALL | CAP_ALL
+  CAP_C1p  = GeodesicCapability.CAP_C1p
+  CAP_C2   = GeodesicCapability.CAP_C2
+  CAP_C3   = GeodesicCapability.CAP_C3
+  CAP_C4   = GeodesicCapability.CAP_C4
+  CAP_ALL  = GeodesicCapability.CAP_ALL
+  CAP_MASK = GeodesicCapability.CAP_MASK
+  OUT_ALL  = GeodesicCapability.OUT_ALL
+  OUT_MASK = GeodesicCapability.OUT_MASK
+  EMPTY         = GeodesicCapability.EMPTY
+  LATITUDE      = GeodesicCapability.LATITUDE
+  LONGITUDE     = GeodesicCapability.LONGITUDE
+  AZIMUTH       = GeodesicCapability.AZIMUTH
+  DISTANCE      = GeodesicCapability.DISTANCE
+  DISTANCE_IN   = GeodesicCapability.DISTANCE_IN
+  REDUCEDLENGTH = GeodesicCapability.REDUCEDLENGTH
+  GEODESICSCALE = GeodesicCapability.GEODESICSCALE
+  AREA          = GeodesicCapability.AREA
+  LONG_NOWRAP   = GeodesicCapability.LONG_NOWRAP
+  ALL           = GeodesicCapability.ALL
 
   def SinCosSeries(sinp, sinx, cosx, c, n):
     """Private: Evaluate a trig series using Clenshaw summation."""
@@ -260,9 +263,9 @@ class Geodesic(object):
   C2f = staticmethod(C2f)
 
   def __init__(self, a, f):
-    """
-    Construct a Geodesic object for ellipsoid with major radius a and
+    """Construct a Geodesic object for ellipsoid with major radius a and
     flattening f.
+
     """
 
     self._a = float(a)
@@ -651,7 +654,7 @@ class Geodesic(object):
     """Private: General version of the inverse problem"""
     a12 = s12 = azi1 = azi2 = m12 = M12 = M21 = S12 = Math.nan # return vals
 
-    outmask &= Geodesic.OUT_ALL
+    outmask &= Geodesic.OUT_MASK
     # Compute longitude difference (AngDiff does this carefully).  Result is
     # in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     # east-going and meridional geodesics.
@@ -972,10 +975,9 @@ class Geodesic(object):
   CheckDistance = staticmethod(CheckDistance)
 
   def Inverse(self, lat1, lon1, lat2, lon2, outmask = DISTANCE | AZIMUTH):
-    """
-    Solve the inverse geodesic problem.  Compute geodesic between
-    (lat1, lon1) and (lat2, lon2).  Return a dictionary with (some) of
-    the following entries:
+    """Solve the inverse geodesic problem.  Compute geodesic between (lat1,
+    lon1) and (lat2, lon2).  Return a dictionary with (some) of the
+    following entries:
 
       lat1 latitude of point 1
       lon1 longitude of point 1
@@ -994,14 +996,13 @@ class Geodesic(object):
     omitted, then only the basic geodesic fields are computed.  The mask
     is an or'ed combination of the following values
 
-      Geodesic.LATITUDE
-      Geodesic.LONGITUDE
       Geodesic.AZIMUTH
       Geodesic.DISTANCE
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.ALL
+
     """
 
     lon1 = Geodesic.CheckPosition(lat1, lon1)
@@ -1010,7 +1011,7 @@ class Geodesic(object):
     result = {'lat1': lat1, 'lon1': lon1, 'lat2': lat2, 'lon2': lon2}
     a12, s12, azi1, azi2, m12, M12, M21, S12 = self.GenInverse(
       lat1, lon1, lat2, lon2, outmask)
-    outmask &= Geodesic.OUT_ALL
+    outmask &= Geodesic.OUT_MASK
     result['a12'] = a12
     if outmask & Geodesic.DISTANCE: result['s12'] = s12
     if outmask & Geodesic.AZIMUTH:
@@ -1033,8 +1034,7 @@ class Geodesic(object):
 
   def Direct(self, lat1, lon1, azi1, s12,
              outmask = LATITUDE | LONGITUDE | AZIMUTH):
-    """
-    Solve the direct geodesic problem.  Compute geodesic starting at
+    """Solve the direct geodesic problem.  Compute geodesic starting at
     (lat1, lon1) with azimuth azi1 and length s12.  Return a dictionary
     with (some) of the following entries:
 
@@ -1052,8 +1052,10 @@ class Geodesic(object):
       S12 area between geodesic and equator
 
     outmask determines which fields get included and if outmask is
-    omitted, then only the basic geodesic fields are computed.  The mask
-    is an or'ed combination of the following values
+    omitted, then only the basic geodesic fields are computed.  The
+    LONG_NOWRAP bit prevents the longitudes being reduced to the range
+    [-180,180).  The mask is an or'ed combination of the following
+    values
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -1062,16 +1064,21 @@ class Geodesic(object):
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.ALL
+      Geodesic.LONG_NOWRAP
+
     """
 
-    lon1 = Geodesic.CheckPosition(lat1, lon1)
+    if outmask & Geodesic.LONG_NOWRAP:
+      Geodesic.CheckPosition(lat1, lon1)
+    else:
+      lon1 = Geodesic.CheckPosition(lat1, lon1)
     azi1 = Geodesic.CheckAzimuth(azi1)
     Geodesic.CheckDistance(s12)
 
     result = {'lat1': lat1, 'lon1': lon1, 'azi1': azi1, 's12': s12}
     a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenDirect(
       lat1, lon1, azi1, False, s12, outmask)
-    outmask &= Geodesic.OUT_ALL
+    outmask &= Geodesic.OUT_MASK
     result['a12'] = a12
     if outmask & Geodesic.LATITUDE: result['lat2'] = lat2
     if outmask & Geodesic.LONGITUDE: result['lon2'] = lon2
@@ -1084,10 +1091,9 @@ class Geodesic(object):
 
   def ArcDirect(self, lat1, lon1, azi1, a12,
                 outmask = LATITUDE | LONGITUDE | AZIMUTH | DISTANCE):
-    """
-    Solve the direct geodesic problem.  Compute geodesic starting at
-    (lat1, lon1) with azimuth azi1 and spherical arc length a12.
-    Return a dictionary with (some) of the following entries:
+    """Solve the direct geodesic problem.  Compute geodesic starting at
+    (lat1, lon1) with azimuth azi1 and spherical arc length a12.  Return
+    a dictionary with (some) of the following entries:
 
       lat1 latitude of point 1
       lon1 longitude of point 1
@@ -1103,8 +1109,10 @@ class Geodesic(object):
       S12 area between geodesic and equator
 
     outmask determines which fields get included and if outmask is
-    omitted, then only the basic geodesic fields are computed.  The mask
-    is an or'ed combination of the following values
+    omitted, then only the basic geodesic fields are computed.  The
+    LONG_NOWRAP bit prevents the longitudes being reduced to the range
+    [-180,180).  The mask is an or'ed combination of the following
+    values
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -1114,16 +1122,21 @@ class Geodesic(object):
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.ALL
+      Geodesic.LONG_NOWRAP
+
     """
 
-    lon1 = Geodesic.CheckPosition(lat1, lon1)
+    if outmask & Geodesic.LONG_NOWRAP:
+      Geodesic.CheckPosition(lat1, lon1)
+    else:
+      lon1 = Geodesic.CheckPosition(lat1, lon1)
     azi1 = Geodesic.CheckAzimuth(azi1)
     Geodesic.CheckDistance(a12)
 
     result = {'lat1': lat1, 'lon1': lon1, 'azi1': azi1, 'a12': a12}
     a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenDirect(
       lat1, lon1, azi1, True, a12, outmask)
-    outmask &= Geodesic.OUT_ALL
+    outmask &= Geodesic.OUT_MASK
     if outmask & Geodesic.DISTANCE: result['s12'] = s12
     if outmask & Geodesic.LATITUDE: result['lat2'] = lat2
     if outmask & Geodesic.LONGITUDE: result['lon2'] = lon2
@@ -1135,8 +1148,7 @@ class Geodesic(object):
     return result
 
   def Line(self, lat1, lon1, azi1, caps = ALL):
-    """
-    Return a GeodesicLine object to compute points along a geodesic
+    """Return a GeodesicLine object to compute points along a geodesic
     starting at lat1, lon1, with azimuth azi1.  caps is an or'ed
     combination of bit the following values indicating the capabilities
     of the return object
@@ -1150,6 +1162,7 @@ class Geodesic(object):
       Geodesic.AREA
       Geodesic.DISTANCE_IN
       Geodesic.ALL
+
     """
 
     from geographiclib.geodesicline import GeodesicLine
@@ -1161,8 +1174,7 @@ class Geodesic(object):
       caps | Geodesic.DISTANCE_IN)
 
   def Area(self, points, polyline = False):
-    """
-    Compute the area of a geodesic polygon given by points, an array of
+    """Compute the area of a geodesic polygon given by points, an array of
     dictionaries with entries lat and lon.  Return a dictionary with
     entries
 
@@ -1173,6 +1185,7 @@ class Geodesic(object):
     There is no need to "close" the polygon.  If polyline is set to
     True, then the points define a polyline instead of a polygon, the
     length is returned as the perimeter, and the area is not returned.
+
     """
 
     from geographiclib.polygonarea import PolygonArea
