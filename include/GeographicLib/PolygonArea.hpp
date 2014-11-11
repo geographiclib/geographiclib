@@ -1,6 +1,6 @@
 /**
  * \file PolygonArea.hpp
- * \brief Header for GeographicLib::PolygonArea class
+ * \brief Header for GeographicLib::PolygonAreaT class
  *
  * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
@@ -40,15 +40,16 @@ namespace GeographicLib {
    * vertex or add the edge ''as'' an edge (by defining its direction and
    * length).
    *
-   * The area and perimeter are accumulated in two times the standard floating
+   * The area and perimeter are accumulated at two times the standard floating
    * point precision to guard against the loss of accuracy with many-sided
    * polygons.  At any point you can ask for the perimeter and area so far.
    * There's an option to treat the points as defining a polyline instead of a
    * polygon; in that case, only the perimeter is computed.
    *
-   * This is a templated class to allow it to be used with either Geodesic and
-   * GeodesicExact.  GeographicLib::PolygonArea and
-   * GeographicLib::PolygonAreaExact are typedefs for these two cases.
+   * This is a templated class to allow it to be used with Geodesic,
+   * GeodesicExact, and Rhumb.  GeographicLib::PolygonArea,
+   * GeographicLib::PolygonAreaExact, and GeographicLib::PolygonAreaRhumb are
+   * typedefs for these cases.
    *
    * @tparam GeodType the geodesic class to use.
    *
@@ -56,7 +57,7 @@ namespace GeographicLib {
    * \include example-PolygonArea.cpp
    *
    * <a href="Planimeter.1.html">Planimeter</a> is a command-line utility
-   * providing access to the functionality of PolygonArea.
+   * providing access to the functionality of PolygonAreaT.
    **********************************************************************/
 
   template <class GeodType = Geodesic>

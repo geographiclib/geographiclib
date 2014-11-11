@@ -103,7 +103,7 @@
  * to the member functions.  Most of the internal comments have been retained.
  * However, in the process of transcription some documentation has been lost
  * and the documentation for the C++ classes, GeographicLib::Geodesic,
- * GeographicLib::GeodesicLine, and GeographicLib::PolygonArea, should be
+ * GeographicLib::GeodesicLine, and GeographicLib::PolygonAreaT, should be
  * consulted.  The C++ code remains the "reference implementation".  Think
  * twice about restructuring the internals of the C code since this may make
  * porting fixes from the C++ code more difficult.
@@ -546,6 +546,10 @@ extern "C" {
    * polylinep is non-zero, then the vertices and edges define a polyline and
    * only the perimeter is returned by geod_polygon_compute().
    *
+   * The area and perimeter are accumulated at two times the standard floating
+   * point precision to guard against the loss of accuracy with many-sided
+   * polygons.  At any point you can ask for the perimeter and area so far.
+   *
    * An example of the use of this function is given in the documentation for
    * geod_polygon_compute().
    **********************************************************************/
@@ -612,10 +616,12 @@ extern "C" {
    *   polyline (meters).
    * @return the number of points.
    *
-   * Only simple polygons (which are not self-intersecting) are allowed.
-   * There's no need to "close" the polygon by repeating the first vertex.  Set
-   * \e pA or \e pP to zero, if you do not want the corresponding quantity
-   * returned.
+   * The area and perimeter are accumulated at two times the standard floating
+   * point precision to guard against the loss of accuracy with many-sided
+   * polygons.  Only simple polygons (which are not self-intersecting) are
+   * allowed.  There's no need to "close" the polygon by repeating the first
+   * vertex.  Set \e pA or \e pP to zero, if you do not want the corresponding
+   * quantity returned.
    *
    * Example, compute the perimeter and area of the geodesic triangle with
    * vertices (0&deg;N,0&deg;E), (0&deg;N,90&deg;E), (90&deg;N,0&deg;E).
@@ -724,7 +730,7 @@ extern "C" {
    * area returned is signed with counter-clockwise traversal being treated as
    * positive.
    *
-   * Example, compute the area of Antarctic:
+   * Example, compute the area of Antarctica:
    @code
    double
      lats[] = {-72.9, -71.9, -74.9, -74.3, -77.5, -77.4, -71.7, -65.9, -65.7,

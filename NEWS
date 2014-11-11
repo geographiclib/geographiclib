@@ -4,7 +4,65 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.38.
+The current version of the library is 1.39.
+
+Changes between 1.39 (released 2014-11-11) and 1.38 versions:
+
+  * GeographicLib usually normalizes longitudes to the range [-180deg,
+    180deg).  However, when solving the direct geodesic and rhumb line
+    problems, it is sometimes necessary to know how many lines the line
+    encircled the earth by returning the longitude "unwrapped".  So the
+    following changes have been made:
+    + add a LONG_NOWRAP flag to mask enums for the outmask arguments for
+      Geodesic, GeodesicLine, Rhumb, and RhumbLine;
+    + similar changes have been made to the Python, Javascript, and
+      Java implementations of the geodesic routines;
+    + for the C, Fortran, and Matlab implementations the arcmode
+      argument to the routines was generalized to allow a combination of
+      ARCMODE and LONG_NOWRAP bits;
+    + the Maxima version now returns the longitude unwrapped.
+    These changes were necessary to fix the PolygonAreaT::AddEdge (see
+    the next item).
+
+  * Changes in area calculations:
+    + fix BUG in PolygonAreaT::AddEdge (also in C, Java, Javascript, and
+      Python implementations) which sometimes causes the wrong area to
+      be returned if the edge spanned more than 180deg;
+    + add area calculation to the Rhumb and RhumbLine classes and the
+      RhumbSolve utility;
+    + add PolygonAreaRhumb typedef for PolygonAreaT<Rhumb>;
+    + add -R option to Planimeter to use PolygonAreaRhumb (and -G option
+      for the default geodesic polygon);
+    + fix BLUNDER in area calculation in Matlab routine geodreckon;
+    + add area calculation to Matlab/Octave routines for great ellipses.
+
+  * Fix bad BUG in Geohash::Reverse; this was introduced in version 1.37
+    and affected all platforms where unsigned longs are 32-bits.  Thanks
+    to Christian Csar for reporting and diagnosing this.
+
+  * Binary installers for Windows are now built with Visual Studio 11
+    2012 (instead of Visual Studio 10 2010).  Compiled Matlab support
+    still with version 2013a (64-bit).
+
+  * Update GeographicLib.pro for builds with qmake to include all the
+    source files.
+
+  * Cmake updates:
+    + include cross-compiling checks in cmake config file;
+    + improve the way unsuitable versions are reported;
+    + include_directories (${GeographicLib_INCLUDE_DIRS}) is no longer
+      necessary with cmake 2.8.11 or later.
+
+  * legacy/Fortran now includes drop-in replacements for the geodesic
+    utilities from the NGS.
+
+  * geographiclib-get-{geoids,gravity,magnetic} with no arguments now
+    print the usage instead of loading the minimal sets.
+
+  * Utility::date(const std::string&, int&, int&, int&) and hence the
+    MagneticField utility accepts the string "now" as a legal time
+    (meaning today).
+
 
 Changes between 1.38 (released 2014-10-02) and 1.37 versions:
 

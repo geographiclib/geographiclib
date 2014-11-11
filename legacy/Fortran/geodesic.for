@@ -107,7 +107,7 @@
 *! However, in the process of transcription some documentation has been
 *! lost and the documentation for the C++ classes,
 *! GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
-*! GeographicLib::PolygonArea, should be consulted.  The C++ code
+*! GeographicLib::PolygonAreaT, should be consulted.  The C++ code
 *! remains the "reference implementation".  Think twice about
 *! restructuring the internals of the Fortran code since this may make
 *! porting fixes from the C++ code more difficult.
