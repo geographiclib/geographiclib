@@ -74,6 +74,7 @@ $(srcdir)/private/C2f.m \
 $(srcdir)/private/C3coeff.m \
 $(srcdir)/private/C3f.m \
 $(srcdir)/private/C4coeff.m \
+$(srcdir)/private/G4coeff.m \
 $(srcdir)/private/C4f.m \
 $(srcdir)/private/cbrt.m \
 $(srcdir)/private/cvmgt.m \

@@ -13,19 +13,18 @@
 
       double precision a, f, lat1, lon1, azi1, lat2, lon2, azi2, s12,
      +    dummy
-      logical arcmod
-      integer omask
+      integer flags, omask
 
 * WGS84 values
       a = 6378137d0
       f = 1/298.257223563d0
 
-      arcmod = .false.
+      flags = 0
       omask = 0
 
  10   continue
       read(*, *, end=90, err=90) lat1, lon1, azi1, s12
-      call direct(a, f, lat1, lon1, azi1, s12, arcmod,
+      call direct(a, f, lat1, lon1, azi1, s12, flags,
      +    lat2, lon2, azi2, omask, dummy, dummy, dummy, dummy, dummy)
       print 20, lat2, lon2, azi2
  20   format(f20.15, 1x, f20.15, 1x, f20.15)

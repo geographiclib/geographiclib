@@ -21,16 +21,16 @@ prints out the geomagnetic field on standard output and, optionally, its
 rate of change.
 
 The input line is of the form I<time> I<lat> I<lon> I<h>. I<time> is a
-date of the form 2012-07-03 or a fractional year such as 2012.5.  I<lat>
-and I<lon> are the latitude and longitude expressed as decimal degrees
-or degrees, minutes, and seconds; see GeoConvert(1) for details.  I<h>
-is the height above the ellipsoid in meters; this is optional and
-defaults to zero.  Alternatively, I<time> can be given on the command
-line as the argument to the B<-t> option, in which case it should not be
-included on the input lines.  Finally, the magnetic field can be
-computed at various points on a circle of latitude (constant I<time>,
-I<lat>, and I<h>) via the B<-c> option; in this case only the longitude
-should be given on the input lines.
+date of the form 2012-07-03, a fractional year such as 2012.5, or the
+string "now".  I<lat> and I<lon> are the latitude and longitude
+expressed as decimal degrees or degrees, minutes, and seconds; see
+GeoConvert(1) for details.  I<h> is the height above the ellipsoid in
+meters; this is optional and defaults to zero.  Alternatively, I<time>
+can be given on the command line as the argument to the B<-t> option, in
+which case it should not be included on the input lines.  Finally, the
+magnetic field can be computed at various points on a circle of latitude
+(constant I<time>, I<lat>, and I<h>) via the B<-c> option; in this case
+only the longitude should be given on the input lines.
 
 The output consists of the following 7 items:
 

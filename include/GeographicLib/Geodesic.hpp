@@ -82,7 +82,6 @@ namespace GeographicLib {
    *   defined similarly (with the geodesics being parallel at point 2).  On a
    *   flat surface, we have \e M12 = \e M21 = 1.  The quantity 1/\e M12 gives
    *   the scale of the Cassini-Soldner projection.
-
    * - <i>area</i>.  The area between the geodesic from point 1 to point 2 and
    *   the equation is represented by \e S12; it is the area, measured
    *   counter-clockwise, of the geodesic quadrilateral with corners
@@ -196,7 +195,9 @@ namespace GeographicLib {
       CAP_C3   = 1U<<3,
       CAP_C4   = 1U<<4,
       CAP_ALL  = 0x1FU,
+      CAP_MASK = CAP_ALL,
       OUT_ALL  = 0x7F80U,
+      OUT_MASK = 0xFF80U,       // Includes LONG_NOWRAP
     };
 
     static real SinCosSeries(bool sinp,
@@ -322,7 +323,13 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = 1U<<14 | CAP_C4,
       /**
-       * All capabilities, calculate everything.
+       * Do not wrap the \e lon2 in the direct calculation.
+       * @hideinitializer
+       **********************************************************************/
+      LONG_NOWRAP   = 1U<<15,
+      /**
+       * All capabilities, calculate everything.  (LONG_NOWRAP is not
+       * included in this mask.)
        * @hideinitializer
        **********************************************************************/
       ALL           = OUT_ALL| CAP_ALL,
@@ -620,13 +627,21 @@ namespace GeographicLib {
      * - \e outmask |= Geodesic::GEODESICSCALE for the geodesic scales \e
      *   M12 and \e M21;
      * - \e outmask |= Geodesic::AREA for the area \e S12;
-     * - \e outmask |= Geodesic::ALL for all of the above.
+     * - \e outmask |= Geodesic::ALL for all of the above;
+     * - \e outmask |= Geodesic::LONG_NOWRAP stops the returned value of \e
+     *   lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
      * .
      * The function value \e a12 is always computed and returned and this
      * equals \e s12_a12 is \e arcmode is true.  If \e outmask includes
      * Geodesic::DISTANCE and \e arcmode is false, then \e s12 = \e s12_a12.
      * It is not necessary to include Geodesic::DISTANCE_IN in \e outmask; this
      * is automatically included is \e arcmode is false.
+     *
+     * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
+     * indicates how many times the geodesic wrapped around the ellipsoid.
+     * Because \e lon2 might be outside the normal allowed range for
+     * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
+     * Math::AngNormalize2 before using it in other GeographicLib calls.
      **********************************************************************/
     Math::real GenDirect(real lat1, real lon1, real azi1,
                          bool arcmode, real s12_a12, unsigned outmask,

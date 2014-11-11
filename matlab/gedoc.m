@@ -5,7 +5,7 @@ function gedoc
 %   the inverse and direct problems for great ellipses on the surface of an
 %   ellipsoid of revolution.  For more information, see
 %
-%     http://geographiclib.sf.net/1.38/greatellipse.html
+%     http://geographiclib.sf.net/html/greatellipse.html
 %
 %   Great ellipses are sometimes proposed as alternatives to computing
 %   ellipsoidal geodesics.  However geodesic calculations are easy to
@@ -45,6 +45,12 @@ function gedoc
 %     * the inverse problem -- given lat1, lon1, lat2, lon2, determine s12,
 %       azi1, and azi2.  This is solved by GEDISTANCE.
 %
+%   The routines also optionally calculate S12 ,the area between the great
+%   ellipse from point 1 to point 2 and the equator; i.e., it is the area,
+%   measured counter-clockwise, of the quadrilateral with corners
+%   (lat1,lon1), (0,lon1), (0,lon2), and (lat2,lon2).  It is given in
+%   meters^2.
+%
 %   The parameters of the ellipsoid are specified by the optional ELLIPSOID
 %   argument to the routines.  This is a two-element vector of the form
 %   [a,e], where a is the equatorial radius, e is the eccentricity e =
@@ -72,7 +78,9 @@ function gedoc
 %   Restrictions on the inputs:
 %     * All latitudes must lie in [-90, 90].
 %     * All longitudes and azimuths must lie in [-540, 540).  On output,
-%       these quantities lie in [-180, 180).
+%       these quantities lie in [-180, 180).  It is however possible to
+%       prevent this normalization of the longitude in geodreckon by
+%       setting the long_nowrap bit in the optional flags argument.
 %     * The distance s12 is unrestricted.  This allows great ellipses to wrap
 %       around the ellipsoid.
 %     * The equatorial radius, a, must be positive.
@@ -123,7 +131,7 @@ function gedoc
 
 % Copyright (c) Charles Karney (2014) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.38.
+% This file was distributed with GeographicLib 1.39.
 
   help gedoc
 end

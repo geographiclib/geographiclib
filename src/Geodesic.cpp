@@ -139,7 +139,7 @@ namespace GeographicLib {
                                   real& s12, real& azi1, real& azi2,
                                   real& m12, real& M12, real& M21, real& S12)
     const {
-    outmask &= OUT_ALL;
+    outmask &= OUT_MASK;
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
@@ -411,7 +411,7 @@ namespace GeographicLib {
 
       if (!meridian &&
           omg12 < real(0.75) * Math::pi() && // Long difference too big
-          sbet2 - sbet1 < real(1.75)) {            // Lat difference too big
+          sbet2 - sbet1 < real(1.75)) {      // Lat difference too big
         // Use tan(Gamma/2) = tan(omg12/2)
         // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
         // with tan(x/2) = sin(x)/(1+cos(x))

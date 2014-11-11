@@ -25,3 +25,8 @@ Linux systems you might do:
   cmake ..
   make
   echo 30 0 29.5 179.5 | ./geodinverse
+
+The two tools ngsforward and ngsinverse are replacements for the NGS
+tools FORWARD and INVERSE available from
+
+  http://www.ngs.noaa.gov/PC_PROD/Inv_Fwd/

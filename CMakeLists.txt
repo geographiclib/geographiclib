@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 38)
+set (PROJECT_VERSION_MINOR 39)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -42,8 +42,8 @@ endif ()
 
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
-set (LIBVERSION 13)
-set (LIBVERSIONFULL 13.0.1)
+set (LIBVERSION 14)
+set (LIBVERSIONFULL 14.0.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -213,8 +213,11 @@ endif ()
 if (NOT MSVC)
   # Set the run time path for shared libraries for non-Windows machines.
   # (1) include link path for external packages (not needed with
-  # GeographicLib because there are no external packages).
-  set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  # GeographicLib because there are no external packages).  This only
+  # makes sense for native builds.
+  if (NOT CMAKE_CROSSCOMPILING)
+    set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  endif ()
   # (2) include installed path for GeographicLib.
   if (NOT APPLE)
     # Use relative path so that package is relocatable
@@ -331,6 +334,9 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
     # Windows build only works with GEOGRAPHICLIB_LIB_TYPE=STATIC.
     # NOTE: mpfr, gmp, and mpir are covered by the LGPL; be sure to
     # abide by the terms of this license.
+    #
+    # Need Visual Studio 12 2013 or later, g++ 4.5 or later; not sure
+    # about clang.
     if (WIN32)
       if (MSVC AND NOT MSVC_VERSION LESS 1800)
         if (CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -355,7 +361,11 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
         include_directories (/usr/local/include)
         link_directories (/usr/local/lib)
       endif ()
-      set (MPFR_LIBRARIES mpfr gmp)
+      # g++ before 4.5 doesn't work (no explicit cast operator)
+      if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
+            CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.5))
+        set (MPFR_LIBRARIES mpfr gmp)
+      endif ()
     endif ()
   endif ()
   if (NOT MPFR_LIBRARIES)

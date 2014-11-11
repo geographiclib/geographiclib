@@ -1,8 +1,8 @@
 /*
 Solve the direct and inverse geodesic problems accurately.
 
-Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
-under the MIT/X11 License.  For more information, see
+Copyright (c) Charles Karney (2013-2014) <charles@karney.com> and
+licensed under the MIT/X11 License.  For more information, see
 http://geographiclib.sourceforge.net/
 
 References:
@@ -19,10 +19,10 @@ Note that the area calculation always uses the series expansion (I don't
 know how to express the integrals in terms of elliptic integrals).
 
 Before running this file, you need to compute and save the series
-expansions by editing god.mac setting maxpow appropriately (near the end
-of the file) and uncommenting the last line (to save the results).  If
-you're testing the accuracy of the series expansions (exact : false) or
-if you're interested in accurate results for the area, that pick a
+expansions by editing geod.mac setting maxpow appropriately (near the
+end of the file) and uncommenting the last line (to save the results).
+If you're testing the accuracy of the series expansions (exact : false)
+or if you're interested in accurate results for the area, that pick a
 largish value of maxpow (e.g., 20).  This program can truncate the
 series to a smaller power.  If you just want to compute accurate
 geodesics and are not interested in the area, then use elliptic
@@ -290,7 +290,7 @@ geod_lineinit(g,lat1,lon1,azi1):=block([a, f,
   GEOD_LATITUDE | GEOD_AZIMUTH, Always allow latitude and azimuth
   Guard against underflow in salp0 */
   azi1 : AngRound(AngNormalize(azi1)),
-  lon1 : AngNormalize(lon1),
+  /* Don't normalizing lon1... */
   /* alp1 is in [0, pi] */
   alp1 : azi1 * degree,
   /* Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
@@ -461,8 +461,9 @@ geod_genposition(l, arcmode,  s12_a12):=block(
   salp2 : l[l_salp0], calp2 : l[l_calp0] * csig2, /* No need to normalize */
   if not exact then
   /* omg12 = omg2 - omg1 */
-  omg12 : atan2x(somg2 * l[l_comg1] - comg2 * l[l_somg1],
-    comg2 * l[l_comg1] + somg2 * l[l_somg1]),
+  omg12 : sig12
+  - (atan2x(ssig2, csig2) - atan2x(l[l_ssig1], l[l_csig1]))
+  + (atan2x(somg2, comg2) - atan2x(l[l_somg1], l[l_comg1])),
   s12 : if arcmode then l[l_b] *
   ((if exact then l[l_E0] else (1 + l[l_A1m1])) * sig12 + AB1) else s12_a12,
   if exact then block([somg2:l[l_salp0] * ssig2,
@@ -470,17 +471,17 @@ geod_genposition(l, arcmode,  s12_a12):=block(
     cchi2],
     /* Without normalization we have schi2 = somg2. */
     cchi2 : l[l_f1] * dn2 *  comg2,
-    lam12 : atan2x(somg2 * l[l_cchi1] - cchi2 * l[l_somg1],
-      cchi2 * l[l_cchi1] + somg2 * l[l_somg1]) -
+    lam12 : (sig12
+      - (atan2x(ssig2, csig2) - atan2x(l[l_ssig1], l[l_csig1]))
+      + (atan2x(somg2, cchi2) - atan2x(l[l_somg1], l[l_cchi1]))) -
     l[l_e2]/l[l_f1] * l[l_salp0] * l[l_H0] *
     (sig12 + deltah(ssig2, csig2, dn2,
         l[l_E][e_k2], l[l_E][e_alpha2], l[l_E][e_hc]) - l[l_H1] ) )
   else lam12 : omg12 + l[l_A3c] *
   ( sig12 + (SinCosSeries(true, ssig2, csig2, l[l_C3a]) - l[l_B31])),
   lon12 : lam12 / degree,
-  /* Use AngNormalize2 because longitude might have wrapped multiple times. */
-  lon12 : AngNormalize2(lon12),
-  lon2 : AngNormalize(l[l_lon1] + lon12),
+  /* Don't normalize lon2... */
+  lon2 : l[l_lon1] + lon12,
   lat2 : atan2x(sbet2, l[l_f1] * cbet2) / degree,
   /* minus signs give range [-180, 180). 0- converts -0 to +0. */
   azi2 : 0 - atan2x(-salp2, calp2) / degree,

@@ -18,14 +18,14 @@ doc/scripts/geographiclib.js: $(JS_SOURCES)
 pack-js: doc/scripts/geographiclib.js
 
 distrib-html: geodesic-papers/biblio.html
-	rsync -a --exclude .svn --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded index.html tm.html tm-addenda.html tm-grid.kmz geod.html geod-addenda.html bessel-errata.html *-figs.pdf geodesic-papers $(WEBSTAGE)/htdocs/
+	rsync -av --exclude .svn --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded index.html tm.html tm-addenda.html tm-grid.kmz geod.html geod-addenda.html bessel-errata.html *-figs.pdf geodesic-papers $(WEBSTAGE)/htdocs/
 	rsync --delete -a -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-doc:
 	rsync --delete -a -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-files:
-	rsync -a --exclude .svn --exclude '.git*' --delete distrib testdata geoids-distrib gravity-distrib magnetic-distrib $(DATASTAGE)/
+	rsync -av --exclude .svn --exclude '.git*' --delete distrib testdata geoids-distrib gravity-distrib magnetic-distrib $(DATASTAGE)/
 	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --exclude .svn --exclude '.git*' --delete --delete-excluded -a -e ssh $(DATASTAGE)/{distrib,testdata,{geoids,gravity,magnetic}-distrib} $(USER)@frs.sourceforge.net:/home/frs/project/geographiclib/
 
 distrib-cgi:

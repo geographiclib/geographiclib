@@ -17,6 +17,10 @@
 #    @PROJECT_NAME@_DEFINITIONS = ${@PROJECT_NAME@_STATIC_DEFINITIONS}, if ON
 #  If only one of the libraries is provided, then
 #    @PROJECT_NAME@_USE_STATIC_LIBS is ignored.
+#
+# For cmake 2.8.11 or later, there's no need to include
+#   include_directories (${GeographicLib_INCLUDE_DIRS})
+#   add_definitions (${GeographicLib_DEFINITIONS})
 
 message (STATUS "Reading ${CMAKE_CURRENT_LIST_FILE}")
 # @PROJECT_NAME@_VERSION is set by version file
@@ -39,7 +43,6 @@ else ()
   set (@PROJECT_NAME@_LIBRARY_DIRS "${_ROOT}/lib")
   set (@PROJECT_NAME@_BINARY_DIRS "${_ROOT}/bin")
 endif ()
-message (STATUS "  include directory: \${@PROJECT_NAME@_INCLUDE_DIRS}")
 
 set (@PROJECT_NAME@_SHARED_LIBRARIES @PROJECT_SHARED_LIBRARIES@)
 set (@PROJECT_NAME@_STATIC_LIBRARIES @PROJECT_STATIC_LIBRARIES@)

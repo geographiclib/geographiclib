@@ -293,7 +293,7 @@ void Geodesic::ArcDirect(double lat1, double lon1, double azi1, double a12,
 //*****************************************************************************
 double Geodesic::GenDirect(double lat1, double lon1, double azi1,
                         bool arcmode, double s12_a12,
-                        NETGeographicLib::Mask outmask,
+                        Geodesic::mask outmask,
                         [System::Runtime::InteropServices::Out] double% lat2,
                         [System::Runtime::InteropServices::Out] double% lon2,
                         [System::Runtime::InteropServices::Out] double% azi2,
@@ -437,7 +437,7 @@ double Geodesic::Inverse(double lat1, double lon1, double lat2, double lon2,
 
 //*****************************************************************************
 double Geodesic::GenInverse(double lat1, double lon1, double lat2, double lon2,
-                        NETGeographicLib::Mask outmask,
+                        Geodesic::mask outmask,
                         [System::Runtime::InteropServices::Out] double% s12,
                         [System::Runtime::InteropServices::Out] double% azi1,
                         [System::Runtime::InteropServices::Out] double% azi2,

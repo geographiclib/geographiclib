@@ -5,6 +5,8 @@
  * Copyright (c) Charles Karney (2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
+ *
+ * See the <a href="RhumbSolve.1.html">man page</a> for usage information.
  **********************************************************************/
 
 #include <iostream>
@@ -49,7 +51,7 @@ int main(int argc, char* argv[]) {
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
-    real lat1, lon1, azi12 = Math::NaN(), lat2, lon2, s12;
+    real lat1, lon1, azi12 = Math::NaN(), lat2, lon2, s12, S12;
     int prec = 3;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
@@ -168,34 +170,34 @@ int main(int argc, char* argv[]) {
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
     const Rhumb rh(a, f, exact);
+    const RhumbLine rhl(linecalc ? rh.Line(lat1, lon1, azi12) :
+                        rh.Line(0, 0, 90));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     int retval = 0;
     std::string s;
-    if (linecalc) {
-      const RhumbLine rhl(rh.Line(lat1, lon1, azi12));
-      while (std::getline(*input, s)) {
-        try {
-          std::istringstream str(s);
+    while (std::getline(*input, s)) {
+      try {
+        std::string eol("\n");
+        if (!cdelim.empty()) {
+          std::string::size_type m = s.find(cdelim);
+          if (m != std::string::npos) {
+            eol = " " + s.substr(m) + "\n";
+            s = s.substr(0, m);
+          }
+        }
+        std::istringstream str(s);
+        if (linecalc) {
           if (!(str >> s12))
             throw GeographicErr("Incomplete input: " + s);
           std::string strc;
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
-          rhl.Position(s12, lat2, lon2);
-          *output << LatLonString(lat2, lon2, prec, dms, dmssep) << "\n";
-        }
-        catch (const std::exception& e) {
-          // Write error message cout so output lines match input lines
-          *output << "ERROR: " << e.what() << "\n";
-          retval = 1;
-        }
-      }
-    } else if (inverse) {
-      while (std::getline(*input, s)) {
-        try {
-          std::istringstream str(s);
+          rhl.Position(s12, lat2, lon2, S12);
+          *output << LatLonString(lat2, lon2, prec, dms, dmssep) << " "
+                  << Utility::str(S12, std::max(prec-7, 0)) << eol;
+        } else if (inverse) {
           std::string slat1, slon1, slat2, slon2;
           if (!(str >> slat1 >> slon1 >> slat2 >> slon2))
             throw GeographicErr("Incomplete input: " + s);
@@ -204,20 +206,11 @@ int main(int argc, char* argv[]) {
             throw GeographicErr("Extraneous input: " + strc);
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
           DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
-          rh.Inverse(lat1, lon1, lat2, lon2, s12, azi12);
+          rh.Inverse(lat1, lon1, lat2, lon2, s12, azi12, S12);
           *output << AzimuthString(azi12, prec, dms, dmssep) << " "
-                  << Utility::str(s12, prec) << "\n";
-        }
-        catch (const std::exception& e) {
-          // Write error message cout so output lines match input lines
-          *output << "ERROR: " << e.what() << "\n";
-          retval = 1;
-        }
-      }
-    } else {
-      while (std::getline(*input, s)) {
-        try {
-          std::istringstream str(s);
+                  << Utility::str(s12, prec) << " "
+                  << Utility::str(S12, std::max(prec-7, 0)) << eol;
+        } else {                // direct
           std::string slat1, slon1, sazi;
           if (!(str >> slat1 >> slon1 >> sazi >> s12))
             throw GeographicErr("Incomplete input: " + s);
@@ -226,14 +219,15 @@ int main(int argc, char* argv[]) {
             throw GeographicErr("Extraneous input: " + strc);
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
           azi12 = DMS::DecodeAzimuth(sazi);
-          rh.Direct(lat1, lon1, azi12, s12, lat2, lon2);
-          *output << LatLonString(lat2, lon2, prec, dms, dmssep) << "\n";
+          rh.Direct(lat1, lon1, azi12, s12, lat2, lon2, S12);
+          *output << LatLonString(lat2, lon2, prec, dms, dmssep) << " "
+                  << Utility::str(S12, std::max(prec-7, 0)) << eol;
         }
-        catch (const std::exception& e) {
-          // Write error message cout so output lines match input lines
-          *output << "ERROR: " << e.what() << "\n";
-          retval = 1;
-        }
+      }
+      catch (const std::exception& e) {
+        // Write error message cout so output lines match input lines
+        *output << "ERROR: " << e.what() << "\n";
+        retval = 1;
       }
     }
     return retval;

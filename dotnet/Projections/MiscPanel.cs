@@ -90,7 +90,6 @@ namespace Projections
                 DMS.Flag ind;
                 int len;
                 string tmp;
-                DMS.Decode("34.245");
                 DMS.Decode("34d22\'34.567\"", out ind);
                 DMS.Decode(-86.0, 32.0, 34.214);
                 DMS.DecodeAngle("-67.4532");

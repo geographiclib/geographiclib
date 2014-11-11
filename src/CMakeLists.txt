@@ -54,9 +54,27 @@ else ()
   endif ()
 endif ()
 
+if (NOT CMAKE_VERSION VERSION_LESS 2.8.11)
+  if (GEOGRAPHICLIB_SHARED_LIB)
+    target_include_directories (${PROJECT_SHARED_LIBRARIES} INTERFACE
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+      $<INSTALL_INTERFACE:include>)
+  endif ()
+  if (GEOGRAPHICLIB_STATIC_LIB)
+    target_include_directories (${PROJECT_STATIC_LIBRARIES} INTERFACE
+      $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+      $<INSTALL_INTERFACE:include>)
+  endif ()
+endif ()
+
 # Specify where the library is installed, adding it to the export targets
 install (TARGETS ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES}
   EXPORT targets
+  # A potentially useful option.  However it's only supported in recent
+  # versions of cmake (2.8.12 and later?).  So comment out for now.
+  # INCLUDES DESTINATION include
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib${LIB_SUFFIX}
   ARCHIVE DESTINATION lib${LIB_SUFFIX})

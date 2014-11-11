@@ -1,6 +1,6 @@
 /**
  * \file PolygonArea.cpp
- * \brief Implementation for GeographicLib::PolygonArea class
+ * \brief Implementation for GeographicLib::PolygonAreaT class
  *
  * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
@@ -41,7 +41,8 @@ namespace GeographicLib {
       _perimetersum += s;
       if (!_polyline) {
         _areasum += S12;
-        _crossings += transit(_lon1, lon);
+        _crossings += transitdirect(_lon1, lon);
+        lon = Math::AngNormalize2(lon);
       }
       _lat1 = lat; _lon1 = lon;
       ++_num;
@@ -165,7 +166,8 @@ namespace GeographicLib {
       _earth.GenDirect(_lat1, _lon1, azi, false, s, _mask,
                        lat, lon, t, t, t, t, t, S12);
       tempsum += S12;
-      crossings += transit(_lon1, lon);
+      crossings += transitdirect(_lon1, lon);
+      lon = Math::AngNormalize2(lon);
       _earth.GenInverse(lat, lon, _lat0, _lon0, _mask, s12, t, t, t, t, t, S12);
       perimeter += s12;
       tempsum += S12;
@@ -196,5 +198,6 @@ namespace GeographicLib {
 
   template class GEOGRAPHICLIB_EXPORT PolygonAreaT<Geodesic>;
   template class GEOGRAPHICLIB_EXPORT PolygonAreaT<GeodesicExact>;
+  template class GEOGRAPHICLIB_EXPORT PolygonAreaT<Rhumb>;
 
 } // namespace GeographicLib

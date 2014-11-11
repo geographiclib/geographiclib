@@ -2,7 +2,7 @@
  * \file Utility.hpp
  * \brief Header for GeographicLib::Utility class
  *
- * Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -15,11 +15,12 @@
 #include <vector>
 #include <sstream>
 #include <cctype>
+#include <ctime>
 
 #if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
+// Squelch warnings about constant conditional expressions and unsafe gmtime
 #  pragma warning (push)
-#  pragma warning (disable: 4127)
+#  pragma warning (disable: 4127 4996)
 #endif
 
 namespace GeographicLib {
@@ -165,7 +166,8 @@ namespace GeographicLib {
     /**
      * Given a date as a string in the format yyyy, yyyy-mm, or yyyy-mm-dd,
      * return the numeric values for the year, month, and day.  No checking is
-     * done on these values.
+     * done on these values.  The string "now" is interpreted as the present
+     * date (in UTC).
      *
      * @param[in] s the date in string format.
      * @param[out] y the year.
@@ -174,6 +176,14 @@ namespace GeographicLib {
      * @exception GeographicErr is \e s is malformed.
      **********************************************************************/
     static void date(const std::string& s, int& y, int& m, int& d) {
+      if (s == "now") {
+        std::time_t t = std::time(0);
+        struct tm* now = gmtime(&t);
+        y = now->tm_year + 1900;
+        m = now->tm_mon + 1;
+        d = now->tm_mday;
+        return;
+      }
       int y1, m1 = 1, d1 = 1;
       const char* digits = "0123456789";
       std::string::size_type p1 = s.find_first_not_of(digits);

@@ -46,6 +46,7 @@ namespace Projections
             this.m_pointsView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             //
             // label1
@@ -196,10 +197,21 @@ namespace Projections
             this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader2.Width = 120;
             //
+            // button3
+            //
+            this.button3.Location = new System.Drawing.Point(309, 177);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 16;
+            this.button3.Text = "Validate";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.OnValidate);
+            //
             // RhumbPanel
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.m_pointsView);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.button2);
@@ -243,5 +255,6 @@ namespace Projections
         private System.Windows.Forms.ListView m_pointsView;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.Button button3;
     }
 }

@@ -96,7 +96,7 @@ namespace GeographicLib {
       return t > 0 ? (x + y) * Math::sq( (sx * sy)/t ) / (sx + sy) :
         (x - y != 0 ? (sx - sy) / (x - y) : 1);
     }
-    // Dlog1p(x,y) = log1p((x-y)/(1+y)/(x-y)
+    // Dlog1p(x,y) = log1p((x-y)/(1+y))/(x-y)
     static inline real Dlog1p(real x, real y) {
       real t = x - y; if (t < 0) { t = -t; y = x; }
       return t ? Math::log1p(t / (1 + y)) / t : 1 / (1 + x);
