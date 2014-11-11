@@ -1,6 +1,6 @@
 /**
  * \file PolygonArea.cpp
- * \brief Implementation for GeographicLib::PolygonArea class
+ * \brief Implementation for GeographicLib::PolygonAreaT class
  *
  * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see

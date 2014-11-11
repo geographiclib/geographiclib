@@ -25,7 +25,7 @@ package net.sf.geographiclib;
  * </ul>
  * <p>
  * This class lets you add vertices one at a time to the polygon.  The area
- * and perimeter are accumulated in two times the standard floating point
+ * and perimeter are accumulated at two times the standard floating point
  * precision to guard against the loss of accuracy with many-sided polygons.
  * At any point you can ask for the perimeter and area so far.  There's an
  * option to treat the points as defining a polyline instead of a polygon; in

@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.39
-\date 2014-mm-dd
+\date 2014-11-11
 
 \section abstract Abstract
 
@@ -902,7 +902,7 @@ The utilities are
    Geodesic and GeodesicLine.  See \ref GeodSolve.cpp.
  - <a href="Planimeter.1.html">
    <b>Planimeter</b></a>: compute the area of geodesic polygons using
-   PolygonArea.  See \ref Planimeter.cpp.
+   PolygonAreaT.  See \ref Planimeter.cpp.
  - <a href="TransverseMercatorProj.1.html">
    <b>TransverseMercatorProj</b></a>: convert between geographic
    and transverse Mercator.  This is for testing
@@ -1028,7 +1028,7 @@ all the information needed to specify a geodesic.  A const member
 function returns the coordinates a specified distance from the starting
 point.  <a href="GeodSolve.1.html">GeodSolve</a> is a simple command
 line utility to perform geodesic calculations.
-PolygonArea is a class which compute the area of geodesic
+PolygonAreaT is a class which compute the area of geodesic
 polygons using the Geodesic class and
 <a href="Planimeter.1.html">Planimeter</a> is a command line utility for
 the same purpose.  AzimuthalEquidistant,
@@ -1088,23 +1088,17 @@ for high degree models such as emm2010.)  These classes requires
 installation of data files for the various magnetic models; see \ref
 magneticinst for details.
 
-Constants, Math, Utility,
-DMS, are general utility class which are used
-internally by the library; in addition EllipticFunction
-is used by TransverseMercatorExact,
-Ellipsoid, and GeodesicExact, and
-GeodesicLineExact; Accumulator is used
-by PolygonArea, and SphericalEngine,
-CircularEngine, SphericalHarmonic,
-SphericalHarmonic1, and
-SphericalHarmonic2 facilitate the summation of
-spherical harmonic series which is needed by and
-MagneticModel and MagneticCircle.  One
-important definition is Math::real which is the type
-used for real numbers.  This allows the library to be easily switched
-to using floats, doubles, or long doubles.  However all the testing
-has been with real set to double and the library should be installed
-in this way.
+Constants, Math, Utility, DMS, are general utility class which are used
+internally by the library; in addition EllipticFunction is used by
+TransverseMercatorExact, Ellipsoid, and GeodesicExact, and
+GeodesicLineExact; Accumulator is used by PolygonAreaT, and
+SphericalEngine, CircularEngine, SphericalHarmonic, SphericalHarmonic1,
+and SphericalHarmonic2 facilitate the summation of spherical harmonic
+series which is needed by and MagneticModel and MagneticCircle.  One
+important definition is Math::real which is the type used for real
+numbers.  This allows the library to be easily switched to using floats,
+doubles, or long doubles.  However all the testing has been with real
+set to double and the library should be installed in this way.
 
 In general, the constructors for the classes in GeographicLib check
 their arguments and throw GeographicErr exceptions with a
@@ -1189,13 +1183,12 @@ Implementations of subsets of GeographicLib are available in other languages
 \section c-fortran C and Fortran implementation
 
 The directories <code>legacy/C</code> and <code>legacy/Fortran</code>
-contain implementations of Geodesic,
-GeodesicLine, and PolygonArea in C and
-Fortran respectively.  These are intended for use in old codes written
-in these languages and should work any reasonably modern compiler.
-These implementations are entirely self-contained and do not depend on
-the rest of GeographicLib.  Sample main programs to solve the direct
-and inverse geodesic problems and to compute polygonal areas are
+contain implementations of Geodesic, GeodesicLine, and PolygonAreaT in C
+and Fortran respectively.  These are intended for use in old codes
+written in these languages and should work any reasonably modern
+compiler.  These implementations are entirely self-contained and do not
+depend on the rest of GeographicLib.  Sample main programs to solve the
+direct and inverse geodesic problems and to compute polygonal areas are
 provided.
 
 For documentation, see
@@ -1204,12 +1197,11 @@ For documentation, see
 
 \section java Java implementation
 
-The directory <code>java</code> contains implementations of
-Geodesic, GeodesicLine, and
-PolygonArea in Java.  This implementation is entirely
-self-contained and does not depend on the rest of GeographicLib.
-Sample main programs to solve the direct and inverse geodesic problems
-and to compute polygonal areas are provided.
+The directory <code>java</code> contains implementations of Geodesic,
+GeodesicLine, and PolygonAreaT in Java.  This implementation is entirely
+self-contained and does not depend on the rest of GeographicLib.  Sample
+main programs to solve the direct and inverse geodesic problems and to
+compute polygonal areas are provided.
 
 For documentation, see
  - <a href="java/index.html">Java library for geodesics</a>.
@@ -1221,7 +1213,7 @@ The directory doc/scripts/GeographicLib contains the classes
 - Accumulator
 - Geodesic
 - GeodesicLine
-- PolygonArea
+- PolygonAreaT
 - DMS
 .
 translated into JavaScript.  See Interface.js for a simple JavaScript
@@ -1427,7 +1419,7 @@ in Octave or Matlab.  The available functions are:
  - geodesicline: compute points along a geodesic
    (see GeodesicLine::Position)
  - polygonarea: compute area of a geodesic polygon
-   (see PolygonArea)
+   (see PolygonAreaT)
  - utmupsforward: convert geographic coordinates to UTM/UPS
    (see UTMUPS::Forward)
  - utmupsreverse: convert UTM/UPS coordinates to geographic
@@ -6619,16 +6611,14 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
-   (released 2014-mm-dd)
+   (released 2014-11-11)
    - GeographicLib usually normalizes longitudes to the range
      [&minus;180&deg;, 180&deg;).  However, when solving the direct
      geodesic and rhumb line problems, it is sometimes necessary to know
      how many lines the line encircled the earth by returning the
      longitude "unwrapped".  So the following changes have been made:
      - add a LONG_NOWRAP flag to \e mask enums for the \e outmask
-       arguments for GeographicLib::Geodesic,
-       GeographicLib::GeodesicLine, GeographicLib::Rhumb, and
-       GeographicLib::RhumbLine;
+       arguments for Geodesic, GeodesicLine, Rhumb, and RhumbLine;
      - similar changes have been made to the Python, Javascript, and
        Java implementations of the geodesic routines;
      - for the C, Fortran, and Matlab implementations the \e arcmode
@@ -6637,29 +6627,29 @@ of the git repository for GeographicLib.
      - the Maxima version now returns the longitude unwrapped.
      .
      These changes were necessary to fix the PolygonAreaT::AddEdge (see
-     below).
-   - Changes in area calculation:
+     the next item).
+   - Changes in area calculations:
      - fix BUG in PolygonAreaT::AddEdge (also in C, Java, Javascript,
        and Python implementations) which sometimes causes the wrong area
-       to be returned, if the edge spanned more than 180&deg;;
+       to be returned if the edge spanned more than 180&deg;;
      - add area calculation to the Rhumb and RhumbLine classes and the
        <a href="RhumbSolve.1.html">RhumbSolve</a> utility (see \ref
        rhumbarea);
      - add PolygonAreaRhumb typedef for PolygonAreaT<Rhumb>;
      - add -R option to <a href="Planimeter.1.html">Planimeter</a> to use
        PolygonAreaRhumb (and -G option for the default geodesic polygon);
+     - fix BLUNDER in area calculation in Matlab routine geodreckon;
      - add area calculation to Matlab/Octave routines for great ellipses
        (see \ref gearea).
    - Fix bad BUG in Geohash::Reverse; this was introduced in version
      1.37 and affected all platforms where unsigned longs are 32-bits.
      Thanks to Christian Csar for reporting and diagnosing this.
-   - Fix BLUNDER in area calculation in Matlab routine geodreckon.
    - Binary installers for Windows are now built with Visual Studio 11
      2012 (instead of Visual Studio 10 2010).  Compiled Matlab support
      still with version 2013a (64-bit).
    - Update GeographicLib.pro for builds with qmake to include all the
      source files.
-   - Cmake updates
+   - Cmake updates:
      - include cross-compiling checks in cmake config file;
      - improve the way unsuitable versions are reported;
      - include_directories (${GeographicLib_INCLUDE_DIRS}) is no longer
@@ -6668,9 +6658,9 @@ of the git repository for GeographicLib.
      utilities from the NGS.
    - geographiclib-get-{geoids,gravity,magnetic} with no arguments now
      print the usage instead of loading the minimal sets.
-   - Utility::date(const std::string&, int&, int&, int&) and hence
-     <a href="MagneticField.1.html">MagneticField</a> accepts the string
-     "now" as a legal time (meaning today).
+   - Utility::date(const std::string&, int&, int&, int&) and hence the
+     <a href="MagneticField.1.html">MagneticField</a> utility accepts
+     the string "now" as a legal time (meaning today).
 
  - <a href="http://geographiclib.sf.net/1.38">Version 1.38</a>
    (released 2014-10-02)
