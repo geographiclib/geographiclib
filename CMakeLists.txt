@@ -385,7 +385,8 @@ endif ()
 # Create a Config.h to expose system information to the compiler
 configure_file (
   include/GeographicLib/Config.h.in
-  include/GeographicLib/Config.h )
+  include/GeographicLib/Config.h
+  @ONLY )
 
 # The documentation depends on doxygen.
 if (GEOGRAPHICLIB_DOCUMENTATION)

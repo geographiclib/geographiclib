@@ -1237,6 +1237,12 @@
    Survey Review '''42'''(315), 20--26 (2010).[[BR]]
    http://earth-info.nga.mil/GandG/publications/An_Integral_for_Geodesic_Length_ePrint.pdf
    [[BR]] http://dx.doi.org/10.1179/003962609X451663
+ * L. E. Sjöberg and M. Shirazian,[[BR]]
+   ''Solving the direct and inverse geodetic problems on the ellipsoid
+   by numerical integration'',
+   J. Surveying and Engineering '''138'''(1), 9--16 (2012).[[BR]]
+   http://www.diva-portal.org/smash/record.jsf?searchId=1&pid=diva2:515798
+   [[BR]] http://dx.doi.org/10.1061/(ASCE)SU.1943-5428.0000061
  * L. E. Sjöberg,[[BR]]
    ''Solutions to the ellipsoidal Clairaut constant and the inverse geodetic
    problem by numerical integration'',
