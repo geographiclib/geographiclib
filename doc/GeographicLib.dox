@@ -11,8 +11,8 @@ namespace GeographicLib {
 /**
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.39
-\date 2014-11-11
+\version 1.40
+\date 2014-mm-dd
 
 \section abstract Abstract
 
@@ -45,16 +45,16 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.39.tar.gz">
-  GeographicLib-1.39.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.39.zip">
-  GeographicLib-1.39.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.40.tar.gz">
+  GeographicLib-1.40.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.40.zip">
+  GeographicLib-1.40.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
 line endings.)  Alternatively you can get the latest release using git
 \verbatim
-  git clone -b r1.39 git://git.code.sf.net/p/geographiclib/code geographiclib
+  git clone -b r1.40 git://git.code.sf.net/p/geographiclib/code geographiclib
 \endverbatim
 There are also binary installers available for some platforms.  See \ref
 binaryinst.
@@ -182,14 +182,14 @@ GeographicLib has been developed under Linux with the g++ compiler
 2012, and 2013.  Earlier versions were tested also under Visual Studio
 2005 and 2008 and under Darwin and Solaris.  It should compile on a wide
 range of other systems.  First download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.39.tar.gz">
-GeographicLib-1.39.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.39.zip">
-GeographicLib-1.39.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.39-win32.exe">
-GeographicLib-1.39-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.39-win64.exe">
-GeographicLib-1.39-win64.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.40.tar.gz">
+GeographicLib-1.40.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.40.zip">
+GeographicLib-1.40.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.40-win32.exe">
+GeographicLib-1.40-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.40-win64.exe">
+GeographicLib-1.40-win64.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -265,10 +265,10 @@ work also for Visual Studio 12 Express (2013).
 
 Here are the steps to compile and install GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.39.tar.gz
-  unzip -q GeographicLib-1.39.zip \endverbatim
+  tar xfpz GeographicLib-1.40.tar.gz
+  unzip -q GeographicLib-1.40.zip \endverbatim
   then enter the directory created with one of \verbatim
-  cd GeographicLib-1.39 \endverbatim
+  cd GeographicLib-1.40 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -276,8 +276,8 @@ Here are the steps to compile and install GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically one of \verbatim
-  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.39 ..
-  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.39 ..
+  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-1.40 ..
+  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-1.40 ..
 \endverbatim
   The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
   settings given above are recommended to ensure that packages that use
@@ -293,7 +293,7 @@ Here are the steps to compile and install GeographicLib:
     convention.  If it is on ON (the Linux default), the installation
     is to a common directory, e.g., /usr/local.  If it is OFF (the
     Windows default), the installation directory contains the package
-    name, e.g., C:/pkg/GeographicLib-1.39.  The installation
+    name, e.g., C:/pkg/GeographicLib-1.40.  The installation
     directories for the documentation, cmake configuration, python and
     matlab interfaces all depend on the variable with deeper paths
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
@@ -308,7 +308,7 @@ Here are the steps to compile and install GeographicLib:
     For windows systems, it is recommended to use a prefix which
     includes the compiler version, as shown above (and also, possibly,
     whether this is a 64-bit build, e.g., <code>cmake -G "Visual Studio
-    10 Win64" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.39
+    10 Win64" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-1.40
     ..</code>).  If you just want to try the library to see if it suits
     your needs, pick, for example,
     <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
@@ -405,9 +405,9 @@ Here are the steps to compile and install GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.39.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.40.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.39 \endverbatim
+  cd GeographicLib-1.40 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD \endverbatim
@@ -436,9 +436,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.39.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.40.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.39 \endverbatim
+  cd GeographicLib-1.40 \endverbatim
 - Edit \verbatim
   include/GeographicLib/Config.h \endverbatim
   If your C++ compiler does not recognize the long double type
@@ -469,8 +469,8 @@ static library and the utilities.  If you only have Visual Studio 2003,
 use cmake to create the necessary solution file, see \ref cmake.  (cmake
 is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.39.zip \endverbatim
-- Open GeographicLib-1.39/windows/GeographicLib-vc10.sln in Visual Studio
+  unzip -q GeographicLib-1.40.zip \endverbatim
+- Open GeographicLib-1.40/windows/GeographicLib-vc10.sln in Visual Studio
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9;
   for Visual Studio Express 2010, replace -vc10 by -vc10x).
 - Pick the build type (e.g., Release), and select "Build Solution".
@@ -502,14 +502,14 @@ be advisable to build it with the compiler you are using for your own
 code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.39-win32.exe">
-GeographicLib-1.39-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.39-win64.exe">
-GeographicLib-1.39-win64.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.40-win32.exe">
+GeographicLib-1.40-win32.exe</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.40-win64.exe">
+GeographicLib-1.40-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc10\\GeographicLib-1.39 or C:\\pkg-vc10-x64\\GeographicLib-1.39,
+   C:\\pkg-vc10\\GeographicLib-1.40 or C:\\pkg-vc10-x64\\GeographicLib-1.40,
  - select the start menu folder,
  - and install.
  .
@@ -517,7 +517,7 @@ GeographicLib-1.39-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc11/GeographicLib-1.39/bin where the utilities are
+will include C:/pkg-vc11/GeographicLib-1.40/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  With the 64-bit installer, the
 Matlab interface is installed in the matlab folder.  Add this to your
@@ -582,7 +582,7 @@ Check the code out of git with \verbatim
 Here the "master" branch is checked out.  There are three branches in
 the git repository:
 - <b>master</b>: the main branch for code maintainence.  Releases are
-  tagged on this branch as, e.g., v1.39.
+  tagged on this branch as, e.g., v1.40.
 - <b>devel</b>: the development branch; changes made here are merged
   into master.
 - <b>release</b>: the release branch created by unpacking the source
@@ -592,7 +592,7 @@ the git repository:
   specifying a branch).  This differs from the master branch in that
   some administrative files are excluded while some intermediate files
   are included (in order to aid building on as many platforms as
-  possible).  Releases are tagged on this branch as, e.g., r1.39.
+  possible).  Releases are tagged on this branch as, e.g., r1.40.
 .
 The autoconf configuration script and the formatted man pages are not
 checked into master branch of the repository.  In order to create the
@@ -608,8 +608,8 @@ In the case of cmake, you then run \verbatim
 which will copy the man pages from the build directory back into the
 source tree and package the resulting source tree for distribution as
 \verbatim
-  GeographicLib-1.39.tar.gz
-  GeographicLib-1.39.zip \endverbatim
+  GeographicLib-1.40.tar.gz
+  GeographicLib-1.40.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -635,7 +635,7 @@ With configure, run \verbatim
   make dist-gzip \endverbatim
 which will create the additional files and packages the results ready
 for distribution as \verbatim
-  geographiclib-1.39.tar.gz \endverbatim
+  geographiclib-1.40.tar.gz \endverbatim
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
@@ -726,7 +726,7 @@ In order to use GeographicLib from C++ code, you will need to
 
   If GeographicLib is found, then the following cmake variables are set:
   - <code>GeographicLib_FOUND</code> = 1
-  - <code>GeographicLib_VERSION</code> = 1.39
+  - <code>GeographicLib_VERSION</code> = 1.40
   - <code>GeographicLib_INCLUDE_DIRS</code>
   - <code>GeographicLib_LIBRARIES</code> = one of the following two:
   - <code>GeographicLib_SHARED_LIBRARIES</code> = GeographicLib
@@ -1152,7 +1152,7 @@ can test the values of the macros GEOGRAPHICLIB_VERSION_MAJOR,
 GEOGRAPHICLIB_VERSION_MINOR, and GEOGRAPHICLIB_VERSION_PATCH; these
 expand to numbers (and the last one is usually 0); these macros appeared
 starting in version 1.31.  There's also a macro
-GEOGRAPHICLIB_VERSION_STRING which expands to, e.g., "1.39"; this macro
+GEOGRAPHICLIB_VERSION_STRING which expands to, e.g., "1.40"; this macro
 has been defined since version 1.9.  Since version 1.37, there's also
 been a macro GEOGRAPHICLIB_VERSION which encode the version as a single
 number, e.g, 1003900.  The macro GEOGRAPHICLIB_VERSION_NUM allows you to
@@ -1308,7 +1308,7 @@ The <code>matlab</code> directory Matlab and Octave implementations of
 some of the functions of GeographicLib.  To use
 these, start Matlab or Octave and run one of (for example) \verbatim
    addpath /usr/local/libexec/GeographicLib/matlab
-   addpath 'C:/pkg-vc10-x64/GeographicLib-1.39/libexec/GeographicLib/matlab'
+   addpath 'C:/pkg-vc10-x64/GeographicLib-1.40/libexec/GeographicLib/matlab'
    \endverbatim
 
 The functions fall into the following groups
@@ -1398,9 +1398,9 @@ There are two ways of compiling the interface code: (1) using cmake and
  - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
    Octave and run, e.g., \code
    mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-1.39/matlab'
+   cd 'C:/pkg-vc10-x64/GeographicLib-1.40/matlab'
    help geographiclibinterface
-   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.39');
+   geographiclibinterface('C:/pkg-vc10/GeographicLib-1.40');
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
@@ -1409,7 +1409,7 @@ There are two ways of compiling the interface code: (1) using cmake and
 To use the interface routines for GeographicLib, run one of (for
 example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-1.39/libexec/GeographicLib/matlab'
+  addpath 'C:/pkg-vc10-x64/GeographicLib-1.40/libexec/GeographicLib/matlab'
 \endverbatim
 in Octave or Matlab.  The available functions are:
  - geodesicdirect: solve direct geodesic problem
@@ -4342,6 +4342,7 @@ piqued by Botnev and Ustinov (2014) who discuss various techniques to
 improve the accuracy of rhumb line calculations.  The items of interest
 here are:
  - Review of accurate formulas for the auxiliary latitudes.
+ - The calculation of the area under a rhumb line.
  - Using divided differences to compute \f$\mu_{12}/\psi_{12}\f$
    maintaining full accuracy.  Two cases are treated:
    - If \f$f\f$ is small, Kr&uuml;ger's series for the transverse
@@ -4569,7 +4570,7 @@ These conversions are implemented by Ellipsoid::RectifyingLatitude and
 Ellipsoid::InverseRectifyingLatitude.
 
 If the flattening is small, \f$\mu\f$ can be expressed as a series in
-various ways.  The most economical series is in terms of the second
+various ways.  The most economical series is in terms of the third
 flattening \f$ n = f/(2-f)\f$ and was found by Bessel (1825); see
 Eq. 5.5.7 of Helmert (1880).  Helmert (1880, Eq. 5.6.8) also gives the
 reverted series (finding \f$\beta\f$ given \f$\mu\f$).  These series are
@@ -4610,14 +4611,13 @@ S_{12} = c^2 \lambda_{12} \left<\sin\xi\right>_{12},
 where \f$\left<\sin\xi\right>_{12}\f$ is the mean value of \f$\sin\xi\f$
 given by
 \f[
-\left<\sin\xi\right>_{12} = \frac{S(\chi_2) - S(\chi_1)}{\psi_2 - \psi_1},
+\begin{align}
+\left<\sin\xi\right>_{12} &= \frac{S(\chi_2) - S(\chi_1)}{\psi_2 - \psi_1},\\
+S(\chi) &= \log\sec\chi + \sum_{l=1} R_l\cos(2l\chi),
+\end{align}
 \f]
-with
-\f[
-S(\chi) = \log\sec\chi + \sum_{l=1} R_l\cos(2l\chi),
-\f]
-and \f$R_l = O(n^l)\f$ is given as a series in \f$n\f$ below.  In the
-spherical limit, the sum vanishes.
+\f$\log\f$ is the natural logarithm, and \f$R_l = O(n^l)\f$ is given as
+a series in \f$n\f$ below.  In the spherical limit, the sum vanishes.
 
 Note the simple way that longitude enters into the expression for the
 area.  In the limit \f$\chi_2 \rightarrow \chi_1\f$, we can apply
@@ -4635,8 +4635,8 @@ divided differences (see the \ref divideddiffs "next section") and use
 Clenshaw summation to evaluate the sum (see the \ref dividedclenshaw
 "last section").
 
-Here is the series expansion accurate to 10th order, found by <a
-href="rhumbarea.mac">rhumbarea.mac</a>:
+Here is the series expansion accurate to 10th order, found by
+<a href="rhumbarea.mac">rhumbarea.mac</a>:
 
 \verbatim
 R[1] = - 1/3 * n
@@ -4996,7 +4996,7 @@ Go to
 Adopt the usual notation for the ellipsoid: equatorial semi-axis
 \f$a\f$, polar semi-axis \f$b\f$, flattening \f$f = (a-b)/a\f$,
 eccentricity \f$e = \sqrt{f(2-f)}\f$, second eccentricity \f$e' =
-e/(1-f)\f$.
+e/(1-f)\f$, and third flattening \f$n=(a-b)/(a+b)=f/(2-f)\f$.
 
 There are several ways in which an ellipsoid can be mapped into a sphere
 converting the great ellipse into a great circle.  The simplest ones
@@ -5039,7 +5039,7 @@ The full parametric mapping is:
  - Positions on the great circle of radius \f$a\f$ are parametrized by
    arc length \f$\sigma\f$ measured from the northward crossing of the
    equator.  The great ellipse has semi-axes \f$a\f$ and
-   \f$a\sqrt{1-e^2\cos^2\gamma_0}\f$, where \f$\gamma_0\f$ is the
+   \f$b'=a\sqrt{1-e^2\cos^2\gamma_0}\f$, where \f$\gamma_0\f$ is the
    great-circle azimuth at the northward equator crossing, and
    \f$\sigma\f$ is the parametric angle on the ellipse.  [In constrast,
    the ellipse giving distances on a geodesic has semi-axes
@@ -5055,8 +5055,8 @@ the ellipsoid.
 \section gearea The area under a great ellipse
 
 The area between the segment of a great ellipse and the equator can be
-found by very similar methods to those used for geodesic areas; see <a
-href="http://dx.doi.org/10.1179/003962689791474267"> Danielsen
+found by very similar methods to those used for geodesic areas; see
+<a href="http://dx.doi.org/10.1179/003962689791474267"> Danielsen
 (1989)</a>.  The notation here is similar to that employed by
 <a href="http://dx.doi.org/10.1007/s00190-012-0578-z"> Karney
 (2013)</a>.
@@ -5079,7 +5079,8 @@ r(x) &= \sqrt{1+x} + (\sinh^{-1}\sqrt x)/\sqrt x.
 \end{align}
 \f]
 Expand in terms of the third flattening of the ellipsoid, \f$n\f$, and the
-third flattening of the great ellipse, \f$\epsilon\f$, by substituting
+third flattening of the great ellipse, \f$\epsilon=(a-b')/(a+b')\f$, by
+substituting
 \f[
 \begin{align}
 e'&=\frac{2\sqrt n}{1-n},\\
@@ -5106,8 +5107,8 @@ Compared to the area under a geodesic, we have
   \f$e'\f$, whereas it is \f$e\cos\gamma_0\f$ that plays the role of the
   eccentricity for the great ellipse.
 
-Here is the series expansion accurate to 10th order, found by <a
-href="gearea.mac">gearea.mac</a>:
+Here is the series expansion accurate to 10th order, found by
+<a href="gearea.mac">gearea.mac</a>:
 
 \verbatim
 G4[0] = + (1/6 + 7/30 * n + 8/105 * n^2 + 4/315 * n^3 + 16/3465 * n^4 + 20/9009 * n^5 + 8/6435 * n^6 + 28/36465 * n^7 + 32/62985 * n^8 + 4/11305 * n^9)
@@ -6609,6 +6610,9 @@ particular the links for the source code will not work if the code has
 been migrated to the archive subdirectory).  All the releases are
 available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for GeographicLib.
+
+ - <a href="http://geographiclib.sf.net/1.40">Version 1.40</a>
+   (released 2014-mm-d)
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-11-11)
