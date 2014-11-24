@@ -543,7 +543,8 @@ GeographicLib.GeodesicLine = {};
           cbet2 * sbet1 * m.sq(somg12) / (1 - comg12);
       }
     }
-    if (vals.salp1 > 0) {       // Sanity check on starting guess
+    // Sanity check on starting guess.  Backwards check allows NaN through.
+    if (!(vals.salp1 <= 0)) {
       // SinCosNorm(vals.salp1, vals.calp1);
       t = m.hypot(vals.salp1, vals.calp1); vals.salp1 /= t; vals.calp1 /= t;
     } else {

@@ -117,7 +117,7 @@
 *! http://geographiclib.sourceforge.net/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.39.
+*! <a href="../index.html">GeographicLib</a> 1.40.
 
 *> Solve the direct geodesic problem
 *!
@@ -1327,8 +1327,8 @@
           calp1 = sbt12a - cbet2 * sbet1 * somg12**2 / (1 - comg12)
         end if
       end if
-* Sanity check on starting guess
-      if (salp1 .gt. 0) then
+* Sanity check on starting guess.  Backwards check allows NaN through.
+      if (.not. (salp1 .le. 0)) then
         call Norm(salp1, calp1)
       else
         salp1 = 1

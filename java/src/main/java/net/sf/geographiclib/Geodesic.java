@@ -1292,7 +1292,8 @@ public class Geodesic {
         w.calp1 = sbet12a - cbet2 * sbet1 * GeoMath.sq(somg12) / (1 - comg12);
       }
     }
-    if (w.salp1 > 0)              // Sanity check on starting guess
+    // Sanity check on starting guess.  Backwards check allows NaN through.
+    if (!(w.salp1 <= 0))
       { Pair p = SinCosNorm(w.salp1, w.calp1);
         w.salp1 = p.first; w.calp1 = p.second; }
     else {

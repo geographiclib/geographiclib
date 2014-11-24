@@ -6616,7 +6616,11 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.40">Version 1.40</a>
-   (released 2014-mm-d)
+   (released 2014-mm-dd)
+   - Geodesic::Inverse didn't return NaN if one of the longitudes was a
+     NaN (bug introduced in version 1.25).  Fixed in the C++, Java,
+     JavaScript, C, Fortran, and Python implementations of the geodesic
+     routines.  This bug was not present in Matlab version.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-11-11)
