@@ -6621,6 +6621,9 @@ of the git repository for GeographicLib.
      NaN (bug introduced in version 1.25).  Fixed in the C++, Java,
      JavaScript, C, Fortran, and Python implementations of the geodesic
      routines.  This bug was not present in Matlab version.
+   - Fix BLUNDER in OSGB::GridReference (found by kalderami) where the
+     wrong result was returned if the easting or northing was negative.
+   - TODO: Handle NaNs in OSGB.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-11-11)

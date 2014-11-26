@@ -44,8 +44,8 @@ namespace GeographicLib {
                           + Utility::str(int(maxprec_)) + "]");
     char grid[2 + 2 * maxprec_];
     int
-      xh = int(floor(x)) / tile_,
-      yh = int(floor(y)) / tile_;
+      xh = int(floor(x / tile_)),
+      yh = int(floor(y / tile_));
     real
       xf = x - tile_ * xh,
       yf = y - tile_ * yh;
