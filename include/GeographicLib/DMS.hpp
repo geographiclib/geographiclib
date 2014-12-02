@@ -2,7 +2,7 @@
  * \file DMS.hpp
  * \brief Header for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -281,7 +281,8 @@ namespace GeographicLib {
      *
      * @param[in] angle input angle (degrees)
      * @param[in] trailing DMS::component value indicating the trailing units
-     *   on the string and this is given as a decimal number if necessary.
+     *   of the string (this component is given as a decimal number if
+     *   necessary).
      * @param[in] prec the number of digits after the decimal point for the
      *   trailing component.
      * @param[in] ind DMS::flag value indicated additional formatting.
