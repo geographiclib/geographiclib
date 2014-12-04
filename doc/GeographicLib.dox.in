@@ -6623,9 +6623,9 @@ of the git repository for GeographicLib.
      routines.  This bug was not present in Matlab version.
    - Fix BLUNDER in OSGB::GridReference (found by kalderami) where the
      wrong result was returned if the easting or northing was negative.
-   - OSGB::GridReference returns "INVALID" if either coordinate is NaN.
-     Similarly a grid reference starting with "IN" results in NaNs for
-     the coordinates.
+   - OSGB::GridReference now returns "INVALID" if either coordinate is
+     NaN.  Similarly a grid reference starting with "IN" results in NaNs
+     for the coordinates.
    - TODO: Add WMM2015. Available 2014-12-15 at
      http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
 
