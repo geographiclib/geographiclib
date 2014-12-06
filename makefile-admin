@@ -29,7 +29,7 @@ distrib-files:
 	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --exclude .svn --exclude '.git*' --delete --delete-excluded -a -e ssh $(DATASTAGE)/{distrib,testdata,{geoids,gravity,magnetic}-distrib} $(USER)@frs.sourceforge.net:/home/frs/project/geographiclib/
 
 distrib-cgi:
-	for f in GeoConvert GeodSolve GeoidEval Planimeter printlogs Geod; do \
+	for f in GeoConvert GeodSolve GeoidEval Planimeter RhumbSolve printlogs Geod; do \
 	  a=cgi-bin/$$f.cgi; b=$(WEBSTAGE)/cgi-bin/$$f; \
 	  cmp $$a $$b > /dev/null || install $$a $$b; done
 	for f in utils; do \

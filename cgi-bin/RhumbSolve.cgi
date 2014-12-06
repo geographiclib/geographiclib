@@ -110,16 +110,14 @@ cat <<EOF
     <meta name="description" content="Online rhumb line calculator" />
     <meta name="author" content="Charles F. F. Karney" />
     <meta name="keywords"
-	  content="rhumb lines,
+	  content="rhumb line, loxodrome,
 		   rhumb line distance,
 		   geographic distance,
-		   shortest path,
 		   direct rhumb line problem,
 		   inverse rhumb line problem,
 		   distance and azimuth,
 		   distance and heading,
 		   range and bearing,
-		   spheroidal triangle,
 		   latitude and longitude,
 		   online calculator,
 		   WGS84 ellipsoid,

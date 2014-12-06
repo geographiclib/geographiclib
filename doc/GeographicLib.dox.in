@@ -957,7 +957,7 @@ Online versions of four of these utilities are provided:
  - <a href="http://geographiclib.sf.net/cgi-bin/GeodSolve">GeodSolve</a>
  - <a href="http://geographiclib.sf.net/cgi-bin/Planimeter">Planimeter</a>
  - <a href="http://geographiclib.sf.net/cgi-bin/GeoidEval">GeoidEval</a>
- - <a href="http://geographiclib.sf.net/cgi-bin/GeodSolve">RhumbSolve</a>
+ - <a href="http://geographiclib.sf.net/cgi-bin/RhumbSolve">RhumbSolve</a>
 
 <center>
 Back to \ref start.  Forward to \ref organization.  Up to \ref contents.
@@ -6627,6 +6627,7 @@ of the git repository for GeographicLib.
    - OSGB::GridReference now returns "INVALID" if either coordinate is
      NaN.  Similarly a grid reference starting with "IN" results in NaNs
      for the coordinates.
+   - Add an online version of <a href="RhumbSolve.1.html">RhumbSolve</a>.
    - TODO: Add WMM2015. Available 2014-12-15 at
      http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
 
