@@ -307,6 +307,9 @@ Convert a point in UTM zone 18n from MSL to HAE
 
 GeoConvert(1), Gravity(1).
 
+An online version of this utility is availbable at
+L<http://geographiclib.sourceforge.net/cgi-bin/GeoidEval>.
+
 =head1 AUTHOR
 
 B<GeoidEval> was written by Charles Karney.

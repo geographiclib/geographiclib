@@ -189,7 +189,12 @@ covered by the data (assuming the edges of the image are geodesics).
 
 =head1 SEE ALSO
 
-GeoConvert(1).  The algorithm for the area of geodesic polygon is
+GeoConvert(1), GeodSolve(1).
+
+An online version of this utility is availbable at
+L<http://geographiclib.sourceforge.net/cgi-bin/Planimeter>.
+
+The algorithm for the area of geodesic polygon is
 given in Section 6 of C. F. F. Karney, I<Algorithms for geodesics>,
 J. Geodesy 87, 43-55 (2013);
 DOI L<http://dx.doi.org/10.1007/s00190-012-0578-z>;

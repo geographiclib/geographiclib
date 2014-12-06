@@ -957,6 +957,7 @@ Online versions of four of these utilities are provided:
  - <a href="http://geographiclib.sf.net/cgi-bin/GeodSolve">GeodSolve</a>
  - <a href="http://geographiclib.sf.net/cgi-bin/Planimeter">Planimeter</a>
  - <a href="http://geographiclib.sf.net/cgi-bin/GeoidEval">GeoidEval</a>
+ - <a href="http://geographiclib.sf.net/cgi-bin/GeodSolve">RhumbSolve</a>
 
 <center>
 Back to \ref start.  Forward to \ref organization.  Up to \ref contents.

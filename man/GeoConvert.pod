@@ -260,8 +260,8 @@ separator character.  Thus 10d20' can be entered as 10d20 or 10:20 and
 =item Unix shells (sh, bash, tsch)
 
 The characters ' and " can be quoted by preceding them with a \
-(backslash); or you can quote a ' with a pair of "s.  The two
-alternatives are illustrated by
+(backslash); or you can quote a string containing ' with a pair of "s.
+The two alternatives are illustrated by
 
    echo 10d20\'30\" "20d30'40" | GeoConvert -d -p -1
    => 10d20'30"N 020d30'40"E
@@ -273,9 +273,10 @@ Quoting of command line arguments is similar
 
 =item Windows command shell (cmd)
 
-The ' character needs no quoting and the " character can be quoted by a
-^.  (This quoting is usually unnecessary because the trailing designator
-can be omitted.)  Thus
+The ' character needs no quoting; the " character can either be quoted
+by a ^ or can be represented by '' (two single quotes).  (This quoting
+is usually unnecessary because the trailing designator can be omitted.)
+Thus
 
    echo 10d20'30^" 20d30'40 | GeoConvert -d -p -1
    => 10d20'30"N 020d30'40"E
@@ -335,6 +336,9 @@ L<http://en.wikipedia.org/wiki/WGS84>.
 =back
 
 =head1 SEE ALSO
+
+An online version of this utility is availbable at
+L<http://geographiclib.sourceforge.net/cgi-bin/GeoConvert>.
 
 The algorithms for the transverse Mercator projection are described in
 C. F. F. Karney, I<Transverse Mercator with an accuracy of a few
