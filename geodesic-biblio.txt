@@ -797,7 +797,7 @@
    http://books.google.com/books?id=EEtFAAAAcAAJ&pg=PA119
  * U. Dini,[[BR]]
    ''Sopra un problema che si presenta nella teoria generale delle
-   rappresentazioni geografiche di una superfìcie su di un altra [The
+   rappresentazioni geografiche di una superficie su di un altra [The
    general theory of mapping one geographical surface to another]'',
    Ann. Mat. Pura App. '''3''' (2nd ser.), 269--293 (1869).[[BR]]
    http://books.google.com/books?id=FvkEAAAAYAAJ&pg=PA269 [[BR]]

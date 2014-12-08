@@ -62,10 +62,6 @@ if test "$INPUT"; then
                  head -1`
 	GOUTPUTF=`echo $INPUT | $EXECDIR/$GCOMMANDX -e "$RADIUS" "$FLATTENING" |
                  head -1`
-	# echo `date +"%F %T"` "OUTPUT: $OUTPUT" >> ../persistent/utilities.log
-	# echo `date +"%F %T"` "GOUTPUT: $GOUTPUT" >> ../persistent/utilities.log
-	# echo `date +"%F %T"` "OUTPUTF: $OUTPUTF" >> ../persistent/utilities.log
-	# echo `date +"%F %T"` "GOUTPUTF: $GOUTPUTF" >> ../persistent/utilities.log
 	if test "$TYPE" = D; then
 	    POS1="`echo $GOUTPUT | cut -f1-2 -d' '`"
 	    POSG1="`echo $GOUTPUTF | cut -f1-2 -d' '`"
@@ -336,9 +332,7 @@ cat <<EOF
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
       (2014-12-05)</address>
     <a href="http://geographiclib.sourceforge.net">
-      <img
-	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"
-	 border="0" height="15" width="80" alt="SourceForge.net" />
+      GeographicLib home page
     </a>
   </body>
 </html>
