@@ -3816,6 +3816,7 @@ Go to
  - \ref triaxial-survey
  - \ref triaxial-stab
  - \ref triaxial-inverse
+ - \ref triaxial-conformal
 
 <b>NOTES</b>
  -# A triaxial ellipsoid approximates the earth only slightly better
@@ -3880,7 +3881,7 @@ Go to
 
 Consider the ellipsoid defined by
 \f[
-  f = \frac{x^2}{a^2} + \frac{y^2}{b^2} + \frac{z^2}{c^2} = 1,
+  f = \frac{X^2}{a^2} + \frac{Y^2}{b^2} + \frac{Z^2}{c^2} = 1,
 \f]
 where, without loss of generality, \f$ a \ge b \ge c \gt 0\f$.  A
 point on the surface is specified by a latitude and longitude.  The \e
@@ -3894,20 +3895,20 @@ The \e parametric latitude and longitude \f$(\phi', \lambda')\f$ are
 defined by
 \f[
 \begin{align}
- x &= a \cos\phi' \cos\lambda', \\
- y &= b \cos\phi' \sin\lambda', \\
- z &= c \sin\phi'.
+ X &= a \cos\phi' \cos\lambda', \\
+ Y &= b \cos\phi' \sin\lambda', \\
+ Z &= c \sin\phi'.
 \end{align}
 \f]
 Jacobi employed the \e ellipsoidal latitude and longitude \f$(\beta,
 \omega)\f$ defined by
 \f[
 \begin{align}
-  x &= a \cos\omega
+  X &= a \cos\omega
       \frac{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}}
            {\sqrt{a^2 - c^2}}, \\
-  y &= b \cos\beta \sin\omega, \\
-  z &= c \sin\beta
+  Y &= b \cos\beta \sin\omega, \\
+  Z &= c \sin\beta
       \frac{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}}
            {\sqrt{a^2 - c^2}}.
 \end{align}
@@ -3944,8 +3945,38 @@ two adjacent umbilical points.  For example, the lines of constant
 construction for ellipses with the ends of the string pinned to the two
 umbilical points.
 
-Inter-conversions between these three latitudes and longitudes and the
-cartesian coordinates are simple algebraic exercises.
+The element of length on the ellipsoid in ellipsoidal coordinates is
+given by
+\f[
+\begin{align}
+\frac{ds^2}{(a^2-b^2)\sin^2\omega+(b^2-c^2)\cos^2\beta} &=
+\frac{b^2\sin^2\beta+c^2\cos^2\beta}
+     {a^2-b^2\sin^2\beta-c^2\cos^2\beta}
+ d\beta^2 \\
+&\qquad+
+\frac{a^2\sin^2\omega+b^2\cos^2\omega}
+     {a^2\sin^2\omega+b^2\cos^2\omega-c^2}
+ d\omega^2.
+\end{align}
+\f]
+
+The torus \f$(\omega, \beta) \in [-\pi,\pi] \times [-\pi,\pi]\f$ covers
+the ellipsoid twice.  In order to facilitate passing to the limit of an
+oblate ellipsoid, we may regard as the principal sheet \f$[-\pi,\pi]
+\times [-\frac12\pi,\frac12\pi]\f$ and insert branch cuts at
+\f$\beta=\pm\frac12\pi\f$.  The rule for switching sheets is
+\f[
+\begin{align}
+\omega & \rightarrow -\omega,\\
+\beta & \rightarrow \pi-\beta,\\
+\alpha & \rightarrow \pi+\alpha,
+\end{align}
+\f]
+where \f$\alpha\f$ is the heading of a path, relative to a line of
+constant \f$\omega\f$.
+
+Inter-conversions between the three different latitudes and longitudes
+and the cartesian coordinates are simple algebraic exercises.
 
 \section triaxial-jacobi Jacobi's solution
 
@@ -4321,6 +4352,77 @@ The shortest path found by this method is unique unless:
    \f$\cos\alpha_2\f$ have opposite signs.  In this case, there another
    shortest geodesic with azimuths \f$\pi - \alpha_1\f$ and
    \f$\pi - \alpha_2\f$.
+
+\section triaxial-conformal Jacobi's conformal projection
+
+In Vorlesungen &uuml;ber Dynamik, &sect;28, Jacobi gives the following
+conformal mapping of the triaxial ellipsoid onto a plane
+\f[
+\begin{align}
+x &= 2 \int \frac
+{\sqrt{a^2 \sin^2\omega + b^2 \cos^2\omega}}
+{\sqrt{a^2 \sin^2\omega + b^2 \cos^2\omega - c^2}}\, d\omega, \\
+y &= 2 \int \frac
+{\sqrt{b^2 \sin^2\beta + c^2 \cos^2\beta}}
+{\sqrt{a^2 - b^2 \sin^2\beta - c^2 \cos^2\beta}}\, d\beta.
+\end{align}
+\f]
+The scale of the projection is
+\f[
+k = \frac2
+{\sqrt{a^2 \sin^2\omega + b^2 (\cos^2\omega-\sin^2\beta) - c^2 \cos^2\beta}}.
+\f]
+Notes:
+ - \f$x\f$ (resp. \f$y\f$) depends on \f$\omega\f$ (resp. \f$\beta\f$)
+   alone, so that latitude-longitude grid maps to straight lines in the
+   projection.  In this sense, the Jacobi projection is the natural
+   generalization of the Mercator projection for the triaxial ellipsoid.
+   Indeed, in the limit \f$a\rightarrow b\f$, it reduces to the normal
+   Mercator projection for an oblate ellipsoid
+ - In the general case (all the axes are different), the scale diverges
+   only at the umbilic points, \f$\sin\omega = \cos\beta = 0\f$.  The
+   behavior of these singularities is illustrated by the complex
+   function
+   \f[
+   f(z;e) = \cosh^{-1}(z/e) - \log(2/e).
+   \f]
+   For \f$e > 0\f$, this function has two square root singularities at
+   \f$\pm e\f$, corresponding to the two northern umbilic points.
+   Plotting contours of its real (resp. imaginary) part gives the
+   behavior of the lines of constant latitude (resp. longitude) near the
+   north pole in Fig. 1.  If we pass to the limit \f$e\rightarrow 0\f$,
+   then \f$ f(z;e)\rightarrow\log z\f$, and the two branch points merge
+   yielding a stronger (logarithmic) singularity at \f$z = 0\f$,
+   concentric circles of latitude, and radial lines of longitude.
+ - Again in the general case, the extents of \f$x\f$ and \f$y\f$ are
+   finite.  In particular, if we substitute values appropriate for the
+   earth,
+   \f[
+   \begin{align}
+   a&=(6378137+35)\,\mathrm m,\\
+   b&=(6378137-35)\,\mathrm m,\\
+   c&=6356752\,\mathrm m,\\
+   \end{align}
+   \f]
+   we have
+   \f[
+   \begin{align}
+   x(90^\circ)-x(0^\circ) &=  38.396508 = 1.0000005\,q,\\
+   y(90^\circ)-y(0^\circ) &= 103.717719 = 2.7012293\,q,\\
+   \end{align}
+   \f]
+   where
+   \f[
+   q = \pi \frac{\sqrt{a^2+b^2}}{\sqrt{a^2+b^2-2c^2}}.
+   \f]
+ - If rhumb lines are defined as curves with a constant bearing relative
+   to the ellipsoid coordinates, then these are straight lines in the
+   Jacobi projection.  A rhumb line which passes over an umbilic point
+   immediately retraces its path.  A rhumb line which crosses the line
+   joining the two northerly umbilic points starts traveling south with
+   a reversed heading (e.g., a NE heading becomes a SW heading).  This
+   behavior is preserved in the limit \f$a\rightarrow b\f$ (although the
+   longitude becomes indeterminate).
 
 <center>
 Back to \ref geodesic.  Forward to \ref rhumb.  Up to \ref contents.
