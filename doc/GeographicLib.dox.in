@@ -6631,6 +6631,8 @@ of the git repository for GeographicLib.
    - OSGB::GridReference now returns "INVALID" if either coordinate is
      NaN.  Similarly a grid reference starting with "IN" results in NaNs
      for the coordinates.
+   - Default constructor for GeoCoords corresponds to an undefined
+     position (latitude and longitude = NaN), instead of the north pole.
    - Add an online version of <a href="RhumbSolve.1.html">RhumbSolve</a>.
    - TODO: Add WMM2015. Available 2014-12-15 at
      http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
