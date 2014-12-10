@@ -4952,6 +4952,10 @@ of package
 great ellipses.
 
 References:
+ - P. D. Thomas,
+   <a href="http://www.dtic.mil/docs/citations/AD0627893">
+   Mathematical Models for Navigation Systems</a>,
+   TR-182 (U.S. Naval Oceanographic Office, 1965).
  - B. R. Bowring,
    <a href="http://dx.doi.org/10.1007/BF02521760">
    The direct and inverse solutions for the great elliptic line on the
@@ -5020,9 +5024,9 @@ Bowring (1984), Williams (1996), Earle (2000, 2008) and Pallikaris &
 Latsas (2009), scale the ellipsoid radially onto a sphere preserving the
 geocentric latitude \f$\theta\f$.  More convenient than this is to scale
 the ellipsoid along \f$\hat z\f$ onto the sphere, as is done by
-Sj&ouml;berg (2012), thus preserving the parametric latitude
-\f$\beta\f$.  The advantage of this "parametric" mapping is that
-Bessel's rapidly converging series for meridian arc in terms of
+Thomas (1965) and Sj&ouml;berg (2012), thus preserving the parametric
+latitude \f$\beta\f$.  The advantage of this "parametric" mapping is
+that Bessel's rapidly converging series for meridian arc in terms of
 parametric latitude can be used (a possibility that is overlooked by
 Sj&ouml;berg).
 
