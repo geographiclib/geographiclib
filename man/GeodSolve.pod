@@ -331,7 +331,7 @@ L<http://geographiclib.sourceforge.net/cgi-bin/GeodSolve>.
 
 The algorithms are described in C. F. F. Karney,
 I<Algorithms for geodesics>, J. Geodesy 87, 43-55 (2013); DOI:
-L<http://dx.doi.org/10.1007/s00190-012-0578-z>;
+L<https://dx.doi.org/10.1007/s00190-012-0578-z>;
 addenda: L<http://geographiclib.sf.net/geod-addenda.html>.
 
 The Wikipedia page, Geodesics on an ellipsoid,

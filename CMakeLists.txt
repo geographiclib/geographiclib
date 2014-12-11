@@ -573,7 +573,7 @@ if (WIN32)
     "http://geographiclib.sf.net/${PROJECT_VERSION}/utilities.html"
     "Utilities documentation"
     "http://geographiclib.sf.net" "GeographicLib home page"
-    "http://sf.net/projects/geographiclib/" "Main project page")
+    "https://sf.net/projects/geographiclib/" "Main project page")
   set (CPACK_NSIS_MODIFY_PATH ON)
 elseif (APPLE)
   # Not tested

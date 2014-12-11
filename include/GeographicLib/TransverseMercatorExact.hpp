@@ -20,7 +20,7 @@ namespace GeographicLib {
    *
    * Implementation of the Transverse Mercator Projection given in
    *  - L. P. Lee,
-   *    <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62"> Conformal
+   *    <a href="https://dx.doi.org/10.3138/X687-1574-4325-WM62"> Conformal
    *    Projections Based On Jacobian Elliptic Functions</a>, Part V of
    *    Conformal Projections Based on Elliptic Functions,
    *    (B. V. Gutsell, Toronto, 1976), 128pp.,
@@ -28,7 +28,7 @@ namespace GeographicLib {
    *    (also appeared as:
    *    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
    *  - C. F. F. Karney,
-   *    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
+   *    <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
    *    Transverse Mercator with an accuracy of a few nanometers,</a>
    *    J. Geodesy 85(8), 475--485 (Aug. 2011);
    *    preprint

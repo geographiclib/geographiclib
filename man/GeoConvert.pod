@@ -316,22 +316,22 @@ following lines will be converted.
 =item B<UTM>
 
 Universal Transverse Mercator,
-L<http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system>.
+L<https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system>.
 
 =item B<UPS>
 
 Universal Polar Stereographic,
-L<http://en.wikipedia.org/wiki/Universal_Polar_Stereographic>.
+L<https://en.wikipedia.org/wiki/Universal_Polar_Stereographic>.
 
 =item B<MGRS>
 
 Military Grid Reference System,
-L<http://en.wikipedia.org/wiki/Military_grid_reference_system>.
+L<https://en.wikipedia.org/wiki/Military_grid_reference_system>.
 
 =item B<WGS84>
 
 World Geodetic System 1984,
-L<http://en.wikipedia.org/wiki/WGS84>.
+L<https://en.wikipedia.org/wiki/WGS84>.
 
 =back
 
@@ -343,7 +343,7 @@ L<http://geographiclib.sourceforge.net/cgi-bin/GeoConvert>.
 The algorithms for the transverse Mercator projection are described in
 C. F. F. Karney, I<Transverse Mercator with an accuracy of a few
 nanometers>, J. Geodesy B<85>(8), 475-485 (Aug. 2011); DOI
-L<http://dx.doi.org/10.1007/s00190-011-0445-3>; preprint
+L<https://dx.doi.org/10.1007/s00190-011-0445-3>; preprint
 L<http://arxiv.org/abs/1002.1417>.
 
 =head1 AUTHOR

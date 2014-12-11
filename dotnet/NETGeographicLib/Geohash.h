@@ -16,8 +16,8 @@ namespace NETGeographicLib
    * \brief .NET wrapper for GeographicLib::Geohash.
    *
    * Geohashes are described in
-   * - http://en.wikipedia.org/wiki/Geohash
-   * - http://geohash.org/
+   * - https://en.wikipedia.org/wiki/Geohash
+   * - http://geohash.org/ (this link is broken as of 2012-12-11)
    * .
    * They provide a compact string representation of a particular geographic
    * location (expressed as latitude and longitude), with the property that if

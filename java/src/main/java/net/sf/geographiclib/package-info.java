@@ -16,10 +16,10 @@
  * The Java library is part of GeographicLib which available for download at
  * <ul>
  * <li>
- *   <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.40.tar.gz">
+ *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.40.tar.gz">
  *   GeographicLib-1.40.tar.gz</a>
  * <li>
- *   <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.40.zip">
+ *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.40.zip">
  *   GeographicLib-1.40.zip</a>
  * </ul>
  * <p>
@@ -150,7 +150,7 @@
  * <ul>
  * <li>
  *   These algorithms are derived in C. F. F. Karney,
- *   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+ *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
  *   Algorithms for geodesics</a>,
  *   J. Geodesy <b>87</b>, 43&ndash;55 (2013)
  *   (<a href="http://geographiclib.sf.net/geod-addenda.html">addenda</a>).

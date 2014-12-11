@@ -274,7 +274,7 @@ L<http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008>.
 =item B<WGS84>
 
 World Geodetic System 1984,
-L<http://en.wikipedia.org/wiki/WGS84>.
+L<https://en.wikipedia.org/wiki/WGS84>.
 
 =item B<HAE>
 

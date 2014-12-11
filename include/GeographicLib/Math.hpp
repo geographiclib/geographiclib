@@ -262,8 +262,8 @@ namespace GeographicLib {
       y /= (x ? x : 1);
       return x * sqrt(1 + y * y);
       // For an alternative (square-root free) method see
-      // C. Moler and D. Morrision (1983) http://dx.doi.org/10.1147/rd.276.0577
-      // and A. A. Dubrulle (1983) http://dx.doi.org/10.1147/rd.276.0582
+      // C. Moler and D. Morrision (1983) https://dx.doi.org/10.1147/rd.276.0577
+      // and A. A. Dubrulle (1983) https://dx.doi.org/10.1147/rd.276.0582
 #endif
     }
 

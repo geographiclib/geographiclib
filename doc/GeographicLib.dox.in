@@ -41,13 +41,13 @@ hand, it does provide the core functionality offered by
 \section download Download
 
 The main project page is at
-- <a href="http://sourceforge.net/projects/geographiclib">
-  http://sourceforge.net/projects/geographiclib </a>
+- <a href="https://sourceforge.net/projects/geographiclib">
+  https://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.tar.gz">
+- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.tar.gz">
   GeographicLib-@PROJECT_VERSION@.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.zip">
+- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.zip">
   GeographicLib-@PROJECT_VERSION@.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two
@@ -182,13 +182,13 @@ GeographicLib has been developed under Linux with the g++ compiler
 2012, and 2013.  Earlier versions were tested also under Visual Studio
 2005 and 2008 and under Darwin and Solaris.  It should compile on a wide
 range of other systems.  First download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.tar.gz">
+<a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.tar.gz">
 GeographicLib-@PROJECT_VERSION@.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.zip">
+<a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.zip">
 GeographicLib-@PROJECT_VERSION@.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win32.exe">
+<a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win32.exe">
 GeographicLib-@PROJECT_VERSION@-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win64.exe">
+<a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win64.exe">
 GeographicLib-@PROJECT_VERSION@-win64.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
@@ -504,9 +504,9 @@ be advisable to build it with the compiler you are using for your own
 code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win32.exe">
+<a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win32.exe">
 GeographicLib-@PROJECT_VERSION@-win32.exe</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win64.exe">
+<a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win64.exe">
 GeographicLib-@PROJECT_VERSION@-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
@@ -1563,13 +1563,13 @@ EGM2008.  These data files are available for download:
  <td><center>30'</center>
  <td><center>0.6</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2">
  link</a> (0.5)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.exe">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.exe">
  link</a> (0.8)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip">
  link</a> (0.5)</center>
 <tr>
  <td>egm84-15
@@ -1577,13 +1577,13 @@ EGM2008.  These data files are available for download:
  <td><center>15'</center>
  <td><center>2.1</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2">
  link</a> (1.5)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.exe">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.exe">
  link</a> (1.9)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip">
  link</a> (2.0)</center>
 <tr>
  <td>egm96-15
@@ -1591,13 +1591,13 @@ EGM2008.  These data files are available for download:
  <td><center>15'</center>
  <td><center>2.1</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2">
  link</a> (1.5)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.exe">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.exe">
  link</a> (1.9)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip">
  link</a> (2.0)</center>
 <tr>
  <td>egm96-5
@@ -1605,13 +1605,13 @@ EGM2008.  These data files are available for download:
  <td><center>5'</center>
  <td><center> 19</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2">
  link</a> (11)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.exe">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.exe">
  link</a> (11)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip">
  link</a> (17)</center>
 <tr>
  <td>egm2008-5
@@ -1619,13 +1619,13 @@ EGM2008.  These data files are available for download:
  <td><center>5'</center>
  <td><center> 19</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2">
  link</a> (11)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.exe">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.exe">
  link</a> (11)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip">
  link</a> (17)</center>
 <tr>
  <td>egm2008-2_5
@@ -1633,13 +1633,13 @@ EGM2008.  These data files are available for download:
  <td><center>2.5'</center>
  <td><center> 75</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2">
  link</a> (35)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.exe">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.exe">
  link</a> (33)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip">
  link</a> (65)</center>
 <tr>
  <td>egm2008-1
@@ -1647,13 +1647,13 @@ EGM2008.  These data files are available for download:
  <td><center>1'</center>
  <td><center>470</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2">
  link</a> (170)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.exe">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.exe">
  link</a> (130)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip">
+ <a href="https://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip">
  link</a> (390)</center>
 </table>
 </center>
@@ -2001,7 +2001,7 @@ two alternatives:
 \section testgeoid Test data for geoids
 
 A test set for the geoid models is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz">
+ - <a href="https://sf.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz">
    GeoidHeights.dat.gz</a>
  .
 This is about 11 MB (compressed).  This test set consists of a set of
@@ -2105,52 +2105,52 @@ These gravity models are available for download:
  <td><center>180</center>
  <td><center>27</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/gravity-distrib/egm84.tar.bz2">
  link</a> (26)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.exe">
+ <a href="https://sf.net/projects/geographiclib/files/gravity-distrib/egm84.exe">
  link</a> (55)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.zip">
+ <a href="https://sf.net/projects/geographiclib/files/gravity-distrib/egm84.zip">
  link</a> (26)</center>
 <tr>
  <td>egm96
  <td><center>360</center>
  <td><center>2100</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/gravity-distrib/egm96.tar.bz2">
  link</a> (2100)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.exe">
+ <a href="https://sf.net/projects/geographiclib/files/gravity-distrib/egm96.exe">
  link</a> (2300)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.zip">
+ <a href="https://sf.net/projects/geographiclib/files/gravity-distrib/egm96.zip">
  link</a> (2100)</center>
 <tr>
  <td>egm2008
  <td><center>2190</center>
  <td><center>76000</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.tar.bz2">
  link</a> (75000)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.exe">
+ <a href="https://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.exe">
  link</a> (72000)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.zip">
+ <a href="https://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.zip">
  link</a> (73000)</center>
 <tr>
  <td>wgs84
  <td><center>20</center>
  <td><center>1</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.tar.bz2">
  link</a> (1)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.exe">
+ <a href="https://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.exe">
  link</a> (30)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.zip">
+ <a href="https://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.zip">
  link</a> (1)</center>
 </table>
 </center>
@@ -2599,13 +2599,13 @@ These magnetic models are available for download:
  <td><center>2010--2015</center>
  <td><center>3</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.tar.bz2">
  link</a> (2)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.exe">
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.exe">
  link</a> (300)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.zip">
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.zip">
  link</a> (2)</center>
 <tr>
  <td>igrf11
@@ -2613,13 +2613,13 @@ These magnetic models are available for download:
  <td><center>1900--2015</center>
  <td><center>25</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.tar.bz2">
  link</a> (7)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.exe">
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.exe">
  link</a> (310)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.zip">
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.zip">
  link</a> (8)</center>
 <tr>
  <td>emm2010
@@ -2627,13 +2627,13 @@ These magnetic models are available for download:
  <td><center>2010--2015</center>
  <td><center>4400</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.tar.bz2">
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.tar.bz2">
  link</a> (3700)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.exe">
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.exe">
  link</a> (3000)</center>
  <td><center>
- <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.zip">
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.zip">
  link</a> (4100)</center>
 </table>
 </center>
@@ -2870,7 +2870,7 @@ For some background information on geodesics on triaxial ellipsoids, see
 
 References:
  - F. W. Bessel,
-   <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation
+   <a href="https://dx.doi.org/10.1002/asna.201011352">The calculation
    of longitude and latitude from geodesic measurements (1825)</a>,
    Astron. Nachr. 331(8), 852-861 (2010);
    translated by C. F. F. Karney and R. E. Deakin; preprint:
@@ -2883,13 +2883,13 @@ References:
  - J. Danielsen,
    The Area under the Geodesic,
    Survey Review 30(232), 61--66 (1989).
-   DOI: <a href="http://dx.doi.org/10.1179/003962689791474267">
+   DOI: <a href="https://dx.doi.org/10.1179/003962689791474267">
    10.1179/003962689791474267</a>
  - C. F. F. Karney,
-   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
    J. Geodesy 87(1), 43--55 (2013);
-   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
    addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
    geod-addenda.html</a>;
@@ -2904,13 +2904,13 @@ References:
 \section testgeod Test data for geodesics
 
 A test set a geodesics is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest.dat.gz">
+ - <a href="https://sf.net/projects/geographiclib/files/testdata/GeodTest.dat.gz">
    GeodTest.dat.gz</a>
  .
 This is about 39 MB (compressed).  This consists of a set of geodesics
 for the WGS84 ellipsoid.  A subset of this (consisting of 1/50 of the
 members &mdash; about 690 kB, compressed) is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz">
+ - <a href="https://sf.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz">
    GeodTest-short.dat.gz</a>
 
 Each line of the test set gives 10 space delimited numbers
@@ -3255,7 +3255,7 @@ C3[9] = + 2431/1179648 * eps^9;
 \endverbatim
 
 The formula for area between the geodesic and the equator is given in
-Sec. 6 of <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+Sec. 6 of <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
 Algorithms for geodesics</a> in terms of \e S,
 \f[
 S = c^2 \alpha + e^2 a^2 \cos\alpha_0 \sin\alpha_0 I_4(\sigma)
@@ -3872,10 +3872,10 @@ Go to
  -# If you only want to learn about geodesics on a biaxial ellipsoid (an
     ellipsoid of revolution), then see \ref geodesic or the paper
     - C. F. F. Karney,
-      <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+      <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
       Algorithms for geodesics</a>,
       J. Geodesy 87(1), 43--55 (2013);
-      DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+      DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
       10.1007/s00190-012-0578-z</a>;
       addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
       geod-addenda.html</a>.
@@ -4004,7 +4004,7 @@ problem in the first half of the nineteenth century.  Jacobi discovered
 that the geodesic equations are separable if they are expressed in
 ellipsoidal coordinates.  You can get an idea of the importance Jacobi
 attached to his discovery from the
-<a href="http://books.google.com/books?id=_09tAAAAMAAJ&pg=PA385">
+<a href="https://books.google.com/books?id=_09tAAAAMAAJ&pg=PA385">
 letter</a> he wrote to his friend and neighbor Bessel:
 <blockquote> The day before yesterday, I reduced to quadrature the
 problem of geodesic lines on an <i>ellipsoid with three unequal
@@ -4019,7 +4019,7 @@ and his result was published in J. Crelle in (1839) with a French
 translation (from German) appearing in J. Liouville in (1841).
 
 Here is the solution, exactly as given by Jacobi
-<a href="http://books.google.com/books?id=Rh8GAAAAYAAJ&pg=PA268"> here</a>
+<a href="https://books.google.com/books?id=Rh8GAAAAYAAJ&pg=PA268"> here</a>
 (with minor changes in notation):
 \f[
 \begin{align}
@@ -4050,7 +4050,7 @@ where \f$\alpha\f$ is the angle the geodesic makes with lines of
 constant \f$\omega\f$. In the limit \f$b\rightarrow a\f$, this reduces
 to \f$\cos\beta\sin\alpha = \text{const.}\f$, the familiar Clairaut
 relation.  A nice derivation of Jacobi's result is given by Darboux
-(1894) <a href="http://books.google.com/books?id=hGMSAAAAIAAJ&pg=PA9">
+(1894) <a href="https://books.google.com/books?id=hGMSAAAAIAAJ&pg=PA9">
 &sect;&sect;583--584</a> where he gives the solution found by Liouville
 (1846) for general quadratic surfaces.  In this formulation, the
 distance along the geodesic, \f$s\f$, is also found using
@@ -4245,7 +4245,7 @@ differential equation with periodic coefficients.  In fact it's a
 special case of Hill's equation which can be treated using Floquet
 theory, see <a href="http://dlmf.nist.gov/28.29">DLMF, &sect;28.29</a>.
 Using the notation of &sect;3 of
-<a href="http://dx.doi.org/10.1007/s00190-012-0578-z"> Algorithms for
+<a href="https://dx.doi.org/10.1007/s00190-012-0578-z"> Algorithms for
 geodesics</a>, the stability is determined by computing the reduced
 length \f$m_{12}\f$ and the geodesic scales \f$M_{12}, M_{21}\f$ over
 half the perimeter of the ellipse and determining the eigenvalues
@@ -4286,7 +4286,7 @@ single point \f$(\beta_1, \omega_1)\f$.
  - Otherwise, the first envelope of the geodesics is a 4-pointed
    astroid.  The cusps of the astroid lie on either \f$\beta = -
    \beta_1\f$ or \f$\omega = \omega_1 + \pi\f$; see
-   <a href="http://dx.doi.org/10.1080/10586458.2003.10504515"> Sinclair
+   <a href="https://dx.doi.org/10.1080/10586458.2003.10504515"> Sinclair
    (2003)</a>.
  - All geodesics intersect (or, in the case of \f$\alpha_1 = 0\f$ or
    \f$\pi\f$, touch) the line \f$\omega = \omega_1 + \pi\f$.
@@ -4320,7 +4320,7 @@ ellipsoid.)  Consider now terminating the geodesics from \f$(\beta_1,
 These properties show that the inverse problem can be solved using
 techniques similar to those employed for an ellipsoid of revolution (see
 &sect;4 of
-<a href="http://dx.doi.org/10.1007/s00190-012-0578-z"> Algorithms for
+<a href="https://dx.doi.org/10.1007/s00190-012-0578-z"> Algorithms for
 geodesics</a>).
  - If the points are opposite umbilical points, an arbitrary
    \f$\alpha_1\f$ may be chosen.
@@ -4491,11 +4491,11 @@ Go to
 
 References:
  - G. G. Bennett,
-   <a href="http://dx.doi.org/10.1017/S0373463300013151">
+   <a href="https://dx.doi.org/10.1017/S0373463300013151">
    Practical Rhumb Line Calculations on the Spheroid</a>
    J. Navigation 49(1), 112--119 (1996).
  - F. W. Bessel,
-   <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation
+   <a href="https://dx.doi.org/10.1002/asna.201011352">The calculation
    of longitude and latitude from geodesic measurements (1825)</a>,
    Astron. Nachr. 331(8), 852-861 (2010);
    translated by C. F. F. Karney and R. E. Deakin; preprint:
@@ -4508,7 +4508,7 @@ References:
    solving with high precision), St. Petersburg State Polytechnical
    University Journal 3(198), 49--58 (2014).
  - K. C. Carlton-Wippern
-   <a href="http://dx.doi.org/10.1017/S0373463300010791">
+   <a href="https://dx.doi.org/10.1017/S0373463300010791">
    On Loxodromic Navigation</a>,
    J. Navigation 45(2), 292--297 (1992).
  - K. E. Engsager and K. Poder,
@@ -4525,10 +4525,10 @@ References:
    <a href="http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf">
    Symbolic computation of divided differences</a>,
    SIGSAM Bull. 33(3), 7--28 (1999)
-   DOI: <a href="http://dx.doi.org/10.1145/334714.334716">
+   DOI: <a href="https://dx.doi.org/10.1145/334714.334716">
    10.1145/334714.334716</a>.
  - C. F. F. Karney,
-   <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
+   <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
    addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
@@ -4538,17 +4538,17 @@ References:
    resource page:
    <a href="http://geographiclib.sf.net/tm.html"> tm.html</a>.
  - C. F. F. Karney,
-   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
    J. Geodesy 87(1), 43--55 (2013);
-   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
    addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
    geod-addenda.html</a>;
    resource page:
    <a href="http://geographiclib.sf.net/geod.html"> geod.html</a>.
  - L. Kr&uuml;ger,
-   <a href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+   <a href="https://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
    the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
    New Series 52, 172 pp. (1912).
@@ -4556,11 +4556,11 @@ References:
    <a href="http://www.mercator99.webspace.virginmedia.com/">
    The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5.
  - W. M. Smart
-   <a href="http://dx.doi.org/10.1093/mnras/106.2.124">
+   <a href="https://dx.doi.org/10.1093/mnras/106.2.124">
    On a Problem in Navigation</a>
    MNRAS 106(2), 124--127 (1946).
  - J. E. D. Williams
-   <a href="http://dx.doi.org/10.1017/S0373463300045549">
+   <a href="https://dx.doi.org/10.1017/S0373463300045549">
    Loxodromic Distances on the Terrestrial Spheroid Journal</a>,
    J. Navigation 3(2), 133--140 (1950)
 
@@ -5080,34 +5080,34 @@ References:
    Mathematical Models for Navigation Systems</a>,
    TR-182 (U.S. Naval Oceanographic Office, 1965).
  - B. R. Bowring,
-   <a href="http://dx.doi.org/10.1007/BF02521760">
+   <a href="https://dx.doi.org/10.1007/BF02521760">
    The direct and inverse solutions for the great elliptic line on the
    reference ellipsoid</a>, Bull. Geod. 58, 101--108 (1984).
  - M. A. Earle,
    A vector solution for navigation on a great ellipse,
    J. Navigation 53(3), 473--481 (2000).
  - M. A. Earle,
-   <a href="http://dx.doi.org/10.1017/S037346330800475X">
+   <a href="https://dx.doi.org/10.1017/S037346330800475X">
    Vector solutions for azimuth</a>,
    J. Navigation 61(3), 537--545 (2008).
  - C. F. F. Karney,
-   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>, J. Geodesy 87(1), 43--55 (2013);
    addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
    geod-addenda.html</a>.
  - A. Pallikaris & G. Latsas,
-   <a href="http://dx.doi.org/1017/S0373463309005323">
+   <a href="https://dx.doi.org/1017/S0373463309005323">
    New algorithm for great elliptic sailing (GES)</a>,
    J. Navigation 62(3), 493--507 (2009).
  - A. Pallikaris, L. Tsoulos, & D. Paradissis,
    New meridian arc formulas for sailing calculations in navigational
    GIS, International Hydrographic Review, 24--34 (May 2009).
  - L. E. Sj&ouml;berg,
-   <a href="http://dx.doi.org/10.2478/v10156-011-0040-9">
+   <a href="https://dx.doi.org/10.2478/v10156-011-0040-9">
    Solutions to the direct and inverse navigation problems on the great
    ellipse</a>, J. Geodetic Science 2(3), 200--205 (2012).
  - R. Williams,
-   <a href="http://dx.doi.org/10.1017/S0373463300013333">
+   <a href="https://dx.doi.org/10.1017/S0373463300013333">
    The Great Ellipse on the Surface of the Spheroid</a>,
    J. Navigation 49(2), 229--234 (1996).
  - T. Vincenty,
@@ -5188,9 +5188,9 @@ the ellipsoid.
 
 The area between the segment of a great ellipse and the equator can be
 found by very similar methods to those used for geodesic areas; see
-<a href="http://dx.doi.org/10.1179/003962689791474267"> Danielsen
+<a href="https://dx.doi.org/10.1179/003962689791474267"> Danielsen
 (1989)</a>.  The notation here is similar to that employed by
-<a href="http://dx.doi.org/10.1007/s00190-012-0578-z"> Karney
+<a href="https://dx.doi.org/10.1007/s00190-012-0578-z"> Karney
 (2013)</a>.
 \f[
 \begin{align}
@@ -5432,7 +5432,7 @@ Go to
 
 References:
  - L. Kr&uuml;ger,
-   <a href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+   <a href="https://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
    the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
    New Series 52, 172 pp. (1912).
@@ -5443,10 +5443,10 @@ References:
    (Also appeared as:
    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
    Part V, pp. 67--101,
-   <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
+   <a href="https://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
    Projections Based On Jacobian Elliptic Functions</a>.
  - C. F. F. Karney,
-   <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
+   <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
    addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
@@ -5467,7 +5467,7 @@ illustration of the exact transverse Mercator grid in Google Earth.
 \section testmerc Test data for the transverse Mercator projection
 
 A test set for the transverse Mercator projection is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/TMcoords.dat.gz">
+ - <a href="https://sf.net/projects/geographiclib/files/testdata/TMcoords.dat.gz">
    TMcoords.dat.gz</a>
  .
 This is about 17 MB (compressed).  This test set consists of a set of
@@ -5687,7 +5687,7 @@ Further instructions are included at the top of the file.
 
 This section gives color versions of the figures in
  - C. F. F. Karney,
-   <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
+   <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
    addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
@@ -5800,7 +5800,7 @@ Back to \ref transversemercator.  Forward to \ref auxlat.  Up to
 
 The implementation of Geocentric::Reverse is adapted from
  - H. Vermeille,
-   <a href="http://dx.doi.org/10.1007/s00190-002-0273-6">
+   <a href="https://dx.doi.org/10.1007/s00190-002-0273-6">
    Direct transformation from geocentric coordinates to geodetic
    coordinates</a>, J. Geodesy 76, 451--454 (2002).
 
@@ -5817,7 +5817,7 @@ described in Appendix B of
  .
 Vermeille similarly updated his method in
  - H. Vermeille,
-   <a href="http://dx.doi.org/10.1007/s00190-010-0419-x">
+   <a href="https://dx.doi.org/10.1007/s00190-010-0419-x">
    An analytical method to transform geocentric into
    geodetic coordinates</a>, J. Geodesy 85, 105--117 (2011).
 
@@ -5894,12 +5894,12 @@ inaccurate results due to underflow; in the other hand, the case of the
 sphere, \e f = 0, is treated specially and gives accurate results.
 
 Other comparable methods are K. M. Borkowski,
-<a href="http://dx.doi.org/10.1007/BF00643807"> Transformation
+<a href="https://dx.doi.org/10.1007/BF00643807"> Transformation
 of geocentric to geodetic coordinates without approximations</a>,
 Astrophys. Space Sci. 139, 1--4 (1987)
-(<a href="http://dx.doi.org/10.1007/BF00656995"> erratum</a>)
+(<a href="https://dx.doi.org/10.1007/BF00656995"> erratum</a>)
 and T. Fukushima,
-<a href="http://dx.doi.org/10.1007/s001900050271"> Fast transform from
+<a href="https://dx.doi.org/10.1007/s001900050271"> Fast transform from
 geocentric to geodetic coordinates</a>, J. Geodesy 73, 603--610 (1999).
 However the choice of independent variables in these methods leads
 to a loss of accuracy for points near the equatorial plane.
@@ -6729,11 +6729,11 @@ List of versions in reverse chronological order together with a brief
 list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)  Recent versions of GeographicLib are available at
-<a href="http://sf.net/projects/geographiclib/files/distrib/">
-http://sourceforge.net/projects/geographiclib/files/distrib/</a>.
+<a href="https://sf.net/projects/geographiclib/files/distrib/">
+https://sourceforge.net/projects/geographiclib/files/distrib/</a>.
 Older versions are in
-<a href="http://sf.net/projects/geographiclib/files/distrib/archive/">
-http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
+<a href="https://sf.net/projects/geographiclib/files/distrib/archive/">
+https://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
 The corresponding documentation for these versions is obtained by
 clicking on the &ldquo;Version <i>m.nn</i>&rdquo; links below.  Some of

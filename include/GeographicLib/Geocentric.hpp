@@ -29,7 +29,7 @@ namespace GeographicLib {
    * The conversion from geographic to geocentric coordinates is
    * straightforward.  For the reverse transformation we use
    * - H. Vermeille,
-   *   <a href="http://dx.doi.org/10.1007/s00190-002-0273-6"> Direct
+   *   <a href="https://dx.doi.org/10.1007/s00190-002-0273-6"> Direct
    *   transformation from geocentric coordinates to geodetic coordinates</a>,
    *   J. Geodesy 76, 451--454 (2002).
    * .
@@ -45,7 +45,7 @@ namespace GeographicLib {
    * .
    * Vermeille similarly updated his method in
    * - H. Vermeille,
-   *   <a href="http://dx.doi.org/10.1007/s00190-010-0419-x">
+   *   <a href="https://dx.doi.org/10.1007/s00190-010-0419-x">
    *   An analytical method to transform geocentric into
    *   geodetic coordinates</a>, J. Geodesy 85, 105--117 (2011).
    * .

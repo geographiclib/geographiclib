@@ -7,7 +7,7 @@
  * http://geographiclib.sourceforge.net/
  *
  * The relevant section of Lee's paper is part V, pp 67--101,
- * <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
+ * <a href="https://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
  * Projections Based On Jacobian Elliptic Functions</a>.
  *
  * The method entails using the Thompson Transverse Mercator as an
