@@ -3847,6 +3847,9 @@ Go to
       represent a degenerate class (they are all closed and all pass
       through the opposite pole).  It is of interest to see how this
       degeneracy is broken with a surface with a more general shape.
+    - Similarly, it is of interest to see how the Mercator projection of
+      the ellipsoid generalizes; this is another problem addressed by
+      Jacobi.
  -# My interest in this problem was piqued by Jean-Marc Baillard.  I put
     him onto Jacobi's solution without having looked at it in detail
     myself; and he quickly implemented the solution for an HP-41
@@ -3974,6 +3977,14 @@ oblate ellipsoid, we may regard as the principal sheet \f$[-\pi,\pi]
 \f]
 where \f$\alpha\f$ is the heading of a path, relative to a line of
 constant \f$\omega\f$.
+
+In the limit \f$b\rightarrow a\f$ (resp. \f$b\rightarrow c\f$), the
+umbilic points converge on the \f$z\f$ (resp. \f$x\f$) axis and an
+oblate (resp. prolate) ellipsoid is obtained with \f$\beta\f$
+(resp. \f$\omega\f$) becoming the standard parametric latitude and
+\f$\omega\f$ (resp. \f$\beta\f$) becoming the standard longitude.  The
+sphere is a non-uniform limit, with the position of the umbilic points
+depending on the ratio \f$(a-b)/(b-c)\f$.
 
 Inter-conversions between the three different latitudes and longitudes
 and the cartesian coordinates are simple algebraic exercises.
@@ -4378,7 +4389,17 @@ Notes:
    projection.  In this sense, the Jacobi projection is the natural
    generalization of the Mercator projection for the triaxial ellipsoid.
    Indeed, in the limit \f$a\rightarrow b\f$, it reduces to the normal
-   Mercator projection for an oblate ellipsoid
+   Mercator projection for an oblate ellipsoid (with an additional
+   overall scale),
+   \f[
+   \begin{align}
+   x &= \frac2{\sqrt{a^2 - c^2}} \int a\, d\omega,\\
+   y &= \frac2{\sqrt{a^2 - c^2}} \int \frac
+   {\sqrt{a^2 \sin^2\beta + c^2 \cos^2\beta}}{\cos\beta}\, d\beta,\\
+   k &= \frac2{\sqrt{a^2 - c^2}}\frac1{\cos\beta};
+   \end{align}
+   \f]
+   recall that \f$\beta\f$ is the parametric latitude in this limit.
  - In the general case (all the axes are different), the scale diverges
    only at the umbilic points, \f$\sin\omega = \cos\beta = 0\f$.  The
    behavior of these singularities is illustrated by the complex
@@ -6736,6 +6757,7 @@ of the git repository for GeographicLib.
    - Default constructor for GeoCoords corresponds to an undefined
      position (latitude and longitude = NaN), instead of the north pole.
    - Add an online version of <a href="RhumbSolve.1.html">RhumbSolve</a>.
+   - Add documentation on \ref triaxial-conformal.
    - TODO: Add WMM2015. Available 2014-12-15 at
      http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
 
