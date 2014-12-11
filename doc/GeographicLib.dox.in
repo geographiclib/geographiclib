@@ -4389,14 +4389,14 @@ Notes:
    projection.  In this sense, the Jacobi projection is the natural
    generalization of the Mercator projection for the triaxial ellipsoid.
    Indeed, in the limit \f$a\rightarrow b\f$, it reduces to the normal
-   Mercator projection for an oblate ellipsoid (with an additional
-   overall scale),
+   Mercator projection for an oblate ellipsoid (apart from an overall
+   scale),
    \f[
    \begin{align}
-   x &= \frac2{\sqrt{a^2 - c^2}} \int a\, d\omega,\\
-   y &= \frac2{\sqrt{a^2 - c^2}} \int \frac
-   {\sqrt{a^2 \sin^2\beta + c^2 \cos^2\beta}}{\cos\beta}\, d\beta,\\
-   k &= \frac2{\sqrt{a^2 - c^2}}\frac1{\cos\beta};
+   x &= \frac{2a}{\sqrt{a^2 - c^2}} \omega,\\
+   y &= \frac{2a}{\sqrt{a^2 - c^2}} \int \frac
+   {\sqrt{a^2 \sin^2\beta + c^2 \cos^2\beta}}{a\cos\beta}\, d\beta,\\
+   k &= \frac{2a}{\sqrt{a^2 - c^2}}\frac1{a\cos\beta};
    \end{align}
    \f]
    recall that \f$\beta\f$ is the parametric latitude in this limit.
