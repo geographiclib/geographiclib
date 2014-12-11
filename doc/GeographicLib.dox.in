@@ -4047,7 +4047,7 @@ Incidentally the constant \f$\gamma\f$ may be expressed as
 \gamma = (b^2-c^2)\cos^2\beta\sin^2\alpha-(a^2-b^2)\sin^2\omega\cos^2\alpha
 \f]
 where \f$\alpha\f$ is the angle the geodesic makes with lines of
-constant \f$\omega\f$. In the limit \f$a\rightarrow b\f$, this reduces
+constant \f$\omega\f$. In the limit \f$b\rightarrow a\f$, this reduces
 to \f$\cos\beta\sin\alpha = \text{const.}\f$, the familiar Clairaut
 relation.  A nice derivation of Jacobi's result is given by Darboux
 (1894) <a href="http://books.google.com/books?id=hGMSAAAAIAAJ&pg=PA9">
@@ -4388,7 +4388,7 @@ Notes:
    alone, so that latitude-longitude grid maps to straight lines in the
    projection.  In this sense, the Jacobi projection is the natural
    generalization of the Mercator projection for the triaxial ellipsoid.
-   Indeed, in the limit \f$a\rightarrow b\f$, it reduces to the normal
+   Indeed, in the limit \f$b\rightarrow a\f$, it reduces to the normal
    Mercator projection for an oblate ellipsoid (apart from an overall
    scale),
    \f[
@@ -4442,8 +4442,8 @@ Notes:
    immediately retraces its path.  A rhumb line which crosses the line
    joining the two northerly umbilic points starts traveling south with
    a reversed heading (e.g., a NE heading becomes a SW heading).  This
-   behavior is preserved in the limit \f$a\rightarrow b\f$ (although the
-   longitude becomes indeterminate).
+   behavior is preserved in the limit \f$b\rightarrow a\f$ (although the
+   longitude becomes indeterminate in this limit).
 
 <center>
 Back to \ref geodesic.  Forward to \ref rhumb.  Up to \ref contents.
