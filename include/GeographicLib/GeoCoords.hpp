@@ -71,7 +71,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * The default constructor sets the coordinate as undefined..
+     * The default constructor sets the coordinate as undefined.
      **********************************************************************/
     GeoCoords()
       : _lat(Math::NaN())

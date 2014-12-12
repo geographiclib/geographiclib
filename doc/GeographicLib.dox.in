@@ -6748,7 +6748,7 @@ of the git repository for GeographicLib.
    - Geodesic::Inverse didn't return NaN if one of the longitudes was a
      NaN (bug introduced in version 1.25).  Fixed in the C++, Java,
      JavaScript, C, Fortran, and Python implementations of the geodesic
-     routines.  This bug was not present in Matlab version.
+     routines.  This bug was not present in the Matlab version.
    - Fix bug in Utility::readarray and Utility::writearray which caused
      an exception in debug mode with zero-sized arrays.
    - Fix BLUNDER in OSGB::GridReference (found by kalderami) where the

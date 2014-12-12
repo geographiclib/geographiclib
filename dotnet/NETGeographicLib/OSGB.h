@@ -124,6 +124,8 @@ namespace NETGeographicLib
          * northing must be in the range [&minus;500 km, 2000 km).  These bounds
          * are consistent with rules for the letter designations for the grid
          * system.
+         *
+         * If \e x or \e y is NaN, the returned grid reference is "INVALID".
          **********************************************************************/
         static void GridReference(double x, double y, int prec,
             [System::Runtime::InteropServices::Out] System::String^% gridref);
@@ -141,6 +143,9 @@ namespace NETGeographicLib
          *
          * The grid reference must be of the form: two letters (not including I)
          * followed by an even number of digits (up to 22).
+         *
+         * If the first 2 characters of \e gridref are "IN", then \e x and \e y are
+         * set to NaN and \e prec is set to &minus;2.
          **********************************************************************/
         static void GridReference(System::String^ gridref,
                 [System::Runtime::InteropServices::Out] double% x,
