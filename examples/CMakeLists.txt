@@ -8,7 +8,8 @@ if (GEOGRAPHICLIB_PRECISION EQUAL 2)
 else ()
   set (EXAMPLE_SOURCES)
 endif ()
-set (EXAMPLE_SOURCES ${EXAMPLE_SOURCES} GeoidToGTX.cpp make-egmcof.cpp)
+set (EXAMPLE_SOURCES ${EXAMPLE_SOURCES}
+  GeoidToGTX.cpp make-egmcof.cpp JacobiConformal.cpp)
 
 set (EXAMPLES)
 add_definitions (${PROJECT_DEFINITIONS})

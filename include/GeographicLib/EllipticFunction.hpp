@@ -240,7 +240,7 @@ namespace GeographicLib {
      * http://dlmf.nist.gov/19.2.E7
      * \f[
      *   \Pi(\alpha^2, k) = \int_0^{\pi/2}
-     *     \frac1{\sqrt{1-k^2\sin^2\phi}(1 - \alpha^2\sin^2\phi_)}\,d\phi.
+     *     \frac1{\sqrt{1-k^2\sin^2\phi}(1 - \alpha^2\sin^2\phi)}\,d\phi.
      * \f]
      **********************************************************************/
     Math::real Pi() const { return _Pic; }
@@ -330,7 +330,7 @@ namespace GeographicLib {
      * http://dlmf.nist.gov/19.2.E7
      * \f[
      *   \Pi(\phi, \alpha^2, k) = \int_0^\phi
-     *     \frac1{\sqrt{1-k^2\sin^2\theta}(1 - \alpha^2\sin^2\theta_)}\,d\theta.
+     *     \frac1{\sqrt{1-k^2\sin^2\theta}(1 - \alpha^2\sin^2\theta)}\,d\theta.
      * \f]
      **********************************************************************/
     Math::real Pi(real phi) const;

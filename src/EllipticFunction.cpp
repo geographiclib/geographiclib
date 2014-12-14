@@ -79,15 +79,18 @@ namespace GeographicLib {
   }
 
   Math::real EllipticFunction::RC(real x, real y) {
+    // Defined only for y != 0 and x >= 0.
     return ( !(x >= y) ?        // x < y  and catch nans
              // http://dlmf.nist.gov/19.2.E18
              atan(sqrt((y - x) / x)) / sqrt(y - x) :
-             ( x == y && y > 0 ? 1 / sqrt(y) :
-               Math::atanh( y > 0 ?
+             ( x == y ? 1 / sqrt(y) :
+               Math::asinh( y > 0 ?
                             // http://dlmf.nist.gov/19.2.E19
-                            sqrt((x - y) / x) :
+                            // atanh(sqrt((x - y) / x))
+                            sqrt((x - y) / y) :
                             // http://dlmf.nist.gov/19.2.E20
-                            sqrt(x / (x - y)) ) / sqrt(x - y) ) );
+                            // atanh(sqrt(x / (x - y)))
+                            sqrt(-x / y) ) / sqrt(x - y) ) );
   }
 
   Math::real EllipticFunction::RG(real x, real y, real z) {
@@ -350,7 +353,7 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::D(real sn, real cn, real dn) const {
     // Carlson, eq. 4.8 and
-    // http://dlmf.nist.gov/19.25.E5
+    // http://dlmf.nist.gov/19.25.E13
     real di = abs(sn) * sn*sn * RD(cn*cn, dn*dn, 1) / 3;
     // Enforce usual trig-like symmetries
     if (cn < 0)
@@ -361,8 +364,8 @@ namespace GeographicLib {
   }
 
   Math::real EllipticFunction::Pi(real sn, real cn, real dn) const {
-    // Carlson, eq. 4.5 and
-    // http://dlmf.nist.gov/19.25.E5
+    // Carlson, eq. 4.7 and
+    // http://dlmf.nist.gov/19.25.E14
     real
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
       pii = abs(sn) * (RF(cn2, dn2, 1) +

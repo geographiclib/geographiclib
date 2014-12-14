@@ -713,10 +713,10 @@ In order to use GeographicLib from C++ code, you will need to
     directory under which GeographicLib is installed);
   - finally, if you need to point to a particular build of GeographicLib,
     define the <i>cmake variable</i> <code>GeographicLib_DIR</code>, which
-    specifies the directory containing the configuration file
-    <code>geographiclib-config.cmake</code> (for debugging this may be the
-    top-level <i>build</i> directory, as opposed to <i>installation</i>
-    directory, for GeographicLib).
+    specifies the absolute path of the directory containing the
+    configuration file <code>geographiclib-config.cmake</code> (for
+    debugging this may be the top-level <i>build</i> directory, as
+    opposed to <i>installation</i> directory, for GeographicLib).
   .
   Typically, specifying nothing or <code>CMAKE_PREFIX_PATH</code>
   suffices.  However the two <code>GeographicLib_DIR</code> variables allow
@@ -4383,6 +4383,44 @@ The scale of the projection is
 k = \frac2
 {\sqrt{a^2 \sin^2\omega + b^2 (\cos^2\omega-\sin^2\beta) - c^2 \cos^2\beta}}.
 \f]
+The integrals can be expressed in terms of elliptic integrals; see
+ - M. V. Nyrtsov, M. E. Flies, M. M. Borisov, P. J. Stooke,
+   <a href="https://dx.doi.org/10.1007/978-3-642-32618-9_17">
+   Jacobi conformal projection of the triaxial ellipsoid: new projection
+   for mapping of small celestial bodies,</a> in
+   <i>Cartography from Pole to Pole</i>,
+   selected contributions to the 26th international conference of the ICA,
+   Dresden 2013,
+   edited by M. Buchroithner, N. Prechtel, and D. Burghardt
+   (Springer, 2014), pp. 235--246.
+ .
+\f[
+\begin{align}
+x&=\frac2{b\sqrt{a^2-c^2}}
+\bigl(c^2 F(\omega',k_x)
+  + (b^2 - c^2)\, \Pi(\omega',\alpha_x^2,k_x)\bigr),\\
+ &=\frac{2b}{\sqrt{a^2-c^2}} G(\omega',\alpha_x^2,k_x),\\
+y&=\frac2{c\sqrt{a^2-b^2}}
+\bigl(a^2 F(\beta',ik_y)
+  - (a^2 - c^2)\, \Pi(\beta',-\alpha_y^2,ik_y)\bigr),\\
+ &=\frac{2c}{\sqrt{a^2-b^2}} G(\beta',-\alpha_y^2,ik_y)
+\end{align}
+\f]
+where
+\f[
+\begin{align}
+\alpha_x &= \frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}}, &
+k_x &= \frac cb \alpha_x,&
+\tan\omega' &= \frac1{\sqrt{1-\alpha_x^2}} \tan\omega, \\
+\alpha_y &= \frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}, &
+k_y &= \frac ac \alpha_y,&
+\tan\beta' &= \frac1{\sqrt{1+\alpha_y^2}} \tan\beta,
+\end{align}
+\f]
+and \f$ F(\phi,k)\f$ and \f$ \Pi(\phi,\alpha^2,k) \f$ are elliptic
+integrals of the first and third kinds defined in
+http://dlmf.nist.gov/19.2.ii.
+
 Notes:
  - \f$x\f$ (resp. \f$y\f$) depends on \f$\omega\f$ (resp. \f$\beta\f$)
    alone, so that latitude-longitude grid maps to straight lines in the
