@@ -42,7 +42,7 @@ cat $1 |
 sed -e 's/\*/<li>/' -e 's/  *\[\[BR\]\]/ <br>/' -e 's/\[\[BR\]\]/<br>/' \
     -e "s%'''\([0-9][0-9]*\)'''%<b>\1</b>%g" \
     -e "s% ''% <i>%g" -e "s%\([^ ]\)''%\1</i>%g" \
-    -e 's%http://\([a-zA-Z][^ ]*\)%<a href="http://\1">http://\1</a>%' \
+    -e 's%\(https\?\)://\([a-zA-Z][^ ]*\)%<a href="\1://\2">\1://\2</a>%' \
     -e 's%(PDF \([^)]*\))%(<a href="http://geographiclib.sf.net/geodesic-papers/\1">pdf</a>)%' \
     -e 's/&/\&amp;/g' \
     -e 's/\([0-9]\)--\([0-9]\)/\1\&ndash;\2/g' \
@@ -83,12 +83,6 @@ cat <<'EOF'
     </ul>
     <hr>
     <a href="..">GeographicLib home</a>
-    <br>
-    <a href="http://geographiclib.sourceforge.net">
-      <img
-	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"
-	 border="0" height="15" width="80" alt="SourceForge.net" />
-    </a>
   </body>
 </html>
 EOF

@@ -274,7 +274,7 @@ L<http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008>.
 =item B<WGS84>
 
 World Geodetic System 1984,
-L<http://en.wikipedia.org/wiki/WGS84>.
+L<https://en.wikipedia.org/wiki/WGS84>.
 
 =item B<HAE>
 
@@ -306,6 +306,9 @@ Convert a point in UTM zone 18n from MSL to HAE
 =head1 SEE ALSO
 
 GeoConvert(1), Gravity(1).
+
+An online version of this utility is availbable at
+L<http://geographiclib.sourceforge.net/cgi-bin/GeoidEval>.
 
 =head1 AUTHOR
 

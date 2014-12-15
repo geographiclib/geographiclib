@@ -10,7 +10,7 @@
 #
 #    Charles F. F. Karney,
 #    Algorithms for geodesics, J. Geodesy 87, 43-55 (2013),
-#    http://dx.doi.org/10.1007/s00190-012-0578-z
+#    https://dx.doi.org/10.1007/s00190-012-0578-z
 #    Addenda: http://geographiclib.sf.net/geod-addenda.html
 #
 # Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
@@ -569,7 +569,8 @@ class Geodesic(object):
         # Update spherical estimate of alp1 using omg12 instead of lam12
         salp1 = cbet2 * somg12
         calp1 = sbet12a - cbet2 * sbet1 * Math.sq(somg12) / (1 - comg12)
-    if salp1 > 0:               # Sanity check on starting guess
+    # Sanity check on starting guess.  Backwards check allows NaN through.
+    if not (salp1 <= 0):
       salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
     else:
       salp1 = 1; calp1 = 0

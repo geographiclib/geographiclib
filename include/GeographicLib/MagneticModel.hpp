@@ -42,6 +42,9 @@ namespace GeographicLib {
    * - WMM2010:
    *   - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
    *   - http://ngdc.noaa.gov/geomag/WMM/data/WMM2010/WMM2010COF.zip
+   * - WMM2015:
+   *   - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+   *   - http://ngdc.noaa.gov/geomag/WMM/data/WMM2015/WMM2015COF.zip
    * - IGRF11:
    *   - http://ngdc.noaa.gov/IAGA/vmod/igrf.html
    *   - http://ngdc.noaa.gov/IAGA/vmod/igrf11coeffs.txt
@@ -327,7 +330,7 @@ namespace GeographicLib {
      * @return the default name for the magnetic model.
      *
      * This is the value of the environment variable
-     * GEOGRAPHICLIB_MAGNETIC_NAME, if set; otherwise, it is "wmm2010".  The
+     * GEOGRAPHICLIB_MAGNETIC_NAME, if set; otherwise, it is "wmm2015".  The
      * MagneticModel class does not use this function; it is just provided as a
      * convenience for a calling program when constructing a MagneticModel
      * object.

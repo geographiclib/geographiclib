@@ -1,10 +1,10 @@
 #! /bin/sh
 #
-# GeodSolve.cgi
-# cgi script for geodesic calculations
+# RhumbSolve.cgi
+# cgi script for rhumb line calculations
 #
-# Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and
-# licensed under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2014) <charles@karney.com> and licensed
+# under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 
 . ./utils.sh
@@ -20,18 +20,14 @@ else
     RADIUS=`lookupellipsoid "$QUERY_STRING" radius`
     FLATTENING=`lookupellipsoid "$QUERY_STRING" flattening`
     FORMAT=`lookupkey "$QUERY_STRING" format`
-    AZF2=`lookupkey "$QUERY_STRING" azi2`
     PREC=`lookupkey "$QUERY_STRING" prec`
     TYPE=`lookupkey "$QUERY_STRING" type`
 fi
 test "$RADIUS" || RADIUS=$DEFAULTRADIUS
 test "$FLATTENING" || FLATTENING=$DEFAULTFLATTENING
 test "$FORMAT" || FORMAT=g
-test "$AZF2" || AZF2=f
 test "$PREC" || PREC=3
 test "$TYPE" || TYPE=I
-AZIX="fazi2"
-test "$AZF2" = b && AZIX="bazi2"
 TAG=
 if test "$RADIUS" = "$DEFAULTRADIUS" -a \
   "$FLATTENING" = "$DEFAULTFLATTENING"; then
@@ -39,22 +35,20 @@ if test "$RADIUS" = "$DEFAULTRADIUS" -a \
 fi
 
 INPUTENC=`encodevalue "$INPUT"`
-COMMAND="GeodSolve -E -f"
+COMMAND="RhumbSolve"
 EXECDIR=../bin
 F='<font color="blue">'
 G='</font>'
 test $TYPE = D || COMMAND="$COMMAND -i"
 COMMANDX="$COMMAND -p 1"
 test $FORMAT = g || COMMAND="$COMMAND -$FORMAT"
-test $AZF2 = f || COMMAND="$COMMAND -$AZF2"
 test $PREC = 3 || COMMAND="$COMMAND -p $PREC"
+GCOMMAND=`echo "$COMMAND" | sed "s/RhumbSolve/GeodSolve -f/"`
+GCOMMANDX=`echo "$COMMANDX" | sed "s/RhumbSolve/GeodSolve -f/"`
 STATUS=
 POSITION1=
 POSITION2=
 DIST12=
-a12=
-m12=
-M1221=
 S12=
 set -o pipefail
 if test "$INPUT"; then
@@ -62,26 +56,37 @@ if test "$INPUT"; then
             head -1`
     if test $? -eq 0; then
 	STATUS=OK
-	OUTPUTG=`echo $INPUT | $EXECDIR/$COMMANDX -e "$RADIUS" "$FLATTENING" |
+	GOUTPUT=`echo $INPUT | $EXECDIR/$GCOMMAND -e "$RADIUS" "$FLATTENING" |
+            head -1`
+	OUTPUTF=`echo $INPUT | $EXECDIR/$COMMANDX -e "$RADIUS" "$FLATTENING" |
                  head -1`
-	POS1="`echo $OUTPUT | cut -f1-2 -d' '`"
-	POS2="`echo $OUTPUT | cut -f4-5 -d' '`"
-	POSG1="`echo $OUTPUTG | cut -f1-2 -d' '`"
-	POSG2="`echo $OUTPUTG | cut -f4-5 -d' '`"
-	AZI1="`echo $OUTPUT | cut -f3 -d' '`"
-	AZI2="`echo $OUTPUT | cut -f6 -d' '`"
-	DIST12="`echo $OUTPUT | cut -f7 -d' '`"
-	a12="`echo $OUTPUT | cut -f8 -d' '`"
-	m12="`echo $OUTPUT | cut -f9 -d' '`"
-	M1221="`echo $OUTPUT | cut -f10-11 -d' '`"
-	S12="`echo $OUTPUT | cut -f12 -d' '`"
+	GOUTPUTF=`echo $INPUT | $EXECDIR/$GCOMMANDX -e "$RADIUS" "$FLATTENING" |
+                 head -1`
 	if test "$TYPE" = D; then
-	    POSITION1=$(geohack $POSG1 $POS1 Black)\ $(convertdeg "$AZI1")
-	    POSITION2=$F$(geohack $POSG2 $POS2 Blue)\ $(convertdeg "$AZI2")$G
+	    POS1="`echo $GOUTPUT | cut -f1-2 -d' '`"
+	    POSG1="`echo $GOUTPUTF | cut -f1-2 -d' '`"
+	    AZI12="`echo $GOUTPUT | cut -f3 -d' '`"
+	    DIST12="`echo $GOUTPUT | cut -f7 -d' '`"
+	    POS2="`echo $OUTPUT | cut -f1-2 -d' '`"
+	    POSG2="`echo $OUTPUTF | cut -f1-2 -d' '`"
+	    S12="`echo $OUTPUT | cut -f3 -d' '`"
+	    POSITION1=$(geohack $POSG1 $POS1 Black)
+	    POSITION2=$F$(geohack $POSG2 $POS2 Blue)$G
+	    echo $POS2 | grep nan > /dev/null &&
+	    POSITION2=$F$(convertdeg "$POS2")$G
+	    AZIMUTH=$(convertdeg "$AZI12")
 	    DIST12=$(encodevalue "$DIST12")
 	else
-	    POSITION1=$(geohack $POSG1 $POS1 Black)\ $F$(convertdeg "$AZI1")$G
-	    POSITION2=$(geohack $POSG2 $POS2 Black)\ $F$(convertdeg "$AZI2")$G
+	    POS1="`echo $GOUTPUT | cut -f1-2 -d' '`"
+	    POSG1="`echo $GOUTPUTF | cut -f1-2 -d' '`"
+	    POS2="`echo $GOUTPUT | cut -f4-5 -d' '`"
+	    POSG2="`echo $GOUTPUTF | cut -f4-5 -d' '`"
+	    AZI12="`echo $OUTPUT | cut -f1 -d' '`"
+	    DIST12="`echo $OUTPUT | cut -f2 -d' '`"
+	    S12="`echo $OUTPUT | cut -f3 -d' '`"
+	    POSITION1=$(geohack $POSG1 $POS1 Black)
+	    POSITION2=$(geohack $POSG2 $POS2 Black)
+	    AZIMUTH=$F$(convertdeg "$AZI12")$G
 	    DIST12=$F$(encodevalue "$DIST12")$G
 	fi
     else
@@ -96,21 +101,19 @@ cat <<EOF
 <html>
   <head>
     <title>
-      Online geodesic calculator
+      Online rhumb line calculator
     </title>
-    <meta name="description" content="Online geodesic calculator" />
+    <meta name="description" content="Online rhumb line calculator" />
     <meta name="author" content="Charles F. F. Karney" />
     <meta name="keywords"
-	  content="geodesics,
-		   geodesic distance,
+	  content="rhumb line, loxodrome,
+		   rhumb line distance,
 		   geographic distance,
-		   shortest path,
-		   direct geodesic problem,
-		   inverse geodesic problem,
+		   direct rhumb line problem,
+		   inverse rhumb line problem,
 		   distance and azimuth,
 		   distance and heading,
 		   range and bearing,
-		   spheroidal triangle,
 		   latitude and longitude,
 		   online calculator,
 		   WGS84 ellipsoid,
@@ -118,13 +121,13 @@ cat <<EOF
   </head>
   <body>
     <h3>
-      Online geodesic calculations using the
-      <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">
-	 GeodSolve</a> utility
+      Online rhumb line calculations using the
+      <a href="http://geographiclib.sourceforge.net/html/RhumbSolve.1.html">
+	 RhumbSolve</a> utility
     </h3>
-    <form action="/cgi-bin/GeodSolve" method="get">
+    <form action="/cgi-bin/RhumbSolve" method="get">
       <p>
-        Geodesic calculation:
+        Rhumb Line calculation:
         <table>
           <tr>
             <td valign='baseline'>
@@ -139,7 +142,7 @@ cat <<EOF
               <em>lat1 lon1 lat2 lon2</em>
             </td>
             <td valign='baseline'>
-              &rarr; <em>azi1 azi2 s12</em>
+              &rarr; <em>azi12 s12</em>
             </td>
           </tr>
           <tr>
@@ -152,10 +155,10 @@ cat <<EOF
 	      </label>
             </td>
             <td valign='baseline'>
-              <em>lat1 lon1 azi1 s12</em>
+              <em>lat1 lon1 azi12 s12</em>
             </td>
             <td valign='baseline'>
-              &rarr; <em>lat2 lon2 azi2</em>
+              &rarr; <em>lat2 lon2</em>
             </td>
           </tr>
         </table>
@@ -186,23 +189,6 @@ while read c desc; do
 done <<EOF
 g Decimal degrees
 d Degrees minutes seconds
-EOF
-cat <<EOF
-          </tr>
-          <tr>
-            <td>
-              Heading at point 2:
-            </td>
-EOF
-while read c desc; do
-    CHECKED=
-    test "$c" = "$AZF2" && CHECKED=CHECKED
-    echo "<td>&nbsp;<label for='$c'>"
-    echo "<input type='radio' name='azi2' value='$c' id='$c' $CHECKED>"
-    echo "$desc</label></td>"
-done <<EOF
-f Forward azimuth
-b Back azimuth
 EOF
 cat <<EOF
           </tr>
@@ -255,37 +241,40 @@ cat <<EOF
         <input type="submit" name="option" value="Reset">
       </p>
       <p>
-        Geodesic (input in black, output in ${F}blue${G}):<br>
+        Rhumb Line (input in black, output in ${F}blue${G}):<br>
         <font size="4"><pre>
-    ellipsoid (a f)     = `encodevalue "$RADIUS"` `encodevalue "$FLATTENING"`$TAG
-    status              = `encodevalue "$STATUS"`
+    ellipsoid (a f) = `encodevalue "$RADIUS"` `encodevalue "$FLATTENING"`$TAG
+    status          = `encodevalue "$STATUS"`
 
-    lat1 lon1 fazi1 (&deg;) = $POSITION1
-    lat2 lon2 $AZIX (&deg;) = $POSITION2
-    s12 (m)             = $DIST12
+    lat1 lon1 (&deg;)   = $POSITION1
+    lat2 lon2 (&deg;)   = $POSITION2
+    azi12 (&deg;)       = $AZIMUTH
+    s12 (m)         = $DIST12
 
-    a12 (&deg;)             = $F$a12$G
-    m12 (m)             = $F$m12$G
-    M12 M21             = $F$M1221$G
-    S12 (m^2)           = $F$S12$G</pre></font>
+    S12 (m^2)       = $F$S12$G</pre></font>
       </p>
     </form>
     <hr>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">
-        GeodSolve</a>
-      performs geodesic calculations for an arbitrary ellipsoid of
-      revolution.  The shortest path between two points on the ellipsoid
-      at (<em>lat1</em>, <em>lon1</em>) and (<em>lat2</em>,
-      <em>lon2</em>) is called the <em>geodesic</em>; its length
-      is <em>s12</em> and the geodesic from point 1 to point 2 has
-      azimuths <em>azi1</em> and <em>azi2</em> at the two end points.
-      There are two standard geodesic problems:
+      <a href="http://geographiclib.sourceforge.net/html/RhumbSolve.1.html">
+        RhumbSolve</a> performs rhumb line calculations for an arbitrary
+      ellipsoid of revolution.  The path with a constant heading between
+      two points on the ellipsoid at (<em>lat1</em>, <em>lon1</em>) and
+      (<em>lat2</em>, <em>lon2</em>) is called the <em>rhumb line</em> (or
+      <em>loxodrome</em>); its length is <em>s12</em> and the rhumb line
+      has a forward azimuth <em>azi12</em> along its
+      length.  <b>NOTE:</b> the rhumb line is <em>not</em> the shortest
+      path between two points; that is the geodesic and it is calculated
+      by <a href="http://geographiclib.sourceforge.net/cgi-bin/GeodSolve">
+	GeodSolve</a>.
+    </p>
+    <p>
+      There are two standard rhumb line problems:
       <ul>
-        <li> Direct: &nbsp; given [<em>lat1 lon1 azi1 s12</em>], find
-          [<em>lat2 lon2 azi2</em>];
+        <li> Direct: &nbsp; given [<em>lat1 lon1 azi12 s12</em>], find
+          [<em>lat2 lon2</em>];
         <li> Inverse: given [<em>lat1 lon1 lat2 lon2</em>], find
-          [<em>azi1 azi2 s12</em>].
+          [<em>azi12 s12</em>].
       </ul>
       Latitudes and longitudes can be given in various formats, for
       example (these all refer to the position of Timbuktu):
@@ -298,19 +287,15 @@ cat <<EOF
       distance <em>s12</em> is in meters.
     </p>
     <p>
-      The additional quantities computed are:
+      The additional quantity computed is:
       <ul>
-	<li> <em>a12</em>, the arc length on the auxiliary sphere (&deg;),
-	<li> <em>m12</em>, the reduced length (m),
-	<li> <em>M12</em> and <em>M21</em>, the geodesic scales,
-	<li> <em>S12</em>, the area between the geodesic
+	<li> <em>S12</em>, the area between the rhumb line
 	  and the equator (m<sup>2</sup>).
       </ul>
     </p>
     <p>
       The ellipsoid is specified by its equatorial radius, <em>a</em>,
-      and its flattening,
-      <em>f</em>&nbsp;=
+      and its flattening, <em>f</em>&nbsp;=
       (<em>a</em>&nbsp;&minus;&nbsp;<em>b</em>)/<em>a</em>,
       where <em>b</em> is the polar semi-axis.  The default values for
       these parameters correspond to the WGS84 ellipsoid.  The method is
@@ -322,50 +307,32 @@ cat <<EOF
       greater than 1, its reciprocal is used.)
     </p>
     <p>
-      GeodSolve is accurate to about 15&nbsp;nanometers (for the WGS84
+      RhumbSolve is accurate to about 15&nbsp;nanometers (for the WGS84
       ellipsoid) and gives solutions for the inverse problem for any
-      pair of points.  Many other geodesic calculators (based on
-      Vincenty's method) fail for some inputs; for example, the
-      <a href="http://www.ngs.noaa.gov/">
-        NGS</a> online
-      <a href="http://www.ngs.noaa.gov/TOOLS/Inv_Fwd/Inv_Fwd.html">
-        inverse geodesic calculator</a>
-      sometimes fails to terminate.
+      pair of points.  The longitude becomes indeterminate when a rhumb
+      line passes through a pole, and this tool reports NaNs (not a
+      number) for <em>lon2</em> and <em>S12</em> in this case.
     </p>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">
-        GeodSolve</a>,
+      <a href="http://geographiclib.sourceforge.net/html/RhumbSolve.1.html">
+        RhumbSolve</a>,
       which is a simple wrapper of the
-      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Geodesic.html">
-        GeographicLib::Geodesic</a> class,
-      is one of the utilities provided
+      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Rhumb.html">
+        GeographicLib::Rhumb</a> class, is one of the utilities provided
       with <a href="http://geographiclib.sourceforge.net/">
-        GeographicLib</a>.
-      Geodesics can also be computed using JavaScript; see the
-      <a href="../scripts/geod-calc.html">JavaScript geodesic
-	calculator</a> and
-      <a href="../scripts/geod-google.html">geodesics on Google
-	maps</a>.  If you wish to use GeodSolve directly,
-      <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
-        download</a>
-      and compile GeographicLib.  The algorithms are described
-      in C. F. F. Karney,
-      <a href="https://dx.doi.org/10.1007/s00190-012-0578-z"><i>Algorithms for
-      geodesics</i></a>,
-      J. Geodesy <b>87</b>, 43&ndash;55 (2013); DOI:
-      <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
-	10.1007/s00190-012-0578-z</a>;
-      addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
-	geod-addenda.html</a>.  See also the Wikipedia page,
-      <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
-	Geodesics on an ellipsoid</a>.
-    </p>
+      GeographicLib</a>.  See also the section of the GeographicLib
+      documentation on
+      <a href="http://geographiclib.sourceforge.net/html/rhumb.html">
+	Rhumb lines</a> and the Wikipedia page,
+      <a href="https://en.wikipedia.org/wiki/Rhumb_line">
+	Rhumb line</a>.
+    </P>
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2014-12-06)</address>
+      (2014-12-05)</address>
     <a href="http://geographiclib.sourceforge.net">
-      GeographicLib home
+      GeographicLib home page
     </a>
   </body>
 </html>

@@ -2,7 +2,7 @@
  * \file OSGB.hpp
  * \brief Header for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010-2013) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -47,8 +47,6 @@ namespace GeographicLib {
     static const std::string letters_;
     static const std::string digits_;
     static const TransverseMercator& OSGBTM();
-    static real northoffset_;
-    static bool init_;
     enum {
       base_ = 10,
       tile_ = 100000,
@@ -151,6 +149,8 @@ namespace GeographicLib {
      * northing must be in the range [&minus;500 km, 2000 km).  These bounds
      * are consistent with rules for the letter designations for the grid
      * system.
+     *
+     * If \e x or \e y is NaN, the returned grid reference is "INVALID".
      **********************************************************************/
     static void GridReference(real x, real y, int prec, std::string& gridref);
 
@@ -167,6 +167,9 @@ namespace GeographicLib {
      *
      * The grid reference must be of the form: two letters (not including I)
      * followed by an even number of digits (up to 22).
+     *
+     * If the first 2 characters of \e gridref are "IN", then \e x and \e y are
+     * set to NaN and \e prec is set to &minus;2.
      **********************************************************************/
     static void GridReference(const std::string& gridref,
                               real& x, real& y, int& prec,

@@ -194,14 +194,14 @@ cat <<EOF
       <a href="../scripts/geod-calc.html">JavaScript geodesic
 	calculator</a>.
       If you wish to use Planimeter directly,
-      <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
+      <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
         download</a>
       and compile GeographicLib.  The algorithms are described
       in C. F. F. Karney,
-      <a href="http://dx.doi.org/10.1007/s00190-012-0578-z"><i>Algorithms for
+      <a href="https://dx.doi.org/10.1007/s00190-012-0578-z"><i>Algorithms for
       geodesics</i></a>,
       J. Geodesy <b>87</b>, 43&ndash;55 (2013); DOI:
-      <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+      <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
 	10.1007/s00190-012-0578-z</a>;
       addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
 	geod-addenda.html</a>.
@@ -211,9 +211,7 @@ cat <<EOF
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
       (2014-11-06)</address>
     <a href="http://geographiclib.sourceforge.net">
-      <img
-	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"
-	 border="0" height="15" width="80" alt="SourceForge.net" />
+      GeographicLib home
     </a>
   </body>
 </html>
