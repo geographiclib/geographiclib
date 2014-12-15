@@ -6838,6 +6838,9 @@ of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.40">Version 1.40</a>
    (released 2014-mm-dd)
+   - Add the World Magnetic Model 2015, wmm2015.  This is now the
+     default magnetic model (replacing wmm2010 which was valid thru the
+     end of 2014).
    - Geodesic::Inverse didn't return NaN if one of the longitudes was a
      NaN (bug introduced in version 1.25).  Fixed in the C++, Java,
      JavaScript, C, Fortran, and Python implementations of the geodesic
@@ -6851,11 +6854,11 @@ of the git repository for GeographicLib.
      for the coordinates.
    - Default constructor for GeoCoords corresponds to an undefined
      position (latitude and longitude = NaN), instead of the north pole.
-   - Add an online version of <a href="RhumbSolve.1.html">RhumbSolve</a>.
+   - Add an online version of <a href="RhumbSolve.1.html">RhumbSolve</a>
+     at http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve.
    - Add documentation on \ref triaxial-conformal.
-   - Add the World Magnetic Model 2015, wmm2015.  This is now the
-     default magnetic model (replacing wmm2010 which was valid thru the
-     end of 2014).
+   - Add a page on \ref auxlat (actually, this was added in Version
+     1.39).
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-11-11)

@@ -42,6 +42,9 @@ namespace GeographicLib {
    * - WMM2010:
    *   - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
    *   - http://ngdc.noaa.gov/geomag/WMM/data/WMM2010/WMM2010COF.zip
+   * - WMM2015:
+   *   - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+   *   - http://ngdc.noaa.gov/geomag/WMM/data/WMM2015/WMM2015COF.zip
    * - IGRF11:
    *   - http://ngdc.noaa.gov/IAGA/vmod/igrf.html
    *   - http://ngdc.noaa.gov/IAGA/vmod/igrf11coeffs.txt
