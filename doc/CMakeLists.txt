@@ -37,6 +37,7 @@ if (DOXYGEN_FOUND)
   file (GLOB SOURCES
     ../src/[A-Za-z]*.cpp ../include/GeographicLib/[A-Za-z]*.hpp
     ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp
+    ../examples/[A-Za-z]*.hpp
     ../legacy/C/*.[ch] ../legacy/Fortran/*.for ../legacy/Fortran/*.inc
     ../dotnet/NETGeographicLib/*.cpp ../dotnet/NETGeographicLib/*.h
     ../dotnet/examples/CS/*.cs ../dotnet/examples/ManagedCPP/*.cpp

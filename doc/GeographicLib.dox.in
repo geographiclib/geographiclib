@@ -1042,13 +1042,11 @@ projections based on the Geodesic class.
 <a href="GeodesicProj.1.html">GeodesicProj</a> is a command line utility
 to exercise these projections.
 
-GeodesicExact and GeodesicLineExact are
-drop in replacements for Geodesic and
-GeodesicLine in which the solution is given in terms of
-elliptic integrals (computed by EllipticFunction).
-These classes should be used if the absolute value of the flattening
-exceeds 0.02.  The -E option to <a href="GeodSolve.1.html">GeodSolve</a>
-uses these classes.
+GeodesicExact and GeodesicLineExact are drop in replacements for
+Geodesic and GeodesicLine in which the solution is given in terms of
+elliptic integrals (computed by EllipticFunction).  These classes should
+be used if the absolute value of the flattening exceeds 0.02.  The -E
+option to <a href="GeodSolve.1.html">GeodSolve</a> uses these classes.
 
 Geocentric and LocalCartesian convert between
 geodetic and geocentric or a local cartesian system.  The constructor for
@@ -2845,18 +2843,16 @@ equidistant projection in terms of geodesics.  The
 <a href="GeodesicProj.1.html">GeodesicProj</a> utility provides an
 interface to these projections.
 
-The algorithms used by Geodesic and
-GeodesicLine are based on a Taylor expansion of the
-geodesic integrals valid when the flattening \e f is small.
-GeodesicExact and GeodesicLineExact
-evaluate the integrals exactly (in terms of incomplete elliptic
-integrals).  For the WGS84 ellipsoid, the series solutions are about
-2--3 times faster and 2--3 times more accurate (because it's easier to
-control round-off errors with series solutions); thus
-Geodesic and GeodesicLine are
-recommended for most geodetic applications.  However, in applications
-where the absolute value of \e f is greater than about 0.02, the exact
-classes should be used.
+The algorithms used by Geodesic and GeodesicLine are based on a Taylor
+expansion of the geodesic integrals valid when the flattening \e f is
+small.  GeodesicExact and GeodesicLineExact evaluate the integrals
+exactly (in terms of incomplete elliptic integrals).  For the WGS84
+ellipsoid, the series solutions are about 2--3 times faster and 2--3
+times more accurate (because it's easier to control round-off errors
+with series solutions); thus Geodesic and GeodesicLine are recommended
+for most geodetic applications.  However, in applications where the
+absolute value of \e f is greater than about 0.02, the exact classes
+should be used.
 
 Go to
  - \ref testgeod
@@ -2995,9 +2991,8 @@ in <a href="geodesic.mac"> geodesic.mac</a> (this depends on
 <a href="ellint.mac"> ellint.mac</a> and uses the series computed by
 <a href="geod.mac"> geod.mac</a>).  This solve both the direct and
 inverse geodesic problems and offers the ability to solve the problems
-either using series expansions (similar to Geodesic) or
-in terms of elliptic integrals (similar to
-GeodesicExact).
+either using series expansions (similar to Geodesic) or in terms of
+elliptic integrals (similar to GeodesicExact).
 
 \section geodseries Expansions for geodesics
 
@@ -3328,9 +3323,9 @@ C4[9] = + 32768/92147055 * eps^9;
 
 \section geodellip Geodesics in terms of elliptic integrals
 
-GeodesicExact and GeodesicLineExact solve
-the geodesic problem using elliptic integrals.  The formulation of
-geodesic in terms of incomplete elliptic integrals is given in
+GeodesicExact and GeodesicLineExact solve the geodesic problem using
+elliptic integrals.  The formulation of geodesic in terms of incomplete
+elliptic integrals is given in
  - C. F. F. Karney,
    <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
    on an ellipsoid of revolution</a>,
@@ -4383,7 +4378,7 @@ The scale of the projection is
 k = \frac2
 {\sqrt{a^2 \sin^2\omega + b^2 (\cos^2\omega-\sin^2\beta) - c^2 \cos^2\beta}}.
 \f]
-The integrals can be expressed in terms of elliptic integrals; see
+Nyrtsov, et al.,
  - M. V. Nyrtsov, M. E. Flies, M. M. Borisov, P. J. Stooke,
    <a href="https://dx.doi.org/10.1007/978-3-642-32618-9_17">
    Jacobi conformal projection of the triaxial ellipsoid: new projection
@@ -4394,32 +4389,59 @@ The integrals can be expressed in terms of elliptic integrals; see
    edited by M. Buchroithner, N. Prechtel, and D. Burghardt
    (Springer, 2014), pp. 235--246.
  .
+express the integrals in terms of elliptic integrals,
 \f[
 \begin{align}
-x&=\frac2{b\sqrt{a^2-c^2}}
-\bigl(c^2 F(\omega',k_x)
-  + (b^2 - c^2)\, \Pi(\omega',\alpha_x^2,k_x)\bigr),\\
- &=\frac{2b}{\sqrt{a^2-c^2}} G(\omega',\alpha_x^2,k_x),\\
-y&=\frac2{c\sqrt{a^2-b^2}}
-\bigl(a^2 F(\beta',ik_y)
-  - (a^2 - c^2)\, \Pi(\beta',-\alpha_y^2,ik_y)\bigr),\\
- &=\frac{2c}{\sqrt{a^2-b^2}} G(\beta',-\alpha_y^2,ik_y)
+x&=\frac{2b}{\sqrt{a^2-c^2}}
+G\biggl(\omega',\frac{a^2-b^2}{a^2-c^2},
+        \frac cb\frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}}\biggr),\\
+y&=\frac{2c}{\sqrt{a^2-b^2}}
+G\biggl(\beta',-\frac{b^2-c^2}{a^2-b^2},
+        i\frac ac\frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}\biggr),
 \end{align}
 \f]
 where
 \f[
 \begin{align}
-\alpha_x &= \frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}}, &
-k_x &= \frac cb \alpha_x,&
-\tan\omega' &= \frac1{\sqrt{1-\alpha_x^2}} \tan\omega, \\
-\alpha_y &= \frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}, &
-k_y &= \frac ac \alpha_y,&
-\tan\beta' &= \frac1{\sqrt{1+\alpha_y^2}} \tan\beta,
+\tan\omega' &= \frac{\sqrt{a^2-c^2}}{\sqrt{b^2-c^2}} \tan\omega, \\
+\tan\beta' &= \frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}} \tan\beta,
 \end{align}
 \f]
-and \f$ F(\phi,k)\f$ and \f$ \Pi(\phi,\alpha^2,k) \f$ are elliptic
-integrals of the first and third kinds defined in
-http://dlmf.nist.gov/19.2.ii.
+and
+\f[
+\begin{align}
+ G(\phi,\alpha^2,k) &= \int_0^\phi
+ \frac{\sqrt{1 - k^2\sin^2\theta}}{1 - \alpha^2\sin^2\theta}\,d\theta\\
+ &=\frac{k^2}{\alpha^2}F(\phi, k)
+ +\biggl(1-\frac{k^2}{\alpha^2}\biggr)\Pi(\phi, \alpha^2, k)
+\end{align}
+\f]
+is the combination of elliptic integrals of the first and third kinds
+that appears in the integral, given by Legendre (1811), for the
+longitude of a geodesic on an ellipsoid of revolution.
+The function \f$ G(\phi,\alpha^2,k) \f$ is provided by the
+EllipticFunction class.  The expression for \f$ x \f$ is essentially the
+same at that given by Nyrtsov, et al.; I have put their expression for
+\f$ y \f$ into a somewhat simpler form using an imaginary modulus.
+
+Using http://dlmf.nist.gov/19.7.E9, the projection may also be written
+as
+\f[
+\begin{align}
+x &= \frac{2a^2}{b{\sqrt{a^2-c^2}}}
+\Pi\biggl(\omega', -\frac{a^2-b^2}{b^2},
+          \frac cb\frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}}\biggr) \\
+&\quad{}-2\tan^{-1}\biggl(\frac{(a^2-b^2) \sin\omega' \cos\omega'}
+{\sqrt{a^2(b^2-c^2)\sin^2\omega' + b^2(a^2-c^2)\cos^2\omega'}}\biggr),\\
+y &= \frac{2b^2}{c\sqrt{a^2-b^2}}
+\Pi\biggl(\beta',-\frac{b^2-c^2}{c^2},
+          i\frac ac\frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}\biggr) \\
+&\quad{}-2\sinh^{-1}\biggl(\frac{(b^2-c^2)\sin\beta \cos\beta}
+{\sqrt{b^2(a^2-b^2)\sin^2\beta + c^2(a^2-c^2)\cos^2\beta}}\biggr).
+\end{align}
+\f]
+In the case of a nearly spherical ellipsoid, the parameter (the second
+argument) of the elliptic integral is small.
 
 Notes:
  - \f$x\f$ (resp. \f$y\f$) depends on \f$\omega\f$ (resp. \f$\beta\f$)
@@ -4433,7 +4455,9 @@ Notes:
    \begin{align}
    x &= \frac{2a}{\sqrt{a^2 - c^2}} \omega,\\
    y &= \frac{2a}{\sqrt{a^2 - c^2}} \int \frac
-   {\sqrt{a^2 \sin^2\beta + c^2 \cos^2\beta}}{a\cos\beta}\, d\beta,\\
+   {\sqrt{a^2 \sin^2\beta + c^2 \cos^2\beta}}{a\cos\beta}\, d\beta\\
+   &= \frac{2a}{\sqrt{a^2 - c^2}} \sinh^{-1}\biggl(\frac ac \tan\beta\biggr) -
+   2\sinh^{-1}\biggl(\frac{\sqrt{a^2-c^2}}c\sin\beta\biggr),\\
    k &= \frac{2a}{\sqrt{a^2 - c^2}}\frac1{a\cos\beta};
    \end{align}
    \f]
@@ -4454,8 +4478,18 @@ Notes:
    yielding a stronger (logarithmic) singularity at \f$z = 0\f$,
    concentric circles of latitude, and radial lines of longitude.
  - Again in the general case, the extents of \f$x\f$ and \f$y\f$ are
-   finite.  In particular, if we substitute values appropriate for the
-   earth,
+   finite (given by the complete elliptic integral of the third kind),
+   \f[
+   \begin{align}
+   x\bigl({\textstyle\frac12}\pi\bigr) &= \frac{2a^2}{b{\sqrt{a^2-c^2}}}
+   \Pi\biggl(-\frac{a^2-b^2}{b^2},
+   \frac cb\frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}}\biggr),\\
+   y\bigl({\textstyle\frac12}\pi\bigr) &= \frac{2b^2}{c\sqrt{a^2-b^2}}
+   \Pi\biggl(-\frac{b^2-c^2}{c^2},
+   i\frac ac\frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}\biggr).
+   \end{align}
+   \f]
+ - In particular, if we substitute values appropriate for the earth,
    \f[
    \begin{align}
    a&=(6378137+35)\,\mathrm m,\\
@@ -4466,8 +4500,8 @@ Notes:
    we have
    \f[
    \begin{align}
-   x(90^\circ)-x(0^\circ) &=  38.396508 = 1.0000005\,q,\\
-   y(90^\circ)-y(0^\circ) &= 103.717719 = 2.7012293\,q,\\
+   x\bigl({\textstyle\frac12}\pi\bigr) &= 38.396508 = 1.0000005\,q,\\
+   y\bigl({\textstyle\frac12}\pi\bigr) &= 103.717719 = 2.7012293\,q,\\
    \end{align}
    \f]
    where
@@ -4482,6 +4516,9 @@ Notes:
    a reversed heading (e.g., a NE heading becomes a SW heading).  This
    behavior is preserved in the limit \f$b\rightarrow a\f$ (although the
    longitude becomes indeterminate in this limit).
+
+An implementation of the Jacobi conformal projection is given here
+\include JacobiConformal.hpp
 
 <center>
 Back to \ref geodesic.  Forward to \ref rhumb.  Up to \ref contents.
