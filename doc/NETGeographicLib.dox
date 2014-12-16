@@ -26,8 +26,8 @@ to the GeographicLib classes.  GeographicLib and NETGeographicLib is an
 integrated product.
 
 The NETGeographic solutions and C++ projects are located in the
-<install>/windows folder.  The C# Projections projects are located in
-the <install>/dotnet/Projections folder.  Solution files have been provided
+\<install\>/windows folder.  The C# Projections projects are located in
+the \<install\>/dotnet/Projections folder.  Solution files have been provided
 for VS 2010 and VS 2013 NETGeographicLib is not available for older
 versions of Microsoft Visual Studio.
 
