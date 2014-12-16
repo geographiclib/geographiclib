@@ -4407,7 +4407,7 @@ Nyrtsov, et al.,
    edited by M. Buchroithner, N. Prechtel, and D. Burghardt
    (Springer, 2014), pp. 235--246.
  .
-express the integrals in terms of elliptic integrals,
+express the projection in terms of elliptic integrals,
 \f[
 \begin{align}
 x&=\frac{2b}{\sqrt{a^2-c^2}}
@@ -4458,8 +4458,8 @@ y &= \frac{2b^2}{c\sqrt{a^2-b^2}}
 {\sqrt{b^2(a^2-b^2)\sin^2\beta + c^2(a^2-c^2)\cos^2\beta}}\biggr).
 \end{align}
 \f]
-In the case of a nearly spherical ellipsoid, the parameter (the second
-argument) of the elliptic integral is small.
+In the case of a nearly spherical ellipsoid, the parameter of the
+elliptic integral (its second argument) is small.
 
 Notes:
  - \f$x\f$ (resp. \f$y\f$) depends on \f$\omega\f$ (resp. \f$\beta\f$)
@@ -6839,8 +6839,9 @@ of the git repository for GeographicLib.
  - <a href="http://geographiclib.sf.net/1.40">Version 1.40</a>
    (released 2014-mm-dd)
    - Add the World Magnetic Model 2015, wmm2015.  This is now the
-     default magnetic model (replacing wmm2010 which was valid thru the
-     end of 2014).
+     default magnetic model for
+     <a href="MagneticField.1.html">MagneticField</a> (replacing wmm2010
+     which is valid thru the end of 2014).
    - Geodesic::Inverse didn't return NaN if one of the longitudes was a
      NaN (bug introduced in version 1.25).  Fixed in the C++, Java,
      JavaScript, C, Fortran, and Python implementations of the geodesic
