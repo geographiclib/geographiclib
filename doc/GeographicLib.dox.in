@@ -6863,8 +6863,10 @@ of the git repository for GeographicLib.
    - Add an online version of <a href="RhumbSolve.1.html">RhumbSolve</a>
      at http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve.
    - Add documentation on \ref triaxial-conformal.
-   - Add a page on \ref auxlat (actually, this was added in Version
+   - Add a page on \ref auxlat (actually, this was added in version
      1.39).
+   - Document the use of two single quotes to stand for a double quote
+     in DMS (introduced in version 1.13).
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-11-11)
