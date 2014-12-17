@@ -4442,7 +4442,7 @@ EllipticFunction class.  The expression for \f$ x \f$ is essentially the
 same at that given by Nyrtsov, et al.; I have put their expression for
 \f$ y \f$ into a somewhat simpler form using an imaginary modulus.
 
-Using http://dlmf.nist.gov/19.7.E9, the projection may also be written
+Using http://dlmf.nist.gov/19.7.E9 the projection may also be written
 as
 \f[
 \begin{align}
@@ -4526,6 +4526,11 @@ Notes:
    \f[
    q = \pi \frac{\sqrt{a^2+b^2}}{\sqrt{a^2+b^2-2c^2}}.
    \f]
+ - The projection may be inverted (to give \f$\omega\f$ in terms of
+   \f$x\f$ and \f$\beta\f$ in terms of \f$y\f$) by using Newton's
+   method to find the root of, for example, \f$x(\omega) - x_0 = 0\f$.
+   The derivative \f$ dx(\omega)/d\omega \f$ is, of course, twice the
+   integrand in the first expression for \f$x\f$.
  - If rhumb lines are defined as curves with a constant bearing relative
    to the ellipsoid coordinates, then these are straight lines in the
    Jacobi projection.  A rhumb line which passes over an umbilic point
