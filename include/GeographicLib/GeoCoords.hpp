@@ -71,19 +71,17 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * The default constructor is equivalent to \e latitude = 90&deg;,
-     * \e longitude = 0&deg;.
+     * The default constructor sets the coordinate as undefined.
      **********************************************************************/
     GeoCoords()
-      // This is the N pole
-      : _lat(90)
-      , _long(0)
-      , _easting(2000000)
-      , _northing(2000000)
-      , _gamma(0)
-      , _k(Constants::UPS_k0())
-      , _northp(true)
-      , _zone(0)
+      : _lat(Math::NaN())
+      , _long(Math::NaN())
+      , _easting(Math::NaN())
+      , _northing(Math::NaN())
+      , _gamma(Math::NaN())
+      , _k(Math::NaN())
+      , _northp(false)
+      , _zone(UTMUPS::INVALID)
     { CopyToAlt(); }
 
     /**

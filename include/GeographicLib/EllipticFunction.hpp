@@ -43,14 +43,14 @@ namespace GeographicLib {
    *
    * The computation of the elliptic integrals uses the algorithms given in
    * - B. C. Carlson,
-   *   <a href="http://dx.doi.org/10.1007/BF02198293"> Computation of real or
+   *   <a href="https://dx.doi.org/10.1007/BF02198293"> Computation of real or
    *   complex elliptic integrals</a>, Numerical Algorithms 10, 13--26 (1995)
    * .
    * with the additional optimizations given in http://dlmf.nist.gov/19.36.i.
    * The computation of the Jacobi elliptic functions uses the algorithm given
    * in
    * - R. Bulirsch,
-   *   <a href="http://dx.doi.org/10.1007/BF01397975"> Numerical Calculation of
+   *   <a href="https://dx.doi.org/10.1007/BF01397975"> Numerical Calculation of
    *   Elliptic Integrals and Elliptic Functions</a>, Numericshe Mathematik 7,
    *   78--90 (1965).
    * .
@@ -240,7 +240,7 @@ namespace GeographicLib {
      * http://dlmf.nist.gov/19.2.E7
      * \f[
      *   \Pi(\alpha^2, k) = \int_0^{\pi/2}
-     *     \frac1{\sqrt{1-k^2\sin^2\phi}(1 - \alpha^2\sin^2\phi_)}\,d\phi.
+     *     \frac1{\sqrt{1-k^2\sin^2\phi}(1 - \alpha^2\sin^2\phi)}\,d\phi.
      * \f]
      **********************************************************************/
     Math::real Pi() const { return _Pic; }
@@ -330,7 +330,7 @@ namespace GeographicLib {
      * http://dlmf.nist.gov/19.2.E7
      * \f[
      *   \Pi(\phi, \alpha^2, k) = \int_0^\phi
-     *     \frac1{\sqrt{1-k^2\sin^2\theta}(1 - \alpha^2\sin^2\theta_)}\,d\theta.
+     *     \frac1{\sqrt{1-k^2\sin^2\theta}(1 - \alpha^2\sin^2\theta)}\,d\theta.
      * \f]
      **********************************************************************/
     Math::real Pi(real phi) const;
@@ -369,7 +369,7 @@ namespace GeographicLib {
      * Legendre expresses the longitude of a point on the geodesic in terms of
      * this combination of elliptic integrals in Exercices de Calcul
      * Int&eacute;gral, Vol. 1 (1811), p. 181,
-     * http://books.google.com/books?id=riIOAAAAQAAJ&pg=PA181.
+     * https://books.google.com/books?id=riIOAAAAQAAJ&pg=PA181.
      *
      * See \ref geodellip for the expression for the longitude in terms of this
      * function.
@@ -396,7 +396,7 @@ namespace GeographicLib {
      *
      * Cayley expresses the longitude difference of a point on the geodesic in
      * terms of this combination of elliptic integrals in Phil. Mag. <b>40</b>
-     * (1870), p. 333, http://books.google.com/books?id=Zk0wAAAAIAAJ&pg=PA333.
+     * (1870), p. 333, https://books.google.com/books?id=Zk0wAAAAIAAJ&pg=PA333.
      *
      * See \ref geodellip for the expression for the longitude in terms of this
      * function.

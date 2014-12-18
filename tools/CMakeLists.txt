@@ -170,6 +170,11 @@ add_test (NAME GeodSolve13 COMMAND
 set_tests_properties (GeodSolve12 GeodSolve13
   PROPERTIES PASS_REGULAR_EXPRESSION "120\\.27.* 105\\.15.* 266\\.7")
 
+# Check fix for inverse ignoring lon12 = nan
+add_test (NAME GeodSolve14 COMMAND GeodSolve -i --input-string "0 0 1 nan")
+set_tests_properties (GeodSolve14
+  PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0
   COMMAND Planimeter --input-string "89 0;89 90;89 180;89 270")

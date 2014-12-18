@@ -120,19 +120,24 @@ manpages: $(MANPAGES)
 	cp $^ html/
 	touch $@
 
-html/index.html: manpages doxyfile.in GeographicLib.dox \
+html/index.html: manpages doxyfile.in GeographicLib.dox.in \
 	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(FIGURES) \
 	doxyfile-c.in geodesic-c.dox doxyfile-for.in geodesic-for.dox \
 	$(LEGACYFILES)
 	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \
 	$(top_srcdir)/LICENSE.txt html/
+	sed -e "s%@PROJECT_VERSION@%$(VERSION)%g" \
+	$(srcdir)/GeographicLib.dox.in > GeographicLib.dox
 	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
+	-e "s%@PROJECT_BINARY_DIR@%..%g" \
 	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 	$(srcdir)/doxyfile.in | $(DOXYGEN) -
 	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
+	-e "s%@PROJECT_BINARY_DIR@%..%g" \
 	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 	$(srcdir)/doxyfile-c.in | $(DOXYGEN) -
 	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
+	-e "s%@PROJECT_BINARY_DIR@%..%g" \
 	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 	$(srcdir)/doxyfile-for.in | $(DOXYGEN) -
 else

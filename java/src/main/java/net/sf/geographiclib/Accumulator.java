@@ -15,7 +15,7 @@ package net.sf.geographiclib;
  * about 32 decimal places.
  * <p>
  * The implementation follows J. R. Shewchuk,
- * <a href="http://dx.doi.org/10.1007/PL00009321"> Adaptive Precision
+ * <a href="https://dx.doi.org/10.1007/PL00009321"> Adaptive Precision
  * Floating-Point Arithmetic and Fast Robust Geometric Predicates</a>,
  * Discrete & Computational Geometry 18(3) 305&ndash;363 (1997).
  * <p>

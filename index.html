@@ -19,6 +19,7 @@
 		   geodesics, shortest path,
 		   direct geodesic problem,
 		   inverse geodesic problem,
+		   rhumb line, loxodrome,
 		   geoid, EGM84, EGM96, EGM2008,
 		   earth gravity model,
 		   gravity disturbance,
@@ -47,10 +48,10 @@
       see <a href="html/LICENSE.txt">LICENSE.txt</a> for the terms.
     </p>
     <ul>
-      <li><a href="http://sf.net/projects/geographiclib/">
+      <li><a href="https://sf.net/projects/geographiclib/">
 	  Main project page</a>
       <li><a href="html">Library documentation</a>
-      <li><a href="http://sf.net/projects/geographiclib/files/distrib">
+      <li><a href="https://sf.net/projects/geographiclib/files/distrib">
 	  Download the code</a>
       <li><a href="html/NET/">.NET wrapper library documentation</a>
       <li>Implementations of the geodesic routines in
@@ -77,16 +78,19 @@
 	      File ID: 39366 (geodesic projections)</a>
 	    <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
 	      File ID: 47898 (great ellipses)</a>
-	  <li>IDL (not included in GeographicLib):
+	  <li>IDL (not part of GeographicLib):
 	    <a href="http://seanelvidge.com/2013/04/newtons-method-for-solving-the-inverse-geodesic-problem-in-idl/">
 	    Solving the inverse geodesic problem in IDL</a> by Sean
 	    Elvidge and Chris Mannix.
-	  <li>C# (not included in GeographicLib):
+	  <li>C# (not part of GeographicLib):
 	    <a href="https://github.com/suryapratap/GeographicLib">
 	    GeographicLib (C#)</a> by Surya Pratap (the same capability
 	    is provided by the <a href="html/NET/">NETGeographicLib</a>).
+	  <li>Mathematica (not part of GeographicLib):
+	    <a href="https://code.google.com/p/mathematica-geodesic/">
+	    mathematica-geodesic</a> by Kei Misawa.
 	</ul>
-      <li><a href="http://sf.net/projects/geographiclib/files/testdata">
+      <li><a href="https://sf.net/projects/geographiclib/files/testdata">
 	  Test data</a> for
 	<ul>
 	  <li>the <a href="html/geodesic.html#testgeod">
@@ -96,15 +100,15 @@
 	  <li><a href="html/geoid.html#testgeoid">
 	      geoid heights</a>
 	</ul>
-      <li><a href="http://sf.net/projects/geographiclib/files/geoids-distrib">
+      <li><a href="https://sf.net/projects/geographiclib/files/geoids-distrib">
 	  Gridded geoid data</a>; see
 	<a href="html/geoid.html#geoidinst">here</a> for
 	documentation
-      <li><a href="http://sf.net/projects/geographiclib/files/gravity-distrib">
+      <li><a href="https://sf.net/projects/geographiclib/files/gravity-distrib">
 	  Earth gravity models</a>; see
 	<a href="html/gravity.html#gravityinst">here</a> for
 	documentation
-      <li><a href="http://sf.net/projects/geographiclib/files/magnetic-distrib">
+      <li><a href="https://sf.net/projects/geographiclib/files/magnetic-distrib">
 	  Geomagnetic models</a>; see
 	<a href="html/magnetic.html#magneticinst">here</a> for
 	documentation
@@ -132,6 +136,9 @@
 	    <a href="http://www.javawa.nl/coordcalc_en.html">
 	      a graphical tool by gps@javawa.nl for geodesic calculations</a>
 	  <li>
+	    <a href="cgi-bin/RhumbSolve">
+	      rhumb line calculator</a>
+	  <li>
 	    <a href="cgi-bin/GeoidEval">
 	      evaluate the geoid height</a> for
 	    EGM84, EGM96, and EGM2008
@@ -146,7 +153,7 @@
 	<ul>
 	  <li>
 	    C. F. F. Karney,
-	    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
+	    <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
 	      <i>Transverse Mercator with an accuracy of a few nanometers</i>
 	    </a>,
 	    J. Geodesy <b>85</b>(8), 475&ndash;485 (Aug. 2011); preprint
@@ -164,10 +171,10 @@
 	    (Feb. 2011).
 	  <li>
 	    C. F. F. Karney,
-	    <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+	    <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
 	      <i>Algorithms for geodesics</i></a>,
 	    J. Geodesy <b>87</b>(1), 43&ndash;55 (Jan. 2013); DOI:
-	    <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+	    <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
 	      10.1007/s00190-012-0578-z</a>;
 	    <a href="geod-addenda.html"><b>addenda</b></a>.
 	</ul>
@@ -175,12 +182,7 @@
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2013-06-30)</address>
+      (2014-12-06)</address>
     <br>
-    <a href="http://geographiclib.sourceforge.net">
-      <img
-	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"
-	 border="0" height="15" width="80" alt="SourceForge.net" />
-    </a>
   </body>
 </html>

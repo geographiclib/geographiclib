@@ -22,9 +22,10 @@
 // and support the new C++11 mathematical functions, std::atanh, etc.  However
 // the Android toolchain, which uses g++ -std=c++11 (4.8 as of 2014-03-11,
 // according to Pullan Lu), does not support std::atanh.  Android toolchains
-// might define __ANDROID__ or ANDROID; so need to check both.
-#  if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ >= 7 \
-  && __cplusplus >= 201103 && \
+// might define __ANDROID__ or ANDROID; so need to check both.  With OSX the
+// version is GNUC version 4.2 and __cplusplus is set to 201103, so remove the
+// version check on GNUC.
+#  if defined(__GNUC__) && __cplusplus >= 201103 && \
   !(defined(__ANDROID__) || defined(ANDROID) || defined(__CYGWIN__))
 #    define GEOGRAPHICLIB_CXX11_MATH 1
 // Visual C++ 12 supports these functions
@@ -261,8 +262,8 @@ namespace GeographicLib {
       y /= (x ? x : 1);
       return x * sqrt(1 + y * y);
       // For an alternative (square-root free) method see
-      // C. Moler and D. Morrision (1983) http://dx.doi.org/10.1147/rd.276.0577
-      // and A. A. Dubrulle (1983) http://dx.doi.org/10.1147/rd.276.0582
+      // C. Moler and D. Morrision (1983) https://dx.doi.org/10.1147/rd.276.0577
+      // and A. A. Dubrulle (1983) https://dx.doi.org/10.1147/rd.276.0582
 #endif
     }
 
@@ -278,7 +279,7 @@ namespace GeographicLib {
       using std::expm1; return expm1(x);
 #else
       using std::exp; using std::abs; using std::log;
-      volatile T
+      GEOGRAPHICLIB_VOLATILE T
         y = exp(x),
         z = y - 1;
       // The reasoning here is similar to that for log1p.  The expression
@@ -301,7 +302,7 @@ namespace GeographicLib {
       using std::log1p; return log1p(x);
 #else
       using std::log;
-      volatile T
+      GEOGRAPHICLIB_VOLATILE T
         y = 1 + x,
         z = y - 1;
       // Here's the explanation for this magic: y = 1 + z, exactly, and z

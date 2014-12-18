@@ -158,8 +158,8 @@ cat <<EOF
 <font size="4"><pre>
     input   = `encodevalue "$INPUT"`
     lat lon = $F$LOCG `convertdeg "$LOCD"`$G
-    <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">UTM</a>/<a href="http://en.wikipedia.org/wiki/Universal_Polar_Stereographic">UPS</a> = $F`encodevalue "$LOCU"`$G
-    <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">MGRS</a>    = $F`encodevalue "$LOCM"`$G</pre></font>
+    <a href="https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">UTM</a>/<a href="https://en.wikipedia.org/wiki/Universal_Polar_Stereographic">UPS</a> = $F`encodevalue "$LOCU"`$G
+    <a href="https://en.wikipedia.org/wiki/Military_grid_reference_system">MGRS</a>    = $F`encodevalue "$LOCM"`$G</pre></font>
       </p>
     </form>
     <hr>
@@ -167,11 +167,11 @@ cat <<EOF
       <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">
         GeoConvert</a>
       converts between geographic (latitude and longitude) coordinates,
-      <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">
+      <a href="https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">
         universal transverse Mercator (UTM)</a> or
-      <a href="http://en.wikipedia.org/wiki/Universal_Polar_Stereographic">
+      <a href="https://en.wikipedia.org/wiki/Universal_Polar_Stereographic">
         universal polar stereographic (UPS)</a> coordinates, and the
-      <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">
+      <a href="https://en.wikipedia.org/wiki/Military_grid_reference_system">
         military grid reference system (MGRS)</a>.
       Examples of legal geographic locations are (these all refer to the
       same place, Cape Morris Jesup on the northern tip of Greenland):
@@ -225,7 +225,7 @@ cat <<EOF
         GeographicLib</a>.
       This web interface illustrates a subset of its capabilities.  If
       you wish to use GeoConvert directly,
-      <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
+      <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
         download</a>
       and compile GeographicLib.
     </p>
@@ -234,9 +234,7 @@ cat <<EOF
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
       (2011-08-14)</address>
     <a href="http://geographiclib.sourceforge.net">
-      <img
-	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"
-	 border="0" height="15" width="80" alt="SourceForge.net" />
+      GeographicLib home
     </a>
   </body>
 </html>

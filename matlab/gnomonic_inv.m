@@ -35,7 +35,7 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
 %
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
-%     http://dx.doi.org/10.1007/s00190-012-0578-z
+%     https://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
 %   which also includes methods for solving the "intersection" and

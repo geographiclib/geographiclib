@@ -7,10 +7,10 @@
 *! This is a Fortran implementation of the geodesic algorithms described
 *! in
 *! - C. F. F. Karney,
-*!   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+*!   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
 *!   Algorithms for geodesics</a>,
 *!   J. Geodesy <b>87</b>, 43--55 (2013);
-*!   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+*!   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
 *!   10.1007/s00190-012-0578-z</a>;
 *!   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
 *!   geod-addenda.html</a>.
@@ -117,7 +117,7 @@
 *! http://geographiclib.sourceforge.net/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.39.
+*! <a href="../index.html">GeographicLib</a> 1.40.
 
 *> Solve the direct geodesic problem
 *!
@@ -1327,8 +1327,8 @@
           calp1 = sbt12a - cbet2 * sbet1 * somg12**2 / (1 - comg12)
         end if
       end if
-* Sanity check on starting guess
-      if (salp1 .gt. 0) then
+* Sanity check on starting guess.  Backwards check allows NaN through.
+      if (.not. (salp1 .le. 0)) then
         call Norm(salp1, calp1)
       else
         salp1 = 1

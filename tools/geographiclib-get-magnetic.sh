@@ -25,6 +25,7 @@ table:
                                   size (kB)
   name     degree    years      tar.bz2  disk
   wmm2010    12    2010-2015      2       3
+  wmm2015    12    2015-2020      2       3
   igrf11     13    1900-2015      7      25
   emm2010   740    2010-2015    3700    4400
 
@@ -32,7 +33,7 @@ The size columns give the download and installed sizes of the datasets.
 In addition you can specify
 
   all = all of the supported magnetic models
-  minimal = wmm2010 igrf11
+  minimal = wmm2015 igrf11
 
 -p parentdir (default $DEFAULTDIR) specifies where the
 datasets should be stored.  The "Default $NAME path" listed when running
@@ -112,6 +113,7 @@ set -e
 
 cat > $TEMP/all <<EOF
 wmm2010
+wmm2015
 emm2010
 igrf11
 EOF
@@ -124,8 +126,8 @@ while test $# -gt 0; do
 	    all )
 		cat $TEMP/all
 		;;
-	    minimal )		# same as no argument
-		echo wmm2010; echo igrf11
+	    minimal )
+		echo wmm2015; echo igrf11
 		;;
 	    * )
 		echo Unknown magnetic model $1 1>&2

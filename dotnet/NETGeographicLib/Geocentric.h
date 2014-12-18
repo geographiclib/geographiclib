@@ -28,7 +28,7 @@ namespace NETGeographicLib
    * The conversion from geographic to geocentric coordinates is
    * straightforward.  For the reverse transformation we use
    * - H. Vermeille,
-   *   <a href="http://dx.doi.org/10.1007/s00190-002-0273-6"> Direct
+   *   <a href="https://dx.doi.org/10.1007/s00190-002-0273-6"> Direct
    *   transformation from geocentric coordinates to geodetic coordinates</a>,
    *   J. Geodesy 76, 451--454 (2002).
    * .

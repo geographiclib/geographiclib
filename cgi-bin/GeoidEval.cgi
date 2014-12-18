@@ -142,7 +142,7 @@ cat <<EOF
         GeographicLib</a>.
       This web interface illustrates a subset of its capabilities.  If
       you wish to use GeoidEval directly,
-      <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
+      <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
         download</a>
       and compile GeographicLib.  A description of the methods is given
       <a href="http://geographiclib.sourceforge.net/html/geoid.html">
@@ -155,9 +155,7 @@ cat <<EOF
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
       (2014-11-06)</address>
     <a href="http://geographiclib.sourceforge.net">
-      <img
-	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"
-	 border="0" height="15" width="80" alt="SourceForge.net" />
+      GeographicLib home
     </a>
   </body>
 </html>

@@ -2,7 +2,7 @@
  * \file DMS.hpp
  * \brief Header for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -120,24 +120,25 @@ namespace GeographicLib {
      * Degrees, minutes, and seconds are indicated by the characters d, '
      * (single quote), &quot; (double quote), and these components may only be
      * given in this order.  Any (but not all) components may be omitted and
-     * other symbols (e.g., the &deg; symbol for degrees and the unicode
-     * prime and double prime symbols for minutes and seconds) may be
-     * substituted.  The last component indicator may be omitted and is assumed
-     * to be the next smallest unit (thus 33d10 is interpreted as 33d10').  The
-     * final component may be a decimal fraction but the non-final components
-     * must be integers.  Instead of using d, ', and &quot; to indicate
-     * degrees, minutes, and seconds, : (colon) may be used to <i>separate</i>
-     * these components (numbers must appear before and after each colon); thus
-     * 50d30'10.3&quot; may be written as 50:30:10.3, 5.5' may be written
-     * 0:5.5, and so on.  The integer parts of the minutes and seconds
-     * components must be less than 60.  A single leading sign is permitted.  A
-     * hemisphere designator (N, E, W, S) may be added to the beginning or end
-     * of the string.  The result is multiplied by the implied sign of the
-     * hemisphere designator (negative for S and W).  In addition \e ind is set
-     * to DMS::LATITUDE if N or S is present, to DMS::LONGITUDE if E or W is
-     * present, and to DMS::NONE otherwise.  Throws an error on a malformed
-     * string.  No check is performed on the range of the result.  Examples of
-     * legal and illegal strings are
+     * other symbols (e.g., the &deg; symbol for degrees and the unicode prime
+     * and double prime symbols for minutes and seconds) may be substituted;
+     * two single quotes can be used instead of &quot;.  The last component
+     * indicator may be omitted and is assumed to be the next smallest unit
+     * (thus 33d10 is interpreted as 33d10').  The final component may be a
+     * decimal fraction but the non-final components must be integers.  Instead
+     * of using d, ', and &quot; to indicate degrees, minutes, and seconds, :
+     * (colon) may be used to <i>separate</i> these components (numbers must
+     * appear before and after each colon); thus 50d30'10.3&quot; may be
+     * written as 50:30:10.3, 5.5' may be written 0:5.5, and so on.  The
+     * integer parts of the minutes and seconds components must be less than
+     * 60.  A single leading sign is permitted.  A hemisphere designator (N, E,
+     * W, S) may be added to the beginning or end of the string.  The result is
+     * multiplied by the implied sign of the hemisphere designator (negative
+     * for S and W).  In addition \e ind is set to DMS::LATITUDE if N or S is
+     * present, to DMS::LONGITUDE if E or W is present, and to DMS::NONE
+     * otherwise.  Throws an error on a malformed string.  No check is
+     * performed on the range of the result.  Examples of legal and illegal
+     * strings are
      * - <i>LEGAL</i> (all the entries on each line are equivalent)
      *   - -20.51125, 20d30'40.5&quot;S, -20&deg;30'40.5, -20d30.675,
      *     N-20d30'40.5&quot;, -20:30:40.5
@@ -281,7 +282,8 @@ namespace GeographicLib {
      *
      * @param[in] angle input angle (degrees)
      * @param[in] trailing DMS::component value indicating the trailing units
-     *   on the string and this is given as a decimal number if necessary.
+     *   of the string (this component is given as a decimal number if
+     *   necessary).
      * @param[in] prec the number of digits after the decimal point for the
      *   trailing component.
      * @param[in] ind DMS::flag value indicated additional formatting.

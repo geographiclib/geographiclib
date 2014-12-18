@@ -21,14 +21,13 @@ install (FILES ${PRIVATE_MATLAB_FILES}
 # On Windows systems, need also to copy the shared library to where the
 # mex files live (in the build and install trees).
 if (MEX)
-  get_target_property (_LIBTYPE ${PROJECT_LIBRARIES} TYPE)
   if (MSVC)
     set (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
     include (InstallRequiredSystemLibraries)
     install (PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
       DESTINATION ${INSTALL_MATLAB_DIR})
     add_custom_target (matlabinterface)
-    if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
+    if (GEOGRAPHICLIB_SHARED_LIB)
       set (_LIB Geographic-i)
     else ()
       set (_LIB Geographic)
@@ -57,7 +56,7 @@ if (MEX)
       set_property (TARGET matlab-${TARGET} PROPERTY FOLDER matlab)
     else ()
       set (INTERFACE_LIST ${INTERFACE_LIST} ${TARGET_INTERFACE})
-      if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
+      if (GEOGRAPHICLIB_SHARED_LIB)
         set (RPATH_OPTS -Wl,-rpath=${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
       endif ()
       add_custom_command (OUTPUT ${TARGET_INTERFACE}
@@ -76,7 +75,11 @@ if (MEX)
     install (PROGRAMS ${INTERFACE_LIST}
       DESTINATION ${INSTALL_MATLAB_DIR} CONFIGURATIONS Release)
   endif ()
-  if (MSVC AND _LIBTYPE STREQUAL "SHARED_LIBRARY")
+  if (MSVC AND GEOGRAPHICLIB_SHARED_LIB)
+    if (NOT CMAKE_VERSION VERSION_LESS 3.0)
+      # Suppress 3.0 warnings about use of the LOCATION target property
+      cmake_policy (SET CMP0026 OLD)
+    endif ()
     get_target_property (_LOC ${PROJECT_LIBRARIES} LOCATION_RELEASE)
     add_custom_command (TARGET matlabinterface POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy ${_LOC} ./)

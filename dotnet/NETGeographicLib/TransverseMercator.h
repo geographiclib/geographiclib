@@ -20,12 +20,12 @@ namespace NETGeographicLib
    * This uses Kr&uuml;ger's method which evaluates the projection and its
    * inverse in terms of a series.  See
    *  - L. Kr&uuml;ger,
-   *    <a href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+   *    <a href="https://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    *    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of the
    *    ellipsoidal earth to the plane), Royal Prussian Geodetic Institute, New
    *    Series 52, 172 pp. (1912).
    *  - C. F. F. Karney,
-   *    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
+   *    <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
    *    Transverse Mercator with an accuracy of a few nanometers,</a>
    *    J. Geodesy 85(8), 475--485 (Aug. 2011);
    *    preprint

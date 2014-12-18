@@ -25,7 +25,7 @@ namespace GeographicLib {
    *
    * Geohashes are described in
    * - https://en.wikipedia.org/wiki/Geohash
-   * - http://geohash.org/
+   * - http://geohash.org/ (this link is broken as of 2012-12-11)
    * .
    * They provide a compact string representation of a particular geographic
    * location (expressed as latitude and longitude), with the property that if
