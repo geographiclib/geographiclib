@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2014-mm-dd
+\date 2014-12-18
 
 \section abstract Abstract
 
@@ -1368,9 +1368,10 @@ The functions fall into the following groups
 
 There are two ways of compiling the interface code: (1) using cmake and
 (2) invoking the compiler from Matlab.
- - <b>Using cmake:</b> Before running cmake, configure MATLAB on
-   Windows to use the same compiler that you're going to use for compiling
-   GeographicLib.  For example \verbatim
+ - <b>Using cmake:</b> (Only tested on Linux and Windows.) Before
+   running cmake, configure MATLAB on Windows to use the same compiler
+   that you're going to use for compiling GeographicLib.  For example
+   \verbatim
    mex.bat -setup
 
    Please choose your compiler for building MEX-files:
@@ -1398,8 +1399,9 @@ There are two ways of compiling the interface code: (1) using cmake and
    instead by using \verbatim
    cmake -D MATLAB_COMPILER=mkoctfile ..
    make matlabinterface \endverbatim
- - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
-   Octave and run, e.g., \code
+ - <b>Invoking the compiler from Matlab or Octave:</b> (Tested with
+   Linux, Mac OSX, and Windows.)  Start Matlab or Octave and run, e.g.,
+   \code
    mex -setup
    cd 'C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab'
    help geographiclibinterface
@@ -1407,7 +1409,10 @@ There are two ways of compiling the interface code: (1) using cmake and
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
-   should be the same as that used to compile GeographicLib).
+   should be the same as that used to compile GeographicLib).  On Mac
+   OSX and Matlab R2014b, the setup command is \code
+   mex -setup C++
+   \endcode
 
 To use the interface routines for GeographicLib, run one of (for
 example) \verbatim
@@ -6839,10 +6844,12 @@ the links in the documentaion of older versions may be out of date (in
 particular the links for the source code will not work if the code has
 been migrated to the archive subdirectory).  All the releases are
 available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
-of the git repository for GeographicLib.
+of the
+<a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
+git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.40">Version 1.40</a>
-   (released 2014-mm-dd)
+   (released 2014-12-18)
    - Add the World Magnetic Model 2015, wmm2015.  This is now the
      default magnetic model for
      <a href="MagneticField.1.html">MagneticField</a> (replacing wmm2010
@@ -6862,11 +6869,13 @@ of the git repository for GeographicLib.
      position (latitude and longitude = NaN), instead of the north pole.
    - Add an online version of <a href="RhumbSolve.1.html">RhumbSolve</a>
      at http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve.
-   - Add documentation on \ref triaxial-conformal.
-   - Add a page on \ref auxlat (actually, this was added in version
-     1.39).
-   - Document the use of two single quotes to stand for a double quote
-     in DMS (introduced in version 1.13).
+   - Additions to the documentation:
+     - documentation on \ref triaxial-conformal;
+     - a page on \ref auxlat (actually, this was added in version 1.39);
+     - document the use of two single quotes to stand for a double quote
+       in DMS (this feature was introduced in version 1.13).
+   - The Matlab function, geographiclibinterface, which compiles the
+     wrapper routines for Matlab now works with Matlab on a Mac.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-11-11)
