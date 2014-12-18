@@ -462,7 +462,8 @@ namespace GeographicLib {
     template<typename ExtT, typename IntT, bool bigendp>
       static inline void readarray(std::istream& str,
                                    std::vector<IntT>& array) {
-      readarray<ExtT, IntT, bigendp>(str, &array[0], array.size());
+      if (array.size() > 0)
+        readarray<ExtT, IntT, bigendp>(str, &array[0], array.size());
     }
 
     /**
@@ -527,7 +528,8 @@ namespace GeographicLib {
     template<typename ExtT, typename IntT, bool bigendp>
       static inline void writearray(std::ostream& str,
                                    std::vector<IntT>& array) {
-      writearray<ExtT, IntT, bigendp>(str, &array[0], array.size());
+      if (array.size() > 0)
+        writearray<ExtT, IntT, bigendp>(str, &array[0], array.size());
     }
 
     /**

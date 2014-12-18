@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    TransverseMercatorProj --help\n"
 "or visit:\n"
-"    http://geographiclib.sf.net/1.39/TransverseMercatorProj.1.html\n";
+"    http://geographiclib.sf.net/1.40/TransverseMercatorProj.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -127,7 +127,7 @@ int usage(int retval, bool brief) {
 "       The algorithms for the transverse Mercator projection are described in\n"
 "       C. F. F. Karney, Transverse Mercator with an accuracy of a few\n"
 "       nanometers, J. Geodesy 85(8), 475-485 (Aug. 2011); DOI\n"
-"       <http://dx.doi.org/10.1007/s00190-011-0445-3>; preprint\n"
+"       <https://dx.doi.org/10.1007/s00190-011-0445-3>; preprint\n"
 "       <http://arxiv.org/abs/1002.1417>.  The explanation of the extended\n"
 "       domain of the projection with the -t option is given in Section 5 of\n"
 "       this paper.\n"

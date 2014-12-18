@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOCONVERT 1"
-.TH GEOCONVERT 1 "2014-11-11" "GeographicLib 1.39" "GeographicLib Utilities"
+.TH GEOCONVERT 1 "2014-12-18" "GeographicLib 1.40" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -164,15 +164,16 @@ is used (\fIa\fR = 6378137 m, \fIf\fR = 1/298.257223563).
 2 tokens (output options \fB\-g\fR, \fB\-d\fR, or \fB\-:\fR) given as \fIlatitude\fR
 \&\fIlongitude\fR using decimal degrees or degrees minutes seconds.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
-significant designator optional.  (See \*(L"\s-1QUOTING\*(R"\s0 for how to
-quote the characters ' and " when entering coordinates on the command
-line.)  Various unicode characters (encoded with \s-1UTF\-8\s0) may also be used
-to denote degrees, minutes, and seconds, e.g., the degree, prime, and
-double prime symbols.  Alternatively, : (colon) may be used to separate
-the various components.  Latitude is given first (unless the \fB\-w\fR
-option is given); however, on input, either may be given first by
-appending or prepending \fIN\fR or \fIS\fR to the latitude and \fIE\fR or \fIW\fR to
-the longitude.  For example, the following are all equivalent
+significant designator optional.  (See \*(L"\s-1QUOTING\*(R"\s0 for how to quote
+the characters ' and \*(L" when entering coordinates on the command line.)
+Various unicode characters (encoded with \s-1UTF\-8\s0) may also be used to
+denote degrees, minutes, and seconds, e.g., the degree, prime, and
+double prime symbols; in addition two single quotes can be used to
+represent \*(R".  Alternatively, : (colon) may be used to separate the
+various components.  Latitude is given first (unless the \fB\-w\fR option
+is given); however, on input, either may be given first by appending
+or prepending \fIN\fR or \fIS\fR to the latitude and \fIE\fR or \fIW\fR to the
+longitude.  For example, the following are all equivalent
 .Sp
 .Vb 5
 \&    33.3 44.4
@@ -371,8 +372,8 @@ separator character.  Thus 10d20' can be entered as 10d20 or 10:20 and
 .IP "Unix shells (sh, bash, tsch)" 4
 .IX Item "Unix shells (sh, bash, tsch)"
 The characters ' and \*(L" can be quoted by preceding them with a \e
-(backslash); or you can quote a ' with a pair of \*(R"s.  The two
-alternatives are illustrated by
+(backslash); or you can quote a string containing ' with a pair of \*(R"s.
+The two alternatives are illustrated by
 .Sp
 .Vb 2
 \&   echo 10d20\e\*(Aq30\e" "20d30\*(Aq40" | GeoConvert \-d \-p \-1
@@ -387,12 +388,13 @@ Quoting of command line arguments is similar
 .Ve
 .IP "Windows command shell (cmd)" 4
 .IX Item "Windows command shell (cmd)"
-The ' character needs no quoting and the " character can be quoted by a
-^.  (This quoting is usually unnecessary because the trailing designator
-can be omitted.)  Thus
+The ' character needs no quoting; the " character can either be quoted
+by a ^ or can be represented by typing ' twice.  (This quoting is
+usually unnecessary because the trailing designator can be omitted.)
+Thus
 .Sp
 .Vb 2
-\&   echo 10d20\*(Aq30^" 20d30\*(Aq40 | GeoConvert \-d \-p \-1
+\&   echo 10d20\*(Aq30\*(Aq\*(Aq 20d30\*(Aq40 | GeoConvert \-d \-p \-1
 \&   => 10d20\*(Aq30"N 020d30\*(Aq40"E
 .Ve
 .Sp
@@ -429,25 +431,28 @@ following lines will be converted.
 .IP "\fB\s-1UTM\s0\fR" 4
 .IX Item "UTM"
 Universal Transverse Mercator,
-<http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system>.
+<https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system>.
 .IP "\fB\s-1UPS\s0\fR" 4
 .IX Item "UPS"
 Universal Polar Stereographic,
-<http://en.wikipedia.org/wiki/Universal_Polar_Stereographic>.
+<https://en.wikipedia.org/wiki/Universal_Polar_Stereographic>.
 .IP "\fB\s-1MGRS\s0\fR" 4
 .IX Item "MGRS"
 Military Grid Reference System,
-<http://en.wikipedia.org/wiki/Military_grid_reference_system>.
+<https://en.wikipedia.org/wiki/Military_grid_reference_system>.
 .IP "\fB\s-1WGS84\s0\fR" 4
 .IX Item "WGS84"
 World Geodetic System 1984,
-<http://en.wikipedia.org/wiki/WGS84>.
+<https://en.wikipedia.org/wiki/WGS84>.
 .SH "SEE ALSO"
 .IX Header "SEE ALSO"
+An online version of this utility is availbable at
+<http://geographiclib.sourceforge.net/cgi\-bin/GeoConvert>.
+.PP
 The algorithms for the transverse Mercator projection are described in
 C. F. F. Karney, \fITransverse Mercator with an accuracy of a few
 nanometers\fR, J. Geodesy \fB85\fR(8), 475\-485 (Aug. 2011); \s-1DOI
-\&\s0<http://dx.doi.org/10.1007/s00190\-011\-0445\-3>; preprint
+\&\s0<https://dx.doi.org/10.1007/s00190\-011\-0445\-3>; preprint
 <http://arxiv.org/abs/1002.1417>.
 .SH "AUTHOR"
 .IX Header "AUTHOR"

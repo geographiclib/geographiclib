@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeodesicProj --help\n"
 "or visit:\n"
-"    http://geographiclib.sf.net/1.39/GeodesicProj.1.html\n";
+"    http://geographiclib.sf.net/1.40/GeodesicProj.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -117,7 +117,7 @@ int usage(int retval, bool brief) {
 "SEE ALSO\n"
 "       The ellipsoidal gnomonic projection is derived in Section 8 of C. F. F.\n"
 "       Karney, Algorithms for geodesics, J. Geodesy 87, 43-55 (2013); DOI\n"
-"       <http://dx.doi.org/10.1007/s00190-012-0578-z>; addenda:\n"
+"       <https://dx.doi.org/10.1007/s00190-012-0578-z>; addenda:\n"
 "       <http://geographiclib.sf.net/geod-addenda.html>.\n"
 "\n"
 "AUTHOR\n"

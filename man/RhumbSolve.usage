@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    RhumbSolve --help\n"
 "or visit:\n"
-"    http://geographiclib.sf.net/1.39/RhumbSolve.1.html\n";
+"    http://geographiclib.sf.net/1.40/RhumbSolve.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -191,6 +191,12 @@ int usage(int retval, bool brief) {
 "\n"
 "SEE ALSO\n"
 "       GeoConvert(1), GeodSolve(1), TransverseMercatorProj(1).\n"
+"\n"
+"       An online version of this utility is availbable at\n"
+"       <http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve>.\n"
+"\n"
+"       The Wikipedia page, Rhumb line,\n"
+"       <https://en.wikipedia.org/wiki/Rhumb_line>.\n"
 "\n"
 "AUTHOR\n"
 "       RhumbSolve was written by Charles Karney.\n"

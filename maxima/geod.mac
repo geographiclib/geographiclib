@@ -9,7 +9,7 @@ References:
 
    Charles F. F. Karney,
    Algorithms for geodesics, J. Geodesy 87, 43-55 (2013),
-   http://dx.doi.org/10.1007/s00190-012-0578-z
+   https://dx.doi.org/10.1007/s00190-012-0578-z
    Addenda: http://geographiclib.sf.net/geod-addenda.html
 
 There are 4 sections in this file
@@ -93,7 +93,7 @@ Then the Lagrange Inversion Theorem
    J. L. Lagrange, Nouvelle methode pour resoudre les equations
    litterales par le moyen des series, Mem. de l'Acad. Roy. des Sciences
    de Berlin 24, 251-326 (1768, publ. 1770), Sec. 16,
-   http://books.google.com/books?id=YywPAAAAIAAJ&pg=PA25
+   https://books.google.com/books?id=YywPAAAAIAAJ&pg=PA25
 
 gives
 

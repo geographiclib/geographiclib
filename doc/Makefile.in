@@ -559,19 +559,24 @@ doc: html/index.html
 @HAVE_DOXYGEN_TRUE@	cp $^ html/
 @HAVE_DOXYGEN_TRUE@	touch $@
 
-@HAVE_DOXYGEN_TRUE@html/index.html: manpages doxyfile.in GeographicLib.dox \
+@HAVE_DOXYGEN_TRUE@html/index.html: manpages doxyfile.in GeographicLib.dox.in \
 @HAVE_DOXYGEN_TRUE@	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(FIGURES) \
 @HAVE_DOXYGEN_TRUE@	doxyfile-c.in geodesic-c.dox doxyfile-for.in geodesic-for.dox \
 @HAVE_DOXYGEN_TRUE@	$(LEGACYFILES)
 @HAVE_DOXYGEN_TRUE@	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \
 @HAVE_DOXYGEN_TRUE@	$(top_srcdir)/LICENSE.txt html/
+@HAVE_DOXYGEN_TRUE@	sed -e "s%@PROJECT_VERSION@%$(VERSION)%g" \
+@HAVE_DOXYGEN_TRUE@	$(srcdir)/GeographicLib.dox.in > GeographicLib.dox
 @HAVE_DOXYGEN_TRUE@	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
+@HAVE_DOXYGEN_TRUE@	-e "s%@PROJECT_BINARY_DIR@%..%g" \
 @HAVE_DOXYGEN_TRUE@	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 @HAVE_DOXYGEN_TRUE@	$(srcdir)/doxyfile.in | $(DOXYGEN) -
 @HAVE_DOXYGEN_TRUE@	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
+@HAVE_DOXYGEN_TRUE@	-e "s%@PROJECT_BINARY_DIR@%..%g" \
 @HAVE_DOXYGEN_TRUE@	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 @HAVE_DOXYGEN_TRUE@	$(srcdir)/doxyfile-c.in | $(DOXYGEN) -
 @HAVE_DOXYGEN_TRUE@	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
+@HAVE_DOXYGEN_TRUE@	-e "s%@PROJECT_BINARY_DIR@%..%g" \
 @HAVE_DOXYGEN_TRUE@	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 @HAVE_DOXYGEN_TRUE@	$(srcdir)/doxyfile-for.in | $(DOXYGEN) -
 @HAVE_DOXYGEN_FALSE@html/index.html: index.html.in utilities.html.in

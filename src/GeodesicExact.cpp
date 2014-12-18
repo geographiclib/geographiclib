@@ -721,7 +721,8 @@ namespace GeographicLib {
         calp1 = sbet12a - cbet2 * sbet1 * Math::sq(somg12) / (1 - comg12);
       }
     }
-    if (salp1 > 0)              // Sanity check on starting guess
+    // Sanity check on starting guess.  Backwards check allows NaN through.
+    if (!(salp1 <= 0))
       SinCosNorm(salp1, calp1);
     else {
       salp1 = 1; calp1 = 0;

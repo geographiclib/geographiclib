@@ -65,8 +65,7 @@ namespace NETGeographicLib
          **********************************************************************/
         ///@{
         /**
-         * The default constructor is equivalent to \e latitude = 90&deg;,
-         * \e longitude = 0&deg;.
+         * The default constructor sets the coordinate as undefined.
          **********************************************************************/
         GeoCoords();
 

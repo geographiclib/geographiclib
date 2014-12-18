@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "MAGNETICFIELD 1"
-.TH MAGNETICFIELD 1 "2014-11-11" "GeographicLib 1.39" "GeographicLib Utilities"
+.TH MAGNETICFIELD 1 "2014-12-18" "GeographicLib 1.40" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -191,7 +191,7 @@ The \s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137 m, \fIf\fR = 1/298.2572235
 .IX Header "OPTIONS"
 .IP "\fB\-n\fR" 4
 .IX Item "-n"
-use magnetic field model \fIname\fR instead of the default \f(CW\*(C`wmm2010\*(C'\fR.  See
+use magnetic field model \fIname\fR instead of the default \f(CW\*(C`wmm2015\*(C'\fR.  See
 \&\*(L"\s-1MODELS\*(R"\s0.
 .IP "\fB\-d\fR" 4
 .IX Item "-d"
@@ -269,6 +269,9 @@ following models
 \&    wmm2010, the World Magnetic Model 2010, which approximates the
 \&      main magnetic field for the period 2010\-2015.  See
 \&      http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+\&    wmm2015, the World Magnetic Model 2015, which approximates the
+\&      main magnetic field for the period 2015\-2020.  See
+\&      http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
 \&    igrf11, the International Geomagnetic Reference Field (11th
 \&      generation) which approximates the main magnetic field for
 \&      the period 1900\-2015.  See
@@ -283,7 +286,7 @@ These models approximate the magnetic field due to the earth's core and
 the ionosphere, the magnetosphere, nearby magnetized materials,
 electrical machinery, etc.
 .PP
-By default, the \f(CW\*(C`wmm2010\*(C'\fR magnetic model is used.  This may changed by
+By default, the \f(CW\*(C`wmm2015\*(C'\fR magnetic model is used.  This may changed by
 setting the environment variable \f(CW\*(C`GEOGRAPHICLIB_MAGNETIC_NAME\*(C'\fR or with
 the \fB\-n\fR option.
 .PP
@@ -301,7 +304,7 @@ available at
 .IX Header "ENVIRONMENT"
 .IP "\fB\s-1GEOGRAPHICLIB_MAGNETIC_NAME\s0\fR" 4
 .IX Item "GEOGRAPHICLIB_MAGNETIC_NAME"
-Override the compile-time default magnetic name of \f(CW\*(C`wmm2010\*(C'\fR.  The
+Override the compile-time default magnetic name of \f(CW\*(C`wmm2015\*(C'\fR.  The
 \&\fB\-h\fR option reports the value of \fB\s-1GEOGRAPHICLIB_MAGNETIC_NAME\s0\fR, if
 defined, otherwise it reports the compile-time value.  If the \fB\-n\fR
 \&\fIname\fR option is used, then \fIname\fR takes precedence.
@@ -330,12 +333,12 @@ error and the field (which may be inaccurate) is returned in the normal
 way.
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
-The magnetic field from \s-1WMM2010\s0 in Timbuktu on 2012\-01\-01
+The magnetic field from \s-1WMM2015\s0 in Timbuktu on 2016\-01\-01
 .PP
 .Vb 3
-\&    echo 2012\-01\-01 16:46:33N 3:00:34W 300 | MagneticField \-r
-\&    => \-2.55 12.43 33771.0 33737.6 \-1500.5 7446.0 34582.1
-\&       0.10 \-0.07 34.3 36.8 54.4 \-35.3 25.9
+\&    echo 2016\-01\-01 16:46:33N 3:00:34W 300 | MagneticField \-r
+\&    => \-2.12 12.15 33871.9 33848.7 \-1251.4 7293.9 34648.3
+\&       0.09 \-0.08 31.8 33.8 53.7 \-41.4 22.3
 .Ve
 .PP
 The first two numbers returned are the declination and inclination of

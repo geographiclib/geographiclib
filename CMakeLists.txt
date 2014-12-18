@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 39)
+set (PROJECT_VERSION_MINOR 40)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -43,7 +43,7 @@ endif ()
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 14)
-set (LIBVERSIONFULL 14.0.0)
+set (LIBVERSIONFULL 14.0.1)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -385,7 +385,8 @@ endif ()
 # Create a Config.h to expose system information to the compiler
 configure_file (
   include/GeographicLib/Config.h.in
-  include/GeographicLib/Config.h )
+  include/GeographicLib/Config.h
+  @ONLY )
 
 # The documentation depends on doxygen.
 if (GEOGRAPHICLIB_DOCUMENTATION)
@@ -572,7 +573,7 @@ if (WIN32)
     "http://geographiclib.sf.net/${PROJECT_VERSION}/utilities.html"
     "Utilities documentation"
     "http://geographiclib.sf.net" "GeographicLib home page"
-    "http://sf.net/projects/geographiclib/" "Main project page")
+    "https://sf.net/projects/geographiclib/" "Main project page")
   set (CPACK_NSIS_MODIFY_PATH ON)
 elseif (APPLE)
   # Not tested

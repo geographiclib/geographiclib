@@ -1,7 +1,7 @@
 /**
  * <h1>Geodesic routines from GeographicLib implemented in Java</h1>
  * @author Charles F. F. Karney (charles@karney.com)
- * @version 1.39
+ * @version 1.40
  *
  * <h2>Abstract</h2>
  * <p>
@@ -16,15 +16,15 @@
  * The Java library is part of GeographicLib which available for download at
  * <ul>
  * <li>
- *   <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.39.tar.gz">
- *   GeographicLib-1.39.tar.gz</a>
+ *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.40.tar.gz">
+ *   GeographicLib-1.40.tar.gz</a>
  * <li>
- *   <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.39.zip">
- *   GeographicLib-1.39.zip</a>
+ *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.40.zip">
+ *   GeographicLib-1.40.zip</a>
  * </ul>
  * <p>
  * as either a compressed tar file (tar.gz) or a zip file.  After unpacking
- * the source, the Java library can be found in GeographicLib-1.39/java.  (This
+ * the source, the Java library can be found in GeographicLib-1.40/java.  (This
  * library is completely independent from the rest of GeodegraphicLib.)  The
  * library consists of the files in the src/main/java/net/sf/geographiclib
  * subdirectory.
@@ -88,9 +88,9 @@
  * some additional packages to your local repository.)  Then compile and run
  * Inverse.java with <pre>
  * cd inverse/src/main/java
- * javac -cp .:../../../../target/GeographicLib-1.39.jar Inverse.java
+ * javac -cp .:../../../../target/GeographicLib-1.40.jar Inverse.java
  * echo -30 0 29.5 179.5 |
- *   java -cp .:../../../../target/GeographicLib-1.39.jar Inverse </pre>
+ *   java -cp .:../../../../target/GeographicLib-1.40.jar Inverse </pre>
  * <h3>Using maven to build and run {@code Inverse.java}</h3>
  * Use <a href="http://maven.apache.org/">maven</a> to install GeographicLib by
  * running (in the main java directory) <pre>
@@ -150,7 +150,7 @@
  * <ul>
  * <li>
  *   These algorithms are derived in C. F. F. Karney,
- *   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+ *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
  *   Algorithms for geodesics</a>,
  *   J. Geodesy <b>87</b>, 43&ndash;55 (2013)
  *   (<a href="http://geographiclib.sf.net/geod-addenda.html">addenda</a>).

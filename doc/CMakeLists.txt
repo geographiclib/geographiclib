@@ -29,13 +29,15 @@ endif ()
 
 file (MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html-stage)
 if (DOXYGEN_FOUND)
-  configure_file (doxyfile.in doxyfile)
-  configure_file (doxyfile-c.in doxyfile-c)
-  configure_file (doxyfile-for.in doxyfile-for)
-  configure_file (doxyfile-net.in doxyfile-net)
+  configure_file (GeographicLib.dox.in GeographicLib.dox @ONLY)
+  configure_file (doxyfile.in doxyfile @ONLY)
+  configure_file (doxyfile-c.in doxyfile-c @ONLY)
+  configure_file (doxyfile-for.in doxyfile-for @ONLY)
+  configure_file (doxyfile-net.in doxyfile-net @ONLY)
   file (GLOB SOURCES
     ../src/[A-Za-z]*.cpp ../include/GeographicLib/[A-Za-z]*.hpp
     ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp
+    ../examples/[A-Za-z]*.hpp
     ../legacy/C/*.[ch] ../legacy/Fortran/*.for ../legacy/Fortran/*.inc
     ../dotnet/NETGeographicLib/*.cpp ../dotnet/NETGeographicLib/*.h
     ../dotnet/examples/CS/*.cs ../dotnet/examples/ManagedCPP/*.cpp
@@ -52,7 +54,8 @@ if (DOXYGEN_FOUND)
       ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-c
       ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-for
       ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-net
-      GeographicLib.dox geodesic-c.dox geodesic-for.dox NETGeographicLib.dox
+      ${CMAKE_CURRENT_BINARY_DIR}/GeographicLib.dox
+      geodesic-c.dox geodesic-for.dox NETGeographicLib.dox
       ${SOURCES} ${EXTRA_FILES} ${FIGURES} ${HTMLMAN}
     COMMAND ${CMAKE_COMMAND} -E remove_directory html
     COMMAND ${CMAKE_COMMAND} -E copy_directory html-stage html

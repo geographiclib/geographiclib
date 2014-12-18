@@ -21,10 +21,10 @@ namespace NETGeographicLib
    * This computes the area of a geodesic polygon using the method given
    * Section 6 of
    * - C. F. F. Karney,
-   *   <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
    *   Algorithms for geodesics</a>,
    *   J. Geodesy <b>87</b>, 43--55 (2013);
-   *   DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
    *   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
    *   geod-addenda.html</a>.

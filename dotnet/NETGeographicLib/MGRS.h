@@ -132,7 +132,7 @@ namespace NETGeographicLib
          * of a band boundary.  For prec in [6, 11], the conversion is accurate to
          * roundoff.
          *
-         * If \e prec = -1, then the "grid zone designation", e.g., 18T, is
+         * If \e prec = &minus;1, then the "grid zone designation", e.g., 18T, is
          * returned.  This consists of the UTM zone number (absent for UPS) and the
          * first letter of the MGRS string which labels the latitude band for UTM
          * and the hemisphere for UPS.
@@ -210,10 +210,11 @@ namespace NETGeographicLib
          * suitable (but essentially arbitrary) point within that grid zone is
          * returned.  The main utility of the conversion is to allow \e zone and \e
          * northp to be determined.  In this case, the \e centerp parameter is
-         * ignored.
+         * ignored and \e prec is set to &minus;1.
          *
          * If the first 3 characters of \e mgrs are "INV", then \e x and \e y are
-         * set to NaN and \e zone is set to UTMUPS::INVALID.
+         * set to NaN, \e zone is set to UTMUPS::INVALID, and \e prec is set to
+         * &minus;2.
          *
          * If an exception is thrown, then the arguments are unchanged.
          **********************************************************************/

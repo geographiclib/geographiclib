@@ -129,7 +129,7 @@ while test $# -gt 0; do
 	    all )
 		cat $TEMP/all
 		;;
-	    minimal )		# same as no argument
+	    minimal )
 		echo egm96; echo wgs84
 		;;
 	    * )
