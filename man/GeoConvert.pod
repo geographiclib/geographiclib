@@ -30,15 +30,16 @@ is used (I<a> = 6378137 m, I<f> = 1/298.257223563).
 2 tokens (output options B<-g>, B<-d>, or B<-:>) given as I<latitude>
 I<longitude> using decimal degrees or degrees minutes seconds.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
-significant designator optional.  (See L</QUOTING> for how to
-quote the characters ' and " when entering coordinates on the command
-line.)  Various unicode characters (encoded with UTF-8) may also be used
-to denote degrees, minutes, and seconds, e.g., the degree, prime, and
-double prime symbols.  Alternatively, : (colon) may be used to separate
-the various components.  Latitude is given first (unless the B<-w>
-option is given); however, on input, either may be given first by
-appending or prepending I<N> or I<S> to the latitude and I<E> or I<W> to
-the longitude.  For example, the following are all equivalent
+significant designator optional.  (See L</QUOTING> for how to quote
+the characters ' and " when entering coordinates on the command line.)
+Various unicode characters (encoded with UTF-8) may also be used to
+denote degrees, minutes, and seconds, e.g., the degree, prime, and
+double prime symbols; in addition two single quotes can be used to
+represent ".  Alternatively, : (colon) may be used to separate the
+various components.  Latitude is given first (unless the B<-w> option
+is given); however, on input, either may be given first by appending
+or prepending I<N> or I<S> to the latitude and I<E> or I<W> to the
+longitude.  For example, the following are all equivalent
 
     33.3 44.4
     E44.4 N33.3
@@ -274,11 +275,11 @@ Quoting of command line arguments is similar
 =item Windows command shell (cmd)
 
 The ' character needs no quoting; the " character can either be quoted
-by a ^ or can be represented by '' (two single quotes).  (This quoting
-is usually unnecessary because the trailing designator can be omitted.)
+by a ^ or can be represented by typing ' twice.  (This quoting is
+usually unnecessary because the trailing designator can be omitted.)
 Thus
 
-   echo 10d20'30^" 20d30'40 | GeoConvert -d -p -1
+   echo 10d20'30'' 20d30'40 | GeoConvert -d -p -1
    => 10d20'30"N 020d30'40"E
 
 Use \ to quote the " character in a command line argument

@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2014-mm-dd
+\date 2014-12-18
 
 \section abstract Abstract
 
@@ -1368,9 +1368,10 @@ The functions fall into the following groups
 
 There are two ways of compiling the interface code: (1) using cmake and
 (2) invoking the compiler from Matlab.
- - <b>Using cmake:</b> Before running cmake, configure MATLAB on
-   Windows to use the same compiler that you're going to use for compiling
-   GeographicLib.  For example \verbatim
+ - <b>Using cmake:</b> (Only tested on Linux and Windows.) Before
+   running cmake, configure MATLAB on Windows to use the same compiler
+   that you're going to use for compiling GeographicLib.  For example
+   \verbatim
    mex.bat -setup
 
    Please choose your compiler for building MEX-files:
@@ -1398,8 +1399,9 @@ There are two ways of compiling the interface code: (1) using cmake and
    instead by using \verbatim
    cmake -D MATLAB_COMPILER=mkoctfile ..
    make matlabinterface \endverbatim
- - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
-   Octave and run, e.g., \code
+ - <b>Invoking the compiler from Matlab or Octave:</b> (Tested with
+   Linux, Mac OSX, and Windows.)  Start Matlab or Octave and run, e.g.,
+   \code
    mex -setup
    cd 'C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab'
    help geographiclibinterface
@@ -1407,7 +1409,10 @@ There are two ways of compiling the interface code: (1) using cmake and
    addpath(pwd);
    \endcode
    The first command allows you to select the compiler to use (which
-   should be the same as that used to compile GeographicLib).
+   should be the same as that used to compile GeographicLib).  On Mac
+   OSX and Matlab R2014b, the setup command is \code
+   mex -setup C++
+   \endcode
 
 To use the interface routines for GeographicLib, run one of (for
 example) \verbatim
@@ -4407,7 +4412,7 @@ Nyrtsov, et al.,
    edited by M. Buchroithner, N. Prechtel, and D. Burghardt
    (Springer, 2014), pp. 235--246.
  .
-express the integrals in terms of elliptic integrals,
+express the projection in terms of elliptic integrals,
 \f[
 \begin{align}
 x&=\frac{2b}{\sqrt{a^2-c^2}}
@@ -4442,7 +4447,7 @@ EllipticFunction class.  The expression for \f$ x \f$ is essentially the
 same at that given by Nyrtsov, et al.; I have put their expression for
 \f$ y \f$ into a somewhat simpler form using an imaginary modulus.
 
-Using http://dlmf.nist.gov/19.7.E9, the projection may also be written
+Using http://dlmf.nist.gov/19.7.E9 the projection may also be written
 as
 \f[
 \begin{align}
@@ -4458,8 +4463,8 @@ y &= \frac{2b^2}{c\sqrt{a^2-b^2}}
 {\sqrt{b^2(a^2-b^2)\sin^2\beta + c^2(a^2-c^2)\cos^2\beta}}\biggr).
 \end{align}
 \f]
-In the case of a nearly spherical ellipsoid, the parameter (the second
-argument) of the elliptic integral is small.
+In the case of a nearly spherical ellipsoid, the parameter of the
+elliptic integral (its second argument) is small.
 
 Notes:
  - \f$x\f$ (resp. \f$y\f$) depends on \f$\omega\f$ (resp. \f$\beta\f$)
@@ -4526,6 +4531,11 @@ Notes:
    \f[
    q = \pi \frac{\sqrt{a^2+b^2}}{\sqrt{a^2+b^2-2c^2}}.
    \f]
+ - The projection may be inverted (to give \f$\omega\f$ in terms of
+   \f$x\f$ and \f$\beta\f$ in terms of \f$y\f$) by using Newton's
+   method to find the root of, for example, \f$x(\omega) - x_0 = 0\f$.
+   The derivative \f$ dx(\omega)/d\omega \f$ is, of course, twice the
+   integrand in the first expression for \f$x\f$.
  - If rhumb lines are defined as curves with a constant bearing relative
    to the ellipsoid coordinates, then these are straight lines in the
    Jacobi projection.  A rhumb line which passes over an umbilic point
@@ -6834,13 +6844,16 @@ the links in the documentaion of older versions may be out of date (in
 particular the links for the source code will not work if the code has
 been migrated to the archive subdirectory).  All the releases are
 available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
-of the git repository for GeographicLib.
+of the
+<a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
+git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.40">Version 1.40</a>
-   (released 2014-mm-dd)
+   (released 2014-12-18)
    - Add the World Magnetic Model 2015, wmm2015.  This is now the
-     default magnetic model (replacing wmm2010 which was valid thru the
-     end of 2014).
+     default magnetic model for
+     <a href="MagneticField.1.html">MagneticField</a> (replacing wmm2010
+     which is valid thru the end of 2014).
    - Geodesic::Inverse didn't return NaN if one of the longitudes was a
      NaN (bug introduced in version 1.25).  Fixed in the C++, Java,
      JavaScript, C, Fortran, and Python implementations of the geodesic
@@ -6856,9 +6869,13 @@ of the git repository for GeographicLib.
      position (latitude and longitude = NaN), instead of the north pole.
    - Add an online version of <a href="RhumbSolve.1.html">RhumbSolve</a>
      at http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve.
-   - Add documentation on \ref triaxial-conformal.
-   - Add a page on \ref auxlat (actually, this was added in Version
-     1.39).
+   - Additions to the documentation:
+     - documentation on \ref triaxial-conformal;
+     - a page on \ref auxlat (actually, this was added in version 1.39);
+     - document the use of two single quotes to stand for a double quote
+       in DMS (this feature was introduced in version 1.13).
+   - The Matlab function, geographiclibinterface, which compiles the
+     wrapper routines for Matlab now works with Matlab on a Mac.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-11-11)

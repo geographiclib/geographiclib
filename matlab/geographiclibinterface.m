@@ -17,12 +17,15 @@ function geographiclibinterface(incdir, libdir)
 % This has been tested with
 %
 %   Octave 3.2.3 and g++ 4.4.4 under Linux
+%   Octave 3.6.4 and g++ 4.8.3 under Linux
 %   Matlab 2007a and Visual Studio 2005 under Windows
 %   Matlab 2008a and Visual Studio 2005 under Windows
 %   Matlab 2008a and Visual Studio 2008 under Windows (*)
 %   Matlab 2010b and Visual Studio 2005 under Windows
 %   Matlab 2010b and Visual Studio 2008 under Windows (*)
 %   Matlab 2010b and Visual Studio 2010 under Windows
+%   Matlab 2013b and Visual Studio 2012 under Windows
+%   Matlab 2014b and Mac OSX 10.10 (Yosemite)
 %
 % (*) Note that geoidheight compiled with Visual Studio 2008 causes Matlab
 %     to CRASH.  The crash happens on the second call.
@@ -49,7 +52,7 @@ function geographiclibinterface(incdir, libdir)
   end
   if (nargin < 2)
     if (nargin == 0)
-      if ispc,
+      if ispc
         installdir = 'C:/Program Files/GeographicLib';
       else
         installdir = '/usr/local';
@@ -66,9 +69,9 @@ function geographiclibinterface(incdir, libdir)
   end
   fprintf('Compiling Matlab interface to GeographicLib\n');
   fprintf('Include directory: %s\nLibrary directory: %s\n', incdir, libdir);
-  for i=1:size(funs,2),
+  for i=1:size(funs,2)
     fprintf('Compiling %s...', funs{i});
-    if ispc,
+    if ispc || ismac
       mex( ['-I' incdir], ['-L' libdir], ['-l' lib], [funs{i} '.cpp'] );
     else
       mex( ['-I' incdir], ['-L' libdir], ['-l' lib], ['-Wl,-rpath=' libdir], ...
