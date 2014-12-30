@@ -4425,7 +4425,9 @@ are thus defined by
 \f]
 After this change, the large principal ellipse is the equator,
 \f$\beta=0\f$, while the small principal ellipse is the prime meridian,
-\f$\omega=0\f$.
+\f$\omega=0\f$.  The four umbilic points, \f$\left|\omega\right| =
+\left|\beta\right| = \frac12\pi\f$, lie on middle principal ellipse in
+the plane \f$X=0\f$.
 
 Jacobi gives the following conformal mapping of the triaxial ellipsoid
 onto a plane
@@ -4466,95 +4468,29 @@ Nyrtsov, et al.,
 
 express the projection in terms of elliptic integrals.  Unfortunately,
 their expressions don't allow the limits of ellipsoids of revolution to
-be recovered simply.  However, the relations
+be readily recovered.  However, the relations
 http://dlmf.nist.gov/19.7.E5 can be used to put the projection in a much
 simpler form:
 \f[
 \begin{align}
 x&=\frac {a^2}{b^2}
-\Pi\biggl(\omega',-\frac{a^2-b^2}{b^2}, \cos\gamma\biggr),\\
+\Pi\biggl(\omega',-\frac{a^2-b^2}{b^2}, \cos\nu\biggr),\\
 y&=\frac {c^2}{b^2}
-\Pi\biggl(\beta',\frac{b^2-c^2}{b^2}, \sin\gamma\biggr),
+\Pi\biggl(\beta',\frac{b^2-c^2}{b^2}, \sin\nu\biggr),
 \end{align}
 \f]
 where
 \f[
 \begin{align}
-\tan\gamma &= \frac ac \frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}, \\
 \tan\omega' &= \frac ba \tan\omega, \\
-\tan\beta' &= \frac bc \tan\beta,
+\tan\beta' &= \frac bc \tan\beta, \\
+\tan\nu &= \frac ac \frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}},
 \end{align}
 \f]
-and \f$\Pi(\phi,\alpha^2,k)\f$ is the elliptic integral of the third
-kind, http://dlmf.nist.gov/19.2.E7.  Note that \f$\nu\f$ is the
-<i>geographiclib</i> latitude of the umbilic points (the angle a normal
-at the umbilic points makes with the equatorial plane).
-
-SKIP
-\f[
-\begin{align}
-x&=\frac ab \csc\nu\,
-G\biggl(\omega',-\cot^2\nu,
-        i\frac ca\cot\nu\biggr),\\
-y&=\frac cb \sec\nu\,
-G\biggl(\beta',-\tan^2\nu,
-        i\frac ac\tan\nu\biggr),
-\end{align}
-\f]
-where
-\f[
-\begin{align}
-\tan\nu &= \frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}, \\
-\tan\omega' &= \sin\nu \tan\omega, \\
-\tan\beta' &= \cos\nu \tan\beta,
-\end{align}
-\f]
-and
-\f[
-\begin{align}
- G(\phi,\alpha^2,k) &= \int_0^\phi
- \frac{\sqrt{1 - k^2\sin^2\theta}}{1 - \alpha^2\sin^2\theta}\,d\theta\\
- &=\frac{k^2}{\alpha^2}F(\phi, k)
- +\biggl(1-\frac{k^2}{\alpha^2}\biggr)\Pi(\phi, \alpha^2, k)
-\end{align}
-\f]
-is the combination of elliptic integrals of the first and third kinds
-that appears in the integral, given by Legendre (1811), for the
-longitude of a geodesic on an ellipsoid of revolution.  The function \f$
-G(\phi,\alpha^2,k) \f$ is provided by the EllipticFunction class.  I
-have put the expressions for \f$(x,y)\f$ given by Nyrtsov, et al. into a
-somewhat simpler form using an imaginary modulus.
-
-Using http://dlmf.nist.gov/19.7.E9 the projection may also be written
-as
-\f[
-\begin{align}
-x &= \frac ba \csc\nu\,
-\Pi\biggl(\omega',\frac{a^2-b^2}{a^2},
-          i\frac ca\cot\nu\biggr) \\
-&\quad{}+\frac{\sqrt{a^2-c^2}}b \sin^{-1}\biggl(\frac{(a^2-b^2)\sin\omega \cos\omega}
-{\sqrt{b^2(b^2-c^2)\sin^2\omega + a^2(a^2-c^2)\cos^2\omega}}\biggr)\\
-   &= \frac ba \csc\nu\,
-\Pi\biggl(\omega',\frac{a^2-b^2}{a^2},
-          i\frac ca\cot\nu\biggr) \\
-&\quad{}+\frac{\sqrt{a^2-c^2}}b \tan^{-1}\biggl(\frac{(a^2-b^2)\sin\omega' \cos\omega'}
-{\sqrt{b^2(a^2-c^2)\sin^2\omega' + a^2(b^2-c^2)\cos^2\omega'}}\biggr),\\
-y &= \frac bc \sec\nu\,
-\Pi\biggl(\beta',-\frac{b^2-c^2}{c^2},
-          i\frac ac\tan\nu\biggr) \\
-&\quad{}-\frac{\sqrt{a^2-c^2}}b \sinh^{-1}\biggl(\frac{(b^2-c^2)\sin\beta \cos\beta}
-{\sqrt{b^2(a^2-b^2)\sin^2\beta + c^2(a^2-c^2)\cos^2\beta}}\biggr)\\
-  &= \frac bc \sec\nu\,
-\Pi\biggl(\beta',-\frac{b^2-c^2}{c^2},
-          i\frac ac\tan\nu\biggr) \\
-&\quad{}-\frac{\sqrt{a^2-c^2}}b \tanh^{-1}\biggl(\frac{(b^2-c^2)\sin\beta' \cos\beta'}
-{\sqrt{b^2(a^2-c^2)\sin^2\beta' + c^2(a^2-b^2)\cos^2\beta'}}\biggr).
-\end{align}
-\f]
-In the case of a nearly spherical ellipsoid, the parameter of the
-elliptic integral, \f$\Pi\f$, (its second argument) is small.
-
-END SKIP
+\f$\nu\f$ is the geographic latitude of the umbilic point at \f$\beta =
+\omega = \frac12\pi\f$ (the angle a normal at the umbilic point makes
+with the equatorial plane), and \f$\Pi(\phi,\alpha^2,k)\f$ is the
+elliptic integral of the third kind, http://dlmf.nist.gov/19.2.E7.
 
 \section jacobi-properties Properties of the projection
 
@@ -4562,13 +4498,12 @@ END SKIP
 alone, so that latitude-longitude grid maps to straight lines in the
 projection.  In this sense, the Jacobi projection is the natural
 generalization of the Mercator projection for the triaxial ellipsoid.
-(See below for the limit \f$b\rightarrow a\f$, which makes this
+(See below for the limit \f$a\rightarrow b\f$, which makes this
 connection explicit.)
 
 In the general case (all the axes are different), the scale diverges
-only at the umbilic points, \f$\left|\omega\right| =
-\left|\beta\right| = \frac12\pi\f$.  The behavior of these
-singularities is illustrated by the complex function
+only at the umbilic points.  The behavior of these singularities is
+illustrated by the complex function
 \f[
 f(z;e) = \cosh^{-1}(z/e) - \log(2/e).
 \f]
@@ -4586,34 +4521,13 @@ finite,
 \f[
 \begin{align}
 x\bigl({\textstyle\frac12}\pi\bigr) &=\frac {a^2}{b^2}
-\Pi\biggl(-\frac{a^2-b^2}{b^2}, \cos\gamma\biggr),\\
+\Pi\biggl(-\frac{a^2-b^2}{b^2}, \cos\nu\biggr),\\
 y\bigl({\textstyle\frac12}\pi\bigr) &=\frac {c^2}{b^2}
-\Pi\biggl(\frac{b^2-c^2}{b^2}, \sin\gamma\biggr),
+\Pi\biggl(\frac{b^2-c^2}{b^2}, \sin\nu\biggr),
 \end{align}
 \f]
 where \f$\Pi(\alpha^2,k)\f$ is the complete elliptic integral of the
 third kind, http://dlmf.nist.gov/19.2.E8.
-
-SKIP
-\f[
-\begin{align}
-x\bigl({\textstyle\frac12}\pi\bigr) &= \frac ab \csc\nu\,
-G\biggl(-\cot^2\nu, i\frac ca\cot\nu\biggr)\\
-&=G\biggl(\cos^2\nu, \frac cb\cos\nu\biggr)\\
-&= \frac ba \csc\nu\,
-\Pi\biggl(\frac{a^2-b^2}{a^2}, i\frac ca\cot\nu\biggr)\\
-&= \frac {a^2}{b^2}
-\Pi\biggl(-\frac{a^2-b^2}{b^2}, \frac cb\cos\nu\biggr),\\
-y\bigl({\textstyle\frac12}\pi\bigr) &= \frac cb \sec\nu\,
-G\biggl(-\tan^2\nu, i\frac ac\tan\nu\biggr)\\
-&=G\biggl(\sin^2\nu, \frac ab\sin\nu\biggr)\\
-&= \frac bc \sec\nu\,
-\Pi\biggl(-\frac{b^2-c^2}{c^2}, i\frac ac\tan\nu\biggr)\\
-&= \frac {c^2}{b^2}
-\Pi\biggl(\frac{b^2-c^2}{b^2}, \frac ab\sin\nu\biggr).
-\end{align}
-\f]
-END SKIP
 
 In particular, if we substitute values appropriate for the earth,
 \f[
@@ -4633,9 +4547,9 @@ y\bigl({\textstyle\frac12}\pi\bigr) &= 4.2465810 = 243.31117^\circ.\\
 
 The projection may be inverted (to give \f$\omega\f$ in terms of \f$x\f$
 and \f$\beta\f$ in terms of \f$y\f$) by using Newton's method to find
-the root of, for example, \f$x(\omega) - x_0 = 0\f$.  The derivative
-elliptic integral is, of course, just given by its defining relation,
-http://dlmf.nist.gov/19.2.E7.
+the root of, for example, \f$x(\omega) - x_0 = 0\f$.  The derivative of
+the elliptic integral is, of course, just given by its defining
+relation.
 
 If rhumb lines are defined as curves with a constant bearing relative
 to the ellipsoid coordinates, then these are straight lines in the
@@ -4643,17 +4557,17 @@ Jacobi projection.  A rhumb line which passes over an umbilic point
 immediately retraces its path.  A rhumb line which crosses the line
 joining the two northerly umbilic points starts traveling south with
 a reversed heading (e.g., a NE heading becomes a SW heading).  This
-behavior is preserved in the limit \f$b\rightarrow a\f$ (although the
+behavior is preserved in the limit \f$a\rightarrow b\f$ (although the
 longitude becomes indeterminate in this limit).
 
 \section jacobi-limiting Limiting cases
 
-<b>Oblate ellipsoid</b>, \f$b\rightarrow a\f$.  The coordinate system
+<b>Oblate ellipsoid</b>, \f$a\rightarrow b\f$.  The coordinate system
 is
 \f[
 \begin{align}
-  X &= a \cos\beta \cos\omega, \\
-  Y &= a \cos\beta \sin\omega, \\
+  X &= b \cos\beta \cos\omega, \\
+  Y &= b \cos\beta \sin\omega, \\
   Z &= c \sin\beta.
 \end{align}
 \f]
@@ -4666,19 +4580,19 @@ ellipsoid,
 \begin{align}
 x &= \omega,\\
 y &= \sinh^{-1}\tan\beta'
-- \frac{\sqrt{a^2-c^2}}a
-  \tanh^{-1}\biggl(\frac{\sqrt{a^2-c^2}}a\sin\beta'\biggr),\\
-k &= \frac1{a\cos\beta}.
+- \frac{\sqrt{b^2-c^2}}b
+  \tanh^{-1}\biggl(\frac{\sqrt{b^2-c^2}}b\sin\beta'\biggr),\\
+k &= \frac1{b\cos\beta}.
 \end{align}
 \f]
 
-<b>Prolate ellipsoid</b>, \f$b\rightarrow c\f$. The coordinate system
+<b>Prolate ellipsoid</b>, \f$c\rightarrow b\f$. The coordinate system
 is
 \f[
 \begin{align}
-  X &= c \cos\omega \cos\beta, \\
+  X &= b \cos\omega \cos\beta, \\
   Y &= a \sin\omega, \\
-  Z &= c \cos\omega \sin\beta.
+  Z &= b \cos\omega \sin\beta.
 \end{align}
 \f]
 Thus \f$\omega\f$ (resp. \f$\omega'\f$) now plays the role of the
@@ -4690,33 +4604,33 @@ and \f$\omega\f$ switched,
 \f[
 \begin{align}
 x &= \sinh^{-1}\tan\omega'
-+ \frac{\sqrt{a^2-c^2}}c
-  \tan^{-1}\biggl(\frac{\sqrt{a^2-c^2}}c\sin\omega'\biggr),\\
++ \frac{\sqrt{a^2-b^2}}b
+  \tan^{-1}\biggl(\frac{\sqrt{a^2-b^2}}b\sin\omega'\biggr),\\
 y &= \beta,\\
-k &= \frac1{c\cos\omega}.
+k &= \frac1{b\cos\omega}.
 \end{align}
 \f]
 
-<b>Sphere</b>, \f$c\rightarrow a\f$.  This is a non-uniform limit
-depending on the parameter \f$\gamma\f$,
+<b>Sphere</b>, \f$a\rightarrow b\f$ and \f$c\rightarrow b\f$.  This is a
+non-uniform limit depending on the parameter \f$\nu\f$,
 \f[
 \begin{align}
-  X &= a \cos\omega \cos\beta, \\
-  Y &= a \sin\omega \sqrt{1 - \sin^2\gamma\sin^2\beta}, \\
-  Z &= a \sin\beta \sqrt{1 - \cos^2\gamma\sin^2\omega}.
+  X &= b \cos\omega \cos\beta, \\
+  Y &= b \sin\omega \sqrt{1 - \sin^2\nu\sin^2\beta}, \\
+  Z &= b \sin\beta \sqrt{1 - \cos^2\nu\sin^2\omega}.
 \end{align}
 \f]
 Using http://dlmf.nist.gov/19.6.E13 the projection can be put in terms
 of the elliptic integral of the first kind, http://dlmf.nist.gov/19.2.E4
 \f[
 \begin{align}
-x &= F(\omega, \cos\gamma), \\
-y &= F(\beta, \sin\gamma), \\
-k &= \frac1{a \sqrt{\cos^2\gamma\cos^2\omega + \sin^2\gamma\cos^2\beta}},
+x &= F(\omega, \cos\nu), \\
+y &= F(\beta, \sin\nu), \\
+k &= \frac1{b \sqrt{\cos^2\nu\cos^2\omega + \sin^2\nu\cos^2\beta}},
 \end{align}
 \f]
 Obtaining the limit of a sphere via an oblate (resp. prolate) ellipsoid
-corresponds to setting \f$\gamma = \frac12\pi\f$ (resp. \f$\gamma
+corresponds to setting \f$\nu = \frac12\pi\f$ (resp. \f$\nu
 =0\f$).  In these limits, the elliptic integral reduces to elementary
 functions http://dlmf.nist.gov/19.6.E7 and http://dlmf.nist.gov/19.6.E8
 \f[
@@ -4728,20 +4642,20 @@ F(\phi, 1) &= \mathop{\mathrm{gd}}\nolimits^{-1}\phi = \sinh^{-1}\tan\phi.
 This limiting case gives the projection found by &Eacute;. Guyou in
  - <a href="https://books.google.com/books?id=saBDAQAAIAAJ&pg=PA308">
    Sur un nouveau système de projection de la sphère</a>,
-   Comptes Rendus 102(6), 308--310 (1886)
+   Comptes Rendus 102(6), 308--310 (1886).
  - <a href="https://books.google.com/books?id=VjU8AQAAMAAJ&pg=PA16">
    Nouveau Système de projection de la sphère: généralisation de la
    projection de Mercator</a>,
-   Annales Hydrographiques (2nd series) 9, 16--35 (1887)<br>
+   Annales Hydrographiques (2nd series) 9, 16--35 (1887).
  .
 who apparently derived it without realizing that it is just a special
 case of the projection Jacobi had given some 40 years earlier.  Guyou's
 name is usually associated with the particular choice,
-\f$\gamma=\frac14\pi\f$, in which case the hemisphere
+\f$\nu=\frac14\pi\f$, in which case the hemisphere
 \f$\left|\omega\right|\le\frac12\pi\f$ is mapped into a square.
-However, by varying \f$\gamma\in[0,\frac12\pi]\f$ the hemisphere can be
-mapped into a rectangle with any aspect ratio, \f$K(\cos\gamma) :
-K(\sin\gamma)\f$, where \f$K(k)\f$ is the complete elliptic integral of
+However, by varying \f$\nu\in[0,\frac12\pi]\f$ the hemisphere can be
+mapped into a rectangle with any aspect ratio, \f$K(\cos\nu) :
+K(\sin\nu)\f$, where \f$K(k)\f$ is the complete elliptic integral of
 the first find, http://dlmf.nist.gov/19.2.E8.
 
 \section jacobi-sphere Conformal mapping of an ellipsoid to a sphere
@@ -4750,7 +4664,7 @@ An essential tool in deriving conformal projections of an ellipsoid of
 revolution is the conformal mapping of the ellipsoid onto a sphere.
 This allows conformal projections of the sphere to be generalized to the
 case of an ellipsoid of revolution.  This conformal mapping is obtained
-by using the ellipsoidal Mercator projectionn to map the ellipsoid to
+by using the ellipsoidal Mercator projection to map the ellipsoid to
 the plane and then using the spherical Mercator projection to map the
 plane onto the sphere.
 
@@ -4759,16 +4673,16 @@ octant of the ellipsoid onto a rectangle using the Jacobi projection.
 The aspect ratio of this rectangle is
 \f[
 \frac {a^2}{b^2}
-\Pi\biggl(-\frac{a^2-b^2}{b^2}, \cos\gamma\biggr) :
+\Pi\biggl(-\frac{a^2-b^2}{b^2}, \cos\nu\biggr) :
 \frac {c^2}{b^2}
-\Pi\biggl(\frac{b^2-c^2}{b^2}, \sin\gamma\biggr).
+\Pi\biggl(\frac{b^2-c^2}{b^2}, \sin\nu\biggr).
 \f]
-Find the value of \f$\gamma'\f$ such that this ratio equals
+Find the value of \f$\nu'\f$ such that this ratio equals
 \f[
-K(\cos\gamma') : K(\sin\gamma').
+K(\cos\nu') : K(\sin\nu').
 \f]
 Map the rectangle onto the equivalent octant of the sphere using Guyou's
-projection with parameter \f$\gamma = \gamma'\f$.  This reduces to the
+projection with parameter \f$\nu = \nu'\f$.  This reduces to the
 standard construction in the limit of an ellipsoid of revolution.
 
 \section jacobi-implementation An implementation of the projection
