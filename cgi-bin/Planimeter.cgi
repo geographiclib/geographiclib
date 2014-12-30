@@ -185,8 +185,8 @@ cat <<EOF
       <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
         Planimeter</a>,
       which is a simple wrapper of the
-      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1PolygonArea.html">
-        GeographicLib::PolygonArea</a> class,
+      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1PolygonAreaT.html">
+        GeographicLib::PolygonAreaT</a> class,
       is one of the utilities provided
       with <a href="http://geographiclib.sourceforge.net/">
         GeographicLib</a>.
