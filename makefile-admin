@@ -18,7 +18,7 @@ doc/scripts/geographiclib.js: $(JS_SOURCES)
 pack-js: doc/scripts/geographiclib.js
 
 distrib-html: geodesic-papers/biblio.html
-	rsync -av --exclude .svn --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded index.html tm.html tm-addenda.html tm-grid.kmz geod.html geod-addenda.html bessel-errata.html *-figs.pdf geodesic-papers $(WEBSTAGE)/htdocs/
+	rsync -av --exclude .svn --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded index.html tm.html tm-addenda.html tm-grid.kmz geod.html geod-addenda.html bessel-errata.html jacobi-errata.html *-figs.pdf geodesic-papers $(WEBSTAGE)/htdocs/
 	rsync --delete -a -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-doc:
