@@ -4459,18 +4459,20 @@ so that it reduces to the familiar formulas in the case of an oblate ellipsoid.
 The projection may be expressed in terms of elliptic integrals,
 \f[
 \begin{align}
-x&=\frac {a^2}{b^2}
-\Pi\biggl(\omega',-\frac{a^2-b^2}{b^2}, \cos\nu\biggr),\\
-y&=\frac {c^2}{b^2}
-\Pi\biggl(\beta',\frac{b^2-c^2}{b^2}, \sin\nu\biggr),
+x&=(1+e_a^2)\,\Pi(\omega',-e_a^2, \cos\nu),\\
+y&=(1-e_c^2)\,\Pi(\beta' , e_c^2, \sin\nu),\\
+k&=\frac{\sqrt{e_a^2+e_c^2}}{b\sqrt{e_a^2\cos^2\omega+e_c^2\cos^2\beta}},
 \end{align}
 \f]
 where
 \f[
 \begin{align}
-\tan\omega' &= \frac ba \tan\omega, \\
-\tan\beta' &= \frac bc \tan\beta, \\
-\tan\nu &= \frac ac \frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}},
+e_a &= \frac{\sqrt{a^2-b^2}}b, \qquad
+e_c = \frac{\sqrt{b^2-c^2}}b, \\
+\tan\omega' &= \frac ba \tan\omega = \frac 1{\sqrt{1+e_a^2}} \tan\omega, \\
+\tan\beta' &= \frac bc \tan\beta = \frac 1{\sqrt{1-e_c^2}} \tan\beta, \\
+\tan\nu &= \frac ac \frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}
+=\frac{e_c}{e_a}\frac{\sqrt{1+e_a^2}}{\sqrt{1-e_c^2}},
 \end{align}
 \f]
 \f$\nu\f$ is the geographic latitude of the umbilic point at \f$\beta =
@@ -4491,7 +4493,7 @@ Nyrtsov, et al.,
 also expressed the projection in terms of elliptic integrals.
 However, their expressions don't allow the limits of ellipsoids of
 revolution to be readily recovered.  The relations
-http://dlmf.nist.gov/19.7.E5 can be used to put the projection in the
+http://dlmf.nist.gov/19.7.E5 can be used to put their results in the
 form given here.
 
 \section jacobi-properties Properties of the projection
@@ -4522,10 +4524,8 @@ Again in the general case, the extents of \f$x\f$ and \f$y\f$ are
 finite,
 \f[
 \begin{align}
-x\bigl({\textstyle\frac12}\pi\bigr) &=\frac {a^2}{b^2}
-\Pi\biggl(-\frac{a^2-b^2}{b^2}, \cos\nu\biggr),\\
-y\bigl({\textstyle\frac12}\pi\bigr) &=\frac {c^2}{b^2}
-\Pi\biggl(\frac{b^2-c^2}{b^2}, \sin\nu\biggr),
+x\bigl(\tfrac12\pi\bigr) &=(1+e_a^2)\,\Pi(-e_a^2, \cos\nu),\\
+y\bigl(\tfrac12\pi\bigr) &=(1-e_c^2)\,\Pi(e_c^2, \sin\nu),
 \end{align}
 \f]
 where \f$\Pi(\alpha^2,k)\f$ is the complete elliptic integral of the
@@ -4574,7 +4574,8 @@ is
 \end{align}
 \f]
 Thus \f$\beta\f$ (resp. \f$\beta'\f$) is the parametric
-(resp. geographic) latitude and \f$\omega=\omega'\f$ is the longitude.
+(resp. geographic) latitude and \f$\omega=\omega'\f$ is the longitude;
+the quantity \f$e_c\f$ is the eccentricity of the ellipsoid.
 Using http://dlmf.nist.gov/19.6.E12 and http://dlmf.nist.gov/19.2.E19
 the projection reduces to the normal Mercator projection for an oblate
 ellipsoid,
@@ -4582,8 +4583,7 @@ ellipsoid,
 \begin{align}
 x &= \omega,\\
 y &= \sinh^{-1}\tan\beta'
-- \frac{\sqrt{b^2-c^2}}b
-  \tanh^{-1}\biggl(\frac{\sqrt{b^2-c^2}}b\sin\beta'\biggr),\\
+- e_c \tanh^{-1}(e_c\sin\beta'),\\
 k &= \frac1{b\cos\beta}.
 \end{align}
 \f]
@@ -4606,8 +4606,8 @@ and \f$\omega\f$ switched,
 \f[
 \begin{align}
 x &= \sinh^{-1}\tan\omega'
-+ \frac{\sqrt{a^2-b^2}}b
-  \tan^{-1}\biggl(\frac{\sqrt{a^2-b^2}}b\sin\omega'\biggr),\\
++ e_a
+  \tan^{-1}(e_a\sin\omega'),\\
 y &= \beta,\\
 k &= \frac1{b\cos\omega}.
 \end{align}
@@ -4674,10 +4674,8 @@ A similar construction is possible for a triaxial ellipsoid.  Map each
 octant of the ellipsoid onto a rectangle using the Jacobi projection.
 The aspect ratio of this rectangle is
 \f[
-\frac {a^2}{b^2}
-\Pi\biggl(-\frac{a^2-b^2}{b^2}, \cos\nu\biggr) :
-\frac {c^2}{b^2}
-\Pi\biggl(\frac{b^2-c^2}{b^2}, \sin\nu\biggr).
+(1+e_a^2)\,\Pi(-e_a^2, \cos\nu) :
+(1-e_c^2)\,\Pi( e_c^2, \sin\nu).
 \f]
 Find the value of \f$\nu'\f$ such that this ratio equals
 \f[
