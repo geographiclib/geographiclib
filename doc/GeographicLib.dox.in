@@ -4403,7 +4403,9 @@ Jacobi (1839) briefly mentions the problem of the conformal projection
 of ellipsoid.  He covers this in greater detail in <i>Vorlesungen
 &uuml;ber Dynamik</i>, &sect;28, which is now available in an
 <a href="https://www.worldcat.org/oclc/440645889">
-English translation</a>.
+English translation</a>
+(<a href="http://geographiclib.sf.net/jacobi-errata.html">
+errata</a>).
 
 \section jacobi-conformal Conformal projection
 
@@ -4454,23 +4456,7 @@ so that it reduces to the familiar formulas in the case of an oblate ellipsoid.
 
 \section jacobi-elliptic The projection in terms of elliptic integrals
 
-Nyrtsov, et al.,
- - M. V. Nyrtsov, M. E. Flies, M. M. Borisov, P. J. Stooke,
-   <a href="https://dx.doi.org/10.1007/978-3-642-32618-9_17">
-   Jacobi conformal projection of the triaxial ellipsoid: new projection
-   for mapping of small celestial bodies,</a> in
-   <i>Cartography from Pole to Pole</i>,
-   selected contributions to the 26th international conference of the ICA,
-   Dresden 2013,
-   edited by M. Buchroithner, N. Prechtel, and D. Burghardt
-   (Springer, 2014), pp. 235--246.
- .
-
-express the projection in terms of elliptic integrals.  Unfortunately,
-their expressions don't allow the limits of ellipsoids of revolution to
-be readily recovered.  However, the relations
-http://dlmf.nist.gov/19.7.E5 can be used to put the projection in a much
-simpler form:
+The projection may be expressed in terms of elliptic integrals,
 \f[
 \begin{align}
 x&=\frac {a^2}{b^2}
@@ -4490,7 +4476,23 @@ where
 \f$\nu\f$ is the geographic latitude of the umbilic point at \f$\beta =
 \omega = \frac12\pi\f$ (the angle a normal at the umbilic point makes
 with the equatorial plane), and \f$\Pi(\phi,\alpha^2,k)\f$ is the
-elliptic integral of the third kind, http://dlmf.nist.gov/19.2.E7.
+elliptic integral of the third kind, http://dlmf.nist.gov/19.2.E7.  This
+allows the projection to be numerically computed using
+EllipticFunction::Pi(real phi) const.
+
+Nyrtsov, et al.,
+ - M. V. Nyrtsov, M. E. Flies, M. M. Borisov, P. J. Stooke,
+   <a href="https://dx.doi.org/10.1007/978-3-642-32618-9_17">
+   Jacobi conformal projection of the triaxial ellipsoid: new projection
+   for mapping of small celestial bodies,</a> in
+   <i>Cartography from Pole to Pole</i>
+   (Springer, 2014), pp. 235--246.
+ .
+also expressed the projection in terms of elliptic integrals.
+However, their expressions don't allow the limits of ellipsoids of
+revolution to be readily recovered.  The relations
+http://dlmf.nist.gov/19.7.E5 can be used to put the projection in the
+form given here.
 
 \section jacobi-properties Properties of the projection
 
