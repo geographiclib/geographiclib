@@ -531,7 +531,8 @@
    https://books.google.com/books?id=ryEOAAAAQAAJ&pg=PA198 [[BR]]
    English translation: by K. Balagangadharan (Hindustan Book Agency, 2009)
    [[BR]] https://www.worldcat.org/oclc/440645889 [[BR]]
-   https://books.google.com/books?id=s9o0QwAACAAJ
+   https://books.google.com/books?id=s9o0QwAACAAJ [[BR]]
+   Errata: http://geographiclib.sf.net/jacobi-errata.html
  * C. G. J. Jacobi,[[BR]]
    ''Über die Curve, welche alle von einem Punkte ausgehenden geodätischen
    Linien eines Rotationsellipsoides berührt [The envelope of geodesic
