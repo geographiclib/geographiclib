@@ -51,9 +51,10 @@ namespace GeographicLib {
       , _ey(_bc2 / _ac2 * Math::sq(_a / _b), +_bc2 / Math::sq(_b),
             _ab2 / _ac2 * Math::sq(_c / _b), Math::sq(_c / _b))
     {
-      using std::sqrt;
-      if (!(a >= b && b >= c && c > 0 && a > c))
-        throw GeographicErr("axes are not in order");
+      if (!(a >= b && b >= c && c > 0))
+        throw GeographicErr("JacobiConformal: axes are not in order");
+      if (!(a > c))
+        throw GeographicErr("JacobiConformal: use alternate constructor for sphere");
     }
     /**
      * Constructor for a triaxial ellipsoid with semi-axes
@@ -81,10 +82,10 @@ namespace GeographicLib {
             +(_b - _c) * (_b + _c) / Math::sq(_b),
             _ab2 / _ac2 * Math::sq(_c / _b), Math::sq(_c / _b))
     {
-      using std::sqrt;
-      if (!(a >= b && b >= c && c > 0 &&
-            ab >= 0 &&  bc >= 0 && ab + ab > 0))
-        throw GeographicErr("axes are not in order");
+      if (!(a >= b && b >= c && c > 0 && ab >= 0 && bc >= 0))
+        throw GeographicErr("JacobiConformal: axes are not in order");
+      if (!(ab + bc > 0))
+        throw GeographicErr("JacobiConformal: ab + bc must be positive");
     }
     /**
      * @return the quadrant length in the \e x direction

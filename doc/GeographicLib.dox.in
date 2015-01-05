@@ -3053,7 +3053,7 @@ In the expansions below, we have
  - \f$ c^2 = a^2/2 + b^2/2 (\tanh^{-1}e)/e \f$
  - \e ep2 = \f$ e'^2 \f$
  - \e k2 = \f$ k^2 \f$
- - \e eps = \f$ \epsilon \f$
+ - \e eps = \f$ \epsilon = k^2 / (\sqrt{1 + k^2} + 1)^2\f$
 
 The formula for distance is
 \f[
