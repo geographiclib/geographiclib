@@ -48,7 +48,7 @@
 //   1600     vc10  (2010)
 //   1700     vc11  (2012)
 //   1800     vc12  (2013)
-//   1900     vc14
+//   1900     vc14  (2015)
 #    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
 #  else
 #    define GEOGRAPHICLIB_STATIC_ASSERT(cond,reason) \
