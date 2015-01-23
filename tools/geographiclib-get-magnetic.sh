@@ -27,13 +27,14 @@ table:
   wmm2010    12    2010-2015      2       3
   wmm2015    12    2015-2020      2       3
   igrf11     13    1900-2015      7      25
+  igrf12     13    1900-2020      7      26
   emm2010   740    2010-2015    3700    4400
 
 The size columns give the download and installed sizes of the datasets.
 In addition you can specify
 
   all = all of the supported magnetic models
-  minimal = wmm2015 igrf11
+  minimal = wmm2015 igrf12
 
 -p parentdir (default $DEFAULTDIR) specifies where the
 datasets should be stored.  The "Default $NAME path" listed when running
@@ -116,6 +117,7 @@ wmm2010
 wmm2015
 emm2010
 igrf11
+igrf12
 EOF
 
 while test $# -gt 0; do
@@ -127,7 +129,7 @@ while test $# -gt 0; do
 		cat $TEMP/all
 		;;
 	    minimal )
-		echo wmm2015; echo igrf11
+		echo wmm2015; echo igrf12
 		;;
 	    * )
 		echo Unknown magnetic model $1 1>&2

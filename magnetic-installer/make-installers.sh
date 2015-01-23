@@ -9,13 +9,13 @@ test -d "$MAGNETICDIR"/magnetic-installers || mkdir -p "$MAGNETICDIR"/magnetic-i
 MAGNETICDIR=`cygpath -w $MAGNETICDIR`
 (
 cat <<EOF
-wmm2015 WMM2015
+igrf12  IGRF12
 EOF
 ) | while read prefix name; do
     "$INNO" magnetic-installers.iss \
-	/dMAGNETICDIR="$MAGNETICDIR" \
-	/dPREFIX="$prefix" \
-	/dNAME="$name" > $prefix.log 2>&1
+	//dMAGNETICDIR="$MAGNETICDIR" \
+	//dPREFIX="$prefix" \
+	//dNAME="$name" > $prefix.log 2>&1
 done
 exit 0
 
@@ -24,4 +24,5 @@ wmm2010 WMM2010
 emm2010 EMM2010
 igrf11  IGRF11
 wmm2015 WMM2015
+igrf12  IGRF12
 EOF

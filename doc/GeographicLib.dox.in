@@ -2577,6 +2577,10 @@ The supported models are
    <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (11th generation)</a>, which approximates
    the main magnetic field for the period 1900--2015.
+ - <b>igrf12</b>, the
+   <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
+   Geomagnetic Reference Field (12th generation)</a>, which approximates
+   the main magnetic field for the period 1900--2020.
  - <b>emm2010</b>, the
    <a href="http://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
    Magnetic Model 2010</a>, which approximates the main and crustal
@@ -2644,6 +2648,20 @@ These magnetic models are available for download:
  <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.zip">
  link</a> (8)</center>
 <tr>
+ <td>igrf12
+ <td><center>13</center>
+ <td><center>1900--2020</center>
+ <td><center>26</center>
+ <td><center>
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf12.tar.bz2">
+ link</a> (7)</center>
+ <td><center>
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf12.exe">
+ link</a> (310)</center>
+ <td><center>
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf12.zip">
+ link</a> (8)</center>
+<tr>
  <td>emm2010
  <td><center>739</center>
  <td><center>2010--2015</center>
@@ -2666,7 +2684,7 @@ geographiclib-get-magnetic (typically installed in /usr/local/sbin)
 which automates the process of downloading and installing the magnetic
 models.  For example
 \verbatim
-   geographiclib-get-magnetic all  # install wmm2010, wmm2015, igrf11, emm2010
+   geographiclib-get-magnetic all  # install wmm2010, wmm2015, igrf11, igrf12, emm2010
    geographiclib-get-magnetic -h   # for help
 \endverbatim
 This script should be run as a user with write access to the
@@ -2735,9 +2753,9 @@ keywords
      meters.
    - <b>NumModels</b> (default 1), the number of models.  WMM2015
      consists of a single model giving the magnetic field and its time
-     variation at 2015.  IGRF11 consists of 23 models for 1900 thru 2010
+     variation at 2015.  IGRF12 consists of 24 models for 1900 thru 2015
      at 5 year intervals.  The time variation is given only for the last
-     model to allow extrapolation beyond 2010.  For dates prior to 2010,
+     model to allow extrapolation beyond 2015.  For dates prior to 2015,
      linear interpolation is used.
    - <b>Epoch</b> (required), the time origin (in fractional years) for
      the first model.
