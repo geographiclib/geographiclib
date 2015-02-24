@@ -57,7 +57,7 @@ namespace GeographicLib {
         throw GeographicErr("JacobiConformal: use alternate constructor for sphere");
     }
     /**
-     * Constructor for a triaxial ellipsoid with semi-axes
+     * Alternate constructor for a triaxial ellipsoid with semi-axes
      *
      * @param[in] a
      * @param[in] b
@@ -68,7 +68,7 @@ namespace GeographicLib {
      * This form can be used to specify a sphere.  The semi-axes must
      * satisfy \e a &ge \e b &ge c > 0.  The ratio \e ab : \e bc must equal
      * (<i>a</i>&minus;<i>b</i>) : (<i>b</i>&minus;<i>c</i>) with \e ab
-     * &ge; 0, \e bc &be; 0, and \e ab + \e bc > 0.
+     * &ge; 0, \e bc &ge; 0, and \e ab + \e bc > 0.
      **********************************************************************/
     JacobiConformal(real a, real b, real c, real ab, real bc)
       : _a(a), _b(b), _c(c)

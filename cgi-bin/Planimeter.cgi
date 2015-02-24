@@ -154,9 +154,10 @@ cat <<EOF
       calculates the perimeter and area of a polygon whose edges are
       either geodesics or rhumb lines on the WGS84 ellipsoid.
       Counter-clockwise traversal of a polygon results in a positive
-      area.  Only simple polygons are supported for the area
-      computation.  There is no need to close the polygon.  Polygons may
-      include one or both poles.  In polyline mode,
+      area.  Only simple (i.e., non-self-intersecting) polygons are
+      supported for the area computation.  There is no need to close the
+      polygon.  Polygons may include one or both poles.  In polyline
+      mode,
       <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
         Planimeter</a>
       calculates the length of the geodesic path joining the points.

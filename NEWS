@@ -444,7 +444,10 @@ Changes between 1.25 (released 2012-10-16) and 1.24 versions:
     + cmake uses folders in Visual Studio to reduce clutter;
     + allow precision of reals to be set in cmake;
     + fail gracefully in the absence of pod documentation tools;
-    + remove support for maintainer tasks in Makefile.mk.
+    + remove support for maintainer tasks in Makefile.mk;
+    + upgrade to automake 1.11.6 to fix the "make distcheck" security
+      vulnerability; see
+      http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-3386
 
 Changes between 1.24 (released 2012-09-22) and 1.23 versions:
 
