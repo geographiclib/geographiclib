@@ -264,7 +264,7 @@ public class Geodesic {
    * <p>
    * @param a equatorial radius (meters).
    * @param f flattening of ellipsoid.  Setting <i>f</i> = 0 gives a sphere.
-   *   Negative <i>f</i> gives a prolate ellipsoid.  If <i>f</i> > 1, set
+   *   Negative <i>f</i> gives a prolate ellipsoid.  If <i>f</i> &gt; 1, set
    *   flattening to 1/<i>f</i>.
    * @exception GeographicErr if <i>a</i> or (1 &minus; <i>f</i> ) <i>a</i> is
    *   not positive.

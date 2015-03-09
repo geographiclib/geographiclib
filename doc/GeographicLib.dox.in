@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2014-12-18
+\date 2015-03-09
 
 \section abstract Abstract
 
@@ -22,7 +22,7 @@ MGRS, geocentric, and local cartesian coordinates, for gravity (e.g.,
 EGM2008), geoid height and geomagnetic field (e.g., WMM2015)
 calculations, and for solving geodesic problems.  The emphasis is on
 returning accurate results with errors close to round-off (about 5--15
-nanometers).  New accurate algorithms for \ref geodesic and \ref
+nanometers).  Accurate algorithms for \ref geodesic and \ref
 transversemercator have been developed for this library.  The
 functionality of the library can be accessed from user code, from the
 \ref utilities provided, or via the \ref other.  Also included is a .NET
@@ -76,6 +76,7 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref magnetic
  - \ref geodesic
  - \ref triaxial
+ - \ref jacobi
  - \ref rhumb
  - \ref greatellipse
  - \ref transversemercator
@@ -2576,6 +2577,10 @@ The supported models are
    <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (11th generation)</a>, which approximates
    the main magnetic field for the period 1900--2015.
+ - <b>igrf12</b>, the
+   <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
+   Geomagnetic Reference Field (12th generation)</a>, which approximates
+   the main magnetic field for the period 1900--2020.
  - <b>emm2010</b>, the
    <a href="http://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
    Magnetic Model 2010</a>, which approximates the main and crustal
@@ -2643,6 +2648,20 @@ These magnetic models are available for download:
  <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.zip">
  link</a> (8)</center>
 <tr>
+ <td>igrf12
+ <td><center>13</center>
+ <td><center>1900--2020</center>
+ <td><center>26</center>
+ <td><center>
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf12.tar.bz2">
+ link</a> (7)</center>
+ <td><center>
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf12.exe">
+ link</a> (310)</center>
+ <td><center>
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf12.zip">
+ link</a> (8)</center>
+<tr>
  <td>emm2010
  <td><center>739</center>
  <td><center>2010--2015</center>
@@ -2665,7 +2684,7 @@ geographiclib-get-magnetic (typically installed in /usr/local/sbin)
 which automates the process of downloading and installing the magnetic
 models.  For example
 \verbatim
-   geographiclib-get-magnetic all  # install wmm2010, wmm2015, igrf11, emm2010
+   geographiclib-get-magnetic all  # install wmm2010, wmm2015, igrf11, igrf12, emm2010
    geographiclib-get-magnetic -h   # for help
 \endverbatim
 This script should be run as a user with write access to the
@@ -2734,9 +2753,9 @@ keywords
      meters.
    - <b>NumModels</b> (default 1), the number of models.  WMM2015
      consists of a single model giving the magnetic field and its time
-     variation at 2015.  IGRF11 consists of 23 models for 1900 thru 2010
+     variation at 2015.  IGRF12 consists of 24 models for 1900 thru 2015
      at 5 year intervals.  The time variation is given only for the last
-     model to allow extrapolation beyond 2010.  For dates prior to 2010,
+     model to allow extrapolation beyond 2015.  For dates prior to 2015,
      linear interpolation is used.
    - <b>Epoch</b> (required), the time origin (in fractional years) for
      the first model.
@@ -2900,7 +2919,7 @@ References:
    Aeronautical Chart and Information Center (St. Louis, 1964),
    Chaps. 5--7.
  - J. Danielsen,
-   The Area under the Geodesic,
+   The area under the geodesic,
    Survey Review 30(232), 61--66 (1989).
    DOI: <a href="https://dx.doi.org/10.1179/003962689791474267">
    10.1179/003962689791474267</a>
@@ -3052,7 +3071,7 @@ In the expansions below, we have
  - \f$ c^2 = a^2/2 + b^2/2 (\tanh^{-1}e)/e \f$
  - \e ep2 = \f$ e'^2 \f$
  - \e k2 = \f$ k^2 \f$
- - \e eps = \f$ \epsilon \f$
+ - \e eps = \f$ \epsilon = k^2 / (\sqrt{1 + k^2} + 1)^2\f$
 
 The formula for distance is
 \f[
@@ -3813,7 +3832,7 @@ Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
 \page triaxial Geodesics on a triaxial ellipsoid
 
 <center>
-Back to \ref geodesic.  Forward to \ref rhumb.  Up to \ref contents.
+Back to \ref geodesic.  Forward to \ref jacobi.  Up to \ref contents.
 </center>
 
 Jacobi (1839) showed that the problem of geodesics on a triaxial
@@ -3834,7 +3853,6 @@ Go to
  - \ref triaxial-survey
  - \ref triaxial-stab
  - \ref triaxial-inverse
- - \ref triaxial-conformal
 
 <b>NOTES</b>
  -# A triaxial ellipsoid approximates the earth only slightly better
@@ -4384,179 +4402,321 @@ The shortest path found by this method is unique unless:
 
 \section triaxial-conformal Jacobi's conformal projection
 
-In Vorlesungen &uuml;ber Dynamik, &sect;28, Jacobi gives the following
-conformal mapping of the triaxial ellipsoid onto a plane
+This material is now on its own page; see \ref jacobi.
+
+<center>
+Back to \ref geodesic.  Forward to \ref jacobi.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page jacobi Jacobi's conformal projection
+
+<center>
+Back to \ref triaxial.  Forward to \ref rhumb.  Up to
+\ref contents.
+</center>
+
+In addition to solving the geodesic problem for the triaxial ellipsoid,
+Jacobi (1839) briefly mentions the problem of the conformal projection
+of ellipsoid.  He covers this in greater detail in <i>Vorlesungen
+&uuml;ber Dynamik</i>, &sect;28, which is now available in an
+<a href="https://www.worldcat.org/oclc/440645889">
+English translation: Lectures on Dynamics</a>
+(<a href="http://geographiclib.sf.net/jacobi-errata.html">
+errata</a>).
+
+\section jacobi-conformal Conformal projection
+
+It is convenient to rotate Jacobi's ellipsoidal coordinate system so
+that \f$(X,Y,Z)\f$ are respectively the middle, large, and small axes of
+the ellipsoid.  The longitude \f$\omega\f$ is shifted so that
+\f$(\beta=0,\omega=0)\f$ is the point \f$(b,0,0)\f$.  The coordinates
+are thus defined by
 \f[
 \begin{align}
-x &= 2 \int \frac
-{\sqrt{a^2 \sin^2\omega + b^2 \cos^2\omega}}
-{\sqrt{a^2 \sin^2\omega + b^2 \cos^2\omega - c^2}}\, d\omega, \\
-y &= 2 \int \frac
+  X &= b \cos\beta \cos\omega, \\
+  Y &= a \sin\omega
+      \frac{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}}
+           {\sqrt{a^2 - c^2}}, \\
+  Z &= c \sin\beta
+      \frac{\sqrt{a^2\cos^2\omega + b^2\sin^2\omega - c^2}}
+           {\sqrt{a^2 - c^2}}.
+\end{align}
+\f]
+After this change, the large principal ellipse is the equator,
+\f$\beta=0\f$, while the small principal ellipse is the prime meridian,
+\f$\omega=0\f$.  The four umbilic points, \f$\left|\omega\right| =
+\left|\beta\right| = \frac12\pi\f$, lie on middle principal ellipse in
+the plane \f$X=0\f$.
+
+Jacobi gives the following conformal mapping of the triaxial ellipsoid
+onto a plane
+\f[
+\begin{align}
+x &= \frac{\sqrt{a^2-c^2}}b  \int \frac
+{\sqrt{a^2 \cos^2\omega + b^2 \sin^2\omega}}
+{\sqrt{a^2 \cos^2\omega + b^2 \sin^2\omega - c^2}}\, d\omega, \\
+y &= \frac{\sqrt{a^2-c^2}}b \int \frac
 {\sqrt{b^2 \sin^2\beta + c^2 \cos^2\beta}}
 {\sqrt{a^2 - b^2 \sin^2\beta - c^2 \cos^2\beta}}\, d\beta.
 \end{align}
 \f]
 The scale of the projection is
 \f[
-k = \frac2
-{\sqrt{a^2 \sin^2\omega + b^2 (\cos^2\omega-\sin^2\beta) - c^2 \cos^2\beta}}.
+k = \frac{\sqrt{a^2-c^2}}
+{b\sqrt{a^2 \cos^2\omega + b^2 (\sin^2\omega-\sin^2\beta) - c^2 \cos^2\beta}}.
 \f]
-Nyrtsov, et al.,
- - M. V. Nyrtsov, M. E. Flies, M. M. Borisov, P. J. Stooke,
-   <a href="https://dx.doi.org/10.1007/978-3-642-32618-9_17">
-   Jacobi conformal projection of the triaxial ellipsoid: new projection
-   for mapping of small celestial bodies,</a> in
-   <i>Cartography from Pole to Pole</i>,
-   selected contributions to the 26th international conference of the ICA,
-   Dresden 2013,
-   edited by M. Buchroithner, N. Prechtel, and D. Burghardt
-   (Springer, 2014), pp. 235--246.
- .
-express the projection in terms of elliptic integrals,
+I have scaled the Jacobi's projection by a constant factor,
+\f[
+\frac{\sqrt{a^2-c^2}}{2b},
+\f]
+so that it reduces to the familiar formulas in the case of an oblate ellipsoid.
+
+\section jacobi-elliptic The projection in terms of elliptic integrals
+
+The projection may be expressed in terms of elliptic integrals,
 \f[
 \begin{align}
-x&=\frac{2b}{\sqrt{a^2-c^2}}
-G\biggl(\omega',\frac{a^2-b^2}{a^2-c^2},
-        \frac cb\frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}}\biggr),\\
-y&=\frac{2c}{\sqrt{a^2-b^2}}
-G\biggl(\beta',-\frac{b^2-c^2}{a^2-b^2},
-        i\frac ac\frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}\biggr),
+x&=(1+e_a^2)\,\Pi(\omega',-e_a^2, \cos\nu),\\
+y&=(1-e_c^2)\,\Pi(\beta' , e_c^2, \sin\nu),\\
+k&=\frac{\sqrt{e_a^2+e_c^2}}{b\sqrt{e_a^2\cos^2\omega+e_c^2\cos^2\beta}},
 \end{align}
 \f]
 where
 \f[
 \begin{align}
-\tan\omega' &= \frac{\sqrt{a^2-c^2}}{\sqrt{b^2-c^2}} \tan\omega, \\
-\tan\beta' &= \frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}} \tan\beta,
+e_a &= \frac{\sqrt{a^2-b^2}}b, \qquad
+e_c = \frac{\sqrt{b^2-c^2}}b, \\
+\tan\omega' &= \frac ba \tan\omega = \frac 1{\sqrt{1+e_a^2}} \tan\omega, \\
+\tan\beta' &= \frac bc \tan\beta = \frac 1{\sqrt{1-e_c^2}} \tan\beta, \\
+\tan\nu &= \frac ac \frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}
+=\frac{e_c}{e_a}\frac{\sqrt{1+e_a^2}}{\sqrt{1-e_c^2}},
 \end{align}
 \f]
-and
+\f$\nu\f$ is the geographic latitude of the umbilic point at \f$\beta =
+\omega = \frac12\pi\f$ (the angle a normal at the umbilic point makes
+with the equatorial plane), and \f$\Pi(\phi,\alpha^2,k)\f$ is the
+elliptic integral of the third kind, http://dlmf.nist.gov/19.2.E7.  This
+allows the projection to be numerically computed using
+EllipticFunction::Pi(real phi) const.
+
+Nyrtsov, et al.,
+ - M. V. Nyrtsov, M. E. Flies, M. M. Borisov, P. J. Stooke,
+   <a href="https://dx.doi.org/10.1007/978-3-642-32618-9_17">
+   Jacobi conformal projection of the triaxial ellipsoid: new projection
+   for mapping of small celestial bodies,</a> in
+   <i>Cartography from Pole to Pole</i>
+   (Springer, 2014), pp. 235--246.
+ .
+also expressed the projection in terms of elliptic integrals.
+However, their expressions don't allow the limits of ellipsoids of
+revolution to be readily recovered.  The relations
+http://dlmf.nist.gov/19.7.E5 can be used to put their results in the
+form given here.
+
+\section jacobi-properties Properties of the projection
+
+\f$x\f$ (resp. \f$y\f$) depends on \f$\omega\f$ (resp. \f$\beta\f$)
+alone, so that latitude-longitude grid maps to straight lines in the
+projection.  In this sense, the Jacobi projection is the natural
+generalization of the Mercator projection for the triaxial ellipsoid.
+(See below for the limit \f$a\rightarrow b\f$, which makes this
+connection explicit.)
+
+In the general case (all the axes are different), the scale diverges
+only at the umbilic points.  The behavior of these singularities is
+illustrated by the complex function
+\f[
+f(z;e) = \cosh^{-1}(z/e) - \log(2/e).
+\f]
+For \f$e > 0\f$, this function has two square root singularities at
+\f$\pm e\f$, corresponding to the two northern umbilic points.
+Plotting contours of its real (resp. imaginary) part gives the
+behavior of the lines of constant latitude (resp. longitude) near the
+north pole in Fig. 1.  If we pass to the limit \f$e\rightarrow 0\f$,
+then \f$ f(z;e)\rightarrow\log z\f$, and the two branch points merge
+yielding a stronger (logarithmic) singularity at \f$z = 0\f$,
+concentric circles of latitude, and radial lines of longitude.
+
+Again in the general case, the extents of \f$x\f$ and \f$y\f$ are
+finite,
 \f[
 \begin{align}
- G(\phi,\alpha^2,k) &= \int_0^\phi
- \frac{\sqrt{1 - k^2\sin^2\theta}}{1 - \alpha^2\sin^2\theta}\,d\theta\\
- &=\frac{k^2}{\alpha^2}F(\phi, k)
- +\biggl(1-\frac{k^2}{\alpha^2}\biggr)\Pi(\phi, \alpha^2, k)
+x\bigl(\tfrac12\pi\bigr) &=(1+e_a^2)\,\Pi(-e_a^2, \cos\nu),\\
+y\bigl(\tfrac12\pi\bigr) &=(1-e_c^2)\,\Pi(e_c^2, \sin\nu),
 \end{align}
 \f]
-is the combination of elliptic integrals of the first and third kinds
-that appears in the integral, given by Legendre (1811), for the
-longitude of a geodesic on an ellipsoid of revolution.
-The function \f$ G(\phi,\alpha^2,k) \f$ is provided by the
-EllipticFunction class.  The expression for \f$ x \f$ is essentially the
-same at that given by Nyrtsov, et al.; I have put their expression for
-\f$ y \f$ into a somewhat simpler form using an imaginary modulus.
+where \f$\Pi(\alpha^2,k)\f$ is the complete elliptic integral of the
+third kind, http://dlmf.nist.gov/19.2.E8.
 
-Using http://dlmf.nist.gov/19.7.E9 the projection may also be written
-as
+In particular, if we substitute values appropriate for the earth,
 \f[
 \begin{align}
-x &= \frac{2a^2}{b{\sqrt{a^2-c^2}}}
-\Pi\biggl(\omega', -\frac{a^2-b^2}{b^2},
-          \frac cb\frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}}\biggr) \\
-&\quad{}-2\tan^{-1}\biggl(\frac{(a^2-b^2) \sin\omega' \cos\omega'}
-{\sqrt{a^2(b^2-c^2)\sin^2\omega' + b^2(a^2-c^2)\cos^2\omega'}}\biggr),\\
-y &= \frac{2b^2}{c\sqrt{a^2-b^2}}
-\Pi\biggl(\beta',-\frac{b^2-c^2}{c^2},
-          i\frac ac\frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}\biggr) \\
-&\quad{}-2\sinh^{-1}\biggl(\frac{(b^2-c^2)\sin\beta \cos\beta}
-{\sqrt{b^2(a^2-b^2)\sin^2\beta + c^2(a^2-c^2)\cos^2\beta}}\biggr).
+a&=(6378137+35)\,\mathrm m,\\
+b&=(6378137-35)\,\mathrm m,\\
+c&=6356752\,\mathrm m,\\
 \end{align}
 \f]
-In the case of a nearly spherical ellipsoid, the parameter of the
-elliptic integral (its second argument) is small.
+we have
+\f[
+\begin{align}
+x\bigl({\textstyle\frac12}\pi\bigr) &= 1.5720928 = \hphantom{0}90.07428^\circ,\\
+y\bigl({\textstyle\frac12}\pi\bigr) &= 4.2465810 = 243.31117^\circ.\\
+\end{align}
+\f]
 
-Notes:
- - \f$x\f$ (resp. \f$y\f$) depends on \f$\omega\f$ (resp. \f$\beta\f$)
-   alone, so that latitude-longitude grid maps to straight lines in the
-   projection.  In this sense, the Jacobi projection is the natural
-   generalization of the Mercator projection for the triaxial ellipsoid.
-   Indeed, in the limit \f$b\rightarrow a\f$, it reduces to the normal
-   Mercator projection for an oblate ellipsoid (apart from an overall
-   scale),
-   \f[
-   \begin{align}
-   x &= \frac{2a}{\sqrt{a^2 - c^2}} \omega,\\
-   y &= \frac{2a}{\sqrt{a^2 - c^2}} \int \frac
-   {\sqrt{a^2 \sin^2\beta + c^2 \cos^2\beta}}{a\cos\beta}\, d\beta\\
-   &= \frac{2a}{\sqrt{a^2 - c^2}} \sinh^{-1}\biggl(\frac ac \tan\beta\biggr) -
-   2\sinh^{-1}\biggl(\frac{\sqrt{a^2-c^2}}c\sin\beta\biggr),\\
-   k &= \frac{2a}{\sqrt{a^2 - c^2}}\frac1{a\cos\beta};
-   \end{align}
-   \f]
-   recall that \f$\beta\f$ is the parametric latitude in this limit.
- - In the general case (all the axes are different), the scale diverges
-   only at the umbilic points, \f$\sin\omega = \cos\beta = 0\f$.  The
-   behavior of these singularities is illustrated by the complex
-   function
-   \f[
-   f(z;e) = \cosh^{-1}(z/e) - \log(2/e).
-   \f]
-   For \f$e > 0\f$, this function has two square root singularities at
-   \f$\pm e\f$, corresponding to the two northern umbilic points.
-   Plotting contours of its real (resp. imaginary) part gives the
-   behavior of the lines of constant latitude (resp. longitude) near the
-   north pole in Fig. 1.  If we pass to the limit \f$e\rightarrow 0\f$,
-   then \f$ f(z;e)\rightarrow\log z\f$, and the two branch points merge
-   yielding a stronger (logarithmic) singularity at \f$z = 0\f$,
-   concentric circles of latitude, and radial lines of longitude.
- - Again in the general case, the extents of \f$x\f$ and \f$y\f$ are
-   finite (given by the complete elliptic integral of the third kind),
-   \f[
-   \begin{align}
-   x\bigl({\textstyle\frac12}\pi\bigr) &= \frac{2a^2}{b{\sqrt{a^2-c^2}}}
-   \Pi\biggl(-\frac{a^2-b^2}{b^2},
-   \frac cb\frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}}\biggr),\\
-   y\bigl({\textstyle\frac12}\pi\bigr) &= \frac{2b^2}{c\sqrt{a^2-b^2}}
-   \Pi\biggl(-\frac{b^2-c^2}{c^2},
-   i\frac ac\frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}\biggr).
-   \end{align}
-   \f]
- - In particular, if we substitute values appropriate for the earth,
-   \f[
-   \begin{align}
-   a&=(6378137+35)\,\mathrm m,\\
-   b&=(6378137-35)\,\mathrm m,\\
-   c&=6356752\,\mathrm m,\\
-   \end{align}
-   \f]
-   we have
-   \f[
-   \begin{align}
-   x\bigl({\textstyle\frac12}\pi\bigr) &= 38.396508 = 1.0000005\,q,\\
-   y\bigl({\textstyle\frac12}\pi\bigr) &= 103.717719 = 2.7012293\,q,\\
-   \end{align}
-   \f]
-   where
-   \f[
-   q = \pi \frac{\sqrt{a^2+b^2}}{\sqrt{a^2+b^2-2c^2}}.
-   \f]
- - The projection may be inverted (to give \f$\omega\f$ in terms of
-   \f$x\f$ and \f$\beta\f$ in terms of \f$y\f$) by using Newton's
-   method to find the root of, for example, \f$x(\omega) - x_0 = 0\f$.
-   The derivative \f$ dx(\omega)/d\omega \f$ is, of course, twice the
-   integrand in the first expression for \f$x\f$.
- - If rhumb lines are defined as curves with a constant bearing relative
-   to the ellipsoid coordinates, then these are straight lines in the
-   Jacobi projection.  A rhumb line which passes over an umbilic point
-   immediately retraces its path.  A rhumb line which crosses the line
-   joining the two northerly umbilic points starts traveling south with
-   a reversed heading (e.g., a NE heading becomes a SW heading).  This
-   behavior is preserved in the limit \f$b\rightarrow a\f$ (although the
-   longitude becomes indeterminate in this limit).
+The projection may be inverted (to give \f$\omega\f$ in terms of \f$x\f$
+and \f$\beta\f$ in terms of \f$y\f$) by using Newton's method to find
+the root of, for example, \f$x(\omega) - x_0 = 0\f$.  The derivative of
+the elliptic integral is, of course, just given by its defining
+relation.
+
+If rhumb lines are defined as curves with a constant bearing relative
+to the ellipsoid coordinates, then these are straight lines in the
+Jacobi projection.  A rhumb line which passes over an umbilic point
+immediately retraces its path.  A rhumb line which crosses the line
+joining the two northerly umbilic points starts traveling south with
+a reversed heading (e.g., a NE heading becomes a SW heading).  This
+behavior is preserved in the limit \f$a\rightarrow b\f$ (although the
+longitude becomes indeterminate in this limit).
+
+\section jacobi-limiting Limiting cases
+
+<b>Oblate ellipsoid</b>, \f$a\rightarrow b\f$.  The coordinate system
+is
+\f[
+\begin{align}
+  X &= b \cos\beta \cos\omega, \\
+  Y &= b \cos\beta \sin\omega, \\
+  Z &= c \sin\beta.
+\end{align}
+\f]
+Thus \f$\beta\f$ (resp. \f$\beta'\f$) is the parametric
+(resp. geographic) latitude and \f$\omega=\omega'\f$ is the longitude;
+the quantity \f$e_c\f$ is the eccentricity of the ellipsoid.
+Using http://dlmf.nist.gov/19.6.E12 and http://dlmf.nist.gov/19.2.E19
+the projection reduces to the normal Mercator projection for an oblate
+ellipsoid,
+\f[
+\begin{align}
+x &= \omega,\\
+y &= \sinh^{-1}\tan\beta'
+- e_c \tanh^{-1}(e_c\sin\beta'),\\
+k &= \frac1{b\cos\beta}.
+\end{align}
+\f]
+
+<b>Prolate ellipsoid</b>, \f$c\rightarrow b\f$. The coordinate system
+is
+\f[
+\begin{align}
+  X &= b \cos\omega \cos\beta, \\
+  Y &= a \sin\omega, \\
+  Z &= b \cos\omega \sin\beta.
+\end{align}
+\f]
+Thus \f$\omega\f$ (resp. \f$\omega'\f$) now plays the role of the
+parametric (resp. geographic) latitude and while \f$\beta=\beta'\f$ is
+the longitude.  Using http://dlmf.nist.gov/19.6.E12
+http://dlmf.nist.gov/19.2.E19 and http://dlmf.nist.gov/19.2.E18 the
+projection reduces to similar expressions with the roles of \f$\beta\f$
+and \f$\omega\f$ switched,
+\f[
+\begin{align}
+x &= \sinh^{-1}\tan\omega'
++ e_a
+  \tan^{-1}(e_a\sin\omega'),\\
+y &= \beta,\\
+k &= \frac1{b\cos\omega}.
+\end{align}
+\f]
+
+<b>Sphere</b>, \f$a\rightarrow b\f$ and \f$c\rightarrow b\f$.  This is a
+non-uniform limit depending on the parameter \f$\nu\f$,
+\f[
+\begin{align}
+  X &= b \cos\omega \cos\beta, \\
+  Y &= b \sin\omega \sqrt{1 - \sin^2\nu\sin^2\beta}, \\
+  Z &= b \sin\beta \sqrt{1 - \cos^2\nu\sin^2\omega}.
+\end{align}
+\f]
+Using http://dlmf.nist.gov/19.6.E13 the projection can be put in terms
+of the elliptic integral of the first kind, http://dlmf.nist.gov/19.2.E4
+\f[
+\begin{align}
+x &= F(\omega, \cos\nu), \\
+y &= F(\beta, \sin\nu), \\
+k &= \frac1{b \sqrt{\cos^2\nu\cos^2\omega + \sin^2\nu\cos^2\beta}},
+\end{align}
+\f]
+Obtaining the limit of a sphere via an oblate (resp. prolate) ellipsoid
+corresponds to setting \f$\nu = \frac12\pi\f$ (resp. \f$\nu
+=0\f$).  In these limits, the elliptic integral reduces to elementary
+functions http://dlmf.nist.gov/19.6.E7 and http://dlmf.nist.gov/19.6.E8
+\f[
+\begin{align}
+F(\phi, 0) &= \phi, \\
+F(\phi, 1) &= \mathop{\mathrm{gd}}\nolimits^{-1}\phi = \sinh^{-1}\tan\phi.
+\end{align}
+\f]
+The spherical limit gives the projection found by &Eacute;. Guyou in
+ - <a href="https://books.google.com/books?id=saBDAQAAIAAJ&pg=PA308">
+   Sur un nouveau système de projection de la sphère</a>,
+   Comptes Rendus 102(6), 308--310 (1886).
+ - <a href="https://books.google.com/books?id=VjU8AQAAMAAJ&pg=PA16">
+   Nouveau système de projection de la sphère: généralisation de la
+   projection de Mercator</a>,
+   Annales Hydrographiques (2nd series) 9, 16--35 (1887).
+ .
+who apparently derived it without realizing that it is just a special
+case of the projection Jacobi had given some 40 years earlier.  Guyou's
+name is usually associated with the particular choice,
+\f$\nu=\frac14\pi\f$, in which case the hemisphere
+\f$\left|\omega\right|\le\frac12\pi\f$ is mapped into a square.
+However, by varying \f$\nu\in[0,\frac12\pi]\f$ the hemisphere can be
+mapped into a rectangle with any aspect ratio, \f$K(\cos\nu) :
+K(\sin\nu)\f$, where \f$K(k)\f$ is the complete elliptic integral of
+the first find, http://dlmf.nist.gov/19.2.E8.
+
+\section jacobi-sphere Conformal mapping of an ellipsoid to a sphere
+
+An essential tool in deriving conformal projections of an ellipsoid of
+revolution is the conformal mapping of the ellipsoid onto a sphere.
+This allows conformal projections of the sphere to be generalized to the
+case of an ellipsoid of revolution.  This conformal mapping is obtained
+by using the ellipsoidal Mercator projection to map the ellipsoid to
+the plane and then using the spherical Mercator projection to map the
+plane onto the sphere.
+
+A similar construction is possible for a triaxial ellipsoid.  Map each
+octant of the ellipsoid onto a rectangle using the Jacobi projection.
+The aspect ratio of this rectangle is
+\f[
+(1+e_a^2)\,\Pi(-e_a^2, \cos\nu) :
+(1-e_c^2)\,\Pi( e_c^2, \sin\nu).
+\f]
+Find the value of \f$\nu'\f$ such that this ratio equals
+\f[
+K(\cos\nu') : K(\sin\nu').
+\f]
+Map the rectangle onto the equivalent octant of the sphere using Guyou's
+projection with parameter \f$\nu = \nu'\f$.  This reduces to the
+standard construction in the limit of an ellipsoid of revolution.
+
+\section jacobi-implementation An implementation of the projection
 
 An implementation of the Jacobi conformal projection is given here
 \include JacobiConformal.hpp
 
 <center>
-Back to \ref geodesic.  Forward to \ref rhumb.  Up to \ref contents.
+Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page rhumb Rhumb lines
 
 <center>
-Back to \ref triaxial.  Forward to \ref greatellipse.  Up to
+Back to \ref jacobi.  Forward to \ref greatellipse.  Up to
 \ref contents.
 </center>
 
@@ -5144,7 +5304,7 @@ unchanged.  The result for the sum is
 \f]
 
 <center>
-Back to \ref triaxial.  Forward to \ref greatellipse.  Up to
+Back to \ref jacobi.  Forward to \ref greatellipse.  Up to
 \ref contents.
 </center>
 **********************************************************************/
@@ -6848,6 +7008,18 @@ of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
 
+ - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
+   (released 2015-03-09)
+   - Fix bug in Rhumb::Inverse (with \e exact = true) and related
+     functions which causes the wrong distance to be reported if one of
+     the end points is at a pole.  Thanks to Thomas Murray for reporting
+     this.
+   - Add International Geomagnetic Reference Field (12th generation),
+     which approximates the main magnetic field of the earth for the
+     period 1900--2020.
+   - Split information about \ref jacobi to a separate section and
+     include more material.
+
  - <a href="http://geographiclib.sf.net/1.40">Version 1.40</a>
    (released 2014-12-18)
    - Add the World Magnetic Model 2015, wmm2015.  This is now the
@@ -7250,7 +7422,10 @@ git repository for GeographicLib</a>.
      - cmake uses folders in Visual Studio to reduce clutter;
      - allow precision of reals to be set in cmake;
      - fail gracefully in the absence of pod documentation tools;
-     - remove support for maintainer tasks in Makefile.mk.
+     - remove support for maintainer tasks in Makefile.mk;
+     - upgrade to automake 1.11.6 to fix the "make distcheck" security
+       vulnerability; see
+       http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-3386
 
  - <a href="http://geographiclib.sf.net/1.24">Version 1.24</a>
    (released 2012-09-22)

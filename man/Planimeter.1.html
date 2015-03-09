@@ -29,7 +29,7 @@
 
 <p>Of course, encircling an area in the clockwise direction is equivalent to encircling the rest of the ellipsoid in the counter-clockwise direction. The default interpretation used by <b>Planimeter</b> is the one that results in a smaller magnitude of area; i.e., the magnitude of the area is less than or equal to one half the total area of the ellipsoid. If the <b>-s</b> option is given, then the interpretation used is the one that results in a positive area; i.e., the area is positive and less than the total area of the ellipsoid.</p>
 
-<p>Only simple polygons are supported for the area computation. Polygons may include one or both poles. There is no need to close the polygon.</p>
+<p>Only simple (i.e., non-self-intersecting) polygons are supported for the area computation. Polygons may include one or both poles. There is no need to close the polygon.</p>
 
 <h1 id="OPTIONS">OPTIONS</h1>
 
@@ -68,7 +68,7 @@
 <dt id="G"><b>-G</b></dt>
 <dd>
 
-<p>use the series formulation for the geodesics. This is the default option and recommened for terrestrial applications.</p>
+<p>use the series formulation for the geodesics. This is the default option and is recommended for terrestrial applications. This option, <b>-G</b>, and the following three options, <b>-E</b>, <b>-Q</b>, and <b>-R</b>, are mutually exclusive.</p>
 
 </dd>
 <dt id="E"><b>-E</b></dt>
@@ -80,7 +80,7 @@
 <dt id="Q"><b>-Q</b></dt>
 <dd>
 
-<p>perform the calculation on the authalic sphere. The area calculation is accurate even if the flattening is large, <i>provided</i> the edges are sufficiently short. The perimeter calculation is not accurate. <b>-E</b> and <b>-Q</b> are mutually exclusive.</p>
+<p>perform the calculation on the authalic sphere. The area calculation is accurate even if the flattening is large, <i>provided</i> the edges are sufficiently short. The perimeter calculation is not accurate.</p>
 
 </dd>
 <dt id="R"><b>-R</b></dt>
