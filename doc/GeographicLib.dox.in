@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2015-mm-dd
+\date 2015-03-09
 
 \section abstract Abstract
 
@@ -7009,16 +7009,16 @@ of the
 git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
-   (released 2015-mm-dd)
-   - Split information about \ref jacobi to a separate section and
-     include more material.
-   - Add International Geomagnetic Reference Field (12th generation),
-     which approximates the main magnetic field of the earth for the
-     period 1900--2020.
+   (released 2015-03-09)
    - Fix bug in Rhumb::Inverse (with \e exact = true) and related
      functions which causes the wrong distance to be reported if one of
      the end points is at a pole.  Thanks to Thomas Murray for reporting
      this.
+   - Add International Geomagnetic Reference Field (12th generation),
+     which approximates the main magnetic field of the earth for the
+     period 1900--2020.
+   - Split information about \ref jacobi to a separate section and
+     include more material.
 
  - <a href="http://geographiclib.sf.net/1.40">Version 1.40</a>
    (released 2014-12-18)

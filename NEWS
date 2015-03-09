@@ -4,7 +4,20 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.40.
+The current version of the library is 1.41.
+
+Changes between 1.41 (released 2015-03-09) and 1.40 versions:
+
+  * Fix bug in Rhumb::Inverse (with exact = true) and related functions
+    which causes the wrong distance to be reported if one of the end
+    points is at a pole.  Thanks to Thomas Murray for reporting this.
+
+  * Add International Geomagnetic Reference Field (12th generation),
+    which approximates the main magnetic field of the earth for the
+    period 1900-2020.
+
+  * Split information about Jacobi's conformal projection to a separate
+    section and include more material.
 
 Changes between 1.40 (released 2014-12-18) and 1.39 versions:
 
