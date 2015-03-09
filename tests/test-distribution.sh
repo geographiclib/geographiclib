@@ -40,7 +40,7 @@ set -e
 #   python/setup.py
 #   tests/test-distribution.sh
 
-VERSION=1.41
+VERSION=1.42
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
@@ -343,6 +343,17 @@ grep "^ *VERSION *= *$libversion *\$" \
     $TEMP/gitb/geographiclib/src/GeographicLib.pro > /dev/null ||
 echo autoconf/Qt library so mismatch
 
+CONFIG_FILE=$TEMP/gitr/geographiclib/configure
+CONFIG_MAJOR=`grep ^GEOGRAPHICLIB_VERSION_MAJOR= $CONFIG_FILE | cut -f2 -d=`
+CONFIG_MINOR=`grep ^GEOGRAPHICLIB_VERSION_MINOR= $CONFIG_FILE | cut -f2 -d=`
+CONFIG_PATCH=`grep ^GEOGRAPHICLIB_VERSION_PATCH= $CONFIG_FILE | cut -f2 -d=`
+CONFIG_VERSIONA=`grep ^PACKAGE_VERSION= $CONFIG_FILE | cut -f2 -d= |
+cut -f2 -d\'`
+CONFIG_VERSION=$CONFIG_MAJOR.$CONFIG_MINOR
+test "$CONFIG_PATCH" = 0 || CONFIG_VERSION=$CONFIG_VERSION.$CONFIG_PATCH
+test "$CONFIG_VERSION"  = "$VERSION" || echo autoconf version number mismatch
+test "$CONFIG_VERSIONA" = "$VERSION" || echo autoconf version string mismatch
+
 cd $TEMP/relx/GeographicLib-$VERSION
 echo Files with trailing spaces:
 find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.pdf' |
@@ -390,7 +401,7 @@ python setup.py sdist --formats gztar,zip upload
 
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib
-git add .
+git add -A
 git commit -m "Version $VERSION ($DATE)"
 git tag -m "Version $VERSION ($DATE)" r$VERSION
 git push
