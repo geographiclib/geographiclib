@@ -2,8 +2,8 @@
  * \file Rhumb.hpp
  * \brief Header for GeographicLib::Rhumb and GeographicLib::RhumbLine classes
  *
- * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2014-2015) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -83,9 +83,11 @@ namespace GeographicLib {
     }
     static inline real tano(real x) {
       using std::abs; using std::tan;
+      // Need the volatile declaration for optimized builds on 32-bit centos
+      // with g++ 4.4.7
+      GEOGRAPHICLIB_VOLATILE real y = 2 * abs(x);
       return
-        2 * abs(x) == Math::pi() ? (x < 0 ? - overflow() : overflow()) :
-        tan(x);
+        y == Math::pi() ? (x < 0 ? - overflow() : overflow()) : tan(x);
     }
     static inline real gd(real x)
     { using std::atan; using std::sinh; return atan(sinh(x)); }

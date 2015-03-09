@@ -2,7 +2,7 @@
  * \file TransverseMercator.cpp
  * \brief Implementation for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -277,8 +277,13 @@ namespace GeographicLib {
   // taupf and tauf are adapted from TransverseMercatorExact (taup and
   // taupinv).  tau = tan(phi), taup = sinh(psi)
   Math::real TransverseMercator::taupf(real tau) const {
-    if (!(abs(tau) < overflow()))
-      return tau;
+    if (!(abs(tau) < overflow())) {
+      // Fixed in 2015-02 to include the correct scale factor for large tau.
+      // This fixes the bug in Rhumb::GenInverse when one of the points is at a
+      // pole
+      real sig = sinh( eatanhe(real(1)) );
+      return tau / (Math::hypot(real(1), sig) + sig);
+    }
     real
       tau1 = Math::hypot(real(1), tau),
       sig = sinh( eatanhe(tau / tau1) );
@@ -286,8 +291,11 @@ namespace GeographicLib {
   }
 
   Math::real TransverseMercator::tauf(real taup) const {
-    if (!(abs(taup) < overflow()))
-      return taup;
+    if (!(abs(taup) < overflow())) {
+      // Fixed in 2015-02 to match taupf.
+      real sig = sinh( eatanhe(real(1)) );
+      return taup * (Math::hypot(real(1), sig) + sig);
+    }
     real
       // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
       // tau = taup/_e2m as a starting guess.  (This starting guess is the

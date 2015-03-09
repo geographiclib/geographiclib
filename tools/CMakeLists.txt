@@ -295,6 +295,13 @@ set_tests_properties (TransverseMercatorProj1
   PROPERTIES PASS_REGULAR_EXPRESSION
   "(90\\.0+ 0\\.0+ 0\\.0+|(90\\.0+|89\\.99999999999[0-9]+) -?180\\.0+ -?180\\.0+) (1\\.0000+|0\\.9999+)")
 
+# Test fix to bad handling of pole by RhumbSolve -i
+# Reported  2015-02-24 by Thomas Murray <thomas.murray56@gmail.com>;
+add_test (NAME RhumbSolve0 COMMAND
+  RhumbSolve -p 3 -i --input-string "0 0 90 0")
+set_tests_properties (RhumbSolve0
+  PROPERTIES PASS_REGULAR_EXPRESSION "^0\\.0+ 10001965\\.729 ")
+
 if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
   # Check fix for single-cell cache bug found 2010-11-23
   add_test (NAME GeoidEval0

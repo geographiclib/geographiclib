@@ -34,7 +34,7 @@ DirExistsWarning=no
 AllowUNCPath=true
 AppendDefaultDirName=true
 ShowLanguageDialog=no
-OutputDir={#MAGNETICDIR}\magnetic-installer
+OutputDir={#MAGNETICDIR}\magnetic-installers
 PrivilegesRequired=none
 VersionInfoVersion={#Version}
 VersionInfoCompany={#Project}
@@ -48,5 +48,5 @@ UninstallDisplayName={#Project} magnetic model {#NAME}
 DiskSpanning=no
 
 [Files]
-Source: {#MAGNETICDIR}\magnetic\{#prefix}.wmm; DestDir: {app}\magnetic; Flags: ignoreversion
-Source: {#MAGNETICDIR}\magnetic\{#prefix}.wmm.cof; DestDir: {app}\magnetic; Flags: ignoreversion
+Source: {#MAGNETICDIR}\magnetic\{#PREFIX}.wmm; DestDir: {app}\magnetic; Flags: ignoreversion
+Source: {#MAGNETICDIR}\magnetic\{#PREFIX}.wmm.cof; DestDir: {app}\magnetic; Flags: ignoreversion
