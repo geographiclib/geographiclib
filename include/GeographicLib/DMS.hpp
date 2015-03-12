@@ -2,7 +2,7 @@
  * \file DMS.hpp
  * \brief Header for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -32,26 +32,6 @@ namespace GeographicLib {
    * \include example-DMS.cpp
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT DMS {
-  private:
-    typedef Math::real real;
-    // Replace all occurrences of pat by c
-    static void replace(std::string& s, const std::string& pat, char c) {
-      std::string::size_type p = 0;
-      while (true) {
-        p = s.find(pat, p);
-        if (p == std::string::npos)
-          break;
-        s.replace(p, pat.length(), 1, c);
-      }
-    }
-    static const std::string hemispheres_;
-    static const std::string signs_;
-    static const std::string digits_;
-    static const std::string dmsindicators_;
-    static const std::string components_[3];
-    static Math::real NumMatch(const std::string& s);
-    DMS();                      // Disable constructor
-
   public:
 
     /**
@@ -108,6 +88,29 @@ namespace GeographicLib {
       SECOND = 2,
     };
 
+  private:
+    typedef Math::real real;
+    // Replace all occurrences of pat by c
+    static void replace(std::string& s, const std::string& pat, char c) {
+      std::string::size_type p = 0;
+      while (true) {
+        p = s.find(pat, p);
+        if (p == std::string::npos)
+          break;
+        s.replace(p, pat.length(), 1, c);
+      }
+    }
+    static const std::string hemispheres_;
+    static const std::string signs_;
+    static const std::string digits_;
+    static const std::string dmsindicators_;
+    static const std::string components_[3];
+    static Math::real NumMatch(const std::string& s);
+    static Math::real InternalDecode(const std::string& dmsa, flag& ind);
+    DMS();                      // Disable constructor
+
+  public:
+
     /**
      * Convert a string in DMS to an angle.
      *
@@ -148,6 +151,8 @@ namespace GeographicLib {
      *   - 4d5&quot;4', 4::5, 4:5:, :4:5, 4d4.5'4&quot;, -N20.5, 1.8e2d, 4:60,
      *     4d-5'
      *
+     * <b>TODO:</b> Document the interpretation of two-part coordinates.
+     *
      * <b>NOTE:</b> At present, all the string handling in the C++
      * implementation %GeographicLib is with 8-bit characters.  The support for
      * unicode symbols for degrees, minutes, and seconds is therefore via the
@@ -156,7 +161,7 @@ namespace GeographicLib {
      * course.)
      *
      * Here is the list of Unicode symbols supported for degrees, minutes,
-     * seconds:
+     * seconds, and the sign:
      * - degrees:
      *   - d, D lower and upper case letters
      *   - U+00b0 degree symbol (&deg;)
@@ -173,6 +178,8 @@ namespace GeographicLib {
      *   - U+2033 double prime (&Prime;)
      *   - U+201d right double quote (&rdquo;)
      *   - '&nbsp;' any two consecutive symbols for minutes
+     * - leading sign:
+     *   - U+2212 minus sign (&minus;)
      * .
      * The codes with a leading zero byte, e.g., U+00b0, are accepted in their
      * UTF-8 coded form 0xc2 0xb0 and as a single byte 0xb0.

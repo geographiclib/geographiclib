@@ -14,15 +14,22 @@
 
 /**
  * @relates GeographicLib::Constants
- * Pack the version components into a single integer.
+ * Pack the version components into a single integer.  Users should not rely on
+ * this particular packing of the components of the version number; see the
+ * documentation for GEOGRAPHICLIB_VERSION, below.
  **********************************************************************/
 #define GEOGRAPHICLIB_VERSION_NUM(a,b,c) ((((a) * 10000 + (b)) * 100) + (c))
 
 /**
- * @relates GeographicLib::Constants
- * The version of GeographicLib as a single integer, packed as MMmmmmpp where
- * MM is the major version, mmmm is the minor version, and pp is the patch
- * level.
+ * @relates GeographicLib::Constants The version of GeographicLib as a single
+ * integer, packed as MMmmmmpp where MM is the major version, mmmm is the minor
+ * version, and pp is the patch level.  Users should not rely on this
+ * particular packing of the components of the version number.  Instead they
+ * should use a test such as \code
+   #if GEOGRAPHICLIB_VERSION >= GEOGRAPHICLIB_VERSION_NUM(1,37,0)
+   ...
+   #endif
+ * \endcode
  **********************************************************************/
 #define GEOGRAPHICLIB_VERSION \
  GEOGRAPHICLIB_VERSION_NUM(GEOGRAPHICLIB_VERSION_MAJOR, \

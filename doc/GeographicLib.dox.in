@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2015-03-09
+\date 2015-mm-dd
 
 \section abstract Abstract
 
@@ -1159,10 +1159,14 @@ starting in version 1.31.  There's also a macro
 GEOGRAPHICLIB_VERSION_STRING which expands to, e.g.,
 "@PROJECT_VERSION@"; this macro has been defined since version 1.9.
 Since version 1.37, there's also been a macro GEOGRAPHICLIB_VERSION
-which encode the version as a single number, e.g, 1003900.  The macro
-GEOGRAPHICLIB_VERSION_NUM allows you to compare versions, e.g., \code
-#if GEOGRAPHICLIB_VERSION >= GEOGRAPHICLIB_VERSION_NUM(1,36,0)
-... \endcode
+which encodes the version as a single number, e.g, 1003900.  Do not rely
+on this particular packing; instead use the macro
+GEOGRAPHICLIB_VERSION_NUM(a,b,c) which allows you to compare versions
+with, e.g.,
+\code
+#if GEOGRAPHICLIB_VERSION >= GEOGRAPHICLIB_VERSION_NUM(1,37,0)
+...
+#endif \endcode
 
 <center>
 Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
@@ -7008,6 +7012,12 @@ of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
 
+ - <a href="http://geographiclib.sf.net/1.42">Version 1.42</a>
+   (released 2015-mm-dd)
+   - Fix auto-conf mismatch of version numbers.
+   - DMS::Decode understands 2-part coordinates.  DOCUMENTATION STILL
+     NEEDED.
+
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
    (released 2015-03-09)
    - Fix bug in Rhumb::Inverse (with \e exact = true) and related
@@ -7120,7 +7130,7 @@ git repository for GeographicLib</a>.
    - Add \ref highprec.
    - <b>INCOMPATIBLE CHANGE</b>: the static instantiations of various
      classes for the WGS84 ellipsoid have been changed to a
-     <a href="http://www.parashift.com/c++-faq/static-init-order-on-first-use.html">
+     <a href="http://isocpp.org/wiki/faq/ctors#static-init-order-on-first-use">
      "construct on first use idiom"</a>.  This avoids a lot of wasteful
      initialization before the user's code starts.  Unfortunately it
      means that existing source code that relies on any of the following
