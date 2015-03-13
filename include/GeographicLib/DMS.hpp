@@ -133,14 +133,14 @@ namespace GeographicLib {
      * (colon) may be used to <i>separate</i> these components (numbers must
      * appear before and after each colon); thus 50d30'10.3&quot; may be
      * written as 50:30:10.3, 5.5' may be written 0:5.5, and so on.  The
-     * integer parts of the minutes and seconds components must be less than
-     * 60.  A single leading sign is permitted.  A hemisphere designator (N, E,
-     * W, S) may be added to the beginning or end of the string.  The result is
-     * multiplied by the implied sign of the hemisphere designator (negative
-     * for S and W).  In addition \e ind is set to DMS::LATITUDE if N or S is
-     * present, to DMS::LONGITUDE if E or W is present, and to DMS::NONE
-     * otherwise.  Throws an error on a malformed string.  No check is
-     * performed on the range of the result.  Examples of legal and illegal
+     * integer parts of the minutes and seconds components must be less
+     * than 60.  A single leading sign is permitted.  A hemisphere designator
+     * (N, E, W, S) may be added to the beginning or end of the string.  The
+     * result is multiplied by the implied sign of the hemisphere designator
+     * (negative for S and W).  In addition \e ind is set to DMS::LATITUDE if N
+     * or S is present, to DMS::LONGITUDE if E or W is present, and to
+     * DMS::NONE otherwise.  Throws an error on a malformed string.  No check
+     * is performed on the range of the result.  Examples of legal and illegal
      * strings are
      * - <i>LEGAL</i> (all the entries on each line are equivalent)
      *   - -20.51125, 20d30'40.5&quot;S, -20&deg;30'40.5, -20d30.675,
@@ -151,7 +151,19 @@ namespace GeographicLib {
      *   - 4d5&quot;4', 4::5, 4:5:, :4:5, 4d4.5'4&quot;, -N20.5, 1.8e2d, 4:60,
      *     4d-5'
      *
-     * <b>TODO:</b> Document the interpretation of two-part coordinates.
+     * The decoding operation can also perform a single addition or subtraction
+     * operation.  If the string includes an <i>internal</i> sign (i.e., not at
+     * the beginning nor immediately after an initial hemisphere designator),
+     * then the string is split immediately before that sign and each half is
+     * decoded according to the above rules and the results added.  The second
+     * half can include a hemisphere designator, but it must come at the end (a
+     * hemisphere designator is not allowed after the initial sign).  If both
+     * halves include hemisphere designators then these must compatible; e.g.,
+     * you cannot mix N and E.  Examples of legal and illegal combinations are
+     * - <i>LEGAL</i> (these are all equivalent)
+     *   - 070:00:45, 70:01:15W+0:0.5, 70:01:15W-0:0:30W, W70:01:15+0:0:30E
+     * - <i>ILLEGAL</i> (the exception thrown explains the problem)
+     *   - 70:01:15W+0:0:15N, W70:01:15+W0:0:15
      *
      * <b>NOTE:</b> At present, all the string handling in the C++
      * implementation %GeographicLib is with 8-bit characters.  The support for
