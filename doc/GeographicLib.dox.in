@@ -4709,8 +4709,9 @@ standard construction in the limit of an ellipsoid of revolution.
 
 \section jacobi-implementation An implementation of the projection
 
-An implementation of the Jacobi conformal projection is given here
-\include JacobiConformal.hpp
+The JacobiConformal class provides an implementation of the Jacobi
+conformal projection is given here.  <b>NOTE:</b> This is just sample
+code.  It is not part of GeographicLib itself.
 
 <center>
 Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.

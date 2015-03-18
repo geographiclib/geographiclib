@@ -1,6 +1,9 @@
 /**
  * \file JacobiConformal.hpp
- * \brief Jacobi's conformal projection of a triaxial ellipsoid.
+ * \brief Header for GeographicLib::JacobiConformal class
+ *
+ * <b>NOTE:</b> This is just sample code.  It is not part of GeographicLib
+ * itself.
  *
  * Copyright (c) Charles Karney (2014-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
@@ -11,7 +14,10 @@
 
 namespace GeographicLib {
   /**
-   * \brief Jacobi's conformal projection
+   * \brief Jacobi's conformal projection of a triaxial ellipsoid
+   *
+   * <b>NOTE:</b> This is just sample code.  It is not part of GeographicLib
+   * itself.
    *
    * This is a conformal projection of the ellipsoid to a plane in which
    * the grid lines are straight; see Jacobi, Vorlesungen ueber Dynamik,
@@ -19,9 +25,17 @@ namespace GeographicLib {
    * must be in order).  Member functions map the ellipsoidal coordinates
    * &omega; and &beta; separately to \e x and \e y.  Jacobi's coordinates
    * have been multiplied by
-   * (<i>a</i><sup>2</sub>&minus;<i>c</i><sup>2</sub>)<sup>1/2</sup> /
+   * (<i>a</i><sup>2</sup>&minus;<i>c</i><sup>2</sup>)<sup>1/2</sup> /
    * (2<i>b</i>) so that the customary results are returned in the cases of
    * a sphere or an ellipsoid of revolution.
+   *
+   * The ellipsoid is oriented so that the large principal ellipse, \f$Z=0\f$,
+   * is the equator, \f$\beta=0\f$, while the small principal ellipse,
+   * \f$Y=0\f$, is the prime meridian, \f$\omega=0\f$.  The four umbilic
+   * points, \f$\left|\omega\right| = \left|\beta\right| = \frac12\pi\f$, lie
+   * on middle principal ellipse in the plane \f$X=0\f$.
+   *
+   * For more information on this projection, see \ref jacobi.
    **********************************************************************/
   class JacobiConformal {
     typedef Math::real real;
@@ -33,9 +47,9 @@ namespace GeographicLib {
     /**
      * Constructor for a trixial ellipsoid with semi-axes
      *
-     * @param[in] a
-     * @param[in] b
-     * @param[in] c
+     * @param[in] a the largest semi-axis.
+     * @param[in] b the middle semi-axis.
+     * @param[in] c the smallest semi-axis.
      *
      * The semi-axes must satisfy \e a &ge; \e b &ge; \e c > 0 and \e a >
      * \e c.  This form of the constructor cannot be used to specify a
@@ -57,16 +71,16 @@ namespace GeographicLib {
         throw GeographicErr("JacobiConformal: use alternate constructor for sphere");
     }
     /**
-     * Alternate constructor for a triaxial ellipsoid with semi-axes
+     * Alternate constructor for a triaxial ellipsoid.
      *
-     * @param[in] a
-     * @param[in] b
-     * @param[in] c
-     * @param[in] ab the relative magnitude of \e a &minus \e b.
-     * @param[in] bc the relative magnitude of \e b &minus \e c.
+     * @param[in] a the largest semi-axis.
+     * @param[in] b the middle semi-axis.
+     * @param[in] c the smallest semi-axis.
+     * @param[in] ab the relative magnitude of \e a &minus; \e b.
+     * @param[in] bc the relative magnitude of \e b &minus; \e c.
      *
      * This form can be used to specify a sphere.  The semi-axes must
-     * satisfy \e a &ge \e b &ge c > 0.  The ratio \e ab : \e bc must equal
+     * satisfy \e a &ge; \e b &ge; c > 0.  The ratio \e ab : \e bc must equal
      * (<i>a</i>&minus;<i>b</i>) : (<i>b</i>&minus;<i>c</i>) with \e ab
      * &ge; 0, \e bc &ge; 0, and \e ab + \e bc > 0.
      **********************************************************************/
