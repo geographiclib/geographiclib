@@ -38,11 +38,11 @@
 
 /**
  * @relates GeographicLib::Constants
- * A compile-time assert.  Use C++11 static_assert, if available.
+ * Is the C++11 static_assert available.
  **********************************************************************/
-#if !defined(GEOGRAPHICLIB_STATIC_ASSERT)
+#if !defined(GEOGRAPHICLIB_HAS_STATIC_ASSERT)
 #  if __cplusplus >= 201103 || defined(__GXX_EXPERIMENTAL_CXX0X__)
-#    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
+#    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 1
 #  elif defined(_MSC_VER) && _MSC_VER >= 1600
 // For reference, here is a table of Visual Studio and _MSC_VER
 // correspondences:
@@ -58,6 +58,18 @@
 //   1700     vc11  (2012)
 //   1800     vc12  (2013)
 //   1900     vc14  (2015)
+#    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 1
+#  else
+#    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 0
+#  endif
+#endif
+
+/**
+ * @relates GeographicLib::Constants
+ * A compile-time assert.  Use C++11 static_assert, if available.
+ **********************************************************************/
+#if !defined(GEOGRAPHICLIB_STATIC_ASSERT)
+#  if GEOGRAPHICLIB_HAS_STATIC_ASSERT
 #    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
 #  else
 #    define GEOGRAPHICLIB_STATIC_ASSERT(cond,reason) \

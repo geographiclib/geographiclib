@@ -266,13 +266,13 @@ else ()
   endif ()
 endif ()
 
+include (CheckCXXSourceCompiles)
+set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS}")
 # Check whether the C++11 math function: std::expm1, std::atanh,
 # etc. are available.  This flag is *not* propagated to clients that use
 # GeographicLib.  However, this is of no consequence.  When the client
 # code is being compiled (and the GeographicLib headers being included),
 # work-alike substitutions are used.
-include (CheckCXXSourceCompiles)
-set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS}")
 check_cxx_source_compiles (
   "#include <cmath>
 int main() {
@@ -284,6 +284,23 @@ if (CXX11_MATH)
   add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)
 else ()
   add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=0)
+endif ()
+
+# Check whether the C++11 static_assert macro is available.  This flag
+# is *not* propagated to clients that use GeographicLib.  However, this
+# is of no consequence.  When the client code is being compiled (and the
+# GeographicLib headers being included), a work-alike substitution are
+# used.
+check_cxx_source_compiles (
+  "#include <cmath>
+int main() {
+  static_assert(true, \"static assert test\");
+  return 0;
+}\n" CXX11_STATIC_ASSERT)
+if (CXX11_STATIC_ASSERT)
+  add_definitions (-DGEOGRAPHICLIB_HAS_STATIC_ASSERT=1)
+else ()
+  add_definitions (-DGEOGRAPHICLIB_HAS_STATIC_ASSERT=0)
 endif ()
 
 # Set the include directories.  Look in ${PROJECT_BINARY_DIR}/include

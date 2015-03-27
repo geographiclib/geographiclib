@@ -416,7 +416,7 @@ namespace GeographicLib {
           std::numeric_limits<ExtT>::is_integer)
         {
           // Data is compatible (aside from the issue of endian-ness).
-          str.read(reinterpret_cast<char *>(array), num * sizeof(ExtT));
+          str.read(reinterpret_cast<char*>(array), num * sizeof(ExtT));
           if (!str.good())
             throw GeographicErr("Failure reading data");
           if (bigendp != Math::bigendian) { // endian mismatch -> swap bytes
@@ -433,7 +433,7 @@ namespace GeographicLib {
           int i = 0;                // index into output array
           while (k) {
             int n = (std::min)(k, bufsize);
-            str.read(reinterpret_cast<char *>(buffer), n * sizeof(ExtT));
+            str.read(reinterpret_cast<char*>(buffer), n * sizeof(ExtT));
             if (!str.good())
               throw GeographicErr("Failure reading data");
             for (int j = 0; j < n; ++j)
@@ -488,7 +488,7 @@ namespace GeographicLib {
           bigendp == Math::bigendian)
         {
           // Data is compatible (including endian-ness).
-          str.write(reinterpret_cast<const char *>(array), num * sizeof(ExtT));
+          str.write(reinterpret_cast<const char*>(array), num * sizeof(ExtT));
           if (!str.good())
             throw GeographicErr("Failure writing data");
         }
@@ -505,7 +505,7 @@ namespace GeographicLib {
               // cast to ExtT and fix endian-ness
               buffer[j] = bigendp == Math::bigendian ? ExtT(array[i++]) :
                 Math::swab<ExtT>(ExtT(array[i++]));
-            str.write(reinterpret_cast<const char *>(buffer), n * sizeof(ExtT));
+            str.write(reinterpret_cast<const char*>(buffer), n * sizeof(ExtT));
             if (!str.good())
               throw GeographicErr("Failure writing data");
             k -= n;

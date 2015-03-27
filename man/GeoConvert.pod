@@ -315,9 +315,9 @@ at 38:59:45N 077:02:00W and its 8 neighbors are then given by
 
     t=0:0:15
     for y in -$t +0 +$t; do
-	for x in -$t +0 +$t; do
-	    echo 38:59:45N$y 077:02:00W$x
-	done
+        for x in -$t +0 +$t; do
+            echo 38:59:45N$y 077:02:00W$x
+        done
     done | GeoConvert -: -p -1 | tr -d ': '
     =>
     385930N0770215W

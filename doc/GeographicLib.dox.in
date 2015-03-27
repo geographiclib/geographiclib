@@ -7015,11 +7015,14 @@ git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.42">Version 1.42</a>
    (released 2015-mm-dd)
-   - Fix auto-conf mismatch of version numbers (which was a problem in
-     versions 1.40 and 1.41).
+   - Fix autoconf mismatch of version numbers (which were inconsistent
+     in versions 1.40 and 1.41).
    - DMS::Decode allows a single addition or subtraction operation,
      e.g., 70W+0:0:15.  This affects the GeoCoords class and the
      utilities (which use the DMS class for reading coordinates).
+   - Mark the computation of the gradient of the geoid height in the
+     Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a>
+     utility as deprecated.
 
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
    (released 2015-03-09)

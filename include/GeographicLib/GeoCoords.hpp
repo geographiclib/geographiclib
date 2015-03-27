@@ -133,7 +133,8 @@ namespace GeographicLib {
      * seconds, etc.  Use d, ', and &quot; to mark off the degrees,
      * minutes and seconds.  Various alternative symbols for degrees, minutes,
      * and seconds are allowed.  Alternatively, use : to separate these
-     * components.  (See DMS::Decode for details.)  Thus
+     * components.  A single addition or subtraction is allowed.  (See
+     * DMS::Decode for details.)  Thus
      * - 40d30'30&quot;
      * - 40d30'30
      * - 40&deg;30'30
@@ -142,12 +143,16 @@ namespace GeographicLib {
      * - 40:30:30
      * - 40:30.5
      * - 40.508333333
+     * - 40:30+0:0:30
+     * - 40:31-0:0.5
      * .
-     * all specify the same angle.  The leading sign applies to all components
-     * so -1d30 is -(1+30/60) = -1.5.  Latitudes must be in the range
-     * [&minus;90&deg;, 90&deg;] and longitudes in the range
-     * [&minus;540&deg;, 540&deg;).  Internally longitudes are reduced
-     * to the range [&minus;180&deg;, 180&deg;).
+     * all specify the same angle.  The leading sign applies to the following
+     * components so -1d30 is -(1+30/60) = &minus;1.5.  However, note
+     * that -1:30-0:0:15 is parsed as (-1:30) + (-0:0:15) = &minus;(1+30/60)
+     * &minus; (15/3600).  Latitudes must be in the range [&minus;90&deg;,
+     * 90&deg;] and longitudes in the range [&minus;540&deg;, 540&deg;).
+     * Internally longitudes are reduced to the range [&minus;180&deg;,
+     * 180&deg;).
      *
      * <b>UTM/UPS parsing</b>: For UTM zones (&minus;80&deg; &le; Lat <
      * 84&deg;), the zone designator is made up of a zone number (for 1 to 60)
