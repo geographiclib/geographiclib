@@ -85,9 +85,12 @@ namespace GeographicLib {
       using std::abs; using std::tan;
       // Need the volatile declaration for optimized builds on 32-bit centos
       // with g++ 4.4.7
-      GEOGRAPHICLIB_VOLATILE real y = 2 * abs(x);
+      // Bletch -- the two tests deal with quad and mpfr.  Need to reformulate
+      // to do everything in degrees.
+      GEOGRAPHICLIB_VOLATILE real y = 2 * abs(x), z = abs(x) / Math::degree();
       return
-        y == Math::pi() ? (x < 0 ? - overflow() : overflow()) : tan(x);
+        (y == Math::pi() || z == 90) ? (x < 0 ? - overflow() : overflow()) :
+        tan(x);
     }
     static inline real gd(real x)
     { using std::atan; using std::sinh; return atan(sinh(x)); }

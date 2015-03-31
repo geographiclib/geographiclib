@@ -70,7 +70,8 @@ set_tests_properties (GeoConvert0
 if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
   # I/O for boost-quad has a bug where precision 0 is interpreted as
   # printed all the digits of the number (instead of printing the
-  # integer portion).
+  # integer portion).  Problem reported on 2014-06-07:
+  # https://svn.boost.org/trac/boost/ticket/10103
   add_test (NAME GeoConvert1 COMMAND GeoConvert -d --input-string "38smb")
   set_tests_properties (GeoConvert1
     PROPERTIES PASS_REGULAR_EXPRESSION "32d59'14\\.1\"N 044d27'53\\.4\"E")
@@ -170,10 +171,15 @@ add_test (NAME GeodSolve13 COMMAND
 set_tests_properties (GeodSolve12 GeodSolve13
   PROPERTIES PASS_REGULAR_EXPRESSION "120\\.27.* 105\\.15.* 266\\.7")
 
-# Check fix for inverse ignoring lon12 = nan
-add_test (NAME GeodSolve14 COMMAND GeodSolve -i --input-string "0 0 1 nan")
-set_tests_properties (GeodSolve14
-  PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
+if (NOT (GEOGRAPHICLIB_PRECISION EQUAL 4 OR GEOGRAPHICLIB_PRECISION EQUAL 5))
+  # mpfr (nan == 0 is true) and boost-quad (nan > 0 is true) have bugs
+  # in handling nans, so skip this test.  Problems reported on
+  # 2015-03-31, https://svn.boost.org/trac/boost/ticket/11159
+  # Check fix for inverse ignoring lon12 = nan
+  add_test (NAME GeodSolve14 COMMAND GeodSolve -i --input-string "0 0 1 nan")
+  set_tests_properties (GeodSolve14
+    PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
+endif()
 
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0
