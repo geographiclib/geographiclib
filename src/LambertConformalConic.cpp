@@ -28,7 +28,6 @@ namespace GeographicLib {
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
-    , _e2m(1 - _e2)
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -56,7 +55,6 @@ namespace GeographicLib {
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
-    , _e2m(1 - _e2)
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -87,7 +85,6 @@ namespace GeographicLib {
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
-    , _e2m(1 - _e2)
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");

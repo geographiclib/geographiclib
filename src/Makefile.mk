@@ -32,6 +32,7 @@ MODULES = Accumulator \
 	MGRS \
 	MagneticCircle \
 	MagneticModel \
+	Math \
 	NormalGravity \
 	OSGB \
 	PolarStereographic \
@@ -43,7 +44,6 @@ MODULES = Accumulator \
 	UTMUPS \
 	Utility
 EXTRAHEADERS = Constants \
-	Math \
 	SphericalHarmonic \
 	SphericalHarmonic1 \
 	SphericalHarmonic2
@@ -119,6 +119,7 @@ MagneticCircle.o: CircularEngine.hpp Config.h Constants.hpp Geocentric.hpp \
 MagneticModel.o: CircularEngine.hpp Config.h Constants.hpp Geocentric.hpp \
 	MagneticCircle.hpp MagneticModel.hpp Math.hpp SphericalEngine.hpp \
 	SphericalHarmonic.hpp Utility.hpp
+Math.o: Config.h Constants.hpp Math.hpp
 NormalGravity.o: Config.h Constants.hpp Geocentric.hpp Math.hpp \
 	NormalGravity.hpp
 OSGB.o: Config.h Constants.hpp Math.hpp OSGB.hpp TransverseMercator.hpp \

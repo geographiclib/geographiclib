@@ -58,7 +58,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     real eps_, epsx_, ahypover_;
-    real _a, _f, _fm, _e2, _es, _e2m;
+    real _a, _f, _fm, _e2, _es;
     real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
     real _scbet0, _tchi0, _scchi0, _psi0, _nrho0, _drhomax;
     static const int numit_ = 5;
