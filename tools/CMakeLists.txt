@@ -171,7 +171,7 @@ add_test (NAME GeodSolve13 COMMAND
 set_tests_properties (GeodSolve12 GeodSolve13
   PROPERTIES PASS_REGULAR_EXPRESSION "120\\.27.* 105\\.15.* 266\\.7")
 
-if (NOT (GEOGRAPHICLIB_PRECISION EQUAL 4 OR GEOGRAPHICLIB_PRECISION EQUAL 5))
+if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
   # mpfr (nan == 0 is true) and boost-quad (nan > 0 is true) have bugs
   # in handling nans, so skip this test.  Problems reported on
   # 2015-03-31, https://svn.boost.org/trac/boost/ticket/11159

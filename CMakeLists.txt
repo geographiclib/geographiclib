@@ -339,7 +339,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
   if (CXX11_MATH)
-    # Install MPFR C++ version 3.5.9 or later from
+    # Install MPFR C++ version 3.6.2 or later from
     # http://www.holoborodko.com/pavel/mpfr and install mpreal.h in the
     # include directory.  NOTE: MPFR C++ is covered by the GPL; be sure
     # to abide by the terms of this license.

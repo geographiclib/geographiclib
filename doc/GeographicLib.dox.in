@@ -6746,7 +6746,7 @@ Here's what you should know:
    arbitrary precision via mpfr::mpreal; this requires
    <a href="http://www.mpfr.org"> MPFR</a> (version 3.0 or later),
    <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
-   (version 3.5.9 or later), and a compiler which supports the explicit
+   (version 3.6.2 or later), and a compiler which supports the explicit
    cast operator (e.g., g++ 4.5 or later, Visual Studio 12 2013 or
    later).
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
