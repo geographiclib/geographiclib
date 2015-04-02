@@ -3,8 +3,8 @@
  * \brief Implementation for GeographicLib::Rhumb and GeographicLib::RhumbLine
  * classes
  *
- * Copyright (c) Charles Karney (2014) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2014-2015) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -121,7 +121,7 @@ namespace GeographicLib {
       psi12 = psi2 - psi1,
       h = Math::hypot(lon12, psi12);
     if (outmask & AZIMUTH)
-      azi12 = 0 - atan2(-lon12, psi12) / Math::degree();
+      azi12 = Math::atan2d(lon12, psi12);
     psi1 *= Math::degree();
     psi2 *= Math::degree();
     real dmudpsi = DIsometricToRectifying(psi2, psi1);

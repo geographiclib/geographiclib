@@ -2,7 +2,7 @@
  * \file Ellipsoid.hpp
  * \brief Header for GeographicLib::Ellipsoid class
  *
- * Copyright (c) Charles Karney (2012-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -41,18 +41,10 @@ namespace GeographicLib {
     typedef Math::real real;
     static const int numit_ = 10;
     real stol_;
-    real _a, _f, _f1, _f12, _e2, _e, _e12, _n, _b;
+    real _a, _f, _f1, _f12, _e2, _es, _e12, _n, _b;
     TransverseMercator _tm;
     EllipticFunction _ell;
     AlbersEqualArea _au;
-    static inline real tand(real x) {
-      using std::abs; using std::tan;
-      return
-        abs(x) == real(90) ? (x < 0 ?
-                              - TransverseMercator::overflow()
-                              : TransverseMercator::overflow()) :
-        tan(x * Math::degree());
-    }
     static inline real atand(real x)
     { using std::atan; return atan(x) / Math::degree(); }
 

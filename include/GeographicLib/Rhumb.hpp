@@ -151,18 +151,10 @@ namespace GeographicLib {
       return Dasinh(tano(x), tano(y)) * Dtan(x, y);
     }
     // Copied from LambertConformalConic...
-    // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0
-    // - sqrt(-e2) * atan( sqrt(-e2) * x)                    if f < 0
-    inline real eatanhe(real x) const {
-      using std::atan;
-      return _ell._f >= 0 ? _ell._e * Math::atanh(_ell._e * x) :
-        - _ell._e * atan(_ell._e * x);
-    }
-    // Copied from LambertConformalConic...
     // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
     inline real Deatanhe(real x, real y) const {
       real t = x - y, d = 1 - _ell._e2 * x * y;
-      return t ? eatanhe(t / d) / t : _ell._e2 / d;
+      return t ? Math::eatanhe(t / d, _ell._es) / t : _ell._e2 / d;
     }
     // (E(x) - E(y)) / (x - y) -- E = incomplete elliptic integral of 2nd kind
     real DE(real x, real y) const;

@@ -7023,6 +7023,9 @@ git repository for GeographicLib</a>.
    - Mark the computation of the gradient of the geoid height in the
      Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a>
      utility as deprecated.
+   - Add Math::norm, Math::AngRound, Math::tand, Math::atan2d,
+     Math::eatanhe, Math::taupf, Math::tauf and remove duplicated (but
+     private) functionality from other classes.
 
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
    (released 2015-03-09)

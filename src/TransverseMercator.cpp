@@ -51,16 +51,15 @@ namespace GeographicLib {
   using namespace std;
 
   TransverseMercator::TransverseMercator(real a, real f, real k0)
-    : tol_(real(0.1)*sqrt(numeric_limits<real>::epsilon()))
-    , _a(a)
+    : _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _k0(k0)
     , _e2(_f * (2 - _f))
-    , _e(sqrt(abs(_e2)))
+    , _es((f < 0 ? -1 : 1) * sqrt(abs(_e2)))
     , _e2m(1 - _e2)
       // _c = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) ) )
       // See, for example, Lee (1976), p 100.
-    , _c( sqrt(_e2m) * exp(eatanhe(real(1))) )
+    , _c( sqrt(_e2m) * exp(Math::eatanhe(real(1), _es)) )
     , _n(_f / (2 - _f))
   {
     if (!(Math::isfinite(_a) && _a > 0))
@@ -271,55 +270,11 @@ namespace GeographicLib {
   //     S = sum(c[i]*sin(2*i*phi),i,1,6)
   //     taup = (tau + tan(S)) / (1 - tau * tan(S))
 
-  // Here we evaluate the forward transform explicitly and solve the reverse
-  // one by Newton's method.
+  // In Math::taupf and Math::tauf we evaluate the forward transform explicitly
+  // and solve the reverse one by Newton's method.
   //
-  // taupf and tauf are adapted from TransverseMercatorExact (taup and
-  // taupinv).  tau = tan(phi), taup = sinh(psi)
-  Math::real TransverseMercator::taupf(real tau) const {
-    if (!(abs(tau) < overflow())) {
-      // Fixed in 2015-02 to include the correct scale factor for large tau.
-      // This fixes the bug in Rhumb::GenInverse when one of the points is at a
-      // pole
-      real sig = sinh( eatanhe(real(1)) );
-      return tau / (Math::hypot(real(1), sig) + sig);
-    }
-    real
-      tau1 = Math::hypot(real(1), tau),
-      sig = sinh( eatanhe(tau / tau1) );
-    return Math::hypot(real(1), sig) * tau - sig * tau1;
-  }
-
-  Math::real TransverseMercator::tauf(real taup) const {
-    if (!(abs(taup) < overflow())) {
-      // Fixed in 2015-02 to match taupf.
-      real sig = sinh( eatanhe(real(1)) );
-      return taup * (Math::hypot(real(1), sig) + sig);
-    }
-    real
-      // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
-      // tau = taup/_e2m as a starting guess.  (This starting guess is the
-      // geocentric latitude which, to first order in the flattening, is equal
-      // to the conformal latitude.)  Only 1 iteration is needed for |lat| <
-      // 3.35 deg, otherwise 2 iterations are needed.  If, instead, tau = taup
-      // is used the mean number of iterations increases to 1.99 (2 iterations
-      // are needed except near tau = 0).
-      tau = taup/_e2m,
-      stol = tol_ * max(real(1), abs(taup));
-    // min iterations = 1, max iterations = 2; mean = 1.94
-    for (int i = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
-      real
-        tau1 = Math::hypot(real(1), tau),
-        sig = sinh( eatanhe( tau / tau1 ) ),
-        taupa = Math::hypot(real(1), sig) * tau - sig * tau1,
-        dtau = (taup - taupa) * (1 + _e2m * Math::sq(tau)) /
-        ( _e2m * tau1 * Math::hypot(real(1), taupa) );
-      tau += dtau;
-      if (!(abs(dtau) >= stol))
-        break;
-    }
-    return tau;
-  }
+  // There are adapted from TransverseMercatorExact (taup and taupinv).  tau =
+  // tan(phi), taup = sinh(psi)
 
   void TransverseMercator::Forward(real lon0, real lat, real lon,
                                    real& x, real& y, real& gamma, real& k)
@@ -362,7 +317,7 @@ namespace GeographicLib {
       real
         c = max(real(0), cos(lam)), // cos(pi/2) might be negative
         tau = tan(phi),
-        taup = taupf(tau);
+        taup = Math::taupf(tau, _es);
       xip = atan2(taup, c);
       // Used to be
       //   etap = Math::atanh(sin(lam) / cosh(psi));
@@ -370,7 +325,7 @@ namespace GeographicLib {
       // convergence and scale for Gauss-Schreiber TM (xip, etap) -- gamma0 =
       // atan(tan(xip) * tanh(etap)) = atan(tan(lam) * sin(phi'));
       // sin(phi') = tau'/sqrt(1 + tau'^2)
-      gamma = atan(tanx(lam) *
+      gamma = atan(Math::tand(lon) *
                    taup / Math::hypot(real(1), taup)); // Krueger p 22 (44)
       // k0 = sqrt(1 - _e2 * sin(phi)^2) * (cos(phi') / cos(phi)) * cosh(etap)
       // Note 1/cos(phi) = cosh(psip);
@@ -548,10 +503,10 @@ namespace GeographicLib {
       lam = atan2(s, c);        // Krueger p 17 (25)
       // Use Newton's method to solve for tau
       real
-        taup = sin(xip)/r,
-        tau = tauf(taup);
+        sxip = sin(xip),
+        tau = Math::tauf(sxip/r, _es);
+      gamma += atan2(sxip * tanh(etap), c); // Krueger p 19 (31)
       phi = atan(tau);
-      gamma += atan(tanx(xip) * tanh(etap)); // Krueger p 19 (31)
       // Note cos(phi') * cosh(eta') = r
       k *= sqrt(_e2m + _e2 * Math::sq(cos(phi))) *
         Math::hypot(real(1), tau) * r;

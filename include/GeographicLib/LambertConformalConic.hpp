@@ -2,7 +2,7 @@
  * \file LambertConformalConic.hpp
  * \brief Header for GeographicLib::LambertConformalConic class
  *
- * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -57,18 +57,12 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT LambertConformalConic {
   private:
     typedef Math::real real;
-    real eps_, epsx_, tol_, ahypover_;
-    real _a, _f, _fm, _e2, _e, _e2m;
+    real eps_, epsx_, ahypover_;
+    real _a, _f, _fm, _e2, _es, _e2m;
     real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
     real _scbet0, _tchi0, _scchi0, _psi0, _nrho0, _drhomax;
     static const int numit_ = 5;
     static inline real hyp(real x) { return Math::hypot(real(1), x); }
-    // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0
-    // - sqrt(-e2) * atan( sqrt(-e2) * x)                    if f < 0
-    inline real eatanhe(real x) const {
-      using std::atan;
-      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * atan(_e * x);
-    }
     // Divided differences
     // Definition: Df(x,y) = (f(x)-f(y))/(x-y)
     // See:
@@ -132,7 +126,7 @@ namespace GeographicLib {
     // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
     inline real Deatanhe(real x, real y) const {
       real t = x - y, d = 1 - _e2 * x * y;
-      return t ? eatanhe(t / d) / t : _e2 / d;
+      return t ? Math::eatanhe(t / d, _es) / t : _e2 / d;
     }
     void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1);
   public:

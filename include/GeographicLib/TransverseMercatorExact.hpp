@@ -2,7 +2,7 @@
  * \file TransverseMercatorExact.hpp
  * \brief Header for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -85,23 +85,11 @@ namespace GeographicLib {
     bool _extendp;
     EllipticFunction _Eu, _Ev;
     static inline real overflow() {
-    // Overflow value s.t. atan(overflow_) = pi/2
+      // Overflow value s.t. atan(overflow_) = pi/2
       static const real
         overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
       return overflow;
     }
-    // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
-    static inline real tanx(real x) {
-      using std::tan;
-      real t = tan(x);
-      // Write the tests this way to ensure that tanx(NaN()) is NaN()
-      return x >= 0 ?
-        (!(t <  0) ? t :  overflow()) :
-        (!(t >= 0) ? t : -overflow());
-    }
-
-    real taup(real tau) const;
-    real taupinv(real taup) const;
 
     void zeta(real u, real snu, real cnu, real dnu,
               real v, real snv, real cnv, real dnv,
