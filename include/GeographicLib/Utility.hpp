@@ -296,6 +296,19 @@ namespace GeographicLib {
         return x < 0 ? std::string("-inf") :
           (x > 0 ? std::string("inf") : std::string("nan"));
       std::ostringstream s;
+#if GEOGRAPHICLIB_PRECISION == 4
+      // boost-quadmath treats precision == 0 as "use as many digits as
+      // necessary", so...
+      using std::floor;
+      if (p == 0) {
+        long long ix = (long long)(floor(x + Math::real(0.5)));
+        // Implement the "round ties to even" rule
+        if (Math::real(ix) == x + Math::real(0.5) && (ix % 2) == 1)
+          --ix;
+        s << ix;
+        return s.str();
+      }
+#endif
       if (p >= 0) s << std::fixed << std::setprecision(p);
       s << x; return s.str();
     }

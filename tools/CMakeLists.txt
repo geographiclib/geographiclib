@@ -67,15 +67,16 @@ add_test (NAME GeoConvert0
   COMMAND GeoConvert -p -3 -m --input-string "33.3 44.4")
 set_tests_properties (GeoConvert0
   PROPERTIES PASS_REGULAR_EXPRESSION "38SMB4484")
-if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
-  # I/O for boost-quad has a bug where precision 0 is interpreted as
-  # printed all the digits of the number (instead of printing the
-  # integer portion).  Problem reported on 2014-06-07:
-  # https://svn.boost.org/trac/boost/ticket/10103
-  add_test (NAME GeoConvert1 COMMAND GeoConvert -d --input-string "38smb")
-  set_tests_properties (GeoConvert1
-    PROPERTIES PASS_REGULAR_EXPRESSION "32d59'14\\.1\"N 044d27'53\\.4\"E")
-endif ()
+
+# I/O for boost-quadmath has a bug where precision 0 is interpreted as
+# printed all the digits of the number (instead of printing the integer
+# portion).  Problem reported on 2014-06-07:
+# https://svn.boost.org/trac/boost/ticket/10103.  GeographicLib 1.42
+# includes a workaround for this bug.
+add_test (NAME GeoConvert1 COMMAND GeoConvert -d --input-string "38smb")
+set_tests_properties (GeoConvert1
+  PROPERTIES PASS_REGULAR_EXPRESSION "32d59'14\\.1\"N 044d27'53\\.4\"E")
+
 add_test (NAME GeoConvert2
   COMMAND GeoConvert -p -2 --input-string "30d30'30\" 30.50833")
 set_tests_properties (GeoConvert2
@@ -172,9 +173,10 @@ set_tests_properties (GeodSolve12 GeodSolve13
   PROPERTIES PASS_REGULAR_EXPRESSION "120\\.27.* 105\\.15.* 266\\.7")
 
 if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
-  # mpfr (nan == 0 is true) and boost-quad (nan > 0 is true) have bugs
-  # in handling nans, so skip this test.  Problems reported on
+  # mpfr (nan == 0 is true) and boost-quadmath (nan > 0 is true) have
+  # bugs in handling nans, so skip this test.  Problems reported on
   # 2015-03-31, https://svn.boost.org/trac/boost/ticket/11159
+  #
   # Check fix for inverse ignoring lon12 = nan
   add_test (NAME GeodSolve14 COMMAND GeodSolve -i --input-string "0 0 1 nan")
   set_tests_properties (GeodSolve14

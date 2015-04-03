@@ -7026,6 +7026,7 @@ git repository for GeographicLib</a>.
    - Add Math::norm, Math::AngRound, Math::tand, Math::atan2d,
      Math::eatanhe, Math::taupf, Math::tauf and remove duplicated (but
      private) functionality from other classes.
+   - Work around boost-quadmath bug with setprecision(0).
 
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
    (released 2015-03-09)

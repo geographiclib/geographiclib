@@ -342,24 +342,25 @@ namespace GeographicLib {
     case DEGREE:
       if (ind != NONE)
         s << setw(1 + min(int(ind), 2) + prec + (prec ? 1 : 0));
-      s << setprecision(prec) << pieces[0];
+      s << Utility::str(pieces[0], prec);
       // Don't include degree designator (d) if it is the trailing component.
       break;
     default:
       if (ind != NONE)
         s << setw(1 + min(int(ind), 2));
-      s << setprecision(0) << pieces[0]
+      s << int(pieces[0])
         << (dmssep ? dmssep : char(tolower(dmsindicators_[0])));
       switch (trailing) {
       case MINUTE:
-        s << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec) << pieces[1];
+        s << setw(2 + prec + (prec ? 1 : 0)) << Utility::str(pieces[1], prec);
         if (!dmssep)
           s << char(tolower(dmsindicators_[1]));
         break;
       case SECOND:
         s << setw(2)
-          << pieces[1] << (dmssep ? dmssep : char(tolower(dmsindicators_[1])))
-          << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec) << pieces[2];
+          << int(pieces[1])
+          << (dmssep ? dmssep : char(tolower(dmsindicators_[1])))
+          << setw(2 + prec + (prec ? 1 : 0)) << Utility::str(pieces[2], prec);
         if (!dmssep)
           s << char(tolower(dmsindicators_[2]));
         break;
