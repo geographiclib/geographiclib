@@ -20,11 +20,12 @@ namespace GeographicLib {
    * itself.
    *
    * This is a conformal projection of the ellipsoid to a plane in which
-   * the grid lines are straight; see Jacobi, Vorlesungen ueber Dynamik,
-   * Sect. 28.  The constructor takes the semi-axes of the ellipsoid (which
-   * must be in order).  Member functions map the ellipsoidal coordinates
-   * &omega; and &beta; separately to \e x and \e y.  Jacobi's coordinates
-   * have been multiplied by
+   * the grid lines are straight; see Jacobi,
+   * <a href="https://books.google.com/books?id=ryEOAAAAQAAJ&pg=PA212">
+   * Vorlesungen &uuml;ber Dynamik, &sect;28</a>.  The constructor takes the
+   * semi-axes of the ellipsoid (which must be in order).  Member functions map
+   * the ellipsoidal coordinates &omega; and &beta; separately to \e x and \e
+   * y.  Jacobi's coordinates have been multiplied by
    * (<i>a</i><sup>2</sup>&minus;<i>c</i><sup>2</sup>)<sup>1/2</sup> /
    * (2<i>b</i>) so that the customary results are returned in the cases of
    * a sphere or an ellipsoid of revolution.

@@ -46,16 +46,16 @@ namespace GeographicLib {
   }
 
   Math::real Ellipsoid::ParametricLatitude(real phi) const
-  { return atand(_f1 * Math::tand(phi)); }
+  { return Math::atand(_f1 * Math::tand(phi)); }
 
   Math::real Ellipsoid::InverseParametricLatitude(real beta) const
-  { return atand(Math::tand(beta) / _f1); }
+  { return Math::atand(Math::tand(beta) / _f1); }
 
   Math::real Ellipsoid::GeocentricLatitude(real phi) const
-  { return atand(_f12 * Math::tand(phi)); }
+  { return Math::atand(_f12 * Math::tand(phi)); }
 
   Math::real Ellipsoid::InverseGeocentricLatitude(real theta) const
-  { return atand(Math::tand(theta) / _f12); }
+  { return Math::atand(Math::tand(theta) / _f12); }
 
   Math::real Ellipsoid::RectifyingLatitude(real phi) const {
     return abs(phi) == 90 ? phi:
@@ -70,22 +70,22 @@ namespace GeographicLib {
   }
 
   Math::real Ellipsoid::AuthalicLatitude(real phi) const
-  { return atand(_au.txif(Math::tand(phi))); }
+  { return Math::atand(_au.txif(Math::tand(phi))); }
 
   Math::real Ellipsoid::InverseAuthalicLatitude(real xi) const
-  { return atand(_au.tphif(Math::tand(xi))); }
+  { return Math::atand(_au.tphif(Math::tand(xi))); }
 
   Math::real Ellipsoid::ConformalLatitude(real phi) const
-  { return atand(Math::taupf(Math::tand(phi), _es)); }
+  { return Math::atand(Math::taupf(Math::tand(phi), _es)); }
 
   Math::real Ellipsoid::InverseConformalLatitude(real chi) const
-  { return atand(Math::tauf(Math::tand(chi), _es)); }
+  { return Math::atand(Math::tauf(Math::tand(chi), _es)); }
 
   Math::real Ellipsoid::IsometricLatitude(real phi) const
   { return Math::asinh(Math::taupf(Math::tand(phi), _es)) / Math::degree(); }
 
   Math::real Ellipsoid::InverseIsometricLatitude(real psi) const
-  { return atand(Math::tauf(sinh(psi * Math::degree()), _es)); }
+  { return Math::atand(Math::tauf(sinh(psi * Math::degree()), _es)); }
 
   Math::real Ellipsoid::CircleRadius(real phi) const {
     return abs(phi) == 90 ? 0 :

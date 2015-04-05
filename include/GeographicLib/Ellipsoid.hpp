@@ -45,8 +45,6 @@ namespace GeographicLib {
     TransverseMercator _tm;
     EllipticFunction _ell;
     AlbersEqualArea _au;
-    static inline real atand(real x)
-    { using std::atan; return atan(x) / Math::degree(); }
 
     // These are the alpha and beta coefficients in the Krueger series from
     // TransverseMercator.  Thy are used by RhumbSolve to compute

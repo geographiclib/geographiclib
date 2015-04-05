@@ -307,7 +307,9 @@ set_tests_properties (TransverseMercatorProj1
 # Reported  2015-02-24 by Thomas Murray <thomas.murray56@gmail.com>;
 add_test (NAME RhumbSolve0 COMMAND
   RhumbSolve -p 3 -i --input-string "0 0 90 0")
-set_tests_properties (RhumbSolve0
+add_test (NAME RhumbSolve1 COMMAND
+  RhumbSolve -p 3 -s -i --input-string "0 0 90 0")
+set_tests_properties (RhumbSolve0 RhumbSolve1
   PROPERTIES PASS_REGULAR_EXPRESSION "^0\\.0+ 10001965\\.729 ")
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)

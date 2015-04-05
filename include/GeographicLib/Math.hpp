@@ -488,7 +488,24 @@ namespace GeographicLib {
     }
 
     /**
-     * Evaluate the atan2 with the result in degrees
+     * Evaluate the atan function with the result in degrees
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] x
+     * @return atan(<i>x</i>) in degrees.
+     *
+     * Large values for the argument return &plusmn;90&deg;
+     **********************************************************************/
+    template<typename T> static inline T atand(T x) {
+      using std::abs; using std::atan;
+      static const T
+        overflow = 1 / (Math::sq(std::numeric_limits<T>::epsilon()) * 100);
+      return !(abs(x) >= overflow) ? atan(x) / Math::degree() :
+        (x > 0 ? 90 : -90);
+    }
+
+    /**
+     * Evaluate the atan2 function with the result in degrees
      *
      * @tparam T the type of the arguments and the returned value.
      * @param[in] y

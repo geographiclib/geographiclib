@@ -4422,9 +4422,10 @@ Back to \ref triaxial.  Forward to \ref rhumb.  Up to
 
 In addition to solving the geodesic problem for the triaxial ellipsoid,
 Jacobi (1839) briefly mentions the problem of the conformal projection
-of ellipsoid.  He covers this in greater detail in <i>Vorlesungen
-&uuml;ber Dynamik</i>, &sect;28, which is now available in an
-<a href="https://www.worldcat.org/oclc/440645889">
+of ellipsoid.  He covers this in greater detail in
+<a href="https://books.google.com/books?id=ryEOAAAAQAAJ&pg=PA212">
+<i>Vorlesungen &uuml;ber Dynamik</i>, &sect;28</a>, which is now
+available in an <a href="https://www.worldcat.org/oclc/440645889">
 English translation: Lectures on Dynamics</a>
 (<a href="http://geographiclib.sf.net/jacobi-errata.html">
 errata</a>).
