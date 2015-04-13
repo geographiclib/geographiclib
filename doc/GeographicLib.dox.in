@@ -338,10 +338,6 @@ Here are the steps to compile and install GeographicLib:
 \endverbatim
     (With IDE compile environments, you get to select the build type in
     the IDE.)
-  - <code>MATLAB_COMPILER</code> (default: OFF).  Set this to either
-    "mex" (for Matlab) or "mkoctfile" (for Octave) to specify the
-    compiler to use for the Matlab/Octave interface.  See \ref matlab
-    for more information.
   - <code>GEOGRAPHICLIB_DOCUMENTATION</code> (default: OFF).  If set to
     ON, then html documentation is created from the source files,
     provided a sufficiently recent version of doxygen can be found.
@@ -374,7 +370,6 @@ Here are the steps to compile and install GeographicLib:
   make install # as root, if CMAKE_INSTALL_PREFIX is a system directory
 \endverbatim
   Possible additional targets are \verbatim
-  make matlabinterface (only for the Release configuration on Windows)
   make dist
   make exampleprograms
   make netexamples (supported only for Release configuration) \endverbatim
@@ -424,11 +419,7 @@ Here are the steps to compile and install GeographicLib:
   make install \endverbatim
 - The headers, library, and utilities are installed in the
   include/GeographicLib, lib, and bin directories under
-  <code>prefix</code>.  This installation method does not compile
-  the Matlab/Octave interface;  however the source for the interface is
-  installed in libexec/GeographicLib/matlab, see \ref matlab of
-  instructions on compiling the interface.  For documentation, open
-  <a href="index.html">
+  <code>prefix</code>.  For documentation, open <a href="index.html">
   share/doc/GeographicLib/html/index.html</a> in a web browser.
 
 \section gnu Installation with GNU compiler and Make
@@ -457,19 +448,15 @@ Here are the steps to compile and install GeographicLib:
   make PREFIX=/tmp/geographic install \endverbatim
 - The headers, library, and utilities are installed in the
   include/GeographicLib, lib, and bin directories under
-  <code>PREFIX</code>.  This installation method does not compile
-  the Matlab/Octave interface;  however the source for the interface is
-  installed in libexec/GeographicLib/matlab, see \ref matlab of
-  instructions on compiling the interface.  For documentation, open
-  <a href="index.html">
+  <code>PREFIX</code>.  For documentation, open <a href="index.html">
   share/doc/GeographicLib/html/index.html</a> in a web browser.
 
 \section windows Installation on Windows
 
 This method requires Visual Studio 2005, 2008, or 2010.  This builds a
 static library and the utilities.  If you only have Visual Studio 2003,
-use cmake to create the necessary solution file, see \ref cmake.  (cmake
-is needed to build the Matlab interface and to run the tests.)
+2012, or later, use cmake to create the necessary solution file, see
+\ref cmake.  (cmake is needed to run the tests.)
 - Unpack the source, running \verbatim
   unzip -q GeographicLib-@PROJECT_VERSION@.zip \endverbatim
 - Open GeographicLib-@PROJECT_VERSION@/windows/GeographicLib-vc10.sln in
@@ -481,10 +468,9 @@ is needed to build the Matlab interface and to run the tests.)
 - Copy the library windows/Release/GeographicLib.lib and the
   headers in include/GeographicLib somewhere convenient.  The
   headers should remain in a directory named GeographicLib.  If you
-  expect to use the Matlab/Octave interface, copy *.m and *.cpp from the
-  matlab directory to a directory in your matlab/octave path, see \ref
-  matlab for instructions on compiling the interface.  For
-  documentation, open
+  expect to use the Matlab/Octave interface, copy *.m from the matlab
+  directory to a directory in your matlab/octave path, see \ref matlab
+  for instructions on compiling the interface.  For documentation, open
   <a href="index.html">doc/html/index.html</a> in a web
   browser.
 
@@ -523,13 +509,12 @@ documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
 will include C:/pkg-vc11/GeographicLib-@PROJECT_VERSION@/bin where the
 utilities are installed.  The headers and library are installed in the
-include/GeographicLib and lib folders.  With the 64-bit installer, the
-Matlab interface is installed in the matlab folder.  Add this to your
-path in Matlab to access this interface.  The libraries were built using
-using Visual Studio 11 2012 in release and debug modes.  The utilities
-were linked against the release-mode shared library.  The Matlab
-interface was compiled with Matlab R2013a 64-bit, however it may work
-with some other 64-bit versions of Matlab.
+include/GeographicLib and lib folders.  The Matlab interface is
+installed in the matlab folder.  Add this to your path in Matlab to
+access this interface.  The libraries were built using using Visual
+Studio 11 2012 in release and debug modes.  The utilities were linked
+against the release-mode shared library.
+
 <a href="NET/index.html">NETGeographicLib</a> library dlls (release and
 debug) are included with the binary installers; these are linked against
 the shared library for GeographicLib.
@@ -7028,6 +7013,8 @@ git repository for GeographicLib</a>.
      Math::eatanhe, Math::taupf, Math::tauf and remove duplicated (but
      private) functionality from other classes.
    - Work around boost-quadmath bug with setprecision(0).
+   - Matlab changes.  Note requirement of Matlab (version 7.9, 2009b, or
+     later) or Octave (version 3.4, Feb. 2011, or later).
 
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
    (released 2015-03-09)
