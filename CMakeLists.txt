@@ -253,11 +253,11 @@ else ()
   # included), a work-alike substitution is used.
   include (CheckCXXCompilerFlag)
   set (CXX11_FLAG "-std=c++11")
-  check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST1)
-  if (NOT CXX11TEST1)
+  check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST)
+  if (NOT CXX11TEST)
     set (CXX11_FLAG "-std=c++0x")
-    check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST2)
-    if (NOT CXX11TEST2)
+    check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST)
+    if (NOT CXX11TEST)
       unset (CXX11_FLAG)
     endif ()
   endif ()
@@ -278,7 +278,7 @@ check_cxx_source_compiles (
 int main() {
   return int(std::hypot(3.0, 4.0) + std::expm1(0.5) + std::log1p(2.0) +
              std::asinh(10.0) + std::atanh(0.8) + std::cbrt(8.0)) +
-         std::isfinite(4.0) + std::isnan(0.0);
+             std::fma(1.0, 2.0, 3.0) + std::isfinite(4.0) + std::isnan(0.0);
 }\n" CXX11_MATH)
 if (CXX11_MATH)
   add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)

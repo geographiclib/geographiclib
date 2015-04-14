@@ -62,13 +62,13 @@
 #include <limits>
 
 #if GEOGRAPHICLIB_PRECISION == 4
+#include <boost/version.hpp>
+#if BOOST_VERSION >= 105600
+#include <boost/cstdfloat.hpp>
+#endif
 #include <boost/multiprecision/float128.hpp>
-#include <boost/math/special_functions/hypot.hpp>
-#include <boost/math/special_functions/expm1.hpp>
-#include <boost/math/special_functions/log1p.hpp>
-#include <boost/math/special_functions/atanh.hpp>
-#include <boost/math/special_functions/asinh.hpp>
-#include <boost/math/special_functions/cbrt.hpp>
+#include <boost/math/special_functions.hpp>
+__float128 fmaq(__float128, __float128, __float128);
 #elif GEOGRAPHICLIB_PRECISION == 5
 #include <mpreal.h>
 #endif
@@ -365,6 +365,24 @@ namespace GeographicLib {
     }
 
     /**
+     * Fused multiply and add.
+     *
+     * @tparam T the type of the arguments and the returned value.
+     * @param[in] x
+     * @param[in] y
+     * @param[in] z
+     * @return <i>xy</i> + <i>z</i>, correctly rounded (on those platforms with
+     *   support for the fma instruction).
+     **********************************************************************/
+    template<typename T> static inline T fma(T x, T y, T z) {
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::fma; return fma(x, y, z);
+#else
+      return x * y + z;
+#endif
+    }
+
+    /**
      * Normalize a two-vector.
      *
      * @tparam T the type of the argument and the returned value.
@@ -481,8 +499,7 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static inline T tand(T x) {
       using std::abs; using std::tan;
-      static const T
-        overflow = 1 / Math::sq(std::numeric_limits<T>::epsilon());
+      static const T overflow = 1 / Math::sq(std::numeric_limits<T>::epsilon());
       return abs(x) != 90 ? tan(x * Math::degree()) :
         (x < 0 ? -overflow : overflow);
     }
@@ -679,6 +696,9 @@ namespace GeographicLib {
 
     static inline real cbrt(real x)
     { return boost::math::cbrt(x, boost_special_functions_policy()); }
+
+    static inline real fma(real x, real y, real z)
+    { return fmaq(__float128(x), __float128(y), __float128(z)); }
 
     static inline bool isnan(real x) { return boost::math::isnan(x); }
 

@@ -7010,8 +7010,8 @@ git repository for GeographicLib</a>.
      Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a>
      utility as deprecated.
    - Add Math::norm, Math::AngRound, Math::tand, Math::atan2d,
-     Math::eatanhe, Math::taupf, Math::tauf and remove duplicated (but
-     private) functionality from other classes.
+     Math::eatanhe, Math::taupf, Math::tauf, Math::fma and remove
+     duplicated (but private) functionality from other classes.
    - Work around boost-quadmath bug with setprecision(0).
    - Matlab changes.  Note requirement of Matlab (version 7.9, 2009b, or
      later) or Octave (version 3.4, Feb. 2011, or later).
