@@ -68,7 +68,11 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
   f = e2 / (1 + sqrt(1 - e2));
 
   b = (1 - f) * a;
-  c2 = (a^2 + b^2 * atanhee(1, e2)) / 2;
+  if e2 ~= 0
+    c2 = (a^2 + b^2 * eatanhe(1, e2) / e2) / 2;
+  else
+    c2 = a^2;
+  end
   area0 = 4 * pi * c2;
 
   [s12, ~, ~, S12] = geoddistance(lat1, lon1, lat2, lon2, ellipsoid);

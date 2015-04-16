@@ -70,11 +70,11 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 
   phi = lat1 * degree;
   sbet1 = f1 * sin(phi); cbet1 = cos(phi); cbet1(lat1 == -90) = tiny;
-  [sbet1, cbet1] = SinCosNorm(sbet1, cbet1);
+  [sbet1, cbet1] = normalize(sbet1, cbet1);
 
   phi = lat2 * degree;
   sbet2 = f1 * sin(phi); cbet2 = cos(phi); cbet2(abs(lat2) == 90) = tiny;
-  [sbet2, cbet2] = SinCosNorm(sbet2, cbet2);
+  [sbet2, cbet2] = normalize(sbet2, cbet2);
 
   lam12 = lon12 * degree;
   slam12 = sin(lam12); slam12(lon12 == 180) = 0; clam12 = cos(lam12);
@@ -84,14 +84,14 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
   sgam2 = cbet1 .* slam12; cgam2 = -sbet1 .* cbet2 + cbet1 .* sbet2 .* clam12;
   ssig12 = hypot(sgam1, cgam1);
   csig12 = sbet1 .* sbet2 + cbet1 .* cbet2 .* clam12;
-  [sgam1, cgam1] = SinCosNorm(sgam1, cgam1);
-  [sgam2, cgam2] = SinCosNorm(sgam2, cgam2);
+  [sgam1, cgam1] = normalize(sgam1, cgam1);
+  [sgam2, cgam2] = normalize(sgam2, cgam2);
   % no need to normalize [ssig12, csig12]
 
   cgam0 = hypot(cgam1, sgam1 .* sbet1);
 
   ssig1 = sbet1; csig1 = cbet1 .* cgam1;
-  [ssig1, csig1] = SinCosNorm(ssig1, csig1);
+  [ssig1, csig1] = normalize(ssig1, csig1);
   ssig2 = ssig1 .* csig12 + csig1 .* ssig12;
   csig2 = csig1 .* csig12 - ssig1 .* ssig12;
 
@@ -131,7 +131,11 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
         2 * atan2(slam12(l) .* (sbet1(l) .* dbet2 + sbet2(l) .* dbet1), ...
                   dlam12    .* (sbet1(l) .* sbet2(l) + dbet1 .* dbet2));
 
-    c2 = a^2 * (1 + (1 - e2) * atanhee(1, e2)) / 2;
+    if e2 ~= 0
+      c2 = a^2 * (1 + (1 - e2) * eatanhe(1, e2) / e2) / 2;
+    else
+      c2 = a^2;
+    end
     S12 = S12 + c2 * gam12;
     S12 = reshape(S12, S);
   end

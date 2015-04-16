@@ -141,13 +141,13 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   phi = lat1 * degree;
   sbet1 = f1 * sin(phi);
   cbet1 = cos(phi); cbet1(abs(lat1) == 90) = tiny;
-  [sbet1, cbet1] = SinCosNorm(sbet1, cbet1);
+  [sbet1, cbet1] = normalize(sbet1, cbet1);
   dn1 = sqrt(1 + ep2 * sbet1.^2);
 
   salp0 = salp1 .* cbet1; calp0 = hypot(calp1, salp1 .* sbet1);
   ssig1 = sbet1; somg1 = salp0 .* sbet1;
   csig1 = cbet1 .* calp1; csig1(sbet1 == 0 & calp1 == 0) = 1; comg1 = csig1;
-  [ssig1, csig1] = SinCosNorm(ssig1, csig1);
+  [ssig1, csig1] = normalize(ssig1, csig1);
 
   k2 = calp0.^2 * ep2;
   epsi = k2 ./ (2 * (1 + sqrt(1 + k2)) + k2);
@@ -262,7 +262,11 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
     calp12(s) = calp2(s) .* calp1(s) + salp2(s) .* salp1(s);
     s = s & salp12 == 0 & calp12 < 0;
     salp12(s) = tiny * calp1(s); calp12(s) = -1;
-    c2 = (a^2 + b^2 * atanhee(1, e2)) / 2;
+    if e2 ~= 0
+      c2 = (a^2 + b^2 * eatanhe(1, e2) / e2) / 2;
+    else
+      c2 = a^2;
+    end
     S12 = c2 * atan2(salp12, calp12) + A4 .* (B42 - B41);
   end
 

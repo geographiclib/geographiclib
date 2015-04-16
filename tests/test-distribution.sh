@@ -27,7 +27,6 @@
 # insta - installed files, make
 # instb - installed files, autoconf
 # instc - installed files, cmake
-# inste - installed files, cmake matlab=on
 # instf - installed files, autoconf direct from git repository
 
 set -e
@@ -97,8 +96,6 @@ while read ver x64; do
     test "$x64" && gen="$gen Win64" || true
     pkg=vc$ver
     test "$x64" && pkg="$pkg-x64" || true
-    matlab=
-    test "$pkg" = vc11-x64 && matlab="-D MATLAB_COMPILER=mex" || true
     installer=
     if test "$ver" -eq 11; then
 	if test "$x64"; then
@@ -117,17 +114,11 @@ while read ver x64; do
 	echo 'mkdir -p v:/data/scratch/$b'
 	echo 'cd v:/data/scratch/$b'
 	echo 'unset GEOGRAPHICLIB_DATA'
-	if test "$matlab"; then
-	    echo 'MATLAB_ROOT=`cygpath "c:/Program Files/MATLAB/R2013a"`'
-	    echo 'export PATH="$PATH:$MATLAB_ROOT/runtime/win64:$MATLAB_ROOT/bin"'
-	fi
-	echo $cmake -G \"$gen\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON $matlab -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+	echo $cmake -G \"$gen\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
 	echo $cmake --build . --config Debug   --target ALL_BUILD
 	echo $cmake --build . --config Debug   --target RUN_TESTS
 	echo $cmake --build . --config Debug   --target INSTALL
 	echo $cmake --build . --config Release --target ALL_BUILD
-	test "$matlab" &&
-	echo $cmake --build . --config Release --target matlabinterface || true
 	echo $cmake --build . --config Release --target exampleprograms
 	echo $cmake --build . --config Release --target netexamples
 	echo $cmake --build . --config Release --target RUN_TESTS
@@ -185,19 +176,11 @@ make -j$NUMCPUS all
 make -j$NUMCPUS test
 make -j$NUMCPUS exampleprograms
 make install
-mkdir ../BUILD-matlab
-cd ../BUILD-matlab
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
-make -j$NUMCPUS all
-make -j$NUMCPUS test
-make -j$NUMCPUS matlabinterface
-make install
 mkdir ../BUILD-system
 cd ../BUILD-system
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D MATLAB_COMPILER=mkoctfile ..
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH ..
 make -j$NUMCPUS all
 make -j$NUMCPUS test
-make -j$NUMCPUS matlabinterface
 cd ..
 mvn -Dcmake.project.bin.directory=$TEMP/mvn install
 
@@ -268,8 +251,6 @@ done
 
 cd $TEMP/instc
 find . -type f | sort -u > ../files.c
-cd $TEMP/inste
-find . -type f | sort -u > ../files.e
 
 cd $TEMP/gitb/geographiclib
 sh autogen.sh
@@ -362,7 +343,7 @@ echo
 echo Files with tabs:
 find . -type f |
 egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
-egrep -v '\.sh|depcomp|install-sh|/config\.|configure|missing' |
+egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
 xargs grep -l  '	' || true
 echo
 echo Files with multiple newlines:

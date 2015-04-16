@@ -75,12 +75,12 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
   phi = lat1 * degree;
   sbet1 = f1 * sin(phi);
   cbet1 = cos(phi); cbet1(abs(lat1) == 90) = tiny;
-  [sbet1, cbet1] = SinCosNorm(sbet1, cbet1);
-  [sgam1, cgam1] = SinCosNorm(sgam1 .* sqrt(1 - e2 * cbet1.^2), cgam1);
+  [sbet1, cbet1] = normalize(sbet1, cbet1);
+  [sgam1, cgam1] = normalize(sgam1 .* sqrt(1 - e2 * cbet1.^2), cgam1);
   sgam0 = sgam1 .* cbet1; cgam0 = hypot(cgam1, sgam1 .* sbet1);
   ssig1 = sbet1; slam1 = sgam0 .* sbet1;
   csig1 = cbet1 .* cgam1; csig1(sbet1 == 0 & cgam1 == 0) = 1; clam1 = csig1;
-  [ssig1, csig1] = SinCosNorm(ssig1, csig1);
+  [ssig1, csig1] = normalize(ssig1, csig1);
 
   k2 = e2 * cgam0.^2;
   epsi = k2 ./ (2 * (1 + sqrt(1 - k2)) - k2);
@@ -142,7 +142,11 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
     cgam12(s) = cgam2(s) .* cgam1(s) + sgam2(s) .* sgam1(s);
     s = s & sgam12 == 0 & cgam12 < 0;
     sgam12(s) = tiny * cgam1(s); cgam12(s) = -1;
-    c2 = a^2 * (1 + (1 - e2) * atanhee(1, e2)) / 2;
+    if e2 ~= 0
+      c2 = a^2 * (1 + (1 - e2) * eatanhe(1, e2) / e2) / 2;
+    else
+      c2 = a^2;
+    end
     S12 = c2 * atan2(sgam12, cgam12) + A4 .* (B42 - B41);
   end
 

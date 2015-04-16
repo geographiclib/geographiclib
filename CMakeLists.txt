@@ -171,29 +171,24 @@ else ()
   set (PROJECT_DEFINITIONS ${PROJECT_STATIC_DEFINITIONS})
 endif ()
 
-# (5) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
-set (MATLAB_COMPILER OFF CACHE STRING
-  "Compiler for matlab/octave interface: mex or mkoctfile or OFF")
-set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
-
-# (6) Create the documentation?  This depends on whether doxygen can be
+# (5) Create the documentation?  This depends on whether doxygen can be
 # found.  If this is OFF, then links will be provided to the online
 # documentation on Sourceforge.
 option (GEOGRAPHICLIB_DOCUMENTATION
   "Use doxygen to create the documentation" OFF)
 
-# (7) Build .NET wrapper library NETGeographicLib.  This only applies to
+# (6) Build .NET wrapper library NETGeographicLib.  This only applies to
 # Windows.  Default is OFF, because, currently, most people don't use
 # this interface.
 option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib library" OFF)
 
-# (8) Set the default "real" precision.  This should probably be left
+# (7) Set the default "real" precision.  This should probably be left
 # at 2 (double).
 set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
   "Precision: 1 = float, 2 = double, 3 = extended, 4 = quadruple, 5 = variable")
 set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3 4 5)
 
-# (9) When making a binary package, should we include the debug version
+# (8) When making a binary package, should we include the debug version
 # of the library?  This applies to MSVC only, because that's the
 # platform where debug and release compilations do not inter-operate.
 # It requires building as follows:
@@ -432,44 +427,6 @@ endif ()
 if (MAINTAINER)
   add_custom_target (distrib-all)
   add_dependencies (distrib-all distrib-man)
-endif ()
-
-# Look for the tool to compile the Matlab interfaces.
-if (MATLAB_COMPILER)
-  if (GEOGRAPHICLIB_PRECISION EQUAL 2)
-    if (WIN32)
-      set (MATLAB_COMPILER_EXT ".bat")
-    else ()
-      set (MATLAB_COMPILER_EXT "")
-    endif ()
-    find_program (MEX "${MATLAB_COMPILER}${MATLAB_COMPILER_EXT}")
-    if (MATLAB_COMPILER MATCHES "mex")
-      get_filename_component (MATLABDIR "${MEX}" REALPATH)
-      get_filename_component (MATLABDIR "${MATLABDIR}" PATH)
-      find_program (MEXEXTPROG "mexext${MATLAB_COMPILER_EXT}"
-        PATHS "${MATLABDIR}")
-      execute_process (COMMAND "${MEXEXTPROG}"
-        OUTPUT_VARIABLE MEXEXT OUTPUT_STRIP_TRAILING_WHITESPACE)
-      set (MEXOPTIONS "-largeArrayDims")
-    else ()
-      set (MEXEXT "mex")
-      set (MEXOPTIONS "--mex")
-    endif ()
-    if (NOT MSVC)
-      # mex files are shared objects => require static lib to be built with
-      # position independent code
-      set (CMAKE_POSITION_INDEPENDENT_CODE ON)
-    endif ()
-    if (NOT MEX)
-      message (WARNING
-        "Cannot find Matlab compiler ${MATLAB_COMPILER}${MATLAB_COMPILER_EXT}")
-    elseif (NOT MEXEXT)
-      set (MEX OFF)
-      message (WARNING "Cannot determine extension for Matlab compiled code")
-    endif ()
-  else ()
-    message (WARNING "Build of Matlab interfaces only works with doubles")
-  endif ()
 endif ()
 
 # Set a default build type for single-configuration cmake generators if

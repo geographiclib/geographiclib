@@ -72,8 +72,8 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
   azi = AngNormalize(azi2);
   [~, ~, ~, ~, ~, ~, rk] = ...
       geodreckon(lat, dlon, -sig12, azi, ellipsoid, true);
-  [sbet , cbet ] = SinCosNorm((1-f) * sind(lat ), cosd(lat ));
-  [sbet0, cbet0] = SinCosNorm((1-f) * sind(lat0), cosd(lat0));
+  [sbet , cbet ] = normalize((1-f) * sind(lat ), cosd(lat ));
+  [sbet0, cbet0] = normalize((1-f) * sind(lat0), cosd(lat0));
   alp = azi * degree;
   salp = sin(alp); salp(alp == -180) = 0;
   calp = cos(alp); calp(abs(alp) == 90) = 0;

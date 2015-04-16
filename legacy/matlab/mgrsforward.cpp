@@ -48,8 +48,8 @@ void mexFunction( int nlhs, mxArray* plhs[],
     prec = int(rprec);
     if (double(prec) != rprec)
       mexErrMsgTxt("Precision is not an integer.");
-    if (prec < 0 || prec > 11)
-      mexErrMsgTxt("Precision outside the legal range [0, 11].");
+    if (prec < -1 || prec > 11)
+      mexErrMsgTxt("Precision outside the legal range [-1, 11].");
   }
 
   mwSize m = mxGetM(prhs[0]);

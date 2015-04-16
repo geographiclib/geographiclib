@@ -1,5 +1,5 @@
 function [lat, lon, gam, k] = utm_inv(zone, northp, x, y)
-%UTM_INV  Forward transverse Mercator projection
+%UTM_INV  Forward UTM projection
 %
 %   [LAT, LON] = UTM_INV(ZONE, NORTHP, X, Y)
 %   [LAT, LON, GAM, K] = UTM_INV(ZONE, NORTHP, X, Y)
@@ -43,7 +43,7 @@ function [lat, lon, gam, k] = utm_inv(zone, northp, x, y)
 % This file was distributed with GeographicLib 1.29.
 
   if nargin < 4, error('Too few input arguments'), end
-  lon0 = -183 + 6 * zone; lat0 = 0;
+  lon0 = -183 + 6 * floor(zone); lat0 = 0;
   fe = 500e3; fn = cvmgt(0, 10000e3, logical(northp)); k0 = 0.9996;
   x = (x - fe) / k0; y = (y - fn) / k0;
   [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y);

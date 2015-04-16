@@ -107,11 +107,11 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 
   phi = lat1 * degree;
   sbet1 = f1 * sin(phi); cbet1 = cos(phi); cbet1(lat1 == -90) = tiny;
-  [sbet1, cbet1] = SinCosNorm(sbet1, cbet1);
+  [sbet1, cbet1] = normalize(sbet1, cbet1);
 
   phi = lat2 * degree;
   sbet2 = f1 * sin(phi); cbet2 = cos(phi); cbet2(abs(lat2) == 90) = tiny;
-  [sbet2, cbet2] = SinCosNorm(sbet2, cbet2);
+  [sbet2, cbet2] = normalize(sbet2, cbet2);
 
   c = cbet1 < -sbet1 & cbet2 == cbet1;
   sbet2(c) = (2 * (sbet2(c) < 0) - 1) .* sbet1(c);
@@ -222,7 +222,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 
     salp1(c) = (salp1a(c) + salp1b(c))/2;
     calp1(c) = (calp1a(c) + calp1b(c))/2;
-    [salp1(g), calp1(g)] = SinCosNorm(salp1(g), calp1(g));
+    [salp1(g), calp1(g)] = normalize(salp1(g), calp1(g));
     tripb(c) = (abs(salp1a(c) - salp1(c)) + (calp1a(c) - calp1(c)) < tolb | ...
                 abs(salp1(c) - salp1b(c)) + (calp1(c) - calp1b(c)) < tolb);
   end
@@ -246,8 +246,8 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
     k2 = calp0.^2 * ep2;
     epsi = k2 ./ (2 * (1 + sqrt(1 + k2)) + k2);
     A4 = (a^2 * e2) * calp0 .* salp0;
-    [ssig1, csig1] = SinCosNorm(ssig1, csig1);
-    [ssig2, csig2] = SinCosNorm(ssig2, csig2);
+    [ssig1, csig1] = normalize(ssig1, csig1);
+    [ssig2, csig2] = normalize(ssig2, csig2);
 
     C4x = C4coeff(n);
     C4a = C4f(epsi, C4x);
@@ -268,7 +268,11 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
     s = salp12 == 0 & calp12 < 0;
     salp12(s) = tiny * calp1(s); calp12(s) = -1;
     alp12(l) = atan2(salp12, calp12);
-    c2 = (a^2 + b^2 * atanhee(1, e2)) / 2;
+    if e2 ~= 0
+      c2 = (a^2 + b^2 * eatanhe(1, e2) / e2) / 2;
+    else
+      c2 = a^2;
+    end
     S12 = 0 + swapp .* lonsign .* latsign .* (S12 + c2 * alp12);
   end
 
@@ -334,7 +338,7 @@ function [sig12, salp1, calp1, salp2, calp2, dnm] = ...
   calp2(s) = somg12(s).^2 ./ (1 + comg12(s));
   calp2(s & comg12 < 0) = 1 - comg12(s & comg12 < 0);
   calp2(s) = sbet12(s) - cbet1(s) .* sbet2(s) .* calp2(s);
-  [salp2, calp2] = SinCosNorm(salp2, calp2);
+  [salp2, calp2] = normalize(salp2, calp2);
   sig12(s) = atan2(ssig12(s), csig12(s));
 
   s = ~(s | abs(n) > 0.1 | csig12 >= 0 | ssig12 >= 6 * abs(n) * pi * cbet1.^2);
@@ -385,7 +389,7 @@ function [sig12, salp1, calp1, salp2, calp2, dnm] = ...
   end
 
   calp1(salp1 <= 0) = 0; salp1(salp1 <= 0) = 1;
-  [salp1, calp1] = SinCosNorm(salp1, calp1);
+  [salp1, calp1] = normalize(salp1, calp1);
 end
 
 function k = Astroid(x, y)
@@ -414,7 +418,7 @@ function k = Astroid(x, y)
   fl2 = disc >= 0;
   T3 = S(fl2) + r3(fl2);
   T3 = T3 + (1 - 2 * (T3 < 0)) .* sqrt(disc(fl2));
-  T = cbrt(T3);
+  T = cbrtx(T3);
   u(fl2) = u(fl2) + T + cvmgt(r2(fl2) ./ T, 0, T ~= 0);
   ang = atan2(sqrt(-disc(~fl2)), -(S(~fl2) + r3(~fl2)));
   u(~fl2) = u(~fl2) + 2 * r(~fl2) .* cos(ang / 3);
@@ -443,7 +447,7 @@ function [lam12, dlam12, ...
 
   ssig1 = sbet1; somg1 = salp0 .* sbet1;
   csig1 = calp1 .* cbet1; comg1 = csig1;
-  [ssig1, csig1] = SinCosNorm(ssig1, csig1);
+  [ssig1, csig1] = normalize(ssig1, csig1);
 
   salp2 = cvmgt(salp0 ./ cbet2, salp1, cbet2 ~= cbet1);
   calp2 = cvmgt(sqrt((calp1 .* cbet1).^2 + ...
@@ -453,7 +457,7 @@ function [lam12, dlam12, ...
                 abs(calp1), cbet2 ~= cbet1 | abs(sbet2) ~= -sbet1);
   ssig2 = sbet2; somg2 = salp0 .* sbet2;
   csig2 = calp2 .* cbet2;  comg2 = csig2;
-  [ssig2, csig2] = SinCosNorm(ssig2, csig2);
+  [ssig2, csig2] = normalize(ssig2, csig2);
 
   sig12 = atan2(max(csig1 .* ssig2 - ssig1 .* csig2, 0), ...
                 csig1 .* csig2 + ssig1 .* ssig2);

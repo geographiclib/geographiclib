@@ -64,7 +64,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   f = ecc2flat(ellipsoid(2));
   e2 = f * (2 - f);
   e2m = 1 - e2;
-  cc = sqrt(e2m) * exp(e2 * atanhee(1, e2));
+  cc = sqrt(e2m) * exp(eatanhe(1, e2));
   n = f / (2 -f);
   alp = alpf(n);
   b1 = (1 - f) * (A1m1f(n) + 1);
@@ -135,7 +135,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   if isscalar(lat0) && lat0 == 0
     y0 = 0;
   else
-    [sbet0, cbet0] = SinCosNorm((1-f) * sind(lat0), cosd(lat0));
+    [sbet0, cbet0] = normalize((1-f) * sind(lat0), cosd(lat0));
     y0 = a1 * (atan2(sbet0, cbet0) + ...
                SinCosSeries(true, sbet0, cbet0, C1f(n)));
   end
@@ -158,13 +158,4 @@ function alp = alpf(n)
   alp(5) = (3438171-13675556*n)*nx/7983360;
   nx = nx * n;
   alp(6) = 212378941*nx/319334400;
-end
-
-function taup = taupf(tau, e2)
-  tau1 = hypot(1, tau);
-  sig = sinh( e2 * atanhee(tau ./ tau1, e2) );
-  taup = hypot(1, sig) .* tau - sig .* tau1;
-  overflow = 1/eps^2;
-  c = ~(abs(tau) < overflow);
-  taup(c) = tau(c);
 end
