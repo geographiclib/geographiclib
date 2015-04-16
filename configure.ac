@@ -12,11 +12,11 @@ GEOGRAPHICLIB_VERSION_MAJOR=1
 GEOGRAPHICLIB_VERSION_MINOR=42
 GEOGRAPHICLIB_VERSION_PATCH=0
 AC_DEFINE_UNQUOTED([GEOGRAPHICLIB_VERSION_MAJOR],
-	[$GEOGRAPHICLIB_VERSION_MAJOR],[major version number])
+        [$GEOGRAPHICLIB_VERSION_MAJOR],[major version number])
 AC_DEFINE_UNQUOTED([GEOGRAPHICLIB_VERSION_MINOR],
-	[$GEOGRAPHICLIB_VERSION_MINOR],[minor version number])
+        [$GEOGRAPHICLIB_VERSION_MINOR],[minor version number])
 AC_DEFINE_UNQUOTED([GEOGRAPHICLIB_VERSION_PATCH],
-	[$GEOGRAPHICLIB_VERSION_PATCH],[patch number])
+        [$GEOGRAPHICLIB_VERSION_PATCH],[patch number])
 AC_SUBST(GEOGRAPHICLIB_VERSION_MAJOR)
 AC_SUBST(GEOGRAPHICLIB_VERSION_MINOR)
 AC_SUBST(GEOGRAPHICLIB_VERSION_PATCH)
@@ -55,15 +55,19 @@ AC_TYPE_LONG_DOUBLE
 # Check endianness
 AC_C_BIGENDIAN
 
-# Check flag for C++11
-AX_CHECK_COMPILE_FLAG([-std=c++0x], [CXXFLAGS="$CXXFLAGS -std=c++0x"])
+# Check flags for C++11
+AX_CHECK_COMPILE_FLAG([-std=c++11],
+        [CXXFLAGS="$CXXFLAGS -std=c++11"],
+        [AX_CHECK_COMPILE_FLAG([-std=c++0x],
+                [CXXFLAGS="$CXXFLAGS -std=c++0x"])])
 # Check for C++11 math functions
 AC_TRY_COMPILE([#include <cmath>],
-	[return int(std::hypot(3.0, 4.0) + std::expm1(0.5) +
+        [return int(std::hypot(3.0, 4.0) + std::expm1(0.5) +
                     std::log1p(2.0) + std::asinh(10.0) + std::atanh(0.8) +
-                    std::cbrt(8.0)) + std::isfinite(4.0) + std::isnan(0.0);],
-	[CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=1"],
-	[CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=0"])
+                    std::fma(1.0, 2.0, 3.0) + std::cbrt(8.0)) +
+                    std::isfinite(4.0) + std::isnan(0.0);],
+        [CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=1"],
+        [CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=0"])
 
 # Check for doxygen.
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
