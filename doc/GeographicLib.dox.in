@@ -7015,6 +7015,7 @@ git repository for GeographicLib</a>.
    - Work around boost-quadmath bug with setprecision(0).
    - Matlab changes.  Note requirement of Matlab (version 7.9, 2009b, or
      later) or Octave (version 3.4, Feb. 2011, or later).
+   - N.B. .gitignore updates on release branch: mex files + RhumbSolve.
 
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
    (released 2015-03-09)
