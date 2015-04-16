@@ -41,7 +41,7 @@ $(srcdir)/localcartesianforward_a.m \
 $(srcdir)/localcartesianreverse_a.m \
 $(srcdir)/polygonarea_a.m
 
-MATLAB_GEOD_PRIVATE = \
+MATLAB_PRIVATE = \
 $(srcdir)/private/A1m1f.m \
 $(srcdir)/private/A2m1f.m \
 $(srcdir)/private/A3coeff.m \
@@ -50,7 +50,7 @@ $(srcdir)/private/AngDiff.m \
 $(srcdir)/private/AngNormalize2.m \
 $(srcdir)/private/AngNormalize.m \
 $(srcdir)/private/AngRound.m \
-$(srcdir)/private/atanhee.m \
+$(srcdir)/private/eatanhe.m \
 $(srcdir)/private/C1f.m \
 $(srcdir)/private/C1pf.m \
 $(srcdir)/private/C2f.m \
@@ -59,9 +59,9 @@ $(srcdir)/private/C3f.m \
 $(srcdir)/private/C4coeff.m \
 $(srcdir)/private/G4coeff.m \
 $(srcdir)/private/C4f.m \
-$(srcdir)/private/cbrt.m \
+$(srcdir)/private/cbrtx.m \
 $(srcdir)/private/cvmgt.m \
-$(srcdir)/private/SinCosNorm.m \
+$(srcdir)/private/normalize.m \
 $(srcdir)/private/SinCosSeries.m \
 $(srcdir)/private/sumx.m \
 $(srcdir)/private/swap.m

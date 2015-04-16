@@ -6,7 +6,7 @@ function zone = StandardZone(lat, lon, setzone)
   MINZONE = 0;
   MAXZONE = 60;
   UPS = 0;
-  
+
   if nargin < 3
     setzone = STANDARD;
   end
@@ -26,7 +26,7 @@ function zone = StandardZone(lat, lon, setzone)
   exception = z == 31 & floor(lat(u) / 8) == 7 & ilon >= 3;
   z(exception) = 32;
   % Svalbard exception
-  exception = lat(u) >= 72 & ilon >= 0 & ilon < 42; 
+  exception = lat(u) >= 72 & ilon >= 0 & ilon < 42;
   z(exception) = 2 * floor((ilon(exception) + 183)/12) + 1;
   zone(u) = z;
   zone(g & ~c) = UPS;

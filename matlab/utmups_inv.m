@@ -17,7 +17,7 @@ function [lat, lon, gam, k] = utmups_inv(x, y, zone, northp)
   catch err
     error('x, y, zone, northp have incompatible sizes')
   end
-  x = x + Z; y = y + Z; 
+  x = x + Z; y = y + Z;
   zone = floor(zone) + Z; northp = logical(northp + Z);
   Z = nan(size(Z));
   lat = Z; lon = Z; gam = Z; k = Z;
