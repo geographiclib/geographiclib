@@ -10,9 +10,9 @@ function geocentricforward(~, ~, ~)
 %       h = geodetic(:,3) in meters (default 0 m)
 %
 %   geocentric is an M x 3 matrix of geocentric coordinates
-%       x = geocentric(:,1) in meters
-%       y = geocentric(:,2) in meters
-%       z = geocentric(:,3) in meters
+%       X = geocentric(:,1) in meters
+%       Y = geocentric(:,2) in meters
+%       Z = geocentric(:,3) in meters
 %   rot is an M x 9 matrix
 %       M = rot(:,1:9) rotation matrix in row major order.  Pre-multiplying
 %           a unit vector in local cartesian coordinates (east, north, up)

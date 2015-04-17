@@ -21,7 +21,6 @@ function zone = StandardZone(lat, lon, setzone)
   u = g & c;
   ilon = mod(floor(lon(u)) + 180, 360) - 180;
   z = floor((ilon + 186) / 6);
-  band = LatitudeBand(lat(u));
   % Norway exception
   exception = z == 31 & floor(lat(u) / 8) == 7 & ilon >= 3;
   z(exception) = 32;

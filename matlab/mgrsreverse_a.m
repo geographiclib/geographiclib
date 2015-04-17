@@ -21,6 +21,6 @@ function [utmups, prec] = mgrsreverse_a(mgrs)
 %
 %   The position is the center of the MGRS square.  To obtain the
 %   SW corner subtract 0.5 * 10^(5-prec) from the easting and northing.
-  [x, y, z, h, prec] = mgrs_rev(mgrs);
+  [x, y, z, h, prec] = mgrs_inv(mgrs);
   utmups = [x, y, z, h];
 end
