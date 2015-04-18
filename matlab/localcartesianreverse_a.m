@@ -34,9 +34,11 @@ function [geodetic, rot] = localcartesianreverse_a(origin, cartesian, a, f)
   else
     ellipsoid = [a, flat2ecc(f)];
   end
-  if length(origin) == 3
+  if length(origin(:)) == 2
+    h0 = 0;
+  elseif length(origin(:)) == 3
     h0 = origin(3);
-  elseif length(origin) ~= 2
+  else
     error('origin is not vector of length 2 or 3')
   end
   [lat, lon, h, M] = ...

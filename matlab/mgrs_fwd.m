@@ -12,7 +12,7 @@ function mgrs = mgrs_fwd(x, y, zone, northp, prec)
   num = prod(s);
   if num == 0, mgrs = cell(0); return, end
   Z = zeros(num, 1);
-  x = x(:) + Z; y = y(:) + Z; zone = zone(:) + Z; 
+  x = x(:) + Z; y = y(:) + Z; zone = zone(:) + Z;
   northp = northp(:) + Z; prec = prec(:) + Z;
   prec(~(prec >= -1 & prec <= 11)) = -2;
   mgrs = repmat('INV',num,1);

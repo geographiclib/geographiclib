@@ -39,13 +39,15 @@ function [cartesian, rot] = localcartesianforward_a(origin, geodetic, a, f)
   else
     h = geodetic(:,3);
   end
-  if length(origin) == 3
+  if length(origin(:)) == 2
+    h0 = 0;
+  elseif length(origin(:)) == 3
     h0 = origin(3);
-  elseif length(origin) ~= 2
+  else
     error('origin is not vector of length 2 or 3')
   end
   [x, y, z, M] = loccart_fwd(origin(1), origin(2), h0, ...
-                             geodetic(:,1), geodetic(:,2), h,  ellipsoid);
+                             geodetic(:,1), geodetic(:,2), h, ellipsoid);
   cartesian = [x, y, z];
   rot = reshape(permute(M, [3, 2 1]), [], 9);
 end
