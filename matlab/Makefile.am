@@ -20,8 +20,6 @@ $(srcdir)/tranmerc_fwd.m \
 $(srcdir)/tranmerc_inv.m \
 $(srcdir)/gnomonic_fwd.m \
 $(srcdir)/gnomonic_inv.m \
-$(srcdir)/utm_fwd.m \
-$(srcdir)/utm_inv.m \
 $(srcdir)/gedoc.m \
 $(srcdir)/gereckon.m \
 $(srcdir)/gedistance.m

@@ -30,6 +30,7 @@ function mgrs = mgrs_fwd(x, y, zone, northp, prec)
   end
   mgrs = reshape(cellstr(mgrs), s);
 end
+
 function mgrs = mgrs_fwd_p(x, y, zone, northp, prec)
   num = size(x, 1);
   delta = 10e-9;
@@ -53,6 +54,7 @@ function mgrs = mgrs_fwd_p(x, y, zone, northp, prec)
   t = mgrs_fwd_upsn(x(upsn), y(upsn), prec); mgrs(upsn,1:end-2) = t;
   t = mgrs_fwd_upss(x(upss), y(upss), prec); mgrs(upss,1:end-2) = t;
 end
+
 function mgrs = mgrs_fwd_utm(x, y, zone, prec)
   mgrs = char(zeros(length(x), 5 + 2 * prec) + ' ');
   if isempty(x), return, end
@@ -80,6 +82,7 @@ function mgrs = mgrs_fwd_utm(x, y, zone, prec)
   xy = formatnum(x, y, prec);
   mgrs(:,5+(1:2*prec)) = xy;
 end
+
 function mgrs = mgrs_fwd_upsn(x, y, prec)
   mgrs = char(zeros(length(x), 3 + 2 * prec) + ' ');
   if isempty(x), return, end
@@ -98,6 +101,7 @@ function mgrs = mgrs_fwd_upsn(x, y, prec)
   xy = formatnum(x, y, prec);
   mgrs(:,3+(1:2*prec)) = xy;
 end
+
 function mgrs = mgrs_fwd_upss(x, y, prec)
   mgrs = char(zeros(length(x), 3 + 2 * prec) + ' ');
   if isempty(x), return, end
@@ -116,6 +120,7 @@ function mgrs = mgrs_fwd_upss(x, y, prec)
   xy = formatnum(x, y, prec);
   mgrs(:,3+(1:2*prec)) = xy;
 end
+
 function xy = formatnum(x, y, prec)
   if (prec < 5)
     x = x / 10 ^ (5 - prec); y = y / 10 ^ (5 - prec);

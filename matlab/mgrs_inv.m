@@ -32,6 +32,7 @@ function [x, y, zone, northp, prec] = mgrs_inv(mgrs)
   x = reshape(x, s); y = reshape(y, s); prec = reshape(prec, s);
   northp = reshape(northp, s); zone = reshape(zone, s);
 end
+
 function [x, y, zone, northp, prec] = mgrs_inv_utm(mgrs)
   zone = (mgrs(:,1) - '0') * 10 + (mgrs(:,2) - '0');
   ok = zone > 0 & zone <= 60;
@@ -67,6 +68,7 @@ function [x, y, zone, northp, prec] = mgrs_inv_utm(mgrs)
   zone(~ok) = -4;
   prec(~ok) = -2;
 end
+
 function [x, y, zone, northp, prec] = mgrs_inv_upss(mgrs)
   zone = zeros(size(mgrs,1),1);
   ok = zone == 0;
@@ -88,6 +90,7 @@ function [x, y, zone, northp, prec] = mgrs_inv_upss(mgrs)
   zone(~ok) = -4;
   prec(~ok) = -2;
 end
+
 function [x, y, zone, northp, prec] = mgrs_inv_upsn(mgrs)
   zone = zeros(size(mgrs,1),1);
   ok = zone == 0;
@@ -110,6 +113,7 @@ function [x, y, zone, northp, prec] = mgrs_inv_upsn(mgrs)
   zone(~ok) = -4;
   prec(~ok) = -2;
 end
+
 function [x, y, prec] = decodexy(xy)
   num = size(xy, 1);
   x = nan(num, 1); y = x;
@@ -157,6 +161,7 @@ function irow = utmrow(iband, icol, irow)
                 (srow == 79 & sband == 9 & scol >= 1) | ...
                 (srow == 80 & sband == 8 & scol <= 1) ) ) = 100;
 end
+
 function len = strlen(strings)
   num = size(strings, 1);
   len = repmat(size(strings, 2), num, 1);
@@ -168,6 +173,7 @@ function len = strlen(strings)
     len(d) = len(d) - 1;
   end
 end
+
 function ind = lookup(str, test)
 % str is uppercase row string to look up in. test is col array to lookup
   q = str - 'A' + 1;

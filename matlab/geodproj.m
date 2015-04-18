@@ -10,10 +10,8 @@ function geodproj
 %   The package implements the forward projection (from geographic to
 %   projected coordinates) and inverse projection (from projected to
 %   geographic coordinates) with abbreviated function names (listed in
-%   parentheses in the list above) suffixed by _FWD and _INV.  In addition,
-%   implementations of the UTM projection are provided with UTM_FWD and
-%   UTM_INV.  For each function, metric properties of the projection are
-%   also returned.
+%   parentheses in the list above) suffixed by _FWD and _INV.  For each
+%   function, metric properties of the projection are also returned.
 %
 %   This package requires the availability of MATLAB File Exchange package
 %   "Geodesics on an ellipsoid of revolution" for performing the necessary
@@ -127,9 +125,8 @@ function geodproj
 %   two geodesics to be determined quickly.
 %
 %   See also EQDAZIM_FWD, EQDAZIM_INV, CASSINI_FWD, CASSINI_INV,
-%     TRANMERC_FWD, TRANMERC_INV, GNOMONIC_FWD, GNOMONIC_INV, UTM_FWD,
-%     UTM_INV, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC, GEODDISTANCE,
-%     GEODRECKON.
+%     TRANMERC_FWD, TRANMERC_INV, GNOMONIC_FWD, GNOMONIC_INV,
+%     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC, GEODDISTANCE, GEODRECKON.
 
 % Copyright (c) Charles Karney (2012) <charles@karney.com>.
 %

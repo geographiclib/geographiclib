@@ -46,4 +46,3 @@ function [lat, lon, gam, k] = polarst_inv(northp, x, y, ellipsoid)
     end
   end
 end
-

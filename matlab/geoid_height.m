@@ -19,6 +19,7 @@ function h = geoid_height(lat, lon, geoidname, geoiddir)
     h = geoid_height_int(lat, lon, saved_geoid);
   end
 end
+
 function height = geoid_height_int(lat, lon, geoid, cubic)
   if nargin < 4, cubic = true; end
   s = size(lat + lon); num = prod(s); Z = zeros(num,1);
@@ -94,6 +95,7 @@ function height = geoid_height_int(lat, lon, geoid, cubic)
   height(~(abs(lat) <= 90 & abs(lon) <= 540)) = nan;
   height = reshape(height, s);
 end
+
 function ind = index(ix, iy, w, h)
 % return 1-based 1d index to w*h array for 0-based 2d indices (ix,iy)
   c = iy < 0;  iy(c) =           - iy(c); ix(c) = ix(c) + w/2;

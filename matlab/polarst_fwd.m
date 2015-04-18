@@ -49,4 +49,3 @@ function [x, y, gam, k] = polarst_fwd(northp, lat, lon, ellipsoid)
     end
   end
 end
-

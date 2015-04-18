@@ -192,29 +192,11 @@ make
 
 mkdir -p $TEMP/geographiclib-matlab/private
 cd $TEMP/instc/libexec/GeographicLib/matlab
-cp -p geod{doc,reckon,distance,area}.m \
-    defaultellipsoid.m ecc2flat.m flat2ecc.m \
-    $TEMP/geographiclib-matlab/
+cp -p *.m $TEMP/geographiclib-matlab/
 cp -p private/*.m $TEMP/geographiclib-matlab/private/
-rm  $TEMP/geographiclib-matlab/private/G4coeff.m
 cd $TEMP
 rm -f $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip
 zip $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip \
-    geographiclib-matlab/*.m geographiclib-matlab/private/*.m
-mkdir -p $TEMP/proj/geographiclib-matlab
-cd $TEMP/instc/libexec/GeographicLib/matlab
-cp -p {geodproj,*_{fwd,inv}}.m $TEMP/proj/geographiclib-matlab
-cd $TEMP/proj
-rm -f $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip
-zip $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip \
-    geographiclib-matlab/*.m
-mkdir -p $TEMP/greatellipse/geographiclib-matlab/private
-cd $TEMP/instc/libexec/GeographicLib/matlab
-cp -p ge{doc,reckon,distance}.m $TEMP/greatellipse/geographiclib-matlab
-cp -p private/G4coeff.m $TEMP/greatellipse/geographiclib-matlab/private/
-cd $TEMP/greatellipse
-rm -f $DEVELSOURCE/matlab/geographiclib_matlabge_$VERSION.zip
-zip $DEVELSOURCE/matlab/geographiclib_matlabge_$VERSION.zip \
     geographiclib-matlab/*.m geographiclib-matlab/private/*.m
 
 cd $TEMP
