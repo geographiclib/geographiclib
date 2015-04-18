@@ -130,3 +130,8 @@ function xy = formatnum(x, y, prec)
   xy = [num2str(floor(x), ['%0', int2str(prec), 'd']), ...
         num2str(floor(y), ['%0', int2str(prec), 'd'])];
 end
+
+function band = LatitudeBand(lat)
+  band = max(-10, min(9, floor(lat / 8)));
+  band(~(abs(lat) <= 90)) = nan;
+end
