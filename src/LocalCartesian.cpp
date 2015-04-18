@@ -25,10 +25,11 @@ namespace GeographicLib {
       lam = lon0 * Math::degree(),
       slam = _lon0 == -180 ? 0 : sin(lam),
       clam = abs(_lon0) == 90 ? 0 : cos(lam);
-    _earth.Rotation(sphi, cphi, slam, clam, _r);
+    Geocentric::Rotation(sphi, cphi, slam, clam, _r);
   }
 
   void LocalCartesian::MatrixMultiply(real M[dim2_]) const {
+    // M = r' . M
     real t[dim2_];
     copy(M, M + dim2_, t);
     for (size_t i = 0; i < dim2_; ++i) {

@@ -10,7 +10,7 @@ function h = geoid_height(lat, lon, geoidname, geoiddir)
     if nargin < 3
       geoidname = '';
     elseif nargin < 4
-      geoidfile = '';
+      geoiddir = '';
     end
     geoidfile = geoid_file(geoidname, geoiddir);
     if ~(isstruct(saved_geoid) && strcmp(saved_geoid.file, geoidfile))
