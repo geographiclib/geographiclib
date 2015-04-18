@@ -18,10 +18,9 @@ function height = geoidheight_a(latlong, geoidname, geoiddir)
 %       geoidheight = height(:,1) height of geoid in meters
 %
   if nargin < 2
-    height = geoid_height(latlong(:,1), latlong(:,2));
+    geoidname = '';
   elseif nargin < 3
-    height = geoid_height(latlong(:,1), latlong(:,2), geoidname);
-  else
-    height = geoid_height(latlong(:,1), latlong(:,2), geoidname, geoiddir);
+    geoidfile = '';
   end
+  height = geoid_height(latlong(:,1), latlong(:,2), geoidname, geoiddir);
 end

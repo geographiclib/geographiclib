@@ -1,11 +1,11 @@
 function filename = geoid_file(name, dir)
-  if nargin < 1
+  if nargin < 1 || isempty(name);
     name = getenv('GEOGRAPHICLIB_GEOID_NAME');
     if isempty(name)
       name = 'egm96-5';
     end
   end
-  if nargin < 2
+  if nargin < 2 || isempty(dir)
     dir = getenv('GEOGRAPHICLIB_GEOID_PATH');
     if isempty(dir)
       dir = getenv('GEOGRAPHICLIB_DATA');
@@ -21,4 +21,3 @@ function filename = geoid_file(name, dir)
   end
   filename = [dir '/' name '.pgm'];
 end
-
