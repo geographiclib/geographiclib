@@ -70,7 +70,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
       mexWarnMsgTxt(e.what());
       x[i] = y[i] = Math::NaN<double>();
       zone[i] = UTMUPS::INVALID; hemi[i] = 0;
-      if (precp) prec[i] = -1;
+      if (precp) prec[i] = -2;
     }
   }
 }

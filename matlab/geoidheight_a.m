@@ -18,25 +18,10 @@ function height = geoidheight_a(latlong, geoidname, geoiddir)
 %       geoidheight = height(:,1) height of geoid in meters
 %
   if nargin < 2
-    geoidname = getenv('GEOGRAPHICLIB_GEOID_NAME');
-    if isempty(geoidname)
-      geoidname = 'egm96-5';
-    end
+    height = geoid_height(latlong(:,1), latlong(:,2));
+  elseif nargin < 3
+    height = geoid_height(latlong(:,1), latlong(:,2), geoidname);
+  else
+    height = geoid_height(latlong(:,1), latlong(:,2), geoidname, geoiddir);
   end
-  if nargin < 3
-    geoiddir = getenv('GEOGRAPHICLIB_GEOID_PATH');
-    if isempty(geoiddir)
-      geoiddir = getenv('GEOGRAPHICLIB_DATA');
-      if isempty(geoiddir)
-        if ispc
-          geoiddir = '/usr/local/share/GeographicLib';
-        else
-          geoiddir = 'C:/ProgramData/GeographicLib';
-        end
-      end
-      geoiddir = [geoiddir '/geoids'];
-    end
-  end
-  geoid = geoid_load(geoidname, geoiddir);
-  height = geoid_height(latlong(:,1), latlong(:,2), geoid);
 end
