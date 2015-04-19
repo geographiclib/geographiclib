@@ -1,11 +1,11 @@
 function [geodesic, aux] = geodesicinverse(latlong, a, f)
-%GEODESICINVERSE  Solve inverse geodesic problem
+%GEODESICINVERSE  Wrapper for geoddistance
 %
 %   [geodesic, aux] = GEODESICINVERSE(latlong)
 %   [geodesic, aux] = GEODESICINVERSE(latlong, a, f)
 %
 %   This is a legacy function to replace a compiled interface function of
-%   the same name.  This now calls GEODDISTANCE which is implemented as
+%   the same name.  This now calls geoddistance which is implemented as
 %   native Matlab code.
 %
 %   latlong is an M x 4 matrix

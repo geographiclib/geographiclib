@@ -9,9 +9,9 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
 %   arguments can be scalars or arrays of equal size.  The ellipsoid vector
 %   is of the form [a, e], where a is the equatorial radius in meters, e is
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by DEFAULTELLIPSOID) is used.  GEODPROJ
+%   precisely, the value returned by defaultellipsoid) is used.  geodproj
 %   defines the projection and gives the restrictions on the allowed ranges
-%   of the arguments.  The forward projection is given by GNOMONIC_FWD.
+%   of the arguments.  The forward projection is given by gnomonic_fwd.
 %
 %   azi and rk give metric properties of the projection at (lat,lon); azi
 %   is the azimuth of the geodesic from the center of projection and rk is
@@ -41,16 +41,11 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
 %   which also includes methods for solving the "intersection" and
 %   "interception" problems using the gnomonic projection.
 %
-%   This routine depends on the MATLAB File Exchange package "Geodesics on
-%   an ellipsoid of revolution":
-%
-%     http://www.mathworks.com/matlabcentral/fileexchange/39108
-%
 %   See also GEODPROJ, GNOMONIC_FWD, GEODRECKON, DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.29.
+% This file was distributed with GeographicLib 1.42.
 
   if nargin < 4, error('Too few input arguments'), end
   if nargin < 5, ellipsoid = defaultellipsoid; end

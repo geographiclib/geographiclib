@@ -1,19 +1,19 @@
-function [x, y, zone, northp, prec] = mgrs_inv(mgrs)
+function [x, y, zone, isnorth, prec] = mgrs_inv(mgrs)
 %MGRS_INV  Convert MGRS to UTM/UPS coordinates
 %
-%   [x, y, zone, northp] = MGRS_INV(mgrs)
-%   [x, y, zone, northp, prec] = MGRS_INV(mgrs)
+%   [x, y, zone, isnorth] = MGRS_INV(mgrs)
+%   [x, y, zone, isnorth, prec] = MGRS_INV(mgrs)
 %
 %   converts MGRS grid references to UTM/UPS coordinates.  mgrs is either a
 %   2d character array of MGRS grid references (optionally padded on the
 %   right with spaces) or a cell array of character strings.  x, y are the
 %   easting and northing (in meters); zone is the UTM zone in [1,60] or 0
-%   for UPS; northp is true (false) for the northern (southern) hemisphere.
-%   prec is the precision of the grid reference.  The position of the
-%   center of the grid square is returned.  To obtain the SW corner
+%   for UPS; isnorth is true (false) for the northern (southern)
+%   hemisphere.  prec is the precision of the grid reference.  The position
+%   of the center of the grid square is returned.  To obtain the SW corner
 %   subtract 0.5 * 10^(5-prec) from the easting and northing.  prec = -1
 %   means that the grid reference consists of a grid zone only.  Illegal
-%   MGRS references result in x = y = NaN, zone = -4, northp = false, prec
+%   MGRS references result in x = y = NaN, zone = -4, isnorth = false, prec
 %   = -2.
 %
 %   See also MGRS_FWD.
@@ -34,7 +34,7 @@ function [x, y, zone, northp, prec] = mgrs_inv(mgrs)
   mgrs = upper(mgrs);
   num = size(mgrs, 1);
   x = nan(num, 1); y = x; prec = -2 * ones(num, 1);
-  northp = false(num, 1); zone = 2 * prec;
+  isnorth = false(num, 1); zone = 2 * prec;
   if num == 0, return, end
   % pad with 5 spaces so we can access letter positions without checks
   mgrs = [mgrs, repmat(' ', num, 5)];
@@ -46,14 +46,14 @@ function [x, y, zone, northp, prec] = mgrs_inv(mgrs)
   utm = isstrprop(mgrs(:,1), 'digit') & contig;
   upss = (mgrs(:,1) == 'A' | mgrs(:,1) == 'B') & contig;
   upsn = (mgrs(:,1) == 'Y' | mgrs(:,1) == 'Z') & contig;
-  [x(utm), y(utm), zone(utm), northp(utm), prec(utm)] = ...
+  [x(utm), y(utm), zone(utm), isnorth(utm), prec(utm)] = ...
       mgrs_inv_utm(mgrs(utm,:));
-  [x(upss), y(upss), zone(upss), northp(upss), prec(upss)] = ...
+  [x(upss), y(upss), zone(upss), isnorth(upss), prec(upss)] = ...
       mgrs_inv_upss(mgrs(upss,:));
-  [x(upsn), y(upsn), zone(upsn), northp(upsn), prec(upsn)] = ...
+  [x(upsn), y(upsn), zone(upsn), isnorth(upsn), prec(upsn)] = ...
       mgrs_inv_upsn(mgrs(upsn,:));
   x = reshape(x, s); y = reshape(y, s); prec = reshape(prec, s);
-  northp = reshape(northp, s); zone = reshape(zone, s);
+  isnorth = reshape(isnorth, s); zone = reshape(zone, s);
 end
 
 function [x, y, zone, northp, prec] = mgrs_inv_utm(mgrs)

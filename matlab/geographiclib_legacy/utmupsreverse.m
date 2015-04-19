@@ -1,10 +1,10 @@
 function [latlong, scale] = utmupsreverse(utmups)
-%UTMUPSREVERSE  Convert UTM/UPS coordinates to geographic
+%UTMUPSREVERSE  Wrapper for utmups_inv
 %
 %   [latlong, scale] = UTMUPSREVERSE(utmups)
 %
 %   This is a legacy function to replace a compiled interface function of
-%   the same name.  This now calls UTMUPS_INV which is implemented as
+%   the same name.  This now calls utmups_inv which is implemented as
 %   native Matlab code.
 %
 %   utmups is an M x 4 matrix
@@ -23,7 +23,7 @@ function [latlong, scale] = utmupsreverse(utmups)
 %       gamma = scale(:,1) meridian convergence in degrees
 %       k = scale(:,2) scale
 %
-%   See also UTMUPS_INV, UTMUPS_FWD, UTMUPSFORWARD.
+%   See also UTMUPS_INV.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %

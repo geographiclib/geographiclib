@@ -11,33 +11,25 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 %   degrees.  The ellipsoid vector is of the form [a, e], where a is the
 %   equatorial radius in meters, e is the eccentricity.  If ellipsoid is
 %   omitted, the WGS84 ellipsoid (more precisely, the value returned by
-%   DEFAULTELLIPSOID) is used.  The output s12 is the distance in meters
+%   defaultellipsoid) is used.  The output s12 is the distance in meters
 %   and azi1 and azi2 are the forward azimuths at the end points in
 %   degrees.  The optional output S12 is the area between the great ellipse
-%   and the equator (in meters^2).  GEDOC gives an example and provides
-%   additional background information.  GEDOC also gives the restrictions
+%   and the equator (in meters^2).  gedoc gives an example and provides
+%   additional background information.  gedoc also gives the restrictions
 %   on the allowed ranges of the arguments.
 %
 %   When given a combination of scalar and array inputs, the scalar inputs
 %   are automatically expanded to match the size of the arrays.
 %
-%   GEODDISTANCE solves the equivalent geodesic problem and usually this is
+%   geoddistance solves the equivalent geodesic problem and usually this is
 %   preferable to using GEDISTANCE.
-%
-%   This routine depends on the MATLAB File Exchange package "Geodesics on
-%   an ellipsoid of revolution":
-%
-%     http://www.mathworks.com/matlabcentral/fileexchange/39108
-%
-%   This routine should be installed in the SAME DIRECTORY as package
-%   39108.
 %
 %   See also GEDOC, GERECKON, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
 %     GEODDISTANCE, GEODRECKON.
 
-% Copyright (c) Charles Karney (2014) <charles@karney.com>.
+% Copyright (c) Charles Karney (2014-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.39.
+% This file was distributed with GeographicLib 1.42.
 
   if nargin < 4, error('Too few input arguments'), end
   if nargin < 5, ellipsoid = defaultellipsoid; end

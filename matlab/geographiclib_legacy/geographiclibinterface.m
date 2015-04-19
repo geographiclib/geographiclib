@@ -1,5 +1,5 @@
 function geographiclibinterface(incdir, libdir)
-%GEOGRAPHICLIBINTERFACE  Compile interface to GeographicLib (DEPRECATED)
+%GEOGRAPHICLIBINTERFACE  Compile interface code (DEPRECATED)
 %
 %   GEOGRAPHICLIBINTERFACE
 %   GEOGRAPHICLIBINTERFACE(installdir)

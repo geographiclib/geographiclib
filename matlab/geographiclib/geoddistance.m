@@ -13,10 +13,10 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %   The ellipsoid vector is of the form [a, e], where a is the equatorial
 %   radius in meters, e is the eccentricity.  If ellipsoid is omitted, the
 %   WGS84 ellipsoid (more precisely, the value returned by
-%   DEFAULTELLIPSOID) is used.  The output s12 is the distance in meters
+%   defaultellipsoid) is used.  The output s12 is the distance in meters
 %   and azi1 and azi2 are the forward azimuths at the end points in
 %   degrees.  The other optional outputs, S12, m12, M12, M21, a12 are
-%   documented in GEODDOC.  GEODDOC also gives the restrictions on the
+%   documented in geoddoc.  geoddoc also gives the restrictions on the
 %   allowed ranges of the arguments.
 %
 %   When given a combination of scalar and array inputs, the scalar inputs
@@ -29,7 +29,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %     https://dx.doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sf.net/geod-addenda.html
 %
-%   This function duplicates some of the functionality of the DISTANCE
+%   This function duplicates some of the functionality of the distance
 %   function in the MATLAB mapping toolbox.  Differences are
 %
 %     * When the ellipsoid argument is omitted, use the WGS84 ellipsoid.
@@ -42,9 +42,9 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %   See also GEODDOC, GEODRECKON, GEODAREA, GEODESICINVERSE,
 %     DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012, 2013) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.31.
+% This file was distributed with GeographicLib 1.42.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional

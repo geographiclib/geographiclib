@@ -1,11 +1,11 @@
 function [geocentric, rot] = geocentricforward(geodetic, a, f)
-%GEOCENTRICFORWARD  Convert geographic coordinates to geocentric
+%GEOCENTRICFORWARD  Wrapper for geocent_fwd
 %
 %   [geocentric, rot] = GEOCENTRICFORWARD(geodetic)
 %   [geocentric, rot] = GEOCENTRICFORWARD(geodetic, a, f)
 %
 %   This is a legacy function to replace a compiled interface function of
-%   the same name.  This now calls GEOCENT_FWD which is implemented as
+%   the same name.  This now calls geocent_fwd which is implemented as
 %   native Matlab code.
 %
 %   geodetic is an M x 3 or M x 2 matrix of geodetic coordinates

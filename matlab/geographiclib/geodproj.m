@@ -128,9 +128,9 @@ function geodproj
 %     TRANMERC_FWD, TRANMERC_INV, GNOMONIC_FWD, GNOMONIC_INV,
 %     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC, GEODDISTANCE, GEODRECKON.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.29.
+% This file was distributed with GeographicLib 1.42.
 
   help geodproj
 end

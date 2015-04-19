@@ -1,11 +1,11 @@
 function [latlong, aux] = geodesicdirect(geodesic, a, f)
-%GEODESICDIRECT  Solve direct geodesic problem
+%GEODESICDIRECT  Wrapper for geodreckon
 %
 %   [latlong, aux] = GEODESICDIRECT(geodesic)
 %   [latlong, aux] = GEODESICDIRECT(geodesic, a, f)
 %
 %   This is a legacy function to replace a compiled interface function of
-%   the same name.  This now calls GEODRECKON which is implemented as
+%   the same name.  This now calls geodreckon which is implemented as
 %   native Matlab code.
 %
 %   geodesic is an M x 4 matrix

@@ -6,16 +6,18 @@ function [x, y, z, M] = loccart_fwd(lat0, lon0, h0, lat, lon, h, ellipsoid)
 %   [x, y, z, M] = LOCCART_FWD(lat0, lon0, h0, lat, lon, h, ellipsoid)
 %
 %   converts from geodetic coordinates, lat, lon, h to local cartesian
-%   coordinates, x, y, z, centered at lat0, lon0, h0.  Latitudes and longitudes
-%   are in degrees; h (default 0), h0, x, y, z are in meters.  lat, lon, h can
-%   be scalars or arrays of equal size.  lat0, lon0, h0 must be scalars.  The
-%   ellipsoid vector is of the form [a, e], where a is the equatorial radius in
-%   meters, e is the eccentricity.  If ellipsoid is omitted, the WGS84
-%   ellipsoid (more precisely, the value returned by DEFAULTELLIPSOID) is used.
+%   coordinates, x, y, z, centered at lat0, lon0, h0.  Latitudes and
+%   longitudes are in degrees; h (default 0), h0, x, y, z are in meters.
+%   lat, lon, h can be scalars or arrays of equal size.  lat0, lon0, h0
+%   must be scalars.  The ellipsoid vector is of the form [a, e], where a
+%   is the equatorial radius in meters, e is the eccentricity.  If
+%   ellipsoid is omitted, the WGS84 ellipsoid (more precisely, the value
+%   returned by defaultellipsoid) is used.
 %
-%   M is the 3 x 3 rotation matrix for the conversion.  Pre-multiplying a unit
-%   vector in local cartesian coordinates at (lat, lon, h) by M transforms the
-%   vector to local cartesian coordinates at (lat0, lon0, h0).
+%   M is the 3 x 3 rotation matrix for the conversion.  Pre-multiplying a
+%   unit vector in local cartesian coordinates at (lat, lon, h) by M
+%   transforms the vector to local cartesian coordinates at (lat0, lon0,
+%   h0).
 %
 %   See also LOCCART_INV.
 

@@ -1,11 +1,11 @@
 function [geodetic, rot] = localcartesianreverse(origin, cartesian, a, f)
-%LOCALCARTESIANREVERSE  Convert local cartesian coordinates to geographic
+%LOCALCARTESIANREVERSE  Wrapper for loccart_inv
 %
 %   [geodetic, rot] = LOCALCARTESIANREVERSE(origin, cartesian)
 %   [geodetic, rot] = LOCALCARTESIANREVERSE(origin, cartesian, a, f)
 %
 %   This is a legacy function to replace a compiled interface function of
-%   the same name.  This now calls LOCCART_INV which is implemented as
+%   the same name.  This now calls loccart_inv which is implemented as
 %   native Matlab code.
 %
 %   origin is a 1 x 3 or 1 x 2 matrix

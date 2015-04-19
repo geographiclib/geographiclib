@@ -1,11 +1,11 @@
 function mgrs = mgrsforward(utmups, prec)
-%MGRSFORWARD  Convert UTM/UPS coordinates to MGRS
+%MGRSFORWARD  Wrapper for mgrs_fwd
 %
 %   mgrs = MGRSFORWARD(utmups)
 %   mgrs = MGRSFORWARD(utmups, prec)
 %
 %   This is a legacy function to replace a compiled interface function of
-%   the same name.  This now calls MGRS_FWD which is implemented as native
+%   the same name.  This now calls mgrs_fwd which is implemented as native
 %   Matlab code.
 %
 %   utmups is an M x 4 matrix

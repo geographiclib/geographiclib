@@ -8,7 +8,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %   input vectors lats, lons (in degrees).  The ellipsoid vector is of the
 %   form [a, e], where a is the equatorial radius in meters, e is the
 %   eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by DEFAULTELLIPSOID) is used.  There is
+%   precisely, the value returned by defaultellipsoid) is used.  There is
 %   no need to "close" the polygon by repeating the first point.  Multiple
 %   polygons can be specified by separating the vertices by NaNs in the
 %   vectors.  Thus a series of quadrilaterals can be specified as two 5 x K
@@ -19,7 +19,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %   numbers of vertices in N.  GEODDOC gives the restrictions on the
 %   allowed ranges of the arguments.
 %
-%   GEODAREA loosely duplicates the functionality of the AREAINT function
+%   GEODAREA loosely duplicates the functionality of the areaint function
 %   in the MATLAB mapping toolbox.  The major difference is that the
 %   polygon edges are taken to be geodesics and the area contributed by
 %   each edge is computed using a series expansion with is accurate
@@ -33,9 +33,9 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %   See also GEODDOC, GEODDISTANCE, GEODRECKON, POLYGONAREA,
 %     DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012-2013) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.31.
+% This file was distributed with GeographicLib 1.42.
 
   if nargin < 2, error('Too few input arguments'), end
   if nargin < 3, ellipsoid = defaultellipsoid; end

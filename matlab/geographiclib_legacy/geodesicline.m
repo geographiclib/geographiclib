@@ -1,11 +1,11 @@
 function [latlong, aux] = geodesicline(lat1, lon1, azi1, distances, a, f)
-%GEODESICLINE  Compute points along a geodesic
+%GEODESICLINE  Another wrapper for geodreckon
 %
 %   [latlong, aux] = GEODESICLINE(lat1, lon1, azi1, distances)
 %   [latlong, aux] = GEODESICLINE(lat1, lon1, azi1, distances, a, f)
 %
 %   This is a legacy function to replace a compiled interface function of
-%   the same name.  This now calls GEODRECKON which is implemented as
+%   the same name.  This now calls geodreckon which is implemented as
 %   native Matlab code.
 %
 %   lat1 is the latitude of point 1 (scalar) in degrees

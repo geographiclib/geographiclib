@@ -25,23 +25,15 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
 %   of points along a single geodesic is efficiently computed by specifying
 %   an array for S12 only.)
 %
-%   GEODRECKON solves the equivalent geodesic problem and usually this is
+%   geodreckon solves the equivalent geodesic problem and usually this is
 %   preferable to using GERECKON.
-%
-%   This routine depends on the MATLAB File Exchange package "Geodesics on
-%   an ellipsoid of revolution":
-%
-%     http://www.mathworks.com/matlabcentral/fileexchange/39108
-%
-%   This routine should be installed in the SAME DIRECTORY as package
-%   39108.
 %
 %   See also GEDOC, GEDISTANCE, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
 %     GEODDISTANCE, GEODRECKON.
 
-% Copyright (c) Charles Karney (2014) <charles@karney.com>.
+% Copyright (c) Charles Karney (2014-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.39.
+% This file was distributed with GeographicLib 1.42.
 
   if nargin < 4, error('Too few input arguments'), end
   if nargin < 5, ellipsoid = defaultellipsoid; end

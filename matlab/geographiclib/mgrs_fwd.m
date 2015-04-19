@@ -1,17 +1,17 @@
-function mgrs = mgrs_fwd(x, y, zone, northp, prec)
+function mgrs = mgrs_fwd(x, y, zone, isnorth, prec)
 %MGRS_FWD  Convert UTM/UPS coordinates to MGRS
 %
-%   mgrs = MGRS_FWD(x, y, zone, northp)
-%   mgrs = MGRS_FWD(x, y, zone, northp, prec)
+%   mgrs = MGRS_FWD(x, y, zone, isnorth)
+%   mgrs = MGRS_FWD(x, y, zone, isnorth, prec)
 %
 %   converts from UTM/UPS coordinates to MGRS.  x, y are the easting and
 %   northing (in meters); zone is the UTM zone, in [1,60] or 0 for UPS;
-%   northp is true (false) for the northern (southern) hemisphere.  prec
+%   isnorth is true (false) for the northern (southern) hemisphere.  prec
 %   gives the precision of the grid reference; the default is 5 giving 1m
 %   precision.  A value of -1 mean that only the grid zone is returned.
 %   The maximum allowed value of prec is 11 (denoting 1um precision).  The
 %   MGRS references are returned in a cell array of strings.  x, y, zone,
-%   northp, prec can be scalars or arrays of the same size.  Values that
+%   isnorth, prec can be scalars or arrays of the same size.  Values that
 %   can't be converted to MGRS return the "invalid" string "INV".
 %
 %   See also MGRS_INV.
@@ -26,15 +26,15 @@ function mgrs = mgrs_fwd(x, y, zone, northp, prec)
   zone = floor(zone);
   prec = floor(prec);
   try
-    s = size(x + y + zone + northp + prec);
+    s = size(x + y + zone + isnorth + prec);
   catch err
-    error('x, y, zone, northp, prec have incompatible sizes')
+    error('x, y, zone, isnorth, prec have incompatible sizes')
   end
   num = prod(s);
   if num == 0, mgrs = cell(0); return, end
   Z = zeros(num, 1);
   x = x(:) + Z; y = y(:) + Z; zone = zone(:) + Z;
-  northp = northp(:) + Z; prec = prec(:) + Z;
+  isnorth = isnorth(:) + Z; prec = prec(:) + Z;
   prec(~(prec >= -1 & prec <= 11)) = -2;
   mgrs = repmat('INV',num,1);
   if ~any(prec >= -1), mgrs = reshape(cellstr(mgrs), s); return, end
@@ -46,7 +46,7 @@ function mgrs = mgrs_fwd(x, y, zone, northp, prec)
     if ~any(in)
       continue
     end
-    t = mgrs_fwd_p(x(in), y(in), zone(in), northp(in), p);
+    t = mgrs_fwd_p(x(in), y(in), zone(in), isnorth(in), p);
     mgrs(in,1:(5 + 2*p)) = t;
   end
   mgrs = reshape(cellstr(mgrs), s);

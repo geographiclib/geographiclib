@@ -1,11 +1,11 @@
 function [area, perimeter] = polygonarea(latlong, a, f)
-%POLYGONAREA  Compute area of a geodesic polygon
+%POLYGONAREA  Wrapper for geodarea
 %
 %   [area, perimeter] = POLYGONAREA(latlong)
 %   [area, perimeter] = POLYGONAREA(latlong, a, f)
 %
 %   This is a legacy function to replace a compiled interface function of
-%   the same name.  This now calls GEODAREA which is implemented as native
+%   the same name.  This now calls geodarea which is implemented as native
 %   Matlab code.
 %
 %   latlong is an M x 2 matrix

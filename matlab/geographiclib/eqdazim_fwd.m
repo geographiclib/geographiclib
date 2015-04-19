@@ -10,9 +10,9 @@ function [x, y, azi, rk] = eqdazim_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   ellipsoid vector is of the form [a, e], where a is the equatorial
 %   radius in meters, e is the eccentricity.  If ellipsoid is omitted, the
 %   WGS84 ellipsoid (more precisely, the value returned by
-%   DEFAULTELLIPSOID) is used.  GEODPROJ defines the projection and gives
+%   defaultellipsoid) is used.  geodproj defines the projection and gives
 %   the restrictions on the allowed ranges of the arguments.  The inverse
-%   projection is given by EQDAZIM_INV.
+%   projection is given by eqdazim_inv.
 %
 %   azi and rk give metric properties of the projection at (lat,lon); azi
 %   is the azimuth of the geodesic from the center of projection and rk is
@@ -39,9 +39,9 @@ function [x, y, azi, rk] = eqdazim_fwd(lat0, lon0, lat, lon, ellipsoid)
 %
 %   See also GEODPROJ, EQDAZIM_INV, GEODDISTANCE, DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.29.
+% This file was distributed with GeographicLib 1.42.
 
   if nargin < 4, error('Too few input arguments'), end
   if nargin < 5, ellipsoid = defaultellipsoid; end

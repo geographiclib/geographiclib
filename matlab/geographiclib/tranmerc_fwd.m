@@ -1,24 +1,24 @@
 function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %TRANMERC_FWD  Forward transverse Mercator projection
 %
-%   [X, Y] = TRANMERC_FWD(LAT0, LON0, LAT, LON)
-%   [X, Y, GAM, K] = TRANMERC_FWD(LAT0, LON0, LAT, LON, ELLIPSOID)
+%   [x, y] = TRANMERC_FWD(lat0, lon0, lat, lon)
+%   [x, y, gam, k] = TRANMERC_FWD(lat0, lon0, lat, lon, ellipsoid)
 %
-%   performs the forward transverse Mercator projection of points (LAT,LON)
-%   to (X,Y) using (LAT0,LON0) as the center of projection.  These input
-%   arguments can be scalars or arrays of equal size.  The ELLIPSOID vector
+%   performs the forward transverse Mercator projection of points (lat,lon)
+%   to (x,y) using (lat0,lon0) as the center of projection.  These input
+%   arguments can be scalars or arrays of equal size.  The ellipsoid vector
 %   is of the form [a, e], where a is the equatorial radius in meters, e is
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by DEFAULTELLIPSOID) is used.  GEODPROJ
+%   precisely, the value returned by defaultellipsoid) is used.  geodproj
 %   defines the projection and gives the restrictions on the allowed ranges
-%   of the arguments.  The inverse projection is given by TRANMERC_INV.
+%   of the arguments.  The inverse projection is given by tranmerc_inv.
 %
-%   GAM and K give metric properties of the projection at (LAT,LON); GAM is
-%   the meridian convergence at the point and K is the scale.
+%   gam and k give metric properties of the projection at (lat,lon); gam is
+%   the meridian convergence at the point and k is the scale.
 %
-%   LAT0, LON0, LAT, LON, GAM are in degrees.  The projected coordinates X,
-%   Y are in meters (more precisely the units used for the equatorial
-%   radius).  K is dimensionless.
+%   lat0, lon0, lat, lon, gam are in degrees.  The projected coordinates x,
+%   y are in meters (more precisely the units used for the equatorial
+%   radius).  k is dimensionless.
 %
 %   This implementation of the projection is based on the series method
 %   described in
@@ -34,16 +34,11 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   less than 1 mm within 7600 km of the central meridian).  The mapping
 %   can be continued accurately over the poles to the opposite meridian.
 %
-%   This routine depends on the MATLAB File Exchange package "Geodesics on
-%   an ellipsoid of revolution":
-%
-%     http://www.mathworks.com/matlabcentral/fileexchange/39108
-%
 %   See also GEODPROJ, TRANMERC_INV, GEODDISTANCE, DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.29.
+% This file was distributed with GeographicLib 1.42.
 
   if nargin < 4, error('Too few input arguments'), end
   if nargin < 5, ellipsoid = defaultellipsoid; end

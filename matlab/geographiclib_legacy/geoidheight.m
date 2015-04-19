@@ -1,11 +1,11 @@
 function height = geoidheight(latlong, geoidname, geoiddir)
-%GEOIDHEIGHT  Compute geoid height
+%GEOIDHEIGHT  Wrapper for geoid_height
 %
 %   height = GEOIDHEIGHT(latlong)
 %   height = GEOIDHEIGHT(latlong, geoidname, geoiddir)
 %
 %   This is a legacy function to replace a compiled interface function of
-%   the same name.  This now calls GEOID_HEIGHT which is implemented as
+%   the same name.  This now calls geoid_height which is implemented as
 %   native Matlab code.
 %
 %   latlong is an M x 2 matrix

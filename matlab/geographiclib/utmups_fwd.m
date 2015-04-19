@@ -1,54 +1,22 @@
-function [x, y, zone, northp, gam, k] = utmups_fwd(lat, lon, setzone)
+function [x, y, zone, isnorth, gam, k] = utmups_fwd(lat, lon, setzone)
 %UTMUPS_FWD  Forward UTM/UPS projection
 %
-%   [x, y, zone, northp] = UTMUPS_FWD(lat, lon)
-%   [x, y, zone, northp, gam, k] = UTMUPS_FWD(lat, lon, setzone)
-%
-%   See also UTMUPS_INV, UTM_FWD, UPS_FWD
-
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
-
-  if nargin < 2, error('Too few input arguments'), end
-  if nargin < 3, setzone = -1; end
-  try
-    Z = lat + lon + setzone;
-    Z = zeros(size(Z));
-  catch err
-    error('lat, lon, setzone have incompatible sizes')
-  end
-  lat = lat + Z; lon = lon + Z;
-  northp = lat >= 0;
-  zone = StandardZone(lat, lon, setzone);
-  Z = nan(size(Z));
-  x = Z; y = Z; gam = Z; k = Z;
-  utm = zone > 0;
-  [x(utm), y(utm), gam(utm), k(utm)] = ...
-      utm_fwd(zone(utm), northp(utm), lat(utm), lon(utm));
-  ups = zone == 0;
-  [x(ups), y(ups), gam(ups), k(ups)] = ...
-      ups_fwd(northp(ups), lat(ups), lon(ups));
-end
-
-function [x, y, gam, k] = utm_fwd(zone, northp, lat, lon)
-%UTM_FWD  Forward UTM projection
-%
-%   [X, Y] = UTM_FWD(ZONE, NORTHP, LAT, LON)
-%   [X, Y, GAM, K] = UTM_FWD(ZONE, NORTHP, LAT, LON)
+%   [x, y, zone, isnorth] = UTMUPS_FWD(lat, lon)
+%   [x, y, zone, isnorth, gam, k] = UTMUPS_FWD(lat, lon, setzone)
 %
 %   performs the forward universal transverse Mercator projection of points
-%   (LAT,LON) to (X,Y) using ZONE and NORTHP.  LAT and LON can be scalars
-%   or arrays of equal size.  ZONE should be an integer in [1,60] and
-%   NORTHP is a logical indicating whether the transformation should use
-%   the false northing for the northern (NORTHP = true) or southern (NORTHP
-%   = false) hemisphere.  The inverse projection is given by UTM_INV.
+%   (lat,lon) to (x,y) using zone and isnorth.  lat and lon can be scalars
+%   or arrays of equal size.  zone should be an integer in [1,60] and
+%   isnorth is a logical indicating whether the transformation should use
+%   the false northing for the northern (isnorth = true) or southern
+%   (isnorth = false) hemisphere.  The inverse projection is given by
+%   utmups_inv.
 %
-%   GAM and K give metric properties of the projection at (LAT,LON); GAM is
-%   the meridian convergence at the point and K is the scale.
+%   gam and k give metric properties of the projection at (lat,lon); gam is
+%   the meridian convergence at the point and k is the scale.
 %
-%   LAT, LON, GAM are in degrees.  The projected coordinates X, Y are in
-%   meters.  K is dimensionless.
+%   lat, lon, gam are in degrees.  The projected coordinates x, y are in
+%   meters.  k is dimensionless.
 %
 %   This implementation for the UTM projection is based on the series
 %   method described in
@@ -71,22 +39,50 @@ function [x, y, gam, k] = utm_fwd(zone, northp, lat, lon)
 %
 %   See also GEODPROJ, UTM_INV, TRANMERC_FWD.
 
-% Copyright (c) Charles Karney (2012) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.29.
+% This file was distributed with GeographicLib 1.42.
+
+  if nargin < 2, error('Too few input arguments'), end
+  if nargin < 3, setzone = -1; end
+  try
+    Z = lat + lon + setzone;
+    Z = zeros(size(Z));
+  catch err
+    error('lat, lon, setzone have incompatible sizes')
+  end
+  lat = lat + Z; lon = lon + Z;
+  isnorth = lat >= 0;
+  zone = StandardZone(lat, lon, setzone);
+  Z = nan(size(Z));
+  x = Z; y = Z; gam = Z; k = Z;
+  utm = zone > 0;
+  [x(utm), y(utm), gam(utm), k(utm)] = ...
+      utm_fwd(zone(utm), isnorth(utm), lat(utm), lon(utm));
+  ups = zone == 0;
+  [x(ups), y(ups), gam(ups), k(ups)] = ...
+      ups_fwd(isnorth(ups), lat(ups), lon(ups));
+end
+
+function [x, y, gam, k] = utm_fwd(zone, isnorth, lat, lon)
+%UTM_FWD  Forward UTM projection
+%
+%   [x, y] = UTM_FWD(zone, isnorth, lat, lon)
+%   [x, y, gam, k] = UTM_FWD(zone, isnorth, lat, lon)
+%
 
   if nargin < 4, error('Too few input arguments'), end
   lon0 = -183 + 6 * floor(zone); lat0 = 0;
-  fe = 500e3; fn = cvmgt(0,10000e3,logical(northp)); k0 = 0.9996;
+  fe = 500e3; fn = cvmgt(0,10000e3,logical(isnorth)); k0 = 0.9996;
   [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon);
   x = x * k0 + fe; y = y * k0 + fn; k = k * k0;
 end
 
-function [x, y, gam, k] = ups_fwd(northp, lat, lon)
+function [x, y, gam, k] = ups_fwd(isnorth, lat, lon)
 %UPS_FWD  Forward UPS projection
 
   fe = 20e5; fn = 20e5; k0 = 0.994;
-  [x, y, gam, k] = polarst_fwd(northp, lat, lon);
+  [x, y, gam, k] = polarst_fwd(isnorth, lat, lon);
   x = x * k0 + fe; y = y * k0 + fn; k = k * k0;
 end
 

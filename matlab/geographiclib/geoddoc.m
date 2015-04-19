@@ -1,9 +1,9 @@
 function geoddoc
 %GEODDOC  Geodesics on an ellipsoid of revolution
 %
-%   This package includes three routines GEODDISTANCE, GEODRECKON, and
-%   GEODAREA which solve various problems involving geodesics on the
-%   surface of an ellipsoid of revolution.  These are based on the paper
+%   The routines geoddistance, geodreckon, and geodarea solve various
+%   problems involving geodesics on the surface of an ellipsoid of
+%   revolution.  These are based on the paper
 %
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
@@ -24,20 +24,20 @@ function geoddoc
 %
 %   Traditionally two geodesic problems are considered:
 %     * the direct problem -- given lat1, lon1, s12, and azi1, determine
-%       lat2, lon2, and azi2.  This is solved by GEODRECKON.
+%       lat2, lon2, and azi2.  This is solved by geodreckon.
 %     * the inverse problem -- given lat1, lon1, lat2, lon2, determine s12,
-%       azi1, and azi2.  This is solved by GEODDISTANCE.
-%   In addition, GEODAREA computes the area of an ellipsoidal polygon
+%       azi1, and azi2.  This is solved by geoddistance.
+%   In addition, geodarea computes the area of an ellipsoidal polygon
 %   where the edges are defined as shortest geodesics.
 %
-%   The parameters of the ellipsoid are specified by the optional ELLIPSOID
+%   The parameters of the ellipsoid are specified by the optional ellipsoid
 %   argument to the routines.  This is a two-element vector of the form
 %   [a,e], where a is the equatorial radius, e is the eccentricity e =
 %   sqrt(a^2-b^2)/a, and b is the polar semi-axis.  Typically, a and b are
 %   measured in meters and the linear and area quantities returned by the
 %   routines are then in meters and meters^2.  However, other units can be
 %   employed.  If ELLIPSOID is omitted, then the WGS84 ellipsoid (more
-%   precisely, the value returned by DEFAULTELLIPSOID) is assumed [6378137,
+%   precisely, the value returned by defaultellipsoid) is assumed [6378137,
 %   0.0818191908426215] corresponding to a = 6378137 meters and a
 %   flattening f = (a-b)/a = 1/298.257223563.  The flattening and
 %   eccentricity are related by
@@ -45,7 +45,7 @@ function geoddoc
 %       e = sqrt(f * (2 - f))
 %       f = e^2 / (1 + sqrt(1 - e^2))
 %
-%   (The functions ECC2FLAT and FLAT2ECC implement these conversions.)  For
+%   (The functions ecc2flat and flat2ecc implement these conversions.)  For
 %   a sphere, set e = 0; for a prolate ellipsoid (b > a), specify e as a
 %   pure imaginary number.
 %
@@ -103,7 +103,7 @@ function geoddoc
 %
 %    Larger values of e can be used with a corresponding drop in accuracy.
 %    The following table gives the approximate maximum error in
-%    GEODDISTANCE and GEODRECKON (expressed as a distance) for an ellipsoid
+%    geoddistance and geodreckon (expressed as a distance) for an ellipsoid
 %    with the same major radius as the WGS84 ellipsoid and different values
 %    of the flattening (nm means nanometer and um means micrometer).
 %
@@ -152,11 +152,7 @@ function geoddoc
 %
 %     http://geographiclib.sf.net
 %
-%   An alternate MATLAB interface is provided by the wrapper functions,
-%   GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, and POLYGONAREA which
-%   are part of GeographicLib.  However these depend on being able to
-%   compile and link the interface code, which limits their usefulness.
-%   GEODDISTANCE, GEODRECKON, and GEODAREA are native implementations which
+%   geoddistance, geodreckon, and geodarea are native implementations which
 %   will work on any MATLAB platform.  They are fully vectorized so that
 %   their speed is competitive with the compiled C++ code.  Implementations
 %   of these routines in Python and JavaScript are also available; see
@@ -168,31 +164,26 @@ function geoddoc
 %   be expressed in terms of elliptic integrals.  These are provided by the
 %   C++ classes GeodesicExact and GeodesicLineExact.
 %
-%   The routines duplicate some of the functionality of the DISTANCE,
-%   RECKON, and AREAINT functions in the MATLAB mapping toolbox.  The major
-%   improvements offered by GEODDISTANCE, GEODRECKON, and GEODAREA are
+%   The routines duplicate some of the functionality of the distance,
+%   reckon, and areaint functions in the MATLAB mapping toolbox.  The major
+%   improvements offered by geoddistance, geodreckon, and geodarea are
 %
 %     * The routines are accurate to round off for abs(e) < 0.2.  For
 %       example, for the WGS84 ellipsoid, the error in the distance
-%       returned by GEODDISTANCE is less then 15 nanometers.
+%       returned by geoddistance is less then 15 nanometers.
 %     * The routines work for prolate (as well as oblate) ellipsoids.
-%     * GEODDISTANCE converges for all inputs.
+%     * geoddistance converges for all inputs.
 %     * Differential and integral properties of the geodesics are computed.
-%     * GEODAREA is accurate regardless of the length of the edges of the
+%     * geodarea is accurate regardless of the length of the edges of the
 %       polygon.
-%
-%   This package is used by the MATLAB File Exchange package "Geodesic
-%   projections for an ellipsoid":
-%
-%     http://www.mathworks.com/matlabcentral/fileexchange/39366
 %
 %   See also GEODDISTANCE, GEODRECKON, GEODAREA,
 %     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
 %     GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, POLYGONAREA.
 
-% Copyright (c) Charles Karney (2012-2014) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.39.
+% This file was distributed with GeographicLib 1.42.
 
   help geoddoc
 end

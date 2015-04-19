@@ -12,10 +12,10 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %   azi1 are given in degrees and s12 in meters.  The ellipsoid vector is
 %   of the form [a, e], where a is the equatorial radius in meters, e is
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by DEFAULTELLIPSOID) is used.  lat2,
+%   precisely, the value returned by defaultellipsoid) is used.  lat2,
 %   lon2, and azi2 give the position and forward azimuths at the end point
 %   in degrees.  The other outputs, S12, m12, M12, M21, a12 are documented
-%   in GEODDOC.  GEODDOC also gives the restrictions on the allowed ranges
+%   in geoddoc.  geoddoc also gives the restrictions on the allowed ranges
 %   of the arguments.
 %
 %   flags (default 0) is a combination of 2 flags:
@@ -69,9 +69,9 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %   See also GEODDOC, GEODDISTANCE, GEODAREA, GEODESICDIRECT, GEODESICLINE,
 %     DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012-2014) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.39.
+% This file was distributed with GeographicLib 1.42.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional

@@ -1,11 +1,11 @@
 function [geodetic, rot] = geocentricreverse(geocentric, a, f)
-%GEOCENTRICREVERSE  Convert geocentric coordinates to geographic
+%GEOCENTRICREVERSE  Wrapper for geocent_inv
 %
 %   [geodetic, rot] = GEOCENTRICREVERSE(geocentric)
 %   [geodetic, rot] = GEOCENTRICREVERSE(geocentric, a, f)
 %
 %   This is a legacy function to replace a compiled interface function of
-%   the same name.  This now calls GEOCENT_INV which is implemented as
+%   the same name.  This now calls geocent_inv which is implemented as
 %   native Matlab code.
 %
 %   geocentric is an M x 3 matrix of geocentric coordinates
@@ -27,7 +27,7 @@ function [geodetic, rot] = geocentricreverse(geocentric, a, f)
 %   f = flattening (0 means a sphere)
 %   If a and f are omitted, the WGS84 values are used.
 %
-%   See also GEOCENT_FWD.
+%   See also GEOCENT_INV.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %

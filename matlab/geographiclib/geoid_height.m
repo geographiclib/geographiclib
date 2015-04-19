@@ -7,33 +7,35 @@ function h = geoid_height(lat, lon, geoidname, geoiddir)
 %   GEOID_HEIGHT([])
 %   height = GEOID_HEIGHT(lat, lon, geoid)
 %
-%   lat and lon are the latitude in degrees.  These can be any compatible
-%   shapes.  The possible geoids are
+%   computes the height of the geoid in meters.  lat and lon are the
+%   latitude and longitude in degrees.  These can be scalars or arrays of
+%   the same size.  The possible geoids are
 %
 %       egm84-30  egm84-15
 %       egm96-15  egm96-5
 %       egm2008-5 egm2008-2_5 egm2008-1
 %
-%   The first part of the name is the geoid model.  The second part gives the
-%   resolution of the gridded data (in arc-seconds).
+%   The first part of the name is the geoid model.  The second part gives
+%   the resolution of the gridded data (in arc-seconds).
 %
-%   The geoid can be overridden by specifying geoidname.  If geoidname is not
-%   specified, the environment variable GEOGRAPHICLIB_GEOID_NAME is used; if
-%   this is not defined then egm96-5 is used.  GEOID_HEIGHT looks in the
-%   directory geoiddir for the geoid data; if this is not specified, it uses
-%   the environment variable GEOGRAPHICLIB_GEOID_PATH; if this is not defined,
-%   it appends "/geoids" to the environment variable GEOGRAPHICLIB_DATA;
-%   finally, it tries the default directory names
+%   The geoid can be overridden by specifying geoidname.  If geoidname is
+%   not specified, the environment variable GEOGRAPHICLIB_GEOID_NAME is
+%   used; if this is not defined then egm96-5 is used.  geoid_height looks
+%   in the directory geoiddir for the geoid data; if this is not specified,
+%   it uses the environment variable GEOGRAPHICLIB_GEOID_PATH; if this is
+%   not defined, it appends "/geoids" to the environment variable
+%   GEOGRAPHICLIB_DATA; finally, it tries the default directory names
 %   /usr/local/share/GeographicLib/geoids or
 %   C:/ProgramData/GeographicLib/geoids.
 %
-%   When geoid_height is invoked with a particular geoidname, the geoid data is
-%   loaded from disk and cached.  A subsequent invocation of geoid_height with
-%   the same geoidname uses the cached data.  Use GEOID_HEIGHT([]) to clear
-%   this cached data.
+%   When geoid_height is invoked with a particular geoidname, the geoid
+%   data is loaded from disk and cached.  A subsequent invocation of
+%   geoid_height with the same geoidname uses the cached data.  Use
+%   GEOID_HEIGHT([]) to clear this cached data.
 %
-%   Alternatively, you can load a geoid with GEOID_LOAD and use the returned
-%   structure as the third argument.  This use does not change the cached data.
+%   Alternatively, you can load a geoid with geoid_load and use the
+%   returned structure as the third argument.  This use does not change the
+%   cached data.
 %
 %   Information on downloading and installing the data for the supported
 %   geoid models is available at

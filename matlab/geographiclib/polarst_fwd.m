@@ -1,8 +1,8 @@
-function [x, y, gam, k] = polarst_fwd(northp, lat, lon, ellipsoid)
+function [x, y, gam, k] = polarst_fwd(isnorth, lat, lon, ellipsoid)
 %POLARST_FWD  Forward polar stereographic projection
 %
-%   [X, Y] = POLARST_FWD(NORTHP, LAT, LON)
-%   [X, Y, GAM, K] = POLARST_FWD(NORTHP, LAT, LON, ELLIPSOID)
+%   [x, y] = POLARST_FWD(isnorth, lat, lon)
+%   [x, y, gam, k] = POLARST_FWD(isnorth, lat, lon, ellipsoid)
 %
 %   See also POLARST_INV.
 
@@ -13,9 +13,9 @@ function [x, y, gam, k] = polarst_fwd(northp, lat, lon, ellipsoid)
   if nargin < 3, error('Too few input arguments'), end
   if nargin < 4, ellipsoid = defaultellipsoid; end
   try
-    [~] = northp + lat + lon;
+    [~] = isnorth + lat + lon;
   catch err
-    error('northp, lat, lon have incompatible sizes')
+    error('isnorth, lat, lon have incompatible sizes')
   end
   if length(ellipsoid(:)) ~= 2
     error('ellipsoid must be a vector of size 2')
@@ -28,8 +28,8 @@ function [x, y, gam, k] = polarst_fwd(northp, lat, lon, ellipsoid)
   e2m = 1 - e2;
   c = sqrt(e2m) * exp(eatanhe(1, e2));
 
-  northp = 2 * logical(northp) - 1;
-  lat = lat .* northp;
+  isnorth = 2 * logical(isnorth) - 1;
+  lat = lat .* isnorth;
   phi = lat * degree;
   lam = AngNormalize(lon) .* degree;
   tau  = tan(phi); tau(abs(lat) == 90) = sign(lat(abs(lat) == 90)) * overflow;
@@ -39,9 +39,9 @@ function [x, y, gam, k] = polarst_fwd(northp, lat, lon, ellipsoid)
   rho = rho * (2 * a / c);
   lon = AngNormalize(lon);
   x = rho .* sin(lam); x(lon == -180) = 0;
-  y = -northp .* rho .* cos(lam); x(abs(lon) == 90) = 0;
+  y = -isnorth .* rho .* cos(lam); x(abs(lon) == 90) = 0;
   if nargout > 2
-    gam = northp .* lon;
+    gam = isnorth .* lon;
     if nargout > 3
       secphi = hypot(1, tau);
       k = (rho / a) .* secphi .* sqrt(e2m + e2 .* secphi.^-2);

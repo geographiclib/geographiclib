@@ -1,11 +1,11 @@
 function [utmups, scale] = utmupsforward(latlong, setzone)
-%UTMUPSFORWARD  Convert geographic coordinates to UTM/UPS
+%UTMUPSFORWARD  Wrapper for utmups_fwd
 %
 %   [utmups, scale] = UTMUPSFORWARD(latlong)
 %   [utmups, scale] = UTMUPSFORWARD(latlong, setzone)
 %
 %   This is a legacy function to replace a compiled interface function of
-%   the same name.  This now calls UTMUPS_FWD which is implemented as
+%   the same name.  This now calls utmups_fwd which is implemented as
 %   native Matlab code.
 %
 %   latlong is an M x 2 matrix
@@ -30,7 +30,7 @@ function [utmups, scale] = utmupsforward(latlong, setzone)
 %       -1, use the standard assigment (the default)
 %       -2, use closest UTM zone
 %
-%   See also UTMUPS_FWD, UTMUPS_INV, UTMUPSREVERSE.
+%   See also UTMUPS_FWD.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %

@@ -1,10 +1,10 @@
 function [utmups, prec] = mgrsreverse(mgrs)
-%MGRSREVERSE  Convert UTM/UPS coordinates to MGRS
+%MGRSREVERSE  Wrapper for mgrs_inv
 %
 %   [utmups, prec] = MGRSREVERSE(mgrs)
 %
 %   This is a legacy function to replace a compiled interface function of
-%   the same name.  This now calls MGRS_INV which is implemented as native
+%   the same name.  This now calls mgrs_inv which is implemented as native
 %   Matlab code.
 %
 %   mgrs is a M x 1 cell array of MGRS strings, e.g.,

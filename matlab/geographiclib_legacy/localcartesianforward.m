@@ -1,11 +1,11 @@
 function [cartesian, rot] = localcartesianforward(origin, geodetic, a, f)
-%LOCALCARTESIANFORWARD  Convert geographic to local cartesian
+%LOCALCARTESIANFORWARD  Wrapper for loccart_fwd
 %
 %   [cartesian, rot] = LOCALCARTESIANFORWARD(origin, geodetic)
 %   [cartesian, rot] = LOCALCARTESIANFORWARD(origin, geodetic, a, f)
 %
 %   This is a legacy function to replace a compiled interface function of
-%   the same name.  This now calls LOCCART_FWD which is implemented as
+%   the same name.  This now calls loccart_fwd which is implemented as
 %   native Matlab code.
 %
 %   origin is a 1 x 3 or 1 x 2 matrix
