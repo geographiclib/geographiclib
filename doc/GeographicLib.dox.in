@@ -301,7 +301,7 @@ Here are the steps to compile and install GeographicLib:
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
     - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib;
     - python interface: OFF: python; ON: lib/python/site-packages;
-    - matlab interface: OFF: matlab; ON: libexec/GeographicLib/matlab;
+    - matlab interface: OFF: matlab; ON: libexec/matlab;
     .
   - <code>CMAKE_INSTALL_PREFIX</code> (default: <code>/usr/local</code>
     on non-Windows systems, <code>C:/Program Files/GeographicLib</code>
@@ -1300,8 +1300,8 @@ of the Australian Communications and Media Authority.)
 The <code>matlab</code> directory Matlab and Octave implementations of
 some of the functions of GeographicLib.  To use
 these, start Matlab or Octave and run one of (for example) \verbatim
-   addpath /usr/local/libexec/GeographicLib/matlab
-   addpath 'C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/libexec/GeographicLib/matlab'
+   addpath /usr/local/libexec/matlab/geographiclib
+   addpath 'C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib'
    \endverbatim
 
 The functions fall into the following groups
@@ -1393,7 +1393,7 @@ There are two ways of compiling the interface code: (1) using cmake and
    Linux, Mac OSX, and Windows.)  Start Matlab or Octave and run, e.g.,
    \code
    mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab'
+   cd 'C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib_legacy'
    help geographiclibinterface
    geographiclibinterface('C:/pkg-vc10/GeographicLib-@PROJECT_VERSION@');
    addpath(pwd);

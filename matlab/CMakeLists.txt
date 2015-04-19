@@ -13,4 +13,4 @@ install (FILES ${PRIVATE_MATLAB_FILES}
 # Install "legacy" functions
 file (GLOB MATLAB_FILES geographiclib_legacy/[A-Za-z]*.m)
 install (FILES ${MATLAB_FILES}
-  DESTINATION ${INSTALL_MATLAB_DIR}/geographiclib_lagacy)
+  DESTINATION ${INSTALL_MATLAB_DIR}/geographiclib_legacy)
