@@ -10,20 +10,25 @@ MATLAB_LEGACY = utmupsforward_a.m utmupsreverse_a.m mgrsforward_a.m \
 	geocentricreverse_a.m localcartesianforward_a.m \
 	localcartesianreverse_a.m polygonarea_a.m
 
-MATLAB_PRIVATE = $(wildcard private/*.m)
+MATLAB_FILES = $(wildcard geographiclib/private/*.m)
+MATLAB_PRIVATE = $(wildcard geographiclib/private/*.m)
+MATLAB_LEGACY = $(wildcard geographiclib_legacy/*.m)
 
-MATLAB_ALL = $(MATLAB_FILES) $(MATLAB_LEGACY)
-
-DEST = $(PREFIX)/libexec/GeographicLib/matlab
+DEST = $(PREFIX)/libexec/matlab
 INSTALL = install -b
 
 all:
 	@:
 
 install:
-	test -d $(DEST)/private || mkdir -p $(DEST)/private
-	$(INSTALL) -m 644 $(MATLAB_ALL) $(DEST)/
-	$(INSTALL) -m 644 $(MATLAB_PRIVATE) $(DEST)/private/
+	test -d $(DEST)/geographiclib/private || \
+		mkdir -p $(DEST)/geographiclib/private
+	test -d $(DEST)/geographiclib_legacy || \
+		mkdir -p $(DEST)/geographiclib_legacy
+	$(INSTALL) -m 644 $(MATLAB_FILES) $(DEST)/geographiclib
+	$(INSTALL) -m 644 $(MATLAB_PRIVATE) $(DEST)/geographiclib/private/
+	$(INSTALL) -m 644 $(MATLAB_LEGACY) $(DEST)/geographiclib_legacy
+
 clean:
 	rm -f *.mex* *.oct
 

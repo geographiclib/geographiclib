@@ -4,76 +4,113 @@
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
 
 MATLAB_FILES = \
-$(srcdir)/geoddoc.m \
-$(srcdir)/geodreckon.m \
-$(srcdir)/geoddistance.m \
-$(srcdir)/geodarea.m \
-$(srcdir)/defaultellipsoid.m \
-$(srcdir)/ecc2flat.m \
-$(srcdir)/flat2ecc.m \
-$(srcdir)/geodproj.m \
-$(srcdir)/eqdazim_fwd.m \
-$(srcdir)/eqdazim_inv.m \
-$(srcdir)/cassini_fwd.m \
-$(srcdir)/cassini_inv.m \
-$(srcdir)/tranmerc_fwd.m \
-$(srcdir)/tranmerc_inv.m \
-$(srcdir)/gnomonic_fwd.m \
-$(srcdir)/gnomonic_inv.m \
-$(srcdir)/gedoc.m \
-$(srcdir)/gereckon.m \
-$(srcdir)/gedistance.m
-
-MATLAB_LEGACY = \
-$(srcdir)/geodesicdirect_a.m \
-$(srcdir)/geodesicinverse_a.m \
-$(srcdir)/geodesicline_a.m \
-$(srcdir)/geoidheight_a.m \
-$(srcdir)/mgrsforward_a.m \
-$(srcdir)/mgrsreverse_a.m \
-$(srcdir)/utmupsforward_a.m \
-$(srcdir)/utmupsreverse_a.m \
-$(srcdir)/geocentricforward_a.m \
-$(srcdir)/geocentricreverse_a.m \
-$(srcdir)/localcartesianforward_a.m \
-$(srcdir)/localcartesianreverse_a.m \
-$(srcdir)/polygonarea_a.m
+$(srcdir)/geographiclib/Contents.m \
+$(srcdir)/geographiclib/cassini_fwd.m \
+$(srcdir)/geographiclib/cassini_inv.m \
+$(srcdir)/geographiclib/defaultellipsoid.m \
+$(srcdir)/geographiclib/ecc2flat.m \
+$(srcdir)/geographiclib/eqdazim_fwd.m \
+$(srcdir)/geographiclib/eqdazim_inv.m \
+$(srcdir)/geographiclib/flat2ecc.m \
+$(srcdir)/geographiclib/gedistance.m \
+$(srcdir)/geographiclib/gedoc.m \
+$(srcdir)/geographiclib/geocent_fwd.m \
+$(srcdir)/geographiclib/geocent_inv.m \
+$(srcdir)/geographiclib/geodarea.m \
+$(srcdir)/geographiclib/geoddistance.m \
+$(srcdir)/geographiclib/geoddoc.m \
+$(srcdir)/geographiclib/geodproj.m \
+$(srcdir)/geographiclib/geodreckon.m \
+$(srcdir)/geographiclib/geoid_height.m \
+$(srcdir)/geographiclib/geoid_load.m \
+$(srcdir)/geographiclib/gereckon.m \
+$(srcdir)/geographiclib/gnomonic_fwd.m \
+$(srcdir)/geographiclib/gnomonic_inv.m \
+$(srcdir)/geographiclib/loccart_fwd.m \
+$(srcdir)/geographiclib/loccart_inv.m \
+$(srcdir)/geographiclib/mgrs_fwd.m \
+$(srcdir)/geographiclib/mgrs_inv.m \
+$(srcdir)/geographiclib/polarst_fwd.m \
+$(srcdir)/geographiclib/polarst_inv.m \
+$(srcdir)/geographiclib/tranmerc_fwd.m \
+$(srcdir)/geographiclib/tranmerc_inv.m \
+$(srcdir)/geographiclib/utmups_fwd.m \
+$(srcdir)/geographiclib/utmups_inv.m
 
 MATLAB_PRIVATE = \
-$(srcdir)/private/A1m1f.m \
-$(srcdir)/private/A2m1f.m \
-$(srcdir)/private/A3coeff.m \
-$(srcdir)/private/A3f.m \
-$(srcdir)/private/AngDiff.m \
-$(srcdir)/private/AngNormalize2.m \
-$(srcdir)/private/AngNormalize.m \
-$(srcdir)/private/AngRound.m \
-$(srcdir)/private/eatanhe.m \
-$(srcdir)/private/C1f.m \
-$(srcdir)/private/C1pf.m \
-$(srcdir)/private/C2f.m \
-$(srcdir)/private/C3coeff.m \
-$(srcdir)/private/C3f.m \
-$(srcdir)/private/C4coeff.m \
-$(srcdir)/private/G4coeff.m \
-$(srcdir)/private/C4f.m \
-$(srcdir)/private/cbrtx.m \
-$(srcdir)/private/cvmgt.m \
-$(srcdir)/private/normalize.m \
-$(srcdir)/private/SinCosSeries.m \
-$(srcdir)/private/sumx.m \
-$(srcdir)/private/swap.m
+$(srcdir)/geographiclib/private/A1m1f.m \
+$(srcdir)/geographiclib/private/A2m1f.m \
+$(srcdir)/geographiclib/private/A3coeff.m \
+$(srcdir)/geographiclib/private/A3f.m \
+$(srcdir)/geographiclib/private/AngDiff.m \
+$(srcdir)/geographiclib/private/AngNormalize.m \
+$(srcdir)/geographiclib/private/AngNormalize2.m \
+$(srcdir)/geographiclib/private/AngRound.m \
+$(srcdir)/geographiclib/private/C1f.m \
+$(srcdir)/geographiclib/private/C1pf.m \
+$(srcdir)/geographiclib/private/C2f.m \
+$(srcdir)/geographiclib/private/C3coeff.m \
+$(srcdir)/geographiclib/private/C3f.m \
+$(srcdir)/geographiclib/private/C4coeff.m \
+$(srcdir)/geographiclib/private/C4f.m \
+$(srcdir)/geographiclib/private/G4coeff.m \
+$(srcdir)/geographiclib/private/GeoRotation.m \
+$(srcdir)/geographiclib/private/SinCosSeries.m \
+$(srcdir)/geographiclib/private/cbrtx.m \
+$(srcdir)/geographiclib/private/cvmgt.m \
+$(srcdir)/geographiclib/private/eatanhe.m \
+$(srcdir)/geographiclib/private/geoid_file.m \
+$(srcdir)/geographiclib/private/geoid_load_file.m \
+$(srcdir)/geographiclib/private/norm2.m \
+$(srcdir)/geographiclib/private/sumx.m \
+$(srcdir)/geographiclib/private/swap.m \
+$(srcdir)/geographiclib/private/tauf.m \
+$(srcdir)/geographiclib/private/taupf.m
 
-MATLAB_ALL = $(MATLAB_LEGACY) $(MATLAB_FILES)
+MATLAB_LEGACY = \
+$(srcdir)/geographiclib_legacy/Contents.m \
+$(srcdir)/geographiclib_legacy/geocentricforward.m \
+$(srcdir)/geographiclib_legacy/geocentricreverse.m \
+$(srcdir)/geographiclib_legacy/geodesicdirect.m \
+$(srcdir)/geographiclib_legacy/geodesicinverse.m \
+$(srcdir)/geographiclib_legacy/geodesicline.m \
+$(srcdir)/geographiclib_legacy/geographiclibinterface.m \
+$(srcdir)/geographiclib_legacy/geoidheight.m \
+$(srcdir)/geographiclib_legacy/localcartesianforward.m \
+$(srcdir)/geographiclib_legacy/localcartesianreverse.m \
+$(srcdir)/geographiclib_legacy/mgrsforward.m \
+$(srcdir)/geographiclib_legacy/mgrsreverse.m \
+$(srcdir)/geographiclib_legacy/polygonarea.m \
+$(srcdir)/geographiclib_legacy/utmupsforward.m \
+$(srcdir)/geographiclib_legacy/utmupsreverse.m
 
-matlabdir=$(libexecdir)/GeographicLib/matlab
+MATLAB_INTERFACE = \
+$(srcdir)/geographiclib_legacy/geocentricforward.cpp \
+$(srcdir)/geographiclib_legacy/geocentricreverse.cpp \
+$(srcdir)/geographiclib_legacy/geodesicdirect.cpp \
+$(srcdir)/geographiclib_legacy/geodesicinverse.cpp \
+$(srcdir)/geographiclib_legacy/geodesicline.cpp \
+$(srcdir)/geographiclib_legacy/geoidheight.cpp \
+$(srcdir)/geographiclib_legacy/localcartesianforward.cpp \
+$(srcdir)/geographiclib_legacy/localcartesianreverse.cpp \
+$(srcdir)/geographiclib_legacy/mgrsforward.cpp \
+$(srcdir)/geographiclib_legacy/mgrsreverse.cpp \
+$(srcdir)/geographiclib_legacy/polygonarea.cpp \
+$(srcdir)/geographiclib_legacy/utmupsforward.cpp \
+$(srcdir)/geographiclib_legacy/utmupsreverse.cpp
+
+MATLAB_ALL = $(MATLAB_FILES) $(MATLAB_PRIVATE) $(MATLAB_LEGACY)
+
+matlabdir=$(DESTDIR)$(libexecdir)/matlab
 
 install:
-	$(INSTALL) -d $(DESTDIR)$(matlabdir)/private
-	$(INSTALL) -m 644 $(MATLAB_ALL) $(DESTDIR)$(matlabdir)
-	$(INSTALL) -m 644 $(MATLAB_PRIVATE) $(DESTDIR)$(matlabdir)/private
+	$(INSTALL) -d $(matlabdir)/geographiclib/private
+	$(INSTALL) -d $(matlabdir)/geographiclib_legacy
+	$(INSTALL) -m 644 $(MATLAB_FILES) $(matlabdir)/geographiclib
+	$(INSTALL) -m 644 $(MATLAB_PRIVATE) $(matlabdir)/geographiclib/private
+	$(INSTALL) -m 644 $(MATLAB_LEGACY) $(matlabdir)/geographiclib_legacy
 
 clean-local:
 	rm -rf *.mex* *.oct
 
-EXTRA_DIST = Makefile.mk CMakeLists.txt $(MATLAB_ALL) $(MATLAB_PRIVATE)
+EXTRA_DIST = Makefile.mk CMakeLists.txt $(MATLAB_ALL) $(MATLAB_INTERFACE)

@@ -190,14 +190,10 @@ cd BUILD
 cmake -D CMAKE_PREFIX_PATH=$TEMP/instc ..
 make
 
-mkdir -p $TEMP/geographiclib-matlab/private
-cd $TEMP/instc/libexec/GeographicLib/matlab
-cp -p *.m $TEMP/geographiclib-matlab/
-cp -p private/*.m $TEMP/geographiclib-matlab/private/
-cd $TEMP
-rm -f $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip
-zip $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip \
-    geographiclib-matlab/*.m geographiclib-matlab/private/*.m
+cd $TEMP/instc/libexec/matlab
+rm -f $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip
+zip $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip \
+    geographiclib/*.m geographiclib/private/*.m
 
 cd $TEMP
 mkdir python-test
