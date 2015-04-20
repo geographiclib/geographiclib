@@ -48,10 +48,10 @@ function [x, y, zone, isnorth, prec] = mgrs_inv(mgrs)
   upsn = (mgrs(:,1) == 'Y' | mgrs(:,1) == 'Z') & contig;
   [x(utm), y(utm), zone(utm), isnorth(utm), prec(utm)] = ...
       mgrs_inv_utm(mgrs(utm,:));
-  [x(upss), y(upss), zone(upss), isnorth(upss), prec(upss)] = ...
-      mgrs_inv_upss(mgrs(upss,:));
   [x(upsn), y(upsn), zone(upsn), isnorth(upsn), prec(upsn)] = ...
       mgrs_inv_upsn(mgrs(upsn,:));
+  [x(upss), y(upss), zone(upss), isnorth(upss), prec(upss)] = ...
+      mgrs_inv_upss(mgrs(upss,:));
   x = reshape(x, s); y = reshape(y, s); prec = reshape(prec, s);
   isnorth = reshape(isnorth, s); zone = reshape(zone, s);
 end
@@ -79,7 +79,7 @@ function [x, y, zone, northp, prec] = mgrs_inv_utm(mgrs)
   rowind = utmrow(band, colind, rowind);
   colind = colind + 1;
   x = colind * 1e5 + x;
-  y = rowind * 1e5 + y;
+  y = rowind * 1e5 + y + (1-northp) * 100e5;
   x(prec == -1) = ...
           (5 - (zone(prec == -1) == 31 & band(prec == -1) == 7)) * 1e5;
   y(prec == -1) = ...
@@ -88,28 +88,6 @@ function [x, y, zone, northp, prec] = mgrs_inv_utm(mgrs)
   x(~ok) = nan;
   y(~ok) = nan;
   northp(~ok) = false;
-  zone(~ok) = -4;
-  prec(~ok) = -2;
-end
-
-function [x, y, zone, northp, prec] = mgrs_inv_upss(mgrs)
-  zone = zeros(size(mgrs,1),1);
-  ok = zone == 0;
-  northp = ~ok;
-  eastp = lookup('AB', mgrs(:,1));
-  ok = ok & eastp >= 0;
-  colind = lookup(['JKLPQRSTUXYZ', 'ABCFGHJKLPQR'], mgrs(:, 2));
-  ok = ok & (colind < 0 | mod(floor(colind / 12) + eastp, 2) == 0);
-  rowind = lookup('ABCDEFGHJKLMNPQRSTUVWXYZ', mgrs(:, 3));
-  [x, y, prec] = decodexy(mgrs(:, 4:end));
-  prec(mgrs(:,2) == ' ') = -1;
-  ok = ok & (prec == -1 | (colind >= 0 & rowind >= 0));
-  x = (colind + 8) * 1e5 + x;
-  y = (rowind + 8) * 1e5 + y;
-  x(prec == -1) = ((2*eastp - 1) * floor(4 * 100/90 + 0.5) + 20) * 1e5;
-  y(prec == -1) = 20e5;
-  x(~ok) = nan;
-  y(~ok) = nan;
   zone(~ok) = -4;
   prec(~ok) = -2;
 end
@@ -128,11 +106,38 @@ function [x, y, zone, northp, prec] = mgrs_inv_upsn(mgrs)
   ok = ok & (prec == -1 | (colind >= 0 & rowind >= 0));
   x = (colind + 13) * 1e5 + x;
   y = (rowind + 13) * 1e5 + y;
-  x(prec == -1) = ((2*eastp - 1) * floor(4 * 100/90 + 0.5) + 20) * 1e5;
+  x(prec == -1) = ((2*eastp(prec == -1) - 1) * ...
+                   floor(4 * 100/90 + 0.5) + 20) * 1e5;
   y(prec == -1) = 20e5;
   x(~ok) = nan;
   y(~ok) = nan;
   northp(~ok) = false;
+  zone(~ok) = -4;
+  prec(~ok) = -2;
+end
+
+function [x, y, zone, northp, prec] = mgrs_inv_upss(mgrs)
+  zone = zeros(size(mgrs,1),1);
+  ok = zone == 0;
+  northp = ~ok;
+  eastp = lookup('AB', mgrs(:,1));
+  ok = ok & eastp >= 0;
+  eastp = eastp > 0;
+  colind = lookup('JKLPQRSTUXYZ', mgrs(:, 2));
+  colind(eastp) = lookup('ABCFGHJKLPQR', mgrs(eastp, 2)) + 12;
+  colind(eastp & colind < 12) = -1;
+  ok = ok & (colind < 0 | mod(floor(colind / 12) + eastp, 2) == 0);
+  rowind = lookup('ABCDEFGHJKLMNPQRSTUVWXYZ', mgrs(:, 3));
+  [x, y, prec] = decodexy(mgrs(:, 4:end));
+  prec(mgrs(:,2) == ' ') = -1;
+  ok = ok & (prec == -1 | (colind >= 0 & rowind >= 0));
+  x = (colind + 8) * 1e5 + x;
+  y = (rowind + 8) * 1e5 + y;
+  x(prec == -1) = ((2*eastp(prec == -1) - 1) * ...
+                   floor(4 * 100/90 + 0.5) + 20) * 1e5;
+  y(prec == -1) = 20e5;
+  x(~ok) = nan;
+  y(~ok) = nan;
   zone(~ok) = -4;
   prec(~ok) = -2;
 end

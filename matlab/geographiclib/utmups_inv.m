@@ -4,7 +4,6 @@ function [lat, lon, gam, k] = utmups_inv(x, y, zone, isnorth)
 %   [lat, lon] = UTMUPS_INV(x, y, zone, isnorth)
 %   [lat, lon, gam, k] = UTMUPS_INV(x, y, zone, isnorth)
 %
-%
 %   performs the inverse universal transverse Mercator projection of points
 %   (x,y) to (lat,lon) using zone and isnorth.  x and y can be scalars or
 %   arrays of equal size.  zone should be an integer in [1,60] and isnorth
@@ -68,19 +67,25 @@ function [lat, lon, gam, k] = utm_inv(zone, isnorth, x, y)
 %   [lat, lon] = UTM_INV(zone, isnorth, x, y)
 %   [lat, lon, gam, k] = UTM_INV(zone, isnorth, x, y)
 
-  if nargin < 4, error('Too few input arguments'), end
   lon0 = -183 + 6 * floor(zone); lat0 = 0;
-  fe = 500e3; fn = cvmgt(0, 10000e3, logical(isnorth)); k0 = 0.9996;
-  x = (x - fe) / k0; y = (y - fn) / k0;
+  fe = 5e5; fn = 100e5 * (1-isnorth); k0 = 0.9996;
+  x = x - fe; y = y - fn;
+  bad = ~(abs(x) <= 5e5 & y >= -91e5 & y <= 96e5);
+  x = x / k0; y = y / k0;
   [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y);
   k = k * k0;
+  lat(bad) = nan; lon(bad) = nan; gam(bad) = nan; k(bad) = nan;
 end
 
 function [lat, lon, gam, k] = ups_inv(isnorth, x, y)
 %UPS_INV  Inverse UPS projection
 
   fe = 20e5; fn = 20e5; k0 = 0.994;
-  x = (x - fe) / k0; y = (y - fn) / k0;
+  x = x - fe; y = y - fn;
+  lim = (13 - 5 * isnorth) * 1e5;
+  bad = ~(abs(x) <= lim & abs(y) <= lim);
+  x = x / k0; y = y / k0;
   [lat, lon, gam, k] = polarst_inv(isnorth, x, y);
   k = k * k0;
+  lat(bad) = nan; lon(bad) = nan; gam(bad) = nan; k(bad) = nan;
 end

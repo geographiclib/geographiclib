@@ -38,9 +38,9 @@ function [latlong, aux] = geodesicline(lat1, lon1, azi1, distances, a, f)
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if (nargin < 2)
+  if (nargin < 5)
     ellipsoid = defaultellipsoid;
-  elseif (nargin < 3)
+  elseif (nargin < 6)
     ellipsoid = [a, 0];
   else
     ellipsoid = [a, flat2ecc(f)];

@@ -61,7 +61,8 @@ function h = geoid_height(lat, lon, geoidname, geoiddir)
   else
     if nargin < 3
       geoidname = '';
-    elseif nargin < 4
+    end
+    if nargin < 4
       geoiddir = '';
     end
     geoidfile = geoid_file(geoidname, geoiddir);

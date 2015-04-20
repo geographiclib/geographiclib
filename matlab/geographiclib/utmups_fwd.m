@@ -62,6 +62,7 @@ function [x, y, zone, isnorth, gam, k] = utmups_fwd(lat, lon, setzone)
   ups = zone == 0;
   [x(ups), y(ups), gam(ups), k(ups)] = ...
       ups_fwd(isnorth(ups), lat(ups), lon(ups));
+  zone(isnan(x)) = -4; isnorth(isnan(x)) = false;
 end
 
 function [x, y, gam, k] = utm_fwd(zone, isnorth, lat, lon)
@@ -69,13 +70,15 @@ function [x, y, gam, k] = utm_fwd(zone, isnorth, lat, lon)
 %
 %   [x, y] = UTM_FWD(zone, isnorth, lat, lon)
 %   [x, y, gam, k] = UTM_FWD(zone, isnorth, lat, lon)
-%
 
-  if nargin < 4, error('Too few input arguments'), end
   lon0 = -183 + 6 * floor(zone); lat0 = 0;
-  fe = 500e3; fn = cvmgt(0,10000e3,logical(isnorth)); k0 = 0.9996;
+  bad = ~(abs(mod(lon - lon0 + 180, 360) - 180) <= 60);
+  fe = 5e5; fn = 100e5 * (1-isnorth); k0 = 0.9996;
   [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon);
-  x = x * k0 + fe; y = y * k0 + fn; k = k * k0;
+  x = x * k0; y = y * k0; k = k * k0;
+  bad = bad | ~(abs(x) <= 5e5 & y >= -91e5 & y <= 96e5);
+  x = x + fe; y = y + fn;
+  x(bad) = nan; y(bad) = nan; gam(bad) = nan; k(bad) = nan;
 end
 
 function [x, y, gam, k] = ups_fwd(isnorth, lat, lon)
@@ -83,7 +86,11 @@ function [x, y, gam, k] = ups_fwd(isnorth, lat, lon)
 
   fe = 20e5; fn = 20e5; k0 = 0.994;
   [x, y, gam, k] = polarst_fwd(isnorth, lat, lon);
-  x = x * k0 + fe; y = y * k0 + fn; k = k * k0;
+  x = x * k0; y = y * k0; k = k * k0;
+  lim = (13 - 5 * isnorth) * 1e5;
+  bad = ~(abs(x) <= lim & abs(y) <= lim);
+  x = x + fe; y = y + fn;
+  x(bad) = nan; y(bad) = nan; gam(bad) = nan; k(bad) = nan;
 end
 
 function zone = StandardZone(lat, lon, setzone)
@@ -97,7 +104,7 @@ function zone = StandardZone(lat, lon, setzone)
     setzone = STANDARD;
   end
   zone = floor(setzone) + zeros(size(lat));
-  zone(zone > MAXZONE | zone < INVALID) = INVALID;
+  zone(~(zone >= INVALID & zone <= MAXZONE)) = INVALID;
   g = zone < MINZONE & zone ~= INVALID;
   c = abs(lat) <= 90 & abs(lon) <= 540;
   zone(g & ~c) = INVALID;

@@ -29,7 +29,8 @@ function height = geoidheight(latlong, geoidname, geoiddir)
 
   if nargin < 2
     geoidname = '';
-  elseif nargin < 3
+  end
+  if nargin < 3
     geoiddir = '';
   end
   height = geoid_height(latlong(:,1), latlong(:,2), geoidname, geoiddir);
