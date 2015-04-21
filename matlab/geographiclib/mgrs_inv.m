@@ -4,19 +4,20 @@ function [x, y, zone, isnorth, prec] = mgrs_inv(mgrs)
 %   [x, y, zone, isnorth] = MGRS_INV(mgrs)
 %   [x, y, zone, isnorth, prec] = MGRS_INV(mgrs)
 %
-%   converts MGRS grid references to UTM/UPS coordinates.  mgrs is either a
+%   converts MGRS grid references to the UTM/UPS system.  mgrs is either a
 %   2d character array of MGRS grid references (optionally padded on the
-%   right with spaces) or a cell array of character strings.  x, y are the
+%   right with spaces) or a cell array of character strings.  (x,y) are the
 %   easting and northing (in meters); zone is the UTM zone in [1,60] or 0
-%   for UPS; isnorth is true (false) for the northern (southern)
-%   hemisphere.  prec is the precision of the grid reference.  The position
-%   of the center of the grid square is returned.  To obtain the SW corner
+%   for UPS; isnorth is 1 (0) for the northern (southern) hemisphere.  prec
+%   is the precision of the grid reference.  For prec >= 0, the position of
+%   the center of the grid square is returned.  To obtain the SW corner
 %   subtract 0.5 * 10^(5-prec) from the easting and northing.  prec = -1
-%   means that the grid reference consists of a grid zone only.  Illegal
-%   MGRS references result in x = y = NaN, zone = -4, isnorth = false, prec
-%   = -2.
+%   means that the grid reference consists of a grid zone only; in this
+%   case some representative position in the grid zone is returned.
+%   Illegal MGRS references result in x = y = NaN, zone = -4, isnorth = 0,
+%   prec = -2.  The inverse operation is performed by mgrs_fwd.
 %
-%   See also MGRS_FWD.
+%   See also MGRS_FWD, UTMUPS_INV.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %

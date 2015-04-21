@@ -4,17 +4,29 @@ function mgrs = mgrs_fwd(x, y, zone, isnorth, prec)
 %   mgrs = MGRS_FWD(x, y, zone, isnorth)
 %   mgrs = MGRS_FWD(x, y, zone, isnorth, prec)
 %
-%   converts from UTM/UPS coordinates to MGRS.  x, y are the easting and
-%   northing (in meters); zone is the UTM zone, in [1,60] or 0 for UPS;
-%   isnorth is true (false) for the northern (southern) hemisphere.  prec
-%   gives the precision of the grid reference; the default is 5 giving 1m
-%   precision.  A value of -1 mean that only the grid zone is returned.
-%   The maximum allowed value of prec is 11 (denoting 1um precision).  The
-%   MGRS references are returned in a cell array of strings.  x, y, zone,
-%   isnorth, prec can be scalars or arrays of the same size.  Values that
-%   can't be converted to MGRS return the "invalid" string "INV".
+%   converts from the UTM/UPS system to MGRS.  (x,y) are the easting and
+%   northing (in meters); zone is the UTM zone, in [1,60], or 0 for UPS;
+%   isnorth is 1 (0) for the northern (southern) hemisphere.  prec in
+%   [-1,11] gives the precision of the grid reference; the default is 5
+%   giving 1m precision.  A value of -1 means that only the grid zone is
+%   returned.  The maximum allowed value of prec is 11 (denoting 1um
+%   precision).  The MGRS references are returned in a cell array of
+%   strings.  x, y, zone, isnorth, prec can be scalars or arrays of the
+%   same size.  Values that can't be converted to MGRS return the "invalid"
+%   string "INV" (for "invalid").  The inverse operation is performed by
+%   mgrs_inv.
 %
-%   See also MGRS_INV.
+%   The allowed values of (x,y) are
+%        UTM: x in [100 km, 900 km]
+%             y in [0 km, 9500 km] for northern hemisphere
+%             y in [1000 km, 10000 km] for southern hemisphere
+%        UPS: x and y in [1300 km, 2700 km] for northern hemisphere
+%             x and y in [800 km, 3200 km] for southern hemisphere
+%
+%   The ranges are 100 km more restrictive than for utmups_fwd and
+%   utmups_inv.
+%
+%   See also MGRS_INV, UTMUPS_FWD.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %

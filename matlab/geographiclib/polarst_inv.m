@@ -1,10 +1,26 @@
 function [lat, lon, gam, k] = polarst_inv(isnorth, x, y, ellipsoid)
-%POLARST_INV  Forward polar stereographic projection
+%POLARST_INV  Inverse polar stereographic projection
 %
 %   [lat, lon] = POLARST_INV(isnorth, x, y)
 %   [lat, lon, gam, k] = POLARST_INV(isnorth, x, y, ellipsoid)
 %
-%   See also POLARST_FWD.
+%   performs the inverse polar stereographic projection of points (x,y) to
+%   (lat,lon) using the north (south) as the center of projection depending
+%   on whether isnortp is 1 (0).  These input arguments can be scalars or
+%   arrays of equal size.  The ellipsoid vector is of the form [a, e],
+%   where a is the equatorial radius in meters, e is the eccentricity.  If
+%   ellipsoid is omitted, the WGS84 ellipsoid (more precisely, the value
+%   returned by defaultellipsoid) is used.  The forward projection is given
+%   by polarst_fwd.
+%
+%   gam and k give metric properties of the projection at (lat,lon); gam is
+%   the meridian convergence at the point and k is the scale.
+%
+%   lat, lon, gam are in degrees.  The projected coordinates x, y are in
+%   meters (more precisely the units used for the equatorial radius).  k is
+%   dimensionless.
+%
+%   See also POLARST_FWD, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %

@@ -1,15 +1,15 @@
 function [lat, lon, gam, k] = utmups_inv(x, y, zone, isnorth)
-%UTMUPS_INV  Forward UTM/UPS projection
+%UTMUPS_INV  Convert from UTM/UPS system
 %
 %   [lat, lon] = UTMUPS_INV(x, y, zone, isnorth)
 %   [lat, lon, gam, k] = UTMUPS_INV(x, y, zone, isnorth)
 %
-%   performs the inverse universal transverse Mercator projection of points
-%   (x,y) to (lat,lon) using zone and isnorth.  x and y can be scalars or
-%   arrays of equal size.  zone should be an integer in [1,60] and isnorth
-%   is a logical indicating whether the transformation should use the false
-%   northing for the northern (isnorth = true) or southern (isnorth =
-%   false) hemisphere.  The forward projection is given by utmups_fwd.
+%   convert to the UTM/UPS system to geographical coordinates, (lat,lon).
+%   The input is (x,y) = (easting,northing), the zone which is either the
+%   UTM zone or 0 for UPS , and a hemisphere selector, isnorth (0 for the
+%   southern hemisphere, 1 for the northern).  x, y, zone, and isnorth can
+%   be scalars or arrays of equal size.  The forward operation is performed
+%   by utmups_fwd.
 %
 %   gam and k give metric properties of the projection at (lat,lon); gam is
 %   the meridian convergence at the point and k is the scale.
@@ -17,26 +17,22 @@ function [lat, lon, gam, k] = utmups_inv(x, y, zone, isnorth)
 %   lat, lon, gam are in degrees.  The projected coordinates x, y are in
 %   meters.  k is dimensionless.
 %
-%   This implementation for the UTM projection is based on the series
-%   method described in
+%   The argument zone has the following meanings
+%        0, use UPS
+%        [1,60], use the corresponding UTM zone
+%       -4, an undefined zone
 %
-%     C. F. F. Karney, Transverse Mercator with an accuracy of a few
-%     nanometers, J. Geodesy 85(8), 475-485 (Aug. 2011);
-%     Addenda: http://geographiclib.sf.net/tm-addenda.html
+%   The allowed values of (x,y) are
+%        UTM: x in [0 km, 1000 km]
+%             y in [0 km, 9600 km] for northern hemisphere
+%             y in [900 km, 10000 km] for southern hemisphere
+%        UPS: x and y in [1200 km, 2800 km] for northern hemisphere
+%             x and y in [700 km, 3300 km] for southern hemisphere
 %
-%   This extends the series given by Krueger (1912) to sixth order in the
-%   flattening.  This is a substantially better series than that used by
-%   the MATLAB mapping toolbox.  In particular the errors in the projection
-%   are less than 5 nanometers withing 3900 km of the central meridian (and
-%   less than 1 mm within 7600 km of the central meridian).  The mapping
-%   can be continued accurately over the poles to the opposite meridian.
+%   UTMUPS_INV checks that (x,y) lie in the limits given above.  If these
+%   conditions don't hold (lat,lon), gam, k are converted to NaN.
 %
-%   This routine depends on the MATLAB File Exchange package "Geodesics on
-%   an ellipsoid of revolution":
-%
-%     http://www.mathworks.com/matlabcentral/fileexchange/39108
-%
-%   See also UTMUPS_FWD, UTM_INV, UPS_INV
+%   See also UTMUPS_FWD, TRANMERC_INV, POLARST_INV, MGRS_INV.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
@@ -62,10 +58,7 @@ function [lat, lon, gam, k] = utmups_inv(x, y, zone, isnorth)
 end
 
 function [lat, lon, gam, k] = utm_inv(zone, isnorth, x, y)
-%UTM_INV  Forward UTM projection
-%
-%   [lat, lon] = UTM_INV(zone, isnorth, x, y)
-%   [lat, lon, gam, k] = UTM_INV(zone, isnorth, x, y)
+%UTM_INV  Inverse UTM projection
 
   lon0 = -183 + 6 * floor(zone); lat0 = 0;
   fe = 5e5; fn = 100e5 * (1-isnorth); k0 = 0.9996;

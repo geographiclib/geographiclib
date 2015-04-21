@@ -1,16 +1,17 @@
 function [x, y, zone, isnorth, gam, k] = utmups_fwd(lat, lon, setzone)
-%UTMUPS_FWD  Forward UTM/UPS projection
+%UTMUPS_FWD  Convert to UTM/UPS system
 %
 %   [x, y, zone, isnorth] = UTMUPS_FWD(lat, lon)
 %   [x, y, zone, isnorth, gam, k] = UTMUPS_FWD(lat, lon, setzone)
 %
-%   performs the forward universal transverse Mercator projection of points
-%   (lat,lon) to (x,y) using zone and isnorth.  lat and lon can be scalars
-%   or arrays of equal size.  zone should be an integer in [1,60] and
-%   isnorth is a logical indicating whether the transformation should use
-%   the false northing for the northern (isnorth = true) or southern
-%   (isnorth = false) hemisphere.  The inverse projection is given by
-%   utmups_inv.
+%   convert from geographical coordinates, (lat,lon), to the UTM/UPS
+%   system.  The output is (x,y) = (easting,northing), zone which is either
+%   the UTM zone or 0 for UPS, and a hemisphere selector, isnorth (0 for
+%   the southern hemisphere, 1 for the northern).  If setzone = -1 (the
+%   default), the standard choice is made between UTM and UPS and, if UTM,
+%   the standard zone is picked (the Norway and Svalbard exceptions are
+%   honored).  lat, lon, and setzone can be scalars or arrays of equal
+%   size.  The inverse operation is performed by utmups_inv.
 %
 %   gam and k give metric properties of the projection at (lat,lon); gam is
 %   the meridian convergence at the point and k is the scale.
@@ -18,26 +19,29 @@ function [x, y, zone, isnorth, gam, k] = utmups_fwd(lat, lon, setzone)
 %   lat, lon, gam are in degrees.  The projected coordinates x, y are in
 %   meters.  k is dimensionless.
 %
-%   This implementation for the UTM projection is based on the series
-%   method described in
+%   The optional argument, setzone, allows the UTM/UPS and zone
+%   assignment to be overridden.  The choices are
+%        0, use UPS
+%        [1,60], use the corresponding UTM zone
+%       -1, use the standard assigment (the default)
+%       -2, use closest UTM zone
+%       -4, an undefined zone
 %
-%     C. F. F. Karney, Transverse Mercator with an accuracy of a few
-%     nanometers, J. Geodesy 85(8), 475-485 (Aug. 2011);
-%     Addenda: http://geographiclib.sf.net/tm-addenda.html
+%   The allowed values of (x,y) are
+%        UTM: x in [0 km, 1000 km]
+%             y in [0 km, 9600 km] for northern hemisphere
+%             y in [900 km, 10000 km] for southern hemisphere
+%        UPS: x and y in [1200 km, 2800 km] for northern hemisphere
+%             x and y in [700 km, 3300 km] for southern hemisphere
 %
-%   This extends the series given by Krueger (1912) to sixth order in the
-%   flattening.  This is a substantially better series than that used by
-%   the MATLAB mapping toolbox.  In particular the errors in the projection
-%   are less than 5 nanometers withing 3900 km of the central meridian (and
-%   less than 1 mm within 7600 km of the central meridian).  The mapping
-%   can be continued accurately over the poles to the opposite meridian.
+%   The ranges are 100 km more restrictive than for mgrs_fwd.
 %
-%   This routine depends on the MATLAB File Exchange package "Geodesics on
-%   an ellipsoid of revolution":
+%   UTMUPS_FWD checks its arguments and requires that lat in [-90deg,90deg]
+%   and lon in [-540deg,540deg] and that (x,y) lie in the limits given
+%   above.  If these conditions don't hold (x,y), gam, k are converted to
+%   NaN, zone to -4 and isnorthp to 0.
 %
-%     http://www.mathworks.com/matlabcentral/fileexchange/39108
-%
-%   See also GEODPROJ, UTM_INV, TRANMERC_FWD.
+%   See also UTMUPS_INV, TRANMERC_FWD, POLARST_FWD, MGRS_FWD.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
@@ -67,9 +71,6 @@ end
 
 function [x, y, gam, k] = utm_fwd(zone, isnorth, lat, lon)
 %UTM_FWD  Forward UTM projection
-%
-%   [x, y] = UTM_FWD(zone, isnorth, lat, lon)
-%   [x, y, gam, k] = UTM_FWD(zone, isnorth, lat, lon)
 
   lon0 = -183 + 6 * floor(zone); lat0 = 0;
   bad = ~(abs(mod(lon - lon0 + 180, 360) - 180) <= 60);
@@ -96,13 +97,9 @@ end
 function zone = StandardZone(lat, lon, setzone)
   INVALID = -4;
   UTM = -2;
-  STANDARD = -1;
   MINZONE = 0;
   MAXZONE = 60;
   UPS = 0;
-  if nargin < 3
-    setzone = STANDARD;
-  end
   zone = floor(setzone) + zeros(size(lat));
   zone(~(zone >= INVALID & zone <= MAXZONE)) = INVALID;
   g = zone < MINZONE & zone ~= INVALID;

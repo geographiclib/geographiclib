@@ -10,7 +10,7 @@
 %   tranmerc_fwd     - Forward transverse Mercator projection
 %   tranmerc_inv     - Inverse transverse Mercator projection
 %   polarst_fwd      - Forward polar stereographic projection
-%   polarst_inv      - Forward polar stereographic projection
+%   polarst_inv      - Inverse polar stereographic projection
 %   eqdazim_fwd      - Forward azimuthal equidistant projection
 %   eqdazim_inv      - Inverse azimuthal equidistant projection
 %   cassini_fwd      - Forward Cassini-Soldner projection
@@ -19,8 +19,8 @@
 %   gnomonic_inv     - Inverse ellipsoidal gnomonic projection
 %
 % Grid systems
-%   utmups_fwd       - Forward UTM/UPS projection
-%   utmups_inv       - Forward UTM/UPS projection
+%   utmups_fwd       - Convert to UTM/UPS system
+%   utmups_inv       - Convert from UTM/UPS system
 %   mgrs_fwd         - Convert UTM/UPS coordinates to MGRS
 %   mgrs_inv         - Convert MGRS to UTM/UPS coordinates
 %
