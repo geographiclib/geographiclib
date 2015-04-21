@@ -17,25 +17,24 @@ function [X, Y, Z, M] = geocent_fwd(lat, lon, h, ellipsoid)
 %   unit vector in local cartesian coordinates (east, north, up) by M
 %   transforms the vector to geocentric coordinates.
 %
-%   See also GEOCENT_INV.
+%   See also GEOCENT_INV, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if nargin < 2, error('Too few input arguments'), end
+  narginchk(2, 4)
   if nargin < 3, h = 0; end
   if nargin < 4, ellipsoid = defaultellipsoid; end
   try
-    z = lat + lon + h;
-    z = zeros(size(z));
-    lat = lat + z; lon = lon + z; h = h + z;
-  catch err
+    z = zeros(size(lat + lon + h));
+  catch
     error('lat, lon, h have incompatible sizes')
   end
   if length(ellipsoid(:)) ~= 2
     error('ellipsoid must be a vector of size 2')
   end
+  lat = lat + z; lon = lon + z; h = h + z;
 
   degree = pi/180;
   a = ellipsoid(1);

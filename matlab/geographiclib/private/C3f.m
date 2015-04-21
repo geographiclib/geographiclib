@@ -1,8 +1,8 @@
 function C3 = C3f(epsi, C3x)
 %C3F  Evaluate C_3
 %
-%   C3 = C3F(EPSI, C3X) evaluates C_{3,l} using Eq. (25) and the
-%   coefficient vector C3X.  EPSI is a K x 1 array.  C3X is a 1 x 15 array.
+%   C3 = C3F(epsi, C3x) evaluates C_{3,l} using Eq. (25) and the
+%   coefficient vector C3x.  epsi is a K x 1 array.  C3x is a 1 x 15 array.
 %   C3 is a K x 5 array.
 
   nC3 = 6;

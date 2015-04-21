@@ -1,8 +1,8 @@
 function C4x = C4coeff(n)
 %C4COEFF  Evaluate coefficients for C_4
 %
-%   C4x = C4COEFF(N) evaluates the coefficients of epsilon^l in expansion
-%   of the area (Eq. (65) expressed in terms of n and epsi).  N is a
+%   C4x = C4COEFF(n) evaluates the coefficients of epsilon^l in expansion
+%   of the area (Eq. (65) expressed in terms of n and epsi).  n is a
 %   scalar.  C4x is a 1 x 21 array.
 
   nC4 = 6;

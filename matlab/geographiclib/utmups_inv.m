@@ -38,11 +38,10 @@ function [lat, lon, gam, k] = utmups_inv(x, y, zone, isnorth)
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if nargin < 4, error('Too few input arguments'), end
+  narginchk(4, 4)
   try
-    Z = x + y + zone + isnorth;
-    Z = zeros(size(Z));
-  catch err
+    Z = zeros(size(x + y + zone + isnorth));
+  catch
     error('x, y, zone, isnorth have incompatible sizes')
   end
   x = x + Z; y = y + Z;

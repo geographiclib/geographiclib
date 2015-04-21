@@ -24,27 +24,25 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 %   geoddistance solves the equivalent geodesic problem and usually this is
 %   preferable to using GEDISTANCE.
 %
-%   See also GEDOC, GERECKON, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
-%     GEODDISTANCE, GEODRECKON.
+%   See also GEDOC, GERECKON, DEFAULTELLIPSOID, GEODDISTANCE, GEODRECKON.
 
 % Copyright (c) Charles Karney (2014-2015) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if nargin < 4, error('Too few input arguments'), end
+  narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
   try
-    Z = lat1 + lon1 + lat2 + lon2;
-    S = size(Z);
-    Z = zeros(S);
-    lat1 = lat1 + Z; lon1 = lon1 + Z;
-    lat2 = lat2 + Z; lon2 = lon2 + Z;
-  catch err
+    S = size(lat1 + lon1 + lat2 + lon2);
+  catch
     error('lat1, lon1, s12, azi1 have incompatible sizes')
   end
   if length(ellipsoid(:)) ~= 2
     error('ellipsoid must be a vector of size 2')
   end
+  Z = zeros(S);
+  lat1 = lat1 + Z; lon1 = lon1 + Z;
+  lat2 = lat2 + Z; lon2 = lon2 + Z;
 
   degree = pi/180;
   tiny = sqrt(realmin);

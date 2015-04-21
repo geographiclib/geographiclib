@@ -1,9 +1,9 @@
 function M = GeoRotation(sphi, cphi, slam, clam)
 %GEOROTATION The rotation from geodetic to geocentric
 %
-%   M = GeoRotation(SPHI, CPHI, SLAM, CLAM)
+%   M = GeoRotation(sphi, cphi, slam, clam)
 %
-%   SPHI, CPHI, SLAM, CLAM must all have the same shape, S.  M has the shape
+%   sphi, cphi, slam, clam must all have the same shape, S.  M has the shape
 %   [3, 3, S].
 
 % This rotation matrix is given by the following quaternion operations

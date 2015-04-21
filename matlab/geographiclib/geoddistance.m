@@ -53,21 +53,20 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 % with scalar arguments.  The biggest change was to eliminate the branching
 % to allow a vectorized solution.
 
-  if nargin < 4, error('Too few input arguments'), end
+  narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
   try
-    Z = lat1 + lon1 + lat2 + lon2;
-    S = size(Z);
-    Z = zeros(S);
-    lat1 = lat1 + Z; lon1 = lon1 + Z;
-    lat2 = lat2 + Z; lon2 = lon2 + Z;
-    Z = Z(:);
-  catch err
+    S = size(lat1 + lon1 + lat2 + lon2);
+  catch
     error('lat1, lon1, s12, azi1 have incompatible sizes')
   end
   if length(ellipsoid(:)) ~= 2
     error('ellipsoid must be a vector of size 2')
   end
+  Z = zeros(S);
+  lat1 = lat1 + Z; lon1 = lon1 + Z;
+  lat2 = lat2 + Z; lon2 = lon2 + Z;
+  Z = Z(:);
 
   degree = pi/180;
   tiny = sqrt(realmin);

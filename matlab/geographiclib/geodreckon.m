@@ -79,10 +79,10 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 % with array arguments are identical to those obtained with multiple calls
 % with scalar arguments.
 
-  if nargin < 4, error('Too few input arguments'), end
+  narginchk(4, 6)
   try
     S = size(lat1 + lon1 + s12_a12 + azi1);
-  catch err
+  catch
     error('lat1, lon1, s12, azi1 have incompatible sizes')
   end
   if nargin <= 4

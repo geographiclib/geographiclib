@@ -34,18 +34,17 @@ function [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y, ellipsoid)
 %   less than 1 mm within 7600 km of the central meridian).  The mapping
 %   can be continued accurately over the poles to the opposite meridian.
 %
-%   See also GEODPROJ, TRANMERC_FWD, GEODRECKON, DEFAULTELLIPSOID.
+%   See also, TRANMERC_FWD, UTMUPS_FWD, UTMUPS_INV, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if nargin < 4, error('Too few input arguments'), end
+  narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
   try
-    Z = lat0 + lon0 + x + y;
-    Z = zeros(size(Z));
-  catch err
+    Z = zeros(size(lat0 + lon0 + x + y));
+  catch
     error('lat0, lon0, x, y have incompatible sizes')
   end
   if length(ellipsoid(:)) ~= 2

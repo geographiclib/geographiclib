@@ -1,5 +1,9 @@
 function filename = geoid_file(name, dir)
-  if nargin < 1 || isempty(name);
+%GEOID_FILE  Return filename for geoid data
+%
+%   filename = geoid_file(name, dir).  See the documentation on geoid_load.
+
+  if nargin < 1 || isempty(name)
     name = getenv('GEOGRAPHICLIB_GEOID_NAME');
     if isempty(name)
       name = 'egm96-5';
@@ -16,8 +20,8 @@ function filename = geoid_file(name, dir)
           dir = '/usr/local/share/GeographicLib';
         end
       end
-      dir = [dir '/geoids'];
+      dir = [dir, '/geoids'];
     end
   end
-  filename = [dir '/' name '.pgm'];
+  filename = [dir, '/', name, '.pgm'];
 end

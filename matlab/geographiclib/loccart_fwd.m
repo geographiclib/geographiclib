@@ -19,22 +19,18 @@ function [x, y, z, M] = loccart_fwd(lat0, lon0, h0, lat, lon, h, ellipsoid)
 %   transforms the vector to local cartesian coordinates at (lat0, lon0,
 %   h0).
 %
-%   See also LOCCART_INV.
+%   See also LOCCART_INV, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.42.
 
+  narginchk(5, 7)
   if nargin < 6, h = 0; end
   if nargin < 7, ellipsoid = defaultellipsoid; end
   try
     S = size(lat + lon + h);
-    num = prod(S);
-    Z = zeros(num, 1);
-    lat = lat(:) + Z;
-    lon = lon(:) + Z;
-    h = h(:) + Z;
-  catch err
+  catch
     error('lat, lon, h have incompatible sizes')
   end
   if ~(isscalar(lat0) && isscalar(lon0) && isscalar(h0))
@@ -43,6 +39,11 @@ function [x, y, z, M] = loccart_fwd(lat0, lon0, h0, lat, lon, h, ellipsoid)
   if length(ellipsoid(:)) ~= 2
     error('ellipsoid must be a vector of size 2')
   end
+  num = prod(S);
+  Z = zeros(num, 1);
+  lat = lat(:) + Z;
+  lon = lon(:) + Z;
+  h = h(:) + Z;
   [X0, Y0, Z0, M0] = geocent_fwd(lat0, lon0, h0, ellipsoid);
   [X , Y , Z , M ] = geocent_fwd(lat , lon , h , ellipsoid);
   r = [X-X0, Y-Y0, Z-Z0] * M0;

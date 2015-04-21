@@ -8,13 +8,13 @@ function mgrs = mgrs_fwd(x, y, zone, isnorth, prec)
 %   northing (in meters); zone is the UTM zone, in [1,60], or 0 for UPS;
 %   isnorth is 1 (0) for the northern (southern) hemisphere.  prec in
 %   [-1,11] gives the precision of the grid reference; the default is 5
-%   giving 1m precision.  A value of -1 means that only the grid zone is
-%   returned.  The maximum allowed value of prec is 11 (denoting 1um
-%   precision).  The MGRS references are returned in a cell array of
-%   strings.  x, y, zone, isnorth, prec can be scalars or arrays of the
-%   same size.  Values that can't be converted to MGRS return the "invalid"
-%   string "INV" (for "invalid").  The inverse operation is performed by
-%   mgrs_inv.
+%   giving 1 m precision.  prec = 0 corresponds to 100 km precision.  A
+%   value of -1 means that only the grid zone is returned.  The maximum
+%   allowed value of prec is 11 (denoting 1 um precision).  The MGRS
+%   references are returned in a cell array of strings.  x, y, zone,
+%   isnorth, prec can be scalars or arrays of the same size.  Values that
+%   can't be converted to MGRS return the "invalid" string, "INV".  The
+%   inverse operation is performed by mgrs_inv.
 %
 %   The allowed values of (x,y) are
 %        UTM: x in [100 km, 900 km]
@@ -32,14 +32,13 @@ function mgrs = mgrs_fwd(x, y, zone, isnorth, prec)
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if nargin < 5
-    prec = 5;
-  end
+  narginchk(4, 5)
+  if nargin < 5, prec = 5; end
   zone = floor(zone);
   prec = floor(prec);
   try
     s = size(x + y + zone + isnorth + prec);
-  catch err
+  catch
     error('x, y, zone, isnorth, prec have incompatible sizes')
   end
   num = prod(s);
@@ -48,10 +47,10 @@ function mgrs = mgrs_fwd(x, y, zone, isnorth, prec)
   x = x(:) + Z; y = y(:) + Z; zone = zone(:) + Z;
   isnorth = isnorth(:) + Z; prec = prec(:) + Z;
   prec(~(prec >= -1 & prec <= 11)) = -2;
-  mgrs = repmat('INV',num,1);
+  mgrs = repmat('INV', num, 1);
   if ~any(prec >= -1), mgrs = reshape(cellstr(mgrs), s); return, end
   maxprec = max(prec);
-  mgrs = [mgrs, repmat(' ',num, 2 + 2*maxprec)];
+  mgrs = [mgrs, repmat(' ', num, 2 + 2*maxprec)];
   minprec = min(prec(prec >= -1));
   for p = minprec:maxprec
     in = prec == p;
@@ -67,8 +66,8 @@ end
 function mgrs = mgrs_fwd_p(x, y, zone, northp, prec)
   num = size(x, 1);
   delta = 10e-9;
-  mgrs = repmat('INV',num,1);
-  mgrs = [mgrs, repmat(' ',num, 2 + 2*prec)];
+  mgrs = repmat('INV', num, 1);
+  mgrs = [mgrs, repmat(' ', num, 2 + 2*prec)];
   utm = zone >= 1 & zone <= 60;
   y(utm & ~northp) = y(utm & ~northp) - 100e5;
   northp(utm) = 1;

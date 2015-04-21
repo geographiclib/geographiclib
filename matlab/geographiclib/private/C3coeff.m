@@ -1,8 +1,8 @@
 function C3x = C3coeff(n)
 %C3COEFF  Evaluate coefficients for C_3
 %
-%   C3x = C3COEFF(N) evaluates the coefficients of epsilon^l in Eq. (25).
-%   N is a scalar.  C3x is a 1 x 15 array.
+%   C3x = C3COEFF(n) evaluates the coefficients of epsilon^l in Eq. (25).
+%   n is a scalar.  C3x is a 1 x 15 array.
 
   nC3 = 6;
   nC3x = (nC3 * (nC3 - 1)) / 2;

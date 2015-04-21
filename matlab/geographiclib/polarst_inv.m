@@ -20,17 +20,17 @@ function [lat, lon, gam, k] = polarst_inv(isnorth, x, y, ellipsoid)
 %   meters (more precisely the units used for the equatorial radius).  k is
 %   dimensionless.
 %
-%   See also POLARST_FWD, DEFAULTELLIPSOID.
+%   See also POLARST_FWD, UTMUPS_FWD, UTMUPS_INV, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if nargin < 3, error('Too few input arguments'), end
+  narginchk(3, 4)
   if nargin < 4, ellipsoid = defaultellipsoid; end
   try
     [~] = isnorth + x + y;
-  catch err
+  catch
     error('isnorth, x, y have incompatible sizes')
   end
   if length(ellipsoid(:)) ~= 2

@@ -1,8 +1,8 @@
 function d = AngDiff(x, y)
 %ANGDIFF  Compute angle difference accurately
 %
-%   D = ANGDIFF(X, Y) computes Y - X, reduces the result to (-180,180] and
-%   rounds the result.  X and Y must be in [-180,180].  X and Y can be any
+%   d = ANGDIFF(x, y) computes y - x, reduces the result to (-180,180] and
+%   rounds the result.  x and y must be in [-180,180].  x and y can be any
 %   compatible shapes.
 
   [d, t] = sumx(-x, y);

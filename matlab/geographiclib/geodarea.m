@@ -37,7 +37,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if nargin < 2, error('Too few input arguments'), end
+  narginchk(2, 3)
   if nargin < 3, ellipsoid = defaultellipsoid; end
   if ~isequal(size(lats), size(lons))
     error('lats, lons have incompatible sizes')
@@ -83,7 +83,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
     P(k) = accumulator(s12(m0(k):m1(k)));
     [As, At] = accumulator(S12(m0(k):m1(k)));
     crossings = sum(cross(m0(k):m1(k)));
-    if mod(crossings, 2) ~= 0,
+    if mod(crossings, 2) ~= 0
       [As, At] = accumulator( ((As < 0) * 2 - 1) * area0 / 2, As, At);
     end
     As = -As; At = -At;
@@ -120,7 +120,7 @@ function [s, t] = accumulator(x, s, t)
   if nargin < 3, t = 0; end
   if nargin < 2, s = 0; end
 
-  for y = x(:)',
+  for y = x(:)'
     % Here's Shewchuk's solution...
     [z, u] = sumx(y, t);
     [s, t] = sumx(z, s);

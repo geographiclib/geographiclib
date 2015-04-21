@@ -1,7 +1,7 @@
 function A2m1 = A2m1f(epsi)
 %A2M1F  Evaluate A_2 - 1
 %
-%   A2M1 = A2M1F(EPSI) evaluates A_2 - 1 using Eq. (42).  EPSI and A2M1 are
+%   A2m1 = A2M1F(epsi) evaluates A_2 - 1 using Eq. (42).  epsi and A2m1 are
 %   K x 1 arrays.
 
   eps2 = epsi.^2;

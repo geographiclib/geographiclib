@@ -175,7 +175,8 @@ set_tests_properties (GeodSolve12 GeodSolve13
 if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
   # mpfr (nan == 0 is true) and boost-quadmath (nan > 0 is true) have
   # bugs in handling nans, so skip this test.  Problems reported on
-  # 2015-03-31, https://svn.boost.org/trac/boost/ticket/11159
+  # 2015-03-31, https://svn.boost.org/trac/boost/ticket/11159.  MFPR C++
+  # version 3.6.2 fixes its nan problem.
   #
   # Check fix for inverse ignoring lon12 = nan
   add_test (NAME GeodSolve14 COMMAND GeodSolve -i --input-string "0 0 1 nan")

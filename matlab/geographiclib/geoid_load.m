@@ -14,15 +14,18 @@ function geoid = geoid_load(name, dir)
 %   The first part of the name is the geoid model.  The second part gives
 %   the resolution of the gridded data (in arc-seconds).
 %
-%   The geoid can be overridden by specifying geoidname.  If geoidname is
-%   not specified, the environment variable GEOGRAPHICLIB_GEOID_NAME is
-%   used; if this is not defined then egm96-5 is used.  geoid_height looks
-%   in the directory geoiddir for the geoid data; if this is not specified,
-%   it uses the environment variable GEOGRAPHICLIB_GEOID_PATH; if this is
-%   not defined, it appends "/geoids" to the environment variable
-%   GEOGRAPHICLIB_DATA; finally, it tries the default directory names
-%   /usr/local/share/GeographicLib/geoids or
-%   C:/ProgramData/GeographicLib/geoids.
+%   If geoidname is not specified (or is empty), the environment variable
+%   GEOGRAPHICLIB_GEOID_NAME is used; if this is not defined then egm96-5
+%   is used.  geoid_height looks in the directory geoiddir for the geoid
+%   data; if this is not specified (or is empty), it uses the environment
+%   variable GEOGRAPHICLIB_GEOID_PATH; if this is not defined, it appends
+%   "/geoids" to the environment variable GEOGRAPHICLIB_DATA; finally, if
+%   GEOGRAPHICLIB_DATA is not defined, it tries the default directory names
+%   /usr/local/share/GeographicLib/geoids (for non-Windows systems) or
+%   C:/ProgramData/GeographicLib/geoids (for Windows systems).
+%
+%   The geoid data is loaded from the file obtained by
+%   geoiddir/geoidname.pgm
 %
 %   The returned geoid can be passed to geoid_height to determine the
 %   height of the geoid.

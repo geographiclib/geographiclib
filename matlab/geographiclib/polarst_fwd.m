@@ -20,17 +20,17 @@ function [x, y, gam, k] = polarst_fwd(isnorth, lat, lon, ellipsoid)
 %   meters (more precisely the units used for the equatorial radius).  k is
 %   dimensionless.
 %
-%   See also POLARST_INV, DEFAULTELLIPSOID.
+%   See also POLARST_INV, UTMUPS_FWD, UTMUPS_INV, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if nargin < 3, error('Too few input arguments'), end
+  narginchk(3, 4)
   if nargin < 4, ellipsoid = defaultellipsoid; end
   try
     [~] = isnorth + lat + lon;
-  catch err
+  catch
     error('isnorth, lat, lon have incompatible sizes')
   end
   if length(ellipsoid(:)) ~= 2
@@ -48,10 +48,10 @@ function [x, y, gam, k] = polarst_fwd(isnorth, lat, lon, ellipsoid)
   lat = lat .* isnorth;
   phi = lat * degree;
   lam = AngNormalize(lon) .* degree;
-  tau  = tan(phi); tau(abs(lat) == 90) = sign(lat(abs(lat) == 90)) * overflow;
+  tau = tan(phi); tau(abs(lat) == 90) = sign(lat(abs(lat) == 90)) * overflow;
   taup = taupf(tau, e2);
   rho = hypot(1, taup) + abs(taup);
-  rho(taup >= 0) = cvmgt(1./rho(taup >= 0), 0, lat ~= 90);
+  rho(taup >= 0) = cvmgt(1./rho(taup >= 0), 0, lat(taup >= 0) ~= 90);
   rho = rho * (2 * a / c);
   lon = AngNormalize(lon);
   x = rho .* sin(lam); x(lon == -180) = 0;

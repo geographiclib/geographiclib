@@ -80,7 +80,7 @@ function geodproj
 %       e = sqrt(f * (2 - f))
 %       f = e^2 / (1 + sqrt(1 - e^2))
 %
-%   (The functions ECC2FLAT and FLAT2ECC implement these conversions.)  For
+%   (The functions ecc2flat and flat2ecc implement these conversions.)  For
 %   a sphere, set e = 0; for a prolate ellipsoid (b > a), specify e as a
 %   pure imaginary number.
 %

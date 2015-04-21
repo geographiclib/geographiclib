@@ -1,12 +1,12 @@
 function y = SinCosSeries(sinp, sinx, cosx, c)
 %SINSCOSERIES  Evaluate a sine or cosine series using Clenshaw summation
 %
-%   Y = SINCOSSERIES(SINP, SINX, COSX, C) evaluate
+%   y = SINCOSSERIES(sinp, sinx, cosx, c) evaluate
 %     y = sum(c[i] * sin( 2*i    * x), i, 1, n), if  sinp
 %     y = sum(c[i] * cos((2*i-1) * x), i, 1, n), if ~sinp
 %
-%   where n is the size of C.  x is given via its sine and cosine in SINX
-%   and COSX.  SINP is a scalar.  SINX, COSX, and Y are K x 1 arrays.  C is
+%   where n is the size of c.  x is given via its sine and cosine in sinx
+%   and cosx.  sinp is a scalar.  sinx, cosx, and y are K x 1 arrays.  c is
 %   a K x N array.
 
   if isempty(sinx), y = []; return, end

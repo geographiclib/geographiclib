@@ -18,15 +18,10 @@ function h = geoid_height(lat, lon, geoidname, geoiddir)
 %   The first part of the name is the geoid model.  The second part gives
 %   the resolution of the gridded data (in arc-seconds).
 %
-%   The geoid can be overridden by specifying geoidname.  If geoidname is
-%   not specified, the environment variable GEOGRAPHICLIB_GEOID_NAME is
-%   used; if this is not defined then egm96-5 is used.  geoid_height looks
-%   in the directory geoiddir for the geoid data; if this is not specified,
-%   it uses the environment variable GEOGRAPHICLIB_GEOID_PATH; if this is
-%   not defined, it appends "/geoids" to the environment variable
-%   GEOGRAPHICLIB_DATA; finally, it tries the default directory names
-%   /usr/local/share/GeographicLib/geoids or
-%   C:/ProgramData/GeographicLib/geoids.
+%   By default the egm96-5 geoid is used.  This can be overridden by
+%   specifying geoidname.  The geoiddir argument overrides the default
+%   directory for the model.  See the documentation on geoid_load for how
+%   these arguments are interpreted.
 %
 %   When geoid_height is invoked with a particular geoidname, the geoid
 %   data is loaded from disk and cached.  A subsequent invocation of
@@ -56,6 +51,7 @@ function h = geoid_height(lat, lon, geoidname, geoiddir)
     saved_geoid = [];
     return
   end
+  narginchk(2, 4)
   if nargin == 3 && isstruct(geoidname)
     h = geoid_height_int(lat, lon, geoidname);
   else
@@ -75,7 +71,12 @@ end
 
 function height = geoid_height_int(lat, lon, geoid, cubic)
   if nargin < 4, cubic = true; end
-  s = size(lat + lon); num = prod(s); Z = zeros(num,1);
+  try
+    s = size(lat + lon);
+  catch
+    error('lat, lon have incompatible sizes')
+  end
+  num = prod(s); Z = zeros(num,1);
   lat = lat(:) + Z; lon = lon(:) + Z;
   h = geoid.h; w = geoid.w;
   % lat is in [0, h]

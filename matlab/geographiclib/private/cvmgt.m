@@ -1,13 +1,13 @@
 function z = cvmgt(x, y, p)
 %CVMGT  Conditional merge of two vectors
 %
-%   Z = CVMGT(X, Y, P) return a vector Z whose elements are X if P is true
-%   and Y otherwise.  P, X, and Y should be the same shape except that X
-%   and Y may be scalars.  CVMGT stands for conditional vector merge true
+%   z = CVMGT(x, y, p) return a vector z whose elements are x if p is true
+%   and y otherwise.  p, x, and y should be the same shape except that x
+%   and y may be scalars.  CVMGT stands for conditional vector merge true
 %   (an intrinsic function for the Cray fortran compiler).  It implements
 %   the C++ statement
 %
-%     Z = P ? X : Y;
+%     z = p ? x : y;
 
   z = zeros(size(p));
   if isscalar(x)

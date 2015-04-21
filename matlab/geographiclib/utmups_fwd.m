@@ -47,12 +47,11 @@ function [x, y, zone, isnorth, gam, k] = utmups_fwd(lat, lon, setzone)
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if nargin < 2, error('Too few input arguments'), end
+  narginchk(2, 3)
   if nargin < 3, setzone = -1; end
   try
-    Z = lat + lon + setzone;
-    Z = zeros(size(Z));
-  catch err
+    Z = zeros(size(lat + lon + setzone));
+  catch
     error('lat, lon, setzone have incompatible sizes')
   end
   lat = lat + Z; lon = lon + Z;

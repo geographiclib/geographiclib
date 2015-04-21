@@ -27,11 +27,11 @@ function [lat, lon, azi, rk] = cassini_inv(lat0, lon0, x, y, ellipsoid)
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if nargin < 4, error('Too few input arguments'), end
+  narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
   try
     [~] = lat0 + lon0 + x + y;
-  catch err
+  catch
     error('lat0, lon0, x, y have incompatible sizes')
   end
 

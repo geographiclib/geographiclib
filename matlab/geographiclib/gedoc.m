@@ -113,7 +113,7 @@ function gedoc
 %   The restriction on e above arises because the meridian distance is
 %   given as a series expansion in the third flattening.  The exact
 %   distance (valid for any e) can be expressed in terms of the elliptic
-%   integral of the second kind .
+%   integral of the second kind.
 %
 %   See also GEDISTANCE, GERECKON, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
 %     GEODDISTANCE, GEODRECKON.

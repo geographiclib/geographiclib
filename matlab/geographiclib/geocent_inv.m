@@ -15,24 +15,23 @@ function [lat, lon, h, M] = geocent_inv(X, Y, Z, ellipsoid)
 %   vector in geocentric coordinates by the transpose of M transforms the
 %   vector to local cartesian coordinates (east, north, up).
 %
-%   See also GEOCENT_FWD.
+%   See also GEOCENT_FWD, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if nargin < 3, error('Too few input arguments'), end
+  narginchk(3, 4)
   if nargin < 4, ellipsoid = defaultellipsoid; end
   try
-    z = X + Y + Z;
-    z = zeros(size(z));
-    X = X + z; Y = Y + z; Z = Z + z;
-  catch err
+    z = zeros(size(X + Y + Z));
+  catch
     error('X, Y, Z have incompatible sizes')
   end
   if length(ellipsoid(:)) ~= 2
     error('ellipsoid must be a vector of size 2')
   end
+  X = X + z; Y = Y + z; Z = Z + z;
 
   degree = pi/180;
   a = ellipsoid(1);

@@ -1,8 +1,8 @@
 function y = AngRound(x)
 %ANGROUND  Round tiny values so that tiny values become zero.
 %
-%   Y = ANGROUND(X) rounds X by adding and subtracting 1/16 to it if it is
-%   small.  X and Y can be any shape.
+%   y = ANGROUND(x) rounds x by adding and subtracting 1/16 to it if it is
+%   small.  x can be any shape.
 
   z = 1/16;
   y = abs(x);

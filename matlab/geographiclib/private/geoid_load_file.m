@@ -1,7 +1,9 @@
 function geoid = geoid_load_file(filename)
+%GEOID_LOAD_FILE  Loads geoid data from filename
+
   geoid.file = filename;
   fid = fopen(geoid.file, 'r');
-  if fid == -1, error(['Cannot open ' geoid.file]),  end
+  if fid == -1, error(['Cannot open ', geoid.file]),  end
   done = 0;
   for i = 1:16
     if done == 3, break, end

@@ -1,9 +1,9 @@
 function e = flat2ecc(f)
 %FLAT2ECC   Convert flattening to eccentricity
 %
-%  E = FLAT2ECC(F)
+%   e = FLAT2ECC(f)
 %
-%  returns the eccentricity of an ellipsoid given the flattening.
+%   returns the eccentricity of an ellipsoid given the flattening.
 %
 %   See also ECC2FLAT.
 

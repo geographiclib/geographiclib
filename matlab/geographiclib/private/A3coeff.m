@@ -1,8 +1,8 @@
 function A3x = A3coeff(n)
 %A3COEFF  Evaluate coefficients for A_3
 %
-%   A3x = A3COEFF(N) evaluates the coefficients of epsilon^l in Eq. (24).  N
-%   is a scalar.  A3x is a 1 x 6 array.
+%   A3x = A3COEFF(n) evaluates the coefficients of epsilon^l in Eq. (24).
+%   n is a scalar.  A3x is a 1 x 6 array.
 
   nA3 = 6;
   A3x = zeros(1, nA3);

@@ -46,11 +46,11 @@ function [x, y, azi, rk] = gnomonic_fwd(lat0, lon0, lat, lon, ellipsoid)
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if nargin < 4, error('Too few input arguments'), end
+  narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
   try
     [~] = lat0 + lon0 + lat + lon;
-  catch err
+  catch
     error('lat0, lon0, lat, lon have incompatible sizes')
   end
 

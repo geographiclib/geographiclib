@@ -1,9 +1,9 @@
 function C4 = C4f(epsi, C4x)
 %C4F  Evaluate C_4
 %
-%   C4 = C4F(EPSI, C4X) evaluates C_{4,l} in the expansion for the area
+%   C4 = C4F(epsi, C4x) evaluates C_{4,l} in the expansion for the area
 %   (Eq. (65) expressed in terms of n and epsi) using the coefficient
-%   vector C4X.  EPSI is a K x 1 array.  C4X is a 1 x 21 array.  C4 is a
+%   vector C4x.  epsi is a K x 1 array.  C4x is a 1 x 21 array.  C4 is a
 %   K x 6 array.
 
   nC4 = 6;

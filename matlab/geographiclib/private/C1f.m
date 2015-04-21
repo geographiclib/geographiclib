@@ -1,7 +1,7 @@
 function C1 = C1f(epsi)
 %C1F  Evaluate C_{1,k}
 %
-%   C1 = C1F(EPSI) evaluates C_{1,l} using Eq. (18).  EPSI is a K x 1
+%   C1 = C1F(epsi) evaluates C_{1,l} using Eq. (18).  epsi is a K x 1
 %   array and C1 is a K x 6 array.
 
   nC1 = 6;
