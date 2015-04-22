@@ -21,7 +21,7 @@ namespace GeographicLib {
   using namespace std;
 
   template<typename T> T Math::eatanhe(T x, T es)  {
-    return es > T(0) ? es * atanh(es * x) : es * atan(es * x);
+    return es > T(0) ? es * atanh(es * x) : -es * atan(es * x);
   }
 
   template<typename T> T Math::taupf(T tau, T es) {

@@ -184,6 +184,16 @@ if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
     PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
 endif()
 
+# Initial implementation of Math::eatanhe was wrong for e^2 < 0.  This
+# checks that this is fixed.
+add_test (NAME GeodSolve15 COMMAND
+  GeodSolve -e 6.4e6 -1/150 -f --input-string "1 2 3 4")
+add_test (NAME GeodSolve16 COMMAND
+  GeodSolve -e 6.4e6 -1/150 -f --input-string "1 2 3 4" -E)
+set_tests_properties (GeodSolve15 GeodSolve16
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "1\\..* 2\\..* 3\\..* 1\\..* 2\\..* 3\\..* 4\\..* 0\\..* 4\\..* 1\\..* 1\\..* 23700")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0
   COMMAND Planimeter --input-string "89 0;89 90;89 180;89 270")

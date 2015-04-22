@@ -8,6 +8,6 @@ function y = eatanhe(x, e2)
   if (e2 >= 0)
     y = e * atanh(e * x);
   else
-    y = e * atan(e * x);
+    y = -e * atan(e * x);
   end
 end
