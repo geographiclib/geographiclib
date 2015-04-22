@@ -64,7 +64,7 @@ cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
 make doc
 (
     cd ../java
-    mvn package
+    mvn package -P release
     rsync -a target/apidocs/ ../BUILD/doc/html/java/
 )
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/

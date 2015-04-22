@@ -19,7 +19,6 @@ $(srcdir)/geographiclib/geocent_inv.m \
 $(srcdir)/geographiclib/geodarea.m \
 $(srcdir)/geographiclib/geoddistance.m \
 $(srcdir)/geographiclib/geoddoc.m \
-$(srcdir)/geographiclib/geodproj.m \
 $(srcdir)/geographiclib/geodreckon.m \
 $(srcdir)/geographiclib/geoid_height.m \
 $(srcdir)/geographiclib/geoid_load.m \
@@ -32,6 +31,7 @@ $(srcdir)/geographiclib/mgrs_fwd.m \
 $(srcdir)/geographiclib/mgrs_inv.m \
 $(srcdir)/geographiclib/polarst_fwd.m \
 $(srcdir)/geographiclib/polarst_inv.m \
+$(srcdir)/geographiclib/projinfo.m \
 $(srcdir)/geographiclib/tranmerc_fwd.m \
 $(srcdir)/geographiclib/tranmerc_inv.m \
 $(srcdir)/geographiclib/utmups_fwd.m \
