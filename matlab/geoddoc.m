@@ -192,7 +192,7 @@ function geoddoc
 
 % Copyright (c) Charles Karney (2012-2014) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.39.
+% This file was distributed with GeographicLib 1.41.1.
 
   help geoddoc
 end
