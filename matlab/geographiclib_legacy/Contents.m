@@ -1,9 +1,9 @@
 % GeographicLib legacy functions
-% Version 1.42 2015-04-19
+% Version 1.42 2015-04-22
 %
-% This functions in this directory are DEPRECATED.  They are wrapper
-% routines for the GeographicLib toolbox.  Directly using the GeographicLib
-% toolbox provides greater functionality and flexiblility.
+%   This functions in this directory are DEPRECATED.  They are wrapper
+%   routines for the GeographicLib toolbox.  Directly using the
+%   GeographicLib toolbox provides greater functionality and flexiblility.
 %
 % Geodesics
 %   geodesicdirect         - Wrapper for geodreckon
@@ -28,3 +28,7 @@
 %
 % Deprecated
 %   geographiclibinterface - Compile interface code (DEPRECATED)
+
+% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+%
+% This file was distributed with GeographicLib 1.42.

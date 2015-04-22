@@ -146,19 +146,6 @@ function geoddoc
 %       [lats, lons] = geodreckon(lat1, lon1, s12 * [0:100]/100, azi1);
 %       plot(lons, lats);
 %
-%   These routines are transcriptions of the C++ classes, Geodesic,
-%   GeodesicLine, and PolygonArea, provided by GeographicLib which is
-%   available at
-%
-%     http://geographiclib.sf.net
-%
-%   geoddistance, geodreckon, and geodarea are native implementations which
-%   will work on any MATLAB platform.  They are fully vectorized so that
-%   their speed is competitive with the compiled C++ code.  Implementations
-%   of these routines in Python and JavaScript are also available; see
-%
-%     http://geographiclib.sf.net/html/other.html
-%
 %   The restriction on e above arises because the formulation is in terms
 %   of series expansions in e^2.  The exact solutions (valid for any e) can
 %   be expressed in terms of elliptic integrals.  These are provided by the

@@ -1,5 +1,38 @@
 % GeographicLib toolbox
-% Version 1.42 2015-04-19
+% Version 1.42 2015-04-22
+%
+%   This toolbox provides native MATLAB implementations of a subset of the
+%   C++ library, GeographicLib.  (But note that the great ellipse routines
+%   are not part of the C++ library.)  All the functions are vectorized and
+%   so offer speeds comparable to compiled C++ code when operating on
+%   arrays.  For information on any function, use MATLAB's help command.
+%   More extensive information is available in the documentation for the
+%   GeographicLib, which is available at
+%
+%       http://geographiclib.sf.net/html
+%
+%   Some common features of these functions:
+%     * Angles (latitude, longitude, azimuth, meridian convergence) are
+%       measured in degrees.
+%     * Distances are measured in meters, areas in meters^2.
+%     * Latitudes must lie in [-90,90] and longitudes and azimuths in
+%       [-540,540).  However most routines don't check that this condition
+%       holds.  (Exceptions are the grid system and geoid functions.  These
+%       return NaNs for invalid inputs.)
+%     * The ellipsoid is specified as [a, e], where a = equatorial radius
+%       and e = eccentricity.  The eccentricity can be pure imaginary to
+%       denote a prolate ellipsoid.
+%     * Keep abs(e) < 0.2 (i.e., abs(f) <= 1/50) for full double precision
+%       accuracy.
+%
+%   There is some overlap between this toolbox and MATLAB's Mapping
+%   Toolbox.  However, this toolbox offers
+%     * Better accuracy.
+%     * Treatment of oblate and prolate ellipsoid
+%     * Guaranteed convergence for geoddistance.
+%     * Calculation of area and differential properties of geodesics.
+%     * Ellipsoidal versions of the equidistant azimuthal and gnomonic
+%       projections.
 %
 % Geodesics
 %   geoddistance     - Distance between points on an ellipsoid
@@ -45,5 +78,9 @@
 %
 % Documentation
 %   geoddoc          - Geodesics on an ellipsoid of revolution
-%   geodproj         - Geodesic projections for an ellipsoid
+%   projinfo         - Projections for an ellipsoid
 %   gedoc            - Great ellipses on an ellipsoid of revolution
+
+% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+%
+% This file was distributed with GeographicLib 1.42.

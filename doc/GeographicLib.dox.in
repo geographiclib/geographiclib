@@ -6958,10 +6958,13 @@ git repository for GeographicLib</a>.
    - Add Math::norm, Math::AngRound, Math::tand, Math::atan2d,
      Math::eatanhe, Math::taupf, Math::tauf, Math::fma and remove
      duplicated (but private) functionality from other classes.
-   - Work around boost-quadmath bug with setprecision(0).
+   - Work around the boost-quadmath bug with setprecision(0).
+   - Point fix for geodarea.m to handle polygons which encircle a pole
+     multiple times.  (This was release 1.41.1 of MATLAB File Exchange
+     package 39108, 2014-04-22.)
    - MATLAB changes.  Note requirement of MATLAB (version 7.9, 2009b, or
      later) or Octave (version 3.4, Feb. 2011, or later).
-   - N.B. .gitignore updates on release branch: mex files + RhumbSolve.
+   - Java library deployed, thanks to Chris Bennight.
 
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
    (released 2015-03-09)

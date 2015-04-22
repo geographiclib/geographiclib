@@ -35,7 +35,6 @@ set -e
 #   CMakeLists.txt
 #   NEWS
 #   configure.ac
-#   doc/GeographicLib.dox
 #   python/setup.py
 #   tests/test-distribution.sh
 
