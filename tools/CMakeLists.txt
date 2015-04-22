@@ -238,16 +238,21 @@ set_tests_properties (Planimeter6 Planimeter7 Planimeter8 Planimeter9
 add_test (NAME Planimeter10 COMMAND Planimeter -R
   --input-string "41N 111:3W; 41N 104:3W; 45N 104:3W; 45N 111:3W")
 set_tests_properties (Planimeter10
-  PROPERTIES PASS_REGULAR_EXPRESSION "4 2029616.[0-9]+ 2535883763..\\.")
+  PROPERTIES PASS_REGULAR_EXPRESSION "4 2029616\\.[0-9]+ 2535883763..\\.")
 # Area of arctic circle
 add_test (NAME Planimeter11
   COMMAND Planimeter -R --input-string "66:33:44 0; 66:33:44 180")
 set_tests_properties (Planimeter11
-  PROPERTIES PASS_REGULAR_EXPRESSION "2 15985058.[0-9]+ 212084182523..\\.")
+  PROPERTIES PASS_REGULAR_EXPRESSION "2 15985058\\.[0-9]+ 212084182523..\\.")
 add_test (NAME Planimeter12
   COMMAND Planimeter --input-string "66:33:44 0; 66:33:44 180")
 set_tests_properties (Planimeter12
-  PROPERTIES PASS_REGULAR_EXPRESSION "2 10465729.[0-9]+ -?0.0")
+  PROPERTIES PASS_REGULAR_EXPRESSION "2 10465729\\.[0-9]+ -?0.0")
+# Check encircling pole twice
+add_test (NAME Planimeter13 COMMAND
+  Planimeter --input-string "89 -360; 89 -240; 89 -120; 89 0; 89 120; 89 240")
+set_tests_properties (Planimeter13
+  PROPERTIES PASS_REGULAR_EXPRESSION "6 1160741\\..* 32415230256\\.")
 
 # Check fix for AlbersEqualArea::Reverse bug found 2011-05-01
 add_test (NAME ConicProj0 COMMAND

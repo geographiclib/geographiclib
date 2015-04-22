@@ -88,9 +88,9 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
     end
     As = -As; At = -At;
     if As > area0/2
-      As = accumulator( -area0 / 2, As, At);
+      As = accumulator(-area0, As, At);
     elseif As <= -area0/2
-      As = accumulator(  area0 / 2, As, At);
+      As = accumulator( area0, As, At);
     end
     A(k) = As;
   end
