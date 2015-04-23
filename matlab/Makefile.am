@@ -74,7 +74,6 @@ $(srcdir)/geographiclib_legacy/geocentricreverse.m \
 $(srcdir)/geographiclib_legacy/geodesicdirect.m \
 $(srcdir)/geographiclib_legacy/geodesicinverse.m \
 $(srcdir)/geographiclib_legacy/geodesicline.m \
-$(srcdir)/geographiclib_legacy/geographiclibinterface.m \
 $(srcdir)/geographiclib_legacy/geoidheight.m \
 $(srcdir)/geographiclib_legacy/localcartesianforward.m \
 $(srcdir)/geographiclib_legacy/localcartesianreverse.m \
@@ -83,21 +82,6 @@ $(srcdir)/geographiclib_legacy/mgrsreverse.m \
 $(srcdir)/geographiclib_legacy/polygonarea.m \
 $(srcdir)/geographiclib_legacy/utmupsforward.m \
 $(srcdir)/geographiclib_legacy/utmupsreverse.m
-
-MATLAB_INTERFACE = \
-$(srcdir)/geographiclib_legacy/geocentricforward.cpp \
-$(srcdir)/geographiclib_legacy/geocentricreverse.cpp \
-$(srcdir)/geographiclib_legacy/geodesicdirect.cpp \
-$(srcdir)/geographiclib_legacy/geodesicinverse.cpp \
-$(srcdir)/geographiclib_legacy/geodesicline.cpp \
-$(srcdir)/geographiclib_legacy/geoidheight.cpp \
-$(srcdir)/geographiclib_legacy/localcartesianforward.cpp \
-$(srcdir)/geographiclib_legacy/localcartesianreverse.cpp \
-$(srcdir)/geographiclib_legacy/mgrsforward.cpp \
-$(srcdir)/geographiclib_legacy/mgrsreverse.cpp \
-$(srcdir)/geographiclib_legacy/polygonarea.cpp \
-$(srcdir)/geographiclib_legacy/utmupsforward.cpp \
-$(srcdir)/geographiclib_legacy/utmupsreverse.cpp
 
 MATLAB_ALL = $(MATLAB_FILES) $(MATLAB_PRIVATE) $(MATLAB_LEGACY)
 
@@ -113,4 +97,4 @@ install:
 clean-local:
 	rm -rf *.mex* *.oct
 
-EXTRA_DIST = Makefile.mk CMakeLists.txt $(MATLAB_ALL) $(MATLAB_INTERFACE)
+EXTRA_DIST = Makefile.mk CMakeLists.txt $(MATLAB_ALL)

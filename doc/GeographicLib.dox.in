@@ -613,7 +613,6 @@ installer is created with \verbatim
   cmake -G "Visual Studio 10 Win64" \
     -D GEOGRAPHICLIB_LIB_TYPE=BOTH \
     -D PACKAGE_DEBUG_LIBS=ON \
-    -D MATLAB_COMPILER=mex \
     -D BUILD_NETGEOGRAPHICLIB=ON \
     ..
   cmake --build . --config Debug --target ALL_BUILD
@@ -1355,7 +1354,10 @@ The functions fall into the following groups
 These functions reimplement the C++ routines from GeographicLib in
 MATLAB code (but note that routines for great ellipses are <i>only</i>
 available as MATLAB code).  Because these functions are all vectorized,
-their performance is comparable to the C++ routines.
+their performance is comparable to the C++ routines.  The minimum
+version numbers required are
+ - MATLAB, version 7.9, 2009b,
+ - Octave, version 3.4, Feb. 2011.
 
 Previously, some of these routines were packaged as three separate
 packages
@@ -6965,11 +6967,23 @@ git repository for GeographicLib</a>.
      Math::eatanhe, Math::taupf, Math::tauf, Math::fma and remove
      duplicated (but private) functionality from other classes.
    - Work around the boost-quadmath bug with setprecision(0).
-   - Point fix for geodarea.m to handle polygons which encircle a pole
-     multiple times.  (This was release 1.41.1 of MATLAB File Exchange
-     package 39108, 2014-04-22.)
-   - MATLAB changes.  Note requirement of MATLAB (version 7.9, 2009b, or
-     later) or Octave (version 3.4, Feb. 2011, or later).
+   - MATLAB changes.
+     - provide native MATLAB implementations for compiled interface
+       functions;
+     - remove MATLAB_COMPILER option from CMakeLists.txt;
+     - reorganize directories, so that
+       - matlab/geographiclib contains the native matlab code;
+       - matlab/geographiclib_legacy contains wrapper functions to mimic
+         the previous compiled functionality;
+     - the installed MATLAB code mirrors this layout;
+     - matlab/geographiclib is now packages and distributed as
+       MATLAB File Exchange package
+       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+       50605</a> (this supersedes three earlier packages).
+     - point fix for geodarea.m to handle polygons which encircle a pole
+       multiple times (released as version 1.41.1 of MATLAB File
+       Exchange package 39108, 2014-04-22).
+
    - Java library deployed, thanks to Chris Bennight.
 
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>

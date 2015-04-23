@@ -53,7 +53,6 @@
             <configuration>
               <options>
                 <GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
-                <MATLAB_COMPILER>OFF</MATLAB_COMPILER>
                 <GEOGRAPHICLIB_DOCUMENTATION>OFF</GEOGRAPHICLIB_DOCUMENTATION>
                 <BUILD_NETGEOGRAPHICLIB>
                   ${build.netgeographiclib}
