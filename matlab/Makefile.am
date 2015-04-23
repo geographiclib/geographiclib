@@ -31,7 +31,7 @@ $(srcdir)/geographiclib/mgrs_fwd.m \
 $(srcdir)/geographiclib/mgrs_inv.m \
 $(srcdir)/geographiclib/polarst_fwd.m \
 $(srcdir)/geographiclib/polarst_inv.m \
-$(srcdir)/geographiclib/projinfo.m \
+$(srcdir)/geographiclib/projdoc.m \
 $(srcdir)/geographiclib/tranmerc_fwd.m \
 $(srcdir)/geographiclib/tranmerc_inv.m \
 $(srcdir)/geographiclib/utmups_fwd.m \

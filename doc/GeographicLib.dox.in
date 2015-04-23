@@ -1344,7 +1344,7 @@ The functions fall into the following groups
    - flat2ecc         - Convert flattening to eccentricity
  - Documentation
    - geoddoc          - Geodesics on an ellipsoid of revolution
-   - geodproj         - Geodesic projections for an ellipsoid
+   - projdoc          - Geodesic projections for an ellipsoid
    - gedoc            - Great ellipses on an ellipsoid of revolution
  .
 These functions reimplement the C++ routines from GeographicLib in

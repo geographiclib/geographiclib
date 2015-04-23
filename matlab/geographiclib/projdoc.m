@@ -1,5 +1,5 @@
-function projinfo
-%PROJINFO  Projections for an ellipsoid
+function projdoc
+%PROJDOC  Projections for an ellipsoid
 %
 %   This package implements five projections:
 %     * the transverse Mercator projection (tranmerc)
@@ -71,5 +71,5 @@ function projinfo
 %
 % This file was distributed with GeographicLib 1.42.
 
-  help projinfo
+  help projdoc
 end

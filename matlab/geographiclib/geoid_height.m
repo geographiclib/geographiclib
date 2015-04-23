@@ -4,7 +4,7 @@ function h = geoid_height(lat, lon, geoidname, geoiddir)
 %   height = GEOID_HEIGHT(lat, lon)
 %   height = GEOID_HEIGHT(lat, lon, geoidname)
 %   height = GEOID_HEIGHT(lat, lon, geoidname, geoiddir)
-%   GEOID_HEIGHT([])
+%            GEOID_HEIGHT([])
 %   height = GEOID_HEIGHT(lat, lon, geoid)
 %
 %   computes the height of the geoid in meters.  lat and lon are the

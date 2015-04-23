@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>net.sf.geographiclib</groupId>
-  <artifactId>GeographicLib</artifactId>
+  <artifactId>GeographicLib-Java</artifactId>
   <version>1.42-SNAPSHOT</version>
 
   <packaging>jar</packaging>
@@ -19,7 +19,7 @@
     </license>
   </licenses>
 
-  <name>GeographicLib</name>
+  <name>Java implementation of GeographicLib</name>
   <description>
     This is a Java implementation of the geodesic algorithms from
     GeographicLib. This is a self-contained library which makes it

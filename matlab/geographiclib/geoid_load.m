@@ -24,8 +24,9 @@ function geoid = geoid_load(name, dir)
 %   /usr/local/share/GeographicLib/geoids (for non-Windows systems) or
 %   C:/ProgramData/GeographicLib/geoids (for Windows systems).
 %
-%   The geoid data is loaded from the file obtained by
-%   geoiddir/geoidname.pgm
+%   The geoid data is loaded from the image file obtained by concatenating
+%   the components to give geoiddir/geoidname.pgm.  These files store a
+%   grid of geoid height encoded as 16-bit integers.
 %
 %   The returned geoid can be passed to geoid_height to determine the
 %   height of the geoid.
