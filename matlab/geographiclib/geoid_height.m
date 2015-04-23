@@ -88,16 +88,16 @@ function height = geoid_height_int(lat, lon, geoid, cubic)
   ilon = floor(flon);
   flat = flat - ilat; flon = flon - ilon;
   if ~cubic
-    ind = index(ilon + [0,0,1,1], ilat + [0,1,0,1], w, h);
+    ind = imgind(ilon + [0,0,1,1], ilat + [0,1,0,1], w, h);
     hf = double(geoid.im(ind));
     height = (1 - flon) .* ((1 - flat) .* hf(:,1) + flat .* hf(:,2)) + ...
              flon       .* ((1 - flat) .* hf(:,3) + flat .* hf(:,4));
   else
-    ind = index(repmat(ilon, 1, 12) + ...
-                repmat([ 0, 1,-1, 0, 1, 2,-1, 0, 1, 2, 0, 1], num, 1), ...
-                repmat(ilat, 1, 12) + ...
-                repmat([-1,-1, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2], num, 1), ...
-                w, h);
+    ind = imgind(repmat(ilon, 1, 12) + ...
+                 repmat([ 0, 1,-1, 0, 1, 2,-1, 0, 1, 2, 0, 1], num, 1), ...
+                 repmat(ilat, 1, 12) + ...
+                 repmat([-1,-1, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2], num, 1), ...
+                 w, h);
     hf = double(geoid.im(ind));
     c0 = 240;
     c3 = [ 9, -18, -88,    0,  96,   90,   0,   0, -60, -20;...
@@ -150,9 +150,9 @@ function height = geoid_height_int(lat, lon, geoid, cubic)
   height = reshape(height, s);
 end
 
-function ind = index(ix, iy, w, h)
+function ind = imgind(ix, iy, w, h)
 % return 1-based 1d index to w*h array for 0-based 2d indices (ix,iy)
-  c = iy < 0;  iy(c) =           - iy(c); ix(c) = ix(c) + w/2;
+  c = iy <  0; iy(c) =           - iy(c); ix(c) = ix(c) + w/2;
   c = iy >= h; iy(c) = 2 * (h-1) - iy(c); ix(c) = ix(c) + w/2;
   ix = mod(ix, w);
   ind = 1 + iy + ix * h;

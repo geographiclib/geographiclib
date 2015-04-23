@@ -54,10 +54,10 @@ as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
 line endings.)  Alternatively you can get the latest release using git
 \verbatim
-  git clone -b r@PROJECT_VERSION@ git://git.code.sf.net/p/geographiclib/code geographiclib
+  git clone git://git.code.sf.net/p/geographiclib/code geographiclib
 \endverbatim
-There are also binary installers available for some platforms.  See \ref
-binaryinst.
+Each release is tagged, e.g., with r@PROJECT_VERSION@.  There are also
+binary installers available for some platforms.  See \ref binaryinst.
 
 GeographicLib is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -1297,14 +1297,19 @@ of the Australian Communications and Media Authority.)
 
 \section matlab MATLAB and Octave implementations
 
-The <code>matlab</code> directory contains MATLAB and Octave
-implementations of some of the functions of GeographicLib.  To use
-these, start MATLAB or Octave and run one of (for example): \verbatim
+The <code>matlab/geographiclib</code> directory contains MATLAB and
+Octave implementations of some of the functions of GeographicLib.  To
+use these, start MATLAB or Octave and run one of (for example):
+\verbatim
    addpath /usr/local/libexec/matlab/geographiclib
    addpath C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib
    \endverbatim
 A summary of the routines is obtained by \verbatim
    help geographiclib \endverbatim
+These MATLAB functions is also available from the MATLAB File Exchange
+site as the
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+GeographicLib toolbox</a>, package 50605.
 
 The functions fall into the following groups
  - Geodesics
@@ -1330,7 +1335,7 @@ The functions fall into the following groups
  - Geoid lookup
    - geoid_height     - Compute the height of the geoid
    - geoid_load       - Load a geoid model
- - Great ellipse
+ - Great ellipses
    - gedistance       - Great ellipse distance between points on an ellipsoid
    - gereckon         - Point along great ellipse at specified azimuth and range
  - Geometric transformations
@@ -1364,20 +1369,21 @@ packages
    Great ellipses</a>,
    MATLAB File Exchange package 47898.
  .
-These packages have now been superseded by by
- - <a href="http://www.mathworks.com/matlabcentral/fileexchange/NNNN">
-   GeographicLib toolbox</a>,
-   MATLAB File Exchange package NNNN.
+These packages have now all been incorporated into the
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+GeographicLib toolbox</a>.
 
 Prior to version 1.42, GeographicLib was distributed with some MATLAB
 functionality offered via compiled interface code.  This has now been
 replaced by native MATLAB wrapper functions which call the functions in
-GeographicLib toolbox.  To use these wrapper functions, run one of:
+the <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+GeographicLib toolbox</a>.  To use these wrapper functions, run one of:
 \verbatim
    addpath /usr/local/libexec/matlab/geographiclib_legacy
    addpath C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib_legacy
    \endverbatim
-The GeographicLib toolbox <i>must</i> also be in your MATLAB path.  A
+The <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+GeographicLib toolbox</a> <i>must</i> also be in your MATLAB path.  A
 summary of the routines is obtained by \verbatim
    help geographiclib_legacy \endverbatim
 These functions are <b>DEPRECATED</b>.  Here is a function listing
