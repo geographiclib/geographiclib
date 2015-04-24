@@ -157,6 +157,6 @@ geographiclib-get-magnetic: geographiclib-get-magnetic.sh
 	chmod +x $@
 
 CLEANFILES = $(sbin_SCRIPTS)
-EXTRA_DIST = Makefile.mk CMakeLists.txt \
+EXTRA_DIST = Makefile.mk CMakeLists.txt tests.cmake \
 	geographiclib-get-geoids.sh geographiclib-get-gravity.sh \
 	geographiclib-get-magnetic.sh
