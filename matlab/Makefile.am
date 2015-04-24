@@ -100,7 +100,7 @@ $(srcdir)/geographiclib_legacy/utmupsforward.cpp \
 $(srcdir)/geographiclib_legacy/utmupsreverse.cpp
 
 MATLAB_ALL = $(MATLAB_FILES) $(MATLAB_PRIVATE)
-MATLAB_LEGACY_ALL $(MATLAB_LEGACY) $(MATLAB_INTERFACE)
+MATLAB_LEGACY_ALL = $(MATLAB_LEGACY) $(MATLAB_INTERFACE)
 
 matlabdir=$(DESTDIR)$(libexecdir)/matlab
 
