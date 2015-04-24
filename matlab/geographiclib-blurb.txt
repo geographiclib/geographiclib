@@ -1,5 +1,5 @@
 GeographicLib toolbox
-Version 1.42-rc1 2015-04-23
+Version 1.42 2015-04-24
 
 This toolbox provides native MATLAB implementations of a subset of the
 C++ library, GeographicLib.  Key components of this toolbox are
@@ -14,7 +14,7 @@ C++ library, GeographicLib.  Key components of this toolbox are
 There is some overlap between this toolbox and MATLAB's Mapping
 Toolbox.  However, this toolbox offers:
   * better accuracy;
-  * treatment of oblate and prolate ellipsoid;
+  * treatment of oblate and prolate ellipsoids;
   * guaranteed convergence for geoddistance;
   * calculation of area and differential properties of geodesics;
   * ellipsoidal versions of the equidistant azimuthal and gnomonic

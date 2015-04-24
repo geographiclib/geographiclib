@@ -1,6 +1,7 @@
 MATLAB_FILES = $(wildcard geographiclib/*.m)
 MATLAB_PRIVATE = $(wildcard geographiclib/private/*.m)
-MATLAB_LEGACY = $(wildcard geographiclib_legacy/*.m)
+MATLAB_LEGACY = $(wildcard geographiclib_legacy/*.m) \
+	$(wildcard geographiclib_legacy/*.cpp)
 
 DEST = $(PREFIX)/libexec/matlab
 INSTALL = install -b

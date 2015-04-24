@@ -1,9 +1,13 @@
 % GeographicLib legacy functions
 % Version 1.42 2015-04-22
 %
-%   This functions in this directory are DEPRECATED.  They are wrapper
-%   routines for the GeographicLib toolbox.  Directly using the
-%   GeographicLib toolbox provides greater functionality and flexiblility.
+%   The functions in this directory are DEPRECATED.  They are wrapper
+%   routines for the GeographicLib toolbox, which is available at
+%
+%     href="http://www.mathworks.com/matlabcentral/fileexchange/50605
+%
+%   Directly using the GeographicLib toolbox provides greater functionality
+%   and flexiblility.
 %
 % Geodesics
 %   geodesicdirect         - Wrapper for geodreckon

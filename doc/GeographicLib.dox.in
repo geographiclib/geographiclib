@@ -6983,7 +6983,6 @@ git repository for GeographicLib</a>.
      - point fix for geodarea.m to handle polygons which encircle a pole
        multiple times (released as version 1.41.1 of MATLAB File
        Exchange package 39108, 2014-04-22).
-
    - Java library deployed, thanks to Chris Bennight.
 
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
