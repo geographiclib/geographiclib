@@ -1195,6 +1195,16 @@ self-contained and does not depend on the rest of GeographicLib.  Sample
 main programs to solve the direct and inverse geodesic problems and to
 compute polygonal areas are provided.
 
+If you're using Apache Maven as your build system, you can use this
+package by including the dependency \verbatim
+  <dependency>
+    <groupId>net.sf.geographiclib</groupId>
+    <artifactId>GeographicLib-Java</artifactId>
+    <version>1.42</version>
+  </dependency>
+  \endverbatim
+in your <code>pom.xml</code>.
+
 For documentation, see
  - <a href="java/index.html">Java library for geodesics</a>.
 
@@ -7003,7 +7013,10 @@ git repository for GeographicLib</a>.
      - point fix for geodarea.m to handle polygons which encircle a pole
        multiple times (released as version 1.41.1 of MATLAB File
        Exchange package 39108, 2014-04-22).
-   - Java library deployed, thanks to Chris Bennight.
+   - artifactId for Java package changed to GeographicLib-Java and the
+     package is now depolyed to oss.sonatype.org (thanks to Chris
+     Bennight for help on this).  TODO: update Java documentation to
+     include relevant info.
 
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
    (released 2015-03-09)

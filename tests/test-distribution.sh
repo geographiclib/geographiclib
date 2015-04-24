@@ -356,6 +356,10 @@ sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 cd $TEMP/gita/geographiclib/python
 python setup.py sdist --formats gztar,zip upload
 
+# java release
+cd $TEMP/gita/geographiclib/java
+mvn clean deploy -P release
+
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib
 git add -A
