@@ -2,17 +2,12 @@
  * \file LambertConformalConic.cpp
  * \brief Implementation for GeographicLib::LambertConformalConic class
  *
- * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/LambertConformalConic.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
-#  pragma warning (disable: 4127)
-#endif
 
 namespace GeographicLib {
 
@@ -22,14 +17,12 @@ namespace GeographicLib {
                                                real stdlat, real k0)
     : eps_(numeric_limits<real>::epsilon())
     , epsx_(Math::sq(eps_))
-    , tol_(real(0.1) * sqrt(eps_))
     , ahypover_(Math::digits() * log(real(numeric_limits<real>::radix)) + 2)
     , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
-    , _e(sqrt(abs(_e2)))
-    , _e2m(1 - _e2)
+    , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -51,14 +44,12 @@ namespace GeographicLib {
                                                real k1)
     : eps_(numeric_limits<real>::epsilon())
     , epsx_(Math::sq(eps_))
-    , tol_(real(0.1) * sqrt(eps_))
     , ahypover_(Math::digits() * log(real(numeric_limits<real>::radix)) + 2)
     , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
-    , _e(sqrt(abs(_e2)))
-    , _e2m(1 - _e2)
+    , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -83,14 +74,12 @@ namespace GeographicLib {
                                                real k1)
     : eps_(numeric_limits<real>::epsilon())
     , epsx_(Math::sq(eps_))
-    , tol_(real(0.1) * sqrt(eps_))
     , ahypover_(Math::digits() * log(real(numeric_limits<real>::radix)) + 2)
     , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
-    , _e(sqrt(abs(_e2)))
-    , _e2m(1 - _e2)
+    , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -157,10 +146,10 @@ namespace GeographicLib {
       tbet2 = _fm * tphi2, scbet2 = hyp(tbet2);
     real
       scphi1 = 1/cphi1,
-      xi1 = eatanhe(sphi1), shxi1 = sinh(xi1), chxi1 = hyp(shxi1),
+      xi1 = Math::eatanhe(sphi1, _es), shxi1 = sinh(xi1), chxi1 = hyp(shxi1),
       tchi1 = chxi1 * tphi1 - shxi1 * scphi1, scchi1 = hyp(tchi1),
       scphi2 = 1/cphi2,
-      xi2 = eatanhe(sphi2), shxi2 = sinh(xi2), chxi2 = hyp(shxi2),
+      xi2 = Math::eatanhe(sphi2, _es), shxi2 = sinh(xi2), chxi2 = hyp(shxi2),
       tchi2 = chxi2 * tphi2 - shxi2 * scphi2, scchi2 = hyp(tchi2),
       psi1 = Math::asinh(tchi1);
     if (tphi2 - tphi1 != 0) {
@@ -248,7 +237,8 @@ namespace GeographicLib {
         // dchi = ((mu2 + mu1) - D(nu2, nu1) * (scphi2 + scphi1)) /
         //         D(tchi2, tchi1)
         real
-          xiZ = eatanhe(real(1)), shxiZ = sinh(xiZ), chxiZ = hyp(shxiZ),
+          xiZ = Math::eatanhe(real(1), _es),
+          shxiZ = sinh(xiZ), chxiZ = hyp(shxiZ),
           // These are differences not divided differences
           // dxiZ1 = xiZ - xi1; dshxiZ1 = shxiZ - shxi; dchxiZ1 = chxiZ - chxi
           dxiZ1 = Deatanhe(real(1), sphi1)/(scphi1*(tphi1+scphi1)),
@@ -295,7 +285,7 @@ namespace GeographicLib {
     }
 
     _scbet0 = hyp(_fm * tphi0);
-    real shxi0 = sinh(eatanhe(_n));
+    real shxi0 = sinh(Math::eatanhe(_n, _es));
     _tchi0 = tphi0 * hyp(shxi0) - shxi0 * hyp(tphi0); _scchi0 = hyp(_tchi0);
     _psi0 = Math::asinh(_tchi0);
 
@@ -322,7 +312,7 @@ namespace GeographicLib {
       real
         sphi = -1, cphi =  epsx_,
         tphi = sphi/cphi,
-        scphi = 1/cphi, shxi = sinh(eatanhe(sphi)),
+        scphi = 1/cphi, shxi = sinh(Math::eatanhe(sphi, _es)),
         tchi = hyp(shxi) * tphi - shxi * scphi, scchi = hyp(tchi),
         psi = Math::asinh(tchi),
         dpsi = Dasinh(tchi, _tchi0, scchi, _scchi0) * (tchi - _tchi0);
@@ -360,7 +350,7 @@ namespace GeographicLib {
       phi = _sign * lat * Math::degree(),
       sphi = sin(phi), cphi = abs(lat) != 90 ? cos(phi) : epsx_,
       tphi = sphi/cphi, scbet = hyp(_fm * tphi),
-      scphi = 1/cphi, shxi = sinh(eatanhe(sphi)),
+      scphi = 1/cphi, shxi = sinh(Math::eatanhe(sphi, _es)),
       tchi = hyp(shxi) * tphi - shxi * scphi, scchi = hyp(tchi),
       psi = Math::asinh(tchi),
       theta = _n * lam, stheta = sin(theta), ctheta = cos(theta),
@@ -436,26 +426,10 @@ namespace GeographicLib {
       tchi = sh * (tn + 1/tn)/2 - hyp(sh) * (tnm1 * (tn + 1)/tn)/2;
     }
 
-    // Use Newton's method to solve for tphi
-    real
-      // See comment in TransverseMercator.cpp about the initial guess
-      tphi = tchi/_e2m,
-      stol = tol_ * max(real(1), abs(tchi));
-    // min iterations = 1, max iterations = 2; mean = 1.94
-    for (int i = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
-      real
-        scphi = hyp(tphi),
-        shxi = sinh( eatanhe( tphi / scphi ) ),
-        tchia = hyp(shxi) * tphi - shxi * scphi,
-        dtphi = (tchi - tchia) * (1 + _e2m * Math::sq(tphi)) /
-        ( _e2m * scphi * hyp(tchia) );
-      tphi += dtphi;
-      if (!(abs(dtphi) >= stol))
-        break;
-    }
     // log(t) = -asinh(tan(chi)) = -psi
     gamma = atan2(nx, y1);
     real
+      tphi = Math::tauf(tchi, _es),
       phi = _sign * atan(tphi),
       scbet = hyp(_fm * tphi), scchi = hyp(tchi),
       lam = _n ? gamma / _n : x / y1;

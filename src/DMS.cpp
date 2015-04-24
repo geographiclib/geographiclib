@@ -2,7 +2,7 @@
  * \file DMS.cpp
  * \brief Implementation for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -42,15 +42,47 @@ namespace GeographicLib {
     replace(dmsa, "\xba", 'd');          // 0xba bare alt symbol
     replace(dmsa, "\xb4", '\'');         // 0xb4 bare acute accent
     replace(dmsa, "''", '"');            // '' -> "
+    unsigned
+      beg = 0,
+      end = unsigned(dmsa.size());
+    while (beg < end && isspace(dmsa[beg]))
+      ++beg;
+    while (beg < end && isspace(dmsa[end - 1]))
+      --end;
+    unsigned bega = beg;
+    if (end > bega && Utility::lookup(hemispheres_, dmsa[bega]) >= 0)
+      ++bega;
+    if (end > bega && Utility::lookup(signs_, dmsa[bega]) >= 0)
+      ++bega;
+    string::size_type p = dmsa.find_first_of(signs_, bega);
+    flag ind1 = NONE;
+    real v = InternalDecode(dmsa.substr(beg,
+                                        (p == string::npos ? end : p) - beg),
+                            ind1);
+    if (p == string::npos)
+      ind = ind1;
+    else {
+      flag ind2 = NONE;
+      v += InternalDecode(dmsa.substr(p, end - p), ind2);
+      if (ind2 == NONE)
+        ind = ind1;
+      else if (ind1 == NONE || ind1 == ind2)
+        ind = ind2;
+      else
+        throw GeographicErr("Incompatible hemisphere specifies in " +
+                            dmsa.substr(beg, p - beg) + " and " +
+                            dmsa.substr(p, end - p));
+    }
+    return v;
+  }
+
+  Math::real DMS::InternalDecode(const std::string& dmsa, flag& ind) {
+    string errormsg;
     do {                       // Executed once (provides the ability to break)
       int sign = 1;
       unsigned
         beg = 0,
         end = unsigned(dmsa.size());
-      while (beg < end && isspace(dmsa[beg]))
-        ++beg;
-      while (beg < end && isspace(dmsa[end - 1]))
-        --end;
       flag ind1 = NONE;
       int k = -1;
       if (end > beg && (k = Utility::lookup(hemispheres_, dmsa[beg])) >= 0) {
@@ -310,24 +342,25 @@ namespace GeographicLib {
     case DEGREE:
       if (ind != NONE)
         s << setw(1 + min(int(ind), 2) + prec + (prec ? 1 : 0));
-      s << setprecision(prec) << pieces[0];
+      s << Utility::str(pieces[0], prec);
       // Don't include degree designator (d) if it is the trailing component.
       break;
     default:
       if (ind != NONE)
         s << setw(1 + min(int(ind), 2));
-      s << setprecision(0) << pieces[0]
+      s << int(pieces[0])
         << (dmssep ? dmssep : char(tolower(dmsindicators_[0])));
       switch (trailing) {
       case MINUTE:
-        s << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec) << pieces[1];
+        s << setw(2 + prec + (prec ? 1 : 0)) << Utility::str(pieces[1], prec);
         if (!dmssep)
           s << char(tolower(dmsindicators_[1]));
         break;
       case SECOND:
         s << setw(2)
-          << pieces[1] << (dmssep ? dmssep : char(tolower(dmsindicators_[1])))
-          << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec) << pieces[2];
+          << int(pieces[1])
+          << (dmssep ? dmssep : char(tolower(dmsindicators_[1])))
+          << setw(2 + prec + (prec ? 1 : 0)) << Utility::str(pieces[2], prec);
         if (!dmssep)
           s << char(tolower(dmsindicators_[2]));
         break;

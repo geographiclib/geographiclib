@@ -2,7 +2,7 @@
  * \file GeodesicLine.cpp
  * \brief Implementation for GeographicLib::GeodesicLine class
  *
- * Copyright (c) Charles Karney (2009-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -39,7 +39,7 @@ namespace GeographicLib {
     , _lat1(lat1)
     , _lon1(lon1)
     // Guard against underflow in salp0
-    , _azi1(Geodesic::AngRound(Math::AngNormalize(azi1)))
+    , _azi1(Math::AngRound(Math::AngNormalize(azi1)))
     , _a(g._a)
     , _f(g._f)
     , _b(g._b)
@@ -58,7 +58,7 @@ namespace GeographicLib {
     // Ensure cbet1 = +epsilon at poles
     sbet1 = _f1 * sin(phi);
     cbet1 = abs(lat1) == 90 ? tiny_ : cos(phi);
-    Geodesic::SinCosNorm(sbet1, cbet1);
+    Math::norm(sbet1, cbet1);
     _dn1 = sqrt(1 + g._ep2 * Math::sq(sbet1));
 
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -77,8 +77,8 @@ namespace GeographicLib {
     // With alp0 = 0, omg1 = 0 for alp1 = 0, omg1 = pi for alp1 = pi.
     _ssig1 = sbet1; _somg1 = _salp0 * sbet1;
     _csig1 = _comg1 = sbet1 != 0 || _calp1 != 0 ? cbet1 * _calp1 : 1;
-    Geodesic::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
-    // Geodesic::SinCosNorm(_somg1, _comg1); -- don't need to normalize!
+    Math::norm(_ssig1, _csig1); // sig1 in (-pi, pi]
+    // Math::norm(_somg1, _comg1); -- don't need to normalize!
 
     _k2 = Math::sq(_calp0) * g._ep2;
     real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
@@ -233,7 +233,7 @@ namespace GeographicLib {
 
     if (outmask & AZIMUTH)
       // minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi2 = 0 - atan2(-salp2, calp2) / Math::degree();
+      azi2 = Math::atan2d(salp2, calp2);
 
     if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
       real

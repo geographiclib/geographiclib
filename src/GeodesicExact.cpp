@@ -2,7 +2,7 @@
  * \file GeodesicExact.cpp
  * \brief Implementation for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -61,9 +61,15 @@ namespace GeographicLib {
     , _ep2(_e2 / Math::sq(_f1))       // e2 / (1 - e2)
     , _n(_f / ( 2 - _f))
     , _b(_a * _f1)
+      // The Geodesic class substitutes atanh(sqrt(e2)) for asinh(sqrt(ep2)) in
+      // the definition of _c2.  The latter is more accurate for very oblate
+      // ellipsoids (which the Geodesic class does not attempt to handle).  Of
+      // course, the area calculation in GeodesicExact is still based on a
+      // series and so only holds for moderately oblate (or prolate)
+      // ellipsoids.
     , _c2((Math::sq(_a) + Math::sq(_b) *
-           (_e2 == 0 ? 1 :
-            (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
+           (_f == 0 ? 1 :
+            (_f > 0 ? Math::asinh(sqrt(_ep2)) : atan(sqrt(-_e2))) /
             sqrt(abs(_e2))))/2) // authalic radius squared
       // The sig12 threshold for "really short".  Using the auxiliary sphere
       // solution with dnm computed at (bet1 + bet2) / 2, the relative error in
@@ -144,13 +150,13 @@ namespace GeographicLib {
     real lon12 = Math::AngDiff(Math::AngNormalize(lon1),
                                Math::AngNormalize(lon2));
     // If very close to being on the same half-meridian, then make it so.
-    lon12 = AngRound(lon12);
+    lon12 = Math::AngRound(lon12);
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
     // If really close to the equator, treat as on equator.
-    lat1 = AngRound(lat1);
-    lat2 = AngRound(lat2);
+    lat1 = Math::AngRound(lat1);
+    lat2 = Math::AngRound(lat2);
     // Swap points so that point with higher (abs) latitude is point 1
     int swapp = abs(lat1) >= abs(lat2) ? 1 : -1;
     if (swapp < 0) {
@@ -182,13 +188,13 @@ namespace GeographicLib {
     // Ensure cbet1 = +epsilon at poles
     sbet1 = _f1 * sin(phi);
     cbet1 = lat1 == -90 ? tiny_ : cos(phi);
-    SinCosNorm(sbet1, cbet1);
+    Math::norm(sbet1, cbet1);
 
     phi = lat2 * Math::degree();
     // Ensure cbet2 = +epsilon at poles
     sbet2 = _f1 * sin(phi);
     cbet2 = abs(lat2) == 90 ? tiny_ : cos(phi);
-    SinCosNorm(sbet2, cbet2);
+    Math::norm(sbet2, cbet2);
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
     // |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -358,7 +364,7 @@ namespace GeographicLib {
             if (nsalp1 > 0 && abs(dalp1) < Math::pi()) {
               calp1 = calp1 * cdalp1 - salp1 * sdalp1;
               salp1 = nsalp1;
-              SinCosNorm(salp1, calp1);
+              Math::norm(salp1, calp1);
               // In some regimes we don't get quadratic convergence because
               // slope -> 0.  So use convergence conditions based on epsilon
               // instead of sqrt(epsilon).
@@ -376,7 +382,7 @@ namespace GeographicLib {
           // WGS84 and random input: mean = 4.74, sd = 0.99
           salp1 = (salp1a + salp1b)/2;
           calp1 = (calp1a + calp1b)/2;
-          SinCosNorm(salp1, calp1);
+          Math::norm(salp1, calp1);
           tripn = false;
           tripb = (abs(salp1a - salp1) + (calp1a - calp1) < tolb_ ||
                    abs(salp1 - salp1b) + (calp1 - calp1b) < tolb_);
@@ -414,8 +420,8 @@ namespace GeographicLib {
           eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2),
           // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
           A4 = Math::sq(_a) * calp0 * salp0 * _e2;
-        SinCosNorm(ssig1, csig1);
-        SinCosNorm(ssig2, csig2);
+        Math::norm(ssig1, csig1);
+        Math::norm(ssig2, csig2);
         real C4a[nC4_];
         C4f(eps, C4a);
         real
@@ -471,8 +477,8 @@ namespace GeographicLib {
 
     if (outmask & AZIMUTH) {
       // minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi1 = 0 - atan2(-salp1, calp1) / Math::degree();
-      azi2 = 0 - atan2(-salp2, calp2) / Math::degree();
+      azi1 = Math::atan2d(salp1, calp1);
+      azi2 = Math::atan2d(salp2, calp2);
     }
 
     // Returned value in [0, 180]
@@ -623,7 +629,7 @@ namespace GeographicLib {
       salp2 = cbet1 * somg12;
       calp2 = sbet12 - cbet1 * sbet2 *
         (comg12 >= 0 ? Math::sq(somg12) / (1 + comg12) : 1 - comg12);
-      SinCosNorm(salp2, calp2);
+      Math::norm(salp2, calp2);
       // Set return value
       sig12 = atan2(ssig12, csig12);
     } else if (abs(_n) > real(0.1) || // Skip astroid calc if too eccentric
@@ -723,7 +729,7 @@ namespace GeographicLib {
     }
     // Sanity check on starting guess.  Backwards check allows NaN through.
     if (!(salp1 <= 0))
-      SinCosNorm(salp1, calp1);
+      Math::norm(salp1, calp1);
     else {
       salp1 = 1; calp1 = 0;
     }
@@ -759,9 +765,9 @@ namespace GeographicLib {
     csig1 = comg1 = calp1 * cbet1;
     // Without normalization we have schi1 = somg1.
     cchi1 = _f1 * dn1 * comg1;
-    SinCosNorm(ssig1, csig1);
-    // SinCosNorm(somg1, comg1); -- don't need to normalize!
-    // SinCosNorm(schi1, cchi1); -- don't need to normalize!
+    Math::norm(ssig1, csig1);
+    // Math::norm(somg1, comg1); -- don't need to normalize!
+    // Math::norm(schi1, cchi1); -- don't need to normalize!
 
     // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     // about this case, since this can yield singularities in the Newton
@@ -784,9 +790,9 @@ namespace GeographicLib {
     csig2 = comg2 = calp2 * cbet2;
     // Without normalization we have schi2 = somg2.
     cchi2 = _f1 * dn2 * comg2;
-    SinCosNorm(ssig2, csig2);
-    // SinCosNorm(somg2, comg2); -- don't need to normalize!
-    // SinCosNorm(schi2, cchi2); -- don't need to normalize!
+    Math::norm(ssig2, csig2);
+    // Math::norm(somg2, comg2); -- don't need to normalize!
+    // Math::norm(schi2, cchi2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, real(0)),

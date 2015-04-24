@@ -2,7 +2,7 @@
  * \file Geodesic.hpp
  * \brief Header for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -202,24 +202,6 @@ namespace GeographicLib {
 
     static real SinCosSeries(bool sinp,
                              real sinx, real cosx, const real c[], int n);
-    static inline real AngRound(real x) {
-      // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
-      // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
-      // is about 1000 times more resolution than we get with angles around 90
-      // degrees.)  We use this to avoid having to deal with near singular
-      // cases when x is non-zero but tiny (e.g., 1.0e-200).
-      using std::abs;
-      const real z = 1/real(16);
-      GEOGRAPHICLIB_VOLATILE real y = abs(x);
-      // The compiler mustn't "simplify" z - (z - y) to y
-      y = y < z ? z - (z - y) : y;
-      return x < 0 ? -y : y;
-    }
-    static inline void SinCosNorm(real& sinx, real& cosx) {
-      real r = Math::hypot(sinx, cosx);
-      sinx /= r;
-      cosx /= r;
-    }
     static real Astroid(real x, real y);
 
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;

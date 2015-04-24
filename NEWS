@@ -4,7 +4,57 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.39.
+The current version of the library is 1.41.
+
+Changes between 1.41 (released 2015-03-09) and 1.40 versions:
+
+  * Fix bug in Rhumb::Inverse (with exact = true) and related functions
+    which causes the wrong distance to be reported if one of the end
+    points is at a pole.  Thanks to Thomas Murray for reporting this.
+
+  * Add International Geomagnetic Reference Field (12th generation),
+    which approximates the main magnetic field of the earth for the
+    period 1900-2020.
+
+  * Split information about Jacobi's conformal projection to a separate
+    section and include more material.
+
+Changes between 1.40 (released 2014-12-18) and 1.39 versions:
+
+  * Add the World Magnetic Model 2015, wmm2015.  This is now the default
+    magnetic model for MagneticField (replacing wmm2010 which is valid
+    thru the end of 2014).
+
+  * Geodesic::Inverse didn't return NaN if one of the longitudes was a
+    NaN (bug introduced in version 1.25).  Fixed in the C++, Java,
+    JavaScript, C, Fortran, and Python implementations of the geodesic
+    routines.  This bug was not present in the Matlab version.
+
+  * Fix bug in Utility::readarray and Utility::writearray which caused
+    an exception in debug mode with zero-sized arrays.
+
+  * Fix BLUNDER in OSGB::GridReference (found by kalderami) where the
+    wrong result was returned if the easting or northing was negative.
+
+  * OSGB::GridReference now returns "INVALID" if either coordinate is
+    NaN.  Similarly a grid reference starting with "IN" results in NaNs
+    for the coordinates.
+
+  * Default constructor for GeoCoords corresponds to an undefined
+    position (latitude and longitude = NaN), instead of the north pole.
+
+  * Add an online version of RhumbSolve at
+    http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve.
+
+  * Additions to the documentation:
+     + documentation on  Jacobi's conformal projection;
+     + a page on Auxiliary latitudes (actually, this was added in
+       version 1.39);
+     + document the use of two single quotes to stand for a double quote
+       in DMS (this feature was introduced in version 1.13).
+
+  * The Matlab function, geographiclibinterface, which compiles the
+    wrapper routines for Matlab now works with Matlab 2014b on a Mac.
 
 Changes between 1.39 (released 2014-11-11) and 1.38 versions:
 
@@ -407,7 +457,10 @@ Changes between 1.25 (released 2012-10-16) and 1.24 versions:
     + cmake uses folders in Visual Studio to reduce clutter;
     + allow precision of reals to be set in cmake;
     + fail gracefully in the absence of pod documentation tools;
-    + remove support for maintainer tasks in Makefile.mk.
+    + remove support for maintainer tasks in Makefile.mk;
+    + upgrade to automake 1.11.6 to fix the "make distcheck" security
+      vulnerability; see
+      http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-3386
 
 Changes between 1.24 (released 2012-09-22) and 1.23 versions:
 

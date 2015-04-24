@@ -13,7 +13,7 @@
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.40
 
-\section abstract Abstract
+\section abstract-c Abstract
 
 This is a C implementation of the geodesic algorithms from <a
 href="http://geographiclib.sf.net">GeographicLib</a>.  This is a
@@ -24,7 +24,7 @@ B. W. Kernigan and D. M. Ritchie, The C Programming Language, 2nd
 Ed. (Prentice Hall, 1988), and so should compile correctly with just
 about any C compiler.
 
-\section download Downloading the source
+\section download-c Downloading the source
 
 The C library is part of %GeographicLib which available for download at
 - <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.40.tar.gz">

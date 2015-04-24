@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2014-mm-dd
+\date 2015-mm-dd
 
 \section abstract Abstract
 
@@ -22,7 +22,7 @@ MGRS, geocentric, and local cartesian coordinates, for gravity (e.g.,
 EGM2008), geoid height and geomagnetic field (e.g., WMM2015)
 calculations, and for solving geodesic problems.  The emphasis is on
 returning accurate results with errors close to round-off (about 5--15
-nanometers).  New accurate algorithms for \ref geodesic and \ref
+nanometers).  Accurate algorithms for \ref geodesic and \ref
 transversemercator have been developed for this library.  The
 functionality of the library can be accessed from user code, from the
 \ref utilities provided, or via the \ref other.  Also included is a .NET
@@ -54,10 +54,10 @@ as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
 line endings.)  Alternatively you can get the latest release using git
 \verbatim
-  git clone -b r@PROJECT_VERSION@ git://git.code.sf.net/p/geographiclib/code geographiclib
+  git clone git://git.code.sf.net/p/geographiclib/code geographiclib
 \endverbatim
-There are also binary installers available for some platforms.  See \ref
-binaryinst.
+Each release is tagged, e.g., with r@PROJECT_VERSION@.  There are also
+binary installers available for some platforms.  See \ref binaryinst.
 
 GeographicLib is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -76,6 +76,7 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref magnetic
  - \ref geodesic
  - \ref triaxial
+ - \ref jacobi
  - \ref rhumb
  - \ref greatellipse
  - \ref transversemercator
@@ -136,7 +137,7 @@ and the utilities have been tested with g++ 4.4 under Linux, with g++
 4.2 under Mac OS X, and with MS Visual Studio 9 (2008), 10 (2010), 11
 (2012), and 12 (2013) compiled for 32 bit and 64 bit.
 
-Matlab, JavaScript, and Python interfaces are provided to portions of
+MATLAB, JavaScript, and Python interfaces are provided to portions of
 GeographicLib; see \ref other.
 
 The section \ref geodesic documents the method of solving the geodesic
@@ -298,9 +299,9 @@ Here are the steps to compile and install GeographicLib:
     matlab interfaces all depend on the variable with deeper paths
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
-    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib;
+    - cmake configuration: OFF cmake; ON: lib/cmake/GeographicLib;
     - python interface: OFF: python; ON: lib/python/site-packages;
-    - matlab interface: OFF: matlab; ON: libexec/GeographicLib/matlab;
+    - matlab interface: OFF: matlab; ON: share/matlab;
     .
   - <code>CMAKE_INSTALL_PREFIX</code> (default: <code>/usr/local</code>
     on non-Windows systems, <code>C:/Program Files/GeographicLib</code>
@@ -337,10 +338,6 @@ Here are the steps to compile and install GeographicLib:
 \endverbatim
     (With IDE compile environments, you get to select the build type in
     the IDE.)
-  - <code>MATLAB_COMPILER</code> (default: OFF).  Set this to either
-    "mex" (for Matlab) or "mkoctfile" (for Octave) to specify the
-    compiler to use for the Matlab/Octave interface.  See \ref matlab
-    for more information.
   - <code>GEOGRAPHICLIB_DOCUMENTATION</code> (default: OFF).  If set to
     ON, then html documentation is created from the source files,
     provided a sufficiently recent version of doxygen can be found.
@@ -373,7 +370,6 @@ Here are the steps to compile and install GeographicLib:
   make install # as root, if CMAKE_INSTALL_PREFIX is a system directory
 \endverbatim
   Possible additional targets are \verbatim
-  make matlabinterface (only for the Release configuration on Windows)
   make dist
   make exampleprograms
   make netexamples (supported only for Release configuration) \endverbatim
@@ -423,11 +419,7 @@ Here are the steps to compile and install GeographicLib:
   make install \endverbatim
 - The headers, library, and utilities are installed in the
   include/GeographicLib, lib, and bin directories under
-  <code>prefix</code>.  This installation method does not compile
-  the Matlab/Octave interface;  however the source for the interface is
-  installed in libexec/GeographicLib/matlab, see \ref matlab of
-  instructions on compiling the interface.  For documentation, open
-  <a href="index.html">
+  <code>prefix</code>.  For documentation, open <a href="index.html">
   share/doc/GeographicLib/html/index.html</a> in a web browser.
 
 \section gnu Installation with GNU compiler and Make
@@ -456,19 +448,15 @@ Here are the steps to compile and install GeographicLib:
   make PREFIX=/tmp/geographic install \endverbatim
 - The headers, library, and utilities are installed in the
   include/GeographicLib, lib, and bin directories under
-  <code>PREFIX</code>.  This installation method does not compile
-  the Matlab/Octave interface;  however the source for the interface is
-  installed in libexec/GeographicLib/matlab, see \ref matlab of
-  instructions on compiling the interface.  For documentation, open
-  <a href="index.html">
+  <code>PREFIX</code>.  For documentation, open <a href="index.html">
   share/doc/GeographicLib/html/index.html</a> in a web browser.
 
 \section windows Installation on Windows
 
 This method requires Visual Studio 2005, 2008, or 2010.  This builds a
 static library and the utilities.  If you only have Visual Studio 2003,
-use cmake to create the necessary solution file, see \ref cmake.  (cmake
-is needed to build the Matlab interface and to run the tests.)
+2012, or later, use cmake to create the necessary solution file, see
+\ref cmake.  (cmake is needed to run the tests.)
 - Unpack the source, running \verbatim
   unzip -q GeographicLib-@PROJECT_VERSION@.zip \endverbatim
 - Open GeographicLib-@PROJECT_VERSION@/windows/GeographicLib-vc10.sln in
@@ -480,10 +468,9 @@ is needed to build the Matlab interface and to run the tests.)
 - Copy the library windows/Release/GeographicLib.lib and the
   headers in include/GeographicLib somewhere convenient.  The
   headers should remain in a directory named GeographicLib.  If you
-  expect to use the Matlab/Octave interface, copy *.m and *.cpp from the
-  matlab directory to a directory in your matlab/octave path, see \ref
-  matlab for instructions on compiling the interface.  For
-  documentation, open
+  expect to use the MATLAB/Octave interface, copy *.m from the matlab
+  directory to a directory in your matlab/octave path, see \ref matlab
+  for instructions on compiling the interface.  For documentation, open
   <a href="index.html">doc/html/index.html</a> in a web
   browser.
 
@@ -522,13 +509,12 @@ documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
 will include C:/pkg-vc11/GeographicLib-@PROJECT_VERSION@/bin where the
 utilities are installed.  The headers and library are installed in the
-include/GeographicLib and lib folders.  With the 64-bit installer, the
-Matlab interface is installed in the matlab folder.  Add this to your
-path in Matlab to access this interface.  The libraries were built using
-using Visual Studio 11 2012 in release and debug modes.  The utilities
-were linked against the release-mode shared library.  The Matlab
-interface was compiled with Matlab R2013a 64-bit, however it may work
-with some other 64-bit versions of Matlab.
+include/GeographicLib and lib folders.  The MATLAB interface is
+installed in the matlab folder.  Add this to your path in MATLAB to
+access this interface.  The libraries were built using using Visual
+Studio 11 2012 in release and debug modes.  The utilities were linked
+against the release-mode shared library.
+
 <a href="NET/index.html">NETGeographicLib</a> library dlls (release and
 debug) are included with the binary installers; these are linked against
 the shared library for GeographicLib.
@@ -627,7 +613,6 @@ installer is created with \verbatim
   cmake -G "Visual Studio 10 Win64" \
     -D GEOGRAPHICLIB_LIB_TYPE=BOTH \
     -D PACKAGE_DEBUG_LIBS=ON \
-    -D MATLAB_COMPILER=mex \
     -D BUILD_NETGEOGRAPHICLIB=ON \
     ..
   cmake --build . --config Debug --target ALL_BUILD
@@ -1123,7 +1108,7 @@ returned as appropriate.  "INV" is treated as an invalid zone
 designation by UTMUPS.  "INVALID" is the corresponding invalid MGRS
 string.  (Similary "nan" is the equivalent invalid Geohash.)  NaNs allow
 the projection of polylines which are separated by NaNs; in this format
-they can be easily plotted in Matlab.
+they can be easily plotted in MATLAB.
 
 A note about portability.  For the most part, the code uses standard C++
 and should be able to be deployed on any system with a modern C++
@@ -1158,10 +1143,14 @@ starting in version 1.31.  There's also a macro
 GEOGRAPHICLIB_VERSION_STRING which expands to, e.g.,
 "@PROJECT_VERSION@"; this macro has been defined since version 1.9.
 Since version 1.37, there's also been a macro GEOGRAPHICLIB_VERSION
-which encode the version as a single number, e.g, 1003900.  The macro
-GEOGRAPHICLIB_VERSION_NUM allows you to compare versions, e.g., \code
-#if GEOGRAPHICLIB_VERSION >= GEOGRAPHICLIB_VERSION_NUM(1,36,0)
-... \endcode
+which encodes the version as a single number, e.g, 1003900.  Do not rely
+on this particular packing; instead use the macro
+GEOGRAPHICLIB_VERSION_NUM(a,b,c) which allows you to compare versions
+with, e.g.,
+\code
+#if GEOGRAPHICLIB_VERSION >= GEOGRAPHICLIB_VERSION_NUM(1,37,0)
+...
+#endif \endcode
 
 <center>
 Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
@@ -1205,6 +1194,16 @@ GeodesicLine, and PolygonAreaT in Java.  This implementation is entirely
 self-contained and does not depend on the rest of GeographicLib.  Sample
 main programs to solve the direct and inverse geodesic problems and to
 compute polygonal areas are provided.
+
+If you're using Apache Maven as your build system, you can use this
+package by including the dependency \verbatim
+  <dependency>
+    <groupId>net.sf.geographiclib</groupId>
+    <artifactId>GeographicLib-Java</artifactId>
+    <version>1.42</version>
+  </dependency>
+  \endverbatim
+in your <code>pom.xml</code>.
 
 For documentation, see
  - <a href="java/index.html">Java library for geodesics</a>.
@@ -1305,155 +1304,130 @@ print(h['lat2'], h['lon2']);
 (Note: The initial version of setup.py was provided by Andrew MacIntyre
 of the Australian Communications and Media Authority.)
 
-\section matlab Matlab and Octave implementations
+\section matlab MATLAB and Octave implementations
 
-The <code>matlab</code> directory Matlab and Octave implementations of
-some of the functions of GeographicLib.  To use
-these, start Matlab or Octave and run one of (for example) \verbatim
-   addpath /usr/local/libexec/GeographicLib/matlab
-   addpath 'C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/libexec/GeographicLib/matlab'
+The <code>matlab/geographiclib</code> directory contains MATLAB and
+Octave implementations of some of the functions of GeographicLib.  To
+use these, start MATLAB or Octave and run one of (for example):
+\verbatim
+   addpath /usr/local/share/matlab/geographiclib
+   addpath C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib
    \endverbatim
+A summary of the routines is obtained by \verbatim
+   help geographiclib \endverbatim
+These MATLAB functions is also available from the MATLAB File Exchange
+site as the
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+GeographicLib toolbox</a>, package 50605.
 
 The functions fall into the following groups
- - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
-   Geodesics on an ellipsoid of revolution</a>, native Matlab
-   implementations of the geodesic routines.  The available functions
-   are
-   - geoddoc: briefly descibe the routines
-   - geodreckon: solve the direct geodesic problem
-   - geoddistance: solve the inverse geodesic problem
-   - geodarea: compute the area of ellipsoidal polygons
-   .
-   Use the help function to get documentation, e.g., \code
-   help geoddistance \endcode
-   to obtain documentation.  These functions are also available as a
-   Matlab File Exchange package from
-   - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
-     http://www.mathworks.com/matlabcentral/fileexchange/39108</a>
- - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
-   Geodesic projections for an ellipsoid</a>, native Matlab
-   implementations of projections which are related to geodesics.  These
-   are
-   - geodproj: briefly descibe the routines
-   - eqdazim_fwd, eqdazim_inv: azimuthal equidistant
-   - cassini_fwd, cassini_inv: Cassini-Soldner
-   - tranmerc_fwd, tranmerc_inv: transverse Mercator
-   - gnomonic_fwd, gnomonic_inv: ellipsoidal gnomonic
-   - utm_fwd, utm_inv: universal transverse Mercator
-   .
-   These functions are also available as a Matlab File Exchange package
-   from
-   - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
-     http://www.mathworks.com/matlabcentral/fileexchange/39366</a>
-   .
-   (This requires that the previous package also be installed.)
- - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
-   Great ellipses</a>, implementations of solutions to the great ellipse
-   problems.  The functions are
-   - gedoc: briefly descibe the routines
-   - gereckon: solve the direct great circle problem
-   - gedistance: solve the inverse great circle problem
-   .
-   The functionality provided by these routines is <i>not</i> available
-   through GeographicLib's C++ library.  These functions are also
-   available as a Matlab File Exchange package from
-   - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
-     http://www.mathworks.com/matlabcentral/fileexchange/47898</a>
-   .
-   (This requires that package 39108 also be installed.)  Background on
-   this problem is provided in \ref greatellipse.
- - Finally, interface code so that some GeographicLib classes can be
-   accessed directly from Matlab or Octave.  The rest of this section
-   describes how to compile and use these interfaces.
-
-There are two ways of compiling the interface code: (1) using cmake and
-(2) invoking the compiler from Matlab.
- - <b>Using cmake:</b> Before running cmake, configure MATLAB on
-   Windows to use the same compiler that you're going to use for compiling
-   GeographicLib.  For example \verbatim
-   mex.bat -setup
-
-   Please choose your compiler for building MEX-files:
-   Would you like mex to locate installed compilers [y]/n? y
-   Select a compiler:
-   [1] Microsoft Visual C++ 2012 in C:\Program Files (x86)\Microsoft Visual Studio 11.0
-   [2] Microsoft Visual C++ 2010 in C:\Program Files (x86)\Microsoft Visual Studio 10.0
-
-   [0] None
-
-   Compiler: 2
-   etc. \endverbatim
-   (This will require that mex.bat is in your PATH.  With Linux, use
-   <code>mex -setup</code>.)  Then configure cmake with, for example
-   \verbatim
-   cmake -G "Visual Studio 10" -D MATLAB_COMPILER=mex ..
-   cmake --build . --config Release --target matlabinterface \endverbatim
-   (Note that only the Release configuration is supported for Matlab.)
-   If you are running a 64-bit version of Matlab, be sure to select a
-   64-bit generator with cmake, e.g., "Visual Studio 10 Win64".  Finally
-   compile GeographicLib with Visual Studio.  (The binary installer for
-   64-bit Windows includes the compiled interface built with Visual
-   Studio 10 and Matlab R2013a 64-bit).<br>
-   On Linux systems, you can compile the interface for use with octave
-   instead by using \verbatim
-   cmake -D MATLAB_COMPILER=mkoctfile ..
-   make matlabinterface \endverbatim
- - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
-   Octave and run, e.g., \code
-   mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab'
-   help geographiclibinterface
-   geographiclibinterface('C:/pkg-vc10/GeographicLib-@PROJECT_VERSION@');
-   addpath(pwd);
-   \endcode
-   The first command allows you to select the compiler to use (which
-   should be the same as that used to compile GeographicLib).
-
-To use the interface routines for GeographicLib, run one of (for
-example) \verbatim
-  addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/libexec/GeographicLib/matlab'
-\endverbatim
-in Octave or Matlab.  The available functions are:
- - geodesicdirect: solve direct geodesic problem
-   (see Geodesic::Direct)
- - geodesicinverse: solve inverse geodesic problem
-   (see Geodesic::Inverse)
- - geodesicline: compute points along a geodesic
-   (see GeodesicLine::Position)
- - polygonarea: compute area of a geodesic polygon
-   (see PolygonAreaT)
- - utmupsforward: convert geographic coordinates to UTM/UPS
-   (see UTMUPS::Forward)
- - utmupsreverse: convert UTM/UPS coordinates to geographic
-   (see UTMUPS::Reverse)
- - mgrsforward: convert UTM/UPS coordinates to MGRS
-   (see MGRS::Forward)
- - mgrsreverse: convert MGRS coordinates to UTM/UPS
-   (see MGRS::Reverse)
- - geoidheight: compute geoid height
-   (see Geoid::operator()())
- - geocentricforward: convert geographic coordinates to geocentric
-   (see Geocentric::Forward)
- - geocentricreverse: convert geocentric coordinates to geographic
-   (see Geocentric::Reverse)
- - localcartesianforward: convert geographic coordinates to local cartesian
-   (see LocalCartesian::Forward)
- - localcartesianreverse: convert local cartesian coordinates to geographic
-   (see LocalCartesian::Reverse)
+ - Geodesics
+   - geoddistance     - Distance between points on an ellipsoid
+   - geodreckon       - Point at specified azimuth, range on an ellipsoid
+   - geodarea         - Surface area of polygon on an ellipsoid
+ - Projections
+   - tranmerc_fwd     - Forward transverse Mercator projection
+   - tranmerc_inv     - Inverse transverse Mercator projection
+   - polarst_fwd      - Forward polar stereographic projection
+   - polarst_inv      - Inverse polar stereographic projection
+   - eqdazim_fwd      - Forward azimuthal equidistant projection
+   - eqdazim_inv      - Inverse azimuthal equidistant projection
+   - cassini_fwd      - Forward Cassini-Soldner projection
+   - cassini_inv      - Inverse Cassini-Soldner projection
+   - gnomonic_fwd     - Forward ellipsoidal gnomonic projection
+   - gnomonic_inv     - Inverse ellipsoidal gnomonic projection
+ - Grid systems
+   - utmups_fwd       - Convert to UTM/UPS system
+   - utmups_inv       - Convert from UTM/UPS system
+   - mgrs_fwd         - Convert UTM/UPS coordinates to MGRS
+   - mgrs_inv         - Convert MGRS to UTM/UPS coordinates
+ - Geoid lookup
+   - geoid_height     - Compute the height of the geoid
+   - geoid_load       - Load a geoid model
+ - Great ellipses
+   - gedistance       - Great ellipse distance between points on an ellipsoid
+   - gereckon         - Point along great ellipse at specified azimuth and range
+ - Geometric transformations
+   - geocent_fwd      - Conversion from geographic to geocentric coordinates
+   - geocent_inv      - Conversion from geocentric to geographic coordinates
+   - loccart_fwd      - Convert geographic to local cartesian coordinates
+   - loccart_inv      - Convert local cartesian to geographic coordinates
+ - Utility
+   - defaultellipsoid - Return the WGS84 ellipsoid
+   - ecc2flat         - Convert eccentricity to flattening
+   - flat2ecc         - Convert flattening to eccentricity
+ - Documentation
+   - geoddoc          - Geodesics on an ellipsoid of revolution
+   - projdoc          - Geodesic projections for an ellipsoid
+   - gedoc            - Great ellipses on an ellipsoid of revolution
  .
-These routines just offer a simple interface to the corresponding C++
-class.  Use the help function to get documentation, e.g., \code
-  help geodesicdirect \endcode
-Unfortunately, the help function does not work for compiled functions in
-Octave; in this case, just list the .m file, e.g., \code
-  type geodesicdirect \endcode
-Other useful functions, e.g., to convert from geographic
-coordinates to MGRS can easily be written with Matlab code.
+These functions reimplement the C++ routines from GeographicLib in
+MATLAB code (but note that routines for great ellipses are <i>only</i>
+available as MATLAB code).  Because these functions are all vectorized,
+their performance is comparable to the C++ routines.  The minimum
+version numbers required are
+ - MATLAB, version 7.9, 2009b,
+ - Octave, version 3.4, Feb. 2011.
+ .
+In addition, in order to use the geoid routines, Octave needs to have
+been built with a version of GraphicsMagick which supports 16-bit
+images.
 
-Note that geoidheight, when compiled with Visual Studio 2008 causes
-Matlab to crash.  (The problem does not occur with Visual Studio 2005 or
-Visual Studio 2010.)
+Previously, some of these routines were packaged as three separate
+packages
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
+   Geodesics on an ellipsoid of revolution</a>,
+   MATLAB File Exchange package 39108.
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
+   Geodesic projections for an ellipsoid</a>,
+   MATLAB File Exchange package 39366,
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
+   Great ellipses</a>,
+   MATLAB File Exchange package 47898.
+ .
+These packages have now all been incorporated into the
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+GeographicLib toolbox</a>.
+
+Prior to version 1.42, GeographicLib was distributed with some MATLAB
+functionality offered via compiled interface code.  This has now been
+replaced by native MATLAB wrapper functions which call the functions in
+the <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+GeographicLib toolbox</a>.  To use these wrapper functions, run one of:
+\verbatim
+   addpath /usr/local/share/matlab/geographiclib_legacy
+   addpath C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib_legacy
+   \endverbatim
+The <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+GeographicLib toolbox</a> <i>must</i> also be in your MATLAB path.  A
+summary of the routines is obtained by \verbatim
+   help geographiclib_legacy \endverbatim
+These functions are <b>DEPRECATED</b>.  Here is a function listing
+  - Geodesics
+    - geodesicdirect         - Wrapper for geodreckon
+    - geodesicinverse        - Wrapper for geoddistance
+    - geodesicline           - Another wrapper for geodreckon
+    - polygonarea            - Wrapper for geodarea
+  - Grid systems
+    - utmupsforward          - Wrapper for utmups_fwd
+    - utmupsreverse          - Wrapper for utmups_inv
+    - mgrsforward            - Wrapper for mgrs_fwd
+    - mgrsreverse            - Wrapper for mgrs_inv
+  - Geoid lookup
+    - geoidheight            - Wrapper for geoid_height
+  - Geometric transformations
+    - geocentricforward      - Wrapper for geocent_fwd
+    - geocentricreverse      - Wrapper for geocent_inv
+    - localcartesianforward  - Wrapper for loccart_fwd
+    - localcartesianreverse  - Wrapper for loccart_inv
+  - Deprecated
+    - geographiclibinterface - Compile interface code (DEPRECATED)
+  .
+The last routine can be used to compile the obsolete interface code
+(which is still provided as C++ code in the same directory).  Doing this
+will switch MATLAB from using the native MATLAB routines to the compiled
+interface.  However, the native code is easier to deploy and is about as
+fast; so the compiled interface will be removed at some point in 2016.
 
 \section maxima Maxima routines
 
@@ -2571,6 +2545,10 @@ The supported models are
    <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (11th generation)</a>, which approximates
    the main magnetic field for the period 1900--2015.
+ - <b>igrf12</b>, the
+   <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
+   Geomagnetic Reference Field (12th generation)</a>, which approximates
+   the main magnetic field for the period 1900--2020.
  - <b>emm2010</b>, the
    <a href="http://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
    Magnetic Model 2010</a>, which approximates the main and crustal
@@ -2638,6 +2616,20 @@ These magnetic models are available for download:
  <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.zip">
  link</a> (8)</center>
 <tr>
+ <td>igrf12
+ <td><center>13</center>
+ <td><center>1900--2020</center>
+ <td><center>26</center>
+ <td><center>
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf12.tar.bz2">
+ link</a> (7)</center>
+ <td><center>
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf12.exe">
+ link</a> (310)</center>
+ <td><center>
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/igrf12.zip">
+ link</a> (8)</center>
+<tr>
  <td>emm2010
  <td><center>739</center>
  <td><center>2010--2015</center>
@@ -2660,7 +2652,7 @@ geographiclib-get-magnetic (typically installed in /usr/local/sbin)
 which automates the process of downloading and installing the magnetic
 models.  For example
 \verbatim
-   geographiclib-get-magnetic all  # install wmm2010, wmm2015, igrf11, emm2010
+   geographiclib-get-magnetic all  # install wmm2010, wmm2015, igrf11, igrf12, emm2010
    geographiclib-get-magnetic -h   # for help
 \endverbatim
 This script should be run as a user with write access to the
@@ -2729,9 +2721,9 @@ keywords
      meters.
    - <b>NumModels</b> (default 1), the number of models.  WMM2015
      consists of a single model giving the magnetic field and its time
-     variation at 2015.  IGRF11 consists of 23 models for 1900 thru 2010
+     variation at 2015.  IGRF12 consists of 24 models for 1900 thru 2015
      at 5 year intervals.  The time variation is given only for the last
-     model to allow extrapolation beyond 2010.  For dates prior to 2010,
+     model to allow extrapolation beyond 2015.  For dates prior to 2015,
      linear interpolation is used.
    - <b>Epoch</b> (required), the time origin (in fractional years) for
      the first model.
@@ -2895,7 +2887,7 @@ References:
    Aeronautical Chart and Information Center (St. Louis, 1964),
    Chaps. 5--7.
  - J. Danielsen,
-   The Area under the Geodesic,
+   The area under the geodesic,
    Survey Review 30(232), 61--66 (1989).
    DOI: <a href="https://dx.doi.org/10.1179/003962689791474267">
    10.1179/003962689791474267</a>
@@ -3047,7 +3039,7 @@ In the expansions below, we have
  - \f$ c^2 = a^2/2 + b^2/2 (\tanh^{-1}e)/e \f$
  - \e ep2 = \f$ e'^2 \f$
  - \e k2 = \f$ k^2 \f$
- - \e eps = \f$ \epsilon \f$
+ - \e eps = \f$ \epsilon = k^2 / (\sqrt{1 + k^2} + 1)^2\f$
 
 The formula for distance is
 \f[
@@ -3808,7 +3800,7 @@ Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
 \page triaxial Geodesics on a triaxial ellipsoid
 
 <center>
-Back to \ref geodesic.  Forward to \ref rhumb.  Up to \ref contents.
+Back to \ref geodesic.  Forward to \ref jacobi.  Up to \ref contents.
 </center>
 
 Jacobi (1839) showed that the problem of geodesics on a triaxial
@@ -3829,7 +3821,6 @@ Go to
  - \ref triaxial-survey
  - \ref triaxial-stab
  - \ref triaxial-inverse
- - \ref triaxial-conformal
 
 <b>NOTES</b>
  -# A triaxial ellipsoid approximates the earth only slightly better
@@ -4379,174 +4370,323 @@ The shortest path found by this method is unique unless:
 
 \section triaxial-conformal Jacobi's conformal projection
 
-In Vorlesungen &uuml;ber Dynamik, &sect;28, Jacobi gives the following
-conformal mapping of the triaxial ellipsoid onto a plane
+This material is now on its own page; see \ref jacobi.
+
+<center>
+Back to \ref geodesic.  Forward to \ref jacobi.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page jacobi Jacobi's conformal projection
+
+<center>
+Back to \ref triaxial.  Forward to \ref rhumb.  Up to
+\ref contents.
+</center>
+
+In addition to solving the geodesic problem for the triaxial ellipsoid,
+Jacobi (1839) briefly mentions the problem of the conformal projection
+of ellipsoid.  He covers this in greater detail in
+<a href="https://books.google.com/books?id=ryEOAAAAQAAJ&pg=PA212">
+<i>Vorlesungen &uuml;ber Dynamik</i>, &sect;28</a>, which is now
+available in an <a href="https://www.worldcat.org/oclc/440645889">
+English translation: Lectures on Dynamics</a>
+(<a href="http://geographiclib.sf.net/jacobi-errata.html">
+errata</a>).
+
+\section jacobi-conformal Conformal projection
+
+It is convenient to rotate Jacobi's ellipsoidal coordinate system so
+that \f$(X,Y,Z)\f$ are respectively the middle, large, and small axes of
+the ellipsoid.  The longitude \f$\omega\f$ is shifted so that
+\f$(\beta=0,\omega=0)\f$ is the point \f$(b,0,0)\f$.  The coordinates
+are thus defined by
 \f[
 \begin{align}
-x &= 2 \int \frac
-{\sqrt{a^2 \sin^2\omega + b^2 \cos^2\omega}}
-{\sqrt{a^2 \sin^2\omega + b^2 \cos^2\omega - c^2}}\, d\omega, \\
-y &= 2 \int \frac
+  X &= b \cos\beta \cos\omega, \\
+  Y &= a \sin\omega
+      \frac{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}}
+           {\sqrt{a^2 - c^2}}, \\
+  Z &= c \sin\beta
+      \frac{\sqrt{a^2\cos^2\omega + b^2\sin^2\omega - c^2}}
+           {\sqrt{a^2 - c^2}}.
+\end{align}
+\f]
+After this change, the large principal ellipse is the equator,
+\f$\beta=0\f$, while the small principal ellipse is the prime meridian,
+\f$\omega=0\f$.  The four umbilic points, \f$\left|\omega\right| =
+\left|\beta\right| = \frac12\pi\f$, lie on middle principal ellipse in
+the plane \f$X=0\f$.
+
+Jacobi gives the following conformal mapping of the triaxial ellipsoid
+onto a plane
+\f[
+\begin{align}
+x &= \frac{\sqrt{a^2-c^2}}b  \int \frac
+{\sqrt{a^2 \cos^2\omega + b^2 \sin^2\omega}}
+{\sqrt{a^2 \cos^2\omega + b^2 \sin^2\omega - c^2}}\, d\omega, \\
+y &= \frac{\sqrt{a^2-c^2}}b \int \frac
 {\sqrt{b^2 \sin^2\beta + c^2 \cos^2\beta}}
 {\sqrt{a^2 - b^2 \sin^2\beta - c^2 \cos^2\beta}}\, d\beta.
 \end{align}
 \f]
 The scale of the projection is
 \f[
-k = \frac2
-{\sqrt{a^2 \sin^2\omega + b^2 (\cos^2\omega-\sin^2\beta) - c^2 \cos^2\beta}}.
+k = \frac{\sqrt{a^2-c^2}}
+{b\sqrt{a^2 \cos^2\omega + b^2 (\sin^2\omega-\sin^2\beta) - c^2 \cos^2\beta}}.
 \f]
-Nyrtsov, et al.,
- - M. V. Nyrtsov, M. E. Flies, M. M. Borisov, P. J. Stooke,
-   <a href="https://dx.doi.org/10.1007/978-3-642-32618-9_17">
-   Jacobi conformal projection of the triaxial ellipsoid: new projection
-   for mapping of small celestial bodies,</a> in
-   <i>Cartography from Pole to Pole</i>,
-   selected contributions to the 26th international conference of the ICA,
-   Dresden 2013,
-   edited by M. Buchroithner, N. Prechtel, and D. Burghardt
-   (Springer, 2014), pp. 235--246.
- .
-express the integrals in terms of elliptic integrals,
+I have scaled the Jacobi's projection by a constant factor,
+\f[
+\frac{\sqrt{a^2-c^2}}{2b},
+\f]
+so that it reduces to the familiar formulas in the case of an oblate ellipsoid.
+
+\section jacobi-elliptic The projection in terms of elliptic integrals
+
+The projection may be expressed in terms of elliptic integrals,
 \f[
 \begin{align}
-x&=\frac{2b}{\sqrt{a^2-c^2}}
-G\biggl(\omega',\frac{a^2-b^2}{a^2-c^2},
-        \frac cb\frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}}\biggr),\\
-y&=\frac{2c}{\sqrt{a^2-b^2}}
-G\biggl(\beta',-\frac{b^2-c^2}{a^2-b^2},
-        i\frac ac\frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}\biggr),
+x&=(1+e_a^2)\,\Pi(\omega',-e_a^2, \cos\nu),\\
+y&=(1-e_c^2)\,\Pi(\beta' , e_c^2, \sin\nu),\\
+k&=\frac{\sqrt{e_a^2+e_c^2}}{b\sqrt{e_a^2\cos^2\omega+e_c^2\cos^2\beta}},
 \end{align}
 \f]
 where
 \f[
 \begin{align}
-\tan\omega' &= \frac{\sqrt{a^2-c^2}}{\sqrt{b^2-c^2}} \tan\omega, \\
-\tan\beta' &= \frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}} \tan\beta,
+e_a &= \frac{\sqrt{a^2-b^2}}b, \qquad
+e_c = \frac{\sqrt{b^2-c^2}}b, \\
+\tan\omega' &= \frac ba \tan\omega = \frac 1{\sqrt{1+e_a^2}} \tan\omega, \\
+\tan\beta' &= \frac bc \tan\beta = \frac 1{\sqrt{1-e_c^2}} \tan\beta, \\
+\tan\nu &= \frac ac \frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}
+=\frac{e_c}{e_a}\frac{\sqrt{1+e_a^2}}{\sqrt{1-e_c^2}},
 \end{align}
 \f]
-and
+\f$\nu\f$ is the geographic latitude of the umbilic point at \f$\beta =
+\omega = \frac12\pi\f$ (the angle a normal at the umbilic point makes
+with the equatorial plane), and \f$\Pi(\phi,\alpha^2,k)\f$ is the
+elliptic integral of the third kind, http://dlmf.nist.gov/19.2.E7.  This
+allows the projection to be numerically computed using
+EllipticFunction::Pi(real phi) const.
+
+Nyrtsov, et al.,
+ - M. V. Nyrtsov, M. E. Flies, M. M. Borisov, P. J. Stooke,
+   <a href="https://dx.doi.org/10.1007/978-3-642-32618-9_17">
+   Jacobi conformal projection of the triaxial ellipsoid: new projection
+   for mapping of small celestial bodies,</a> in
+   <i>Cartography from Pole to Pole</i>
+   (Springer, 2014), pp. 235--246.
+ .
+also expressed the projection in terms of elliptic integrals.
+However, their expressions don't allow the limits of ellipsoids of
+revolution to be readily recovered.  The relations
+http://dlmf.nist.gov/19.7.E5 can be used to put their results in the
+form given here.
+
+\section jacobi-properties Properties of the projection
+
+\f$x\f$ (resp. \f$y\f$) depends on \f$\omega\f$ (resp. \f$\beta\f$)
+alone, so that latitude-longitude grid maps to straight lines in the
+projection.  In this sense, the Jacobi projection is the natural
+generalization of the Mercator projection for the triaxial ellipsoid.
+(See below for the limit \f$a\rightarrow b\f$, which makes this
+connection explicit.)
+
+In the general case (all the axes are different), the scale diverges
+only at the umbilic points.  The behavior of these singularities is
+illustrated by the complex function
+\f[
+f(z;e) = \cosh^{-1}(z/e) - \log(2/e).
+\f]
+For \f$e > 0\f$, this function has two square root singularities at
+\f$\pm e\f$, corresponding to the two northern umbilic points.
+Plotting contours of its real (resp. imaginary) part gives the
+behavior of the lines of constant latitude (resp. longitude) near the
+north pole in Fig. 1.  If we pass to the limit \f$e\rightarrow 0\f$,
+then \f$ f(z;e)\rightarrow\log z\f$, and the two branch points merge
+yielding a stronger (logarithmic) singularity at \f$z = 0\f$,
+concentric circles of latitude, and radial lines of longitude.
+
+Again in the general case, the extents of \f$x\f$ and \f$y\f$ are
+finite,
 \f[
 \begin{align}
- G(\phi,\alpha^2,k) &= \int_0^\phi
- \frac{\sqrt{1 - k^2\sin^2\theta}}{1 - \alpha^2\sin^2\theta}\,d\theta\\
- &=\frac{k^2}{\alpha^2}F(\phi, k)
- +\biggl(1-\frac{k^2}{\alpha^2}\biggr)\Pi(\phi, \alpha^2, k)
+x\bigl(\tfrac12\pi\bigr) &=(1+e_a^2)\,\Pi(-e_a^2, \cos\nu),\\
+y\bigl(\tfrac12\pi\bigr) &=(1-e_c^2)\,\Pi(e_c^2, \sin\nu),
 \end{align}
 \f]
-is the combination of elliptic integrals of the first and third kinds
-that appears in the integral, given by Legendre (1811), for the
-longitude of a geodesic on an ellipsoid of revolution.
-The function \f$ G(\phi,\alpha^2,k) \f$ is provided by the
-EllipticFunction class.  The expression for \f$ x \f$ is essentially the
-same at that given by Nyrtsov, et al.; I have put their expression for
-\f$ y \f$ into a somewhat simpler form using an imaginary modulus.
+where \f$\Pi(\alpha^2,k)\f$ is the complete elliptic integral of the
+third kind, http://dlmf.nist.gov/19.2.E8.
 
-Using http://dlmf.nist.gov/19.7.E9, the projection may also be written
-as
+In particular, if we substitute values appropriate for the earth,
 \f[
 \begin{align}
-x &= \frac{2a^2}{b{\sqrt{a^2-c^2}}}
-\Pi\biggl(\omega', -\frac{a^2-b^2}{b^2},
-          \frac cb\frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}}\biggr) \\
-&\quad{}-2\tan^{-1}\biggl(\frac{(a^2-b^2) \sin\omega' \cos\omega'}
-{\sqrt{a^2(b^2-c^2)\sin^2\omega' + b^2(a^2-c^2)\cos^2\omega'}}\biggr),\\
-y &= \frac{2b^2}{c\sqrt{a^2-b^2}}
-\Pi\biggl(\beta',-\frac{b^2-c^2}{c^2},
-          i\frac ac\frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}\biggr) \\
-&\quad{}-2\sinh^{-1}\biggl(\frac{(b^2-c^2)\sin\beta \cos\beta}
-{\sqrt{b^2(a^2-b^2)\sin^2\beta + c^2(a^2-c^2)\cos^2\beta}}\biggr).
+a&=(6378137+35)\,\mathrm m,\\
+b&=(6378137-35)\,\mathrm m,\\
+c&=6356752\,\mathrm m,\\
 \end{align}
 \f]
-In the case of a nearly spherical ellipsoid, the parameter (the second
-argument) of the elliptic integral is small.
+we have
+\f[
+\begin{align}
+x\bigl({\textstyle\frac12}\pi\bigr) &= 1.5720928 = \hphantom{0}90.07428^\circ,\\
+y\bigl({\textstyle\frac12}\pi\bigr) &= 4.2465810 = 243.31117^\circ.\\
+\end{align}
+\f]
 
-Notes:
- - \f$x\f$ (resp. \f$y\f$) depends on \f$\omega\f$ (resp. \f$\beta\f$)
-   alone, so that latitude-longitude grid maps to straight lines in the
-   projection.  In this sense, the Jacobi projection is the natural
-   generalization of the Mercator projection for the triaxial ellipsoid.
-   Indeed, in the limit \f$b\rightarrow a\f$, it reduces to the normal
-   Mercator projection for an oblate ellipsoid (apart from an overall
-   scale),
-   \f[
-   \begin{align}
-   x &= \frac{2a}{\sqrt{a^2 - c^2}} \omega,\\
-   y &= \frac{2a}{\sqrt{a^2 - c^2}} \int \frac
-   {\sqrt{a^2 \sin^2\beta + c^2 \cos^2\beta}}{a\cos\beta}\, d\beta\\
-   &= \frac{2a}{\sqrt{a^2 - c^2}} \sinh^{-1}\biggl(\frac ac \tan\beta\biggr) -
-   2\sinh^{-1}\biggl(\frac{\sqrt{a^2-c^2}}c\sin\beta\biggr),\\
-   k &= \frac{2a}{\sqrt{a^2 - c^2}}\frac1{a\cos\beta};
-   \end{align}
-   \f]
-   recall that \f$\beta\f$ is the parametric latitude in this limit.
- - In the general case (all the axes are different), the scale diverges
-   only at the umbilic points, \f$\sin\omega = \cos\beta = 0\f$.  The
-   behavior of these singularities is illustrated by the complex
-   function
-   \f[
-   f(z;e) = \cosh^{-1}(z/e) - \log(2/e).
-   \f]
-   For \f$e > 0\f$, this function has two square root singularities at
-   \f$\pm e\f$, corresponding to the two northern umbilic points.
-   Plotting contours of its real (resp. imaginary) part gives the
-   behavior of the lines of constant latitude (resp. longitude) near the
-   north pole in Fig. 1.  If we pass to the limit \f$e\rightarrow 0\f$,
-   then \f$ f(z;e)\rightarrow\log z\f$, and the two branch points merge
-   yielding a stronger (logarithmic) singularity at \f$z = 0\f$,
-   concentric circles of latitude, and radial lines of longitude.
- - Again in the general case, the extents of \f$x\f$ and \f$y\f$ are
-   finite (given by the complete elliptic integral of the third kind),
-   \f[
-   \begin{align}
-   x\bigl({\textstyle\frac12}\pi\bigr) &= \frac{2a^2}{b{\sqrt{a^2-c^2}}}
-   \Pi\biggl(-\frac{a^2-b^2}{b^2},
-   \frac cb\frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}}\biggr),\\
-   y\bigl({\textstyle\frac12}\pi\bigr) &= \frac{2b^2}{c\sqrt{a^2-b^2}}
-   \Pi\biggl(-\frac{b^2-c^2}{c^2},
-   i\frac ac\frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}\biggr).
-   \end{align}
-   \f]
- - In particular, if we substitute values appropriate for the earth,
-   \f[
-   \begin{align}
-   a&=(6378137+35)\,\mathrm m,\\
-   b&=(6378137-35)\,\mathrm m,\\
-   c&=6356752\,\mathrm m,\\
-   \end{align}
-   \f]
-   we have
-   \f[
-   \begin{align}
-   x\bigl({\textstyle\frac12}\pi\bigr) &= 38.396508 = 1.0000005\,q,\\
-   y\bigl({\textstyle\frac12}\pi\bigr) &= 103.717719 = 2.7012293\,q,\\
-   \end{align}
-   \f]
-   where
-   \f[
-   q = \pi \frac{\sqrt{a^2+b^2}}{\sqrt{a^2+b^2-2c^2}}.
-   \f]
- - If rhumb lines are defined as curves with a constant bearing relative
-   to the ellipsoid coordinates, then these are straight lines in the
-   Jacobi projection.  A rhumb line which passes over an umbilic point
-   immediately retraces its path.  A rhumb line which crosses the line
-   joining the two northerly umbilic points starts traveling south with
-   a reversed heading (e.g., a NE heading becomes a SW heading).  This
-   behavior is preserved in the limit \f$b\rightarrow a\f$ (although the
-   longitude becomes indeterminate in this limit).
+The projection may be inverted (to give \f$\omega\f$ in terms of \f$x\f$
+and \f$\beta\f$ in terms of \f$y\f$) by using Newton's method to find
+the root of, for example, \f$x(\omega) - x_0 = 0\f$.  The derivative of
+the elliptic integral is, of course, just given by its defining
+relation.
 
-An implementation of the Jacobi conformal projection is given here
-\include JacobiConformal.hpp
+If rhumb lines are defined as curves with a constant bearing relative
+to the ellipsoid coordinates, then these are straight lines in the
+Jacobi projection.  A rhumb line which passes over an umbilic point
+immediately retraces its path.  A rhumb line which crosses the line
+joining the two northerly umbilic points starts traveling south with
+a reversed heading (e.g., a NE heading becomes a SW heading).  This
+behavior is preserved in the limit \f$a\rightarrow b\f$ (although the
+longitude becomes indeterminate in this limit).
+
+\section jacobi-limiting Limiting cases
+
+<b>Oblate ellipsoid</b>, \f$a\rightarrow b\f$.  The coordinate system
+is
+\f[
+\begin{align}
+  X &= b \cos\beta \cos\omega, \\
+  Y &= b \cos\beta \sin\omega, \\
+  Z &= c \sin\beta.
+\end{align}
+\f]
+Thus \f$\beta\f$ (resp. \f$\beta'\f$) is the parametric
+(resp. geographic) latitude and \f$\omega=\omega'\f$ is the longitude;
+the quantity \f$e_c\f$ is the eccentricity of the ellipsoid.
+Using http://dlmf.nist.gov/19.6.E12 and http://dlmf.nist.gov/19.2.E19
+the projection reduces to the normal Mercator projection for an oblate
+ellipsoid,
+\f[
+\begin{align}
+x &= \omega,\\
+y &= \sinh^{-1}\tan\beta'
+- e_c \tanh^{-1}(e_c\sin\beta'),\\
+k &= \frac1{b\cos\beta}.
+\end{align}
+\f]
+
+<b>Prolate ellipsoid</b>, \f$c\rightarrow b\f$. The coordinate system
+is
+\f[
+\begin{align}
+  X &= b \cos\omega \cos\beta, \\
+  Y &= a \sin\omega, \\
+  Z &= b \cos\omega \sin\beta.
+\end{align}
+\f]
+Thus \f$\omega\f$ (resp. \f$\omega'\f$) now plays the role of the
+parametric (resp. geographic) latitude and while \f$\beta=\beta'\f$ is
+the longitude.  Using http://dlmf.nist.gov/19.6.E12
+http://dlmf.nist.gov/19.2.E19 and http://dlmf.nist.gov/19.2.E18 the
+projection reduces to similar expressions with the roles of \f$\beta\f$
+and \f$\omega\f$ switched,
+\f[
+\begin{align}
+x &= \sinh^{-1}\tan\omega'
++ e_a
+  \tan^{-1}(e_a\sin\omega'),\\
+y &= \beta,\\
+k &= \frac1{b\cos\omega}.
+\end{align}
+\f]
+
+<b>Sphere</b>, \f$a\rightarrow b\f$ and \f$c\rightarrow b\f$.  This is a
+non-uniform limit depending on the parameter \f$\nu\f$,
+\f[
+\begin{align}
+  X &= b \cos\omega \cos\beta, \\
+  Y &= b \sin\omega \sqrt{1 - \sin^2\nu\sin^2\beta}, \\
+  Z &= b \sin\beta \sqrt{1 - \cos^2\nu\sin^2\omega}.
+\end{align}
+\f]
+Using http://dlmf.nist.gov/19.6.E13 the projection can be put in terms
+of the elliptic integral of the first kind, http://dlmf.nist.gov/19.2.E4
+\f[
+\begin{align}
+x &= F(\omega, \cos\nu), \\
+y &= F(\beta, \sin\nu), \\
+k &= \frac1{b \sqrt{\cos^2\nu\cos^2\omega + \sin^2\nu\cos^2\beta}},
+\end{align}
+\f]
+Obtaining the limit of a sphere via an oblate (resp. prolate) ellipsoid
+corresponds to setting \f$\nu = \frac12\pi\f$ (resp. \f$\nu
+=0\f$).  In these limits, the elliptic integral reduces to elementary
+functions http://dlmf.nist.gov/19.6.E7 and http://dlmf.nist.gov/19.6.E8
+\f[
+\begin{align}
+F(\phi, 0) &= \phi, \\
+F(\phi, 1) &= \mathop{\mathrm{gd}}\nolimits^{-1}\phi = \sinh^{-1}\tan\phi.
+\end{align}
+\f]
+The spherical limit gives the projection found by &Eacute;. Guyou in
+ - <a href="https://books.google.com/books?id=saBDAQAAIAAJ&pg=PA308">
+   Sur un nouveau système de projection de la sphère</a>,
+   Comptes Rendus 102(6), 308--310 (1886).
+ - <a href="https://books.google.com/books?id=VjU8AQAAMAAJ&pg=PA16">
+   Nouveau système de projection de la sphère: généralisation de la
+   projection de Mercator</a>,
+   Annales Hydrographiques (2nd series) 9, 16--35 (1887).
+ .
+who apparently derived it without realizing that it is just a special
+case of the projection Jacobi had given some 40 years earlier.  Guyou's
+name is usually associated with the particular choice,
+\f$\nu=\frac14\pi\f$, in which case the hemisphere
+\f$\left|\omega\right|\le\frac12\pi\f$ is mapped into a square.
+However, by varying \f$\nu\in[0,\frac12\pi]\f$ the hemisphere can be
+mapped into a rectangle with any aspect ratio, \f$K(\cos\nu) :
+K(\sin\nu)\f$, where \f$K(k)\f$ is the complete elliptic integral of
+the first find, http://dlmf.nist.gov/19.2.E8.
+
+\section jacobi-sphere Conformal mapping of an ellipsoid to a sphere
+
+An essential tool in deriving conformal projections of an ellipsoid of
+revolution is the conformal mapping of the ellipsoid onto a sphere.
+This allows conformal projections of the sphere to be generalized to the
+case of an ellipsoid of revolution.  This conformal mapping is obtained
+by using the ellipsoidal Mercator projection to map the ellipsoid to
+the plane and then using the spherical Mercator projection to map the
+plane onto the sphere.
+
+A similar construction is possible for a triaxial ellipsoid.  Map each
+octant of the ellipsoid onto a rectangle using the Jacobi projection.
+The aspect ratio of this rectangle is
+\f[
+(1+e_a^2)\,\Pi(-e_a^2, \cos\nu) :
+(1-e_c^2)\,\Pi( e_c^2, \sin\nu).
+\f]
+Find the value of \f$\nu'\f$ such that this ratio equals
+\f[
+K(\cos\nu') : K(\sin\nu').
+\f]
+Map the rectangle onto the equivalent octant of the sphere using Guyou's
+projection with parameter \f$\nu = \nu'\f$.  This reduces to the
+standard construction in the limit of an ellipsoid of revolution.
+
+\section jacobi-implementation An implementation of the projection
+
+The JacobiConformal class provides an implementation of the Jacobi
+conformal projection is given here.  <b>NOTE:</b> This is just sample
+code.  It is not part of GeographicLib itself.
 
 <center>
-Back to \ref geodesic.  Forward to \ref rhumb.  Up to \ref contents.
+Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page rhumb Rhumb lines
 
 <center>
-Back to \ref triaxial.  Forward to \ref greatellipse.  Up to
+Back to \ref jacobi.  Forward to \ref greatellipse.  Up to
 \ref contents.
 </center>
 
@@ -5134,7 +5274,7 @@ unchanged.  The result for the sum is
 \f]
 
 <center>
-Back to \ref triaxial.  Forward to \ref greatellipse.  Up to
+Back to \ref jacobi.  Forward to \ref greatellipse.  Up to
 \ref contents.
 </center>
 **********************************************************************/
@@ -5153,19 +5293,14 @@ geodesic problems is complex and costly.  These assumptions are no
 longer true, and geodesics should normally be used in place of great
 ellipses.  This is discussed in more detail in \ref gevsgeodesic.
 
-Solutions of the great ellipse problems implemented for Matlab and
+Solutions of the great ellipse problems implemented for MATLAB and
 Octave are provided by
  - gedoc: briefly descibe the routines
  - gereckon: solve the direct great circle problem
  - gedistance: solve the inverse great circle problem
  .
-These functions are also available as a package
-<a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
-47898</a> on Matlab File Exchange.  This requires also the installation
-of package
-<a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
-39108</a>.  In this time, there are no C++ support in GeographicLib for
-great ellipses.
+At this time, there are no C++ support in GeographicLib for great
+ellipses.
 
 References:
  - P. D. Thomas,
@@ -6571,7 +6706,7 @@ Here's what you should know:
    arbitrary precision via mpfr::mpreal; this requires
    <a href="http://www.mpfr.org"> MPFR</a> (version 3.0 or later),
    <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
-   (version 3.5.9 or later), and a compiler which supports the explicit
+   (version 3.6.2 or later), and a compiler which supports the explicit
    cast operator (e.g., g++ 4.5 or later, Visual Studio 12 2013 or
    later).
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
@@ -6834,17 +6969,77 @@ the links in the documentaion of older versions may be out of date (in
 particular the links for the source code will not work if the code has
 been migrated to the archive subdirectory).  All the releases are
 available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
-of the git repository for GeographicLib.
+of the
+<a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
+git repository for GeographicLib</a>.
+
+ - <a href="http://geographiclib.sf.net/1.42">Version 1.42</a>
+   (released 2015-mm-dd)
+   - On non-Windows systems, the cmake config-style find_package files
+     are now installed in
+     ${CMAKE_INSTALL_PREFIX}/lib/cmake/GeographicLib instead of
+     ${CMAKE_INSTALL_PREFIX}/share/cmake/GeographicLib, because the
+     files are architecture-specific.  You should remove the versions in
+     the old location.
+   - Fix autoconf mismatch of version numbers (which were inconsistent
+     in versions 1.40 and 1.41).
+   - DMS::Decode allows a single addition or subtraction operation,
+     e.g., 70W+0:0:15.  This affects the GeoCoords class and the
+     utilities (which use the DMS class for reading coordinates).
+   - Mark the computation of the gradient of the geoid height in the
+     Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a>
+     utility as deprecated.
+   - Add Math::norm, Math::AngRound, Math::tand, Math::atan2d,
+     Math::eatanhe, Math::taupf, Math::tauf, Math::fma and remove
+     duplicated (but private) functionality from other classes.
+   - Work around the boost-quadmath bug with setprecision(0).
+   - MATLAB changes.
+     - provide native MATLAB implementations for compiled interface
+       functions;
+     - remove MATLAB_COMPILER option from CMakeLists.txt;
+     - reorganize directories, so that
+       - parent directory on non-Windows systems is
+         ${CMAKE_INSTALL_PREFIX}/share (instead of
+         ${CMAKE_INSTALL_PREFIX}/libexec), this is because the files are
+         architecture independent;
+       - matlab/geographiclib contains the native matlab code;
+       - matlab/geographiclib_legacy contains wrapper functions to mimic
+         the previous compiled functionality;
+     - the installed MATLAB code mirrors this layout;
+     - matlab/geographiclib is now packages and distributed as
+       MATLAB File Exchange package
+       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+       50605</a> (this supersedes three earlier packages).
+     - point fix for geodarea.m to handle polygons which encircle a pole
+       multiple times (released as version 1.41.1 of MATLAB File
+       Exchange package 39108, 2014-04-22).
+   - artifactId for Java package changed to GeographicLib-Java and the
+     package is now depolyed to oss.sonatype.org (thanks to Chris
+     Bennight for help on this).  TODO: update Java documentation to
+     include relevant info.
+
+ - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
+   (released 2015-03-09)
+   - Fix bug in Rhumb::Inverse (with \e exact = true) and related
+     functions which causes the wrong distance to be reported if one of
+     the end points is at a pole.  Thanks to Thomas Murray for reporting
+     this.
+   - Add International Geomagnetic Reference Field (12th generation),
+     which approximates the main magnetic field of the earth for the
+     period 1900--2020.
+   - Split information about \ref jacobi to a separate section and
+     include more material.
 
  - <a href="http://geographiclib.sf.net/1.40">Version 1.40</a>
-   (released 2014-mm-dd)
+   (released 2014-12-18)
    - Add the World Magnetic Model 2015, wmm2015.  This is now the
-     default magnetic model (replacing wmm2010 which was valid thru the
-     end of 2014).
+     default magnetic model for
+     <a href="MagneticField.1.html">MagneticField</a> (replacing wmm2010
+     which is valid thru the end of 2014).
    - Geodesic::Inverse didn't return NaN if one of the longitudes was a
      NaN (bug introduced in version 1.25).  Fixed in the C++, Java,
      JavaScript, C, Fortran, and Python implementations of the geodesic
-     routines.  This bug was not present in the Matlab version.
+     routines.  This bug was not present in the MATLAB version.
    - Fix bug in Utility::readarray and Utility::writearray which caused
      an exception in debug mode with zero-sized arrays.
    - Fix BLUNDER in OSGB::GridReference (found by kalderami) where the
@@ -6856,9 +7051,13 @@ of the git repository for GeographicLib.
      position (latitude and longitude = NaN), instead of the north pole.
    - Add an online version of <a href="RhumbSolve.1.html">RhumbSolve</a>
      at http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve.
-   - Add documentation on \ref triaxial-conformal.
-   - Add a page on \ref auxlat (actually, this was added in Version
-     1.39).
+   - Additions to the documentation:
+     - documentation on \ref triaxial-conformal;
+     - a page on \ref auxlat (actually, this was added in version 1.39);
+     - document the use of two single quotes to stand for a double quote
+       in DMS (this feature was introduced in version 1.13).
+   - The MATLAB function, geographiclibinterface, which compiles the
+     wrapper routines for MATLAB now works with MATLAB on a Mac.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-11-11)
@@ -6871,7 +7070,7 @@ of the git repository for GeographicLib.
        arguments for Geodesic, GeodesicLine, Rhumb, and RhumbLine;
      - similar changes have been made to the Python, Javascript, and
        Java implementations of the geodesic routines;
-     - for the C, Fortran, and Matlab implementations the \e arcmode
+     - for the C, Fortran, and MATLAB implementations the \e arcmode
        argument to the routines was generalized to allow a combination
        of ARCMODE and LONG_NOWRAP bits;
      - the Maxima version now returns the longitude unwrapped.
@@ -6888,14 +7087,14 @@ of the git repository for GeographicLib.
      - add PolygonAreaRhumb typedef for PolygonAreaT<Rhumb>;
      - add -R option to <a href="Planimeter.1.html">Planimeter</a> to use
        PolygonAreaRhumb (and -G option for the default geodesic polygon);
-     - fix BLUNDER in area calculation in Matlab routine geodreckon;
-     - add area calculation to Matlab/Octave routines for great ellipses
+     - fix BLUNDER in area calculation in MATLAB routine geodreckon;
+     - add area calculation to MATLAB/Octave routines for great ellipses
        (see \ref gearea).
    - Fix bad BUG in Geohash::Reverse; this was introduced in version
      1.37 and affected all platforms where unsigned longs are 32-bits.
      Thanks to Christian Csar for reporting and diagnosing this.
    - Binary installers for Windows are now built with Visual Studio 11
-     2012 (instead of Visual Studio 10 2010).  Compiled Matlab support
+     2012 (instead of Visual Studio 10 2010).  Compiled MATLAB support
      still with version 2013a (64-bit).
    - Update GeographicLib.pro for builds with qmake to include all the
      source files.
@@ -6922,7 +7121,7 @@ of the git repository for GeographicLib.
    - Accept the minus sign as a synomym for - in DMS.{cpp,js}.
    - The cmake configuration file geographiclib-depends.cmake has been
      renamed to geographiclib-targets.cmake.
-   - Matlab/Octave routines for great ellipses added; see \ref
+   - MATLAB/Octave routines for great ellipses added; see \ref
      greatellipse.
    - Provide man pages for geographiclib-get-{geoids,gravity,magnetic}.
 
@@ -6931,7 +7130,7 @@ of the git repository for GeographicLib.
    - Add \ref highprec.
    - <b>INCOMPATIBLE CHANGE</b>: the static instantiations of various
      classes for the WGS84 ellipsoid have been changed to a
-     <a href="http://www.parashift.com/c++-faq/static-init-order-on-first-use.html">
+     <a href="http://isocpp.org/wiki/faq/ctors#static-init-order-on-first-use">
      "construct on first use idiom"</a>.  This avoids a lot of wasteful
      initialization before the user's code starts.  Unfortunately it
      means that existing source code that relies on any of the following
@@ -7045,7 +7244,7 @@ of the git repository for GeographicLib.
    (released 2014-03-13)
    - Fix blunder in UTMUPS::EncodeEPSG (found by Ben
      Adler).
-   - Matlab wrapper routines geodesic{direct,inverse,line} switch to
+   - MATLAB wrapper routines geodesic{direct,inverse,line} switch to
      "exact" routes if |<i>f</i>| &gt; 0.02.
    - GeodSolve.cgi allows ellipsoid to be set (and uses the -E option
      for <a href="GeodSolve.1.html">GeodSolve</a>).
@@ -7132,9 +7331,9 @@ of the git repository for GeographicLib.
      - improving setting of runtime path for Unix-like systems with cmake;
      - install PDB files when compiling with Visual Studio to aid
        debugging;
-     - Windows binary release now uses Matlab R2013a (64-bit) and
+     - Windows binary release now uses MATLAB R2013a (64-bit) and
        uses the -largeArrayDims option.
-     - fixes to the way the Matlab interface routines are built (thanks
+     - fixes to the way the MATLAB interface routines are built (thanks
        to Phil Miller and Chris F.).
    - Changes to the geodesic routines:
      - add \ref java of the geodesic routines (thanks to Skip Breidbach
@@ -7144,7 +7343,7 @@ of the git repository for GeographicLib.
      - fixes to python port so that they work with version 3.x, in
        addition to 2.x (courtesy of Amato);
      - accumulate the perimeter and area of polygons via a double-wide
-       accumulator in Fortran, C, and Matlab implementations (this is
+       accumulator in Fortran, C, and MATLAB implementations (this is
        already included in the other implementations);
      - port PolygonArea::AddEdge and
        PolygonArea::TestEdge to JavaScript and python
@@ -7158,7 +7357,7 @@ of the git repository for GeographicLib.
    - Improve efficiency of MGRS::Forward by avoiding the
      calculation of the latitude if possible (adapting an idea of Craig
      Rollins).
-   - Fixes to the way the Matlab interface routines are built (thanks to
+   - Fixes to the way the MATLAB interface routines are built (thanks to
      Phil Miller and Chris F.).
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
@@ -7184,7 +7383,7 @@ of the git repository for GeographicLib.
        close to the prime meridian;
      - FIX BUG is geoddistance.m where the value of m12 was wrong for
        meridional geodesics;
-     - add Matlab implementations of the geodesic projections;
+     - add MATLAB implementations of the geodesic projections;
      - remove unneeded special code for geodesics which start at a pole;
      - include polygon area routine in C and Fortran implementations;
      - add doxygen documentation for C and Fortran libraries.
@@ -7192,7 +7391,7 @@ of the git repository for GeographicLib.
  - <a href="http://geographiclib.sf.net/1.27">Version 1.27</a>
    (released 2012-11-29)
    - Changes to geodesic routines:
-     - add native Matlab implementations: geoddistance.m, geodreckon.m,
+     - add native MATLAB implementations: geoddistance.m, geodreckon.m,
        geodarea.m;
      - add C and Fortran implementations;
      - improve the solution of the direct problem so that the series
@@ -7233,7 +7432,10 @@ of the git repository for GeographicLib.
      - cmake uses folders in Visual Studio to reduce clutter;
      - allow precision of reals to be set in cmake;
      - fail gracefully in the absence of pod documentation tools;
-     - remove support for maintainer tasks in Makefile.mk.
+     - remove support for maintainer tasks in Makefile.mk;
+     - upgrade to automake 1.11.6 to fix the "make distcheck" security
+       vulnerability; see
+       http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-3386
 
  - <a href="http://geographiclib.sf.net/1.24">Version 1.24</a>
    (released 2012-09-22)
@@ -7310,7 +7512,7 @@ of the git repository for GeographicLib.
      document this as the preferred method of using autoconf.
    - cmake tweaks:
      - simplify the configuration of doxygen;
-     - allow the Matlab compiler to be specified with the
+     - allow the MATLAB compiler to be specified with the
        MATLAB_COMPILER option.
 
  - <a href="http://geographiclib.sf.net/1.20">Version 1.20</a>
@@ -7331,14 +7533,14 @@ of the git repository for GeographicLib.
    - Fix argument checking tests in MGRS::Forward.
    - Add \--comment-delimiter and \--line-separator options to the \ref
      utilities.
-   - Add installer for 64-bit Windows; the compiled Matlab interface is
+   - Add installer for 64-bit Windows; the compiled MATLAB interface is
      supplied with the Windows 64-bit installer only.
 
  - <a href="http://geographiclib.sf.net/1.18">Version 1.18</a>
    (released 2012-02-18)
    - Improve documentation on configuration with cmake.
    - cmake's find_package ensures that the compiler versions match on Windows.
-   - Improve documentation on compiling Matlab interface.
+   - Improve documentation on compiling MATLAB interface.
    - Binary installer for Windows installs under C:/pkg-vc10 by default.
 
  - <a href="http://geographiclib.sf.net/1.17">Version 1.17</a>
@@ -7454,11 +7656,11 @@ of the git repository for GeographicLib.
  - <a href="http://geographiclib.sf.net/1.12">Version 1.12</a>
    (released 2011-07-21)
    - Change license to MIT/X11.
-   - Add PolygonArea class and equivalent Matlab function.
+   - Add PolygonArea class and equivalent MATLAB function.
    - Provide JavaScript and Python implementations of geodesic routines.
-   - Fix Windows installer to include runtime dlls for Matlab.
+   - Fix Windows installer to include runtime dlls for MATLAB.
    - Fix (innocuous) unassigned variable in Geodesic::GenInverse.
-   - Geodesic routines in Matlab return a12 as first column of aux return
+   - Geodesic routines in MATLAB return a12 as first column of aux return
      value (incompatible change).
    - A couple of code changes to enable compilation with Visual
      Studio 2003.
@@ -7492,7 +7694,7 @@ of the git repository for GeographicLib.
 
  - <a href="http://geographiclib.sf.net/1.10">Version 1.10</a>
    (released 2011-06-11)
-   - Improvements to Matlab/Octave interface:
+   - Improvements to MATLAB/Octave interface:
      - add {geocentric,localcartesian}{forward,reverse};
      - make geographiclibinterface more general;
      - install the source for the interface;
@@ -7560,7 +7762,7 @@ of the git repository for GeographicLib.
    - Library created by Visual Studio is Geographic.lib instead of
      GeographicLib.lib (compatible with makefiles).
    - Make classes NaN aware.
-   - Use cell arrays for MGRS strings in Matlab.
+   - Use cell arrays for MGRS strings in MATLAB.
    - Add solution/project files for Visual Studio 2010 (32-bit only).
    - Use C++11 static_assert and math functions, if available.
 
@@ -7582,7 +7784,7 @@ of the git repository for GeographicLib.
      with previous versions of GeographicLib.  However, the library is
      source compatible.
    - Add OSGB.
-   - Matlab and Octave interfaces to UTMUPS,
+   - MATLAB and Octave interfaces to UTMUPS,
      MGRS, Geoid, Geodesic
      provided.
    - Minor changes

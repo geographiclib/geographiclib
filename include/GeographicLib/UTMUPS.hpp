@@ -251,7 +251,7 @@ namespace GeographicLib {
      * [900km, 19600km] for the "southern" hemisphere.
      *
      * UPS eastings and northings are allowed to be in the range [1200km,
-     * 2800km] in the northern hemisphere and in [700km, 3100km] in the
+     * 2800km] in the northern hemisphere and in [700km, 3300km] in the
      * southern hemisphere.
      *
      * These ranges are 100km larger than allowed for the conversions to MGRS.

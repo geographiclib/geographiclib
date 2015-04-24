@@ -30,21 +30,27 @@ is used (I<a> = 6378137 m, I<f> = 1/298.257223563).
 2 tokens (output options B<-g>, B<-d>, or B<-:>) given as I<latitude>
 I<longitude> using decimal degrees or degrees minutes seconds.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
-significant designator optional.  (See L</QUOTING> for how to
-quote the characters ' and " when entering coordinates on the command
-line.)  Various unicode characters (encoded with UTF-8) may also be used
-to denote degrees, minutes, and seconds, e.g., the degree, prime, and
-double prime symbols.  Alternatively, : (colon) may be used to separate
-the various components.  Latitude is given first (unless the B<-w>
-option is given); however, on input, either may be given first by
-appending or prepending I<N> or I<S> to the latitude and I<E> or I<W> to
-the longitude.  For example, the following are all equivalent
+significant designator optional.  (See L</QUOTING> for how to quote
+the characters ' and " when entering coordinates on the command line.)
+Various unicode characters (encoded with UTF-8) may also be used to
+denote degrees, minutes, and seconds, e.g., the degree, prime, and
+double prime symbols; in addition two single quotes can be used to
+represent ".  Alternatively, : (colon) may be used to separate the
+various components.  Latitude is given first (unless the B<-w> option
+is given); however, on input, either may be given first by appending
+or prepending I<N> or I<S> to the latitude and I<E> or I<W> to the
+longitude.  For example, the following are all equivalent
 
     33.3 44.4
     E44.4 N33.3
     33d18'N 44d24'E
     44d24 33d18N
     33:18 44:24
+
+It is also possible to carry out addition or subtraction operations in
+geographic coordinates.  For example the point 15" east of 39N 70W is
+
+    39N 70W+0:0:15E
 
 =item B<UTM/UPS>
 
@@ -274,11 +280,11 @@ Quoting of command line arguments is similar
 =item Windows command shell (cmd)
 
 The ' character needs no quoting; the " character can either be quoted
-by a ^ or can be represented by '' (two single quotes).  (This quoting
-is usually unnecessary because the trailing designator can be omitted.)
+by a ^ or can be represented by typing ' twice.  (This quoting is
+usually unnecessary because the trailing designator can be omitted.)
 Thus
 
-   echo 10d20'30^" 20d30'40 | GeoConvert -d -p -1
+   echo 10d20'30'' 20d30'40 | GeoConvert -d -p -1
    => 10d20'30"N 020d30'40"E
 
 Use \ to quote the " character in a command line argument
@@ -301,6 +307,28 @@ file C<input.txt> should just contain the plain coordinates.
    echo 38SMB4488 | GeoConvert -: -p 1 => 33:20:03.25N 044:2413.06E
    echo 38SMB4488 | GeoConvert -u      => 38n 444500 3688500
    echo E44d24 N33d20 | GeoConvert -m -p -3 => 38SMB4488
+
+GeoConvert can be used to do simple arithmetic using degree, minutes,
+and seconds.  For example, sometimes data is tiled in 15 second squares
+tagged by the DMS representation of the SW corner.  The tags of the tile
+at 38:59:45N 077:02:00W and its 8 neighbors are then given by
+
+    t=0:0:15
+    for y in -$t +0 +$t; do
+        for x in -$t +0 +$t; do
+            echo 38:59:45N$y 077:02:00W$x
+        done
+    done | GeoConvert -: -p -1 | tr -d ': '
+    =>
+    385930N0770215W
+    385930N0770200W
+    385930N0770145W
+    385945N0770215W
+    385945N0770200W
+    385945N0770145W
+    390000N0770215W
+    390000N0770200W
+    390000N0770145W
 
 =head1 ERRORS
 

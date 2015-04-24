@@ -3,8 +3,8 @@
 # Planimeter.cgi
 # cgi script for measuring the area of geodesic polygons
 #
-# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
-# under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and
+# licensed under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 
 . ./utils.sh
@@ -154,9 +154,10 @@ cat <<EOF
       calculates the perimeter and area of a polygon whose edges are
       either geodesics or rhumb lines on the WGS84 ellipsoid.
       Counter-clockwise traversal of a polygon results in a positive
-      area.  Only simple polygons are supported for the area
-      computation.  There is no need to close the polygon.  Polygons may
-      include one or both poles.  In polyline mode,
+      area.  Only simple (i.e., non-self-intersecting) polygons are
+      supported for the area computation.  There is no need to close the
+      polygon.  Polygons may include one or both poles.  In polyline
+      mode,
       <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
         Planimeter</a>
       calculates the length of the geodesic path joining the points.
@@ -185,8 +186,8 @@ cat <<EOF
       <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
         Planimeter</a>,
       which is a simple wrapper of the
-      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1PolygonArea.html">
-        GeographicLib::PolygonArea</a> class,
+      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1PolygonAreaT.html">
+        GeographicLib::PolygonAreaT</a> class,
       is one of the utilities provided
       with <a href="http://geographiclib.sourceforge.net/">
         GeographicLib</a>.

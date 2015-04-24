@@ -17,7 +17,7 @@ package net.sf.geographiclib;
  * The implementation follows J. R. Shewchuk,
  * <a href="https://dx.doi.org/10.1007/PL00009321"> Adaptive Precision
  * Floating-Point Arithmetic and Fast Robust Geometric Predicates</a>,
- * Discrete & Computational Geometry 18(3) 305&ndash;363 (1997).
+ * Discrete &amp; Computational Geometry 18(3) 305&ndash;363 (1997).
  * <p>
  * In the documentation of the member functions, <i>sum</i> stands for the value
  * currently held in the accumulator.

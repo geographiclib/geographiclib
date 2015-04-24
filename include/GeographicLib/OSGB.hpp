@@ -2,7 +2,7 @@
  * \file OSGB.hpp
  * \brief Header for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -182,8 +182,11 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the Airy 1830 ellipsoid (meters).
      *
      * This is 20923713 ft converted to meters using the rule 1 ft =
-     * 10<sup>9.48401603&minus;10</sup> m.  (The Airy 1830 value is returned
-     * because the OSGB projection is based on this ellipsoid.)
+     * 10<sup>9.48401603&minus;10</sup> m.  The Airy 1830 value is returned
+     * because the OSGB projection is based on this ellipsoid.  The conversion
+     * factor from feet to meters is the one used for the 1936 retriangulation
+     * of Britain; see Section A.1 (p. 37) of <i>A guide to coordinate systems
+     * in Great Britain</i>, v2.2 (Dec. 2013).
      **********************************************************************/
     static Math::real MajorRadius() {
     // result is about 6377563.3960320664406 m
