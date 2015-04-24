@@ -32,6 +32,12 @@ function h = geoid_height(lat, lon, geoidname, geoiddir)
 %   returned structure as the third argument.  This use does not change the
 %   cached data.
 %
+%   In order to use this routine with Octave, Octave needs to have been
+%   compiled with a version of GraphicsMagick which supports 16-bit images.
+%   Also, the first time you uses this routine, you may receive a warning
+%   message "your version of GraphicsMagick limits images to 16 bits per
+%   pixel"; this can safely be ignored.
+%
 %   Information on downloading and installing the data for the supported
 %   geoid models is available at
 %

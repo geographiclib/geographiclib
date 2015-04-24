@@ -1,6 +1,6 @@
 # Install matlab files.
 if (COMMON_INSTALL_PATH)
-  set (INSTALL_MATLAB_DIR "libexec/matlab")
+  set (INSTALL_MATLAB_DIR "share/matlab")
 else ()
   set (INSTALL_MATLAB_DIR "matlab")
 endif ()

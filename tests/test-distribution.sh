@@ -189,7 +189,7 @@ cd BUILD
 cmake -D CMAKE_PREFIX_PATH=$TEMP/instc ..
 make
 
-cd $TEMP/instc/libexec/matlab/geographiclib
+cd $TEMP/instc/share/matlab/geographiclib
 rm -f $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip
 zip $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip *.m private/*.m
 

@@ -84,7 +84,7 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
   C1pa = C1pf(epsi);
   tau12 = s12 ./ A1;
   s = sin(tau12); c = cos(tau12);
-  B12 = - SinCosSeries(true,  stau1 .* c + ctau1 .* s, ...
+  B12 = - SinCosSeries(true, stau1 .* c + ctau1 .* s, ...
                        ctau1 .* c - stau1 .* s, C1pa);
   sig12 = tau12 - (B12 - B11);
   ssig12 = sin(sig12); csig12 = cos(sig12);

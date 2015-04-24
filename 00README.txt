@@ -93,7 +93,7 @@ Files
       *.m, private/*.m -- Matlab implementation of some classes
 
     matlab/geographiclib_legacy
-      *.m -- legacy Matlab routines
+      *.{m,cpp} -- legacy Matlab routines
 
     doc/
       doxyfile.in -- Doxygen config file
