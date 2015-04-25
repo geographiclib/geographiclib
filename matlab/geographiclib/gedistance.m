@@ -1,5 +1,5 @@
 function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
-%GEDISTANCE  Great ellipse distance between points on an ellipsoid
+%GEDISTANCE  Great ellipse distance on an ellipsoid
 %
 %   [s12, azi1, azi2] = GEDISTANCE(lat1, lon1, lat2, lon2)
 %   [s12, azi1, azi2, S12] = GEDISTANCE(lat1, lon1, lat2, lon2, ellipsoid)

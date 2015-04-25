@@ -5,8 +5,9 @@ function geographiclibinterface(incdir, libdir)
 %   GEOGRAPHICLIBINTERFACE(installdir)
 %   GEOGRAPHICLIBINTERFACE(incdir, libdir)
 %
-%   This function is DEPRECATED because native Matlab implementations
-%   are available for all the functions.
+%   This function is DEPRECATED because native Matlab implementations are
+%   available for all the functions.  It and the associated C++ wrapper
+%   code will be removed at some point in 2016.
 %
 %   With one argument GEOGRAPHICLIBINTERFACE looks for the compiled library
 %   in installdir/lib and the include files in installdir/include.

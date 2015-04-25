@@ -10,7 +10,7 @@
  * self-contained library which makes it easy to do geodesic computations
  * for an ellipsoid of revolution in a Java program.  It requires Java
  * version 1.1 or later.
- * <p>
+ *
  * <h2>Downloading the source</h2>
  * <p>
  * The Java library is part of GeographicLib which available for download at
@@ -28,7 +28,7 @@
  * library is completely independent from the rest of GeodegraphicLib.)  The
  * library consists of the files in the src/main/java/net/sf/geographiclib
  * subdirectory.
- * <p>
+ *
  * <h2>Sample programs</h2>
  * <p>
  * Also included are 3 small test programs
@@ -69,17 +69,21 @@
  *     catch (Exception e) {}
  *   }
  * }}</pre>
+ *
  * <h2>Compiling and running a sample program</h2>
+ * <p>
  * Three difference ways of compiling and running {@code Inverse.java} are
  * given.  These differ in the degree to which they utilize
  * <a href="http://maven.apache.org/">maven</a> to manage your Java code and
  * its dependencies.  (Thanks to Skip Breidbach for supplying the maven
  * support.)
+ *
  * <h3>Without using maven</h3>
  * Compile and run as follows <pre>
  * cd inverse/src/main/java
  * javac -cp .:../../../../src/main/java Inverse.java
  * echo -30 0 29.5 179.5 | java -cp .:../../../../src/main/java Inverse </pre>
+ *
  * <h3>Using maven to package GeographicLib</h3>
  * Use <a href="http://maven.apache.org/">maven</a> to create a jar file by
  * running (in the main java directory) <pre>
@@ -91,6 +95,7 @@
  * javac -cp .:../../../../target/GeographicLib-1.42.jar Inverse.java
  * echo -30 0 29.5 179.5 |
  *   java -cp .:../../../../target/GeographicLib-1.42.jar Inverse </pre>
+ *
  * <h3>Using maven to build and run {@code Inverse.java}</h3>
  * Use <a href="http://maven.apache.org/">maven</a> to install GeographicLib by
  * running (in the main java directory) <pre>
@@ -101,6 +106,7 @@
  * cd inverse
  * mvn compile
  * echo -30 0 29.5 179.5 | mvn -q exec:java </pre>
+ *
  * <h2>Using the library</h2>
  * <p>
  * <ul>
@@ -139,12 +145,12 @@
  *   net.sf.geographiclib.PolygonResult}).
  * </ul>
  * <p>
- * The documentation is generated using javadoc when {@code mvn package} is run
- * (the top of the documentation tree is {@code target/apidocs/index.html}).
- * This is also available on the web at
- * <a href="http://geographiclib.sf.net/html/C/index.html">
- * http://geographiclib.sf.net/html/C/index.html</a>.
- * <p>
+ * The documentation is generated using javadoc when
+ * {@code mvn package -P release} is run (the top of the documentation tree is
+ * {@code target/apidocs/index.html}).  This is also available on the web at
+ * <a href="http://geographiclib.sf.net/html/java/index.html">
+ * http://geographiclib.sf.net/html/java/index.html</a>.
+ *
  * <h2>External links</h2>
  * <p>
  * <ul>
