@@ -40,7 +40,7 @@
  *    {@code inverse/src/main/java/Inverse.java} is a simple command line
  *    utility for solving the inverse geodesic problem;
  * <li>
- *    {@code planimter/src/main/java/Planimeter.java} is a simple command line
+ *    {@code planimeter/src/main/java/Planimeter.java} is a simple command line
  *    utility for computing the area of a geodesic polygon given its vertices.
  * </ul>
  * <p>
