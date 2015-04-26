@@ -6975,48 +6975,51 @@ git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.42">Version 1.42</a>
    (released 2015-mm-dd)
-   - On non-Windows systems, the cmake config-style find_package files
-     are now installed in
-     ${CMAKE_INSTALL_PREFIX}/lib/cmake/GeographicLib instead of
-     ${CMAKE_INSTALL_PREFIX}/share/cmake/GeographicLib, because the
-     files are architecture-specific.  You should remove the versions in
-     the old location.
-   - Fix autoconf mismatch of version numbers (which were inconsistent
-     in versions 1.40 and 1.41).
    - DMS::Decode allows a single addition or subtraction operation,
      e.g., 70W+0:0:15.  This affects the GeoCoords class and the
      utilities (which use the DMS class for reading coordinates).
-   - Mark the computation of the gradient of the geoid height in the
-     Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a>
-     utility as deprecated.
    - Add Math::norm, Math::AngRound, Math::tand, Math::atan2d,
      Math::eatanhe, Math::taupf, Math::tauf, Math::fma and remove
      duplicated (but private) functionality from other classes.
-   - Work around the boost-quadmath bug with setprecision(0).
-   - MATLAB changes.
+   - On non-Windows systems, the cmake config-style find_package files
+     are now installed in
+     ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/cmake/GeographicLib
+     instead of ${CMAKE_INSTALL_PREFIX}/share/cmake/GeographicLib,
+     because the files are architecture-specific.  This change will let
+     32-bit and 64-bit versions coexist on the same machine (in lib and
+     lib64).  You should remove the versions in the old "share"
+     location.
+   - MATLAB changes:
      - provide native MATLAB implementations for compiled interface
        functions, see \ref matlab;
-     - remove MATLAB_COMPILER option from CMakeLists.txt;
+     - the compiled MATLAB interface is now deprecated and so the
+       MATLAB_COMPILER option in the cmake build has been removed;
      - reorganize directories, so that
        - matlab/geographiclib contains the native matlab code;
        - matlab/geographiclib_legacy contains wrapper functions to mimic
          the previous compiled functionality;
      - the installed MATLAB code mirrors this layout, but the parent
-       installation directory on non-Windows systems is now
+       installation directory on non-Windows systems is
        ${CMAKE_INSTALL_PREFIX}/share (instead of
-       ${CMAKE_INSTALL_PREFIX}/libexec), this is because the files are
+       ${CMAKE_INSTALL_PREFIX}/libexec), because the files are now
        architecture independent;
      - matlab/geographiclib is now packaged and distributed as
        MATLAB File Exchange package
        <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
-       50605</a> (this supersedes three earlier MATLAB packages).
-     - point fix for geodarea.m to handle polygons which encircle a pole
-       multiple times (released as version 1.41.1 of MATLAB File
-       Exchange package 39108, 2014-04-22).
-   - artifactId for Java package changed to GeographicLib-Java and the
-     package is now depolyed to oss.sonatype.org (thanks to Chris
-     Bennight for help on this).  TODO: update Java documentation to
-     include relevant info.
+       50605</a> (this supersedes three earlier MATLAB packages);
+     - point fix for geodarea.m to correct bug in area of polygons which
+       encircle a pole multiple times (released as version 1.41.1 of
+       MATLAB File Exchange package 39108, 2014-04-22).
+   - artifactId for Java package changed from GeographicLib to
+     GeographicLib-Java and the package is now depolyed to
+     oss.sonatype.org (thanks to Chris Bennight for help on this).
+     TODO: update Java documentation to include relevant info.
+   - Fix autoconf mismatch of version numbers (which were inconsistent
+     in versions 1.40 and 1.41).
+   - Mark the computation of the gradient of the geoid height in the
+     Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a>
+     utility as deprecated.
+   - Work around the boost-quadmath bug with setprecision(0).
 
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
    (released 2015-03-09)
