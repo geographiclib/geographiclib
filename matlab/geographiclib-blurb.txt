@@ -1,5 +1,5 @@
 GeographicLib toolbox
-Version 1.42 2015-04-24
+Version 1.42 2015-04-27
 
 This toolbox provides native MATLAB implementations of a subset of the
 C++ library, GeographicLib.  Key components of this toolbox are
@@ -32,7 +32,7 @@ This package incorporates the following packages:
   http://www.mathworks.com/matlabcentral/fileexchange/47898
 
 Including all of the functionality in a single toolbox allows easier
-sharing of code (i.e., via a common private directory).
+sharing of code (via a common private directory).
 
 Extensive documentation on the C++ library is available at
 

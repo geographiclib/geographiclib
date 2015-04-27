@@ -68,36 +68,36 @@ $(srcdir)/geographiclib/private/tauf.m \
 $(srcdir)/geographiclib/private/taupf.m
 
 MATLAB_LEGACY = \
-$(srcdir)/geographiclib_legacy/Contents.m \
-$(srcdir)/geographiclib_legacy/geocentricforward.m \
-$(srcdir)/geographiclib_legacy/geocentricreverse.m \
-$(srcdir)/geographiclib_legacy/geodesicdirect.m \
-$(srcdir)/geographiclib_legacy/geodesicinverse.m \
-$(srcdir)/geographiclib_legacy/geodesicline.m \
-$(srcdir)/geographiclib_legacy/geoidheight.m \
-$(srcdir)/geographiclib_legacy/localcartesianforward.m \
-$(srcdir)/geographiclib_legacy/localcartesianreverse.m \
-$(srcdir)/geographiclib_legacy/mgrsforward.m \
-$(srcdir)/geographiclib_legacy/mgrsreverse.m \
-$(srcdir)/geographiclib_legacy/polygonarea.m \
-$(srcdir)/geographiclib_legacy/utmupsforward.m \
-$(srcdir)/geographiclib_legacy/utmupsreverse.m
+$(srcdir)/geographiclib-legacy/Contents.m \
+$(srcdir)/geographiclib-legacy/geocentricforward.m \
+$(srcdir)/geographiclib-legacy/geocentricreverse.m \
+$(srcdir)/geographiclib-legacy/geodesicdirect.m \
+$(srcdir)/geographiclib-legacy/geodesicinverse.m \
+$(srcdir)/geographiclib-legacy/geodesicline.m \
+$(srcdir)/geographiclib-legacy/geoidheight.m \
+$(srcdir)/geographiclib-legacy/localcartesianforward.m \
+$(srcdir)/geographiclib-legacy/localcartesianreverse.m \
+$(srcdir)/geographiclib-legacy/mgrsforward.m \
+$(srcdir)/geographiclib-legacy/mgrsreverse.m \
+$(srcdir)/geographiclib-legacy/polygonarea.m \
+$(srcdir)/geographiclib-legacy/utmupsforward.m \
+$(srcdir)/geographiclib-legacy/utmupsreverse.m
 
 MATLAB_INTERFACE = \
-$(srcdir)/geographiclib_legacy/geographiclibinterface.m \
-$(srcdir)/geographiclib_legacy/geocentricforward.cpp \
-$(srcdir)/geographiclib_legacy/geocentricreverse.cpp \
-$(srcdir)/geographiclib_legacy/geodesicdirect.cpp \
-$(srcdir)/geographiclib_legacy/geodesicinverse.cpp \
-$(srcdir)/geographiclib_legacy/geodesicline.cpp \
-$(srcdir)/geographiclib_legacy/geoidheight.cpp \
-$(srcdir)/geographiclib_legacy/localcartesianforward.cpp \
-$(srcdir)/geographiclib_legacy/localcartesianreverse.cpp \
-$(srcdir)/geographiclib_legacy/mgrsforward.cpp \
-$(srcdir)/geographiclib_legacy/mgrsreverse.cpp \
-$(srcdir)/geographiclib_legacy/polygonarea.cpp \
-$(srcdir)/geographiclib_legacy/utmupsforward.cpp \
-$(srcdir)/geographiclib_legacy/utmupsreverse.cpp
+$(srcdir)/geographiclib-legacy/geographiclibinterface.m \
+$(srcdir)/geographiclib-legacy/geocentricforward.cpp \
+$(srcdir)/geographiclib-legacy/geocentricreverse.cpp \
+$(srcdir)/geographiclib-legacy/geodesicdirect.cpp \
+$(srcdir)/geographiclib-legacy/geodesicinverse.cpp \
+$(srcdir)/geographiclib-legacy/geodesicline.cpp \
+$(srcdir)/geographiclib-legacy/geoidheight.cpp \
+$(srcdir)/geographiclib-legacy/localcartesianforward.cpp \
+$(srcdir)/geographiclib-legacy/localcartesianreverse.cpp \
+$(srcdir)/geographiclib-legacy/mgrsforward.cpp \
+$(srcdir)/geographiclib-legacy/mgrsreverse.cpp \
+$(srcdir)/geographiclib-legacy/polygonarea.cpp \
+$(srcdir)/geographiclib-legacy/utmupsforward.cpp \
+$(srcdir)/geographiclib-legacy/utmupsreverse.cpp
 
 MATLAB_ALL = $(MATLAB_FILES) $(MATLAB_PRIVATE)
 MATLAB_LEGACY_ALL = $(MATLAB_LEGACY) $(MATLAB_INTERFACE)
@@ -106,14 +106,10 @@ matlabdir=$(DESTDIR)$(datadir)/matlab
 
 install:
 	$(INSTALL) -d $(matlabdir)/geographiclib/private
-	$(INSTALL) -d $(matlabdir)/geographiclib_legacy
+	$(INSTALL) -d $(matlabdir)/geographiclib-legacy
 	$(INSTALL) -m 644 $(MATLAB_FILES) $(matlabdir)/geographiclib
 	$(INSTALL) -m 644 $(MATLAB_PRIVATE) $(matlabdir)/geographiclib/private
-	$(INSTALL) -m 644 $(MATLAB_LEGACY_ALL) $(matlabdir)/geographiclib_legacy
-	$(INSTALL) -m 644 $(srcdir)/geographiclib/Contents.m \
-		$(matlabdir)/geographiclib/geographiclib.m
-	$(INSTALL) -m 644 $(srcdir)/geographiclib_legacy/Contents.m \
-		$(matlabdir)/geographiclib_legacy/geographiclib_legacy.m
+	$(INSTALL) -m 644 $(MATLAB_LEGACY_ALL) $(matlabdir)/geographiclib-legacy
 
 clean-local:
 	rm -rf *.mex* *.oct
