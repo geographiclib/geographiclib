@@ -51,6 +51,7 @@ Files
     examples/
       example-*.cpp -- simple usage examples for all the classes
       GeoidToGTX.cpp -- a parallelization example
+      JacobiConformal.[ch]pp -- mapping a triaxial ellipsoid
 
     tools/
       GeoConvert.cpp -- geographic conversion utility

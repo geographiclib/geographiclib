@@ -3,7 +3,7 @@ MATLAB_PRIVATE = $(wildcard geographiclib/private/*.m)
 MATLAB_LEGACY = $(wildcard geographiclib_legacy/*.m) \
 	$(wildcard geographiclib_legacy/*.cpp)
 
-DEST = $(PREFIX)/libexec/matlab
+DEST = $(PREFIX)/share/matlab
 INSTALL = install -b
 
 all:
@@ -17,6 +17,10 @@ install:
 	$(INSTALL) -m 644 $(MATLAB_FILES) $(DEST)/geographiclib
 	$(INSTALL) -m 644 $(MATLAB_PRIVATE) $(DEST)/geographiclib/private/
 	$(INSTALL) -m 644 $(MATLAB_LEGACY) $(DEST)/geographiclib_legacy
+	$(INSTALL) -m 644 geographiclib/Contents.m \
+		$(DEST)/geographiclib/geographiclib.m
+	$(INSTALL) -m 644 geographiclib_legacy/Contents.m \
+		$(DEST)/geographiclib_legacy/geographiclib_legacy.m
 
 clean:
 	rm -f *.mex* *.oct

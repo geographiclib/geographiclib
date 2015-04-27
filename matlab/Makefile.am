@@ -102,7 +102,7 @@ $(srcdir)/geographiclib_legacy/utmupsreverse.cpp
 MATLAB_ALL = $(MATLAB_FILES) $(MATLAB_PRIVATE)
 MATLAB_LEGACY_ALL = $(MATLAB_LEGACY) $(MATLAB_INTERFACE)
 
-matlabdir=$(DESTDIR)$(libexecdir)/matlab
+matlabdir=$(DESTDIR)$(datadir)/matlab
 
 install:
 	$(INSTALL) -d $(matlabdir)/geographiclib/private
@@ -110,6 +110,10 @@ install:
 	$(INSTALL) -m 644 $(MATLAB_FILES) $(matlabdir)/geographiclib
 	$(INSTALL) -m 644 $(MATLAB_PRIVATE) $(matlabdir)/geographiclib/private
 	$(INSTALL) -m 644 $(MATLAB_LEGACY_ALL) $(matlabdir)/geographiclib_legacy
+	$(INSTALL) -m 644 $(srcdir)/geographiclib/Contents.m \
+		$(matlabdir)/geographiclib/geographiclib.m
+	$(INSTALL) -m 644 $(srcdir)/geographiclib_legacy/Contents.m \
+		$(matlabdir)/geographiclib_legacy/geographiclib_legacy.m
 
 clean-local:
 	rm -rf *.mex* *.oct

@@ -23,9 +23,9 @@ function [geodetic, rot] = localcartesianreverse(origin, cartesian, a, f)
 %       h = geodetic(:,3) in meters
 %   rot is an M x 9 matrix
 %       M = rot(:,1:9) rotation matrix in row major order.  Pre-multiplying
-%           a unit vector in local cartesian coordinates at (lat0, lon0, h0)
-%           by the transpose of M transforms the vector to local cartesian
-%           coordinates at (lat, lon, h).
+%           a unit vector in local cartesian coordinates at (lat0, lon0,
+%           h0) by the transpose of M transforms the vector to local
+%           cartesian coordinates at (lat, lon, h).
 %
 %   a = major radius (meters)
 %   f = flattening (0 means a sphere)

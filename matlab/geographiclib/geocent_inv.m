@@ -5,15 +5,15 @@ function [lat, lon, h, M] = geocent_inv(X, Y, Z, ellipsoid)
 %   [lat, lon, h, M] = GEOCENT_INV(X, Y, Z, ellipsoid)
 %
 %   converts from geocentric coordinates X, Y, Z to geographic coordinates,
-%   lat, lon, h.  X, Y, Z can be scalars or arrays of equal size.  X, Y, Z, and
-%   h are in meters.  lat and lon are in degrees.  The ellipsoid vector is of
-%   the form [a, e], where a is the equatorial radius in meters, e is the
-%   eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
+%   lat, lon, h.  X, Y, Z can be scalars or arrays of equal size.  X, Y, Z,
+%   and h are in meters.  lat and lon are in degrees.  The ellipsoid vector
+%   is of the form [a, e], where a is the equatorial radius in meters, e is
+%   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
 %   precisely, the value returned by defaultellipsoid) is used.
 %
-%   M is the 3 x 3 rotation matrix for the conversion.  Pre-multiplying a unit
-%   vector in geocentric coordinates by the transpose of M transforms the
-%   vector to local cartesian coordinates (east, north, up).
+%   M is the 3 x 3 rotation matrix for the conversion.  Pre-multiplying a
+%   unit vector in geocentric coordinates by the transpose of M transforms
+%   the vector to local cartesian coordinates (east, north, up).
 %
 %   See also GEOCENT_FWD, DEFAULTELLIPSOID.
 

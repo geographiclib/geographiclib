@@ -19,9 +19,10 @@ function projdoc
 %     [~,azi0,~,~,m,M] = geoddistance(lat0,lon0,lat,lon)
 %     rho = m./M, x = rho.*sind(azi0), y = rho.*cosd(azi0)
 %
-%   Obviously this is an azimuthal projection.  It also enjoys approximately
-%   the property of the spherical gnomonic projection, that geodesics map
-%   to straight lines.  The projection is derived in Section 8 of
+%   Obviously this is an azimuthal projection.  It also enjoys
+%   approximately the property of the spherical gnomonic projection, that
+%   geodesics map to straight lines.  The projection is derived in Section
+%   8 of
 %
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);

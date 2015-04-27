@@ -77,8 +77,8 @@
 %   loccart_inv      - Convert local cartesian to geographic coordinates
 %
 % Great ellipses
-%   gedistance       - Great ellipse distance between points on an ellipsoid
-%   gereckon         - Point along great ellipse at specified azimuth and range
+%   gedistance       - Great ellipse distance on an ellipsoid
+%   gereckon         - Point along great ellipse at given azimuth and range
 %
 % Utility
 %   defaultellipsoid - Return the WGS84 ellipsoid

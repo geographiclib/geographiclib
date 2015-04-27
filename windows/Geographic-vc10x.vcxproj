@@ -142,6 +142,7 @@
     <ClCompile Include="../src/MGRS.cpp" />
     <ClCompile Include="../src/MagneticCircle.cpp" />
     <ClCompile Include="../src/MagneticModel.cpp" />
+    <ClCompile Include="../src/Math.cpp" />
     <ClCompile Include="../src/NormalGravity.cpp" />
     <ClCompile Include="../src/OSGB.cpp" />
     <ClCompile Include="../src/PolarStereographic.cpp" />

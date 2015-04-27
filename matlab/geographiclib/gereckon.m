@@ -1,5 +1,5 @@
 function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
-%GERECKON  Point along great ellipse at specified azimuth and range
+%GERECKON  Point along great ellipse at given azimuth and range
 %
 %   [lat2, lon2, azi2] = GERECKON(lat1, lon1, s12, azi1)
 %   [lat2, lon2, azi2, S12] = GERECKON(lat1, lon1, s12, azi1, ellipsoid)

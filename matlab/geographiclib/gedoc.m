@@ -70,8 +70,8 @@ function gedoc
 %       these quantities lie in [-180, 180).  It is however possible to
 %       prevent this normalization of the longitude in geodreckon by
 %       setting the long_nowrap bit in the optional flags argument.
-%     * The distance s12 is unrestricted.  This allows great ellipses to wrap
-%       around the ellipsoid.
+%     * The distance s12 is unrestricted.  This allows great ellipses to
+%       wrap around the ellipsoid.
 %     * The equatorial radius, a, must be positive.
 %     * The eccentricity, e, should be satisfy abs(e) < 0.2 in order to
 %       retain full accuracy (this corresponds to flattenings satisfying

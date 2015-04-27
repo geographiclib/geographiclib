@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in Fortran
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.40
+\version 1.42
 
 \section abstract-for Abstract
 
@@ -25,14 +25,14 @@ compile correctly with just about any Fortran compiler.
 \section download-for Downloading the source
 
 The Fortran library is part of %GeographicLib which available for download at
-- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.40.tar.gz">
-  GeographicLib-1.40.tar.gz</a>
-- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.40.zip">
-  GeographicLib-1.40.zip</a>
+- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.42.tar.gz">
+  GeographicLib-1.42.tar.gz</a>
+- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.42.zip">
+  GeographicLib-1.42.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the Fortran library can be found in
-GeographicLib-1.40/legacy/Fortran.  The library consists of the file
+GeographicLib-1.42/legacy/Fortran.  The library consists of the file
 geodesic.for.
 
 \section doc Library documentation
