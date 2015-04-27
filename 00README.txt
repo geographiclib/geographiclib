@@ -79,7 +79,6 @@ Files
       GeoidEval-vc9.vcproj -- project for GeoidEval
       Gravity-vc9.vcproj -- project for Gravity
       MagneticField-vc9.vcproj -- project for MagneticField
-      also files for MS Studio 2005 (with vc8)
       also files for MS Studio 2010 (with vc10)
       NETGeographic-vc10.vcxproj -- project for .NET wrapper
 

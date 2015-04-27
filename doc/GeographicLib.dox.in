@@ -200,7 +200,7 @@ Then pick one of the first five options below:
 - \ref gnu.  This is a simple installation method that works with g++
   and GNU make on Linux and many Unix platforms.
 - \ref windows.  This is a simple installation method that works with
-  Visual Studio 2005, 2008, and 2010 under Windows.
+  Visual Studio 2008 and 2010 under Windows.
 - \ref binaryinst.  Use this installation method if you only need to use
   the \ref utilities supplied with GeographicLib.  (This method also
   installs the header files and the library for use by Visual Studio 10.)
@@ -453,16 +453,15 @@ Here are the steps to compile and install GeographicLib:
 
 \section windows Installation on Windows
 
-This method requires Visual Studio 2005, 2008, or 2010.  This builds a
-static library and the utilities.  If you only have Visual Studio 2003,
-2012, or later, use cmake to create the necessary solution file, see
-\ref cmake.  (cmake is needed to run the tests.)
+This method requires Visual Studio 2008 or 2010.  This builds a static
+library and the utilities.  If you have some other version of Visual
+Studio, use cmake to create the necessary solution file, see \ref cmake.
+(cmake is needed to run the tests.)
 - Unpack the source, running \verbatim
   unzip -q GeographicLib-@PROJECT_VERSION@.zip \endverbatim
 - Open GeographicLib-@PROJECT_VERSION@/windows/GeographicLib-vc10.sln in
-  Visual Studio 2010 (for Visual Studio 2005 and 2008, replace -vc10 by
-  -vc8 or -vc9; for Visual Studio Express 2010, replace -vc10 by
-  -vc10x).
+  Visual Studio 2010 (for Visual Studio 2008, replace -vc10 by -vc9; for
+  Visual Studio Express 2010, replace -vc10 by -vc10x).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
 - Copy the library windows/Release/GeographicLib.lib and the
@@ -1195,8 +1194,9 @@ self-contained and does not depend on the rest of GeographicLib.  Sample
 main programs to solve the direct and inverse geodesic problems and to
 compute polygonal areas are provided.
 
-If you're using Apache Maven as your build system, you can use this
-package by including the dependency \verbatim
+This package is available on Maven Central; so if you're using Apache
+Maven as your build system, you can use this package by including the
+dependency \verbatim
   <dependency>
     <groupId>net.sf.geographiclib</groupId>
     <artifactId>GeographicLib-Java</artifactId>
@@ -7012,14 +7012,15 @@ git repository for GeographicLib</a>.
        MATLAB File Exchange package 39108, 2014-04-22).
    - artifactId for Java package changed from GeographicLib to
      GeographicLib-Java and the package is now depolyed to
-     oss.sonatype.org (thanks to Chris Bennight for help on this).
-     TODO: update Java documentation to include relevant info.
+     Maven Central (thanks to Chris Bennight for help on this).
    - Fix autoconf mismatch of version numbers (which were inconsistent
      in versions 1.40 and 1.41).
    - Mark the computation of the gradient of the geoid height in the
      Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a>
      utility as deprecated.
    - Work around the boost-quadmath bug with setprecision(0).
+   - Deprecate use of Visual Studio 2005 "-vc8" project files in the
+     windows directory.
 
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
    (released 2015-03-09)

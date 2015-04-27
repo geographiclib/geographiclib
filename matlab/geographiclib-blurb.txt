@@ -37,3 +37,13 @@ sharing of code (i.e., via a common private directory).
 Extensive documentation on the C++ library is available at
 
   http://geographiclib.sf.net/html
+
+Geoid lookup requires the installation of one or more geoid models.
+Instructions for this are given in
+
+  http://geographiclib.sf.net/html/geoid.html#geoidinst
+
+A problem with MATLAB Central sometimes causes the "Robust Control
+Toolbox" to be listed as a required product.  This is wrong; this
+package has no dependencies other than MATLAB (version 7.9 or later) or
+Octave (version 3.4 or later).
