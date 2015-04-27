@@ -40,7 +40,7 @@
    Mém. de l'Acad. Roy. des Sciences de Paris,
    406--416 (1733, publ. 1735).[[BR]]
    https://books.google.com/books?id=GOAEAAAAQAAJ&pg=PA406 [[BR]]
-   alt: http://gallica.bnf.fr/ark:/12148/bpt6k3530m.image.f566
+   alt: http://gallica.bnf.fr/ark:/12148/bpt6k3530m/f566.image
  * A. C. Clairaut,[[BR]]
    ''Suite d'un Mémoire donné en 1733, qui a pour titre: Détermination
    géometrique de la perpendiculaire à la méridienne tracée, &c
@@ -48,7 +48,7 @@
    determination of the perpendicular to the meridian, etc.]'',
    Mém. de l'Acad. Roy. des Sciences de Paris, 83--96 (1739, publ. 1741).[[BR]]
    https://books.google.com/books?id=5OAEAAAAQAAJ&pg=RA1-PA83 [[BR]]
-   alt: http://gallica.bnf.fr/ark:/12148/bpt6k3536g
+   alt: http://gallica.bnf.fr/ark:/12148/bpt6k3536g/f183.image
  * A. C. Clairaut,[[BR]]
    ''Théorie de la Figure de la Terre Tirée des Principes de
    l'Hydrostatique [The Theory of the Figure of the Earth Drawn from
@@ -507,7 +507,7 @@
    https://dx.doi.org/10.1515/crll.1839.19.309 [[BR]]
    French translation: Jour. Liouville '''6''', 267--272 (1841).[[BR]]
    https://books.google.com/books?id=Rh8GAAAAYAAJ&pg=RA1-PA267 [[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1841_1_6_A20_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1841_1_6_A20_0.pdf
    [[BR]]Letter to Bessel, Dec. 28, 1838:
    https://books.google.com/books?id=_09tAAAAMAAJ&pg=PA385 (PDF jacobi-V7.pdf)
    [[BR]]Announcement: Comptes Rendus '''8''', 284 (1839).[[BR]]
@@ -531,7 +531,8 @@
    https://books.google.com/books?id=ryEOAAAAQAAJ&pg=PA198 [[BR]]
    English translation: by K. Balagangadharan (Hindustan Book Agency, 2009)
    [[BR]] https://www.worldcat.org/oclc/440645889 [[BR]]
-   https://books.google.com/books?id=s9o0QwAACAAJ
+   https://books.google.com/books?id=s9o0QwAACAAJ [[BR]]
+   Errata: http://geographiclib.sf.net/jacobi-errata.html
  * C. G. J. Jacobi,[[BR]]
    ''Über die Curve, welche alle von einem Punkte ausgehenden geodätischen
    Linien eines Rotationsellipsoides berührt [The envelope of geodesic
@@ -582,7 +583,7 @@
    [The geodesic on an arbitrary ellipsoid]'',
    Jour. Liouville '''9''', 401--408 (1844).[[BR]]
    https://books.google.com/books?id=7oYGAAAAYAAJ&pg=PA401 [[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1844_1_9_A37_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1844_1_9_A37_0.pdf
  * J. Liouville,[[BR]]
    ''Démonstration géométrique relative à l'équation des lignes
    géodésiques sur les surfaces du second degré [Geometrical
@@ -590,14 +591,14 @@
    the second degree]'',
    Jour. Liouville '''11''', 21--24 (1846).[[BR]]
    https://books.google.com/books?id=qTUGAAAAYAAJ&pg=PA21 [[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1846_1_11_A3_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1846_1_11_A3_0.pdf
  * J. Liouville,[[BR]]
    ''Sur quelques cas particuliers où les équations du mouvement d'un
    point matériel peuvent s'intégrer [Special cases where the equations
    of motion are integrable]'',
    Jour. Liouville '''11''', 345--378 (1846).[[BR]]
    https://books.google.com/books?id=qTUGAAAAYAAJ&pg=PA345 [[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1846_1_11_A45_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1846_1_11_A45_0.pdf
  * J. Liouville,[[BR]]
    Notes on G. Monge, ''Application de l'Analyse à la Géometrie''
    (5th edition, Bachelier, Paris, 1850), pp. 547--600.[[BR]]
@@ -607,7 +608,7 @@
    [On the general theory of surfaces]'',
    Jour. Liouville '''16''', 130--132 (1851).[[BR]]
    https://books.google.com/books?id=TFdOAAAAMAAJ&pg=PA130 [[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1851_1_16_A4_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1851_1_16_A4_0.pdf
  * M. Roberts,[[BR]]
    ''Géométrie, Communication verbale de M. Liouville
    [Geometry, Verbal communication of J. Liouville]'',
@@ -619,13 +620,13 @@
    curvature on an allispoid]'',
    Jour. Liouville '''11''', 1--4 (1846).[[BR]]
    https://books.google.com/books?id=qTUGAAAAYAAJ&pg=PA1 [[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1846_1_11_A1_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1846_1_11_A1_0.pdf
  * M. Roberts,[[BR]]
    ''Nouvelles propriétés des lignes géodésiques et des lignes de
    courbure sur l'ellipsoïde [New properties of geodesics and lines of
    curvature on an allispoid]'',
    Jour. Liouville '''13''', 1--11 (1848).[[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1848_1_13_A1_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1848_1_13_A1_0.pdf
  * M. Roberts,[[BR]]
    Theorems on the lines of curvature of an ellipsoid
    Camb. Dublin Math. Jour. '''3''', 159--163 (1848).[[BR]]
@@ -634,7 +635,7 @@
    ''Mémoire sur la géométrie de courbes tracées sur la surface d'un
    ellipsoïde [The geometry of curves on the surface of an ellipsoid]'',
    Jour. Liouville '''15''', 275--295 (1850).[[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1850_1_15_A16_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1850_1_15_A16_0.pdf
  * M. Roberts,[[BR]]
    ''Sur quelques applications de la théorie des surfaces
    [Some applications of the theory of surfaces]'',
@@ -646,7 +647,7 @@
    surfaces of the second degree]'',
    Jour. Liouville '''11''', 5--20 (1846).[[BR]]
    https://books.google.com/books?id=qTUGAAAAYAAJ&pg=PA5 [[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1846_1_11_A2_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1846_1_11_A2_0.pdf
  * M. Chasles,[[BR]]
    ''Nouvelles démonstrations des deux équations relatives aux tangentes
    communes à deux surfaces du second degré homofocales; Et propriétés
@@ -656,7 +657,7 @@
    geodesic lines and the lines of curvature of these surfaces]'',
    Jour. Liouville '''11''', 105--119 (1846).[[BR]]
    https://books.google.com/books?id=qTUGAAAAYAAJ&pg=PA105 [[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1846_1_11_A14_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1846_1_11_A14_0.pdf
  * P. O. Bonnet,[[BR]]
    ''Mémoire sur la théorie générale des surfaces
    [On the general theory of surfaces]'',
@@ -671,16 +672,16 @@
    ''Démonstration géométrique de quelques théorèmes relatifs à la
    théorie des surfaces [Geometric proof of some theorems for surfaces]'',
    Jour. Liouville '''13''', 78--79 (1848).[[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1848_1_13_A11_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1848_1_13_A11_0.pdf
  * J. Bertrand,[[BR]]
    ''Démonstration d'un théorème de M. Gauss [Proof of a theorem of
    C. F. Gauss]'',
    Jour. Liouville '''13''', 80--82 (1848).[[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1848_1_13_A11_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1848_1_13_A11_0.pdf
  * C.-F. Diguet,[[BR]]
    ''Note à l'occasion de l'article précédent [Note on the preceding article]'',
    Jour. Liouville '''13''', 83--86 (1848).[[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1848_1_13_A12_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1848_1_13_A12_0.pdf
  * A. S. Hart,[[BR]]
    ''On the form of geodesic lines through the umbilic of an ellipsoid'',
    Proc. Roy. Irish Acad. '''4''', 274 (1849).[[BR]]
@@ -711,7 +712,7 @@
    ''Sur une ligne géodésique de l'ellipsoïde
    [The geodesic line of the ellipsoid]'',
    J. Math. Pures Appl. (Ser. 2) '''2''', 213--216 (1857).[[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1857_2_2_A18_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1857_2_2_A18_0.pdf
  * K. T. W. Weierstrass,[[BR]]
    ''Über die geodätischen Linien auf dem dreiaxigen Ellipsoid
    [Geodesic lines on a triaxial ellipsoid]'',
@@ -1122,12 +1123,12 @@
    ''Sur certaines propriétés des trajectoires en Dynamique
    [On certain properties of trajectories in dynamics]'',
    J. Math. Pures Appl. (Ser. 5) '''3''', 331--388 (1897).[[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1897_5_3_A12_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1897_5_3_A12_0.pdf
  * J. S. Hadamard,[[BR]]
    ''Les surfaces à courbures opposées et leurs lignes géodésiques
    [Surfaces with negative curvature and their geodesics]'',
    J. Math. Pures Appl. (Ser. 5) '''4''', 27--74 (1898).[[BR]]
-   http://portail.mathdoc.fr/JMPA/afficher_notice.php?id=JMPA_1898_5_4_A3_0
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1898_5_4_A3_0.pdf
  * J. S. Hadamard,[[BR]]
    ''Sur la forme des lignes géodésiques à l'infini et sur les
    géodésiques des surfaces réglées du second ordre [On geodesics at

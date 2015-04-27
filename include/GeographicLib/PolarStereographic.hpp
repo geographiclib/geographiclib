@@ -2,7 +2,7 @@
  * \file PolarStereographic.hpp
  * \brief Header for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -32,32 +32,8 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT PolarStereographic {
   private:
     typedef Math::real real;
-    real tol_;
-    // _Cx used to be _C but g++ 3.4 has a macro of that name
-    real _a, _f, _e2, _e, _e2m, _Cx, _c;
+    real _a, _f, _e2, _es, _e2m, _c;
     real _k0;
-    static const int numit_ = 5;
-    static inline real overflow() {
-    // Overflow value s.t. atan(overflow_) = pi/2
-      static const real
-        overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
-      return overflow;
-    }
-    // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
-    static inline real tanx(real x) {
-      using std::tan;
-      real t = tan(x);
-      // Write the tests this way to ensure that tanx(NaN()) is NaN()
-      return x >= 0 ?
-        (!(t <  0) ? t :  overflow()) :
-        (!(t >= 0) ? t : -overflow());
-    }
-    // Return e * atanh(e * x) for f >= 0, else return
-    // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
-    inline real eatanhe(real x) const {
-      using std::atan;
-      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * atan(_e * x);
-    }
   public:
 
     /**

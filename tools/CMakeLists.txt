@@ -67,14 +67,16 @@ add_test (NAME GeoConvert0
   COMMAND GeoConvert -p -3 -m --input-string "33.3 44.4")
 set_tests_properties (GeoConvert0
   PROPERTIES PASS_REGULAR_EXPRESSION "38SMB4484")
-if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
-  # I/O for boost-quad has a bug where precision 0 is interpreted as
-  # printed all the digits of the number (instead of printing the
-  # integer portion).
-  add_test (NAME GeoConvert1 COMMAND GeoConvert -d --input-string "38smb")
-  set_tests_properties (GeoConvert1
-    PROPERTIES PASS_REGULAR_EXPRESSION "32d59'14\\.1\"N 044d27'53\\.4\"E")
-endif ()
+
+# I/O for boost-quadmath has a bug where precision 0 is interpreted as
+# printed all the digits of the number (instead of printing the integer
+# portion).  Problem reported on 2014-06-07:
+# https://svn.boost.org/trac/boost/ticket/10103.  GeographicLib 1.42
+# includes a workaround for this bug.
+add_test (NAME GeoConvert1 COMMAND GeoConvert -d --input-string "38smb")
+set_tests_properties (GeoConvert1
+  PROPERTIES PASS_REGULAR_EXPRESSION "32d59'14\\.1\"N 044d27'53\\.4\"E")
+
 add_test (NAME GeoConvert2
   COMMAND GeoConvert -p -2 --input-string "30d30'30\" 30.50833")
 set_tests_properties (GeoConvert2
@@ -170,10 +172,27 @@ add_test (NAME GeodSolve13 COMMAND
 set_tests_properties (GeodSolve12 GeodSolve13
   PROPERTIES PASS_REGULAR_EXPRESSION "120\\.27.* 105\\.15.* 266\\.7")
 
-# Check fix for inverse ignoring lon12 = nan
-add_test (NAME GeodSolve14 COMMAND GeodSolve -i --input-string "0 0 1 nan")
-set_tests_properties (GeodSolve14
-  PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
+if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
+  # mpfr (nan == 0 is true) and boost-quadmath (nan > 0 is true) have
+  # bugs in handling nans, so skip this test.  Problems reported on
+  # 2015-03-31, https://svn.boost.org/trac/boost/ticket/11159.  MFPR C++
+  # version 3.6.2 fixes its nan problem.
+  #
+  # Check fix for inverse ignoring lon12 = nan
+  add_test (NAME GeodSolve14 COMMAND GeodSolve -i --input-string "0 0 1 nan")
+  set_tests_properties (GeodSolve14
+    PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
+endif()
+
+# Initial implementation of Math::eatanhe was wrong for e^2 < 0.  This
+# checks that this is fixed.
+add_test (NAME GeodSolve15 COMMAND
+  GeodSolve -e 6.4e6 -1/150 -f --input-string "1 2 3 4")
+add_test (NAME GeodSolve16 COMMAND
+  GeodSolve -e 6.4e6 -1/150 -f --input-string "1 2 3 4" -E)
+set_tests_properties (GeodSolve15 GeodSolve16
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "1\\..* 2\\..* 3\\..* 1\\..* 2\\..* 3\\..* 4\\..* 0\\..* 4\\..* 1\\..* 1\\..* 23700")
 
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0
@@ -219,16 +238,21 @@ set_tests_properties (Planimeter6 Planimeter7 Planimeter8 Planimeter9
 add_test (NAME Planimeter10 COMMAND Planimeter -R
   --input-string "41N 111:3W; 41N 104:3W; 45N 104:3W; 45N 111:3W")
 set_tests_properties (Planimeter10
-  PROPERTIES PASS_REGULAR_EXPRESSION "4 2029616.[0-9]+ 2535883763..\\.")
+  PROPERTIES PASS_REGULAR_EXPRESSION "4 2029616\\.[0-9]+ 2535883763..\\.")
 # Area of arctic circle
 add_test (NAME Planimeter11
   COMMAND Planimeter -R --input-string "66:33:44 0; 66:33:44 180")
 set_tests_properties (Planimeter11
-  PROPERTIES PASS_REGULAR_EXPRESSION "2 15985058.[0-9]+ 212084182523..\\.")
+  PROPERTIES PASS_REGULAR_EXPRESSION "2 15985058\\.[0-9]+ 212084182523..\\.")
 add_test (NAME Planimeter12
   COMMAND Planimeter --input-string "66:33:44 0; 66:33:44 180")
 set_tests_properties (Planimeter12
-  PROPERTIES PASS_REGULAR_EXPRESSION "2 10465729.[0-9]+ -?0.0")
+  PROPERTIES PASS_REGULAR_EXPRESSION "2 10465729\\.[0-9]+ -?0.0")
+# Check encircling pole twice
+add_test (NAME Planimeter13 COMMAND
+  Planimeter --input-string "89 -360; 89 -240; 89 -120; 89 0; 89 120; 89 240")
+set_tests_properties (Planimeter13
+  PROPERTIES PASS_REGULAR_EXPRESSION "6 1160741\\..* 32415230256\\.")
 
 # Check fix for AlbersEqualArea::Reverse bug found 2011-05-01
 add_test (NAME ConicProj0 COMMAND
@@ -294,6 +318,15 @@ add_test (NAME TransverseMercatorProj1 COMMAND
 set_tests_properties (TransverseMercatorProj1
   PROPERTIES PASS_REGULAR_EXPRESSION
   "(90\\.0+ 0\\.0+ 0\\.0+|(90\\.0+|89\\.99999999999[0-9]+) -?180\\.0+ -?180\\.0+) (1\\.0000+|0\\.9999+)")
+
+# Test fix to bad handling of pole by RhumbSolve -i
+# Reported  2015-02-24 by Thomas Murray <thomas.murray56@gmail.com>;
+add_test (NAME RhumbSolve0 COMMAND
+  RhumbSolve -p 3 -i --input-string "0 0 90 0")
+add_test (NAME RhumbSolve1 COMMAND
+  RhumbSolve -p 3 -s -i --input-string "0 0 90 0")
+set_tests_properties (RhumbSolve0 RhumbSolve1
+  PROPERTIES PASS_REGULAR_EXPRESSION "^0\\.0+ 10001965\\.729 ")
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
   # Check fix for single-cell cache bug found 2010-11-23

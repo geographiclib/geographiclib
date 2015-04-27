@@ -47,8 +47,9 @@ If the B<-s> option is given, then the interpretation used is the one
 that results in a positive area; i.e., the area is positive and less
 than the total area of the ellipsoid.
 
-Only simple polygons are supported for the area computation.  Polygons
-may include one or both poles.  There is no need to close the polygon.
+Only simple (i.e., non-self-intersecting) polygons are supported for the
+area computation.  Polygons may include one or both poles.  There is no
+need to close the polygon.
 
 =head1 OPTIONS
 
@@ -90,7 +91,9 @@ given (in meters^2) with (I<prec> - 5) digits after the decimal point.
 =item B<-G>
 
 use the series formulation for the geodesics.  This is the default
-option and recommened for terrestrial applications.
+option and is recommended for terrestrial applications.  This option,
+B<-G>, and the following three options, B<-E>, B<-Q>, and B<-R>, are
+mutually exclusive.
 
 =item B<-E>
 
@@ -104,8 +107,7 @@ accurate for modest flattenings.)
 
 perform the calculation on the authalic sphere.  The area calculation is
 accurate even if the flattening is large, I<provided> the edges are
-sufficiently short.  The perimeter calculation is not accurate.  B<-E>
-and B<-Q> are mutually exclusive.
+sufficiently short.  The perimeter calculation is not accurate.
 
 =item B<-R>
 

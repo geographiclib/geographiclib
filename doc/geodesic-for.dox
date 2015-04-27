@@ -13,7 +13,7 @@
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.40
 
-\section abstract Abstract
+\section abstract-for Abstract
 
 This is a Fortran implementation of the geodesic algorithms from <a
 href="http://geographiclib.sf.net">GeographicLib</a>.  This is a
@@ -22,7 +22,7 @@ for an ellipsoid of revolution in a Fortran program.  It is written in
 Fortran 77 (avoiding features which are now deprecated) and should
 compile correctly with just about any Fortran compiler.
 
-\section download Downloading the source
+\section download-for Downloading the source
 
 The Fortran library is part of %GeographicLib which available for download at
 - <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.40.tar.gz">

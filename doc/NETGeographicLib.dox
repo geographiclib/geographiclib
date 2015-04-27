@@ -14,7 +14,7 @@
 \version 1.40
 \date 2014-12-18
 
-\section abstract Abstract
+\section abstract-net Abstract
 
 %NETGeographicLib is a .NET wrapper for GeographicLib.  It allows
 .NET developers to access GeographicLib classes within C#, Visual

@@ -34,6 +34,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		MGRS.cpp \
 		MagneticCircle.cpp \
 		MagneticModel.cpp \
+		Math.cpp \
 		NormalGravity.cpp \
 		OSGB.cpp \
 		PolarStereographic.cpp \
