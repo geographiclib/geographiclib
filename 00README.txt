@@ -92,7 +92,7 @@ Files
     matlab/geographiclib
       *.m, private/*.m -- Matlab implementation of some classes
 
-    matlab/geographiclib_legacy
+    matlab/geographiclib-legacy
       *.{m,cpp} -- legacy Matlab routines
 
     doc/

@@ -1395,13 +1395,13 @@ replaced by native MATLAB wrapper functions which call the functions in
 the <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
 GeographicLib toolbox</a>.  To use these wrapper functions, run one of:
 \verbatim
-   addpath /usr/local/share/matlab/geographiclib_legacy
-   addpath C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib_legacy
+   addpath /usr/local/share/matlab/geographiclib-legacy
+   addpath C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib-legacy
    \endverbatim
 The <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
 GeographicLib toolbox</a> <i>must</i> also be in your MATLAB path.  A
 summary of the routines is obtained by \verbatim
-   help geographiclib_legacy \endverbatim
+   help geographiclib-legacy \endverbatim
 These functions are <b>DEPRECATED</b>.  Here is a function listing
   - Geodesics
     - geodesicdirect         - Wrapper for geodreckon
@@ -6996,7 +6996,7 @@ git repository for GeographicLib</a>.
        MATLAB_COMPILER option in the cmake build has been removed;
      - reorganize directories, so that
        - matlab/geographiclib contains the native matlab code;
-       - matlab/geographiclib_legacy contains wrapper functions to mimic
+       - matlab/geographiclib-legacy contains wrapper functions to mimic
          the previous compiled functionality;
      - the installed MATLAB code mirrors this layout, but the parent
        installation directory on non-Windows systems is

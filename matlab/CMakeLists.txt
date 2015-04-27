@@ -13,12 +13,6 @@ install (FILES ${PRIVATE_MATLAB_FILES}
   DESTINATION ${INSTALL_MATLAB_DIR}/geographiclib/private)
 # Install "legacy" functions
 file (GLOB LEGACY_FILES
-  geographiclib_legacy/[A-Za-z]*.m  geographiclib_legacy/[A-Za-z]*.cpp)
+  geographiclib-legacy/[A-Za-z]*.m  geographiclib-legacy/[A-Za-z]*.cpp)
 install (FILES ${LEGACY_FILES}
-  DESTINATION ${INSTALL_MATLAB_DIR}/geographiclib_legacy)
-# Octave doesn't know about Contents.m, so
-install (FILES geographiclib/Contents.m
-  DESTINATION ${INSTALL_MATLAB_DIR}/geographiclib RENAME geographiclib.m)
-install (FILES geographiclib_legacy/Contents.m
-  DESTINATION ${INSTALL_MATLAB_DIR}/geographiclib_legacy
-  RENAME geographiclib_legacy.m)
+  DESTINATION ${INSTALL_MATLAB_DIR}/geographiclib-legacy)
