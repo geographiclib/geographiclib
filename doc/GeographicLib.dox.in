@@ -6701,7 +6701,8 @@ Here's what you should know:
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=4</code> gives quad
    precision (113-bit precision) via boost::multiprecision::float128;
    this requires <a href="http://www.boost.org"> boost</a> (version 1.54
-   or later) and the quadmath library (which requires the use of g++).
+   or later) and the quadmath library (the package names are libquadmath
+   and libquadmath-devel).  This requires the use of g++.
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=5</code> gives
    arbitrary precision via mpfr::mpreal; this requires
    <a href="http://www.mpfr.org"> MPFR</a> (version 3.0 or later),
