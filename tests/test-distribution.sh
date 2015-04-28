@@ -32,13 +32,17 @@
 set -e
 
 # The following files contain version information:
+#   pom.xml
 #   CMakeLists.txt
 #   NEWS
 #   configure.ac
-#   python/setup.py
 #   tests/test-distribution.sh
+#   src/GeographicLib.pro
+# Need updating if underlying library changes
+#   python/setup.py
+#   C/Fortran/Java/MATLAB libraries
 
-VERSION=1.42
+VERSION=1.43
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib

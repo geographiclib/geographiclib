@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 42)
+set (PROJECT_VERSION_MINOR 43)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -43,7 +43,7 @@ endif ()
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 14)
-set (LIBVERSION_BUILD 14.0.3)
+set (LIBVERSION_BUILD 14.0.4)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -464,7 +464,7 @@ add_subdirectory (doc)
 add_subdirectory (matlab)
 add_subdirectory (python/geographiclib)
 add_subdirectory (examples)
-if (BUILD_NETGEOGRAPHICLIB)
+if (MSVC AND BUILD_NETGEOGRAPHICLIB)
   if (GEOGRAPHICLIB_PRECISION EQUAL 2)
     set (NETGEOGRAPHICLIB_LIBRARIES NETGeographicLib)
     set (NETLIBNAME NETGeographic)
