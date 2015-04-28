@@ -4,7 +4,61 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.41.
+The current version of the library is 1.42.
+
+Changes between 1.42 (released 2015-04-28) and 1.41 versions:
+
+  * DMS::Decode allows a single addition or subtraction operation, e.g.,
+    70W+0:0:15.  This affects the GeoCoords class and the utilities
+    (which use the DMS class for reading coordinates).
+
+  * Add Math::norm, Math::AngRound, Math::tand, Math::atan2d,
+    Math::eatanhe, Math::taupf, Math::tauf, Math::fma and remove
+    duplicated (but private) functionality from other classes.
+
+  * On non-Windows systems, the cmake config-style find_package files
+    are now installed under ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}
+    instead of ${CMAKE_INSTALL_PREFIX}/share, because the files are
+    architecture-specific.  This change will let 32-bit and 64-bit
+    versions coexist on the same machine (in lib and lib64).  You should
+    remove the versions in the old "share" location.
+
+  * MATLAB changes:
+    + provide native MATLAB implementations for compiled interface
+      functions;
+    + the compiled MATLAB interface is now deprecated and so the
+      MATLAB_COMPILER option in the cmake build has been removed;
+    + reorganize directories, so that
+      o matlab/geographiclib contains the native matlab code;
+      o matlab/geographiclib-legacy contains wrapper functions to mimic
+        the previous compiled functionality;
+    + the installed MATLAB code mirrors this layout, but the parent
+      installation directory on non-Windows systems is
+      ${CMAKE_INSTALL_PREFIX}/share (instead of
+      ${CMAKE_INSTALL_PREFIX}/libexec), because the files are now
+      architecture independent;
+    + matlab/geographiclib is now packaged and distributed as MATLAB
+      File Exchange package 50605 (this supersedes three earlier MATLAB
+      packages);
+    + point fix for geodarea.m to correct bug in area of polygons which
+      encircle a pole multiple times (released as version 1.41.1 of
+      MATLAB File Exchange package 39108, 2014-04-22).
+
+  * artifactId for Java package changed from GeographicLib to
+    GeographicLib-Java and the package is now depolyed to Maven Central
+    (thanks to Chris Bennight for help on this).
+
+  * Fix autoconf mismatch of version numbers (which were inconsistent in
+    versions 1.40 and 1.41).
+
+  * Mark the computation of the gradient of the geoid height in the
+    Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a> utility
+    as deprecated.
+
+  * Work around the boost-quadmath bug with setprecision(0).
+
+  * Deprecate use of Visual Studio 2005 "-vc8" project files in the
+    windows directory.
 
 Changes between 1.41 (released 2015-03-09) and 1.40 versions:
 
@@ -47,11 +101,11 @@ Changes between 1.40 (released 2014-12-18) and 1.39 versions:
     http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve.
 
   * Additions to the documentation:
-     + documentation on  Jacobi's conformal projection;
-     + a page on Auxiliary latitudes (actually, this was added in
-       version 1.39);
-     + document the use of two single quotes to stand for a double quote
-       in DMS (this feature was introduced in version 1.13).
+    + documentation on  Jacobi's conformal projection;
+    + a page on Auxiliary latitudes (actually, this was added in
+      version 1.39);
+    + document the use of two single quotes to stand for a double quote
+      in DMS (this feature was introduced in version 1.13).
 
   * The Matlab function, geographiclibinterface, which compiles the
     wrapper routines for Matlab now works with Matlab 2014b on a Mac.

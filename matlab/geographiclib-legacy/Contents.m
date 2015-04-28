@@ -1,5 +1,5 @@
 % GeographicLib legacy functions
-% Version 1.42 2015-04-22
+% Version 1.42 2015-04-27
 %
 %   The functions in this directory are DEPRECATED.  They are wrapper
 %   routines for the GeographicLib toolbox, which is available at

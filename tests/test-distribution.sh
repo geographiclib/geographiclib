@@ -191,10 +191,7 @@ make
 
 cd $TEMP/instc/share/matlab/geographiclib
 rm -f $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip
-(
-    find -maxdepth 1 -type f ! -name geographiclib.m -name '*.m' | sort
-    find private -type f -name '*.m' | sort
-) | xargs zip $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip
+zip $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip *.m private/*.m
 
 cd $TEMP
 mkdir python-test

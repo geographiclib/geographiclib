@@ -21,11 +21,11 @@
 #define GEOGRAPHICLIB_VERSION_NUM(a,b,c) ((((a) * 10000 + (b)) * 100) + (c))
 
 /**
- * @relates GeographicLib::Constants The version of GeographicLib as a single
- * integer, packed as MMmmmmpp where MM is the major version, mmmm is the minor
- * version, and pp is the patch level.  Users should not rely on this
- * particular packing of the components of the version number.  Instead they
- * should use a test such as \code
+ * @relates GeographicLib::Constants
+ * The version of GeographicLib as a single integer, packed as MMmmmmpp where
+ * MM is the major version, mmmm is the minor version, and pp is the patch
+ * level.  Users should not rely on this particular packing of the components
+ * of the version number.  Instead they should use a test such as \code
    #if GEOGRAPHICLIB_VERSION >= GEOGRAPHICLIB_VERSION_NUM(1,37,0)
    ...
    #endif
@@ -38,7 +38,7 @@
 
 /**
  * @relates GeographicLib::Constants
- * Is the C++11 static_assert available.
+ * Is the C++11 static_assert available?
  **********************************************************************/
 #if !defined(GEOGRAPHICLIB_HAS_STATIC_ASSERT)
 #  if __cplusplus >= 201103 || defined(__GXX_EXPERIMENTAL_CXX0X__)

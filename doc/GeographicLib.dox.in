@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2015-mm-dd
+\date 2015-04-28
 
 \section abstract Abstract
 
@@ -200,7 +200,7 @@ Then pick one of the first five options below:
 - \ref gnu.  This is a simple installation method that works with g++
   and GNU make on Linux and many Unix platforms.
 - \ref windows.  This is a simple installation method that works with
-  Visual Studio 2005, 2008, and 2010 under Windows.
+  Visual Studio 2008 and 2010 under Windows.
 - \ref binaryinst.  Use this installation method if you only need to use
   the \ref utilities supplied with GeographicLib.  (This method also
   installs the header files and the library for use by Visual Studio 10.)
@@ -453,16 +453,15 @@ Here are the steps to compile and install GeographicLib:
 
 \section windows Installation on Windows
 
-This method requires Visual Studio 2005, 2008, or 2010.  This builds a
-static library and the utilities.  If you only have Visual Studio 2003,
-2012, or later, use cmake to create the necessary solution file, see
-\ref cmake.  (cmake is needed to run the tests.)
+This method requires Visual Studio 2008 or 2010.  This builds a static
+library and the utilities.  If you have some other version of Visual
+Studio, use cmake to create the necessary solution file, see \ref cmake.
+(cmake is needed to run the tests.)
 - Unpack the source, running \verbatim
   unzip -q GeographicLib-@PROJECT_VERSION@.zip \endverbatim
 - Open GeographicLib-@PROJECT_VERSION@/windows/GeographicLib-vc10.sln in
-  Visual Studio 2010 (for Visual Studio 2005 and 2008, replace -vc10 by
-  -vc8 or -vc9; for Visual Studio Express 2010, replace -vc10 by
-  -vc10x).
+  Visual Studio 2010 (for Visual Studio 2008, replace -vc10 by -vc9; for
+  Visual Studio Express 2010, replace -vc10 by -vc10x).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
 - Copy the library windows/Release/GeographicLib.lib and the
@@ -1195,8 +1194,9 @@ self-contained and does not depend on the rest of GeographicLib.  Sample
 main programs to solve the direct and inverse geodesic problems and to
 compute polygonal areas are provided.
 
-If you're using Apache Maven as your build system, you can use this
-package by including the dependency \verbatim
+This package is available on Maven Central; so if you're using Apache
+Maven as your build system, you can use this package by including the
+dependency \verbatim
   <dependency>
     <groupId>net.sf.geographiclib</groupId>
     <artifactId>GeographicLib-Java</artifactId>
@@ -1395,13 +1395,13 @@ replaced by native MATLAB wrapper functions which call the functions in
 the <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
 GeographicLib toolbox</a>.  To use these wrapper functions, run one of:
 \verbatim
-   addpath /usr/local/share/matlab/geographiclib_legacy
-   addpath C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib_legacy
+   addpath /usr/local/share/matlab/geographiclib-legacy
+   addpath C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib-legacy
    \endverbatim
 The <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
 GeographicLib toolbox</a> <i>must</i> also be in your MATLAB path.  A
 summary of the routines is obtained by \verbatim
-   help geographiclib_legacy \endverbatim
+   help geographiclib-legacy \endverbatim
 These functions are <b>DEPRECATED</b>.  Here is a function listing
   - Geodesics
     - geodesicdirect         - Wrapper for geodreckon
@@ -6701,7 +6701,8 @@ Here's what you should know:
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=4</code> gives quad
    precision (113-bit precision) via boost::multiprecision::float128;
    this requires <a href="http://www.boost.org"> boost</a> (version 1.54
-   or later) and the quadmath library (which requires the use of g++).
+   or later) and the quadmath library (the package names are libquadmath
+   and libquadmath-devel).  This requires the use of g++.
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=5</code> gives
    arbitrary precision via mpfr::mpreal; this requires
    <a href="http://www.mpfr.org"> MPFR</a> (version 3.0 or later),
@@ -6974,7 +6975,7 @@ of the
 git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.42">Version 1.42</a>
-   (released 2015-mm-dd)
+   (released 2015-04-28)
    - DMS::Decode allows a single addition or subtraction operation,
      e.g., 70W+0:0:15.  This affects the GeoCoords class and the
      utilities (which use the DMS class for reading coordinates).
@@ -6982,13 +6983,11 @@ git repository for GeographicLib</a>.
      Math::eatanhe, Math::taupf, Math::tauf, Math::fma and remove
      duplicated (but private) functionality from other classes.
    - On non-Windows systems, the cmake config-style find_package files
-     are now installed in
-     ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/cmake/GeographicLib
-     instead of ${CMAKE_INSTALL_PREFIX}/share/cmake/GeographicLib,
-     because the files are architecture-specific.  This change will let
-     32-bit and 64-bit versions coexist on the same machine (in lib and
-     lib64).  You should remove the versions in the old "share"
-     location.
+     are now installed under ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}
+     instead of ${CMAKE_INSTALL_PREFIX}/share, because the files are
+     architecture-specific.  This change will let 32-bit and 64-bit
+     versions coexist on the same machine (in lib and lib64).  You
+     should remove the versions in the old "share" location.
    - MATLAB changes:
      - provide native MATLAB implementations for compiled interface
        functions, see \ref matlab;
@@ -6996,7 +6995,7 @@ git repository for GeographicLib</a>.
        MATLAB_COMPILER option in the cmake build has been removed;
      - reorganize directories, so that
        - matlab/geographiclib contains the native matlab code;
-       - matlab/geographiclib_legacy contains wrapper functions to mimic
+       - matlab/geographiclib-legacy contains wrapper functions to mimic
          the previous compiled functionality;
      - the installed MATLAB code mirrors this layout, but the parent
        installation directory on non-Windows systems is
@@ -7012,14 +7011,15 @@ git repository for GeographicLib</a>.
        MATLAB File Exchange package 39108, 2014-04-22).
    - artifactId for Java package changed from GeographicLib to
      GeographicLib-Java and the package is now depolyed to
-     oss.sonatype.org (thanks to Chris Bennight for help on this).
-     TODO: update Java documentation to include relevant info.
+     Maven Central (thanks to Chris Bennight for help on this).
    - Fix autoconf mismatch of version numbers (which were inconsistent
      in versions 1.40 and 1.41).
    - Mark the computation of the gradient of the geoid height in the
      Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a>
      utility as deprecated.
    - Work around the boost-quadmath bug with setprecision(0).
+   - Deprecate use of Visual Studio 2005 "-vc8" project files in the
+     windows directory.
 
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
    (released 2015-03-09)
