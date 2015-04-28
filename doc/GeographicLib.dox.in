@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2015-mm-dd
+\date 2015-04-28
 
 \section abstract Abstract
 
@@ -6975,7 +6975,7 @@ of the
 git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.42">Version 1.42</a>
-   (released 2015-mm-dd)
+   (released 2015-04-28)
    - DMS::Decode allows a single addition or subtraction operation,
      e.g., 70W+0:0:15.  This affects the GeoCoords class and the
      utilities (which use the DMS class for reading coordinates).
@@ -6983,13 +6983,11 @@ git repository for GeographicLib</a>.
      Math::eatanhe, Math::taupf, Math::tauf, Math::fma and remove
      duplicated (but private) functionality from other classes.
    - On non-Windows systems, the cmake config-style find_package files
-     are now installed in
-     ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/cmake/GeographicLib
-     instead of ${CMAKE_INSTALL_PREFIX}/share/cmake/GeographicLib,
-     because the files are architecture-specific.  This change will let
-     32-bit and 64-bit versions coexist on the same machine (in lib and
-     lib64).  You should remove the versions in the old "share"
-     location.
+     are now installed under ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}
+     instead of ${CMAKE_INSTALL_PREFIX}/share, because the files are
+     architecture-specific.  This change will let 32-bit and 64-bit
+     versions coexist on the same machine (in lib and lib64).  You
+     should remove the versions in the old "share" location.
    - MATLAB changes:
      - provide native MATLAB implementations for compiled interface
        functions, see \ref matlab;
