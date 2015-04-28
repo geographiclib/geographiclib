@@ -2,7 +2,7 @@
  * \file Geocentric.cpp
  * \brief Implementation for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -45,7 +45,7 @@ namespace GeographicLib {
       n = _a/sqrt(1 - _e2 * Math::sq(sphi)),
       slam = lon == -180 ? 0 : sin(lam),
       clam = abs(lon) == 90 ? 0 : cos(lam);
-    Z = ( _e2m * n + h) * sphi;
+    Z = (_e2m * n + h) * sphi;
     X = (n + h) * cphi;
     Y = X * slam;
     X *= clam;
@@ -152,8 +152,8 @@ namespace GeographicLib {
       }
     }
     lat = atan2(sphi, cphi) / Math::degree();
-    // Negative signs return lon in [-180, 180).
-    lon = -atan2(-slam, clam) / Math::degree();
+    // Negative signs return lon in [-180, 180).  0- converts -0 to +0.
+    lon = Math::atan2d(slam, clam);
     if (M)
       Rotation(sphi, cphi, slam, clam, M);
   }

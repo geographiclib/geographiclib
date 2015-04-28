@@ -2,7 +2,7 @@
  * \file GeodesicLineExact.cpp
  * \brief Implementation for GeographicLib::GeodesicLineExact class
  *
- * Copyright (c) Charles Karney (2012-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -39,7 +39,7 @@ namespace GeographicLib {
     , _lat1(lat1)
     , _lon1(lon1)
     // Guard against underflow in salp0
-    , _azi1(GeodesicExact::AngRound(Math::AngNormalize(azi1)))
+    , _azi1(Math::AngRound(Math::AngNormalize(azi1)))
     , _a(g._a)
     , _f(g._f)
     , _b(g._b)
@@ -60,7 +60,7 @@ namespace GeographicLib {
     // Ensure cbet1 = +epsilon at poles
     sbet1 = _f1 * sin(phi);
     cbet1 = abs(lat1) == 90 ? tiny_ : cos(phi);
-    GeodesicExact::SinCosNorm(sbet1, cbet1);
+    Math::norm(sbet1, cbet1);
     _dn1 = (_f >= 0 ? sqrt(1 + g._ep2 * Math::sq(sbet1)) :
             sqrt(1 - _e2 * Math::sq(cbet1)) / _f1);
 
@@ -82,9 +82,9 @@ namespace GeographicLib {
     _csig1 = _comg1 = sbet1 != 0 || _calp1 != 0 ? cbet1 * _calp1 : 1;
     // Without normalization we have schi1 = somg1.
     _cchi1 = _f1 * _dn1 * _comg1;
-    GeodesicExact::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
-    // GeodesicExact::SinCosNorm(_somg1, _comg1); -- don't need to normalize!
-    // GeodesicExact::SinCosNorm(_schi1, _cchi1); -- don't need to normalize!
+    Math::norm(_ssig1, _csig1); // sig1 in (-pi, pi]
+    // Math::norm(_somg1, _comg1); -- don't need to normalize!
+    // Math::norm(_schi1, _cchi1); -- don't need to normalize!
 
     _k2 = Math::sq(_calp0) * g._ep2;
     _E.Reset(-_k2, -g._ep2, 1 + _k2, 1 + g._ep2);
@@ -201,7 +201,7 @@ namespace GeographicLib {
 
     if (outmask & AZIMUTH)
       // minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi2 = 0 - atan2(-salp2, calp2) / Math::degree();
+      azi2 = Math::atan2d(salp2, calp2);
 
     if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
       real J12 = _k2 * _D0 * (sig12 + _E.deltaD(ssig2, csig2, dn2) - _D1);

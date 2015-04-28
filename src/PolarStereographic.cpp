@@ -2,31 +2,24 @@
  * \file PolarStereographic.cpp
  * \brief Implementation for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/PolarStereographic.hpp>
 
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
-#  pragma warning (disable: 4127)
-#endif
-
 namespace GeographicLib {
 
   using namespace std;
 
   PolarStereographic::PolarStereographic(real a, real f, real k0)
-    : tol_(real(0.1)*sqrt(numeric_limits<real>::epsilon()))
-    , _a(a)
+    : _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _e2(_f * (2 - _f))
-    , _e(sqrt(abs(_e2)))
+    , _es((_f < 0 ? -1 : 0) * sqrt(abs(_e2)))
     , _e2m(1 - _e2)
-    , _Cx(exp(eatanhe(real(1))))
-    , _c( (1 - _f) * _Cx )
+    , _c( (1 - _f) * exp(Math::eatanhe(real(1), _es)) )
     , _k0(k0)
   {
     if (!(Math::isfinite(_a) && _a > 0))
@@ -70,11 +63,9 @@ namespace GeographicLib {
     const {
     lat *= northp ? 1 : -1;
     real
-      phi = lat * Math::degree(),
-      tau = lat != -90 ? tanx(phi) : -overflow(),
+      tau = Math::tand(lat),
       secphi = Math::hypot(real(1), tau),
-      sig = sinh( eatanhe(tau / secphi) ),
-      taup = Math::hypot(real(1), sig) * tau - sig * secphi,
+      taup = Math::taupf(tau, _es),
       rho = Math::hypot(real(1), taup) + abs(taup);
     rho = taup >= 0 ? (lat != 90 ? 1/rho : 0) : rho;
     rho *= 2 * _k0 * _a / _c;
@@ -95,28 +86,12 @@ namespace GeographicLib {
       rho = Math::hypot(x, y),
       t = rho / (2 * _k0 * _a / _c),
       taup = (1 / t - t) / 2,
-      tau = taup * _Cx,
-      stol = tol_ * max(real(1), abs(taup));
-    if (abs(tau) < overflow()) {
-      // min iterations = 1, max iterations = 2; mean = 1.99
-      for (int i = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
-        real
-          tau1 = Math::hypot(real(1), tau),
-          sig = sinh( eatanhe( tau / tau1 ) ),
-          taupa = Math::hypot(real(1), sig) * tau - sig * tau1,
-          dtau = (taup - taupa) * (1 + _e2m * Math::sq(tau)) /
-          ( _e2m * tau1 * Math::hypot(real(1), taupa) );
-        tau += dtau;
-        if (!(abs(dtau) >= stol))
-          break;
-      }
-    }
-    real
+      tau = Math::tauf(taup, _es),
       phi = atan(tau),
       secphi = Math::hypot(real(1), tau);
     k = rho ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) : _k0;
     lat = (northp ? 1 : -1) * (rho ? phi / Math::degree() : 90);
-    lon = -atan2( -x, northp ? -y : y ) / Math::degree();
+    lon = 0 - atan2( -x, northp ? -y : y ) / Math::degree();
     gamma = northp ? lon : -lon;
   }
 

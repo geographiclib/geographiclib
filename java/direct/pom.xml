@@ -9,7 +9,7 @@
   <groupId>net.sf.geographiclib.example</groupId>
   <artifactId>Direct</artifactId>
   <name>Direct</name>
-  <version>1.40</version>
+  <version>1.42</version>
 
   <packaging>jar</packaging>
 
@@ -27,8 +27,8 @@
   <dependencies>
     <dependency>
       <groupId>net.sf.geographiclib</groupId>
-      <artifactId>GeographicLib</artifactId>
-      <version>1.40</version>
+      <artifactId>GeographicLib-Java</artifactId>
+      <version>1.42</version>
     </dependency>
   </dependencies>
 

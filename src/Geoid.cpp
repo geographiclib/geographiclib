@@ -8,6 +8,7 @@
  **********************************************************************/
 
 #include <GeographicLib/Geoid.hpp>
+// For getenv
 #include <cstdlib>
 #include <GeographicLib/Utility.hpp>
 

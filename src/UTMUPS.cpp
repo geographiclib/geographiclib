@@ -84,7 +84,7 @@ namespace GeographicLib {
         lon0 = CentralMeridian(zone1),
         dlon = lon - lon0;
       dlon = abs(dlon - 360 * floor((dlon + 180)/360));
-      if (dlon > 60)
+      if (!(dlon <= 60))
         // Check isn't really necessary because CheckCoords catches this case.
         // But this allows a more meaningful error message to be given.
         throw GeographicErr("Longitude " + Utility::str(lon)

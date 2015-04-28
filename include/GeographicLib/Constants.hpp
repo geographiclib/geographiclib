@@ -14,7 +14,9 @@
 
 /**
  * @relates GeographicLib::Constants
- * Pack the version components into a single integer.
+ * Pack the version components into a single integer.  Users should not rely on
+ * this particular packing of the components of the version number; see the
+ * documentation for GEOGRAPHICLIB_VERSION, below.
  **********************************************************************/
 #define GEOGRAPHICLIB_VERSION_NUM(a,b,c) ((((a) * 10000 + (b)) * 100) + (c))
 
@@ -22,7 +24,12 @@
  * @relates GeographicLib::Constants
  * The version of GeographicLib as a single integer, packed as MMmmmmpp where
  * MM is the major version, mmmm is the minor version, and pp is the patch
- * level.
+ * level.  Users should not rely on this particular packing of the components
+ * of the version number.  Instead they should use a test such as \code
+   #if GEOGRAPHICLIB_VERSION >= GEOGRAPHICLIB_VERSION_NUM(1,37,0)
+   ...
+   #endif
+ * \endcode
  **********************************************************************/
 #define GEOGRAPHICLIB_VERSION \
  GEOGRAPHICLIB_VERSION_NUM(GEOGRAPHICLIB_VERSION_MAJOR, \
@@ -31,11 +38,11 @@
 
 /**
  * @relates GeographicLib::Constants
- * A compile-time assert.  Use C++11 static_assert, if available.
+ * Is the C++11 static_assert available?
  **********************************************************************/
-#if !defined(GEOGRAPHICLIB_STATIC_ASSERT)
+#if !defined(GEOGRAPHICLIB_HAS_STATIC_ASSERT)
 #  if __cplusplus >= 201103 || defined(__GXX_EXPERIMENTAL_CXX0X__)
-#    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
+#    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 1
 #  elif defined(_MSC_VER) && _MSC_VER >= 1600
 // For reference, here is a table of Visual Studio and _MSC_VER
 // correspondences:
@@ -51,6 +58,18 @@
 //   1700     vc11  (2012)
 //   1800     vc12  (2013)
 //   1900     vc14  (2015)
+#    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 1
+#  else
+#    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 0
+#  endif
+#endif
+
+/**
+ * @relates GeographicLib::Constants
+ * A compile-time assert.  Use C++11 static_assert, if available.
+ **********************************************************************/
+#if !defined(GEOGRAPHICLIB_STATIC_ASSERT)
+#  if GEOGRAPHICLIB_HAS_STATIC_ASSERT
 #    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
 #  else
 #    define GEOGRAPHICLIB_STATIC_ASSERT(cond,reason) \

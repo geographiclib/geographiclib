@@ -10,6 +10,7 @@
 #include <GeographicLib/GeoCoords.hpp>
 #include <GeographicLib/MGRS.hpp>
 #include <GeographicLib/DMS.hpp>
+#include <GeographicLib/Utility.hpp>
 
 namespace GeographicLib {
 
@@ -109,13 +110,13 @@ namespace GeographicLib {
     real scale = prec < 0 ? pow(real(10), -prec) : real(1);
     os << UTMUPS::EncodeZone(zone, northp, abbrev) << fixed << setfill('0');
     if (Math::isfinite(easting)) {
-      os << " " << setprecision(max(0, prec)) << easting / scale;
+      os << " " << Utility::str(easting / scale, max(0, prec));
       if (prec < 0 && abs(easting / scale) > real(0.5))
         os << setw(-prec) << 0;
     } else
       os << " nan";
     if (Math::isfinite(northing)) {
-      os << " " << setprecision(max(0, prec)) << northing / scale;
+      os << " " << Utility::str(northing / scale, max(0, prec));
       if (prec < 0 && abs(northing / scale) > real(0.5))
         os << setw(-prec) << 0;
     } else

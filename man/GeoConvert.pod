@@ -47,6 +47,11 @@ longitude.  For example, the following are all equivalent
     44d24 33d18N
     33:18 44:24
 
+It is also possible to carry out addition or subtraction operations in
+geographic coordinates.  For example the point 15" east of 39N 70W is
+
+    39N 70W+0:0:15E
+
 =item B<UTM/UPS>
 
 3 tokens (output option B<-u>) given as I<zone>+I<hemisphere> I<easting>
@@ -302,6 +307,28 @@ file C<input.txt> should just contain the plain coordinates.
    echo 38SMB4488 | GeoConvert -: -p 1 => 33:20:03.25N 044:2413.06E
    echo 38SMB4488 | GeoConvert -u      => 38n 444500 3688500
    echo E44d24 N33d20 | GeoConvert -m -p -3 => 38SMB4488
+
+GeoConvert can be used to do simple arithmetic using degree, minutes,
+and seconds.  For example, sometimes data is tiled in 15 second squares
+tagged by the DMS representation of the SW corner.  The tags of the tile
+at 38:59:45N 077:02:00W and its 8 neighbors are then given by
+
+    t=0:0:15
+    for y in -$t +0 +$t; do
+        for x in -$t +0 +$t; do
+            echo 38:59:45N$y 077:02:00W$x
+        done
+    done | GeoConvert -: -p -1 | tr -d ': '
+    =>
+    385930N0770215W
+    385930N0770200W
+    385930N0770145W
+    385945N0770215W
+    385945N0770200W
+    385945N0770145W
+    390000N0770215W
+    390000N0770200W
+    390000N0770145W
 
 =head1 ERRORS
 

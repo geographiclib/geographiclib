@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeoidEval --help\n"
 "or visit:\n"
-"    http://geographiclib.sf.net/1.41/GeoidEval.1.html\n";
+"    http://geographiclib.sf.net/1.42/GeoidEval.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -62,6 +62,7 @@ int usage(int retval, bool brief) {
 "           result of the way that the geoid data is stored, the calculation of\n"
 "           gradients can result in large quantization errors.  This is\n"
 "           particularly acute at high latitudes and for the easterly gradient.\n"
+"           For this reason, the use of this option is DEPRECATED.\n"
 "\n"
 "       -z  prefix each line of input by zone, e.g., \"38n\".  This should be\n"
 "           used when the input consists of UTM/UPS eastings and northings.\n"

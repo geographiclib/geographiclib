@@ -2,7 +2,7 @@
  * \file TransverseMercatorExact.cpp
  * \brief Implementation for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -81,35 +81,6 @@ namespace GeographicLib {
                                              Constants::WGS84_f(),
                                              Constants::UTM_k0());
     return utm;
-  }
-
-  // tau = tan(phi), taup = sinh(psi)
-  Math::real TransverseMercatorExact::taup(real tau) const {
-    real
-      tau1 = Math::hypot(real(1), tau),
-      sig = sinh( _e * Math::atanh(_e * tau / tau1) );
-    return Math::hypot(real(1), sig) * tau - sig * tau1;
-  }
-
-  Math::real TransverseMercatorExact::taupinv(real taup) const {
-    real
-      // See comment in implementation of TransverseMercator::tauf about the
-      // initial guess
-      tau = taup/_mv,
-      stol = tol_ * max(real(1), abs(taup));
-    // min iterations = 1, max iterations = 2; mean = 1.94
-    for (int i = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
-      real
-        tau1 = Math::hypot(real(1), tau),
-        sig = sinh( _e * Math::atanh(_e * tau / tau1 ) ),
-        taupa = Math::hypot(real(1), sig) * tau - sig * tau1,
-        dtau = (taup - taupa) * (1 + _mv * Math::sq(tau)) /
-        ( _mv * tau1 * Math::hypot(real(1), taupa) );
-      tau += dtau;
-      if (!(abs(dtau) >= stol))
-        break;
-    }
-    return tau;
   }
 
   void TransverseMercatorExact::zeta(real /*u*/, real snu, real cnu, real dnu,
@@ -389,9 +360,8 @@ namespace GeographicLib {
       lon = 180 - lon;
     }
     real
-      phi = lat * Math::degree(),
       lam = lon * Math::degree(),
-      tau = tanx(phi);
+      tau = Math::tand(lat);
 
     // u,v = coordinates for the Thompson TM, Lee 54
     real u, v;
@@ -402,7 +372,8 @@ namespace GeographicLib {
       u = 0;
       v = _Ev.K();
     } else
-      zetainv(taup(tau), lam, u, v);
+      // tau = tan(phi), taup = sinh(psi)
+      zetainv(Math::taupf(tau, _e), lam, u, v);
 
     real snu, cnu, dnu, snv, cnv, dnv;
     _Eu.sncndn(u, snu, cnu, dnu);
@@ -421,7 +392,7 @@ namespace GeographicLib {
     } else {
       // Recompute (tau, lam) from (u, v) to improve accuracy of Scale
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
-      tau=taupinv(tau);
+      tau = Math::tauf(tau, _e);
       Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
       gamma /= Math::degree();
     }
@@ -463,7 +434,7 @@ namespace GeographicLib {
     real phi, lam, tau;
     if (v != 0 || u != _Eu.K()) {
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
-      tau = taupinv(tau);
+      tau = Math::tauf(tau, _e);
       phi = atan(tau);
       lat = phi / Math::degree();
       lon = lam / Math::degree();

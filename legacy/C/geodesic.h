@@ -113,7 +113,7 @@
  * http://geographiclib.sourceforge.net/
  *
  * This library was distributed with
- * <a href="../index.html">GeographicLib</a> 1.40.
+ * <a href="../index.html">GeographicLib</a> 1.42.
  **********************************************************************/
 
 #if !defined(GEODESIC_H)
@@ -128,12 +128,35 @@
  * The minor version of the geodesic library.  (This tracks the version of
  * GeographicLib.)
  **********************************************************************/
-#define GEODESIC_VERSION_MINOR 40
+#define GEODESIC_VERSION_MINOR 42
 /**
  * The patch level of the geodesic library.  (This tracks the version of
  * GeographicLib.)
  **********************************************************************/
 #define GEODESIC_VERSION_PATCH 0
+
+/**
+ * Pack the version components into a single integer.  Users should not rely on
+ * this particular packing of the components of the version number; see the
+ * documentation for GEODESIC_VERSION, below.
+ **********************************************************************/
+#define GEODESIC_VERSION_NUM(a,b,c) ((((a) * 10000 + (b)) * 100) + (c))
+
+/**
+ * The version of the geodesic library as a single integer, packed as MMmmmmpp
+ * where MM is the major version, mmmm is the minor version, and pp is the
+ * patch level.  Users should not rely on this particular packing of the
+ * components of the version number.  Instead they should use a test such as
+ * \code
+   #if GEODESIC_VERSION >= GEODESIC_VERSION_NUM(1,40,0)
+   ...
+   #endif
+ * \endcode
+ **********************************************************************/
+#define GEODESIC_VERSION \
+ GEODESIC_VERSION_NUM(GEODESIC_VERSION_MAJOR, \
+                      GEODESIC_VERSION_MINOR, \
+                      GEODESIC_VERSION_PATCH)
 
 #if defined(__cplusplus)
 extern "C" {

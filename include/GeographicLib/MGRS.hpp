@@ -203,7 +203,7 @@ namespace GeographicLib {
      * in the northern hemisphere and in [800 km, 3200 km] in the southern
      * hemisphere.
      *
-     * The ranges are 100 km more restrictive that for the conversion between
+     * The ranges are 100 km more restrictive than for the conversion between
      * geographic coordinates and UTM and UPS given by UTMUPS.  These
      * restrictions are dictated by the allowed letters in MGRS coordinates.
      * The choice of 9500 km for the maximum northing for northern hemisphere

@@ -75,20 +75,6 @@ namespace GeographicLib {
     static const int maxpow_ = GEOGRAPHICLIB_RHUMBAREA_ORDER;
     // _R[0] unused
     real _R[maxpow_ + 1];
-    static inline real overflow() {
-      // Overflow value s.t. atan(overflow_) = pi/2
-      static const real
-        overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
-      return overflow;
-    }
-    static inline real tano(real x) {
-      using std::abs; using std::tan;
-      // Need the volatile declaration for optimized builds on 32-bit centos
-      // with g++ 4.4.7
-      GEOGRAPHICLIB_VOLATILE real y = 2 * abs(x);
-      return
-        y == Math::pi() ? (x < 0 ? - overflow() : overflow()) : tan(x);
-    }
     static inline real gd(real x)
     { using std::atan; using std::sinh; return atan(sinh(x)); }
 
@@ -107,9 +93,12 @@ namespace GeographicLib {
       real t = x - y;
       return t ? 2 * Math::atanh(t / (x + y)) / t : 1 / x;
     }
+    // N.B., x and y are in degrees
     static inline real Dtan(real x, real y) {
-      real d = x - y, tx = tano(x), ty = tano(y), txy = tx * ty;
-      return d ? (2 * txy > -1 ? (1 + txy) * tano(d) : tx - ty) / d :
+      real d = x - y, tx = Math::tand(x), ty = Math::tand(y), txy = tx * ty;
+      return d ?
+        (2 * txy > -1 ? (1 + txy) * Math::tand(d) : tx - ty) /
+        (d * Math::degree()) :
         1 + txy;
     }
     static inline real Datan(real x, real y) {
@@ -144,22 +133,14 @@ namespace GeographicLib {
       using std::sinh;
       return Datan(sinh(x), sinh(y)) * Dsinh(x, y);
     }
-    static inline real Dgdinv(real x, real y) {
-      return Dasinh(tano(x), tano(y)) * Dtan(x, y);
-    }
-    // Copied from LambertConformalConic...
-    // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0
-    // - sqrt(-e2) * atan( sqrt(-e2) * x)                    if f < 0
-    inline real eatanhe(real x) const {
-      using std::atan;
-      return _ell._f >= 0 ? _ell._e * Math::atanh(_ell._e * x) :
-        - _ell._e * atan(_ell._e * x);
-    }
+    // N.B., x and y are the tangents of the angles
+    static inline real Dgdinv(real x, real y)
+    { return Dasinh(x, y) / Datan(x, y); }
     // Copied from LambertConformalConic...
     // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
     inline real Deatanhe(real x, real y) const {
       real t = x - y, d = 1 - _ell._e2 * x * y;
-      return t ? eatanhe(t / d) / t : _ell._e2 / d;
+      return t ? Math::eatanhe(t / d, _ell._es) / t : _ell._e2 / d;
     }
     // (E(x) - E(y)) / (x - y) -- E = incomplete elliptic integral of 2nd kind
     real DE(real x, real y) const;
@@ -177,6 +158,7 @@ namespace GeographicLib {
     real DRectifyingToConformal(real mux, real muy) const;
 
     // (mux - muy) / (psix - psiy)
+    // N.B., psix and psiy are in degrees
     real DIsometricToRectifying(real psix, real psiy) const;
     // (psix - psiy) / (mux - muy)
     real DRectifyingToIsometric(real mux, real muy) const;

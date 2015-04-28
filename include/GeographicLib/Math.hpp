@@ -2,7 +2,7 @@
  * \file Math.hpp
  * \brief Header for GeographicLib::Math class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -62,13 +62,13 @@
 #include <limits>
 
 #if GEOGRAPHICLIB_PRECISION == 4
+#include <boost/version.hpp>
+#if BOOST_VERSION >= 105600
+#include <boost/cstdfloat.hpp>
+#endif
 #include <boost/multiprecision/float128.hpp>
-#include <boost/math/special_functions/hypot.hpp>
-#include <boost/math/special_functions/expm1.hpp>
-#include <boost/math/special_functions/log1p.hpp>
-#include <boost/math/special_functions/atanh.hpp>
-#include <boost/math/special_functions/asinh.hpp>
-#include <boost/math/special_functions/cbrt.hpp>
+#include <boost/math/special_functions.hpp>
+__float128 fmaq(__float128, __float128, __float128);
 #elif GEOGRAPHICLIB_PRECISION == 5
 #include <mpreal.h>
 #endif
@@ -365,6 +365,34 @@ namespace GeographicLib {
     }
 
     /**
+     * Fused multiply and add.
+     *
+     * @tparam T the type of the arguments and the returned value.
+     * @param[in] x
+     * @param[in] y
+     * @param[in] z
+     * @return <i>xy</i> + <i>z</i>, correctly rounded (on those platforms with
+     *   support for the fma instruction).
+     **********************************************************************/
+    template<typename T> static inline T fma(T x, T y, T z) {
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::fma; return fma(x, y, z);
+#else
+      return x * y + z;
+#endif
+    }
+
+    /**
+     * Normalize a two-vector.
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in,out] x on output set to <i>x</i>/hypot(<i>x</i>, <i>y</i>).
+     * @param[in,out] y on output set to <i>y</i>/hypot(<i>x</i>, <i>y</i>).
+     **********************************************************************/
+    template<typename T> static inline void norm(T& x, T& y)
+    { T h = hypot(x, y); x /= h; y /= h; }
+
+    /**
      * The error-free sum of two numbers.
      *
      * @tparam T the type of the argument and the returned value.
@@ -435,6 +463,128 @@ namespace GeographicLib {
         d += T(360);            // exact
       return d + t;
     }
+
+    /**
+     * Coarsen a value close to zero.
+     *
+     * @tparam T the type of the argument and returned value.
+     * @param[in] x
+     * @return the coarsened value.
+     *
+     * The makes the smallest gap in \e x = 1/16 - nextafter(1/16, 0) =
+     * 1/2<sup>57</sup> for reals = 0.7 pm on the earth if \e x is an angle in
+     * degrees.  (This is about 1000 times more resolution than we get with
+     * angles around 90&deg;.)  We use this to avoid having to deal with near
+     * singular cases when \e x is non-zero but tiny (e.g.,
+     * 10<sup>&minus;200</sup>).
+     **********************************************************************/
+    template<typename T> static inline T AngRound(T x) {
+      using std::abs;
+      const T z = 1/T(16);
+      GEOGRAPHICLIB_VOLATILE T y = abs(x);
+      // The compiler mustn't "simplify" z - (z - y) to y
+      y = y < z ? z - (z - y) : y;
+      return x < 0 ? -y : y;
+    }
+
+    /**
+     * Evaluate the tangent function with the argument in degrees
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] x in degrees.
+     * @return tan(<i>x</i>).
+     *
+     * If \e x = &plusmn;90&deg;, then a suitably large (but finite) value is
+     * returned.
+     **********************************************************************/
+    template<typename T> static inline T tand(T x) {
+      using std::abs; using std::tan;
+      static const T overflow = 1 / Math::sq(std::numeric_limits<T>::epsilon());
+      return abs(x) != 90 ? tan(x * Math::degree()) :
+        (x < 0 ? -overflow : overflow);
+    }
+
+    /**
+     * Evaluate the atan function with the result in degrees
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] x
+     * @return atan(<i>x</i>) in degrees.
+     *
+     * Large values for the argument return &plusmn;90&deg;
+     **********************************************************************/
+    template<typename T> static inline T atand(T x) {
+      using std::abs; using std::atan;
+      static const T
+        overflow = 1 / (Math::sq(std::numeric_limits<T>::epsilon()) * 100);
+      return !(abs(x) >= overflow) ? atan(x) / Math::degree() :
+        (x > 0 ? 90 : -90);
+    }
+
+    /**
+     * Evaluate the atan2 function with the result in degrees
+     *
+     * @tparam T the type of the arguments and the returned value.
+     * @param[in] y
+     * @param[in] x
+     * @return atan2(<i>y</i>, <i>x</i>) in degrees.
+     *
+     * The result is in the range [&minus;180&deg; 180&deg;).
+     **********************************************************************/
+    template<typename T> static inline T atan2d(T y, T x) {
+      using std::atan2;
+      return 0 - atan2(-y, x) / Math::degree();
+    }
+
+    /**
+     * Evaluate <i>e</i> atanh(<i>e x</i>)
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] x
+     * @param[in] es the signed eccentricity =  sign(<i>e</i><sup>2</sup>)
+     *    sqrt(|<i>e</i><sup>2</sup>|)
+     * @return <i>e</i> atanh(<i>e x</i>)
+     *
+     * If <i>e</i><sup>2</sup> is negative (<i>e</i> is imaginary), the
+     * expression is evaluated in terms of atan.
+     **********************************************************************/
+    template<typename T> static T eatanhe(T x, T es);
+
+    /**
+     * tan&chi; in terms of tan&phi;
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] tau &tau; = tan&phi;
+     * @param[in] es the signed eccentricity = sign(<i>e</i><sup>2</sup>)
+     *   sqrt(|<i>e</i><sup>2</sup>|)
+     * @return &tau;&prime; = tan&chi;
+     *
+     * See Eqs. (7--9) of
+     * C. F. F. Karney,
+     * <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
+     * Transverse Mercator with an accuracy of a few nanometers,</a>
+     * J. Geodesy 85(8), 475--485 (Aug. 2011)
+     * (preprint <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
+     **********************************************************************/
+    template<typename T> static T taupf(T tau, T es);
+
+    /**
+     * tan&phi; in terms of tan&chi;
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] taup &tau;&prime; = tan&chi;
+     * @param[in] es the signed eccentricity = sign(<i>e</i><sup>2</sup>)
+     *   sqrt(|<i>e</i><sup>2</sup>|)
+     * @return &tau; = tan&phi;
+     *
+     * See Eqs. (19--21) of
+     * C. F. F. Karney,
+     * <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
+     * Transverse Mercator with an accuracy of a few nanometers,</a>
+     * J. Geodesy 85(8), 475--485 (Aug. 2011)
+     * (preprint <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
+     **********************************************************************/
+    template<typename T> static T tauf(T taup, T es);
 
     /**
      * Test for finiteness.
@@ -546,6 +696,9 @@ namespace GeographicLib {
 
     static inline real cbrt(real x)
     { return boost::math::cbrt(x, boost_special_functions_policy()); }
+
+    static inline real fma(real x, real y, real z)
+    { return fmaq(__float128(x), __float128(y), __float128(z)); }
 
     static inline bool isnan(real x) { return boost::math::isnan(x); }
 

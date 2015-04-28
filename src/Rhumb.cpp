@@ -3,8 +3,8 @@
  * \brief Implementation for GeographicLib::Rhumb and GeographicLib::RhumbLine
  * classes
  *
- * Copyright (c) Charles Karney (2014) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2014-2015) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -121,14 +121,14 @@ namespace GeographicLib {
       psi12 = psi2 - psi1,
       h = Math::hypot(lon12, psi12);
     if (outmask & AZIMUTH)
-      azi12 = 0 - atan2(-lon12, psi12) / Math::degree();
-    psi1 *= Math::degree();
-    psi2 *= Math::degree();
-    real dmudpsi = DIsometricToRectifying(psi2, psi1);
-    if (outmask & DISTANCE)
+      azi12 = Math::atan2d(lon12, psi12);
+    if (outmask & DISTANCE) {
+      real dmudpsi = DIsometricToRectifying(psi2, psi1);
       s12 = h * dmudpsi * _ell.QuarterMeridian() / 90;
+    }
     if (outmask & AREA)
-      S12 = _c2 * lon12 * MeanSinXi(psi2, psi1);
+      S12 = _c2 * lon12 *
+        MeanSinXi(psi2 * Math::degree(), psi1 * Math::degree());
   }
 
   RhumbLine Rhumb::Line(real lat1, real lon1, real azi12) const
@@ -170,17 +170,17 @@ namespace GeographicLib {
 
   Math::real Rhumb::DRectifying(real latx, real laty) const {
     real
-      phix = latx * Math::degree(), tbetx = _ell._f1 * tano(phix),
-      phiy = laty * Math::degree(), tbety = _ell._f1 * tano(phiy);
+      tbetx = _ell._f1 * Math::tand(latx),
+      tbety = _ell._f1 * Math::tand(laty);
     return (Math::pi()/2) * _ell._b * _ell._f1 * DE(atan(tbetx), atan(tbety))
-      * Dtan(phix, phiy) * Datan(tbetx, tbety) / _ell.QuarterMeridian();
+      * Dtan(latx, laty) * Datan(tbetx, tbety) / _ell.QuarterMeridian();
   }
 
   Math::real Rhumb::DIsometric(real latx, real laty) const {
     real
-      phix = latx * Math::degree(), tx = tano(phix),
-      phiy = laty * Math::degree(), ty = tano(phiy);
-    return Dasinh(tx, ty) * Dtan(phix, phiy)
+      phix = latx * Math::degree(), tx = Math::tand(latx),
+      phiy = laty * Math::degree(), ty = Math::tand(laty);
+    return Dasinh(tx, ty) * Dtan(latx, laty)
       - Deatanhe(sin(phix), sin(phiy)) * Dsin(phix, phiy);
   }
 
@@ -268,11 +268,14 @@ namespace GeographicLib {
   Math::real Rhumb::DIsometricToRectifying(real psix, real psiy) const {
     if (_exact) {
       real
-        latx = _ell.InverseIsometricLatitude(psix/Math::degree()),
-        laty = _ell.InverseIsometricLatitude(psiy/Math::degree());
+        latx = _ell.InverseIsometricLatitude(psix),
+        laty = _ell.InverseIsometricLatitude(psiy);
       return DRectifying(latx, laty) / DIsometric(latx, laty);
-    } else
+    } else {
+      psix *= Math::degree();
+      psiy *= Math::degree();
       return DConformalToRectifying(gd(psix), gd(psiy)) * Dgd(psix, psiy);
+    }
   }
 
   Math::real Rhumb::DRectifyingToIsometric(real mux, real muy) const {
@@ -281,8 +284,8 @@ namespace GeographicLib {
       laty = _ell.InverseRectifyingLatitude(muy/Math::degree());
     return _exact ?
       DIsometric(latx, laty) / DRectifying(latx, laty) :
-      Dgdinv(_ell.ConformalLatitude(latx) * Math::degree(),
-             _ell.ConformalLatitude(laty) * Math::degree()) *
+      Dgdinv(Math::taupf(Math::tand(latx), _ell._es),
+             Math::taupf(Math::tand(laty), _ell._es)) *
       DRectifyingToConformal(mux, muy);
   }
 
