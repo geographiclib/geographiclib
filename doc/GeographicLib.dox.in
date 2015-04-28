@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2015-03-09
+\date 2015-04-28
 
 \section abstract Abstract
 
@@ -54,10 +54,10 @@ as either a compressed tar file (tar.gz) or a zip file.  (The two
 archives have identical contents, except that the zip file has DOS
 line endings.)  Alternatively you can get the latest release using git
 \verbatim
-  git clone -b r@PROJECT_VERSION@ git://git.code.sf.net/p/geographiclib/code geographiclib
+  git clone git://git.code.sf.net/p/geographiclib/code geographiclib
 \endverbatim
-There are also binary installers available for some platforms.  See \ref
-binaryinst.
+Each release is tagged, e.g., with r@PROJECT_VERSION@.  There are also
+binary installers available for some platforms.  See \ref binaryinst.
 
 GeographicLib is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -137,7 +137,7 @@ and the utilities have been tested with g++ 4.4 under Linux, with g++
 4.2 under Mac OS X, and with MS Visual Studio 9 (2008), 10 (2010), 11
 (2012), and 12 (2013) compiled for 32 bit and 64 bit.
 
-Matlab, JavaScript, and Python interfaces are provided to portions of
+MATLAB, JavaScript, and Python interfaces are provided to portions of
 GeographicLib; see \ref other.
 
 The section \ref geodesic documents the method of solving the geodesic
@@ -200,7 +200,7 @@ Then pick one of the first five options below:
 - \ref gnu.  This is a simple installation method that works with g++
   and GNU make on Linux and many Unix platforms.
 - \ref windows.  This is a simple installation method that works with
-  Visual Studio 2005, 2008, and 2010 under Windows.
+  Visual Studio 2008 and 2010 under Windows.
 - \ref binaryinst.  Use this installation method if you only need to use
   the \ref utilities supplied with GeographicLib.  (This method also
   installs the header files and the library for use by Visual Studio 10.)
@@ -299,9 +299,9 @@ Here are the steps to compile and install GeographicLib:
     matlab interfaces all depend on the variable with deeper paths
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
-    - cmake configuration: OFF cmake; ON: share/cmake/GeographicLib;
+    - cmake configuration: OFF cmake; ON: lib/cmake/GeographicLib;
     - python interface: OFF: python; ON: lib/python/site-packages;
-    - matlab interface: OFF: matlab; ON: libexec/GeographicLib/matlab;
+    - matlab interface: OFF: matlab; ON: share/matlab;
     .
   - <code>CMAKE_INSTALL_PREFIX</code> (default: <code>/usr/local</code>
     on non-Windows systems, <code>C:/Program Files/GeographicLib</code>
@@ -338,10 +338,6 @@ Here are the steps to compile and install GeographicLib:
 \endverbatim
     (With IDE compile environments, you get to select the build type in
     the IDE.)
-  - <code>MATLAB_COMPILER</code> (default: OFF).  Set this to either
-    "mex" (for Matlab) or "mkoctfile" (for Octave) to specify the
-    compiler to use for the Matlab/Octave interface.  See \ref matlab
-    for more information.
   - <code>GEOGRAPHICLIB_DOCUMENTATION</code> (default: OFF).  If set to
     ON, then html documentation is created from the source files,
     provided a sufficiently recent version of doxygen can be found.
@@ -374,7 +370,6 @@ Here are the steps to compile and install GeographicLib:
   make install # as root, if CMAKE_INSTALL_PREFIX is a system directory
 \endverbatim
   Possible additional targets are \verbatim
-  make matlabinterface (only for the Release configuration on Windows)
   make dist
   make exampleprograms
   make netexamples (supported only for Release configuration) \endverbatim
@@ -424,11 +419,7 @@ Here are the steps to compile and install GeographicLib:
   make install \endverbatim
 - The headers, library, and utilities are installed in the
   include/GeographicLib, lib, and bin directories under
-  <code>prefix</code>.  This installation method does not compile
-  the Matlab/Octave interface;  however the source for the interface is
-  installed in libexec/GeographicLib/matlab, see \ref matlab of
-  instructions on compiling the interface.  For documentation, open
-  <a href="index.html">
+  <code>prefix</code>.  For documentation, open <a href="index.html">
   share/doc/GeographicLib/html/index.html</a> in a web browser.
 
 \section gnu Installation with GNU compiler and Make
@@ -457,34 +448,28 @@ Here are the steps to compile and install GeographicLib:
   make PREFIX=/tmp/geographic install \endverbatim
 - The headers, library, and utilities are installed in the
   include/GeographicLib, lib, and bin directories under
-  <code>PREFIX</code>.  This installation method does not compile
-  the Matlab/Octave interface;  however the source for the interface is
-  installed in libexec/GeographicLib/matlab, see \ref matlab of
-  instructions on compiling the interface.  For documentation, open
-  <a href="index.html">
+  <code>PREFIX</code>.  For documentation, open <a href="index.html">
   share/doc/GeographicLib/html/index.html</a> in a web browser.
 
 \section windows Installation on Windows
 
-This method requires Visual Studio 2005, 2008, or 2010.  This builds a
-static library and the utilities.  If you only have Visual Studio 2003,
-use cmake to create the necessary solution file, see \ref cmake.  (cmake
-is needed to build the Matlab interface and to run the tests.)
+This method requires Visual Studio 2008 or 2010.  This builds a static
+library and the utilities.  If you have some other version of Visual
+Studio, use cmake to create the necessary solution file, see \ref cmake.
+(cmake is needed to run the tests.)
 - Unpack the source, running \verbatim
   unzip -q GeographicLib-@PROJECT_VERSION@.zip \endverbatim
 - Open GeographicLib-@PROJECT_VERSION@/windows/GeographicLib-vc10.sln in
-  Visual Studio 2010 (for Visual Studio 2005 and 2008, replace -vc10 by
-  -vc8 or -vc9; for Visual Studio Express 2010, replace -vc10 by
-  -vc10x).
+  Visual Studio 2010 (for Visual Studio 2008, replace -vc10 by -vc9; for
+  Visual Studio Express 2010, replace -vc10 by -vc10x).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
 - Copy the library windows/Release/GeographicLib.lib and the
   headers in include/GeographicLib somewhere convenient.  The
   headers should remain in a directory named GeographicLib.  If you
-  expect to use the Matlab/Octave interface, copy *.m and *.cpp from the
-  matlab directory to a directory in your matlab/octave path, see \ref
-  matlab for instructions on compiling the interface.  For
-  documentation, open
+  expect to use the MATLAB/Octave interface, copy *.m from the matlab
+  directory to a directory in your matlab/octave path, see \ref matlab
+  for instructions on compiling the interface.  For documentation, open
   <a href="index.html">doc/html/index.html</a> in a web
   browser.
 
@@ -523,13 +508,12 @@ documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
 will include C:/pkg-vc11/GeographicLib-@PROJECT_VERSION@/bin where the
 utilities are installed.  The headers and library are installed in the
-include/GeographicLib and lib folders.  With the 64-bit installer, the
-Matlab interface is installed in the matlab folder.  Add this to your
-path in Matlab to access this interface.  The libraries were built using
-using Visual Studio 11 2012 in release and debug modes.  The utilities
-were linked against the release-mode shared library.  The Matlab
-interface was compiled with Matlab R2013a 64-bit, however it may work
-with some other 64-bit versions of Matlab.
+include/GeographicLib and lib folders.  The MATLAB interface is
+installed in the matlab folder.  Add this to your path in MATLAB to
+access this interface.  The libraries were built using using Visual
+Studio 11 2012 in release and debug modes.  The utilities were linked
+against the release-mode shared library.
+
 <a href="NET/index.html">NETGeographicLib</a> library dlls (release and
 debug) are included with the binary installers; these are linked against
 the shared library for GeographicLib.
@@ -628,7 +612,6 @@ installer is created with \verbatim
   cmake -G "Visual Studio 10 Win64" \
     -D GEOGRAPHICLIB_LIB_TYPE=BOTH \
     -D PACKAGE_DEBUG_LIBS=ON \
-    -D MATLAB_COMPILER=mex \
     -D BUILD_NETGEOGRAPHICLIB=ON \
     ..
   cmake --build . --config Debug --target ALL_BUILD
@@ -1124,7 +1107,7 @@ returned as appropriate.  "INV" is treated as an invalid zone
 designation by UTMUPS.  "INVALID" is the corresponding invalid MGRS
 string.  (Similary "nan" is the equivalent invalid Geohash.)  NaNs allow
 the projection of polylines which are separated by NaNs; in this format
-they can be easily plotted in Matlab.
+they can be easily plotted in MATLAB.
 
 A note about portability.  For the most part, the code uses standard C++
 and should be able to be deployed on any system with a modern C++
@@ -1159,10 +1142,14 @@ starting in version 1.31.  There's also a macro
 GEOGRAPHICLIB_VERSION_STRING which expands to, e.g.,
 "@PROJECT_VERSION@"; this macro has been defined since version 1.9.
 Since version 1.37, there's also been a macro GEOGRAPHICLIB_VERSION
-which encode the version as a single number, e.g, 1003900.  The macro
-GEOGRAPHICLIB_VERSION_NUM allows you to compare versions, e.g., \code
-#if GEOGRAPHICLIB_VERSION >= GEOGRAPHICLIB_VERSION_NUM(1,36,0)
-... \endcode
+which encodes the version as a single number, e.g, 1003900.  Do not rely
+on this particular packing; instead use the macro
+GEOGRAPHICLIB_VERSION_NUM(a,b,c) which allows you to compare versions
+with, e.g.,
+\code
+#if GEOGRAPHICLIB_VERSION >= GEOGRAPHICLIB_VERSION_NUM(1,37,0)
+...
+#endif \endcode
 
 <center>
 Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
@@ -1206,6 +1193,17 @@ GeodesicLine, and PolygonAreaT in Java.  This implementation is entirely
 self-contained and does not depend on the rest of GeographicLib.  Sample
 main programs to solve the direct and inverse geodesic problems and to
 compute polygonal areas are provided.
+
+This package is available on Maven Central; so if you're using Apache
+Maven as your build system, you can use this package by including the
+dependency \verbatim
+  <dependency>
+    <groupId>net.sf.geographiclib</groupId>
+    <artifactId>GeographicLib-Java</artifactId>
+    <version>1.42</version>
+  </dependency>
+  \endverbatim
+in your <code>pom.xml</code>.
 
 For documentation, see
  - <a href="java/index.html">Java library for geodesics</a>.
@@ -1306,160 +1304,130 @@ print(h['lat2'], h['lon2']);
 (Note: The initial version of setup.py was provided by Andrew MacIntyre
 of the Australian Communications and Media Authority.)
 
-\section matlab Matlab and Octave implementations
+\section matlab MATLAB and Octave implementations
 
-The <code>matlab</code> directory Matlab and Octave implementations of
-some of the functions of GeographicLib.  To use
-these, start Matlab or Octave and run one of (for example) \verbatim
-   addpath /usr/local/libexec/GeographicLib/matlab
-   addpath 'C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/libexec/GeographicLib/matlab'
+The <code>matlab/geographiclib</code> directory contains MATLAB and
+Octave implementations of some of the functions of GeographicLib.  To
+use these, start MATLAB or Octave and run one of (for example):
+\verbatim
+   addpath /usr/local/share/matlab/geographiclib
+   addpath C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib
    \endverbatim
+A summary of the routines is obtained by \verbatim
+   help geographiclib \endverbatim
+These MATLAB functions is also available from the MATLAB File Exchange
+site as the
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+GeographicLib toolbox</a>, package 50605.
 
 The functions fall into the following groups
- - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
-   Geodesics on an ellipsoid of revolution</a>, native Matlab
-   implementations of the geodesic routines.  The available functions
-   are
-   - geoddoc: briefly descibe the routines
-   - geodreckon: solve the direct geodesic problem
-   - geoddistance: solve the inverse geodesic problem
-   - geodarea: compute the area of ellipsoidal polygons
-   .
-   Use the help function to get documentation, e.g., \code
-   help geoddistance \endcode
-   to obtain documentation.  These functions are also available as a
-   Matlab File Exchange package from
-   - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
-     http://www.mathworks.com/matlabcentral/fileexchange/39108</a>
- - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
-   Geodesic projections for an ellipsoid</a>, native Matlab
-   implementations of projections which are related to geodesics.  These
-   are
-   - geodproj: briefly descibe the routines
-   - eqdazim_fwd, eqdazim_inv: azimuthal equidistant
-   - cassini_fwd, cassini_inv: Cassini-Soldner
-   - tranmerc_fwd, tranmerc_inv: transverse Mercator
-   - gnomonic_fwd, gnomonic_inv: ellipsoidal gnomonic
-   - utm_fwd, utm_inv: universal transverse Mercator
-   .
-   These functions are also available as a Matlab File Exchange package
-   from
-   - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
-     http://www.mathworks.com/matlabcentral/fileexchange/39366</a>
-   .
-   (This requires that the previous package also be installed.)
- - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
-   Great ellipses</a>, implementations of solutions to the great ellipse
-   problems.  The functions are
-   - gedoc: briefly descibe the routines
-   - gereckon: solve the direct great circle problem
-   - gedistance: solve the inverse great circle problem
-   .
-   The functionality provided by these routines is <i>not</i> available
-   through GeographicLib's C++ library.  These functions are also
-   available as a Matlab File Exchange package from
-   - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
-     http://www.mathworks.com/matlabcentral/fileexchange/47898</a>
-   .
-   (This requires that package 39108 also be installed.)  Background on
-   this problem is provided in \ref greatellipse.
- - Finally, interface code so that some GeographicLib classes can be
-   accessed directly from Matlab or Octave.  The rest of this section
-   describes how to compile and use these interfaces.
-
-There are two ways of compiling the interface code: (1) using cmake and
-(2) invoking the compiler from Matlab.
- - <b>Using cmake:</b> (Only tested on Linux and Windows.) Before
-   running cmake, configure MATLAB on Windows to use the same compiler
-   that you're going to use for compiling GeographicLib.  For example
-   \verbatim
-   mex.bat -setup
-
-   Please choose your compiler for building MEX-files:
-   Would you like mex to locate installed compilers [y]/n? y
-   Select a compiler:
-   [1] Microsoft Visual C++ 2012 in C:\Program Files (x86)\Microsoft Visual Studio 11.0
-   [2] Microsoft Visual C++ 2010 in C:\Program Files (x86)\Microsoft Visual Studio 10.0
-
-   [0] None
-
-   Compiler: 2
-   etc. \endverbatim
-   (This will require that mex.bat is in your PATH.  With Linux, use
-   <code>mex -setup</code>.)  Then configure cmake with, for example
-   \verbatim
-   cmake -G "Visual Studio 10" -D MATLAB_COMPILER=mex ..
-   cmake --build . --config Release --target matlabinterface \endverbatim
-   (Note that only the Release configuration is supported for Matlab.)
-   If you are running a 64-bit version of Matlab, be sure to select a
-   64-bit generator with cmake, e.g., "Visual Studio 10 Win64".  Finally
-   compile GeographicLib with Visual Studio.  (The binary installer for
-   64-bit Windows includes the compiled interface built with Visual
-   Studio 10 and Matlab R2013a 64-bit).<br>
-   On Linux systems, you can compile the interface for use with octave
-   instead by using \verbatim
-   cmake -D MATLAB_COMPILER=mkoctfile ..
-   make matlabinterface \endverbatim
- - <b>Invoking the compiler from Matlab or Octave:</b> (Tested with
-   Linux, Mac OSX, and Windows.)  Start Matlab or Octave and run, e.g.,
-   \code
-   mex -setup
-   cd 'C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab'
-   help geographiclibinterface
-   geographiclibinterface('C:/pkg-vc10/GeographicLib-@PROJECT_VERSION@');
-   addpath(pwd);
-   \endcode
-   The first command allows you to select the compiler to use (which
-   should be the same as that used to compile GeographicLib).  On Mac
-   OSX and Matlab R2014b, the setup command is \code
-   mex -setup C++
-   \endcode
-
-To use the interface routines for GeographicLib, run one of (for
-example) \verbatim
-  addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/libexec/GeographicLib/matlab'
-\endverbatim
-in Octave or Matlab.  The available functions are:
- - geodesicdirect: solve direct geodesic problem
-   (see Geodesic::Direct)
- - geodesicinverse: solve inverse geodesic problem
-   (see Geodesic::Inverse)
- - geodesicline: compute points along a geodesic
-   (see GeodesicLine::Position)
- - polygonarea: compute area of a geodesic polygon
-   (see PolygonAreaT)
- - utmupsforward: convert geographic coordinates to UTM/UPS
-   (see UTMUPS::Forward)
- - utmupsreverse: convert UTM/UPS coordinates to geographic
-   (see UTMUPS::Reverse)
- - mgrsforward: convert UTM/UPS coordinates to MGRS
-   (see MGRS::Forward)
- - mgrsreverse: convert MGRS coordinates to UTM/UPS
-   (see MGRS::Reverse)
- - geoidheight: compute geoid height
-   (see Geoid::operator()())
- - geocentricforward: convert geographic coordinates to geocentric
-   (see Geocentric::Forward)
- - geocentricreverse: convert geocentric coordinates to geographic
-   (see Geocentric::Reverse)
- - localcartesianforward: convert geographic coordinates to local cartesian
-   (see LocalCartesian::Forward)
- - localcartesianreverse: convert local cartesian coordinates to geographic
-   (see LocalCartesian::Reverse)
+ - Geodesics
+   - geoddistance     - Distance between points on an ellipsoid
+   - geodreckon       - Point at specified azimuth, range on an ellipsoid
+   - geodarea         - Surface area of polygon on an ellipsoid
+ - Projections
+   - tranmerc_fwd     - Forward transverse Mercator projection
+   - tranmerc_inv     - Inverse transverse Mercator projection
+   - polarst_fwd      - Forward polar stereographic projection
+   - polarst_inv      - Inverse polar stereographic projection
+   - eqdazim_fwd      - Forward azimuthal equidistant projection
+   - eqdazim_inv      - Inverse azimuthal equidistant projection
+   - cassini_fwd      - Forward Cassini-Soldner projection
+   - cassini_inv      - Inverse Cassini-Soldner projection
+   - gnomonic_fwd     - Forward ellipsoidal gnomonic projection
+   - gnomonic_inv     - Inverse ellipsoidal gnomonic projection
+ - Grid systems
+   - utmups_fwd       - Convert to UTM/UPS system
+   - utmups_inv       - Convert from UTM/UPS system
+   - mgrs_fwd         - Convert UTM/UPS coordinates to MGRS
+   - mgrs_inv         - Convert MGRS to UTM/UPS coordinates
+ - Geoid lookup
+   - geoid_height     - Compute the height of the geoid
+   - geoid_load       - Load a geoid model
+ - Great ellipses
+   - gedistance       - Great ellipse distance between points on an ellipsoid
+   - gereckon         - Point along great ellipse at specified azimuth and range
+ - Geometric transformations
+   - geocent_fwd      - Conversion from geographic to geocentric coordinates
+   - geocent_inv      - Conversion from geocentric to geographic coordinates
+   - loccart_fwd      - Convert geographic to local cartesian coordinates
+   - loccart_inv      - Convert local cartesian to geographic coordinates
+ - Utility
+   - defaultellipsoid - Return the WGS84 ellipsoid
+   - ecc2flat         - Convert eccentricity to flattening
+   - flat2ecc         - Convert flattening to eccentricity
+ - Documentation
+   - geoddoc          - Geodesics on an ellipsoid of revolution
+   - projdoc          - Geodesic projections for an ellipsoid
+   - gedoc            - Great ellipses on an ellipsoid of revolution
  .
-These routines just offer a simple interface to the corresponding C++
-class.  Use the help function to get documentation, e.g., \code
-  help geodesicdirect \endcode
-Unfortunately, the help function does not work for compiled functions in
-Octave; in this case, just list the .m file, e.g., \code
-  type geodesicdirect \endcode
-Other useful functions, e.g., to convert from geographic
-coordinates to MGRS can easily be written with Matlab code.
+These functions reimplement the C++ routines from GeographicLib in
+MATLAB code (but note that routines for great ellipses are <i>only</i>
+available as MATLAB code).  Because these functions are all vectorized,
+their performance is comparable to the C++ routines.  The minimum
+version numbers required are
+ - MATLAB, version 7.9, 2009b,
+ - Octave, version 3.4, Feb. 2011.
+ .
+In addition, in order to use the geoid routines, Octave needs to have
+been built with a version of GraphicsMagick which supports 16-bit
+images.
 
-Note that geoidheight, when compiled with Visual Studio 2008 causes
-Matlab to crash.  (The problem does not occur with Visual Studio 2005 or
-Visual Studio 2010.)
+Previously, some of these routines were packaged as three separate
+packages
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
+   Geodesics on an ellipsoid of revolution</a>,
+   MATLAB File Exchange package 39108.
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
+   Geodesic projections for an ellipsoid</a>,
+   MATLAB File Exchange package 39366,
+ - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
+   Great ellipses</a>,
+   MATLAB File Exchange package 47898.
+ .
+These packages have now all been incorporated into the
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+GeographicLib toolbox</a>.
+
+Prior to version 1.42, GeographicLib was distributed with some MATLAB
+functionality offered via compiled interface code.  This has now been
+replaced by native MATLAB wrapper functions which call the functions in
+the <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+GeographicLib toolbox</a>.  To use these wrapper functions, run one of:
+\verbatim
+   addpath /usr/local/share/matlab/geographiclib-legacy
+   addpath C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib-legacy
+   \endverbatim
+The <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+GeographicLib toolbox</a> <i>must</i> also be in your MATLAB path.  A
+summary of the routines is obtained by \verbatim
+   help geographiclib-legacy \endverbatim
+These functions are <b>DEPRECATED</b>.  Here is a function listing
+  - Geodesics
+    - geodesicdirect         - Wrapper for geodreckon
+    - geodesicinverse        - Wrapper for geoddistance
+    - geodesicline           - Another wrapper for geodreckon
+    - polygonarea            - Wrapper for geodarea
+  - Grid systems
+    - utmupsforward          - Wrapper for utmups_fwd
+    - utmupsreverse          - Wrapper for utmups_inv
+    - mgrsforward            - Wrapper for mgrs_fwd
+    - mgrsreverse            - Wrapper for mgrs_inv
+  - Geoid lookup
+    - geoidheight            - Wrapper for geoid_height
+  - Geometric transformations
+    - geocentricforward      - Wrapper for geocent_fwd
+    - geocentricreverse      - Wrapper for geocent_inv
+    - localcartesianforward  - Wrapper for loccart_fwd
+    - localcartesianreverse  - Wrapper for loccart_inv
+  - Deprecated
+    - geographiclibinterface - Compile interface code (DEPRECATED)
+  .
+The last routine can be used to compile the obsolete interface code
+(which is still provided as C++ code in the same directory).  Doing this
+will switch MATLAB from using the native MATLAB routines to the compiled
+interface.  However, the native code is easier to deploy and is about as
+fast; so the compiled interface will be removed at some point in 2016.
 
 \section maxima Maxima routines
 
@@ -4418,9 +4386,10 @@ Back to \ref triaxial.  Forward to \ref rhumb.  Up to
 
 In addition to solving the geodesic problem for the triaxial ellipsoid,
 Jacobi (1839) briefly mentions the problem of the conformal projection
-of ellipsoid.  He covers this in greater detail in <i>Vorlesungen
-&uuml;ber Dynamik</i>, &sect;28, which is now available in an
-<a href="https://www.worldcat.org/oclc/440645889">
+of ellipsoid.  He covers this in greater detail in
+<a href="https://books.google.com/books?id=ryEOAAAAQAAJ&pg=PA212">
+<i>Vorlesungen &uuml;ber Dynamik</i>, &sect;28</a>, which is now
+available in an <a href="https://www.worldcat.org/oclc/440645889">
 English translation: Lectures on Dynamics</a>
 (<a href="http://geographiclib.sf.net/jacobi-errata.html">
 errata</a>).
@@ -4705,8 +4674,9 @@ standard construction in the limit of an ellipsoid of revolution.
 
 \section jacobi-implementation An implementation of the projection
 
-An implementation of the Jacobi conformal projection is given here
-\include JacobiConformal.hpp
+The JacobiConformal class provides an implementation of the Jacobi
+conformal projection is given here.  <b>NOTE:</b> This is just sample
+code.  It is not part of GeographicLib itself.
 
 <center>
 Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
@@ -5323,19 +5293,14 @@ geodesic problems is complex and costly.  These assumptions are no
 longer true, and geodesics should normally be used in place of great
 ellipses.  This is discussed in more detail in \ref gevsgeodesic.
 
-Solutions of the great ellipse problems implemented for Matlab and
+Solutions of the great ellipse problems implemented for MATLAB and
 Octave are provided by
  - gedoc: briefly descibe the routines
  - gereckon: solve the direct great circle problem
  - gedistance: solve the inverse great circle problem
  .
-These functions are also available as a package
-<a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
-47898</a> on Matlab File Exchange.  This requires also the installation
-of package
-<a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
-39108</a>.  In this time, there are no C++ support in GeographicLib for
-great ellipses.
+At this time, there are no C++ support in GeographicLib for great
+ellipses.
 
 References:
  - P. D. Thomas,
@@ -6736,12 +6701,13 @@ Here's what you should know:
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=4</code> gives quad
    precision (113-bit precision) via boost::multiprecision::float128;
    this requires <a href="http://www.boost.org"> boost</a> (version 1.54
-   or later) and the quadmath library (which requires the use of g++).
+   or later) and the quadmath library (the package names are libquadmath
+   and libquadmath-devel).  This requires the use of g++.
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=5</code> gives
    arbitrary precision via mpfr::mpreal; this requires
    <a href="http://www.mpfr.org"> MPFR</a> (version 3.0 or later),
    <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
-   (version 3.5.9 or later), and a compiler which supports the explicit
+   (version 3.6.2 or later), and a compiler which supports the explicit
    cast operator (e.g., g++ 4.5 or later, Visual Studio 12 2013 or
    later).
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
@@ -7008,6 +6974,53 @@ of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
 
+ - <a href="http://geographiclib.sf.net/1.42">Version 1.42</a>
+   (released 2015-04-28)
+   - DMS::Decode allows a single addition or subtraction operation,
+     e.g., 70W+0:0:15.  This affects the GeoCoords class and the
+     utilities (which use the DMS class for reading coordinates).
+   - Add Math::norm, Math::AngRound, Math::tand, Math::atan2d,
+     Math::eatanhe, Math::taupf, Math::tauf, Math::fma and remove
+     duplicated (but private) functionality from other classes.
+   - On non-Windows systems, the cmake config-style find_package files
+     are now installed under ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}
+     instead of ${CMAKE_INSTALL_PREFIX}/share, because the files are
+     architecture-specific.  This change will let 32-bit and 64-bit
+     versions coexist on the same machine (in lib and lib64).  You
+     should remove the versions in the old "share" location.
+   - MATLAB changes:
+     - provide native MATLAB implementations for compiled interface
+       functions, see \ref matlab;
+     - the compiled MATLAB interface is now deprecated and so the
+       MATLAB_COMPILER option in the cmake build has been removed;
+     - reorganize directories, so that
+       - matlab/geographiclib contains the native matlab code;
+       - matlab/geographiclib-legacy contains wrapper functions to mimic
+         the previous compiled functionality;
+     - the installed MATLAB code mirrors this layout, but the parent
+       installation directory on non-Windows systems is
+       ${CMAKE_INSTALL_PREFIX}/share (instead of
+       ${CMAKE_INSTALL_PREFIX}/libexec), because the files are now
+       architecture independent;
+     - matlab/geographiclib is now packaged and distributed as
+       MATLAB File Exchange package
+       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+       50605</a> (this supersedes three earlier MATLAB packages);
+     - point fix for geodarea.m to correct bug in area of polygons which
+       encircle a pole multiple times (released as version 1.41.1 of
+       MATLAB File Exchange package 39108, 2014-04-22).
+   - artifactId for Java package changed from GeographicLib to
+     GeographicLib-Java and the package is now depolyed to
+     Maven Central (thanks to Chris Bennight for help on this).
+   - Fix autoconf mismatch of version numbers (which were inconsistent
+     in versions 1.40 and 1.41).
+   - Mark the computation of the gradient of the geoid height in the
+     Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a>
+     utility as deprecated.
+   - Work around the boost-quadmath bug with setprecision(0).
+   - Deprecate use of Visual Studio 2005 "-vc8" project files in the
+     windows directory.
+
  - <a href="http://geographiclib.sf.net/1.41">Version 1.41</a>
    (released 2015-03-09)
    - Fix bug in Rhumb::Inverse (with \e exact = true) and related
@@ -7029,7 +7042,7 @@ git repository for GeographicLib</a>.
    - Geodesic::Inverse didn't return NaN if one of the longitudes was a
      NaN (bug introduced in version 1.25).  Fixed in the C++, Java,
      JavaScript, C, Fortran, and Python implementations of the geodesic
-     routines.  This bug was not present in the Matlab version.
+     routines.  This bug was not present in the MATLAB version.
    - Fix bug in Utility::readarray and Utility::writearray which caused
      an exception in debug mode with zero-sized arrays.
    - Fix BLUNDER in OSGB::GridReference (found by kalderami) where the
@@ -7046,8 +7059,8 @@ git repository for GeographicLib</a>.
      - a page on \ref auxlat (actually, this was added in version 1.39);
      - document the use of two single quotes to stand for a double quote
        in DMS (this feature was introduced in version 1.13).
-   - The Matlab function, geographiclibinterface, which compiles the
-     wrapper routines for Matlab now works with Matlab on a Mac.
+   - The MATLAB function, geographiclibinterface, which compiles the
+     wrapper routines for MATLAB now works with MATLAB on a Mac.
 
  - <a href="http://geographiclib.sf.net/1.39">Version 1.39</a>
    (released 2014-11-11)
@@ -7060,7 +7073,7 @@ git repository for GeographicLib</a>.
        arguments for Geodesic, GeodesicLine, Rhumb, and RhumbLine;
      - similar changes have been made to the Python, Javascript, and
        Java implementations of the geodesic routines;
-     - for the C, Fortran, and Matlab implementations the \e arcmode
+     - for the C, Fortran, and MATLAB implementations the \e arcmode
        argument to the routines was generalized to allow a combination
        of ARCMODE and LONG_NOWRAP bits;
      - the Maxima version now returns the longitude unwrapped.
@@ -7077,14 +7090,14 @@ git repository for GeographicLib</a>.
      - add PolygonAreaRhumb typedef for PolygonAreaT<Rhumb>;
      - add -R option to <a href="Planimeter.1.html">Planimeter</a> to use
        PolygonAreaRhumb (and -G option for the default geodesic polygon);
-     - fix BLUNDER in area calculation in Matlab routine geodreckon;
-     - add area calculation to Matlab/Octave routines for great ellipses
+     - fix BLUNDER in area calculation in MATLAB routine geodreckon;
+     - add area calculation to MATLAB/Octave routines for great ellipses
        (see \ref gearea).
    - Fix bad BUG in Geohash::Reverse; this was introduced in version
      1.37 and affected all platforms where unsigned longs are 32-bits.
      Thanks to Christian Csar for reporting and diagnosing this.
    - Binary installers for Windows are now built with Visual Studio 11
-     2012 (instead of Visual Studio 10 2010).  Compiled Matlab support
+     2012 (instead of Visual Studio 10 2010).  Compiled MATLAB support
      still with version 2013a (64-bit).
    - Update GeographicLib.pro for builds with qmake to include all the
      source files.
@@ -7111,7 +7124,7 @@ git repository for GeographicLib</a>.
    - Accept the minus sign as a synomym for - in DMS.{cpp,js}.
    - The cmake configuration file geographiclib-depends.cmake has been
      renamed to geographiclib-targets.cmake.
-   - Matlab/Octave routines for great ellipses added; see \ref
+   - MATLAB/Octave routines for great ellipses added; see \ref
      greatellipse.
    - Provide man pages for geographiclib-get-{geoids,gravity,magnetic}.
 
@@ -7120,7 +7133,7 @@ git repository for GeographicLib</a>.
    - Add \ref highprec.
    - <b>INCOMPATIBLE CHANGE</b>: the static instantiations of various
      classes for the WGS84 ellipsoid have been changed to a
-     <a href="http://www.parashift.com/c++-faq/static-init-order-on-first-use.html">
+     <a href="http://isocpp.org/wiki/faq/ctors#static-init-order-on-first-use">
      "construct on first use idiom"</a>.  This avoids a lot of wasteful
      initialization before the user's code starts.  Unfortunately it
      means that existing source code that relies on any of the following
@@ -7234,7 +7247,7 @@ git repository for GeographicLib</a>.
    (released 2014-03-13)
    - Fix blunder in UTMUPS::EncodeEPSG (found by Ben
      Adler).
-   - Matlab wrapper routines geodesic{direct,inverse,line} switch to
+   - MATLAB wrapper routines geodesic{direct,inverse,line} switch to
      "exact" routes if |<i>f</i>| &gt; 0.02.
    - GeodSolve.cgi allows ellipsoid to be set (and uses the -E option
      for <a href="GeodSolve.1.html">GeodSolve</a>).
@@ -7321,9 +7334,9 @@ git repository for GeographicLib</a>.
      - improving setting of runtime path for Unix-like systems with cmake;
      - install PDB files when compiling with Visual Studio to aid
        debugging;
-     - Windows binary release now uses Matlab R2013a (64-bit) and
+     - Windows binary release now uses MATLAB R2013a (64-bit) and
        uses the -largeArrayDims option.
-     - fixes to the way the Matlab interface routines are built (thanks
+     - fixes to the way the MATLAB interface routines are built (thanks
        to Phil Miller and Chris F.).
    - Changes to the geodesic routines:
      - add \ref java of the geodesic routines (thanks to Skip Breidbach
@@ -7333,7 +7346,7 @@ git repository for GeographicLib</a>.
      - fixes to python port so that they work with version 3.x, in
        addition to 2.x (courtesy of Amato);
      - accumulate the perimeter and area of polygons via a double-wide
-       accumulator in Fortran, C, and Matlab implementations (this is
+       accumulator in Fortran, C, and MATLAB implementations (this is
        already included in the other implementations);
      - port PolygonArea::AddEdge and
        PolygonArea::TestEdge to JavaScript and python
@@ -7347,7 +7360,7 @@ git repository for GeographicLib</a>.
    - Improve efficiency of MGRS::Forward by avoiding the
      calculation of the latitude if possible (adapting an idea of Craig
      Rollins).
-   - Fixes to the way the Matlab interface routines are built (thanks to
+   - Fixes to the way the MATLAB interface routines are built (thanks to
      Phil Miller and Chris F.).
 
  - <a href="http://geographiclib.sf.net/1.30">Version 1.30</a>
@@ -7373,7 +7386,7 @@ git repository for GeographicLib</a>.
        close to the prime meridian;
      - FIX BUG is geoddistance.m where the value of m12 was wrong for
        meridional geodesics;
-     - add Matlab implementations of the geodesic projections;
+     - add MATLAB implementations of the geodesic projections;
      - remove unneeded special code for geodesics which start at a pole;
      - include polygon area routine in C and Fortran implementations;
      - add doxygen documentation for C and Fortran libraries.
@@ -7381,7 +7394,7 @@ git repository for GeographicLib</a>.
  - <a href="http://geographiclib.sf.net/1.27">Version 1.27</a>
    (released 2012-11-29)
    - Changes to geodesic routines:
-     - add native Matlab implementations: geoddistance.m, geodreckon.m,
+     - add native MATLAB implementations: geoddistance.m, geodreckon.m,
        geodarea.m;
      - add C and Fortran implementations;
      - improve the solution of the direct problem so that the series
@@ -7502,7 +7515,7 @@ git repository for GeographicLib</a>.
      document this as the preferred method of using autoconf.
    - cmake tweaks:
      - simplify the configuration of doxygen;
-     - allow the Matlab compiler to be specified with the
+     - allow the MATLAB compiler to be specified with the
        MATLAB_COMPILER option.
 
  - <a href="http://geographiclib.sf.net/1.20">Version 1.20</a>
@@ -7523,14 +7536,14 @@ git repository for GeographicLib</a>.
    - Fix argument checking tests in MGRS::Forward.
    - Add \--comment-delimiter and \--line-separator options to the \ref
      utilities.
-   - Add installer for 64-bit Windows; the compiled Matlab interface is
+   - Add installer for 64-bit Windows; the compiled MATLAB interface is
      supplied with the Windows 64-bit installer only.
 
  - <a href="http://geographiclib.sf.net/1.18">Version 1.18</a>
    (released 2012-02-18)
    - Improve documentation on configuration with cmake.
    - cmake's find_package ensures that the compiler versions match on Windows.
-   - Improve documentation on compiling Matlab interface.
+   - Improve documentation on compiling MATLAB interface.
    - Binary installer for Windows installs under C:/pkg-vc10 by default.
 
  - <a href="http://geographiclib.sf.net/1.17">Version 1.17</a>
@@ -7646,11 +7659,11 @@ git repository for GeographicLib</a>.
  - <a href="http://geographiclib.sf.net/1.12">Version 1.12</a>
    (released 2011-07-21)
    - Change license to MIT/X11.
-   - Add PolygonArea class and equivalent Matlab function.
+   - Add PolygonArea class and equivalent MATLAB function.
    - Provide JavaScript and Python implementations of geodesic routines.
-   - Fix Windows installer to include runtime dlls for Matlab.
+   - Fix Windows installer to include runtime dlls for MATLAB.
    - Fix (innocuous) unassigned variable in Geodesic::GenInverse.
-   - Geodesic routines in Matlab return a12 as first column of aux return
+   - Geodesic routines in MATLAB return a12 as first column of aux return
      value (incompatible change).
    - A couple of code changes to enable compilation with Visual
      Studio 2003.
@@ -7684,7 +7697,7 @@ git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.10">Version 1.10</a>
    (released 2011-06-11)
-   - Improvements to Matlab/Octave interface:
+   - Improvements to MATLAB/Octave interface:
      - add {geocentric,localcartesian}{forward,reverse};
      - make geographiclibinterface more general;
      - install the source for the interface;
@@ -7752,7 +7765,7 @@ git repository for GeographicLib</a>.
    - Library created by Visual Studio is Geographic.lib instead of
      GeographicLib.lib (compatible with makefiles).
    - Make classes NaN aware.
-   - Use cell arrays for MGRS strings in Matlab.
+   - Use cell arrays for MGRS strings in MATLAB.
    - Add solution/project files for Visual Studio 2010 (32-bit only).
    - Use C++11 static_assert and math functions, if available.
 
@@ -7774,7 +7787,7 @@ git repository for GeographicLib</a>.
      with previous versions of GeographicLib.  However, the library is
      source compatible.
    - Add OSGB.
-   - Matlab and Octave interfaces to UTMUPS,
+   - MATLAB and Octave interfaces to UTMUPS,
      MGRS, Geoid, Geodesic
      provided.
    - Minor changes

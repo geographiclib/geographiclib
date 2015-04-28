@@ -2,8 +2,8 @@
  * \file MagneticModel.cpp
  * \brief Implementation for GeographicLib::MagneticModel class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -221,11 +221,11 @@ namespace GeographicLib {
                                       real& Dt, real& It) {
     H = Math::hypot(Bx, By);
     Ht = H ? (Bx * Bxt + By * Byt) / H : Math::hypot(Bxt, Byt);
-    D = (0 - (H ? atan2(-Bx, By) : atan2(-Bxt, Byt))) / Math::degree();
+    D = H ? Math::atan2d(Bx, By) : Math::atan2d(Bxt, Byt);
     Dt = (H ? (By * Bxt - Bx * Byt) / Math::sq(H) : 0) / Math::degree();
     F = Math::hypot(H, Bz);
     Ft = F ? (H * Ht + Bz * Bzt) / F : Math::hypot(Ht, Bzt);
-    I = (F ? atan2(-Bz, H) : atan2(-Bzt, Ht)) / Math::degree();
+    I = F ? Math::atan2d(-Bz, H) : Math::atan2d(-Bzt, Ht);
     It = (F ? (Bz * Ht - H * Bzt) / Math::sq(F) : 0) / Math::degree();
   }
 

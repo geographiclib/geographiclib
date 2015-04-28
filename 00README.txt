@@ -16,8 +16,8 @@ Files
     include/GeographicLib/ and src/
       Config.h.in, Config.h -- system dependent configuration
       Constants.hpp -- WGS84 constants
-      Math.hpp -- math routines
-      Utility.hpp -- I/O and date routines
+      Math.[ch]pp -- math routines
+      Utility.[ch]pp -- I/O and date routines
       Accumulator.[ch]pp -- quad precision adder
       PolarStereographic.[ch]pp -- polar stereographic projection
       TransverseMercator.[ch]pp -- transverse Mercator projection
@@ -51,6 +51,7 @@ Files
     examples/
       example-*.cpp -- simple usage examples for all the classes
       GeoidToGTX.cpp -- a parallelization example
+      JacobiConformal.[ch]pp -- mapping a triaxial ellipsoid
 
     tools/
       GeoConvert.cpp -- geographic conversion utility
@@ -78,7 +79,6 @@ Files
       GeoidEval-vc9.vcproj -- project for GeoidEval
       Gravity-vc9.vcproj -- project for Gravity
       MagneticField-vc9.vcproj -- project for MagneticField
-      also files for MS Studio 2005 (with vc8)
       also files for MS Studio 2010 (with vc10)
       NETGeographic-vc10.vcxproj -- project for .NET wrapper
 
@@ -89,25 +89,11 @@ Files
       geod.mac -- Maxima code for series approximations for Geodesic
       geodesic.mac -- Maxima code for geodesic problems
 
-    matlab/
-      geographiclibinterface.m -- Matlab code to compile Matlab interfaces
-      utmupsforward.{cpp,m} -- Matlab code to convert geographic to UTM/UPS
-      utmupsreverse.{cpp,m} -- Matlab code to convert UTM/UPS to geographic
-      mgrsforward.{cpp,m} -- Matlab code to convert UTM/UPS to MGRS
-      mgrsreverse.{cpp,m} -- Matlab code to convert MGRS to UTM/UPS
-      geodesicdirect.{cpp,m} -- Matlab code for the direct geodesic problem
-      geodesicinverse.{cpp,m} -- Matlab code for the inverse geodesic problem
-      geodesicline.{cpp,m} -- Matlab code for geodesic lines
-      geoidheight.{cpp,m} -- Matlab code to look up geoid heights
-      polygonarea.{cpp,m} -- Matlab code for polygon areas
-      geoddoc.m -- documentation for native Matlab geodesic routines
-      geodreckon.m -- native Matlab implementation of direct geodesic problem
-      geoddistance.m -- native Matlab implementation of inverse geodesic problem
-      geodarea.m -- native Matlab implementation of polygon area
-      defaultellipsoid.m, ecc2flat.m, flat2ecc.m -- auxiliary functions
-      geodproj.m -- documentation for geodesic projections
-      *_{fwd,inv}.m -- native Matlab implementation of geodesic projections
-      private/*.m -- internal functions for geodesic routines
+    matlab/geographiclib
+      *.m, private/*.m -- Matlab implementation of some classes
+
+    matlab/geographiclib-legacy
+      *.{m,cpp} -- legacy Matlab routines
 
     doc/
       doxyfile.in -- Doxygen config file

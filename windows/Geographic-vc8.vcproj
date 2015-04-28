@@ -361,6 +361,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Math.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\NormalGravity.cpp"
 				>
 			</File>

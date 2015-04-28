@@ -168,8 +168,8 @@ int main() {
       std::ifstream f(name.c_str(), std::ios::binary);
       if (!f.good())
         throw GeographicErr("Cannot open coefficient file");
-      f.read(reinterpret_cast<char *>(&C[0]), k * sizeof(real));
-      f.read(reinterpret_cast<char *>(&S[0]), k * sizeof(real));
+      f.read(reinterpret_cast<char*>(&C[0]), k * sizeof(real));
+      f.read(reinterpret_cast<char*>(&S[0]), k * sizeof(real));
     }
     //    for (int i = 0; i < k; ++i)
     //      std::cout << i << " " << C[i] << " " << S[i] << "\n";

@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 41)
+set (PROJECT_VERSION_MINOR 42)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -43,7 +43,7 @@ endif ()
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 14)
-set (LIBVERSION_BUILD 14.0.2)
+set (LIBVERSION_BUILD 14.0.3)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -171,29 +171,24 @@ else ()
   set (PROJECT_DEFINITIONS ${PROJECT_STATIC_DEFINITIONS})
 endif ()
 
-# (5) Compile the Matlab interfaces?  Skip Matlab compilation if OFF
-set (MATLAB_COMPILER OFF CACHE STRING
-  "Compiler for matlab/octave interface: mex or mkoctfile or OFF")
-set_property (CACHE MATLAB_COMPILER PROPERTY STRINGS "mex" "mkoctfile" OFF)
-
-# (6) Create the documentation?  This depends on whether doxygen can be
+# (5) Create the documentation?  This depends on whether doxygen can be
 # found.  If this is OFF, then links will be provided to the online
 # documentation on Sourceforge.
 option (GEOGRAPHICLIB_DOCUMENTATION
   "Use doxygen to create the documentation" OFF)
 
-# (7) Build .NET wrapper library NETGeographicLib.  This only applies to
+# (6) Build .NET wrapper library NETGeographicLib.  This only applies to
 # Windows.  Default is OFF, because, currently, most people don't use
 # this interface.
 option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib library" OFF)
 
-# (8) Set the default "real" precision.  This should probably be left
+# (7) Set the default "real" precision.  This should probably be left
 # at 2 (double).
 set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
   "Precision: 1 = float, 2 = double, 3 = extended, 4 = quadruple, 5 = variable")
 set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3 4 5)
 
-# (9) When making a binary package, should we include the debug version
+# (8) When making a binary package, should we include the debug version
 # of the library?  This applies to MSVC only, because that's the
 # platform where debug and release compilations do not inter-operate.
 # It requires building as follows:
@@ -253,11 +248,11 @@ else ()
   # included), a work-alike substitution is used.
   include (CheckCXXCompilerFlag)
   set (CXX11_FLAG "-std=c++11")
-  check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST1)
-  if (NOT CXX11TEST1)
+  check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST)
+  if (NOT CXX11TEST)
     set (CXX11_FLAG "-std=c++0x")
-    check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST2)
-    if (NOT CXX11TEST2)
+    check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST)
+    if (NOT CXX11TEST)
       unset (CXX11_FLAG)
     endif ()
   endif ()
@@ -266,24 +261,41 @@ else ()
   endif ()
 endif ()
 
+include (CheckCXXSourceCompiles)
+set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS}")
 # Check whether the C++11 math function: std::expm1, std::atanh,
 # etc. are available.  This flag is *not* propagated to clients that use
 # GeographicLib.  However, this is of no consequence.  When the client
 # code is being compiled (and the GeographicLib headers being included),
 # work-alike substitutions are used.
-include (CheckCXXSourceCompiles)
-set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS}")
 check_cxx_source_compiles (
   "#include <cmath>
 int main() {
   return int(std::hypot(3.0, 4.0) + std::expm1(0.5) + std::log1p(2.0) +
              std::asinh(10.0) + std::atanh(0.8) + std::cbrt(8.0)) +
-         std::isfinite(4.0) + std::isnan(0.0);
+             std::fma(1.0, 2.0, 3.0) + std::isfinite(4.0) + std::isnan(0.0);
 }\n" CXX11_MATH)
 if (CXX11_MATH)
   add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)
 else ()
   add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=0)
+endif ()
+
+# Check whether the C++11 static_assert macro is available.  This flag
+# is *not* propagated to clients that use GeographicLib.  However, this
+# is of no consequence.  When the client code is being compiled (and the
+# GeographicLib headers being included), a work-alike substitution are
+# used.
+check_cxx_source_compiles (
+  "#include <cmath>
+int main() {
+  static_assert(true, \"static assert test\");
+  return 0;
+}\n" CXX11_STATIC_ASSERT)
+if (CXX11_STATIC_ASSERT)
+  add_definitions (-DGEOGRAPHICLIB_HAS_STATIC_ASSERT=1)
+else ()
+  add_definitions (-DGEOGRAPHICLIB_HAS_STATIC_ASSERT=0)
 endif ()
 
 # Set the include directories.  Look in ${PROJECT_BINARY_DIR}/include
@@ -322,7 +334,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
   if (CXX11_MATH)
-    # Install MPFR C++ version 3.5.9 or later from
+    # Install MPFR C++ version 3.6.2 or later from
     # http://www.holoborodko.com/pavel/mpfr and install mpreal.h in the
     # include directory.  NOTE: MPFR C++ is covered by the GPL; be sure
     # to abide by the terms of this license.
@@ -417,44 +429,6 @@ if (MAINTAINER)
   add_dependencies (distrib-all distrib-man)
 endif ()
 
-# Look for the tool to compile the Matlab interfaces.
-if (MATLAB_COMPILER)
-  if (GEOGRAPHICLIB_PRECISION EQUAL 2)
-    if (WIN32)
-      set (MATLAB_COMPILER_EXT ".bat")
-    else ()
-      set (MATLAB_COMPILER_EXT "")
-    endif ()
-    find_program (MEX "${MATLAB_COMPILER}${MATLAB_COMPILER_EXT}")
-    if (MATLAB_COMPILER MATCHES "mex")
-      get_filename_component (MATLABDIR "${MEX}" REALPATH)
-      get_filename_component (MATLABDIR "${MATLABDIR}" PATH)
-      find_program (MEXEXTPROG "mexext${MATLAB_COMPILER_EXT}"
-        PATHS "${MATLABDIR}")
-      execute_process (COMMAND "${MEXEXTPROG}"
-        OUTPUT_VARIABLE MEXEXT OUTPUT_STRIP_TRAILING_WHITESPACE)
-      set (MEXOPTIONS "-largeArrayDims")
-    else ()
-      set (MEXEXT "mex")
-      set (MEXOPTIONS "--mex")
-    endif ()
-    if (NOT MSVC)
-      # mex files are shared objects => require static lib to be built with
-      # position independent code
-      set (CMAKE_POSITION_INDEPENDENT_CODE ON)
-    endif ()
-    if (NOT MEX)
-      message (WARNING
-        "Cannot find Matlab compiler ${MATLAB_COMPILER}${MATLAB_COMPILER_EXT}")
-    elseif (NOT MEXEXT)
-      set (MEX OFF)
-      message (WARNING "Cannot determine extension for Matlab compiled code")
-    endif ()
-  else ()
-    message (WARNING "Build of Matlab interfaces only works with doubles")
-  endif ()
-endif ()
-
 # Set a default build type for single-configuration cmake generators if
 # no build type is set.
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
@@ -538,7 +512,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(html|kmz|pdf)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio|js-compress)\\\\.sh\$"
   "${PROJECT_SOURCE_DIR}/(geodesic-biblio.txt|makefile-admin|[^/]*\\\\.png)\$"
-  "${PROJECT_SOURCE_DIR}/matlab/matlab-.*blurb.txt\$" )
+  "${PROJECT_SOURCE_DIR}/matlab/.*blurb.txt\$" )
 set (CPACK_SOURCE_GENERATOR TGZ)
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)

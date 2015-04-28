@@ -1,0 +1,49 @@
+GeographicLib toolbox
+Version 1.42 2015-04-27
+
+This toolbox provides native MATLAB implementations of a subset of the
+C++ library, GeographicLib.  Key components of this toolbox are
+
+  * Geodesics: direct, inverse, area calculations.
+  * Projections: transverse Mercator, polar stereographic, etc.
+  * Grid systems: UTM, UPS, MGRS.
+  * Geoid lookup: EGM84, EGM96, EGM2008 geoids supported.
+  * Geometric transformations: geocentric, local cartesian.
+  * Great ellipses: direct, inverse, area calculations.
+
+There is some overlap between this toolbox and MATLAB's Mapping
+Toolbox.  However, this toolbox offers:
+  * better accuracy;
+  * treatment of oblate and prolate ellipsoids;
+  * guaranteed convergence for geoddistance;
+  * calculation of area and differential properties of geodesics;
+  * ellipsoidal versions of the equidistant azimuthal and gnomonic
+    projections.
+
+This package incorporates the following packages:
+
+  Geodesics on an ellipsoid of revolution
+  http://www.mathworks.com/matlabcentral/fileexchange/39108
+
+  Geodesic projections for an ellipsoid
+  http://www.mathworks.com/matlabcentral/fileexchange/39366
+
+  Great ellipses
+  http://www.mathworks.com/matlabcentral/fileexchange/47898
+
+Including all of the functionality in a single toolbox allows easier
+sharing of code (via a common private directory).
+
+Extensive documentation on the C++ library is available at
+
+  http://geographiclib.sf.net/html
+
+Geoid lookup requires the installation of one or more geoid models.
+Instructions for this are given in
+
+  http://geographiclib.sf.net/html/geoid.html#geoidinst
+
+A problem with MATLAB Central sometimes causes the "Robust Control
+Toolbox" to be listed as a required product.  This is wrong; this
+package has no dependencies other than MATLAB (version 7.9 or later) or
+Octave (version 3.4 or later).

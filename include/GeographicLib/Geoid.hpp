@@ -2,7 +2,7 @@
  * \file Geoid.hpp
  * \brief Header for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -68,7 +68,8 @@ namespace GeographicLib {
    * heights.  As a result of the way that the geoid data is stored, the
    * calculation of gradients can result in large quantization errors.  This is
    * particularly acute for fine grids, at high latitudes, and for the easterly
-   * gradient.
+   * gradient.  For this reason, the use of this facility is <b>DEPRECATED</b>.
+   * Instead, use the GravityModel class to evaluate the gravity vector.
    *
    * This class is typically \e not thread safe in that a single instantiation
    * cannot be safely used by multiple threads because of the way the object
@@ -309,13 +310,14 @@ namespace GeographicLib {
      *   never happens if (\e lat, \e lon) is within a successfully cached area.
      * @return geoid height (meters).
      *
-     * The latitude should be in [&minus;90&deg;, 90&deg;] and
-     * longitude should be in [&minus;540&deg;, 540&deg;).  As a result
-     * of the way that the geoid data is stored, the calculation of gradients
-     * can result in large quantization errors.  This is particularly acute for
-     * fine grids, at high latitudes, and for the easterly gradient.  If you
-     * need to compute the direction of the acceleration due to gravity
-     * accurately, you should use GravityModel::Gravity.
+     * The latitude should be in [&minus;90&deg;, 90&deg;] and longitude should
+     * be in [&minus;540&deg;, 540&deg;).  As a result of the way that the
+     * geoid data is stored, the calculation of gradients can result in large
+     * quantization errors.  This is particularly acute for fine grids, at high
+     * latitudes, and for the easterly gradient.  For this reason, the
+     * computation of the gradient is <b>DEPRECATED</b>.  If you need to
+     * compute the direction of the acceleration due to gravity accurately, you
+     * should use GravityModel::Gravity.
      **********************************************************************/
     Math::real operator()(real lat, real lon, real& gradn, real& grade) const {
       return height(lat, lon, true, gradn, grade);

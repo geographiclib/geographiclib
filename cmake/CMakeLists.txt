@@ -21,7 +21,7 @@ export (TARGETS ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES} ${TOOLS}
 # path to the root from there.  (Note that the whole install tree can
 # be relocated.)
 if (COMMON_INSTALL_PATH)
-  set (INSTALL_CMAKE_DIR "share/cmake/${PROJECT_NAME}")
+  set (INSTALL_CMAKE_DIR "lib${LIB_SUFFIX}/cmake/${PROJECT_NAME}")
   set (PROJECT_ROOT_DIR "../../..")
 else ()
   set (INSTALL_CMAKE_DIR "cmake")

@@ -2,7 +2,7 @@
  * \file CassiniSoldner.cpp
  * \brief Implementation for GeographicLib::CassiniSoldner class
  *
- * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -34,7 +34,7 @@ namespace GeographicLib {
       f = _earth.Flattening();
     _sbet0 = (1 - f) * sin(phi);
     _cbet0 = abs(LatitudeOrigin()) == 90 ? 0 : cos(phi);
-    SinCosNorm(_sbet0, _cbet0);
+    Math::norm(_sbet0, _cbet0);
   }
 
   void CassiniSoldner::Forward(real lat, real lon, real& x, real& y,
@@ -43,7 +43,7 @@ namespace GeographicLib {
       return;
     real dlon = Math::AngDiff(LongitudeOrigin(), Math::AngNormalize(lon));
     real sig12, s12, azi1, azi2;
-    lat = AngRound(lat);
+    lat = Math::AngRound(lat);
     sig12 = _earth.Inverse(lat, -abs(dlon), lat, abs(dlon), s12, azi1, azi2);
     if (sig12 < 100 * tiny_)
       sig12 = s12 = 0;

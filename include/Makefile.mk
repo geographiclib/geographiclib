@@ -1,4 +1,5 @@
-MODULES = AlbersEqualArea \
+MODULES = Accumulator \
+	AlbersEqualArea \
 	AzimuthalEquidistant \
 	CassiniSoldner \
 	CircularEngine \
@@ -21,6 +22,7 @@ MODULES = AlbersEqualArea \
 	MGRS \
 	MagneticCircle \
 	MagneticModel \
+	Math \
 	NormalGravity \
 	OSGB \
 	PolarStereographic \
@@ -31,9 +33,7 @@ MODULES = AlbersEqualArea \
 	TransverseMercatorExact \
 	UTMUPS \
 	Utility
-EXTRAHEADERS = Accumulator \
-	Constants \
-	Math \
+EXTRAHEADERS = Constants \
 	SphericalHarmonic \
 	SphericalHarmonic1 \
 	SphericalHarmonic2

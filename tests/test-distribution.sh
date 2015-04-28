@@ -27,7 +27,6 @@
 # insta - installed files, make
 # instb - installed files, autoconf
 # instc - installed files, cmake
-# inste - installed files, cmake matlab=on
 # instf - installed files, autoconf direct from git repository
 
 set -e
@@ -36,11 +35,10 @@ set -e
 #   CMakeLists.txt
 #   NEWS
 #   configure.ac
-#   doc/GeographicLib.dox
 #   python/setup.py
 #   tests/test-distribution.sh
 
-VERSION=1.41
+VERSION=1.42
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
@@ -66,7 +64,7 @@ cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
 make doc
 (
     cd ../java
-    mvn package
+    mvn package -P release
     rsync -a target/apidocs/ ../BUILD/doc/html/java/
 )
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
@@ -97,8 +95,6 @@ while read ver x64; do
     test "$x64" && gen="$gen Win64" || true
     pkg=vc$ver
     test "$x64" && pkg="$pkg-x64" || true
-    matlab=
-    test "$pkg" = vc11-x64 && matlab="-D MATLAB_COMPILER=mex" || true
     installer=
     if test "$ver" -eq 11; then
 	if test "$x64"; then
@@ -117,17 +113,11 @@ while read ver x64; do
 	echo 'mkdir -p v:/data/scratch/$b'
 	echo 'cd v:/data/scratch/$b'
 	echo 'unset GEOGRAPHICLIB_DATA'
-	if test "$matlab"; then
-	    echo 'MATLAB_ROOT=`cygpath "c:/Program Files/MATLAB/R2013a"`'
-	    echo 'export PATH="$PATH:$MATLAB_ROOT/runtime/win64:$MATLAB_ROOT/bin"'
-	fi
-	echo $cmake -G \"$gen\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON $matlab -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+	echo $cmake -G \"$gen\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
 	echo $cmake --build . --config Debug   --target ALL_BUILD
 	echo $cmake --build . --config Debug   --target RUN_TESTS
 	echo $cmake --build . --config Debug   --target INSTALL
 	echo $cmake --build . --config Release --target ALL_BUILD
-	test "$matlab" &&
-	echo $cmake --build . --config Release --target matlabinterface || true
 	echo $cmake --build . --config Release --target exampleprograms
 	echo $cmake --build . --config Release --target netexamples
 	echo $cmake --build . --config Release --target RUN_TESTS
@@ -185,19 +175,11 @@ make -j$NUMCPUS all
 make -j$NUMCPUS test
 make -j$NUMCPUS exampleprograms
 make install
-mkdir ../BUILD-matlab
-cd ../BUILD-matlab
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D MATLAB_COMPILER=mkoctfile -D CMAKE_INSTALL_PREFIX=$TEMP/inste ..
-make -j$NUMCPUS all
-make -j$NUMCPUS test
-make -j$NUMCPUS matlabinterface
-make install
 mkdir ../BUILD-system
 cd ../BUILD-system
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D MATLAB_COMPILER=mkoctfile ..
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH ..
 make -j$NUMCPUS all
 make -j$NUMCPUS test
-make -j$NUMCPUS matlabinterface
 cd ..
 mvn -Dcmake.project.bin.directory=$TEMP/mvn install
 
@@ -207,32 +189,9 @@ cd BUILD
 cmake -D CMAKE_PREFIX_PATH=$TEMP/instc ..
 make
 
-mkdir -p $TEMP/geographiclib-matlab/private
-cd $TEMP/instc/libexec/GeographicLib/matlab
-cp -p geod{doc,reckon,distance,area}.m \
-    defaultellipsoid.m ecc2flat.m flat2ecc.m \
-    $TEMP/geographiclib-matlab/
-cp -p private/*.m $TEMP/geographiclib-matlab/private/
-rm  $TEMP/geographiclib-matlab/private/G4coeff.m
-cd $TEMP
-rm -f $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip
-zip $DEVELSOURCE/matlab/geographiclib_matlab_$VERSION.zip \
-    geographiclib-matlab/*.m geographiclib-matlab/private/*.m
-mkdir -p $TEMP/proj/geographiclib-matlab
-cd $TEMP/instc/libexec/GeographicLib/matlab
-cp -p {geodproj,*_{fwd,inv}}.m $TEMP/proj/geographiclib-matlab
-cd $TEMP/proj
-rm -f $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip
-zip $DEVELSOURCE/matlab/geographiclib_matlabproj_$VERSION.zip \
-    geographiclib-matlab/*.m
-mkdir -p $TEMP/greatellipse/geographiclib-matlab/private
-cd $TEMP/instc/libexec/GeographicLib/matlab
-cp -p ge{doc,reckon,distance}.m $TEMP/greatellipse/geographiclib-matlab
-cp -p private/G4coeff.m $TEMP/greatellipse/geographiclib-matlab/private/
-cd $TEMP/greatellipse
-rm -f $DEVELSOURCE/matlab/geographiclib_matlabge_$VERSION.zip
-zip $DEVELSOURCE/matlab/geographiclib_matlabge_$VERSION.zip \
-    geographiclib-matlab/*.m geographiclib-matlab/private/*.m
+cd $TEMP/instc/share/matlab/geographiclib
+rm -f $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip
+zip $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip *.m private/*.m
 
 cd $TEMP
 mkdir python-test
@@ -268,8 +227,6 @@ done
 
 cd $TEMP/instc
 find . -type f | sort -u > ../files.c
-cd $TEMP/inste
-find . -type f | sort -u > ../files.e
 
 cd $TEMP/gitb/geographiclib
 sh autogen.sh
@@ -327,7 +284,7 @@ int main() {
   return 0;
 }
 EOF
-for i in a b c e f; do
+for i in a b c f; do
     cp testprogram.cpp testprogram$i.cpp
     g++ -c -g -O3 -I$TEMP/inst$i/include testprogram$i.cpp
     g++ -g -o testprogram$i testprogram$i.o -Wl,-rpath=$TEMP/inst$i/lib -L$TEMP/inst$i/lib -lGeographic
@@ -343,6 +300,17 @@ grep "^ *VERSION *= *$libversion *\$" \
     $TEMP/gitb/geographiclib/src/GeographicLib.pro > /dev/null ||
 echo autoconf/Qt library so mismatch
 
+CONFIG_FILE=$TEMP/gitr/geographiclib/configure
+CONFIG_MAJOR=`grep ^GEOGRAPHICLIB_VERSION_MAJOR= $CONFIG_FILE | cut -f2 -d=`
+CONFIG_MINOR=`grep ^GEOGRAPHICLIB_VERSION_MINOR= $CONFIG_FILE | cut -f2 -d=`
+CONFIG_PATCH=`grep ^GEOGRAPHICLIB_VERSION_PATCH= $CONFIG_FILE | cut -f2 -d=`
+CONFIG_VERSIONA=`grep ^PACKAGE_VERSION= $CONFIG_FILE | cut -f2 -d= |
+cut -f2 -d\'`
+CONFIG_VERSION=$CONFIG_MAJOR.$CONFIG_MINOR
+test "$CONFIG_PATCH" = 0 || CONFIG_VERSION=$CONFIG_VERSION.$CONFIG_PATCH
+test "$CONFIG_VERSION"  = "$VERSION" || echo autoconf version number mismatch
+test "$CONFIG_VERSIONA" = "$VERSION" || echo autoconf version string mismatch
+
 cd $TEMP/relx/GeographicLib-$VERSION
 echo Files with trailing spaces:
 find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.pdf' |
@@ -351,7 +319,7 @@ echo
 echo Files with tabs:
 find . -type f |
 egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
-egrep -v '\.sh|depcomp|install-sh|/config\.|configure|missing' |
+egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
 xargs grep -l  '	' || true
 echo
 echo Files with multiple newlines:
@@ -388,9 +356,13 @@ sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 cd $TEMP/gita/geographiclib/python
 python setup.py sdist --formats gztar,zip upload
 
+# java release
+cd $TEMP/gita/geographiclib/java
+mvn clean deploy -P release
+
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib
-git add .
+git add -A
 git commit -m "Version $VERSION ($DATE)"
 git tag -m "Version $VERSION ($DATE)" r$VERSION
 git push

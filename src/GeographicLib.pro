@@ -1,4 +1,4 @@
-VERSION = 14.0.2
+VERSION = 14.0.3
 
 TEMPLATE = lib
 
@@ -30,6 +30,7 @@ SOURCES += LocalCartesian.cpp
 SOURCES += MGRS.cpp
 SOURCES += MagneticCircle.cpp
 SOURCES += MagneticModel.cpp
+SOURCES += Math.cpp
 SOURCES += NormalGravity.cpp
 SOURCES += OSGB.cpp
 SOURCES += PolarStereographic.cpp
