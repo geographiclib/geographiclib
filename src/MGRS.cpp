@@ -339,15 +339,17 @@ namespace GeographicLib {
   }
 
   int MGRS::UTMRow(int iband, int icol, int irow) {
-    // Input is MGRS (periodic) row index and output is true row index.  Band
-    // index is in [-10, 10) (as returned by LatitudeBand).  Column index
-    // origin is easting = 100km.  Returns maxutmSrow_ if irow and iband are
-    // incompatible.  Row index origin is equator.
+    // Input is iband = band index in [-10, 10) (as returned by LatitudeBand),
+    // icol = column index in [0,8) with origin of easting = 100km, and irow =
+    // periodic row index in [0,20) with origin = equator.  Output is true row
+    // index in [-90, 95).  Returns maxutmSrow_ = 100, if irow and iband are
+    // incompatible.
 
     // Estimate center row number for latitude band
     // 90 deg = 100 tiles; 1 band = 8 deg = 100*8/90 tiles
     real c = 100 * (8 * iband + 4)/real(90);
     bool northp = iband >= 0;
+    // These are safe bounds on the rows
     //  iband minrow maxrow
     //   -10    -90    -81
     //    -9    -80    -72
@@ -375,10 +377,16 @@ namespace GeographicLib {
       maxrow = iband <   9 ?
       int(floor(c + real(4.4) - real(0.1) * northp)) :  94,
       baserow = (minrow + maxrow) / 2 - utmrowperiod_ / 2;
-    // Add maxutmSrow_ = 5 * utmrowperiod_ to ensure operand is positive
+    // Offset irow by the multiple of utmrowperiod_ which brings it as close as
+    // possible to the center of the latitude band, (minrow + maxrow) / 2.
+    // (Add maxutmSrow_ = 5 * utmrowperiod_ to ensure operand is positive.)
     irow = (irow - baserow + maxutmSrow_) % utmrowperiod_ + baserow;
-    if (irow < minrow || irow > maxrow) {
-      // Northing = 71*100km and 80*100km intersect band boundaries
+    if ( !(irow >= minrow && irow <= maxrow) ) {
+      // Outside the safe bounds, so need to check...
+      // Northing = 71e5 and 80e5 intersect band boundaries
+      //   y = 71e5 in scol = 2 (x = [3e5,4e5] and x = [6e5,7e5])
+      //   y = 80e5 in scol = 1 (x = [2e5,3e5] and x = [7e5,8e5])
+      // This holds for all the ellipsoids given in NGA.SIG.0012_2.0.0_UTMUPS.
       // The following deals with these special cases.
       int
         // Fold [-10,-1] -> [9,0]
@@ -387,6 +395,8 @@ namespace GeographicLib {
         srow = irow >= 0 ? irow : -irow - 1,
         // Fold [4,7] -> [3,0]
         scol = icol < 4 ? icol : -icol + 7;
+      // For example, the safe rows for band 8 are 71 - 79.  However row 70 is
+      // allowed if scol = [2,3] and row 80 is allowed if scol = [0,1].
       if ( ! ( (srow == 70 && sband == 8 && scol >= 2) ||
                (srow == 71 && sband == 7 && scol <= 2) ||
                (srow == 79 && sband == 9 && scol >= 1) ||

@@ -1,19 +1,22 @@
-function [x, y, zone, isnorth, prec] = mgrs_inv(mgrs)
+function [x, y, zone, isnorth, prec] = mgrs_inv(mgrs, center)
 %MGRS_INV  Convert MGRS to UTM/UPS coordinates
 %
 %   [x, y, zone, isnorth] = MGRS_INV(mgrs)
-%   [x, y, zone, isnorth, prec] = MGRS_INV(mgrs)
+%   [x, y, zone, isnorth, prec] = MGRS_INV(mgrs, center)
 %
 %   converts MGRS grid references to the UTM/UPS system.  mgrs is either a
 %   2d character array of MGRS grid references (optionally padded on the
 %   right with spaces) or a cell array of character strings.  (x,y) are the
 %   easting and northing (in meters); zone is the UTM zone in [1,60] or 0
 %   for UPS; isnorth is 1 (0) for the northern (southern) hemisphere.  prec
-%   is the precision of the grid reference.  For prec >= 0, the position of
-%   the center of the grid square is returned.  To obtain the SW corner
-%   subtract 0.5 * 10^(5-prec) from the easting and northing.  prec = -1
-%   means that the grid reference consists of a grid zone only; in this
-%   case some representative position in the grid zone is returned.
+%   is the precision of the grid reference, i.e., 1/2 the number of
+%   trailing digits; for example 38SMB4488 has prec = 2 (denoting a 1 km
+%   square).  If center = 1 (the default), then for prec >= 0, the position
+%   of the center of the grid square is returned; to obtain the SW corner
+%   subtract 0.5 * 10^(5-prec) from the easting and northing.  If center =
+%   0, then the SW corner is returned.  center must be a scalar.  prec = -1
+%   means that the grid reference consists of a grid zone, e.g., 38S, only;
+%   in this case some representative position in the grid zone is returned.
 %   Illegal MGRS references result in x = y = NaN, zone = -4, isnorth = 0,
 %   prec = -2.  The inverse operation is performed by mgrs_fwd.
 %
@@ -23,6 +26,11 @@ function [x, y, zone, isnorth, prec] = mgrs_inv(mgrs)
 %
 % This file was distributed with GeographicLib 1.42.
 
+  if nargin < 2, 
+    center = true;
+  else
+    center = logical(center);
+  end
   if ischar(mgrs)
     mgrs = cellstr(mgrs);
   end
@@ -31,6 +39,9 @@ function [x, y, zone, isnorth, prec] = mgrs_inv(mgrs)
     mgrs = char(deblank(mgrs));
   else
     error('mgrs must be cell array of strings or 2d char array')
+  end
+  if ~isscalar(center)
+    error('center must if a scalar logical')
   end
   mgrs = upper(mgrs);
   num = size(mgrs, 1);
@@ -48,16 +59,16 @@ function [x, y, zone, isnorth, prec] = mgrs_inv(mgrs)
   upss = (mgrs(:,1) == 'A' | mgrs(:,1) == 'B') & contig;
   upsn = (mgrs(:,1) == 'Y' | mgrs(:,1) == 'Z') & contig;
   [x(utm), y(utm), zone(utm), isnorth(utm), prec(utm)] = ...
-      mgrs_inv_utm(mgrs(utm,:));
+      mgrs_inv_utm(mgrs(utm,:), center);
   [x(upsn), y(upsn), zone(upsn), isnorth(upsn), prec(upsn)] = ...
-      mgrs_inv_upsn(mgrs(upsn,:));
+      mgrs_inv_upsn(mgrs(upsn,:), center);
   [x(upss), y(upss), zone(upss), isnorth(upss), prec(upss)] = ...
-      mgrs_inv_upss(mgrs(upss,:));
+      mgrs_inv_upss(mgrs(upss,:), center);
   x = reshape(x, s); y = reshape(y, s); prec = reshape(prec, s);
   isnorth = reshape(isnorth, s); zone = reshape(zone, s);
 end
 
-function [x, y, zone, northp, prec] = mgrs_inv_utm(mgrs)
+function [x, y, zone, northp, prec] = mgrs_inv_utm(mgrs, center)
   zone = (mgrs(:,1) - '0') * 10 + (mgrs(:,2) - '0');
   ok = zone > 0 & zone <= 60;
   band = lookup('CDEFGHJKLMNPQRSTUVWX', mgrs(:,3));
@@ -74,7 +85,7 @@ function [x, y, zone, northp, prec] = mgrs_inv_utm(mgrs)
   rowind(even) = mod(rowind(even) - 5, 20);
   % good values in [0,20), bad values = -1
   rowind(bad) = -1;
-  [x, y, prec] = decodexy(mgrs(:, 6:end));
+  [x, y, prec] = decodexy(mgrs(:, 6:end), center);
   prec(mgrs(:,4) == ' ') = -1;
   ok = ok & (prec == -1 | (colind >= 0 & rowind >= 0));
   rowind = utmrow(band, colind, rowind);
@@ -93,7 +104,7 @@ function [x, y, zone, northp, prec] = mgrs_inv_utm(mgrs)
   prec(~ok) = -2;
 end
 
-function [x, y, zone, northp, prec] = mgrs_inv_upsn(mgrs)
+function [x, y, zone, northp, prec] = mgrs_inv_upsn(mgrs, center)
   zone = zeros(size(mgrs,1),1);
   ok = zone == 0;
   northp = ok;
@@ -102,7 +113,7 @@ function [x, y, zone, northp, prec] = mgrs_inv_upsn(mgrs)
   colind = lookup(['RSTUXYZ', 'ABCFGHJ'], mgrs(:, 2));
   ok = ok & (colind < 0 | mod(floor(colind / 7) + eastp, 2) == 0);
   rowind = lookup('ABCDEFGHJKLMNP', mgrs(:, 3));
-  [x, y, prec] = decodexy(mgrs(:, 4:end));
+  [x, y, prec] = decodexy(mgrs(:, 4:end), center);
   prec(mgrs(:,2) == ' ') = -1;
   ok = ok & (prec == -1 | (colind >= 0 & rowind >= 0));
   x = (colind + 13) * 1e5 + x;
@@ -117,7 +128,7 @@ function [x, y, zone, northp, prec] = mgrs_inv_upsn(mgrs)
   prec(~ok) = -2;
 end
 
-function [x, y, zone, northp, prec] = mgrs_inv_upss(mgrs)
+function [x, y, zone, northp, prec] = mgrs_inv_upss(mgrs, center)
   zone = zeros(size(mgrs,1),1);
   ok = zone == 0;
   northp = ~ok;
@@ -129,7 +140,7 @@ function [x, y, zone, northp, prec] = mgrs_inv_upss(mgrs)
   colind(eastp & colind < 12) = -1;
   ok = ok & (colind < 0 | mod(floor(colind / 12) + eastp, 2) == 0);
   rowind = lookup('ABCDEFGHJKLMNPQRSTUVWXYZ', mgrs(:, 3));
-  [x, y, prec] = decodexy(mgrs(:, 4:end));
+  [x, y, prec] = decodexy(mgrs(:, 4:end), center);
   prec(mgrs(:,2) == ' ') = -1;
   ok = ok & (prec == -1 | (colind >= 0 & rowind >= 0));
   x = (colind + 8) * 1e5 + x;
@@ -143,7 +154,7 @@ function [x, y, zone, northp, prec] = mgrs_inv_upss(mgrs)
   prec(~ok) = -2;
 end
 
-function [x, y, prec] = decodexy(xy)
+function [x, y, prec] = decodexy(xy, center)
   num = size(xy, 1);
   x = nan(num, 1); y = x;
   len = strlen(xy);
@@ -156,8 +167,9 @@ function [x, y, prec] = decodexy(xy)
   minprec = max(1,min(prec(ok))); maxprec = max(prec(ok));
   for p = minprec:maxprec
     m = 1e5 / 10^p;
-    x(prec == p) = str2double(cellstr(xy(prec == p, 0+(1:p)))) * m + m/2;
-    y(prec == p) = str2double(cellstr(xy(prec == p, p+(1:p)))) * m + m/2;
+    cent = center * m/2;
+    x(prec == p) = str2double(cellstr(xy(prec == p, 0+(1:p)))) * m + cent;
+    y(prec == p) = str2double(cellstr(xy(prec == p, p+(1:p)))) * m + cent;
   end
 end
 
@@ -175,7 +187,7 @@ function irow = utmrow(iband, icol, irow)
   maxrow = cvmgt(floor(c + 4.4 - 0.1 * northp),  94, iband <   9);
   baserow = floor((minrow + maxrow) / 2) - 10;
   irow = mod(irow - baserow, 20) + baserow;
-  fix = irow < minrow | irow > maxrow;
+  fix = ~(irow >= minrow & irow <= maxrow);
   if ~any(fix), return, end
   % Northing = 71*100km and 80*100km intersect band boundaries
   % The following deals with these special cases.

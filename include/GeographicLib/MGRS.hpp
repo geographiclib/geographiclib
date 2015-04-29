@@ -294,7 +294,7 @@ namespace GeographicLib {
      * latitude band letter are permitted provided that some portion of the
      * 100 km block is within the given latitude band.  Thus
      *   - 38VLS and 38WLS are allowed (latitude 64N intersects the square
-     *     38[VW]LS); but 38VMS is not permitted (all of 38VMS is north of 64N)
+     *     38[VW]LS); but 38VMS is not permitted (all of 38WMS is north of 64N)
      *   - 38MPE and 38NPF are permitted (they straddle the equator); but 38NPE
      *     and 38MPF are not permitted (the equator does not intersect either
      *     block).
@@ -304,7 +304,7 @@ namespace GeographicLib {
      *
      * The UTM/UPS selection and the UTM zone is preserved in the conversion
      * from MGRS coordinate.  The conversion is exact for prec in [0, 5].  With
-     * centerp = true the conversion from MGRS to geographic and back is
+     * \e centerp = true, the conversion from MGRS to geographic and back is
      * stable.  This is not assured if \e centerp = false.
      *
      * If a "grid zone designation" (for example, 18T or A) is given, then some

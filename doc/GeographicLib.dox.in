@@ -6978,6 +6978,7 @@ git repository for GeographicLib</a>.
    (released 2015-mm-dd)
    - Reminder to clean out install directories from pre-1.42
      installations.
+   - MATLAB function mgrs_inv now takes an optional center argument.
 
  - <a href="http://geographiclib.sf.net/1.42">Version 1.42</a>
    (released 2015-04-28)
