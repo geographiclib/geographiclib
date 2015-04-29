@@ -5,24 +5,38 @@ function geoid = geoid_load(name, dir)
 %   geoid = GEOID_LOAD(geoidname)
 %   geoid = GEOID_LOAD(geoidname, geoiddir)
 %
-%   Loads geoid data into the workspace.  The possible geoids are
+%   Loads geoid data into the workspace.  geoid_height uses this function
+%   to load the geoid data it needs.  The possible geoids are
 %
 %       egm84-30  egm84-15
 %       egm96-15  egm96-5
 %       egm2008-5 egm2008-2_5 egm2008-1
 %
-%   The first part of the name is the geoid model.  The second part gives
-%   the resolution of the gridded data (in arc-seconds).
+%   The first part of the name is the geoid model, e.g., egm2008.  The
+%   second part gives the resolution of the gridded data (in arc-seconds),
+%   e.g., 2.5".
 %
 %   If geoidname is not specified (or is empty), the environment variable
 %   GEOGRAPHICLIB_GEOID_NAME is used; if this is not defined then egm96-5
-%   is used.  geoid_height looks in the directory geoiddir for the geoid
-%   data; if this is not specified (or is empty), it uses the environment
-%   variable GEOGRAPHICLIB_GEOID_PATH; if this is not defined, it appends
-%   "/geoids" to the environment variable GEOGRAPHICLIB_DATA; finally, if
-%   GEOGRAPHICLIB_DATA is not defined, it tries the default directory names
-%   /usr/local/share/GeographicLib/geoids (for non-Windows systems) or
-%   C:/ProgramData/GeographicLib/geoids (for Windows systems).
+%   is used.
+%
+%   GEOID_LOAD determines the directory with the geoid data as follows
+%   (here an empty string is the same as undefined):
+%
+%      * if geoiddir is specified, then look there; otherwise ...
+%      * if the environment variable GEOGRAPHICLIB_GEOID_PATH is defined,
+%        look there; otherwise ...
+%      * if the environment variable GEOGRAPHICLIB_DATA is defined, look in
+%        [GEOGRAPHICLIB_DATA '/geoids']; otherwise ...
+%      * look in /usr/local/share/GeographicLib/geoids (for non-Windows
+%        systems) or C:/ProgramData/GeographicLib/geoids (for Windows
+%        systems).
+%
+%   If your geoid models are installed in /usr/share/GeographicLib/geoids,
+%   for example, you can avoid the need to supply the geoiddir argument
+%   with
+%
+%       setenv GEOGRAPHICLIB_DATA /usr/share/GeographicLib
 %
 %   The geoid data is loaded from the image file obtained by concatenating
 %   the components to give geoiddir/geoidname.pgm.  These files store a

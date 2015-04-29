@@ -234,7 +234,7 @@ the field.  The second line gives the annual change.
 
 =head1 SEE ALSO
 
-GeoConvert(1).
+GeoConvert(1), geographiclib-get-magnetic(8).
 
 =head1 AUTHOR
 

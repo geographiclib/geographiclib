@@ -174,9 +174,8 @@ B<-d> option.  The B<-h> option prints the default gravity path and
 name.  Use the B<-v> option to ascertain the full path name of the data
 file.
 
-Instructions for downloading and installing gravity models are
-available at
-L<http://geographiclib.sf.net/html/gravity.html#gravityinst>.
+Instructions for downloading and installing gravity models are available
+at L<http://geographiclib.sf.net/html/gravity.html#gravityinst>.
 
 =head1 ENVIRONMENT
 
@@ -222,7 +221,7 @@ The gravity field from EGM2008 at the top of Mount Everest
 
 =head1 SEE ALSO
 
-GeoConvert(1), GeoidEval(1).
+GeoConvert(1), GeoidEval(1), geographiclib-get-gravity(8).
 
 =head1 AUTHOR
 

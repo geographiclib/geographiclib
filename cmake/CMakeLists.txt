@@ -21,6 +21,8 @@ export (TARGETS ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES} ${TOOLS}
 # path to the root from there.  (Note that the whole install tree can
 # be relocated.)
 if (COMMON_INSTALL_PATH)
+  # Install under lib${LIB_SUFFIX} so that 32-bit and 64-bit packages
+  # can be installed on a single machine.
   set (INSTALL_CMAKE_DIR "lib${LIB_SUFFIX}/cmake/${PROJECT_NAME}")
   set (PROJECT_ROOT_DIR "../../..")
 else ()
