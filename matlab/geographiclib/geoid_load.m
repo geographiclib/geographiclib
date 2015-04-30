@@ -12,9 +12,9 @@ function geoid = geoid_load(name, dir)
 %       egm96-15  egm96-5
 %       egm2008-5 egm2008-2_5 egm2008-1
 %
-%   The first part of the name is the geoid model, e.g., egm2008.  The
-%   second part gives the resolution of the gridded data (in arc-seconds),
-%   e.g., 2.5".
+%   The first part of the name is the geoid model.  The second part gives
+%   the resolution of the gridded data (in arc-seconds).  Thus egm2008-2_5
+%   is the egm2008 geoid model at a resolution of 2.5".
 %
 %   If geoidname is not specified (or is empty), the environment variable
 %   GEOGRAPHICLIB_GEOID_NAME is used; if this is not defined then egm96-5

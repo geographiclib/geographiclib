@@ -10,8 +10,9 @@ function [lat, lon, gam, k] = polarst_inv(isnorth, x, y, ellipsoid)
 %   arrays of equal size.  The ellipsoid vector is of the form [a, e],
 %   where a is the equatorial radius in meters, e is the eccentricity.  If
 %   ellipsoid is omitted, the WGS84 ellipsoid (more precisely, the value
-%   returned by defaultellipsoid) is used.  The forward projection is given
-%   by polarst_fwd.
+%   returned by defaultellipsoid) is used.  projdoc defines the projection
+%   and gives the restrictions on the allowed ranges of the arguments.  The
+%   forward projection is given by polarst_fwd.
 %
 %   gam and k give metric properties of the projection at (lat,lon); gam is
 %   the meridian convergence at the point and k is the scale.
@@ -20,7 +21,8 @@ function [lat, lon, gam, k] = polarst_inv(isnorth, x, y, ellipsoid)
 %   meters (more precisely the units used for the equatorial radius).  k is
 %   dimensionless.
 %
-%   See also POLARST_FWD, UTMUPS_FWD, UTMUPS_INV, DEFAULTELLIPSOID.
+%   See also PROJDOC, POLARST_FWD, UTMUPS_FWD, UTMUPS_INV,
+%     DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %

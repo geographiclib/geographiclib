@@ -16,7 +16,8 @@ function h = geoid_height(lat, lon, geoidname, geoiddir)
 %       egm2008-5 egm2008-2_5 egm2008-1
 %
 %   The first part of the name is the geoid model.  The second part gives
-%   the resolution of the gridded data (in arc-seconds).
+%   the resolution of the gridded data (in arc-seconds).  Thus egm2008-2_5
+%   is the egm2008 geoid model at a resolution of 2.5".
 %
 %   By default the egm96-5 geoid is used.  This can be overridden by
 %   specifying geoidname.  The geoiddir argument overrides the default

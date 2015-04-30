@@ -9,7 +9,7 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   arguments can be scalars or arrays of equal size.  The ellipsoid vector
 %   is of the form [a, e], where a is the equatorial radius in meters, e is
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by defaultellipsoid) is used.  geodproj
+%   precisely, the value returned by defaultellipsoid) is used.  projdoc
 %   defines the projection and gives the restrictions on the allowed ranges
 %   of the arguments.  The inverse projection is given by cassini_inv.
 %
@@ -21,7 +21,7 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   y are in meters (more precisely the units used for the equatorial
 %   radius).  rk is dimensionless.
 %
-%   See also GEODPROJ, CASSINI_INV, GEODDISTANCE, DEFAULTELLIPSOID.
+%   See also PROJDOC, CASSINI_INV, GEODDISTANCE, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %

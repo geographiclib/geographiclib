@@ -42,11 +42,11 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %
 %   When given a combination of scalar and array inputs, GEODRECKON behaves
 %   as though the inputs were expanded to match the size of the arrays.
-%   However, in the particular case where LAT1 and AZI1 are the same for
+%   However, in the particular case where lat1 and azi1 are the same for
 %   all the input points, they should be specified as scalars since this
 %   will considerably speed up the calculations.  (In particular a series
 %   of points along a single geodesic is efficiently computed by specifying
-%   an array for S12 only.)
+%   an array for s12 only.)
 %
 %   This is an implementation of the algorithm given in
 %

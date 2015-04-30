@@ -5,8 +5,8 @@ function [x, y, zone, isnorth, prec] = mgrs_inv(mgrs, center)
 %   [x, y, zone, isnorth, prec] = MGRS_INV(mgrs, center)
 %
 %   converts MGRS grid references to the UTM/UPS system.  mgrs is either a
-%   2d character array of MGRS grid references (optionally padded on the
-%   right with spaces) or a cell array of character strings.  (x,y) are the
+%   2d character array of MGRS grid references or a cell array of character
+%   strings; leading and trailing whitespace is ignored.  (x,y) are the
 %   easting and northing (in meters); zone is the UTM zone in [1,60] or 0
 %   for UPS; isnorth is 1 (0) for the northern (southern) hemisphere.  prec
 %   is the precision of the grid reference, i.e., 1/2 the number of
@@ -26,7 +26,8 @@ function [x, y, zone, isnorth, prec] = mgrs_inv(mgrs, center)
 %
 % This file was distributed with GeographicLib 1.42.
 
-  if nargin < 2, 
+  narginchk(1, 2)
+  if nargin < 2
     center = true;
   else
     center = logical(center);
@@ -36,7 +37,7 @@ function [x, y, zone, isnorth, prec] = mgrs_inv(mgrs, center)
   end
   if iscell(mgrs)
     s = size(mgrs);
-    mgrs = char(deblank(mgrs));
+    mgrs = char(strtrim(mgrs));
   else
     error('mgrs must be cell array of strings or 2d char array')
   end

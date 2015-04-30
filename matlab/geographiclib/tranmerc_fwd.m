@@ -9,9 +9,11 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   arguments can be scalars or arrays of equal size.  The ellipsoid vector
 %   is of the form [a, e], where a is the equatorial radius in meters, e is
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by defaultellipsoid) is used.  geodproj
-%   defines the projection and gives the restrictions on the allowed ranges
-%   of the arguments.  The inverse projection is given by tranmerc_inv.
+%   precisely, the value returned by defaultellipsoid) is used.  The common
+%   case of lat0 = 0 is treated efficiently provided that lat0 is specified
+%   as a scalar.  projdoc defines the projection and gives the restrictions
+%   on the allowed ranges of the arguments.  The inverse projection is
+%   given by tranmerc_inv.
 %
 %   gam and k give metric properties of the projection at (lat,lon); gam is
 %   the meridian convergence at the point and k is the scale.
@@ -34,7 +36,8 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   less than 1 mm within 7600 km of the central meridian).  The mapping
 %   can be continued accurately over the poles to the opposite meridian.
 %
-%   See also TRANMERC_INV, UTMUPS_FWD, UTMUPS_INV, DEFAULTELLIPSOID.
+%   See also PROJDOC, TRANMERC_INV, UTMUPS_FWD, UTMUPS_INV,
+%     DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %

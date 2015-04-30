@@ -10,20 +10,20 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
 %   azi1 are given in degrees and s12 in meters.  The ellipsoid vector is
 %   of the form [a, e], where a is the equatorial radius in meters, e is
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by DEFAULTELLIPSOID) is used.  lat2,
+%   precisely, the value returned by defaultellipsoid) is used.  lat2,
 %   lon2, and azi2 give the position and forward azimuths at the end point
 %   in degrees.  The optional output S12 is the area between the great
-%   ellipse and the equator (in meters^2).  GEDOC gives an example and
-%   provides additional background information.  GEDOC also gives the
+%   ellipse and the equator (in meters^2).  gedoc gives an example and
+%   provides additional background information.  gedoc also gives the
 %   restrictions on the allowed ranges of the arguments.
 %
 %   When given a combination of scalar and array inputs, GERECKON behaves
 %   as though the inputs were expanded to match the size of the arrays.
-%   However, in the particular case where LAT1 and AZI1 are the same for
+%   However, in the particular case where lat1 and azi1 are the same for
 %   all the input points, they should be specified as scalars since this
 %   will considerably speed up the calculations.  (In particular a series
 %   of points along a single geodesic is efficiently computed by specifying
-%   an array for S12 only.)
+%   an array for s12 only.)
 %
 %   geodreckon solves the equivalent geodesic problem and usually this is
 %   preferable to using GERECKON.
