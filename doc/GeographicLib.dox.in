@@ -6978,7 +6978,11 @@ git repository for GeographicLib</a>.
    (released 2015-mm-dd)
    - Reminder to clean out install directories from pre-1.42
      installations.
-   - MATLAB function mgrs_inv now takes an optional center argument.
+   - Document conditions on \e a, \e f, <i>k</i><sub>UTM</sub>, and
+     <i>k</i><sub>UPS</sub> for assumptions in UTMUPS and MGRS classes
+     to hold.
+   - MATLAB function mgrs_inv now takes an optional \e center argument
+     and strips whitespace from both beginning and end of the string.
 
  - <a href="http://geographiclib.sf.net/1.42">Version 1.42</a>
    (released 2015-04-28)

@@ -40,8 +40,10 @@ set -e
 #   src/GeographicLib.pro
 # Need updating if underlying library changes
 #   python/setup.py
+#   matlab/geographiclib/Contents.m
 #   C/Fortran/Java/MATLAB libraries
 
+DATE=`date +%F`
 VERSION=1.43
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
@@ -194,8 +196,16 @@ cmake -D CMAKE_PREFIX_PATH=$TEMP/instc ..
 make
 
 cd $TEMP/instc/share/matlab/geographiclib
-rm -f $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip
-zip $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip *.m private/*.m
+mkdir $TEMP/matlab
+cp -pr $TEMP/instc/share/matlab/geographiclib $TEMP/matlab
+cd $TEMP/matlab/geographiclib
+rm -f $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip
+zip $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip *.m private/*.m
+cd $TEMP/matlab
+cp -p $TEMP/gita/geographiclib/geodesic.png .
+cp -p $TEMP/gita/geographiclib/matlab/geographiclib-blurb.txt .
+VERSION=$VERSION DATE=$DATE ROOT=$TEMP/matlab \
+       sh $DEVELSOURCE/tests/matlab-toolbox-config.sh
 
 cd $TEMP
 mkdir python-test
@@ -335,7 +345,6 @@ while read f;do
 done
 echo
 
-DATE=`date +%F`
 cat > $TEMP/tasks.txt <<EOF
 # deploy documentation
 test -d $WEBDIST/htdocs/$VERSION-pre &&
@@ -363,6 +372,13 @@ python setup.py sdist --formats gztar,zip upload
 # java release
 cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
+
+# matlab toolbox
+cd $TEMP/matlab
+matlab &
+mv $TEMP/matlab/geographiclib.mltbx $DEVELSOURCE/geographiclib_toolbox_$VERSION.mltbx
+chmod 644 $DEVELSOURCE/geographiclib_toolbox_$VERSION.*
+mv $DEVELSOURCE/geographiclib_toolbox_$VERSION.* $DEVELSOURCE/matlab-distrib
 
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib
