@@ -381,7 +381,7 @@ namespace GeographicLib {
     // possible to the center of the latitude band, (minrow + maxrow) / 2.
     // (Add maxutmSrow_ = 5 * utmrowperiod_ to ensure operand is positive.)
     irow = (irow - baserow + maxutmSrow_) % utmrowperiod_ + baserow;
-    if ( !(irow >= minrow && irow <= maxrow) ) {
+    if (!( irow >= minrow && irow <= maxrow )) {
       // Outside the safe bounds, so need to check...
       // Northing = 71e5 and 80e5 intersect band boundaries
       //   y = 71e5 in scol = 2 (x = [3e5,4e5] and x = [6e5,7e5])
@@ -404,6 +404,65 @@ namespace GeographicLib {
         irow = maxutmSrow_;
     }
     return irow;
+  }
+
+  void MGRS::Check() {
+    real lat, lon, x, y, t = tile_; int zone; bool northp;
+    UTMUPS::Reverse(31, true , 1*t,  0*t, lat, lon);
+    if (!( lon <   0 ))
+      throw GeographicErr("MGRS::Check: equator coverage failure");
+    UTMUPS::Reverse(31, true , 1*t, 95*t, lat, lon);
+    if (!( lat >  84 ))
+      throw GeographicErr("MGRS::Check: UTM doesn't reach latitude = 84");
+    UTMUPS::Reverse(31, false, 1*t, 10*t, lat, lon);
+    if (!( lat < -80 ))
+      throw GeographicErr("MGRS::Check: UTM doesn't reach latitude = -80");
+    UTMUPS::Forward(56,  3, zone, northp, x, y, 32);
+    if (!( x > 1*t ))
+      throw GeographicErr("MGRS::Check: Norway exception creates a gap");
+    UTMUPS::Forward(72, 21, zone, northp, x, y, 35);
+    if (!( x > 1*t ))
+      throw GeographicErr("MGRS::Check: Svalbard exception creates a gap");
+    UTMUPS::Reverse(0, true , 20*t, 13*t, lat, lon);
+    if (!( lat <  84 ))
+      throw GeographicErr("MGRS::Check: North UPS doesn't reach latitude = 84");
+    UTMUPS::Reverse(0, false, 20*t,  8*t, lat, lon);
+    if (!( lat > -80 ))
+      throw
+        GeographicErr("MGRS::Check: South UPS doesn't reach latitude = -80");
+    // Entries are [band, x, y] either side of the band boundaries.  Units for
+    // x, y are t = 100km.
+    const short tab[] = {
+      0, 5,  0,   0, 9,  0,     // south edge of band 0
+      0, 5,  8,   0, 9,  8,     // north edge of band 0
+      1, 5,  9,   1, 9,  9,     // south edge of band 1
+      1, 5, 17,   1, 9, 17,     // north edge of band 1
+      2, 5, 18,   2, 9, 18,     // etc.
+      2, 5, 26,   2, 9, 26,
+      3, 5, 27,   3, 9, 27,
+      3, 5, 35,   3, 9, 35,
+      4, 5, 36,   4, 9, 36,
+      4, 5, 44,   4, 9, 44,
+      5, 5, 45,   5, 9, 45,
+      5, 5, 53,   5, 9, 53,
+      6, 5, 54,   6, 9, 54,
+      6, 5, 62,   6, 9, 62,
+      7, 5, 63,   7, 9, 63,
+      7, 5, 70,   7, 7, 70,   7, 7, 71,   7, 9, 71, // y = 71t crosses boundary
+      8, 5, 71,   8, 6, 71,   8, 6, 72,   8, 9, 72, // between bands 7 and 8.
+      8, 5, 79,   8, 8, 79,   8, 8, 80,   8, 9, 80, // y = 80t crosses boundary
+      9, 5, 80,   9, 7, 80,   9, 7, 81,   9, 9, 81, // between bands 8 and 9.
+      9, 5, 95,   9, 9, 95,     // north edge of band 9
+    };
+    const int bandchecks = sizeof(tab) / (3 * sizeof(short));
+    for (int i = 0; i < bandchecks; ++i) {
+      UTMUPS::Reverse(38, true, tab[3*i+1]*t, tab[3*i+2]*t, lat, lon);
+      if (!( LatitudeBand(lat) == tab[3*i+0] ))
+        throw GeographicErr("MGRS::Check: Band error, b = " +
+                            Utility::str(tab[3*i+0]) + ", x = " +
+                            Utility::str(tab[3*i+1]) + "00km, y = " +
+                            Utility::str(tab[3*i+2]) + "00km");
+    }
   }
 
 } // namespace GeographicLib

@@ -6978,9 +6978,10 @@ git repository for GeographicLib</a>.
    (released 2015-mm-dd)
    - Reminder to clean out install directories from pre-1.42
      installations.
-   - Document conditions on \e a, \e f, <i>k</i><sub>UTM</sub>, and
-     <i>k</i><sub>UPS</sub> for assumptions in UTMUPS and MGRS classes
-     to hold.
+   - Add MGRS::Check() to verify (and document) that \e a, \e f,
+     <i>k</i><sub>UTM</sub>, and <i>k</i><sub>UPS</sub> are consistent
+     with the assumptions in the UTMUPS and MGRS classes.  This is
+     invoked with <code>GeoConvert --version</code>.
    - MATLAB function mgrs_inv now takes an optional \e center argument
      and strips whitespace from both beginning and end of the string.
 

@@ -50,6 +50,7 @@ _UpgradeReport_Files
 aclocal.m4
 archive
 cmake_install.cmake
+compile
 config.guess
 config.h
 config.h.in

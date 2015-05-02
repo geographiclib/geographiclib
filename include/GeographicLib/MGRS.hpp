@@ -343,6 +343,14 @@ namespace GeographicLib {
     static Math::real Flattening() { return UTMUPS::Flattening(); }
     ///@}
 
+    /**
+     * Perform some checks on the UTMUPS coordinates on this ellipsoid.  Throw
+     * an error if any of the assumptions made in the MGRS class is not true.
+     * This check needs to be carried out if the ellipsoid parameters (or the
+     * UTM/UPS scales) are ever changed.
+     **********************************************************************/
+    static void Check();
+
     /// \cond SKIP
     /**
      * <b>DEPRECATED</b>
