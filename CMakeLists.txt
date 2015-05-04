@@ -241,21 +241,20 @@ if (MSVC)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-  # check for C++11 support.  If available, the C++11 static_assert is
-  # used.  This flag is *not* propagated to clients that use
-  # GeographicLib.  However, this is of no consequence.  When the client
-  # code is being compiled (and the GeographicLib headers being
-  # included), a work-alike substitution is used.
+  # check for C++11 support.  This flag is *not* propagated to clients
+  # that use GeographicLib.  However, this is of no consequence.  When
+  # the client code is being compiled (and the GeographicLib headers
+  # being included), a work-alike substitution is used.
   include (CheckCXXCompilerFlag)
-  set (CXX11_FLAG "-std=c++11")
-  check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST)
-  if (NOT CXX11TEST)
-    set (CXX11_FLAG "-std=c++0x")
-    check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST)
-    if (NOT CXX11TEST)
-      unset (CXX11_FLAG)
+  foreach (_F 14 11 0x)
+    set (CXX11_FLAG "-std=c++${_F}")
+    set (_T CXX11TEST${_F})
+    check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
+    if (${_T})
+      break ()
     endif ()
-  endif ()
+    unset (CXX11_FLAG)
+  endforeach ()
   if (CXX11_FLAG)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
   endif ()

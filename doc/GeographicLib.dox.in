@@ -5366,9 +5366,9 @@ combination of the two.
 
 One such combination (scaling by \f$a^2/b\f$ in the \f$\hat z\f$
 direction, following by a radial scaling to the sphere) preserves the
-geographical latitude \f$\phi\f$.  This enables an great ellipse to be
+geographical latitude \f$\phi\f$.  This enables a great ellipse to be
 plotted on a chart merely by determining way points on the corresponding
-great circle and tranferring them directly on the chart.  In this
+great circle and transferring them directly on the chart.  In this
 exercise the flattening of the ellipsoid can be <i>ignored</i>!
 
 Bowring (1984), Williams (1996), Earle (2000, 2008) and Pallikaris &
@@ -6984,6 +6984,7 @@ git repository for GeographicLib</a>.
      invoked with <code>GeoConvert --version</code>.
    - MATLAB function mgrs_inv now takes an optional \e center argument
      and strips whitespace from both beginning and end of the string.
+   - Add Math::polyval.
 
  - <a href="http://geographiclib.sf.net/1.42">Version 1.42</a>
    (released 2015-04-28)

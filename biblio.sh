@@ -25,7 +25,9 @@ cat <<'EOF'
       href=".">geodesic-papers</a>. Please let me, Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>,
       know of errors, omissions, etc.  In particular, I'm interested to
-      learn of any cases where I have mis-translated the title of a paper.
+      learn of any cases where I have mis-translated the title of a
+      paper.  In addition, the links to Google Books occasionally get
+      out of date; let me know if this happens.
     </p>
     <p>This bibliography was started on 2009-06-06 (at
       <a href=" http://trac.osgeo.org/proj/wiki/GeodesicCalculations">

@@ -417,6 +417,23 @@ namespace GeographicLib {
     }
 
     /**
+     * Evaluate a polynomial.
+     *
+     * @tparam T the type of the arguments and returned value.
+     * @param[in] N the order of the polynomial; require that \e N &ge;
+     *   &minus;1.
+     * @param[in] p the coefficient array (of size \e N + 1), the coefficient
+     *   of the highest order term first.
+     * @param[in] x the variable.
+     * @return the value of the polynomial.
+     *
+     * Evaluate &sum;<sub><i>n</i>=0</sub><sup><i>N</i></sup>
+     * <i>p</i><sub><i>n</i></sub> <i>x</i><sup><i>N</i>&minus;<i>n</i></sup>
+     **********************************************************************/
+    template<typename T> static inline T polyval(int N, const T p[], T x)
+    { T v = 0; ++N; while (N--) v = fma(v, x, *p++); return v; }
+
+    /**
      * Normalize an angle (restricted input range).
      *
      * @tparam T the type of the argument and returned value.
