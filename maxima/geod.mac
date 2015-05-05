@@ -581,4 +581,4 @@ printcode()$
 dispseries()$
 /* Save the values needed for geodesic.mac  This is commented out
 here to avoid accidentally overwriting files in a user's directory. */
-/* save(concat("geod",maxpow,".lsp"), values, arrays)$ */
+/* (file:concat("geod",maxpow,".lsp"), save(file, values, arrays))$ */

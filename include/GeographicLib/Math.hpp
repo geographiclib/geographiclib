@@ -372,7 +372,7 @@ namespace GeographicLib {
      * @param[in] y
      * @param[in] z
      * @return <i>xy</i> + <i>z</i>, correctly rounded (on those platforms with
-     *   support for the fma instruction).
+     *   support for the <code>fma</code> instruction).
      **********************************************************************/
     template<typename T> static inline T fma(T x, T y, T z) {
 #if GEOGRAPHICLIB_CXX11_MATH
@@ -420,18 +420,19 @@ namespace GeographicLib {
      * Evaluate a polynomial.
      *
      * @tparam T the type of the arguments and returned value.
-     * @param[in] N the order of the polynomial; require that \e N &ge;
-     *   &minus;1.
-     * @param[in] p the coefficient array (of size \e N + 1), the coefficient
-     *   of the highest order term first.
+     * @param[in] N the order of the polynomial.
+     * @param[in] p the coefficient array (of size \e N + 1).
      * @param[in] x the variable.
      * @return the value of the polynomial.
      *
-     * Evaluate &sum;<sub><i>n</i>=0</sub><sup><i>N</i></sup>
-     * <i>p</i><sub><i>n</i></sub> <i>x</i><sup><i>N</i>&minus;<i>n</i></sup>
+     * Evaluate &sum;<sub><i>n</i>=0..<i>N</i></sub>
+     * <i>p</i><sub><i>n</i></sub> <i>x</i><sup><i>N</i>&minus;<i>n</i></sup>.
+     * Return 0 if \e N &lt; 0.  Return <i>p</i><sub><i>0</i></sub>, if \e N =
+     * 0 (even if \e x is infinite or a nan).  The evaluation uses Horner's
+     * method with Math::fma to minimize round-off errors.
      **********************************************************************/
     template<typename T> static inline T polyval(int N, const T p[], T x)
-    { T v = 0; ++N; while (N--) v = fma(v, x, *p++); return v; }
+    { T v = N < 0 ? 0 : *p++; while (--N >= 0) v = fma(v, x, *p++); return v; }
 
     /**
      * Normalize an angle (restricted input range).

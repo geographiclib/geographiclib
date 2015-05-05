@@ -27,6 +27,9 @@
 #include "GeoConvert.usage"
 
 int main(int argc, char* argv[]) {
+  const double c[] = {1.0, 3.0, -1.0};
+  std::cout << GeographicLib::Math::polyval(2, c, 1/3.0) << "\n";
+  return 0;
   try {
     using namespace GeographicLib;
     typedef Math::real real;
@@ -120,9 +123,8 @@ int main(int argc, char* argv[]) {
         if (++m == argc) return usage(1, true);
         cdelim = argv[m];
       } else if (arg == "--version") {
-        std::cout
-          << argv[0] << ": GeographicLib version "
-          << GEOGRAPHICLIB_VERSION_STRING << "\n";
+        std::cout << argv[0] << ": GeographicLib version "
+                  << GEOGRAPHICLIB_VERSION_STRING << "\n";
         MGRS::Check();
         return 0;
       } else

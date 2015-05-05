@@ -244,9 +244,10 @@ else ()
   # check for C++11 support.  This flag is *not* propagated to clients
   # that use GeographicLib.  However, this is of no consequence.  When
   # the client code is being compiled (and the GeographicLib headers
-  # being included), a work-alike substitution is used.
+  # being included), work-alike substitutions are used.
   include (CheckCXXCompilerFlag)
-  foreach (_F 14 11 0x)
+  # Not yet ready for c++14 (problem with MPFR C++)
+  foreach (_F 11 0x)
     set (CXX11_FLAG "-std=c++${_F}")
     set (_T CXX11TEST${_F})
     check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
@@ -283,7 +284,7 @@ endif ()
 # Check whether the C++11 static_assert macro is available.  This flag
 # is *not* propagated to clients that use GeographicLib.  However, this
 # is of no consequence.  When the client code is being compiled (and the
-# GeographicLib headers being included), a work-alike substitution are
+# GeographicLib headers being included), a work-alike substitution is
 # used.
 check_cxx_source_compiles (
   "#include <cmath>
