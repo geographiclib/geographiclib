@@ -1426,8 +1426,8 @@ namespace GeographicLib {
 #error "Bad value for GEOGRAPHICLIB_GEODESIC_ORDER"
 #endif
     int o = 0, k = 0;
-    for (int j = nC3_ - 1; j >= 0; --j) { // coeff of eps^j
-      int m = min(nC3_ - j - 1, j);       // order of polynomial in n
+    for (int j = nA3_ - 1; j >= 0; --j) { // coeff of eps^j
+      int m = min(nA3_ - j - 1, j);       // order of polynomial in n
       _A3x[k++] = Math::polyval(m, coeff + o, _n) / coeff[o + m + 1];
       o += m + 2;
     }

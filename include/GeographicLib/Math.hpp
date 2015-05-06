@@ -425,14 +425,14 @@ namespace GeographicLib {
      * @param[in] x the variable.
      * @return the value of the polynomial.
      *
-     * Evaluate &sum;<sub><i>n</i>=0..<i>N</i></sub>
+     * Evaluate <i>y</i> = &sum;<sub><i>n</i>=0..<i>N</i></sub>
      * <i>p</i><sub><i>n</i></sub> <i>x</i><sup><i>N</i>&minus;<i>n</i></sup>.
      * Return 0 if \e N &lt; 0.  Return <i>p</i><sub><i>0</i></sub>, if \e N =
      * 0 (even if \e x is infinite or a nan).  The evaluation uses Horner's
      * method with Math::fma to minimize round-off errors.
      **********************************************************************/
     template<typename T> static inline T polyval(int N, const T p[], T x)
-    { T v = N < 0 ? 0 : *p++; while (--N >= 0) v = fma(v, x, *p++); return v; }
+    { T y = N < 0 ? 0 : *p++; while (--N >= 0) y = fma(y, x, *p++); return y; }
 
     /**
      * Normalize an angle (restricted input range).
