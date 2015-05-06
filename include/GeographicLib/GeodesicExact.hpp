@@ -139,7 +139,6 @@ namespace GeographicLib {
       using std::ldexp;
       return ldexp(real(hi), 52) + lo;
     }
-    static const Math::real* rawC4coeff();
 
   public:
 

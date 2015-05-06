@@ -111,8 +111,8 @@ namespace GeographicLib {
     n /= 2;
     while (n--) {
       // Unroll loop x 2, so accumulators return to their original role
-      y1 = ar * y0 - y1 + *--c;
-      y0 = ar * y1 - y0 + *--c;
+      y1 = Math::fma(ar, y0, -y1) + *--c;
+      y0 = Math::fma(ar, y1, -y0) + *--c;
     }
     return cosx * (y0 - y1);    // cos(x) * (y0 - y1)
   }
@@ -825,41 +825,19 @@ namespace GeographicLib {
   }
 
   void GeodesicExact::C4f(real eps, real c[]) const {
-    // Evaluate C4 coeffs by Horner's method
+    // Evaluate C4 coeffs
     // Elements c[0] thru c[nC4_ - 1] are set
-    for (int j = nC4x_, k = nC4_; k; ) {
-      real t = 0;
-      for (int i = nC4_ - k + 1; i; --i)
-        t = eps * t + _C4x[--j];
-      c[--k] = t;
-    }
-
     real mult = 1;
-    for (int k = 1; k < nC4_; ) {
+    int o = 0;
+    for (int l = 0; l < nC4_; ++l) { // l is index of C4[l]
+      int m = nC4_ - l - 1;          // order of polynomial in eps
+      c[l] = mult * Math::polyval(m, _C4x + o, eps);
+      o += m + 1;
       mult *= eps;
-      c[k++] *= mult;
     }
-  }
-
-  // Geodesic.cpp contains explicit expressions for _C4x[l].  However this
-  // results in extraordinarily long compiler times with real = quad (7 mins)
-  // or mpreal (15 mins).  So instead we evaluate _C4x[l] by using the Horner
-  // recursion with the coefficient stored in an array by rawC4coeff.
-
-  void GeodesicExact::C4coeff() {
-    const real* cc = rawC4coeff();
-    // Coefficients for C[4,m]
-    for (int m = 0, k = 0, h = 0; m < nC4_; ++m) {
-      // eps^j coefficient
-      for (int j = m; j < nC4_; ++j) {
-        real t = 0;
-        // n^l coefficient
-        for (int l = nC4_ - j; l--;)
-          t = _n * t + cc[h++];
-        _C4x[k++] = t/cc[h++];
-      }
-    }
-    return;
+    // Post condition: o == nC4x_
+    if  (!(o == nC4x_))
+      throw GeographicErr("C4 misalignment");
   }
 
 } // namespace GeographicLib
