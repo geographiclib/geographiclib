@@ -27,9 +27,6 @@
 #include "GeoConvert.usage"
 
 int main(int argc, char* argv[]) {
-  const double c[] = {1.0, 3.0, -1.0};
-  std::cout << GeographicLib::Math::polyval(2, c, 1/3.0) << "\n";
-  return 0;
   try {
     using namespace GeographicLib;
     typedef Math::real real;

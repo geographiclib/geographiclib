@@ -7860,6 +7860,9 @@ namespace GeographicLib {
 #else
 #error "Bad value for GEOGRAPHICLIB_GEODESICEXACT_ORDER"
 #endif
+    GEOGRAPHICLIB_STATIC_ASSERT(sizeof(coeff) / sizeof(real) ==
+                                (nC4_ * (nC4_ + 1) * (nC4_ + 5)) / 6,
+                                "Coefficient array size mismatch in C4coeff");
     int o = 0, k = 0;
     for (int l = 0; l < nC4_; ++l) {        // l is index of C4[l]
       for (int j = nC4_ - 1; j >= l; --j) { // coeff of eps^j
@@ -7868,7 +7871,7 @@ namespace GeographicLib {
         o += m + 2;
       }
     }
-    // Post condition: o == sizeof(coeff) / sizeof(real)
+    // Post condition: o == sizeof(coeff) / sizeof(real) && k == nC4x_
     if  (!(o == sizeof(coeff) / sizeof(real) && k == nC4x_))
       throw GeographicErr("C4 misalignment");
   }

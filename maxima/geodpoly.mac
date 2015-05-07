@@ -1,6 +1,7 @@
 load("geod8.lsp")$
 taylordepth:5$
-simplenum:true;
+simplenum:true$
+count:0$
 jtaylor(expr,var1,var2,ord):=expand(subst([zz=1],
     ratdisrep(taylor(subst([var1=zz*var1,var2=zz*var2],expr),zz,0,ord))))$
 h(x):=if x=0 then 0 else block([n:0],while integerp(x/16) do (x:x/16,n:n+1),n);
@@ -20,6 +21,7 @@ then concat("real(",formatnum(x),")") else
 concat("reale(",formatnum(floor(x/2^52)),",",
   formatnum(x-floor(x/2^52)*2^52),")")$
 printterm(x,line):=block([lx:slength(x)+1,lline:slength(line)],
+  count:count+1,
   x:concat(x,if simplenum then ", " else ","),
   if lline=0 then line:concat("      ",x)
   else (if lx+lline<80 then line:concat(line,x)
@@ -47,13 +49,14 @@ value1(val):=block([tab2:"    ",linel:90,macro],
     print(concat("#if ", macro, "/2 == ",nn/2))
     else
     print(concat("#elif ", macro, "/2 == ",nn/2)),
+    count:0,
     print(concat(tab2,"static const real coeff[] = {")),
     block(
       [q:ratdisrep(taylor(ev(val),eps,0,nn)),line:""],
       q:subst(eps=sqrt(eps2),expand(q)),
       polyprint(q,eps2,string(val)),
       line:flushline(line)),
-    print(concat(tab2,"};"))),
+    print(concat(tab2,"};  // count = ",count))),
   print("#else
 #error", concat("\"Bad value for ", macro, "\""), "
 #endif
@@ -69,13 +72,14 @@ array1(array):=block([tab2:"    ",linel:90,macro],
     print(concat("#if ", macro, " == ",nn))
     else
     print(concat("#elif ", macro, " == ",nn)),
+    count:0,
     print(concat(tab2,"static const real coeff[] = {")),
     for m:0 thru nn do if part(arrayapply(array,[m]),0) # array then block(
       [q:ratdisrep(taylor(arrayapply(array,[m]),eps,0,nn)),line:""],
       q:subst(eps=sqrt(eps2),expand(q/eps^m)),
       polyprint(q,eps2,concat(array, "[", m, "]/eps^",m)),
       line:flushline(line)),
-    print(concat(tab2,"};"))),
+    print(concat(tab2,"};  // count = ",count))),
   print("#else
 #error", concat("\"Bad value for ", macro, "\""), "
 #endif
@@ -91,6 +95,7 @@ value2(val):=block([tab2:"    ",linel:90,macro],
     print(concat("#if ", macro, " == ",nn))
     else
     print(concat("#elif ", macro, " == ",nn)),
+    count:0,
     print(concat(tab2,"static const real coeff[] = {")),
     block(
       [q:jtaylor(ev(val),n,eps,nn-1),line:""],
@@ -98,7 +103,7 @@ value2(val):=block([tab2:"    ",linel:90,macro],
         [p:coeff(q,eps,j)],
         polyprint(p,n,concat(val, ", coeff of eps^",j))),
       line:flushline(line)),
-    print(concat(tab2,"};"))),
+    print(concat(tab2,"};  // count = ",count))),
   print("#else
 #error", concat("\"Bad value for ", macro, "\""), "
 #endif
@@ -114,6 +119,7 @@ array2(array):=block([tab2:"    ",linel:90,macro],
     print(concat("#if ", macro, " == ",nn))
     else
     print(concat("#elif ", macro, " == ",nn)),
+    count:0,
     print(concat(tab2,"static const real coeff[] = {")),
     for m:0 thru nn-1 do if part(arrayapply(array,[m]),0) # array then block(
       [q:jtaylor(arrayapply(array,[m]),n,eps,nn-1),line:""],
@@ -121,7 +127,7 @@ array2(array):=block([tab2:"    ",linel:90,macro],
         [p:coeff(q,eps,j)],
         polyprint(p,n,concat(array, "[", m ,"], coeff of eps^",j))),
       line:flushline(line)),
-    print(concat(tab2,"};"))),
+    print(concat(tab2,"};  // count = ",count))),
   print("#else
 #error", concat("\"Bad value for ", macro, "\""), "
 #endif
