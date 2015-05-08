@@ -248,6 +248,8 @@ namespace GeographicLib {
      *   180&deg;).
      * @param[in] swaplatlong if true assume longitude is given before latitude
      *   in the absence of hemisphere designators (default false).
+     * @param[in] unroll if false (the default) then reduce longitude to the
+     *   range [&minus;180&deg;, 180&deg;).
      * @exception GeographicErr if \e dmsa or \e dmsb is malformed.
      * @exception GeographicErr if \e dmsa and \e dmsb are both interpreted as
      *   latitudes.
@@ -265,7 +267,8 @@ namespace GeographicLib {
      * unchanged.
      **********************************************************************/
     static void DecodeLatLon(const std::string& dmsa, const std::string& dmsb,
-                             real& lat, real& lon, bool swaplatlong = false);
+                             real& lat, real& lon,
+                             bool swaplatlong = false, bool unroll = false);
 
     /**
      * Convert a string to an angle in degrees.

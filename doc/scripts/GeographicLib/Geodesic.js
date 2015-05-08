@@ -56,7 +56,7 @@ GeographicLib.GeodesicLine = {};
   g.CAP_ALL  = 0x1F;
   g.CAP_MASK = g.CAP_ALL;
   g.OUT_ALL  = 0x7F80;
-  g.OUT_MASK = 0xFF80;          // Includes LONG_NOWRAP
+  g.OUT_MASK = 0xFF80;          // Includes LONG_UNROLL
   g.NONE          = 0;
   g.LATITUDE      = 1<<7  | g.CAP_NONE;
   g.LONGITUDE     = 1<<8  | g.CAP_C3;
@@ -66,7 +66,8 @@ GeographicLib.GeodesicLine = {};
   g.REDUCEDLENGTH = 1<<12 | g.CAP_C1 | g.CAP_C2;
   g.GEODESICSCALE = 1<<13 | g.CAP_C1 | g.CAP_C2;
   g.AREA          = 1<<14 | g.CAP_C4;
-  g.LONG_NOWRAP   = 1<<15;
+  g.LONG_UNROLL   = 1<<15;
+  g.LONG_NOWRAP   = g.LONG_UNROLL;
   g.ALL           = g.OUT_ALL| g.CAP_ALL;
 
   g.SinCosSeries = function(sinp, sinx, cosx, c, n) {
@@ -95,12 +96,13 @@ GeographicLib.GeodesicLine = {};
     // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
     // is about 1000 times more resolution than we get with angles around 90
     // degrees.)  We use this to avoid having to deal with near singular
-    // cases when x is non-zero but tiny (e.g., 1.0e-200).
+    // cases when x is non-zero but tiny (e.g., 1.0e-200).  This also converts
+    // -0 to +0.
     var z = 1/16;
     var y = Math.abs(x);
     // The compiler mustn't "simplify" z - (z - y) to y
     y = y < z ? z - (z - y) : y;
-    return x < 0 ? -y : y;
+    return x < 0 ? 0 - y : y;
   };
   g.Astroid = function(x, y) {
     // Solve k^4+2*k^3-(x^2+y^2-1)*k^2-2*y^2*k-y^2 = 0 for positive

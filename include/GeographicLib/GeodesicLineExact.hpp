@@ -119,12 +119,16 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = GeodesicExact::AREA,
       /**
-       * Do not wrap \e lon2 in the direct calculation.
+       * Unroll \e lon2 in the direct calculation.  (This flag used to be
+       * called LONG_NOWRAP.)
        * @hideinitializer
        **********************************************************************/
-      LONG_NOWRAP = GeodesicExact::LONG_NOWRAP,
+      LONG_UNROLL = GeodesicExact::LONG_UNROLL,
+      /// \cond SKIP
+      LONG_NOWRAP   = LONG_UNROLL,
+      /// \endcond
       /**
-       * All capabilities, calculate everything.  (LONG_NOWRAP is not
+       * All capabilities, calculate everything.  (LONG_UNROLL is not
        * included in this mask.)
        * @hideinitializer
        **********************************************************************/
@@ -476,19 +480,20 @@ namespace GeographicLib {
      *   \e M12 and \e M21;
      * - \e outmask |= GeodesicLineExact::AREA for the area \e S12;
      * - \e outmask |= GeodesicLineExact::ALL for all of the above;
-     * - \e outmask |= GeodesicLineExact::LONG_NOWRAP stops the returned value
-     *   of \e lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
+     * - \e outmask |= GeodesicLineExact::LONG_UNROLL to unroll \e lon2 instead
+     *   of wrapping it into the range [&minus;180&deg;, 180&deg;).
      * .
      * Requesting a value which the GeodesicLineExact object is not capable of
      * computing is not an error; the corresponding argument will not be
      * altered.  Note, however, that the arc length is always computed and
      * returned as the function value.
      *
-     * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
-     * indicates how many times the geodesic wrapped around the ellipsoid.
-     * Because \e lon2 might be outside the normal allowed range for
-     * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
-     * Math::AngNormalize2 before using it in other GeographicLib calls.
+     * With the GeodesicLineExact::LONG_UNROLL bit set, the quantity \e lon2
+     * &minus; \e lon1 indicates how many times and in what sense the geodesic
+     * encircles the ellipsoid.  Because \e lon2 might be outside the normal
+     * allowed range for longitudes, [&minus;540&deg;, 540&deg;), be sure to
+     * normalize it with Math::AngNormalize2 before using it in other
+     * GeographicLib calls.
      **********************************************************************/
     Math::real GenPosition(bool arcmode, real s12_a12, unsigned outmask,
                            real& lat2, real& lon2, real& azi2,

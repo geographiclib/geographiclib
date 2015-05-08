@@ -51,6 +51,7 @@
  *   GeographicLib.Geodesic.REDUCEDLENGTH
  *   GeographicLib.Geodesic.GEODESICSCALE
  *   GeographicLib.Geodesic.AREA
+ *   GeographicLib.Geodesic.LONG_UNROLL
  *   GeographicLib.Geodesic.ALL
  *
  **********************************************************************

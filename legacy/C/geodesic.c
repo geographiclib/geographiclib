@@ -171,7 +171,7 @@ static real AngRound(real x) {
   volatile real y = fabs(x);
   /* The compiler mustn't "simplify" z - (z - y) to y */
   y = y < z ? z - (z - y) : y;
-  return x < 0 ? -y : y;
+  return x < 0 ? 0 - y : y;
 }
 
 static void A3coeff(struct geod_geodesic* g);
@@ -452,12 +452,14 @@ real geod_genposition(const struct geod_geodesicline* l,
     s12 = flags & GEOD_ARCMODE ? l->b * ((1 + l->A1m1) * sig12 + AB1) : s12_a12;
 
   if (outmask & GEOD_LONGITUDE) {
+    int E = l->salp0 < 0 ? -1 : 1; /* east or west going? */
     /* tan(omg2) = sin(alp0) * tan(sig2) */
     somg2 = l->salp0 * ssig2; comg2 = csig2;  /* No need to normalize */
     /* omg12 = omg2 - omg1 */
-    omg12 = flags & GEOD_LONG_NOWRAP ? sig12
-      - (atan2(ssig2, csig2) - atan2(l->ssig1, l->csig1))
-      + (atan2(somg2, comg2) - atan2(l->somg1, l->comg1))
+    omg12 = flags & GEOD_LONG_UNROLL
+      ? E * (sig12
+             - (atan2(    ssig2, csig2) - atan2(    l->ssig1, l->csig1))
+             + (atan2(E * somg2, comg2) - atan2(E * l->somg1, l->comg1)))
       : atan2(somg2 * l->comg1 - comg2 * l->somg1,
               comg2 * l->comg1 + somg2 * l->somg1);
     lam12 = omg12 + l->A3c *
@@ -466,7 +468,7 @@ real geod_genposition(const struct geod_geodesicline* l,
     lon12 = lam12 / degree;
     /* Use AngNormalize2 because longitude might have wrapped multiple
      * times. */
-    lon2 = flags & GEOD_LONG_NOWRAP ? l->lon1 + lon12 :
+    lon2 = flags & GEOD_LONG_UNROLL ? l->lon1 + lon12 :
       AngNormalize(AngNormalize(l->lon1) + AngNormalize2(lon12));
   }
 
@@ -1594,7 +1596,7 @@ void geod_polygon_addedge(const struct geod_geodesic* g,
                           real azi, real s) {
   if (p->num) {                 /* Do nothing is num is zero */
     real lat, lon, S12;
-    geod_gendirect(g, p->lat, p->lon, azi, GEOD_LONG_NOWRAP, s,
+    geod_gendirect(g, p->lat, p->lon, azi, GEOD_LONG_UNROLL, s,
                    &lat, &lon, 0,
                    0, 0, 0, 0, p->polyline ? 0 : &S12);
     accadd(p->P, s);
@@ -1731,7 +1733,7 @@ unsigned geod_polygon_testedge(const struct geod_geodesic* g,
   crossings = p->crossings;
   {
     real lat, lon, s12, S12;
-    geod_gendirect(g, p->lat, p->lon, azi, GEOD_LONG_NOWRAP, s,
+    geod_gendirect(g, p->lat, p->lon, azi, GEOD_LONG_UNROLL, s,
                    &lat, &lon, 0,
                    0, 0, 0, 0, &S12);
     tempsum += S12;

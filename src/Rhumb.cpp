@@ -331,7 +331,7 @@ namespace GeographicLib {
       if (outmask & AREA)
         S12 = _rh._c2 * lon2x *
           _rh.MeanSinXi(_psi1 * Math::degree(), psi2 * Math::degree());
-      lon2x = outmask & LONG_NOWRAP ? _lon1 + lon2x :
+      lon2x = outmask & LONG_UNROLL ? _lon1 + lon2x :
         Math::AngNormalize2(Math::AngNormalize(_lon1) + lon2x);
     } else {
       // Reduce to the interval [-180, 180)

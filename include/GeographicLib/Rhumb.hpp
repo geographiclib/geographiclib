@@ -218,12 +218,16 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = 1U<<14,
       /**
-       * Do not wrap the \e lon2 in the direct calculation.
+       * Unroll \e lon2 in the direct calculation.  (This flag used to be
+       * called LONG_NOWRAP.)
        * @hideinitializer
        **********************************************************************/
-      LONG_NOWRAP   = 1U<<15,
+      LONG_UNROLL   = 1U<<15,
+      /// \cond SKIP
+      LONG_NOWRAP   = LONG_UNROLL,
+      /// \endcond
       /**
-       * Calculate everything.  (LONG_NOWRAP is not included in this mask.)
+       * Calculate everything.  (LONG_UNROLL is not included in this mask.)
        * @hideinitializer
        **********************************************************************/
       ALL           = 0x7F80U,
@@ -304,14 +308,15 @@ namespace GeographicLib {
      * - \e outmask |= Rhumb::LONGITUDE for the latitude \e lon2;
      * - \e outmask |= Rhumb::AREA for the area \e S12;
      * - \e outmask |= Rhumb::ALL for all of the above;
-     * - \e outmask |= Rhumb::LONG_NOWRAP stops the returned value of \e
-     *   lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
+     * - \e outmask |= Rhumb::LONG_UNROLL to unroll \e lon2 instead of wrapping
+     *   it into the range [&minus;180&deg;, 180&deg;).
      * .
-     * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
-     * indicates how many times the rhumb line wrapped around the ellipsoid.
-     * Because \e lon2 might be outside the normal allowed range for
-     * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
-     * Math::AngNormalize2 before using it in other GeographicLib calls.
+     * With the Rhumb::LONG_UNROLL bit set, the quantity \e lon2 &minus;
+     * \e lon1 indicates how many times and in what sense the rhumb line
+     * encircles the ellipsoid.  Because \e lon2 might be outside the normal
+     * allowed range for longitudes, [&minus;540&deg;, 540&deg;), be sure to
+     * normalize it with Math::AngNormalize2 before using it in other
+     * GeographicLib calls.
      **********************************************************************/
     void GenDirect(real lat1, real lon1, real azi12, real s12, unsigned outmask,
                    real& lat2, real& lon2, real& S12) const;
@@ -451,6 +456,9 @@ namespace GeographicLib {
               bool exact);
   public:
 
+    /**
+     * This is a duplication of Rhumb::mask.
+     **********************************************************************/
     enum mask {
       /**
        * No output.
@@ -483,12 +491,16 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = Rhumb::AREA,
       /**
-       * Do wrap the \e lon2 in the direct calculation.
+       * Unroll \e lon2 in the direct calculation.  (This flag used to be
+       * called LONG_NOWRAP.)
        * @hideinitializer
        **********************************************************************/
-      LONG_NOWRAP   = Rhumb::LONG_NOWRAP,
+      LONG_UNROLL   = Rhumb::LONG_UNROLL,
+      /// \cond SKIP
+      LONG_NOWRAP   = LONG_UNROLL,
+      /// \endcond
       /**
-       * Calculate everything.  (LONG_NOWRAP is not included in this mask.)
+       * Calculate everything.  (LONG_UNROLL is not included in this mask.)
        * @hideinitializer
        **********************************************************************/
       ALL           = Rhumb::ALL,
@@ -530,25 +542,26 @@ namespace GeographicLib {
      *
      * @param[in] s12 distance between point 1 and point 2 (meters); it can be
      *   negative.
-     * @param[in] outmask a bitor'ed combination of Rhumb::mask values
+     * @param[in] outmask a bitor'ed combination of RhumbLine::mask values
      *   specifying which of the following parameters should be set.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees).
      * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
      *
-     * The Rhumb::mask values possible for \e outmask are
-     * - \e outmask |= Rhumb::LATITUDE for the latitude \e lat2;
-     * - \e outmask |= Rhumb::LONGITUDE for the latitude \e lon2;
-     * - \e outmask |= Rhumb::AREA for the area \e S12;
-     * - \e outmask |= Rhumb::ALL for all of the above;
-     * - \e outmask |= Rhumb::LONG_NOWRAP stops the returned value of \e
-     *   lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
+     * The RhumbLine::mask values possible for \e outmask are
+     * - \e outmask |= RhumbLine::LATITUDE for the latitude \e lat2;
+     * - \e outmask |= RhumbLine::LONGITUDE for the latitude \e lon2;
+     * - \e outmask |= RhumbLine::AREA for the area \e S12;
+     * - \e outmask |= RhumbLine::ALL for all of the above;
+     * - \e outmask |= RhumbLine::LONG_UNROLL to unroll \e lon2 instead of
+     *   wrapping it into the range [&minus;180&deg;, 180&deg;).
      * .
-     * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
-     * indicates how many times the rhumb line wrapped around the ellipsoid.
-     * Because \e lon2 might be outside the normal allowed range for
-     * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
-     * Math::AngNormalize2 before using it in other GeographicLib calls.
+     * With the RhumbLine::LONG_UNROLL bit set, the quantity \e lon2 &minus; \e
+     * lon1 indicates how many times and in what sense the rhumb line encircles
+     * the ellipsoid.  Because \e lon2 might be outside the normal allowed
+     * range for longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize
+     * it with Math::AngNormalize2 before using it in other GeographicLib
+     * calls.
      *
      * If \e s12 is large enough that the rhumb line crosses a pole, the
      * longitude of point 2 is indeterminate (a NaN is returned for \e lon2 and

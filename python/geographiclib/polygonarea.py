@@ -57,7 +57,7 @@ class PolygonArea(object):
     self._mask = (Geodesic.LATITUDE | Geodesic.LONGITUDE |
                   Geodesic.DISTANCE |
                   (Geodesic.EMPTY if self._polyline else
-                   Geodesic.AREA | Geodesic.LONG_NOWRAP))
+                   Geodesic.AREA | Geodesic.LONG_UNROLL))
     if not self._polyline: self._areasum = Accumulator()
     self._perimetersum = Accumulator()
     self.Clear()

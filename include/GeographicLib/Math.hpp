@@ -494,7 +494,7 @@ namespace GeographicLib {
      * degrees.  (This is about 1000 times more resolution than we get with
      * angles around 90&deg;.)  We use this to avoid having to deal with near
      * singular cases when \e x is non-zero but tiny (e.g.,
-     * 10<sup>&minus;200</sup>).
+     * 10<sup>&minus;200</sup>).  This also converts -0 to +0.
      **********************************************************************/
     template<typename T> static inline T AngRound(T x) {
       using std::abs;
@@ -502,7 +502,7 @@ namespace GeographicLib {
       GEOGRAPHICLIB_VOLATILE T y = abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
-      return x < 0 ? -y : y;
+      return x < 0 ? 0 - y : y;
     }
 
     /**
@@ -551,6 +551,7 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static inline T atan2d(T y, T x) {
       using std::atan2;
+      // The "0 -" converts -0 to +0.
       return 0 - atan2(-y, x) / Math::degree();
     }
 

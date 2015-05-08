@@ -113,7 +113,7 @@
  * http://geographiclib.sourceforge.net/
  *
  * This library was distributed with
- * <a href="../index.html">GeographicLib</a> 1.42.
+ * <a href="../index.html">GeographicLib</a> 1.43.
  **********************************************************************/
 
 #if !defined(GEODESIC_H)
@@ -406,8 +406,7 @@ extern "C" {
    * @param[in] azi1 azimuth at point 1 (degrees).
    * @param[in] flags bitor'ed combination of geod_flags(); \e flags &
    *   GEOD_ARCMODE determines the meaning of \e s12_a12 and \e flags &
-   *   GEOD_LONG_NOWRAP prevents the value of \e lon2 being wrapped into
-   *   the range [&minus;180&deg;, 180&deg;).
+   *   GEOD_LONG_UNROLL "unrolls" \e lon2.
    * @param[in] s12_a12 if \e flags & GEOD_ARCMODE is 0, this is the distance
    *   between point 1 and point 2 (meters); otherwise it is the arc length
    *   between point 1 and point 2 (degrees); it can be negative.
@@ -432,12 +431,12 @@ extern "C" {
    * "return" arguments \e plat2, etc., may be replaced by 0, if you do not
    * need some quantities computed.
    *
-   * With \e flags & GEOD_LONG_NOWRAP bit set, the quantity \e lon2 &minus;
-   * \e lon1 indicates how many times the geodesic wrapped around the
-   * ellipsoid.  Because \e lon2 might be outside the normal allowed range
-   * for longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it,
-   * e.g., with fmod(\e lon2, 360.0) before using it in subsequent
-   * calculations
+   * With \e flags & GEOD_LONG_UNROLL bit set, the longitude is "unrolled" so
+   * that the quantity \e lon2 &minus; \e lon1 indicates how many times and in
+   * what sense the geodesic encircles the ellipsoid.  Because \e lon2 might be
+   * outside the normal allowed range for longitudes, [&minus;540&deg;,
+   * 540&deg;), be sure to normalize it, e.g., with fmod(\e lon2, 360.0) before
+   * using it in subsequent calculations
    **********************************************************************/
   double geod_gendirect(const struct geod_geodesic* g,
                         double lat1, double lon1, double azi1,
@@ -487,10 +486,8 @@ extern "C" {
    *   geodesic line.
    * @param[in] flags bitor'ed combination of geod_flags(); \e flags &
    *   GEOD_ARCMODE determines the meaning of \e s12_a12 and \e flags &
-   *   GEOD_LONG_NOWRAP prevents the value of \e lon2 being wrapped into
-   *   the range [&minus;180&deg;, 180&deg;); if \e flags & GEOD_ARCMODE is
-   *   0, then \e l must have been initialized with \e caps |=
-   *   GEOD_DISTANCE_IN.
+   *   GEOD_LONG_UNROLL "unrolls" \e lon2; if \e flags & GEOD_ARCMODE is 0,
+   *   then \e l must have been initialized with \e caps |= GEOD_DISTANCE_IN.
    * @param[in] s12_a12 if \e flags & GEOD_ARCMODE is 0, this is the
    *   distance between point 1 and point 2 (meters); otherwise it is the
    *   arc length between point 1 and point 2 (degrees); it can be
@@ -522,12 +519,12 @@ extern "C" {
    * computed.  Requesting a value which \e l is not capable of computing
    * is not an error; the corresponding argument will not be altered.
    *
-   * With \e flags & GEOD_LONG_NOWRAP bit set, the quantity \e lon2 &minus;
-   * \e lon1 indicates how many times the geodesic wrapped around the
-   * ellipsoid.  Because \e lon2 might be outside the normal allowed range
-   * for longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it,
-   * e.g., with fmod(\e lon2, 360.0) before using it in subsequent
-   * calculations
+   * With \e flags & GEOD_LONG_UNROLL bit set, the longitude is "unrolled" so
+   * that the quantity \e lon2 &minus; \e lon1 indicates how many times the
+   * geodesic wrapped around the ellipsoid.  Because \e lon2 might be outside
+   * the normal allowed range for longitudes, [&minus;540&deg;, 540&deg;), be
+   * sure to normalize it, e.g., with fmod(\e lon2, 360.0) before using it in
+   * subsequent calculations
    *
    * Example, compute way points between JFK and Singapore Changi Airport
    * using geod_genposition().  In this example, the points are evenly space in
@@ -794,7 +791,10 @@ extern "C" {
   enum geod_flags {
     GEOD_NOFLAGS      = 0U,     /**< No flags */
     GEOD_ARCMODE      = 1U<<0,  /**< Position given in terms of arc distance */
-    GEOD_LONG_NOWRAP  = 1U<<15  /**< Don't wrap longitude */
+    GEOD_LONG_UNROLL  = 1U<<15, /**< Unroll the longitude */
+    /**< @cond SKIP */
+    GEOD_LONG_NOWRAP  = GEOD_LONG_UNROLL /* For backward compatibility only */
+    /**< @endcond */
   };
 
 #if defined(__cplusplus)

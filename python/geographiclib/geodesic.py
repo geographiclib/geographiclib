@@ -102,7 +102,8 @@ class Geodesic(object):
   REDUCEDLENGTH = GeodesicCapability.REDUCEDLENGTH
   GEODESICSCALE = GeodesicCapability.GEODESICSCALE
   AREA          = GeodesicCapability.AREA
-  LONG_NOWRAP   = GeodesicCapability.LONG_NOWRAP
+  LONG_UNROLL   = GeodesicCapability.LONG_UNROLL
+  LONG_NOWRAP   = GeodesicCapability.LONG_UNROLL
   ALL           = GeodesicCapability.ALL
 
   def SinCosSeries(sinp, sinx, cosx, c, n):
@@ -141,7 +142,7 @@ class Geodesic(object):
     y = abs(x)
     # The compiler mustn't "simplify" z - (z - y) to y
     if y < z: y = z - (z - y)
-    return -y if x < 0 else y
+    return 0 - y if x < 0 else y
   AngRound = staticmethod(AngRound)
 
   def SinCosNorm(sinx, cosx):
@@ -1054,9 +1055,9 @@ class Geodesic(object):
 
     outmask determines which fields get included and if outmask is
     omitted, then only the basic geodesic fields are computed.  The
-    LONG_NOWRAP bit prevents the longitudes being reduced to the range
-    [-180,180).  The mask is an or'ed combination of the following
-    values
+    LONG_UNROLL bit unrolls the longitudes (instead of reducing them to
+    the range [-180,180)).  The mask is an or'ed combination of the
+    following values
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -1065,11 +1066,11 @@ class Geodesic(object):
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.ALL
-      Geodesic.LONG_NOWRAP
+      Geodesic.LONG_UNROLL
 
     """
 
-    if outmask & Geodesic.LONG_NOWRAP:
+    if outmask & Geodesic.LONG_UNROLL:
       Geodesic.CheckPosition(lat1, lon1)
     else:
       lon1 = Geodesic.CheckPosition(lat1, lon1)
@@ -1111,9 +1112,9 @@ class Geodesic(object):
 
     outmask determines which fields get included and if outmask is
     omitted, then only the basic geodesic fields are computed.  The
-    LONG_NOWRAP bit prevents the longitudes being reduced to the range
-    [-180,180).  The mask is an or'ed combination of the following
-    values
+    LONG_UNROLL bit unrolls the longitudes (instead of reducing them to
+    the range [-180,180)).  The mask is an or'ed combination of the
+    following values
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -1123,11 +1124,11 @@ class Geodesic(object):
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.ALL
-      Geodesic.LONG_NOWRAP
+      Geodesic.LONG_UNROLL
 
     """
 
-    if outmask & Geodesic.LONG_NOWRAP:
+    if outmask & Geodesic.LONG_UNROLL:
       Geodesic.CheckPosition(lat1, lon1)
     else:
       lon1 = Geodesic.CheckPosition(lat1, lon1)

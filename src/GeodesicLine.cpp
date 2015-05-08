@@ -38,15 +38,15 @@ namespace GeographicLib {
     : tiny_(g.tiny_)
     , _lat1(lat1)
     , _lon1(lon1)
-    // Guard against underflow in salp0
+    // Guard against underflow in salp0.  Also -0 is converted to +0.
     , _azi1(Math::AngRound(Math::AngNormalize(azi1)))
     , _a(g._a)
     , _f(g._f)
     , _b(g._b)
     , _c2(g._c2)
     , _f1(g._f1)
-      // Always allow latitude and azimuth
-    , _caps(caps | LATITUDE | AZIMUTH)
+      // Always allow latitude and azimuth and unrolling of longitude
+    , _caps(caps | LATITUDE | AZIMUTH | LONG_UNROLL)
   {
     real alp1 = _azi1 * Math::degree();
     // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
@@ -211,10 +211,12 @@ namespace GeographicLib {
     if (outmask & LONGITUDE) {
       // tan(omg2) = sin(alp0) * tan(sig2)
       real somg2 = _salp0 * ssig2, comg2 = csig2;  // No need to normalize
+      int E = _salp0 < 0 ? -1 : 1;                 // east-going?
       // omg12 = omg2 - omg1
-      real omg12 = outmask & LONG_NOWRAP ? sig12
-        - (atan2(ssig2, csig2) - atan2(_ssig1, _csig1))
-        + (atan2(somg2, comg2) - atan2(_somg1, _comg1))
+      real omg12 = outmask & LONG_UNROLL
+        ? E * (sig12
+               - (atan2(    ssig2, csig2) - atan2(    _ssig1, _csig1))
+               + (atan2(E * somg2, comg2) - atan2(E * _somg1, _comg1)))
         : atan2(somg2 * _comg1 - comg2 * _somg1,
                 comg2 * _comg1 + somg2 * _somg1);
       real lam12 = omg12 + _A3c *
@@ -223,7 +225,7 @@ namespace GeographicLib {
       real lon12 = lam12 / Math::degree();
       // Use Math::AngNormalize2 because longitude might have wrapped
       // multiple times.
-      lon2 = outmask & LONG_NOWRAP ? _lon1 + lon12 :
+      lon2 = outmask & LONG_UNROLL ? _lon1 + lon12 :
         Math::AngNormalize(Math::AngNormalize(_lon1) +
                            Math::AngNormalize2(lon12));
     }
@@ -232,7 +234,6 @@ namespace GeographicLib {
       lat2 = atan2(sbet2, _f1 * cbet2) / Math::degree();
 
     if (outmask & AZIMUTH)
-      // minus signs give range [-180, 180). 0- converts -0 to +0.
       azi2 = Math::atan2d(salp2, calp2);
 
     if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {

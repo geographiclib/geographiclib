@@ -187,7 +187,7 @@
       }
     }
 
-    var omg12, lam12, lon12;
+    var omg12, lam12, lon12, E;
     var sbet2, cbet2, somg2, comg2, salp2, calp2;
     // sig2 = sig1 + sig12
     ssig2 = this._ssig1 * csig12 + this._csig1 * ssig12;
@@ -214,10 +214,14 @@
     if (outmask & g.LONGITUDE) {
       // tan(omg2) = sin(alp0) * tan(sig2)
       somg2 = this._salp0 * ssig2; comg2 = csig2; // No need to normalize
+      E = this._salp0 < 0 ? -1 : 1;
       // omg12 = omg2 - omg1
-      omg12 = outmask & g.LONG_NOWRAP ? sig12 -
-        (Math.atan2(ssig2, csig2) - Math.atan2(this._ssig1, this._csig1)) +
-        (Math.atan2(somg2, comg2) - Math.atan2(this._somg1, this._comg1)) :
+      omg12 = outmask & g.LONG_UNROLL ?
+        E * (sig12 -
+             (Math.atan2(ssig2, csig2) -
+              Math.atan2(this._ssig1, this._csig1)) +
+             (Math.atan2(E * somg2, comg2) -
+              Math.atan2(E * this._somg1, this._comg1))) :
         Math.atan2(somg2 * this._comg1 - comg2 * this._somg1,
                      comg2 * this._comg1 + somg2 * this._somg1);
       lam12 = omg12 + this._A3c *
@@ -226,7 +230,7 @@
       lon12 = lam12 / m.degree;
       // Use AngNormalize2 because longitude might have wrapped multiple times.
       lon12 = m.AngNormalize2(lon12);
-      vals.lon2 = outmask & g.LONG_NOWRAP ? this._lon1 + lon12 :
+      vals.lon2 = outmask & g.LONG_UNROLL ? this._lon1 + lon12 :
         m.AngNormalize(m.AngNormalize(this._lon1) + m.AngNormalize2(lon12));
     }
 

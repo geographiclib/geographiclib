@@ -20,7 +20,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %
 %   flags (default 0) is a combination of 2 flags:
 %      arcmode = bitand(flags, 1)
-%      long_nowrap = bitand(flags, 2)
+%      long_unroll = bitand(flags, 2)
 %
 %   If arcmode is unset (the default), then, in the long form of the call,
 %   the input argument s12_a12 is the distance s12 (in meters) and the
@@ -30,12 +30,12 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %   auxiliary sphere a12 (in degrees) and the corresponding distance s12 is
 %   returned in the final output variable a12_s12 (in meters).
 %
-%   If long_nowrap is unset (the default), then the value lon2 is in the
-%   range [-180,180).  If long_nowrap is set, the quantity lon2 - lon1
-%   indicates how many times the geodesic wrapped around the ellipsoid.
-%   Because lon2 might be outside the normal allowed range for longitudes,
-%   [-540, 540), be sure to normalize it with rem(lon2, 360) before using
-%   it in other calls.
+%   If long_unroll is unset (the default), then the value lon2 is in the
+%   range [-180,180).  If long_unroll is set, the longitude is "unrolled"
+%   so that the quantity lon2 - lon1 indicates how many times and in what
+%   sense the geodesic encircles the ellipsoid.  Because lon2 might be
+%   outside the normal allowed range for longitudes, [-540, 540), be sure
+%   to normalize it with rem(lon2, 360) before using it in other calls.
 %
 %   The two optional arguments, ellipsoid and flags, may be given in any
 %   order and either or both may be omitted.
@@ -110,7 +110,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
     error('flags must be a scalar')
   end
   arcmode = bitand(flags, 1);
-  long_nowrap = bitand(flags, 2);
+  long_unroll = bitand(flags, 2);
 
   degree = pi/180;
   tiny = sqrt(realmin);
@@ -201,10 +201,11 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   cbet2(cbet2 == 0) = tiny;
   somg2 = salp0 .* ssig2; comg2 = csig2;
   salp2 = salp0; calp2 = calp0 .* csig2;
-  if long_nowrap
-    omg12 = sig12 ...
-            - (atan2(ssig2, csig2) - atan2(ssig1, csig1)) ...
-            + (atan2(somg2, comg2) - atan2(somg1, comg1));
+  if long_unroll
+    E = 1 - 2*(salp0 < 0);
+    omg12 = E .* (sig12 ...
+                  - (atan2(   ssig2, csig2) - atan2(   ssig1, csig1)) ...
+                  + (atan2(E.*somg2, comg2) - atan2(E.*somg1, comg1)));
   else
     omg12 = atan2(somg2 .* comg1 - comg2 .* somg1, ...
                   comg2 .* comg1 + somg2 .* somg1);
@@ -212,7 +213,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   lam12 = omg12 + ...
           A3c .* ( sig12 + (SinCosSeries(true, ssig2, csig2, C3a) - B31));
   lon12 = lam12 / degree;
-  if long_nowrap
+  if long_unroll
     lon2 = lon1 + lon12;
   else
     lon12 = AngNormalize2(lon12);

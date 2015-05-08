@@ -239,12 +239,13 @@ public class Geodesic {
     // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
     // is about 1000 times more resolution than we get with angles around 90
     // degrees.)  We use this to avoid having to deal with near singular
-    // cases when x is non-zero but tiny (e.g., 1.0e-200).
+    // cases when x is non-zero but tiny (e.g., 1.0e-200).  This also converts
+    // -0 to +0.
     final double z = 1/16.0;
     double y = Math.abs(x);
     // The compiler mustn't "simplify" z - (z - y) to y
     y = y < z ? z - (z - y) : y;
-    return x < 0 ? -y : y;
+    return x < 0 ? 0 - y : y;
   }
 
   protected static Pair SinCosNorm(double sinx, double cosx) {
@@ -354,7 +355,7 @@ public class Geodesic {
    * <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>s12</i>, and <i>a12</i> are
    * always included in the returned result.  The value of <i>lon2</i> returned
    * is in the range [&minus;180&deg;, 180&deg;), unless the <i>outmask</i>
-   * includes the {@link GeodesicMask#LONG_NOWRAP} flag.
+   * includes the {@link GeodesicMask#LONG_UNROLL} flag.
    **********************************************************************/
   public GeodesicData Direct(double lat1, double lon1,
                              double azi1, double s12, int outmask) {
@@ -411,7 +412,7 @@ public class Geodesic {
    * <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, and <i>a12</i> are always included
    * in the returned result.  The value of <i>lon2</i> returned is in the range
    * [&minus;180&deg;, 180&deg;), unless the <i>outmask</i> includes the {@link
-   * GeodesicMask#LONG_NOWRAP} flag.
+   * GeodesicMask#LONG_UNROLL} flag.
    **********************************************************************/
   public GeodesicData ArcDirect(double lat1, double lon1,
                                 double azi1, double a12, int outmask) {
@@ -456,8 +457,8 @@ public class Geodesic {
    * <li>
    *   <i>outmask</i> |= GeodesicMask.ALL for all of the above;
    * <li>
-   *   <i>outmask</i> |= GeodesicMask.LONG_NOWRAP to stop <i>lon2</i> from
-   *   being reduced to the range [&minus;180&deg;, 180&deg;).
+   *   <i>outmask</i> |= GeodesicMask.LONG_UNROLL to unroll <i>lon2</i>
+   *   (instead of reducing it to the range [&minus;180&deg;, 180&deg;)).
    * </ul>
    * <p>
    * The function value <i>a12</i> is always computed and returned and this

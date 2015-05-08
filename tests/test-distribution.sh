@@ -41,7 +41,10 @@ set -e
 # Need updating if underlying library changes
 #   python/setup.py
 #   matlab/geographiclib/Contents.m
-#   C/Fortran/Java/MATLAB libraries
+#   legacy/C/geodesic.h
+#   legacy/Fortran/geodesic.for
+#   java/pom.xml java/*/pom.xml
+#   java/src/main/java/net/sf/geographiclib/package-info.java
 
 DATE=`date +%F`
 VERSION=1.43

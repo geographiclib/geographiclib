@@ -208,13 +208,14 @@ class GeodesicLine(object):
     if outmask & Geodesic.LONGITUDE:
       # tan(omg2) = sin(alp0) * tan(sig2)
       somg2 = self._salp0 * ssig2; comg2 = csig2 # No need to normalize
+      E = -1 if self._salp0 < 0 else 1           # East or west going?
       # omg12 = omg2 - omg1
-      omg12 = (sig12
-               - (math.atan2(ssig2, csig2) -
-                  math.atan2(self._ssig1, self._csig1))
-               + (math.atan2(somg2, comg2) -
-                  math.atan2(self._somg1, self._comg1))
-               if outmask & Geodesic.LONG_NOWRAP
+      omg12 = (E * (sig12
+                    - (math.atan2(          ssig2,       csig2) -
+                       math.atan2(    self._ssig1, self._csig1))
+                    + (math.atan2(E *       somg2,       comg2) -
+                       math.atan2(E * self._somg1, self._comg1)))
+               if outmask & Geodesic.LONG_UNROLL
                else math.atan2(somg2 * self._comg1 - comg2 * self._somg1,
                                comg2 * self._comg1 + somg2 * self._somg1))
       lam12 = omg12 + self._A3c * (
@@ -224,7 +225,7 @@ class GeodesicLine(object):
       lon12 = lam12 / Math.degree
       # Use Math.AngNormalize2 because longitude might have wrapped
       # multiple times.
-      lon2 = (self._lon1 + lon12 if outmask & Geodesic.LONG_NOWRAP else
+      lon2 = (self._lon1 + lon12 if outmask & Geodesic.LONG_UNROLL else
               Math.AngNormalize(Math.AngNormalize(self._lon1) +
                                 Math.AngNormalize2(lon12)))
 
@@ -306,9 +307,10 @@ class GeodesicLine(object):
 
     outmask determines which fields get included and if outmask is
     omitted, then only the basic geodesic fields are computed.  The
-    LONG_NOWRAP bit prevents the longitudes being reduced to the range
-    [-180,180).  The mask is an or'ed combination of the following
-    values
+    LONG_UNROLL bit unrolls the longitudes (instead of reducing them to
+    the range [-180,180)), so that lon2 - lon1 indicates how many times
+    and in what sense the geodesic encircles the ellipsoid.  The mask is
+    an or'ed combination of the following values
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -317,14 +319,14 @@ class GeodesicLine(object):
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.ALL
-      Geodesic.LONG_NOWRAP
+      Geodesic.LONG_UNROLL
 
     """
 
     from geographiclib.geodesic import Geodesic
     Geodesic.CheckDistance(s12)
     result = {'lat1': self._lat1,
-              'lon1': self._lon1 if outmask & Geodesic.LONG_NOWRAP else
+              'lon1': self._lon1 if outmask & Geodesic.LONG_UNROLL else
               Math.AngNormalize(self._lon1),
               'azi1': self._azi1, 's12': s12}
     a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenPosition(
@@ -362,9 +364,9 @@ class GeodesicLine(object):
 
     outmask determines which fields get included and if outmask is
     omitted, then only the basic geodesic fields are computed.  The
-    LONG_NOWRAP bit prevents the longitudes being reduced to the range
-    [-180,180).  The mask is an or'ed combination of the following
-    values
+    LONG_UNROLL bit unrolls the longitudes (instead of reducing them to
+    the range [-180,180)).  The mask is an or'ed combination of the
+    following values
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -374,14 +376,14 @@ class GeodesicLine(object):
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.ALL
-      Geodesic.LONG_NOWRAP
+      Geodesic.LONG_UNROLL
 
     """
 
     from geographiclib.geodesic import Geodesic
     Geodesic.CheckDistance(a12)
     result = {'lat1': self._lat1,
-              'lon1': self._lon1 if outmask & Geodesic.LONG_NOWRAP else
+              'lon1': self._lon1 if outmask & Geodesic.LONG_UNROLL else
               Math.AngNormalize(self._lon1),
               'azi1': self._azi1, 'a12': a12}
     a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenPosition(

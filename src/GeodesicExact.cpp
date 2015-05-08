@@ -476,7 +476,6 @@ namespace GeographicLib {
     salp2 *= swapp * lonsign; calp2 *= swapp * latsign;
 
     if (outmask & AZIMUTH) {
-      // minus signs give range [-180, 180). 0- converts -0 to +0.
       azi1 = Math::atan2d(salp1, calp1);
       azi2 = Math::atan2d(salp2, calp2);
     }

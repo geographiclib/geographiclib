@@ -117,7 +117,7 @@
 *! http://geographiclib.sourceforge.net/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.42.
+*! <a href="../index.html">GeographicLib</a> 1.43.
 
 *> Solve the direct geodesic problem
 *!
@@ -131,7 +131,7 @@
 *!   between point 1 and point 2 (meters); otherwise it is the arc
 *!   length between point 1 and point 2 (degrees); it can be negative.
 *! @param[in] flags a bitor'ed combination of the \e arcmode and \e
-*!   nowrap flags.
+*!   unroll flags.
 *! @param[out] lat2 latitude of point 2 (degrees).
 *! @param[out] lon2 longitude of point 2 (degrees).
 *! @param[out] azi2 (forward) azimuth at point 2 (degrees).
@@ -150,16 +150,17 @@
 *! \e flags is an integer in [0, 4) whose binary bits are interpreted
 *! as follows
 *! - 1 the \e arcmode flag
-*! - 2 the \e nowrap flag
+*! - 2 the \e unroll flag
 *! .
 *! If \e arcmode is not set, \e s12a12 is \e s12 and \e a12s12 is \e
 *! a12; otherwise, \e s12a12 is \e a12 and \e a12s12 is \e s12.  It \e
-*! nowrap is not set, the value \e lon2 returned is in the range
-*! [&minus;180&deg;, 180&deg;); otherwise \e lon2 &minus \e lon1
-*! indicates how many times the geodesic wrapped around the ellipsoid.
-*! Because \e lon2 might be outside the normal allowed range for
-*! longitudes, [&minus;540&deg;, 540&deg;), be sure to reduces its range
-*! with mod(\e lon2, 360d0) before using it in other calls.
+*! unroll is not set, the value \e lon2 returned is in the range
+*! [&minus;180&deg;, 180&deg;); if unroll is set, the longitude variable
+*! is "unrolled" so that \e lon2 &minus \e lon1 indicates how many times
+*! and in what sense the geodesic encircles the ellipsoid.  Because \e
+*! lon2 might be outside the normal allowed range for longitudes,
+*! [&minus;540&deg;, 540&deg;), be sure to reduces its range with mod(\e
+*! lon2, 360d0) before using it in other calls.
 *!
 *! \e omask is an integer in [0, 16) whose binary bits are interpreted
 *! as follows
@@ -200,13 +201,13 @@
 
       double precision csmgt, atanhx, hypotx,
      +    AngNm, AngNm2, AngRnd, TrgSum, A1m1f, A2m1f, A3f
-      logical arcmod, nowrap, arcp, redlp, scalp, areap
+      logical arcmod, unroll, arcp, redlp, scalp, areap
       double precision e2, f1, ep2, n, b, c2,
      +    lon1x, azi1x, phi, alp1, salp0, calp0, k2, eps,
      +    salp1, calp1, ssig1, csig1, cbet1, sbet1, dn1, somg1, comg1,
      +    salp2, calp2, ssig2, csig2, sbet2, cbet2, dn2, somg2, comg2,
      +    ssig12, csig12, salp12, calp12, omg12, lam12, lon12,
-     +    sig12, stau1, ctau1, tau12, s12a, t, s, c, serr,
+     +    sig12, stau1, ctau1, tau12, s12a, t, s, c, serr, E,
      +    A1m1, A2m1, A3c, A4, AB1, AB2,
      +    B11, B12, B21, B22, B31, B41, B42, J12
 
@@ -227,7 +228,7 @@
       c2 = 0
 
       arcmod = mod(flags/1, 2) == 1
-      nowrap = mod(flags/2, 2) == 1
+      unroll = mod(flags/2, 2) == 1
 
       arcp = mod(omask/1, 2) == 1
       redlp = mod(omask/2, 2) == 1
@@ -408,13 +409,15 @@
 * No need to normalize
       salp2 = salp0
       calp2 = calp0 * csig2
+* East or west going?
+      E = sign(1.0d0, salp0)
 * omg12 = omg2 - omg1
-      omg12 = csmgt(sig12
-     +    - (atan2(ssig2, csig2) - atan2(ssig1, csig1))
-     +    + (atan2(somg2, comg2) - atan2(somg1, comg1)),
+      omg12 = csmgt(E * (sig12
+     +    - (atan2(    ssig2, csig2) - atan2(    ssig1, csig1))
+     +    + (atan2(E * somg2, comg2) - atan2(E * somg1, comg1))),
      +    atan2(somg2 * comg1 - comg2 * somg1,
      +    comg2 * comg1 + somg2 * somg1),
-     +    nowrap)
+     +    unroll)
 
       lam12 = omg12 + A3c *
      +    ( sig12 + (TrgSum(.true., ssig2, csig2, C3a, nC3-1)
@@ -422,7 +425,7 @@
       lon12 = lam12 / degree
 * Use Math::AngNm2 because longitude might have wrapped multiple
 * times.
-      lon2 = csmgt(lon1 + lon12, AngNm(lon1x + AngNm2(lon12)), nowrap)
+      lon2 = csmgt(lon1 + lon12, AngNm(lon1x + AngNm2(lon12)), unroll)
       lat2 = atan2(sbet2, f1 * cbet2) / degree
 * minus signs give range [-180, 180). 0- converts -0 to +0.
       azi2 = 0 - atan2(-salp2, calp2) / degree
@@ -1798,10 +1801,11 @@
 
       double precision function AngRnd(x)
 * The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
-* for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
-* is about 1000 times more resolution than we get with angles around 90
+* for reals = 0.7 pm on the earth if x is an angle in degrees.  (This is
+* about 1000 times more resolution than we get with angles around 90
 * degrees.)  We use this to avoid having to deal with near singular
-* cases when x is non-zero but tiny (e.g., 1.0e-200).
+* cases when x is non-zero but tiny (e.g., 1.0e-200).  This also
+* converts -0 to +0.
 * input
       double precision x
 
@@ -1810,7 +1814,7 @@
       y = abs(x)
 * The compiler mustn't "simplify" z - (z - y) to y
       if (y .lt. z) y = z - (z - y)
-      AngRnd = sign(y, x)
+      AngRnd = 0 + sign(y, x)
 
       return
       end
@@ -2015,5 +2019,5 @@
 *    SinCosSeries  TrgSum
 *    xthresh       xthrsh
 *    transit       trnsit
-*    LONG_NOWRAP   nowrap
+*    LONG_UNROLL   unroll
 *> @endcond SKIP

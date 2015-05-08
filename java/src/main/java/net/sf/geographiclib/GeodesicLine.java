@@ -299,8 +299,11 @@ public class GeodesicLine {
    * |= {@link GeodesicMask#DISTANCE_IN}; otherwise no parameters are set.
    * Requesting a value which the GeodesicLine object is not capable of
    * computing is not an error (no parameters will be set).  The value of
-   * <i>lon2</i> returned is in the range [&minus;180&deg;, 180&deg;), unless
-   * the <i>outmask</i> includes the {@link GeodesicMask#LONG_NOWRAP} flag.
+   * <i>lon2</i> returned is normally in the range [&minus;180&deg;, 180&deg;);
+   * however if the <i>outmask</i> includes the
+   * {@link GeodesicMask#LONG_UNROLL} flag, the longitude is "unrolled" so that
+   * the quantity <i>lon2</i> &minus; <i>lon1</i> indicates how many times and
+   * in what sense the geodesic encircles the ellipsoid.
    **********************************************************************/
   public GeodesicData Position(double s12, int outmask) {
     return Position(false, s12, outmask);
@@ -344,7 +347,7 @@ public class GeodesicLine {
    * Requesting a value which the GeodesicLine object is not capable of
    * computing is not an error (no parameters will be set).  The value of
    * <i>lon2</i> returned is in the range [&minus;180&deg;, 180&deg;), unless
-   * the <i>outmask</i> includes the {@link GeodesicMask#LONG_NOWRAP} flag.
+   * the <i>outmask</i> includes the {@link GeodesicMask#LONG_UNROLL} flag.
    **********************************************************************/
   public GeodesicData ArcPosition(double a12, int outmask) {
     return Position(true, a12, outmask);
@@ -384,8 +387,8 @@ public class GeodesicLine {
    * <li>
    *   <i>outmask</i> |= GeodesicMask.ALL for all of the above;
    * <li>
-   *   <i>outmask</i> |= GeodesicMask.LONG_NOWRAP to stop <i>lon2</i> from
-   *   being reduced to the range [&minus;180&deg;, 180&deg;).
+   *   <i>outmask</i> |= GeodesicMask.LONG_UNROLL to unroll <i>lon2</i>
+   *   (instead of reducing it to the range [&minus;180&deg;, 180&deg;)).
    * </ul>
    * <p>
    * Requesting a value which the GeodesicLine object is not capable of
@@ -401,7 +404,7 @@ public class GeodesicLine {
       // Uninitialized or impossible distance calculation requested
       return r;
     r.lat1 = _lat1; r.azi1 = _azi1;
-    r.lon1 = ((outmask & GeodesicMask.LONG_NOWRAP) != 0) ? _lon1 :
+    r.lon1 = ((outmask & GeodesicMask.LONG_UNROLL) != 0) ? _lon1 :
       GeoMath.AngNormalize(_lon1);
 
     // Avoid warning about uninitialized B12.
@@ -490,10 +493,12 @@ public class GeodesicLine {
     if ((outmask & GeodesicMask.LONGITUDE) != 0) {
       // tan(omg2) = sin(alp0) * tan(sig2)
       somg2 = _salp0 * ssig2; comg2 = csig2;  // No need to normalize
+      int E =  _salp0 < 0 ? -1 : 1;           // east or west going?
       // omg12 = omg2 - omg1
-      omg12 = ((outmask & GeodesicMask.LONG_NOWRAP) != 0) ? sig12
-        - (Math.atan2(ssig2, csig2) - Math.atan2(_ssig1, _csig1))
-        + (Math.atan2(somg2, comg2) - Math.atan2(_somg1, _comg1))
+      omg12 = ((outmask & GeodesicMask.LONG_UNROLL) != 0)
+        ? E * (sig12
+               - (Math.atan2(  ssig2, csig2) - Math.atan2(  _ssig1, _csig1))
+               + (Math.atan2(E*somg2, comg2) - Math.atan2(E*_somg1, _comg1)))
         : Math.atan2(somg2 * _comg1 - comg2 * _somg1,
                      comg2 * _comg1 + somg2 * _somg1);
       lam12 = omg12 + _A3c *
@@ -502,7 +507,7 @@ public class GeodesicLine {
       lon12 = lam12 / GeoMath.degree;
       // Use GeoMath.AngNormalize2 because longitude might have wrapped
       // multiple times.
-      r.lon2 = ((outmask & GeodesicMask.LONG_NOWRAP) != 0) ? _lon1 + lon12 :
+      r.lon2 = ((outmask & GeodesicMask.LONG_UNROLL) != 0) ? _lon1 + lon12 :
         GeoMath.AngNormalize(r.lon1 + GeoMath.AngNormalize2(lon12));
     }
 

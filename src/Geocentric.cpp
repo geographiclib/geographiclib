@@ -152,7 +152,6 @@ namespace GeographicLib {
       }
     }
     lat = atan2(sphi, cphi) / Math::degree();
-    // Negative signs return lon in [-180, 180).  0- converts -0 to +0.
     lon = Math::atan2d(slam, clam);
     if (M)
       Rotation(sphi, cphi, slam, clam, M);

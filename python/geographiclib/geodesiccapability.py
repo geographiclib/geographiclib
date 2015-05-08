@@ -26,7 +26,7 @@ class GeodesicCapability(object):
   CAP_ALL  = 0x1F
   CAP_MASK = CAP_ALL
   OUT_ALL  = 0x7F80
-  OUT_MASK = 0xFF80             # Includes LONG_NOWRAP
+  OUT_MASK = 0xFF80             # Includes LONG_UNROLL
   EMPTY         = 0
   LATITUDE      = 1 << 7  | CAP_NONE
   LONGITUDE     = 1 << 8  | CAP_C3
@@ -36,5 +36,6 @@ class GeodesicCapability(object):
   REDUCEDLENGTH = 1 << 12 | CAP_C1 | CAP_C2
   GEODESICSCALE = 1 << 13 | CAP_C1 | CAP_C2
   AREA          = 1 << 14 | CAP_C4
-  LONG_NOWRAP   = 1 << 15
-  ALL           = OUT_ALL | CAP_ALL # Does not include LONG_NOWRAP
+  LONG_UNROLL   = 1 << 15
+  LONG_NOWRAP   = LONG_UNROLL       # For backwards compatibility only
+  ALL           = OUT_ALL | CAP_ALL # Does not include LONG_UNROLL

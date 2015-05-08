@@ -139,6 +139,28 @@ set_tests_properties (GeodSolve15 GeodSolve16
   PROPERTIES PASS_REGULAR_EXPRESSION
   "1\\..* 2\\..* 3\\..* 1\\..* 2\\..* 3\\..* 4\\..* 0\\..* 4\\..* 1\\..* 1\\..* 23700")
 
+# Check fix for LONG_UNROLL bug found on 2015-05-07
+add_test (NAME GeodSolve17 COMMAND
+  GeodSolve -u --input-string "40 -75 -10 2e7")
+add_test (NAME GeodSolve18 COMMAND
+  GeodSolve -u --input-string "40 -75 -10 2e7" -E)
+add_test (NAME GeodSolve19 COMMAND
+  GeodSolve -u -l 40 -75 -10 --input-string "2e7")
+add_test (NAME GeodSolve20 COMMAND
+  GeodSolve -u -l 40 -75 -10 --input-string "2e7" -E)
+set_tests_properties (GeodSolve17 GeodSolve18 GeodSolve19 GeodSolve20
+  PROPERTIES PASS_REGULAR_EXPRESSION "-39\\.[0-9]* -254\\.[0-9]* -170\\.[0-9]*")
+add_test (NAME GeodSolve21 COMMAND
+  GeodSolve --input-string "40 -75 -10 2e7")
+add_test (NAME GeodSolve22 COMMAND
+  GeodSolve --input-string "40 -75 -10 2e7" -E)
+add_test (NAME GeodSolve23 COMMAND
+  GeodSolve -l 40 -75 -10 --input-string "2e7")
+add_test (NAME GeodSolve24 COMMAND
+  GeodSolve -l 40 -75 -10 --input-string "2e7" -E)
+set_tests_properties (GeodSolve21 GeodSolve22 GeodSolve23 GeodSolve24
+  PROPERTIES PASS_REGULAR_EXPRESSION "-39\\.[0-9]* 105\\.[0-9]* -170\\.[0-9]*")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0
   COMMAND Planimeter --input-string "89 0;89 90;89 180;89 270")

@@ -1,3 +1,5 @@
+/* Print out the coefficients for the geodesic series in a format that
+allows Math::polyval to be used. */
 load("geod8.lsp")$
 taylordepth:5$
 simplenum:true$
@@ -34,7 +36,7 @@ polyprint(p, var, title):=block([linel:90,d,line:"",h],
   p:expand(d*p),
   h:hipow(p,var),
   print(concat("      // ", title, ", polynomial in ", var, " of order ",h)),
-  for k:h step -1 thru 0 do 
+  for k:h step -1 thru 0 do
   line:printterm(formatnumx(coeff(p,var,k)),line),
   line:printterm(formatnumx(d),line),
   flushline(line),
