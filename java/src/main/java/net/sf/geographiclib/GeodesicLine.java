@@ -166,8 +166,9 @@ public class GeodesicLine {
     _b = g._b;
     _c2 = g._c2;
     _f1 = g._f1;
-    // Always allow latitude and azimuth
-    _caps = caps | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH;
+    // Always allow latitude and azimuth and unrolling the longitude
+    _caps = caps | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
+      GeodesicMask.LONG_UNROLL;
 
     // Guard against underflow in salp0
     azi1 = Geodesic.AngRound(GeoMath.AngNormalize(azi1));

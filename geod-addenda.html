@@ -102,26 +102,28 @@ C_{45} &\textstyle=  \frac{128}{99099} \epsilon^5 + \ldots.
 	times a geodesic encircles the earth, i.e., to determine the
 	value of \(\lambda_{12}\) without reducing it to some canonical
 	range.  The geodesic classes offer this option through the
-	Geodesic::LONG_NOWRAP mask bit.  In the case of the inverse
+	Geodesic::LONG_UNROLL mask bit.  In the case of the inverse
 	problem, we are interested in the shortest geodesic and thus
-	\(\lambda_{12}\in(-\frac12\pi,\frac12\pi]\) (the geodesic
-	between points on opposite meridians is taken to be east-going).
-	When solving the direct geodesic problem, \(\sigma_{12}\) is
-	found in terms of the length of the geodesic, \(\omega\) and
-	\(\sigma\) are in the same quadrant, and they are related by
-	\(\tan\omega = \sin\alpha_0 \tan\sigma\).  The "unwrapped" value
-	of \(\lambda_{12}\) is then given by
+	\(\lambda_{12}\in(-\pi,\pi]\) (the geodesic between points on
+	opposite meridians is taken to be east-going).  When solving the
+	direct geodesic problem, \(\sigma_{12}\) is found in terms of
+	the length of the geodesic, \(\omega\) and \(\sigma\) pass from
+	one quadrant to the next at the same time, and they are related
+	by \(\tan\omega = \sin\alpha_0 \tan\sigma\).  The "unrolled"
+	value of \(\lambda_{12}\) is then given by
 	\[
 	\begin{align}
-	\omega_{12} &= \sigma_{12}
+	\omega_{12} &= E\biggl[\sigma_{12}
 	- \biggl(\tan^{-1}\frac{\sin\sigma_2}{\cos\sigma_2} -
 	\tan^{-1}\frac{\sin\sigma_1}{\cos\sigma_1}\biggr)\\
-	&\quad\qquad{}+ \biggl(\tan^{-1}\frac{\sin\omega_2}{\cos\omega_2} -
-	\tan^{-1}\frac{\sin\omega_1}{\cos\omega_1}\biggr),\\
+	&\quad\qquad{}+ \biggl(\tan^{-1}\frac{E\sin\omega_2}{\cos\omega_2} -
+	\tan^{-1}\frac{E\sin\omega_1}{\cos\omega_1}\biggr)\biggr],\\
 	\lambda_{12} &= \omega_{12} - f\sin\alpha_0
-	\bigl(I_3(\sigma_2)-I_3(\sigma_1)\bigr).
+	\bigl(I_3(\sigma_2)-I_3(\sigma_1)\bigr),
 	\end{align}
 	\]
+	where \(E=\pm1\) is the sign of \(\sin\alpha_0\) or \(+1\) if
+	\(\sin\alpha_0 = 0\).
       <li>
 	The starting guesses for Newton's method given in Sec. 5 are not
 	very good for highly eccentric ellipsoids.  It's possible to

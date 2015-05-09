@@ -270,7 +270,8 @@ void geod_lineinit(struct geod_geodesicline* l,
   l->f1 = g->f1;
   /* If caps is 0 assume the standard direct calculation */
   l->caps = (caps ? caps : GEOD_DISTANCE_IN | GEOD_LONGITUDE) |
-    GEOD_LATITUDE | GEOD_AZIMUTH; /* Always allow latitude and azimuth */
+    /* always allow latitude and azimuth and unrolling of longitude */
+    GEOD_LATITUDE | GEOD_AZIMUTH | GEOD_LONG_UNROLL;
 
   l->lat1 = lat1;
   l->lon1 = lon1;

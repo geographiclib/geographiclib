@@ -30,7 +30,8 @@
     this._b = geod._b;
     this._c2 = geod._c2;
     this._f1 = geod._f1;
-    this._caps = !caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH);
+    this._caps = (!caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH)) |
+      g.LONG_UNROLL;
 
     azi1 = g.AngRound(m.AngNormalize(azi1));
     this._lat1 = lat1;

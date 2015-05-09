@@ -32,7 +32,8 @@ class GeodesicLine(object):
     self._b = geod._b
     self._c2 = geod._c2
     self._f1 = geod._f1
-    self._caps = caps | Geodesic.LATITUDE | Geodesic.AZIMUTH
+    self._caps = (caps | Geodesic.LATITUDE | Geodesic.AZIMUTH |
+                  Geodesic.LONG_UNROLL)
 
     # Guard against underflow in salp0
     azi1 = Geodesic.AngRound(Math.AngNormalize(azi1))

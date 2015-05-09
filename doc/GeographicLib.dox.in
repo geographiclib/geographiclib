@@ -6994,12 +6994,13 @@ git repository for GeographicLib</a>.
      JavaScript, Java, C, Fortran, MATLAB, Maxima, Python.
    - GeodesicLine{,Exact} constructor now unconditionally adds
      LONG_UNROLL to its capabilities.  (Without this the LONG_UNROLL
-     flag was ignored when invoking this class.)
+     flag was ignored when invoking GeodesicLine::GenPosition.)  Also
+     for JavaScript, Java, C, Python.
    - Rename LONG_NOWRAP -> LONG_UNROLL: C++ (inc. Geodesic,
      GeodesicExact, Rhumb), JavaScript, dotnet, Java, C, Fortran,
      MATLAB, Python.  The name LONG_NOWRAP is retained for backwards
      compatibility.
-   - AngRound now convert -0 to +0: C++, JavaScript, Java, C, Fortran,
+   - AngRound now converts -0 to +0: C++, JavaScript, Java, C, Fortran,
      MATLAB, Maxima, Python.
    - DMS::DecodeLatLat takes optional unroll arg.
    - Implement GeodSolve -u.  TODO: python inverse should include
