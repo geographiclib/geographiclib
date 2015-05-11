@@ -1,5 +1,5 @@
 #! /bin/sh
-# Run Inno Setup Compiler to create installers for geoid datasets
+# Run Inno Setup Compiler to create installers for magnetic datasets
 
 INNO="c:/Program Files/Inno Setup 5/ISCC.exe"
 test -f "$INNO" || INNO="c:/Program Files (x86)/Inno Setup 5/ISCC.exe"

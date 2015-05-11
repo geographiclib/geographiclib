@@ -1485,9 +1485,11 @@ offers are different for each geoid, and the interpolation programs are
 different for each grid resolution.  In addition these tools are written
 in Fortran with is nowadays difficult to integrate with other software.)
 
-The geoid height, \e N, can be used to convert a height above the
-ellipsoid, \e h, to the corresponding height above the geoid (roughly,
-the height above mean sea level), \e H, using the relations
+The height of the geoid above the ellipsoid, \e N, is sometimes called
+the geoid undulation.  It can be used to convert a height above the
+ellipsoid, \e h, to the corresponding height above the geoid (the
+orthometric height, roughly the height above mean sea level), \e H,
+using the relations
 
 &nbsp;&nbsp;&nbsp;\e h = \e N + \e H; &nbsp;&nbsp;\e H = &minus;\e N + \e h.
 

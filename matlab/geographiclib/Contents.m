@@ -67,7 +67,7 @@
 %   mgrs_inv         - Convert MGRS to UTM/UPS coordinates
 %
 % Geoid lookup
-%   geoid_height     - Compute the height of the geoid
+%   geoid_height     - Compute the height of the geoid above the ellipsoid
 %   geoid_load       - Load a geoid model
 %
 % Geometric transformations

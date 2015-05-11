@@ -35,7 +35,7 @@ Files
       AzimuthalEquidistant.[ch]pp -- azimuthal equidistant projection
       Gnomonic.[ch]pp -- gnomonic projection
       CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
-      Geoid.[ch]pp -- geoid heights
+      Geoid.[ch]pp -- geoid heights above the ellipsoid
       Gravity{Model,Circle}.[ch]pp -- gravity models
       Magnetic{Model,Circle}.[ch]pp -- geomagentic models
       {Spherical,Circular}Engine.[ch]pp -- spherical harmonic sums

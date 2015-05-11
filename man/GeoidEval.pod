@@ -17,8 +17,8 @@ B<GeoidEval> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-l> ]
 =head1 DESCRIPTION
 
 B<GeoidEval> reads in positions on standard input and prints out the
-corresponding geoid heights on standard output.  Optionally, it also
-prints the northerly and easterly gradients of the geoid height.
+corresponding heights of the geoid above the WGS84 ellipsoid on standard
+output.
 
 Positions are given as latitude and longitude, UTM/UPS, or MGRS, in any
 of the formats accepted by GeoConvert(1).  (MGRS coordinates signify the
@@ -30,9 +30,11 @@ eastings and northings in a single zone to be used as standard input.
 More accurate results for the geoid height are provided by Gravity(1).
 This utility can also compute the direction of gravity accurately.
 
-The geoid height, I<N>, can be used to convert a height above the
-ellipsoid, I<h>, to the corresponding height above the geoid (roughly
-the height above mean sea level), I<H>, using the relations
+The height of the geoid above the ellipsoid, I<N>, is sometimes called
+the geoid undulation.  It can be used to convert a height above the
+ellipsoid, I<h>, to the corresponding height above the geoid (the
+orthometric height, roughly the height above mean sea level), I<H>,
+using the relations
 
 =over
 
@@ -195,8 +197,7 @@ interpolation is based on a least-squares fit of a cubic polynomial to a
 The cubic is constrained to be independent of longitude when evaluating
 the height at one of the poles.  Cubic interpolation is considerably
 more accurate than bilinear; however it results in small discontinuities
-in the returned height on cell boundaries.  The gradients are computed
-by differentiating the interpolated results.
+in the returned height on cell boundaries.
 
 =head1 CACHE
 

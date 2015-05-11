@@ -34,9 +34,9 @@
 namespace GeographicLib {
 
   /**
-   * \brief Looking up the height of the geoid
+   * \brief Looking up the height of the geoid above the ellipsoid
    *
-   * This class evaluated the height of one of the standard geoids, EGM84,
+   * This class evaluates the height of one of the standard geoids, EGM84,
    * EGM96, or EGM2008 by bilinear or cubic interpolation into a rectangular
    * grid of data.  These geoid models are documented in
    * - EGM84:
@@ -51,9 +51,10 @@ namespace GeographicLib {
    * this class evaluates the height by interpolation into a grid of
    * precomputed values.
    *
-   * The geoid height, \e N, can be used to convert a height above the
-   * ellipsoid, \e h, to the corresponding height above the geoid (roughly the
-   * height above mean sea level), \e H, using the relations
+   * The height of the geoid above the ellipsoid, \e N, is sometimes called the
+   * geoid undulation.  It can be used to convert a height above the ellipsoid,
+   * \e h, to the corresponding height above the geoid (the orthometric height,
+   * roughly the height above mean sea level), \e H, using the relations
    *
    * &nbsp;&nbsp;&nbsp;\e h = \e N + \e H;
    * &nbsp;&nbsp;\e H = &minus;\e N + \e h.
@@ -289,7 +290,7 @@ namespace GeographicLib {
      * @param[in] lon longitude of the point (degrees).
      * @exception GeographicErr if there's a problem reading the data; this
      *   never happens if (\e lat, \e lon) is within a successfully cached area.
-     * @return geoid height (meters).
+     * @return the height of the geoid above the ellipsoid (meters).
      *
      * The latitude should be in [&minus;90&deg;, 90&deg;] and
      * longitude should be in [&minus;540&deg;, 540&deg;).

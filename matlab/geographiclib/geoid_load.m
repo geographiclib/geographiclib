@@ -40,10 +40,10 @@ function geoid = geoid_load(name, dir)
 %
 %   The geoid data is loaded from the image file obtained by concatenating
 %   the components to give geoiddir/geoidname.pgm.  These files store a
-%   grid of geoid height encoded as 16-bit integers.
+%   grid of geoid heights above the ellipsoid encoded as 16-bit integers.
 %
 %   The returned geoid can be passed to geoid_height to determine the
-%   height of the geoid.
+%   height of the geoid above the ellipsoid.
 %
 %   Information on downloading and installing the data for the supported
 %   geoid models is available at

@@ -122,10 +122,11 @@ cat <<EOF
 	GeoConvert</a> utility).
     </p>
     <p>
-      The geoid height, <i>N</i>, can be used to convert a height above
-      the ellipsoid, <i>h</i>, to the corresponding height above the
-      geoid (roughly the height above mean sea level), <i>H</i>, using
-      the relations
+      The height of the geoid above the ellipsoid, <i>N</i>, is
+      sometimes called the geoid undulation.  It can be used to convert
+      a height above the ellipsoid, <i>h</i>, to the corresponding
+      height above the geoid (the orthometric height, roughly the height
+      above mean sea level), <i>H</i>, using the relations
       <blockquote>
 	<i>h</i> = <i>N</i> + <i>H</i>;
 	&nbsp;&nbsp;<i>H</i> = &minus;<i>N</i> + <i>h</i>.
