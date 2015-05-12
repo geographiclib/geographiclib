@@ -137,6 +137,12 @@ static real sumx(real u, real v, real* t) {
   return s;
 }
 
+static real polyval(int N, const real p[], real x) {
+  real y = N < 0 ? 0 : *p++;
+  while (--N >= 0) y = y * x + *p++;
+  return y;
+}
+
 static real minx(real x, real y)
 { return x < y ? x : y; }
 
@@ -146,7 +152,7 @@ static real maxx(real x, real y)
 static void swapx(real* x, real* y)
 { real t = *x; *x = *y; *y = t; }
 
-static void SinCosNorm(real* sinx, real* cosx) {
+static void norm2(real* sinx, real* cosx) {
   real r = hypotx(*sinx, *cosx);
   *sinx /= r;
   *cosx /= r;
@@ -287,7 +293,7 @@ void geod_lineinit(struct geod_geodesicline* l,
   /* Ensure cbet1 = +epsilon at poles */
   sbet1 = l->f1 * sin(phi);
   cbet1 = fabs(lat1) == 90 ? tiny : cos(phi);
-  SinCosNorm(&sbet1, &cbet1);
+  norm2(&sbet1, &cbet1);
   l->dn1 = sqrt(1 + g->ep2 * sq(sbet1));
 
   /* Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0), */
@@ -306,8 +312,8 @@ void geod_lineinit(struct geod_geodesicline* l,
    * With alp0 = 0, omg1 = 0 for alp1 = 0, omg1 = pi for alp1 = pi. */
   l->ssig1 = sbet1; l->somg1 = l->salp0 * sbet1;
   l->csig1 = l->comg1 = sbet1 != 0 || l->calp1 != 0 ? cbet1 * l->calp1 : 1;
-  SinCosNorm(&l->ssig1, &l->csig1); /* sig1 in (-pi, pi] */
-  /* SinCosNorm(somg1, comg1); -- don't need to normalize! */
+  norm2(&l->ssig1, &l->csig1); /* sig1 in (-pi, pi] */
+  /* norm2(somg1, comg1); -- don't need to normalize! */
 
   l->k2 = sq(l->calp0) * g->ep2;
   eps = l->k2 / (2 * (1 + sqrt(1 + l->k2)) + l->k2);
@@ -502,7 +508,7 @@ real geod_genposition(const struct geod_geodesicline* l,
       B42 = SinCosSeries(FALSE, ssig2, csig2, l->C4a, nC4);
     real salp12, calp12;
     if (l->calp0 == 0 || l->salp0 == 0) {
-      /* alp12 = alp2 - alp1, used in atan2 so no need to normalized */
+      /* alp12 = alp2 - alp1, used in atan2 so no need to normalize */
       salp12 = salp2 * l->calp1 - calp2 * l->salp1;
       calp12 = calp2 * l->calp1 + salp2 * l->salp1;
       /* The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
@@ -648,13 +654,13 @@ real geod_geninverse(const struct geod_geodesic* g,
   /* Ensure cbet1 = +epsilon at poles */
   sbet1 = g->f1 * sin(phi);
   cbet1 = lat1 == -90 ? tiny : cos(phi);
-  SinCosNorm(&sbet1, &cbet1);
+  norm2(&sbet1, &cbet1);
 
   phi = lat2 * degree;
   /* Ensure cbet2 = +epsilon at poles */
   sbet2 = g->f1 * sin(phi);
   cbet2 = fabs(lat2) == 90 ? tiny : cos(phi);
-  SinCosNorm(&sbet2, &cbet2);
+  norm2(&sbet2, &cbet2);
 
   /* If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
    * |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -796,7 +802,7 @@ real geod_geninverse(const struct geod_geodesic* g,
           if (nsalp1 > 0 && fabs(dalp1) < pi) {
             calp1 = calp1 * cdalp1 - salp1 * sdalp1;
             salp1 = nsalp1;
-            SinCosNorm(&salp1, &calp1);
+            norm2(&salp1, &calp1);
             /* In some regimes we don't get quadratic convergence because
              * slope -> 0.  So use convergence conditions based on epsilon
              * instead of sqrt(epsilon). */
@@ -814,7 +820,7 @@ real geod_geninverse(const struct geod_geodesic* g,
          * WGS84 and random input: mean = 4.74, sd = 0.99 */
         salp1 = (salp1a + salp1b)/2;
         calp1 = (calp1a + calp1b)/2;
-        SinCosNorm(&salp1, &calp1);
+        norm2(&salp1, &calp1);
         tripn = FALSE;
         tripb = (fabs(salp1a - salp1) + (calp1a - calp1) < tolb ||
                  fabs(salp1 - salp1b) + (calp1 - calp1b) < tolb);
@@ -855,8 +861,8 @@ real geod_geninverse(const struct geod_geodesic* g,
         A4 = sq(g->a) * calp0 * salp0 * g->e2;
       real C4a[nC4];
       real B41, B42;
-      SinCosNorm(&ssig1, &csig1);
-      SinCosNorm(&ssig2, &csig2);
+      norm2(&ssig1, &csig1);
+      norm2(&ssig2, &csig2);
       C4f(g, eps, C4a);
       B41 = SinCosSeries(FALSE, ssig1, csig1, C4a, nC4);
       B42 = SinCosSeries(FALSE, ssig2, csig2, C4a, nC4);
@@ -1122,7 +1128,7 @@ real InverseStart(const struct geod_geodesic* g,
     salp2 = cbet1 * somg12;
     calp2 = sbet12 - cbet1 * sbet2 *
       (comg12 >= 0 ? sq(somg12) / (1 + comg12) : 1 - comg12);
-    SinCosNorm(&salp2, &calp2);
+    norm2(&salp2, &calp2);
     /* Set return value */
     sig12 = atan2(ssig12, csig12);
   } else if (fabs(g->n) > (real)(0.1) || /* No astroid calc if too eccentric */
@@ -1222,7 +1228,7 @@ real InverseStart(const struct geod_geodesic* g,
   }
   /* Sanity check on starting guess.  Backwards check allows NaN through. */
   if (!(salp1 <= 0))
-    SinCosNorm(&salp1, &calp1);
+    norm2(&salp1, &calp1);
   else {
     salp1 = 1; calp1 = 0;
   }
@@ -1269,8 +1275,8 @@ real Lambda12(const struct geod_geodesic* g,
    * tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1) */
   ssig1 = sbet1; somg1 = salp0 * sbet1;
   csig1 = comg1 = calp1 * cbet1;
-  SinCosNorm(&ssig1, &csig1);
-  /* SinCosNorm(&somg1, &comg1); -- don't need to normalize! */
+  norm2(&ssig1, &csig1);
+  /* norm2(&somg1, &comg1); -- don't need to normalize! */
 
   /* Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
    * about this case, since this can yield singularities in the Newton
@@ -1291,8 +1297,8 @@ real Lambda12(const struct geod_geodesic* g,
    * tan(omg2) = sin(alp0) * tan(sig2). */
   ssig2 = sbet2; somg2 = salp0 * sbet2;
   csig2 = comg2 = calp2 * cbet2;
-  SinCosNorm(&ssig2, &csig2);
-  /* SinCosNorm(&somg2, &comg2); -- don't need to normalize! */
+  norm2(&ssig2, &csig2);
+  /* norm2(&somg2, &comg2); -- don't need to normalize! */
 
   /* sig12 = sig2 - sig1, limit to [0, pi] */
   sig12 = atan2(maxx(csig1 * ssig2 - ssig1 * csig2, (real)(0)),

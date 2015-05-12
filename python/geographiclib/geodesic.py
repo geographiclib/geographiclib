@@ -56,8 +56,9 @@ class Geodesic(object):
     help(Geodesic.Area)
 
   All angles (latitudes, longitudes, azimuths, spherical arc lengths)
-  are measured in degrees.  All lengths (distance, reduced length) are
-  measured in meters.  All areas are measures in square meters.
+  are measured in degrees.  Latitudes must lie in [-90,90]; longitudes
+  and azimuths must lie in [-540,540).  All lengths (distance, reduced
+  length) are measured in meters.  Areas are measures in square meters.
 
   """
 
@@ -106,14 +107,15 @@ class Geodesic(object):
   LONG_NOWRAP   = GeodesicCapability.LONG_UNROLL
   ALL           = GeodesicCapability.ALL
 
-  def SinCosSeries(sinp, sinx, cosx, c, n):
+  def SinCosSeries(sinp, sinx, cosx, c):
     """Private: Evaluate a trig series using Clenshaw summation."""
     # Evaluate
     # y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
     #            sum(c[i] * cos((2*i+1) * x), i, 0, n-1)
     # using Clenshaw summation.  N.B. c[0] is unused for sin series
     # Approx operation count = (n + 5) mult and (2 * n + 2) add
-    k = (n + sinp)             # Point to one beyond last element
+    k = len(c)                  # Point to one beyond last element
+    n = k - sinp
     ar = 2 * (cosx - sinx) * (cosx + sinx) # 2 * cos(2 * x)
     y1 = 0                                 # accumulators for sum
     if n & 1:
@@ -130,26 +132,6 @@ class Geodesic(object):
     return ( 2 * sinx * cosx * y0 if sinp # sin(2 * x) * y0
              else cosx * (y0 - y1) )      # cos(x) * (y0 - y1)
   SinCosSeries = staticmethod(SinCosSeries)
-
-  def AngRound(x):
-    """Private: Round an angle so that small values underflow to zero."""
-    # The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
-    # for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
-    # is about 1000 times more resolution than we get with angles around 90
-    # degrees.)  We use this to avoid having to deal with near singular
-    # cases when x is non-zero but tiny (e.g., 1.0e-200).
-    z = 1/16.0
-    y = abs(x)
-    # The compiler mustn't "simplify" z - (z - y) to y
-    if y < z: y = z - (z - y)
-    return 0 - y if x < 0 else y
-  AngRound = staticmethod(AngRound)
-
-  def SinCosNorm(sinx, cosx):
-    """Private: Normalize sin and cos."""
-    r = math.hypot(sinx, cosx)
-    return sinx/r, cosx/r
-  SinCosNorm = staticmethod(SinCosNorm)
 
   def Astroid(x, y):
     """Private: solve astroid equation."""
@@ -414,12 +396,12 @@ class Geodesic(object):
     Geodesic.C2f(eps, C2a)
     A1m1 = Geodesic.A1m1f(eps)
     AB1 = (1 + A1m1) * (
-      Geodesic.SinCosSeries(True, ssig2, csig2, C1a, Geodesic.nC1_) -
-      Geodesic.SinCosSeries(True, ssig1, csig1, C1a, Geodesic.nC1_))
+      Geodesic.SinCosSeries(True, ssig2, csig2, C1a) -
+      Geodesic.SinCosSeries(True, ssig1, csig1, C1a))
     A2m1 = Geodesic.A2m1f(eps)
     AB2 = (1 + A2m1) * (
-      Geodesic.SinCosSeries(True, ssig2, csig2, C2a, Geodesic.nC2_) -
-      Geodesic.SinCosSeries(True, ssig1, csig1, C2a, Geodesic.nC2_))
+      Geodesic.SinCosSeries(True, ssig2, csig2, C2a) -
+      Geodesic.SinCosSeries(True, ssig1, csig1, C2a))
     m0 = A1m1 - A2m1
     J12 = m0 * sig12 + (AB1 - AB2)
     # Missing a factor of _b.
@@ -481,7 +463,7 @@ class Geodesic(object):
       salp2 = cbet1 * somg12
       calp2 = sbet12 - cbet1 * sbet2 * (Math.sq(somg12) / (1 + comg12)
                                         if comg12 >= 0 else 1 - comg12)
-      salp2, calp2 = Geodesic.SinCosNorm(salp2, calp2)
+      salp2, calp2 = Math.norm(salp2, calp2)
       # Set return value
       sig12 = math.atan2(ssig12, csig12)
     elif (abs(self._n) >= 0.1 or # Skip astroid calc if too eccentric
@@ -572,7 +554,7 @@ class Geodesic(object):
         calp1 = sbet12a - cbet2 * sbet1 * Math.sq(somg12) / (1 - comg12)
     # Sanity check on starting guess.  Backwards check allows NaN through.
     if not (salp1 <= 0):
-      salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
+      salp1, calp1 = Math.norm(salp1, calp1)
     else:
       salp1 = 1; calp1 = 0
     return sig12, salp1, calp1, salp2, calp2, dnm
@@ -597,8 +579,8 @@ class Geodesic(object):
     # tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
     ssig1 = sbet1; somg1 = salp0 * sbet1
     csig1 = comg1 = calp1 * cbet1
-    ssig1, csig1 = Geodesic.SinCosNorm(ssig1, csig1)
-    # SinCosNorm(somg1, comg1); -- don't need to normalize!
+    ssig1, csig1 = Math.norm(ssig1, csig1)
+    # Math.norm(somg1, comg1); -- don't need to normalize!
 
     # Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     # about this case, since this can yield singularities in the Newton
@@ -617,8 +599,8 @@ class Geodesic(object):
     # tan(omg2) = sin(alp0) * tan(sig2).
     ssig2 = sbet2; somg2 = salp0 * sbet2
     csig2 = comg2 = calp2 * cbet2
-    ssig2, csig2 = Geodesic.SinCosNorm(ssig2, csig2)
-    # SinCosNorm(somg2, comg2); -- don't need to normalize!
+    ssig2, csig2 = Math.norm(ssig2, csig2)
+    # Math.norm(somg2, comg2); -- don't need to normalize!
 
     # sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = math.atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
@@ -631,8 +613,8 @@ class Geodesic(object):
     k2 = Math.sq(calp0) * self._ep2
     eps = k2 / (2 * (1 + math.sqrt(1 + k2)) + k2)
     self.C3f(eps, C3a)
-    B312 = (Geodesic.SinCosSeries(True, ssig2, csig2, C3a, Geodesic.nC3_-1) -
-            Geodesic.SinCosSeries(True, ssig1, csig1, C3a, Geodesic.nC3_-1))
+    B312 = (Geodesic.SinCosSeries(True, ssig2, csig2, C3a) -
+            Geodesic.SinCosSeries(True, ssig1, csig1, C3a))
     h0 = -self._f * self.A3f(eps)
     domg12 = salp0 * h0 * (sig12 + B312)
     lam12 = omg12 + domg12
@@ -662,13 +644,13 @@ class Geodesic(object):
     # east-going and meridional geodesics.
     lon12 = Math.AngDiff(Math.AngNormalize(lon1), Math.AngNormalize(lon2))
     # If very close to being on the same half-meridian, then make it so.
-    lon12 = Geodesic.AngRound(lon12)
+    lon12 = Math.AngRound(lon12)
     # Make longitude difference positive.
     lonsign = 1 if lon12 >= 0 else -1
     lon12 *= lonsign
     # If really close to the equator, treat as on equator.
-    lat1 = Geodesic.AngRound(lat1)
-    lat2 = Geodesic.AngRound(lat2)
+    lat1 = Math.AngRound(lat1)
+    lat2 = Math.AngRound(lat2)
     # Swap points so that point with higher (abs) latitude is point 1
     swapp = 1 if abs(lat1) >= abs(lat2) else -1
     if swapp < 0:
@@ -696,13 +678,13 @@ class Geodesic(object):
     # Ensure cbet1 = +epsilon at poles
     sbet1 = self._f1 * math.sin(phi)
     cbet1 = Geodesic.tiny_ if lat1 == -90 else math.cos(phi)
-    sbet1, cbet1 = Geodesic.SinCosNorm(sbet1, cbet1)
+    sbet1, cbet1 = Math.norm(sbet1, cbet1)
 
     phi = lat2 * Math.degree
     # Ensure cbet2 = +epsilon at poles
     sbet2 = self._f1 * math.sin(phi)
     cbet2 = Geodesic.tiny_ if abs(lat2) == 90 else math.cos(phi)
-    sbet2, cbet2 = Geodesic.SinCosNorm(sbet2, cbet2)
+    sbet2, cbet2 = Math.norm(sbet2, cbet2)
 
     # If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
     # |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -850,7 +832,7 @@ class Geodesic(object):
             if nsalp1 > 0 and abs(dalp1) < math.pi:
               calp1 = calp1 * cdalp1 - salp1 * sdalp1
               salp1 = nsalp1
-              salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
+              salp1, calp1 = Math.norm(salp1, calp1)
               # In some regimes we don't get quadratic convergence because
               # slope -> 0.  So use convergence conditions based on epsilon
               # instead of sqrt(epsilon).
@@ -865,7 +847,7 @@ class Geodesic(object):
           # WGS84 and random input: mean = 4.74, sd = 0.99
           salp1 = (salp1a + salp1b)/2
           calp1 = (calp1a + calp1b)/2
-          salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
+          salp1, calp1 = Math.norm(salp1, calp1)
           tripn = False
           tripb = (abs(salp1a - salp1) + (calp1a - calp1) < Geodesic.tolb_ or
                    abs(salp1 - salp1b) + (calp1 - calp1b) < Geodesic.tolb_)
@@ -899,12 +881,12 @@ class Geodesic(object):
         eps = k2 / (2 * (1 + math.sqrt(1 + k2)) + k2)
         # Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
         A4 = Math.sq(self._a) * calp0 * salp0 * self._e2
-        ssig1, csig1 = Geodesic.SinCosNorm(ssig1, csig1)
-        ssig2, csig2 = Geodesic.SinCosNorm(ssig2, csig2)
+        ssig1, csig1 = Math.norm(ssig1, csig1)
+        ssig2, csig2 = Math.norm(ssig2, csig2)
         C4a = list(range(Geodesic.nC4_))
         self.C4f(eps, C4a)
-        B41 = Geodesic.SinCosSeries(False, ssig1, csig1, C4a, Geodesic.nC4_)
-        B42 = Geodesic.SinCosSeries(False, ssig2, csig2, C4a, Geodesic.nC4_)
+        B41 = Geodesic.SinCosSeries(False, ssig1, csig1, C4a)
+        B42 = Geodesic.SinCosSeries(False, ssig2, csig2, C4a)
         S12 = A4 * (B42 - B41)
       else:
         # Avoid problems with indeterminate sig1, sig2 on equator
@@ -1004,15 +986,24 @@ class Geodesic(object):
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.ALL
+      Geodesic.LONG_UNROLL
+
+    If Geodesic.LONG_UNROLL is set, then lon1 is unchanged and lon2 -
+    lon1 indicates whether the geodesic is east going or west going.
+    Otherwise lon1 and lon2 are both reduced to the range [-180,180).
 
     """
 
-    lon1 = Geodesic.CheckPosition(lat1, lon1)
-    lon2 = Geodesic.CheckPosition(lat2, lon2)
+    lon1a = Geodesic.CheckPosition(lat1, lon1)
+    lon2a = Geodesic.CheckPosition(lat2, lon2)
+    if outmask & Geodesic.LONG_UNROLL:
+      lon2 = lon1 + Math.AngDiff(lon1a, lon2a)
+    else:
+      lon1 = lon1a; lon2 = lon2a
 
     result = {'lat1': lat1, 'lon1': lon1, 'lat2': lat2, 'lon2': lon2}
     a12, s12, azi1, azi2, m12, M12, M21, S12 = self.GenInverse(
-      lat1, lon1, lat2, lon2, outmask)
+      lat1, lon1a, lat2, lon2a, outmask)
     outmask &= Geodesic.OUT_MASK
     result['a12'] = a12
     if outmask & Geodesic.DISTANCE: result['s12'] = s12
@@ -1054,10 +1045,8 @@ class Geodesic(object):
       S12 area between geodesic and equator
 
     outmask determines which fields get included and if outmask is
-    omitted, then only the basic geodesic fields are computed.  The
-    LONG_UNROLL bit unrolls the longitudes (instead of reducing them to
-    the range [-180,180)).  The mask is an or'ed combination of the
-    following values
+    omitted, then only the basic geodesic fields are computed.  The mask
+    is an or'ed combination of the following values
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -1067,6 +1056,13 @@ class Geodesic(object):
       Geodesic.AREA
       Geodesic.ALL
       Geodesic.LONG_UNROLL
+
+    The LONG_UNROLL bit unrolls the longitudes (instead of reducing them
+    to the range [-180,180)); the quantity lon2 - lon1 then indicates
+    how many times and in what sense the geodesic encircles the
+    ellipsoid.  Because lon2 might be outside the normal allowed range
+    for longitudes, [-540,540), be sure to normalize it with
+    math.fmod(lon2,360) before using it in other calls.
 
     """
 

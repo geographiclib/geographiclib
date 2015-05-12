@@ -264,7 +264,7 @@
 * Ensure cbet1 = +dbleps at poles
       sbet1 = f1 * sin(phi)
       cbet1 = csmgt(tiny, cos(phi), abs(lat1) .eq. 90)
-      call Norm(sbet1, cbet1)
+      call norm2(sbet1, cbet1)
       dn1 = sqrt(1 + ep2 * sbet1**2)
 
 * Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -287,8 +287,8 @@
       csig1 = csmgt(cbet1 * calp1, 1d0, sbet1 .ne. 0 .or. calp1 .ne. 0)
       comg1 = csig1
 * sig1 in (-pi, pi]
-      call Norm(ssig1, csig1)
-* Geodesic::Norm(somg1, comg1); -- don't need to normalize!
+      call norm2(ssig1, csig1)
+* norm2(somg1, comg1); -- don't need to normalize!
 
       k2 = calp0**2 * ep2
       eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
@@ -448,7 +448,7 @@
       if (areap) then
         B42 = TrgSum(.false., ssig2, csig2, C4a, nC4)
         if (calp0 .eq. 0 .or. salp0 .eq. 0) then
-* alp12 = alp2 - alp1, used in atan2 so no need to normalized
+* alp12 = alp2 - alp1, used in atan2 so no need to normalize
           salp12 = salp2 * calp1 - calp2 * salp1
           calp12 = calp2 * calp1 + salp2 * salp1
 * The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
@@ -642,13 +642,13 @@
 * Ensure cbet1 = +dbleps at poles
       sbet1 = f1 * sin(phi)
       cbet1 = csmgt(tiny, cos(phi), lat1x .eq. -90)
-      call Norm(sbet1, cbet1)
+      call norm2(sbet1, cbet1)
 
       phi = lat2x * degree
 * Ensure cbet2 = +dbleps at poles
       sbet2 = f1 * sin(phi)
       cbet2 = csmgt(tiny, cos(phi), abs(lat2x) .eq. 90)
-      call Norm(sbet2, cbet2)
+      call norm2(sbet2, cbet2)
 
 * If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
 * |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1
@@ -808,7 +808,7 @@
               if (nsalp1 .gt. 0 .and. abs(dalp1) .lt. pi) then
                 calp1 = calp1 * cdalp1 - salp1 * sdalp1
                 salp1 = nsalp1
-                call Norm(salp1, calp1)
+                call norm2(salp1, calp1)
 * In some regimes we don't get quadratic convergence because
 * slope -> 0.  So use convergence conditions based on dbleps
 * instead of sqrt(dbleps).
@@ -826,7 +826,7 @@
 * WGS84 and random input: mean = 4.74, sd = 0.99
             salp1 = (salp1a + salp1b)/2
             calp1 = (calp1a + calp1b)/2
-            call Norm(salp1, calp1)
+            call norm2(salp1, calp1)
             tripn = .false.
             tripb = abs(salp1a - salp1) + (calp1a - calp1) .lt. tolb
      +          .or. abs(salp1 - salp1b) + (calp1 - calp1b) .lt. tolb
@@ -860,8 +860,8 @@
           eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
 * Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
           A4 = a**2 * calp0 * salp0 * e2
-          call Norm(ssig1, csig1)
-          call Norm(ssig2, csig2)
+          call norm2(ssig1, csig1)
+          call norm2(ssig2, csig2)
           call C4f(eps, C4x, C4a)
           B41 = TrgSum(.false., ssig1, csig1, C4a, nC4)
           B42 = TrgSum(.false., ssig2, csig2, C4a, nC4)
@@ -1241,7 +1241,7 @@
         salp2 = cbet1 * somg12
         calp2 = sbet12 - cbet1 * sbet2 *
      +      csmgt(somg12**2 / (1 + comg12), 1 - comg12, comg12 .ge. 0)
-        call Norm(salp2, calp2)
+        call norm2(salp2, calp2)
 * Set return value
         sig12 = atan2(ssig12, csig12)
       else if (abs(n) .gt. 0.1d0 .or. csig12 .ge. 0 .or.
@@ -1332,7 +1332,7 @@
       end if
 * Sanity check on starting guess.  Backwards check allows NaN through.
       if (.not. (salp1 .le. 0)) then
-        call Norm(salp1, calp1)
+        call norm2(salp1, calp1)
       else
         salp1 = 1
         calp1 = 0
@@ -1391,8 +1391,8 @@
       somg1 = salp0 * sbet1
       csig1 = calp1 * cbet1
       comg1 = csig1
-      call Norm(ssig1, csig1)
-* Norm(somg1, comg1); -- don't need to normalize!
+      call norm2(ssig1, csig1)
+* norm2(somg1, comg1); -- don't need to normalize!
 
 * Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
 * about this case, since this can yield singularities in the Newton
@@ -1414,8 +1414,8 @@
       somg2 = salp0 * sbet2
       csig2 = calp2 * cbet2
       comg2 = csig2
-      call Norm(ssig2, csig2)
-* Norm(somg2, comg2); -- don't need to normalize!
+      call norm2(ssig2, csig2)
+* norm2(somg2, comg2); -- don't need to normalize!
 
 * sig12 = sig2 - sig1, limit to [0, pi]
       sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0d0),
@@ -1840,7 +1840,7 @@
       return
       end
 
-      subroutine Norm(sinx, cosx)
+      subroutine norm2(sinx, cosx)
 * input/output
       double precision sinx, cosx
 
@@ -1989,7 +1989,26 @@
       return
       end
 
-* Table of name abbreviations to conform to the 6-char limit
+      double precision function polval(N, p, x)
+* input
+      integer N
+      double precision p(0:N), x
+
+      integer i
+      if (N .lt. 0) then
+        polval = 0
+      else
+        polval = p(0)
+      endif
+      do 10 i = 1, N
+        polval = polval * x + p(i)
+ 10   continue
+
+      return
+      end
+
+* Table of name abbreviations to conform to the 6-char limit and
+* potential name conflicts.
 *    A3coeff       A3cof
 *    C3coeff       C3cof
 *    C4coeff       C4cof
@@ -2015,9 +2034,10 @@
 *    meridian      merid
 *    outmask       omask
 *    shortline     shortp
-*    SinCosNorm    Norm
+*    norm          norm2
 *    SinCosSeries  TrgSum
 *    xthresh       xthrsh
 *    transit       trnsit
+*    polyval       polval
 *    LONG_UNROLL   unroll
 *> @endcond SKIP

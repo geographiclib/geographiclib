@@ -5,7 +5,7 @@ function A2m1 = A2m1f(epsi)
 %   K x 1 arrays.
 
   coeff = [ ...
-      25, 36, 64, 0, 256, ... A2/(1-eps)-1, polynomial in eps2 of order 3
+      25, 36, 64, 0, 256, ...
           ];
   eps2 = epsi.^2;
   t = polyval(coeff(1 : end - 1), eps2) / coeff(end);

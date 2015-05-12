@@ -232,7 +232,7 @@ namespace GeographicLib {
         B42 = Geodesic30<real>::SinCosSeries(false, ssig2, csig2, _C4a, nC4_);
       real salp12, calp12;
       if (_calp0 == 0 || _salp0 == 0) {
-        // alp12 = alp2 - alp1, used in atan2 so no need to normalized
+        // alp12 = alp2 - alp1, used in atan2 so no need to normalize
         salp12 = salp2 * _calp1 - calp2 * _salp1;
         calp12 = calp2 * _calp1 + salp2 * _salp1;
         // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz

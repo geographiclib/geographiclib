@@ -503,7 +503,7 @@ geod_genposition(l, arcmode,  s12_a12):=block(
       M21 : csig12 - (t * l[l_ssig1] - l[l_csig1] * J12) *  ssig2 /  dn2)),
   block([ B42 : SinCosSeries(false, ssig2, csig2, l[l_C4a]), salp12, calp12],
     if l[l_calp0] = 0b0 or l[l_salp0] = 0b0 then (
-      /* alp12 = alp2 - alp1, used in atan2 so no need to normalized */
+      /* alp12 = alp2 - alp1, used in atan2 so no need to normalize */
       salp12 : salp2 * l[l_calp1] - calp2 * l[l_salp1],
       calp12 : calp2 * l[l_calp1] + salp2 * l[l_salp1],
       /* The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz

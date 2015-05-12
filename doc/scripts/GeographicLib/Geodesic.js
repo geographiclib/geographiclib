@@ -70,13 +70,15 @@ GeographicLib.GeodesicLine = {};
   g.LONG_NOWRAP   = g.LONG_UNROLL;
   g.ALL           = g.OUT_ALL| g.CAP_ALL;
 
-  g.SinCosSeries = function(sinp, sinx, cosx, c, n) {
+  g.SinCosSeries = function(sinp, sinx, cosx, c) {
     // Evaluate
     // y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
     //            sum(c[i] * cos((2*i+1) * x), i, 0, n-1)
     // using Clenshaw summation.  N.B. c[0] is unused for sin series
     // Approx operation count = (n + 5) mult and (2 * n + 2) add
-    var k = n + (sinp ? 1 : 0); // Point to one beyond last element
+    var
+    k = c.length,               // Point to one beyond last element
+    n = k - (sinp ? 1 : 0);
     var
     ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
     y0 = n & 1 ? c[--k] : 0, y1 = 0;        // accumulators for sum
@@ -91,19 +93,6 @@ GeographicLib.GeodesicLine = {};
             cosx * (y0 - y1));            // cos(x) * (y0 - y1)
   };
 
-  g.AngRound = function(x) {
-    // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
-    // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
-    // is about 1000 times more resolution than we get with angles around 90
-    // degrees.)  We use this to avoid having to deal with near singular
-    // cases when x is non-zero but tiny (e.g., 1.0e-200).  This also converts
-    // -0 to +0.
-    var z = 1/16;
-    var y = Math.abs(x);
-    // The compiler mustn't "simplify" z - (z - y) to y
-    y = y < z ? z - (z - y) : y;
-    return x < 0 ? 0 - y : y;
-  };
   g.Astroid = function(x, y) {
     // Solve k^4+2*k^3-(x^2+y^2-1)*k^2-2*y^2*k-y^2 = 0 for positive
     // root k.  This solution is adapted from Geocentric::Reverse.
@@ -373,11 +362,11 @@ GeographicLib.GeodesicLine = {};
     g.C2f(eps, C2a);
     var
     A1m1 = g.A1m1f(eps),
-    AB1 = (1 + A1m1) * (g.SinCosSeries(true, ssig2, csig2, C1a, g.nC1_) -
-                        g.SinCosSeries(true, ssig1, csig1, C1a, g.nC1_)),
+    AB1 = (1 + A1m1) * (g.SinCosSeries(true, ssig2, csig2, C1a) -
+                        g.SinCosSeries(true, ssig1, csig1, C1a)),
     A2m1 = g.A2m1f(eps),
-    AB2 = (1 + A2m1) * (g.SinCosSeries(true, ssig2, csig2, C2a, g.nC2_) -
-                        g.SinCosSeries(true, ssig1, csig1, C2a, g.nC2_));
+    AB2 = (1 + A2m1) * (g.SinCosSeries(true, ssig2, csig2, C2a) -
+                        g.SinCosSeries(true, ssig1, csig1, C2a));
     vals.m0 = A1m1 - A2m1;
     var J12 = vals.m0 * sig12 + (AB1 - AB2);
     // Missing a factor of _b.
@@ -445,7 +434,7 @@ GeographicLib.GeodesicLine = {};
       vals.salp2 = cbet1 * somg12;
       vals.calp2 = sbet12 - cbet1 * sbet2 *
         (comg12 >= 0 ? m.sq(somg12) / (1 + comg12) : 1 - comg12);
-      // SinCosNorm(vals.salp2, vals.calp2);
+      // norm(vals.salp2, vals.calp2);
       t = m.hypot(vals.salp2, vals.calp2); vals.salp2 /= t; vals.calp2 /= t;
       // Set return value
       vals.sig12 = Math.atan2(ssig12, csig12);
@@ -547,7 +536,7 @@ GeographicLib.GeodesicLine = {};
     }
     // Sanity check on starting guess.  Backwards check allows NaN through.
     if (!(vals.salp1 <= 0)) {
-      // SinCosNorm(vals.salp1, vals.calp1);
+      // norm(vals.salp1, vals.calp1);
       t = m.hypot(vals.salp1, vals.calp1); vals.salp1 /= t; vals.calp1 /= t;
     } else {
       vals.salp1 = 1; vals.calp1 = 0;
@@ -576,9 +565,9 @@ GeographicLib.GeodesicLine = {};
     // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
     vals.ssig1 = sbet1; somg1 = salp0 * sbet1;
     vals.csig1 = comg1 = calp1 * cbet1;
-    // SinCosNorm(vals.ssig1, vals.csig1);
+    // norm(vals.ssig1, vals.csig1);
     t = m.hypot(vals.ssig1, vals.csig1); vals.ssig1 /= t; vals.csig1 /= t;
-    // SinCosNorm(somg1, comg1); -- don't need to normalize!
+    // norm(somg1, comg1); -- don't need to normalize!
 
     // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     // about this case, since this can yield singularities in the Newton
@@ -598,9 +587,9 @@ GeographicLib.GeodesicLine = {};
     // tan(omg2) = sin(alp0) * tan(sig2).
     vals.ssig2 = sbet2; somg2 = salp0 * sbet2;
     vals.csig2 = comg2 = vals.calp2 * cbet2;
-    // SinCosNorm(vals.ssig2, vals.csig2);
+    // norm(vals.ssig2, vals.csig2);
     t = m.hypot(vals.ssig2, vals.csig2); vals.ssig2 /= t; vals.csig2 /= t;
-    // SinCosNorm(somg2, comg2); -- don't need to normalize!
+    // norm(somg2, comg2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     vals.sig12 = Math.atan2(Math.max(vals.csig1 * vals.ssig2 -
@@ -614,8 +603,8 @@ GeographicLib.GeodesicLine = {};
     var k2 = m.sq(calp0) * this._ep2;
     vals.eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
     this.C3f(vals.eps, C3a);
-    B312 = (g.SinCosSeries(true, vals.ssig2, vals.csig2, C3a, g.nC3_-1) -
-            g.SinCosSeries(true, vals.ssig1, vals.csig1, C3a, g.nC3_-1));
+    B312 = (g.SinCosSeries(true, vals.ssig2, vals.csig2, C3a) -
+            g.SinCosSeries(true, vals.ssig1, vals.csig1, C3a));
     h0 = -this._f * this.A3f(vals.eps);
     vals.domg12 = salp0 * h0 * (vals.sig12 + B312);
     vals.lam12 = omg12 + vals.domg12;
@@ -644,13 +633,13 @@ GeographicLib.GeodesicLine = {};
     // east-going and meridional geodesics.
     var lon12 = m.AngDiff(m.AngNormalize(lon1), m.AngNormalize(lon2));
     // If very close to being on the same half-meridian, then make it so.
-    lon12 = g.AngRound(lon12);
+    lon12 = m.AngRound(lon12);
     // Make longitude difference positive.
     var lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
     // If really close to the equator, treat as on equator.
-    lat1 = g.AngRound(lat1);
-    lat2 = g.AngRound(lat2);
+    lat1 = m.AngRound(lat1);
+    lat2 = m.AngRound(lat2);
     // Swap points so that point with higher (abs) latitude is point 1
     var t, swapp = Math.abs(lat1) >= Math.abs(lat2) ? 1 : -1;
     if (swapp < 0) {
@@ -682,14 +671,14 @@ GeographicLib.GeodesicLine = {};
     // Ensure cbet1 = +epsilon at poles
     sbet1 = this._f1 * Math.sin(phi);
     cbet1 = lat1 === -90 ? g.tiny_ : Math.cos(phi);
-    // SinCosNorm(sbet1, cbet1);
+    // norm(sbet1, cbet1);
     t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
 
     phi = lat2 * m.degree;
     // Ensure cbet2 = +epsilon at poles
     sbet2 = this._f1 * Math.sin(phi);
     cbet2 = Math.abs(lat2) === 90 ? g.tiny_ : Math.cos(phi);
-    // SinCosNorm(sbet2, cbet2);
+    // norm(sbet2, cbet2);
     t = m.hypot(sbet2, cbet2); sbet2 /= t; cbet2 /= t;
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
@@ -863,7 +852,7 @@ GeographicLib.GeodesicLine = {};
             if (nsalp1 > 0 && Math.abs(dalp1) < Math.PI) {
               calp1 = calp1 * cdalp1 - salp1 * sdalp1;
               salp1 = Math.max(0, nsalp1);
-              // SinCosNorm(salp1, calp1);
+              // norm(salp1, calp1);
               t = m.hypot(salp1, calp1); salp1 /= t; calp1 /= t;
               // In some regimes we don't get quadratic convergence because
               // slope -> 0.  So use convergence conditions based on epsilon
@@ -882,7 +871,7 @@ GeographicLib.GeodesicLine = {};
           // WGS84 and random input: mean = 4.74, sd = 0.99
           salp1 = (salp1a + salp1b)/2;
           calp1 = (calp1a + calp1b)/2;
-          // SinCosNorm(salp1, calp1);
+          // norm(salp1, calp1);
           t = m.hypot(salp1, calp1); salp1 /= t; calp1 /= t;
           tripn = false;
           tripb = (Math.abs(salp1a - salp1) + (calp1a - calp1) < g.tolb_ ||
@@ -927,15 +916,15 @@ GeographicLib.GeodesicLine = {};
         eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
         // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
         A4 = m.sq(this._a) * calp0 * salp0 * this._e2;
-        // SinCosNorm(ssig1, csig1);
+        // norm(ssig1, csig1);
         t = m.hypot(ssig1, csig1); ssig1 /= t; csig1 /= t;
-        // SinCosNorm(ssig2, csig2);
+        // norm(ssig2, csig2);
         t = m.hypot(ssig2, csig2); ssig2 /= t; csig2 /= t;
         var C4a = new Array(g.nC4_);
         this.C4f(eps, C4a);
         var
-        B41 = g.SinCosSeries(false, ssig1, csig1, C4a, g.nC4_),
-        B42 = g.SinCosSeries(false, ssig2, csig2, C4a, g.nC4_);
+        B41 = g.SinCosSeries(false, ssig1, csig1, C4a),
+        B42 = g.SinCosSeries(false, ssig2, csig2, C4a);
         vals.S12 = A4 * (B42 - B41);
       } else
         // Avoid problems with indeterminate sig1, sig2 on equator

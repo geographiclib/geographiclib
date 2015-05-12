@@ -171,7 +171,7 @@ public class GeodesicLine {
       GeodesicMask.LONG_UNROLL;
 
     // Guard against underflow in salp0
-    azi1 = Geodesic.AngRound(GeoMath.AngNormalize(azi1));
+    azi1 = GeoMath.AngRound(GeoMath.AngNormalize(azi1));
     _lat1 = lat1;
     _lon1 = lon1;
     _azi1 = azi1;
@@ -186,7 +186,7 @@ public class GeodesicLine {
     // Ensure cbet1 = +epsilon at poles
     sbet1 = _f1 * Math.sin(phi);
     cbet1 = Math.abs(lat1) == 90 ? Geodesic.tiny_ : Math.cos(phi);
-    { Pair p = Geodesic.SinCosNorm(sbet1, cbet1);
+    { Pair p = GeoMath.norm(sbet1, cbet1);
       sbet1 = p.first; cbet1 = p.second; }
     _dn1 = Math.sqrt(1 + g._ep2 * GeoMath.sq(sbet1));
 
@@ -206,9 +206,9 @@ public class GeodesicLine {
     // With alp0 = 0, omg1 = 0 for alp1 = 0, omg1 = pi for alp1 = pi.
     _ssig1 = sbet1; _somg1 = _salp0 * sbet1;
     _csig1 = _comg1 = sbet1 != 0 || _calp1 != 0 ? cbet1 * _calp1 : 1;
-    { Pair p = Geodesic.SinCosNorm(_ssig1, _csig1);
+    { Pair p = GeoMath.norm(_ssig1, _csig1);
       _ssig1 = p.first; _csig1 = p.second; } // sig1 in (-pi, pi]
-    // Geodesic.SinCosNorm(_somg1, _comg1); -- don't need to normalize!
+    // GeoMath.norm(_somg1, _comg1); -- don't need to normalize!
 
     _k2 = GeoMath.sq(_calp0) * g._ep2;
     double eps = _k2 / (2 * (1 + Math.sqrt(1 + _k2)) + _k2);
@@ -542,7 +542,7 @@ public class GeodesicLine {
         B42 = Geodesic.SinCosSeries(false, ssig2, csig2, _C4a);
       double salp12, calp12;
       if (_calp0 == 0 || _salp0 == 0) {
-        // alp12 = alp2 - alp1, used in atan2 so no need to normalized
+        // alp12 = alp2 - alp1, used in atan2 so no need to normalize
         salp12 = salp2 * _calp1 - calp2 * _salp1;
         calp12 = calp2 * _calp1 + salp2 * _salp1;
         // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz

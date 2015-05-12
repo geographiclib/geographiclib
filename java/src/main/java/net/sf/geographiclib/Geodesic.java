@@ -234,25 +234,6 @@ public class Geodesic {
   private static final double tolb_ = tol0_ * tol2_;
   private static final double xthresh_ = 1000 * tol2_;
 
-  protected static double AngRound(double x) {
-    // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
-    // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
-    // is about 1000 times more resolution than we get with angles around 90
-    // degrees.)  We use this to avoid having to deal with near singular
-    // cases when x is non-zero but tiny (e.g., 1.0e-200).  This also converts
-    // -0 to +0.
-    final double z = 1/16.0;
-    double y = Math.abs(x);
-    // The compiler mustn't "simplify" z - (z - y) to y
-    y = y < z ? z - (z - y) : y;
-    return x < 0 ? 0 - y : y;
-  }
-
-  protected static Pair SinCosNorm(double sinx, double cosx) {
-    double r = GeoMath.hypot(sinx, cosx);
-    return new Pair(sinx/r, cosx/r);
-  }
-
   protected double _a, _f, _f1, _e2, _ep2, _b, _c2;
   private double _n, _etol2;
   private double _A3x[], _C3x[], _C4x[];
@@ -554,13 +535,13 @@ public class Geodesic {
     // east-going and meridional geodesics.
     double lon12 = GeoMath.AngDiff(lon1, lon2);
     // If very close to being on the same half-meridian, then make it so.
-    lon12 = AngRound(lon12);
+    lon12 = GeoMath.AngRound(lon12);
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
     // If really close to the equator, treat as on equator.
-    lat1 = AngRound(lat1);
-    lat2 = AngRound(lat2);
+    lat1 = GeoMath.AngRound(lat1);
+    lat2 = GeoMath.AngRound(lat2);
     // Save input parameters post normalization
     r.lat1 = lat1; r.lon1 = lon1; r.lat2 = lat2; r.lon2 = lon2;
     // Swap points so that point with higher (abs) latitude is point 1
@@ -592,14 +573,14 @@ public class Geodesic {
     // Ensure cbet1 = +epsilon at poles
     sbet1 = _f1 * Math.sin(phi);
     cbet1 = lat1 == -90 ? tiny_ : Math.cos(phi);
-    { Pair p = SinCosNorm(sbet1, cbet1);
+    { Pair p = GeoMath.norm(sbet1, cbet1);
       sbet1 = p.first; cbet1 = p.second; }
 
     phi = lat2 * GeoMath.degree;
     // Ensure cbet2 = +epsilon at poles
     sbet2 = _f1 * Math.sin(phi);
     cbet2 = Math.abs(lat2) == 90 ? tiny_ : Math.cos(phi);
-    { Pair p = SinCosNorm(sbet2, cbet2);
+    { Pair p = GeoMath.norm(sbet2, cbet2);
       sbet2 = p.first; cbet2 = p.second; }
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
@@ -770,7 +751,7 @@ public class Geodesic {
             if (nsalp1 > 0 && Math.abs(dalp1) < Math.PI) {
               calp1 = calp1 * cdalp1 - salp1 * sdalp1;
               salp1 = nsalp1;
-              { Pair p = SinCosNorm(salp1, calp1);
+              { Pair p = GeoMath.norm(salp1, calp1);
                 salp1 = p.first; calp1 = p.second; }
               // In some regimes we don't get quadratic convergence because
               // slope -> 0.  So use convergence conditions based on epsilon
@@ -789,7 +770,7 @@ public class Geodesic {
           // WGS84 and random input: mean = 4.74, sd = 0.99
           salp1 = (salp1a + salp1b)/2;
           calp1 = (calp1a + calp1b)/2;
-          { Pair p = SinCosNorm(salp1, calp1);
+          { Pair p = GeoMath.norm(salp1, calp1);
             salp1 = p.first; calp1 = p.second; }
           tripn = false;
           tripb = (Math.abs(salp1a - salp1) + (calp1a - calp1) < tolb_ ||
@@ -833,9 +814,9 @@ public class Geodesic {
           eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2),
           // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
           A4 = GeoMath.sq(_a) * calp0 * salp0 * _e2;
-        { Pair p = SinCosNorm(ssig1, csig1);
+        { Pair p = GeoMath.norm(ssig1, csig1);
           ssig1 = p.first; csig1 = p.second; }
-        { Pair p = SinCosNorm(ssig2, csig2);
+        { Pair p = GeoMath.norm(ssig2, csig2);
           ssig2 = p.first; csig2 = p.second; }
         double C4a[] = new double[nC4_];
         C4f(eps, C4a);
@@ -1021,7 +1002,9 @@ public class Geodesic {
     //            sum(c[i] * cos((2*i+1) * x), i, 0, n-1)
     // using Clenshaw summation.  N.B. c[0] is unused for sin series
     // Approx operation count = (n + 5) mult and (2 * n + 2) add
-    int k = c.length, n = k - (sinp ? 1 : 0);
+    int
+      k = c.length,             // Point to one beyond last element
+      n = k - (sinp ? 1 : 0);
     double
       ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
       y0 = (n & 1) != 0 ? c[--k] : 0, y1 = 0;        // accumulators for sum
@@ -1188,7 +1171,7 @@ public class Geodesic {
       w.salp2 = cbet1 * somg12;
       w.calp2 = sbet12 - cbet1 * sbet2 *
         (comg12 >= 0 ? GeoMath.sq(somg12) / (1 + comg12) : 1 - comg12);
-      { Pair p = SinCosNorm(w.salp2, w.calp2);
+      { Pair p = GeoMath.norm(w.salp2, w.calp2);
         w.salp2 = p.first; w.calp2 = p.second; }
       // Set return value
       w.sig12 = Math.atan2(ssig12, csig12);
@@ -1292,7 +1275,7 @@ public class Geodesic {
     }
     // Sanity check on starting guess.  Backwards check allows NaN through.
     if (!(w.salp1 <= 0))
-      { Pair p = SinCosNorm(w.salp1, w.calp1);
+      { Pair p = GeoMath.norm(w.salp1, w.calp1);
         w.salp1 = p.first; w.calp1 = p.second; }
     else {
       w.salp1 = 1; w.calp1 = 0;
@@ -1335,9 +1318,9 @@ public class Geodesic {
     // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
     w.ssig1 = sbet1; somg1 = salp0 * sbet1;
     w.csig1 = comg1 = calp1 * cbet1;
-    { Pair p = SinCosNorm(w.ssig1, w.csig1);
+    { Pair p = GeoMath.norm(w.ssig1, w.csig1);
       w.ssig1 = p.first; w.csig1 = p.second; }
-    // SinCosNorm(somg1, comg1); -- don't need to normalize!
+    // GeoMath.norm(somg1, comg1); -- don't need to normalize!
 
     // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     // about this case, since this can yield singularities in the Newton
@@ -1358,9 +1341,9 @@ public class Geodesic {
     // tan(omg2) = sin(alp0) * tan(sig2).
     w.ssig2 = sbet2; somg2 = salp0 * sbet2;
     w.csig2 = comg2 = w.calp2 * cbet2;
-    { Pair p = SinCosNorm(w.ssig2, w.csig2);
+    { Pair p = GeoMath.norm(w.ssig2, w.csig2);
       w.ssig2 = p.first; w.csig2 = p.second; }
-    // SinCosNorm(somg2, comg2); -- don't need to normalize!
+    // GeoMath.norm(somg2, comg2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     w.sig12 = Math.atan2(Math.max(w.csig1 * w.ssig2 - w.ssig1 * w.csig2, 0.0),

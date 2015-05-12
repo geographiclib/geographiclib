@@ -75,6 +75,12 @@ class Math(object):
     return -y if x < 0 else y
   atanh = staticmethod(atanh)
 
+  def norm(x, y):
+    """Private: Normalize a two-vector."""
+    r = math.hypot(x, y)
+    return x/r, y/r
+  norm = staticmethod(norm)
+
   def sum(u, v):
     """Error free transformation of a sum."""
     # Error free transformation of a sum.  Note that t can be the same as one
@@ -89,6 +95,29 @@ class Math(object):
     #       = round(u + v) + t
     return s, t
   sum = staticmethod(sum)
+
+  def polyval(N, p, s, x):
+    """Evaluate a polynomial."""
+    y = 0 if N < 0 else p[s]
+    while N > 0:
+      N -= 1; s += 1
+      y = y * x + p[s]
+    return y
+  polyval = staticmethod(polyval)
+
+  def AngRound(x):
+    """Private: Round an angle so that small values underflow to zero."""
+    # The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
+    # for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
+    # is about 1000 times more resolution than we get with angles around 90
+    # degrees.)  We use this to avoid having to deal with near singular
+    # cases when x is non-zero but tiny (e.g., 1.0e-200).
+    z = 1/16.0
+    y = abs(x)
+    # The compiler mustn't "simplify" z - (z - y) to y
+    if y < z: y = z - (z - y)
+    return 0 - y if x < 0 else y
+  AngRound = staticmethod(AngRound)
 
   def AngNormalize(x):
     """reduce angle in [-540,540) to [-180,180)"""
