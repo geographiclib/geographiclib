@@ -6988,9 +6988,9 @@ git repository for GeographicLib</a>.
      and strips whitespace from both beginning and end of the string.
    - Add Math::polyval (done: C++, C, Java, JavaScript, MATLAB, Fortran,
      python).
-   - Use Math::polyval (TODO: TM routines in C++, MATLAB; Geodesic
-     routines C, Fortran, Java, JavaScript, python).
-   - Migrations AngRound and SinCosNorm to math class for python, Java,
+   - Use Math::polyval (done: C++, C, MATLAB, Fortran; TODO: TM routines
+     in C++, MATLAB; Geodesic routines Java, JavaScript, python).
+   - Migrate AngRound and SinCosNorm to math class for python, Java,
      JavaScript.
    - Fix LONG_UNROLL unrolling bug: C++ (Geodesic, GeodesicExact),
      JavaScript, Java, C, Fortran, MATLAB, Maxima, Python.
@@ -7006,8 +7006,9 @@ git repository for GeographicLib</a>.
      MATLAB, Maxima, Python.
    - DMS::DecodeLatLat takes optional unroll arg.
    - Implement GeodSolve -u.  python inverse includes updated lon2 in
-     output dictionary if LONG_UNROLL is set.  TODO: add similar option
-     to cgi version for GeodSolve.
+     output dictionary if LONG_UNROLL is set.  GeodSolve avoids
+     unnecessary calculations.  TODO: add similar option to cgi version
+     for GeodSolve.
 
  - <a href="http://geographiclib.sf.net/1.42">Version 1.42</a>
    (released 2015-04-28)

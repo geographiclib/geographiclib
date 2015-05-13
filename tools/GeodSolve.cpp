@@ -200,21 +200,28 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
+    // GeodesicExact mask values are the same as Geodesic
+    unsigned outmask = Geodesic::LATITUDE | Geodesic::LONGITUDE |
+      Geodesic::AZIMUTH;        // basic output quantities
+    outmask |= inverse ? Geodesic::DISTANCE : // distance-related flags
+      (arcmode ? Geodesic::NONE : Geodesic::DISTANCE_IN);
+    // longitude unrolling
+    outmask |= unroll ? Geodesic::LONG_UNROLL : Geodesic::NONE;
+    // full output -- don't use Geodesic::ALL since this includes DISTANCE_IN
+    outmask |= full ? (Geodesic::DISTANCE | Geodesic::REDUCEDLENGTH |
+                       Geodesic::GEODESICSCALE | Geodesic::AREA) :
+      Geodesic::NONE;
+
     const Geodesic      geods(a, f);
     const GeodesicExact geode(a, f);
     GeodesicLine      ls;
     GeodesicLineExact le;
     if (linecalc) {
       if (exact)
-        le = geode.Line(lat1, lon1, azi1);
+        le = geode.Line(lat1, lon1, azi1, outmask);
       else
-        ls = geods.Line(lat1, lon1, azi1);
+        ls = geods.Line(lat1, lon1, azi1, outmask);
     }
-
-    unsigned outmask = exact ?
-      (GeodesicExact::ALL |
-       (unroll ? GeodesicExact::LONG_UNROLL : GeodesicExact::NONE)) :
-      (Geodesic::ALL | (unroll ? Geodesic::LONG_UNROLL : Geodesic::NONE));
 
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
@@ -243,10 +250,10 @@ int main(int argc, char* argv[]) {
           // Normalize second longitude
           DMS::DecodeLatLon(slat2, slon2, lat2, lon2, false, true);
           a12 = exact ?
-            geode.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2,
-                          m12, M12, M21, S12) :
-            geods.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2,
-                          m12, M12, M21, S12);
+            geode.GenInverse(lat1, lon1, lat2, lon2, outmask,
+                             s12, azi1, azi2, m12, M12, M21, S12) :
+            geods.GenInverse(lat1, lon1, lat2, lon2, outmask,
+                             s12, azi1, azi2, m12, M12, M21, S12);
           if (full)
             *output << LatLonString(lat1, lon1, prec, dms, dmssep) << " ";
           *output << AzimuthString(azi1, prec, dms, dmssep) << " ";
