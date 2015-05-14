@@ -4336,13 +4336,13 @@ geodesics</a>).
    non-umbilical point is found using the generalization of Clairaut's
    equation (given above) with \f$\gamma = 0\f$.
  - Treat the cases where the geodesic might follow a line of constant
-   \f$\beta\f$.  There are two such cases: (a) the points lie on the
-   ellipse \f$z = 0\f$ on a general ellipsoid and (b) the points lie on
-   an ellipse whose major axis is the \f$x\f$ axis on a prolate ellipsoid
-   (\f$a = b > c\f$).  Determine the reduced length \f$m_{12}\f$ for the
-   geodesic which is the shorter path along the ellipse.  If \f$m_{12}
-   \ge 0\f$, then this is the shortest path on the ellipsoid; otherwise
-   proceed to the general case (next).
+   \f$\beta\f$.  There are two such cases: (a)&nbsp;the points lie on
+   the ellipse \f$z = 0\f$ on a general ellipsoid and (b)&nbsp;the
+   points lie on an ellipse whose major axis is the \f$x\f$ axis on a
+   prolate ellipsoid (\f$a = b > c\f$).  Determine the reduced length
+   \f$m_{12}\f$ for the geodesic which is the shorter path along the
+   ellipse.  If \f$m_{12} \ge 0\f$, then this is the shortest path on
+   the ellipsoid; otherwise proceed to the general case (next).
  - Swap the points, if necessary, so that the first point is the one
    closest to a pole.  Estimate \f$\alpha_1\f$ (by some means) and solve
    the \e hybrid problem, i.e., determine the longitude \f$\omega_2\f$
@@ -6978,6 +6978,39 @@ git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-mm-dd)
+   - Changes in the LONG_NOWRAP option (added in version 1.39) in the
+     Geodesic and GeodesicLib classes:
+     - The option is now called LONG_UNROLL (a less negative sounding
+       term); the original name, LONG_NOWRAP, is retained for backwards
+       compatibility.
+     - There were two bad BUGS in the implementation of this capability:
+       (a)&nbsp;it gave <i>incorrect</i> results for west-going
+       geodesics; (b)&nbsp;the option was <i>ignored</i> if used
+       directly via the GeodesicLine class.  The first bug affected the
+       implementations in all languages.  The second affected the
+       implementation in C++ (GeodesicLine and GeodesicLineExact),
+       JavaScript, Java, C, Python.  These bugs have now been FIXED.
+     - <a href="GeodSolve.1.html">GeodSolve</a> now accepts a -u option,
+       which turns on the LONG_UNROLL treatment.  With this option
+       <code>lon1</code> is reported as entered and <code>lon2</code> is
+       given such that <code>lon2</code> &minus; <code>lon1</code>
+       indicates how often and in what sense the geodesic has encircled
+       the earth.  (This option also affects the value of longitude
+       reported when an inverse calculation is run with the -f option.)
+     - The inverse calculation with the python library similarly sets
+       <code>lon1</code> and <code>lon2</code> in output dictionary
+       respecting the LONG_UNROLL flag.
+     - TODO: add similar option to cgi version of GeodSolve.
+     - To support these changes DMS::DecodeLatLon now takes an optional
+       unroll arg and Math::AngRound now coverts -0 to 0.
+   - Add Math::polyval (also to C, Java, JavaScript, Fortran, python
+     versions of the library; this is a built-in function for
+     MATLAB/Octave).  This evaluates a polynomial using Horner's method.
+     In the C++ implementation, it uses Math::fma which will reduce the
+     round-off error during the evaluation.  All the Maxima-generated
+     code in GeographicLib has been replaced by Maxima-generated arrays
+     of polynomial coefficients which are used as input to
+     Math::polyval.  TODO: TM routines in C++, MATLAB.
    - Reminder to clean out install directories from pre-1.42
      installations.
    - Add MGRS::Check() to verify (and document) that \e a, \e f,
@@ -6986,29 +7019,11 @@ git repository for GeographicLib</a>.
      invoked with <code>GeoConvert --version</code>.
    - MATLAB function mgrs_inv now takes an optional \e center argument
      and strips whitespace from both beginning and end of the string.
-   - Add Math::polyval (done: C++, C, Java, JavaScript, MATLAB, Fortran,
-     python).
-   - Use Math::polyval (done: C++, C, MATLAB, Fortran; TODO: TM routines
-     in C++, MATLAB; Geodesic routines Java, JavaScript, python).
-   - Migrate AngRound and SinCosNorm to math class for python, Java,
-     JavaScript.
-   - Fix LONG_UNROLL unrolling bug: C++ (Geodesic, GeodesicExact),
-     JavaScript, Java, C, Fortran, MATLAB, Maxima, Python.
-   - GeodesicLine{,Exact} constructor now unconditionally adds
-     LONG_UNROLL to its capabilities.  (Without this the LONG_UNROLL
-     flag was ignored when invoking GeodesicLine::GenPosition.)  Also
-     for JavaScript, Java, C, Python.
-   - Rename LONG_NOWRAP -> LONG_UNROLL: C++ (inc. Geodesic,
-     GeodesicExact, Rhumb), JavaScript, dotnet, Java, C, Fortran,
-     MATLAB, Python.  The name LONG_NOWRAP is retained for backwards
-     compatibility.
-   - AngRound now converts -0 to +0: C++, JavaScript, Java, C, Fortran,
-     MATLAB, Maxima, Python.
-   - DMS::DecodeLatLat takes optional unroll arg.
-   - Implement GeodSolve -u.  python inverse includes updated lon2 in
-     output dictionary if LONG_UNROLL is set.  GeodSolve avoids
-     unnecessary calculations.  TODO: add similar option to cgi version
-     for GeodSolve.
+   - Minor internal changes:
+     - GeodSolve sets the geodesic mask so that unnecessary calculations
+       are avoided;
+     - some routines have migrated into a math class for for python,
+       Java, JavaScript libraries.
 
  - <a href="http://geographiclib.sf.net/1.42">Version 1.42</a>
    (released 2015-04-28)
@@ -7107,7 +7122,7 @@ git repository for GeographicLib</a>.
      longitude "unwrapped".  So the following changes have been made:
      - add a LONG_NOWRAP flag to \e mask enums for the \e outmask
        arguments for Geodesic, GeodesicLine, Rhumb, and RhumbLine;
-     - similar changes have been made to the Python, Javascript, and
+     - similar changes have been made to the Python, JavaScript, and
        Java implementations of the geodesic routines;
      - for the C, Fortran, and MATLAB implementations the \e arcmode
        argument to the routines was generalized to allow a combination
@@ -7117,7 +7132,7 @@ git repository for GeographicLib</a>.
      These changes were necessary to fix the PolygonAreaT::AddEdge (see
      the next item).
    - Changes in area calculations:
-     - fix BUG in PolygonAreaT::AddEdge (also in C, Java, Javascript,
+     - fix BUG in PolygonAreaT::AddEdge (also in C, Java, JavaScript,
        and Python implementations) which sometimes causes the wrong area
        to be returned if the edge spanned more than 180&deg;;
      - add area calculation to the Rhumb and RhumbLine classes and the

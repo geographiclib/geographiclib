@@ -105,14 +105,17 @@
  * some additional packages to your local repository.)  Then compile and run
  * Inverse.java with <pre>
  * cd inverse/src/main/java
- * javac -cp .:../../../../target/GeographicLib-1.43.jar Inverse.java
+ * javac -cp .:../../../../target/GeographicLib-Java-1.43.jar Inverse.java
  * echo -30 0 29.5 179.5 |
- *   java -cp .:../../../../target/GeographicLib-1.43.jar Inverse </pre>
+ *   java -cp .:../../../../target/GeographicLib-Java-1.43.jar Inverse </pre>
  *
  * <h3>Using maven to build and run {@code Inverse.java}</h3>
- * The sample code includes a {@code pom.xml} which downloads the pre-built
- * artifact for GeographicLib-Java from Maven Central.  So you can compile and
- * run Inverse.java with <pre>
+ * The sample code includes a {@code pom.xml} which specifies
+ * GeographicLib-Jave as a dependency.  You can build and install this
+ * dependency by running (in the main java directory) <pre>
+ * mvn install </pre>
+ * Alternatively, you can let maven download it from Maven Central.  You can
+ * compile and run Inverse.java with <pre>
  * cd inverse
  * mvn compile
  * echo -30 0 29.5 179.5 | mvn -q exec:java </pre>

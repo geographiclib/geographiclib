@@ -803,13 +803,7 @@ namespace GeographicLib {
 
   Math::real Geodesic::A3f(real eps) const {
     // Evaluate A3
-    int o = 0;
-    real v = Math::polyval(nA3_ - 1, _A3x, eps);
-    o += nA3_;
-    // Post condition: o == sizeof(_A3x) / sizeof(real)
-    if  (!(o == sizeof(_A3x) / sizeof(real)))
-      throw GeographicErr("A3 misalignment");
-    return v;
+    return Math::polyval(nA3_ - 1, _A3x, eps);
   }
 
   void Geodesic::C3f(real eps, real c[]) const {
@@ -824,8 +818,6 @@ namespace GeographicLib {
       o += m + 1;
     }
     // Post condition: o == nC3x_
-    if  (!(o == nC3x_))
-      throw GeographicErr("C3 misalignment");
   }
 
   void Geodesic::C4f(real eps, real c[]) const {
@@ -840,8 +832,6 @@ namespace GeographicLib {
       mult *= eps;
     }
     // Post condition: o == nC4x_
-    if  (!(o == nC4x_))
-      throw GeographicErr("C4 misalignment");
   }
 
   // The static const coefficient arrays in the following functions are
@@ -900,12 +890,8 @@ namespace GeographicLib {
 #endif
     GEOGRAPHICLIB_STATIC_ASSERT(sizeof(coeff) / sizeof(real) == nA1_/2 + 2,
                                 "Coefficient array size mismatch in A1m1f");
-    int o = 0, m = nA1_/2;
+    int m = nA1_/2;
     real t = Math::polyval(m, coeff, Math::sq(eps)) / coeff[m + 1];
-    o += m + 2;
-    // Post condition: o == sizeof(coeff) / sizeof(real)
-    if  (!(o == sizeof(coeff) / sizeof(real)))
-      throw GeographicErr("A1 misalignment");
     return (t + eps) / (1 - eps);
   }
 
@@ -1028,8 +1014,6 @@ namespace GeographicLib {
       d *= eps;
     }
     // Post condition: o == sizeof(coeff) / sizeof(real)
-    if  (!(o == sizeof(coeff) / sizeof(real)))
-      throw GeographicErr("C1 misalignment");
   }
 
   // The coefficients C1p[l] in the Fourier expansion of B1p
@@ -1151,8 +1135,6 @@ namespace GeographicLib {
       d *= eps;
     }
     // Post condition: o == sizeof(coeff) / sizeof(real)
-    if  (!(o == sizeof(coeff) / sizeof(real)))
-      throw GeographicErr("C2 misalignment");
   }
 
   // The scale factor A2-1 = mean value of (d/dsigma)I2 - 1
@@ -1188,12 +1170,8 @@ namespace GeographicLib {
 #endif
     GEOGRAPHICLIB_STATIC_ASSERT(sizeof(coeff) / sizeof(real) == nA2_/2 + 2,
                                 "Coefficient array size mismatch in A2m1f");
-    int o = 0, m = nA2_/2;
+    int m = nA2_/2;
     real t = Math::polyval(m, coeff, Math::sq(eps)) / coeff[m + 1];
-    o += m + 2;
-    // Post condition: o == sizeof(coeff) / sizeof(real)
-    if  (!(o == sizeof(coeff) / sizeof(real)))
-      throw GeographicErr("A2 misalignment");
     return t * (1 - eps) - eps;
   }
 
@@ -1316,8 +1294,6 @@ namespace GeographicLib {
       d *= eps;
     }
     // Post condition: o == sizeof(coeff) / sizeof(real)
-    if  (!(o == sizeof(coeff) / sizeof(real)))
-      throw GeographicErr("C2 misalignment");
   }
 
   // The scale factor A3 = mean value of (d/dsigma)I3
@@ -1435,8 +1411,6 @@ namespace GeographicLib {
       o += m + 2;
     }
     // Post condition: o == sizeof(coeff) / sizeof(real) && k == nA3x_
-    if  (!(o == sizeof(coeff) / sizeof(real) && k == nA3x_))
-      throw GeographicErr("A3 misalignment");
   }
 
   // The coefficients C3[l] in the Fourier expansion of B3
@@ -1654,8 +1628,6 @@ namespace GeographicLib {
       }
     }
     // Post condition: o == sizeof(coeff) / sizeof(real) && k == nC3x_
-    if  (!(o == sizeof(coeff) / sizeof(real) && k == nC3x_))
-      throw GeographicErr("C3 misalignment");
   }
 
   void Geodesic::C4coeff() {
@@ -1942,8 +1914,6 @@ namespace GeographicLib {
       }
     }
     // Post condition: o == sizeof(coeff) / sizeof(real) && k == nC4x_
-    if  (!(o == sizeof(coeff) / sizeof(real) && k == nC4x_))
-      throw GeographicErr("C4 misalignment");
   }
 
 } // namespace GeographicLib

@@ -6,7 +6,7 @@ function A1m1 = A1m1f(epsi)
 
   coeff = [ ...
       1, 4, 64, 0, 256, ...
-    ];
+          ];
   eps2 = epsi.^2;
   t = polyval(coeff(1 : end - 1), eps2) / coeff(end);
   A1m1 = (t + epsi) ./ (1 - epsi);

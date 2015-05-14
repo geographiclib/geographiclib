@@ -98,7 +98,7 @@ class Math(object):
 
   def polyval(N, p, s, x):
     """Evaluate a polynomial."""
-    y = 0 if N < 0 else p[s]
+    y = float(0 if N < 0 else p[s]) # make sure the returned value is a float
     while N > 0:
       N -= 1; s += 1
       y = y * x + p[s]

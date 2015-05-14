@@ -182,67 +182,82 @@ class Geodesic(object):
 
   def A1m1f(eps):
     """Private: return A1-1."""
-    eps2 = Math.sq(eps)
-    t = eps2*(eps2*(eps2+4)+64)/256
+    coeff = [
+      1, 4, 64, 0, 256,
+    ]
+    m = Geodesic.nA1_//2
+    t = Math.polyval(m, coeff, 0, Math.sq(eps)) / coeff[m + 1]
     return (t + eps) / (1 - eps)
   A1m1f = staticmethod(A1m1f)
 
   def C1f(eps, c):
     """Private: return C1."""
+    coeff = [
+      -1, 6, -16, 32,
+      -9, 64, -128, 2048,
+      9, -16, 768,
+      3, -5, 512,
+      -7, 1280,
+      -7, 2048,
+    ]
     eps2 = Math.sq(eps)
     d = eps
-    c[1] = d*((6-eps2)*eps2-16)/32
-    d *= eps
-    c[2] = d*((64-9*eps2)*eps2-128)/2048
-    d *= eps
-    c[3] = d*(9*eps2-16)/768
-    d *= eps
-    c[4] = d*(3*eps2-5)/512
-    d *= eps
-    c[5] = -7*d/1280
-    d *= eps
-    c[6] = -7*d/2048
+    o = 0
+    for l in range(1, Geodesic.nC1_ + 1): # l is index of C1p[l]
+      m = (Geodesic.nC1_ - l) // 2        # order of polynomial in eps^2
+      c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
+      o += m + 2
+      d *= eps
   C1f = staticmethod(C1f)
 
   def C1pf(eps, c):
     """Private: return C1'"""
+    coeff = [
+      205, -432, 768, 1536,
+      4005, -4736, 3840, 12288,
+      -225, 116, 384,
+      -7173, 2695, 7680,
+      3467, 7680,
+      38081, 61440,
+    ]
     eps2 = Math.sq(eps)
     d = eps
-    c[1] = d*(eps2*(205*eps2-432)+768)/1536
-    d *= eps
-    c[2] = d*(eps2*(4005*eps2-4736)+3840)/12288
-    d *= eps
-    c[3] = d*(116-225*eps2)/384
-    d *= eps
-    c[4] = d*(2695-7173*eps2)/7680
-    d *= eps
-    c[5] = 3467*d/7680
-    d *= eps
-    c[6] = 38081*d/61440
+    o = 0
+    for l in range(1, Geodesic.nC1p_ + 1): # l is index of C1p[l]
+      m = (Geodesic.nC1p_ - l) // 2 # order of polynomial in eps^2
+      c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
+      o += m + 2
+      d *= eps
   C1pf = staticmethod(C1pf)
 
   def A2m1f(eps):
     """Private: return A2-1"""
-    eps2 = Math.sq(eps)
-    t = eps2*(eps2*(25*eps2+36)+64)/256
+    coeff = [
+      25, 36, 64, 0, 256,
+    ]
+    m = Geodesic.nA2_//2
+    t = Math.polyval(m, coeff, 0, Math.sq(eps)) / coeff[m + 1]
     return t * (1 - eps) - eps
   A2m1f = staticmethod(A2m1f)
 
   def C2f(eps, c):
     """Private: return C2"""
+    coeff = [
+      1, 2, 16, 32,
+      35, 64, 384, 2048,
+      15, 80, 768,
+      7, 35, 512,
+      63, 1280,
+      77, 2048,
+    ]
     eps2 = Math.sq(eps)
     d = eps
-    c[1] = d*(eps2*(eps2+2)+16)/32
-    d *= eps
-    c[2] = d*(eps2*(35*eps2+64)+384)/2048
-    d *= eps
-    c[3] = d*(15*eps2+80)/768
-    d *= eps
-    c[4] = d*(7*eps2+35)/512
-    d *= eps
-    c[5] = 63*d/1280
-    d *= eps
-    c[6] = 77*d/2048
+    o = 0
+    for l in range(1, Geodesic.nC2_ + 1): # l is index of C2[l]
+      m = (Geodesic.nC2_ - l) // 2        # order of polynomial in eps^2
+      c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
+      o += m + 2
+      d *= eps
   C2f = staticmethod(C2f)
 
   def __init__(self, a, f):
@@ -288,101 +303,109 @@ class Geodesic(object):
 
   def A3coeff(self):
     """Private: return coefficients for A3"""
-    _n = self._n
-    self._A3x[0] = 1
-    self._A3x[1] = (_n-1)/2
-    self._A3x[2] = (_n*(3*_n-1)-2)/8
-    self._A3x[3] = ((-_n-3)*_n-1)/16
-    self._A3x[4] = (-2*_n-3)/64
-    self._A3x[5] = -3/128.0
+    coeff = [
+      -3, 128,
+      -2, -3, 64,
+      -1, -3, -1, 16,
+      3, -1, -2, 8,
+      1, -1, 2,
+      1, 1,
+    ]
+    o = 0; k = 0
+    for j in range(Geodesic.nA3_ - 1, -1, -1): # coeff of eps^j
+      m = min(Geodesic.nA3_ - j - 1, j) # order of polynomial in n
+      self._A3x[k] = Math.polyval(m, coeff, o, self._n) / coeff[o + m + 1]
+      k += 1
+      o += m + 2
 
   def C3coeff(self):
     """Private: return coefficients for C3"""
-    _n = self._n
-    self._C3x[0] = (1-_n)/4
-    self._C3x[1] = (1-_n*_n)/8
-    self._C3x[2] = ((3-_n)*_n+3)/64
-    self._C3x[3] = (2*_n+5)/128
-    self._C3x[4] = 3/128.0
-    self._C3x[5] = ((_n-3)*_n+2)/32
-    self._C3x[6] = ((-3*_n-2)*_n+3)/64
-    self._C3x[7] = (_n+3)/128
-    self._C3x[8] = 5/256.0
-    self._C3x[9] = (_n*(5*_n-9)+5)/192
-    self._C3x[10] = (9-10*_n)/384
-    self._C3x[11] = 7/512.0
-    self._C3x[12] = (7-14*_n)/512
-    self._C3x[13] = 7/512.0
-    self._C3x[14] = 21/2560.0
+    coeff = [
+      3, 128,
+      2, 5, 128,
+      -1, 3, 3, 64,
+      -1, 0, 1, 8,
+      -1, 1, 4,
+      5, 256,
+      1, 3, 128,
+      -3, -2, 3, 64,
+      1, -3, 2, 32,
+      7, 512,
+      -10, 9, 384,
+      5, -9, 5, 192,
+      7, 512,
+      -14, 7, 512,
+      21, 2560,
+    ]
+    o = 0; k = 0
+    for l in range(1, Geodesic.nC3_): # l is index of C3[l]
+      for j in range(Geodesic.nC3_ - 1, l - 1, -1): # coeff of eps^j
+        m = min(Geodesic.nC3_ - j - 1, j) # order of polynomial in n
+        self._C3x[k] = Math.polyval(m, coeff, o, self._n) / coeff[o + m + 1]
+        k += 1
+        o += m + 2
 
   def C4coeff(self):
     """Private: return coefficients for C4"""
-    _n = self._n
-    self._C4x[0] = (_n*(_n*(_n*(_n*(100*_n+208)+572)+3432)-12012)+30030)/45045
-    self._C4x[1] = (_n*(_n*(_n*(64*_n+624)-4576)+6864)-3003)/15015
-    self._C4x[2] = (_n*((14144-10656*_n)*_n-4576)-858)/45045
-    self._C4x[3] = ((-224*_n-4784)*_n+1573)/45045
-    self._C4x[4] = (1088*_n+156)/45045
-    self._C4x[5] = 97/15015.0
-    self._C4x[6] = (_n*(_n*((-64*_n-624)*_n+4576)-6864)+3003)/135135
-    self._C4x[7] = (_n*(_n*(5952*_n-11648)+9152)-2574)/135135
-    self._C4x[8] = (_n*(5792*_n+1040)-1287)/135135
-    self._C4x[9] = (468-2944*_n)/135135
-    self._C4x[10] = 1/9009.0
-    self._C4x[11] = (_n*((4160-1440*_n)*_n-4576)+1716)/225225
-    self._C4x[12] = ((4992-8448*_n)*_n-1144)/225225
-    self._C4x[13] = (1856*_n-936)/225225
-    self._C4x[14] = 8/10725.0
-    self._C4x[15] = (_n*(3584*_n-3328)+1144)/315315
-    self._C4x[16] = (1024*_n-208)/105105
-    self._C4x[17] = -136/63063.0
-    self._C4x[18] = (832-2560*_n)/405405
-    self._C4x[19] = -128/135135.0
-    self._C4x[20] = 128/99099.0
+    coeff = [
+      97, 15015,
+      1088, 156, 45045,
+      -224, -4784, 1573, 45045,
+      -10656, 14144, -4576, -858, 45045,
+      64, 624, -4576, 6864, -3003, 15015,
+      100, 208, 572, 3432, -12012, 30030, 45045,
+      1, 9009,
+      -2944, 468, 135135,
+      5792, 1040, -1287, 135135,
+      5952, -11648, 9152, -2574, 135135,
+      -64, -624, 4576, -6864, 3003, 135135,
+      8, 10725,
+      1856, -936, 225225,
+      -8448, 4992, -1144, 225225,
+      -1440, 4160, -4576, 1716, 225225,
+      -136, 63063,
+      1024, -208, 105105,
+      3584, -3328, 1144, 315315,
+      -128, 135135,
+      -2560, 832, 405405,
+      128, 99099,
+    ]
+    o = 0; k = 0
+    for l in range(Geodesic.nC4_): # l is index of C4[l]
+      for j in range(Geodesic.nC4_ - 1, l - 1, -1): # coeff of eps^j
+        m = Geodesic.nC4_ - j - 1 # order of polynomial in n
+        self._C4x[k] = Math.polyval(m, coeff, o, self._n) / coeff[o + m + 1]
+        k += 1
+        o += m + 2
 
   def A3f(self, eps):
     """Private: return A3"""
-    # Evaluate sum(_A3x[k] * eps^k, k, 0, nA3x_-1) by Horner's method
-    v = 0
-    for i in range(Geodesic.nA3x_-1, -1, -1):
-      v = eps * v + self._A3x[i]
-    return v
+    # Evaluate A3
+    return Math.polyval(Geodesic.nA3_ - 1, self._A3x, 0, eps)
 
   def C3f(self, eps, c):
     """Private: return C3"""
-    # Evaluate C3 coeffs by Horner's method
+    # Evaluate C3
     # Elements c[1] thru c[nC3_ - 1] are set
-    j = Geodesic.nC3x_; k = Geodesic.nC3_ - 1
-    while k:
-      t = 0
-      for _ in range(Geodesic.nC3_ - k):
-        j -= 1
-        t = eps * t + self._C3x[j]
-      c[k] = t
-      k -= 1
-
     mult = 1
-    for k in range(1, Geodesic.nC3_):
+    o = 0
+    for l in range(1, Geodesic.nC3_): # l is index of C3[l]
+      m = Geodesic.nC3_ - l - 1       # order of polynomial in eps
       mult *= eps
-      c[k] *= mult
+      c[l] = mult * Math.polyval(m, self._C3x, o, eps)
+      o += m + 1
 
   def C4f(self, eps, c):
     """Private: return C4"""
     # Evaluate C4 coeffs by Horner's method
     # Elements c[0] thru c[nC4_ - 1] are set
-    j = Geodesic.nC4x_; k = Geodesic.nC4_
-    while k:
-      t = 0
-      for _ in range(Geodesic.nC4_ - k + 1):
-        j -= 1
-        t = eps * t + self._C4x[j]
-      k -= 1
-      c[k] = t
-
     mult = 1
-    for k in range(1, Geodesic.nC4_):
+    o = 0
+    for l in range(Geodesic.nC4_): # l is index of C4[l]
+      m = Geodesic.nC4_ - l - 1    # order of polynomial in eps
+      c[l] = mult * Math.polyval(m, self._C4x, o, eps)
+      o += m + 1
       mult *= eps
-      c[k] *= mult
 
   # return s12b, m12b, m0, M12, M21
   def Lengths(self, eps, sig12,
