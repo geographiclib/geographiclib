@@ -29,7 +29,7 @@
               <options>
                 <GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
                 <GEOGRAPHICLIB_DOCUMENTATION>OFF</GEOGRAPHICLIB_DOCUMENTATION>
-                <BUILD_NETGEOGRAPHICLIB>ON</BUILD_NETGEOGRAPHICLIB>
+                <BUILD_NETGEOGRAPHICLIB>OFF</BUILD_NETGEOGRAPHICLIB>
               </options>
             </configuration>
           </execution>

@@ -63,139 +63,218 @@ namespace GeographicLib {
       throw GeographicErr("Minor radius is not positive");
     if (!(Math::isfinite(_k0) && _k0 > 0))
       throw GeographicErr("Scale is not positive");
-    // If coefficents might overflow_ an int, convert them to double (and they
-    // are all exactly representable as doubles).
-    real nx = Math::sq(_n);
-    switch (maxpow_) {
-    case 4:
-      _b1 = 1/(1+_n)*(nx*(nx+16)+64)/64;
-      _alp[1] = _n*(_n*(_n*(164*_n+225)-480)+360)/720;
-      _bet[1] = _n*(_n*((555-4*_n)*_n-960)+720)/1440;
-      _alp[2] = nx*(_n*(557*_n-864)+390)/1440;
-      _bet[2] = nx*((96-437*_n)*_n+30)/1440;
-      nx *= _n;
-      _alp[3] = (427-1236*_n)*nx/1680;
-      _bet[3] = (119-148*_n)*nx/3360;
-      nx *= _n;
-      _alp[4] = 49561*nx/161280;
-      _bet[4] = 4397*nx/161280;
-      break;
-    case 5:
-      _b1 = 1/(1+_n)*(nx*(nx+16)+64)/64;
-      _alp[1] = _n*(_n*(_n*((328-635*_n)*_n+450)-960)+720)/1440;
-      _bet[1] = _n*(_n*(_n*((-3645*_n-64)*_n+8880)-15360)+11520)/23040;
-      _alp[2] = nx*(_n*(_n*(4496*_n+3899)-6048)+2730)/10080;
-      _bet[2] = nx*(_n*(_n*(4416*_n-3059)+672)+210)/10080;
-      nx *= _n;
-      _alp[3] = nx*(_n*(15061*_n-19776)+6832)/26880;
-      _bet[3] = nx*((-627*_n-592)*_n+476)/13440;
-      nx *= _n;
-      _alp[4] = (49561-171840*_n)*nx/161280;
-      _bet[4] = (4397-3520*_n)*nx/161280;
-      nx *= _n;
-      _alp[5] = 34729*nx/80640;
-      _bet[5] = 4583*nx/161280;
-      break;
-    case 6:
-      _b1 = 1/(1+_n)*(nx*(nx*(nx+4)+64)+256)/256;
-      _alp[1] = _n*(_n*(_n*(_n*(_n*(31564*_n-66675)+34440)+47250)-100800)+
-                    75600)/151200;
-      _bet[1] = _n*(_n*(_n*(_n*(_n*(384796*_n-382725)-6720)+932400)-1612800)+
-                    1209600)/2419200;
-      _alp[2] = nx*(_n*(_n*((863232-1983433*_n)*_n+748608)-1161216)+524160)/
-        1935360;
-      _bet[2] = nx*(_n*(_n*((1695744-1118711*_n)*_n-1174656)+258048)+80640)/
-        3870720;
-      nx *= _n;
-      _alp[3] = nx*(_n*(_n*(670412*_n+406647)-533952)+184464)/725760;
-      _bet[3] = nx*(_n*(_n*(22276*_n-16929)-15984)+12852)/362880;
-      nx *= _n;
-      _alp[4] = nx*(_n*(6601661*_n-7732800)+2230245)/7257600;
-      _bet[4] = nx*((-830251*_n-158400)*_n+197865)/7257600;
-      nx *= _n;
-      _alp[5] = (3438171-13675556*_n)*nx/7983360;
-      _bet[5] = (453717-435388*_n)*nx/15966720;
-      nx *= _n;
-      _alp[6] = 212378941*nx/319334400;
-      _bet[6] = 20648693*nx/638668800;
-      break;
-    case 7:
-      _b1 = 1/(1+_n)*(nx*(nx*(nx+4)+64)+256)/256;
-      _alp[1] = _n*(_n*(_n*(_n*(_n*(_n*(1804025*_n+2020096)-4267200)+2204160)+
-                            3024000)-6451200)+4838400)/9676800;
-      _bet[1] = _n*(_n*(_n*(_n*(_n*((6156736-5406467*_n)*_n-6123600)-107520)+
-                            14918400)-25804800)+19353600)/38707200;
-      _alp[2] = nx*(_n*(_n*(_n*(_n*(4626384*_n-9917165)+4316160)+3743040)-
-                        5806080)+2620800)/9676800;
-      _bet[2] = nx*(_n*(_n*(_n*(_n*(829456*_n-5593555)+8478720)-5873280)+
-                        1290240)+403200)/19353600;
-      nx *= _n;
-      _alp[3] = nx*(_n*(_n*((26816480-67102379*_n)*_n+16265880)-21358080)+
-                    7378560)/29030400;
-      _bet[3] = nx*(_n*(_n*(_n*(9261899*_n+3564160)-2708640)-2557440)+
-                    2056320)/58060800;
-      nx *= _n;
-      _alp[4] = nx*(_n*(_n*(155912000*_n+72618271)-85060800)+24532695)/
-        79833600;
-      _bet[4] = nx*(_n*(_n*(14928352*_n-9132761)-1742400)+2176515)/79833600;
-      nx *= _n;
-      _alp[5] = nx*(_n*(102508609*_n-109404448)+27505368)/63866880;
-      _bet[5] = nx*((-8005831*_n-1741552)*_n+1814868)/63866880;
-      nx *= _n;
-      _alp[6] = (2760926233LL-12282192400LL*_n)*nx/4151347200LL;
-      _bet[6] = (268433009-261810608*_n)*nx/8302694400LL;
-      nx *= _n;
-      _alp[7] = 1522256789LL*nx/1383782400LL;
-      _bet[7] = 219941297*nx/5535129600LL;
-      break;
-    case 8:
-      _b1 = 1/(1+_n)*(nx*(nx*(nx*(25*nx+64)+256)+4096)+16384)/16384;
-      _alp[1] = _n*(_n*(_n*(_n*(_n*(_n*((37884525-75900428*_n)*_n+42422016)-
-                                    89611200)+46287360)+63504000)-135475200)+
-                    101606400)/203212800;
-      _bet[1] = _n*(_n*(_n*(_n*(_n*(_n*(_n*(31777436*_n-37845269)+43097152)-
-                                    42865200)-752640)+104428800)-180633600)+
-                    135475200)/270950400;
-      _alp[2] = nx*(_n*(_n*(_n*(_n*(_n*(148003883*_n+83274912)-178508970)+
-                                77690880)+67374720)-104509440)+47174400)/
-        174182400;
-      _bet[2] = nx*(_n*(_n*(_n*(_n*(_n*(24749483*_n+14930208)-100683990)+
-                                152616960)-105719040)+23224320)+7257600)/
-        348364800;
-      nx *= _n;
-      _alp[3] = nx*(_n*(_n*(_n*(_n*(318729724*_n-738126169)+294981280)+
-                            178924680)-234938880)+81164160)/319334400;
-      _bet[3] = nx*(_n*(_n*(_n*((101880889-232468668*_n)*_n+39205760)-
-                            29795040)-28131840)+22619520)/638668800;
-      nx *= _n;
-      _alp[4] = nx*(_n*(_n*((14967552000LL-40176129013LL*_n)*_n+6971354016LL)-
-                        8165836800LL)+2355138720LL)/7664025600LL;
-      _bet[4] = nx*(_n*(_n*(_n*(324154477*_n+1433121792LL)-876745056)-
-                        167270400)+208945440)/7664025600LL;
-      nx *= _n;
-      _alp[5] = nx*(_n*(_n*(10421654396LL*_n+3997835751LL)-4266773472LL)+
-                    1072709352LL)/2490808320LL;
-      _bet[5] = nx*(_n*(_n*(457888660*_n-312227409)-67920528)+70779852)/
-        2490808320LL;
-      nx *= _n;
-      _alp[6] = nx*(_n*(175214326799LL*_n-171950693600LL)+38652967262LL)/
-        58118860800LL;
-      _bet[6] = nx*((-19841813847LL*_n-3665348512LL)*_n+3758062126LL)/
-        116237721600LL;
-      nx *= _n;
-      _alp[7] = (13700311101LL-67039739596LL*_n)*nx/12454041600LL;
-      _bet[7] = (1979471673LL-1989295244LL*_n)*nx/49816166400LL;
-      nx *= _n;
-      _alp[8] = 1424729850961LL*nx/743921418240LL;
-      _bet[8] = 191773887257LL*nx/3719607091200LL;
-      break;
-    default:
-      GEOGRAPHICLIB_STATIC_ASSERT(maxpow_ >= 4 && maxpow_ <= 8,
-                                  "Bad value of maxpow_");
-    }
+
+    // Generated by Maxima on 2015-05-14 22:55:13-04:00
+#if GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER/2 == 2
+    static const real b1coeff[] = {
+      // b1*(n+1), polynomial in n2 of order 2
+      1, 16, 64, 64,
+    };  // count = 4
+#elif GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER/2 == 3
+    static const real b1coeff[] = {
+      // b1*(n+1), polynomial in n2 of order 3
+      1, 4, 64, 256, 256,
+    };  // count = 5
+#elif GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER/2 == 4
+    static const real b1coeff[] = {
+      // b1*(n+1), polynomial in n2 of order 4
+      25, 64, 256, 4096, 16384, 16384,
+    };  // count = 6
+#else
+#error "Bad value for GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER"
+#endif
+
+#if GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER == 4
+    static const real alpcoeff[] = {
+      // alp[1]/n^1, polynomial in n of order 3
+      164, 225, -480, 360, 720,
+      // alp[2]/n^2, polynomial in n of order 2
+      557, -864, 390, 1440,
+      // alp[3]/n^3, polynomial in n of order 1
+      -1236, 427, 1680,
+      // alp[4]/n^4, polynomial in n of order 0
+      49561, 161280,
+    };  // count = 14
+#elif GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER == 5
+    static const real alpcoeff[] = {
+      // alp[1]/n^1, polynomial in n of order 4
+      -635, 328, 450, -960, 720, 1440,
+      // alp[2]/n^2, polynomial in n of order 3
+      4496, 3899, -6048, 2730, 10080,
+      // alp[3]/n^3, polynomial in n of order 2
+      15061, -19776, 6832, 26880,
+      // alp[4]/n^4, polynomial in n of order 1
+      -171840, 49561, 161280,
+      // alp[5]/n^5, polynomial in n of order 0
+      34729, 80640,
+    };  // count = 20
+#elif GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER == 6
+    static const real alpcoeff[] = {
+      // alp[1]/n^1, polynomial in n of order 5
+      31564, -66675, 34440, 47250, -100800, 75600, 151200,
+      // alp[2]/n^2, polynomial in n of order 4
+      -1983433, 863232, 748608, -1161216, 524160, 1935360,
+      // alp[3]/n^3, polynomial in n of order 3
+      670412, 406647, -533952, 184464, 725760,
+      // alp[4]/n^4, polynomial in n of order 2
+      6601661, -7732800, 2230245, 7257600,
+      // alp[5]/n^5, polynomial in n of order 1
+      -13675556, 3438171, 7983360,
+      // alp[6]/n^6, polynomial in n of order 0
+      212378941, 319334400,
+    };  // count = 27
+#elif GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER == 7
+    static const real alpcoeff[] = {
+      // alp[1]/n^1, polynomial in n of order 6
+      1804025, 2020096, -4267200, 2204160, 3024000, -6451200, 4838400, 9676800,
+      // alp[2]/n^2, polynomial in n of order 5
+      4626384, -9917165, 4316160, 3743040, -5806080, 2620800, 9676800,
+      // alp[3]/n^3, polynomial in n of order 4
+      -67102379, 26816480, 16265880, -21358080, 7378560, 29030400,
+      // alp[4]/n^4, polynomial in n of order 3
+      155912000, 72618271, -85060800, 24532695, 79833600,
+      // alp[5]/n^5, polynomial in n of order 2
+      102508609, -109404448, 27505368, 63866880,
+      // alp[6]/n^6, polynomial in n of order 1
+      -12282192400LL, 2760926233LL, 4151347200LL,
+      // alp[7]/n^7, polynomial in n of order 0
+      1522256789, 1383782400,
+    };  // count = 35
+#elif GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER == 8
+    static const real alpcoeff[] = {
+      // alp[1]/n^1, polynomial in n of order 7
+      -75900428, 37884525, 42422016, -89611200, 46287360, 63504000, -135475200,
+      101606400, 203212800,
+      // alp[2]/n^2, polynomial in n of order 6
+      148003883, 83274912, -178508970, 77690880, 67374720, -104509440,
+      47174400, 174182400,
+      // alp[3]/n^3, polynomial in n of order 5
+      318729724, -738126169, 294981280, 178924680, -234938880, 81164160,
+      319334400,
+      // alp[4]/n^4, polynomial in n of order 4
+      -40176129013LL, 14967552000LL, 6971354016LL, -8165836800LL, 2355138720LL,
+      7664025600LL,
+      // alp[5]/n^5, polynomial in n of order 3
+      10421654396LL, 3997835751LL, -4266773472LL, 1072709352, 2490808320LL,
+      // alp[6]/n^6, polynomial in n of order 2
+      175214326799LL, -171950693600LL, 38652967262LL, 58118860800LL,
+      // alp[7]/n^7, polynomial in n of order 1
+      -67039739596LL, 13700311101LL, 12454041600LL,
+      // alp[8]/n^8, polynomial in n of order 0
+      1424729850961LL, 743921418240LL,
+    };  // count = 44
+#else
+#error "Bad value for GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER"
+#endif
+
+#if GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER == 4
+    static const real betcoeff[] = {
+      // bet[1]/n^1, polynomial in n of order 3
+      -4, 555, -960, 720, 1440,
+      // bet[2]/n^2, polynomial in n of order 2
+      -437, 96, 30, 1440,
+      // bet[3]/n^3, polynomial in n of order 1
+      -148, 119, 3360,
+      // bet[4]/n^4, polynomial in n of order 0
+      4397, 161280,
+    };  // count = 14
+#elif GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER == 5
+    static const real betcoeff[] = {
+      // bet[1]/n^1, polynomial in n of order 4
+      -3645, -64, 8880, -15360, 11520, 23040,
+      // bet[2]/n^2, polynomial in n of order 3
+      4416, -3059, 672, 210, 10080,
+      // bet[3]/n^3, polynomial in n of order 2
+      -627, -592, 476, 13440,
+      // bet[4]/n^4, polynomial in n of order 1
+      -3520, 4397, 161280,
+      // bet[5]/n^5, polynomial in n of order 0
+      4583, 161280,
+    };  // count = 20
+#elif GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER == 6
+    static const real betcoeff[] = {
+      // bet[1]/n^1, polynomial in n of order 5
+      384796, -382725, -6720, 932400, -1612800, 1209600, 2419200,
+      // bet[2]/n^2, polynomial in n of order 4
+      -1118711, 1695744, -1174656, 258048, 80640, 3870720,
+      // bet[3]/n^3, polynomial in n of order 3
+      22276, -16929, -15984, 12852, 362880,
+      // bet[4]/n^4, polynomial in n of order 2
+      -830251, -158400, 197865, 7257600,
+      // bet[5]/n^5, polynomial in n of order 1
+      -435388, 453717, 15966720,
+      // bet[6]/n^6, polynomial in n of order 0
+      20648693, 638668800,
+    };  // count = 27
+#elif GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER == 7
+    static const real betcoeff[] = {
+      // bet[1]/n^1, polynomial in n of order 6
+      -5406467, 6156736, -6123600, -107520, 14918400, -25804800, 19353600,
+      38707200,
+      // bet[2]/n^2, polynomial in n of order 5
+      829456, -5593555, 8478720, -5873280, 1290240, 403200, 19353600,
+      // bet[3]/n^3, polynomial in n of order 4
+      9261899, 3564160, -2708640, -2557440, 2056320, 58060800,
+      // bet[4]/n^4, polynomial in n of order 3
+      14928352, -9132761, -1742400, 2176515, 79833600,
+      // bet[5]/n^5, polynomial in n of order 2
+      -8005831, -1741552, 1814868, 63866880,
+      // bet[6]/n^6, polynomial in n of order 1
+      -261810608, 268433009, 8302694400LL,
+      // bet[7]/n^7, polynomial in n of order 0
+      219941297, 5535129600LL,
+    };  // count = 35
+#elif GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER == 8
+    static const real betcoeff[] = {
+      // bet[1]/n^1, polynomial in n of order 7
+      31777436, -37845269, 43097152, -42865200, -752640, 104428800, -180633600,
+      135475200, 270950400,
+      // bet[2]/n^2, polynomial in n of order 6
+      24749483, 14930208, -100683990, 152616960, -105719040, 23224320, 7257600,
+      348364800,
+      // bet[3]/n^3, polynomial in n of order 5
+      -232468668, 101880889, 39205760, -29795040, -28131840, 22619520,
+      638668800,
+      // bet[4]/n^4, polynomial in n of order 4
+      324154477, 1433121792, -876745056, -167270400, 208945440, 7664025600LL,
+      // bet[5]/n^5, polynomial in n of order 3
+      457888660, -312227409, -67920528, 70779852, 2490808320LL,
+      // bet[6]/n^6, polynomial in n of order 2
+      -19841813847LL, -3665348512LL, 3758062126LL, 116237721600LL,
+      // bet[7]/n^7, polynomial in n of order 1
+      -1989295244, 1979471673, 49816166400LL,
+      // bet[8]/n^8, polynomial in n of order 0
+      191773887257LL, 3719607091200LL,
+    };  // count = 44
+#else
+#error "Bad value for GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER"
+#endif
+
+    GEOGRAPHICLIB_STATIC_ASSERT(sizeof(b1coeff) / sizeof(real) ==
+                                maxpow_/2 + 2,
+                                "Coefficient array size mismatch for b1");
+    GEOGRAPHICLIB_STATIC_ASSERT(sizeof(alpcoeff) / sizeof(real) ==
+                                (maxpow_ * (maxpow_ + 3))/2,
+                                "Coefficient array size mismatch for alp");
+    GEOGRAPHICLIB_STATIC_ASSERT(sizeof(betcoeff) / sizeof(real) ==
+                                (maxpow_ * (maxpow_ + 3))/2,
+                                "Coefficient array size mismatch for bet");
+    int m = maxpow_/2;
+    _b1 = Math::polyval(m, b1coeff, Math::sq(_n)) / (b1coeff[m + 1] * (1+_n));
     // _a1 is the equivalent radius for computing the circumference of
     // ellipse.
     _a1 = _b1 * _a;
+    int o = 0;
+    real d = _n;
+    for (int l = 1; l <= maxpow_; ++l) {
+      int m = maxpow_ - l;
+      _alp[l] = d * Math::polyval(m, alpcoeff + o, _n) / alpcoeff[o + m + 1];
+      _bet[l] = d * Math::polyval(m, betcoeff + o, _n) / betcoeff[o + m + 1];
+      o += m + 2;
+      d *= _n;
+    }
+    // Post condition: o == sizeof(alpcoeff) / sizeof(real) &&
+    // o == sizeof(betcoeff) / sizeof(real)
   }
 
   const TransverseMercator& TransverseMercator::UTM() {

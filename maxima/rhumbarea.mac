@@ -192,7 +192,7 @@ codeR(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
   print("    }"),
 'done)$
 
-maxpow:6$
+maxpow:8$
 computeR(maxpow)$
 dispR(maxpow)$
 codeR(4,maxpow)$

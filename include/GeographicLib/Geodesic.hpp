@@ -15,7 +15,7 @@
 #if !defined(GEOGRAPHICLIB_GEODESIC_ORDER)
 /**
  * The order of the expansions used by Geodesic.
- * GEOGRAPHICLIB_GEODESIC_ORDER can be set to any integer in [0, 8].
+ * GEOGRAPHICLIB_GEODESIC_ORDER can be set to any integer in [3, 8].
  **********************************************************************/
 #  define GEOGRAPHICLIB_GEODESIC_ORDER \
   (GEOGRAPHICLIB_PRECISION == 2 ? 6 : \

@@ -66,7 +66,7 @@ tested out to maxpow = 30; but this takes a long time (see below).
    30  13535s = 226m
 */
 
-maxpow:6$ /* Max power for forward and reverse projections */
+maxpow:8$ /* Max power for forward and reverse projections */
 /* Notation
 
    e = eccentricity
@@ -205,6 +205,9 @@ defarrayfuns():=block([aa:a1*(1+n),alpha:zeta_zetap,beta:zetap_zeta,t],
       1+sum(coeff(t,cos(2*k*zeta))*cos(2*k*z),k,1,i))))$
 
 printseries()$
+(b1:a1,
+  for i:1 thru maxpow do (alp[i]:coeff(zeta_zetap,sin(2*i*zetap)),
+    bet[i]:coeff(expand(-zetap_zeta),sin(2*i*zeta))))$
 /*
 defarrayfuns()$
 save("tmseries.lsp",maxpow,arrays)$
