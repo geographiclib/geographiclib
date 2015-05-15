@@ -147,12 +147,12 @@ The section \ref transversemercator documents various properties of this
 projection.
 
 The bulk of the testing has used geographically relevant values of the
-flattening.  Thus, you can expect close to full accuracy for -0.01 &le;
-\e f &le; 0.01 (but note that TransverseMercatorExact is
-restricted to \e f > 0).  However, reasonably accurate results can be
-expected if -0.1 &le; \e f &le; 0.1.  Outside this range, you should
-attempt to verify the accuracy of the routines independently.  Two types
-of problems may occur with larger values of <i>f</i>:
+flattening.  Thus, you can expect close to full accuracy for &minus;0.01
+&le; \e f &le; 0.01 (but note that TransverseMercatorExact is restricted
+to \e f > 0).  However, reasonably accurate results can be expected if
+&minus;0.1 &le; \e f &le; 0.1.  Outside this range, you should attempt
+to verify the accuracy of the routines independently.  Two types of
+problems may occur with larger values of <i>f</i>:
  - Some classes, specifically Geodesic,
    GeodesicLine, and TransverseMercator,
    use series expansions using \e f as a small parameter.  The accuracy
@@ -1433,14 +1433,16 @@ fast; so the compiled interface will be removed at some point in 2016.
 
 Maxima is a free computer algebra system which can be downloaded from
 http://maxima.sf.net.  Maxima was used to generate the series used by
-TransverseMercator (<a href="tmseries.mac">
-tmseries.mac</a>) and Geodesic (<a href="geod.mac">
-geod.mac</a>) and to generate accurate data for testing
-(<a href="tm.mac"> tm.mac</a> and <a href="geodesic.mac">
-geodesic.mac</a>).  The latter uses Maxima's bigfloat arithmetic
-together with series extended to high order or solutions in terms of
-elliptic integrals (<a href="ellint.mac"> ellint.mac</a>).  These files
-contain brief instructions on how to use them.
+TransverseMercator (<a href="tmseries.mac"> tmseries.mac</a>), Geodesic
+(<a href="geod.mac"> geod.mac</a>), Rhumb (<a href="rhumbarea.mac">
+rhumbarea.mac</a>), \ref gearea (<a href="gearea.mac"> gearea.mac</a>),
+the relation between \ref auxlat (<a href="auxlat.mac"> auxlat.mac</a>),
+and to generate accurate data for testing (<a href="tm.mac"> tm.mac</a>
+and <a href="geodesic.mac"> geodesic.mac</a>).  The latter uses Maxima's
+bigfloat arithmetic together with series extended to high order or
+solutions in terms of elliptic integrals (<a href="ellint.mac">
+ellint.mac</a>).  These files contain brief instructions on how to use
+them.
 
 \section dotnet .NET wrapper
 
@@ -1748,9 +1750,9 @@ GeoTiff, e.g., with
    gdal_translate -ot Float32 -scale 0 65000 -108 87 egm96-5.pgm egm96-5.tif
 \endverbatim
 The arguments to -scale here are specific to the Offset and Scale
-parameters used in the pgm file (note 65000 * 0.003 - 108 = 87).  You
-can check these by running <a href="GeoidEval.1.html">GeoidEval</a> with
-the "-v" option.
+parameters used in the pgm file (note 65000 * 0.003 &minus; 108 = 87).
+You can check these by running <a href="GeoidEval.1.html">GeoidEval</a>
+with the "-v" option.
 
 Here is a sample script which uses GDAL to create a 1-degree
 squared grid of geoid heights at 3&quot; resolution (matching DTED1) by
@@ -1836,9 +1838,9 @@ boundaries.  The over-constrained cubic fit slightly reduces the
 quantization errors on average.
 
 The algorithm for the least squares fit is taken from, F. H. Lesh,
-Multi-dimensional least-squares polynomial curve fitting, CACM 2, 29-30
-(1959).  This algorithm is not part of Geoid; instead it is
-implemented as
+Multi-dimensional least-squares polynomial curve fitting, CACM 2, 29--30
+(1959).  This algorithm is not part of Geoid; instead it is implemented
+as
 <a href="https://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>
 code which is used to precompute the matrices to convert the function
 values on the stencil into the coefficients from the cubic polynomial.
@@ -2880,7 +2882,7 @@ References:
  - F. W. Bessel,
    <a href="https://dx.doi.org/10.1002/asna.201011352">The calculation
    of longitude and latitude from geodesic measurements (1825)</a>,
-   Astron. Nachr. 331(8), 852-861 (2010);
+   Astron. Nachr. 331(8), 852--861 (2010);
    translated by C. F. F. Karney and R. E. Deakin; preprint:
    <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - F. R. Helmert,
@@ -3010,12 +3012,12 @@ elliptic integrals (similar to GeodesicExact).
 
 We give here the series expansions for the various geodesic integrals
 valid to order <i>f</i><sup>10</sup>.  In this release of the code, we
-use a 6th-order expansions.  This is sufficient to maintain accuracy
-for doubles for the SRMmax ellipsoid (\e a = 6400&nbsp;km, \e f = 1/150).
-However, the preprocessor macro GEOGRAPHICLIB_GEODESIC_ORDER can be
-used to select any order up to 8.  (If using long doubles, with a
-64-bit fraction, the default order is 7.)  The series expanded to
-order <i>f</i><sup>30</sup> are given in <a href="geodseries30.html">
+use a 6th-order expansions.  This is sufficient to maintain accuracy for
+doubles for the SRMmax ellipsoid (\e a = 6400&nbsp;km, \e f = 1/150).
+However, the preprocessor macro GEOGRAPHICLIB_GEODESIC_ORDER can be used
+to select an order from 3 thru 8.  (If using long doubles, with a 64-bit
+fraction, the default order is 7.)  The series expanded to order
+<i>f</i><sup>30</sup> are given in <a href="geodseries30.html">
 geodseries30.html</a>.
 
 In the formulas below ^ indicates exponentiation (<i>f</i>^3 =
@@ -3401,7 +3403,7 @@ distorted measure of distance from the equator with very eccentric
 ellipsoids and this introducing an irreducible representational error in
 the algorithms in this case.  It is therefore recommended to restrict
 the use of these classes to <i>b</i>/\e a &isin; [0.01, 100] or \e f
-&isin; [-99, 0.99].  Note that GeodesicExact still uses a series
+&isin; [&minus;99, 0.99].  Note that GeodesicExact still uses a series
 expansion for the area \e S12.  However the series is taken out to 30th
 order and gives accurate results for <i>b</i>/\e a &isin; [1/2, 2]; the
 accuracy is about 8 decimal digits for <i>b</i>/\e a &isin; [1/4, 4].
@@ -4732,7 +4734,7 @@ References:
  - F. W. Bessel,
    <a href="https://dx.doi.org/10.1002/asna.201011352">The calculation
    of longitude and latitude from geodesic measurements (1825)</a>,
-   Astron. Nachr. 331(8), 852-861 (2010);
+   Astron. Nachr. 331(8), 852--861 (2010);
    translated by C. F. F. Karney and R. E. Deakin; preprint:
    <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - V.A. Botnev, S.M. Ustinov,
@@ -4998,8 +5000,8 @@ divided differences (see the \ref divideddiffs "next section") and use
 Clenshaw summation to evaluate the sum (see the \ref dividedclenshaw
 "last section").
 
-Here is the series expansion accurate to 10th order, found by
-<a href="rhumbarea.mac">rhumbarea.mac</a>:
+Here is the series expansion accurate to 10th order, found by the Maxima
+script <a href="rhumbarea.mac">rhumbarea.mac</a>:
 
 \verbatim
 R[1] = - 1/3 * n
@@ -6990,33 +6992,40 @@ git repository for GeographicLib</a>.
        implementations in all languages.  The second affected the
        implementation in C++ (GeodesicLine and GeodesicLineExact),
        JavaScript, Java, C, Python.  These bugs have now been FIXED.
-     - <a href="GeodSolve.1.html">GeodSolve</a> now accepts a -u option,
-       which turns on the LONG_UNROLL treatment.  With this option
-       <code>lon1</code> is reported as entered and <code>lon2</code> is
-       given such that <code>lon2</code> &minus; <code>lon1</code>
-       indicates how often and in what sense the geodesic has encircled
-       the earth.  (This option also affects the value of longitude
-       reported when an inverse calculation is run with the -f option.)
+     - The <a href="GeodSolve.1.html">GeodSolve</a> utility now accepts
+       a -u option, which turns on the LONG_UNROLL treatment.  With this
+       option <code>lon1</code> is reported as entered and
+       <code>lon2</code> is given such that <code>lon2</code> &minus;
+       <code>lon1</code> indicates how often and in what sense the
+       geodesic has encircled the earth.  (This option also affects the
+       value of longitude reported when an inverse calculation is run
+       with the -f option.)
      - The inverse calculation with the python library similarly sets
        <code>lon1</code> and <code>lon2</code> in output dictionary
        respecting the LONG_UNROLL flag.
-     - TODO: add similar option to cgi version of GeodSolve.
+     - The online version of
+       <a href="http://geographiclib.sf.net/cgi-bin/GeodSolve">GeodSolve</a>
+       now offers an option to unroll the longitude.
      - To support these changes DMS::DecodeLatLon now takes an optional
        unroll arg and Math::AngRound now coverts -0 to 0.
    - Add Math::polyval (also to C, Java, JavaScript, Fortran, python
      versions of the library; this is a built-in function for
      MATLAB/Octave).  This evaluates a polynomial using Horner's method.
      In the C++ implementation, it uses Math::fma which will reduce the
-     round-off error during the evaluation.  All the Maxima-generated
-     code in GeographicLib has been replaced by Maxima-generated arrays
-     of polynomial coefficients which are used as input to
-     Math::polyval.  TODO: TM routines in C++, MATLAB.
+     round-off error during the evaluation.  The Maxima-generated code
+     for the evaluation of series in the Geodesic, TransverseMercator,
+     and Rhumb classes and MATLAB routines, gedistance and gereckon, has
+     been replaced by Maxima-generated arrays of polynomial coefficients
+     which are used as input to Math::polyval.
    - Reminder to clean out install directories from pre-1.42
      installations.
-   - Add MGRS::Check() to verify (and document) that \e a, \e f,
+   - Add MGRS::Check() to verify that \e a, \e f,
      <i>k</i><sub>UTM</sub>, and <i>k</i><sub>UPS</sub> are consistent
      with the assumptions in the UTMUPS and MGRS classes.  This is
-     invoked with <code>GeoConvert --version</code>.
+     invoked with <code>GeoConvert \--version</code>.  (This function
+     was added to document and check the assumptions used in the UTMUPS
+     and MGRS classes in case they are extended to deal with ellipsoids
+     other than WS84.)
    - MATLAB function mgrs_inv now takes an optional \e center argument
      and strips whitespace from both beginning and end of the string.
    - Minor internal changes:

@@ -61,7 +61,7 @@ function N = geoid_height(lat, lon, geoidname, geoiddir)
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.43.
 
   persistent saved_geoid
   if nargin == 1 && isempty(lat)
