@@ -2557,6 +2557,10 @@ The supported models are
    <a href="http://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
    Magnetic Model 2010</a>, which approximates the main and crustal
    magnetic fields for the period 2010--2015.
+ - <b>emm2015</b>, the
+   <a href="http://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
+   Magnetic Model 2015</a>, which approximates the main and crustal
+   magnetic fields for the period 2000--2020.
 
 Go to
  - \ref magneticinst
@@ -2647,6 +2651,20 @@ These magnetic models are available for download:
  <td><center>
  <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.zip">
  link</a> (4100)</center>
+<tr>
+ <td>emm2015
+ <td><center>729</center>
+ <td><center>2000--2020</center>
+ <td><center>4300</center>
+ <td><center>
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/emm2015.tar.bz2">
+ link</a> (660)</center>
+ <td><center>
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/emm2015.exe">
+ link</a> (XXX)</center>
+ <td><center>
+ <a href="https://sf.net/projects/geographiclib/files/magnetic-distrib/emm2015.zip">
+ link</a> (1100)</center>
 </table>
 </center>
 The "size" column is the size of the uncompressed data.
@@ -2656,7 +2674,7 @@ geographiclib-get-magnetic (typically installed in /usr/local/sbin)
 which automates the process of downloading and installing the magnetic
 models.  For example
 \verbatim
-   geographiclib-get-magnetic all  # install wmm2010, wmm2015, igrf11, igrf12, emm2010
+   geographiclib-get-magnetic all  # install wmm2010, wmm2015, igrf11, igrf12, emm2010, emm2015
    geographiclib-get-magnetic -h   # for help
 \endverbatim
 This script should be run as a user with write access to the
@@ -2711,7 +2729,7 @@ spherical harmonic sum.
 
 The first line of the .wmm file must consist of "WMMF-v" where WMMF
 stands for "World Magnetic Model Format" and v is the version number of
-the format (currently "1").
+the format (currently "2").
 
 The rest of the File is read a line at a time.  A # character and
 everything after it are discarded.  If the result is just white space it
@@ -2729,6 +2747,12 @@ keywords
      at 5 year intervals.  The time variation is given only for the last
      model to allow extrapolation beyond 2015.  For dates prior to 2015,
      linear interpolation is used.
+   - <b>NumConstants</b> (default 0), the number of time-independent
+     terms; this can be 0 or 1.  This keyword was introduced in format
+     version 2 (GeographicLib version 1.43) to support the EMM2015
+     model.  This model includes long wavelength time-varying
+     components of degree 15.  This is supplemented by a short
+     wavelength time-independent component with degree = 729.
    - <b>Epoch</b> (required), the time origin (in fractional years) for
      the first model.
    - <b>DeltaEpoch</b> (default 1), the interval between models in years
@@ -6980,6 +7004,10 @@ git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-mm-dd)
+   - Add the Enhanced Magnetic Model 2015, emm2015.  This is valid for
+     2000 thru the end of 2019.  This required some changes in the
+     MagneticModel and MagneticCircle classes; so this model cannot be
+     used with versions of GeographicLib prior to 1.43.
    - Changes in the LONG_NOWRAP option (added in version 1.39) in the
      Geodesic and GeodesicLib classes:
      - The option is now called LONG_UNROLL (a less negative sounding
@@ -7007,7 +7035,7 @@ git repository for GeographicLib</a>.
        <a href="http://geographiclib.sf.net/cgi-bin/GeodSolve">GeodSolve</a>
        now offers an option to unroll the longitude.
      - To support these changes DMS::DecodeLatLon now takes an optional
-       unroll arg and Math::AngRound now coverts -0 to 0.
+       \e unroll argument and Math::AngRound now coverts &minus;0 to +0.
    - Add Math::polyval (also to C, Java, JavaScript, Fortran, python
      versions of the library; this is a built-in function for
      MATLAB/Octave).  This evaluates a polynomial using Horner's method.
@@ -7017,8 +7045,6 @@ git repository for GeographicLib</a>.
      and Rhumb classes and MATLAB routines, gedistance and gereckon, has
      been replaced by Maxima-generated arrays of polynomial coefficients
      which are used as input to Math::polyval.
-   - Reminder to clean out install directories from pre-1.42
-     installations.
    - Add MGRS::Check() to verify that \e a, \e f,
      <i>k</i><sub>UTM</sub>, and <i>k</i><sub>UPS</sub> are consistent
      with the assumptions in the UTMUPS and MGRS classes.  This is
@@ -7033,6 +7059,11 @@ git repository for GeographicLib</a>.
        are avoided;
      - some routines have migrated into a math class for for python,
        Java, JavaScript libraries.
+   - A reminder: because of changes in the installation directories for
+     non-Windows systems introduced in version 1.42, you should remove
+     the following directories from your system:
+     - ${CMAKE_INSTALL_PREFIX}/share/cmake/GeographicLib*
+     - ${CMAKE_INSTALL_PREFIX}/libexec/GeographicLib/matlab
 
  - <a href="http://geographiclib.sf.net/1.42">Version 1.42</a>
    (released 2015-04-28)

@@ -2,8 +2,8 @@
  * \file MagneticModel.hpp
  * \brief Header for GeographicLib::MagneticModel class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -66,7 +66,7 @@ namespace GeographicLib {
     static const int idlength_ = 8;
     std::string _name, _dir, _description, _date, _filename, _id;
     real _t0, _dt0, _tmin, _tmax, _a, _hmin, _hmax;
-    int _Nmodels;
+    int _Nmodels, _Nconstants;
     SphericalHarmonic::normalization _norm;
     Geocentric _earth;
     std::vector< std::vector<real> > _G;

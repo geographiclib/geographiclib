@@ -14,7 +14,6 @@
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/SphericalEngine.hpp>
 #include <GeographicLib/CircularEngine.hpp>
-#include <GeographicLib/Geocentric.hpp>
 
 namespace GeographicLib {
 
@@ -135,8 +134,8 @@ namespace GeographicLib {
      * @param[in] a the reference radius appearing in the definition of the
      *   sum.
      * @param[in] norm the normalization for the associated Legendre
-     *   polynomials, either SphericalHarmonic::full (the default) or
-     *   SphericalHarmonic::schmidt.
+     *   polynomials, either SphericalHarmonic::FULL (the default) or
+     *   SphericalHarmonic::SCHMIDT.
      * @exception GeographicErr if \e N does not satisfy \e N &ge; &minus;1.
      * @exception GeographicErr if \e C or \e S is not big enough to hold the
      *   coefficients.
