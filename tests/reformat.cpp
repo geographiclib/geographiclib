@@ -91,9 +91,12 @@ int main(int argc, char* argv[]) {
       // download
       //http://www.ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2015_Sph_Linux.zip
       // unpack
-      // coefficients are in EMM2015_linux/EMM20{00-15}/EMM2010.COF and
+      // coefficients are in EMM2015_linux/EMM20{00-15}.COF and
       // EMM2015_linux/EMM2015/EMM2010SV.COF.  Ignore additional SV files; the
       // same result is obtained using linear interpolation.
+      // degree > 15 terms in EMM2015.COF are time-independent terms applied at
+      // all times.  These are put into an addition set of coefficients after
+      // EMM2015SV.COF.
       std::string id = "EMM2015A";
       fout.write(id.c_str(), 8);
       for (int i = 0; i <= 17; ++i) {

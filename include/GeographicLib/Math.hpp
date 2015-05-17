@@ -428,11 +428,10 @@ namespace GeographicLib {
      * Evaluate <i>y</i> = &sum;<sub><i>n</i>=0..<i>N</i></sub>
      * <i>p</i><sub><i>n</i></sub> <i>x</i><sup><i>N</i>&minus;<i>n</i></sup>.
      * Return 0 if \e N &lt; 0.  Return <i>p</i><sub>0</sub>, if \e N = 0 (even
-     * if \e x is infinite or a nan).  The evaluation uses Horner's method with
-     * Math::fma to minimize round-off errors.
+     * if \e x is infinite or a nan).  The evaluation uses Horner's method.
      **********************************************************************/
     template<typename T> static inline T polyval(int N, const T p[], T x)
-    { T y = N < 0 ? 0 : *p++; while (--N >= 0) y = fma(y, x, *p++); return y; }
+    { T y = N < 0 ? 0 : *p++; while (--N >= 0) y = y * x + *p++; return y; }
 
     /**
      * Normalize an angle (restricted input range).

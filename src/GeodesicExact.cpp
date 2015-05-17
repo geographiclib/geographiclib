@@ -111,8 +111,8 @@ namespace GeographicLib {
     n /= 2;
     while (n--) {
       // Unroll loop x 2, so accumulators return to their original role
-      y1 = Math::fma(ar, y0, -y1) + *--c;
-      y0 = Math::fma(ar, y1, -y0) + *--c;
+      y1 = ar * y0 - y1 + *--c;
+      y0 = ar * y1 - y0 + *--c;
     }
     return cosx * (y0 - y1);    // cos(x) * (y0 - y1)
   }

@@ -7039,12 +7039,11 @@ git repository for GeographicLib</a>.
    - Add Math::polyval (also to C, Java, JavaScript, Fortran, python
      versions of the library; this is a built-in function for
      MATLAB/Octave).  This evaluates a polynomial using Horner's method.
-     In the C++ implementation, it uses Math::fma which will reduce the
-     round-off error during the evaluation.  The Maxima-generated code
-     for the evaluation of series in the Geodesic, TransverseMercator,
-     and Rhumb classes and MATLAB routines, gedistance and gereckon, has
-     been replaced by Maxima-generated arrays of polynomial coefficients
-     which are used as input to Math::polyval.
+     The Maxima-generated code for the evaluation of series in the
+     Geodesic, TransverseMercator, and Rhumb classes and MATLAB
+     routines, gedistance and gereckon, has been replaced by
+     Maxima-generated arrays of polynomial coefficients which are used
+     as input to Math::polyval.
    - Add MGRS::Check() to verify that \e a, \e f,
      <i>k</i><sub>UTM</sub>, and <i>k</i><sub>UPS</sub> are consistent
      with the assumptions in the UTMUPS and MGRS classes.  This is

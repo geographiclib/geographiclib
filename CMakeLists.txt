@@ -246,7 +246,7 @@ else ()
   # the client code is being compiled (and the GeographicLib headers
   # being included), work-alike substitutions are used.
   include (CheckCXXCompilerFlag)
-  # Not yet ready for c++14 (problem with MPFR C++)
+  # Not yet ready for C++14 (problem with MPFR C++)
   foreach (_F 11 0x)
     set (CXX11_FLAG "-std=c++${_F}")
     set (_T CXX11TEST${_F})
