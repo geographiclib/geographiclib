@@ -87,35 +87,8 @@ function N = geoid_height(lat, lon, geoidname, geoiddir)
 end
 
 function N = geoid_height_int(lat, lon, geoid, cubic)
-  if nargin < 4, cubic = true; end
-  try
-    s = size(lat + lon);
-  catch
-    error('lat, lon have incompatible sizes')
-  end
-  num = prod(s); Z = zeros(num,1);
-  lat = lat(:) + Z; lon = lon(:) + Z;
-  h = geoid.h; w = geoid.w;
-  % lat is in [0, h]
-  flat = min(max((90 - lat) * (h - 1) / 180, 0), (h - 1));
-  % lon is in [0, w)
-  flon = mod(lon * w / 360, w);
-  flon(isnan(flon)) = 0;
-  ilat = min(floor(flat), h - 2);
-  ilon = floor(flon);
-  flat = flat - ilat; flon = flon - ilon;
-  if ~cubic
-    ind = imgind(ilon + [0,0,1,1], ilat + [0,1,0,1], w, h);
-    hf = double(geoid.im(ind));
-    N = (1 - flon) .* ((1 - flat) .* hf(:,1) + flat .* hf(:,2)) + ...
-        flon       .* ((1 - flat) .* hf(:,3) + flat .* hf(:,4));
-  else
-    ind = imgind(repmat(ilon, 1, 12) + ...
-                 repmat([ 0, 1,-1, 0, 1, 2,-1, 0, 1, 2, 0, 1], num, 1), ...
-                 repmat(ilat, 1, 12) + ...
-                 repmat([-1,-1, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2], num, 1), ...
-                 w, h);
-    hf = double(geoid.im(ind));
+  persistent c0 c3 c0n c3n c0s c3s
+  if isempty(c3s)
     c0 = 240;
     c3 = [ 9, -18, -88,    0,  96,   90,   0,   0, -60, -20;...
           -9,  18,   8,    0, -96,   30,   0,   0,  60, -20;...
@@ -155,6 +128,36 @@ function N = geoid_height_int(lat, lon, geoid, cubic)
              0,    0,   62,   0,    0,   31, 0,   0,    0, -31;...
            -18,   36,  -64,   0,   66,   51, 0,   0, -102,  31;...
             18,  -36,    2,   0,  -66,  -51, 0,   0,  102,  31];
+  end
+  if nargin < 4, cubic = true; end
+  try
+    s = size(lat + lon);
+  catch
+    error('lat, lon have incompatible sizes')
+  end
+  num = prod(s); Z = zeros(num,1);
+  lat = lat(:) + Z; lon = lon(:) + Z;
+  h = geoid.h; w = geoid.w;
+  % lat is in [0, h]
+  flat = min(max((90 - lat) * (h - 1) / 180, 0), (h - 1));
+  % lon is in [0, w)
+  flon = mod(lon * w / 360, w);
+  flon(isnan(flon)) = 0;
+  ilat = min(floor(flat), h - 2);
+  ilon = floor(flon);
+  flat = flat - ilat; flon = flon - ilon;
+  if ~cubic
+    ind = imgind(ilon + [0,0,1,1], ilat + [0,1,0,1], w, h);
+    hf = double(geoid.im(ind));
+    N = (1 - flon) .* ((1 - flat) .* hf(:,1) + flat .* hf(:,2)) + ...
+        flon       .* ((1 - flat) .* hf(:,3) + flat .* hf(:,4));
+  else
+    ind = imgind(repmat(ilon, 1, 12) + ...
+                 repmat([ 0, 1,-1, 0, 1, 2,-1, 0, 1, 2, 0, 1], num, 1), ...
+                 repmat(ilat, 1, 12) + ...
+                 repmat([-1,-1, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2], num, 1), ...
+                 w, h);
+    hf = double(geoid.im(ind));
     hfx = hf * c3 / c0;
     hfx(ilat ==   0,:) = hf(ilat ==   0,:) * c3n / c0n;
     hfx(ilat == h-2,:) = hf(ilat == h-2,:) * c3s / c0s;

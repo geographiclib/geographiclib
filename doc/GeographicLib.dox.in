@@ -1378,12 +1378,8 @@ packages
  - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
    Geodesics on an ellipsoid of revolution</a>,
    MATLAB File Exchange package 39108.
- - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
-   Geodesic projections for an ellipsoid</a>,
-   MATLAB File Exchange package 39366,
- - <a href="http://www.mathworks.com/matlabcentral/fileexchange/47898">
-   Great ellipses</a>,
-   MATLAB File Exchange package 47898.
+ - Geodesic projections for an ellipsoid,
+ - Great ellipses.
  .
 These packages have now all been incorporated into the
 <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">

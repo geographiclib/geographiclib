@@ -1411,7 +1411,7 @@ public class Geodesic {
 
   // The scale factor A1-1 = mean value of (d/dsigma)I1 - 1
   protected static double A1m1f(double eps) {
-    double coeff[] = {
+    final double coeff[] = {
       // (1-eps)*A1-1, polynomial in eps2 of order 3
       1, 4, 64, 0, 256,
     };
@@ -1422,7 +1422,7 @@ public class Geodesic {
 
   // The coefficients C1[l] in the Fourier expansion of B1
   protected static void C1f(double eps, double c[]) {
-    double coeff[] = {
+    final double coeff[] = {
       // C1[1]/eps^1, polynomial in eps2 of order 2
       -1, 6, -16, 32,
       // C1[2]/eps^2, polynomial in eps2 of order 2
@@ -1450,7 +1450,7 @@ public class Geodesic {
 
   // The coefficients C1p[l] in the Fourier expansion of B1p
   protected static void C1pf(double eps, double c[]) {
-    double coeff[] = {
+    final double coeff[] = {
       // C1p[1]/eps^1, polynomial in eps2 of order 2
       205, -432, 768, 1536,
       // C1p[2]/eps^2, polynomial in eps2 of order 2
@@ -1478,7 +1478,7 @@ public class Geodesic {
 
   // The scale factor A2-1 = mean value of (d/dsigma)I2 - 1
   protected static double A2m1f(double eps) {
-    double coeff[] = {
+    final double coeff[] = {
       // A2/(1-eps)-1, polynomial in eps2 of order 3
       25, 36, 64, 0, 256,
     };
@@ -1489,7 +1489,7 @@ public class Geodesic {
 
   // The coefficients C2[l] in the Fourier expansion of B2
   protected static void C2f(double eps, double c[]) {
-    double coeff[] = {
+    final double coeff[] = {
       // C2[1]/eps^1, polynomial in eps2 of order 2
       1, 2, 16, 32,
       // C2[2]/eps^2, polynomial in eps2 of order 2
@@ -1517,7 +1517,7 @@ public class Geodesic {
 
   // The scale factor A3 = mean value of (d/dsigma)I3
   protected void A3coeff() {
-    double coeff[] = {
+    final double coeff[] = {
       // A3, coeff of eps^5, polynomial in n of order 0
       -3, 128,
       // A3, coeff of eps^4, polynomial in n of order 1
@@ -1541,7 +1541,7 @@ public class Geodesic {
 
   // The coefficients C3[l] in the Fourier expansion of B3
   protected void C3coeff() {
-    double coeff[] = {
+    final double coeff[] = {
       // C3[1], coeff of eps^5, polynomial in n of order 0
       3, 128,
       // C3[1], coeff of eps^4, polynomial in n of order 1
@@ -1584,7 +1584,7 @@ public class Geodesic {
   }
 
   protected void C4coeff() {
-    double coeff[] = {
+    final double coeff[] = {
       // C4[0], coeff of eps^5, polynomial in n of order 0
       97, 15015,
       // C4[0], coeff of eps^4, polynomial in n of order 1

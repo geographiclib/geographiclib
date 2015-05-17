@@ -89,6 +89,12 @@ function mgrs = mgrs_fwd_p(x, y, zone, northp, prec)
 end
 
 function mgrs = mgrs_fwd_utm(x, y, zone, prec)
+  persistent latband utmcols utmrow
+  if isempty(utmrow)
+    latband = 'CDEFGHJKLMNPQRSTUVWX';
+    utmcols = ['ABCDEFGH', 'JKLMNPQR', 'STUVWXYZ'];
+    utmrow = 'ABCDEFGHJKLMNPQRSTUV';
+  end
   mgrs = char(zeros(length(x), 5 + 2 * prec) + ' ');
   if isempty(x), return, end
   mgrs(:,1) = '0' + floor(zone / 10);
@@ -102,12 +108,9 @@ function mgrs = mgrs_fwd_utm(x, y, zone, prec)
   bande =  LatitudeBand(late);
   c = band ~= bande;
   band(c) = LatitudeBand(utmups_inv(x(c), y(c), zone(c), 1));
-  latband = 'CDEFGHJKLMNPQRSTUVWX';
   mgrs(:,3) = latband(band + 11);
   if prec < 0, return, end
   xh = floor(x / 1e5); yh = floor(y / 1e5);
-  utmcols = ['ABCDEFGH', 'JKLMNPQR', 'STUVWXYZ'];
-  utmrow = 'ABCDEFGHJKLMNPQRSTUV';
   mgrs(:,4) = utmcols(mod(zone - 1, 3) * 8 + xh);
   mgrs(:,5) = utmrow(mod(yh + mod(zone - 1, 2) * 5, 20) + 1);
   if prec == 0, return, end
@@ -117,16 +120,19 @@ function mgrs = mgrs_fwd_utm(x, y, zone, prec)
 end
 
 function mgrs = mgrs_fwd_upsn(x, y, prec)
+  persistent upsband upscols upsrow
+  if isempty(upsrow)
+    upsband = 'YZ';
+    upscols = ['RSTUXYZ', 'ABCFGHJ'];
+    upsrow = 'ABCDEFGHJKLMNP';
+  end
   mgrs = char(zeros(length(x), 3 + 2 * prec) + ' ');
   if isempty(x), return, end
-  upsband = 'YZ';
   xh = floor(x / 1e5);
   eastp = xh >= 20;
   mgrs(:,1) = upsband(eastp + 1);
   if prec < 0, return, end
   yh = floor(y / 1e5);
-  upscols = ['RSTUXYZ', 'ABCFGHJ'];
-  upsrow = 'ABCDEFGHJKLMNP';
   mgrs(:,2) = upscols(eastp * 7 + xh - cvmgt(20, 13, eastp) + 1);
   mgrs(:,3) = upsrow(yh - 13 + 1);
   if prec == 0, return, end
@@ -136,16 +142,19 @@ function mgrs = mgrs_fwd_upsn(x, y, prec)
 end
 
 function mgrs = mgrs_fwd_upss(x, y, prec)
+  persistent upsband upscols upsrow
+  if isempty(upsrow)
+    upsband = 'AB';
+    upscols = ['JKLPQRSTUXYZ', 'ABCFGHJKLPQR'];
+    upsrow = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  end
   mgrs = char(zeros(length(x), 3 + 2 * prec) + ' ');
   if isempty(x), return, end
-  upsband = 'AB';
   xh = floor(x / 1e5);
   eastp = xh >= 20;
   mgrs(:,1) = upsband(eastp + 1);
   if prec < 0, return, end
   yh = floor(y / 1e5);
-  upscols = ['JKLPQRSTUXYZ', 'ABCFGHJKLPQR'];
-  upsrow = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
   mgrs(:,2) = upscols(eastp * 12 + xh - cvmgt(20, 8, eastp) + 1);
   mgrs(:,3) = upsrow(yh - 8 + 1);
   if prec == 0, return, end

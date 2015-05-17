@@ -70,17 +70,23 @@ function [x, y, zone, isnorth, prec] = mgrs_inv(mgrs, center)
 end
 
 function [x, y, zone, northp, prec] = mgrs_inv_utm(mgrs, center)
+  persistent latband utmcols utmrow
+  if isempty(utmrow)
+    latband = 'CDEFGHJKLMNPQRSTUVWX';
+    utmcols = ['ABCDEFGH', 'JKLMNPQR', 'STUVWXYZ'];
+    utmrow = 'ABCDEFGHJKLMNPQRSTUV';
+  end
   zone = (mgrs(:,1) - '0') * 10 + (mgrs(:,2) - '0');
   ok = zone > 0 & zone <= 60;
-  band = lookup('CDEFGHJKLMNPQRSTUVWX', mgrs(:,3));
+  band = lookup(latband, mgrs(:,3));
   ok = ok & band >= 0;
   band = band - 10;
   northp = band >= 0;
-  colind = lookup(['ABCDEFGH', 'JKLMNPQR', 'STUVWXYZ'], mgrs(:, 4)) - ...
+  colind = lookup(utmcols, mgrs(:, 4)) - ...
            mod(zone - 1, 3) * 8;
   % good values in [0,8), bad values = -1
   colind(colind >= 8) = -1;
-  rowind = lookup('ABCDEFGHJKLMNPQRSTUV', mgrs(:, 5));
+  rowind = lookup(utmrow, mgrs(:, 5));
   even = mod(zone, 2) == 0;
   bad = rowind < 0;
   rowind(even) = mod(rowind(even) - 5, 20);
@@ -89,7 +95,7 @@ function [x, y, zone, northp, prec] = mgrs_inv_utm(mgrs, center)
   [x, y, prec] = decodexy(mgrs(:, 6:end), center);
   prec(mgrs(:,4) == ' ') = -1;
   ok = ok & (prec == -1 | (colind >= 0 & rowind >= 0));
-  rowind = utmrow(band, colind, rowind);
+  rowind = fixutmrow(band, colind, rowind);
   colind = colind + 1;
   x = colind * 1e5 + x;
   y = rowind * 1e5 + y + (1-northp) * 100e5;
@@ -106,14 +112,20 @@ function [x, y, zone, northp, prec] = mgrs_inv_utm(mgrs, center)
 end
 
 function [x, y, zone, northp, prec] = mgrs_inv_upsn(mgrs, center)
+  persistent upsband upscols upsrow
+  if isempty(upsrow)
+    upsband = 'YZ';
+    upscols = ['RSTUXYZ', 'ABCFGHJ'];
+    upsrow = 'ABCDEFGHJKLMNP';
+  end
   zone = zeros(size(mgrs,1),1);
   ok = zone == 0;
   northp = ok;
-  eastp = lookup('YZ', mgrs(:,1));
+  eastp = lookup(upsband, mgrs(:,1));
   ok = ok & eastp >= 0;
-  colind = lookup(['RSTUXYZ', 'ABCFGHJ'], mgrs(:, 2));
+  colind = lookup(upscols, mgrs(:, 2));
   ok = ok & (colind < 0 | mod(floor(colind / 7) + eastp, 2) == 0);
-  rowind = lookup('ABCDEFGHJKLMNP', mgrs(:, 3));
+  rowind = lookup(upsrow, mgrs(:, 3));
   [x, y, prec] = decodexy(mgrs(:, 4:end), center);
   prec(mgrs(:,2) == ' ') = -1;
   ok = ok & (prec == -1 | (colind >= 0 & rowind >= 0));
@@ -130,17 +142,24 @@ function [x, y, zone, northp, prec] = mgrs_inv_upsn(mgrs, center)
 end
 
 function [x, y, zone, northp, prec] = mgrs_inv_upss(mgrs, center)
+  persistent upsband upscolA upscolB upsrow
+  if isempty(upsrow)
+    upsband = 'AB';
+    upscolA = 'JKLPQRSTUXYZ';
+    upscolB = 'ABCFGHJKLPQR';
+    upsrow = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  end
   zone = zeros(size(mgrs,1),1);
   ok = zone == 0;
   northp = ~ok;
-  eastp = lookup('AB', mgrs(:,1));
+  eastp = lookup(upsband, mgrs(:,1));
   ok = ok & eastp >= 0;
   eastp = eastp > 0;
-  colind = lookup('JKLPQRSTUXYZ', mgrs(:, 2));
-  colind(eastp) = lookup('ABCFGHJKLPQR', mgrs(eastp, 2)) + 12;
+  colind = lookup(upscolA, mgrs(:, 2));
+  colind(eastp) = lookup(upscolB, mgrs(eastp, 2)) + 12;
   colind(eastp & colind < 12) = -1;
   ok = ok & (colind < 0 | mod(floor(colind / 12) + eastp, 2) == 0);
-  rowind = lookup('ABCDEFGHJKLMNPQRSTUVWXYZ', mgrs(:, 3));
+  rowind = lookup(upsrow, mgrs(:, 3));
   [x, y, prec] = decodexy(mgrs(:, 4:end), center);
   prec(mgrs(:,2) == ' ') = -1;
   ok = ok & (prec == -1 | (colind >= 0 & rowind >= 0));
@@ -174,7 +193,7 @@ function [x, y, prec] = decodexy(xy, center)
   end
 end
 
-function irow = utmrow(iband, icol, irow)
+function irow = fixutmrow(iband, icol, irow)
 % Input is MGRS (periodic) row index and output is true row index.  Band
 % index is in [-10, 10) (as returned by LatitudeBand).  Column index
 % origin is easting = 100km.  Returns 100  if irow and iband are
@@ -217,7 +236,8 @@ function len = strlen(strings)
 end
 
 function ind = lookup(str, test)
-% str is uppercase row string to look up in. test is col array to lookup
+% str is uppercase row string to look up in. test is col array to
+% lookup.  Result is zero-based index or -1 if not found.
   q = str - 'A' + 1;
   t = zeros(27,1);
   t(q) = cumsum(ones(length(q),1));
