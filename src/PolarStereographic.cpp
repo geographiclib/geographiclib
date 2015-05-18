@@ -17,7 +17,7 @@ namespace GeographicLib {
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _e2(_f * (2 - _f))
-    , _es((_f < 0 ? -1 : 0) * sqrt(abs(_e2)))
+    , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
     , _e2m(1 - _e2)
     , _c( (1 - _f) * exp(Math::eatanhe(real(1), _es)) )
     , _k0(k0)

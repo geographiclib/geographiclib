@@ -7004,6 +7004,9 @@ git repository for GeographicLib</a>.
      2000 thru the end of 2019.  This required some changes in the
      MagneticModel and MagneticCircle classes; so this model cannot be
      used with versions of GeographicLib prior to 1.43.
+   - Fix BLUNDER in PolarStereographic constructor introduced in version
+     1.42.  This affected UTMUPS conversions for UPS which could be
+     incorrect by up to 0.5 km.
    - Changes in the LONG_NOWRAP option (added in version 1.39) in the
      Geodesic and GeodesicLib classes:
      - The option is now called LONG_UNROLL (a less negative sounding
