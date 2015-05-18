@@ -7027,9 +7027,9 @@ git repository for GeographicLib</a>.
        geodesic has encircled the earth.  (This option also affects the
        value of longitude reported when an inverse calculation is run
        with the -f option.)
-     - The inverse calculation with the python library similarly sets
-       <code>lon1</code> and <code>lon2</code> in output dictionary
-       respecting the LONG_UNROLL flag.
+     - The inverse calculation with the JavaScript and python libraries
+       similarly sets <code>lon1</code> and <code>lon2</code> in output
+       dictionary respecting the LONG_UNROLL flag.
      - The online version of
        <a href="http://geographiclib.sf.net/cgi-bin/GeodSolve">GeodSolve</a>
        now offers an option to unroll the longitude.

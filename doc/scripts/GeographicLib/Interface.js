@@ -122,25 +122,32 @@
 
   g.Geodesic.prototype.Inverse = function(lat1, lon1, lat2, lon2, outmask) {
     if (!outmask) outmask = g.DISTANCE | g.AZIMUTH;
-    lon1 = g.Geodesic.CheckPosition(lat1, lon1);
+    g.Geodesic.CheckPosition(lat1, lon1);
     lon2 = g.Geodesic.CheckPosition(lat2, lon2);
 
     var result = this.GenInverse(lat1, lon1, lat2, lon2, outmask);
-    result.lat1 = lat1; result.lon1 = lon1;
-    result.lat2 = lat2; result.lon2 = lon2;
+    if (outmask & g.LONG_UNROLL) {
+      result.lon1 = lon1;
+      result.lon2 = lon1 + m.AngDiff(m.AngNormalize(lon1), lon2);
+    } else {
+      result.lon1 = m.AngNormalize(lon1);
+      result.lon2 = lon2;
+    }
+    result.lat1 = lat1;
+    result.lat2 = lat2;
 
     return result;
   };
 
   g.Geodesic.prototype.Direct = function(lat1, lon1, azi1, s12, outmask) {
     if (!outmask) outmask = g.LATITUDE | g.LONGITUDE | g.AZIMUTH;
-    lon1 = g.Geodesic.CheckPosition(lat1, lon1);
+    g.Geodesic.CheckPosition(lat1, lon1);
     azi1 = g.Geodesic.CheckAzimuth(azi1);
     g.Geodesic.CheckDistance(s12);
 
     var result = this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
-    result.lat1 = lat1; result.lon1 = lon1;
-    result.azi1 = azi1; result.s12 = s12;
+    result.lon1 = (outmask & g.LONG_UNROLL) ? lon1 : m.AngNormalize(lon1)
+    result.lat1 = lat1; result.azi1 = azi1; result.s12 = s12;
 
     return result;
   };

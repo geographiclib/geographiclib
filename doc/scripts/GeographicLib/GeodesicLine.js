@@ -226,7 +226,6 @@
                    this._B31));
       lon12 = lam12 / m.degree;
       // Use AngNormalize2 because longitude might have wrapped multiple times.
-      lon12 = m.AngNormalize2(lon12);
       vals.lon2 = outmask & g.LONG_UNROLL ? this._lon1 + lon12 :
         m.AngNormalize(m.AngNormalize(this._lon1) + m.AngNormalize2(lon12));
     }

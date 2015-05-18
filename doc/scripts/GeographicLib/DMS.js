@@ -262,7 +262,6 @@ GeographicLib.DMS = {};
       throw new Error("Latitude " + lat + "d not in [-90d, 90d]");
     if (lon < -540 || lon >= 540)
       throw new Error("Latitude " + lon + "d not in [-540d, 540d)");
-    lon = m.AngNormalize(lon);
     vals.lat = lat;
     vals.lon = lon;
     return vals;
