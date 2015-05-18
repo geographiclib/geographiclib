@@ -45,9 +45,9 @@ endif ()
 # This invokes MGRS::Check()
 add_test (NAME GeoConvert7 COMMAND GeoConvert --version)
 # Check fix to PolarStereographic es initialization blunder (2015-05-18)
-add_test (NAME GeoConvert8 COMMAND GeoConvert -u --input-string "86 0")
+add_test (NAME GeoConvert8 COMMAND GeoConvert -u -p 6 --input-string "86 0")
 set_tests_properties (GeoConvert8 PROPERTIES PASS_REGULAR_EXPRESSION
-  "n 2000000 1555732")
+  "n 2000000\\.0* 1555731\\.570643")
 
 add_test (NAME GeodSolve0 COMMAND GeodSolve
   -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")

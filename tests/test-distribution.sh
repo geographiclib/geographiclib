@@ -204,7 +204,7 @@ cp -pr $TEMP/instc/share/matlab/geographiclib $TEMP/matlab
 cd $TEMP/matlab/geographiclib
 rm -f $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip
 zip $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip *.m private/*.m
-mkdir $TEMP/geographiclib-matlab
+mkdir -p $TEMP/geographiclib-matlab/private
 while read f;do cp -p $f $TEMP/geographiclib-matlab/$f; done <<EOF
 defaultellipsoid.m
 ecc2flat.m
@@ -237,7 +237,7 @@ private/sumx.m
 private/swap.m
 EOF
 cd $TEMP
-rm $DEVELSOURCE/geographiclib_matlab_$VERSION.zip
+rm -f $DEVELSOURCE/geographiclib_matlab_$VERSION.zip
 zip $DEVELSOURCE/geographiclib_matlab_$VERSION.zip \
     geographiclib-matlab/*.m geographiclib-matlab/private/*.m
 cd $TEMP/matlab

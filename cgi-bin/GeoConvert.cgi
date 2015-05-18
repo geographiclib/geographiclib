@@ -180,7 +180,7 @@ cat <<EOF
         83.627 -32.664                24XWT783908
         W32d40 N83d37.6               YUB17770380
         83&deg;37'39"N 32&deg;39'52"W     UTM:
-        87:37:39 32:39:52             25n 504158 9286521
+        83:37:39 32:39:52W            25n 504158 9286521
         32:39.9W 83:37.6N             430000 9290000 26n
         32:40W+0:0:6 83:37.6      UPS:
         32:40W+0:0:6 83:38-0:0.4      n 1617772 1403805</pre>
@@ -232,7 +232,7 @@ cat <<EOF
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2011-08-14)</address>
+      (2015-05-18)</address>
     <a href="http://geographiclib.sourceforge.net">
       GeographicLib home
     </a>
