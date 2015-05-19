@@ -431,7 +431,6 @@ public class GeodesicLine {
                                     _ctau1 * c - _stau1 * s,
                                     _C1pa);
       sig12 = tau12 - (B12 - _B11);
-      r.a12 = sig12 / GeoMath.degree;
       ssig12 = Math.sin(sig12); csig12 = Math.cos(sig12);
       if (Math.abs(_f) > 0.01) {
         // Reverted distance series is inaccurate for |f| > 1/100, so correct
@@ -464,6 +463,7 @@ public class GeodesicLine {
         ssig12 = Math.sin(sig12); csig12 = Math.cos(sig12);
         // Update B12 below
       }
+      r.a12 = sig12 / GeoMath.degree;
     }
 
     double omg12, lam12, lon12;
