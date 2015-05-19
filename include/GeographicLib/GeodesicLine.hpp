@@ -507,7 +507,7 @@ namespace GeographicLib {
      * - \e outmask |= GeodesicLine::AREA for the area \e S12;
      * - \e outmask |= GeodesicLine::ALL for all of the above;
      * - \e outmask |= GeodesicLine::LONG_UNROLL to unroll \e lon2 instead of
-     *   wrapping it into the range [&minus;180&deg;, 180&deg;).
+     *   reducing it into the range [&minus;180&deg;, 180&deg;).
      * .
      * Requesting a value which the GeodesicLine object is not capable of
      * computing is not an error; the corresponding argument will not be

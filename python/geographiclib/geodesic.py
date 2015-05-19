@@ -1008,7 +1008,7 @@ class Geodesic(object):
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
-      Geodesic.ALL
+      Geodesic.ALL (all of the above)
       Geodesic.LONG_UNROLL
 
     If Geodesic.LONG_UNROLL is set, then lon1 is unchanged and lon2 -
@@ -1077,7 +1077,7 @@ class Geodesic(object):
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
-      Geodesic.ALL
+      Geodesic.ALL (all of the above)
       Geodesic.LONG_UNROLL
 
     The LONG_UNROLL bit unrolls the longitudes (instead of reducing them
@@ -1142,7 +1142,7 @@ class Geodesic(object):
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
-      Geodesic.ALL
+      Geodesic.ALL (all of the above)
       Geodesic.LONG_UNROLL
 
     """
@@ -1182,7 +1182,7 @@ class Geodesic(object):
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.DISTANCE_IN
-      Geodesic.ALL
+      Geodesic.ALL (all of the above)
 
     """
 

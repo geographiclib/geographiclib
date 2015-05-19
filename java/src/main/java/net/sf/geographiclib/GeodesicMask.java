@@ -77,11 +77,12 @@ public class GeodesicMask {
    **********************************************************************/
   public static final int LONG_UNROLL   = 1<<15;
   /**
-   * For backward compatibility only.  Use LONG_UNROLL instead.
+   * For backward compatibility only; use LONG_UNROLL instead.
    **********************************************************************/
   public static final int LONG_NOWRAP   = LONG_UNROLL;
   /**
-   * All capabilities, calculate everything.
+   * All capabilities, calculate everything.  (LONG_UNROLL is not included in
+   * this mask.)
    **********************************************************************/
   public static final int ALL           = OUT_ALL| CAP_ALL;
 }

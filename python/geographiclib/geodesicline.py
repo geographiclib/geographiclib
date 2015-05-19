@@ -315,7 +315,7 @@ class GeodesicLine(object):
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
-      Geodesic.ALL
+      Geodesic.ALL (all of the above)
       Geodesic.LONG_UNROLL
 
     """
@@ -372,7 +372,7 @@ class GeodesicLine(object):
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
-      Geodesic.ALL
+      Geodesic.ALL (all of the above)
       Geodesic.LONG_UNROLL
 
     """

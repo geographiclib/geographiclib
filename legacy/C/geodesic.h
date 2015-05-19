@@ -520,11 +520,11 @@ extern "C" {
    * is not an error; the corresponding argument will not be altered.
    *
    * With \e flags & GEOD_LONG_UNROLL bit set, the longitude is "unrolled" so
-   * that the quantity \e lon2 &minus; \e lon1 indicates how many times the
-   * geodesic wrapped around the ellipsoid.  Because \e lon2 might be outside
-   * the normal allowed range for longitudes, [&minus;540&deg;, 540&deg;), be
-   * sure to normalize it, e.g., with fmod(\e lon2, 360.0) before using it in
-   * subsequent calculations
+   * that the quantity \e lon2 &minus; \e lon1 indicates how many times and in
+   * what sense the geodesic encircles the ellipsoid.  Because \e lon2 might be
+   * outside the normal allowed range for longitudes, [&minus;540&deg;,
+   * 540&deg;), be sure to normalize it, e.g., with fmod(\e lon2, 360.0) before
+   * using it in subsequent calculations
    *
    * Example, compute way points between JFK and Singapore Changi Airport
    * using geod_genposition().  In this example, the points are evenly space in
