@@ -33,6 +33,7 @@ namespace GeographicLib {
                       _lat, _long, _gamma, _k);
     } else if (sa.size() == 2) {
       DMS::DecodeLatLon(sa[0], sa[1], _lat, _long, swaplatlong);
+      _long = Math::AngNormalize(_long);
       UTMUPS::Forward( _lat, _long,
                        _zone, _northp, _easting, _northing, _gamma, _k);
     } else if (sa.size() == 3) {

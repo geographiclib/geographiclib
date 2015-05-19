@@ -106,7 +106,6 @@
       throw new Error("latitude " + lat + " not in [-90, 90]");
     if (!(lon >= -540 && lon < 540))
       throw new Error("longitude " + lon + " not in [-540, 540)");
-    return m.AngNormalize(lon);
   };
 
   g.Geodesic.CheckAzimuth = function(azi) {
@@ -123,9 +122,10 @@
   g.Geodesic.prototype.Inverse = function(lat1, lon1, lat2, lon2, outmask) {
     if (!outmask) outmask = g.DISTANCE | g.AZIMUTH;
     g.Geodesic.CheckPosition(lat1, lon1);
-    lon2 = g.Geodesic.CheckPosition(lat2, lon2);
+    g.Geodesic.CheckPosition(lat2, lon2);
 
     var result = this.GenInverse(lat1, lon1, lat2, lon2, outmask);
+    lon2 = m.AngNormalize(lon2);
     if (outmask & g.LONG_UNROLL) {
       result.lon1 = lon1;
       result.lon2 = lon1 + m.AngDiff(m.AngNormalize(lon1), lon2);

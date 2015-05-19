@@ -7033,8 +7033,9 @@ git repository for GeographicLib</a>.
      - The online version of
        <a href="http://geographiclib.sf.net/cgi-bin/GeodSolve">GeodSolve</a>
        now offers an option to unroll the longitude.
-     - To support these changes DMS::DecodeLatLon now takes an optional
-       \e unroll argument and Math::AngRound now coverts &minus;0 to +0.
+     - To support these changes DMS::DecodeLatLon no longer reduces the
+       longitude to the range [&minus;180&deg;, 180&deg;) and
+       Math::AngRound now coverts &minus;0 to +0.
    - Add Math::polyval (also to C, Java, JavaScript, Fortran, python
      versions of the library; this is a built-in function for
      MATLAB/Octave).  This evaluates a polynomial using Horner's method.

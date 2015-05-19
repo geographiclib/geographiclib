@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
         if (m + 3 >= argc) return usage(1, true);
         try {
           DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                            lat1, lon1, false, true);
+                            lat1, lon1);
           azi1 = DMS::DecodeAzimuth(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {
@@ -160,8 +160,6 @@ int main(int argc, char* argv[]) {
       } else
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
-    if (linecalc && !unroll)
-      lon1 = Math::AngNormalize(lon1);
 
     if (!ifile.empty() && !istring.empty()) {
       std::cerr << "Cannot specify --input-string and --input-file together\n";
@@ -246,22 +244,24 @@ int main(int argc, char* argv[]) {
           std::string strc;
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
-          DMS::DecodeLatLon(slat1, slon1, lat1, lon1, false, unroll);
-          // Normalize second longitude
-          DMS::DecodeLatLon(slat2, slon2, lat2, lon2, false, true);
+          DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
+          DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
           a12 = exact ?
             geode.GenInverse(lat1, lon1, lat2, lon2, outmask,
                              s12, azi1, azi2, m12, M12, M21, S12) :
             geods.GenInverse(lat1, lon1, lat2, lon2, outmask,
                              s12, azi1, azi2, m12, M12, M21, S12);
-          if (full)
-            *output << LatLonString(lat1, lon1, prec, dms, dmssep) << " ";
-          *output << AzimuthString(azi1, prec, dms, dmssep) << " ";
           if (full) {
+            lon2 = Math::AngNormalize(lon2);
             if (unroll)
               lon2 = lon1 + Math::AngDiff(Math::AngNormalize(lon1), lon2);
-            *output << LatLonString(lat2, lon2, prec, dms, dmssep) << " ";
+            else
+              lon1 = Math::AngNormalize(lon1);
+            *output << LatLonString(lat1, lon1, prec, dms, dmssep) << " ";
           }
+          *output << AzimuthString(azi1, prec, dms, dmssep) << " ";
+          if (full)
+            *output << LatLonString(lat2, lon2, prec, dms, dmssep) << " ";
           *output << AzimuthString(azi2 + azi2sense, prec, dms, dmssep) << " "
                   << DistanceStrings(s12, a12, full, arcmode, prec, dms);
           if (full)
@@ -291,7 +291,7 @@ int main(int argc, char* argv[]) {
             std::string strc;
             if (str >> strc)
               throw GeographicErr("Extraneous input: " + strc);
-            DMS::DecodeLatLon(slat1, slon1, lat1, lon1, false, unroll);
+            DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
             azi1 = DMS::DecodeAzimuth(sazi1);
             s12 = ReadDistance(ss12, arcmode);
             a12 = exact ?
@@ -301,8 +301,10 @@ int main(int argc, char* argv[]) {
                               lat2, lon2, azi2, s12, m12, M12, M21, S12);
           }
           if (full)
-            *output << LatLonString(lat1, lon1, prec, dms, dmssep) << " "
-                    << AzimuthString(azi1, prec, dms, dmssep) << " ";
+            *output
+              << LatLonString(lat1, unroll ? lon1 : Math::AngNormalize(lon1),
+                              prec, dms, dmssep) << " "
+              << AzimuthString(azi1, prec, dms, dmssep) << " ";
           *output << LatLonString(lat2, lon2, prec, dms, dmssep) << " "
                   << AzimuthString(azi2 + azi2sense, prec, dms, dmssep);
           if (full)
