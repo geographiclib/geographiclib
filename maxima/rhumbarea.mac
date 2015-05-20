@@ -200,4 +200,3 @@ load("polyprint.mac")$
 printrhumb():=block([macro:GEOGRAPHICLIB_RHUMBAREA_ORDER],
   array1('R,'n,1,0))$
 printrhumb()$
-

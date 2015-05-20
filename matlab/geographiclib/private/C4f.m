@@ -12,7 +12,7 @@ function C4 = C4f(epsi, C4x)
   o = 1;
   for l = 0 : nC4 - 1
     m = nC4 - l - 1;
-    C4(:, l+1) = mult * polyval(C4x(o : o + m), epsi);
+    C4(:, l+1) = mult .* polyval(C4x(o : o + m), epsi);
     o = o + m + 1;
     mult = mult .* epsi;
   end
