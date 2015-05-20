@@ -208,6 +208,12 @@ printseries()$
 (b1:a1,
   for i:1 thru maxpow do (alp[i]:coeff(zeta_zetap,sin(2*i*zetap)),
     bet[i]:coeff(expand(-zetap_zeta),sin(2*i*zeta))))$
+load("polyprint.mac")$
+printtm():=block([macro:GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER],
+  value1('(b1*(1+n)),'n,2,0),
+  array1('alp,'n,1,0),
+  array1('bet,'n,1,0))$
+printtm()$
 /*
 defarrayfuns()$
 save("tmseries.lsp",maxpow,arrays)$

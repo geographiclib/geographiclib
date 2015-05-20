@@ -195,4 +195,9 @@ codeR(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
 maxpow:8$
 computeR(maxpow)$
 dispR(maxpow)$
-codeR(4,maxpow)$
+/* codeR(4,maxpow)$ */
+load("polyprint.mac")$
+printrhumb():=block([macro:GEOGRAPHICLIB_RHUMBAREA_ORDER],
+  array1('R,'n,1,0))$
+printrhumb()$
+

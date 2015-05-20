@@ -513,6 +513,7 @@ function [s12b, m12b, m0, M12, M21] = ...
     M12 = csig12 + (t .* ssig2 - csig2 .* J12) .* ssig1 ./ dn1;
     M21 = csig12 - (t .* ssig1 - csig1 .* J12) .* ssig2 ./ dn2;
   else
-    M12 = sig12 + NaN; M21 = M12;
+    % Assign arbitrary values
+    M12 = sig12; M21 = M12;
   end
 end

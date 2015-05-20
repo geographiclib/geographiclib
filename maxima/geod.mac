@@ -577,8 +577,27 @@ dispseries():=(
   */
 maxpow:8$
 computeall()$
-printcode()$
+/* printcode()$ */
 dispseries()$
+/* Coefficients of I1 - I2 */
+A12:ratdisrep(taylor(A1-A2,eps,0,maxpow))$
+for j:1 thru maxpow do
+  C12[j]:ratdisrep(taylor((A1*C1[j]-A2*C2[j])/A12,eps,0,maxpow-1))$
+
+load("polyprint.mac")$
+printgeod():= block([macro:if simplenum then "GEOGRAPHICLIB_GEODESIC_ORDER"
+  else "GEOGRAPHICLIB_GEODESICEXACT_ORDER"],
+  value1('(A1*(1-eps)-1),'eps,2,0),
+  array1('C1,'eps,2,0),
+  array1('C1p,'eps,2,0),
+  value1('(A2/(1-eps)-1),'eps,2,0),
+  array1('C2,eps,2,0),
+  value2('A3,'n,'eps,1),
+  array2('C3,'n,'eps,1),
+  array2('C4,'n,'eps,1),
+  value1('A12,'eps,1,0),
+  array1('C12,'eps,1,1))$
+printgeod()$
 /* Save the values needed for geodesic.mac  This is commented out
 here to avoid accidentally overwriting files in a user's directory. */
 /* (file:concat("geod",maxpow,".lsp"), save(file, values, arrays))$ */
