@@ -37,14 +37,29 @@ set -e
 #   NEWS
 #   configure.ac
 #   tests/test-distribution.sh
-#   src/GeographicLib.pro
+#   src/GeographicLib.pro lib version
+
 # Need updating if underlying library changes
+
+# python
 #   python/setup.py
-#   matlab/geographiclib/Contents.m
-#   legacy/C/geodesic.h
+
+# MATLAB
+#   matlab/geographiclib/Contents.m version + date
+
+# C
+#   legacy/C/geodesic.h comment + GEODESIC_VERSION_*
+#   doc/geodesic-c.dox
+
+# Fortran
 #   legacy/Fortran/geodesic.for
+#   doc/geodesic-for.dox
+
+# Java
 #   java/pom.xml java/*/pom.xml
 #   java/src/main/java/net/sf/geographiclib/package-info.java
+
+# JavaScript + maxima -- none
 
 DATE=`date +%F`
 VERSION=1.43

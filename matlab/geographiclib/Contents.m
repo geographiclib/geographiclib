@@ -1,5 +1,5 @@
 % GeographicLib toolbox
-% Version 1.43 2015-mm-dd
+% Version 1.43 2015-05-23
 %
 %   This toolbox provides native MATLAB implementations of a subset of the
 %   C++ library, GeographicLib.  Key components of this toolbox are

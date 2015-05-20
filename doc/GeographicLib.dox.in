@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2015-mm-dd
+\date 2015-05-23
 
 \section abstract Abstract
 
@@ -6999,7 +6999,7 @@ of the
 git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
-   (released 2015-mm-dd)
+   (released 2015-05-23)
    - Add the Enhanced Magnetic Model 2015, emm2015.  This is valid for
      2000 thru the end of 2019.  This required some changes in the
      MagneticModel and MagneticCircle classes; so this model cannot be

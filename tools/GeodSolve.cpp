@@ -2,7 +2,7 @@
  * \file GeodSolve.cpp
  * \brief Command line utility for geodesic calculations
  *
- * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
