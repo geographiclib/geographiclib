@@ -450,6 +450,11 @@ git tag -m "Version $VERSION ($DATE)" v$VERSION
 git push --all
 git push --tags
 
+# Also to do
+# update home brew
+# upload matlab packages
+# update binaries for cgi applications
+# trigger build on build-open
 EOF
 echo cat $TEMP/tasks.txt
 cat $TEMP/tasks.txt

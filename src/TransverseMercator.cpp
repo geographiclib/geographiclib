@@ -267,7 +267,7 @@ namespace GeographicLib {
     int o = 0;
     real d = _n;
     for (int l = 1; l <= maxpow_; ++l) {
-      int m = maxpow_ - l;
+      m = maxpow_ - l;
       _alp[l] = d * Math::polyval(m, alpcoeff + o, _n) / alpcoeff[o + m + 1];
       _bet[l] = d * Math::polyval(m, betcoeff + o, _n) / betcoeff[o + m + 1];
       o += m + 2;

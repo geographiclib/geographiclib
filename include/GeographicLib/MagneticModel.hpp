@@ -33,8 +33,8 @@ namespace GeographicLib {
    * of currents in the ionosphere and magnetosphere which have daily and
    * annual variations.
    *
-   * See \ref magnetic for details of how to install the magnetic model and the
-   * data format.
+   * See \ref magnetic for details of how to install the magnetic models and
+   * the data format.
    *
    * See
    * - General information:

@@ -66,7 +66,7 @@ namespace GeographicLib {
    * - \e x, \e y, \e z, local cartesian coordinates used to denote the east,
    *   north and up directions.
    *
-   * See \ref gravity for details of how to install the gravity model and the
+   * See \ref gravity for details of how to install the gravity models and the
    * data format.
    *
    * References:
