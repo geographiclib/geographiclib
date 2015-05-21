@@ -45,7 +45,7 @@ COMMAND="GeodSolve -E -f"
 EXECDIR=../bin
 F='<font color="blue">'
 G='</font>'
-test $TYPE = D || COMMAND="$COMMAND -i"
+test $TYPE = I && COMMAND="$COMMAND -i"
 COMMANDX="$COMMAND -p 1"
 test $FORMAT = d && COMMAND="$COMMAND -$FORMAT"
 test $AZF2   = b && COMMAND="$COMMAND -$AZF2"
@@ -186,8 +186,8 @@ while read c desc; do
     echo "<input type='radio' name='format' value='$c' id='$c' $CHECKED>"
     echo "$desc</label></td>"
 done <<EOF
-g Decimal degrees
-d Degrees minutes seconds
+g decimal degrees
+d degrees minutes seconds
 EOF
 cat <<EOF
           </tr>
@@ -203,8 +203,8 @@ while read c desc; do
     echo "<input type='radio' name='azi2' value='$c' id='$c' $CHECKED>"
     echo "$desc</label></td>"
 done <<EOF
-f Forward azimuth
-b Back azimuth
+f forward azimuth
+b back azimuth
 EOF
 cat <<EOF
           </tr>
@@ -220,8 +220,8 @@ while read c desc; do
     echo "<input type='radio' name='unroll' value='$c' id='$c' $CHECKED>"
     echo "$desc</label></td>"
 done <<EOF
-r Reduce to [&minus;180&deg;,180&deg;)
-u Unroll
+r reduce to [&minus;180&deg;,180&deg;)
+u unroll
 EOF
 cat <<EOF
           </tr>

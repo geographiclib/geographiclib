@@ -11,7 +11,8 @@ function [lat, lon, h, M] = loccart_inv(lat0, lon0, h0, x, y, z, ellipsoid)
 %   The ellipsoid vector is of the form [a, e], where a is the equatorial
 %   radius in meters, e is the eccentricity.  If ellipsoid is omitted, the
 %   WGS84 ellipsoid (more precisely, the value returned by
-%   defaultellipsoid) is used.
+%   defaultellipsoid) is used.  The forward operation is given by
+%   loccart_fwd.
 %
 %   M is the 3 x 3 rotation matrix for the conversion.  Pre-multiplying a
 %   unit vector in local cartesian coordinates at (lat0, lon0, h0) by the
