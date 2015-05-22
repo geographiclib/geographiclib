@@ -48,14 +48,15 @@ namespace GeographicLib {
     , _hmin(Math::NaN())
     , _hmax(Math::NaN())
     , _Nmodels(1)
+    , _Nconstants(0)
     , _norm(SphericalHarmonic::SCHMIDT)
     , _earth(earth)
   {
     if (_dir.empty())
       _dir = DefaultMagneticPath();
     ReadMetadata(_name);
-    _G.resize(_Nmodels + 1);
-    _H.resize(_Nmodels + 1);
+    _G.resize(_Nmodels + 1 + _Nconstants);
+    _H.resize(_Nmodels + 1 + _Nconstants);
     {
       string coeff = _filename + ".cof";
       ifstream coeffstr(coeff.c_str(), ios::binary);
@@ -68,7 +69,7 @@ namespace GeographicLib {
       id[idlength_] = '\0';
       if (_id != string(id))
         throw GeographicErr("ID mismatch: " + _id + " vs " + id);
-      for (int i = 0; i <= _Nmodels; ++i) {
+      for (int i = 0; i < _Nmodels + 1 + _Nconstants; ++i) {
         int N, M;
         SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _G[i], _H[i]);
         if (!(M < 0 || _G[i][0] == 0))
@@ -96,7 +97,7 @@ namespace GeographicLib {
     if (n != string::npos)
       n -= 5;
     string version = line.substr(5, n);
-    if (version != "1")
+    if (!(version == "1" || version == "2"))
       throw GeographicErr("Unknown version in " + _filename + ": " + version);
     string key, val;
     while (getline(metastr, line)) {
@@ -120,6 +121,8 @@ namespace GeographicLib {
         _dt0 = Utility::num<real>(val);
       else if (key == "NumModels")
         _Nmodels = Utility::num<int>(val);
+      else if (key == "NumConstants")
+        _Nconstants = Utility::num<int>(val);
       else if (key == "MinTime")
         _tmin = Utility::num<real>(val);
       else if (key == "MaxTime")
@@ -155,6 +158,10 @@ namespace GeographicLib {
       throw GeographicErr("Min height exceeds max height");
     if (int(_id.size()) != idlength_)
       throw GeographicErr("Invalid ID");
+    if (_Nmodels < 1)
+      throw GeographicErr("NumModels must be positive");
+    if (!(_Nconstants == 0 || _Nconstants == 1))
+      throw GeographicErr("NumConstants must be 0 or 1");
     if (!(_dt0 > 0)) {
       if (_Nmodels > 1)
         throw GeographicErr("DeltaEpoch must be positive");
@@ -176,17 +183,20 @@ namespace GeographicLib {
     // Components in geocentric basis
     // initial values to suppress warning
     real BX0 = 0, BY0 = 0, BZ0 = 0, BX1 = 0, BY1 = 0, BZ1 = 0;
+    real BXc = 0, BYc = 0, BZc = 0;
     _harm[n](X, Y, Z, BX0, BY0, BZ0);
     _harm[n + 1](X, Y, Z, BX1, BY1, BZ1);
+    if (_Nconstants)
+      _harm[_Nmodels + 1](X, Y, Z, BXc, BYc, BZc);
     if (interpolate) {
       // Convert to a time derivative
       BX1 = (BX1 - BX0) / _dt0;
       BY1 = (BY1 - BY0) / _dt0;
       BZ1 = (BZ1 - BZ0) / _dt0;
     }
-    BX0 += t * BX1;
-    BY0 += t * BY1;
-    BZ0 += t * BZ1;
+    BX0 += t * BX1 + BXc;
+    BY0 += t * BY1 + BYc;
+    BZ0 += t * BZ1 + BZc;
     if (diffp) {
       Geocentric::Unrotate(M, BX1, BY1, BZ1, Bxt, Byt, Bzt);
       Bxt *= - _a;
@@ -208,10 +218,16 @@ namespace GeographicLib {
     _earth.IntForward(lat, 0, h, X, Y, Z, M);
     // Y = 0, cphi = M[7], sphi = M[8];
 
-    return MagneticCircle(_a, _earth._f, lat, h, t,
-                          M[7], M[8], t1, _dt0, interpolate,
-                          _harm[n].Circle(X, Z, true),
-                          _harm[n + 1].Circle(X, Z, true));
+    return (_Nconstants == 0 ?
+            MagneticCircle(_a, _earth._f, lat, h, t,
+                           M[7], M[8], t1, _dt0, interpolate,
+                           _harm[n].Circle(X, Z, true),
+                           _harm[n + 1].Circle(X, Z, true)) :
+            MagneticCircle(_a, _earth._f, lat, h, t,
+                           M[7], M[8], t1, _dt0, interpolate,
+                           _harm[n].Circle(X, Z, true),
+                           _harm[n + 1].Circle(X, Z, true),
+                           _harm[_Nmodels + 1].Circle(X, Z, true)));
   }
 
   void MagneticModel::FieldComponents(real Bx, real By, real Bz,

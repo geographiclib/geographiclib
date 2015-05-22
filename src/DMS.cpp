@@ -244,7 +244,8 @@ namespace GeographicLib {
   }
 
   void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,
-                         real& lat, real& lon, bool swaplatlong) {
+                         real& lat, real& lon,
+                         bool swaplatlong) {
     real a, b;
     flag ia, ib;
     a = Decode(stra, ia);
@@ -270,7 +271,6 @@ namespace GeographicLib {
     if (lon1 < -540 || lon1 >= 540)
       throw GeographicErr("Longitude " + Utility::str(lon1)
                           + "d not in [-540d, 540d)");
-    lon1 = Math::AngNormalize(lon1);
     lat = lat1;
     lon = lon1;
   }

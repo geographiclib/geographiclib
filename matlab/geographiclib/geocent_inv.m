@@ -9,7 +9,8 @@ function [lat, lon, h, M] = geocent_inv(X, Y, Z, ellipsoid)
 %   and h are in meters.  lat and lon are in degrees.  The ellipsoid vector
 %   is of the form [a, e], where a is the equatorial radius in meters, e is
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by defaultellipsoid) is used.
+%   precisely, the value returned by defaultellipsoid) is used.  The
+%   forward operation is given by geocent_fwd.
 %
 %   M is the 3 x 3 rotation matrix for the conversion.  Pre-multiplying a
 %   unit vector in geocentric coordinates by the transpose of M transforms

@@ -1,22 +1,33 @@
-function h = geoid_height(lat, lon, geoidname, geoiddir)
-%GEOID_HEIGHT  Compute the height of the geoid
+function N = geoid_height(lat, lon, geoidname, geoiddir)
+%GEOID_HEIGHT  Compute the height of the geoid above the ellipsoid
 %
-%   height = GEOID_HEIGHT(lat, lon)
-%   height = GEOID_HEIGHT(lat, lon, geoidname)
-%   height = GEOID_HEIGHT(lat, lon, geoidname, geoiddir)
-%            GEOID_HEIGHT([])
-%   height = GEOID_HEIGHT(lat, lon, geoid)
+%   N = GEOID_HEIGHT(lat, lon)
+%   N = GEOID_HEIGHT(lat, lon, geoidname)
+%   N = GEOID_HEIGHT(lat, lon, geoidname, geoiddir)
+%       GEOID_HEIGHT([])
+%   N = GEOID_HEIGHT(lat, lon, geoid)
 %
-%   computes the height of the geoid in meters.  lat and lon are the
-%   latitude and longitude in degrees.  These can be scalars or arrays of
-%   the same size.  The possible geoids are
+%   computes the height, N, of the geoid above the WGS84 ellipsoid.  lat
+%   and lon are the latitude and longitude in degrees; these can be scalars
+%   or arrays of the same size.  N is in meters.
+%
+%   The height of the geoid above the ellipsoid, N, is sometimes called the
+%   geoid undulation.  It can be used to convert a height above the
+%   ellipsoid, h, to the corresponding height above the geoid (the
+%   orthometric height, roughly the height above mean sea level), H, using
+%   the relations
+%
+%       h = N + H;   H = -N + h.
+%
+%   The possible geoids are
 %
 %       egm84-30  egm84-15
 %       egm96-15  egm96-5
 %       egm2008-5 egm2008-2_5 egm2008-1
 %
 %   The first part of the name is the geoid model.  The second part gives
-%   the resolution of the gridded data (in arc-seconds).
+%   the resolution of the gridded data (in arc-seconds).  Thus egm2008-2_5
+%   is the egm2008 geoid model at a resolution of 2.5".
 %
 %   By default the egm96-5 geoid is used.  This can be overridden by
 %   specifying geoidname.  The geoiddir argument overrides the default
@@ -50,7 +61,7 @@ function h = geoid_height(lat, lon, geoidname, geoiddir)
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.43.
 
   persistent saved_geoid
   if nargin == 1 && isempty(lat)
@@ -59,7 +70,7 @@ function h = geoid_height(lat, lon, geoidname, geoiddir)
   end
   narginchk(2, 4)
   if nargin == 3 && isstruct(geoidname)
-    h = geoid_height_int(lat, lon, geoidname);
+    N = geoid_height_int(lat, lon, geoidname);
   else
     if nargin < 3
       geoidname = '';
@@ -71,40 +82,13 @@ function h = geoid_height(lat, lon, geoidname, geoiddir)
     if ~(isstruct(saved_geoid) && strcmp(saved_geoid.file, geoidfile))
       saved_geoid = geoid_load_file(geoidfile);
     end
-    h = geoid_height_int(lat, lon, saved_geoid);
+    N = geoid_height_int(lat, lon, saved_geoid);
   end
 end
 
-function height = geoid_height_int(lat, lon, geoid, cubic)
-  if nargin < 4, cubic = true; end
-  try
-    s = size(lat + lon);
-  catch
-    error('lat, lon have incompatible sizes')
-  end
-  num = prod(s); Z = zeros(num,1);
-  lat = lat(:) + Z; lon = lon(:) + Z;
-  h = geoid.h; w = geoid.w;
-  % lat is in [0, h]
-  flat = min(max((90 - lat) * (h - 1) / 180, 0), (h - 1));
-  % lon is in [0, w)
-  flon = mod(lon * w / 360, w);
-  flon(isnan(flon)) = 0;
-  ilat = min(floor(flat), h - 2);
-  ilon = floor(flon);
-  flat = flat - ilat; flon = flon - ilon;
-  if ~cubic
-    ind = imgind(ilon + [0,0,1,1], ilat + [0,1,0,1], w, h);
-    hf = double(geoid.im(ind));
-    height = (1 - flon) .* ((1 - flat) .* hf(:,1) + flat .* hf(:,2)) + ...
-             flon       .* ((1 - flat) .* hf(:,3) + flat .* hf(:,4));
-  else
-    ind = imgind(repmat(ilon, 1, 12) + ...
-                 repmat([ 0, 1,-1, 0, 1, 2,-1, 0, 1, 2, 0, 1], num, 1), ...
-                 repmat(ilat, 1, 12) + ...
-                 repmat([-1,-1, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2], num, 1), ...
-                 w, h);
-    hf = double(geoid.im(ind));
+function N = geoid_height_int(lat, lon, geoid, cubic)
+  persistent c0 c3 c0n c3n c0s c3s
+  if isempty(c3s)
     c0 = 240;
     c3 = [ 9, -18, -88,    0,  96,   90,   0,   0, -60, -20;...
           -9,  18,   8,    0, -96,   30,   0,   0,  60, -20;...
@@ -144,16 +128,46 @@ function height = geoid_height_int(lat, lon, geoid, cubic)
              0,    0,   62,   0,    0,   31, 0,   0,    0, -31;...
            -18,   36,  -64,   0,   66,   51, 0,   0, -102,  31;...
             18,  -36,    2,   0,  -66,  -51, 0,   0,  102,  31];
+  end
+  if nargin < 4, cubic = true; end
+  try
+    s = size(lat + lon);
+  catch
+    error('lat, lon have incompatible sizes')
+  end
+  num = prod(s); Z = zeros(num,1);
+  lat = lat(:) + Z; lon = lon(:) + Z;
+  h = geoid.h; w = geoid.w;
+  % lat is in [0, h]
+  flat = min(max((90 - lat) * (h - 1) / 180, 0), (h - 1));
+  % lon is in [0, w)
+  flon = mod(lon * w / 360, w);
+  flon(isnan(flon)) = 0;
+  ilat = min(floor(flat), h - 2);
+  ilon = floor(flon);
+  flat = flat - ilat; flon = flon - ilon;
+  if ~cubic
+    ind = imgind(ilon + [0,0,1,1], ilat + [0,1,0,1], w, h);
+    hf = double(geoid.im(ind));
+    N = (1 - flon) .* ((1 - flat) .* hf(:,1) + flat .* hf(:,2)) + ...
+        flon       .* ((1 - flat) .* hf(:,3) + flat .* hf(:,4));
+  else
+    ind = imgind(repmat(ilon, 1, 12) + ...
+                 repmat([ 0, 1,-1, 0, 1, 2,-1, 0, 1, 2, 0, 1], num, 1), ...
+                 repmat(ilat, 1, 12) + ...
+                 repmat([-1,-1, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2], num, 1), ...
+                 w, h);
+    hf = double(geoid.im(ind));
     hfx = hf * c3 / c0;
     hfx(ilat ==   0,:) = hf(ilat ==   0,:) * c3n / c0n;
     hfx(ilat == h-2,:) = hf(ilat == h-2,:) * c3s / c0s;
-    height = sum(hfx .* [Z+1, flon, flat, flon.^2, flon.*flat, flat.^2, ...
-                        flon.^3, flon.^2.*flat, flon.*flat.^2, flat.^3], ...
-                 2);
+    N = sum(hfx .* [Z+1, flon, flat, flon.^2, flon.*flat, flat.^2, ...
+                    flon.^3, flon.^2.*flat, flon.*flat.^2, flat.^3], ...
+            2);
   end
-  height = geoid.offset + geoid.scale * height;
-  height(~(abs(lat) <= 90 & abs(lon) <= 540)) = nan;
-  height = reshape(height, s);
+  N = geoid.offset + geoid.scale * N;
+  N(~(abs(lat) <= 90 & abs(lon) <= 540)) = nan;
+  N = reshape(N, s);
 end
 
 function ind = imgind(ix, iy, w, h)

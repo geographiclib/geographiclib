@@ -56,7 +56,7 @@ namespace NETGeographicLib
           CAP_ALL  = 0x1FU,
           CAP_MASK = CAP_ALL,
           OUT_ALL  = 0x7F80U,
-          OUT_MASK = 0xFF80U,       // Includes LONG_NOWRAP
+          OUT_MASK = 0xFF80U,       // Includes LONG_UNROLL
         };
         // a pointer to the GeographicLib::GeodesicLineExact.
         const GeographicLib::GeodesicLineExact* m_pGeodesicLineExact;
@@ -124,12 +124,14 @@ namespace NETGeographicLib
            **********************************************************************/
           AREA          = 1U<<14 | unsigned(captype::CAP_C4),
           /**
-           * Do not wrap the \e lon2 in the direct calculation.
+           * Unroll \e lon2 in the direct calculation.  (This flag used to be
+           * called LONG_NOWRAP.)
            * @hideinitializer
            **********************************************************************/
-          LONG_NOWRAP   = 1U<<15,
+          LONG_UNROLL   = 1U<<15,
+          LONG_NOWRAP   = LONG_UNROLL,
           /**
-           * All capabilities, calculate everything.  (LONG_NOWRAP is not
+           * All capabilities, calculate everything.  (LONG_UNROLL is not
            * included in this mask.)
            * @hideinitializer
            **********************************************************************/
@@ -453,19 +455,20 @@ namespace NETGeographicLib
          *   \e M12 and \e M21;
          * - \e outmask |= GeodesicLineExact::AREA for the area \e S12;
          * - \e outmask |= GeodesicLineExact::ALL for all of the above;
-         * - \e outmask |= GeodesicLineExact::LONG_NOWRAP stops the returned value
-         *   of \e lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
+         * - \e outmask |= GeodesicLineExact::LONG_UNROLL  to unroll \e lon2 instead
+         *   of wrapping it into the range [&minus;180&deg;, 180&deg;).
          * .
          * Requesting a value which the GeodesicLineExact object is not capable of
          * computing is not an error; the corresponding argument will not be
          * altered.  Note, however, that the arc length is always computed and
          * returned as the function value.
          *
-         * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
-         * indicates how many times the geodesic wrapped around the ellipsoid.
-         * Because \e lon2 might be outside the normal allowed range for
-         * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
-         * Math::AngNormalize2 before using it in other GeographicLib calls.
+         * With the LONG_UNROLL bit set, the quantity \e lon2 &minus; \e lon1
+         * indicates how many times and in what sense the geodesic encircles
+         * the ellipsoid.  Because \e lon2 might be outside the normal allowed
+         * range for longitudes, [&minus;540&deg;, 540&deg;), be sure to
+         * normalize it with Math::AngNormalize2 before using it in other
+         * GeographicLib calls.
          **********************************************************************/
         double GenPosition(bool arcmode, double s12_a12,
                 GeodesicLineExact::mask outmask,

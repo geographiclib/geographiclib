@@ -7,20 +7,13 @@ function C4 = C4f(epsi, C4x)
 %   K x 6 array.
 
   nC4 = 6;
-  nC4x = size(C4x, 2);
-  j = nC4x;
   C4 = zeros(length(epsi), nC4);
-  for k = nC4 : -1 : 1
-    t = C4(:, k);
-    for i = nC4 - k : -1 : 0
-      t = epsi .* t + C4x(j);
-      j = j - 1;
-    end
-    C4(:, k) = t;
-  end
-  mult = ones(length(epsi), 1);
-  for k = 2 : nC4
+  mult = 1;
+  o = 1;
+  for l = 0 : nC4 - 1
+    m = nC4 - l - 1;
+    C4(:, l+1) = mult .* polyval(C4x(o : o + m), epsi);
+    o = o + m + 1;
     mult = mult .* epsi;
-    C4(:, k) = C4(:, k) .* mult;
   end
 end

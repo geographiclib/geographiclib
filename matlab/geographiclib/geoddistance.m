@@ -44,7 +44,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.43.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
@@ -513,6 +513,6 @@ function [s12b, m12b, m0, M12, M21] = ...
     M12 = csig12 + (t .* ssig2 - csig2 .* J12) .* ssig1 ./ dn1;
     M21 = csig12 - (t .* ssig1 - csig1 .* J12) .* ssig2 ./ dn2;
   else
-    M12 = sig12 + NaN; M21 = M12;
+    M12 = sig12; M21 = M12;             % assign arbitrary values
   end
 end

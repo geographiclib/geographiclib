@@ -111,7 +111,7 @@ namespace GeographicLib {
       , _polyline(polyline)
       , _mask(GeodType::LATITUDE | GeodType::LONGITUDE | GeodType::DISTANCE |
               (_polyline ? GeodType::NONE :
-               GeodType::AREA | GeodType::LONG_NOWRAP))
+               GeodType::AREA | GeodType::LONG_UNROLL))
     { Clear(); }
 
     /**

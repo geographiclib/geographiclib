@@ -16,7 +16,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %   Counter-clockwise traversal counts as a positive area.  Only simple
 %   polygons (which do not intersect themselves) are supported.  Also
 %   returned are the perimeters of the polygons in P (meters) and the
-%   numbers of vertices in N.  GEODDOC gives the restrictions on the
+%   numbers of vertices in N.  geoddoc gives the restrictions on the
 %   allowed ranges of the arguments.
 %
 %   GEODAREA loosely duplicates the functionality of the areaint function
@@ -35,7 +35,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.43.
 
   narginchk(2, 3)
   if nargin < 3, ellipsoid = defaultellipsoid; end

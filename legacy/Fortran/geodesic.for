@@ -112,12 +112,12 @@
 *! restructuring the internals of the Fortran code since this may make
 *! porting fixes from the C++ code more difficult.
 *!
-*! Copyright (c) Charles Karney (2012-2014) <charles@karney.com> and
+*! Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and
 *! licensed under the MIT/X11 License.  For more information, see
 *! http://geographiclib.sourceforge.net/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.42.
+*! <a href="../index.html">GeographicLib</a> 1.43.
 
 *> Solve the direct geodesic problem
 *!
@@ -131,7 +131,7 @@
 *!   between point 1 and point 2 (meters); otherwise it is the arc
 *!   length between point 1 and point 2 (degrees); it can be negative.
 *! @param[in] flags a bitor'ed combination of the \e arcmode and \e
-*!   nowrap flags.
+*!   unroll flags.
 *! @param[out] lat2 latitude of point 2 (degrees).
 *! @param[out] lon2 longitude of point 2 (degrees).
 *! @param[out] azi2 (forward) azimuth at point 2 (degrees).
@@ -150,16 +150,17 @@
 *! \e flags is an integer in [0, 4) whose binary bits are interpreted
 *! as follows
 *! - 1 the \e arcmode flag
-*! - 2 the \e nowrap flag
+*! - 2 the \e unroll flag
 *! .
 *! If \e arcmode is not set, \e s12a12 is \e s12 and \e a12s12 is \e
 *! a12; otherwise, \e s12a12 is \e a12 and \e a12s12 is \e s12.  It \e
-*! nowrap is not set, the value \e lon2 returned is in the range
-*! [&minus;180&deg;, 180&deg;); otherwise \e lon2 &minus \e lon1
-*! indicates how many times the geodesic wrapped around the ellipsoid.
-*! Because \e lon2 might be outside the normal allowed range for
-*! longitudes, [&minus;540&deg;, 540&deg;), be sure to reduces its range
-*! with mod(\e lon2, 360d0) before using it in other calls.
+*! unroll is not set, the value \e lon2 returned is in the range
+*! [&minus;180&deg;, 180&deg;); if unroll is set, the longitude variable
+*! is "unrolled" so that \e lon2 &minus \e lon1 indicates how many times
+*! and in what sense the geodesic encircles the ellipsoid.  Because \e
+*! lon2 might be outside the normal allowed range for longitudes,
+*! [&minus;540&deg;, 540&deg;), be sure to reduces its range with mod(\e
+*! lon2, 360d0) before using it in other calls.
 *!
 *! \e omask is an integer in [0, 16) whose binary bits are interpreted
 *! as follows
@@ -200,13 +201,13 @@
 
       double precision csmgt, atanhx, hypotx,
      +    AngNm, AngNm2, AngRnd, TrgSum, A1m1f, A2m1f, A3f
-      logical arcmod, nowrap, arcp, redlp, scalp, areap
+      logical arcmod, unroll, arcp, redlp, scalp, areap
       double precision e2, f1, ep2, n, b, c2,
      +    lon1x, azi1x, phi, alp1, salp0, calp0, k2, eps,
      +    salp1, calp1, ssig1, csig1, cbet1, sbet1, dn1, somg1, comg1,
      +    salp2, calp2, ssig2, csig2, sbet2, cbet2, dn2, somg2, comg2,
      +    ssig12, csig12, salp12, calp12, omg12, lam12, lon12,
-     +    sig12, stau1, ctau1, tau12, s12a, t, s, c, serr,
+     +    sig12, stau1, ctau1, tau12, s12a, t, s, c, serr, E,
      +    A1m1, A2m1, A3c, A4, AB1, AB2,
      +    B11, B12, B21, B22, B31, B41, B42, J12
 
@@ -227,7 +228,7 @@
       c2 = 0
 
       arcmod = mod(flags/1, 2) == 1
-      nowrap = mod(flags/2, 2) == 1
+      unroll = mod(flags/2, 2) == 1
 
       arcp = mod(omask/1, 2) == 1
       redlp = mod(omask/2, 2) == 1
@@ -263,7 +264,7 @@
 * Ensure cbet1 = +dbleps at poles
       sbet1 = f1 * sin(phi)
       cbet1 = csmgt(tiny, cos(phi), abs(lat1) .eq. 90)
-      call Norm(sbet1, cbet1)
+      call norm2(sbet1, cbet1)
       dn1 = sqrt(1 + ep2 * sbet1**2)
 
 * Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -286,8 +287,8 @@
       csig1 = csmgt(cbet1 * calp1, 1d0, sbet1 .ne. 0 .or. calp1 .ne. 0)
       comg1 = csig1
 * sig1 in (-pi, pi]
-      call Norm(ssig1, csig1)
-* Geodesic::Norm(somg1, comg1); -- don't need to normalize!
+      call norm2(ssig1, csig1)
+* norm2(somg1, comg1); -- don't need to normalize!
 
       k2 = calp0**2 * ep2
       eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
@@ -408,13 +409,15 @@
 * No need to normalize
       salp2 = salp0
       calp2 = calp0 * csig2
+* East or west going?
+      E = sign(1d0, salp0)
 * omg12 = omg2 - omg1
-      omg12 = csmgt(sig12
-     +    - (atan2(ssig2, csig2) - atan2(ssig1, csig1))
-     +    + (atan2(somg2, comg2) - atan2(somg1, comg1)),
+      omg12 = csmgt(E * (sig12
+     +    - (atan2(    ssig2, csig2) - atan2(    ssig1, csig1))
+     +    + (atan2(E * somg2, comg2) - atan2(E * somg1, comg1))),
      +    atan2(somg2 * comg1 - comg2 * somg1,
      +    comg2 * comg1 + somg2 * somg1),
-     +    nowrap)
+     +    unroll)
 
       lam12 = omg12 + A3c *
      +    ( sig12 + (TrgSum(.true., ssig2, csig2, C3a, nC3-1)
@@ -422,7 +425,7 @@
       lon12 = lam12 / degree
 * Use Math::AngNm2 because longitude might have wrapped multiple
 * times.
-      lon2 = csmgt(lon1 + lon12, AngNm(lon1x + AngNm2(lon12)), nowrap)
+      lon2 = csmgt(lon1 + lon12, AngNm(lon1x + AngNm2(lon12)), unroll)
       lat2 = atan2(sbet2, f1 * cbet2) / degree
 * minus signs give range [-180, 180). 0- converts -0 to +0.
       azi2 = 0 - atan2(-salp2, calp2) / degree
@@ -445,7 +448,7 @@
       if (areap) then
         B42 = TrgSum(.false., ssig2, csig2, C4a, nC4)
         if (calp0 .eq. 0 .or. salp0 .eq. 0) then
-* alp12 = alp2 - alp1, used in atan2 so no need to normalized
+* alp12 = alp2 - alp1, used in atan2 so no need to normalize
           salp12 = salp2 * calp1 - calp2 * salp1
           calp12 = calp2 * calp1 + salp2 * salp1
 * The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
@@ -639,13 +642,13 @@
 * Ensure cbet1 = +dbleps at poles
       sbet1 = f1 * sin(phi)
       cbet1 = csmgt(tiny, cos(phi), lat1x .eq. -90)
-      call Norm(sbet1, cbet1)
+      call norm2(sbet1, cbet1)
 
       phi = lat2x * degree
 * Ensure cbet2 = +dbleps at poles
       sbet2 = f1 * sin(phi)
       cbet2 = csmgt(tiny, cos(phi), abs(lat2x) .eq. 90)
-      call Norm(sbet2, cbet2)
+      call norm2(sbet2, cbet2)
 
 * If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
 * |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1
@@ -805,7 +808,7 @@
               if (nsalp1 .gt. 0 .and. abs(dalp1) .lt. pi) then
                 calp1 = calp1 * cdalp1 - salp1 * sdalp1
                 salp1 = nsalp1
-                call Norm(salp1, calp1)
+                call norm2(salp1, calp1)
 * In some regimes we don't get quadratic convergence because
 * slope -> 0.  So use convergence conditions based on dbleps
 * instead of sqrt(dbleps).
@@ -823,7 +826,7 @@
 * WGS84 and random input: mean = 4.74, sd = 0.99
             salp1 = (salp1a + salp1b)/2
             calp1 = (calp1a + calp1b)/2
-            call Norm(salp1, calp1)
+            call norm2(salp1, calp1)
             tripn = .false.
             tripb = abs(salp1a - salp1) + (calp1a - calp1) .lt. tolb
      +          .or. abs(salp1 - salp1b) + (calp1 - calp1b) .lt. tolb
@@ -857,8 +860,8 @@
           eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
 * Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
           A4 = a**2 * calp0 * salp0 * e2
-          call Norm(ssig1, csig1)
-          call Norm(ssig2, csig2)
+          call norm2(ssig1, csig1)
+          call norm2(ssig2, csig2)
           call C4f(eps, C4x, C4a)
           B41 = TrgSum(.false., ssig1, csig1, C4a, nC4)
           B42 = TrgSum(.false., ssig2, csig2, C4a, nC4)
@@ -1021,7 +1024,7 @@
       dblmin = 0.5d0**1022
       dbleps = 0.5d0**(digits-1)
 
-      pi = atan2(0.0d0, -1.0d0)
+      pi = atan2(0d0, -1d0)
       degree = pi/180
       tiny = sqrt(dblmin)
       tol0 = dbleps
@@ -1238,7 +1241,7 @@
         salp2 = cbet1 * somg12
         calp2 = sbet12 - cbet1 * sbet2 *
      +      csmgt(somg12**2 / (1 + comg12), 1 - comg12, comg12 .ge. 0)
-        call Norm(salp2, calp2)
+        call norm2(salp2, calp2)
 * Set return value
         sig12 = atan2(ssig12, csig12)
       else if (abs(n) .gt. 0.1d0 .or. csig12 .ge. 0 .or.
@@ -1329,7 +1332,7 @@
       end if
 * Sanity check on starting guess.  Backwards check allows NaN through.
       if (.not. (salp1 .le. 0)) then
-        call Norm(salp1, calp1)
+        call norm2(salp1, calp1)
       else
         salp1 = 1
         calp1 = 0
@@ -1388,8 +1391,8 @@
       somg1 = salp0 * sbet1
       csig1 = calp1 * cbet1
       comg1 = csig1
-      call Norm(ssig1, csig1)
-* Norm(somg1, comg1); -- don't need to normalize!
+      call norm2(ssig1, csig1)
+* norm2(somg1, comg1); -- don't need to normalize!
 
 * Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
 * about this case, since this can yield singularities in the Newton
@@ -1411,8 +1414,8 @@
       somg2 = salp0 * sbet2
       csig2 = calp2 * cbet2
       comg2 = csig2
-      call Norm(ssig2, csig2)
-* Norm(somg2, comg2); -- don't need to normalize!
+      call norm2(ssig2, csig2)
+* norm2(somg2, comg2); -- don't need to normalize!
 
 * sig12 = sig2 - sig1, limit to [0, pi]
       sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0d0),
@@ -1446,7 +1449,7 @@
       end
 
       double precision function A3f(eps, A3x)
-* Evaluate sum(A3x[k] * eps^k, k, 0, nA3x-1) by Horner's method
+* Evaluate A3
       integer ord, nA3, nA3x
       parameter (ord = 6, nA3 = ord, nA3x = nA3)
 
@@ -1455,17 +1458,14 @@
 * output
       double precision A3x(0: nA3x-1)
 
-      integer i
-      A3f = 0
-      do 10 i = nA3x-1, 0, -1
-        A3f = eps * A3f + A3x(i)
- 10   continue
+      double precision polval
+      A3f = polval(nA3 - 1, A3x, eps)
 
       return
       end
 
       subroutine C3f(eps, C3x, c)
-* Evaluate C3 coeffs by Horner's method
+* Evaluate C3 coeffs
 * Elements c[1] thru c[nC3-1] are set
       integer ord, nC3, nC3x
       parameter (ord = 6, nC3 = ord, nC3x = (nC3 * (nC3 - 1)) / 2)
@@ -1475,30 +1475,23 @@
 * output
       double precision c(nC3-1)
 
-      integer i, j, k
-      double precision t, mult
-
-      j = nC3x
-      do 20 k = nC3-1, 1 , -1
-        t = 0
-        do 10 i = nC3 - k, 1, -1
-          j = j - 1
-          t = eps * t + C3x(j)
- 10     continue
-        c(k) = t
- 20   continue
+      integer o, m, l
+      double precision mult, polval
 
       mult = 1
-      do 30 k = 1, nC3-1
+      o = 0
+      do 10 l = 1, nC3 - 1
+        m = nC3 - l - 1
         mult = mult * eps
-        c(k) = c(k) * mult
- 30   continue
+        c(l) = mult * polval(m, C3x(o), eps)
+        o = o + m + 1
+ 10   continue
 
       return
       end
 
       subroutine C4f(eps, C4x, c)
-* Evaluate C4 coeffs by Horner's method
+* Evaluate C4
 * Elements c[0] thru c[nC4-1] are set
       integer ord, nC4, nC4x
       parameter (ord = 6, nC4 = ord, nC4x = (nC4 * (nC4 + 1)) / 2)
@@ -1508,39 +1501,35 @@
 *output
       double precision c(0:nC4-1)
 
-      integer i, j, k
-      double precision t, mult
-
-      j = nC4x
-      do 20 k = nC4-1, 0, -1
-         t = 0
-         do 10 i = nC4 - k, 1, -1
-            j = j - 1
-            t = eps * t + C4x(j)
- 10      continue
-         c(k) = t
- 20   continue
+      integer o, m, l
+      double precision mult, polval
 
       mult = 1
-      do 30 k = 1, nC4-1
-         mult = mult * eps
-         c(k) = c(k) * mult
- 30   continue
+      o = 0
+      do 10 l = 0, nC4 - 1
+        m = nC4 - l - 1
+        c(l) = mult * polval(m, C4x(o), eps)
+        o = o + m + 1
+        mult = mult * eps
+ 10   continue
 
       return
       end
-
-* Generated by Maxima on 2010-09-04 10:26:17-04:00
 
       double precision function A1m1f(eps)
 * The scale factor A1-1 = mean value of (d/dsigma)I1 - 1
 * input
       double precision eps
 
-      double precision eps2, t
+      double precision t
+      integer ord, nA1, o, m
+      parameter (ord = 6, nA1 = ord)
+      double precision polval, coeff(nA1/2 + 2)
+      data coeff /1, 4, 64, 0, 256/
 
-      eps2 = eps**2
-      t = eps2*(eps2*(eps2+4)+64)/256
+      o = 1
+      m = nA1/2
+      t = polval(m, coeff(o), eps**2) / coeff(o + m + 1)
       A1m1f = (t + eps) / (1 - eps)
 
       return
@@ -1557,20 +1546,25 @@
       double precision c(nC1)
 
       double precision eps2, d
+      integer o, m, l
+      double precision polval, coeff((nC1**2 + 7*nC1 - 2*(nC1/2))/4)
+      data coeff /
+     +    -1, 6, -16, 32,
+     +    -9, 64, -128, 2048,
+     +    9, -16, 768,
+     +    3, -5, 512,
+     +    -7, 1280,
+     +    -7, 2048/
 
       eps2 = eps**2
       d = eps
-      c(1) = d*((6-eps2)*eps2-16)/32
-      d = d * eps
-      c(2) = d*((64-9*eps2)*eps2-128)/2048
-      d = d * eps
-      c(3) = d*(9*eps2-16)/768
-      d = d * eps
-      c(4) = d*(3*eps2-5)/512
-      d = d * eps
-      c(5) = -7*d/1280
-      d = d * eps
-      c(6) = -7*d/2048
+      o = 1
+      do 10 l = 1, nC1
+        m = (nC1 - l) / 2
+        c(l) = d * polval(m, coeff(o), eps2) / coeff(o + m + 1)
+        o = o + m + 2
+        d = d * eps
+ 10   continue
 
       return
       end
@@ -1586,20 +1580,25 @@
       double precision c(nC1p)
 
       double precision eps2, d
+      integer o, m, l
+      double precision polval, coeff((nC1p**2 + 7*nC1p - 2*(nC1p/2))/4)
+      data coeff /
+     +    205, -432, 768, 1536,
+     +    4005, -4736, 3840, 12288,
+     +    -225, 116, 384,
+     +    -7173, 2695, 7680,
+     +    3467, 7680,
+     +    38081, 61440/
 
       eps2 = eps**2
       d = eps
-      c(1) = d*(eps2*(205*eps2-432)+768)/1536
-      d = d * eps
-      c(2) = d*(eps2*(4005*eps2-4736)+3840)/12288
-      d = d * eps
-      c(3) = d*(116-225*eps2)/384
-      d = d * eps
-      c(4) = d*(2695-7173*eps2)/7680
-      d = d * eps
-      c(5) = 3467*d/7680
-      d = d * eps
-      c(6) = 38081*d/61440
+      o = 1
+      do 10 l = 1, nC1p
+        m = (nC1p - l) / 2
+        c(l) = d * polval(m, coeff(o), eps2) / coeff(o + m + 1)
+        o = o + m + 2
+        d = d * eps
+ 10   continue
 
       return
       end
@@ -1609,10 +1608,15 @@
 * input
       double precision eps
 
-      double precision eps2, t
+      double precision t
+      integer ord, nA2, o, m
+      parameter (ord = 6, nA2 = ord)
+      double precision polval, coeff(nA2/2 + 2)
+      data coeff /25, 36, 64, 0, 256/
 
-      eps2 = eps**2
-      t = eps2*(eps2*(25*eps2+36)+64)/256
+      o = 1
+      m = nA2/2
+      t = polval(m, coeff(o), eps**2) / coeff(o + m + 1)
       A2m1f = t * (1 - eps) - eps
 
       return
@@ -1629,20 +1633,25 @@
       double precision c(nC2)
 
       double precision eps2, d
+      integer o, m, l
+      double precision polval, coeff((nC2**2 + 7*nC2 - 2*(nC2/2))/4)
+      data coeff /
+     +    1, 2, 16, 32,
+     +    35, 64, 384, 2048,
+     +    15, 80, 768,
+     +    7, 35, 512,
+     +    63, 1280,
+     +    77, 2048/
 
       eps2 = eps**2
       d = eps
-      c(1) = d*(eps2*(eps2+2)+16)/32
-      d = d * eps
-      c(2) = d*(eps2*(35*eps2+64)+384)/2048
-      d = d * eps
-      c(3) = d*(15*eps2+80)/768
-      d = d * eps
-      c(4) = d*(7*eps2+35)/512
-      d = d * eps
-      c(5) = 63*d/1280
-      d = d * eps
-      c(6) = 77*d/2048
+      o = 1
+      do 10 l = 1, nC2
+        m = (nC2 - l) / 2
+        c(l) = d * polval(m, coeff(o), eps2) / coeff(o + m + 1)
+        o = o + m + 2
+        d = d * eps
+ 10   continue
 
       return
       end
@@ -1657,12 +1666,24 @@
 * output
       double precision A3x(0:nA3x-1)
 
-      A3x(0) = 1
-      A3x(1) = (n-1)/2
-      A3x(2) = (n*(3*n-1)-2)/8
-      A3x(3) = ((-n-3)*n-1)/16
-      A3x(4) = (-2*n-3)/64
-      A3x(5) = -3/128d0
+      integer o, m, k, j
+      double precision polval, coeff((nA3**2 + 7*nA3 - 2*(nA3/2))/4)
+      data coeff /
+     +    -3, 128,
+     +    -2, -3, 64,
+     +    -1, -3, -1, 16,
+     +    3, -1, -2, 8,
+     +    1, -1, 2,
+     +    1, 1/
+
+      o = 1
+      k = 0
+      do 10 j = nA3 - 1, 0, -1
+        m = min(nA3 - j - 1, j)
+        A3x(k) = polval(m, coeff(o), n) / coeff(o + m + 1)
+        k = k + 1
+        o = o + m + 2
+ 10   continue
 
       return
       end
@@ -1677,26 +1698,39 @@
 * output
       double precision C3x(0:nC3x-1)
 
-      C3x(0) = (1-n)/4
-      C3x(1) = (1-n*n)/8
-      C3x(2) = ((3-n)*n+3)/64
-      C3x(3) = (2*n+5)/128
-      C3x(4) = 3/128d0
-      C3x(5) = ((n-3)*n+2)/32
-      C3x(6) = ((-3*n-2)*n+3)/64
-      C3x(7) = (n+3)/128
-      C3x(8) = 5/256d0
-      C3x(9) = (n*(5*n-9)+5)/192
-      C3x(10) = (9-10*n)/384
-      C3x(11) = 7/512d0
-      C3x(12) = (7-14*n)/512
-      C3x(13) = 7/512d0
-      C3x(14) = 21/2560d0
+      integer o, m, l, j, k
+      double precision polval,
+     +    coeff(((nC3-1)*(nC3**2 + 7*nC3 - 2*(nC3/2)))/8)
+      data coeff /
+     +    3, 128,
+     +    2, 5, 128,
+     +    -1, 3, 3, 64,
+     +    -1, 0, 1, 8,
+     +    -1, 1, 4,
+     +    5, 256,
+     +    1, 3, 128,
+     +    -3, -2, 3, 64,
+     +    1, -3, 2, 32,
+     +    7, 512,
+     +    -10, 9, 384,
+     +    5, -9, 5, 192,
+     +    7, 512,
+     +    -14, 7, 512,
+     +    21, 2560/
+
+      o = 1
+      k = 0
+      do 20 l = 1, nC3 - 1
+        do 10 j = nC3 - 1, l, -1
+          m = min(nC3 - j - 1, j)
+          C3x(k) = polval(m, coeff(o), n) / coeff(o + m + 1)
+          k = k + 1
+          o = o + m + 2
+ 10     continue
+ 20   continue
 
       return
       end
-
-* Generated by Maxima on 2012-10-19 08:02:34-04:00
 
       subroutine C4cof(n, C4x)
 * The coefficients C4[l] in the Fourier expansion of I4
@@ -1708,27 +1742,32 @@
 * output
       double precision C4x(0:nC4x-1)
 
-      C4x(0) = (n*(n*(n*(n*(100*n+208)+572)+3432)-12012)+30030)/45045
-      C4x(1) = (n*(n*(n*(64*n+624)-4576)+6864)-3003)/15015
-      C4x(2) = (n*((14144-10656*n)*n-4576)-858)/45045
-      C4x(3) = ((-224*n-4784)*n+1573)/45045
-      C4x(4) = (1088*n+156)/45045
-      C4x(5) = 97/15015d0
-      C4x(6) = (n*(n*((-64*n-624)*n+4576)-6864)+3003)/135135
-      C4x(7) = (n*(n*(5952*n-11648)+9152)-2574)/135135
-      C4x(8) = (n*(5792*n+1040)-1287)/135135
-      C4x(9) = (468-2944*n)/135135
-      C4x(10) = 1/9009d0
-      C4x(11) = (n*((4160-1440*n)*n-4576)+1716)/225225
-      C4x(12) = ((4992-8448*n)*n-1144)/225225
-      C4x(13) = (1856*n-936)/225225
-      C4x(14) = 8/10725d0
-      C4x(15) = (n*(3584*n-3328)+1144)/315315
-      C4x(16) = (1024*n-208)/105105
-      C4x(17) = -136/63063d0
-      C4x(18) = (832-2560*n)/405405
-      C4x(19) = -128/135135d0
-      C4x(20) = 128/99099d0
+      integer o, m, l, j, k
+      double precision polval, coeff((nC4 * (nC4 + 1) * (nC4 + 5)) / 6)
+      data coeff /
+     +    97, 15015,   1088, 156, 45045,   -224, -4784, 1573, 45045,
+     +    -10656, 14144, -4576, -858, 45045,
+     +    64, 624, -4576, 6864, -3003, 15015,
+     +    100, 208, 572, 3432, -12012, 30030, 45045,
+     +    1, 9009,   -2944, 468, 135135,   5792, 1040, -1287, 135135,
+     +    5952, -11648, 9152, -2574, 135135,
+     +    -64, -624, 4576, -6864, 3003, 135135,
+     +    8, 10725,   1856, -936, 225225,   -8448, 4992, -1144, 225225,
+     +    -1440, 4160, -4576, 1716, 225225,
+     +    -136, 63063,   1024, -208, 105105,
+     +    3584, -3328, 1144, 315315,
+     +    -128, 135135,   -2560, 832, 405405,   128, 99099/
+
+      o = 1
+      k = 0
+      do 20 l = 0, nC4 - 1
+        do 10 j = nC4 - 1, l, -1
+          m = nC4 - j - 1
+          C4x(k) = polval(m, coeff(o), n) / coeff(o + m + 1)
+          k = k + 1
+          o = o + m + 2
+ 10     continue
+ 20   continue
 
       return
       end
@@ -1798,10 +1837,11 @@
 
       double precision function AngRnd(x)
 * The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
-* for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
-* is about 1000 times more resolution than we get with angles around 90
+* for reals = 0.7 pm on the earth if x is an angle in degrees.  (This is
+* about 1000 times more resolution than we get with angles around 90
 * degrees.)  We use this to avoid having to deal with near singular
-* cases when x is non-zero but tiny (e.g., 1.0e-200).
+* cases when x is non-zero but tiny (e.g., 1.0e-200).  This also
+* converts -0 to +0.
 * input
       double precision x
 
@@ -1810,7 +1850,7 @@
       y = abs(x)
 * The compiler mustn't "simplify" z - (z - y) to y
       if (y .lt. z) y = z - (z - y)
-      AngRnd = sign(y, x)
+      AngRnd = 0 + sign(y, x)
 
       return
       end
@@ -1836,7 +1876,7 @@
       return
       end
 
-      subroutine Norm(sinx, cosx)
+      subroutine norm2(sinx, cosx)
 * input/output
       double precision sinx, cosx
 
@@ -1985,7 +2025,26 @@
       return
       end
 
-* Table of name abbreviations to conform to the 6-char limit
+      double precision function polval(N, p, x)
+* input
+      integer N
+      double precision p(0:N), x
+
+      integer i
+      if (N .lt. 0) then
+        polval = 0
+      else
+        polval = p(0)
+      endif
+      do 10 i = 1, N
+        polval = polval * x + p(i)
+ 10   continue
+
+      return
+      end
+
+* Table of name abbreviations to conform to the 6-char limit and
+* potential name conflicts.
 *    A3coeff       A3cof
 *    C3coeff       C3cof
 *    C4coeff       C4cof
@@ -2011,9 +2070,10 @@
 *    meridian      merid
 *    outmask       omask
 *    shortline     shortp
-*    SinCosNorm    Norm
+*    norm          norm2
 *    SinCosSeries  TrgSum
 *    xthresh       xthrsh
 *    transit       trnsit
-*    LONG_NOWRAP   nowrap
+*    polyval       polval
+*    LONG_UNROLL   unroll
 *> @endcond SKIP

@@ -110,6 +110,11 @@ public class GeoMath {
     return x < 0 ? -y : y;
   }
 
+  public static Pair norm(double sinx, double cosx) {
+    double r = GeoMath.hypot(sinx, cosx);
+    return new Pair(sinx/r, cosx/r);
+  }
+
   /**
    * The error-free sum of two numbers.
    * <p>
@@ -130,6 +135,41 @@ public class GeoMath {
     // u + v =       s      + t
     //       = round(u + v) + t
     return new Pair(s, t);
+  }
+
+  /**
+   * Evaluate a polynomial.
+   * <p>
+   * @param N the order of the polynomial.
+   * @param p the coefficient array (of size <i>N</i> + <i>s</i> + 1 or more).
+   * @param s starting index for the array.
+   * @param x the variable.
+   * @return the value of the polynomial.
+   *
+   * Evaluate <i>y</i> = &sum;<sub><i>n</i>=0..<i>N</i></sub>
+   * <i>p</i><sub><i>s</i>+<i>n</i></sub>
+   * <i>x</i><sup><i>N</i>&minus;<i>n</i></sup>.  Return 0 if <i>N</i> &lt; 0.
+   * Return <i>p</i><sub><i>s</i></sub>, if <i>N</i> = 0 (even if <i>x</i> is
+   * infinite or a nan).  The evaluation uses Horner's method.
+   **********************************************************************/
+  public static double polyval(int N, double p[], int s, double x) {
+    double y = N < 0 ? 0 : p[s++];
+    while (--N >= 0) y = y * x + p[s++];
+    return y;
+  }
+
+  public static double AngRound(double x) {
+    // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
+    // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
+    // is about 1000 times more resolution than we get with angles around 90
+    // degrees.)  We use this to avoid having to deal with near singular
+    // cases when x is non-zero but tiny (e.g., 1.0e-200).  This also converts
+    // -0 to +0.
+    final double z = 1/16.0;
+    double y = Math.abs(x);
+    // The compiler mustn't "simplify" z - (z - y) to y
+    y = y < z ? z - (z - y) : y;
+    return x < 0 ? 0 - y : y;
   }
 
   /**

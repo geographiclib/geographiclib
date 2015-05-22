@@ -113,7 +113,7 @@
    various astronomical questions, part 13]'',
    Mém. de l'Acad. Roy. des Sciences de Paris, 73--192 + 3 plates
    (1778, publ. 1781).[[BR]]
-   https://books.google.com/books?id=8uEEAAAAQAAJ&pg=RA1-PA73
+   https://books.google.com/books?id=8uEEAAAAQAAJ&pg=RA1-PA75
    (pp. 112--113 missing)
  * A. P. Dionis du Séjour,[[BR]]
    ''Traité Analytique des Mouvemens apparens des Corps Célestes
@@ -127,7 +127,7 @@
    [Navigation on the ellipsoid, its loxodromes, and the shortest path]'',
    Mém. l'Acad. Roy. des Sciences de Turin '''4''', 325--368 + figures
    (1788--89, publ. 1790).[[BR]]
-   https://books.google.com/books?id=ZO-DiSOtC0kC&pg=PA327
+   https://books.google.com/books?id=ZO-DiSOtC0kC&pg=PA321
    (figures missing)
  * T. Valperga di Caluso,[[BR]]
    ''Applications des formules du plus court chemin sur le spheroïde elliptique

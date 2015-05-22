@@ -143,12 +143,12 @@
 		  <a href="scripts/geod-calc.html">geod-calc</a>;
 		  displaying geodesics on Google Maps,
 		  <a href="scripts/geod-google.html">geod-google</a>.
-		<li>Matlab/Octave:
+		<li>MATLAB/Octave:
 		  <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
 		    File ID: 39108 (geodesics)</a>;
-		  <a href="http://www.mathworks.com/matlabcentral/fileexchange/39366">
-		    File ID: 39366 (geodesic projections)</a>.
-
+		  <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+		    File ID: 50605 (geodesics + other components of
+		    GeographicLib)</a>
 		<li><a href="html/C/index.html">C</a>,
 		  <a href="html/Fortran/index.html">Fortran</a>, and
 		  <a href="html/java/index.html">Java</a>:
@@ -210,6 +210,12 @@
 	<a href="html/geodesic.html#geodellip">
 	  Geodesics in terms of elliptic integrals</a>.
       <li>
+	In some application it may be important to minimize round-off
+	errors when taking the difference of two trigonometric sums.
+	This may be accomplished by using
+	<a href="html/rhumb.html#dividedclenshaw">
+	  Clenshaw evaluation of differenced sums</a>.
+      <li>
 	Various ways that the distance along a meridian can be solved
 	in terms of elliptic integrals are given in
 	<a href="html/geodesic.html#meridian">
@@ -222,6 +228,12 @@
 	in <a href="html/triaxial.html">Geodesics on a triaxial
 	ellipsoid</a>.  This examines the solution to this problem found
 	by Jacobi in 1839.
+      <li>
+	In the same paper, Jacobi gave a conformal projection for a
+	triaxial ellipsoid.  This is expressed in terms of elliptic
+	integrals in these notes on
+	<a href="html/jacobi.html">
+	  Jacobi's conformal projection</a>.
       <li>
 	<a href="geodesic-papers/biblio.html">
 	  An online geodesic bibliography</a>.
@@ -255,7 +267,7 @@
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2013-10-08)</address>
+      (2015-05-14)</address>
     <br>
     <a href="http://geographiclib.sourceforge.net">
       GeographicLib home

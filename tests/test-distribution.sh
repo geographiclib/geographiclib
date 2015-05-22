@@ -32,13 +32,38 @@
 set -e
 
 # The following files contain version information:
+#   pom.xml
 #   CMakeLists.txt
 #   NEWS
 #   configure.ac
-#   python/setup.py
 #   tests/test-distribution.sh
+#   src/GeographicLib.pro lib version
 
-VERSION=1.42
+# Need updating if underlying library changes
+
+# python
+#   python/setup.py
+
+# MATLAB
+#   matlab/geographiclib/Contents.m version + date
+
+# C
+#   legacy/C/geodesic.h comment + GEODESIC_VERSION_*
+#   doc/geodesic-c.dox
+
+# Fortran
+#   legacy/Fortran/geodesic.for
+#   doc/geodesic-for.dox
+
+# Java
+#   java/pom.xml java/*/pom.xml
+#   java/src/main/java/net/sf/geographiclib/package-info.java
+
+# JavaScript + maxima -- none
+
+DATE=`date +%F`
+DATE=2015-05-23
+VERSION=1.43
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
@@ -190,8 +215,52 @@ cmake -D CMAKE_PREFIX_PATH=$TEMP/instc ..
 make
 
 cd $TEMP/instc/share/matlab/geographiclib
-rm -f $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip
-zip $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip *.m private/*.m
+mkdir $TEMP/matlab
+cp -pr $TEMP/instc/share/matlab/geographiclib $TEMP/matlab
+cd $TEMP/matlab/geographiclib
+rm -f $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip
+zip $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip *.m private/*.m
+mkdir -p $TEMP/geographiclib-matlab/private
+while read f;do cp -p $f $TEMP/geographiclib-matlab/$f; done <<EOF
+defaultellipsoid.m
+ecc2flat.m
+flat2ecc.m
+geodarea.m
+geoddistance.m
+geoddoc.m
+geodreckon.m
+private/A1m1f.m
+private/A2m1f.m
+private/A3coeff.m
+private/A3f.m
+private/AngDiff.m
+private/AngNormalize.m
+private/AngNormalize2.m
+private/AngRound.m
+private/C1f.m
+private/C1pf.m
+private/C2f.m
+private/C3coeff.m
+private/C3f.m
+private/C4coeff.m
+private/C4f.m
+private/SinCosSeries.m
+private/cbrtx.m
+private/cvmgt.m
+private/eatanhe.m
+private/norm2.m
+private/sumx.m
+private/swap.m
+EOF
+cd $TEMP
+rm -f $DEVELSOURCE/geographiclib_matlab_$VERSION.zip
+zip $DEVELSOURCE/geographiclib_matlab_$VERSION.zip \
+    geographiclib-matlab/*.m geographiclib-matlab/private/*.m
+cd $TEMP/matlab
+cp -p $TEMP/gita/geographiclib/geodesic.png .
+cp -p $TEMP/gita/geographiclib/matlab/geographiclib-blurb.txt .
+VERSION=$VERSION DATE=$DATE ROOT=$TEMP/matlab \
+       sh $DEVELSOURCE/tests/matlab-toolbox-config.sh
 
 cd $TEMP
 mkdir python-test
@@ -331,7 +400,6 @@ while read f;do
 done
 echo
 
-DATE=`date +%F`
 cat > $TEMP/tasks.txt <<EOF
 # deploy documentation
 test -d $WEBDIST/htdocs/$VERSION-pre &&
@@ -360,6 +428,15 @@ python setup.py sdist --formats gztar,zip upload
 cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
 
+# matlab toolbox
+cd $TEMP/matlab
+matlab &
+# remove existing geographiclib path, double click on geographiclib.prj
+# click on "Package".
+mv $TEMP/matlab/geographiclib.mltbx $DEVELSOURCE/geographiclib_toolbox_$VERSION.mltbx
+chmod 644 $DEVELSOURCE/geographiclib_toolbox_$VERSION.*
+mv $DEVELSOURCE/geographiclib_*_$VERSION.* $DEVELSOURCE/matlab-distrib
+
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib
 git add -A
@@ -376,6 +453,11 @@ git tag -m "Version $VERSION ($DATE)" v$VERSION
 git push --all
 git push --tags
 
+# Also to do
+# update home brew
+# upload matlab packages
+# update binaries for cgi applications
+# trigger build on build-open
 EOF
 echo cat $TEMP/tasks.txt
 cat $TEMP/tasks.txt

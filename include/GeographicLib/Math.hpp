@@ -372,7 +372,7 @@ namespace GeographicLib {
      * @param[in] y
      * @param[in] z
      * @return <i>xy</i> + <i>z</i>, correctly rounded (on those platforms with
-     *   support for the fma instruction).
+     *   support for the <code>fma</code> instruction).
      **********************************************************************/
     template<typename T> static inline T fma(T x, T y, T z) {
 #if GEOGRAPHICLIB_CXX11_MATH
@@ -415,6 +415,23 @@ namespace GeographicLib {
       //       = round(u + v) + t
       return s;
     }
+
+    /**
+     * Evaluate a polynomial.
+     *
+     * @tparam T the type of the arguments and returned value.
+     * @param[in] N the order of the polynomial.
+     * @param[in] p the coefficient array (of size \e N + 1).
+     * @param[in] x the variable.
+     * @return the value of the polynomial.
+     *
+     * Evaluate <i>y</i> = &sum;<sub><i>n</i>=0..<i>N</i></sub>
+     * <i>p</i><sub><i>n</i></sub> <i>x</i><sup><i>N</i>&minus;<i>n</i></sup>.
+     * Return 0 if \e N &lt; 0.  Return <i>p</i><sub>0</sub>, if \e N = 0 (even
+     * if \e x is infinite or a nan).  The evaluation uses Horner's method.
+     **********************************************************************/
+    template<typename T> static inline T polyval(int N, const T p[], T x)
+    { T y = N < 0 ? 0 : *p++; while (--N >= 0) y = y * x + *p++; return y; }
 
     /**
      * Normalize an angle (restricted input range).
@@ -476,7 +493,7 @@ namespace GeographicLib {
      * degrees.  (This is about 1000 times more resolution than we get with
      * angles around 90&deg;.)  We use this to avoid having to deal with near
      * singular cases when \e x is non-zero but tiny (e.g.,
-     * 10<sup>&minus;200</sup>).
+     * 10<sup>&minus;200</sup>).  This also converts -0 to +0.
      **********************************************************************/
     template<typename T> static inline T AngRound(T x) {
       using std::abs;
@@ -484,7 +501,7 @@ namespace GeographicLib {
       GEOGRAPHICLIB_VOLATILE T y = abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
-      return x < 0 ? -y : y;
+      return x < 0 ? 0 - y : y;
     }
 
     /**
@@ -533,6 +550,7 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static inline T atan2d(T y, T x) {
       using std::atan2;
+      // The "0 -" converts -0 to +0.
       return 0 - atan2(-y, x) / Math::degree();
     }
 

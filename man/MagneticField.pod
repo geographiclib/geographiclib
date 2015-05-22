@@ -155,12 +155,19 @@ following models
       main magnetic field for the period 2015-2020.  See
       http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
     igrf11, the International Geomagnetic Reference Field (11th
-      generation) which approximates the main magnetic field for
+      generation), which approximates the main magnetic field for
       the period 1900-2015.  See
       http://ngdc.noaa.gov/IAGA/vmod/igrf.html
-    emm2010, the Enhanced Magnetic Model 2010, which approximates the
-      main and crustal magnetic fields for the period 2010-2015.  See
-      http://ngdc.noaa.gov/geomag/EMM/index.html
+    igrf12, the International Geomagnetic Reference Field (12th
+      generation), which approximates the main magnetic field for
+      the period 1900-2020.  See
+      http://ngdc.noaa.gov/IAGA/vmod/igrf.html
+    emm2010, the Enhanced Magnetic Model 2010, which approximates
+      the main and crustal magnetic fields for the period 2010-2015.
+      See http://ngdc.noaa.gov/geomag/EMM/index.html
+    emm2015, the Enhanced Magnetic Model 2015, which approximates
+      the main and crustal magnetic fields for the period 2000-2020.
+      See http://ngdc.noaa.gov/geomag/EMM/index.html
 
 These models approximate the magnetic field due to the earth's core and
 (in the case of emm2010) its crust.  They neglect magnetic fields due to
@@ -234,7 +241,7 @@ the field.  The second line gives the annual change.
 
 =head1 SEE ALSO
 
-GeoConvert(1).
+GeoConvert(1), geographiclib-get-magnetic(8).
 
 =head1 AUTHOR
 

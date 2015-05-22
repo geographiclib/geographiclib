@@ -9,9 +9,11 @@ function [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y, ellipsoid)
 %   arguments can be scalars or arrays of equal size.  The ellipsoid vector
 %   is of the form [a, e], where a is the equatorial radius in meters, e is
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by defaultellipsoid) is used.  geodproj
-%   defines the projection and gives the restrictions on the allowed ranges
-%   of the arguments.  The forward projection is given by tranmerc_fwd.
+%   precisely, the value returned by defaultellipsoid) is used.  The common
+%   case of lat0 = 0 is treated efficiently provided that lat0 is specified
+%   as a scalar.  projdoc defines the projection and gives the restrictions
+%   on the allowed ranges of the arguments.  The forward projection is
+%   given by tranmerc_fwd.
 %
 %   gam and K give metric properties of the projection at (lat,lon); gam is
 %   the meridian convergence at the point and k is the scale.
@@ -34,11 +36,12 @@ function [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y, ellipsoid)
 %   less than 1 mm within 7600 km of the central meridian).  The mapping
 %   can be continued accurately over the poles to the opposite meridian.
 %
-%   See also, TRANMERC_FWD, UTMUPS_FWD, UTMUPS_INV, DEFAULTELLIPSOID.
+%   See also PROJDOC, TRANMERC_FWD, UTMUPS_FWD, UTMUPS_INV,
+%     DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.43.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -140,18 +143,25 @@ function [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y, ellipsoid)
 end
 
 function bet = betf(n)
-  bet = zeros(1,6);
-  nx = n^2;
-  bet(1) = n*(n*(n*(n*(n*(384796*n-382725)-6720)+932400)-1612800)+ ...
-              1209600)/2419200;
-  bet(2) = nx*(n*(n*((1695744-1118711*n)*n-1174656)+258048)+80640)/ ...
-           3870720;
-  nx = nx * n;
-  bet(3) = nx*(n*(n*(22276*n-16929)-15984)+12852)/362880;
-  nx = nx * n;
-  bet(4) = nx*((-830251*n-158400)*n+197865)/7257600;
-  nx = nx * n;
-  bet(5) = (453717-435388*n)*nx/15966720;
-  nx = nx * n;
-  bet(6) = 20648693*nx/638668800;
+  persistent betcoeff
+  if isempty(betcoeff)
+    betcoeff = [
+        384796, -382725, -6720, 932400, -1612800, 1209600, 2419200, ...
+        -1118711, 1695744, -1174656, 258048, 80640, 3870720, ...
+        22276, -16929, -15984, 12852, 362880, ...
+        -830251, -158400, 197865, 7257600, ...
+        -435388, 453717, 15966720, ...
+        20648693, 638668800, ...
+               ];
+  end
+  maxpow = 6;
+  bet = zeros(1, maxpow);
+  o = 1;
+  d = n;
+  for l = 1 : maxpow
+    m = maxpow - l;
+    bet(l) = d * polyval(betcoeff(o : o + m), n) / betcoeff(o + m + 1);
+    o = o + m + 2;
+    d = d * n;
+  end
 end

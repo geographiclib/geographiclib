@@ -104,7 +104,7 @@ public class PolygonArea {
      _mask = GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
        GeodesicMask.DISTANCE |
        (_polyline ? GeodesicMask.NONE :
-        GeodesicMask.AREA | GeodesicMask.LONG_NOWRAP);
+        GeodesicMask.AREA | GeodesicMask.LONG_UNROLL);
      _perimetersum = new Accumulator(0);
      if (!_polyline)
        _areasum = new Accumulator(0);
