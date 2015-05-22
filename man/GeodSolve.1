@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEODSOLVE 1"
-.TH GEODSOLVE 1 "2015-04-28" "GeographicLib 1.42" "GeographicLib Utilities"
+.TH GEODSOLVE 1 "2015-05-22" "GeographicLib 1.43" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -143,7 +143,7 @@ GeodSolve \-\- perform geodesic calculations
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
 \&\fBGeodSolve\fR [ \fB\-i\fR | \fB\-l\fR \fIlat1\fR \fIlon1\fR \fIazi1\fR ] [ \fB\-a\fR ]
-[ \fB\-e\fR \fIa\fR \fIf\fR ]
+[ \fB\-e\fR \fIa\fR \fIf\fR ] \fB\-u\fR ]
 [ \fB\-d\fR | \fB\-:\fR ] [ \fB\-b\fR ] [ \fB\-f\fR ] [ \fB\-p\fR \fIprec\fR ] [ \fB\-E\fR ]
 [ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
@@ -192,6 +192,13 @@ the flattening is \fIf\fR.  Setting \fIf\fR = 0 results in a sphere.  Specify
 is allowed for \fIf\fR.  (Also, if \fIf\fR > 1, the flattening is set to
 1/\fIf\fR.)  By default, the \s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137 m,
 \&\fIf\fR = 1/298.257223563.
+.IP "\fB\-u\fR" 4
+.IX Item "-u"
+unroll the longitude.  On input longitudes must lie in [\-540deg,540deg)
+and, normally, on output longitudes are reduced to lie in
+[\-180deg,180deg).  However with this option, the returned longitude
+\&\fIlon2\fR is \*(L"unrolled\*(R" so that \fIlon2\fR \- \fIlon1\fR indicates how often and
+in what sense the geodesic has encircled the earth.
 .IP "\fB\-d\fR" 4
 .IX Item "-d"
 output angles as degrees, minutes, seconds instead of decimal degrees.

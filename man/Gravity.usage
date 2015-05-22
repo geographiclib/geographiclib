@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    Gravity --help\n"
 "or visit:\n"
-"    http://geographiclib.sf.net/1.42/Gravity.1.html\n";
+"    http://geographiclib.sf.net/1.43/Gravity.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -132,7 +132,7 @@ int usage(int retval, bool brief) {
 "             http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008\n"
 "           wgs84, world geodetic system 1984.  This returns the normal\n"
 "             gravity for the WGS84 ellipsoid.\n"
-"           GRS80, geodetic reference system 1980.  This returns the normal\n"
+"           grs80, geodetic reference system 1980.  This returns the normal\n"
 "             gravity for the GRS80 ellipsoid.\n"
 "\n"
 "       These models approximate the gravitation field above the surface of the\n"
@@ -183,7 +183,7 @@ int usage(int retval, bool brief) {
 "           => -0.00001 0.00103 -9.76782\n"
 "\n"
 "SEE ALSO\n"
-"       GeoConvert(1), GeoidEval(1).\n"
+"       GeoConvert(1), GeoidEval(1), geographiclib-get-gravity(8).\n"
 "\n"
 "AUTHOR\n"
 "       Gravity was written by Charles Karney.\n"

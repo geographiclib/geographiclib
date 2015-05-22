@@ -14,7 +14,6 @@
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/SphericalEngine.hpp>
 #include <GeographicLib/CircularEngine.hpp>
-#include <GeographicLib/Geocentric.hpp>
 
 namespace GeographicLib {
 
@@ -135,8 +134,8 @@ namespace GeographicLib {
      * @param[in] a the reference radius appearing in the definition of the
      *   sum.
      * @param[in] norm the normalization for the associated Legendre
-     *   polynomials, either SphericalHarmonic::full (the default) or
-     *   SphericalHarmonic::schmidt.
+     *   polynomials, either SphericalHarmonic::FULL (the default) or
+     *   SphericalHarmonic::SCHMIDT.
      * @exception GeographicErr if \e N does not satisfy \e N &ge; &minus;1.
      * @exception GeographicErr if \e C or \e S is not big enough to hold the
      *   coefficients.
@@ -285,8 +284,9 @@ namespace GeographicLib {
      * @return the CircularEngine object.
      *
      * SphericalHarmonic::operator()() exchanges the order of the sums in the
-     * definition, i.e., &sum;<sub>n = 0..N</sub> &sum;<sub>m = 0..n</sub>
-     * becomes &sum;<sub>m = 0..N</sub> &sum;<sub>n = m..N</sub>.
+     * definition, i.e., &sum;<sub><i>n</i> = 0..<i>N</i></sub>
+     * &sum;<sub><i>m</i> = 0..<i>n</i></sub> becomes &sum;<sub><i>m</i> =
+     * 0..<i>N</i></sub> &sum;<sub><i>n</i> = <i>m</i>..<i>N</i></sub>.
      * SphericalHarmonic::Circle performs the inner sum over degree \e n (which
      * entails about <i>N</i><sup>2</sup> operations).  Calling
      * CircularEngine::operator()() on the returned object performs the outer

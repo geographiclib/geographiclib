@@ -6,7 +6,7 @@ RhumbSolve -- perform rhumb line calculations
 
 B<RhumbSolve> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi12> ]
 [ B<-e> I<a> I<f> ]
-[ B<-d> | B<-:> ] [ B<-f> ] [ B<-p> I<prec> ] [ B<-s> ]
+[ B<-d> | B<-:> ] [ B<-p> I<prec> ] [ B<-s> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]

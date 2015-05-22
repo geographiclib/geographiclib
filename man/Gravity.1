@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GRAVITY 1"
-.TH GRAVITY 1 "2015-04-28" "GeographicLib 1.42" "GeographicLib Utilities"
+.TH GRAVITY 1 "2015-05-22" "GeographicLib 1.43" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -275,7 +275,7 @@ file name of \*(L"\-\*(R" stands for standard output.
 \&      http://earth\-info.nga.mil/GandG/wgs84/gravitymod/egm2008
 \&    wgs84, world geodetic system 1984.  This returns the normal
 \&      gravity for the WGS84 ellipsoid.
-\&    GRS80, geodetic reference system 1980.  This returns the normal
+\&    grs80, geodetic reference system 1980.  This returns the normal
 \&      gravity for the GRS80 ellipsoid.
 .Ve
 .PP
@@ -291,9 +291,8 @@ time.  This may changed by setting the environment variables
 name.  Use the \fB\-v\fR option to ascertain the full path name of the data
 file.
 .PP
-Instructions for downloading and installing gravity models are
-available at
-<http://geographiclib.sf.net/html/gravity.html#gravityinst>.
+Instructions for downloading and installing gravity models are available
+at <http://geographiclib.sf.net/html/gravity.html#gravityinst>.
 .SH "ENVIRONMENT"
 .IX Header "ENVIRONMENT"
 .IP "\fB\s-1GEOGRAPHICLIB_GRAVITY_NAME\s0\fR" 4
@@ -331,7 +330,7 @@ The gravity field from \s-1EGM2008\s0 at the top of Mount Everest
 .Ve
 .SH "SEE ALSO"
 .IX Header "SEE ALSO"
-\&\fIGeoConvert\fR\|(1), \fIGeoidEval\fR\|(1).
+\&\fIGeoConvert\fR\|(1), \fIGeoidEval\fR\|(1), \fIgeographiclib\-get\-gravity\fR\|(8).
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 \&\fBGravity\fR was written by Charles Karney.

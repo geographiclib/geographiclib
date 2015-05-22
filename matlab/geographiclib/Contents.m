@@ -1,5 +1,5 @@
 % GeographicLib toolbox
-% Version 1.42 2015-04-27
+% Version 1.43 2015-05-23
 %
 %   This toolbox provides native MATLAB implementations of a subset of the
 %   C++ library, GeographicLib.  Key components of this toolbox are
@@ -67,7 +67,7 @@
 %   mgrs_inv         - Convert MGRS to UTM/UPS coordinates
 %
 % Geoid lookup
-%   geoid_height     - Compute the height of the geoid
+%   geoid_height     - Compute the height of the geoid above the ellipsoid
 %   geoid_load       - Load a geoid model
 %
 % Geometric transformations
@@ -92,4 +92,4 @@
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.43.

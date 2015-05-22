@@ -2,8 +2,8 @@
  * \file MagneticCircle.hpp
  * \brief Header for GeographicLib::MagneticCircle class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -39,8 +39,8 @@ namespace GeographicLib {
     typedef Math::real real;
 
     real _a, _f, _lat, _h, _t, _cphi, _sphi, _t1, _dt0;
-    bool _interpolate;
-    CircularEngine _circ0, _circ1;
+    bool _interpolate, _constterm;
+    CircularEngine _circ0, _circ1, _circ2;
 
     MagneticCircle(real a, real f, real lat, real h, real t,
                    real cphi, real sphi, real t1, real dt0,
@@ -56,8 +56,30 @@ namespace GeographicLib {
       , _t1(t1)
       , _dt0(dt0)
       , _interpolate(interpolate)
+      , _constterm(false)
       , _circ0(circ0)
       , _circ1(circ1)
+    {}
+
+    MagneticCircle(real a, real f, real lat, real h, real t,
+                   real cphi, real sphi, real t1, real dt0,
+                   bool interpolate,
+                   const CircularEngine& circ0, const CircularEngine& circ1,
+                   const CircularEngine& circ2)
+      : _a(a)
+      , _f(f)
+      , _lat(lat)
+      , _h(h)
+      , _t(t)
+      , _cphi(cphi)
+      , _sphi(sphi)
+      , _t1(t1)
+      , _dt0(dt0)
+      , _interpolate(interpolate)
+      , _constterm(true)
+      , _circ0(circ0)
+      , _circ1(circ1)
+      , _circ2(circ2)
     {}
 
     void Field(real lon, bool diffp,

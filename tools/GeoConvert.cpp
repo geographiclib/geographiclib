@@ -17,6 +17,7 @@
 #include <GeographicLib/GeoCoords.hpp>
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
+#include <GeographicLib/MGRS.hpp>
 
 #if defined(_MSC_VER)
 // Squelch warnings about constant conditional expressions
@@ -119,9 +120,9 @@ int main(int argc, char* argv[]) {
         if (++m == argc) return usage(1, true);
         cdelim = argv[m];
       } else if (arg == "--version") {
-        std::cout
-          << argv[0] << ": GeographicLib version "
-          << GEOGRAPHICLIB_VERSION_STRING << "\n";
+        std::cout << argv[0] << ": GeographicLib version "
+                  << GEOGRAPHICLIB_VERSION_STRING << "\n";
+        MGRS::Check();
         return 0;
       } else
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");

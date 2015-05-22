@@ -1,8 +1,9 @@
 function tau = tauf(taup, e2)
 %TAUF   tan(phi)
 %
-%   TAUF(taup, e2) returns tangent of phi in terms of taup the tangent of chi.
-%   e2, the square of the eccentricity, is a scalar; taup can be any shape.
+%   TAUF(taup, e2) returns tangent of phi in terms of taup the tangent of
+%   chi.  e2, the square of the eccentricity, is a scalar; taup can be any
+%   shape.
 
   numit = 5;
   e2m = 1 - e2;

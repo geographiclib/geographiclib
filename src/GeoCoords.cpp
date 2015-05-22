@@ -2,7 +2,7 @@
  * \file GeoCoords.cpp
  * \brief Implementation for GeographicLib::GeoCoords class
  *
- * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -33,6 +33,7 @@ namespace GeographicLib {
                       _lat, _long, _gamma, _k);
     } else if (sa.size() == 2) {
       DMS::DecodeLatLon(sa[0], sa[1], _lat, _long, swaplatlong);
+      _long = Math::AngNormalize(_long);
       UTMUPS::Forward( _lat, _long,
                        _zone, _northp, _easting, _northing, _gamma, _k);
     } else if (sa.size() == 3) {

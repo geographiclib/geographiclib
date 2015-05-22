@@ -56,8 +56,9 @@ class Geodesic(object):
     help(Geodesic.Area)
 
   All angles (latitudes, longitudes, azimuths, spherical arc lengths)
-  are measured in degrees.  All lengths (distance, reduced length) are
-  measured in meters.  All areas are measures in square meters.
+  are measured in degrees.  Latitudes must lie in [-90,90]; longitudes
+  and azimuths must lie in [-540,540).  All lengths (distance, reduced
+  length) are measured in meters.  Areas are measures in square meters.
 
   """
 
@@ -102,17 +103,19 @@ class Geodesic(object):
   REDUCEDLENGTH = GeodesicCapability.REDUCEDLENGTH
   GEODESICSCALE = GeodesicCapability.GEODESICSCALE
   AREA          = GeodesicCapability.AREA
-  LONG_NOWRAP   = GeodesicCapability.LONG_NOWRAP
+  LONG_UNROLL   = GeodesicCapability.LONG_UNROLL
+  LONG_NOWRAP   = GeodesicCapability.LONG_UNROLL
   ALL           = GeodesicCapability.ALL
 
-  def SinCosSeries(sinp, sinx, cosx, c, n):
+  def SinCosSeries(sinp, sinx, cosx, c):
     """Private: Evaluate a trig series using Clenshaw summation."""
     # Evaluate
     # y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
     #            sum(c[i] * cos((2*i+1) * x), i, 0, n-1)
     # using Clenshaw summation.  N.B. c[0] is unused for sin series
     # Approx operation count = (n + 5) mult and (2 * n + 2) add
-    k = (n + sinp)             # Point to one beyond last element
+    k = len(c)                  # Point to one beyond last element
+    n = k - sinp
     ar = 2 * (cosx - sinx) * (cosx + sinx) # 2 * cos(2 * x)
     y1 = 0                                 # accumulators for sum
     if n & 1:
@@ -129,26 +132,6 @@ class Geodesic(object):
     return ( 2 * sinx * cosx * y0 if sinp # sin(2 * x) * y0
              else cosx * (y0 - y1) )      # cos(x) * (y0 - y1)
   SinCosSeries = staticmethod(SinCosSeries)
-
-  def AngRound(x):
-    """Private: Round an angle so that small values underflow to zero."""
-    # The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
-    # for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
-    # is about 1000 times more resolution than we get with angles around 90
-    # degrees.)  We use this to avoid having to deal with near singular
-    # cases when x is non-zero but tiny (e.g., 1.0e-200).
-    z = 1/16.0
-    y = abs(x)
-    # The compiler mustn't "simplify" z - (z - y) to y
-    if y < z: y = z - (z - y)
-    return -y if x < 0 else y
-  AngRound = staticmethod(AngRound)
-
-  def SinCosNorm(sinx, cosx):
-    """Private: Normalize sin and cos."""
-    r = math.hypot(sinx, cosx)
-    return sinx/r, cosx/r
-  SinCosNorm = staticmethod(SinCosNorm)
 
   def Astroid(x, y):
     """Private: solve astroid equation."""
@@ -199,67 +182,82 @@ class Geodesic(object):
 
   def A1m1f(eps):
     """Private: return A1-1."""
-    eps2 = Math.sq(eps)
-    t = eps2*(eps2*(eps2+4)+64)/256
+    coeff = [
+      1, 4, 64, 0, 256,
+    ]
+    m = Geodesic.nA1_//2
+    t = Math.polyval(m, coeff, 0, Math.sq(eps)) / coeff[m + 1]
     return (t + eps) / (1 - eps)
   A1m1f = staticmethod(A1m1f)
 
   def C1f(eps, c):
     """Private: return C1."""
+    coeff = [
+      -1, 6, -16, 32,
+      -9, 64, -128, 2048,
+      9, -16, 768,
+      3, -5, 512,
+      -7, 1280,
+      -7, 2048,
+    ]
     eps2 = Math.sq(eps)
     d = eps
-    c[1] = d*((6-eps2)*eps2-16)/32
-    d *= eps
-    c[2] = d*((64-9*eps2)*eps2-128)/2048
-    d *= eps
-    c[3] = d*(9*eps2-16)/768
-    d *= eps
-    c[4] = d*(3*eps2-5)/512
-    d *= eps
-    c[5] = -7*d/1280
-    d *= eps
-    c[6] = -7*d/2048
+    o = 0
+    for l in range(1, Geodesic.nC1_ + 1): # l is index of C1p[l]
+      m = (Geodesic.nC1_ - l) // 2        # order of polynomial in eps^2
+      c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
+      o += m + 2
+      d *= eps
   C1f = staticmethod(C1f)
 
   def C1pf(eps, c):
     """Private: return C1'"""
+    coeff = [
+      205, -432, 768, 1536,
+      4005, -4736, 3840, 12288,
+      -225, 116, 384,
+      -7173, 2695, 7680,
+      3467, 7680,
+      38081, 61440,
+    ]
     eps2 = Math.sq(eps)
     d = eps
-    c[1] = d*(eps2*(205*eps2-432)+768)/1536
-    d *= eps
-    c[2] = d*(eps2*(4005*eps2-4736)+3840)/12288
-    d *= eps
-    c[3] = d*(116-225*eps2)/384
-    d *= eps
-    c[4] = d*(2695-7173*eps2)/7680
-    d *= eps
-    c[5] = 3467*d/7680
-    d *= eps
-    c[6] = 38081*d/61440
+    o = 0
+    for l in range(1, Geodesic.nC1p_ + 1): # l is index of C1p[l]
+      m = (Geodesic.nC1p_ - l) // 2 # order of polynomial in eps^2
+      c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
+      o += m + 2
+      d *= eps
   C1pf = staticmethod(C1pf)
 
   def A2m1f(eps):
     """Private: return A2-1"""
-    eps2 = Math.sq(eps)
-    t = eps2*(eps2*(25*eps2+36)+64)/256
+    coeff = [
+      25, 36, 64, 0, 256,
+    ]
+    m = Geodesic.nA2_//2
+    t = Math.polyval(m, coeff, 0, Math.sq(eps)) / coeff[m + 1]
     return t * (1 - eps) - eps
   A2m1f = staticmethod(A2m1f)
 
   def C2f(eps, c):
     """Private: return C2"""
+    coeff = [
+      1, 2, 16, 32,
+      35, 64, 384, 2048,
+      15, 80, 768,
+      7, 35, 512,
+      63, 1280,
+      77, 2048,
+    ]
     eps2 = Math.sq(eps)
     d = eps
-    c[1] = d*(eps2*(eps2+2)+16)/32
-    d *= eps
-    c[2] = d*(eps2*(35*eps2+64)+384)/2048
-    d *= eps
-    c[3] = d*(15*eps2+80)/768
-    d *= eps
-    c[4] = d*(7*eps2+35)/512
-    d *= eps
-    c[5] = 63*d/1280
-    d *= eps
-    c[6] = 77*d/2048
+    o = 0
+    for l in range(1, Geodesic.nC2_ + 1): # l is index of C2[l]
+      m = (Geodesic.nC2_ - l) // 2        # order of polynomial in eps^2
+      c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
+      o += m + 2
+      d *= eps
   C2f = staticmethod(C2f)
 
   def __init__(self, a, f):
@@ -305,101 +303,109 @@ class Geodesic(object):
 
   def A3coeff(self):
     """Private: return coefficients for A3"""
-    _n = self._n
-    self._A3x[0] = 1
-    self._A3x[1] = (_n-1)/2
-    self._A3x[2] = (_n*(3*_n-1)-2)/8
-    self._A3x[3] = ((-_n-3)*_n-1)/16
-    self._A3x[4] = (-2*_n-3)/64
-    self._A3x[5] = -3/128.0
+    coeff = [
+      -3, 128,
+      -2, -3, 64,
+      -1, -3, -1, 16,
+      3, -1, -2, 8,
+      1, -1, 2,
+      1, 1,
+    ]
+    o = 0; k = 0
+    for j in range(Geodesic.nA3_ - 1, -1, -1): # coeff of eps^j
+      m = min(Geodesic.nA3_ - j - 1, j) # order of polynomial in n
+      self._A3x[k] = Math.polyval(m, coeff, o, self._n) / coeff[o + m + 1]
+      k += 1
+      o += m + 2
 
   def C3coeff(self):
     """Private: return coefficients for C3"""
-    _n = self._n
-    self._C3x[0] = (1-_n)/4
-    self._C3x[1] = (1-_n*_n)/8
-    self._C3x[2] = ((3-_n)*_n+3)/64
-    self._C3x[3] = (2*_n+5)/128
-    self._C3x[4] = 3/128.0
-    self._C3x[5] = ((_n-3)*_n+2)/32
-    self._C3x[6] = ((-3*_n-2)*_n+3)/64
-    self._C3x[7] = (_n+3)/128
-    self._C3x[8] = 5/256.0
-    self._C3x[9] = (_n*(5*_n-9)+5)/192
-    self._C3x[10] = (9-10*_n)/384
-    self._C3x[11] = 7/512.0
-    self._C3x[12] = (7-14*_n)/512
-    self._C3x[13] = 7/512.0
-    self._C3x[14] = 21/2560.0
+    coeff = [
+      3, 128,
+      2, 5, 128,
+      -1, 3, 3, 64,
+      -1, 0, 1, 8,
+      -1, 1, 4,
+      5, 256,
+      1, 3, 128,
+      -3, -2, 3, 64,
+      1, -3, 2, 32,
+      7, 512,
+      -10, 9, 384,
+      5, -9, 5, 192,
+      7, 512,
+      -14, 7, 512,
+      21, 2560,
+    ]
+    o = 0; k = 0
+    for l in range(1, Geodesic.nC3_): # l is index of C3[l]
+      for j in range(Geodesic.nC3_ - 1, l - 1, -1): # coeff of eps^j
+        m = min(Geodesic.nC3_ - j - 1, j) # order of polynomial in n
+        self._C3x[k] = Math.polyval(m, coeff, o, self._n) / coeff[o + m + 1]
+        k += 1
+        o += m + 2
 
   def C4coeff(self):
     """Private: return coefficients for C4"""
-    _n = self._n
-    self._C4x[0] = (_n*(_n*(_n*(_n*(100*_n+208)+572)+3432)-12012)+30030)/45045
-    self._C4x[1] = (_n*(_n*(_n*(64*_n+624)-4576)+6864)-3003)/15015
-    self._C4x[2] = (_n*((14144-10656*_n)*_n-4576)-858)/45045
-    self._C4x[3] = ((-224*_n-4784)*_n+1573)/45045
-    self._C4x[4] = (1088*_n+156)/45045
-    self._C4x[5] = 97/15015.0
-    self._C4x[6] = (_n*(_n*((-64*_n-624)*_n+4576)-6864)+3003)/135135
-    self._C4x[7] = (_n*(_n*(5952*_n-11648)+9152)-2574)/135135
-    self._C4x[8] = (_n*(5792*_n+1040)-1287)/135135
-    self._C4x[9] = (468-2944*_n)/135135
-    self._C4x[10] = 1/9009.0
-    self._C4x[11] = (_n*((4160-1440*_n)*_n-4576)+1716)/225225
-    self._C4x[12] = ((4992-8448*_n)*_n-1144)/225225
-    self._C4x[13] = (1856*_n-936)/225225
-    self._C4x[14] = 8/10725.0
-    self._C4x[15] = (_n*(3584*_n-3328)+1144)/315315
-    self._C4x[16] = (1024*_n-208)/105105
-    self._C4x[17] = -136/63063.0
-    self._C4x[18] = (832-2560*_n)/405405
-    self._C4x[19] = -128/135135.0
-    self._C4x[20] = 128/99099.0
+    coeff = [
+      97, 15015,
+      1088, 156, 45045,
+      -224, -4784, 1573, 45045,
+      -10656, 14144, -4576, -858, 45045,
+      64, 624, -4576, 6864, -3003, 15015,
+      100, 208, 572, 3432, -12012, 30030, 45045,
+      1, 9009,
+      -2944, 468, 135135,
+      5792, 1040, -1287, 135135,
+      5952, -11648, 9152, -2574, 135135,
+      -64, -624, 4576, -6864, 3003, 135135,
+      8, 10725,
+      1856, -936, 225225,
+      -8448, 4992, -1144, 225225,
+      -1440, 4160, -4576, 1716, 225225,
+      -136, 63063,
+      1024, -208, 105105,
+      3584, -3328, 1144, 315315,
+      -128, 135135,
+      -2560, 832, 405405,
+      128, 99099,
+    ]
+    o = 0; k = 0
+    for l in range(Geodesic.nC4_): # l is index of C4[l]
+      for j in range(Geodesic.nC4_ - 1, l - 1, -1): # coeff of eps^j
+        m = Geodesic.nC4_ - j - 1 # order of polynomial in n
+        self._C4x[k] = Math.polyval(m, coeff, o, self._n) / coeff[o + m + 1]
+        k += 1
+        o += m + 2
 
   def A3f(self, eps):
     """Private: return A3"""
-    # Evaluate sum(_A3x[k] * eps^k, k, 0, nA3x_-1) by Horner's method
-    v = 0
-    for i in range(Geodesic.nA3x_-1, -1, -1):
-      v = eps * v + self._A3x[i]
-    return v
+    # Evaluate A3
+    return Math.polyval(Geodesic.nA3_ - 1, self._A3x, 0, eps)
 
   def C3f(self, eps, c):
     """Private: return C3"""
-    # Evaluate C3 coeffs by Horner's method
+    # Evaluate C3
     # Elements c[1] thru c[nC3_ - 1] are set
-    j = Geodesic.nC3x_; k = Geodesic.nC3_ - 1
-    while k:
-      t = 0
-      for _ in range(Geodesic.nC3_ - k):
-        j -= 1
-        t = eps * t + self._C3x[j]
-      c[k] = t
-      k -= 1
-
     mult = 1
-    for k in range(1, Geodesic.nC3_):
+    o = 0
+    for l in range(1, Geodesic.nC3_): # l is index of C3[l]
+      m = Geodesic.nC3_ - l - 1       # order of polynomial in eps
       mult *= eps
-      c[k] *= mult
+      c[l] = mult * Math.polyval(m, self._C3x, o, eps)
+      o += m + 1
 
   def C4f(self, eps, c):
     """Private: return C4"""
     # Evaluate C4 coeffs by Horner's method
     # Elements c[0] thru c[nC4_ - 1] are set
-    j = Geodesic.nC4x_; k = Geodesic.nC4_
-    while k:
-      t = 0
-      for _ in range(Geodesic.nC4_ - k + 1):
-        j -= 1
-        t = eps * t + self._C4x[j]
-      k -= 1
-      c[k] = t
-
     mult = 1
-    for k in range(1, Geodesic.nC4_):
+    o = 0
+    for l in range(Geodesic.nC4_): # l is index of C4[l]
+      m = Geodesic.nC4_ - l - 1    # order of polynomial in eps
+      c[l] = mult * Math.polyval(m, self._C4x, o, eps)
+      o += m + 1
       mult *= eps
-      c[k] *= mult
 
   # return s12b, m12b, m0, M12, M21
   def Lengths(self, eps, sig12,
@@ -413,12 +419,12 @@ class Geodesic(object):
     Geodesic.C2f(eps, C2a)
     A1m1 = Geodesic.A1m1f(eps)
     AB1 = (1 + A1m1) * (
-      Geodesic.SinCosSeries(True, ssig2, csig2, C1a, Geodesic.nC1_) -
-      Geodesic.SinCosSeries(True, ssig1, csig1, C1a, Geodesic.nC1_))
+      Geodesic.SinCosSeries(True, ssig2, csig2, C1a) -
+      Geodesic.SinCosSeries(True, ssig1, csig1, C1a))
     A2m1 = Geodesic.A2m1f(eps)
     AB2 = (1 + A2m1) * (
-      Geodesic.SinCosSeries(True, ssig2, csig2, C2a, Geodesic.nC2_) -
-      Geodesic.SinCosSeries(True, ssig1, csig1, C2a, Geodesic.nC2_))
+      Geodesic.SinCosSeries(True, ssig2, csig2, C2a) -
+      Geodesic.SinCosSeries(True, ssig1, csig1, C2a))
     m0 = A1m1 - A2m1
     J12 = m0 * sig12 + (AB1 - AB2)
     # Missing a factor of _b.
@@ -480,7 +486,7 @@ class Geodesic(object):
       salp2 = cbet1 * somg12
       calp2 = sbet12 - cbet1 * sbet2 * (Math.sq(somg12) / (1 + comg12)
                                         if comg12 >= 0 else 1 - comg12)
-      salp2, calp2 = Geodesic.SinCosNorm(salp2, calp2)
+      salp2, calp2 = Math.norm(salp2, calp2)
       # Set return value
       sig12 = math.atan2(ssig12, csig12)
     elif (abs(self._n) >= 0.1 or # Skip astroid calc if too eccentric
@@ -571,7 +577,7 @@ class Geodesic(object):
         calp1 = sbet12a - cbet2 * sbet1 * Math.sq(somg12) / (1 - comg12)
     # Sanity check on starting guess.  Backwards check allows NaN through.
     if not (salp1 <= 0):
-      salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
+      salp1, calp1 = Math.norm(salp1, calp1)
     else:
       salp1 = 1; calp1 = 0
     return sig12, salp1, calp1, salp2, calp2, dnm
@@ -596,8 +602,8 @@ class Geodesic(object):
     # tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
     ssig1 = sbet1; somg1 = salp0 * sbet1
     csig1 = comg1 = calp1 * cbet1
-    ssig1, csig1 = Geodesic.SinCosNorm(ssig1, csig1)
-    # SinCosNorm(somg1, comg1); -- don't need to normalize!
+    ssig1, csig1 = Math.norm(ssig1, csig1)
+    # Math.norm(somg1, comg1); -- don't need to normalize!
 
     # Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     # about this case, since this can yield singularities in the Newton
@@ -616,8 +622,8 @@ class Geodesic(object):
     # tan(omg2) = sin(alp0) * tan(sig2).
     ssig2 = sbet2; somg2 = salp0 * sbet2
     csig2 = comg2 = calp2 * cbet2
-    ssig2, csig2 = Geodesic.SinCosNorm(ssig2, csig2)
-    # SinCosNorm(somg2, comg2); -- don't need to normalize!
+    ssig2, csig2 = Math.norm(ssig2, csig2)
+    # Math.norm(somg2, comg2); -- don't need to normalize!
 
     # sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = math.atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
@@ -630,8 +636,8 @@ class Geodesic(object):
     k2 = Math.sq(calp0) * self._ep2
     eps = k2 / (2 * (1 + math.sqrt(1 + k2)) + k2)
     self.C3f(eps, C3a)
-    B312 = (Geodesic.SinCosSeries(True, ssig2, csig2, C3a, Geodesic.nC3_-1) -
-            Geodesic.SinCosSeries(True, ssig1, csig1, C3a, Geodesic.nC3_-1))
+    B312 = (Geodesic.SinCosSeries(True, ssig2, csig2, C3a) -
+            Geodesic.SinCosSeries(True, ssig1, csig1, C3a))
     h0 = -self._f * self.A3f(eps)
     domg12 = salp0 * h0 * (sig12 + B312)
     lam12 = omg12 + domg12
@@ -661,13 +667,13 @@ class Geodesic(object):
     # east-going and meridional geodesics.
     lon12 = Math.AngDiff(Math.AngNormalize(lon1), Math.AngNormalize(lon2))
     # If very close to being on the same half-meridian, then make it so.
-    lon12 = Geodesic.AngRound(lon12)
+    lon12 = Math.AngRound(lon12)
     # Make longitude difference positive.
     lonsign = 1 if lon12 >= 0 else -1
     lon12 *= lonsign
     # If really close to the equator, treat as on equator.
-    lat1 = Geodesic.AngRound(lat1)
-    lat2 = Geodesic.AngRound(lat2)
+    lat1 = Math.AngRound(lat1)
+    lat2 = Math.AngRound(lat2)
     # Swap points so that point with higher (abs) latitude is point 1
     swapp = 1 if abs(lat1) >= abs(lat2) else -1
     if swapp < 0:
@@ -695,13 +701,13 @@ class Geodesic(object):
     # Ensure cbet1 = +epsilon at poles
     sbet1 = self._f1 * math.sin(phi)
     cbet1 = Geodesic.tiny_ if lat1 == -90 else math.cos(phi)
-    sbet1, cbet1 = Geodesic.SinCosNorm(sbet1, cbet1)
+    sbet1, cbet1 = Math.norm(sbet1, cbet1)
 
     phi = lat2 * Math.degree
     # Ensure cbet2 = +epsilon at poles
     sbet2 = self._f1 * math.sin(phi)
     cbet2 = Geodesic.tiny_ if abs(lat2) == 90 else math.cos(phi)
-    sbet2, cbet2 = Geodesic.SinCosNorm(sbet2, cbet2)
+    sbet2, cbet2 = Math.norm(sbet2, cbet2)
 
     # If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
     # |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -849,7 +855,7 @@ class Geodesic(object):
             if nsalp1 > 0 and abs(dalp1) < math.pi:
               calp1 = calp1 * cdalp1 - salp1 * sdalp1
               salp1 = nsalp1
-              salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
+              salp1, calp1 = Math.norm(salp1, calp1)
               # In some regimes we don't get quadratic convergence because
               # slope -> 0.  So use convergence conditions based on epsilon
               # instead of sqrt(epsilon).
@@ -864,7 +870,7 @@ class Geodesic(object):
           # WGS84 and random input: mean = 4.74, sd = 0.99
           salp1 = (salp1a + salp1b)/2
           calp1 = (calp1a + calp1b)/2
-          salp1, calp1 = Geodesic.SinCosNorm(salp1, calp1)
+          salp1, calp1 = Math.norm(salp1, calp1)
           tripn = False
           tripb = (abs(salp1a - salp1) + (calp1a - calp1) < Geodesic.tolb_ or
                    abs(salp1 - salp1b) + (calp1 - calp1b) < Geodesic.tolb_)
@@ -898,12 +904,12 @@ class Geodesic(object):
         eps = k2 / (2 * (1 + math.sqrt(1 + k2)) + k2)
         # Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
         A4 = Math.sq(self._a) * calp0 * salp0 * self._e2
-        ssig1, csig1 = Geodesic.SinCosNorm(ssig1, csig1)
-        ssig2, csig2 = Geodesic.SinCosNorm(ssig2, csig2)
+        ssig1, csig1 = Math.norm(ssig1, csig1)
+        ssig2, csig2 = Math.norm(ssig2, csig2)
         C4a = list(range(Geodesic.nC4_))
         self.C4f(eps, C4a)
-        B41 = Geodesic.SinCosSeries(False, ssig1, csig1, C4a, Geodesic.nC4_)
-        B42 = Geodesic.SinCosSeries(False, ssig2, csig2, C4a, Geodesic.nC4_)
+        B41 = Geodesic.SinCosSeries(False, ssig1, csig1, C4a)
+        B42 = Geodesic.SinCosSeries(False, ssig2, csig2, C4a)
         S12 = A4 * (B42 - B41)
       else:
         # Avoid problems with indeterminate sig1, sig2 on equator
@@ -1002,16 +1008,25 @@ class Geodesic(object):
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
-      Geodesic.ALL
+      Geodesic.ALL (all of the above)
+      Geodesic.LONG_UNROLL
+
+    If Geodesic.LONG_UNROLL is set, then lon1 is unchanged and lon2 -
+    lon1 indicates whether the geodesic is east going or west going.
+    Otherwise lon1 and lon2 are both reduced to the range [-180,180).
 
     """
 
-    lon1 = Geodesic.CheckPosition(lat1, lon1)
-    lon2 = Geodesic.CheckPosition(lat2, lon2)
+    lon1a = Geodesic.CheckPosition(lat1, lon1)
+    lon2a = Geodesic.CheckPosition(lat2, lon2)
+    if outmask & Geodesic.LONG_UNROLL:
+      lon2 = lon1 + Math.AngDiff(lon1a, lon2a)
+    else:
+      lon1 = lon1a; lon2 = lon2a
 
     result = {'lat1': lat1, 'lon1': lon1, 'lat2': lat2, 'lon2': lon2}
     a12, s12, azi1, azi2, m12, M12, M21, S12 = self.GenInverse(
-      lat1, lon1, lat2, lon2, outmask)
+      lat1, lon1a, lat2, lon2a, outmask)
     outmask &= Geodesic.OUT_MASK
     result['a12'] = a12
     if outmask & Geodesic.DISTANCE: result['s12'] = s12
@@ -1053,10 +1068,8 @@ class Geodesic(object):
       S12 area between geodesic and equator
 
     outmask determines which fields get included and if outmask is
-    omitted, then only the basic geodesic fields are computed.  The
-    LONG_NOWRAP bit prevents the longitudes being reduced to the range
-    [-180,180).  The mask is an or'ed combination of the following
-    values
+    omitted, then only the basic geodesic fields are computed.  The mask
+    is an or'ed combination of the following values
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -1064,12 +1077,19 @@ class Geodesic(object):
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
-      Geodesic.ALL
-      Geodesic.LONG_NOWRAP
+      Geodesic.ALL (all of the above)
+      Geodesic.LONG_UNROLL
+
+    The LONG_UNROLL bit unrolls the longitudes (instead of reducing them
+    to the range [-180,180)); the quantity lon2 - lon1 then indicates
+    how many times and in what sense the geodesic encircles the
+    ellipsoid.  Because lon2 might be outside the normal allowed range
+    for longitudes, [-540,540), be sure to normalize it with
+    math.fmod(lon2,360) before using it in other calls.
 
     """
 
-    if outmask & Geodesic.LONG_NOWRAP:
+    if outmask & Geodesic.LONG_UNROLL:
       Geodesic.CheckPosition(lat1, lon1)
     else:
       lon1 = Geodesic.CheckPosition(lat1, lon1)
@@ -1111,9 +1131,9 @@ class Geodesic(object):
 
     outmask determines which fields get included and if outmask is
     omitted, then only the basic geodesic fields are computed.  The
-    LONG_NOWRAP bit prevents the longitudes being reduced to the range
-    [-180,180).  The mask is an or'ed combination of the following
-    values
+    LONG_UNROLL bit unrolls the longitudes (instead of reducing them to
+    the range [-180,180)).  The mask is an or'ed combination of the
+    following values
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -1122,12 +1142,12 @@ class Geodesic(object):
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
-      Geodesic.ALL
-      Geodesic.LONG_NOWRAP
+      Geodesic.ALL (all of the above)
+      Geodesic.LONG_UNROLL
 
     """
 
-    if outmask & Geodesic.LONG_NOWRAP:
+    if outmask & Geodesic.LONG_UNROLL:
       Geodesic.CheckPosition(lat1, lon1)
     else:
       lon1 = Geodesic.CheckPosition(lat1, lon1)
@@ -1162,7 +1182,7 @@ class Geodesic(object):
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.DISTANCE_IN
-      Geodesic.ALL
+      Geodesic.ALL (all of the above)
 
     """
 

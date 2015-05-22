@@ -4,7 +4,76 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.42.
+The current version of the library is 1.43.
+
+Changes between 1.43 (released 2015-05-23) and 1.42 versions:
+
+  * Add the Enhanced Magnetic Model 2015, emm2015.  This is valid for
+    2000 thru the end of 2019.  This required some changes in the
+    MagneticModel and MagneticCircle classes; so this model cannot be
+    used with versions of GeographicLib prior to 1.43.
+
+  * Fix BLUNDER in PolarStereographic constructor introduced in version
+    1.42.  This affected UTMUPS conversions for UPS which could be
+    incorrect by up to 0.5 km.
+
+  * Changes in the LONG_NOWRAP option (added in version 1.39) in the
+    Geodesic and GeodesicLine classes:
+    + The option is now called LONG_UNROLL (a less negative sounding
+      term); the original name, LONG_NOWRAP, is retained for backwards
+      compatibility.
+    + There were two bad BUGS in the implementation of this capability:
+      (a) it gave incorrect results for west-going geodesics; (b) the
+      option was ignored if used directly via the GeodesicLine class.
+      The first bug affected the implementations in all languages.  The
+      second affected the implementation in C++ (GeodesicLine and
+      GeodesicLineExact), JavaScript, Java, C, Python.  These bugs have
+      now been FIXED.
+    + The GeodSolve utility now accepts a -u option, which turns on the
+      LONG_UNROLL treatment.  With this option lon1 is reported as
+      entered and lon2 is given such that lon2 - lon1 indicates how
+      often and in what sense the geodesic has encircled the earth.
+      (This option also affects the value of longitude reported when an
+      inverse calculation is run with the -f option.)
+    + The inverse calculation with the JavaScript and python libraries
+      similarly sets lon1 and lon2 in output dictionary respecting the
+      LONG_UNROLL flag.
+    + The online version of GeodSolve now offers an option to unroll the
+      longitude.
+    + To support these changes DMS::DecodeLatLon no longer reduces the
+      longitude to the range [-180deg, 180deg) and Math::AngRound now
+      coverts -0 to +0.
+
+  * Add Math::polyval (also to C, Java, JavaScript, Fortran, python
+    versions of the library; this is a built-in function for
+    MATLAB/Octave).  This evaluates a polynomial using Horner's method.
+    The Maxima-generated code fragments for the evaluation of series in
+    the Geodesic, TransverseMercator, and Rhumb classes and MATLAB
+    routines for great ellipses have been replaced by Maxima-generated
+    arrays of polynomial coefficients which are used as input to
+    Math::polyval.
+
+  * Add MGRS::Check() to verify that a, f, k_UTM, and k_UPS are
+    consistent with the assumptions in the UTMUPS and MGRS classes.
+    This is invoked with GeoConvert --version.  (This function was added
+    to document and check the assumptions used in the UTMUPS and MGRS
+    classes in case they are extended to deal with ellipsoids other than
+    WS84.)
+
+  * MATLAB function mgrs_inv now takes an optional center argument and
+    strips white space from both beginning and end of the string.
+
+  * Minor internal changes:
+    + GeodSolve sets the geodesic mask so that unnecessary calculations
+      are avoided;
+    + some routines have migrated into a math class for for python,
+      Java, JavaScript libraries.
+
+  * A reminder: because of changes in the installation directories for
+    non-Windows systems introduced in version 1.42, you should remove
+    the following directories from your system:
+    + ${CMAKE_INSTALL_PREFIX}/share/cmake/GeographicLib*
+    + ${CMAKE_INSTALL_PREFIX}/libexec/GeographicLib/matlab
 
 Changes between 1.42 (released 2015-04-28) and 1.41 versions:
 
@@ -45,7 +114,7 @@ Changes between 1.42 (released 2015-04-28) and 1.41 versions:
       MATLAB File Exchange package 39108, 2014-04-22).
 
   * artifactId for Java package changed from GeographicLib to
-    GeographicLib-Java and the package is now depolyed to Maven Central
+    GeographicLib-Java and the package is now deployed to Maven Central
     (thanks to Chris Bennight for help on this).
 
   * Fix autoconf mismatch of version numbers (which were inconsistent in
@@ -177,7 +246,7 @@ Changes between 1.38 (released 2014-10-02) and 1.37 versions:
   * In cmake builds under Windows, set the output directories so that
      binaries and shared libraries are together.
 
-  * Accept the minus sign as a synomym for - in DMS.{cpp,js}.
+  * Accept the minus sign as a synonym for - in DMS.{cpp,js}.
 
   * The cmake configuration file geographiclib-depends.cmake has been
      renamed to geographiclib-targets.cmake.
@@ -610,7 +679,7 @@ Changes between 1.20 (released 2012-03-23) and 1.19 versions:
     + add "x64" to the package name for the 64-bit binary installer;
     + fix cmake warning with Visual Studio Express.
 
-  * Fix SphericalEngine to deal with aggessive iterator checking by
+  * Fix SphericalEngine to deal with aggressive iterator checking by
     Visual Studio.
 
   * Fix transcription BUG is Geodesic.js.

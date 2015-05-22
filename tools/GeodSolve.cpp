@@ -2,7 +2,7 @@
  * \file GeodSolve.cpp
  * \brief Command line utility for geodesic calculations
  *
- * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
     using namespace GeographicLib;
     Utility::set_digits();
     bool linecalc = false, inverse = false, arcmode = false,
-      dms = false, full = false, exact = false;
+      dms = false, full = false, exact = false, unroll = false;
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
@@ -111,7 +111,8 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 2;
-      }
+      } else if (arg == "-u")
+        unroll = true;
       else if (arg == "-d") {
         dms = true;
         dmssep = '\0';
@@ -153,9 +154,8 @@ int main(int argc, char* argv[]) {
         if (++m == argc) return usage(1, true);
         cdelim = argv[m];
       } else if (arg == "--version") {
-        std::cout
-          << argv[0] << ": GeographicLib version "
-          << GEOGRAPHICLIB_VERSION_STRING << "\n";
+        std::cout << argv[0] << ": GeographicLib version "
+                  << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
@@ -198,15 +198,27 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    const Geodesic geod(a, f);
+    // GeodesicExact mask values are the same as Geodesic
+    unsigned outmask = Geodesic::LATITUDE | Geodesic::LONGITUDE |
+      Geodesic::AZIMUTH;        // basic output quantities
+    outmask |= inverse ? Geodesic::DISTANCE : // distance-related flags
+      (arcmode ? Geodesic::NONE : Geodesic::DISTANCE_IN);
+    // longitude unrolling
+    outmask |= unroll ? Geodesic::LONG_UNROLL : Geodesic::NONE;
+    // full output -- don't use Geodesic::ALL since this includes DISTANCE_IN
+    outmask |= full ? (Geodesic::DISTANCE | Geodesic::REDUCEDLENGTH |
+                       Geodesic::GEODESICSCALE | Geodesic::AREA) :
+      Geodesic::NONE;
+
+    const Geodesic      geods(a, f);
     const GeodesicExact geode(a, f);
-    GeodesicLine l;
+    GeodesicLine      ls;
     GeodesicLineExact le;
     if (linecalc) {
       if (exact)
-        le = geode.Line(lat1, lon1, azi1);
+        le = geode.Line(lat1, lon1, azi1, outmask);
       else
-        l = geod.Line(lat1, lon1, azi1);
+        ls = geods.Line(lat1, lon1, azi1, outmask);
     }
 
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
@@ -235,12 +247,18 @@ int main(int argc, char* argv[]) {
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
           DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
           a12 = exact ?
-            geode.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2,
-                          m12, M12, M21, S12) :
-            geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2,
-                         m12, M12, M21, S12);
-          if (full)
+            geode.GenInverse(lat1, lon1, lat2, lon2, outmask,
+                             s12, azi1, azi2, m12, M12, M21, S12) :
+            geods.GenInverse(lat1, lon1, lat2, lon2, outmask,
+                             s12, azi1, azi2, m12, M12, M21, S12);
+          if (full) {
+            lon2 = Math::AngNormalize(lon2);
+            if (unroll)
+              lon2 = lon1 + Math::AngDiff(Math::AngNormalize(lon1), lon2);
+            else
+              lon1 = Math::AngNormalize(lon1);
             *output << LatLonString(lat1, lon1, prec, dms, dmssep) << " ";
+          }
           *output << AzimuthString(azi1, prec, dms, dmssep) << " ";
           if (full)
             *output << LatLonString(lat2, lon2, prec, dms, dmssep) << " ";
@@ -261,14 +279,11 @@ int main(int argc, char* argv[]) {
             if (str >> strc)
               throw GeographicErr("Extraneous input: " + strc);
             s12 = ReadDistance(ss12, arcmode);
-            if (arcmode)
-              exact ?
-                le.ArcPosition(s12, lat2, lon2, azi2, a12, m12, M12, M21, S12) :
-                l.ArcPosition(s12, lat2, lon2, azi2, a12, m12, M12, M21, S12);
-            else
-              a12 = exact ?
-                le.Position(s12, lat2, lon2, azi2, m12, M12, M21, S12) :
-                l.Position(s12, lat2, lon2, azi2, m12, M12, M21, S12);
+            a12 = exact ?
+              le.GenPosition(arcmode, s12, outmask,
+                             lat2, lon2, azi2, s12, m12, M12, M21, S12) :
+              ls.GenPosition(arcmode, s12, outmask,
+                             lat2, lon2, azi2, s12, m12, M12, M21, S12);
           } else {
             std::string slat1, slon1, sazi1, ss12;
             if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
@@ -279,24 +294,17 @@ int main(int argc, char* argv[]) {
             DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
             azi1 = DMS::DecodeAzimuth(sazi1);
             s12 = ReadDistance(ss12, arcmode);
-            if (arcmode)
-              exact ?
-                geode.ArcDirect(lat1, lon1, azi1, s12, lat2, lon2, azi2, a12,
-                                m12, M12, M21, S12) :
-                geod.ArcDirect(lat1, lon1, azi1, s12, lat2, lon2, azi2, a12,
-                               m12, M12, M21, S12);
-            else
-              a12 = exact ?
-                geode.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2,
-                             m12, M12, M21, S12) :
-                geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2,
-                            m12, M12, M21, S12);
+            a12 = exact ?
+              geode.GenDirect(lat1, lon1, azi1, arcmode, s12, outmask,
+                              lat2, lon2, azi2, s12, m12, M12, M21, S12) :
+              geods.GenDirect(lat1, lon1, azi1, arcmode, s12, outmask,
+                              lat2, lon2, azi2, s12, m12, M12, M21, S12);
           }
-          if (arcmode)
-            std::swap(s12, a12);
           if (full)
-            *output << LatLonString(lat1, lon1, prec, dms, dmssep) << " "
-                    << AzimuthString(azi1, prec, dms, dmssep) << " ";
+            *output
+              << LatLonString(lat1, unroll ? lon1 : Math::AngNormalize(lon1),
+                              prec, dms, dmssep) << " "
+              << AzimuthString(azi1, prec, dms, dmssep) << " ";
           *output << LatLonString(lat2, lon2, prec, dms, dmssep) << " "
                   << AzimuthString(azi2 + azi2sense, prec, dms, dmssep);
           if (full)

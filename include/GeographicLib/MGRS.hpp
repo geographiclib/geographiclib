@@ -2,7 +2,7 @@
  * \file MGRS.hpp
  * \brief Header for GeographicLib::MGRS class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -293,18 +293,18 @@ namespace GeographicLib {
      * zones 1--9.)  In addition, MGRS coordinates with a neighboring
      * latitude band letter are permitted provided that some portion of the
      * 100 km block is within the given latitude band.  Thus
-     *   - 38VLS and 38WLS are allowed (latitude 64N intersects the square
-     *     38[VW]LS); but 38VMS is not permitted (all of 38VMS is north of 64N)
-     *   - 38MPE and 38NPF are permitted (they straddle the equator); but 38NPE
-     *     and 38MPF are not permitted (the equator does not intersect either
-     *     block).
-     *   - Similarly ZAB and YZB are permitted (they straddle the prime
-     *     meridian); but YAB and ZZB are not (the prime meridian does not
-     *     intersect either block).
+     * - 38VLS and 38WLS are allowed (latitude 64N intersects the square
+     *   38[VW]LS); but 38VMS is not permitted (all of 38WMS is north of 64N)
+     * - 38MPE and 38NPF are permitted (they straddle the equator); but 38NPE
+     *   and 38MPF are not permitted (the equator does not intersect either
+     *   block).
+     * - Similarly ZAB and YZB are permitted (they straddle the prime
+     *   meridian); but YAB and ZZB are not (the prime meridian does not
+     *   intersect either block).
      *
      * The UTM/UPS selection and the UTM zone is preserved in the conversion
      * from MGRS coordinate.  The conversion is exact for prec in [0, 5].  With
-     * centerp = true the conversion from MGRS to geographic and back is
+     * \e centerp = true, the conversion from MGRS to geographic and back is
      * stable.  This is not assured if \e centerp = false.
      *
      * If a "grid zone designation" (for example, 18T or A) is given, then some
@@ -342,6 +342,14 @@ namespace GeographicLib {
      **********************************************************************/
     static Math::real Flattening() { return UTMUPS::Flattening(); }
     ///@}
+
+    /**
+     * Perform some checks on the UTMUPS coordinates on this ellipsoid.  Throw
+     * an error if any of the assumptions made in the MGRS class is not true.
+     * This check needs to be carried out if the ellipsoid parameters (or the
+     * UTM/UPS scales) are ever changed.
+     **********************************************************************/
+    static void Check();
 
     /// \cond SKIP
     /**

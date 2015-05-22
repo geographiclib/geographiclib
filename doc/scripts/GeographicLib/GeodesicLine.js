@@ -30,9 +30,10 @@
     this._b = geod._b;
     this._c2 = geod._c2;
     this._f1 = geod._f1;
-    this._caps = !caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH);
+    this._caps = (!caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH)) |
+      g.LONG_UNROLL;
 
-    azi1 = g.AngRound(m.AngNormalize(azi1));
+    azi1 = m.AngRound(m.AngNormalize(azi1));
     this._lat1 = lat1;
     this._lon1 = lon1;
     this._azi1 = azi1;
@@ -47,7 +48,7 @@
     // Ensure cbet1 = +epsilon at poles
     sbet1 = this._f1 * Math.sin(phi);
     cbet1 = Math.abs(lat1) === 90 ? g.tiny_ : Math.cos(phi);
-    // SinCosNorm(sbet1, cbet1);
+    // norm(sbet1, cbet1);
     var t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
     this._dn1 = Math.sqrt(1 + geod._ep2 * m.sq(sbet1));
 
@@ -68,10 +69,10 @@
     this._ssig1 = sbet1; this._somg1 = this._salp0 * sbet1;
     this._csig1 = this._comg1 =
       sbet1 !== 0 || this._calp1 !== 0 ? cbet1 * this._calp1 : 1;
-    // SinCosNorm(this._ssig1, this._csig1); // sig1 in (-pi, pi]
+    // norm(this._ssig1, this._csig1); // sig1 in (-pi, pi]
     t = m.hypot(this._ssig1, this._csig1);
     this._ssig1 /= t; this._csig1 /= t;
-    // SinCosNorm(this._somg1, this._comg1); -- don't need to normalize!
+    // norm(this._somg1, this._comg1); -- don't need to normalize!
 
     this._k2 = m.sq(this._calp0) * geod._ep2;
     var eps = this._k2 / (2 * (1 + Math.sqrt(1 + this._k2)) + this._k2);
@@ -80,14 +81,13 @@
       this._A1m1 = g.A1m1f(eps);
       this._C1a = new Array(g.nC1_ + 1);
       g.C1f(eps, this._C1a);
-      this._B11 = g.SinCosSeries(true, this._ssig1, this._csig1,
-                                 this._C1a, g.nC1_);
+      this._B11 = g.SinCosSeries(true, this._ssig1, this._csig1, this._C1a);
       var s = Math.sin(this._B11), c = Math.cos(this._B11);
       // tau1 = sig1 + B11
       this._stau1 = this._ssig1 * c + this._csig1 * s;
       this._ctau1 = this._csig1 * c - this._ssig1 * s;
       // Not necessary because C1pa reverts C1a
-      //    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa, nC1p_);
+      //    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa);
     }
 
     if (this._caps & g.CAP_C1p) {
@@ -99,16 +99,14 @@
       this._A2m1 = g.A2m1f(eps);
       this._C2a = new Array(g.nC2_ + 1);
       g.C2f(eps, this._C2a);
-      this._B21 = g.SinCosSeries(true, this._ssig1, this._csig1,
-                                 this._C2a, g.nC2_);
+      this._B21 = g.SinCosSeries(true, this._ssig1, this._csig1, this._C2a);
     }
 
     if (this._caps & g.CAP_C3) {
       this._C3a = new Array(g.nC3_);
       geod.C3f(eps, this._C3a);
       this._A3c = -this._f * this._salp0 * geod.A3f(eps);
-      this._B31 = g.SinCosSeries(true, this._ssig1, this._csig1,
-                                 this._C3a, g.nC3_-1);
+      this._B31 = g.SinCosSeries(true, this._ssig1, this._csig1, this._C3a);
     }
 
     if (this._caps & g.CAP_C4) {
@@ -116,8 +114,7 @@
       geod.C4f(eps, this._C4a);
       // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
       this._A4 = m.sq(this._a) * this._calp0 * this._salp0 * geod._e2;
-      this._B41 = g.SinCosSeries(false, this._ssig1, this._csig1,
-                                 this._C4a, g.nC4_);
+      this._B41 = g.SinCosSeries(false, this._ssig1, this._csig1, this._C4a);
     }
   };
 
@@ -151,7 +148,7 @@
       B12 = - g.SinCosSeries(true,
                              this._stau1 * c + this._ctau1 * s,
                              this._ctau1 * c - this._stau1 * s,
-                             this._C1pa, g.nC1p_);
+                             this._C1pa);
       sig12 = tau12 - (B12 - this._B11);
       ssig12 = Math.sin(sig12); csig12 = Math.cos(sig12);
       if (Math.abs(this._f) > 0.01) {
@@ -178,7 +175,7 @@
         //      1/5   157e6 3.8e9 280e6
         ssig2 = this._ssig1 * csig12 + this._csig1 * ssig12;
         csig2 = this._csig1 * csig12 - this._ssig1 * ssig12;
-        B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a, g.nC1_);
+        B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a);
         var serr = (1 + this._A1m1) * (sig12 + (B12 - this._B11)) -
           s12_a12 / this._b;
         sig12 = sig12 - serr / Math.sqrt(1 + this._k2 * m.sq(ssig2));
@@ -187,7 +184,7 @@
       }
     }
 
-    var omg12, lam12, lon12;
+    var omg12, lam12, lon12, E;
     var sbet2, cbet2, somg2, comg2, salp2, calp2;
     // sig2 = sig1 + sig12
     ssig2 = this._ssig1 * csig12 + this._csig1 * ssig12;
@@ -195,7 +192,7 @@
     var dn2 = Math.sqrt(1 + this._k2 * m.sq(ssig2));
     if (outmask & (g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE)) {
       if (arcmode || Math.abs(this._f) > 0.01)
-        B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a, g.nC1_);
+        B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a);
       AB1 = (1 + this._A1m1) * (B12 - this._B11);
     }
     // sin(bet2) = cos(alp0) * sin(sig2)
@@ -214,19 +211,22 @@
     if (outmask & g.LONGITUDE) {
       // tan(omg2) = sin(alp0) * tan(sig2)
       somg2 = this._salp0 * ssig2; comg2 = csig2; // No need to normalize
+      E = this._salp0 < 0 ? -1 : 1;
       // omg12 = omg2 - omg1
-      omg12 = outmask & g.LONG_NOWRAP ? sig12 -
-        (Math.atan2(ssig2, csig2) - Math.atan2(this._ssig1, this._csig1)) +
-        (Math.atan2(somg2, comg2) - Math.atan2(this._somg1, this._comg1)) :
+      omg12 = outmask & g.LONG_UNROLL ?
+        E * (sig12 -
+             (Math.atan2(ssig2, csig2) -
+              Math.atan2(this._ssig1, this._csig1)) +
+             (Math.atan2(E * somg2, comg2) -
+              Math.atan2(E * this._somg1, this._comg1))) :
         Math.atan2(somg2 * this._comg1 - comg2 * this._somg1,
                      comg2 * this._comg1 + somg2 * this._somg1);
       lam12 = omg12 + this._A3c *
-        ( sig12 + (g.SinCosSeries(true, ssig2, csig2, this._C3a, g.nC3_-1) -
+        ( sig12 + (g.SinCosSeries(true, ssig2, csig2, this._C3a) -
                    this._B31));
       lon12 = lam12 / m.degree;
       // Use AngNormalize2 because longitude might have wrapped multiple times.
-      lon12 = m.AngNormalize2(lon12);
-      vals.lon2 = outmask & g.LONG_NOWRAP ? this._lon1 + lon12 :
+      vals.lon2 = outmask & g.LONG_UNROLL ? this._lon1 + lon12 :
         m.AngNormalize(m.AngNormalize(this._lon1) + m.AngNormalize2(lon12));
     }
 
@@ -239,7 +239,7 @@
 
     if (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE)) {
       var
-      B22 = g.SinCosSeries(true, ssig2, csig2, this._C2a, g.nC2_),
+      B22 = g.SinCosSeries(true, ssig2, csig2, this._C2a),
       AB2 = (1 + this._A2m1) * (B22 - this._B21),
       J12 = (this._A1m1 - this._A2m1) * sig12 + (AB1 - AB2);
       if (outmask & g.REDUCEDLENGTH)
@@ -258,10 +258,10 @@
 
     if (outmask & g.AREA) {
       var
-      B42 = g.SinCosSeries(false, ssig2, csig2, this._C4a, g.nC4_);
+      B42 = g.SinCosSeries(false, ssig2, csig2, this._C4a);
       var salp12, calp12;
       if (this._calp0 === 0 || this._salp0 === 0) {
-        // alp12 = alp2 - alp1, used in atan2 so no need to normalized
+        // alp12 = alp2 - alp1, used in atan2 so no need to normalize
         salp12 = salp2 * this._calp1 - calp2 * this._salp1;
         calp12 = calp2 * this._calp1 + salp2 * this._salp1;
         // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz

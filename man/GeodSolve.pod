@@ -5,7 +5,7 @@ GeodSolve -- perform geodesic calculations
 =head1 SYNOPSIS
 
 B<GeodSolve> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi1> ] [ B<-a> ]
-[ B<-e> I<a> I<f> ]
+[ B<-e> I<a> I<f> ] B<-u> ]
 [ B<-d> | B<-:> ] [ B<-b> ] [ B<-f> ] [ B<-p> I<prec> ] [ B<-E> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
@@ -71,6 +71,14 @@ I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
 1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137 m,
 I<f> = 1/298.257223563.
+
+=item B<-u>
+
+unroll the longitude.  On input longitudes must lie in [-540deg,540deg)
+and, normally, on output longitudes are reduced to lie in
+[-180deg,180deg).  However with this option, the returned longitude
+I<lon2> is "unrolled" so that I<lon2> - I<lon1> indicates how often and
+in what sense the geodesic has encircled the earth.
 
 =item B<-d>
 

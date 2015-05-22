@@ -17,7 +17,7 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<p><b>GeodSolve</b> [ <b>-i</b> | <b>-l</b> <i>lat1</i> <i>lon1</i> <i>azi1</i> ] [ <b>-a</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] [ <b>-d</b> | <b>-:</b> ] [ <b>-b</b> ] [ <b>-f</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-E</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
+<p><b>GeodSolve</b> [ <b>-i</b> | <b>-l</b> <i>lat1</i> <i>lon1</i> <i>azi1</i> ] [ <b>-a</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] <b>-u</b> ] [ <b>-d</b> | <b>-:</b> ] [ <b>-b</b> ] [ <b>-f</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-E</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
@@ -64,6 +64,12 @@
 <dd>
 
 <p>specify the ellipsoid via <i>a</i> <i>f</i>; the equatorial radius is <i>a</i> and the flattening is <i>f</i>. Setting <i>f</i> = 0 results in a sphere. Specify <i>f</i> &lt; 0 for a prolate ellipsoid. A simple fraction, e.g., 1/297, is allowed for <i>f</i>. (Also, if <i>f</i> &gt; 1, the flattening is set to 1/<i>f</i>.) By default, the WGS84 ellipsoid is used, <i>a</i> = 6378137 m, <i>f</i> = 1/298.257223563.</p>
+
+</dd>
+<dt id="u"><b>-u</b></dt>
+<dd>
+
+<p>unroll the longitude. On input longitudes must lie in [-540deg,540deg) and, normally, on output longitudes are reduced to lie in [-180deg,180deg). However with this option, the returned longitude <i>lon2</i> is &quot;unrolled&quot; so that <i>lon2</i> - <i>lon1</i> indicates how often and in what sense the geodesic has encircled the earth.</p>
 
 </dd>
 <dt id="d"><b>-d</b></dt>

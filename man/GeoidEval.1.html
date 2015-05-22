@@ -21,13 +21,13 @@
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
-<p><b>GeoidEval</b> reads in positions on standard input and prints out the corresponding geoid heights on standard output. Optionally, it also prints the northerly and easterly gradients of the geoid height.</p>
+<p><b>GeoidEval</b> reads in positions on standard input and prints out the corresponding heights of the geoid above the WGS84 ellipsoid on standard output.</p>
 
 <p>Positions are given as latitude and longitude, UTM/UPS, or MGRS, in any of the formats accepted by GeoConvert(1). (MGRS coordinates signify the <i>center</i> of the corresponding MGRS square.) If the <b>-z</b> option is specified then the specified zone is prepended to each line of input (which must be in UTM/UPS coordinates). This allows a file with UTM eastings and northings in a single zone to be used as standard input.</p>
 
 <p>More accurate results for the geoid height are provided by Gravity(1). This utility can also compute the direction of gravity accurately.</p>
 
-<p>The geoid height, <i>N</i>, can be used to convert a height above the ellipsoid, <i>h</i>, to the corresponding height above the geoid (roughly the height above mean sea level), <i>H</i>, using the relations</p>
+<p>The height of the geoid above the ellipsoid, <i>N</i>, is sometimes called the geoid undulation. It can be used to convert a height above the ellipsoid, <i>h</i>, to the corresponding height above the geoid (the orthometric height, roughly the height above mean sea level), <i>H</i>, using the relations</p>
 
 <ul>
 
@@ -180,7 +180,7 @@
    1 2 2 1
    . 1 1 .</code></pre>
 
-<p>The cubic is constrained to be independent of longitude when evaluating the height at one of the poles. Cubic interpolation is considerably more accurate than bilinear; however it results in small discontinuities in the returned height on cell boundaries. The gradients are computed by differentiating the interpolated results.</p>
+<p>The cubic is constrained to be independent of longitude when evaluating the height at one of the poles. Cubic interpolation is considerably more accurate than bilinear; however it results in small discontinuities in the returned height on cell boundaries.</p>
 
 <h1 id="CACHE">CACHE</h1>
 
@@ -276,7 +276,7 @@
 
 <h1 id="SEE-ALSO">SEE ALSO</h1>
 
-<p>GeoConvert(1), Gravity(1).</p>
+<p>GeoConvert(1), Gravity(1), geographiclib-get-geoids(8).</p>
 
 <p>An online version of this utility is availbable at <a href="http://geographiclib.sourceforge.net/cgi-bin/GeoidEval">http://geographiclib.sourceforge.net/cgi-bin/GeoidEval</a>.</p>
 

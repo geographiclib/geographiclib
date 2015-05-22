@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 42)
+set (PROJECT_VERSION_MINOR 43)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -43,7 +43,7 @@ endif ()
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 14)
-set (LIBVERSION_BUILD 14.0.3)
+set (LIBVERSION_BUILD 14.1.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -241,21 +241,21 @@ if (MSVC)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-  # check for C++11 support.  If available, the C++11 static_assert is
-  # used.  This flag is *not* propagated to clients that use
-  # GeographicLib.  However, this is of no consequence.  When the client
-  # code is being compiled (and the GeographicLib headers being
-  # included), a work-alike substitution is used.
+  # check for C++11 support.  This flag is *not* propagated to clients
+  # that use GeographicLib.  However, this is of no consequence.  When
+  # the client code is being compiled (and the GeographicLib headers
+  # being included), work-alike substitutions are used.
   include (CheckCXXCompilerFlag)
-  set (CXX11_FLAG "-std=c++11")
-  check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST)
-  if (NOT CXX11TEST)
-    set (CXX11_FLAG "-std=c++0x")
-    check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST)
-    if (NOT CXX11TEST)
-      unset (CXX11_FLAG)
+  # Not yet ready for C++14 (problem with MPFR C++)
+  foreach (_F 11 0x)
+    set (CXX11_FLAG "-std=c++${_F}")
+    set (_T CXX11TEST${_F})
+    check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
+    if (${_T})
+      break ()
     endif ()
-  endif ()
+    unset (CXX11_FLAG)
+  endforeach ()
   if (CXX11_FLAG)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
   endif ()
@@ -284,7 +284,7 @@ endif ()
 # Check whether the C++11 static_assert macro is available.  This flag
 # is *not* propagated to clients that use GeographicLib.  However, this
 # is of no consequence.  When the client code is being compiled (and the
-# GeographicLib headers being included), a work-alike substitution are
+# GeographicLib headers being included), a work-alike substitution is
 # used.
 check_cxx_source_compiles (
   "#include <cmath>
@@ -464,7 +464,7 @@ add_subdirectory (doc)
 add_subdirectory (matlab)
 add_subdirectory (python/geographiclib)
 add_subdirectory (examples)
-if (BUILD_NETGEOGRAPHICLIB)
+if (MSVC AND BUILD_NETGEOGRAPHICLIB)
   if (GEOGRAPHICLIB_PRECISION EQUAL 2)
     set (NETGEOGRAPHICLIB_LIBRARIES NETGeographicLib)
     set (NETLIBNAME NETGeographic)

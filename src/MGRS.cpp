@@ -2,7 +2,7 @@
  * \file MGRS.cpp
  * \brief Implementation for GeographicLib::MGRS class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -339,15 +339,17 @@ namespace GeographicLib {
   }
 
   int MGRS::UTMRow(int iband, int icol, int irow) {
-    // Input is MGRS (periodic) row index and output is true row index.  Band
-    // index is in [-10, 10) (as returned by LatitudeBand).  Column index
-    // origin is easting = 100km.  Returns maxutmSrow_ if irow and iband are
-    // incompatible.  Row index origin is equator.
+    // Input is iband = band index in [-10, 10) (as returned by LatitudeBand),
+    // icol = column index in [0,8) with origin of easting = 100km, and irow =
+    // periodic row index in [0,20) with origin = equator.  Output is true row
+    // index in [-90, 95).  Returns maxutmSrow_ = 100, if irow and iband are
+    // incompatible.
 
     // Estimate center row number for latitude band
     // 90 deg = 100 tiles; 1 band = 8 deg = 100*8/90 tiles
     real c = 100 * (8 * iband + 4)/real(90);
     bool northp = iband >= 0;
+    // These are safe bounds on the rows
     //  iband minrow maxrow
     //   -10    -90    -81
     //    -9    -80    -72
@@ -375,10 +377,16 @@ namespace GeographicLib {
       maxrow = iband <   9 ?
       int(floor(c + real(4.4) - real(0.1) * northp)) :  94,
       baserow = (minrow + maxrow) / 2 - utmrowperiod_ / 2;
-    // Add maxutmSrow_ = 5 * utmrowperiod_ to ensure operand is positive
+    // Offset irow by the multiple of utmrowperiod_ which brings it as close as
+    // possible to the center of the latitude band, (minrow + maxrow) / 2.
+    // (Add maxutmSrow_ = 5 * utmrowperiod_ to ensure operand is positive.)
     irow = (irow - baserow + maxutmSrow_) % utmrowperiod_ + baserow;
-    if (irow < minrow || irow > maxrow) {
-      // Northing = 71*100km and 80*100km intersect band boundaries
+    if (!( irow >= minrow && irow <= maxrow )) {
+      // Outside the safe bounds, so need to check...
+      // Northing = 71e5 and 80e5 intersect band boundaries
+      //   y = 71e5 in scol = 2 (x = [3e5,4e5] and x = [6e5,7e5])
+      //   y = 80e5 in scol = 1 (x = [2e5,3e5] and x = [7e5,8e5])
+      // This holds for all the ellipsoids given in NGA.SIG.0012_2.0.0_UTMUPS.
       // The following deals with these special cases.
       int
         // Fold [-10,-1] -> [9,0]
@@ -387,6 +395,8 @@ namespace GeographicLib {
         srow = irow >= 0 ? irow : -irow - 1,
         // Fold [4,7] -> [3,0]
         scol = icol < 4 ? icol : -icol + 7;
+      // For example, the safe rows for band 8 are 71 - 79.  However row 70 is
+      // allowed if scol = [2,3] and row 80 is allowed if scol = [0,1].
       if ( ! ( (srow == 70 && sband == 8 && scol >= 2) ||
                (srow == 71 && sband == 7 && scol <= 2) ||
                (srow == 79 && sband == 9 && scol >= 1) ||
@@ -394,6 +404,65 @@ namespace GeographicLib {
         irow = maxutmSrow_;
     }
     return irow;
+  }
+
+  void MGRS::Check() {
+    real lat, lon, x, y, t = tile_; int zone; bool northp;
+    UTMUPS::Reverse(31, true , 1*t,  0*t, lat, lon);
+    if (!( lon <   0 ))
+      throw GeographicErr("MGRS::Check: equator coverage failure");
+    UTMUPS::Reverse(31, true , 1*t, 95*t, lat, lon);
+    if (!( lat >  84 ))
+      throw GeographicErr("MGRS::Check: UTM doesn't reach latitude = 84");
+    UTMUPS::Reverse(31, false, 1*t, 10*t, lat, lon);
+    if (!( lat < -80 ))
+      throw GeographicErr("MGRS::Check: UTM doesn't reach latitude = -80");
+    UTMUPS::Forward(56,  3, zone, northp, x, y, 32);
+    if (!( x > 1*t ))
+      throw GeographicErr("MGRS::Check: Norway exception creates a gap");
+    UTMUPS::Forward(72, 21, zone, northp, x, y, 35);
+    if (!( x > 1*t ))
+      throw GeographicErr("MGRS::Check: Svalbard exception creates a gap");
+    UTMUPS::Reverse(0, true , 20*t, 13*t, lat, lon);
+    if (!( lat <  84 ))
+      throw GeographicErr("MGRS::Check: North UPS doesn't reach latitude = 84");
+    UTMUPS::Reverse(0, false, 20*t,  8*t, lat, lon);
+    if (!( lat > -80 ))
+      throw
+        GeographicErr("MGRS::Check: South UPS doesn't reach latitude = -80");
+    // Entries are [band, x, y] either side of the band boundaries.  Units for
+    // x, y are t = 100km.
+    const short tab[] = {
+      0, 5,  0,   0, 9,  0,     // south edge of band 0
+      0, 5,  8,   0, 9,  8,     // north edge of band 0
+      1, 5,  9,   1, 9,  9,     // south edge of band 1
+      1, 5, 17,   1, 9, 17,     // north edge of band 1
+      2, 5, 18,   2, 9, 18,     // etc.
+      2, 5, 26,   2, 9, 26,
+      3, 5, 27,   3, 9, 27,
+      3, 5, 35,   3, 9, 35,
+      4, 5, 36,   4, 9, 36,
+      4, 5, 44,   4, 9, 44,
+      5, 5, 45,   5, 9, 45,
+      5, 5, 53,   5, 9, 53,
+      6, 5, 54,   6, 9, 54,
+      6, 5, 62,   6, 9, 62,
+      7, 5, 63,   7, 9, 63,
+      7, 5, 70,   7, 7, 70,   7, 7, 71,   7, 9, 71, // y = 71t crosses boundary
+      8, 5, 71,   8, 6, 71,   8, 6, 72,   8, 9, 72, // between bands 7 and 8.
+      8, 5, 79,   8, 8, 79,   8, 8, 80,   8, 9, 80, // y = 80t crosses boundary
+      9, 5, 80,   9, 7, 80,   9, 7, 81,   9, 9, 81, // between bands 8 and 9.
+      9, 5, 95,   9, 9, 95,     // north edge of band 9
+    };
+    const int bandchecks = sizeof(tab) / (3 * sizeof(short));
+    for (int i = 0; i < bandchecks; ++i) {
+      UTMUPS::Reverse(38, true, tab[3*i+1]*t, tab[3*i+2]*t, lat, lon);
+      if (!( LatitudeBand(lat) == tab[3*i+0] ))
+        throw GeographicErr("MGRS::Check: Band error, b = " +
+                            Utility::str(tab[3*i+0]) + ", x = " +
+                            Utility::str(tab[3*i+1]) + "00km, y = " +
+                            Utility::str(tab[3*i+2]) + "00km");
+    }
   }
 
 } // namespace GeographicLib

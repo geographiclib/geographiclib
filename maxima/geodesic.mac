@@ -217,7 +217,7 @@ AngDiff(x, y) := block([t,d,r:sumx(-x,y)],
 
 AngRound(x) := block([z:1/16b0, y:abs(x)],
   y : if y < z then z - (z - y) else y,
-  if x < 0b0 then -y else y)$
+  if x < 0b0 then 0b0-y else y)$
 
 /* Indices in geodesic struct */
 block([i:0], g_a:(i:i+1), g_f:(i:i+1), g_f1:(i:i+1), g_e2:(i:i+1),
@@ -381,7 +381,7 @@ geod_genposition(l, arcmode,  s12_a12):=block(
   /* Avoid warning about uninitialized B12. */
   sig12, ssig12, csig12, B12 : 0, E2 : 0, AB1 : 0,
   omg12, lam12, lon12,
-  ssig2, csig2, sbet2, cbet2, somg2, comg2, salp2, calp2, dn2],
+  ssig2, csig2, sbet2, cbet2, somg2, comg2, salp2, calp2, dn2, E],
   s12_a12 : bfloat(s12_a12),
   if (arcmode) then block([s12a],
     /* Interpret s12_a12 as spherical arc length */
@@ -459,11 +459,12 @@ geod_genposition(l, arcmode,  s12_a12):=block(
     somg2 : l[l_salp0] * ssig2, comg2 : csig2),  /* No need to normalize */
   /* tan(alp0) = cos(sig2)*tan(alp2) */
   salp2 : l[l_salp0], calp2 : l[l_calp0] * csig2, /* No need to normalize */
+  E = if l[l_salp0] < 0b0 then -1 else 1,
   if not exact then
   /* omg12 = omg2 - omg1 */
-  omg12 : sig12
-  - (atan2x(ssig2, csig2) - atan2x(l[l_ssig1], l[l_csig1]))
-  + (atan2x(somg2, comg2) - atan2x(l[l_somg1], l[l_comg1])),
+  omg12 : E * (sig12
+    - (atan2x(  ssig2, csig2) - atan2x(  l[l_ssig1], l[l_csig1]))
+    + (atan2x(E*somg2, comg2) - atan2x(E*l[l_somg1], l[l_comg1]))),
   s12 : if arcmode then l[l_b] *
   ((if exact then l[l_E0] else (1 + l[l_A1m1])) * sig12 + AB1) else s12_a12,
   if exact then block([somg2:l[l_salp0] * ssig2,
@@ -471,9 +472,9 @@ geod_genposition(l, arcmode,  s12_a12):=block(
     cchi2],
     /* Without normalization we have schi2 = somg2. */
     cchi2 : l[l_f1] * dn2 *  comg2,
-    lam12 : (sig12
-      - (atan2x(ssig2, csig2) - atan2x(l[l_ssig1], l[l_csig1]))
-      + (atan2x(somg2, cchi2) - atan2x(l[l_somg1], l[l_cchi1]))) -
+    lam12 : E * (sig12
+      - (atan2x(  ssig2, csig2) - atan2x(  l[l_ssig1], l[l_csig1]))
+      + (atan2x(E*somg2, cchi2) - atan2x(E*l[l_somg1], l[l_cchi1]))) -
     l[l_e2]/l[l_f1] * l[l_salp0] * l[l_H0] *
     (sig12 + deltah(ssig2, csig2, dn2,
         l[l_E][e_k2], l[l_E][e_alpha2], l[l_E][e_hc]) - l[l_H1] ) )
@@ -502,7 +503,7 @@ geod_genposition(l, arcmode,  s12_a12):=block(
       M21 : csig12 - (t * l[l_ssig1] - l[l_csig1] * J12) *  ssig2 /  dn2)),
   block([ B42 : SinCosSeries(false, ssig2, csig2, l[l_C4a]), salp12, calp12],
     if l[l_calp0] = 0b0 or l[l_salp0] = 0b0 then (
-      /* alp12 = alp2 - alp1, used in atan2 so no need to normalized */
+      /* alp12 = alp2 - alp1, used in atan2 so no need to normalize */
       salp12 : salp2 * l[l_calp1] - calp2 * l[l_salp1],
       calp12 : calp2 * l[l_calp1] + salp2 * l[l_salp1],
       /* The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
