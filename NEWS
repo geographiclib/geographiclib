@@ -6,7 +6,7 @@ For more information, see
 
 The current version of the library is 1.43.
 
-Changes between 1.43 (released 2015-mm-dd) and 1.42 versions:
+Changes between 1.43 (released 2015-05-23) and 1.42 versions:
 
   * Add the Enhanced Magnetic Model 2015, emm2015.  This is valid for
     2000 thru the end of 2019.  This required some changes in the

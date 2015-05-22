@@ -62,6 +62,7 @@ set -e
 # JavaScript + maxima -- none
 
 DATE=`date +%F`
+DATE=2015-05-23
 VERSION=1.43
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
@@ -430,9 +431,11 @@ mvn clean deploy -P release
 # matlab toolbox
 cd $TEMP/matlab
 matlab &
+# remove existing geographiclib path, double click on geographiclib.prj
+# click on "Package".
 mv $TEMP/matlab/geographiclib.mltbx $DEVELSOURCE/geographiclib_toolbox_$VERSION.mltbx
 chmod 644 $DEVELSOURCE/geographiclib_toolbox_$VERSION.*
-mv $DEVELSOURCE/geographiclib_toolbox_$VERSION.* $DEVELSOURCE/matlab-distrib
+mv $DEVELSOURCE/geographiclib_*_$VERSION.* $DEVELSOURCE/matlab-distrib
 
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib
