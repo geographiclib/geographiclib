@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
   std::string file = argv[2];
   try {
     // model = wmm2010
-    // http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip
+    //http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip
     // unpack
     // coefficients are in EMM_Sph_Windows_Linux/WMM2010.COF
     // N=739, M=718
@@ -91,12 +91,32 @@ int main(int argc, char* argv[]) {
       // download
       //http://www.ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2015_Sph_Linux.zip
       // unpack
-      // coefficients are in EMM2015_linux/EMM20{00-15}.COF and
-      // EMM2015_linux/EMM2015/EMM2010SV.COF.  Ignore additional SV files; the
-      // same result is obtained using linear interpolation.
-      // degree > 15 terms in EMM2015.COF are time-independent terms applied at
-      // all times.  These are put into an addition set of coefficients after
-      // EMM2015SV.COF.
+      //
+      // * The only coefficients needed are EMM20{00-15}.COF and EMM2015SV.COF.
+      //
+      // * The other SV files can be ignored because the time dependence can be
+      //   obtained using linear interpolation for dates < 2015 (or
+      //   extrapolation for dates < 2000).
+      //
+      // * The time varying part of the field is of degree 15.  This
+      //   constitutes all the coefficients in EMM20{00-14}.COF and
+      //   EMM2015SV.COF and a subset of the coefficients in EMM2015.COF.
+      //
+      // * To this should be added a time independent short wavelength field
+      //   which is given by the degree > 15 terms in EMM2015.COF.
+      //
+      // * These time independent terms are of degree 729 and order 718.  There
+      //   are higher degree and order coefficients listed in the file, but
+      //   these are zero.
+      //
+      // * The EMM2015 coefficients as used by GeographicLib compress much
+      //   better than those for EMM2010 (660 kB instead of 3700 kB).
+      //   Presumably this is because the EMM2015 are only given with 4 decimal
+      //   digits.
+      //
+      // * The GeographicLib implementation produces the same results as listed
+      //   in EMM2015_TEST_VALUES.txt
+
       std::string id = "EMM2015A";
       fout.write(id.c_str(), 8);
       for (int i = 0; i <= 17; ++i) {

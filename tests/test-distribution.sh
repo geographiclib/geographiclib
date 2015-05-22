@@ -62,8 +62,7 @@ set -e
 # JavaScript + maxima -- none
 
 DATE=`date +%F`
-DATE=2015-05-23
-VERSION=1.43
+VERSION=1.44
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
@@ -454,6 +453,9 @@ git push --all
 git push --tags
 
 # Also to do
+# post release notices
+# set default download files
+# make -f makefile-admin distrib-{cgi,js,html}
 # update home brew
 # upload matlab packages
 # update binaries for cgi applications
