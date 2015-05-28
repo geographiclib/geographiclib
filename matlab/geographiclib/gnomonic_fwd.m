@@ -60,6 +60,6 @@ function [x, y, azi, rk] = gnomonic_fwd(lat0, lon0, lat, lon, ellipsoid)
   x = rho .* sin(azi0);
   y = rho .* cos(azi0);
   rk = M;
-  x(M <= 0) = NaN;
-  y(M <= 0) = NaN;
+  x(M <= 0) = nan;
+  y(M <= 0) = nan;
 end

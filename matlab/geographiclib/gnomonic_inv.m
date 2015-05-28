@@ -83,10 +83,10 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
   end
   c = ~trip;
   if any(c)
-    lat(c) = NaN;
-    lon(c) = NaN;
-    azi(c) = NaN;
-    M(c) = NaN;
+    lat(c) = nan;
+    lon(c) = nan;
+    azi(c) = nan;
+    M(c) = nan;
   end
   rk = M;
 end

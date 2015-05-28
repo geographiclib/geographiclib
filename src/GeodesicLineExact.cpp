@@ -189,7 +189,7 @@ namespace GeographicLib {
         : atan2(somg2 * _cchi1 - cchi2 * _somg1,
                 cchi2 * _cchi1 + somg2 * _somg1);
       real lam12 = chi12 -
-        _e2/_f1 * _salp0 * _H0 * (sig12 + _E.deltaH(ssig2, csig2, dn2) - _H1 );
+        _e2/_f1 * _salp0 * _H0 * (sig12 + (_E.deltaH(ssig2, csig2, dn2) - _H1));
       real lon12 = lam12 / Math::degree();
       // Use Math::AngNormalize2 because longitude might have wrapped
       // multiple times.
@@ -205,7 +205,7 @@ namespace GeographicLib {
       azi2 = Math::atan2d(salp2, calp2);
 
     if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
-      real J12 = _k2 * _D0 * (sig12 + _E.deltaD(ssig2, csig2, dn2) - _D1);
+      real J12 = _k2 * _D0 * (sig12 + (_E.deltaD(ssig2, csig2, dn2) - _D1));
       if (outmask & REDUCEDLENGTH)
         // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
         // accurate cancellation in the case of coincident points.

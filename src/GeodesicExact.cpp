@@ -247,8 +247,8 @@ namespace GeographicLib {
       {
         real dummy;
         Lengths(E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                cbet1, cbet2, s12x, m12x, dummy,
-                (outmask & GEODESICSCALE) != 0U, M12, M21);
+                cbet1, cbet2, outmask | REDUCEDLENGTH,
+                s12x, m12x, dummy, M12, M21);
       }
       // Add the check for sig12 since zero length geodesics might yield m12 <
       // 0.  Test case was
@@ -390,8 +390,7 @@ namespace GeographicLib {
         {
           real dummy;
           Lengths(E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                  cbet1, cbet2, s12x, m12x, dummy,
-                  (outmask & GEODESICSCALE) != 0U, M12, M21);
+                  cbet1, cbet2, outmask, s12x, m12x, dummy, M12, M21);
         }
         m12x *= _b;
         s12x *= _b;
@@ -488,29 +487,43 @@ namespace GeographicLib {
                               real sig12,
                               real ssig1, real csig1, real dn1,
                               real ssig2, real csig2, real dn2,
-                              real cbet1, real cbet2,
+                              real cbet1, real cbet2, unsigned outmask,
                               real& s12b, real& m12b, real& m0,
-                              bool scalep, real& M12, real& M21) const {
+                              real& M12, real& M21) const {
     // Return m12b = (reduced length)/_b; also calculate s12b = distance/_b,
     // and m0 = coefficient of secular term in expression for reduced length.
 
+    outmask &= OUT_ALL;
+    // outmask & DISTANCE: set s12b
+    // outmask & REDUCEDLENGTH: set m12b & m0
+    // outmask & GEODESICSCALE: set M12 & M21
+
     // It's OK to have repeated dummy arguments,
     // e.g., s12b = m0 = M12 = M21 = dummy
-    m0 = - E.k2() * E.D() / (Math::pi() / 2);
-    real J12 = m0 *
-      (sig12 + E.deltaD(ssig2, csig2, dn2) - E.deltaD(ssig1, csig1, dn1));
-    // Missing a factor of _b.
-    // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
-    // cancellation in the case of coincident points.
-    m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) - csig1 * csig2 * J12;
-    // Missing a factor of _b
-    s12b = E.E() / (Math::pi() / 2) *
-      (sig12 + E.deltaE(ssig2, csig2, dn2) - E.deltaE(ssig1, csig1, dn1));
-    if (scalep) {
-      real csig12 = csig1 * csig2 + ssig1 * ssig2;
-      real t = _ep2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2);
-      M12 = csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1;
-      M21 = csig12 - (t * ssig1 - csig1 * J12) * ssig2 / dn2;
+
+    if (outmask & DISTANCE)
+      // Missing a factor of _b
+      s12b = E.E() / (Math::pi() / 2) *
+        (sig12 + (E.deltaE(ssig2, csig2, dn2) - E.deltaE(ssig1, csig1, dn1)));
+    if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
+      real
+        m0x = - E.k2() * E.D() / (Math::pi() / 2),
+        J12 = m0x *
+        (sig12 + (E.deltaD(ssig2, csig2, dn2) - E.deltaD(ssig1, csig1, dn1)));
+      if (outmask & REDUCEDLENGTH) {
+        m0 = m0x;
+        // Missing a factor of _b.  Add parens around (csig1 * ssig2) and
+        // (ssig1 * csig2) to ensure accurate cancellation in the case of
+        // coincident points.
+        m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
+          csig1 * csig2 * J12;
+      }
+      if (outmask & GEODESICSCALE) {
+        real csig12 = csig1 * csig2 + ssig1 * ssig2;
+        real t = _ep2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2);
+        M12 = csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1;
+        M21 = csig12 - (t * ssig1 - csig1 * J12) * ssig2 / dn2;
+      }
     }
   }
 
@@ -529,7 +542,7 @@ namespace GeographicLib {
         S = p * q / 4,            // S = r^3 * s
         r2 = Math::sq(r),
         r3 = r * r2,
-        // The discrimant of the quadratic equation for T3.  This is zero on
+        // The discriminant of the quadratic equation for T3.  This is zero on
         // the evolute curve p^(1/3)+q^(1/3) = 1
         disc = S * (S + 2 * r3);
       real u = r;
@@ -664,8 +677,7 @@ namespace GeographicLib {
         // Inverse.
         Lengths(E, Math::pi() + bet12a,
                 sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
-                cbet1, cbet2, dummy, m12b, m0, false,
-                dummy, dummy);
+                cbet1, cbet2, REDUCEDLENGTH, dummy, m12b, m0, dummy, dummy);
         x = -1 + m12b / (cbet1 * cbet2 * m0 * Math::pi());
         betscale = x < -real(0.01) ? sbet12a / x :
           -_f * Math::sq(cbet1) * Math::pi();
@@ -806,7 +818,7 @@ namespace GeographicLib {
                        cchi1 * cchi2 + somg1 * somg2);
     lam12 = chi12 -
       _e2/_f1 * salp0 * E.H() / (Math::pi() / 2) *
-      (sig12 + E.deltaH(ssig2, csig2, dn2) - E.deltaH(ssig1, csig1, dn1) );
+      (sig12 + (E.deltaH(ssig2, csig2, dn2) - E.deltaH(ssig1, csig1, dn1)));
 
     if (diffp) {
       if (calp2 == 0)
@@ -814,8 +826,8 @@ namespace GeographicLib {
       else {
         real dummy;
         Lengths(E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                cbet1, cbet2, dummy, dlam12, dummy,
-                false, dummy, dummy);
+                cbet1, cbet2, REDUCEDLENGTH,
+                dummy, dlam12, dummy, dummy, dummy);
         dlam12 *= _f1 / (calp2 * cbet2);
       }
     }

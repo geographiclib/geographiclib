@@ -1029,7 +1029,7 @@ real Astroid(real x, real y) {
       S = p * q / 4,            /* S = r^3 * s */
       r2 = sq(r),
       r3 = r * r2,
-      /* The discrimant of the quadratic equation for T3.  This is zero on
+      /* The discriminant of the quadratic equation for T3.  This is zero on
        * the evolute curve p^(1/3)+q^(1/3) = 1 */
       disc = S * (S + 2 * r3);
     real u = r;

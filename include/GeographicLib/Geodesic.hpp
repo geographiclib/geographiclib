@@ -177,12 +177,17 @@ namespace GeographicLib {
     static const int nC1p_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nA2_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC2_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+    static const int nA5_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+    static const int nC5_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nA3_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nA3x_ = nA3_;
     static const int nC3_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC3x_ = (nC3_ * (nC3_ - 1)) / 2;
     static const int nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
+    // Size for temporary array
+    // nC = max(max(nC1_, nC1p_, nC2_, nC5_) + 1, max(nC3_, nC4_))
+    static const int nC_ = GEOGRAPHICLIB_GEODESIC_ORDER + 1;
     static const unsigned maxit1_ = 20;
     unsigned maxit2_;
     real tiny_, tol0_, tol1_, tol2_, tolb_, xthresh_;
@@ -210,23 +215,22 @@ namespace GeographicLib {
     void Lengths(real eps, real sig12,
                  real ssig1, real csig1, real dn1,
                  real ssig2, real csig2, real dn2,
-                 real cbet1, real cbet2,
+                 real cbet1, real cbet2, unsigned outmask,
                  real& s12s, real& m12a, real& m0,
-                 bool scalep, real& M12, real& M21,
-                 real C1a[], real C2a[]) const;
+                 real& M12, real& M21, real Ca[]) const;
     real InverseStart(real sbet1, real cbet1, real dn1,
                       real sbet2, real cbet2, real dn2,
                       real lam12,
                       real& salp1, real& calp1,
                       real& salp2, real& calp2, real& dnm,
-                      real C1a[], real C2a[]) const;
+                      real Ca[]) const;
     real Lambda12(real sbet1, real cbet1, real dn1,
                   real sbet2, real cbet2, real dn2,
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
                   real& eps, real& domg12, bool diffp, real& dlam12,
-                  real C1a[], real C2a[], real C3a[])
+                  real Ca[])
       const;
 
     // These are Maxima generated functions to provide series approximations to
@@ -236,6 +240,8 @@ namespace GeographicLib {
     static void C1pf(real eps, real c[]);
     static real A2m1f(real eps);
     static void C2f(real eps, real c[]);
+    static real A5f(real eps);
+    static void C5f(real eps, real c[]);
 
     void A3coeff();
     real A3f(real eps) const;

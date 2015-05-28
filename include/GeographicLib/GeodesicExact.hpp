@@ -110,9 +110,9 @@ namespace GeographicLib {
                  real sig12,
                  real ssig1, real csig1, real dn1,
                  real ssig2, real csig2, real dn2,
-                 real cbet1, real cbet2,
+                 real cbet1, real cbet2, unsigned outmask,
                  real& s12s, real& m12a, real& m0,
-                 bool scalep, real& M12, real& M21) const;
+                 real& M12, real& M21) const;
     real InverseStart(EllipticFunction& E,
                       real sbet1, real cbet1, real dn1,
                       real sbet2, real cbet2, real dn2,
