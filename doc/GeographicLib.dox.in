@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2015-05-23
+\date 2015-mm-dd
 
 \section abstract Abstract
 
@@ -6989,6 +6989,11 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
+
+ - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
+   (released 2015-mm-dd)
+   - Fix bugs in NormalGravity so that it works in the case of a sphere
+     (instead of returning NaNs).
 
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-05-23)

@@ -30,7 +30,7 @@ namespace GeographicLib {
       if (!(Math::isfinite(_a) && _a > 0))
         throw GeographicErr("Major radius is not positive");
       if (!(Math::isfinite(_GM) && _GM > 0))
-        throw GeographicErr("Gravitational constants is not positive");
+        throw GeographicErr("Gravitational constant is not positive");
       if (!(_omega == 0 && _f == 0 && _J2 == 0)) {
         bool flatp = _f > 0 && Math::isfinite(_f);
         if (_J2 > 0 && Math::isfinite(_J2) && flatp)
@@ -40,22 +40,23 @@ namespace GeographicLib {
         if (!(Math::isfinite(_omega) && _omega != 0))
           throw GeographicErr("Angular velocity is not non-zero");
         if (flatp)
-          _J2 = FlatteningToJ2(a, GM, omega, f);
+          _J2 = FlatteningToJ2(_a, _GM, _omega, _f);
         else
-          _f = J2ToFlattening(a, GM, omega, J2);
+          _f = J2ToFlattening(_a, _GM, _omega, _J2);
       } // else we have a sphere: omega = f = J2 = 0
       _e2 = _f * (2 - _f);
       _ep2 = _e2 / (1 - _e2);
       _q0 = qf(_ep2);
       _earth = Geocentric(_a, _f);
       _b = _a * (1 - _f);
-      _E = a * sqrt(_e2);                               // H+M, Eq 2-54
-      _U0 = _GM / _E * atan(sqrt(_ep2)) + _aomega2 / 3; // H+M, Eq 2-61
+      _E = _a * sqrt(_e2);      // H+M, Eq 2-54
+      // H+M, Eq 2-61
+      _U0 = _GM / (_E ? _E / atan(sqrt(_ep2)) : _b) + _aomega2 / 3;
       // The approximate ratio of the centrifugal acceleration (at the equator)
       // to gravity.
-      _m = _aomega2 * _b / _GM;                         // H+M, Eq 2-70
+      _m = _aomega2 * _b / _GM; // H+M, Eq 2-70
       real
-        Q = _m * sqrt(_ep2) * qpf(_ep2) / (3 * _q0),
+        Q = _m * (_q0 ? sqrt(_ep2) * qpf(_ep2) / (3 * _q0) : 1),
         G = (1 - _m - Q / 2);
       _gammae = _GM / (_a * _b) * G;       // H+M, Eq 2-73
       _gammap = _GM / (_a * _a) * (1 + Q); // H+M, Eq 2-74
@@ -179,14 +180,14 @@ namespace GeographicLib {
       invw = uE / Math::hypot(u, _E * sbet), // H+M, Eq 2-63
       ep = _E/u,
       ep2 = Math::sq(ep),
-      q = qf(ep2) / _q0,
+      q = _q0 ? qf(ep2) / _q0 : pow(_a / u, 3),
       qp = qpf(ep2) / _q0,
       // H+M, Eqs 2-62 + 6-9, but omitting last (rotational) term .
-      Vres = (_GM / _E * atan(_E / u)
+      Vres = (_GM / (_E ? _E / atan(_E / u) : u)
               + _aomega2 * q * (Math::sq(sbet) - 1/real(3)) / 2),
       // H+M, Eq 6-10
       gamu = - invw * (_GM
-                       + (_aomega2 * _E * qp
+                       + (_aomega2 * (_q0 ? _E * qp : 3 * q * u)
                           * (Math::sq(sbet) - 1/real(3)) / 2)) / Math::sq(uE),
       gamb = _aomega2 * q * sbet * cbet * invw / uE,
       t = u * invw / uE;
