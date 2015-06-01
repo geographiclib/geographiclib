@@ -502,27 +502,34 @@ function [s12b, m12b, m0, M12, M21] = ...
 %LENGTHS  Compute various lengths associate with a geodesic
 
   N = nan(size(sig12));
-  if bitand(1, outmask)
+  if bitand(1+2+4, outmask)
+    A1 = A1m1f(epsi);
     Ca = C1f(epsi);
-    A1m1 = A1m1f(epsi);
-    AB1 = (1 + A1m1) .* (SinCosSeries(true, ssig2, csig2, Ca) - ...
-                         SinCosSeries(true, ssig1, csig1, Ca));
-    s12b = (1 + A1m1) .* sig12 + AB1;
     if bitand(2+4, outmask)
-      Ca = C2f(epsi);
-      A2m1 = A2m1f(epsi);
-      AB2 = (1 + A2m1) .* (SinCosSeries(true, ssig2, csig2, Ca) - ...
-                           SinCosSeries(true, ssig1, csig1, Ca));
-      m0 = A1m1 - A2m1;
-      J12 = m0 .* sig12 + (AB1 - AB2);
+      A2 = A2m1f(epsi);
+      Cb = C2f(epsi);
+      m0 = A1 - A2;
+      A2 = 1 + A2;
+    end
+    A1 = 1 + A1;
+  end
+  if bitand(1, outmask)
+    B1 = SinCosSeries(true, ssig2, csig2, Ca) - ...
+          SinCosSeries(true, ssig1, csig1, Ca);
+    s12b = A1 .* (sig12 + B1);
+    if bitand(2+4, outmask)
+      B2 = SinCosSeries(true, ssig2, csig2, Cb) - ...
+            SinCosSeries(true, ssig1, csig1, Cb);
+      J12 = m0 .* sig12 + (A1 .* B1 - A2 .* B2);
     end
   else
     s12b = N;                           % assign arbitrary unused result
     if bitand(2+4, outmask)
-      Ca = C5f(epsi);
-      m0 = A5f(epsi);
-      J12 = m0 .* (sig12 + (SinCosSeries(true, ssig2, csig2, Ca) - ...
-                            SinCosSeries(true, ssig1, csig1, Ca)));
+      for l = 1 : size(Cb, 2)
+        Cb(:, l) = A1 .* Ca(:, l) - A2 .* Cb(:, l);
+      end
+      J12 = m0 .* sig12 + (SinCosSeries(true, ssig2, csig2, Cb) - ...
+                           SinCosSeries(true, ssig1, csig1, Cb));
     end
   end
   if bitand(2, outmask)
@@ -538,50 +545,5 @@ function [s12b, m12b, m0, M12, M21] = ...
     M21 = csig12 - (t .* ssig1 - csig1 .* J12) .* ssig2 ./ dn2;
   else
     M12 = N; M21 = N;                   % assign arbitrary unused result
-  end
-end
-
-function A5 = A5f(epsi)
-%A5F  Evaluate (A_1 - A_2)
-%
-%   A5 = A5F(epsi) evaluates (A_1 - A_2).  epsi and A5 are K x 1
-%   arrays.
-
-  persistent coeff
-  if isempty(coeff)
-    % A5, polynomial in eps of order 5
-    coeff = [ ...
-        75, 90, 72, 96, 64, 128, 0, 64, ...
-            ];
-  end
-  A5 = polyval(coeff(1 : end - 1), epsi) / coeff(end);
-end
-
-function C5 = C5f(epsi)
-%C5  Evaluate (A1*C1[l]-A2*C1[l])/A5
-%
-%   C5 = C5F(epsi) evaluates (A1*C1[l]-A2*C1[l])/A5.  epsi is a K x 1
-%   array and C1 is a K x 6 array.
-
-  persistent coeff nC5
-  if isempty(coeff)
-    nC5 = 6;
-    coeff = [ ...
-        1, -4, 0, -16, 64, -128, 256, ...
-        -11, 8, -32, 128, -128, 1024, ...
-        9, -30, 112, -96, 1536, ...
-        -7, 25, -20, 512, ...
-        91, -70, 2560, ...
-        -21, 1024, ...
-            ];
-  end
-  C5 = zeros(length(epsi), nC5);
-  d = 1;
-  o = 1;
-  for  l = 1 : nC5
-    m = nC5 - l;
-    C5(:,l) = d .* polyval(coeff(o : o + m), epsi) / coeff(o + m + 1);
-    o = o + m + 2;
-    d = d .* epsi;
   end
 end

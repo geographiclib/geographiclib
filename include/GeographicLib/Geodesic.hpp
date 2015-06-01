@@ -177,8 +177,6 @@ namespace GeographicLib {
     static const int nC1p_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nA2_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC2_ = GEOGRAPHICLIB_GEODESIC_ORDER;
-    static const int nA5_ = GEOGRAPHICLIB_GEODESIC_ORDER;
-    static const int nC5_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nA3_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nA3x_ = nA3_;
     static const int nC3_ = GEOGRAPHICLIB_GEODESIC_ORDER;
@@ -186,7 +184,7 @@ namespace GeographicLib {
     static const int nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
     // Size for temporary array
-    // nC = max(max(nC1_, nC1p_, nC2_, nC5_) + 1, max(nC3_, nC4_))
+    // nC = max(max(nC1_, nC1p_, nC2_) + 1, max(nC3_, nC4_))
     static const int nC_ = GEOGRAPHICLIB_GEODESIC_ORDER + 1;
     static const unsigned maxit1_ = 20;
     unsigned maxit2_;
@@ -240,8 +238,6 @@ namespace GeographicLib {
     static void C1pf(real eps, real c[]);
     static real A2m1f(real eps);
     static void C2f(real eps, real c[]);
-    static real A5f(real eps);
-    static void C5f(real eps, real c[]);
 
     void A3coeff();
     real A3f(real eps) const;
