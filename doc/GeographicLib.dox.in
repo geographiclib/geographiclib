@@ -6992,8 +6992,10 @@ git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
    (released 2015-mm-dd)
-   - Fix bugs in NormalGravity so that it works in the case of a sphere
-     (instead of returning NaNs).
+   - Fix bugs in NormalGravity (found by htallon) so that it works in
+     the case of a sphere (instead of returning NaNs).
+   - Replace the series for <i>A</i><sub>2</sub> in the Geodesic class
+     with one with smaller truncation errors.
 
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-05-23)
