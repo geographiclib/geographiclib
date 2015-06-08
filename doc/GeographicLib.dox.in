@@ -6995,7 +6995,16 @@ git repository for GeographicLib</a>.
    - Fix bugs in NormalGravity (found by htallon) so that it works in
      the case of a sphere (instead of returning NaNs).
    - Replace the series for <i>A</i><sub>2</sub> in the Geodesic class
-     with one with smaller truncation errors.
+     with one with smaller truncation errors.  1 = new series, 2 = new
+     Lengths, 3 = minimize number of arrays ...
+     C++, 123
+     C, 13
+     Fortran, 13
+     Java, 1(3x)
+     JavaScript, 1(3x)
+     MATLAB, 123
+     maxima, 13
+     Python, 1(3x)
 
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-05-23)
@@ -7026,7 +7035,7 @@ git repository for GeographicLib</a>.
        geodesic has encircled the earth.  (This option also affects the
        value of longitude reported when an inverse calculation is run
        with the -f option.)
-     - The inverse calculation with the JavaScript and python libraries
+     - The inverse calculation with the JavaScript and Python libraries
        similarly sets <code>lon1</code> and <code>lon2</code> in output
        dictionary respecting the LONG_UNROLL flag.
      - The online version of
@@ -7035,7 +7044,7 @@ git repository for GeographicLib</a>.
      - To support these changes DMS::DecodeLatLon no longer reduces the
        longitude to the range [&minus;180&deg;, 180&deg;) and
        Math::AngRound now coverts &minus;0 to +0.
-   - Add Math::polyval (also to C, Java, JavaScript, Fortran, python
+   - Add Math::polyval (also to C, Java, JavaScript, Fortran, Python
      versions of the library; this is a built-in function for
      MATLAB/Octave).  This evaluates a polynomial using Horner's method.
      The Maxima-generated code fragments for the evaluation of series in
@@ -7055,7 +7064,7 @@ git repository for GeographicLib</a>.
    - Minor internal changes:
      - GeodSolve sets the geodesic mask so that unnecessary calculations
        are avoided;
-     - some routines have migrated into a math class for for python,
+     - some routines have migrated into a math class for for Python,
        Java, JavaScript libraries.
    - A reminder: because of changes in the installation directories for
      non-Windows systems introduced in version 1.42, you should remove
@@ -7381,7 +7390,7 @@ git repository for GeographicLib</a>.
      - on Linux, the installed package is relocatable;
      - on MacOSX, the installed utilities can find the shared library.
    - Use a more precise value for OSGB::CentralScale().
-   - Add Arc routines to python interface.
+   - Add Arc routines to Python interface.
    - The Geod utility has been removed; the same functionality lives on
      with <a href="GeodSolve.1.html">GeodSolve</a> (introduced in
      version 1.30).
@@ -7432,13 +7441,13 @@ git repository for GeographicLib</a>.
        for the maven support);
      - FIX BUG: avoid altering input args in Fortran implementation;
      - more systematic treatment of very short geodesic;
-     - fixes to python port so that they work with version 3.x, in
+     - fixes to Python port so that they work with version 3.x, in
        addition to 2.x (courtesy of Amato);
      - accumulate the perimeter and area of polygons via a double-wide
        accumulator in Fortran, C, and MATLAB implementations (this is
        already included in the other implementations);
      - port PolygonArea::AddEdge and
-       PolygonArea::TestEdge to JavaScript and python
+       PolygonArea::TestEdge to JavaScript and Python
        interfaces;
      - include documentation on \ref geodshort.
    - Unix scripts for downloading datasets,
@@ -7545,7 +7554,7 @@ git repository for GeographicLib</a>.
      - explicitly check version of doxygen.
    - Fix building under cygwin.
    - Document restrictions on \e f in \ref intro.
-   - Fix python interface to work with version 2.6.x.
+   - Fix Python interface to work with version 2.6.x.
 
  - <a href="http://geographiclib.sf.net/1.23">Version 1.23</a>
    (released 2012-07-17)
@@ -7581,7 +7590,7 @@ git repository for GeographicLib</a>.
      - use COMMON_INSTALL_PATH to determine layout of installation
        directories;
      - as a consequence, the installation paths for the documentation,
-       and python and matlab interfaces are shortened for Windows;
+       and Python and MATLAB interfaces are shortened for Windows;
      - zip source distribution now uses DOS line endings;
      - the tests work in debug mode for Windows;
      - default setting of GEOGRAPHICLIB_DATA does not depend on
@@ -7708,10 +7717,10 @@ git repository for GeographicLib</a>.
    - Modify <a href="GeoidEval.1.html">GeoidEval</a> so that it can be
      used to convert the height datum for LIDAR data.
    - Modest speed-up of Geodesic::Inverse.
-   - Changes in python interface:
+   - Changes in Python interface:
      - FIX BUG in transcription of Geodesic::Inverse;
      - include setup.py for easy installation;
-     - python only distribution is available at
+     - Python only distribution is available at
        http://pypi.python.org/pypi/geographiclib
    - Supply a minimal Qt qmake project file for library
      src/Geographic.pro.

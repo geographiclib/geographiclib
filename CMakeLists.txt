@@ -429,9 +429,9 @@ if (MAINTAINER)
   add_dependencies (distrib-all distrib-man)
 endif ()
 
-# Set a default build type for single-configuration cmake generators if
-# no build type is set.
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  # Set a default build type for single-configuration cmake generators
+  # if no build type is set.
   set (CMAKE_BUILD_TYPE Release)
 endif ()
 

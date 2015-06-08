@@ -343,13 +343,7 @@ cat <<EOF
     <p>
       GeodSolve is accurate to about 15&nbsp;nanometers (for the WGS84
       ellipsoid) and gives solutions for the inverse problem for any
-      pair of points.  Many other geodesic calculators (based on
-      Vincenty's method) fail for some inputs; for example, the
-      <a href="http://www.ngs.noaa.gov/">
-        NGS</a> online
-      <a href="http://www.ngs.noaa.gov/TOOLS/Inv_Fwd/Inv_Fwd.html">
-        inverse geodesic calculator</a>
-      sometimes fails to terminate.
+      pair of points.
     </p>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">

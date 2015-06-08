@@ -38,6 +38,7 @@
 #define nC3x  ((nC3 * (nC3 - 1)) / 2)
 #define nC4   GEOGRAPHICLIB_GEODESIC_ORDER
 #define nC4x  ((nC4 * (nC4 + 1)) / 2)
+#define nC    (GEOGRAPHICLIB_GEODESIC_ORDER + 1)
 
 typedef double real;
 typedef int boolx;
@@ -195,8 +196,8 @@ static void Lengths(const struct geod_geodesic* g,
                     real cbet1, real cbet2,
                     real* ps12b, real* pm12b, real* pm0,
                     boolx scalep, real* pM12, real* pM21,
-                    /* Scratch areas of the right size */
-                    real C1a[], real C2a[]);
+                    /* Scratch area of the right size */
+                    real Ca[]);
 static real Astroid(real x, real y);
 static real InverseStart(const struct geod_geodesic* g,
                          real sbet1, real cbet1, real dn1,
@@ -207,8 +208,8 @@ static real InverseStart(const struct geod_geodesic* g,
                          real* psalp2, real* pcalp2,
                          /* Only updated for short lines */
                          real* pdnm,
-                         /* Scratch areas of the right size */
-                         real C1a[], real C2a[]);
+                         /* Scratch area of the right size */
+                         real Ca[]);
 static real Lambda12(const struct geod_geodesic* g,
                      real sbet1, real cbet1, real dn1,
                      real sbet2, real cbet2, real dn2,
@@ -219,8 +220,8 @@ static real Lambda12(const struct geod_geodesic* g,
                      real* pssig2, real* pcsig2,
                      real* peps, real* pdomg12,
                      boolx diffp, real* pdlam12,
-                     /* Scratch areas of the right size */
-                     real C1a[], real C2a[], real C3a[]);
+                     /* Scratch area of the right size */
+                     real Ca[]);
 static real A3f(const struct geod_geodesic* g, real eps);
 static void C3f(const struct geod_geodesic* g, real eps, real c[]);
 static void C4f(const struct geod_geodesic* g, real eps, real c[]);
@@ -605,8 +606,7 @@ real geod_geninverse(const struct geod_geodesic* g,
   real phi, sbet1, cbet1, sbet2, cbet2, s12x = 0, m12x = 0;
   real dn1, dn2, lam12, slam12, clam12;
   real a12 = 0, sig12, calp1 = 0, salp1 = 0, calp2 = 0, salp2 = 0;
-  /* index zero elements of these arrays are unused */
-  real C1a[nC1 + 1], C2a[nC2 + 1], C3a[nC3];
+  real Ca[nC];
   boolx meridian;
   real omg12 = 0;
 
@@ -709,7 +709,7 @@ real geod_geninverse(const struct geod_geodesic* g,
       real dummy;
       Lengths(g, g->n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
               cbet1, cbet2, &s12x, &m12x, &dummy,
-              (outmask & GEOD_GEODESICSCALE) != 0U, &M12, &M21, C1a, C2a);
+              (outmask & GEOD_GEODESICSCALE) != 0U, &M12, &M21, Ca);
     }
     /* Add the check for sig12 since zero length geodesics might yield m12 <
      * 0.  Test case was
@@ -751,7 +751,7 @@ real geod_geninverse(const struct geod_geodesic* g,
     sig12 = InverseStart(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2,
                          lam12,
                          &salp1, &calp1, &salp2, &calp2, &dnm,
-                         C1a, C2a);
+                         Ca);
 
     if (sig12 >= 0) {
       /* Short lines (InverseStart sets salp2, calp2, dnm) */
@@ -785,7 +785,7 @@ real geod_geninverse(const struct geod_geodesic* g,
         real dv = 0,
           v = (Lambda12(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                         &salp2, &calp2, &sig12, &ssig1, &csig1, &ssig2, &csig2,
-                        &eps, &omg12, numit < maxit1, &dv, C1a, C2a, C3a)
+                        &eps, &omg12, numit < maxit1, &dv, Ca)
                - lam12);
         /* 2 * tol0 is approximately 1 ulp for a number in [0, pi]. */
         /* Reversed test to allow escape with NaNs */
@@ -831,7 +831,7 @@ real geod_geninverse(const struct geod_geodesic* g,
         real dummy;
         Lengths(g, eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
                 cbet1, cbet2, &s12x, &m12x, &dummy,
-                (outmask & GEOD_GEODESICSCALE) != 0U, &M12, &M21, C1a, C2a);
+                (outmask & GEOD_GEODESICSCALE) != 0U, &M12, &M21, Ca);
       }
       m12x *= g->b;
       s12x *= g->b;
@@ -861,13 +861,12 @@ real geod_geninverse(const struct geod_geodesic* g,
         eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2),
         /* Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0). */
         A4 = sq(g->a) * calp0 * salp0 * g->e2;
-      real C4a[nC4];
       real B41, B42;
       norm2(&ssig1, &csig1);
       norm2(&ssig2, &csig2);
-      C4f(g, eps, C4a);
-      B41 = SinCosSeries(FALSE, ssig1, csig1, C4a, nC4);
-      B42 = SinCosSeries(FALSE, ssig2, csig2, C4a, nC4);
+      C4f(g, eps, Ca);
+      B41 = SinCosSeries(FALSE, ssig1, csig1, Ca, nC4);
+      B42 = SinCosSeries(FALSE, ssig2, csig2, Ca, nC4);
       S12 = A4 * (B42 - B41);
     } else
       /* Avoid problems with indeterminate sig1, sig2 on equator */
@@ -976,21 +975,21 @@ void Lengths(const struct geod_geodesic* g,
              real cbet1, real cbet2,
              real* ps12b, real* pm12b, real* pm0,
              boolx scalep, real* pM12, real* pM21,
-             /* Scratch areas of the right size */
-             real C1a[], real C2a[]) {
+             /* Scratch area of the right size */
+             real Ca[]) {
   real s12b = 0, m12b = 0, m0 = 0, M12 = 0, M21 = 0;
   real A1m1, AB1, A2m1, AB2, J12;
 
   /* Return m12b = (reduced length)/b; also calculate s12b = distance/b,
    * and m0 = coefficient of secular term in expression for reduced length. */
-  C1f(eps, C1a);
-  C2f(eps, C2a);
   A1m1 = A1m1f(eps);
-  AB1 = (1 + A1m1) * (SinCosSeries(TRUE, ssig2, csig2, C1a, nC1) -
-                      SinCosSeries(TRUE, ssig1, csig1, C1a, nC1));
+  C1f(eps, Ca);
+  AB1 = (1 + A1m1) * (SinCosSeries(TRUE, ssig2, csig2, Ca, nC1) -
+                      SinCosSeries(TRUE, ssig1, csig1, Ca, nC1));
   A2m1 = A2m1f(eps);
-  AB2 = (1 + A2m1) * (SinCosSeries(TRUE, ssig2, csig2, C2a, nC2) -
-                      SinCosSeries(TRUE, ssig1, csig1, C2a, nC2));
+  C2f(eps, Ca);
+  AB2 = (1 + A2m1) * (SinCosSeries(TRUE, ssig2, csig2, Ca, nC2) -
+                      SinCosSeries(TRUE, ssig1, csig1, Ca, nC2));
   m0 = A1m1 - A2m1;
   J12 = m0 * sig12 + (AB1 - AB2);
   /* Missing a factor of b.
@@ -1075,8 +1074,8 @@ real InverseStart(const struct geod_geodesic* g,
                   real* psalp2, real* pcalp2,
                   /* Only updated for short lines */
                   real* pdnm,
-                  /* Scratch areas of the right size */
-                  real C1a[], real C2a[]) {
+                  /* Scratch area of the right size */
+                  real Ca[]) {
   real salp1 = 0, calp1 = 0, salp2 = 0, calp2 = 0, dnm = 0;
 
   /* Return a starting point for Newton's method in salp1 and calp1 (function
@@ -1168,7 +1167,7 @@ real InverseStart(const struct geod_geodesic* g,
       Lengths(g, g->n, pi + bet12a,
               sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
               cbet1, cbet2, &dummy, &m12b, &m0, FALSE,
-              &dummy, &dummy, C1a, C2a);
+              &dummy, &dummy, Ca);
       x = -1 + m12b / (cbet1 * cbet2 * m0 * pi);
       betscale = x < -(real)(0.01) ? sbet12a / x :
         -g->f * sq(cbet1) * pi;
@@ -1256,8 +1255,8 @@ real Lambda12(const struct geod_geodesic* g,
               real* pssig2, real* pcsig2,
               real* peps, real* pdomg12,
               boolx diffp, real* pdlam12,
-              /* Scratch areas of the right size */
-              real C1a[], real C2a[], real C3a[]) {
+              /* Scratch area of the right size */
+              real Ca[]) {
   real salp2 = 0, calp2 = 0, sig12 = 0,
     ssig1 = 0, csig1 = 0, ssig2 = 0, csig2 = 0, eps = 0, domg12 = 0, dlam12 = 0;
   real salp0, calp0;
@@ -1311,9 +1310,9 @@ real Lambda12(const struct geod_geodesic* g,
                 comg1 * comg2 + somg1 * somg2);
   k2 = sq(calp0) * g->ep2;
   eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
-  C3f(g, eps, C3a);
-  B312 = (SinCosSeries(TRUE, ssig2, csig2, C3a, nC3-1) -
-          SinCosSeries(TRUE, ssig1, csig1, C3a, nC3-1));
+  C3f(g, eps, Ca);
+  B312 = (SinCosSeries(TRUE, ssig2, csig2, Ca, nC3-1) -
+          SinCosSeries(TRUE, ssig1, csig1, Ca, nC3-1));
   h0 = -g->f * A3f(g, eps);
   domg12 = salp0 * h0 * (sig12 + B312);
   lam12 = omg12 + domg12;
@@ -1325,7 +1324,7 @@ real Lambda12(const struct geod_geodesic* g,
       real dummy;
       Lengths(g, eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
               cbet1, cbet2, &dummy, &dlam12, &dummy,
-              FALSE, &dummy, &dummy, C1a, C2a);
+              FALSE, &dummy, &dummy, Ca);
       dlam12 *= g->f1 / (calp2 * cbet2);
     }
   }
@@ -1446,12 +1445,12 @@ void C1pf(real eps, real c[])  {
 /* The scale factor A2-1 = mean value of (d/dsigma)I2 - 1 */
 real A2m1f(real eps)  {
   static const real coeff[] = {
-    /* A2/(1-eps)-1, polynomial in eps2 of order 3 */
-    25, 36, 64, 0, 256,
+    /* (eps+1)*A2-1, polynomial in eps2 of order 3 */
+    -11, -28, -192, 0, 256,
   };
   int m = nA2/2;
   real t = polyval(m, coeff, sq(eps)) / coeff[m + 1];
-  return t * (1 - eps) - eps;
+  return (t - eps) / (1 + eps);
 }
 
 /* The coefficients C2[l] in the Fourier expansion of B2 */

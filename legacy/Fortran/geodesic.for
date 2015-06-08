@@ -117,7 +117,7 @@
 *! http://geographiclib.sourceforge.net/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.43.
+*! <a href="../index.html">GeographicLib</a> 1.44.
 
 *> Solve the direct geodesic problem
 *!
@@ -535,12 +535,13 @@
 * optional output
       double precision a12, m12, MM12, MM21, SS12
 
-      integer ord, nC1, nC2, nA3, nA3x, nC3, nC3x, nC4, nC4x
-      parameter (ord = 6, nC1 = ord, nC2 = ord, nA3 = ord, nA3x = nA3,
+      integer ord, nA3, nA3x, nC3, nC3x, nC4, nC4x, nC
+      parameter (ord = 6, nA3 = ord, nA3x = nA3,
      +    nC3 = ord, nC3x = (nC3 * (nC3 - 1)) / 2,
-     +    nC4 = ord, nC4x = (nC4 * (nC4 + 1)) / 2)
+     +    nC4 = ord, nC4x = (nC4 * (nC4 + 1)) / 2,
+     +    nC = ord)
       double precision A3x(0:nA3x-1), C3x(0:nC3x-1), C4x(0:nC4x-1),
-     +    C1a(nC1), C2a(nC2), C3a(nC3-1), C4a(0:nC4-1)
+     +    Ca(nC)
 
       double precision csmgt, atanhx, hypotx,
      +    AngNm, AngDif, AngRnd, TrgSum, Lam12f, InvSta
@@ -701,7 +702,7 @@
      +      csig1 * csig2 + ssig1 * ssig2)
         call Lengs(n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
      +      cbet1, cbet2, s12x, m12x, dummy,
-     +      scalp, MM12, MM21, ep2, C1a, C2a)
+     +      scalp, MM12, MM21, ep2, Ca)
 
 * Add the check for sig12 since zero length geodesics might yield m12 <
 * 0.  Test case was
@@ -744,7 +745,7 @@
 
 * Figure a starting point for Newton's method
         sig12 = InvSta(sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
-     +      f, A3x, salp1, calp1, salp2, calp2, dnm, C1a, C2a)
+     +      f, A3x, salp1, calp1, salp2, calp2, dnm, Ca)
 
         if (sig12 .ge. 0) then
 * Short lines (InvSta sets salp2, calp2, dnm)
@@ -784,7 +785,7 @@
      +          salp1, calp1, f, A3x, C3x, salp2, calp2, sig12,
      +          ssig1, csig1, ssig2, csig2,
      +          eps, omg12, numit .lt. maxit1, dv,
-     +          C1a, C2a, C3a) - lam12
+     +          Ca) - lam12
 * 2 * tol0 is approximately 1 ulp for a number in [0, pi].
 * Reversed test to allow escape with NaNs
             if (tripb .or.
@@ -834,7 +835,7 @@
  20       continue
           call Lengs(eps, sig12, ssig1, csig1, dn1,
      +        ssig2, csig2, dn2, cbet1, cbet2, s12x, m12x, dummy,
-     +        scalp, MM12, MM21, ep2, C1a, C2a)
+     +        scalp, MM12, MM21, ep2, Ca)
           m12x = m12x * b
           s12x = s12x * b
           a12x = sig12 / degree
@@ -862,9 +863,9 @@
           A4 = a**2 * calp0 * salp0 * e2
           call norm2(ssig1, csig1)
           call norm2(ssig2, csig2)
-          call C4f(eps, C4x, C4a)
-          B41 = TrgSum(.false., ssig1, csig1, C4a, nC4)
-          B42 = TrgSum(.false., ssig2, csig2, C4a, nC4)
+          call C4f(eps, C4x, Ca)
+          B41 = TrgSum(.false., ssig1, csig1, Ca, nC4)
+          B42 = TrgSum(.false., ssig2, csig2, Ca, nC4)
           SS12 = A4 * (B42 - B41)
         else
 * Avoid problems with indeterminate sig1, sig2 on equator
@@ -1047,7 +1048,7 @@
       subroutine Lengs(eps, sig12,
      +    ssig1, csig1, dn1, ssig2, csig2, dn2,
      +    cbet1, cbet2, s12b, m12b, m0,
-     +    scalp, MM12, MM21, ep2, C1a, C2a)
+     +    scalp, MM12, MM21, ep2, Ca)
 * input
       double precision eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
      +    cbet1, cbet2, ep2
@@ -1057,7 +1058,7 @@
 * optional output
       double precision MM12, MM21
 * temporary storage
-      double precision C1a(*), C2a(*)
+      double precision Ca(*)
 
       integer ord, nC1, nC2
       parameter (ord = 6, nC1 = ord, nC2 = ord)
@@ -1067,15 +1068,15 @@
 
 * Return m12b = (reduced length)/b; also calculate s12b = distance/b,
 * and m0 = coefficient of secular term in expression for reduced length.
-      call C1f(eps, C1a)
-      call C2f(eps, C2a)
 
       A1m1 = A1m1f(eps)
-      AB1 = (1 + A1m1) * (TrgSum(.true., ssig2, csig2, C1a, nC1) -
-     +    TrgSum(.true., ssig1, csig1, C1a, nC1))
+      call C1f(eps, Ca)
+      AB1 = (1 + A1m1) * (TrgSum(.true., ssig2, csig2, Ca, nC1) -
+     +    TrgSum(.true., ssig1, csig1, Ca, nC1))
       A2m1 = A2m1f(eps)
-      AB2 = (1 + A2m1) * (TrgSum(.true., ssig2, csig2, C2a, nC2) -
-     +    TrgSum(.true., ssig1, csig1, C2a, nC2))
+      call C2f(eps, Ca)
+      AB2 = (1 + A2m1) * (TrgSum(.true., ssig2, csig2, Ca, nC2) -
+     +    TrgSum(.true., ssig1, csig1, Ca, nC2))
       m0 = A1m1 - A2m1
       J12 = m0 * sig12 + (AB1 - AB2)
 * Missing a factor of b.
@@ -1163,7 +1164,7 @@
       double precision function InvSta(sbet1, cbet1, dn1,
      +    sbet2, cbet2, dn2, lam12, f, A3x,
      +    salp1, calp1, salp2, calp2, dnm,
-     +    C1a, C2a)
+     +    Ca)
 * Return a starting point for Newton's method in salp1 and calp1
 * (function value is -1).  If Newton's method doesn't need to be used,
 * return also salp2, calp2, and dnm and function value is sig12.
@@ -1173,7 +1174,7 @@
 * output
       double precision salp1, calp1, salp2, calp2, dnm
 * temporary
-      double precision C1a(*), C2a(*)
+      double precision Ca(*)
 
       double precision csmgt, hypotx, A3f, Astrd
       logical shortp
@@ -1268,7 +1269,7 @@
           call Lengs(n, pi + bt12a,
      +        sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
      +        cbet1, cbet2, dummy, m12b, m0, .false.,
-     +        dummy, dummy, ep2, C1a, C2a)
+     +        dummy, dummy, ep2, Ca)
           x = -1 + m12b / (cbet1 * cbet2 * m0 * pi)
           betscl = csmgt(sbt12a / x, -f * cbet1**2 * pi,
      +        x .lt. -0.01d0)
@@ -1345,7 +1346,7 @@
       double precision function Lam12f(sbet1, cbet1, dn1,
      +    sbet2, cbet2, dn2, salp1, calp1, f, A3x, C3x, salp2, calp2,
      +    sig12, ssig1, csig1, ssig2, csig2, eps, domg12, diffp, dlam12,
-     +    C1a, C2a, C3a)
+     +    Ca)
 * input
       double precision sbet1, cbet1, dn1, sbet2, cbet2, dn2,
      +    salp1, calp1, f, A3x(*), C3x(*)
@@ -1356,7 +1357,7 @@
 * optional output
       double precision dlam12
 * temporary
-      double precision C1a(*), C2a(*), C3a(*)
+      double precision Ca(*)
 
       integer ord, nC3
       parameter (ord = 6, nC3 = ord)
@@ -1426,9 +1427,9 @@
      +    comg1 * comg2 + somg1 * somg2)
       k2 = calp0**2 * ep2
       eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
-      call C3f(eps, C3x, C3a)
-      B312 = (TrgSum(.true., ssig2, csig2, C3a, nC3-1) -
-     +    TrgSum(.true., ssig1, csig1, C3a, nC3-1))
+      call C3f(eps, C3x, Ca)
+      B312 = (TrgSum(.true., ssig2, csig2, Ca, nC3-1) -
+     +    TrgSum(.true., ssig1, csig1, Ca, nC3-1))
       h0 = -f * A3f(eps, A3x)
       domg12 = salp0 * h0 * (sig12 + B312)
       lam12 = omg12 + domg12
@@ -1439,7 +1440,7 @@
         else
           call Lengs(eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
      +        cbet1, cbet2, dummy, dlam12, dummy,
-     +        .false., dummy, dummy, ep2, C1a, C2a)
+     +        .false., dummy, dummy, ep2, Ca)
           dlam12 = dlam12 * f1 / (calp2 * cbet2)
         end if
       end if
@@ -1612,12 +1613,12 @@
       integer ord, nA2, o, m
       parameter (ord = 6, nA2 = ord)
       double precision polval, coeff(nA2/2 + 2)
-      data coeff /25, 36, 64, 0, 256/
+      data coeff /-11, -28, -192, 0, 256/
 
       o = 1
       m = nA2/2
       t = polval(m, coeff(o), eps**2) / coeff(o + m + 1)
-      A2m1f = t * (1 - eps) - eps
+      A2m1f = (t - eps) / (1 + eps)
 
       return
       end

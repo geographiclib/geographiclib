@@ -33,9 +33,9 @@ set -e
 
 # The following files contain version information:
 #   pom.xml
-#   CMakeLists.txt
+#   CMakeLists.txt (PROJECT_VERSION_* LIBVERSION_*)
 #   NEWS
-#   configure.ac
+#   configure.ac (AC_INIT, GEOGRAPHICLIB_VERSION_* LT_*)
 #   tests/test-distribution.sh
 #   src/GeographicLib.pro lib version
 

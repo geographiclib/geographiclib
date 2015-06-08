@@ -515,17 +515,18 @@ function [s12b, m12b, m0, M12, M21] = ...
   end
   if bitand(1, outmask)
     B1 = SinCosSeries(true, ssig2, csig2, Ca) - ...
-          SinCosSeries(true, ssig1, csig1, Ca);
+         SinCosSeries(true, ssig1, csig1, Ca);
     s12b = A1 .* (sig12 + B1);
     if bitand(2+4, outmask)
       B2 = SinCosSeries(true, ssig2, csig2, Cb) - ...
-            SinCosSeries(true, ssig1, csig1, Cb);
+           SinCosSeries(true, ssig1, csig1, Cb);
       J12 = m0 .* sig12 + (A1 .* B1 - A2 .* B2);
     end
   else
     s12b = N;                           % assign arbitrary unused result
     if bitand(2+4, outmask)
       for l = 1 : size(Cb, 2)
+        % Assume here that size(Ca, 2) >= size(Cb, 2)
         Cb(:, l) = A1 .* Ca(:, l) - A2 .* Cb(:, l);
       end
       J12 = m0 .* sig12 + (SinCosSeries(true, ssig2, csig2, Cb) - ...

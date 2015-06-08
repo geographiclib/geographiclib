@@ -233,11 +233,11 @@ class Geodesic(object):
   def A2m1f(eps):
     """Private: return A2-1"""
     coeff = [
-      25, 36, 64, 0, 256,
+      -11, -28, -192, 0, 256,
     ]
     m = Geodesic.nA2_//2
     t = Math.polyval(m, coeff, 0, Math.sq(eps)) / coeff[m + 1]
-    return t * (1 - eps) - eps
+    return (t - eps) / (1 + eps)
   A2m1f = staticmethod(A2m1f)
 
   def C2f(eps, c):

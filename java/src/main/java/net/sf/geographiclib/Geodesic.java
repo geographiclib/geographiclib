@@ -1479,12 +1479,12 @@ public class Geodesic {
   // The scale factor A2-1 = mean value of (d/dsigma)I2 - 1
   protected static double A2m1f(double eps) {
     final double coeff[] = {
-      // A2/(1-eps)-1, polynomial in eps2 of order 3
-      25, 36, 64, 0, 256,
+      // (eps+1)*A2-1, polynomial in eps2 of order 3
+      -11, -28, -192, 0, 256,
     };
     int m = nA2_/2;
     double t = GeoMath.polyval(m, coeff, 0, GeoMath.sq(eps)) / coeff[m + 1];
-    return t * (1 - eps) - eps;
+    return (t - eps) / (1 + eps);
   }
 
   // The coefficients C2[l] in the Fourier expansion of B2

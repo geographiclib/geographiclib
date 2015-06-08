@@ -218,12 +218,12 @@ GeographicLib.GeodesicLine = {};
   // The scale factor A2-1 = mean value of (d/dsigma)I2 - 1
   g.A2m1f = function(eps) {
     var coeff = [
-      // A2/(1-eps)-1, polynomial in eps2 of order 3
-      25, 36, 64, 0, 256,
+      // (eps+1)*A2-1, polynomial in eps2 of order 3
+      -11, -28, -192, 0, 256,
     ];
     var p = Math.floor(g.nA2_/2);
     var t = m.polyval(p, coeff, 0, m.sq(eps)) / coeff[p + 1];
-    return t * (1 - eps) - eps;
+    return (t - eps) / (1 + eps);
   };
 
   // The coefficients C2[l] in the Fourier expansion of B2
@@ -877,7 +877,7 @@ GeographicLib.GeodesicLine = {};
 
       // Figure a starting point for Newton's method
       nvals = this.InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
-                                    C1a, C2a);
+                                C1a, C2a);
       sig12 = nvals.sig12;
       salp1 = nvals.salp1;
       calp1 = nvals.calp1;

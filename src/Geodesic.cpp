@@ -501,6 +501,7 @@ namespace GeographicLib {
         J12 = m0x * sig12 + (A1 * B1 - A2 * B2);
       }
     } else if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
+      // Assume here that nC1_ >= nC2_
       for (int l = 1; l <= nC2_; ++l)
         Cb[l] = A1 * Ca[l] - A2 * Cb[l];
       J12 = m0x * sig12 + (SinCosSeries(true, ssig2, csig2, Cb, nC2_) -

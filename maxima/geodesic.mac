@@ -133,8 +133,8 @@ if not exact then (
       l:endcons(horner(ataylor(C1[i],eps,nC1)),l),l)),
   C1pf(eps):=''(block([l:[]],for i:1 thru nC1p do
       l:endcons(horner(ataylor(C1p[i],eps,nC1p)),l),l)),
-  A2m1f(eps):=''(horner(ataylor(A2/(1-eps)-1,eps,nA2))
-    *(1-eps) - eps),
+  A2m1f(eps):=''((horner(ataylor(A2*(1+eps)-1,eps,nA2))
+      -eps)/(1+eps)),
   C2f(eps):=''(block([l:[]],for i:1 thru nC2 do
       l:endcons(horner(ataylor(C2[i],eps,nC2)),l),l)),
   A3coeff(n):=
@@ -547,8 +547,6 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
   phi, sbet1, cbet1, sbet2, cbet2, s12x : 0b0, m12x : 0b0,
   dn1, dn2, lam12, slam12, clam12,
   a12 : 0b0, sig12, calp1 : 0b0, salp1 : 0b0, calp2 : 0b0, salp2 : 0b0,
-  /* index zero elements of these arrays are unused */
-  C1a, C2a, C3a,
   meridian,  omg12 : 0b0,
   /* Initialize for the meridian.  No longitude calculation is done in this
   case to let the parameter default to 0. */
@@ -753,13 +751,13 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
       k2 : sq(calp0) * g[g_ep2], eps,
       /* Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0). */
       A4 : sq(g[g_a]) * calp0 * salp0 * g[g_e2],
-      C4a, B41, B42],
+      Ca, B41, B42],
       eps : k2 / (2 * (1 + sqrt(1 + k2)) + k2),
       block([t:SinCosNorm(ssig1, csig1)], ssig1:t[1], csig1:t[2]),
       block([t:SinCosNorm(ssig2, csig2)], ssig2:t[1], csig2:t[2]),
-      C4a : C4f(g, eps),
-      B41 : SinCosSeries(false, ssig1, csig1, C4a),
-      B42 : SinCosSeries(false, ssig2, csig2, C4a),
+      Ca : C4f(g, eps),
+      B41 : SinCosSeries(false, ssig1, csig1, Ca),
+      B42 : SinCosSeries(false, ssig2, csig2, Ca),
       S12 : A4 * (B42 - B41))
     else S12 : 0, /* Avoid problems with indeterminate sig1, sig2 on equator */
     if not meridian and
@@ -827,7 +825,7 @@ SinCosSeries(sinp, sinx, cosx, c):=block([n:length(c), ar, y0, y1, n2, k],
 
 /* Return [s12b, m12b, m0, M12, M21] */
 Lengths(g, eps, E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2):=
-block([scalep:true, C1a, C2a,
+block([scalep:true, Ca,
   s12b : 0b0, m12b : 0b0, m0 : 0b0, M12 : 0b0, M21 : 0b0,
   A1m1, AB1, A2m1, AB2, J12],
   /* Return m12b = (reduced length)/b; also calculate s12b = distance/b,
@@ -837,13 +835,13 @@ block([scalep:true, C1a, C2a,
     J12 : m0 *
       (sig12 + deltad(ssig2, csig2, dn2, E[e_k2], E[e_dc])
       - deltad(ssig1, csig1, dn1, E[e_k2], E[e_dc])) )
-  else (C1a : C1f(eps), C2a : C2f(eps),
-    A1m1 : A1m1f(eps),
-    AB1 : (1 + A1m1) * (SinCosSeries(true, ssig2, csig2, C1a) -
-      SinCosSeries(true, ssig1, csig1, C1a)),
-    A2m1 : A2m1f(eps),
-    AB2 : (1 + A2m1) * (SinCosSeries(true, ssig2, csig2, C2a) -
-      SinCosSeries(true, ssig1, csig1, C2a)),
+  else (
+    A1m1 : A1m1f(eps), Ca : C1f(eps),
+    AB1 : (1 + A1m1) * (SinCosSeries(true, ssig2, csig2, Ca) -
+      SinCosSeries(true, ssig1, csig1, Ca)),
+    A2m1 : A2m1f(eps), Ca : C2f(eps),
+    AB2 : (1 + A2m1) * (SinCosSeries(true, ssig2, csig2, Ca) -
+      SinCosSeries(true, ssig1, csig1, Ca)),
     m0 : A1m1 - A2m1,
     J12 : m0 * sig12 + (AB1 - AB2)),
   /* Missing a factor of b.
@@ -1036,7 +1034,7 @@ block([salp2 : 0b0, calp2 : 0b0, sig12 : 0b0,
   domg12 : 0b0, dlam12 : 0b0,
   salp0, calp0,
   somg1, comg1, somg2, comg2, cchi1, cchi2, omg12:0, lam12,
-  B312, h0, k2],
+  B312, h0, k2, Ca],
   if sbet1 = 0b0 and calp1 = 0b0 then
   /* Break degeneracy of equatorial line.  This case has already been
   handled. */
@@ -1091,9 +1089,9 @@ block([salp2 : 0b0, calp2 : 0b0, sig12 : 0b0,
       (sig12 + deltah(ssig2, csig2, dn2, E[e_k2], E[e_alpha2], E[e_hc]) -
        deltah(ssig1, csig1, dn1, E[e_k2], E[e_alpha2], E[e_hc]) ) )
   else (eps : k2 / (2 * (1 + sqrt(1 + k2)) + k2),
-    C3a : C3f(g, eps),
-    B312 : (SinCosSeries(true, ssig2, csig2, C3a) -
-      SinCosSeries(true, ssig1, csig1, C3a)),
+    Ca : C3f(g, eps),
+    B312 : (SinCosSeries(true, ssig2, csig2, Ca) -
+      SinCosSeries(true, ssig1, csig1, Ca)),
     h0 : -g[g_f] * A3f(g, eps),
     domg12 : salp0 * h0 * (sig12 + B312),
     lam12 : omg12 + domg12),

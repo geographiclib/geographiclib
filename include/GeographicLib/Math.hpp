@@ -156,7 +156,9 @@ namespace GeographicLib {
      * @param[in] ndigits the number of bits of precision.
      * @return the resulting number of bits of precision.
      *
-     * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.
+     * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.  See also
+     * Utility::set_digits for caveats about when this routine should be
+     * called.
      **********************************************************************/
     static inline int set_digits(int ndigits) {
 #if GEOGRAPHICLIB_PRECISION != 5
