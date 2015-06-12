@@ -49,6 +49,27 @@ add_test (NAME GeoConvert8 COMMAND GeoConvert -u -p 6 --input-string "86 0")
 set_tests_properties (GeoConvert8 PROPERTIES PASS_REGULAR_EXPRESSION
   "n 2000000\\.0* 1555731\\.570643")
 
+# Check that integer(minutes) >= 60 and decimal(minutes) > 60 fail.
+# Later used to succeed; fixed 2015-06-11.
+add_test (NAME GeoConvert9 COMMAND GeoConvert --input-string "5d70.0 10")
+add_test (NAME GeoConvert10 COMMAND GeoConvert --input-string "5d60 10")
+set_tests_properties (GeoConvert9 GeoConvert10 PROPERTIES WILL_FAIL ON)
+# Check that integer(minutes) < 60 and decimal(minutes) <= 60 succeed.
+# Later used to fail with 60.; fixed 2015-06-11.
+add_test (NAME GeoConvert11 COMMAND GeoConvert --input-string "5d59 10")
+add_test (NAME GeoConvert12 COMMAND GeoConvert --input-string "5d60. 10")
+add_test (NAME GeoConvert13 COMMAND GeoConvert --input-string "5d60.0 10")
+
+# Check DMS::Encode does round ties to even.  Fixed 2015-06-11.
+add_test (NAME GeoConvert14 COMMAND GeoConvert
+  -: -p -4 --input-string "5.25 5.75")
+set_tests_properties (GeoConvert14
+  PROPERTIES PASS_REGULAR_EXPRESSION "05.2N 005.8E")
+add_test (NAME GeoConvert15 COMMAND GeoConvert
+  -: -p -1 --input-string "5.03125 5.09375")
+set_tests_properties (GeoConvert15
+  PROPERTIES PASS_REGULAR_EXPRESSION "05:01:52N 005:05:38E")
+
 add_test (NAME GeodSolve0 COMMAND GeodSolve
   -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")
 set_tests_properties (GeodSolve0 PROPERTIES PASS_REGULAR_EXPRESSION
@@ -162,6 +183,13 @@ add_test (NAME GeodSolve24 COMMAND GeodSolve
   -l 40 -75 -10 --input-string "2e7" -E)
 set_tests_properties (GeodSolve21 GeodSolve22 GeodSolve23 GeodSolve24
   PROPERTIES PASS_REGULAR_EXPRESSION "-39\\.[0-9]* 105\\.[0-9]* -170\\.[0-9]*")
+
+# Check fix for inaccurate rounding in DMS::Decode, e.g., verify that
+# 7:33:36 = 7.56; fixed on 2015-06-11.
+add_test (NAME GeodSolve25 COMMAND GeodSolve
+  -p 6 --input-string "0 0 7:33:36-7.56 10001965")
+set_tests_properties (GeodSolve25 PROPERTIES PASS_REGULAR_EXPRESSION
+  "89\\.9[0-9]* 0\\.00000000000 0\\.00000000000")
 
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter

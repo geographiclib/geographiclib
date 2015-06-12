@@ -169,7 +169,7 @@ namespace GeographicLib {
               " component of " + dmsa.substr(beg, end - beg);
             break;
           }
-          if (digcount > 1) {
+          if (digcount > 0) {
             istringstream s(dmsa.substr(p - intcount - digcount - 1,
                                         intcount + digcount));
             s >> fcurrent;
@@ -205,7 +205,7 @@ namespace GeographicLib {
             + dmsa.substr(beg, end - beg);
           break;
         }
-        if (digcount > 1) {
+        if (digcount > 0) {
           istringstream s(dmsa.substr(p - intcount - digcount,
                                       intcount + digcount));
           s >> fcurrent;
@@ -220,12 +220,12 @@ namespace GeographicLib {
         break;
       }
       // Note that we accept 59.999999... even though it rounds to 60.
-      if (ipieces[1] >= 60) {
+      if (ipieces[1] >= 60 || fpieces[1] > 60 ) {
         errormsg = "Minutes " + Utility::str(fpieces[1])
           + " not in range [0, 60)";
         break;
       }
-      if (ipieces[2] >= 60) {
+      if (ipieces[2] >= 60 || fpieces[2] > 60) {
         errormsg = "Seconds " + Utility::str(fpieces[2])
           + " not in range [0, 60)";
         break;
@@ -233,7 +233,9 @@ namespace GeographicLib {
       ind = ind1;
       // Assume check on range of result is made by calling routine (which
       // might be able to offer a better diagnostic).
-      return real(sign) * (fpieces[0] + (fpieces[1] + fpieces[2] / 60) / 60);
+      return real(sign) *
+        ( fpieces[2] ? (60*(60*fpieces[0] + fpieces[1]) + fpieces[2]) / 3600 :
+          ( fpieces[1] ? (60*fpieces[0] + fpieces[1]) / 60 : fpieces[0] ) );
     } while (false);
     real val = Utility::nummatch<real>(dmsa);
     if (val == 0)
@@ -320,7 +322,13 @@ namespace GeographicLib {
     // fractional part.
     real
       idegree = floor(angle),
-      fdegree = floor((angle - idegree) * scale + real(0.5)) / scale;
+      fdegree = (angle - idegree) * scale + real(0.5);
+    {
+      // Implement the "round ties to even" rule
+      real f = floor(fdegree);
+      fdegree = (f == fdegree && fmod(f, real(2)) == 1) ? f - 1 : f;
+    }
+    fdegree /= scale;
     if (fdegree >= 1) {
       idegree += 1;
       fdegree -= 1;

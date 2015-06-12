@@ -478,7 +478,7 @@ namespace GeographicLib {
     // outmask & GEODESICSCALE: set M12 & M21
 
     real m0x = 0, J12 = 0, A1 = 0, A2 = 0;
-    double Cb[nC2_ + 1];
+    real Cb[nC2_ + 1];
     if (outmask & (DISTANCE | REDUCEDLENGTH | GEODESICSCALE)) {
       A1 = A1m1f(eps);
       C1f(eps, Ca);

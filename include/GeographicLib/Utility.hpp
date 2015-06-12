@@ -299,14 +299,16 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_PRECISION == 4
       // boost-quadmath treats precision == 0 as "use as many digits as
       // necessary", so...
-      using std::floor;
+      using std::floor; using std::fmod;
       if (p == 0) {
-        long long ix = (long long)(floor(x + Math::real(0.5)));
+        x += Math::real(0.5);
+        Math::real ix = floor(x);
         // Implement the "round ties to even" rule
-        if (Math::real(ix) == x + Math::real(0.5) && (ix % 2) == 1)
-          --ix;
-        s << ix;
-        return s.str();
+        x = (ix == x && fmod(ix, Math::real(2)) == 1) ? ix - 1 : ix;
+        s << std::fixed << std::setprecision(1) << x;
+        std::string r(s.str());
+        // strip off trailing ".0"
+        return r.substr(0, (std::max)(int(r.size()) - 2, 0));
       }
 #endif
       if (p >= 0) s << std::fixed << std::setprecision(p);

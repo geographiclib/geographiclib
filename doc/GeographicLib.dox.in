@@ -6994,6 +6994,9 @@ git repository for GeographicLib</a>.
    (released 2015-mm-dd)
    - Fix bugs in NormalGravity (found by htallon) so that it works in
      the case of a sphere (instead of returning NaNs).
+   - Tighten up DMS::Decode: (a) allow 30:60.0 30:60., disallow 30:70.0
+     30:60; (b) more accurate rounding.  DMS::Encode rounds ties to
+     even.  TODO: propagate changes to JavaScript.
    - Replace the series for <i>A</i><sub>2</sub> in the Geodesic class
      with one with smaller truncation errors.  1 = new series, 2 = new
      Lengths, 3 = minimize number of arrays ...
@@ -7005,7 +7008,29 @@ git repository for GeographicLib</a>.
      MATLAB, 123
      maxima, 13
      Python, 1(3x)
-
+   - Add -w open for tools
+     CartConvert
+     ConicProj
+     GeodesicProj
+     GeoConvert DONE
+     GeodSolve
+     GeoidEval
+     Gravity
+     MagneticField
+     Planimeter
+     RhumbSolve
+     TransverseMercatorProj
+   - Update man pages to refer to GeoConvert(1) on handling of coordinates.
+     CartConvert
+     ConicProj
+     GeodesicProj
+     GeodSolve
+     GeoidEval
+     Gravity
+     MagneticField
+     Planimeter
+     RhumbSolve
+     TransverseMercatorProj
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-05-23)
    - Add the Enhanced Magnetic Model 2015, emm2015.  This is valid for
