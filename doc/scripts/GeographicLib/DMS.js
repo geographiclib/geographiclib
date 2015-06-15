@@ -147,7 +147,7 @@ GeographicLib.DMS = {};
               " component of " + dmsa.substr(beg, end - beg);
             break;
           }
-          if (digcount > 1) {
+          if (digcount > 0) {
             fcurrent = parseFloat(dmsa.substr(p - intcount - digcount - 1,
                                               intcount + digcount));
             icurrent = 0;
@@ -182,7 +182,7 @@ GeographicLib.DMS = {};
             dmsa.substr(beg, end - beg);
           break;
         }
-        if (digcount > 1) {
+        if (digcount > 0) {
           fcurrent = parseFloat(dmsa.substr(p - intcount - digcount,
                                             intcount + digcount));
           icurrent = 0;
@@ -196,18 +196,20 @@ GeographicLib.DMS = {};
         break;
       }
       // Note that we accept 59.999999... even though it rounds to 60.
-      if (ipieces[1] >= 60) {
+      if (ipieces[1] >= 60 || fpieces[1] > 60) {
         errormsg = "Minutes " + fpieces[1] + " not in range [0, 60)";
         break;
       }
-      if (ipieces[2] >= 60) {
+      if (ipieces[2] >= 60 || fpieces[2] > 60) {
         errormsg = "Seconds " + fpieces[2] + " not in range [0, 60)";
         break;
       }
       vals.ind = ind1;
       // Assume check on range of result is made by calling routine (which
       // might be able to offer a better diagnostic).
-      vals.val = sign * (fpieces[0] + (fpieces[1] + fpieces[2] / 60) / 60);
+      vals.val = sign *
+        ( fpieces[2] ? (60*(60*fpieces[0] + fpieces[1]) + fpieces[2]) / 3600 :
+          ( fpieces[1] ? (60*fpieces[0] + fpieces[1]) / 60 : fpieces[0] ) );
       return vals;
     } while (false);
     vals.val = d.NumMatch(dmsa);
@@ -313,6 +315,12 @@ GeographicLib.DMS = {};
     // fractional part.
     var
     idegree = Math.floor(angle),
+    fdegree = (angle - idegree) * scale + real(0.5),
+    real f = floor(fdegree);
+    // Implement the "round ties to even" rule
+    fdegree = (f == fdegree && (f & 1)) ? f - 1 : f;
+    fdegree /= scale;
+
     fdegree = Math.floor((angle - idegree) * scale + 0.5) / scale;
     if (fdegree >= 1) {
       idegree += 1;

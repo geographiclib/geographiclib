@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
-    bool reverse = false, sign = true, polyline = false;
+    bool reverse = false, sign = true, polyline = false, longfirst = false;
     int linetype = GEODESIC;
     int prec = 6;
     std::string istring, ifile, ofile, cdelim;
@@ -60,7 +60,9 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 2;
-      } else if (arg == "-p") {
+      } else if (arg == "-w")
+        longfirst = true;
+      else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
           prec = Utility::num<int>(std::string(argv[m]));
@@ -173,7 +175,7 @@ int main(int argc, char* argv[]) {
       bool endpoly = s.empty();
       if (!endpoly) {
         try {
-          p.Reset(s);
+          p.Reset(s, longfirst);
           if (Math::isnan(p.Latitude()) || Math::isnan(p.Longitude()))
             endpoly = true;
         }

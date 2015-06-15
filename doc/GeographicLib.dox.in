@@ -7008,18 +7008,9 @@ git repository for GeographicLib</a>.
      MATLAB, 123
      maxima, 13
      Python, 1(3x)
-   - Add -w open for tools
-     CartConvert
-     ConicProj
-     GeodesicProj
-     GeoConvert DONE
-     GeodSolve
-     GeoidEval
-     Gravity
-     MagneticField
-     Planimeter
-     RhumbSolve
-     TransverseMercatorProj
+   - Add -w open for tools CartConvert ConicProj GeodesicProj GeodSolve
+     GeoidEval Gravity MagneticField Planimeter RhumbSolve
+     TransverseMercatorProj; add -p option to CarConvert.
    - Update man pages to refer to GeoConvert(1) on handling of coordinates.
      CartConvert
      ConicProj
@@ -7031,6 +7022,12 @@ git repository for GeographicLib</a>.
      Planimeter
      RhumbSolve
      TransverseMercatorProj
+   - Hide the documentation of the computation of the gradient of the
+     geoid height (now deprecated) in the Geoid class.
+   - Add Math::sincosd, Math::sind, Math::cosd; improve the accuracy of
+     Math::atan2d.  These functions carefully minimize round-off errors
+     in the conversions between radians and degrees.
+
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-05-23)
    - Add the Enhanced Magnetic Model 2015, emm2015.  This is valid for

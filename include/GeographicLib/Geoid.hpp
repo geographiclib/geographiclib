@@ -62,16 +62,6 @@ namespace GeographicLib {
    * See \ref geoid for details of how to install the data sets, the data
    * format, estimates of the interpolation errors, and how to use caching.
    *
-   * In addition to returning the geoid height, the gradient of the geoid can
-   * be calculated.  The gradient is defined as the rate of change of the geoid
-   * as a function of position on the ellipsoid.  This uses the parameters for
-   * the WGS84 ellipsoid.  The gradient defined in terms of the interpolated
-   * heights.  As a result of the way that the geoid data is stored, the
-   * calculation of gradients can result in large quantization errors.  This is
-   * particularly acute for fine grids, at high latitudes, and for the easterly
-   * gradient.  For this reason, the use of this facility is <b>DEPRECATED</b>.
-   * Instead, use the GravityModel class to evaluate the gravity vector.
-   *
    * This class is typically \e not thread safe in that a single instantiation
    * cannot be safely used by multiple threads because of the way the object
    * reads the data set and because it maintains a single-cell cache.  If
@@ -300,6 +290,7 @@ namespace GeographicLib {
       return height(lat, lon, false, gradn, grade);
     }
 
+    /// \cond SKIP
     /**
      * Compute the geoid height and gradient at a point
      *
@@ -323,6 +314,7 @@ namespace GeographicLib {
     Math::real operator()(real lat, real lon, real& gradn, real& grade) const {
       return height(lat, lon, true, gradn, grade);
     }
+    /// \endcond
 
     /**
      * Convert a height above the geoid to a height above the ellipsoid and
@@ -342,7 +334,7 @@ namespace GeographicLib {
     Math::real ConvertHeight(real lat, real lon, real h,
                              convertflag d) const {
       real gradn, grade;
-      return h + real(d) * height(lat, lon, true, gradn, grade);
+      return h + real(d) * height(lat, lon, false, gradn, grade);
     }
 
     ///@}

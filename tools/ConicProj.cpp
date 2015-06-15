@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
     using namespace GeographicLib;
     typedef Math::real real;
     Utility::set_digits();
-    bool lcc = false, albers = false, reverse = false;
+    bool lcc = false, albers = false, reverse = false, longfirst = false;
     real lat1 = 0, lat2 = 0, lon0 = 0, k1 = 1;
     real
       a = Constants::WGS84_a(),
@@ -99,7 +99,9 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 2;
-      } else if (arg == "-p") {
+      } else if (arg == "-w")
+        longfirst = true;
+       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
           prec = Utility::num<int>(std::string(argv[m]));
@@ -210,7 +212,7 @@ int main(int argc, char* argv[]) {
           x = Utility::num<real>(stra);
           y = Utility::num<real>(strb);
         } else
-          DMS::DecodeLatLon(stra, strb, lat, lon);
+          DMS::DecodeLatLon(stra, strb, lat, lon, longfirst);
         std::string strc;
         if (str >> strc)
           throw GeographicErr("Extraneous input: " + strc);
@@ -219,8 +221,8 @@ int main(int argc, char* argv[]) {
             lproj.Reverse(lon0, x, y, lat, lon, gamma, k);
           else
             aproj.Reverse(lon0, x, y, lat, lon, gamma, k);
-          *output << Utility::str(lat, prec + 5) << " "
-                  << Utility::str(lon, prec + 5) << " "
+          *output << Utility::str(longfirst ? lon : lat, prec + 5) << " "
+                  << Utility::str(longfirst ? lat : lon, prec + 5) << " "
                   << Utility::str(gamma, prec + 6) << " "
                   << Utility::str(k, prec + 6) << eol;
         } else {

@@ -147,9 +147,10 @@ namespace GeographicLib {
      *     N-20d30'40.5&quot;, -20:30:40.5
      *   - 4d0'9, 4d9&quot;, 4d9'', 4:0:9, 004:00:09, 4.0025, 4.0025d, 4d0.15,
      *     04:.15
+     *   - 4:59.99999999999999, 4:60.0, 4:59:59.9999999999999, 4:59:60.0, 5
      * - <i>ILLEGAL</i> (the exception thrown explains the problem)
      *   - 4d5&quot;4', 4::5, 4:5:, :4:5, 4d4.5'4&quot;, -N20.5, 1.8e2d, 4:60,
-     *     4d-5'
+     *     4:59:60
      *
      * The decoding operation can also perform a single addition or subtraction
      * operation.  If the string includes an <i>internal</i> sign (i.e., not at
@@ -245,7 +246,7 @@ namespace GeographicLib {
      * @param[in] dmsb second string.
      * @param[out] lat latitude (degrees).
      * @param[out] lon longitude (degrees).
-     * @param[in] swaplatlong if true assume longitude is given before latitude
+     * @param[in] longfirst if true assume longitude is given before latitude
      *   in the absence of hemisphere designators (default false).
      * @exception GeographicErr if \e dmsa or \e dmsb is malformed.
      * @exception GeographicErr if \e dmsa and \e dmsb are both interpreted as
@@ -265,7 +266,7 @@ namespace GeographicLib {
      **********************************************************************/
     static void DecodeLatLon(const std::string& dmsa, const std::string& dmsb,
                              real& lat, real& lon,
-                             bool swaplatlong = false);
+                             bool longfirst = false);
 
     /**
      * Convert a string to an angle in degrees.

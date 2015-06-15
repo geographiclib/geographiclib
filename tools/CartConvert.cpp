@@ -32,10 +32,11 @@ int main(int argc, char* argv[]) {
     using namespace GeographicLib;
     typedef Math::real real;
     Utility::set_digits();
-    bool localcartesian = false, reverse = false;
+    bool localcartesian = false, reverse = false, longfirst = false;
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
+    int prec = 6;
     real lat0 = 0, lon0 = 0, h0 = 0;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
@@ -49,7 +50,7 @@ int main(int argc, char* argv[]) {
         if (m + 3 >= argc) return usage(1, true);
         try {
           DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                            lat0, lon0);
+                            lat0, lon0, longfirst);
           h0 = Utility::num<real>(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {
@@ -68,7 +69,18 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 2;
-      } else if (arg == "--input-string") {
+      } else if (arg == "-w")
+        longfirst = true;
+      else if (arg == "-p") {
+        if (++m == argc) return usage(1, true);
+        try {
+          prec = Utility::num<int>(std::string(argv[m]));
+        }
+        catch (const std::exception&) {
+          std::cerr << "Precision " << argv[m] << " is not a number\n";
+          return 1;
+        }
+      }  else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
       } else if (arg == "--input-file") {
@@ -135,6 +147,9 @@ int main(int argc, char* argv[]) {
     const Geocentric ec(a, f);
     const LocalCartesian lc(lat0, lon0, h0, ec);
 
+    // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
+    // 10^-11 sec (= 0.3 nm).
+    prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     std::string s;
     int retval = 0;
     while (std::getline(*input, s)) {
@@ -158,7 +173,7 @@ int main(int argc, char* argv[]) {
           y = Utility::num<real>(strb);
           z = Utility::num<real>(strc);
         } else {
-          DMS::DecodeLatLon(stra, strb, lat, lon);
+          DMS::DecodeLatLon(stra, strb, lat, lon, longfirst);
           h = Utility::num<real>(strc);
         }
         std::string strd;
@@ -169,17 +184,17 @@ int main(int argc, char* argv[]) {
             lc.Reverse(x, y, z, lat, lon, h);
           else
             ec.Reverse(x, y, z, lat, lon, h);
-          *output << Utility::str(lat, 15 + Math::extra_digits()) << " "
-                  << Utility::str(lon, 15 + Math::extra_digits()) << " "
-                  << Utility::str(h, 12 + Math::extra_digits()) << eol;
+          *output << Utility::str(longfirst ? lon : lat, prec + 5) << " "
+                  << Utility::str(longfirst ? lat : lon, prec + 5) << " "
+                  << Utility::str(h, prec) << eol;
         } else {
           if (localcartesian)
             lc.Forward(lat, lon, h, x, y, z);
           else
             ec.Forward(lat, lon, h, x, y, z);
-          *output << Utility::str(x, 10 + Math::extra_digits()) << " "
-                  << Utility::str(y, 10 + Math::extra_digits()) << " "
-                  << Utility::str(z, 10 + Math::extra_digits()) << eol;
+          *output << Utility::str(x, prec) << " "
+                  << Utility::str(y, prec) << " "
+                  << Utility::str(z, prec) << eol;
         }
       }
       catch (const std::exception& e) {

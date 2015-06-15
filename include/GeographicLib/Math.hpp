@@ -507,6 +507,133 @@ namespace GeographicLib {
     }
 
     /**
+     * Evaluate the sine and cosine function with the argument in degrees
+     *
+     * @tparam T the type of the arguments.
+     * @param[in] x in degrees.
+     * @param[out] sinx sin(<i>x</i>).
+     * @param[out] cosx cos(<i>x</i>).
+     *
+     * In order to minimize round-off errors, this function exactly reduces the
+     * argument to the range [&minus;45&deg;, 45&deg;] before converting it to
+     * radians.
+     **********************************************************************/
+    template<typename T> static inline void sincosd(T x, T& sinx, T& cosx) {
+      using std::sin; using std::cos;
+      T r; int q;
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3
+      using std::remquo;
+      // Check for glibc bug (remquo(9.0, 1.0, &q) = 1) fixed in version 2.22.
+      // (Actually the bug is only when compiling without optimization -O0.)
+      // This has to be a run-time test because we don't know what version of
+      // glibc will be used at compile/link time.
+      static const bool remquo_OK = remquo(T(9), T(1), &q) == T(0);
+      if (remquo_OK)
+        r = remquo(x, T(90), &q);
+      else {
+        using std::fmod; using std::floor;
+        r = fmod(x, T(360));
+        q = int(floor(x / 90 + T(0.5)));
+        r -= 90 * q;
+      }
+#else
+      using std::fmod; using std::floor;
+      r = fmod(x, T(360));
+      q = int(floor(x / 90 + T(0.5)));
+      r -= 90 * q;
+#endif
+      // now abs(r) <= 45
+      r *= degree();
+      T s = sin(r), c = cos(r);
+      switch(unsigned(q) & 3u) {
+      case 0u: sinx =  s; cosx =  c; break;
+      case 1u: sinx =  c; cosx = -s; break;
+      case 2u: sinx = -s; cosx = -c; break;
+      case 3u: sinx = -c; cosx =  s; break;
+      }
+    }
+
+    /**
+     * Evaluate the sine function with the argument in degrees
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] x in degrees.
+     * @return sin(<i>x</i>).
+     *
+     * In order to minimize round-off errors, this function exactly reduces the
+     * argument to the range [&minus;45&deg;, 45&deg;] before converting it to
+     * radians.
+     **********************************************************************/
+    template<typename T> static inline T sind(T x) {
+      using std::sin; using std::cos;
+      T r; int q;
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3
+      using std::remquo;
+      // Check for glibc bug (remquo(9.0, 1.0, &q) = 1) fixed in version 2.22.
+      // This has to be a run-time test because we don't know what version of
+      // glibc will be used at compile/link time.
+      static const bool remquo_OK = remquo(T(9), T(1), &q) == T(0);
+      if (remquo_OK)
+        r = remquo(x, T(90), &q);
+      else {
+        using std::fmod; using std::floor;
+        r = fmod(x, T(360));
+        q = int(floor(x / 90 + T(0.5)));
+        r -= 90 * q;
+      }
+#else
+      using std::fmod; using std::floor;
+      r = fmod(x, T(360));
+      q = int(floor(x / 90 + T(0.5)));
+      r -= 90 * q;
+#endif
+      // now abs(r) <= 45
+      r *= degree();
+      unsigned p = unsigned(q);
+      return (p & 2u ? -1 : 1) * (p & 1u ? cos(r) : sin(r));
+    }
+
+    /**
+     * Evaluate the cosine function with the argument in degrees
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] x in degrees.
+     * @return cos(<i>x</i>).
+     *
+     * In order to minimize round-off errors, this function exactly reduces the
+     * argument to the range [&minus;45&deg;, 45&deg;] before converting it to
+     * radians.
+     **********************************************************************/
+    template<typename T> static inline T cosd(T x) {
+      using std::sin; using std::cos;
+      T r; int q;
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3
+      using std::remquo;
+      // Check for glibc bug (remquo(9.0, 1.0, &q) = 1) fixed in version 2.22.
+      // This has to be a run-time test because we don't know what version of
+      // glibc will be used at compile/link time.
+      static const bool remquo_OK = remquo(T(9), T(1), &q) == T(0);
+      if (remquo_OK)
+        r = remquo(x, T(90), &q);
+      else {
+        using std::fmod; using std::floor;
+        r = fmod(x, T(360));
+        q = int(floor(x / 90 + T(0.5)));
+        r -= 90 * q;
+      }
+#else
+      using std::fmod; using std::floor;
+      r = fmod(x, T(360));
+      q = int(floor(x / 90 + T(0.5)));
+      r -= 90 * q;
+#endif
+      // now abs(r) <= 45
+      r *= degree();
+      unsigned p = unsigned(q + 1);
+      return (p & 2u ? -1 : 1) * (p & 1u ? cos(r) : sin(r));
+    }
+
+    /**
      * Evaluate the tangent function with the argument in degrees
      *
      * @tparam T the type of the argument and the returned value.
@@ -517,10 +644,10 @@ namespace GeographicLib {
      * returned.
      **********************************************************************/
     template<typename T> static inline T tand(T x) {
-      using std::abs; using std::tan;
-      static const T overflow = 1 / Math::sq(std::numeric_limits<T>::epsilon());
-      return abs(x) != 90 ? tan(x * Math::degree()) :
-        (x < 0 ? -overflow : overflow);
+      static const T overflow = 1 / sq(std::numeric_limits<T>::epsilon());
+      T s, c;
+      sincosd(x, s, c);
+      return c ? s / c : (x < 0 ? -overflow : overflow);
     }
 
     /**
@@ -532,13 +659,8 @@ namespace GeographicLib {
      *
      * Large values for the argument return &plusmn;90&deg;
      **********************************************************************/
-    template<typename T> static inline T atand(T x) {
-      using std::abs; using std::atan;
-      static const T
-        overflow = 1 / (Math::sq(std::numeric_limits<T>::epsilon()) * 100);
-      return !(abs(x) >= overflow) ? atan(x) / Math::degree() :
-        (x > 0 ? 90 : -90);
-    }
+    template<typename T> static inline T atand(T x)
+    { return atan2d(x, T(1)); }
 
     /**
      * Evaluate the atan2 function with the result in degrees
@@ -548,12 +670,32 @@ namespace GeographicLib {
      * @param[in] x
      * @return atan2(<i>y</i>, <i>x</i>) in degrees.
      *
-     * The result is in the range [&minus;180&deg; 180&deg;).
+     * The result is in the range [&minus;180&deg; 180&deg;).  In order to
+     * minimize round-off errors, this function rearranges the arguments so
+     * that result of atan2 is exactly reduces the argument to the range
+     * [&minus;&pi/4;, &pi;/4] before converting it to degrees.
      **********************************************************************/
     template<typename T> static inline T atan2d(T y, T x) {
-      using std::atan2;
+      using std::atan2; using std::abs;
       // The "0 -" converts -0 to +0.
-      return 0 - atan2(-y, x) / Math::degree();
+      //      return 0 - atan2(-y, x) / Math::degree();
+      unsigned q = 0u;
+      if (abs(y) > abs(x)) {
+        std::swap(x, y);
+        q = 2u;
+      }
+      if (x < 0) {
+        x = -x;
+        q += 1u;
+      }
+      T ang = atan2(y, x) / degree();
+      // here abs(ang) <= 45
+      switch (q) {
+      case 1u: ang = (y > 0 ? 180 : -180) - ang; break;
+      case 2u: ang =  90 - ang; break;
+      case 3u: ang = -90 + ang; break;
+      }
+      return ang;
     }
 
     /**

@@ -177,7 +177,7 @@ public:
      * @param[in] dmsb second string.
      * @param[out] lat latitude (degrees).
      * @param[out] lon longitude (degrees).
-     * @param[in] swaplatlong if true assume longitude is given before latitude
+     * @param[in] longfirst if true assume longitude is given before latitude
      *   in the absence of hemisphere designators (default false).
      * @exception GeographicErr if \e dmsa or \e dmsb is malformed.
      * @exception GeographicErr if \e dmsa and \e dmsb are both interpreted as
@@ -198,7 +198,7 @@ public:
     static void DecodeLatLon(System::String^ dmsa, System::String^ dmsb,
                      [System::Runtime::InteropServices::Out] double% lat,
                      [System::Runtime::InteropServices::Out] double% lon,
-                     bool swaplatlong );
+                     bool longfirst );
 
     /**
      * Convert a string to an angle in degrees.

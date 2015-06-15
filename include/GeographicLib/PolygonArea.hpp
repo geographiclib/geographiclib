@@ -90,8 +90,10 @@ namespace GeographicLib {
       using std::fmod;
       // We want to compute exactly
       //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
-      // Since we only need the parity of the result we can use std::remquo but
-      // this is buggy with g++ 4.8.3 and requires C++11.  So instead we do
+      // Since we only need the parity of the result we can use std::remquo;
+      // but this is buggy with g++ 4.8.3 (glibc version < 2.22), see
+      //   https://sourceware.org/bugzilla/show_bug.cgi?id=17569
+      // and requires C++11.  So instead we do
       lon1 = fmod(lon1, real(720)); lon2 = fmod(lon2, real(720));
       return ( ((lon2 >= 0 && lon2 < 360) || lon2 < -360 ? 0 : 1) -
                ((lon1 >= 0 && lon1 < 360) || lon1 < -360 ? 0 : 1) );

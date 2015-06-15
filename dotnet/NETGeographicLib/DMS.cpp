@@ -36,13 +36,13 @@ double DMS::Decode( System::String^ dms,
 void DMS::DecodeLatLon(System::String^ dmsa, System::String^ dmsb,
                         [System::Runtime::InteropServices::Out] double% lat,
                         [System::Runtime::InteropServices::Out] double% lon,
-                        bool swaplatlong )
+                        bool longfirst )
 {
     try
     {
         double llat, llon;
         GeographicLib::DMS::DecodeLatLon( StringConvert::ManagedToUnmanaged( dmsa ),
-            StringConvert::ManagedToUnmanaged( dmsb ), llat, llon, swaplatlong );
+            StringConvert::ManagedToUnmanaged( dmsb ), llat, llon, longfirst );
         lat = llat;
         lon = llon;
     }

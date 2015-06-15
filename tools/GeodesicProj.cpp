@@ -34,7 +34,8 @@ int main(int argc, char* argv[]) {
     using namespace GeographicLib;
     typedef Math::real real;
     Utility::set_digits();
-    bool azimuthal = false, cassini = false, gnomonic = false, reverse = false;
+    bool azimuthal = false, cassini = false, gnomonic = false, reverse = false,
+      longfirst = false;
     real lat0 = 0, lon0 = 0;
     real
       a = Constants::WGS84_a(),
@@ -54,7 +55,7 @@ int main(int argc, char* argv[]) {
         if (m + 2 >= argc) return usage(1, true);
         try {
           DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                            lat0, lon0);
+                            lat0, lon0, longfirst);
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of " << arg << ": "
@@ -73,7 +74,9 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 2;
-      } else if (arg == "-p") {
+      } else if (arg == "-w")
+        longfirst = true;
+      else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
           prec = Utility::num<int>(std::string(argv[m]));
@@ -183,7 +186,7 @@ int main(int argc, char* argv[]) {
           x = Utility::num<real>(stra);
           y = Utility::num<real>(strb);
         } else
-          DMS::DecodeLatLon(stra, strb, lat, lon);
+          DMS::DecodeLatLon(stra, strb, lat, lon, longfirst);
         std::string strc;
         if (str >> strc)
           throw GeographicErr("Extraneous input: " + strc);
@@ -194,8 +197,8 @@ int main(int argc, char* argv[]) {
             az.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
           else
             gn.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
-          *output << Utility::str(lat, prec + 5) << " "
-                  << Utility::str(lon, prec + 5) << " "
+          *output << Utility::str(longfirst ? lon : lat, prec + 5) << " "
+                  << Utility::str(longfirst ? lat : lon, prec + 5) << " "
                   << Utility::str(azi, prec + 5) << " "
                   << Utility::str(rk, prec + 6) << eol;
         } else {

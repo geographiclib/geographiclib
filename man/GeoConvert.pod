@@ -5,8 +5,8 @@ GeoConvert -- convert geographic coordinates
 =head1 SYNOPSIS
 
 B<GeoConvert> [ B<-g> | B<-d> | B<-:> | B<-u> | B<-m> | B<-c> ]
-[ B<-p> I<prec> ] [ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ] [ B<-w> ]
-[ B<-l> | B<-a> ]
+[ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ]
+[ B<-w> ] [ B<-p> I<prec> ] [ B<-l> | B<-a> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -28,29 +28,16 @@ is used (I<a> = 6378137 m, I<f> = 1/298.257223563).
 =item B<geographic>
 
 2 tokens (output options B<-g>, B<-d>, or B<-:>) given as I<latitude>
-I<longitude> using decimal degrees or degrees minutes seconds.  d, ',
-and " are used to denote degrees, minutes, and seconds, with the least
-significant designator optional.  (See L</QUOTING> for how to quote
-the characters ' and " when entering coordinates on the command line.)
-Various unicode characters (encoded with UTF-8) may also be used to
-denote degrees, minutes, and seconds, e.g., the degree, prime, and
-double prime symbols; in addition two single quotes can be used to
-represent ".  Alternatively, : (colon) may be used to separate the
-various components.  Latitude is given first (unless the B<-w> option
-is given); however, on input, either may be given first by appending
-or prepending I<N> or I<S> to the latitude and I<E> or I<W> to the
-longitude.  For example, the following are all equivalent
+I<longitude> using decimal degrees or degrees, minutes, and seconds.
+Latitude is given first (unless the B<-w> option is given).  See
+L</GEOGRAPHIC COORDINATES> for a description of the format.  For
+example, the following are all equivalent
 
     33.3 44.4
     E44.4 N33.3
     33d18'N 44d24'E
     44d24 33d18N
-    33:18 44:24
-
-It is also possible to carry out addition or subtraction operations in
-geographic coordinates.  For example the point 15" east of 39N 70W is
-
-    39N 70W+0:0:15E
+    33:18 +44:24
 
 =item B<UTM/UPS>
 
@@ -105,11 +92,6 @@ output meridian convergence and scale for the corresponding UTM or
 UPS projection.  Convergence is the bearing of grid north given as
 degrees clockwise from true north.
 
-=item B<-p>
-
-set the output precision to I<prec> (default 0); I<prec> is the
-precision relative to 1 m.  See L</PRECISION>.
-
 =item B<-z>
 
 set the zone to I<zone> for output.  Use either 0 E<lt> I<zone> E<lt>=
@@ -131,9 +113,14 @@ square instead of the center; see L</MGRS>.
 
 =item B<-w>
 
-on input and output, longitude precedes latitude (except that on input
+on input and output, longitude precedes latitude (except that, on input,
 this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
 I<W>).
+
+=item B<-p>
+
+set the output precision to I<prec> (default 0); I<prec> is the
+precision relative to 1 m.  See L</PRECISION>.
 
 =item B<-l>
 
@@ -252,6 +239,42 @@ designator I<n> or I<s> and I<not> an MGRS latitude band letter.
 Convert the MGRS latitude band letter to a hemisphere as follows:
 replace I<C> thru I<M> by I<s> (or I<south>); replace I<N> thru I<X> by
 I<n> (or I<north>).
+
+=head1 GEOGRAPHIC COORDINATES
+
+The utility accepts geographic coordinates, latitude and longitude, in a
+number of common formats.  Latitude precedes longitude, unless the B<-w>
+option is given which switches this convention.  On input, either
+coordinate may be given first by appending or prepending I<N> or I<S> to
+the latitude and I<E> or I<W> to the longitude.  These hemisphere
+designators carry an implied sign, positive for I<N> and I<E> and
+negative for I<S> and I<W>.  This sign multiplies any +/- sign prefixing
+the coordinate.  The coordinates may be given as decimal degree or as
+degrees, minutes, and seconds.  d, ', and " are used to denote degrees,
+minutes, and seconds, with the least significant designator optional.
+(See L</QUOTING> for how to quote the characters ' and " when entering
+coordinates on the command line.)  Alternatively, : (colon) may be used
+to separate the various components.  Only the final component of
+coordinate can include a decimal point, and the minutes and seconds
+components must be less than 60.
+
+It is also possible to carry out addition or subtraction operations in
+geographic coordinates.  If the coordinate includes an interior sign
+(i.e., not at the beginning or immediately after an initial hemisphere
+designator), then the coordinate is split before that sign; the two
+pieces are parsed separately and the results summed.  For example the
+point 15" east of 39N 70W is
+
+    39N 70W+0:0:15E
+
+Various unicode characters (encoded with UTF-8) may also be used to
+denote degrees, minutes, and seconds, e.g., the degree, prime, and
+double prime symbols; in addition two single quotes can be used to
+represent ".
+
+The other GeographicLib utilities use the same rules for interpreting
+geographic coordinates; in addition, azimuths and arc lengths are
+interpreted the same way.
 
 =head1 QUOTING
 
