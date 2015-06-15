@@ -513,12 +513,10 @@ namespace GeographicLib {
      * @param[in] x in degrees.
      * @param[out] sinx sin(<i>x</i>).
      * @param[out] cosx cos(<i>x</i>).
-     *
-     * In order to minimize round-off errors, this function exactly reduces the
-     * argument to the range [&minus;45&deg;, 45&deg;] before converting it to
-     * radians.
      **********************************************************************/
     template<typename T> static inline void sincosd(T x, T& sinx, T& cosx) {
+      // In order to minimize round-off errors, this function exactly reduces
+      // the argument to the range [-45, 45] before converting it to radians.
       using std::sin; using std::cos;
       T r; int q;
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3 && \
@@ -537,8 +535,9 @@ namespace GeographicLib {
 #endif
       // now abs(r) <= 45
       r *= degree();
+      // Possibly could call the gnu extension sincos
       T s = sin(r), c = cos(r);
-      switch(unsigned(q) & 3u) {
+      switch (unsigned(q) & 3u) {
       case 0u: sinx =  s; cosx =  c; break;
       case 1u: sinx =  c; cosx = -s; break;
       case 2u: sinx = -s; cosx = -c; break;
@@ -552,20 +551,13 @@ namespace GeographicLib {
      * @tparam T the type of the argument and the returned value.
      * @param[in] x in degrees.
      * @return sin(<i>x</i>).
-     *
-     * In order to minimize round-off errors, this function exactly reduces the
-     * argument to the range [&minus;45&deg;, 45&deg;] before converting it to
-     * radians.
      **********************************************************************/
     template<typename T> static inline T sind(T x) {
+      // See sincosd
       using std::sin; using std::cos;
       T r; int q;
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3 && \
   !defined(__GNUC__)
-      // Disable for gcc because of bug in glibc version < 2.22, see
-      //   https://sourceware.org/bugzilla/show_bug.cgi?id=17569
-      // Once this fix is widely deployed, should insert a runtime test for the
-      // glibc version number.
       using std::remquo;
       r = remquo(x, T(90), &q);
 #else
@@ -586,20 +578,13 @@ namespace GeographicLib {
      * @tparam T the type of the argument and the returned value.
      * @param[in] x in degrees.
      * @return cos(<i>x</i>).
-     *
-     * In order to minimize round-off errors, this function exactly reduces the
-     * argument to the range [&minus;45&deg;, 45&deg;] before converting it to
-     * radians.
      **********************************************************************/
     template<typename T> static inline T cosd(T x) {
+      // See sincosd
       using std::sin; using std::cos;
       T r; int q;
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3 && \
   !defined(__GNUC__)
-      // Disable for gcc because of bug in glibc version < 2.22, see
-      //   https://sourceware.org/bugzilla/show_bug.cgi?id=17569
-      // Once this fix is widely deployed, should insert a runtime test for the
-      // glibc version number.
       using std::remquo;
       r = remquo(x, T(90), &q);
 #else
@@ -637,8 +622,6 @@ namespace GeographicLib {
      * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return atan(<i>x</i>) in degrees.
-     *
-     * Large values for the argument return &plusmn;90&deg;
      **********************************************************************/
     template<typename T> static inline T atand(T x)
     { return atan2d(x, T(1)); }
@@ -651,30 +634,24 @@ namespace GeographicLib {
      * @param[in] x
      * @return atan2(<i>y</i>, <i>x</i>) in degrees.
      *
-     * The result is in the range [&minus;180&deg; 180&deg;).  In order to
-     * minimize round-off errors, this function rearranges the arguments so
-     * that result of atan2 is exactly reduces the argument to the range
-     * [&minus;&pi/4;, &pi;/4] before converting it to degrees.
+     * The result is in the range [&minus;180&deg; 180&deg;).
      **********************************************************************/
     template<typename T> static inline T atan2d(T y, T x) {
+      // In order to minimize round-off errors, this function rearranges the
+      // arguments so that result of atan2 is in the range [-pi/4, pi/4] before
+      // converting it to degrees and mapping the result to the correct
+      // quadrant.
       using std::atan2; using std::abs;
-      // The "0 -" converts -0 to +0.
-      //      return 0 - atan2(-y, x) / Math::degree();
-      unsigned q = 0u;
-      if (abs(y) > abs(x)) {
-        std::swap(x, y);
-        q = 2u;
-      }
-      if (x < 0) {
-        x = -x;
-        q += 1u;
-      }
+      int q = 0;
+      if (abs(y) > abs(x)) { std::swap(x, y); q = 2; }
+      if (x < 0) { x = -x; ++q; }
       // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
       T ang = atan2(y, x) / degree();
       switch (q) {
-      case 1u: ang = (y > 0 ? 180 : -180) - ang; break;
-      case 2u: ang =  90 - ang; break;
-      case 3u: ang = -90 + ang; break;
+        // case 0: break;
+      case 1: ang = (y > 0 ? 180 : -180) - ang; break;
+      case 2: ang =  90 - ang; break;
+      case 3: ang = -90 + ang; break;
       }
       return ang;
     }
