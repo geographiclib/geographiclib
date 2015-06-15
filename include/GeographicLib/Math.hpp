@@ -521,25 +521,18 @@ namespace GeographicLib {
     template<typename T> static inline void sincosd(T x, T& sinx, T& cosx) {
       using std::sin; using std::cos;
       T r; int q;
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3 && \
+  !defined(__GNUC__)
+      // Disable for gcc because of bug in glibc version < 2.22, see
+      //   https://sourceware.org/bugzilla/show_bug.cgi?id=17569
+      // Once this fix is widely deployed, should insert a runtime test for the
+      // glibc version number.
       using std::remquo;
-      // Check for glibc bug (remquo(9.0, 1.0, &q) = 1) fixed in version 2.22.
-      // (Actually the bug is only when compiling without optimization -O0.)
-      // This has to be a run-time test because we don't know what version of
-      // glibc will be used at compile/link time.
-      static const bool remquo_OK = remquo(T(9), T(1), &q) == T(0);
-      if (remquo_OK)
-        r = remquo(x, T(90), &q);
-      else {
-        using std::fmod; using std::floor;
-        r = fmod(x, T(360));
-        q = int(floor(x / 90 + T(0.5)));
-        r -= 90 * q;
-      }
+      r = remquo(x, T(90), &q);
 #else
       using std::fmod; using std::floor;
       r = fmod(x, T(360));
-      q = int(floor(x / 90 + T(0.5)));
+      q = int(floor(r / 90 + T(0.5)));
       r -= 90 * q;
 #endif
       // now abs(r) <= 45
@@ -567,24 +560,18 @@ namespace GeographicLib {
     template<typename T> static inline T sind(T x) {
       using std::sin; using std::cos;
       T r; int q;
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3 && \
+  !defined(__GNUC__)
+      // Disable for gcc because of bug in glibc version < 2.22, see
+      //   https://sourceware.org/bugzilla/show_bug.cgi?id=17569
+      // Once this fix is widely deployed, should insert a runtime test for the
+      // glibc version number.
       using std::remquo;
-      // Check for glibc bug (remquo(9.0, 1.0, &q) = 1) fixed in version 2.22.
-      // This has to be a run-time test because we don't know what version of
-      // glibc will be used at compile/link time.
-      static const bool remquo_OK = remquo(T(9), T(1), &q) == T(0);
-      if (remquo_OK)
-        r = remquo(x, T(90), &q);
-      else {
-        using std::fmod; using std::floor;
-        r = fmod(x, T(360));
-        q = int(floor(x / 90 + T(0.5)));
-        r -= 90 * q;
-      }
+      r = remquo(x, T(90), &q);
 #else
       using std::fmod; using std::floor;
       r = fmod(x, T(360));
-      q = int(floor(x / 90 + T(0.5)));
+      q = int(floor(r / 90 + T(0.5)));
       r -= 90 * q;
 #endif
       // now abs(r) <= 45
@@ -607,24 +594,18 @@ namespace GeographicLib {
     template<typename T> static inline T cosd(T x) {
       using std::sin; using std::cos;
       T r; int q;
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3 && \
+  !defined(__GNUC__)
+      // Disable for gcc because of bug in glibc version < 2.22, see
+      //   https://sourceware.org/bugzilla/show_bug.cgi?id=17569
+      // Once this fix is widely deployed, should insert a runtime test for the
+      // glibc version number.
       using std::remquo;
-      // Check for glibc bug (remquo(9.0, 1.0, &q) = 1) fixed in version 2.22.
-      // This has to be a run-time test because we don't know what version of
-      // glibc will be used at compile/link time.
-      static const bool remquo_OK = remquo(T(9), T(1), &q) == T(0);
-      if (remquo_OK)
-        r = remquo(x, T(90), &q);
-      else {
-        using std::fmod; using std::floor;
-        r = fmod(x, T(360));
-        q = int(floor(x / 90 + T(0.5)));
-        r -= 90 * q;
-      }
+      r = remquo(x, T(90), &q);
 #else
       using std::fmod; using std::floor;
       r = fmod(x, T(360));
-      q = int(floor(x / 90 + T(0.5)));
+      q = int(floor(r / 90 + T(0.5)));
       r -= 90 * q;
 #endif
       // now abs(r) <= 45
@@ -688,8 +669,8 @@ namespace GeographicLib {
         x = -x;
         q += 1u;
       }
+      // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
       T ang = atan2(y, x) / degree();
-      // here abs(ang) <= 45
       switch (q) {
       case 1u: ang = (y > 0 ? 180 : -180) - ang; break;
       case 2u: ang =  90 - ang; break;
