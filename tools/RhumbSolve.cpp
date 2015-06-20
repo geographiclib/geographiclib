@@ -45,7 +45,7 @@ std::string LatLonString(real lat, real lon, int prec, bool dms, char dmssep,
 
 std::string AzimuthString(real azi, int prec, bool dms, char dmssep) {
   return dms ? DMS::Encode(azi, prec + 5, DMS::AZIMUTH, dmssep) :
-    DMS::Encode(azi >= 180 ? azi - 360 : azi, prec + 5, DMS::NUMBER);
+    DMS::Encode(azi, prec + 5, DMS::NUMBER);
 }
 
 int main(int argc, char* argv[]) {

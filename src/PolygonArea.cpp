@@ -42,7 +42,7 @@ namespace GeographicLib {
       if (!_polyline) {
         _areasum += S12;
         _crossings += transitdirect(_lon1, lon);
-        lon = Math::AngNormalize2(lon);
+        lon = Math::AngNormalize(lon);
       }
       _lat1 = lat; _lon1 = lon;
       ++_num;
@@ -167,7 +167,7 @@ namespace GeographicLib {
                        lat, lon, t, t, t, t, t, S12);
       tempsum += S12;
       crossings += transitdirect(_lon1, lon);
-      lon = Math::AngNormalize2(lon);
+      lon = Math::AngNormalize(lon);
       _earth.GenInverse(lat, lon, _lat0, _lon0, _mask, s12, t, t, t, t, t, S12);
       perimeter += s12;
       tempsum += S12;

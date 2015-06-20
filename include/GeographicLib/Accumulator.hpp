@@ -142,6 +142,18 @@ namespace GeographicLib {
      **********************************************************************/
     Accumulator& operator*=(int n) { _s *= n; _t *= n; return *this; }
     /**
+     * Multiply accumulator by a number.  The fma (fused multiply and add)
+     * instruction is used (if available) in order to maintain accuracy.
+     *
+     * @param[in] y set \e sum *= \e y.
+     **********************************************************************/
+    Accumulator& operator*=(T y) {
+      T d = _s; _s *= y;
+      d = Math::fma(y, d, -_s); // the error in the first multiplication
+      _t = Math::fma(y, _t, d); // add error to the second term
+      return *this;
+    }
+    /**
      * Test equality of an Accumulator with a number.
      **********************************************************************/
     bool operator==(T y) const { return _s == y; }

@@ -7022,11 +7022,23 @@ git repository for GeographicLib</a>.
      Planimeter
      RhumbSolve
      TransverseMercatorProj
-   - Hide the documentation of the computation of the gradient of the
-     geoid height (now deprecated) in the Geoid class.
+   - Math::AngNormalize works on any angles.  Math::AngNormalize2
+     deprecated.
    - Add Math::sincosd, Math::sind, Math::cosd; improve the accuracy of
      Math::atan2d.  These functions carefully minimize round-off errors
-     in the conversions between radians and degrees.
+     in the conversions between radians and degrees.  TODO: use these
+     functions, where appropropriate.
+   - TODO: migrate sincosd, AngNormalize, AngDiff improvements to
+     C,
+     Fortran,
+     Java,
+     JavaScript,
+     MATLAB,
+     maxima,
+     Python
+   - Hide the documentation of the computation of the gradient of the
+     geoid height (now deprecated) in the Geoid class.
+   - Add Accumulator::operator*(T y).
 
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-05-23)
