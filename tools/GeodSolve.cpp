@@ -270,8 +270,8 @@ int main(int argc, char* argv[]) {
             *output << LatLonString(lat2, lon2, prec, dms, dmssep, longfirst)
                     << " ";
           if (azi2back)
-            azi2 += azi2 < 0 ? 180 : -180;
-          *output << AzimuthString(azi2 + azi2sense, prec, dms, dmssep) << " "
+            azi2 += azi2 >= 0 ? -180 : 180;
+          *output << AzimuthString(azi2, prec, dms, dmssep) << " "
                   << DistanceStrings(s12, a12, full, arcmode, prec, dms);
           if (full)
             *output << " " << Utility::str(m12, prec)
@@ -315,7 +315,7 @@ int main(int argc, char* argv[]) {
                               prec, dms, dmssep, longfirst)
               << " " << AzimuthString(azi1, prec, dms, dmssep) << " ";
           if (azi2back)
-            azi2 += azi2 < 0 ? 180 : -180;
+            azi2 += azi2 >= 0 ? -180 : 180;
           *output << LatLonString(lat2, lon2, prec, dms, dmssep, longfirst)
                   << " " << AzimuthString(azi2, prec, dms, dmssep);
           if (full)

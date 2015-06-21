@@ -90,7 +90,7 @@ namespace GeographicLib {
     k = rho ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) : _k0;
     lat = (northp ? 1 : -1) * Math::atand(tau);
     lon = Math::atan2d(x, northp ? -y : y );
-    gamma = northp ? lon : -lon;
+    gamma = Math::AngNormalize(northp ? lon : -lon);
   }
 
   void PolarStereographic::SetScale(real lat, real k) {

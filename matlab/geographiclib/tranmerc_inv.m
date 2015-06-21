@@ -41,7 +41,7 @@ function [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y, ellipsoid)
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.43.
+% This file was distributed with GeographicLib 1.44.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -54,7 +54,6 @@ function [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y, ellipsoid)
     error('ellipsoid must be a vector of size 2')
   end
 
-  degree = pi/180;
   maxpow = 6;
 
   a = ellipsoid(1);
@@ -113,33 +112,31 @@ function [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y, ellipsoid)
   ar = s0 .* ch0; ai = c0 .* sh0;
   xip  = xi  + ar .* xip0 - ai .* etap0;
   etap = eta + ai .* xip0 + ar .* etap0;
-  gam = atan2(yi1, yr1);
+  gam = atan2dx(yi1, yr1);
   k = b1 ./ hypot(yr1, yi1);
   s = sinh(etap);
   c = max(0, cos(xip));
   r = hypot(s, c);
-  lam = atan2(s, c);
-  taup = sin(xip)./r;
-  tau = tauf(taup, e2);
-  phi = atan(tau);
-  gam = gam + atan(tan(xip) .* tanh(etap));
+  lon = atan2dx(s, c);
+  sxip = sin(xip);
+  tau = tauf(sxip./r, e2);
+  lat = atan2dx(tau);
+  gam = gam + atan2dx(sxip .* tanh(etap), c);
   c = r ~= 0;
-  k(c) = k(c) .* sqrt(e2m + e2 * cos(phi(c)).^2) .* ...
+  k(c) = k(c) .* sqrt(e2m + e2 ./ (1 + tau.^2)) .* ...
          hypot(1, tau(c)) .* r(c);
   c = ~c;
   if any(c)
-    phi(c) = pi/2;
-    lam(c) = 0;
+    lat(c) = 90;
+    lon(c) = 0;
     k(c) = k(c) * cc;
   end
-  lat = phi / degree .* xisign;
-  lon = lam / degree;
+  lat = lat .* xisign;
   lon(backside) = 180 - lon(backside);
   lon = lon .* etasign;
   lon = AngNormalize(lon + AngNormalize(lon0));
-  gam = gam/degree;
   gam(backside) = 180 - gam(backside);
-  gam = gam .* xisign .* etasign;
+  gam = AngNormalize(gam .* xisign .* etasign);
 end
 
 function bet = betf(n)

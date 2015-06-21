@@ -7039,6 +7039,8 @@ git repository for GeographicLib</a>.
    - Hide the documentation of the computation of the gradient of the
      geoid height (now deprecated) in the Geoid class.
    - Add Accumulator::operator*(T y).
+   - Fix bug where CassiniSoldner::Forward returned the wrong azimuth
+     for points at the pole; also fix similar bug in cassini_fwd.m.
 
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-05-23)
