@@ -45,13 +45,13 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
   dlon = AngDiff(AngNormalize(lon0), AngNormalize(lon)) + Z;
   [s12, azi1, azi2, ~, ~, ~, ~, sig12] = ...
       geoddistance(lat, -abs(dlon), lat, abs(dlon), ellipsoid);
-  c = sig12 < 100 * tiny;
+  c = sig12 < 200 * tiny;
   sig12(c) = 0;
   s12(c) = 0;
   sig12 = 0.5 * sig12;
   s12 = 0.5 * s12;
   c = s12 == 0;
-  da = (azi2 - azi2)/2;
+  da = AngDiff(azi1, azi2)/2;
   s = abs(dlon) <= 90;
   azi1(c & s) = 90 - da(c & s);
   azi2(c & s) = 90 + da(c & s);

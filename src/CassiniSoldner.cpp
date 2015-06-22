@@ -45,12 +45,12 @@ namespace GeographicLib {
     real sig12, s12, azi1, azi2;
     lat = Math::AngRound(lat);
     sig12 = _earth.Inverse(lat, -abs(dlon), lat, abs(dlon), s12, azi1, azi2);
-    if (sig12 < 100 * tiny_)
+    if (sig12 < 200 * tiny_)    // Need 200 > 2 / Math::degree()
       sig12 = s12 = 0;
     sig12 *= real(0.5);
     s12 *= real(0.5);
     if (s12 == 0) {
-      real da = (azi2 - azi1)/2;
+      real da = Math::AngDiff(azi1, azi2)/2;
       if (abs(dlon) <= 90) {
         azi1 = 90 - da;
         azi2 = 90 + da;
