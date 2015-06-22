@@ -531,22 +531,24 @@ namespace GeographicLib {
 
     /**
      * @return \e azi0 the azimuth (degrees) of the geodesic line as it crosses
-     * the equator in a northward direction.
+     *   the equator in a northward direction.
+     *
+     * The result lies in [&minus;90&deg;, 90&deg;].
      **********************************************************************/
     Math::real EquatorialAzimuth() const {
       using std::atan2;
-      return Init() ?
-        atan2(_salp0, _calp0) / Math::degree() : Math::NaN();
+      return Init() ? Math::atan2d(_salp0, _calp0) : Math::NaN();
     }
 
     /**
      * @return \e a1 the arc length (degrees) between the northward equatorial
-     * crossing and point 1.
+     *   crossing and point 1.
+     *
+     * The result lies in (&minus;180&deg;, 180&deg;].
      **********************************************************************/
     Math::real EquatorialArc() const {
       using std::atan2;
-      return Init() ?
-        atan2(_ssig1, _csig1) / Math::degree() : Math::NaN();
+      return Init() ? atan2(_ssig1, _csig1) / Math::degree() : Math::NaN();
     }
 
     /**

@@ -275,7 +275,7 @@ int main() {
   return int(std::hypot(3.0, 4.0) + std::expm1(0.5) + std::log1p(2.0) +
              std::asinh(10.0) + std::atanh(0.8) + std::cbrt(8.0)) +
              std::fma(1.0, 2.0, 3.0) + std::isfinite(4.0) + std::isnan(0.0) +
-             std::remquo(100.0, 90.0, &q);
+             std::remquo(100.0, 90.0, &q) + std::remainder(100.0, 90.0);
 }\n" CXX11_MATH)
 if (CXX11_MATH)
   add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)

@@ -25,7 +25,7 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.44.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -42,7 +42,7 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
   degree = pi/180;
   f = ecc2flat(ellipsoid(2));
   lat = AngRound(lat);
-  dlon = AngDiff(AngNormalize(lon0), AngNormalize(lon)) + Z;
+  dlon = AngDiff(lon0, lon) + Z;
   [s12, azi1, azi2, ~, ~, ~, ~, sig12] = ...
       geoddistance(lat, -abs(dlon), lat, abs(dlon), ellipsoid);
   c = sig12 < 200 * tiny;
@@ -66,11 +66,11 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
   azi = AngNormalize(azi2);
   [~, ~, ~, ~, ~, ~, rk] = ...
       geodreckon(lat, dlon, -sig12, azi, ellipsoid, true);
-  [sbet , cbet ] = norm2((1-f) * sind(lat ), cosd(lat ));
-  [sbet0, cbet0] = norm2((1-f) * sind(lat0), cosd(lat0));
-  alp = azi * degree;
-  salp = sin(alp); salp(alp == -180) = 0;
-  calp = cos(alp); calp(abs(alp) == 90) = 0;
+  [sbet, cbet] = sincosdx(lat);
+  [sbet, cbet] = norm2((1-f) * sbet, cbet);
+  [sbet0, cbet0] = sincosdx(lat0);
+  [sbet0, cbet0] = norm2((1-f) * sbet0, cbet0);
+  [salp, calp] = sincosdx(azi);
   salp0 = salp .* cbet;
   calp0 = hypot(calp, salp .* sbet);
   sbet1 = calp0;

@@ -375,6 +375,10 @@ namespace GeographicLib {
      * @param[in] z
      * @return <i>xy</i> + <i>z</i>, correctly rounded (on those platforms with
      *   support for the <code>fma</code> instruction).
+     *
+     * On platforms without the <code>fma</code> instruction, no attempt is
+     * made to improve on the result of a rounded multiplication followed by a
+     * rounded addition.
      **********************************************************************/
     template<typename T> static inline T fma(T x, T y, T z) {
 #if GEOGRAPHICLIB_CXX11_MATH
@@ -436,16 +440,24 @@ namespace GeographicLib {
     { T y = N < 0 ? 0 : *p++; while (--N >= 0) y = y * x + *p++; return y; }
 
     /**
-     * Normalize an angle (restricted input range).
+     * Normalize an angle.
      *
      * @tparam T the type of the argument and returned value.
      * @param[in] x the angle in degrees.
      * @return the angle reduced to the range [&minus;180&deg;, 180&deg;).
      *
-     * \e x must lie in [&minus;540&deg;, 540&deg;).
+     * The range of \e x is unrestricted.
      **********************************************************************/
-    template<typename T> static inline T AngNormalize(T x)
-    { return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x); }
+    template<typename T> static inline T AngNormalize(T x) {
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
+      using std::remainder;
+      T y = remainder(x, T(360)); return y != 180 ? y : -180;
+#else
+      using std::fmod;
+      T y = fmod(x, T(360));
+      return y < -180 ? y + 360 : (y < 360 ? y : y - 360);
+#endif
+    }
 
     /**
      * Normalize an arbitrary angle.
@@ -454,10 +466,10 @@ namespace GeographicLib {
      * @param[in] x the angle in degrees.
      * @return the angle reduced to the range [&minus;180&deg;, 180&deg;).
      *
-     * The range of \e x is unrestricted.
+     * <b>DEPRECATED</b>: use AngNormalize instead.
      **********************************************************************/
     template<typename T> static inline T AngNormalize2(T x)
-    { using std::fmod; return AngNormalize<T>(fmod(x, T(360))); }
+    { return AngNormalize<T>(x); }
 
     /**
      * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]
@@ -468,19 +480,20 @@ namespace GeographicLib {
      * @return \e y &minus; \e x, reduced to the range [&minus;180&deg;,
      *   180&deg;].
      *
-     * \e x and \e y must both lie in [&minus;180&deg;, 180&deg;].  The result
-     * is equivalent to computing the difference exactly, reducing it to
-     * (&minus;180&deg;, 180&deg;] and rounding the result.  Note that this
-     * prescription allows &minus;180&deg; to be returned (e.g., if \e x is
-     * tiny and negative and \e y = 180&deg;).
+     * The result is equivalent to computing the difference exactly, reducing
+     * it to (&minus;180&deg;, 180&deg;] and rounding the result.  Note that
+     * this prescription allows &minus;180&deg; to be returned (e.g., if \e x
+     * is tiny and negative and \e y = 180&deg;).
      **********************************************************************/
     template<typename T> static inline T AngDiff(T x, T y) {
-      T t, d = sum(-x, y, t);
-      if ((d - T(180)) + t > T(0)) // y - x > 180
-        d -= T(360);            // exact
-      else if ((d + T(180)) + t <= T(0)) // y - x <= -180
-        d += T(360);            // exact
-      return d + t;
+      T t, d = - AngNormalize(sum(AngNormalize(x), AngNormalize(-y), t));
+      // Here y - x = d - t (mod 360), exactly, where d is in (-180,180] and
+      // abs(t) <= eps (eps = 2^-45 for doubles).  The only case where the
+      // addition of t takes the result outside the range (-180,180] is d = 180
+      // and t < 0.  The case, d = -180 + eps, t = eps, can't happen, since
+      // sum would have returned the exact result in such a case (i.e., given t
+      // = 0).
+      return (d == 180 && t < 0 ? -180 : d) - t;
     }
 
     /**
@@ -513,6 +526,9 @@ namespace GeographicLib {
      * @param[in] x in degrees.
      * @param[out] sinx sin(<i>x</i>).
      * @param[out] cosx cos(<i>x</i>).
+     *
+     * The results obey exactly the elementary properties of the trigonometric
+     * functions, e.g., sin 9&deg; = cos 81&deg; = &minus; sin 123456789&deg;
      **********************************************************************/
     template<typename T> static inline void sincosd(T x, T& sinx, T& cosx) {
       // In order to minimize round-off errors, this function exactly reduces
@@ -617,16 +633,6 @@ namespace GeographicLib {
     }
 
     /**
-     * Evaluate the atan function with the result in degrees
-     *
-     * @tparam T the type of the argument and the returned value.
-     * @param[in] x
-     * @return atan(<i>x</i>) in degrees.
-     **********************************************************************/
-    template<typename T> static inline T atand(T x)
-    { return atan2d(x, T(1)); }
-
-    /**
      * Evaluate the atan2 function with the result in degrees
      *
      * @tparam T the type of the arguments and the returned value.
@@ -634,7 +640,9 @@ namespace GeographicLib {
      * @param[in] x
      * @return atan2(<i>y</i>, <i>x</i>) in degrees.
      *
-     * The result is in the range [&minus;180&deg; 180&deg;).
+     * The result is in the range [&minus;180&deg; 180&deg;).  N.B.,
+     * atan2d(&plusmn;0, &minus;1) = &minus;180&deg;; atan2d(+&epsilon;,
+     * &minus;1) = +180&deg;, for &epsilon; positive and tiny.
      **********************************************************************/
     template<typename T> static inline T atan2d(T y, T x) {
       // In order to minimize round-off errors, this function rearranges the
@@ -655,6 +663,16 @@ namespace GeographicLib {
       }
       return ang;
     }
+
+    /**
+     * Evaluate the atan function with the result in degrees
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] x
+     * @return atan(<i>x</i>) in degrees.
+     **********************************************************************/
+    template<typename T> static inline T atand(T x)
+    { return atan2d(x, T(1)); }
 
     /**
      * Evaluate <i>e</i> atanh(<i>e x</i>)

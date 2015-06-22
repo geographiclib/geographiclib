@@ -71,7 +71,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.43.
+% This file was distributed with GeographicLib 1.44.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
@@ -132,15 +132,12 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 
   lat1 = lat1(:);
   lon1 = lon1(:);
-  azi1 = AngRound(AngNormalize(azi1(:)));
+  azi1 = AngRound(azi1(:));
   s12_a12 = s12_a12(:);
 
-  alp1 = azi1 * degree;
-  salp1 = sin(alp1); salp1(azi1 == -180) = 0;
-  calp1 = cos(alp1); calp1(abs(azi1) == 90) = 0;
-  phi = lat1 * degree;
-  sbet1 = f1 * sin(phi);
-  cbet1 = cos(phi); cbet1(abs(lat1) == 90) = tiny;
+  [salp1, calp1] = sincosdx(azi1);
+  [sbet1, cbet1] = sincosdx(lat1);
+  sbet1 = f1 * sbet1; cbet1 = max(tiny, cbet1);
   [sbet1, cbet1] = norm2(sbet1, cbet1);
   dn1 = sqrt(1 + ep2 * sbet1.^2);
 
@@ -216,11 +213,11 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   if long_unroll
     lon2 = lon1 + lon12;
   else
-    lon12 = AngNormalize2(lon12);
+    lon12 = AngNormalize(lon12);
     lon2 = AngNormalize(AngNormalize(lon1) + lon12);
   end
-  lat2 = atan2(sbet2, f1 * cbet2) / degree;
-  azi2 = 0 - atan2(-salp2, calp2) / degree;
+  lat2 = atan2dx(sbet2, f1 * cbet2);
+  azi2 = atan2dx(salp2, calp2);
   if arcmode
     a12_s12 = b * ((1 + A1m1) .* sig12 + AB1);
   else

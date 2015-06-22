@@ -308,13 +308,19 @@ set_tests_properties (TransverseMercatorProj1 PROPERTIES PASS_REGULAR_EXPRESSION
   "(90\\.0+ 0\\.0+ 0\\.0+|(90\\.0+|89\\.99999999999[0-9]+) -?180\\.0+ -?180\\.0+) (1\\.0000+|0\\.9999+)")
 
 # Test fix to bad handling of pole by RhumbSolve -i
-# Reported  2015-02-24 by Thomas Murray <thomas.murray56@gmail.com>;
+# Reported  2015-02-24 by Thomas Murray <thomas.murray56@gmail.com>
 add_test (NAME RhumbSolve0 COMMAND RhumbSolve
   -p 3 -i --input-string "0 0 90 0")
 add_test (NAME RhumbSolve1 COMMAND RhumbSolve
   -p 3 -i --input-string "0 0 90 0" -s)
 set_tests_properties (RhumbSolve0 RhumbSolve1 PROPERTIES PASS_REGULAR_EXPRESSION
   "^0\\.0+ 10001965\\.729 ")
+
+# Test fix to CassiniSoldner::Forward bug found 2015-06-20
+add_test (NAME GeodesicProj0 COMMAND GeodesicProj
+  -c 0 0 -p 3 --input-string "90 80")
+set_tests_properties (GeodesicProj0 PROPERTIES PASS_REGULAR_EXPRESSION
+  "^-?0\\.0+ [0-9]+\\.[0-9]+ 170\\.0+ ")
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
   # Check fix for single-cell cache bug found 2010-11-23

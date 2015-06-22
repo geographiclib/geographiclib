@@ -270,9 +270,6 @@ namespace GeographicLib {
     if (abs(lat1) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat1)
                           + "d not in [-90d, 90d]");
-    if (lon1 < -540 || lon1 >= 540)
-      throw GeographicErr("Longitude " + Utility::str(lon1)
-                          + "d not in [-540d, 540d)");
     lat = lat1;
     lon = lon1;
   }
@@ -292,8 +289,6 @@ namespace GeographicLib {
     if (ind == LATITUDE)
       throw GeographicErr("Azimuth " + azistr
                           + " has a latitude hemisphere, N/S");
-    if (azi < -540 || azi >= 540)
-      throw GeographicErr("Azimuth " + azistr + " not in range [-540d, 540d)");
     return Math::AngNormalize(azi);
   }
 

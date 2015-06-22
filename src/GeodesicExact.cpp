@@ -147,10 +147,8 @@ namespace GeographicLib {
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
-    real lon12 = Math::AngDiff(Math::AngNormalize(lon1),
-                               Math::AngNormalize(lon2));
     // If very close to being on the same half-meridian, then make it so.
-    lon12 = Math::AngRound(lon12);
+    real lon12 = Math::AngRound(Math::AngDiff(lon1, lon2));
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
@@ -179,21 +177,19 @@ namespace GeographicLib {
     // check, e.g., on verifying quadrants in atan2.  In addition, this
     // enforces some symmetries in the results returned.
 
-    real phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
+    real sbet1, cbet1, sbet2, cbet2, s12x, m12x;
     // Initialize for the meridian.  No longitude calculation is done in this
     // case to let the parameter default to 0.
     EllipticFunction E(-_ep2);
 
-    phi = lat1 * Math::degree();
+    Math::sincosd(lat1, sbet1, cbet1);
     // Ensure cbet1 = +epsilon at poles
-    sbet1 = _f1 * sin(phi);
-    cbet1 = lat1 == -90 ? tiny_ : cos(phi);
+    sbet1 *= _f1; cbet1 = max(tiny_, cbet1);
     Math::norm(sbet1, cbet1);
 
-    phi = lat2 * Math::degree();
+    Math::sincosd(lat2, sbet2, cbet2);
     // Ensure cbet2 = +epsilon at poles
-    sbet2 = _f1 * sin(phi);
-    cbet2 = abs(lat2) == 90 ? tiny_ : cos(phi);
+    sbet2 *= _f1; cbet2 = max(tiny_, cbet2);
     Math::norm(sbet2, cbet2);
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
@@ -219,9 +215,8 @@ namespace GeographicLib {
              sqrt(1 - _e2 * Math::sq(cbet2)) / _f1);
 
     real
-      lam12 = lon12 * Math::degree(),
-      slam12 = abs(lon12) == 180 ? 0 : sin(lam12),
-      clam12 = cos(lam12);      // lon12 == 90 isn't interesting
+      lam12 = lon12 * Math::degree(), slam12, clam12;
+    Math::sincosd(lon12, slam12, clam12);
 
     // initial values to suppress warning
     real a12, sig12, calp1, salp1, calp2 = 0, salp2 = 0;

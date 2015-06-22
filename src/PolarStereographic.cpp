@@ -71,12 +71,10 @@ namespace GeographicLib {
     rho *= 2 * _k0 * _a / _c;
     k = lat != 90 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) :
       _k0;
-    lon = Math::AngNormalize(lon);
-    real
-      lam = lon * Math::degree();
-    x = rho * (lon == -180 ? 0 : sin(lam));
-    y = (northp ? -rho : rho) * (abs(lon) == 90 ? 0 : cos(lam));
-    gamma = northp ? lon : -lon;
+    Math::sincosd(lon, x, y);
+    x *= rho;
+    y *= (northp ? -rho : rho);
+    gamma = Math::AngNormalize(northp ? lon : -lon);
   }
 
   void PolarStereographic::Reverse(bool northp, real x, real y,
@@ -84,15 +82,15 @@ namespace GeographicLib {
     const {
     real
       rho = Math::hypot(x, y),
-      t = rho / (2 * _k0 * _a / _c),
+      t = rho ? rho / (2 * _k0 * _a / _c) :
+      Math::sq(numeric_limits<real>::epsilon()),
       taup = (1 / t - t) / 2,
       tau = Math::tauf(taup, _es),
-      phi = atan(tau),
       secphi = Math::hypot(real(1), tau);
     k = rho ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) : _k0;
-    lat = (northp ? 1 : -1) * (rho ? phi / Math::degree() : 90);
-    lon = 0 - atan2( -x, northp ? -y : y ) / Math::degree();
-    gamma = northp ? lon : -lon;
+    lat = (northp ? 1 : -1) * Math::atand(tau);
+    lon = Math::atan2d(x, northp ? -y : y );
+    gamma = Math::AngNormalize(northp ? lon : -lon);
   }
 
   void PolarStereographic::SetScale(real lat, real k) {

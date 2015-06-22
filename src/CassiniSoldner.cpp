@@ -29,11 +29,9 @@ namespace GeographicLib {
                             Geodesic::LATITUDE | Geodesic::LONGITUDE |
                             Geodesic::DISTANCE | Geodesic::DISTANCE_IN |
                             Geodesic::AZIMUTH);
-    real
-      phi = LatitudeOrigin() * Math::degree(),
-      f = _earth.Flattening();
-    _sbet0 = (1 - f) * sin(phi);
-    _cbet0 = abs(LatitudeOrigin()) == 90 ? 0 : cos(phi);
+    real f = _earth.Flattening();
+    Math::sincosd(LatitudeOrigin(), _sbet0, _cbet0);
+    _sbet0 *= (1 - f);
     Math::norm(_sbet0, _cbet0);
   }
 
@@ -41,7 +39,7 @@ namespace GeographicLib {
                                real& azi, real& rk) const {
     if (!Init())
       return;
-    real dlon = Math::AngDiff(LongitudeOrigin(), Math::AngNormalize(lon));
+    real dlon = Math::AngDiff(LongitudeOrigin(), lon);
     real sig12, s12, azi1, azi2;
     lat = Math::AngRound(lat);
     sig12 = _earth.Inverse(lat, -abs(dlon), lat, abs(dlon), s12, azi1, azi2);
@@ -72,9 +70,9 @@ namespace GeographicLib {
                      Geodesic::GEODESICSCALE,
                      t, t, t, t, t, t, rk, t);
 
+    real salp0, calp0;
+    Math::sincosd(perp.EquatorialAzimuth(), salp0, calp0);
     real
-      alp0 = perp.EquatorialAzimuth() * Math::degree(),
-      calp0 = cos(alp0), salp0 = sin(alp0),
       sbet1 = lat >=0 ? calp0 : -calp0,
       cbet1 = abs(dlon) <= 90 ? abs(salp0) : -abs(salp0),
       sbet01 = sbet1 * _cbet0 - cbet1 * _sbet0,

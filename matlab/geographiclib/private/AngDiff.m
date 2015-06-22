@@ -5,9 +5,8 @@ function d = AngDiff(x, y)
 %   rounds the result.  x and y must be in [-180,180].  x and y can be any
 %   compatible shapes.
 
-  [d, t] = sumx(-x, y);
-  c = (d - 180) + t > 0;
-  d(c) = (d(c) - 360) + t(c);
-  c = (d + 180) + t <= 0;
-  d(c) = (d(c) + 360) + t(c);
+  [d, t] = sumx(AngNormalize(x), AngNormalize(-y));
+  d = - AngNormalize(d);
+  d(d == 180 & t < 0) = -180;
+  d = d - t;
 end

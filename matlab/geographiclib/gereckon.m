@@ -45,7 +45,6 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
     error('ellipsoid must be a vector of size 2')
   end
 
-  degree = pi/180;
   tiny = sqrt(realmin);
 
   a = ellipsoid(1);
@@ -56,16 +55,13 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
   areap = nargout >= 4;
 
   lat1 = lat1(:);
-  lon1 = AngNormalize(lon1(:));
-  azi1 = AngRound(AngNormalize(azi1(:)));
+  lon1 = lon1(:);
+  azi1 = AngRound(azi1(:));
   s12 = s12(:);
 
-  alp1 = azi1 * degree;
-  sgam1 = sin(alp1); sgam1(azi1 == -180) = 0;
-  cgam1 = cos(alp1); cgam1(abs(azi1) == 90) = 0;
-  phi = lat1 * degree;
-  sbet1 = f1 * sin(phi);
-  cbet1 = cos(phi); cbet1(abs(lat1) == 90) = tiny;
+  [sgam1, cgam1] = sincosdx(azi1);
+  [sbet1, cbet1] = sincosdx(lat1);
+  sbet1 = f1 * sbet1; cbet1 = max(tiny, cbet1);
   [sbet1, cbet1] = norm2(sbet1, cbet1);
   [sgam1, cgam1] = norm2(sgam1 .* sqrt(1 - e2 * cbet1.^2), cgam1);
   sgam0 = sgam1 .* cbet1; cgam0 = hypot(cgam1, sgam1 .* sbet1);
@@ -104,13 +100,11 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
   cbet2(cbet2 == 0) = tiny;
   slam2 = sgam0 .* ssig2; clam2 = csig2;
   sgam2 = sgam0; cgam2 = cgam0 .* csig2;
-  lam12 = atan2(slam2 .* clam1 - clam2 .* slam1, ...
-                clam2 .* clam1 + slam2 .* slam1);
-  lon12 = lam12 / degree;
-  lon12 = AngNormalize2(lon12);
-  lon2 = AngNormalize(lon1 + lon12);
-  lat2 = atan2(sbet2, f1 * cbet2) / degree;
-  azi2 = 0 - atan2(-sgam2, cgam2 .* sqrt(1 - e2 * cbet2.^2)) / degree;
+  lon12 = atan2dx(slam2 .* clam1 - clam2 .* slam1, ...
+                  clam2 .* clam1 + slam2 .* slam1);
+  lon2 = AngNormalize(AngNormalize(lon1) + lon12);
+  lat2 = atan2dx(sbet2, f1 * cbet2);
+  azi2 = atan2dx(sgam2, cgam2 .* sqrt(1 - e2 * cbet2.^2));
 
   lat2 = reshape(lat2, S);
   lon2 = reshape(lon2, S);
