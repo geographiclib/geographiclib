@@ -194,11 +194,11 @@ int main(int argc, char* argv[]) {
       }
 
       GeoCoords p;
-      std::string s, suff;
+      std::string s, eol, suff;
       const char* spaces = " \t\n\v\f\r,"; // Include comma as space
       while (std::getline(*input, s)) {
         try {
-          std::string eol("\n");
+          eol = "\n";
           if (!cdelim.empty()) {
             std::string::size_type m = s.find(cdelim);
             if (m != std::string::npos) {

@@ -232,10 +232,11 @@ int main(int argc, char* argv[]) {
                   << m.MaxHeight()/1000 << "km]\n";
       const MagneticCircle c(circle ? m.Circle(time, lat, h) :
                              MagneticCircle());
-      std::string s, stra, strb;
+      std::string s, eol, stra, strb;
+      std::istringstream str(s);
       while (std::getline(*input, s)) {
         try {
-          std::string eol("\n");
+          eol = "\n";
           if (!cdelim.empty()) {
             std::string::size_type n = s.find(cdelim);
             if (n != std::string::npos) {
@@ -243,7 +244,7 @@ int main(int argc, char* argv[]) {
               s = s.substr(0, n);
             }
           }
-          std::istringstream str(s);
+          str.clear(); str.str(s);
           if (!(timeset || circle)) {
             if (!(str >> stra))
               throw GeographicErr("Incomplete input: " + s);

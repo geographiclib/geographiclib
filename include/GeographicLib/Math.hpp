@@ -455,7 +455,7 @@ namespace GeographicLib {
 #else
       using std::fmod;
       T y = fmod(x, T(360));
-      return y < -180 ? y + 360 : (y < 360 ? y : y - 360);
+      return y < -180 ? y + 360 : (y < 180 ? y : y - 360);
 #endif
     }
 
@@ -516,7 +516,7 @@ namespace GeographicLib {
       GEOGRAPHICLIB_VOLATILE T y = abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
-      return x < 0 ? 0 - y : y;
+      return 0 + (x < 0 ? -y : y);
     }
 
     /**

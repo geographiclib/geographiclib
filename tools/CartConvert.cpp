@@ -150,11 +150,12 @@ int main(int argc, char* argv[]) {
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
-    std::string s;
+    std::string s, eol, stra, strb, strc, strd;
+    std::istringstream str;
     int retval = 0;
     while (std::getline(*input, s)) {
       try {
-        std::string eol("\n");
+        eol = "\n";
         if (!cdelim.empty()) {
           std::string::size_type m = s.find(cdelim);
           if (m != std::string::npos) {
@@ -162,10 +163,9 @@ int main(int argc, char* argv[]) {
             s = s.substr(0, m);
           }
         }
-        std::istringstream str(s);
+        str.clear(); str.str(s);
         // initial values to suppress warnings
         real lat, lon, h, x = 0, y = 0, z = 0;
-        std::string stra, strb, strc;
         if (!(str >> stra >> strb >> strc))
           throw GeographicErr("Incomplete input: " + s);
         if (reverse) {
@@ -176,7 +176,6 @@ int main(int argc, char* argv[]) {
           DMS::DecodeLatLon(stra, strb, lat, lon, longfirst);
           h = Utility::num<real>(strc);
         }
-        std::string strd;
         if (str >> strd)
           throw GeographicErr("Extraneous input: " + strd);
         if (reverse) {

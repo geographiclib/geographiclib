@@ -181,11 +181,12 @@ int main(int argc, char* argv[]) {
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
+    std::string s, eol, slat1, slon1, slat2, slon2, sazi, ss12, strc;
+    std::istringstream str;
     int retval = 0;
-    std::string s;
     while (std::getline(*input, s)) {
       try {
-        std::string eol("\n");
+        eol = "\n";
         if (!cdelim.empty()) {
           std::string::size_type m = s.find(cdelim);
           if (m != std::string::npos) {
@@ -193,21 +194,18 @@ int main(int argc, char* argv[]) {
             s = s.substr(0, m);
           }
         }
-        std::istringstream str(s);
+        str.clear(); str.str(s);
         if (linecalc) {
           if (!(str >> s12))
             throw GeographicErr("Incomplete input: " + s);
-          std::string strc;
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
           rhl.Position(s12, lat2, lon2, S12);
           *output << LatLonString(lat2, lon2, prec, dms, dmssep, longfirst)
                   << " " << Utility::str(S12, std::max(prec-7, 0)) << eol;
         } else if (inverse) {
-          std::string slat1, slon1, slat2, slon2;
           if (!(str >> slat1 >> slon1 >> slat2 >> slon2))
             throw GeographicErr("Incomplete input: " + s);
-          std::string strc;
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1, longfirst);
@@ -217,10 +215,8 @@ int main(int argc, char* argv[]) {
                   << Utility::str(s12, prec) << " "
                   << Utility::str(S12, std::max(prec-7, 0)) << eol;
         } else {                // direct
-          std::string slat1, slon1, sazi;
           if (!(str >> slat1 >> slon1 >> sazi >> s12))
             throw GeographicErr("Incomplete input: " + s);
-          std::string strc;
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1, longfirst);

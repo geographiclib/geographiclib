@@ -198,10 +198,11 @@ int main(int argc, char* argv[]) {
                         (mode == ANOMALY ? GravityModel::SPHERICAL_ANOMALY :
                          GravityModel::GEOID_HEIGHT))); // mode == UNDULATION
       const GravityCircle c(circle ? g.Circle(lat, h, mask) : GravityCircle());
-      std::string s, stra, strb;
+      std::string s, eol, stra, strb;
+      std::istringstream str;
       while (std::getline(*input, s)) {
         try {
-          std::string eol("\n");
+          eol = "\n";
           if (!cdelim.empty()) {
             std::string::size_type m = s.find(cdelim);
             if (m != std::string::npos) {
@@ -209,7 +210,7 @@ int main(int argc, char* argv[]) {
               s = s.substr(0, m);
             }
           }
-          std::istringstream str(s);
+          str.clear(); str.str(s);
           real lon;
           if (circle) {
             if (!(str >> strb))

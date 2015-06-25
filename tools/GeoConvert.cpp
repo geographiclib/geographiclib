@@ -166,12 +166,12 @@ int main(int argc, char* argv[]) {
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
     GeoCoords p;
-    std::string s;
+    std::string s, eol;
     std::string os;
     int retval = 0;
 
     while (std::getline(*input, s)) {
-      std::string eol("\n");
+      eol = "\n";
       try {
         if (!cdelim.empty()) {
           std::string::size_type m = s.find(cdelim);
