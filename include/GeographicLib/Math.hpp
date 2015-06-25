@@ -656,7 +656,7 @@ namespace GeographicLib {
       // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
       T ang = atan2(y, x) / degree();
       switch (q) {
-        // case 0: break;
+      case 0: ang =   0 + ang; break; // Convert -0 to +0
       case 1: ang = (y > 0 ? 180 : -180) - ang; break;
       case 2: ang =  90 - ang; break;
       case 3: ang = -90 + ang; break;
