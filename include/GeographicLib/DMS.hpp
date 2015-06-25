@@ -152,15 +152,19 @@ namespace GeographicLib {
      *   - 4d5&quot;4', 4::5, 4:5:, :4:5, 4d4.5'4&quot;, -N20.5, 1.8e2d, 4:60,
      *     4:59:60
      *
-     * The decoding operation can also perform a single addition or subtraction
-     * operation.  If the string includes an <i>internal</i> sign (i.e., not at
+     * The decoding operation can also perform addition and subtraction
+     * operations.  If the string includes <i>internal</i> signs (i.e., not at
      * the beginning nor immediately after an initial hemisphere designator),
-     * then the string is split immediately before that sign and each half is
-     * decoded according to the above rules and the results added.  The second
-     * half can include a hemisphere designator, but it must come at the end (a
-     * hemisphere designator is not allowed after the initial sign).  If both
-     * halves include hemisphere designators then these must compatible; e.g.,
-     * you cannot mix N and E.  Examples of legal and illegal combinations are
+     * then the string is split immediately before such signs and each piece is
+     * decoded according to the above rules and the results added; thus
+     * <code>S3-2.5+4.1N</code> is parsed as the sum of <code>S3</code>,
+     * <code>-2.5</code>, <code>+4.1N</code>.  Any piece can include a
+     * hemisphere designator; however, if multiple designators are given, they
+     * must compatible; e.g., you cannot mix N and E.  In addition, the
+     * designator can appear at the beginning or end of the first piece, but
+     * must be at the end of all subsequent pieces (a hemisphere designator is
+     * not allowed after the initial sign).  Examples of legal and illegal
+     * combinations are
      * - <i>LEGAL</i> (these are all equivalent)
      *   - 070:00:45, 70:01:15W+0:0.5, 70:01:15W-0:0:30W, W70:01:15+0:0:30E
      * - <i>ILLEGAL</i> (the exception thrown explains the problem)

@@ -42,37 +42,40 @@ namespace GeographicLib {
     replace(dmsa, "\xba", 'd');          // 0xba bare alt symbol
     replace(dmsa, "\xb4", '\'');         // 0xb4 bare acute accent
     replace(dmsa, "''", '"');            // '' -> "
-    unsigned
+    string::size_type
       beg = 0,
       end = unsigned(dmsa.size());
     while (beg < end && isspace(dmsa[beg]))
       ++beg;
     while (beg < end && isspace(dmsa[end - 1]))
       --end;
-    unsigned bega = beg;
-    if (end > bega && Utility::lookup(hemispheres_, dmsa[bega]) >= 0)
-      ++bega;
-    if (end > bega && Utility::lookup(signs_, dmsa[bega]) >= 0)
-      ++bega;
-    string::size_type p = dmsa.find_first_of(signs_, bega);
+    // The trimmed string in [beg, end)
+    real v = 0;
+    int i = 0;
     flag ind1 = NONE;
-    real v = InternalDecode(dmsa.substr(beg,
-                                        (p == string::npos ? end : p) - beg),
-                            ind1);
-    if (p == string::npos)
-      ind = ind1;
-    else {
+    // p is pointer to the next piece that needs decoding
+    for (string::size_type p = beg, pb; p < end; p = pb, ++i) {
+      string::size_type pa = p;
+      // Skip over initial hemisphere letter (for i == 0)
+      if (i == 0 && Utility::lookup(hemispheres_, dmsa[pa]) >= 0)
+        ++pa;
+      // Skip over initial sign (checking for it if i == 0)
+      if (i > 0 || (pa < end && Utility::lookup(signs_, dmsa[pa]) >= 0))
+        ++pa;
+      // Find next sign
+      pb = min(dmsa.find_first_of(signs_, pa), end);
       flag ind2 = NONE;
-      v += InternalDecode(dmsa.substr(p, end - p), ind2);
-      if (ind2 == NONE)
-        ind = ind1;
-      else if (ind1 == NONE || ind1 == ind2)
-        ind = ind2;
-      else
+      v += InternalDecode(dmsa.substr(p, pb - p), ind2);
+      if (ind1 == NONE)
+        ind1 = ind2;
+      else if (!(ind2 == NONE || ind1 == ind2))
         throw GeographicErr("Incompatible hemisphere specifies in " +
-                            dmsa.substr(beg, p - beg) + " and " +
-                            dmsa.substr(p, end - p));
+                            dmsa.substr(beg, pb - beg));
     }
+    if (i == 0)
+      throw GeographicErr("Empty or incomplete DMS string " +
+                          dmsa.substr(beg, end - beg));
+    ind = ind1;
     return v;
   }
 

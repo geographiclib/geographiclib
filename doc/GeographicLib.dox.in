@@ -7041,6 +7041,10 @@ git repository for GeographicLib</a>.
    - Add Accumulator::operator*(T y).
    - Fix bug where CassiniSoldner::Forward returned the wrong azimuth
      for points at the pole; also fix similar bug in cassini_fwd.m.
+   - Geodesic::Inverse sets s12 to zero for coincident points at pole.
+   - DMS::Decode: generalize a+b concept, introduced in version 1.42, to
+     any number of pieces.
+   - TODO: Utilities: use istringstream clear/str.
 
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-05-23)

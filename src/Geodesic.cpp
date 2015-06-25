@@ -174,15 +174,14 @@ namespace GeographicLib {
 
     real sbet1, cbet1, sbet2, cbet2, s12x, m12x;
 
-    Math::sincosd(lat1, sbet1, cbet1);
-    // Ensure cbet1 = +epsilon at poles
-    sbet1 *= _f1; cbet1 = max(tiny_, cbet1);
-    Math::norm(sbet1, cbet1);
+    Math::sincosd(lat1, sbet1, cbet1); sbet1 *= _f1;
+    // Ensure cbet1 = +epsilon at poles; doing the fix on beta means that sig12
+    // will be <= 2*tiny for two points at the same pole.
+    Math::norm(sbet1, cbet1); cbet1 = max(tiny_, cbet1);
 
-    Math::sincosd(lat2, sbet2, cbet2);
+    Math::sincosd(lat2, sbet2, cbet2); sbet2 *= _f1;
     // Ensure cbet2 = +epsilon at poles
-    sbet2 *= _f1; cbet2 = max(tiny_, cbet2);
-    Math::norm(sbet2, cbet2);
+    Math::norm(sbet2, cbet2); cbet2 = max(tiny_, cbet2);
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
     // |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -245,6 +244,9 @@ namespace GeographicLib {
       // In fact, we will have sig12 > pi/2 for meridional geodesic which is
       // not a shortest path.
       if (sig12 < 1 || m12x >= 0) {
+        // Need at least 2, to handle 90 0 90 180
+        if (sig12 < 3 * tiny_)
+          sig12 = m12x = s12x = 0;
         m12x *= _b;
         s12x *= _b;
         a12 = sig12 / Math::degree();

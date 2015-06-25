@@ -45,9 +45,6 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
   dlon = AngDiff(lon0, lon) + Z;
   [s12, azi1, azi2, ~, ~, ~, ~, sig12] = ...
       geoddistance(lat, -abs(dlon), lat, abs(dlon), ellipsoid);
-  c = sig12 < 200 * tiny;
-  sig12(c) = 0;
-  s12(c) = 0;
   sig12 = 0.5 * sig12;
   s12 = 0.5 * s12;
   c = s12 == 0;
