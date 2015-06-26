@@ -234,7 +234,6 @@ private/A3coeff.m
 private/A3f.m
 private/AngDiff.m
 private/AngNormalize.m
-private/AngNormalize2.m
 private/AngRound.m
 private/C1f.m
 private/C1pf.m
@@ -244,10 +243,12 @@ private/C3f.m
 private/C4coeff.m
 private/C4f.m
 private/SinCosSeries.m
+private/atan2dx.m
 private/cbrtx.m
 private/cvmgt.m
 private/eatanhe.m
 private/norm2.m
+private/sincosdx.m
 private/sumx.m
 private/swap.m
 EOF

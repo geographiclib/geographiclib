@@ -675,8 +675,8 @@ namespace GeographicLib {
         // Because omg12 is near pi, estimate work with omg12a = pi - omg12
         real k = Astroid(x, y);
         real
-          omg12a = lamscale * ( _f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k ),
-          somg12 = sin(omg12a), comg12 = -cos(omg12a);
+          omg12a = lamscale * ( _f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k );
+        somg12 = sin(omg12a), comg12 = -cos(omg12a);
         // Update spherical estimate of alp1 using omg12 instead of lam12
         salp1 = cbet2 * somg12;
         calp1 = sbet12a - cbet2 * sbet1 * Math::sq(somg12) / (1 - comg12);

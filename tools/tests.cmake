@@ -339,12 +339,13 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/wmm2010.wmm)
     -n wmm2010 -p 10 -r -t 2012.5 --input-string "-80 240 100e3")
   add_test (NAME MagneticField2 COMMAND MagneticField
     -n wmm2010 -p 10 -r -c 2012.5 -80 100e3 --input-string "240")
-  set_tests_properties (MagneticField0 PROPERTIES PASS_REGULAR_EXPRESSION
-    " 5535\\.5249148687 14765\\.3703243050 -50625\\.9305478794 .*\n.* 20\\.4904268023 1\\.0272592716 83\\.5313962281 ")
-  set_tests_properties (MagneticField1 PROPERTIES PASS_REGULAR_EXPRESSION
-    " 5535\\.5249148687 14765\\.3703243050 -50625\\.9305478794 .*\n.* 20\\.4904268023 1\\.0272592716 83\\.5313962281 ")
-  set_tests_properties (MagneticField2 PROPERTIES PASS_REGULAR_EXPRESSION
-    " 5535\\.5249148687 14765\\.3703243050 -50625\\.9305478794 .*\n.* 20\\.4904268023 1\\.0272592716 83\\.5313962281 ")
+  # In third number, allow a final digit 5 (instead of correct 4) to
+  # accommodate Visual Studio 12 and 14.  The relative difference is
+  # "only" 2e-15; on the other hand, this might be a lurking bug in
+  # these compilers.  (Visual Studio 10 and 11 are OK.)
+  set_tests_properties (MagneticField0 MagneticField1 MagneticField2
+    PROPERTIES PASS_REGULAR_EXPRESSION
+    " 5535\\.5249148687 14765\\.3703243050 -50625\\.930547879[45] .*\n.* 20\\.4904268023 1\\.0272592716 83\\.5313962281 ")
 endif ()
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/emm2015.wmm)

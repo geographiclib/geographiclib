@@ -44,7 +44,6 @@ $(srcdir)/geographiclib/private/A3coeff.m \
 $(srcdir)/geographiclib/private/A3f.m \
 $(srcdir)/geographiclib/private/AngDiff.m \
 $(srcdir)/geographiclib/private/AngNormalize.m \
-$(srcdir)/geographiclib/private/AngNormalize2.m \
 $(srcdir)/geographiclib/private/AngRound.m \
 $(srcdir)/geographiclib/private/C1f.m \
 $(srcdir)/geographiclib/private/C1pf.m \
@@ -56,12 +55,14 @@ $(srcdir)/geographiclib/private/C4f.m \
 $(srcdir)/geographiclib/private/G4coeff.m \
 $(srcdir)/geographiclib/private/GeoRotation.m \
 $(srcdir)/geographiclib/private/SinCosSeries.m \
+$(srcdir)/geographiclib/private/atan2dx.m \
 $(srcdir)/geographiclib/private/cbrtx.m \
 $(srcdir)/geographiclib/private/cvmgt.m \
 $(srcdir)/geographiclib/private/eatanhe.m \
 $(srcdir)/geographiclib/private/geoid_file.m \
 $(srcdir)/geographiclib/private/geoid_load_file.m \
 $(srcdir)/geographiclib/private/norm2.m \
+$(srcdir)/geographiclib/private/sincosdx.m \
 $(srcdir)/geographiclib/private/sumx.m \
 $(srcdir)/geographiclib/private/swap.m \
 $(srcdir)/geographiclib/private/tauf.m \
