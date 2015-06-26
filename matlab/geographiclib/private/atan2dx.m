@@ -16,7 +16,7 @@ function z = atan2dx(y, x)
     q2 = x < 0; x(q2) = -x(q2);
     q = 2 * q1 + q2;
     z = atan2(y, x) * (180 / pi);       % z in [-45, 45]
-    t = q == 0;          z(t) =    0 + z(t);
+    % t = q == 0;        z(t) =    0 + z(t);
     t = q == 1 & y >  0; z(t) =  180 - z(t);
     t = q == 1 & y <= 0; z(t) = -180 - z(t);
     t = q == 2;          z(t) =   90 - z(t);

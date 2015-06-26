@@ -516,7 +516,16 @@ namespace GeographicLib {
       GEOGRAPHICLIB_VOLATILE T y = abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
-      return 0 + (x < 0 ? -y : y);
+#if GEOGRAPHICLIB_PRECISION == 4
+      // With quad precision and x = +/-0, this gives y = -0.  So change test
+      // to x <= 0 here to force +0 to be returned.
+      return x <= 0 ? 0 - y : y;
+#elif GEOGRAPHICLIB_PRECISION == 5
+      // With mpfr, 0 - y is a call to +=(int) which doesn't fix the sign of -0
+      return x < 0 ? T(0) - y : y;
+#else
+      return x < 0 ? 0 - y : y;
+#endif
     }
 
     /**
@@ -642,7 +651,8 @@ namespace GeographicLib {
      *
      * The result is in the range [&minus;180&deg; 180&deg;).  N.B.,
      * atan2d(&plusmn;0, &minus;1) = &minus;180&deg;; atan2d(+&epsilon;,
-     * &minus;1) = +180&deg;, for &epsilon; positive and tiny.
+     * &minus;1) = +180&deg;, for &epsilon; positive and tiny;
+     * atan2d(&plusmn;0, 1) = &plusmn;0&deg;.
      **********************************************************************/
     template<typename T> static inline T atan2d(T y, T x) {
       // In order to minimize round-off errors, this function rearranges the
@@ -656,7 +666,12 @@ namespace GeographicLib {
       // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
       T ang = atan2(y, x) / degree();
       switch (q) {
-      case 0: ang =   0 + ang; break; // Convert -0 to +0
+        // Note that atan2d(-0.0, 1.0) will return -0.  However, we expect that
+        // atan2d will not be called with y = -0.  If need be, include
+        //
+        //   case 0: ang = 0 + ang; break;
+        //
+        // and handle mpfr as in AngRound.
       case 1: ang = (y > 0 ? 180 : -180) - ang; break;
       case 2: ang =  90 - ang; break;
       case 3: ang = -90 + ang; break;
