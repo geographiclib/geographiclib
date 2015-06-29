@@ -52,10 +52,9 @@ namespace GeographicLib {
   {
     Math::sincosd(_azi1, _salp1, _calp1);
     real cbet1, sbet1;
-    Math::sincosd(_lat1, sbet1, cbet1);
+    Math::sincosd(_lat1, sbet1, cbet1); sbet1 *= _f1;
     // Ensure cbet1 = +epsilon at poles
-    sbet1 *= _f1; cbet1 = max(tiny_, cbet1);
-    Math::norm(sbet1, cbet1);
+    Math::norm(sbet1, cbet1); cbet1 = max(tiny_, cbet1);
     _dn1 = (_f >= 0 ? sqrt(1 + g._ep2 * Math::sq(sbet1)) :
             sqrt(1 - _e2 * Math::sq(cbet1)) / _f1);
 

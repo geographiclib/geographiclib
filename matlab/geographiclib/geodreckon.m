@@ -161,12 +161,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 
   if arcmode
     sig12 = s12_a12 * degree;
-    ssig12 = sin(sig12);
-    csig12 = cos(sig12);
-    s12a = abs(s12_a12);
-    s12a = s12a - 180 * floor(s12a / 180);
-    ssig12(s12a == 0) = 0;
-    csig12(s12a == 90) = 0;
+    [ssig12, csig12] = sincosdx(s12_a12);
   else
     tau12 = s12_a12 ./ (b * (1 + A1m1));
     s = sin(tau12); c = cos(tau12);

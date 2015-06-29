@@ -237,8 +237,7 @@ extern "C" {
    *   geod_genposition().
    *
    * \e g must have been initialized with a call to geod_init().  \e lat1
-   * should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e azi1
-   * should be in the range [&minus;540&deg;, 540&deg;).
+   * should be in the range [&minus;90&deg;, 90&deg;].
    *
    * The geod_mask values are [see geod_mask()]:
    * - \e caps |= GEOD_LATITUDE for the latitude \e lat2; this is
@@ -278,8 +277,7 @@ extern "C" {
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
    *
    * \e g must have been initialized with a call to geod_init().  \e lat1
-   * should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e azi1
-   * should be in the range [&minus;540&deg;, 540&deg;).  The values of \e lon2
+   * should be in the range [&minus;90&deg;, 90&deg;].  The values of \e lon2
    * and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;).  Any of
    * the "return" arguments \e plat2, etc., may be replaced by 0, if you do not
    * need some quantities computed.
@@ -318,11 +316,10 @@ extern "C" {
    * @param[out] pazi1 pointer to the azimuth at point 1 (degrees).
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
    *
-   * \e g must have been initialized with a call to geod_init().  \e lat1
-   * and \e lat2 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and
-   * \e lon2 should be in the range [&minus;540&deg;, 540&deg;).  The values of
+   * \e g must have been initialized with a call to geod_init().  \e lat1 and
+   * \e lat2 should be in the range [&minus;90&deg;, 90&deg;];.  The values of
    * \e azi1 and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;).
-   * Any of the "return" arguments \e ps12, etc., may be replaced by 0, if you
+   * Any of the "return" arguments, \e ps12, etc., may be replaced by 0, if you
    * do not need some quantities computed.
    *
    * If either point is at a pole, the azimuth is defined by keeping the
@@ -425,18 +422,14 @@ extern "C" {
    * @return \e a12 arc length of between point 1 and point 2 (degrees).
    *
    * \e g must have been initialized with a call to geod_init().  \e lat1
-   * should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e azi1
-   * should be in the range [&minus;540&deg;, 540&deg;).  The function
-   * value \e a12 equals \e s12_a12 if \e flags & GEOD_ARCMODE.  Any of the
-   * "return" arguments \e plat2, etc., may be replaced by 0, if you do not
-   * need some quantities computed.
+   * should be in the range [&minus;90&deg;, 90&deg;];.  The function value \e
+   * a12 equals \e s12_a12 if \e flags & GEOD_ARCMODE.  Any of the "return"
+   * arguments, \e plat2, etc., may be replaced by 0, if you do not need some
+   * quantities computed.
    *
    * With \e flags & GEOD_LONG_UNROLL bit set, the longitude is "unrolled" so
    * that the quantity \e lon2 &minus; \e lon1 indicates how many times and in
-   * what sense the geodesic encircles the ellipsoid.  Because \e lon2 might be
-   * outside the normal allowed range for longitudes, [&minus;540&deg;,
-   * 540&deg;), be sure to normalize it, e.g., with fmod(\e lon2, 360.0) before
-   * using it in subsequent calculations
+   * what sense the geodesic encircles the ellipsoid.
    **********************************************************************/
   double geod_gendirect(const struct geod_geodesic* g,
                         double lat1, double lon1, double azi1,

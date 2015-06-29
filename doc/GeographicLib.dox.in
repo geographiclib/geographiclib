@@ -6999,29 +6999,20 @@ git repository for GeographicLib</a>.
      even.  TODO: propagate changes to JavaScript.
    - Replace the series for <i>A</i><sub>2</sub> in the Geodesic class
      with one with smaller truncation errors.  1 = new series, 2 = new
-     Lengths, 3 = minimize number of arrays ...
-     C++, 123
-     C, 13
-     Fortran, 13
+     Lengths, 3 = minimize number of arrays, 4 = AngNormalize,
+     5 = sincosd/atan2s, 6 = small dist fix
+     C++, 123456
+     C, 123456
+     Fortran, 123456
      Java, 1(3x)
      JavaScript, 1(3x)
-     MATLAB, 123
+     MATLAB, 123456
      maxima, 13
-     Python, 1(3x)
+     Python, 1(3x)45
    - Add -w open for tools CartConvert ConicProj GeodesicProj GeodSolve
      GeoidEval Gravity MagneticField Planimeter RhumbSolve
      TransverseMercatorProj; add -p option to CarConvert.
    - Update man pages to refer to GeoConvert(1) on handling of coordinates.
-     CartConvert
-     ConicProj
-     GeodesicProj
-     GeodSolve
-     GeoidEval
-     Gravity
-     MagneticField
-     Planimeter
-     RhumbSolve
-     TransverseMercatorProj
    - Math::AngNormalize works on any angles.  Math::AngNormalize2
      deprecated.
    - Add Math::sincosd, Math::sind, Math::cosd; improve the accuracy of

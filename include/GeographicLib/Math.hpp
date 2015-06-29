@@ -486,7 +486,13 @@ namespace GeographicLib {
      * is tiny and negative and \e y = 180&deg;).
      **********************************************************************/
     template<typename T> static inline T AngDiff(T x, T y) {
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
+      using std::remainder;
+      T t, d = - AngNormalize(sum(remainder( x, T(360)),
+                                  remainder(-y, T(360)), t));
+#else
       T t, d = - AngNormalize(sum(AngNormalize(x), AngNormalize(-y), t));
+#endif
       // Here y - x = d - t (mod 360), exactly, where d is in (-180,180] and
       // abs(t) <= eps (eps = 2^-45 for doubles).  The only case where the
       // addition of t takes the result outside the range (-180,180] is d = 180
@@ -562,11 +568,11 @@ namespace GeographicLib {
       r *= degree();
       // Possibly could call the gnu extension sincos
       T s = sin(r), c = cos(r);
-      switch (unsigned(q) & 3u) {
-      case 0u: sinx =  s; cosx =  c; break;
-      case 1u: sinx =  c; cosx = -s; break;
-      case 2u: sinx = -s; cosx = -c; break;
-      case 3u: sinx = -c; cosx =  s; break;
+      switch (unsigned(q) & 3U) {
+      case 0U: sinx =  s; cosx =  c; break;
+      case 1U: sinx =  c; cosx = -s; break;
+      case 2U: sinx = -s; cosx = -c; break;
+      case 3U: sinx = -c; cosx =  s; break;
       }
     }
 
@@ -594,7 +600,7 @@ namespace GeographicLib {
       // now abs(r) <= 45
       r *= degree();
       unsigned p = unsigned(q);
-      return (p & 2u ? -1 : 1) * (p & 1u ? cos(r) : sin(r));
+      return (p & 2U ? -1 : 1) * (p & 1U ? cos(r) : sin(r));
     }
 
     /**
@@ -621,7 +627,7 @@ namespace GeographicLib {
       // now abs(r) <= 45
       r *= degree();
       unsigned p = unsigned(q + 1);
-      return (p & 2u ? -1 : 1) * (p & 1u ? cos(r) : sin(r));
+      return (p & 2U ? -1 : 1) * (p & 1U ? cos(r) : sin(r));
     }
 
     /**
@@ -638,7 +644,7 @@ namespace GeographicLib {
       static const T overflow = 1 / sq(std::numeric_limits<T>::epsilon());
       T s, c;
       sincosd(x, s, c);
-      return c ? s / c : (x < 0 ? -overflow : overflow);
+      return c ? s / c : (s < 0 ? -overflow : overflow);
     }
 
     /**

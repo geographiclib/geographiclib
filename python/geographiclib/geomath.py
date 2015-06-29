@@ -120,28 +120,64 @@ class Math(object):
   AngRound = staticmethod(AngRound)
 
   def AngNormalize(x):
-    """reduce angle in [-540,540) to [-180,180)"""
+    """reduce angle to [-180,180)"""
 
+    x = math.fmod(x, 360)
     return (x - 360 if x >= 180 else
             (x + 360 if x < -180 else x))
   AngNormalize = staticmethod(AngNormalize)
 
-  def AngNormalize2(x):
-    """reduce arbitrary angle to [-180,180)"""
-
-    return Math.AngNormalize(math.fmod(x, 360))
-  AngNormalize2 = staticmethod(AngNormalize2)
-
   def AngDiff(x, y):
     """compute y - x and reduce to [-180,180] accurately"""
 
-    d, t = Math.sum(-x, y)
-    if (d - 180) + t > 0:       # y - x > 180
-      d -= 360                  # exact
-    elif (d + 180) + t <= 0:    # y - x <= -180
-      d += 360                  # exact
-    return d + t
+    d, t = Math.sum(Math.AngNormalize(x), Math.AngNormalize(-y))
+    d = - Math.AngNormalize(d)
+    return (-180 if d == 180 and t < 0 else d) - t
   AngDiff = staticmethod(AngDiff)
+
+  def sincosd(x):
+    """Compute sine and cosine of x in degrees."""
+
+    r = math.fmod(x, 360); q = int(math.floor(r / 90 + 0.5))
+    r -= 90 * q; r *= Math.degree
+    s = math.sin(r); c = math.cos(r)
+    q = q % 4
+    if q == 1:
+      s, c =  c, -s
+    elif q == 2:
+      s, c = -s, -c
+    elif q == 3:
+      s, c = -c,  s
+    return s, c
+    return s, t
+  sincosd = staticmethod(sincosd)
+
+  def AngNormalize(x):
+    """reduce angle to [-180,180)"""
+
+    x = math.fmod(x, 360)
+    return (x - 360 if x >= 180 else
+            (x + 360 if x < -180 else x))
+  AngNormalize = staticmethod(AngNormalize)
+
+  def atan2d(y, x):
+    """compute atan2(y, x) with the result in degrees"""
+
+    if abs(y) > abs(x):
+      q = 2; x, y = y, x
+    else:
+      q = 0
+    if x < 0:
+      q += 1; x = -x
+    ang = math.atan2(y, x) / Math.degree
+    if q == 1:
+      ang = (180 if y > 0 else -180) - ang
+    elif q == 2:
+      ang =  90 - ang
+    elif q == 3:
+      ang = -90 + ang
+    return ang
+  atan2d = staticmethod(atan2d)
 
   def isfinite(x):
     """Test for finiteness"""

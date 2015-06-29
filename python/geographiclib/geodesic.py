@@ -150,7 +150,7 @@ class Geodesic(object):
       # the evolute curve p^(1/3)+q^(1/3) = 1
       disc = S * (S + 2 * r3)
       u = r
-      if (disc >= 0):
+      if disc >= 0:
         T3 = S + r3
         # Pick the sign on the sqrt to maximize abs(T3).  This minimizes loss
         # of precision due to cancellation.  The result is unchanged because
@@ -665,9 +665,8 @@ class Geodesic(object):
     # Compute longitude difference (AngDiff does this carefully).  Result is
     # in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     # east-going and meridional geodesics.
-    lon12 = Math.AngDiff(Math.AngNormalize(lon1), Math.AngNormalize(lon2))
     # If very close to being on the same half-meridian, then make it so.
-    lon12 = Math.AngRound(lon12)
+    lon12 = Math.AngRound(Math.AngDiff(lon1, lon2))
     # Make longitude difference positive.
     lonsign = 1 if lon12 >= 0 else -1
     lon12 *= lonsign
@@ -697,17 +696,13 @@ class Geodesic(object):
 
     # real phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x
 
-    phi = lat1 * Math.degree
+    sbet1, cbet1 = Math.sincosd(lat1); sbet1 *= self._f1
     # Ensure cbet1 = +epsilon at poles
-    sbet1 = self._f1 * math.sin(phi)
-    cbet1 = Geodesic.tiny_ if lat1 == -90 else math.cos(phi)
-    sbet1, cbet1 = Math.norm(sbet1, cbet1)
+    sbet1, cbet1 = Math.norm(sbet1, cbet1); cbet1 = max(Geodesic.tiny_, cbet1)
 
-    phi = lat2 * Math.degree
+    sbet2, cbet2 = Math.sincosd(lat2); sbet2 *= self._f1
     # Ensure cbet2 = +epsilon at poles
-    sbet2 = self._f1 * math.sin(phi)
-    cbet2 = Geodesic.tiny_ if abs(lat2) == 90 else math.cos(phi)
-    sbet2, cbet2 = Math.norm(sbet2, cbet2)
+    sbet2, cbet2 = Math.norm(sbet2, cbet2); cbet2 = max(Geodesic.tiny_, cbet2)
 
     # If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
     # |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -728,8 +723,7 @@ class Geodesic(object):
     dn2 = math.sqrt(1 + self._ep2 * Math.sq(sbet2))
 
     lam12 = lon12 * Math.degree
-    slam12 = 0 if lon12 == 180 else math.sin(lam12)
-    clam12 = math.cos(lam12)      # lon12 == 90 isn't interesting
+    slam12, clam12 = Math.sincosd(lon12)
 
     # real a12, sig12, calp1, salp1, calp2, salp2
     # index zero elements of these arrays are unused
@@ -767,6 +761,8 @@ class Geodesic(object):
       # In fact, we will have sig12 > pi/2 for meridional geodesic which is
       # not a shortest path.
       if sig12 < 1 or m12x >= 0:
+        if sig12 < 3 * Geodesic.tiny_:
+          sig12 = m12x = s12x = 0
         m12x *= self._b
         s12x *= self._b
         a12 = sig12 / Math.degree
@@ -953,31 +949,31 @@ class Geodesic(object):
 
     if outmask & Geodesic.AZIMUTH:
       # minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi1 = 0 - math.atan2(-salp1, calp1) / Math.degree
-      azi2 = 0 - math.atan2(-salp2, calp2) / Math.degree
+      azi1 = Math.atan2d(salp1, calp1)
+      azi2 = Math.atan2d(salp2, calp2)
 
     # Returned value in [0, 180]
     return a12, s12, azi1, azi2, m12, M12, M21, S12
 
   def CheckPosition(lat, lon):
     """Check that lat and lon are legal and return normalized lon"""
-    if (abs(lat) > 90):
+    if abs(lat) > 90:
       raise ValueError("latitude " + str(lat) + " not in [-90, 90]")
-    if (lon < -540 or lon >= 540):
-      raise ValueError("longitude " + str(lon) + " not in [-540, 540)")
+    if not Math.isfinite(lon):
+      raise ValueError("lonitude " + str(azi) + " not a finite number")
     return Math.AngNormalize(lon)
   CheckPosition = staticmethod(CheckPosition)
 
   def CheckAzimuth(azi):
     """Check that azi is legal and return normalized value"""
-    if (azi < -540 or azi >= 540):
-      raise ValueError("azimuth " + str(azi) + " not in [-540, 540)")
+    if not Math.isfinite(azi):
+      raise ValueError("azimuth " + str(azi) + " not a finite number")
     return Math.AngNormalize(azi)
   CheckAzimuth = staticmethod(CheckAzimuth)
 
   def CheckDistance(s):
     """Check that s is a legal distance"""
-    if not (Math.isfinite(s)):
+    if not Math.isfinite(s):
       raise ValueError("distance " + str(s) + " not a finite number")
   CheckDistance = staticmethod(CheckDistance)
 
@@ -1083,9 +1079,7 @@ class Geodesic(object):
     The LONG_UNROLL bit unrolls the longitudes (instead of reducing them
     to the range [-180,180)); the quantity lon2 - lon1 then indicates
     how many times and in what sense the geodesic encircles the
-    ellipsoid.  Because lon2 might be outside the normal allowed range
-    for longitudes, [-540,540), be sure to normalize it with
-    math.fmod(lon2,360) before using it in other calls.
+    ellipsoid.
 
     """
 

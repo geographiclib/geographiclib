@@ -36,22 +36,15 @@ class GeodesicLine(object):
                   Geodesic.LONG_UNROLL)
 
     # Guard against underflow in salp0
-    azi1 = Math.AngRound(Math.AngNormalize(azi1))
-    self._lat1 = lat1
+    self._lat1 = Math.AngRound(lat1)
     self._lon1 = lon1
-    self._azi1 = azi1
-    # alp1 is in [0, pi]
-    alp1 = azi1 * Math.degree
-    # Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
-    # problems directly than to skirt them.
-    self._salp1 = 0 if     azi1  == -180 else math.sin(alp1)
-    self._calp1 = 0 if abs(azi1) ==   90 else math.cos(alp1)
-    # real cbet1, sbet1, phi
-    phi = lat1 * Math.degree
+    self._azi1 = Math.AngRound(azi1)
+    self._salp1, self._calp1 = Math.sincosd(azi1)
+
+    # real cbet1, sbet1
+    sbet1, cbet1 = Math.sincosd(lat1); sbet1 *= self._f1
     # Ensure cbet1 = +epsilon at poles
-    sbet1 = self._f1 * math.sin(phi)
-    cbet1 = Geodesic.tiny_ if abs(lat1) == 90 else math.cos(phi)
-    sbet1, cbet1 = Math.norm(sbet1, cbet1)
+    sbet1, cbet1 = Math.norm(sbet1, cbet1); cbet1 = max(Geodesic.tiny_, cbet1)
     self._dn1 = math.sqrt(1 + geod._ep2 * Math.sq(sbet1))
 
     # Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -134,10 +127,7 @@ class GeodesicLine(object):
     if arcmode:
       # Interpret s12_a12 as spherical arc length
       sig12 = s12_a12 * Math.degree
-      s12a = abs(s12_a12)
-      s12a -= 180 * math.floor(s12a / 180)
-      ssig12 = 0 if s12a ==  0 else math.sin(sig12)
-      csig12 = 0 if s12a == 90 else math.cos(sig12)
+      ssig12, csig12 = Math.sincosd(s12_a12)
     else:
       # Interpret s12_a12 as distance
       tau12 = s12_a12 / (self._b * (1 + self._A1m1))
@@ -221,18 +211,16 @@ class GeodesicLine(object):
         sig12 + (Geodesic.SinCosSeries(True, ssig2, csig2, self._C3a)
                  - self._B31))
       lon12 = lam12 / Math.degree
-      # Use Math.AngNormalize2 because longitude might have wrapped
-      # multiple times.
       lon2 = (self._lon1 + lon12 if outmask & Geodesic.LONG_UNROLL else
               Math.AngNormalize(Math.AngNormalize(self._lon1) +
-                                Math.AngNormalize2(lon12)))
+                                Math.AngNormalize(lon12)))
 
     if outmask & Geodesic.LATITUDE:
-      lat2 = math.atan2(sbet2, self._f1 * cbet2) / Math.degree
+      lat2 = Math.atan2d(sbet2, self._f1 * cbet2)
 
     if outmask & Geodesic.AZIMUTH:
       # minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi2 = 0 - math.atan2(-salp2, calp2) / Math.degree
+      azi2 = Math.atan2d(salp2, calp2)
 
     if outmask & (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
       B22 = Geodesic.SinCosSeries(True, ssig2, csig2, self._C2a)
