@@ -847,6 +847,9 @@ GeographicLib.GeodesicLine = {};
       // In fact, we will have sig12 > pi/2 for meridional geodesic
       // which is not a shortest path.
       if (sig12 < 1 || m12x >= 0) {
+        // Need at least 2, to handle 90 0 90 180
+        if (sig12 < 3 * g.tiny_)
+          sig12 = m12x = s12x = 0;
         m12x *= this._b;
         s12x *= this._b;
         vals.a12 = sig12 / m.degree;

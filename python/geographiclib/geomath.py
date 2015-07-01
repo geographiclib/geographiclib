@@ -23,7 +23,6 @@ class Math(object):
     digits, the number of digits in the fraction of a real number
     minval, minimum normalized positive number
     maxval, maximum finite number
-    degree, the number of radians in a degree
     nan, not a number
     inf, infinity
   """
@@ -32,7 +31,6 @@ class Math(object):
   epsilon = math.pow(2.0, 1-digits)
   minval = math.pow(2.0, -1022)
   maxval = math.pow(2.0, 1023) * (2 - epsilon)
-  degree = math.pi/180
   inf = float("inf") if sys.version_info > (2, 6) else 2 * maxval
   nan = float("nan") if sys.version_info > (2, 6) else inf - inf
 
@@ -139,7 +137,7 @@ class Math(object):
     """Compute sine and cosine of x in degrees."""
 
     r = math.fmod(x, 360); q = int(math.floor(r / 90 + 0.5))
-    r -= 90 * q; r *= Math.degree
+    r -= 90 * q; r = math.radians(r)
     s = math.sin(r); c = math.cos(r)
     q = q % 4
     if q == 1:
@@ -149,16 +147,7 @@ class Math(object):
     elif q == 3:
       s, c = -c,  s
     return s, c
-    return s, t
   sincosd = staticmethod(sincosd)
-
-  def AngNormalize(x):
-    """reduce angle to [-180,180)"""
-
-    x = math.fmod(x, 360)
-    return (x - 360 if x >= 180 else
-            (x + 360 if x < -180 else x))
-  AngNormalize = staticmethod(AngNormalize)
 
   def atan2d(y, x):
     """compute atan2(y, x) with the result in degrees"""
@@ -169,7 +158,7 @@ class Math(object):
       q = 0
     if x < 0:
       q += 1; x = -x
-    ang = math.atan2(y, x) / Math.degree
+    ang = math.degrees(math.atan2(y, x))
     if q == 1:
       ang = (180 if y > 0 else -180) - ang
     elif q == 2:

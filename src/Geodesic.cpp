@@ -361,7 +361,7 @@ namespace GeographicLib {
         }
         {
           real dummy;
-          // Ensures that the reduced length and geodesic scale are computed in
+          // Ensure that the reduced length and geodesic scale are computed in
           // a "canonical" way, with the I2 integral.
           unsigned lengthmask = outmask |
             (outmask & (REDUCEDLENGTH | GEODESICSCALE) ? DISTANCE : NONE);

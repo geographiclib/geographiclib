@@ -6716,16 +6716,18 @@ Here's what you should know:
    recommended for installation for all users on a system.
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=4</code> gives quad
    precision (113-bit precision) via boost::multiprecision::float128;
-   this requires <a href="http://www.boost.org"> boost</a> (version 1.54
-   or later) and the quadmath library (the package names are libquadmath
-   and libquadmath-devel).  This requires the use of g++.
+   this requires:
+   - <a href="http://www.boost.org"> Boost</a>, version 1.54 or later,
+   - the quadmath library (the package names are libquadmath
+     and libquadmath-devel),
+   - the use of g++.
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=5</code> gives
-   arbitrary precision via mpfr::mpreal; this requires
-   <a href="http://www.mpfr.org"> MPFR</a> (version 3.0 or later),
-   <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
-   (version 3.6.2 or later), and a compiler which supports the explicit
-   cast operator (e.g., g++ 4.5 or later, Visual Studio 12 2013 or
-   later).
+   arbitrary precision via mpfr::mpreal; this requires:
+   - <a href="http://www.mpfr.org"> MPFR</a>, version 3.0 or later,
+   - <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
+     (version 3.6.2 or later),
+   - a compiler which supports the explicit cast operator (e.g., g++ 4.5
+     or later, Visual Studio 12 2013 or later).
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
    to respect these.
  - The indicated precision is used for <b>all</b> floating point
@@ -6896,7 +6898,7 @@ The following steps needed to be taken
        were made member variables and so initialized when the
        constructor was called.
      - Some simple static real arrays (e.g., the interpolating stencils
-       for Geoid) were changes into integer arrays.
+       for Geoid) were changed into integer arrays.
      - Some static variables where converted to static functions similar
        to the definition of pi() above.
      - All the static instances of classes where converted as follows
@@ -6996,19 +6998,19 @@ git repository for GeographicLib</a>.
      the case of a sphere (instead of returning NaNs).
    - Tighten up DMS::Decode: (a) allow 30:60.0 30:60., disallow 30:70.0
      30:60; (b) more accurate rounding.  DMS::Encode rounds ties to
-     even.  TODO: propagate changes to JavaScript.
+     even.  DONE: propagate changes to JavaScript.
    - Replace the series for <i>A</i><sub>2</sub> in the Geodesic class
      with one with smaller truncation errors.  1 = new series, 2 = new
      Lengths, 3 = minimize number of arrays, 4 = AngNormalize,
-     5 = sincosd/atan2s, 6 = small dist fix
+     5 = sincosd/atan2d, 6 = small dist fix
      C++, 123456
      C, 123456
      Fortran, 123456
-     Java, 1(3x)
-     JavaScript, 1(3x)
+     Java, 1(3x)6
+     JavaScript, 1(3x)6
      MATLAB, 123456
-     maxima, 13
-     Python, 1(3x)45
+     maxima, 1(2x)3456
+     Python, 12(3x)456
    - Add -w open for tools CartConvert ConicProj GeodesicProj GeodSolve
      GeoidEval Gravity MagneticField Planimeter RhumbSolve
      TransverseMercatorProj; add -p option to CarConvert.
@@ -7019,14 +7021,6 @@ git repository for GeographicLib</a>.
      Math::atan2d.  These functions carefully minimize round-off errors
      in the conversions between radians and degrees.  TODO: use these
      functions, where appropropriate.
-   - TODO: migrate sincosd, AngNormalize, AngDiff improvements to
-     C,
-     Fortran,
-     Java,
-     JavaScript,
-     MATLAB,
-     maxima,
-     Python
    - Hide the documentation of the computation of the gradient of the
      geoid height (now deprecated) in the Geoid class.
    - Add Accumulator::operator*(T y).

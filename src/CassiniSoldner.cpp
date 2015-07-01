@@ -14,14 +14,10 @@ namespace GeographicLib {
   using namespace std;
 
   CassiniSoldner::CassiniSoldner(const Geodesic& earth)
-    : eps1_(real(0.01) * sqrt(numeric_limits<real>::epsilon()))
-    , tiny_(sqrt(numeric_limits<real>::min()))
-    , _earth(earth) {}
+    : _earth(earth) {}
 
   CassiniSoldner::CassiniSoldner(real lat0, real lon0, const Geodesic& earth)
-    : eps1_(real(0.01) * sqrt(numeric_limits<real>::epsilon()))
-    , tiny_(sqrt(numeric_limits<real>::min()))
-    , _earth(earth)
+    : _earth(earth)
   { Reset(lat0, lon0); }
 
   void CassiniSoldner::Reset(real lat0, real lon0) {

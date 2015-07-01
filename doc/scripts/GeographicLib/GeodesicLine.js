@@ -37,7 +37,6 @@
     this._lat1 = lat1;
     this._lon1 = lon1;
     this._azi1 = azi1;
-    // alp1 is in [0, pi]
     var alp1 = azi1 * m.degree;
     // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
     // problems directly than to skirt them.

@@ -175,7 +175,6 @@ public class GeodesicLine {
     _lat1 = lat1;
     _lon1 = lon1;
     _azi1 = azi1;
-    // alp1 is in [0, pi]
     double alp1 = azi1 * GeoMath.degree;
     // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
     // problems directly than to skirt them.

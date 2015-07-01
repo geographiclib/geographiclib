@@ -205,19 +205,37 @@ swapx(x, y):=[y,x]$
 SinCosNorm(sinx, cosx):=block([r : hypotx(sinx, cosx)],
   [sinx/r, cosx/r])$
 
-AngNormalize(x):= if x >= 180b0 then x - 360b0
-else (if x < -180b0 then x + 360b0 else x)$
-AngNormalize2(x):=AngNormalize(mod(x, 360b0))$
+AngNormalize(x):=block([y:x-360b0*floor(x/360b0+0.5)],
+  if y < -180b0 then y+360b0 else if y < 180b0 then y else y-360b0)$
 
-AngDiff(x, y) := block([t,d,r:sumx(-x,y)],
-  d:r[1], t:r[2],
-  if (d - 180b0) + t > 0b0 then d : d - 360b0
-  else if (d + 180b0) + t <= 0b0 then d : d + 360b0,
-  d + t)$
+AngDiff(x, y) := block([t,d,r:sumx(AngNormalize(x),AngNormalize(-y))],
+  d:-AngNormalize(r[1]), t:r[2],
+  (if d = 180b0 and t < 0b0 then -180b0 else d) - t)$
 
 AngRound(x) := block([z:1/16b0, y:abs(x)],
   y : if y < z then z - (z - y) else y,
   if x < 0b0 then 0b0-y else y)$
+
+sincosdx(x):=block([r,q:floor(x/90b0 + 0.5),s,c],
+  r:(x-q*90b0)*degree,
+  s:sin(r), c:cos(r),
+  q:mod(q,4),
+  if     q = 0 then [ s,  c]
+  elseif q = 1 then [ c, -s]
+  elseif q = 2 then [-s, -c]
+  else              [-c,  s])$
+
+atan2dx(T y, T x):=block([q,xx,yy,ang],
+  if abs(y) > abs(x)
+  then (xx:y, yy:x, q:2)
+  else (xx:x, yy:y, q:0),
+  if x < 0
+  then (x:-x, q:q+1),
+  ang:atan2(yy, xx) / degree,
+  if     q = 0 then ang
+  elseif q = 1 then (if y > 0b0 then 180b0 else -180b0) - ang
+  elseif q = 2 then  90 - ang
+  else              -90 + ang)$
 
 /* Indices in geodesic struct */
 block([i:0], g_a:(i:i+1), g_f:(i:i+1), g_f1:(i:i+1), g_e2:(i:i+1),
@@ -276,7 +294,7 @@ geod_lineinit(g,lat1,lon1,azi1):=block([a, f,
   A1m1, A2m1, A3c, B11, B21, B31,
   A4, B41, C1a, C1pa, C2a, C3a,
   C4a,
-  alp1, cbet1, sbet1, phi, eps,
+  cbet1, sbet1, eps,
   e2, cchi1, A4, B41, E0, D0, H0, E1, D1, H1, C4a, E],
   lat1:bfloat(lat1),lon1:bfloat(lon1), azi1:bfloat(azi1),
   a : g[g_a],
@@ -285,23 +303,18 @@ geod_lineinit(g,lat1,lon1,azi1):=block([a, f,
   c2 : g[g_c2],
   f1 : g[g_f1],
   e2 : g[g_e2],
+  lat1 : AngRound(lat1),
   /* If caps is 0 assume the standard direct calculation
   caps = (caps ? caps : GEOD_DISTANCE_IN | GEOD_LONGITUDE) |
   GEOD_LATITUDE | GEOD_AZIMUTH, Always allow latitude and azimuth
   Guard against underflow in salp0 */
-  azi1 : AngRound(AngNormalize(azi1)),
+  azi1 : AngRound(azi1),
   /* Don't normalizing lon1... */
-  /* alp1 is in [0, pi] */
-  alp1 : azi1 * degree,
-  /* Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
-  problems directly than to skirt them. */
-  salp1 : if azi1  = -180b0 then 0b0 else sin(alp1),
-  calp1 : if abs(azi1) = 90b0 then 0b0 else cos(alp1),
-  phi : lat1 * degree,
-  /* Ensure cbet1 = +epsilon at poles */
-  sbet1 : f1 * sin(phi),
-  cbet1 : if abs(lat1) = 90b0 then tiny else cos(phi),
+  block([t:sincosdx(azi1)], salp1:t[1], calp1:t[2]),
+  block([t:sincosdx(lat1)], sbet1:t[1], cbet1:t[2]), sbet1 : f1 * sbet1,
   block([t:SinCosNorm(sbet1, cbet1)], sbet1:t[1], cbet1:t[2]),
+  /* Ensure cbet1 = +epsilon at poles */
+  cbet1 = max(tiny, cbet1),
   dn1 : sqrt(1 + g[g_ep2] * sq(sbet1)),
   /* Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0), */
   salp0 : salp1 * cbet1, /* alp0 in [0, pi/2 - |bet1|] */
@@ -383,13 +396,10 @@ geod_genposition(l, arcmode,  s12_a12):=block(
   omg12, lam12, lon12,
   ssig2, csig2, sbet2, cbet2, somg2, comg2, salp2, calp2, dn2, E],
   s12_a12 : bfloat(s12_a12),
-  if (arcmode) then block([s12a],
+  if (arcmode) then (
     /* Interpret s12_a12 as spherical arc length */
     sig12 : s12_a12 * degree,
-    s12a : abs(s12_a12),
-    s12a : s12a - 180 * floor(s12a / 180),
-    ssig12 : if s12a =  0b0 then 0b0 else sin(sig12),
-    csig12 : if s12a = 90b0 then 0b0 else cos(sig12))
+    block([t:sincosdx(s12_a12)], ssig12:t[1], csig12:t[2]))
   else block([tau12 : s12_a12 / (l[l_b] *
       (if exact then l[l_E0] else (1 + l[l_A1m1]))),s,c],
     /* Interpret s12_a12 as distance */
@@ -483,9 +493,9 @@ geod_genposition(l, arcmode,  s12_a12):=block(
   lon12 : lam12 / degree,
   /* Don't normalize lon2... */
   lon2 : l[l_lon1] + lon12,
-  lat2 : atan2x(sbet2, l[l_f1] * cbet2) / degree,
+  lat2 : atan2dx(sbet2, l[l_f1] * cbet2),
   /* minus signs give range [-180, 180). 0- converts -0 to +0. */
-  azi2 : 0 - atan2x(-salp2, calp2) / degree,
+  azi2 : atan2dx(salp2, calp2),
   block([B22, AB2, J12],
     if exact then J12 : l[l_k2] * l[l_D0] *
     (sig12 + deltad(ssig2, csig2, dn2, l[l_E][e_k2], l[l_E][e_dc]) - l[l_D1])
@@ -544,7 +554,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
   [s12 : 0b0, azi1 : 0b0, azi2 : 0b0,
   m12 : 0b0, M12 : 0b0, M21 : 0b0, S12 : 0b0,
   lon12, latsign, lonsign, swapp,
-  phi, sbet1, cbet1, sbet2, cbet2, s12x : 0b0, m12x : 0b0,
+  sbet1, cbet1, sbet2, cbet2, s12x : 0b0, m12x : 0b0,
   dn1, dn2, lam12, slam12, clam12,
   a12 : 0b0, sig12, calp1 : 0b0, salp1 : 0b0, calp2 : 0b0, salp2 : 0b0,
   meridian,  omg12 : 0b0,
@@ -556,7 +566,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
   /* Compute longitude difference (AngDiff does this carefully).  Result is
   in [-180, 180] but -180 is only for west-going geodesics.  180 is for
   east-going and meridional geodesics. */
-  lon12 : AngDiff(AngNormalize(lon1), AngNormalize(lon2)),
+  lon12 : AngDiff(lon1, lon2),
   /* If very close to being on the same half-meridian, then make it so. */
   lon12 : AngRound(lon12),
   /* Make longitude difference positive. */
@@ -582,16 +592,14 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
   made.  We make these transformations so that there are few cases to
   check, e.g., on verifying quadrants in atan2.  In addition, this
   enforces some symmetries in the results returned. */
-  phi : lat1 * degree,
-  /* Ensure cbet1 = +epsilon at poles */
-  sbet1 : g[g_f1] * sin(phi),
-  cbet1 : if lat1 = -90b0 then tiny else cos(phi),
+  block([t:sincosdx(lat1)], sbet1:t[1], cbet1:t[2]), sbet1 : f1 * sbet1,
   block([t:SinCosNorm(sbet1, cbet1)], sbet1:t[1], cbet1:t[2]),
-  phi : lat2 * degree,
-  /* Ensure cbet2 = +epsilon at poles */
-  sbet2 : g[g_f1] * sin(phi),
-  cbet2 : if abs(lat2) = 90b0 then tiny else cos(phi),
+  /* Ensure cbet1 = +epsilon at poles */
+  cbet1 = max(tiny, cbet1),
+  block([t:sincosdx(lat2)], sbet2:t[1], cbet2:t[2]), sbet2 : f1 * sbet2,
   block([t:SinCosNorm(sbet2, cbet2)], sbet2:t[1], cbet2:t[2]),
+  /* Ensure cbet2 = +epsilon at poles */
+  cbet2 = max(tiny, cbet2),
   /* If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
   |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
   a better measure.  This logic is used in assigning calp2 in Lambda12.
@@ -605,8 +613,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
   dn1 : sqrt(1 + g[g_ep2] * sq(sbet1)),
   dn2 : sqrt(1 + g[g_ep2] * sq(sbet2)),
   lam12 : lon12 * degree,
-  slam12 : if lon12 = 180b0 then 0b0 else sin(lam12),
-  clam12 : cos(lam12),      /* lon12 == 90 isn't interesting */
+  block([t:sincosdx(lon12)], slam12:t[1], clam12:t[2]),
   meridian : is(lat1 = -90b0 or slam12 = 0b0),
   if meridian then block(
     /* Endpoints are on a single full meridian, so the geodesic might lie on
@@ -630,6 +637,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
     In fact, we will have sig12 > pi/2 for meridional geodesic which is
     not a shortest path. */
     if sig12 < 1b0 or m12x >= 0b0 then (
+      if sig12 < 3 * tiny then sig12 : m12x : s12x : 0b0,
       m12x : m12x * g[g_b],
       s12x : s12x * g[g_b],
       a12 : sig12 / degree )
@@ -793,9 +801,8 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
     block([t:swapx(M12, M21)], M12:t[1], M21:t[2])),
   salp1 : salp1 * swapp * lonsign, calp1 : calp1 * swapp * latsign,
   salp2 : salp2 * swapp * lonsign, calp2 : calp2 * swapp * latsign,
-  /* minus signs give range [-180, 180). 0- converts -0 to +0. */
-  azi1 : 0b0 - atan2x(-salp1, calp1) / degree,
-  azi2 : 0b0 - atan2x(-salp2, calp2) / degree,
+  azi1 : atan2dx(salp1, calp1),
+  azi2 : atan2dx(salp2, calp2),
   [a12, s12, azi1, azi2, m12, M12, M21, S12]
 )$
 
@@ -825,7 +832,7 @@ SinCosSeries(sinp, sinx, cosx, c):=block([n:length(c), ar, y0, y1, n2, k],
 
 /* Return [s12b, m12b, m0, M12, M21] */
 Lengths(g, eps, E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2):=
-block([scalep:true, Ca,
+block([Ca,
   s12b : 0b0, m12b : 0b0, m0 : 0b0, M12 : 0b0, M21 : 0b0,
   A1m1, AB1, A2m1, AB2, J12],
   /* Return m12b = (reduced length)/b; also calculate s12b = distance/b,
@@ -854,7 +861,7 @@ block([scalep:true, Ca,
   (sig12 + deltae(ssig2, csig2, dn2, E[e_k2], E[e_ec])
   - deltae(ssig1, csig1, dn1, E[e_k2], E[e_ec]))
   else (1 + A1m1) * sig12 + AB1,
-  if scalep then block([csig12 : csig1 * csig2 + ssig1 * ssig2,
+  block([csig12 : csig1 * csig2 + ssig1 * ssig2,
     t : g[g_ep2] * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2)],
     M12 : csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1,
     M21 : csig12 - (t * ssig1 - csig1 * J12) * ssig2 / dn2 ),

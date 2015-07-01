@@ -409,37 +409,56 @@ class Geodesic(object):
 
   # return s12b, m12b, m0, M12, M21
   def Lengths(self, eps, sig12,
-              ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2, scalep,
+              ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2, outmask,
               # Scratch areas of the right size
               C1a, C2a):
     """Private: return a bunch of lengths"""
-    # Return m12b = (reduced length)/_b; also calculate s12b = distance/_b,
-    # and m0 = coefficient of secular term in expression for reduced length.
-    Geodesic.C1f(eps, C1a)
-    Geodesic.C2f(eps, C2a)
-    A1m1 = Geodesic.A1m1f(eps)
-    AB1 = (1 + A1m1) * (
-      Geodesic.SinCosSeries(True, ssig2, csig2, C1a) -
-      Geodesic.SinCosSeries(True, ssig1, csig1, C1a))
-    A2m1 = Geodesic.A2m1f(eps)
-    AB2 = (1 + A2m1) * (
-      Geodesic.SinCosSeries(True, ssig2, csig2, C2a) -
-      Geodesic.SinCosSeries(True, ssig1, csig1, C2a))
-    m0 = A1m1 - A2m1
-    J12 = m0 * sig12 + (AB1 - AB2)
-    # Missing a factor of _b.
-    # Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
-    # cancellation in the case of coincident points.
-    m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) - csig1 * csig2 * J12
-    # Missing a factor of _b
-    s12b = (1 + A1m1) * sig12 + AB1
-    if scalep:
+    # Return s12b, m12b, m0, M12, M21, where
+    # m12b = (reduced length)/_b; s12b = distance/_b,
+    # m0 = coefficient of secular term in expression for reduced length.
+    outmask &= Geodesic.OUT_MASK
+    # outmask & DISTANCE: set s12b
+    # outmask & REDUCEDLENGTH: set m12b & m0
+    # outmask & GEODESICSCALE: set M12 & M21
+
+    s12b = m12b = m0 = M12 = M21 = Math.nan
+    if outmask & (Geodesic.DISTANCE | Geodesic.REDUCEDLENGTH |
+                  Geodesic.GEODESICSCALE):
+      A1 = Geodesic.A1m1f(eps)
+      Geodesic.C1f(eps, C1a)
+      if outmask & (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
+        A2 = Geodesic.A2m1f(eps)
+        Geodesic.C2f(eps, C2a)
+        m0x = A1 - A2
+        A2 = 1 + A2
+      A1 = 1 + A1
+    if outmask & Geodesic.DISTANCE:
+      B1 = (Geodesic.SinCosSeries(True, ssig2, csig2, C1a) -
+            Geodesic.SinCosSeries(True, ssig1, csig1, C1a))
+      # Missing a factor of _b
+      s12b = A1 * (sig12 + B1)
+      if outmask & (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
+        B2 = (Geodesic.SinCosSeries(True, ssig2, csig2, C2a) -
+              Geodesic.SinCosSeries(True, ssig1, csig1, C2a))
+        J12 = m0x * sig12 + (A1 * B1 - A2 * B2)
+    elif outmask & (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
+      # Assume here that nC1_ >= nC2_
+      for l in range(1, Geodesic.nC2_):
+        C2a[l] = A1 * C1a[l] - A2 * C2a[l]
+      J12 = m0x * sig12 + (Geodesic.SinCosSeries(True, ssig2, csig2, C2a) -
+                           Geodesic.SinCosSeries(True, ssig1, csig1, C2a))
+    if outmask & Geodesic.REDUCEDLENGTH:
+      m0 = m0x
+      # Missing a factor of _b.
+      # Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure
+      # accurate cancellation in the case of coincident points.
+      m12b = (dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
+              csig1 * csig2 * J12)
+    if outmask & Geodesic.GEODESICSCALE:
       csig12 = csig1 * csig2 + ssig1 * ssig2
       t = self._ep2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2)
       M12 = csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1
       M21 = csig12 - (t * ssig1 - csig1 * J12) * ssig2 / dn2
-    else:
-      M12 = M21 = Math.nan
     return s12b, m12b, m0, M12, M21
 
   # return sig12, salp1, calp1, salp2, calp2, dnm
@@ -519,7 +538,7 @@ class Geodesic(object):
         # Inverse.
         dummy, m12b, m0, dummy, dummy = self.Lengths(
           self._n, math.pi + bet12a, sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
-          cbet1, cbet2, False, C1a, C2a)
+          cbet1, cbet2, Geodesic.REDUCEDLENGTH, C1a, C2a)
         x = -1 + m12b / (cbet1 * cbet2 * m0 * math.pi)
         betscale = (sbet12a / x if x < -0.01
                     else -self._f * Math.sq(cbet1) * math.pi)
@@ -648,7 +667,7 @@ class Geodesic(object):
       else:
         dummy, dlam12, dummy, dummy, dummy = self.Lengths(
           eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
-          False, C1a, C2a)
+          Geodesic.REDUCEDLENGTH, C1a, C2a)
         dlam12 *= self._f1 / (calp2 * cbet2)
     else:
       dlam12 = Math.nan
@@ -722,7 +741,7 @@ class Geodesic(object):
     dn1 = math.sqrt(1 + self._ep2 * Math.sq(sbet1))
     dn2 = math.sqrt(1 + self._ep2 * Math.sq(sbet2))
 
-    lam12 = lon12 * Math.degree
+    lam12 = math.radians(lon12)
     slam12, clam12 = Math.sincosd(lon12)
 
     # real a12, sig12, calp1, salp1, calp2, salp2
@@ -751,7 +770,7 @@ class Geodesic(object):
 
       s12x, m12x, dummy, M12, M21 = self.Lengths(
         self._n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
-        (outmask & Geodesic.GEODESICSCALE) != 0, C1a, C2a)
+        outmask | Geodesic.DISTANCE | Geodesic.REDUCEDLENGTH, C1a, C2a)
 
       # Add the check for sig12 since zero length geodesics might yield m12 <
       # 0.  Test case was
@@ -765,7 +784,7 @@ class Geodesic(object):
           sig12 = m12x = s12x = 0
         m12x *= self._b
         s12x *= self._b
-        a12 = sig12 / Math.degree
+        a12 = math.degrees(sig12)
       else:
         # m12 < 0, i.e., prolate and too close to anti-podal
         meridian = False
@@ -801,7 +820,7 @@ class Geodesic(object):
         m12x = (Math.sq(dnm) * self._b * math.sin(sig12 / dnm))
         if outmask & Geodesic.GEODESICSCALE:
           M12 = M21 = math.cos(sig12 / dnm)
-        a12 = sig12 / Math.degree
+        a12 = math.degrees(sig12)
         omg12 = lam12 / (self._f1 * dnm)
       else:
 
@@ -828,8 +847,8 @@ class Geodesic(object):
           # WGS84 and random input: mean = 2.85, sd = 0.60
           (nlam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
            eps, omg12, dv) = self.Lambda12(
-            sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-            salp1, calp1, numit < Geodesic.maxit1_, C1a, C2a, C3a)
+             sbet1, cbet1, dn1, sbet2, cbet2, dn2,
+             salp1, calp1, numit < Geodesic.maxit1_, C1a, C2a, C3a)
           v = nlam12 - lam12
           # 2 * tol0 is approximately 1 ulp for a number in [0, pi].
           # Reversed test to allow escape with NaNs
@@ -871,13 +890,17 @@ class Geodesic(object):
           tripb = (abs(salp1a - salp1) + (calp1a - calp1) < Geodesic.tolb_ or
                    abs(salp1 - salp1b) + (calp1 - calp1b) < Geodesic.tolb_)
 
+        lengthmask = (outmask &
+                      (Geodesic.DISTANCE
+                       if (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE)
+                       else Geodesic.EMPTY))
         s12x, m12x, dummy, M12, M21 = self.Lengths(
           eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
-          (outmask & Geodesic.GEODESICSCALE) != 0, C1a, C2a)
+          lengthmask, C1a, C2a)
 
         m12x *= self._b
         s12x *= self._b
-        a12 = sig12 / Math.degree
+        a12 = math.degrees(sig12)
         omg12 = lam12 - omg12
     # end elif not meridian
 
@@ -960,7 +983,7 @@ class Geodesic(object):
     if abs(lat) > 90:
       raise ValueError("latitude " + str(lat) + " not in [-90, 90]")
     if not Math.isfinite(lon):
-      raise ValueError("lonitude " + str(azi) + " not a finite number")
+      raise ValueError("lonitude " + str(lon) + " not a finite number")
     return Math.AngNormalize(lon)
   CheckPosition = staticmethod(CheckPosition)
 
@@ -1041,7 +1064,7 @@ class Geodesic(object):
     line = GeodesicLine(
       self, lat1, lon1, azi1,
       # Automatically supply DISTANCE_IN if necessary
-      outmask | ( Geodesic.EMPTY if arcmode else Geodesic.DISTANCE_IN))
+      outmask | (Geodesic.EMPTY if arcmode else Geodesic.DISTANCE_IN))
     return line.GenPosition(arcmode, s12_a12, outmask)
 
   def Direct(self, lat1, lon1, azi1, s12,

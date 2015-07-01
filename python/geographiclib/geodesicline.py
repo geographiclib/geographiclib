@@ -126,7 +126,7 @@ class GeodesicLine(object):
     B12 = 0; AB1 = 0
     if arcmode:
       # Interpret s12_a12 as spherical arc length
-      sig12 = s12_a12 * Math.degree
+      sig12 = math.radians(s12_a12)
       ssig12, csig12 = Math.sincosd(s12_a12)
     else:
       # Interpret s12_a12 as distance
@@ -210,7 +210,7 @@ class GeodesicLine(object):
       lam12 = omg12 + self._A3c * (
         sig12 + (Geodesic.SinCosSeries(True, ssig2, csig2, self._C3a)
                  - self._B31))
-      lon12 = lam12 / Math.degree
+      lon12 = math.degrees(lam12)
       lon2 = (self._lon1 + lon12 if outmask & Geodesic.LONG_UNROLL else
               Math.AngNormalize(Math.AngNormalize(self._lon1) +
                                 Math.AngNormalize(lon12)))
@@ -268,7 +268,7 @@ class GeodesicLine(object):
       S12 = (self._c2 * math.atan2(salp12, calp12) +
              self._A4 * (B42 - self._B41))
 
-    a12 = s12_a12 if arcmode else sig12 / Math.degree
+    a12 = s12_a12 if arcmode else math.degrees(sig12)
     return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
 
   def Position(self, s12,

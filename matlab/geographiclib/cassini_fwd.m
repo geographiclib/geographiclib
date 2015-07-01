@@ -38,7 +38,6 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
     error('ellipsoid must be a vector of size 2')
   end
 
-  tiny = sqrt(realmin);
   degree = pi/180;
   f = ecc2flat(ellipsoid(2));
   lat = AngRound(lat);
