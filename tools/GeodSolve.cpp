@@ -258,7 +258,7 @@ int main(int argc, char* argv[]) {
           if (full) {
             lon2 = Math::AngNormalize(lon2);
             if (unroll)
-              lon2 = lon1 + Math::AngDiff(Math::AngNormalize(lon1), lon2);
+              lon2 = lon1 + Math::AngDiff(lon1, lon2);
             else
               lon1 = Math::AngNormalize(lon1);
             *output << LatLonString(lat1, lon1, prec, dms, dmssep, longfirst)

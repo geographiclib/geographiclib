@@ -353,7 +353,7 @@ namespace GeographicLib {
   void TransverseMercator::Forward(real lon0, real lat, real lon,
                                    real& x, real& y, real& gamma, real& k)
     const {
-    lon = Math::AngDiff(Math::AngNormalize(lon0), Math::AngNormalize(lon));
+    lon = Math::AngDiff(lon0, lon);
     // Explicitly enforce the parity
     int
       latsign = lat < 0 ? -1 : 1,
@@ -591,7 +591,7 @@ namespace GeographicLib {
     if (backside)
       lon = 180 - lon;
     lon *= etasign;
-    lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
+    lon = Math::AngNormalize(lon + lon0);
     if (backside)
       gamma = 180 - gamma;
     gamma *= xisign * etasign;

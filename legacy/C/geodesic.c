@@ -197,10 +197,10 @@ static void sincosdx(real x, real* sinx, real* cosx) {
   /* Possibly could call the gnu extension sincos */
   s = sin(r); c = cos(r);
   switch ((unsigned)q & 3U) {
-  case 0U: *sinx =  s; *cosx =  c; break;
-  case 1U: *sinx =  c; *cosx = -s; break;
-  case 2U: *sinx = -s; *cosx = -c; break;
-  case 3U: *sinx = -c; *cosx =  s; break;
+  case 0U: *sinx =     s; *cosx =     c; break;
+  case 1U: *sinx =     c; *cosx = 0 - s; break;
+  case 2U: *sinx = 0 - s; *cosx = 0 - c; break;
+  case 3U: *sinx = 0 - c; *cosx =     s; break;
   }
 }
 

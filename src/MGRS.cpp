@@ -103,8 +103,8 @@ namespace GeographicLib {
         iy /= base_;
       }
       if (prec > tilelevel_) {
-        xf -= floor(xf / mult);
-        yf -= floor(yf / mult);
+        xf -= floor(xf);
+        yf -= floor(yf);
         mult = pow(real(base_), prec - tilelevel_);
         ix = int(floor(xf * mult));
         iy = int(floor(yf * mult));
@@ -249,18 +249,18 @@ namespace GeographicLib {
     }
     int prec1 = (len - p)/2;
     real
-      unit = tile_,
-      x1 = unit * icol,
-      y1 = unit * irow;
+      unit = 1,
+      x1 = icol,
+      y1 = irow;
     for (int i = 0; i < prec1; ++i) {
-      unit /= base_;
+      unit *= base_;
       int
         ix = Utility::lookup(digits_, mgrs[p + i]),
         iy = Utility::lookup(digits_, mgrs[p + i + prec1]);
       if (ix < 0 || iy < 0)
         throw GeographicErr("Encountered a non-digit in " + mgrs.substr(p));
-      x1 += unit * ix;
-      y1 += unit * iy;
+      x1 = base_ * x1 + ix;
+      y1 = base_ * y1 + iy;
     }
     if ((len - p) % 2) {
       if (Utility::lookup(digits_, mgrs[len - 1]) < 0)
@@ -274,13 +274,12 @@ namespace GeographicLib {
                           + " digits_ in "
                           + mgrs.substr(p));
     if (centerp) {
-      x1 += unit/2;
-      y1 += unit/2;
+      unit *= 2; x1 = 2 * x1 + 1; y1 = 2 * y1 + 1;
     }
     zone = zone1;
     northp = northp1;
-    x = x1;
-    y = y1;
+    x = (tile_ * x1) / unit;
+    y = (tile_ * y1) / unit;
     prec = prec1;
   }
 

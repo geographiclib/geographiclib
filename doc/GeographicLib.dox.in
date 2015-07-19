@@ -7029,7 +7029,11 @@ git repository for GeographicLib</a>.
    - Geodesic::Inverse sets s12 to zero for coincident points at pole.
    - DMS::Decode: generalize a+b concept, introduced in version 1.42, to
      any number of pieces.
-   - TODO: Utilities: use istringstream clear/str.
+   - Utilities: use istringstream clear/str.
+   - TODO: Document limitations of series for TransverseMercator.
+   - Add GARS.
+   - Add Georef.
+   - Geohash uses "invalid" instead of "nan".
 
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-05-23)

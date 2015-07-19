@@ -13,12 +13,13 @@ function [sinx, cosx] = sincosdx(x)
     sinx = sind(x); cosx = cosd(x);
   else
     r = rem(x, 360);
+    r(x == 0 & signbit(x)) = -0;        % workaround rem's bad handling of -0
     q = floor(r / 90 + 0.5);
     r = r - 90 * q;
     q = mod(q, 4);
     sinx = sind(r); cosx = cosd(r);
-    t = q == 1; z = sinx(t); sinx(t) = cosx(t); cosx(t) = -z;
-    t = q == 2; sinx(t) = -sinx(t); cosx(t) = -cosx(t);
-    t = q == 3; z = sinx(t); sinx(t) = -cosx(t); cosx(t) = z;
+    t = q == 1; z = 0 - sinx(t); sinx(t) = cosx(t); cosx(t) = z;
+    t = q == 2; sinx(t) = 0 - sinx(t); cosx(t) = 0 - cosx(t);
+    t = q == 3; z = sinx(t); sinx(t) = 0 - cosx(t); cosx(t) = z;
   end
 end

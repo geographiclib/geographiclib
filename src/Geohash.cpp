@@ -2,7 +2,7 @@
  * \file Geohash.cpp
  * \brief Implementation for GeographicLib::Geohash class
  *
- * Copyright (c) Charles Karney (2012-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -14,8 +14,6 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const int Geohash::decprec_[] = {-2, -1, 0, 0, 1, 2, 3, 3, 4, 5,
-                                   6, 6, 7, 8, 9, 9, 10, 11, 12};
   const string Geohash::lcdigits_ = "0123456789bcdefghjkmnpqrstuvwxyz";
   const string Geohash::ucdigits_ = "0123456789BCDEFGHJKMNPQRSTUVWXYZ";
 
@@ -23,11 +21,8 @@ namespace GeographicLib {
     if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    if (lon < -540 || lon >= 540)
-      throw GeographicErr("Longitude " + Utility::str(lon)
-                          + "d not in [-540d, 540d)");
     if (Math::isnan(lat) || Math::isnan(lon)) {
-      geohash = "nan";
+      geohash = "invalid";
       return;
     }
     if (lat == 90) lat -= lateps() / 2;
@@ -60,16 +55,20 @@ namespace GeographicLib {
 
   void Geohash::Reverse(const std::string& geohash, real& lat, real& lon,
                         int& len, bool centerp) {
-    len = min(int(maxlen_), int(geohash.length()));
-    if (len >= 3 &&
-        toupper(geohash[0]) == 'N' &&
-        toupper(geohash[1]) == 'A' &&
-        toupper(geohash[2]) == 'N') {
+    int len1 = min(int(maxlen_), int(geohash.length()));
+    if (len1 >= 3 &&
+        ((toupper(geohash[0]) == 'I' &&
+          toupper(geohash[1]) == 'N' &&
+          toupper(geohash[2]) == 'V') ||
+         // Check A first because it is not in a standard geohash
+         (toupper(geohash[1]) == 'A' &&
+          toupper(geohash[0]) == 'N' &&
+          toupper(geohash[2]) == 'N'))) {
       lat = lon = Math::NaN();
       return;
     }
     unsigned long long ulon = 0, ulat = 0;
-    for (unsigned k = 0, j = 0; k < unsigned(len); ++k) {
+    for (unsigned k = 0, j = 0; k < unsigned(len1); ++k) {
       int byte = Utility::lookup(ucdigits_, geohash[k]);
       if (byte < 0)
         throw GeographicErr("Illegal character in geohash " + geohash);
@@ -86,11 +85,12 @@ namespace GeographicLib {
       ulon += 1;
       ulat += 1;
     }
-    int s = 5 * (maxlen_ - len);
+    int s = 5 * (maxlen_ - len1);
     ulon <<=     (s / 2);
     ulat <<= s - (s / 2);
     lon = ulon * loneps() - 180;
     lat = ulat * lateps() - 90;
+    len = len1;
   }
 
 } // namespace GeographicLib

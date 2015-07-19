@@ -220,10 +220,10 @@ sincosdx(x):=block([r,q:floor(x/90b0 + 0.5),s,c],
   r:(x-q*90b0)*degree,
   s:sin(r), c:cos(r),
   q:mod(q,4),
-  if     q = 0 then [ s,  c]
-  elseif q = 1 then [ c, -s]
-  elseif q = 2 then [-s, -c]
-  else              [-c,  s])$
+  if     q = 0 then [  s,   c]
+  elseif q = 1 then [  c, 0-s]
+  elseif q = 2 then [0-s, 0-c]
+  else              [0-c,   s])$
 
 atan2dx(T y, T x):=block([q,xx,yy,ang],
   if abs(y) > abs(x)

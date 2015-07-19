@@ -69,7 +69,6 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT CassiniSoldner {
   private:
     typedef Math::real real;
-    real DEPRECATE1, DEPRECATE2; // Remove on suitable library version change
     Geodesic _earth;
     GeodesicLine _meridian;
     real _sbet0, _cbet0;

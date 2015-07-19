@@ -148,7 +148,7 @@ namespace GeographicLib {
                          unsigned outmask,
                          real& s12, real& azi12, real& S12) const {
     real
-      lon12 = Math::AngDiff(Math::AngNormalize(lon1), Math::AngNormalize(lon2)),
+      lon12 = Math::AngDiff(lon1, lon2),
       psi1 = _ell.IsometricLatitude(lat1),
       psi2 = _ell.IsometricLatitude(lat2),
       psi12 = psi2 - psi1,

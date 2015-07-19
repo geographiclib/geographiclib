@@ -2057,17 +2057,17 @@
       c = cos(r)
       q = mod(q + 4, 4)
       if (q .eq. 0) then
-        sinx =  s
-        cosx =  c
+        sinx =     s
+        cosx =     c
       else if (q .eq. 1) then
-        sinx =  c
-        cosx = -s
+        sinx =     c
+        cosx = 0 - s
       else if (q .eq. 2) then
-        sinx = -s
-        cosx = -c
+        sinx = 0 - s
+        cosx = 0 - c
       else
-        sinx = -c
-        cosx =  s
+        sinx = 0 - c
+        cosx =     s
       end if
 
       return
