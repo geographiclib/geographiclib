@@ -184,8 +184,7 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added. \e lat should be in the range
-     * [&minus;90&deg;, 90&deg;]; \e lon and \e lon0 should be in the
-     * range [&minus;540&deg;, 540&deg;).
+     * [&minus;90&deg;, 90&deg;].
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const;
@@ -201,9 +200,8 @@ namespace GeographicLib {
      * @param[out] gamma meridian convergence at point (degrees).
      * @param[out] k scale of projection at point.
      *
-     * No false easting or northing is added.  \e lon0 should be in the range
-     * [&minus;540&deg;, 540&deg;).  The value of \e lon returned is in
-     * the range [&minus;180&deg;, 180&deg;).
+     * No false easting or northing is added.  The value of \e lon returned is
+     * in the range [&minus;180&deg;, 180&deg;).
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const;

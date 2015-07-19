@@ -7013,7 +7013,7 @@ git repository for GeographicLib</a>.
      Python, 12(3x)456
    - Add -w open for tools CartConvert ConicProj GeodesicProj GeodSolve
      GeoidEval Gravity MagneticField Planimeter RhumbSolve
-     TransverseMercatorProj; add -p option to CarConvert.
+     TransverseMercatorProj; add -p option to CartConvert.
    - Update man pages to refer to GeoConvert(1) on handling of coordinates.
    - Math::AngNormalize works on any angles.  Math::AngNormalize2
      deprecated.
@@ -7030,10 +7030,11 @@ git repository for GeographicLib</a>.
    - DMS::Decode: generalize a+b concept, introduced in version 1.42, to
      any number of pieces.
    - Utilities: use istringstream clear/str.
-   - TODO: Document limitations of series for TransverseMercator.
+   - Document limitations of series for TransverseMercator.
    - Add GARS.
    - Add Georef.
    - Geohash uses "invalid" instead of "nan".
+   - More accurate rounding in MGRS::Reverse.
 
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-05-23)
