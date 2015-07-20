@@ -97,10 +97,8 @@ namespace GeographicLib {
         ix = int(floor(xf / mult)),
         iy = int(floor(yf / mult));
       for (int c = min(prec, int(tilelevel_)); c--;) {
-        mgrs1[z + c] = digits_[ ix % base_ ];
-        ix /= base_;
-        mgrs1[z + c + prec] = digits_[ iy % base_ ];
-        iy /= base_;
+        mgrs1[z + c       ] = digits_[ix % base_]; ix /= base_;
+        mgrs1[z + c + prec] = digits_[iy % base_]; iy /= base_;
       }
       if (prec > tilelevel_) {
         xf -= floor(xf);
@@ -109,10 +107,8 @@ namespace GeographicLib {
         ix = int(floor(xf * mult));
         iy = int(floor(yf * mult));
         for (int c = prec - tilelevel_; c--;) {
-          mgrs1[z + c + tilelevel_] = digits_[ ix % base_ ];
-          ix /= base_;
-          mgrs1[z + c + tilelevel_ + prec] = digits_[ iy % base_ ];
-          iy /= base_;
+          mgrs1[z + c + tilelevel_       ] = digits_[ix % base_]; ix /= base_;
+          mgrs1[z + c + tilelevel_ + prec] = digits_[iy % base_]; iy /= base_;
         }
       }
     }
@@ -160,7 +156,7 @@ namespace GeographicLib {
                      int& prec, bool centerp) {
     int
       p = 0,
-      len = int(mgrs.size());
+      len = int(mgrs.length());
     if (len >= 3 &&
         toupper(mgrs[0]) == 'I' &&
         toupper(mgrs[1]) == 'N' &&
@@ -182,7 +178,7 @@ namespace GeographicLib {
     if (p > 0 && !(zone1 >= UTMUPS::MINUTMZONE && zone1 <= UTMUPS::MAXUTMZONE))
       throw GeographicErr("Zone " + Utility::str(zone1) + " not in [1,60]");
     if (p > 2)
-      throw GeographicErr("More than 2 digits_ at start of MGRS "
+      throw GeographicErr("More than 2 digits at start of MGRS "
                           + mgrs.substr(0, p));
     if (len - p < 1)
       throw GeographicErr("MGRS string too short " + mgrs);
@@ -266,13 +262,12 @@ namespace GeographicLib {
       if (Utility::lookup(digits_, mgrs[len - 1]) < 0)
         throw GeographicErr("Encountered a non-digit in " + mgrs.substr(p));
       else
-        throw GeographicErr("Not an even number of digits_ in "
+        throw GeographicErr("Not an even number of digits in "
                             + mgrs.substr(p));
     }
     if (prec1 > maxprec_)
       throw GeographicErr("More than " + Utility::str(2*maxprec_)
-                          + " digits_ in "
-                          + mgrs.substr(p));
+                          + " digits in " + mgrs.substr(p));
     if (centerp) {
       unit *= 2; x1 = 2 * x1 + 1; y1 = 2 * y1 + 1;
     }

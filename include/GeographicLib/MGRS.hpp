@@ -182,15 +182,16 @@ namespace GeographicLib {
      *   allocated.
      *
      * \e prec specifies the precision of the MGRS string as follows:
-     * - prec = &minus;1 (min), only the grid zone is returned
-     * - prec = 0 (min), 100 km
-     * - prec = 1, 10 km
-     * - prec = 2, 1 km
-     * - prec = 3, 100 m
-     * - prec = 4, 10 m
-     * - prec = 5, 1 m
-     * - prec = 6, 0.1 m
-     * - prec = 11 (max), 1 &mu;m
+     * - \e prec = &minus;1 (min), only the grid zone is returned
+     * - \e prec = 0, 100 km
+     * - \e prec = 1, 10 km
+     * - \e prec = 2, 1 km
+     * - \e prec = 3, 100 m
+     * - \e prec = 4, 10 m
+     * - \e prec = 5, 1 m
+     * - \e prec = 6, 0.1 m
+     * - &hellip;
+     * - \e prec = 11 (max), 1 &mu;m
      *
      * UTM eastings are allowed to be in the range [100 km, 900 km], northings
      * are allowed to be in in [0 km, 9500 km] for the northern hemisphere and

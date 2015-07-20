@@ -69,11 +69,10 @@ namespace GeographicLib {
      *   90&deg;].
      * @exception std::bad_alloc if memory for \e gars can't be allocated.
      *
-     * Internally, \e prec is first put in the range [0, 2].  The meaning of \e
-     * prec is as follows:
-     * - 0, 30' precision, e.g., 006AG;
-     * - 1, 15' precision, e.g., 006AG3;
-     * - 2, 5' precision, e.g., 006AG39.
+     * \e prec specifies the precision of \e gars as follows:
+     * - \e prec = 0 (min), 30' precision, e.g., 006AG;
+     * - \e prec = 1, 15' precision, e.g., 006AG3;
+     * - \e prec = 2 (max), 5' precision, e.g., 006AG39.
      *
      * If \e lat or \e lon is NaN, then \e gars is set to "INVALID".
      **********************************************************************/
@@ -90,11 +89,11 @@ namespace GeographicLib {
      *   \e gars, otherwise return the south-west corner.
      * @exception GeographicErr if \e gars is illegal.
      *
-     * The case of the letters in \e gars is ignored.  The value of \e prec is
-     * in [0, 2].  The meaning of \e prec is as follows:
-     * - 0, 30' precision, e.g., 006AG;
-     * - 1, 15' precision, e.g., 006AG3;
-     * - 2, 5' precision, e.g., 006AG39.
+     * The case of the letters in \e gars is ignored.  \e prec gives the
+     * precision of \e gars as follows:
+     * - \e prec = 0 (min), 30' precision, e.g., 006AG;
+     * - \e prec = 1, 15' precision, e.g., 006AG3;
+     * - \e prec = 2 (max), 5' precision, e.g., 006AG39.
      *
      * If the first 3 characters of \e gars are "INV", then \e lat and \e lon
      * are set to NaN and \e prec is unchanged.

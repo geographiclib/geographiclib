@@ -67,15 +67,16 @@ namespace GeographicLib {
      *   90&deg;].
      * @exception std::bad_alloc if memory for \e georef can't be allocated.
      *
-     * Internally, \e prec is first put in the range [&minus;1, 11], with 1
-     * changed to 2.  The meaning of \e prec is as follows:
-     * - &minus;1, 15&deg; precision, e.g., NK;
-     * - 0, 1&deg; precision, e.g., NKLN;
-     * - 2, 1' precision, e.g., NKLN2438;
-     * - 3, 0.1' precision, e.g., NKLN244389;
+     * \e prec specifies the precision of \e georef as follows:
+     * - \e prec = &minus;1 (min), 15&deg;
+     * - \e prec = 0, 1&deg;
+     * - \e prec = 1, converted to \e prec = 2
+     * - \e prec = 2, 1'
+     * - \e prec = 3, 0.1'
+     * - \e prec = 4, 0.01'
+     * - \e prec = 5, 0.001'
      * - &hellip;
-     * - 11, 10<sup>&minus;9</sup>' precision, e.g.,
-     *   NKLN2444639999938946600000.
+     * - \e prec = 11 (max), 10<sup>&minus;9</sup>'
      *
      * If \e lat or \e lon is NaN, then \e georef is set to "INVALID".
      **********************************************************************/
@@ -92,16 +93,17 @@ namespace GeographicLib {
      *   \e georef, otherwise return the south-west corner.
      * @exception GeographicErr if \e georef is illegal.
      *
-     * The case of the letters in \e georef is ignored.  The value of \e prec
-     * is in [&minus;1, 11] (except for 1).  The meaning of \e prec is as
-     * follows:
-     * - &minus;1, 15&deg; precision, e.g., NK;
-     * - 0, 1&deg; precision, e.g., NKLN;
-     * - 2, 1' precision, e.g., NKLN2438;
-     * - 3, 0.1' precision, e.g., NKLN244389;
+     * The case of the letters in \e georef is ignored.  \e prec specifies the
+     * precision of \e georef as follows:
+     * - \e prec = &minus;1 (min), 15&deg;
+     * - \e prec = 0, 1&deg;
+     * - \e prec = 1, not returned
+     * - \e prec = 2, 1'
+     * - \e prec = 3, 0.1'
+     * - \e prec = 4, 0.01'
+     * - \e prec = 5, 0.001'
      * - &hellip;
-     * - 11, 10<sup>&minus;9</sup>' precision, e.g.,
-     *   NKLN2444639999938946600000.
+     * - \e prec = 11 (max), 10<sup>&minus;9</sup>'
      *
      * If the first 3 characters of \e georef are "INV", then \e lat and \e lon
      * are set to NaN and \e prec is unchanged.

@@ -58,7 +58,7 @@ namespace GeographicLib {
 
   void GARS::Reverse(const std::string& gars, real& lat, real& lon,
                         int& prec, bool centerp) {
-    int len = gars.length();
+    int len = int(gars.length());
     if (len >= 3 &&
         toupper(gars[0]) == 'I' &&
         toupper(gars[1]) == 'N' &&
