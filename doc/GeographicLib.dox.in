@@ -1097,9 +1097,9 @@ typically throw errors (an exception is GeodesicLine).  However, calling
 the class functions with NaNs as arguments is not an error; NaNs are
 returned as appropriate.  "INV" is treated as an invalid zone
 designation by UTMUPS.  "INVALID" is the corresponding invalid MGRS
-string.  (Similarly "nan" is the equivalent invalid Geohash.)  NaNs allow
-the projection of polylines which are separated by NaNs; in this format
-they can be easily plotted in MATLAB.
+string (and similarly for GARS, Geohash, and Georef strings).  NaNs
+allow the projection of polylines which are separated by NaNs; in this
+format they can be easily plotted in MATLAB.
 
 A note about portability.  For the most part, the code uses standard C++
 and should be able to be deployed on any system with a modern C++
