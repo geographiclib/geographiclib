@@ -120,7 +120,7 @@ function [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y, ellipsoid)
   lon = atan2dx(s, c);
   sxip = sin(xip);
   tau = tauf(sxip./r, e2);
-  lat = atan2dx(tau);
+  lat = atan2dx(tau, 1);
   gam = gam + atan2dx(sxip .* tanh(etap), c);
   c = r ~= 0;
   k(c) = k(c) .* sqrt(e2m + e2 ./ (1 + tau.^2)) .* ...

@@ -41,10 +41,8 @@ namespace GeographicLib {
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
       throw GeographicErr("Standard latitude not in [-90d, 90d]");
-    real
-      phi = stdlat * Math::degree(),
-      sphi = sin(phi),
-      cphi = abs(stdlat) != 90 ? cos(phi) : 0;
+    real sphi, cphi;
+    Math::sincosd(stdlat, sphi, cphi);
     Init(sphi, cphi, sphi, cphi, k0);
   }
 
@@ -74,11 +72,10 @@ namespace GeographicLib {
       throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
     if (!(abs(stdlat2) <= 90))
       throw GeographicErr("Standard latitude 2 not in [-90d, 90d]");
-    real
-      phi1 = stdlat1 * Math::degree(),
-      phi2 = stdlat2 * Math::degree();
-    Init(sin(phi1), abs(stdlat1) != 90 ? cos(phi1) : 0,
-         sin(phi2), abs(stdlat2) != 90 ? cos(phi2) : 0, k1);
+    real sphi1, cphi1, sphi2, cphi2;
+    Math::sincosd(stdlat1, sphi1, cphi1);
+    Math::sincosd(stdlat2, sphi2, cphi2);
+    Init(sphi1, cphi1, sphi2, cphi2, k1);
   }
 
   AlbersEqualArea::AlbersEqualArea(real a, real f,

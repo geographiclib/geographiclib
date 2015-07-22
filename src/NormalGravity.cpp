@@ -147,11 +147,9 @@ namespace GeographicLib {
   }
 
   Math::real NormalGravity::SurfaceGravity(real lat) const {
-    real
-      phi = lat * Math::degree(),
-      sphi2 = abs(lat) == 90 ? 1 : Math::sq(sin(phi));
+    real sphi = Math::sind(lat);
     // H+M, Eq 2-78
-    return _gammae * (1 + _k * sphi2) / sqrt(1 - _e2 * sphi2);
+    return _gammae * (1 + _k * Math::sq(sphi)) / sqrt(1 - _e2 * Math::sq(sphi));
   }
 
   Math::real NormalGravity::V0(real X, real Y, real Z,

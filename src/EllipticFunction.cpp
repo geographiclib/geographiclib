@@ -456,10 +456,8 @@ namespace GeographicLib {
   Math::real EllipticFunction::Ed(real ang) const {
     real n = ceil(ang/360 - real(0.5));
     ang -= 360 * n;
-    real
-      phi = ang * Math::degree(),
-      sn = abs(ang) == 180 ? 0 : sin(phi),
-      cn = abs(ang) ==  90 ? 0 : cos(phi);
+    real sn, cn;
+    Math::sincosd(ang, sn, cn);
     return E(sn, cn, Delta(sn, cn)) + 4 * E() * n;
   }
 

@@ -600,7 +600,8 @@ namespace GeographicLib {
       // now abs(r) <= 45
       r *= degree();
       unsigned p = unsigned(q);
-      return (p & 2U ? -1 : 1) * (p & 1U ? cos(r) : sin(r));
+      r = p & 1U ? cos(r) : sin(r);
+      return p & 2U ? 0 - r : r;
     }
 
     /**
@@ -627,7 +628,8 @@ namespace GeographicLib {
       // now abs(r) <= 45
       r *= degree();
       unsigned p = unsigned(q + 1);
-      return (p & 2U ? -1 : 1) * (p & 1U ? cos(r) : sin(r));
+      r = p & 1U ? cos(r) : sin(r);
+      return p & 2U ? 0 - r : r;
     }
 
     /**

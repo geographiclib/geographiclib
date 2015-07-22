@@ -103,22 +103,21 @@ namespace GeographicLib {
   { return _b * _ell.Ed( ParametricLatitude(phi) ); }
 
   Math::real Ellipsoid::MeridionalCurvatureRadius(real phi) const {
-    real v = 1 - _e2 * Math::sq(sin(phi * Math::degree()));
+    real v = 1 - _e2 * Math::sq(Math::sind(phi));
     return _a * (1 - _e2) / (v * sqrt(v));
   }
 
   Math::real Ellipsoid::TransverseCurvatureRadius(real phi) const {
-    real v = 1 - _e2 * Math::sq(sin(phi * Math::degree()));
+    real v = 1 - _e2 * Math::sq(Math::sind(phi));
     return _a / sqrt(v);
   }
 
   Math::real Ellipsoid::NormalCurvatureRadius(real phi, real azi)
     const {
-    real
-      alpha = azi * Math::degree(),
-      v = 1 - _e2 * Math::sq(sin(phi * Math::degree()));
-    return _a / (sqrt(v) *
-                 (Math::sq(cos(alpha)) * v / (1 - _e2) + Math::sq(sin(alpha))));
+    real calp, salp,
+      v = 1 - _e2 * Math::sq(Math::sind(phi));
+    Math::sincosd(azi, salp, calp);
+    return _a / (sqrt(v) * (Math::sq(calp) * v / (1 - _e2) + Math::sq(salp)));
   }
 
 } // namespace GeographicLib

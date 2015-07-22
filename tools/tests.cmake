@@ -50,12 +50,12 @@ set_tests_properties (GeoConvert8 PROPERTIES PASS_REGULAR_EXPRESSION
   "n 2000000\\.0* 1555731\\.570643")
 
 # Check that integer(minutes) >= 60 and decimal(minutes) > 60 fail.
-# Later used to succeed; fixed 2015-06-11.
+# Latter used to succeed; fixed 2015-06-11.
 add_test (NAME GeoConvert9 COMMAND GeoConvert --input-string "5d70.0 10")
 add_test (NAME GeoConvert10 COMMAND GeoConvert --input-string "5d60 10")
 set_tests_properties (GeoConvert9 GeoConvert10 PROPERTIES WILL_FAIL ON)
 # Check that integer(minutes) < 60 and decimal(minutes) <= 60 succeed.
-# Later used to fail with 60.; fixed 2015-06-11.
+# Latter used to fail with 60.; fixed 2015-06-11.
 add_test (NAME GeoConvert11 COMMAND GeoConvert --input-string "5d59 10")
 add_test (NAME GeoConvert12 COMMAND GeoConvert --input-string "5d60. 10")
 add_test (NAME GeoConvert13 COMMAND GeoConvert --input-string "5d60.0 10")
