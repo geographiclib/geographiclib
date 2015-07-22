@@ -7034,7 +7034,10 @@ git repository for GeographicLib</a>.
    - Add GARS.
    - Add Georef.
    - Geohash uses "invalid" instead of "nan".
-   - More accurate rounding in MGRS::Reverse.
+   - More accurate rounding in MGRS::Reverse and mgrs_inv.m.  Avoid
+     generation of trailing 9s in MGRS::Forward and mgrs_fwd.m.
+   - Fix bug in mgrs_inv.m so that illegal letter combinations are
+     correctly detected.  Treat prec > 11 in mgrs_fwd.m as prec = 11.
 
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-05-23)

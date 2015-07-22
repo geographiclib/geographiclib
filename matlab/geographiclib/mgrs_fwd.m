@@ -36,7 +36,7 @@ function mgrs = mgrs_fwd(x, y, zone, isnorth, prec)
   narginchk(4, 5)
   if nargin < 5, prec = 5; end
   zone = floor(zone);
-  prec = floor(prec);
+  prec = min(11, max(-2, floor(prec))); % this converts NaNs to -2.
   try
     s = size(x + y + zone + isnorth + prec);
   catch
@@ -47,7 +47,6 @@ function mgrs = mgrs_fwd(x, y, zone, isnorth, prec)
   Z = zeros(num, 1);
   x = x(:) + Z; y = y(:) + Z; zone = zone(:) + Z;
   isnorth = isnorth(:) + Z; prec = prec(:) + Z;
-  prec(~(prec >= -1 & prec <= 11)) = -2;
   mgrs = repmat('INV', num, 1);
   if ~any(prec >= -1), mgrs = reshape(cellstr(mgrs), s); return, end
   maxprec = max(prec);
@@ -114,8 +113,7 @@ function mgrs = mgrs_fwd_utm(x, y, zone, prec)
   mgrs(:,4) = utmcols(mod(zone - 1, 3) * 8 + xh);
   mgrs(:,5) = utmrow(mod(yh + mod(zone - 1, 2) * 5, 20) + 1);
   if prec == 0, return, end
-  x = x - 1e5 * xh; y = y - 1e5 * yh;
-  xy = formatnum(x, y, prec);
+  xy = formatnum(x, xh, y, yh, prec);
   mgrs(:,5+(1:2*prec)) = xy;
 end
 
@@ -136,8 +134,7 @@ function mgrs = mgrs_fwd_upsn(x, y, prec)
   mgrs(:,2) = upscols(eastp * 7 + xh - cvmgt(20, 13, eastp) + 1);
   mgrs(:,3) = upsrow(yh - 13 + 1);
   if prec == 0, return, end
-  x = x - 1e5 * xh; y = y - 1e5 * yh;
-  xy = formatnum(x, y, prec);
+  xy = formatnum(x, xh, y, yh, prec);
   mgrs(:,3+(1:2*prec)) = xy;
 end
 
@@ -158,19 +155,23 @@ function mgrs = mgrs_fwd_upss(x, y, prec)
   mgrs(:,2) = upscols(eastp * 12 + xh - cvmgt(20, 8, eastp) + 1);
   mgrs(:,3) = upsrow(yh - 8 + 1);
   if prec == 0, return, end
-  x = x - 1e5 * xh; y = y - 1e5 * yh;
-  xy = formatnum(x, y, prec);
+  xy = formatnum(x, xh, y, yh, prec);
   mgrs(:,3+(1:2*prec)) = xy;
 end
 
-function xy = formatnum(x, y, prec)
+function xy = formatnum(x, xh, y, yh, prec)
+  mult = 1e5;
   if (prec < 5)
-    x = x / 10 ^ (5 - prec); y = y / 10 ^ (5 - prec);
+    t = 10 ^ (5 - prec);
+    x = x / t; y = y / t; mult = mult / t;
   elseif (prec > 5)
-    x = x * 10 ^ (prec - 5); y = y * 10 ^ (prec - 5);
+    t = 10 ^ (prec - 5);
+    x = x * t; y = y * t; mult = mult * t;
   end
-  xy = [num2str(floor(x), ['%0', int2str(prec), 'd']), ...
-        num2str(floor(y), ['%0', int2str(prec), 'd'])];
+  x = min(floor(x) - mult * xh, mult - 1);
+  y = min(floor(y) - mult * yh, mult - 1);
+  xy = [num2str(x, ['%0', int2str(prec), 'd']), ...
+        num2str(y, ['%0', int2str(prec), 'd'])];
 end
 
 function band = LatitudeBand(lat)
