@@ -92,6 +92,8 @@ namespace GeographicLib {
       utmevenrowshift_ = 5,
       // Maximum precision is um
       maxprec_ = 5 + 6,
+      // For generating digits at maxprec
+      mult_ = 1000000,
     };
     static void CheckCoords(bool utmp, bool& northp, real& x, real& y);
     static int UTMRow(int iband, int icol, int irow);

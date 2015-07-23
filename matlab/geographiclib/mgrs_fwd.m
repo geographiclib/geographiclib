@@ -109,7 +109,8 @@ function mgrs = mgrs_fwd_utm(x, y, zone, prec)
   band(c) = LatitudeBand(utmups_inv(x(c), y(c), zone(c), 1));
   mgrs(:,3) = latband(band + 11);
   if prec < 0, return, end
-  xh = floor(x / 1e5); yh = floor(y / 1e5);
+  x = floor(x * 1e6); y = floor(y * 1e6);
+  xh = floor(x / 1e11); yh = floor(y / 1e11);
   mgrs(:,4) = utmcols(mod(zone - 1, 3) * 8 + xh);
   mgrs(:,5) = utmrow(mod(yh + mod(zone - 1, 2) * 5, 20) + 1);
   if prec == 0, return, end
@@ -126,11 +127,11 @@ function mgrs = mgrs_fwd_upsn(x, y, prec)
   end
   mgrs = char(zeros(length(x), 3 + 2 * prec) + ' ');
   if isempty(x), return, end
-  xh = floor(x / 1e5);
+  x = floor(x * 1e6); y = floor(y * 1e6);
+  xh = floor(x / 1e11); yh = floor(y / 1e11);
   eastp = xh >= 20;
   mgrs(:,1) = upsband(eastp + 1);
   if prec < 0, return, end
-  yh = floor(y / 1e5);
   mgrs(:,2) = upscols(eastp * 7 + xh - cvmgt(20, 13, eastp) + 1);
   mgrs(:,3) = upsrow(yh - 13 + 1);
   if prec == 0, return, end
@@ -147,11 +148,11 @@ function mgrs = mgrs_fwd_upss(x, y, prec)
   end
   mgrs = char(zeros(length(x), 3 + 2 * prec) + ' ');
   if isempty(x), return, end
-  xh = floor(x / 1e5);
+  x = floor(x * 1e6); y = floor(y * 1e6);
+  xh = floor(x / 1e11); yh = floor(y / 1e11);
   eastp = xh >= 20;
   mgrs(:,1) = upsband(eastp + 1);
   if prec < 0, return, end
-  yh = floor(y / 1e5);
   mgrs(:,2) = upscols(eastp * 12 + xh - cvmgt(20, 8, eastp) + 1);
   mgrs(:,3) = upsrow(yh - 8 + 1);
   if prec == 0, return, end
@@ -160,16 +161,9 @@ function mgrs = mgrs_fwd_upss(x, y, prec)
 end
 
 function xy = formatnum(x, xh, y, yh, prec)
-  mult = 1e5;
-  if (prec < 5)
-    t = 10 ^ (5 - prec);
-    x = x / t; y = y / t; mult = mult / t;
-  elseif (prec > 5)
-    t = 10 ^ (prec - 5);
-    x = x * t; y = y * t; mult = mult * t;
-  end
-  x = min(floor(x) - mult * xh, mult - 1);
-  y = min(floor(y) - mult * yh, mult - 1);
+  x = x - xh * 1e11; y = y - yh * 1e11;
+  d = 10 ^ (11 - prec);
+  x = floor(x / d); y = floor(y / d);
   xy = [num2str(x, ['%0', int2str(prec), 'd']), ...
         num2str(y, ['%0', int2str(prec), 'd'])];
 end

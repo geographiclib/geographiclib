@@ -67,9 +67,16 @@ namespace GeographicLib {
       // This isn't necessary...!  Keep y non-neg
       // if (!northp) y -= maxutmSrow_ * tile_;
     }
-    int
-      xh = int(floor(x)) / tile_,
-      yh = int(floor(y)) / tile_;
+    // The C++ standard mandates 64 bits for unsigned long long.  But
+    // check, to make sure.
+    GEOGRAPHICLIB_STATIC_ASSERT(
+         numeric_limits<unsigned long long>::digits >= 45,
+         "unsigned long long not wide enough to store 20e12");
+    unsigned long long
+      ix = (unsigned long long)(floor(x * mult_)),
+      iy = (unsigned long long)(floor(y * mult_)),
+      m = (unsigned long long)(mult_) * (unsigned long long)(tile_);
+    int xh = int(ix / m), yh = int(iy / m);
     if (utmp) {
       int
         // Correct fuzziness in latitude near equator
@@ -92,22 +99,10 @@ namespace GeographicLib {
       mgrs1[z++] = upsrows_[northp][yh - (northp ? minupsNind_ : minupsSind_)];
     }
     if (prec > 0) {
-      real mult = tile_;
-      if (prec < tilelevel_) {
-        real t = pow(real(base_), tilelevel_ - prec);
-        x /= t; y /= t; mult /= t;
-      } else if (prec > tilelevel_) {
-        real t = pow(real(base_), prec - tilelevel_);
-        x *= t; y *= t; mult *= t;
-      }
-      // The C++ standard mandates 64 bits for unsigned long long.  But
-      // check, to make sure.
-      GEOGRAPHICLIB_STATIC_ASSERT(
-                   numeric_limits<unsigned long long>::digits >= 45,
-                   "unsigned long long not wide enough to store 20e12");
-      unsigned long long
-        ix = (unsigned long long)(min(floor(x) - mult * xh, mult - 1)),
-        iy = (unsigned long long)(min(floor(y) - mult * yh, mult - 1));
+      ix -= m * xh; iy -= m * yh;
+      unsigned long long d =
+        (unsigned long long)(pow(real(base_), maxprec_ - prec));
+      ix /= d; iy /= d;
       for (int c = prec; c--;) {
         mgrs1[z + c       ] = digits_[ix % base_]; ix /= base_;
         mgrs1[z + c + prec] = digits_[iy % base_]; iy /= base_;
