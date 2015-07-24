@@ -26,13 +26,16 @@ namespace GeographicLib {
       return;
     }
     lon = Math::AngNormalize(lon); // lon in [-180,180)
+    if (lat == 90) lat *= (1 - numeric_limits<real>::epsilon() / 2);
     prec = max(0, min(int(maxprec_), prec));
-    real tile = tile_ / real(60); // Convert to degrees
-    int ilon =     int(floor(lon/tile));
-    int ilat = min(int(floor(lat/tile)), int(maxlat_));
-    lon = lon/tile - ilon; ilon -= lonorig_;
-    lat = lat/tile - ilat; ilat -= latorig_;
+    int
+      x = int(floor(lon * m_)) - lonorig_ * m_,
+      y = int(floor(lat * m_)) - latorig_ * m_,
+      ilon = x * mult1_ / m_,
+      ilat = y * mult1_ / m_;
+    x -= ilon * m_ / mult1_; y -= ilat * m_ / mult1_;
     char gars1[maxlen_];
+    ++ilon;
     for (int c = lonlen_; c--;) {
       gars1[c] = digits_[ ilon % baselon_]; ilon /= baselon_;
     }
@@ -40,15 +43,10 @@ namespace GeographicLib {
       gars1[lonlen_ + c] = letters_[ilat % baselat_]; ilat /= baselat_;
     }
     if (prec > 0) {
-      // Handle case where lon or lat = -tiny.  This also deals with lat = 90.
-      if (lon == 1) lon -= numeric_limits<real>::epsilon() / 2;
-      if (lat == 1) lat -= numeric_limits<real>::epsilon() / 2;
-      ilon = int(floor(mult2_ * lon));
-      ilat = int(floor(mult2_ * lat));
+      ilon = x / mult3_; ilat = y / mult3_;
       gars1[baselen_] = digits_[mult2_ * (mult2_ - 1 - ilat) + ilon + 1];
       if (prec > 1) {
-        lon = mult2_ * lon - ilon; ilon = int(floor(mult3_ * lon));
-        lat = mult2_ * lat - ilat; ilat = int(floor(mult3_ * lat));
+        ilon = x % mult3_; ilat = y % mult3_;
         gars1[baselen_ + 1] = digits_[mult3_ * (mult3_ - 1 - ilat) + ilon + 1];
       }
     }
@@ -71,7 +69,6 @@ namespace GeographicLib {
     if (len > maxlen_)
       throw GeographicErr("GARS can have at most 7 characters " + gars);
     int prec1 = len - baselen_;
-    real tile = tile_ / real(60); // Convert to degrees
     int ilon = 0;
     for (int c = 0; c < lonlen_; ++c) {
       int k = Utility::lookup(digits_, gars[c]);
@@ -82,6 +79,7 @@ namespace GeographicLib {
     if (!(ilon >= 1 && ilon <= 720))
         throw GeographicErr("Initial digits in GARS must lie in [1, 720] " +
                             gars);
+    --ilon;
     int ilat = 0;
     for (int c = 0; c < latlen_; ++c) {
       int k = Utility::lookup(letters_, gars[lonlen_ + c]);
@@ -92,9 +90,9 @@ namespace GeographicLib {
     if (!(ilat < 360))
       throw  GeographicErr("GARS letters must lie in [AA, QZ] " + gars);
     real
-      lat1 = ilat + latorig_,
-      lon1 = ilon + lonorig_,
-      unit = 1;
+      unit = mult1_,
+      lat1 = ilat + latorig_ * unit,
+      lon1 = ilon + lonorig_ * unit;
     if (prec1 > 0) {
       int k = Utility::lookup(digits_, gars[baselen_]);
       if (!(k >= 1 && k <= mult2_ * mult2_))
@@ -116,8 +114,8 @@ namespace GeographicLib {
     if (centerp) {
       unit *= 2; lat1 = 2 * lat1 + 1; lon1 = 2 * lon1 + 1;
     }
-    lat = (tile * lat1) / unit;
-    lon = (tile * lon1) / unit;
+    lat = lat1 / unit;
+    lon = lon1 / unit;
     prec = prec1;
   }
 

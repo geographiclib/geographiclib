@@ -46,6 +46,11 @@ namespace GeographicLib {
    *   identity.  (This is affected in predictable ways by errors in
    *   determining the latitude band and by loss of precision in the MGRS
    *   coordinates.)
+   * - The trailing digits produced by Forward are consistent as the precision
+   *   is varied.  Specifically, the digits are obtained by operating on the
+   *   easting with &lfloor;10<sup>6</sup> <i>x</i>&rfloor; and extracting the
+   *   required digits from the resulting number (and similarly for the
+   *   northing).
    * - All MGRS coordinates truncate to legal 100 km blocks.  All MGRS
    *   coordinates with a legal 100 km block prefix are legal (even though the
    *   latitude band letter may now belong to a neighboring band).

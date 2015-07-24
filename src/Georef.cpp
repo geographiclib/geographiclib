@@ -28,30 +28,28 @@ namespace GeographicLib {
       return;
     }
     lon = Math::AngNormalize(lon); // lon in [-180,180)
+    if (lat == 90) lat *= (1 - numeric_limits<real>::epsilon() / 2);
     prec = max(-1, min(int(maxprec_), prec));
     if (prec == 1) ++prec;      // Disallow prec = 1
-    int ilon =     int(floor(lon));                lon -= ilon;
-    int ilat = min(int(floor(lat)), int(maxlat_)); lat -= ilat;
+    // The C++ standard mandates 64 bits for long long.  But
+    // check, to make sure.
+    GEOGRAPHICLIB_STATIC_ASSERT(numeric_limits<long long>::digits >= 45,
+                                "long long not wide enough to store 21600e9");
+    const long long m = 60000000000LL;
+    long long
+      x = (long long)(floor(lon * m)) - lonorig_ * m,
+      y = (long long)(floor(lat * m)) - latorig_ * m;
+    int ilon = int(x / m); int ilat = int(y / m);
     char georef1[maxlen_];
-    georef1[0] = lontile_[ilon/tile_ - lonorig_];
-    georef1[1] = lattile_[ilat/tile_ - latorig_];
+    georef1[0] = lontile_[ilon / tile_];
+    georef1[1] = lattile_[ilat / tile_];
     if (prec >= 0) {
       georef1[2] = degrees_[ilon % tile_];
       georef1[3] = degrees_[ilat % tile_];
       if (prec > 0) {
-        // Handle case where lon or lat = -tiny.
-        // This also deals with lat = 90.
-        if (lon == 1) lon -= numeric_limits<real>::epsilon() / 2;
-        if (lat == 1) lat -= numeric_limits<real>::epsilon() / 2;
-        real mult = pow(real(base_), prec - 2) * mult2_;
-        // The C++ standard mandates 64 bits for unsigned long long.  But
-        // check, to make sure.
-        GEOGRAPHICLIB_STATIC_ASSERT(
-             numeric_limits<unsigned long long>::digits >= 36,
-             "unsigned long long not wide enough to store 60e9");
-        unsigned long long
-          x = (unsigned long long)(floor(mult * lon)),
-          y = (unsigned long long)(floor(mult * lat));
+        x -= m * ilon; y -= m * ilat;
+        long long d = (long long)pow(real(base_), maxprec_ - prec);
+        x /= d; y /= d;
         for (int c = prec; c--;) {
           georef1[baselen_ + c       ] = digits_[x % base_]; x /= base_;
           georef1[baselen_ + c + prec] = digits_[y % base_]; y /= base_;
@@ -80,11 +78,11 @@ namespace GeographicLib {
     k = Utility::lookup(lontile_, georef[0]);
     if (k < 0)
       throw GeographicErr("Bad longitude tile letter in georef " + georef);
-    real lon1 = k + lonorig_;
+    real lon1 = k + lonorig_ / tile_;
     k = Utility::lookup(lattile_, georef[1]);
     if (k < 0)
       throw GeographicErr("Bad latitude tile letter in georef " + georef);
-    real lat1 = k + latorig_;
+    real lat1 = k + latorig_ / tile_;
     real unit = 1;
     if (len > 2) {
       unit *= tile_;

@@ -70,11 +70,20 @@ add_test (NAME GeoConvert15 COMMAND GeoConvert
 set_tests_properties (GeoConvert15
   PROPERTIES PASS_REGULAR_EXPRESSION "05:01:52N 005:05:38E")
 
-# Check MGRS::Forward rounding fix, 2015-07-22
+# Check MGRS::Forward improved rounding fix, 2015-07-22
 add_test (NAME GeoConvert16 COMMAND GeoConvert
   -m -p 3 --input-string "38n 444140.6 3684706.3")
 set_tests_properties (GeoConvert16
   PROPERTIES PASS_REGULAR_EXPRESSION "38SMB4414060084706300")
+# Check MGRS::Forward digit consistency fix, 2015-07-23
+add_test (NAME GeoConvert17 COMMAND GeoConvert
+  -m -p 3 --input-string "38n 500000 63.811")
+add_test (NAME GeoConvert18 COMMAND GeoConvert
+  -m -p 4 --input-string "38n 500000 63.811")
+set_tests_properties (GeoConvert17
+  PROPERTIES PASS_REGULAR_EXPRESSION "38NNF0000000000063811")
+set_tests_properties (GeoConvert18
+  PROPERTIES PASS_REGULAR_EXPRESSION "38NNF000000000000638110")
 
 add_test (NAME GeodSolve0 COMMAND GeodSolve
   -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")

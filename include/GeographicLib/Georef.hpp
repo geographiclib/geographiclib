@@ -43,13 +43,11 @@ namespace GeographicLib {
     static const std::string degrees_;
     enum {
       tile_ = 15,               // The size of tile in degrees
-      maxlat_ = 89,             // Max latitude
-      lonorig_ = -180 / tile_,  // Origin for longitude tiles
-      latorig_ = -90 / tile_,   // Origin for latitude tiles
+      lonorig_ = -180,          // Origin for longitude
+      latorig_ = -90,           // Origin for latitude
       base_ = 10,               // Base for minutes
       baselen_ = 4,
-      maxprec_ = 5 + 6,         // approximately equivalent to MGRS
-      mult2_ = 60,              // number of minuites in a degree
+      maxprec_ = 11,            // approximately equivalent to MGRS class
       maxlen_ = baselen_ + 2 * maxprec_,
     };
     Georef();                     // Disable constructor

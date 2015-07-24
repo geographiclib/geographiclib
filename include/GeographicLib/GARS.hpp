@@ -40,18 +40,18 @@ namespace GeographicLib {
     static const std::string digits_;
     static const std::string letters_;
     enum {
-      tile_ = 30,                       // The tile in minutes
-      maxlat_ = 90 * 60 / tile_ - 1,    // Max latitude tile
-      lonorig_ = -180 * 60 / tile_ - 1, // Origin for longitude tiles
-      latorig_ = -90 * 60 / tile_,      // Origin for latitude tiles
-      baselon_ = 10,                    // Base for longitude tiles
-      baselat_ = 24,                    // Base for latitude tiles
+      lonorig_ = -180,          // Origin for longitude
+      latorig_ = -90,           // Origin for latitude
+      baselon_ = 10,            // Base for longitude tiles
+      baselat_ = 24,            // Base for latitude tiles
       lonlen_ = 3,
       latlen_ = 2,
       baselen_ = lonlen_ + latlen_,
-      maxprec_ = 2,
+      mult1_ = 2,               // base precision = 1/2 degree
       mult2_ = 2,               // 6th char gives 2x more precision
       mult3_ = 3,               // 7th char gives 3x more precision
+      m_ = mult1_ * mult2_ * mult3_,
+      maxprec_ = 2,
       maxlen_ = baselen_ + maxprec_,
     };
     GARS();                     // Disable constructor
