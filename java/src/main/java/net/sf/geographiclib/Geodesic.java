@@ -628,9 +628,9 @@ public class Geodesic {
                     csig1 * csig2 + ssig1 * ssig2);
       {
         LengthsV v =
-          Lengths(_n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                  cbet1, cbet2,
-                  (outmask & GeodesicMask.GEODESICSCALE) != 0, C1a, C2a);
+          Lengths(_n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+                  outmask | GeodesicMask.DISTANCE | GeodesicMask.REDUCEDLENGTH,
+                  C1a, C2a);
         s12x = v.s12b; m12x = v.m12b;
         if ((outmask & GeodesicMask.GEODESICSCALE) != 0) {
           r.M12 = v.M12; r.M21 = v.M21;
@@ -773,10 +773,16 @@ public class Geodesic {
                    Math.abs(salp1 - salp1b) + (calp1 - calp1b) < tolb_);
         }
         {
+          // Ensure that the reduced length and geodesic scale are computed in
+          // a "canonical" way, with the I2 integral.
+          int lengthmask = outmask |
+            ((outmask &
+              (GeodesicMask.REDUCEDLENGTH | GeodesicMask.GEODESICSCALE)) != 0 ?
+             GeodesicMask.DISTANCE : GeodesicMask.NONE);
           LengthsV v =
-            Lengths(eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                    cbet1, cbet2,
-                    (outmask & GeodesicMask.GEODESICSCALE) != 0, C1a, C2a);
+            Lengths(eps, sig12,
+                    ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+                    lengthmask, C1a, C2a);
           s12x = v.s12b; m12x = v.m12b;
           if ((outmask & GeodesicMask.GEODESICSCALE) != 0) {
             r.M12 = v.M12; r.M21 = v.M21;
@@ -1025,31 +1031,56 @@ public class Geodesic {
                            double ssig1, double csig1, double dn1,
                            double ssig2, double csig2, double dn2,
                            double cbet1, double cbet2,
-                           boolean scalep,
+                           int outmask,
                            // Scratch areas of the right size
                            double C1a[], double C2a[]) {
     // Return m12b = (reduced length)/_b; also calculate s12b = distance/_b,
     // and m0 = coefficient of secular term in expression for reduced length.
+    outmask &= GeodesicMask.OUT_MASK;
     LengthsV v = new LengthsV(); // To hold s12b, m12b, m0, M12, M21;
-    C1f(eps, C1a);
-    C2f(eps, C2a);
-    double
-      A1m1 = A1m1f(eps),
-      AB1 = (1 + A1m1) * (SinCosSeries(true, ssig2, csig2, C1a) -
-                          SinCosSeries(true, ssig1, csig1, C1a)),
-      A2m1 = A2m1f(eps),
-      AB2 = (1 + A2m1) * (SinCosSeries(true, ssig2, csig2, C2a) -
-                          SinCosSeries(true, ssig1, csig1, C2a));
-    v.m0 = A1m1 - A2m1;
-    double J12 = v.m0 * sig12 + (AB1 - AB2);
-    // Missing a factor of _b.
-    // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
-    // cancellation in the case of coincident points.
-    v.m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
-      csig1 * csig2 * J12;
-    // Missing a factor of _b
-    v.s12b = (1 + A1m1) * sig12 + AB1;
-    if (scalep) {
+
+    double m0x = 0, J12 = 0, A1 = 0, A2 = 0;
+    if ((outmask & (GeodesicMask.DISTANCE | GeodesicMask.REDUCEDLENGTH |
+                    GeodesicMask.GEODESICSCALE)) != 0) {
+      A1 = A1m1f(eps);
+      C1f(eps, C1a);
+      if ((outmask & (GeodesicMask.REDUCEDLENGTH |
+                      GeodesicMask.GEODESICSCALE)) != 0) {
+        A2 = A2m1f(eps);
+        C2f(eps, C2a);
+        m0x = A1 - A2;
+        A2 = 1 + A2;
+      }
+      A1 = 1 + A1;
+    }
+    if ((outmask & GeodesicMask.DISTANCE) != 0) {
+      double B1 = SinCosSeries(true, ssig2, csig2, C1a) -
+        SinCosSeries(true, ssig1, csig1, C1a);
+      // Missing a factor of _b
+      v.s12b = A1 * (sig12 + B1);
+      if ((outmask & (GeodesicMask.REDUCEDLENGTH |
+                      GeodesicMask.GEODESICSCALE)) != 0) {
+        double B2 = SinCosSeries(true, ssig2, csig2, C2a) -
+          SinCosSeries(true, ssig1, csig1, C2a);
+        J12 = m0x * sig12 + (A1 * B1 - A2 * B2);
+      }
+    } else if ((outmask & (GeodesicMask.REDUCEDLENGTH |
+                           GeodesicMask.GEODESICSCALE)) != 0) {
+      // Assume here that nC1_ >= nC2_
+      for (int l = 1; l <= nC2_; ++l)
+        C2a[l] = A1 * C1a[l] - A2 * C2a[l];
+      J12 = m0x * sig12 + (SinCosSeries(true, ssig2, csig2, C2a) -
+                           SinCosSeries(true, ssig1, csig1, C2a));
+    }
+    if ((outmask & GeodesicMask.REDUCEDLENGTH) != 0) {
+      v.m0 = m0x;
+      // Missing a factor of _b.
+      // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure
+      // accurate cancellation in the case of coincident points.
+      v.m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
+        csig1 * csig2 * J12;
+    }
+    if ((outmask & GeodesicMask.GEODESICSCALE) != 0) {
       double csig12 = csig1 * csig2 + ssig1 * ssig2;
       double t = _ep2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2);
       v.M12 = csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1;
@@ -1204,7 +1235,7 @@ public class Geodesic {
         LengthsV v =
           Lengths(_n, Math.PI + bet12a,
                   sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
-                  cbet1, cbet2, false, C1a, C2a);
+                  cbet1, cbet2, GeodesicMask.REDUCEDLENGTH, C1a, C2a);
         m12b = v.m12b; m0 = v.m0;
 
         x = -1 + m12b / (cbet1 * cbet2 * m0 * Math.PI);
@@ -1360,10 +1391,9 @@ public class Geodesic {
       if (w.calp2 == 0)
         w.dlam12 = - 2 * _f1 * dn1 / sbet1;
       else {
-        double dummy;
         LengthsV v =
           Lengths(w.eps, w.sig12, w.ssig1, w.csig1, dn1, w.ssig2, w.csig2, dn2,
-                  cbet1, cbet2, false, C1a, C2a);
+                  cbet1, cbet2, GeodesicMask.REDUCEDLENGTH, C1a, C2a);
         w.dlam12 = v.m12b;
         w.dlam12 *= _f1 / (w.calp2 * cbet2);
       }

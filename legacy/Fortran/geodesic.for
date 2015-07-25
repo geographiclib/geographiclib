@@ -2066,6 +2066,7 @@
         sinx = 0 - s
         cosx = 0 - c
       else
+* q.eq.3
         sinx = 0 - c
         cosx =     s
       end if

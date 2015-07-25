@@ -232,8 +232,8 @@ namespace GeographicLib {
                     csig1 * csig2 + ssig1 * ssig2);
       {
         real dummy;
-        Lengths(_n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                cbet1, cbet2, outmask | DISTANCE | REDUCEDLENGTH,
+        Lengths(_n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+                outmask | DISTANCE | REDUCEDLENGTH,
                 s12x, m12x, dummy, M12, M21, Ca);
       }
       // Add the check for sig12 since zero length geodesics might yield m12 <
