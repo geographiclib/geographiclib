@@ -185,7 +185,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real W(real lon, real& gX, real& gY, real& gZ) const {
       real clam, slam;
-      CircularEngine::cossin(lon, clam, slam);
+      Math::sincosd(lon, slam, clam);
       return W(clam, slam, gX, gY, gZ);
     }
 
@@ -205,7 +205,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real V(real lon, real& GX, real& GY, real& GZ) const {
       real clam, slam;
-      CircularEngine::cossin(lon, clam, slam);
+      Math::sincosd(lon, slam, clam);
       return V(clam, slam, GX, GY, GZ);
     }
 
@@ -226,7 +226,7 @@ namespace GeographicLib {
     Math::real T(real lon, real& deltaX, real& deltaY, real& deltaZ)
       const {
       real clam, slam;
-      CircularEngine::cossin(lon, clam, slam);
+      Math::sincosd(lon, slam, clam);
       return InternalT(clam, slam, deltaX, deltaY, deltaZ, true, true);
     }
 
@@ -239,7 +239,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real T(real lon) const {
       real clam, slam, dummy;
-      CircularEngine::cossin(lon, clam, slam);
+      Math::sincosd(lon, slam, clam);
       return InternalT(clam, slam, dummy, dummy, dummy, false, true);
     }
 
