@@ -69,8 +69,8 @@ namespace GeographicLib {
     }
     // The C++ standard mandates 64 bits for long long.  But
     // check, to make sure.
-    GEOGRAPHICLIB_STATIC_ASSERT(numeric_limits<long long>::digits >= 45,
-                                "long long not wide enough to store 20e12");
+    GEOGRAPHICLIB_STATIC_ASSERT(numeric_limits<long long>::digits >= 44,
+                                "long long not wide enough to store 10e12");
     long long
       ix = (long long)(floor(x * mult_)),
       iy = (long long)(floor(y * mult_)),

@@ -104,13 +104,9 @@
   g.Geodesic.CheckPosition = function(lat, lon) {
     if (!(Math.abs(lat) <= 90))
       throw new Error("latitude " + lat + " not in [-90, 90]");
-    if (!(lon >= -540 && lon < 540))
-      throw new Error("longitude " + lon + " not in [-540, 540)");
   };
 
   g.Geodesic.CheckAzimuth = function(azi) {
-    if (!(azi >= -540 && azi < 540))
-      throw new Error("longitude " + azi + " not in [-540, 540)");
     return m.AngNormalize(azi);
   };
 
@@ -205,10 +201,6 @@
   g.Geodesic.prototype.Circle = function(lat1, lon1, azi1, s12, k) {
     if (!(Math.abs(lat1) <= 90))
       throw new Error("lat1 must be in [-90, 90]");
-    if (!(lon1 >= -540 && lon1 < 540))
-      throw new Error("lon1 must be in [-540, 540)");
-    if (!(azi1 >= -540 && azi1 < 540))
-      throw new Error("azi1 must be in [-540, 540)");
     if (!(isFinite(s12)))
       throw new Error("s12 must be a finite number");
     lon1 = m.AngNormalize(lon1);
@@ -229,8 +221,6 @@
   g.Geodesic.prototype.Envelope = function(lat1, lon1, k, ord) {
     if (!(Math.abs(lat1) <= 90))
       throw new Error("lat1 must be in [-90, 90]");
-    if (!(lon1 >= -540 && lon1 < 540))
-      throw new Error("lon1 must be in [-540, 540)");
     lon1 = m.AngNormalize(lon1);
     if (!k || k < 4) k = 24;
     if (!ord) ord = 1;

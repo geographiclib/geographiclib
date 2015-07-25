@@ -33,9 +33,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %   If long_unroll is unset (the default), then the value lon2 is in the
 %   range [-180,180).  If long_unroll is set, the longitude is "unrolled"
 %   so that the quantity lon2 - lon1 indicates how many times and in what
-%   sense the geodesic encircles the ellipsoid.  Because lon2 might be
-%   outside the normal allowed range for longitudes, [-540, 540), be sure
-%   to normalize it with rem(lon2, 360) before using it in other calls.
+%   sense the geodesic encircles the ellipsoid.
 %
 %   The two optional arguments, ellipsoid and flags, may be given in any
 %   order and either or both may be omitted.
@@ -130,7 +128,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   A3x = A3coeff(n);
   C3x = C3coeff(n);
 
-  lat1 = lat1(:);
+  lat1 = AngRound(lat1(:));
   lon1 = lon1(:);
   azi1 = AngRound(azi1(:));
   s12_a12 = s12_a12(:);

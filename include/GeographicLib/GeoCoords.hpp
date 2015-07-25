@@ -150,9 +150,8 @@ namespace GeographicLib {
      * components so -1d30 is -(1+30/60) = &minus;1.5.  However, note
      * that -1:30-0:0:15 is parsed as (-1:30) + (-0:0:15) = &minus;(1+30/60)
      * &minus; (15/3600).  Latitudes must be in the range [&minus;90&deg;,
-     * 90&deg;] and longitudes in the range [&minus;540&deg;, 540&deg;).
-     * Internally longitudes are reduced to the range [&minus;180&deg;,
-     * 180&deg;).
+     * 90&deg;].  Internally longitudes are reduced to the range
+     * [&minus;180&deg;, 180&deg;).
      *
      * <b>UTM/UPS parsing</b>: For UTM zones (&minus;80&deg; &le; Lat <
      * 84&deg;), the zone designator is made up of a zone number (for 1 to 60)
@@ -189,8 +188,6 @@ namespace GeographicLib {
      *   specified zone using the rules given in UTMUPS::zonespec.
      * @exception GeographicErr if \e latitude is not in [&minus;90&deg;,
      *   90&deg;].
-     * @exception GeographicErr if \e longitude is not in [&minus;540&deg;,
-     *   540&deg;).
      * @exception GeographicErr if \e zone cannot be used for this location.
      **********************************************************************/
     GeoCoords(real latitude, real longitude, int zone = UTMUPS::STANDARD) {
@@ -235,8 +232,6 @@ namespace GeographicLib {
      *   specified zone using the rules given in UTMUPS::zonespec.
      * @exception GeographicErr if \e latitude is not in [&minus;90&deg;,
      *   90&deg;].
-     * @exception GeographicErr if \e longitude is not in [&minus;540&deg;,
-     *   540&deg;).
      * @exception GeographicErr if \e zone cannot be used for this location.
      **********************************************************************/
     void Reset(real latitude, real longitude, int zone = UTMUPS::STANDARD) {

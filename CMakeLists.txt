@@ -405,7 +405,7 @@ configure_file (
 # The documentation depends on doxygen.
 if (GEOGRAPHICLIB_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
-  find_package (Doxygen)
+  find_package (Doxygen 1.8.7)
 endif ()
 
 # The man pages are written as pod files and converted to nroff format,

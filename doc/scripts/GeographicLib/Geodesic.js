@@ -762,21 +762,19 @@ GeographicLib.GeodesicLine = {};
     // check, e.g., on verifying quadrants in atan2.  In addition, this
     // enforces some symmetries in the results returned.
 
-    var phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
+    var sbet1, cbet1, sbet2, cbet2, s12x, m12x;
 
-    phi = lat1 * m.degree;
-    // Ensure cbet1 = +epsilon at poles
-    sbet1 = this._f1 * Math.sin(phi);
-    cbet1 = lat1 === -90 ? g.tiny_ : Math.cos(phi);
+    t = m.sincosd(lat1); sbet1 = this._f1 * t.s; cbet1 = t.c;
     // norm(sbet1, cbet1);
     t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
+    // Ensure cbet1 = +epsilon at poles
+    cbet1 = Math.max(g.tiny_, cbet1);
 
-    phi = lat2 * m.degree;
-    // Ensure cbet2 = +epsilon at poles
-    sbet2 = this._f1 * Math.sin(phi);
-    cbet2 = Math.abs(lat2) === 90 ? g.tiny_ : Math.cos(phi);
+    t = m.sincosd(lat2); sbet2 = this._f1 * t.s; cbet2 = t.c;
     // norm(sbet2, cbet2);
     t = m.hypot(sbet2, cbet2); sbet2 /= t; cbet2 /= t;
+    // Ensure cbet2 = +epsilon at poles
+    cbet2 = Math.max(g.tiny_, cbet2);
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
     // |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -798,10 +796,8 @@ GeographicLib.GeodesicLine = {};
     dn1 = Math.sqrt(1 + this._ep2 * m.sq(sbet1)),
     dn2 = Math.sqrt(1 + this._ep2 * m.sq(sbet2));
 
-    var
-    lam12 = lon12 * m.degree,
-    slam12 = lon12 === 180 ? 0 : Math.sin(lam12),
-    clam12 = Math.cos(lam12);   // lon12 == 90 isn't interesting
+    var lam12 = lon12 * m.degree, slam12, clam12;
+    t = m.sincosd(lam12); slam12 = t.s; clam12 = t.c;
 
     var sig12, calp1, salp1, calp2, salp2;
     // index zero elements of these arrays are unused
@@ -1083,9 +1079,8 @@ GeographicLib.GeodesicLine = {};
     salp2 *= swapp * lonsign; calp2 *= swapp * latsign;
 
     if (outmask & g.AZIMUTH) {
-      // minus signs give range [-180, 180). 0- converts -0 to +0.
-      vals.azi1 = 0 - Math.atan2(-salp1, calp1) / m.degree;
-      vals.azi2 = 0 - Math.atan2(-salp2, calp2) / m.degree;
+      vals.azi1 = m.atan2d(salp1, calp1);
+      vals.azi2 = m.atan2d(salp2, calp2);
     }
 
     // Returned value in [0, 180]

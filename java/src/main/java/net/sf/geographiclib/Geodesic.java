@@ -300,10 +300,9 @@ public class Geodesic {
    *   <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>lat2</i>, <i>lon2</i>,
    *   <i>azi2</i>, <i>s12</i>, <i>a12</i>.
    * <p>
-   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;]; <i>lon1</i>
-   * and <i>azi1</i> should be in the range [&minus;540&deg;, 540&deg;).  The
-   * values of <i>lon2</i> and <i>azi2</i> returned are in the range
-   * [&minus;180&deg;, 180&deg;).
+   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;].  The values
+   * of <i>lon2</i> and <i>azi2</i> returned are in the range [&minus;180&deg;,
+   * 180&deg;).
    * <p>
    * If either point is at a pole, the azimuth is defined by keeping the
    * longitude fixed, writing <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;),
@@ -356,10 +355,9 @@ public class Geodesic {
    *   <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>lat2</i>, <i>lon2</i>,
    *   <i>azi2</i>, <i>s12</i>, <i>a12</i>.
    * <p>
-   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;]; <i>lon1</i>
-   * and <i>azi1</i> should be in the range [&minus;540&deg;, 540&deg;).  The
-   * values of <i>lon2</i> and <i>azi2</i> returned are in the range
-   * [&minus;180&deg;, 180&deg;).
+   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;].  The values
+   * of <i>lon2</i> and <i>azi2</i> returned are in the range [&minus;180&deg;,
+   * 180&deg;).
    * <p>
    * If either point is at a pole, the azimuth is defined by keeping the
    * longitude fixed, writing <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;),
@@ -471,9 +469,8 @@ public class Geodesic {
    *   <i>azi2</i>, <i>s12</i>, <i>a12</i>.
    * <p>
    * <i>lat1</i> and <i>lat2</i> should be in the range [&minus;90&deg;,
-   * 90&deg;]; <i>lon1</i> and <i>lon2</i> should be in the range
-   * [&minus;540&deg;, 540&deg;).  The values of <i>azi1</i> and <i>azi2</i>
-   * returned are in the range [&minus;180&deg;, 180&deg;).
+   * 90&deg;].  The values of <i>azi1</i> and <i>azi2</i> returned are in the
+   * range [&minus;180&deg;, 180&deg;).
    * <p>
    * If either point is at a pole, the azimuth is defined by keeping the
    * longitude fixed, writing <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;),
@@ -566,22 +563,19 @@ public class Geodesic {
     // check, e.g., on verifying quadrants in atan2.  In addition, this
     // enforces some symmetries in the results returned.
 
-    double phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
+    double sbet1, cbet1, sbet2, cbet2, s12x, m12x;
     s12x = m12x = Double.NaN;
 
-    phi = lat1 * GeoMath.degree;
-    // Ensure cbet1 = +epsilon at poles
-    sbet1 = _f1 * Math.sin(phi);
-    cbet1 = lat1 == -90 ? tiny_ : Math.cos(phi);
-    { Pair p = GeoMath.norm(sbet1, cbet1);
-      sbet1 = p.first; cbet1 = p.second; }
+    { Pair p = GeoMath.sincosd(lat1); sbet1 = _f1 * p.first; cbet1 = p.second; }
+    // Ensure cbet1 = +epsilon at poles; doing the fix on beta means that sig12
+    // will be <= 2*tiny for two points at the same pole.
+    { Pair p = GeoMath.norm(sbet1, cbet1); sbet1 = p.first; cbet1 = p.second; }
+    cbet1 = Math.max(tiny_, cbet1);
 
-    phi = lat2 * GeoMath.degree;
+    { Pair p = GeoMath.sincosd(lat2); sbet2 = _f1 * p.first; cbet2 = p.second; }
     // Ensure cbet2 = +epsilon at poles
-    sbet2 = _f1 * Math.sin(phi);
-    cbet2 = Math.abs(lat2) == 90 ? tiny_ : Math.cos(phi);
-    { Pair p = GeoMath.norm(sbet2, cbet2);
-      sbet2 = p.first; cbet2 = p.second; }
+    { Pair p = GeoMath.norm(sbet2, cbet2); sbet2 = p.first; cbet2 = p.second; }
+    cbet2 = Math.max(tiny_, cbet2);
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
     // |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -604,9 +598,8 @@ public class Geodesic {
       dn2 = Math.sqrt(1 + _ep2 * GeoMath.sq(sbet2));
 
     double
-      lam12 = lon12 * GeoMath.degree,
-      slam12 = Math.abs(lon12) == 180 ? 0 : Math.sin(lam12),
-      clam12 = Math.cos(lam12);      // lon12 == 90 isn't interesting
+      lam12 = lon12 * GeoMath.degree, slam12, clam12;
+    { Pair p = GeoMath.sincosd(lon12); slam12 = p.first; clam12 = p.second; }
 
     double a12, sig12, calp1, salp1, calp2, salp2;
     a12 = sig12 = calp1 = salp1 = calp2 = salp2 = Double.NaN;
@@ -875,9 +868,8 @@ public class Geodesic {
     salp2 *= swapp * lonsign; calp2 *= swapp * latsign;
 
     if ((outmask & GeodesicMask.AZIMUTH) != 0) {
-      // minus signs give range [-180, 180). 0- converts -0 to +0.
-      r.azi1 = 0 - Math.atan2(-salp1, calp1) / GeoMath.degree;
-      r.azi2 = 0 - Math.atan2(-salp2, calp2) / GeoMath.degree;
+      r.azi1 = GeoMath.atan2d(salp1, calp1);
+      r.azi2 = GeoMath.atan2d(salp2, calp2);
     }
     // Returned value in [0, 180]
     r.a12 = a12;
@@ -892,9 +884,8 @@ public class Geodesic {
    * @param azi1 azimuth at point 1 (degrees).
    * @return a {@link GeodesicLine} object.
    * <p>
-   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;]; <i>lon1</i>
-   * and <i>azi1</i> should be in the range [&minus;540&deg;, 540&deg;).  The
-   * full set of capabilities is included.
+   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;].  The full
+   * set of capabilities is included.
    * <p>
    * If the point is at a pole, the azimuth is defined by keeping the
    * <i>lon1</i> fixed, writing <i>lat1</i> = &plusmn;(90 &minus; &epsilon;),

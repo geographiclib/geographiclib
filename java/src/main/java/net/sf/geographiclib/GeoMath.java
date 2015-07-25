@@ -178,21 +178,12 @@ public class GeoMath {
    * @param x the angle in degrees.
    * @return the angle reduced to the range [&minus;180&deg;, 180&deg;).
    * <p>
-   * <i>x</i> must lie in [&minus;540&deg;, 540&deg;).
-   **********************************************************************/
-  public static double AngNormalize(double x)
-  { return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x); }
-
-  /**
-   * Normalize an arbitrary angle.
-   * <p>
-   * @param x the angle in degrees.
-   * @return the angle reduced to the range [&minus;180&deg;, 180&deg;).
-   * <p>
    * The range of <i>x</i> is unrestricted.
    **********************************************************************/
-  public static double AngNormalize2(double x)
-  { return AngNormalize(x % 360.0); }
+  public static double AngNormalize(double x) {
+    x = x % 360.0;
+    return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
+  }
 
   /**
    * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]
@@ -217,6 +208,74 @@ public class GeoMath {
       d += 360.0;            // exact
     return d + t;
   }
+
+  /**
+   * Evaluate the sine and cosine function with the argument in degrees
+   *
+   * @param x in degrees.
+   * @return Pair(<i>s</i>, <i>t</i>) with <i>s</i> = sin(<i>x</i>) and
+   *   <i>c</i> = cos(<i>x</i>).
+   *
+   * The results obey exactly the elementary properties of the trigonometric
+   * functions, e.g., sin 9&deg; = cos 81&deg; = &minus; sin 123456789&deg;.
+   **********************************************************************/
+  public static Pair sincosd(double x) {
+    // In order to minimize round-off errors, this function exactly reduces
+    // the argument to the range [-45, 45] before converting it to radians.
+    double r; int q;
+    r = x % 360.0;
+    q = (int)Math.floor(r / 90 + 0.5);
+    r -= 90 * q;
+    // now abs(r) <= 45
+    r *= degree;
+    // Possibly could call the gnu extension sincos
+    double s = Math.sin(r), c = Math.cos(r);
+    double sinx, cosx;
+    switch (q & 3) {
+    case  0: sinx =     s; cosx =     c; break;
+    case  1: sinx =     c; cosx = 0 - s; break;
+    case  2: sinx = 0 - s; cosx = 0 - c; break;
+    default: sinx = 0 - c; cosx =     s; break; // case 3
+    }
+    return new Pair(sinx, cosx);
+  }
+
+    /**
+     * Evaluate the atan2 function with the result in degrees
+     *
+     * @param y
+     * @param x
+     * @return atan2(<i>y</i>, <i>x</i>) in degrees.
+     *
+     * The result is in the range [&minus;180&deg; 180&deg;).  N.B.,
+     * atan2d(&plusmn;0, &minus;1) = &minus;180&deg;; atan2d(+&epsilon;,
+     * &minus;1) = +180&deg;, for &epsilon; positive and tiny;
+     * atan2d(&plusmn;0, 1) = &plusmn;0&deg;.
+     **********************************************************************/
+  public static double atan2d(double y, double x) {
+    // In order to minimize round-off errors, this function rearranges the
+    // arguments so that result of atan2 is in the range [-pi/4, pi/4] before
+    // converting it to degrees and mapping the result to the correct
+    // quadrant.
+    int q = 0;
+    if (Math.abs(y) > Math.abs(x)) { double t; t = x; x = y; y = t; q = 2; }
+    if (x < 0) { x = -x; ++q; }
+    // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
+    double ang = Math.atan2(y, x) / degree;
+    switch (q) {
+      // Note that atan2d(-0.0, 1.0) will return -0.  However, we expect that
+      // atan2d will not be called with y = -0.  If need be, include
+      //
+      //   case 0: ang = 0 + ang; break;
+      //
+      // and handle mpfr as in AngRound.
+    case 1: ang = (y > 0 ? 180 : -180) - ang; break;
+    case 2: ang =  90 - ang; break;
+    case 3: ang = -90 + ang; break;
+    }
+    return ang;
+  }
+
   /**
    * Test for finiteness.
    * <p>

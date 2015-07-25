@@ -451,11 +451,11 @@ namespace GeographicLib {
     template<typename T> static inline T AngNormalize(T x) {
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
       using std::remainder;
-      T y = remainder(x, T(360)); return y != 180 ? y : -180;
+      x = remainder(x, T(360)); return x != 180 ? x : -180;
 #else
       using std::fmod;
-      T y = fmod(x, T(360));
-      return y < -180 ? y + 360 : (y < 180 ? y : y - 360);
+      x = fmod(x, T(360));
+      return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
 #endif
     }
 
@@ -543,7 +543,7 @@ namespace GeographicLib {
      * @param[out] cosx cos(<i>x</i>).
      *
      * The results obey exactly the elementary properties of the trigonometric
-     * functions, e.g., sin 9&deg; = cos 81&deg; = &minus; sin 123456789&deg;
+     * functions, e.g., sin 9&deg; = cos 81&deg; = &minus; sin 123456789&deg;.
      **********************************************************************/
     template<typename T> static inline void sincosd(T x, T& sinx, T& cosx) {
       // In order to minimize round-off errors, this function exactly reduces
@@ -572,7 +572,7 @@ namespace GeographicLib {
       case 0U: sinx =     s; cosx =     c; break;
       case 1U: sinx =     c; cosx = 0 - s; break;
       case 2U: sinx = 0 - s; cosx = 0 - c; break;
-      case 3U: sinx = 0 - c; cosx =     s; break;
+      default: sinx = 0 - c; cosx =     s; break; // case 3U
       }
     }
 

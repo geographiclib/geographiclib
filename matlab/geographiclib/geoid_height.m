@@ -166,7 +166,7 @@ function N = geoid_height_int(lat, lon, geoid, cubic)
             2);
   end
   N = geoid.offset + geoid.scale * N;
-  N(~(abs(lat) <= 90 & abs(lon) <= 540)) = nan;
+  N(~(abs(lat) <= 90 & isfinite(lon))) = nan;
   N = reshape(N, s);
 end
 

@@ -56,9 +56,9 @@ class Geodesic(object):
     help(Geodesic.Area)
 
   All angles (latitudes, longitudes, azimuths, spherical arc lengths)
-  are measured in degrees.  Latitudes must lie in [-90,90]; longitudes
-  and azimuths must lie in [-540,540).  All lengths (distance, reduced
-  length) are measured in meters.  Areas are measures in square meters.
+  are measured in degrees.  Latitudes must lie in [-90,90].  All lengths
+  (distance, reduced length) are measured in meters.  Areas are measures
+  in square meters.
 
   """
 

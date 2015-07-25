@@ -262,8 +262,7 @@ namespace GeographicLib {
      * @param[out] lon2 longitude of point 2 (degrees).
      * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
      *
-     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-     * azi12 should be in the range [&minus;540&deg;, 540&deg;).  The value of
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].  The value of
      * \e lon2 returned is in the range [&minus;180&deg;, 180&deg;).
      *
      * If point 1 is a pole, the cosine of its latitude is taken to be
@@ -313,10 +312,7 @@ namespace GeographicLib {
      * .
      * With the Rhumb::LONG_UNROLL bit set, the quantity \e lon2 &minus;
      * \e lon1 indicates how many times and in what sense the rhumb line
-     * encircles the ellipsoid.  Because \e lon2 might be outside the normal
-     * allowed range for longitudes, [&minus;540&deg;, 540&deg;), be sure to
-     * normalize it with Math::AngNormalize2 before using it in other
-     * GeographicLib calls.
+     * encircles the ellipsoid.
      **********************************************************************/
     void GenDirect(real lat1, real lon1, real azi12, real s12, unsigned outmask,
                    real& lat2, real& lon2, real& S12) const;
@@ -335,8 +331,7 @@ namespace GeographicLib {
      * The shortest rhumb line is found.  If the end points are on opposite
      * meridians, there are two shortest rhumb lines and the east-going one is
      * chosen.  \e lat1 and \e lat2 should be in the range [&minus;90&deg;,
-     * 90&deg;]; \e lon1 and \e lon2 should be in the range [&minus;540&deg;,
-     * 540&deg;).  The value of \e azi12 returned is in the range
+     * 90&deg;].  The value of \e azi12 returned is in the range
      * [&minus;180&deg;, 180&deg;).
      *
      * If either point is a pole, the cosine of its latitude is taken to be
@@ -391,8 +386,7 @@ namespace GeographicLib {
      * @param[in] azi12 azimuth of the rhumb line (degrees).
      * @return a RhumbLine object.
      *
-     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-     * azi12 should be in the range [&minus;540&deg;, 540&deg;).
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
      *
      * If point 1 is a pole, the cosine of its latitude is taken to be
      * 1/&epsilon;<sup>2</sup> (where &epsilon; is 2<sup>-52</sup>).  This
@@ -558,10 +552,7 @@ namespace GeographicLib {
      * .
      * With the RhumbLine::LONG_UNROLL bit set, the quantity \e lon2 &minus; \e
      * lon1 indicates how many times and in what sense the rhumb line encircles
-     * the ellipsoid.  Because \e lon2 might be outside the normal allowed
-     * range for longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize
-     * it with Math::AngNormalize2 before using it in other GeographicLib
-     * calls.
+     * the ellipsoid.
      *
      * If \e s12 is large enough that the rhumb line crosses a pole, the
      * longitude of point 2 is indeterminate (a NaN is returned for \e lon2 and

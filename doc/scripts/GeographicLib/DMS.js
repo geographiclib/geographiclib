@@ -262,8 +262,6 @@ GeographicLib.DMS = {};
     var lat = ia === d.LATITUDE ? a : b, lon = ia === d.LATITUDE ? b : a;
     if (Math.abs(lat) > 90)
       throw new Error("Latitude " + lat + "d not in [-90d, 90d]");
-    if (lon < -540 || lon >= 540)
-      throw new Error("Latitude " + lon + "d not in [-540d, 540d)");
     vals.lat = lat;
     vals.lon = lon;
     return vals;
@@ -284,8 +282,6 @@ GeographicLib.DMS = {};
     if (ind === d.LATITUDE)
       throw new Error("Azimuth " + azistr +
                       " has a latitude hemisphere, N/S");
-    if (azi < -540 || azi >= 540)
-      throw new Error("Azimuth " + azistr + " not in range [-540d, 540d)");
     azi = m.AngNormalize(azi);
     return azi;
   };
@@ -315,8 +311,8 @@ GeographicLib.DMS = {};
     // fractional part.
     var
     idegree = Math.floor(angle),
-    fdegree = (angle - idegree) * scale + real(0.5),
-    real f = floor(fdegree);
+    fdegree = (angle - idegree) * scale + 0.5,
+    f = Math.floor(fdegree);
     // Implement the "round ties to even" rule
     fdegree = (f == fdegree && (f & 1)) ? f - 1 : f;
     fdegree /= scale;

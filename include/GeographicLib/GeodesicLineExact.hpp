@@ -153,8 +153,7 @@ namespace GeographicLib {
      *   possess, i.e., which quantities can be returned in calls to
      *   GeodesicLine::Position.
      *
-     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-     * azi1 should be in the range [&minus;540&deg;, 540&deg;).
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
      *
      * The GeodesicLineExact::mask values are
      * - \e caps |= GeodesicLineExact::LATITUDE for the latitude \e lat2; this
@@ -490,10 +489,7 @@ namespace GeographicLib {
      *
      * With the GeodesicLineExact::LONG_UNROLL bit set, the quantity \e lon2
      * &minus; \e lon1 indicates how many times and in what sense the geodesic
-     * encircles the ellipsoid.  Because \e lon2 might be outside the normal
-     * allowed range for longitudes, [&minus;540&deg;, 540&deg;), be sure to
-     * normalize it with Math::AngNormalize2 before using it in other
-     * GeographicLib calls.
+     * encircles the ellipsoid.
      **********************************************************************/
     Math::real GenPosition(bool arcmode, real s12_a12, unsigned outmask,
                            real& lat2, real& lon2, real& azi2,

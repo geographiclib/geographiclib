@@ -69,8 +69,6 @@ int main(int argc, char* argv[]) {
           lon0 = DMS::Decode(std::string(argv[m]), ind);
           if (ind == DMS::LATITUDE)
             throw GeographicErr("Bad hemisphere");
-          if (!(lon0 >= -540 && lon0 < 540))
-            throw GeographicErr("Bad longitude");
           lon0 = Math::AngNormalize(lon0);
         }
         catch (const std::exception& e) {
