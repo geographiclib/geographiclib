@@ -128,10 +128,9 @@ namespace NETGeographicLib
          * - 40:30.5
          * - 40.508333333
          * .
-         * all specify the same angle.  The leading sign applies to all components
-         * so -1d30 is -(1+30/60) = -1.5.  Latitudes must be in the range
-         * [&minus;90&deg;, 90&deg;] and longitudes in the range
-         * [&minus;540&deg;, 540&deg;).  Internally longitudes are reduced
+         * all specify the same angle.  The leading sign applies to all
+         * components so -1d30 is -(1+30/60) = -1.5.  Latitudes must be in the
+         * range [&minus;90&deg;, 90&deg;].  Internally longitudes are reduced
          * to the range [&minus;180&deg;, 180&deg;).
          *
          * <b>UTM/UPS parsing</b>: For UTM zones (&minus;80&deg; &le; Lat <
@@ -166,8 +165,6 @@ namespace NETGeographicLib
          *   specified zone using the rules given in UTMUPS::zonespec.
          * @exception GeographicErr if \e latitude is not in [&minus;90&deg;,
          *   90&deg;].
-         * @exception GeographicErr if \e longitude is not in [&minus;540&deg;,
-         *   540&deg;).
          * @exception GeographicErr if \e zone cannot be used for this location.
          **********************************************************************/
         GeoCoords(double latitude, double longitude, int zone );
@@ -212,8 +209,6 @@ namespace NETGeographicLib
          *   specified zone using the rules given in UTMUPS::zonespec.
          * @exception GeographicErr if \e latitude is not in [&minus;90&deg;,
          *   90&deg;].
-         * @exception GeographicErr if \e longitude is not in [&minus;540&deg;,
-         *   540&deg;).
          * @exception GeographicErr if \e zone cannot be used for this location.
          **********************************************************************/
         void Reset(double latitude, double longitude, int zone ) ;

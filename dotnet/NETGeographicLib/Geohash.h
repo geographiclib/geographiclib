@@ -47,8 +47,6 @@ namespace NETGeographicLib
          * @param[out] geohash the geohash.
          * @exception GeographicErr if \e la is not in [&minus;90&deg;,
          *   90&deg;].
-         * @exception GeographicErr if \e lon is not in [&minus;540&deg;,
-         *   540&deg;).
          * @exception std::bad_alloc if memory for \e geohash can't be allocated.
          *
          * Internally, \e len is first put in the range [0, 18].

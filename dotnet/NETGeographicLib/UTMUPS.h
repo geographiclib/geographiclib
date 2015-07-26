@@ -166,8 +166,6 @@ namespace NETGeographicLib
          *   coordinates (default = false).
          * @exception GeographicErr if \e lat is not in [&minus;90&deg;,
          *   90&deg;].
-         * @exception GeographicErr if \e lon is not in [&minus;540&deg;,
-         *   540&deg;).
          * @exception GeographicErr if the resulting \e x or \e y is out of allowed
          *   range (see Reverse); in this case, these arguments are unchanged.
          *

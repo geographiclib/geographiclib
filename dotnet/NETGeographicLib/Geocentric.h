@@ -114,8 +114,7 @@ namespace NETGeographicLib
          * @param[out] Y geocentric coordinate (meters).
          * @param[out] Z geocentric coordinate (meters).
          *
-         * \e lat should be in the range [&minus;90&deg;, 90&deg;]; \e lon
-         * should be in the range [&minus;540&deg;, 540&deg;).
+         * \e lat should be in the range [&minus;90&deg;, 90&deg;].
          **********************************************************************/
         void Forward(double lat, double lon, double h,
             [System::Runtime::InteropServices::Out] double% X,
