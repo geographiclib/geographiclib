@@ -128,7 +128,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real x(real omg) const {
       real somg, comg;
-      Math::sincosd(omg);
+      Math::sincosd(omg, somg, comg);
       return x(somg, comg) / Math::degree();
     }
     /**
@@ -157,7 +157,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real y(real bet) const {
       real sbet, cbet;
-      Math::sincosd(bet);
+      Math::sincosd(bet, sbet, cbet);
       return y(sbet, cbet) / Math::degree();
     }
   };

@@ -18,6 +18,9 @@ namespace GeographicLib {
   const string Geohash::ucdigits_ = "0123456789BCDEFGHJKMNPQRSTUVWXYZ";
 
   void Geohash::Forward(real lat, real lon, int len, std::string& geohash) {
+    static const real shift = pow(real(2), 45);
+    static const real loneps = 180 / shift;
+    static const real lateps =  90 / shift;
     if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
@@ -25,14 +28,14 @@ namespace GeographicLib {
       geohash = "invalid";
       return;
     }
-    if (lat == 90) lat -= lateps() / 2;
+    if (lat == 90) lat -= lateps / 2;
     lon = Math::AngNormalize(lon); // lon in [-180,180)
     // lon/loneps in [-2^45,2^45); lon/loneps + shift in [0,2^46)
     // similarly for lat
     len = max(0, min(int(maxlen_), len));
     unsigned long long
-      ulon = (unsigned long long)(floor(lon/loneps()) + shift()),
-      ulat = (unsigned long long)(floor(lat/lateps()) + shift());
+      ulon = (unsigned long long)(floor(lon/loneps) + shift),
+      ulat = (unsigned long long)(floor(lat/lateps) + shift);
     char geohash1[maxlen_];
     unsigned byte = 0;
     for (unsigned i = 0; i < 5 * unsigned(len);) {
@@ -55,6 +58,9 @@ namespace GeographicLib {
 
   void Geohash::Reverse(const std::string& geohash, real& lat, real& lon,
                         int& len, bool centerp) {
+    static const real shift = pow(real(2), 45);
+    static const real loneps = 180 / shift;
+    static const real lateps =  90 / shift;
     int len1 = min(int(maxlen_), int(geohash.length()));
     if (len1 >= 3 &&
         ((toupper(geohash[0]) == 'I' &&
@@ -88,8 +94,8 @@ namespace GeographicLib {
     int s = 5 * (maxlen_ - len1);
     ulon <<=     (s / 2);
     ulat <<= s - (s / 2);
-    lon = ulon * loneps() - 180;
-    lat = ulat * lateps() - 90;
+    lon = ulon * loneps - 180;
+    lat = ulat * lateps - 90;
     len = len1;
   }
 

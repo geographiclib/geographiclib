@@ -84,12 +84,6 @@ namespace GeographicLib {
     real _a, _f, _k0, _mu, _mv, _e;
     bool _extendp;
     EllipticFunction _Eu, _Ev;
-    static inline real overflow() {
-      // Overflow value s.t. atan(overflow_) = pi/2
-      static const real
-        overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
-      return overflow;
-    }
 
     void zeta(real u, real snu, real cnu, real dnu,
               real v, real snv, real cnv, real dnv,
