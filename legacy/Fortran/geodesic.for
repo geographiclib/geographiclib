@@ -1815,12 +1815,10 @@
       double precision x
 
       AngNm = mod(x, 360d0)
-      if (x .ge. 180) then
-        AngNm = x - 360
-      else if (x .lt. -180) then
-        AngNm = x + 360
-      else
-        AngNm = x
+      if (AngNm .lt. -180) then
+        AngNm = AngNm + 360
+      else if (AngNm .ge. 180) then
+        AngNm = AngNm - 360
       end if
 
       return
@@ -1885,14 +1883,14 @@
       return
       end
 
-      subroutine norm2(sinx, cosx)
+      subroutine norm2(x, y)
 * input/output
-      double precision sinx, cosx
+      double precision x, y
 
       double precision hypotx, r
-      r = hypotx(sinx, cosx)
-      sinx = sinx/r
-      cosx = cosx/r
+      r = hypotx(x, y)
+      x = x/r
+      y = y/r
 
       return
       end

@@ -121,8 +121,8 @@ class Math(object):
     """reduce angle to [-180,180)"""
 
     x = math.fmod(x, 360)
-    return (x - 360 if x >= 180 else
-            (x + 360 if x < -180 else x))
+    return (x + 360 if x < -180 else
+            (x if x < 180 else x - 360))
   AngNormalize = staticmethod(AngNormalize)
 
   def AngDiff(x, y):

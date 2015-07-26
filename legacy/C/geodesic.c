@@ -162,8 +162,8 @@ static void norm2(real* sinx, real* cosx) {
 }
 
 static real AngNormalize(real x) {
-  real y = fmod(x, (real)(360));
-  return y < -180 ? y + 360 : (y < 180 ? y : y - 360);
+  x = fmod(x, (real)(360));
+  return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
 }
 
 static real AngDiff(real x, real y) {
