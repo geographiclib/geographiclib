@@ -460,7 +460,7 @@ dispA2(ord):=block(
     print(concat(if j = 2 then "A2 = (1 " else "        ",
         if ttt>0 then "+ " else "- ",
         string(abs(ttt)), " * ", string(eps^j),
-        if j=ord or j = ord-1 then ") * (1 - eps);" else ""))))$
+        if j=ord or j = ord-1 then ") / (1 + eps);" else ""))))$
 
 dispC2(ord):=for i:1 thru ord do
 block([tt:ataylor(C2[i],eps,ord),ttt,linel:1200],
