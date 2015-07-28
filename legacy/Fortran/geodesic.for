@@ -176,6 +176,9 @@
 *! path.  (For a prolate ellipsoid, an additional condition is necessary
 *! for a shortest path: the longitudinal extent must not exceed of
 *! 180&deg;.)
+*!
+*! Example of use:
+*! \include geoddirect.for
 
       subroutine direct(a, f, lat1, lon1, azi1, s12a12, flags,
      +    lat2, lon2, azi2, omask, a12s12, m12, MM12, MM21, SS12)
@@ -512,6 +515,9 @@
 *! If this fails to converge (this is very unlikely in geodetic
 *! applications but does occur for very eccentric ellipsoids), then the
 *! bisection method is used to refine the solution.
+*!
+*! Example of use:
+*! \include geodinverse.for
 
       subroutine invers(a, f, lat1, lon1, lat2, lon2,
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
@@ -925,9 +931,9 @@
 *!   a sphere.  Negative \e f gives a prolate ellipsoid.
 *! @param[in] lats an array of the latitudes of the vertices (degrees).
 *! @param[in] lons an array of the longitudes of the vertices (degrees).
-*! @param[in] n the number of vertices
-*! @param[out] AA the (signed) area of the polygon (meters<sup>2</sup>)
-*! @param[out] PP the perimeter of the polygon
+*! @param[in] n the number of vertices.
+*! @param[out] AA the (signed) area of the polygon (meters<sup>2</sup>).
+*! @param[out] PP the perimeter of the polygon.
 *!
 *! \e lats should be in the range [&minus;90&deg;, 90&deg;].
 *!
@@ -990,6 +996,25 @@
         call accadd(Aacc, +area0)
       end if
       AA = Aacc(1)
+
+      return
+      end
+
+*> Return the version numbers for this package.
+*!
+*! @param[out] major the major version number.
+*! @param[out] minor the minor version number.
+*! @param[out] patch the patch number.
+*!
+*! This subroutine was added with version 1.44.
+
+      subroutine geover(major, minor, patch)
+* output
+      integer major, minor, patch
+
+      major = 1
+      minor = 44
+      patch = 0
 
       return
       end

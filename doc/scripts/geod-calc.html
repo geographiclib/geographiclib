@@ -28,7 +28,6 @@
 	    src="http://geographiclib.sf.net/scripts/geographiclib.js">
     </script>
     <script type="text/javascript">
-<!--
 var geod = GeographicLib.Geodesic.WGS84;
 var dms = GeographicLib.DMS;
 function formatpoint(lat, lon, azi, dmsformat, prec) {
@@ -43,7 +42,7 @@ function formatpoint(lat, lon, azi, dmsformat, prec) {
   } else {
     return (lat.toFixed(prec) + " " +
 	    lon.toFixed(prec) + " " +
-	    azi .toFixed(prec));
+	    azi.toFixed(prec));
   }
 }
 
@@ -155,7 +154,6 @@ function GeodesicArea(input, polyline) {
   }
   return result;
 }
-//-->
     </script>
   </head>
   <body>
@@ -191,7 +189,12 @@ function GeodesicArea(input, polyline) {
       -20:30:40.5.)  The results are accurate to about
       15&nbsp;nanometers (or 0.1&nbsp;m<sup>2</sup> per vertex for
       areas).  A slicker page where the geodesics are incorporated into
-      Google Maps is given <a href="geod-google.html">here</a>.
+      Google Maps is given <a href="geod-google.html">here</a>.  This
+      page uses version
+      <script type="text/javascript">
+	document.write(GeographicLib.Constants.version_string);
+      </script>
+      of the geodesic code.
     <p>
       Jump to:
       <ul>

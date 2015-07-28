@@ -87,7 +87,7 @@ and are therefore in the public domain.
 
 \section library Using the library
 
-- Optionall put @verbatim
+- Optionally put @verbatim
   include "geodesic.inc" @endverbatim
   in declaration section of your subroutines.
 - make calls to the geodesic routines from your code.  The interface to
@@ -117,6 +117,4 @@ and are therefore in the public domain.
   geodesic.
 - <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">
   An online geodesic bibliography</a>.
-**********************************************************************/
-
 **********************************************************************/

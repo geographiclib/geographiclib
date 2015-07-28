@@ -43,6 +43,7 @@ set -e
 
 # python
 #   python/setup.py
+#   python/geographiclib/__init__.py
 
 # MATLAB
 #   matlab/geographiclib/Contents.m version + date
@@ -59,7 +60,11 @@ set -e
 #   java/pom.xml java/*/pom.xml
 #   java/src/main/java/net/sf/geographiclib/package-info.java
 
-# JavaScript + maxima -- none
+# maxima
+#   maxima/geodesic.mac
+
+# JavaScript
+#   doc/scripts/GeographicLib/Math.js
 
 DATE=`date +%F`
 VERSION=1.44
@@ -76,8 +81,10 @@ test -d $TEMP || mkdir $TEMP
 rm -rf $TEMP/*
 mkdir $TEMP/gita # Package creation via cmake
 mkdir $TEMP/gitb # Package creation via autoconf
-(cd $TEMP/gita; git clone -b $BRANCH $GITSOURCE)
-(cd $TEMP/gitb; git clone -b $BRANCH $GITSOURCE)
+mkdir $TEMP/gitr # For release branch
+(cd $TEMP/gitr; git clone -b $BRANCH $GITSOURCE)
+(cd $TEMP/gita; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
+(cd $TEMP/gitb; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
 cd $TEMP/gita/geographiclib
 sh autogen.sh
 mkdir BUILD
@@ -159,10 +166,8 @@ done <<EOF
 14 y
 EOF
 
-mkdir $TEMP/gitr
-cd $TEMP/gitr
-git clone -b release $GITSOURCE
-cd geographiclib
+cd $TEMP/gitr/geographiclib
+git checkout release
 find . -type f | grep -v '/\.git' | xargs rm
 tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
 (
@@ -219,43 +224,6 @@ cp -pr $TEMP/instc/share/matlab/geographiclib $TEMP/matlab
 cd $TEMP/matlab/geographiclib
 rm -f $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip
 zip $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip *.m private/*.m
-mkdir -p $TEMP/geographiclib-matlab/private
-while read f;do cp -p $f $TEMP/geographiclib-matlab/$f; done <<EOF
-defaultellipsoid.m
-ecc2flat.m
-flat2ecc.m
-geodarea.m
-geoddistance.m
-geoddoc.m
-geodreckon.m
-private/A1m1f.m
-private/A2m1f.m
-private/A3coeff.m
-private/A3f.m
-private/AngDiff.m
-private/AngNormalize.m
-private/AngRound.m
-private/C1f.m
-private/C1pf.m
-private/C2f.m
-private/C3coeff.m
-private/C3f.m
-private/C4coeff.m
-private/C4f.m
-private/SinCosSeries.m
-private/atan2dx.m
-private/cbrtx.m
-private/cvmgt.m
-private/eatanhe.m
-private/norm2.m
-private/sincosdx.m
-private/sumx.m
-private/swap.m
-EOF
-cd $TEMP
-rm -f $DEVELSOURCE/geographiclib_matlab_$VERSION.zip
-zip $DEVELSOURCE/geographiclib_matlab_$VERSION.zip \
-    geographiclib-matlab/*.m geographiclib-matlab/private/*.m
 cd $TEMP/matlab
 cp -p $TEMP/gita/geographiclib/geodesic.png .
 cp -p $TEMP/gita/geographiclib/matlab/geographiclib-blurb.txt .

@@ -151,6 +151,8 @@ GeographicLib.Math.digits = 53;
 
 GeographicLib.Constants = {};
 GeographicLib.Constants.WGS84 = { a: 6378137, f: 1/298.257223563 };
+GeographicLib.Constants.version = { major: 1, minor: 44, patch: 0 };
+GeographicLib.Constants.version_string = "1.44";
 
 GeographicLib.Accumulator = {};
 (function() {

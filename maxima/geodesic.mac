@@ -100,6 +100,9 @@ documented at
 
 */
 
+/* The corresponding version of GeographicLib */
+geod_version:[1,44,0]$
+
 /* Load series created by geod.mac (NEED TO UNCOMMENT THE LAST LINE OF
 geod.mac TO GENERATE THIS FILE). */
 load("geod30.lsp")$
@@ -202,8 +205,7 @@ sumx(u, v):=block([s,up,vpp,t],
 
 swapx(x, y):=[y,x]$
 
-SinCosNorm(sinx, cosx):=block([r : hypotx(sinx, cosx)],
-  [sinx/r, cosx/r])$
+norm2(x, y):=block([r : hypotx(x, y)], [x/r, y/r])$
 
 AngNormalize(x):=block([y:x-360b0*floor(x/360b0+0.5)],
   if y < -180b0 then y+360b0 else if y < 180b0 then y else y-360b0)$
@@ -312,7 +314,7 @@ geod_lineinit(g,lat1,lon1,azi1):=block([a, f,
   /* Don't normalizing lon1... */
   block([t:sincosdx(azi1)], salp1:t[1], calp1:t[2]),
   block([t:sincosdx(lat1)], sbet1:t[1], cbet1:t[2]), sbet1 : f1 * sbet1,
-  block([t:SinCosNorm(sbet1, cbet1)], sbet1:t[1], cbet1:t[2]),
+  block([t:norm2(sbet1, cbet1)], sbet1:t[1], cbet1:t[2]),
   /* Ensure cbet1 = +epsilon at poles */
   cbet1 = max(tiny, cbet1),
   dn1 : sqrt(1 + g[g_ep2] * sq(sbet1)),
@@ -335,9 +337,9 @@ geod_lineinit(g,lat1,lon1,azi1):=block([a, f,
   /* Without normalization we have schi1 = somg1. */
   cchi1 : f1 * dn1 * comg1,
   /* sig1 in (-pi, pi] */
-  block([t:SinCosNorm(ssig1, csig1)], ssig1:t[1], csig1:t[2]),
-  /* SinCosNorm (somg1, comg1); -- don't need to normalize!
-  SinCosNorm (schi1, cchi1); -- don't need to normalize! */
+  block([t:norm2(ssig1, csig1)], ssig1:t[1], csig1:t[2]),
+  /* norm2 (somg1, comg1); -- don't need to normalize!
+  norm2 (schi1, cchi1); -- don't need to normalize! */
   k2 : sq(calp0) * g[g_ep2],
   eps : k2 / (2 * (1 + sqrt(1 + k2)) + k2),
   E:Ef(-k2,-g[g_ep2]),
@@ -593,11 +595,11 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
   check, e.g., on verifying quadrants in atan2.  In addition, this
   enforces some symmetries in the results returned. */
   block([t:sincosdx(lat1)], sbet1:t[1], cbet1:t[2]), sbet1 : f1 * sbet1,
-  block([t:SinCosNorm(sbet1, cbet1)], sbet1:t[1], cbet1:t[2]),
+  block([t:norm2(sbet1, cbet1)], sbet1:t[1], cbet1:t[2]),
   /* Ensure cbet1 = +epsilon at poles */
   cbet1 = max(tiny, cbet1),
   block([t:sincosdx(lat2)], sbet2:t[1], cbet2:t[2]), sbet2 : f1 * sbet2,
-  block([t:SinCosNorm(sbet2, cbet2)], sbet2:t[1], cbet2:t[2]),
+  block([t:norm2(sbet2, cbet2)], sbet2:t[1], cbet2:t[2]),
   /* Ensure cbet2 = +epsilon at poles */
   cbet2 = max(tiny, cbet2),
   /* If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
@@ -716,7 +718,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
           if nsalp1 > 0b0 and abs(dalp1) < pi then (
             calp1 : calp1 * cdalp1 - salp1 * sdalp1,
             salp1 : nsalp1,
-            block([t:SinCosNorm(salp1, calp1)], salp1:t[1], calp1:t[2]),
+            block([t:norm2(salp1, calp1)], salp1:t[1], calp1:t[2]),
             /* In some regimes we don't get quadratic convergence because
             slope -> 0.  So use convergence conditions based on epsilon
             instead of sqrt(epsilon). */
@@ -733,7 +735,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
           WGS84 and random input: mean = 4.74, sd = 0.99 */
           salp1 : (salp1a + salp1b)/2,
           calp1 : (calp1a + calp1b)/2,
-          block([t:SinCosNorm(salp1, calp1)], salp1:t[1], calp1:t[2]),
+          block([t:norm2(salp1, calp1)], salp1:t[1], calp1:t[2]),
           tripn : false,
           tripb : is(abs(salp1a - salp1) + (calp1a - calp1) < tolb or
             abs(salp1 - salp1b) + (calp1 - calp1b) < tolb)) ),
@@ -761,8 +763,8 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
       A4 : sq(g[g_a]) * calp0 * salp0 * g[g_e2],
       Ca, B41, B42],
       eps : k2 / (2 * (1 + sqrt(1 + k2)) + k2),
-      block([t:SinCosNorm(ssig1, csig1)], ssig1:t[1], csig1:t[2]),
-      block([t:SinCosNorm(ssig2, csig2)], ssig2:t[1], csig2:t[2]),
+      block([t:norm2(ssig1, csig1)], ssig1:t[1], csig1:t[2]),
+      block([t:norm2(ssig2, csig2)], ssig2:t[1], csig2:t[2]),
       Ca : C4f(g, eps),
       B41 : SinCosSeries(false, ssig1, csig1, Ca),
       B42 : SinCosSeries(false, ssig2, csig2, Ca),
@@ -945,7 +947,7 @@ InverseStart(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12):=block(
     salp2 : cbet1 * somg12,
     calp2 : sbet12 - cbet1 * sbet2 *
     (if comg12 >= 0 then sq(somg12) / (1 + comg12) else 1 - comg12),
-    block([t:SinCosNorm(salp2, calp2)], salp2:t[1], calp2:t[2]),
+    block([t:norm2(salp2, calp2)], salp2:t[1], calp2:t[2]),
     /* Set return value */
     sig12 : atan2x(ssig12, csig12))
   else if abs(g[g_n]) > 0.1b0 or /* No astroid calc if too eccentric */
@@ -1027,7 +1029,7 @@ InverseStart(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12):=block(
       salp1 : cbet2 * somg12,
       calp1 : sbet12a - cbet2 * sbet1 * sq(somg12) / (1 - comg12))),
   if salp1 > 0 then              /* Sanity check on starting guess */
-  block([t:SinCosNorm(salp1, calp1)], salp1:t[1], calp1:t[2])
+  block([t:norm2(salp1, calp1)], salp1:t[1], calp1:t[2])
   else ( salp1 : 1b0, calp1 : 0b0 ),
   [sig12, salp1, calp1, salp2, calp2, dnm]
   )$
@@ -1055,8 +1057,8 @@ block([salp2 : 0b0, calp2 : 0b0, sig12 : 0b0,
   csig1 : comg1 : calp1 * cbet1,
   /* Without normalization we have schi1 = somg1. */
   if exact then cchi1 : g[g_f1] * dn1 * comg1,
-  block([t:SinCosNorm(ssig1, csig1)], ssig1:t[1], csig1:t[2]),
-  /* SinCosNorm (&somg1, &comg1); -- don't need to normalize! */
+  block([t:norm2(ssig1, csig1)], ssig1:t[1], csig1:t[2]),
+  /* norm2 (&somg1, &comg1); -- don't need to normalize! */
   /* Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
   about this case, since this can yield singularities in the Newton
   iteration.
@@ -1078,8 +1080,8 @@ block([salp2 : 0b0, calp2 : 0b0, sig12 : 0b0,
   csig2 : comg2 : calp2 * cbet2,
   /* Without normalization we have schi2 = somg2. */
   if exact then cchi2 : g[g_f1] * dn2 * comg2,
-  block([t:SinCosNorm(ssig2, csig2)], ssig2:t[1], csig2:t[2]),
-  /* SinCosNorm (&somg2, &comg2); -- don't need to normalize! */
+  block([t:norm2(ssig2, csig2)], ssig2:t[1], csig2:t[2]),
+  /* norm2(&somg2, &comg2); -- don't need to normalize! */
   /* sig12 = sig2 - sig1, limit to [0, pi] */
   sig12 : atan2x(max(csig1 * ssig2 - ssig1 * csig2, 0b0),
     csig1 * csig2 + ssig1 * ssig2),

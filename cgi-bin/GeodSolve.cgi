@@ -41,8 +41,9 @@ if test "$RADIUS" = "$DEFAULTRADIUS" -a \
 fi
 
 INPUTENC=`encodevalue "$INPUT"`
-COMMAND="GeodSolve -E -f"
 EXECDIR=../bin
+COMMAND="GeodSolve -E -f"
+VERSION=`$EXECDIR/$COMMAND --version | cut -f4 -d" "`
 F='<font color="blue">'
 G='</font>'
 test $TYPE = I && COMMAND="$COMMAND -i"
@@ -292,7 +293,7 @@ cat <<EOF
     <hr>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">
-        GeodSolve</a>
+        GeodSolve (version $VERSION)</a>
       performs geodesic calculations for an arbitrary ellipsoid of
       revolution.  The shortest path between two points on the ellipsoid
       at (<em>lat1</em>, <em>lon1</em>) and (<em>lat2</em>,
