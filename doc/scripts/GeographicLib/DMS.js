@@ -40,8 +40,6 @@ GeographicLib.DMS = {};
 
   // return val, ind
   d.Decode = function(dms) {
-    var vals = {};
-    var errormsg = new String("");
     var dmsa = dms;
     dmsa = dmsa.replace(/\u00b0/g, 'd');
     dmsa = dmsa.replace(/\u00ba/g, 'd');
@@ -54,8 +52,43 @@ GeographicLib.DMS = {};
     dmsa = dmsa.replace(/\u201d/g, '"');
     dmsa = dmsa.replace(/\u2212/g, '-');
     dmsa = dmsa.replace(/''/g, '"');
-    dmsa = dmsa.replace(/^\s+/, "");
-    dmsa = dmsa.replace(/\s+$/, "");
+    dmsa = dmsa.trim();
+    var errormsg = new String("");
+    var end = dmsa.length;
+    var v = 0, i = 0, mi, pi, vals;
+    var ind1 = d.NONE, ind2;
+    var p, pa, pb;
+    // p is pointer to the next piece that needs decoding
+    for (p = 0; p < end; p = pb, ++i) {
+      pa = p;
+      // Skip over initial hemisphere letter (for i == 0)
+      if (i == 0 && d.lookup(d.hemispheres_, dmsa.charAt(pa)) >= 0)
+        ++pa;
+      // Skip over initial sign (checking for it if i == 0)
+      if (i > 0 || (pa < end && d.lookup(d.signs_, dmsa.charAt(pa)) >= 0))
+        ++pa;
+      // Find next sign
+      mi = dmsa.substr(pa, end - pa).indexOf('-');
+      pi = dmsa.substr(pa, end - pa).indexOf('+');
+      if (mi < 0) mi = end; else mi += pa;
+      if (pi < 0) pi = end; else pi += pa;
+      pb = Math.min(mi, pi);
+      vals = d.InternalDecode(dmsa.substr(p, pb - p));
+      v += vals.val; ind2 = vals.ind;
+      if (ind1 == d.NONE)
+        ind1 = ind2;
+      else if (!(ind2 == d.NONE || ind1 == ind2))
+        throw new Error("Incompatible hemisphere specifies in " +
+                        dmsa.substr(0, pb));
+    }
+    if (i == 0)
+      throw new Error("Empty or incomplete DMS string " + dmsa);
+    return {val: v, ind: ind1};
+  };
+
+  d.InternalDecode = function(dmsa) {
+    var vals = {};
+    var errormsg = new String("");
     do {                       // Executed once (provides the ability to break)
       var sign = 1;
       var beg = 0, end = dmsa.length;

@@ -11,11 +11,12 @@ function mgrs = mgrs_fwd(x, y, zone, isnorth, prec)
 %   giving 1 m precision.  For example, prec = 2 corresponding to 1 km
 %   precision, returns a string such as 38SMB4488.  A value of -1 means
 %   that only the grid zone, e.g., 38S, is returned.  The maximum allowed
-%   value of prec is 11 (denoting 1 um precision).  The MGRS references are
-%   returned in a cell array of strings.  x, y, zone, isnorth, prec can be
-%   scalars or arrays of the same size.  Values that can't be converted to
-%   MGRS return the "invalid" string, INV.  The inverse operation is
-%   performed by mgrs_inv.
+%   value of prec is 11 (denoting 1 um precision).  prec < -1 is treated a
+%   NaN, while prec > 11 is treated the same as prec = 11.  The MGRS
+%   references are returned in a cell array of strings.  x, y, zone,
+%   isnorth, prec can be scalars or arrays of the same size.  Values that
+%   can't be converted to MGRS return the "invalid" string, INV.  The
+%   inverse operation is performed by mgrs_inv.
 %
 %   The allowed values of (x,y) are
 %        UTM: x in [100 km, 900 km]
