@@ -34,8 +34,8 @@ the script for displaying
 <a href="../scripts/geod-google.html">geodesics in Google Maps</a>
 
 This library is <i>not</i> a general purpose projection library; use
-<a href="http://trac.osgeo.org/proj/">proj.4</a> for that.  On the other
-hand, it does provide the core functionality offered by
+<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a> for that.  On
+the other hand, it does provide the core functionality offered by
 <a href="http://earth-info.nima.mil/GandG/geotrans/">GEOTRANS</a>.
 
 \section download Download

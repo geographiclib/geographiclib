@@ -30,7 +30,8 @@ namespace GeographicLib {
    * They provide a compact string representation of a particular geographic
    * location (expressed as latitude and longitude), with the property that if
    * trailing characters are dropped from the string the geographic location
-   * remains nearby.
+   * remains nearby.  The classes Georef and GARS implement similar compact
+   * representations.
    *
    * Example of use:
    * \include example-Geohash.cpp
@@ -54,7 +55,7 @@ namespace GeographicLib {
      * @param[in] lon longitude of point (degrees).
      * @param[in] len the length of the resulting geohash.
      * @param[out] geohash the geohash.
-     * @exception GeographicErr if \e la is not in [&minus;90&deg;,
+     * @exception GeographicErr if \e lat is not in [&minus;90&deg;,
      *   90&deg;].
      * @exception std::bad_alloc if memory for \e geohash can't be allocated.
      *

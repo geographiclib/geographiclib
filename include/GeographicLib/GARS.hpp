@@ -27,8 +27,9 @@ namespace GeographicLib {
    * - https://en.wikipedia.org/wiki/Global_Area_Reference_System
    * - http://earth-info.nga.mil/GandG/coordsys/grids/gars.html
    * .
-   * It provide a compact string representation of a geographic area (expressed
-   * as latitude and longitude).
+   * It provides a compact string representation of a geographic area
+   * (expressed as latitude and longitude).  The classes Georef and Geohash
+   * implement similar compact representations.
    *
    * Example of use:
    * \include example-GARS.cpp
@@ -65,7 +66,7 @@ namespace GeographicLib {
      * @param[in] lon longitude of point (degrees).
      * @param[in] prec the precision of the resulting GARS.
      * @param[out] gars the GARS string.
-     * @exception GeographicErr if \e la is not in [&minus;90&deg;,
+     * @exception GeographicErr if \e lat is not in [&minus;90&deg;,
      *   90&deg;].
      * @exception std::bad_alloc if memory for \e gars can't be allocated.
      *

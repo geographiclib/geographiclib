@@ -27,8 +27,9 @@ namespace GeographicLib {
    * - https://en.wikipedia.org/wiki/Georef
    * - http://earth-info.nga.mil/GandG/coordsys/grids/georef.pdf
    * .
-   * It provide a compact string representation of a geographic area (expressed
-   * as latitude and longitude).
+   * It provides a compact string representation of a geographic area
+   * (expressed as latitude and longitude).  The classes GARS and Geohash
+   * implement similar compact representations.
    *
    * Example of use:
    * \include example-Georef.cpp
@@ -61,7 +62,7 @@ namespace GeographicLib {
      * @param[in] lon longitude of point (degrees).
      * @param[in] prec the precision of the resulting georef.
      * @param[out] georef the georef string.
-     * @exception GeographicErr if \e la is not in [&minus;90&deg;,
+     * @exception GeographicErr if \e lat is not in [&minus;90&deg;,
      *   90&deg;].
      * @exception std::bad_alloc if memory for \e georef can't be allocated.
      *
