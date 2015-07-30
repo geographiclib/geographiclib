@@ -10,8 +10,9 @@ function [lat, lon, gam, k] = polarst_inv(isnorth, x, y, ellipsoid)
 %   arrays of equal size.  The ellipsoid vector is of the form [a, e],
 %   where a is the equatorial radius in meters, e is the eccentricity.  If
 %   ellipsoid is omitted, the WGS84 ellipsoid (more precisely, the value
-%   returned by defaultellipsoid) is used.  The forward projection is given
-%   by polarst_fwd.
+%   returned by defaultellipsoid) is used.  projdoc defines the projection
+%   and gives the restrictions on the allowed ranges of the arguments.  The
+%   forward projection is given by polarst_fwd.
 %
 %   gam and k give metric properties of the projection at (lat,lon); gam is
 %   the meridian convergence at the point and k is the scale.
@@ -20,11 +21,12 @@ function [lat, lon, gam, k] = polarst_inv(isnorth, x, y, ellipsoid)
 %   meters (more precisely the units used for the equatorial radius).  k is
 %   dimensionless.
 %
-%   See also POLARST_FWD, UTMUPS_FWD, UTMUPS_INV, DEFAULTELLIPSOID.
+%   See also PROJDOC, POLARST_FWD, UTMUPS_FWD, UTMUPS_INV,
+%     DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.44.
 
   narginchk(3, 4)
   if nargin < 4, ellipsoid = defaultellipsoid; end
@@ -37,7 +39,6 @@ function [lat, lon, gam, k] = polarst_inv(isnorth, x, y, ellipsoid)
     error('ellipsoid must be a vector of size 2')
   end
 
-  degree = pi/180;
   a = ellipsoid(1);
   e2 = ellipsoid(2)^2;
   e2m = 1 - e2;
@@ -48,13 +49,12 @@ function [lat, lon, gam, k] = polarst_inv(isnorth, x, y, ellipsoid)
   t = rho / (2 * a / c);
   taup = (1 ./ t - t) / 2;
   tau = tauf(taup, e2);
-  phi = atan(tau);
-  lat =  phi / degree;
+  lat = atand(tau);
   lat(rho == 0) = 90;
   lat = isnorth .* lat;
-  lon = 0 - atan2( -x, -isnorth .* y) / degree;
+  lon = atan2dx(x, -isnorth .* y);
   if nargout > 2
-    gam = isnorth .* lon;
+    gam = AngNormalize(isnorth .* lon);
     if nargout > 3
       secphi = hypot(1, tau);
       k = (rho / a) .* secphi .* sqrt(e2m + e2 .* secphi.^-2);

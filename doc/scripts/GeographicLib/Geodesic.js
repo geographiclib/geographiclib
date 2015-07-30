@@ -12,7 +12,7 @@
  *    https://dx.doi.org/10.1007/s00190-012-0578-z
  *    Addenda: http://geographiclib.sf.net/geod-addenda.html
  *
- * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -56,7 +56,7 @@ GeographicLib.GeodesicLine = {};
   g.CAP_ALL  = 0x1F;
   g.CAP_MASK = g.CAP_ALL;
   g.OUT_ALL  = 0x7F80;
-  g.OUT_MASK = 0xFF80;          // Includes LONG_NOWRAP
+  g.OUT_MASK = 0xFF80;          // Includes LONG_UNROLL
   g.NONE          = 0;
   g.LATITUDE      = 1<<7  | g.CAP_NONE;
   g.LONGITUDE     = 1<<8  | g.CAP_C3;
@@ -66,16 +66,19 @@ GeographicLib.GeodesicLine = {};
   g.REDUCEDLENGTH = 1<<12 | g.CAP_C1 | g.CAP_C2;
   g.GEODESICSCALE = 1<<13 | g.CAP_C1 | g.CAP_C2;
   g.AREA          = 1<<14 | g.CAP_C4;
-  g.LONG_NOWRAP   = 1<<15;
+  g.LONG_UNROLL   = 1<<15;
+  g.LONG_NOWRAP   = g.LONG_UNROLL;
   g.ALL           = g.OUT_ALL| g.CAP_ALL;
 
-  g.SinCosSeries = function(sinp, sinx, cosx, c, n) {
+  g.SinCosSeries = function(sinp, sinx, cosx, c) {
     // Evaluate
     // y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
     //            sum(c[i] * cos((2*i+1) * x), i, 0, n-1)
     // using Clenshaw summation.  N.B. c[0] is unused for sin series
     // Approx operation count = (n + 5) mult and (2 * n + 2) add
-    var k = n + (sinp ? 1 : 0); // Point to one beyond last element
+    var
+    k = c.length,               // Point to one beyond last element
+    n = k - (sinp ? 1 : 0);
     var
     ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
     y0 = n & 1 ? c[--k] : 0, y1 = 0;        // accumulators for sum
@@ -90,18 +93,6 @@ GeographicLib.GeodesicLine = {};
             cosx * (y0 - y1));            // cos(x) * (y0 - y1)
   };
 
-  g.AngRound = function(x) {
-    // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
-    // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
-    // is about 1000 times more resolution than we get with angles around 90
-    // degrees.)  We use this to avoid having to deal with near singular
-    // cases when x is non-zero but tiny (e.g., 1.0e-200).
-    var z = 1/16;
-    var y = Math.abs(x);
-    // The compiler mustn't "simplify" z - (z - y) to y
-    y = y < z ? z - (z - y) : y;
-    return x < 0 ? -y : y;
-  };
   g.Astroid = function(x, y) {
     // Solve k^4+2*k^3-(x^2+y^2-1)*k^2-2*y^2*k-y^2 = 0 for positive
     // root k.  This solution is adapted from Geocentric::Reverse.
@@ -117,7 +108,7 @@ GeographicLib.GeodesicLine = {};
       S = p * q / 4,            // S = r^3 * s
       r2 = m.sq(r),
       r3 = r * r2,
-      // The discrimant of the quadratic equation for T3.  This is
+      // The discriminant of the quadratic equation for T3.  This is
       // zero on the evolute curve p^(1/3)+q^(1/3) = 1
       disc = S * (S + 2 * r3);
       var u = r;
@@ -157,69 +148,110 @@ GeographicLib.GeodesicLine = {};
     return k;
   };
 
+  // The scale factor A1-1 = mean value of (d/dsigma)I1 - 1
   g.A1m1f = function(eps) {
-    var
-    eps2 = m.sq(eps),
-    t = eps2*(eps2*(eps2+4)+64)/256;
+    var coeff = [
+      // (1-eps)*A1-1, polynomial in eps2 of order 3
+      1, 4, 64, 0, 256,
+    ];
+    var p = Math.floor(g.nA1_/2);
+    var t = m.polyval(p, coeff, 0, m.sq(eps)) / coeff[p + 1];
     return (t + eps) / (1 - eps);
   };
 
+  // The coefficients C1[l] in the Fourier expansion of B1
   g.C1f = function(eps, c) {
+    var coeff = [
+      // C1[1]/eps^1, polynomial in eps2 of order 2
+        -1, 6, -16, 32,
+      // C1[2]/eps^2, polynomial in eps2 of order 2
+        -9, 64, -128, 2048,
+      // C1[3]/eps^3, polynomial in eps2 of order 1
+      9, -16, 768,
+      // C1[4]/eps^4, polynomial in eps2 of order 1
+      3, -5, 512,
+      // C1[5]/eps^5, polynomial in eps2 of order 0
+        -7, 1280,
+      // C1[6]/eps^6, polynomial in eps2 of order 0
+        -7, 2048,
+    ];
     var
     eps2 = m.sq(eps),
     d = eps;
-    c[1] = d*((6-eps2)*eps2-16)/32;
-    d *= eps;
-    c[2] = d*((64-9*eps2)*eps2-128)/2048;
-    d *= eps;
-    c[3] = d*(9*eps2-16)/768;
-    d *= eps;
-    c[4] = d*(3*eps2-5)/512;
-    d *= eps;
-    c[5] = -7*d/1280;
-    d *= eps;
-    c[6] = -7*d/2048;
+    var o = 0;
+    for (var l = 1; l <= g.nC1_; ++l) {     // l is index of C1p[l]
+      var p = Math.floor((g.nC1_ - l) / 2); // order of polynomial in eps^2
+      c[l] = d * m.polyval(p, coeff, o, eps2) / coeff[o + p + 1];
+      o += p + 2;
+      d *= eps;
+    }
   };
 
+  // The coefficients C1p[l] in the Fourier expansion of B1p
   g.C1pf = function(eps, c) {
+    var coeff = [
+      // C1p[1]/eps^1, polynomial in eps2 of order 2
+      205, -432, 768, 1536,
+      // C1p[2]/eps^2, polynomial in eps2 of order 2
+      4005, -4736, 3840, 12288,
+      // C1p[3]/eps^3, polynomial in eps2 of order 1
+        -225, 116, 384,
+      // C1p[4]/eps^4, polynomial in eps2 of order 1
+        -7173, 2695, 7680,
+      // C1p[5]/eps^5, polynomial in eps2 of order 0
+      3467, 7680,
+      // C1p[6]/eps^6, polynomial in eps2 of order 0
+      38081, 61440,
+    ];
     var
     eps2 = m.sq(eps),
     d = eps;
-    c[1] = d*(eps2*(205*eps2-432)+768)/1536;
-    d *= eps;
-    c[2] = d*(eps2*(4005*eps2-4736)+3840)/12288;
-    d *= eps;
-    c[3] = d*(116-225*eps2)/384;
-    d *= eps;
-    c[4] = d*(2695-7173*eps2)/7680;
-    d *= eps;
-    c[5] = 3467*d/7680;
-    d *= eps;
-    c[6] = 38081*d/61440;
+    var o = 0;
+    for (var l = 1; l <= g.nC1p_; ++l) {     // l is index of C1p[l]
+      var p = Math.floor((g.nC1p_ - l) / 2); // order of polynomial in eps^2
+      c[l] = d * m.polyval(p, coeff, o, eps2) / coeff[o + p + 1];
+      o += p + 2;
+      d *= eps;
+    }
   };
 
+  // The scale factor A2-1 = mean value of (d/dsigma)I2 - 1
   g.A2m1f = function(eps) {
-    var
-    eps2 = m.sq(eps),
-    t = eps2*(eps2*(25*eps2+36)+64)/256;
-    return t * (1 - eps) - eps;
+    var coeff = [
+      // (eps+1)*A2-1, polynomial in eps2 of order 3
+      -11, -28, -192, 0, 256,
+    ];
+    var p = Math.floor(g.nA2_/2);
+    var t = m.polyval(p, coeff, 0, m.sq(eps)) / coeff[p + 1];
+    return (t - eps) / (1 + eps);
   };
 
+  // The coefficients C2[l] in the Fourier expansion of B2
   g.C2f = function(eps, c) {
+    var coeff = [
+      // C2[1]/eps^1, polynomial in eps2 of order 2
+      1, 2, 16, 32,
+      // C2[2]/eps^2, polynomial in eps2 of order 2
+      35, 64, 384, 2048,
+      // C2[3]/eps^3, polynomial in eps2 of order 1
+      15, 80, 768,
+      // C2[4]/eps^4, polynomial in eps2 of order 1
+      7, 35, 512,
+      // C2[5]/eps^5, polynomial in eps2 of order 0
+      63, 1280,
+      // C2[6]/eps^6, polynomial in eps2 of order 0
+      77, 2048,
+    ];
     var
     eps2 = m.sq(eps),
     d = eps;
-    c[1] = d*(eps2*(eps2+2)+16)/32;
-    d *= eps;
-    c[2] = d*(eps2*(35*eps2+64)+384)/2048;
-    d *= eps;
-    c[3] = d*(15*eps2+80)/768;
-    d *= eps;
-    c[4] = d*(7*eps2+35)/512;
-    d *= eps;
-    c[5] = 63*d/1280;
-    d *= eps;
-    c[6] = 77*d/2048;
+    var o = 0;
+    for (var l = 1; l <= g.nC2_; ++l) {     // l is index of C2[l]
+      var p = Math.floor((g.nC2_ - l) / 2); // order of polynomial in eps^2
+      c[l] = d * m.polyval(p, coeff, o, eps2) / coeff[o + p + 1];
+      o += p + 2;
+      d *= eps;
+    }
   };
 
   g.Geodesic = function(a, f) {
@@ -260,139 +292,215 @@ GeographicLib.GeodesicLine = {};
     this.C4coeff();
   };
 
+  // The scale factor A3 = mean value of (d/dsigma)I3
   g.Geodesic.prototype.A3coeff = function() {
-    var _n = this._n;
-    this._A3x[0] = 1;
-    this._A3x[1] = (_n-1)/2;
-    this._A3x[2] = (_n*(3*_n-1)-2)/8;
-    this._A3x[3] = ((-_n-3)*_n-1)/16;
-    this._A3x[4] = (-2*_n-3)/64;
-    this._A3x[5] = -3/128;
+    var coeff = [
+      // A3, coeff of eps^5, polynomial in n of order 0
+        -3, 128,
+      // A3, coeff of eps^4, polynomial in n of order 1
+        -2, -3, 64,
+      // A3, coeff of eps^3, polynomial in n of order 2
+        -1, -3, -1, 16,
+      // A3, coeff of eps^2, polynomial in n of order 2
+      3, -1, -2, 8,
+      // A3, coeff of eps^1, polynomial in n of order 1
+      1, -1, 2,
+      // A3, coeff of eps^0, polynomial in n of order 0
+      1, 1,
+    ];
+    var o = 0, k = 0;
+    for (var j = g.nA3_ - 1; j >= 0; --j) { // coeff of eps^j
+      var p = Math.min(g.nA3_ - j - 1, j);  // order of polynomial in n
+      this._A3x[k++] = m.polyval(p, coeff, o, this._n) / coeff[o + p + 1];
+      o += p + 2;
+    }
   };
 
+  // The coefficients C3[l] in the Fourier expansion of B3
   g.Geodesic.prototype.C3coeff = function() {
-    var _n = this._n;
-    this._C3x[0] = (1-_n)/4;
-    this._C3x[1] = (1-_n*_n)/8;
-    this._C3x[2] = ((3-_n)*_n+3)/64;
-    this._C3x[3] = (2*_n+5)/128;
-    this._C3x[4] = 3/128;
-    this._C3x[5] = ((_n-3)*_n+2)/32;
-    this._C3x[6] = ((-3*_n-2)*_n+3)/64;
-    this._C3x[7] = (_n+3)/128;
-    this._C3x[8] = 5/256;
-    this._C3x[9] = (_n*(5*_n-9)+5)/192;
-    this._C3x[10] = (9-10*_n)/384;
-    this._C3x[11] = 7/512;
-    this._C3x[12] = (7-14*_n)/512;
-    this._C3x[13] = 7/512;
-    this._C3x[14] = 21/2560;
+    var coeff = [
+      // C3[1], coeff of eps^5, polynomial in n of order 0
+      3, 128,
+      // C3[1], coeff of eps^4, polynomial in n of order 1
+      2, 5, 128,
+      // C3[1], coeff of eps^3, polynomial in n of order 2
+        -1, 3, 3, 64,
+      // C3[1], coeff of eps^2, polynomial in n of order 2
+        -1, 0, 1, 8,
+      // C3[1], coeff of eps^1, polynomial in n of order 1
+        -1, 1, 4,
+      // C3[2], coeff of eps^5, polynomial in n of order 0
+      5, 256,
+      // C3[2], coeff of eps^4, polynomial in n of order 1
+      1, 3, 128,
+      // C3[2], coeff of eps^3, polynomial in n of order 2
+        -3, -2, 3, 64,
+      // C3[2], coeff of eps^2, polynomial in n of order 2
+      1, -3, 2, 32,
+      // C3[3], coeff of eps^5, polynomial in n of order 0
+      7, 512,
+      // C3[3], coeff of eps^4, polynomial in n of order 1
+        -10, 9, 384,
+      // C3[3], coeff of eps^3, polynomial in n of order 2
+      5, -9, 5, 192,
+      // C3[4], coeff of eps^5, polynomial in n of order 0
+      7, 512,
+      // C3[4], coeff of eps^4, polynomial in n of order 1
+        -14, 7, 512,
+      // C3[5], coeff of eps^5, polynomial in n of order 0
+      21, 2560,
+    ];
+    var o = 0, k = 0;
+    for (var l = 1; l < g.nC3_; ++l) {        // l is index of C3[l]
+      for (var j = g.nC3_ - 1; j >= l; --j) { // coeff of eps^j
+        var p = Math.min(g.nC3_ - j - 1, j);  // order of polynomial in n
+        this._C3x[k++] = m.polyval(p, coeff, o, this._n) / coeff[o + p + 1];
+        o += p + 2;
+      }
+    }
   };
 
   g.Geodesic.prototype.C4coeff = function() {
-    var _n = this._n;
-    this._C4x[0] = (_n*(_n*(_n*(_n*(100*_n+208)+572)+3432)-12012)+30030)/45045;
-    this._C4x[1] = (_n*(_n*(_n*(64*_n+624)-4576)+6864)-3003)/15015;
-    this._C4x[2] = (_n*((14144-10656*_n)*_n-4576)-858)/45045;
-    this._C4x[3] = ((-224*_n-4784)*_n+1573)/45045;
-    this._C4x[4] = (1088*_n+156)/45045;
-    this._C4x[5] = 97/15015.0;
-    this._C4x[6] = (_n*(_n*((-64*_n-624)*_n+4576)-6864)+3003)/135135;
-    this._C4x[7] = (_n*(_n*(5952*_n-11648)+9152)-2574)/135135;
-    this._C4x[8] = (_n*(5792*_n+1040)-1287)/135135;
-    this._C4x[9] = (468-2944*_n)/135135;
-    this._C4x[10] = 1/9009.0;
-    this._C4x[11] = (_n*((4160-1440*_n)*_n-4576)+1716)/225225;
-    this._C4x[12] = ((4992-8448*_n)*_n-1144)/225225;
-    this._C4x[13] = (1856*_n-936)/225225;
-    this._C4x[14] = 8/10725.0;
-    this._C4x[15] = (_n*(3584*_n-3328)+1144)/315315;
-    this._C4x[16] = (1024*_n-208)/105105;
-    this._C4x[17] = -136/63063.0;
-    this._C4x[18] = (832-2560*_n)/405405;
-    this._C4x[19] = -128/135135.0;
-    this._C4x[20] = 128/99099.0;
+    var coeff = [
+      // C4[0], coeff of eps^5, polynomial in n of order 0
+      97, 15015,
+      // C4[0], coeff of eps^4, polynomial in n of order 1
+      1088, 156, 45045,
+      // C4[0], coeff of eps^3, polynomial in n of order 2
+        -224, -4784, 1573, 45045,
+      // C4[0], coeff of eps^2, polynomial in n of order 3
+        -10656, 14144, -4576, -858, 45045,
+      // C4[0], coeff of eps^1, polynomial in n of order 4
+      64, 624, -4576, 6864, -3003, 15015,
+      // C4[0], coeff of eps^0, polynomial in n of order 5
+      100, 208, 572, 3432, -12012, 30030, 45045,
+      // C4[1], coeff of eps^5, polynomial in n of order 0
+      1, 9009,
+      // C4[1], coeff of eps^4, polynomial in n of order 1
+        -2944, 468, 135135,
+      // C4[1], coeff of eps^3, polynomial in n of order 2
+      5792, 1040, -1287, 135135,
+      // C4[1], coeff of eps^2, polynomial in n of order 3
+      5952, -11648, 9152, -2574, 135135,
+      // C4[1], coeff of eps^1, polynomial in n of order 4
+        -64, -624, 4576, -6864, 3003, 135135,
+      // C4[2], coeff of eps^5, polynomial in n of order 0
+      8, 10725,
+      // C4[2], coeff of eps^4, polynomial in n of order 1
+      1856, -936, 225225,
+      // C4[2], coeff of eps^3, polynomial in n of order 2
+        -8448, 4992, -1144, 225225,
+      // C4[2], coeff of eps^2, polynomial in n of order 3
+        -1440, 4160, -4576, 1716, 225225,
+      // C4[3], coeff of eps^5, polynomial in n of order 0
+        -136, 63063,
+      // C4[3], coeff of eps^4, polynomial in n of order 1
+      1024, -208, 105105,
+      // C4[3], coeff of eps^3, polynomial in n of order 2
+      3584, -3328, 1144, 315315,
+      // C4[4], coeff of eps^5, polynomial in n of order 0
+        -128, 135135,
+      // C4[4], coeff of eps^4, polynomial in n of order 1
+        -2560, 832, 405405,
+      // C4[5], coeff of eps^5, polynomial in n of order 0
+      128, 99099,
+    ];
+    var o = 0, k = 0;
+    for (var l = 0; l < g.nC4_; ++l) {        // l is index of C4[l]
+      for (var j = g.nC4_ - 1; j >= l; --j) { // coeff of eps^j
+        var p = g.nC4_ - j - 1;               // order of polynomial in n
+        this._C4x[k++] = m.polyval(p, coeff, o, this._n) / coeff[o + p + 1];
+        o += p + 2;
+      }
+    }
   };
 
   g.Geodesic.prototype.A3f = function(eps) {
-    // Evaluate sum(_A3x[k] * eps^k, k, 0, nA3x_-1) by Horner's method
-    var v = 0;
-    for (var i = g.nA3x_; i; )
-      v = eps * v + this._A3x[--i];
-    return v;
+    // Evaluate A3
+    return m.polyval(g.nA3x_ - 1, this._A3x, 0, eps);
   };
 
   g.Geodesic.prototype.C3f = function(eps, c) {
-    // Evaluate C3 coeffs by Horner's method
+    // Evaluate C3 coeffs
     // Elements c[1] thru c[nC3_ - 1] are set
-    var j, k;
-    for (j = g.nC3x_, k = g.nC3_ - 1; k; ) {
-      var t = 0;
-      for (var i = g.nC3_ - k; i; --i)
-        t = eps * t + this._C3x[--j];
-      c[k--] = t;
-    }
-
     var mult = 1;
-    for (k = 1; k < g.nC3_; ) {
+    var o = 0;
+    for (var l = 1; l < g.nC3_; ++l) { // l is index of C3[l]
+      var p = g.nC3_ - l - 1;          // order of polynomial in eps
       mult *= eps;
-      c[k++] *= mult;
+      c[l] = mult * m.polyval(p, this._C3x, o, eps);
+      o += p + 1;
     }
   };
 
   g.Geodesic.prototype.C4f = function(eps, c) {
-    // Evaluate C4 coeffs by Horner's method
+    // Evaluate C4 coeffs
     // Elements c[0] thru c[nC4_ - 1] are set
-    var j, k;
-    for (j = g.nC4x_, k = g.nC4_; k; ) {
-      var t = 0;
-      for (var i = g.nC4_ - k + 1; i; --i)
-        t = eps * t + this._C4x[--j];
-      c[--k] = t;
-    }
-
     var mult = 1;
-    for (k = 1; k < g.nC4_; ) {
+    var o = 0;
+    for (var l = 0; l < g.nC4_; ++l) { // l is index of C4[l]
+      var p = g.nC4_ - l - 1;          // order of polynomial in eps
+      c[l] = mult * m.polyval(p, this._C4x, o, eps);
+      o += p + 1;
       mult *= eps;
-      c[k++] *= mult;
     }
   };
 
   // return s12b, m12b, m0, M12, M21
   g.Geodesic.prototype.Lengths = function(eps, sig12,
                                           ssig1, csig1, dn1, ssig2, csig2, dn2,
-                                          cbet1, cbet2, scalep,
+                                          cbet1, cbet2, outmask,
                                           C1a, C2a) {
-    var vals = {};
     // Return m12b = (reduced length)/_b; also calculate s12b =
     // distance/_b, and m0 = coefficient of secular term in
     // expression for reduced length.
-    g.C1f(eps, C1a);
-    g.C2f(eps, C2a);
-    var
-    A1m1 = g.A1m1f(eps),
-    AB1 = (1 + A1m1) * (g.SinCosSeries(true, ssig2, csig2, C1a, g.nC1_) -
-                        g.SinCosSeries(true, ssig1, csig1, C1a, g.nC1_)),
-    A2m1 = g.A2m1f(eps),
-    AB2 = (1 + A2m1) * (g.SinCosSeries(true, ssig2, csig2, C2a, g.nC2_) -
-                        g.SinCosSeries(true, ssig1, csig1, C2a, g.nC2_));
-    vals.m0 = A1m1 - A2m1;
-    var J12 = vals.m0 * sig12 + (AB1 - AB2);
-    // Missing a factor of _b.
-    // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to
-    // ensure accurate cancellation in the case of coincident
-    // points.
-    vals.m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
-      csig1 * csig2 * J12;
-    // Missing a factor of _b
-    vals.s12b = (1 + A1m1) * sig12 + AB1;
-    if (scalep) {
+    outmask &= g.OUT_MASK;
+    var vals = {};
+
+    var m0x = 0, J12 = 0, A1 = 0, A2 = 0;
+    if (outmask & (g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE)) {
+      A1 = g.A1m1f(eps);
+      g.C1f(eps, C1a);
+      if (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE)) {
+        A2 = g.A2m1f(eps);
+        g.C2f(eps, C2a);
+        m0x = A1 - A2;
+        A2 = 1 + A2;
+      }
+      A1 = 1 + A1;
+    }
+    if (outmask & g.DISTANCE) {
+      var B1 = g.SinCosSeries(true, ssig2, csig2, C1a) -
+        g.SinCosSeries(true, ssig1, csig1, C1a);
+      // Missing a factor of _b
+      vals.s12b = A1 * (sig12 + B1);
+      if (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE)) {
+        var B2 = g.SinCosSeries(true, ssig2, csig2, C2a) -
+          g.SinCosSeries(true, ssig1, csig1, C2a);
+        J12 = m0x * sig12 + (A1 * B1 - A2 * B2);
+      }
+    } else if (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE)) {
+      // Assume here that nC1_ >= nC2_
+      for (var l = 1; l <= g.nC2_; ++l)
+        C2a[l] = A1 * C1a[l] - A2 * C2a[l];
+      J12 = m0x * sig12 + (g.SinCosSeries(true, ssig2, csig2, C2a) -
+                           g.SinCosSeries(true, ssig1, csig1, C2a));
+    }
+    if (outmask & g.REDUCEDLENGTH) {
+      vals.m0 = m0x;
+      // Missing a factor of _b.
+      // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure
+      // accurate cancellation in the case of coincident points.
+      vals.m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
+        csig1 * csig2 * J12;
+    }
+    if (outmask & g.GEODESICSCALE) {
       var csig12 = csig1 * csig2 + ssig1 * ssig2;
       var t = this._ep2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2);
       vals.M12 = csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1;
       vals.M21 = csig12 - (t * ssig1 - csig1 * J12) * ssig2 / dn2;
     }
-      return vals;
+    return vals;
   };
 
   // return sig12, salp1, calp1, salp2, calp2, dnm
@@ -443,7 +551,7 @@ GeographicLib.GeodesicLine = {};
       vals.salp2 = cbet1 * somg12;
       vals.calp2 = sbet12 - cbet1 * sbet2 *
         (comg12 >= 0 ? m.sq(somg12) / (1 + comg12) : 1 - comg12);
-      // SinCosNorm(vals.salp2, vals.calp2);
+      // norm(vals.salp2, vals.calp2);
       t = m.hypot(vals.salp2, vals.calp2); vals.salp2 /= t; vals.calp2 /= t;
       // Set return value
       vals.sig12 = Math.atan2(ssig12, csig12);
@@ -479,7 +587,7 @@ GeographicLib.GeodesicLine = {};
         // in Inverse.
         var nvals = this.Lengths(this._n, Math.PI + bet12a,
                                  sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
-                                 cbet1, cbet2, false, C1a, C2a);
+                                 cbet1, cbet2, g.REDUCEDLENGTH, C1a, C2a);
         m12b = nvals.m12b; m0 = nvals.m0;
         x = -1 + m12b / (cbet1 * cbet2 * m0 * Math.PI);
         betscale = x < -0.01 ? sbet12a / x :
@@ -545,7 +653,7 @@ GeographicLib.GeodesicLine = {};
     }
     // Sanity check on starting guess.  Backwards check allows NaN through.
     if (!(vals.salp1 <= 0)) {
-      // SinCosNorm(vals.salp1, vals.calp1);
+      // norm(vals.salp1, vals.calp1);
       t = m.hypot(vals.salp1, vals.calp1); vals.salp1 /= t; vals.calp1 /= t;
     } else {
       vals.salp1 = 1; vals.calp1 = 0;
@@ -574,9 +682,9 @@ GeographicLib.GeodesicLine = {};
     // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
     vals.ssig1 = sbet1; somg1 = salp0 * sbet1;
     vals.csig1 = comg1 = calp1 * cbet1;
-    // SinCosNorm(vals.ssig1, vals.csig1);
+    // norm(vals.ssig1, vals.csig1);
     t = m.hypot(vals.ssig1, vals.csig1); vals.ssig1 /= t; vals.csig1 /= t;
-    // SinCosNorm(somg1, comg1); -- don't need to normalize!
+    // norm(somg1, comg1); -- don't need to normalize!
 
     // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     // about this case, since this can yield singularities in the Newton
@@ -596,9 +704,9 @@ GeographicLib.GeodesicLine = {};
     // tan(omg2) = sin(alp0) * tan(sig2).
     vals.ssig2 = sbet2; somg2 = salp0 * sbet2;
     vals.csig2 = comg2 = vals.calp2 * cbet2;
-    // SinCosNorm(vals.ssig2, vals.csig2);
+    // norm(vals.ssig2, vals.csig2);
     t = m.hypot(vals.ssig2, vals.csig2); vals.ssig2 /= t; vals.csig2 /= t;
-    // SinCosNorm(somg2, comg2); -- don't need to normalize!
+    // norm(somg2, comg2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     vals.sig12 = Math.atan2(Math.max(vals.csig1 * vals.ssig2 -
@@ -612,8 +720,8 @@ GeographicLib.GeodesicLine = {};
     var k2 = m.sq(calp0) * this._ep2;
     vals.eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
     this.C3f(vals.eps, C3a);
-    B312 = (g.SinCosSeries(true, vals.ssig2, vals.csig2, C3a, g.nC3_-1) -
-            g.SinCosSeries(true, vals.ssig1, vals.csig1, C3a, g.nC3_-1));
+    B312 = (g.SinCosSeries(true, vals.ssig2, vals.csig2, C3a) -
+            g.SinCosSeries(true, vals.ssig1, vals.csig1, C3a));
     h0 = -this._f * this.A3f(vals.eps);
     vals.domg12 = salp0 * h0 * (vals.sig12 + B312);
     vals.lam12 = omg12 + vals.domg12;
@@ -625,7 +733,7 @@ GeographicLib.GeodesicLine = {};
         var nvals = this.Lengths(vals.eps, vals.sig12,
                                  vals.ssig1, vals.csig1, dn1,
                                  vals.ssig2, vals.csig2, dn2,
-                                 cbet1, cbet2, false, C1a, C2a);
+                                 cbet1, cbet2, g.REDUCEDLENGTH, C1a, C2a);
         vals.dlam12 = nvals.m12b;
         vals.dlam12 *= this._f1 / (vals.calp2 * cbet2);
       }
@@ -640,15 +748,15 @@ GeographicLib.GeodesicLine = {};
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
-    var lon12 = m.AngDiff(m.AngNormalize(lon1), m.AngNormalize(lon2));
+    var lon12 = m.AngDiff(lon1, lon2);
     // If very close to being on the same half-meridian, then make it so.
-    lon12 = g.AngRound(lon12);
+    lon12 = m.AngRound(lon12);
     // Make longitude difference positive.
     var lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
     // If really close to the equator, treat as on equator.
-    lat1 = g.AngRound(lat1);
-    lat2 = g.AngRound(lat2);
+    lat1 = m.AngRound(lat1);
+    lat2 = m.AngRound(lat2);
     // Swap points so that point with higher (abs) latitude is point 1
     var t, swapp = Math.abs(lat1) >= Math.abs(lat2) ? 1 : -1;
     if (swapp < 0) {
@@ -674,21 +782,19 @@ GeographicLib.GeodesicLine = {};
     // check, e.g., on verifying quadrants in atan2.  In addition, this
     // enforces some symmetries in the results returned.
 
-    var phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
+    var sbet1, cbet1, sbet2, cbet2, s12x, m12x;
 
-    phi = lat1 * m.degree;
-    // Ensure cbet1 = +epsilon at poles
-    sbet1 = this._f1 * Math.sin(phi);
-    cbet1 = lat1 === -90 ? g.tiny_ : Math.cos(phi);
-    // SinCosNorm(sbet1, cbet1);
+    t = m.sincosd(lat1); sbet1 = this._f1 * t.s; cbet1 = t.c;
+    // norm(sbet1, cbet1);
     t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
+    // Ensure cbet1 = +epsilon at poles
+    cbet1 = Math.max(g.tiny_, cbet1);
 
-    phi = lat2 * m.degree;
-    // Ensure cbet2 = +epsilon at poles
-    sbet2 = this._f1 * Math.sin(phi);
-    cbet2 = Math.abs(lat2) === 90 ? g.tiny_ : Math.cos(phi);
-    // SinCosNorm(sbet2, cbet2);
+    t = m.sincosd(lat2); sbet2 = this._f1 * t.s; cbet2 = t.c;
+    // norm(sbet2, cbet2);
     t = m.hypot(sbet2, cbet2); sbet2 /= t; cbet2 /= t;
+    // Ensure cbet2 = +epsilon at poles
+    cbet2 = Math.max(g.tiny_, cbet2);
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
     // |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -710,10 +816,8 @@ GeographicLib.GeodesicLine = {};
     dn1 = Math.sqrt(1 + this._ep2 * m.sq(sbet1)),
     dn2 = Math.sqrt(1 + this._ep2 * m.sq(sbet2));
 
-    var
-    lam12 = lon12 * m.degree,
-    slam12 = lon12 === 180 ? 0 : Math.sin(lam12),
-    clam12 = Math.cos(lam12);   // lon12 == 90 isn't interesting
+    var lam12 = lon12 * m.degree, slam12, clam12;
+    t = m.sincosd(lam12); slam12 = t.s; clam12 = t.c;
 
     var sig12, calp1, salp1, calp2, salp2;
     // index zero elements of these arrays are unused
@@ -741,9 +845,9 @@ GeographicLib.GeodesicLine = {};
       sig12 = Math.atan2(Math.max(csig1 * ssig2 - ssig1 * csig2, 0),
                          csig1 * csig2 + ssig1 * ssig2);
       nvals = this.Lengths(this._n, sig12,
-                               ssig1, csig1, dn1, ssig2, csig2, dn2,
-                               cbet1, cbet2, (outmask & g.GEODESICSCALE) !== 0,
-                               C1a, C2a);
+                           ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+                           outmask | g.DISTANCE | g.REDUCEDLENGTH,
+                           C1a, C2a);
       s12x = nvals.s12b;
       m12x = nvals.m12b;
       // Ignore m0
@@ -759,6 +863,9 @@ GeographicLib.GeodesicLine = {};
       // In fact, we will have sig12 > pi/2 for meridional geodesic
       // which is not a shortest path.
       if (sig12 < 1 || m12x >= 0) {
+        // Need at least 2, to handle 90 0 90 180
+        if (sig12 < 3 * g.tiny_)
+          sig12 = m12x = s12x = 0;
         m12x *= this._b;
         s12x *= this._b;
         vals.a12 = sig12 / m.degree;
@@ -789,7 +896,7 @@ GeographicLib.GeodesicLine = {};
 
       // Figure a starting point for Newton's method
       nvals = this.InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
-                                    C1a, C2a);
+                                C1a, C2a);
       sig12 = nvals.sig12;
       salp1 = nvals.salp1;
       calp1 = nvals.calp1;
@@ -861,7 +968,7 @@ GeographicLib.GeodesicLine = {};
             if (nsalp1 > 0 && Math.abs(dalp1) < Math.PI) {
               calp1 = calp1 * cdalp1 - salp1 * sdalp1;
               salp1 = Math.max(0, nsalp1);
-              // SinCosNorm(salp1, calp1);
+              // norm(salp1, calp1);
               t = m.hypot(salp1, calp1); salp1 /= t; calp1 /= t;
               // In some regimes we don't get quadratic convergence because
               // slope -> 0.  So use convergence conditions based on epsilon
@@ -880,17 +987,18 @@ GeographicLib.GeodesicLine = {};
           // WGS84 and random input: mean = 4.74, sd = 0.99
           salp1 = (salp1a + salp1b)/2;
           calp1 = (calp1a + calp1b)/2;
-          // SinCosNorm(salp1, calp1);
+          // norm(salp1, calp1);
           t = m.hypot(salp1, calp1); salp1 /= t; calp1 /= t;
           tripn = false;
           tripb = (Math.abs(salp1a - salp1) + (calp1a - calp1) < g.tolb_ ||
                    Math.abs(salp1 - salp1b) + (calp1 - calp1b) < g.tolb_);
         }
+        var lengthmask = outmask |
+            (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE) ?
+             g.DISTANCE : g.NONE);
         nvals = this.Lengths(eps, sig12,
-                             ssig1, csig1, dn1, ssig2, csig2, dn2,
-                             cbet1, cbet2,
-                             (outmask & g.GEODESICSCALE) !== 0,
-                             C1a, C2a);
+                             ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+                             lengthmask, C1a, C2a);
         s12x = nvals.s12b;
         m12x = nvals.m12b;
         // Ignore m0
@@ -925,15 +1033,15 @@ GeographicLib.GeodesicLine = {};
         eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
         // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
         A4 = m.sq(this._a) * calp0 * salp0 * this._e2;
-        // SinCosNorm(ssig1, csig1);
+        // norm(ssig1, csig1);
         t = m.hypot(ssig1, csig1); ssig1 /= t; csig1 /= t;
-        // SinCosNorm(ssig2, csig2);
+        // norm(ssig2, csig2);
         t = m.hypot(ssig2, csig2); ssig2 /= t; csig2 /= t;
         var C4a = new Array(g.nC4_);
         this.C4f(eps, C4a);
         var
-        B41 = g.SinCosSeries(false, ssig1, csig1, C4a, g.nC4_),
-        B42 = g.SinCosSeries(false, ssig2, csig2, C4a, g.nC4_);
+        B41 = g.SinCosSeries(false, ssig1, csig1, C4a),
+        B42 = g.SinCosSeries(false, ssig2, csig2, C4a);
         vals.S12 = A4 * (B42 - B41);
       } else
         // Avoid problems with indeterminate sig1, sig2 on equator
@@ -992,9 +1100,8 @@ GeographicLib.GeodesicLine = {};
     salp2 *= swapp * lonsign; calp2 *= swapp * latsign;
 
     if (outmask & g.AZIMUTH) {
-      // minus signs give range [-180, 180). 0- converts -0 to +0.
-      vals.azi1 = 0 - Math.atan2(-salp1, calp1) / m.degree;
-      vals.azi2 = 0 - Math.atan2(-salp2, calp2) / m.degree;
+      vals.azi1 = m.atan2d(salp1, calp1);
+      vals.azi2 = m.atan2d(salp2, calp2);
     }
 
     // Returned value in [0, 180]

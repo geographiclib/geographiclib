@@ -6,7 +6,7 @@ MagneticField -- compute the earth's magnetic field
 
 B<MagneticField> [ B<-n> I<name> ] [ B<-d> I<dir> ]
 [ B<-t> I<time> | B<-c> I<time> I<lat> I<h> ]
-[ B<-r> ] [ B<-T> I<tguard> ] [ B<-H> I<hguard> ] [ B<-p> I<prec> ]
+[ B<-r> ] [ B<-w> ] [ B<-T> I<tguard> ] [ B<-H> I<hguard> ] [ B<-p> I<prec> ]
 [ B<-v> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
@@ -23,14 +23,16 @@ rate of change.
 The input line is of the form I<time> I<lat> I<lon> I<h>. I<time> is a
 date of the form 2012-07-03, a fractional year such as 2012.5, or the
 string "now".  I<lat> and I<lon> are the latitude and longitude
-expressed as decimal degrees or degrees, minutes, and seconds; see
-GeoConvert(1) for details.  I<h> is the height above the ellipsoid in
-meters; this is optional and defaults to zero.  Alternatively, I<time>
-can be given on the command line as the argument to the B<-t> option, in
-which case it should not be included on the input lines.  Finally, the
-magnetic field can be computed at various points on a circle of latitude
-(constant I<time>, I<lat>, and I<h>) via the B<-c> option; in this case
-only the longitude should be given on the input lines.
+expressed as decimal degrees or degrees, minutes, and seconds; for
+details on the allowed formats for latitude and longitude, see the
+C<GEOGRAPHIC COORDINATES> section of GeoConvert(1).  I<h> is the height
+above the ellipsoid in meters; this is optional and defaults to zero.
+Alternatively, I<time> can be given on the command line as the argument
+to the B<-t> option, in which case it should not be included on the
+input lines.  Finally, the magnetic field can be computed at various
+points on a circle of latitude (constant I<time>, I<lat>, and I<h>) via
+the B<-c> option; in this case only the longitude should be given on the
+input lines.
 
 The output consists of the following 7 items:
 
@@ -78,6 +80,12 @@ quickly.
 =item B<-r>
 
 toggle whether to report the rates of change of the field.
+
+=item B<-w>
+
+on input and output, longitude precedes latitude (except that on input
+this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
+I<W>).
 
 =item B<-T>
 
@@ -155,12 +163,19 @@ following models
       main magnetic field for the period 2015-2020.  See
       http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
     igrf11, the International Geomagnetic Reference Field (11th
-      generation) which approximates the main magnetic field for
+      generation), which approximates the main magnetic field for
       the period 1900-2015.  See
       http://ngdc.noaa.gov/IAGA/vmod/igrf.html
-    emm2010, the Enhanced Magnetic Model 2010, which approximates the
-      main and crustal magnetic fields for the period 2010-2015.  See
-      http://ngdc.noaa.gov/geomag/EMM/index.html
+    igrf12, the International Geomagnetic Reference Field (12th
+      generation), which approximates the main magnetic field for
+      the period 1900-2020.  See
+      http://ngdc.noaa.gov/IAGA/vmod/igrf.html
+    emm2010, the Enhanced Magnetic Model 2010, which approximates
+      the main and crustal magnetic fields for the period 2010-2015.
+      See http://ngdc.noaa.gov/geomag/EMM/index.html
+    emm2015, the Enhanced Magnetic Model 2015, which approximates
+      the main and crustal magnetic fields for the period 2000-2020.
+      See http://ngdc.noaa.gov/geomag/EMM/index.html
 
 These models approximate the magnetic field due to the earth's core and
 (in the case of emm2010) its crust.  They neglect magnetic fields due to
@@ -234,7 +249,7 @@ the field.  The second line gives the annual change.
 
 =head1 SEE ALSO
 
-GeoConvert(1).
+GeoConvert(1), geographiclib-get-magnetic(8).
 
 =head1 AUTHOR
 

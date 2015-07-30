@@ -5,7 +5,7 @@ GeodesicProj -- perform projections based on geodesics
 =head1 SYNOPSIS
 
 B<GeodesicProj> ( B<-z> | B<-c> | B<-g> ) I<lat0> I<lon0> [ B<-r> ]
-[ B<-e> I<a> I<f> ] [ B<-p> I<prec> ]
+[ B<-e> I<a> I<f> ] [ B<-w> ] [ B<-p> I<prec> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -23,16 +23,18 @@ options must be given (the last one given is used).
 
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) I<latitude> and I<longitude> (decimal
-degrees or degrees, minutes, seconds).  For each set of geodetic
-coordinates, the corresponding projected coordinates I<x>, I<y> (meters)
-are printed on standard output together with the azimuth I<azi>
-(degrees) and reciprocal scale I<rk>.  For Cassini-Soldner, I<azi> is
-the bearing of the easting direction and the scale in the easting
-direction is 1 and the scale in the northing direction is 1/I<rk>.  For
-azimuthal equidistant and gnomonic, I<azi> is the bearing of the radial
-direction and the scale in the azimuthal direction is 1/I<rk>.  For
-azimuthal equidistant and gnomonic, the scales in the radial direction
-are 1 and 1/I<rk>^2, respectively.
+degrees or degrees, minutes, seconds); for details on the allowed
+formats for latitude and longitude, see the C<GEOGRAPHIC COORDINATES>
+section of GeoConvert(1).  For each set of geodetic coordinates, the
+corresponding projected coordinates I<x>, I<y> (meters) are printed on
+standard output together with the azimuth I<azi> (degrees) and
+reciprocal scale I<rk>.  For Cassini-Soldner, I<azi> is the bearing of
+the easting direction and the scale in the easting direction is 1 and
+the scale in the northing direction is 1/I<rk>.  For azimuthal
+equidistant and gnomonic, I<azi> is the bearing of the radial direction
+and the scale in the azimuthal direction is 1/I<rk>.  For azimuthal
+equidistant and gnomonic, the scales in the radial direction are 1 and
+1/I<rk>^2, respectively.
 
 =head1 OPTIONS
 
@@ -41,17 +43,20 @@ are 1 and 1/I<rk>^2, respectively.
 =item B<-z>
 
 use the azimuthal equidistant projection centered at latitude = I<lat0>,
-longitude = I<lon0>.
+longitude = I<lon0>.  The B<-w> flag can be used to swap the default
+order of the 2 coordinates, provided that it appears before B<-z>.
 
 =item B<-c>
 
 use the Cassini-Soldner projection centered at latitude = I<lat0>,
-longitude = I<lon0>.
+longitude = I<lon0>.  The B<-w> flag can be used to swap the default
+order of the 2 coordinates, provided that it appears before B<-c>.
 
 =item B<-g>
 
 use the ellipsoidal gnomonic projection centered at latitude = I<lat0>,
-longitude = I<lon0>.
+longitude = I<lon0>.  The B<-w> flag can be used to swap the default
+order of the 2 coordinates, provided that it appears before B<-g>.
 
 =item B<-r>
 
@@ -67,6 +72,12 @@ I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
 1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137 m,
 I<f> = 1/298.257223563.
+
+=item B<-w>
+
+on input and output, longitude precedes latitude (except that, on input,
+this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
+I<W>).
 
 =item B<-p>
 

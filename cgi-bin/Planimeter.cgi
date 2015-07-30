@@ -30,8 +30,9 @@ if test "$RHUMB" = "rhumb"; then
 else
   RHUMBFLAG=
 fi
-COMMAND=Planimeter
 EXECDIR=../bin
+COMMAND="Planimeter"
+VERSION=`$EXECDIR/$COMMAND --version | cut -f4 -d" "`
 STATUS=
 NUM=
 LEN=
@@ -150,7 +151,7 @@ cat <<EOF
     <p>
       In polygon mode,
       <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
-        Planimeter</a>
+        Planimeter (version $VERSION)</a>
       calculates the perimeter and area of a polygon whose edges are
       either geodesics or rhumb lines on the WGS84 ellipsoid.
       Counter-clockwise traversal of a polygon results in a positive
@@ -210,7 +211,7 @@ cat <<EOF
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2014-11-06)</address>
+      (2015-02-24)</address>
     <a href="http://geographiclib.sourceforge.net">
       GeographicLib home
     </a>

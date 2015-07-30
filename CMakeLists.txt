@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 42)
+set (PROJECT_VERSION_MINOR 44)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -43,7 +43,7 @@ endif ()
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 14)
-set (LIBVERSION_BUILD 14.0.3)
+set (LIBVERSION_BUILD 14.2.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -238,24 +238,25 @@ test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 # Make the compiler more picky.
 if (MSVC)
   string (REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+  # Turn on parallel builds for Visual Studio
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MP")
 else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-  # check for C++11 support.  If available, the C++11 static_assert is
-  # used.  This flag is *not* propagated to clients that use
-  # GeographicLib.  However, this is of no consequence.  When the client
-  # code is being compiled (and the GeographicLib headers being
-  # included), a work-alike substitution is used.
+  # check for C++11 support.  This flag is *not* propagated to clients
+  # that use GeographicLib.  However, this is of no consequence.  When
+  # the client code is being compiled (and the GeographicLib headers
+  # being included), work-alike substitutions are used.
   include (CheckCXXCompilerFlag)
-  set (CXX11_FLAG "-std=c++11")
-  check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST)
-  if (NOT CXX11TEST)
-    set (CXX11_FLAG "-std=c++0x")
-    check_cxx_compiler_flag (${CXX11_FLAG} CXX11TEST)
-    if (NOT CXX11TEST)
-      unset (CXX11_FLAG)
+  # Not yet ready for C++14 (problem with MPFR C++)
+  foreach (_F 11 0x)
+    set (CXX11_FLAG "-std=c++${_F}")
+    set (_T CXX11TEST${_F})
+    check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
+    if (${_T})
+      break ()
     endif ()
-  endif ()
+    unset (CXX11_FLAG)
+  endforeach ()
   if (CXX11_FLAG)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
   endif ()
@@ -271,9 +272,11 @@ set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS}")
 check_cxx_source_compiles (
   "#include <cmath>
 int main() {
+  int q;
   return int(std::hypot(3.0, 4.0) + std::expm1(0.5) + std::log1p(2.0) +
              std::asinh(10.0) + std::atanh(0.8) + std::cbrt(8.0)) +
-             std::fma(1.0, 2.0, 3.0) + std::isfinite(4.0) + std::isnan(0.0);
+             std::fma(1.0, 2.0, 3.0) + std::isfinite(4.0) + std::isnan(0.0) +
+             std::remquo(100.0, 90.0, &q) + std::remainder(100.0, 90.0);
 }\n" CXX11_MATH)
 if (CXX11_MATH)
   add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)
@@ -284,7 +287,7 @@ endif ()
 # Check whether the C++11 static_assert macro is available.  This flag
 # is *not* propagated to clients that use GeographicLib.  However, this
 # is of no consequence.  When the client code is being compiled (and the
-# GeographicLib headers being included), a work-alike substitution are
+# GeographicLib headers being included), a work-alike substitution is
 # used.
 check_cxx_source_compiles (
   "#include <cmath>
@@ -403,7 +406,7 @@ configure_file (
 # The documentation depends on doxygen.
 if (GEOGRAPHICLIB_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
-  find_package (Doxygen)
+  find_package (Doxygen 1.8.7)
 endif ()
 
 # The man pages are written as pod files and converted to nroff format,
@@ -429,9 +432,9 @@ if (MAINTAINER)
   add_dependencies (distrib-all distrib-man)
 endif ()
 
-# Set a default build type for single-configuration cmake generators if
-# no build type is set.
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  # Set a default build type for single-configuration cmake generators
+  # if no build type is set.
   set (CMAKE_BUILD_TYPE Release)
 endif ()
 
@@ -464,7 +467,7 @@ add_subdirectory (doc)
 add_subdirectory (matlab)
 add_subdirectory (python/geographiclib)
 add_subdirectory (examples)
-if (BUILD_NETGEOGRAPHICLIB)
+if (MSVC AND BUILD_NETGEOGRAPHICLIB)
   if (GEOGRAPHICLIB_PRECISION EQUAL 2)
     set (NETGEOGRAPHICLIB_LIBRARIES NETGeographicLib)
     set (NETLIBNAME NETGeographic)

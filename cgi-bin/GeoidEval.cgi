@@ -3,8 +3,8 @@
 # GeoidEval.cgi
 # cgi script for geoid height evaluations
 #
-# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
-# under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and
+# licensed under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 
 . ./utils.sh
@@ -15,9 +15,10 @@ else
     INPUT=`lookupcheckkey "$QUERY_STRING" input`
 fi
 INPUTENC=`encodevalue "$INPUT"`
-COMMAND=GeoidEval
-export GEOGRAPHICLIB_DATA=..
 EXECDIR=../bin
+COMMAND="GeoidEval"
+VERSION=`$EXECDIR/$COMMAND --version | cut -f4 -d" "`
+export GEOGRAPHICLIB_DATA=..
 F='<font color="blue">'
 G='</font>'
 POSITION1=
@@ -98,7 +99,7 @@ cat <<EOF
     <hr>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/GeoidEval.1.html">
-        GeoidEval</a>
+        GeoidEval (version $VERSION)</a>
       computes the height of the geoid above the WGS84 ellipsoid
       using interpolation in a grid of values for the earth
       gravity models,
@@ -122,10 +123,11 @@ cat <<EOF
 	GeoConvert</a> utility).
     </p>
     <p>
-      The geoid height, <i>N</i>, can be used to convert a height above
-      the ellipsoid, <i>h</i>, to the corresponding height above the
-      geoid (roughly the height above mean sea level), <i>H</i>, using
-      the relations
+      The height of the geoid above the ellipsoid, <i>N</i>, is
+      sometimes called the geoid undulation.  It can be used to convert
+      a height above the ellipsoid, <i>h</i>, to the corresponding
+      height above the geoid (the orthometric height, roughly the height
+      above mean sea level), <i>H</i>, using the relations
       <blockquote>
 	<i>h</i> = <i>N</i> + <i>H</i>;
 	&nbsp;&nbsp;<i>H</i> = &minus;<i>N</i> + <i>h</i>.

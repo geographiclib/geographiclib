@@ -4,7 +4,8 @@ CartConvert -- convert geodetic coordinates to geocentric or local cartesian
 
 =head1 SYNOPSIS
 
-B<CartConvert> [ B<-r> ] [ B<-l> I<lat0> I<lon0> I<h0> ] [ B<-e> I<a> I<f> ]
+B<CartConvert> [ B<-r> ] [ B<-l> I<lat0> I<lon0> I<h0> ]
+[ B<-e> I<a> I<f> ] [ B<-w> ] [ B<-p> prec ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -25,9 +26,10 @@ I<h0>, I<z> normal to the ellipsoid and I<y> due north.
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) I<latitude>, I<longitude> (decimal degrees
 or degrees, minutes and seconds), and I<height> above the ellipsoid
-(meters).  For each set of geodetic coordinates, the corresponding
-cartesian coordinates I<x>, I<y>, I<z> (meters) are printed on standard
-output.
+(meters); for details on the allowed formats for latitude and longitude,
+see the C<GEOGRAPHIC COORDINATES> section of GeoConvert(1).  For each
+set of geodetic coordinates, the corresponding cartesian coordinates
+I<x>, I<y>, I<z> (meters) are printed on standard output.
 
 =head1 OPTIONS
 
@@ -39,6 +41,13 @@ perform the reverse projection.  I<x>, I<y>, I<z> are given on standard
 input and each line of standard output gives I<latitude>, I<longitude>,
 I<height>.
 
+=item B<-l>
+
+specifies conversions to and from a local cartesion coordinate systems
+with origin I<lat0> I<lon0> I<h0>, instead of a geocentric coordinate
+system.  The B<-w> flag can be used to swap the default order of the 2
+geographic coordinates, provided that it appears before B<-l>.
+
 =item B<-e>
 
 specify the ellipsoid via I<a> I<f>; the equatorial radius is I<a> and
@@ -47,6 +56,20 @@ I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
 1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137 m,
 I<f> = 1/298.257223563.
+
+=item B<-w>
+
+on input and output, longitude precedes latitude (except that, on input,
+this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
+I<W>).
+
+=item B<-p>
+
+set the output precision to I<prec> (default 6).  I<prec> is the number
+of digits after the decimal point for geocentric and local cartesion
+coordinates and for the height (in meters).  For latitudes and
+longitudes (in degrees), the number of digits after the decimal point is
+I<prec> + 5.
 
 =item B<--comment-delimiter>
 

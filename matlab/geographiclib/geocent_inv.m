@@ -9,7 +9,8 @@ function [lat, lon, h, M] = geocent_inv(X, Y, Z, ellipsoid)
 %   and h are in meters.  lat and lon are in degrees.  The ellipsoid vector
 %   is of the form [a, e], where a is the equatorial radius in meters, e is
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by defaultellipsoid) is used.
+%   precisely, the value returned by defaultellipsoid) is used.  The
+%   forward operation is given by geocent_fwd.
 %
 %   M is the 3 x 3 rotation matrix for the conversion.  Pre-multiplying a
 %   unit vector in geocentric coordinates by the transpose of M transforms
@@ -19,7 +20,7 @@ function [lat, lon, h, M] = geocent_inv(X, Y, Z, ellipsoid)
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.44.
 
   narginchk(3, 4)
   if nargin < 4, ellipsoid = defaultellipsoid; end
@@ -33,7 +34,6 @@ function [lat, lon, h, M] = geocent_inv(X, Y, Z, ellipsoid)
   end
   X = X + z; Y = Y + z; Z = Z + z;
 
-  degree = pi/180;
   a = ellipsoid(1);
   e2 = ellipsoid(2)^2;
   e2m = 1 - e2;
@@ -142,9 +142,9 @@ function [lat, lon, h, M] = geocent_inv(X, Y, Z, ellipsoid)
     sphi(far) = Z(far)/2 ./ H;
     cphi(far) = R(far) ./ H;
   end
-  lat = atan2(sphi, cphi) / degree;
+  lat = atan2dx(sphi, cphi);
   % Negative signs return lon in [-180, 180).  0- converts -0 to +0.
-  lon = 0 - atan2(-slam, clam) / degree;
+  lon = atan2dx(slam, clam);
   if nargout > 3
     M = GeoRotation(sphi, cphi, slam, clam);
   end

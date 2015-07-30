@@ -1,8 +1,8 @@
 /**
- * \file ProjTest.cpp
+ * \file ConicTest.cpp
  * \brief Command line utility for testing transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008-2010) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -135,8 +135,8 @@ int main(int argc, char* argv[]) {
         int
           sign1 = lat1 < 0 ? -1 : 1,
           sign2 = lat2 < 0 ? -1 : 1;
-        lat1 = floor(sign1 * lat1 * quant + 0.5L);
-        lat2 = floor(sign2 * lat2 * quant + 0.5L);
+        lat1 = real(floor(sign1 * lat1 * quant + 0.5L));
+        lat2 = real(floor(sign2 * lat2 * quant + 0.5L));
         real
           colat1 = (90 * quant - lat1) / quant,
           colat2 = (90 * quant - lat2) / quant;
@@ -182,7 +182,7 @@ int main(int argc, char* argv[]) {
           sign0 = lat0 < 0 ? -1 : 1;
         real quant = 1e12L;
         real
-          lat00 = floor(sign0 * lat0 * quant + 0.5L),
+          lat00 = real(floor(sign0 * lat0 * quant + 0.5L)),
           colat00 = (90 * quant - lat00) / quant;
         lat00 /= quant;
         real

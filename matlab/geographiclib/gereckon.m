@@ -10,20 +10,20 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
 %   azi1 are given in degrees and s12 in meters.  The ellipsoid vector is
 %   of the form [a, e], where a is the equatorial radius in meters, e is
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by DEFAULTELLIPSOID) is used.  lat2,
+%   precisely, the value returned by defaultellipsoid) is used.  lat2,
 %   lon2, and azi2 give the position and forward azimuths at the end point
 %   in degrees.  The optional output S12 is the area between the great
-%   ellipse and the equator (in meters^2).  GEDOC gives an example and
-%   provides additional background information.  GEDOC also gives the
+%   ellipse and the equator (in meters^2).  gedoc gives an example and
+%   provides additional background information.  gedoc also gives the
 %   restrictions on the allowed ranges of the arguments.
 %
 %   When given a combination of scalar and array inputs, GERECKON behaves
 %   as though the inputs were expanded to match the size of the arrays.
-%   However, in the particular case where LAT1 and AZI1 are the same for
+%   However, in the particular case where lat1 and azi1 are the same for
 %   all the input points, they should be specified as scalars since this
 %   will considerably speed up the calculations.  (In particular a series
 %   of points along a single geodesic is efficiently computed by specifying
-%   an array for S12 only.)
+%   an array for s12 only.)
 %
 %   geodreckon solves the equivalent geodesic problem and usually this is
 %   preferable to using GERECKON.
@@ -32,7 +32,7 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
 
 % Copyright (c) Charles Karney (2014-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.43.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -45,7 +45,6 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
     error('ellipsoid must be a vector of size 2')
   end
 
-  degree = pi/180;
   tiny = sqrt(realmin);
 
   a = ellipsoid(1);
@@ -56,16 +55,13 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
   areap = nargout >= 4;
 
   lat1 = lat1(:);
-  lon1 = AngNormalize(lon1(:));
-  azi1 = AngRound(AngNormalize(azi1(:)));
+  lon1 = lon1(:);
+  azi1 = AngRound(azi1(:));
   s12 = s12(:);
 
-  alp1 = azi1 * degree;
-  sgam1 = sin(alp1); sgam1(azi1 == -180) = 0;
-  cgam1 = cos(alp1); cgam1(abs(azi1) == 90) = 0;
-  phi = lat1 * degree;
-  sbet1 = f1 * sin(phi);
-  cbet1 = cos(phi); cbet1(abs(lat1) == 90) = tiny;
+  [sgam1, cgam1] = sincosdx(azi1);
+  [sbet1, cbet1] = sincosdx(lat1);
+  sbet1 = f1 * sbet1; cbet1 = max(tiny, cbet1);
   [sbet1, cbet1] = norm2(sbet1, cbet1);
   [sgam1, cgam1] = norm2(sgam1 .* sqrt(1 - e2 * cbet1.^2), cgam1);
   sgam0 = sgam1 .* cbet1; cgam0 = hypot(cgam1, sgam1 .* sbet1);
@@ -104,13 +100,11 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
   cbet2(cbet2 == 0) = tiny;
   slam2 = sgam0 .* ssig2; clam2 = csig2;
   sgam2 = sgam0; cgam2 = cgam0 .* csig2;
-  lam12 = atan2(slam2 .* clam1 - clam2 .* slam1, ...
-                clam2 .* clam1 + slam2 .* slam1);
-  lon12 = lam12 / degree;
-  lon12 = AngNormalize2(lon12);
-  lon2 = AngNormalize(lon1 + lon12);
-  lat2 = atan2(sbet2, f1 * cbet2) / degree;
-  azi2 = 0 - atan2(-sgam2, cgam2 .* sqrt(1 - e2 * cbet2.^2)) / degree;
+  lon12 = atan2dx(slam2 .* clam1 - clam2 .* slam1, ...
+                  clam2 .* clam1 + slam2 .* slam1);
+  lon2 = AngNormalize(AngNormalize(lon1) + lon12);
+  lat2 = atan2dx(sbet2, f1 * cbet2);
+  azi2 = atan2dx(sgam2, cgam2 .* sqrt(1 - e2 * cbet2.^2));
 
   lat2 = reshape(lat2, S);
   lon2 = reshape(lon2, S);

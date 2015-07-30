@@ -32,13 +32,42 @@
 set -e
 
 # The following files contain version information:
-#   CMakeLists.txt
+#   pom.xml
+#   CMakeLists.txt (PROJECT_VERSION_* LIBVERSION_*)
 #   NEWS
-#   configure.ac
-#   python/setup.py
+#   configure.ac (AC_INIT, GEOGRAPHICLIB_VERSION_* LT_*)
 #   tests/test-distribution.sh
+#   src/GeographicLib.pro lib version
 
-VERSION=1.42
+# Need updating if underlying library changes
+
+# python
+#   python/setup.py
+#   python/geographiclib/__init__.py
+
+# MATLAB
+#   matlab/geographiclib/Contents.m version + date
+
+# C
+#   legacy/C/geodesic.h comment + GEODESIC_VERSION_*
+#   doc/geodesic-c.dox
+
+# Fortran
+#   legacy/Fortran/geodesic.for
+#   doc/geodesic-for.dox
+
+# Java
+#   java/pom.xml java/*/pom.xml
+#   java/src/main/java/net/sf/geographiclib/package-info.java
+
+# maxima
+#   maxima/geodesic.mac
+
+# JavaScript
+#   doc/scripts/GeographicLib/Math.js
+
+DATE=`date +%F`
+VERSION=1.44
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
@@ -52,8 +81,10 @@ test -d $TEMP || mkdir $TEMP
 rm -rf $TEMP/*
 mkdir $TEMP/gita # Package creation via cmake
 mkdir $TEMP/gitb # Package creation via autoconf
-(cd $TEMP/gita; git clone -b $BRANCH $GITSOURCE)
-(cd $TEMP/gitb; git clone -b $BRANCH $GITSOURCE)
+mkdir $TEMP/gitr # For release branch
+(cd $TEMP/gitr; git clone -b $BRANCH $GITSOURCE)
+(cd $TEMP/gita; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
+(cd $TEMP/gitb; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
 cd $TEMP/gita/geographiclib
 sh autogen.sh
 mkdir BUILD
@@ -135,10 +166,8 @@ done <<EOF
 14 y
 EOF
 
-mkdir $TEMP/gitr
-cd $TEMP/gitr
-git clone -b release $GITSOURCE
-cd geographiclib
+cd $TEMP/gitr/geographiclib
+git checkout release
 find . -type f | grep -v '/\.git' | xargs rm
 tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
 (
@@ -190,8 +219,16 @@ cmake -D CMAKE_PREFIX_PATH=$TEMP/instc ..
 make
 
 cd $TEMP/instc/share/matlab/geographiclib
-rm -f $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip
-zip $DEVELSOURCE/matlab/geographiclib_toolbox_$VERSION.zip *.m private/*.m
+mkdir $TEMP/matlab
+cp -pr $TEMP/instc/share/matlab/geographiclib $TEMP/matlab
+cd $TEMP/matlab/geographiclib
+rm -f $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip
+zip $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip *.m private/*.m
+cd $TEMP/matlab
+cp -p $TEMP/gita/geographiclib/geodesic.png .
+cp -p $TEMP/gita/geographiclib/matlab/geographiclib-blurb.txt .
+VERSION=$VERSION DATE=$DATE ROOT=$TEMP/matlab \
+       sh $DEVELSOURCE/tests/matlab-toolbox-config.sh
 
 cd $TEMP
 mkdir python-test
@@ -331,7 +368,6 @@ while read f;do
 done
 echo
 
-DATE=`date +%F`
 cat > $TEMP/tasks.txt <<EOF
 # deploy documentation
 test -d $WEBDIST/htdocs/$VERSION-pre &&
@@ -360,6 +396,15 @@ python setup.py sdist --formats gztar,zip upload
 cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
 
+# matlab toolbox
+cd $TEMP/matlab
+matlab &
+# remove existing geographiclib path, double click on geographiclib.prj
+# click on "Package".
+mv $TEMP/matlab/geographiclib.mltbx $DEVELSOURCE/geographiclib_toolbox_$VERSION.mltbx
+chmod 644 $DEVELSOURCE/geographiclib_toolbox_$VERSION.*
+mv $DEVELSOURCE/geographiclib_*_$VERSION.* $DEVELSOURCE/matlab-distrib
+
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib
 git add -A
@@ -376,6 +421,14 @@ git tag -m "Version $VERSION ($DATE)" v$VERSION
 git push --all
 git push --tags
 
+# Also to do
+# post release notices
+# set default download files
+# make -f makefile-admin distrib-{cgi,js,html}
+# update home brew
+# upload matlab packages
+# update binaries for cgi applications
+# trigger build on build-open
 EOF
 echo cat $TEMP/tasks.txt
 cat $TEMP/tasks.txt

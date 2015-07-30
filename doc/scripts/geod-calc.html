@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Geodesic calculations for an ellipsoid done right</title>
@@ -22,11 +22,12 @@
 		   online calculator,
 		   WGS84 ellipsoid,
 		   GeographicLib" />
+    <meta http-equiv="Content-Type"
+	  content="text/html; charset=ISO-8859-1">
     <script type="text/javascript"
 	    src="http://geographiclib.sf.net/scripts/geographiclib.js">
     </script>
     <script type="text/javascript">
-<!--
 var geod = GeographicLib.Geodesic.WGS84;
 var dms = GeographicLib.DMS;
 function formatpoint(lat, lon, azi, dmsformat, prec) {
@@ -41,7 +42,7 @@ function formatpoint(lat, lon, azi, dmsformat, prec) {
   } else {
     return (lat.toFixed(prec) + " " +
 	    lon.toFixed(prec) + " " +
-	    azi .toFixed(prec));
+	    azi.toFixed(prec));
   }
 }
 
@@ -153,7 +154,6 @@ function GeodesicArea(input, polyline) {
   }
   return result;
 }
-//-->
     </script>
   </head>
   <body>
@@ -189,7 +189,12 @@ function GeodesicArea(input, polyline) {
       -20:30:40.5.)  The results are accurate to about
       15&nbsp;nanometers (or 0.1&nbsp;m<sup>2</sup> per vertex for
       areas).  A slicker page where the geodesics are incorporated into
-      Google Maps is given <a href="geod-google.html">here</a>.
+      Google Maps is given <a href="geod-google.html">here</a>.  This
+      page uses version
+      <script type="text/javascript">
+	document.write(GeographicLib.Constants.version_string);
+      </script>
+      of the geodesic code.
     <p>
       Jump to:
       <ul>
@@ -209,12 +214,8 @@ function GeodesicArea(input, polyline) {
 	path is characterized by its length <i>s12</i> and its azimuth
 	at the two ends <i>azi1</i> and <i>azi2</i>.  The sample
 	calculation finds the shortest path between Wellington, New
-	Zealand, and Salamanca, Spain.  (For this example, the
-	<a href="http://www.ngs.noaa.gov/">NGS</a>
-	<a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
-        inverse geodesic calculator</a> returns a result which is 1.2 km
-	too long with an azimuth which is off by 3 degrees.)  To perform
-	the calculation, press the &ldquo;COMPUTE&rdquo; button.
+	Zealand, and Salamanca, Spain.  To perform the calculation,
+	press the &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2&rdquo;</i>:</p>
       <p>input:
@@ -406,7 +407,7 @@ function GeodesicArea(input, polyline) {
 	is a little unfair, since Google Earth has no concept of
 	polygons which encircle a pole.)  If the <i>polyline</i> option
 	is selected then just the length of the line joining the points
-	is is returned.  To perform the calculation, press the
+	is returned.  To perform the calculation, press the
 	&ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter points, one per line, as <i>&ldquo;lat lon&rdquo;</i>:</p>
@@ -460,7 +461,7 @@ function GeodesicArea(input, polyline) {
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2011-08-04)</address>
+      (2015-07-30)</address>
     <br>
     <a href="http://geographiclib.sourceforge.net">Geographiclib Sourceforge</a>
   </body>

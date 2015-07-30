@@ -88,8 +88,6 @@ function geoddoc
 %
 %   Restrictions on the inputs:
 %     * All latitudes must lie in [-90, 90].
-%     * All longitudes and azimuths must lie in [-540, 540).  On output,
-%       these quantities lie in [-180, 180).
 %     * The distance s12 is unrestricted.  This allows geodesics to wrap
 %       around the ellipsoid.  Such geodesics are no longer shortest paths.
 %       However they retain the property that they are the straightest
@@ -170,7 +168,7 @@ function geoddoc
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.43.
 
   help geoddoc
 end

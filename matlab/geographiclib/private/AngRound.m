@@ -7,5 +7,5 @@ function y = AngRound(x)
   z = 1/16;
   y = abs(x);
   y(y < z) = z - (z - y(y < z));
-  y(x < 0) = -y(x < 0);
+  y(x < 0) = 0 - y(x < 0);
 end

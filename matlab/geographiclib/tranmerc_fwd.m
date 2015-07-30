@@ -9,9 +9,11 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   arguments can be scalars or arrays of equal size.  The ellipsoid vector
 %   is of the form [a, e], where a is the equatorial radius in meters, e is
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by defaultellipsoid) is used.  geodproj
-%   defines the projection and gives the restrictions on the allowed ranges
-%   of the arguments.  The inverse projection is given by tranmerc_inv.
+%   precisely, the value returned by defaultellipsoid) is used.  The common
+%   case of lat0 = 0 is treated efficiently provided that lat0 is specified
+%   as a scalar.  projdoc defines the projection and gives the restrictions
+%   on the allowed ranges of the arguments.  The inverse projection is
+%   given by tranmerc_inv.
 %
 %   gam and k give metric properties of the projection at (lat,lon); gam is
 %   the meridian convergence at the point and k is the scale.
@@ -34,11 +36,12 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   less than 1 mm within 7600 km of the central meridian).  The mapping
 %   can be continued accurately over the poles to the opposite meridian.
 %
-%   See also TRANMERC_INV, UTMUPS_FWD, UTMUPS_INV, DEFAULTELLIPSOID.
+%   See also PROJDOC, TRANMERC_INV, UTMUPS_FWD, UTMUPS_INV,
+%     DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.44.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -51,7 +54,6 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
     error('ellipsoid must be a vector of size 2')
   end
 
-  degree = pi/180;
   maxpow = 6;
 
   a = ellipsoid(1);
@@ -64,7 +66,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   b1 = (1 - f) * (A1m1f(n) + 1);
   a1 = b1 * a;
 
-  lon = AngDiff(AngNormalize(lon0), AngNormalize(lon));
+  lon = AngDiff(lon0, lon);
 
   latsign = 1 - 2 * (lat < 0);
   lonsign = 1 - 2 * (lon < 0);
@@ -73,20 +75,19 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   backside = lon > 90;
   latsign(backside & lat == 0) = -1;
   lon(backside) = 180 - lon(backside);
-  phi = lat * degree;
-  lam = lon * degree;
-  c = max(0, cos(lam));
-  tau = tan(phi);
+  [sphi, cphi] = sincosdx(lat);
+  [slam, clam] = sincosdx(lon);
+  tau = sphi ./ cphi;
   taup = taupf(tau, e2);
-  xip = atan2(taup, c);
-  etap = asinh(sin(lam) ./ hypot(taup, c));
-  gam = atan(tan(lam) .* taup ./ hypot(1, taup));
-  k = sqrt(e2m + e2 * cos(phi).^2) .* hypot(1, tau) ./ hypot(taup, c);
+  xip = atan2(taup, clam);
+  etap = asinh(slam ./ hypot(taup, clam));
+  gam = atan2dx(slam .* taup, clam .* hypot(1, taup));
+  k = sqrt(e2m + e2 * cphi.^2) .* hypot(1, tau) ./ hypot(taup, clam);
   c = ~(lat ~= 90);
   if any(c)
     xip(c) = pi/2;
     etap(c) = 0;
-    gam(c) = lam;
+    gam(c) = lon;
     k = cc;
   end
   c0 = cos(2 * xip); ch0 = cosh(2 * etap);
@@ -117,14 +118,13 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   ar = s0 .* ch0; ai = c0 .* sh0;
   xi  = xip  + ar .* xi0 - ai .* eta0;
   eta = etap + ai .* xi0 + ar .* eta0;
-  gam = gam - atan2(yi1, yr1);
+  gam = gam - atan2dx(yi1, yr1);
   k = k .* (b1 * hypot(yr1, yi1));
-  gam = gam / degree;
   xi(backside) = pi - xi(backside);
   y = a1 * xi .* latsign;
   x = a1 * eta .* lonsign;
   gam(backside) = 180 - gam(backside);
-  gam = gam .* latsign .* lonsign;
+  gam = AngNormalize(gam .* latsign .* lonsign);
 
   if isscalar(lat0) && lat0 == 0
     y0 = 0;
@@ -137,19 +137,25 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 end
 
 function alp = alpf(n)
-  alp = zeros(1,6);
-  nx = n^2;
-
-  alp(1) = n*(n*(n*(n*(n*(31564*n-66675)+34440)+47250)-100800)+ ...
-              75600)/151200;
-  alp(2) = nx*(n*(n*((863232-1983433*n)*n+748608)-1161216)+524160)/ ...
-           1935360;
-  nx = nx * n;
-  alp(3) = nx*(n*(n*(670412*n+406647)-533952)+184464)/725760;
-  nx = nx * n;
-  alp(4) = nx*(n*(6601661*n-7732800)+2230245)/7257600;
-  nx = nx * n;
-  alp(5) = (3438171-13675556*n)*nx/7983360;
-  nx = nx * n;
-  alp(6) = 212378941*nx/319334400;
+  persistent alpcoeff
+  if isempty(alpcoeff)
+    alpcoeff = [ ...
+        31564, -66675, 34440, 47250, -100800, 75600, 151200, ...
+        -1983433, 863232, 748608, -1161216, 524160, 1935360, ...
+        670412, 406647, -533952, 184464, 725760, ...
+        6601661, -7732800, 2230245, 7257600, ...
+        -13675556, 3438171, 7983360, ...
+        212378941, 319334400, ...
+               ];
+  end
+  maxpow = 6;
+  alp = zeros(1, maxpow);
+  o = 1;
+  d = n;
+  for l = 1 : maxpow
+    m = maxpow - l;
+    alp(l) = d * polyval(alpcoeff(o : o + m), n) / alpcoeff(o + m + 1);
+    o = o + m + 2;
+    d = d * n;
+  end
 end

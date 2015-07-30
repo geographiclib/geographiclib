@@ -15,7 +15,7 @@
 #if !defined(GEOGRAPHICLIB_GEODESIC_ORDER)
 /**
  * The order of the expansions used by Geodesic.
- * GEOGRAPHICLIB_GEODESIC_ORDER can be set to any integer in [0, 8].
+ * GEOGRAPHICLIB_GEODESIC_ORDER can be set to any integer in [3, 8].
  **********************************************************************/
 #  define GEOGRAPHICLIB_GEODESIC_ORDER \
   (GEOGRAPHICLIB_PRECISION == 2 ? 6 : \
@@ -183,6 +183,9 @@ namespace GeographicLib {
     static const int nC3x_ = (nC3_ * (nC3_ - 1)) / 2;
     static const int nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
+    // Size for temporary array
+    // nC = max(max(nC1_, nC1p_, nC2_) + 1, max(nC3_, nC4_))
+    static const int nC_ = GEOGRAPHICLIB_GEODESIC_ORDER + 1;
     static const unsigned maxit1_ = 20;
     unsigned maxit2_;
     real tiny_, tol0_, tol1_, tol2_, tolb_, xthresh_;
@@ -197,7 +200,7 @@ namespace GeographicLib {
       CAP_ALL  = 0x1FU,
       CAP_MASK = CAP_ALL,
       OUT_ALL  = 0x7F80U,
-      OUT_MASK = 0xFF80U,       // Includes LONG_NOWRAP
+      OUT_MASK = 0xFF80U,       // Includes LONG_UNROLL
     };
 
     static real SinCosSeries(bool sinp,
@@ -210,23 +213,22 @@ namespace GeographicLib {
     void Lengths(real eps, real sig12,
                  real ssig1, real csig1, real dn1,
                  real ssig2, real csig2, real dn2,
-                 real cbet1, real cbet2,
+                 real cbet1, real cbet2, unsigned outmask,
                  real& s12s, real& m12a, real& m0,
-                 bool scalep, real& M12, real& M21,
-                 real C1a[], real C2a[]) const;
+                 real& M12, real& M21, real Ca[]) const;
     real InverseStart(real sbet1, real cbet1, real dn1,
                       real sbet2, real cbet2, real dn2,
                       real lam12,
                       real& salp1, real& calp1,
                       real& salp2, real& calp2, real& dnm,
-                      real C1a[], real C2a[]) const;
+                      real Ca[]) const;
     real Lambda12(real sbet1, real cbet1, real dn1,
                   real sbet2, real cbet2, real dn2,
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
                   real& eps, real& domg12, bool diffp, real& dlam12,
-                  real C1a[], real C2a[], real C3a[])
+                  real Ca[])
       const;
 
     // These are Maxima generated functions to provide series approximations to
@@ -305,12 +307,16 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = 1U<<14 | CAP_C4,
       /**
-       * Do not wrap the \e lon2 in the direct calculation.
+       * Unroll \e lon2 in the direct calculation.  (This flag used to be
+       * called LONG_NOWRAP.)
        * @hideinitializer
        **********************************************************************/
-      LONG_NOWRAP   = 1U<<15,
+      LONG_UNROLL   = 1U<<15,
+      /// \cond SKIP
+      LONG_NOWRAP   = LONG_UNROLL,
+      /// \endcond
       /**
-       * All capabilities, calculate everything.  (LONG_NOWRAP is not
+       * All capabilities, calculate everything.  (LONG_UNROLL is not
        * included in this mask.)
        * @hideinitializer
        **********************************************************************/
@@ -356,8 +362,7 @@ namespace GeographicLib {
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
-     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-     * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].  The values of
      * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
      * 180&deg;).
      *
@@ -470,8 +475,7 @@ namespace GeographicLib {
      *   (dimensionless).
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
      *
-     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-     * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].  The values of
      * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
      * 180&deg;).
      *
@@ -610,8 +614,8 @@ namespace GeographicLib {
      *   M12 and \e M21;
      * - \e outmask |= Geodesic::AREA for the area \e S12;
      * - \e outmask |= Geodesic::ALL for all of the above;
-     * - \e outmask |= Geodesic::LONG_NOWRAP stops the returned value of \e
-     *   lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
+     * - \e outmask |= Geodesic::LONG_UNROLL to unroll \e lon2 instead of
+     *   wrapping it into the range [&minus;180&deg;, 180&deg;).
      * .
      * The function value \e a12 is always computed and returned and this
      * equals \e s12_a12 is \e arcmode is true.  If \e outmask includes
@@ -619,11 +623,9 @@ namespace GeographicLib {
      * It is not necessary to include Geodesic::DISTANCE_IN in \e outmask; this
      * is automatically included is \e arcmode is false.
      *
-     * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
-     * indicates how many times the geodesic wrapped around the ellipsoid.
-     * Because \e lon2 might be outside the normal allowed range for
-     * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
-     * Math::AngNormalize2 before using it in other GeographicLib calls.
+     * With the Geodesic::LONG_UNROLL bit set, the quantity \e lon2 &minus; \e
+     * lon1 indicates how many times and in what sense the geodesic encircles
+     * the ellipsoid.
      **********************************************************************/
     Math::real GenDirect(real lat1, real lon1, real azi1,
                          bool arcmode, real s12_a12, unsigned outmask,
@@ -653,8 +655,7 @@ namespace GeographicLib {
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
-     * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;]; \e
-     * lon1 and \e lon2 should be in the range [&minus;540&deg;, 540&deg;).
+     * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;].
      * The values of \e azi1 and \e azi2 returned are in the range
      * [&minus;180&deg;, 180&deg;).
      *
@@ -811,8 +812,7 @@ namespace GeographicLib {
      *   GeodesicLine::Position.
      * @return a GeodesicLine object.
      *
-     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-     * azi1 should be in the range [&minus;540&deg;, 540&deg;).
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
      *
      * The Geodesic::mask values are
      * - \e caps |= Geodesic::LATITUDE for the latitude \e lat2; this is

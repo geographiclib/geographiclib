@@ -2,7 +2,7 @@
  * \file GeodesicLineExact.hpp
  * \brief Header for GeographicLib::GeodesicLineExact class
  *
- * Copyright (c) Charles Karney (2012-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -119,12 +119,16 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = GeodesicExact::AREA,
       /**
-       * Do not wrap \e lon2 in the direct calculation.
+       * Unroll \e lon2 in the direct calculation.  (This flag used to be
+       * called LONG_NOWRAP.)
        * @hideinitializer
        **********************************************************************/
-      LONG_NOWRAP = GeodesicExact::LONG_NOWRAP,
+      LONG_UNROLL = GeodesicExact::LONG_UNROLL,
+      /// \cond SKIP
+      LONG_NOWRAP   = LONG_UNROLL,
+      /// \endcond
       /**
-       * All capabilities, calculate everything.  (LONG_NOWRAP is not
+       * All capabilities, calculate everything.  (LONG_UNROLL is not
        * included in this mask.)
        * @hideinitializer
        **********************************************************************/
@@ -149,8 +153,7 @@ namespace GeographicLib {
      *   possess, i.e., which quantities can be returned in calls to
      *   GeodesicLine::Position.
      *
-     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-     * azi1 should be in the range [&minus;540&deg;, 540&deg;).
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
      *
      * The GeodesicLineExact::mask values are
      * - \e caps |= GeodesicLineExact::LATITUDE for the latitude \e lat2; this
@@ -476,19 +479,17 @@ namespace GeographicLib {
      *   \e M12 and \e M21;
      * - \e outmask |= GeodesicLineExact::AREA for the area \e S12;
      * - \e outmask |= GeodesicLineExact::ALL for all of the above;
-     * - \e outmask |= GeodesicLineExact::LONG_NOWRAP stops the returned value
-     *   of \e lon2 being wrapped into the range [&minus;180&deg;, 180&deg;).
+     * - \e outmask |= GeodesicLineExact::LONG_UNROLL to unroll \e lon2 instead
+     *   of wrapping it into the range [&minus;180&deg;, 180&deg;).
      * .
      * Requesting a value which the GeodesicLineExact object is not capable of
      * computing is not an error; the corresponding argument will not be
      * altered.  Note, however, that the arc length is always computed and
      * returned as the function value.
      *
-     * With the LONG_NOWRAP bit set, the quantity \e lon2 &minus; \e lon1
-     * indicates how many times the geodesic wrapped around the ellipsoid.
-     * Because \e lon2 might be outside the normal allowed range for
-     * longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it with
-     * Math::AngNormalize2 before using it in other GeographicLib calls.
+     * With the GeodesicLineExact::LONG_UNROLL bit set, the quantity \e lon2
+     * &minus; \e lon1 indicates how many times and in what sense the geodesic
+     * encircles the ellipsoid.
      **********************************************************************/
     Math::real GenPosition(bool arcmode, real s12_a12, unsigned outmask,
                            real& lat2, real& lon2, real& azi2,
@@ -526,22 +527,24 @@ namespace GeographicLib {
 
     /**
      * @return \e azi0 the azimuth (degrees) of the geodesic line as it crosses
-     * the equator in a northward direction.
+     *   the equator in a northward direction.
+     *
+     * The result lies in [&minus;90&deg;, 90&deg;].
      **********************************************************************/
     Math::real EquatorialAzimuth() const {
       using std::atan2;
-      return Init() ?
-        atan2(_salp0, _calp0) / Math::degree() : Math::NaN();
+      return Init() ? Math::atan2d(_salp0, _calp0) : Math::NaN();
     }
 
     /**
      * @return \e a1 the arc length (degrees) between the northward equatorial
-     * crossing and point 1.
+     *   crossing and point 1.
+     *
+     * The result lies in (&minus;180&deg;, 180&deg;].
      **********************************************************************/
     Math::real EquatorialArc() const {
       using std::atan2;
-      return Init() ?
-        atan2(_ssig1, _csig1) / Math::degree() : Math::NaN();
+      return Init() ? atan2(_ssig1, _csig1) / Math::degree() : Math::NaN();
     }
 
     /**

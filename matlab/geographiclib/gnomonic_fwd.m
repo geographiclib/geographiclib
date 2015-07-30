@@ -10,7 +10,7 @@ function [x, y, azi, rk] = gnomonic_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   ellipsoid vector is of the form [a, e], where a is the equatorial
 %   radius in meters, e is the eccentricity.  If ellipsoid is omitted, the
 %   WGS84 ellipsoid (more precisely, the value returned by
-%   defaultellipsoid) is used.  geodproj defines the projection and gives
+%   defaultellipsoid) is used.  projdoc defines the projection and gives
 %   the restrictions on the allowed ranges of the arguments.  The inverse
 %   projection is given by gnomonic_inv.
 %
@@ -40,11 +40,11 @@ function [x, y, azi, rk] = gnomonic_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   which also includes methods for solving the "intersection" and
 %   "interception" problems using the gnomonic projection.
 %
-%   See also GEODPROJ, GNOMONIC_INV, GEODDISTANCE, DEFAULTELLIPSOID.
+%   See also PROJDOC, GNOMONIC_INV, GEODDISTANCE, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.44.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -56,10 +56,10 @@ function [x, y, azi, rk] = gnomonic_fwd(lat0, lon0, lat, lon, ellipsoid)
 
   [~, azi0, azi, ~, m, M] = geoddistance(lat0, lon0, lat, lon, ellipsoid);
   rho = m ./ M;
-  azi0 = azi0 * (pi/180);
-  x = rho .* sin(azi0);
-  y = rho .* cos(azi0);
+  [x, y] = sincosdx(azi0);
+  x = rho .* x;
+  y = rho .* y;
   rk = M;
-  x(M <= 0) = NaN;
-  y(M <= 0) = NaN;
+  x(M <= 0) = nan;
+  y(M <= 0) = nan;
 end

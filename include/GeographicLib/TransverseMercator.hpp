@@ -45,9 +45,18 @@ namespace GeographicLib {
    * error is 5 nm (5 nanometers), ground distance, for all positions within 35
    * degrees of the central meridian.  The error in the convergence is 2
    * &times; 10<sup>&minus;15</sup>&quot; and the relative error in the scale
-   * is 6 &minus; 10<sup>&minus;12</sup>%%.  See Sec. 4 of
+   * is 6 &times; 10<sup>&minus;12</sup>%%.  See Sec. 4 of
    * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details.
    * The speed penalty in going to 6th order is only about 1%.
+   *
+   * There's a singularity in the projection at &phi; = 0&deg;, &lambda;
+   * &minus; &lambda;<sub>0</sub> = &plusmn;(1 &minus; \e e)90&deg; (&asymp;
+   * &plusmn;82.6&deg; for the WGS84 ellipsoid), where \e e is the
+   * eccentricity.  Beyond this point, the series ceases to converge and the
+   * results from this method will be garbage.  To be on the safe side, don't
+   * use this method if the angular distance from the central meridian exceeds
+   * (1 &minus; 2e)90&deg; (&asymp; 75&deg; for the WGS84 ellipsoid)
+   *
    * TransverseMercatorExact is an alternative implementation of the projection
    * using exact formulas which yield accurate (to 8 nm) results over the
    * entire ellipsoid.
@@ -113,8 +122,7 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added. \e lat should be in the range
-     * [&minus;90&deg;, 90&deg;]; \e lon and \e lon0 should be in the
-     * range [&minus;540&deg;, 540&deg;).
+     * [&minus;90&deg;, 90&deg;].
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const;
@@ -130,9 +138,8 @@ namespace GeographicLib {
      * @param[out] gamma meridian convergence at point (degrees).
      * @param[out] k scale of projection at point.
      *
-     * No false easting or northing is added.  \e lon0 should be in the range
-     * [&minus;540&deg;, 540&deg;).  The value of \e lon returned is in
-     * the range [&minus;180&deg;, 180&deg;).
+     * No false easting or northing is added.  The value of \e lon returned is
+     * in the range [&minus;180&deg;, 180&deg;).
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const;

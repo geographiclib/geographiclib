@@ -1,6 +1,3 @@
-GeographicLib toolbox
-Version 1.42 2015-04-27
-
 This toolbox provides native MATLAB implementations of a subset of the
 C++ library, GeographicLib.  Key components of this toolbox are
 
@@ -13,6 +10,7 @@ C++ library, GeographicLib.  Key components of this toolbox are
 
 There is some overlap between this toolbox and MATLAB's Mapping
 Toolbox.  However, this toolbox offers:
+
   * better accuracy;
   * treatment of oblate and prolate ellipsoids;
   * guaranteed convergence for geoddistance;
@@ -20,16 +18,12 @@ Toolbox.  However, this toolbox offers:
   * ellipsoidal versions of the equidistant azimuthal and gnomonic
     projections.
 
-This package incorporates the following packages:
+Subsets of this package were previously released as:
 
   Geodesics on an ellipsoid of revolution
-  http://www.mathworks.com/matlabcentral/fileexchange/39108
-
-  Geodesic projections for an ellipsoid
-  http://www.mathworks.com/matlabcentral/fileexchange/39366
-
-  Great ellipses
-  http://www.mathworks.com/matlabcentral/fileexchange/47898
+    http://www.mathworks.com/matlabcentral/fileexchange/39108
+  Geodesic projections for an ellipsoid (now withdrawn)
+  Great ellipses (now withdrawn)
 
 Including all of the functionality in a single toolbox allows easier
 sharing of code (via a common private directory).
@@ -43,7 +37,7 @@ Instructions for this are given in
 
   http://geographiclib.sf.net/html/geoid.html#geoidinst
 
-A problem with MATLAB Central sometimes causes the "Robust Control
-Toolbox" to be listed as a required product.  This is wrong; this
-package has no dependencies other than MATLAB (version 7.9 or later) or
-Octave (version 3.4 or later).
+A problem with the way MATLAB Central packages toolboxes causes the
+"Robust Control Toolbox" to be listed as a required product. This is
+wrong; this package has no dependencies other than MATLAB (version 7.9
+or later) or Octave (version 3.4 or later).

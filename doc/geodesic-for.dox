@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in Fortran
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.42
+\version 1.44
 
 \section abstract-for Abstract
 
@@ -25,14 +25,14 @@ compile correctly with just about any Fortran compiler.
 \section download-for Downloading the source
 
 The Fortran library is part of %GeographicLib which available for download at
-- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.42.tar.gz">
-  GeographicLib-1.42.tar.gz</a>
-- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.42.zip">
-  GeographicLib-1.42.zip</a>
+- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.44.tar.gz">
+  GeographicLib-1.44.tar.gz</a>
+- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.44.zip">
+  GeographicLib-1.44.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the Fortran library can be found in
-GeographicLib-1.42/legacy/Fortran.  The library consists of the file
+GeographicLib-1.44/legacy/Fortran.  The library consists of the file
 geodesic.for.
 
 \section doc Library documentation
@@ -87,7 +87,7 @@ and are therefore in the public domain.
 
 \section library Using the library
 
-- Optionall put @verbatim
+- Optionally put @verbatim
   include "geodesic.inc" @endverbatim
   in declaration section of your subroutines.
 - make calls to the geodesic routines from your code.  The interface to
@@ -117,6 +117,4 @@ and are therefore in the public domain.
   geodesic.
 - <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">
   An online geodesic bibliography</a>.
-**********************************************************************/
-
 **********************************************************************/

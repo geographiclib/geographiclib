@@ -13,7 +13,7 @@
 #    https://dx.doi.org/10.1007/s00190-012-0578-z
 #    Addenda: http://geographiclib.sf.net/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 ######################################################################
@@ -32,25 +32,19 @@ class GeodesicLine(object):
     self._b = geod._b
     self._c2 = geod._c2
     self._f1 = geod._f1
-    self._caps = caps | Geodesic.LATITUDE | Geodesic.AZIMUTH
+    self._caps = (caps | Geodesic.LATITUDE | Geodesic.AZIMUTH |
+                  Geodesic.LONG_UNROLL)
 
     # Guard against underflow in salp0
-    azi1 = Geodesic.AngRound(Math.AngNormalize(azi1))
-    self._lat1 = lat1
+    self._lat1 = Math.AngRound(lat1)
     self._lon1 = lon1
-    self._azi1 = azi1
-    # alp1 is in [0, pi]
-    alp1 = azi1 * Math.degree
-    # Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
-    # problems directly than to skirt them.
-    self._salp1 = 0 if     azi1  == -180 else math.sin(alp1)
-    self._calp1 = 0 if abs(azi1) ==   90 else math.cos(alp1)
-    # real cbet1, sbet1, phi
-    phi = lat1 * Math.degree
+    self._azi1 = Math.AngRound(azi1)
+    self._salp1, self._calp1 = Math.sincosd(azi1)
+
+    # real cbet1, sbet1
+    sbet1, cbet1 = Math.sincosd(lat1); sbet1 *= self._f1
     # Ensure cbet1 = +epsilon at poles
-    sbet1 = self._f1 * math.sin(phi)
-    cbet1 = Geodesic.tiny_ if abs(lat1) == 90 else math.cos(phi)
-    sbet1, cbet1 = Geodesic.SinCosNorm(sbet1, cbet1)
+    sbet1, cbet1 = Math.norm(sbet1, cbet1); cbet1 = max(Geodesic.tiny_, cbet1)
     self._dn1 = math.sqrt(1 + geod._ep2 * Math.sq(sbet1))
 
     # Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -71,9 +65,9 @@ class GeodesicLine(object):
     self._csig1 = self._comg1 = (cbet1 * self._calp1
                                  if sbet1 != 0 or self._calp1 != 0 else 1)
     # sig1 in (-pi, pi]
-    self._ssig1, self._csig1 = Geodesic.SinCosNorm(self._ssig1, self._csig1)
+    self._ssig1, self._csig1 = Math.norm(self._ssig1, self._csig1)
     # No need to normalize
-    # self._somg1, self._comg1 = Geodesic.SinCosNorm(self._somg1, self._comg1)
+    # self._somg1, self._comg1 = Math.norm(self._somg1, self._comg1)
 
     self._k2 = Math.sq(self._calp0) * geod._ep2
     eps = self._k2 / (2 * (1 + math.sqrt(1 + self._k2)) + self._k2)
@@ -83,13 +77,13 @@ class GeodesicLine(object):
       self._C1a = list(range(Geodesic.nC1_ + 1))
       Geodesic.C1f(eps, self._C1a)
       self._B11 = Geodesic.SinCosSeries(
-        True, self._ssig1, self._csig1, self._C1a, Geodesic.nC1_)
+        True, self._ssig1, self._csig1, self._C1a)
       s = math.sin(self._B11); c = math.cos(self._B11)
       # tau1 = sig1 + B11
       self._stau1 = self._ssig1 * c + self._csig1 * s
       self._ctau1 = self._csig1 * c - self._ssig1 * s
       # Not necessary because C1pa reverts C1a
-      #    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa, nC1p_)
+      #    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa)
 
     if self._caps & Geodesic.CAP_C1p:
       self._C1pa = list(range(Geodesic.nC1p_ + 1))
@@ -100,14 +94,14 @@ class GeodesicLine(object):
       self._C2a = list(range(Geodesic.nC2_ + 1))
       Geodesic.C2f(eps, self._C2a)
       self._B21 = Geodesic.SinCosSeries(
-        True, self._ssig1, self._csig1, self._C2a, Geodesic.nC2_)
+        True, self._ssig1, self._csig1, self._C2a)
 
     if self._caps & Geodesic.CAP_C3:
       self._C3a = list(range(Geodesic.nC3_))
       geod.C3f(eps, self._C3a)
       self._A3c = -self._f * self._salp0 * geod.A3f(eps)
       self._B31 = Geodesic.SinCosSeries(
-        True, self._ssig1, self._csig1, self._C3a, Geodesic.nC3_-1)
+        True, self._ssig1, self._csig1, self._C3a)
 
     if self._caps & Geodesic.CAP_C4:
       self._C4a = list(range(Geodesic.nC4_))
@@ -115,7 +109,7 @@ class GeodesicLine(object):
       # Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
       self._A4 = Math.sq(self._a) * self._calp0 * self._salp0 * geod._e2
       self._B41 = Geodesic.SinCosSeries(
-        False, self._ssig1, self._csig1, self._C4a, Geodesic.nC4_)
+        False, self._ssig1, self._csig1, self._C4a)
 
   # return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   def GenPosition(self, arcmode, s12_a12, outmask):
@@ -132,11 +126,8 @@ class GeodesicLine(object):
     B12 = 0; AB1 = 0
     if arcmode:
       # Interpret s12_a12 as spherical arc length
-      sig12 = s12_a12 * Math.degree
-      s12a = abs(s12_a12)
-      s12a -= 180 * math.floor(s12a / 180)
-      ssig12 = 0 if s12a ==  0 else math.sin(sig12)
-      csig12 = 0 if s12a == 90 else math.cos(sig12)
+      sig12 = math.radians(s12_a12)
+      ssig12, csig12 = Math.sincosd(s12_a12)
     else:
       # Interpret s12_a12 as distance
       tau12 = s12_a12 / (self._b * (1 + self._A1m1))
@@ -145,7 +136,7 @@ class GeodesicLine(object):
       B12 = - Geodesic.SinCosSeries(True,
                                     self._stau1 * c + self._ctau1 * s,
                                     self._ctau1 * c - self._stau1 * s,
-                                    self._C1pa, Geodesic.nC1p_)
+                                    self._C1pa)
       sig12 = tau12 - (B12 - self._B11)
       ssig12 = math.sin(sig12); csig12 = math.cos(sig12)
       if abs(self._f) > 0.01:
@@ -172,8 +163,7 @@ class GeodesicLine(object):
         #      1/5   157e6 3.8e9 280e6
         ssig2 = self._ssig1 * csig12 + self._csig1 * ssig12
         csig2 = self._csig1 * csig12 - self._ssig1 * ssig12
-        B12 = Geodesic.SinCosSeries(True, ssig2, csig2,
-                                    self._C1a, Geodesic.nC1_)
+        B12 = Geodesic.SinCosSeries(True, ssig2, csig2, self._C1a)
         serr = ((1 + self._A1m1) * (sig12 + (B12 - self._B11)) -
                 s12_a12 / self._b)
         sig12 = sig12 - serr / math.sqrt(1 + self._k2 * Math.sq(ssig2))
@@ -189,8 +179,7 @@ class GeodesicLine(object):
     if outmask & (
       Geodesic.DISTANCE | Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
       if arcmode or abs(self._f) > 0.01:
-        B12 = Geodesic.SinCosSeries(True, ssig2, csig2,
-                                    self._C1a, Geodesic.nC1_)
+        B12 = Geodesic.SinCosSeries(True, ssig2, csig2, self._C1a)
       AB1 = (1 + self._A1m1) * (B12 - self._B11)
     # sin(bet2) = cos(alp0) * sin(sig2)
     sbet2 = self._calp0 * ssig2
@@ -208,35 +197,33 @@ class GeodesicLine(object):
     if outmask & Geodesic.LONGITUDE:
       # tan(omg2) = sin(alp0) * tan(sig2)
       somg2 = self._salp0 * ssig2; comg2 = csig2 # No need to normalize
+      E = -1 if self._salp0 < 0 else 1           # East or west going?
       # omg12 = omg2 - omg1
-      omg12 = (sig12
-               - (math.atan2(ssig2, csig2) -
-                  math.atan2(self._ssig1, self._csig1))
-               + (math.atan2(somg2, comg2) -
-                  math.atan2(self._somg1, self._comg1))
-               if outmask & Geodesic.LONG_NOWRAP
+      omg12 = (E * (sig12
+                    - (math.atan2(          ssig2,       csig2) -
+                       math.atan2(    self._ssig1, self._csig1))
+                    + (math.atan2(E *       somg2,       comg2) -
+                       math.atan2(E * self._somg1, self._comg1)))
+               if outmask & Geodesic.LONG_UNROLL
                else math.atan2(somg2 * self._comg1 - comg2 * self._somg1,
                                comg2 * self._comg1 + somg2 * self._somg1))
       lam12 = omg12 + self._A3c * (
-        sig12 + (Geodesic.SinCosSeries(True, ssig2, csig2,
-                                       self._C3a, Geodesic.nC3_-1)
+        sig12 + (Geodesic.SinCosSeries(True, ssig2, csig2, self._C3a)
                  - self._B31))
-      lon12 = lam12 / Math.degree
-      # Use Math.AngNormalize2 because longitude might have wrapped
-      # multiple times.
-      lon2 = (self._lon1 + lon12 if outmask & Geodesic.LONG_NOWRAP else
+      lon12 = math.degrees(lam12)
+      lon2 = (self._lon1 + lon12 if outmask & Geodesic.LONG_UNROLL else
               Math.AngNormalize(Math.AngNormalize(self._lon1) +
-                                Math.AngNormalize2(lon12)))
+                                Math.AngNormalize(lon12)))
 
     if outmask & Geodesic.LATITUDE:
-      lat2 = math.atan2(sbet2, self._f1 * cbet2) / Math.degree
+      lat2 = Math.atan2d(sbet2, self._f1 * cbet2)
 
     if outmask & Geodesic.AZIMUTH:
       # minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi2 = 0 - math.atan2(-salp2, calp2) / Math.degree
+      azi2 = Math.atan2d(salp2, calp2)
 
     if outmask & (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
-      B22 = Geodesic.SinCosSeries(True, ssig2, csig2, self._C2a, Geodesic.nC2_)
+      B22 = Geodesic.SinCosSeries(True, ssig2, csig2, self._C2a)
       AB2 = (1 + self._A2m1) * (B22 - self._B21)
       J12 = (self._A1m1 - self._A2m1) * sig12 + (AB1 - AB2)
       if outmask & Geodesic.REDUCEDLENGTH:
@@ -252,11 +239,10 @@ class GeodesicLine(object):
         M21 = csig12 - (t * self._ssig1 - self._csig1 * J12) * ssig2 / dn2
 
     if outmask & Geodesic.AREA:
-      B42 = Geodesic.SinCosSeries(False,
-                                  ssig2, csig2, self._C4a, Geodesic.nC4_)
+      B42 = Geodesic.SinCosSeries(False, ssig2, csig2, self._C4a)
       # real salp12, calp12
       if self._calp0 == 0 or self._salp0 == 0:
-        # alp12 = alp2 - alp1, used in atan2 so no need to normalized
+        # alp12 = alp2 - alp1, used in atan2 so no need to normalize
         salp12 = salp2 * self._calp1 - calp2 * self._salp1
         calp12 = calp2 * self._calp1 + salp2 * self._salp1
         # The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
@@ -282,7 +268,7 @@ class GeodesicLine(object):
       S12 = (self._c2 * math.atan2(salp12, calp12) +
              self._A4 * (B42 - self._B41))
 
-    a12 = s12_a12 if arcmode else sig12 / Math.degree
+    a12 = s12_a12 if arcmode else math.degrees(sig12)
     return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
 
   def Position(self, s12,
@@ -306,9 +292,10 @@ class GeodesicLine(object):
 
     outmask determines which fields get included and if outmask is
     omitted, then only the basic geodesic fields are computed.  The
-    LONG_NOWRAP bit prevents the longitudes being reduced to the range
-    [-180,180).  The mask is an or'ed combination of the following
-    values
+    LONG_UNROLL bit unrolls the longitudes (instead of reducing them to
+    the range [-180,180)), so that lon2 - lon1 indicates how many times
+    and in what sense the geodesic encircles the ellipsoid.  The mask is
+    an or'ed combination of the following values
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -316,15 +303,15 @@ class GeodesicLine(object):
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
-      Geodesic.ALL
-      Geodesic.LONG_NOWRAP
+      Geodesic.ALL (all of the above)
+      Geodesic.LONG_UNROLL
 
     """
 
     from geographiclib.geodesic import Geodesic
     Geodesic.CheckDistance(s12)
     result = {'lat1': self._lat1,
-              'lon1': self._lon1 if outmask & Geodesic.LONG_NOWRAP else
+              'lon1': self._lon1 if outmask & Geodesic.LONG_UNROLL else
               Math.AngNormalize(self._lon1),
               'azi1': self._azi1, 's12': s12}
     a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenPosition(
@@ -362,9 +349,9 @@ class GeodesicLine(object):
 
     outmask determines which fields get included and if outmask is
     omitted, then only the basic geodesic fields are computed.  The
-    LONG_NOWRAP bit prevents the longitudes being reduced to the range
-    [-180,180).  The mask is an or'ed combination of the following
-    values
+    LONG_UNROLL bit unrolls the longitudes (instead of reducing them to
+    the range [-180,180)).  The mask is an or'ed combination of the
+    following values
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -373,15 +360,15 @@ class GeodesicLine(object):
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
-      Geodesic.ALL
-      Geodesic.LONG_NOWRAP
+      Geodesic.ALL (all of the above)
+      Geodesic.LONG_UNROLL
 
     """
 
     from geographiclib.geodesic import Geodesic
     Geodesic.CheckDistance(a12)
     result = {'lat1': self._lat1,
-              'lon1': self._lon1 if outmask & Geodesic.LONG_NOWRAP else
+              'lon1': self._lon1 if outmask & Geodesic.LONG_UNROLL else
               Math.AngNormalize(self._lon1),
               'azi1': self._azi1, 'a12': a12}
     a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenPosition(

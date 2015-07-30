@@ -35,7 +35,7 @@ Files
       AzimuthalEquidistant.[ch]pp -- azimuthal equidistant projection
       Gnomonic.[ch]pp -- gnomonic projection
       CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
-      Geoid.[ch]pp -- geoid heights
+      Geoid.[ch]pp -- geoid heights above the ellipsoid
       Gravity{Model,Circle}.[ch]pp -- gravity models
       Magnetic{Model,Circle}.[ch]pp -- geomagentic models
       {Spherical,Circular}Engine.[ch]pp -- spherical harmonic sums
@@ -45,6 +45,8 @@ Files
       Gnomonic.[ch]pp -- Ellipsoidal gnomonic projection
       OSGB.[ch]pp -- Ordnance Survey grid system
       Geohash.[ch]pp -- conversions for geohashes
+      GARS.[ch]pp -- conversions for GARS
+      Georef.[ch]pp -- conversions for georefs
       Ellipsoid.[ch]pp -- ellipsoid properties
       Rhumb.[ch]pp -- rhumb line calculations
 
@@ -65,6 +67,7 @@ Files
       Planimeter.cpp -- computer polygon areas
       RhumbSolve.cpp -- calculate rhumb lines
       geographiclib-get-geoids -- download geoid datasets
+      geographiclib-get-gravity -- download gravity models
       geographiclib-get-magnetic -- download geomagnetic models
 
     windows/

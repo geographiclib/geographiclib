@@ -27,6 +27,7 @@
 /gravity-distrib/
 /magnetic
 /magnetic-distrib/
+/matlab-distrib/
 /mpfr_mpir_x86_x64_msvc2010/
 /testdata/
 CMakeCache.txt
@@ -49,6 +50,7 @@ _UpgradeReport_Files
 aclocal.m4
 archive
 cmake_install.cmake
+compile
 config.guess
 config.h
 config.h.in

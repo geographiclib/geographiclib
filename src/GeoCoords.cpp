@@ -2,7 +2,7 @@
  * \file GeoCoords.cpp
  * \brief Implementation for GeographicLib::GeoCoords class
  *
- * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -16,7 +16,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  void GeoCoords::Reset(const std::string& s, bool centerp, bool swaplatlong) {
+  void GeoCoords::Reset(const std::string& s, bool centerp, bool longfirst) {
     vector<string> sa;
     const char* spaces = " \t\n\v\f\r,"; // Include comma as a space
     for (string::size_type pos0 = 0, pos1; pos0 != string::npos;) {
@@ -32,7 +32,8 @@ namespace GeographicLib {
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
                       _lat, _long, _gamma, _k);
     } else if (sa.size() == 2) {
-      DMS::DecodeLatLon(sa[0], sa[1], _lat, _long, swaplatlong);
+      DMS::DecodeLatLon(sa[0], sa[1], _lat, _long, longfirst);
+      _long = Math::AngNormalize(_long);
       UTMUPS::Forward( _lat, _long,
                        _zone, _northp, _easting, _northing, _gamma, _k);
     } else if (sa.size() == 3) {
@@ -58,12 +59,12 @@ namespace GeographicLib {
     CopyToAlt();
   }
 
-  string GeoCoords::GeoRepresentation(int prec, bool swaplatlong) const {
+  string GeoCoords::GeoRepresentation(int prec, bool longfirst) const {
     prec = max(0, min(9 + Math::extra_digits(), prec) + 5);
     ostringstream os;
     os << fixed << setprecision(prec);
-    real a = swaplatlong ? _long : _lat;
-    real b = swaplatlong ? _lat : _long;
+    real a = longfirst ? _long : _lat;
+    real b = longfirst ? _lat : _long;
     if (!Math::isnan(a))
       os << a;
     else
@@ -76,13 +77,13 @@ namespace GeographicLib {
     return os.str();
   }
 
-  string GeoCoords::DMSRepresentation(int prec, bool swaplatlong,
+  string GeoCoords::DMSRepresentation(int prec, bool longfirst,
                                       char dmssep) const {
     prec = max(0, min(10 + Math::extra_digits(), prec) + 5);
-    return DMS::Encode(swaplatlong ? _long : _lat, unsigned(prec),
-                       swaplatlong ? DMS::LONGITUDE : DMS::LATITUDE, dmssep) +
-      " " + DMS::Encode(swaplatlong ? _lat : _long, unsigned(prec),
-                        swaplatlong ? DMS::LATITUDE : DMS::LONGITUDE, dmssep);
+    return DMS::Encode(longfirst ? _long : _lat, unsigned(prec),
+                       longfirst ? DMS::LONGITUDE : DMS::LATITUDE, dmssep) +
+      " " + DMS::Encode(longfirst ? _lat : _long, unsigned(prec),
+                        longfirst ? DMS::LATITUDE : DMS::LONGITUDE, dmssep);
   }
 
   string GeoCoords::MGRSRepresentation(int prec) const {

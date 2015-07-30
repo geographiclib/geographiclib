@@ -10,7 +10,7 @@ function [x, y, azi, rk] = eqdazim_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   ellipsoid vector is of the form [a, e], where a is the equatorial
 %   radius in meters, e is the eccentricity.  If ellipsoid is omitted, the
 %   WGS84 ellipsoid (more precisely, the value returned by
-%   defaultellipsoid) is used.  geodproj defines the projection and gives
+%   defaultellipsoid) is used.  projdoc defines the projection and gives
 %   the restrictions on the allowed ranges of the arguments.  The inverse
 %   projection is given by eqdazim_inv.
 %
@@ -32,11 +32,11 @@ function [x, y, azi, rk] = eqdazim_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   describes how to use this projection in the determination of maritime
 %   boundaries (finding the median line).
 %
-%   See also GEODPROJ, EQDAZIM_INV, GEODDISTANCE, DEFAULTELLIPSOID.
+%   See also PROJDOC, EQDAZIM_INV, GEODDISTANCE, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.44.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -48,9 +48,9 @@ function [x, y, azi, rk] = eqdazim_fwd(lat0, lon0, lat, lon, ellipsoid)
 
   [s, azi0, azi, ~, m, ~, ~, sig] = ...
       geoddistance(lat0, lon0, lat, lon, ellipsoid);
-  azi0 = azi0 * (pi/180);
-  x = s .* sin(azi0);
-  y = s .* cos(azi0);
+  [x, y] = sincosdx(azi0);
+  x = s .* x;
+  y = s .* y;
   rk = m ./ s;
   rk(sig <= 0.01 * sqrt(realmin)) = 1;
 end

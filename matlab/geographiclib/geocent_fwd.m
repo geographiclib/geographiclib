@@ -11,7 +11,8 @@ function [X, Y, Z, M] = geocent_fwd(lat, lon, h, ellipsoid)
 %   meters.  The ellipsoid vector is of the form [a, e], where a is the
 %   equatorial radius in meters, e is the eccentricity.  If ellipsoid is
 %   omitted, the WGS84 ellipsoid (more precisely, the value returned by
-%   defaultellipsoid) is used.
+%   defaultellipsoid) is used.  The inverse operation is given by
+%   geocent_inv.
 %
 %   M is the 3 x 3 rotation matrix for the conversion.  Pre-multiplying a
 %   unit vector in local cartesian coordinates (east, north, up) by M
@@ -21,7 +22,7 @@ function [X, Y, Z, M] = geocent_fwd(lat, lon, h, ellipsoid)
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.44.
 
   narginchk(2, 4)
   if nargin < 3, h = 0; end
@@ -36,20 +37,13 @@ function [X, Y, Z, M] = geocent_fwd(lat, lon, h, ellipsoid)
   end
   lat = lat + z; lon = lon + z; h = h + z;
 
-  degree = pi/180;
   a = ellipsoid(1);
   e2 = ellipsoid(2)^2;
   e2m = 1 - e2;
 
-  lon = AngNormalize(lon);
-
-  phi = lat * degree;
-  lam = lon * degree;
-  sphi = sin(phi);
-  cphi = cos(phi); cphi(abs(lat) == 90) = 0;
+  [slam, clam] = sincosdx(lon);
+  [sphi, cphi] = sincosdx(lat);
   n = a./sqrt(1 - e2 * sphi.^2);
-  slam = sin(lam); slam(lon == -180) = 0;
-  clam = cos(lam); clam(abs(lon) == 90) = 0;
   Z = (e2m * n + h) .* sphi;
   X = (n + h) .* cphi;
   Y = X .* slam;

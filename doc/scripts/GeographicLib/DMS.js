@@ -5,7 +5,7 @@
  * See the documentation for the C++ class.  The conversion is a literal
  * conversion from C++.
  *
- * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -40,8 +40,6 @@ GeographicLib.DMS = {};
 
   // return val, ind
   d.Decode = function(dms) {
-    var vals = {};
-    var errormsg = new String("");
     var dmsa = dms;
     dmsa = dmsa.replace(/\u00b0/g, 'd');
     dmsa = dmsa.replace(/\u00ba/g, 'd');
@@ -54,8 +52,43 @@ GeographicLib.DMS = {};
     dmsa = dmsa.replace(/\u201d/g, '"');
     dmsa = dmsa.replace(/\u2212/g, '-');
     dmsa = dmsa.replace(/''/g, '"');
-    dmsa = dmsa.replace(/^\s+/, "");
-    dmsa = dmsa.replace(/\s+$/, "");
+    dmsa = dmsa.trim();
+    var errormsg = new String("");
+    var end = dmsa.length;
+    var v = 0, i = 0, mi, pi, vals;
+    var ind1 = d.NONE, ind2;
+    var p, pa, pb;
+    // p is pointer to the next piece that needs decoding
+    for (p = 0; p < end; p = pb, ++i) {
+      pa = p;
+      // Skip over initial hemisphere letter (for i == 0)
+      if (i == 0 && d.lookup(d.hemispheres_, dmsa.charAt(pa)) >= 0)
+        ++pa;
+      // Skip over initial sign (checking for it if i == 0)
+      if (i > 0 || (pa < end && d.lookup(d.signs_, dmsa.charAt(pa)) >= 0))
+        ++pa;
+      // Find next sign
+      mi = dmsa.substr(pa, end - pa).indexOf('-');
+      pi = dmsa.substr(pa, end - pa).indexOf('+');
+      if (mi < 0) mi = end; else mi += pa;
+      if (pi < 0) pi = end; else pi += pa;
+      pb = Math.min(mi, pi);
+      vals = d.InternalDecode(dmsa.substr(p, pb - p));
+      v += vals.val; ind2 = vals.ind;
+      if (ind1 == d.NONE)
+        ind1 = ind2;
+      else if (!(ind2 == d.NONE || ind1 == ind2))
+        throw new Error("Incompatible hemisphere specifies in " +
+                        dmsa.substr(0, pb));
+    }
+    if (i == 0)
+      throw new Error("Empty or incomplete DMS string " + dmsa);
+    return {val: v, ind: ind1};
+  };
+
+  d.InternalDecode = function(dmsa) {
+    var vals = {};
+    var errormsg = new String("");
     do {                       // Executed once (provides the ability to break)
       var sign = 1;
       var beg = 0, end = dmsa.length;
@@ -147,7 +180,7 @@ GeographicLib.DMS = {};
               " component of " + dmsa.substr(beg, end - beg);
             break;
           }
-          if (digcount > 1) {
+          if (digcount > 0) {
             fcurrent = parseFloat(dmsa.substr(p - intcount - digcount - 1,
                                               intcount + digcount));
             icurrent = 0;
@@ -182,7 +215,7 @@ GeographicLib.DMS = {};
             dmsa.substr(beg, end - beg);
           break;
         }
-        if (digcount > 1) {
+        if (digcount > 0) {
           fcurrent = parseFloat(dmsa.substr(p - intcount - digcount,
                                             intcount + digcount));
           icurrent = 0;
@@ -196,18 +229,20 @@ GeographicLib.DMS = {};
         break;
       }
       // Note that we accept 59.999999... even though it rounds to 60.
-      if (ipieces[1] >= 60) {
+      if (ipieces[1] >= 60 || fpieces[1] > 60) {
         errormsg = "Minutes " + fpieces[1] + " not in range [0, 60)";
         break;
       }
-      if (ipieces[2] >= 60) {
+      if (ipieces[2] >= 60 || fpieces[2] > 60) {
         errormsg = "Seconds " + fpieces[2] + " not in range [0, 60)";
         break;
       }
       vals.ind = ind1;
       // Assume check on range of result is made by calling routine (which
       // might be able to offer a better diagnostic).
-      vals.val = sign * (fpieces[0] + (fpieces[1] + fpieces[2] / 60) / 60);
+      vals.val = sign *
+        ( fpieces[2] ? (60*(60*fpieces[0] + fpieces[1]) + fpieces[2]) / 3600 :
+          ( fpieces[1] ? (60*fpieces[0] + fpieces[1]) / 60 : fpieces[0] ) );
       return vals;
     } while (false);
     vals.val = d.NumMatch(dmsa);
@@ -260,9 +295,6 @@ GeographicLib.DMS = {};
     var lat = ia === d.LATITUDE ? a : b, lon = ia === d.LATITUDE ? b : a;
     if (Math.abs(lat) > 90)
       throw new Error("Latitude " + lat + "d not in [-90d, 90d]");
-    if (lon < -540 || lon >= 540)
-      throw new Error("Latitude " + lon + "d not in [-540d, 540d)");
-    lon = m.AngNormalize(lon);
     vals.lat = lat;
     vals.lon = lon;
     return vals;
@@ -283,8 +315,6 @@ GeographicLib.DMS = {};
     if (ind === d.LATITUDE)
       throw new Error("Azimuth " + azistr +
                       " has a latitude hemisphere, N/S");
-    if (azi < -540 || azi >= 540)
-      throw new Error("Azimuth " + azistr + " not in range [-540d, 540d)");
     azi = m.AngNormalize(azi);
     return azi;
   };
@@ -314,6 +344,12 @@ GeographicLib.DMS = {};
     // fractional part.
     var
     idegree = Math.floor(angle),
+    fdegree = (angle - idegree) * scale + 0.5,
+    f = Math.floor(fdegree);
+    // Implement the "round ties to even" rule
+    fdegree = (f == fdegree && (f & 1)) ? f - 1 : f;
+    fdegree /= scale;
+
     fdegree = Math.floor((angle - idegree) * scale + 0.5) / scale;
     if (fdegree >= 1) {
       idegree += 1;

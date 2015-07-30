@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in C
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.42
+\version 1.44
 
 \section abstract-c Abstract
 
@@ -27,19 +27,19 @@ about any C compiler.
 \section download-c Downloading the source
 
 The C library is part of %GeographicLib which available for download at
-- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.42.tar.gz">
-  GeographicLib-1.42.tar.gz</a>
-- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.42.zip">
-  GeographicLib-1.42.zip</a>
+- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.44.tar.gz">
+  GeographicLib-1.44.tar.gz</a>
+- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.44.zip">
+  GeographicLib-1.44.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
-the source, the C library can be found in GeographicLib-1.42/legacy/C.
+the source, the C library can be found in GeographicLib-1.44/legacy/C.
 The library consists of two files geodesic.c and geodesic.h.
 
 The library is also included as part of
-<a href="http://trac.osgeo.org/proj/">proj.4</a> starting with version
-4.9.0, where is used as the computational backend for
-<a href="http://trac.osgeo.org/proj/wiki/man_geod">geod(1)</a>.
+<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a> starting with
+version 4.9.0, where it is used as the computational backend for
+<a href="https://github.com/OSGeo/proj.4/wiki/Mangeod">geod(1)</a>.
 Instructions for how to use the library via proj.4 are given below.
 
 \section doc Library documentation
@@ -88,9 +88,22 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
   in your source code.  If you are using the library via proj.4, change
   this to @verbatim
   #include <geodesic.h> @endverbatim
-- make calls to the geodesic routines from your code.  The interface to
+- Make calls to the geodesic routines from your code.  The interface to
   the library is documented in geodesic.h.
 - Compile and link as described above.
+- If linking with proj.4, you might want to check that the version of
+  proj.4 contains the geodesic routines.  You can do this with @verbatim
+  #include <proj_api.h>
+  #if PJ_VERSION >= 490
+  #include <geodesic.h>
+  #endif
+  ... @endverbatim
+
+- You can check the version of the geodesic library with, e.g.,
+  @verbatim
+  #if GEODESIC_VERSION >= GEODESIC_VERSION_NUM(1,40,0)
+  ...
+  #endif @endverbatim
 
 \section external External links
 

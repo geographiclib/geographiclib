@@ -30,7 +30,7 @@ public class GeodesicMask {
   protected static final int CAP_ALL  = 0x1F;
   protected static final int CAP_MASK = CAP_ALL;
   protected static final int OUT_ALL  = 0x7F80;
-  protected static final int OUT_MASK = 0xFF80; // Include LONG_NOWRAP
+  protected static final int OUT_MASK = 0xFF80; // Include LONG_UNROLL
 
   /**
    * No capabilities, no output.
@@ -73,11 +73,16 @@ public class GeodesicMask {
    **********************************************************************/
   public static final int AREA          = 1<<14 | CAP_C4;
   /**
-   * Do not wrap <i>lon2</i>.
+   * Unroll <i>lon2</i>.
    **********************************************************************/
-  public static final int LONG_NOWRAP   = 1<<15;
+  public static final int LONG_UNROLL   = 1<<15;
   /**
-   * All capabilities, calculate everything.
+   * For backward compatibility only; use LONG_UNROLL instead.
+   **********************************************************************/
+  public static final int LONG_NOWRAP   = LONG_UNROLL;
+  /**
+   * All capabilities, calculate everything.  (LONG_UNROLL is not included in
+   * this mask.)
    **********************************************************************/
   public static final int ALL           = OUT_ALL| CAP_ALL;
 }

@@ -105,8 +105,7 @@ namespace NETGeographicLib
          *
          * No false easting or northing is added.  \e lat should be in the range
          * (&minus;90&deg;, 90&deg;] for \e northp = true and in the range
-         * [&minus;90&deg;, 90&deg;) for \e northp = false; \e lon should
-         * be in the range [&minus;540&deg;, 540&deg;).
+         * [&minus;90&deg;, 90&deg;) for \e northp = false.
          **********************************************************************/
         void Forward(bool northp, double lat, double lon,
                      [System::Runtime::InteropServices::Out] double% x,

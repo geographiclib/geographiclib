@@ -6,20 +6,13 @@ function C3 = C3f(epsi, C3x)
 %   C3 is a K x 5 array.
 
   nC3 = 6;
-  nC3x = size(C3x, 2);
-  j = nC3x;
   C3 = zeros(length(epsi), nC3 - 1);
-  for k = nC3 - 1 : -1 : 1
-    t = C3(:, k);
-    for i = nC3 - k : -1 : 1
-      t = epsi .* t + C3x(j);
-      j = j - 1;
-    end
-    C3(:, k) = t;
-  end
-  mult = ones(length(epsi), 1);
-  for k = 1 : nC3 - 1
+  mult = 1;
+  o = 1;
+  for l = 1 : nC3 - 1
+    m = nC3 - l - 1;
     mult = mult .* epsi;
-    C3(:, k) = C3(:, k) .* mult;
+    C3(:, l) = mult .* polyval(C3x(o : o + m), epsi);
+    o = o + m + 1;
   end
 end

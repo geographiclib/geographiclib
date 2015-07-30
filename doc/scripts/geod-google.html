@@ -24,6 +24,8 @@
 		   Google Maps,
 		   WGS84 ellipsoid,
 		   GeographicLib" />
+    <meta http-equiv="Content-Type"
+	  content="text/html; charset=ISO-8859-1">
     <style>
       html, body, #map-canvas {
         height: 100%;
@@ -219,8 +221,11 @@ function clearPaths() {
 	&nbsp;s12: <input type="text" "readonly" id="s12" size=20>
 	&nbsp;&nbsp; status: <input "readonly" id="status" size=30>
 	&nbsp;&nbsp;
-	<a href="geod-google-instructions.html"><b>INSTRUCTIONS HERE</b></a>
-    </p>
+	<a href="geod-google-instructions.html"><b>INSTRUCTIONS</b></a>
+	(v<script type="text/javascript">
+	  document.write(GeographicLib.Constants.version_string);
+	</script>)
+      </p>
   </div>
   </body>
 </html>

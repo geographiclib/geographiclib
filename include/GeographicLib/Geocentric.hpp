@@ -2,7 +2,7 @@
  * \file Geocentric.hpp
  * \brief Header for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -73,9 +73,6 @@ namespace GeographicLib {
     friend class GravityCircle;  // GravityCircle uses Rotation
     friend class GravityModel;   // GravityModel uses IntForward
     friend class NormalGravity;  // NormalGravity uses IntForward
-    friend class SphericalHarmonic;
-    friend class SphericalHarmonic1;
-    friend class SphericalHarmonic2;
     static const size_t dim_ = 3;
     static const size_t dim2_ = dim_ * dim_;
     real _a, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
@@ -131,8 +128,7 @@ namespace GeographicLib {
      * @param[out] Y geocentric coordinate (meters).
      * @param[out] Z geocentric coordinate (meters).
      *
-     * \e lat should be in the range [&minus;90&deg;, 90&deg;]; \e lon
-     * should be in the range [&minus;540&deg;, 540&deg;).
+     * \e lat should be in the range [&minus;90&deg;, 90&deg;].
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& X, real& Y, real& Z)
       const {

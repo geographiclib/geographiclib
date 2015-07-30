@@ -17,7 +17,7 @@
  *    https://dx.doi.org/10.1007/s00190-012-0578-z
  *    Addenda: http://geographiclib.sf.net/geod-addenda.html
  *
- * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************
@@ -51,6 +51,7 @@
  *   GeographicLib.Geodesic.REDUCEDLENGTH
  *   GeographicLib.Geodesic.GEODESICSCALE
  *   GeographicLib.Geodesic.AREA
+ *   GeographicLib.Geodesic.LONG_UNROLL
  *   GeographicLib.Geodesic.ALL
  *
  **********************************************************************
@@ -103,14 +104,9 @@
   g.Geodesic.CheckPosition = function(lat, lon) {
     if (!(Math.abs(lat) <= 90))
       throw new Error("latitude " + lat + " not in [-90, 90]");
-    if (!(lon >= -540 && lon < 540))
-      throw new Error("longitude " + lon + " not in [-540, 540)");
-    return m.AngNormalize(lon);
   };
 
   g.Geodesic.CheckAzimuth = function(azi) {
-    if (!(azi >= -540 && azi < 540))
-      throw new Error("longitude " + azi + " not in [-540, 540)");
     return m.AngNormalize(azi);
   };
 
@@ -121,25 +117,33 @@
 
   g.Geodesic.prototype.Inverse = function(lat1, lon1, lat2, lon2, outmask) {
     if (!outmask) outmask = g.DISTANCE | g.AZIMUTH;
-    lon1 = g.Geodesic.CheckPosition(lat1, lon1);
-    lon2 = g.Geodesic.CheckPosition(lat2, lon2);
+    g.Geodesic.CheckPosition(lat1, lon1);
+    g.Geodesic.CheckPosition(lat2, lon2);
 
     var result = this.GenInverse(lat1, lon1, lat2, lon2, outmask);
-    result.lat1 = lat1; result.lon1 = lon1;
-    result.lat2 = lat2; result.lon2 = lon2;
+    lon2 = m.AngNormalize(lon2);
+    if (outmask & g.LONG_UNROLL) {
+      result.lon1 = lon1;
+      result.lon2 = lon1 + m.AngDiff(lon1, lon2);
+    } else {
+      result.lon1 = m.AngNormalize(lon1);
+      result.lon2 = lon2;
+    }
+    result.lat1 = lat1;
+    result.lat2 = lat2;
 
     return result;
   };
 
   g.Geodesic.prototype.Direct = function(lat1, lon1, azi1, s12, outmask) {
     if (!outmask) outmask = g.LATITUDE | g.LONGITUDE | g.AZIMUTH;
-    lon1 = g.Geodesic.CheckPosition(lat1, lon1);
+    g.Geodesic.CheckPosition(lat1, lon1);
     azi1 = g.Geodesic.CheckAzimuth(azi1);
     g.Geodesic.CheckDistance(s12);
 
     var result = this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
-    result.lat1 = lat1; result.lon1 = lon1;
-    result.azi1 = azi1; result.s12 = s12;
+    result.lon1 = (outmask & g.LONG_UNROLL) ? lon1 : m.AngNormalize(lon1)
+    result.lat1 = lat1; result.azi1 = azi1; result.s12 = s12;
 
     return result;
   };
@@ -197,10 +201,6 @@
   g.Geodesic.prototype.Circle = function(lat1, lon1, azi1, s12, k) {
     if (!(Math.abs(lat1) <= 90))
       throw new Error("lat1 must be in [-90, 90]");
-    if (!(lon1 >= -540 && lon1 < 540))
-      throw new Error("lon1 must be in [-540, 540)");
-    if (!(azi1 >= -540 && azi1 < 540))
-      throw new Error("azi1 must be in [-540, 540)");
     if (!(isFinite(s12)))
       throw new Error("s12 must be a finite number");
     lon1 = m.AngNormalize(lon1);
@@ -221,8 +221,6 @@
   g.Geodesic.prototype.Envelope = function(lat1, lon1, k, ord) {
     if (!(Math.abs(lat1) <= 90))
       throw new Error("lat1 must be in [-90, 90]");
-    if (!(lon1 >= -540 && lon1 < 540))
-      throw new Error("lon1 must be in [-540, 540)");
     lon1 = m.AngNormalize(lon1);
     if (!k || k < 4) k = 24;
     if (!ord) ord = 1;

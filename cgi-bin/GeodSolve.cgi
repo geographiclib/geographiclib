@@ -3,7 +3,7 @@
 # GeodSolve.cgi
 # cgi script for geodesic calculations
 #
-# Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 
@@ -21,6 +21,7 @@ else
     FLATTENING=`lookupellipsoid "$QUERY_STRING" flattening`
     FORMAT=`lookupkey "$QUERY_STRING" format`
     AZF2=`lookupkey "$QUERY_STRING" azi2`
+    UNROLL=`lookupkey "$QUERY_STRING" unroll`
     PREC=`lookupkey "$QUERY_STRING" prec`
     TYPE=`lookupkey "$QUERY_STRING" type`
 fi
@@ -28,6 +29,7 @@ test "$RADIUS" || RADIUS=$DEFAULTRADIUS
 test "$FLATTENING" || FLATTENING=$DEFAULTFLATTENING
 test "$FORMAT" || FORMAT=g
 test "$AZF2" || AZF2=f
+test "$UNROLL" || UNROLL=r
 test "$PREC" || PREC=3
 test "$TYPE" || TYPE=I
 AZIX="fazi2"
@@ -39,15 +41,17 @@ if test "$RADIUS" = "$DEFAULTRADIUS" -a \
 fi
 
 INPUTENC=`encodevalue "$INPUT"`
-COMMAND="GeodSolve -E -f"
 EXECDIR=../bin
+COMMAND="GeodSolve -E -f"
+VERSION=`$EXECDIR/$COMMAND --version | cut -f4 -d" "`
 F='<font color="blue">'
 G='</font>'
-test $TYPE = D || COMMAND="$COMMAND -i"
+test $TYPE = I && COMMAND="$COMMAND -i"
 COMMANDX="$COMMAND -p 1"
-test $FORMAT = g || COMMAND="$COMMAND -$FORMAT"
-test $AZF2 = f || COMMAND="$COMMAND -$AZF2"
-test $PREC = 3 || COMMAND="$COMMAND -p $PREC"
+test $FORMAT = d && COMMAND="$COMMAND -$FORMAT"
+test $AZF2   = b && COMMAND="$COMMAND -$AZF2"
+test $UNROLL = u && COMMAND="$COMMAND -$UNROLL"
+test $PREC   = 3 || COMMAND="$COMMAND -p $PREC"
 STATUS=
 POSITION1=
 POSITION2=
@@ -181,11 +185,10 @@ while read c desc; do
     test "$c" = "$FORMAT" && CHECKED=CHECKED
     echo "<td>&nbsp;<label for='$c'>"
     echo "<input type='radio' name='format' value='$c' id='$c' $CHECKED>"
-    echo "$desc</label>"
-    echo "</td>"
+    echo "$desc</label></td>"
 done <<EOF
-g Decimal degrees
-d Degrees minutes seconds
+g decimal degrees
+d degrees minutes seconds
 EOF
 cat <<EOF
           </tr>
@@ -201,8 +204,25 @@ while read c desc; do
     echo "<input type='radio' name='azi2' value='$c' id='$c' $CHECKED>"
     echo "$desc</label></td>"
 done <<EOF
-f Forward azimuth
-b Back azimuth
+f forward azimuth
+b back azimuth
+EOF
+cat <<EOF
+          </tr>
+          <tr>
+            <td>
+              Longitude:
+            </td>
+EOF
+while read c desc; do
+    CHECKED=
+    test "$c" = "$UNROLL" && CHECKED=CHECKED
+    echo "<td>&nbsp;<label for='$c'>"
+    echo "<input type='radio' name='unroll' value='$c' id='$c' $CHECKED>"
+    echo "$desc</label></td>"
+done <<EOF
+r reduce to [&minus;180&deg;,180&deg;)
+u unroll
 EOF
 cat <<EOF
           </tr>
@@ -273,7 +293,7 @@ cat <<EOF
     <hr>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">
-        GeodSolve</a>
+        GeodSolve (version $VERSION)</a>
       performs geodesic calculations for an arbitrary ellipsoid of
       revolution.  The shortest path between two points on the ellipsoid
       at (<em>lat1</em>, <em>lon1</em>) and (<em>lat2</em>,
@@ -294,7 +314,7 @@ cat <<EOF
         16d47' -3d1'
         W3&deg;0'34" N16&deg;46'33"
         3:0:34W 16:46:33N</pre>
-      Azimuths are given in degress clockwise from north.  The
+      Azimuths are given in degrees clockwise from north.  The
       distance <em>s12</em> is in meters.
     </p>
     <p>
@@ -324,13 +344,7 @@ cat <<EOF
     <p>
       GeodSolve is accurate to about 15&nbsp;nanometers (for the WGS84
       ellipsoid) and gives solutions for the inverse problem for any
-      pair of points.  Many other geodesic calculators (based on
-      Vincenty's method) fail for some inputs; for example, the
-      <a href="http://www.ngs.noaa.gov/">
-        NGS</a> online
-      <a href="http://www.ngs.noaa.gov/TOOLS/Inv_Fwd/Inv_Fwd.html">
-        inverse geodesic calculator</a>
-      sometimes fails to terminate.
+      pair of points.
     </p>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">
@@ -363,7 +377,7 @@ cat <<EOF
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2014-12-06)</address>
+      (2015-05-14)</address>
     <a href="http://geographiclib.sourceforge.net">
       GeographicLib home
     </a>

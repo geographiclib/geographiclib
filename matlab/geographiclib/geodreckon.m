@@ -20,7 +20,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %
 %   flags (default 0) is a combination of 2 flags:
 %      arcmode = bitand(flags, 1)
-%      long_nowrap = bitand(flags, 2)
+%      long_unroll = bitand(flags, 2)
 %
 %   If arcmode is unset (the default), then, in the long form of the call,
 %   the input argument s12_a12 is the distance s12 (in meters) and the
@@ -30,23 +30,21 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %   auxiliary sphere a12 (in degrees) and the corresponding distance s12 is
 %   returned in the final output variable a12_s12 (in meters).
 %
-%   If long_nowrap is unset (the default), then the value lon2 is in the
-%   range [-180,180).  If long_nowrap is set, the quantity lon2 - lon1
-%   indicates how many times the geodesic wrapped around the ellipsoid.
-%   Because lon2 might be outside the normal allowed range for longitudes,
-%   [-540, 540), be sure to normalize it with rem(lon2, 360) before using
-%   it in other calls.
+%   If long_unroll is unset (the default), then the value lon2 is in the
+%   range [-180,180).  If long_unroll is set, the longitude is "unrolled"
+%   so that the quantity lon2 - lon1 indicates how many times and in what
+%   sense the geodesic encircles the ellipsoid.
 %
 %   The two optional arguments, ellipsoid and flags, may be given in any
 %   order and either or both may be omitted.
 %
 %   When given a combination of scalar and array inputs, GEODRECKON behaves
 %   as though the inputs were expanded to match the size of the arrays.
-%   However, in the particular case where LAT1 and AZI1 are the same for
+%   However, in the particular case where lat1 and azi1 are the same for
 %   all the input points, they should be specified as scalars since this
 %   will considerably speed up the calculations.  (In particular a series
 %   of points along a single geodesic is efficiently computed by specifying
-%   an array for S12 only.)
+%   an array for s12 only.)
 %
 %   This is an implementation of the algorithm given in
 %
@@ -71,7 +69,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.44.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
@@ -110,7 +108,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
     error('flags must be a scalar')
   end
   arcmode = bitand(flags, 1);
-  long_nowrap = bitand(flags, 2);
+  long_unroll = bitand(flags, 2);
 
   degree = pi/180;
   tiny = sqrt(realmin);
@@ -130,17 +128,14 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   A3x = A3coeff(n);
   C3x = C3coeff(n);
 
-  lat1 = lat1(:);
+  lat1 = AngRound(lat1(:));
   lon1 = lon1(:);
-  azi1 = AngRound(AngNormalize(azi1(:)));
+  azi1 = AngRound(azi1(:));
   s12_a12 = s12_a12(:);
 
-  alp1 = azi1 * degree;
-  salp1 = sin(alp1); salp1(azi1 == -180) = 0;
-  calp1 = cos(alp1); calp1(abs(azi1) == 90) = 0;
-  phi = lat1 * degree;
-  sbet1 = f1 * sin(phi);
-  cbet1 = cos(phi); cbet1(abs(lat1) == 90) = tiny;
+  [salp1, calp1] = sincosdx(azi1);
+  [sbet1, cbet1] = sincosdx(lat1);
+  sbet1 = f1 * sbet1; cbet1 = max(tiny, cbet1);
   [sbet1, cbet1] = norm2(sbet1, cbet1);
   dn1 = sqrt(1 + ep2 * sbet1.^2);
 
@@ -164,12 +159,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 
   if arcmode
     sig12 = s12_a12 * degree;
-    ssig12 = sin(sig12);
-    csig12 = cos(sig12);
-    s12a = abs(s12_a12);
-    s12a = s12a - 180 * floor(s12a / 180);
-    ssig12(s12a == 0) = 0;
-    csig12(s12a == 90) = 0;
+    [ssig12, csig12] = sincosdx(s12_a12);
   else
     tau12 = s12_a12 ./ (b * (1 + A1m1));
     s = sin(tau12); c = cos(tau12);
@@ -201,10 +191,11 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   cbet2(cbet2 == 0) = tiny;
   somg2 = salp0 .* ssig2; comg2 = csig2;
   salp2 = salp0; calp2 = calp0 .* csig2;
-  if long_nowrap
-    omg12 = sig12 ...
-            - (atan2(ssig2, csig2) - atan2(ssig1, csig1)) ...
-            + (atan2(somg2, comg2) - atan2(somg1, comg1));
+  if long_unroll
+    E = 1 - 2*(salp0 < 0);
+    omg12 = E .* (sig12 ...
+                  - (atan2(   ssig2, csig2) - atan2(   ssig1, csig1)) ...
+                  + (atan2(E.*somg2, comg2) - atan2(E.*somg1, comg1)));
   else
     omg12 = atan2(somg2 .* comg1 - comg2 .* somg1, ...
                   comg2 .* comg1 + somg2 .* somg1);
@@ -212,14 +203,14 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   lam12 = omg12 + ...
           A3c .* ( sig12 + (SinCosSeries(true, ssig2, csig2, C3a) - B31));
   lon12 = lam12 / degree;
-  if long_nowrap
+  if long_unroll
     lon2 = lon1 + lon12;
   else
-    lon12 = AngNormalize2(lon12);
+    lon12 = AngNormalize(lon12);
     lon2 = AngNormalize(AngNormalize(lon1) + lon12);
   end
-  lat2 = atan2(sbet2, f1 * cbet2) / degree;
-  azi2 = 0 - atan2(-salp2, calp2) / degree;
+  lat2 = atan2dx(sbet2, f1 * cbet2);
+  azi2 = atan2dx(salp2, calp2);
   if arcmode
     a12_s12 = b * ((1 + A1m1) .* sig12 + AB1);
   else

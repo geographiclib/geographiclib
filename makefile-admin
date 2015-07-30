@@ -7,6 +7,7 @@ USER=karney
 STAGE=$(HOME)/web
 WEBSTAGE=$(STAGE)/geographiclib-web
 DATASTAGE=$(STAGE)/geographiclib-files
+SCRIPTSTAGE=$(WEBSTAGE)/htdocs/scripts
 
 geodesic-papers/biblio.html: geodesic-biblio.txt biblio.sh
 	sh biblio.sh $< > $@
@@ -19,14 +20,14 @@ pack-js: doc/scripts/geographiclib.js
 
 distrib-html: geodesic-papers/biblio.html
 	rsync -av --exclude .svn --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded index.html tm.html tm-addenda.html tm-grid.kmz geod.html geod-addenda.html bessel-errata.html jacobi-errata.html *-figs.pdf geodesic-papers $(WEBSTAGE)/htdocs/
-	rsync --delete -a -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
+	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-doc:
-	rsync --delete -a -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
+	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-files:
 	rsync -av --exclude .svn --exclude '.git*' --delete distrib testdata geoids-distrib gravity-distrib magnetic-distrib $(DATASTAGE)/
-	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --exclude .svn --exclude '.git*' --delete --delete-excluded -a -e ssh $(DATASTAGE)/{distrib,testdata,{geoids,gravity,magnetic}-distrib} $(USER)@frs.sourceforge.net:/home/frs/project/geographiclib/
+	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --exclude .svn --exclude '.git*' --delete --delete-excluded -av -e ssh $(DATASTAGE)/{distrib,testdata,{geoids,gravity,magnetic}-distrib} $(USER)@frs.sourceforge.net:/home/frs/project/geographiclib/
 
 distrib-cgi:
 	for f in GeoConvert GeodSolve GeoidEval Planimeter RhumbSolve printlogs Geod; do \
@@ -35,15 +36,39 @@ distrib-cgi:
 	for f in utils; do \
 	  a=cgi-bin/$$f.sh; b=$(WEBSTAGE)/cgi-bin/$$f.sh; \
 	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
-	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --delete --delete-excluded -a -e ssh $(WEBSTAGE)/{cgi-bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
+	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/{cgi-bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-js: doc/scripts/geographiclib.js
+	v=`grep ' Version: ' doc/scripts/geographiclib.js |cut -f4 -d' '`; \
 	for f in geod-calc.html geod-google{,-instructions}.html \
 	geographiclib.js \
 	GeographicLib/{Math,Geodesic{,Line},PolygonArea,DMS,Interface}.js; do \
-	  a=doc/scripts/$$f; b=$(WEBSTAGE)/htdocs/scripts/$$f; \
-	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
-	rsync --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded -a -e ssh $(WEBSTAGE)/htdocs/scripts $(USER),geographiclib@web.sourceforge.net:./htdocs/
+	  a=doc/scripts/$$f; b=$(SCRIPTSTAGE)/test/$$f; \
+	  test $$f = geographiclib.js && \
+	  b=$(SCRIPTSTAGE)/test/geographiclib-$$v.js; \
+	  sed s%/scripts/geographic%/scripts/test/geographic% $$a > $$b.new; \
+	  if cmp $$b.new $$b > /dev/null 2>&1; then \
+	  rm $$b.new; else mv $$b.new $$b; fi; \
+        done; \
+	rm -f $(SCRIPTSTAGE)/test/geographiclib.js; \
+	ln -s geographiclib-$$v.js $(SCRIPTSTAGE)/test/geographiclib.js; \
+	ls $(SCRIPTSTAGE)/test/geographiclib-*.js | head --lines -1 | \
+	xargs -r rm -f
+	rsync --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded -av -e ssh $(SCRIPTSTAGE)/test/ $(USER),geographiclib@web.sourceforge.net:./htdocs/scripts/test/
+
+install-js:
+	find $(SCRIPTSTAGE)/test -type f -printf '%P\n' | \
+	while read f; do \
+	  a=$(SCRIPTSTAGE)/test/$$f; \
+	  b=$(SCRIPTSTAGE)/$$f; \
+	  sed s%/scripts/test/geographic%/scripts/geographic% $$a > $$b.new; \
+	  if cmp $$b.new $$b > /dev/null 2>&2; then \
+	  rm $$b.new; else mv $$b.new $$b; fi; \
+	done
+	t=`find $(SCRIPTSTAGE)/test/geographiclib.js -printf '%l'`; \
+	rm -f $(SCRIPTSTAGE)/geographiclib.js; \
+	ln -s $$t $(SCRIPTSTAGE)/geographiclib.js
+	rsync --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded -av -e ssh $(SCRIPTSTAGE)/ $(USER),geographiclib@web.sourceforge.net:./htdocs/scripts/
 
 distrib-python: python/setup.py
 	cd python && python setup.py sdist --formats=gztar,zip upload

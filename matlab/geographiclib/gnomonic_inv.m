@@ -9,7 +9,7 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
 %   arguments can be scalars or arrays of equal size.  The ellipsoid vector
 %   is of the form [a, e], where a is the equatorial radius in meters, e is
 %   the eccentricity.  If ellipsoid is omitted, the WGS84 ellipsoid (more
-%   precisely, the value returned by defaultellipsoid) is used.  geodproj
+%   precisely, the value returned by defaultellipsoid) is used.  projdoc
 %   defines the projection and gives the restrictions on the allowed ranges
 %   of the arguments.  The forward projection is given by gnomonic_fwd.
 %
@@ -41,11 +41,11 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
 %   which also includes methods for solving the "intersection" and
 %   "interception" problems using the gnomonic projection.
 %
-%   See also GEODPROJ, GNOMONIC_FWD, GEODRECKON, DEFAULTELLIPSOID.
+%   See also PROJDOC, GNOMONIC_FWD, GEODRECKON, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.42.
+% This file was distributed with GeographicLib 1.44.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -62,7 +62,7 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
   eps1 = a * 0.01 * sqrt(eps);
 
   lat0 = lat0 + Z; lon0 = lon0 + Z; x = x + Z; y = y + Z;
-  azi0 = atan2(x, y) / (pi/180);
+  azi0 = atan2dx(x, y);
   rho = hypot(x, y);
   s = a * atan(rho / a);
   little = rho <= a;
@@ -83,10 +83,10 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
   end
   c = ~trip;
   if any(c)
-    lat(c) = NaN;
-    lon(c) = NaN;
-    azi(c) = NaN;
-    M(c) = NaN;
+    lat(c) = nan;
+    lon(c) = nan;
+    azi(c) = nan;
+    M(c) = nan;
   end
   rk = M;
 end

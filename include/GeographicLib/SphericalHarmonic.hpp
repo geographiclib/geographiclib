@@ -14,7 +14,6 @@
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/SphericalEngine.hpp>
 #include <GeographicLib/CircularEngine.hpp>
-#include <GeographicLib/Geocentric.hpp>
 
 namespace GeographicLib {
 
@@ -45,18 +44,23 @@ namespace GeographicLib {
    * implementation.
    *
    * References:
-   * - C. W. Clenshaw, A note on the summation of Chebyshev series,
+   * - C. W. Clenshaw,
+   *   <a href="https://dx.doi.org/10.1090/S0025-5718-1955-0071856-0">
+   *   A note on the summation of Chebyshev series</a>,
    *   %Math. Tables Aids Comput. 9(51), 118--120 (1955).
    * - R. E. Deakin, Derivatives of the earth's potentials, Geomatics
    *   Research Australasia 68, 31--60, (June 1998).
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San
    *   Francisco, 1967).  (See Sec. 1-14, for a definition of Pbar.)
-   * - S. A. Holmes and W. E. Featherstone, A unified approach to the Clenshaw
-   *   summation and the recursive computation of very high degree and order
-   *   normalised associated Legendre functions, J. Geodesy 76(5),
-   *   279--299 (2002).
-   * - C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw
-   *   summation, Boll. Geod. Sci. Aff. 41(4), 349--375 (1982).
+   * - S. A. Holmes and W. E. Featherstone,
+   *   <a href="https://dx.doi.org/10.1007/s00190-002-0216-2">
+   *   A unified approach to the Clenshaw summation and the recursive
+   *   computation of very high degree and order normalised associated Legendre
+   *   functions</a>, J. Geodesy 76(5), 279--299 (2002).
+   * - C. C. Tscherning and K. Poder,
+   *   <a href="http://cct.gfy.ku.dk/publ_cct/cct80.pdf">
+   *   Some geodetic applications of Clenshaw summation</a>,
+   *   Boll. Geod. Sci. Aff. 41(4), 349--375 (1982).
    *
    * Example of use:
    * \include example-SphericalHarmonic.cpp
@@ -135,8 +139,8 @@ namespace GeographicLib {
      * @param[in] a the reference radius appearing in the definition of the
      *   sum.
      * @param[in] norm the normalization for the associated Legendre
-     *   polynomials, either SphericalHarmonic::full (the default) or
-     *   SphericalHarmonic::schmidt.
+     *   polynomials, either SphericalHarmonic::FULL (the default) or
+     *   SphericalHarmonic::SCHMIDT.
      * @exception GeographicErr if \e N does not satisfy \e N &ge; &minus;1.
      * @exception GeographicErr if \e C or \e S is not big enough to hold the
      *   coefficients.
@@ -285,8 +289,9 @@ namespace GeographicLib {
      * @return the CircularEngine object.
      *
      * SphericalHarmonic::operator()() exchanges the order of the sums in the
-     * definition, i.e., &sum;<sub>n = 0..N</sub> &sum;<sub>m = 0..n</sub>
-     * becomes &sum;<sub>m = 0..N</sub> &sum;<sub>n = m..N</sub>.
+     * definition, i.e., &sum;<sub><i>n</i> = 0..<i>N</i></sub>
+     * &sum;<sub><i>m</i> = 0..<i>n</i></sub> becomes &sum;<sub><i>m</i> =
+     * 0..<i>N</i></sub> &sum;<sub><i>n</i> = <i>m</i>..<i>N</i></sub>.
      * SphericalHarmonic::Circle performs the inner sum over degree \e n (which
      * entails about <i>N</i><sup>2</sup> operations).  Calling
      * CircularEngine::operator()() on the returned object performs the outer

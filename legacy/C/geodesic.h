@@ -108,12 +108,12 @@
  * twice about restructuring the internals of the C code since this may make
  * porting fixes from the C++ code more difficult.
  *
- * Copyright (c) Charles Karney (2012-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * This library was distributed with
- * <a href="../index.html">GeographicLib</a> 1.42.
+ * <a href="../index.html">GeographicLib</a> 1.44.
  **********************************************************************/
 
 #if !defined(GEODESIC_H)
@@ -128,7 +128,7 @@
  * The minor version of the geodesic library.  (This tracks the version of
  * GeographicLib.)
  **********************************************************************/
-#define GEODESIC_VERSION_MINOR 42
+#define GEODESIC_VERSION_MINOR 44
 /**
  * The patch level of the geodesic library.  (This tracks the version of
  * GeographicLib.)
@@ -237,8 +237,7 @@ extern "C" {
    *   geod_genposition().
    *
    * \e g must have been initialized with a call to geod_init().  \e lat1
-   * should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e azi1
-   * should be in the range [&minus;540&deg;, 540&deg;).
+   * should be in the range [&minus;90&deg;, 90&deg;].
    *
    * The geod_mask values are [see geod_mask()]:
    * - \e caps |= GEOD_LATITUDE for the latitude \e lat2; this is
@@ -278,8 +277,7 @@ extern "C" {
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
    *
    * \e g must have been initialized with a call to geod_init().  \e lat1
-   * should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e azi1
-   * should be in the range [&minus;540&deg;, 540&deg;).  The values of \e lon2
+   * should be in the range [&minus;90&deg;, 90&deg;].  The values of \e lon2
    * and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;).  Any of
    * the "return" arguments \e plat2, etc., may be replaced by 0, if you do not
    * need some quantities computed.
@@ -318,11 +316,10 @@ extern "C" {
    * @param[out] pazi1 pointer to the azimuth at point 1 (degrees).
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
    *
-   * \e g must have been initialized with a call to geod_init().  \e lat1
-   * and \e lat2 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and
-   * \e lon2 should be in the range [&minus;540&deg;, 540&deg;).  The values of
+   * \e g must have been initialized with a call to geod_init().  \e lat1 and
+   * \e lat2 should be in the range [&minus;90&deg;, 90&deg;];.  The values of
    * \e azi1 and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;).
-   * Any of the "return" arguments \e ps12, etc., may be replaced by 0, if you
+   * Any of the "return" arguments, \e ps12, etc., may be replaced by 0, if you
    * do not need some quantities computed.
    *
    * If either point is at a pole, the azimuth is defined by keeping the
@@ -406,8 +403,7 @@ extern "C" {
    * @param[in] azi1 azimuth at point 1 (degrees).
    * @param[in] flags bitor'ed combination of geod_flags(); \e flags &
    *   GEOD_ARCMODE determines the meaning of \e s12_a12 and \e flags &
-   *   GEOD_LONG_NOWRAP prevents the value of \e lon2 being wrapped into
-   *   the range [&minus;180&deg;, 180&deg;).
+   *   GEOD_LONG_UNROLL "unrolls" \e lon2.
    * @param[in] s12_a12 if \e flags & GEOD_ARCMODE is 0, this is the distance
    *   between point 1 and point 2 (meters); otherwise it is the arc length
    *   between point 1 and point 2 (degrees); it can be negative.
@@ -426,18 +422,14 @@ extern "C" {
    * @return \e a12 arc length of between point 1 and point 2 (degrees).
    *
    * \e g must have been initialized with a call to geod_init().  \e lat1
-   * should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e azi1
-   * should be in the range [&minus;540&deg;, 540&deg;).  The function
-   * value \e a12 equals \e s12_a12 if \e flags & GEOD_ARCMODE.  Any of the
-   * "return" arguments \e plat2, etc., may be replaced by 0, if you do not
-   * need some quantities computed.
+   * should be in the range [&minus;90&deg;, 90&deg;];.  The function value \e
+   * a12 equals \e s12_a12 if \e flags & GEOD_ARCMODE.  Any of the "return"
+   * arguments, \e plat2, etc., may be replaced by 0, if you do not need some
+   * quantities computed.
    *
-   * With \e flags & GEOD_LONG_NOWRAP bit set, the quantity \e lon2 &minus;
-   * \e lon1 indicates how many times the geodesic wrapped around the
-   * ellipsoid.  Because \e lon2 might be outside the normal allowed range
-   * for longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it,
-   * e.g., with fmod(\e lon2, 360.0) before using it in subsequent
-   * calculations
+   * With \e flags & GEOD_LONG_UNROLL bit set, the longitude is "unrolled" so
+   * that the quantity \e lon2 &minus; \e lon1 indicates how many times and in
+   * what sense the geodesic encircles the ellipsoid.
    **********************************************************************/
   double geod_gendirect(const struct geod_geodesic* g,
                         double lat1, double lon1, double azi1,
@@ -468,9 +460,8 @@ extern "C" {
    *   (meters<sup>2</sup>).
    * @return \e a12 arc length of between point 1 and point 2 (degrees).
    *
-   * \e g must have been initialized with a call to geod_init().  \e lat1
-   * and \e lat2 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and
-   * \e lon2 should be in the range [&minus;540&deg;, 540&deg;).  Any of the
+   * \e g must have been initialized with a call to geod_init().  \e lat1 and
+   * \e lat2 should be in the range [&minus;90&deg;, 90&deg;].  Any of the
    * "return" arguments \e ps12, etc., may be replaced by 0, if you do not need
    * some quantities computed.
    **********************************************************************/
@@ -487,10 +478,8 @@ extern "C" {
    *   geodesic line.
    * @param[in] flags bitor'ed combination of geod_flags(); \e flags &
    *   GEOD_ARCMODE determines the meaning of \e s12_a12 and \e flags &
-   *   GEOD_LONG_NOWRAP prevents the value of \e lon2 being wrapped into
-   *   the range [&minus;180&deg;, 180&deg;); if \e flags & GEOD_ARCMODE is
-   *   0, then \e l must have been initialized with \e caps |=
-   *   GEOD_DISTANCE_IN.
+   *   GEOD_LONG_UNROLL "unrolls" \e lon2; if \e flags & GEOD_ARCMODE is 0,
+   *   then \e l must have been initialized with \e caps |= GEOD_DISTANCE_IN.
    * @param[in] s12_a12 if \e flags & GEOD_ARCMODE is 0, this is the
    *   distance between point 1 and point 2 (meters); otherwise it is the
    *   arc length between point 1 and point 2 (degrees); it can be
@@ -522,12 +511,9 @@ extern "C" {
    * computed.  Requesting a value which \e l is not capable of computing
    * is not an error; the corresponding argument will not be altered.
    *
-   * With \e flags & GEOD_LONG_NOWRAP bit set, the quantity \e lon2 &minus;
-   * \e lon1 indicates how many times the geodesic wrapped around the
-   * ellipsoid.  Because \e lon2 might be outside the normal allowed range
-   * for longitudes, [&minus;540&deg;, 540&deg;), be sure to normalize it,
-   * e.g., with fmod(\e lon2, 360.0) before using it in subsequent
-   * calculations
+   * With \e flags & GEOD_LONG_UNROLL bit set, the longitude is "unrolled" so
+   * that the quantity \e lon2 &minus; \e lon1 indicates how many times and in
+   * what sense the geodesic encircles the ellipsoid.
    *
    * Example, compute way points between JFK and Singapore Changi Airport
    * using geod_genposition().  In this example, the points are evenly space in
@@ -591,8 +577,7 @@ extern "C" {
    * \e g and \e p must have been initialized with calls to geod_init() and
    * geod_polygon_init(), respectively.  The same \e g must be used for all the
    * points and edges in a polygon.  \e lat should be in the range
-   * [&minus;90&deg;, 90&deg;] and \e lon should be in the range
-   * [&minus;540&deg;, 540&deg;).
+   * [&minus;90&deg;, 90&deg;].
    *
    * An example of the use of this function is given in the documentation for
    * geod_polygon_compute().
@@ -613,10 +598,9 @@ extern "C" {
    *
    * \e g and \e p must have been initialized with calls to geod_init() and
    * geod_polygon_init(), respectively.  The same \e g must be used for all the
-   * points and edges in a polygon.  \e azi should be in the range
-   * [&minus;540&deg;, 540&deg;).  This does nothing if no points have been
-   * added yet.  The \e lat and \e lon fields of \e p give the location of
-   * the new vertex.
+   * points and edges in a polygon.  This does nothing if no points have been
+   * added yet.  The \e lat and \e lon fields of \e p give the location of the
+   * new vertex.
    **********************************************************************/
   void geod_polygon_addedge(const struct geod_geodesic* g,
                             struct geod_polygon* p,
@@ -692,8 +676,7 @@ extern "C" {
    *   polyline (meters).
    * @return the number of points.
    *
-   * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
-   * lon should be in the range [&minus;540&deg;, 540&deg;).
+   * \e lat should be in the range [&minus;90&deg;, 90&deg;].
    **********************************************************************/
   unsigned geod_polygon_testpoint(const struct geod_geodesic* g,
                                   const struct geod_polygon* p,
@@ -725,8 +708,6 @@ extern "C" {
    * @param[out] pP pointer to the perimeter of the polygon or length of the
    *   polyline (meters).
    * @return the number of points.
-   *
-   * \e azi should be in the range [&minus;540&deg;, 540&deg;).
    **********************************************************************/
   unsigned geod_polygon_testedge(const struct geod_geodesic* g,
                                  const struct geod_polygon* p,
@@ -745,8 +726,7 @@ extern "C" {
    * @param[out] pA pointer to the area of the polygon (meters<sup>2</sup>).
    * @param[out] pP pointer to the perimeter of the polygon (meters).
    *
-   * \e lats should be in the range [&minus;90&deg;, 90&deg;]; \e lons should
-   * be in the range [&minus;540&deg;, 540&deg;).
+   * \e lats should be in the range [&minus;90&deg;, 90&deg;].
    *
    * Only simple polygons (which are not self-intersecting) are allowed.
    * There's no need to "close" the polygon by repeating the first vertex.  The
@@ -794,7 +774,10 @@ extern "C" {
   enum geod_flags {
     GEOD_NOFLAGS      = 0U,     /**< No flags */
     GEOD_ARCMODE      = 1U<<0,  /**< Position given in terms of arc distance */
-    GEOD_LONG_NOWRAP  = 1U<<15  /**< Don't wrap longitude */
+    GEOD_LONG_UNROLL  = 1U<<15, /**< Unroll the longitude */
+    /**< @cond SKIP */
+    GEOD_LONG_NOWRAP  = GEOD_LONG_UNROLL /* For backward compatibility only */
+    /**< @endcond */
   };
 
 #if defined(__cplusplus)
