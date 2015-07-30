@@ -97,8 +97,9 @@ namespace GeographicLib {
      * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
     static Math::real LatitudeResolution(int len) {
+      using std::pow;
       len = (std::max)(0, (std::min)(int(maxlen_), len));
-      return 180 * std::pow(0.5, 5 * len / 2);
+      return 180 * pow(real(0.5), 5 * len / 2);
     }
 
     /**
@@ -110,8 +111,9 @@ namespace GeographicLib {
      * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
     static Math::real LongitudeResolution(int len) {
+      using std::pow;
       len = (std::max)(0, (std::min)(int(maxlen_), len));
-      return 360 * std::pow(0.5, 5 * len - 5 * len / 2);
+      return 360 * pow(real(0.5), 5 * len - 5 * len / 2);
     }
 
     /**
@@ -124,8 +126,7 @@ namespace GeographicLib {
      * The returned length is in the range [0, 18].
      **********************************************************************/
     static int GeohashLength(real res) {
-      using std::abs;
-      res = abs(res);
+      using std::abs; res = abs(res);
       for (int len = 0; len < maxlen_; ++len)
         if (LongitudeResolution(len) <= res)
           return len;

@@ -238,7 +238,8 @@ test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 # Make the compiler more picky.
 if (MSVC)
   string (REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+  # Turn on parallel builds for Visual Studio
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MP")
 else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
   # check for C++11 support.  This flag is *not* propagated to clients

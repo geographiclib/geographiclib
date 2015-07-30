@@ -1225,7 +1225,14 @@ These examples include a "stripped" version of the JavaScript code, \code
 <script type="text/javascript"
         src="http://geographiclib.sf.net/scripts/geographiclib.js">
 </script> \endcode
-which loads faster.
+which loads faster.  This file gives you the latest version of the
+library.  If you need to use a specific version of this file, include a
+version number as in \code
+<script type="text/javascript"
+        src="http://geographiclib.sf.net/scripts/geographiclib-1.43.js">
+</script> \endcode
+You can visit http://geographiclib.sf.net/scripts/ to see which versions
+are available.
 
 \section python Python implementation
 

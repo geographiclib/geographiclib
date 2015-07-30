@@ -51,7 +51,9 @@ distrib-js: doc/scripts/geographiclib.js
 	  rm $$b.new; else mv $$b.new $$b; fi; \
         done; \
 	rm -f $(SCRIPTSTAGE)/test/geographiclib.js; \
-	ln -s geographiclib-$$v.js $(SCRIPTSTAGE)/test/geographiclib.js
+	ln -s geographiclib-$$v.js $(SCRIPTSTAGE)/test/geographiclib.js; \
+	ls $(SCRIPTSTAGE)/test/geographiclib-*.js | head --lines -1 | \
+	xargs -r rm -f
 	rsync --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded -av -e ssh $(SCRIPTSTAGE)/test/ $(USER),geographiclib@web.sourceforge.net:./htdocs/scripts/test/
 
 install-js:
@@ -66,7 +68,7 @@ install-js:
 	t=`find $(SCRIPTSTAGE)/test/geographiclib.js -printf '%l'`; \
 	rm -f $(SCRIPTSTAGE)/geographiclib.js; \
 	ln -s $$t $(SCRIPTSTAGE)/geographiclib.js
-#	rsync --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded -av -e ssh $(SCRIPTSTAGE)/ $(USER),geographiclib@web.sourceforge.net:./htdocs/scripts/
+	rsync --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded -av -e ssh $(SCRIPTSTAGE)/ $(USER),geographiclib@web.sourceforge.net:./htdocs/scripts/
 
 distrib-python: python/setup.py
 	cd python && python setup.py sdist --formats=gztar,zip upload

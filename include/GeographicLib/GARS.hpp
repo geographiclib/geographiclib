@@ -90,8 +90,8 @@ namespace GeographicLib {
      *   \e gars, otherwise return the south-west corner.
      * @exception GeographicErr if \e gars is illegal.
      *
-     * The case of the letters in \e gars is ignored.  \e prec gives the
-     * precision of \e gars as follows:
+     * The case of the letters in \e gars is ignored.  \e prec is in the range
+     * [0, 2] and gives the precision of \e gars as follows:
      * - \e prec = 0 (min), 30' precision, e.g., 006AG;
      * - \e prec = 1, 15' precision, e.g., 006AG3;
      * - \e prec = 2 (max), 5' precision, e.g., 006AG39.
@@ -101,6 +101,36 @@ namespace GeographicLib {
      **********************************************************************/
     static void Reverse(const std::string& gars, real& lat, real& lon,
                         int& prec, bool centerp = true);
+
+    /**
+     * The angular resolution of a GARS.
+     *
+     * @param[in] prec the precision of the GARS.
+     * @return the latitude-longitude resolution (degrees).
+     *
+     * Internally, \e prec is first put in the range [0, 2].
+     **********************************************************************/
+    static Math::real Resolution(int prec) {
+      return 1/real(prec <= 0 ? mult1_ : (prec == 1 ? mult1_ * mult2_ :
+                                          mult1_ * mult2_ * mult3_));
+    }
+
+    /**
+     * The GARS precision required to meet a given geographic resolution.
+     *
+     * @param[in] res the minimum of resolution in latitude and longitude
+     *   (degrees).
+     * @return GARS precision.
+     *
+     * The returned length is in the range [0, 2].
+     **********************************************************************/
+    static int Precision(real res) {
+      using std::abs; res = abs(res);
+      for (int prec = 0; prec < maxprec_; ++prec)
+        if (Resolution(prec) <= res)
+          return prec;
+      return maxprec_;
+    }
 
   };
 
