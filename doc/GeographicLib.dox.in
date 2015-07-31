@@ -7001,13 +7001,6 @@ git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
    (released 2015-mm-dd)
-   - BUG FIXES:
-     - NormalGravity now works properly for a sphere (\e omega = \e f =
-       \e J2 = 0), instead of returning NaNs (problem found by htallon);
-     - CassiniSoldner::Forward and cassini_fwd.m now returns the correct
-       azimuth for points at the pole;
-     - Illegal letter combinations are now correctly detected by
-       mgrs_inv.m.
    - Various changes to improve accuracy, e.g., by minimizing round-off
      errors:
      - Add Math::sincosd, Math::sind, Math::cosd which take their
@@ -7034,6 +7027,10 @@ git repository for GeographicLib</a>.
        with one with smaller truncation errors.
      - Geodesic::Inverse sets \e s12 to zero for coincident points at
        pole (instead of returning a tiny quantity).
+   - All the \ref utilities now accept the -p option to set the
+     precision and the -w option to swap the latitude-longitude order.
+   - Add classes for GARS, the Global Area Reference System, and for
+     Georef, the World Geographic Reference System.
    - Changes to DMS::Decode and DMS.js:
      - tighten up the rules:
        - 30:70.0 and 30:60 are illegal (minutes and second must be
@@ -7066,12 +7063,15 @@ git repository for GeographicLib</a>.
      - Fortran: add geover subroutine to return version numbers;
      - Maxima: geodesic.mac defines geod_version;
      - CGI scripts: these report the version numbers of the utilities.
-   - All the \ref utilities now accept the -p option to set the
-     precision and the -w option to swap the latitude-longitude order.
+   - BUG FIXES:
+     - NormalGravity now works properly for a sphere (\e omega = \e f =
+       \e J2 = 0), instead of returning NaNs (problem found by htallon);
+     - CassiniSoldner::Forward and cassini_fwd.m now returns the correct
+       azimuth for points at the pole;
+     - Illegal letter combinations are now correctly detected by
+       mgrs_inv.m.
    - mgrs_fwd.m now treats treats prec > 11 in mgrs_fwd.m as prec = 11.
    - Add Accumulator::operator*(T y).
-   - Add GARS class for the Global Area Reference System.
-   - Add Georef class for the World Geographic Reference System.
    - Geohash uses "invalid" instead of "nan" when the latitude or
      longitude is a nan.
 
