@@ -32,10 +32,10 @@ namespace NETGeographicLib
    * Visual Basic Example:
    * \include example-GARS.vb
    **********************************************************************/
-  public ref class GARS 
+  public ref class GARS
   {
     // all memebers of this class are static so the constructor is hidden.
-	  GARS() {}
+      GARS() {}
 
   public:
 
@@ -56,7 +56,7 @@ namespace NETGeographicLib
      *
      * If \e lat or \e lon is NaN, then \e gars is set to "INVALID".
      **********************************************************************/
-    static void Forward(double lat, double lon, int prec, 
+    static void Forward(double lat, double lon, int prec,
         [System::Runtime::InteropServices::Out] System::String^% gars);
 
     /**
@@ -79,10 +79,10 @@ namespace NETGeographicLib
      * If the first 3 characters of \e gars are "INV", then \e lat and \e lon
      * are set to NaN and \e prec is unchanged.
      **********************************************************************/
-    static void Reverse( System::String^ gars, 
-        [System::Runtime::InteropServices::Out] double% lat, 
+    static void Reverse( System::String^ gars,
+        [System::Runtime::InteropServices::Out] double% lat,
         [System::Runtime::InteropServices::Out] double% lon,
-        [System::Runtime::InteropServices::Out] int% prec, 
+        [System::Runtime::InteropServices::Out] int% prec,
         bool centerp);
 
     /**

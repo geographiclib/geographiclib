@@ -19,15 +19,15 @@ using namespace NETGeographicLib;
 void GARS::Forward(double lat, double lon, int prec, System::String^% gars)
 {
     try
-	{
+    {
         std::string l;
         GeographicLib::GARS::Forward( lat, lon, prec, l );
         gars = gcnew System::String( l.c_str() );
-	}
+    }
     catch ( const std::exception& xcpt )
     {
         throw gcnew GeographicErr( xcpt.what() );
-	}
+    }
 }
 
 //*****************************************************************************

@@ -270,10 +270,10 @@ namespace NETGeographicLib
      **********************************************************************/
     public ref class Utility
     {
-	private:
+    private:
         // hide the constructor since all members of this class are static
-		Utility() {}
-	public:
+        Utility() {}
+    public:
     /**
      * Convert a string representing a date to a fractional year.
      *
@@ -287,5 +287,5 @@ namespace NETGeographicLib
      * number with 2010-01-01 giving 2010.0 and 2012-07-03 giving 2012.5.
      **********************************************************************/
         static double FractionalYear( System::String^ s );
-	};
+    };
 }  // namespace NETGeographicLib

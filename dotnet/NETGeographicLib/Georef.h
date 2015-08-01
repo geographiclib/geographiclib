@@ -30,11 +30,11 @@ namespace NETGeographicLib
    * Visual Basic Example:
    * \include example-Georef.vb
    **********************************************************************/
-  public ref class Georef 
+  public ref class Georef
   {
   private:
-	  // hide the constructor since all members of this class are static.
-	  Georef() {}
+      // hide the constructor since all members of this class are static.
+      Georef() {}
 
   public:
     /**
@@ -60,7 +60,7 @@ namespace NETGeographicLib
      *
      * If \e lat or \e lon is NaN, then \e georef is set to "INVALID".
      **********************************************************************/
-    static void Forward(double lat, double lon, int prec, 
+    static void Forward(double lat, double lon, int prec,
         [System::Runtime::InteropServices::Out] System::String^% georef);
 
     /**
@@ -89,10 +89,10 @@ namespace NETGeographicLib
      * If the first 3 characters of \e georef are "INV", then \e lat and \e lon
      * are set to NaN and \e prec is unchanged.
      **********************************************************************/
-    static void Reverse( System::String^ georef, 
-        [System::Runtime::InteropServices::Out] double% lat, 
+    static void Reverse( System::String^ georef,
+        [System::Runtime::InteropServices::Out] double% lat,
         [System::Runtime::InteropServices::Out] double% lon,
-        [System::Runtime::InteropServices::Out] int% prec, 
+        [System::Runtime::InteropServices::Out] int% prec,
         bool centerp );
 
     /**

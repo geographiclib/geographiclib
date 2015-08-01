@@ -52,6 +52,6 @@ int VersionInfo::Patch()
 //*****************************************************************************
 double Utility::FractionalYear( System::String^ s )
 {
-    return GeographicLib::Utility::fractionalyear<double>( 
+    return GeographicLib::Utility::fractionalyear<double>(
         StringConvert::ManagedToUnmanaged( s ) );
 }

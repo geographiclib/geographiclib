@@ -19,15 +19,15 @@ using namespace NETGeographicLib;
 void Georef::Forward(double lat, double lon, int prec, System::String^% georef)
 {
     try
-	{
+    {
         std::string l;
         GeographicLib::Georef::Forward( lat, lon, prec, l );
         georef = gcnew System::String( l.c_str() );
-	}
+    }
     catch ( const std::exception& xcpt )
     {
         throw gcnew GeographicErr( xcpt.what() );
-	}
+    }
 }
 
 //*****************************************************************************
