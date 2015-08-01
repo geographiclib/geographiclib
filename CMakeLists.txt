@@ -273,10 +273,12 @@ check_cxx_source_compiles (
   "#include <cmath>
 int main() {
   int q;
-  return int(std::hypot(3.0, 4.0) + std::expm1(0.5) + std::log1p(2.0) +
-             std::asinh(10.0) + std::atanh(0.8) + std::cbrt(8.0)) +
-             std::fma(1.0, 2.0, 3.0) + std::isfinite(4.0) + std::isnan(0.0) +
-             std::remquo(100.0, 90.0, &q) + std::remainder(100.0, 90.0);
+  return int(std::hypot(3.0, 4.0) + std::expm1(0.5) +
+             std::log1p(2.0) + std::asinh(10.0) +
+             std::atanh(0.8) + std::cbrt(8.0) +
+             std::fma(1.0, 2.0, 3.0) + std::remquo(100.0, 90.0, &q) +
+             std::remainder(100.0, 90.0)) +
+             std::isfinite(4.0) + std::isnan(0.0);
 }\n" CXX11_MATH)
 if (CXX11_MATH)
   add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)
@@ -406,6 +408,7 @@ configure_file (
 # The documentation depends on doxygen.
 if (GEOGRAPHICLIB_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
+  # Version 1.8.7 or later needed for &hellip;
   find_package (Doxygen 1.8.7)
 endif ()
 
