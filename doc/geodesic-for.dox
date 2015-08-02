@@ -80,15 +80,16 @@ The corresponding source files
  - ngscommon.for
  .
 are derived from the NGS source files
- - forward.for, version 2.0, dated 2002-10-28
- - inverse.for, version 3.0, dated 2012-11-27
+ - forward.for, version 2.0, dated 2002-08-21
+ - inverse.for, version 3.0, dated 2012-11-04
  .
 and are therefore in the public domain.
 
 \section library Using the library
 
-- Optionally put @verbatim
-  include "geodesic.inc" @endverbatim
+- Optionally put @code{.for}
+  include "geodesic.inc"
+  @endcode
   in declaration section of your subroutines.
 - make calls to the geodesic routines from your code.  The interface to
   the library is documented in geodesic.for.
@@ -112,7 +113,7 @@ and are therefore in the public domain.
 - <a href="../C/index.html">The C library</a>.
 - <a href="../java/index.html">The Java library</a>.
 - Documentation on the C++ classes: GeographicLib::Geodesic,
-  GeographicLib::GeodesicLine, GeographicLib::PolygonArea.
+  GeographicLib::GeodesicLine, GeographicLib::PolygonAreaT.
 - The section in the %GeographicLib documentation on geodesics: \ref
   geodesic.
 - <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">

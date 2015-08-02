@@ -1260,12 +1260,12 @@ path with, for example \verbatim
   python setup.py install
 \endverbatim
 (this will require root privileges).  Or else you can set the path
-within python using \code
+within python using \code{.py}
 >>> import sys
 >>> sys.path.append("/usr/local/lib/python/site-packages")
 \endcode
 
-An example of using this interface is \code
+An example of using this interface is \code{.py}
 >>> from geographiclib.geodesic import Geodesic
 >>> # The geodesic inverse problem
 ... Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
@@ -1285,7 +1285,7 @@ An example of using this interface is \code
 
 Another illustrative exercise is finding the point midway between JFK
 Airport to Singapore Changi Airport
-\code
+\code{.py}
 from geographiclib.geodesic import Geodesic
 
 # Coordinates of airports
@@ -2500,7 +2500,7 @@ a regular grid and writes on the result in a
 <a href="http://vdatum.noaa.gov/dev/gtx_info.html#dev_gtx_binary">.gtx</a>
 file.  On an 8-processor Intel 2.66 GHz machine using OpenMP
 (-DHAVE_OPENMP=1), it takes about 40 minutes of elapsed time to compute
-the geoid height for EGM2008 on a 1' gride.  (Without these
+the geoid height for EGM2008 on a 1' grid.  (Without these
 optimizations, the computation would have taken about 200 days!)
 \include GeoidToGTX.cpp
 
@@ -6930,7 +6930,7 @@ The following steps needed to be taken
        // use
        const Geodesic& geod = Geodesic::WGS84(); \endcode
        This is the so-called
-       <a href="http://www.parashift.com/c++-faq/static-init-order-on-first-use.html">
+       <a href="https://isocpp.org/wiki/faq/ctors#static-init-order-on-first-use">
        "construct on first use idiom"</a>.  This is the most disruptive
        of the changes since it requires a different calling convention
        in user code.  However the old static initializations were
@@ -7001,13 +7001,6 @@ git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
    (released 2015-mm-dd)
-   - BUG FIXES:
-     - NormalGravity now works properly for a sphere (\e omega = \e f =
-       \e J2 = 0), instead of returning NaNs (problem found by htallon);
-     - CassiniSoldner::Forward and cassini_fwd.m now returns the correct
-       azimuth for points at the pole;
-     - Illegal letter combinations are now correctly detected by
-       mgrs_inv.m.
    - Various changes to improve accuracy, e.g., by minimizing round-off
      errors:
      - Add Math::sincosd, Math::sind, Math::cosd which take their
@@ -7034,6 +7027,10 @@ git repository for GeographicLib</a>.
        with one with smaller truncation errors.
      - Geodesic::Inverse sets \e s12 to zero for coincident points at
        pole (instead of returning a tiny quantity).
+   - All the \ref utilities now accept the -p option to set the
+     precision and the -w option to swap the latitude-longitude order.
+   - Add classes for GARS, the Global Area Reference System, and for
+     Georef, the World Geographic Reference System.
    - Changes to DMS::Decode and DMS.js:
      - tighten up the rules:
        - 30:70.0 and 30:60 are illegal (minutes and second must be
@@ -7050,7 +7047,8 @@ git repository for GeographicLib</a>.
      - hide the documentation of the computation of the gradient of the
        geoid height (now deprecated) in the Geoid class;
      - warn about the possible misinterpretation of 7.0E+1 by
-       DMS::Decode.
+       DMS::Decode;
+     - require Doxygen 1.8.7 or later.
    - More systematic treatment of version numbers:
      - Python: \__init\__.py defines \__version\__ and \__version_info\__;
      - JavaScript:
@@ -7066,12 +7064,15 @@ git repository for GeographicLib</a>.
      - Fortran: add geover subroutine to return version numbers;
      - Maxima: geodesic.mac defines geod_version;
      - CGI scripts: these report the version numbers of the utilities.
-   - All the \ref utilities now accept the -p option to set the
-     precision and the -w option to swap the latitude-longitude order.
+   - BUG FIXES:
+     - NormalGravity now works properly for a sphere (\e omega = \e f =
+       \e J2 = 0), instead of returning NaNs (problem found by htallon);
+     - CassiniSoldner::Forward and cassini_fwd.m now returns the correct
+       azimuth for points at the pole;
+     - Illegal letter combinations are now correctly detected by
+       mgrs_inv.m.
    - mgrs_fwd.m now treats treats prec > 11 in mgrs_fwd.m as prec = 11.
    - Add Accumulator::operator*(T y).
-   - Add GARS class for the Global Area Reference System.
-   - Add Georef class for the World Geographic Reference System.
    - Geohash uses "invalid" instead of "nan" when the latitude or
      longitude is a nan.
 

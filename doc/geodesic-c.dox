@@ -83,27 +83,31 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 
 \section library Using the library
 
-- Put @verbatim
-  #include "geodesic.h" @endverbatim
+- Put @code{.c}
+  #include "geodesic.h"
+  @endcode
   in your source code.  If you are using the library via proj.4, change
-  this to @verbatim
-  #include <geodesic.h> @endverbatim
+  this to @code{.c}
+  #include <geodesic.h>
+  @endcode
 - Make calls to the geodesic routines from your code.  The interface to
   the library is documented in geodesic.h.
 - Compile and link as described above.
 - If linking with proj.4, you might want to check that the version of
-  proj.4 contains the geodesic routines.  You can do this with @verbatim
+  proj.4 contains the geodesic routines.  You can do this with @code{.c}
   #include <proj_api.h>
   #if PJ_VERSION >= 490
   #include <geodesic.h>
   #endif
-  ... @endverbatim
+  ...
+  @endcode
 
 - You can check the version of the geodesic library with, e.g.,
-  @verbatim
+  @code{.c}
   #if GEODESIC_VERSION >= GEODESIC_VERSION_NUM(1,40,0)
   ...
-  #endif @endverbatim
+  #endif
+  @endcode
 
 \section external External links
 
@@ -123,7 +127,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 - <a href="../java/index.html">The Java library</a>.
 - <a href="../Fortran/index.html">The Fortran library</a>.
 - Documentation on the C++ classes: GeographicLib::Geodesic,
-  GeographicLib::GeodesicLine, GeographicLib::PolygonArea.
+  GeographicLib::GeodesicLine, GeographicLib::PolygonAreaT.
 - The section in the %GeographicLib documentation on geodesics: \ref
   geodesic.
 - <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">

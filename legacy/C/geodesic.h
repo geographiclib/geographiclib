@@ -147,11 +147,11 @@
  * where MM is the major version, mmmm is the minor version, and pp is the
  * patch level.  Users should not rely on this particular packing of the
  * components of the version number.  Instead they should use a test such as
- * \code
+ * @code{.c}
    #if GEODESIC_VERSION >= GEODESIC_VERSION_NUM(1,40,0)
    ...
    #endif
- * \endcode
+ * @endcode
  **********************************************************************/
 #define GEODESIC_VERSION \
  GEODESIC_VERSION_NUM(GEODESIC_VERSION_MAJOR, \
@@ -290,7 +290,7 @@ extern "C" {
    * longitudinal extent must not exceed of 180&deg;.)
    *
    * Example, determine the point 10000 km NE of JFK:
-   @code
+   @code{.c}
    struct geod_geodesic g;
    double lat, lon;
    geod_init(&g, 6378137, 1/298.257223563);
@@ -332,7 +332,7 @@ extern "C" {
    * is used to refine the solution.
    *
    * Example, determine the distance between JFK and Singapore Changi Airport:
-   @code
+   @code{.c}
    struct geod_geodesic g;
    double s12;
    geod_init(&g, 6378137, 1/298.257223563);
@@ -364,7 +364,7 @@ extern "C" {
    *
    * Example, compute way points between JFK and Singapore Changi Airport
    * the "obvious" way using geod_direct():
-   @code
+   @code{.c}
    struct geod_geodesic g;
    double s12, azi1, lat[101],lon[101];
    int i;
@@ -376,7 +376,7 @@ extern "C" {
    }
    @endcode
    * A faster way using geod_position():
-   @code
+   @code{.c}
    struct geod_geodesic g;
    struct geod_geodesicline l;
    double s12, azi1, lat[101],lon[101];
@@ -520,7 +520,7 @@ extern "C" {
    * arc length (and so only approximately equally space in distance).  This is
    * faster than using geod_position() would be appropriate if drawing the path
    * on a map.
-   @code
+   @code{.c}
    struct geod_geodesic g;
    struct geod_geodesicline l;
    double a12, azi1, lat[101], lon[101];
@@ -632,7 +632,7 @@ extern "C" {
    *
    * Example, compute the perimeter and area of the geodesic triangle with
    * vertices (0&deg;N,0&deg;E), (0&deg;N,90&deg;E), (90&deg;N,0&deg;E).
-   @code
+   @code{.c}
    double A, P;
    int n;
    struct geod_geodesic g;
@@ -734,7 +734,7 @@ extern "C" {
    * positive.
    *
    * Example, compute the area of Antarctica:
-   @code
+   @code{.c}
    double
      lats[] = {-72.9, -71.9, -74.9, -74.3, -77.5, -77.4, -71.7, -65.9, -65.7,
                -66.6, -66.9, -69.8, -70.0, -71.0, -77.3, -77.9, -74.7},
