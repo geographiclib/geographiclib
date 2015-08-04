@@ -5230,7 +5230,7 @@ where
 \mathsf F_k(x,y)=
 \begin{bmatrix}
      \cos kd \sin kp\\
-\frac{\sin kd}d \cos kp
+     {\displaystyle\frac{\sin kd}d} \cos kp
 \end{bmatrix},
 \f]
 \f$d=\frac12(x-y)\f$, \f$p=\frac12(x+y)\f$, and, in the limit
@@ -5246,7 +5246,7 @@ where
 \f[
  \mathsf A(x,y) = 2\begin{bmatrix}
   \cos d \cos p & -d\sin d \sin p \\
-- \frac{\sin d}d \sin p &   \cos d \cos p
+- {\displaystyle\frac{\sin d}d} \sin p &   \cos d \cos p
 \end{bmatrix},
 \f]
 and \f$\lim_{d\rightarrow0}(\sin d)/d = 1\f$.  The standard Clenshaw
@@ -5284,7 +5284,8 @@ where
 \mathsf F_k(x,y)=
 \begin{bmatrix}
      \cos\bigl( (k+k_0)d \bigr) \sin \bigl( (k+k_0)p + x_0 \bigr)\\
-     \frac{\sin\bigl( (k+k_0)d \bigr)}d \cos \bigl( (k+k_0)p + x_0 \bigr)
+     {\displaystyle\frac{\sin\bigl( (k+k_0)d \bigr)}d}
+     \cos \bigl( (k+k_0)p + x_0 \bigr)
 \end{bmatrix}.
 \f]
 The recursion for \f$\mathsf B_k\f$ is identical to the previous case;
@@ -6211,7 +6212,7 @@ relations between &phi;, &beta;, &theta;, and &mu;.  In addition, the
 expansions converge for <i>b</i>/<i>a</i> &isin; (0,&nbsp;&infin;).
 (Some authors use the eccentricity as the expansion parameter, but the
 resulting series only converge for <i>b</i>/<i>a</i> &isin;
-(0,&nbsp;&radic;2).  These expansions were obtained with the the maxima
+(0,&nbsp;&radic;2).)  These expansions were obtained with the the maxima
 code, <a href="auxlat.mac">auxlat.mac</a>.
 
 Here are the relations between &phi;, &beta;, &theta;, and &mu; carried

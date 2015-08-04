@@ -378,6 +378,13 @@ cd $TEMP/relx/GeographicLib-$VERSION
 	    n=`tail -1 $f | wc -l`; test $n -eq 0 && echo $f || true
 	done
     echo
+    echo Files with extra newlines at end:
+    find . -type f |
+	egrep -v '/configure|/ltmain.sh|\.png|\.pdf|\.1\.html' |
+	while read f;do
+	    n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
+	done
+    echo
 ) > $TEMP/badfiles.txt
 cat $TEMP/badfiles.txt
 cat > $TEMP/tasks.txt <<EOF
