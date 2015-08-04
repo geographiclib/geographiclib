@@ -261,7 +261,6 @@ namespace NETGeographicLib
         };
     };
 
-
     /**
      * @brief Utility library.
      *
