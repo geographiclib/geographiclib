@@ -349,25 +349,37 @@ test "$CONFIG_VERSION"  = "$VERSION" || echo autoconf version number mismatch
 test "$CONFIG_VERSIONA" = "$VERSION" || echo autoconf version string mismatch
 
 cd $TEMP/relx/GeographicLib-$VERSION
-echo Files with trailing spaces:
-find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.pdf' |
-xargs grep -l ' $' || true
-echo
-echo Files with tabs:
-find . -type f |
-egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
-egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
-xargs grep -l  '	' || true
-echo
-echo Files with multiple newlines:
-find . -type f |
-egrep -v '/Makefile\.in|\.1\.html|\.png|\.pdf|/ltmain|/config|\.m4|Settings' |
-egrep -v '(Resources|Settings)\.Designer\.cs' |
-while read f;do
-    tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
-done
-echo
-
+(
+    echo Files with trailing spaces:
+    find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.pdf' |
+	while read f; do
+	    tr -d '\r' < $f | grep ' $' > /dev/null && echo $f || true
+	done
+    echo
+    echo Files with tabs:
+    find . -type f |
+	egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
+	egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
+	xargs grep -l  '	' || true
+    echo
+    echo Files with multiple newlines:
+    find . -type f |
+	egrep -v \
+	   '/Makefile\.in|\.1\.html|\.png|\.pdf|/ltmain|/config|\.m4|Settings' |
+	egrep -v '(Resources|Settings)\.Designer\.cs' |
+	while read f; do
+	    tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
+	done
+    echo
+    echo Files with no newline at end:
+    find . -type f |
+	egrep -v '\.png|\.pdf' |
+	while read f;do
+	    n=`tail -1 $f | wc -l`; test $n -eq 0 && echo $f || true
+	done
+    echo
+) > $TEMP/badfiles.txt
+cat $TEMP/badfiles.txt
 cat > $TEMP/tasks.txt <<EOF
 # deploy documentation
 test -d $WEBDIST/htdocs/$VERSION-pre &&

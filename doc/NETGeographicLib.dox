@@ -60,7 +60,10 @@ in the header files contain a section labeled "INTERFACE DIFFERENCES" that detai
 the differences between the NETGeographicLib interfaces and the GeographicLib
 interfaces.  The differences are summarized in the text that follows.
 
-Default values for function parameters are not supported in .NET.
+Default values for function parameters are not supported in .NET.  If
+the documentation refers to a default value for a parameter, it applies
+only to GeographicLib.  However, such a "default" value often provides a
+reasonable choice for this parameter.
 
 Several GeographicLib class functions accept or return a "capabilities mask" as
 an unsigned integer.  The NETGeographicLib classes accept and return the capabilities
