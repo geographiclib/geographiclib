@@ -87,6 +87,7 @@ mkdir $TEMP/gitr # For release branch
 (cd $TEMP/gitb; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
 cd $TEMP/gita/geographiclib
 sh autogen.sh
+make -f makefile-admin pack-js
 mkdir BUILD
 cd BUILD
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON ..

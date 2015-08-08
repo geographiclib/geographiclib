@@ -1297,7 +1297,7 @@ g = Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2)
 
 # Compute midpoint starting at 1
 h = Geodesic.WGS84.Direct(lat1, lon1, g['azi1'], g['s12']/2)
-print(h['lat2'], h['lon2']);
+print(h['lat2'], h['lon2'])
 \endcode
 
 (Note: The initial version of setup.py was provided by Andrew MacIntyre
