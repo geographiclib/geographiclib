@@ -121,13 +121,12 @@
     g.Geodesic.CheckPosition(lat2, lon2);
 
     var result = this.GenInverse(lat1, lon1, lat2, lon2, outmask);
-    lon2 = m.AngNormalize(lon2);
     if (outmask & g.LONG_UNROLL) {
       result.lon1 = lon1;
       result.lon2 = lon1 + m.AngDiff(lon1, lon2);
     } else {
       result.lon1 = m.AngNormalize(lon1);
-      result.lon2 = lon2;
+      result.lon2 = m.AngNormalize(lon2);
     }
     result.lat1 = lat1;
     result.lat2 = lat2;

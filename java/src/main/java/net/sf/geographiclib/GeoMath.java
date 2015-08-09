@@ -111,7 +111,7 @@ public class GeoMath {
   }
 
   public static Pair norm(double sinx, double cosx) {
-    double r = GeoMath.hypot(sinx, cosx);
+    double r = hypot(sinx, cosx);
     return new Pair(sinx/r, cosx/r);
   }
 
@@ -201,12 +201,11 @@ public class GeoMath {
    **********************************************************************/
   public static double AngDiff(double x, double y) {
     double d, t;
-    { Pair r = sum(-x, y); d = r.first; t = r.second; }
-    if ((d - 180.0) + t > 0.0) // y - x > 180
-      d -= 360.0;            // exact
-    else if ((d + 180.0) + t <= 0.0) // y - x <= -180
-      d += 360.0;            // exact
-    return d + t;
+    {
+      Pair r = sum(AngNormalize(x), AngNormalize(-y));
+      d = - AngNormalize(r.first); t = r.second;
+    }
+    return (d == 180 && t < 0 ? -180 : d) - t;
   }
 
   /**

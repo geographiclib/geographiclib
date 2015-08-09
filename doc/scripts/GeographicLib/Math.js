@@ -83,21 +83,11 @@ GeographicLib.Math.AngNormalize = function(x) {
 
 GeographicLib.Math.AngDiff = function(x, y) {
   // Compute y - x and reduce to [-180,180] accurately.
-  // This is the same logic as the Accumulator class uses.
   var
-  d = y - x,
-  yp = d + x,
-  xpp = yp - d;
-  yp -= y;
-  xpp -= x;
-  var t =  xpp - yp;
-  // y - x =       d      + t
-  //       = round(y - x) + t
-  if ((d - 180) + t > 0)        // y - x > 180
-    d -= 360;                   // exact
-  else if ((d + 180) + t <= 0)  // y - x <= -180
-    d += 360;                   // exact
-  return d + t;
+  r = m.sum(m.AngNormalize(x), m.AngNormalize(-y)),
+  d = - m.AngNormalize(r.s);
+  t = r.t;
+  return (d == 180 && t < 0 ? -180 : d) - t;
 };
 
 GeographicLib.Math.sincosd = function(x) {

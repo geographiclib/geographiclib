@@ -525,22 +525,25 @@ public class Geodesic {
                               double lat2, double lon2, int outmask) {
     outmask &= GeodesicMask.OUT_MASK;
     GeodesicData r = new GeodesicData();
-    lon1 = GeoMath.AngNormalize(lon1);
-    lon2 = GeoMath.AngNormalize(lon2);
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
     double lon12 = GeoMath.AngDiff(lon1, lon2);
+    // If really close to the equator, treat as on equator.
+    lat1 = GeoMath.AngRound(lat1);
+    lat2 = GeoMath.AngRound(lat2);
+    // Save input parameters post normalization
+    r.lat1 = lat1; r.lat2 = lat2;
+    if ((outmask & GeodesicMask.LONG_UNROLL) != 0) {
+      r.lon1 = lon1; r.lon2 = lon1 + lon12;
+    } else {
+      r.lon1 = GeoMath.AngNormalize(lon1); r.lon2 = GeoMath.AngNormalize(lon2);
+    }
     // If very close to being on the same half-meridian, then make it so.
     lon12 = GeoMath.AngRound(lon12);
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
-    // If really close to the equator, treat as on equator.
-    lat1 = GeoMath.AngRound(lat1);
-    lat2 = GeoMath.AngRound(lat2);
-    // Save input parameters post normalization
-    r.lat1 = lat1; r.lon1 = lon1; r.lat2 = lat2; r.lon2 = lon2;
     // Swap points so that point with higher (abs) latitude is point 1
     int swapp = Math.abs(lat1) >= Math.abs(lat2) ? 1 : -1;
     if (swapp < 0) {

@@ -256,11 +256,12 @@ int main(int argc, char* argv[]) {
             geods.GenInverse(lat1, lon1, lat2, lon2, outmask,
                              s12, azi1, azi2, m12, M12, M21, S12);
           if (full) {
-            lon2 = Math::AngNormalize(lon2);
             if (unroll)
               lon2 = lon1 + Math::AngDiff(lon1, lon2);
-            else
+            else {
               lon1 = Math::AngNormalize(lon1);
+              lon2 = Math::AngNormalize(lon2);
+            }
             *output << LatLonString(lat1, lon1, prec, dms, dmssep, longfirst)
                     << " ";
           }

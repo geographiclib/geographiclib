@@ -1025,8 +1025,8 @@ void Lengths(const struct geod_geodesic* g,
     /* Missing a factor of b */
     *ps12b = A1 * (sig12 + B1);
     if (redlp) {
-      real B2 = SinCosSeries(TRUE, ssig2, csig2, Ca, nC2) -
-        SinCosSeries(TRUE, ssig1, csig1, Ca, nC2);
+      real B2 = SinCosSeries(TRUE, ssig2, csig2, Cb, nC2) -
+        SinCosSeries(TRUE, ssig1, csig1, Cb, nC2);
       J12 = m0 * sig12 + (A1 * B1 - A2 * B2);
     }
   } else if (redlp) {
