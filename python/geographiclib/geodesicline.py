@@ -26,6 +26,26 @@ class GeodesicLine(object):
   """Points on a geodesic path"""
 
   def __init__(self, geod, lat1, lon1, azi1, caps = GeodesicCapability.ALL):
+    """Construct a GeodesicLine object describing a geodesic line
+    starting at (lat1, lon1) with azimuth azi1.  geod is a Geodesic
+    object (which embodies the ellipsoid parameters).  caps is caps is
+    an or'ed combination of bit the following values indicating the
+    capabilities of the returned object
+
+      Geodesic.LATITUDE
+      Geodesic.LONGITUDE
+      Geodesic.AZIMUTH
+      Geodesic.DISTANCE
+      Geodesic.REDUCEDLENGTH
+      Geodesic.GEODESICSCALE
+      Geodesic.AREA
+      Geodesic.DISTANCE_IN
+      Geodesic.ALL (all of the above)
+
+    The default value of caps is ALL.
+
+    """
+
     from geographiclib.geodesic import Geodesic
     self._a = geod._a
     self._f = geod._f
@@ -306,6 +326,8 @@ class GeodesicLine(object):
       Geodesic.ALL (all of the above)
       Geodesic.LONG_UNROLL
 
+    The default value of outmask is LATITUDE | LONGITUDE | AZIMUTH.
+
     """
 
     from geographiclib.geodesic import Geodesic
@@ -362,6 +384,9 @@ class GeodesicLine(object):
       Geodesic.AREA
       Geodesic.ALL (all of the above)
       Geodesic.LONG_UNROLL
+
+    The default value of outmask is LATITUDE | LONGITUDE | AZIMUTH |
+    DISTANCE.
 
     """
 

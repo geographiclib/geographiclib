@@ -7028,8 +7028,11 @@ git repository for GeographicLib</a>.
        with one with smaller truncation errors.
      - Geodesic::Inverse sets \e s12 to zero for coincident points at
        pole (instead of returning a tiny quantity).
-   - All the \ref utilities now accept the -p option to set the
-     precision and the -w option to swap the latitude-longitude order.
+   - All the \ref utilities accept the -w option to swap the
+     latitude-longitude order on input and output (and where appropriate
+     on the command-line arguments).  CartConvert now accepts the -p
+     option to set the precision; now all of the utilities except
+     GeoidEval accept -p.
    - Add classes for GARS, the Global Area Reference System, and for
      Georef, the World Geographic Reference System.
    - Changes to DMS::Decode and DMS.js:
@@ -7049,6 +7052,9 @@ git repository for GeographicLib</a>.
        geoid height (now deprecated) in the Geoid class;
      - warn about the possible misinterpretation of 7.0E+1 by
        DMS::Decode;
+     - \e swaplatlong optional argument of DMS::DecodeLatLong and
+       various functions in the GeoCoords class is now called \e
+       longfirst;
      - require Doxygen 1.8.7 or later.
    - More systematic treatment of version numbers:
      - Python: \__init\__.py defines \__version\__ and \__version_info\__;

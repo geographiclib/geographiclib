@@ -399,3 +399,11 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
   set_tests_properties (Gravity2 PROPERTIES PASS_REGULAR_EXPRESSION
     "7\\.404 -6\\.168 7\\.616")
 endif ()
+
+if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/grs80.egm)
+  # Check close to zero gravity in geostationary orbit
+  add_test (NAME Gravity3 COMMAND Gravity
+    -p 3 -n grs80 --input-string "0 123 35786e3")
+  set_tests_properties (Gravity3 PROPERTIES PASS_REGULAR_EXPRESSION
+    "^-?0\\.000 -?0\\.000 -?0.000")
+endif ()

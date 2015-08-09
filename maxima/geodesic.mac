@@ -227,12 +227,12 @@ sincosdx(x):=block([r,q:floor(x/90b0 + 0.5),s,c],
   elseif q = 2 then [0-s, 0-c]
   else              [0-c,   s])$
 
-atan2dx(T y, T x):=block([q,xx,yy,ang],
+atan2dx(y,x):=block([q,xx,yy,ang],
   if abs(y) > abs(x)
   then (xx:y, yy:x, q:2)
   else (xx:x, yy:y, q:0),
-  if x < 0
-  then (x:-x, q:q+1),
+  if xx < 0
+  then (xx:-xx, q:q+1),
   ang:atan2(yy, xx) / degree,
   if     q = 0 then ang
   elseif q = 1 then (if y > 0b0 then 180b0 else -180b0) - ang
@@ -471,7 +471,7 @@ geod_genposition(l, arcmode,  s12_a12):=block(
     somg2 : l[l_salp0] * ssig2, comg2 : csig2),  /* No need to normalize */
   /* tan(alp0) = cos(sig2)*tan(alp2) */
   salp2 : l[l_salp0], calp2 : l[l_calp0] * csig2, /* No need to normalize */
-  E = if l[l_salp0] < 0b0 then -1 else 1,
+  E : if l[l_salp0] < 0b0 then -1 else 1,
   if not exact then
   /* omg12 = omg2 - omg1 */
   omg12 : E * (sig12
@@ -594,11 +594,11 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
   made.  We make these transformations so that there are few cases to
   check, e.g., on verifying quadrants in atan2.  In addition, this
   enforces some symmetries in the results returned. */
-  block([t:sincosdx(lat1)], sbet1:t[1], cbet1:t[2]), sbet1 : f1 * sbet1,
+  block([t:sincosdx(lat1)], sbet1:t[1], cbet1:t[2]), sbet1 : g[g_f1] * sbet1,
   block([t:norm2(sbet1, cbet1)], sbet1:t[1], cbet1:t[2]),
   /* Ensure cbet1 = +epsilon at poles */
   cbet1 = max(tiny, cbet1),
-  block([t:sincosdx(lat2)], sbet2:t[1], cbet2:t[2]), sbet2 : f1 * sbet2,
+  block([t:sincosdx(lat2)], sbet2:t[1], cbet2:t[2]), sbet2 : g[g_f1] * sbet2,
   block([t:norm2(sbet2, cbet2)], sbet2:t[1], cbet2:t[2]),
   /* Ensure cbet2 = +epsilon at poles */
   cbet2 = max(tiny, cbet2),

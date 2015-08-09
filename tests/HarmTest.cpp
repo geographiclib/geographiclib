@@ -19,42 +19,44 @@
 #  pragma warning (disable: 4127 4701 4702)
 #endif
 
+using namespace std;
 using namespace GeographicLib;
+
 int main() {
   typedef GeographicLib::Math::real real;
   try {
     {
-      std::cout << std::fixed;
+      cout << fixed;
       // GravityModel egm("egm2008");
       // GravityModel egm("egm84-mod","/home/ckarney/geographiclib/gravity");
       GravityModel egm("egm2008");
       real lat, lon;
-      while (std::cin >> lat >> lon) {
+      while (cin >> lat >> lon) {
         real g = egm.GeoidHeight(lat, lon);
-        std::cout << std::setprecision(6)
-                  << std::setw(12) << lat
-                  << std::setw(12) << lon
-                  << std::setprecision(12) << std::setw(20)
-                  << g << "\n";
+        cout << setprecision(6)
+             << setw(12) << lat
+             << setw(12) << lon
+             << setprecision(12) << setw(20)
+             << g << "\n";
         /*
           real h;
-          std::cin >> h;
+          cin >> h;
         real Dg01, xi, eta;
         egm.Anomaly(lat, lon, h, Dg01, xi, eta);
         Dg01 *= 1e5;
         xi *= 3600;
         eta *= 3600;
-        std::cout << std::setprecision(12) << g << " " << Dg01 << " "
-                  << xi << " " << eta << "\n";
+        cout << setprecision(12) << g << " " << Dg01 << " "
+             << xi << " " << eta << "\n";
         */
       }
     return 0;
     }
     {
-      std::cout << std::fixed << std::setprecision(6);
+      cout << fixed << setprecision(6);
       GravityModel egm("egm2008");
       real lat, lon;
-      while (std::cin >> lat >> lon) {
+      while (cin >> lat >> lon) {
         real
           h = 0,
           gamma = egm.ReferenceEllipsoid().SurfaceGravity(lat),
@@ -63,88 +65,88 @@ int main() {
         real T = egm.Disturbance(lat, lon, h, deltax, deltay, deltaz);
         h = T/gamma;
         real h0 = h;
-        //        std::cout << "I " << U0 << " " << h << "\n";
+        //        cout << "I " << U0 << " " << h << "\n";
         for (int i = 0; i < 10; ++i) {
           real gx, gy, gz;
           real W = egm.Gravity(lat, lon, h, gx, gy, gz);
           h += (W-U0)/gamma;
           if (i == 9)
-          std::cout << i << " " << W << " " << h <<  " " << h - h0 << "\n";
+          cout << i << " " << W << " " << h <<  " " << h - h0 << "\n";
         }
       }
       return 0;
     }
     if (false) {
     {
-      std::cout << std::fixed;
+      cout << fixed;
       Geoid egm("egm2008-1");
       real lat0 = 89.234412, lon0 = -179.234257, dl = 180/1123, h = 0;
       for (int j = 0; j < 2000; ++j) {
         real lat = lat0 - j*dl/2;
         for (int i = 0; i < 4000; ++i) {
           real lon = lon0 + i * dl/2;
-        // std::cout << std::setprecision(3) << lon << " "
-        // << std::setprecision(12) << egm.GeoidHeight(lat,lon) << "\n";
+        // cout << setprecision(3) << lon << " "
+        // << setprecision(12) << egm.GeoidHeight(lat,lon) << "\n";
           h+=egm(lat,lon);
         }
       }
-      std::cout << std::setprecision(3) << 0/*lon*/ << " "
-                << std::setprecision(12) << h/*c.GeoidHeight(lon)*/ << "\n";
+      cout << setprecision(3) << 0/*lon*/ << " "
+           << setprecision(12) << h/*c.GeoidHeight(lon)*/ << "\n";
       return 0;
     }
 
     {
-      std::cout << std::fixed;
+      cout << fixed;
       GravityModel egm("egm2008","/home/ckarney/geographiclib/gravity");
       real lat = 33, lon0 = 44, dlon = 0.001;
       GravityCircle c = egm.Circle(lat, 0.0);
       for (int i = 0; i < 100000; ++i) {
         real lon = lon0 + i * dlon;
-        // std::cout << std::setprecision(3) << lon << " "
-        // << std::setprecision(12) << egm.GeoidHeight(lat,lon) << "\n";
-        std::cout << std::setprecision(3) << lon << " "
-                  << std::setprecision(12) << c.GeoidHeight(lon) << "\n";
+        // cout << setprecision(3) << lon << " "
+        // << setprecision(12) << egm.GeoidHeight(lat,lon) << "\n";
+        cout << setprecision(3) << lon << " "
+             << setprecision(12) << c.GeoidHeight(lon) << "\n";
       }
       return 0;
     }
     }
     if (true) {
-      std::cout << std::setprecision(8);
+      cout << setprecision(8);
       // MagneticModel mag("/scratch/WMM2010NewLinux/WMM2010ISO.COF");
       MagneticModel mag1("wmm2010");
       MagneticModel mag2("emm2010");
       MagneticModel mag3("igrf11");
       real lat, lon, h, t, bx, by, bz, bxt, byt, bzt;
-      while (std::cin >> t >> lat >> lon >> h) {
+      while (cin >> t >> lat >> lon >> h) {
         mag1(t, lat, lon, h, bx, by, bz, bxt, byt, bzt);
-        std::cout << by << " " << bx << " " << -bz << " "
-                  << byt << " " << bxt << " " << -bzt << "\n";
+        cout << by << " " << bx << " " << -bz << " "
+             << byt << " " << bxt << " " << -bzt << "\n";
         MagneticCircle circ1(mag1.Circle(t, lat, h));
         circ1(lon, bx, by, bz, bxt, byt, bzt);
-        std::cout << by << " " << bx << " " << -bz << " "
-                  << byt << " " << bxt << " " << -bzt << "\n";
+        cout << by << " " << bx << " " << -bz << " "
+             << byt << " " << bxt << " " << -bzt << "\n";
         /*
         mag2(t, lat, lon, h, bx, by, bz, bxt, byt, bzt);
-        std::cout << by << " " << bx << " " << -bz << " "
-                  << byt << " " << bxt << " " << -bzt << "\n";
+        cout << by << " " << bx << " " << -bz << " "
+             << byt << " " << bxt << " " << -bzt << "\n";
         MagneticCircle circ2(mag2.Circle(t, lat, h));
         circ2(lon, bx, by, bz, bxt, byt, bzt);
-        std::cout << by << " " << bx << " " << -bz << " "
-                  << byt << " " << bxt << " " << -bzt << "\n";
+        cout << by << " " << bx << " " << -bz << " "
+             << byt << " " << bxt << " " << -bzt << "\n";
         mag3(t, lat, lon, h, bx, by, bz, bxt, byt, bzt);
-        std::cout << by << " " << bx << " " << -bz << " "
-                  << byt << " " << bxt << " " << -bzt << "\n";
+        cout << by << " " << bx << " " << -bz << " "
+             << byt << " " << bxt << " " << -bzt << "\n";
         MagneticCircle circ3(mag3.Circle(t, lat, h));
         circ3(lon, bx, by, bz, bxt, byt, bzt);
-        std::cout << by << " " << bx << " " << -bz << " "
-                  << byt << " " << bxt << " " << -bzt << "\n";
+        cout << by << " " << bx << " " << -bz << " "
+             << byt << " " << bxt << " " << -bzt << "\n";
         */
       }
       return 0;
     }
     int type = 2;
     int N;
-    std::string name;
+    string name;
     switch (type) {
     case 0:
       N = 360;
@@ -161,24 +163,24 @@ int main() {
       break;
     }
     int k = ((N + 1) * (N + 2)) / 2;
-    std::vector<real> C(k);
-    std::vector<real> S(k);
+    vector<real> C(k);
+    vector<real> S(k);
     name = "/scratch/egm2008/harm/" + name;
     {
-      std::ifstream f(name.c_str(), std::ios::binary);
+      ifstream f(name.c_str(), ios::binary);
       if (!f.good())
         throw GeographicErr("Cannot open coefficient file");
       f.read(reinterpret_cast<char*>(&C[0]), k * sizeof(real));
       f.read(reinterpret_cast<char*>(&S[0]), k * sizeof(real));
     }
     //    for (int i = 0; i < k; ++i)
-    //      std::cout << i << " " << C[i] << " " << S[i] << "\n";
+    //      cout << i << " " << C[i] << " " << S[i] << "\n";
     real lat, lon;
-    std::cout << std::setprecision(17);
+    cout << setprecision(17);
     real a(0.9L), r(1.2L);
     SphericalHarmonic harm(C, S, N, a, SphericalHarmonic::FULL);
-    std::vector<real> Z;
-    while (std::cin >> lat >> lon) {
+    vector<real> Z;
+    while (cin >> lat >> lon) {
       real
         phi = Math::degree() * lat,
         lam = Math::degree() * lon,
@@ -195,17 +197,17 @@ int main() {
         v1 = harm(x, y, z);
       real
         v2 = harm(x, y, z, dx2, dy2, dz2);
-      std::cout << v1 << " " << v2 << "\n";
-      std::cout << dx1 << " " << dx2 << "\n"
-                << dy1 << " " << dy2 << "\n"
-                << dz1 << " " << dz2 << "\n";
+      cout << v1 << " " << v2 << "\n";
+      cout << dx1 << " " << dx2 << "\n"
+           << dy1 << " " << dy2 << "\n"
+           << dz1 << " " << dz2 << "\n";
       CircularEngine circ1 = harm.Circle(r * cos(phi), z, false);
       CircularEngine circ2 = harm.Circle(r * cos(phi), z, true);
       real v3, dx3, dy3, dz3;
       v3 = circ2(lon, dx3, dy3, dz3);
-      std::cout << v3 << " " << dx3 << " " << dy3 << " " << dz3 << "\n";
+      cout << v3 << " " << dx3 << " " << dy3 << " " << dz3 << "\n";
     }
-    std::cout << "start timing" << std::endl;
+    cout << "start timing" << endl;
     real phi, lam, sum, z, p, dx, dy, dz;
     lat = 33; phi = lat * Math::degree();
     z = r * sin(phi);
@@ -215,21 +217,21 @@ int main() {
       lam = (44 + 0.01*i) * Math::degree();
       sum += harm(p * cos(lam), p * sin(lam), z, dx, dy, dz);
     }
-    std::cout << "sum a " << sum << std::endl;
+    cout << "sum a " << sum << endl;
     CircularEngine circ(harm.Circle(p, z, true));
     sum = 0;
     for (int i = 0; i < 100000; ++i) {
       lon = (44 + 0.01*i);
       sum += circ(lon, dx, dy, dz);
     }
-    std::cout << "sum b " << sum << std::endl;
+    cout << "sum b " << sum << endl;
   }
-  catch (const std::exception& e) {
-    std::cerr << "Caught exception: " << e.what() << "\n";
+  catch (const exception& e) {
+    cerr << "Caught exception: " << e.what() << "\n";
     return 1;
   }
   catch (...) {
-    std::cerr << "Caught unknown exception\n";
+    cerr << "Caught unknown exception\n";
     return 1;
   }
   return 0;
