@@ -1,4 +1,3 @@
-// example-Georef.cpp : main project file.
 using namespace System;
 using namespace NETGeographicLib;
 

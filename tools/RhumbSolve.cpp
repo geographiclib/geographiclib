@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
         if (m + 3 >= argc) return usage(1, true);
         try {
           DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                            lat1, lon1);
+                            lat1, lon1, longfirst);
           azi12 = DMS::DecodeAzimuth(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {

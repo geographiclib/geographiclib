@@ -890,9 +890,10 @@ class Geodesic(object):
           tripb = (abs(salp1a - salp1) + (calp1a - calp1) < Geodesic.tolb_ or
                    abs(salp1 - salp1b) + (calp1 - calp1b) < Geodesic.tolb_)
 
-        lengthmask = (outmask &
+        lengthmask = (outmask |
                       (Geodesic.DISTANCE
-                       if (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE)
+                       if (outmask & (Geodesic.REDUCEDLENGTH |
+                                      Geodesic.GEODESICSCALE))
                        else Geodesic.EMPTY))
         s12x, m12x, dummy, M12, M21 = self.Lengths(
           eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
@@ -1034,6 +1035,8 @@ class Geodesic(object):
     lon1 indicates whether the geodesic is east going or west going.
     Otherwise lon1 and lon2 are both reduced to the range [-180,180).
 
+    The default value of outmask is DISTANCE | AZIMUTH.
+
     """
 
     lon1a = Geodesic.CheckPosition(lat1, lon1)
@@ -1104,6 +1107,8 @@ class Geodesic(object):
     how many times and in what sense the geodesic encircles the
     ellipsoid.
 
+    The default value of outmask is LATITUDE | LONGITUDE | AZIMUTH.
+
     """
 
     if outmask & Geodesic.LONG_UNROLL:
@@ -1162,6 +1167,9 @@ class Geodesic(object):
       Geodesic.ALL (all of the above)
       Geodesic.LONG_UNROLL
 
+    The default value of outmask is LATITUDE | LONGITUDE | AZIMUTH |
+    DISTANCE.
+
     """
 
     if outmask & Geodesic.LONG_UNROLL:
@@ -1189,7 +1197,7 @@ class Geodesic(object):
     """Return a GeodesicLine object to compute points along a geodesic
     starting at lat1, lon1, with azimuth azi1.  caps is an or'ed
     combination of bit the following values indicating the capabilities
-    of the return object
+    of the returned object
 
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
@@ -1200,6 +1208,8 @@ class Geodesic(object):
       Geodesic.AREA
       Geodesic.DISTANCE_IN
       Geodesic.ALL (all of the above)
+
+    The default value of caps is ALL.
 
     """
 

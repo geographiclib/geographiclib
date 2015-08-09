@@ -1,4 +1,4 @@
-﻿Imports NETGeographicLib
+Imports NETGeographicLib
 Module example_Georef
     Sub Main()
         Try
