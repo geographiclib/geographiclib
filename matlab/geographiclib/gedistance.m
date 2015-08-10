@@ -54,6 +54,8 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 
   areap = nargout >= 4;
 
+  lat1 = AngRound(lat1(:));
+  lat2 = AngRound(lat2(:));
   lon12 = AngRound(AngDiff(lon1(:), lon2(:)));
 
   [sbet1, cbet1] = sincosdx(lat1);

@@ -35,7 +35,7 @@ function [X, Y, Z, M] = geocent_fwd(lat, lon, h, ellipsoid)
   if length(ellipsoid(:)) ~= 2
     error('ellipsoid must be a vector of size 2')
   end
-  lat = lat + z; lon = lon + z; h = h + z;
+  lat = LatNormalize(lat) + z; lon = lon + z; h = h + z;
 
   a = ellipsoid(1);
   e2 = ellipsoid(2)^2;

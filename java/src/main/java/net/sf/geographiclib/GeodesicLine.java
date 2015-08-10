@@ -169,13 +169,15 @@ public class GeodesicLine {
     _caps = caps | GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
       GeodesicMask.LONG_UNROLL;
 
-    _lat1 = GeoMath.AngRound(lat1);
+    _lat1 = lat1;
     _lon1 = lon1;
+    _azi1 = GeoMath.AngNormalize(azi1);
     // Guard against underflow in salp0
-    _azi1 = GeoMath.AngRound(azi1);
-    { Pair p = GeoMath.sincosd(_azi1); _salp1 = p.first; _calp1 = p.second; }
+    { Pair p = GeoMath.sincosd(GeoMath.AngRound(_azi1));
+      _salp1 = p.first; _calp1 = p.second; }
     double cbet1, sbet1;
-    { Pair p = GeoMath.sincosd(lat1); sbet1 = _f1 * p.first; cbet1 = p.second; }
+    { Pair p = GeoMath.sincosd(GeoMath.AngRound(lat1));
+      sbet1 = _f1 * p.first; cbet1 = p.second; }
     // Ensure cbet1 = +epsilon at poles
     { Pair p = GeoMath.norm(sbet1, cbet1); sbet1 = p.first; cbet1 = p.second; }
     _dn1 = Math.sqrt(1 + g._ep2 * GeoMath.sq(sbet1));

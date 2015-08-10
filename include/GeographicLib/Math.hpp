@@ -472,6 +472,17 @@ namespace GeographicLib {
     { return AngNormalize<T>(x); }
 
     /**
+     * Normalize a latitude.
+     *
+     * @tparam T the type of the argument and returned value.
+     * @param[in] x the angle in degrees.
+     * @return x if it is in the range [&minus;90&deg;, 90&deg;], otherwise
+     *   return NaN.
+     **********************************************************************/
+    template<typename T> static inline T LatNormalize(T x)
+    { using std::abs; return abs(x) <= 90 ? x : NaN<T>(); }
+
+    /**
      * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]
      *
      * @tparam T the type of the arguments and returned value.

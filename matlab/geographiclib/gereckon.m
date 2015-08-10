@@ -54,7 +54,7 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
 
   areap = nargout >= 4;
 
-  lat1 = lat1(:);
+  lat1 = AngRound(lat1(:));
   lon1 = lon1(:);
   azi1 = AngRound(azi1(:));
   s12 = s12(:);
@@ -133,6 +133,7 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
       c2 = a^2;
     end
     S12 = c2 * atan2(sgam12, cgam12) + A4 .* (B42 - B41);
+    S12 = reshape(S12, S);
   end
 
 end

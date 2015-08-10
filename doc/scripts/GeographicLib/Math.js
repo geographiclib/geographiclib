@@ -84,8 +84,9 @@ GeographicLib.Math.AngNormalize = function(x) {
 GeographicLib.Math.AngDiff = function(x, y) {
   // Compute y - x and reduce to [-180,180] accurately.
   var
-  r = m.sum(m.AngNormalize(x), m.AngNormalize(-y)),
-  d = - m.AngNormalize(r.s);
+  r = GeographicLib.Math.sum(GeographicLib.Math.AngNormalize(x),
+                             GeographicLib.Math.AngNormalize(-y)),
+  d = - GeographicLib.Math.AngNormalize(r.s);
   t = r.t;
   return (d == 180 && t < 0 ? -180 : d) - t;
 };

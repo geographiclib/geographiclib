@@ -305,15 +305,16 @@ geod_lineinit(g,lat1,lon1,azi1):=block([a, f,
   c2 : g[g_c2],
   f1 : g[g_f1],
   e2 : g[g_e2],
-  lat1 : AngRound(lat1),
+  lat1 : lat1,
   /* If caps is 0 assume the standard direct calculation
   caps = (caps ? caps : GEOD_DISTANCE_IN | GEOD_LONGITUDE) |
   GEOD_LATITUDE | GEOD_AZIMUTH, Always allow latitude and azimuth
   Guard against underflow in salp0 */
-  azi1 : AngRound(azi1),
-  /* Don't normalizing lon1... */
-  block([t:sincosdx(azi1)], salp1:t[1], calp1:t[2]),
-  block([t:sincosdx(lat1)], sbet1:t[1], cbet1:t[2]), sbet1 : f1 * sbet1,
+  azi1 : AngNormalize(azi1),
+  /* Don't normalize lon1... */
+  block([t:sincosdx(AngRound(azi1))], salp1:t[1], calp1:t[2]),
+  block([t:sincosdx(AngRound(lat1))],
+        sbet1:t[1], cbet1:t[2]), sbet1 : f1 * sbet1,
   block([t:norm2(sbet1, cbet1)], sbet1:t[1], cbet1:t[2]),
   /* Ensure cbet1 = +epsilon at poles */
   cbet1 = max(tiny, cbet1),

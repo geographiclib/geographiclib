@@ -37,7 +37,6 @@ namespace GeographicLib {
       return;
     real dlon = Math::AngDiff(LongitudeOrigin(), lon);
     real sig12, s12, azi1, azi2;
-    lat = Math::AngRound(lat);
     sig12 = _earth.Inverse(lat, -abs(dlon), lat, abs(dlon), s12, azi1, azi2);
     sig12 *= real(0.5);
     s12 *= real(0.5);

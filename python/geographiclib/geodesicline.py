@@ -56,13 +56,13 @@ class GeodesicLine(object):
                   Geodesic.LONG_UNROLL)
 
     # Guard against underflow in salp0
-    self._lat1 = Math.AngRound(lat1)
+    self._lat1 = lat1
     self._lon1 = lon1
-    self._azi1 = Math.AngRound(azi1)
-    self._salp1, self._calp1 = Math.sincosd(azi1)
+    self._azi1 = Math.AngNormalize(azi1)
+    self._salp1, self._calp1 = Math.sincosd(Math.AngRound(azi1))
 
     # real cbet1, sbet1
-    sbet1, cbet1 = Math.sincosd(lat1); sbet1 *= self._f1
+    sbet1, cbet1 = Math.sincosd(Math.AngRound(lat1)); sbet1 *= self._f1
     # Ensure cbet1 = +epsilon at poles
     sbet1, cbet1 = Math.norm(sbet1, cbet1); cbet1 = max(Geodesic.tiny_, cbet1)
     self._dn1 = math.sqrt(1 + geod._ep2 * Math.sq(sbet1))

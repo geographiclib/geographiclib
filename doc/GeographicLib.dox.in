@@ -7028,6 +7028,12 @@ git repository for GeographicLib</a>.
        with one with smaller truncation errors.
      - Geodesic::Inverse sets \e s12 to zero for coincident points at
        pole (instead of returning a tiny quantity).
+     - Math::LatNormalize returns its argument if it is in
+       [&minus;90&deg;, 90&deg;]; if not, it returns NaN.
+     - Routines which don't check their arguments now interpret a
+       latitude outside the legal range of [&minus;90&deg;, 90&deg;] as
+       a NaN; such routines will return NaNs instead of finite but
+       incorrect results.
    - All the \ref utilities accept the -w option to swap the
      latitude-longitude order on input and output (and where appropriate
      on the command-line arguments).  CartConvert now accepts the -p

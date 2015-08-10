@@ -33,13 +33,13 @@
     this._caps = (!caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH)) |
       g.LONG_UNROLL;
 
-    this._lat1 = m.AngNormalize(lat1);
+    this._lat1 = lat1;
     this._lon1 = lon1;
     this._azi1 = m.AngNormalize(azi1);
     var t;
-    t = m.sincosd(azi1); this._salp1 = t.s; this._calp1 = t.c;
+    t = m.sincosd(m.AngRound(azi1)); this._salp1 = t.s; this._calp1 = t.c;
     var cbet1, sbet1;
-    t = m.sincosd(lat1); sbet1 = this._f1 * t.s; cbet1 = t.c;
+    t = m.sincosd(m.AngRound(lat1)); sbet1 = this._f1 * t.s; cbet1 = t.c;
     // norm(sbet1, cbet1);
     t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
     // Ensure cbet1 = +epsilon at poles

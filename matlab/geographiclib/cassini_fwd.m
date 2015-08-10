@@ -40,7 +40,6 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
 
   degree = pi/180;
   f = ecc2flat(ellipsoid(2));
-  lat = AngRound(lat);
   dlon = AngDiff(lon0, lon) + Z;
   [s12, azi1, azi2, ~, ~, ~, ~, sig12] = ...
       geoddistance(lat, -abs(dlon), lat, abs(dlon), ellipsoid);

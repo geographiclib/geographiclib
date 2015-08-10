@@ -128,7 +128,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   A3x = A3coeff(n);
   C3x = C3coeff(n);
 
-  lat1 = AngRound(lat1(:));
+  lat1 = AngRound(LatNormalize(lat1(:)));
   lon1 = lon1(:);
   azi1 = AngRound(azi1(:));
   s12_a12 = s12_a12(:);
@@ -216,6 +216,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   else
     a12_s12 = sig12 / degree;
   end
+  a12_s12 = reshape(a12_s12, S);
 
   if redlp || scalp
     A2m1 = A2m1f(epsi);
@@ -248,6 +249,8 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
                    ssig12 .* (csig1 .* ssig12 ./ (1 + csig12) + ssig1), ...
                    csig12 <= 0);
     calp12 = salp0.^2 + calp0.^2 .* csig1 .* csig2;
+    % Enlarge salp1, calp1 is case lat1 is an array and azi1 is a scalar
+    s = zeros(size(salp0)); salp1 = salp1 + s; calp1 = calp1 + s;
     s = calp0 == 0 | salp0 == 0;
     salp12(s) = salp2(s) .* calp1(s) - calp2(s) .* salp1(s);
     calp12(s) = calp2(s) .* calp1(s) + salp2(s) .* salp1(s);
@@ -259,6 +262,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
       c2 = a^2;
     end
     S12 = c2 * atan2(salp12, calp12) + A4 .* (B42 - B41);
+    S12 = reshape(S12, S);
   end
 
   lat2 = reshape(lat2, S);

@@ -103,8 +103,8 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   lon12 = AngRound(AngDiff(lon1(:), lon2(:)));
   lonsign = 2 * (lon12 >= 0) - 1;
   lon12 = lonsign .* lon12;
-  lat1 = AngRound(lat1(:));
-  lat2 = AngRound(lat2(:));
+  lat1 = AngRound(LatNormalize(lat1(:)));
+  lat2 = AngRound(LatNormalize(lat2(:)));
   swapp = 2 * (abs(lat1) >= abs(lat2)) - 1;
   lonsign(swapp < 0) = - lonsign(swapp < 0);
   [lat1(swapp < 0), lat2(swapp < 0)] = swap(lat1(swapp < 0), lat2(swapp < 0));
@@ -296,6 +296,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   [calp1(swapp<0), calp2(swapp<0)] = swap(calp1(swapp<0), calp2(swapp<0));
   if scalp
     [M12(swapp<0), M21(swapp<0)] = swap(M12(swapp<0), M21(swapp<0));
+    M12 = reshape(M12, S); M21 = reshape(M21, S);
   end
   salp1 = salp1 .* swapp .* lonsign; calp1 = calp1 .* swapp .* latsign;
   salp2 = salp2 .* swapp .* lonsign; calp2 = calp2 .* swapp .* latsign;
@@ -305,9 +306,13 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   a12 = sig12 / degree;
 
   s12 = reshape(s12, S); azi1 = reshape(azi1, S); azi2 = reshape(azi2, S);
-  m12 = reshape(m12, S); M12 = reshape(M12, S); M21 = reshape(M21, S);
-  a12 = reshape(a12, S);
-  if (areap)
+  if redp
+    m12 = reshape(m12, S);
+  end
+  if nargout >= 8
+    a12 = reshape(a12, S);
+  end
+  if areap
     S12 = reshape(S12, S);
   end
 end

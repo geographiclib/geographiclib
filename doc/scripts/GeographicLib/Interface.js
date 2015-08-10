@@ -51,8 +51,8 @@
  *   GeographicLib.Geodesic.REDUCEDLENGTH
  *   GeographicLib.Geodesic.GEODESICSCALE
  *   GeographicLib.Geodesic.AREA
+ *   GeographicLib.Geodesic.ALL (all of the above)
  *   GeographicLib.Geodesic.LONG_UNROLL
- *   GeographicLib.Geodesic.ALL
  *
  **********************************************************************
  * GeographicLib.Geodesic.WGS84.InversePath(lat1, lon1, lat2, lon2, ds12, maxk);
@@ -119,7 +119,6 @@
     if (!outmask) outmask = g.DISTANCE | g.AZIMUTH;
     g.Geodesic.CheckPosition(lat1, lon1);
     g.Geodesic.CheckPosition(lat2, lon2);
-
     var result = this.GenInverse(lat1, lon1, lat2, lon2, outmask);
     if (outmask & g.LONG_UNROLL) {
       result.lon1 = lon1;
