@@ -186,6 +186,17 @@ public class GeoMath {
   }
 
   /**
+   * Normalize a latitude.
+   * <p>
+   * @param x the angle in degrees.
+   * @return x if it is in the range [&minus;90&deg;, 90&deg;], otherwise
+   *   return NaN.
+   **********************************************************************/
+  public static double LatFix(double x) {
+    return Math.abs(x) > 90 ? Double.NaN : x;
+  }
+
+  /**
    * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]
    * <p>
    * @param x the first angle in degrees.

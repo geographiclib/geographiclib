@@ -528,7 +528,7 @@ public class Geodesic {
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
-    r.lat1 = lat1; r.lat2 = lat2;
+    r.lat1 = lat1 = GeoMath.LatFix(lat1); r.lat2 = lat2 = GeoMath.LatFix(lat2);
     // If really close to the equator, treat as on equator.
     lat1 = GeoMath.AngRound(lat1);
     lat2 = GeoMath.AngRound(lat2);

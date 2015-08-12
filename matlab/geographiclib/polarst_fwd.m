@@ -46,7 +46,7 @@ function [x, y, gam, k] = polarst_fwd(isnorth, lat, lon, ellipsoid)
   c = sqrt(e2m) * exp(eatanhe(1, e2));
 
   isnorth = 2 * logical(isnorth) - 1;
-  lat = LatNormalize(lat) .* isnorth;
+  lat = LatFix(lat) .* isnorth;
   tau = tand(lat); tau(abs(lat) == 90) = sign(lat(abs(lat) == 90)) * overflow;
   taup = taupf(tau, e2);
   rho = hypot(1, taup) + abs(taup);

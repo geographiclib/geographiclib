@@ -690,8 +690,8 @@ class Geodesic(object):
     lonsign = 1 if lon12 >= 0 else -1
     lon12 *= lonsign
     # If really close to the equator, treat as on equator.
-    lat1 = Math.AngRound(lat1)
-    lat2 = Math.AngRound(lat2)
+    lat1 = Math.AngRound(Math.LatFix(lat1))
+    lat2 = Math.AngRound(Math.LatFix(lat2))
     # Swap points so that point with higher (abs) latitude is point 1
     swapp = 1 if abs(lat1) >= abs(lat2) else -1
     if swapp < 0:
@@ -981,7 +981,7 @@ class Geodesic(object):
 
   def CheckPosition(lat, lon):
     """Check that lat and lon are legal and return normalized lon"""
-    if abs(lat) > 90:
+    if not (abs(lat) <= 90):
       raise ValueError("latitude " + str(lat) + " not in [-90, 90]")
     if not Math.isfinite(lon):
       raise ValueError("lonitude " + str(lon) + " not a finite number")

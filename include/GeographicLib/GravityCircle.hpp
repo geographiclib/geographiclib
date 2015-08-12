@@ -67,7 +67,7 @@ namespace GeographicLib {
       : _caps(caps)
       , _a(a)
       , _f(f)
-      , _lat(lat)
+      , _lat(Math::LatFix(lat))
       , _h(h)
       , _Z(Z)
       , _Px(P)

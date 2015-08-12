@@ -266,7 +266,7 @@ GeographicLib.DMS = {};
     t = t.substr(p0, p1 + 1 - p0); // Length at least 3
     if (t === "NAN" || t === "1.#QNAN" || t === "1.#SNAN" || t === "1.#IND" ||
         t === "1.#R")
-      return sign * Number.NaN;
+      return Number.NaN;
     else if (t === "INF" || t === "1.#INF")
       return sign * Number.POSITIVE_INFINITY;
     return 0;

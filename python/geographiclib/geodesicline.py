@@ -56,7 +56,7 @@ class GeodesicLine(object):
                   Geodesic.LONG_UNROLL)
 
     # Guard against underflow in salp0
-    self._lat1 = lat1
+    self._lat1 = Math.LatFix(lat1)
     self._lon1 = lon1
     self._azi1 = Math.AngNormalize(azi1)
     self._salp1, self._calp1 = Math.sincosd(Math.AngRound(azi1))

@@ -54,6 +54,7 @@ $(srcdir)/geographiclib/private/C4coeff.m \
 $(srcdir)/geographiclib/private/C4f.m \
 $(srcdir)/geographiclib/private/G4coeff.m \
 $(srcdir)/geographiclib/private/GeoRotation.m \
+$(srcdir)/geographiclib/private/LatFix.m \
 $(srcdir)/geographiclib/private/SinCosSeries.m \
 $(srcdir)/geographiclib/private/atan2dx.m \
 $(srcdir)/geographiclib/private/cbrtx.m \

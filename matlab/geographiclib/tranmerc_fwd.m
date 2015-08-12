@@ -71,7 +71,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   latsign = 1 - 2 * (lat < 0);
   lonsign = 1 - 2 * (lon < 0);
   lon = lon .* lonsign;
-  lat = LatNormalize(lat) .* latsign;
+  lat = LatFix(lat) .* latsign;
   backside = lon > 90;
   latsign(backside & lat == 0) = -1;
   lon(backside) = 180 - lon(backside);
@@ -129,7 +129,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   if isscalar(lat0) && lat0 == 0
     y0 = 0;
   else
-    [sbet0, cbet0] = sincosdx(LatNormalize(lat0));
+    [sbet0, cbet0] = sincosdx(LatFix(lat0));
     [sbet0, cbet0] = norm2((1-f) * sbet0, cbet0);
     y0 = a1 * (atan2(sbet0, cbet0) + ...
                SinCosSeries(true, sbet0, cbet0, C1f(n)));

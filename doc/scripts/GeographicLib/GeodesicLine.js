@@ -33,13 +33,13 @@
     this._caps = (!caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH)) |
       g.LONG_UNROLL;
 
-    this._lat1 = lat1;
+    this._lat1 = m.LatFix(lat1);
     this._lon1 = lon1;
     this._azi1 = m.AngNormalize(azi1);
     var t;
-    t = m.sincosd(m.AngRound(azi1)); this._salp1 = t.s; this._calp1 = t.c;
+    t = m.sincosd(m.AngRound(this._azi1)); this._salp1 = t.s; this._calp1 = t.c;
     var cbet1, sbet1;
-    t = m.sincosd(m.AngRound(lat1)); sbet1 = this._f1 * t.s; cbet1 = t.c;
+    t = m.sincosd(m.AngRound(this._lat1)); sbet1 = this._f1 * t.s; cbet1 = t.c;
     // norm(sbet1, cbet1);
     t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
     // Ensure cbet1 = +epsilon at poles
@@ -117,6 +117,13 @@
                                                   outmask) {
     var vals = {};
     outmask &= this._caps & g.OUT_MASK;
+    vals.lat1 = this._lat1; vals.azi1 = this._azi1;
+    vals.lon1 = outmask & g.LONG_UNROLL ?
+      this._lon1 : m.AngNormalize(this._lon1);
+    if (arcmode)
+      vals.a12 = s12_a12;
+    else
+      vals.s12 = s12_a12;
     if (!( arcmode || (this._caps & g.DISTANCE_IN & g.OUT_MASK) )) {
       // Uninitialized or impossible distance calculation requested
       vals.a12 = Number.NaN;
@@ -196,8 +203,8 @@
     // tan(alp0) = cos(sig2)*tan(alp2)
     salp2 = this._salp0; calp2 = this._calp0 * csig2; // No need to normalize
 
-    if (outmask & g.DISTANCE)
-      vals.s12 = arcmode ? this._b * ((1 + this._A1m1) * sig12 + AB1) : s12_a12;
+    if (arcmode && (outmask & g.DISTANCE))
+      vals.s12 = this._b * ((1 + this._A1m1) * sig12 + AB1);
 
     if (outmask & g.LONGITUDE) {
       // tan(omg2) = sin(alp0) * tan(sig2)
@@ -278,7 +285,8 @@
         this._A4 * (B42 - this._B41);
     }
 
-    vals.a12 = arcmode ? s12_a12 : sig12 / m.degree;
+    if (!arcmode)
+      vals.a12 = sig12 / m.degree;
     return vals;
   };
 

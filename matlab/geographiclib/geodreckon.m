@@ -128,7 +128,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   A3x = A3coeff(n);
   C3x = C3coeff(n);
 
-  lat1 = AngRound(LatNormalize(lat1(:)));
+  lat1 = AngRound(LatFix(lat1(:)));
   lon1 = lon1(:);
   azi1 = AngRound(azi1(:));
   s12_a12 = s12_a12(:);

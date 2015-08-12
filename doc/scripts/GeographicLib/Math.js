@@ -81,6 +81,11 @@ GeographicLib.Math.AngNormalize = function(x) {
   return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
 };
 
+GeographicLib.Math.LatFix = function(x) {
+  // Place angle with NaN if outside [-90, 90].
+  return Math.abs(x) > 90 ? Number.NaN : x;
+};
+
 GeographicLib.Math.AngDiff = function(x, y) {
   // Compute y - x and reduce to [-180,180] accurately.
   var

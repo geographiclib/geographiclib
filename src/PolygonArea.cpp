@@ -15,6 +15,7 @@ namespace GeographicLib {
 
   template <class GeodType>
   void PolygonAreaT<GeodType>::AddPoint(real lat, real lon) {
+    lat = Math::LatFix(lat);
     lon = Math::AngNormalize(lon);
     if (_num == 0) {
       _lat0 = _lat1 = lat;

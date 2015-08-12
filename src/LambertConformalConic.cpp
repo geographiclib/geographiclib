@@ -342,10 +342,11 @@ namespace GeographicLib {
     //
     // where nrho0 = n * rho0, drho = rho - rho0
     // and drho is evaluated with divided differences
+    real sphi, cphi;
+    Math::sincosd(Math::LatFix(lat) * _sign, sphi, cphi);
+    cphi = max(epsx_, cphi);
     real
       lam = lon * Math::degree(),
-      phi = _sign * lat * Math::degree(),
-      sphi = sin(phi), cphi = abs(lat) != 90 ? cos(phi) : epsx_,
       tphi = sphi/cphi, scbet = hyp(_fm * tphi),
       scphi = 1/cphi, shxi = sinh(Math::eatanhe(sphi, _es)),
       tchi = hyp(shxi) * tphi - shxi * scphi, scchi = hyp(tchi),
@@ -427,10 +428,9 @@ namespace GeographicLib {
     gamma = atan2(nx, y1);
     real
       tphi = Math::tauf(tchi, _es),
-      phi = _sign * atan(tphi),
       scbet = hyp(_fm * tphi), scchi = hyp(tchi),
       lam = _n ? gamma / _n : x / y1;
-    lat = phi / Math::degree();
+    lat = Math::atand(_sign * tphi);
     lon = lam / Math::degree();
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
     k = _k0 * (scbet/_scbet0) /

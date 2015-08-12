@@ -14,7 +14,7 @@ namespace GeographicLib {
   using namespace std;
 
   void LocalCartesian::Reset(real lat0, real lon0, real h0) {
-    _lat0 = lat0;
+    _lat0 = Math::LatFix(lat0);
     _lon0 = Math::AngNormalize(lon0);
     _h0 = h0;
     _earth.Forward(_lat0, _lon0, _h0, _x0, _y0, _z0);

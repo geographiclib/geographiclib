@@ -103,8 +103,8 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   lon12 = AngRound(AngDiff(lon1(:), lon2(:)));
   lonsign = 2 * (lon12 >= 0) - 1;
   lon12 = lonsign .* lon12;
-  lat1 = AngRound(LatNormalize(lat1(:)));
-  lat2 = AngRound(LatNormalize(lat2(:)));
+  lat1 = AngRound(LatFix(lat1(:)));
+  lat2 = AngRound(LatFix(lat2(:)));
   swapp = 2 * (abs(lat1) >= abs(lat2)) - 1;
   lonsign(swapp < 0) = - lonsign(swapp < 0);
   [lat1(swapp < 0), lat2(swapp < 0)] = swap(lat1(swapp < 0), lat2(swapp < 0));

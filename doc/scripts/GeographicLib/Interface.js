@@ -107,6 +107,8 @@
   };
 
   g.Geodesic.CheckAzimuth = function(azi) {
+    if (!(isFinite(azi)))
+      throw new Error("azimuth " + azi + " not a finite number");
     return m.AngNormalize(azi);
   };
 
@@ -119,31 +121,15 @@
     if (!outmask) outmask = g.DISTANCE | g.AZIMUTH;
     g.Geodesic.CheckPosition(lat1, lon1);
     g.Geodesic.CheckPosition(lat2, lon2);
-    var result = this.GenInverse(lat1, lon1, lat2, lon2, outmask);
-    if (outmask & g.LONG_UNROLL) {
-      result.lon1 = lon1;
-      result.lon2 = lon1 + m.AngDiff(lon1, lon2);
-    } else {
-      result.lon1 = m.AngNormalize(lon1);
-      result.lon2 = m.AngNormalize(lon2);
-    }
-    result.lat1 = lat1;
-    result.lat2 = lat2;
-
-    return result;
+    return this.GenInverse(lat1, lon1, lat2, lon2, outmask);
   };
 
   g.Geodesic.prototype.Direct = function(lat1, lon1, azi1, s12, outmask) {
     if (!outmask) outmask = g.LATITUDE | g.LONGITUDE | g.AZIMUTH;
     g.Geodesic.CheckPosition(lat1, lon1);
-    azi1 = g.Geodesic.CheckAzimuth(azi1);
+    g.Geodesic.CheckAzimuth(azi1);
     g.Geodesic.CheckDistance(s12);
-
-    var result = this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
-    result.lon1 = (outmask & g.LONG_UNROLL) ? lon1 : m.AngNormalize(lon1)
-    result.lat1 = lat1; result.azi1 = azi1; result.s12 = s12;
-
-    return result;
+    return this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
   };
 
   g.Geodesic.prototype.InversePath =

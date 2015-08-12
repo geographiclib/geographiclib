@@ -37,7 +37,7 @@ namespace GeographicLib {
                               real& X, real& Y, real& Z,
                               real M[dim2_]) const {
     real sphi, cphi, slam, clam;
-    Math::sincosd(lat, sphi, cphi);
+    Math::sincosd(Math::LatFix(lat), sphi, cphi);
     Math::sincosd(lon, slam, clam);
     real n = _a/sqrt(1 - _e2 * Math::sq(sphi));
     Z = (_e2m * n + h) * sphi;

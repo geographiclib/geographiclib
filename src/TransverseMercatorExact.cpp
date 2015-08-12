@@ -349,6 +349,7 @@ namespace GeographicLib {
   void TransverseMercatorExact::Forward(real lon0, real lat, real lon,
                                         real& x, real& y, real& gamma, real& k)
     const {
+    lat = Math::LatFix(lat);
     lon = Math::AngDiff(lon0, lon);
     // Explicitly enforce the parity
     int

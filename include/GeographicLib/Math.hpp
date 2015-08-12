@@ -479,8 +479,8 @@ namespace GeographicLib {
      * @return x if it is in the range [&minus;90&deg;, 90&deg;], otherwise
      *   return NaN.
      **********************************************************************/
-    template<typename T> static inline T LatNormalize(T x)
-    { using std::abs; return abs(x) <= 90 ? x : NaN<T>(); }
+    template<typename T> static inline T LatFix(T x)
+    { using std::abs; return abs(x) > 90 ? NaN<T>() : x; }
 
     /**
      * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]

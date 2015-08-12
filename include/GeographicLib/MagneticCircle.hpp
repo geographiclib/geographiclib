@@ -48,7 +48,7 @@ namespace GeographicLib {
                    const CircularEngine& circ0, const CircularEngine& circ1)
       : _a(a)
       , _f(f)
-      , _lat(lat)
+      , _lat(Math::LatFix(lat))
       , _h(h)
       , _t(t)
       , _cphi(cphi)

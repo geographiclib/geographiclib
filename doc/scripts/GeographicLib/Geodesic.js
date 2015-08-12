@@ -748,7 +748,13 @@ GeographicLib.GeodesicLine = {};
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
+    vals.lat1 = lat1 = m.LatFix(lat1); vals.lat2 = lat2 = m.LatFix(lat2);
     var lon12 = m.AngDiff(lon1, lon2);
+    if (outmask & g.LONG_UNROLL) {
+      vals.lon1 = lon1; vals.lon2 = lon1 + lon12;
+    } else {
+      vals.lon1 = m.AngNormalize(lon1); vals.lon2 = m.AngNormalize(lon2);
+    }
     // If very close to being on the same half-meridian, then make it so.
     lon12 = m.AngRound(lon12);
     // Make longitude difference positive.

@@ -54,7 +54,7 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
 
   areap = nargout >= 4;
 
-  lat1 = AngRound(lat1(:));
+  lat1 = AngRound(LatFix(lat1(:)));
   lon1 = lon1(:);
   azi1 = AngRound(azi1(:));
   s12 = s12(:);

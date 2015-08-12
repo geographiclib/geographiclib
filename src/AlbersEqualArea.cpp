@@ -386,10 +386,11 @@ namespace GeographicLib {
     const {
     lon = Math::AngDiff(lon0, lon);
     lat *= _sign;
+    real sphi, cphi;
+    Math::sincosd(Math::LatFix(lat) * _sign, sphi, cphi);
+    cphi = max(epsx_, cphi);
     real
       lam = lon * Math::degree(),
-      phi = lat * Math::degree(),
-      sphi = sin(phi), cphi = abs(lat) != 90 ? cos(phi) : epsx_,
       tphi = sphi/cphi, txi = txif(tphi), sxi = txi/hyp(txi),
       dq = _qZ * Dsn(txi, _txi0, sxi, _sxi0) * (txi - _txi0),
       drho = - _a * dq / (sqrt(_m02 - _n0 * dq) + _nrho0 / _a),
@@ -420,11 +421,10 @@ namespace GeographicLib {
               (Math::sq(_a) * _qZ),
       txi = (_txi0 + dsxia) / sqrt(max(1 - dsxia * (2*_txi0 + dsxia), epsx2_)),
       tphi = tphif(txi),
-      phi = _sign * atan(tphi),
       theta = atan2(nx, y1),
       lam = _n0 ? theta / (_k2 * _n0) : x / (y1 * _k0);
     gamma = _sign * theta / Math::degree();
-    lat = phi / Math::degree();
+    lat = Math::atand(_sign * tphi);
     lon = lam / Math::degree();
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
     k = _k0 * (den ? (_nrho0 + _n0 * drho) * hyp(_fm * tphi) / _a : 1);

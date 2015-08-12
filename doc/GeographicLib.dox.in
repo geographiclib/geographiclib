@@ -7028,8 +7028,8 @@ git repository for GeographicLib</a>.
        with one with smaller truncation errors.
      - Geodesic::Inverse sets \e s12 to zero for coincident points at
        pole (instead of returning a tiny quantity).
-     - Math::LatNormalize returns its argument if it is in
-       [&minus;90&deg;, 90&deg;]; if not, it returns NaN.
+     - Math::LatFix returns its argument if it is in [&minus;90&deg;,
+       90&deg;]; if not, it returns NaN.
      - Routines which don't check their arguments now interpret a
        latitude outside the legal range of [&minus;90&deg;, 90&deg;] as
        a NaN; such routines will return NaNs instead of finite but
@@ -7082,8 +7082,11 @@ git repository for GeographicLib</a>.
        \e J2 = 0), instead of returning NaNs (problem found by htallon);
      - CassiniSoldner::Forward and cassini_fwd.m now returns the correct
        azimuth for points at the pole;
-     - Illegal letter combinations are now correctly detected by
-       mgrs_inv.m.
+     - illegal letter combinations are now correctly detected by
+       mgrs_inv.m;
+     - MATLAB routines now return array results with the right shape;
+     - MATLAB routines now properly handle mixed scalar and array
+       arguments.
    - mgrs_fwd.m now treats treats prec > 11 in mgrs_fwd.m as prec = 11.
    - Add Accumulator::operator*(T y).
    - Geohash uses "invalid" instead of "nan" when the latitude or

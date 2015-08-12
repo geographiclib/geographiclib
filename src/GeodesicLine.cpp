@@ -36,9 +36,8 @@ namespace GeographicLib {
                              real lat1, real lon1, real azi1,
                              unsigned caps)
     : tiny_(g.tiny_)
-    , _lat1(lat1)
+    , _lat1(Math::LatFix(lat1))
     , _lon1(lon1)
-    // Guard against underflow in salp0.  Also -0 is converted to +0.
     , _azi1(Math::AngNormalize(azi1))
     , _a(g._a)
     , _f(g._f)
@@ -48,6 +47,7 @@ namespace GeographicLib {
       // Always allow latitude and azimuth and unrolling of longitude
     , _caps(caps | LATITUDE | AZIMUTH | LONG_UNROLL)
   {
+    // Guard against underflow in salp0.  Also -0 is converted to +0.
     Math::sincosd(Math::AngRound(_azi1), _salp1, _calp1);
     real cbet1, sbet1;
     Math::sincosd(Math::AngRound(_lat1), sbet1, cbet1); sbet1 *= _f1;

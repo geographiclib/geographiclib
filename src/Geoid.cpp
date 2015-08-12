@@ -305,6 +305,7 @@ namespace GeographicLib {
 
   Math::real Geoid::height(real lat, real lon, bool gradp,
                            real& gradn, real& grade) const {
+    lat = Math::LatFix(lat);
     if (Math::isnan(lat) || Math::isnan(lon)) {
       if (gradp) gradn = grade = Math::NaN();
       return Math::NaN();
@@ -442,6 +443,8 @@ namespace GeographicLib {
       CacheClear();
       return;
     }
+    south = Math::LatFix(south);
+    north = Math::LatFix(north);
     west = Math::AngNormalize(west); // west in [-180, 180)
     east = Math::AngNormalize(east);
     if (east <= west)

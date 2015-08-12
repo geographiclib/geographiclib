@@ -61,6 +61,7 @@ namespace GeographicLib {
   void PolarStereographic::Forward(bool northp, real lat, real lon,
                                    real& x, real& y, real& gamma, real& k)
     const {
+    lat = Math::LatFix(lat);
     lat *= northp ? 1 : -1;
     real
       tau = Math::tand(lat),

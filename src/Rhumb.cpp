@@ -331,7 +331,7 @@ namespace GeographicLib {
                        bool exact)
     : _rh(rh)
     , _exact(exact)
-    , _lat1(lat1)
+    , _lat1(Math::LatFix(lat1))
     , _lon1(lon1)
     , _azi12(Math::AngNormalize(azi12))
   {

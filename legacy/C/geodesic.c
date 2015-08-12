@@ -166,8 +166,8 @@ static real AngNormalize(real x) {
   return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
 }
 
-static real LatNormalize(real x)
-{ return fabs(x) <= 90 ? x : NaN; }
+static real LatFix(real x)
+{ return fabs(x) > 90 ? NaN : x; }
 
 static real AngDiff(real x, real y) {
   real t, d = - AngNormalize(sumx(AngNormalize(x), AngNormalize(-y), &t));
@@ -329,7 +329,7 @@ void geod_lineinit(struct geod_geodesicline* l,
     /* always allow latitude and azimuth and unrolling of longitude */
     GEOD_LATITUDE | GEOD_AZIMUTH | GEOD_LONG_UNROLL;
 
-  l->lat1 = LatNormalize(lat1);
+  l->lat1 = LatFix(lat1);
   l->lon1 = lon1;
   l->azi1 = AngNormalize(azi1);
   /* Guard against underflow in salp0 */
@@ -661,8 +661,8 @@ real geod_geninverse(const struct geod_geodesic* g,
   lonsign = lon12 >= 0 ? 1 : -1;
   lon12 *= lonsign;
   /* If really close to the equator, treat as on equator. */
-  lat1 = AngRound(LatNormalize(lat1));
-  lat2 = AngRound(LatNormalize(lat2));
+  lat1 = AngRound(LatFix(lat1));
+  lat2 = AngRound(LatFix(lat2));
   /* Swap points so that point with higher (abs) latitude is point 1 */
   swapp = fabs(lat1) >= fabs(lat2) ? 1 : -1;
   if (swapp < 0) {
