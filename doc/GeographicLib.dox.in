@@ -1246,16 +1246,19 @@ otherwise).  This contains implementations of the classes
 - Geodesic
 - GeodesicLine
 - PolygonAreaT
-.
-You can also download the python interface independent of the rest of
-GeographicLib from
+
+You can install the python interface independent of the rest of
+GeographicLib using pip \verbatim
+  pip install geographiclib \endverbatim
+This requires root privileges and you might first need to install the
+python-pip package.
+
+Alternatively download
 - <a href="http://pypi.python.org/pypi/geographiclib">
   http://pypi.python.org/pypi/geographiclib</a>
 .
-and then unpack the .tar.gz or .zip file.
-
-You can "install" these routines, so that they are in python's default
-path with, for example \verbatim
+and unpack the .tar.gz or .zip file.  You can "install" these routines,
+so that they are in python's default path with, for example \verbatim
   cd geographiclib-1.16
   python setup.py install
 \endverbatim
@@ -7005,14 +7008,14 @@ git repository for GeographicLib</a>.
    - Various changes to improve accuracy, e.g., by minimizing round-off
      errors:
      - Add Math::sincosd, Math::sind, Math::cosd which take their
-       arguments in degrees.  These functions do exact range reduction.
-       As a consequence, they obey exactly the elementary properties of
-       the trigonometric functions, e.g., sin 9&deg; = cos 81&deg; =
-       &minus; sin 123456789&deg;.
+       arguments in degrees.  These functions do exact range reduction
+       and thus they obey exactly the elementary properties of the
+       trigonometric functions, e.g., sin 9&deg; = cos 81&deg; = &minus;
+       sin 123456789&deg;.
      - Math::AngNormalize now works for any angles, instead of angles in
-       the range [&minus;540&deg;, 540&deg;).  As a consequence the
+       the range [&minus;540&deg;, 540&deg;).  The
        function Math::AngNormalize2 is now <b>deprecated</b>.
-     - As a consequence, there is now no restriction on longitudes and
+     - This means that there is now no restriction on longitudes and
        azimuths; any values can be used.
      - Improve the accuracy of Math::atan2d.
      - DMS::Decode avoids unnecessary round-off errors; thus 7:33:36 and
@@ -7030,10 +7033,10 @@ git repository for GeographicLib</a>.
        pole (instead of returning a tiny quantity).
      - Math::LatFix returns its argument if it is in [&minus;90&deg;,
        90&deg;]; if not, it returns NaN.
-     - Routines which don't check their arguments now interpret a
-       latitude outside the legal range of [&minus;90&deg;, 90&deg;] as
-       a NaN; such routines will return NaNs instead of finite but
-       incorrect results.
+     - Using Math::LatFix, routines which don't check their arguments
+       now interpret a latitude outside the legal range of
+       [&minus;90&deg;, 90&deg;] as a NaN; such routines will return
+       NaNs instead of finite but incorrect results.
    - All the \ref utilities accept the -w option to swap the
      latitude-longitude order on input and output (and where appropriate
      on the command-line arguments).  CartConvert now accepts the -p

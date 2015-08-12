@@ -237,13 +237,16 @@ cat > tester.py <<EOF
 import sys
 sys.path.append("$TEMP/python-test/site-packages")
 from geographiclib.geodesic import Geodesic
-print(Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50))
+print(Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50,
+                             Geodesic.ALL | Geodesic.LONG_UNROLL))
 # The geodesic direct problem
-print(Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3))
+print(Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3,
+                            Geodesic.ALL | Geodesic.LONG_UNROLL))
 # How to obtain several points along a geodesic
 line = Geodesic.WGS84.Line(40.6, -73.8, 45)
 print(line.Position( 5000e3))
 print(line.Position(10000e3))
+print(line.Position(10000e3, Geodesic.ALL | Geodesic.LONG_UNROLL))
 # Computing the area of a geodesic polygon
 def p(lat,lon): return {'lat': lat, 'lon': lon}
 
@@ -414,6 +417,9 @@ python setup.py sdist --formats gztar,zip upload
 # java release
 cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
+
+# javascript release
+make -C $DEVELSOURCE -f makefile-admin distrib-js
 
 # matlab toolbox
 cd $TEMP/matlab

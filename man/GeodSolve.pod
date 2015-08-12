@@ -209,13 +209,14 @@ and I<M21> are dimensionless quantities.  On a flat surface, we have
 I<M12> = I<M21> = 1.
 
 If points 1, 2, and 3 lie on a single geodesic, then the following
-addition rules hold,
-I<s13> = I<s12> + I<s23>,
-I<a13> = I<a12> + I<a23>,
-I<S13> = I<S12> + I<S23>,
-I<m13> = I<m12> I<M23> + I<m23> I<M21>,
-I<M13> = I<M12> I<M23> - (1 - I<M12> I<M21>) I<m23> / I<m12>, and
-I<M31> = I<M32> I<M21> - (1 - I<M23> I<M32>) I<m12> / I<m23>.
+addition rules hold:
+
+   s13 = s12 + s23,
+   a13 = a12 + a23,
+   S13 = S12 + S23,
+   m13 = m12 M23 + m23 M21,
+   M13 = M12 M23 - (1 - M12 M21) m23 / m12,
+   M31 = M32 M21 - (1 - M23 M32) m12 / m23.
 
 Finally, I<S12> is the area between the geodesic from point 1 to point 2
 and the equator; i.e., it is the area, measured counter-clockwise, of

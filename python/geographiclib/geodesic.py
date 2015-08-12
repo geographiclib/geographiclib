@@ -589,7 +589,7 @@ class Geodesic(object):
         # Because omg12 is near pi, estimate work with omg12a = pi - omg12
         k = Geodesic.Astroid(x, y)
         omg12a = lamscale * ( -x * k/(1 + k) if self._f >= 0
-                               else -y * (1 + k)/k )
+                              else -y * (1 + k)/k )
         somg12 = math.sin(omg12a); comg12 = -math.cos(omg12a)
         # Update spherical estimate of alp1 using omg12 instead of lam12
         salp1 = cbet2 * somg12

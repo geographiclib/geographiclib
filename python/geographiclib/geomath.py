@@ -129,7 +129,7 @@ class Math(object):
     """replace angles outside [-90,90] by NaN"""
 
     return Math.nan if abs(x) > 90 else x
-  AngNormalize = staticmethod(AngNormalize)
+  LatFix = staticmethod(LatFix)
 
   def AngDiff(x, y):
     """compute y - x and reduce to [-180,180] accurately"""

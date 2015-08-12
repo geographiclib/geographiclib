@@ -182,7 +182,7 @@ function GeodesicArea(input, polyline) {
     </div>
     <p>
       This page illustrates the geodesic routines available in
-      <a href="http://geographiclib.sourceforge.net">GeographicLib</a>.
+      <a href="http://geographiclib.sf.net">GeographicLib</a>.
       The C++ code has been converted to JavaScript so the calculations
       are carried out on the client.  The algorithms are considerably
       more accurate than Vincenty's method, and offer more functionality
@@ -210,7 +210,7 @@ function GeodesicArea(input, polyline) {
       15&nbsp;nanometers (or 0.1&nbsp;m<sup>2</sup> per vertex for
       areas).  A slicker page where the geodesics are incorporated into
       Google Maps is given <a href="geod-google.html">here</a>.  Basic
-      online tools with provide similar capabilities are
+      online tools which provide similar capabilities are
       <a href="http://geographiclib.sf.net/cgi-bin/GeodSolve">GeodSolve</a>
       and
       <a href="http://geographiclib.sf.net/cgi-bin/Planimeter">Planimeter</a>;
@@ -236,8 +236,10 @@ function GeodesicArea(input, polyline) {
       <p>
 	Find the shortest path between two points on the earth.  The
 	path is characterized by its length <i>s12</i> and its azimuth
-	at the two ends <i>azi1</i> and <i>azi2</i>.  See the paper for
-	the definition of the
+	at the two ends <i>azi1</i> and <i>azi2</i>.  See
+	<a href="http://geographiclib.sf.net/html/GeodSolve.1.html">
+	  GeodSolve(1)</a>
+	for the definition of the
 	quantities <i>a12</i>, <i>m12</i>, <i>M12</i>, <i>M21</i>,
 	and <i>S12</i>.  The sample calculation finds the shortest path
 	between Wellington, New Zealand, and Salamanca, Spain.  To
@@ -323,8 +325,10 @@ function GeodesicArea(input, polyline) {
 	Find the destination traveling a given distance along a geodesic
 	with a given azimuth at the starting point.  The destination is
 	characterized by its position <i>lat2, lon2</i> and its azimuth
-	at the destination <i>azi2</i>.  See the paper for the
-	definition of the
+	at the destination <i>azi2</i>.  See
+	<a href="http://geographiclib.sf.net/html/GeodSolve.1.html">
+	  GeodSolve(1)</a>
+	for the definition of the
 	quantities <i>a12</i>, <i>m12</i>, <i>M12</i>, <i>M21</i>,
 	and <i>S12</i>.  The sample calculation shows the result of
 	travelling 10000 km NE from JFK airport.  To perform the
@@ -530,8 +534,8 @@ function GeodesicArea(input, polyline) {
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2015-07-30)</address>
+      (2015-08-12)</address>
     <br>
-    <a href="http://geographiclib.sourceforge.net">Geographiclib Sourceforge</a>
+    <a href="http://geographiclib.sf.net">Geographiclib Sourceforge</a>
   </body>
 </html>
