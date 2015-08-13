@@ -109,6 +109,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   end
   arcmode = bitand(flags, 1);
   long_unroll = bitand(flags, 2);
+  Z = zeros(prod(S),1);
 
   degree = pi/180;
   tiny = sqrt(realmin);
@@ -216,7 +217,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   else
     a12_s12 = sig12 / degree;
   end
-  a12_s12 = reshape(a12_s12, S);
+  a12_s12 = reshape(a12_s12 + Z, S);
 
   if redlp || scalp
     A2m1 = A2m1f(epsi);
@@ -228,13 +229,13 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
     if redlp
       m12 = b * ((dn2 .* (csig1 .* ssig2) - dn1 .* (ssig1 .* csig2)) ...
                  - csig1 .* csig2 .* J12);
-      m12 = reshape(m12, S);
+      m12 = reshape(m12 + Z, S);
     end
     if scalp
       t = k2 .* (ssig2 - ssig1) .* (ssig2 + ssig1) ./ (dn1 + dn2);
       M12 = csig12 + (t .* ssig2 - csig2 .* J12) .* ssig1 ./ dn1;
       M21 = csig12 - (t .* ssig1 - csig1 .* J12) .* ssig2 ./  dn2;
-      M12 = reshape(M12, S); M21 = reshape(M21, S);
+      M12 = reshape(M12 + Z, S); M21 = reshape(M21 + Z, S);
     end
   end
 
@@ -262,11 +263,11 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
       c2 = a^2;
     end
     S12 = c2 * atan2(salp12, calp12) + A4 .* (B42 - B41);
-    S12 = reshape(S12, S);
+    S12 = reshape(S12 + Z, S);
   end
 
-  lat2 = reshape(lat2, S);
+  lat2 = reshape(lat2 + Z, S);
   lon2 = reshape(lon2, S);
-  azi2 = reshape(azi2, S);
+  azi2 = reshape(azi2 + Z, S);
 
 end

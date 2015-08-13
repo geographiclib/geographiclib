@@ -40,3 +40,28 @@ A problem with the way MATLAB Central packages toolboxes causes the
 "Robust Control Toolbox" to be listed as a required product. This is
 wrong; this package has no dependencies other than MATLAB (version 7.9
 or later) or Octave (version 3.4 or later).
+
+Changes in 1.44:
+
+     - Changes to improve accuracy when evaluating trigonometric
+       functions.
+     - There is now no restriction on longitudes and azimuths; any
+       values can be used.
+     - NaNs are returned if latitudes outside the range [-90,90] are
+       specified.
+     - geoddistance sets s12 to zero for coincident points at pole
+       (instead of returning a tiny quantity).
+     - As a consequence, cassini_fwd now returns the correct azimuth for
+       points at the pole.
+     - Routines now return array results with the right shape.
+     - Routines now properly handle mixed scalar and array arguments.
+     - mgrs_fwd now treats treats prec > 11 as prec = 11.
+     - mgrs_fwd ensures that digits in lower precision results match
+       those at higher precision.
+     - Illegal letter combinations are now correctly detected by
+       mgrs_inv.
+     - Fixed bug where mgrs_inv returned the wrong results for prec = 0
+       strings and center = 0.
+     - mgrs_inv now decodes prec = 11 strings properly.
+     - More accurate rounding in mgrs_inv;  this change only makes a
+       difference at sub-meter precisions.

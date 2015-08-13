@@ -317,7 +317,7 @@ extern "C" {
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
    *
    * \e g must have been initialized with a call to geod_init().  \e lat1 and
-   * \e lat2 should be in the range [&minus;90&deg;, 90&deg;];.  The values of
+   * \e lat2 should be in the range [&minus;90&deg;, 90&deg;].  The values of
    * \e azi1 and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;).
    * Any of the "return" arguments, \e ps12, etc., may be replaced by 0, if you
    * do not need some quantities computed.
@@ -422,7 +422,7 @@ extern "C" {
    * @return \e a12 arc length of between point 1 and point 2 (degrees).
    *
    * \e g must have been initialized with a call to geod_init().  \e lat1
-   * should be in the range [&minus;90&deg;, 90&deg;];.  The function value \e
+   * should be in the range [&minus;90&deg;, 90&deg;].  The function value \e
    * a12 equals \e s12_a12 if \e flags & GEOD_ARCMODE.  Any of the "return"
    * arguments, \e plat2, etc., may be replaced by 0, if you do not need some
    * quantities computed.

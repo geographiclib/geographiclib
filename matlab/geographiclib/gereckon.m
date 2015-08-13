@@ -46,6 +46,7 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
   end
 
   tiny = sqrt(realmin);
+  Z = zeros(prod(S),1);
 
   a = ellipsoid(1);
   e2 = ellipsoid(2)^2;
@@ -106,9 +107,9 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
   lat2 = atan2dx(sbet2, f1 * cbet2);
   azi2 = atan2dx(sgam2, cgam2 .* sqrt(1 - e2 * cbet2.^2));
 
-  lat2 = reshape(lat2, S);
+  lat2 = reshape(lat2 + Z, S);
   lon2 = reshape(lon2, S);
-  azi2 = reshape(azi2, S);
+  azi2 = reshape(azi2 + Z, S);
 
   if areap
     n = f / (2 - f);
@@ -133,7 +134,7 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
       c2 = a^2;
     end
     S12 = c2 * atan2(sgam12, cgam12) + A4 .* (B42 - B41);
-    S12 = reshape(S12, S);
+    S12 = reshape(S12 + Z, S);
   end
 
 end

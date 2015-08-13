@@ -7021,10 +7021,10 @@ git repository for GeographicLib</a>.
      - DMS::Decode avoids unnecessary round-off errors; thus 7:33:36 and
        7.56 result in identical values.  DMS::Encode rounds ties to
        even.  These changes have also been made to DMS.js.
-     - More accurate rounding in MGRS::Reverse and mgrs_inv.m.  This
+     - More accurate rounding in MGRS::Reverse and mgrs_inv.m; this
        change only makes a difference at sub-meter precisions.
      - With MGRS::Forward and mgrs_fwd.m, ensure that digits in lower
-       precision results match those at higher precision.  As a result,
+       precision results match those at higher precision; as a result,
        strings of trailing 9s are less likely to be generated.  This
        change only makes a difference at sub-meter precisions.
      - Replace the series for <i>A</i><sub>2</sub> in the Geodesic class
@@ -7036,7 +7036,10 @@ git repository for GeographicLib</a>.
      - Using Math::LatFix, routines which don't check their arguments
        now interpret a latitude outside the legal range of
        [&minus;90&deg;, 90&deg;] as a NaN; such routines will return
-       NaNs instead of finite but incorrect results.
+       NaNs instead of finite but incorrect results; <b>caution</b>:
+       code that (dangerously) relied on the "reasonable" results being
+       returned for values of the latitude outside the allowed range
+       will now malfunction.
    - All the \ref utilities accept the -w option to swap the
      latitude-longitude order on input and output (and where appropriate
      on the command-line arguments).  CartConvert now accepts the -p
@@ -7061,7 +7064,7 @@ git repository for GeographicLib</a>.
        geoid height (now deprecated) in the Geoid class;
      - warn about the possible misinterpretation of 7.0E+1 by
        DMS::Decode;
-     - \e swaplatlong optional argument of DMS::DecodeLatLong and
+     - \e swaplatlong optional argument of DMS::DecodeLatLon and
        various functions in the GeoCoords class is now called \e
        longfirst;
      - require Doxygen 1.8.7 or later.
@@ -7084,14 +7087,17 @@ git repository for GeographicLib</a>.
      - NormalGravity now works properly for a sphere (\e omega = \e f =
        \e J2 = 0), instead of returning NaNs (problem found by htallon);
      - CassiniSoldner::Forward and cassini_fwd.m now returns the correct
-       azimuth for points at the pole;
+       azimuth for points at the pole.
+   - MATLAB-specific fixes:
+     - mgrs_fwd now treats treats prec > 11 as prec = 11;
      - illegal letter combinations are now correctly detected by
-       mgrs_inv.m;
-     - MATLAB routines now return array results with the right shape;
-     - MATLAB routines now properly handle mixed scalar and array
-       arguments.
-   - mgrs_fwd.m now treats treats prec > 11 in mgrs_fwd.m as prec = 11.
-   - Add Accumulator::operator*(T y).
+       mgrs_inv;
+     - fixed bug where mgrs_inv returned the wrong results for prec = 0
+       strings and center = 0;
+     - mgrs_inv now decodes prec = 11 strings properly;
+     - routines now return array results with the right shape;
+     - routines now properly handle mixed scalar and array arguments.
+   - Add Accumulator<T>::operator*=(T y).
    - Geohash uses "invalid" instead of "nan" when the latitude or
      longitude is a nan.
 

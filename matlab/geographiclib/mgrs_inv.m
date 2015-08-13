@@ -177,20 +177,23 @@ function [x, y, prec] = decodexy(xy, xh, yh, center)
   len = strlen(xy);
   prec = len / 2;
   digits = sum(isspace(xy) | isstrprop(xy, 'digit'), 2) == size(xy, 2);
-  ok = len < 22 & mod(len, 2) == 0 & digits;
+  ok = len <= 22 & mod(len, 2) == 0 & digits;
   prec(~ok) = -2;
   if ~any(ok), return, end
-  x(prec == 0) = 0.5e5; y(prec == 0) = 0.5e5;
-  minprec = max(1,min(prec(ok))); maxprec = max(prec(ok));
   cent = center * 0.5;
+  in = prec == 0;
+  if any(in)
+    x(in) = (xh(in) + cent) * 1e5; y(in) = (yh(in) + cent) * 1e5;
+  end
+  minprec = max(1,min(prec(ok))); maxprec = max(prec(ok));
   for p = minprec:maxprec
     in = prec == p;
     if ~any(in)
       continue
     end
     m = 10^p;
-    x(in) = xh * m + str2double(cellstr(xy(in, 0+(1:p)))) + cent;
-    y(in) = yh * m + str2double(cellstr(xy(in, p+(1:p)))) + cent;
+    x(in) = xh(in) * m + str2double(cellstr(xy(in, 0+(1:p)))) + cent;
+    y(in) = yh(in) * m + str2double(cellstr(xy(in, p+(1:p)))) + cent;
     if p < 5
       m = 1e5 / m;
       x(in) = x(in) * m;

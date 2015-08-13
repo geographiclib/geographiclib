@@ -69,9 +69,11 @@ function [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y, ellipsoid)
   if isscalar(lat0) && lat0 == 0
     y0 = 0;
   else
-    [sbet0, cbet0] = norm2((1-f) * sind(lat0), cosd(lat0));
+    [sbet0, cbet0] = sincosdx(LatFix(lat0(:)));
+    [sbet0, cbet0] = norm2((1-f) * sbet0, cbet0);
     y0 = a1 * (atan2(sbet0, cbet0) + ...
                SinCosSeries(true, sbet0, cbet0, C1f(n)));
+    y0 = reshape(y0, size(lat0))
   end
   y = y + y0;
 

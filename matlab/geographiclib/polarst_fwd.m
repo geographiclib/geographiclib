@@ -31,7 +31,7 @@ function [x, y, gam, k] = polarst_fwd(isnorth, lat, lon, ellipsoid)
   narginchk(3, 4)
   if nargin < 4, ellipsoid = defaultellipsoid; end
   try
-    [~] = isnorth + lat + lon;
+    Z = zeros(size(isnorth + lat + lon));
   catch
     error('isnorth, lat, lon have incompatible sizes')
   end
@@ -56,10 +56,10 @@ function [x, y, gam, k] = polarst_fwd(isnorth, lat, lon, ellipsoid)
   x = rho .* x;
   y = -isnorth .* rho .* y;
   if nargout > 2
-    gam = AngNormalize(isnorth .* lon);
+    gam = AngNormalize(isnorth .* lon) + Z;
     if nargout > 3
       secphi = hypot(1, tau);
-      k = (rho / a) .* secphi .* sqrt(e2m + e2 .* secphi.^-2);
+      k = (rho / a) .* secphi .* sqrt(e2m + e2 .* secphi.^-2) + Z;
       k(lat == 90) = 1;
     end
   end
