@@ -210,7 +210,7 @@
  * <ul>
  * <li>
  *   <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
- *   (released 2015-08-15)
+ *   (released 2015-08-14)
  * <ul>
  * <li>
  *   Improve accuracy of calculations by evaluating trigonometric

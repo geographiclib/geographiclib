@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2015-08-15
+\date 2015-08-14
 
 \section abstract Abstract
 
@@ -7004,7 +7004,7 @@ of the
 git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
-   (released 2015-08-15)
+   (released 2015-08-14)
    - Various changes to improve accuracy, e.g., by minimizing round-off
      errors:
      - Add Math::sincosd, Math::sind, Math::cosd which take their

@@ -125,7 +125,7 @@ and are therefore in the public domain.
 \section changes-for Change log
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
-   (released 2015-08-15)
+   (released 2015-08-14)
 
    - Improve accuracy of calculations by evaluating trigonometric
      functions more carefully and replacing the series for the reduced
