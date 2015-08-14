@@ -59,6 +59,7 @@ set -e
 # Java
 #   java/pom.xml java/*/pom.xml
 #   java/src/main/java/net/sf/geographiclib/package-info.java
+#   (remember to remove SNAPSHOT from version number of lib)
 
 # maxima
 #   maxima/geodesic.mac
