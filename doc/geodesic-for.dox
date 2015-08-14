@@ -35,12 +35,12 @@ the source, the Fortran library can be found in
 GeographicLib-1.44/legacy/Fortran.  The library consists of the file
 geodesic.for.
 
-\section doc Library documentation
+\section doc-for Library documentation
 
 The interface to the library is documented via doxygen in the source
 file.  To access this, see geodesic.for.
 
-\section samples Sample programs
+\section samples-for Sample programs
 
 Also included are 3 small test programs:
  - geoddirect.for is a simple command line utility for solving the
@@ -85,7 +85,7 @@ are derived from the NGS source files
  .
 and are therefore in the public domain.
 
-\section library Using the library
+\section library-for Using the library
 
 - Optionally put @code{.for}
   include "geodesic.inc"
@@ -95,7 +95,7 @@ and are therefore in the public domain.
   the library is documented in geodesic.for.
 - Compile and link as described above.
 
-\section external External links
+\section external-for External links
 
 - These algorithms are derived in C. F. F. Karney,
   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
@@ -118,4 +118,22 @@ and are therefore in the public domain.
   geodesic.
 - <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">
   An online geodesic bibliography</a>.
+- The wikipedia page,
+  <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
+  Geodesics on an ellipsoid</a>.
+
+\section changes-for Change log
+
+ - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
+   (released 2015-08-15)
+
+   - Improve accuracy of calculations by evaluating trigonometric
+     functions more carefully and replacing the series for the reduced
+     length with one with a smaller truncation error.
+   - The allowed ranges for longitudes and azimuths is now unlimited;
+     it used to be [&minus;540&deg;, 540&deg;).
+   - The sample programs, geoddirect and geodinverse, enforce the
+     restriction of latitude to [&minus;90&deg;, 90&deg;].
+   - The inverse calculation sets \e s12 to zero for coincident points
+     at pole (instead of returning a tiny quantity).
 **********************************************************************/

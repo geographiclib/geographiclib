@@ -156,8 +156,8 @@
 *! a12; otherwise, \e s12a12 is \e a12 and \e a12s12 is \e s12.  It \e
 *! unroll is not set, the value \e lon2 returned is in the range
 *! [&minus;180&deg;, 180&deg;); if unroll is set, the longitude variable
-*! is "unrolled" so that \e lon2 &minus \e lon1 indicates how many times
-*! and in what sense the geodesic encircles the ellipsoid.
+*! is "unrolled" so that \e lon2 &minus; \e lon1 indicates how many
+*! times and in what sense the geodesic encircles the ellipsoid.
 *!
 *! \e omask is an integer in [0, 16) whose binary bits are interpreted
 *! as follows

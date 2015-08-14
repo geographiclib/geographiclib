@@ -79,7 +79,8 @@ I<f> = 1/298.257223563.
 unroll the longitude.  Normally, on output longitudes are reduced to lie
 in [-180deg,180deg).  However with this option, the returned longitude
 I<lon2> is "unrolled" so that I<lon2> - I<lon1> indicates how often and
-in what sense the geodesic has encircled the earth.
+in what sense the geodesic has encircled the earth.  Use the B<-f>
+option, to get both longitudes printed.
 
 =item B<-d>
 

@@ -199,6 +199,36 @@
  * <li>
  *   <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">
  *   An online geodesic bibliography</a>.
+ * <li>
+ *   The wikipedia page,
+ *   <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
+ *   Geodesics on an ellipsoid</a>.
+ * </ul>
+ *
+ * <h2>Change log</h2>
+ * <p>
+ * <ul>
+ * <li>
+ *   <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
+ *   (released 2015-08-15)
+ * <ul>
+ * <li>
+ *   Improve accuracy of calculations by evaluating trigonometric
+ *   functions more carefully and replacing the series for the reduced
+ *   length with one with a smaller truncation error.
+ * <li>
+ *   The allowed ranges for longitudes and azimuths is now unlimited;
+ *   it used to be [&minus;540&deg;, 540&deg;).
+ * <li>
+ *   Enforce the restriction of latitude to [&minus;90&deg;, 90&deg;] by
+ *   returning NaNs if the latitude is outside this range.
+ * <li>
+ *   Geodesic.Inverse sets <i>s12</i> to zero for coincident points at pole
+ *   (instead of returning a tiny quantity).
+ * <li>
+ *   Geodesic.Inverse pays attentions to the GeodesicMask.LONG_UNROLL bit in
+ *   <i>outmask</i>.
+ * </ul>
  * </ul>
  **********************************************************************/
 package net.sf.geographiclib;

@@ -436,8 +436,11 @@ public class Geodesic {
    * <li>
    *   <i>outmask</i> |= GeodesicMask.ALL for all of the above;
    * <li>
-   *   <i>outmask</i> |= GeodesicMask.LONG_UNROLL to unroll <i>lon2</i>
-   *   (instead of reducing it to the range [&minus;180&deg;, 180&deg;)).
+   *   <i>outmask</i> |= GeodesicMask.LONG_UNROLL, if set then <i>lon1</i> is
+   *   unchanged and <i>lon2</i> &minus; <i>lon1</i> indicates how many times
+   *   and in what sense the geodesic encircles the ellipsoid.  Otherwise
+   *   <i>lon1</i> and <i>lon2</i> are both reduced to the range
+   *   [&minus;180&deg;, 180&deg;).
    * </ul>
    * <p>
    * The function value <i>a12</i> is always computed and returned and this
@@ -516,6 +519,11 @@ public class Geodesic {
    *   <i>outmask</i> |= GeodesicMask.AREA for the area <i>S12</i>;
    * <li>
    *   <i>outmask</i> |= GeodesicMask.ALL for all of the above.
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.LONG_UNROLL, if set then <i>lon1</i> is
+   *   unchanged and <i>lon2</i> &minus; <i>lon1</i> indicates whether the
+   *   geodesic is east going or west going.  Otherwise <i>lon1</i> and
+   *   <i>lon2</i> are both reduced to the range [&minus;180&deg;, 180&deg;).
    * </ul>
    * <p>
    * <i>lat1</i>, <i>lon1</i>, <i>lat2</i>, <i>lon2</i>, and <i>a12</i> are

@@ -24,11 +24,16 @@
 
  10   continue
       read(*, *, end=90, err=90) lat1, lon1, azi1, s12
+      if (abs(lat1) .gt. 90) then
+        print 15
+ 15     format(1x, 'lat1 must be in [-90,90]')
+        go to 10
+      end if
       call direct(a, f, lat1, lon1, azi1, s12, flags,
      +    lat2, lon2, azi2, omask,
      +    dummy1, dummy2, dummy3, dummy4, dummy5)
       print 20, lat2, lon2, azi2
- 20   format(f20.15, 1x, f20.15, 1x, f20.15)
+ 20   format(1x, f20.15, 1x, f20.15, 1x, f20.15)
       go to 10
  90   continue
 

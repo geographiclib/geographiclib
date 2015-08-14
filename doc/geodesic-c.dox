@@ -42,12 +42,12 @@ version 4.9.0, where it is used as the computational backend for
 <a href="https://github.com/OSGeo/proj.4/wiki/Mangeod">geod(1)</a>.
 Instructions for how to use the library via proj.4 are given below.
 
-\section doc Library documentation
+\section doc-c Library documentation
 
 The interface to the library is documented via doxygen in the header
 file.  To access this, see geodesic.h.
 
-\section samples Sample programs
+\section samples-c Sample programs
 
 Also included are 3 small test programs:
  - direct.c is a simple command line utility for solving the
@@ -81,7 +81,7 @@ cc -c -I/usr/local/include inverse.c
 cc -o inverse inverse.o -lproj -L/usr/local/lib -Wl,-rpath=/usr/local/lib
 echo 30 0 29.5 179.5 | ./inverse \endverbatim
 
-\section library Using the library
+\section library-c Using the library
 
 - Put @code{.c}
   #include "geodesic.h"
@@ -109,7 +109,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
   #endif
   @endcode
 
-\section external External links
+\section external-c External links
 
 - These algorithms are derived in C. F. F. Karney,
   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
@@ -132,4 +132,22 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
   geodesic.
 - <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">
   An online geodesic bibliography</a>.
+- The wikipedia page,
+  <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
+  Geodesics on an ellipsoid</a>.
+
+\section changes-c Change log
+
+ - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
+   (released 2015-08-15)
+
+   - Improve accuracy of calculations by evaluating trigonometric
+     functions more carefully and replacing the series for the reduced
+     length with one with a smaller truncation error.
+   - The allowed ranges for longitudes and azimuths is now unlimited;
+     it used to be [&minus;540&deg;, 540&deg;).
+   - Enforce the restriction of latitude to [&minus;90&deg;, 90&deg;] by
+     returning NaNs if the latitude is outside this range.
+   - The inverse calculation sets \e s12 to zero for coincident points
+     at pole (instead of returning a tiny quantity).
 **********************************************************************/
