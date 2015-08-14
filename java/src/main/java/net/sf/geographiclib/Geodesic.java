@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.Geodesic class
  *
- * Copyright (c) Charles Karney (2013-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -300,10 +300,9 @@ public class Geodesic {
    *   <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>lat2</i>, <i>lon2</i>,
    *   <i>azi2</i>, <i>s12</i>, <i>a12</i>.
    * <p>
-   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;]; <i>lon1</i>
-   * and <i>azi1</i> should be in the range [&minus;540&deg;, 540&deg;).  The
-   * values of <i>lon2</i> and <i>azi2</i> returned are in the range
-   * [&minus;180&deg;, 180&deg;).
+   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;].  The values
+   * of <i>lon2</i> and <i>azi2</i> returned are in the range [&minus;180&deg;,
+   * 180&deg;).
    * <p>
    * If either point is at a pole, the azimuth is defined by keeping the
    * longitude fixed, writing <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;),
@@ -356,10 +355,9 @@ public class Geodesic {
    *   <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>lat2</i>, <i>lon2</i>,
    *   <i>azi2</i>, <i>s12</i>, <i>a12</i>.
    * <p>
-   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;]; <i>lon1</i>
-   * and <i>azi1</i> should be in the range [&minus;540&deg;, 540&deg;).  The
-   * values of <i>lon2</i> and <i>azi2</i> returned are in the range
-   * [&minus;180&deg;, 180&deg;).
+   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;].  The values
+   * of <i>lon2</i> and <i>azi2</i> returned are in the range [&minus;180&deg;,
+   * 180&deg;).
    * <p>
    * If either point is at a pole, the azimuth is defined by keeping the
    * longitude fixed, writing <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;),
@@ -438,8 +436,11 @@ public class Geodesic {
    * <li>
    *   <i>outmask</i> |= GeodesicMask.ALL for all of the above;
    * <li>
-   *   <i>outmask</i> |= GeodesicMask.LONG_UNROLL to unroll <i>lon2</i>
-   *   (instead of reducing it to the range [&minus;180&deg;, 180&deg;)).
+   *   <i>outmask</i> |= GeodesicMask.LONG_UNROLL, if set then <i>lon1</i> is
+   *   unchanged and <i>lon2</i> &minus; <i>lon1</i> indicates how many times
+   *   and in what sense the geodesic encircles the ellipsoid.  Otherwise
+   *   <i>lon1</i> and <i>lon2</i> are both reduced to the range
+   *   [&minus;180&deg;, 180&deg;).
    * </ul>
    * <p>
    * The function value <i>a12</i> is always computed and returned and this
@@ -471,9 +472,8 @@ public class Geodesic {
    *   <i>azi2</i>, <i>s12</i>, <i>a12</i>.
    * <p>
    * <i>lat1</i> and <i>lat2</i> should be in the range [&minus;90&deg;,
-   * 90&deg;]; <i>lon1</i> and <i>lon2</i> should be in the range
-   * [&minus;540&deg;, 540&deg;).  The values of <i>azi1</i> and <i>azi2</i>
-   * returned are in the range [&minus;180&deg;, 180&deg;).
+   * 90&deg;].  The values of <i>azi1</i> and <i>azi2</i> returned are in the
+   * range [&minus;180&deg;, 180&deg;).
    * <p>
    * If either point is at a pole, the azimuth is defined by keeping the
    * longitude fixed, writing <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;),
@@ -519,6 +519,11 @@ public class Geodesic {
    *   <i>outmask</i> |= GeodesicMask.AREA for the area <i>S12</i>;
    * <li>
    *   <i>outmask</i> |= GeodesicMask.ALL for all of the above.
+   * <li>
+   *   <i>outmask</i> |= GeodesicMask.LONG_UNROLL, if set then <i>lon1</i> is
+   *   unchanged and <i>lon2</i> &minus; <i>lon1</i> indicates whether the
+   *   geodesic is east going or west going.  Otherwise <i>lon1</i> and
+   *   <i>lon2</i> are both reduced to the range [&minus;180&deg;, 180&deg;).
    * </ul>
    * <p>
    * <i>lat1</i>, <i>lon1</i>, <i>lat2</i>, <i>lon2</i>, and <i>a12</i> are
@@ -528,22 +533,24 @@ public class Geodesic {
                               double lat2, double lon2, int outmask) {
     outmask &= GeodesicMask.OUT_MASK;
     GeodesicData r = new GeodesicData();
-    lon1 = GeoMath.AngNormalize(lon1);
-    lon2 = GeoMath.AngNormalize(lon2);
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
+    r.lat1 = lat1 = GeoMath.LatFix(lat1); r.lat2 = lat2 = GeoMath.LatFix(lat2);
+    // If really close to the equator, treat as on equator.
+    lat1 = GeoMath.AngRound(lat1);
+    lat2 = GeoMath.AngRound(lat2);
     double lon12 = GeoMath.AngDiff(lon1, lon2);
+    if ((outmask & GeodesicMask.LONG_UNROLL) != 0) {
+      r.lon1 = lon1; r.lon2 = lon1 + lon12;
+    } else {
+      r.lon1 = GeoMath.AngNormalize(lon1); r.lon2 = GeoMath.AngNormalize(lon2);
+    }
     // If very close to being on the same half-meridian, then make it so.
     lon12 = GeoMath.AngRound(lon12);
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
-    // If really close to the equator, treat as on equator.
-    lat1 = GeoMath.AngRound(lat1);
-    lat2 = GeoMath.AngRound(lat2);
-    // Save input parameters post normalization
-    r.lat1 = lat1; r.lon1 = lon1; r.lat2 = lat2; r.lon2 = lon2;
     // Swap points so that point with higher (abs) latitude is point 1
     int swapp = Math.abs(lat1) >= Math.abs(lat2) ? 1 : -1;
     if (swapp < 0) {
@@ -566,22 +573,19 @@ public class Geodesic {
     // check, e.g., on verifying quadrants in atan2.  In addition, this
     // enforces some symmetries in the results returned.
 
-    double phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
+    double sbet1, cbet1, sbet2, cbet2, s12x, m12x;
     s12x = m12x = Double.NaN;
 
-    phi = lat1 * GeoMath.degree;
-    // Ensure cbet1 = +epsilon at poles
-    sbet1 = _f1 * Math.sin(phi);
-    cbet1 = lat1 == -90 ? tiny_ : Math.cos(phi);
-    { Pair p = GeoMath.norm(sbet1, cbet1);
-      sbet1 = p.first; cbet1 = p.second; }
+    { Pair p = GeoMath.sincosd(lat1); sbet1 = _f1 * p.first; cbet1 = p.second; }
+    // Ensure cbet1 = +epsilon at poles; doing the fix on beta means that sig12
+    // will be <= 2*tiny for two points at the same pole.
+    { Pair p = GeoMath.norm(sbet1, cbet1); sbet1 = p.first; cbet1 = p.second; }
+    cbet1 = Math.max(tiny_, cbet1);
 
-    phi = lat2 * GeoMath.degree;
+    { Pair p = GeoMath.sincosd(lat2); sbet2 = _f1 * p.first; cbet2 = p.second; }
     // Ensure cbet2 = +epsilon at poles
-    sbet2 = _f1 * Math.sin(phi);
-    cbet2 = Math.abs(lat2) == 90 ? tiny_ : Math.cos(phi);
-    { Pair p = GeoMath.norm(sbet2, cbet2);
-      sbet2 = p.first; cbet2 = p.second; }
+    { Pair p = GeoMath.norm(sbet2, cbet2); sbet2 = p.first; cbet2 = p.second; }
+    cbet2 = Math.max(tiny_, cbet2);
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
     // |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -604,9 +608,8 @@ public class Geodesic {
       dn2 = Math.sqrt(1 + _ep2 * GeoMath.sq(sbet2));
 
     double
-      lam12 = lon12 * GeoMath.degree,
-      slam12 = Math.abs(lon12) == 180 ? 0 : Math.sin(lam12),
-      clam12 = Math.cos(lam12);      // lon12 == 90 isn't interesting
+      lam12 = lon12 * GeoMath.degree, slam12, clam12;
+    { Pair p = GeoMath.sincosd(lon12); slam12 = p.first; clam12 = p.second; }
 
     double a12, sig12, calp1, salp1, calp2, salp2;
     a12 = sig12 = calp1 = salp1 = calp2 = salp2 = Double.NaN;
@@ -635,9 +638,9 @@ public class Geodesic {
                     csig1 * csig2 + ssig1 * ssig2);
       {
         LengthsV v =
-          Lengths(_n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                  cbet1, cbet2,
-                  (outmask & GeodesicMask.GEODESICSCALE) != 0, C1a, C2a);
+          Lengths(_n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+                  outmask | GeodesicMask.DISTANCE | GeodesicMask.REDUCEDLENGTH,
+                  C1a, C2a);
         s12x = v.s12b; m12x = v.m12b;
         if ((outmask & GeodesicMask.GEODESICSCALE) != 0) {
           r.M12 = v.M12; r.M21 = v.M21;
@@ -651,6 +654,9 @@ public class Geodesic {
       // In fact, we will have sig12 > pi/2 for meridional geodesic which is
       // not a shortest path.
       if (sig12 < 1 || m12x >= 0) {
+        // Need at least 2, to handle 90 0 90 180
+        if (sig12 < 3 * tiny_)
+          sig12 = m12x = s12x = 0;
         m12x *= _b;
         s12x *= _b;
         a12 = sig12 / GeoMath.degree;
@@ -777,10 +783,16 @@ public class Geodesic {
                    Math.abs(salp1 - salp1b) + (calp1 - calp1b) < tolb_);
         }
         {
+          // Ensure that the reduced length and geodesic scale are computed in
+          // a "canonical" way, with the I2 integral.
+          int lengthmask = outmask |
+            ((outmask &
+              (GeodesicMask.REDUCEDLENGTH | GeodesicMask.GEODESICSCALE)) != 0 ?
+             GeodesicMask.DISTANCE : GeodesicMask.NONE);
           LengthsV v =
-            Lengths(eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                    cbet1, cbet2,
-                    (outmask & GeodesicMask.GEODESICSCALE) != 0, C1a, C2a);
+            Lengths(eps, sig12,
+                    ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+                    lengthmask, C1a, C2a);
           s12x = v.s12b; m12x = v.m12b;
           if ((outmask & GeodesicMask.GEODESICSCALE) != 0) {
             r.M12 = v.M12; r.M21 = v.M21;
@@ -872,9 +884,8 @@ public class Geodesic {
     salp2 *= swapp * lonsign; calp2 *= swapp * latsign;
 
     if ((outmask & GeodesicMask.AZIMUTH) != 0) {
-      // minus signs give range [-180, 180). 0- converts -0 to +0.
-      r.azi1 = 0 - Math.atan2(-salp1, calp1) / GeoMath.degree;
-      r.azi2 = 0 - Math.atan2(-salp2, calp2) / GeoMath.degree;
+      r.azi1 = GeoMath.atan2d(salp1, calp1);
+      r.azi2 = GeoMath.atan2d(salp2, calp2);
     }
     // Returned value in [0, 180]
     r.a12 = a12;
@@ -889,9 +900,8 @@ public class Geodesic {
    * @param azi1 azimuth at point 1 (degrees).
    * @return a {@link GeodesicLine} object.
    * <p>
-   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;]; <i>lon1</i>
-   * and <i>azi1</i> should be in the range [&minus;540&deg;, 540&deg;).  The
-   * full set of capabilities is included.
+   * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;].  The full
+   * set of capabilities is included.
    * <p>
    * If the point is at a pole, the azimuth is defined by keeping the
    * <i>lon1</i> fixed, writing <i>lat1</i> = &plusmn;(90 &minus; &epsilon;),
@@ -1031,31 +1041,56 @@ public class Geodesic {
                            double ssig1, double csig1, double dn1,
                            double ssig2, double csig2, double dn2,
                            double cbet1, double cbet2,
-                           boolean scalep,
+                           int outmask,
                            // Scratch areas of the right size
                            double C1a[], double C2a[]) {
     // Return m12b = (reduced length)/_b; also calculate s12b = distance/_b,
     // and m0 = coefficient of secular term in expression for reduced length.
+    outmask &= GeodesicMask.OUT_MASK;
     LengthsV v = new LengthsV(); // To hold s12b, m12b, m0, M12, M21;
-    C1f(eps, C1a);
-    C2f(eps, C2a);
-    double
-      A1m1 = A1m1f(eps),
-      AB1 = (1 + A1m1) * (SinCosSeries(true, ssig2, csig2, C1a) -
-                          SinCosSeries(true, ssig1, csig1, C1a)),
-      A2m1 = A2m1f(eps),
-      AB2 = (1 + A2m1) * (SinCosSeries(true, ssig2, csig2, C2a) -
-                          SinCosSeries(true, ssig1, csig1, C2a));
-    v.m0 = A1m1 - A2m1;
-    double J12 = v.m0 * sig12 + (AB1 - AB2);
-    // Missing a factor of _b.
-    // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
-    // cancellation in the case of coincident points.
-    v.m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
-      csig1 * csig2 * J12;
-    // Missing a factor of _b
-    v.s12b = (1 + A1m1) * sig12 + AB1;
-    if (scalep) {
+
+    double m0x = 0, J12 = 0, A1 = 0, A2 = 0;
+    if ((outmask & (GeodesicMask.DISTANCE | GeodesicMask.REDUCEDLENGTH |
+                    GeodesicMask.GEODESICSCALE)) != 0) {
+      A1 = A1m1f(eps);
+      C1f(eps, C1a);
+      if ((outmask & (GeodesicMask.REDUCEDLENGTH |
+                      GeodesicMask.GEODESICSCALE)) != 0) {
+        A2 = A2m1f(eps);
+        C2f(eps, C2a);
+        m0x = A1 - A2;
+        A2 = 1 + A2;
+      }
+      A1 = 1 + A1;
+    }
+    if ((outmask & GeodesicMask.DISTANCE) != 0) {
+      double B1 = SinCosSeries(true, ssig2, csig2, C1a) -
+        SinCosSeries(true, ssig1, csig1, C1a);
+      // Missing a factor of _b
+      v.s12b = A1 * (sig12 + B1);
+      if ((outmask & (GeodesicMask.REDUCEDLENGTH |
+                      GeodesicMask.GEODESICSCALE)) != 0) {
+        double B2 = SinCosSeries(true, ssig2, csig2, C2a) -
+          SinCosSeries(true, ssig1, csig1, C2a);
+        J12 = m0x * sig12 + (A1 * B1 - A2 * B2);
+      }
+    } else if ((outmask & (GeodesicMask.REDUCEDLENGTH |
+                           GeodesicMask.GEODESICSCALE)) != 0) {
+      // Assume here that nC1_ >= nC2_
+      for (int l = 1; l <= nC2_; ++l)
+        C2a[l] = A1 * C1a[l] - A2 * C2a[l];
+      J12 = m0x * sig12 + (SinCosSeries(true, ssig2, csig2, C2a) -
+                           SinCosSeries(true, ssig1, csig1, C2a));
+    }
+    if ((outmask & GeodesicMask.REDUCEDLENGTH) != 0) {
+      v.m0 = m0x;
+      // Missing a factor of _b.
+      // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure
+      // accurate cancellation in the case of coincident points.
+      v.m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
+        csig1 * csig2 * J12;
+    }
+    if ((outmask & GeodesicMask.GEODESICSCALE) != 0) {
       double csig12 = csig1 * csig2 + ssig1 * ssig2;
       double t = _ep2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2);
       v.M12 = csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1;
@@ -1079,7 +1114,7 @@ public class Geodesic {
         S = p * q / 4,            // S = r^3 * s
         r2 = GeoMath.sq(r),
         r3 = r * r2,
-        // The discrimant of the quadratic equation for T3.  This is zero on
+        // The discriminant of the quadratic equation for T3.  This is zero on
         // the evolute curve p^(1/3)+q^(1/3) = 1
         disc = S * (S + 2 * r3);
       double u = r;
@@ -1210,7 +1245,7 @@ public class Geodesic {
         LengthsV v =
           Lengths(_n, Math.PI + bet12a,
                   sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
-                  cbet1, cbet2, false, C1a, C2a);
+                  cbet1, cbet2, GeodesicMask.REDUCEDLENGTH, C1a, C2a);
         m12b = v.m12b; m0 = v.m0;
 
         x = -1 + m12b / (cbet1 * cbet2 * m0 * Math.PI);
@@ -1366,10 +1401,9 @@ public class Geodesic {
       if (w.calp2 == 0)
         w.dlam12 = - 2 * _f1 * dn1 / sbet1;
       else {
-        double dummy;
         LengthsV v =
           Lengths(w.eps, w.sig12, w.ssig1, w.csig1, dn1, w.ssig2, w.csig2, dn2,
-                  cbet1, cbet2, false, C1a, C2a);
+                  cbet1, cbet2, GeodesicMask.REDUCEDLENGTH, C1a, C2a);
         w.dlam12 = v.m12b;
         w.dlam12 *= _f1 / (w.calp2 * cbet2);
       }
@@ -1479,12 +1513,12 @@ public class Geodesic {
   // The scale factor A2-1 = mean value of (d/dsigma)I2 - 1
   protected static double A2m1f(double eps) {
     final double coeff[] = {
-      // A2/(1-eps)-1, polynomial in eps2 of order 3
-      25, 36, 64, 0, 256,
+      // (eps+1)*A2-1, polynomial in eps2 of order 3
+      -11, -28, -192, 0, 256,
     };
     int m = nA2_/2;
     double t = GeoMath.polyval(m, coeff, 0, GeoMath.sq(eps)) / coeff[m + 1];
-    return t * (1 - eps) - eps;
+    return (t - eps) / (1 + eps);
   }
 
   // The coefficients C2[l] in the Fourier expansion of B2

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Geodesic calculations for an ellipsoid done right</title>
@@ -22,11 +22,12 @@
 		   online calculator,
 		   WGS84 ellipsoid,
 		   GeographicLib" />
+    <meta http-equiv="Content-Type"
+	  content="text/html; charset=ISO-8859-1">
     <script type="text/javascript"
 	    src="http://geographiclib.sf.net/scripts/geographiclib.js">
     </script>
     <script type="text/javascript">
-<!--
 var geod = GeographicLib.Geodesic.WGS84;
 var dms = GeographicLib.DMS;
 function formatpoint(lat, lon, azi, dmsformat, prec) {
@@ -41,7 +42,7 @@ function formatpoint(lat, lon, azi, dmsformat, prec) {
   } else {
     return (lat.toFixed(prec) + " " +
 	    lon.toFixed(prec) + " " +
-	    azi .toFixed(prec));
+	    azi.toFixed(prec));
   }
 }
 
@@ -55,17 +56,27 @@ function GeodesicInverse(input, dmsformat, prec) {
       throw new Error("Need 4 input items");
     var p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
     var p2 = GeographicLib.DMS.DecodeLatLon(t[2], t[3]);
-    t = geod.Inverse(p1.lat, p1.lon, p2.lat, p2.lon);
+    t = geod.Inverse(p1.lat, p1.lon, p2.lat, p2.lon,
+		     GeographicLib.Geodesic.ALL |
+		     GeographicLib.Geodesic.LONG_UNROLL);
     result.status = "OK";
     result.p1 = formatpoint(t.lat1, t.lon1, t.azi1, dmsformat, prec);
     result.p2 = formatpoint(t.lat2, t.lon2, t.azi2, dmsformat, prec);
     result.s12 = t.s12.toFixed(prec);
+    result.a12 = t.a12.toFixed(prec + 5);
+    result.m12 = t.m12.toFixed(prec);
+    result.M1221 = t.M12.toFixed(prec + 7) + " " + t.M21.toFixed(prec + 6);
+    result.S12 = t.S12.toFixed(Math.max(prec - 7, 0));
   }
   catch (e) {
     result.status = "ERROR: " + e.message;
     result.p1 = "";
     result.p2 = "";
     result.s12 = "";
+    result.a12 = "";
+    result.m12 = "";
+    result.M1221 = "";
+    result.S12 = "";
   }
   return result;
 }
@@ -81,17 +92,27 @@ function GeodesicDirect(input, dmsformat, prec) {
     var p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
     var azi1 = GeographicLib.DMS.DecodeAzimuth(t[2]);
     var s12 = parseFloat(t[3]);
-    t = geod.Direct(p1.lat, p1.lon, azi1, s12);
+    t = geod.Direct(p1.lat, p1.lon, azi1, s12,
+		    GeographicLib.Geodesic.ALL |
+		    GeographicLib.Geodesic.LONG_UNROLL);
     result.status = "OK";
     result.p1 = formatpoint(t.lat1, t.lon1, t.azi1, dmsformat, prec);
     result.p2 = formatpoint(t.lat2, t.lon2, t.azi2, dmsformat, prec);
     result.s12 = t.s12.toFixed(prec);
+    result.a12 = t.a12.toFixed(prec + 5);
+    result.m12 = t.m12.toFixed(prec);
+    result.M1221 = t.M12.toFixed(prec + 7) + " " + t.M21.toFixed(prec + 6);
+    result.S12 = t.S12.toFixed(Math.max(prec - 7, 0));
   }
   catch (e) {
     result.status = "ERROR: " + e.message;
     result.p1 = "";
     result.p2 = "";
     result.s12 = "";
+    result.a12 = "";
+    result.m12 = "";
+    result.M1221 = "";
+    result.S12 = "";
   }
   return result;
 }
@@ -153,7 +174,6 @@ function GeodesicArea(input, polyline) {
   }
   return result;
 }
-//-->
     </script>
   </head>
   <body>
@@ -162,7 +182,7 @@ function GeodesicArea(input, polyline) {
     </div>
     <p>
       This page illustrates the geodesic routines available in
-      <a href="http://geographiclib.sourceforge.net">GeographicLib</a>.
+      <a href="http://geographiclib.sf.net">GeographicLib</a>.
       The C++ code has been converted to JavaScript so the calculations
       are carried out on the client.  The algorithms are considerably
       more accurate than Vincenty's method, and offer more functionality
@@ -189,7 +209,16 @@ function GeodesicArea(input, polyline) {
       -20:30:40.5.)  The results are accurate to about
       15&nbsp;nanometers (or 0.1&nbsp;m<sup>2</sup> per vertex for
       areas).  A slicker page where the geodesics are incorporated into
-      Google Maps is given <a href="geod-google.html">here</a>.
+      Google Maps is given <a href="geod-google.html">here</a>.  Basic
+      online tools which provide similar capabilities are
+      <a href="http://geographiclib.sf.net/cgi-bin/GeodSolve">GeodSolve</a>
+      and
+      <a href="http://geographiclib.sf.net/cgi-bin/Planimeter">Planimeter</a>;
+      these call a C++ backend.  This page uses version
+      <script type="text/javascript">
+	document.write(GeographicLib.Constants.version_string);
+      </script>
+      of the geodesic code.
     <p>
       Jump to:
       <ul>
@@ -207,14 +236,14 @@ function GeodesicArea(input, polyline) {
       <p>
 	Find the shortest path between two points on the earth.  The
 	path is characterized by its length <i>s12</i> and its azimuth
-	at the two ends <i>azi1</i> and <i>azi2</i>.  The sample
-	calculation finds the shortest path between Wellington, New
-	Zealand, and Salamanca, Spain.  (For this example, the
-	<a href="http://www.ngs.noaa.gov/">NGS</a>
-	<a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
-        inverse geodesic calculator</a> returns a result which is 1.2 km
-	too long with an azimuth which is off by 3 degrees.)  To perform
-	the calculation, press the &ldquo;COMPUTE&rdquo; button.
+	at the two ends <i>azi1</i> and <i>azi2</i>.  See
+	<a href="http://geographiclib.sf.net/html/GeodSolve.1.html">
+	  GeodSolve(1)</a>
+	for the definition of the
+	quantities <i>a12</i>, <i>m12</i>, <i>M12</i>, <i>M21</i>,
+	and <i>S12</i>.  The sample calculation finds the shortest path
+	between Wellington, New Zealand, and Salamanca, Spain.  To
+	perform the calculation, press the &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2&rdquo;</i>:</p>
       <p>input:
@@ -250,7 +279,11 @@ function GeodesicArea(input, polyline) {
 			document.inverse.status.value = t.status;
 			document.inverse.p1.value = t.p1;
 			document.inverse.p2.value = t.p2;
-			document.inverse.s12.value = t.s12;" />
+			document.inverse.s12.value = t.s12;
+			document.inverse.a12.value = t.a12;
+			document.inverse.m12.value = t.m12;
+			document.inverse.M1221.value = t.M1221;
+			document.inverse.S12.value = t.S12;" />
       </p>
       <p>
 	status:
@@ -268,6 +301,22 @@ function GeodesicArea(input, polyline) {
 	<font color='blue'>s12</font>:
         <input name="s12" size=25 readonly />
       </p>
+      <p>
+	<font color='blue'>a12</font>:
+        <input name="a12" size=25 readonly />
+      </p>
+      <p>
+	<font color='blue'>m12</font>:
+        <input name="m12" size=25 readonly />
+      </p>
+      <p>
+	<font color='blue'>M12 M21</font>:
+        <input name="M1221" size=50 readonly />
+      </p>
+      <p>
+	<font color='blue'>S12</font>:
+        <input name="S12" size=25 readonly />
+      </p>
     </form>
     <hr>
     <form name="direct">
@@ -276,9 +325,14 @@ function GeodesicArea(input, polyline) {
 	Find the destination traveling a given distance along a geodesic
 	with a given azimuth at the starting point.  The destination is
 	characterized by its position <i>lat2, lon2</i> and its azimuth
-	at the destination <i>azi2</i>.  The sample calculation shows
-	the result of travelling 10000 km NE from JFK airport.  To perform
-	the calculation, press the &ldquo;COMPUTE&rdquo; button.
+	at the destination <i>azi2</i>.  See
+	<a href="http://geographiclib.sf.net/html/GeodSolve.1.html">
+	  GeodSolve(1)</a>
+	for the definition of the
+	quantities <i>a12</i>, <i>m12</i>, <i>M12</i>, <i>M21</i>,
+	and <i>S12</i>.  The sample calculation shows the result of
+	travelling 10000 km NE from JFK airport.  To perform the
+	calculation, press the &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 azi1 s12&rdquo;</i>:</p>
       <p>input:
@@ -314,7 +368,11 @@ function GeodesicArea(input, polyline) {
 			document.direct.status.value = t.status;
 			document.direct.p1.value = t.p1;
 			document.direct.p2.value = t.p2;
-			document.direct.s12.value = t.s12;" />
+			document.direct.s12.value = t.s12;
+			document.direct.a12.value = t.a12;
+			document.direct.m12.value = t.m12;
+			document.direct.M1221.value = t.M1221;
+			document.direct.S12.value = t.S12;" />
       </p>
       <p>
 	status:
@@ -331,6 +389,22 @@ function GeodesicArea(input, polyline) {
       <p>
 	s12:
         <input name="s12" size=25 readonly />
+      </p>
+      <p>
+	<font color='blue'>a12</font>:
+        <input name="a12" size=25 readonly />
+      </p>
+      <p>
+	<font color='blue'>m12</font>:
+        <input name="m12" size=25 readonly />
+      </p>
+      <p>
+	<font color='blue'>M12 M21</font>:
+        <input name="M1221" size=50 readonly />
+      </p>
+      <p>
+	<font color='blue'>S12</font>:
+        <input name="S12" size=25 readonly />
       </p>
     </form>
     <hr>
@@ -460,8 +534,8 @@ function GeodesicArea(input, polyline) {
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2011-08-04)</address>
+      (2015-08-12)</address>
     <br>
-    <a href="http://geographiclib.sourceforge.net">Geographiclib Sourceforge</a>
+    <a href="http://geographiclib.sf.net">Geographiclib Sourceforge</a>
   </body>
 </html>

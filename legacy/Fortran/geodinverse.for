@@ -23,12 +23,18 @@
 
  10   continue
       read(*, *, end=90, err=90) lat1, lon1, lat2, lon2
+      if (abs(lat1) .gt. 90 .or. abs(lat2) .gt. 90) then
+        print 15
+ 15     format(1x,'lat1 and lat2 must be in [-90,90]')
+        go to 10
+      end if
       call invers(a, f, lat1, lon1, lat2, lon2,
      +    s12, azi1, azi2, omask,
      +    dummy1, dummy2, dummy3, dummy4 , dummy5)
       print 20, azi1, azi2, s12
- 20   format(f20.15, 1x, f20.15, 1x, f19.10)
+ 20   format(1x, f20.15, 1x, f20.15, 1x, f19.10)
       go to 10
  90   continue
+
       stop
       end

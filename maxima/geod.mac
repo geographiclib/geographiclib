@@ -1,7 +1,7 @@
 /*
 Compute the series expansions for the ellipsoidal geodesic problem.
 
-Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and
+Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and
 licensed under the MIT/X11 License.  For more information, see
 http://geographiclib.sourceforge.net/
 
@@ -133,9 +133,9 @@ in A2 and C2[l].  This leads to a series where half the terms drop out.
 
 computeI2(maxpow):=block([sintegrand,sintegrandexp,s,sigma,tau1,k2,eps],
   sintegrand:1/sqrt(1+k2*sin(sigma)^2),
-/* Multiplicative factor (1-eps) */
+/* Multiplicative factor 1/(1+eps) */
   sintegrandexp:ataylor(
-      1/(1-eps)*subst([k2=4*eps/(1-eps)^2],sintegrand),
+      (1+eps)*subst([k2=4*eps/(1-eps)^2],sintegrand),
       eps,maxpow),
   s:trigreduce(integrate(sintegrandexp,sigma)),
   s:s-subst(sigma=0,s),
@@ -144,7 +144,7 @@ computeI2(maxpow):=block([sintegrand,sintegrandexp,s,sigma,tau1,k2,eps],
   for i:1 thru maxpow do C2[i]:coeff(tau1,sin(2*i*sigma)),
   if expand(tau1-sigma-sum(C2[i]*sin(2*i*sigma),i,1,maxpow)) # 0
   then error("left over terms in B2"),
-  A2:A2*(1-eps),
+  A2:A2/(1+eps),
   'done)$
 
 /*
@@ -303,7 +303,7 @@ codeA2(maxpow):=block([tab2:"    ",tab3:"      "],
       t;
     switch (nA2_/2) {"),
   for n:0 thru entier(maxpow/2) do block([
-    q:horner(ataylor(subst([eps=sqrt(eps2)],A2/(1-eps)-1),eps2,n)),
+    q:horner(ataylor(subst([eps=sqrt(eps2)],A2*(1+eps)-1),eps2,n)),
     linel:1200],
     print(concat(tab2,"case ",string(n),":")),
     print(concat(tab3,"t = ",string(q),";")),
@@ -313,7 +313,7 @@ codeA2(maxpow):=block([tab2:"    ",tab3:"      "],
       " && nA2_ <= ",string(maxpow),", \"Bad value of nA2_\");")),
   print(concat(tab3,"t = 0;")),
   print("    }
-    return t * (1 - eps) - eps;
+    return (t - eps) / (1 + eps);
   }"),
 'done)$
 
@@ -455,12 +455,12 @@ block([tt:ataylor(C1p[i],eps,ord),ttt,linel:1200],
         if j=ord or j=ord-1 then ";" else ""))))$
 
 dispA2(ord):=block(
-  [tt:ataylor(A2/(1-eps),eps,ord),ttt,linel:1200],
+  [tt:ataylor(A2*(1+eps),eps,ord),ttt,linel:1200],
   for j:2 step 2 thru ord do (ttt:coeff(tt,eps,j),
     print(concat(if j = 2 then "A2 = (1 " else "        ",
         if ttt>0 then "+ " else "- ",
         string(abs(ttt)), " * ", string(eps^j),
-        if j=ord or j = ord-1 then ") * (1 - eps);" else ""))))$
+        if j=ord or j = ord-1 then ") / (1 + eps);" else ""))))$
 
 dispC2(ord):=for i:1 thru ord do
 block([tt:ataylor(C2[i],eps,ord),ttt,linel:1200],
@@ -579,10 +579,6 @@ maxpow:8$
 computeall()$
 /* printcode()$ */
 dispseries()$
-/* Coefficients of I1 - I2 */
-A12:ratdisrep(taylor(A1-A2,eps,0,maxpow))$
-for j:1 thru maxpow do
-  C12[j]:ratdisrep(taylor((A1*C1[j]-A2*C2[j])/A12,eps,0,maxpow-1))$
 
 load("polyprint.mac")$
 printgeod():= block([macro:if simplenum then "GEOGRAPHICLIB_GEODESIC_ORDER"
@@ -590,13 +586,11 @@ printgeod():= block([macro:if simplenum then "GEOGRAPHICLIB_GEODESIC_ORDER"
   value1('(A1*(1-eps)-1),'eps,2,0),
   array1('C1,'eps,2,0),
   array1('C1p,'eps,2,0),
-  value1('(A2/(1-eps)-1),'eps,2,0),
+  value1('(A2*(1+eps)-1),'eps,2,0),
   array1('C2,eps,2,0),
   value2('A3,'n,'eps,1),
   array2('C3,'n,'eps,1),
-  array2('C4,'n,'eps,1),
-  value1('A12,'eps,1,0),
-  array1('C12,'eps,1,1))$
+  array2('C4,'n,'eps,1))$
 printgeod()$
 /* Save the values needed for geodesic.mac  This is commented out
 here to avoid accidentally overwriting files in a user's directory. */

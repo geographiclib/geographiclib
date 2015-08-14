@@ -36,10 +36,9 @@ namespace GeographicLib {
                              real lat1, real lon1, real azi1,
                              unsigned caps)
     : tiny_(g.tiny_)
-    , _lat1(lat1)
+    , _lat1(Math::LatFix(lat1))
     , _lon1(lon1)
-    // Guard against underflow in salp0.  Also -0 is converted to +0.
-    , _azi1(Math::AngRound(Math::AngNormalize(azi1)))
+    , _azi1(Math::AngNormalize(azi1))
     , _a(g._a)
     , _f(g._f)
     , _b(g._b)
@@ -48,17 +47,12 @@ namespace GeographicLib {
       // Always allow latitude and azimuth and unrolling of longitude
     , _caps(caps | LATITUDE | AZIMUTH | LONG_UNROLL)
   {
-    real alp1 = _azi1 * Math::degree();
-    // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
-    // problems directly than to skirt them.
-    _salp1 =     _azi1  == -180 ? 0 : sin(alp1);
-    _calp1 = abs(_azi1) ==   90 ? 0 : cos(alp1);
-    real cbet1, sbet1, phi;
-    phi = lat1 * Math::degree();
+    // Guard against underflow in salp0.  Also -0 is converted to +0.
+    Math::sincosd(Math::AngRound(_azi1), _salp1, _calp1);
+    real cbet1, sbet1;
+    Math::sincosd(Math::AngRound(_lat1), sbet1, cbet1); sbet1 *= _f1;
     // Ensure cbet1 = +epsilon at poles
-    sbet1 = _f1 * sin(phi);
-    cbet1 = abs(lat1) == 90 ? tiny_ : cos(phi);
-    Math::norm(sbet1, cbet1);
+    Math::norm(sbet1, cbet1); cbet1 = max(tiny_, cbet1);
     _dn1 = sqrt(1 + g._ep2 * Math::sq(sbet1));
 
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -135,10 +129,7 @@ namespace GeographicLib {
     if (arcmode) {
       // Interpret s12_a12 as spherical arc length
       sig12 = s12_a12 * Math::degree();
-      real s12a = abs(s12_a12);
-      s12a -= 180 * floor(s12a / 180);
-      ssig12 = s12a ==  0 ? 0 : sin(sig12);
-      csig12 = s12a == 90 ? 0 : cos(sig12);
+      Math::sincosd(s12_a12, ssig12, csig12);
     } else {
       // Interpret s12_a12 as distance
       real
@@ -223,15 +214,13 @@ namespace GeographicLib {
         ( sig12 + (Geodesic::SinCosSeries(true, ssig2, csig2, _C3a, nC3_-1)
                    - _B31));
       real lon12 = lam12 / Math::degree();
-      // Use Math::AngNormalize2 because longitude might have wrapped
-      // multiple times.
       lon2 = outmask & LONG_UNROLL ? _lon1 + lon12 :
         Math::AngNormalize(Math::AngNormalize(_lon1) +
-                           Math::AngNormalize2(lon12));
+                           Math::AngNormalize(lon12));
     }
 
     if (outmask & LATITUDE)
-      lat2 = atan2(sbet2, _f1 * cbet2) / Math::degree();
+      lat2 = Math::atan2d(sbet2, _f1 * cbet2);
 
     if (outmask & AZIMUTH)
       azi2 = Math::atan2d(salp2, calp2);

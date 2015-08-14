@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "MAGNETICFIELD 1"
-.TH MAGNETICFIELD 1 "2015-05-22" "GeographicLib 1.43" "GeographicLib Utilities"
+.TH MAGNETICFIELD 1 "2015-08-14" "GeographicLib 1.44" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -144,7 +144,7 @@ MagneticField \-\- compute the earth's magnetic field
 .IX Header "SYNOPSIS"
 \&\fBMagneticField\fR [ \fB\-n\fR \fIname\fR ] [ \fB\-d\fR \fIdir\fR ]
 [ \fB\-t\fR \fItime\fR | \fB\-c\fR \fItime\fR \fIlat\fR \fIh\fR ]
-[ \fB\-r\fR ] [ \fB\-T\fR \fItguard\fR ] [ \fB\-H\fR \fIhguard\fR ] [ \fB\-p\fR \fIprec\fR ]
+[ \fB\-r\fR ] [ \fB\-w\fR ] [ \fB\-T\fR \fItguard\fR ] [ \fB\-H\fR \fIhguard\fR ] [ \fB\-p\fR \fIprec\fR ]
 [ \fB\-v\fR ]
 [ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
@@ -160,14 +160,16 @@ rate of change.
 The input line is of the form \fItime\fR \fIlat\fR \fIlon\fR \fIh\fR. \fItime\fR is a
 date of the form 2012\-07\-03, a fractional year such as 2012.5, or the
 string \*(L"now\*(R".  \fIlat\fR and \fIlon\fR are the latitude and longitude
-expressed as decimal degrees or degrees, minutes, and seconds; see
-\&\fIGeoConvert\fR\|(1) for details.  \fIh\fR is the height above the ellipsoid in
-meters; this is optional and defaults to zero.  Alternatively, \fItime\fR
-can be given on the command line as the argument to the \fB\-t\fR option, in
-which case it should not be included on the input lines.  Finally, the
-magnetic field can be computed at various points on a circle of latitude
-(constant \fItime\fR, \fIlat\fR, and \fIh\fR) via the \fB\-c\fR option; in this case
-only the longitude should be given on the input lines.
+expressed as decimal degrees or degrees, minutes, and seconds; for
+details on the allowed formats for latitude and longitude, see the
+\&\f(CW\*(C`GEOGRAPHIC COORDINATES\*(C'\fR section of \fIGeoConvert\fR\|(1).  \fIh\fR is the height
+above the ellipsoid in meters; this is optional and defaults to zero.
+Alternatively, \fItime\fR can be given on the command line as the argument
+to the \fB\-t\fR option, in which case it should not be included on the
+input lines.  Finally, the magnetic field can be computed at various
+points on a circle of latitude (constant \fItime\fR, \fIlat\fR, and \fIh\fR) via
+the \fB\-c\fR option; in this case only the longitude should be given on the
+input lines.
 .PP
 The output consists of the following 7 items:
 .PP
@@ -210,6 +212,11 @@ quickly.
 .IP "\fB\-r\fR" 4
 .IX Item "-r"
 toggle whether to report the rates of change of the field.
+.IP "\fB\-w\fR" 4
+.IX Item "-w"
+on input and output, longitude precedes latitude (except that on input
+this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR, \fIE\fR,
+\&\fIW\fR).
 .IP "\fB\-T\fR" 4
 .IX Item "-T"
 signal an error if \fItime\fR lies \fItguard\fR years (default 50 yr) beyond

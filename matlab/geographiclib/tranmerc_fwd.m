@@ -41,7 +41,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.43.
+% This file was distributed with GeographicLib 1.44.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -54,7 +54,6 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
     error('ellipsoid must be a vector of size 2')
   end
 
-  degree = pi/180;
   maxpow = 6;
 
   a = ellipsoid(1);
@@ -67,29 +66,28 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   b1 = (1 - f) * (A1m1f(n) + 1);
   a1 = b1 * a;
 
-  lon = AngDiff(AngNormalize(lon0), AngNormalize(lon));
+  lon = AngDiff(lon0, lon);
 
   latsign = 1 - 2 * (lat < 0);
   lonsign = 1 - 2 * (lon < 0);
   lon = lon .* lonsign;
-  lat = lat .* latsign;
+  lat = LatFix(lat) .* latsign;
   backside = lon > 90;
   latsign(backside & lat == 0) = -1;
   lon(backside) = 180 - lon(backside);
-  phi = lat * degree;
-  lam = lon * degree;
-  c = max(0, cos(lam));
-  tau = tan(phi);
+  [sphi, cphi] = sincosdx(lat);
+  [slam, clam] = sincosdx(lon);
+  tau = sphi ./ cphi;
   taup = taupf(tau, e2);
-  xip = atan2(taup, c);
-  etap = asinh(sin(lam) ./ hypot(taup, c));
-  gam = atan(tan(lam) .* taup ./ hypot(1, taup));
-  k = sqrt(e2m + e2 * cos(phi).^2) .* hypot(1, tau) ./ hypot(taup, c);
+  xip = atan2(taup, clam);
+  etap = asinh(slam ./ hypot(taup, clam));
+  gam = atan2dx(slam .* taup, clam .* hypot(1, taup));
+  k = sqrt(e2m + e2 * cphi.^2) .* hypot(1, tau) ./ hypot(taup, clam);
   c = ~(lat ~= 90);
   if any(c)
     xip(c) = pi/2;
     etap(c) = 0;
-    gam(c) = lam;
+    gam(c) = lon;
     k = cc;
   end
   c0 = cos(2 * xip); ch0 = cosh(2 * etap);
@@ -120,21 +118,22 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   ar = s0 .* ch0; ai = c0 .* sh0;
   xi  = xip  + ar .* xi0 - ai .* eta0;
   eta = etap + ai .* xi0 + ar .* eta0;
-  gam = gam - atan2(yi1, yr1);
+  gam = gam - atan2dx(yi1, yr1);
   k = k .* (b1 * hypot(yr1, yi1));
-  gam = gam / degree;
   xi(backside) = pi - xi(backside);
   y = a1 * xi .* latsign;
   x = a1 * eta .* lonsign;
   gam(backside) = 180 - gam(backside);
-  gam = gam .* latsign .* lonsign;
+  gam = AngNormalize(gam .* latsign .* lonsign);
 
   if isscalar(lat0) && lat0 == 0
     y0 = 0;
   else
-    [sbet0, cbet0] = norm2((1-f) * sind(lat0), cosd(lat0));
+    [sbet0, cbet0] = sincosdx(LatFix(lat0(:)));
+    [sbet0, cbet0] = norm2((1-f) * sbet0, cbet0);
     y0 = a1 * (atan2(sbet0, cbet0) + ...
                SinCosSeries(true, sbet0, cbet0, C1f(n)));
+    y0 = reshape(y0, size(lat0));
   end
   y = y - y0;
 end

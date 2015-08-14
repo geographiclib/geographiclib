@@ -12,6 +12,7 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/DMS.hpp \
 			GeographicLib/Ellipsoid.hpp \
 			GeographicLib/EllipticFunction.hpp \
+			GeographicLib/GARS.hpp \
 			GeographicLib/GeoCoords.hpp \
 			GeographicLib/Geocentric.hpp \
 			GeographicLib/Geodesic.hpp \
@@ -20,6 +21,7 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/GeodesicLineExact.hpp \
 			GeographicLib/Geohash.hpp \
 			GeographicLib/Geoid.hpp \
+			GeographicLib/Georef.hpp \
 			GeographicLib/Gnomonic.hpp \
 			GeographicLib/GravityCircle.hpp \
 			GeographicLib/GravityModel.hpp \

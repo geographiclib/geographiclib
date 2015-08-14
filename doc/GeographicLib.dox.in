@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2015-05-23
+\date 2015-08-14
 
 \section abstract Abstract
 
@@ -34,8 +34,8 @@ the script for displaying
 <a href="../scripts/geod-google.html">geodesics in Google Maps</a>
 
 This library is <i>not</i> a general purpose projection library; use
-<a href="http://trac.osgeo.org/proj/">proj.4</a> for that.  On the other
-hand, it does provide the core functionality offered by
+<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a> for that.  On
+the other hand, it does provide the core functionality offered by
 <a href="http://earth-info.nima.mil/GandG/geotrans/">GEOTRANS</a>.
 
 \section download Download
@@ -1097,9 +1097,9 @@ typically throw errors (an exception is GeodesicLine).  However, calling
 the class functions with NaNs as arguments is not an error; NaNs are
 returned as appropriate.  "INV" is treated as an invalid zone
 designation by UTMUPS.  "INVALID" is the corresponding invalid MGRS
-string.  (Similarly "nan" is the equivalent invalid Geohash.)  NaNs allow
-the projection of polylines which are separated by NaNs; in this format
-they can be easily plotted in MATLAB.
+string (and similarly for GARS, Geohash, and Georef strings).  NaNs
+allow the projection of polylines which are separated by NaNs; in this
+format they can be easily plotted in MATLAB.
 
 A note about portability.  For the most part, the code uses standard C++
 and should be able to be deployed on any system with a modern C++
@@ -1225,7 +1225,14 @@ These examples include a "stripped" version of the JavaScript code, \code
 <script type="text/javascript"
         src="http://geographiclib.sf.net/scripts/geographiclib.js">
 </script> \endcode
-which loads faster.
+which loads faster.  This file gives you the latest version of the
+library.  If you need to use a specific version of this file, include a
+version number as in \code
+<script type="text/javascript"
+        src="http://geographiclib.sf.net/scripts/geographiclib-1.43.js">
+</script> \endcode
+You can visit http://geographiclib.sf.net/scripts/ to see which versions
+are available.
 
 \section python Python implementation
 
@@ -1239,26 +1246,29 @@ otherwise).  This contains implementations of the classes
 - Geodesic
 - GeodesicLine
 - PolygonAreaT
-.
-You can also download the python interface independent of the rest of
-GeographicLib from
+
+You can install the python interface independent of the rest of
+GeographicLib using pip \verbatim
+  pip install geographiclib \endverbatim
+This requires root privileges and you might first need to install the
+python-pip package.
+
+Alternatively download
 - <a href="http://pypi.python.org/pypi/geographiclib">
   http://pypi.python.org/pypi/geographiclib</a>
 .
-and then unpack the .tar.gz or .zip file.
-
-You can "install" these routines, so that they are in python's default
-path with, for example \verbatim
+and unpack the .tar.gz or .zip file.  You can "install" these routines,
+so that they are in python's default path with, for example \verbatim
   cd geographiclib-1.16
   python setup.py install
 \endverbatim
 (this will require root privileges).  Or else you can set the path
-within python using \code
+within python using \code{.py}
 >>> import sys
 >>> sys.path.append("/usr/local/lib/python/site-packages")
 \endcode
 
-An example of using this interface is \code
+An example of using this interface is \code{.py}
 >>> from geographiclib.geodesic import Geodesic
 >>> # The geodesic inverse problem
 ... Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
@@ -1278,7 +1288,7 @@ An example of using this interface is \code
 
 Another illustrative exercise is finding the point midway between JFK
 Airport to Singapore Changi Airport
-\code
+\code{.py}
 from geographiclib.geodesic import Geodesic
 
 # Coordinates of airports
@@ -1290,7 +1300,7 @@ g = Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2)
 
 # Compute midpoint starting at 1
 h = Geodesic.WGS84.Direct(lat1, lon1, g['azi1'], g['s12']/2)
-print(h['lat2'], h['lon2']);
+print(h['lat2'], h['lon2'])
 \endcode
 
 (Note: The initial version of setup.py was provided by Andrew MacIntyre
@@ -2493,7 +2503,7 @@ a regular grid and writes on the result in a
 <a href="http://vdatum.noaa.gov/dev/gtx_info.html#dev_gtx_binary">.gtx</a>
 file.  On an 8-processor Intel 2.66 GHz machine using OpenMP
 (-DHAVE_OPENMP=1), it takes about 40 minutes of elapsed time to compute
-the geoid height for EGM2008 on a 1' gride.  (Without these
+the geoid height for EGM2008 on a 1' grid.  (Without these
 optimizations, the computation would have taken about 200 days!)
 \include GeoidToGTX.cpp
 
@@ -3165,11 +3175,11 @@ where
 \end{align}
 \f]
 \verbatim
-A2 = (1 + 1/4 * eps^2
-        + 9/64 * eps^4
-        + 25/256 * eps^6
-        + 1225/16384 * eps^8
-        + 3969/65536 * eps^10) * (1 - eps);
+A2 = (1 - 3/4 * eps^2
+        - 7/64 * eps^4
+        - 11/256 * eps^6
+        - 375/16384 * eps^8
+        - 931/65536 * eps^10) / (1 + eps);
 \endverbatim
 \verbatim
 C2[1] = + 1/2 * eps
@@ -5223,7 +5233,7 @@ where
 \mathsf F_k(x,y)=
 \begin{bmatrix}
      \cos kd \sin kp\\
-\frac{\sin kd}d \cos kp
+     {\displaystyle\frac{\sin kd}d} \cos kp
 \end{bmatrix},
 \f]
 \f$d=\frac12(x-y)\f$, \f$p=\frac12(x+y)\f$, and, in the limit
@@ -5239,7 +5249,7 @@ where
 \f[
  \mathsf A(x,y) = 2\begin{bmatrix}
   \cos d \cos p & -d\sin d \sin p \\
-- \frac{\sin d}d \sin p &   \cos d \cos p
+- {\displaystyle\frac{\sin d}d} \sin p &   \cos d \cos p
 \end{bmatrix},
 \f]
 and \f$\lim_{d\rightarrow0}(\sin d)/d = 1\f$.  The standard Clenshaw
@@ -5277,7 +5287,8 @@ where
 \mathsf F_k(x,y)=
 \begin{bmatrix}
      \cos\bigl( (k+k_0)d \bigr) \sin \bigl( (k+k_0)p + x_0 \bigr)\\
-     \frac{\sin\bigl( (k+k_0)d \bigr)}d \cos \bigl( (k+k_0)p + x_0 \bigr)
+     {\displaystyle\frac{\sin\bigl( (k+k_0)d \bigr)}d}
+     \cos \bigl( (k+k_0)p + x_0 \bigr)
 \end{bmatrix}.
 \f]
 The recursion for \f$\mathsf B_k\f$ is identical to the previous case;
@@ -6204,7 +6215,7 @@ relations between &phi;, &beta;, &theta;, and &mu;.  In addition, the
 expansions converge for <i>b</i>/<i>a</i> &isin; (0,&nbsp;&infin;).
 (Some authors use the eccentricity as the expansion parameter, but the
 resulting series only converge for <i>b</i>/<i>a</i> &isin;
-(0,&nbsp;&radic;2).  These expansions were obtained with the the maxima
+(0,&nbsp;&radic;2).)  These expansions were obtained with the the maxima
 code, <a href="auxlat.mac">auxlat.mac</a>.
 
 Here are the relations between &phi;, &beta;, &theta;, and &mu; carried
@@ -6716,16 +6727,18 @@ Here's what you should know:
    recommended for installation for all users on a system.
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=4</code> gives quad
    precision (113-bit precision) via boost::multiprecision::float128;
-   this requires <a href="http://www.boost.org"> boost</a> (version 1.54
-   or later) and the quadmath library (the package names are libquadmath
-   and libquadmath-devel).  This requires the use of g++.
+   this requires:
+   - <a href="http://www.boost.org"> Boost</a>, version 1.54 or later,
+   - the quadmath library (the package names are libquadmath
+     and libquadmath-devel),
+   - the use of g++.
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=5</code> gives
-   arbitrary precision via mpfr::mpreal; this requires
-   <a href="http://www.mpfr.org"> MPFR</a> (version 3.0 or later),
-   <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
-   (version 3.6.2 or later), and a compiler which supports the explicit
-   cast operator (e.g., g++ 4.5 or later, Visual Studio 12 2013 or
-   later).
+   arbitrary precision via mpfr::mpreal; this requires:
+   - <a href="http://www.mpfr.org"> MPFR</a>, version 3.0 or later,
+   - <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
+     (version 3.6.2 or later),
+   - a compiler which supports the explicit cast operator (e.g., g++ 4.5
+     or later, Visual Studio 12 2013 or later).
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
    to respect these.
  - The indicated precision is used for <b>all</b> floating point
@@ -6896,7 +6909,7 @@ The following steps needed to be taken
        were made member variables and so initialized when the
        constructor was called.
      - Some simple static real arrays (e.g., the interpolating stencils
-       for Geoid) were changes into integer arrays.
+       for Geoid) were changed into integer arrays.
      - Some static variables where converted to static functions similar
        to the definition of pi() above.
      - All the static instances of classes where converted as follows
@@ -6921,7 +6934,7 @@ The following steps needed to be taken
        // use
        const Geodesic& geod = Geodesic::WGS84(); \endcode
        This is the so-called
-       <a href="http://www.parashift.com/c++-faq/static-init-order-on-first-use.html">
+       <a href="https://isocpp.org/wiki/faq/ctors#static-init-order-on-first-use">
        "construct on first use idiom"</a>.  This is the most disruptive
        of the changes since it requires a different calling convention
        in user code.  However the old static initializations were
@@ -6990,6 +7003,104 @@ of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
 
+ - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
+   (released 2015-08-14)
+   - Various changes to improve accuracy, e.g., by minimizing round-off
+     errors:
+     - Add Math::sincosd, Math::sind, Math::cosd which take their
+       arguments in degrees.  These functions do exact range reduction
+       and thus they obey exactly the elementary properties of the
+       trigonometric functions, e.g., sin 9&deg; = cos 81&deg; = &minus;
+       sin 123456789&deg;.
+     - Math::AngNormalize now works for any angles, instead of angles in
+       the range [&minus;540&deg;, 540&deg;); the function
+       Math::AngNormalize2 is now <b>deprecated</b>.
+     - This means that there is now no restriction on longitudes and
+       azimuths; any values can be used.
+     - Improve the accuracy of Math::atan2d.
+     - DMS::Decode avoids unnecessary round-off errors; thus 7:33:36 and
+       7.56 result in identical values.  DMS::Encode rounds ties to
+       even.  These changes have also been made to DMS.js.
+     - More accurate rounding in MGRS::Reverse and mgrs_inv.m; this
+       change only makes a difference at sub-meter precisions.
+     - With MGRS::Forward and mgrs_fwd.m, ensure that digits in lower
+       precision results match those at higher precision; as a result,
+       strings of trailing 9s are less likely to be generated.  This
+       change only makes a difference at sub-meter precisions.
+     - Replace the series for <i>A</i><sub>2</sub> in the Geodesic class
+       with one with smaller truncation errors.
+     - Geodesic::Inverse sets \e s12 to zero for coincident points at
+       pole (instead of returning a tiny quantity).
+     - Math::LatFix returns its argument if it is in [&minus;90&deg;,
+       90&deg;]; if not, it returns NaN.
+     - Using Math::LatFix, routines which don't check their arguments
+       now interpret a latitude outside the legal range of
+       [&minus;90&deg;, 90&deg;] as a NaN; such routines will return
+       NaNs instead of finite but incorrect results; <b>caution</b>:
+       code that (dangerously) relied on the "reasonable" results being
+       returned for values of the latitude outside the allowed range
+       will now malfunction.
+   - All the \ref utilities accept the -w option to swap the
+     latitude-longitude order on input and output (and where appropriate
+     on the command-line arguments).  CartConvert now accepts the -p
+     option to set the precision; now all of the utilities except
+     GeoidEval accept -p.
+   - Add classes for GARS, the Global Area Reference System, and for
+     Georef, the World Geographic Reference System.
+   - Changes to DMS::Decode and DMS.js:
+     - tighten up the rules:
+       - 30:70.0 and 30:60 are illegal (minutes and second must be
+         strictly less than 60), however
+       - 30:60.0 and 30:60. are legal (floating point 60 is OK, since it
+         might have been generated by rounding 59.99&hellip;);
+     - generalize a+b concept, introduced in version 1.42, to any number
+       of pieces; thus 8+0:40-0:0:10 is interpreted as 8:39:50.
+   - Documentation fixes:
+     - update man pages to refer to
+       <a href="GeoConvert.1.html">GeoConvert(1)</a> on handling of
+       geographic coordinates;
+     - document limitations of the series used for TransverseMercator;
+     - hide the documentation of the computation of the gradient of the
+       geoid height (now deprecated) in the Geoid class;
+     - warn about the possible misinterpretation of 7.0E+1 by
+       DMS::Decode;
+     - \e swaplatlong optional argument of DMS::DecodeLatLon and
+       various functions in the GeoCoords class is now called \e
+       longfirst;
+     - require Doxygen 1.8.7 or later.
+   - More systematic treatment of version numbers:
+     - Python: \__init\__.py defines \__version\__ and \__version_info\__;
+     - JavaScript:
+       - Math.js defines Constants.version and Constants.version_string;
+       - version number included as comment in packed script
+         geographiclib.js;
+       - <a href="../scripts/geod-calc.html">geod-calc.html</a> and
+         <a href="../scripts/geod-google.html">geod-google.html</a>
+         report the version number;
+       - http://geographiclib.sourceforge.net/scripts/ gives access to
+         earlier versions of geographiclib.js as
+         geographiclib-<i>m.nn</i>.js;
+     - Fortran: add geover subroutine to return version numbers;
+     - Maxima: geodesic.mac defines geod_version;
+     - CGI scripts: these report the version numbers of the utilities.
+   - BUG FIXES:
+     - NormalGravity now works properly for a sphere (\e omega = \e f =
+       \e J2 = 0), instead of returning NaNs (problem found by htallon);
+     - CassiniSoldner::Forward and cassini_fwd.m now returns the correct
+       azimuth for points at the pole.
+   - MATLAB-specific fixes:
+     - mgrs_fwd now treats treats prec > 11 as prec = 11;
+     - illegal letter combinations are now correctly detected by
+       mgrs_inv;
+     - fixed bug where mgrs_inv returned the wrong results for prec = 0
+       strings and center = 0;
+     - mgrs_inv now decodes prec = 11 strings properly;
+     - routines now return array results with the right shape;
+     - routines now properly handle mixed scalar and array arguments.
+   - Add Accumulator<T>::operator*=(T y).
+   - Geohash uses "invalid" instead of "nan" when the latitude or
+     longitude is a nan.
+
  - <a href="http://geographiclib.sf.net/1.43">Version 1.43</a>
    (released 2015-05-23)
    - Add the Enhanced Magnetic Model 2015, emm2015.  This is valid for
@@ -7019,7 +7130,7 @@ git repository for GeographicLib</a>.
        geodesic has encircled the earth.  (This option also affects the
        value of longitude reported when an inverse calculation is run
        with the -f option.)
-     - The inverse calculation with the JavaScript and python libraries
+     - The inverse calculation with the JavaScript and Python libraries
        similarly sets <code>lon1</code> and <code>lon2</code> in output
        dictionary respecting the LONG_UNROLL flag.
      - The online version of
@@ -7028,7 +7139,7 @@ git repository for GeographicLib</a>.
      - To support these changes DMS::DecodeLatLon no longer reduces the
        longitude to the range [&minus;180&deg;, 180&deg;) and
        Math::AngRound now coverts &minus;0 to +0.
-   - Add Math::polyval (also to C, Java, JavaScript, Fortran, python
+   - Add Math::polyval (also to C, Java, JavaScript, Fortran, Python
      versions of the library; this is a built-in function for
      MATLAB/Octave).  This evaluates a polynomial using Horner's method.
      The Maxima-generated code fragments for the evaluation of series in
@@ -7048,7 +7159,7 @@ git repository for GeographicLib</a>.
    - Minor internal changes:
      - GeodSolve sets the geodesic mask so that unnecessary calculations
        are avoided;
-     - some routines have migrated into a math class for for python,
+     - some routines have migrated into a math class for for Python,
        Java, JavaScript libraries.
    - A reminder: because of changes in the installation directories for
      non-Windows systems introduced in version 1.42, you should remove
@@ -7374,7 +7485,7 @@ git repository for GeographicLib</a>.
      - on Linux, the installed package is relocatable;
      - on MacOSX, the installed utilities can find the shared library.
    - Use a more precise value for OSGB::CentralScale().
-   - Add Arc routines to python interface.
+   - Add Arc routines to Python interface.
    - The Geod utility has been removed; the same functionality lives on
      with <a href="GeodSolve.1.html">GeodSolve</a> (introduced in
      version 1.30).
@@ -7425,13 +7536,13 @@ git repository for GeographicLib</a>.
        for the maven support);
      - FIX BUG: avoid altering input args in Fortran implementation;
      - more systematic treatment of very short geodesic;
-     - fixes to python port so that they work with version 3.x, in
+     - fixes to Python port so that they work with version 3.x, in
        addition to 2.x (courtesy of Amato);
      - accumulate the perimeter and area of polygons via a double-wide
        accumulator in Fortran, C, and MATLAB implementations (this is
        already included in the other implementations);
      - port PolygonArea::AddEdge and
-       PolygonArea::TestEdge to JavaScript and python
+       PolygonArea::TestEdge to JavaScript and Python
        interfaces;
      - include documentation on \ref geodshort.
    - Unix scripts for downloading datasets,
@@ -7538,7 +7649,7 @@ git repository for GeographicLib</a>.
      - explicitly check version of doxygen.
    - Fix building under cygwin.
    - Document restrictions on \e f in \ref intro.
-   - Fix python interface to work with version 2.6.x.
+   - Fix Python interface to work with version 2.6.x.
 
  - <a href="http://geographiclib.sf.net/1.23">Version 1.23</a>
    (released 2012-07-17)
@@ -7574,7 +7685,7 @@ git repository for GeographicLib</a>.
      - use COMMON_INSTALL_PATH to determine layout of installation
        directories;
      - as a consequence, the installation paths for the documentation,
-       and python and matlab interfaces are shortened for Windows;
+       and Python and MATLAB interfaces are shortened for Windows;
      - zip source distribution now uses DOS line endings;
      - the tests work in debug mode for Windows;
      - default setting of GEOGRAPHICLIB_DATA does not depend on
@@ -7701,10 +7812,10 @@ git repository for GeographicLib</a>.
    - Modify <a href="GeoidEval.1.html">GeoidEval</a> so that it can be
      used to convert the height datum for LIDAR data.
    - Modest speed-up of Geodesic::Inverse.
-   - Changes in python interface:
+   - Changes in Python interface:
      - FIX BUG in transcription of Geodesic::Inverse;
      - include setup.py for easy installation;
-     - python only distribution is available at
+     - Python only distribution is available at
        http://pypi.python.org/pypi/geographiclib
    - Supply a minimal Qt qmake project file for library
      src/Geographic.pro.

@@ -36,10 +36,10 @@ function [x, y, zone, isnorth, gam, k] = utmups_fwd(lat, lon, setzone)
 %
 %   The ranges are 100 km more restrictive than for mgrs_fwd.
 %
-%   UTMUPS_FWD checks its arguments and requires that lat in [-90deg,90deg]
-%   and lon in [-540deg,540deg] and that (x,y) lie in the limits given
-%   above.  If these conditions don't hold (x,y), gam, k are converted to
-%   NaN, zone to -4 and isnorthp to 0.
+%   UTMUPS_FWD checks its arguments and requires that lat is in
+%   [-90deg,90deg] and that (x,y) lie in the limits given above.  If these
+%   conditions don't hold (x,y), gam, k are converted to NaN, zone to -4
+%   and isnorthp to 0.
 %
 %   See also UTMUPS_INV, TRANMERC_FWD, POLARST_FWD, MGRS_FWD.
 
@@ -102,7 +102,7 @@ function zone = StandardZone(lat, lon, setzone)
   zone = floor(setzone) + zeros(size(lat));
   zone(~(zone >= INVALID & zone <= MAXZONE)) = INVALID;
   g = zone < MINZONE & zone ~= INVALID;
-  c = abs(lat) <= 90 & abs(lon) <= 540;
+  c = abs(lat) <= 90 & isfinite(lon);
   zone(g & ~c) = INVALID;
   g = g & c;
   c = zone == UTM | (lat >= -80 & lat < 84);

@@ -130,10 +130,10 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libGeographic_la_LIBADD =
 am_libGeographic_la_OBJECTS = Accumulator.lo AlbersEqualArea.lo \
 	AzimuthalEquidistant.lo CassiniSoldner.lo CircularEngine.lo \
-	DMS.lo Ellipsoid.lo EllipticFunction.lo GeoCoords.lo \
+	DMS.lo Ellipsoid.lo EllipticFunction.lo GARS.lo GeoCoords.lo \
 	Geocentric.lo Geodesic.lo GeodesicExact.lo GeodesicExactC4.lo \
 	GeodesicLine.lo GeodesicLineExact.lo Geohash.lo Geoid.lo \
-	Gnomonic.lo GravityCircle.lo GravityModel.lo \
+	Georef.lo Gnomonic.lo GravityCircle.lo GravityModel.lo \
 	LambertConformalConic.lo LocalCartesian.lo MGRS.lo \
 	MagneticCircle.lo MagneticModel.lo Math.lo NormalGravity.lo \
 	OSGB.lo PolarStereographic.lo PolygonArea.lo Rhumb.lo \
@@ -374,6 +374,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		DMS.cpp \
 		Ellipsoid.cpp \
 		EllipticFunction.cpp \
+		GARS.cpp \
 		GeoCoords.cpp \
 		Geocentric.cpp \
 		Geodesic.cpp \
@@ -383,6 +384,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		GeodesicLineExact.cpp \
 		Geohash.cpp \
 		Geoid.cpp \
+		Georef.cpp \
 		Gnomonic.cpp \
 		GravityCircle.cpp \
 		GravityModel.cpp \
@@ -411,6 +413,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		../include/GeographicLib/DMS.hpp \
 		../include/GeographicLib/Ellipsoid.hpp \
 		../include/GeographicLib/EllipticFunction.hpp \
+		../include/GeographicLib/GARS.hpp \
 		../include/GeographicLib/GeoCoords.hpp \
 		../include/GeographicLib/Geocentric.hpp \
 		../include/GeographicLib/Geodesic.hpp \
@@ -419,6 +422,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		../include/GeographicLib/GeodesicLineExact.hpp \
 		../include/GeographicLib/Geohash.hpp \
 		../include/GeographicLib/Geoid.hpp \
+		../include/GeographicLib/Georef.hpp \
 		../include/GeographicLib/Gnomonic.hpp \
 		../include/GeographicLib/GravityCircle.hpp \
 		../include/GeographicLib/GravityModel.hpp \
@@ -532,6 +536,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DMS.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Ellipsoid.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/EllipticFunction.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GARS.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeoCoords.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geocentric.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geodesic.Plo@am__quote@
@@ -541,6 +546,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodesicLineExact.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geohash.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geoid.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Georef.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Gnomonic.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GravityCircle.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GravityModel.Plo@am__quote@

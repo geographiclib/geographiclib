@@ -2,7 +2,7 @@
  * \file GeodesicProj.cpp
  * \brief Command line utility for geodesic projections
  *
- * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -34,7 +34,8 @@ int main(int argc, char* argv[]) {
     using namespace GeographicLib;
     typedef Math::real real;
     Utility::set_digits();
-    bool azimuthal = false, cassini = false, gnomonic = false, reverse = false;
+    bool azimuthal = false, cassini = false, gnomonic = false, reverse = false,
+      longfirst = false;
     real lat0 = 0, lon0 = 0;
     real
       a = Constants::WGS84_a(),
@@ -54,7 +55,7 @@ int main(int argc, char* argv[]) {
         if (m + 2 >= argc) return usage(1, true);
         try {
           DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                            lat0, lon0);
+                            lat0, lon0, longfirst);
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of " << arg << ": "
@@ -73,7 +74,9 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 2;
-      } else if (arg == "-p") {
+      } else if (arg == "-w")
+        longfirst = true;
+      else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
           prec = Utility::num<int>(std::string(argv[m]));
@@ -161,12 +164,13 @@ int main(int argc, char* argv[]) {
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
-    std::string s;
+    std::string s, eol, stra, strb, strc;
+    std::istringstream str;
     int retval = 0;
     std::cout << std::fixed;
     while (std::getline(*input, s)) {
       try {
-        std::string eol("\n");
+        eol = "\n";
         if (!cdelim.empty()) {
           std::string::size_type m = s.find(cdelim);
           if (m != std::string::npos) {
@@ -174,17 +178,15 @@ int main(int argc, char* argv[]) {
             s = s.substr(0, m);
           }
         }
-        std::istringstream str(s);
+        str.clear(); str.str(s);
         real lat, lon, x, y, azi, rk;
-        std::string stra, strb;
         if (!(str >> stra >> strb))
           throw GeographicErr("Incomplete input: " + s);
         if (reverse) {
           x = Utility::num<real>(stra);
           y = Utility::num<real>(strb);
         } else
-          DMS::DecodeLatLon(stra, strb, lat, lon);
-        std::string strc;
+          DMS::DecodeLatLon(stra, strb, lat, lon, longfirst);
         if (str >> strc)
           throw GeographicErr("Extraneous input: " + strc);
         if (reverse) {
@@ -194,8 +196,8 @@ int main(int argc, char* argv[]) {
             az.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
           else
             gn.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
-          *output << Utility::str(lat, prec + 5) << " "
-                  << Utility::str(lon, prec + 5) << " "
+          *output << Utility::str(longfirst ? lon : lat, prec + 5) << " "
+                  << Utility::str(longfirst ? lat : lon, prec + 5) << " "
                   << Utility::str(azi, prec + 5) << " "
                   << Utility::str(rk, prec + 6) << eol;
         } else {

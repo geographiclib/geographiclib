@@ -228,10 +228,9 @@ namespace NETGeographicLib
          * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
          * @return \e a12 arc length of between point 1 and point 2 (degrees).
          *
-         * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-         * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
-         * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
-         * 180&deg;).
+         * \e lat1 should be in the range [&minus;90&deg;, 90&deg;];.  The
+         * values of \e lon2 and \e azi2 returned are in the range
+         * [&minus;180&deg;, 180&deg;).
          *
          * If either point is at a pole, the azimuth is defined by keeping the
          * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
@@ -322,10 +321,9 @@ namespace NETGeographicLib
          *   (dimensionless).
          * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
          *
-         * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-         * azi1 should be in the range [&minus;540&deg;, 540&deg;).  The values of
-         * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
-         * 180&deg;).
+         * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].  The
+         * values of \e lon2 and \e azi2 returned are in the range
+         * [&minus;180&deg;, 180&deg;).
          *
          * If either point is at a pole, the azimuth is defined by keeping the
          * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
@@ -457,10 +455,7 @@ namespace NETGeographicLib
          *
          * With the LONG_UNROLL bit set, the quantity \e lon2 &minus; \e lon1
          * indicates how many times and in what sense the geodesic encircles
-         * the ellipsoid.  Because \e lon2 might be outside the normal allowed
-         * range for longitudes, [&minus;540&deg;, 540&deg;), be sure to
-         * normalize it with Math::AngNormalize2 before using it in other
-         * GeographicLib calls.
+         * the ellipsoid.
          **********************************************************************/
         double GenDirect(double lat1, double lon1, double azi1,
                         bool arcmode, double s12_a12, GeodesicExact::mask outmask,
@@ -495,10 +490,9 @@ namespace NETGeographicLib
          * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
          * @return \e a12 arc length of between point 1 and point 2 (degrees).
          *
-         * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;]; \e
-         * lon1 and \e lon2 should be in the range [&minus;540&deg;, 540&deg;).
-         * The values of \e azi1 and \e azi2 returned are in the range
-         * [&minus;180&deg;, 180&deg;).
+         * \e lat1 and \e lat2 should be in the range [&minus;90&deg;,
+         * 90&deg;].  The values of \e azi1 and \e azi2 returned are in the
+         * range [&minus;180&deg;, 180&deg;).
          *
          * If either point is at a pole, the azimuth is defined by keeping the
          * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
@@ -632,8 +626,7 @@ namespace NETGeographicLib
          *   GeodesicLineExact::Position.
          * @return a GeodesicLineExact object.
          *
-         * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-         * azi1 should be in the range [&minus;540&deg;, 540&deg;).
+         * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
          *
          * The GeodesicExact::mask values are
          * - \e caps |= NETGeographicLib::Mask::LATITUDE for the latitude \e lat2; this is

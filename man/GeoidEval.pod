@@ -5,7 +5,7 @@ GeoidEval -- look up geoid heights
 =head1 SYNOPSIS
 
 B<GeoidEval> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-l> ]
-[ B<-a> | B<-c> I<south> I<west> I<north> I<east> ] [ B<-g> ]
+[ B<-a> | B<-c> I<south> I<west> I<north> I<east> ] [ B<-w> ]
 [ B<-z> I<zone> ] [ B<--msltohae> ] [ B<--haetomsl> ]
 [ B<-v> ]
 [ B<--comment-delimiter> I<commentdelim> ]
@@ -68,17 +68,15 @@ cache the entire data set in memory.  See L</CACHE>.
 =item B<-c>
 
 cache the data bounded by I<south> I<west> I<north> I<east> in memory.
-See L</CACHE>.
+The first two arguments specify the SW corner of the cache and the last
+two arguments specify the NE corner.  The B<-w> flag specifies that
+longitude precedes latitude for these corners, provided that it appears
+before B<-c>.  See L</CACHE>.
 
-=item B<-g>
+=item B<-w>
 
-print the northerly and easterly gradients after the geoid height (i.e.,
-the rate at which the geoid height changes per unit distance along the
-WGS84 ellipsoid in the specified directions).  As a result of the way
-that the geoid data is stored, the calculation of gradients can result
-in large quantization errors.  This is particularly acute at high
-latitudes and for the easterly gradient.  For this reason, the use of
-this option is B<DEPRECATED>.
+when reading geographic coordinates, longitude precedes latitude (this
+can be overridden by a hemisphere designator, I<N>, I<S>, I<E>, I<W>).
 
 =item B<-z>
 

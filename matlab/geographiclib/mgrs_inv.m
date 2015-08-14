@@ -92,18 +92,15 @@ function [x, y, zone, northp, prec] = mgrs_inv_utm(mgrs, center)
   rowind(even) = mod(rowind(even) - 5, 20);
   % good values in [0,20), bad values = -1
   rowind(bad) = -1;
-  [x, y, prec] = decodexy(mgrs(:, 6:end), center);
+  rowfix = fixutmrow(band, colind, rowind);
+  [x, y, prec] = decodexy(mgrs(:, 6:end), ...
+                          colind + 1, rowfix + (1-northp) * 100, center);
   prec(mgrs(:,4) == ' ') = -1;
-  ok = ok & (prec == -1 | (colind >= 0 & rowind >= 0));
-  rowind = fixutmrow(band, colind, rowind);
-  colind = colind + 1;
-  x = colind * 1e5 + x;
-  y = rowind * 1e5 + y + (1-northp) * 100e5;
-  x(prec == -1) = ...
-          (5 - (zone(prec == -1) == 31 & band(prec == -1) == 7)) * 1e5;
-  y(prec == -1) = ...
-          floor(8 * (band(prec == -1) + 0.5) * 100/90 + 0.5) * 1e5 + ...
-          (1- northp(prec == -1)) * 100e5;
+  zoneonly = prec == -1;
+  ok = ok & (zoneonly | (colind >= 0 & rowind >= 0 & rowfix < 100));
+  x(zoneonly) = (5 - (zone(zoneonly) == 31 & band(zoneonly) == 7)) * 1e5;
+  y(zoneonly) = floor(8 * (band(zoneonly) + 0.5) * 100/90 + 0.5) * 1e5 + ...
+      (1- northp(zoneonly)) * 100e5;
   x(~ok) = nan;
   y(~ok) = nan;
   northp(~ok) = false;
@@ -126,14 +123,14 @@ function [x, y, zone, northp, prec] = mgrs_inv_upsn(mgrs, center)
   colind = lookup(upscols, mgrs(:, 2));
   ok = ok & (colind < 0 | mod(floor(colind / 7) + eastp, 2) == 0);
   rowind = lookup(upsrow, mgrs(:, 3));
-  [x, y, prec] = decodexy(mgrs(:, 4:end), center);
+  rowind = rowind + 13;
+  colind = colind + 13;
+  [x, y, prec] = decodexy(mgrs(:, 4:end), colind, rowind, center);
   prec(mgrs(:,2) == ' ') = -1;
-  ok = ok & (prec == -1 | (colind >= 0 & rowind >= 0));
-  x = (colind + 13) * 1e5 + x;
-  y = (rowind + 13) * 1e5 + y;
-  x(prec == -1) = ((2*eastp(prec == -1) - 1) * ...
-                   floor(4 * 100/90 + 0.5) + 20) * 1e5;
-  y(prec == -1) = 20e5;
+  zoneonly = prec == -1;
+  ok = ok & (zoneonly | (colind >= 0 & rowind >= 0));
+  x(zoneonly) = ((2*eastp(zoneonly) - 1) * floor(4 * 100/90 + 0.5) + 20) * 1e5;
+  y(zoneonly) = 20e5;
   x(~ok) = nan;
   y(~ok) = nan;
   northp(~ok) = false;
@@ -160,36 +157,52 @@ function [x, y, zone, northp, prec] = mgrs_inv_upss(mgrs, center)
   colind(eastp & colind < 12) = -1;
   ok = ok & (colind < 0 | mod(floor(colind / 12) + eastp, 2) == 0);
   rowind = lookup(upsrow, mgrs(:, 3));
-  [x, y, prec] = decodexy(mgrs(:, 4:end), center);
+  rowind = rowind + 8;
+  colind = colind + 8;
+  [x, y, prec] = decodexy(mgrs(:, 4:end), colind, rowind, center);
   prec(mgrs(:,2) == ' ') = -1;
-  ok = ok & (prec == -1 | (colind >= 0 & rowind >= 0));
-  x = (colind + 8) * 1e5 + x;
-  y = (rowind + 8) * 1e5 + y;
-  x(prec == -1) = ((2*eastp(prec == -1) - 1) * ...
-                   floor(4 * 100/90 + 0.5) + 20) * 1e5;
-  y(prec == -1) = 20e5;
+  zoneonly = prec == -1;
+  ok = ok & (zoneonly | (colind >= 0 & rowind >= 0));
+  x(zoneonly) = ((2*eastp(zoneonly) - 1) * floor(4 * 100/90 + 0.5) + 20) * 1e5;
+  y(zoneonly) = 20e5;
   x(~ok) = nan;
   y(~ok) = nan;
   zone(~ok) = -4;
   prec(~ok) = -2;
 end
 
-function [x, y, prec] = decodexy(xy, center)
+function [x, y, prec] = decodexy(xy, xh, yh, center)
   num = size(xy, 1);
   x = nan(num, 1); y = x;
   len = strlen(xy);
   prec = len / 2;
   digits = sum(isspace(xy) | isstrprop(xy, 'digit'), 2) == size(xy, 2);
-  ok = len < 22 & mod(len, 2) == 0 & digits;
+  ok = len <= 22 & mod(len, 2) == 0 & digits;
   prec(~ok) = -2;
   if ~any(ok), return, end
-  x(prec == 0) = 0.5e5; y(prec == 0) = 0.5e5;
+  cent = center * 0.5;
+  in = prec == 0;
+  if any(in)
+    x(in) = (xh(in) + cent) * 1e5; y(in) = (yh(in) + cent) * 1e5;
+  end
   minprec = max(1,min(prec(ok))); maxprec = max(prec(ok));
   for p = minprec:maxprec
-    m = 1e5 / 10^p;
-    cent = center * m/2;
-    x(prec == p) = str2double(cellstr(xy(prec == p, 0+(1:p)))) * m + cent;
-    y(prec == p) = str2double(cellstr(xy(prec == p, p+(1:p)))) * m + cent;
+    in = prec == p;
+    if ~any(in)
+      continue
+    end
+    m = 10^p;
+    x(in) = xh(in) * m + str2double(cellstr(xy(in, 0+(1:p)))) + cent;
+    y(in) = yh(in) * m + str2double(cellstr(xy(in, p+(1:p)))) + cent;
+    if p < 5
+      m = 1e5 / m;
+      x(in) = x(in) * m;
+      y(in) = y(in) * m;
+    elseif p > 5
+      m = m / 1e5;
+      x(in) = x(in) / m;
+      y(in) = y(in) / m;
+    end
   end
 end
 

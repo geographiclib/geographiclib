@@ -13,6 +13,7 @@ EXAMPLE_FILES = \
 	example-DMS.cpp \
 	example-Ellipsoid.cpp \
 	example-EllipticFunction.cpp \
+	example-GARS.cpp \
 	example-GeoCoords.cpp \
 	example-Geocentric.cpp \
 	example-Geodesic.cpp \
@@ -23,6 +24,7 @@ EXAMPLE_FILES = \
 	example-GeographicErr.cpp \
 	example-Geohash.cpp \
 	example-Geoid.cpp \
+	example-Georef.cpp \
 	example-Gnomonic.cpp \
 	example-GravityCircle.cpp \
 	example-GravityModel.cpp \

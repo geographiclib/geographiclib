@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEODSOLVE 1"
-.TH GEODSOLVE 1 "2015-05-22" "GeographicLib 1.43" "GeographicLib Utilities"
+.TH GEODSOLVE 1 "2015-08-14" "GeographicLib 1.44" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -144,7 +144,7 @@ GeodSolve \-\- perform geodesic calculations
 .IX Header "SYNOPSIS"
 \&\fBGeodSolve\fR [ \fB\-i\fR | \fB\-l\fR \fIlat1\fR \fIlon1\fR \fIazi1\fR ] [ \fB\-a\fR ]
 [ \fB\-e\fR \fIa\fR \fIf\fR ] \fB\-u\fR ]
-[ \fB\-d\fR | \fB\-:\fR ] [ \fB\-b\fR ] [ \fB\-f\fR ] [ \fB\-p\fR \fIprec\fR ] [ \fB\-E\fR ]
+[ \fB\-d\fR | \fB\-:\fR ] [ \fB\-w\fR ] [ \fB\-b\fR ] [ \fB\-f\fR ] [ \fB\-p\fR \fIprec\fR ] [ \fB\-E\fR ]
 [ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
 [ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
@@ -179,7 +179,9 @@ perform an inverse geodesic calculation (see 3 above).
 .IP "\fB\-l\fR" 4
 .IX Item "-l"
 line mode (see 2 above); generate a sequence of points along the
-geodesic specified by \fIlat1\fR \fIlon1\fR \fIazi1\fR.
+geodesic specified by \fIlat1\fR \fIlon1\fR \fIazi1\fR.  The \fB\-w\fR flag can be
+used to swap the default order of the 2 geographic coordinates, provided
+that it appears before \fB\-l\fR.
 .IP "\fB\-a\fR" 4
 .IX Item "-a"
 arc mode; on input \fIand\fR output \fIs12\fR is replaced by \fIa12\fR the arc
@@ -194,11 +196,11 @@ is allowed for \fIf\fR.  (Also, if \fIf\fR > 1, the flattening is set to
 \&\fIf\fR = 1/298.257223563.
 .IP "\fB\-u\fR" 4
 .IX Item "-u"
-unroll the longitude.  On input longitudes must lie in [\-540deg,540deg)
-and, normally, on output longitudes are reduced to lie in
-[\-180deg,180deg).  However with this option, the returned longitude
+unroll the longitude.  Normally, on output longitudes are reduced to lie
+in [\-180deg,180deg).  However with this option, the returned longitude
 \&\fIlon2\fR is \*(L"unrolled\*(R" so that \fIlon2\fR \- \fIlon1\fR indicates how often and
-in what sense the geodesic has encircled the earth.
+in what sense the geodesic has encircled the earth.  Use the \fB\-f\fR
+option, to get both longitudes printed.
 .IP "\fB\-d\fR" 4
 .IX Item "-d"
 output angles as degrees, minutes, seconds instead of decimal degrees.
@@ -206,6 +208,11 @@ output angles as degrees, minutes, seconds instead of decimal degrees.
 .IX Item "-:"
 like \fB\-d\fR, except use : as a separator instead of the d, ', and "
 delimiters.
+.IP "\fB\-w\fR" 4
+.IX Item "-w"
+on input and output, longitude precedes latitude (except that, on input,
+this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR, \fIE\fR,
+\&\fIW\fR).
 .IP "\fB\-b\fR" 4
 .IX Item "-b"
 report the \fIback\fR azimuth at point 2 instead of the forward azimuth.
@@ -261,18 +268,18 @@ file name of \*(L"\-\*(R" stands for standard output.
 .SH "INPUT"
 .IX Header "INPUT"
 \&\fBGeodSolve\fR measures all angles in degrees and all lengths (\fIs12\fR) in
-meters.  On input angles (latitude, longitude, azimuth, arc length) can
-be as decimal degrees or degrees (d), minutes ('), seconds (\*(L").  A
-decimal point can only appear in the least significant component and the
-designator (d, ', or \*(R") for this component is optional; thus \f(CW\*(C`40d30\*(C'\fR,
-\&\f(CW\*(C`40d30\*(Aq\*(C'\fR, \f(CW\*(C`40.5d\*(C'\fR, and \f(CW40.5\fR are all equivalent.  By default,
-latitude precedes longitude for each point; however on input either may
-be given first by appending (or prepending) \fIN\fR or \fIS\fR to the latitude
-and \fIE\fR or \fIW\fR to the longitude.  Azimuths are measured clockwise from
-north; however this may be overridden with \fIE\fR or \fIW\fR.
+meters, and all areas (\fIS12\fR) in meters^2.  On input angles (latitude,
+longitude, azimuth, arc length) can be as decimal degrees or degrees,
+minutes, seconds.  For example, \f(CW\*(C`40d30\*(C'\fR, \f(CW\*(C`40d30\*(Aq\*(C'\fR, \f(CW\*(C`40:30\*(C'\fR, \f(CW\*(C`40.5d\*(C'\fR,
+and \f(CW40.5\fR are all equivalent.  By default, latitude precedes longitude
+for each point (the \fB\-w\fR flag switches this convention); however on
+input either may be given first by appending (or prepending) \fIN\fR or
+\&\fIS\fR to the latitude and \fIE\fR or \fIW\fR to the longitude.  Azimuths are
+measured clockwise from north; however this may be overridden with \fIE\fR
+or \fIW\fR.
 .PP
-See the \f(CW\*(C`QUOTING\*(C'\fR section of \fIGeoConvert\fR\|(1) for how to quote the \s-1DMS\s0
-designators ' and ".
+For details on the allowed formats for angles, see the \f(CW\*(C`GEOGRAPHIC
+COORDINATES\*(C'\fR section of \fIGeoConvert\fR\|(1).
 .SH "AUXILIARY SPHERE"
 .IX Header "AUXILIARY SPHERE"
 Geodesics on the ellipsoid can be transferred to the \fIauxiliary sphere\fR
@@ -303,13 +310,16 @@ and \fIM21\fR are dimensionless quantities.  On a flat surface, we have
 \&\fIM12\fR = \fIM21\fR = 1.
 .PP
 If points 1, 2, and 3 lie on a single geodesic, then the following
-addition rules hold,
-\&\fIs13\fR = \fIs12\fR + \fIs23\fR,
-\&\fIa13\fR = \fIa12\fR + \fIa23\fR,
-\&\fIS13\fR = \fIS12\fR + \fIS23\fR,
-\&\fIm13\fR = \fIm12\fR \fIM23\fR + \fIm23\fR \fIM21\fR,
-\&\fIM13\fR = \fIM12\fR \fIM23\fR \- (1 \- \fIM12\fR \fIM21\fR) \fIm23\fR / \fIm12\fR, and
-\&\fIM31\fR = \fIM32\fR \fIM21\fR \- (1 \- \fIM23\fR \fIM32\fR) \fIm12\fR / \fIm23\fR.
+addition rules hold:
+.PP
+.Vb 6
+\&   s13 = s12 + s23,
+\&   a13 = a12 + a23,
+\&   S13 = S12 + S23,
+\&   m13 = m12 M23 + m23 M21,
+\&   M13 = M12 M23 \- (1 \- M12 M21) m23 / m12,
+\&   M31 = M32 M21 \- (1 \- M23 M32) m12 / m23.
+.Ve
 .PP
 Finally, \fIS12\fR is the area between the geodesic from point 1 to point 2
 and the equator; i.e., it is the area, measured counter-clockwise, of

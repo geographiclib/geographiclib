@@ -17,13 +17,13 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<p><b>ConicProj</b> ( <b>-c</b> | <b>-a</b> ) <i>lat1</i> <i>lat2</i> [ <b>-l</b> <i>lon0</i> ] [ <b>-k</b> <i>k1</i> ] [ <b>-r</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] [ <b>-p</b> <i>prec</i> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
+<p><b>ConicProj</b> ( <b>-c</b> | <b>-a</b> ) <i>lat1</i> <i>lat2</i> [ <b>-l</b> <i>lon0</i> ] [ <b>-k</b> <i>k1</i> ] [ <b>-r</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] [ <b>-w</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
 <p>Perform one of two conic projections geodesics. Convert geodetic coordinates to either Lambert conformal conic or Albers equal area coordinates. The standard latitudes <i>lat1</i> and <i>lat2</i> are specified by that the <b>-c</b> option (for Lambert conformal conic) or the <b>-a</b> option (for Albers equal area). At least one of these options must be given (the last one given is used). Specify <i>lat1</i> = <i>lat2</i>, to obtain the case with a single standard parallel. The central meridian is given by <i>lon0</i>. The longitude of origin is given by the latitude of minimum (azimuthal) scale for Lambert conformal conic (Albers equal area). The (azimuthal) scale on the standard parallels is <i>k1</i>.</p>
 
-<p>Geodetic coordinates are provided on standard input as a set of lines containing (blank separated) <i>latitude</i> and <i>longitude</i> (decimal degrees or degrees, minutes, seconds). For each set of geodetic coordinates, the corresponding projected easting, <i>x</i>, and northing, <i>y</i>, (meters) are printed on standard output together with the meridian convergence <i>gamma</i> (degrees) and (azimuthal) scale <i>k</i>. For Albers equal area, the radial scale is 1/<i>k</i>. The meridian convergence is the bearing of the <i>y</i> axis measured clockwise from true north.</p>
+<p>Geodetic coordinates are provided on standard input as a set of lines containing (blank separated) <i>latitude</i> and <i>longitude</i> (decimal degrees or degrees, minutes, seconds); for details on the allowed formats for latitude and longitude, see the <code>GEOGRAPHIC COORDINATES</code> section of GeoConvert(1). For each set of geodetic coordinates, the corresponding projected easting, <i>x</i>, and northing, <i>y</i>, (meters) are printed on standard output together with the meridian convergence <i>gamma</i> (degrees) and (azimuthal) scale <i>k</i>. For Albers equal area, the radial scale is 1/<i>k</i>. The meridian convergence is the bearing of the <i>y</i> axis measured clockwise from true north.</p>
 
 <p>Special cases of the Lambert conformal projection are the Mercator projection (the standard latitudes equal and opposite) and the polar stereographic projection (both standard latitudes correspond to the same pole). Special cases of the Albers equal area projection are the cylindrical equal area projection (the standard latitudes equal and opposite), the Lambert azimuthal equal area projection (both standard latitude corresponds to the same pole), and the Lambert equal area conic projection (one standard parallel is at a pole).</p>
 
@@ -65,6 +65,12 @@
 <dd>
 
 <p>specify the ellipsoid via <i>a</i> <i>f</i>; the equatorial radius is <i>a</i> and the flattening is <i>f</i>. Setting <i>f</i> = 0 results in a sphere. Specify <i>f</i> &lt; 0 for a prolate ellipsoid. A simple fraction, e.g., 1/297, is allowed for <i>f</i>. (Also, if <i>f</i> &gt; 1, the flattening is set to 1/<i>f</i>.) By default, the WGS84 ellipsoid is used, <i>a</i> = 6378137 m, <i>f</i> = 1/298.257223563.</p>
+
+</dd>
+<dt id="w"><b>-w</b></dt>
+<dd>
+
+<p>on input and output, longitude precedes latitude (except that, on input, this can be overridden by a hemisphere designator, <i>N</i>, <i>S</i>, <i>E</i>, <i>W</i>).</p>
 
 </dd>
 <dt id="p"><b>-p</b></dt>

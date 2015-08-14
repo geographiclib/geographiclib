@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOIDEVAL 1"
-.TH GEOIDEVAL 1 "2015-05-22" "GeographicLib 1.43" "GeographicLib Utilities"
+.TH GEOIDEVAL 1 "2015-08-14" "GeographicLib 1.44" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -143,7 +143,7 @@ GeoidEval \-\- look up geoid heights
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
 \&\fBGeoidEval\fR [ \fB\-n\fR \fIname\fR ] [ \fB\-d\fR \fIdir\fR ] [ \fB\-l\fR ]
-[ \fB\-a\fR | \fB\-c\fR \fIsouth\fR \fIwest\fR \fInorth\fR \fIeast\fR ] [ \fB\-g\fR ]
+[ \fB\-a\fR | \fB\-c\fR \fIsouth\fR \fIwest\fR \fInorth\fR \fIeast\fR ] [ \fB\-w\fR ]
 [ \fB\-z\fR \fIzone\fR ] [ \fB\-\-msltohae\fR ] [ \fB\-\-haetomsl\fR ]
 [ \fB\-v\fR ]
 [ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
@@ -196,16 +196,14 @@ cache the entire data set in memory.  See \*(L"\s-1CACHE\*(R"\s0.
 .IP "\fB\-c\fR" 4
 .IX Item "-c"
 cache the data bounded by \fIsouth\fR \fIwest\fR \fInorth\fR \fIeast\fR in memory.
-See \*(L"\s-1CACHE\*(R"\s0.
-.IP "\fB\-g\fR" 4
-.IX Item "-g"
-print the northerly and easterly gradients after the geoid height (i.e.,
-the rate at which the geoid height changes per unit distance along the
-\&\s-1WGS84\s0 ellipsoid in the specified directions).  As a result of the way
-that the geoid data is stored, the calculation of gradients can result
-in large quantization errors.  This is particularly acute at high
-latitudes and for the easterly gradient.  For this reason, the use of
-this option is \fB\s-1DEPRECATED\s0\fR.
+The first two arguments specify the \s-1SW\s0 corner of the cache and the last
+two arguments specify the \s-1NE\s0 corner.  The \fB\-w\fR flag specifies that
+longitude precedes latitude for these corners, provided that it appears
+before \fB\-c\fR.  See \*(L"\s-1CACHE\*(R"\s0.
+.IP "\fB\-w\fR" 4
+.IX Item "-w"
+when reading geographic coordinates, longitude precedes latitude (this
+can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR, \fIE\fR, \fIW\fR).
 .IP "\fB\-z\fR" 4
 .IX Item "-z"
 prefix each line of input by \fIzone\fR, e.g., \f(CW\*(C`38n\*(C'\fR.  This should be used

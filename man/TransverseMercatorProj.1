@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "TRANSVERSEMERCATORPROJ 1"
-.TH TRANSVERSEMERCATORPROJ 1 "2015-05-22" "GeographicLib 1.43" "GeographicLib Utilities"
+.TH TRANSVERSEMERCATORPROJ 1 "2015-08-14" "GeographicLib 1.44" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -144,7 +144,7 @@ TransverseMercatorProj \-\- perform transverse Mercator projection
 .IX Header "SYNOPSIS"
 \&\fBTransverseMercatorProj\fR [ \fB\-s\fR | \fB\-t\fR ]
 [ \fB\-l\fR \fIlon0\fR ] [ \fB\-k\fR \fIk0\fR ] [ \fB\-r\fR ]
-[ \fB\-e\fR \fIa\fR \fIf\fR ] [ \fB\-p\fR \fIprec\fR ]
+[ \fB\-e\fR \fIa\fR \fIf\fR ] [ \fB\-w\fR ] [ \fB\-p\fR \fIprec\fR ]
 [ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
 [ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
@@ -160,11 +160,13 @@ exact transverse Mercator projection is used.
 .PP
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) \fIlatitude\fR and \fIlongitude\fR (decimal
-degrees or degrees, minutes, seconds).  For each set of geodetic
-coordinates, the corresponding projected easting, \fIx\fR, and northing,
-\&\fIy\fR, (meters) are printed on standard output together with the meridian
-convergence \fIgamma\fR (degrees) and scale \fIk\fR.  The meridian convergence
-is the bearing of the \fIy\fR axis measured clockwise from true north.
+degrees or degrees, minutes, seconds); for detils on the allowed
+formats for latitude and longitude, see the \f(CW\*(C`GEOGRAPHIC COORDINATES\*(C'\fR
+section of \fIGeoConvert\fR\|(1).  For each set of geodetic coordinates, the
+corresponding projected easting, \fIx\fR, and northing, \fIy\fR, (meters) are
+printed on standard output together with the meridian convergence
+\&\fIgamma\fR (degrees) and scale \fIk\fR.  The meridian convergence is the
+bearing of the \fIy\fR axis measured clockwise from true north.
 .SH "OPTIONS"
 .IX Header "OPTIONS"
 .IP "\fB\-s\fR" 4
@@ -194,6 +196,11 @@ is allowed for \fIf\fR.  (Also, if \fIf\fR > 1, the flattening is set to
 1/\fIf\fR.)  By default, the \s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137 m,
 \&\fIf\fR = 1/298.257223563.  If the exact algorithm is used, \fIf\fR must be
 positive.
+.IP "\fB\-w\fR" 4
+.IX Item "-w"
+on input and output, longitude precedes latitude (except that on input
+this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR, \fIE\fR,
+\&\fIW\fR).
 .IP "\fB\-p\fR" 4
 .IX Item "-p"
 set the output precision to \fIprec\fR (default 6).  \fIprec\fR is the number

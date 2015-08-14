@@ -36,15 +36,10 @@ namespace GeographicLib {
   void Geocentric::IntForward(real lat, real lon, real h,
                               real& X, real& Y, real& Z,
                               real M[dim2_]) const {
-    lon = Math::AngNormalize(lon);
-    real
-      phi = lat * Math::degree(),
-      lam = lon * Math::degree(),
-      sphi = sin(phi),
-      cphi = abs(lat) == 90 ? 0 : cos(phi),
-      n = _a/sqrt(1 - _e2 * Math::sq(sphi)),
-      slam = lon == -180 ? 0 : sin(lam),
-      clam = abs(lon) == 90 ? 0 : cos(lam);
+    real sphi, cphi, slam, clam;
+    Math::sincosd(Math::LatFix(lat), sphi, cphi);
+    Math::sincosd(lon, slam, clam);
+    real n = _a/sqrt(1 - _e2 * Math::sq(sphi));
     Z = (_e2m * n + h) * sphi;
     X = (n + h) * cphi;
     Y = X * slam;
@@ -151,7 +146,7 @@ namespace GeographicLib {
         h = - _a * (_f >= 0 ? _e2m : 1) * H / _e2a;
       }
     }
-    lat = atan2(sphi, cphi) / Math::degree();
+    lat = Math::atan2d(sphi, cphi);
     lon = Math::atan2d(slam, clam);
     if (M)
       Rotation(sphi, cphi, slam, clam, M);

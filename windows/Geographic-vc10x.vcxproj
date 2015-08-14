@@ -84,6 +84,7 @@
     <ClInclude Include="../include/GeographicLib/DMS.hpp" />
     <ClInclude Include="../include/GeographicLib/Ellipsoid.hpp" />
     <ClInclude Include="../include/GeographicLib/EllipticFunction.hpp" />
+    <ClInclude Include="../include/GeographicLib/GARS.hpp" />
     <ClInclude Include="../include/GeographicLib/GeoCoords.hpp" />
     <ClInclude Include="../include/GeographicLib/Geocentric.hpp" />
     <ClInclude Include="../include/GeographicLib/Geodesic.hpp" />
@@ -92,6 +93,7 @@
     <ClInclude Include="../include/GeographicLib/GeodesicLineExact.hpp" />
     <ClInclude Include="../include/GeographicLib/Geohash.hpp" />
     <ClInclude Include="../include/GeographicLib/Geoid.hpp" />
+    <ClInclude Include="../include/GeographicLib/Georef.hpp" />
     <ClInclude Include="../include/GeographicLib/Gnomonic.hpp" />
     <ClInclude Include="../include/GeographicLib/GravityCircle.hpp" />
     <ClInclude Include="../include/GeographicLib/GravityModel.hpp" />
@@ -125,6 +127,7 @@
     <ClCompile Include="../src/DMS.cpp" />
     <ClCompile Include="../src/Ellipsoid.cpp" />
     <ClCompile Include="../src/EllipticFunction.cpp" />
+    <ClCompile Include="../src/GARS.cpp" />
     <ClCompile Include="../src/GeoCoords.cpp" />
     <ClCompile Include="../src/Geocentric.cpp" />
     <ClCompile Include="../src/Geodesic.cpp" />
@@ -134,6 +137,7 @@
     <ClCompile Include="../src/GeodesicLineExact.cpp" />
     <ClCompile Include="../src/Geohash.cpp" />
     <ClCompile Include="../src/Geoid.cpp" />
+    <ClCompile Include="../src/Georef.cpp" />
     <ClCompile Include="../src/Gnomonic.cpp" />
     <ClCompile Include="../src/GravityCircle.cpp" />
     <ClCompile Include="../src/GravityModel.cpp" />
@@ -158,4 +162,3 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
-

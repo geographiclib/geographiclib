@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "RHUMBSOLVE 1"
-.TH RHUMBSOLVE 1 "2015-05-22" "GeographicLib 1.43" "GeographicLib Utilities"
+.TH RHUMBSOLVE 1 "2015-08-14" "GeographicLib 1.44" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -144,7 +144,7 @@ RhumbSolve \-\- perform rhumb line calculations
 .IX Header "SYNOPSIS"
 \&\fBRhumbSolve\fR [ \fB\-i\fR | \fB\-l\fR \fIlat1\fR \fIlon1\fR \fIazi12\fR ]
 [ \fB\-e\fR \fIa\fR \fIf\fR ]
-[ \fB\-d\fR | \fB\-:\fR ] [ \fB\-p\fR \fIprec\fR ] [ \fB\-s\fR ]
+[ \fB\-d\fR | \fB\-:\fR ] [ \fB\-w\fR ] [ \fB\-p\fR \fIprec\fR ] [ \fB\-s\fR ]
 [ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
 [ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
@@ -191,8 +191,10 @@ there are two shortest rhumb lines and the east-going one is chosen.
 perform an inverse calculation (see 3 above).
 .IP "\fB\-l\fR" 4
 .IX Item "-l"
-line mode (see 2 above); generate a sequence of points along the
-rhumb line specified by \fIlat1\fR \fIlon1\fR \fIazi12\fR.
+line mode (see 2 above); generate a sequence of points along the rhumb
+line specified by \fIlat1\fR \fIlon1\fR \fIazi12\fR.  The \fB\-w\fR flag can be used
+to swap the default order of the 2 geographic coordinates, provided that
+it appears before \fB\-l\fR.
 .IP "\fB\-e\fR" 4
 .IX Item "-e"
 specify the ellipsoid via \fIa\fR \fIf\fR; the equatorial radius is \fIa\fR and
@@ -208,6 +210,11 @@ output angles as degrees, minutes, seconds instead of decimal degrees.
 .IX Item "-:"
 like \fB\-d\fR, except use : as a separator instead of the d, ', and "
 delimiters.
+.IP "\fB\-w\fR" 4
+.IX Item "-w"
+on input and output, longitude precedes latitude (except that on input
+this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR, \fIE\fR,
+\&\fIW\fR).
 .IP "\fB\-p\fR" 4
 .IX Item "-p"
 set the output precision to \fIprec\fR (default 3); \fIprec\fR is the
@@ -258,18 +265,17 @@ file name of \*(L"\-\*(R" stands for standard output.
 .IX Header "INPUT"
 \&\fBRhumbSolve\fR measures all angles in degrees, all lengths (\fIs12\fR) in
 meters, and all areas (\fIS12\fR) in meters^2.  On input angles (latitude,
-longitude, azimuth) can be as decimal degrees or degrees (d), minutes
-('), seconds (\*(L").  A decimal point can only appear in the least
-significant component and the designator (d, ', or \*(R") for this component
-is optional; thus \f(CW\*(C`40d30\*(C'\fR, \f(CW\*(C`40d30\*(Aq\*(C'\fR, \f(CW\*(C`40.5d\*(C'\fR, and \f(CW40.5\fR are all
-equivalent.  By default, latitude precedes longitude for each point;
-however on input either may be given first by appending (or prepending)
-\&\fIN\fR or \fIS\fR to the latitude and \fIE\fR or \fIW\fR to the longitude.
-Azimuths are measured clockwise from north; however this may be
-overridden with \fIE\fR or \fIW\fR.
+longitude, azimuth, arc length) can be as decimal degrees or degrees,
+minutes, seconds.  For example, \f(CW\*(C`40d30\*(C'\fR, \f(CW\*(C`40d30\*(Aq\*(C'\fR, \f(CW\*(C`40:30\*(C'\fR, \f(CW\*(C`40.5d\*(C'\fR,
+and \f(CW40.5\fR are all equivalent.  By default, latitude precedes longitude
+for each point (the \fB\-w\fR flag switches this convention); however on
+input either may be given first by appending (or prepending) \fIN\fR or
+\&\fIS\fR to the latitude and \fIE\fR or \fIW\fR to the longitude.  Azimuths are
+measured clockwise from north; however this may be overridden with \fIE\fR
+or \fIW\fR.
 .PP
-See the \f(CW\*(C`QUOTING\*(C'\fR section of \fIGeoConvert\fR\|(1) for how to quote the \s-1DMS\s0
-designators ' and ".
+For details on the allowed formats for angles, see the \f(CW\*(C`GEOGRAPHIC
+COORDINATES\*(C'\fR section of \fIGeoConvert\fR\|(1).
 .SH "PRECISION"
 .IX Header "PRECISION"
 \&\fIprec\fR gives precision of the output with \fIprec\fR = 0 giving 1 m

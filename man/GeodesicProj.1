@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEODESICPROJ 1"
-.TH GEODESICPROJ 1 "2015-05-22" "GeographicLib 1.43" "GeographicLib Utilities"
+.TH GEODESICPROJ 1 "2015-08-14" "GeographicLib 1.44" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -143,7 +143,7 @@ GeodesicProj \-\- perform projections based on geodesics
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
 \&\fBGeodesicProj\fR ( \fB\-z\fR | \fB\-c\fR | \fB\-g\fR ) \fIlat0\fR \fIlon0\fR [ \fB\-r\fR ]
-[ \fB\-e\fR \fIa\fR \fIf\fR ] [ \fB\-p\fR \fIprec\fR ]
+[ \fB\-e\fR \fIa\fR \fIf\fR ] [ \fB\-w\fR ] [ \fB\-p\fR \fIprec\fR ]
 [ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
 [ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
@@ -160,30 +160,35 @@ options must be given (the last one given is used).
 .PP
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) \fIlatitude\fR and \fIlongitude\fR (decimal
-degrees or degrees, minutes, seconds).  For each set of geodetic
-coordinates, the corresponding projected coordinates \fIx\fR, \fIy\fR (meters)
-are printed on standard output together with the azimuth \fIazi\fR
-(degrees) and reciprocal scale \fIrk\fR.  For Cassini-Soldner, \fIazi\fR is
-the bearing of the easting direction and the scale in the easting
-direction is 1 and the scale in the northing direction is 1/\fIrk\fR.  For
-azimuthal equidistant and gnomonic, \fIazi\fR is the bearing of the radial
-direction and the scale in the azimuthal direction is 1/\fIrk\fR.  For
-azimuthal equidistant and gnomonic, the scales in the radial direction
-are 1 and 1/\fIrk\fR^2, respectively.
+degrees or degrees, minutes, seconds); for details on the allowed
+formats for latitude and longitude, see the \f(CW\*(C`GEOGRAPHIC COORDINATES\*(C'\fR
+section of \fIGeoConvert\fR\|(1).  For each set of geodetic coordinates, the
+corresponding projected coordinates \fIx\fR, \fIy\fR (meters) are printed on
+standard output together with the azimuth \fIazi\fR (degrees) and
+reciprocal scale \fIrk\fR.  For Cassini-Soldner, \fIazi\fR is the bearing of
+the easting direction and the scale in the easting direction is 1 and
+the scale in the northing direction is 1/\fIrk\fR.  For azimuthal
+equidistant and gnomonic, \fIazi\fR is the bearing of the radial direction
+and the scale in the azimuthal direction is 1/\fIrk\fR.  For azimuthal
+equidistant and gnomonic, the scales in the radial direction are 1 and
+1/\fIrk\fR^2, respectively.
 .SH "OPTIONS"
 .IX Header "OPTIONS"
 .IP "\fB\-z\fR" 4
 .IX Item "-z"
 use the azimuthal equidistant projection centered at latitude = \fIlat0\fR,
-longitude = \fIlon0\fR.
+longitude = \fIlon0\fR.  The \fB\-w\fR flag can be used to swap the default
+order of the 2 coordinates, provided that it appears before \fB\-z\fR.
 .IP "\fB\-c\fR" 4
 .IX Item "-c"
 use the Cassini-Soldner projection centered at latitude = \fIlat0\fR,
-longitude = \fIlon0\fR.
+longitude = \fIlon0\fR.  The \fB\-w\fR flag can be used to swap the default
+order of the 2 coordinates, provided that it appears before \fB\-c\fR.
 .IP "\fB\-g\fR" 4
 .IX Item "-g"
 use the ellipsoidal gnomonic projection centered at latitude = \fIlat0\fR,
-longitude = \fIlon0\fR.
+longitude = \fIlon0\fR.  The \fB\-w\fR flag can be used to swap the default
+order of the 2 coordinates, provided that it appears before \fB\-g\fR.
 .IP "\fB\-r\fR" 4
 .IX Item "-r"
 perform the reverse projection.  \fIx\fR and \fIy\fR are given on standard
@@ -197,6 +202,11 @@ the flattening is \fIf\fR.  Setting \fIf\fR = 0 results in a sphere.  Specify
 is allowed for \fIf\fR.  (Also, if \fIf\fR > 1, the flattening is set to
 1/\fIf\fR.)  By default, the \s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137 m,
 \&\fIf\fR = 1/298.257223563.
+.IP "\fB\-w\fR" 4
+.IX Item "-w"
+on input and output, longitude precedes latitude (except that, on input,
+this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR, \fIE\fR,
+\&\fIW\fR).
 .IP "\fB\-p\fR" 4
 .IX Item "-p"
 set the output precision to \fIprec\fR (default 6).  \fIprec\fR is the number

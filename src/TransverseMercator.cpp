@@ -353,7 +353,8 @@ namespace GeographicLib {
   void TransverseMercator::Forward(real lon0, real lat, real lon,
                                    real& x, real& y, real& gamma, real& k)
     const {
-    lon = Math::AngDiff(Math::AngNormalize(lon0), Math::AngNormalize(lon));
+    lat = Math::LatFix(lat);
+    lon = Math::AngDiff(lon0, lon);
     // Explicitly enforce the parity
     int
       latsign = lat < 0 ? -1 : 1,
@@ -366,9 +367,9 @@ namespace GeographicLib {
         latsign = -1;
       lon = 180 - lon;
     }
-    real
-      phi = lat * Math::degree(),
-      lam = lon * Math::degree();
+    real sphi, cphi, slam, clam;
+    Math::sincosd(lat, sphi, cphi);
+    Math::sincosd(lon, slam, clam);
     // phi = latitude
     // phi' = conformal latitude
     // psi = isometric latitude
@@ -389,18 +390,17 @@ namespace GeographicLib {
     real etap, xip;
     if (lat != 90) {
       real
-        c = max(real(0), cos(lam)), // cos(pi/2) might be negative
-        tau = tan(phi),
+        tau = sphi / cphi,
         taup = Math::taupf(tau, _es);
-      xip = atan2(taup, c);
+      xip = atan2(taup, clam);
       // Used to be
       //   etap = Math::atanh(sin(lam) / cosh(psi));
-      etap = Math::asinh(sin(lam) / Math::hypot(taup, c));
+      etap = Math::asinh(slam / Math::hypot(taup, clam));
       // convergence and scale for Gauss-Schreiber TM (xip, etap) -- gamma0 =
       // atan(tan(xip) * tanh(etap)) = atan(tan(lam) * sin(phi'));
       // sin(phi') = tau'/sqrt(1 + tau'^2)
-      gamma = atan(Math::tand(lon) *
-                   taup / Math::hypot(real(1), taup)); // Krueger p 22 (44)
+      // Krueger p 22 (44)
+      gamma = Math::atan2d(slam * taup, clam * Math::hypot(real(1), taup));
       // k0 = sqrt(1 - _e2 * sin(phi)^2) * (cos(phi') / cos(phi)) * cosh(etap)
       // Note 1/cos(phi) = cosh(psip);
       // and cos(phi') * cosh(etap) = 1/hypot(sinh(psi), cos(lam))
@@ -408,12 +408,12 @@ namespace GeographicLib {
       // This form has cancelling errors.  This property is lost if cosh(psip)
       // is replaced by 1/cos(phi), even though it's using "primary" data (phi
       // instead of psip).
-      k = sqrt(_e2m + _e2 * Math::sq(cos(phi))) * Math::hypot(real(1), tau)
-        / Math::hypot(taup, c);
+      k = sqrt(_e2m + _e2 * Math::sq(cphi)) * Math::hypot(real(1), tau)
+        / Math::hypot(taup, clam);
     } else {
       xip = Math::pi()/2;
       etap = 0;
-      gamma = lam;
+      gamma = lon;
       k = _c;
     }
     // {xi',eta'} is {northing,easting} for Gauss-Schreiber transverse Mercator
@@ -501,14 +501,14 @@ namespace GeographicLib {
       eta = etap + ai * xi0 + ar * eta0;
     // Fold in change in convergence and scale for Gauss-Schreiber TM to
     // Gauss-Krueger TM.
-    gamma -= atan2(yi1, yr1);
+    gamma -= Math::atan2d(yi1, yr1);
     k *= _b1 * Math::hypot(yr1, yi1);
-    gamma /= Math::degree();
     y = _a1 * _k0 * (backside ? Math::pi() - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
     if (backside)
       gamma = 180 - gamma;
     gamma *= latsign * lonsign;
+    gamma = Math::AngNormalize(gamma);
     k *= _k0;
   }
 
@@ -561,44 +561,42 @@ namespace GeographicLib {
       xip  = xi  + ar * xip0 - ai * etap0,
       etap = eta + ai * xip0 + ar * etap0;
     // Convergence and scale for Gauss-Schreiber TM to Gauss-Krueger TM.
-    gamma = atan2(yi1, yr1);
+    gamma = Math::atan2d(yi1, yr1);
     k = _b1 / Math::hypot(yr1, yi1);
     // JHS 154 has
     //
     //   phi' = asin(sin(xi') / cosh(eta')) (Krueger p 17 (25))
     //   lam = asin(tanh(eta') / cos(phi')
     //   psi = asinh(tan(phi'))
-    real lam, phi;
     real
       s = sinh(etap),
       c = max(real(0), cos(xip)), // cos(pi/2) might be negative
       r = Math::hypot(s, c);
     if (r != 0) {
-      lam = atan2(s, c);        // Krueger p 17 (25)
+      lon = Math::atan2d(s, c); // Krueger p 17 (25)
       // Use Newton's method to solve for tau
       real
         sxip = sin(xip),
         tau = Math::tauf(sxip/r, _es);
-      gamma += atan2(sxip * tanh(etap), c); // Krueger p 19 (31)
-      phi = atan(tau);
+      gamma += Math::atan2d(sxip * tanh(etap), c); // Krueger p 19 (31)
+      lat = Math::atand(tau);
       // Note cos(phi') * cosh(eta') = r
-      k *= sqrt(_e2m + _e2 * Math::sq(cos(phi))) *
+      k *= sqrt(_e2m + _e2 / (1 + Math::sq(tau))) *
         Math::hypot(real(1), tau) * r;
     } else {
-      phi = Math::pi()/2;
-      lam = 0;
+      lat = 90;
+      lon = 0;
       k *= _c;
     }
-    lat = phi / Math::degree() * xisign;
-    lon = lam / Math::degree();
+    lat *= xisign;
     if (backside)
       lon = 180 - lon;
     lon *= etasign;
-    lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
-    gamma /= Math::degree();
+    lon = Math::AngNormalize(lon + lon0);
     if (backside)
       gamma = 180 - gamma;
     gamma *= xisign * etasign;
+    gamma = Math::AngNormalize(gamma);
     k *= _k0;
   }
 

@@ -3,7 +3,7 @@
  * Transcription of Math.hpp, Constants.hpp, and Accumulator.hpp into
  * JavaScript.
  *
- * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -76,32 +76,69 @@ GeographicLib.Math.AngRound = function(x) {
 };
 
 GeographicLib.Math.AngNormalize = function(x) {
-  // Place angle in [-180, 180).  Assumes x is in [-540, 540).
-  return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
+  // Place angle in [-180, 180).
+  x = x % 360.0;
+  return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
 };
 
-GeographicLib.Math.AngNormalize2 = function(x) {
-  // Place arbitrary angle in [-180, 180).
-  return GeographicLib.Math.AngNormalize(x % 360.0);
+GeographicLib.Math.LatFix = function(x) {
+  // Place angle with NaN if outside [-90, 90].
+  return Math.abs(x) > 90 ? Number.NaN : x;
 };
 
 GeographicLib.Math.AngDiff = function(x, y) {
   // Compute y - x and reduce to [-180,180] accurately.
-  // This is the same logic as the Accumulator class uses.
   var
-  d = y - x,
-  yp = d + x,
-  xpp = yp - d;
-  yp -= y;
-  xpp -= x;
-  var t =  xpp - yp;
-  // y - x =       d      + t
-  //       = round(y - x) + t
-  if ((d - 180) + t > 0)        // y - x > 180
-    d -= 360;                   // exact
-  else if ((d + 180) + t <= 0)  // y - x <= -180
-    d += 360;                   // exact
-  return d + t;
+  r = GeographicLib.Math.sum(GeographicLib.Math.AngNormalize(x),
+                             GeographicLib.Math.AngNormalize(-y)),
+  d = - GeographicLib.Math.AngNormalize(r.s);
+  t = r.t;
+  return (d == 180 && t < 0 ? -180 : d) - t;
+};
+
+GeographicLib.Math.sincosd = function(x) {
+  // In order to minimize round-off errors, this function exactly reduces
+  // the argument to the range [-45, 45] before converting it to radians.
+  var r, q;
+  r = x % 360.0;
+  q = Math.floor(r / 90 + 0.5);
+  r -= 90 * q;
+  // now abs(r) <= 45
+  r *= this.degree;
+  // Possibly could call the gnu extension sincos
+  var s = Math.sin(r), c = Math.cos(r);
+  var sinx, cosx;
+  switch (q & 3) {
+  case  0: sinx =     s; cosx =     c; break;
+  case  1: sinx =     c; cosx = 0 - s; break;
+  case  2: sinx = 0 - s; cosx = 0 - c; break;
+  default: sinx = 0 - c; cosx =     s; break; // case 3
+  }
+  return {s: sinx, c: cosx};
+};
+
+GeographicLib.Math.atan2d = function(y, x) {
+  // In order to minimize round-off errors, this function rearranges the
+  // arguments so that result of atan2 is in the range [-pi/4, pi/4] before
+  // converting it to degrees and mapping the result to the correct
+  // quadrant.
+  var q = 0;
+  if (Math.abs(y) > Math.abs(x)) { var t; t = x; x = y; y = t; q = 2; }
+  if (x < 0) { x = -x; ++q; }
+  // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
+  var ang = Math.atan2(y, x) / this.degree;
+  switch (q) {
+    // Note that atan2d(-0.0, 1.0) will return -0.  However, we expect that
+    // atan2d will not be called with y = -0.  If need be, include
+    //
+    //   case 0: ang = 0 + ang; break;
+    //
+    // and handle mpfr as in AngRound.
+  case 1: ang = (y > 0 ? 180 : -180) - ang; break;
+  case 2: ang =  90 - ang; break;
+  case 3: ang = -90 + ang; break;
+  }
+  return ang;
 };
 
 GeographicLib.Math.epsilon = Math.pow(0.5, 52);
@@ -110,6 +147,8 @@ GeographicLib.Math.digits = 53;
 
 GeographicLib.Constants = {};
 GeographicLib.Constants.WGS84 = { a: 6378137, f: 1/298.257223563 };
+GeographicLib.Constants.version = { major: 1, minor: 44, patch: 0 };
+GeographicLib.Constants.version_string = "1.44";
 
 GeographicLib.Accumulator = {};
 (function() {

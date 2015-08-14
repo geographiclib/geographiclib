@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in Fortran
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.43
+\version 1.44
 
 \section abstract-for Abstract
 
@@ -25,22 +25,22 @@ compile correctly with just about any Fortran compiler.
 \section download-for Downloading the source
 
 The Fortran library is part of %GeographicLib which available for download at
-- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.43.tar.gz">
-  GeographicLib-1.43.tar.gz</a>
-- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.43.zip">
-  GeographicLib-1.43.zip</a>
+- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.44.tar.gz">
+  GeographicLib-1.44.tar.gz</a>
+- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.44.zip">
+  GeographicLib-1.44.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the Fortran library can be found in
-GeographicLib-1.43/legacy/Fortran.  The library consists of the file
+GeographicLib-1.44/legacy/Fortran.  The library consists of the file
 geodesic.for.
 
-\section doc Library documentation
+\section doc-for Library documentation
 
 The interface to the library is documented via doxygen in the source
 file.  To access this, see geodesic.for.
 
-\section samples Sample programs
+\section samples-for Sample programs
 
 Also included are 3 small test programs:
  - geoddirect.for is a simple command line utility for solving the
@@ -80,21 +80,22 @@ The corresponding source files
  - ngscommon.for
  .
 are derived from the NGS source files
- - forward.for, version 2.0, dated 2002-10-28
- - inverse.for, version 3.0, dated 2012-11-27
+ - forward.for, version 2.0, dated 2002-08-21
+ - inverse.for, version 3.0, dated 2012-11-04
  .
 and are therefore in the public domain.
 
-\section library Using the library
+\section library-for Using the library
 
-- Optionall put @verbatim
-  include "geodesic.inc" @endverbatim
+- Optionally put @code{.for}
+  include "geodesic.inc"
+  @endcode
   in declaration section of your subroutines.
 - make calls to the geodesic routines from your code.  The interface to
   the library is documented in geodesic.for.
 - Compile and link as described above.
 
-\section external External links
+\section external-for External links
 
 - These algorithms are derived in C. F. F. Karney,
   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
@@ -112,11 +113,27 @@ and are therefore in the public domain.
 - <a href="../C/index.html">The C library</a>.
 - <a href="../java/index.html">The Java library</a>.
 - Documentation on the C++ classes: GeographicLib::Geodesic,
-  GeographicLib::GeodesicLine, GeographicLib::PolygonArea.
+  GeographicLib::GeodesicLine, GeographicLib::PolygonAreaT.
 - The section in the %GeographicLib documentation on geodesics: \ref
   geodesic.
 - <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">
   An online geodesic bibliography</a>.
-**********************************************************************/
+- The wikipedia page,
+  <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
+  Geodesics on an ellipsoid</a>.
 
+\section changes-for Change log
+
+ - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
+   (released 2015-08-14)
+
+   - Improve accuracy of calculations by evaluating trigonometric
+     functions more carefully and replacing the series for the reduced
+     length with one with a smaller truncation error.
+   - The allowed ranges for longitudes and azimuths is now unlimited;
+     it used to be [&minus;540&deg;, 540&deg;).
+   - The sample programs, geoddirect and geodinverse, enforce the
+     restriction of latitude to [&minus;90&deg;, 90&deg;].
+   - The inverse calculation sets \e s12 to zero for coincident points
+     at pole (instead of returning a tiny quantity).
 **********************************************************************/

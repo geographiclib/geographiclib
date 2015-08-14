@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "CONICPROJ 1"
-.TH CONICPROJ 1 "2015-05-22" "GeographicLib 1.43" "GeographicLib Utilities"
+.TH CONICPROJ 1 "2015-08-14" "GeographicLib 1.44" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -144,7 +144,7 @@ ConicProj \-\- perform conic projections
 .IX Header "SYNOPSIS"
 \&\fBConicProj\fR ( \fB\-c\fR | \fB\-a\fR ) \fIlat1\fR \fIlat2\fR
 [ \fB\-l\fR \fIlon0\fR ] [ \fB\-k\fR \fIk1\fR ] [ \fB\-r\fR ]
-[ \fB\-e\fR \fIa\fR \fIf\fR ] [ \fB\-p\fR \fIprec\fR ]
+[ \fB\-e\fR \fIa\fR \fIf\fR ] [ \fB\-w\fR ] [ \fB\-p\fR \fIprec\fR ]
 [ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
 [ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
@@ -165,12 +165,14 @@ area).  The (azimuthal) scale on the standard parallels is \fIk1\fR.
 .PP
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) \fIlatitude\fR and \fIlongitude\fR (decimal
-degrees or degrees, minutes, seconds).  For each set of geodetic
-coordinates, the corresponding projected easting, \fIx\fR, and northing,
-\&\fIy\fR, (meters) are printed on standard output together with the meridian
-convergence \fIgamma\fR (degrees) and (azimuthal) scale \fIk\fR.  For Albers
-equal area, the radial scale is 1/\fIk\fR.  The meridian convergence is the
-bearing of the \fIy\fR axis measured clockwise from true north.
+degrees or degrees, minutes, seconds);  for details on the allowed
+formats for latitude and longitude, see the \f(CW\*(C`GEOGRAPHIC COORDINATES\*(C'\fR
+section of \fIGeoConvert\fR\|(1).  For each set of geodetic coordinates, the
+corresponding projected easting, \fIx\fR, and northing, \fIy\fR, (meters) are
+printed on standard output together with the meridian convergence
+\&\fIgamma\fR (degrees) and (azimuthal) scale \fIk\fR.  For Albers equal area,
+the radial scale is 1/\fIk\fR.  The meridian convergence is the bearing of
+the \fIy\fR axis measured clockwise from true north.
 .PP
 Special cases of the Lambert conformal projection are the Mercator
 projection (the standard latitudes equal and opposite) and the polar
@@ -210,6 +212,11 @@ the flattening is \fIf\fR.  Setting \fIf\fR = 0 results in a sphere.  Specify
 is allowed for \fIf\fR.  (Also, if \fIf\fR > 1, the flattening is set to
 1/\fIf\fR.)  By default, the \s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137 m,
 \&\fIf\fR = 1/298.257223563.
+.IP "\fB\-w\fR" 4
+.IX Item "-w"
+on input and output, longitude precedes latitude (except that, on input,
+this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR, \fIE\fR,
+\&\fIW\fR).
 .IP "\fB\-p\fR" 4
 .IX Item "-p"
 set the output precision to \fIprec\fR (default 6).  \fIprec\fR is the number

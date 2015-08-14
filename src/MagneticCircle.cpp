@@ -20,7 +20,7 @@ namespace GeographicLib {
                              real& Bx, real& By, real& Bz,
                              real& Bxt, real& Byt, real& Bzt) const {
     real clam, slam;
-    CircularEngine::cossin(lon, clam, slam);
+    Math::sincosd(lon, slam, clam);
     real M[Geocentric::dim2_];
     Geocentric::Rotation(_sphi, _cphi, slam, clam, M);
     real BX0, BY0, BZ0, BX1, BY1, BZ1; // Components in geocentric basis

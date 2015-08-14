@@ -2,7 +2,7 @@
  * \file AlbersEqualArea.cpp
  * \brief Implementation for GeographicLib::AlbersEqualArea class
  *
- * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -41,10 +41,8 @@ namespace GeographicLib {
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
       throw GeographicErr("Standard latitude not in [-90d, 90d]");
-    real
-      phi = stdlat * Math::degree(),
-      sphi = sin(phi),
-      cphi = abs(stdlat) != 90 ? cos(phi) : 0;
+    real sphi, cphi;
+    Math::sincosd(stdlat, sphi, cphi);
     Init(sphi, cphi, sphi, cphi, k0);
   }
 
@@ -74,11 +72,10 @@ namespace GeographicLib {
       throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
     if (!(abs(stdlat2) <= 90))
       throw GeographicErr("Standard latitude 2 not in [-90d, 90d]");
-    real
-      phi1 = stdlat1 * Math::degree(),
-      phi2 = stdlat2 * Math::degree();
-    Init(sin(phi1), abs(stdlat1) != 90 ? cos(phi1) : 0,
-         sin(phi2), abs(stdlat2) != 90 ? cos(phi2) : 0, k1);
+    real sphi1, cphi1, sphi2, cphi2;
+    Math::sincosd(stdlat1, sphi1, cphi1);
+    Math::sincosd(stdlat2, sphi2, cphi2);
+    Init(sphi1, cphi1, sphi2, cphi2, k1);
   }
 
   AlbersEqualArea::AlbersEqualArea(real a, real f,
@@ -387,12 +384,13 @@ namespace GeographicLib {
   void AlbersEqualArea::Forward(real lon0, real lat, real lon,
                                 real& x, real& y, real& gamma, real& k)
     const {
-    lon = Math::AngDiff(Math::AngNormalize(lon0), Math::AngNormalize(lon));
+    lon = Math::AngDiff(lon0, lon);
     lat *= _sign;
+    real sphi, cphi;
+    Math::sincosd(Math::LatFix(lat) * _sign, sphi, cphi);
+    cphi = max(epsx_, cphi);
     real
       lam = lon * Math::degree(),
-      phi = lat * Math::degree(),
-      sphi = sin(phi), cphi = abs(lat) != 90 ? cos(phi) : epsx_,
       tphi = sphi/cphi, txi = txif(tphi), sxi = txi/hyp(txi),
       dq = _qZ * Dsn(txi, _txi0, sxi, _sxi0) * (txi - _txi0),
       drho = - _a * dq / (sqrt(_m02 - _n0 * dq) + _nrho0 / _a),
@@ -423,11 +421,10 @@ namespace GeographicLib {
               (Math::sq(_a) * _qZ),
       txi = (_txi0 + dsxia) / sqrt(max(1 - dsxia * (2*_txi0 + dsxia), epsx2_)),
       tphi = tphif(txi),
-      phi = _sign * atan(tphi),
       theta = atan2(nx, y1),
       lam = _n0 ? theta / (_k2 * _n0) : x / (y1 * _k0);
     gamma = _sign * theta / Math::degree();
-    lat = phi / Math::degree();
+    lat = Math::atand(_sign * tphi);
     lon = lam / Math::degree();
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
     k = _k0 * (den ? (_nrho0 + _n0 * drho) * hyp(_fm * tphi) / _a : 1);

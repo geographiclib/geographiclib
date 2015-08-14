@@ -2,7 +2,7 @@
  * \file Gnomonic.hpp
  * \brief Header for GeographicLib::Gnomonic class
  *
- * Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -127,8 +127,7 @@ namespace GeographicLib {
      * @param[out] azi azimuth of geodesic at point (degrees).
      * @param[out] rk reciprocal of azimuthal scale at point.
      *
-     * \e lat0 and \e lat should be in the range [&minus;90&deg;, 90&deg;] and
-     * \e lon0 and \e lon should be in the range [&minus;540&deg;, 540&deg;).
+     * \e lat0 and \e lat should be in the range [&minus;90&deg;, 90&deg;].
      * The scale of the projection is 1/<i>rk</i><sup>2</sup> in the "radial"
      * direction, \e azi clockwise from true north, and is 1/\e rk in the
      * direction perpendicular to this.  If the point lies "over the horizon",
@@ -152,17 +151,16 @@ namespace GeographicLib {
      * @param[out] azi azimuth of geodesic at point (degrees).
      * @param[out] rk reciprocal of azimuthal scale at point.
      *
-     * \e lat0 should be in the range [&minus;90&deg;, 90&deg;] and \e
-     * lon0 should be in the range [&minus;540&deg;, 540&deg;).  \e lat
-     * will be in the range [&minus;90&deg;, 90&deg;] and \e lon will
-     * be in the range [&minus;180&deg;, 180&deg;).  The scale of the
-     * projection is 1/<i>rk</i><sup>2</sup> in the "radial" direction, \e azi
-     * clockwise from true north, and is 1/\e rk in the direction perpendicular
-     * to this.  Even though all inputs should return a valid \e lat and \e
-     * lon, it's possible that the procedure fails to converge for very large
-     * \e x or \e y; in this case NaNs are returned for all the output
-     * arguments.  A call to Reverse followed by a call to Forward will return
-     * the original (\e x, \e y) (to roundoff).
+     * \e lat0 should be in the range [&minus;90&deg;, 90&deg;].  \e lat will
+     * be in the range [&minus;90&deg;, 90&deg;] and \e lon will be in the
+     * range [&minus;180&deg;, 180&deg;).  The scale of the projection is
+     * 1/<i>rk</i><sup>2</sup> in the "radial" direction, \e azi clockwise from
+     * true north, and is 1/\e rk in the direction perpendicular to this.  Even
+     * though all inputs should return a valid \e lat and \e lon, it's possible
+     * that the procedure fails to converge for very large \e x or \e y; in
+     * this case NaNs are returned for all the output arguments.  A call to
+     * Reverse followed by a call to Forward will return the original (\e x, \e
+     * y) (to roundoff).
      **********************************************************************/
     void Reverse(real lat0, real lon0, real x, real y,
                  real& lat, real& lon, real& azi, real& rk) const;

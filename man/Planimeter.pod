@@ -5,7 +5,7 @@ Planimeter -- compute the area of geodesic polygons
 =head1 SYNOPSIS
 
 B<Planimeter> [ B<-r> ] [ B<-s> ] [ B<-l> ] [ B<-e> I<a> I<f> ]
-[ B<-p> I<prec> ] [ B<-G> | B<-E> | B<-Q> | B<-R> ]
+[ B<-w> ] [ B<-p> I<prec> ] [ B<-G> | B<-E> | B<-Q> | B<-R> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -81,6 +81,11 @@ is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
 I<f> = 1/298.257223563.  If entering vertices as UTM/UPS or MGRS
 coordinates, use the default ellipsoid, since the conversion of these
 coordinates to latitude and longitude always uses the WGS84 parameters.
+
+=item B<-w>
+
+when reading geographic coordinates, longitude precedes latitude (this
+can be overridden by a hemisphere designator, I<N>, I<S>, I<E>, I<W>).
 
 =item B<-p>
 

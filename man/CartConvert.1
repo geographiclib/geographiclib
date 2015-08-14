@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "CARTCONVERT 1"
-.TH CARTCONVERT 1 "2015-05-22" "GeographicLib 1.43" "GeographicLib Utilities"
+.TH CARTCONVERT 1 "2015-08-14" "GeographicLib 1.44" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -142,7 +142,8 @@
 CartConvert \-\- convert geodetic coordinates to geocentric or local cartesian
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
-\&\fBCartConvert\fR [ \fB\-r\fR ] [ \fB\-l\fR \fIlat0\fR \fIlon0\fR \fIh0\fR ] [ \fB\-e\fR \fIa\fR \fIf\fR ]
+\&\fBCartConvert\fR [ \fB\-r\fR ] [ \fB\-l\fR \fIlat0\fR \fIlon0\fR \fIh0\fR ]
+[ \fB\-e\fR \fIa\fR \fIf\fR ] [ \fB\-w\fR ] [ \fB\-p\fR prec ]
 [ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
 [ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
@@ -162,9 +163,10 @@ origin at \fIlatitude\fR = \fIlat0\fR, \fIlongitude\fR = \fIlon0\fR, \fIheight\f
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) \fIlatitude\fR, \fIlongitude\fR (decimal degrees
 or degrees, minutes and seconds), and \fIheight\fR above the ellipsoid
-(meters).  For each set of geodetic coordinates, the corresponding
-cartesian coordinates \fIx\fR, \fIy\fR, \fIz\fR (meters) are printed on standard
-output.
+(meters); for details on the allowed formats for latitude and longitude,
+see the \f(CW\*(C`GEOGRAPHIC COORDINATES\*(C'\fR section of \fIGeoConvert\fR\|(1).  For each
+set of geodetic coordinates, the corresponding cartesian coordinates
+\&\fIx\fR, \fIy\fR, \fIz\fR (meters) are printed on standard output.
 .SH "OPTIONS"
 .IX Header "OPTIONS"
 .IP "\fB\-r\fR" 4
@@ -172,6 +174,12 @@ output.
 perform the reverse projection.  \fIx\fR, \fIy\fR, \fIz\fR are given on standard
 input and each line of standard output gives \fIlatitude\fR, \fIlongitude\fR,
 \&\fIheight\fR.
+.IP "\fB\-l\fR" 4
+.IX Item "-l"
+specifies conversions to and from a local cartesion coordinate systems
+with origin \fIlat0\fR \fIlon0\fR \fIh0\fR, instead of a geocentric coordinate
+system.  The \fB\-w\fR flag can be used to swap the default order of the 2
+geographic coordinates, provided that it appears before \fB\-l\fR.
 .IP "\fB\-e\fR" 4
 .IX Item "-e"
 specify the ellipsoid via \fIa\fR \fIf\fR; the equatorial radius is \fIa\fR and
@@ -180,6 +188,18 @@ the flattening is \fIf\fR.  Setting \fIf\fR = 0 results in a sphere.  Specify
 is allowed for \fIf\fR.  (Also, if \fIf\fR > 1, the flattening is set to
 1/\fIf\fR.)  By default, the \s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137 m,
 \&\fIf\fR = 1/298.257223563.
+.IP "\fB\-w\fR" 4
+.IX Item "-w"
+on input and output, longitude precedes latitude (except that, on input,
+this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR, \fIE\fR,
+\&\fIW\fR).
+.IP "\fB\-p\fR" 4
+.IX Item "-p"
+set the output precision to \fIprec\fR (default 6).  \fIprec\fR is the number
+of digits after the decimal point for geocentric and local cartesion
+coordinates and for the height (in meters).  For latitudes and
+longitudes (in degrees), the number of digits after the decimal point is
+\&\fIprec\fR + 5.
 .IP "\fB\-\-comment\-delimiter\fR" 4
 .IX Item "--comment-delimiter"
 set the comment delimiter to \fIcommentdelim\fR (e.g., \*(L"#\*(R" or \*(L"//\*(R").  If

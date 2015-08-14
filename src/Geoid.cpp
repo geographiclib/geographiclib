@@ -2,7 +2,7 @@
  * \file Geoid.cpp
  * \brief Implementation for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -305,6 +305,7 @@ namespace GeographicLib {
 
   Math::real Geoid::height(real lat, real lon, bool gradp,
                            real& gradn, real& grade) const {
+    lat = Math::LatFix(lat);
     if (Math::isnan(lat) || Math::isnan(lon)) {
       if (gradp) gradn = grade = Math::NaN();
       return Math::NaN();
@@ -370,11 +371,9 @@ namespace GeographicLib {
         c = (1 - fy) * a + fy * b,
         h = _offset + _scale * c;
       if (gradp) {
-        real
-          phi = lat * _degree,
-          cosphi = cos(phi),
-          sinphi = sin(phi),
-          n = 1/sqrt(1 - _e2 * sinphi * sinphi);
+        real cosphi, sinphi;
+        Math::sincosd(lat, sinphi, cosphi);
+        real n = 1/sqrt(1 - _e2 * Math::sq(sinphi));
         gradn = ((1 - fx) * (v00 - v10) + fx * (v01 - v11)) *
           _rlatres / (_degree * _a * (1 - _e2) * n * n * n);
         grade = (cosphi > _eps ?
@@ -405,11 +404,9 @@ namespace GeographicLib {
         lat = max(lat, -90 + 1/(100 * _rlatres));
         fy = (90 - lat) * _rlatres;
         fy -= int(fy);
-        real
-          phi = lat * _degree,
-          cosphi = cos(phi),
-          sinphi = sin(phi),
-          n = 1/sqrt(1 - _e2 * sinphi * sinphi);
+        real cosphi, sinphi;
+        Math::sincosd(lat, sinphi, cosphi);
+        real n = 1/sqrt(1 - _e2 * Math::sq(sinphi));
         gradn = t[2] + fx * (t[4] + fx * t[7]) +
           fy * (2 * t[5] + fx * 2 * t[8] + 3 * fy * t[9]);
         grade = t[1] + fx * (2 * t[3] + fx * 3 * t[6]) +
@@ -446,6 +443,8 @@ namespace GeographicLib {
       CacheClear();
       return;
     }
+    south = Math::LatFix(south);
+    north = Math::LatFix(north);
     west = Math::AngNormalize(west); // west in [-180, 180)
     east = Math::AngNormalize(east);
     if (east <= west)

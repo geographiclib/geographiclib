@@ -2,7 +2,7 @@
  * \file PolygonArea.cpp
  * \brief Implementation for GeographicLib::PolygonAreaT class
  *
- * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -15,6 +15,7 @@ namespace GeographicLib {
 
   template <class GeodType>
   void PolygonAreaT<GeodType>::AddPoint(real lat, real lon) {
+    lat = Math::LatFix(lat);
     lon = Math::AngNormalize(lon);
     if (_num == 0) {
       _lat0 = _lat1 = lat;
@@ -42,7 +43,7 @@ namespace GeographicLib {
       if (!_polyline) {
         _areasum += S12;
         _crossings += transitdirect(_lon1, lon);
-        lon = Math::AngNormalize2(lon);
+        lon = Math::AngNormalize(lon);
       }
       _lat1 = lat; _lon1 = lon;
       ++_num;
@@ -167,7 +168,7 @@ namespace GeographicLib {
                        lat, lon, t, t, t, t, t, S12);
       tempsum += S12;
       crossings += transitdirect(_lon1, lon);
-      lon = Math::AngNormalize2(lon);
+      lon = Math::AngNormalize(lon);
       _earth.GenInverse(lat, lon, _lat0, _lon0, _mask, s12, t, t, t, t, t, S12);
       perimeter += s12;
       tempsum += S12;

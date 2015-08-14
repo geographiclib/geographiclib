@@ -17,7 +17,7 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<p><b>GeodSolve</b> [ <b>-i</b> | <b>-l</b> <i>lat1</i> <i>lon1</i> <i>azi1</i> ] [ <b>-a</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] <b>-u</b> ] [ <b>-d</b> | <b>-:</b> ] [ <b>-b</b> ] [ <b>-f</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-E</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
+<p><b>GeodSolve</b> [ <b>-i</b> | <b>-l</b> <i>lat1</i> <i>lon1</i> <i>azi1</i> ] [ <b>-a</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] <b>-u</b> ] [ <b>-d</b> | <b>-:</b> ] [ <b>-w</b> ] [ <b>-b</b> ] [ <b>-f</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-E</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
@@ -51,7 +51,7 @@
 <dt id="l"><b>-l</b></dt>
 <dd>
 
-<p>line mode (see 2 above); generate a sequence of points along the geodesic specified by <i>lat1</i> <i>lon1</i> <i>azi1</i>.</p>
+<p>line mode (see 2 above); generate a sequence of points along the geodesic specified by <i>lat1</i> <i>lon1</i> <i>azi1</i>. The <b>-w</b> flag can be used to swap the default order of the 2 geographic coordinates, provided that it appears before <b>-l</b>.</p>
 
 </dd>
 <dt id="a"><b>-a</b></dt>
@@ -69,7 +69,7 @@
 <dt id="u"><b>-u</b></dt>
 <dd>
 
-<p>unroll the longitude. On input longitudes must lie in [-540deg,540deg) and, normally, on output longitudes are reduced to lie in [-180deg,180deg). However with this option, the returned longitude <i>lon2</i> is &quot;unrolled&quot; so that <i>lon2</i> - <i>lon1</i> indicates how often and in what sense the geodesic has encircled the earth.</p>
+<p>unroll the longitude. Normally, on output longitudes are reduced to lie in [-180deg,180deg). However with this option, the returned longitude <i>lon2</i> is &quot;unrolled&quot; so that <i>lon2</i> - <i>lon1</i> indicates how often and in what sense the geodesic has encircled the earth. Use the <b>-f</b> option, to get both longitudes printed.</p>
 
 </dd>
 <dt id="d"><b>-d</b></dt>
@@ -82,6 +82,12 @@
 <dd>
 
 <p>like <b>-d</b>, except use : as a separator instead of the d, &#39;, and &quot; delimiters.</p>
+
+</dd>
+<dt id="w"><b>-w</b></dt>
+<dd>
+
+<p>on input and output, longitude precedes latitude (except that, on input, this can be overridden by a hemisphere designator, <i>N</i>, <i>S</i>, <i>E</i>, <i>W</i>).</p>
 
 </dd>
 <dt id="b"><b>-b</b></dt>
@@ -160,9 +166,9 @@
 
 <h1 id="INPUT">INPUT</h1>
 
-<p><b>GeodSolve</b> measures all angles in degrees and all lengths (<i>s12</i>) in meters. On input angles (latitude, longitude, azimuth, arc length) can be as decimal degrees or degrees (d), minutes (&#39;), seconds (&quot;). A decimal point can only appear in the least significant component and the designator (d, &#39;, or &quot;) for this component is optional; thus <code>40d30</code>, <code>40d30&#39;</code>, <code>40.5d</code>, and <code>40.5</code> are all equivalent. By default, latitude precedes longitude for each point; however on input either may be given first by appending (or prepending) <i>N</i> or <i>S</i> to the latitude and <i>E</i> or <i>W</i> to the longitude. Azimuths are measured clockwise from north; however this may be overridden with <i>E</i> or <i>W</i>.</p>
+<p><b>GeodSolve</b> measures all angles in degrees and all lengths (<i>s12</i>) in meters, and all areas (<i>S12</i>) in meters^2. On input angles (latitude, longitude, azimuth, arc length) can be as decimal degrees or degrees, minutes, seconds. For example, <code>40d30</code>, <code>40d30&#39;</code>, <code>40:30</code>, <code>40.5d</code>, and <code>40.5</code> are all equivalent. By default, latitude precedes longitude for each point (the <b>-w</b> flag switches this convention); however on input either may be given first by appending (or prepending) <i>N</i> or <i>S</i> to the latitude and <i>E</i> or <i>W</i> to the longitude. Azimuths are measured clockwise from north; however this may be overridden with <i>E</i> or <i>W</i>.</p>
 
-<p>See the <code>QUOTING</code> section of GeoConvert(1) for how to quote the DMS designators &#39; and &quot;.</p>
+<p>For details on the allowed formats for angles, see the <code>GEOGRAPHIC COORDINATES</code> section of GeoConvert(1).</p>
 
 <h1 id="AUXILIARY-SPHERE">AUXILIARY SPHERE</h1>
 
@@ -176,7 +182,14 @@
 
 <p><i>M12</i> and <i>M21</i> are geodesic scales. If two geodesics are parallel at point 1 and separated by a small distance <i>dt</i>, then they are separated by a distance <i>M12</i> <i>dt</i> at point 2. <i>M21</i> is defined similarly (with the geodesics being parallel to one another at point 2). <i>M12</i> and <i>M21</i> are dimensionless quantities. On a flat surface, we have <i>M12</i> = <i>M21</i> = 1.</p>
 
-<p>If points 1, 2, and 3 lie on a single geodesic, then the following addition rules hold, <i>s13</i> = <i>s12</i> + <i>s23</i>, <i>a13</i> = <i>a12</i> + <i>a23</i>, <i>S13</i> = <i>S12</i> + <i>S23</i>, <i>m13</i> = <i>m12</i> <i>M23</i> + <i>m23</i> <i>M21</i>, <i>M13</i> = <i>M12</i> <i>M23</i> - (1 - <i>M12</i> <i>M21</i>) <i>m23</i> / <i>m12</i>, and <i>M31</i> = <i>M32</i> <i>M21</i> - (1 - <i>M23</i> <i>M32</i>) <i>m12</i> / <i>m23</i>.</p>
+<p>If points 1, 2, and 3 lie on a single geodesic, then the following addition rules hold:</p>
+
+<pre><code>   s13 = s12 + s23,
+   a13 = a12 + a23,
+   S13 = S12 + S23,
+   m13 = m12 M23 + m23 M21,
+   M13 = M12 M23 - (1 - M12 M21) m23 / m12,
+   M31 = M32 M21 - (1 - M23 M32) m12 / m23.</code></pre>
 
 <p>Finally, <i>S12</i> is the area between the geodesic from point 1 to point 2 and the equator; i.e., it is the area, measured counter-clockwise, of the geodesic quadrilateral with corners (<i>lat1</i>,<i>lon1</i>), (0,<i>lon1</i>), (0,<i>lon2</i>), and (<i>lat2</i>,<i>lon2</i>). It is given in meters^2.</p>
 

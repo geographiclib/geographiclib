@@ -142,16 +142,14 @@ namespace GeographicLib {
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
-    real lon12 = Math::AngDiff(Math::AngNormalize(lon1),
-                               Math::AngNormalize(lon2));
     // If very close to being on the same half-meridian, then make it so.
-    lon12 = Math::AngRound(lon12);
+    real lon12 = Math::AngRound(Math::AngDiff(lon1, lon2));
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
     // If really close to the equator, treat as on equator.
-    lat1 = Math::AngRound(lat1);
-    lat2 = Math::AngRound(lat2);
+    lat1 = Math::AngRound(Math::LatFix(lat1));
+    lat2 = Math::AngRound(Math::LatFix(lat2));
     // Swap points so that point with higher (abs) latitude is point 1
     int swapp = abs(lat1) >= abs(lat2) ? 1 : -1;
     if (swapp < 0) {
@@ -174,19 +172,16 @@ namespace GeographicLib {
     // check, e.g., on verifying quadrants in atan2.  In addition, this
     // enforces some symmetries in the results returned.
 
-    real phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
+    real sbet1, cbet1, sbet2, cbet2, s12x, m12x;
 
-    phi = lat1 * Math::degree();
-    // Ensure cbet1 = +epsilon at poles
-    sbet1 = _f1 * sin(phi);
-    cbet1 = lat1 == -90 ? tiny_ : cos(phi);
-    Math::norm(sbet1, cbet1);
+    Math::sincosd(lat1, sbet1, cbet1); sbet1 *= _f1;
+    // Ensure cbet1 = +epsilon at poles; doing the fix on beta means that sig12
+    // will be <= 2*tiny for two points at the same pole.
+    Math::norm(sbet1, cbet1); cbet1 = max(tiny_, cbet1);
 
-    phi = lat2 * Math::degree();
+    Math::sincosd(lat2, sbet2, cbet2); sbet2 *= _f1;
     // Ensure cbet2 = +epsilon at poles
-    sbet2 = _f1 * sin(phi);
-    cbet2 = abs(lat2) == 90 ? tiny_ : cos(phi);
-    Math::norm(sbet2, cbet2);
+    Math::norm(sbet2, cbet2); cbet2 = max(tiny_, cbet2);
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
     // |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -209,14 +204,13 @@ namespace GeographicLib {
       dn2 = sqrt(1 + _ep2 * Math::sq(sbet2));
 
     real
-      lam12 = lon12 * Math::degree(),
-      slam12 = abs(lon12) == 180 ? 0 : sin(lam12),
-      clam12 = cos(lam12);      // lon12 == 90 isn't interesting
+      lam12 = lon12 * Math::degree(), slam12, clam12;
+    Math::sincosd(lon12, slam12, clam12);
 
     // initial values to suppress warning
     real a12, sig12, calp1, salp1, calp2 = 0, salp2 = 0;
-    // index zero elements of these arrays are unused
-    real C1a[nC1_ + 1], C2a[nC2_ + 1], C3a[nC3_];
+    // index zero element of this array is unused
+    real Ca[nC_];
 
     bool meridian = lat1 == -90 || slam12 == 0;
 
@@ -238,9 +232,9 @@ namespace GeographicLib {
                     csig1 * csig2 + ssig1 * ssig2);
       {
         real dummy;
-        Lengths(_n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                cbet1, cbet2, s12x, m12x, dummy,
-                (outmask & GEODESICSCALE) != 0U, M12, M21, C1a, C2a);
+        Lengths(_n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+                outmask | DISTANCE | REDUCEDLENGTH,
+                s12x, m12x, dummy, M12, M21, Ca);
       }
       // Add the check for sig12 since zero length geodesics might yield m12 <
       // 0.  Test case was
@@ -250,6 +244,9 @@ namespace GeographicLib {
       // In fact, we will have sig12 > pi/2 for meridional geodesic which is
       // not a shortest path.
       if (sig12 < 1 || m12x >= 0) {
+        // Need at least 2, to handle 90 0 90 180
+        if (sig12 < 3 * tiny_)
+          sig12 = m12x = s12x = 0;
         m12x *= _b;
         s12x *= _b;
         a12 = sig12 / Math::degree();
@@ -283,7 +280,7 @@ namespace GeographicLib {
       sig12 = InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
                            lam12,
                            salp1, calp1, salp2, calp2, dnm,
-                           C1a, C2a);
+                           Ca);
 
       if (sig12 >= 0) {
         // Short lines (InverseStart sets salp2, calp2, dnm)
@@ -320,7 +317,7 @@ namespace GeographicLib {
           real dv;
           real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                            eps, omg12, numit < maxit1_, dv, C1a, C2a, C3a)
+                            eps, omg12, numit < maxit1_, dv, Ca)
             - lam12;
           // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
           // Reversed test to allow escape with NaNs
@@ -364,9 +361,12 @@ namespace GeographicLib {
         }
         {
           real dummy;
+          // Ensure that the reduced length and geodesic scale are computed in
+          // a "canonical" way, with the I2 integral.
+          unsigned lengthmask = outmask |
+            (outmask & (REDUCEDLENGTH | GEODESICSCALE) ? DISTANCE : NONE);
           Lengths(eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                  cbet1, cbet2, s12x, m12x, dummy,
-                  (outmask & GEODESICSCALE) != 0U, M12, M21, C1a, C2a);
+                  cbet1, cbet2, lengthmask, s12x, m12x, dummy, M12, M21, Ca);
         }
         m12x *= _b;
         s12x *= _b;
@@ -398,11 +398,10 @@ namespace GeographicLib {
           A4 = Math::sq(_a) * calp0 * salp0 * _e2;
         Math::norm(ssig1, csig1);
         Math::norm(ssig2, csig2);
-        real C4a[nC4_];
-        C4f(eps, C4a);
+        C4f(eps, Ca);
         real
-          B41 = SinCosSeries(false, ssig1, csig1, C4a, nC4_),
-          B42 = SinCosSeries(false, ssig2, csig2, C4a, nC4_);
+          B41 = SinCosSeries(false, ssig1, csig1, Ca, nC4_),
+          B42 = SinCosSeries(false, ssig2, csig2, Ca, nC4_);
         S12 = A4 * (B42 - B41);
       } else
         // Avoid problems with indeterminate sig1, sig2 on equator
@@ -463,31 +462,57 @@ namespace GeographicLib {
   void Geodesic::Lengths(real eps, real sig12,
                          real ssig1, real csig1, real dn1,
                          real ssig2, real csig2, real dn2,
-                         real cbet1, real cbet2,
-                         real& s12b, real& m12b, real& m0,
-                         bool scalep, real& M12, real& M21,
-                         // Scratch areas of the right size
-                         real C1a[], real C2a[]) const {
+                         real cbet1, real cbet2, unsigned outmask,
+                         real& s12b, real& m12b, real& m0, real& M12, real& M21,
+                         // Scratch area of the right size
+                         real Ca[]) const {
     // Return m12b = (reduced length)/_b; also calculate s12b = distance/_b,
     // and m0 = coefficient of secular term in expression for reduced length.
-    C1f(eps, C1a);
-    C2f(eps, C2a);
-    real
-      A1m1 = A1m1f(eps),
-      AB1 = (1 + A1m1) * (SinCosSeries(true, ssig2, csig2, C1a, nC1_) -
-                          SinCosSeries(true, ssig1, csig1, C1a, nC1_)),
-      A2m1 = A2m1f(eps),
-      AB2 = (1 + A2m1) * (SinCosSeries(true, ssig2, csig2, C2a, nC2_) -
-                          SinCosSeries(true, ssig1, csig1, C2a, nC2_));
-    m0 = A1m1 - A2m1;
-    real J12 = m0 * sig12 + (AB1 - AB2);
-    // Missing a factor of _b.
-    // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
-    // cancellation in the case of coincident points.
-    m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) - csig1 * csig2 * J12;
-    // Missing a factor of _b
-    s12b = (1 + A1m1) * sig12 + AB1;
-    if (scalep) {
+
+    outmask &= OUT_MASK;
+    // outmask & DISTANCE: set s12b
+    // outmask & REDUCEDLENGTH: set m12b & m0
+    // outmask & GEODESICSCALE: set M12 & M21
+
+    real m0x = 0, J12 = 0, A1 = 0, A2 = 0;
+    real Cb[nC2_ + 1];
+    if (outmask & (DISTANCE | REDUCEDLENGTH | GEODESICSCALE)) {
+      A1 = A1m1f(eps);
+      C1f(eps, Ca);
+      if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
+        A2 = A2m1f(eps);
+        C2f(eps, Cb);
+        m0x = A1 - A2;
+        A2 = 1 + A2;
+      }
+      A1 = 1 + A1;
+    }
+    if (outmask & DISTANCE) {
+      real B1 = SinCosSeries(true, ssig2, csig2, Ca, nC1_) -
+        SinCosSeries(true, ssig1, csig1, Ca, nC1_);
+      // Missing a factor of _b
+      s12b = A1 * (sig12 + B1);
+      if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
+        real B2 = SinCosSeries(true, ssig2, csig2, Cb, nC2_) -
+          SinCosSeries(true, ssig1, csig1, Cb, nC2_);
+        J12 = m0x * sig12 + (A1 * B1 - A2 * B2);
+      }
+    } else if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
+      // Assume here that nC1_ >= nC2_
+      for (int l = 1; l <= nC2_; ++l)
+        Cb[l] = A1 * Ca[l] - A2 * Cb[l];
+      J12 = m0x * sig12 + (SinCosSeries(true, ssig2, csig2, Cb, nC2_) -
+                           SinCosSeries(true, ssig1, csig1, Cb, nC2_));
+    }
+    if (outmask & REDUCEDLENGTH) {
+      m0 = m0x;
+      // Missing a factor of _b.
+      // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure
+      // accurate cancellation in the case of coincident points.
+      m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
+        csig1 * csig2 * J12;
+    }
+    if (outmask & GEODESICSCALE) {
       real csig12 = csig1 * csig2 + ssig1 * ssig2;
       real t = _ep2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2);
       M12 = csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1;
@@ -510,7 +535,7 @@ namespace GeographicLib {
         S = p * q / 4,            // S = r^3 * s
         r2 = Math::sq(r),
         r3 = r * r2,
-        // The discrimant of the quadratic equation for T3.  This is zero on
+        // The discriminant of the quadratic equation for T3.  This is zero on
         // the evolute curve p^(1/3)+q^(1/3) = 1
         disc = S * (S + 2 * r3);
       real u = r;
@@ -555,8 +580,8 @@ namespace GeographicLib {
                                     real& salp2, real& calp2,
                                     // Only updated for short lines
                                     real& dnm,
-                                    // Scratch areas of the right size
-                                    real C1a[], real C2a[]) const {
+                                    // Scratch area of the right size
+                                    real Ca[]) const {
     // Return a starting point for Newton's method in salp1 and calp1 (function
     // value is -1).  If Newton's method doesn't need to be used, return also
     // salp2 and calp2 and function value is sig12.
@@ -646,8 +671,7 @@ namespace GeographicLib {
         // Inverse.
         Lengths(_n, Math::pi() + bet12a,
                 sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
-                cbet1, cbet2, dummy, m12b, m0, false,
-                dummy, dummy, C1a, C2a);
+                cbet1, cbet2, REDUCEDLENGTH, dummy, m12b, m0, dummy, dummy, Ca);
         x = -1 + m12b / (cbet1 * cbet2 * m0 * Math::pi());
         betscale = x < -real(0.01) ? sbet12a / x :
           -_f * Math::sq(cbet1) * Math::pi();
@@ -726,8 +750,8 @@ namespace GeographicLib {
                                 real& ssig2, real& csig2,
                                 real& eps, real& domg12,
                                 bool diffp, real& dlam12,
-                                // Scratch areas of the right size
-                                real C1a[], real C2a[], real C3a[]) const {
+                                // Scratch area of the right size
+                                real Ca[]) const {
 
     if (sbet1 == 0 && calp1 == 0)
       // Break degeneracy of equatorial line.  This case has already been
@@ -779,9 +803,9 @@ namespace GeographicLib {
     real B312, h0;
     real k2 = Math::sq(calp0) * _ep2;
     eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
-    C3f(eps, C3a);
-    B312 = (SinCosSeries(true, ssig2, csig2, C3a, nC3_-1) -
-            SinCosSeries(true, ssig1, csig1, C3a, nC3_-1));
+    C3f(eps, Ca);
+    B312 = (SinCosSeries(true, ssig2, csig2, Ca, nC3_-1) -
+            SinCosSeries(true, ssig1, csig1, Ca, nC3_-1));
     h0 = -_f * A3f(eps);
     domg12 = salp0 * h0 * (sig12 + B312);
     lam12 = omg12 + domg12;
@@ -792,8 +816,8 @@ namespace GeographicLib {
       else {
         real dummy;
         Lengths(eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                cbet1, cbet2, dummy, dlam12, dummy,
-                false, dummy, dummy, C1a, C2a);
+                cbet1, cbet2, REDUCEDLENGTH,
+                dummy, dlam12, dummy, dummy, dummy, Ca);
         dlam12 *= _f1 / (calp2 * cbet2);
       }
     }
@@ -1104,27 +1128,27 @@ namespace GeographicLib {
 
   // The scale factor A2-1 = mean value of (d/dsigma)I2 - 1
   Math::real Geodesic::A2m1f(real eps) {
-    // Generated by Maxima on 2015-05-05 18:08:12-04:00
+    // Generated by Maxima on 2015-05-29 08:09:47-04:00
 #if GEOGRAPHICLIB_GEODESIC_ORDER/2 == 1
     static const real coeff[] = {
-      // A2/(1-eps)-1, polynomial in eps2 of order 1
-      1, 0, 4,
-    };
+      // (eps+1)*A2-1, polynomial in eps2 of order 1
+      -3, 0, 4,
+    };  // count = 3
 #elif GEOGRAPHICLIB_GEODESIC_ORDER/2 == 2
     static const real coeff[] = {
-      // A2/(1-eps)-1, polynomial in eps2 of order 2
-      9, 16, 0, 64,
-    };
+      // (eps+1)*A2-1, polynomial in eps2 of order 2
+      -7, -48, 0, 64,
+    };  // count = 4
 #elif GEOGRAPHICLIB_GEODESIC_ORDER/2 == 3
     static const real coeff[] = {
-      // A2/(1-eps)-1, polynomial in eps2 of order 3
-      25, 36, 64, 0, 256,
-    };
+      // (eps+1)*A2-1, polynomial in eps2 of order 3
+      -11, -28, -192, 0, 256,
+    };  // count = 5
 #elif GEOGRAPHICLIB_GEODESIC_ORDER/2 == 4
     static const real coeff[] = {
-      // A2/(1-eps)-1, polynomial in eps2 of order 4
-      1225, 1600, 2304, 4096, 0, 16384,
-    };
+      // (eps+1)*A2-1, polynomial in eps2 of order 4
+      -375, -704, -1792, -12288, 0, 16384,
+    };  // count = 6
 #else
 #error "Bad value for GEOGRAPHICLIB_GEODESIC_ORDER"
 #endif
@@ -1132,7 +1156,7 @@ namespace GeographicLib {
                                 "Coefficient array size mismatch in A2m1f");
     int m = nA2_/2;
     real t = Math::polyval(m, coeff, Math::sq(eps)) / coeff[m + 1];
-    return t * (1 - eps) - eps;
+    return (t - eps) / (1 + eps);
   }
 
   // The coefficients C2[l] in the Fourier expansion of B2

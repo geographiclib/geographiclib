@@ -1,5 +1,5 @@
 % GeographicLib toolbox
-% Version 1.43 2015-05-23
+% Version 1.44 2015-08-14
 %
 %   This toolbox provides native MATLAB implementations of a subset of the
 %   C++ library, GeographicLib.  Key components of this toolbox are
@@ -22,10 +22,9 @@
 %     * Angles (latitude, longitude, azimuth, meridian convergence) are
 %       measured in degrees.
 %     * Distances are measured in meters, areas in meters^2.
-%     * Latitudes must lie in [-90,90] and longitudes and azimuths in
-%       [-540,540).  However most routines don't check that this condition
-%       holds.  (Exceptions are the grid system and geoid functions.  These
-%       return NaNs for invalid inputs.)
+%     * Latitudes must lie in [-90,90].  However most routines don't check
+%       that this condition holds.  (Exceptions are the grid system and
+%       geoid functions.  These return NaNs for invalid inputs.)
 %     * The ellipsoid is specified as [a, e], where a = equatorial radius
 %       and e = eccentricity.  The eccentricity can be pure imaginary to
 %       denote a prolate ellipsoid.
@@ -92,4 +91,4 @@
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.43.
+% This file was distributed with GeographicLib 1.44.

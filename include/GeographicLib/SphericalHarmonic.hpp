@@ -44,18 +44,23 @@ namespace GeographicLib {
    * implementation.
    *
    * References:
-   * - C. W. Clenshaw, A note on the summation of Chebyshev series,
+   * - C. W. Clenshaw,
+   *   <a href="https://dx.doi.org/10.1090/S0025-5718-1955-0071856-0">
+   *   A note on the summation of Chebyshev series</a>,
    *   %Math. Tables Aids Comput. 9(51), 118--120 (1955).
    * - R. E. Deakin, Derivatives of the earth's potentials, Geomatics
    *   Research Australasia 68, 31--60, (June 1998).
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San
    *   Francisco, 1967).  (See Sec. 1-14, for a definition of Pbar.)
-   * - S. A. Holmes and W. E. Featherstone, A unified approach to the Clenshaw
-   *   summation and the recursive computation of very high degree and order
-   *   normalised associated Legendre functions, J. Geodesy 76(5),
-   *   279--299 (2002).
-   * - C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw
-   *   summation, Boll. Geod. Sci. Aff. 41(4), 349--375 (1982).
+   * - S. A. Holmes and W. E. Featherstone,
+   *   <a href="https://dx.doi.org/10.1007/s00190-002-0216-2">
+   *   A unified approach to the Clenshaw summation and the recursive
+   *   computation of very high degree and order normalised associated Legendre
+   *   functions</a>, J. Geodesy 76(5), 279--299 (2002).
+   * - C. C. Tscherning and K. Poder,
+   *   <a href="http://cct.gfy.ku.dk/publ_cct/cct80.pdf">
+   *   Some geodetic applications of Clenshaw summation</a>,
+   *   Boll. Geod. Sci. Aff. 41(4), 349--375 (1982).
    *
    * Example of use:
    * \include example-SphericalHarmonic.cpp

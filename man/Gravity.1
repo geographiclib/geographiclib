@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GRAVITY 1"
-.TH GRAVITY 1 "2015-05-22" "GeographicLib 1.43" "GeographicLib Utilities"
+.TH GRAVITY 1 "2015-08-14" "GeographicLib 1.44" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -144,7 +144,7 @@ Gravity \-\- compute the earth's gravity field
 .IX Header "SYNOPSIS"
 \&\fBGravity\fR [ \fB\-n\fR \fIname\fR ] [ \fB\-d\fR \fIdir\fR ]
 [ \fB\-G\fR | \fB\-D\fR | \fB\-A\fR | \fB\-H\fR ] [ \fB\-c\fR \fIlat\fR \fIh\fR ]
-[ \fB\-p\fR \fIprec\fR ]
+[ \fB\-w\fR ] [ \fB\-p\fR \fIprec\fR ]
 [ \fB\-v\fR ]
 [ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
@@ -158,13 +158,14 @@ gravitational field on standard output.
 .PP
 The input line is of the form \fIlat\fR \fIlon\fR \fIh\fR.  \fIlat\fR and \fIlon\fR are
 the latitude and longitude expressed as decimal degrees or degrees,
-minutes, and seconds; see \fIGeoConvert\fR\|(1) for details.  \fIh\fR is the height
-above the ellipsoid in meters; this quantity is optional and defaults to
-0.  Alternatively, the gravity field can be computed at various points
-on a circle of latitude (constant \fIlat\fR and \fIh\fR) via the \fB\-c\fR option;
-in this case only the longitude should be given on the input lines.  The
-quantities printed out are governed by the \fB\-G\fR (default), \fB\-D\fR,
-\&\fB\-A\fR, or \fB\-H\fR options.
+minutes, and seconds; for details on the allowed formats for latitude
+and longitude, see the \f(CW\*(C`GEOGRAPHIC COORDINATES\*(C'\fR section of
+\&\fIGeoConvert\fR\|(1).  \fIh\fR is the height above the ellipsoid in meters; this
+quantity is optional and defaults to 0.  Alternatively, the gravity
+field can be computed at various points on a circle of latitude
+(constant \fIlat\fR and \fIh\fR) via the \fB\-c\fR option; in this case only the
+longitude should be given on the input lines.  The quantities printed
+out are governed by the \fB\-G\fR (default), \fB\-D\fR, \fB\-A\fR, or \fB\-H\fR options.
 .PP
 All the supported gravity models, except for grs80, use \s-1WGS84\s0 as the
 reference ellipsoid \fIa\fR = 6378137 m, \fIf\fR = 1/298.257223563, \fIomega\fR =
@@ -220,6 +221,11 @@ evaluate the field on a circle of latitude given by \fIlat\fR and \fIh\fR
 instead of reading these quantities from the input lines.  In this case,
 \&\fBGravity\fR can calculate the field considerably more quickly.  If geoid
 heights are being computed (the \fB\-H\fR option), then \fIh\fR must be zero.
+.IP "\fB\-w\fR" 4
+.IX Item "-w"
+on input and output, longitude precedes latitude (except that on input
+this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR, \fIE\fR,
+\&\fIW\fR).
 .IP "\fB\-p\fR" 4
 .IX Item "-p"
 set the output precision to \fIprec\fR.  By default \fIprec\fR is 5 for

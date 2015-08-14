@@ -6,7 +6,7 @@ ConicProj -- perform conic projections
 
 B<ConicProj> ( B<-c> | B<-a> ) I<lat1> I<lat2>
 [ B<-l> I<lon0> ] [ B<-k> I<k1> ] [ B<-r> ]
-[ B<-e> I<a> I<f> ] [ B<-p> I<prec> ]
+[ B<-e> I<a> I<f> ] [ B<-w> ] [ B<-p> I<prec> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -28,12 +28,14 @@ area).  The (azimuthal) scale on the standard parallels is I<k1>.
 
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) I<latitude> and I<longitude> (decimal
-degrees or degrees, minutes, seconds).  For each set of geodetic
-coordinates, the corresponding projected easting, I<x>, and northing,
-I<y>, (meters) are printed on standard output together with the meridian
-convergence I<gamma> (degrees) and (azimuthal) scale I<k>.  For Albers
-equal area, the radial scale is 1/I<k>.  The meridian convergence is the
-bearing of the I<y> axis measured clockwise from true north.
+degrees or degrees, minutes, seconds);  for details on the allowed
+formats for latitude and longitude, see the C<GEOGRAPHIC COORDINATES>
+section of GeoConvert(1).  For each set of geodetic coordinates, the
+corresponding projected easting, I<x>, and northing, I<y>, (meters) are
+printed on standard output together with the meridian convergence
+I<gamma> (degrees) and (azimuthal) scale I<k>.  For Albers equal area,
+the radial scale is 1/I<k>.  The meridian convergence is the bearing of
+the I<y> axis measured clockwise from true north.
 
 Special cases of the Lambert conformal projection are the Mercator
 projection (the standard latitudes equal and opposite) and the polar
@@ -81,6 +83,12 @@ I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
 1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137 m,
 I<f> = 1/298.257223563.
+
+=item B<-w>
+
+on input and output, longitude precedes latitude (except that, on input,
+this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
+I<W>).
 
 =item B<-p>
 

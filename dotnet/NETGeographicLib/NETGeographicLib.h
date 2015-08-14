@@ -260,4 +260,31 @@ namespace NETGeographicLib
             static property double J2 { double get() { return m_J2; } }
         };
     };
+
+    /**
+     * @brief Utility library.
+     *
+     * This class only exposes the GeographicLib::Utility::fractionalyear
+     * function.
+     **********************************************************************/
+    public ref class Utility
+    {
+    private:
+        // hide the constructor since all members of this class are static
+        Utility() {}
+    public:
+    /**
+     * Convert a string representing a date to a fractional year.
+     *
+     * @param[in] s the string to be converted.
+     * @exception GeographicErr if \e s can't be interpreted as a date.
+     * @return the fractional year.
+     *
+     * The string is first read as an ordinary number (e.g., 2010 or 2012.5);
+     * if this is successful, the value is returned.  Otherwise the string
+     * should be of the form yyyy-mm or yyyy-mm-dd and this is converted to a
+     * number with 2010-01-01 giving 2010.0 and 2012-07-03 giving 2012.5.
+     **********************************************************************/
+        static double FractionalYear( System::String^ s );
+    };
 }  // namespace NETGeographicLib

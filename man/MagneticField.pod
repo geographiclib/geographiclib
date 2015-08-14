@@ -6,7 +6,7 @@ MagneticField -- compute the earth's magnetic field
 
 B<MagneticField> [ B<-n> I<name> ] [ B<-d> I<dir> ]
 [ B<-t> I<time> | B<-c> I<time> I<lat> I<h> ]
-[ B<-r> ] [ B<-T> I<tguard> ] [ B<-H> I<hguard> ] [ B<-p> I<prec> ]
+[ B<-r> ] [ B<-w> ] [ B<-T> I<tguard> ] [ B<-H> I<hguard> ] [ B<-p> I<prec> ]
 [ B<-v> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
@@ -23,14 +23,16 @@ rate of change.
 The input line is of the form I<time> I<lat> I<lon> I<h>. I<time> is a
 date of the form 2012-07-03, a fractional year such as 2012.5, or the
 string "now".  I<lat> and I<lon> are the latitude and longitude
-expressed as decimal degrees or degrees, minutes, and seconds; see
-GeoConvert(1) for details.  I<h> is the height above the ellipsoid in
-meters; this is optional and defaults to zero.  Alternatively, I<time>
-can be given on the command line as the argument to the B<-t> option, in
-which case it should not be included on the input lines.  Finally, the
-magnetic field can be computed at various points on a circle of latitude
-(constant I<time>, I<lat>, and I<h>) via the B<-c> option; in this case
-only the longitude should be given on the input lines.
+expressed as decimal degrees or degrees, minutes, and seconds; for
+details on the allowed formats for latitude and longitude, see the
+C<GEOGRAPHIC COORDINATES> section of GeoConvert(1).  I<h> is the height
+above the ellipsoid in meters; this is optional and defaults to zero.
+Alternatively, I<time> can be given on the command line as the argument
+to the B<-t> option, in which case it should not be included on the
+input lines.  Finally, the magnetic field can be computed at various
+points on a circle of latitude (constant I<time>, I<lat>, and I<h>) via
+the B<-c> option; in this case only the longitude should be given on the
+input lines.
 
 The output consists of the following 7 items:
 
@@ -78,6 +80,12 @@ quickly.
 =item B<-r>
 
 toggle whether to report the rates of change of the field.
+
+=item B<-w>
+
+on input and output, longitude precedes latitude (except that on input
+this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
+I<W>).
 
 =item B<-T>
 

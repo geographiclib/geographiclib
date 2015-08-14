@@ -6,7 +6,7 @@ GeodSolve -- perform geodesic calculations
 
 B<GeodSolve> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi1> ] [ B<-a> ]
 [ B<-e> I<a> I<f> ] B<-u> ]
-[ B<-d> | B<-:> ] [ B<-b> ] [ B<-f> ] [ B<-p> I<prec> ] [ B<-E> ]
+[ B<-d> | B<-:> ] [ B<-w> ] [ B<-b> ] [ B<-f> ] [ B<-p> I<prec> ] [ B<-E> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -56,7 +56,9 @@ perform an inverse geodesic calculation (see 3 above).
 =item B<-l>
 
 line mode (see 2 above); generate a sequence of points along the
-geodesic specified by I<lat1> I<lon1> I<azi1>.
+geodesic specified by I<lat1> I<lon1> I<azi1>.  The B<-w> flag can be
+used to swap the default order of the 2 geographic coordinates, provided
+that it appears before B<-l>.
 
 =item B<-a>
 
@@ -74,11 +76,11 @@ I<f> = 1/298.257223563.
 
 =item B<-u>
 
-unroll the longitude.  On input longitudes must lie in [-540deg,540deg)
-and, normally, on output longitudes are reduced to lie in
-[-180deg,180deg).  However with this option, the returned longitude
+unroll the longitude.  Normally, on output longitudes are reduced to lie
+in [-180deg,180deg).  However with this option, the returned longitude
 I<lon2> is "unrolled" so that I<lon2> - I<lon1> indicates how often and
-in what sense the geodesic has encircled the earth.
+in what sense the geodesic has encircled the earth.  Use the B<-f>
+option, to get both longitudes printed.
 
 =item B<-d>
 
@@ -88,6 +90,12 @@ output angles as degrees, minutes, seconds instead of decimal degrees.
 
 like B<-d>, except use : as a separator instead of the d, ', and "
 delimiters.
+
+=item B<-w>
+
+on input and output, longitude precedes latitude (except that, on input,
+this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
+I<W>).
 
 =item B<-b>
 
@@ -158,18 +166,18 @@ file name of "-" stands for standard output.
 =head1 INPUT
 
 B<GeodSolve> measures all angles in degrees and all lengths (I<s12>) in
-meters.  On input angles (latitude, longitude, azimuth, arc length) can
-be as decimal degrees or degrees (d), minutes ('), seconds (").  A
-decimal point can only appear in the least significant component and the
-designator (d, ', or ") for this component is optional; thus C<40d30>,
-C<40d30'>, C<40.5d>, and C<40.5> are all equivalent.  By default,
-latitude precedes longitude for each point; however on input either may
-be given first by appending (or prepending) I<N> or I<S> to the latitude
-and I<E> or I<W> to the longitude.  Azimuths are measured clockwise from
-north; however this may be overridden with I<E> or I<W>.
+meters, and all areas (I<S12>) in meters^2.  On input angles (latitude,
+longitude, azimuth, arc length) can be as decimal degrees or degrees,
+minutes, seconds.  For example, C<40d30>, C<40d30'>, C<40:30>, C<40.5d>,
+and C<40.5> are all equivalent.  By default, latitude precedes longitude
+for each point (the B<-w> flag switches this convention); however on
+input either may be given first by appending (or prepending) I<N> or
+I<S> to the latitude and I<E> or I<W> to the longitude.  Azimuths are
+measured clockwise from north; however this may be overridden with I<E>
+or I<W>.
 
-See the C<QUOTING> section of GeoConvert(1) for how to quote the DMS
-designators ' and ".
+For details on the allowed formats for angles, see the C<GEOGRAPHIC
+COORDINATES> section of GeoConvert(1).
 
 =head1 AUXILIARY SPHERE
 
@@ -202,13 +210,14 @@ and I<M21> are dimensionless quantities.  On a flat surface, we have
 I<M12> = I<M21> = 1.
 
 If points 1, 2, and 3 lie on a single geodesic, then the following
-addition rules hold,
-I<s13> = I<s12> + I<s23>,
-I<a13> = I<a12> + I<a23>,
-I<S13> = I<S12> + I<S23>,
-I<m13> = I<m12> I<M23> + I<m23> I<M21>,
-I<M13> = I<M12> I<M23> - (1 - I<M12> I<M21>) I<m23> / I<m12>, and
-I<M31> = I<M32> I<M21> - (1 - I<M23> I<M32>) I<m12> / I<m23>.
+addition rules hold:
+
+   s13 = s12 + s23,
+   a13 = a12 + a23,
+   S13 = S12 + S23,
+   m13 = m12 M23 + m23 M21,
+   M13 = M12 M23 - (1 - M12 M21) m23 / m12,
+   M31 = M32 M21 - (1 - M23 M32) m12 / m23.
 
 Finally, I<S12> is the area between the geodesic from point 1 to point 2
 and the equator; i.e., it is the area, measured counter-clockwise, of

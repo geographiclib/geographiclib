@@ -90,12 +90,15 @@ namespace GeographicLib {
     // atanh(snu * dnv) = asinh(snu * dnv / sqrt(cnu^2 + _mv * snu^2 * snv^2))
     // atanh(_e * snu / dnv) =
     //         asinh(_e * snu / sqrt(_mu * cnu^2 + _mv * cnv^2))
+    // Overflow value s.t. atan(overflow) = pi/2
+    static const real
+      overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
     real
       d1 = sqrt(Math::sq(cnu) + _mv * Math::sq(snu * snv)),
       d2 = sqrt(_mu * Math::sq(cnu) + _mv * Math::sq(cnv)),
-      t1 = (d1 ? snu * dnv / d1 : (snu < 0 ? -overflow() : overflow())),
+      t1 = (d1 ? snu * dnv / d1 : (snu < 0 ? -overflow : overflow)),
       t2 = (d2 ? sinh( _e * Math::asinh(_e * snu / d2) ) :
-            (snu < 0 ? -overflow() : overflow()));
+            (snu < 0 ? -overflow : overflow));
     // psi = asinh(t1) - asinh(t2)
     // taup = sinh(psi)
     taup = t1 * Math::hypot(real(1), t2) - t2 * Math::hypot(real(1), t1);
@@ -346,7 +349,8 @@ namespace GeographicLib {
   void TransverseMercatorExact::Forward(real lon0, real lat, real lon,
                                         real& x, real& y, real& gamma, real& k)
     const {
-    lon = Math::AngDiff(Math::AngNormalize(lon0), Math::AngNormalize(lon));
+    lat = Math::LatFix(lat);
+    lon = Math::AngDiff(lon0, lon);
     // Explicitly enforce the parity
     int
       latsign = (!_extendp && lat < 0) ? -1 : 1,

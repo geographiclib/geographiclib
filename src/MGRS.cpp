@@ -38,6 +38,9 @@ namespace GeographicLib {
 
   void MGRS::Forward(int zone, bool northp, real x, real y, real lat,
                      int prec, std::string& mgrs) {
+    // The smallest angle s.t., 90 - angeps() < 90 (approx 50e-12 arcsec)
+    // 7 = ceil(log_2(90))
+    static const real angeps = pow(real(0.5), Math::digits() - 7);
     if (zone == UTMUPS::INVALID ||
         Math::isnan(x) || Math::isnan(y) || Math::isnan(lat)) {
       mgrs = "INVALID";
@@ -64,16 +67,19 @@ namespace GeographicLib {
       // This isn't necessary...!  Keep y non-neg
       // if (!northp) y -= maxutmSrow_ * tile_;
     }
-    int
-      xh = int(floor(x)) / tile_,
-      yh = int(floor(y)) / tile_;
-    real
-      xf = x - tile_ * xh,
-      yf = y - tile_ * yh;
+    // The C++ standard mandates 64 bits for long long.  But
+    // check, to make sure.
+    GEOGRAPHICLIB_STATIC_ASSERT(numeric_limits<long long>::digits >= 44,
+                                "long long not wide enough to store 10e12");
+    long long
+      ix = (long long)(floor(x * mult_)),
+      iy = (long long)(floor(y * mult_)),
+      m = (long long)(mult_) * (long long)(tile_);
+    int xh = int(ix / m), yh = int(iy / m);
     if (utmp) {
       int
         // Correct fuzziness in latitude near equator
-        iband = abs(lat) > angeps() ? LatitudeBand(lat) : (northp ? 0 : -1),
+        iband = abs(lat) > angeps ? LatitudeBand(lat) : (northp ? 0 : -1),
         icol = xh - minutmcol_,
         irow = UTMRow(iband, icol, yh % utmrowperiod_);
       if (irow != yh - (northp ? minutmNrow_ : maxutmSrow_))
@@ -92,28 +98,12 @@ namespace GeographicLib {
       mgrs1[z++] = upsrows_[northp][yh - (northp ? minupsNind_ : minupsSind_)];
     }
     if (prec > 0) {
-      real mult = pow(real(base_), max(tilelevel_ - prec, 0));
-      int
-        ix = int(floor(xf / mult)),
-        iy = int(floor(yf / mult));
-      for (int c = min(prec, int(tilelevel_)); c--;) {
-        mgrs1[z + c] = digits_[ ix % base_ ];
-        ix /= base_;
-        mgrs1[z + c + prec] = digits_[ iy % base_ ];
-        iy /= base_;
-      }
-      if (prec > tilelevel_) {
-        xf -= floor(xf / mult);
-        yf -= floor(yf / mult);
-        mult = pow(real(base_), prec - tilelevel_);
-        ix = int(floor(xf * mult));
-        iy = int(floor(yf * mult));
-        for (int c = prec - tilelevel_; c--;) {
-          mgrs1[z + c + tilelevel_] = digits_[ ix % base_ ];
-          ix /= base_;
-          mgrs1[z + c + tilelevel_ + prec] = digits_[ iy % base_ ];
-          iy /= base_;
-        }
+      ix -= m * xh; iy -= m * yh;
+      long long d = (long long)(pow(real(base_), maxprec_ - prec));
+      ix /= d; iy /= d;
+      for (int c = prec; c--;) {
+        mgrs1[z + c       ] = digits_[ix % base_]; ix /= base_;
+        mgrs1[z + c + prec] = digits_[iy % base_]; iy /= base_;
       }
     }
     mgrs.resize(mlen);
@@ -160,7 +150,7 @@ namespace GeographicLib {
                      int& prec, bool centerp) {
     int
       p = 0,
-      len = int(mgrs.size());
+      len = int(mgrs.length());
     if (len >= 3 &&
         toupper(mgrs[0]) == 'I' &&
         toupper(mgrs[1]) == 'N' &&
@@ -182,7 +172,7 @@ namespace GeographicLib {
     if (p > 0 && !(zone1 >= UTMUPS::MINUTMZONE && zone1 <= UTMUPS::MAXUTMZONE))
       throw GeographicErr("Zone " + Utility::str(zone1) + " not in [1,60]");
     if (p > 2)
-      throw GeographicErr("More than 2 digits_ at start of MGRS "
+      throw GeographicErr("More than 2 digits at start of MGRS "
                           + mgrs.substr(0, p));
     if (len - p < 1)
       throw GeographicErr("MGRS string too short " + mgrs);
@@ -249,38 +239,36 @@ namespace GeographicLib {
     }
     int prec1 = (len - p)/2;
     real
-      unit = tile_,
-      x1 = unit * icol,
-      y1 = unit * irow;
+      unit = 1,
+      x1 = icol,
+      y1 = irow;
     for (int i = 0; i < prec1; ++i) {
-      unit /= base_;
+      unit *= base_;
       int
         ix = Utility::lookup(digits_, mgrs[p + i]),
         iy = Utility::lookup(digits_, mgrs[p + i + prec1]);
       if (ix < 0 || iy < 0)
         throw GeographicErr("Encountered a non-digit in " + mgrs.substr(p));
-      x1 += unit * ix;
-      y1 += unit * iy;
+      x1 = base_ * x1 + ix;
+      y1 = base_ * y1 + iy;
     }
     if ((len - p) % 2) {
       if (Utility::lookup(digits_, mgrs[len - 1]) < 0)
         throw GeographicErr("Encountered a non-digit in " + mgrs.substr(p));
       else
-        throw GeographicErr("Not an even number of digits_ in "
+        throw GeographicErr("Not an even number of digits in "
                             + mgrs.substr(p));
     }
     if (prec1 > maxprec_)
       throw GeographicErr("More than " + Utility::str(2*maxprec_)
-                          + " digits_ in "
-                          + mgrs.substr(p));
+                          + " digits in " + mgrs.substr(p));
     if (centerp) {
-      x1 += unit/2;
-      y1 += unit/2;
+      unit *= 2; x1 = 2 * x1 + 1; y1 = 2 * y1 + 1;
     }
     zone = zone1;
     northp = northp1;
-    x = x1;
-    y = y1;
+    x = (tile_ * x1) / unit;
+    y = (tile_ * y1) / unit;
     prec = prec1;
   }
 
@@ -288,15 +276,20 @@ namespace GeographicLib {
     // Limits are all multiples of 100km and are all closed on the lower end
     // and open on the upper end -- and this is reflected in the error
     // messages.  However if a coordinate lies on the excluded upper end (e.g.,
-    // after rounding), it is shifted down by eps().  This also folds UTM
+    // after rounding), it is shifted down by eps.  This also folds UTM
     // northings to the correct N/S hemisphere.
+
+    // The smallest length s.t., 1.0e7 - eps() < 1.0e7 (approx 1.9 nm)
+    // 25 = ceil(log_2(2e7)) -- use half circumference here because
+    // northing 195e5 is a legal in the "southern" hemisphere.
+    static const real eps = pow(real(0.5), Math::digits() - 25);
     int
       ix = int(floor(x / tile_)),
       iy = int(floor(y / tile_)),
       ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
     if (! (ix >= mineasting_[ind] && ix < maxeasting_[ind]) ) {
       if (ix == maxeasting_[ind] && x == maxeasting_[ind] * tile_)
-        x -= eps();
+        x -= eps;
       else
         throw GeographicErr("Easting " + Utility::str(int(floor(x/1000)))
                             + "km not in MGRS/"
@@ -309,7 +302,7 @@ namespace GeographicLib {
     }
     if (! (iy >= minnorthing_[ind] && iy < maxnorthing_[ind]) ) {
       if (iy == maxnorthing_[ind] && y == maxnorthing_[ind] * tile_)
-        y -= eps();
+        y -= eps;
       else
         throw GeographicErr("Northing " + Utility::str(int(floor(y/1000)))
                             + "km not in MGRS/"
@@ -329,7 +322,7 @@ namespace GeographicLib {
       } else if (!northp && iy >= maxutmSrow_) {
         if (y == maxutmSrow_ * tile_)
           // If on equator retain S hemisphere
-          y -= eps();
+          y -= eps;
         else {
           northp = true;
           y -= utmNshift_;
