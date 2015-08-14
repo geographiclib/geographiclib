@@ -12,7 +12,7 @@
  *    https://dx.doi.org/10.1007/s00190-012-0578-z
  *    Addenda: http://geographiclib.sf.net/geod-addenda.html
  *
- * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -108,7 +108,7 @@ GeographicLib.GeodesicLine = {};
       S = p * q / 4,            // S = r^3 * s
       r2 = m.sq(r),
       r3 = r * r2,
-      // The discrimant of the quadratic equation for T3.  This is
+      // The discriminant of the quadratic equation for T3.  This is
       // zero on the evolute curve p^(1/3)+q^(1/3) = 1
       disc = S * (S + 2 * r3);
       var u = r;
@@ -218,12 +218,12 @@ GeographicLib.GeodesicLine = {};
   // The scale factor A2-1 = mean value of (d/dsigma)I2 - 1
   g.A2m1f = function(eps) {
     var coeff = [
-      // A2/(1-eps)-1, polynomial in eps2 of order 3
-      25, 36, 64, 0, 256,
+      // (eps+1)*A2-1, polynomial in eps2 of order 3
+      -11, -28, -192, 0, 256,
     ];
     var p = Math.floor(g.nA2_/2);
     var t = m.polyval(p, coeff, 0, m.sq(eps)) / coeff[p + 1];
-    return t * (1 - eps) - eps;
+    return (t - eps) / (1 + eps);
   };
 
   // The coefficients C2[l] in the Fourier expansion of B2
@@ -449,38 +449,58 @@ GeographicLib.GeodesicLine = {};
   // return s12b, m12b, m0, M12, M21
   g.Geodesic.prototype.Lengths = function(eps, sig12,
                                           ssig1, csig1, dn1, ssig2, csig2, dn2,
-                                          cbet1, cbet2, scalep,
+                                          cbet1, cbet2, outmask,
                                           C1a, C2a) {
-    var vals = {};
     // Return m12b = (reduced length)/_b; also calculate s12b =
     // distance/_b, and m0 = coefficient of secular term in
     // expression for reduced length.
-    g.C1f(eps, C1a);
-    g.C2f(eps, C2a);
-    var
-    A1m1 = g.A1m1f(eps),
-    AB1 = (1 + A1m1) * (g.SinCosSeries(true, ssig2, csig2, C1a) -
-                        g.SinCosSeries(true, ssig1, csig1, C1a)),
-    A2m1 = g.A2m1f(eps),
-    AB2 = (1 + A2m1) * (g.SinCosSeries(true, ssig2, csig2, C2a) -
-                        g.SinCosSeries(true, ssig1, csig1, C2a));
-    vals.m0 = A1m1 - A2m1;
-    var J12 = vals.m0 * sig12 + (AB1 - AB2);
-    // Missing a factor of _b.
-    // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to
-    // ensure accurate cancellation in the case of coincident
-    // points.
-    vals.m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
-      csig1 * csig2 * J12;
-    // Missing a factor of _b
-    vals.s12b = (1 + A1m1) * sig12 + AB1;
-    if (scalep) {
+    outmask &= g.OUT_MASK;
+    var vals = {};
+
+    var m0x = 0, J12 = 0, A1 = 0, A2 = 0;
+    if (outmask & (g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE)) {
+      A1 = g.A1m1f(eps);
+      g.C1f(eps, C1a);
+      if (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE)) {
+        A2 = g.A2m1f(eps);
+        g.C2f(eps, C2a);
+        m0x = A1 - A2;
+        A2 = 1 + A2;
+      }
+      A1 = 1 + A1;
+    }
+    if (outmask & g.DISTANCE) {
+      var B1 = g.SinCosSeries(true, ssig2, csig2, C1a) -
+        g.SinCosSeries(true, ssig1, csig1, C1a);
+      // Missing a factor of _b
+      vals.s12b = A1 * (sig12 + B1);
+      if (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE)) {
+        var B2 = g.SinCosSeries(true, ssig2, csig2, C2a) -
+          g.SinCosSeries(true, ssig1, csig1, C2a);
+        J12 = m0x * sig12 + (A1 * B1 - A2 * B2);
+      }
+    } else if (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE)) {
+      // Assume here that nC1_ >= nC2_
+      for (var l = 1; l <= g.nC2_; ++l)
+        C2a[l] = A1 * C1a[l] - A2 * C2a[l];
+      J12 = m0x * sig12 + (g.SinCosSeries(true, ssig2, csig2, C2a) -
+                           g.SinCosSeries(true, ssig1, csig1, C2a));
+    }
+    if (outmask & g.REDUCEDLENGTH) {
+      vals.m0 = m0x;
+      // Missing a factor of _b.
+      // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure
+      // accurate cancellation in the case of coincident points.
+      vals.m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
+        csig1 * csig2 * J12;
+    }
+    if (outmask & g.GEODESICSCALE) {
       var csig12 = csig1 * csig2 + ssig1 * ssig2;
       var t = this._ep2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2);
       vals.M12 = csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1;
       vals.M21 = csig12 - (t * ssig1 - csig1 * J12) * ssig2 / dn2;
     }
-      return vals;
+    return vals;
   };
 
   // return sig12, salp1, calp1, salp2, calp2, dnm
@@ -567,7 +587,7 @@ GeographicLib.GeodesicLine = {};
         // in Inverse.
         var nvals = this.Lengths(this._n, Math.PI + bet12a,
                                  sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
-                                 cbet1, cbet2, false, C1a, C2a);
+                                 cbet1, cbet2, g.REDUCEDLENGTH, C1a, C2a);
         m12b = nvals.m12b; m0 = nvals.m0;
         x = -1 + m12b / (cbet1 * cbet2 * m0 * Math.PI);
         betscale = x < -0.01 ? sbet12a / x :
@@ -713,7 +733,7 @@ GeographicLib.GeodesicLine = {};
         var nvals = this.Lengths(vals.eps, vals.sig12,
                                  vals.ssig1, vals.csig1, dn1,
                                  vals.ssig2, vals.csig2, dn2,
-                                 cbet1, cbet2, false, C1a, C2a);
+                                 cbet1, cbet2, g.REDUCEDLENGTH, C1a, C2a);
         vals.dlam12 = nvals.m12b;
         vals.dlam12 *= this._f1 / (vals.calp2 * cbet2);
       }
@@ -728,7 +748,13 @@ GeographicLib.GeodesicLine = {};
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
-    var lon12 = m.AngDiff(m.AngNormalize(lon1), m.AngNormalize(lon2));
+    vals.lat1 = lat1 = m.LatFix(lat1); vals.lat2 = lat2 = m.LatFix(lat2);
+    var lon12 = m.AngDiff(lon1, lon2);
+    if (outmask & g.LONG_UNROLL) {
+      vals.lon1 = lon1; vals.lon2 = lon1 + lon12;
+    } else {
+      vals.lon1 = m.AngNormalize(lon1); vals.lon2 = m.AngNormalize(lon2);
+    }
     // If very close to being on the same half-meridian, then make it so.
     lon12 = m.AngRound(lon12);
     // Make longitude difference positive.
@@ -762,21 +788,19 @@ GeographicLib.GeodesicLine = {};
     // check, e.g., on verifying quadrants in atan2.  In addition, this
     // enforces some symmetries in the results returned.
 
-    var phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
+    var sbet1, cbet1, sbet2, cbet2, s12x, m12x;
 
-    phi = lat1 * m.degree;
-    // Ensure cbet1 = +epsilon at poles
-    sbet1 = this._f1 * Math.sin(phi);
-    cbet1 = lat1 === -90 ? g.tiny_ : Math.cos(phi);
+    t = m.sincosd(lat1); sbet1 = this._f1 * t.s; cbet1 = t.c;
     // norm(sbet1, cbet1);
     t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
+    // Ensure cbet1 = +epsilon at poles
+    cbet1 = Math.max(g.tiny_, cbet1);
 
-    phi = lat2 * m.degree;
-    // Ensure cbet2 = +epsilon at poles
-    sbet2 = this._f1 * Math.sin(phi);
-    cbet2 = Math.abs(lat2) === 90 ? g.tiny_ : Math.cos(phi);
+    t = m.sincosd(lat2); sbet2 = this._f1 * t.s; cbet2 = t.c;
     // norm(sbet2, cbet2);
     t = m.hypot(sbet2, cbet2); sbet2 /= t; cbet2 /= t;
+    // Ensure cbet2 = +epsilon at poles
+    cbet2 = Math.max(g.tiny_, cbet2);
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
     // |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -798,10 +822,8 @@ GeographicLib.GeodesicLine = {};
     dn1 = Math.sqrt(1 + this._ep2 * m.sq(sbet1)),
     dn2 = Math.sqrt(1 + this._ep2 * m.sq(sbet2));
 
-    var
-    lam12 = lon12 * m.degree,
-    slam12 = lon12 === 180 ? 0 : Math.sin(lam12),
-    clam12 = Math.cos(lam12);   // lon12 == 90 isn't interesting
+    var lam12 = lon12 * m.degree, slam12, clam12;
+    t = m.sincosd(lam12); slam12 = t.s; clam12 = t.c;
 
     var sig12, calp1, salp1, calp2, salp2;
     // index zero elements of these arrays are unused
@@ -829,9 +851,9 @@ GeographicLib.GeodesicLine = {};
       sig12 = Math.atan2(Math.max(csig1 * ssig2 - ssig1 * csig2, 0),
                          csig1 * csig2 + ssig1 * ssig2);
       nvals = this.Lengths(this._n, sig12,
-                               ssig1, csig1, dn1, ssig2, csig2, dn2,
-                               cbet1, cbet2, (outmask & g.GEODESICSCALE) !== 0,
-                               C1a, C2a);
+                           ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+                           outmask | g.DISTANCE | g.REDUCEDLENGTH,
+                           C1a, C2a);
       s12x = nvals.s12b;
       m12x = nvals.m12b;
       // Ignore m0
@@ -847,6 +869,9 @@ GeographicLib.GeodesicLine = {};
       // In fact, we will have sig12 > pi/2 for meridional geodesic
       // which is not a shortest path.
       if (sig12 < 1 || m12x >= 0) {
+        // Need at least 2, to handle 90 0 90 180
+        if (sig12 < 3 * g.tiny_)
+          sig12 = m12x = s12x = 0;
         m12x *= this._b;
         s12x *= this._b;
         vals.a12 = sig12 / m.degree;
@@ -877,7 +902,7 @@ GeographicLib.GeodesicLine = {};
 
       // Figure a starting point for Newton's method
       nvals = this.InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
-                                    C1a, C2a);
+                                C1a, C2a);
       sig12 = nvals.sig12;
       salp1 = nvals.salp1;
       calp1 = nvals.calp1;
@@ -974,11 +999,12 @@ GeographicLib.GeodesicLine = {};
           tripb = (Math.abs(salp1a - salp1) + (calp1a - calp1) < g.tolb_ ||
                    Math.abs(salp1 - salp1b) + (calp1 - calp1b) < g.tolb_);
         }
+        var lengthmask = outmask |
+            (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE) ?
+             g.DISTANCE : g.NONE);
         nvals = this.Lengths(eps, sig12,
-                             ssig1, csig1, dn1, ssig2, csig2, dn2,
-                             cbet1, cbet2,
-                             (outmask & g.GEODESICSCALE) !== 0,
-                             C1a, C2a);
+                             ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+                             lengthmask, C1a, C2a);
         s12x = nvals.s12b;
         m12x = nvals.m12b;
         // Ignore m0
@@ -1080,9 +1106,8 @@ GeographicLib.GeodesicLine = {};
     salp2 *= swapp * lonsign; calp2 *= swapp * latsign;
 
     if (outmask & g.AZIMUTH) {
-      // minus signs give range [-180, 180). 0- converts -0 to +0.
-      vals.azi1 = 0 - Math.atan2(-salp1, calp1) / m.degree;
-      vals.azi2 = 0 - Math.atan2(-salp2, calp2) / m.degree;
+      vals.azi1 = m.atan2d(salp1, calp1);
+      vals.azi2 = m.atan2d(salp2, calp2);
     }
 
     // Returned value in [0, 180]

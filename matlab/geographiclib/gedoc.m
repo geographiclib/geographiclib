@@ -66,8 +66,6 @@ function gedoc
 %
 %   Restrictions on the inputs:
 %     * All latitudes must lie in [-90, 90].
-%     * All longitudes and azimuths must lie in [-540, 540).  On output,
-%       these quantities lie in [-180, 180).
 %     * The distance s12 is unrestricted.  This allows great ellipses to
 %       wrap around the ellipsoid.
 %     * The equatorial radius, a, must be positive.

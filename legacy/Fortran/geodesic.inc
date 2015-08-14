@@ -31,4 +31,8 @@
         double precision, intent(out) :: AA, PP
         end subroutine area
 
+        subroutine geover(major, minor, patch)
+        integer, intent(out) :: major, minor, patch
+        end subroutine geover
+
       end interface

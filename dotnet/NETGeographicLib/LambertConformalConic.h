@@ -173,14 +173,14 @@ namespace NETGeographicLib
          * @param[out] gamma meridian convergence at point (degrees).
          * @param[out] k scale of projection at point.
          *
-         * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
-         * No false easting or northing is added and \e lat should be in the range
-         * [&minus;90&deg;, 90&deg;]; \e lon and \e lon0 should be in the
-         * range [&minus;540&deg;, 540&deg;).  The error in the projection
-         * is less than about 10 nm (10 nanometers), true distance, and the errors
-         * in the meridian convergence and scale are consistent with this.  The
-         * values of \e x and \e y returned for points which project to infinity
-         * (i.e., one or both of the poles) will be large but finite.
+         * The latitude origin is given by
+         * LambertConformalConic::LatitudeOrigin().  No false easting or
+         * northing is added and \e lat should be in the range [&minus;90&deg;,
+         * 90&deg;].  The error in the projection is less than about 10 nm (10
+         * nanometers), true distance, and the errors in the meridian
+         * convergence and scale are consistent with this.  The values of \e x
+         * and \e y returned for points which project to infinity (i.e., one or
+         * both of the poles) will be large but finite.
          **********************************************************************/
         void Forward(double lon0, double lat, double lon,
                      [System::Runtime::InteropServices::Out] double% x,
@@ -199,13 +199,12 @@ namespace NETGeographicLib
          * @param[out] gamma meridian convergence at point (degrees).
          * @param[out] k scale of projection at point.
          *
-         * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
-         * No false easting or northing is added.  \e lon0 should be in the range
-         * [&minus;540&deg;, 540&deg;).  The value of \e lon returned is in
-         * the range [&minus;180&deg;, 180&deg;).  The error in the
-         * projection is less than about 10 nm (10 nanometers), true distance, and
-         * the errors in the meridian convergence and scale are consistent with
-         * this.
+         * The latitude origin is given by
+         * LambertConformalConic::LatitudeOrigin().  No false easting or
+         * northing is added.  The value of \e lon returned is in the range
+         * [&minus;180&deg;, 180&deg;).  The error in the projection is less
+         * than about 10 nm (10 nanometers), true distance, and the errors in
+         * the meridian convergence and scale are consistent with this.
          **********************************************************************/
         void Reverse(double lon0, double x, double y,
                      [System::Runtime::InteropServices::Out] double% lat,

@@ -148,7 +148,7 @@ namespace GeographicLib {
                          unsigned outmask,
                          real& s12, real& azi12, real& S12) const {
     real
-      lon12 = Math::AngDiff(Math::AngNormalize(lon1), Math::AngNormalize(lon2)),
+      lon12 = Math::AngDiff(lon1, lon2),
       psi1 = _ell.IsometricLatitude(lat1),
       psi2 = _ell.IsometricLatitude(lat2),
       psi12 = psi2 - psi1,
@@ -331,7 +331,7 @@ namespace GeographicLib {
                        bool exact)
     : _rh(rh)
     , _exact(exact)
-    , _lat1(lat1)
+    , _lat1(Math::LatFix(lat1))
     , _lon1(lon1)
     , _azi12(Math::AngNormalize(azi12))
   {
@@ -365,10 +365,10 @@ namespace GeographicLib {
         S12 = _rh._c2 * lon2x *
           _rh.MeanSinXi(_psi1 * Math::degree(), psi2 * Math::degree());
       lon2x = outmask & LONG_UNROLL ? _lon1 + lon2x :
-        Math::AngNormalize2(Math::AngNormalize(_lon1) + lon2x);
+        Math::AngNormalize(Math::AngNormalize(_lon1) + lon2x);
     } else {
       // Reduce to the interval [-180, 180)
-      mu2 = Math::AngNormalize2(mu2);
+      mu2 = Math::AngNormalize(mu2);
       // Deal with points on the anti-meridian
       if (abs(mu2) > 90) mu2 = Math::AngNormalize(180 - mu2);
       lat2x = _rh._ell.InverseRectifyingLatitude(mu2);

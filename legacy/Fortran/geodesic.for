@@ -117,7 +117,7 @@
 *! http://geographiclib.sourceforge.net/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.43.
+*! <a href="../index.html">GeographicLib</a> 1.44.
 
 *> Solve the direct geodesic problem
 *!
@@ -156,11 +156,8 @@
 *! a12; otherwise, \e s12a12 is \e a12 and \e a12s12 is \e s12.  It \e
 *! unroll is not set, the value \e lon2 returned is in the range
 *! [&minus;180&deg;, 180&deg;); if unroll is set, the longitude variable
-*! is "unrolled" so that \e lon2 &minus \e lon1 indicates how many times
-*! and in what sense the geodesic encircles the ellipsoid.  Because \e
-*! lon2 might be outside the normal allowed range for longitudes,
-*! [&minus;540&deg;, 540&deg;), be sure to reduces its range with mod(\e
-*! lon2, 360d0) before using it in other calls.
+*! is "unrolled" so that \e lon2 &minus; \e lon1 indicates how many
+*! times and in what sense the geodesic encircles the ellipsoid.
 *!
 *! \e omask is an integer in [0, 16) whose binary bits are interpreted
 *! as follows
@@ -169,9 +166,8 @@
 *! - 4 return \e MM12 and \e MM21
 *! - 8 return \e SS12
 *!
-*! \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and
-*! \e azi1 should be in the range [&minus;540&deg;, 540&deg;).  The
-*! value \e azi2 returned is in the range [&minus;180&deg;, 180&deg;).
+*! \e lat1 should be in the range [&minus;90&deg;, 90&deg;].  The value
+*! \e azi2 returned is in the range [&minus;180&deg;, 180&deg;).
 *!
 *! If either point is at a pole, the azimuth is defined by keeping the
 *! longitude fixed, writing \e lat = \e lat = &plusmn;(90&deg; &minus;
@@ -180,6 +176,9 @@
 *! path.  (For a prolate ellipsoid, an additional condition is necessary
 *! for a shortest path: the longitudinal extent must not exceed of
 *! 180&deg;.)
+*!
+*! Example of use:
+*! \include geoddirect.for
 
       subroutine direct(a, f, lat1, lon1, azi1, s12a12, flags,
      +    lat2, lon2, azi2, omask, a12s12, m12, MM12, MM21, SS12)
@@ -200,14 +199,14 @@
      +    C1a(nC1), C1pa(nC1p), C2a(nC2), C3a(nC3-1), C4a(0:nC4-1)
 
       double precision csmgt, atanhx, hypotx,
-     +    AngNm, AngNm2, AngRnd, TrgSum, A1m1f, A2m1f, A3f
+     +    AngNm, AngRnd, TrgSum, A1m1f, A2m1f, A3f, atn2dx
       logical arcmod, unroll, arcp, redlp, scalp, areap
       double precision e2, f1, ep2, n, b, c2,
-     +    lon1x, azi1x, phi, alp1, salp0, calp0, k2, eps,
+     +    salp0, calp0, k2, eps,
      +    salp1, calp1, ssig1, csig1, cbet1, sbet1, dn1, somg1, comg1,
      +    salp2, calp2, ssig2, csig2, sbet2, cbet2, dn2, somg2, comg2,
      +    ssig12, csig12, salp12, calp12, omg12, lam12, lon12,
-     +    sig12, stau1, ctau1, tau12, s12a, t, s, c, serr, E,
+     +    sig12, stau1, ctau1, tau12, t, s, c, serr, E,
      +    A1m1, A2m1, A3c, A4, AB1, AB2,
      +    B11, B12, B21, B22, B31, B41, B42, J12
 
@@ -250,21 +249,13 @@
       if (areap) call C4cof(n, C4x)
 
 * Guard against underflow in salp0
-      azi1x = AngRnd(AngNm(azi1))
-      lon1x = AngNm(lon1)
+      call sncsdx(AngRnd(azi1), salp1, calp1)
 
-* alp1 is in [0, pi]
-      alp1 = azi1x * degree
-* Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
-* problems directly than to skirt them.
-      salp1 = csmgt(0d0, sin(alp1), azi1x .eq. -180)
-      calp1 = csmgt(0d0, cos(alp1), abs(azi1x) .eq. 90)
-
-      phi = lat1 * degree
-* Ensure cbet1 = +dbleps at poles
-      sbet1 = f1 * sin(phi)
-      cbet1 = csmgt(tiny, cos(phi), abs(lat1) .eq. 90)
+      call sncsdx(AngRnd(lat1), sbet1, cbet1)
+      sbet1 = f1 * sbet1
       call norm2(sbet1, cbet1)
+* Ensure cbet1 = +dbleps at poles
+      cbet1 = max(tiny, cbet1)
       dn1 = sqrt(1 + ep2 * sbet1**2)
 
 * Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -334,10 +325,7 @@
       if (arcmod) then
 * Interpret s12a12 as spherical arc length
         sig12 = s12a12 * degree
-        s12a = abs(s12a12)
-        s12a = s12a - 180 * aint(s12a / 180)
-        ssig12 =  csmgt(0d0, sin(sig12), s12a .eq.  0)
-        csig12 =  csmgt(0d0, cos(sig12), s12a .eq. 90)
+        call sncsdx(s12a12, ssig12, csig12)
 * Suppress bogus warnings about unitialized variables
         B12 = 0
       else
@@ -412,23 +400,27 @@
 * East or west going?
       E = sign(1d0, salp0)
 * omg12 = omg2 - omg1
-      omg12 = csmgt(E * (sig12
-     +    - (atan2(    ssig2, csig2) - atan2(    ssig1, csig1))
-     +    + (atan2(E * somg2, comg2) - atan2(E * somg1, comg1))),
-     +    atan2(somg2 * comg1 - comg2 * somg1,
-     +    comg2 * comg1 + somg2 * somg1),
-     +    unroll)
+      if (unroll) then
+        omg12 = E * (sig12
+     +      - (atan2(    ssig2, csig2) - atan2(    ssig1, csig1))
+     +      + (atan2(E * somg2, comg2) - atan2(E * somg1, comg1)))
+      else
+        omg12 = atan2(somg2 * comg1 - comg2 * somg1,
+     +      comg2 * comg1 + somg2 * somg1)
+      end if
 
       lam12 = omg12 + A3c *
      +    ( sig12 + (TrgSum(.true., ssig2, csig2, C3a, nC3-1)
      +    - B31))
       lon12 = lam12 / degree
-* Use Math::AngNm2 because longitude might have wrapped multiple
-* times.
-      lon2 = csmgt(lon1 + lon12, AngNm(lon1x + AngNm2(lon12)), unroll)
-      lat2 = atan2(sbet2, f1 * cbet2) / degree
+      if (unroll) then
+        lon2 = lon1 + lon12
+      else
+        lon2 = AngNm(AngNm(lon1) + AngNm(lon12))
+      end if
+      lat2 = atn2dx(sbet2, f1 * cbet2)
 * minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi2 = 0 - atan2(-salp2, calp2) / degree
+      azi2 = atn2dx(salp2, calp2)
 
       if (redlp .or. scalp) then
         B22 = TrgSum(.true., ssig2, csig2, C2a, nC2)
@@ -511,10 +503,9 @@
 *! - 4 return \e MM12 and \e MM21
 *! - 8 return \e SS12
 *!
-*! \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;];
-*! \e lon1 and \e lon2 should be in the range [&minus;540&deg;,
-*! 540&deg;).  The values of \e azi1 and \e azi2 returned are in the
-*! range [&minus;180&deg;, 180&deg;).
+*! \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;].
+*! The values of \e azi1 and \e azi2 returned are in the range
+*! [&minus;180&deg;, 180&deg;).
 *!
 *! If either point is at a pole, the azimuth is defined by keeping the
 *! longitude fixed, writing \e lat = &plusmn;(90&deg; &minus;
@@ -524,6 +515,9 @@
 *! If this fails to converge (this is very unlikely in geodetic
 *! applications but does occur for very eccentric ellipsoids), then the
 *! bisection method is used to refine the solution.
+*!
+*! Example of use:
+*! \include geodinverse.for
 
       subroutine invers(a, f, lat1, lon1, lat2, lon2,
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
@@ -535,20 +529,21 @@
 * optional output
       double precision a12, m12, MM12, MM21, SS12
 
-      integer ord, nC1, nC2, nA3, nA3x, nC3, nC3x, nC4, nC4x
-      parameter (ord = 6, nC1 = ord, nC2 = ord, nA3 = ord, nA3x = nA3,
+      integer ord, nA3, nA3x, nC3, nC3x, nC4, nC4x, nC
+      parameter (ord = 6, nA3 = ord, nA3x = nA3,
      +    nC3 = ord, nC3x = (nC3 * (nC3 - 1)) / 2,
-     +    nC4 = ord, nC4x = (nC4 * (nC4 + 1)) / 2)
+     +    nC4 = ord, nC4x = (nC4 * (nC4 + 1)) / 2,
+     +    nC = ord)
       double precision A3x(0:nA3x-1), C3x(0:nC3x-1), C4x(0:nC4x-1),
-     +    C1a(nC1), C2a(nC2), C3a(nC3-1), C4a(0:nC4-1)
+     +    Ca(nC)
 
       double precision csmgt, atanhx, hypotx,
-     +    AngNm, AngDif, AngRnd, TrgSum, Lam12f, InvSta
+     +    AngDif, AngRnd, TrgSum, Lam12f, InvSta, atn2dx
       integer latsgn, lonsgn, swapp, numit
       logical arcp, redlp, scalp, areap, merid, tripn, tripb
 
       double precision e2, f1, ep2, n, b, c2,
-     +    lat1x, lat2x, phi, salp0, calp0, k2, eps,
+     +    lat1x, lat2x, salp0, calp0, k2, eps,
      +    salp1, calp1, ssig1, csig1, cbet1, sbet1, dbet1, dn1,
      +    salp2, calp2, ssig2, csig2, sbet2, cbet2, dbet2, dn2,
      +    slam12, clam12, salp12, calp12, omg12, lam12, lon12,
@@ -559,7 +554,7 @@
 
       double precision dblmin, dbleps, pi, degree, tiny,
      +    tol0, tol1, tol2, tolb, xthrsh
-      integer digits, maxit1, maxit2
+      integer digits, maxit1, maxit2, lmask
       logical init
       common /geocom/ dblmin, dbleps, pi, degree, tiny,
      +    tol0, tol1, tol2, tolb, xthrsh, digits, maxit1, maxit2, init
@@ -577,6 +572,11 @@
       redlp = mod(omask/2, 2) == 1
       scalp = mod(omask/4, 2) == 1
       areap = mod(omask/8, 2) == 1
+      if (scalp) then
+        lmask = 16 + 2 + 4
+      else
+        lmask = 16 + 2
+      end if
 
       if (areap) then
         if (e2 .eq. 0) then
@@ -595,9 +595,8 @@
 * Compute longitude difference (AngDiff does this carefully).  Result is
 * in [-180, 180] but -180 is only for west-going geodesics.  180 is for
 * east-going and meridional geodesics.
-      lon12 = AngDif(AngNm(lon1), AngNm(lon2))
 * If very close to being on the same half-meridian, then make it so.
-      lon12 = AngRnd(lon12)
+      lon12 = AngRnd(AngDif(lon1, lon2))
 * Make longitude difference positive.
       if (lon12 .ge. 0) then
         lonsgn = 1
@@ -638,17 +637,17 @@
 * to check, e.g., on verifying quadrants in atan2.  In addition, this
 * enforces some symmetries in the results returned.
 
-      phi = lat1x * degree
-* Ensure cbet1 = +dbleps at poles
-      sbet1 = f1 * sin(phi)
-      cbet1 = csmgt(tiny, cos(phi), lat1x .eq. -90)
+      call sncsdx(lat1x, sbet1, cbet1)
+      sbet1 = f1 * sbet1
       call norm2(sbet1, cbet1)
+* Ensure cbet1 = +dbleps at poles
+      cbet1 = max(tiny, cbet1)
 
-      phi = lat2x * degree
-* Ensure cbet2 = +dbleps at poles
-      sbet2 = f1 * sin(phi)
-      cbet2 = csmgt(tiny, cos(phi), abs(lat2x) .eq. 90)
+      call sncsdx(lat2x, sbet2, cbet2)
+      sbet2 = f1 * sbet2
       call norm2(sbet2, cbet2)
+* Ensure cbet2 = +dbleps at poles
+      cbet2 = max(tiny, cbet2)
 
 * If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
 * |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1
@@ -669,10 +668,7 @@
       dn2 = sqrt(1 + ep2 * sbet2**2)
 
       lam12 = lon12 * degree
-      slam12 = sin(lam12)
-      if (lon12 .eq. 180) slam12 = 0
-* lon12 == 90 isn't interesting
-      clam12 = cos(lam12)
+      call sncsdx(lon12, slam12, clam12)
 
 * Suppress bogus warnings about unitialized variables
       a12x = 0
@@ -700,8 +696,8 @@
         sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0d0),
      +      csig1 * csig2 + ssig1 * ssig2)
         call Lengs(n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-     +      cbet1, cbet2, s12x, m12x, dummy,
-     +      scalp, MM12, MM21, ep2, C1a, C2a)
+     +      cbet1, cbet2, lmask,
+     +      s12x, m12x, dummy, MM12, MM21, ep2, Ca)
 
 * Add the check for sig12 since zero length geodesics might yield m12 <
 * 0.  Test case was
@@ -711,6 +707,11 @@
 * In fact, we will have sig12 > pi/2 for meridional geodesic which is
 * not a shortest path.
         if (sig12 .lt. 1 .or. m12x .ge. 0) then
+          if (sig12 .lt. 3 * tiny) then
+            sig12 = 0
+            m12x = 0
+            s12x = 0
+          end if
           m12x = m12x * b
           s12x = s12x * b
           a12x = sig12 / degree
@@ -744,7 +745,7 @@
 
 * Figure a starting point for Newton's method
         sig12 = InvSta(sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
-     +      f, A3x, salp1, calp1, salp2, calp2, dnm, C1a, C2a)
+     +      f, A3x, salp1, calp1, salp2, calp2, dnm, Ca)
 
         if (sig12 .ge. 0) then
 * Short lines (InvSta sets salp2, calp2, dnm)
@@ -784,7 +785,7 @@
      +          salp1, calp1, f, A3x, C3x, salp2, calp2, sig12,
      +          ssig1, csig1, ssig2, csig2,
      +          eps, omg12, numit .lt. maxit1, dv,
-     +          C1a, C2a, C3a) - lam12
+     +          Ca) - lam12
 * 2 * tol0 is approximately 1 ulp for a number in [0, pi].
 * Reversed test to allow escape with NaNs
             if (tripb .or.
@@ -832,9 +833,9 @@
      +          .or. abs(salp1 - salp1b) + (calp1 - calp1b) .lt. tolb
  10       continue
  20       continue
-          call Lengs(eps, sig12, ssig1, csig1, dn1,
-     +        ssig2, csig2, dn2, cbet1, cbet2, s12x, m12x, dummy,
-     +        scalp, MM12, MM21, ep2, C1a, C2a)
+          call Lengs(eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
+     +        cbet1, cbet2, lmask,
+     +        s12x, m12x, dummy, MM12, MM21, ep2, Ca)
           m12x = m12x * b
           s12x = s12x * b
           a12x = sig12 / degree
@@ -862,9 +863,9 @@
           A4 = a**2 * calp0 * salp0 * e2
           call norm2(ssig1, csig1)
           call norm2(ssig2, csig2)
-          call C4f(eps, C4x, C4a)
-          B41 = TrgSum(.false., ssig1, csig1, C4a, nC4)
-          B42 = TrgSum(.false., ssig2, csig2, C4a, nC4)
+          call C4f(eps, C4x, Ca)
+          B41 = TrgSum(.false., ssig1, csig1, Ca, nC4)
+          B42 = TrgSum(.false., ssig2, csig2, Ca, nC4)
           SS12 = A4 * (B42 - B41)
         else
 * Avoid problems with indeterminate sig1, sig2 on equator
@@ -915,8 +916,8 @@
       calp2 = calp2 * swapp * latsgn
 
 * minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi1 = 0 - atan2(-salp1, calp1) / degree
-      azi2 = 0 - atan2(-salp2, calp2) / degree
+      azi1 = atn2dx(salp1, calp1)
+      azi2 = atn2dx(salp2, calp2)
 
       if (arcp) a12 = a12x
 
@@ -930,12 +931,11 @@
 *!   a sphere.  Negative \e f gives a prolate ellipsoid.
 *! @param[in] lats an array of the latitudes of the vertices (degrees).
 *! @param[in] lons an array of the longitudes of the vertices (degrees).
-*! @param[in] n the number of vertices
-*! @param[out] AA the (signed) area of the polygon (meters<sup>2</sup>)
-*! @param[out] PP the perimeter of the polygon
+*! @param[in] n the number of vertices.
+*! @param[out] AA the (signed) area of the polygon (meters<sup>2</sup>).
+*! @param[out] PP the perimeter of the polygon.
 *!
-*! \e lats should be in the range [&minus;90&deg;, 90&deg;]; \e lons
-*! should be in the range [&minus;540&deg;, 540&deg;).
+*! \e lats should be in the range [&minus;90&deg;, 90&deg;].
 *!
 *! Only simple polygons (which are not self-intersecting) are allowed.
 *! There's no need to "close" the polygon by repeating the first vertex.
@@ -1000,6 +1000,25 @@
       return
       end
 
+*> Return the version numbers for this package.
+*!
+*! @param[out] major the major version number.
+*! @param[out] minor the minor version number.
+*! @param[out] patch the patch number.
+*!
+*! This subroutine was added with version 1.44.
+
+      subroutine geover(major, minor, patch)
+* output
+      integer major, minor, patch
+
+      major = 1
+      minor = 44
+      patch = 0
+
+      return
+      end
+
 *> @cond SKIP
 
       block data geodat
@@ -1044,47 +1063,75 @@
       return
       end
 
-      subroutine Lengs(eps, sig12,
-     +    ssig1, csig1, dn1, ssig2, csig2, dn2,
-     +    cbet1, cbet2, s12b, m12b, m0,
-     +    scalp, MM12, MM21, ep2, C1a, C2a)
+      subroutine Lengs(eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
+     +    cbet1, cbet2, omask,
+     +    s12b, m12b, m0, MM12, MM21, ep2, Ca)
 * input
       double precision eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
      +    cbet1, cbet2, ep2
-      logical scalp
-* output
-      double precision s12b, m12b, m0
+      integer omask
 * optional output
-      double precision MM12, MM21
+      double precision s12b, m12b, m0, MM12, MM21
 * temporary storage
-      double precision C1a(*), C2a(*)
+      double precision Ca(*)
 
       integer ord, nC1, nC2
       parameter (ord = 6, nC1 = ord, nC2 = ord)
 
       double precision A1m1f, A2m1f, TrgSum
-      double precision A1m1, AB1, A2m1, AB2, J12, csig12, t
+      double precision m0x, J12, A1, A2, B1, B2, csig12, t, Cb(nC2)
+      logical distp, redlp, scalp
+      integer l
 
 * Return m12b = (reduced length)/b; also calculate s12b = distance/b,
 * and m0 = coefficient of secular term in expression for reduced length.
-      call C1f(eps, C1a)
-      call C2f(eps, C2a)
 
-      A1m1 = A1m1f(eps)
-      AB1 = (1 + A1m1) * (TrgSum(.true., ssig2, csig2, C1a, nC1) -
-     +    TrgSum(.true., ssig1, csig1, C1a, nC1))
-      A2m1 = A2m1f(eps)
-      AB2 = (1 + A2m1) * (TrgSum(.true., ssig2, csig2, C2a, nC2) -
-     +    TrgSum(.true., ssig1, csig1, C2a, nC2))
-      m0 = A1m1 - A2m1
-      J12 = m0 * sig12 + (AB1 - AB2)
+      distp = mod(omask/16, 2) == 1
+      redlp = mod(omask/2, 2) == 1
+      scalp = mod(omask/4, 2) == 1
+
+* Suppress compiler warnings
+      m0x = 0
+      J12 = 0
+      A1 = 0
+      A2 = 0
+      if (distp .or. redlp .or. scalp) then
+        A1 = A1m1f(eps)
+        call C1f(eps, Ca)
+        if (redlp .or. scalp) then
+          A2 = A2m1f(eps)
+          call C2f(eps, Cb)
+          m0x = A1 - A2
+          A2 = 1 + A2
+        end if
+        A1 = 1 + A1
+      end if
+      if (distp) then
+        B1 = TrgSum(.true., ssig2, csig2, Ca, nC1) -
+     +      TrgSum(.true., ssig1, csig1, Ca, nC1)
+* Missing a factor of b
+        s12b = A1 * (sig12 + B1)
+        if (redlp .or. scalp) then
+          B2 = Trgsum(.true., ssig2, csig2, Cb, nC2) -
+     +        TrgSum(.true., ssig1, csig1, Cb, nC2)
+          J12 = m0x * sig12 + (A1 * B1 - A2 * B2)
+        end if
+      else if (redlp .or. scalp) then
+* Assume here that nC1 >= nC2
+        do 10 l = 1, nC2
+          Cb(l) = A1 * Ca(l) - A2 * Cb(l)
+ 10     continue
+        J12 = m0x * sig12 + (TrgSum(.true., ssig2, csig2, Cb, nC2) -
+     +      TrgSum(.true., ssig1, csig1, Cb, nC2))
+      end if
+      if (redlp) then
+        m0 = m0x
 * Missing a factor of b.
 * Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure
 * accurate cancellation in the case of coincident points.
-      m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
-     +    csig1 * csig2 * J12
-* Missing a factor of b
-      s12b = (1 + A1m1) * sig12 + AB1
+        m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
+     +      csig1 * csig2 * J12
+      end if
       if (scalp) then
         csig12 = csig1 * csig2 + ssig1 * ssig2
         t = ep2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2)
@@ -1115,7 +1162,7 @@
         S = p * q / 4
         r2 = r**2
         r3 = r * r2
-* The discrimant of the quadratic equation for T3.  This is zero on
+* The discriminant of the quadratic equation for T3.  This is zero on
 * the evolute curve p^(1/3)+q^(1/3) = 1
         disc = S * (S + 2 * r3)
         u = r
@@ -1163,7 +1210,7 @@
       double precision function InvSta(sbet1, cbet1, dn1,
      +    sbet2, cbet2, dn2, lam12, f, A3x,
      +    salp1, calp1, salp2, calp2, dnm,
-     +    C1a, C2a)
+     +    Ca)
 * Return a starting point for Newton's method in salp1 and calp1
 * (function value is -1).  If Newton's method doesn't need to be used,
 * return also salp2, calp2, and dnm and function value is sig12.
@@ -1173,7 +1220,7 @@
 * output
       double precision salp1, calp1, salp2, calp2, dnm
 * temporary
-      double precision C1a(*), C2a(*)
+      double precision Ca(*)
 
       double precision csmgt, hypotx, A3f, Astrd
       logical shortp
@@ -1266,9 +1313,8 @@
 * In the case of lon12 = 180, this repeats a calculation made in
 * Inverse.
           call Lengs(n, pi + bt12a,
-     +        sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
-     +        cbet1, cbet2, dummy, m12b, m0, .false.,
-     +        dummy, dummy, ep2, C1a, C2a)
+     +        sbet1, -cbet1, dn1, sbet2, cbet2, dn2, cbet1, cbet2, 2,
+     +        dummy, m12b, m0, dummy, dummy, ep2, Ca)
           x = -1 + m12b / (cbet1 * cbet2 * m0 * pi)
           betscl = csmgt(sbt12a / x, -f * cbet1**2 * pi,
      +        x .lt. -0.01d0)
@@ -1345,7 +1391,7 @@
       double precision function Lam12f(sbet1, cbet1, dn1,
      +    sbet2, cbet2, dn2, salp1, calp1, f, A3x, C3x, salp2, calp2,
      +    sig12, ssig1, csig1, ssig2, csig2, eps, domg12, diffp, dlam12,
-     +    C1a, C2a, C3a)
+     +    Ca)
 * input
       double precision sbet1, cbet1, dn1, sbet2, cbet2, dn2,
      +    salp1, calp1, f, A3x(*), C3x(*)
@@ -1356,7 +1402,7 @@
 * optional output
       double precision dlam12
 * temporary
-      double precision C1a(*), C2a(*), C3a(*)
+      double precision Ca(*)
 
       integer ord, nC3
       parameter (ord = 6, nC3 = ord)
@@ -1426,9 +1472,9 @@
      +    comg1 * comg2 + somg1 * somg2)
       k2 = calp0**2 * ep2
       eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
-      call C3f(eps, C3x, C3a)
-      B312 = (TrgSum(.true., ssig2, csig2, C3a, nC3-1) -
-     +    TrgSum(.true., ssig1, csig1, C3a, nC3-1))
+      call C3f(eps, C3x, Ca)
+      B312 = (TrgSum(.true., ssig2, csig2, Ca, nC3-1) -
+     +    TrgSum(.true., ssig1, csig1, Ca, nC3-1))
       h0 = -f * A3f(eps, A3x)
       domg12 = salp0 * h0 * (sig12 + B312)
       lam12 = omg12 + domg12
@@ -1438,8 +1484,8 @@
           dlam12 = - 2 * f1 * dn1 / sbet1
         else
           call Lengs(eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-     +        cbet1, cbet2, dummy, dlam12, dummy,
-     +        .false., dummy, dummy, ep2, C1a, C2a)
+     +        cbet1, cbet2, 2,
+     +        dummy, dlam12, dummy, dummy, dummy, ep2, Ca)
           dlam12 = dlam12 * f1 / (calp2 * cbet2)
         end if
       end if
@@ -1612,12 +1658,12 @@
       integer ord, nA2, o, m
       parameter (ord = 6, nA2 = ord)
       double precision polval, coeff(nA2/2 + 2)
-      data coeff /25, 36, 64, 0, 256/
+      data coeff /-11, -28, -192, 0, 256/
 
       o = 1
       m = nA2/2
       t = polval(m, coeff(o), eps**2) / coeff(o + m + 1)
-      A2m1f = t * (1 - eps) - eps
+      A2m1f = (t - eps) / (1 + eps)
 
       return
       end
@@ -1793,24 +1839,12 @@
 * input
       double precision x
 
-      if (x .ge. 180) then
-        AngNm = x - 360
-      else if (x .lt. -180) then
-        AngNm = x + 360
-      else
-        AngNm = x
+      AngNm = mod(x, 360d0)
+      if (AngNm .lt. -180) then
+        AngNm = AngNm + 360
+      else if (AngNm .ge. 180) then
+        AngNm = AngNm - 360
       end if
-
-      return
-      end
-
-      double precision function AngNm2(x)
-* input
-      double precision x
-
-      double precision AngNm
-      AngNm2 = mod(x, 360d0)
-      AngNm2 = AngNm(AngNm2)
 
       return
       end
@@ -1823,14 +1857,12 @@
 * input
       double precision x, y
 
-      double precision d, t, sumx
-      d = sumx(-x, y, t)
-      if ((d - 180d0) + t .gt. 0d0) then
-        d = d - 360d0
-      else if ((d + 180d0) + t .le. 0d0) then
-        d = d + 360d0
+      double precision d, t, sumx, AngNm
+      d = - AngNm(sumx(AngNm(x), AngNm(-y), t))
+      if (d .eq. 180 .and. t .lt. 0) then
+        d = -180
       end if
-      AngDif = d + t
+      AngDif = d - t
 
       return
       end
@@ -1876,14 +1908,14 @@
       return
       end
 
-      subroutine norm2(sinx, cosx)
+      subroutine norm2(x, y)
 * input/output
-      double precision sinx, cosx
+      double precision x, y
 
       double precision hypotx, r
-      r = hypotx(sinx, cosx)
-      sinx = sinx/r
-      cosx = cosx/r
+      r = hypotx(x, y)
+      x = x/r
+      y = y/r
 
       return
       end
@@ -2025,6 +2057,88 @@
       return
       end
 
+      subroutine sncsdx(x, sinx, cosx)
+* Compute sin(x) and cos(x) with x in degrees
+* input
+      double precision x
+* input/output
+      double precision sinx, cosx
+
+      double precision dblmin, dbleps, pi, degree, tiny,
+     +    tol0, tol1, tol2, tolb, xthrsh
+      integer digits, maxit1, maxit2
+      logical init
+      common /geocom/ dblmin, dbleps, pi, degree, tiny,
+     +    tol0, tol1, tol2, tolb, xthrsh, digits, maxit1, maxit2, init
+
+      double precision r, s, c
+      integer q
+      r = mod(x, 360d0)
+      q = nint(r / 90)
+      r = (r - 90 * q) * degree
+      s = sin(r)
+      c = cos(r)
+      q = mod(q + 4, 4)
+      if (q .eq. 0) then
+        sinx =     s
+        cosx =     c
+      else if (q .eq. 1) then
+        sinx =     c
+        cosx = 0 - s
+      else if (q .eq. 2) then
+        sinx = 0 - s
+        cosx = 0 - c
+      else
+* q.eq.3
+        sinx = 0 - c
+        cosx =     s
+      end if
+
+      return
+      end
+
+      double precision function atn2dx(y, x)
+* input
+      double precision x, y
+
+      double precision dblmin, dbleps, pi, degree, tiny,
+     +    tol0, tol1, tol2, tolb, xthrsh
+      integer digits, maxit1, maxit2
+      logical init
+      common /geocom/ dblmin, dbleps, pi, degree, tiny,
+     +    tol0, tol1, tol2, tolb, xthrsh, digits, maxit1, maxit2, init
+
+      double precision xx, yy
+      integer q
+      if (abs(y) .gt. abs(x)) then
+        xx = y
+        yy = x
+        q = 2
+      else
+        xx = x
+        yy = y
+        q = 0
+      end if
+      if (xx .lt. 0) then
+        xx = -xx
+        q = q + 1
+      end if
+      atn2dx = atan2(yy, xx) / degree
+      if (q .eq. 1) then
+        if (yy .gt. 0) then
+          atn2dx =  180 - atn2dx
+        else
+          atn2dx = -180 - atn2dx
+        end if
+      else if (q .eq. 2) then
+        atn2dx =  90 - atn2dx
+      else if (q .eq. 3) then
+        atn2dx = -90 + atn2dx
+      end if
+
+      return
+      end
+
       double precision function polval(N, p, x)
 * input
       integer N
@@ -2049,7 +2163,6 @@
 *    C3coeff       C3cof
 *    C4coeff       C4cof
 *    AngNormalize  AngNm
-*    AngNormalize2 AngNm2
 *    AngDiff       AngDif
 *    AngRound      AngRnd
 *    arcmode       arcmod
@@ -2076,4 +2189,6 @@
 *    transit       trnsit
 *    polyval       polval
 *    LONG_UNROLL   unroll
+*    sincosd       sncsdx
+*    atan2d        atn2dx
 *> @endcond SKIP

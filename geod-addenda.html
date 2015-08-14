@@ -8,6 +8,8 @@
     <meta name="description" content="Geodesics on an ellipsoid,
 				      Addenda and Errata" />
     <meta name="author" content="Charles F. F. Karney" />
+    <meta http-equiv="Content-Type"
+	  content="text/html; charset=ISO-8859-1">
     <script type="text/javascript"
 	    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
     </script>
@@ -146,6 +148,17 @@ C_{45} &\textstyle=  \frac{128}{99099} \epsilon^5 + \ldots.
 	starting guess is taken to be \((\alpha_{1a} + \alpha_{1b}) /
 	2\).
       <li>
+	The series for \(A_2\) converges slightly faster it is
+	multiplied by \(1+\epsilon\), instead of divided by
+	\(1-\epsilon\).  The resulting series is
+	\[
+\textstyle
+A_2 = (1 + \epsilon)^{-1} \bigl(
+1 - \frac{3}{4}\epsilon^2 - \frac{7}{64}\epsilon^4
+- \frac{11}{256}\epsilon^6 - \frac{375}{16384}\epsilon^8
+\bigr).
+	\]
+      <li>
 	In order to obtain accurate solutions for ellipsoids of
 	arbitrary eccentricity, it is necessary to replace the series
 	expansions for the integrals (which are valid only if \(f\) is
@@ -204,15 +217,16 @@ C_{45} &\textstyle=  \frac{128}{99099} \epsilon^5 + \ldots.
 	      jacobi-V7.pdf</a>.
 	</ul>
     </ol>
-    Items 3&ndash;7 represent changes since the publication of the
-    paper.  Changes 3&ndash;6 have been implemented in the
+    Items 3&ndash;8 represent changes since the publication of the
+    paper.  Changes 3&ndash;7 have been implemented in the
     <a href="index.html"> GeographicLib</a> classes
     <a href="html/classGeographicLib_1_1Geodesic.html"> Geodesic</a> and
     <a href="html/classGeographicLib_1_1GeodesicLine.html">
       GeodesicLine</a>
-    in GeographicLib versions 1.27, 1.26, 1.39, and 1.25, respectively.
-    Change 7 (the evaluation of the integrals in terms of elliptic
-    integrals) is implemented in the <a href="index.html">
+    in GeographicLib versions 1.27, 1.26, 1.39 (fixed in 1.43), 1.25,
+    and 1.44, respectively.  Change 8 (the evaluation of the integrals
+    in terms of elliptic integrals) is implemented in
+    the <a href="index.html">
       GeographicLib</a>
     classes
     <a href="html/classGeographicLib_1_1GeodesicExact.html">
@@ -225,6 +239,7 @@ C_{45} &\textstyle=  \frac{128}{99099} \epsilon^5 + \ldots.
     <a href="html/classGeographicLib_1_1GeodesicLine.html">
       GeodesicLine</a>
     are preferred, because they are about 2&ndash;3 times faster and the
+
     round-off errors are about 2&ndash;3 times smaller.
     <p>
       Some notes on geodesics on a <i>triaxial</i> ellipsoid are given
@@ -460,7 +475,7 @@ C_{45} &\textstyle=  \frac{128}{99099} \epsilon^5 + \ldots.
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2015-05-09)</address>
+      (2015-05-31)</address>
     <br>
     <a href="http://geographiclib.sourceforge.net">
       GeographicLib home

@@ -6,7 +6,7 @@ RhumbSolve -- perform rhumb line calculations
 
 B<RhumbSolve> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi12> ]
 [ B<-e> I<a> I<f> ]
-[ B<-d> | B<-:> ] [ B<-p> I<prec> ] [ B<-s> ]
+[ B<-d> | B<-:> ] [ B<-w> ] [ B<-p> I<prec> ] [ B<-s> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -68,8 +68,10 @@ perform an inverse calculation (see 3 above).
 
 =item B<-l>
 
-line mode (see 2 above); generate a sequence of points along the
-rhumb line specified by I<lat1> I<lon1> I<azi12>.
+line mode (see 2 above); generate a sequence of points along the rhumb
+line specified by I<lat1> I<lon1> I<azi12>.  The B<-w> flag can be used
+to swap the default order of the 2 geographic coordinates, provided that
+it appears before B<-l>.
 
 =item B<-e>
 
@@ -88,6 +90,12 @@ output angles as degrees, minutes, seconds instead of decimal degrees.
 
 like B<-d>, except use : as a separator instead of the d, ', and "
 delimiters.
+
+=item B<-w>
+
+on input and output, longitude precedes latitude (except that on input
+this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
+I<W>).
 
 =item B<-p>
 
@@ -151,18 +159,17 @@ file name of "-" stands for standard output.
 
 B<RhumbSolve> measures all angles in degrees, all lengths (I<s12>) in
 meters, and all areas (I<S12>) in meters^2.  On input angles (latitude,
-longitude, azimuth) can be as decimal degrees or degrees (d), minutes
-('), seconds (").  A decimal point can only appear in the least
-significant component and the designator (d, ', or ") for this component
-is optional; thus C<40d30>, C<40d30'>, C<40.5d>, and C<40.5> are all
-equivalent.  By default, latitude precedes longitude for each point;
-however on input either may be given first by appending (or prepending)
-I<N> or I<S> to the latitude and I<E> or I<W> to the longitude.
-Azimuths are measured clockwise from north; however this may be
-overridden with I<E> or I<W>.
+longitude, azimuth, arc length) can be as decimal degrees or degrees,
+minutes, seconds.  For example, C<40d30>, C<40d30'>, C<40:30>, C<40.5d>,
+and C<40.5> are all equivalent.  By default, latitude precedes longitude
+for each point (the B<-w> flag switches this convention); however on
+input either may be given first by appending (or prepending) I<N> or
+I<S> to the latitude and I<E> or I<W> to the longitude.  Azimuths are
+measured clockwise from north; however this may be overridden with I<E>
+or I<W>.
 
-See the C<QUOTING> section of GeoConvert(1) for how to quote the DMS
-designators ' and ".
+For details on the allowed formats for angles, see the C<GEOGRAPHIC
+COORDINATES> section of GeoConvert(1).
 
 =head1 PRECISION
 

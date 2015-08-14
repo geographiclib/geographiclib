@@ -55,8 +55,7 @@ namespace NETGeographicLib
          * @param[out] gamma meridian convergence at point (degrees).
          * @param[out] k scale of projection at point.
          *
-         * \e lat should be in the range [&minus;90&deg;, 90&deg;]; \e lon
-         * should be in the range [&minus;540&deg;, 540&deg;).
+         * \e lat should be in the range [&minus;90&deg;, 90&deg;].
          **********************************************************************/
         static void Forward(double lat, double lon,
                     [System::Runtime::InteropServices::Out] double% x,

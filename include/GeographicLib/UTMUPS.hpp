@@ -2,7 +2,7 @@
  * \file UTMUPS.hpp
  * \brief Header for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -89,7 +89,6 @@ namespace GeographicLib {
     static const int epsgS   = 32761; // EPSG code for UPS   S
     static real CentralMeridian(int zone)
     { return real(6 * zone - 183); }
-    static void CheckLatLon(real lat, real lon);
     // Throw an error if easting or northing are outside standard ranges.  If
     // throwp = false, return bool instead.
     static bool CheckCoords(bool utmp, bool northp, real x, real y,
@@ -195,8 +194,6 @@ namespace GeographicLib {
      *   coordinates (default = false).
      * @exception GeographicErr if \e lat is not in [&minus;90&deg;,
      *   90&deg;].
-     * @exception GeographicErr if \e lon is not in [&minus;540&deg;,
-     *   540&deg;).
      * @exception GeographicErr if the resulting \e x or \e y is out of allowed
      *   range (see Reverse); in this case, these arguments are unchanged.
      *

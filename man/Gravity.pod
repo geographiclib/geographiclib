@@ -6,7 +6,7 @@ Gravity -- compute the earth's gravity field
 
 B<Gravity> [ B<-n> I<name> ] [ B<-d> I<dir> ]
 [ B<-G> | B<-D> | B<-A> | B<-H> ] [ B<-c> I<lat> I<h> ]
-[ B<-p> I<prec> ]
+[ B<-w> ] [ B<-p> I<prec> ]
 [ B<-v> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
@@ -21,13 +21,14 @@ gravitational field on standard output.
 
 The input line is of the form I<lat> I<lon> I<h>.  I<lat> and I<lon> are
 the latitude and longitude expressed as decimal degrees or degrees,
-minutes, and seconds; see GeoConvert(1) for details.  I<h> is the height
-above the ellipsoid in meters; this quantity is optional and defaults to
-0.  Alternatively, the gravity field can be computed at various points
-on a circle of latitude (constant I<lat> and I<h>) via the B<-c> option;
-in this case only the longitude should be given on the input lines.  The
-quantities printed out are governed by the B<-G> (default), B<-D>,
-B<-A>, or B<-H> options.
+minutes, and seconds; for details on the allowed formats for latitude
+and longitude, see the C<GEOGRAPHIC COORDINATES> section of
+GeoConvert(1).  I<h> is the height above the ellipsoid in meters; this
+quantity is optional and defaults to 0.  Alternatively, the gravity
+field can be computed at various points on a circle of latitude
+(constant I<lat> and I<h>) via the B<-c> option; in this case only the
+longitude should be given on the input lines.  The quantities printed
+out are governed by the B<-G> (default), B<-D>, B<-A>, or B<-H> options.
 
 All the supported gravity models, except for grs80, use WGS84 as the
 reference ellipsoid I<a> = 6378137 m, I<f> = 1/298.257223563, I<omega> =
@@ -92,6 +93,12 @@ evaluate the field on a circle of latitude given by I<lat> and I<h>
 instead of reading these quantities from the input lines.  In this case,
 B<Gravity> can calculate the field considerably more quickly.  If geoid
 heights are being computed (the B<-H> option), then I<h> must be zero.
+
+=item B<-w>
+
+on input and output, longitude precedes latitude (except that on input
+this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
+I<W>).
 
 =item B<-p>
 

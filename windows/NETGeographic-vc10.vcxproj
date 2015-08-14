@@ -177,6 +177,8 @@
     <ClInclude Include="../dotnet/NETGeographicLib/TransverseMercator.h" />
     <ClInclude Include="../dotnet/NETGeographicLib/TransverseMercatorExact.h" />
     <ClInclude Include="../dotnet/NETGeographicLib/UTMUPS.h" />
+    <ClInclude Include="..\dotnet\NETGeographicLib\GARS.h" />
+    <ClInclude Include="..\dotnet\NETGeographicLib\Georef.h" />
     <ClInclude Include="..\dotnet\NETGeographicLib\Rhumb.h" />
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +225,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\dotnet\NETGeographicLib\GARS.cpp" />
+    <ClCompile Include="..\dotnet\NETGeographicLib\Georef.cpp" />
     <ClCompile Include="..\dotnet\NETGeographicLib\Rhumb.cpp" />
   </ItemGroup>
   <ItemGroup>

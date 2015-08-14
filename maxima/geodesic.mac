@@ -1,7 +1,7 @@
 /*
 Solve the direct and inverse geodesic problems accurately.
 
-Copyright (c) Charles Karney (2013-2014) <charles@karney.com> and
+Copyright (c) Charles Karney (2013-2015) <charles@karney.com> and
 licensed under the MIT/X11 License.  For more information, see
 http://geographiclib.sourceforge.net/
 
@@ -100,6 +100,9 @@ documented at
 
 */
 
+/* The corresponding version of GeographicLib */
+geod_version:[1,44,0]$
+
 /* Load series created by geod.mac (NEED TO UNCOMMENT THE LAST LINE OF
 geod.mac TO GENERATE THIS FILE). */
 load("geod30.lsp")$
@@ -133,8 +136,8 @@ if not exact then (
       l:endcons(horner(ataylor(C1[i],eps,nC1)),l),l)),
   C1pf(eps):=''(block([l:[]],for i:1 thru nC1p do
       l:endcons(horner(ataylor(C1p[i],eps,nC1p)),l),l)),
-  A2m1f(eps):=''(horner(ataylor(A2/(1-eps)-1,eps,nA2))
-    *(1-eps) - eps),
+  A2m1f(eps):=''((horner(ataylor(A2*(1+eps)-1,eps,nA2))
+      -eps)/(1+eps)),
   C2f(eps):=''(block([l:[]],for i:1 thru nC2 do
       l:endcons(horner(ataylor(C2[i],eps,nC2)),l),l)),
   A3coeff(n):=
@@ -202,22 +205,39 @@ sumx(u, v):=block([s,up,vpp,t],
 
 swapx(x, y):=[y,x]$
 
-SinCosNorm(sinx, cosx):=block([r : hypotx(sinx, cosx)],
-  [sinx/r, cosx/r])$
+norm2(x, y):=block([r : hypotx(x, y)], [x/r, y/r])$
 
-AngNormalize(x):= if x >= 180b0 then x - 360b0
-else (if x < -180b0 then x + 360b0 else x)$
-AngNormalize2(x):=AngNormalize(mod(x, 360b0))$
+AngNormalize(x):=block([y:x-360b0*floor(x/360b0+0.5)],
+  if y < -180b0 then y+360b0 else if y < 180b0 then y else y-360b0)$
 
-AngDiff(x, y) := block([t,d,r:sumx(-x,y)],
-  d:r[1], t:r[2],
-  if (d - 180b0) + t > 0b0 then d : d - 360b0
-  else if (d + 180b0) + t <= 0b0 then d : d + 360b0,
-  d + t)$
+AngDiff(x, y) := block([t,d,r:sumx(AngNormalize(x),AngNormalize(-y))],
+  d:-AngNormalize(r[1]), t:r[2],
+  (if d = 180b0 and t < 0b0 then -180b0 else d) - t)$
 
 AngRound(x) := block([z:1/16b0, y:abs(x)],
   y : if y < z then z - (z - y) else y,
   if x < 0b0 then 0b0-y else y)$
+
+sincosdx(x):=block([r,q:floor(x/90b0 + 0.5),s,c],
+  r:(x-q*90b0)*degree,
+  s:sin(r), c:cos(r),
+  q:mod(q,4),
+  if     q = 0 then [  s,   c]
+  elseif q = 1 then [  c, 0-s]
+  elseif q = 2 then [0-s, 0-c]
+  else              [0-c,   s])$
+
+atan2dx(y,x):=block([q,xx,yy,ang],
+  if abs(y) > abs(x)
+  then (xx:y, yy:x, q:2)
+  else (xx:x, yy:y, q:0),
+  if xx < 0
+  then (xx:-xx, q:q+1),
+  ang:atan2(yy, xx) / degree,
+  if     q = 0 then ang
+  elseif q = 1 then (if y > 0b0 then 180b0 else -180b0) - ang
+  elseif q = 2 then  90 - ang
+  else              -90 + ang)$
 
 /* Indices in geodesic struct */
 block([i:0], g_a:(i:i+1), g_f:(i:i+1), g_f1:(i:i+1), g_e2:(i:i+1),
@@ -276,7 +296,7 @@ geod_lineinit(g,lat1,lon1,azi1):=block([a, f,
   A1m1, A2m1, A3c, B11, B21, B31,
   A4, B41, C1a, C1pa, C2a, C3a,
   C4a,
-  alp1, cbet1, sbet1, phi, eps,
+  cbet1, sbet1, eps,
   e2, cchi1, A4, B41, E0, D0, H0, E1, D1, H1, C4a, E],
   lat1:bfloat(lat1),lon1:bfloat(lon1), azi1:bfloat(azi1),
   a : g[g_a],
@@ -285,23 +305,19 @@ geod_lineinit(g,lat1,lon1,azi1):=block([a, f,
   c2 : g[g_c2],
   f1 : g[g_f1],
   e2 : g[g_e2],
+  lat1 : lat1,
   /* If caps is 0 assume the standard direct calculation
   caps = (caps ? caps : GEOD_DISTANCE_IN | GEOD_LONGITUDE) |
   GEOD_LATITUDE | GEOD_AZIMUTH, Always allow latitude and azimuth
   Guard against underflow in salp0 */
-  azi1 : AngRound(AngNormalize(azi1)),
-  /* Don't normalizing lon1... */
-  /* alp1 is in [0, pi] */
-  alp1 : azi1 * degree,
-  /* Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
-  problems directly than to skirt them. */
-  salp1 : if azi1  = -180b0 then 0b0 else sin(alp1),
-  calp1 : if abs(azi1) = 90b0 then 0b0 else cos(alp1),
-  phi : lat1 * degree,
+  azi1 : AngNormalize(azi1),
+  /* Don't normalize lon1... */
+  block([t:sincosdx(AngRound(azi1))], salp1:t[1], calp1:t[2]),
+  block([t:sincosdx(AngRound(lat1))],
+        sbet1:t[1], cbet1:t[2]), sbet1 : f1 * sbet1,
+  block([t:norm2(sbet1, cbet1)], sbet1:t[1], cbet1:t[2]),
   /* Ensure cbet1 = +epsilon at poles */
-  sbet1 : f1 * sin(phi),
-  cbet1 : if abs(lat1) = 90b0 then tiny else cos(phi),
-  block([t:SinCosNorm(sbet1, cbet1)], sbet1:t[1], cbet1:t[2]),
+  cbet1 = max(tiny, cbet1),
   dn1 : sqrt(1 + g[g_ep2] * sq(sbet1)),
   /* Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0), */
   salp0 : salp1 * cbet1, /* alp0 in [0, pi/2 - |bet1|] */
@@ -322,9 +338,9 @@ geod_lineinit(g,lat1,lon1,azi1):=block([a, f,
   /* Without normalization we have schi1 = somg1. */
   cchi1 : f1 * dn1 * comg1,
   /* sig1 in (-pi, pi] */
-  block([t:SinCosNorm(ssig1, csig1)], ssig1:t[1], csig1:t[2]),
-  /* SinCosNorm (somg1, comg1); -- don't need to normalize!
-  SinCosNorm (schi1, cchi1); -- don't need to normalize! */
+  block([t:norm2(ssig1, csig1)], ssig1:t[1], csig1:t[2]),
+  /* norm2 (somg1, comg1); -- don't need to normalize!
+  norm2 (schi1, cchi1); -- don't need to normalize! */
   k2 : sq(calp0) * g[g_ep2],
   eps : k2 / (2 * (1 + sqrt(1 + k2)) + k2),
   E:Ef(-k2,-g[g_ep2]),
@@ -383,13 +399,10 @@ geod_genposition(l, arcmode,  s12_a12):=block(
   omg12, lam12, lon12,
   ssig2, csig2, sbet2, cbet2, somg2, comg2, salp2, calp2, dn2, E],
   s12_a12 : bfloat(s12_a12),
-  if (arcmode) then block([s12a],
+  if (arcmode) then (
     /* Interpret s12_a12 as spherical arc length */
     sig12 : s12_a12 * degree,
-    s12a : abs(s12_a12),
-    s12a : s12a - 180 * floor(s12a / 180),
-    ssig12 : if s12a =  0b0 then 0b0 else sin(sig12),
-    csig12 : if s12a = 90b0 then 0b0 else cos(sig12))
+    block([t:sincosdx(s12_a12)], ssig12:t[1], csig12:t[2]))
   else block([tau12 : s12_a12 / (l[l_b] *
       (if exact then l[l_E0] else (1 + l[l_A1m1]))),s,c],
     /* Interpret s12_a12 as distance */
@@ -459,7 +472,7 @@ geod_genposition(l, arcmode,  s12_a12):=block(
     somg2 : l[l_salp0] * ssig2, comg2 : csig2),  /* No need to normalize */
   /* tan(alp0) = cos(sig2)*tan(alp2) */
   salp2 : l[l_salp0], calp2 : l[l_calp0] * csig2, /* No need to normalize */
-  E = if l[l_salp0] < 0b0 then -1 else 1,
+  E : if l[l_salp0] < 0b0 then -1 else 1,
   if not exact then
   /* omg12 = omg2 - omg1 */
   omg12 : E * (sig12
@@ -483,9 +496,9 @@ geod_genposition(l, arcmode,  s12_a12):=block(
   lon12 : lam12 / degree,
   /* Don't normalize lon2... */
   lon2 : l[l_lon1] + lon12,
-  lat2 : atan2x(sbet2, l[l_f1] * cbet2) / degree,
+  lat2 : atan2dx(sbet2, l[l_f1] * cbet2),
   /* minus signs give range [-180, 180). 0- converts -0 to +0. */
-  azi2 : 0 - atan2x(-salp2, calp2) / degree,
+  azi2 : atan2dx(salp2, calp2),
   block([B22, AB2, J12],
     if exact then J12 : l[l_k2] * l[l_D0] *
     (sig12 + deltad(ssig2, csig2, dn2, l[l_E][e_k2], l[l_E][e_dc]) - l[l_D1])
@@ -544,11 +557,9 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
   [s12 : 0b0, azi1 : 0b0, azi2 : 0b0,
   m12 : 0b0, M12 : 0b0, M21 : 0b0, S12 : 0b0,
   lon12, latsign, lonsign, swapp,
-  phi, sbet1, cbet1, sbet2, cbet2, s12x : 0b0, m12x : 0b0,
+  sbet1, cbet1, sbet2, cbet2, s12x : 0b0, m12x : 0b0,
   dn1, dn2, lam12, slam12, clam12,
   a12 : 0b0, sig12, calp1 : 0b0, salp1 : 0b0, calp2 : 0b0, salp2 : 0b0,
-  /* index zero elements of these arrays are unused */
-  C1a, C2a, C3a,
   meridian,  omg12 : 0b0,
   /* Initialize for the meridian.  No longitude calculation is done in this
   case to let the parameter default to 0. */
@@ -558,7 +569,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
   /* Compute longitude difference (AngDiff does this carefully).  Result is
   in [-180, 180] but -180 is only for west-going geodesics.  180 is for
   east-going and meridional geodesics. */
-  lon12 : AngDiff(AngNormalize(lon1), AngNormalize(lon2)),
+  lon12 : AngDiff(lon1, lon2),
   /* If very close to being on the same half-meridian, then make it so. */
   lon12 : AngRound(lon12),
   /* Make longitude difference positive. */
@@ -584,16 +595,14 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
   made.  We make these transformations so that there are few cases to
   check, e.g., on verifying quadrants in atan2.  In addition, this
   enforces some symmetries in the results returned. */
-  phi : lat1 * degree,
+  block([t:sincosdx(lat1)], sbet1:t[1], cbet1:t[2]), sbet1 : g[g_f1] * sbet1,
+  block([t:norm2(sbet1, cbet1)], sbet1:t[1], cbet1:t[2]),
   /* Ensure cbet1 = +epsilon at poles */
-  sbet1 : g[g_f1] * sin(phi),
-  cbet1 : if lat1 = -90b0 then tiny else cos(phi),
-  block([t:SinCosNorm(sbet1, cbet1)], sbet1:t[1], cbet1:t[2]),
-  phi : lat2 * degree,
+  cbet1 = max(tiny, cbet1),
+  block([t:sincosdx(lat2)], sbet2:t[1], cbet2:t[2]), sbet2 : g[g_f1] * sbet2,
+  block([t:norm2(sbet2, cbet2)], sbet2:t[1], cbet2:t[2]),
   /* Ensure cbet2 = +epsilon at poles */
-  sbet2 : g[g_f1] * sin(phi),
-  cbet2 : if abs(lat2) = 90b0 then tiny else cos(phi),
-  block([t:SinCosNorm(sbet2, cbet2)], sbet2:t[1], cbet2:t[2]),
+  cbet2 = max(tiny, cbet2),
   /* If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
   |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
   a better measure.  This logic is used in assigning calp2 in Lambda12.
@@ -607,8 +616,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
   dn1 : sqrt(1 + g[g_ep2] * sq(sbet1)),
   dn2 : sqrt(1 + g[g_ep2] * sq(sbet2)),
   lam12 : lon12 * degree,
-  slam12 : if lon12 = 180b0 then 0b0 else sin(lam12),
-  clam12 : cos(lam12),      /* lon12 == 90 isn't interesting */
+  block([t:sincosdx(lon12)], slam12:t[1], clam12:t[2]),
   meridian : is(lat1 = -90b0 or slam12 = 0b0),
   if meridian then block(
     /* Endpoints are on a single full meridian, so the geodesic might lie on
@@ -632,6 +640,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
     In fact, we will have sig12 > pi/2 for meridional geodesic which is
     not a shortest path. */
     if sig12 < 1b0 or m12x >= 0b0 then (
+      if sig12 < 3 * tiny then sig12 : m12x : s12x : 0b0,
       m12x : m12x * g[g_b],
       s12x : s12x * g[g_b],
       a12 : sig12 / degree )
@@ -710,7 +719,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
           if nsalp1 > 0b0 and abs(dalp1) < pi then (
             calp1 : calp1 * cdalp1 - salp1 * sdalp1,
             salp1 : nsalp1,
-            block([t:SinCosNorm(salp1, calp1)], salp1:t[1], calp1:t[2]),
+            block([t:norm2(salp1, calp1)], salp1:t[1], calp1:t[2]),
             /* In some regimes we don't get quadratic convergence because
             slope -> 0.  So use convergence conditions based on epsilon
             instead of sqrt(epsilon). */
@@ -727,7 +736,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
           WGS84 and random input: mean = 4.74, sd = 0.99 */
           salp1 : (salp1a + salp1b)/2,
           calp1 : (calp1a + calp1b)/2,
-          block([t:SinCosNorm(salp1, calp1)], salp1:t[1], calp1:t[2]),
+          block([t:norm2(salp1, calp1)], salp1:t[1], calp1:t[2]),
           tripn : false,
           tripb : is(abs(salp1a - salp1) + (calp1a - calp1) < tolb or
             abs(salp1 - salp1b) + (calp1 - calp1b) < tolb)) ),
@@ -753,13 +762,13 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
       k2 : sq(calp0) * g[g_ep2], eps,
       /* Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0). */
       A4 : sq(g[g_a]) * calp0 * salp0 * g[g_e2],
-      C4a, B41, B42],
+      Ca, B41, B42],
       eps : k2 / (2 * (1 + sqrt(1 + k2)) + k2),
-      block([t:SinCosNorm(ssig1, csig1)], ssig1:t[1], csig1:t[2]),
-      block([t:SinCosNorm(ssig2, csig2)], ssig2:t[1], csig2:t[2]),
-      C4a : C4f(g, eps),
-      B41 : SinCosSeries(false, ssig1, csig1, C4a),
-      B42 : SinCosSeries(false, ssig2, csig2, C4a),
+      block([t:norm2(ssig1, csig1)], ssig1:t[1], csig1:t[2]),
+      block([t:norm2(ssig2, csig2)], ssig2:t[1], csig2:t[2]),
+      Ca : C4f(g, eps),
+      B41 : SinCosSeries(false, ssig1, csig1, Ca),
+      B42 : SinCosSeries(false, ssig2, csig2, Ca),
       S12 : A4 * (B42 - B41))
     else S12 : 0, /* Avoid problems with indeterminate sig1, sig2 on equator */
     if not meridian and
@@ -795,9 +804,8 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
     block([t:swapx(M12, M21)], M12:t[1], M21:t[2])),
   salp1 : salp1 * swapp * lonsign, calp1 : calp1 * swapp * latsign,
   salp2 : salp2 * swapp * lonsign, calp2 : calp2 * swapp * latsign,
-  /* minus signs give range [-180, 180). 0- converts -0 to +0. */
-  azi1 : 0b0 - atan2x(-salp1, calp1) / degree,
-  azi2 : 0b0 - atan2x(-salp2, calp2) / degree,
+  azi1 : atan2dx(salp1, calp1),
+  azi2 : atan2dx(salp2, calp2),
   [a12, s12, azi1, azi2, m12, M12, M21, S12]
 )$
 
@@ -827,7 +835,7 @@ SinCosSeries(sinp, sinx, cosx, c):=block([n:length(c), ar, y0, y1, n2, k],
 
 /* Return [s12b, m12b, m0, M12, M21] */
 Lengths(g, eps, E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2):=
-block([scalep:true, C1a, C2a,
+block([Ca,
   s12b : 0b0, m12b : 0b0, m0 : 0b0, M12 : 0b0, M21 : 0b0,
   A1m1, AB1, A2m1, AB2, J12],
   /* Return m12b = (reduced length)/b; also calculate s12b = distance/b,
@@ -837,13 +845,13 @@ block([scalep:true, C1a, C2a,
     J12 : m0 *
       (sig12 + deltad(ssig2, csig2, dn2, E[e_k2], E[e_dc])
       - deltad(ssig1, csig1, dn1, E[e_k2], E[e_dc])) )
-  else (C1a : C1f(eps), C2a : C2f(eps),
-    A1m1 : A1m1f(eps),
-    AB1 : (1 + A1m1) * (SinCosSeries(true, ssig2, csig2, C1a) -
-      SinCosSeries(true, ssig1, csig1, C1a)),
-    A2m1 : A2m1f(eps),
-    AB2 : (1 + A2m1) * (SinCosSeries(true, ssig2, csig2, C2a) -
-      SinCosSeries(true, ssig1, csig1, C2a)),
+  else (
+    A1m1 : A1m1f(eps), Ca : C1f(eps),
+    AB1 : (1 + A1m1) * (SinCosSeries(true, ssig2, csig2, Ca) -
+      SinCosSeries(true, ssig1, csig1, Ca)),
+    A2m1 : A2m1f(eps), Ca : C2f(eps),
+    AB2 : (1 + A2m1) * (SinCosSeries(true, ssig2, csig2, Ca) -
+      SinCosSeries(true, ssig1, csig1, Ca)),
     m0 : A1m1 - A2m1,
     J12 : m0 * sig12 + (AB1 - AB2)),
   /* Missing a factor of b.
@@ -856,7 +864,7 @@ block([scalep:true, C1a, C2a,
   (sig12 + deltae(ssig2, csig2, dn2, E[e_k2], E[e_ec])
   - deltae(ssig1, csig1, dn1, E[e_k2], E[e_ec]))
   else (1 + A1m1) * sig12 + AB1,
-  if scalep then block([csig12 : csig1 * csig2 + ssig1 * ssig2,
+  block([csig12 : csig1 * csig2 + ssig1 * ssig2,
     t : g[g_ep2] * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2)],
     M12 : csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1,
     M21 : csig12 - (t * ssig1 - csig1 * J12) * ssig2 / dn2 ),
@@ -874,7 +882,7 @@ Astroid(x, y):= block(
     r2 : sq(r),
     r3, disc, u, v, uv, w],
     r3 : r * r2,
-    /* The discrimant of the quadratic equation for T3.  This is zero on
+    /* The discriminant of the quadratic equation for T3.  This is zero on
     the evolute curve p^(1/3)+q^(1/3) = 1 */
     disc : S * (S + 2 * r3),
     u : r,
@@ -940,7 +948,7 @@ InverseStart(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12):=block(
     salp2 : cbet1 * somg12,
     calp2 : sbet12 - cbet1 * sbet2 *
     (if comg12 >= 0 then sq(somg12) / (1 + comg12) else 1 - comg12),
-    block([t:SinCosNorm(salp2, calp2)], salp2:t[1], calp2:t[2]),
+    block([t:norm2(salp2, calp2)], salp2:t[1], calp2:t[2]),
     /* Set return value */
     sig12 : atan2x(ssig12, csig12))
   else if abs(g[g_n]) > 0.1b0 or /* No astroid calc if too eccentric */
@@ -1022,7 +1030,7 @@ InverseStart(g, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12):=block(
       salp1 : cbet2 * somg12,
       calp1 : sbet12a - cbet2 * sbet1 * sq(somg12) / (1 - comg12))),
   if salp1 > 0 then              /* Sanity check on starting guess */
-  block([t:SinCosNorm(salp1, calp1)], salp1:t[1], calp1:t[2])
+  block([t:norm2(salp1, calp1)], salp1:t[1], calp1:t[2])
   else ( salp1 : 1b0, calp1 : 0b0 ),
   [sig12, salp1, calp1, salp2, calp2, dnm]
   )$
@@ -1036,7 +1044,7 @@ block([salp2 : 0b0, calp2 : 0b0, sig12 : 0b0,
   domg12 : 0b0, dlam12 : 0b0,
   salp0, calp0,
   somg1, comg1, somg2, comg2, cchi1, cchi2, omg12:0, lam12,
-  B312, h0, k2],
+  B312, h0, k2, Ca],
   if sbet1 = 0b0 and calp1 = 0b0 then
   /* Break degeneracy of equatorial line.  This case has already been
   handled. */
@@ -1050,8 +1058,8 @@ block([salp2 : 0b0, calp2 : 0b0, sig12 : 0b0,
   csig1 : comg1 : calp1 * cbet1,
   /* Without normalization we have schi1 = somg1. */
   if exact then cchi1 : g[g_f1] * dn1 * comg1,
-  block([t:SinCosNorm(ssig1, csig1)], ssig1:t[1], csig1:t[2]),
-  /* SinCosNorm (&somg1, &comg1); -- don't need to normalize! */
+  block([t:norm2(ssig1, csig1)], ssig1:t[1], csig1:t[2]),
+  /* norm2 (&somg1, &comg1); -- don't need to normalize! */
   /* Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
   about this case, since this can yield singularities in the Newton
   iteration.
@@ -1073,8 +1081,8 @@ block([salp2 : 0b0, calp2 : 0b0, sig12 : 0b0,
   csig2 : comg2 : calp2 * cbet2,
   /* Without normalization we have schi2 = somg2. */
   if exact then cchi2 : g[g_f1] * dn2 * comg2,
-  block([t:SinCosNorm(ssig2, csig2)], ssig2:t[1], csig2:t[2]),
-  /* SinCosNorm (&somg2, &comg2); -- don't need to normalize! */
+  block([t:norm2(ssig2, csig2)], ssig2:t[1], csig2:t[2]),
+  /* norm2(&somg2, &comg2); -- don't need to normalize! */
   /* sig12 = sig2 - sig1, limit to [0, pi] */
   sig12 : atan2x(max(csig1 * ssig2 - ssig1 * csig2, 0b0),
     csig1 * csig2 + ssig1 * ssig2),
@@ -1091,9 +1099,9 @@ block([salp2 : 0b0, calp2 : 0b0, sig12 : 0b0,
       (sig12 + deltah(ssig2, csig2, dn2, E[e_k2], E[e_alpha2], E[e_hc]) -
        deltah(ssig1, csig1, dn1, E[e_k2], E[e_alpha2], E[e_hc]) ) )
   else (eps : k2 / (2 * (1 + sqrt(1 + k2)) + k2),
-    C3a : C3f(g, eps),
-    B312 : (SinCosSeries(true, ssig2, csig2, C3a) -
-      SinCosSeries(true, ssig1, csig1, C3a)),
+    Ca : C3f(g, eps),
+    B312 : (SinCosSeries(true, ssig2, csig2, Ca) -
+      SinCosSeries(true, ssig1, csig1, Ca)),
     h0 : -g[g_f] * A3f(g, eps),
     domg12 : salp0 * h0 * (sig12 + B312),
     lam12 : omg12 + domg12),

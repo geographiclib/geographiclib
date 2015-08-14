@@ -2,7 +2,7 @@
  * \file GeoidEval.cpp
  * \brief Command line utility for evaluating geoid heights
  *
- * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     Geoid::convertflag heightmult = Geoid::NONE;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';';
-    bool northp = false;
+    bool northp = false, longfirst = false;
     int zonenum = UTMUPS::INVALID;
 
     for (int m = 1; m < argc; ++m) {
@@ -54,9 +54,9 @@ int main(int argc, char* argv[]) {
         cachearea = true;
         try {
           DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                            caches, cachew);
+                            caches, cachew, longfirst);
           DMS::DecodeLatLon(std::string(argv[m + 3]), std::string(argv[m + 4]),
-                            cachen, cachee);
+                            cachen, cachee, longfirst);
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding argument of -c: " << e.what() << "\n";
@@ -67,6 +67,8 @@ int main(int argc, char* argv[]) {
         heightmult = Geoid::GEOIDTOELLIPSOID;
       else if (arg == "--haetomsl")
         heightmult = Geoid::ELLIPSOIDTOGEOID;
+      else if (arg == "-w")
+        longfirst = true;
       else if (arg == "-z") {
         if (++m == argc) return usage(1, true);
         std::string zone = argv[m];
@@ -192,11 +194,11 @@ int main(int argc, char* argv[]) {
       }
 
       GeoCoords p;
-      std::string s, suff;
+      std::string s, eol, suff;
       const char* spaces = " \t\n\v\f\r,"; // Include comma as space
       while (std::getline(*input, s)) {
         try {
-          std::string eol("\n");
+          eol = "\n";
           if (!cdelim.empty()) {
             std::string::size_type m = s.find(cdelim);
             if (m != std::string::npos) {
@@ -243,7 +245,7 @@ int main(int argc, char* argv[]) {
               height = Utility::num<real>(s.substr(pa + 1, pb - pa));
               s = s.substr(0, pa + 1);
             }
-            p.Reset(s);
+            p.Reset(s, true, longfirst);
           }
           if (heightmult) {
             real h = g(p.Latitude(), p.Longitude());

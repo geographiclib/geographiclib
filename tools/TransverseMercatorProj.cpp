@@ -2,7 +2,7 @@
  * \file TransverseMercatorProj.cpp
  * \brief Command line utility for transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -15,7 +15,6 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include <GeographicLib/EllipticFunction.hpp>
 #include <GeographicLib/TransverseMercatorExact.hpp>
 #include <GeographicLib/TransverseMercator.hpp>
 #include <GeographicLib/DMS.hpp>
@@ -34,7 +33,8 @@ int main(int argc, char* argv[]) {
     using namespace GeographicLib;
     typedef Math::real real;
     Utility::set_digits();
-    bool exact = true, extended = false, series = false, reverse = false;
+    bool exact = true, extended = false, series = false, reverse = false,
+      longfirst = false;
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f(),
@@ -63,8 +63,6 @@ int main(int argc, char* argv[]) {
           lon0 = DMS::Decode(std::string(argv[m]), ind);
           if (ind == DMS::LATITUDE)
             throw GeographicErr("Bad hemisphere");
-          if (!(lon0 >= -540 && lon0 < 540))
-            throw GeographicErr("Bad longitude");
           lon0 = Math::AngNormalize(lon0);
         }
         catch (const std::exception& e) {
@@ -93,7 +91,9 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 2;
-      } else if (arg == "-p") {
+      } else if (arg == "-w")
+        longfirst = true;
+      else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
           prec = Utility::num<int>(std::string(argv[m]));
@@ -176,12 +176,13 @@ int main(int argc, char* argv[]) {
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
-    std::string s;
+    std::string s, eol, stra, strb, strc;
+    std::istringstream str(s);
     int retval = 0;
     std::cout << std::fixed;
     while (std::getline(*input, s)) {
       try {
-        std::string eol("\n");
+        eol = "\n";
         if (!cdelim.empty()) {
           std::string::size_type m = s.find(cdelim);
           if (m != std::string::npos) {
@@ -189,17 +190,15 @@ int main(int argc, char* argv[]) {
             s = s.substr(0, m);
           }
         }
-        std::istringstream str(s);
+        str.clear(); str.str(s);
         real lat, lon, x, y;
-        std::string stra, strb;
         if (!(str >> stra >> strb))
           throw GeographicErr("Incomplete input: " + s);
         if (reverse) {
           x = Utility::num<real>(stra);
           y = Utility::num<real>(strb);
         } else
-          DMS::DecodeLatLon(stra, strb, lat, lon);
-        std::string strc;
+          DMS::DecodeLatLon(stra, strb, lat, lon, longfirst);
         if (str >> strc)
           throw GeographicErr("Extraneous input: " + strc);
         real gamma, k;
@@ -208,8 +207,8 @@ int main(int argc, char* argv[]) {
             TMS.Reverse(lon0, x, y, lat, lon, gamma, k);
           else
             TME.Reverse(lon0, x, y, lat, lon, gamma, k);
-          *output << Utility::str(lat, prec + 5) << " "
-                  << Utility::str(lon, prec + 5) << " "
+          *output << Utility::str(longfirst ? lon : lat, prec + 5) << " "
+                  << Utility::str(longfirst ? lat : lon, prec + 5) << " "
                   << Utility::str(gamma, prec + 6) << " "
                   << Utility::str(k, prec + 6) << eol;
         } else {

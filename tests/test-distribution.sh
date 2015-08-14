@@ -33,9 +33,9 @@ set -e
 
 # The following files contain version information:
 #   pom.xml
-#   CMakeLists.txt
+#   CMakeLists.txt (PROJECT_VERSION_* LIBVERSION_*)
 #   NEWS
-#   configure.ac
+#   configure.ac (AC_INIT, GEOGRAPHICLIB_VERSION_* LT_*)
 #   tests/test-distribution.sh
 #   src/GeographicLib.pro lib version
 
@@ -43,6 +43,7 @@ set -e
 
 # python
 #   python/setup.py
+#   python/geographiclib/__init__.py
 
 # MATLAB
 #   matlab/geographiclib/Contents.m version + date
@@ -58,12 +59,16 @@ set -e
 # Java
 #   java/pom.xml java/*/pom.xml
 #   java/src/main/java/net/sf/geographiclib/package-info.java
+#   (remember to remove SNAPSHOT from version number of lib)
 
-# JavaScript + maxima -- none
+# maxima
+#   maxima/geodesic.mac
+
+# JavaScript
+#   doc/scripts/GeographicLib/Math.js
 
 DATE=`date +%F`
-DATE=2015-05-23
-VERSION=1.43
+VERSION=1.44
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
@@ -77,8 +82,10 @@ test -d $TEMP || mkdir $TEMP
 rm -rf $TEMP/*
 mkdir $TEMP/gita # Package creation via cmake
 mkdir $TEMP/gitb # Package creation via autoconf
-(cd $TEMP/gita; git clone -b $BRANCH $GITSOURCE)
-(cd $TEMP/gitb; git clone -b $BRANCH $GITSOURCE)
+mkdir $TEMP/gitr # For release branch
+(cd $TEMP/gitr; git clone -b $BRANCH $GITSOURCE)
+(cd $TEMP/gita; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
+(cd $TEMP/gitb; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
 cd $TEMP/gita/geographiclib
 sh autogen.sh
 mkdir BUILD
@@ -160,10 +167,8 @@ done <<EOF
 14 y
 EOF
 
-mkdir $TEMP/gitr
-cd $TEMP/gitr
-git clone -b release $GITSOURCE
-cd geographiclib
+cd $TEMP/gitr/geographiclib
+git checkout release
 find . -type f | grep -v '/\.git' | xargs rm
 tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
 (
@@ -220,42 +225,6 @@ cp -pr $TEMP/instc/share/matlab/geographiclib $TEMP/matlab
 cd $TEMP/matlab/geographiclib
 rm -f $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip
 zip $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip *.m private/*.m
-mkdir -p $TEMP/geographiclib-matlab/private
-while read f;do cp -p $f $TEMP/geographiclib-matlab/$f; done <<EOF
-defaultellipsoid.m
-ecc2flat.m
-flat2ecc.m
-geodarea.m
-geoddistance.m
-geoddoc.m
-geodreckon.m
-private/A1m1f.m
-private/A2m1f.m
-private/A3coeff.m
-private/A3f.m
-private/AngDiff.m
-private/AngNormalize.m
-private/AngNormalize2.m
-private/AngRound.m
-private/C1f.m
-private/C1pf.m
-private/C2f.m
-private/C3coeff.m
-private/C3f.m
-private/C4coeff.m
-private/C4f.m
-private/SinCosSeries.m
-private/cbrtx.m
-private/cvmgt.m
-private/eatanhe.m
-private/norm2.m
-private/sumx.m
-private/swap.m
-EOF
-cd $TEMP
-rm -f $DEVELSOURCE/geographiclib_matlab_$VERSION.zip
-zip $DEVELSOURCE/geographiclib_matlab_$VERSION.zip \
-    geographiclib-matlab/*.m geographiclib-matlab/private/*.m
 cd $TEMP/matlab
 cp -p $TEMP/gita/geographiclib/geodesic.png .
 cp -p $TEMP/gita/geographiclib/matlab/geographiclib-blurb.txt .
@@ -269,13 +238,16 @@ cat > tester.py <<EOF
 import sys
 sys.path.append("$TEMP/python-test/site-packages")
 from geographiclib.geodesic import Geodesic
-print(Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50))
+print(Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50,
+                             Geodesic.ALL | Geodesic.LONG_UNROLL))
 # The geodesic direct problem
-print(Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3))
+print(Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3,
+                            Geodesic.ALL | Geodesic.LONG_UNROLL))
 # How to obtain several points along a geodesic
 line = Geodesic.WGS84.Line(40.6, -73.8, 45)
 print(line.Position( 5000e3))
 print(line.Position(10000e3))
+print(line.Position(10000e3, Geodesic.ALL | Geodesic.LONG_UNROLL))
 # Computing the area of a geodesic polygon
 def p(lat,lon): return {'lat': lat, 'lon': lon}
 
@@ -381,25 +353,44 @@ test "$CONFIG_VERSION"  = "$VERSION" || echo autoconf version number mismatch
 test "$CONFIG_VERSIONA" = "$VERSION" || echo autoconf version string mismatch
 
 cd $TEMP/relx/GeographicLib-$VERSION
-echo Files with trailing spaces:
-find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.pdf' |
-xargs grep -l ' $' || true
-echo
-echo Files with tabs:
-find . -type f |
-egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
-egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
-xargs grep -l  '	' || true
-echo
-echo Files with multiple newlines:
-find . -type f |
-egrep -v '/Makefile\.in|\.1\.html|\.png|\.pdf|/ltmain|/config|\.m4|Settings' |
-egrep -v '(Resources|Settings)\.Designer\.cs' |
-while read f;do
-    tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
-done
-echo
-
+(
+    echo Files with trailing spaces:
+    find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.pdf' |
+	while read f; do
+	    tr -d '\r' < $f | grep ' $' > /dev/null && echo $f || true
+	done
+    echo
+    echo Files with tabs:
+    find . -type f |
+	egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
+	egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
+	xargs grep -l  '	' || true
+    echo
+    echo Files with multiple newlines:
+    find . -type f |
+	egrep -v \
+	   '/Makefile\.in|\.1\.html|\.png|\.pdf|/ltmain|/config|\.m4|Settings' |
+	egrep -v '(Resources|Settings)\.Designer\.cs' |
+	while read f; do
+	    tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
+	done
+    echo
+    echo Files with no newline at end:
+    find . -type f |
+	egrep -v '\.png|\.pdf' |
+	while read f;do
+	    n=`tail -1 $f | wc -l`; test $n -eq 0 && echo $f || true
+	done
+    echo
+    echo Files with extra newlines at end:
+    find . -type f |
+	egrep -v '/configure|/ltmain.sh|\.png|\.pdf|\.1\.html' |
+	while read f;do
+	    n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
+	done
+    echo
+) > $TEMP/badfiles.txt
+cat $TEMP/badfiles.txt
 cat > $TEMP/tasks.txt <<EOF
 # deploy documentation
 test -d $WEBDIST/htdocs/$VERSION-pre &&
@@ -428,6 +419,9 @@ python setup.py sdist --formats gztar,zip upload
 cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
 
+# javascript release
+make -C $DEVELSOURCE -f makefile-admin distrib-js
+
 # matlab toolbox
 cd $TEMP/matlab
 matlab &
@@ -454,6 +448,9 @@ git push --all
 git push --tags
 
 # Also to do
+# post release notices
+# set default download files
+# make -f makefile-admin distrib-{cgi,js,html}
 # update home brew
 # upload matlab packages
 # update binaries for cgi applications

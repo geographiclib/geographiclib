@@ -1,4 +1,4 @@
-VERSION = 14.1.0
+VERSION = 14.2.0
 
 TEMPLATE = lib
 
@@ -13,6 +13,7 @@ SOURCES += CircularEngine.cpp
 SOURCES += DMS.cpp
 SOURCES += Ellipsoid.cpp
 SOURCES += EllipticFunction.cpp
+SOURCES += GARS.cpp
 SOURCES += GeoCoords.cpp
 SOURCES += Geocentric.cpp
 SOURCES += Geodesic.cpp
@@ -22,6 +23,7 @@ SOURCES += GeodesicLine.cpp
 SOURCES += GeodesicLineExact.cpp
 SOURCES += Geohash.cpp
 SOURCES += Geoid.cpp
+SOURCES += Georef.cpp
 SOURCES += Gnomonic.cpp
 SOURCES += GravityCircle.cpp
 SOURCES += GravityModel.cpp
@@ -51,6 +53,7 @@ HEADERS += $$INCLUDEDIR/Constants.hpp
 HEADERS += $$INCLUDEDIR/DMS.hpp
 HEADERS += $$INCLUDEDIR/Ellipsoid.hpp
 HEADERS += $$INCLUDEDIR/EllipticFunction.hpp
+HEADERS += $$INCLUDEDIR/GARS.hpp
 HEADERS += $$INCLUDEDIR/GeoCoords.hpp
 HEADERS += $$INCLUDEDIR/Geocentric.hpp
 HEADERS += $$INCLUDEDIR/Geodesic.hpp
@@ -59,6 +62,7 @@ HEADERS += $$INCLUDEDIR/GeodesicLine.hpp
 HEADERS += $$INCLUDEDIR/GeodesicLineExact.hpp
 HEADERS += $$INCLUDEDIR/Geohash.hpp
 HEADERS += $$INCLUDEDIR/Geoid.hpp
+HEADERS += $$INCLUDEDIR/Georef.hpp
 HEADERS += $$INCLUDEDIR/Gnomonic.hpp
 HEADERS += $$INCLUDEDIR/GravityCircle.hpp
 HEADERS += $$INCLUDEDIR/GravityModel.hpp

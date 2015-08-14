@@ -70,7 +70,7 @@ function N = geoid_height(lat, lon, geoidname, geoiddir)
   end
   narginchk(2, 4)
   if nargin == 3 && isstruct(geoidname)
-    N = geoid_height_int(lat, lon, geoidname);
+    N = geoid_height_int(lat, lon, geoidname, true);
   else
     if nargin < 3
       geoidname = '';
@@ -82,7 +82,7 @@ function N = geoid_height(lat, lon, geoidname, geoiddir)
     if ~(isstruct(saved_geoid) && strcmp(saved_geoid.file, geoidfile))
       saved_geoid = geoid_load_file(geoidfile);
     end
-    N = geoid_height_int(lat, lon, saved_geoid);
+    N = geoid_height_int(lat, lon, saved_geoid, true);
   end
 end
 
@@ -129,7 +129,6 @@ function N = geoid_height_int(lat, lon, geoid, cubic)
            -18,   36,  -64,   0,   66,   51, 0,   0, -102,  31;...
             18,  -36,    2,   0,  -66,  -51, 0,   0,  102,  31];
   end
-  if nargin < 4, cubic = true; end
   try
     s = size(lat + lon);
   catch
@@ -166,7 +165,7 @@ function N = geoid_height_int(lat, lon, geoid, cubic)
             2);
   end
   N = geoid.offset + geoid.scale * N;
-  N(~(abs(lat) <= 90 & abs(lon) <= 540)) = nan;
+  N(~(abs(lat) <= 90 & isfinite(lon))) = nan;
   N = reshape(N, s);
 end
 

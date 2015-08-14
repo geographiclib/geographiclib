@@ -378,8 +378,8 @@ int main(int argc, char* argv[]) {
       }
     }
     if (accuracytest) {
-      Math::real mult = Math::extra_digits() == 0 ? 1e9l :
-        Math::extra_digits() <= 3 ? 1e12l : 1e15l;
+      Math::real mult = Math::real(Math::extra_digits() == 0 ? 1e9l :
+                                   Math::extra_digits() <= 3 ? 1e12l : 1e15l);
       for (unsigned i = 0; i < NUMERR; ++i)
         cout << i << " " << mult * err[i]
              << " " << errind[i] << "\n";

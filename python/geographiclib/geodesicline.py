@@ -13,7 +13,7 @@
 #    https://dx.doi.org/10.1007/s00190-012-0578-z
 #    Addenda: http://geographiclib.sf.net/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 ######################################################################
@@ -26,6 +26,26 @@ class GeodesicLine(object):
   """Points on a geodesic path"""
 
   def __init__(self, geod, lat1, lon1, azi1, caps = GeodesicCapability.ALL):
+    """Construct a GeodesicLine object describing a geodesic line
+    starting at (lat1, lon1) with azimuth azi1.  geod is a Geodesic
+    object (which embodies the ellipsoid parameters).  caps is caps is
+    an or'ed combination of bit the following values indicating the
+    capabilities of the returned object
+
+      Geodesic.LATITUDE
+      Geodesic.LONGITUDE
+      Geodesic.AZIMUTH
+      Geodesic.DISTANCE
+      Geodesic.REDUCEDLENGTH
+      Geodesic.GEODESICSCALE
+      Geodesic.AREA
+      Geodesic.DISTANCE_IN
+      Geodesic.ALL (all of the above)
+
+    The default value of caps is ALL.
+
+    """
+
     from geographiclib.geodesic import Geodesic
     self._a = geod._a
     self._f = geod._f
@@ -36,22 +56,15 @@ class GeodesicLine(object):
                   Geodesic.LONG_UNROLL)
 
     # Guard against underflow in salp0
-    azi1 = Math.AngRound(Math.AngNormalize(azi1))
-    self._lat1 = lat1
+    self._lat1 = Math.LatFix(lat1)
     self._lon1 = lon1
-    self._azi1 = azi1
-    # alp1 is in [0, pi]
-    alp1 = azi1 * Math.degree
-    # Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
-    # problems directly than to skirt them.
-    self._salp1 = 0 if     azi1  == -180 else math.sin(alp1)
-    self._calp1 = 0 if abs(azi1) ==   90 else math.cos(alp1)
-    # real cbet1, sbet1, phi
-    phi = lat1 * Math.degree
+    self._azi1 = Math.AngNormalize(azi1)
+    self._salp1, self._calp1 = Math.sincosd(Math.AngRound(azi1))
+
+    # real cbet1, sbet1
+    sbet1, cbet1 = Math.sincosd(Math.AngRound(lat1)); sbet1 *= self._f1
     # Ensure cbet1 = +epsilon at poles
-    sbet1 = self._f1 * math.sin(phi)
-    cbet1 = Geodesic.tiny_ if abs(lat1) == 90 else math.cos(phi)
-    sbet1, cbet1 = Math.norm(sbet1, cbet1)
+    sbet1, cbet1 = Math.norm(sbet1, cbet1); cbet1 = max(Geodesic.tiny_, cbet1)
     self._dn1 = math.sqrt(1 + geod._ep2 * Math.sq(sbet1))
 
     # Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -133,11 +146,8 @@ class GeodesicLine(object):
     B12 = 0; AB1 = 0
     if arcmode:
       # Interpret s12_a12 as spherical arc length
-      sig12 = s12_a12 * Math.degree
-      s12a = abs(s12_a12)
-      s12a -= 180 * math.floor(s12a / 180)
-      ssig12 = 0 if s12a ==  0 else math.sin(sig12)
-      csig12 = 0 if s12a == 90 else math.cos(sig12)
+      sig12 = math.radians(s12_a12)
+      ssig12, csig12 = Math.sincosd(s12_a12)
     else:
       # Interpret s12_a12 as distance
       tau12 = s12_a12 / (self._b * (1 + self._A1m1))
@@ -220,19 +230,17 @@ class GeodesicLine(object):
       lam12 = omg12 + self._A3c * (
         sig12 + (Geodesic.SinCosSeries(True, ssig2, csig2, self._C3a)
                  - self._B31))
-      lon12 = lam12 / Math.degree
-      # Use Math.AngNormalize2 because longitude might have wrapped
-      # multiple times.
+      lon12 = math.degrees(lam12)
       lon2 = (self._lon1 + lon12 if outmask & Geodesic.LONG_UNROLL else
               Math.AngNormalize(Math.AngNormalize(self._lon1) +
-                                Math.AngNormalize2(lon12)))
+                                Math.AngNormalize(lon12)))
 
     if outmask & Geodesic.LATITUDE:
-      lat2 = math.atan2(sbet2, self._f1 * cbet2) / Math.degree
+      lat2 = Math.atan2d(sbet2, self._f1 * cbet2)
 
     if outmask & Geodesic.AZIMUTH:
       # minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi2 = 0 - math.atan2(-salp2, calp2) / Math.degree
+      azi2 = Math.atan2d(salp2, calp2)
 
     if outmask & (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
       B22 = Geodesic.SinCosSeries(True, ssig2, csig2, self._C2a)
@@ -280,7 +288,7 @@ class GeodesicLine(object):
       S12 = (self._c2 * math.atan2(salp12, calp12) +
              self._A4 * (B42 - self._B41))
 
-    a12 = s12_a12 if arcmode else sig12 / Math.degree
+    a12 = s12_a12 if arcmode else math.degrees(sig12)
     return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
 
   def Position(self, s12,
@@ -317,6 +325,8 @@ class GeodesicLine(object):
       Geodesic.AREA
       Geodesic.ALL (all of the above)
       Geodesic.LONG_UNROLL
+
+    The default value of outmask is LATITUDE | LONGITUDE | AZIMUTH.
 
     """
 
@@ -374,6 +384,9 @@ class GeodesicLine(object):
       Geodesic.AREA
       Geodesic.ALL (all of the above)
       Geodesic.LONG_UNROLL
+
+    The default value of outmask is LATITUDE | LONGITUDE | AZIMUTH |
+    DISTANCE.
 
     """
 

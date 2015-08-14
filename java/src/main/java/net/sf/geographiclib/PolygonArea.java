@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.PolygonArea class
  *
- * Copyright (c) Charles Karney (2013-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -128,8 +128,7 @@ public class PolygonArea {
    * @param lat the latitude of the point (degrees).
    * @param lon the latitude of the point (degrees).
    * <p>
-   * <i>lat</i> should be in the range [&minus;90&deg;, 90&deg;] and <i>lon</i>
-   * should be in the range [&minus;540&deg;, 540&deg;).
+   * <i>lat</i> should be in the range [&minus;90&deg;, 90&deg;].
    **********************************************************************/
   public void AddPoint(double lat, double lon) {
     lon = GeoMath.AngNormalize(lon);
@@ -154,9 +153,8 @@ public class PolygonArea {
    * @param azi azimuth at current point (degrees).
    * @param s distance from current point to next point (meters).
    * <p>
-   * <i>azi</i> should be in the range [&minus;540&deg;, 540&deg;).  This does
-   * nothing if no points have been added yet.  Use PolygonArea.CurrentPoint to
-   * determine the position of the new vertex.
+   * This does nothing if no points have been added yet.  Use
+   * PolygonArea.CurrentPoint to determine the position of the new vertex.
    **********************************************************************/
   public void AddEdge(double azi, double s) {
     if (_num > 0) {             // Do nothing if _num is zero
@@ -249,8 +247,7 @@ public class PolygonArea {
    *   is the area of the polygon (meters<sup>2</sup>) or Double.NaN of
    *   <i>polyline</i> is true in the constructor.
    * <p>
-   * <i>lat</i> should be in the range [&minus;90&deg;, 90&deg;] and <i>lon</i>
-   * should be in the range [&minus;540&deg;, 540&deg;).
+   * <i>lat</i> should be in the range [&minus;90&deg;, 90&deg;].
    **********************************************************************/
   public PolygonResult TestPoint(double lat, double lon,
                                  boolean reverse, boolean sign) {
@@ -318,8 +315,6 @@ public class PolygonArea {
    *   of the polygon or the length of the polyline (meters), and <i>area</i>
    *   is the area of the polygon (meters<sup>2</sup>) or Double.NaN of
    *   <i>polyline</i> is true in the constructor.
-   * <p>
-   * <i>azi</i> should be in the range [&minus;540&deg;, 540&deg;).
    **********************************************************************/
   public PolygonResult TestEdge(double azi, double s,
                                 boolean reverse, boolean sign) {

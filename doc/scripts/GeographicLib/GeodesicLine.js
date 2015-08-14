@@ -12,7 +12,7 @@
  *    https://dx.doi.org/10.1007/s00190-012-0578-z
  *    Addenda: http://geographiclib.sf.net/geod-addenda.html
  *
- * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -33,23 +33,17 @@
     this._caps = (!caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH)) |
       g.LONG_UNROLL;
 
-    azi1 = m.AngRound(m.AngNormalize(azi1));
-    this._lat1 = lat1;
+    this._lat1 = m.LatFix(lat1);
     this._lon1 = lon1;
-    this._azi1 = azi1;
-    // alp1 is in [0, pi]
-    var alp1 = azi1 * m.degree;
-    // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
-    // problems directly than to skirt them.
-    this._salp1 =          azi1  === -180 ? 0 : Math.sin(alp1);
-    this._calp1 = Math.abs(azi1) ===   90 ? 0 : Math.cos(alp1);
-    var cbet1, sbet1, phi;
-    phi = lat1 * m.degree;
-    // Ensure cbet1 = +epsilon at poles
-    sbet1 = this._f1 * Math.sin(phi);
-    cbet1 = Math.abs(lat1) === 90 ? g.tiny_ : Math.cos(phi);
+    this._azi1 = m.AngNormalize(azi1);
+    var t;
+    t = m.sincosd(m.AngRound(this._azi1)); this._salp1 = t.s; this._calp1 = t.c;
+    var cbet1, sbet1;
+    t = m.sincosd(m.AngRound(this._lat1)); sbet1 = this._f1 * t.s; cbet1 = t.c;
     // norm(sbet1, cbet1);
-    var t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
+    t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
+    // Ensure cbet1 = +epsilon at poles
+    cbet1 = Math.max(g.tiny_, cbet1);
     this._dn1 = Math.sqrt(1 + geod._ep2 * m.sq(sbet1));
 
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -123,6 +117,13 @@
                                                   outmask) {
     var vals = {};
     outmask &= this._caps & g.OUT_MASK;
+    vals.lat1 = this._lat1; vals.azi1 = this._azi1;
+    vals.lon1 = outmask & g.LONG_UNROLL ?
+      this._lon1 : m.AngNormalize(this._lon1);
+    if (arcmode)
+      vals.a12 = s12_a12;
+    else
+      vals.s12 = s12_a12;
     if (!( arcmode || (this._caps & g.DISTANCE_IN & g.OUT_MASK) )) {
       // Uninitialized or impossible distance calculation requested
       vals.a12 = Number.NaN;
@@ -134,10 +135,7 @@
     if (arcmode) {
       // Interpret s12_a12 as spherical arc length
       sig12 = s12_a12 * m.degree;
-      var s12a = Math.abs(s12_a12);
-      s12a -= 180 * Math.floor(s12a / 180);
-      ssig12 = s12a ===  0 ? 0 : Math.sin(sig12);
-      csig12 = s12a === 90 ? 0 : Math.cos(sig12);
+      t = m.sincosd(s12_a12); ssig12 = t.s; csig12 = t.c;
     } else {
       // Interpret s12_a12 as distance
       var
@@ -205,8 +203,8 @@
     // tan(alp0) = cos(sig2)*tan(alp2)
     salp2 = this._salp0; calp2 = this._calp0 * csig2; // No need to normalize
 
-    if (outmask & g.DISTANCE)
-      vals.s12 = arcmode ? this._b * ((1 + this._A1m1) * sig12 + AB1) : s12_a12;
+    if (arcmode && (outmask & g.DISTANCE))
+      vals.s12 = this._b * ((1 + this._A1m1) * sig12 + AB1);
 
     if (outmask & g.LONGITUDE) {
       // tan(omg2) = sin(alp0) * tan(sig2)
@@ -225,17 +223,15 @@
         ( sig12 + (g.SinCosSeries(true, ssig2, csig2, this._C3a) -
                    this._B31));
       lon12 = lam12 / m.degree;
-      // Use AngNormalize2 because longitude might have wrapped multiple times.
       vals.lon2 = outmask & g.LONG_UNROLL ? this._lon1 + lon12 :
-        m.AngNormalize(m.AngNormalize(this._lon1) + m.AngNormalize2(lon12));
+        m.AngNormalize(m.AngNormalize(this._lon1) + m.AngNormalize(lon12));
     }
 
     if (outmask & g.LATITUDE)
-      vals.lat2 = Math.atan2(sbet2, this._f1 * cbet2) / m.degree;
+      vals.lat2 = m.atan2d(sbet2, this._f1 * cbet2);
 
     if (outmask & g.AZIMUTH)
-      // minus signs give range [-180, 180). 0- converts -0 to +0.
-      vals.azi2 = 0 - Math.atan2(-salp2, calp2) / m.degree;
+      vals.azi2 = m.atan2d(salp2, calp2);
 
     if (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE)) {
       var
@@ -289,7 +285,8 @@
         this._A4 * (B42 - this._B41);
     }
 
-    vals.a12 = arcmode ? s12_a12 : sig12 / m.degree;
+    if (!arcmode)
+      vals.a12 = sig12 / m.degree;
     return vals;
   };
 

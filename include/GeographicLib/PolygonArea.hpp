@@ -2,7 +2,7 @@
  * \file PolygonArea.hpp
  * \brief Header for GeographicLib::PolygonAreaT class
  *
- * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -87,14 +87,23 @@ namespace GeographicLib {
     // an alternate version of transit to deal with longitudes in the direct
     // problem.
     static inline int transitdirect(real lon1, real lon2) {
-      using std::fmod;
       // We want to compute exactly
       //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
-      // Since we only need the parity of the result we can use std::remquo but
-      // this is buggy with g++ 4.8.3 and requires C++11.  So instead we do
+      // Since we only need the parity of the result we can use std::remquo;
+      // but this is buggy with g++ 4.8.3 (glibc version < 2.22), see
+      //   https://sourceware.org/bugzilla/show_bug.cgi?id=17569
+      // and requires C++11.  So instead we do
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
+      using std::remainder;
+      lon1 = remainder(lon1, real(720)); lon2 = remainder(lon2, real(720));
+      return ( (lon2 >= 0 && lon2 < 360 ? 0 : 1) -
+               (lon1 >= 0 && lon1 < 360 ? 0 : 1) );
+#else
+      using std::fmod;
       lon1 = fmod(lon1, real(720)); lon2 = fmod(lon2, real(720));
       return ( ((lon2 >= 0 && lon2 < 360) || lon2 < -360 ? 0 : 1) -
                ((lon1 >= 0 && lon1 < 360) || lon1 < -360 ? 0 : 1) );
+#endif
     }
   public:
 
@@ -131,8 +140,7 @@ namespace GeographicLib {
      * @param[in] lat the latitude of the point (degrees).
      * @param[in] lon the longitude of the point (degrees).
      *
-     * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
-     * lon should be in the range [&minus;540&deg;, 540&deg;).
+     * \e lat should be in the range [&minus;90&deg;, 90&deg;].
      **********************************************************************/
     void AddPoint(real lat, real lon);
 
@@ -142,9 +150,8 @@ namespace GeographicLib {
      * @param[in] azi azimuth at current point (degrees).
      * @param[in] s distance from current point to next point (meters).
      *
-     * \e azi should be in the range [&minus;540&deg;, 540&deg;).  This does
-     * nothing if no points have been added yet.  Use PolygonAreaT::CurrentPoint
-     * to determine the position of the new vertex.
+     * This does nothing if no points have been added yet.  Use
+     * PolygonAreaT::CurrentPoint to determine the position of the new vertex.
      **********************************************************************/
     void AddEdge(real azi, real s);
 
@@ -188,8 +195,7 @@ namespace GeographicLib {
      *   constructor.
      * @return the number of points.
      *
-     * \e lat should be in the range [&minus;90&deg;, 90&deg;] and \e
-     * lon should be in the range [&minus;540&deg;, 540&deg;).
+     * \e lat should be in the range [&minus;90&deg;, 90&deg;].
      **********************************************************************/
     unsigned TestPoint(real lat, real lon, bool reverse, bool sign,
                        real& perimeter, real& area) const;
@@ -216,8 +222,6 @@ namespace GeographicLib {
      *   (meters<sup>2</sup>); only set if polyline is false in the
      *   constructor.
      * @return the number of points.
-     *
-     * \e azi should be in the range [&minus;540&deg;, 540&deg;).
      **********************************************************************/
     unsigned TestEdge(real azi, real s, bool reverse, bool sign,
                       real& perimeter, real& area) const;

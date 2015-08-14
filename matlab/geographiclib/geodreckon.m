@@ -33,9 +33,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %   If long_unroll is unset (the default), then the value lon2 is in the
 %   range [-180,180).  If long_unroll is set, the longitude is "unrolled"
 %   so that the quantity lon2 - lon1 indicates how many times and in what
-%   sense the geodesic encircles the ellipsoid.  Because lon2 might be
-%   outside the normal allowed range for longitudes, [-540, 540), be sure
-%   to normalize it with rem(lon2, 360) before using it in other calls.
+%   sense the geodesic encircles the ellipsoid.
 %
 %   The two optional arguments, ellipsoid and flags, may be given in any
 %   order and either or both may be omitted.
@@ -71,7 +69,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.43.
+% This file was distributed with GeographicLib 1.44.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
@@ -111,6 +109,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   end
   arcmode = bitand(flags, 1);
   long_unroll = bitand(flags, 2);
+  Z = zeros(prod(S),1);
 
   degree = pi/180;
   tiny = sqrt(realmin);
@@ -130,17 +129,14 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   A3x = A3coeff(n);
   C3x = C3coeff(n);
 
-  lat1 = lat1(:);
+  lat1 = AngRound(LatFix(lat1(:)));
   lon1 = lon1(:);
-  azi1 = AngRound(AngNormalize(azi1(:)));
+  azi1 = AngRound(azi1(:));
   s12_a12 = s12_a12(:);
 
-  alp1 = azi1 * degree;
-  salp1 = sin(alp1); salp1(azi1 == -180) = 0;
-  calp1 = cos(alp1); calp1(abs(azi1) == 90) = 0;
-  phi = lat1 * degree;
-  sbet1 = f1 * sin(phi);
-  cbet1 = cos(phi); cbet1(abs(lat1) == 90) = tiny;
+  [salp1, calp1] = sincosdx(azi1);
+  [sbet1, cbet1] = sincosdx(lat1);
+  sbet1 = f1 * sbet1; cbet1 = max(tiny, cbet1);
   [sbet1, cbet1] = norm2(sbet1, cbet1);
   dn1 = sqrt(1 + ep2 * sbet1.^2);
 
@@ -164,12 +160,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 
   if arcmode
     sig12 = s12_a12 * degree;
-    ssig12 = sin(sig12);
-    csig12 = cos(sig12);
-    s12a = abs(s12_a12);
-    s12a = s12a - 180 * floor(s12a / 180);
-    ssig12(s12a == 0) = 0;
-    csig12(s12a == 90) = 0;
+    [ssig12, csig12] = sincosdx(s12_a12);
   else
     tau12 = s12_a12 ./ (b * (1 + A1m1));
     s = sin(tau12); c = cos(tau12);
@@ -216,16 +207,17 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   if long_unroll
     lon2 = lon1 + lon12;
   else
-    lon12 = AngNormalize2(lon12);
+    lon12 = AngNormalize(lon12);
     lon2 = AngNormalize(AngNormalize(lon1) + lon12);
   end
-  lat2 = atan2(sbet2, f1 * cbet2) / degree;
-  azi2 = 0 - atan2(-salp2, calp2) / degree;
+  lat2 = atan2dx(sbet2, f1 * cbet2);
+  azi2 = atan2dx(salp2, calp2);
   if arcmode
     a12_s12 = b * ((1 + A1m1) .* sig12 + AB1);
   else
     a12_s12 = sig12 / degree;
   end
+  a12_s12 = reshape(a12_s12 + Z, S);
 
   if redlp || scalp
     A2m1 = A2m1f(epsi);
@@ -237,13 +229,13 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
     if redlp
       m12 = b * ((dn2 .* (csig1 .* ssig2) - dn1 .* (ssig1 .* csig2)) ...
                  - csig1 .* csig2 .* J12);
-      m12 = reshape(m12, S);
+      m12 = reshape(m12 + Z, S);
     end
     if scalp
       t = k2 .* (ssig2 - ssig1) .* (ssig2 + ssig1) ./ (dn1 + dn2);
       M12 = csig12 + (t .* ssig2 - csig2 .* J12) .* ssig1 ./ dn1;
       M21 = csig12 - (t .* ssig1 - csig1 .* J12) .* ssig2 ./  dn2;
-      M12 = reshape(M12, S); M21 = reshape(M21, S);
+      M12 = reshape(M12 + Z, S); M21 = reshape(M21 + Z, S);
     end
   end
 
@@ -258,6 +250,8 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
                    ssig12 .* (csig1 .* ssig12 ./ (1 + csig12) + ssig1), ...
                    csig12 <= 0);
     calp12 = salp0.^2 + calp0.^2 .* csig1 .* csig2;
+    % Enlarge salp1, calp1 is case lat1 is an array and azi1 is a scalar
+    s = zeros(size(salp0)); salp1 = salp1 + s; calp1 = calp1 + s;
     s = calp0 == 0 | salp0 == 0;
     salp12(s) = salp2(s) .* calp1(s) - calp2(s) .* salp1(s);
     calp12(s) = calp2(s) .* calp1(s) + salp2(s) .* salp1(s);
@@ -269,10 +263,11 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
       c2 = a^2;
     end
     S12 = c2 * atan2(salp12, calp12) + A4 .* (B42 - B41);
+    S12 = reshape(S12 + Z, S);
   end
 
-  lat2 = reshape(lat2, S);
+  lat2 = reshape(lat2 + Z, S);
   lon2 = reshape(lon2, S);
-  azi2 = reshape(azi2, S);
+  azi2 = reshape(azi2 + Z, S);
 
 end

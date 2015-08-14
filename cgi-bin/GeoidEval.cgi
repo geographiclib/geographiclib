@@ -15,9 +15,10 @@ else
     INPUT=`lookupcheckkey "$QUERY_STRING" input`
 fi
 INPUTENC=`encodevalue "$INPUT"`
-COMMAND=GeoidEval
-export GEOGRAPHICLIB_DATA=..
 EXECDIR=../bin
+COMMAND="GeoidEval"
+VERSION=`$EXECDIR/$COMMAND --version | cut -f4 -d" "`
+export GEOGRAPHICLIB_DATA=..
 F='<font color="blue">'
 G='</font>'
 POSITION1=
@@ -98,7 +99,7 @@ cat <<EOF
     <hr>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/GeoidEval.1.html">
-        GeoidEval</a>
+        GeoidEval (version $VERSION)</a>
       computes the height of the geoid above the WGS84 ellipsoid
       using interpolation in a grid of values for the earth
       gravity models,

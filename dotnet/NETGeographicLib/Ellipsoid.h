@@ -402,9 +402,8 @@ namespace NETGeographicLib
          *   section at latitude &phi; inclined at an angle \e azi to the
          *   meridian (meters).
          *
-         * &phi; must lie in the range [&minus;90&deg;, 90&deg;] and \e
-         * azi must lie in the range [&minus;540&deg;, 540&deg;); the
-         * result is undefined if either of conditions does not hold.
+         * &phi; must lie in the range [&minus;90&deg;, 90&deg;]; the
+         * result is undefined if this condition does not hold.
          **********************************************************************/
         double NormalCurvatureRadius(double phi, double azi);
         ///@}

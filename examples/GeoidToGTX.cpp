@@ -1,6 +1,6 @@
 // Write out a gtx file of geoid heights above the ellipsoid.  For egm2008 at
 // 1' resolution this takes about 40 mins on a 8-processor Intel 2.66 GHz
-// machine using OpenMP (-DHAVE_OPENMP=1).
+// machine using OpenMP.
 //
 // For the format of gtx files, see
 // http://vdatum.noaa.gov/dev/gtx_info.html#dev_gtx_binary
@@ -19,6 +19,12 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+
+#if defined(_OPENMP)
+#define HAVE_OPENMP 1
+#else
+#define HAVE_OPENMP 0
+#endif
 
 #if HAVE_OPENMP
 #  include <omp.h>

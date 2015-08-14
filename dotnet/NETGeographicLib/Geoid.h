@@ -156,8 +156,7 @@ namespace NETGeographicLib
          * parallels \e south and \e north and the meridians \e west and \e east.
          * \e east is always interpreted as being east of \e west, if necessary by
          * adding 360&deg; to its value.  \e south and \e north should be in
-         * the range [&minus;90&deg;, 90&deg;]; \e west and \e east should
-         * be in the range [&minus;540&deg;, 540&deg;).
+         * the range [&minus;90&deg;, 90&deg;].
          **********************************************************************/
         void CacheArea(double south, double west, double north, double east);
 
@@ -196,8 +195,7 @@ namespace NETGeographicLib
          *   never happens if (\e lat, \e lon) is within a successfully cached area.
          * @return geoid height (meters).
          *
-         * The latitude should be in [&minus;90&deg;, 90&deg;] and
-         * longitude should be in [&minus;540&deg;, 540&deg;).
+         * The latitude should be in [&minus;90&deg;, 90&deg;].
          **********************************************************************/
         double Height(double lat, double lon);
 
@@ -212,13 +210,12 @@ namespace NETGeographicLib
          *   never happens if (\e lat, \e lon) is within a successfully cached area.
          * @return geoid height (meters).
          *
-         * The latitude should be in [&minus;90&deg;, 90&deg;] and
-         * longitude should be in [&minus;540&deg;, 540&deg;).  As a result
-         * of the way that the geoid data is stored, the calculation of gradients
-         * can result in large quantization errors.  This is particularly acute for
-         * fine grids, at high latitudes, and for the easterly gradient.  If you
-         * need to compute the direction of the acceleration due to gravity
-         * accurately, you should use GravityModel::Gravity.
+         * The latitude should be in [&minus;90&deg;, 90&deg;].  As a result of
+         * the way that the geoid data is stored, the calculation of gradients
+         * can result in large quantization errors.  This is particularly acute
+         * for fine grids, at high latitudes, and for the easterly gradient.
+         * If you need to compute the direction of the acceleration due to
+         * gravity accurately, you should use GravityModel::Gravity.
          **********************************************************************/
         double Height(double lat, double lon,
             [System::Runtime::InteropServices::Out] double% gradn,

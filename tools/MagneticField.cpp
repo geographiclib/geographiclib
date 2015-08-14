@@ -2,7 +2,7 @@
  * \file MagneticField.cpp
  * \brief Command line utility for evaluating magnetic fields
  *
- * Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     using namespace GeographicLib;
     typedef Math::real real;
     Utility::set_digits();
-    bool verbose = false;
+    bool verbose = false, longfirst = false;
     std::string dir;
     std::string model = MagneticModel::DefaultMagneticName();
     std::string istring, ifile, ofile, cdelim;
@@ -82,6 +82,8 @@ int main(int argc, char* argv[]) {
         }
       } else if (arg == "-r")
         rate = !rate;
+      else if (arg == "-w")
+        longfirst = true;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
@@ -230,10 +232,11 @@ int main(int argc, char* argv[]) {
                   << m.MaxHeight()/1000 << "km]\n";
       const MagneticCircle c(circle ? m.Circle(time, lat, h) :
                              MagneticCircle());
-      std::string s, stra, strb;
+      std::string s, eol, stra, strb;
+      std::istringstream str(s);
       while (std::getline(*input, s)) {
         try {
-          std::string eol("\n");
+          eol = "\n";
           if (!cdelim.empty()) {
             std::string::size_type n = s.find(cdelim);
             if (n != std::string::npos) {
@@ -241,7 +244,7 @@ int main(int argc, char* argv[]) {
               s = s.substr(0, n);
             }
           }
-          std::istringstream str(s);
+          str.clear(); str.str(s);
           if (!(timeset || circle)) {
             if (!(str >> stra))
               throw GeographicErr("Incomplete input: " + s);
@@ -265,13 +268,10 @@ int main(int argc, char* argv[]) {
             lon = DMS::Decode(strb, ind);
             if (ind == DMS::LATITUDE)
               throw GeographicErr("Bad hemisphere letter on " + strb);
-            if (lon < -540 || lon >= 540)
-              throw GeographicErr("Longitude " + strb +
-                                  " not in [-540d, 540d)");
           } else {
             if (!(str >> stra >> strb))
               throw GeographicErr("Incomplete input: " + s);
-            DMS::DecodeLatLon(stra, strb, lat, lon);
+            DMS::DecodeLatLon(stra, strb, lat, lon, longfirst);
             h = 0;              // h is optional
             if (str >> h) {
               if (h < m.MinHeight() - hguard || h > m.MaxHeight() + hguard)

@@ -46,6 +46,11 @@ namespace GeographicLib {
    *   identity.  (This is affected in predictable ways by errors in
    *   determining the latitude band and by loss of precision in the MGRS
    *   coordinates.)
+   * - The trailing digits produced by Forward are consistent as the precision
+   *   is varied.  Specifically, the digits are obtained by operating on the
+   *   easting with &lfloor;10<sup>6</sup> <i>x</i>&rfloor; and extracting the
+   *   required digits from the resulting number (and similarly for the
+   *   northing).
    * - All MGRS coordinates truncate to legal 100 km blocks.  All MGRS
    *   coordinates with a legal 100 km block prefix are legal (even though the
    *   latitude band letter may now belong to a neighboring band).
@@ -69,21 +74,6 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT MGRS {
   private:
     typedef Math::real real;
-    // The smallest length s.t., 1.0e7 - eps() < 1.0e7 (approx 1.9 nm)
-    static inline real eps() {
-      using std::pow;
-      // 25 = ceil(log_2(2e7)) -- use half circumference here because
-      // northing 195e5 is a legal in the "southern" hemisphere.
-      static const real eps = pow(real(0.5), Math::digits() - 25);
-      return eps;
-    }
-    // The smallest angle s.t., 90 - angeps() < 90 (approx 50e-12 arcsec)
-    static inline real angeps() {
-      using std::pow;
-      // 7 = ceil(log_2(90))
-      static const real angeps = pow(real(0.5), Math::digits() - 7);
-      return angeps;
-    }
     static const std::string hemispheres_;
     static const std::string utmcols_[3];
     static const std::string utmrow_;
@@ -107,6 +97,8 @@ namespace GeographicLib {
       utmevenrowshift_ = 5,
       // Maximum precision is um
       maxprec_ = 5 + 6,
+      // For generating digits at maxprec
+      mult_ = 1000000,
     };
     static void CheckCoords(bool utmp, bool& northp, real& x, real& y);
     static int UTMRow(int iband, int icol, int irow);
@@ -182,15 +174,16 @@ namespace GeographicLib {
      *   allocated.
      *
      * \e prec specifies the precision of the MGRS string as follows:
-     * - prec = &minus;1 (min), only the grid zone is returned
-     * - prec = 0 (min), 100 km
-     * - prec = 1, 10 km
-     * - prec = 2, 1 km
-     * - prec = 3, 100 m
-     * - prec = 4, 10 m
-     * - prec = 5, 1 m
-     * - prec = 6, 0.1 m
-     * - prec = 11 (max), 1 &mu;m
+     * - \e prec = &minus;1 (min), only the grid zone is returned
+     * - \e prec = 0, 100 km
+     * - \e prec = 1, 10 km
+     * - \e prec = 2, 1 km
+     * - \e prec = 3, 100 m
+     * - \e prec = 4, 10 m
+     * - \e prec = 5, 1 m
+     * - \e prec = 6, 0.1 m
+     * - &hellip;
+     * - \e prec = 11 (max), 1 &mu;m
      *
      * UTM eastings are allowed to be in the range [100 km, 900 km], northings
      * are allowed to be in in [0 km, 9500 km] for the northern hemisphere and

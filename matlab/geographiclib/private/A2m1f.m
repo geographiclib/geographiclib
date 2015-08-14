@@ -7,10 +7,10 @@ function A2m1 = A2m1f(epsi)
   persistent coeff
   if isempty(coeff)
     coeff = [ ...
-        25, 36, 64, 0, 256, ...
+        -11, -28, -192, 0, 256, ...
             ];
   end
   eps2 = epsi.^2;
   t = polyval(coeff(1 : end - 1), eps2) / coeff(end);
-  A2m1 = t .* (1 - epsi) - epsi;
+  A2m1 = (t - epsi) ./ (1 + epsi);
 end

@@ -74,8 +74,7 @@ namespace GeographicLib {
      *
      * No false easting or northing is added.  \e lat should be in the range
      * (&minus;90&deg;, 90&deg;] for \e northp = true and in the range
-     * [&minus;90&deg;, 90&deg;) for \e northp = false; \e lon should
-     * be in the range [&minus;540&deg;, 540&deg;).
+     * [&minus;90&deg;, 90&deg;) for \e northp = false.
      **********************************************************************/
     void Forward(bool northp, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const;

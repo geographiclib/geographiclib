@@ -2,7 +2,7 @@
  * \file GeodesicLine.hpp
  * \brief Header for GeographicLib::GeodesicLine class
  *
- * Copyright (c) Charles Karney (2009-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -181,8 +181,7 @@ namespace GeographicLib {
      *   i.e., which quantities can be returned in calls to
      *   GeodesicLine::Position.
      *
-     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;]; \e lon1 and \e
-     * azi1 should be in the range [&minus;540&deg;, 540&deg;).
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
      *
      * The GeodesicLine::mask values are
      * - \e caps |= GeodesicLine::LATITUDE for the latitude \e lat2; this is
@@ -516,10 +515,7 @@ namespace GeographicLib {
      *
      * With the GeodesicLine::LONG_UNROLL bit set, the quantity \e lon2 &minus;
      * \e lon1 indicates how many times and in what sense the geodesic
-     * encircles the ellipsoid.  Because \e lon2 might be outside the normal
-     * allowed range for longitudes, [&minus;540&deg;, 540&deg;), be sure to
-     * normalize it with Math::AngNormalize2 before using it in other
-     * GeographicLib calls.
+     * encircles the ellipsoid.
      **********************************************************************/
     Math::real GenPosition(bool arcmode, real s12_a12, unsigned outmask,
                            real& lat2, real& lon2, real& azi2,
@@ -558,21 +554,21 @@ namespace GeographicLib {
     /**
      * @return \e azi0 the azimuth (degrees) of the geodesic line as it crosses
      *   the equator in a northward direction.
+     *
+     * The result lies in [&minus;90&deg;, 90&deg;].
      **********************************************************************/
     Math::real EquatorialAzimuth() const {
-      using std::atan2;
-      return Init() ?
-        atan2(_salp0, _calp0) / Math::degree() : Math::NaN();
+      return Init() ? Math::atan2d(_salp0, _calp0) : Math::NaN();
     }
 
     /**
      * @return \e a1 the arc length (degrees) between the northward equatorial
      *   crossing and point 1.
+     *
+     * The result lies in (&minus;180&deg;, 180&deg;].
      **********************************************************************/
     Math::real EquatorialArc() const {
-      using std::atan2;
-      return Init() ?
-        atan2(_ssig1, _csig1) / Math::degree() : Math::NaN();
+      return Init() ? Math::atan2d(_ssig1, _csig1) : Math::NaN();
     }
 
     /**

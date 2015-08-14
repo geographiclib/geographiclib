@@ -41,8 +41,9 @@ if test "$RADIUS" = "$DEFAULTRADIUS" -a \
 fi
 
 INPUTENC=`encodevalue "$INPUT"`
-COMMAND="GeodSolve -E -f"
 EXECDIR=../bin
+COMMAND="GeodSolve -E -f"
+VERSION=`$EXECDIR/$COMMAND --version | cut -f4 -d" "`
 F='<font color="blue">'
 G='</font>'
 test $TYPE = I && COMMAND="$COMMAND -i"
@@ -292,7 +293,7 @@ cat <<EOF
     <hr>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">
-        GeodSolve</a>
+        GeodSolve (version $VERSION)</a>
       performs geodesic calculations for an arbitrary ellipsoid of
       revolution.  The shortest path between two points on the ellipsoid
       at (<em>lat1</em>, <em>lon1</em>) and (<em>lat2</em>,
@@ -343,13 +344,7 @@ cat <<EOF
     <p>
       GeodSolve is accurate to about 15&nbsp;nanometers (for the WGS84
       ellipsoid) and gives solutions for the inverse problem for any
-      pair of points.  Many other geodesic calculators (based on
-      Vincenty's method) fail for some inputs; for example, the
-      <a href="http://www.ngs.noaa.gov/">
-        NGS</a> online
-      <a href="http://www.ngs.noaa.gov/TOOLS/Inv_Fwd/Inv_Fwd.html">
-        inverse geodesic calculator</a>
-      sometimes fails to terminate.
+      pair of points.
     </p>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/GeodSolve.1.html">

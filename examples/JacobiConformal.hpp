@@ -127,11 +127,8 @@ namespace GeographicLib {
      * &omega; must be in (&minus;180&deg;, 180&deg;].
      **********************************************************************/
     Math::real x(real omg) const {
-      using std::abs; using std::sin; using std::cos;
-      real
-        a = omg * Math::degree(),
-        somg = abs(omg) == 180 ? 0 : sin(a),
-        comg = abs(omg) ==  90 ? 0 : cos(a);
+      real somg, comg;
+      Math::sincosd(omg, somg, comg);
       return x(somg, comg) / Math::degree();
     }
     /**
@@ -159,11 +156,8 @@ namespace GeographicLib {
      * &beta; must be in (&minus;180&deg;, 180&deg;].
      **********************************************************************/
     Math::real y(real bet) const {
-      using std::abs; using std::sin; using std::cos;
-      real
-        a = bet * Math::degree(),
-        sbet = abs(bet) == 180 ? 0 : sin(a),
-        cbet = abs(bet) ==  90 ? 0 : cos(a);
+      real sbet, cbet;
+      Math::sincosd(bet, sbet, cbet);
       return y(sbet, cbet) / Math::degree();
     }
   };
