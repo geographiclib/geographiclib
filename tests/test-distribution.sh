@@ -68,7 +68,7 @@ set -e
 #   doc/scripts/GeographicLib/Math.js
 
 DATE=`date +%F`
-VERSION=1.44
+VERSION=1.45
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 DEVELSOURCE=/u/geographiclib
@@ -420,14 +420,9 @@ cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
 
 # javascript release
-make -C $DEVELSOURCE -f makefile-admin distrib-js
+make -C $DEVELSOURCE -f makefile-admin install-js
 
 # matlab toolbox
-cd $TEMP/matlab
-matlab &
-# remove existing geographiclib path, double click on geographiclib.prj
-# click on "Package".
-mv $TEMP/matlab/geographiclib.mltbx $DEVELSOURCE/geographiclib_toolbox_$VERSION.mltbx
 chmod 644 $DEVELSOURCE/geographiclib_toolbox_$VERSION.*
 mv $DEVELSOURCE/geographiclib_*_$VERSION.* $DEVELSOURCE/matlab-distrib
 
@@ -450,8 +445,8 @@ git push --tags
 # Also to do
 # post release notices
 # set default download files
-# make -f makefile-admin distrib-{cgi,js,html}
-# update home brew
+# make -f makefile-admin distrib-{cgi,html}
+# update home brew (commit message = geographiclib $VERSION)
 # upload matlab packages
 # update binaries for cgi applications
 # trigger build on build-open
