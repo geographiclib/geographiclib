@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2015-08-14
+\date 2015-mm-dd
 
 \section abstract Abstract
 
@@ -1192,7 +1192,7 @@ dependency \verbatim
   <dependency>
     <groupId>net.sf.geographiclib</groupId>
     <artifactId>GeographicLib-Java</artifactId>
-    <version>1.43</version>
+    <version>1.44</version>
   </dependency>
   \endverbatim
 in your <code>pom.xml</code>.
@@ -7002,6 +7002,11 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
+
+ - <a href="http://geographiclib.sf.net/1.44">Version 1.45</a>
+   (released 2015-mm-dd)
+   - Fix problems related to max(-0.0, +0.0) returning -0.0 with some
+     languages.
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
    (released 2015-08-14)

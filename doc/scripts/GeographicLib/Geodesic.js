@@ -709,12 +709,12 @@ GeographicLib.GeodesicLine = {};
     // norm(somg2, comg2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
-    vals.sig12 = Math.atan2(Math.max(vals.csig1 * vals.ssig2 -
-                                     vals.ssig1 * vals.csig2, 0),
+    vals.sig12 = Math.atan2(0 + Math.max(0, vals.csig1 * vals.ssig2 -
+                                         vals.ssig1 * vals.csig2),
                             vals.csig1 * vals.csig2 + vals.ssig1 * vals.ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
-    omg12 = Math.atan2(Math.max(comg1 * somg2 - somg1 * comg2, 0),
+    omg12 = Math.atan2(0 + Math.max(0, comg1 * somg2 - somg1 * comg2),
                        comg1 * comg2 + somg1 * somg2);
     var B312, h0;
     var k2 = m.sq(calp0) * this._ep2;
@@ -848,7 +848,7 @@ GeographicLib.GeodesicLine = {};
       ssig2 = sbet2; csig2 = calp2 * cbet2;
 
       // sig12 = sig2 - sig1
-      sig12 = Math.atan2(Math.max(csig1 * ssig2 - ssig1 * csig2, 0),
+      sig12 = Math.atan2(0 + Math.max(0, csig1 * ssig2 - ssig1 * csig2),
                          csig1 * csig2 + ssig1 * ssig2);
       nvals = this.Lengths(this._n, sig12,
                            ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
@@ -973,7 +973,7 @@ GeographicLib.GeodesicLine = {};
             nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
             if (nsalp1 > 0 && Math.abs(dalp1) < Math.PI) {
               calp1 = calp1 * cdalp1 - salp1 * sdalp1;
-              salp1 = Math.max(0, nsalp1);
+              salp1 = nsalp1;
               // norm(salp1, calp1);
               t = m.hypot(salp1, calp1); salp1 /= t; calp1 /= t;
               // In some regimes we don't get quadratic convergence because

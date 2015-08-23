@@ -634,7 +634,7 @@ public class Geodesic {
         ssig2 = sbet2, csig2 = calp2 * cbet2;
 
       // sig12 = sig2 - sig1
-      sig12 = Math.atan2(Math.max(csig1 * ssig2 - ssig1 * csig2, 0.0),
+      sig12 = Math.atan2(Math.max(0.0, csig1 * ssig2 - ssig1 * csig2),
                     csig1 * csig2 + ssig1 * ssig2);
       {
         LengthsV v =
@@ -1381,11 +1381,11 @@ public class Geodesic {
     // GeoMath.norm(somg2, comg2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
-    w.sig12 = Math.atan2(Math.max(w.csig1 * w.ssig2 - w.ssig1 * w.csig2, 0.0),
+    w.sig12 = Math.atan2(Math.max(0.0, w.csig1 * w.ssig2 - w.ssig1 * w.csig2),
                   w.csig1 * w.csig2 + w.ssig1 * w.ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
-    omg12 = Math.atan2(Math.max(comg1 * somg2 - somg1 * comg2, 0.0),
+    omg12 = Math.atan2(Math.max(0.0, comg1 * somg2 - somg1 * comg2),
                   comg1 * comg2 + somg1 * somg2);
     double B312, h0;
     double k2 = GeoMath.sq(calp0) * _ep2;

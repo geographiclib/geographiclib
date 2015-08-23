@@ -206,6 +206,14 @@ add_test (NAME GeodSolve25 COMMAND GeodSolve
 set_tests_properties (GeodSolve25 PROPERTIES PASS_REGULAR_EXPRESSION
   "89\\.9[0-9]* 0\\.00000000000 0\\.00000000000")
 
+# Check max(-0.0,+0.0) issue 2015-08-22
+add_test (NAME GeodSolve26 COMMAND GeodSolve
+  -i -p 0 --input-string "0 0 0 179.5")
+add_test (NAME GeodSolve27 COMMAND GeodSolve
+  -i -p 0 --input-string "0 0 0 179.5" -E)
+set_tests_properties (GeodSolve26 GeodSolve27
+  PROPERTIES PASS_REGULAR_EXPRESSION "55\\.96650 124\\.03350 19980862")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")

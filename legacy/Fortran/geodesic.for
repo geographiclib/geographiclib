@@ -693,7 +693,7 @@
         csig2 = calp2 * cbet2
 
 * sig12 = sig2 - sig1
-        sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0d0),
+        sig12 = atan2(0d0 + max(0d0, csig1 * ssig2 - ssig1 * csig2),
      +      csig1 * csig2 + ssig1 * ssig2)
         call Lengs(n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
      +      cbet1, cbet2, lmask,
@@ -1464,11 +1464,11 @@
 * norm2(somg2, comg2); -- don't need to normalize!
 
 * sig12 = sig2 - sig1, limit to [0, pi]
-      sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0d0),
+      sig12 = atan2(0d0 + max(0d0, csig1 * ssig2 - ssig1 * csig2),
      +    csig1 * csig2 + ssig1 * ssig2)
 
 * omg12 = omg2 - omg1, limit to [0, pi]
-      omg12 = atan2(max(comg1 * somg2 - somg1 * comg2, 0d0),
+      omg12 = atan2(0d0 + max(0d0, comg1 * somg2 - somg1 * comg2),
      +    comg1 * comg2 + somg1 * somg2)
       k2 = calp0**2 * ep2
       eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)

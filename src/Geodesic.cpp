@@ -228,7 +228,7 @@ namespace GeographicLib {
         ssig2 = sbet2, csig2 = calp2 * cbet2;
 
       // sig12 = sig2 - sig1
-      sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, real(0)),
+      sig12 = atan2(max(real(0), csig1 * ssig2 - ssig1 * csig2),
                     csig1 * csig2 + ssig1 * ssig2);
       {
         real dummy;
@@ -794,11 +794,11 @@ namespace GeographicLib {
     // Math::norm(somg2, comg2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
-    sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, real(0)),
+    sig12 = atan2(max(real(0), csig1 * ssig2 - ssig1 * csig2),
                   csig1 * csig2 + ssig1 * ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
-    omg12 = atan2(max(comg1 * somg2 - somg1 * comg2, real(0)),
+    omg12 = atan2(max(real(0), comg1 * somg2 - somg1 * comg2),
                   comg1 * comg2 + somg1 * somg2);
     real B312, h0;
     real k2 = Math::sq(calp0) * _ep2;

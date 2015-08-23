@@ -628,7 +628,7 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
     ssig1 : sbet1, csig1 : calp1 * cbet1,
     ssig2 : sbet2, csig2 : calp2 * cbet2,
     /* sig12 = sig2 - sig1 */
-    sig12 : atan2x(max(csig1 * ssig2 - ssig1 * csig2, 0b0),
+    sig12 : atan2x(0b0 + max(0b0, csig1 * ssig2 - ssig1 * csig2),
       csig1 * csig2 + ssig1 * ssig2),
     block([r],
       r:Lengths(g, g[g_n], E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
@@ -1084,16 +1084,16 @@ block([salp2 : 0b0, calp2 : 0b0, sig12 : 0b0,
   block([t:norm2(ssig2, csig2)], ssig2:t[1], csig2:t[2]),
   /* norm2(&somg2, &comg2); -- don't need to normalize! */
   /* sig12 = sig2 - sig1, limit to [0, pi] */
-  sig12 : atan2x(max(csig1 * ssig2 - ssig1 * csig2, 0b0),
+  sig12 : atan2x(0b0 + max(0b0, csig1 * ssig2 - ssig1 * csig2),
     csig1 * csig2 + ssig1 * ssig2),
   /* omg12 = omg2 - omg1, limit to [0, pi] */
-  omg12 : atan2x(max(comg1 * somg2 - somg1 * comg2, 0b0),
+  omg12 : atan2x(0b0 + max(0b0, comg1 * somg2 - somg1 * comg2),
     comg1 * comg2 + somg1 * somg2),
   k2 : sq(calp0) * g[g_ep2],
   if exact then block([chi12],
     E : Ef(-k2, -g[g_ep2]),
-    chi12 : atan2x(max(cchi1 * somg2 - somg1 * cchi2, 0b0),
-                       cchi1 * cchi2 + somg1 * somg2),
+    chi12 : atan2x(0b0 + max(0b0, cchi1 * somg2 - somg1 * cchi2),
+      cchi1 * cchi2 + somg1 * somg2),
     lam12 : chi12 -
       g[g_e2]/g[g_f1] * salp0 * E[e_hc] / (pi/2) *
       (sig12 + deltah(ssig2, csig2, dn2, E[e_k2], E[e_alpha2], E[e_hc]) -

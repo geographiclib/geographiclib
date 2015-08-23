@@ -147,10 +147,10 @@ static real polyval(int N, const real p[], real x) {
 }
 
 static real minx(real x, real y)
-{ return x < y ? x : y; }
+{ return !(x < y) ? x : y; }
 
 static real maxx(real x, real y)
-{ return x > y ? x : y; }
+{ return x < y ? y : x; }
 
 static void swapx(real* x, real* y)
 { real t = *x; *x = *y; *y = t; }
@@ -731,7 +731,7 @@ real geod_geninverse(const struct geod_geodesic* g,
     ssig2 = sbet2; csig2 = calp2 * cbet2;
 
     /* sig12 = sig2 - sig1 */
-    sig12 = atan2(maxx(csig1 * ssig2 - ssig1 * csig2, (real)(0)),
+    sig12 = atan2(maxx((real)(0), csig1 * ssig2 - ssig1 * csig2),
                   csig1 * csig2 + ssig1 * ssig2);
     Lengths(g, g->n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
             cbet1, cbet2, &s12x, &m12x, 0,
@@ -1345,11 +1345,11 @@ real Lambda12(const struct geod_geodesic* g,
   /* norm2(&somg2, &comg2); -- don't need to normalize! */
 
   /* sig12 = sig2 - sig1, limit to [0, pi] */
-  sig12 = atan2(maxx(csig1 * ssig2 - ssig1 * csig2, (real)(0)),
+  sig12 = atan2(maxx((real)(0), csig1 * ssig2 - ssig1 * csig2),
                 csig1 * csig2 + ssig1 * ssig2);
 
   /* omg12 = omg2 - omg1, limit to [0, pi] */
-  omg12 = atan2(maxx(comg1 * somg2 - somg1 * comg2, (real)(0)),
+  omg12 = atan2(maxx((real)(0), comg1 * somg2 - somg1 * comg2),
                 comg1 * comg2 + somg1 * somg2);
   k2 = sq(calp0) * g->ep2;
   eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
