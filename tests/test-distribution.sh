@@ -38,6 +38,8 @@ set -e
 #   configure.ac (AC_INIT, GEOGRAPHICLIB_VERSION_* LT_*)
 #   tests/test-distribution.sh
 #   src/GeographicLib.pro lib version
+#   doc/GeographicLib.dox.in
+#   doc/NETGeographicLib.dox
 
 # Need updating if underlying library changes
 

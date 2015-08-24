@@ -1,7 +1,7 @@
 /**
  * <h1>Geodesic routines from GeographicLib implemented in Java</h1>
  * @author Charles F. F. Karney (charles@karney.com)
- * @version 1.44
+ * @version 1.45
  *
  * <h2>Abstract</h2>
  * <p>
@@ -19,15 +19,15 @@
  * GeographicLib-Java is part of GeographicLib which available for download at
  * <ul>
  * <li>
- *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.44.tar.gz">
- *   GeographicLib-1.44.tar.gz</a>
+ *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.45.tar.gz">
+ *   GeographicLib-1.45.tar.gz</a>
  * <li>
- *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.44.zip">
- *   GeographicLib-1.44.zip</a>
+ *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.45.zip">
+ *   GeographicLib-1.45.zip</a>
  * </ul>
  * <p>
  * as either a compressed tar file (tar.gz) or a zip file.  After unpacking
- * the source, the Java library can be found in GeographicLib-1.44/java.  (This
+ * the source, the Java library can be found in GeographicLib-1.45/java.  (This
  * library is completely independent from the rest of GeodegraphicLib.)  The
  * library consists of the files in the src/main/java/net/sf/geographiclib
  * subdirectory.
@@ -40,7 +40,7 @@
  *   <dependency>
  *     <groupId>net.sf.geographiclib</groupId>
  *     <artifactId>GeographicLib-Java</artifactId>
- *     <version>1.44</version>
+ *     <version>1.45</version>
  *   </dependency> }</pre>
  * in your {@code pom.xml}.
  *
@@ -105,9 +105,9 @@
  * some additional packages to your local repository.)  Then compile and run
  * Inverse.java with <pre>
  * cd inverse/src/main/java
- * javac -cp .:../../../../target/GeographicLib-Java-1.44.jar Inverse.java
+ * javac -cp .:../../../../target/GeographicLib-Java-1.45.jar Inverse.java
  * echo -30 0 29.5 179.5 |
- *   java -cp .:../../../../target/GeographicLib-Java-1.44.jar Inverse </pre>
+ *   java -cp .:../../../../target/GeographicLib-Java-1.45.jar Inverse </pre>
  *
  * <h3>Using maven to build and run {@code Inverse.java}</h3>
  * The sample code includes a {@code pom.xml} which specifies
@@ -209,7 +209,10 @@
  * <p>
  * <ul>
  * <li>
- *   <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
+ *   <a href="http://geographiclib.sf.net/1.45/java">Version 1.45</a>
+ *   (released 2015-mm-dd)
+ * <li>
+ *   <a href="http://geographiclib.sf.net/1.44/java">Version 1.44</a>
  *   (released 2015-08-14)
  * <ul>
  * <li>

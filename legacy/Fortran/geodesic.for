@@ -1013,7 +1013,7 @@
       integer major, minor, patch
 
       major = 1
-      minor = 44
+      minor = 45
       patch = 0
 
       return

@@ -35,7 +35,7 @@ dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
 LT_CURRENT=16
-LT_REVISION=0
+LT_REVISION=1
 LT_AGE=2
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)

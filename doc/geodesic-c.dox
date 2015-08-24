@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in C
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.44
+\version 1.45
 
 \section abstract-c Abstract
 
@@ -27,13 +27,13 @@ about any C compiler.
 \section download-c Downloading the source
 
 The C library is part of %GeographicLib which available for download at
-- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.44.tar.gz">
-  GeographicLib-1.44.tar.gz</a>
-- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.44.zip">
-  GeographicLib-1.44.zip</a>
+- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.45.tar.gz">
+  GeographicLib-1.45.tar.gz</a>
+- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.45.zip">
+  GeographicLib-1.45.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
-the source, the C library can be found in GeographicLib-1.44/legacy/C.
+the source, the C library can be found in GeographicLib-1.45/legacy/C.
 The library consists of two files geodesic.c and geodesic.h.
 
 The library is also included as part of
@@ -138,7 +138,10 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 
 \section changes-c Change log
 
- - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
+ - <a href="http://geographiclib.sf.net/1.45/C">Version 1.45</a>
+   (released 2015-mm-dd)
+
+ - <a href="http://geographiclib.sf.net/1.44/C">Version 1.44</a>
    (released 2015-08-14)
 
    - Improve accuracy of calculations by evaluating trigonometric
