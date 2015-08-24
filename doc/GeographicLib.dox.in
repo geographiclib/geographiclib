@@ -7007,6 +7007,8 @@ git repository for GeographicLib</a>.
    (released 2015-mm-dd)
    - Fix problems related to max(-0.0, +0.0) returning -0.0 with some
      languages.
+   - Add Java implementation of the Gnomonic project (courtesy of
+     Sebastian Mattheis).
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
    (released 2015-08-14)
