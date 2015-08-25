@@ -146,11 +146,12 @@ static real polyval(int N, const real p[], real x) {
   return y;
 }
 
-static real minx(real x, real y)
-{ return !(x < y) ? x : y; }
+// mimic C++ std::min and std::max
+static real minx(real a, real b)
+{ return (b < a) ? b : a; }
 
-static real maxx(real x, real y)
-{ return x < y ? y : x; }
+static real maxx(real a, real b)
+{ return (a < b) ? b : a; }
 
 static void swapx(real* x, real* y)
 { real t = *x; *x = *y; *y = t; }

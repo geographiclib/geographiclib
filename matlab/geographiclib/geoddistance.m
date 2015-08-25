@@ -190,68 +190,70 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
     numit = Z;
     tripn = Z > 0;
     tripb = tripn;
-    gsave = g;
-    for k = 0 : maxit2 - 1
-      if k == 0 && ~any(g), break, end
-      numit(g) = k;
-      [v(g), dv(g), ...
-       salp2(g), calp2(g), sig12(g), ...
-       ssig1(g), csig1(g), ssig2(g), csig2(g), epsi(g), omg12(g)] = ...
-          Lambda12(sbet1(g), cbet1(g), dn1(g), ...
-                   sbet2(g), cbet2(g), dn2(g), ...
-                   salp1(g), calp1(g), f, A3x, C3x);
-      v = v - lam12;
-      g = g & ~(tripb | ~(abs(v) >= ((tripn * 6) + 2) * tol0));
-      if ~any(g), break, end
+    if any(g)
+      gsave = g;
+      for k = 0 : maxit2 - 1
+        if k == 0 && ~any(g), break, end
+        numit(g) = k;
+        [v(g), dv(g), ...
+         salp2(g), calp2(g), sig12(g), ...
+         ssig1(g), csig1(g), ssig2(g), csig2(g), epsi(g), omg12(g)] = ...
+            Lambda12(sbet1(g), cbet1(g), dn1(g), ...
+                     sbet2(g), cbet2(g), dn2(g), ...
+                     salp1(g), calp1(g), f, A3x, C3x);
+        v = v - lam12;
+        g = g & ~(tripb | ~(abs(v) >= ((tripn * 6) + 2) * tol0));
+        if ~any(g), break, end
 
-      c = g & v > 0;
-      if k <= maxit1
-        c = c & calp1 ./ salp1 > calp1b ./ salp1b;
+        c = g & v > 0;
+        if k <= maxit1
+          c = c & calp1 ./ salp1 > calp1b ./ salp1b;
+        end
+        salp1b(c) = salp1(c); calp1b(c) = calp1(c);
+
+        c = g & v < 0;
+        if k <= maxit1
+          c = c & calp1 ./ salp1 < calp1a ./ salp1a;
+        end
+        salp1a(c) = salp1(c); calp1a(c) = calp1(c);
+
+        if k == maxit1, tripn(g) = false; end
+        if k < maxit1
+          dalp1 = -v ./ dv;
+          sdalp1 = sin(dalp1); cdalp1 = cos(dalp1);
+          nsalp1 = salp1 .* cdalp1 + calp1 .* sdalp1;
+          calp1(g) = calp1(g) .* cdalp1(g) - salp1(g) .* sdalp1(g);
+          salp1(g) = nsalp1(g);
+          tripn = g & abs(v) <= 16 * tol0;
+          c = g & ~(dv > 0 & nsalp1 > 0 & abs(dalp1) < pi);
+          tripn(c) = false;
+        else
+          c = g;
+        end
+
+        salp1(c) = (salp1a(c) + salp1b(c))/2;
+        calp1(c) = (calp1a(c) + calp1b(c))/2;
+        [salp1(g), calp1(g)] = norm2(salp1(g), calp1(g));
+        tripb(c) = abs(salp1a(c)-salp1(c)) + (calp1a(c)-calp1(c)) < tolb ...
+            |      abs(salp1(c)-salp1b(c)) + (calp1(c)-calp1b(c)) < tolb;
       end
-      salp1b(c) = salp1(c); calp1b(c) = calp1(c);
 
-      c = g & v < 0;
-      if k <= maxit1
-        c = c & calp1 ./ salp1 < calp1a ./ salp1a;
-      end
-      salp1a(c) = salp1(c); calp1a(c) = calp1(c);
-
-      if k == maxit1, tripn(g) = false; end
-      if k < maxit1
-        dalp1 = -v ./ dv;
-        sdalp1 = sin(dalp1); cdalp1 = cos(dalp1);
-        nsalp1 = salp1 .* cdalp1 + calp1 .* sdalp1;
-        calp1(g) = calp1(g) .* cdalp1(g) - salp1(g) .* sdalp1(g);
-        salp1(g) = nsalp1(g);
-        tripn = g & abs(v) <= 16 * tol0;
-        c = g & ~(dv > 0 & nsalp1 > 0 & abs(dalp1) < pi);
-        tripn(c) = false;
-      else
-        c = g;
+      g = gsave;
+      if bitand(2+4, lengthmask)
+        % set distance bit if redp or scalp, so that J12 is computed in a
+        % canonical way.
+        lengthmask = bitor(1, lengthmask);
       end
 
-      salp1(c) = (salp1a(c) + salp1b(c))/2;
-      calp1(c) = (calp1a(c) + calp1b(c))/2;
-      [salp1(g), calp1(g)] = norm2(salp1(g), calp1(g));
-      tripb(c) = abs(salp1a(c) - salp1(c)) + (calp1a(c) - calp1(c)) < tolb | ...
-          abs(salp1(c) - salp1b(c)) + (calp1(c) - calp1b(c)) < tolb;
+      [s12(g), m12(g), ~, M12(g), M21(g)] = ...
+          Lengths(epsi(g), sig12(g), ...
+                  ssig1(g), csig1(g), dn1(g), ssig2(g), csig2(g), dn2(g), ...
+                  cbet1(g), cbet2(g), lengthmask, ep2);
+
+      m12(g) = m12(g) * b;
+      s12(g) = s12(g) * b;
+      omg12(g) = lam12(g) - omg12(g);
     end
-
-    g = gsave;
-    if bitand(2+4, lengthmask)
-      % set distance bit if redp or scalp, so that J12 is computed in a
-      % canonical way.
-      lengthmask = bitor(1, lengthmask);
-    end
-
-    [s12(g), m12(g), ~, M12(g), M21(g)] = ...
-        Lengths(epsi(g), sig12(g), ...
-                ssig1(g), csig1(g), dn1(g), ssig2(g), csig2(g), dn2(g), ...
-                cbet1(g), cbet2(g), lengthmask, ep2);
-
-    m12(g) = m12(g) * b;
-    s12(g) = s12(g) * b;
-    omg12(g) = lam12(g) - omg12(g);
   end
 
   s12 = 0 + s12;
