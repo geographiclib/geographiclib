@@ -171,6 +171,7 @@ EOF
 
 cd $TEMP/gitr/geographiclib
 git checkout release
+git config user.email karney@users.sourceforge.net
 find . -type f | grep -v '/\.git' | xargs rm
 tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
 (

@@ -10,13 +10,16 @@ package net.sf.geographiclib;
 /**
  * The results of gnomonic projection.
  * <p>
+
  * This is used to return the results for a gnomonic projection of a point
  * (<i>lat</i>, <i>lon</i>) given a center point of projection (<i>lat0</i>,
- * <i>lon0</i>). The returned GnomonicData objects always include the parameters
- * provided to {@link Gnomonic#Forward(double, double, double, double)
- * Gnomonic.Forward} and
- * {@link Gnomonic#Reverse(double, double, double, double) Gnomonic.Reverse} and
- * it always includes the fields <i>x</i>, <i>y</i>, <i>azi</i>. and <i>rk</i>.
+ * <i>lon0</i>). The returned GnomonicData objects always include the
+ * parameters provided to
+ * {@link Gnomonic#Forward(double, double, double, double) Gnomonic.Forward}
+ * and
+ * {@link Gnomonic#Reverse(double, double, double, double) Gnomonic.Reverse}
+ * and it always includes the fields <i>x</i>, <i>y</i>, <i>azi</i>. and
+ * <i>rk</i>.
  **********************************************************************/
 public class GnomonicData {
   /**

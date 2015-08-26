@@ -146,7 +146,7 @@ static real polyval(int N, const real p[], real x) {
   return y;
 }
 
-// mimic C++ std::min and std::max
+/* mimic C++ std::min and std::max */
 static real minx(real a, real b)
 { return (b < a) ? b : a; }
 

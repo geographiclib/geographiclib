@@ -11,19 +11,20 @@ package net.sf.geographiclib;
  * Gnomonic projection.
  * <p>
  * <i>Note: Gnomonic.java has been ported to Java from its C++ equivalent
- * Gnomonic.cpp, authored by C. F. F. Karney and licensed under MIT/X11 license.
- * The following documentation is mostly the same as for its C++ equivalent, but
- * has been adopted to apply to this Java implementation.</i>
+ * Gnomonic.cpp, authored by C. F. F. Karney and licensed under MIT/X11
+ * license.  The following documentation is mostly the same as for its C++
+ * equivalent, but has been adopted to apply to this Java implementation.</i>
  * <p>
  * Gnomonic projection centered at an arbitrary position <i>C</i> on the
  * ellipsoid. This projection is derived in Section 8 of
  * <ul>
  * <li>
  * C. F. F. Karney, <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
- * Algorithms for geodesics</a>, J. Geodesy <b>87</b>, 43--55 (2013); DOI: <a
- * href="http://dx.doi.org/10.1007/s00190-012-0578-z">
- * 10.1007/s00190-012-0578-z</a>; addenda: <a
- * href="http://geographiclib.sf.net/geod-addenda.html"> geod-addenda.html</a>.
+ * Algorithms for geodesics</a>, J. Geodesy <b>87</b>, 43&ndash;55 (2013);
+ * DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+ * 10.1007/s00190-012-0578-z</a>; addenda:
+ * <a href="http://geographiclib.sf.net/geod-addenda.html">
+ * geod-addenda.html</a>.
  * </li>
  * </ul>
  * <p>
@@ -34,11 +35,13 @@ package net.sf.geographiclib;
  * <i>y</i> of <i>P</i> in gnomonic projection with <i>x</i> = &rho; sin
  * <i>azi1</i>; <i>y</i> = &rho; cos <i>azi1</i>, where <i>azi1</i> is the
  * azimuth of the geodesic at <i>C</i>. The method
- * {@link Gnomonic#Forward(double, double, double, double)} performs the forward
- * projection and {@link Gnomonic#Reverse(double, double, double, double)} is
- * the inverse of the projection. The methods also return the azimuth <i>azi</i>
- * of the geodesic at <i>P</i> and reciprocal scale <i>rk</i> in the azimuthal
- * direction. The scale in the radial direction is 1/<i>rk</i><sup>2</sup>.
+ * {@link Gnomonic#Forward(double, double, double, double)} performs the
+ * forward projection and
+ * {@link Gnomonic#Reverse(double, double, double, double)} is the
+ * inverse of the projection. The methods also return the azimuth
+ * <i>azi</i> of the geodesic at <i>P</i> and reciprocal scale
+ * <i>rk</i> in the azimuthal direction. The scale in the radial
+ * direction is 1/<i>rk</i><sup>2</sup>.
  * <p>
  * For a sphere, &rho; reduces to <i>a</i> tan(<i>s12</i>/<i>a</i>), where
  * <i>s12</i> is the length of the geodesic from <i>C</i> to <i>P</i>, and the
@@ -58,13 +61,13 @@ package net.sf.geographiclib;
  * <br>
  * where <i>K</i> is the Gaussian curvature.
  * <p>
- * This result applies for any surface. For an ellipsoid of revolution, consider
- * all geodesics whose end points are within a distance <i>r</i> of <i>C</i>.
- * For a given <i>r</i>, the deviation is maximum when the latitude of <i>C</i>
- * is 45&deg;, when endpoints are a distance <i>r</i> away, and when their
- * azimuths from the center are &plusmn; 45&deg; or &plusmn; 135&deg;. To lowest
- * order in <i>r</i> and the flattening <i>f</i>, the deviation is <i>f</i>
- * (<i>r</i>/2<i>a</i>)<sup>3</sup> <i>r</i>.
+ * This result applies for any surface. For an ellipsoid of revolution,
+ * consider all geodesics whose end points are within a distance <i>r</i> of
+ * <i>C</i>.  For a given <i>r</i>, the deviation is maximum when the latitude
+ * of <i>C</i> is 45&deg;, when endpoints are a distance <i>r</i> away, and
+ * when their azimuths from the center are &plusmn; 45&deg; or &plusmn;
+ * 135&deg;. To lowest order in <i>r</i> and the flattening <i>f</i>, the
+ * deviation is <i>f</i> (<i>r</i>/2<i>a</i>)<sup>3</sup> <i>r</i>.
  * <p>
  * The conversions all take place using a Geodesic object (by default
  * Geodesic::WGS84). For more information on geodesics see \ref geodesic.
@@ -87,15 +90,15 @@ package net.sf.geographiclib;
  * that the values of the latitude match for the center point and perform a
  * central projection onto the plane tangent to the conformal sphere at the
  * center point. This causes normal sections through the center point to appear
- * as straight lines in the projection; i.e., it generalizes the spherical great
- * circle to a normal section. This was proposed by I. G. Letoval'tsev,
- * Generalization of the %Gnomonic Projection for a Spheroid and the Principal
+ * as straight lines in the projection; i.e., it generalizes the spherical
+ * great circle to a normal section. This was proposed by I. G. Letoval'tsev,
+ * Generalization of the Gnomonic Projection for a Spheroid and the Principal
  * Geodetic Problems Involved in the Alignment of Surface Routes, Geodesy and
- * Aerophotography (5), 271--274 (1963).
+ * Aerophotography (5), 271&ndash;274 (1963).
  * </li>
  * <li>
- * The projection given here. This causes geodesics close to the center point to
- * appear as straight lines in the projection; i.e., it generalizes the
+ * The projection given here. This causes geodesics close to the center point
+ * to appear as straight lines in the projection; i.e., it generalizes the
  * spherical great circle to a geodesic.
  * </li>
  * </ul>
@@ -127,66 +130,51 @@ package net.sf.geographiclib;
  *   }
  * }
  * </pre>
- * <p>
- * <a href="GeodesicProj.1.html">GeodesicProj</a> is a command-line utility
- * providing access to the functionality of AzimuthalEquidistant, Gnomonic, and
- * CassiniSoldner.
  */
 
 public class Gnomonic {
   private static final double eps = 0.01 * Math.sqrt(GeoMath.epsilon);
-  private Geodesic earth;
-  private double a, f;
-  /**
-   * Maximum number of iterations for calculation gnomonic projection. (The
-   * solution should usually converge before reaching the maximum number of
-   * iterations. The default is 10.)
-   */
-  public static int maxit = 10;
+  private Geodesic _earth;
+  private double _a, _f;
+  private static final int numit_ = 10;
 
   /**
    * Constructor for Gnomonic.
    * <p>
-   * @param earth
-   *          the {@link Geodesic} object to use for geodesic calculations. By
-   *          default the WGS84 ellipsoid should be used.
+   * @param earth the {@link Geodesic} object to use for geodesic
+   *   calculations. By default the WGS84 ellipsoid should be used.
    */
   public Gnomonic(Geodesic earth) {
-    this.earth = earth;
-    this.a = earth.MajorRadius();
-    this.f = earth.Flattening();
+    _earth = earth;
+    _a = _earth.MajorRadius();
+    _f = _earth.Flattening();
   }
 
   /**
    * Forward projection, from geographic to gnomonic.
    * <p>
-   * @param lat0
-   *          latitude of center point of projection (degrees).
-   * @param lon0
-   *          longitude of center point of projection (degrees).
-   * @param lat
-   *          latitude of point (degrees).
-   * @param lon
-   *          longitude of point (degrees).
-   * @return {@link GnomonicData} object with the following fields: <i>lat0</i>,
-   *         <i>lon0</i>, <i>lat</i>, <i>lon</i>, <i>x</i>, <i>y</i>,
-   *         <i>azi</i>, <i>rk</i>.
-   *         <p>
-   *         <i>lat0</i> and <i>lat</i> should be in the range [&minus;90&deg;,
-   *         90&deg;] and <i>lon0</i> and <i>lon</i> should be in the range
-   *         [&minus;540&deg;, 540&deg;). The scale of the projection is
-   *         1/<i>rk<sup>2</sup></i> in the "radial" direction, <i>azi</i>
-   *         clockwise from true north, and is 1/<i>rk</i> in the direction
-   *         perpendicular to this. If the point lies "over the horizon", i.e.,
-   *         if <i>rk</i> &le; 0, then NaNs are returned for <i>x</i> and
-   *         <i>y</i> (the correct values are returned for <i>azi</i> and
-   *         <i>rk</i>). A call to Forward followed by a call to Reverse will
-   *         return the original (<i>lat</i>, <i>lon</i>) (to within roundoff)
-   *         provided the point in not over the horizon.
+   * @param lat0 latitude of center point of projection (degrees).
+   * @param lon0 longitude of center point of projection (degrees).
+   * @param lat latitude of point (degrees).
+   * @param lon longitude of point (degrees).
+   * @return {@link GnomonicData} object with the following fields:
+   *   <i>lat0</i>, <i>lon0</i>, <i>lat</i>, <i>lon</i>, <i>x</i>, <i>y</i>,
+   *   <i>azi</i>, <i>rk</i>.
+   * <p>
+   * <i>lat0</i> and <i>lat</i> should be in the range [&minus;90&deg;,
+   * 90&deg;] and <i>lon0</i> and <i>lon</i> should be in the range
+   * [&minus;540&deg;, 540&deg;). The scale of the projection is
+   * 1/<i>rk<sup>2</sup></i> in the "radial" direction, <i>azi</i> clockwise
+   * from true north, and is 1/<i>rk</i> in the direction perpendicular to
+   * this. If the point lies "over the horizon", i.e., if <i>rk</i> &le; 0,
+   * then NaNs are returned for <i>x</i> and <i>y</i> (the correct values are
+   * returned for <i>azi</i> and <i>rk</i>). A call to Forward followed by a
+   * call to Reverse will return the original (<i>lat</i>, <i>lon</i>) (to
+   * within roundoff) provided the point in not over the horizon.
    */
   public GnomonicData Forward(double lat0, double lon0, double lat, double lon) {
     GeodesicData inv =
-        earth.Inverse(lat0, lon0, lat, lon, GeodesicMask.AZIMUTH
+        _earth.Inverse(lat0, lon0, lat, lon, GeodesicMask.AZIMUTH
             | GeodesicMask.GEODESICSCALE | GeodesicMask.REDUCEDLENGTH);
     GnomonicData fwd =
         new GnomonicData(lat0, lon0, lat, lon, Double.NaN, Double.NaN,
@@ -194,9 +182,9 @@ public class Gnomonic {
 
     if (inv.M12 > 0) {
       double rho = inv.m12 / inv.M12;
-      double azi = inv.azi1 * Math.atan2(0d, -1d) / 180d;
-      fwd.x = rho * Math.sin(azi);
-      fwd.y = rho * Math.cos(azi);
+      Pair p = GeoMath.sincosd(inv.azi1);
+      fwd.x = rho * p.first;
+      fwd.y = rho * p.second;
     }
 
     return fwd;
@@ -205,51 +193,47 @@ public class Gnomonic {
   /**
    * Reverse projection, from gnomonic to geographic.
    * <p>
-   * @param lat0
-   *          latitude of center point of projection (degrees).
-   * @param lon0
-   *          longitude of center point of projection (degrees).
-   * @param x
-   *          easting of point (meters).
-   * @param y
-   *          northing of point (meters).
-   * @return {@link GnomonicData} object with the following fields: <i>lat0</i>,
-   *         <i>lon0</i>, <i>lat</i>, <i>lon</i>, <i>x</i>, <i>y</i>,
-   *         <i>azi</i>, <i>rk</i>.
-   *         <p>
-   *         <i>lat0</i> should be in the range [&minus;90&deg;, 90&deg;] and
-   *         <i>lon0</i> should be in the range [&minus;540&deg;, 540&deg;).
-   *         <i>lat</i> will be in the range [&minus;90&deg;, 90&deg;] and
-   *         <i>lon</i> will be in the range [&minus;180&deg;, 180&deg;). The
-   *         scale of the projection is 1/<i>rk<sup>2</sup></i> in the "radial"
-   *         direction, <i>azi</i> clockwise from true north, and is 1/<i>rk</i>
-   *         in the direction perpendicular to this. Even though all inputs
-   *         should return a valid <i>lat</i> and <i>lon</i>, it's possible that
-   *         the procedure fails to converge for very large <i>x</i> or
-   *         <i>y</i>; in this case NaNs are returned for all the output
-   *         arguments. A call to Reverse followed by a call to Forward will
-   *         return the original (<i>x</i>, <i>y</i>) (to roundoff).
+   * @param lat0 latitude of center point of projection (degrees).
+   * @param lon0 longitude of center point of projection (degrees).
+   * @param x easting of point (meters).
+   * @param y northing of point (meters).
+   * @return {@link GnomonicData} object with the following fields:
+   *   <i>lat0</i>, <i>lon0</i>, <i>lat</i>, <i>lon</i>, <i>x</i>, <i>y</i>,
+   *   <i>azi</i>, <i>rk</i>.
+   * <p>
+   * <i>lat0</i> should be in the range [&minus;90&deg;, 90&deg;] and
+   * <i>lon0</i> should be in the range [&minus;540&deg;, 540&deg;).
+   * <i>lat</i> will be in the range [&minus;90&deg;, 90&deg;] and <i>lon</i>
+   * will be in the range [&minus;180&deg;, 180&deg;). The scale of the
+   * projection is 1/<i>rk<sup>2</sup></i> in the "radial" direction,
+   * <i>azi</i> clockwise from true north, and is 1/<i>rk</i> in the direction
+   * perpendicular to this. Even though all inputs should return a valid
+   * <i>lat</i> and <i>lon</i>, it's possible that the procedure fails to
+   * converge for very large <i>x</i> or <i>y</i>; in this case NaNs are
+   * returned for all the output arguments. A call to Reverse followed by a
+   * call to Forward will return the original (<i>x</i>, <i>y</i>) (to
+   * roundoff).
    */
   public GnomonicData Reverse(double lat0, double lon0, double x, double y) {
     GnomonicData rev =
         new GnomonicData(lat0, lon0, Double.NaN, Double.NaN, x, y, Double.NaN,
             Double.NaN);
 
-    double azi0 = Math.atan2(x, y) / GeoMath.degree;
+    double azi0 = GeoMath.atan2d(x, y);
     double rho = Math.hypot(x, y);
-    double s = a * Math.atan(rho / a);
-    boolean little = rho <= a;
+    double s = _a * Math.atan(rho / _a);
+    boolean little = rho <= _a;
 
     if (!little)
       rho = 1 / rho;
 
     GeodesicLine line =
-        earth.Line(lat0, lon0, azi0, GeodesicMask.LATITUDE
+        _earth.Line(lat0, lon0, azi0, GeodesicMask.LATITUDE
             | GeodesicMask.LONGITUDE | GeodesicMask.AZIMUTH
             | GeodesicMask.DISTANCE_IN | GeodesicMask.REDUCEDLENGTH
             | GeodesicMask.GEODESICSCALE);
 
-    int count = maxit, trip = 0;
+    int count = numit_, trip = 0;
     GeodesicData pos = null;
 
     while (count-- > 0) {
@@ -266,7 +250,7 @@ public class Gnomonic {
               : (rho - (pos.M12 / pos.m12)) * pos.m12 * pos.m12;
       s -= ds;
 
-      if (Math.abs(ds) <= eps * a)
+      if (Math.abs(ds) <= eps * _a)
         trip++;
     }
 
@@ -280,4 +264,16 @@ public class Gnomonic {
 
     return rev;
   }
+
+  /**
+   * @return <i>a</i> the equatorial radius of the ellipsoid (meters).  This is
+   *   the value inherited from the Geodesic object used in the constructor.
+   **********************************************************************/
+  public double MajorRadius() { return _a; }
+
+  /**
+   * @return <i>f</i> the  flattening of the ellipsoid.  This is
+   *   the value inherited from the Geodesic object used in the constructor.
+   **********************************************************************/
+  public double Flattening() { return _f; }
 }
