@@ -82,9 +82,9 @@ namespace GeographicLib {
    *   sphere at the center point.  This causes normal sections through the
    *   center point to appear as straight lines in the projection; i.e., it
    *   generalizes the spherical great circle to a normal section.  This was
-   *   proposed by I. G. Letoval'tsev, Generalization of the %Gnomonic
-   *   Projection for a Spheroid and the Principal Geodetic Problems Involved
-   *   in the Alignment of Surface Routes, Geodesy and Aerophotography (5),
+   *   proposed by I. G. Letoval'tsev, Generalization of the gnomonic
+   *   projection for a spheroid and the principal geodetic problems involved
+   *   in the alignment of surface routes, Geodesy and Aerophotography (5),
    *   271--274 (1963).
    * - The projection given here.  This causes geodesics close to the center
    *   point to appear as straight lines in the projection; i.e., it

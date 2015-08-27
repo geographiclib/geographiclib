@@ -7009,6 +7009,10 @@ git repository for GeographicLib</a>.
      languages.
    - Add Java implementation of the Gnomonic project (courtesy of
      Sebastian Mattheis).
+   - Fix array size mismatch in MATLAB routine geoddistance by avoiding
+     calls to subfunctions with zero-length arrays.
+   - Throw error on non-convergence in Gnomonic::Reverse if
+     GEOGRAPHICLIB_PRECISION &gt; 3.
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
    (released 2015-08-14)

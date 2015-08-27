@@ -92,8 +92,8 @@ package net.sf.geographiclib;
  * center point. This causes normal sections through the center point to appear
  * as straight lines in the projection; i.e., it generalizes the spherical
  * great circle to a normal section. This was proposed by I. G. Letoval'tsev,
- * Generalization of the Gnomonic Projection for a Spheroid and the Principal
- * Geodetic Problems Involved in the Alignment of Surface Routes, Geodesy and
+ * Generalization of the gnomonic projection for a spheroid and the principal
+ * geodetic problems involved in the alignment of surface routes, Geodesy and
  * Aerophotography (5), 271&ndash;274 (1963).
  * </li>
  * <li>
@@ -133,10 +133,10 @@ package net.sf.geographiclib;
  */
 
 public class Gnomonic {
-  private static final double eps = 0.01 * Math.sqrt(GeoMath.epsilon);
+  private static final double eps_ = 0.01 * Math.sqrt(GeoMath.epsilon);
+  private static final int numit_ = 10;
   private Geodesic _earth;
   private double _a, _f;
-  private static final int numit_ = 10;
 
   /**
    * Constructor for Gnomonic.
@@ -172,13 +172,14 @@ public class Gnomonic {
    * call to Reverse will return the original (<i>lat</i>, <i>lon</i>) (to
    * within roundoff) provided the point in not over the horizon.
    */
-  public GnomonicData Forward(double lat0, double lon0, double lat, double lon) {
+  public GnomonicData Forward(double lat0, double lon0, double lat, double lon)
+  {
     GeodesicData inv =
-        _earth.Inverse(lat0, lon0, lat, lon, GeodesicMask.AZIMUTH
-            | GeodesicMask.GEODESICSCALE | GeodesicMask.REDUCEDLENGTH);
+      _earth.Inverse(lat0, lon0, lat, lon, GeodesicMask.AZIMUTH
+                     | GeodesicMask.GEODESICSCALE | GeodesicMask.REDUCEDLENGTH);
     GnomonicData fwd =
-        new GnomonicData(lat0, lon0, lat, lon, Double.NaN, Double.NaN,
-            inv.azi2, inv.M12);
+      new GnomonicData(lat0, lon0, lat, lon, Double.NaN, Double.NaN,
+                       inv.azi2, inv.M12);
 
     if (inv.M12 > 0) {
       double rho = inv.m12 / inv.M12;
@@ -216,8 +217,8 @@ public class Gnomonic {
    */
   public GnomonicData Reverse(double lat0, double lon0, double x, double y) {
     GnomonicData rev =
-        new GnomonicData(lat0, lon0, Double.NaN, Double.NaN, x, y, Double.NaN,
-            Double.NaN);
+      new GnomonicData(lat0, lon0, Double.NaN, Double.NaN, x, y, Double.NaN,
+                       Double.NaN);
 
     double azi0 = GeoMath.atan2d(x, y);
     double rho = Math.hypot(x, y);
@@ -228,29 +229,30 @@ public class Gnomonic {
       rho = 1 / rho;
 
     GeodesicLine line =
-        _earth.Line(lat0, lon0, azi0, GeodesicMask.LATITUDE
-            | GeodesicMask.LONGITUDE | GeodesicMask.AZIMUTH
-            | GeodesicMask.DISTANCE_IN | GeodesicMask.REDUCEDLENGTH
-            | GeodesicMask.GEODESICSCALE);
+      _earth.Line(lat0, lon0, azi0, GeodesicMask.LATITUDE
+                  | GeodesicMask.LONGITUDE | GeodesicMask.AZIMUTH
+                  | GeodesicMask.DISTANCE_IN | GeodesicMask.REDUCEDLENGTH
+                  | GeodesicMask.GEODESICSCALE);
 
     int count = numit_, trip = 0;
     GeodesicData pos = null;
 
     while (count-- > 0) {
       pos =
-          line.Position(s, GeodesicMask.LONGITUDE | GeodesicMask.LATITUDE
-              | GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE_IN
-              | GeodesicMask.REDUCEDLENGTH | GeodesicMask.GEODESICSCALE);
+        line.Position(s, GeodesicMask.LONGITUDE | GeodesicMask.LATITUDE
+                      | GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE_IN
+                      | GeodesicMask.REDUCEDLENGTH
+                      | GeodesicMask.GEODESICSCALE);
 
       if (trip > 0)
         break;
 
       double ds =
-          little ? ((pos.m12 / pos.M12) - rho) * pos.M12 * pos.M12
-              : (rho - (pos.M12 / pos.m12)) * pos.m12 * pos.m12;
+        little ? ((pos.m12 / pos.M12) - rho) * pos.M12 * pos.M12
+        : (rho - (pos.M12 / pos.m12)) * pos.m12 * pos.m12;
       s -= ds;
 
-      if (Math.abs(ds) <= eps * _a)
+      if (Math.abs(ds) <= eps_ * _a)
         trip++;
     }
 
@@ -260,7 +262,7 @@ public class Gnomonic {
     rev.lat = pos.lat2;
     rev.lon = pos.lon2;
     rev.azi = pos.azi2;
-    rev.rk = pos.m12;
+    rev.rk = pos.M12;
 
     return rev;
   }

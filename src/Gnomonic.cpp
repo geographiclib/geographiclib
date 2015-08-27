@@ -10,8 +10,9 @@
 #include <GeographicLib/Gnomonic.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about potentially uninitialized local variables
-#  pragma warning (disable: 4701)
+// Squelch warnings about potentially uninitialized local variables and
+// constant conditional expressions
+#  pragma warning (disable: 4701 4127)
 #endif
 
 namespace GeographicLib {
@@ -61,7 +62,7 @@ namespace GeographicLib {
                                   Geodesic::GEODESICSCALE));
     int count = numit_, trip = 0;
     real lat1, lon1, azi1, M;
-    while (count--) {
+    while (count-- || GEOGRAPHICLIB_PANIC) {
       real m, t;
       line.Position(s, lat1, lon1, azi1, m, M, t);
       if (trip)
