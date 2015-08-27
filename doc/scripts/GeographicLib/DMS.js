@@ -41,19 +41,18 @@ GeographicLib.DMS = {};
   // return val, ind
   d.Decode = function(dms) {
     var dmsa = dms;
-    dmsa = dmsa.replace(/\u00b0/g, 'd');
-    dmsa = dmsa.replace(/\u00ba/g, 'd');
-    dmsa = dmsa.replace(/\u2070/g, 'd');
-    dmsa = dmsa.replace(/\u02da/g, 'd');
-    dmsa = dmsa.replace(/\u2032/g, '\'');
-    dmsa = dmsa.replace(/\u00b4/g, '\'');
-    dmsa = dmsa.replace(/\u2019/g, '\'');
-    dmsa = dmsa.replace(/\u2033/g, '"');
-    dmsa = dmsa.replace(/\u201d/g, '"');
-    dmsa = dmsa.replace(/\u2212/g, '-');
-    dmsa = dmsa.replace(/''/g, '"');
-    dmsa = dmsa.trim();
-    var errormsg = new String("");
+    dmsa = dmsa.replace(/\u00b0/g, 'd')
+	  .replace(/\u00ba/g, 'd')
+	  .replace(/\u2070/g, 'd')
+	  .replace(/\u02da/g, 'd')
+	  .replace(/\u2032/g, '\'')
+	  .replace(/\u00b4/g, '\'')
+	  .replace(/\u2019/g, '\'')
+	  .replace(/\u2033/g, '"')
+	  .replace(/\u201d/g, '"')
+	  .replace(/\u2212/g, '-')
+	  .replace(/''/g, '"')
+	  .trim();
     var end = dmsa.length;
     var v = 0, i = 0, mi, pi, vals;
     var ind1 = d.NONE, ind2;
@@ -62,7 +61,7 @@ GeographicLib.DMS = {};
     for (p = 0; p < end; p = pb, ++i) {
       pa = p;
       // Skip over initial hemisphere letter (for i == 0)
-      if (i == 0 && d.lookup(d.hemispheres_, dmsa.charAt(pa)) >= 0)
+      if (i === 0 && d.lookup(d.hemispheres_, dmsa.charAt(pa)) >= 0)
         ++pa;
       // Skip over initial sign (checking for it if i == 0)
       if (i > 0 || (pa < end && d.lookup(d.signs_, dmsa.charAt(pa)) >= 0))
@@ -81,14 +80,14 @@ GeographicLib.DMS = {};
         throw new Error("Incompatible hemisphere specifies in " +
                         dmsa.substr(0, pb));
     }
-    if (i == 0)
+    if (i === 0)
       throw new Error("Empty or incomplete DMS string " + dmsa);
     return {val: v, ind: ind1};
   };
 
   d.InternalDecode = function(dmsa) {
     var vals = {};
-    var errormsg = new String("");
+    var errormsg = "";
     do {                       // Executed once (provides the ability to break)
       var sign = 1;
       var beg = 0, end = dmsa.length;
@@ -364,7 +363,7 @@ GeographicLib.DMS = {};
       pieces[i - 1] = ip;
     }
     pieces[0] += idegree;
-    var s = new String("");
+    var s = "";
     if (ind === d.NONE && sign < 0)
       s += '-';
     switch (trailing) {

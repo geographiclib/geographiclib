@@ -558,7 +558,7 @@ GeographicLib.GeodesicLine = {};
     } else if (Math.abs(this._n) > 0.1 || // Skip astroid calc if too eccentric
                csig12 >= 0 ||
                ssig12 >= 6 * Math.abs(this._n) * Math.PI * m.sq(cbet1)) {
-      0; // Nothing to do, zeroth order spherical approximation is OK
+      // Nothing to do, zeroth order spherical approximation is OK
     } else {
       // Scale lam12 and bet2 to x, y coordinate system where antipodal
       // point is at origin and singular point is at y = 0, x = -1.

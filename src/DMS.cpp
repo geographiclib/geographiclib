@@ -26,7 +26,6 @@ namespace GeographicLib {
   const string DMS::components_[] = {"degrees", "minutes", "seconds"};
 
   Math::real DMS::Decode(const std::string& dms, flag& ind) {
-    string errormsg;
     string dmsa = dms;
     replace(dmsa, "\xc2\xb0", 'd');      // U+00b0 degree symbol
     replace(dmsa, "\xc2\xba", 'd');      // U+00ba alt symbol

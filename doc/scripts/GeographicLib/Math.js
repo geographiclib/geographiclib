@@ -60,7 +60,7 @@ GeographicLib.Math.polyval = function(N, p, s, x) {
   var y = N < 0 ? 0 : p[s++];
   while (--N >= 0) y = y * x + p[s++];
   return y;
-}
+};
 
 GeographicLib.Math.AngRound = function(x) {
   // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57 for
