@@ -151,17 +151,17 @@ install-doc: html/index.html
 	$(INSTALL) -m 644 `dirname $<`/*.* $(htmldir)
 	-test -f `dirname $<`/search/search.js && \
 	$(INSTALL) -d $(htmldir)/search && \
-	$(INSTALL) -m 644 `dirname $<`/search/*.* $(htmldir)/search
+	$(INSTALL) -m 644 `dirname $<`/search/*.* $(htmldir)/search || true
 	-test -f `dirname $<`/C/index.html && \
 	$(INSTALL) -d $(htmldir)/C && \
-	$(INSTALL) -m 644 `dirname $<`/C/*.* $(htmldir)/C
+	$(INSTALL) -m 644 `dirname $<`/C/*.* $(htmldir)/C || true
 	-test -f `dirname $<`/C/search/search.js && \
 	$(INSTALL) -d $(htmldir)/C/search && \
-	$(INSTALL) -m 644 `dirname $<`/C/search/*.* $(htmldir)/C/search
+	$(INSTALL) -m 644 `dirname $<`/C/search/*.* $(htmldir)/C/search || true
 	-test -f `dirname $<`/Fortran/index.html && \
 	$(INSTALL) -d $(htmldir)/Fortran && \
-	$(INSTALL) -m 644 `dirname $<`/Fortran/*.* $(htmldir)/Fortran
+	$(INSTALL) -m 644 `dirname $<`/Fortran/*.* $(htmldir)/Fortran || true
 	-test -f `dirname $<`/Fortran/search/search.js && \
 	$(INSTALL) -d $(htmldir)/Fortran/search && \
 	$(INSTALL) -m 644 `dirname $<`/Fortran/search/*.* \
-	$(htmldir)/Fortran/search
+	$(htmldir)/Fortran/search || true

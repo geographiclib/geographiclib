@@ -209,7 +209,7 @@ make -j$NUMCPUS test
 make -j$NUMCPUS exampleprograms
 make install
 rsync -a --delete $TEMP/instc/share/doc/GeographicLib/scripts/ $TEMP/js/
-JS_VERSION=`grep Version: $TEMP/js/geographiclib.js | cut -f2 -d: | tr -d' '`
+JS_VERSION=`grep Version: $TEMP/js/geographiclib.js | cut -f2 -d: | tr -d ' '`
 mv $TEMP/js/geographiclib.js $TEMP/js/geographiclib-$JS_VERSION.js
 ln -s geographiclib-$JS_VERSION.js $TEMP/js/geographiclib.js
 rsync -a --delete $TEMP/js/ $WEBDIST/htdocs/scripts/test/
@@ -373,6 +373,7 @@ cd $TEMP/relx/GeographicLib-$VERSION
     find . -type f |
 	egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
 	egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
+	egrep -v 'doc/scripts/geod-.*\.in' |
 	xargs grep -l  '	' || true
     echo
     echo Files with multiple newlines:

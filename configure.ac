@@ -62,7 +62,8 @@ AX_CHECK_COMPILE_FLAG([-std=c++11],
                 [CXXFLAGS="$CXXFLAGS -std=c++0x"])])
 # Check for C++11 math functions
 AC_TRY_COMPILE([#include <cmath>],
-        [return int(std::hypot(3.0, 4.0) + std::expm1(0.5) +
+        [int q;
+	 return int(std::hypot(3.0, 4.0) + std::expm1(0.5) +
                     std::log1p(2.0) + std::asinh(10.0) +
                     std::atanh(0.8) + std::cbrt(8.0) +
                     std::fma(1.0, 2.0, 3.0) + std::remquo(100.0, 90.0, &q) +

@@ -26,7 +26,7 @@ maintainer-clean-local:
 
 scriptsdir=$(DESTDIR)$(docdir)/scripts
 
-install:
+install: all
 	$(INSTALL) -d $(scriptsdir)
 	$(INSTALL) -m 644 $(SCRIPTDRIVERS) geographiclib.js $(scriptsdir)
 	$(INSTALL) -d $(scriptsdir)/GeographicLib
