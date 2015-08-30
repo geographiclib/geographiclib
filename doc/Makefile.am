@@ -9,19 +9,6 @@ FIGURES = $(srcdir)/gauss-krueger-graticule.png \
 	$(srcdir)/gauss-krueger-error.png \
 	$(srcdir)/meridian-measures.png
 
-SCRIPTDRIVERS = \
-	$(srcdir)/scripts/geod-calc.html \
-	$(srcdir)/scripts/geod-google.html \
-	$(srcdir)/scripts/geod-google-instructions.html
-
-JSSCRIPTS = \
-	$(srcdir)/scripts/GeographicLib/Math.js \
-	$(srcdir)/scripts/GeographicLib/Geodesic.js \
-	$(srcdir)/scripts/GeographicLib/GeodesicLine.js \
-	$(srcdir)/scripts/GeographicLib/PolygonArea.js \
-	$(srcdir)/scripts/GeographicLib/DMS.js \
-	$(srcdir)/scripts/GeographicLib/Interface.js
-
 HPPFILES = \
 	$(top_srcdir)/include/GeographicLib/Accumulator.hpp \
 	$(top_srcdir)/include/GeographicLib/AlbersEqualArea.hpp \
@@ -157,29 +144,24 @@ endif
 maintainer-clean-local:
 	rm -rf html manpages
 
+htmldir=$(DESTDIR)$(docdir)/html
+
 install-doc: html/index.html
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html
-	$(INSTALL) -m 644 `dirname $<`/*.* $(DESTDIR)$(docdir)/html
+	$(INSTALL) -d $(htmldir)
+	$(INSTALL) -m 644 `dirname $<`/*.* $(htmldir)
 	-test -f `dirname $<`/search/search.js && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/search && \
-	$(INSTALL) -m 644 `dirname $<`/search/*.* \
-	$(DESTDIR)$(docdir)/html/search
+	$(INSTALL) -d $(htmldir)/search && \
+	$(INSTALL) -m 644 `dirname $<`/search/*.* $(htmldir)/search
 	-test -f `dirname $<`/C/index.html && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/C && \
-	$(INSTALL) -m 644 `dirname $<`/C/*.* $(DESTDIR)$(docdir)/html/C
+	$(INSTALL) -d $(htmldir)/C && \
+	$(INSTALL) -m 644 `dirname $<`/C/*.* $(htmldir)/C
 	-test -f `dirname $<`/C/search/search.js && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/C/search && \
-	$(INSTALL) -m 644 `dirname $<`/C/search/*.* \
-	$(DESTDIR)$(docdir)/html/C/search
+	$(INSTALL) -d $(htmldir)/C/search && \
+	$(INSTALL) -m 644 `dirname $<`/C/search/*.* $(htmldir)/C/search
 	-test -f `dirname $<`/Fortran/index.html && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/Fortran && \
-	$(INSTALL) -m 644 `dirname $<`/Fortran/*.* \
-	$(DESTDIR)$(docdir)/html/Fortran
+	$(INSTALL) -d $(htmldir)/Fortran && \
+	$(INSTALL) -m 644 `dirname $<`/Fortran/*.* $(htmldir)/Fortran
 	-test -f `dirname $<`/Fortran/search/search.js && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/Fortran/search && \
+	$(INSTALL) -d $(htmldir)/Fortran/search && \
 	$(INSTALL) -m 644 `dirname $<`/Fortran/search/*.* \
-	$(DESTDIR)$(docdir)/html/Fortran/search
-	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts
-	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(DESTDIR)$(docdir)/scripts
-	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts/GeographicLib
-	$(INSTALL) -m 644 $(JSSCRIPTS) $(DESTDIR)$(docdir)/scripts/GeographicLib
+	$(htmldir)/Fortran/search

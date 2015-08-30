@@ -7013,6 +7013,11 @@ git repository for GeographicLib</a>.
      calls to subfunctions with zero-length arrays.
    - Throw error on non-convergence in Gnomonic::Reverse if
      GEOGRAPHICLIB_PRECISION &gt; 3.
+   - JavaScript changes:
+     - clean up the implementation;
+     - fix incorrect argument of sincosd in Geodesic.GenInverse;
+     - creation and installation of JavaScript files by end user now
+       supported.
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
    (released 2015-08-14)

@@ -11,12 +11,6 @@ SCRIPTSTAGE=$(WEBSTAGE)/htdocs/scripts
 
 geodesic-papers/biblio.html: geodesic-biblio.txt biblio.sh
 	sh biblio.sh $< > $@
-JS_MODULES=Math Geodesic GeodesicLine PolygonArea DMS Interface
-JS_SOURCES=$(patsubst %,doc/scripts/GeographicLib/%.js,$(JS_MODULES))
-doc/scripts/geographiclib.js: $(JS_SOURCES)
-	sh js-compress.sh $^ > $@
-
-pack-js: doc/scripts/geographiclib.js
 
 distrib-html: geodesic-papers/biblio.html
 	rsync -av --exclude .svn --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded index.html tm.html tm-addenda.html tm-grid.kmz geod.html geod-addenda.html bessel-errata.html jacobi-errata.html *-figs.pdf geodesic-papers $(WEBSTAGE)/htdocs/
@@ -38,22 +32,7 @@ distrib-cgi:
 	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
 	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/{cgi-bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
 
-distrib-js: doc/scripts/geographiclib.js
-	v=`grep ' Version: ' doc/scripts/geographiclib.js |cut -f4 -d' '`; \
-	for f in geod-calc.html geod-google{,-instructions}.html \
-	geographiclib.js \
-	GeographicLib/{Math,Geodesic{,Line},PolygonArea,DMS,Interface}.js; do \
-	  a=doc/scripts/$$f; b=$(SCRIPTSTAGE)/test/$$f; \
-	  test $$f = geographiclib.js && \
-	  b=$(SCRIPTSTAGE)/test/geographiclib-$$v.js; \
-	  sed s%/scripts/geographic%/scripts/test/geographic% $$a > $$b.new; \
-	  if cmp $$b.new $$b > /dev/null 2>&1; then \
-	  rm $$b.new; else mv $$b.new $$b; fi; \
-        done; \
-	rm -f $(SCRIPTSTAGE)/test/geographiclib.js; \
-	ln -s geographiclib-$$v.js $(SCRIPTSTAGE)/test/geographiclib.js; \
-	ls $(SCRIPTSTAGE)/test/geographiclib-*.js | head --lines -1 | \
-	xargs -r rm -f
+distrib-js:
 	rsync --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded -av -e ssh $(SCRIPTSTAGE)/test/ $(USER),geographiclib@web.sourceforge.net:./htdocs/scripts/test/
 
 install-js:
@@ -61,7 +40,7 @@ install-js:
 	while read f; do \
 	  a=$(SCRIPTSTAGE)/test/$$f; \
 	  b=$(SCRIPTSTAGE)/$$f; \
-	  sed s%/scripts/test/geographic%/scripts/geographic% $$a > $$b.new; \
+	  cp $$a $$b.new; \
 	  if cmp $$b.new $$b > /dev/null 2>&2; then \
 	  rm $$b.new; else mv $$b.new $$b; fi; \
 	done

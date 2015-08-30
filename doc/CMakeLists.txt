@@ -77,10 +77,3 @@ else ()
     ${CMAKE_CURRENT_BINARY_DIR}/html/utilities.html
     DESTINATION ${INSTALL_DOC_DIR}/html)
 endif ()
-
-# Finally install the JavaScript files
-file (GLOB SCRIPTDRIVERS scripts/[A-Za-z]*.html)
-file (GLOB JSSCRIPTS scripts/GeographicLib/[A-Za-z]*.js)
-install (FILES ${SCRIPTDRIVERS} DESTINATION ${INSTALL_DOC_DIR}/scripts)
-install (FILES ${JSSCRIPTS}
-  DESTINATION ${INSTALL_DOC_DIR}/scripts/GeographicLib)

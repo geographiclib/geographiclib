@@ -8,152 +8,156 @@
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-var GeographicLib; if (!GeographicLib) GeographicLib = {};
-
-GeographicLib.Math = {};
-
-GeographicLib.Math.sq = function(x) { return x * x; };
-
-GeographicLib.Math.hypot = function(x, y) {
-  x = Math.abs(x);
-  y = Math.abs(y);
-  var a = Math.max(x, y), b = Math.min(x, y) / (a ? a : 1);
-  return a * Math.sqrt(1 + b * b);
-};
-
-GeographicLib.Math.cbrt = function(x) {
-  var y = Math.pow(Math.abs(x), 1/3);
-  return x < 0 ? -y : y;
-};
-
-GeographicLib.Math.log1p = function(x) {
-  var
-  y = 1 + x,
-  z = y - 1;
-  // Here's the explanation for this magic: y = 1 + z, exactly, and z
-  // approx x, thus log(y)/z (which is nearly constant near z = 0) returns
-  // a good approximation to the true log(1 + x)/x.  The multiplication x *
-  // (log(y)/z) introduces little additional error.
-  return z === 0 ? x : x * Math.log(y) / z;
-};
-
-GeographicLib.Math.atanh = function(x) {
-  var y = Math.abs(x);          // Enforce odd parity
-  y = GeographicLib.Math.log1p(2 * y/(1 - y))/2;
-  return x < 0 ? -y : y;
-};
-
-GeographicLib.Math.sum = function(u, v) {
-  var
-  s = u + v,
-  up = s - v,
-  vpp = s - up;
-  up -= u;
-  vpp -= v;
-  t = -(up + vpp);
-  // u + v =       s      + t
-  //       = round(u + v) + t
-  return {s: s, t: t};
-};
-
-GeographicLib.Math.polyval = function(N, p, s, x) {
-  var y = N < 0 ? 0 : p[s++];
-  while (--N >= 0) y = y * x + p[s++];
-  return y;
-};
-
-GeographicLib.Math.AngRound = function(x) {
-  // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57 for
-  // reals = 0.7 pm on the earth if x is an angle in degrees.  (This is about
-  // 1000 times more resolution than we get with angles around 90 degrees.)  We
-  // use this to avoid having to deal with near singular cases when x is
-  // non-zero but tiny (e.g., 1.0e-200).  This also converts -0 to +0.
-  var z = 1/16;
-  var y = Math.abs(x);
-  // The compiler mustn't "simplify" z - (z - y) to y
-  y = y < z ? z - (z - y) : y;
-  return x < 0 ? 0 - y : y;
-};
-
-GeographicLib.Math.AngNormalize = function(x) {
-  // Place angle in [-180, 180).
-  x = x % 360.0;
-  return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
-};
-
-GeographicLib.Math.LatFix = function(x) {
-  // Place angle with NaN if outside [-90, 90].
-  return Math.abs(x) > 90 ? Number.NaN : x;
-};
-
-GeographicLib.Math.AngDiff = function(x, y) {
-  // Compute y - x and reduce to [-180,180] accurately.
-  var
-  r = GeographicLib.Math.sum(GeographicLib.Math.AngNormalize(x),
-                             GeographicLib.Math.AngNormalize(-y)),
-  d = - GeographicLib.Math.AngNormalize(r.s);
-  t = r.t;
-  return (d == 180 && t < 0 ? -180 : d) - t;
-};
-
-GeographicLib.Math.sincosd = function(x) {
-  // In order to minimize round-off errors, this function exactly reduces
-  // the argument to the range [-45, 45] before converting it to radians.
-  var r, q;
-  r = x % 360.0;
-  q = Math.floor(r / 90 + 0.5);
-  r -= 90 * q;
-  // now abs(r) <= 45
-  r *= this.degree;
-  // Possibly could call the gnu extension sincos
-  var s = Math.sin(r), c = Math.cos(r);
-  var sinx, cosx;
-  switch (q & 3) {
-  case  0: sinx =     s; cosx =     c; break;
-  case  1: sinx =     c; cosx = 0 - s; break;
-  case  2: sinx = 0 - s; cosx = 0 - c; break;
-  default: sinx = 0 - c; cosx =     s; break; // case 3
-  }
-  return {s: sinx, c: cosx};
-};
-
-GeographicLib.Math.atan2d = function(y, x) {
-  // In order to minimize round-off errors, this function rearranges the
-  // arguments so that result of atan2 is in the range [-pi/4, pi/4] before
-  // converting it to degrees and mapping the result to the correct
-  // quadrant.
-  var q = 0;
-  if (Math.abs(y) > Math.abs(x)) { var t; t = x; x = y; y = t; q = 2; }
-  if (x < 0) { x = -x; ++q; }
-  // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
-  var ang = Math.atan2(y, x) / this.degree;
-  switch (q) {
-    // Note that atan2d(-0.0, 1.0) will return -0.  However, we expect that
-    // atan2d will not be called with y = -0.  If need be, include
-    //
-    //   case 0: ang = 0 + ang; break;
-    //
-    // and handle mpfr as in AngRound.
-  case 1: ang = (y > 0 ? 180 : -180) - ang; break;
-  case 2: ang =  90 - ang; break;
-  case 3: ang = -90 + ang; break;
-  }
-  return ang;
-};
-
-GeographicLib.Math.epsilon = Math.pow(0.5, 52);
-GeographicLib.Math.degree = Math.PI/180;
-GeographicLib.Math.digits = 53;
-
+var GeographicLib = {};
 GeographicLib.Constants = {};
-GeographicLib.Constants.WGS84 = { a: 6378137, f: 1/298.257223563 };
-GeographicLib.Constants.version = { major: 1, minor: 45, patch: 0 };
-GeographicLib.Constants.version_string = "1.45";
-
+GeographicLib.Math = {};
 GeographicLib.Accumulator = {};
-(function() {
-  a = GeographicLib.Accumulator;
-  var m = GeographicLib.Math;
+
+(function(c) {
+  "use strict";
+
+  c.WGS84 = { a: 6378137, f: 1/298.257223563 };
+  c.version = { major: 1, minor: 45, patch: 0 };
+  c.version_string = "1.45";
+})(GeographicLib.Constants);
+
+(function(m) {
+  "use strict";
+
+  m.epsilon = Math.pow(0.5, 52);
+  m.degree = Math.PI/180;
+  m.digits = 53;
+
+  m.sq = function(x) { return x * x; };
+
+  m.hypot = function(x, y) {
+    var a, b;
+    x = Math.abs(x);
+    y = Math.abs(y);
+    a = Math.max(x, y); b = Math.min(x, y) / (a ? a : 1);
+    return a * Math.sqrt(1 + b * b);
+  };
+
+  m.cbrt = function(x) {
+    var y = Math.pow(Math.abs(x), 1/3);
+    return x < 0 ? -y : y;
+  };
+
+  m.log1p = function(x) {
+    var y = 1 + x,
+        z = y - 1;
+    // Here's the explanation for this magic: y = 1 + z, exactly, and z
+    // approx x, thus log(y)/z (which is nearly constant near z = 0) returns
+    // a good approximation to the true log(1 + x)/x.  The multiplication x *
+    // (log(y)/z) introduces little additional error.
+    return z === 0 ? x : x * Math.log(y) / z;
+  };
+
+  m.atanh = function(x) {
+    var y = Math.abs(x);          // Enforce odd parity
+    y = m.log1p(2 * y/(1 - y))/2;
+    return x < 0 ? -y : y;
+  };
+
+  m.sum = function(u, v) {
+    var s = u + v,
+        up = s - v,
+        vpp = s - up,
+        t;
+    up -= u;
+    vpp -= v;
+    t = -(up + vpp);
+    // u + v =       s      + t
+    //       = round(u + v) + t
+    return {s: s, t: t};
+  };
+
+  m.polyval = function(N, p, s, x) {
+    var y = N < 0 ? 0 : p[s++];
+    while (--N >= 0) y = y * x + p[s++];
+    return y;
+  };
+
+  m.AngRound = function(x) {
+    // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57 for
+    // reals = 0.7 pm on the earth if x is an angle in degrees.  (This is about
+    // 1000 times more resolution than we get with angles around 90 degrees.)
+    // We use this to avoid having to deal with near singular cases when x is
+    // non-zero but tiny (e.g., 1.0e-200).  This also converts -0 to +0.
+    var z = 1/16,
+        y = Math.abs(x);
+    // The compiler mustn't "simplify" z - (z - y) to y
+    y = y < z ? z - (z - y) : y;
+    return x < 0 ? 0 - y : y;
+  };
+
+  m.AngNormalize = function(x) {
+    // Place angle in [-180, 180).
+    x = x % 360.0;
+    return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
+  };
+
+  m.LatFix = function(x) {
+    // Place angle with NaN if outside [-90, 90].
+    return Math.abs(x) > 90 ? Number.NaN : x;
+  };
+
+  m.AngDiff = function(x, y) {
+    // Compute y - x and reduce to [-180,180] accurately.
+    var r = m.sum(m.AngNormalize(x),
+                  m.AngNormalize(-y)),
+        d = - m.AngNormalize(r.s),
+        t = r.t;
+    return (d == 180 && t < 0 ? -180 : d) - t;
+  };
+
+  m.sincosd = function(x) {
+    // In order to minimize round-off errors, this function exactly reduces
+    // the argument to the range [-45, 45] before converting it to radians.
+    var r, q, s, c, sinx, cosx;
+    r = x % 360.0;
+    q = Math.floor(r / 90 + 0.5);
+    r -= 90 * q;
+    // now abs(r) <= 45
+    r *= this.degree;
+    // Possibly could call the gnu extension sincos
+    s = Math.sin(r); c = Math.cos(r);
+    switch (q & 3) {
+    case  0: sinx =     s; cosx =     c; break;
+    case  1: sinx =     c; cosx = 0 - s; break;
+    case  2: sinx = 0 - s; cosx = 0 - c; break;
+    default: sinx = 0 - c; cosx =     s; break; // case 3
+    }
+    return {s: sinx, c: cosx};
+  };
+
+  m.atan2d = function(y, x) {
+    // In order to minimize round-off errors, this function rearranges the
+    // arguments so that result of atan2 is in the range [-pi/4, pi/4] before
+    // converting it to degrees and mapping the result to the correct
+    // quadrant.
+    var q = 0, t, ang;
+    if (Math.abs(y) > Math.abs(x)) { t = x; x = y; y = t; q = 2; }
+    if (x < 0) { x = -x; ++q; }
+    // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
+    ang = Math.atan2(y, x) / this.degree;
+    switch (q) {
+      // Note that atan2d(-0.0, 1.0) will return -0.  However, we expect that
+      // atan2d will not be called with y = -0.  If need be, include
+      //
+      //   case 0: ang = 0 + ang; break;
+      //
+      // and handle mpfr as in AngRound.
+    case 1: ang = (y > 0 ? 180 : -180) - ang; break;
+    case 2: ang =  90 - ang; break;
+    case 3: ang = -90 + ang; break;
+    }
+    return ang;
+  };
+})(GeographicLib.Math);
+
+(function(a, m) {
+  "use strict";
 
   a.Accumulator = function(y) {
     this.Set(y);
@@ -173,8 +177,8 @@ GeographicLib.Accumulator = {};
   a.Accumulator.prototype.Add = function(y) {
     // Here's Shewchuk's solution...
     // Accumulate starting at least significant end
-    var u = m.sum(y, this._t);
-    var v = m.sum(u.s, this._s);
+    var u = m.sum(y, this._t),
+        v = m.sum(u.s, this._s);
     u = u.t;
     this._s = v.s;
     this._t = v.t;
@@ -213,10 +217,11 @@ GeographicLib.Accumulator = {};
   };
 
   a.Accumulator.prototype.Sum = function(y) {
+    var b;
     if (!y)
       return this._s;
     else {
-      var b = new a.Accumulator(this);
+      b = new a.Accumulator(this);
       b.Add(y);
       return b._s;
     }
@@ -226,5 +231,4 @@ GeographicLib.Accumulator = {};
     this._s *= -1;
     this._t *= -1;
   };
-
-})();
+})(GeographicLib.Accumulator, GeographicLib.Math);

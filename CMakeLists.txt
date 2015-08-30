@@ -467,6 +467,7 @@ add_subdirectory (include/GeographicLib)
 add_subdirectory (tools)
 add_subdirectory (man)
 add_subdirectory (doc)
+add_subdirectory (doc/scripts)
 add_subdirectory (matlab)
 add_subdirectory (python/geographiclib)
 add_subdirectory (examples)
@@ -516,7 +517,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/(tests|testdata|cgi-bin|.*\\\\.cache)/"
   "${PROJECT_SOURCE_DIR}/(distrib|.*-distrib|.*-installer|geodesic-papers)/"
   "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(html|kmz|pdf)\$"
-  "${PROJECT_SOURCE_DIR}/(autogen|biblio|js-compress)\\\\.sh\$"
+  "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
   "${PROJECT_SOURCE_DIR}/(geodesic-biblio.txt|makefile-admin|[^/]*\\\\.png)\$"
   "${PROJECT_SOURCE_DIR}/matlab/.*blurb.txt\$" )
 set (CPACK_SOURCE_GENERATOR TGZ)

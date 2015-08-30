@@ -33,83 +33,94 @@
         padding: 0px
       }
     </style>
+    <!--
+	 Full URL for latest version of geographiclib.js is
+	 http://geographiclib.sf.net/scripts/geographiclib.js
+	 URL for a specific version is, for example,
+	 http://geographiclib.sf.net/scripts/geographiclib-1.44.js
+      -->
     <script type="text/javascript"
-	    src="http://geographiclib.sf.net/scripts/geographiclib.js">
+	    src="geographiclib.js">
     </script>
     <script type="text/javascript"
 	    src="https://maps.googleapis.com/maps/api/js?sensor=false">
     </script>
     <script type="text/javascript">
-var geod = GeographicLib.Geodesic.WGS84;
-var dms = GeographicLib.DMS;
-var geodesic, circle, envelope;
+var geod = GeographicLib.Geodesic.WGS84,
+    dms = GeographicLib.DMS,
+    geodesic, circle, envelope;
 
 function initialize() {
-  var mapOptions = {
-    zoom: 8,
-    center: new google.maps.LatLng(41.3, -5.5),
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
+  var i,
+      mapOptions = {
+        zoom: 8,
+        center: new google.maps.LatLng(41.3, -5.5),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      },
+      geodesicOptions = {
+        strokeColor: '#0000FF',
+        strokeOpacity: 1,
+        strokeWeight: 3,
+        geodesic: true
+      },
+      circleOptions = {
+        strokeColor: '#00FF00',
+        strokeOpacity: 1,
+        strokeWeight: 3,
+        geodesic: true
+      },
+      envelopeOptions = {
+        strokeColor: '#FF0000',
+        strokeOpacity: 1,
+        strokeWeight: 3,
+        geodesic: true
+      };
   map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-  var geodesicOptions = {
-    strokeColor: '#0000FF',
-    strokeOpacity: 1,
-    strokeWeight: 3,
-    geodesic: true
-  }
   geodesic = new google.maps.Polyline(geodesicOptions);
   geodesic.setMap(map);
 
-  var circleOptions = {
-    strokeColor: '#00FF00',
-    strokeOpacity: 1,
-    strokeWeight: 3,
-    geodesic: true
-  }
   circle = new google.maps.Polyline(circleOptions);
   circle.setMap(map);
 
-  var envelopeOptions = {
-    strokeColor: '#FF0000',
-    strokeOpacity: 1,
-    strokeWeight: 3,
-    geodesic: true
-  }
   envelope = new Array(4);
-  for (var i = 0; i < 4; ++i) {
+  for (i = 0; i < 4; ++i) {
     envelope[i] = new google.maps.Polyline(envelopeOptions);
     envelope[i].setMap(map);
   }
 }
 
 function formatpoint(lat, lon, azi, dmsformat, prec) {
+  "use strict";
+  var trail;
   prec += 5;
   if (dmsformat) {
-    var trail = prec < 2 ? dms.DEGREE :
+    trail = prec < 2 ? dms.DEGREE :
       (prec < 4 ? dms.MINUTE : dms.SECOND);
     prec = prec < 2 ? prec : (prec < 4 ? prec - 2 : prec - 4);
     return (dms.Encode(lat, trail, prec, dms.LATITUDE) + " " +
-	    dms.Encode(lon, trail, prec, dms.LONGITUDE) + " " +
-	    dms.Encode(azi, trail, prec, dms.AZIMUTH));
+            dms.Encode(lon, trail, prec, dms.LONGITUDE) + " " +
+            dms.Encode(azi, trail, prec, dms.AZIMUTH));
   } else {
     return (lat.toFixed(prec) + " " +
-	    lon.toFixed(prec) + " " +
-	    azi .toFixed(prec));
+            lon.toFixed(prec) + " " +
+            azi .toFixed(prec));
   }
 }
 
 function GeodesicInverse(input) {
-  var result = {};
+  "use strict";
+  var result = {},
+      t, p1, p2, v;
   try {
     // Input is a blank-delimited line: lat1 lon1 lat2 lon2
-    var t = new String(input);
+    t = input;
     t = t.replace(/^\s+/,"").replace(/\s+$/,"").split(/[\s,]+/,6);
     if (t.length != 4)
       throw new Error("Need 4 input items");
-    var p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
-    var p2 = GeographicLib.DMS.DecodeLatLon(t[2], t[3]);
-    var v = geod.Inverse(p1.lat, p1.lon, p2.lat, p2.lon);
+    p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
+    p2 = GeographicLib.DMS.DecodeLatLon(t[2], t[3]);
+    v = geod.Inverse(p1.lat, p1.lon, p2.lat, p2.lon);
     result.status = "OK";
     result.p1 = formatpoint(v.lat1, v.lon1, v.azi1, true, 0);
     result.p2 = formatpoint(v.lat2, v.lon2, v.azi2, true, 0);
@@ -124,18 +135,21 @@ function GeodesicInverse(input) {
   }
   return result;
 }
+
 function GeodesicDirect(input) {
-  var result = {};
+  "use strict";
+  var result = {},
+      t, p1, azi1, s12, v;
   try {
     // Input is a blank-delimited line: lat1 lon1 azi1 s12
-    var t = new String(input);
-   t = t.replace(/^\s+/,"").replace(/\s+$/,"").split(/[\s,]+/,6);
+    t = input;
+    t = t.replace(/^\s+/,"").replace(/\s+$/,"").split(/[\s,]+/,6);
     if (t.length != 4)
       throw new Error("Need 4 input items");
-    var p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
-    var azi1 = GeographicLib.DMS.DecodeAzimuth(t[2]);
-    var s12 = parseFloat(t[3]);
-    var v =  geod.Direct(p1.lat, p1.lon, azi1, s12);
+    p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
+    azi1 = GeographicLib.DMS.DecodeAzimuth(t[2]);
+    s12 = parseFloat(t[3]);
+    v =  geod.Direct(p1.lat, p1.lon, azi1, s12);
     result.status = "OK";
     result.p1 = formatpoint(v.lat1, v.lon1, v.azi1, true, 0);
     result.p2 = formatpoint(v.lat2, v.lon2, v.azi2, true, 0);
@@ -152,10 +166,11 @@ function GeodesicDirect(input) {
 }
 
 function draw(v) {
+  "use strict";
   var points = geod.DirectPath(v.lat1, v.lon1, v.azi1, v.s12,
-			100000, 100);
+                               100000, 100),
+      i, k, path;
   clearPaths();
-  var i, k, path;
 
   path = geodesic.getPath();
   for (k = 0; k < points.length; ++k)
@@ -174,11 +189,13 @@ function draw(v) {
 }
 
 function clearPaths() {
-  cPath = geodesic.getPath();
+  "use strict";
+  var i,
+      cPath = geodesic.getPath();
   while (cPath.getLength()) cPath.pop();
   cPath = circle.getPath();
   while (cPath.getLength()) cPath.pop();
-  for (var i = 0; i < 4; ++i) {
+  for (i = 0; i < 4; ++i) {
     cPath = envelope[i].getPath();
     while (cPath.getLength()) cPath.pop();
   }

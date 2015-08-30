@@ -10,11 +10,12 @@
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
+// Load AFTER GeographicLib/Math.js
+
 GeographicLib.DMS = {};
 
-(function() {
-  var d = GeographicLib.DMS;
-  var m = GeographicLib.Math;
+(function(d, m) {
+  "use strict";
   d.lookup = function(s, c) {
     return s.indexOf(c.toUpperCase());
   };
@@ -40,23 +41,22 @@ GeographicLib.DMS = {};
 
   // return val, ind
   d.Decode = function(dms) {
-    var dmsa = dms;
+    var dmsa = dms, end,
+        v = 0, i = 0, mi, pi, vals,
+        ind1 = d.NONE, ind2, p, pa, pb;
     dmsa = dmsa.replace(/\u00b0/g, 'd')
-	  .replace(/\u00ba/g, 'd')
-	  .replace(/\u2070/g, 'd')
-	  .replace(/\u02da/g, 'd')
-	  .replace(/\u2032/g, '\'')
-	  .replace(/\u00b4/g, '\'')
-	  .replace(/\u2019/g, '\'')
-	  .replace(/\u2033/g, '"')
-	  .replace(/\u201d/g, '"')
-	  .replace(/\u2212/g, '-')
-	  .replace(/''/g, '"')
-	  .trim();
-    var end = dmsa.length;
-    var v = 0, i = 0, mi, pi, vals;
-    var ind1 = d.NONE, ind2;
-    var p, pa, pb;
+          .replace(/\u00ba/g, 'd')
+          .replace(/\u2070/g, 'd')
+          .replace(/\u02da/g, 'd')
+          .replace(/\u2032/g, '\'')
+          .replace(/\u00b4/g, '\'')
+          .replace(/\u2019/g, '\'')
+          .replace(/\u2033/g, '"')
+          .replace(/\u201d/g, '"')
+          .replace(/\u2212/g, '-')
+          .replace(/''/g, '"')
+          .trim();
+    end = dmsa.length;
     // p is pointer to the next piece that needs decoding
     for (p = 0; p < end; p = pb, ++i) {
       pa = p;
@@ -86,13 +86,18 @@ GeographicLib.DMS = {};
   };
 
   d.InternalDecode = function(dmsa) {
-    var vals = {};
-    var errormsg = "";
+    var vals = {}, errormsg = "",
+        sign, beg, end, ind1, k,
+        ipieces, fpieces, npiece,
+        icurrent, fcurrent, ncurrent, p,
+        pointseen,
+        digcount, intcount,
+        x;
     do {                       // Executed once (provides the ability to break)
-      var sign = 1;
-      var beg = 0, end = dmsa.length;
-      var ind1 = d.NONE;
-      var k = -1;
+      sign = 1;
+      beg = 0; end = dmsa.length;
+      ind1 = d.NONE;
+      k = -1;
       if (end > beg && (k = d.lookup(d.hemispheres_, dmsa.charAt(beg))) >= 0) {
         ind1 = (k & 2) ? d.LONGITUDE : d.LATITUDE;
         sign = (k & 1) ? 1 : -1;
@@ -128,17 +133,18 @@ GeographicLib.DMS = {};
         errormsg = "Empty or incomplete DMS string " + dmsa;
         break;
       }
-      var ipieces = [0, 0, 0];
-      var fpieces = [0, 0, 0];
-      var npiece = 0;
-      var icurrent = 0;
-      var fcurrent = 0;
-      var ncurrent = 0, p = beg;
-      var pointseen = false;
-      var digcount = 0;
-      var intcount = 0;
+      ipieces = [0, 0, 0];
+      fpieces = [0, 0, 0];
+      npiece = 0;
+      icurrent = 0;
+      fcurrent = 0;
+      ncurrent = 0;
+      p = beg;
+      pointseen = false;
+      digcount = 0;
+      intcount = 0;
       while (p < end) {
-        var x = dmsa.charAt(p++);
+        x = dmsa.charAt(p++);
         if ((k = d.lookup(d.digits_, x)) >= 0) {
           ++ncurrent;
           if (digcount > 0) {
@@ -158,7 +164,7 @@ GeographicLib.DMS = {};
         } else if ((k = d.lookup(d.dmsindicators_, x)) >= 0) {
           if (k >= 3) {
             if (p === end) {
-              errormsg = "Illegal for : to appear at the end of " +
+              errormsg = "Illegal for colon to appear at the end of " +
                 dmsa.substr(beg, end - beg);
               break;
             }
@@ -229,11 +235,11 @@ GeographicLib.DMS = {};
       }
       // Note that we accept 59.999999... even though it rounds to 60.
       if (ipieces[1] >= 60 || fpieces[1] > 60) {
-        errormsg = "Minutes " + fpieces[1] + " not in range [0, 60)";
+        errormsg = "Minutes " + fpieces[1] + " not in range [0,60)";
         break;
       }
       if (ipieces[2] >= 60 || fpieces[2] > 60) {
-        errormsg = "Seconds " + fpieces[2] + " not in range [0, 60)";
+        errormsg = "Seconds " + fpieces[2] + " not in range [0,60)";
         break;
       }
       vals.ind = ind1;
@@ -253,12 +259,13 @@ GeographicLib.DMS = {};
   };
 
   d.NumMatch = function(s) {
+    var t, sign, p0, p0;
     if (s.length < 3)
       return 0;
-    var t = s.toUpperCase().replace(/0+$/,"");
-    var sign = t.charAt(0) === '-' ? -1 : 1;
-    var p0 = t.charAt(0) === '-' || t.charAt(0) === '+' ? 1 : 0;
-    var p1 = t.length - 1;
+    t = s.toUpperCase().replace(/0+$/,"");
+    sign = t.charAt(0) === '-' ? -1 : 1;
+    p0 = t.charAt(0) === '-' || t.charAt(0) === '+' ? 1 : 0;
+    p1 = t.length - 1;
     if (p1 + 1 < p0 + 3)
       return 0;
     // Strip off sign and trailing 0s
@@ -273,12 +280,13 @@ GeographicLib.DMS = {};
 
   // return lat, lon
   d.DecodeLatLon = function(stra, strb, swaplatlong) {
-    var vals = {};
+    var vals = {},
+        valsa = d.Decode(stra),
+        valsb = d.Decode(strb),
+        a = valsa.val, ia = valsa.ind,
+        b = valsb.val, ib = valsb.ind,
+        lat, lon;
     if (!swaplatlong) swaplatlong = false;
-    var valsa = d.Decode(stra);
-    var valsb = d.Decode(strb);
-    var a = valsa.val, ia = valsa.ind;
-    var b = valsb.val, ib = valsb.ind;
     if (ia === d.NONE && ib === d.NONE) {
       // Default to lat, long unless swaplatlong
       ia = swaplatlong ? d.LONGITUDE : d.LATITUDE;
@@ -291,29 +299,30 @@ GeographicLib.DMS = {};
       throw new Error("Both " + stra + " and " +
                       strb + " interpreted as " +
                       (ia === d.LATITUDE ? "latitudes" : "longitudes"));
-    var lat = ia === d.LATITUDE ? a : b, lon = ia === d.LATITUDE ? b : a;
+    lat = ia === d.LATITUDE ? a : b;
+    lon = ia === d.LATITUDE ? b : a;
     if (Math.abs(lat) > 90)
-      throw new Error("Latitude " + lat + "d not in [-90d, 90d]");
+      throw new Error("Latitude " + lat + " not in [-90,90]");
     vals.lat = lat;
     vals.lon = lon;
     return vals;
   };
 
   d.DecodeAngle = function(angstr) {
-    var vals = d.Decode(angstr);
-    var ang = vals.val, ind = vals.ind;
+    var vals = d.Decode(angstr),
+        ang = vals.val, ind = vals.ind;
     if (ind !== d.NONE)
       throw new Error("Arc angle " + angstr +
-                      " includes a hemisphere, N/E/W/S");
+                      " includes a hemisphere N/E/W/S");
     return ang;
   };
 
   d.DecodeAzimuth = function(azistr) {
-    var vals = d.Decode(azistr);
-    var azi = vals.val, ind = vals.ind;
+    var vals = d.Decode(azistr),
+        azi = vals.val, ind = vals.ind;
     if (ind === d.LATITUDE)
       throw new Error("Azimuth " + azistr +
-                      " has a latitude hemisphere, N/S");
+                      " has a latitude hemisphere N/S");
     azi = m.AngNormalize(azi);
     return azi;
   };
@@ -321,6 +330,8 @@ GeographicLib.DMS = {};
   d.Encode = function(angle, trailing, prec, ind) {
     // Assume check on range of input angle has been made by calling
     // routine (which might be able to offer a better diagnostic).
+    var scale = 1, i, sign,
+        idegree, fdegree, f, pieces, ip, fp, s;
     if (!ind) ind = d.NONE;
     if (!isFinite(angle))
       return angle < 0 ? String("-inf") :
@@ -329,21 +340,19 @@ GeographicLib.DMS = {};
     // 15 - 2 * trailing = ceiling(log10(2^53/90/60^trailing)).
     // This suffices to give full real precision for numbers in [-90,90]
     prec = Math.min(15 - 2 * trailing, prec);
-    var scale = 1, i;
     for (i = 0; i < trailing; ++i)
       scale *= 60;
     for (i = 0; i < prec; ++i)
       scale *= 10;
     if (ind === d.AZIMUTH)
       angle -= Math.floor(angle/360) * 360;
-    var sign = angle < 0 ? -1 : 1;
+    sign = angle < 0 ? -1 : 1;
     angle *= sign;
 
     // Break off integer part to preserve precision in manipulation of
     // fractional part.
-    var
-    idegree = Math.floor(angle),
-    fdegree = (angle - idegree) * scale + 0.5,
+    idegree = Math.floor(angle);
+    fdegree = (angle - idegree) * scale + 0.5;
     f = Math.floor(fdegree);
     // Implement the "round ties to even" rule
     fdegree = (f == fdegree && (f & 1)) ? f - 1 : f;
@@ -354,16 +363,15 @@ GeographicLib.DMS = {};
       idegree += 1;
       fdegree -= 1;
     }
-    var pieces = [fdegree, 0, 0];
+    pieces = [fdegree, 0, 0];
     for (i = 1; i <= trailing; ++i) {
-      var
-      ip = Math.floor(pieces[i - 1]),
+      ip = Math.floor(pieces[i - 1]);
       fp = pieces[i - 1] - ip;
       pieces[i] = fp * 60;
       pieces[i - 1] = ip;
     }
     pieces[0] += idegree;
-    var s = "";
+    s = "";
     if (ind === d.NONE && sign < 0)
       s += '-';
     switch (trailing) {
@@ -396,5 +404,4 @@ GeographicLib.DMS = {};
                                  (sign < 0 ? 0 : 1));
     return s;
   };
-
-})();
+})(GeographicLib.DMS, GeographicLib.Math);

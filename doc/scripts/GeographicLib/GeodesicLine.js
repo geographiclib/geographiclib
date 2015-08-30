@@ -17,14 +17,14 @@
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-// Load AFTER GeographicLib/Math.js and GeographicLib/Geodesic.js
+// Load AFTER GeographicLib/Math.js, GeographicLib/Geodesic.js
 
-(function() {
-  var g = GeographicLib.Geodesic;
-  var l = GeographicLib.GeodesicLine;
-  var m = GeographicLib.Math;
+(function(g, l, m) {
+  "use strict";
 
   l.GeodesicLine = function(geod, lat1, lon1, azi1, caps) {
+    var t, cbet1, sbet1, eps, s, c;
+
     this._a = geod._a;
     this._f = geod._f;
     this._b = geod._b;
@@ -36,9 +36,7 @@
     this._lat1 = m.LatFix(lat1);
     this._lon1 = lon1;
     this._azi1 = m.AngNormalize(azi1);
-    var t;
     t = m.sincosd(m.AngRound(this._azi1)); this._salp1 = t.s; this._calp1 = t.c;
-    var cbet1, sbet1;
     t = m.sincosd(m.AngRound(this._lat1)); sbet1 = this._f1 * t.s; cbet1 = t.c;
     // norm(sbet1, cbet1);
     t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
@@ -69,14 +67,14 @@
     // norm(this._somg1, this._comg1); -- don't need to normalize!
 
     this._k2 = m.sq(this._calp0) * geod._ep2;
-    var eps = this._k2 / (2 * (1 + Math.sqrt(1 + this._k2)) + this._k2);
+    eps = this._k2 / (2 * (1 + Math.sqrt(1 + this._k2)) + this._k2);
 
     if (this._caps & g.CAP_C1) {
       this._A1m1 = g.A1m1f(eps);
       this._C1a = new Array(g.nC1_ + 1);
       g.C1f(eps, this._C1a);
       this._B11 = g.SinCosSeries(true, this._ssig1, this._csig1, this._C1a);
-      var s = Math.sin(this._B11), c = Math.cos(this._B11);
+      s = Math.sin(this._B11); c = Math.cos(this._B11);
       // tau1 = sig1 + B11
       this._stau1 = this._ssig1 * c + this._csig1 * s;
       this._ctau1 = this._csig1 * c - this._ssig1 * s;
@@ -115,7 +113,10 @@
   // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   l.GeodesicLine.prototype.GenPosition = function(arcmode, s12_a12,
                                                   outmask) {
-    var vals = {};
+    var vals = {},
+        sig12, ssig12, csig12, B12, AB1, ssig2, csig2, tau12, s, c, serr,
+        omg12, lam12, lon12, E, sbet2, cbet2, somg2, comg2, salp2, calp2, dn2,
+        B22, AB2, J12, t, B42, salp12, calp12;
     outmask &= this._caps & g.OUT_MASK;
     vals.lat1 = this._lat1; vals.azi1 = this._azi1;
     vals.lon1 = outmask & g.LONG_UNROLL ?
@@ -131,16 +132,15 @@
     }
 
     // Avoid warning about uninitialized B12.
-    var sig12, ssig12, csig12, B12 = 0, AB1 = 0, ssig2, csig2;
+    B12 = 0; AB1 = 0;
     if (arcmode) {
       // Interpret s12_a12 as spherical arc length
       sig12 = s12_a12 * m.degree;
       t = m.sincosd(s12_a12); ssig12 = t.s; csig12 = t.c;
     } else {
       // Interpret s12_a12 as distance
-      var
-      tau12 = s12_a12 / (this._b * (1 + this._A1m1)),
-      s = Math.sin(tau12),
+      tau12 = s12_a12 / (this._b * (1 + this._A1m1));
+      s = Math.sin(tau12);
       c = Math.cos(tau12);
       // tau2 = tau1 + tau12
       B12 = - g.SinCosSeries(true,
@@ -174,7 +174,7 @@
         ssig2 = this._ssig1 * csig12 + this._csig1 * ssig12;
         csig2 = this._csig1 * csig12 - this._ssig1 * ssig12;
         B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a);
-        var serr = (1 + this._A1m1) * (sig12 + (B12 - this._B11)) -
+        serr = (1 + this._A1m1) * (sig12 + (B12 - this._B11)) -
           s12_a12 / this._b;
         sig12 = sig12 - serr / Math.sqrt(1 + this._k2 * m.sq(ssig2));
         ssig12 = Math.sin(sig12); csig12 = Math.cos(sig12);
@@ -182,12 +182,10 @@
       }
     }
 
-    var omg12, lam12, lon12, E;
-    var sbet2, cbet2, somg2, comg2, salp2, calp2;
     // sig2 = sig1 + sig12
     ssig2 = this._ssig1 * csig12 + this._csig1 * ssig12;
     csig2 = this._csig1 * csig12 - this._ssig1 * ssig12;
-    var dn2 = Math.sqrt(1 + this._k2 * m.sq(ssig2));
+    dn2 = Math.sqrt(1 + this._k2 * m.sq(ssig2));
     if (outmask & (g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE)) {
       if (arcmode || Math.abs(this._f) > 0.01)
         B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a);
@@ -234,9 +232,8 @@
       vals.azi2 = m.atan2d(salp2, calp2);
 
     if (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE)) {
-      var
-      B22 = g.SinCosSeries(true, ssig2, csig2, this._C2a),
-      AB2 = (1 + this._A2m1) * (B22 - this._B21),
+      B22 = g.SinCosSeries(true, ssig2, csig2, this._C2a);
+      AB2 = (1 + this._A2m1) * (B22 - this._B21);
       J12 = (this._A1m1 - this._A2m1) * sig12 + (AB1 - AB2);
       if (outmask & g.REDUCEDLENGTH)
         // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
@@ -245,7 +242,7 @@
                                this._dn1 * (this._ssig1 * csig2)) -
                               this._csig1 * csig2 * J12);
       if (outmask & g.GEODESICSCALE) {
-        var t = this._k2 * (ssig2 - this._ssig1) * (ssig2 + this._ssig1) /
+        t = this._k2 * (ssig2 - this._ssig1) * (ssig2 + this._ssig1) /
           (this._dn1 + dn2);
         vals.M12 = csig12 + (t * ssig2 - csig2 * J12) * this._ssig1 / this._dn1;
         vals.M21 = csig12 - (t * this._ssig1 - this._csig1 * J12) * ssig2 / dn2;
@@ -253,9 +250,7 @@
     }
 
     if (outmask & g.AREA) {
-      var
       B42 = g.SinCosSeries(false, ssig2, csig2, this._C4a);
-      var salp12, calp12;
       if (this._calp0 === 0 || this._salp0 === 0) {
         // alp12 = alp2 - alp1, used in atan2 so no need to normalize
         salp12 = salp2 * this._calp1 - calp2 * this._salp1;
@@ -290,4 +285,4 @@
     return vals;
   };
 
-})();
+})(GeographicLib.Geodesic, GeographicLib.GeodesicLine, GeographicLib.Math);

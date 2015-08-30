@@ -21,11 +21,8 @@
 
 GeographicLib.PolygonArea = {};
 
-(function() {
-  var m = GeographicLib.Math;
-  var a = GeographicLib.Accumulator;
-  var g = GeographicLib.Geodesic;
-  var p = GeographicLib.PolygonArea;
+(function(p, g, m, a) {
+  "use strict";
 
   p.transit = function(lon1, lon2) {
     // Return 1 or -1 if crossing prime meridian in east or west direction.
@@ -250,4 +247,5 @@ GeographicLib.PolygonArea = {};
     return poly.Compute(false, true);
   };
 
-})();
+})(GeographicLib.PolygonArea, GeographicLib.Geodesic,
+   GeographicLib.Math, GeographicLib.Accumulator);

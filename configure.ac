@@ -91,6 +91,7 @@ src/Makefile
 include/Makefile
 tools/Makefile
 doc/Makefile
+doc/scripts/Makefile
 man/Makefile
 matlab/Makefile
 python/Makefile

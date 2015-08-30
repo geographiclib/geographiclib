@@ -24,41 +24,51 @@
 		   GeographicLib" />
     <meta http-equiv="Content-Type"
 	  content="text/html; charset=ISO-8859-1">
-    <script type="text/javascript"
-	    src="http://geographiclib.sf.net/scripts/geographiclib.js">
+    <!--
+	 Full URL for latest version of geographiclib.js is
+	 http://geographiclib.sf.net/scripts/geographiclib.js
+	 URL for a specific version is, for example,
+	 http://geographiclib.sf.net/scripts/geographiclib-1.44.js
+      -->
+    <script type="text/javascript" src="geographiclib.js">
     </script>
     <script type="text/javascript">
-var geod = GeographicLib.Geodesic.WGS84;
-var dms = GeographicLib.DMS;
+"use strict";
+
+var geod = GeographicLib.Geodesic.WGS84,
+    dms = GeographicLib.DMS;
+
 function formatpoint(lat, lon, azi, dmsformat, prec) {
+  var trail;
   prec += 5;
   if (dmsformat) {
-    var trail = prec < 2 ? dms.DEGREE :
+    trail = prec < 2 ? dms.DEGREE :
       (prec < 4 ? dms.MINUTE : dms.SECOND);
     prec = prec < 2 ? prec : (prec < 4 ? prec - 2 : prec - 4);
     return (dms.Encode(lat, trail, prec, dms.LATITUDE) + " " +
-	    dms.Encode(lon, trail, prec, dms.LONGITUDE) + " " +
-	    dms.Encode(azi, trail, prec, dms.AZIMUTH));
+            dms.Encode(lon, trail, prec, dms.LONGITUDE) + " " +
+            dms.Encode(azi, trail, prec, dms.AZIMUTH));
   } else {
     return (lat.toFixed(prec) + " " +
-	    lon.toFixed(prec) + " " +
-	    azi.toFixed(prec));
+            lon.toFixed(prec) + " " +
+            azi.toFixed(prec));
   }
 }
 
 function GeodesicInverse(input, dmsformat, prec) {
-  var result = {};
+  var result = {},
+      t, p1, p2;
   try {
     // Input is a blank-delimited line: lat1 lon1 lat2 lon2
-    var t = new String(input);
+    t = input;
     t = t.replace(/^\s+/,"").replace(/\s+$/,"").split(/[\s,]+/,6);
     if (t.length != 4)
       throw new Error("Need 4 input items");
-    var p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
-    var p2 = GeographicLib.DMS.DecodeLatLon(t[2], t[3]);
+    p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
+    p2 = GeographicLib.DMS.DecodeLatLon(t[2], t[3]);
     t = geod.Inverse(p1.lat, p1.lon, p2.lat, p2.lon,
-		     GeographicLib.Geodesic.ALL |
-		     GeographicLib.Geodesic.LONG_UNROLL);
+                     GeographicLib.Geodesic.ALL |
+                     GeographicLib.Geodesic.LONG_UNROLL);
     result.status = "OK";
     result.p1 = formatpoint(t.lat1, t.lon1, t.azi1, dmsformat, prec);
     result.p2 = formatpoint(t.lat2, t.lon2, t.azi2, dmsformat, prec);
@@ -82,19 +92,20 @@ function GeodesicInverse(input, dmsformat, prec) {
 }
 
 function GeodesicDirect(input, dmsformat, prec) {
-  var result = {};
+  var result = {},
+      t, p1, azi1, s12;
   try {
     // Input is a blank-delimited line: lat1 lon1 azi1 s12
-    var t = new String(input);
+    var t = input;
     t = t.replace(/^\s+/,"").replace(/\s+$/,"").split(/[\s,]+/,6);
     if (t.length != 4)
       throw new Error("Need 4 input items");
-    var p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
-    var azi1 = GeographicLib.DMS.DecodeAzimuth(t[2]);
-    var s12 = parseFloat(t[3]);
+    p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
+    azi1 = GeographicLib.DMS.DecodeAzimuth(t[2]);
+    s12 = parseFloat(t[3]);
     t = geod.Direct(p1.lat, p1.lon, azi1, s12,
-		    GeographicLib.Geodesic.ALL |
-		    GeographicLib.Geodesic.LONG_UNROLL);
+                    GeographicLib.Geodesic.ALL |
+                    GeographicLib.Geodesic.LONG_UNROLL);
     result.status = "OK";
     result.p1 = formatpoint(t.lat1, t.lon1, t.azi1, dmsformat, prec);
     result.p2 = formatpoint(t.lat2, t.lon2, t.azi2, dmsformat, prec);
@@ -118,24 +129,22 @@ function GeodesicDirect(input, dmsformat, prec) {
 }
 
 function GeodesicInversePath(input, dmsformat, prec) {
-  var result = {};
+  var result = {},
+      t, p1, p2, ds12, maxnum, i;
   try {
     // Input is a blank-delimited line: lat1 lon1 lat2 lon2 ds12 maxnum
-    var t = new String(input);
+    var t = input;
     t = t.replace(/^\s+/,"").replace(/\s+$/,"").split(/[\s,]+/,8);
     if (t.length != 6)
       throw new Error("Need 6 input items");
-    var p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
-    var p2 = GeographicLib.DMS.DecodeLatLon(t[2], t[3]);
-    var ds12 = parseFloat(t[4]);
-    var maxnum = parseInt(t[5]);
-    var t = new String(input);
-    t = t.split(/[\s,]+/,8);
-    if (t[0] == "") t.shift();
+    p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
+    p2 = GeographicLib.DMS.DecodeLatLon(t[2], t[3]);
+    ds12 = parseFloat(t[4]);
+    maxnum = parseInt(t[5]);
     t = geod.InversePath(p1.lat, p1.lon, p2.lat, p2.lon, ds12, maxnum);
     result.status = "OK";
     result.points = ""
-    for (var i = 0; i < t.length; ++i)
+    for (i = 0; i < t.length; ++i)
       result.points +=
       formatpoint(t[i].lat, t[i].lon, t[i].azi, dmsformat, prec) + "\n";
   }
@@ -147,18 +156,19 @@ function GeodesicInversePath(input, dmsformat, prec) {
 }
 
 function GeodesicArea(input, polyline) {
-  var result = {};
+  var result = {},
+      t, i, pos;
   try {
     // Input is a newline-delimited points;
     // each point is blank-delimited: lat lon
-    var t = new String(input);
+    t = input;
     t = t.split(/[\r\n]/);
     if (t[0] == "") t.shift();
     if (t[t.length-1] == "") t.pop();
-    for (var i = 0; i < t.length; ++i) {
-      var pos = t[i].replace(/^\s+/,"").replace(/\s+$/,"").split(/[\s,]+/,4);
+    for (i = 0; i < t.length; ++i) {
+      pos = t[i].replace(/^\s+/,"").replace(/\s+$/,"").split(/[\s,]+/,4);
       if (pos.length != 2)
-	throw new Error("Need 2 items on each line");
+        throw new Error("Need 2 items on each line");
       t[i] = dms.DecodeLatLon(pos[0], pos[1]);
     }
     t = geod.Area(t, polyline);

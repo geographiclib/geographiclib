@@ -96,14 +96,15 @@
  * returned as the perimeter (and the area is not calculated).
  **********************************************************************/
 
-(function() {
-  var m = GeographicLib.Math;
-  var g = GeographicLib.Geodesic;
-  var l = GeographicLib.GeodesicLine;
+// Load AFTER GeographicLib/Math.js, GeographicLib/Geodesic.js,
+// GeographicLib/GeodesicLine.js, GeographicLib/PolygonArea.js
+
+(function(g, l, p, m) {
+  "use strict";
 
   g.Geodesic.CheckPosition = function(lat, lon) {
     if (!(Math.abs(lat) <= 90))
-      throw new Error("latitude " + lat + " not in [-90, 90]");
+      throw new Error("latitude " + lat + " not in [-90,90]");
   };
 
   g.Geodesic.CheckAzimuth = function(azi) {
@@ -184,7 +185,7 @@
 
   g.Geodesic.prototype.Circle = function(lat1, lon1, azi1, s12, k) {
     if (!(Math.abs(lat1) <= 90))
-      throw new Error("lat1 must be in [-90, 90]");
+      throw new Error("lat1 must be in [-90,90]");
     if (!(isFinite(s12)))
       throw new Error("s12 must be a finite number");
     lon1 = m.AngNormalize(lon1);
@@ -204,7 +205,7 @@
 
   g.Geodesic.prototype.Envelope = function(lat1, lon1, k, ord) {
     if (!(Math.abs(lat1) <= 90))
-      throw new Error("lat1 must be in [-90, 90]");
+      throw new Error("lat1 must be in [-90,90]");
     lon1 = m.AngNormalize(lon1);
     if (!k || k < 4) k = 24;
     if (!ord) ord = 1;
@@ -233,7 +234,8 @@
   };
 
   g.Geodesic.prototype.Area = function(points, polyline) {
-    return GeographicLib.PolygonArea.Area(this, points, polyline);
+    return p.Area(this, points, polyline);
   };
 
-})();
+})(GeographicLib.Geodesic, GeographicLib.GeodesicLine,
+   GeographicLib.PolygonArea, GeographicLib.Math);

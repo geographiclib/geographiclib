@@ -208,6 +208,12 @@ make -j$NUMCPUS all
 make -j$NUMCPUS test
 make -j$NUMCPUS exampleprograms
 make install
+rsync -a --delete $TEMP/instc/share/doc/GeographicLib/scripts/ $TEMP/js/
+JS_VERSION=`grep Version: $TEMP/js/geographiclib.js | cut -f2 -d: | tr -d' '`
+mv $TEMP/js/geographiclib.js $TEMP/js/geographiclib-$JS_VERSION.js
+ln -s geographiclib-$JS_VERSION.js $TEMP/js/geographiclib.js
+rsync -a --delete $TEMP/js/ $WEBDIST/htdocs/scripts/test/
+
 mkdir ../BUILD-system
 cd ../BUILD-system
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH ..
@@ -273,7 +279,7 @@ cd $TEMP/instc
 find . -type f | sort -u > ../files.c
 
 cd $TEMP/gitb/geographiclib
-sh autogen.sh
+./autogen.sh
 mkdir BUILD-config
 cd BUILD-config
 ../configure --prefix=$TEMP/instf
@@ -423,6 +429,7 @@ cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
 
 # javascript release
+make -C $DEVELSOURCE -f makefile-admin distrib-js
 make -C $DEVELSOURCE -f makefile-admin install-js
 
 # matlab toolbox
