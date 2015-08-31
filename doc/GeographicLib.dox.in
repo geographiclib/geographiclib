@@ -298,8 +298,10 @@ Here are the steps to compile and install GeographicLib:
     directories for the documentation, cmake configuration, python and
     matlab interfaces all depend on the variable with deeper paths
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
-    - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
     - cmake configuration: OFF cmake; ON: lib/cmake/GeographicLib;
+    - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
+    - JavaScript interface: OFF: doc/scripts; ON:
+      share/doc/GeographicLib/scripts;
     - python interface: OFF: python; ON: lib/python/site-packages;
     - matlab interface: OFF: matlab; ON: share/matlab;
     .
@@ -1211,7 +1213,22 @@ The directory doc/scripts/GeographicLib contains the classes
 - DMS
 .
 translated into JavaScript.  See Interface.js for a simple JavaScript
-interface to these routines (documented near the top of the file).
+interface to these routines (documented near the top of the file).  When
+GeographicLib is built the JavaScript source files are concatenated and
+compressed into a single file <code>geographiclib.js</code>.  This can
+be included into you document with \code
+<script type="text/javascript"
+        src="http://geographiclib.sf.net/scripts/geographiclib.js">
+</script> \endcode
+This file gives you the latest version of the library.  If you need to
+use a specific version of this file, include a version number as in
+\code
+<script type="text/javascript"
+        src="http://geographiclib.sf.net/scripts/geographiclib-1.43.js">
+</script> \endcode
+You can visit http://geographiclib.sf.net/scripts/ to see which versions
+are available.
+
 Examples of using this interface are
 - a <a href="../scripts/geod-calc.html">geodesic calculator</a> showing
   the solution of direct and inverse geodesic problem, finding
@@ -1220,19 +1237,6 @@ Examples of using this interface are
 - <a href="../scripts/geod-google.html">displaying geodesics in Google
   Maps</a> which shows the geodesic, the geodesic circle, and various
   geodesic envelopes.
-.
-These examples include a "stripped" version of the JavaScript code, \code
-<script type="text/javascript"
-        src="http://geographiclib.sf.net/scripts/geographiclib.js">
-</script> \endcode
-which loads faster.  This file gives you the latest version of the
-library.  If you need to use a specific version of this file, include a
-version number as in \code
-<script type="text/javascript"
-        src="http://geographiclib.sf.net/scripts/geographiclib-1.43.js">
-</script> \endcode
-You can visit http://geographiclib.sf.net/scripts/ to see which versions
-are available.
 
 \section python Python implementation
 
@@ -7015,9 +7019,15 @@ git repository for GeographicLib</a>.
      GEOGRAPHICLIB_PRECISION &gt; 3.
    - JavaScript changes:
      - clean up the implementation;
-     - fix incorrect argument of sincosd in Geodesic.GenInverse;
-     - creation and installation of JavaScript files by end user now
-       supported.
+     - fix bug Geodesic.GenInverse (this bug, introduced in version
+       1.44, resulted in the wrong azimuth being reported for points at
+       the pole);
+     - the creation of the concatenated compressed version of the code,
+       geographiclib.js is now part of the build process;
+     - install geographiclib.js of the individual JavaScript source
+       files.
+   - Fixed bug, introduced in version 1.44, in the detection of C++11
+     math functions in configure.ac.
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
    (released 2015-08-14)

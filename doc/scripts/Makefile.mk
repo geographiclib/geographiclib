@@ -1,5 +1,6 @@
+# The order here is significant
 JS_MODULES=Math Geodesic GeodesicLine PolygonArea DMS Interface
-JS_SCRIPTS = $(patsubst %,GeographicLib/%.js,$(JS_MODULES))
+JSSCRIPTS = $(patsubst %,GeographicLib/%.js,$(JS_MODULES))
 
 SCRIPTDRIVERSIN = $(wildcard geod-*.in)
 SCRIPTDRIVERS = $(patsubst %.in,%.html,$(SCRIPTDRIVERSIN))
@@ -9,7 +10,7 @@ all: geographiclib.js $(SCRIPTDRIVERS)
 %.html: %.in
 	cp $^ $@
 
-geographiclib.js: HEADER.js $(JS_SCRIPTS)
+geographiclib.js: HEADER.js $(JSSCRIPTS)
 	./js-compress.sh $^ > $@
 
 clean:
@@ -20,9 +21,7 @@ DEST = $(PREFIX)/share/doc/GeographicLib/scripts
 INSTALL = install -b
 
 install: all
-	test -d $(DEST)/GeographicLib || \
-	mkdir -p $(DEST)/GeographicLib
+	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 $(SCRIPTDRIVERS) geographiclib.js $(DEST)/
-	$(INSTALL) -m 644 $(JS_SCRIPTS) $(DEST)/GeographicLib/
 
 .PHONY: install clean

@@ -210,7 +210,7 @@ GeographicLib.Accumulator = {};
     // [128, 16] + 1 -> [160, -16] -- 160 = round(145).
     // But [160, 0] - 16 -> [128, 16] -- 128 = round(144).
     //
-    if (this._s === 0)           // This implies t == 0,
+    if (this._s === 0)          // This implies t == 0,
       this._s = u;              // so result is u
     else
       this._t += u;             // otherwise just accumulate u to t.

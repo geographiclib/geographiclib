@@ -5,6 +5,7 @@ SCRIPTDRIVERS = \
 	geod-google.html \
 	geod-google-instructions.html
 
+# The order here is significant
 JSSCRIPTS = \
 	$(srcdir)/GeographicLib/Math.js \
 	$(srcdir)/GeographicLib/Geodesic.js \
@@ -29,5 +30,3 @@ scriptsdir=$(DESTDIR)$(docdir)/scripts
 install: all
 	$(INSTALL) -d $(scriptsdir)
 	$(INSTALL) -m 644 $(SCRIPTDRIVERS) geographiclib.js $(scriptsdir)
-	$(INSTALL) -d $(scriptsdir)/GeographicLib
-	$(INSTALL) -m 644 $(JSSCRIPTS) $(scriptsdir)/GeographicLib

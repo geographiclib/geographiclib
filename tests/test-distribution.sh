@@ -102,6 +102,11 @@ make doc
     rsync -a target/apidocs/ ../BUILD/doc/html/java/
 )
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
+cp -p --delete doc/scripts/*.js doc/scripts/*.html $TEMP/js/
+JS_VERSION=`grep Version: $TEMP/js/geographiclib.js | cut -f2 -d: | tr -d ' '`
+mv $TEMP/js/geographiclib.js $TEMP/js/geographiclib-$JS_VERSION.js
+ln -s geographiclib-$JS_VERSION.js $TEMP/js/geographiclib.js
+rsync -a --delete $TEMP/js/ $WEBDIST/htdocs/scripts/test/
 
 mkdir $TEMP/rel{a,b,c,x,y}
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/rela # Version of make build
@@ -208,11 +213,6 @@ make -j$NUMCPUS all
 make -j$NUMCPUS test
 make -j$NUMCPUS exampleprograms
 make install
-rsync -a --delete $TEMP/instc/share/doc/GeographicLib/scripts/ $TEMP/js/
-JS_VERSION=`grep Version: $TEMP/js/geographiclib.js | cut -f2 -d: | tr -d ' '`
-mv $TEMP/js/geographiclib.js $TEMP/js/geographiclib-$JS_VERSION.js
-ln -s geographiclib-$JS_VERSION.js $TEMP/js/geographiclib.js
-rsync -a --delete $TEMP/js/ $WEBDIST/htdocs/scripts/test/
 
 mkdir ../BUILD-system
 cd ../BUILD-system

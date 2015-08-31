@@ -38,15 +38,22 @@ if (JS_BUILD)
   endforeach ()
 endif ()
 
+# "make javascript" will reconfigure cmake if necessary, since
+# geographiclib.js is created during configuration.
+add_custom_command (OUTPUT geographiclib.js
+  DEPENDS ${JSSCRIPTS} HEADER.js
+  COMMAND ${CMAKE_COMMAND} ARGS "."
+  WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+add_custom_target (javascript ALL DEPENDS geographiclib.js)
+
 if (COMMON_INSTALL_PATH)
   set (INSTALL_SCRIPTS_DIR "share/doc/GeographicLib/scripts")
 else ()
   set (INSTALL_SCRIPTS_DIR "doc/scripts")
 endif ()
 
-# Install the JavaScript files
+# Install the JavaScript file
 install (FILES ${JS_TARGET} DESTINATION ${INSTALL_SCRIPTS_DIR})
-install (FILES ${JSSCRIPTS} DESTINATION ${INSTALL_SCRIPTS_DIR}/GeographicLib)
 
 set (SCRIPTDRIVERS geod-calc geod-google geod-google-instructions)
 foreach (_D ${SCRIPTDRIVERS})

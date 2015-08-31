@@ -22,7 +22,7 @@
 GeographicLib.Geodesic = {};
 GeographicLib.GeodesicLine = {};
 
-(function(g, l, m) {
+(function(g, l, m, c) {
   "use strict";
 
   g.GEOGRAPHICLIB_GEODESIC_ORDER = 6;
@@ -708,12 +708,12 @@ GeographicLib.GeodesicLine = {};
     // norm(somg2, comg2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
-    vals.sig12 = Math.atan2(0 + Math.max(0, vals.csig1 * vals.ssig2 -
-                                         vals.ssig1 * vals.csig2),
+    vals.sig12 = Math.atan2(Math.max(0, vals.csig1 * vals.ssig2 -
+                                     vals.ssig1 * vals.csig2),
                             vals.csig1 * vals.csig2 + vals.ssig1 * vals.ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
-    omg12 = Math.atan2(0 + Math.max(0, comg1 * somg2 - somg1 * comg2),
+    omg12 = Math.atan2(Math.max(0, comg1 * somg2 - somg1 * comg2),
                        comg1 * comg2 + somg1 * somg2);
     k2 = m.sq(calp0) * this._ep2;
     vals.eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
@@ -848,7 +848,7 @@ GeographicLib.GeodesicLine = {};
       ssig2 = sbet2; csig2 = calp2 * cbet2;
 
       // sig12 = sig2 - sig1
-      sig12 = Math.atan2(0 + Math.max(0, csig1 * ssig2 - ssig1 * csig2),
+      sig12 = Math.atan2(Math.max(0, csig1 * ssig2 - ssig1 * csig2),
                          csig1 * csig2 + ssig1 * ssig2);
       nvals = this.Lengths(this._n, sig12,
                            ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
@@ -1114,6 +1114,6 @@ GeographicLib.GeodesicLine = {};
     return line.GenPosition(arcmode, s12_a12, outmask);
   };
 
-  g.WGS84 = new g.Geodesic(GeographicLib.Constants.WGS84.a,
-                           GeographicLib.Constants.WGS84.f);
-})(GeographicLib.Geodesic, GeographicLib.GeodesicLine, GeographicLib.Math);
+  g.WGS84 = new g.Geodesic(c.WGS84.a, c.WGS84.f);
+})(GeographicLib.Geodesic, GeographicLib.GeodesicLine, GeographicLib.Math,
+  GeographicLib.Constants);

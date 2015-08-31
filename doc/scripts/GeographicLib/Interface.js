@@ -102,34 +102,35 @@
 (function(g, l, p, m) {
   "use strict";
 
-  g.Geodesic.CheckPosition = function(lat, lon) {
+  g.CheckPosition = function(lat, lon) {
     if (!(Math.abs(lat) <= 90))
       throw new Error("latitude " + lat + " not in [-90,90]");
+    if (!(isFinite(lon)))
+      throw new Error("longitude " + lon + " not a finite number");
   };
 
-  g.Geodesic.CheckAzimuth = function(azi) {
+  g.CheckAzimuth = function(azi) {
     if (!(isFinite(azi)))
       throw new Error("azimuth " + azi + " not a finite number");
-    return m.AngNormalize(azi);
   };
 
-  g.Geodesic.CheckDistance = function(s) {
+  g.CheckDistance = function(s) {
     if (!(isFinite(s)))
       throw new Error("distance " + s + " not a finite number");
   };
 
   g.Geodesic.prototype.Inverse = function(lat1, lon1, lat2, lon2, outmask) {
     if (!outmask) outmask = g.DISTANCE | g.AZIMUTH;
-    g.Geodesic.CheckPosition(lat1, lon1);
-    g.Geodesic.CheckPosition(lat2, lon2);
+    g.CheckPosition(lat1, lon1);
+    g.CheckPosition(lat2, lon2);
     return this.GenInverse(lat1, lon1, lat2, lon2, outmask);
   };
 
   g.Geodesic.prototype.Direct = function(lat1, lon1, azi1, s12, outmask) {
     if (!outmask) outmask = g.LATITUDE | g.LONGITUDE | g.AZIMUTH;
-    g.Geodesic.CheckPosition(lat1, lon1);
-    g.Geodesic.CheckAzimuth(azi1);
-    g.Geodesic.CheckDistance(s12);
+    g.CheckPosition(lat1, lon1);
+    g.CheckAzimuth(azi1);
+    g.CheckDistance(s12);
     return this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
   };
 
