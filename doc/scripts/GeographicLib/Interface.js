@@ -94,7 +94,7 @@
  * There is no need to "close" the polygon.  If polyline (default =
  * false) is true, then the points denote a polyline and its length is
  * returned as the perimeter (and the area is not calculated).
- **********************************************************************/
+ */
 
 // Load AFTER GeographicLib/Math.js, GeographicLib/Geodesic.js,
 // GeographicLib/GeodesicLine.js, GeographicLib/PolygonArea.js

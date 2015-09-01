@@ -102,7 +102,8 @@ make doc
     rsync -a target/apidocs/ ../BUILD/doc/html/java/
 )
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
-cp -p --delete doc/scripts/*.js doc/scripts/*.html $TEMP/js/
+mkdir -p $TEMP/js
+cp -p doc/scripts/*.js doc/scripts/*.html $TEMP/js/
 JS_VERSION=`grep Version: $TEMP/js/geographiclib.js | cut -f2 -d: | tr -d ' '`
 mv $TEMP/js/geographiclib.js $TEMP/js/geographiclib-$JS_VERSION.js
 ln -s geographiclib-$JS_VERSION.js $TEMP/js/geographiclib.js

@@ -8,7 +8,7 @@
  * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
- **********************************************************************/
+ */
 
 // Load AFTER GeographicLib/Math.js
 
@@ -16,20 +16,22 @@ GeographicLib.DMS = {};
 
 (function(d, m) {
   "use strict";
-  d.lookup = function(s, c) {
+
+  var lookup, zerofill, InternalDecode, NumMatch,
+      hemispheres_ = "SNWE",
+      signs_ = "-+",
+      digits_ = "0123456789",
+      dmsindicators_ = "D'\":",
+      // dmsindicatorsu_ = "\u00b0\u2032\u2033"; // Unicode variants
+      dmsindicatorsu_ = "\u00b0'\"", // Use degree symbol
+      components_ = ["degrees", "minutes", "seconds"];
+  lookup = function(s, c) {
     return s.indexOf(c.toUpperCase());
   };
-  d.zerofill = function(s, n) {
+  zerofill = function(s, n) {
     return String("0000").substr(0, Math.max(0, Math.min(4, n-s.length))) +
       s;
   };
-  d.hemispheres_ = "SNWE";
-  d.signs_ = "-+";
-  d.digits_ = "0123456789";
-  d.dmsindicators_ = "D'\":";
-  // d.dmsindicatorsu_ = "\u00b0\u2032\u2033"; // Unicode variants
-  d.dmsindicatorsu_ = "\u00b0'\""; // Use degree symbol
-  d.components_ = ["degrees", "minutes", "seconds"];
   d.NONE = 0;
   d.LATITUDE = 1;
   d.LONGITUDE = 2;
@@ -61,10 +63,10 @@ GeographicLib.DMS = {};
     for (p = 0; p < end; p = pb, ++i) {
       pa = p;
       // Skip over initial hemisphere letter (for i == 0)
-      if (i === 0 && d.lookup(d.hemispheres_, dmsa.charAt(pa)) >= 0)
+      if (i === 0 && lookup(hemispheres_, dmsa.charAt(pa)) >= 0)
         ++pa;
       // Skip over initial sign (checking for it if i == 0)
-      if (i > 0 || (pa < end && d.lookup(d.signs_, dmsa.charAt(pa)) >= 0))
+      if (i > 0 || (pa < end && lookup(signs_, dmsa.charAt(pa)) >= 0))
         ++pa;
       // Find next sign
       mi = dmsa.substr(pa, end - pa).indexOf('-');
@@ -72,7 +74,7 @@ GeographicLib.DMS = {};
       if (mi < 0) mi = end; else mi += pa;
       if (pi < 0) pi = end; else pi += pa;
       pb = Math.min(mi, pi);
-      vals = d.InternalDecode(dmsa.substr(p, pb - p));
+      vals = InternalDecode(dmsa.substr(p, pb - p));
       v += vals.val; ind2 = vals.ind;
       if (ind1 == d.NONE)
         ind1 = ind2;
@@ -85,7 +87,7 @@ GeographicLib.DMS = {};
     return {val: v, ind: ind1};
   };
 
-  d.InternalDecode = function(dmsa) {
+  InternalDecode = function(dmsa) {
     var vals = {}, errormsg = "",
         sign, beg, end, ind1, k,
         ipieces, fpieces, npiece,
@@ -98,13 +100,13 @@ GeographicLib.DMS = {};
       beg = 0; end = dmsa.length;
       ind1 = d.NONE;
       k = -1;
-      if (end > beg && (k = d.lookup(d.hemispheres_, dmsa.charAt(beg))) >= 0) {
+      if (end > beg && (k = lookup(hemispheres_, dmsa.charAt(beg))) >= 0) {
         ind1 = (k & 2) ? d.LONGITUDE : d.LATITUDE;
         sign = (k & 1) ? 1 : -1;
         ++beg;
       }
       if (end > beg &&
-          (k = d.lookup(d.hemispheres_, dmsa.charAt(end-1))) >= 0) {
+          (k = lookup(hemispheres_, dmsa.charAt(end-1))) >= 0) {
         if (k >= 0) {
           if (ind1 !== d.NONE) {
             if (dmsa.charAt(beg - 1).toUpperCase() ===
@@ -123,7 +125,7 @@ GeographicLib.DMS = {};
           --end;
         }
       }
-      if (end > beg && (k = d.lookup(d.signs_, dmsa.charAt(beg))) >= 0) {
+      if (end > beg && (k = lookup(signs_, dmsa.charAt(beg))) >= 0) {
         if (k >= 0) {
           sign *= k ? 1 : -1;
           ++beg;
@@ -145,7 +147,7 @@ GeographicLib.DMS = {};
       intcount = 0;
       while (p < end) {
         x = dmsa.charAt(p++);
-        if ((k = d.lookup(d.digits_, x)) >= 0) {
+        if ((k = lookup(digits_, x)) >= 0) {
           ++ncurrent;
           if (digcount > 0) {
             ++digcount;         // Count of decimal digits
@@ -161,7 +163,7 @@ GeographicLib.DMS = {};
           }
           pointseen = true;
           digcount = 1;
-        } else if ((k = d.lookup(d.dmsindicators_, x)) >= 0) {
+        } else if ((k = lookup(dmsindicators_, x)) >= 0) {
           if (k >= 3) {
             if (p === end) {
               errormsg = "Illegal for colon to appear at the end of " +
@@ -171,17 +173,17 @@ GeographicLib.DMS = {};
             k = npiece;
           }
           if (k === npiece - 1) {
-            errormsg = "Repeated " + d.components_[k] +
+            errormsg = "Repeated " + components_[k] +
               " component in " + dmsa.substr(beg, end - beg);
             break;
           } else if (k < npiece) {
-            errormsg = d.components_[k] + " component follows " +
-              d.components_[npiece - 1] + " component in " +
+            errormsg = components_[k] + " component follows " +
+              components_[npiece - 1] + " component in " +
               dmsa.substr(beg, end - beg);
             break;
           }
           if (ncurrent === 0) {
-            errormsg = "Missing numbers in " + d.components_[k] +
+            errormsg = "Missing numbers in " + components_[k] +
               " component of " + dmsa.substr(beg, end - beg);
             break;
           }
@@ -197,7 +199,7 @@ GeographicLib.DMS = {};
             icurrent = fcurrent = 0;
             ncurrent = digcount = intcount = 0;
           }
-        } else if (d.lookup(d.signs_, x) >= 0) {
+        } else if (lookup(signs_, x) >= 0) {
           errormsg = "Internal sign in DMS string " +
             dmsa.substr(beg, end - beg);
           break;
@@ -209,7 +211,7 @@ GeographicLib.DMS = {};
       }
       if (errormsg.length)
         break;
-      if (d.lookup(d.dmsindicators_, dmsa.charAt(p - 1)) < 0) {
+      if (lookup(dmsindicators_, dmsa.charAt(p - 1)) < 0) {
         if (npiece >= 3) {
           errormsg = "Extra text following seconds in DMS string " +
             dmsa.substr(beg, end - beg);
@@ -250,7 +252,7 @@ GeographicLib.DMS = {};
           ( fpieces[1] ? (60*fpieces[0] + fpieces[1]) / 60 : fpieces[0] ) );
       return vals;
     } while (false);
-    vals.val = d.NumMatch(dmsa);
+    vals.val = NumMatch(dmsa);
     if (vals.val === 0)
       throw new Error(errormsg);
     else
@@ -258,8 +260,8 @@ GeographicLib.DMS = {};
     return vals;
   };
 
-  d.NumMatch = function(s) {
-    var t, sign, p0, p0;
+  NumMatch = function(s) {
+    var t, sign, p0, p1;
     if (s.length < 3)
       return 0;
     t = s.toUpperCase().replace(/0+$/,"");
@@ -376,32 +378,32 @@ GeographicLib.DMS = {};
       s += '-';
     switch (trailing) {
     case d.DEGREE:
-      s += d.zerofill(pieces[0].toFixed(prec),
-                      ind === d.NONE ? 0 :
-                      1 + Math.min(ind, 2) + prec + (prec ? 1 : 0)) +
-        d.dmsindicatorsu_.charAt(0);
+      s += zerofill(pieces[0].toFixed(prec),
+                    ind === d.NONE ? 0 :
+                    1 + Math.min(ind, 2) + prec + (prec ? 1 : 0)) +
+        dmsindicatorsu_.charAt(0);
       break;
     default:
-      s += d.zerofill(pieces[0].toFixed(0),
-                      ind === d.NONE ? 0 : 1 + Math.min(ind, 2)) +
-        d.dmsindicatorsu_.charAt(0);
+      s += zerofill(pieces[0].toFixed(0),
+                    ind === d.NONE ? 0 : 1 + Math.min(ind, 2)) +
+        dmsindicatorsu_.charAt(0);
       switch (trailing) {
       case d.MINUTE:
-        s += d.zerofill(pieces[1].toFixed(prec), 2 + prec + (prec ? 1 : 0)) +
-          d.dmsindicatorsu_.charAt(1);
+        s += zerofill(pieces[1].toFixed(prec), 2 + prec + (prec ? 1 : 0)) +
+          dmsindicatorsu_.charAt(1);
         break;
       case d.SECOND:
-        s += d.zerofill(pieces[1].toFixed(0), 2) + d.dmsindicatorsu_.charAt(1);
-        s += d.zerofill(pieces[2].toFixed(prec), 2 + prec + (prec ? 1 : 0)) +
-          d.dmsindicatorsu_.charAt(2);
+        s += zerofill(pieces[1].toFixed(0), 2) + dmsindicatorsu_.charAt(1);
+        s += zerofill(pieces[2].toFixed(prec), 2 + prec + (prec ? 1 : 0)) +
+          dmsindicatorsu_.charAt(2);
         break;
       default:
         break;
       }
     }
     if (ind !== d.NONE && ind !== d.AZIMUTH)
-      s += d.hemispheres_.charAt((ind === d.LATITUDE ? 0 : 2) +
-                                 (sign < 0 ? 0 : 1));
+      s += hemispheres_.charAt((ind === d.LATITUDE ? 0 : 2) +
+                               (sign < 0 ? 0 : 1));
     return s;
   };
 })(GeographicLib.DMS, GeographicLib.Math);

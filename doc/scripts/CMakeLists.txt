@@ -25,7 +25,10 @@ if (JS_BUILD)
   file (APPEND ${JS_TARGET} "${_S}")
   foreach (_F ${JSSCRIPTS})
     file (READ "${_F}" _S)
-    string (REGEX REPLACE "^.*\\*/" "" _S "${_S}")
+    # This matches /*...*/ style comments, where ... is any number of
+    # \*[^/] and [^*].  This has the defect that the it won't detect,
+    # e.g., **/ as the end of the comment.
+    string (REGEX REPLACE "/\\*(\\*[^/]|[^*])*\\*/" "" _S "${_S}")
     string (REGEX REPLACE "//[^\n]*\n" "\n" _S "${_S}")
     string (REGEX REPLACE "[ \t]+" " " _S "${_S}")
     string (REGEX REPLACE "([^\"A-Za-z0-9_]) " "\\1" _S "${_S}")
@@ -36,6 +39,8 @@ if (JS_BUILD)
     string (REGEX REPLACE "\n+" "\n" _S "${_S}")
     file (APPEND ${JS_TARGET} "// ${_F}\n${_S}")
   endforeach ()
+  # support loading with node's require
+  file (APPEND ${JS_TARGET} "if(module)module.exports=GeographicLib;\n")
 endif ()
 
 # "make javascript" will reconfigure cmake if necessary, since

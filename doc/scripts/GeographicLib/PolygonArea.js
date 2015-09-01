@@ -15,7 +15,7 @@
  * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
- **********************************************************************/
+ */
 
 // Load AFTER GeographicLib/Math.js and GeographicLib/Geodesic.js
 
@@ -24,7 +24,8 @@ GeographicLib.PolygonArea = {};
 (function(p, g, m, a) {
   "use strict";
 
-  p.transit = function(lon1, lon2) {
+  var transit, transitdirect;
+  transit = function(lon1, lon2) {
     // Return 1 or -1 if crossing prime meridian in east or west direction.
     // Otherwise return zero.
     // Compute lon12 the same way as Geodesic::Inverse.
@@ -39,7 +40,7 @@ GeographicLib.PolygonArea = {};
 
   // an alternate version of transit to deal with longitudes in the direct
   // problem.
-  p.transitdirect = function(lon1, lon2) {
+  transitdirect = function(lon1, lon2) {
     // We want to compute exactly
     //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
     // Since we only need the parity of the result we can use std::remquo but
@@ -79,7 +80,7 @@ GeographicLib.PolygonArea = {};
       this._perimetersum.Add(t.s12);
       if (!this._polyline) {
         this._areasum.Add(t.S12);
-        this._crossings += p.transit(this._lon1, lon);
+        this._crossings += transit(this._lon1, lon);
       }
       this._lat1 = lat;
       this._lon1 = lon;
@@ -93,7 +94,7 @@ GeographicLib.PolygonArea = {};
       this._perimetersum.Add(s);
       if (!this._polyline) {
         this._areasum.Add(t.S12);
-        this._crossings += p.transitdirect(this._lon1, t.lon2);
+        this._crossings += transitdirect(this._lon1, t.lon2);
       }
       this._lat1 = t.lat2;
       this._lon1 = t.lon2;
@@ -119,7 +120,7 @@ GeographicLib.PolygonArea = {};
     vals.perimeter = this._perimetersum.Sum(t.s12);
     var tempsum = new a.Accumulator(this._areasum);
     tempsum.Add(t.S12);
-    var crossings = this._crossings + p.transit(this._lon1, this._lon0);
+    var crossings = this._crossings + transit(this._lon1, this._lon0);
     if (crossings & 1)
       tempsum.Add( (tempsum.Sum() < 0 ? 1 : -1) * this._area0/2 );
     // area is with the clockwise sense.  If !reverse convert to
@@ -163,7 +164,7 @@ GeographicLib.PolygonArea = {};
       vals.perimeter += t.s12;
       if (!this._polyline) {
         tempsum += t.S12;
-        crossings += p.transit(i === 0 ? this._lon1 : lon,
+        crossings += transit(i === 0 ? this._lon1 : lon,
                                i !== 0 ? this._lon0 : lon);
       }
     }
@@ -207,11 +208,11 @@ GeographicLib.PolygonArea = {};
     var t;
     t = this._earth.Direct(this._lat1, this._lon1, azi, s, this._mask);
     tempsum += t.S12;
-    crossings += p.transitdirect(this._lon1, t.lon2);
+    crossings += transitdirect(this._lon1, t.lon2);
     t = this._earth(t.lat2, t.lon2, this._lat0, this._lon0, this._mask);
     perimeter += t.s12;
     tempsum += t.S12;
-    crossings += p.transit(t.lon2, this._lon0);
+    crossings += transit(t.lon2, this._lon0);
 
     if (crossings & 1)
       tempsum += (tempsum < 0 ? 1 : -1) * this._area0/2;

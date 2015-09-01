@@ -15,7 +15,7 @@
  * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
- **********************************************************************/
+ */
 
 // Load AFTER Math.js
 
@@ -25,49 +25,51 @@ GeographicLib.GeodesicLine = {};
 (function(g, l, m, c) {
   "use strict";
 
-  g.GEOGRAPHICLIB_GEODESIC_ORDER = 6;
-  g.nA1_ = g.GEOGRAPHICLIB_GEODESIC_ORDER;
-  g.nC1_ = g.GEOGRAPHICLIB_GEODESIC_ORDER;
-  g.nC1p_ = g.GEOGRAPHICLIB_GEODESIC_ORDER;
-  g.nA2_ = g.GEOGRAPHICLIB_GEODESIC_ORDER;
-  g.nC2_ = g.GEOGRAPHICLIB_GEODESIC_ORDER;
-  g.nA3_ = g.GEOGRAPHICLIB_GEODESIC_ORDER;
-  g.nA3x_ = g.nA3_;
-  g.nC3_ = g.GEOGRAPHICLIB_GEODESIC_ORDER;
-  g.nC3x_ = (g.nC3_ * (g.nC3_ - 1)) / 2;
-  g.nC4_ = g.GEOGRAPHICLIB_GEODESIC_ORDER;
-  g.nC4x_ = (g.nC4_ * (g.nC4_ + 1)) / 2;
-  g.maxit1_ = 20;
-  g.maxit2_ = g.maxit1_ + m.digits + 10;
-  g.tiny_ = Math.sqrt(Number.MIN_VALUE);
-  g.tol0_ = m.epsilon;
-  g.tol1_ = 200 * g.tol0_;
-  g.tol2_ = Math.sqrt(g.tol0_);
-  g.tolb_ = g.tol0_ * g.tol1_;
-  g.xthresh_ = 1000 * g.tol2_;
+  var GEOGRAPHICLIB_GEODESIC_ORDER = 6,
+      nA1_ = GEOGRAPHICLIB_GEODESIC_ORDER,
+      nA2_ = GEOGRAPHICLIB_GEODESIC_ORDER,
+      nA3_ = GEOGRAPHICLIB_GEODESIC_ORDER,
+      nA3x_ = nA3_,
+      nC3x_, nC4x_,
+      maxit1_ = 20,
+      maxit2_ = maxit1_ + m.digits + 10,
+      tol0_ = m.epsilon,
+      tol1_ = 200 * tol0_,
+      tol2_ = Math.sqrt(tol0_),
+      tolb_ = tol0_ * tol1_,
+      xthresh_ = 1000 * tol2_,
+      CAP_NONE = 0,
+      CAP_ALL  = 0x1F,
+      CAP_MASK = CAP_ALL,
+      OUT_ALL  = 0x7F80,
+      Astroid;
 
-  g.CAP_NONE = 0;
+  g.tiny_ = Math.sqrt(Number.MIN_VALUE);
+  g.nC1_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+  g.nC1p_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+  g.nC2_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+  g.nC3_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+  g.nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER;
+  nC3x_ = (g.nC3_ * (g.nC3_ - 1)) / 2;
+  nC4x_ = (g.nC4_ * (g.nC4_ + 1)) / 2,
   g.CAP_C1   = 1<<0;
   g.CAP_C1p  = 1<<1;
   g.CAP_C2   = 1<<2;
   g.CAP_C3   = 1<<3;
   g.CAP_C4   = 1<<4;
-  g.CAP_ALL  = 0x1F;
-  g.CAP_MASK = g.CAP_ALL;
-  g.OUT_ALL  = 0x7F80;
-  g.OUT_MASK = 0xFF80;          // Includes LONG_UNROLL
+
   g.NONE          = 0;
-  g.LATITUDE      = 1<<7  | g.CAP_NONE;
+  g.LATITUDE      = 1<<7  | CAP_NONE;
   g.LONGITUDE     = 1<<8  | g.CAP_C3;
-  g.AZIMUTH       = 1<<9  | g.CAP_NONE;
+  g.AZIMUTH       = 1<<9  | CAP_NONE;
   g.DISTANCE      = 1<<10 | g.CAP_C1;
   g.DISTANCE_IN   = 1<<11 | g.CAP_C1 | g.CAP_C1p;
   g.REDUCEDLENGTH = 1<<12 | g.CAP_C1 | g.CAP_C2;
   g.GEODESICSCALE = 1<<13 | g.CAP_C1 | g.CAP_C2;
   g.AREA          = 1<<14 | g.CAP_C4;
   g.LONG_UNROLL   = 1<<15;
-  g.LONG_NOWRAP   = g.LONG_UNROLL;
-  g.ALL           = g.OUT_ALL| g.CAP_ALL;
+  g.ALL           = OUT_ALL| CAP_ALL;
+  g.OUT_MASK      = OUT_ALL| g.LONG_UNROLL;
 
   g.SinCosSeries = function(sinp, sinx, cosx, c) {
     // Evaluate
@@ -90,7 +92,7 @@ GeographicLib.GeodesicLine = {};
             cosx * (y0 - y1));            // cos(x) * (y0 - y1)
   };
 
-  g.Astroid = function(x, y) {
+  Astroid = function(x, y) {
     // Solve k^4+2*k^3-(x^2+y^2-1)*k^2-2*y^2*k-y^2 = 0 for positive
     // root k.  This solution is adapted from Geocentric::Reverse.
     var k,
@@ -149,7 +151,7 @@ GeographicLib.GeodesicLine = {};
           // (1-eps)*A1-1, polynomial in eps2 of order 3
             +1, 4, 64, 0, 256,
         ],
-        p = Math.floor(g.nA1_/2),
+        p = Math.floor(nA1_/2),
         t = m.polyval(p, coeff, 0, m.sq(eps)) / coeff[p + 1];
     return (t + eps) / (1 - eps);
   };
@@ -219,7 +221,7 @@ GeographicLib.GeodesicLine = {};
           // (eps+1)*A2-1, polynomial in eps2 of order 3
             -11, -28, -192, 0, 256,
         ],
-        p = Math.floor(g.nA2_/2),
+        p = Math.floor(nA2_/2),
         t = m.polyval(p, coeff, 0, m.sq(eps)) / coeff[p + 1];
     return (t - eps) / (1 + eps);
   };
@@ -276,16 +278,16 @@ GeographicLib.GeodesicLine = {};
     // by a factor of 2.)  Setting this equal to epsilon gives sig12 = etol2.
     // Here 0.1 is a safety factor (error decreased by 100) and max(0.001,
     // abs(f)) stops etol2 getting too large in the nearly spherical case.
-    this._etol2 = 0.1 * g.tol2_ /
+    this._etol2 = 0.1 * tol2_ /
       Math.sqrt( Math.max(0.001, Math.abs(this._f)) *
                  Math.min(1.0, 1 - this._f/2) / 2 );
     if (!(isFinite(this._a) && this._a > 0))
       throw new Error("Major radius is not positive");
     if (!(isFinite(this._b) && this._b > 0))
       throw new Error("Minor radius is not positive");
-    this._A3x = new Array(g.nA3x_);
-    this._C3x = new Array(g.nC3x_);
-    this._C4x = new Array(g.nC4x_);
+    this._A3x = new Array(nA3x_);
+    this._C3x = new Array(nC3x_);
+    this._C4x = new Array(nC4x_);
     this.A3coeff();
     this.C3coeff();
     this.C4coeff();
@@ -310,8 +312,8 @@ GeographicLib.GeodesicLine = {};
         ],
         o = 0, k = 0,
         j, p;
-    for (j = g.nA3_ - 1; j >= 0; --j) { // coeff of eps^j
-      p = Math.min(g.nA3_ - j - 1, j);  // order of polynomial in n
+    for (j = nA3_ - 1; j >= 0; --j) { // coeff of eps^j
+      p = Math.min(nA3_ - j - 1, j);  // order of polynomial in n
       this._A3x[k++] = m.polyval(p, coeff, o, this._n) / coeff[o + p + 1];
       o += p + 2;
     }
@@ -422,7 +424,7 @@ GeographicLib.GeodesicLine = {};
 
   g.Geodesic.prototype.A3f = function(eps) {
     // Evaluate A3
-    return m.polyval(g.nA3x_ - 1, this._A3x, 0, eps);
+    return m.polyval(nA3x_ - 1, this._A3x, 0, eps);
   };
 
   g.Geodesic.prototype.C3f = function(eps, c) {
@@ -441,7 +443,7 @@ GeographicLib.GeodesicLine = {};
 
   g.Geodesic.prototype.C4f = function(eps, c) {
     // Evaluate C4 coeffs
-    // Elements c[0] thru c[nC4_ - 1] are set
+    // Elements c[0] thru c[g.nC4_ - 1] are set
     var mult = 1,
         o = 0,
         l, p;
@@ -596,13 +598,13 @@ GeographicLib.GeodesicLine = {};
         y = (lam12 - Math.PI) / lamscale;
       }
 
-      if (y > -g.tol1_ && x > -1 - g.xthresh_) {
+      if (y > -tol1_ && x > -1 - xthresh_) {
         // strip near cut
         if (this._f >= 0) {
           vals.salp1 = Math.min(1, -x);
           vals.calp1 = - Math.sqrt(1 - m.sq(vals.salp1));
         } else {
-          vals.calp1 = Math.max(x > -g.tol1_ ? 0 : -1, x);
+          vals.calp1 = Math.max(x > -tol1_ ? 0 : -1, x);
           vals.salp1 = Math.sqrt(1 - m.sq(vals.calp1));
         }
       } else {
@@ -640,7 +642,7 @@ GeographicLib.GeodesicLine = {};
         //    6    56      0
         //
         // Because omg12 is near pi, estimate work with omg12a = pi - omg12
-        k = g.Astroid(x, y);
+        k = Astroid(x, y);
         omg12a = lamscale * ( this._f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k );
         somg12 = Math.sin(omg12a); comg12 = -Math.cos(omg12a);
         // Update spherical estimate of alp1 using omg12 instead of
@@ -934,11 +936,11 @@ GeographicLib.GeodesicLine = {};
         numit = 0;
         // Bracketing range
         salp1a = g.tiny_; calp1a = 1; salp1b = g.tiny_; calp1b = -1;
-        for (tripn = false, tripb = false; numit < g.maxit2_; ++numit) {
+        for (tripn = false, tripb = false; numit < maxit2_; ++numit) {
           // the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
           // WGS84 and random input: mean = 2.85, sd = 0.60
           nvals = this.Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-                                salp1, calp1, numit < g.maxit1_,
+                                salp1, calp1, numit < maxit1_,
                                 C1a, C2a, C3a);
           v = nvals.lam12 - lam12;
           salp2 = nvals.salp2;
@@ -954,16 +956,16 @@ GeographicLib.GeodesicLine = {};
 
           // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
           // Reversed test to allow escape with NaNs
-          if (tripb || !(Math.abs(v) >= (tripn ? 8 : 2) * g.tol0_))
+          if (tripb || !(Math.abs(v) >= (tripn ? 8 : 2) * tol0_))
             break;
           // Update bracketing values
-          if (v > 0 && (numit < g.maxit1_ || calp1/salp1 > calp1b/salp1b)) {
+          if (v > 0 && (numit < maxit1_ || calp1/salp1 > calp1b/salp1b)) {
               salp1b = salp1; calp1b = calp1;
           } else if (v < 0 &&
-                     (numit < g.maxit1_ || calp1/salp1 < calp1a/salp1a)) {
+                     (numit < maxit1_ || calp1/salp1 < calp1a/salp1a)) {
             salp1a = salp1; calp1a = calp1;
           }
-          if (numit < g.maxit1_ && dv > 0) {
+          if (numit < maxit1_ && dv > 0) {
             dalp1 = -v/dv;
             sdalp1 = Math.sin(dalp1); cdalp1 = Math.cos(dalp1);
             nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
@@ -975,7 +977,7 @@ GeographicLib.GeodesicLine = {};
               // In some regimes we don't get quadratic convergence because
               // slope -> 0.  So use convergence conditions based on epsilon
               // instead of sqrt(epsilon).
-              tripn = Math.abs(v) <= 16 * g.tol0_;
+              tripn = Math.abs(v) <= 16 * tol0_;
               continue;
             }
           }
@@ -992,8 +994,8 @@ GeographicLib.GeodesicLine = {};
           // norm(salp1, calp1);
           t = m.hypot(salp1, calp1); salp1 /= t; calp1 /= t;
           tripn = false;
-          tripb = (Math.abs(salp1a - salp1) + (calp1a - calp1) < g.tolb_ ||
-                   Math.abs(salp1 - salp1b) + (calp1 - calp1b) < g.tolb_);
+          tripb = (Math.abs(salp1a - salp1) + (calp1a - calp1) < tolb_ ||
+                   Math.abs(salp1 - salp1b) + (calp1 - calp1b) < tolb_);
         }
         lengthmask = outmask |
             (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE) ?
