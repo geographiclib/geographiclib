@@ -42,7 +42,10 @@ GeographicLib.GeodesicLine = {};
       CAP_ALL  = 0x1F,
       CAP_MASK = CAP_ALL,
       OUT_ALL  = 0x7F80,
-      Astroid;
+      Astroid,
+      A1m1f_coeff, C1f_coeff, C1pf_coeff,
+      A2m1f_coeff, C2f_coeff,
+      A3_coeff, C3_coeff, C4_coeff;
 
   g.tiny_ = Math.sqrt(Number.MIN_VALUE);
   g.nC1_ = GEOGRAPHICLIB_GEODESIC_ORDER;
@@ -144,112 +147,112 @@ GeographicLib.GeodesicLine = {};
     return k;
   };
 
+  A1m1f_coeff = [
+    // (1-eps)*A1-1, polynomial in eps2 of order 3
+      +1, 4, 64, 0, 256,
+  ];
+
   // The scale factor A1-1 = mean value of (d/dsigma)I1 - 1
   g.A1m1f = function(eps) {
-    var coeff =
-        [
-          // (1-eps)*A1-1, polynomial in eps2 of order 3
-            +1, 4, 64, 0, 256,
-        ],
-        p = Math.floor(nA1_/2),
-        t = m.polyval(p, coeff, 0, m.sq(eps)) / coeff[p + 1];
+    var p = Math.floor(nA1_/2),
+        t = m.polyval(p, A1m1f_coeff, 0, m.sq(eps)) / C1f_coeff[p + 1];
     return (t + eps) / (1 - eps);
   };
 
+  C1f_coeff = [
+    // C1[1]/eps^1, polynomial in eps2 of order 2
+      -1, 6, -16, 32,
+    // C1[2]/eps^2, polynomial in eps2 of order 2
+      -9, 64, -128, 2048,
+    // C1[3]/eps^3, polynomial in eps2 of order 1
+      +9, -16, 768,
+    // C1[4]/eps^4, polynomial in eps2 of order 1
+      +3, -5, 512,
+    // C1[5]/eps^5, polynomial in eps2 of order 0
+      -7, 1280,
+    // C1[6]/eps^6, polynomial in eps2 of order 0
+      -7, 2048,
+  ];
+
   // The coefficients C1[l] in the Fourier expansion of B1
   g.C1f = function(eps, c) {
-    var coeff =
-        [
-          // C1[1]/eps^1, polynomial in eps2 of order 2
-            -1, 6, -16, 32,
-          // C1[2]/eps^2, polynomial in eps2 of order 2
-            -9, 64, -128, 2048,
-          // C1[3]/eps^3, polynomial in eps2 of order 1
-            +9, -16, 768,
-          // C1[4]/eps^4, polynomial in eps2 of order 1
-            +3, -5, 512,
-          // C1[5]/eps^5, polynomial in eps2 of order 0
-            -7, 1280,
-          // C1[6]/eps^6, polynomial in eps2 of order 0
-            -7, 2048,
-        ],
-        eps2 = m.sq(eps),
+    var eps2 = m.sq(eps),
         d = eps,
         o = 0,
         l, p;
     for (l = 1; l <= g.nC1_; ++l) {     // l is index of C1p[l]
       p = Math.floor((g.nC1_ - l) / 2); // order of polynomial in eps^2
-      c[l] = d * m.polyval(p, coeff, o, eps2) / coeff[o + p + 1];
+      c[l] = d * m.polyval(p, C1f_coeff, o, eps2) / C1f_coeff[o + p + 1];
       o += p + 2;
       d *= eps;
     }
   };
 
+  C1pf_coeff = [
+    // C1p[1]/eps^1, polynomial in eps2 of order 2
+      +205, -432, 768, 1536,
+    // C1p[2]/eps^2, polynomial in eps2 of order 2
+      +4005, -4736, 3840, 12288,
+    // C1p[3]/eps^3, polynomial in eps2 of order 1
+      -225, 116, 384,
+    // C1p[4]/eps^4, polynomial in eps2 of order 1
+      -7173, 2695, 7680,
+    // C1p[5]/eps^5, polynomial in eps2 of order 0
+      +3467, 7680,
+    // C1p[6]/eps^6, polynomial in eps2 of order 0
+      +38081, 61440,
+  ];
+
   // The coefficients C1p[l] in the Fourier expansion of B1p
   g.C1pf = function(eps, c) {
-    var coeff =
-        [
-          // C1p[1]/eps^1, polynomial in eps2 of order 2
-            +205, -432, 768, 1536,
-          // C1p[2]/eps^2, polynomial in eps2 of order 2
-            +4005, -4736, 3840, 12288,
-          // C1p[3]/eps^3, polynomial in eps2 of order 1
-            -225, 116, 384,
-          // C1p[4]/eps^4, polynomial in eps2 of order 1
-            -7173, 2695, 7680,
-          // C1p[5]/eps^5, polynomial in eps2 of order 0
-            +3467, 7680,
-          // C1p[6]/eps^6, polynomial in eps2 of order 0
-            +38081, 61440,
-        ],
-        eps2 = m.sq(eps),
+    var eps2 = m.sq(eps),
         d = eps,
         o = 0,
         l, p;
     for (l = 1; l <= g.nC1p_; ++l) {     // l is index of C1p[l]
       p = Math.floor((g.nC1p_ - l) / 2); // order of polynomial in eps^2
-      c[l] = d * m.polyval(p, coeff, o, eps2) / coeff[o + p + 1];
+      c[l] = d * m.polyval(p, C1pf_coeff, o, eps2) / C1pf_coeff[o + p + 1];
       o += p + 2;
       d *= eps;
     }
   };
 
+  A2m1f_coeff = [
+    // (eps+1)*A2-1, polynomial in eps2 of order 3
+      -11, -28, -192, 0, 256,
+  ];
+
   // The scale factor A2-1 = mean value of (d/dsigma)I2 - 1
   g.A2m1f = function(eps) {
-    var coeff =
-        [
-          // (eps+1)*A2-1, polynomial in eps2 of order 3
-            -11, -28, -192, 0, 256,
-        ],
-        p = Math.floor(nA2_/2),
-        t = m.polyval(p, coeff, 0, m.sq(eps)) / coeff[p + 1];
+    var p = Math.floor(nA2_/2),
+        t = m.polyval(p, A2m1f_coeff, 0, m.sq(eps)) / A2m1f_coeff[p + 1];
     return (t - eps) / (1 + eps);
   };
 
+  C2f_coeff = [
+    // C2[1]/eps^1, polynomial in eps2 of order 2
+      +1, 2, 16, 32,
+    // C2[2]/eps^2, polynomial in eps2 of order 2
+      +35, 64, 384, 2048,
+    // C2[3]/eps^3, polynomial in eps2 of order 1
+      +15, 80, 768,
+    // C2[4]/eps^4, polynomial in eps2 of order 1
+      +7, 35, 512,
+    // C2[5]/eps^5, polynomial in eps2 of order 0
+      +63, 1280,
+    // C2[6]/eps^6, polynomial in eps2 of order 0
+      +77, 2048,
+  ];
+
   // The coefficients C2[l] in the Fourier expansion of B2
   g.C2f = function(eps, c) {
-    var coeff =
-        [
-          // C2[1]/eps^1, polynomial in eps2 of order 2
-            +1, 2, 16, 32,
-          // C2[2]/eps^2, polynomial in eps2 of order 2
-            +35, 64, 384, 2048,
-          // C2[3]/eps^3, polynomial in eps2 of order 1
-            +15, 80, 768,
-          // C2[4]/eps^4, polynomial in eps2 of order 1
-            +7, 35, 512,
-          // C2[5]/eps^5, polynomial in eps2 of order 0
-            +63, 1280,
-          // C2[6]/eps^6, polynomial in eps2 of order 0
-            +77, 2048,
-        ],
-        eps2 = m.sq(eps),
+    var eps2 = m.sq(eps),
         d = eps,
         o = 0,
         l, p;
     for (l = 1; l <= g.nC2_; ++l) {     // l is index of C2[l]
       p = Math.floor((g.nC2_ - l) / 2); // order of polynomial in eps^2
-      c[l] = d * m.polyval(p, coeff, o, eps2) / coeff[o + p + 1];
+      c[l] = d * m.polyval(p, C2f_coeff, o, eps2) / C2f_coeff[o + p + 1];
       o += p + 2;
       d *= eps;
     }
@@ -293,130 +296,133 @@ GeographicLib.GeodesicLine = {};
     this.C4coeff();
   };
 
+  A3_coeff = [
+    // A3, coeff of eps^5, polynomial in n of order 0
+      -3, 128,
+    // A3, coeff of eps^4, polynomial in n of order 1
+      -2, -3, 64,
+    // A3, coeff of eps^3, polynomial in n of order 2
+      -1, -3, -1, 16,
+    // A3, coeff of eps^2, polynomial in n of order 2
+      +3, -1, -2, 8,
+    // A3, coeff of eps^1, polynomial in n of order 1
+      +1, -1, 2,
+    // A3, coeff of eps^0, polynomial in n of order 0
+      +1, 1,
+  ];
+
   // The scale factor A3 = mean value of (d/dsigma)I3
   g.Geodesic.prototype.A3coeff = function() {
-    var coeff =
-        [
-          // A3, coeff of eps^5, polynomial in n of order 0
-            -3, 128,
-          // A3, coeff of eps^4, polynomial in n of order 1
-            -2, -3, 64,
-          // A3, coeff of eps^3, polynomial in n of order 2
-            -1, -3, -1, 16,
-          // A3, coeff of eps^2, polynomial in n of order 2
-            +3, -1, -2, 8,
-          // A3, coeff of eps^1, polynomial in n of order 1
-            +1, -1, 2,
-          // A3, coeff of eps^0, polynomial in n of order 0
-            +1, 1,
-        ],
-        o = 0, k = 0,
+    var o = 0, k = 0,
         j, p;
     for (j = nA3_ - 1; j >= 0; --j) { // coeff of eps^j
       p = Math.min(nA3_ - j - 1, j);  // order of polynomial in n
-      this._A3x[k++] = m.polyval(p, coeff, o, this._n) / coeff[o + p + 1];
+      this._A3x[k++] = m.polyval(p, A3_coeff, o, this._n)
+        / A3_coeff[o + p + 1];
       o += p + 2;
     }
   };
 
+  C3_coeff = [
+    // C3[1], coeff of eps^5, polynomial in n of order 0
+      +3, 128,
+    // C3[1], coeff of eps^4, polynomial in n of order 1
+      +2, 5, 128,
+    // C3[1], coeff of eps^3, polynomial in n of order 2
+      -1, 3, 3, 64,
+    // C3[1], coeff of eps^2, polynomial in n of order 2
+      -1, 0, 1, 8,
+    // C3[1], coeff of eps^1, polynomial in n of order 1
+      -1, 1, 4,
+    // C3[2], coeff of eps^5, polynomial in n of order 0
+      +5, 256,
+    // C3[2], coeff of eps^4, polynomial in n of order 1
+      +1, 3, 128,
+    // C3[2], coeff of eps^3, polynomial in n of order 2
+      -3, -2, 3, 64,
+    // C3[2], coeff of eps^2, polynomial in n of order 2
+      +1, -3, 2, 32,
+    // C3[3], coeff of eps^5, polynomial in n of order 0
+      +7, 512,
+    // C3[3], coeff of eps^4, polynomial in n of order 1
+      -10, 9, 384,
+    // C3[3], coeff of eps^3, polynomial in n of order 2
+      +5, -9, 5, 192,
+    // C3[4], coeff of eps^5, polynomial in n of order 0
+      +7, 512,
+    // C3[4], coeff of eps^4, polynomial in n of order 1
+      -14, 7, 512,
+    // C3[5], coeff of eps^5, polynomial in n of order 0
+      +21, 2560,
+  ];
+
   // The coefficients C3[l] in the Fourier expansion of B3
   g.Geodesic.prototype.C3coeff = function() {
-    var coeff =
-        [
-          // C3[1], coeff of eps^5, polynomial in n of order 0
-            +3, 128,
-          // C3[1], coeff of eps^4, polynomial in n of order 1
-            +2, 5, 128,
-          // C3[1], coeff of eps^3, polynomial in n of order 2
-            -1, 3, 3, 64,
-          // C3[1], coeff of eps^2, polynomial in n of order 2
-            -1, 0, 1, 8,
-          // C3[1], coeff of eps^1, polynomial in n of order 1
-            -1, 1, 4,
-          // C3[2], coeff of eps^5, polynomial in n of order 0
-            +5, 256,
-          // C3[2], coeff of eps^4, polynomial in n of order 1
-            +1, 3, 128,
-          // C3[2], coeff of eps^3, polynomial in n of order 2
-            -3, -2, 3, 64,
-          // C3[2], coeff of eps^2, polynomial in n of order 2
-            +1, -3, 2, 32,
-          // C3[3], coeff of eps^5, polynomial in n of order 0
-            +7, 512,
-          // C3[3], coeff of eps^4, polynomial in n of order 1
-            -10, 9, 384,
-          // C3[3], coeff of eps^3, polynomial in n of order 2
-            +5, -9, 5, 192,
-          // C3[4], coeff of eps^5, polynomial in n of order 0
-            +7, 512,
-          // C3[4], coeff of eps^4, polynomial in n of order 1
-            -14, 7, 512,
-          // C3[5], coeff of eps^5, polynomial in n of order 0
-            +21, 2560,
-        ],
-        o = 0, k = 0,
+    var o = 0, k = 0,
         l, j, p;
     for (l = 1; l < g.nC3_; ++l) {        // l is index of C3[l]
       for (j = g.nC3_ - 1; j >= l; --j) { // coeff of eps^j
         p = Math.min(g.nC3_ - j - 1, j);  // order of polynomial in n
-        this._C3x[k++] = m.polyval(p, coeff, o, this._n) / coeff[o + p + 1];
+        this._C3x[k++] = m.polyval(p, C3_coeff, o, this._n) /
+          C3_coeff[o + p + 1];
         o += p + 2;
       }
     }
   };
 
+  C4_coeff = [
+    // C4[0], coeff of eps^5, polynomial in n of order 0
+      +97, 15015,
+    // C4[0], coeff of eps^4, polynomial in n of order 1
+      +1088, 156, 45045,
+    // C4[0], coeff of eps^3, polynomial in n of order 2
+      -224, -4784, 1573, 45045,
+    // C4[0], coeff of eps^2, polynomial in n of order 3
+      -10656, 14144, -4576, -858, 45045,
+    // C4[0], coeff of eps^1, polynomial in n of order 4
+      +64, 624, -4576, 6864, -3003, 15015,
+    // C4[0], coeff of eps^0, polynomial in n of order 5
+      +100, 208, 572, 3432, -12012, 30030, 45045,
+    // C4[1], coeff of eps^5, polynomial in n of order 0
+      +1, 9009,
+    // C4[1], coeff of eps^4, polynomial in n of order 1
+      -2944, 468, 135135,
+    // C4[1], coeff of eps^3, polynomial in n of order 2
+      +5792, 1040, -1287, 135135,
+    // C4[1], coeff of eps^2, polynomial in n of order 3
+      +5952, -11648, 9152, -2574, 135135,
+    // C4[1], coeff of eps^1, polynomial in n of order 4
+      -64, -624, 4576, -6864, 3003, 135135,
+    // C4[2], coeff of eps^5, polynomial in n of order 0
+      +8, 10725,
+    // C4[2], coeff of eps^4, polynomial in n of order 1
+      +1856, -936, 225225,
+    // C4[2], coeff of eps^3, polynomial in n of order 2
+      -8448, 4992, -1144, 225225,
+    // C4[2], coeff of eps^2, polynomial in n of order 3
+      -1440, 4160, -4576, 1716, 225225,
+    // C4[3], coeff of eps^5, polynomial in n of order 0
+      -136, 63063,
+    // C4[3], coeff of eps^4, polynomial in n of order 1
+      +1024, -208, 105105,
+    // C4[3], coeff of eps^3, polynomial in n of order 2
+      +3584, -3328, 1144, 315315,
+    // C4[4], coeff of eps^5, polynomial in n of order 0
+      -128, 135135,
+    // C4[4], coeff of eps^4, polynomial in n of order 1
+      -2560, 832, 405405,
+    // C4[5], coeff of eps^5, polynomial in n of order 0
+      +128, 99099,
+  ];
+
   g.Geodesic.prototype.C4coeff = function() {
-    var coeff =
-        [
-          // C4[0], coeff of eps^5, polynomial in n of order 0
-            +97, 15015,
-          // C4[0], coeff of eps^4, polynomial in n of order 1
-            +1088, 156, 45045,
-          // C4[0], coeff of eps^3, polynomial in n of order 2
-            -224, -4784, 1573, 45045,
-          // C4[0], coeff of eps^2, polynomial in n of order 3
-            -10656, 14144, -4576, -858, 45045,
-          // C4[0], coeff of eps^1, polynomial in n of order 4
-            +64, 624, -4576, 6864, -3003, 15015,
-          // C4[0], coeff of eps^0, polynomial in n of order 5
-            +100, 208, 572, 3432, -12012, 30030, 45045,
-          // C4[1], coeff of eps^5, polynomial in n of order 0
-            +1, 9009,
-          // C4[1], coeff of eps^4, polynomial in n of order 1
-            -2944, 468, 135135,
-          // C4[1], coeff of eps^3, polynomial in n of order 2
-            +5792, 1040, -1287, 135135,
-          // C4[1], coeff of eps^2, polynomial in n of order 3
-            +5952, -11648, 9152, -2574, 135135,
-          // C4[1], coeff of eps^1, polynomial in n of order 4
-            -64, -624, 4576, -6864, 3003, 135135,
-          // C4[2], coeff of eps^5, polynomial in n of order 0
-            +8, 10725,
-          // C4[2], coeff of eps^4, polynomial in n of order 1
-            +1856, -936, 225225,
-          // C4[2], coeff of eps^3, polynomial in n of order 2
-            -8448, 4992, -1144, 225225,
-          // C4[2], coeff of eps^2, polynomial in n of order 3
-            -1440, 4160, -4576, 1716, 225225,
-          // C4[3], coeff of eps^5, polynomial in n of order 0
-            -136, 63063,
-          // C4[3], coeff of eps^4, polynomial in n of order 1
-            +1024, -208, 105105,
-          // C4[3], coeff of eps^3, polynomial in n of order 2
-            +3584, -3328, 1144, 315315,
-          // C4[4], coeff of eps^5, polynomial in n of order 0
-            -128, 135135,
-          // C4[4], coeff of eps^4, polynomial in n of order 1
-            -2560, 832, 405405,
-          // C4[5], coeff of eps^5, polynomial in n of order 0
-            +128, 99099,
-        ],
-        o = 0, k = 0,
+    var o = 0, k = 0,
         l, j, p;
     for (l = 0; l < g.nC4_; ++l) {        // l is index of C4[l]
       for (j = g.nC4_ - 1; j >= l; --j) { // coeff of eps^j
         p = g.nC4_ - j - 1;               // order of polynomial in n
-        this._C4x[k++] = m.polyval(p, coeff, o, this._n) / coeff[o + p + 1];
+        this._C4x[k++] = m.polyval(p, C4_coeff, o, this._n)
+          / C4_coeff[o + p + 1];
         o += p + 2;
       }
     }
@@ -1115,6 +1121,11 @@ GeographicLib.GeodesicLine = {};
      outmask | (arcmode ? g.NONE : g.DISTANCE_IN));
     return line.GenPosition(arcmode, s12_a12, outmask);
   };
+
+  // return a GeodesicLine
+  g.Geodesic.prototype.Line = function (lat1, lon1, azi1, caps) {
+    return new l.GeodesicLine(this, lat1, lon1, azi1, caps);
+  }
 
   g.WGS84 = new g.Geodesic(c.WGS84.a, c.WGS84.f);
 })(GeographicLib.Geodesic, GeographicLib.GeodesicLine, GeographicLib.Math,

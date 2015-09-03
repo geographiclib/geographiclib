@@ -8,28 +8,75 @@
  * http://geographiclib.sourceforge.net/
  */
 
+/**
+* @module GeographicLib
+*/
 var GeographicLib = {};
 GeographicLib.Constants = {};
 GeographicLib.Math = {};
 GeographicLib.Accumulator = {};
 
-(function(c) {
+(function(
+  /**
+   * @exports GeographicLib/Constants
+   */
+  c) {
   "use strict";
 
+  /**
+   * @constant
+   * @description WGS84 radius and flattening
+   */
   c.WGS84 = { a: 6378137, f: 1/298.257223563 };
+  /**
+   * @constant
+   * @description version numbers
+   */
   c.version = { major: 1, minor: 45, patch: 0 };
+  /**
+   * @constant
+   * @description version string
+   */
   c.version_string = "1.45";
 })(GeographicLib.Constants);
 
-(function(m) {
+(function(
+  /**
+   * @exports GeographicLib/Math
+   * @description A bunch of useful static math constants and functions.
+   */
+  m) {
   "use strict";
 
-  m.epsilon = Math.pow(0.5, 52);
-  m.degree = Math.PI/180;
+  /**
+   * @description The number of digits of precision in floating-point numbers.
+   * @constant {number}
+   */
   m.digits = 53;
+  /**
+   * @description The machine epsilon.
+   * @constant {number}
+   */
+  m.epsilon = Math.pow(0.5, m.digits - 1);
+  /**
+   * @description The factor to convert degrees to radians.
+   * @constant {number}
+   */
+  m.degree = Math.PI/180;
 
+  /**
+   * @description Square a number.
+   * @param {number} x the number.
+   * @returns {number} the square.
+   */
   m.sq = function(x) { return x * x; };
 
+  /**
+   * @description The hypotenuse function.
+   * @param {number} x the first side.
+   * @param {number} y the second side.
+   * @returns {number} the hypotenuse.
+   */
   m.hypot = function(x, y) {
     var a, b;
     x = Math.abs(x);
@@ -38,6 +85,11 @@ GeographicLib.Accumulator = {};
     return a * Math.sqrt(1 + b * b);
   };
 
+  /**
+   * @description The cube root function.
+   * @param {number} x the number.
+   * @returns {number} the real cube root.
+   */
   m.cbrt = function(x) {
     var y = Math.pow(Math.abs(x), 1/3);
     return x < 0 ? -y : y;
@@ -93,12 +145,12 @@ GeographicLib.Accumulator = {};
 
   m.AngNormalize = function(x) {
     // Place angle in [-180, 180).
-    x = x % 360.0;
+    x = x % 360;
     return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
   };
 
   m.LatFix = function(x) {
-    // Place angle with NaN if outside [-90, 90].
+    // Replace angle with NaN if outside [-90, 90].
     return Math.abs(x) > 90 ? Number.NaN : x;
   };
 
@@ -115,7 +167,7 @@ GeographicLib.Accumulator = {};
     // In order to minimize round-off errors, this function exactly reduces
     // the argument to the range [-45, 45] before converting it to radians.
     var r, q, s, c, sinx, cosx;
-    r = x % 360.0;
+    r = x % 360;
     q = Math.floor(r / 90 + 0.5);
     r -= 90 * q;
     // now abs(r) <= 45
@@ -156,13 +208,28 @@ GeographicLib.Accumulator = {};
   };
 })(GeographicLib.Math);
 
-(function(a, m) {
+(function(
+  /**
+   * @exports GeographicLib/Accumulator
+   */
+  a, m) {
   "use strict";
 
+  /**
+   * @class
+   * @classdesc This allow many numbers to be added together with twice the
+   * normal precision.  In the documentation of the member functions,
+   * <i>sum</i> stands for the value currently held in the accumulator.
+   * @param {number} [y = 0]  set <i>sum</i> = <i>y</i>.
+   */
   a.Accumulator = function(y) {
     this.Set(y);
   };
 
+  /**
+   * @description Set the accumulator to a number.
+   * @param {number} [y = 0] set <i>sum</i> = <i>y</i>.
+   */
   a.Accumulator.prototype.Set = function(y) {
     if (!y) y = 0;
     if (y.constructor === a.Accumulator) {
@@ -174,6 +241,10 @@ GeographicLib.Accumulator = {};
     }
   };
 
+  /**
+   * @description Add a number to the accumulator.
+   * @param {number} [y = 0] set <i>sum</i> += <i>y</i>.
+   */
   a.Accumulator.prototype.Add = function(y) {
     // Here's Shewchuk's solution...
     // Accumulate starting at least significant end
@@ -216,6 +287,12 @@ GeographicLib.Accumulator = {};
       this._t += u;             // otherwise just accumulate u to t.
   };
 
+  /**
+   * @description Return the result of adding a number to <i>sum</i> (but
+   *   don't change <i>sum</i>).
+   * @param {number} [y = 0] the number to be added to the sum.
+   * @return <i>sum</i> + <i>y</i>.
+   */
   a.Accumulator.prototype.Sum = function(y) {
     var b;
     if (!y)
@@ -227,6 +304,9 @@ GeographicLib.Accumulator = {};
     }
   };
 
+  /**
+   * @description Set <i>sum</i> = &minus;<i>sum</i>.
+   */
   a.Accumulator.prototype.Negate = function() {
     this._s *= -1;
     this._t *= -1;

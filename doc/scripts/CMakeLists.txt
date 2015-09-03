@@ -25,6 +25,8 @@ if (JS_BUILD)
   file (APPEND ${JS_TARGET} "${_S}")
   foreach (_F ${JSSCRIPTS})
     file (READ "${_F}" _S)
+    # Normalize the line endings.
+    string (REGEX REPLACE "\r" "\n" _S "${_S}")
     # This matches /*...*/ style comments, where ... is any number of
     # \*[^/] and [^*].  This has the defect that the it won't detect,
     # e.g., **/ as the end of the comment.
