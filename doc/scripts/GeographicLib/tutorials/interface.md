@@ -1,4 +1,3 @@
-
 ````
 var GeographicLib = require('./geographiclib'),
     wgs84 = GeographicLib.Geodesic.WGS84,
@@ -7,7 +6,10 @@ geod.Inverse(1,2,3,4);
 international.Inverse(1,2,3,4, GeographicLib.Geodesic.ALL);
 ````
 
-See {@tutorial tutorial-geodesic}.
+See {@tutorial geodesics} {@link module:GeographicLib}
+{@link module:GeographicLib/Geodesic}.
+{@link module:GeographicLib/Geodesic.Geodesic}.
+{@link module:GeographicLib/Geodesic.Geodesic#Inverse}.
 perform the basic geodesic calculations.  These return an object with
 (some) of the following fields set:
 
@@ -26,19 +28,20 @@ perform the basic geodesic calculations.  These return an object with
 * S12 = *S*<sub>12</sub>, area between geodesic and equator
   (meters<sup>2</sup>)
 
+<a name="outmask"></a>
 outmask determines which fields get included and if outmask is omitted,
 then STANDARD is assumed.  The mask is an or'ed combination of the
 following values
 
-* GeographicLib.Geodesic.LATITUDE, compute latitude
-* GeographicLib.Geodesic.LONGITUDE, compute longitude
-* GeographicLib.Geodesic.AZIMUTH, compute azimuth
-* GeographicLib.Geodesic.DISTANCE, compute distance
+* GeographicLib.Geodesic.LATITUDE, compute latitude, lat2
+* GeographicLib.Geodesic.LONGITUDE, compute longitude, lon2
+* GeographicLib.Geodesic.AZIMUTH, compute azimuths, azi1 and azi2
+* GeographicLib.Geodesic.DISTANCE, compute distance, s12
 * GeographicLib.Geodesic.STANDARD (all of the above)
 * GeographicLib.Geodesic.DISTANCE_IN, see below
-* GeographicLib.Geodesic.REDUCEDLENGTH, compute reduced length
-* GeographicLib.Geodesic.GEODESICSCALE, compute geodesic scales
-* GeographicLib.Geodesic.AREA, compute area
+* GeographicLib.Geodesic.REDUCEDLENGTH, compute reduced length, m12
+* GeographicLib.Geodesic.GEODESICSCALE, compute geodesic scales, M12 and M21
+* GeographicLib.Geodesic.AREA, compute area, S12
 * GeographicLib.Geodesic.ALL (all of the above)
 * GeographicLib.Geodesic.LONG_UNROLL, see below
 

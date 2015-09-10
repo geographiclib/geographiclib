@@ -77,10 +77,10 @@ addition rules hold:
   * *S*<sub>13</sub> = *S*<sub>12</sub> + *S*<sub>23</sub>
   * *m*<sub>13</sub> = *m*<sub>12</sub>*m*<sub>23</sub> +
     *m*<sub>23</sub>*m*<sub>21</sub>
-  * *M*<sub>13</sub> = *M*<sub>12</sub>*M*<sub>23</sub> -
+  * *M*<sub>13</sub> = *M*<sub>12</sub>*M*<sub>23</sub> &minus;
     (1 &minus; *M*<sub>12</sub>*M*<sub>21</sub>)
     *m*<sub>23</sub>/*m*<sub>12</sub>
-  * *M*<sub>31</sub> = *M*<sub>32</sub>*M*<sub>21</sub> -
+  * *M*<sub>31</sub> = *M*<sub>32</sub>*M*<sub>21</sub> &minus;
     (1 &minus; *M*<sub>23</sub>*M*<sub>32</sub>)
     *m*<sub>12</sub>/*m*<sub>23</sub>
 

@@ -19,9 +19,27 @@
 
 // Load AFTER GeographicLib/Math.js, GeographicLib/Geodesic.js
 
-(function(g, l, m) {
+(function(g,
+          /**
+           * @exports GeographicLib/GeodesicLine
+           */
+          l, m) {
   "use strict";
 
+  /**
+   * @class
+   * @property {number} a the equatorial radius (meters)
+   * @property {number} f the flattening
+   * @summary Initialize a GeodesicLine object.
+   * @classdesc Performs geodesic calculations along a given geodesic.
+   * @tutorial geodesics
+   * @param {object} geod a {@link module:GeographicLib/Geodesic.Geodesic
+   *   Geodesic} object.
+   * @param {number} lat1
+   * @param {number} lon1
+   * @param {number} azi1
+   * @param {bitmask} caps
+   */
   l.GeodesicLine = function(geod, lat1, lon1, azi1, caps) {
     var t, cbet1, sbet1, eps, s, c;
     if (!caps) caps = g.STANDARD | g.DISTANCE_IN;

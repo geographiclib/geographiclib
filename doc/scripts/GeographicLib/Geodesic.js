@@ -26,6 +26,19 @@ GeographicLib.PolygonArea = {};
 (function(
   /**
    * @exports GeographicLib/Geodesic
+   * @description provide bitmasks specifying capabilities and output:
+   * - NONE, no capabilities, no output;
+   * - LATITUDE, calculate latitude lat2;
+   * - LONGITUDE, calculate longitude lon2;
+   * - AZIMUTH, calculate azimuths azi1 and azi2;
+   * - DISTANCE, calculate s12;
+   * - STANDARD, all of the above;
+   * - DISTANCE_IN, allow s12 to be used as input in the direct problem;
+   * - REDUCEDLENGTH, calculate m12;
+   * - GEODESICSCALE, calculate M12 and M21;
+   * - AREA, calculation S12;
+   * - ALL, all of the above;
+   * - LONG_UNROLL, unroll lon2.
    */
   g, l, p, m, c) {
   "use strict";
@@ -66,25 +79,9 @@ GeographicLib.PolygonArea = {};
   g.CAP_C3   = 1<<3;
   g.CAP_C4   = 1<<4;
 
-  /**
-   * @description Include nothing in the returned result.
-   * @constant {bitmask}
-   */
   g.NONE          = 0;
-  /**
-   * @description Include the latitude in the returned result.
-   * @constant {bitmask}
-   */
   g.LATITUDE      = 1<<7  | CAP_NONE;
-  /**
-   * @description Include the longitude in the returned result.
-   * @constant {bitmask}
-   */
   g.LONGITUDE     = 1<<8  | g.CAP_C3;
-  /**
-   * @description Include the azimuth in the returned result.
-   * @constant {bitmask}
-   */
   g.AZIMUTH       = 1<<9  | CAP_NONE;
   g.DISTANCE      = 1<<10 | g.CAP_C1;
   g.STANDARD      = g.LATITUDE | g.LONGITUDE | g.AZIMUTH | g.DISTANCE;
@@ -92,8 +89,8 @@ GeographicLib.PolygonArea = {};
   g.REDUCEDLENGTH = 1<<12 | g.CAP_C1 | g.CAP_C2;
   g.GEODESICSCALE = 1<<13 | g.CAP_C1 | g.CAP_C2;
   g.AREA          = 1<<14 | g.CAP_C4;
-  g.LONG_UNROLL   = 1<<15;
   g.ALL           = OUT_ALL| CAP_ALL;
+  g.LONG_UNROLL   = 1<<15;
   g.OUT_MASK      = OUT_ALL| g.LONG_UNROLL;
 
   g.SinCosSeries = function(sinp, sinx, cosx, c) {
@@ -284,29 +281,15 @@ GeographicLib.PolygonArea = {};
    * @class
    * @property {number} a the equatorial radius (meters)
    * @property {number} f the flattening
-   * @example
-   * var GeographicLib = require('./geographiclib'),
-   *     g = GeographicLib.Geodesic,
-   *     c = GeographicLib.Constants,
-   *     geog = new g.Geodesic(c.WGS84.a, c.WGS84.f);
-   * geog.Inverse(-30, 20, 29.5, 199.5);
-   * // -->
-   * // { lat1: -30,
-   * //   lat2: 29.5,
-   * //   lon1: 0,
-   * //   lon2: -5,
-   * //   a12: 59.526700345561785,
-   * //   s12: 6606149.877725766,
-   * //   azi1: -5.06894183621681,9
-   * //   azi2: -5.0437842312297185 }
-   * geog.Inverse(-30, 0, 29.5, 179.5, g.ALL);
-   * @summary summary
-   * @description dec
+   * @summary Initialize a Geodesic object for a specific ellipsoid
    * @classdesc Performs geodesic calculations on an ellipsoid of revolution.
-   * See {@tutorial geodesic|sldfj}.
-   * @tutorial geodesic
-   * @param {number} a the equatorial radius of the ellipsoid (meters),
-   * @param {number} f the flattening od the ellipsoid,
+   *   The routines for solving the direct and inverse problems return an
+   *   object with some of the following fields set: lat1, lon1, azi1, lat2,
+   *   lon2, azi2, s12, a12, m12, M12, M21, S12.  See {@tutorial interface}.
+   *   See {@tutorial interface#outmask}.
+   * @tutorial geodesics
+   * @param {number} a the equatorial radius of the ellipsoid (meters)
+   * @param {number} f the flattening of the ellipsoid.
    */
   g.Geodesic = function(a, f) {
     this.a = a;
@@ -798,19 +781,15 @@ GeographicLib.PolygonArea = {};
   };
 
   /**
+   * @summary Solve the inverse geodesic problem.
    * @param {number} lat1 the latitude of the first point in degrees.
    * @param {number} lon1 the longitude of the first point in degrees.
    * @param {number} lat2 the latitude of the second point in degrees.
    * @param {number} lon2 the longitude of the second point in degrees.
-   * @param {number} outmask a bitor'ed of
-   * @summary Solve the inverse geodesic problem.
-   * @description Solve the inverse geodesic problem full version
-   *   * a
-   *   * bljsdf lkjsdf
-   * @example
-   * var g = GeographicLib.Geodesic,
-   *     geod = g.Geodesic(6.4e6, 1/150),
-   *     r = geod.Inverse(1,2,3,4, g.STANDARD);
+   * @param {bitmask} [outmask = STANDARD] which results to include.
+   * @returns {object} the requested results
+   * @description The lat1, lon1, lat2, lon2, and a12 fields of the result are
+   *   always set.
    */
   // return a12, s12, azi1, azi2, m12, M12, M21, S12
   g.Geodesic.prototype.Inverse = function(lat1, lon1, lat2, lon2, outmask) {
@@ -1180,6 +1159,19 @@ GeographicLib.PolygonArea = {};
     return vals;
   };
 
+  /**
+   * @summary Solve the general direct geodesic problem.
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} azi1 the azimuth at the first point in degrees.
+   * @param {bool} arcmode is the next parameter an arc length?
+   * @param {number} s12_a12 the (arcmode ? arc length : distance) from the
+   *   first point to the second in (arcmode ? degrees : meters).
+   * @param {bitmask} [outmask = STANDARD] which results to include.
+   * @returns {object} the requested results.
+   * @description The lat1, lon1, azi1, and a12 fields of the result are
+   *   always set; s12 is included if arcmode is false.
+   */
   // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   g.Geodesic.prototype.GenDirect = function (lat1, lon1, azi1,
                                              arcmode, s12_a12, outmask) {
@@ -1194,11 +1186,35 @@ GeographicLib.PolygonArea = {};
     return line.GenPosition(arcmode, s12_a12, outmask);
   };
 
+  /**
+   * @summary Solve the direct geodesic problem.
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} azi1 the azimuth at the first point in degrees.
+   * @param {number} s12 the distance from the first point to the second in
+   *   meters.
+   * @param {bitmask} [outmask = STANDARD] which results to include.
+   * @returns {object} the requested results.
+   * @description The lat1, lon1, azi1, s12, and a12 fields of the result are
+   *   always set.
+   */
   // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   g.Geodesic.prototype.Direct = function (lat1, lon1, azi1, s12, outmask) {
     return this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
   };
 
+  /**
+   * @summary Solve the direct geodesic problem with arc length.
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} azi1 the azimuth at the first point in degrees.
+   * @param {number} a12 the arc length from the first point to the second in
+   *   degrees.
+   * @param {bitmask} [outmask = STANDARD] which results to include.
+   * @returns {object} the requested results.
+   * @description The lat1, lon1, azi1, and a12 fields of the result are
+   *   always set.
+   */
   // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   g.Geodesic.prototype.ArcDirect = function (lat1, lon1, azi1, a12, outmask) {
     return this.GenDirect(lat1, lon1, azi1, true, a12, outmask);

@@ -30,7 +30,7 @@ GeographicLib.Accumulator = {};
   c.WGS84 = { a: 6378137, f: 1/298.257223563 };
   /**
    * @constant
-   * @description version numbers
+   * @description an array of version numbers
    */
   c.version = [ 1, 45, 0 ];
   /**
@@ -43,7 +43,7 @@ GeographicLib.Accumulator = {};
 (function(
   /**
    * @exports GeographicLib/Math
-   * @description A bunch of useful static math constants and functions.
+   * @description Some useful mathematical constants and functions.
    */
   m) {
   "use strict";
@@ -86,7 +86,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description The cube root function.
+   * @description Cube root function.
    * @param {number} x the argument.
    * @returns {number} the real cube root.
    */
@@ -111,7 +111,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description the inverse hyperbolic tangent.
+   * @description Inverse hyperbolic tangent.
    * @param {number} x the argument.
    * @returns {number} tanh<sup>&minus;1</sup> x.
    */
@@ -125,8 +125,8 @@ GeographicLib.Accumulator = {};
    * @description An error-free sum.
    * @param {number} u
    * @param {number} v
-   * @returns sum with sum.s = round(u + v) and sum.t is u + v &minus; round(u
-   * + v)
+   * @returns {object} sum with sum.s = round(u + v) and sum.t is u + v &minus;
+   *   round(u + v)
    */
   m.sum = function(u, v) {
     var s = u + v,
@@ -141,12 +141,26 @@ GeographicLib.Accumulator = {};
     return {s: s, t: t};
   };
 
+  /**
+   * @description Evaluate a polynomial.
+   * @param {integer} N the order of the polynomial.
+   * @param {array} p the coefficient array (of size N + 1) (leading
+   *   order coefficient first)
+   * @param {number} x the variable.
+   * @returns {number} the value of the polynomial.
+   */
   m.polyval = function(N, p, s, x) {
     var y = N < 0 ? 0 : p[s++];
     while (--N >= 0) y = y * x + p[s++];
     return y;
   };
 
+
+  /**
+   * @description Coarsen a value close to zero.
+   * @param {number} x
+   * @returns {number} the coarsened value.
+   */
   m.AngRound = function(x) {
     // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57 for
     // reals = 0.7 pm on the earth if x is an angle in degrees.  (This is about
@@ -160,26 +174,51 @@ GeographicLib.Accumulator = {};
     return x < 0 ? 0 - y : y;
   };
 
+  /**
+   * @description Normalize an angle.
+   * @param {number} x the angle in degrees.
+   * @returns {number} the angle reduced to the range [&minus;180&deg;,
+   *   180&deg;).
+   */
   m.AngNormalize = function(x) {
     // Place angle in [-180, 180).
     x = x % 360;
     return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
   };
 
+  /**
+   * @description Normalize a latitude.
+   * @param {number} x the angle in degrees.
+   * @returns {number} x if it is in the range [&minus;90&deg;, 90&deg;],
+   *   otherwise return NaN.
+   */
   m.LatFix = function(x) {
     // Replace angle with NaN if outside [-90, 90].
     return Math.abs(x) > 90 ? Number.NaN : x;
   };
 
+  /**
+   * @description Difference of two angles reduced to [&minus;180&deg;,
+   *   180&deg;]
+   * @param {number} x the first angle in degrees.
+   * @param {number} y the second angle in degrees.
+   * @return {number} y &minus; x, reduced to the range [&minus;180&deg;,
+   *   180&deg;].
+   */
   m.AngDiff = function(x, y) {
     // Compute y - x and reduce to [-180,180] accurately.
-    var r = m.sum(m.AngNormalize(x),
-                  m.AngNormalize(-y)),
+    var r = m.sum(m.AngNormalize(x), m.AngNormalize(-y)),
         d = - m.AngNormalize(r.s),
         t = r.t;
     return (d == 180 && t < 0 ? -180 : d) - t;
   };
 
+  /**
+   * @description Evaluate the sine and cosine function with the argument in
+   *   degrees
+   * @param {number} x in degrees.
+   * @returns {object} r with r.s = sin(x) and r.c = cos(x).
+   */
   m.sincosd = function(x) {
     // In order to minimize round-off errors, this function exactly reduces
     // the argument to the range [-45, 45] before converting it to radians.
@@ -200,6 +239,13 @@ GeographicLib.Accumulator = {};
     return {s: sinx, c: cosx};
   };
 
+    /**
+     * @description Evaluate the atan2 function with the result in degrees
+     * @param {number} y
+     * @param {number} x
+     * @returns atan2(y, x) in degrees, in the range [&minus;180&deg;
+     *   180&deg;).
+     */
   m.atan2d = function(y, x) {
     // In order to minimize round-off errors, this function rearranges the
     // arguments so that result of atan2 is in the range [-pi/4, pi/4] before
@@ -234,10 +280,11 @@ GeographicLib.Accumulator = {};
 
   /**
    * @class
+   * @summary Accurate summation of many numbers.
    * @classdesc This allow many numbers to be added together with twice the
    * normal precision.  In the documentation of the member functions,
-   * <i>sum</i> stands for the value currently held in the accumulator.
-   * @param {number} [y = 0]  set <i>sum</i> = <i>y</i>.
+   * sum stands for the value currently held in the accumulator.
+   * @param {number} [y = 0]  set sum = y.
    */
   a.Accumulator = function(y) {
     this.Set(y);
@@ -245,7 +292,7 @@ GeographicLib.Accumulator = {};
 
   /**
    * @description Set the accumulator to a number.
-   * @param {number} [y = 0] set <i>sum</i> = <i>y</i>.
+   * @param {number} [y = 0] set sum = y.
    */
   a.Accumulator.prototype.Set = function(y) {
     if (!y) y = 0;
@@ -260,7 +307,7 @@ GeographicLib.Accumulator = {};
 
   /**
    * @description Add a number to the accumulator.
-   * @param {number} [y = 0] set <i>sum</i> += <i>y</i>.
+   * @param {number} [y = 0] set sum += y.
    */
   a.Accumulator.prototype.Add = function(y) {
     // Here's Shewchuk's solution...
@@ -305,10 +352,10 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description Return the result of adding a number to <i>sum</i> (but
-   *   don't change <i>sum</i>).
+   * @description Return the result of adding a number to sum (but
+   *   don't change sum).
    * @param {number} [y = 0] the number to be added to the sum.
-   * @return <i>sum</i> + <i>y</i>.
+   * @return sum + y.
    */
   a.Accumulator.prototype.Sum = function(y) {
     var b;
@@ -322,7 +369,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description Set <i>sum</i> = &minus;<i>sum</i>.
+   * @description Set sum = &minus;sum.
    */
   a.Accumulator.prototype.Negate = function() {
     this._s *= -1;
