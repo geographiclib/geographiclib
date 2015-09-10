@@ -24,9 +24,10 @@
 
   l.GeodesicLine = function(geod, lat1, lon1, azi1, caps) {
     var t, cbet1, sbet1, eps, s, c;
+    if (!caps) caps = g.STANDARD | g.DISTANCE_IN;
 
-    this._a = geod._a;
-    this._f = geod._f;
+    this.a = geod.a;
+    this.f = geod.f;
     this._b = geod._b;
     this._c2 = geod._c2;
     this._f1 = geod._f1;
@@ -97,7 +98,7 @@
     if (this._caps & g.CAP_C3) {
       this._C3a = new Array(g.nC3_);
       geod.C3f(eps, this._C3a);
-      this._A3c = -this._f * this._salp0 * geod.A3f(eps);
+      this._A3c = -this.f * this._salp0 * geod.A3f(eps);
       this._B31 = g.SinCosSeries(true, this._ssig1, this._csig1, this._C3a);
     }
 
@@ -105,7 +106,7 @@
       this._C4a = new Array(g.nC4_); // all the elements of _C4a are used
       geod.C4f(eps, this._C4a);
       // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
-      this._A4 = m.sq(this._a) * this._calp0 * this._salp0 * geod._e2;
+      this._A4 = m.sq(this.a) * this._calp0 * this._salp0 * geod._e2;
       this._B41 = g.SinCosSeries(false, this._ssig1, this._csig1, this._C4a);
     }
   };
@@ -117,6 +118,10 @@
         sig12, ssig12, csig12, B12, AB1, ssig2, csig2, tau12, s, c, serr,
         omg12, lam12, lon12, E, sbet2, cbet2, somg2, comg2, salp2, calp2, dn2,
         B22, AB2, J12, t, B42, salp12, calp12;
+    if (!outmask)
+      outmask = g.STANDARD;
+    else if (outmask == g.LONG_UNROLL)
+      outmask |= g.STANDARD;
     outmask &= this._caps & g.OUT_MASK;
     vals.lat1 = this._lat1; vals.azi1 = this._azi1;
     vals.lon1 = outmask & g.LONG_UNROLL ?
@@ -149,7 +154,7 @@
                              this._C1pa);
       sig12 = tau12 - (B12 - this._B11);
       ssig12 = Math.sin(sig12); csig12 = Math.cos(sig12);
-      if (Math.abs(this._f) > 0.01) {
+      if (Math.abs(this.f) > 0.01) {
         // Reverted distance series is inaccurate for |f| > 1/100, so correct
         // sig12 with 1 Newton iteration.  The following table shows the
         // approximate maximum error for a = WGS_a() and various f relative to
@@ -187,7 +192,7 @@
     csig2 = this._csig1 * csig12 - this._ssig1 * ssig12;
     dn2 = Math.sqrt(1 + this._k2 * m.sq(ssig2));
     if (outmask & (g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE)) {
-      if (arcmode || Math.abs(this._f) > 0.01)
+      if (arcmode || Math.abs(this.f) > 0.01)
         B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a);
       AB1 = (1 + this._A1m1) * (B12 - this._B11);
     }
@@ -283,6 +288,16 @@
     if (!arcmode)
       vals.a12 = sig12 / m.degree;
     return vals;
+  };
+
+  // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
+  l.GeodesicLine.prototype.Position = function(s12, outmask) {
+    return this.GenPosition(false, s12, outmask);
+  };
+
+  // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
+  l.GeodesicLine.prototype.ArcPosition = function(a12, outmask) {
+    return this.GenPosition(true, a12, outmask);
   };
 
 })(GeographicLib.Geodesic, GeographicLib.GeodesicLine, GeographicLib.Math);

@@ -19,8 +19,6 @@
 
 // Load AFTER GeographicLib/Math.js and GeographicLib/Geodesic.js
 
-GeographicLib.PolygonArea = {};
-
 (function(p, g, m, a) {
   "use strict";
 

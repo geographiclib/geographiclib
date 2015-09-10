@@ -32,7 +32,7 @@ GeographicLib.Accumulator = {};
    * @constant
    * @description version numbers
    */
-  c.version = { major: 1, minor: 45, patch: 0 };
+  c.version = [ 1, 45, 0 ];
   /**
    * @constant
    * @description version string
@@ -87,7 +87,7 @@ GeographicLib.Accumulator = {};
 
   /**
    * @description The cube root function.
-   * @param {number} x the number.
+   * @param {number} x the argument.
    * @returns {number} the real cube root.
    */
   m.cbrt = function(x) {
@@ -95,6 +95,11 @@ GeographicLib.Accumulator = {};
     return x < 0 ? -y : y;
   };
 
+  /**
+   * @description The log1p function.
+   * @param {number} x the argument.
+   * @returns {number} log(1 + x).
+   */
   m.log1p = function(x) {
     var y = 1 + x,
         z = y - 1;
@@ -105,12 +110,24 @@ GeographicLib.Accumulator = {};
     return z === 0 ? x : x * Math.log(y) / z;
   };
 
+  /**
+   * @description the inverse hyperbolic tangent.
+   * @param {number} x the argument.
+   * @returns {number} tanh<sup>&minus;1</sup> x.
+   */
   m.atanh = function(x) {
     var y = Math.abs(x);          // Enforce odd parity
     y = m.log1p(2 * y/(1 - y))/2;
     return x < 0 ? -y : y;
   };
 
+  /**
+   * @description An error-free sum.
+   * @param {number} u
+   * @param {number} v
+   * @returns sum with sum.s = round(u + v) and sum.t is u + v &minus; round(u
+   * + v)
+   */
   m.sum = function(u, v) {
     var s = u + v,
         up = s - v,

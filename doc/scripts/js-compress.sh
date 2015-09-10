@@ -21,4 +21,4 @@ for f; do
 	sed -e 's/\([^"A-Za-z0-9_]\) /\1/g' -e 's/ \([^\["A-Za-z0-9_]\)/\1/g'
 done
 # support loading with node's require
-echo "if(module)module.exports=GeographicLib;"
+echo "if(typeof module!=='undefined')module.exports=GeographicLib;"

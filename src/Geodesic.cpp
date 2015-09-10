@@ -62,7 +62,8 @@ namespace GeographicLib {
     , _n(_f / ( 2 - _f))
     , _b(_a * _f1)
     , _c2((Math::sq(_a) + Math::sq(_b) *
-           Math::eatanhe(real(1), (_f < 0 ? -1 : 1) * sqrt(abs(_e2))) / _e2)
+           (_e2 == 0 ? 1 :
+            Math::eatanhe(real(1), (_f < 0 ? -1 : 1) * sqrt(abs(_e2))) / _e2))
           / 2) // authalic radius squared
       // The sig12 threshold for "really short".  Using the auxiliary sphere
       // solution with dnm computed at (bet1 + bet2) / 2, the relative error in

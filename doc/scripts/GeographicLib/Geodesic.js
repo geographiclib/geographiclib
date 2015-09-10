@@ -21,8 +21,13 @@
 
 GeographicLib.Geodesic = {};
 GeographicLib.GeodesicLine = {};
+GeographicLib.PolygonArea = {};
 
-(function(g, l, m, c) {
+(function(
+  /**
+   * @exports GeographicLib/Geodesic
+   */
+  g, l, p, m, c) {
   "use strict";
 
   var GEOGRAPHICLIB_GEODESIC_ORDER = 6,
@@ -61,11 +66,28 @@ GeographicLib.GeodesicLine = {};
   g.CAP_C3   = 1<<3;
   g.CAP_C4   = 1<<4;
 
+  /**
+   * @description Include nothing in the returned result.
+   * @constant {bitmask}
+   */
   g.NONE          = 0;
+  /**
+   * @description Include the latitude in the returned result.
+   * @constant {bitmask}
+   */
   g.LATITUDE      = 1<<7  | CAP_NONE;
+  /**
+   * @description Include the longitude in the returned result.
+   * @constant {bitmask}
+   */
   g.LONGITUDE     = 1<<8  | g.CAP_C3;
+  /**
+   * @description Include the azimuth in the returned result.
+   * @constant {bitmask}
+   */
   g.AZIMUTH       = 1<<9  | CAP_NONE;
   g.DISTANCE      = 1<<10 | g.CAP_C1;
+  g.STANDARD      = g.LATITUDE | g.LONGITUDE | g.AZIMUTH | g.DISTANCE;
   g.DISTANCE_IN   = 1<<11 | g.CAP_C1 | g.CAP_C1p;
   g.REDUCEDLENGTH = 1<<12 | g.CAP_C1 | g.CAP_C2;
   g.GEODESICSCALE = 1<<13 | g.CAP_C1 | g.CAP_C2;
@@ -155,7 +177,7 @@ GeographicLib.GeodesicLine = {};
   // The scale factor A1-1 = mean value of (d/dsigma)I1 - 1
   g.A1m1f = function(eps) {
     var p = Math.floor(nA1_/2),
-        t = m.polyval(p, A1m1f_coeff, 0, m.sq(eps)) / C1f_coeff[p + 1];
+        t = m.polyval(p, A1m1f_coeff, 0, m.sq(eps)) / A1m1f_coeff[p + 1];
     return (t + eps) / (1 - eps);
   };
 
@@ -258,16 +280,44 @@ GeographicLib.GeodesicLine = {};
     }
   };
 
+  /**
+   * @class
+   * @property {number} a the equatorial radius (meters)
+   * @property {number} f the flattening
+   * @example
+   * var GeographicLib = require('./geographiclib'),
+   *     g = GeographicLib.Geodesic,
+   *     c = GeographicLib.Constants,
+   *     geog = new g.Geodesic(c.WGS84.a, c.WGS84.f);
+   * geog.Inverse(-30, 20, 29.5, 199.5);
+   * // -->
+   * // { lat1: -30,
+   * //   lat2: 29.5,
+   * //   lon1: 0,
+   * //   lon2: -5,
+   * //   a12: 59.526700345561785,
+   * //   s12: 6606149.877725766,
+   * //   azi1: -5.06894183621681,9
+   * //   azi2: -5.0437842312297185 }
+   * geog.Inverse(-30, 0, 29.5, 179.5, g.ALL);
+   * @summary summary
+   * @description dec
+   * @classdesc Performs geodesic calculations on an ellipsoid of revolution.
+   * See {@tutorial geodesic|sldfj}.
+   * @tutorial geodesic
+   * @param {number} a the equatorial radius of the ellipsoid (meters),
+   * @param {number} f the flattening od the ellipsoid,
+   */
   g.Geodesic = function(a, f) {
-    this._a = a;
-    this._f = f <= 1 ? f : 1/f;
-    this._f1 = 1 - this._f;
-    this._e2 = this._f * (2 - this._f);
+    this.a = a;
+    this.f = f;
+    this._f1 = 1 - this.f;
+    this._e2 = this.f * (2 - this.f);
     this._ep2 = this._e2 / m.sq(this._f1); // e2 / (1 - e2)
-    this._n = this._f / ( 2 - this._f);
-    this._b = this._a * this._f1;
+    this._n = this.f / ( 2 - this.f);
+    this._b = this.a * this._f1;
     // authalic radius squared
-    this._c2 = (m.sq(this._a) + m.sq(this._b) *
+    this._c2 = (m.sq(this.a) + m.sq(this._b) *
                 (this._e2 === 0 ? 1 :
                  (this._e2 > 0 ? m.atanh(Math.sqrt(this._e2)) :
                   Math.atan(Math.sqrt(-this._e2))) /
@@ -282,9 +332,9 @@ GeographicLib.GeodesicLine = {};
     // Here 0.1 is a safety factor (error decreased by 100) and max(0.001,
     // abs(f)) stops etol2 getting too large in the nearly spherical case.
     this._etol2 = 0.1 * tol2_ /
-      Math.sqrt( Math.max(0.001, Math.abs(this._f)) *
-                 Math.min(1.0, 1 - this._f/2) / 2 );
-    if (!(isFinite(this._a) && this._a > 0))
+      Math.sqrt( Math.max(0.001, Math.abs(this.f)) *
+                 Math.min(1.0, 1 - this.f/2) / 2 );
+    if (!(isFinite(this.a) && this.a > 0))
       throw new Error("Major radius is not positive");
     if (!(isFinite(this._b) && this._b > 0))
       throw new Error("Minor radius is not positive");
@@ -578,16 +628,16 @@ GeographicLib.GeodesicLine = {};
     } else {
       // Scale lam12 and bet2 to x, y coordinate system where antipodal
       // point is at origin and singular point is at y = 0, x = -1.
-      if (this._f >= 0) {       // In fact f == 0 does not get here
+      if (this.f >= 0) {       // In fact f == 0 does not get here
         // x = dlong, y = dlat
         k2 = m.sq(sbet1) * this._ep2;
         eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
-        lamscale = this._f * cbet1 * this.A3f(eps) * Math.PI;
+        lamscale = this.f * cbet1 * this.A3f(eps) * Math.PI;
         betscale = lamscale * cbet1;
 
         x = (lam12 - Math.PI) / lamscale;
         y = sbet12a / betscale;
-      } else {                  // _f < 0
+      } else {                  // f < 0
         // x = dlat, y = dlong
         cbet12a = cbet2 * cbet1 - sbet2 * sbet1;
         bet12a = Math.atan2(sbet12a, cbet12a);
@@ -599,14 +649,14 @@ GeographicLib.GeodesicLine = {};
         m12b = nvals.m12b; m0 = nvals.m0;
         x = -1 + m12b / (cbet1 * cbet2 * m0 * Math.PI);
         betscale = x < -0.01 ? sbet12a / x :
-          -this._f * m.sq(cbet1) * Math.PI;
+          -this.f * m.sq(cbet1) * Math.PI;
         lamscale = betscale / cbet1;
         y = (lam12 - Math.PI) / lamscale;
       }
 
       if (y > -tol1_ && x > -1 - xthresh_) {
         // strip near cut
-        if (this._f >= 0) {
+        if (this.f >= 0) {
           vals.salp1 = Math.min(1, -x);
           vals.calp1 = - Math.sqrt(1 - m.sq(vals.salp1));
         } else {
@@ -617,8 +667,8 @@ GeographicLib.GeodesicLine = {};
         // Estimate alp1, by solving the astroid problem.
         //
         // Could estimate alpha1 = theta + pi/2, directly, i.e.,
-        //   calp1 = y/k; salp1 = -x/(1+k);  for _f >= 0
-        //   calp1 = x/(1+k); salp1 = -y/k;  for _f < 0 (need to check)
+        //   calp1 = y/k; salp1 = -x/(1+k);  for f >= 0
+        //   calp1 = x/(1+k); salp1 = -y/k;  for f < 0 (need to check)
         //
         // However, it's better to estimate omg12 from astroid and use
         // spherical formula to compute alp1.  This reduces the mean number of
@@ -649,7 +699,7 @@ GeographicLib.GeodesicLine = {};
         //
         // Because omg12 is near pi, estimate work with omg12a = pi - omg12
         k = Astroid(x, y);
-        omg12a = lamscale * ( this._f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k );
+        omg12a = lamscale * ( this.f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k );
         somg12 = Math.sin(omg12a); comg12 = -Math.cos(omg12a);
         // Update spherical estimate of alp1 using omg12 instead of
         // lam12
@@ -728,7 +778,7 @@ GeographicLib.GeodesicLine = {};
     this.C3f(vals.eps, C3a);
     B312 = (g.SinCosSeries(true, vals.ssig2, vals.csig2, C3a) -
             g.SinCosSeries(true, vals.ssig1, vals.csig1, C3a));
-    h0 = -this._f * this.A3f(vals.eps);
+    h0 = -this.f * this.A3f(vals.eps);
     vals.domg12 = salp0 * h0 * (vals.sig12 + B312);
     vals.lam12 = omg12 + vals.domg12;
 
@@ -747,8 +797,23 @@ GeographicLib.GeodesicLine = {};
     return vals;
   };
 
+  /**
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} lat2 the latitude of the second point in degrees.
+   * @param {number} lon2 the longitude of the second point in degrees.
+   * @param {number} outmask a bitor'ed of
+   * @summary Solve the inverse geodesic problem.
+   * @description Solve the inverse geodesic problem full version
+   *   * a
+   *   * bljsdf lkjsdf
+   * @example
+   * var g = GeographicLib.Geodesic,
+   *     geod = g.Geodesic(6.4e6, 1/150),
+   *     r = geod.Inverse(1,2,3,4, g.STANDARD);
+   */
   // return a12, s12, azi1, azi2, m12, M12, M21, S12
-  g.Geodesic.prototype.GenInverse = function(lat1, lon1, lat2, lon2, outmask) {
+  g.Geodesic.prototype.Inverse = function(lat1, lon1, lat2, lon2, outmask) {
     var vals = {},
         lon12, lonsign, t, swapp, latsign,
         sbet1, cbet1, sbet2, cbet2, s12x, m12x,
@@ -759,6 +824,8 @@ GeographicLib.GeodesicLine = {};
         tripn, tripb, v, dv, dalp1, sdalp1, cdalp1, nsalp1,
         lengthmask, salp0, calp0, alp12, k2, A4, C4a, B41, B42,
         somg12, domg12, dbet1, dbet2, salp12, calp12;
+    if (!outmask) outmask = g.STANDARD;
+    if (outmask == g.LONG_UNROLL) outmask |= g.STANDARD;
     outmask &= g.OUT_MASK;
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
@@ -891,11 +958,11 @@ GeographicLib.GeodesicLine = {};
     if (!meridian &&
         sbet1 === 0 &&           // and sbet2 == 0
         // Mimic the way Lambda12 works with calp1 = 0
-        (this._f <= 0 || lam12 <= Math.PI - this._f * Math.PI)) {
+        (this.f <= 0 || lam12 <= Math.PI - this.f * Math.PI)) {
 
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
-      s12x = this._a * lam12;
+      s12x = this.a * lam12;
       sig12 = omg12 = lam12 / this._f1;
       m12x = this._b * Math.sin(sig12);
       if (outmask & g.GEODESICSCALE)
@@ -1040,7 +1107,7 @@ GeographicLib.GeodesicLine = {};
         k2 = m.sq(calp0) * this._ep2;
         eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
         // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
-        A4 = m.sq(this._a) * calp0 * salp0 * this._e2;
+        A4 = m.sq(this.a) * calp0 * salp0 * this._e2;
         // norm(ssig1, csig1);
         t = m.hypot(ssig1, csig1); ssig1 /= t; csig1 /= t;
         // norm(ssig2, csig2);
@@ -1116,17 +1183,36 @@ GeographicLib.GeodesicLine = {};
   // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   g.Geodesic.prototype.GenDirect = function (lat1, lon1, azi1,
                                              arcmode, s12_a12, outmask) {
-    var line = new l.GeodesicLine(this, lat1, lon1, azi1,
-     // Automatically supply DISTANCE_IN if necessary
-     outmask | (arcmode ? g.NONE : g.DISTANCE_IN));
+    var line;
+    if (!outmask)
+      outmask = g.STANDARD;
+    else if (outmask == g.LONG_UNROLL)
+      outmask |= g.STANDARD;
+    line = new l.GeodesicLine(this, lat1, lon1, azi1,
+                              // Automatically supply DISTANCE_IN if necessary
+                              outmask | (arcmode ? g.NONE : g.DISTANCE_IN));
     return line.GenPosition(arcmode, s12_a12, outmask);
+  };
+
+  // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
+  g.Geodesic.prototype.Direct = function (lat1, lon1, azi1, s12, outmask) {
+    return this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
+  };
+
+  // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
+  g.Geodesic.prototype.ArcDirect = function (lat1, lon1, azi1, a12, outmask) {
+    return this.GenDirect(lat1, lon1, azi1, true, a12, outmask);
   };
 
   // return a GeodesicLine
   g.Geodesic.prototype.Line = function (lat1, lon1, azi1, caps) {
     return new l.GeodesicLine(this, lat1, lon1, azi1, caps);
-  }
+  };
+
+  g.Geodesic.prototype.Area = function(points, polyline) {
+    return p.Area(this, points, polyline);
+  };
 
   g.WGS84 = new g.Geodesic(c.WGS84.a, c.WGS84.f);
-})(GeographicLib.Geodesic, GeographicLib.GeodesicLine, GeographicLib.Math,
-  GeographicLib.Constants);
+})(GeographicLib.Geodesic, GeographicLib.GeodesicLine,
+   GeographicLib.PolygonArea, GeographicLib.Math, GeographicLib.Constants);

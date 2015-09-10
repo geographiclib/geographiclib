@@ -1,6 +1,6 @@
 # This list governs the order in which the JavaScript sources are
 # concatenated.  This shouldn't be changed.
-set (JS_MODULES Math Geodesic GeodesicLine PolygonArea DMS Interface)
+set (JS_MODULES Math Geodesic GeodesicLine PolygonArea DMS)
 
 # Combine JavaScript into a single file if necessary
 set (JS_BUILD 0)
@@ -42,7 +42,8 @@ if (JS_BUILD)
     file (APPEND ${JS_TARGET} "// ${_F}\n${_S}")
   endforeach ()
   # support loading with node's require
-  file (APPEND ${JS_TARGET} "if(module)module.exports=GeographicLib;\n")
+  file (APPEND ${JS_TARGET}
+    "if(typeof module!=='undefined')module.exports=GeographicLib;\n")
 endif ()
 
 # "make javascript" will reconfigure cmake if necessary, since

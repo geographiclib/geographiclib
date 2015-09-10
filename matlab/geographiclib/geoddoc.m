@@ -94,7 +94,7 @@ function geoddoc
 %       curves on the surface.
 %     * Similarly, the spherical arc length, a12, is unrestricted.
 %     * The equatorial radius, a, must be positive.
-%     * The eccentricity, e, should be satisfy abs(e) < 0.2 in order to
+%     * The eccentricity, e, should satisfy abs(e) < 0.2 in order to
 %       retain full accuracy (this corresponds to flattenings satisfying
 %       abs(f) <= 1/50, approximately).  This condition holds for most
 %       applications in geodesy.

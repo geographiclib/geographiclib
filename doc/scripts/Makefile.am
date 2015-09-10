@@ -11,8 +11,7 @@ JSSCRIPTS = \
 	$(srcdir)/GeographicLib/Geodesic.js \
 	$(srcdir)/GeographicLib/GeodesicLine.js \
 	$(srcdir)/GeographicLib/PolygonArea.js \
-	$(srcdir)/GeographicLib/DMS.js \
-	$(srcdir)/GeographicLib/Interface.js
+	$(srcdir)/GeographicLib/DMS.js
 
 all: geographiclib.js $(SCRIPTDRIVERS)
 

@@ -1,0 +1,23 @@
+{
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "source": {
+        "includePattern": ".+\\.js(doc)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "plugins": [ "plugins/markdown" ],
+    "templates": {
+      "cleverLinks": false,
+      "monospaceLinks": false,
+      "default": { "outputSourceFiles": true },
+      "systemName"      : "GeographicLib",
+      "footer"          : "",
+      "copyright"       : "Copyright (c) Charles Karney (2011-2015) <charles@karney.com>.",
+      "navType"         : "vertical",
+      "theme"           : "cerulean",
+      "linenums"        : true,
+      "collapseSymbols" : false,
+      "inverseNav"      : false
+    }
+}

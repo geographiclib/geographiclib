@@ -214,6 +214,14 @@ add_test (NAME GeodSolve27 COMMAND GeodSolve
 set_tests_properties (GeodSolve26 GeodSolve27
   PROPERTIES PASS_REGULAR_EXPRESSION "55\\.96650 124\\.03350 19980862")
 
+# Check 0/0 problem with area calculation on sphere 2015-09-08
+add_test (NAME GeodSolve28 COMMAND GeodSolve
+  -i -f -e 6.4e6 0 --input-string "1 2 3 4")
+add_test (NAME GeodSolve29 COMMAND GeodSolve
+  -i -f -e 6.4e6 0 --input-string "1 2 3 4" -E)
+set_tests_properties (GeodSolve28 GeodSolve29
+  PROPERTIES PASS_REGULAR_EXPRESSION " 49911046115")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")

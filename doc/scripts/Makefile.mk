@@ -1,5 +1,5 @@
 # The order here is significant
-JS_MODULES=Math Geodesic GeodesicLine PolygonArea DMS Interface
+JS_MODULES=Math Geodesic GeodesicLine PolygonArea DMS
 JSSCRIPTS = $(patsubst %,GeographicLib/%.js,$(JS_MODULES))
 
 SCRIPTDRIVERSIN = $(wildcard geod-*.in)

@@ -1212,11 +1212,10 @@ The directory doc/scripts/GeographicLib contains the classes
 - PolygonAreaT
 - DMS
 .
-translated into JavaScript.  See Interface.js for a simple JavaScript
-interface to these routines (documented near the top of the file).  When
-GeographicLib is built the JavaScript source files are concatenated and
-compressed into a single file <code>geographiclib.js</code>.  This can
-be included into you document with \code
+translated into JavaScript.  When GeographicLib is built the JavaScript
+source files are concatenated and compressed into a single file
+<code>geographiclib.js</code>.  This can be included into you document
+with \code
 <script type="text/javascript"
         src="http://geographiclib.sf.net/scripts/geographiclib.js">
 </script> \endcode
@@ -7010,7 +7009,11 @@ git repository for GeographicLib</a>.
  - <a href="http://geographiclib.sf.net/1.44">Version 1.45</a>
    (released 2015-mm-dd)
    - Fix problems related to max(-0.0, +0.0) returning -0.0 with some
-     languages.
+     languages.  (The only known case where this lead to incorrect
+     results is with the MATLAB implementation version 1.44.)
+   - Fix bug (introduced in version 1.42) in C++ implementation geodesic
+     area computation which causes NaNs to be returned in the case of a
+     sphere.
    - Add Java implementation of the Gnomonic project (courtesy of
      Sebastian Mattheis).
    - Fix array size mismatch in MATLAB routine geoddistance by avoiding

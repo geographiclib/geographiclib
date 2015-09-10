@@ -10,11 +10,9 @@
  * http://geographiclib.sourceforge.net/
  */
 
-// Load AFTER GeographicLib/Math.js
-
 GeographicLib.DMS = {};
 
-(function(d, m) {
+(function(d) {
   "use strict";
 
   var lookup, zerofill, InternalDecode, NumMatch,
@@ -298,8 +296,7 @@ GeographicLib.DMS = {};
     else if (ib === d.NONE)
       ib = d.LATITUDE + d.LONGITUDE - ia;
     if (ia === ib)
-      throw new Error("Both " + stra + " and " +
-                      strb + " interpreted as " +
+      throw new Error("Both " + stra + " and " + strb + " interpreted as " +
                       (ia === d.LATITUDE ? "latitudes" : "longitudes"));
     lat = ia === d.LATITUDE ? a : b;
     lon = ia === d.LATITUDE ? b : a;
@@ -314,8 +311,7 @@ GeographicLib.DMS = {};
     var vals = d.Decode(angstr),
         ang = vals.val, ind = vals.ind;
     if (ind !== d.NONE)
-      throw new Error("Arc angle " + angstr +
-                      " includes a hemisphere N/E/W/S");
+      throw new Error("Arc angle " + angstr + " includes a hemisphere N/E/W/S");
     return ang;
   };
 
@@ -323,9 +319,7 @@ GeographicLib.DMS = {};
     var vals = d.Decode(azistr),
         azi = vals.val, ind = vals.ind;
     if (ind === d.LATITUDE)
-      throw new Error("Azimuth " + azistr +
-                      " has a latitude hemisphere N/S");
-    azi = m.AngNormalize(azi);
+      throw new Error("Azimuth " + azistr + " has a latitude hemisphere N/S");
     return azi;
   };
 
@@ -406,4 +400,4 @@ GeographicLib.DMS = {};
                                (sign < 0 ? 0 : 1));
     return s;
   };
-})(GeographicLib.DMS, GeographicLib.Math);
+})(GeographicLib.DMS);
