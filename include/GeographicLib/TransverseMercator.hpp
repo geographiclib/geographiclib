@@ -102,8 +102,7 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
-     *   flattening to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.
      * @param[in] k0 central scale factor.
      * @exception GeographicErr if \e a, (1 &minus; \e f) \e a, or \e k0 is
      *   not positive.

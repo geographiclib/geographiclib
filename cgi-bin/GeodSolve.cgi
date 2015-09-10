@@ -338,8 +338,7 @@ cat <<EOF
       (corresponding to 0.01&nbsp;&le; <em>b</em>/<em>a</em>&nbsp;&le;
       100).  Note that <em>f</em> is negative for a prolate ellipsoid
       (<em>b</em>&nbsp;&gt; <em>a</em>) and that it can be entered as a
-      fraction, e.g., 1/297.  (If the value entered for <em>f</em> is
-      greater than 1, its reciprocal is used.)
+      fraction, e.g., 1/297.
     </p>
     <p>
       GeodSolve is accurate to about 15&nbsp;nanometers (for the WGS84

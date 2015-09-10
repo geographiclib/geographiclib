@@ -97,8 +97,7 @@ namespace NETGeographicLib
          *
          * @param[in] a equatorial radius of ellipsoid (meters).
          * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-         *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-         *   to 1/\e f.
+         *   Negative \e f gives a prolate ellipsoid.
          * @param[in] stdlat standard parallel (degrees), the circle of tangency.
          * @param[in] k0 azimuthal scale on the standard parallel.
          * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k0 is
@@ -113,8 +112,7 @@ namespace NETGeographicLib
          *
          * @param[in] a equatorial radius of ellipsoid (meters).
          * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-         *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-         *   to 1/\e f.
+         *   Negative \e f gives a prolate ellipsoid.
          * @param[in] stdlat1 first standard parallel (degrees).
          * @param[in] stdlat2 second standard parallel (degrees).
          * @param[in] k1 azimuthal scale on the standard parallels.
@@ -131,8 +129,7 @@ namespace NETGeographicLib
          *
          * @param[in] a equatorial radius of ellipsoid (meters).
          * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-         *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-         *   to 1/\e f.
+         *   Negative \e f gives a prolate ellipsoid.
          * @param[in] sinlat1 sine of first standard parallel.
          * @param[in] coslat1 cosine of first standard parallel.
          * @param[in] sinlat2 sine of second standard parallel.

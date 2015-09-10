@@ -238,8 +238,7 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
-     *   flattening to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.
      * @param[in] exact if true (the default) use an addition theorem for
      *   elliptic integrals to compute divided differences; otherwise use
      *   series expansion (accurate for |<i>f</i>| < 0.01).

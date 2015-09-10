@@ -51,14 +51,13 @@ namespace GeographicLib {
       // which otherwise failed for Visual Studio 10 (Release and Debug)
     , tol1_(200 * tol0_)
     , tol2_(sqrt(tol0_))
-      // Check on bisection interval
-    , tolb_(tol0_ * tol2_)
+    , tolb_(tol0_ * tol2_)      // Check on bisection interval
     , xthresh_(1000 * tol2_)
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)
+    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
-    , _ep2(_e2 / Math::sq(_f1))       // e2 / (1 - e2)
+    , _ep2(_e2 / Math::sq(_f1)) // e2 / (1 - e2)
     , _n(_f / ( 2 - _f))
     , _b(_a * _f1)
     , _c2((Math::sq(_a) + Math::sq(_b) *

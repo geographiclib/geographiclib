@@ -19,7 +19,7 @@ namespace GeographicLib {
     , epsx_(Math::sq(eps_))
     , ahypover_(Math::digits() * log(real(numeric_limits<real>::radix)) + 2)
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)
+    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
@@ -44,7 +44,7 @@ namespace GeographicLib {
     , epsx_(Math::sq(eps_))
     , ahypover_(Math::digits() * log(real(numeric_limits<real>::radix)) + 2)
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)
+    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
@@ -73,7 +73,7 @@ namespace GeographicLib {
     , epsx_(Math::sq(eps_))
     , ahypover_(Math::digits() * log(real(numeric_limits<real>::radix)) + 2)
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)
+    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))

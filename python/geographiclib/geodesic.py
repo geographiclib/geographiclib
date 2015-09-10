@@ -267,7 +267,7 @@ class Geodesic(object):
     """
 
     self._a = float(a)
-    self._f = float(f) if f <= 1 else 1.0/f
+    self._f = float(f)
     self._f1 = 1 - self._f
     self._e2 = self._f * (2 - self._f)
     self._ep2 = self._e2 / Math.sq(self._f1) # e2 / (1 - e2)

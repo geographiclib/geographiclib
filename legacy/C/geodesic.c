@@ -289,7 +289,7 @@ static void accneg(real s[]);
 void geod_init(struct geod_geodesic* g, real a, real f) {
   if (!init) Init();
   g->a = a;
-  g->f = f <= 1 ? f : 1/f;
+  g->f = f;
   g->f1 = 1 - g->f;
   g->e2 = g->f * (2 - g->f);
   g->ep2 = g->e2 / sq(g->f1);   /* e2 / (1 - e2) */

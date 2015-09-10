@@ -7031,6 +7031,11 @@ git repository for GeographicLib</a>.
        files.
    - Fixed bug, introduced in version 1.44, in the detection of C++11
      math functions in configure.ac.
+   - Behavior of substituting 1/\e f for \e f if \e f > 1 is now
+     <b>deprecated</b>.  This behavior has been removed from the
+     JavaScript, C, and python implementations (it was never
+     documented).  Maxima, MATLAB, and Fortran implementations never
+     included this behavior.
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
    (released 2015-08-14)
