@@ -1,0 +1,11 @@
+ {
+     "geodesics": {
+         "title": "General information on geodesics"
+     },
+     "interface": {
+         "title": "The library interface"
+     },
+     "examples": {
+         "title": "Examples of use"
+     }
+ }

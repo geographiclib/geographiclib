@@ -1,4 +1,4 @@
-/**
+/*
  * Math.js
  * Transcription of Math.hpp, Constants.hpp, and Accumulator.hpp into
  * JavaScript.
@@ -9,8 +9,35 @@
  */
 
 /**
-* @module GeographicLib
-*/
+ * @namespace GeographicLib
+ * @description The parent namespace for the following modules:
+ * - {@link module:GeographicLib/Geodesic GeographicLib/Geodesic} The main
+ *   engine for solving geodesic problems via the
+ *   {@link module:GeographicLib/Geodesic.Geodesic Geodesic} class.
+ * - {@link module:GeographicLib/GeodesicLine GeographicLib/GeodesicLine}
+ *   computes points along a single geodesic line via the
+ *   {@link module:GeographicLib/GeodesicLine.GeodesicLine GeodesicLine}
+ *   class.
+ * - {@link module:GeographicLib/PolygonArea GeographicLib/PolygonArea}
+ *   computes the area of a geodesic polygon via the
+ *   {@link module:GeographicLib/PolygonArea.PolygonArea PolygonArea}
+ *   class.
+ * - {@link module:GeographicLib/DMS GeographicLib/DMS} handles the decoding
+ *   and encoding of angles in degree, minutes, and seconds, via static
+ *   functions in this module.
+ * - {@link module:GeographicLib/Constants GeographicLib/Constants} defines
+ *   constants specifying the version numbers and the parameters for the WGS84
+ *   ellipsoid.
+ *
+ * The following modules are used internally by the package:
+ * - {@link module:GeographicLib/Math GeographicLib/Math} defines various
+ *   mathematical functions.
+ * - {@link module:GeographicLib/Accumulator GeographicLib/Accumulator}
+ *   interally used by
+ *   {@link module:GeographicLib/PolygonArea.PolygonArea PolygonArea} (via the
+ *   {@link module:GeographicLib/Accumulator.Accumulator Accumulator} class)
+ *   for summing the contributions to the area of a polygon.
+ */
 var GeographicLib = {};
 GeographicLib.Constants = {};
 GeographicLib.Math = {};
@@ -19,23 +46,29 @@ GeographicLib.Accumulator = {};
 (function(
   /**
    * @exports GeographicLib/Constants
+   * @description Define constants defining the version and WGS84 parameters.
    */
   c) {
   "use strict";
 
   /**
    * @constant
-   * @description WGS84 radius and flattening
+   * @summary WGS84 parameters.
+   * @property {number} a the equatorial radius (meters).
+   * @property {number} f the flattening.
    */
   c.WGS84 = { a: 6378137, f: 1/298.257223563 };
   /**
    * @constant
-   * @description an array of version numbers
+   * @summary an array of version numbers.
+   * @property {number} major the major version number.
+   * @property {number} minor the minor version number.
+   * @property {number} patch the patch number.
    */
-  c.version = [ 1, 45, 0 ];
+  c.version = { major: 1, minor: 44, patch: 0 };
   /**
    * @constant
-   * @description version string
+   * @summary version string
    */
   c.version_string = "1.45";
 })(GeographicLib.Constants);
@@ -43,36 +76,37 @@ GeographicLib.Accumulator = {};
 (function(
   /**
    * @exports GeographicLib/Math
-   * @description Some useful mathematical constants and functions.
+   * @description Some useful mathematical constants and functions (mainly for
+   *   internal use).
    */
   m) {
   "use strict";
 
   /**
-   * @description The number of digits of precision in floating-point numbers.
+   * @summary The number of digits of precision in floating-point numbers.
    * @constant {number}
    */
   m.digits = 53;
   /**
-   * @description The machine epsilon.
+   * @summary The machine epsilon.
    * @constant {number}
    */
   m.epsilon = Math.pow(0.5, m.digits - 1);
   /**
-   * @description The factor to convert degrees to radians.
+   * @summary The factor to convert degrees to radians.
    * @constant {number}
    */
   m.degree = Math.PI/180;
 
   /**
-   * @description Square a number.
+   * @summary Square a number.
    * @param {number} x the number.
    * @returns {number} the square.
    */
   m.sq = function(x) { return x * x; };
 
   /**
-   * @description The hypotenuse function.
+   * @summary The hypotenuse function.
    * @param {number} x the first side.
    * @param {number} y the second side.
    * @returns {number} the hypotenuse.
@@ -86,7 +120,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description Cube root function.
+   * @summary Cube root function.
    * @param {number} x the argument.
    * @returns {number} the real cube root.
    */
@@ -96,7 +130,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description The log1p function.
+   * @summary The log1p function.
    * @param {number} x the argument.
    * @returns {number} log(1 + x).
    */
@@ -111,7 +145,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description Inverse hyperbolic tangent.
+   * @summary Inverse hyperbolic tangent.
    * @param {number} x the argument.
    * @returns {number} tanh<sup>&minus;1</sup> x.
    */
@@ -122,7 +156,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description An error-free sum.
+   * @summary An error-free sum.
    * @param {number} u
    * @param {number} v
    * @returns {object} sum with sum.s = round(u + v) and sum.t is u + v &minus;
@@ -142,7 +176,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description Evaluate a polynomial.
+   * @summary Evaluate a polynomial.
    * @param {integer} N the order of the polynomial.
    * @param {array} p the coefficient array (of size N + 1) (leading
    *   order coefficient first)
@@ -157,7 +191,7 @@ GeographicLib.Accumulator = {};
 
 
   /**
-   * @description Coarsen a value close to zero.
+   * @summary Coarsen a value close to zero.
    * @param {number} x
    * @returns {number} the coarsened value.
    */
@@ -175,7 +209,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description Normalize an angle.
+   * @summary Normalize an angle.
    * @param {number} x the angle in degrees.
    * @returns {number} the angle reduced to the range [&minus;180&deg;,
    *   180&deg;).
@@ -187,7 +221,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description Normalize a latitude.
+   * @summary Normalize a latitude.
    * @param {number} x the angle in degrees.
    * @returns {number} x if it is in the range [&minus;90&deg;, 90&deg;],
    *   otherwise return NaN.
@@ -198,7 +232,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description Difference of two angles reduced to [&minus;180&deg;,
+   * @summary Difference of two angles reduced to [&minus;180&deg;,
    *   180&deg;]
    * @param {number} x the first angle in degrees.
    * @param {number} y the second angle in degrees.
@@ -214,7 +248,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description Evaluate the sine and cosine function with the argument in
+   * @summary Evaluate the sine and cosine function with the argument in
    *   degrees
    * @param {number} x in degrees.
    * @returns {object} r with r.s = sin(x) and r.c = cos(x).
@@ -239,13 +273,13 @@ GeographicLib.Accumulator = {};
     return {s: sinx, c: cosx};
   };
 
-    /**
-     * @description Evaluate the atan2 function with the result in degrees
-     * @param {number} y
-     * @param {number} x
-     * @returns atan2(y, x) in degrees, in the range [&minus;180&deg;
-     *   180&deg;).
-     */
+  /**
+   * @summary Evaluate the atan2 function with the result in degrees
+   * @param {number} y
+   * @param {number} x
+   * @returns atan2(y, x) in degrees, in the range [&minus;180&deg;
+   *   180&deg;).
+   */
   m.atan2d = function(y, x) {
     // In order to minimize round-off errors, this function rearranges the
     // arguments so that result of atan2 is in the range [-pi/4, pi/4] before
@@ -274,6 +308,9 @@ GeographicLib.Accumulator = {};
 (function(
   /**
    * @exports GeographicLib/Accumulator
+   * @description Accurate summation via the
+   *   {@link module:GeographicLib/Accumulator.Accumulator Accumulator} class
+   *   (mainly for internal use).
    */
   a, m) {
   "use strict";
@@ -281,18 +318,18 @@ GeographicLib.Accumulator = {};
   /**
    * @class
    * @summary Accurate summation of many numbers.
-   * @classdesc This allow many numbers to be added together with twice the
-   * normal precision.  In the documentation of the member functions,
-   * sum stands for the value currently held in the accumulator.
-   * @param {number} [y = 0]  set sum = y.
+   * @classdesc This allows many numbers to be added together with twice the
+   *   normal precision.  In the documentation of the member functions, sum
+   *   stands for the value currently held in the accumulator.
+   * @param {number | Accumulator} [y = 0]  set sum = y.
    */
   a.Accumulator = function(y) {
     this.Set(y);
   };
 
   /**
-   * @description Set the accumulator to a number.
-   * @param {number} [y = 0] set sum = y.
+   * @summary Set the accumulator to a number.
+   * @param {number | Accumulator} [y = 0] set sum = y.
    */
   a.Accumulator.prototype.Set = function(y) {
     if (!y) y = 0;
@@ -306,7 +343,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description Add a number to the accumulator.
+   * @summary Add a number to the accumulator.
    * @param {number} [y = 0] set sum += y.
    */
   a.Accumulator.prototype.Add = function(y) {
@@ -352,7 +389,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description Return the result of adding a number to sum (but
+   * @summary Return the result of adding a number to sum (but
    *   don't change sum).
    * @param {number} [y = 0] the number to be added to the sum.
    * @return sum + y.
@@ -369,7 +406,7 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @description Set sum = &minus;sum.
+   * @summary Set sum = &minus;sum.
    */
   a.Accumulator.prototype.Negate = function() {
     this._s *= -1;

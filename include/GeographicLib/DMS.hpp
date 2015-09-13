@@ -311,7 +311,7 @@ namespace GeographicLib {
      *   necessary).
      * @param[in] prec the number of digits after the decimal point for the
      *   trailing component.
-     * @param[in] ind DMS::flag value indicated additional formatting.
+     * @param[in] ind DMS::flag value indicating additional formatting.
      * @param[in] dmssep if non-null, use as the DMS separator character
      *   (instead of d, ', &quot; delimiters).
      * @exception std::bad_alloc if memory for the string can't be allocated.
@@ -325,7 +325,7 @@ namespace GeographicLib {
      * - ind == DMS::LONGITUDE, trailing E or W hemisphere designator, no
      *   sign, pad degrees to 3 digits, e.g., 008d03'W.
      * - ind == DMS::AZIMUTH, convert to the range [0, 360&deg;), no
-     *   sign, pad degrees to 3 digits, , e.g., 351d57'.
+     *   sign, pad degrees to 3 digits, e.g., 351d57'.
      * .
      * The integer parts of the minutes and seconds components are always given
      * with 2 digits.

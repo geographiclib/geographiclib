@@ -42,6 +42,16 @@ var geod = GeographicLib.Geodesic.WGS84,
   "use strict";
 
   /*
+   * Compute the area of a polygon
+   */
+  g.Geodesic.prototype.Area = function(points, polyline) {
+    var poly = this.Polygon(polyline), i;
+    for (i = 0; i < points.length; ++i)
+      poly.AddPoint(points[i].lat, points[i].lon);
+    return poly.Compute(false, true);
+  };
+
+  /*
    * split a geodesic line into k equal pieces which are no longer than about
    * ds12 (but k cannot exceed maxk, default 20), and returns an array of
    * length k + 1 of objects with fields lat, lon, azi.
@@ -195,8 +205,8 @@ function GeodesicArea(input, polyline) {
     // each point is blank-delimited: lat lon
     t = input;
     t = t.split(/[\r\n]/);
-    if (t[0] == "") t.shift();
-    if (t[t.length-1] == "") t.pop();
+    if (t.length > 0 && t[0] == "") t.shift();
+    if (t.length > 0 && t[t.length-1] == "") t.pop();
     for (i = 0; i < t.length; ++i) {
       pos = t[i].replace(/^\s+/,"").replace(/\s+$/,"").split(/[\s,]+/,4);
       if (pos.length != 2)

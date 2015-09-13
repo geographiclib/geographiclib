@@ -1,4 +1,4 @@
-/**
+/*
  * DMS.js
  * Transcription of DMS.[ch]pp into JavaScript.
  *
@@ -12,7 +12,26 @@
 
 GeographicLib.DMS = {};
 
-(function(d) {
+(function(
+  /**
+   * @exports GeographicLib/DMS
+   * @description Decode/Encode angles expressed as degrees, minutes, and
+   *   seconds.  This module defines several constants:
+   *   - hemisphere indicator (returned by
+   *       {@link module:GeographicLib/DMS.Decode Decode}) and a formatting
+   *       indicator (used by
+   *       {@link module:GeographicLib/DMS.Encode Encode})
+   *     - NONE = 0, no designator and format as plain angle;
+   *     - LATITUDE = 1, a N/S designator and format as latitude;
+   *     - LONGITUDE = 2, an E/W designator and format as longitude;
+   *     - AZIMUTH = 3, format as azimuth;
+   *   - the specification of the trailing component in
+   *       {@link module:GeographicLib/DMS.Encode Encode}
+   *     - DEGREE;
+   *     - MINUTE;
+   *     - SECOND.
+   */
+  d) {
   "use strict";
 
   var lookup, zerofill, InternalDecode, NumMatch,
@@ -34,12 +53,22 @@ GeographicLib.DMS = {};
   d.LATITUDE = 1;
   d.LONGITUDE = 2;
   d.AZIMUTH = 3;
-  d.NUMBER = 4;
   d.DEGREE = 0;
   d.MINUTE = 1;
   d.SECOND = 2;
 
-  // return val, ind
+  /**
+   * @summary Decode a DMS string.
+   * @description The interpretation of the string is given in the
+   *   documentation of the corresponding function, Decode(string&, flag&)
+   *   in the {@link
+   *   http://geographiclib.sourceforge.net/html/classGeographicLib_1_1DMS.html
+   *   C++ DMS class}
+   * @param {string} dms the string.
+   * @returns {object} r where r.val is the decoded value (degrees) and r.ind
+   *   is a hemisphere designator, one of NONE, LATITUDE, LONGITUDE.
+   * @throws an error if the string is illegal.
+   */
   d.Decode = function(dms) {
     var dmsa = dms, end,
         v = 0, i = 0, mi, pi, vals,
@@ -278,19 +307,29 @@ GeographicLib.DMS = {};
     return 0;
   };
 
-  // return lat, lon
-  d.DecodeLatLon = function(stra, strb, swaplatlong) {
+  /**
+   * @summary Decode two DMS strings interpreting them as a latitude/longitude
+   *   pair.
+   * @param {string} stra the first string.
+   * @param {string} strb the first string.
+   * @param {bool} [longfirst = false] if true assume then longitude is given
+   *   first (in the absense of any hemisphere indicators).
+   * @returns {object} r where r.lat is the decoded latitude and r.lon is the
+   *   decoded longitude (both in degrees).
+   * @throws an error if the strings are illegal.
+   */
+  d.DecodeLatLon = function(stra, strb, longfirst) {
     var vals = {},
         valsa = d.Decode(stra),
         valsb = d.Decode(strb),
         a = valsa.val, ia = valsa.ind,
         b = valsb.val, ib = valsb.ind,
         lat, lon;
-    if (!swaplatlong) swaplatlong = false;
+    if (!longfirst) longfirst = false;
     if (ia === d.NONE && ib === d.NONE) {
-      // Default to lat, long unless swaplatlong
-      ia = swaplatlong ? d.LONGITUDE : d.LATITUDE;
-      ib = swaplatlong ? d.LATITUDE : d.LONGITUDE;
+      // Default to lat, long unless longfirst
+      ia = longfirst ? d.LONGITUDE : d.LATITUDE;
+      ib = longfirst ? d.LATITUDE : d.LONGITUDE;
     } else if (ia === d.NONE)
       ia = d.LATITUDE + d.LONGITUDE - ib;
     else if (ib === d.NONE)
@@ -307,6 +346,13 @@ GeographicLib.DMS = {};
     return vals;
   };
 
+  /**
+   * @summary Decode a DMS string interpreting it as an arc length.
+   * @param {string} angstr the string (this must not include a hemisphere
+   *   indicator).
+   * @returns {number} the arc length (degrees).
+   * @throws an error if the string is illegal.
+   */
   d.DecodeAngle = function(angstr) {
     var vals = d.Decode(angstr),
         ang = vals.val, ind = vals.ind;
@@ -315,6 +361,13 @@ GeographicLib.DMS = {};
     return ang;
   };
 
+  /**
+   * @summary Decode a DMS string interpreting it as an azimuth.
+   * @param {string} azistr the string (this may include an E/W hemisphere
+   *   indicator).
+   * @returns {number} the azimuth (degrees).
+   * @throws an error if the string is illegal.
+   */
   d.DecodeAzimuth = function(azistr) {
     var vals = d.Decode(azistr),
         azi = vals.val, ind = vals.ind;
@@ -323,6 +376,27 @@ GeographicLib.DMS = {};
     return azi;
   };
 
+  /**
+   * @summary Convert angle (in degrees) into a DMS string (using &deg;, ',
+   *  and &quot;).
+   * @param {number} angle input angle (degrees).
+   * @param {number} trailing one of DEGREE, MINUTE, or SECOND to indicate
+   *   the trailing component of the string (this component is given as a
+   *   decimal number if necessary).
+   * @param {number} prec the number of digits after the decimal point for
+   *   the trailing component.
+   * @param {number} [ind = NONE] a formatting indicator, one of NONE,
+   *   LATITUDE, LONGITUDE, AZIMUTH.
+   * @returns {string} the resulting string formatted as follows:
+   *   * NONE, signed result no leading zeros on degrees except in the units
+   *     place, e.g., -8&deg;03'.
+   *   * LATITUDE, trailing N or S hemisphere designator, no sign, pad
+   *     degrees to 2 digits, e.g., 08&deg;03'S.
+   *   * LONGITUDE, trailing E or W hemisphere designator, no sign, pad
+   *     degrees to 3 digits, e.g., 008&deg;03'W.
+   *   * AZIMUTH, convert to the range [0, 360&deg;), no sign, pad degrees to
+   *     3 digits, e.g., 351&deg;57'.
+   */
   d.Encode = function(angle, trailing, prec, ind) {
     // Assume check on range of input angle has been made by calling
     // routine (which might be able to offer a better diagnostic).

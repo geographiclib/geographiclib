@@ -1,4 +1,4 @@
-/**
+/*
  * Geodesic.js
  * Transcription of Geodesic.[ch]pp into JavaScript.
  *
@@ -26,19 +26,8 @@ GeographicLib.PolygonArea = {};
 (function(
   /**
    * @exports GeographicLib/Geodesic
-   * @description provide bitmasks specifying capabilities and output:
-   * - NONE, no capabilities, no output;
-   * - LATITUDE, calculate latitude lat2;
-   * - LONGITUDE, calculate longitude lon2;
-   * - AZIMUTH, calculate azimuths azi1 and azi2;
-   * - DISTANCE, calculate s12;
-   * - STANDARD, all of the above;
-   * - DISTANCE_IN, allow s12 to be used as input in the direct problem;
-   * - REDUCEDLENGTH, calculate m12;
-   * - GEODESICSCALE, calculate M12 and M21;
-   * - AREA, calculation S12;
-   * - ALL, all of the above;
-   * - LONG_UNROLL, unroll lon2.
+   * @description Solve geodesic problems via the
+   *   {@link module:GeographicLib/Geodesic.Geodesic Geodesic} class.
    */
   g, l, p, m, c) {
   "use strict";
@@ -279,17 +268,27 @@ GeographicLib.PolygonArea = {};
 
   /**
    * @class
-   * @property {number} a the equatorial radius (meters)
-   * @property {number} f the flattening
-   * @summary Initialize a Geodesic object for a specific ellipsoid
+   * @property {number} a the equatorial radius (meters).
+   * @property {number} f the flattening.
+   * @summary Initialize a Geodesic object for a specific ellipsoid.
    * @classdesc Performs geodesic calculations on an ellipsoid of revolution.
    *   The routines for solving the direct and inverse problems return an
    *   object with some of the following fields set: lat1, lon1, azi1, lat2,
-   *   lon2, azi2, s12, a12, m12, M12, M21, S12.  See {@tutorial interface}.
-   *   See {@tutorial interface#outmask}.
-   * @tutorial geodesics
-   * @param {number} a the equatorial radius of the ellipsoid (meters)
-   * @param {number} f the flattening of the ellipsoid.
+   *   lon2, azi2, s12, a12, m12, M12, M21, S12.  See {@tutorial interface},
+   *   "The results".
+   * @example
+   * var GeographicLib = require('geographiclib'),
+   *     geod = GeographicLib.Geodesic.WGS84;
+   * var inv = geod.Inverse(1,2,3,4);
+   * console.log('lat1 = ' + inv.lat1 + ", lon1 = " + inv.lon1 +
+   *             ', lat2 = ' + inv.lat2 + ", lon2 = " + inv.lon2 +
+   *             ',\nazi1 = ' + inv.azi1 + ", azi2 = " + inv.azi2 +
+   *             ', s12 = ' + inv.s12);
+   * @param {number} a the equatorial radius of the ellipsoid (meters).
+   * @param {number} f the flattening of the ellipsoid.  Setting f = 0 gives
+   *   a sphere (on which geodesics are great circles).  Negative f gives a
+   *   prolate ellipsoid.
+   * @throws an error if the parameters are illegal.
    */
   g.Geodesic = function(a, f) {
     this.a = a;
@@ -789,9 +788,9 @@ GeographicLib.PolygonArea = {};
    * @param {bitmask} [outmask = STANDARD] which results to include.
    * @returns {object} the requested results
    * @description The lat1, lon1, lat2, lon2, and a12 fields of the result are
-   *   always set.
+   *   always set.  For details on the outmask parameter, see {@tutorial
+   *   interface}, "The outmask and caps parameters".
    */
-  // return a12, s12, azi1, azi2, m12, M12, M21, S12
   g.Geodesic.prototype.Inverse = function(lat1, lon1, lat2, lon2, outmask) {
     var vals = {},
         lon12, lonsign, t, swapp, latsign,
@@ -1169,10 +1168,10 @@ GeographicLib.PolygonArea = {};
    *   first point to the second in (arcmode ? degrees : meters).
    * @param {bitmask} [outmask = STANDARD] which results to include.
    * @returns {object} the requested results.
-   * @description The lat1, lon1, azi1, and a12 fields of the result are
-   *   always set; s12 is included if arcmode is false.
+   * @description The lat1, lon1, azi1, and a12 fields of the result are always
+   *   set; s12 is included if arcmode is false.  For details on the outmask
+   *   parameter, see {@tutorial interface}, "The outmask and caps parameters".
    */
-  // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   g.Geodesic.prototype.GenDirect = function (lat1, lon1, azi1,
                                              arcmode, s12_a12, outmask) {
     var line;
@@ -1196,9 +1195,9 @@ GeographicLib.PolygonArea = {};
    * @param {bitmask} [outmask = STANDARD] which results to include.
    * @returns {object} the requested results.
    * @description The lat1, lon1, azi1, s12, and a12 fields of the result are
-   *   always set.
+   *   always set.  For details on the outmask parameter, see {@tutorial
+   *   interface}, "The outmask and caps parameters".
    */
-  // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   g.Geodesic.prototype.Direct = function (lat1, lon1, azi1, s12, outmask) {
     return this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
   };
@@ -1213,22 +1212,50 @@ GeographicLib.PolygonArea = {};
    * @param {bitmask} [outmask = STANDARD] which results to include.
    * @returns {object} the requested results.
    * @description The lat1, lon1, azi1, and a12 fields of the result are
-   *   always set.
+   *   always set.  For details on the outmask parameter, see {@tutorial
+   *   interface}, "The outmask and caps parameters".
    */
-  // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   g.Geodesic.prototype.ArcDirect = function (lat1, lon1, azi1, a12, outmask) {
     return this.GenDirect(lat1, lon1, azi1, true, a12, outmask);
   };
 
-  // return a GeodesicLine
+  /**
+   * @summary Create a {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} object.
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} azi1 the azimuth at the first point in degrees.
+   *   degrees.
+   * @param {bitmask} [caps = STANDARD | DISTANCE_IN] which capabilities to
+   *   include.
+   * @returns {object} the
+   *   {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} object
+   * @description For details on the caps parameter, see {@tutorial interface},
+   *   "The outmask and caps parameters".
+   */
   g.Geodesic.prototype.Line = function (lat1, lon1, azi1, caps) {
     return new l.GeodesicLine(this, lat1, lon1, azi1, caps);
   };
 
-  g.Geodesic.prototype.Area = function(points, polyline) {
-    return p.Area(this, points, polyline);
+  /**
+   * @summary Create a {@link module:GeographicLib/PolygonArea.PolygonArea
+   *   PolygonArea} object.
+   * @param {bool} [polyline = false] if true the new PolygonArea object
+   *   describes a polyline instead of a polygon.
+   * @returns {object} the
+   *   {@link module:GeographicLib/PolygonArea.PolygonArea
+   *   PolygonArea} object
+   */
+  g.Geodesic.prototype.Polygon = function (polyline) {
+    return new p.PolygonArea(this, polyline);
   };
 
+  /**
+   * @summary a {@link module:GeographicLib/Geodesic.Geodesic Geodesic} object
+   *   initialized for the WGS84 ellipsoid.
+   * @constant {object}
+   */
   g.WGS84 = new g.Geodesic(c.WGS84.a, c.WGS84.f);
 })(GeographicLib.Geodesic, GeographicLib.GeodesicLine,
    GeographicLib.PolygonArea, GeographicLib.Math, GeographicLib.Constants);

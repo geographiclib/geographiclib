@@ -1,4 +1,4 @@
-/**
+/*
  * GeodesicLine.js
  * Transcription of GeodesicLine.[ch]pp into JavaScript.
  *
@@ -19,26 +19,36 @@
 
 // Load AFTER GeographicLib/Math.js, GeographicLib/Geodesic.js
 
-(function(g,
-          /**
-           * @exports GeographicLib/GeodesicLine
-           */
-          l, m) {
+(function(
+  g,
+  /**
+   * @exports GeographicLib/GeodesicLine
+   * @description Solve geodesic problems on a single geodesic line via the
+   *   {@link module:GeographicLib/GeodesicLine.GeodesicLine GeodesicLine}
+   *   class.
+   */
+  l, m) {
   "use strict";
 
   /**
    * @class
-   * @property {number} a the equatorial radius (meters)
-   * @property {number} f the flattening
+   * @property {number} a the equatorial radius (meters).
+   * @property {number} f the flattening.
+   * @property {number} lat1 the initial latitude (degrees).
+   * @property {number} lon1 the initial longitude (degrees).
+   * @property {number} azi1 the initial azimuth (degrees).
+   * @property {bitmask} caps the capabilities of the object.
    * @summary Initialize a GeodesicLine object.
-   * @classdesc Performs geodesic calculations along a given geodesic.
-   * @tutorial geodesics
+   * @classdesc Performs geodesic calculations along a given geodesic line.
+   *   This object is usually instantiated by
+   *   {@link module:GeographicLib/Geodesic.Geodesic#Line Geodesic.Line}.
    * @param {object} geod a {@link module:GeographicLib/Geodesic.Geodesic
    *   Geodesic} object.
-   * @param {number} lat1
-   * @param {number} lon1
-   * @param {number} azi1
-   * @param {bitmask} caps
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} azi1 the azimuth at the first point in degrees.
+   * @param {bitmask} [caps = STANDARD | DISTANCE_IN] which capabilities to
+   *   include; LATITUDE | AZIMUTH are always included.
    */
   l.GeodesicLine = function(geod, lat1, lon1, azi1, caps) {
     var t, cbet1, sbet1, eps, s, c;
@@ -52,11 +62,11 @@
     this._caps = (!caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH)) |
       g.LONG_UNROLL;
 
-    this._lat1 = m.LatFix(lat1);
-    this._lon1 = lon1;
-    this._azi1 = m.AngNormalize(azi1);
-    t = m.sincosd(m.AngRound(this._azi1)); this._salp1 = t.s; this._calp1 = t.c;
-    t = m.sincosd(m.AngRound(this._lat1)); sbet1 = this._f1 * t.s; cbet1 = t.c;
+    this.lat1 = m.LatFix(lat1);
+    this.lon1 = lon1;
+    this.azi1 = m.AngNormalize(azi1);
+    t = m.sincosd(m.AngRound(this.azi1)); this._salp1 = t.s; this._calp1 = t.c;
+    t = m.sincosd(m.AngRound(this.lat1)); sbet1 = this._f1 * t.s; cbet1 = t.c;
     // norm(sbet1, cbet1);
     t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
     // Ensure cbet1 = +epsilon at poles
@@ -129,7 +139,17 @@
     }
   };
 
-  // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
+  /**
+   * @summary Find the position on the line (general case).
+   * @param {bool} arcmode is the next parameter an arc length?
+   * @param {number} s12_a12 the (arcmode ? arc length : distance) from the
+   *   first point to the second in (arcmode ? degrees : meters).
+   * @param {bitmask} [outmask = STANDARD] which results to include; this is
+   *   subject to the capabilities of the object.
+   * @returns {object} the requested results.
+   * @description The lat1, lon1, azi1, and a12 fields of the result are
+   *   always set; s12 is included if arcmode is false.
+   */
   l.GeodesicLine.prototype.GenPosition = function(arcmode, s12_a12,
                                                   outmask) {
     var vals = {},
@@ -141,9 +161,9 @@
     else if (outmask == g.LONG_UNROLL)
       outmask |= g.STANDARD;
     outmask &= this._caps & g.OUT_MASK;
-    vals.lat1 = this._lat1; vals.azi1 = this._azi1;
+    vals.lat1 = this.lat1; vals.azi1 = this.azi1;
     vals.lon1 = outmask & g.LONG_UNROLL ?
-      this._lon1 : m.AngNormalize(this._lon1);
+      this.lon1 : m.AngNormalize(this.lon1);
     if (arcmode)
       vals.a12 = s12_a12;
     else
@@ -244,8 +264,8 @@
         ( sig12 + (g.SinCosSeries(true, ssig2, csig2, this._C3a) -
                    this._B31));
       lon12 = lam12 / m.degree;
-      vals.lon2 = outmask & g.LONG_UNROLL ? this._lon1 + lon12 :
-        m.AngNormalize(m.AngNormalize(this._lon1) + m.AngNormalize(lon12));
+      vals.lon2 = outmask & g.LONG_UNROLL ? this.lon1 + lon12 :
+        m.AngNormalize(m.AngNormalize(this.lon1) + m.AngNormalize(lon12));
     }
 
     if (outmask & g.LATITUDE)
@@ -308,12 +328,30 @@
     return vals;
   };
 
-  // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
+  /**
+   * @summary Find the position on the line given s12.
+   * @param {number} s12 the distance from the first point to the second in
+   *   meters.
+   * @param {bitmask} [outmask = STANDARD] which results to include; this is
+   *   subject to the capabilities of the object.
+   * @returns {object} the requested results.
+   * @description The lat1, lon1, azi1, s12, and a12 fields of the result are
+   *   always set; s12 is included if arcmode is false.
+   */
   l.GeodesicLine.prototype.Position = function(s12, outmask) {
     return this.GenPosition(false, s12, outmask);
   };
 
-  // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
+  /**
+   * @summary Find the position on the line given a12.
+   * @param {number} a12 the arc length from the first point to the second in
+   *   degrees.
+   * @param {bitmask} [outmask = STANDARD] which results to include; this is
+   *   subject to the capabilities of the object.
+   * @returns {object} the requested results.
+   * @description The lat1, lon1, azi1, and a12 fields of the result are
+   *   always set.
+   */
   l.GeodesicLine.prototype.ArcPosition = function(a12, outmask) {
     return this.GenPosition(true, a12, outmask);
   };

@@ -1,18 +1,26 @@
-````
-var GeographicLib = require('./geographiclib'),
-    wgs84 = GeographicLib.Geodesic.WGS84,
-    international = new GeographicLib.Geodesic.Geodesic(6378388, 1/297);
-geod.Inverse(1,2,3,4);
-international.Inverse(1,2,3,4, GeographicLib.Geodesic.ALL);
-````
+Jump to
+* [The units](#units)
+* [The results](#results)
+* [The outmask and caps parameters](#outmask)
+* [Restrictions on the parameters](#restrict)
 
-See {@tutorial geodesics} {@link module:GeographicLib}
-{@link module:GeographicLib/Geodesic}.
-{@link module:GeographicLib/Geodesic.Geodesic}.
-{@link module:GeographicLib/Geodesic.Geodesic#Inverse}.
-perform the basic geodesic calculations.  These return an object with
-(some) of the following fields set:
+### <a name="units"></a>The units
 
+All angles (latitude, longitude, azimuth, arc length) are measured in
+degrees with latitudes increasing northwards, longitudes increasing
+eastwards, and azimuths measured clockwise from north.  For a point at a
+pole, the azimuth is defined by keeping the longitude fixed, writing
+&phi; = &plusmn;(90&deg; &minus; &epsilon;), and taking the limit
+&epsilon; &rarr; 0+.
+
+### <a name="results"></a>The results
+
+The results returned by
+{@link module:GeographicLib/Geodesic.Geodesic#Inverse Geodesic.Direct},
+{@link module:GeographicLib/Geodesic.Geodesic#Inverse Geodesic.Inverse},
+{@link module:GeographicLib/GeodesicLine.GeodesicLine#Position
+GeodesicLine.Position}, etc., return an object with
+(some) of the following 12 fields set:
 * lat1 = &phi;<sub>1</sub>, latitude of point 1 (degrees)
 * lon1 = &lambda;<sub>1</sub>, longitude of point 1 (degrees)
 * azi1 = &alpha;<sub>1</sub>, azimuth of line at point 1 (degrees)
@@ -28,34 +36,77 @@ perform the basic geodesic calculations.  These return an object with
 * S12 = *S*<sub>12</sub>, area between geodesic and equator
   (meters<sup>2</sup>)
 
-<a name="outmask"></a>
-outmask determines which fields get included and if outmask is omitted,
-then STANDARD is assumed.  The mask is an or'ed combination of the
-following values
+The input parameters together with a12 are always included in the
+object.  Azimuths are reduced to the range [&minus;180&deg;, 180&deg;).
+See {@tutorial geodesics} for the definitions of these quantities.
 
-* GeographicLib.Geodesic.LATITUDE, compute latitude, lat2
-* GeographicLib.Geodesic.LONGITUDE, compute longitude, lon2
-* GeographicLib.Geodesic.AZIMUTH, compute azimuths, azi1 and azi2
-* GeographicLib.Geodesic.DISTANCE, compute distance, s12
-* GeographicLib.Geodesic.STANDARD (all of the above)
-* GeographicLib.Geodesic.DISTANCE_IN, see below
-* GeographicLib.Geodesic.REDUCEDLENGTH, compute reduced length, m12
-* GeographicLib.Geodesic.GEODESICSCALE, compute geodesic scales, M12 and M21
-* GeographicLib.Geodesic.AREA, compute area, S12
-* GeographicLib.Geodesic.ALL (all of the above)
-* GeographicLib.Geodesic.LONG_UNROLL, see below
+### <a name="outmask"></a>The outmask and caps parameters
 
-The input arguments are included in the returned objects.  Latitudes
-outside of the allowed range [&minus;90&deg;, 90&deg;] are replaced by
-NaNs.  Azimuths are reduced to the range [&minus;180&deg;, 180&deg;).
+By default, the geodesic routines return the 7 basic quantities: lat1,
+lon1, azi1, lat2, lon2, azi2, s12, together with the arc length a12.
+The optional output mask parameter, outmask, can be used to tailor which
+quantities to calculate.  In addition, when a
+{@link module:GeographicLib/GeodesicLine.GeodesicLine GeodesicLine} is
+constructed it can be provided with the optional capabilities parameter,
+caps.
 
-GeographicLib.Geodesic.DISTANCE_IN is a capability provided to the
-GeographicLine.GeodesicLine constructor.  It allows the position on the
-line to specified in terms of distance.  (Without this, the position can
-only be specified in terms of the arc length.)
+Both outmask and caps are obtained by or'ing together the following
+values
+* Geodesic.NONE, no capabilities, no output;
+* Geodesic.LATITUDE, compute latitude, lat2;
+* Geodesic.LONGITUDE, compute longitude, lon2;
+* Geodesic.AZIMUTH, compute azimuths, azi1 and azi2;
+* Geodesic.DISTANCE, compute distance, s12;
+* Geodesic.STANDARD, all of the above;
+* Geodesic.DISTANCE_IN, allow s12 to be used as input in the direct problem;
+* Geodesic.REDUCEDLENGTH, compute reduced length, m12;
+* Geodesic.GEODESICSCALE, compute geodesic scales, M12 and M21;
+* Geodesic.AREA, compute area, S12;
+* Geodesic.ALL, all of the above;
+* Geodesic.LONG_UNROLL, unroll longitudes.
 
-GeographicLib.Geodesic.LONG_UNROLL controls the treatment of longitude.
-If it is not set then the lon1 and lon2 fields are both reduced to the
-range [&minus;180&deg;, 180&deg;).  If it is set, then lon1 is as given
-in the function call and lon2 &minus; lon1 determines how many times and
-in what sense the geodesic has encircled the ellipsoid.
+Geodesic.DISTANCE_IN is a capability provided to the
+{@link module:GeographicLib/GeodesicLine.GeodesicLine GeodesicLine}
+constructor.  It allows the position on the line to specified in terms
+of distance.  (Without this, the position can only be specified in terms
+of the arc length.)
+
+Geodesic.LONG_UNROLL controls the treatment of longitude.  If it is not
+set then the lon1 and lon2 fields are both reduced to the range
+[&minus;180&deg;, 180&deg;).  If it is set, then lon1 is as given in the
+function call and lon2 &minus; lon1 determines how many times and in
+what sense the geodesic has encircled the ellipsoid.
+
+### <a name="restrict"></a>Restrictions on the parameters
+
+* Latitudes must lie in [&minus;90&deg;, 90&deg;].  Latitudes outside of
+  this range are replaced by NaNs.
+* The distance *s*<sub>12</sub> is unrestricted.  This allows
+  geodesics to wrap around the ellipsoid.  Such geodesics are no
+  longer shortest paths.  However they retain the property that they
+  are the straightest curves on the surface.
+* Similarly, the spherical arc length &sigma;<sub>12</sub> is
+  unrestricted.
+* Azimuths are unrestricted; internally these are exactly reduced to
+  the range [&minus;180&deg;, 180&deg;].
+* The equatorial radius *a* and the polar semi-axis *b* must both be 
+  positive and finite (this implies that &minus;&infin; &lt; *f* &lt; 1).
+* The flattening *f* should satisfy *f* &isin; [&minus;1/50,1/50] in
+  order to retain full accuracy.  This condition holds for most
+  applications in geodesy.
+
+Reasonably accurate results can be obtained for |*f*| &lt; 0.2.  Here is
+a table of the approximate maximum error (expressed as a distance) for
+an ellipsoid with the same major radius as the WGS84 ellipsoid and
+different values of the flattening.
+
+  | abs(f) | error
+  |:-------|------:
+  | 0.003  |  15 nm
+  | 0.01   |  25 nm
+  | 0.02   |  30 nm
+  | 0.05   |  10 &mu;m
+  | 0.1    | 1.5 mm
+  | 0.2    | 300 mm
+
+Here 1 nm (nanometer) = 10<sup>&minus;9</sup> m (*not* nautical mile!)

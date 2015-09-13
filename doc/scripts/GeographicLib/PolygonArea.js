@@ -1,4 +1,4 @@
-/**
+/*
  * PolygonArea.js
  * Transcription of PolygonArea.[ch]pp into JavaScript.
  *
@@ -19,19 +19,26 @@
 
 // Load AFTER GeographicLib/Math.js and GeographicLib/Geodesic.js
 
-(function(p, g, m, a) {
+(function(
+  /**
+   * @exports GeographicLib/PolygonArea
+   * @description Compute the area of geodesic polygons via the
+   *   {@link module:GeographicLib/PolygonArea.PolygonArea PolygonArea}
+   *   class.
+   */
+  p, g, m, a) {
   "use strict";
 
   var transit, transitdirect;
   transit = function(lon1, lon2) {
     // Return 1 or -1 if crossing prime meridian in east or west direction.
     // Otherwise return zero.
+    var lon12, cross;
     // Compute lon12 the same way as Geodesic::Inverse.
     lon1 = m.AngNormalize(lon1);
     lon2 = m.AngNormalize(lon2);
-    var lon12 = m.AngDiff(lon1, lon2);
-    var cross =
-      lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
+    lon12 = m.AngDiff(lon1, lon2);
+    cross = lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
       (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
     return cross;
   };
@@ -48,77 +55,125 @@
              ((lon1 >= 0 && lon1 < 360) || lon1 < -360 ? 0 : 1) );
   };
 
-  p.PolygonArea = function(earth, polyline) {
-    this._earth = earth;
-    this._area0 = 4 * Math.PI * earth._c2;
-    this._polyline = !polyline ? false : polyline;
+  /**
+   * @class
+   * @property {number} a the equatorial radius (meters).
+   * @property {number} f the flattening.
+   * @property {bool} polyline whether the PolygonArea object describes a
+   *   polyline or a polygon.
+   * @property {number} the number of vertices so far.
+   * @property {number} lat the current latitude (degrees).
+   * @property {number} lon the current longitude (degrees).
+   * @summary Initialize a PolygonArea object.
+   * @classdesc Computes the area and perimeter of a geodesic polygon.
+   *   This object is usually instantiated by
+   *   {@link module:GeographicLib/Geodesic.Geodesic#Polygon Geodesic.Polygon}.
+   * @param {object} geod a {@link module:GeographicLib/Geodesic.Geodesic
+   *   Geodesic} object.
+   * @param {bool} [polyline = false] if true the new PolygonArea object
+   *   describes a polyline instead of a polygon.
+   */
+  p.PolygonArea = function(geod, polyline) {
+    this._geod = geod;
+    this.a = this._geod.a;
+    this.f = this._geod.f;
+    this._area0 = 4 * Math.PI * geod._c2;
+    this.polyline = !polyline ? false : polyline;
     this._mask = g.LATITUDE | g.LONGITUDE | g.DISTANCE |
-          (this._polyline ? g.NONE : g.AREA | g.LONG_UNROLL);
-    if (!this._polyline)
+          (this.polyline ? g.NONE : g.AREA | g.LONG_UNROLL);
+    if (!this.polyline)
       this._areasum = new a.Accumulator(0);
     this._perimetersum = new a.Accumulator(0);
     this.Clear();
   };
 
+  /**
+   * @summary Clear the PolygonArea object, setting the number of vertices to
+   *   0.
+   */
   p.PolygonArea.prototype.Clear = function() {
-    this._num = 0;
+    this.num = 0;
     this._crossings = 0;
-    if (!this._polyline)
+    if (!this.polyline)
       this._areasum.Set(0);
     this._perimetersum.Set(0);
-    this._lat0 = this._lon0 = this._lat1 = this._lon1 = Number.NaN;
+    this._lat0 = this._lon0 = this.lat = this.lon = Number.NaN;
   };
 
+  /**
+   * @summary Add the next vertex to the polygon.
+   * @param {number} lat the latitude of the point (degrees).
+   * @param {number} lon the longitude of the point (degrees).
+   * @description This adds an edge from the current vertex to the new vertex.
+   */
   p.PolygonArea.prototype.AddPoint = function(lat, lon) {
-    if (this._num === 0) {
-      this._lat0 = this._lat1 = lat;
-      this._lon0 = this._lon1 = lon;
+    var t;
+    if (this.num === 0) {
+      this._lat0 = this.lat = lat;
+      this._lon0 = this.lon = lon;
     } else {
-      var t = this._earth.Inverse(this._lat1, this._lon1, lat, lon, this._mask);
+      t = this._geod.Inverse(this.lat, this.lon, lat, lon, this._mask);
       this._perimetersum.Add(t.s12);
-      if (!this._polyline) {
+      if (!this.polyline) {
         this._areasum.Add(t.S12);
-        this._crossings += transit(this._lon1, lon);
+        this._crossings += transit(this.lon, lon);
       }
-      this._lat1 = lat;
-      this._lon1 = lon;
+      this.lat = lat;
+      this.lon = lon;
     }
-    ++this._num;
+    ++this.num;
   };
 
+  /**
+   * @summary Add the next edge to the polygon.
+   * @param {number} azi the azimuth at the current the point (degrees).
+   * @param {number} s the length of the edge (meters).
+   * @description This specifies the new vertex in terms of the edge from the
+   *   current vertex.
+   */
   p.PolygonArea.prototype.AddEdge = function(azi, s) {
-    if (this._num) {
-      var t = this._earth.Direct(this._lat1, this._lon1, azi, s, this._mask);
+    var t;
+    if (this.num) {
+      t = this._geod.Direct(this.lat, this.lon, azi, s, this._mask);
       this._perimetersum.Add(s);
-      if (!this._polyline) {
+      if (!this.polyline) {
         this._areasum.Add(t.S12);
-        this._crossings += transitdirect(this._lon1, t.lon2);
+        this._crossings += transitdirect(this.lon, t.lon2);
       }
-      this._lat1 = t.lat2;
-      this._lon1 = t.lon2;
+      this.lat = t.lat2;
+      this.lon = t.lon2;
     }
-    ++this._num;
+    ++this.num;
   };
 
-  // return number, perimeter, area
+  /**
+   * @summary Compute the perimeter and area of the polygon.
+   * @param {bool} reverse if true then clockwise (instead of
+   *   counter-clockwise) traversal counts as a positive area.
+   * @param {bool} sign if true then return a signed result for the area if the
+   *   polygon is traversed in the "wrong" direction instead of returning the
+   * @returns {oject} r where r.number is the number of vertices, r.perimeter
+   *   is the perimeter (meters), and r.area (only returned if polyline is
+   *   false) is the area (meters<sup>2</sup>).
+   */
   p.PolygonArea.prototype.Compute = function(reverse, sign) {
-    var vals = {number: this._num};
-    if (this._num < 2) {
+    var vals = {number: this.num}, t, tempsum, crossings;
+    if (this.num < 2) {
       vals.perimeter = 0;
-      if (!this._polyline)
+      if (!this.polyline)
         vals.area = 0;
       return vals;
     }
-    if (this._polyline) {
+    if (this.polyline) {
       vals.perimeter = this._perimetersum.Sum();
       return vals;
     }
-    var t = this._earth.Inverse(this._lat1, this._lon1, this._lat0, this._lon0,
-                                this._mask);
+    t = this._geod.Inverse(this.lat, this.lon, this._lat0, this._lon0,
+                           this._mask);
     vals.perimeter = this._perimetersum.Sum(t.s12);
-    var tempsum = new a.Accumulator(this._areasum);
+    tempsum = new a.Accumulator(this._areasum);
     tempsum.Add(t.S12);
-    var crossings = this._crossings + transit(this._lon1, this._lon0);
+    crossings = this._crossings + transit(this.lon, this._lon0);
     if (crossings & 1)
       tempsum.Add( (tempsum.Sum() < 0 ? 1 : -1) * this._area0/2 );
     // area is with the clockwise sense.  If !reverse convert to
@@ -141,33 +196,45 @@
     return vals;
   };
 
-  // return number, perimeter, area
+  /**
+   * @summary Compute the perimeter and area of the polygon with a tentative
+   *   new vertex.
+   * @param {number} lat the latitude of the point (degrees).
+   * @param {number} lon the longitude of the point (degrees).
+   * @param {bool} reverse if true then clockwise (instead of
+   *   counter-clockwise) traversal counts as a positive area.
+   * @param {bool} sign if true then return a signed result for the area if the
+   *   polygon is traversed in the "wrong" direction instead of returning the
+   * @returns {oject} r where r.number is the number of vertices, r.perimeter
+   *   is the perimeter (meters), and r.area (only returned if polyline is
+   *   false) is the area (meters<sup>2</sup>).
+   * @description A new vertex is *not* added to the polygon.
+   */
   p.PolygonArea.prototype.TestPoint = function(lat, lon, reverse, sign) {
-    var vals = {number: this._num + 1};
-    if (this._num === 0) {
+    var vals = {number: this.num + 1}, t, tempsum, crossings, i;
+    if (this.num === 0) {
       vals.perimeter = 0;
-      if (!this._polyline)
+      if (!this.polyline)
         vals.area = 0;
       return vals;
     }
     vals.perimeter = this._perimetersum.Sum();
-    var tempsum = this._polyline ? 0 : this._areasum.Sum();
-    var crossings = this._crossings;
-    var t;
-    for (var i = 0; i < (this._polyline ? 1 : 2); ++i) {
-      t = this._earth.Inverse(
-       i === 0 ? this._lat1 : lat, i === 0 ? this._lon1 : lon,
+    tempsum = this.polyline ? 0 : this._areasum.Sum();
+    crossings = this._crossings;
+    for (i = 0; i < (this.polyline ? 1 : 2); ++i) {
+      t = this._geod.Inverse(
+       i === 0 ? this.lat : lat, i === 0 ? this.lon : lon,
        i !== 0 ? this._lat0 : lat, i !== 0 ? this._lon0 : lon,
        this._mask);
       vals.perimeter += t.s12;
-      if (!this._polyline) {
+      if (!this.polyline) {
         tempsum += t.S12;
-        crossings += transit(i === 0 ? this._lon1 : lon,
+        crossings += transit(i === 0 ? this.lon : lon,
                                i !== 0 ? this._lon0 : lon);
       }
     }
 
-    if (this._polyline)
+    if (this.polyline)
       return vals;
 
     if (crossings & 1)
@@ -192,22 +259,34 @@
     return vals;
   };
 
-  // return number, perimeter, area
+  /**
+   * @summary Compute the perimeter and area of the polygon with a tentative
+   *   new edge.
+   * @param {number} azi the azimuth of the edge (degrees).
+   * @param {number} s the length of the edge (meters).
+   * @param {bool} reverse if true then clockwise (instead of
+   *   counter-clockwise) traversal counts as a positive area.
+   * @param {bool} sign if true then return a signed result for the area if the
+   *   polygon is traversed in the "wrong" direction instead of returning the
+   * @returns {oject} r where r.number is the number of vertices, r.perimeter
+   *   is the perimeter (meters), and r.area (only returned if polyline is
+   *   false) is the area (meters<sup>2</sup>).
+   * @description A new vertex is *not* added to the polygon.
+   */
   p.PolygonArea.prototype.TestEdge = function(azi, s, reverse, sign) {
-    var vals = {number: this._num ? this._num + 1 : 0};
-    if (this._num === 0)
+    var vals = {number: this.num ? this.num + 1 : 0}, t, tempsump, crossings;
+    if (this.num === 0)
       return vals;
     vals.perimeter = this._perimetersum.Sum() + s;
-    if (this._polyline)
+    if (this.polyline)
       return vals;
 
-    var tempsum = this._areasum.Sum();
-    var crossings = this._crossings;
-    var t;
-    t = this._earth.Direct(this._lat1, this._lon1, azi, s, this._mask);
+    tempsum = this._areasum.Sum();
+    crossings = this._crossings;
+    t = this._geod.Direct(this.lat, this.lon, azi, s, this._mask);
     tempsum += t.S12;
-    crossings += transitdirect(this._lon1, t.lon2);
-    t = this._earth(t.lat2, t.lon2, this._lat0, this._lon0, this._mask);
+    crossings += transitdirect(this.lon, t.lon2);
+    t = this._geod(t.lat2, t.lon2, this._lat0, this._lon0, this._mask);
     perimeter += t.s12;
     tempsum += t.S12;
     crossings += transit(t.lon2, this._lon0);
@@ -232,18 +311,6 @@
     }
     vals.area = tempsum;
     return vals;
-  };
-
-  p.PolygonArea.prototype.CurrentPoint = function() {
-    var vals = {lat: this._lat1, lon: this._lon1};
-    return vals;
-  };
-
-  p.Area = function(earth, points, polyline) {
-    var poly = new p.PolygonArea(earth, polyline);
-    for (var i = 0; i < points.length; ++i)
-      poly.AddPoint(points[i].lat, points[i].lon);
-    return poly.Compute(false, true);
   };
 
 })(GeographicLib.PolygonArea, GeographicLib.Geodesic,
