@@ -112,7 +112,6 @@ Geodesic.Direct}:
 var r = geod.Direct(-32.06, 115.74, 225, 20000e3);
 console.log('The position is (' +
             r.lat2.toFixed(8) + ',' + r.lon2.toFixed(8) + ').');
-// This prints "The position is (32.11195529,-63.95925278)."
 ```
 &rarr;`The position is (32.11195529,-63.95925278).`
 
@@ -142,10 +141,10 @@ var r = geod.Inverse(40.1, 116.6, 37.6, -122.4),
     i, s;
 console.log('distance latitude longitude azimuth');
 for (i = 0; i <= n; ++i) {
-    s = Math.min(ds * i, s12);
-    r = l.Position(s, Geodesic.STANDARD | Geodesic.LONG_UNROLL);
-    console.log(r.s12.toFixed(0) + " " + r.lat2.toFixed(5) + " " +
-                r.lon2.toFixed(5) + " " + r.azi2.toFixed(5));
+  s = Math.min(ds * i, s12);
+  r = l.Position(s, Geodesic.STANDARD | Geodesic.LONG_UNROLL);
+  console.log(r.s12.toFixed(0) + " " + r.lat2.toFixed(5) + " " +
+              r.lon2.toFixed(5) + " " + r.azi2.toFixed(5));
 }
 ```
 <br/>
@@ -187,10 +186,10 @@ var r = geod.Inverse(40.1, 116.6, 37.6, -122.4, Geodesic.AZIMUTH),
 da = a12 / n;
 console.log('latitude longitude');
 for (i = 0; i <= n; ++i) {
-    a = da * i;
-    r = l.ArcPosition(a,
-      Geodesic.LATITUDE | Geodesic.LONGITUDE | Geodesic.LONG_UNROLL);
-    console.log(r.lat2.toFixed(5) + " " + r.lon2.toFixed(5));
+  a = da * i;
+  r = l.ArcPosition(a, Geodesic.LATITUDE |
+                    Geodesic.LONGITUDE | Geodesic.LONG_UNROLL);
+  console.log(r.lat2.toFixed(5) + " " + r.lon2.toFixed(5));
 }
 ```
 <br/>
@@ -223,17 +222,14 @@ Geodesic.Polygon} and the
 PolygonArea} class:
 ```javascript
 var p = geod.Polygon(false), i,
-    antarctica=[
-     [-63.1, -58], [-72.9, -74], [-71.9,-102], [-74.9,-102], [-74.3,-131],
-     [-77.5,-163], [-77.4, 163], [-71.7, 172], [-65.9, 140], [-65.7, 113],
-     [-66.6,  88], [-66.9,  59], [-69.8,  25], [-70.0,  -4], [-71.0, -14],
-     [-77.3, -33], [-77.9, -46], [-74.7, -61]
+    antarctica = [
+      [-63.1, -58], [-72.9, -74], [-71.9,-102], [-74.9,-102], [-74.3,-131],
+      [-77.5,-163], [-77.4, 163], [-71.7, 172], [-65.9, 140], [-65.7, 113],
+      [-66.6,  88], [-66.9,  59], [-69.8,  25], [-70.0,  -4], [-71.0, -14],
+      [-77.3, -33], [-77.9, -46], [-74.7, -61]
     ];
-for (i = 0; i < antarctica.length; ++i) {
-    p.AddPoint(antarctica[i][0], antarctica[i][1]);
-    console.log(i + " " + p.Compute(false, true).perimeter + " " +
-    p.Compute(false, true).area);
-    }
+for (i = 0; i < antarctica.length; ++i)
+  p.AddPoint(antarctica[i][0], antarctica[i][1]);
 console.log("The area of Antarctica is " +
             p.Compute(false, true).area.toFixed(1) + " m^2.");
 ```

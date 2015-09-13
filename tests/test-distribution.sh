@@ -101,6 +101,13 @@ make doc
     mvn package -P release
     rsync -a target/apidocs/ ../BUILD/doc/html/java/
 )
+(
+    cd ../doc/scripts/GeographicLib
+    make
+    rsync -a html/ ../../../BUILD/doc/html/js/
+    cd node_modules/geographiclib
+    npm pack
+)
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
 mkdir -p $TEMP/js
 cp -p doc/scripts/*.js doc/scripts/*.html $TEMP/js/
@@ -372,7 +379,7 @@ cd $TEMP/relx/GeographicLib-$VERSION
     echo
     echo Files with tabs:
     find . -type f |
-	egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
+	egrep -v '[Mm]akefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
 	egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
 	egrep -v 'doc/scripts/geod-.*\.in' |
 	xargs grep -l  '	' || true

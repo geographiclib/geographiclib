@@ -89,7 +89,7 @@ what sense the geodesic has encircled the ellipsoid.
   unrestricted.
 * Azimuths are unrestricted; internally these are exactly reduced to
   the range [&minus;180&deg;, 180&deg;].
-* The equatorial radius *a* and the polar semi-axis *b* must both be 
+* The equatorial radius *a* and the polar semi-axis *b* must both be
   positive and finite (this implies that &minus;&infin; &lt; *f* &lt; 1).
 * The flattening *f* should satisfy *f* &isin; [&minus;1/50,1/50] in
   order to retain full accuracy.  This condition holds for most

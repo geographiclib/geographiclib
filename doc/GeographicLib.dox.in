@@ -7025,6 +7025,7 @@ git repository for GeographicLib</a>.
      sphere.
    - Add Java implementation of the Gnomonic project (courtesy of
      Sebastian Mattheis).
+   - Add JUnit tests to Java implementation.
    - Fix array size mismatch in MATLAB routine geoddistance by avoiding
      calls to subfunctions with zero-length arrays.
    - Throw error on non-convergence in Gnomonic::Reverse if
@@ -7037,7 +7038,10 @@ git repository for GeographicLib</a>.
      - the creation of the concatenated compressed version of the code,
        geographiclib.js is now part of the build process;
      - install geographiclib.js of the individual JavaScript source
-       files.
+       files;
+     - package as an <a href="https://www.npmjs.com">npm</a> package;
+     - add mocha tests;
+     - add JSDoc documentation.
    - Fixed bug, introduced in version 1.44, in the detection of C++11
      math functions in configure.ac.
    - Behavior of substituting 1/\e f for \e f if \e f > 1 is now

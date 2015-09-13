@@ -189,7 +189,6 @@ GeographicLib.Accumulator = {};
     return y;
   };
 
-
   /**
    * @summary Coarsen a value close to zero.
    * @param {number} x

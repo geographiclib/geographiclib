@@ -152,7 +152,7 @@
    *   counter-clockwise) traversal counts as a positive area.
    * @param {bool} sign if true then return a signed result for the area if the
    *   polygon is traversed in the "wrong" direction instead of returning the
-   * @returns {oject} r where r.number is the number of vertices, r.perimeter
+   * @returns {object} r where r.number is the number of vertices, r.perimeter
    *   is the perimeter (meters), and r.area (only returned if polyline is
    *   false) is the area (meters<sup>2</sup>).
    */
@@ -205,7 +205,7 @@
    *   counter-clockwise) traversal counts as a positive area.
    * @param {bool} sign if true then return a signed result for the area if the
    *   polygon is traversed in the "wrong" direction instead of returning the
-   * @returns {oject} r where r.number is the number of vertices, r.perimeter
+   * @returns {object} r where r.number is the number of vertices, r.perimeter
    *   is the perimeter (meters), and r.area (only returned if polyline is
    *   false) is the area (meters<sup>2</sup>).
    * @description A new vertex is *not* added to the polygon.
@@ -268,7 +268,7 @@
    *   counter-clockwise) traversal counts as a positive area.
    * @param {bool} sign if true then return a signed result for the area if the
    *   polygon is traversed in the "wrong" direction instead of returning the
-   * @returns {oject} r where r.number is the number of vertices, r.perimeter
+   * @returns {object} r where r.number is the number of vertices, r.perimeter
    *   is the perimeter (meters), and r.area (only returned if polyline is
    *   false) is the area (meters<sup>2</sup>).
    * @description A new vertex is *not* added to the polygon.

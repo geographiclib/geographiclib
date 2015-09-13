@@ -3,3 +3,5 @@
 *.tgz
 .git*
 .npmignore
+npm-debug.log
+node_modules/
