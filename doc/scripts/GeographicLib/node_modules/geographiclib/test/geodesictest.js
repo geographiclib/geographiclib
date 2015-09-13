@@ -104,8 +104,8 @@ describe('GeographicLib', function() {
       assert.approx(lon2, inv.lon2, 1e-13);
       assert.approx(azi1, inv.azi1, 1e-13);
       assert.approx(azi2, inv.azi2, 1e-13);
-      assert.approx(a12, inv.a12, 1e-13);
       assert.approx(s12, inv.s12, 1e-8);
+      assert.approx(a12, inv.a12, 1e-13);
       assert.approx(m12, inv.m12, 1e-8);
       assert.approx(M12, inv.M12, 1e-15);
       assert.approx(M21, inv.M21, 1e-15);

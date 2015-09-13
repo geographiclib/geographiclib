@@ -1,6 +1,6 @@
 Jump to
 * [GeographicLib namespace](#namespace)
-* [Specify the ellipsoid](#ellipsoid)
+* [Specifying the ellipsoid](#ellipsoid)
 * [Basic geodesic calculations](#basic)
 * [Computing waypoints](#waypoints)
 * [Measuring areas](#area)
@@ -66,7 +66,7 @@ Browse
 [http://geographiclib.sf.net/scripts](http://geographiclib.sf.net/scripts)
 to see what versions are available.
 
-### <a name="ellipsoid"></a>Specify the ellipsoid
+### <a name="ellipsoid"></a>Specifying the ellipsoid
 
 Once {@link GeographicLib} has been brought into scope, the ellipsoid is
 defined via the {@link module:GeographicLib/Geodesic.Geodesic Geodesic}
@@ -76,7 +76,7 @@ flattening, for example
 var geod = new GeographicLib.Geodesic.Geodesic(6378137, 1/298.257223563);
 ```
 <br/>
-These are the parameters for the WGS84 ellipsoid and this comes prefined
+These are the parameters for the WGS84 ellipsoid and this comes predefined
 by the package as
 ```javascipt
 var geod = GeographicLib.Geodesic.WGS84;
@@ -96,14 +96,18 @@ var GeographicLib = require('geographiclib'),
 ### <a name="basic"></a>Basic geodesic calculations
 
 The distance from Wellington, NZ (41.32S, 174.81E) to Salamanca, Spain
-(40.96N, 5.50W):
+(40.96N, 5.50W) using
+{@link module:GeographicLib/Geodesic.Geodesic#Inverse
+Geodesic.Inverse}:
 ```javascript
 var r = geod.Inverse(-41.32, 174.81, 40.96, -5.50);
 console.log('The distance is ' + r.s12.toFixed(3) + ' m.');
 ```
 &rarr;`The distance is 19959679.267 m.`
 
-The point the point 20000 km SW of Perth, Australia (32.06S, 115.74E):
+The point the point 20000 km SW of Perth, Australia (32.06S, 115.74E) using
+{@link module:GeographicLib/Geodesic.Geodesic#Direct
+Geodesic.Direct}:
 ```javascript
 var r = geod.Direct(-32.06, 115.74, 225, 20000e3);
 console.log('The position is (' +
@@ -126,7 +130,11 @@ console.log('The area is ' + r.S12.toFixed(1) + ' m^2');
 
 Consider the geodesic between Beijing Airport (40.1N, 116.6E) and San
 Fransisco Airport (37.6N, 122.4W).  Compute waypoints and azimuths at
-intervals of 1000 km:
+intervals of 1000 km using
+{@link module:GeographicLib/Geodesic.Geodesic#Line
+Geodesic.Line} and
+{@link module:GeographicLib/GeodesicLine.GeodesicLine#Position
+GeodesicLine.Position}:
 ```javascript
 var r = geod.Inverse(40.1, 116.6, 37.6, -122.4),
     l = geod.Line(r.lat1, r.lon1, r.azi1),
@@ -140,7 +148,7 @@ for (i = 0; i <= n; ++i) {
                 r.lon2.toFixed(5) + " " + r.azi2.toFixed(5));
 }
 ```
-<br\>
+<br/>
 gives
 ```text
 distance latitude longitude azimuth
@@ -157,14 +165,19 @@ distance latitude longitude azimuth
 9513998 37.60000 237.60000 138.89027
 ```
 <br/>
-The inclusion of Geodesic.LONG_UNROLL in the call to Position ensures
-that the longitude does not jump on crossing the international dateline.
+The inclusion of Geodesic.LONG_UNROLL in the call to
+{@link module:GeographicLib/GeodesicLine.GeodesicLine#Position
+GeodesicLine.Position} ensures that the longitude does not jump on
+crossing the international dateline.
 
 If the purpose of computing the waypoints is to plot a smooth geodesic,
 then it's not important that they be exactly equally spaced.  In this
 case, it's faster to parameterize the line in terms of the spherical arc
-length instead of the distance.  Here the spacing is about 1&deg; of arc
-which means that the distance between the waypoints will be about 60 NM.
+length with
+{@link module:GeographicLib/GeodesicLine.GeodesicLine#ArcPosition
+GeodesicLine.ArcPosition} instead of the distance.  Here the spacing is
+about 1&deg; of arc which means that the distance between the waypoints
+will be about 60 NM.
 ```javascript
 var r = geod.Inverse(40.1, 116.6, 37.6, -122.4, Geodesic.AZIMUTH),
     l = geod.Line(r.lat1, r.lon1, r.azi1,
@@ -203,8 +216,11 @@ The variation in the distance between these waypoints is on the order of
 
 ### <a name="area"></a>Measuring areas
 
-Measure the area of Antarctica
-
+Measure the area of Antarctica using
+{@link module:GeographicLib/Geodesic.Geodesic#Polygon
+Geodesic.Polygon} and the
+{@link module:GeographicLib/PolygonArea.PolygonArea
+PolygonArea} class:
 ```javascript
 var p = geod.Polygon(false), i,
     antarctica=[
@@ -225,19 +241,22 @@ console.log("The area of Antarctica is " +
 
 If the points of the polygon are being selected interactively, then
 {@link module:GeographicLib/PolygonArea.PolygonArea#TestPoint
-PolygonArea.TestPoint} can be use to report the area an perimeter for a
-polygon with a tentative final vertex tracking the mouse pointer.
+PolygonArea.TestPoint} can be used to report the area and perimeter for
+a polygon with a tentative final vertex which tracks the mouse pointer.
 
 ### <a name="dms"></a>Degrees, minutes, seconds conversion
 
 Compute the azimuth for geodesic from JFK (73.8W, 40.6N) to Paris CDG
-(49°01'N, 2°33'E)
+(49°01'N, 2°33'E) using the {@link module:GeographicLib/DMS DMS} module:
 ```javascript
 var c = "73.8W 40.6N 49°01'N 2°33'E".split(" "),
     p1 = DMS.DecodeLatLon(c[0], c[1]),
     p2 = DMS.DecodeLatLon(c[2], c[3]),
     r = geod.Inverse(p1.lat, p1.lon, p2.lat, p2.lon);
-console.log("Starting azimuth = " +
-            DMS.Encode(r.azi1, DMS.MINUTE, 3, DMS.AZIMUTH));
+console.log("Start = (" +
+            DMS.Encode(r.lat1, DMS.MINUTE, 0, DMS.LATITUDE) + ", " +
+            DMS.Encode(r.lon1, DMS.MINUTE, 0, DMS.LONGITUDE) +
+            "), azimuth = " +
+            DMS.Encode(r.azi1, DMS.MINUTE, 1, DMS.AZIMUTH));
 ```
-&rarr; `Starting azimuth = 053°28.213'`
+&rarr; `Start = (40°36'N, 073°48'W), azimuth = 053°28.2'`
