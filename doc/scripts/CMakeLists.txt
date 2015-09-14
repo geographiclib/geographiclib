@@ -43,7 +43,7 @@ if (JS_BUILD)
   endforeach ()
   # support loading with node's require
   file (APPEND ${JS_TARGET}
-    "if(typeof module!=='undefined')module.exports=GeographicLib;\n")
+    "if(typeof module==='object')module.exports=GeographicLib;\n")
 endif ()
 
 # "make javascript" will reconfigure cmake if necessary, since

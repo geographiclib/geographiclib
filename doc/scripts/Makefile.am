@@ -13,12 +13,15 @@ JSSCRIPTS = \
 	$(srcdir)/GeographicLib/PolygonArea.js \
 	$(srcdir)/GeographicLib/DMS.js
 
-all: geographiclib.js $(SCRIPTDRIVERS)
+all: geographiclib.js geographiclib-min.js $(SCRIPTDRIVERS)
 
 .in.html:
 	cp $^ $@
 
 geographiclib.js: HEADER.js $(JSSCRIPTS)
+	$(srcdir)/js-cat.sh $^ > $@
+
+geographiclib-min.js: HEADER.js $(JSSCRIPTS)
 	$(srcdir)/js-compress.sh $^ > $@
 
 maintainer-clean-local:

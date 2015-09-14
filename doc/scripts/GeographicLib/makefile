@@ -1,9 +1,15 @@
-VERSION = 1.45
+JS_VERSION := $(shell grep "version_string = " Math.js | cut -f2 -d'"')
 SCRIPTS = Math.js Geodesic.js GeodesicLine.js PolygonArea.js DMS.js
 TUTORIALS = tutorials/geodesics.md tutorials/interface.md \
 	tutorials/examples.md tutorials/tutorials.json
 DEST=node_modules/geographiclib
-all: doc script samples
+NODEFILES = \
+	$(DEST)/package.json \
+	$(DEST)/README.md \
+	$(DEST)/LICENSE.txt \
+	$(DEST)/test/geodesictest.js
+
+all: doc script samples pack publish
 doc: html/index.html
 script: $(DEST)/geographiclib.js
 
@@ -12,11 +18,14 @@ html/index.html: GeographicLib.md $(SCRIPTS) $(TUTORIALS)
 	jsdoc -d html -u tutorials -R GeographicLib.md $(SCRIPTS)
 
 publish: doc
-	rsync --delete -a -e ssh html/ karney,geographiclib@web.sourceforge.net:htdocs/$(VERSION)/js/
+	rsync --delete -a -e ssh html/ karney,geographiclib@web.sourceforge.net:htdocs/$(JS_VERSION)/js/
+
+pack: $(DEST)/geographiclib.js $(NODEFILES)
+	npm pack $(DEST)
 
 $(DEST)/geographiclib.js: ../HEADER.js $(SCRIPTS)
 	test -d $(DEST) || mkdir $(DEST)
-	../js-compress.sh $^ > $@
+	../js-cat.sh $^ > $@
 
 $(DEST)/%.html: ../%.in
 	cp $^ $@

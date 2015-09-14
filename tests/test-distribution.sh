@@ -106,8 +106,6 @@ make doc
     cd ../doc/scripts/GeographicLib
     make
     rsync -a html/ ../../../BUILD/doc/html/js/
-    cd node_modules/geographiclib
-    npm pack
 )
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
 mkdir -p $TEMP/js

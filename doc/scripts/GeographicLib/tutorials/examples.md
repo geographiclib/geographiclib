@@ -81,11 +81,14 @@ great circles) and *f* &lt; 0 to give a prolate ellipsoid.
 
 The rest of the examples on this page assume the following assignments
 ```javascript
-var GeographicLib = require('geographiclib'),
-    Geodesic = GeographicLib.Geodesic,
+var GeographicLib = require('geographiclib');
+var Geodesic = GeographicLib.Geodesic,
     DMS = GeographicLib.DMS,
     geod = Geodesic.WGS84;
 ```
+with the understanding that the first line should be replaced with the
+appropriate construction needed to bring the
+[GeographicLib namespace](#namespace) into scope.
 
 ### <a name="basic"></a>Basic geodesic calculations
 
