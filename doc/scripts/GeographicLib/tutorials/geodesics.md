@@ -25,7 +25,8 @@ points.  In this figure, we have &lambda;<sub>12</sub> =
 <img src="http://upload.wikimedia.org/wikipedia/commons/c/cb/Geodesic_problem_on_an_ellipsoid.svg" width="250">
 </center>
 A geodesic can be extended indefinitely by requiring that any
-sufficiently small segment is a shortest path.
+sufficiently small segment is a shortest path; geodesics are also the
+straightest curves on the surface.
 
 Traditionally two geodesic problems are considered:
 * the direct problem &mdash; given &phi;<sub>1</sub>,
@@ -75,8 +76,8 @@ addition rules hold:
 * *s*<sub>13</sub> = *s*<sub>12</sub> + *s*<sub>23</sub>
 * &sigma;<sub>13</sub> = &sigma;<sub>12</sub> + &sigma;<sub>23</sub>
 * *S*<sub>13</sub> = *S*<sub>12</sub> + *S*<sub>23</sub>
-* *m*<sub>13</sub> = *m*<sub>12</sub>*m*<sub>23</sub> +
-  *m*<sub>23</sub>*m*<sub>21</sub>
+* *m*<sub>13</sub> = *m*<sub>12</sub>*M*<sub>23</sub> +
+  *m*<sub>23</sub>*M*<sub>21</sub>
 * *M*<sub>13</sub> = *M*<sub>12</sub>*M*<sub>23</sub> &minus;
   (1 &minus; *M*<sub>12</sub>*M*<sub>21</sub>)
   *m*<sub>23</sub>/*m*<sub>12</sub>
@@ -122,9 +123,10 @@ catalog of those cases:
 
 ### <a name="background"></a>Background
 
-The algorithms implemented by this package are derived in Karney (2013)
-and are based on Helmert (1880).  These improve on the work of Vincenty
-(1975) in the following respects:
+The algorithms implemented by this package are given in Karney (2013)
+and are based on Bessel (1825) and Helmert (1880); the algorithm for
+areas is based on Danielsen (1989).  These improve on the work of
+Vincenty (1975) in the following respects:
 * The results are accurate to round-off for terrestrial ellipsoids (the
   error in the distance is less then 15 nanometers, compared to 0.1 mm
   for Vincenty).
@@ -136,6 +138,11 @@ and are based on Helmert (1880).  These improve on the work of Vincenty
 
 ### <a name="references"></a>References
 
+* F. W. Bessel,
+  {@link http://arxiv.org/abs/0908.1824 The calculation of longitude and
+  latitude from geodesic measurements (1825)},
+  Astron. Nachr. **331**(8), 852&ndash;861 (2010),
+  translated by C. F. F. Karney and R. E. Deakin.
 * F. R. Helmert,
   {@link http://geographiclib.sf.net/geodesic-papers/helmert80-en.html
   Mathematical and Physical Theories of Higher Geodesy, Vol 1},
@@ -145,6 +152,9 @@ and are based on Helmert (1880).  These improve on the work of Vincenty
   Direct and inverse solutions of geodesics on the ellipsoid with
   application of nested equations},
   Survey Review **23**(176), 88&ndash;93 (1975).
+- J. Danielsen,
+  {@link https://dx.doi.org/10.1179/003962689791474267 The area under
+  the geodesic}, Survey Review **30**(232), 61&ndash;66 (1989).
 * C. F. F. Karney,
   {@link https://dx.doi.org/10.1007/s00190-012-0578-z
   Algorithms for geodesics}, J. Geodesy **87**(1) 43&ndash;55 (2013);

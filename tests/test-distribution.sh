@@ -68,6 +68,7 @@ set -e
 
 # JavaScript
 #   doc/scripts/GeographicLib/Math.js
+#   doc/scripts/GeographicLib/node_modules/geographiclib/package.json
 
 DATE=`date +%F`
 VERSION=1.45

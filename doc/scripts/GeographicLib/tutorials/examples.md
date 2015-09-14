@@ -9,10 +9,10 @@ Jump to
 ### <a name="namespace"></a>GeographicLib namespace
 
 This capabilities of this package are all exposed through the
-{@link GeographicLib} namespace.  This is can brought into scope is
+{@link GeographicLib} namespace.  This is can brought into scope in
 various ways.
 
-#### In node after installing the package with npm
+#### Using node after installing the package with npm
 
 If [npm](https://www.npmjs.com) has been used to install geographiclib
 via one of
@@ -20,32 +20,30 @@ via one of
 $ npm install geographiclib
 $ npm install --global geographiclib
 ```
-<br/>
 then in [node](https://nodejs.org), you can do
 ```javascript
 var GeographicLib = require('geographiclib');
 ```
-<br/>
-#### In node with a free-standing geographiclib.js
 
-If you have a (recent) version of geographiclib.js in you current
+#### Using node with a free-standing geographiclib.js
+
+If you have geographiclib.js (version 1.45 or later) in your current
 directory, then [node](https://nodejs.org) can access it with
 ```javascript
 var GeographicLib = require('./geographiclib');
 ```
-<br/>
 A similar prescription works if geographiclib.js is installed elsewhere
 in your filesystem, replacing "." above with the correct directory.
 
-#### In HTML, with your own version of geographiclib.js
+#### HTML with your own version of geographiclib.js
 
 Load geographiclib.js with
 ```html
 <script type="text/javascript" src="geographiclib.js">
 </script>
 ```
-<br/>
-#### In HTML, downloading geographiclib.js
+
+#### HTML downloading geographiclib.js
 
 Load geographiclib.js with
 ```html
@@ -53,15 +51,13 @@ Load geographiclib.js with
         src="http://geographiclib.sf.net/scripts/geographiclib.js">
 </script>
 ```
-<br/>
 This uses the latest version.  If you want use a specific version, load
 with, for example,
 ```html
 <script type="text/javascript"
-        src="http://geographiclib.sf.net/scripts/geographiclib-1.44.js">
+        src="http://geographiclib.sf.net/scripts/geographiclib-1.45.js">
 </script>
 ```
-<br/>
 Browse
 [http://geographiclib.sf.net/scripts](http://geographiclib.sf.net/scripts)
 to see what versions are available.
@@ -70,18 +66,16 @@ to see what versions are available.
 
 Once {@link GeographicLib} has been brought into scope, the ellipsoid is
 defined via the {@link module:GeographicLib/Geodesic.Geodesic Geodesic}
-constructor using *a* = the equatorial radius in meters and *f* = the
-flattening, for example
+constructor using the equatorial radius *a* in meters and the flattening
+*f*, for example
 ```javascipt
 var geod = new GeographicLib.Geodesic.Geodesic(6378137, 1/298.257223563);
 ```
-<br/>
 These are the parameters for the WGS84 ellipsoid and this comes predefined
 by the package as
 ```javascipt
 var geod = GeographicLib.Geodesic.WGS84;
 ```
-<br/>
 Note that you can set *f* = 0 to give a sphere (on which geodesics are
 great circles) and *f* &lt; 0 to give a prolate ellipsoid.
 
@@ -111,14 +105,14 @@ Geodesic.Direct}:
 ```javascript
 var r = geod.Direct(-32.06, 115.74, 225, 20000e3);
 console.log('The position is (' +
-            r.lat2.toFixed(8) + ',' + r.lon2.toFixed(8) + ').');
+            r.lat2.toFixed(8) + ', ' + r.lon2.toFixed(8) + ').');
 ```
-&rarr;`The position is (32.11195529,-63.95925278).`
+&rarr;`The position is (32.11195529, -63.95925278).`
 
 The area between the geodesic from JFK Airport (40.6N, 73.8W) to LHR
 Airport (51.6N, 0.5W) and the equator.  This is an example of setting
-the outmask parameter, see {@tutorial interface}, "The outmask and caps
-parameters".
+the *outmask* parameter, see {@tutorial interface}, "The *outmask* and
+*caps* parameters".
 ```javascript
 var r = geod.Inverse(40.6, -73.8, 51.6, -0.5, Geodesic.AREA);
 console.log('The area is ' + r.S12.toFixed(1) + ' m^2');
@@ -147,7 +141,6 @@ for (i = 0; i <= n; ++i) {
               r.lon2.toFixed(5) + " " + r.azi2.toFixed(5));
 }
 ```
-<br/>
 gives
 ```text
 distance latitude longitude azimuth
@@ -163,7 +156,6 @@ distance latitude longitude azimuth
 9000000 41.02145 233.58294 136.34359
 9513998 37.60000 237.60000 138.89027
 ```
-<br/>
 The inclusion of Geodesic.LONG_UNROLL in the call to
 {@link module:GeographicLib/GeodesicLine.GeodesicLine#Position
 GeodesicLine.Position} ensures that the longitude does not jump on
@@ -192,7 +184,6 @@ for (i = 0; i <= n; ++i) {
   console.log(r.lat2.toFixed(5) + " " + r.lon2.toFixed(5));
 }
 ```
-<br/>
 gives
 ```text
 latitude longitude
@@ -209,7 +200,6 @@ latitude longitude
 38.34746 236.76857
 37.60000 237.60000
 ```
-<br/>
 The variation in the distance between these waypoints is on the order of
 1/*f*.
 
@@ -230,10 +220,12 @@ var p = geod.Polygon(false), i,
     ];
 for (i = 0; i < antarctica.length; ++i)
   p.AddPoint(antarctica[i][0], antarctica[i][1]);
-console.log("The area of Antarctica is " +
-            p.Compute(false, true).area.toFixed(1) + " m^2.");
+p = p.Compute(false, true);
+console.log("Perimeter/area of Antarctica are " +
+            p.perimeter.toFixed(3) + " m / " +
+            p.area.toFixed(1) + " m^2.");
 ```
-&rarr; `The area of Antarctica is 13662703680020.1 m^2.`
+&rarr; `Perimeter/area of Antarctica are 16831067.893 m / 13662703680020.1 m^2.`
 
 If the points of the polygon are being selected interactively, then
 {@link module:GeographicLib/PolygonArea.PolygonArea#TestPoint

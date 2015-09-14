@@ -37,6 +37,6 @@ console.log('The distance is ' + r.s12.toFixed(3) + ' m.');
 // Find the point 20000 km SW of Perth, Australia (32.06S, 115.74E)...
 r = geod.Direct(-32.06, 115.74, 225, 20000e3);
 console.log('The position is (' +
-            r.lat2.toFixed(8) + ',' + r.lon2.toFixed(8) + ').');
-// This prints "The position is (32.11195529,-63.95925278)."
+            r.lat2.toFixed(8) + ', ' + r.lon2.toFixed(8) + ').');
+// This prints "The position is (32.11195529, -63.95925278)."
 ```

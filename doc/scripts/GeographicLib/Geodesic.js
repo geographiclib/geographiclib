@@ -1170,7 +1170,8 @@ GeographicLib.PolygonArea = {};
    * @returns {object} the requested results.
    * @description The lat1, lon1, azi1, and a12 fields of the result are always
    *   set; s12 is included if arcmode is false.  For details on the outmask
-   *   parameter, see {@tutorial interface}, "The outmask and caps parameters".
+   *   parameter, see {@tutorial interface}, "The outmask and caps
+   *   parameters".
    */
   g.Geodesic.prototype.GenDirect = function (lat1, lon1, azi1,
                                              arcmode, s12_a12, outmask) {

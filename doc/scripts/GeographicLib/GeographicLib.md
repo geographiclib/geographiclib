@@ -12,7 +12,6 @@ $ npm install geographiclib
 $ node
 > var GeographicLib = require('geographiclib');
 ```
-<br/>
 Alternatively, you can use it in client-side JavaScript, by including in
 your HTML page
 ```html
@@ -20,7 +19,6 @@ your HTML page
         src="http://geographiclib.sf.net/scripts/geographiclib.js">
 </script>
 ```
-<br/>
 Both of these prescriptions define a {@link GeographicLib} namespace.  Now
 geodesic calculations can be carried out, for example,
 ```javascript
@@ -35,13 +33,12 @@ console.log('The distance is ' + r.s12.toFixed(3) + ' m.');
 // Find the point 20000 km SW of Perth, Australia (32.06S, 115.74E)...
 r = geod.Direct(-32.06, 115.74, 225, 20000e3);
 console.log('The position is (' +
-            r.lat2.toFixed(8) + ',' + r.lon2.toFixed(8) + ').');
-// This prints "The position is (32.11195529,-63.95925278)."
+            r.lat2.toFixed(8) + ', ' + r.lon2.toFixed(8) + ').');
+// This prints "The position is (32.11195529, -63.95925278)."
 ```
-<br/>
 Two examples of this library in use are
-* [a geodesic calculator](http://geographiclib.sf.net/scripts/geod-calc.html)
-* [displaying geodesics on Google
+* [A geodesic calculator](http://geographiclib.sf.net/scripts/geod-calc.html)
+* [Displaying geodesics on Google
   Maps](http://geographiclib.sf.net/scripts/geod-google.html)
 
 More information
