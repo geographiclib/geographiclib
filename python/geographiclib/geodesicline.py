@@ -36,6 +36,7 @@ class GeodesicLine(object):
       Geodesic.LONGITUDE
       Geodesic.AZIMUTH
       Geodesic.DISTANCE
+      Geodesic.STANDARD (all of the above)
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
@@ -291,9 +292,7 @@ class GeodesicLine(object):
     a12 = s12_a12 if arcmode else math.degrees(sig12)
     return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
 
-  def Position(self, s12,
-               outmask = GeodesicCapability.LATITUDE |
-               GeodesicCapability.LONGITUDE | GeodesicCapability.AZIMUTH):
+  def Position(self, s12, outmask = GeodesicCapability.STANDARD):
     """Return the point a distance s12 along the geodesic line.  Return a
     dictionary with (some) of the following entries:
 
@@ -320,13 +319,14 @@ class GeodesicLine(object):
       Geodesic.LATITUDE
       Geodesic.LONGITUDE
       Geodesic.AZIMUTH
+      Geodesic.STANDARD (all of the above)
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.ALL (all of the above)
       Geodesic.LONG_UNROLL
 
-    The default value of outmask is LATITUDE | LONGITUDE | AZIMUTH.
+    The default value of outmask is STANDARD.
 
     """
 
@@ -349,10 +349,7 @@ class GeodesicLine(object):
     if outmask & Geodesic.AREA: result['S12'] = S12
     return result
 
-  def ArcPosition(self, a12,
-                  outmask = GeodesicCapability.LATITUDE |
-                  GeodesicCapability.LONGITUDE | GeodesicCapability.AZIMUTH |
-                  GeodesicCapability.DISTANCE):
+  def ArcPosition(self, a12, outmask = GeodesicCapability.STANDARD):
     """Return the point a spherical arc length a12 along the geodesic line.
     Return a dictionary with (some) of the following entries:
 
@@ -379,14 +376,14 @@ class GeodesicLine(object):
       Geodesic.LONGITUDE
       Geodesic.AZIMUTH
       Geodesic.DISTANCE
+      Geodesic.STANDARD (all of the above)
       Geodesic.REDUCEDLENGTH
       Geodesic.GEODESICSCALE
       Geodesic.AREA
       Geodesic.ALL (all of the above)
       Geodesic.LONG_UNROLL
 
-    The default value of outmask is LATITUDE | LONGITUDE | AZIMUTH |
-    DISTANCE.
+    The default value of outmask is STANDARD.
 
     """
 

@@ -222,6 +222,27 @@ add_test (NAME GeodSolve29 COMMAND GeodSolve
 set_tests_properties (GeodSolve28 GeodSolve29
   PROPERTIES PASS_REGULAR_EXPRESSION " 49911046115")
 
+# Check for bad placement of assignment of r.a12 with |f| > 0.01 (bug in
+# Java implementation fixed on 2015-05-19).
+add_test (NAME GeodSolve30 COMMAND GeodSolve
+  -f -e 6.4e6 0.1 -p 3 --input-string "1 2 10 5e6")
+set_tests_properties (GeodSolve30 PROPERTIES PASS_REGULAR_EXPRESSION
+  " 48.55570690 ")
+
+# Check longitude unrolling with inverse calculation 2015-09-16
+add_test (NAME GeodSolve31 COMMAND GeodSolve
+  -i -f -p 0 --input-string "0 539 0 181")
+add_test (NAME GeodSolve32 COMMAND GeodSolve
+  -i -f -p 0 --input-string "0 539 0 181" -E)
+set_tests_properties (GeodSolve31 GeodSolve32 PROPERTIES PASS_REGULAR_EXPRESSION
+  "0\\..* 179\\..* 90\\..* 0\\..* -179\\..* 90\\..* 222639 ")
+add_test (NAME GeodSolve33 COMMAND GeodSolve
+  -i -f -p 0 --input-string "0 539 0 181" -u)
+add_test (NAME GeodSolve34 COMMAND GeodSolve
+  -i -f -p 0 --input-string "0 539 0 181" -u -E)
+set_tests_properties (GeodSolve33 GeodSolve34 PROPERTIES PASS_REGULAR_EXPRESSION
+  "0\\..* 539\\..* 90\\..* 0\\..* 541\\..* 90\\..* 222639 ")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")
@@ -232,9 +253,7 @@ add_test (NAME Planimeter2 COMMAND Planimeter
 add_test (NAME Planimeter3 COMMAND Planimeter --input-string "90 0; 0 0; 0 90")
 add_test (NAME Planimeter4 COMMAND Planimeter
   -l --input-string "90 0; 0 0; 0 90")
-set_tests_properties (Planimeter0 PROPERTIES PASS_REGULAR_EXPRESSION
-  "4 631819\\.8745[0-9]+ 2495230567[78]\\.[0-9]+")
-set_tests_properties (Planimeter1 PROPERTIES PASS_REGULAR_EXPRESSION
+set_tests_properties (Planimeter0 Planimeter1 PROPERTIES PASS_REGULAR_EXPRESSION
   "4 631819\\.8745[0-9]+ 2495230567[78]\\.[0-9]+")
 set_tests_properties (Planimeter2 PROPERTIES PASS_REGULAR_EXPRESSION
   "4 627598\\.2731[0-9]+ 24619419146.[0-9]+")

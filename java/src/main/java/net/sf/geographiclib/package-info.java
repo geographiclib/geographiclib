@@ -8,7 +8,7 @@
  * GeographicLib-Java is a Java implementation of the geodesic algorithms from
  * <a href="http://geographiclib.sf.net">GeographicLib</a>.  This is a
  * self-contained library which makes it easy to do geodesic computations for
- * an ellipsoid of revolution in a Java program.  It requires Java version 1.1
+ * an ellipsoid of revolution in a Java program.  It requires Java version 1.2
  * or later.
  *
  * <h2>Downloading</h2>
@@ -211,6 +211,11 @@
  * <li>
  *   <a href="http://geographiclib.sf.net/1.45/java">Version 1.45</a>
  *   (released 2015-mm-dd)
+ * <ul>
+ * <li>
+ *   Use Math.toRadians and Math.toDegrees instead of GeoMath.degree.
+ *   This requires Java 1.2 or later (released 1998-12).
+ * </ul>
  * <li>
  *   <a href="http://geographiclib.sf.net/1.44/java">Version 1.44</a>
  *   (released 2015-08-14)

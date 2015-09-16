@@ -7025,9 +7025,13 @@ git repository for GeographicLib</a>.
      sphere.
    - Add Java implementation of the Gnomonic project (courtesy of
      Sebastian Mattheis).
+   - Java version now requires Java 1.2 (released 1998-12).
    - Add JUnit tests to Java implementation.
+   - Add unittest tests to JavaScript implementation.
    - Fix array size mismatch in MATLAB routine geoddistance by avoiding
      calls to subfunctions with zero-length arrays.
+   - Fixes to tranmerc_{fwd,inv}.m so that they work with array and
+     mixed array/scalar arguments.
    - Throw error on non-convergence in Gnomonic::Reverse if
      GEOGRAPHICLIB_PRECISION &gt; 3.
    - JavaScript changes:

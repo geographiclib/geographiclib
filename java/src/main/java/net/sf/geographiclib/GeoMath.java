@@ -29,11 +29,6 @@ public class GeoMath {
    * version 1.6 and later, Double.MIN_NORMAL can be used.
    **********************************************************************/
   public static final double min = Math.pow(0.5, 1022);
-  /**
-   * The number of radians in a degree.  In Java version 1.2 and later,
-   * Math.toRadians and Math.toDegrees can be used.
-   **********************************************************************/
-  public static final double degree = Math.PI / 180;
 
   /**
    * Square a number.
@@ -237,7 +232,7 @@ public class GeoMath {
     q = (int)Math.floor(r / 90 + 0.5);
     r -= 90 * q;
     // now abs(r) <= 45
-    r *= degree;
+    r = Math.toRadians(r);
     // Possibly could call the gnu extension sincos
     double s = Math.sin(r), c = Math.cos(r);
     double sinx, cosx;
@@ -271,7 +266,7 @@ public class GeoMath {
     if (Math.abs(y) > Math.abs(x)) { double t; t = x; x = y; y = t; q = 2; }
     if (x < 0) { x = -x; ++q; }
     // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
-    double ang = Math.atan2(y, x) / degree;
+    double ang = Math.toDegrees(Math.atan2(y, x));
     switch (q) {
       // Note that atan2d(-0.0, 1.0) will return -0.  However, we expect that
       // atan2d will not be called with y = -0.  If need be, include

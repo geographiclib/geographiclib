@@ -46,7 +46,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
   try
-    Z = zeros(size(lat0 + lon0 + lat + lon));
+    S = size(lat0 + lon0 + lat + lon);
   catch
     error('lat0, lon0, lat, lon have incompatible sizes')
   end
@@ -54,6 +54,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
     error('ellipsoid must be a vector of size 2')
   end
 
+  Z = zeros(prod(S),1);
   maxpow = 6;
 
   a = ellipsoid(1);
@@ -66,18 +67,19 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   b1 = (1 - f) * (A1m1f(n) + 1);
   a1 = b1 * a;
 
-  lon = AngDiff(lon0, lon);
+  lat = LatFix(lat(:)) + Z;
+  lon = AngDiff(lon0(:), lon(:)) + Z;
 
   latsign = 1 - 2 * (lat < 0);
   lonsign = 1 - 2 * (lon < 0);
   lon = lon .* lonsign;
-  lat = LatFix(lat) .* latsign;
+  lat = lat .* latsign;
   backside = lon > 90;
   latsign(backside & lat == 0) = -1;
   lon(backside) = 180 - lon(backside);
   [sphi, cphi] = sincosdx(lat);
   [slam, clam] = sincosdx(lon);
-  tau = sphi ./ cphi;
+  tau = sphi ./ max(sqrt(realmin), cphi);
   taup = taupf(tau, e2);
   xip = atan2(taup, clam);
   etap = asinh(slam ./ hypot(taup, clam));
@@ -87,8 +89,8 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   if any(c)
     xip(c) = pi/2;
     etap(c) = 0;
-    gam(c) = lon;
-    k = cc;
+    gam(c) = lon(c);
+    k(c) = cc;
   end
   c0 = cos(2 * xip); ch0 = cosh(2 * etap);
   s0 = sin(2 * xip); sh0 = sinh(2 * etap);
@@ -133,9 +135,11 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
     [sbet0, cbet0] = norm2((1-f) * sbet0, cbet0);
     y0 = a1 * (atan2(sbet0, cbet0) + ...
                SinCosSeries(true, sbet0, cbet0, C1f(n)));
-    y0 = reshape(y0, size(lat0));
   end
   y = y - y0;
+
+  x = reshape(x, S); y = reshape(y, S);
+  gam = reshape(gam, S); k = reshape(k, S);
 end
 
 function alp = alpf(n)

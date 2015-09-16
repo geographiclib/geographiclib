@@ -142,7 +142,8 @@ class Math(object):
   def sincosd(x):
     """Compute sine and cosine of x in degrees."""
 
-    r = math.fmod(x, 360); q = int(math.floor(r / 90 + 0.5))
+    r = math.fmod(x, 360)
+    q = Math.nan if Math.isnan(r) else int(math.floor(r / 90 + 0.5))
     r -= 90 * q; r = math.radians(r)
     s = math.sin(r); c = math.cos(r)
     q = q % 4
@@ -179,3 +180,9 @@ class Math(object):
 
     return abs(x) <= Math.maxval
   isfinite = staticmethod(isfinite)
+
+  def isnan(x):
+    """Test if nan"""
+
+    return math.isnan(x) if sys.version_info > (2, 6) else x != x
+  isnan = staticmethod(isnan)

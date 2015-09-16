@@ -607,7 +607,7 @@ public class Geodesic {
       dn2 = Math.sqrt(1 + _ep2 * GeoMath.sq(sbet2));
 
     double
-      lam12 = lon12 * GeoMath.degree, slam12, clam12;
+      lam12 = Math.toRadians(lon12), slam12, clam12;
     { Pair p = GeoMath.sincosd(lon12); slam12 = p.first; clam12 = p.second; }
 
     double a12, sig12, calp1, salp1, calp2, salp2;
@@ -658,7 +658,7 @@ public class Geodesic {
           sig12 = m12x = s12x = 0;
         m12x *= _b;
         s12x *= _b;
-        a12 = sig12 / GeoMath.degree;
+        a12 = Math.toDegrees(sig12);
       } else
         // m12 < 0, i.e., prolate and too close to anti-podal
         meridian = false;
@@ -703,7 +703,7 @@ public class Geodesic {
         m12x = GeoMath.sq(dnm) * _b * Math.sin(sig12 / dnm);
         if ((outmask & GeodesicMask.GEODESICSCALE) != 0)
           r.M12 = r.M21 = Math.cos(sig12 / dnm);
-        a12 = sig12 / GeoMath.degree;
+        a12 = Math.toDegrees(sig12);
         omg12 = lam12 / (_f1 * dnm);
       } else {
 
@@ -799,7 +799,7 @@ public class Geodesic {
         }
         m12x *= _b;
         s12x *= _b;
-        a12 = sig12 / GeoMath.degree;
+        a12 = Math.toDegrees(sig12);
         omg12 = lam12 - omg12;
       }
     }
