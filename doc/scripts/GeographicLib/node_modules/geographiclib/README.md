@@ -22,7 +22,7 @@ var GeographicLib = require('geographiclib');
 Full documentation is provided
 [here](http://geographiclib.sourceforge.net/1.45/js/).
 
-## Examples:
+## Examples
 
 ```javascript
 var GeographicLib = require('geographiclib'),
@@ -40,3 +40,8 @@ console.log('The position is (' +
             r.lat2.toFixed(8) + ', ' + r.lon2.toFixed(8) + ').');
 // This prints "The position is (32.11195529, -63.95925278)."
 ```
+
+## Authors
+
+* algorithms + js code: Charles Karney (charles@karney.com)
+* node.js port: Yurij Mikhalevich (0@39.yt)

@@ -4,7 +4,9 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.44.
+The current version of the library is 1.45.
+
+Changes between 1.45 (released 2015-mm-dd) and 1.44 versions:
 
 Changes between 1.44 (released 2015-08-14) and 1.43 versions:
 
@@ -13,8 +15,8 @@ Changes between 1.44 (released 2015-08-14) and 1.43 versions:
     + Add Math::sincosd, Math::sind, Math::cosd which take their
       arguments in degrees.  These functions do exact range reduction
       and thus they obey exactly the elementary properties of the
-      trigonometric functions, e.g., sin 9d = cos 81d =
-      - sin 123456789d.
+      trigonometric functions, e.g., sin 9d = cos 81d
+      = - sin 123456789d.
     + Math::AngNormalize now works for any angles, instead of angles in
       the range [-540d, 540d); the function Math::AngNormalize2 is now
       deprecated.

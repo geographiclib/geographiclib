@@ -125,6 +125,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 - <a href="http://geographiclib.sf.net">The GeographicLib web site</a>.
 - <a href="../index.html">The C++ library</a>.
 - <a href="../java/index.html">The Java library</a>.
+- <a href="../js/index.html">The JavaScript library</a>.
 - <a href="../Fortran/index.html">The Fortran library</a>.
 - Documentation on the C++ classes: GeographicLib::Geodesic,
   GeographicLib::GeodesicLine, GeographicLib::PolygonAreaT.

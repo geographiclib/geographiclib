@@ -1,4 +1,6 @@
-# Geodesic routines from GeographicLib
+## Geodesic routines from GeographicLib
+
+### Installation
 
 This library is a JavaScript implementation of the geodesic routines
 from [GeographicLib](http://geographiclib.sf.net).  This solves the
@@ -19,8 +21,11 @@ your HTML page
         src="http://geographiclib.sf.net/scripts/geographiclib.js">
 </script>
 ```
-Both of these prescriptions define a {@link GeographicLib} namespace.  Now
-geodesic calculations can be carried out, for example,
+Both of these prescriptions define a {@link GeographicLib} namespace.
+
+### Examples
+
+Now geodesic calculations can be carried out, for example,
 ```javascript
 var geod = GeographicLib.Geodesic.WGS84, r;
 
@@ -41,7 +46,12 @@ Two examples of this library in use are
 * [Displaying geodesics on Google
   Maps](http://geographiclib.sf.net/scripts/geod-google.html)
 
-More information
+### More information
 * {@tutorial geodesics}
 * {@tutorial interface}
 * {@tutorial examples}
+
+### Authors
+
+* algorithms + js code: Charles Karney (charles@karney.com)
+* node.js port: Yurij Mikhalevich (0@39.yt)
