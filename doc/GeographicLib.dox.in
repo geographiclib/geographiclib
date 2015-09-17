@@ -295,15 +295,15 @@ Here are the steps to compile and install GeographicLib:
     is to a common directory, e.g., /usr/local.  If it is OFF (the
     Windows default), the installation directory contains the package
     name, e.g., C:/pkg/GeographicLib-@PROJECT_VERSION@.  The installation
-    directories for the documentation, cmake configuration, python and
-    matlab interfaces all depend on the variable with deeper paths
+    directories for the documentation, cmake configuration, Python and
+    MATLAB interfaces all depend on the variable with deeper paths
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
     - cmake configuration: OFF cmake; ON: lib/cmake/GeographicLib;
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
     - JavaScript interface: OFF: doc/scripts; ON:
       share/doc/GeographicLib/scripts;
-    - python interface: OFF: python; ON: lib/python/site-packages;
-    - matlab interface: OFF: matlab; ON: share/matlab;
+    - Python interface: OFF: python; ON: lib/python/site-packages;
+    - MATLAB interface: OFF: matlab; ON: share/matlab;
     .
   - <code>CMAKE_INSTALL_PREFIX</code> (default: <code>/usr/local</code>
     on non-Windows systems, <code>C:/Program Files/GeographicLib</code>
@@ -1214,16 +1214,16 @@ The directory doc/scripts/GeographicLib contains the classes
 .
 translated into JavaScript.  When GeographicLib is built the JavaScript
 source files are concatenated and compressed into a single file
-<code>geographiclib.js</code>.  This can be included into your document
-with \code
+<code>geographiclib.min.js</code>.  This can be included into your
+document with \code
 <script type="text/javascript"
-        src="http://geographiclib.sf.net/scripts/geographiclib.js">
+        src="http://geographiclib.sf.net/scripts/geographiclib.min.js">
 </script> \endcode
 This file gives you the latest version of the library.  If you need to
 use a specific version of this file, include a version number as in
 \code
 <script type="text/javascript"
-        src="http://geographiclib.sf.net/scripts/geographiclib-1.43.js">
+        src="http://geographiclib.sf.net/scripts/geographiclib-1.45.min.js">
 </script> \endcode
 You can visit http://geographiclib.sf.net/scripts/ to see which versions
 are available.
@@ -1248,7 +1248,7 @@ Examples of using this interface are
 
 \section python Python implementation
 
-A python implementation of the geodesic routines from GeographicLib
+A Python implementation of the geodesic routines from GeographicLib
 are provided in the python/geographiclib directory (which is installed
 as PREFIX/lib/python/site-packages/geographiclib, if
 COMMON_INSTALL_PATH is ON, and as PREFIX/python/geographiclib,
@@ -1259,7 +1259,7 @@ otherwise).  This contains implementations of the classes
 - GeodesicLine
 - PolygonAreaT
 
-You can install the python interface independent of the rest of
+You can install the Python interface independent of the rest of
 GeographicLib using pip \verbatim
   pip install geographiclib \endverbatim
 This requires root privileges and you might first need to install the
@@ -1275,7 +1275,7 @@ so that they are in python's default path with, for example \verbatim
   python setup.py install
 \endverbatim
 (this will require root privileges).  Or else you can set the path
-within python using \code{.py}
+within Python using \code{.py}
 >>> import sys
 >>> sys.path.append("/usr/local/lib/python/site-packages")
 \endcode
@@ -7048,9 +7048,10 @@ git repository for GeographicLib</a>.
      - add JSDoc documentation.
    - Fixed bug, introduced in version 1.44, in the detection of C++11
      math functions in configure.ac.
+   - Fixed bug in normalization of the area in Python package.
    - Behavior of substituting 1/\e f for \e f if \e f > 1 is now
      <b>deprecated</b>.  This behavior has been removed from the
-     JavaScript, C, and python implementations (it was never
+     JavaScript, C, and Python implementations (it was never
      documented).  Maxima, MATLAB, and Fortran implementations never
      included this behavior.
 

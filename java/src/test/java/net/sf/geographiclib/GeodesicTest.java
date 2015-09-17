@@ -1,12 +1,35 @@
 package net.sf.geographiclib.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import net.sf.geographiclib.*;
 
 public class GeodesicTest {
 
-  final double testcases[][] = {
+  private static boolean isNaN(double x) { return x != x; }
+  private static final PolygonArea polygon =
+    new PolygonArea(Geodesic.WGS84, false);
+  private static final PolygonArea polyline =
+    new PolygonArea(Geodesic.WGS84, true);
+
+  private static PolygonResult Planimeter(double points[][]) {
+    polygon.Clear();
+    for (int i = 0; i < points.length; ++i) {
+      polygon.AddPoint(points[i][0], points[i][1]);
+    }
+    return polygon.Compute(false, true);
+  }
+
+  private static PolygonResult PolyLength(double points[][]) {
+    polyline.Clear();
+    for (int i = 0; i < points.length; ++i) {
+      polyline.AddPoint(points[i][0], points[i][1]);
+    }
+    return polyline.Compute(false, true);
+  }
+
+  private static final double testcases[][] = {
     {35.60777, -139.44815, 111.098748429560326,
      -11.17491, -69.95921, 129.289270889708762,
      8935244.5604818305, 80.50729714281974, 6273170.2055303837,
@@ -132,4 +155,276 @@ public class GeodesicTest {
       assertEquals(S12, dir.S12, 0.1);
     }
   }
+
+  @Test
+  public void GeodSolve0() {
+    GeodesicData inv = Geodesic.WGS84.Inverse(40.6, -73.8,
+                                              49.01666667, 2.55);
+    assertEquals(inv.azi1, 53.47022, 0.5e-5);
+    assertEquals(inv.azi2, 111.59367, 0.5e-5);
+    assertEquals(inv.s12, 5853226, 0.5);
+  }
+
+  @Test
+  public void GeodSolve1() {
+    GeodesicData inv = Geodesic.WGS84.Direct(40.63972222, -73.77888889,
+                                             53.5, 5850e3);
+    assertEquals(inv.lat2, 49.01467, 0.5e-5);
+    assertEquals(inv.lon2, 2.56106, 0.5e-5);
+    assertEquals(inv.azi2, 111.62947, 0.5e-5);
+  }
+
+  @Test
+  public void GeodSolve2() {
+    // Check fix for antipodal prolate bug found 2010-09-04
+    Geodesic geod = new Geodesic(6.4e6, -1/150.0);
+    GeodesicData inv = geod.Inverse(0.07476, 0, -0.07476, 180);
+    assertEquals(inv.azi1, 90.00078, 0.5e-5);
+    assertEquals(inv.azi2, 90.00078, 0.5e-5);
+    assertEquals(inv.s12, 20106193, 0.5);
+    inv = geod.Inverse(0.1, 0, -0.1, 180);
+    assertEquals(inv.azi1, 90.00105, 0.5e-5);
+    assertEquals(inv.azi2, 90.00105, 0.5e-5);
+    assertEquals(inv.s12, 20106193, 0.5);
+  }
+
+  @Test
+  public void GeodSolve4() {
+    // Check fix for short line bug found 2010-05-21
+    GeodesicData inv = Geodesic.WGS84.Inverse(36.493349428792, 0,
+                                              36.49334942879201, .0000008);
+    assertEquals(inv.s12, 0.072, 0.5e-3);
+  }
+
+  @Test
+  public void GeodSolve5() {
+    // Check fix for point2=pole bug found 2010-05-03
+    GeodesicData inv = Geodesic.WGS84.Direct(0.01777745589997, 30, 0, 10e6);
+    assertEquals(inv.lat2, 90, 0.5e-5);
+    if (inv.lon2 < 0) {
+      assertEquals(inv.lon2, -150, 0.5e-5);
+      assertEquals(inv.azi2, -180, 0.5e-5);
+    } else {
+      assertEquals(inv.lon2, 30, 0.5e-5);
+      assertEquals(inv.azi2, 0, 0.5e-5);
+    }
+  }
+
+  @Test
+  public void GeodSolve6() {
+    // Check fix for volatile sbet12a bug found 2011-06-25 (gcc 4.4.4
+    // x86 -O3).  Found again on 2012-03-27 with tdm-mingw32 (g++ // 4.6.1).
+    GeodesicData inv =
+      Geodesic.WGS84.Inverse(88.202499451857, 0,
+                             -88.202499451857, 179.981022032992859592);
+    assertEquals(inv.s12, 20003898.214, 0.5e-3);
+    inv = Geodesic.WGS84.Inverse(89.262080389218, 0,
+                                 -89.262080389218, 179.992207982775375662);
+    assertEquals(inv.s12, 20003925.854, 0.5e-3);
+    inv = Geodesic.WGS84.Inverse(89.333123580033, 0,
+                                 -89.333123580032997687, 179.99295812360148422);
+    assertEquals(inv.s12, 20003926.881, 0.5e-3);
+  }
+
+  @Test
+  public void GeodSolve9() {
+    // Check fix for volatile x bug found 2011-06-25 (gcc 4.4.4 x86 -O3);
+    GeodesicData inv =
+      Geodesic.WGS84.Inverse(56.320923501171, 0,
+                             -56.320923501171, 179.664747671772880215);
+    assertEquals(inv.s12, 19993558.287, 0.5e-3);
+  }
+
+  @Test
+  public void GeodSolve10() {
+    // Check fix for adjust tol1_ bug found 2011-06-25 (Visual Studio
+    // 10 rel + debug)
+    GeodesicData inv =
+      Geodesic.WGS84.Inverse(52.784459512564, 0,
+                             -52.784459512563990912, 179.634407464943777557);
+    assertEquals(inv.s12, 19991596.095, 0.5e-3);
+  }
+
+  @Test
+  public void GeodSolve11() {
+    // Check fix for bet2 = -bet1 bug found 2011-06-25 (Visual Studio
+    // 10 rel + debug)
+    GeodesicData inv =
+      Geodesic.WGS84.Inverse(48.522876735459, 0,
+                             -48.52287673545898293, 179.599720456223079643);
+    assertEquals(inv.s12, 19989144.774, 0.5e-3);
+  }
+
+  @Test
+  public void GeodSolve12() {
+    // Check fix for inverse geodesics on extreme prolate/oblate
+    // ellipsoids Reported 2012-08-29 Stefan Guenther
+    // <stefan.gunther@embl.de>; fixed 2012-10-07
+    Geodesic geod = new Geodesic(89.8, -1.83);
+    GeodesicData inv = geod.Inverse(0, 0, -10, 160);
+    assertEquals(inv.azi1, 120.27, 1e-2);
+    assertEquals(inv.azi2, 105.15, 1e-2);
+    assertEquals(inv.s12, 266.7, 1e-1);
+  }
+
+  @Test
+  public void GeodSolve14() {
+    // Check fix for inverse ignoring lon12 = nan
+    GeodesicData inv = Geodesic.WGS84.Inverse(0, 0, 1, Double.NaN);
+    assertTrue(isNaN(inv.azi1));
+    assertTrue(isNaN(inv.azi2));
+    assertTrue(isNaN(inv.s12));
+  }
+
+  @Test
+  public void GeodSolve15() {
+    // Initial implementation of Math::eatanhe was wrong for e^2 < 0.  This
+    // checks that this is fixed.
+    Geodesic geod = new Geodesic(6.4e6, -1/150.0);
+    GeodesicData dir = geod.Direct(1, 2, 3, 4, GeodesicMask.AREA);
+    assertEquals(dir.S12, 23700, 0.5);
+  }
+
+  @Test
+  public void GeodSolve17() {
+    // Check fix for LONG_UNROLL bug found on 2015-05-07
+    GeodesicData dir =
+      Geodesic.WGS84.Direct(40, -75, -10, 2e7,
+                            GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat2, -39, 1);
+    assertEquals(dir.lon2, -254, 1);
+    assertEquals(dir.azi2, -170, 1);
+    GeodesicLine line = Geodesic.WGS84.Line(40, -75, -10);
+    dir = line.Position(2e7, GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat2, -39, 1);
+    assertEquals(dir.lon2, -254, 1);
+    assertEquals(dir.azi2, -170, 1);
+    dir = Geodesic.WGS84.Direct(40, -75, -10, 2e7);
+    assertEquals(dir.lat2, -39, 1);
+    assertEquals(dir.lon2, 105, 1);
+    assertEquals(dir.azi2, -170, 1);
+    line = Geodesic.WGS84.Line(40, -75, -10);
+    dir = line.Position(2e7);
+    assertEquals(dir.lat2, -39, 1);
+    assertEquals(dir.lon2, 105, 1);
+    assertEquals(dir.azi2, -170, 1);
+  }
+
+  @Test
+  public void GeodSolve26() {
+    // Check max(-0.0,+0.0) issue 2015-08-22
+    GeodesicData inv = Geodesic.WGS84.Inverse(0, 0, 0, 179.5);
+    assertEquals(inv.azi1, 55.96650, 0.5e-5);
+    assertEquals(inv.azi2, 124.03350, 0.5e-5);
+    assertEquals(inv.s12, 19980862, 0.5);
+  }
+
+  @Test
+  public void GeodSolve28() {
+    // Check 0/0 problem with area calculation on sphere 2015-09-08
+    Geodesic geod = new Geodesic(6.4e6, 0);
+    GeodesicData dir = geod.Inverse(1, 2, 3, 4, GeodesicMask.AREA);
+    assertEquals(dir.S12, 49911046115.0, 0.5);
+  }
+
+  @Test
+  public void GeodSolve30() {
+    // Check for bad placement of assignment of r.a12 with |f| > 0.01 (bug in
+    // Java implementation fixed on 2015-05-19).
+    Geodesic geod = new Geodesic(6.4e6, 0.1);
+    GeodesicData dir = geod.Direct(1, 2, 10, 5e6);
+    assertEquals(dir.a12, 48.55570690, 0.5e-8);
+  }
+
+  @Test
+  public void GeodSolve31() {
+    // Check longitude unrolling with inverse calculation 2015-09-16
+    GeodesicData dir = Geodesic.WGS84.Inverse(0, 539, 0, 181);
+    assertEquals(dir.lon1, 179, 1e-10);
+    assertEquals(dir.lon2, -179, 1e-10);
+    assertEquals(dir.s12, 222639, 0.5);
+    dir = Geodesic.WGS84.Inverse(0, 539, 0, 181,
+                                 GeodesicMask.STANDARD |
+                                 GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lon1, 539, 1e-10);
+    assertEquals(dir.lon2, 541, 1e-10);
+    assertEquals(dir.s12, 222639, 0.5);
+  }
+
+  @Test
+  public void Planimeter0() {
+    // Check fix for pole-encircling bug found 2011-03-16
+    double pa[][] = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};
+    PolygonResult a = Planimeter(pa);
+    assertEquals(a.perimeter, 631819.8745, 1e-4);
+    assertEquals(a.area, 24952305678.0, 1);
+
+    double pb[][] = {{-89, 0}, {-89, 90}, {-89, 180}, {-89, 270}};
+    a = Planimeter(pb);
+    assertEquals(a.perimeter, 631819.8745, 1e-4);
+    assertEquals(a.area, -24952305678.0, 1);
+
+    double pc[][] = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+    a = Planimeter(pc);
+    assertEquals(a.perimeter, 627598.2731, 1e-4);
+    assertEquals(a.area, 24619419146.0, 1);
+
+    double pd[][] = {{90, 0}, {0, 0}, {0, 90}};
+    a = Planimeter(pd);
+    assertEquals(a.perimeter, 30022685, 1);
+    assertEquals(a.area, 63758202715511.0, 1);
+    a = PolyLength(pd);
+    assertEquals(a.perimeter, 20020719, 1);
+    assertTrue(isNaN(a.area));
+  }
+
+  @Test
+  public void Planimeter5() {
+    // Check fix for Planimeter pole crossing bug found 2011-06-24
+    double points[][] = {{89, 0.1}, {89, 90.1}, {89, -179.9}};
+    PolygonResult a = Planimeter(points);
+    assertEquals(a.perimeter, 539297, 1);
+    assertEquals(a.area, 12476152838.5, 1);
+  }
+
+  @Test
+  public void Planimeter6() {
+    // Check fix for Planimeter lon12 rounding bug found 2012-12-03
+    double pa[][] = {{9, -0.00000000000001}, {9, 180}, {9, 0}};
+    PolygonResult a = Planimeter(pa);
+    assertEquals(a.perimeter, 36026861, 1);
+    assertEquals(a.area, 0, 1);
+    double pb[][] = {{9, 0.00000000000001}, {9, 0}, {9, 180}};
+    a = Planimeter(pb);
+    assertEquals(a.perimeter, 36026861, 1);
+    assertEquals(a.area, 0, 1);
+    double pc[][] = {{9, 0.00000000000001}, {9, 180}, {9, 0}};
+    a = Planimeter(pc);
+    assertEquals(a.perimeter, 36026861, 1);
+    assertEquals(a.area, 0, 1);
+    double pd[][] = {{9, -0.00000000000001}, {9, 0}, {9, 180}};
+    a = Planimeter(pd);
+    assertEquals(a.perimeter, 36026861, 1);
+    assertEquals(a.area, 0, 1);
+  }
+
+  @Test
+  public void Planimeter12() {
+    // Area of arctic circle (not really -- adjunct to rhumb-area test)
+    double points[][] = {{66.562222222, 0}, {66.562222222, 180}};
+    PolygonResult a = Planimeter(points);
+    assertEquals(a.perimeter, 10465729, 1);
+    assertEquals(a.area, 0, 1);
+  }
+
+  @Test
+  public void Planimeter13() {
+    // Check encircling pole twice
+    double points[][] = {{89,-360}, {89,-240}, {89,-120},
+                         {89,0}, {89,120}, {89,240}};
+    PolygonResult a =  Planimeter(points);
+    assertEquals(a.perimeter, 1160741, 1);
+    assertEquals(a.area, 32415230256.0, 1);
+  }
+
 }

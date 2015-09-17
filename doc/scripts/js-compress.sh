@@ -10,7 +10,7 @@ done
 sed -e "s/@JS_VERSION@/$JS_VERSION/" -e "s/@FILE_INVENTORY@/$FILE_INVENTORY/" \
     $HEADER
 for f; do
-    echo "// GeographicLib/`basename $f`"
+    echo "// `basename $f`"
     # The first regex matches /*...*/ style comments where ... is any
     # number of \*[^/] and [^*].  This has the defect that the it
     # won't detect, e.g., **/ as the end of the comment.

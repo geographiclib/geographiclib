@@ -99,8 +99,13 @@ cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
 make doc
 (
     cd ../java
-    mvn package -P release
+    mvn -q package -P release
     rsync -a target/apidocs/ ../BUILD/doc/html/java/
+)
+(
+    cd ../python
+    python2 -m unittest test.test_geodesic
+    python3 -m unittest test.test_geodesic
 )
 (
     cd ../doc/scripts/GeographicLib
@@ -113,6 +118,8 @@ cp -p doc/scripts/*.js doc/scripts/*.html $TEMP/js/
 JS_VERSION=`grep Version: $TEMP/js/geographiclib.js | cut -f2 -d: | tr -d ' '`
 mv $TEMP/js/geographiclib.js $TEMP/js/geographiclib-$JS_VERSION.js
 ln -s geographiclib-$JS_VERSION.js $TEMP/js/geographiclib.js
+mv $TEMP/js/geographiclib.min.js $TEMP/js/geographiclib-$JS_VERSION.min.js
+ln -s geographiclib-$JS_VERSION.min.js $TEMP/js/geographiclib.min.js
 rsync -a --delete $TEMP/js/ $WEBDIST/htdocs/scripts/test/
 
 mkdir $TEMP/rel{a,b,c,x,y}

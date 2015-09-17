@@ -34,13 +34,12 @@
       }
     </style>
     <!--
-	 Full URL for latest version of geographiclib.js is
-	 http://geographiclib.sf.net/scripts/geographiclib.js
+	 Full URL for latest version of geographiclib.min.js is
+	 http://geographiclib.sf.net/scripts/geographiclib.min.js
 	 URL for a specific version is, for example,
-	 http://geographiclib.sf.net/scripts/geographiclib-1.44.js
+	 http://geographiclib.sf.net/scripts/geographiclib-1.45.min.js
       -->
-    <script type="text/javascript"
-	    src="geographiclib.js">
+    <script type="text/javascript" src="geographiclib.min.js">
     </script>
     <script type="text/javascript"
 	    src="https://maps.googleapis.com/maps/api/js?sensor=false">

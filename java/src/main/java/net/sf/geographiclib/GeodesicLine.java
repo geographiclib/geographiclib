@@ -274,9 +274,7 @@ public class GeodesicLine {
    * |= {@link GeodesicMask#DISTANCE_IN}; otherwise no parameters are set.
    **********************************************************************/
   public GeodesicData Position(double s12) {
-    return Position(false, s12,
-                    GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
-                    GeodesicMask.AZIMUTH);
+    return Position(false, s12, GeodesicMask.STANDARD);
   }
   /**
    * Compute the position of point 2 which is a distance <i>s12</i> (meters)
@@ -320,9 +318,7 @@ public class GeodesicLine {
    * |= {@link GeodesicMask#DISTANCE_IN}; otherwise no parameters are set.
    **********************************************************************/
   public GeodesicData ArcPosition(double a12) {
-    return Position(true, a12,
-                    GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
-                    GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE);
+    return Position(true, a12, GeodesicMask.STANDARD);
   }
   /**
    * Compute the position of point 2 which is an arc length <i>a12</i>

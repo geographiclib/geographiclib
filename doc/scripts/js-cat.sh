@@ -11,7 +11,7 @@ sed -e "s/@JS_VERSION@/$JS_VERSION/" -e "s/@FILE_INVENTORY@/$FILE_INVENTORY/" \
     $HEADER
 for f; do
     echo
-    echo "/**************** GeographicLib/`basename $f` ****************/"
+    echo "/**************** `basename $f` ****************/"
     cat $f
 done
 echo

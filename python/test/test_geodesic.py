@@ -254,7 +254,7 @@ class GeodSolveTest(unittest.TestCase):
         # Check 0/0 problem with area calculation on sphere 2015-09-08
         geod = Geodesic(6.4e6, 0)
         dir = geod.Inverse(1, 2, 3, 4, Geodesic.AREA)
-        self.assertAlmostEqual(dir["S12"], 49911046115, delta = 0.5)
+        self.assertAlmostEqual(dir["S12"], 49911046115.0, delta = 0.5)
 
     def test_GeodSolve30(self):
         # Check for bad placement of assignment of r.a12 with |f| > 0.01 (bug in
@@ -302,21 +302,21 @@ class PlanimeterTest(unittest.TestCase):
         points = [[89, 0], [89, 90], [89, 180], [89, 270]]
         num, perimeter, area = PlanimeterTest.Planimeter(points)
         self.assertAlmostEqual(perimeter, 631819.8745, delta = 1e-4)
-        self.assertAlmostEqual(area, 24952305678, delta = 1)
+        self.assertAlmostEqual(area, 24952305678.0, delta = 1)
         points = [[-89, 0], [-89, 90], [-89, 180], [-89, 270]]
         num, perimeter, area = PlanimeterTest.Planimeter(points)
         self.assertAlmostEqual(perimeter, 631819.8745, delta = 1e-4)
-        self.assertAlmostEqual(area, -24952305678, delta = 1)
+        self.assertAlmostEqual(area, -24952305678.0, delta = 1)
 
         points = [[0, -1], [-1, 0], [0, 1], [1, 0]]
         num, perimeter, area = PlanimeterTest.Planimeter(points)
         self.assertAlmostEqual(perimeter, 627598.2731, delta = 1e-4)
-        self.assertAlmostEqual(area, 24619419146, delta = 1)
+        self.assertAlmostEqual(area, 24619419146.0, delta = 1)
 
         points = [[90, 0], [0, 0], [0, 90]]
         num, perimeter, area = PlanimeterTest.Planimeter(points)
         self.assertAlmostEqual(perimeter, 30022685, delta = 1)
-        self.assertAlmostEqual(area, 63758202715511, delta = 1)
+        self.assertAlmostEqual(area, 63758202715511.0, delta = 1)
         num, perimeter, area = PlanimeterTest.PolyLength(points)
         self.assertAlmostEqual(perimeter, 20020719, delta = 1)
         self.assertTrue(Math.isnan(area))
@@ -359,4 +359,4 @@ class PlanimeterTest(unittest.TestCase):
         points = [[89,-360], [89,-240], [89,-120], [89,0], [89,120], [89,240]]
         num, perimeter, area = PlanimeterTest.Planimeter(points)
         self.assertAlmostEqual(perimeter, 1160741, delta = 1)
-        self.assertAlmostEqual(area, 32415230256, delta = 1)
+        self.assertAlmostEqual(area, 32415230256.0, delta = 1)

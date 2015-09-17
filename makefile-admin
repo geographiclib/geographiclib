@@ -47,6 +47,9 @@ install-js:
 	t=`find $(SCRIPTSTAGE)/test/geographiclib.js -printf '%l'`; \
 	rm -f $(SCRIPTSTAGE)/geographiclib.js; \
 	ln -s $$t $(SCRIPTSTAGE)/geographiclib.js
+	t=`find $(SCRIPTSTAGE)/test/geographiclib.min.js -printf '%l'`; \
+	rm -f $(SCRIPTSTAGE)/geographiclib.min.js; \
+	ln -s $$t $(SCRIPTSTAGE)/geographiclib.min.js
 	rsync --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded -av -e ssh $(SCRIPTSTAGE)/ $(USER),geographiclib@web.sourceforge.net:./htdocs/scripts/
 
 distrib-python: python/setup.py

@@ -2,16 +2,20 @@ JS_VERSION := $(shell grep "version_string = " Math.js | cut -f2 -d'"')
 SCRIPTS = Math.js Geodesic.js GeodesicLine.js PolygonArea.js DMS.js
 TUTORIALS = tutorials/geodesics.md tutorials/interface.md \
 	tutorials/examples.md tutorials/tutorials.json
+ALLSCRIPTS = $(DEST)/geographiclib.js $(DEST)/geographiclib.min.js \
+	$(patsubst %,$(DEST)/src/%,$(SCRIPTS))
 DEST=node_modules/geographiclib
+NODE_VERSION := $(shell grep "version.: " $(DEST)/package.json | cut -f4 -d'"')
 NODEFILES = \
 	$(DEST)/package.json \
 	$(DEST)/README.md \
 	$(DEST)/LICENSE.txt \
-	$(DEST)/test/geodesictest.js
+	$(ALLSCRIPTS)
 
-all: doc script samples pack publish
+all: doc script samples test pack
 doc: html/index.html
-script: $(DEST)/geographiclib.js
+script: $(ALLSCRIPTS)
+pack: geographiclib-$(NODE_VERSION).tgz
 
 # requires that jsdoc be installed
 html/index.html: GeographicLib.md $(SCRIPTS) $(TUTORIALS)
@@ -20,14 +24,22 @@ html/index.html: GeographicLib.md $(SCRIPTS) $(TUTORIALS)
 publish: doc
 	rsync --delete -a -e ssh html/ karney,geographiclib@web.sourceforge.net:htdocs/$(JS_VERSION)/js/
 
-pack: $(DEST)/geographiclib.js $(NODEFILES)
+geographiclib-$(NODE_VERSION).tgz: $(NODEFILES)
 	npm pack $(DEST)
 
 $(DEST)/geographiclib.js: ../HEADER.js $(SCRIPTS)
 	test -d $(DEST) || mkdir $(DEST)
 	../js-cat.sh $^ > $@
 
+$(DEST)/geographiclib.min.js: ../HEADER.js $(SCRIPTS)
+	test -d $(DEST) || mkdir $(DEST)
+	../js-compress.sh $^ > $@
+
 $(DEST)/%.html: ../%.in
+	cp $^ $@
+
+$(DEST)/src/%.js: %.js
+	test -d $(DEST)/src || mkdir $(DEST)/src
 	cp $^ $@
 
 samples: $(DEST)/geod-calc.html $(DEST)/geod-google.html $(DEST)/geod-google-instructions.html

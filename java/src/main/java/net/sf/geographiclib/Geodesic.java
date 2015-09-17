@@ -312,9 +312,7 @@ public class Geodesic {
    **********************************************************************/
   public GeodesicData Direct(double lat1, double lon1,
                              double azi1, double s12) {
-    return Direct(lat1, lon1, azi1, false, s12,
-                  GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
-                  GeodesicMask.AZIMUTH);
+    return Direct(lat1, lon1, azi1, false, s12, GeodesicMask.STANDARD);
   }
   /**
    * Solve the direct geodesic problem where the length of the geodesic is
@@ -367,9 +365,7 @@ public class Geodesic {
    **********************************************************************/
   public GeodesicData ArcDirect(double lat1, double lon1,
                                 double azi1, double a12) {
-    return Direct(lat1, lon1, azi1, true, a12,
-                  GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE |
-                  GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE);
+    return Direct(lat1, lon1, azi1, true, a12, GeodesicMask.STANDARD);
   }
 
   /**
@@ -485,8 +481,7 @@ public class Geodesic {
    **********************************************************************/
   public GeodesicData Inverse(double lat1, double lon1,
                               double lat2, double lon2) {
-    return Inverse(lat1, lon1, lat2, lon2,
-                   GeodesicMask.DISTANCE | GeodesicMask.AZIMUTH);
+    return Inverse(lat1, lon1, lat2, lon2, GeodesicMask.STANDARD);
   }
 
   /**

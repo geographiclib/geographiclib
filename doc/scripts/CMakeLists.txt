@@ -3,9 +3,12 @@
 set (JS_MODULES Math Geodesic GeodesicLine PolygonArea DMS)
 
 # Combine JavaScript into a single file if necessary
-set (JS_BUILD 0)
 set (JSSCRIPTS)
+set (JS_BUILD 0)
+set (JS_BUILD_MIN 0)
 set (JS_TARGET "${CMAKE_CURRENT_BINARY_DIR}/geographiclib.js")
+set (JS_TARGET_MIN "${CMAKE_CURRENT_BINARY_DIR}/geographiclib.min.js")
+set (JS_TARGETS ${JS_TARGET} ${JS_TARGET_MIN})
 set (FILE_INVENTORY "")
 foreach (_F ${JS_MODULES})
   set (_S "GeographicLib/${_F}.js")
@@ -13,6 +16,9 @@ foreach (_F ${JS_MODULES})
   list (APPEND JSSCRIPTS  ${_S})
   if ("${CMAKE_CURRENT_SOURCE_DIR}/_S" IS_NEWER_THAN ${JS_TARGET})
     set (JS_BUILD 1)
+  endif ()
+  if ("${CMAKE_CURRENT_SOURCE_DIR}/_S" IS_NEWER_THAN ${JS_TARGET_MIN})
+    set (JS_BUILD_MIN 1)
   endif ()
 endforeach ()
 
@@ -24,6 +30,29 @@ if (JS_BUILD)
   string (CONFIGURE ${_S} _S @ONLY)
   file (APPEND ${JS_TARGET} "${_S}")
   foreach (_F ${JSSCRIPTS})
+    get_filename_component(_N ${_F} NAME)
+    file (READ "${_F}" _S)
+    # Normalize the line endings.
+    string (REGEX REPLACE "\r" "" _S "${_S}")
+    file (APPEND ${JS_TARGET} "\n/**************** ${_N} ****************/\n")
+    file (APPEND ${JS_TARGET} "${_S}")
+  endforeach ()
+  # support loading with node's require
+  file (APPEND ${JS_TARGET}
+    "\n/******** support loading with node's require ********/\n")
+  file (APPEND ${JS_TARGET}
+    "if (typeof module === 'object') module.exports = GeographicLib;\n")
+endif ()
+
+if (JS_BUILD_MIN)
+  file (STRINGS "GeographicLib/Math.js" _S REGEX version_string)
+  string (REGEX REPLACE ".*\"(.*)\".*" "\\1" JS_VERSION "${_S}")
+  file (REMOVE ${JS_TARGET_MIN})
+  file (READ "HEADER.js" _S)
+  string (CONFIGURE ${_S} _S @ONLY)
+  file (APPEND ${JS_TARGET_MIN} "${_S}")
+  foreach (_F ${JSSCRIPTS})
+    get_filename_component(_N ${_F} NAME)
     file (READ "${_F}" _S)
     # Normalize the line endings.
     string (REGEX REPLACE "\r" "\n" _S "${_S}")
@@ -39,16 +68,16 @@ if (JS_BUILD)
     string (REGEX REPLACE " \n" "\n" _S "${_S}")
     string (REGEX REPLACE "^\n" "" _S "${_S}")
     string (REGEX REPLACE "\n+" "\n" _S "${_S}")
-    file (APPEND ${JS_TARGET} "// ${_F}\n${_S}")
+    file (APPEND ${JS_TARGET_MIN} "// ${_N}\n${_S}")
   endforeach ()
   # support loading with node's require
-  file (APPEND ${JS_TARGET}
+  file (APPEND ${JS_TARGET_MIN}
     "if(typeof module==='object')module.exports=GeographicLib;\n")
 endif ()
 
 # "make javascript" will reconfigure cmake if necessary, since
 # geographiclib.js is created during configuration.
-add_custom_command (OUTPUT geographiclib.js
+add_custom_command (OUTPUT ${JS_TARGETS}
   DEPENDS ${JSSCRIPTS} HEADER.js
   COMMAND ${CMAKE_COMMAND} ARGS "."
   WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
@@ -61,7 +90,7 @@ else ()
 endif ()
 
 # Install the JavaScript file
-install (FILES ${JS_TARGET} DESTINATION ${INSTALL_SCRIPTS_DIR})
+install (FILES ${JS_TARGETS} DESTINATION ${INSTALL_SCRIPTS_DIR})
 
 set (SCRIPTDRIVERS geod-calc geod-google geod-google-instructions)
 foreach (_D ${SCRIPTDRIVERS})
