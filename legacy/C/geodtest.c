@@ -1,4 +1,4 @@
-// Test suite for C version the geodesic library
+/* Test suite for C version the geodesic library */
 
 #include "geodesic.h"
 #include <stdio.h>
@@ -107,8 +107,8 @@ int testinverse() {
     lat2 = testcases[i][3]; lon2 = testcases[i][4]; azi2 = testcases[i][5];
     s12 = testcases[i][6]; a12 = testcases[i][7]; m12 = testcases[i][8];
     M12 = testcases[i][9]; M21 = testcases[i][10]; S12 = testcases[i][11];
-    a12a = geod_geninverse(&g, lat1, lon1, lat2, lon2, &s12a, &azi1a, &azi2a, 
-			   &m12a, &M12a, &M21a, &S12a);
+    a12a = geod_geninverse(&g, lat1, lon1, lat2, lon2, &s12a, &azi1a, &azi2a,
+               &m12a, &M12a, &M21a, &S12a);
     result += assertEquals(azi1, azi1a, 1e-13);
     result += assertEquals(azi2, azi2a, 1e-13);
     result += assertEquals(s12, s12a, 1e-8);
@@ -134,8 +134,8 @@ int testdirect() {
     s12 = testcases[i][6]; a12 = testcases[i][7]; m12 = testcases[i][8];
     M12 = testcases[i][9]; M21 = testcases[i][10]; S12 = testcases[i][11];
     a12a = geod_gendirect(&g, lat1, lon1, azi1, flags, s12,
-			  &lat2a, &lon2a, &azi2a, 0,
-			  &m12a, &M12a, &M21a, &S12a);
+              &lat2a, &lon2a, &azi2a, 0,
+              &m12a, &M12a, &M21a, &S12a);
     result += assertEquals(lat2, lat2a, 1e-13);
     result += assertEquals(lon2, lon2a, 1e-13);
     result += assertEquals(azi2, azi2a, 1e-13);

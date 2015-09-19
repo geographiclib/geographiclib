@@ -166,7 +166,7 @@ describe("GeographicLib", function() {
   });
 
   describe("DMSTest", function () {
-    it("check encode", function () {
+    it("check decode", function () {
       assert.deepEqual(d.Decode("E7:33:36"), d.Decode("-7.56W"));
     });
   });

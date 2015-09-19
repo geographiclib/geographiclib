@@ -67,18 +67,23 @@ set -e
 #   maxima/geodesic.mac
 
 # JavaScript
-#   doc/scripts/GeographicLib/Math.js
-#   doc/scripts/GeographicLib/node_modules/geographiclib/package.json
+#   js/src/Math.js
+#   js/package.json
 
 DATE=`date +%F`
 VERSION=1.45
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
-DEVELSOURCE=/u/geographiclib
+if test `hostname` = petrel.petrel.org; then
+    DEVELSOURCE=$HOME/geographiclib
+    WINDOWSBUILD=/var/tmp
+else
+    DEVELSOURCE=/u/geographiclib
+    WINDOWSBUILD=/u/temp
+fi
+WINDOWSBUILDWIN=u:/temp
 GITSOURCE=file://$DEVELSOURCE
 WEBDIST=/home/ckarney/web/geographiclib-web
-WINDOWSBUILD=/u/temp
-WINDOWSBUILDWIN=u:/temp
 NUMCPUS=4
 
 test -d $TEMP || mkdir $TEMP
@@ -107,14 +112,9 @@ make doc
     python2 -m unittest test.test_geodesic
     python3 -m unittest test.test_geodesic
 )
-(
-    cd ../doc/scripts/GeographicLib
-    make
-    rsync -a html/ ../../../BUILD/doc/html/js/
-)
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
 mkdir -p $TEMP/js
-cp -p doc/scripts/*.js doc/scripts/*.html $TEMP/js/
+cp -p js/*.js js/*.html $TEMP/js/
 JS_VERSION=`grep Version: $TEMP/js/geographiclib.js | cut -f2 -d: | tr -d ' '`
 mv $TEMP/js/geographiclib.js $TEMP/js/geographiclib-$JS_VERSION.js
 ln -s geographiclib-$JS_VERSION.js $TEMP/js/geographiclib.js
@@ -227,6 +227,10 @@ make -j$NUMCPUS all
 make -j$NUMCPUS test
 make -j$NUMCPUS exampleprograms
 make install
+(
+    cd $TEMP/instc/lib/node_modules/geographiclib
+    mocha
+)
 
 mkdir ../BUILD-system
 cd ../BUILD-system
@@ -388,7 +392,7 @@ cd $TEMP/relx/GeographicLib-$VERSION
     find . -type f |
 	egrep -v '[Mm]akefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
 	egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
-	egrep -v 'doc/scripts/geod-.*\.in' |
+	egrep -v 'js/samples/geod-.*\.html' |
 	xargs grep -l  '	' || true
     echo
     echo Files with multiple newlines:

@@ -11,7 +11,7 @@ set (JS_TARGET_MIN "${CMAKE_CURRENT_BINARY_DIR}/geographiclib.min.js")
 set (JS_TARGETS ${JS_TARGET} ${JS_TARGET_MIN})
 set (FILE_INVENTORY "")
 foreach (_F ${JS_MODULES})
-  set (_S "GeographicLib/${_F}.js")
+  set (_S "src/${_F}.js")
   set (FILE_INVENTORY "${FILE_INVENTORY} ${_F}.js")
   list (APPEND JSSCRIPTS  ${_S})
   if ("${CMAKE_CURRENT_SOURCE_DIR}/_S" IS_NEWER_THAN ${JS_TARGET})
@@ -23,7 +23,7 @@ foreach (_F ${JS_MODULES})
 endforeach ()
 
 if (JS_BUILD)
-  file (STRINGS "GeographicLib/Math.js" _S REGEX version_string)
+  file (STRINGS "src/Math.js" _S REGEX version_string)
   string (REGEX REPLACE ".*\"(.*)\".*" "\\1" JS_VERSION "${_S}")
   file (REMOVE ${JS_TARGET})
   file (READ "HEADER.js" _S)
@@ -45,7 +45,7 @@ if (JS_BUILD)
 endif ()
 
 if (JS_BUILD_MIN)
-  file (STRINGS "GeographicLib/Math.js" _S REGEX version_string)
+  file (STRINGS "src/Math.js" _S REGEX version_string)
   string (REGEX REPLACE ".*\"(.*)\".*" "\\1" JS_VERSION "${_S}")
   file (REMOVE ${JS_TARGET_MIN})
   file (READ "HEADER.js" _S)
@@ -82,20 +82,20 @@ add_custom_command (OUTPUT ${JS_TARGETS}
   DEPENDS ${JSSCRIPTS} HEADER.js
   COMMAND ${CMAKE_COMMAND} ARGS "."
   WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+
+file (GLOB SAMPLES samples/*.html)
+file (COPY ${SAMPLES} DESTINATION .)
+
 add_custom_target (javascript ALL DEPENDS ${JS_TARGETS})
 
 if (COMMON_INSTALL_PATH)
-  set (INSTALL_SCRIPTS_DIR "share/doc/GeographicLib/scripts")
+  set (INSTALL_JS_DIR "lib${LIB_SUFFIX}/node_modules/geographiclib")
 else ()
-  set (INSTALL_SCRIPTS_DIR "doc/scripts")
+  set (INSTALL_JS_DIR "node_modules/geographiclib")
 endif ()
 
-# Install the JavaScript file
-install (FILES ${JS_TARGETS} DESTINATION ${INSTALL_SCRIPTS_DIR})
-
-set (SCRIPTDRIVERS geod-calc geod-google geod-google-instructions)
-foreach (_D ${SCRIPTDRIVERS})
-  configure_file (${_D}.in ${_D}.html)
-  install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${_D}.html
-    DESTINATION ${INSTALL_SCRIPTS_DIR})
-endforeach ()
+# Install the JavaScript files
+install (FILES ../LICENSE.txt package.json README.md ${JS_TARGETS}
+  DESTINATION ${INSTALL_JS_DIR})
+install (FILES ${JSSCRIPTS} DESTINATION ${INSTALL_JS_DIR}/src)
+install (FILES test/geodesictest.js DESTINATION ${INSTALL_JS_DIR}/test)

@@ -1,11 +1,11 @@
  {
-     "geodesics": {
+     "1-geodesics": {
          "title": "General information on geodesics"
      },
-     "interface": {
+     "2-interface": {
          "title": "The library interface"
      },
-     "examples": {
+     "3-examples": {
          "title": "Examples of use"
      }
  }

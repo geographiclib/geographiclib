@@ -7,10 +7,10 @@ AUTOMAKE_OPTIONS = foreign
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src man tools doc doc/scripts include matlab python cmake examples
+SUBDIRS = src man tools doc js include matlab python cmake examples
 
 EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL README.md pom.xml \
-	Makefile.mk CMakeLists.txt windows maxima doc legacy java dotnet
+	Makefile.mk CMakeLists.txt windows maxima doc legacy java js dotnet
 
 dist-hook:
 	rm -rf $(distdir)/doc/html $(distdir)/doc/manpages \
@@ -32,6 +32,7 @@ dist-hook:
 		-e "s/PATCH .*/PATCH ${GEOGRAPHICLIB_VERSION_PATCH}/" \
 		$(top_srcdir)/include/GeographicLib/Config.h > \
 		$(distdir)/include/GeographicLib/Config.h
+
 # Custom rules
 
 all-local: man doc

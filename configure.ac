@@ -92,7 +92,7 @@ src/Makefile
 include/Makefile
 tools/Makefile
 doc/Makefile
-doc/scripts/Makefile
+js/Makefile
 man/Makefile
 matlab/Makefile
 python/Makefile

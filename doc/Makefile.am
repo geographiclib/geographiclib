@@ -1,6 +1,7 @@
 EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html
 
-FIGURES = $(srcdir)/gauss-krueger-graticule.png \
+FIGURES = \
+	$(srcdir)/gauss-krueger-graticule.png \
 	$(srcdir)/thompson-tm-graticule.png \
 	$(srcdir)/gauss-krueger-convergence-scale.png \
 	$(srcdir)/gauss-schreiber-graticule-a.png \
@@ -88,21 +89,6 @@ MANPAGES = \
 	../man/RhumbSolve.1.html \
 	../man/TransverseMercatorProj.1.html
 
-LEGACYFILES = \
-	$(top_srcdir)/legacy/C/geodesic.c \
-	$(top_srcdir)/legacy/C/geodesic.h \
-	$(top_srcdir)/legacy/C/direct.c \
-	$(top_srcdir)/legacy/C/inverse.c \
-	$(top_srcdir)/legacy/C/planimeter.c \
-	$(top_srcdir)/legacy/Fortran/geodesic.for \
-	$(top_srcdir)/legacy/Fortran/geodesic.inc \
-	$(top_srcdir)/legacy/Fortran/geoddirect.for \
-	$(top_srcdir)/legacy/Fortran/geodinverse.for \
-	$(top_srcdir)/legacy/Fortran/ngscommon.for \
-	$(top_srcdir)/legacy/Fortran/ngsforward.for \
-	$(top_srcdir)/legacy/Fortran/ngsinverse.for \
-	$(top_srcdir)/legacy/Fortran/planimeter.for
-
 doc: html/index.html
 
 if HAVE_DOXYGEN
@@ -112,9 +98,7 @@ manpages: $(MANPAGES)
 	touch $@
 
 html/index.html: manpages doxyfile.in GeographicLib.dox.in \
-	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(FIGURES) \
-	doxyfile-c.in geodesic-c.dox doxyfile-for.in geodesic-for.dox \
-	$(LEGACYFILES)
+	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(FIGURES)
 	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \
 	$(top_srcdir)/LICENSE.txt html/
 	sed -e "s%@PROJECT_VERSION@%$(VERSION)%g" \
@@ -123,14 +107,6 @@ html/index.html: manpages doxyfile.in GeographicLib.dox.in \
 	-e "s%@PROJECT_BINARY_DIR@%..%g" \
 	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 	$(srcdir)/doxyfile.in | $(DOXYGEN) -
-	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
-	-e "s%@PROJECT_BINARY_DIR@%..%g" \
-	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
-	$(srcdir)/doxyfile-c.in | $(DOXYGEN) -
-	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
-	-e "s%@PROJECT_BINARY_DIR@%..%g" \
-	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
-	$(srcdir)/doxyfile-for.in | $(DOXYGEN) -
 else
 html/index.html: index.html.in utilities.html.in
 	if test -d html; then rm -rf html/*; else mkdir html; fi
@@ -152,16 +128,3 @@ install-doc: html/index.html
 	-test -f `dirname $<`/search/search.js && \
 	$(INSTALL) -d $(htmldir)/search && \
 	$(INSTALL) -m 644 `dirname $<`/search/*.* $(htmldir)/search || true
-	-test -f `dirname $<`/C/index.html && \
-	$(INSTALL) -d $(htmldir)/C && \
-	$(INSTALL) -m 644 `dirname $<`/C/*.* $(htmldir)/C || true
-	-test -f `dirname $<`/C/search/search.js && \
-	$(INSTALL) -d $(htmldir)/C/search && \
-	$(INSTALL) -m 644 `dirname $<`/C/search/*.* $(htmldir)/C/search || true
-	-test -f `dirname $<`/Fortran/index.html && \
-	$(INSTALL) -d $(htmldir)/Fortran && \
-	$(INSTALL) -m 644 `dirname $<`/Fortran/*.* $(htmldir)/Fortran || true
-	-test -f `dirname $<`/Fortran/search/search.js && \
-	$(INSTALL) -d $(htmldir)/Fortran/search && \
-	$(INSTALL) -m 644 `dirname $<`/Fortran/search/*.* \
-	$(htmldir)/Fortran/search || true
