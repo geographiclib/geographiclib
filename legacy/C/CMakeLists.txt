@@ -13,10 +13,13 @@ if (WIN32)
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
 else ()
   set (CMAKE_C_FLAGS
-    "${CMAKE_C_FLAGS} -Wall -Wextra -Wno-array-bounds -pedantic -ansi")
+    "${CMAKE_C_FLAGS} -Wall -Wextra -Wno-array-bounds -pedantic")
+  if (NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ansi")
+  endif ()
 endif ()
 
-set (TOOLS direct inverse planimeter)
+set (TOOLS direct inverse planimeter geodtest)
 
 foreach (TOOL ${TOOLS})
   add_executable (${TOOL} ${TOOL}.c geodesic.c geodesic.h)

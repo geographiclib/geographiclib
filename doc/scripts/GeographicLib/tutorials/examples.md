@@ -33,7 +33,8 @@ directory, then [node](https://nodejs.org) can access it with
 var GeographicLib = require('./geographiclib');
 ```
 A similar prescription works if geographiclib.js is installed elsewhere
-in your filesystem, replacing "." above with the correct directory.
+in your filesystem, replacing "./" above with the correct directory.
+Note that the directory must begin with "./", "../", or "/".
 
 #### HTML with your own version of geographiclib.js
 

@@ -302,8 +302,9 @@ Here are the steps to compile and install GeographicLib:
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
     - JavaScript interface: OFF: doc/scripts; ON:
       share/doc/GeographicLib/scripts;
+    - NEW JavaScript interface: OFF: node_modules; ON: lib/node_modules;
     - Python interface: OFF: python; ON: lib/python/site-packages;
-    - MATLAB interface: OFF: matlab; ON: share/matlab;
+    - MATLAB interface: OFF: matlab; ON: share/matlab.
     .
   - <code>CMAKE_INSTALL_PREFIX</code> (default: <code>/usr/local</code>
     on non-Windows systems, <code>C:/Program Files/GeographicLib</code>
@@ -7054,6 +7055,9 @@ git repository for GeographicLib</a>.
      JavaScript, C, and Python implementations (it was never
      documented).  Maxima, MATLAB, and Fortran implementations never
      included this behavior.
+   - Implement LatFix for Fortran; <b>caution</b>: this clamps the
+     latitude to [-90,90] instead of flagging bad latitudes with NaNs
+     (impossible since Fortran 77 does not support NaNs).
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
    (released 2015-08-14)

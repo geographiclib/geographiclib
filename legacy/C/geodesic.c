@@ -1700,8 +1700,12 @@ void accneg(real s[]) {
 }
 
 void geod_polygon_init(struct geod_polygon* p, boolx polylinep) {
-  p->lat0 = p->lon0 = p->lat = p->lon = NaN;
   p->polyline = (polylinep != 0);
+  geod_polygon_clear(p);
+}
+
+void geod_polygon_clear(struct geod_polygon* p) {
+  p->lat0 = p->lon0 = p->lat = p->lon = NaN;
   accini(p->P);
   accini(p->A);
   p->num = p->crossings = 0;

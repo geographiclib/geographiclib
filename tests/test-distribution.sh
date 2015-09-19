@@ -282,10 +282,11 @@ python3 tester.py
 cp -pr $TEMP/relc/GeographicLib-$VERSION/legacy $TEMP/
 for l in C Fortran; do
     (
-      mkdir $TEMP/legacy/$l/BUILD
-      cd $TEMP/legacy/$l/BUILD
-      cmake ..
-      make -j$NUMCPUS
+	mkdir $TEMP/legacy/$l/BUILD
+	cd $TEMP/legacy/$l/BUILD
+	cmake ..
+	make -j$NUMCPUS
+	./geodtest
     )
 done
 

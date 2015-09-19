@@ -107,16 +107,31 @@ class GeodesicTest(unittest.TestCase):
         for l in GeodesicTest.testcases:
             (lat1, lon1, azi1, lat2, lon2, azi2,
              s12, a12, m12, M12, M21, S12) = l
-            inv = Geodesic.WGS84.Direct(lat1, lon1, azi1, s12,
+            dir = Geodesic.WGS84.Direct(lat1, lon1, azi1, s12,
                                         Geodesic.ALL | Geodesic.LONG_UNROLL)
-            self.assertAlmostEqual(lat2, inv["lat2"], delta = 1e-13)
-            self.assertAlmostEqual(lon2, inv["lon2"], delta = 1e-13)
-            self.assertAlmostEqual(azi2, inv["azi2"], delta = 1e-13)
-            self.assertAlmostEqual(a12, inv["a12"], delta = 1e-13)
-            self.assertAlmostEqual(m12, inv["m12"], delta = 1e-8)
-            self.assertAlmostEqual(M12, inv["M12"], delta = 1e-15)
-            self.assertAlmostEqual(M21, inv["M21"], delta = 1e-15)
-            self.assertAlmostEqual(S12, inv["S12"], delta = 0.1)
+            self.assertAlmostEqual(lat2, dir["lat2"], delta = 1e-13)
+            self.assertAlmostEqual(lon2, dir["lon2"], delta = 1e-13)
+            self.assertAlmostEqual(azi2, dir["azi2"], delta = 1e-13)
+            self.assertAlmostEqual(a12, dir["a12"], delta = 1e-13)
+            self.assertAlmostEqual(m12, dir["m12"], delta = 1e-8)
+            self.assertAlmostEqual(M12, dir["M12"], delta = 1e-15)
+            self.assertAlmostEqual(M21, dir["M21"], delta = 1e-15)
+            self.assertAlmostEqual(S12, dir["S12"], delta = 0.1)
+
+    def test_arcdirect(self):
+        for l in GeodesicTest.testcases:
+            (lat1, lon1, azi1, lat2, lon2, azi2,
+             s12, a12, m12, M12, M21, S12) = l
+            dir = Geodesic.WGS84.ArcDirect(lat1, lon1, azi1, a12,
+                                           Geodesic.ALL | Geodesic.LONG_UNROLL)
+            self.assertAlmostEqual(lat2, dir["lat2"], delta = 1e-13)
+            self.assertAlmostEqual(lon2, dir["lon2"], delta = 1e-13)
+            self.assertAlmostEqual(azi2, dir["azi2"], delta = 1e-13)
+            self.assertAlmostEqual(s12, dir["s12"], delta = 1e-8)
+            self.assertAlmostEqual(m12, dir["m12"], delta = 1e-8)
+            self.assertAlmostEqual(M12, dir["M12"], delta = 1e-15)
+            self.assertAlmostEqual(M21, dir["M21"], delta = 1e-15)
+            self.assertAlmostEqual(S12, dir["S12"], delta = 0.1)
 
 class GeodSolveTest(unittest.TestCase):
 
@@ -127,10 +142,10 @@ class GeodSolveTest(unittest.TestCase):
         self.assertAlmostEqual(inv["s12"], 5853226, delta = 0.5)
 
     def test_GeodSolve1(self):
-        inv = Geodesic.WGS84.Direct(40.63972222, -73.77888889, 53.5, 5850e3)
-        self.assertAlmostEqual(inv["lat2"], 49.01467, delta = 0.5e-5)
-        self.assertAlmostEqual(inv["lon2"], 2.56106, delta = 0.5e-5)
-        self.assertAlmostEqual(inv["azi2"], 111.62947, delta = 0.5e-5)
+        dir = Geodesic.WGS84.Direct(40.63972222, -73.77888889, 53.5, 5850e3)
+        self.assertAlmostEqual(dir["lat2"], 49.01467, delta = 0.5e-5)
+        self.assertAlmostEqual(dir["lon2"], 2.56106, delta = 0.5e-5)
+        self.assertAlmostEqual(dir["azi2"], 111.62947, delta = 0.5e-5)
 
     def test_GeodSolve2(self):
         # Check fix for antipodal prolate bug found 2010-09-04
@@ -152,18 +167,18 @@ class GeodSolveTest(unittest.TestCase):
 
     def test_GeodSolve5(self):
         # Check fix for point2=pole bug found 2010-05-03
-        inv = Geodesic.WGS84.Direct(0.01777745589997, 30, 0, 10e6)
-        self.assertAlmostEqual(inv["lat2"], 90, delta = 0.5e-5)
-        if inv["lon2"] < 0:
-            self.assertAlmostEqual(inv["lon2"], -150, delta = 0.5e-5)
-            self.assertAlmostEqual(inv["azi2"], -180, delta = 0.5e-5)
+        dir = Geodesic.WGS84.Direct(0.01777745589997, 30, 0, 10e6)
+        self.assertAlmostEqual(dir["lat2"], 90, delta = 0.5e-5)
+        if dir["lon2"] < 0:
+            self.assertAlmostEqual(dir["lon2"], -150, delta = 0.5e-5)
+            self.assertAlmostEqual(dir["azi2"], -180, delta = 0.5e-5)
         else:
-            self.assertAlmostEqual(inv["lon2"], 30, delta = 0.5e-5)
-            self.assertAlmostEqual(inv["azi2"], 0, delta = 0.5e-5)
+            self.assertAlmostEqual(dir["lon2"], 30, delta = 0.5e-5)
+            self.assertAlmostEqual(dir["azi2"], 0, delta = 0.5e-5)
 
     def test_GeodSolve6(self):
         # Check fix for volatile sbet12a bug found 2011-06-25 (gcc 4.4.4
-        # x86 -O3).  Found again on 2012-03-27 with tdm-mingw32 (g++ # 4.6.1).
+        # x86 -O3).  Found again on 2012-03-27 with tdm-mingw32 (g++ 4.6.1).
         inv = Geodesic.WGS84.Inverse(88.202499451857, 0,
                                      -88.202499451857, 179.981022032992859592)
         self.assertAlmostEqual(inv["s12"], 20003898.214, delta = 0.5e-3)
@@ -237,7 +252,6 @@ class GeodSolveTest(unittest.TestCase):
         self.assertAlmostEqual(dir["lat2"], -39, delta = 1)
         self.assertAlmostEqual(dir["lon2"], 105, delta = 1)
         self.assertAlmostEqual(dir["azi2"], -170, delta = 1)
-        line = Geodesic.WGS84.Line(40, -75, -10)
         dir = line.Position(2e7)
         self.assertAlmostEqual(dir["lat2"], -39, delta = 1)
         self.assertAlmostEqual(dir["lon2"], 105, delta = 1)
@@ -253,8 +267,8 @@ class GeodSolveTest(unittest.TestCase):
     def test_GeodSolve28(self):
         # Check 0/0 problem with area calculation on sphere 2015-09-08
         geod = Geodesic(6.4e6, 0)
-        dir = geod.Inverse(1, 2, 3, 4, Geodesic.AREA)
-        self.assertAlmostEqual(dir["S12"], 49911046115.0, delta = 0.5)
+        inv = geod.Inverse(1, 2, 3, 4, Geodesic.AREA)
+        self.assertAlmostEqual(inv["S12"], 49911046115.0, delta = 0.5)
 
     def test_GeodSolve30(self):
         # Check for bad placement of assignment of r.a12 with |f| > 0.01 (bug in

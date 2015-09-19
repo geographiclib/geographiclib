@@ -200,7 +200,7 @@
      +    C1a(nC1), C1pa(nC1p), C2a(nC2), C3a(nC3-1), C4a(0:nC4-1)
 
       double precision csmgt, atanhx, hypotx,
-     +    AngNm, AngRnd, TrgSum, A1m1f, A2m1f, A3f, atn2dx
+     +    AngNm, AngRnd, TrgSum, A1m1f, A2m1f, A3f, atn2dx, LatFix
       logical arcmod, unroll, arcp, redlp, scalp, areap
       double precision e2, f1, ep2, n, b, c2,
      +    salp0, calp0, k2, eps,
@@ -252,7 +252,7 @@
 * Guard against underflow in salp0
       call sncsdx(AngRnd(azi1), salp1, calp1)
 
-      call sncsdx(AngRnd(lat1), sbet1, cbet1)
+      call sncsdx(AngRnd(LatFix(lat1)), sbet1, cbet1)
       sbet1 = f1 * sbet1
       call norm2(sbet1, cbet1)
 * Ensure cbet1 = +dbleps at poles
@@ -539,7 +539,7 @@
      +    Ca(nC)
 
       double precision csmgt, atanhx, hypotx,
-     +    AngDif, AngRnd, TrgSum, Lam12f, InvSta, atn2dx
+     +    AngDif, AngRnd, TrgSum, Lam12f, InvSta, atn2dx, LatFix
       integer latsgn, lonsgn, swapp, numit
       logical arcp, redlp, scalp, areap, merid, tripn, tripb
 
@@ -606,8 +606,8 @@
       end if
       lon12 = lon12 * lonsgn
 * If really close to the equator, treat as on equator.
-      lat1x = AngRnd(lat1)
-      lat2x = AngRnd(lat2)
+      lat1x = AngRnd(LatFix(lat1))
+      lat2x = AngRnd(LatFix(lat2))
 * Swap points so that point with higher (abs) latitude is point 1
       if (abs(lat1x) .ge. abs(lat2x)) then
         swapp = 1
@@ -1288,7 +1288,8 @@
 * really short lines
         salp2 = cbet1 * somg12
         calp2 = sbet12 - cbet1 * sbet2 *
-     +      csmgt(somg12**2 / (1 + comg12), 1 - comg12, comg12 .ge. 0)
+     +      csmgt(somg12**2 / (1 + max(0d0, comg12)),
+     +      1 - comg12, comg12 .ge. 0)
         call norm2(salp2, calp2)
 * Set return value
         sig12 = atan2(ssig12, csig12)
@@ -1845,6 +1846,20 @@
         AngNm = AngNm + 360
       else if (AngNm .ge. 180) then
         AngNm = AngNm - 360
+      end if
+
+      return
+      end
+
+      double precision function LatFix(x)
+* input
+      double precision x
+
+      LatFix = x
+      if (x .gt. 90) then
+        LatFix = 90
+      else if (x .lt. -90) then
+        LatFix = -90
       end if
 
       return

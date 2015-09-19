@@ -157,6 +157,28 @@ public class GeodesicTest {
   }
 
   @Test
+  public void ArcDirectCheck() {
+    for (int i = 0; i < testcases.length; ++i) {
+      double
+        lat1 = testcases[i][0], lon1 = testcases[i][1], azi1 = testcases[i][2],
+        lat2 = testcases[i][3], lon2 = testcases[i][4], azi2 = testcases[i][5],
+        s12 = testcases[i][6], a12 = testcases[i][7], m12 = testcases[i][8],
+        M12 = testcases[i][9], M21 = testcases[i][10], S12 = testcases[i][11];
+      GeodesicData dir = Geodesic.WGS84.ArcDirect(lat1, lon1, azi1, a12,
+                                               GeodesicMask.ALL |
+                                               GeodesicMask.LONG_UNROLL);
+      assertEquals(lat2, dir.lat2, 1e-13);
+      assertEquals(lon2, dir.lon2, 1e-13);
+      assertEquals(azi2, dir.azi2, 1e-13);
+      assertEquals(s12, dir.s12, 1e-8);
+      assertEquals(m12, dir.m12, 1e-8);
+      assertEquals(M12, dir.M12, 1e-15);
+      assertEquals(M21, dir.M21, 1e-15);
+      assertEquals(S12, dir.S12, 0.1);
+    }
+  }
+
+  @Test
   public void GeodSolve0() {
     GeodesicData inv = Geodesic.WGS84.Inverse(40.6, -73.8,
                                               49.01666667, 2.55);
@@ -167,11 +189,11 @@ public class GeodesicTest {
 
   @Test
   public void GeodSolve1() {
-    GeodesicData inv = Geodesic.WGS84.Direct(40.63972222, -73.77888889,
+    GeodesicData dir = Geodesic.WGS84.Direct(40.63972222, -73.77888889,
                                              53.5, 5850e3);
-    assertEquals(inv.lat2, 49.01467, 0.5e-5);
-    assertEquals(inv.lon2, 2.56106, 0.5e-5);
-    assertEquals(inv.azi2, 111.62947, 0.5e-5);
+    assertEquals(dir.lat2, 49.01467, 0.5e-5);
+    assertEquals(dir.lon2, 2.56106, 0.5e-5);
+    assertEquals(dir.azi2, 111.62947, 0.5e-5);
   }
 
   @Test
@@ -199,21 +221,21 @@ public class GeodesicTest {
   @Test
   public void GeodSolve5() {
     // Check fix for point2=pole bug found 2010-05-03
-    GeodesicData inv = Geodesic.WGS84.Direct(0.01777745589997, 30, 0, 10e6);
-    assertEquals(inv.lat2, 90, 0.5e-5);
-    if (inv.lon2 < 0) {
-      assertEquals(inv.lon2, -150, 0.5e-5);
-      assertEquals(inv.azi2, -180, 0.5e-5);
+    GeodesicData dir = Geodesic.WGS84.Direct(0.01777745589997, 30, 0, 10e6);
+    assertEquals(dir.lat2, 90, 0.5e-5);
+    if (dir.lon2 < 0) {
+      assertEquals(dir.lon2, -150, 0.5e-5);
+      assertEquals(dir.azi2, -180, 0.5e-5);
     } else {
-      assertEquals(inv.lon2, 30, 0.5e-5);
-      assertEquals(inv.azi2, 0, 0.5e-5);
+      assertEquals(dir.lon2, 30, 0.5e-5);
+      assertEquals(dir.azi2, 0, 0.5e-5);
     }
   }
 
   @Test
   public void GeodSolve6() {
     // Check fix for volatile sbet12a bug found 2011-06-25 (gcc 4.4.4
-    // x86 -O3).  Found again on 2012-03-27 with tdm-mingw32 (g++ // 4.6.1).
+    // x86 -O3).  Found again on 2012-03-27 with tdm-mingw32 (g++ 4.6.1).
     GeodesicData inv =
       Geodesic.WGS84.Inverse(88.202499451857, 0,
                              -88.202499451857, 179.981022032992859592);
@@ -228,7 +250,7 @@ public class GeodesicTest {
 
   @Test
   public void GeodSolve9() {
-    // Check fix for volatile x bug found 2011-06-25 (gcc 4.4.4 x86 -O3);
+    // Check fix for volatile x bug found 2011-06-25 (gcc 4.4.4 x86 -O3)
     GeodesicData inv =
       Geodesic.WGS84.Inverse(56.320923501171, 0,
                              -56.320923501171, 179.664747671772880215);
@@ -303,7 +325,6 @@ public class GeodesicTest {
     assertEquals(dir.lat2, -39, 1);
     assertEquals(dir.lon2, 105, 1);
     assertEquals(dir.azi2, -170, 1);
-    line = Geodesic.WGS84.Line(40, -75, -10);
     dir = line.Position(2e7);
     assertEquals(dir.lat2, -39, 1);
     assertEquals(dir.lon2, 105, 1);
@@ -323,8 +344,8 @@ public class GeodesicTest {
   public void GeodSolve28() {
     // Check 0/0 problem with area calculation on sphere 2015-09-08
     Geodesic geod = new Geodesic(6.4e6, 0);
-    GeodesicData dir = geod.Inverse(1, 2, 3, 4, GeodesicMask.AREA);
-    assertEquals(dir.S12, 49911046115.0, 0.5);
+    GeodesicData inv = geod.Inverse(1, 2, 3, 4, GeodesicMask.AREA);
+    assertEquals(inv.S12, 49911046115.0, 0.5);
   }
 
   @Test

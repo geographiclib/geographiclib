@@ -564,6 +564,13 @@ extern "C" {
   void geod_polygon_init(struct geod_polygon* p, int polylinep);
 
   /**
+   * Clear the polygon, allowing a new polygon to be started.
+   *
+   * @param[in,out] p a pointer to the object to be cleared.
+   **********************************************************************/
+  void geod_polygon_clear(struct geod_polygon* p);
+
+  /**
    * Add a point to the polygon or polyline.
    *
    * @param[in] g a pointer to the geod_geodesic object specifying the

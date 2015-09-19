@@ -76,12 +76,13 @@ if (JS_BUILD_MIN)
 endif ()
 
 # "make javascript" will reconfigure cmake if necessary, since
-# geographiclib.js is created during configuration.
+# geographiclib.js and geographiclib.min.js are created during
+# configuration.
 add_custom_command (OUTPUT ${JS_TARGETS}
   DEPENDS ${JSSCRIPTS} HEADER.js
   COMMAND ${CMAKE_COMMAND} ARGS "."
   WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-add_custom_target (javascript ALL DEPENDS geographiclib.js)
+add_custom_target (javascript ALL DEPENDS ${JS_TARGETS})
 
 if (COMMON_INSTALL_PATH)
   set (INSTALL_SCRIPTS_DIR "share/doc/GeographicLib/scripts")
