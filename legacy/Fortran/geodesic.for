@@ -1856,11 +1856,9 @@
       double precision x
 
       LatFix = x
-      if (x .gt. 90) then
-        LatFix = 90
-      else if (x .lt. -90) then
-        LatFix = -90
-      end if
+      if (.not. (abs(x) .gt. 90)) return
+* concoct a NaN
+      LatFix = sqrt(90 - abs(x))
 
       return
       end

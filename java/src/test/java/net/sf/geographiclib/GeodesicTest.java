@@ -333,15 +333,6 @@ public class GeodesicTest {
 
   @Test
   public void GeodSolve26() {
-    // Check max(-0.0,+0.0) issue 2015-08-22
-    GeodesicData inv = Geodesic.WGS84.Inverse(0, 0, 0, 179.5);
-    assertEquals(inv.azi1, 55.96650, 0.5e-5);
-    assertEquals(inv.azi2, 124.03350, 0.5e-5);
-    assertEquals(inv.s12, 19980862, 0.5);
-  }
-
-  @Test
-  public void GeodSolve28() {
     // Check 0/0 problem with area calculation on sphere 2015-09-08
     Geodesic geod = new Geodesic(6.4e6, 0);
     GeodesicData inv = geod.Inverse(1, 2, 3, 4, GeodesicMask.AREA);
@@ -349,7 +340,7 @@ public class GeodesicTest {
   }
 
   @Test
-  public void GeodSolve30() {
+  public void GeodSolve28() {
     // Check for bad placement of assignment of r.a12 with |f| > 0.01 (bug in
     // Java implementation fixed on 2015-05-19).
     Geodesic geod = new Geodesic(6.4e6, 0.1);
@@ -358,7 +349,7 @@ public class GeodesicTest {
   }
 
   @Test
-  public void GeodSolve31() {
+  public void GeodSolve29() {
     // Check longitude unrolling with inverse calculation 2015-09-16
     GeodesicData dir = Geodesic.WGS84.Inverse(0, 539, 0, 181);
     assertEquals(dir.lon1, 179, 1e-10);
@@ -370,6 +361,59 @@ public class GeodesicTest {
     assertEquals(dir.lon1, 539, 1e-10);
     assertEquals(dir.lon2, 541, 1e-10);
     assertEquals(dir.s12, 222639, 0.5);
+  }
+
+  @Test
+  public void GeodSolve33() {
+    // Check max(-0.0,+0.0) issues 2015-08-22 (triggered by bugs in Octave --
+    // sind(-0.0) = +0.0 -- and in some version of Visual Studio --
+    // fmod(-0.0, 360.0) = +0.0.
+    GeodesicData inv = Geodesic.WGS84.Inverse(0, 0, 0, 179);
+    assertEquals(inv.azi1, 90.00000, 0.5e-5);
+    assertEquals(inv.azi2, 90.00000, 0.5e-5);
+    assertEquals(inv.s12, 19926189, 0.5);
+    inv = Geodesic.WGS84.Inverse(0, 0, 0, 179.5);
+    assertEquals(inv.azi1, 55.96650, 0.5e-5);
+    assertEquals(inv.azi2, 124.03350, 0.5e-5);
+    assertEquals(inv.s12, 19980862, 0.5);
+    inv = Geodesic.WGS84.Inverse(0, 0, 0, 180);
+    assertEquals(inv.azi1, 0.00000, 0.5e-5);
+    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(inv.s12, 20003931, 0.5);
+    inv = Geodesic.WGS84.Inverse(0, 0, 1, 180);
+    assertEquals(inv.azi1, 0.00000, 0.5e-5);
+    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(inv.s12, 19893357, 0.5);
+    Geodesic geod = new Geodesic(6.4e6, 0);
+    inv = geod.Inverse(0, 0, 0, 179);
+    assertEquals(inv.azi1, 90.00000, 0.5e-5);
+    assertEquals(inv.azi2, 90.00000, 0.5e-5);
+    assertEquals(inv.s12, 19994492, 0.5);
+    inv = geod.Inverse(0, 0, 0, 180);
+    assertEquals(inv.azi1, 0.00000, 0.5e-5);
+    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(inv.s12, 20106193, 0.5);
+    inv = geod.Inverse(0, 0, 1, 180);
+    assertEquals(inv.azi1, 0.00000, 0.5e-5);
+    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(inv.s12, 19994492, 0.5);
+    geod = new Geodesic(6.4e6, -1/300.0);
+    inv = geod.Inverse(0, 0, 0, 179);
+    assertEquals(inv.azi1, 90.00000, 0.5e-5);
+    assertEquals(inv.azi2, 90.00000, 0.5e-5);
+    assertEquals(inv.s12, 19994492, 0.5);
+    inv = geod.Inverse(0, 0, 0, 180);
+    assertEquals(inv.azi1, 90.00000, 0.5e-5);
+    assertEquals(inv.azi2, 90.00000, 0.5e-5);
+    assertEquals(inv.s12, 20106193, 0.5);
+    inv = geod.Inverse(0, 0, 0.5, 180);
+    assertEquals(inv.azi1, 33.02493, 0.5e-5);
+    assertEquals(inv.azi2, 146.97364, 0.5e-5);
+    assertEquals(inv.s12, 20082617, 0.5);
+    inv = geod.Inverse(0, 0, 1, 180);
+    assertEquals(inv.azi1, 0.00000, 0.5e-5);
+    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(inv.s12, 20027270, 0.5);
   }
 
   @Test

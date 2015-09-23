@@ -361,19 +361,6 @@ int GeodSolve17() {
   }
 
 int GeodSolve26() {
-  /* Check max(-0.0,+0.0) issue 2015-08-22 */
-  double azi1, azi2, s12;
-  struct geod_geodesic g;
-  int result = 0;
-  geod_init(&g, wgs84_a, wgs84_f);
-  geod_inverse(&g, 0, 0, 0, 179.5, &s12, &azi1, &azi2);
-  result += assertEquals(azi1, 55.96650, 0.5e-5);
-  result += assertEquals(azi2, 124.03350, 0.5e-5);
-  result += assertEquals(s12, 19980862, 0.5);
-  return result;
-}
-
-int GeodSolve28() {
   /* Check 0/0 problem with area calculation on sphere 2015-09-08 */
   double S12;
   struct geod_geodesic g;
@@ -384,7 +371,7 @@ int GeodSolve28() {
   return result;
 }
 
-int GeodSolve30() {
+int GeodSolve28() {
   /* Check for bad placement of assignment of r.a12 with |f| > 0.01 (bug in
    * Java implementation fixed on 2015-05-19). */
   double a12;
@@ -393,6 +380,64 @@ int GeodSolve30() {
   geod_init(&g, 6.4e6, 0.1);
   a12 = geod_gendirect(&g, 1, 2, 10, 0, 5e6, 0, 0, 0, 0, 0, 0, 0, 0);
   result += assertEquals(a12, 48.55570690, 0.5e-8);
+  return result;
+}
+
+int GeodSolve33() {
+  /* Check max(-0.0,+0.0) issues 2015-08-22 (triggered by bugs in Octave --
+   * sind(-0.0) = +0.0 -- and in some version of Visual Studio --
+   * fmod(-0.0, 360.0) = +0.0. */
+  double azi1, azi2, s12;
+  struct geod_geodesic g;
+  int result = 0;
+  geod_init(&g, wgs84_a, wgs84_f);
+  geod_inverse(&g, 0, 0, 0, 179, &s12, &azi1, &azi2);
+  result += assertEquals(azi1, 90.00000, 0.5e-5);
+  result += assertEquals(azi2, 90.00000, 0.5e-5);
+  result += assertEquals(s12, 19926189, 0.5);
+  geod_inverse(&g, 0, 0, 0, 179.5, &s12, &azi1, &azi2);
+  result += assertEquals(azi1, 55.96650, 0.5e-5);
+  result += assertEquals(azi2, 124.03350, 0.5e-5);
+  result += assertEquals(s12, 19980862, 0.5);
+  geod_inverse(&g, 0, 0, 0, 180, &s12, &azi1, &azi2);
+  result += assertEquals(azi1, 0.00000, 0.5e-5);
+  result += assertEquals(azi2, -180.00000, 0.5e-5);
+  result += assertEquals(s12, 20003931, 0.5);
+  geod_inverse(&g, 0, 0, 1, 180, &s12, &azi1, &azi2);
+  result += assertEquals(azi1, 0.00000, 0.5e-5);
+  result += assertEquals(azi2, -180.00000, 0.5e-5);
+  result += assertEquals(s12, 19893357, 0.5);
+  geod_init(&g, 6.4e6, 0);
+  geod_inverse(&g, 0, 0, 0, 179, &s12, &azi1, &azi2);
+  result += assertEquals(azi1, 90.00000, 0.5e-5);
+  result += assertEquals(azi2, 90.00000, 0.5e-5);
+  result += assertEquals(s12, 19994492, 0.5);
+  geod_inverse(&g, 0, 0, 0, 180, &s12, &azi1, &azi2);
+  result += assertEquals(azi1, 0.00000, 0.5e-5);
+  result += assertEquals(azi2, -180.00000, 0.5e-5);
+  result += assertEquals(s12, 20106193, 0.5);
+  geod_inverse(&g, 0, 0, 1, 180, &s12, &azi1, &azi2);
+  result += assertEquals(azi1, 0.00000, 0.5e-5);
+  result += assertEquals(azi2, -180.00000, 0.5e-5);
+  result += assertEquals(s12, 19994492, 0.5);
+  geod_init(&g, 6.4e6, -1/300.0);
+  geod_inverse(&g, 0, 0, 0, 179, &s12, &azi1, &azi2);
+  result += assertEquals(azi1, 90.00000, 0.5e-5);
+  result += assertEquals(azi2, 90.00000, 0.5e-5);
+  result += assertEquals(s12, 19994492, 0.5);
+  geod_inverse(&g, 0, 0, 0, 180, &s12, &azi1, &azi2);
+  result += assertEquals(azi1, 90.00000, 0.5e-5);
+  result += assertEquals(azi2, 90.00000, 0.5e-5);
+  result += assertEquals(s12, 20106193, 0.5);
+  geod_inverse(&g, 0, 0, 0.5, 180, &s12, &azi1, &azi2);
+  result += assertEquals(azi1, 33.02493, 0.5e-5);
+  result += assertEquals(azi2, 146.97364, 0.5e-5);
+  result += assertEquals(s12, 20082617, 0.5);
+  geod_inverse(&g, 0, 0, 1, 180, &s12, &azi1, &azi2);
+  result += assertEquals(azi1, 0.00000, 0.5e-5);
+  result += assertEquals(azi2, -180.00000, 0.5e-5);
+  result += assertEquals(s12, 20027270, 0.5);
+
   return result;
 }
 
@@ -534,7 +579,7 @@ int main() {
   if ((i = GeodSolve17())) {++n; printf("GeodSolve17 fail: %d\n", i);}
   if ((i = GeodSolve26())) {++n; printf("GeodSolve26 fail: %d\n", i);}
   if ((i = GeodSolve28())) {++n; printf("GeodSolve28 fail: %d\n", i);}
-  if ((i = GeodSolve30())) {++n; printf("GeodSolve30 fail: %d\n", i);}
+  if ((i = GeodSolve33())) {++n; printf("GeodSolve33 fail: %d\n", i);}
   if ((i = Planimeter0())) {++n; printf("Planimeter0 fail: %d\n", i);}
   if ((i = Planimeter5())) {++n; printf("Planimeter5 fail: %d\n", i);}
   if ((i = Planimeter6())) {++n; printf("Planimeter6 fail: %d\n", i);}

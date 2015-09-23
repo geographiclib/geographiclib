@@ -252,7 +252,7 @@ public class Geodesic {
     _f = f <= 1 ? f : 1/f;      // f > 1 behavior is DEPRECATED
     _f1 = 1 - _f;
     _e2 = _f * (2 - _f);
-    _ep2 = _e2 / GeoMath.sq(_f1);       // e2 / (1 - e2)
+    _ep2 = _e2 / GeoMath.sq(_f1); // e2 / (1 - e2)
     _n = _f / ( 2 - _f);
     _b = _a * _f1;
     _c2 = (GeoMath.sq(_a) + GeoMath.sq(_b) *

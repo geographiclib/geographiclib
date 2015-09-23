@@ -76,9 +76,11 @@ BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then
     DEVELSOURCE=$HOME/geographiclib
+    WINDEVELSOURCE=/u/geographiclib
     WINDOWSBUILD=/var/tmp
 else
     DEVELSOURCE=/u/geographiclib
+    WINDEVELSOURCE=/u/geographiclib
     WINDOWSBUILD=/u/temp
 fi
 WINDOWSBUILDWIN=u:/temp
@@ -177,7 +179,7 @@ while read ver x64; do
 	echo $cmake --build . --config Release --target INSTALL
 	echo $cmake --build . --config Release --target PACKAGE
 	test "$installer" &&
-	echo cp "$installer" $DEVELSOURCE/ || true
+	echo cp "$installer" $WINDEVELSOURCE/ || true
     ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
     chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
 done <<EOF

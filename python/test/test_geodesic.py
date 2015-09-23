@@ -258,26 +258,19 @@ class GeodSolveTest(unittest.TestCase):
         self.assertAlmostEqual(dir["azi2"], -170, delta = 1)
 
     def test_GeodSolve26(self):
-        # Check max(-0.0,+0.0) issue 2015-08-22
-        inv = Geodesic.WGS84.Inverse(0, 0, 0, 179.5)
-        self.assertAlmostEqual(inv["azi1"], 55.96650, delta = 0.5e-5)
-        self.assertAlmostEqual(inv["azi2"], 124.03350, delta = 0.5e-5)
-        self.assertAlmostEqual(inv["s12"], 19980862, delta = 0.5)
-
-    def test_GeodSolve28(self):
         # Check 0/0 problem with area calculation on sphere 2015-09-08
         geod = Geodesic(6.4e6, 0)
         inv = geod.Inverse(1, 2, 3, 4, Geodesic.AREA)
         self.assertAlmostEqual(inv["S12"], 49911046115.0, delta = 0.5)
 
-    def test_GeodSolve30(self):
+    def test_GeodSolve28(self):
         # Check for bad placement of assignment of r.a12 with |f| > 0.01 (bug in
         # Java implementation fixed on 2015-05-19).
         geod = Geodesic(6.4e6, 0.1)
         dir = geod.Direct(1, 2, 10, 5e6)
         self.assertAlmostEqual(dir["a12"], 48.55570690, delta = 0.5e-8)
 
-    def test_GeodSolve31(self):
+    def test_GeodSolve29(self):
         # Check longitude unrolling with inverse calculation 2015-09-16
         dir = Geodesic.WGS84.Inverse(0, 539, 0, 181)
         self.assertAlmostEqual(dir["lon1"], 179, delta = 1e-10)
@@ -288,6 +281,57 @@ class GeodSolveTest(unittest.TestCase):
         self.assertAlmostEqual(dir["lon1"], 539, delta = 1e-10)
         self.assertAlmostEqual(dir["lon2"], 541, delta = 1e-10)
         self.assertAlmostEqual(dir["s12"], 222639, delta = 0.5)
+
+    def test_GeodSolve33(self):
+        # Check max(-0.0,+0.0) issues 2015-08-22 (triggered by bugs in
+        # Octave -- sind(-0.0) = +0.0 -- and in some version of Visual
+        # Studio -- fmod(-0.0, 360.0) = +0.0.
+        inv = Geodesic.WGS84.Inverse(0, 0, 0, 179)
+        self.assertAlmostEqual(inv["azi1"], 90.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["azi2"], 90.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["s12"], 19926189, delta = 0.5)
+        inv = Geodesic.WGS84.Inverse(0, 0, 0, 179.5)
+        self.assertAlmostEqual(inv["azi1"], 55.96650, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["azi2"], 124.03350, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["s12"], 19980862, delta = 0.5)
+        inv = Geodesic.WGS84.Inverse(0, 0, 0, 180)
+        self.assertAlmostEqual(inv["azi1"], 0.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["azi2"], -180.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["s12"], 20003931, delta = 0.5)
+        inv = Geodesic.WGS84.Inverse(0, 0, 1, 180)
+        self.assertAlmostEqual(inv["azi1"], 0.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["azi2"], -180.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["s12"], 19893357, delta = 0.5)
+        geod = Geodesic(6.4e6, 0)
+        inv = geod.Inverse(0, 0, 0, 179)
+        self.assertAlmostEqual(inv["azi1"], 90.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["azi2"], 90.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["s12"], 19994492, delta = 0.5)
+        inv = geod.Inverse(0, 0, 0, 180)
+        self.assertAlmostEqual(inv["azi1"], 0.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["azi2"], -180.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["s12"], 20106193, delta = 0.5)
+        inv = geod.Inverse(0, 0, 1, 180)
+        self.assertAlmostEqual(inv["azi1"], 0.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["azi2"], -180.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["s12"], 19994492, delta = 0.5)
+        geod = Geodesic(6.4e6, -1/300.0)
+        inv = geod.Inverse(0, 0, 0, 179)
+        self.assertAlmostEqual(inv["azi1"], 90.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["azi2"], 90.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["s12"], 19994492, delta = 0.5)
+        inv = geod.Inverse(0, 0, 0, 180)
+        self.assertAlmostEqual(inv["azi1"], 90.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["azi2"], 90.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["s12"], 20106193, delta = 0.5)
+        inv = geod.Inverse(0, 0, 0.5, 180)
+        self.assertAlmostEqual(inv["azi1"], 33.02493, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["azi2"], 146.97364, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["s12"], 20082617, delta = 0.5)
+        inv = geod.Inverse(0, 0, 1, 180)
+        self.assertAlmostEqual(inv["azi1"], 0.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["azi2"], -180.00000, delta = 0.5e-5)
+        self.assertAlmostEqual(inv["s12"], 20027270, delta = 0.5);
 
 class PlanimeterTest(unittest.TestCase):
 

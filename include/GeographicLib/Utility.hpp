@@ -383,6 +383,11 @@ namespace GeographicLib {
      * @param[in] s the string to be converted.
      * @exception GeographicErr is \e s is not readable as a fraction of type T.
      * @return object of type T
+     *
+     * <b>NOTE</b>: The msys shell under Windows converts arguments which look
+     * like pathnames into their Windows equivalents.  As a result an argument
+     * like "-1/300" gets mangled into something unrecognizable.  The
+     * workaround is to put the sign on the denominator, e.g., "1/-300".
      **********************************************************************/
     template<typename T> static T fract(const std::string& s) {
       std::string::size_type delim = s.find('/');

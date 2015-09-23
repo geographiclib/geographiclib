@@ -583,28 +583,6 @@
       end
 
       integer function tstg26()
-* Check max(-0.0d0,+0.0d0) issue 2015-08-22
-      double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
-      double precision a, f
-      integer r, assert, omask
-      include 'geodesic.inc'
-
-* WGS84 values
-      a = 6378137d0
-      f = 1/298.257223563d0
-      omask = 0
-      r = 0
-      call invers(a, f, 0d0, 0d0, 0d0, 179.5d0,
-     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
-      r = r + assert(azi1, 55.96650d0, 0.5d-5)
-      r = r + assert(azi2, 124.03350d0, 0.5d-5)
-      r = r + assert(s12, 19980862d0, 0.5d0)
-
-      tstg26 = r
-      return
-      end
-
-      integer function tstg28()
 * Check 0/0 problem with area calculation on sphere 2015-09-08
       double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
       double precision a, f
@@ -619,11 +597,11 @@
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
       r = r + assert(SS12, 49911046115.0d0, 0.5d0)
 
-      tstg28 = r
+      tstg26 = r
       return
       end
 
-      integer function tstg30()
+      integer function tstg28()
 * Check fix for LONG_UNROLL bug found on 2015-05-07
       double precision lat2, lon2, azi2, a12, m12, MM12, MM21, SS12
       double precision a, f
@@ -639,7 +617,85 @@
      +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
       r = r + assert(a12, 48.55570690d0, 0.5d-8)
 
-      tstg30 = r
+      tstg28 = r
+      return
+      end
+
+      integer function tstg33()
+* Check max(-0.0,+0.0) issues 2015-08-22 (triggered by bugs in Octave --
+* sind(-0.0) = +0.0 -- and in some version of Visual Studio --
+* fmod(-0.0, 360.0) = +0.0.
+      double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
+      double precision a, f
+      integer r, assert, omask
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+      omask = 0
+      r = 0
+      call invers(a, f, 0d0, 0d0, 0d0, 179d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 90.00000d0, 0.5d-5)
+      r = r + assert(azi2, 90.00000d0, 0.5d-5)
+      r = r + assert(s12, 19926189d0, 0.5d0)
+      call invers(a, f, 0d0, 0d0, 0d0, 179.5d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 55.96650d0, 0.5d-5)
+      r = r + assert(azi2, 124.03350d0, 0.5d-5)
+      r = r + assert(s12, 19980862d0, 0.5d0)
+      call invers(a, f, 0d0, 0d0, 0d0, 180d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 0.00000d0, 0.5d-5)
+      r = r + assert(azi2, -180.00000d0, 0.5d-5)
+      r = r + assert(s12, 20003931d0, 0.5d0)
+      call invers(a, f, 0d0, 0d0, 1d0, 180d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 0.00000d0, 0.5d-5)
+      r = r + assert(azi2, -180.00000d0, 0.5d-5)
+      r = r + assert(s12, 19893357d0, 0.5d0)
+      a = 6.4d6
+      f = 0
+      call invers(a, f, 0d0, 0d0, 0d0, 179d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 90.00000d0, 0.5d-5)
+      r = r + assert(azi2, 90.00000d0, 0.5d-5)
+      r = r + assert(s12, 19994492d0, 0.5d0)
+      call invers(a, f, 0d0, 0d0, 0d0, 180d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 0.00000d0, 0.5d-5)
+      r = r + assert(azi2, -180.00000d0, 0.5d-5)
+      r = r + assert(s12, 20106193d0, 0.5d0)
+      call invers(a, f, 0d0, 0d0, 1d0, 180d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 0.00000d0, 0.5d-5)
+      r = r + assert(azi2, -180.00000d0, 0.5d-5)
+      r = r + assert(s12, 19994492d0, 0.5d0)
+      a = 6.4d6
+      f = -1/300.0d0
+      call invers(a, f, 0d0, 0d0, 0d0, 179d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 90.00000d0, 0.5d-5)
+      r = r + assert(azi2, 90.00000d0, 0.5d-5)
+      r = r + assert(s12, 19994492d0, 0.5d0)
+      call invers(a, f, 0d0, 0d0, 0d0, 180d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 90.00000d0, 0.5d-5)
+      r = r + assert(azi2, 90.00000d0, 0.5d-5)
+      r = r + assert(s12, 20106193d0, 0.5d0)
+      call invers(a, f, 0d0, 0d0, 0.5d0, 180d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 33.02493d0, 0.5d-5)
+      r = r + assert(azi2, 146.97364d0, 0.5d-5)
+      r = r + assert(s12, 20082617d0, 0.5d0)
+      call invers(a, f, 0d0, 0d0, 1d0, 180d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 0.00000d0, 0.5d-5)
+      r = r + assert(azi2, -180.00000d0, 0.5d-5)
+      r = r + assert(s12, 20027270d0, 0.5d0)
+
+      tstg33 = r
       return
       end
 
@@ -787,7 +843,7 @@
       integer n, i
       integer tstinv, tstdir, tstarc,
      +    tstg0, tstg1, tstg2, tstg5, tstg6, tstg9, tstg10, tstg11,
-     +    tstg12, tstg15, tstg17, tstg26, tstg28, tstg30,
+     +    tstg12, tstg15, tstg17, tstg26, tstg28, tstg33,
      +    tstp0, tstp5, tstp6, tstp12, tstp13
 
       n = 0
@@ -872,10 +928,10 @@
         n = n + 1
         print *, 'tstg28 file:', i
       end if
-      i = tstg30()
+      i = tstg33()
       if (i .gt. 0) then
         n = n + 1
-        print *, 'tstg30 file:', i
+        print *, 'tstg33 file:', i
       end if
       i = tstp0()
       if (i .gt. 0) then

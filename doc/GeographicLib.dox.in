@@ -1230,8 +1230,8 @@ You can visit http://geographiclib.sf.net/scripts/ to see which versions
 are available.
 
 Starting with version 1.45, this package is available as an
-<a href="https://www.npmjs.com">npm</a> package that can be used with
-<a href="https://nodejs.org">node</a>.  To install this as a node
+<a href="https://nodejs.org">node</a> package that can be installed with
+<a href="https://www.npmjs.com">npm</a>.  To install this as a node
 package, use \verbatim
   npm install geographiclib \endverbatim
 
@@ -7018,46 +7018,51 @@ git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.45</a>
    (released 2015-mm-dd)
-   - Fix problems related to max(-0.0, +0.0) returning -0.0 with some
-     languages.  (The only known case where this lead to incorrect
-     results is with the MATLAB implementation version 1.44.)
-   - Fix bug (introduced in version 1.42) in C++ implementation geodesic
-     area computation which causes NaNs to be returned in the case of a
-     sphere.
-   - Add Java implementation of the Gnomonic project (courtesy of
-     Sebastian Mattheis).
-   - Java version now requires Java 1.2 (released 1998-12).
-   - Add JUnit tests to Java implementation.
-   - Add unittest tests to Python implementation.
-   - Fix array size mismatch in MATLAB routine geoddistance by avoiding
-     calls to subfunctions with zero-length arrays.
-   - Fixes to tranmerc_{fwd,inv}.m so that they work with array and
-     mixed array/scalar arguments.
-   - Throw error on non-convergence in Gnomonic::Reverse if
-     GEOGRAPHICLIB_PRECISION &gt; 3.
-   - JavaScript changes:
+   - Fix BUG in solution of inverse geodesic caused by misbehavior of
+     some versions of Visual Studio on Windows (fmod(-0.0, 360.0)
+     returns +0.0 instead of -0.0) and Octave (sind(-0.0) returns +0.0
+     instead of -0.0).  These bugs were exposed because max(-0.0, +0.0)
+     returns -0.0 for some languages.
+   - Changes to JavaScript package:
      - clean up the implementation;
+     - it is a now a <a href="https://nodejs.org">node</a> package that
+       can be installed with n <a href="https://www.npmjs.com">npm</a>;
+     - make install now installs the node package in
+       <code>lib/node_modules/geographiclib</code>;
+     - add unit tests using mocha;
+     - add documentation via JSDoc;
      - fix bug Geodesic.GenInverse (this bug, introduced in version
        1.44, resulted in the wrong azimuth being reported for points at
-       the pole);
-     - the creation of the concatenated compressed version of the code,
-       geographiclib.js is now part of the build process;
-     - install geographiclib.js of the individual JavaScript source
-       files;
-     - package as an <a href="https://www.npmjs.com">npm</a> package;
-     - add mocha tests;
-     - add JSDoc documentation.
-   - Fixed bug, introduced in version 1.44, in the detection of C++11
-     math functions in configure.ac.
-   - Fixed bug in normalization of the area in Python package.
+       the pole).
+   - Changes to Java package:
+     - add implementation of Gnomonic projection (courtesy of Sebastian
+       Mattheis);
+     - add unit tests using JUnit;
+     - Java version 1.2 (released 1998-12) or later is now required.
+   - Changes to Python package:
+     - add unit tests using the unittest framework;
+     - fixed bug in normalization of the area.
+   - Changes to MATLAB package:
+     - fix array size mismatch in geoddistance by avoiding calls to
+       subfunctions with zero-length arrays;
+     - fix tranmerc_{fwd,inv} so that they work with arrays and
+       mixed array/scalar arguments.
    - Behavior of substituting 1/\e f for \e f if \e f > 1 is now
      <b>deprecated</b>.  This behavior has been removed from the
      JavaScript, C, and Python implementations (it was never
      documented).  Maxima, MATLAB, and Fortran implementations never
      included this behavior.
-   - Implement LatFix for Fortran; <b>caution</b>: this clamps the
-     latitude to [-90,90] instead of flagging bad latitudes with NaNs
-     (impossible since Fortran 77 does not support NaNs).
+   - Other changes:
+     - fix bug (introduced in version 1.42) in C++ implementation
+       geodesic area computation which causes NaNs to be returned in the
+       case of a sphere;
+     - fixed bug, introduced in version 1.44, in the detection of C++11
+       math functions in configure.ac;
+     - throw error on non-convergence in Gnomonic::Reverse if
+       GEOGRAPHICLIB_PRECISION &gt; 3;
+     - add geod_polygon_clear to C library;
+     - implement Math::LatFix for Fortran library;
+     - add test cases for the C and Fortran libraries.
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
    (released 2015-08-14)

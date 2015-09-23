@@ -61,7 +61,7 @@
    * @property {number} f the flattening.
    * @property {bool} polyline whether the PolygonArea object describes a
    *   polyline or a polygon.
-   * @property {number} the number of vertices so far.
+   * @property {number} num the number of vertices so far.
    * @property {number} lat the current latitude (degrees).
    * @property {number} lon the current longitude (degrees).
    * @summary Initialize a PolygonArea object.

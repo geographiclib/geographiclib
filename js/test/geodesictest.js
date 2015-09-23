@@ -315,22 +315,13 @@ describe("GeographicLib", function() {
     });
 
     it("GeodSolve26", function() {
-      // Check max(-0.0,+0.0) issue 2015-08-22
-      var geod = g.WGS84,
-          inv = geod.Inverse(0, 0, 0, 179.5);
-      assert.approx(inv.azi1, 55.96650, 0.5e-5);
-      assert.approx(inv.azi2, 124.03350, 0.5e-5);
-      assert.approx(inv.s12, 19980862, 0.5);
-    });
-
-    it("GeodSolve28", function() {
       // Check 0/0 problem with area calculation on sphere 2015-09-08
       var geod = new g.Geodesic(6.4e6, 0),
           inv = geod.Inverse(1, 2, 3, 4, g.AREA);
       assert.approx(inv.S12, 49911046115.0, 0.5);
     });
 
-    it("GeodSolve30", function() {
+    it("GeodSolve28", function() {
       // Check for bad placement of assignment of r.a12 with |f| > 0.01 (bug in
       // Java implementation fixed on 2015-05-19).
       var geod = new g.Geodesic(6.4e6, 0.1),
@@ -338,7 +329,7 @@ describe("GeographicLib", function() {
       assert.approx(dir.a12, 48.55570690, 0.5e-8);
     });
 
-    it("GeodSolve31", function() {
+    it("GeodSolve29", function() {
       // Check longitude unrolling with inverse calculation 2015-09-16
       var geod = g.WGS84,
           dir = geod.Inverse(0, 539, 0, 181);
@@ -351,6 +342,59 @@ describe("GeographicLib", function() {
       assert.approx(dir.s12, 222639, 0.5);
     });
   });
+
+    it("GeodSolve33", function() {
+      // Check max(-0.0,+0.0) issues 2015-08-22 (triggered by bugs in Octave --
+      // sind(-0.0) = +0.0 -- and in some version of Visual Studio --
+      // fmod(-0.0, 360.0) = +0.0.
+      var geod = g.WGS84,
+          inv = geod.Inverse(0, 0, 0, 179);
+      assert.approx(inv.azi1, 90.00000, 0.5e-5);
+      assert.approx(inv.azi2, 90.00000, 0.5e-5);
+      assert.approx(inv.s12, 19926189, 0.5);
+      inv = geod.Inverse(0, 0, 0, 179.5);
+      assert.approx(inv.azi1, 55.96650, 0.5e-5);
+      assert.approx(inv.azi2, 124.03350, 0.5e-5);
+      assert.approx(inv.s12, 19980862, 0.5);
+      inv = geod.Inverse(0, 0, 0, 180);
+      assert.approx(inv.azi1, 0.00000, 0.5e-5);
+      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(inv.s12, 20003931, 0.5);
+      inv = geod.Inverse(0, 0, 1, 180);
+      assert.approx(inv.azi1, 0.00000, 0.5e-5);
+      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(inv.s12, 19893357, 0.5);
+      geod = new g.Geodesic(6.4e6, 0);
+      inv = geod.Inverse(0, 0, 0, 179);
+      assert.approx(inv.azi1, 90.00000, 0.5e-5);
+      assert.approx(inv.azi2, 90.00000, 0.5e-5);
+      assert.approx(inv.s12, 19994492, 0.5);
+      inv = geod.Inverse(0, 0, 0, 180);
+      assert.approx(inv.azi1, 0.00000, 0.5e-5);
+      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(inv.s12, 20106193, 0.5);
+      inv = geod.Inverse(0, 0, 1, 180);
+      assert.approx(inv.azi1, 0.00000, 0.5e-5);
+      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(inv.s12, 19994492, 0.5);
+      geod = new g.Geodesic(6.4e6, -1/300.0);
+      inv = geod.Inverse(0, 0, 0, 179);
+      assert.approx(inv.azi1, 90.00000, 0.5e-5);
+      assert.approx(inv.azi2, 90.00000, 0.5e-5);
+      assert.approx(inv.s12, 19994492, 0.5);
+      inv = geod.Inverse(0, 0, 0, 180);
+      assert.approx(inv.azi1, 90.00000, 0.5e-5);
+      assert.approx(inv.azi2, 90.00000, 0.5e-5);
+      assert.approx(inv.s12, 20106193, 0.5);
+      inv = geod.Inverse(0, 0, 0.5, 180);
+      assert.approx(inv.azi1, 33.02493, 0.5e-5);
+      assert.approx(inv.azi2, 146.97364, 0.5e-5);
+      assert.approx(inv.s12, 20082617, 0.5);
+      inv = geod.Inverse(0, 0, 1, 180);
+      assert.approx(inv.azi1, 0.00000, 0.5e-5);
+      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(inv.s12, 20027270, 0.5);
+    });
 
   describe("Planimeter", function () {
 
