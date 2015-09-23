@@ -333,6 +333,18 @@ class GeodSolveTest(unittest.TestCase):
         self.assertAlmostEqual(inv["azi2"], -180.00000, delta = 0.5e-5)
         self.assertAlmostEqual(inv["s12"], 20027270, delta = 0.5);
 
+    def test_GeodSolve55(self):
+        # Check fix for nan + point on equator or pole not returning all nans in
+        # Geodesic::Inverse, found 2015-09-23.
+        inv = Geodesic.WGS84.Inverse(Math.nan, 0, 0, 90)
+        self.assertTrue(Math.isnan(inv["azi1"]))
+        self.assertTrue(Math.isnan(inv["azi2"]))
+        self.assertTrue(Math.isnan(inv["s12"]))
+        inv = Geodesic.WGS84.Inverse(Math.nan, 0, 90, 9)
+        self.assertTrue(Math.isnan(inv["azi1"]))
+        self.assertTrue(Math.isnan(inv["azi2"]))
+        self.assertTrue(Math.isnan(inv["s12"]))
+
 class PlanimeterTest(unittest.TestCase):
 
     from geographiclib.polygonarea import PolygonArea

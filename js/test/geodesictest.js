@@ -396,6 +396,21 @@ describe("GeographicLib", function() {
       assert.approx(inv.s12, 20027270, 0.5);
     });
 
+    it("GeodSolve55", function() {
+      // Check fix for nan + point on equator or pole not returning all nans in
+      // Geodesic::Inverse, found 2015-09-23.
+      var geod = g.WGS84,
+          dir = geod.Inverse(NaN, 0, 0, 90);
+      assert(isNaN(inv.azi1));
+      assert(isNaN(inv.azi2));
+      assert(isNaN(inv.s12));
+      dir = geod.Inverse(NaN, 0, 90, 9);
+      assert(isNaN(inv.azi1));
+      assert(isNaN(inv.azi2));
+      assert(isNaN(inv.s12));
+    });
+  });
+
   describe("Planimeter", function () {
 
     var geod = g.WGS84,

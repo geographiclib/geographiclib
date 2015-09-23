@@ -694,7 +694,8 @@ class Geodesic(object):
     lat1 = Math.AngRound(Math.LatFix(lat1))
     lat2 = Math.AngRound(Math.LatFix(lat2))
     # Swap points so that point with higher (abs) latitude is point 1
-    swapp = 1 if abs(lat1) >= abs(lat2) else -1
+    # If one latitude is a nan, then it becomes lat1.
+    swapp = -1 if abs(lat1) < abs(lat2) else 1
     if swapp < 0:
       lonsign *= -1
       lat2, lat1 = lat1, lat2
@@ -982,7 +983,7 @@ class Geodesic(object):
 
   def CheckPosition(lat, lon):
     """Check that lat and lon are legal and return normalized lon"""
-    if not (abs(lat) <= 90):
+    if abs(lat) > 90:
       raise ValueError("latitude " + str(lat) + " not in [-90, 90]")
     # if not Math.isfinite(lon):
     #   raise ValueError("longitude " + str(lon) + " not a finite number")

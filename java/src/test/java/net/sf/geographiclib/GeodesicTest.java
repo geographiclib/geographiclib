@@ -417,6 +417,20 @@ public class GeodesicTest {
   }
 
   @Test
+  public void GeodSolve55() {
+    // Check fix for nan + point on equator or pole not returning all nans in
+    // Geodesic::Inverse, found 2015-09-23.
+    GeodesicData inv = Geodesic.WGS84.Inverse(Double.NaN, 0, 0, 90);
+    assertTrue(isNaN(inv.azi1));
+    assertTrue(isNaN(inv.azi2));
+    assertTrue(isNaN(inv.s12));
+    inv = Geodesic.WGS84.Inverse(Double.NaN, 0, 90, 3);
+    assertTrue(isNaN(inv.azi1));
+    assertTrue(isNaN(inv.azi2));
+    assertTrue(isNaN(inv.s12));
+  }
+
+  @Test
   public void Planimeter0() {
     // Check fix for pole-encircling bug found 2011-03-16
     double pa[][] = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};

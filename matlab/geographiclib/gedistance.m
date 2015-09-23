@@ -80,6 +80,7 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
   cgam0 = hypot(cgam1, sgam1 .* sbet1);
 
   ssig1 = sbet1; csig1 = cbet1 .* cgam1;
+  csig1(ssig1 == 0 & csig1 == 0) = 1;
   [ssig1, csig1] = norm2(ssig1, csig1);
   ssig2 = ssig1 .* csig12 + csig1 .* ssig12;
   csig2 = csig1 .* csig12 - ssig1 .* ssig12;

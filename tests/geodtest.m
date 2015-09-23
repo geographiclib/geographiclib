@@ -1,11 +1,8 @@
 function geodtest
-if 0
   testrand
   GeodSolve0
   GeodSolve1
-end
   GeodSolve2
-if 0
   GeodSolve4
   GeodSolve5
   GeodSolve6
@@ -13,17 +10,19 @@ if 0
   GeodSolve10
   GeodSolve11
   GeodSolve12
+  GeodSolve14
   GeodSolve15
   GeodSolve17
   GeodSolve26
   GeodSolve28
   GeodSolve33
+  GeodSolve55
   Planimeter0
   Planimeter5
   Planimeter6
   Planimeter12
   Planimeter13
-end
+  Other
 end
 
 function assertEquals(x, y, d)
@@ -249,6 +248,14 @@ function GeodSolve12
   assertEquals(s12, 266.7, 1e-1);
 end
 
+function GeodSolve14
+% Check fix for inverse ignoring lon12 = nan
+  [s12, azi1, azi2] = geoddistance(0, 0, 1, NaN);
+  assert(isnan(azi1));
+  assert(isnan(azi2));
+  assert(isnan(s12));
+end
+
 function GeodSolve15
 % Initial implementation of Math::eatanhe was wrong for e^2 < 0.  This
 % checks that this is fixed.
@@ -336,6 +343,19 @@ function GeodSolve33
   assertEquals(s12, 20027270, 0.5);
 end
 
+function GeodSolve55
+% Check fix for nan + point on equator or pole not returning all nans in
+% Geodesic::Inverse, found 2015-09-23.
+  [s12, azi1, azi2] = geoddistance(NaN, 0, 0, 90);
+  assert(isnan(azi1));
+  assert(isnan(azi2));
+  assert(isnan(s12));
+  [s12, azi1, azi2] = geoddistance(NaN, 0, 90, 9);
+  assert(isnan(azi1));
+  assert(isnan(azi2));
+  assert(isnan(s12));
+end
+
 function Planimeter0
 % Check fix for pole-encircling bug found 2011-03-16
   pa = [89, 0; 89, 90; 89, 180; 89, 270];
@@ -404,4 +424,10 @@ function Planimeter13
   [area, perimeter] = geodarea(points(:,1), points(:,2));
   assertEquals(perimeter, 1160741, 1);
   assertEquals(area, 32415230256.0, 1);
+end
+
+function Other
+% gedistance(0, 0, 0, 100) wrongly return nan 2015-09-23
+  s12 = gedistance(0, 0, 0, 100);
+  assertEquals(s12, 11131949, 0.5);
 end

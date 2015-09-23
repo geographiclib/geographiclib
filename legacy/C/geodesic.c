@@ -664,8 +664,9 @@ real geod_geninverse(const struct geod_geodesic* g,
   /* If really close to the equator, treat as on equator. */
   lat1 = AngRound(LatFix(lat1));
   lat2 = AngRound(LatFix(lat2));
-  /* Swap points so that point with higher (abs) latitude is point 1 */
-  swapp = fabs(lat1) >= fabs(lat2) ? 1 : -1;
+  /* Swap points so that point with higher (abs) latitude is point 1
+   * If one latitude is a nan, then it becomes lat1. */
+  swapp = fabs(lat1) < fabs(lat2) ? -1 : 1;
   if (swapp < 0) {
     lonsign *= -1;
     swapx(&lat1, &lat2);

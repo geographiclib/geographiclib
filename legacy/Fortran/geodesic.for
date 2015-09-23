@@ -227,13 +227,13 @@
       b = a * f1
       c2 = 0
 
-      arcmod = mod(flags/1, 2) == 1
-      unroll = mod(flags/2, 2) == 1
+      arcmod = mod(flags/1, 2) .eq. 1
+      unroll = mod(flags/2, 2) .eq. 1
 
-      arcp = mod(omask/1, 2) == 1
-      redlp = mod(omask/2, 2) == 1
-      scalp = mod(omask/4, 2) == 1
-      areap = mod(omask/8, 2) == 1
+      arcp = mod(omask/1, 2) .eq. 1
+      redlp = mod(omask/2, 2) .eq. 1
+      scalp = mod(omask/4, 2) .eq. 1
+      areap = mod(omask/8, 2) .eq. 1
 
       if (areap) then
         if (e2 .eq. 0) then
@@ -580,10 +580,10 @@
       b = a * f1
       c2 = 0
 
-      arcp = mod(omask/1, 2) == 1
-      redlp = mod(omask/2, 2) == 1
-      scalp = mod(omask/4, 2) == 1
-      areap = mod(omask/8, 2) == 1
+      arcp = mod(omask/1, 2) .eq. 1
+      redlp = mod(omask/2, 2) .eq. 1
+      scalp = mod(omask/4, 2) .eq. 1
+      areap = mod(omask/8, 2) .eq. 1
       if (scalp) then
         lmask = 16 + 2 + 4
       else
@@ -620,10 +620,11 @@
       lat1x = AngRnd(LatFix(lat1))
       lat2x = AngRnd(LatFix(lat2))
 * Swap points so that point with higher (abs) latitude is point 1
-      if (abs(lat1x) .ge. abs(lat2x)) then
-        swapp = 1
-      else
+* If one latitude is a nan, then it becomes lat1.
+      if (abs(lat1x) .lt. abs(lat2x)) then
         swapp = -1
+      else
+        swapp = 1
       end if
       if (swapp .lt. 0) then
         lonsgn = -lonsgn
@@ -684,7 +685,7 @@
 
 * Suppress bogus warnings about unitialized variables
       a12x = 0
-      merid = lat1x .eq. -90 .or. slam12 == 0
+      merid = lat1x .eq. -90 .or. slam12 .eq. 0
 
       if (merid) then
 
@@ -1102,9 +1103,9 @@
 * Return m12b = (reduced length)/b; also calculate s12b = distance/b,
 * and m0 = coefficient of secular term in expression for reduced length.
 
-      distp = mod(omask/16, 2) == 1
-      redlp = mod(omask/2, 2) == 1
-      scalp = mod(omask/4, 2) == 1
+      distp = (mod(omask/16, 2) .eq. 1)
+      redlp = (mod(omask/2, 2) .eq. 1)
+      scalp = (mod(omask/4, 2) .eq. 1)
 
 * Suppress compiler warnings
       m0x = 0

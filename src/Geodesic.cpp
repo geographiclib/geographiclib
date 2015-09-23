@@ -151,7 +151,8 @@ namespace GeographicLib {
     lat1 = Math::AngRound(Math::LatFix(lat1));
     lat2 = Math::AngRound(Math::LatFix(lat2));
     // Swap points so that point with higher (abs) latitude is point 1
-    int swapp = abs(lat1) >= abs(lat2) ? 1 : -1;
+    // If one latitude is a nan, then it becomes lat1.
+    int swapp = abs(lat1) < abs(lat2) ? -1 : 1;
     if (swapp < 0) {
       lonsign *= -1;
       swap(lat1, lat2);

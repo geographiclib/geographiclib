@@ -318,6 +318,19 @@ int GeodSolve12() {
   return result;
 }
 
+int GeodSolve14() {
+  /* Check fix for inverse ignoring lon12 = nan */
+  double azi1, azi2, s12, nan = sqrt(-1.0);
+  struct geod_geodesic g;
+  int result = 0;
+  geod_init(&g, wgs84_a, wgs84_f);
+  geod_inverse(&g, 0, 0, 1, nan, &s12, &azi1, &azi2);
+  result += azi1 == azi1 ? 1 : 0;
+  result += azi2 == azi2 ? 1 : 0;
+  result += s12 == s12 ? 1 : 0;
+  return result;
+}
+
 int GeodSolve15() {
   /* Initial implementation of Math::eatanhe was wrong for e^2 < 0.  This
    * checks that this is fixed. */
@@ -438,6 +451,24 @@ int GeodSolve33() {
   result += assertEquals(azi2, -180.00000, 0.5e-5);
   result += assertEquals(s12, 20027270, 0.5);
 
+  return result;
+}
+
+int GeodSolve55() {
+  /* Check fix for nan + point on equator or pole not returning all nans in
+   * Geodesic::Inverse, found 2015-09-23. */
+  double azi1, azi2, s12, nan = sqrt(-1.0);
+  struct geod_geodesic g;
+  int result = 0;
+  geod_init(&g, wgs84_a, wgs84_f);
+  geod_inverse(&g, nan, 0, 0, 90, &s12, &azi1, &azi2);
+  result += azi1 == azi1 ? 1 : 0;
+  result += azi2 == azi2 ? 1 : 0;
+  result += s12 == s12 ? 1 : 0;
+  geod_inverse(&g, nan, 0, 90, 9, &s12, &azi1, &azi2);
+  result += azi1 == azi1 ? 1 : 0;
+  result += azi2 == azi2 ? 1 : 0;
+  result += s12 == s12 ? 1 : 0;
   return result;
 }
 
@@ -575,11 +606,13 @@ int main() {
   if ((i = GeodSolve10())) {++n; printf("GeodSolve10 fail: %d\n", i);}
   if ((i = GeodSolve11())) {++n; printf("GeodSolve11 fail: %d\n", i);}
   if ((i = GeodSolve12())) {++n; printf("GeodSolve12 fail: %d\n", i);}
+  if ((i = GeodSolve14())) {++n; printf("GeodSolve14 fail: %d\n", i);}
   if ((i = GeodSolve15())) {++n; printf("GeodSolve15 fail: %d\n", i);}
   if ((i = GeodSolve17())) {++n; printf("GeodSolve17 fail: %d\n", i);}
   if ((i = GeodSolve26())) {++n; printf("GeodSolve26 fail: %d\n", i);}
   if ((i = GeodSolve28())) {++n; printf("GeodSolve28 fail: %d\n", i);}
   if ((i = GeodSolve33())) {++n; printf("GeodSolve33 fail: %d\n", i);}
+  if ((i = GeodSolve55())) {++n; printf("GeodSolve55 fail: %d\n", i);}
   if ((i = Planimeter0())) {++n; printf("Planimeter0 fail: %d\n", i);}
   if ((i = Planimeter5())) {++n; printf("Planimeter5 fail: %d\n", i);}
   if ((i = Planimeter6())) {++n; printf("Planimeter6 fail: %d\n", i);}

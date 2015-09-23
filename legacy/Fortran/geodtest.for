@@ -298,6 +298,17 @@
       return
       end
 
+      integer function isnan(x)
+      double precision x
+      if (x .eq. x) then
+        isnan = 0
+      else
+        isnan = 1
+      end if
+
+      return
+      end
+
       integer function tstg0()
       double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
       double precision a, f

@@ -305,6 +305,15 @@ set_tests_properties (GeodSolve51 GeodSolve52
 set_tests_properties (GeodSolve53 GeodSolve54
   PROPERTIES PASS_REGULAR_EXPRESSION "0\\.00000 -180\\.00000 20027270")
 
+# Check fix for nan + point on equator or pole not returning all nans in
+# Geodesic::Inverse, found 2015-09-23.
+add_test (NAME GeodSolve55 COMMAND GeodSolve -i --input-string "nan 0 0 90")
+add_test (NAME GeodSolve56 COMMAND GeodSolve -i --input-string "nan 0 0 90" -E)
+add_test (NAME GeodSolve57 COMMAND GeodSolve -i --input-string "nan 0 90 9")
+add_test (NAME GeodSolve58 COMMAND GeodSolve -i --input-string "nan 0 90 9" -E)
+set_tests_properties (GeodSolve55 GeodSolve56 GeodSolve57 GeodSolve58
+  PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")
