@@ -7061,7 +7061,7 @@ git repository for GeographicLib</a>.
      - throw error on non-convergence in Gnomonic::Reverse if
        GEOGRAPHICLIB_PRECISION &gt; 3;
      - add geod_polygon_clear to C library;
-     - implement Math::LatFix for Fortran library;
+     - turn illegal latitudes into NaNs for Fortran library;
      - add test cases for the C and Fortran libraries.
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>

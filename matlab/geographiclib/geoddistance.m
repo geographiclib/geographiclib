@@ -350,8 +350,8 @@ function [sig12, salp1, calp1, salp2, calp2, dnm] = ...
 
   salp1 = cbet2 .* somg12;
   t = cbet2 .* sbet1 .* somg12.^2;
-  calp1 = cvmgt(sbet12  + t ./ (1 + comg12), ...
-                sbet12a - t ./ (1 - comg12), ...
+  calp1 = cvmgt(sbet12  + t ./ max(1, 1 + comg12), ...
+                sbet12a - t ./ max(1, 1 - comg12), ...
                 comg12 >= 0);
 
   ssig12 = hypot(salp1, calp1);
@@ -383,11 +383,14 @@ function [sig12, salp1, calp1, salp2, calp2, dnm] = ...
                   sbet1(s), -cbet1(s), dn1(s), sbet2(s), cbet2(s), dn2(s), ...
                   cbet1(s), cbet2(s), 2);
       x = -1 + m12b ./ (cbet1(s) .* cbet2(s) .* m0 * pi);
-      betscale = cvmgt(sbet12a(s) ./ x, - f * cbet1(s).^2 * pi, x < -0.01);
-      lamscale = betscale ./ cbet1(s);
+      betscale = cvmgt(sbet12a(s) ./ min(-0.01, x), - f * cbet1(s).^2 * pi, ...
+                       x < -0.01);
+     lamscale = betscale ./ cbet1(s);
       y = (lam12(s) - pi) ./ lamscale;
     end
     k = Astroid(x, y);
+    str = y > -tol1 & x > -1 - xthresh;
+    k(str) = 1;
     if f >= 0
       omg12a = -x .* k ./ (1 + k);
     else
@@ -398,7 +401,6 @@ function [sig12, salp1, calp1, salp2, calp2, dnm] = ...
     salp1(s) = cbet2(s) .* somg12;
     calp1(s) = sbet12a(s) - cbet2(s) .* sbet1(s) .* somg12.^2 ./ (1 - comg12);
 
-    str = y > -tol1 & x > -1 - xthresh;
     if any(str)
       salp1s = salp1(s); calp1s = calp1(s);
       if f >= 0
@@ -500,8 +502,8 @@ function [lam12, dlam12, ...
   [~, dlam12] = ...
       Lengths(epsi, sig12, ...
               ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2, 2);
-  dlam12 = dlam12 .* f1 ./ (calp2 .* cbet2);
   z = calp2 == 0;
+  dlam12(~z) = dlam12(~z) .* f1 ./ (calp2(~z) .* cbet2(~z));
   dlam12(z) = - 2 * f1 .* dn1(z) ./ sbet1(z);
 end
 

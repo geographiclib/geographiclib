@@ -199,7 +199,7 @@
       double precision A3x(0:nA3x-1), C3x(0:nC3x-1), C4x(0:nC4x-1),
      +    C1a(nC1), C1pa(nC1p), C2a(nC2), C3a(nC3-1), C4a(0:nC4-1)
 
-      double precision csmgt, atanhx, hypotx,
+      double precision atanhx, hypotx,
      +    AngNm, AngRnd, TrgSum, A1m1f, A2m1f, A3f, atn2dx, LatFix
       logical arcmod, unroll, arcp, redlp, scalp, areap
       double precision e2, f1, ep2, n, b, c2,
@@ -276,7 +276,11 @@
 * With alp0 = 0, omg1 = 0 for alp1 = 0, omg1 = pi for alp1 = pi.
       ssig1 = sbet1
       somg1 = salp0 * sbet1
-      csig1 = csmgt(cbet1 * calp1, 1d0, sbet1 .ne. 0 .or. calp1 .ne. 0)
+      if (sbet1 .ne. 0 .or. calp1 .ne. 0) then
+        csig1 = cbet1 * calp1
+      else
+        csig1 = 1
+      end if
       comg1 = csig1
 * sig1 in (-pi, pi]
       call norm2(ssig1, csig1)
@@ -460,17 +464,24 @@
 * else
 *   csig1 - csig2 = csig1 * (1 - csig12) + ssig12 * ssig1
 * No need to normalize
-          salp12 = calp0 * salp0 *
-     +        csmgt(csig1 * (1 - csig12) + ssig12 * ssig1,
-     +        ssig12 * (csig1 * ssig12 / (1 + csig12) + ssig1),
-     +        csig12 .le. 0)
+          if (csig12 .le. 0) then
+            salp12 = csig1 * (1 - csig12) + ssig12 * ssig1
+          else
+            salp12 = ssig12 * (csig1 * ssig12 / (1 + csig12) + ssig1)
+          end if
+          salp12 = calp0 * salp0 * salp12
           calp12 = salp0**2 + calp0**2 * csig1 * csig2
         end if
         SS12 = c2 * atan2(salp12, calp12) + A4 * (B42 - B41)
       end if
 
-      if (arcp) a12s12 = csmgt(b * ((1 + A1m1) * sig12 + AB1),
-     +    sig12 / degree, arcmod)
+      if (arcp) then
+        if (arcmod) then
+          a12s12 = b * ((1 + A1m1) * sig12 + AB1)
+        else
+          a12s12 = sig12 / degree
+        end if
+      end if
 
       return
       end
@@ -538,7 +549,7 @@
       double precision A3x(0:nA3x-1), C3x(0:nC3x-1), C4x(0:nC4x-1),
      +    Ca(nC)
 
-      double precision csmgt, atanhx, hypotx,
+      double precision atanhx, hypotx,
      +    AngDif, AngRnd, TrgSum, Lam12f, InvSta, atn2dx, LatFix
       integer latsgn, lonsgn, swapp, numit
       logical arcp, redlp, scalp, areap, merid, tripn, tripb
@@ -789,8 +800,12 @@
      +          Ca) - lam12
 * 2 * tol0 is approximately 1 ulp for a number in [0, pi].
 * Reversed test to allow escape with NaNs
-            if (tripb .or.
-     +          .not. (abs(v) .ge. csmgt(8d0, 2d0, tripn) * tol0))
+            if (tripn) then
+              dummy = 8
+            else
+              dummy = 2
+            end if
+            if (tripb .or. .not. (abs(v) .ge. dummy * tol0))
      +          go to 20
 * Update bracketing values
             if (v .gt. 0 .and. (numit .gt. maxit1 .or.
@@ -1149,7 +1164,7 @@
 * input
       double precision x, y
 
-      double precision cbrt, csmgt
+      double precision cbrt
       double precision k, p, q, r, S, r2, r3, disc, u,
      +    T3, T, ang, v, uv, w
 
@@ -1173,7 +1188,12 @@
 * of precision due to cancellation.  The result is unchanged because
 * of the way the T is used in definition of u.
 * T3 = (r * t)^3
-          T3 = T3 + csmgt(-sqrt(disc), sqrt(disc), T3 .lt. 0)
+          if (T3 .lt. 0) then
+            disc = -sqrt(disc)
+          else
+            disc = sqrt(disc)
+          end if
+          T3 = T3 + disc
 * N.B. cbrt always returns the real root.  cbrt(-8) = -2.
 * T = r * t
           T = cbrt(T3)
@@ -1190,7 +1210,11 @@
         v = sqrt(u**2 + q)
 * Avoid loss of accuracy when u < 0.
 * u+v, guaranteed positive
-        uv = csmgt(q / (v - u), u + v, u .lt. 0)
+        if (u .lt. 0) then
+          uv = q / (v - u)
+        else
+          uv = u + v
+        end if
 * positive?
         w = (uv - q) / (2 * v)
 * Rearrange expression for k to avoid loss of accuracy due to
@@ -1223,7 +1247,7 @@
 * temporary
       double precision Ca(*)
 
-      double precision csmgt, hypotx, A3f, Astrd
+      double precision hypotx, A3f, Astrd
       logical shortp
       double precision f1, e2, ep2, n, etol2, k2, eps, sig12,
      +    sbet12, cbet12, sbt12a, omg12, somg12, comg12, ssig12, csig12,
@@ -1277,9 +1301,11 @@
       comg12 = cos(omg12)
 
       salp1 = cbet2 * somg12
-      calp1 = csmgt(sbet12 + cbet2 * sbet1 * somg12**2 / (1 + comg12),
-     +    sbt12a - cbet2 * sbet1 * somg12**2 / (1 - comg12),
-     +    comg12 .ge. 0)
+      if (comg12 .ge. 0) then
+        calp1 = sbet12 + cbet2 * sbet1 * somg12**2 / (1 + comg12)
+      else
+        calp1 = sbt12a - cbet2 * sbet1 * somg12**2 / (1 - comg12)
+      end if
 
       ssig12 = hypotx(salp1, calp1)
       csig12 = sbet1 * sbet2 + cbet1 * cbet2 * comg12
@@ -1287,9 +1313,12 @@
       if (shortp .and. ssig12 .lt. etol2) then
 * really short lines
         salp2 = cbet1 * somg12
-        calp2 = sbet12 - cbet1 * sbet2 *
-     +      csmgt(somg12**2 / (1 + max(0d0, comg12)),
-     +      1 - comg12, comg12 .ge. 0)
+        if (comg12 .ge. 0) then
+          calp2 = somg12**2 / (1 + comg12)
+        else
+          calp2 = 1 - comg12
+        end if
+        calp2 = sbet12 - cbet1 * sbet2 * calp2
         call norm2(salp2, calp2)
 * Set return value
         sig12 = atan2(ssig12, csig12)
@@ -1318,8 +1347,11 @@
      +        sbet1, -cbet1, dn1, sbet2, cbet2, dn2, cbet1, cbet2, 2,
      +        dummy, m12b, m0, dummy, dummy, ep2, Ca)
           x = -1 + m12b / (cbet1 * cbet2 * m0 * pi)
-          betscl = csmgt(sbt12a / x, -f * cbet1**2 * pi,
-     +        x .lt. -0.01d0)
+          if (x .lt. -0.01d0) then
+            betscl = sbt12a / x
+          else
+            betscl = -f * cbet1**2 * pi
+          end if
           lamscl = betscl / cbet1
           y = (lam12 - pi) / lamscl
         end if
@@ -1330,7 +1362,12 @@
             salp1 = min(1d0, -x)
             calp1 = - sqrt(1 - salp1**2)
           else
-            calp1 = max(csmgt(0d0, 1d0, x .gt. -tol1), x)
+            if (x .gt. -tol1) then
+              calp1 = 0
+            else
+              calp1 = 1
+            end if
+            calp1 = max(calp1, x)
             salp1 = sqrt(1 - calp1**2)
           end if
         else
@@ -1369,8 +1406,12 @@
 *
 * Because omg12 is near pi, estimate work with omg12a = pi - omg12
           k = Astrd(x, y)
-          omg12a = lamscl *
-     +        csmgt(-x * k/(1 + k), -y * (1 + k)/k, f .ge. 0)
+          if (f .ge. 0) then
+            omg12a = -x * k/(1 + k)
+          else
+            omg12a = -y * (1 + k)/k
+          end if
+          omg12a = lamscl * omg12a
           somg12 = sin(omg12a)
           comg12 = -cos(omg12a)
 * Update spherical estimate of alp1 using omg12 instead of lam12
@@ -1409,7 +1450,7 @@
       integer ord, nC3
       parameter (ord = 6, nC3 = ord)
 
-      double precision csmgt, hypotx, A3f, TrgSum
+      double precision hypotx, A3f, TrgSum
 
       double precision f1, e2, ep2, salp0, calp0,
      +    somg1, comg1, somg2, comg2, omg12, lam12, B312, h0, k2, dummy
@@ -1446,16 +1487,25 @@
 * about this case, since this can yield singularities in the Newton
 * iteration.
 * sin(alp2) * cos(bet2) = sin(alp0)
-      salp2 = csmgt(salp0 / cbet2, salp1, cbet2 .ne. cbet1)
+      if (cbet2 .ne. cbet1) then
+        salp2 = salp0 / cbet2
+      else
+        salp2 = salp1
+      end if
 * calp2 = sqrt(1 - sq(salp2))
 *       = sqrt(sq(calp0) - sq(sbet2)) / cbet2
 * and subst for calp0 and rearrange to give (choose positive sqrt
 * to give alp2 in [0, pi/2]).
-      calp2 = csmgt(sqrt((calp1 * cbet1)**2 +
-     +    csmgt((cbet2 - cbet1) * (cbet1 + cbet2),
-     +    (sbet1 - sbet2) * (sbet1 + sbet2),
-     +    cbet1 .lt. -sbet1)) / cbet2,
-     +    abs(calp1), cbet2 .ne. cbet1 .or. abs(sbet2) .ne. -sbet1)
+      if (cbet2 .ne. cbet1 .or. abs(sbet2) .ne. -sbet1) then
+        if (cbet1 .lt. -sbet1) then
+          calp2 = (cbet2 - cbet1) * (cbet1 + cbet2)
+        else
+          calp2 = (sbet1 - sbet2) * (sbet1 + sbet2)
+        end if
+        calp2 = sqrt((calp1 * cbet1)**2 + calp2) / cbet2
+      else
+        calp2 = abs(calp1)
+      end if
 * tan(bet2) = tan(sig2) * cos(alp2)
 * tan(omg2) = sin(alp0) * tan(sig2).
       ssig2 = sbet2
@@ -1938,10 +1988,14 @@
 * input
       double precision x
 
-      double precision csmgt, y, z
+      double precision y, z
       y = 1 + x
       z = y - 1
-      log1px = csmgt(x, x * log(y) / z, z .eq. 0)
+      if (z .eq. 0) then
+        log1px = x
+      else
+        log1px = x * log(y) / z
+      end if
 
       return
       end
@@ -1963,20 +2017,6 @@
       double precision x
 
       cbrt = sign(abs(x)**(1/3d0), x)
-
-      return
-      end
-
-      double precision function csmgt(x, y, p)
-* input
-      double precision x, y
-      logical p
-
-      if (p) then
-        csmgt = x
-      else
-        csmgt = y
-      end if
 
       return
       end
@@ -2163,7 +2203,7 @@
         polval = 0
       else
         polval = p(0)
-      endif
+      end if
       do 10 i = 1, N
         polval = polval * x + p(i)
  10   continue

@@ -358,7 +358,7 @@ int GeodSolve17() {
   result += assertEquals(lon2, 105, 1);
   result += assertEquals(azi2, -170, 1);
   return result;
-  }
+}
 
 int GeodSolve26() {
   /* Check 0/0 problem with area calculation on sphere 2015-09-08 */
