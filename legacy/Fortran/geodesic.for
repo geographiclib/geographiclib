@@ -1062,7 +1062,11 @@
 
       pi = atan2(0d0, -1d0)
       degree = pi/180
-      tiny = sqrt(dblmin)
+* This is about cbrt(dblmin).  With other implementations, sqrt(dblmin)
+* is used.  The larger value is used here to avoid complaints about a
+* IEEE_UNDERFLOW_FLAG IEEE_DENORMAL signal.  This is triggered when
+* invers is called with points at opposite poles.
+      tiny = 0.5d0**((1022+2)/3)
       tol0 = dbleps
 * Increase multiplier in defn of tol1 from 100 to 200 to fix inverse
 * case 52.784459512564 0 -52.784459512563990912 179.634407464943777557

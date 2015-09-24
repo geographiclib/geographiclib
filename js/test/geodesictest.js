@@ -341,7 +341,6 @@ describe("GeographicLib", function() {
       assert.approx(dir.lon2, 541, 1e-10);
       assert.approx(dir.s12, 222639, 0.5);
     });
-  });
 
     it("GeodSolve33", function() {
       // Check max(-0.0,+0.0) issues 2015-08-22 (triggered by bugs in Octave --
@@ -400,11 +399,11 @@ describe("GeographicLib", function() {
       // Check fix for nan + point on equator or pole not returning all nans in
       // Geodesic::Inverse, found 2015-09-23.
       var geod = g.WGS84,
-          dir = geod.Inverse(NaN, 0, 0, 90);
+          inv = geod.Inverse(NaN, 0, 0, 90);
       assert(isNaN(inv.azi1));
       assert(isNaN(inv.azi2));
       assert(isNaN(inv.s12));
-      dir = geod.Inverse(NaN, 0, 90, 9);
+      inv = geod.Inverse(NaN, 0, 90, 9);
       assert(isNaN(inv.azi1));
       assert(isNaN(inv.azi2));
       assert(isNaN(inv.s12));

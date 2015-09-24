@@ -7056,6 +7056,8 @@ git repository for GeographicLib</a>.
      - fix bug (introduced in version 1.42) in C++ implementation
        geodesic area computation which causes NaNs to be returned in the
        case of a sphere;
+     - make sure NaNs are returned from Geodesic::Inverse when the
+       latitude of one of the points is NaN;
      - fixed bug, introduced in version 1.44, in the detection of C++11
        math functions in configure.ac;
      - throw error on non-convergence in Gnomonic::Reverse if

@@ -114,6 +114,10 @@ make doc
     python2 -m unittest test.test_geodesic
     python3 -m unittest test.test_geodesic
 )
+(
+    cd ../tests
+    octave rungeodtest.m
+)
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
 mkdir -p $TEMP/js
 cp -p js/*.js js/*.html $TEMP/js/

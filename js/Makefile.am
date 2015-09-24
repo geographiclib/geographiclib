@@ -16,7 +16,13 @@ TESTSCRIPTS = $(srcdir)/test/geodesictest.js
 
 all: geographiclib.js geographiclib.min.js $(SAMPLES)
 
-%.html: samples/%.html
+geod-calc.html: samples/geod-calc.html
+	cp $^ $@
+
+geod-google.html: samples/geod-google.html
+	cp $^ $@
+
+geod-google-instructions.html: samples/geod-google-instructions.html
 	cp $^ $@
 
 geographiclib.js: HEADER.js $(JSSCRIPTS)

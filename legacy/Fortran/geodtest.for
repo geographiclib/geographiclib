@@ -298,12 +298,12 @@
       return
       end
 
-      integer function isnan(x)
+      integer function notnan(x)
       double precision x
       if (x .eq. x) then
-        isnan = 0
+        notnan = 1
       else
-        isnan = 1
+        notnan = 0
       end if
 
       return
@@ -543,6 +543,27 @@
       return
       end
 
+      integer function tstg14()
+* Check fix for inverse ignoring lon12 = nan
+      double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
+      double precision a, f, LatFix
+      integer r, notnan, omask
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+      omask = 0
+      r = 0
+      call invers(a, f, 0d0, 0d0, 1d0, LatFix(91d0),
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + notnan(azi1)
+      r = r + notnan(azi2)
+      r = r + notnan(s12)
+      tstg14 = r
+      return
+      end
+
       integer function tstg15()
 * Initial implementation of Math::eatanhe was wrong for e^2 < 0.  This
 * checks that this is fixed.
@@ -710,6 +731,33 @@
       return
       end
 
+      integer function tstg55()
+* Check fix for nan + point on equator or pole not returning all nans in
+* Geodesic::Inverse, found 2015-09-23.
+      double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
+      double precision a, f
+      integer r, notnan, omask
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+      omask = 0
+      r = 0
+      call invers(a, f, 91d0, 0d0, 0d0, 90d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + notnan(azi1)
+      r = r + notnan(azi2)
+      r = r + notnan(s12)
+      call invers(a, f, 91d0, 0d0, 90d0, 9d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + notnan(azi1)
+      r = r + notnan(azi2)
+      r = r + notnan(s12)
+      tstg55 = r
+      return
+      end
+
       integer function tstp0()
 * Check fix for pole-encircling bug found 2011-03-16
       double precision lata(4), lona(4)
@@ -854,11 +902,10 @@
       integer n, i
       integer tstinv, tstdir, tstarc,
      +    tstg0, tstg1, tstg2, tstg5, tstg6, tstg9, tstg10, tstg11,
-     +    tstg12, tstg15, tstg17, tstg26, tstg28, tstg33,
-     +    tstp0, tstp5, tstp6, tstp12, tstp13
+     +    tstg12, tstg14, tstg15, tstg17, tstg26, tstg28, tstg33,
+     +    tstg55, tstp0, tstp5, tstp6, tstp12, tstp13
 
       n = 0
-      if (.false.) then
       i = tstinv()
       if (i .gt. 0) then
         n = n + 1
@@ -919,6 +966,11 @@
         n = n + 1
         print *, 'tstg12 file:', i
       end if
+      i = tstg14()
+      if (i .gt. 0) then
+        n = n + 1
+        print *, 'tstg14 file:', i
+      end if
       i = tstg15()
       if (i .gt. 0) then
         n = n + 1
@@ -944,6 +996,11 @@
         n = n + 1
         print *, 'tstg33 file:', i
       end if
+      i = tstg55()
+      if (i .gt. 0) then
+        n = n + 1
+        print *, 'tstg55 file:', i
+      end if
       i = tstp0()
       if (i .gt. 0) then
         n = n + 1
@@ -953,7 +1010,6 @@
       if (i .gt. 0) then
         n = n + 1
         print *, 'tstp5 file:', i
-      end if
       end if
       i = tstp6()
       if (i .gt. 0) then
