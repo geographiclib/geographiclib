@@ -103,7 +103,7 @@ cd BUILD
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON ..
 make dist
 cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
-make doc
+make doc distrib-npm
 (
     cd ../java
     mvn -q package -P release
@@ -455,6 +455,7 @@ cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
 
 # javascript release
+npm publish $TEMP/gita/geographiclib/BUILD/js/geographiclib
 make -C $DEVELSOURCE -f makefile-admin distrib-js
 make -C $DEVELSOURCE -f makefile-admin install-js
 

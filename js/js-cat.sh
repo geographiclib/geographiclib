@@ -9,11 +9,26 @@ for f; do
 done
 sed -e "s/@JS_VERSION@/$JS_VERSION/" -e "s/@FILE_INVENTORY@/$FILE_INVENTORY/" \
     $HEADER
+cat <<EOF
+
+(function() {
+  'use strict';
+EOF
 for f; do
     echo
     echo "/**************** `basename $f` ****************/"
     cat $f
 done
-echo
-echo "/******** support loading with node's require ********/"
-echo "if (typeof module === 'object') module.exports = GeographicLib;"
+cat <<EOF
+
+  /******** export GeographicLib ********/
+  if (typeof module === 'object' && module.exports)
+    module.exports = GeographicLib;
+  else if (typeof define === 'function' && define.amd)
+    define('geographiclib', [], function() { return GeographicLib; });
+  else if (typeof window === 'object')
+    window.GeographicLib = GeographicLib;
+  else
+    return GeographicLib;
+})();
+EOF

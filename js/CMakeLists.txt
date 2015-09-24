@@ -29,6 +29,7 @@ if (JS_BUILD)
   file (READ "HEADER.js" _S)
   string (CONFIGURE ${_S} _S @ONLY)
   file (APPEND ${JS_TARGET} "${_S}")
+  file (APPEND ${JS_TARGET} "\n(function() {\n  'use strict';\n")
   foreach (_F ${JSSCRIPTS})
     get_filename_component(_N ${_F} NAME)
     file (READ "${_F}" _S)
@@ -37,11 +38,19 @@ if (JS_BUILD)
     file (APPEND ${JS_TARGET} "\n/**************** ${_N} ****************/\n")
     file (APPEND ${JS_TARGET} "${_S}")
   endforeach ()
-  # support loading with node's require
-  file (APPEND ${JS_TARGET}
-    "\n/******** support loading with node's require ********/\n")
-  file (APPEND ${JS_TARGET}
-    "if (typeof module === 'object') module.exports = GeographicLib;\n")
+  # export GeographlicLib
+  file (APPEND ${JS_TARGET} "
+  /******** export GeographicLib ********/
+  if (typeof module === 'object' && module.exports)
+    module.exports = GeographicLib;
+  else if (typeof define === 'function' && define.amd)
+    define('geographiclib', [], function() { return GeographicLib; });
+  else if (typeof window === 'object')
+    window.GeographicLib = GeographicLib;
+  else
+    return GeographicLib;
+})();
+")
 endif ()
 
 if (JS_BUILD_MIN)
@@ -51,6 +60,7 @@ if (JS_BUILD_MIN)
   file (READ "HEADER.js" _S)
   string (CONFIGURE ${_S} _S @ONLY)
   file (APPEND ${JS_TARGET_MIN} "${_S}")
+  file (APPEND ${JS_TARGET_MIN} "(function(){\n'use strict';\n")
   foreach (_F ${JSSCRIPTS})
     get_filename_component(_N ${_F} NAME)
     file (READ "${_F}" _S)
@@ -70,9 +80,18 @@ if (JS_BUILD_MIN)
     string (REGEX REPLACE "\n+" "\n" _S "${_S}")
     file (APPEND ${JS_TARGET_MIN} "// ${_N}\n${_S}")
   endforeach ()
-  # support loading with node's require
+  # export GeographlicLib
   file (APPEND ${JS_TARGET_MIN}
-    "if(typeof module==='object')module.exports=GeographicLib;\n")
+    "if(typeof module==='object'&&module.exports)
+module.exports=GeographicLib;
+else if(typeof define==='function'&&define.amd)
+define('geographiclib',[],function(){return GeographicLib;});
+else if(typeof window==='object')
+window.GeographicLib=GeographicLib;
+else
+return GeographicLib;
+})();
+")
 endif ()
 
 # "make javascript" will reconfigure cmake if necessary, since
@@ -99,3 +118,18 @@ install (FILES ../LICENSE.txt package.json README.md ${JS_TARGETS}
   DESTINATION ${INSTALL_JS_DIR})
 install (FILES ${JSSCRIPTS} DESTINATION ${INSTALL_JS_DIR}/src)
 install (FILES test/geodesictest.js DESTINATION ${INSTALL_JS_DIR}/test)
+
+if (MAINTAINER)
+  add_custom_target (distrib-npm)
+  add_dependencies (distrib-npm javascript)
+  set (_D ${CMAKE_CURRENT_BINARY_DIR}/geographiclib)
+  add_custom_command (TARGET distrib-npm
+    COMMAND
+    mkdir -p ${_D}/src ${_D}/test &&
+    install -C -m 644 ../LICENSE.txt package.json README.md ${JS_TARGETS}
+    ${_D} &&
+    install -C -m 644 ${JSSCRIPTS} ${_D}/src &&
+    install -C -m 644 test/geodesictest.js ${_D}/test
+    COMMENT "To publish nodejs package, run\nnpm publish ${_D}"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+endif ()

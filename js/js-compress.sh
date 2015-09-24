@@ -9,6 +9,10 @@ for f; do
 done
 sed -e "s/@JS_VERSION@/$JS_VERSION/" -e "s/@FILE_INVENTORY@/$FILE_INVENTORY/" \
     $HEADER
+cat <<EOF
+(function(){
+'use strict';
+EOF
 for f; do
     echo "// `basename $f`"
     # The first regex matches /*...*/ style comments where ... is any
@@ -21,4 +25,14 @@ for f; do
 	sed -e 's/\([^"A-Za-z0-9_]\) /\1/g' -e 's/ \([^\["A-Za-z0-9_]\)/\1/g'
 done
 # support loading with node's require
-echo "if(typeof module==='object')module.exports=GeographicLib;"
+cat <<EOF
+if(typeof module==='object'&&module.exports)
+module.exports=GeographicLib;
+else if(typeof define==='function'&&define.amd)
+define('geographiclib',[],function(){return GeographicLib;});
+else if(typeof window==='object')
+window.GeographicLib=GeographicLib;
+else
+return GeographicLib;
+})();
+EOF

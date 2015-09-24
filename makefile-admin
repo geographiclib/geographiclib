@@ -26,10 +26,10 @@ distrib-files:
 distrib-cgi:
 	for f in GeoConvert GeodSolve GeoidEval Planimeter RhumbSolve printlogs Geod; do \
 	  a=cgi-bin/$$f.cgi; b=$(WEBSTAGE)/cgi-bin/$$f; \
-	  cmp $$a $$b > /dev/null || install $$a $$b; done
+	  install -C $$a $$b; done
 	for f in utils; do \
 	  a=cgi-bin/$$f.sh; b=$(WEBSTAGE)/cgi-bin/$$f.sh; \
-	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
+	  install -C -m 644 $$a $$b; done
 	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/{cgi-bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-js:
@@ -38,11 +38,7 @@ distrib-js:
 install-js:
 	find $(SCRIPTSTAGE)/test -type f -printf '%P\n' | \
 	while read f; do \
-	  a=$(SCRIPTSTAGE)/test/$$f; \
-	  b=$(SCRIPTSTAGE)/$$f; \
-	  cp $$a $$b.new; \
-	  if cmp $$b.new $$b > /dev/null 2>&2; then \
-	  rm $$b.new; else mv $$b.new $$b; fi; \
+	  install -C -m 644 $(SCRIPTSTAGE)/test/$$f $(SCRIPTSTAGE)/$$f; \
 	done
 	t=`find $(SCRIPTSTAGE)/test/geographiclib.js -printf '%l'`; \
 	rm -f $(SCRIPTSTAGE)/geographiclib.js; \

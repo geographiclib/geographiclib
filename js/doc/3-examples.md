@@ -36,27 +36,29 @@ A similar prescription works if geographiclib.js is installed elsewhere
 in your filesystem, replacing "./" above with the correct directory.
 Note that the directory must begin with "./", "../", or "/".
 
-#### HTML with your own version of geographiclib.js
+#### HTML with your own version of geographiclib.min.js
 
-Load geographiclib.js with
+Load geographiclib.min.js with
 ```html
-<script type="text/javascript" src="geographiclib.js">
+<script type="text/javascript" src="geographiclib.min.js">
 </script>
 ```
+This ".min.js" version has been "minified" by removing comments and
+redundant white space; this is appropriate for web applications.
 
-#### HTML downloading geographiclib.js
+#### HTML downloading geographiclib.min.js from SourceForge
 
-Load geographiclib.js with
+Load geographiclib.min.js with
 ```html
 <script type="text/javascript"
-        src="http://geographiclib.sf.net/scripts/geographiclib.js">
+        src="http://geographiclib.sf.net/scripts/geographiclib.min.js">
 </script>
 ```
 This uses the latest version.  If you want use a specific version, load
 with, for example,
 ```html
 <script type="text/javascript"
-        src="http://geographiclib.sf.net/scripts/geographiclib-1.45.js">
+        src="http://geographiclib.sf.net/scripts/geographiclib-1.45.min.js">
 </script>
 ```
 Browse
