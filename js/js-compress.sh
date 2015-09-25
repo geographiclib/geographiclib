@@ -10,8 +10,7 @@ done
 sed -e "s/@JS_VERSION@/$JS_VERSION/" -e "s/@FILE_INVENTORY@/$FILE_INVENTORY/" \
     $HEADER
 cat <<EOF
-(function(){
-'use strict';
+(function(cb){
 EOF
 for f; do
     echo "// `basename $f`"
@@ -26,13 +25,14 @@ for f; do
 done
 # support loading with node's require
 cat <<EOF
-if(typeof module==='object'&&module.exports)
-module.exports=GeographicLib;
-else if(typeof define==='function'&&define.amd)
-define('geographiclib',[],function(){return GeographicLib;});
-else if(typeof window==='object')
-window.GeographicLib=GeographicLib;
-else
-return GeographicLib;
-})();
+cb(GeographicLib);
+})(function(geo){
+if(typeof module==='object'&&module.exports){
+module.exports=geo;
+}else if(typeof define==='function'&&define.amd){
+define('geographiclib',[],function(){return geo;});
+}else{
+window.GeographicLib=geo;
+}
+});
 EOF

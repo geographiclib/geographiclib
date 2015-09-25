@@ -7046,7 +7046,8 @@ git repository for GeographicLib</a>.
      - fix array size mismatch in geoddistance by avoiding calls to
        subfunctions with zero-length arrays;
      - fix tranmerc_{fwd,inv} so that they work with arrays and
-       mixed array/scalar arguments.
+       mixed array/scalar arguments;
+     - add geographiclib_test.m to run a test suite.
    - Behavior of substituting 1/\e f for \e f if \e f > 1 is now
      <b>deprecated</b>.  This behavior has been removed from the
      JavaScript, C, and Python implementations (it was never

@@ -21,3 +21,9 @@ set_target_properties (${TOOLS} PROPERTIES COMPILE_FLAGS
 # compile flags above.
 add_executable (ngsforward ngsforward.for ngscommon.for geodesic.for)
 add_executable (ngsinverse ngsinverse.for ngscommon.for geodesic.for)
+
+# Turn on testing
+enable_testing ()
+
+# Run the test suite
+add_test (NAME geodtest COMMAND geodtest)

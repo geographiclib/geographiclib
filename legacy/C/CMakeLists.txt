@@ -27,3 +27,9 @@ foreach (TOOL ${TOOLS})
     target_link_libraries (${TOOL} m)
   endif ()
 endforeach ()
+
+# Turn on testing
+enable_testing ()
+
+# Run the test suite
+add_test (NAME geodtest COMMAND geodtest)

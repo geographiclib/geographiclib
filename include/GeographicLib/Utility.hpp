@@ -322,24 +322,34 @@ namespace GeographicLib {
      * @param[in] s the string to be converted.
      * @exception GeographicErr is \e s is not readable as a T.
      * @return object of type T
+     *
+     * White space at the beginning and end of \e s is ignored.
      **********************************************************************/
     template<typename T> static T num(const std::string& s) {
       T x;
       std::string errmsg;
+      std::string::size_type
+        beg = 0,
+        end = unsigned(s.size());
+      while (beg < end && isspace(s[beg]))
+        ++beg;
+      while (beg < end && isspace(s[end - 1]))
+        --end;
+      std::string t = s.substr(beg, end-beg);
       do {                     // Executed once (provides the ability to break)
-        std::istringstream is(s);
+        std::istringstream is(t);
         if (!(is >> x)) {
-          errmsg = "Cannot decode " + s;
+          errmsg = "Cannot decode " + t;
           break;
         }
         int pos = int(is.tellg()); // Returns -1 at end of string?
-        if (!(pos < 0 || pos == int(s.size()))) {
-          errmsg = "Extra text " + s.substr(pos) + " at end of " + s;
+        if (!(pos < 0 || pos == int(t.size()))) {
+          errmsg = "Extra text " + t.substr(pos) + " at end of " + t;
           break;
         }
         return x;
       } while (false);
-      x = std::numeric_limits<T>::is_integer ? 0 : nummatch<T>(s);
+      x = std::numeric_limits<T>::is_integer ? 0 : nummatch<T>(t);
       if (x == 0)
         throw GeographicErr(errmsg);
       return x;
@@ -352,6 +362,8 @@ namespace GeographicLib {
      * @param[in] s the string to be matched.
      * @return appropriate special value (&plusmn;&infin;, nan) or 0 if none is
      *   found.
+     *
+     * White space is not allowed at the beginning or end of \e s.
      **********************************************************************/
     template<typename T> static T nummatch(const std::string& s) {
       if (s.length() < 3)

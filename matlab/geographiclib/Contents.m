@@ -83,6 +83,7 @@
 %   defaultellipsoid - Return the WGS84 ellipsoid
 %   ecc2flat         - Convert eccentricity to flattening
 %   flat2ecc         - Convert flattening to eccentricity
+%   geographiclib_test - The test suite for the geographiclib package
 %
 % Documentation
 %   geoddoc          - Geodesics on an ellipsoid of revolution

@@ -274,16 +274,16 @@ GeographicLib.PolygonArea = {};
    * @classdesc Performs geodesic calculations on an ellipsoid of revolution.
    *   The routines for solving the direct and inverse problems return an
    *   object with some of the following fields set: lat1, lon1, azi1, lat2,
-   *   lon2, azi2, s12, a12, m12, M12, M21, S12.  See {@tutorial interface},
+   *   lon2, azi2, s12, a12, m12, M12, M21, S12.  See {@tutorial 2-interface},
    *   "The results".
    * @example
-   * var GeographicLib = require('geographiclib'),
+   * var GeographicLib = require("geographiclib"),
    *     geod = GeographicLib.Geodesic.WGS84;
    * var inv = geod.Inverse(1,2,3,4);
-   * console.log('lat1 = ' + inv.lat1 + ", lon1 = " + inv.lon1 +
-   *             ', lat2 = ' + inv.lat2 + ", lon2 = " + inv.lon2 +
-   *             ',\nazi1 = ' + inv.azi1 + ", azi2 = " + inv.azi2 +
-   *             ', s12 = ' + inv.s12);
+   * console.log("lat1 = " + inv.lat1 + ", lon1 = " + inv.lon1 +
+   *             ", lat2 = " + inv.lat2 + ", lon2 = " + inv.lon2 +
+   *             ",\nazi1 = " + inv.azi1 + ", azi2 = " + inv.azi2 +
+   *             ", s12 = " + inv.s12);
    * @param {number} a the equatorial radius of the ellipsoid (meters).
    * @param {number} f the flattening of the ellipsoid.  Setting f = 0 gives
    *   a sphere (on which geodesics are great circles).  Negative f gives a
@@ -789,7 +789,7 @@ GeographicLib.PolygonArea = {};
    * @returns {object} the requested results
    * @description The lat1, lon1, lat2, lon2, and a12 fields of the result are
    *   always set.  For details on the outmask parameter, see {@tutorial
-   *   interface}, "The outmask and caps parameters".
+   *   2-interface}, "The outmask and caps parameters".
    */
   g.Geodesic.prototype.Inverse = function(lat1, lon1, lat2, lon2, outmask) {
     var vals = {},
@@ -1171,7 +1171,7 @@ GeographicLib.PolygonArea = {};
    * @returns {object} the requested results.
    * @description The lat1, lon1, azi1, and a12 fields of the result are always
    *   set; s12 is included if arcmode is false.  For details on the outmask
-   *   parameter, see {@tutorial interface}, "The outmask and caps
+   *   parameter, see {@tutorial 2-interface}, "The outmask and caps
    *   parameters".
    */
   g.Geodesic.prototype.GenDirect = function (lat1, lon1, azi1,
@@ -1198,7 +1198,7 @@ GeographicLib.PolygonArea = {};
    * @returns {object} the requested results.
    * @description The lat1, lon1, azi1, s12, and a12 fields of the result are
    *   always set.  For details on the outmask parameter, see {@tutorial
-   *   interface}, "The outmask and caps parameters".
+   *   2-interface}, "The outmask and caps parameters".
    */
   g.Geodesic.prototype.Direct = function (lat1, lon1, azi1, s12, outmask) {
     return this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
@@ -1215,7 +1215,7 @@ GeographicLib.PolygonArea = {};
    * @returns {object} the requested results.
    * @description The lat1, lon1, azi1, and a12 fields of the result are
    *   always set.  For details on the outmask parameter, see {@tutorial
-   *   interface}, "The outmask and caps parameters".
+   *   2-interface}, "The outmask and caps parameters".
    */
   g.Geodesic.prototype.ArcDirect = function (lat1, lon1, azi1, a12, outmask) {
     return this.GenDirect(lat1, lon1, azi1, true, a12, outmask);
@@ -1233,8 +1233,8 @@ GeographicLib.PolygonArea = {};
    * @returns {object} the
    *   {@link module:GeographicLib/GeodesicLine.GeodesicLine
    *   GeodesicLine} object
-   * @description For details on the caps parameter, see {@tutorial interface},
-   *   "The outmask and caps parameters".
+   * @description For details on the caps parameter, see {@tutorial
+   *   2-interface}, "The outmask and caps parameters".
    */
   g.Geodesic.prototype.Line = function (lat1, lon1, azi1, caps) {
     return new l.GeodesicLine(this, lat1, lon1, azi1, caps);

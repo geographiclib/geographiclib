@@ -29,7 +29,7 @@ if (JS_BUILD)
   file (READ "HEADER.js" _S)
   string (CONFIGURE ${_S} _S @ONLY)
   file (APPEND ${JS_TARGET} "${_S}")
-  file (APPEND ${JS_TARGET} "\n(function() {\n  'use strict';\n")
+  file (APPEND ${JS_TARGET} "\n(function(cb) {\n")
   foreach (_F ${JSSCRIPTS})
     get_filename_component(_N ${_F} NAME)
     file (READ "${_F}" _S)
@@ -40,16 +40,20 @@ if (JS_BUILD)
   endforeach ()
   # export GeographlicLib
   file (APPEND ${JS_TARGET} "
-  /******** export GeographicLib ********/
-  if (typeof module === 'object' && module.exports)
-    module.exports = GeographicLib;
-  else if (typeof define === 'function' && define.amd)
-    define('geographiclib', [], function() { return GeographicLib; });
-  else if (typeof window === 'object')
-    window.GeographicLib = GeographicLib;
-  else
-    return GeographicLib;
-})();
+cb(GeographicLib);
+
+})(function(geo) {
+  if (typeof module === 'object' && module.exports) {
+    /******** support loading with node's require ********/
+    module.exports = geo;
+  } else if (typeof define === 'function' && define.amd) {
+    /******** support loading with AMD ********/
+    define('geographiclib', [], function() { return geo; });
+  } else {
+    /******** otherwise just pollute our global namespace ********/
+    window.GeographicLib = geo;
+  }
+});
 ")
 endif ()
 
@@ -60,7 +64,7 @@ if (JS_BUILD_MIN)
   file (READ "HEADER.js" _S)
   string (CONFIGURE ${_S} _S @ONLY)
   file (APPEND ${JS_TARGET_MIN} "${_S}")
-  file (APPEND ${JS_TARGET_MIN} "(function(){\n'use strict';\n")
+  file (APPEND ${JS_TARGET_MIN} "(function(cb){\n")
   foreach (_F ${JSSCRIPTS})
     get_filename_component(_N ${_F} NAME)
     file (READ "${_F}" _S)
@@ -82,15 +86,16 @@ if (JS_BUILD_MIN)
   endforeach ()
   # export GeographlicLib
   file (APPEND ${JS_TARGET_MIN}
-    "if(typeof module==='object'&&module.exports)
-module.exports=GeographicLib;
-else if(typeof define==='function'&&define.amd)
-define('geographiclib',[],function(){return GeographicLib;});
-else if(typeof window==='object')
-window.GeographicLib=GeographicLib;
-else
-return GeographicLib;
-})();
+    "cb(GeographicLib);
+})(function(geo){
+if(typeof module==='object'&&module.exports){
+module.exports=geo;
+}else if(typeof define==='function'&&define.amd){
+define('geographiclib',[],function(){return geo;});
+}else{
+window.GeographicLib=geo;
+}
+});
 ")
 endif ()
 

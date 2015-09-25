@@ -11,8 +11,7 @@ sed -e "s/@JS_VERSION@/$JS_VERSION/" -e "s/@FILE_INVENTORY@/$FILE_INVENTORY/" \
     $HEADER
 cat <<EOF
 
-(function() {
-  'use strict';
+(function(cb) {
 EOF
 for f; do
     echo
@@ -21,14 +20,18 @@ for f; do
 done
 cat <<EOF
 
-  /******** export GeographicLib ********/
-  if (typeof module === 'object' && module.exports)
-    module.exports = GeographicLib;
-  else if (typeof define === 'function' && define.amd)
-    define('geographiclib', [], function() { return GeographicLib; });
-  else if (typeof window === 'object')
-    window.GeographicLib = GeographicLib;
-  else
-    return GeographicLib;
-})();
+cb(GeographicLib);
+
+})(function(geo) {
+  if (typeof module === 'object' && module.exports) {
+    /******** support loading with node's require ********/
+    module.exports = geo;
+  } else if (typeof define === 'function' && define.amd) {
+    /******** support loading with AMD ********/
+    define('geographiclib', [], function() { return geo; });
+  } else {
+    /******** otherwise just pollute our global namespace ********/
+    window.GeographicLib = geo;
+  }
+});
 EOF

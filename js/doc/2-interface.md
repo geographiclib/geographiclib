@@ -38,7 +38,7 @@ GeodesicLine.Position}, etc., return an object with
 
 The input parameters together with *a12* are always included in the
 object.  Azimuths are reduced to the range [&minus;180&deg;, 180&deg;).
-See {@tutorial geodesics} for the definitions of these quantities.
+See {@tutorial 1-geodesics} for the definitions of these quantities.
 
 ### <a name="outmask"></a>The *outmask* and *caps* parameters
 

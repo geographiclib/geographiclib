@@ -69,6 +69,7 @@ set -e
 # JavaScript
 #   js/src/Math.js
 #   js/package.json
+#   js/README.md
 
 DATE=`date +%F`
 VERSION=1.45
@@ -115,8 +116,8 @@ make doc distrib-npm
     python3 -m unittest test.test_geodesic
 )
 (
-    cd ../tests
-    octave rungeodtest.m
+    cd ../matlab/geographiclib
+    octave --eval geographiclib_test
 )
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
 mkdir -p $TEMP/js
@@ -296,7 +297,7 @@ for l in C Fortran; do
 	cd $TEMP/legacy/$l/BUILD
 	cmake ..
 	make -j$NUMCPUS
-	./geodtest
+	make test
     )
 done
 

@@ -5,6 +5,7 @@
 
 MATLAB_FILES = \
 $(srcdir)/geographiclib/Contents.m \
+$(srcdir)/geographiclib/geographiclib_test.m \
 $(srcdir)/geographiclib/cassini_fwd.m \
 $(srcdir)/geographiclib/cassini_inv.m \
 $(srcdir)/geographiclib/defaultellipsoid.m \

@@ -39,7 +39,7 @@
    * @property {number} azi1 the initial azimuth (degrees).
    * @property {bitmask} caps the capabilities of the object.
    * @summary Initialize a GeodesicLine object.  For details on the caps
-   *   parameter, see {@tutorial interface}, "The outmask and caps
+   *   parameter, see {@tutorial 2-interface}, "The outmask and caps
    *   parameters".
    * @classdesc Performs geodesic calculations along a given geodesic line.
    *   This object is usually instantiated by
@@ -151,7 +151,7 @@
    * @returns {object} the requested results.
    * @description The lat1, lon1, azi1, and a12 fields of the result are
    *   always set; s12 is included if arcmode is false.  For details on the
-   *   outmask parameter, see {@tutorial interface}, "The outmask and caps
+   *   outmask parameter, see {@tutorial 2-interface}, "The outmask and caps
    *   parameters".
    */
   l.GeodesicLine.prototype.GenPosition = function(arcmode, s12_a12,
@@ -341,7 +341,7 @@
    * @returns {object} the requested results.
    * @description The lat1, lon1, azi1, s12, and a12 fields of the result are
    *   always set; s12 is included if arcmode is false.  For details on the
-   *   outmask parameter, see {@tutorial interface}, "The outmask and caps
+   *   outmask parameter, see {@tutorial 2-interface}, "The outmask and caps
    *   parameters".
    */
   l.GeodesicLine.prototype.Position = function(s12, outmask) {
@@ -357,7 +357,7 @@
    * @returns {object} the requested results.
    * @description The lat1, lon1, azi1, and a12 fields of the result are
    *   always set.  For details on the outmask parameter, see {@tutorial
-   *   interface}, "The outmask and caps parameters".
+   *   2-interface}, "The outmask and caps parameters".
    */
   l.GeodesicLine.prototype.ArcPosition = function(a12, outmask) {
     return this.GenPosition(true, a12, outmask);

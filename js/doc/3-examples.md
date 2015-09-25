@@ -22,7 +22,7 @@ $ npm install --global geographiclib
 ```
 then in [node](https://nodejs.org), you can do
 ```javascript
-var GeographicLib = require('geographiclib');
+var GeographicLib = require("geographiclib");
 ```
 
 #### Using node with a free-standing geographiclib.js
@@ -30,11 +30,27 @@ var GeographicLib = require('geographiclib');
 If you have geographiclib.js (version 1.45 or later) in your current
 directory, then [node](https://nodejs.org) can access it with
 ```javascript
-var GeographicLib = require('./geographiclib');
+var GeographicLib = require("./geographiclib");
 ```
 A similar prescription works if geographiclib.js is installed elsewhere
 in your filesystem, replacing "./" above with the correct directory.
 Note that the directory must begin with "./", "../", or "/".
+
+#### Using with ADM with geographiclib.js
+
+If you have geographiclib.js (version 1.45 or later) in your current
+directory
+```javascript
+require.config({
+  paths: {
+    geographiclib: "./geographiclib.js" // or .min.js
+    }
+});
+
+define(["geographiclib"], function(GeographicLib) {
+  // do something with GeographicLib here.
+});
+```
 
 #### HTML with your own version of geographiclib.min.js
 
@@ -84,7 +100,7 @@ great circles) and *f* &lt; 0 to give a prolate ellipsoid.
 
 The rest of the examples on this page assume the following assignments
 ```javascript
-var GeographicLib = require('geographiclib');
+var GeographicLib = require("geographiclib");
 var Geodesic = GeographicLib.Geodesic,
     DMS = GeographicLib.DMS,
     geod = Geodesic.WGS84;
@@ -101,7 +117,7 @@ The distance from Wellington, NZ (41.32S, 174.81E) to Salamanca, Spain
 Geodesic.Inverse}:
 ```javascript
 var r = geod.Inverse(-41.32, 174.81, 40.96, -5.50);
-console.log('The distance is ' + r.s12.toFixed(3) + ' m.');
+console.log("The distance is " + r.s12.toFixed(3) + " m.");
 ```
 &rarr;`The distance is 19959679.267 m.`
 
@@ -110,18 +126,18 @@ The point the point 20000 km SW of Perth, Australia (32.06S, 115.74E) using
 Geodesic.Direct}:
 ```javascript
 var r = geod.Direct(-32.06, 115.74, 225, 20000e3);
-console.log('The position is (' +
-            r.lat2.toFixed(8) + ', ' + r.lon2.toFixed(8) + ').');
+console.log("The position is (" +
+            r.lat2.toFixed(8) + ", " + r.lon2.toFixed(8) + ").");
 ```
 &rarr;`The position is (32.11195529, -63.95925278).`
 
 The area between the geodesic from JFK Airport (40.6N, 73.8W) to LHR
 Airport (51.6N, 0.5W) and the equator.  This is an example of setting
-the *outmask* parameter, see {@tutorial interface}, "The *outmask* and
+the *outmask* parameter, see {@tutorial 2-interface}, "The *outmask* and
 *caps* parameters".
 ```javascript
 var r = geod.Inverse(40.6, -73.8, 51.6, -0.5, Geodesic.AREA);
-console.log('The area is ' + r.S12.toFixed(1) + ' m^2');
+console.log("The area is " + r.S12.toFixed(1) + " m^2");
 ```
 &rarr; `The area is 40041368848742.5 m^2`
 
@@ -139,7 +155,7 @@ var r = geod.Inverse(40.1, 116.6, 37.6, -122.4),
     l = geod.Line(r.lat1, r.lon1, r.azi1),
     s12 = r.s12; ds = 1000e3, n = Math.ceil(s12 / ds),
     i, s;
-console.log('distance latitude longitude azimuth');
+console.log("distance latitude longitude azimuth");
 for (i = 0; i <= n; ++i) {
   s = Math.min(ds * i, s12);
   r = l.Position(s, Geodesic.STANDARD | Geodesic.LONG_UNROLL);
@@ -182,7 +198,7 @@ var r = geod.Inverse(40.1, 116.6, 37.6, -122.4, Geodesic.AZIMUTH),
     a12 = r.a12; da = 1, n = Math.ceil(a12 / da),
     i, a;
 da = a12 / n;
-console.log('latitude longitude');
+console.log("latitude longitude");
 for (i = 0; i <= n; ++i) {
   a = da * i;
   r = l.ArcPosition(a, Geodesic.LATITUDE |
