@@ -165,8 +165,8 @@ function xy = formatnum(x, xh, y, yh, prec)
   x = x - xh * 1e11; y = y - yh * 1e11;
   d = 10 ^ (11 - prec);
   x = floor(x / d); y = floor(y / d);
-  xy = [num2str(x, ['%0', int2str(prec), 'd']), ...
-        num2str(y, ['%0', int2str(prec), 'd'])];
+  xy = [num2str(x, ['%0', int2str(prec), '.0f']), ...
+        num2str(y, ['%0', int2str(prec), '.0f'])];
 end
 
 function band = LatitudeBand(lat)

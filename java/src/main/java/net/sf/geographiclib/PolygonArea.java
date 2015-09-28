@@ -194,6 +194,8 @@ public class PolygonArea {
    *   of the polygon or the length of the polyline (meters), and <i>area</i>
    *   is the area of the polygon (meters<sup>2</sup>) or Double.NaN of
    *   <i>polyline</i> is true in the constructor.
+   * <p>
+   * More points can be added to the polygon after this call.
    **********************************************************************/
   public PolygonResult Compute(boolean reverse, boolean sign) {
     if (_num < 2)

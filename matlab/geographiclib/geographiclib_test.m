@@ -6,35 +6,47 @@ function geographiclib_test
 %   runs a variety of tests and produces no output it they are successful.
 
   n = 0;
-  i = testrand; if i, n=n+1; printf("testrand fail: %d\n", i); end
-  i = GeodSolve0; if i, n=n+1; printf("GeodSolve0 fail: %d\n", i); end
-  i = GeodSolve1; if i, n=n+1; printf("GeodSolve1 fail: %d\n", i); end
-  i = GeodSolve2; if i, n=n+1; printf("GeodSolve2 fail: %d\n", i); end
-  i = GeodSolve4; if i, n=n+1; printf("GeodSolve4 fail: %d\n", i); end
-  i = GeodSolve5; if i, n=n+1; printf("GeodSolve5 fail: %d\n", i); end
-  i = GeodSolve6; if i, n=n+1; printf("GeodSolve6 fail: %d\n", i); end
-  i = GeodSolve9; if i, n=n+1; printf("GeodSolve9 fail: %d\n", i); end
-  i = GeodSolve10; if i, n=n+1; printf("GeodSolve10 fail: %d\n", i); end
-  i = GeodSolve11; if i, n=n+1; printf("GeodSolve11 fail: %d\n", i); end
-  i = GeodSolve12; if i, n=n+1; printf("GeodSolve12 fail: %d\n", i); end
-  i = GeodSolve14; if i, n=n+1; printf("GeodSolve14 fail: %d\n", i); end
-  i = GeodSolve15; if i, n=n+1; printf("GeodSolve15 fail: %d\n", i); end
-  i = GeodSolve17; if i, n=n+1; printf("GeodSolve17 fail: %d\n", i); end
-  i = GeodSolve26; if i, n=n+1; printf("GeodSolve26 fail: %d\n", i); end
-  i = GeodSolve28; if i, n=n+1; printf("GeodSolve28 fail: %d\n", i); end
-  i = GeodSolve33; if i, n=n+1; printf("GeodSolve33 fail: %d\n", i); end
-  i = GeodSolve55; if i, n=n+1; printf("GeodSolve55 fail: %d\n", i); end
-  i = Planimeter0; if i, n=n+1; printf("Planimeter0 fail: %d\n", i); end
-  i = Planimeter5; if i, n=n+1; printf("Planimeter5 fail: %d\n", i); end
-  i = Planimeter6; if i, n=n+1; printf("Planimeter6 fail: %d\n", i); end
-  i = Planimeter12; if i, n=n+1; printf("Planimeter12 fail: %d\n", i); end
-  i = Planimeter13; if i, n=n+1; printf("Planimeter13 fail: %d\n", i); end
-  i = gedistance0; if i, n=n+1; printf("gedistance0 fail: %d\n", i); end
-  assert(n == 0)
+  i = testrand; if i, n=n+1; fprintf('testrand fail: %d\n', i); end
+  i = GeodSolve0; if i, n=n+1; fprintf('GeodSolve0 fail: %d\n', i); end
+  i = GeodSolve1; if i, n=n+1; fprintf('GeodSolve1 fail: %d\n', i); end
+  i = GeodSolve2; if i, n=n+1; fprintf('GeodSolve2 fail: %d\n', i); end
+  i = GeodSolve4; if i, n=n+1; fprintf('GeodSolve4 fail: %d\n', i); end
+  i = GeodSolve5; if i, n=n+1; fprintf('GeodSolve5 fail: %d\n', i); end
+  i = GeodSolve6; if i, n=n+1; fprintf('GeodSolve6 fail: %d\n', i); end
+  i = GeodSolve9; if i, n=n+1; fprintf('GeodSolve9 fail: %d\n', i); end
+  i = GeodSolve10; if i, n=n+1; fprintf('GeodSolve10 fail: %d\n', i); end
+  i = GeodSolve11; if i, n=n+1; fprintf('GeodSolve11 fail: %d\n', i); end
+  i = GeodSolve12; if i, n=n+1; fprintf('GeodSolve12 fail: %d\n', i); end
+  i = GeodSolve14; if i, n=n+1; fprintf('GeodSolve14 fail: %d\n', i); end
+  i = GeodSolve15; if i, n=n+1; fprintf('GeodSolve15 fail: %d\n', i); end
+  i = GeodSolve17; if i, n=n+1; fprintf('GeodSolve17 fail: %d\n', i); end
+  i = GeodSolve26; if i, n=n+1; fprintf('GeodSolve26 fail: %d\n', i); end
+  i = GeodSolve28; if i, n=n+1; fprintf('GeodSolve28 fail: %d\n', i); end
+  i = GeodSolve33; if i, n=n+1; fprintf('GeodSolve33 fail: %d\n', i); end
+  i = GeodSolve55; if i, n=n+1; fprintf('GeodSolve55 fail: %d\n', i); end
+  i = Planimeter0; if i, n=n+1; fprintf('Planimeter0 fail: %d\n', i); end
+  i = Planimeter5; if i, n=n+1; fprintf('Planimeter5 fail: %d\n', i); end
+  i = Planimeter6; if i, n=n+1; fprintf('Planimeter6 fail: %d\n', i); end
+  i = Planimeter12; if i, n=n+1; fprintf('Planimeter12 fail: %d\n', i); end
+  i = Planimeter13; if i, n=n+1; fprintf('Planimeter13 fail: %d\n', i); end
+  i = gedistance0; if i, n=n+1; fprintf('gedistance0 fail: %d\n', i); end
+  i = tranmerc0; if i, n=n+1; fprintf('tranmerc0 fail: %d\n', i); end
+  i = mgrs0; if i, n=n+1; fprintf('mgrs0 fail: %d\n', i); end
+  i = mgrs1; if i, n=n+1; fprintf('mgrs1 fail: %d\n', i); end
+  i = mgrs2; if i, n=n+1; fprintf('mgrs2 fail: %d\n', i); end
+  i = mgrs3; if i, n=n+1; fprintf('mgrs3 fail: %d\n', i); end
+  i = mgrs4; if i, n=n+1; fprintf('mgrs4 fail: %d\n', i); end
+  assert(n == 0);
 end
 
 function n = assertEquals(x, y, d)
-  n = any( ~(abs(x - y) <= d) );
+  n = abs(x - y) <= d;
+  n = sum(~n(:));
+end
+
+function n = assertNaN(x)
+  n = isnan(x);
+  n = sum(~n(:));
 end
 
 function n = testrand
@@ -195,6 +207,9 @@ end
 
 function n = GeodSolve4
 % Check fix for short line bug found 2010-05-21
+% This also checks the MATLAB specific bug:
+% Ensure that Lengths in geoddistance is not invoked with zero-length
+% vectors, 2015-08-25.
   n = 0;
   s12 = geoddistance(36.493349428792, 0, 36.49334942879201, .0000008);
   n = n + assertEquals(s12, 0.072, 0.5e-3);
@@ -271,9 +286,9 @@ function n = GeodSolve14
 % Check fix for inverse ignoring lon12 = nan
   n = 0;
   [s12, azi1, azi2] = geoddistance(0, 0, 1, NaN);
-  n = n + ~isnan(azi1);
-  n = n + ~isnan(azi2);
-  n = n + ~isnan(s12);
+  n = n + assertNaN(azi1);
+  n = n + assertNaN(azi2);
+  n = n + assertNaN(s12);
 end
 
 function n = GeodSolve15
@@ -366,6 +381,10 @@ function n = GeodSolve33
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
   n = n + assertEquals(azi2, -180.00000, 0.5e-5);
   n = n + assertEquals(s12, 20027270, 0.5);
+  % Check also octave-specific versions of this problem.
+  % In 1.44 this returned [-2.0004e+07, -2.0004e+07, 0.0000e+00, 0.0000e+00]
+  s12 = geoddistance(0,0,0,[179.5, 179.6, 180, 180]);
+  n = n + assertEquals(s12, [19980862, 19989165, 20003931, 20003931], 0.5);
 end
 
 function n = GeodSolve55
@@ -373,13 +392,13 @@ function n = GeodSolve55
 % Geodesic::Inverse, found 2015-09-23.
   n = 0;
   [s12, azi1, azi2] = geoddistance(NaN, 0, 0, 90);
-  n = n + ~isnan(azi1);
-  n = n + ~isnan(azi2);
-  n = n + ~isnan(s12);
+  n = n + assertNaN(azi1);
+  n = n + assertNaN(azi2);
+  n = n + assertNaN(s12);
   [s12, azi1, azi2] = geoddistance(NaN, 0, 90, 9);
-  n = n + ~isnan(azi1);
-  n = n + ~isnan(azi2);
-  n = n + ~isnan(s12);
+  n = n + assertNaN(azi1);
+  n = n + assertNaN(azi2);
+  n = n + assertNaN(s12);
 end
 
 function n = Planimeter0
@@ -462,4 +481,74 @@ function n = gedistance0
   n = 0;
   s12 = gedistance(0, 0, 0, 100);
   n = n + assertEquals(s12, 11131949, 0.5);
+end
+
+function n = tranmerc0
+% In 1.44, tranmerc_{fwd,inv} didn't work with array arguments.
+  n = 0;
+  % This used to result in an error
+  [x, y, gam, k] = tranmerc_fwd(0, 0, [90,90;85,85], [10,20;10,20]);
+  k0 = 0.9996;
+  n = n + assertEquals(x, [0, 0; 96820.412637, 190740.935334]/k0, 0.5e-6);
+  n = n + assertEquals(y, [9997964.943021, 9997964.943021;  ...
+                      9448171.516284, 9473242.646190]/k0, 0.5e-6);
+  n = n + assertEquals(gam, [10, 20; ...
+                      9.962710901776, 19.929896900550], 0.5e-12);
+  n = n + assertEquals(k, [0.9996, 0.9996; ...
+                      0.999714504947, 1.000044424775]/k0, 0.5e-12);
+  % This used to result in NaNs
+  [x, y, gam, k] = tranmerc_fwd(0, 0, [90,90;85,85]', [10,20;10,20]');
+  k0 = 0.9996;
+  n = n + assertEquals(x, [0, 0; 96820.412637, 190740.935334]'/k0, 0.5e-6);
+  n = n + assertEquals(y, [9997964.943021, 9997964.943021;  ...
+                      9448171.516284, 9473242.646190]'/k0, 0.5e-6);
+  n = n + assertEquals(gam, [10, 20; ...
+                      9.962710901776, 19.929896900550]', 0.5e-12);
+  n = n + assertEquals(k, [0.9996, 0.9996; ...
+                      0.999714504947, 1.000044424775]'/k0, 0.5e-12);
+end
+
+function n = mgrs0
+% In 1.43, mgrs_inv didn't detect illegal letter combinations.
+  n = 0;
+  % This used to result in finite x, y
+  [x, y, zone, northp] = mgrs_inv('38RMB');
+  n = n + assertNaN(x) + assertNaN(y);
+  n = n + assertEquals(zone, -4, 0);
+  n = n + assertEquals(northp, false, 0);
+end
+
+function n = mgrs1
+% In 1.44, mgrs_fwd gives the wrong results with prec = 10 or 11 in octave
+  n = 0;
+  % This used to result in '38SMB-1539607552-1539607552'
+  mgrs = mgrs_fwd(450000, 3650000, 38, 1, 11);
+  n = n + assertEquals(mgrs{1}, '38SMB5000000000050000000000', 0);
+end
+
+function n = mgrs2
+% In 1.43, mgrs_inv doesn't decode prec 11 string correctly
+  n = 0;
+  % This used to result in x = y = NaN
+  [x, y, zone, northp] = mgrs_inv('38SMB5000000000050000000000');
+  n = n + assertEquals(x, 450000.0000005, 0.5e-6);
+  n = n + assertEquals(y, 3650000.0000005, 0.5e-6);
+  n = n + assertEquals(zone, 38, 0);
+  n = n + assertEquals(northp, true, 0);
+end
+
+function n = mgrs3
+% GeoConvert16: Check MGRS::Forward improved rounding fix, 2015-07-22
+  n = 0;
+  mgrs = mgrs_fwd(444140.6, 3684706.3, 38, 1, 8);
+  n = n + assertEquals(mgrs{1}, '38SMB4414060084706300', 0);
+end
+
+function n = mgrs4
+% GeoConvert17: Check MGRS::Forward digit consistency fix, 2015-07-23
+  n = 0;
+  mgrs = mgrs_fwd(500000, 63.811, 38, 1, 8);
+  n = n + assertEquals(mgrs{1}, '38NNF0000000000063811', 0);
+  mgrs = mgrs_fwd(500000, 63.811, 38, 1, 9);
+  n = n + assertEquals(mgrs{1}, '38NNF000000000000638110', 0);
 end

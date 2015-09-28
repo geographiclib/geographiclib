@@ -636,6 +636,8 @@ extern "C" {
    * vertex.  Set \e pA or \e pP to zero, if you do not want the corresponding
    * quantity returned.
    *
+   * More points can be added to the polygon after this call.
+   *
    * Example, compute the perimeter and area of the geodesic triangle with
    * vertices (0&deg;N,0&deg;E), (0&deg;N,90&deg;E), (90&deg;N,0&deg;E).
    @code{.c}

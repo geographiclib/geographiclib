@@ -168,6 +168,8 @@ namespace GeographicLib {
      * @param[out] area the area of the polygon (meters<sup>2</sup>); only set
      *   if \e polyline is false in the constructor.
      * @return the number of points.
+     *
+     * More points can be added to the polygon after this call.
      **********************************************************************/
     unsigned Compute(bool reverse, bool sign,
                      real& perimeter, real& area) const;

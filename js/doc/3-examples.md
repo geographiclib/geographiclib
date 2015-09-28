@@ -36,22 +36,6 @@ A similar prescription works if geographiclib.js is installed elsewhere
 in your filesystem, replacing "./" above with the correct directory.
 Note that the directory must begin with "./", "../", or "/".
 
-#### Using with ADM with geographiclib.js
-
-If you have geographiclib.js (version 1.45 or later) in your current
-directory
-```javascript
-require.config({
-  paths: {
-    geographiclib: "./geographiclib.js" // or .min.js
-    }
-});
-
-define(["geographiclib"], function(GeographicLib) {
-  // do something with GeographicLib here.
-});
-```
-
 #### HTML with your own version of geographiclib.min.js
 
 Load geographiclib.min.js with
@@ -80,6 +64,28 @@ with, for example,
 Browse
 [http://geographiclib.sf.net/scripts](http://geographiclib.sf.net/scripts)
 to see what versions are available.
+
+#### Loading geographiclib.min.js with AMD
+
+This uses [require.js](http://requirejs.org/) (which you can download
+[here](http://requirejs.org/docs/download.html)) to load geographiclib
+(version 1.45 or later) asynchronously.  Your web page includes
+```html
+<script type="text/javascript" src="require.js"></script>
+<script type="text/javascript" src="main.js"></script>
+```
+where main.js contains, for example,
+```javascript
+require.config({
+  paths: {
+    geographiclib: "./geographiclib.min"
+    }
+});
+
+define(["geographiclib"], function(GeographicLib) {
+  // do something with GeographicLib here.
+});
+```
 
 ### <a name="ellipsoid"></a>Specifying the ellipsoid
 

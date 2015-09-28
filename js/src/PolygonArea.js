@@ -155,6 +155,7 @@
    * @returns {object} r where r.number is the number of vertices, r.perimeter
    *   is the perimeter (meters), and r.area (only returned if polyline is
    *   false) is the area (meters<sup>2</sup>).
+   * @description More points can be added to the polygon after this call.
    */
   p.PolygonArea.prototype.Compute = function(reverse, sign) {
     var vals = {number: this.num}, t, tempsum, crossings;

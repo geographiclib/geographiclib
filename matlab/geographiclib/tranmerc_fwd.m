@@ -13,7 +13,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   case of lat0 = 0 is treated efficiently provided that lat0 is specified
 %   as a scalar.  projdoc defines the projection and gives the restrictions
 %   on the allowed ranges of the arguments.  The inverse projection is
-%   given by tranmerc_inv.
+%   given by tranmerc_inv.  The scale on the central meridian is 1.
 %
 %   gam and k give metric properties of the projection at (lat,lon); gam is
 %   the meridian convergence at the point and k is the scale.
