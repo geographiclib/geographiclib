@@ -68,6 +68,7 @@ mkdir BUILD
 cd BUILD
 cmake ..
 make
+make test
 echo 30 0 29.5 179.5 | ./inverse \endverbatim
 
 Alternatively, if you have proj.4 installed, you can compile and link

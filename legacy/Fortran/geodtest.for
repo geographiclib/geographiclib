@@ -1,4 +1,13 @@
-* Test suite for Fortran version of the geodesic library
+*> @file geodtest.for
+*! @brief Test suite for the geodesic routines in Fortran
+*!
+*! Run these tests by configuring with cmake and running "make test".
+*!
+*! Copyright (c) Charles Karney (2015) <charles@karney.com> and licensed under
+*! the MIT/X11 License.  For more information, see
+*! http://geographiclib.sourceforge.net/
+
+*> @cond SKIP
 
       block data tests
 
@@ -1033,3 +1042,5 @@
 
       stop
       end
+
+*> @endcond SKIP

@@ -7026,7 +7026,7 @@ git repository for GeographicLib</a>.
    - Changes to JavaScript package:
      - clean up the implementation;
      - it is a now a <a href="https://nodejs.org">node</a> package that
-       can be installed with n <a href="https://www.npmjs.com">npm</a>;
+       can be installed with <a href="https://www.npmjs.com">npm</a>;
      - make install now installs the node package in
        <code>lib/node_modules/geographiclib</code>;
      - add unit tests using mocha;
@@ -7047,6 +7047,8 @@ git repository for GeographicLib</a>.
        subfunctions with zero-length arrays;
      - fix tranmerc_{fwd,inv} so that they work with arrays and
        mixed array/scalar arguments;
+     - work around Octave problem which causes mgrs_fwd to return
+       garbage with prec = 10 or 11;
      - add geographiclib_test.m to run a test suite.
    - Behavior of substituting 1/\e f for \e f if \e f > 1 is now
      <b>deprecated</b>.  This behavior has been removed from the
@@ -7065,7 +7067,7 @@ git repository for GeographicLib</a>.
        GEOGRAPHICLIB_PRECISION &gt; 3;
      - add geod_polygon_clear to C library;
      - turn illegal latitudes into NaNs for Fortran library;
-     - add test cases for the C and Fortran libraries.
+     - add test suites for the C and Fortran libraries.
 
  - <a href="http://geographiclib.sf.net/1.44">Version 1.44</a>
    (released 2015-08-14)

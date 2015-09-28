@@ -61,6 +61,7 @@ mkdir BUILD
 cd BUILD
 cmake ..
 make
+make test
 echo 30 0 29.5 179.5 | ./geodinverse \endverbatim
 
 Finally, the two programs

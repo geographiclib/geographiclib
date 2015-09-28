@@ -1,4 +1,15 @@
-/* Test suite for C version the geodesic library */
+/**
+ * \file geodtest.c
+ * \brief Test suite for the geodesic routines in C
+ *
+ * Run these tests by configuring with cmake and running "make test".
+ *
+ * Copyright (c) Charles Karney (2015) <charles@karney.com> and licensed under
+ * the MIT/X11 License.  For more information, see
+ * http://geographiclib.sourceforge.net/
+ **********************************************************************/
+
+/** @cond SKIP */
 
 #include "geodesic.h"
 #include <stdio.h>
@@ -620,3 +631,5 @@ int main() {
   if ((i = Planimeter13())) {++n; printf("Planimeter13 fail: %d\n", i);}
   return n;
 }
+
+/** @endcond */
