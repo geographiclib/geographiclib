@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2015-mm-dd
+\date 2015-09-30
 
 \section abstract Abstract
 
@@ -300,9 +300,7 @@ Here are the steps to compile and install GeographicLib:
     relative to CMAKE_INSTALL_PREFIX being used when it's ON:
     - cmake configuration: OFF cmake; ON: lib/cmake/GeographicLib;
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
-    - JavaScript interface: OFF: doc/scripts; ON:
-      share/doc/GeographicLib/scripts;
-    - NEW JavaScript interface: OFF: node_modules; ON: lib/node_modules;
+    - JavaScript interface: OFF: node_modules; ON: lib/node_modules;
     - Python interface: OFF: python; ON: lib/python/site-packages;
     - MATLAB interface: OFF: matlab; ON: share/matlab.
     .
@@ -1195,7 +1193,7 @@ dependency \verbatim
   <dependency>
     <groupId>net.sf.geographiclib</groupId>
     <artifactId>GeographicLib-Java</artifactId>
-    <version>1.44</version>
+    <version>1.45</version>
   </dependency>
   \endverbatim
 in your <code>pom.xml</code>.
@@ -1205,7 +1203,7 @@ For documentation, see
 
 \section javascript JavaScript implementation
 
-The directory doc/scripts/GeographicLib contains the classes
+The directory js/src contains the classes
 - Math
 - Accumulator
 - Geodesic
@@ -1231,8 +1229,8 @@ are available.
 
 Starting with version 1.45, this package is available as an
 <a href="https://nodejs.org">node</a> package that can be installed with
-<a href="https://www.npmjs.com">npm</a>.  To install this as a node
-package, use \verbatim
+<a href="https://www.npmjs.com">npm</a> (thanks to Yurij Mikhalevich for
+help with this work).  To install this as a node package, use \verbatim
   npm install geographiclib \endverbatim
 
 For documentation, see
@@ -4079,7 +4077,7 @@ Here is the solution, exactly as given by Jacobi
 \f]
 As Jacobi notes &quot;a function of the angle \f$\beta\f$ equals a
 function of the angle \f$\omega\f$.  These two functions are just
-Abelian integrals...&quot; Two constants \f$\delta\f$ and \f$\gamma\f$
+Abelian integrals&hellip;&quot; Two constants \f$\delta\f$ and \f$\gamma\f$
 appear in the solution.  Typically \f$\delta\f$ is zero if the lower
 limits of the integrals are taken to be the starting point of the geodesic
 and the direction of the geodesics is determined by \f$\gamma\f$.
@@ -5573,7 +5571,7 @@ G4[9] = + 2431/104595456 * eps^9;
 Some papers advocating the use of great ellipses for navigation exhibit
 a prejudice against the use of geodesics.  These excerpts from
 Pallikaris, Tsoulos, & Paradissis (2009) give the flavor
- - ... it is required to adopt realistic accuracy standards in order not
+ - &hellip; it is required to adopt realistic accuracy standards in order not
    only to eliminate the significant errors of the spherical model but
    also to avoid the exaggerated and unrealistic requirements of sub
    meter accuracy.
@@ -7016,17 +7014,20 @@ of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
 
- - <a href="http://geographiclib.sf.net/1.44">Version 1.45</a>
-   (released 2015-mm-dd)
+ - <a href="http://geographiclib.sf.net/1.45">Version 1.45</a>
+   (released 2015-09-30)
    - Fix BUG in solution of inverse geodesic caused by misbehavior of
-     some versions of Visual Studio on Windows (fmod(-0.0, 360.0)
-     returns +0.0 instead of -0.0) and Octave (sind(-0.0) returns +0.0
-     instead of -0.0).  These bugs were exposed because max(-0.0, +0.0)
-     returns -0.0 for some languages.
+     some versions of Visual Studio on Windows (fmod(&minus;0.0, 360.0)
+     returns +0.0 instead of &minus;0.0) and Octave (sind(&minus;0.0)
+     returns +0.0 instead of &minus;0.0).  These bugs were exposed
+     because max(&minus;0.0, +0.0) returns &minus;0.0 for some
+     languages.
+   - Geodesic::Inverse now correctly returns NaNs if one of the
+     latitudes is a NaN.
    - Changes to JavaScript package:
-     - clean up the implementation;
-     - it is a now a <a href="https://nodejs.org">node</a> package that
-       can be installed with <a href="https://www.npmjs.com">npm</a>;
+     - thanks to help from Yurij Mikhalevich, it is a now a
+       <a href="https://nodejs.org">node</a> package that can be
+       installed with <a href="https://www.npmjs.com">npm</a>;
      - make install now installs the node package in
        <code>lib/node_modules/geographiclib</code>;
      - add unit tests using mocha;
@@ -7035,9 +7036,11 @@ git repository for GeographicLib</a>.
        1.44, resulted in the wrong azimuth being reported for points at
        the pole).
    - Changes to Java package:
-     - add implementation of Gnomonic projection (courtesy of Sebastian
-       Mattheis);
+     - add implementation of ellipsoidal Gnomonic projection (courtesy
+       of Sebastian Mattheis);
      - add unit tests using JUnit;
+     - Math.toRadians and Math.toDegrees are used instead of
+       GeoMath.degree (which is now removed), as a result&hellip;
      - Java version 1.2 (released 1998-12) or later is now required.
    - Changes to Python package:
      - add unit tests using the unittest framework;
@@ -7056,11 +7059,9 @@ git repository for GeographicLib</a>.
      documented).  Maxima, MATLAB, and Fortran implementations never
      included this behavior.
    - Other changes:
-     - fix bug (introduced in version 1.42) in C++ implementation
-       geodesic area computation which causes NaNs to be returned in the
+     - fix bug, introduced in version 1.42, in the C++ implementation to
+       the computation of area which causes NaNs to be returned in the
        case of a sphere;
-     - make sure NaNs are returned from Geodesic::Inverse when the
-       latitude of one of the points is NaN;
      - fixed bug, introduced in version 1.44, in the detection of C++11
        math functions in configure.ac;
      - throw error on non-convergence in Gnomonic::Reverse if
@@ -7535,7 +7536,7 @@ git repository for GeographicLib</a>.
        select the library to use;
      - find_package version checking allows nmake and Visual Studio
        generators to interoperate on Windows;
-     - find_package (GeographicLib ...) requires that GeographicLib be
+     - find_package (GeographicLib &hellip;) requires that GeographicLib be
        capitalized correctly;
      - on Unix/Linux, don't include the version number in directory for
        the cmake configuration files;

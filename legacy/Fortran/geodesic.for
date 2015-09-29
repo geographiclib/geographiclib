@@ -118,7 +118,7 @@
 *! http://geographiclib.sourceforge.net/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.44.
+*! <a href="../index.html">GeographicLib</a> 1.45.
 
 *> Solve the direct geodesic problem
 *!

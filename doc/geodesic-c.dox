@@ -141,11 +141,15 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 \section changes-c Change log
 
  - <a href="http://geographiclib.sf.net/1.45/C">Version 1.45</a>
-   (released 2015-mm-dd)
+   (released 2015-09-30)
+   - The solution of the inverse problem now correctly returns NaNs if
+     one of the latitudes is a NaN.
+   - Include a test suite that can be run with "make test" after
+     configuring with cmake.
+   - Add geod_polygon_clear().
 
  - <a href="http://geographiclib.sf.net/1.44/C">Version 1.44</a>
    (released 2015-08-14)
-
    - Improve accuracy of calculations by evaluating trigonometric
      functions more carefully and replacing the series for the reduced
      length with one with a smaller truncation error.

@@ -36,6 +36,10 @@ Instructions for this are given in
 
   http://geographiclib.sf.net/html/geoid.html#geoidinst
 
+A change log for this package is available at
+
+  http://geographiclib.sf.net/html/changes.html
+
 A problem with the way MATLAB Central packages toolboxes causes the
 "Robust Control Toolbox" to be listed as a required product. This is
 wrong; this package has no dependencies other than MATLAB (version 7.9

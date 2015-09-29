@@ -1,5 +1,7 @@
 ## Geodesic routines from GeographicLib
 
+This documentation applies to version 1.45.
+
 ### Installation
 
 This library is a JavaScript implementation of the geodesic routines
@@ -48,9 +50,9 @@ Two examples of this library in use are
   Maps](http://geographiclib.sf.net/scripts/geod-google.html)
 
 ### More information
-* {@tutorial geodesics}
-* {@tutorial interface}
-* {@tutorial examples}
+* {@tutorial 1-geodesics}
+* {@tutorial 2-interface}
+* {@tutorial 3-examples}
 
 ### Authors
 

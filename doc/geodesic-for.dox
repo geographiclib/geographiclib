@@ -127,11 +127,17 @@ and are therefore in the public domain.
 \section changes-for Change log
 
  - <a href="http://geographiclib.sf.net/1.45/Fortran">Version 1.45</a>
-   (released 2015-mm-dd)
+   (released 2015-09-30)
+   - The solution of the inverse problem now correctly returns NaNs if
+     one of the latitudes is a NaN.
+   - Include a test suite that can be run with "make test" after
+     configuring with cmake.
+   - The library now treats latitudes outside the range [&minus;90&deg;,
+     90&deg;] as NaNs; so the sample programs no longer check for legal
+     values of latitude.
 
  - <a href="http://geographiclib.sf.net/1.44/Fortran">Version 1.44</a>
    (released 2015-08-14)
-
    - Improve accuracy of calculations by evaluating trigonometric
      functions more carefully and replacing the series for the reduced
      length with one with a smaller truncation error.

@@ -55,7 +55,7 @@ set -e
 #   doc/geodesic-c.dox
 
 # Fortran
-#   legacy/Fortran/geodesic.for
+#   legacy/Fortran/geodesic.for comment + geover
 #   doc/geodesic-for.dox
 
 # Java
@@ -70,6 +70,7 @@ set -e
 #   js/src/Math.js
 #   js/package.json
 #   js/README.md
+#   js/GeographicLib.md
 
 DATE=`date +%F`
 VERSION=1.45
@@ -169,7 +170,7 @@ while read ver x64; do
     (
 	echo "#! /bin/sh -exv"
 	echo 'b=geog-`pwd | sed s%.*/%%`'
-	echo 'rm -rf v:/data/scratch/$b'
+	echo 'rm -rf v:/data/scratch/$b u:/pkg-$pkg/GeographicLib-$VERSION/*'
 	echo 'mkdir -p v:/data/scratch/$b'
 	echo 'cd v:/data/scratch/$b'
 	echo 'unset GEOGRAPHICLIB_DATA'
@@ -209,6 +210,8 @@ tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
     done
 )
 rm -rf GeographicLib-$VERSION
+find * -type d -empty | xargs -r rmdir
+find * -type d -empty | xargs -r rmdir
 
 cd $TEMP/rela/GeographicLib-$VERSION
 make -j$NUMCPUS

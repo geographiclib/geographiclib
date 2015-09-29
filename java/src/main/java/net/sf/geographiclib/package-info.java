@@ -210,11 +210,18 @@
  * <ul>
  * <li>
  *   <a href="http://geographiclib.sf.net/1.45/java">Version 1.45</a>
- *   (released 2015-mm-dd)
+ *   (released 2015-09-30)
  * <ul>
  * <li>
- *   Use Math.toRadians and Math.toDegrees instead of GeoMath.degree.
- *   This requires Java 1.2 or later (released 1998-12).
+ *   The solution of the inverse problem now correctly returns NaNs if
+ *   one of the latitudes is a NaN.
+ * <li>
+ *   Add implementation of the ellipsoidal
+ *   {@link net.sf.geographiclib.Gnomonic} (courtesy of Sebastian Mattheis).
+ * <li>
+ *   Math.toRadians and Math.toDegrees are used instead of GeoMath.degree
+ *   (which is now removed).  This requires Java 1.2 or later (released
+ *   1998-12).
  * </ul>
  * <li>
  *   <a href="http://geographiclib.sf.net/1.44/java">Version 1.44</a>

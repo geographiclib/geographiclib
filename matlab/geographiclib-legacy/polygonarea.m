@@ -28,8 +28,6 @@ function [area, perimeter] = polygonarea(latlong, a, f)
 %   See also GEODAREA.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   if (nargin < 2)
     ellipsoid = defaultellipsoid;

@@ -1,6 +1,6 @@
 {
   "name": "geographiclib",
-  "version": "1.45.0-beta7",
+  "version": "1.45.0",
   "description":
   "JavaScript implementation of geodesic routines in GeographicLib",
   "main": "geographiclib.js",
