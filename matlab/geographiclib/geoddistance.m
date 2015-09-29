@@ -44,8 +44,6 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 %
-% This file was distributed with GeographicLib 1.44.
-%
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
 % documentation.  This is a vector implementation and the results returned

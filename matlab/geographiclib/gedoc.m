@@ -115,8 +115,6 @@ function gedoc
 %     GEODDISTANCE, GEODRECKON.
 
 % Copyright (c) Charles Karney (2014-2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   help gedoc
 end

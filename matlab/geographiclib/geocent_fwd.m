@@ -21,8 +21,6 @@ function [X, Y, Z, M] = geocent_fwd(lat, lon, h, ellipsoid)
 %   See also GEOCENT_INV, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.44.
 
   narginchk(2, 4)
   if nargin < 3, h = 0; end

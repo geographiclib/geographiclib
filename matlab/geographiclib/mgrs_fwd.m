@@ -31,8 +31,6 @@ function mgrs = mgrs_fwd(x, y, zone, isnorth, prec)
 %   See also MGRS_INV, UTMUPS_FWD.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   narginchk(4, 5)
   if nargin < 5, prec = 5; end

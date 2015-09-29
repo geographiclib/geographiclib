@@ -1,5 +1,5 @@
 % GeographicLib toolbox
-% Version 1.44.1 2015-08-24
+% Version 1.45 2015-10-01
 %
 %   This toolbox provides native MATLAB implementations of a subset of the
 %   C++ library, GeographicLib.  Key components of this toolbox are
@@ -91,5 +91,3 @@
 %   gedoc            - Great ellipses on an ellipsoid of revolution
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.44.

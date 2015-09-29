@@ -33,8 +33,6 @@ function [utmups, scale] = utmupsforward(latlong, setzone)
 %   See also UTMUPS_FWD.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   if nargin < 2
     setzone = -1;

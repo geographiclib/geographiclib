@@ -67,8 +67,6 @@ function projdoc
 %     GNOMONIC_FWD, GNOMONIC_INV, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   help projdoc
 end

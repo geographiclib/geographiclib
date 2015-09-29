@@ -44,8 +44,6 @@ function [x, y, zone, isnorth, gam, k] = utmups_fwd(lat, lon, setzone)
 %   See also UTMUPS_INV, TRANMERC_FWD, POLARST_FWD, MGRS_FWD.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   narginchk(2, 3)
   if nargin < 3, setzone = -1; end

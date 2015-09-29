@@ -31,8 +31,6 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
 %   See also GEDOC, GEDISTANCE, DEFAULTELLIPSOID, GEODDISTANCE, GEODRECKON.
 
 % Copyright (c) Charles Karney (2014-2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.43.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end

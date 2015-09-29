@@ -27,8 +27,6 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 %   See also GEDOC, GERECKON, DEFAULTELLIPSOID, GEODDISTANCE, GEODRECKON.
 
 % Copyright (c) Charles Karney (2014-2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.44.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end

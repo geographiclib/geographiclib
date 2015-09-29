@@ -29,8 +29,6 @@ function [utmups, prec] = mgrsreverse(mgrs)
 %   See also MGRS_INV.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   [x, y, z, h, prec] = mgrs_inv(mgrs);
   utmups = [x, y, z, h];

@@ -23,8 +23,6 @@ function [x, y, zone, isnorth, prec] = mgrs_inv(mgrs, center)
 %   See also MGRS_FWD, UTMUPS_INV.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.43.
 
   narginchk(1, 2)
   if nargin < 2
