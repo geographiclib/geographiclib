@@ -105,23 +105,47 @@ public:
      * (colon) may be used to <i>separate</i> these components (numbers must
      * appear before and after each colon); thus 50d30'10.3&quot; may be
      * written as 50:30:10.3, 5.5' may be written 0:5.5, and so on.  The
-     * integer parts of the minutes and seconds components must be less than
-     * 60.  A single leading sign is permitted.  A hemisphere designator (N, E,
-     * W, S) may be added to the beginning or end of the string.  The result is
-     * multiplied by the implied sign of the hemisphere designator (negative
-     * for S and W).  In addition \e ind is set to DMS::LATITUDE if N or S is
-     * present, to DMS::LONGITUDE if E or W is present, and to DMS::NONE
-     * otherwise.  Throws an error on a malformed string.  No check is
-     * performed on the range of the result.  Examples of legal and illegal
+     * integer parts of the minutes and seconds components must be less
+     * than 60.  A single leading sign is permitted.  A hemisphere designator
+     * (N, E, W, S) may be added to the beginning or end of the string.  The
+     * result is multiplied by the implied sign of the hemisphere designator
+     * (negative for S and W).  In addition \e ind is set to DMS::LATITUDE if N
+     * or S is present, to DMS::LONGITUDE if E or W is present, and to
+     * DMS::NONE otherwise.  Throws an error on a malformed string.  No check
+     * is performed on the range of the result.  Examples of legal and illegal
      * strings are
      * - <i>LEGAL</i> (all the entries on each line are equivalent)
      *   - -20.51125, 20d30'40.5&quot;S, -20&deg;30'40.5, -20d30.675,
      *     N-20d30'40.5&quot;, -20:30:40.5
      *   - 4d0'9, 4d9&quot;, 4d9'', 4:0:9, 004:00:09, 4.0025, 4.0025d, 4d0.15,
      *     04:.15
+     *   - 4:59.99999999999999, 4:60.0, 4:59:59.9999999999999, 4:59:60.0, 5
      * - <i>ILLEGAL</i> (the exception thrown explains the problem)
      *   - 4d5&quot;4', 4::5, 4:5:, :4:5, 4d4.5'4&quot;, -N20.5, 1.8e2d, 4:60,
-     *     4d-5'
+     *     4:59:60
+     *
+     * The decoding operation can also perform addition and subtraction
+     * operations.  If the string includes <i>internal</i> signs (i.e., not at
+     * the beginning nor immediately after an initial hemisphere designator),
+     * then the string is split immediately before such signs and each piece is
+     * decoded according to the above rules and the results added; thus
+     * <code>S3-2.5+4.1N</code> is parsed as the sum of <code>S3</code>,
+     * <code>-2.5</code>, <code>+4.1N</code>.  Any piece can include a
+     * hemisphere designator; however, if multiple designators are given, they
+     * must compatible; e.g., you cannot mix N and E.  In addition, the
+     * designator can appear at the beginning or end of the first piece, but
+     * must be at the end of all subsequent pieces (a hemisphere designator is
+     * not allowed after the initial sign).  Examples of legal and illegal
+     * combinations are
+     * - <i>LEGAL</i> (these are all equivalent)
+     *   - 070:00:45, 70:01:15W+0:0.5, 70:01:15W-0:0:30W, W70:01:15+0:0:30E
+     * - <i>ILLEGAL</i> (the exception thrown explains the problem)
+     *   - 70:01:15W+0:0:15N, W70:01:15+W0:0:15
+     *
+     * <b>WARNING:</b> "Exponential" notation is not recognized.  Thus
+     * <code>7.0E1</code> is illegal, while <code>7.0E+1</code> is parsed as
+     * <code>(7.0E) + (+1)</code>, yielding the same result as
+     * <code>8.0E</code>.
      *
      * <b>NOTE:</b> At present, all the string handling in the C++
      * implementation %GeographicLib is with 8-bit characters.  The support for
@@ -177,7 +201,7 @@ public:
      * @param[in] dmsb second string.
      * @param[out] lat latitude (degrees).
      * @param[out] lon longitude (degrees).
-     * @param[in] swaplatlong if true assume longitude is given before latitude
+     * @param[in] longfirst if true assume longitude is given before latitude
      *   in the absence of hemisphere designators (default false).
      * @exception GeographicErr if \e dmsa or \e dmsb is malformed.
      * @exception GeographicErr if \e dmsa and \e dmsb are both interpreted as
@@ -186,8 +210,6 @@ public:
      *   longitudes.
      * @exception GeographicErr if decoded latitude is not in [&minus;90&deg;,
      *   90&deg;].
-     * @exception GeographicErr if decoded longitude is not in
-     *   [&minus;540&deg;, 540&deg;).
      *
      * By default, the \e lat (resp., \e lon) is assigned to the results of
      * decoding \e dmsa (resp., \e dmsb).  However this is overridden if either
@@ -198,7 +220,7 @@ public:
     static void DecodeLatLon(System::String^ dmsa, System::String^ dmsb,
                      [System::Runtime::InteropServices::Out] double% lat,
                      [System::Runtime::InteropServices::Out] double% lon,
-                     bool swaplatlong );
+                     bool longfirst );
 
     /**
      * Convert a string to an angle in degrees.
@@ -219,8 +241,6 @@ public:
      * @param[in] azistr input string.
      * @exception GeographicErr if \e azistr is malformed.
      * @exception GeographicErr if \e azistr includes a N/S designator.
-     * @exception GeographicErr if decoded azimuth is not in
-     *   [&minus;540&deg;, 540&deg;).
      * @return azimuth (degrees) reduced to the range [&minus;180&deg;,
      *   180&deg;).
      *

@@ -56,8 +56,6 @@ function projdoc
 %
 %   Restrictions on the inputs:
 %     * All latitudes must lie in [-90, 90].
-%     * All longitudes and azimuths must lie in [-540, 540).  On output,
-%       these quantities lie in [-180, 180).
 %     * The equatorial radius, a, must be positive.
 %     * The eccentricity, e, should be satisfy abs(e) < 0.2 in order to
 %       retain full accuracy (this corresponds to flattenings satisfying
@@ -69,8 +67,6 @@ function projdoc
 %     GNOMONIC_FWD, GNOMONIC_INV, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   help projdoc
 end

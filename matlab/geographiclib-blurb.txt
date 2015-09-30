@@ -20,10 +20,9 @@ Toolbox.  However, this toolbox offers:
 
 Subsets of this package were previously released as:
 
-  Geodesics on an ellipsoid of revolution
-    http://www.mathworks.com/matlabcentral/fileexchange/39108
-  Geodesic projections for an ellipsoid (now withdrawn)
-  Great ellipses (now withdrawn)
+  Geodesics on an ellipsoid of revolution (deprecated)
+  Geodesic projections for an ellipsoid (withdrawn)
+  Great ellipses (withdrawn)
 
 Including all of the functionality in a single toolbox allows easier
 sharing of code (via a common private directory).
@@ -36,6 +35,10 @@ Geoid lookup requires the installation of one or more geoid models.
 Instructions for this are given in
 
   http://geographiclib.sf.net/html/geoid.html#geoidinst
+
+A change log for this package is available at
+
+  http://geographiclib.sf.net/html/changes.html
 
 A problem with the way MATLAB Central packages toolboxes causes the
 "Robust Control Toolbox" to be listed as a required product. This is

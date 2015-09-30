@@ -2,7 +2,7 @@
  * \file Constants.hpp
  * \brief Header for GeographicLib::Constants class
  *
- * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -150,8 +150,12 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return the flattening of WGS84 ellipsoid (1/298.257223563).
      **********************************************************************/
-    template<typename T> static inline T WGS84_f()
-    { return 1 / ( T(298257223563LL) / 1000000000 ); }
+    template<typename T> static inline T WGS84_f() {
+      // Evaluating this as 1000000000 / T(298257223563LL) reduces the
+      // round-off error by about 10%.  However, expressing the flattening as
+      // 1/298.257223563 is well ingrained.
+      return 1 / ( T(298257223563LL) / 1000000000 );
+    }
     /**
      * A synonym for WGS84_f<real>().
      **********************************************************************/

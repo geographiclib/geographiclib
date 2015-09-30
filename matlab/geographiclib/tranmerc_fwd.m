@@ -13,7 +13,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   case of lat0 = 0 is treated efficiently provided that lat0 is specified
 %   as a scalar.  projdoc defines the projection and gives the restrictions
 %   on the allowed ranges of the arguments.  The inverse projection is
-%   given by tranmerc_inv.
+%   given by tranmerc_inv.  The scale on the central meridian is 1.
 %
 %   gam and k give metric properties of the projection at (lat,lon); gam is
 %   the meridian convergence at the point and k is the scale.
@@ -40,13 +40,11 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %     DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.43.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
   try
-    Z = zeros(size(lat0 + lon0 + lat + lon));
+    S = size(lat0 + lon0 + lat + lon);
   catch
     error('lat0, lon0, lat, lon have incompatible sizes')
   end
@@ -54,7 +52,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
     error('ellipsoid must be a vector of size 2')
   end
 
-  degree = pi/180;
+  Z = zeros(prod(S),1);
   maxpow = 6;
 
   a = ellipsoid(1);
@@ -67,7 +65,8 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   b1 = (1 - f) * (A1m1f(n) + 1);
   a1 = b1 * a;
 
-  lon = AngDiff(AngNormalize(lon0), AngNormalize(lon));
+  lat = LatFix(lat(:)) + Z;
+  lon = AngDiff(lon0(:), lon(:)) + Z;
 
   latsign = 1 - 2 * (lat < 0);
   lonsign = 1 - 2 * (lon < 0);
@@ -76,21 +75,20 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   backside = lon > 90;
   latsign(backside & lat == 0) = -1;
   lon(backside) = 180 - lon(backside);
-  phi = lat * degree;
-  lam = lon * degree;
-  c = max(0, cos(lam));
-  tau = tan(phi);
+  [sphi, cphi] = sincosdx(lat);
+  [slam, clam] = sincosdx(lon);
+  tau = sphi ./ max(sqrt(realmin), cphi);
   taup = taupf(tau, e2);
-  xip = atan2(taup, c);
-  etap = asinh(sin(lam) ./ hypot(taup, c));
-  gam = atan(tan(lam) .* taup ./ hypot(1, taup));
-  k = sqrt(e2m + e2 * cos(phi).^2) .* hypot(1, tau) ./ hypot(taup, c);
+  xip = atan2(taup, clam);
+  etap = asinh(slam ./ hypot(taup, clam));
+  gam = atan2dx(slam .* taup, clam .* hypot(1, taup));
+  k = sqrt(e2m + e2 * cphi.^2) .* hypot(1, tau) ./ hypot(taup, clam);
   c = ~(lat ~= 90);
   if any(c)
     xip(c) = pi/2;
     etap(c) = 0;
-    gam(c) = lam;
-    k = cc;
+    gam(c) = lon(c);
+    k(c) = cc;
   end
   c0 = cos(2 * xip); ch0 = cosh(2 * etap);
   s0 = sin(2 * xip); sh0 = sinh(2 * etap);
@@ -120,23 +118,26 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   ar = s0 .* ch0; ai = c0 .* sh0;
   xi  = xip  + ar .* xi0 - ai .* eta0;
   eta = etap + ai .* xi0 + ar .* eta0;
-  gam = gam - atan2(yi1, yr1);
+  gam = gam - atan2dx(yi1, yr1);
   k = k .* (b1 * hypot(yr1, yi1));
-  gam = gam / degree;
   xi(backside) = pi - xi(backside);
   y = a1 * xi .* latsign;
   x = a1 * eta .* lonsign;
   gam(backside) = 180 - gam(backside);
-  gam = gam .* latsign .* lonsign;
+  gam = AngNormalize(gam .* latsign .* lonsign);
 
   if isscalar(lat0) && lat0 == 0
     y0 = 0;
   else
-    [sbet0, cbet0] = norm2((1-f) * sind(lat0), cosd(lat0));
+    [sbet0, cbet0] = sincosdx(LatFix(lat0(:)));
+    [sbet0, cbet0] = norm2((1-f) * sbet0, cbet0);
     y0 = a1 * (atan2(sbet0, cbet0) + ...
                SinCosSeries(true, sbet0, cbet0, C1f(n)));
   end
   y = y - y0;
+
+  x = reshape(x, S); y = reshape(y, S);
+  gam = reshape(gam, S); k = reshape(k, S);
 end
 
 function alp = alpf(n)

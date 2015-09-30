@@ -8,7 +8,7 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release)
 endif ()
 
-set (TOOLS geoddirect geodinverse planimeter)
+set (TOOLS geoddirect geodinverse planimeter geodtest)
 
 foreach (TOOL ${TOOLS})
   add_executable (${TOOL} ${TOOL}.for geodesic.for geodesic.inc)
@@ -21,3 +21,9 @@ set_target_properties (${TOOLS} PROPERTIES COMPILE_FLAGS
 # compile flags above.
 add_executable (ngsforward ngsforward.for ngscommon.for geodesic.for)
 add_executable (ngsinverse ngsinverse.for ngscommon.for geodesic.for)
+
+# Turn on testing
+enable_testing ()
+
+# Run the test suite
+add_test (NAME geodtest COMMAND geodtest)

@@ -34,5 +34,3 @@
 %   geographiclibinterface - Compile interface code (DEPRECATED)
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.

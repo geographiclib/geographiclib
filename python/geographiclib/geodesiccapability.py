@@ -32,6 +32,7 @@ class GeodesicCapability(object):
   LONGITUDE     = 1 << 8  | CAP_C3
   AZIMUTH       = 1 << 9  | CAP_NONE
   DISTANCE      = 1 << 10 | CAP_C1
+  STANDARD      = LATITUDE | LONGITUDE | AZIMUTH | DISTANCE
   DISTANCE_IN   = 1 << 11 | CAP_C1 | CAP_C1p
   REDUCEDLENGTH = 1 << 12 | CAP_C1 | CAP_C2
   GEODESICSCALE = 1 << 13 | CAP_C1 | CAP_C2

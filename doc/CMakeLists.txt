@@ -42,6 +42,8 @@ if (DOXYGEN_FOUND)
     ../dotnet/NETGeographicLib/*.cpp ../dotnet/NETGeographicLib/*.h
     ../dotnet/examples/CS/*.cs ../dotnet/examples/ManagedCPP/*.cpp
     ../dotnet/examples/VB/*.vb)
+  file (GLOB JSSOURCES ../js/src/*.js)
+  file (GLOB JSTUTORIALS ../js/GeographicLib.md  ../js/doc/*.md)
   file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac
     tmseries30.html geodseries30.html ../LICENSE.txt)
   file (GLOB FIGURES *.png)
@@ -49,6 +51,11 @@ if (DOXYGEN_FOUND)
   add_custom_target (doc ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
   add_dependencies (doc htmlman)
+  if (JSDOC)
+    set (JSDOC_CMD "${JSDOC}")
+  else ()
+    set (JSDOC_CMD "echo")
+  endif ()
   add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/html/index.html
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxyfile
       ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-c
@@ -56,13 +63,19 @@ if (DOXYGEN_FOUND)
       ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-net
       ${CMAKE_CURRENT_BINARY_DIR}/GeographicLib.dox
       geodesic-c.dox geodesic-for.dox NETGeographicLib.dox
-      ${SOURCES} ${EXTRA_FILES} ${FIGURES} ${HTMLMAN}
+      ${SOURCES} ${JSSOURCES} ${EXTRA_FILES} ${JSTUTORIALS}
+      ${FIGURES} ${HTMLMAN}
     COMMAND ${CMAKE_COMMAND} -E remove_directory html
     COMMAND ${CMAKE_COMMAND} -E copy_directory html-stage html
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile > doxygen.log
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile-c > doxygen-c.log
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile-for > doxygen-for.log
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile-net > doxygen-net.log
+    COMMAND ${JSDOC_CMD} --verbose -d html/js
+      -u ${PROJECT_SOURCE_DIR}/js/doc
+      -c ${PROJECT_SOURCE_DIR}/js/conf.json
+      -R ${PROJECT_SOURCE_DIR}/js/GeographicLib.md
+      ${PROJECT_SOURCE_DIR}/js/src > jsdoc.log
     COMMENT "Generating html documentation tree")
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
     DESTINATION ${INSTALL_DOC_DIR})
@@ -77,10 +90,3 @@ else ()
     ${CMAKE_CURRENT_BINARY_DIR}/html/utilities.html
     DESTINATION ${INSTALL_DOC_DIR}/html)
 endif ()
-
-# Finally install the JavaScript files
-file (GLOB SCRIPTDRIVERS scripts/[A-Za-z]*.html)
-file (GLOB JSSCRIPTS scripts/GeographicLib/[A-Za-z]*.js)
-install (FILES ${SCRIPTDRIVERS} DESTINATION ${INSTALL_DOC_DIR}/scripts)
-install (FILES ${JSSCRIPTS}
-  DESTINATION ${INSTALL_DOC_DIR}/scripts/GeographicLib)

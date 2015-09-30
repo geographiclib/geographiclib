@@ -1,6 +1,7 @@
 EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html
 
-FIGURES = $(srcdir)/gauss-krueger-graticule.png \
+FIGURES = \
+	$(srcdir)/gauss-krueger-graticule.png \
 	$(srcdir)/thompson-tm-graticule.png \
 	$(srcdir)/gauss-krueger-convergence-scale.png \
 	$(srcdir)/gauss-schreiber-graticule-a.png \
@@ -8,19 +9,6 @@ FIGURES = $(srcdir)/gauss-krueger-graticule.png \
 	$(srcdir)/thompson-tm-graticule-a.png \
 	$(srcdir)/gauss-krueger-error.png \
 	$(srcdir)/meridian-measures.png
-
-SCRIPTDRIVERS = \
-	$(srcdir)/scripts/geod-calc.html \
-	$(srcdir)/scripts/geod-google.html \
-	$(srcdir)/scripts/geod-google-instructions.html
-
-JSSCRIPTS = \
-	$(srcdir)/scripts/GeographicLib/Math.js \
-	$(srcdir)/scripts/GeographicLib/Geodesic.js \
-	$(srcdir)/scripts/GeographicLib/GeodesicLine.js \
-	$(srcdir)/scripts/GeographicLib/PolygonArea.js \
-	$(srcdir)/scripts/GeographicLib/DMS.js \
-	$(srcdir)/scripts/GeographicLib/Interface.js
 
 HPPFILES = \
 	$(top_srcdir)/include/GeographicLib/Accumulator.hpp \
@@ -31,14 +19,16 @@ HPPFILES = \
 	$(top_srcdir)/include/GeographicLib/DMS.hpp \
 	$(top_srcdir)/include/GeographicLib/Ellipsoid.hpp \
 	$(top_srcdir)/include/GeographicLib/EllipticFunction.hpp \
-	$(top_srcdir)/include/GeographicLib/Geocentric.hpp \
+	$(top_srcdir)/include/GeographicLib/GARS.hpp \
 	$(top_srcdir)/include/GeographicLib/GeoCoords.hpp \
+	$(top_srcdir)/include/GeographicLib/Geocentric.hpp \
 	$(top_srcdir)/include/GeographicLib/Geodesic.hpp \
 	$(top_srcdir)/include/GeographicLib/GeodesicExact.hpp \
 	$(top_srcdir)/include/GeographicLib/GeodesicLine.hpp \
 	$(top_srcdir)/include/GeographicLib/GeodesicLineExact.hpp \
 	$(top_srcdir)/include/GeographicLib/Geohash.hpp \
 	$(top_srcdir)/include/GeographicLib/Geoid.hpp \
+	$(top_srcdir)/include/GeographicLib/Georef.hpp \
 	$(top_srcdir)/include/GeographicLib/Gnomonic.hpp \
 	$(top_srcdir)/include/GeographicLib/LambertConformalConic.hpp \
 	$(top_srcdir)/include/GeographicLib/LocalCartesian.hpp \
@@ -58,12 +48,14 @@ ALLSOURCES = \
 	$(top_srcdir)/src/DMS.cpp \
 	$(top_srcdir)/src/Ellipsoid.cpp \
 	$(top_srcdir)/src/EllipticFunction.cpp \
-	$(top_srcdir)/src/Geocentric.cpp \
+	$(top_srcdir)/src/GARS.cpp \
 	$(top_srcdir)/src/GeoCoords.cpp \
+	$(top_srcdir)/src/Geocentric.cpp \
 	$(top_srcdir)/src/Geodesic.cpp \
 	$(top_srcdir)/src/GeodesicLine.cpp \
 	$(top_srcdir)/src/Geohash.cpp \
 	$(top_srcdir)/src/Geoid.cpp \
+	$(top_srcdir)/src/Georef.cpp \
 	$(top_srcdir)/src/Gnomonic.cpp \
 	$(top_srcdir)/src/LambertConformalConic.cpp \
 	$(top_srcdir)/src/LocalCartesian.cpp \
@@ -97,21 +89,6 @@ MANPAGES = \
 	../man/RhumbSolve.1.html \
 	../man/TransverseMercatorProj.1.html
 
-LEGACYFILES = \
-	$(top_srcdir)/legacy/C/geodesic.c \
-	$(top_srcdir)/legacy/C/geodesic.h \
-	$(top_srcdir)/legacy/C/direct.c \
-	$(top_srcdir)/legacy/C/inverse.c \
-	$(top_srcdir)/legacy/C/planimeter.c \
-	$(top_srcdir)/legacy/Fortran/geodesic.for \
-	$(top_srcdir)/legacy/Fortran/geodesic.inc \
-	$(top_srcdir)/legacy/Fortran/geoddirect.for \
-	$(top_srcdir)/legacy/Fortran/geodinverse.for \
-	$(top_srcdir)/legacy/Fortran/ngscommon.for \
-	$(top_srcdir)/legacy/Fortran/ngsforward.for \
-	$(top_srcdir)/legacy/Fortran/ngsinverse.for \
-	$(top_srcdir)/legacy/Fortran/planimeter.for
-
 doc: html/index.html
 
 if HAVE_DOXYGEN
@@ -121,9 +98,7 @@ manpages: $(MANPAGES)
 	touch $@
 
 html/index.html: manpages doxyfile.in GeographicLib.dox.in \
-	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(FIGURES) \
-	doxyfile-c.in geodesic-c.dox doxyfile-for.in geodesic-for.dox \
-	$(LEGACYFILES)
+	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(FIGURES)
 	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \
 	$(top_srcdir)/LICENSE.txt html/
 	sed -e "s%@PROJECT_VERSION@%$(VERSION)%g" \
@@ -132,14 +107,6 @@ html/index.html: manpages doxyfile.in GeographicLib.dox.in \
 	-e "s%@PROJECT_BINARY_DIR@%..%g" \
 	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 	$(srcdir)/doxyfile.in | $(DOXYGEN) -
-	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
-	-e "s%@PROJECT_BINARY_DIR@%..%g" \
-	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
-	$(srcdir)/doxyfile-c.in | $(DOXYGEN) -
-	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
-	-e "s%@PROJECT_BINARY_DIR@%..%g" \
-	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
-	$(srcdir)/doxyfile-for.in | $(DOXYGEN) -
 else
 html/index.html: index.html.in utilities.html.in
 	if test -d html; then rm -rf html/*; else mkdir html; fi
@@ -153,29 +120,11 @@ endif
 maintainer-clean-local:
 	rm -rf html manpages
 
+htmldir=$(DESTDIR)$(docdir)/html
+
 install-doc: html/index.html
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html
-	$(INSTALL) -m 644 `dirname $<`/*.* $(DESTDIR)$(docdir)/html
+	$(INSTALL) -d $(htmldir)
+	$(INSTALL) -m 644 `dirname $<`/*.* $(htmldir)
 	-test -f `dirname $<`/search/search.js && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/search && \
-	$(INSTALL) -m 644 `dirname $<`/search/*.* \
-	$(DESTDIR)$(docdir)/html/search
-	-test -f `dirname $<`/C/index.html && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/C && \
-	$(INSTALL) -m 644 `dirname $<`/C/*.* $(DESTDIR)$(docdir)/html/C
-	-test -f `dirname $<`/C/search/search.js && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/C/search && \
-	$(INSTALL) -m 644 `dirname $<`/C/search/*.* \
-	$(DESTDIR)$(docdir)/html/C/search
-	-test -f `dirname $<`/Fortran/index.html && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/Fortran && \
-	$(INSTALL) -m 644 `dirname $<`/Fortran/*.* \
-	$(DESTDIR)$(docdir)/html/Fortran
-	-test -f `dirname $<`/Fortran/search/search.js && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/Fortran/search && \
-	$(INSTALL) -m 644 `dirname $<`/Fortran/search/*.* \
-	$(DESTDIR)$(docdir)/html/Fortran/search
-	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts
-	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(DESTDIR)$(docdir)/scripts
-	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts/GeographicLib
-	$(INSTALL) -m 644 $(JSSCRIPTS) $(DESTDIR)$(docdir)/scripts/GeographicLib
+	$(INSTALL) -d $(htmldir)/search && \
+	$(INSTALL) -m 644 `dirname $<`/search/*.* $(htmldir)/search || true

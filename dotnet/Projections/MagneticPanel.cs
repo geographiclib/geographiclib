@@ -134,6 +134,9 @@ namespace Projections
                 if (bx != x || by != y || bz != z )
                     throw new Exception("Error in MagneticCircle.Field (2)");
 
+                double dtest = Utility.FractionalYear("2015.34");
+                dtest = Utility.FractionalYear("2015-07-31");
+
                 MessageBox.Show("No errors detected", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception xcpt)

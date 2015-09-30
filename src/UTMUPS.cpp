@@ -2,7 +2,7 @@
  * \file UTMUPS.cpp
  * \brief Implementation for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -47,8 +47,7 @@ namespace GeographicLib {
     if (Math::isnan(lat) || Math::isnan(lon)) // Check if lat or lon is a NaN
       return INVALID;
     if (setzone == UTM || (lat >= -80 && lat < 84)) {
-      // Assume lon is in [-540, 540).
-      int ilon = int(floor(lon));
+      int ilon = int(floor(fmod(lon, real(360))));
       if (ilon >= 180)
         ilon -= 360;
       else if (ilon < -180)
@@ -68,7 +67,9 @@ namespace GeographicLib {
                        int& zone, bool& northp, real& x, real& y,
                        real& gamma, real& k,
                        int setzone, bool mgrslimits) {
-    CheckLatLon(lat, lon);
+    if (abs(lat) > 90)
+      throw GeographicErr("Latitude " + Utility::str(lat)
+                          + "d not in [-90d, 90d]");
     bool northp1 = lat >= 0;
     int zone1 = StandardZone(lat, lon, setzone);
     if (zone1 == INVALID) {
@@ -136,15 +137,6 @@ namespace GeographicLib {
     else
       PolarStereographic::UPS().Reverse(northp, x, y, lat, lon, gamma, k);
   }
-
-  void UTMUPS::CheckLatLon(real lat, real lon) {
-    if (abs(lat) > 90)
-      throw GeographicErr("Latitude " + Utility::str(lat)
-                          + "d not in [-90d, 90d]");
-    if (lon < -540 || lon >= 540)
-      throw GeographicErr("Longitude " + Utility::str(lon)
-                          + "d not in [-540d, 540d)");
-    }
 
   bool UTMUPS::CheckCoords(bool utmp, bool northp, real x, real y,
                            bool mgrslimits, bool throwp) {

@@ -2,7 +2,7 @@
  * \file GeoConvert.cpp
  * \brief Command line utility for geographic coordinate conversions
  *
- * Copyright (c) Charles Karney (2008-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
     int outputmode = GEOGRAPHIC;
     int prec = 0;
     int zone = UTMUPS::MATCH;
-    bool centerp = true, swaplatlong = false;
+    bool centerp = true, longfirst = false;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
     bool sethemisphere = false, northp = false, abbrev = true;
@@ -58,22 +58,7 @@ int main(int argc, char* argv[]) {
         outputmode = CONVERGENCE;
       else if (arg == "-n")
         centerp = false;
-      else if (arg == "-w")
-        swaplatlong = true;
-      else if (arg == "-l")
-        abbrev = false;
-      else if (arg == "-a")
-        abbrev = true;
-      else if (arg == "-p") {
-        if (++m == argc) return usage(1, true);
-        try {
-          prec = Utility::num<int>(std::string(argv[m]));
-        }
-        catch (const std::exception&) {
-          std::cerr << "Precision " << argv[m] << " is not a number\n";
-          return 1;
-        }
-      } else if (arg == "-z") {
+      else if (arg == "-z") {
         if (++m == argc) return usage(1, true);
         std::string zonestr(argv[m]);
         try {
@@ -100,7 +85,22 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-t") {
         zone = UTMUPS::UTM;
         sethemisphere = false;
-      } else if (arg == "--input-string") {
+      } else if (arg == "-w")
+        longfirst = true;
+      else if (arg == "-p") {
+        if (++m == argc) return usage(1, true);
+        try {
+          prec = Utility::num<int>(std::string(argv[m]));
+        }
+        catch (const std::exception&) {
+          std::cerr << "Precision " << argv[m] << " is not a number\n";
+          return 1;
+        }
+      } else if (arg == "-l")
+        abbrev = false;
+      else if (arg == "-a")
+        abbrev = true;
+      else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
       } else if (arg == "--input-file") {
@@ -166,12 +166,12 @@ int main(int argc, char* argv[]) {
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
     GeoCoords p;
-    std::string s;
+    std::string s, eol;
     std::string os;
     int retval = 0;
 
     while (std::getline(*input, s)) {
-      std::string eol("\n");
+      eol = "\n";
       try {
         if (!cdelim.empty()) {
           std::string::size_type m = s.find(cdelim);
@@ -180,14 +180,14 @@ int main(int argc, char* argv[]) {
             s = s.substr(0, m);
           }
         }
-        p.Reset(s, centerp, swaplatlong);
+        p.Reset(s, centerp, longfirst);
         p.SetAltZone(zone);
         switch (outputmode) {
         case GEOGRAPHIC:
-          os = p.GeoRepresentation(prec, swaplatlong);
+          os = p.GeoRepresentation(prec, longfirst);
           break;
         case DMS:
-          os = p.DMSRepresentation(prec, swaplatlong, dmssep);
+          os = p.DMSRepresentation(prec, longfirst, dmssep);
           break;
         case UTMUPS:
           os = (sethemisphere

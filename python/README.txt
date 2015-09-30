@@ -5,7 +5,7 @@ GeographicLib.  This contains implementations of the classes
 - GeographicLib::Accumulator
 - GeographicLib::Geodesic
 - GeographicLib::GeodesicLine
-- GeographicLib::PolygonArea
+- GeographicLib::PolygonAreaT<Geodesic>
 
 For more information on GeographicLib, see
 

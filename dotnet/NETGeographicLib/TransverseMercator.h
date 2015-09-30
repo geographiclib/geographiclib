@@ -87,8 +87,7 @@ namespace NETGeographicLib
          *
          * @param[in] a equatorial radius (meters).
          * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-         *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-         *   to 1/\e f.
+         *   Negative \e f gives a prolate ellipsoid.
          * @param[in] k0 central scale factor.
          * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k0 is
          *   not positive.
@@ -119,8 +118,7 @@ namespace NETGeographicLib
          * @param[out] k scale of projection at point.
          *
          * No false easting or northing is added. \e lat should be in the range
-         * [&minus;90&deg;, 90&deg;]; \e lon and \e lon0 should be in the
-         * range [&minus;540&deg;, 540&deg;).
+         * [&minus;90&deg;, 90&deg;].
          **********************************************************************/
         void Forward(double lon0, double lat, double lon,
                      [System::Runtime::InteropServices::Out] double% x,
@@ -139,9 +137,8 @@ namespace NETGeographicLib
          * @param[out] gamma meridian convergence at point (degrees).
          * @param[out] k scale of projection at point.
          *
-         * No false easting or northing is added.  \e lon0 should be in the range
-         * [&minus;540&deg;, 540&deg;).  The value of \e lon returned is in
-         * the range [&minus;180&deg;, 180&deg;).
+         * No false easting or northing is added.  The value of \e lon returned
+         * is in the range [&minus;180&deg;, 180&deg;).
          **********************************************************************/
         void Reverse(double lon0, double x, double y,
                      [System::Runtime::InteropServices::Out] double% lat,

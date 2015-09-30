@@ -84,12 +84,6 @@ namespace GeographicLib {
     real _a, _f, _k0, _mu, _mv, _e;
     bool _extendp;
     EllipticFunction _Eu, _Ev;
-    static inline real overflow() {
-      // Overflow value s.t. atan(overflow_) = pi/2
-      static const real
-        overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
-      return overflow;
-    }
 
     void zeta(real u, real snu, real cnu, real dnu,
               real v, real snv, real cnv, real dnv,
@@ -124,8 +118,7 @@ namespace GeographicLib {
      * Constructor for a ellipsoid with
      *
      * @param[in] a equatorial radius (meters).
-     * @param[in] f flattening of ellipsoid.  If \e f &gt; 1, set flattening
-     *   to 1/\e f.
+     * @param[in] f flattening of ellipsoid.
      * @param[in] k0 central scale factor.
      * @param[in] extendp use extended domain.
      * @exception GeographicErr if \e a, \e f, or \e k0 is not positive.
@@ -184,8 +177,7 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added. \e lat should be in the range
-     * [&minus;90&deg;, 90&deg;]; \e lon and \e lon0 should be in the
-     * range [&minus;540&deg;, 540&deg;).
+     * [&minus;90&deg;, 90&deg;].
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const;
@@ -201,9 +193,8 @@ namespace GeographicLib {
      * @param[out] gamma meridian convergence at point (degrees).
      * @param[out] k scale of projection at point.
      *
-     * No false easting or northing is added.  \e lon0 should be in the range
-     * [&minus;540&deg;, 540&deg;).  The value of \e lon returned is in
-     * the range [&minus;180&deg;, 180&deg;).
+     * No false easting or northing is added.  The value of \e lon returned is
+     * in the range [&minus;180&deg;, 180&deg;).
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const;

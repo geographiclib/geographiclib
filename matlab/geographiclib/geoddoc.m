@@ -82,21 +82,19 @@ function geoddoc
 %     * s13 = s12 + s23
 %     * a13 = a12 + a23
 %     * S13 = S12 + S23
-%     * m13 = m12*m23 + m23*m21
+%     * m13 = m12*M23 + m23*M21
 %     * M13 = M12*M23 - (1 - M12*M21) * m23/m12
 %     * M31 = M32*M21 - (1 - M23*M32) * m12/m23
 %
 %   Restrictions on the inputs:
 %     * All latitudes must lie in [-90, 90].
-%     * All longitudes and azimuths must lie in [-540, 540).  On output,
-%       these quantities lie in [-180, 180).
 %     * The distance s12 is unrestricted.  This allows geodesics to wrap
 %       around the ellipsoid.  Such geodesics are no longer shortest paths.
 %       However they retain the property that they are the straightest
 %       curves on the surface.
 %     * Similarly, the spherical arc length, a12, is unrestricted.
 %     * The equatorial radius, a, must be positive.
-%     * The eccentricity, e, should be satisfy abs(e) < 0.2 in order to
+%     * The eccentricity, e, should satisfy abs(e) < 0.2 in order to
 %       retain full accuracy (this corresponds to flattenings satisfying
 %       abs(f) <= 1/50, approximately).  This condition holds for most
 %       applications in geodesy.
@@ -169,8 +167,6 @@ function geoddoc
 %     GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, POLYGONAREA.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.43.
 
   help geoddoc
 end

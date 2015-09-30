@@ -26,8 +26,6 @@ function [latlong, scale] = utmupsreverse(utmups)
 %   See also UTMUPS_INV.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   [lat, lon, gam, k] = ...
       utmups_inv(utmups(:,1), utmups(:,2), utmups(:,3), utmups(:,4));

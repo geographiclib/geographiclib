@@ -21,8 +21,6 @@ function [X, Y, Z, M] = geocent_fwd(lat, lon, h, ellipsoid)
 %   See also GEOCENT_INV, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   narginchk(2, 4)
   if nargin < 3, h = 0; end
@@ -35,22 +33,15 @@ function [X, Y, Z, M] = geocent_fwd(lat, lon, h, ellipsoid)
   if length(ellipsoid(:)) ~= 2
     error('ellipsoid must be a vector of size 2')
   end
-  lat = lat + z; lon = lon + z; h = h + z;
+  lat = LatFix(lat) + z; lon = lon + z; h = h + z;
 
-  degree = pi/180;
   a = ellipsoid(1);
   e2 = ellipsoid(2)^2;
   e2m = 1 - e2;
 
-  lon = AngNormalize(lon);
-
-  phi = lat * degree;
-  lam = lon * degree;
-  sphi = sin(phi);
-  cphi = cos(phi); cphi(abs(lat) == 90) = 0;
+  [slam, clam] = sincosdx(lon);
+  [sphi, cphi] = sincosdx(lat);
   n = a./sqrt(1 - e2 * sphi.^2);
-  slam = sin(lam); slam(lon == -180) = 0;
-  clam = cos(lam); clam(abs(lon) == 90) = 0;
   Z = (e2m * n + h) .* sphi;
   X = (n + h) .* cphi;
   Y = X .* slam;

@@ -1,14 +1,14 @@
 /**
  * <h1>Geodesic routines from GeographicLib implemented in Java</h1>
  * @author Charles F. F. Karney (charles@karney.com)
- * @version 1.43
+ * @version 1.45
  *
  * <h2>Abstract</h2>
  * <p>
  * GeographicLib-Java is a Java implementation of the geodesic algorithms from
  * <a href="http://geographiclib.sf.net">GeographicLib</a>.  This is a
  * self-contained library which makes it easy to do geodesic computations for
- * an ellipsoid of revolution in a Java program.  It requires Java version 1.1
+ * an ellipsoid of revolution in a Java program.  It requires Java version 1.2
  * or later.
  *
  * <h2>Downloading</h2>
@@ -19,15 +19,15 @@
  * GeographicLib-Java is part of GeographicLib which available for download at
  * <ul>
  * <li>
- *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.43.tar.gz">
- *   GeographicLib-1.43.tar.gz</a>
+ *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.45.tar.gz">
+ *   GeographicLib-1.45.tar.gz</a>
  * <li>
- *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.43.zip">
- *   GeographicLib-1.43.zip</a>
+ *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.45.zip">
+ *   GeographicLib-1.45.zip</a>
  * </ul>
  * <p>
  * as either a compressed tar file (tar.gz) or a zip file.  After unpacking
- * the source, the Java library can be found in GeographicLib-1.43/java.  (This
+ * the source, the Java library can be found in GeographicLib-1.45/java.  (This
  * library is completely independent from the rest of GeodegraphicLib.)  The
  * library consists of the files in the src/main/java/net/sf/geographiclib
  * subdirectory.
@@ -40,7 +40,7 @@
  *   <dependency>
  *     <groupId>net.sf.geographiclib</groupId>
  *     <artifactId>GeographicLib-Java</artifactId>
- *     <version>1.43</version>
+ *     <version>1.45</version>
  *   </dependency> }</pre>
  * in your {@code pom.xml}.
  *
@@ -105,9 +105,9 @@
  * some additional packages to your local repository.)  Then compile and run
  * Inverse.java with <pre>
  * cd inverse/src/main/java
- * javac -cp .:../../../../target/GeographicLib-Java-1.43.jar Inverse.java
+ * javac -cp .:../../../../target/GeographicLib-Java-1.45.jar Inverse.java
  * echo -30 0 29.5 179.5 |
- *   java -cp .:../../../../target/GeographicLib-Java-1.43.jar Inverse </pre>
+ *   java -cp .:../../../../target/GeographicLib-Java-1.45.jar Inverse </pre>
  *
  * <h3>Using maven to build and run {@code Inverse.java}</h3>
  * The sample code includes a {@code pom.xml} which specifies
@@ -199,6 +199,51 @@
  * <li>
  *   <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">
  *   An online geodesic bibliography</a>.
+ * <li>
+ *   The wikipedia page,
+ *   <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
+ *   Geodesics on an ellipsoid</a>.
+ * </ul>
+ *
+ * <h2>Change log</h2>
+ * <p>
+ * <ul>
+ * <li>
+ *   <a href="http://geographiclib.sf.net/1.45/java">Version 1.45</a>
+ *   (released 2015-09-30)
+ * <ul>
+ * <li>
+ *   The solution of the inverse problem now correctly returns NaNs if
+ *   one of the latitudes is a NaN.
+ * <li>
+ *   Add implementation of the ellipsoidal
+ *   {@link net.sf.geographiclib.Gnomonic} (courtesy of Sebastian Mattheis).
+ * <li>
+ *   Math.toRadians and Math.toDegrees are used instead of GeoMath.degree
+ *   (which is now removed).  This requires Java 1.2 or later (released
+ *   1998-12).
+ * </ul>
+ * <li>
+ *   <a href="http://geographiclib.sf.net/1.44/java">Version 1.44</a>
+ *   (released 2015-08-14)
+ * <ul>
+ * <li>
+ *   Improve accuracy of calculations by evaluating trigonometric
+ *   functions more carefully and replacing the series for the reduced
+ *   length with one with a smaller truncation error.
+ * <li>
+ *   The allowed ranges for longitudes and azimuths is now unlimited;
+ *   it used to be [&minus;540&deg;, 540&deg;).
+ * <li>
+ *   Enforce the restriction of latitude to [&minus;90&deg;, 90&deg;] by
+ *   returning NaNs if the latitude is outside this range.
+ * <li>
+ *   Geodesic.Inverse sets <i>s12</i> to zero for coincident points at pole
+ *   (instead of returning a tiny quantity).
+ * <li>
+ *   Geodesic.Inverse pays attentions to the GeodesicMask.LONG_UNROLL bit in
+ *   <i>outmask</i>.
+ * </ul>
  * </ul>
  **********************************************************************/
 package net.sf.geographiclib;

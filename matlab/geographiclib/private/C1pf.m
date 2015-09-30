@@ -1,8 +1,8 @@
 function C1p = C1pf(epsi)
 %C1PF  Evaluate C'_{1,k}
 %
-%   C1p = C1PF(epsi) evaluates C'_{1,l} using Eq. (21).  epsi is an
-%   K x 1 array and C1 is a K x 6 array.
+%   C1p = C1PF(epsi) evaluates C'_{1,l} using Eq. (21).  epsi is a K x 1
+%   array and C1 is a K x 6 array.
 
   persistent coeff nC1p
   if isempty(coeff)

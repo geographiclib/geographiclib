@@ -2,8 +2,8 @@
  * \file CircularEngine.hpp
  * \brief Header for GeographicLib::CircularEngine class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -66,17 +66,7 @@ namespace GeographicLib {
     Math::real Value(bool gradp, real cl, real sl,
                      real& gradx, real& grady, real& gradz) const;
 
-    static inline void cossin(real x, real& cosx, real& sinx) {
-      using std::abs; using std::cos; using std::sin;
-      x = x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
-      real xi = x * Math::degree();
-      cosx = abs(x) ==   90 ? 0 : cos(xi);
-      sinx =     x  == -180 ? 0 : sin(xi);
-    }
-
     friend class SphericalEngine;
-    friend class GravityCircle;  // Access to cossin
-    friend class MagneticCircle; // Access to cossin
     CircularEngine(int M, bool gradp, unsigned norm,
                    real a, real r, real u, real t)
       : _M(M)
@@ -148,7 +138,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real operator()(real lon) const {
       real coslon, sinlon;
-      cossin(lon, coslon, sinlon);
+      Math::sincosd(lon, sinlon, coslon);
       return (*this)(coslon, sinlon);
     }
 
@@ -191,7 +181,7 @@ namespace GeographicLib {
     Math::real operator()(real lon,
                           real& gradx, real& grady, real& gradz) const {
       real coslon, sinlon;
-      cossin(lon, coslon, sinlon);
+      Math::sincosd(lon, sinlon, coslon);
       return (*this)(coslon, sinlon, gradx, grady, gradz);
     }
   };

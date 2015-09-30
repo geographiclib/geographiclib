@@ -27,8 +27,6 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 %   See also GEDOC, GERECKON, DEFAULTELLIPSOID, GEODDISTANCE, GEODRECKON.
 
 % Copyright (c) Charles Karney (2014-2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.43.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -44,7 +42,6 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
   lat1 = lat1 + Z; lon1 = lon1 + Z;
   lat2 = lat2 + Z; lon2 = lon2 + Z;
 
-  degree = pi/180;
   tiny = sqrt(realmin);
 
   a = ellipsoid(1);
@@ -55,19 +52,19 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 
   areap = nargout >= 4;
 
-  lon12 = AngDiff(AngNormalize(lon1(:)), AngNormalize(lon2(:)));
-  lon12 = AngRound(lon12);
+  lat1 = AngRound(LatFix(lat1(:)));
+  lat2 = AngRound(LatFix(lat2(:)));
+  lon12 = AngRound(AngDiff(lon1(:), lon2(:)));
 
-  phi = lat1 * degree;
-  sbet1 = f1 * sin(phi); cbet1 = cos(phi); cbet1(lat1 == -90) = tiny;
+  [sbet1, cbet1] = sincosdx(lat1);
+  sbet1 = f1 * sbet1; cbet1 = max(tiny, cbet1);
   [sbet1, cbet1] = norm2(sbet1, cbet1);
 
-  phi = lat2 * degree;
-  sbet2 = f1 * sin(phi); cbet2 = cos(phi); cbet2(abs(lat2) == 90) = tiny;
+  [sbet2, cbet2] = sincosdx(lat2);
+  sbet2 = f1 * sbet2; cbet2 = max(tiny, cbet2);
   [sbet2, cbet2] = norm2(sbet2, cbet2);
 
-  lam12 = lon12 * degree;
-  slam12 = sin(lam12); slam12(lon12 == 180) = 0; clam12 = cos(lam12);
+  [slam12, clam12] = sincosdx(lon12);
 
   % Solve great circle
   sgam1 = cbet2 .* slam12; cgam1 = +cbet1 .* sbet2 - sbet1 .* cbet2 .* clam12;
@@ -81,6 +78,7 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
   cgam0 = hypot(cgam1, sgam1 .* sbet1);
 
   ssig1 = sbet1; csig1 = cbet1 .* cgam1;
+  csig1(ssig1 == 0 & csig1 == 0) = 1;
   [ssig1, csig1] = norm2(ssig1, csig1);
   ssig2 = ssig1 .* csig12 + csig1 .* ssig12;
   csig2 = csig1 .* csig12 - ssig1 .* ssig12;
@@ -92,8 +90,8 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
   s12 = A1 .* (atan2(ssig12, csig12) + ...
                (SinCosSeries(true, ssig2, csig2, C1a) - ...
                 SinCosSeries(true, ssig1, csig1, C1a)));
-  azi1 = atan2(sgam1, cgam1 .* sqrt(1 - e2 * cbet1.^2)) / degree;
-  azi2 = atan2(sgam2, cgam2 .* sqrt(1 - e2 * cbet2.^2)) / degree;
+  azi1 = atan2dx(sgam1, cgam1 .* sqrt(1 - e2 * cbet1.^2));
+  azi2 = atan2dx(sgam2, cgam2 .* sqrt(1 - e2 * cbet2.^2));
 
   s12 = reshape(s12, S); azi1 = reshape(azi1, S); azi2 = reshape(azi2, S);
 

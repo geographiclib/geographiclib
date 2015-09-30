@@ -27,8 +27,9 @@
      +    s12, azi1, azi2, omask,
      +    dummy1, dummy2, dummy3, dummy4 , dummy5)
       print 20, azi1, azi2, s12
- 20   format(f20.15, 1x, f20.15, 1x, f19.10)
+ 20   format(1x, f20.15, 1x, f20.15, 1x, f19.10)
       go to 10
  90   continue
+
       stop
       end

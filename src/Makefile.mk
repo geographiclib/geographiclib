@@ -16,6 +16,7 @@ MODULES = Accumulator \
 	DMS \
 	Ellipsoid \
 	EllipticFunction \
+	GARS \
 	GeoCoords \
 	Geocentric \
 	Geodesic \
@@ -24,6 +25,7 @@ MODULES = Accumulator \
 	GeodesicLineExact \
 	Geohash \
 	Geoid \
+	Georef \
 	Gnomonic \
 	GravityCircle \
 	GravityModel \
@@ -88,6 +90,7 @@ DMS.o: Config.h Constants.hpp DMS.hpp Math.hpp Utility.hpp
 Ellipsoid.o: Config.h Constants.hpp Ellipsoid.hpp AlbersEqualArea.hpp \
 	EllipticFunction.hpp Math.hpp TransverseMercator.hpp
 EllipticFunction.o: Config.h Constants.hpp EllipticFunction.hpp Math.hpp
+GARS.o: Config.h Constants.hpp GARS.hpp Utility.hpp
 GeoCoords.o: Config.h Constants.hpp DMS.hpp GeoCoords.hpp MGRS.hpp Math.hpp \
 	UTMUPS.hpp Utility.hpp
 Geocentric.o: Config.h Constants.hpp Geocentric.hpp Math.hpp
@@ -100,6 +103,7 @@ GeodesicLineExact.o: Config.h Constants.hpp GeodesicExact.hpp \
 	GeodesicLineExact.hpp Math.hpp
 Geohash.o: Config.h Constants.hpp Geohash.hpp Utility.hpp
 Geoid.o: Config.h Constants.hpp Geoid.hpp Math.hpp
+Georef.o: Config.h Constants.hpp Georef.hpp Utility.hpp
 Gnomonic.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Gnomonic.hpp \
 	Math.hpp
 GravityCircle.o: CircularEngine.hpp Config.h Constants.hpp Geocentric.hpp \

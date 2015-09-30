@@ -44,8 +44,6 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
 %   See also PROJDOC, GNOMONIC_FWD, GEODRECKON, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -62,7 +60,7 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
   eps1 = a * 0.01 * sqrt(eps);
 
   lat0 = lat0 + Z; lon0 = lon0 + Z; x = x + Z; y = y + Z;
-  azi0 = atan2(x, y) / (pi/180);
+  azi0 = atan2dx(x, y);
   rho = hypot(x, y);
   s = a * atan(rho / a);
   little = rho <= a;
@@ -83,10 +81,10 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
   end
   c = ~trip;
   if any(c)
-    lat(c) = NaN;
-    lon(c) = NaN;
-    azi(c) = NaN;
-    M(c) = NaN;
+    lat(c) = nan;
+    lon(c) = nan;
+    azi(c) = nan;
+    M(c) = nan;
   end
   rk = M;
 end

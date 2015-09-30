@@ -19,8 +19,9 @@ fi
 test "$ZONE" || ZONE=-3
 test "$PREC" || PREC=0
 INPUTENC=`encodevalue "$INPUT"`
-COMMAND=GeoConvert
 EXECDIR=../bin
+COMMAND="GeoConvert"
+VERSION=`$EXECDIR/$COMMAND --version | cut -f4 -d" "`
 F='<font color="Blue">'
 G='</font>'
 test $PREC = 0 || COMMAND="$COMMAND -p $PREC"
@@ -165,7 +166,7 @@ cat <<EOF
     <hr>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">
-        GeoConvert</a>
+        GeoConvert (version $VERSION)</a>
       converts between geographic (latitude and longitude) coordinates,
       <a href="https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">
         universal transverse Mercator (UTM)</a> or

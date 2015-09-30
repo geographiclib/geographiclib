@@ -53,8 +53,6 @@ function geoid = geoid_load(name, dir)
 %   See also GEOID_HEIGHT.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.43.
 
   if nargin < 1
     file = geoid_file;

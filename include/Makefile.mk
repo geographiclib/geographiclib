@@ -6,6 +6,7 @@ MODULES = Accumulator \
 	DMS \
 	Ellipsoid \
 	EllipticFunction \
+	GARS \
 	GeoCoords \
 	Geocentric \
 	Geodesic \
@@ -14,6 +15,7 @@ MODULES = Accumulator \
 	GeodesicLineExact \
 	Geohash \
 	Geoid \
+	Georef \
 	Gnomonic \
 	GravityCircle \
 	GravityModel \

@@ -2,7 +2,7 @@
  * \file GeoCoords.hpp
  * \brief Header for GeographicLib::GeoCoords class
  *
- * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -91,7 +91,7 @@ namespace GeographicLib {
      *   the position.
      * @param[in] centerp governs the interpretation of MGRS coordinates (see
      *   below).
-     * @param[in] swaplatlong governs the interpretation of geographic
+     * @param[in] longfirst governs the interpretation of geographic
      *   coordinates (see below).
      * @exception GeographicErr if the \e s is malformed (see below).
      *
@@ -119,9 +119,9 @@ namespace GeographicLib {
      *
      * <b>Latitude and Longitude parsing</b>: Latitude precedes longitude,
      * unless a N, S, E, W hemisphere designator is used on one or both
-     * coordinates.  If \e swaplatlong = true (default is false), then
+     * coordinates.  If \e longfirst = true (default is false), then
      * longitude precedes latitude in the absence of a hemisphere designator.
-     * Thus (with \e swaplatlong = false)
+     * Thus (with \e longfirst = false)
      * - 40 -75
      * - N40 W75
      * - -75 N40
@@ -150,9 +150,8 @@ namespace GeographicLib {
      * components so -1d30 is -(1+30/60) = &minus;1.5.  However, note
      * that -1:30-0:0:15 is parsed as (-1:30) + (-0:0:15) = &minus;(1+30/60)
      * &minus; (15/3600).  Latitudes must be in the range [&minus;90&deg;,
-     * 90&deg;] and longitudes in the range [&minus;540&deg;, 540&deg;).
-     * Internally longitudes are reduced to the range [&minus;180&deg;,
-     * 180&deg;).
+     * 90&deg;].  Internally longitudes are reduced to the range
+     * [&minus;180&deg;, 180&deg;).
      *
      * <b>UTM/UPS parsing</b>: For UTM zones (&minus;80&deg; &le; Lat <
      * 84&deg;), the zone designator is made up of a zone number (for 1 to 60)
@@ -177,8 +176,8 @@ namespace GeographicLib {
      * - 38SMB44148470   = 38n 444140 3684700
      **********************************************************************/
     explicit GeoCoords(const std::string& s,
-                       bool centerp = true, bool swaplatlong = false)
-    { Reset(s, centerp, swaplatlong); }
+                       bool centerp = true, bool longfirst = false)
+    { Reset(s, centerp, longfirst); }
 
     /**
      * Construct from geographic coordinates.
@@ -189,8 +188,6 @@ namespace GeographicLib {
      *   specified zone using the rules given in UTMUPS::zonespec.
      * @exception GeographicErr if \e latitude is not in [&minus;90&deg;,
      *   90&deg;].
-     * @exception GeographicErr if \e longitude is not in [&minus;540&deg;,
-     *   540&deg;).
      * @exception GeographicErr if \e zone cannot be used for this location.
      **********************************************************************/
     GeoCoords(real latitude, real longitude, int zone = UTMUPS::STANDARD) {
@@ -213,17 +210,17 @@ namespace GeographicLib {
 
     /**
      * Reset the location from a string.  See
-     * GeoCoords(const std::string& s, bool centerp, bool swaplatlong).
+     * GeoCoords(const std::string& s, bool centerp, bool longfirst).
      *
      * @param[in] s 1-element, 2-element, or 3-element string representation of
      *   the position.
      * @param[in] centerp governs the interpretation of MGRS coordinates.
-     * @param[in] swaplatlong governs the interpretation of geographic
+     * @param[in] longfirst governs the interpretation of geographic
      *   coordinates.
      * @exception GeographicErr if the \e s is malformed.
      **********************************************************************/
     void Reset(const std::string& s,
-               bool centerp = true, bool swaplatlong = false);
+               bool centerp = true, bool longfirst = false);
 
     /**
      * Reset the location in terms of geographic coordinates.  See
@@ -235,8 +232,6 @@ namespace GeographicLib {
      *   specified zone using the rules given in UTMUPS::zonespec.
      * @exception GeographicErr if \e latitude is not in [&minus;90&deg;,
      *   90&deg;].
-     * @exception GeographicErr if \e longitude is not in [&minus;540&deg;,
-     *   540&deg;).
      * @exception GeographicErr if \e zone cannot be used for this location.
      **********************************************************************/
     void Reset(real latitude, real longitude, int zone = UTMUPS::STANDARD) {
@@ -387,7 +382,7 @@ namespace GeographicLib {
      * degrees.
      *
      * @param[in] prec precision (relative to about 1m).
-     * @param[in] swaplatlong if true give longitude first (default = false)
+     * @param[in] longfirst if true give longitude first (default = false)
      * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return decimal latitude/longitude string representation.
      *
@@ -397,14 +392,14 @@ namespace GeographicLib {
      * - prec = 3, 10<sup>&minus;8</sup>&deg;
      * - prec = 9 (max), 10<sup>&minus;14</sup>&deg;
      **********************************************************************/
-    std::string GeoRepresentation(int prec = 0, bool swaplatlong = false) const;
+    std::string GeoRepresentation(int prec = 0, bool longfirst = false) const;
 
     /**
      * String representation with latitude and longitude as degrees, minutes,
      * seconds, and hemisphere.
      *
      * @param[in] prec precision (relative to about 1m)
-     * @param[in] swaplatlong if true give longitude first (default = false)
+     * @param[in] longfirst if true give longitude first (default = false)
      * @param[in] dmssep if non-null, use as the DMS separator character
      *   (instead of d, ', &quot; delimiters).
      * @exception std::bad_alloc if memory for the string can't be allocated.
@@ -420,7 +415,7 @@ namespace GeographicLib {
      * - prec = 1, 0.01&quot;
      * - prec = 10 (max), 10<sup>&minus;11</sup>&quot;
      **********************************************************************/
-    std::string DMSRepresentation(int prec = 0, bool swaplatlong = false,
+    std::string DMSRepresentation(int prec = 0, bool longfirst = false,
                                   char dmssep = char(0))
       const;
 

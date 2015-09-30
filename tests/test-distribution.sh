@@ -33,16 +33,19 @@ set -e
 
 # The following files contain version information:
 #   pom.xml
-#   CMakeLists.txt
+#   CMakeLists.txt (PROJECT_VERSION_* LIBVERSION_*)
 #   NEWS
-#   configure.ac
+#   configure.ac (AC_INIT, GEOGRAPHICLIB_VERSION_* LT_*)
 #   tests/test-distribution.sh
 #   src/GeographicLib.pro lib version
+#   doc/GeographicLib.dox.in
+#   doc/NETGeographicLib.dox
 
 # Need updating if underlying library changes
 
 # python
 #   python/setup.py
+#   python/geographiclib/__init__.py
 
 # MATLAB
 #   matlab/geographiclib/Contents.m version + date
@@ -52,33 +55,49 @@ set -e
 #   doc/geodesic-c.dox
 
 # Fortran
-#   legacy/Fortran/geodesic.for
+#   legacy/Fortran/geodesic.for comment + geover
 #   doc/geodesic-for.dox
 
 # Java
 #   java/pom.xml java/*/pom.xml
 #   java/src/main/java/net/sf/geographiclib/package-info.java
+#   (remember to remove SNAPSHOT from version number of lib)
 
-# JavaScript + maxima -- none
+# maxima
+#   maxima/geodesic.mac
+
+# JavaScript
+#   js/src/Math.js
+#   js/package.json
+#   js/README.md
+#   js/GeographicLib.md
 
 DATE=`date +%F`
-DATE=2015-05-23
-VERSION=1.43
+VERSION=1.45
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
-DEVELSOURCE=/u/geographiclib
+if test `hostname` = petrel.petrel.org; then
+    DEVELSOURCE=$HOME/geographiclib
+    WINDEVELSOURCE=/u/geographiclib
+    WINDOWSBUILD=/var/tmp
+else
+    DEVELSOURCE=/u/geographiclib
+    WINDEVELSOURCE=/u/geographiclib
+    WINDOWSBUILD=/u/temp
+fi
+WINDOWSBUILDWIN=u:/temp
 GITSOURCE=file://$DEVELSOURCE
 WEBDIST=/home/ckarney/web/geographiclib-web
-WINDOWSBUILD=/u/temp
-WINDOWSBUILDWIN=u:/temp
 NUMCPUS=4
 
 test -d $TEMP || mkdir $TEMP
 rm -rf $TEMP/*
 mkdir $TEMP/gita # Package creation via cmake
 mkdir $TEMP/gitb # Package creation via autoconf
-(cd $TEMP/gita; git clone -b $BRANCH $GITSOURCE)
-(cd $TEMP/gitb; git clone -b $BRANCH $GITSOURCE)
+mkdir $TEMP/gitr # For release branch
+(cd $TEMP/gitr; git clone -b $BRANCH $GITSOURCE)
+(cd $TEMP/gita; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
+(cd $TEMP/gitb; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
 cd $TEMP/gita/geographiclib
 sh autogen.sh
 mkdir BUILD
@@ -86,13 +105,30 @@ cd BUILD
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON ..
 make dist
 cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
-make doc
+make doc distrib-npm
 (
     cd ../java
-    mvn package -P release
+    mvn -q package -P release
     rsync -a target/apidocs/ ../BUILD/doc/html/java/
 )
+(
+    cd ../python
+    python2 -m unittest test.test_geodesic
+    python3 -m unittest test.test_geodesic
+)
+(
+    cd ../matlab/geographiclib
+    octave --eval geographiclib_test
+)
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
+mkdir -p $TEMP/js
+cp -p js/*.js js/*.html $TEMP/js/
+JS_VERSION=`grep Version: $TEMP/js/geographiclib.js | cut -f2 -d: | tr -d ' '`
+mv $TEMP/js/geographiclib.js $TEMP/js/geographiclib-$JS_VERSION.js
+ln -s geographiclib-$JS_VERSION.js $TEMP/js/geographiclib.js
+mv $TEMP/js/geographiclib.min.js $TEMP/js/geographiclib-$JS_VERSION.min.js
+ln -s geographiclib-$JS_VERSION.min.js $TEMP/js/geographiclib.min.js
+rsync -a --delete $TEMP/js/ $WEBDIST/htdocs/scripts/test/
 
 mkdir $TEMP/rel{a,b,c,x,y}
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/rela # Version of make build
@@ -134,7 +170,7 @@ while read ver x64; do
     (
 	echo "#! /bin/sh -exv"
 	echo 'b=geog-`pwd | sed s%.*/%%`'
-	echo 'rm -rf v:/data/scratch/$b'
+	echo 'rm -rf v:/data/scratch/$b u:/pkg-$pkg/GeographicLib-$VERSION/*'
 	echo 'mkdir -p v:/data/scratch/$b'
 	echo 'cd v:/data/scratch/$b'
 	echo 'unset GEOGRAPHICLIB_DATA'
@@ -149,7 +185,7 @@ while read ver x64; do
 	echo $cmake --build . --config Release --target INSTALL
 	echo $cmake --build . --config Release --target PACKAGE
 	test "$installer" &&
-	echo cp "$installer" $DEVELSOURCE/ || true
+	echo cp "$installer" $WINDEVELSOURCE/ || true
     ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
     chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
 done <<EOF
@@ -160,10 +196,9 @@ done <<EOF
 14 y
 EOF
 
-mkdir $TEMP/gitr
-cd $TEMP/gitr
-git clone -b release $GITSOURCE
-cd geographiclib
+cd $TEMP/gitr/geographiclib
+git checkout release
+git config user.email karney@users.sourceforge.net
 find . -type f | grep -v '/\.git' | xargs rm
 tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
 (
@@ -175,6 +210,8 @@ tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
     done
 )
 rm -rf GeographicLib-$VERSION
+find * -type d -empty | xargs -r rmdir
+find * -type d -empty | xargs -r rmdir
 
 cd $TEMP/rela/GeographicLib-$VERSION
 make -j$NUMCPUS
@@ -200,6 +237,11 @@ make -j$NUMCPUS all
 make -j$NUMCPUS test
 make -j$NUMCPUS exampleprograms
 make install
+(
+    cd $TEMP/instc/lib/node_modules/geographiclib
+    mocha
+)
+
 mkdir ../BUILD-system
 cd ../BUILD-system
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH ..
@@ -220,42 +262,6 @@ cp -pr $TEMP/instc/share/matlab/geographiclib $TEMP/matlab
 cd $TEMP/matlab/geographiclib
 rm -f $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip
 zip $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip *.m private/*.m
-mkdir -p $TEMP/geographiclib-matlab/private
-while read f;do cp -p $f $TEMP/geographiclib-matlab/$f; done <<EOF
-defaultellipsoid.m
-ecc2flat.m
-flat2ecc.m
-geodarea.m
-geoddistance.m
-geoddoc.m
-geodreckon.m
-private/A1m1f.m
-private/A2m1f.m
-private/A3coeff.m
-private/A3f.m
-private/AngDiff.m
-private/AngNormalize.m
-private/AngNormalize2.m
-private/AngRound.m
-private/C1f.m
-private/C1pf.m
-private/C2f.m
-private/C3coeff.m
-private/C3f.m
-private/C4coeff.m
-private/C4f.m
-private/SinCosSeries.m
-private/cbrtx.m
-private/cvmgt.m
-private/eatanhe.m
-private/norm2.m
-private/sumx.m
-private/swap.m
-EOF
-cd $TEMP
-rm -f $DEVELSOURCE/geographiclib_matlab_$VERSION.zip
-zip $DEVELSOURCE/geographiclib_matlab_$VERSION.zip \
-    geographiclib-matlab/*.m geographiclib-matlab/private/*.m
 cd $TEMP/matlab
 cp -p $TEMP/gita/geographiclib/geodesic.png .
 cp -p $TEMP/gita/geographiclib/matlab/geographiclib-blurb.txt .
@@ -269,13 +275,16 @@ cat > tester.py <<EOF
 import sys
 sys.path.append("$TEMP/python-test/site-packages")
 from geographiclib.geodesic import Geodesic
-print(Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50))
+print(Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50,
+                             Geodesic.ALL | Geodesic.LONG_UNROLL))
 # The geodesic direct problem
-print(Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3))
+print(Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3,
+                            Geodesic.ALL | Geodesic.LONG_UNROLL))
 # How to obtain several points along a geodesic
 line = Geodesic.WGS84.Line(40.6, -73.8, 45)
 print(line.Position( 5000e3))
 print(line.Position(10000e3))
+print(line.Position(10000e3, Geodesic.ALL | Geodesic.LONG_UNROLL))
 # Computing the area of a geodesic polygon
 def p(lat,lon): return {'lat': lat, 'lon': lon}
 
@@ -287,10 +296,11 @@ python3 tester.py
 cp -pr $TEMP/relc/GeographicLib-$VERSION/legacy $TEMP/
 for l in C Fortran; do
     (
-      mkdir $TEMP/legacy/$l/BUILD
-      cd $TEMP/legacy/$l/BUILD
-      cmake ..
-      make -j$NUMCPUS
+	mkdir $TEMP/legacy/$l/BUILD
+	cd $TEMP/legacy/$l/BUILD
+	cmake ..
+	make -j$NUMCPUS
+	make test
     )
 done
 
@@ -298,7 +308,7 @@ cd $TEMP/instc
 find . -type f | sort -u > ../files.c
 
 cd $TEMP/gitb/geographiclib
-sh autogen.sh
+./autogen.sh
 mkdir BUILD-config
 cd BUILD-config
 ../configure --prefix=$TEMP/instf
@@ -381,25 +391,45 @@ test "$CONFIG_VERSION"  = "$VERSION" || echo autoconf version number mismatch
 test "$CONFIG_VERSIONA" = "$VERSION" || echo autoconf version string mismatch
 
 cd $TEMP/relx/GeographicLib-$VERSION
-echo Files with trailing spaces:
-find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.pdf' |
-xargs grep -l ' $' || true
-echo
-echo Files with tabs:
-find . -type f |
-egrep -v 'Makefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
-egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
-xargs grep -l  '	' || true
-echo
-echo Files with multiple newlines:
-find . -type f |
-egrep -v '/Makefile\.in|\.1\.html|\.png|\.pdf|/ltmain|/config|\.m4|Settings' |
-egrep -v '(Resources|Settings)\.Designer\.cs' |
-while read f;do
-    tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
-done
-echo
-
+(
+    echo Files with trailing spaces:
+    find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.pdf' |
+	while read f; do
+	    tr -d '\r' < $f | grep ' $' > /dev/null && echo $f || true
+	done
+    echo
+    echo Files with tabs:
+    find . -type f |
+	egrep -v '[Mm]akefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
+	egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
+	egrep -v 'js/samples/geod-.*\.html' |
+	xargs grep -l  '	' || true
+    echo
+    echo Files with multiple newlines:
+    find . -type f |
+	egrep -v \
+	   '/Makefile\.in|\.1\.html|\.png|\.pdf|/ltmain|/config|\.m4|Settings' |
+	egrep -v '(Resources|Settings)\.Designer\.cs' |
+	while read f; do
+	    tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
+	done
+    echo
+    echo Files with no newline at end:
+    find . -type f |
+	egrep -v '\.png|\.pdf' |
+	while read f;do
+	    n=`tail -1 $f | wc -l`; test $n -eq 0 && echo $f || true
+	done
+    echo
+    echo Files with extra newlines at end:
+    find . -type f |
+	egrep -v '/configure|/ltmain.sh|\.png|\.pdf|\.1\.html' |
+	while read f;do
+	    n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
+	done
+    echo
+) > $TEMP/badfiles.txt
+cat $TEMP/badfiles.txt
 cat > $TEMP/tasks.txt <<EOF
 # deploy documentation
 test -d $WEBDIST/htdocs/$VERSION-pre &&
@@ -428,12 +458,12 @@ python setup.py sdist --formats gztar,zip upload
 cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
 
+# javascript release
+npm publish $TEMP/gita/geographiclib/BUILD/js/geographiclib
+make -C $DEVELSOURCE -f makefile-admin distrib-js
+make -C $DEVELSOURCE -f makefile-admin install-js
+
 # matlab toolbox
-cd $TEMP/matlab
-matlab &
-# remove existing geographiclib path, double click on geographiclib.prj
-# click on "Package".
-mv $TEMP/matlab/geographiclib.mltbx $DEVELSOURCE/geographiclib_toolbox_$VERSION.mltbx
 chmod 644 $DEVELSOURCE/geographiclib_toolbox_$VERSION.*
 mv $DEVELSOURCE/geographiclib_*_$VERSION.* $DEVELSOURCE/matlab-distrib
 
@@ -454,7 +484,10 @@ git push --all
 git push --tags
 
 # Also to do
-# update home brew
+# post release notices
+# set default download files
+# make -f makefile-admin distrib-{cgi,html}
+# update home brew (commit message = geographiclib $VERSION)
 # upload matlab packages
 # update binaries for cgi applications
 # trigger build on build-open

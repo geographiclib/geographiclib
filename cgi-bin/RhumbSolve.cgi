@@ -35,8 +35,9 @@ if test "$RADIUS" = "$DEFAULTRADIUS" -a \
 fi
 
 INPUTENC=`encodevalue "$INPUT"`
-COMMAND="RhumbSolve"
 EXECDIR=../bin
+COMMAND="RhumbSolve"
+VERSION=`$EXECDIR/$COMMAND --version | cut -f4 -d" "`
 F='<font color="blue">'
 G='</font>'
 test $TYPE = D || COMMAND="$COMMAND -i"
@@ -257,15 +258,17 @@ cat <<EOF
     <hr>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/RhumbSolve.1.html">
-        RhumbSolve</a> performs rhumb line calculations for an arbitrary
-      ellipsoid of revolution.  The path with a constant heading between
-      two points on the ellipsoid at (<em>lat1</em>, <em>lon1</em>) and
-      (<em>lat2</em>, <em>lon2</em>) is called the <em>rhumb line</em> (or
-      <em>loxodrome</em>); its length is <em>s12</em> and the rhumb line
-      has a forward azimuth <em>azi12</em> along its
+        RhumbSolve (version $VERSION)</a>
+      performs rhumb line calculations for an arbitrary ellipsoid of
+      revolution.  The path with a constant heading between two points
+      on the ellipsoid at (<em>lat1</em>, <em>lon1</em>) and
+      (<em>lat2</em>, <em>lon2</em>) is called the <em>rhumb line</em>
+      (or <em>loxodrome</em>); its length is <em>s12</em> and the rhumb
+      line has a forward azimuth <em>azi12</em> along its
       length.  <b>NOTE:</b> the rhumb line is <em>not</em> the shortest
       path between two points; that is the geodesic and it is calculated
-      by <a href="http://geographiclib.sourceforge.net/cgi-bin/GeodSolve">
+      by
+      <a href="http://geographiclib.sourceforge.net/cgi-bin/GeodSolve">
 	GeodSolve</a>.
     </p>
     <p>
@@ -303,8 +306,7 @@ cat <<EOF
       (corresponding to 0.01&nbsp;&le; <em>b</em>/<em>a</em>&nbsp;&le;
       100).  Note that <em>f</em> is negative for a prolate ellipsoid
       (<em>b</em>&nbsp;&gt; <em>a</em>) and that it can be entered as a
-      fraction, e.g., 1/297.  (If the value entered for <em>f</em> is
-      greater than 1, its reciprocal is used.)
+      fraction, e.g., 1/297.
     </p>
     <p>
       RhumbSolve is accurate to about 15&nbsp;nanometers (for the WGS84

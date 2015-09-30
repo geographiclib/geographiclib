@@ -56,6 +56,11 @@ public class GeodesicMask {
    **********************************************************************/
   public static final int DISTANCE      = 1<<10 | CAP_C1;
   /**
+   * All of the above, the "standard" output and capabilities.
+   **********************************************************************/
+  public static final int STANDARD      = LATITUDE | LONGITUDE |
+      AZIMUTH | DISTANCE;
+  /**
    * Allow distance <i>s12</i> to be used as <i>input</i> in the direct
    * geodesic problem.
    **********************************************************************/
@@ -73,6 +78,11 @@ public class GeodesicMask {
    **********************************************************************/
   public static final int AREA          = 1<<14 | CAP_C4;
   /**
+   * All capabilities, calculate everything.  (LONG_UNROLL is not included in
+   * this mask.)
+   **********************************************************************/
+  public static final int ALL           = OUT_ALL| CAP_ALL;
+  /**
    * Unroll <i>lon2</i>.
    **********************************************************************/
   public static final int LONG_UNROLL   = 1<<15;
@@ -80,9 +90,4 @@ public class GeodesicMask {
    * For backward compatibility only; use LONG_UNROLL instead.
    **********************************************************************/
   public static final int LONG_NOWRAP   = LONG_UNROLL;
-  /**
-   * All capabilities, calculate everything.  (LONG_UNROLL is not included in
-   * this mask.)
-   **********************************************************************/
-  public static final int ALL           = OUT_ALL| CAP_ALL;
 }

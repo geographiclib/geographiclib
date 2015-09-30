@@ -22,8 +22,6 @@ function [lat, lon, h, M] = loccart_inv(lat0, lon0, h0, x, y, z, ellipsoid)
 %   See also LOCCART_FWD, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   narginchk(6, 7)
   if nargin < 7, ellipsoid = defaultellipsoid; end

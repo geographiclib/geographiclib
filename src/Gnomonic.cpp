@@ -2,7 +2,7 @@
  * \file Gnomonic.cpp
  * \brief Implementation for GeographicLib::Gnomonic class
  *
- * Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -10,8 +10,9 @@
 #include <GeographicLib/Gnomonic.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about potentially uninitialized local variables
-#  pragma warning (disable: 4701)
+// Squelch warnings about potentially uninitialized local variables and
+// constant conditional expressions
+#  pragma warning (disable: 4701 4127)
 #endif
 
 namespace GeographicLib {
@@ -39,9 +40,8 @@ namespace GeographicLib {
       x = y = Math::NaN();
     else {
       real rho = m/M;
-      azi0 *= Math::degree();
-      x = rho * sin(azi0);
-      y = rho * cos(azi0);
+      Math::sincosd(azi0, x, y);
+      x *= rho; y *= rho;
     }
   }
 
@@ -49,7 +49,7 @@ namespace GeographicLib {
                          real& lat, real& lon, real& azi, real& rk)
     const {
     real
-      azi0 = atan2(x, y) / Math::degree(),
+      azi0 = Math::atan2d(x, y),
       rho = Math::hypot(x, y),
       s = _a * atan(rho/_a);
     bool little = rho <= _a;
@@ -62,7 +62,7 @@ namespace GeographicLib {
                                   Geodesic::GEODESICSCALE));
     int count = numit_, trip = 0;
     real lat1, lon1, azi1, M;
-    while (count--) {
+    while (count-- || GEOGRAPHICLIB_PANIC) {
       real m, t;
       line.Position(s, lat1, lon1, azi1, m, M, t);
       if (trip)

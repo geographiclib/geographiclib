@@ -1,4 +1,4 @@
-/**
+/*
  * GeodesicLine.js
  * Transcription of GeodesicLine.[ch]pp into JavaScript.
  *
@@ -12,44 +12,67 @@
  *    https://dx.doi.org/10.1007/s00190-012-0578-z
  *    Addenda: http://geographiclib.sf.net/geod-addenda.html
  *
- * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
- **********************************************************************/
+ */
 
-// Load AFTER GeographicLib/Math.js and GeographicLib/Geodesic.js
+// Load AFTER GeographicLib/Math.js, GeographicLib/Geodesic.js
 
-(function() {
-  var g = GeographicLib.Geodesic;
-  var l = GeographicLib.GeodesicLine;
-  var m = GeographicLib.Math;
+(function(
+  g,
+  /**
+   * @exports GeographicLib/GeodesicLine
+   * @description Solve geodesic problems on a single geodesic line via the
+   *   {@link module:GeographicLib/GeodesicLine.GeodesicLine GeodesicLine}
+   *   class.
+   */
+  l, m) {
+  "use strict";
 
+  /**
+   * @class
+   * @property {number} a the equatorial radius (meters).
+   * @property {number} f the flattening.
+   * @property {number} lat1 the initial latitude (degrees).
+   * @property {number} lon1 the initial longitude (degrees).
+   * @property {number} azi1 the initial azimuth (degrees).
+   * @property {bitmask} caps the capabilities of the object.
+   * @summary Initialize a GeodesicLine object.  For details on the caps
+   *   parameter, see {@tutorial 2-interface}, "The outmask and caps
+   *   parameters".
+   * @classdesc Performs geodesic calculations along a given geodesic line.
+   *   This object is usually instantiated by
+   *   {@link module:GeographicLib/Geodesic.Geodesic#Line Geodesic.Line}.
+   * @param {object} geod a {@link module:GeographicLib/Geodesic.Geodesic
+   *   Geodesic} object.
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} azi1 the azimuth at the first point in degrees.
+   * @param {bitmask} [caps = STANDARD | DISTANCE_IN] which capabilities to
+   *   include; LATITUDE | AZIMUTH are always included.
+   */
   l.GeodesicLine = function(geod, lat1, lon1, azi1, caps) {
-    this._a = geod._a;
-    this._f = geod._f;
+    var t, cbet1, sbet1, eps, s, c;
+    if (!caps) caps = g.STANDARD | g.DISTANCE_IN;
+
+    this.a = geod.a;
+    this.f = geod.f;
     this._b = geod._b;
     this._c2 = geod._c2;
     this._f1 = geod._f1;
     this._caps = (!caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH)) |
       g.LONG_UNROLL;
 
-    azi1 = m.AngRound(m.AngNormalize(azi1));
-    this._lat1 = lat1;
-    this._lon1 = lon1;
-    this._azi1 = azi1;
-    // alp1 is in [0, pi]
-    var alp1 = azi1 * m.degree;
-    // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
-    // problems directly than to skirt them.
-    this._salp1 =          azi1  === -180 ? 0 : Math.sin(alp1);
-    this._calp1 = Math.abs(azi1) ===   90 ? 0 : Math.cos(alp1);
-    var cbet1, sbet1, phi;
-    phi = lat1 * m.degree;
-    // Ensure cbet1 = +epsilon at poles
-    sbet1 = this._f1 * Math.sin(phi);
-    cbet1 = Math.abs(lat1) === 90 ? g.tiny_ : Math.cos(phi);
+    this.lat1 = m.LatFix(lat1);
+    this.lon1 = lon1;
+    this.azi1 = m.AngNormalize(azi1);
+    t = m.sincosd(m.AngRound(this.azi1)); this._salp1 = t.s; this._calp1 = t.c;
+    t = m.sincosd(m.AngRound(this.lat1)); sbet1 = this._f1 * t.s; cbet1 = t.c;
     // norm(sbet1, cbet1);
-    var t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
+    t = m.hypot(sbet1, cbet1); sbet1 /= t; cbet1 /= t;
+    // Ensure cbet1 = +epsilon at poles
+    cbet1 = Math.max(g.tiny_, cbet1);
     this._dn1 = Math.sqrt(1 + geod._ep2 * m.sq(sbet1));
 
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -75,14 +98,14 @@
     // norm(this._somg1, this._comg1); -- don't need to normalize!
 
     this._k2 = m.sq(this._calp0) * geod._ep2;
-    var eps = this._k2 / (2 * (1 + Math.sqrt(1 + this._k2)) + this._k2);
+    eps = this._k2 / (2 * (1 + Math.sqrt(1 + this._k2)) + this._k2);
 
     if (this._caps & g.CAP_C1) {
       this._A1m1 = g.A1m1f(eps);
       this._C1a = new Array(g.nC1_ + 1);
       g.C1f(eps, this._C1a);
       this._B11 = g.SinCosSeries(true, this._ssig1, this._csig1, this._C1a);
-      var s = Math.sin(this._B11), c = Math.cos(this._B11);
+      s = Math.sin(this._B11); c = Math.cos(this._B11);
       // tau1 = sig1 + B11
       this._stau1 = this._ssig1 * c + this._csig1 * s;
       this._ctau1 = this._csig1 * c - this._ssig1 * s;
@@ -105,7 +128,7 @@
     if (this._caps & g.CAP_C3) {
       this._C3a = new Array(g.nC3_);
       geod.C3f(eps, this._C3a);
-      this._A3c = -this._f * this._salp0 * geod.A3f(eps);
+      this._A3c = -this.f * this._salp0 * geod.A3f(eps);
       this._B31 = g.SinCosSeries(true, this._ssig1, this._csig1, this._C3a);
     }
 
@@ -113,16 +136,42 @@
       this._C4a = new Array(g.nC4_); // all the elements of _C4a are used
       geod.C4f(eps, this._C4a);
       // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
-      this._A4 = m.sq(this._a) * this._calp0 * this._salp0 * geod._e2;
+      this._A4 = m.sq(this.a) * this._calp0 * this._salp0 * geod._e2;
       this._B41 = g.SinCosSeries(false, this._ssig1, this._csig1, this._C4a);
     }
   };
 
-  // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
+  /**
+   * @summary Find the position on the line (general case).
+   * @param {bool} arcmode is the next parameter an arc length?
+   * @param {number} s12_a12 the (arcmode ? arc length : distance) from the
+   *   first point to the second in (arcmode ? degrees : meters).
+   * @param {bitmask} [outmask = STANDARD] which results to include; this is
+   *   subject to the capabilities of the object.
+   * @returns {object} the requested results.
+   * @description The lat1, lon1, azi1, and a12 fields of the result are
+   *   always set; s12 is included if arcmode is false.  For details on the
+   *   outmask parameter, see {@tutorial 2-interface}, "The outmask and caps
+   *   parameters".
+   */
   l.GeodesicLine.prototype.GenPosition = function(arcmode, s12_a12,
                                                   outmask) {
-    var vals = {};
+    var vals = {},
+        sig12, ssig12, csig12, B12, AB1, ssig2, csig2, tau12, s, c, serr,
+        omg12, lam12, lon12, E, sbet2, cbet2, somg2, comg2, salp2, calp2, dn2,
+        B22, AB2, J12, t, B42, salp12, calp12;
+    if (!outmask)
+      outmask = g.STANDARD;
+    else if (outmask == g.LONG_UNROLL)
+      outmask |= g.STANDARD;
     outmask &= this._caps & g.OUT_MASK;
+    vals.lat1 = this.lat1; vals.azi1 = this.azi1;
+    vals.lon1 = outmask & g.LONG_UNROLL ?
+      this.lon1 : m.AngNormalize(this.lon1);
+    if (arcmode)
+      vals.a12 = s12_a12;
+    else
+      vals.s12 = s12_a12;
     if (!( arcmode || (this._caps & g.DISTANCE_IN & g.OUT_MASK) )) {
       // Uninitialized or impossible distance calculation requested
       vals.a12 = Number.NaN;
@@ -130,19 +179,15 @@
     }
 
     // Avoid warning about uninitialized B12.
-    var sig12, ssig12, csig12, B12 = 0, AB1 = 0, ssig2, csig2;
+    B12 = 0; AB1 = 0;
     if (arcmode) {
       // Interpret s12_a12 as spherical arc length
       sig12 = s12_a12 * m.degree;
-      var s12a = Math.abs(s12_a12);
-      s12a -= 180 * Math.floor(s12a / 180);
-      ssig12 = s12a ===  0 ? 0 : Math.sin(sig12);
-      csig12 = s12a === 90 ? 0 : Math.cos(sig12);
+      t = m.sincosd(s12_a12); ssig12 = t.s; csig12 = t.c;
     } else {
       // Interpret s12_a12 as distance
-      var
-      tau12 = s12_a12 / (this._b * (1 + this._A1m1)),
-      s = Math.sin(tau12),
+      tau12 = s12_a12 / (this._b * (1 + this._A1m1));
+      s = Math.sin(tau12);
       c = Math.cos(tau12);
       // tau2 = tau1 + tau12
       B12 = - g.SinCosSeries(true,
@@ -151,7 +196,7 @@
                              this._C1pa);
       sig12 = tau12 - (B12 - this._B11);
       ssig12 = Math.sin(sig12); csig12 = Math.cos(sig12);
-      if (Math.abs(this._f) > 0.01) {
+      if (Math.abs(this.f) > 0.01) {
         // Reverted distance series is inaccurate for |f| > 1/100, so correct
         // sig12 with 1 Newton iteration.  The following table shows the
         // approximate maximum error for a = WGS_a() and various f relative to
@@ -176,7 +221,7 @@
         ssig2 = this._ssig1 * csig12 + this._csig1 * ssig12;
         csig2 = this._csig1 * csig12 - this._ssig1 * ssig12;
         B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a);
-        var serr = (1 + this._A1m1) * (sig12 + (B12 - this._B11)) -
+        serr = (1 + this._A1m1) * (sig12 + (B12 - this._B11)) -
           s12_a12 / this._b;
         sig12 = sig12 - serr / Math.sqrt(1 + this._k2 * m.sq(ssig2));
         ssig12 = Math.sin(sig12); csig12 = Math.cos(sig12);
@@ -184,14 +229,12 @@
       }
     }
 
-    var omg12, lam12, lon12, E;
-    var sbet2, cbet2, somg2, comg2, salp2, calp2;
     // sig2 = sig1 + sig12
     ssig2 = this._ssig1 * csig12 + this._csig1 * ssig12;
     csig2 = this._csig1 * csig12 - this._ssig1 * ssig12;
-    var dn2 = Math.sqrt(1 + this._k2 * m.sq(ssig2));
+    dn2 = Math.sqrt(1 + this._k2 * m.sq(ssig2));
     if (outmask & (g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE)) {
-      if (arcmode || Math.abs(this._f) > 0.01)
+      if (arcmode || Math.abs(this.f) > 0.01)
         B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a);
       AB1 = (1 + this._A1m1) * (B12 - this._B11);
     }
@@ -205,8 +248,8 @@
     // tan(alp0) = cos(sig2)*tan(alp2)
     salp2 = this._salp0; calp2 = this._calp0 * csig2; // No need to normalize
 
-    if (outmask & g.DISTANCE)
-      vals.s12 = arcmode ? this._b * ((1 + this._A1m1) * sig12 + AB1) : s12_a12;
+    if (arcmode && (outmask & g.DISTANCE))
+      vals.s12 = this._b * ((1 + this._A1m1) * sig12 + AB1);
 
     if (outmask & g.LONGITUDE) {
       // tan(omg2) = sin(alp0) * tan(sig2)
@@ -225,22 +268,19 @@
         ( sig12 + (g.SinCosSeries(true, ssig2, csig2, this._C3a) -
                    this._B31));
       lon12 = lam12 / m.degree;
-      // Use AngNormalize2 because longitude might have wrapped multiple times.
-      vals.lon2 = outmask & g.LONG_UNROLL ? this._lon1 + lon12 :
-        m.AngNormalize(m.AngNormalize(this._lon1) + m.AngNormalize2(lon12));
+      vals.lon2 = outmask & g.LONG_UNROLL ? this.lon1 + lon12 :
+        m.AngNormalize(m.AngNormalize(this.lon1) + m.AngNormalize(lon12));
     }
 
     if (outmask & g.LATITUDE)
-      vals.lat2 = Math.atan2(sbet2, this._f1 * cbet2) / m.degree;
+      vals.lat2 = m.atan2d(sbet2, this._f1 * cbet2);
 
     if (outmask & g.AZIMUTH)
-      // minus signs give range [-180, 180). 0- converts -0 to +0.
-      vals.azi2 = 0 - Math.atan2(-salp2, calp2) / m.degree;
+      vals.azi2 = m.atan2d(salp2, calp2);
 
     if (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE)) {
-      var
-      B22 = g.SinCosSeries(true, ssig2, csig2, this._C2a),
-      AB2 = (1 + this._A2m1) * (B22 - this._B21),
+      B22 = g.SinCosSeries(true, ssig2, csig2, this._C2a);
+      AB2 = (1 + this._A2m1) * (B22 - this._B21);
       J12 = (this._A1m1 - this._A2m1) * sig12 + (AB1 - AB2);
       if (outmask & g.REDUCEDLENGTH)
         // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
@@ -249,7 +289,7 @@
                                this._dn1 * (this._ssig1 * csig2)) -
                               this._csig1 * csig2 * J12);
       if (outmask & g.GEODESICSCALE) {
-        var t = this._k2 * (ssig2 - this._ssig1) * (ssig2 + this._ssig1) /
+        t = this._k2 * (ssig2 - this._ssig1) * (ssig2 + this._ssig1) /
           (this._dn1 + dn2);
         vals.M12 = csig12 + (t * ssig2 - csig2 * J12) * this._ssig1 / this._dn1;
         vals.M21 = csig12 - (t * this._ssig1 - this._csig1 * J12) * ssig2 / dn2;
@@ -257,9 +297,7 @@
     }
 
     if (outmask & g.AREA) {
-      var
       B42 = g.SinCosSeries(false, ssig2, csig2, this._C4a);
-      var salp12, calp12;
       if (this._calp0 === 0 || this._salp0 === 0) {
         // alp12 = alp2 - alp1, used in atan2 so no need to normalize
         salp12 = salp2 * this._calp1 - calp2 * this._salp1;
@@ -289,8 +327,40 @@
         this._A4 * (B42 - this._B41);
     }
 
-    vals.a12 = arcmode ? s12_a12 : sig12 / m.degree;
+    if (!arcmode)
+      vals.a12 = sig12 / m.degree;
     return vals;
   };
 
-})();
+  /**
+   * @summary Find the position on the line given s12.
+   * @param {number} s12 the distance from the first point to the second in
+   *   meters.
+   * @param {bitmask} [outmask = STANDARD] which results to include; this is
+   *   subject to the capabilities of the object.
+   * @returns {object} the requested results.
+   * @description The lat1, lon1, azi1, s12, and a12 fields of the result are
+   *   always set; s12 is included if arcmode is false.  For details on the
+   *   outmask parameter, see {@tutorial 2-interface}, "The outmask and caps
+   *   parameters".
+   */
+  l.GeodesicLine.prototype.Position = function(s12, outmask) {
+    return this.GenPosition(false, s12, outmask);
+  };
+
+  /**
+   * @summary Find the position on the line given a12.
+   * @param {number} a12 the arc length from the first point to the second in
+   *   degrees.
+   * @param {bitmask} [outmask = STANDARD] which results to include; this is
+   *   subject to the capabilities of the object.
+   * @returns {object} the requested results.
+   * @description The lat1, lon1, azi1, and a12 fields of the result are
+   *   always set.  For details on the outmask parameter, see {@tutorial
+   *   2-interface}, "The outmask and caps parameters".
+   */
+  l.GeodesicLine.prototype.ArcPosition = function(a12, outmask) {
+    return this.GenPosition(true, a12, outmask);
+  };
+
+})(GeographicLib.Geodesic, GeographicLib.GeodesicLine, GeographicLib.Math);

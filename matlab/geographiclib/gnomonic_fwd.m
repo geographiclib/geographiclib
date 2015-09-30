@@ -43,8 +43,6 @@ function [x, y, azi, rk] = gnomonic_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   See also PROJDOC, GNOMONIC_INV, GEODDISTANCE, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -56,10 +54,10 @@ function [x, y, azi, rk] = gnomonic_fwd(lat0, lon0, lat, lon, ellipsoid)
 
   [~, azi0, azi, ~, m, M] = geoddistance(lat0, lon0, lat, lon, ellipsoid);
   rho = m ./ M;
-  azi0 = azi0 * (pi/180);
-  x = rho .* sin(azi0);
-  y = rho .* cos(azi0);
+  [x, y] = sincosdx(azi0);
+  x = rho .* x;
+  y = rho .* y;
   rk = M;
-  x(M <= 0) = NaN;
-  y(M <= 0) = NaN;
+  x(M <= 0) = nan;
+  y(M <= 0) = nan;
 end

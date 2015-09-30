@@ -28,8 +28,9 @@
      +    lat2, lon2, azi2, omask,
      +    dummy1, dummy2, dummy3, dummy4, dummy5)
       print 20, lat2, lon2, azi2
- 20   format(f20.15, 1x, f20.15, 1x, f20.15)
+ 20   format(1x, f20.15, 1x, f20.15, 1x, f20.15)
       go to 10
  90   continue
+
       stop
       end

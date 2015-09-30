@@ -2,7 +2,7 @@
  * \file Gravity.cpp
  * \brief Command line utility for evaluating gravity fields
  *
- * Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
     using namespace GeographicLib;
     typedef Math::real real;
     Utility::set_digits();
-    bool verbose = false;
+    bool verbose = false, longfirst = false;
     std::string dir;
     std::string model = GravityModel::DefaultGravityName();
     std::string istring, ifile, ofile, cdelim;
@@ -80,7 +80,9 @@ int main(int argc, char* argv[]) {
                     << e.what() << "\n";
           return 1;
         }
-      } else if (arg == "-p") {
+      } else if (arg == "-w")
+        longfirst = true;
+      else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
           prec = Utility::num<int>(std::string(argv[m]));
@@ -196,10 +198,11 @@ int main(int argc, char* argv[]) {
                         (mode == ANOMALY ? GravityModel::SPHERICAL_ANOMALY :
                          GravityModel::GEOID_HEIGHT))); // mode == UNDULATION
       const GravityCircle c(circle ? g.Circle(lat, h, mask) : GravityCircle());
-      std::string s, stra, strb;
+      std::string s, eol, stra, strb;
+      std::istringstream str;
       while (std::getline(*input, s)) {
         try {
-          std::string eol("\n");
+          eol = "\n";
           if (!cdelim.empty()) {
             std::string::size_type m = s.find(cdelim);
             if (m != std::string::npos) {
@@ -207,7 +210,7 @@ int main(int argc, char* argv[]) {
               s = s.substr(0, m);
             }
           }
-          std::istringstream str(s);
+          str.clear(); str.str(s);
           real lon;
           if (circle) {
             if (!(str >> strb))
@@ -216,13 +219,10 @@ int main(int argc, char* argv[]) {
             lon = DMS::Decode(strb, ind);
             if (ind == DMS::LATITUDE)
               throw GeographicErr("Bad hemisphere letter on " + strb);
-            if (lon < -540 || lon >= 540)
-              throw GeographicErr("Longitude " + strb +
-                                  " not in [-540d, 540d)");
           } else {
             if (!(str >> stra >> strb))
               throw GeographicErr("Incomplete input: " + s);
-            DMS::DecodeLatLon(stra, strb, lat, lon);
+            DMS::DecodeLatLon(stra, strb, lat, lon, longfirst);
             h = 0;
             if (!(str >> h))    // h is optional
               str.clear();

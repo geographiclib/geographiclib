@@ -29,13 +29,10 @@ find_package (OpenMP QUIET)
 
 if (OPENMP_FOUND)
   set_target_properties (GeoidToGTX PROPERTIES
-    COMPILE_FLAGS ${OpenMP_CXX_FLAGS} COMPILE_DEFINITIONS HAVE_OPENMP=1)
+    COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
   if (NOT WIN32)
     set_target_properties (GeoidToGTX PROPERTIES LINK_FLAGS ${OpenMP_CXX_FLAGS})
   endif ()
-  message (STATUS "Example program GeoidToGTX will use OpenMP")
-else ()
-  message (STATUS "Example program GeoidToGTX will not use OpenMP")
 endif ()
 
 add_custom_target (exampleprograms DEPENDS ${EXAMPLES})

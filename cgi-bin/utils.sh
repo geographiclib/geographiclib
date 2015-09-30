@@ -78,5 +78,5 @@ convertdeg () {
 # Generate GeoHack URL.  $1 $2 are real position; $3 $4 is displayed
 # postion; $5 is link color
 geohack () {
-    echo "<a href=\"http://stable.toolserver.org/geohack/geohack.php?params=$1;$2\" style=\"color:$5\">$(convertdeg "$3 $4")</a>"
+    echo "<a href=\"http://tools.wmflabs.org/geohack/geohack.php?params=$1;$2\" style=\"color:$5\">$(convertdeg "$3 $4")</a>"
 }

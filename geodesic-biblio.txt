@@ -1210,8 +1210,8 @@
    Univ. of New Brunswick (1974), Secs. 3--4.[[BR]]
    http://www2.unb.ca/gge/Pubs/LN39.pdf
  * T. Vincenty,[[BR]]
-   ''Direct and Inverse Solutions of Geodesics on the Ellipsoid with
-   Application of Nested Equations'',
+   ''Direct and inverse solutions of geodesics on the ellipsoid with
+   application of nested equations'',
    Survey Review '''23''' (misprinted as '''22''') (176), 88--93 (1975);
    Addendum: Survey Review '''23'''(180), 294 (1976).[[BR]]
    http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf [[BR]]
