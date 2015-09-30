@@ -113,7 +113,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   tiny = sqrt(realmin);
 
   a = ellipsoid(1);
-  e2 = ellipsoid(2)^2;
+  e2 = real(ellipsoid(2)^2);
   f = e2 / (1 + sqrt(1 - e2));
   f1 = 1 - f;
   ep2 = e2 / (1 - e2);

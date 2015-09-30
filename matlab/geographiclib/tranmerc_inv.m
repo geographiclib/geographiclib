@@ -56,8 +56,8 @@ function [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y, ellipsoid)
   maxpow = 6;
 
   a = ellipsoid(1);
-  f = ecc2flat(ellipsoid(2));
-  e2 = f * (2 - f);
+  e2 = real(ellipsoid(2)^2);
+  f = e2 / (1 + sqrt(1 - e2));
   e2m = 1 - e2;
   cc = sqrt(e2m) * exp(eatanhe(1, e2));
   n = f / (2 -f);

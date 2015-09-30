@@ -49,6 +49,7 @@ set -e
 
 # MATLAB
 #   matlab/geographiclib/Contents.m version + date
+#   matlab/geographiclib-blurb.txt version + date
 
 # C
 #   legacy/C/geodesic.h comment + GEODESIC_VERSION_*

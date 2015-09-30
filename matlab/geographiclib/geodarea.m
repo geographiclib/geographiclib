@@ -62,7 +62,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
   lat2(m1) = lat1(m0); lon2(m1) = lon1(m0);
 
   a = ellipsoid(1);
-  e2 = ellipsoid(2)^2;
+  e2 = real(ellipsoid(2)^2);
   f = e2 / (1 + sqrt(1 - e2));
 
   b = (1 - f) * a;

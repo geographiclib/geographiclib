@@ -45,7 +45,7 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
   tiny = sqrt(realmin);
 
   a = ellipsoid(1);
-  e2 = ellipsoid(2)^2;
+  e2 = real(ellipsoid(2)^2);
   f = e2 / (1 + sqrt(1 - e2));
 
   f1 = 1 - f;
