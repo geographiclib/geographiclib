@@ -35,8 +35,6 @@ function [lat, lon, gam, k] = utmups_inv(x, y, zone, isnorth)
 %   See also UTMUPS_FWD, TRANMERC_INV, POLARST_INV, MGRS_INV.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   narginchk(4, 4)
   try

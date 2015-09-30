@@ -28,4 +28,4 @@ clean-local:
 	rm -rf *.pyc $(PACKAGE)/*.pyc
 
 EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES) setup.py \
-	MANIFEST.in README.txt
+	MANIFEST.in README.txt test/__init__.py test/test_geodesic.py

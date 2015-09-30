@@ -6,8 +6,8 @@
 #
 #    http://geographiclib.sourceforge.net/html/annotated.html
 #
-# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
-# the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and
+# licensed under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 ######################################################################
 
@@ -23,7 +23,6 @@ class Math(object):
     digits, the number of digits in the fraction of a real number
     minval, minimum normalized positive number
     maxval, maximum finite number
-    degree, the number of radians in a degree
     nan, not a number
     inf, infinity
   """
@@ -32,7 +31,6 @@ class Math(object):
   epsilon = math.pow(2.0, 1-digits)
   minval = math.pow(2.0, -1022)
   maxval = math.pow(2.0, 1023) * (2 - epsilon)
-  degree = math.pi/180
   inf = float("inf") if sys.version_info > (2, 6) else 2 * maxval
   nan = float("nan") if sys.version_info > (2, 6) else inf - inf
 
@@ -120,31 +118,71 @@ class Math(object):
   AngRound = staticmethod(AngRound)
 
   def AngNormalize(x):
-    """reduce angle in [-540,540) to [-180,180)"""
+    """reduce angle to [-180,180)"""
 
-    return (x - 360 if x >= 180 else
-            (x + 360 if x < -180 else x))
+    x = math.fmod(x, 360)
+    return (x + 360 if x < -180 else
+            (x if x < 180 else x - 360))
   AngNormalize = staticmethod(AngNormalize)
 
-  def AngNormalize2(x):
-    """reduce arbitrary angle to [-180,180)"""
+  def LatFix(x):
+    """replace angles outside [-90,90] by NaN"""
 
-    return Math.AngNormalize(math.fmod(x, 360))
-  AngNormalize2 = staticmethod(AngNormalize2)
+    return Math.nan if abs(x) > 90 else x
+  LatFix = staticmethod(LatFix)
 
   def AngDiff(x, y):
     """compute y - x and reduce to [-180,180] accurately"""
 
-    d, t = Math.sum(-x, y)
-    if (d - 180) + t > 0:       # y - x > 180
-      d -= 360                  # exact
-    elif (d + 180) + t <= 0:    # y - x <= -180
-      d += 360                  # exact
-    return d + t
+    d, t = Math.sum(Math.AngNormalize(x), Math.AngNormalize(-y))
+    d = - Math.AngNormalize(d)
+    return (-180 if d == 180 and t < 0 else d) - t
   AngDiff = staticmethod(AngDiff)
+
+  def sincosd(x):
+    """Compute sine and cosine of x in degrees."""
+
+    r = math.fmod(x, 360)
+    q = Math.nan if Math.isnan(r) else int(math.floor(r / 90 + 0.5))
+    r -= 90 * q; r = math.radians(r)
+    s = math.sin(r); c = math.cos(r)
+    q = q % 4
+    if q == 1:
+      s, c =   c, 0-s
+    elif q == 2:
+      s, c = 0-s, 0-c
+    elif q == 3:
+      s, c = 0-c,   s
+    return s, c
+  sincosd = staticmethod(sincosd)
+
+  def atan2d(y, x):
+    """compute atan2(y, x) with the result in degrees"""
+
+    if abs(y) > abs(x):
+      q = 2; x, y = y, x
+    else:
+      q = 0
+    if x < 0:
+      q += 1; x = -x
+    ang = math.degrees(math.atan2(y, x))
+    if q == 1:
+      ang = (180 if y > 0 else -180) - ang
+    elif q == 2:
+      ang =  90 - ang
+    elif q == 3:
+      ang = -90 + ang
+    return ang
+  atan2d = staticmethod(atan2d)
 
   def isfinite(x):
     """Test for finiteness"""
 
     return abs(x) <= Math.maxval
   isfinite = staticmethod(isfinite)
+
+  def isnan(x):
+    """Test if nan"""
+
+    return math.isnan(x) if sys.version_info > (2, 6) else x != x
+  isnan = staticmethod(isnan)

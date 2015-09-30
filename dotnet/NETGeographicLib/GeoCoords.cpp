@@ -42,11 +42,11 @@ GeoCoords::GeoCoords()
 }
 
 //*****************************************************************************
-GeoCoords::GeoCoords(System::String^ s, bool centerp, bool swaplatlong )
+GeoCoords::GeoCoords(System::String^ s, bool centerp, bool longfirst )
 {
     try
     {
-        m_pGeoCoords = new GeographicLib::GeoCoords(StringConvert::ManagedToUnmanaged(s), centerp, swaplatlong);
+        m_pGeoCoords = new GeographicLib::GeoCoords(StringConvert::ManagedToUnmanaged(s), centerp, longfirst);
     }
     catch ( std::bad_alloc )
     {
@@ -93,11 +93,11 @@ GeoCoords::GeoCoords(int zone, bool northp, double easting, double northing)
 }
 
 //*****************************************************************************
-void GeoCoords::Reset( System::String^ s, bool centerp, bool swaplatlong )
+void GeoCoords::Reset( System::String^ s, bool centerp, bool longfirst )
 {
     try
     {
-        m_pGeoCoords->Reset(StringConvert::ManagedToUnmanaged(s), centerp, swaplatlong);
+        m_pGeoCoords->Reset(StringConvert::ManagedToUnmanaged(s), centerp, longfirst);
     }
     catch ( const std::exception& err )
     {
@@ -194,16 +194,16 @@ double GeoCoords::MajorRadius::get() { return UTMUPS::MajorRadius(); }
 double GeoCoords::Flattening::get() { return UTMUPS::Flattening(); }
 
 //*****************************************************************************
-System::String^ GeoCoords::GeoRepresentation(int prec, bool swaplatlong )
+System::String^ GeoCoords::GeoRepresentation(int prec, bool longfirst )
 {
-    return gcnew System::String( m_pGeoCoords->GeoRepresentation(prec, swaplatlong).c_str() );
+    return gcnew System::String( m_pGeoCoords->GeoRepresentation(prec, longfirst).c_str() );
 }
 
 //*****************************************************************************
-System::String^ GeoCoords::DMSRepresentation(int prec, bool swaplatlong,
+System::String^ GeoCoords::DMSRepresentation(int prec, bool longfirst,
                                 char dmssep )
 {
-    return gcnew System::String( m_pGeoCoords->DMSRepresentation(prec, swaplatlong, dmssep).c_str() );
+    return gcnew System::String( m_pGeoCoords->DMSRepresentation(prec, longfirst, dmssep).c_str() );
 }
 
 //*****************************************************************************

@@ -51,14 +51,13 @@ namespace GeographicLib {
       // which otherwise failed for Visual Studio 10 (Release and Debug)
     , tol1_(200 * tol0_)
     , tol2_(sqrt(tol0_))
-      // Check on bisection interval
-    , tolb_(tol0_ * tol2_)
+    , tolb_(tol0_ * tol2_)      // Check on bisection interval
     , xthresh_(1000 * tol2_)
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)
+    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
-    , _ep2(_e2 / Math::sq(_f1))       // e2 / (1 - e2)
+    , _ep2(_e2 / Math::sq(_f1)) // e2 / (1 - e2)
     , _n(_f / ( 2 - _f))
     , _b(_a * _f1)
       // The Geodesic class substitutes atanh(sqrt(e2)) for asinh(sqrt(ep2)) in
@@ -147,18 +146,17 @@ namespace GeographicLib {
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
-    real lon12 = Math::AngDiff(Math::AngNormalize(lon1),
-                               Math::AngNormalize(lon2));
     // If very close to being on the same half-meridian, then make it so.
-    lon12 = Math::AngRound(lon12);
+    real lon12 = Math::AngRound(Math::AngDiff(lon1, lon2));
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
     // If really close to the equator, treat as on equator.
-    lat1 = Math::AngRound(lat1);
-    lat2 = Math::AngRound(lat2);
+    lat1 = Math::AngRound(Math::LatFix(lat1));
+    lat2 = Math::AngRound(Math::LatFix(lat2));
     // Swap points so that point with higher (abs) latitude is point 1
-    int swapp = abs(lat1) >= abs(lat2) ? 1 : -1;
+    // If one latitude is a nan, then it becomes lat1.
+    int swapp = abs(lat1) < abs(lat2) ? -1 : 1;
     if (swapp < 0) {
       lonsign *= -1;
       swap(lat1, lat2);
@@ -179,22 +177,19 @@ namespace GeographicLib {
     // check, e.g., on verifying quadrants in atan2.  In addition, this
     // enforces some symmetries in the results returned.
 
-    real phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
+    real sbet1, cbet1, sbet2, cbet2, s12x, m12x;
     // Initialize for the meridian.  No longitude calculation is done in this
     // case to let the parameter default to 0.
     EllipticFunction E(-_ep2);
 
-    phi = lat1 * Math::degree();
-    // Ensure cbet1 = +epsilon at poles
-    sbet1 = _f1 * sin(phi);
-    cbet1 = lat1 == -90 ? tiny_ : cos(phi);
-    Math::norm(sbet1, cbet1);
+    Math::sincosd(lat1, sbet1, cbet1); sbet1 *= _f1;
+    // Ensure cbet1 = +epsilon at poles; doing the fix on beta means that sig12
+    // will be <= 2*tiny for two points at the same pole.
+    Math::norm(sbet1, cbet1); cbet1 = max(tiny_, cbet1);
 
-    phi = lat2 * Math::degree();
+    Math::sincosd(lat2, sbet2, cbet2); sbet2 *= _f1;
     // Ensure cbet2 = +epsilon at poles
-    sbet2 = _f1 * sin(phi);
-    cbet2 = abs(lat2) == 90 ? tiny_ : cos(phi);
-    Math::norm(sbet2, cbet2);
+    Math::norm(sbet2, cbet2); cbet2 = max(tiny_, cbet2);
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
     // |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -219,9 +214,8 @@ namespace GeographicLib {
              sqrt(1 - _e2 * Math::sq(cbet2)) / _f1);
 
     real
-      lam12 = lon12 * Math::degree(),
-      slam12 = abs(lon12) == 180 ? 0 : sin(lam12),
-      clam12 = cos(lam12);      // lon12 == 90 isn't interesting
+      lam12 = lon12 * Math::degree(), slam12, clam12;
+    Math::sincosd(lon12, slam12, clam12);
 
     // initial values to suppress warning
     real a12, sig12, calp1, salp1, calp2 = 0, salp2 = 0;
@@ -242,13 +236,13 @@ namespace GeographicLib {
         ssig2 = sbet2, csig2 = calp2 * cbet2;
 
       // sig12 = sig2 - sig1
-      sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, real(0)),
+      sig12 = atan2(max(real(0), csig1 * ssig2 - ssig1 * csig2),
                     csig1 * csig2 + ssig1 * ssig2);
       {
         real dummy;
         Lengths(E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                cbet1, cbet2, s12x, m12x, dummy,
-                (outmask & GEODESICSCALE) != 0U, M12, M21);
+                cbet1, cbet2, outmask | REDUCEDLENGTH,
+                s12x, m12x, dummy, M12, M21);
       }
       // Add the check for sig12 since zero length geodesics might yield m12 <
       // 0.  Test case was
@@ -258,6 +252,9 @@ namespace GeographicLib {
       // In fact, we will have sig12 > pi/2 for meridional geodesic which is
       // not a shortest path.
       if (sig12 < 1 || m12x >= 0) {
+        // Need at least 2, to handle 90 0 90 180
+        if (sig12 < 3 * tiny_)
+          sig12 = m12x = s12x = 0;
         m12x *= _b;
         s12x *= _b;
         a12 = sig12 / Math::degree();
@@ -390,8 +387,7 @@ namespace GeographicLib {
         {
           real dummy;
           Lengths(E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                  cbet1, cbet2, s12x, m12x, dummy,
-                  (outmask & GEODESICSCALE) != 0U, M12, M21);
+                  cbet1, cbet2, outmask, s12x, m12x, dummy, M12, M21);
         }
         m12x *= _b;
         s12x *= _b;
@@ -488,29 +484,43 @@ namespace GeographicLib {
                               real sig12,
                               real ssig1, real csig1, real dn1,
                               real ssig2, real csig2, real dn2,
-                              real cbet1, real cbet2,
+                              real cbet1, real cbet2, unsigned outmask,
                               real& s12b, real& m12b, real& m0,
-                              bool scalep, real& M12, real& M21) const {
+                              real& M12, real& M21) const {
     // Return m12b = (reduced length)/_b; also calculate s12b = distance/_b,
     // and m0 = coefficient of secular term in expression for reduced length.
 
+    outmask &= OUT_ALL;
+    // outmask & DISTANCE: set s12b
+    // outmask & REDUCEDLENGTH: set m12b & m0
+    // outmask & GEODESICSCALE: set M12 & M21
+
     // It's OK to have repeated dummy arguments,
     // e.g., s12b = m0 = M12 = M21 = dummy
-    m0 = - E.k2() * E.D() / (Math::pi() / 2);
-    real J12 = m0 *
-      (sig12 + E.deltaD(ssig2, csig2, dn2) - E.deltaD(ssig1, csig1, dn1));
-    // Missing a factor of _b.
-    // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
-    // cancellation in the case of coincident points.
-    m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) - csig1 * csig2 * J12;
-    // Missing a factor of _b
-    s12b = E.E() / (Math::pi() / 2) *
-      (sig12 + E.deltaE(ssig2, csig2, dn2) - E.deltaE(ssig1, csig1, dn1));
-    if (scalep) {
-      real csig12 = csig1 * csig2 + ssig1 * ssig2;
-      real t = _ep2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2);
-      M12 = csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1;
-      M21 = csig12 - (t * ssig1 - csig1 * J12) * ssig2 / dn2;
+
+    if (outmask & DISTANCE)
+      // Missing a factor of _b
+      s12b = E.E() / (Math::pi() / 2) *
+        (sig12 + (E.deltaE(ssig2, csig2, dn2) - E.deltaE(ssig1, csig1, dn1)));
+    if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
+      real
+        m0x = - E.k2() * E.D() / (Math::pi() / 2),
+        J12 = m0x *
+        (sig12 + (E.deltaD(ssig2, csig2, dn2) - E.deltaD(ssig1, csig1, dn1)));
+      if (outmask & REDUCEDLENGTH) {
+        m0 = m0x;
+        // Missing a factor of _b.  Add parens around (csig1 * ssig2) and
+        // (ssig1 * csig2) to ensure accurate cancellation in the case of
+        // coincident points.
+        m12b = dn2 * (csig1 * ssig2) - dn1 * (ssig1 * csig2) -
+          csig1 * csig2 * J12;
+      }
+      if (outmask & GEODESICSCALE) {
+        real csig12 = csig1 * csig2 + ssig1 * ssig2;
+        real t = _ep2 * (cbet1 - cbet2) * (cbet1 + cbet2) / (dn1 + dn2);
+        M12 = csig12 + (t * ssig2 - csig2 * J12) * ssig1 / dn1;
+        M21 = csig12 - (t * ssig1 - csig1 * J12) * ssig2 / dn2;
+      }
     }
   }
 
@@ -529,7 +539,7 @@ namespace GeographicLib {
         S = p * q / 4,            // S = r^3 * s
         r2 = Math::sq(r),
         r3 = r * r2,
-        // The discrimant of the quadratic equation for T3.  This is zero on
+        // The discriminant of the quadratic equation for T3.  This is zero on
         // the evolute curve p^(1/3)+q^(1/3) = 1
         disc = S * (S + 2 * r3);
       real u = r;
@@ -664,8 +674,7 @@ namespace GeographicLib {
         // Inverse.
         Lengths(E, Math::pi() + bet12a,
                 sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
-                cbet1, cbet2, dummy, m12b, m0, false,
-                dummy, dummy);
+                cbet1, cbet2, REDUCEDLENGTH, dummy, m12b, m0, dummy, dummy);
         x = -1 + m12b / (cbet1 * cbet2 * m0 * Math::pi());
         betscale = x < -real(0.01) ? sbet12a / x :
           -_f * Math::sq(cbet1) * Math::pi();
@@ -794,19 +803,19 @@ namespace GeographicLib {
     // Math::norm(schi2, cchi2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
-    sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, real(0)),
+    sig12 = atan2(max(real(0), csig1 * ssig2 - ssig1 * csig2),
                   csig1 * csig2 + ssig1 * ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
-    omg12 = atan2(max(comg1 * somg2 - somg1 * comg2, real(0)),
+    omg12 = atan2(max(real(0), comg1 * somg2 - somg1 * comg2),
                   comg1 * comg2 + somg1 * somg2);
     real k2 = Math::sq(calp0) * _ep2;
     E.Reset(-k2, -_ep2, 1 + k2, 1 + _ep2);
-    real chi12 = atan2(max(cchi1 * somg2 - somg1 * cchi2, real(0)),
+    real chi12 = atan2(max(real(0), cchi1 * somg2 - somg1 * cchi2),
                        cchi1 * cchi2 + somg1 * somg2);
     lam12 = chi12 -
       _e2/_f1 * salp0 * E.H() / (Math::pi() / 2) *
-      (sig12 + E.deltaH(ssig2, csig2, dn2) - E.deltaH(ssig1, csig1, dn1) );
+      (sig12 + (E.deltaH(ssig2, csig2, dn2) - E.deltaH(ssig1, csig1, dn1)));
 
     if (diffp) {
       if (calp2 == 0)
@@ -814,8 +823,8 @@ namespace GeographicLib {
       else {
         real dummy;
         Lengths(E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-                cbet1, cbet2, dummy, dlam12, dummy,
-                false, dummy, dummy);
+                cbet1, cbet2, REDUCEDLENGTH,
+                dummy, dlam12, dummy, dummy, dummy);
         dlam12 *= _f1 / (calp2 * cbet2);
       }
     }

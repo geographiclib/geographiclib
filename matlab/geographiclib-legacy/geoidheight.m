@@ -26,8 +26,6 @@ function height = geoidheight(latlong, geoidname, geoiddir)
 %   See also GEOID_HEIGHT.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   if nargin < 2
     geoidname = '';

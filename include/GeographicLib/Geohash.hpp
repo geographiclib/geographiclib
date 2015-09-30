@@ -2,8 +2,8 @@
  * \file Geohash.hpp
  * \brief Header for GeographicLib::Geohash class
  *
- * Copyright (c) Charles Karney (2012) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -25,12 +25,13 @@ namespace GeographicLib {
    *
    * Geohashes are described in
    * - https://en.wikipedia.org/wiki/Geohash
-   * - http://geohash.org/ (this link is broken as of 2012-12-11)
+   * - http://geohash.org/
    * .
    * They provide a compact string representation of a particular geographic
    * location (expressed as latitude and longitude), with the property that if
    * trailing characters are dropped from the string the geographic location
-   * remains nearby.
+   * remains nearby.  The classes Georef and GARS implement similar compact
+   * representations.
    *
    * Example of use:
    * \include example-Geohash.cpp
@@ -41,20 +42,6 @@ namespace GeographicLib {
     typedef Math::real real;
     static const int maxlen_ = 18;
     static const unsigned long long mask_ = 1ULL << 45;
-    static const int decprec_[];
-    static inline real shift() {
-      using std::pow; static const real shift = pow(real(2), 45);
-      return shift;
-    }
-    static inline real loneps() {
-      static const real loneps = 180 / shift();
-      return loneps;
-    }
-    static inline real lateps() {
-      static const real lateps = 90 / shift();
-      return lateps;
-    }
-    static const real lateps_;
     static const std::string lcdigits_;
     static const std::string ucdigits_;
     Geohash();                     // Disable constructor
@@ -68,15 +55,14 @@ namespace GeographicLib {
      * @param[in] lon longitude of point (degrees).
      * @param[in] len the length of the resulting geohash.
      * @param[out] geohash the geohash.
-     * @exception GeographicErr if \e la is not in [&minus;90&deg;,
+     * @exception GeographicErr if \e lat is not in [&minus;90&deg;,
      *   90&deg;].
-     * @exception GeographicErr if \e lon is not in [&minus;540&deg;,
-     *   540&deg;).
      * @exception std::bad_alloc if memory for \e geohash can't be allocated.
      *
-     * Internally, \e len is first put in the range [0, 18].
+     * Internally, \e len is first put in the range [0, 18].  (\e len = 18
+     * provides approximately 1&mu;m precision.)
      *
-     * If \e lat or \e lon is NaN, the returned geohash is "nan".
+     * If \e lat or \e lon is NaN, the returned geohash is "invalid".
      **********************************************************************/
     static void Forward(real lat, real lon, int len, std::string& geohash);
 
@@ -91,11 +77,13 @@ namespace GeographicLib {
      *   geohash location, otherwise return the south-west corner.
      * @exception GeographicErr if \e geohash contains illegal characters.
      *
-     * Only the first 18 characters for \e geohash are considered.  The case of
-     * the letters in \e geohash is ignored.
+     * Only the first 18 characters for \e geohash are considered.  (18
+     * characters provides approximately 1&mu;m precision.)  The case of the
+     * letters in \e geohash is ignored.
      *
-     * If the first three characters in \e geohash are "nan", then \e lat and
-     * \e lon are set to NaN.
+     * If the first 3 characters of \e geohash are "inv", then \e lat and \e
+     * lon are set to NaN and \e len is unchanged.  ("nan" is treated
+     * similarly.)
      **********************************************************************/
     static void Reverse(const std::string& geohash, real& lat, real& lon,
                         int& len, bool centerp = true);
@@ -109,8 +97,9 @@ namespace GeographicLib {
      * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
     static Math::real LatitudeResolution(int len) {
+      using std::pow;
       len = (std::max)(0, (std::min)(int(maxlen_), len));
-      return 180 * std::pow(0.5, 5 * len / 2);
+      return 180 * pow(real(0.5), 5 * len / 2);
     }
 
     /**
@@ -122,8 +111,9 @@ namespace GeographicLib {
      * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
     static Math::real LongitudeResolution(int len) {
+      using std::pow;
       len = (std::max)(0, (std::min)(int(maxlen_), len));
-      return 360 * std::pow(0.5, 5 * len - 5 * len / 2);
+      return 360 * pow(real(0.5), 5 * len - 5 * len / 2);
     }
 
     /**
@@ -136,8 +126,7 @@ namespace GeographicLib {
      * The returned length is in the range [0, 18].
      **********************************************************************/
     static int GeohashLength(real res) {
-      using std::abs;
-      res = abs(res);
+      using std::abs; res = abs(res);
       for (int len = 0; len < maxlen_; ++len)
         if (LongitudeResolution(len) <= res)
           return len;

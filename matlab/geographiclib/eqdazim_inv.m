@@ -35,8 +35,6 @@ function [lat, lon, azi, rk] = eqdazim_inv(lat0, lon0, x, y, ellipsoid)
 %   See also PROJDOC, EQDAZIM_FWD, GEODRECKON, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -46,7 +44,7 @@ function [lat, lon, azi, rk] = eqdazim_inv(lat0, lon0, x, y, ellipsoid)
     error('lat0, lon0, x, y have incompatible sizes')
   end
 
-  azi0 = atan2(x, y) / (pi/180);
+  azi0 = atan2dx(x, y);
   s = hypot(x, y);
   [lat, lon, azi, ~, m, ~, ~, sig] = geodreckon(lat0, lon0, s, azi0, ellipsoid);
   rk = m ./ s;

@@ -219,7 +219,7 @@ host_alias = @host_alias@
 host_cpu = @host_cpu@
 host_os = @host_os@
 host_vendor = @host_vendor@
-htmldir = @htmldir@
+htmldir = $(DESTDIR)$(docdir)/html
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
@@ -247,7 +247,8 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 EXTRAFILES = $(srcdir)/tmseries30.html $(srcdir)/geodseries30.html
-FIGURES = $(srcdir)/gauss-krueger-graticule.png \
+FIGURES = \
+	$(srcdir)/gauss-krueger-graticule.png \
 	$(srcdir)/thompson-tm-graticule.png \
 	$(srcdir)/gauss-krueger-convergence-scale.png \
 	$(srcdir)/gauss-schreiber-graticule-a.png \
@@ -255,19 +256,6 @@ FIGURES = $(srcdir)/gauss-krueger-graticule.png \
 	$(srcdir)/thompson-tm-graticule-a.png \
 	$(srcdir)/gauss-krueger-error.png \
 	$(srcdir)/meridian-measures.png
-
-SCRIPTDRIVERS = \
-	$(srcdir)/scripts/geod-calc.html \
-	$(srcdir)/scripts/geod-google.html \
-	$(srcdir)/scripts/geod-google-instructions.html
-
-JSSCRIPTS = \
-	$(srcdir)/scripts/GeographicLib/Math.js \
-	$(srcdir)/scripts/GeographicLib/Geodesic.js \
-	$(srcdir)/scripts/GeographicLib/GeodesicLine.js \
-	$(srcdir)/scripts/GeographicLib/PolygonArea.js \
-	$(srcdir)/scripts/GeographicLib/DMS.js \
-	$(srcdir)/scripts/GeographicLib/Interface.js
 
 HPPFILES = \
 	$(top_srcdir)/include/GeographicLib/Accumulator.hpp \
@@ -278,14 +266,16 @@ HPPFILES = \
 	$(top_srcdir)/include/GeographicLib/DMS.hpp \
 	$(top_srcdir)/include/GeographicLib/Ellipsoid.hpp \
 	$(top_srcdir)/include/GeographicLib/EllipticFunction.hpp \
-	$(top_srcdir)/include/GeographicLib/Geocentric.hpp \
+	$(top_srcdir)/include/GeographicLib/GARS.hpp \
 	$(top_srcdir)/include/GeographicLib/GeoCoords.hpp \
+	$(top_srcdir)/include/GeographicLib/Geocentric.hpp \
 	$(top_srcdir)/include/GeographicLib/Geodesic.hpp \
 	$(top_srcdir)/include/GeographicLib/GeodesicExact.hpp \
 	$(top_srcdir)/include/GeographicLib/GeodesicLine.hpp \
 	$(top_srcdir)/include/GeographicLib/GeodesicLineExact.hpp \
 	$(top_srcdir)/include/GeographicLib/Geohash.hpp \
 	$(top_srcdir)/include/GeographicLib/Geoid.hpp \
+	$(top_srcdir)/include/GeographicLib/Georef.hpp \
 	$(top_srcdir)/include/GeographicLib/Gnomonic.hpp \
 	$(top_srcdir)/include/GeographicLib/LambertConformalConic.hpp \
 	$(top_srcdir)/include/GeographicLib/LocalCartesian.hpp \
@@ -305,12 +295,14 @@ ALLSOURCES = \
 	$(top_srcdir)/src/DMS.cpp \
 	$(top_srcdir)/src/Ellipsoid.cpp \
 	$(top_srcdir)/src/EllipticFunction.cpp \
-	$(top_srcdir)/src/Geocentric.cpp \
+	$(top_srcdir)/src/GARS.cpp \
 	$(top_srcdir)/src/GeoCoords.cpp \
+	$(top_srcdir)/src/Geocentric.cpp \
 	$(top_srcdir)/src/Geodesic.cpp \
 	$(top_srcdir)/src/GeodesicLine.cpp \
 	$(top_srcdir)/src/Geohash.cpp \
 	$(top_srcdir)/src/Geoid.cpp \
+	$(top_srcdir)/src/Georef.cpp \
 	$(top_srcdir)/src/Gnomonic.cpp \
 	$(top_srcdir)/src/LambertConformalConic.cpp \
 	$(top_srcdir)/src/LocalCartesian.cpp \
@@ -343,21 +335,6 @@ MANPAGES = \
 	../man/Planimeter.1.html \
 	../man/RhumbSolve.1.html \
 	../man/TransverseMercatorProj.1.html
-
-LEGACYFILES = \
-	$(top_srcdir)/legacy/C/geodesic.c \
-	$(top_srcdir)/legacy/C/geodesic.h \
-	$(top_srcdir)/legacy/C/direct.c \
-	$(top_srcdir)/legacy/C/inverse.c \
-	$(top_srcdir)/legacy/C/planimeter.c \
-	$(top_srcdir)/legacy/Fortran/geodesic.for \
-	$(top_srcdir)/legacy/Fortran/geodesic.inc \
-	$(top_srcdir)/legacy/Fortran/geoddirect.for \
-	$(top_srcdir)/legacy/Fortran/geodinverse.for \
-	$(top_srcdir)/legacy/Fortran/ngscommon.for \
-	$(top_srcdir)/legacy/Fortran/ngsforward.for \
-	$(top_srcdir)/legacy/Fortran/ngsinverse.for \
-	$(top_srcdir)/legacy/Fortran/planimeter.for
 
 all: all-am
 
@@ -560,9 +537,7 @@ doc: html/index.html
 @HAVE_DOXYGEN_TRUE@	touch $@
 
 @HAVE_DOXYGEN_TRUE@html/index.html: manpages doxyfile.in GeographicLib.dox.in \
-@HAVE_DOXYGEN_TRUE@	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(FIGURES) \
-@HAVE_DOXYGEN_TRUE@	doxyfile-c.in geodesic-c.dox doxyfile-for.in geodesic-for.dox \
-@HAVE_DOXYGEN_TRUE@	$(LEGACYFILES)
+@HAVE_DOXYGEN_TRUE@	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(FIGURES)
 @HAVE_DOXYGEN_TRUE@	cp -p $(EXTRAFILES) $(top_srcdir)/maxima/*.mac \
 @HAVE_DOXYGEN_TRUE@	$(top_srcdir)/LICENSE.txt html/
 @HAVE_DOXYGEN_TRUE@	sed -e "s%@PROJECT_VERSION@%$(VERSION)%g" \
@@ -571,14 +546,6 @@ doc: html/index.html
 @HAVE_DOXYGEN_TRUE@	-e "s%@PROJECT_BINARY_DIR@%..%g" \
 @HAVE_DOXYGEN_TRUE@	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 @HAVE_DOXYGEN_TRUE@	$(srcdir)/doxyfile.in | $(DOXYGEN) -
-@HAVE_DOXYGEN_TRUE@	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
-@HAVE_DOXYGEN_TRUE@	-e "s%@PROJECT_BINARY_DIR@%..%g" \
-@HAVE_DOXYGEN_TRUE@	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
-@HAVE_DOXYGEN_TRUE@	$(srcdir)/doxyfile-c.in | $(DOXYGEN) -
-@HAVE_DOXYGEN_TRUE@	sed -e "s%@PROJECT_SOURCE_DIR@%$(top_srcdir)%g" \
-@HAVE_DOXYGEN_TRUE@	-e "s%@PROJECT_BINARY_DIR@%..%g" \
-@HAVE_DOXYGEN_TRUE@	-e "s%@PROJECT_VERSION@%$(VERSION)%g" \
-@HAVE_DOXYGEN_TRUE@	$(srcdir)/doxyfile-for.in | $(DOXYGEN) -
 @HAVE_DOXYGEN_FALSE@html/index.html: index.html.in utilities.html.in
 @HAVE_DOXYGEN_FALSE@	if test -d html; then rm -rf html/*; else mkdir html; fi
 @HAVE_DOXYGEN_FALSE@	cp $(top_srcdir)/LICENSE.txt html/
@@ -591,31 +558,11 @@ maintainer-clean-local:
 	rm -rf html manpages
 
 install-doc: html/index.html
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html
-	$(INSTALL) -m 644 `dirname $<`/*.* $(DESTDIR)$(docdir)/html
+	$(INSTALL) -d $(htmldir)
+	$(INSTALL) -m 644 `dirname $<`/*.* $(htmldir)
 	-test -f `dirname $<`/search/search.js && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/search && \
-	$(INSTALL) -m 644 `dirname $<`/search/*.* \
-	$(DESTDIR)$(docdir)/html/search
-	-test -f `dirname $<`/C/index.html && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/C && \
-	$(INSTALL) -m 644 `dirname $<`/C/*.* $(DESTDIR)$(docdir)/html/C
-	-test -f `dirname $<`/C/search/search.js && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/C/search && \
-	$(INSTALL) -m 644 `dirname $<`/C/search/*.* \
-	$(DESTDIR)$(docdir)/html/C/search
-	-test -f `dirname $<`/Fortran/index.html && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/Fortran && \
-	$(INSTALL) -m 644 `dirname $<`/Fortran/*.* \
-	$(DESTDIR)$(docdir)/html/Fortran
-	-test -f `dirname $<`/Fortran/search/search.js && \
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/Fortran/search && \
-	$(INSTALL) -m 644 `dirname $<`/Fortran/search/*.* \
-	$(DESTDIR)$(docdir)/html/Fortran/search
-	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts
-	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(DESTDIR)$(docdir)/scripts
-	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts/GeographicLib
-	$(INSTALL) -m 644 $(JSSCRIPTS) $(DESTDIR)$(docdir)/scripts/GeographicLib
+	$(INSTALL) -d $(htmldir)/search && \
+	$(INSTALL) -m 644 `dirname $<`/search/*.* $(htmldir)/search || true
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -26,7 +26,6 @@ namespace GeographicLib {
   const string DMS::components_[] = {"degrees", "minutes", "seconds"};
 
   Math::real DMS::Decode(const std::string& dms, flag& ind) {
-    string errormsg;
     string dmsa = dms;
     replace(dmsa, "\xc2\xb0", 'd');      // U+00b0 degree symbol
     replace(dmsa, "\xc2\xba", 'd');      // U+00ba alt symbol
@@ -42,37 +41,40 @@ namespace GeographicLib {
     replace(dmsa, "\xba", 'd');          // 0xba bare alt symbol
     replace(dmsa, "\xb4", '\'');         // 0xb4 bare acute accent
     replace(dmsa, "''", '"');            // '' -> "
-    unsigned
+    string::size_type
       beg = 0,
       end = unsigned(dmsa.size());
     while (beg < end && isspace(dmsa[beg]))
       ++beg;
     while (beg < end && isspace(dmsa[end - 1]))
       --end;
-    unsigned bega = beg;
-    if (end > bega && Utility::lookup(hemispheres_, dmsa[bega]) >= 0)
-      ++bega;
-    if (end > bega && Utility::lookup(signs_, dmsa[bega]) >= 0)
-      ++bega;
-    string::size_type p = dmsa.find_first_of(signs_, bega);
+    // The trimmed string in [beg, end)
+    real v = 0;
+    int i = 0;
     flag ind1 = NONE;
-    real v = InternalDecode(dmsa.substr(beg,
-                                        (p == string::npos ? end : p) - beg),
-                            ind1);
-    if (p == string::npos)
-      ind = ind1;
-    else {
+    // p is pointer to the next piece that needs decoding
+    for (string::size_type p = beg, pb; p < end; p = pb, ++i) {
+      string::size_type pa = p;
+      // Skip over initial hemisphere letter (for i == 0)
+      if (i == 0 && Utility::lookup(hemispheres_, dmsa[pa]) >= 0)
+        ++pa;
+      // Skip over initial sign (checking for it if i == 0)
+      if (i > 0 || (pa < end && Utility::lookup(signs_, dmsa[pa]) >= 0))
+        ++pa;
+      // Find next sign
+      pb = min(dmsa.find_first_of(signs_, pa), end);
       flag ind2 = NONE;
-      v += InternalDecode(dmsa.substr(p, end - p), ind2);
-      if (ind2 == NONE)
-        ind = ind1;
-      else if (ind1 == NONE || ind1 == ind2)
-        ind = ind2;
-      else
+      v += InternalDecode(dmsa.substr(p, pb - p), ind2);
+      if (ind1 == NONE)
+        ind1 = ind2;
+      else if (!(ind2 == NONE || ind1 == ind2))
         throw GeographicErr("Incompatible hemisphere specifies in " +
-                            dmsa.substr(beg, p - beg) + " and " +
-                            dmsa.substr(p, end - p));
+                            dmsa.substr(beg, pb - beg));
     }
+    if (i == 0)
+      throw GeographicErr("Empty or incomplete DMS string " +
+                          dmsa.substr(beg, end - beg));
+    ind = ind1;
     return v;
   }
 
@@ -169,7 +171,7 @@ namespace GeographicLib {
               " component of " + dmsa.substr(beg, end - beg);
             break;
           }
-          if (digcount > 1) {
+          if (digcount > 0) {
             istringstream s(dmsa.substr(p - intcount - digcount - 1,
                                         intcount + digcount));
             s >> fcurrent;
@@ -205,7 +207,7 @@ namespace GeographicLib {
             + dmsa.substr(beg, end - beg);
           break;
         }
-        if (digcount > 1) {
+        if (digcount > 0) {
           istringstream s(dmsa.substr(p - intcount - digcount,
                                       intcount + digcount));
           s >> fcurrent;
@@ -220,12 +222,12 @@ namespace GeographicLib {
         break;
       }
       // Note that we accept 59.999999... even though it rounds to 60.
-      if (ipieces[1] >= 60) {
+      if (ipieces[1] >= 60 || fpieces[1] > 60 ) {
         errormsg = "Minutes " + Utility::str(fpieces[1])
           + " not in range [0, 60)";
         break;
       }
-      if (ipieces[2] >= 60) {
+      if (ipieces[2] >= 60 || fpieces[2] > 60) {
         errormsg = "Seconds " + Utility::str(fpieces[2])
           + " not in range [0, 60)";
         break;
@@ -233,7 +235,9 @@ namespace GeographicLib {
       ind = ind1;
       // Assume check on range of result is made by calling routine (which
       // might be able to offer a better diagnostic).
-      return real(sign) * (fpieces[0] + (fpieces[1] + fpieces[2] / 60) / 60);
+      return real(sign) *
+        ( fpieces[2] ? (60*(60*fpieces[0] + fpieces[1]) + fpieces[2]) / 3600 :
+          ( fpieces[1] ? (60*fpieces[0] + fpieces[1]) / 60 : fpieces[0] ) );
     } while (false);
     real val = Utility::nummatch<real>(dmsa);
     if (val == 0)
@@ -245,15 +249,15 @@ namespace GeographicLib {
 
   void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,
                          real& lat, real& lon,
-                         bool swaplatlong) {
+                         bool longfirst) {
     real a, b;
     flag ia, ib;
     a = Decode(stra, ia);
     b = Decode(strb, ib);
     if (ia == NONE && ib == NONE) {
-      // Default to lat, long unless swaplatlong
-      ia = swaplatlong ? LONGITUDE : LATITUDE;
-      ib = swaplatlong ? LATITUDE : LONGITUDE;
+      // Default to lat, long unless longfirst
+      ia = longfirst ? LONGITUDE : LATITUDE;
+      ib = longfirst ? LATITUDE : LONGITUDE;
     } else if (ia == NONE)
       ia = flag(LATITUDE + LONGITUDE - ib);
     else if (ib == NONE)
@@ -268,9 +272,6 @@ namespace GeographicLib {
     if (abs(lat1) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat1)
                           + "d not in [-90d, 90d]");
-    if (lon1 < -540 || lon1 >= 540)
-      throw GeographicErr("Longitude " + Utility::str(lon1)
-                          + "d not in [-540d, 540d)");
     lat = lat1;
     lon = lon1;
   }
@@ -290,8 +291,6 @@ namespace GeographicLib {
     if (ind == LATITUDE)
       throw GeographicErr("Azimuth " + azistr
                           + " has a latitude hemisphere, N/S");
-    if (azi < -540 || azi >= 540)
-      throw GeographicErr("Azimuth " + azistr + " not in range [-540d, 540d)");
     return Math::AngNormalize(azi);
   }
 
@@ -320,7 +319,13 @@ namespace GeographicLib {
     // fractional part.
     real
       idegree = floor(angle),
-      fdegree = floor((angle - idegree) * scale + real(0.5)) / scale;
+      fdegree = (angle - idegree) * scale + real(0.5);
+    {
+      // Implement the "round ties to even" rule
+      real f = floor(fdegree);
+      fdegree = (f == fdegree && fmod(f, real(2)) == 1) ? f - 1 : f;
+    }
+    fdegree /= scale;
     if (fdegree >= 1) {
       idegree += 1;
       fdegree -= 1;

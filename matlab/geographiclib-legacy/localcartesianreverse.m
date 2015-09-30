@@ -34,8 +34,6 @@ function [geodetic, rot] = localcartesianreverse(origin, cartesian, a, f)
 %   See also LOCCART_INV.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
-%
-% This file was distributed with GeographicLib 1.42.
 
   if (nargin < 3)
     ellipsoid = defaultellipsoid;

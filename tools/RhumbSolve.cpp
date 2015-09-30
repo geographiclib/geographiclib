@@ -2,7 +2,7 @@
  * \file RhumbSolve.cpp
  * \brief Command line utility for rhumb line calculations
  *
- * Copyright (c) Charles Karney (2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -31,23 +31,28 @@
 using namespace GeographicLib;
 typedef Math::real real;
 
-std::string LatLonString(real lat, real lon, int prec, bool dms, char dmssep) {
-  return dms ?
-    DMS::Encode(lat, prec + 5, DMS::LATITUDE, dmssep) + " " +
-    DMS::Encode(lon, prec + 5, DMS::LONGITUDE, dmssep) :
-    DMS::Encode(lat, prec + 5, DMS::NUMBER) + " " +
+std::string LatLonString(real lat, real lon, int prec, bool dms, char dmssep,
+                         bool longfirst) {
+  using namespace GeographicLib;
+  std::string
+    latstr = dms ? DMS::Encode(lat, prec + 5, DMS::LATITUDE, dmssep) :
+    DMS::Encode(lat, prec + 5, DMS::NUMBER),
+    lonstr = dms ? DMS::Encode(lon, prec + 5, DMS::LONGITUDE, dmssep) :
     DMS::Encode(lon, prec + 5, DMS::NUMBER);
+  return
+    (longfirst ? lonstr : latstr) + " " + (longfirst ? latstr : lonstr);
 }
 
 std::string AzimuthString(real azi, int prec, bool dms, char dmssep) {
   return dms ? DMS::Encode(azi, prec + 5, DMS::AZIMUTH, dmssep) :
-    DMS::Encode(azi >= 180 ? azi - 360 : azi, prec + 5, DMS::NUMBER);
+    DMS::Encode(azi, prec + 5, DMS::NUMBER);
 }
 
 int main(int argc, char* argv[]) {
   try {
     Utility::set_digits();
-    bool linecalc = false, inverse = false, dms = false, exact = true;
+    bool linecalc = false, inverse = false, dms = false, exact = true,
+      longfirst = false;
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
@@ -67,7 +72,7 @@ int main(int argc, char* argv[]) {
         if (m + 3 >= argc) return usage(1, true);
         try {
           DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                            lat1, lon1);
+                            lat1, lon1, longfirst);
           azi12 = DMS::DecodeAzimuth(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {
@@ -93,7 +98,9 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-:") {
         dms = true;
         dmssep = ':';
-      } else if (arg == "-p") {
+      } else if (arg == "-w")
+        longfirst = true;
+      else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
           prec = Utility::num<int>(std::string(argv[m]));
@@ -174,11 +181,12 @@ int main(int argc, char* argv[]) {
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
+    std::string s, eol, slat1, slon1, slat2, slon2, sazi, ss12, strc;
+    std::istringstream str;
     int retval = 0;
-    std::string s;
     while (std::getline(*input, s)) {
       try {
-        std::string eol("\n");
+        eol = "\n";
         if (!cdelim.empty()) {
           std::string::size_type m = s.find(cdelim);
           if (m != std::string::npos) {
@@ -186,41 +194,36 @@ int main(int argc, char* argv[]) {
             s = s.substr(0, m);
           }
         }
-        std::istringstream str(s);
+        str.clear(); str.str(s);
         if (linecalc) {
           if (!(str >> s12))
             throw GeographicErr("Incomplete input: " + s);
-          std::string strc;
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
           rhl.Position(s12, lat2, lon2, S12);
-          *output << LatLonString(lat2, lon2, prec, dms, dmssep) << " "
-                  << Utility::str(S12, std::max(prec-7, 0)) << eol;
+          *output << LatLonString(lat2, lon2, prec, dms, dmssep, longfirst)
+                  << " " << Utility::str(S12, std::max(prec-7, 0)) << eol;
         } else if (inverse) {
-          std::string slat1, slon1, slat2, slon2;
           if (!(str >> slat1 >> slon1 >> slat2 >> slon2))
             throw GeographicErr("Incomplete input: " + s);
-          std::string strc;
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
-          DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
-          DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
+          DMS::DecodeLatLon(slat1, slon1, lat1, lon1, longfirst);
+          DMS::DecodeLatLon(slat2, slon2, lat2, lon2, longfirst);
           rh.Inverse(lat1, lon1, lat2, lon2, s12, azi12, S12);
           *output << AzimuthString(azi12, prec, dms, dmssep) << " "
                   << Utility::str(s12, prec) << " "
                   << Utility::str(S12, std::max(prec-7, 0)) << eol;
         } else {                // direct
-          std::string slat1, slon1, sazi;
           if (!(str >> slat1 >> slon1 >> sazi >> s12))
             throw GeographicErr("Incomplete input: " + s);
-          std::string strc;
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
-          DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
+          DMS::DecodeLatLon(slat1, slon1, lat1, lon1, longfirst);
           azi12 = DMS::DecodeAzimuth(sazi);
           rh.Direct(lat1, lon1, azi12, s12, lat2, lon2, S12);
-          *output << LatLonString(lat2, lon2, prec, dms, dmssep) << " "
-                  << Utility::str(S12, std::max(prec-7, 0)) << eol;
+          *output << LatLonString(lat2, lon2, prec, dms, dmssep, longfirst)
+                  << " " << Utility::str(S12, std::max(prec-7, 0)) << eol;
         }
       }
       catch (const std::exception& e) {

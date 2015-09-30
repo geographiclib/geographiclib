@@ -2,8 +2,8 @@
  * \file GravityCircle.cpp
  * \brief Implementation for GeographicLib::GravityCircle class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -19,7 +19,7 @@ namespace GeographicLib {
   Math::real GravityCircle::Gravity(real lon, real& gx, real& gy, real& gz)
     const {
     real clam, slam, M[Geocentric::dim2_];
-    CircularEngine::cossin(lon, clam, slam);
+    Math::sincosd(lon, slam, clam);
     real Wres = W(clam, slam, gx, gy, gz);
     Geocentric::Rotation(_sphi, _cphi, slam, clam, M);
     Geocentric::Unrotate(M, gx, gy, gz, gx, gy, gz);
@@ -29,7 +29,7 @@ namespace GeographicLib {
   Math::real GravityCircle::Disturbance(real lon, real& deltax, real& deltay,
                                         real& deltaz) const {
     real clam, slam, M[Geocentric::dim2_];
-    CircularEngine::cossin(lon, clam, slam);
+    Math::sincosd(lon, slam, clam);
     real Tres = InternalT(clam, slam, deltax, deltay, deltaz, true, true);
     Geocentric::Rotation(_sphi, _cphi, slam, clam, M);
     Geocentric::Unrotate(M, deltax, deltay, deltaz, deltax, deltay, deltaz);
@@ -40,7 +40,7 @@ namespace GeographicLib {
     if ((_caps & GEOID_HEIGHT) != GEOID_HEIGHT)
       return Math::NaN();
     real clam, slam, dummy;
-    CircularEngine::cossin(lon, clam, slam);
+    Math::sincosd(lon, slam, clam);
     real T = InternalT(clam, slam, dummy, dummy, dummy, false, false);
     real correction = _corrmult * _correction(clam, slam);
     return T/_gamma0 + correction;
@@ -54,7 +54,7 @@ namespace GeographicLib {
       return;
     }
     real clam, slam;
-    CircularEngine::cossin(lon, clam, slam);
+    Math::sincosd(lon, slam, clam);
     real
       deltax, deltay, deltaz,
       T = InternalT(clam, slam, deltax, deltay, deltaz, true, false);

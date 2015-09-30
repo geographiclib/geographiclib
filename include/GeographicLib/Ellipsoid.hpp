@@ -62,8 +62,7 @@ namespace GeographicLib {
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set
-     *   flattening to 1/\e f.
+     *   Negative \e f gives a prolate ellipsoid.
      * @exception GeographicErr if \e a or (1 &minus; \e f) \e a is not
      *   positive.
      **********************************************************************/
@@ -396,9 +395,8 @@ namespace GeographicLib {
      *   section at latitude &phi; inclined at an angle \e azi to the
      *   meridian (meters).
      *
-     * &phi; must lie in the range [&minus;90&deg;, 90&deg;] and \e
-     * azi must lie in the range [&minus;540&deg;, 540&deg;); the
-     * result is undefined if either of conditions does not hold.
+     * &phi; must lie in the range [&minus;90&deg;, 90&deg;]; the result is
+     * undefined this condition does not hold.
      **********************************************************************/
     Math::real NormalCurvatureRadius(real phi, real azi) const;
     ///@}

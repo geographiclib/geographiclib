@@ -2,7 +2,7 @@
  * \file Accumulator.hpp
  * \brief Header for GeographicLib::Accumulator class
  *
- * Copyright (c) Charles Karney (2010-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -17,7 +17,7 @@ namespace GeographicLib {
   /**
    * \brief An accumulator for sums
    *
-   * This allow many numbers of floating point type \e T to be added together
+   * This allows many numbers of floating point type \e T to be added together
    * with twice the normal precision.  Thus if \e T is double, the effective
    * precision of the sum is 106 bits or about 32 decimal places.
    *
@@ -141,6 +141,18 @@ namespace GeographicLib {
      * @param[in] n set \e sum *= \e n.
      **********************************************************************/
     Accumulator& operator*=(int n) { _s *= n; _t *= n; return *this; }
+    /**
+     * Multiply accumulator by a number.  The fma (fused multiply and add)
+     * instruction is used (if available) in order to maintain accuracy.
+     *
+     * @param[in] y set \e sum *= \e y.
+     **********************************************************************/
+    Accumulator& operator*=(T y) {
+      T d = _s; _s *= y;
+      d = Math::fma(y, d, -_s); // the error in the first multiplication
+      _t = Math::fma(y, _t, d); // add error to the second term
+      return *this;
+    }
     /**
      * Test equality of an Accumulator with a number.
      **********************************************************************/

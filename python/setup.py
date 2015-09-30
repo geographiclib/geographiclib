@@ -15,7 +15,7 @@
 from distutils.core import setup
 
 setup(name="geographiclib",
-      version="1.43",
+      version="1.45",
       description=
         "A translation of the GeographicLib::Geodesic class to Python",
       author="Charles Karney",
@@ -25,13 +25,14 @@ setup(name="geographiclib",
       data_files=[],
       license="MIT",
       keywords="gis geographical earth distance geodesic",
-      classifiers=["Development Status :: 5 - Production/Stable",
-                   "Intended Audience :: Developers",
-                   "Intended Audience :: Science/Research",
-                   "License :: OSI Approved :: MIT License",
-                   "Operating System :: OS Independent",
-                   "Programming Language :: Python",
-                   "Topic :: Scientific/Engineering :: GIS",
-                   "Topic :: Software Development :: Libraries :: Python Modules",
-                   ],
-      )
+      classifiers=[
+          "Development Status :: 5 - Production/Stable",
+          "Intended Audience :: Developers",
+          "Intended Audience :: Science/Research",
+          "License :: OSI Approved :: MIT License",
+          "Operating System :: OS Independent",
+          "Programming Language :: Python",
+          "Topic :: Scientific/Engineering :: GIS",
+          "Topic :: Software Development :: Libraries :: Python Modules",
+      ],
+)

@@ -17,6 +17,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		DMS.cpp \
 		Ellipsoid.cpp \
 		EllipticFunction.cpp \
+		GARS.cpp \
 		GeoCoords.cpp \
 		Geocentric.cpp \
 		Geodesic.cpp \
@@ -26,6 +27,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		GeodesicLineExact.cpp \
 		Geohash.cpp \
 		Geoid.cpp \
+		Georef.cpp \
 		Gnomonic.cpp \
 		GravityCircle.cpp \
 		GravityModel.cpp \
@@ -54,6 +56,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		../include/GeographicLib/DMS.hpp \
 		../include/GeographicLib/Ellipsoid.hpp \
 		../include/GeographicLib/EllipticFunction.hpp \
+		../include/GeographicLib/GARS.hpp \
 		../include/GeographicLib/GeoCoords.hpp \
 		../include/GeographicLib/Geocentric.hpp \
 		../include/GeographicLib/Geodesic.hpp \
@@ -62,6 +65,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		../include/GeographicLib/GeodesicLineExact.hpp \
 		../include/GeographicLib/Geohash.hpp \
 		../include/GeographicLib/Geoid.hpp \
+		../include/GeographicLib/Georef.hpp \
 		../include/GeographicLib/Gnomonic.hpp \
 		../include/GeographicLib/GravityCircle.hpp \
 		../include/GeographicLib/GravityModel.hpp \

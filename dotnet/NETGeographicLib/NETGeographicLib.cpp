@@ -10,6 +10,7 @@
  **********************************************************************/
 #include "stdafx.h"
 #include "GeographicLib/Config.h"
+#include "GeographicLib/Utility.hpp"
 #include "NETGeographicLib.h"
 
 using namespace System::Runtime::InteropServices;
@@ -46,4 +47,11 @@ int VersionInfo::MinorVersion()
 int VersionInfo::Patch()
 {
     return GEOGRAPHICLIB_VERSION_PATCH;
+}
+
+//*****************************************************************************
+double Utility::FractionalYear( System::String^ s )
+{
+    return GeographicLib::Utility::fractionalyear<double>(
+        StringConvert::ManagedToUnmanaged( s ) );
 }

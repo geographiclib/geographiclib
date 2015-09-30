@@ -2,7 +2,7 @@
  * \file Planimeter.cpp
  * \brief Command line utility for measuring the area of geodesic polygons
  *
- * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
-    bool reverse = false, sign = true, polyline = false;
+    bool reverse = false, sign = true, polyline = false, longfirst = false;
     int linetype = GEODESIC;
     int prec = 6;
     std::string istring, ifile, ofile, cdelim;
@@ -60,7 +60,9 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 2;
-      } else if (arg == "-p") {
+      } else if (arg == "-w")
+        longfirst = true;
+      else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
           prec = Utility::num<int>(std::string(argv[m]));
@@ -158,10 +160,9 @@ int main(int argc, char* argv[]) {
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
-    std::string s;
+    std::string s, eol("\n");
     real perimeter, area;
     unsigned num;
-    std::string eol("\n");
     while (std::getline(*input, s)) {
       if (!cdelim.empty()) {
         std::string::size_type m = s.find(cdelim);
@@ -173,7 +174,7 @@ int main(int argc, char* argv[]) {
       bool endpoly = s.empty();
       if (!endpoly) {
         try {
-          p.Reset(s);
+          p.Reset(s, longfirst);
           if (Math::isnan(p.Latitude()) || Math::isnan(p.Longitude()))
             endpoly = true;
         }

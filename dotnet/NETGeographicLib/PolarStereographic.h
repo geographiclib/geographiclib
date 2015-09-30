@@ -60,8 +60,7 @@ namespace NETGeographicLib
          *
          * @param[in] a equatorial radius (meters).
          * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
-         *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
-         *   to 1/\e f.
+         *   Negative \e f gives a prolate ellipsoid.
          * @param[in] k0 central scale factor.
          * @exception GeographicErr if \e a, (1 &minus; \e f ) \e a, or \e k0 is
          *   not positive.
@@ -105,8 +104,7 @@ namespace NETGeographicLib
          *
          * No false easting or northing is added.  \e lat should be in the range
          * (&minus;90&deg;, 90&deg;] for \e northp = true and in the range
-         * [&minus;90&deg;, 90&deg;) for \e northp = false; \e lon should
-         * be in the range [&minus;540&deg;, 540&deg;).
+         * [&minus;90&deg;, 90&deg;) for \e northp = false.
          **********************************************************************/
         void Forward(bool northp, double lat, double lon,
                      [System::Runtime::InteropServices::Out] double% x,

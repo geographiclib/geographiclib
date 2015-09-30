@@ -119,7 +119,7 @@ class PolygonArea(object):
     tempsum.Add(S12)
     crossings = self._crossings + PolygonArea.transit(self._lon1, self._lon0)
     if crossings & 1:
-      tempsum.Add( (1 if tempsum < 0 else -1) * self._area0/2 )
+      tempsum.Add( (1 if tempsum.Sum() < 0 else -1) * self._area0/2 )
     # area is with the clockwise sense.  If !reverse convert to
     # counter-clockwise convention.
     if not reverse: tempsum.Negate()
