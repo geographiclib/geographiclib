@@ -74,7 +74,7 @@ set -e
 #   js/GeographicLib.md
 
 DATE=`date +%F`
-VERSION=1.45
+VERSION=1.46
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then

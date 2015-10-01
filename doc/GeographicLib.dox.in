@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2015-09-30
+\date 2015-mm-dd
 
 \section abstract Abstract
 
@@ -7013,6 +7013,15 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
+
+ - <a href="http://geographiclib.sf.net/1.46">Version 1.46</a>
+   (released 2015-mm-dd)
+   - A reminder: because of the JavaScript changes introduced in version
+     1.45, you should remove the following installation directories from
+     your system:
+     - Windows: ${CMAKE_INSTALL_PREFIX}/doc/scripts
+     - Others: ${CMAKE_INSTALL_PREFIX}/share/doc/GeographicLib/scripts
+   - TODO: binary installers for Windows to use Visual Studio 12 2013.
 
  - <a href="http://geographiclib.sf.net/1.45">Version 1.45</a>
    (released 2015-09-30)
