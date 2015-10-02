@@ -1,6 +1,6 @@
 /*
  * Geodesic routines from GeographicLib translated to JavaScript.  See
- * http://geographiclib.sf.net/html/other.html#javascript
+ * http://geographiclib.sf.net/html/js/
  *
  * The algorithms are derived in
  *

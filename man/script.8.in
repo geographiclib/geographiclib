@@ -5,10 +5,10 @@
 .B @SCRIPT@
 downloads and installs the @DATA@ datasets used by GeographicLib,
 <http://geographiclib.sf.net>.  For documentation, supply the
-.B -h
+.B \-h
 option:
 .PP
-    @SCRIPT@ -h
+    @SCRIPT@ \-h
 .PP
 By default, the datasets are installed in
 .I @GEOGRAPHICLIB_DATA@/@DATA@
