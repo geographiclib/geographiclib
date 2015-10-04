@@ -483,20 +483,21 @@ namespace GeographicLib {
     { using std::abs; return abs(x) > 90 ? NaN<T>() : x; }
 
     /**
-     * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]
+     * The exact of two angles reduced to (&minus;180&deg;, 180&deg;]
      *
      * @tparam T the type of the arguments and returned value.
      * @param[in] x the first angle in degrees.
      * @param[in] y the second angle in degrees.
-     * @return \e y &minus; \e x, reduced to the range [&minus;180&deg;,
-     *   180&deg;].
+     * @param[out] e the error term in degrees.
+     * @return \e d, the truncated value of \e y &minus; \e x.
      *
-     * The result is equivalent to computing the difference exactly, reducing
-     * it to (&minus;180&deg;, 180&deg;] and rounding the result.  Note that
-     * this prescription allows &minus;180&deg; to be returned (e.g., if \e x
-     * is tiny and negative and \e y = 180&deg;).
+     * The computes \e z = \e y &minus; \e x exactly, reduced to
+     * (&minus;180&deg;, 180&deg;]; and then sets \e z = \e d + \e e where \e d
+     * is the nearest representable number to \e z and \e e is the truncation
+     * error.  If \e d = &minus;180, then \e e &gt; 0; If \e d = 180, then \e e
+     * &le; 0.
      **********************************************************************/
-    template<typename T> static inline T AngDiff(T x, T y) {
+    template<typename T> static inline T AngDiff(T x, T y, T& e) {
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
       using std::remainder;
       T t, d = - AngNormalize(sum(remainder( x, T(360)),
@@ -510,8 +511,25 @@ namespace GeographicLib {
       // and t < 0.  The case, d = -180 + eps, t = eps, can't happen, since
       // sum would have returned the exact result in such a case (i.e., given t
       // = 0).
-      return (d == 180 && t < 0 ? -180 : d) - t;
+      return sum(d == 180 && t < 0 ? -180 : d, -t, e);
     }
+
+    /**
+     * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]
+     *
+     * @tparam T the type of the arguments and returned value.
+     * @param[in] x the first angle in degrees.
+     * @param[in] y the second angle in degrees.
+     * @return \e y &minus; \e x, reduced to the range [&minus;180&deg;,
+     *   180&deg;].
+     *
+     * The result is equivalent to computing the difference exactly, reducing
+     * it to (&minus;180&deg;, 180&deg;] and rounding the result.  Note that
+     * this prescription allows &minus;180&deg; to be returned (e.g., if \e x
+     * is tiny and negative and \e y = 180&deg;).
+     **********************************************************************/
+    template<typename T> static inline T AngDiff(T x, T y)
+    { T e; return AngDiff(x, y, e); }
 
     /**
      * Coarsen a value close to zero.

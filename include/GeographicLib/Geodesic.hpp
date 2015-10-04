@@ -218,18 +218,17 @@ namespace GeographicLib {
                  real& M12, real& M21, real Ca[]) const;
     real InverseStart(real sbet1, real cbet1, real dn1,
                       real sbet2, real cbet2, real dn2,
-                      real lam12,
+                      real lam12, real slam12, real clam12,
                       real& salp1, real& calp1,
                       real& salp2, real& calp2, real& dnm,
                       real Ca[]) const;
     real Lambda12(real sbet1, real cbet1, real dn1,
                   real sbet2, real cbet2, real dn2,
-                  real salp1, real calp1,
+                  real salp1, real calp1, real slam120, real clam120,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
-                  real& eps, real& domg12, bool diffp, real& dlam12,
-                  real Ca[])
-      const;
+                  real& eps, real& somg12, real& comg12,
+                  bool diffp, real& dlam12, real Ca[]) const;
 
     // These are Maxima generated functions to provide series approximations to
     // the integrals for the ellipsoidal geodesic.

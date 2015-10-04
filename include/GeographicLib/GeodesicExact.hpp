@@ -116,16 +116,16 @@ namespace GeographicLib {
     real InverseStart(EllipticFunction& E,
                       real sbet1, real cbet1, real dn1,
                       real sbet2, real cbet2, real dn2,
-                      real lam12,
+                      real lam12, real slam12, real clam12,
                       real& salp1, real& calp1,
                       real& salp2, real& calp2, real& dnm) const;
     real Lambda12(real sbet1, real cbet1, real dn1,
                   real sbet2, real cbet2, real dn2,
-                  real salp1, real calp1,
+                  real salp1, real calp1, real slam120, real clam120,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
                   EllipticFunction& E,
-                  real& omg12, bool diffp, real& dlam12) const;
+                  real& somg12, real& comg12, bool diffp, real& dlam12) const;
 
     // These are Maxima generated functions to provide series approximations to
     // the integrals for the area.
