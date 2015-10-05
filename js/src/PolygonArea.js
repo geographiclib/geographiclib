@@ -27,7 +27,6 @@
    *   class.
    */
   p, g, m, a) {
-  "use strict";
 
   var transit, transitdirect;
   transit = function(lon1, lon2) {

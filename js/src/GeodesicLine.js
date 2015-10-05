@@ -28,7 +28,6 @@
    *   class.
    */
   l, m) {
-  "use strict";
 
   /**
    * @class
