@@ -158,7 +158,7 @@ while read ver x64; do
     pkg=vc$ver
     test "$x64" && pkg="$pkg-x64" || true
     installer=
-    if test "$ver" -eq 11; then
+    if test "$ver" -eq 12; then
 	if test "$x64"; then
 	    installer=GeographicLib-$VERSION-win64.exe
 	else
@@ -193,6 +193,7 @@ done <<EOF
 10 y
 11
 11 y
+12
 12 y
 14 y
 EOF

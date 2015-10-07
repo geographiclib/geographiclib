@@ -7021,8 +7021,8 @@ git repository for GeographicLib</a>.
      your system:
      - Windows: ${CMAKE_INSTALL_PREFIX}/doc/scripts
      - Others: ${CMAKE_INSTALL_PREFIX}/share/doc/GeographicLib/scripts
-   - TODO: binary installers for Windows to use Visual Studio 12 2013.
-   - JavaScript package: some clean up.
+   - Binary installers for Windows now use Visual Studio 12 2013.
+   - JavaScript package: some code clean up.
 
  - <a href="http://geographiclib.sf.net/1.45">Version 1.45</a>
    (released 2015-09-30)
