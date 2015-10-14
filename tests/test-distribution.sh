@@ -165,8 +165,6 @@ while read ver x64; do
 	    installer=GeographicLib-$VERSION-win32.exe
 	fi
     fi
-    cmake=cmake
-    test "$ver" -eq 14 && cmake=cmake3 || true
     mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg
     (
 	echo "#! /bin/sh -exv"
@@ -175,16 +173,16 @@ while read ver x64; do
 	echo 'mkdir -p v:/data/scratch/$b'
 	echo 'cd v:/data/scratch/$b'
 	echo 'unset GEOGRAPHICLIB_DATA'
-	echo $cmake -G \"$gen\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
-	echo $cmake --build . --config Debug   --target ALL_BUILD
-	echo $cmake --build . --config Debug   --target RUN_TESTS
-	echo $cmake --build . --config Debug   --target INSTALL
-	echo $cmake --build . --config Release --target ALL_BUILD
-	echo $cmake --build . --config Release --target exampleprograms
-	echo $cmake --build . --config Release --target netexamples
-	echo $cmake --build . --config Release --target RUN_TESTS
-	echo $cmake --build . --config Release --target INSTALL
-	echo $cmake --build . --config Release --target PACKAGE
+	echo cmake -G \"$gen\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+	echo cmake --build . --config Debug   --target ALL_BUILD
+	echo cmake --build . --config Debug   --target RUN_TESTS
+	echo cmake --build . --config Debug   --target INSTALL
+	echo cmake --build . --config Release --target ALL_BUILD
+	echo cmake --build . --config Release --target exampleprograms
+	echo cmake --build . --config Release --target netexamples
+	echo cmake --build . --config Release --target RUN_TESTS
+	echo cmake --build . --config Release --target INSTALL
+	echo cmake --build . --config Release --target PACKAGE
 	test "$installer" &&
 	echo cp "$installer" $WINDEVELSOURCE/ || true
     ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
