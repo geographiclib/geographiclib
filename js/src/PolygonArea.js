@@ -274,7 +274,7 @@
    * @description A new vertex is *not* added to the polygon.
    */
   p.PolygonArea.prototype.TestEdge = function(azi, s, reverse, sign) {
-    var vals = {number: this.num ? this.num + 1 : 0}, t, tempsump, crossings;
+    var vals = {number: this.num ? this.num + 1 : 0}, t, tempsum, crossings;
     if (this.num === 0)
       return vals;
     vals.perimeter = this._perimetersum.Sum() + s;
@@ -286,8 +286,8 @@
     t = this._geod.Direct(this.lat, this.lon, azi, s, this._mask);
     tempsum += t.S12;
     crossings += transitdirect(this.lon, t.lon2);
-    t = this._geod(t.lat2, t.lon2, this._lat0, this._lon0, this._mask);
-    perimeter += t.s12;
+    t = this._geod.Inverse(t.lat2, t.lon2, this._lat0, this._lon0, this._mask);
+    vals.perimeter += t.s12;
     tempsum += t.S12;
     crossings += transit(t.lon2, this._lon0);
 

@@ -510,5 +510,13 @@ describe("GeographicLib", function() {
       assert.approx(a.area, 32415230256.0, 1);
     });
 
+    it("check TestEdge", function() {
+      // Check fix of bugs found by threepointone, 2015-10-14
+      polygon.Clear();
+      polygon.AddPoint(33, 44);
+      polygon.TestEdge(90, 10e3, false, true);
+      polygon.AddEdge(90, 10e3, false, true);
+    });
+
   });
 });
