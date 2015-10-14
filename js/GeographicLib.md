@@ -1,6 +1,6 @@
 ## Geodesic routines from GeographicLib
 
-This documentation applies to version 1.45.
+This documentation applies to version 1.46.
 
 ### Installation
 

@@ -156,7 +156,7 @@ namespace GeographicLib {
       slam12, clam12;
     lon12s = (180 - lon12) - lon12s;
     if (lon12 > 90) {
-      Math::sincosd(Math::AngRound(), slam12, clam12);
+      Math::sincosd(Math::AngRound(lon12s), slam12, clam12);
       clam12 = -clam12;
     } else
       Math::sincosd(lon12, slam12, clam12);

@@ -2982,7 +2982,7 @@ simplicity and without loss of generality, \e lat1 is chosen in
 chosen in [0&deg;, 180&deg;].  Furthermore, \e lat1 and \e
 azi1 are taken to be multiples of 10<sup>&minus;12</sup> deg and \e s12
 is a multiple of 0.1&nbsp;&mu;m in [0&nbsp;m, 20003931.4586254&nbsp;m].
-This results \e lon2 in [0&deg;, 180&deg;] and \e azi2 in [0&deg;,
+This results in \e lon2 in [0&deg;, 180&deg;] and \e azi2 in [0&deg;,
 180&deg;].
 
 The direct calculation uses an expansion of the geodesic equations
@@ -5752,8 +5752,8 @@ Each line of the test set gives 6 space delimited numbers
  .
 The latitude and longitude are all multiples of 10<sup>&minus;12</sup>
 deg and should be regarded as exact, except that longitude =
-82.63627282416406551 should be interpreted as exactly 90 (1 - \e e)
-degrees.  These results are computed using Lee's formulas with
+82.63627282416406551 should be interpreted as exactly (1 &minus; \e e)
+90&deg;.  These results are computed using Lee's formulas with
 <a href="https://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
 bfloats and fpprec set to 80 (so the errors in the data are probably 1/2
 of the values quoted above).  The Maxima code,
@@ -5776,23 +5776,23 @@ The contents of the file are as follows:
    0&deg;, lon &ge; 0&deg;;
  - 1000 entries close to lat = 0&deg;, lon = 90&deg; with lat &ge;
    0&deg;, lon &le; 90&deg;;
- - 2000 entries close to lat = 0&deg;, lon = 90&deg; (1 &minus; \e e)
+ - 2000 entries close to lat = 0&deg;, lon = (1 &minus; \e e) 90&deg;
    with lat &ge; 0&deg;;
  - 25000 entries randomly distributed in lat in [&minus;89&deg;,
-   0&deg;], lon in [90&deg; (1 &minus; \e e), 90&deg;];
+   0&deg;], lon in [(1 &minus; \e e) 90&deg;, 90&deg;];
  - 1000 entries randomly distributed on lat in [&minus;89&deg;, 0&deg;],
    lon = 90&deg;;
  - 1000 entries randomly distributed on lat in [&minus;89&deg;, 0&deg;],
-   lon = 90&deg; (1 &minus; \e e);
+   lon = (1 &minus; \e e) 90&deg;;
  - 1000 entries close to lat = 0&deg;, lon = 90&deg; (lat < 0&deg;, lon
    &le; 90&deg;);
- - 1000 entries close to lat = 0&deg;, lon = 90&deg; (1 &minus; \e e)
-   (lat < 0&deg;, lon &le; 90&deg; (1 &minus; \e e));
+ - 1000 entries close to lat = 0&deg;, lon = (1 &minus; \e e) 90&deg;
+   (lat < 0&deg;, lon &le; (1 &minus; \e e) 90&deg;);
  .
 (a total of 287000 entries).  The entries for lat < 0&deg; and
-lon in [90&deg; (1 &minus; \e e), 90&deg;] use the "extended"
+lon in [(1 &minus; \e e) 90&deg;, 90&deg;] use the "extended"
 domain for the transverse Mercator projection explained in Sec. 5 of
-<a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.  The first
+Karney (2011).  The first
 258000 entries have lat &ge; 0&deg; and are suitable for testing
 implementations following the standard convention.
 
