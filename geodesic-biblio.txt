@@ -905,7 +905,8 @@
    https://books.google.com/books?id=qt2CAAAAIAAJ&pg=PA212 (PDF helmert80.pdf)
    [[BR]]English translation:
    by Aeronautical Chart and Information Center (St. Louis, 1964).[[BR]]
-   http://geographiclib.sf.net/geodesic-papers/helmert80-en.html
+   https://dx.doi.org/10.5281/zenodo.32050 [[BR]]
+   https://www.worldcat.org/oclc/17273288
  * F. R. Helmert,[[BR]]
    ''Entwicklung der ersten Glieder für die Reduction eines sphäroidischen
    Dreiecks auf ein sphärisches mit denselben Seiten [Development of the
@@ -1188,9 +1189,10 @@
    (Moscow, 1962).[[BR]]
    English translation: ''Course in Spheroidal Geodesy'',
    FTD-MT-64-390 (US Air Force, Feb. 1967).[[BR]]
+   https://www.worldcat.org/oclc/6150611 [[BR]]
    http://www.dtic.mil/docs/citations/AD0650520 [[BR]]
    clean copy:
-   http://geographiclib.sf.net/geodesic-papers/bagratuni67.pdf
+   https://dx.doi.org/10.5281/zenodo.32371
  * E. M. Sodano and T. A. Robinson,[[BR]]
    ''Direct and Inverse Solutions of Geodesics'',
    Tech. Rep. 7 Rev. (Army Map Service, 1963).[[BR]]
@@ -1253,6 +1255,9 @@
    J. Geodetic Science '''2'''(3), 162--171 (2012).[[BR]]
    https://dx.doi.org/10.2478/v10156-011-0037-4 [[BR]]
    Errata: https://dx.doi.org/10.2478/jogs-2013-0014
+ * C. F. F. Karney,[[BR]]
+   ''Test set for geodesics'' (2010). [[BR]]
+   https://dx.doi.org/10.5281/zenodo.32156
  * C. F. F. Karney,[[BR]]
    ''Geodesics on an ellipsoid of revolution''
    (Feb. 2011).[[BR]]

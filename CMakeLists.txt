@@ -403,7 +403,7 @@ endif ()
 configure_file (
   include/GeographicLib/Config.h.in
   include/GeographicLib/Config.h
-  @ONLY )
+  @ONLY)
 
 # The documentation depends on doxygen.
 if (GEOGRAPHICLIB_DOCUMENTATION)
@@ -520,7 +520,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(html|css|kmz|pdf)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
   "${PROJECT_SOURCE_DIR}/(geodesic-biblio.txt|makefile-admin|[^/]*\\\\.png)\$"
-  "${PROJECT_SOURCE_DIR}/matlab/.*blurb.txt\$" )
+  "${PROJECT_SOURCE_DIR}/matlab/.*blurb.txt\$")
 set (CPACK_SOURCE_GENERATOR TGZ)
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)

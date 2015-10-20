@@ -2919,7 +2919,7 @@ References:
    translated by C. F. F. Karney and R. E. Deakin; preprint:
    <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - F. R. Helmert,
-   <a href="http://geographiclib.sf.net/geodesic-papers/helmert80-en.pdf">
+   <a href="https://dx.doi.org/10.5281/zenodo.32050">
    Mathematical and Physical Theories of Higher Geodesy, Part 1 (1880)</a>,
    Aeronautical Chart and Information Center (St. Louis, 1964),
    Chaps. 5--7.
@@ -2949,6 +2949,9 @@ References:
 A test set a geodesics is available at
  - <a href="https://sf.net/projects/geographiclib/files/testdata/GeodTest.dat.gz">
    GeodTest.dat.gz</a>
+ - C. F. F. Karney, Test set for geodesics,
+   DOI: <a href="https://dx.doi.org/10.5281/zenodo.32156">
+   10.5281/zenodo.32156</a>.
  .
 This is about 39 MB (compressed).  This consists of a set of geodesics
 for the WGS84 ellipsoid.  A subset of this (consisting of 1/50 of the
@@ -2957,14 +2960,14 @@ members &mdash; about 690 kB, compressed) is available at
    GeodTest-short.dat.gz</a>
 
 Each line of the test set gives 10 space delimited numbers
- - latitude for point 1, \e lat1 (degrees, exact)
- - longitude for point 1, \e lon1 (degrees, always 0)
- - azimuth for point 1, \e azi1 (clockwise from north in degrees, exact)
- - latitude for point 2, \e lat2 (degrees, accurate to
+ - latitude at point 1, \e lat1 (degrees, exact)
+ - longitude at point 1, \e lon1 (degrees, always 0)
+ - azimuth at point 1, \e azi1 (clockwise from north in degrees, exact)
+ - latitude at point 2, \e lat2 (degrees, accurate to
    10<sup>&minus;18</sup> deg)
- - longitude for point 2, \e lon2 (degrees, accurate to
+ - longitude at point 2, \e lon2 (degrees, accurate to
    10<sup>&minus;18</sup> deg)
- - azimuth for point 2, \e azi2 (degrees, accurate to
+ - azimuth at point 2, \e azi2 (degrees, accurate to
    10<sup>&minus;18</sup> deg)
  - geodesic distance from point 1 to point 2, \e s12 (meters, exact)
  - arc distance on the auxiliary sphere, \e a12 (degrees, accurate to
@@ -4787,7 +4790,7 @@ References:
    transverse Mercator mapping (almost)</a>,
    Proc. XXIII Intl. Cartographic Conf. (ICC2007), Moscow (2007).
  - F. R. Helmert,
-   <a href="http://geographiclib.sf.net/geodesic-papers/helmert80-en.pdf">
+   <a href="https://dx.doi.org/10.5281/zenodo.32050">
    Mathematical and Physical Theories of Higher Geodesy, Part 1 (1880)</a>,
    Aeronautical Chart and Information Center (St. Louis, 1964),
    Chaps. 5--7.
