@@ -1238,6 +1238,23 @@
    of K. Borre & W. G. Strang, ''Algorithms for Global Positioning''
    (Wellesley-Cambridge Press, 2012) [[BR]]
    http://old.gps.aau.dk/downloads/notes.pdf
+ * C. F. F. Karney,[[BR]]
+   ''GeographicLib, version 2009-03'' (Mar. 1, 2009). [[BR]]
+   https://dx.doi.org/10.5281/zenodo.32463
+ * C. F. F. Karney,[[BR]]
+   ''Test set for geodesics'' (2010). [[BR]]
+   https://dx.doi.org/10.5281/zenodo.32156
+ * C. F. F. Karney,[[BR]]
+   ''Geodesics on an ellipsoid of revolution''
+   (Feb. 2011).[[BR]]
+   http://arxiv.org/abs/1102.1215 [[BR]]
+   Errata: http://geographiclib.sf.net/geod-addenda.html#geod-errata
+ * C. F. F. Karney,[[BR]]
+   ''Algorithms for geodesics'',
+   J. Geodesy '''87'''(1), 43--55 (2013).[[BR]]
+   https://dx.doi.org/10.1007/s00190-012-0578-z [[BR]]
+   http://arxiv.org/abs/1109.4448 [[BR]]
+   Addenda: http://geographiclib.sf.net/geod-addenda.html
  * C. M. Rollins,[[BR]]
    ''An integral for geodesic length'',
    Survey Review '''42'''(315), 20--26 (2010).[[BR]]
@@ -1255,19 +1272,6 @@
    J. Geodetic Science '''2'''(3), 162--171 (2012).[[BR]]
    https://dx.doi.org/10.2478/v10156-011-0037-4 [[BR]]
    Errata: https://dx.doi.org/10.2478/jogs-2013-0014
- * C. F. F. Karney,[[BR]]
-   ''Test set for geodesics'' (2010). [[BR]]
-   https://dx.doi.org/10.5281/zenodo.32156
- * C. F. F. Karney,[[BR]]
-   ''Geodesics on an ellipsoid of revolution''
-   (Feb. 2011).[[BR]]
-   http://arxiv.org/abs/1102.1215 [[BR]]
-   Errata: http://geographiclib.sf.net/geod-addenda.html#geod-errata
- * C. F. F. Karney,[[BR]]
-   ''Algorithms for geodesics'',
-   J. Geodesy '''87'''(1), 43--55 (2013).[[BR]]
-   https://dx.doi.org/10.1007/s00190-012-0578-z [[BR]]
-   Addenda: http://geographiclib.sf.net/geod-addenda.html
  * G. Panou, D. Delikaraoglou, and R. Korakitis,[[BR]]
    ''Solving the geodesics on the ellipsoid as a boundary value problem'',
    J. Geodetic Science '''3'''(1), 40--47 (2013).[[BR]]

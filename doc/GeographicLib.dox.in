@@ -41,8 +41,7 @@ the other hand, it does provide the core functionality offered by
 \section download Download
 
 The main project page is at
-- <a href="https://sourceforge.net/projects/geographiclib">
-  https://sourceforge.net/projects/geographiclib </a>
+- https://sourceforge.net/projects/geographiclib
 .
 The code is available for download at
 - <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.tar.gz">
@@ -62,7 +61,9 @@ binary installers available for some platforms.  See \ref binaryinst.
 GeographicLib is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
 see <a href="LICENSE.txt">LICENSE.txt</a> for the terms.
-For more information, see http://geographiclib.sourceforge.net/.
+
+For more information on GeographicLib, see
+- http://geographiclib.sourceforge.net/.
 
 \section contents Contents
  - \ref intro
@@ -2949,7 +2950,7 @@ References:
 A test set a geodesics is available at
  - <a href="https://sf.net/projects/geographiclib/files/testdata/GeodTest.dat.gz">
    GeodTest.dat.gz</a>
- - C. F. F. Karney, Test set for geodesics,
+ - C. F. F. Karney, <i>Test set for geodesics</i> (2010), <br>
    DOI: <a href="https://dx.doi.org/10.5281/zenodo.32156">
    10.5281/zenodo.32156</a>.
  .
@@ -5738,6 +5739,10 @@ illustration of the exact transverse Mercator grid in Google Earth.
 A test set for the transverse Mercator projection is available at
  - <a href="https://sf.net/projects/geographiclib/files/testdata/TMcoords.dat.gz">
    TMcoords.dat.gz</a>
+ - C. F. F. Karney, <i>Test data for the transverse Mercator projection</i>
+   (2009),  <br>
+   DOI: <a href="https://dx.doi.org/10.5281/zenodo.32470">
+   10.5281/zenodo.32470</a>.
  .
 This is about 17 MB (compressed).  This test set consists of a set of
 geographic coordinates together with the corresponding transverse
