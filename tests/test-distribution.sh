@@ -142,7 +142,7 @@ unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
 #! /bin/sh -exv
 unset GEOGRAPHICLIB_DATA
-for v in 2013 2012 2010; do
+for v in 2015 2013 2012 2010; do
   for a in 64 32; do
     rm -rf v:/data/scratch/geog-mvn-$v-$a
     mvn -Dcmake.compiler=vc$v -Dcmake.arch=$a \
@@ -188,11 +188,13 @@ while read ver x64; do
     ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
     chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
 done <<EOF
+10
 10 y
 11
 11 y
 12
 12 y
+14
 14 y
 EOF
 

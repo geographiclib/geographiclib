@@ -314,16 +314,14 @@ add_test (NAME GeodSolve58 COMMAND GeodSolve -i --input-string "nan 0 90 9" -E)
 set_tests_properties (GeodSolve55 GeodSolve56 GeodSolve57 GeodSolve58
   PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
 
-if (NOT (MSVC AND MSVC_VERSION MATCHES "18.."))
-  # Check for points close with longitudes close to 180 deg apart.
-  add_test (NAME GeodSolve59 COMMAND GeodSolve
-    -i -p 9 --input-string "5 0.00000000000001 10 180")
-  add_test (NAME GeodSolve60 COMMAND GeodSolve
-    -i -p 9 --input-string "5 0.00000000000001 10 180" -E)
-  set_tests_properties (GeodSolve59 GeodSolve60
-    PROPERTIES PASS_REGULAR_EXPRESSION
-    "0\\.0000000000000[34] 179\\.9999999999999[5-7] 18345191\\.17433271[2-4]")
-endif ()
+# Check for points close with longitudes close to 180 deg apart.
+add_test (NAME GeodSolve59 COMMAND GeodSolve
+  -i -p 9 --input-string "5 0.00000000000001 10 180")
+add_test (NAME GeodSolve60 COMMAND GeodSolve
+  -i -p 9 --input-string "5 0.00000000000001 10 180" -E)
+set_tests_properties (GeodSolve59 GeodSolve60
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "0\\.0000000000000[34] 179\\.9999999999999[5-7] 18345191\\.17433271[2-6]")
 
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
