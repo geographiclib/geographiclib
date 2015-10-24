@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /2009-
+Disallow: /1.
+Disallow: /scripts/test/
+Disallow: /scripts/geographiclib-1.

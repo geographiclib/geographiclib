@@ -198,7 +198,7 @@
  *   on an ellipsoid of revolution</a>.
  * <li>
  *   <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">
- *   An online geodesic bibliography</a>.
+ *   A geodesic bibliography</a>.
  * <li>
  *   The wikipedia page,
  *   <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">

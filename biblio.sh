@@ -6,13 +6,13 @@ cat <<'EOF'
 <html>
   <head>
     <title>
-      Online geodesic bibliography
+      Geodesic bibliography
     </title>
     <link rel="stylesheet" type="text/css" href="../default.css">
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
   </head>
   <body topmargin=10 leftmargin=10>
-    <h3>An online geodesic bibliography</h3>
+    <h3>A geodesic bibliography</h3>
     <p>
       Here is a list of the older mathematical treatments of the
       geodesic problem for an ellipsoid, together with links to online

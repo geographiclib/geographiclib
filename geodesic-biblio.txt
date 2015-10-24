@@ -34,7 +34,7 @@
    389--405 (1733, publ. 1735).[[BR]]
    https://books.google.com/books?id=GOAEAAAAQAAJ&pg=PA389
  * A. C. Clairaut,[[BR]]
-   ''Détermination géometrique de la perpendiculaire à la méridienne
+   ''Détermination géométrique de la perpendiculaire à la méridienne
    tracée par M. Cassini [Geometrical determination of the perpendicular
    to the meridian drawn by Jacques Cassini]'',
    Mém. de l'Acad. Roy. des Sciences de Paris,
@@ -43,7 +43,7 @@
    alt: http://gallica.bnf.fr/ark:/12148/bpt6k3530m/f566.image
  * A. C. Clairaut,[[BR]]
    ''Suite d'un Mémoire donné en 1733, qui a pour titre: Détermination
-   géometrique de la perpendiculaire à la méridienne tracée, &c
+   géométrique de la perpendiculaire à la méridienne tracée, &c
    [Continuation of a paper presented in 1733 entitled: Geometrical
    determination of the perpendicular to the meridian, etc.]'',
    Mém. de l'Acad. Roy. des Sciences de Paris, 83--96 (1739, publ. 1741).[[BR]]
@@ -793,6 +793,11 @@
    in ''Opere matematiche di Eugenio Beltrami'' (Vol. 1, Hoepli, Milan, 1902),
    pp. 366--373.[[BR]]
    https://books.google.com/books?id=c48vHvLN--kC&pg=PA366 (PDF beltrami-V1.pdf)
+ * O. Schreiber,[[BR]]
+   ''Theorie der Projectionsmethode der Hannoverschen Landesvermessung
+   [Theory of the projection for the survey of Hannover]''
+   (Hahn, 1866).[[BR]]
+   https://books.google.com/books?id=rIQ_AAAAcAAJ
  * E. B. Christoffel,[[BR]]
    ''Allgemeine Theorie der geodätischen Dreiecke
    [General theory of geodesic triangles]'',

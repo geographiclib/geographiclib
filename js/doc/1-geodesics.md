@@ -160,7 +160,7 @@ Vincenty (1975) in the following respects:
   Algorithms for geodesics}, J. Geodesy **87**(1) 43&ndash;55 (2013);
   {@link http://geographiclib.sf.net/geod-addenda.html addenda}.
 - {@link http://geographiclib.sf.net/geodesic-papers/biblio.html
-  An online geodesic bibliography}.
+  A geodesic bibliography}.
 * The wikipedia page,
   {@link https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid
   Geodesics on an ellipsoid}.

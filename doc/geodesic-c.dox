@@ -133,7 +133,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 - The section in the %GeographicLib documentation on geodesics: \ref
   geodesic.
 - <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">
-  An online geodesic bibliography</a>.
+  A geodesic bibliography</a>.
 - The wikipedia page,
   <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
   Geodesics on an ellipsoid</a>.

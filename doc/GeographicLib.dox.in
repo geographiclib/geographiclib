@@ -3903,7 +3903,7 @@ Go to
  -# I do not give full citations of the papers here.  You can find these
     in the
     <a href="http://geographiclib.sourceforge.net/geodesic-papers/biblio.html">
-    Online Geodesic Bibliography</a>; this includes links to online
+    Geodesic Bibliography</a>; this includes links to online
     versions of the papers.
  -# An alternative to exploring geodesics using Jacobi's solution is to
     integrate the equations for the geodesics directly.  This is the
