@@ -144,7 +144,7 @@ Vincenty (1975) in the following respects:
   Astron. Nachr. **331**(8), 852&ndash;861 (2010),
   translated by C. F. F. Karney and R. E. Deakin.
 * F. R. Helmert,
-  {@link http://geographiclib.sf.net/geodesic-papers/helmert80-en.html
+  {@link http://geographiclib.sourceforge.net/geodesic-papers/helmert80-en.html
   Mathematical and Physical Theories of Higher Geodesy, Vol 1},
   (Teubner, Leipzig, 1880), Chaps. 5&ndash;7.
 * T. Vincenty,
@@ -158,8 +158,8 @@ Vincenty (1975) in the following respects:
 * C. F. F. Karney,
   {@link https://dx.doi.org/10.1007/s00190-012-0578-z
   Algorithms for geodesics}, J. Geodesy **87**(1) 43&ndash;55 (2013);
-  {@link http://geographiclib.sf.net/geod-addenda.html addenda}.
-- {@link http://geographiclib.sf.net/geodesic-papers/biblio.html
+  {@link http://geographiclib.sourceforge.net/geod-addenda.html addenda}.
+- {@link http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
   A geodesic bibliography}.
 * The wikipedia page,
   {@link https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid

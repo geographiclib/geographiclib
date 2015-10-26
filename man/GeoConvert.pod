@@ -408,4 +408,4 @@ B<GeoConvert> was written by Charles Karney.
 =head1 HISTORY
 
 B<GeoConvert> was added to GeographicLib,
-L<http://geographiclib.sf.net>, in 2009-01.
+L<http://geographiclib.sourceforge.net>, in 2009-01.

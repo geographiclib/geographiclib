@@ -205,7 +205,7 @@ cat <<EOF
       J. Geodesy <b>87</b>, 43&ndash;55 (2013); DOI:
       <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
 	10.1007/s00190-012-0578-z</a>;
-      addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+      addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
 	geod-addenda.html</a>.
     </p>
     <hr>

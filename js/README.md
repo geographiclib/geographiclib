@@ -1,7 +1,7 @@
 # Geodesic routines from GeographicLib
 
 This library is a JavaScript implementation of the geodesic routines
-from [GeographicLib](http://geographiclib.sf.net).  This solves the
+from [GeographicLib](http://geographiclib.sourceforge.net).  This solves the
 direct and inverse geodesic problems for an ellipsoid of revolution.
 
 ## Installation

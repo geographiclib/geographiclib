@@ -47,7 +47,7 @@ sed -e 's/\*/<li>/' -e 's/  *\[\[BR\]\]/ <br>/' -e 's/\[\[BR\]\]/<br>/' \
     -e "s%'''\([0-9][0-9]*\)'''%<b>\1</b>%g" \
     -e "s% ''% <i>%g" -e "s%\([^ ]\)''%\1</i>%g" \
     -e 's%\(https\?\)://\([a-zA-Z][^ ]*\)%<a href="\1://\2">\1://\2</a>%' \
-    -e 's%(PDF \([^)]*\))%(<a href="http://geographiclib.sf.net/geodesic-papers/\1">pdf</a>)%' \
+    -e 's%(PDF \([^)]*\))%(<a href="http://geographiclib.sourceforge.net/geodesic-papers/\1">pdf</a>)%' \
     -e 's/&/\&amp;/g' \
     -e 's/\([0-9]\)--\([0-9]\)/\1\&ndash;\2/g' \
     -e 's/É/\&Eacute;/g' \

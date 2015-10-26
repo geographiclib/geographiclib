@@ -16,7 +16,7 @@
 \section abstract-for Abstract
 
 This is a Fortran implementation of the geodesic algorithms from <a
-href="http://geographiclib.sf.net">GeographicLib</a>.  This is a
+href="http://geographiclib.sourceforge.net">GeographicLib</a>.  This is a
 self-contained library which makes it easy to do geodesic computations
 for an ellipsoid of revolution in a Fortran program.  It is written in
 Fortran 77 (avoiding features which are now deprecated) and should
@@ -25,9 +25,9 @@ compile correctly with just about any Fortran compiler.
 \section download-for Downloading the source
 
 The Fortran library is part of %GeographicLib which available for download at
-- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.45.tar.gz">
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.45.tar.gz">
   GeographicLib-1.45.tar.gz</a>
-- <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.45.zip">
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.45.zip">
   GeographicLib-1.45.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
@@ -102,14 +102,14 @@ and are therefore in the public domain.
   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
   Algorithms for geodesics</a>,
   J. Geodesy <b>87</b>, 43--55 (2013)
-  (<a href="http://geographiclib.sf.net/geod-addenda.html"> addenda</a>).
+  (<a href="http://geographiclib.sourceforge.net/geod-addenda.html"> addenda</a>).
 - A longer paper on geodesics: C. F. F. Karney,
    <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
    on an ellipsoid of revolution</a>,
    Feb. 2011
-   (<a href="http://geographiclib.sf.net/geod-addenda.html#geod-errata">
+   (<a href="http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata">
    errata</a>).
-- <a href="http://geographiclib.sf.net">The GeographicLib web site</a>.
+- <a href="http://geographiclib.sourceforge.net">The GeographicLib web site</a>.
 - <a href="../index.html">The C++ library</a>.
 - <a href="../C/index.html">The C library</a>.
 - <a href="../java/index.html">The Java library</a>.
@@ -118,7 +118,7 @@ and are therefore in the public domain.
   GeographicLib::GeodesicLine, GeographicLib::PolygonAreaT.
 - The section in the %GeographicLib documentation on geodesics: \ref
   geodesic.
-- <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">
+- <a href="http://geographiclib.sourceforge.net/geodesic-papers/biblio.html">
   A geodesic bibliography</a>.
 - The wikipedia page,
   <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
@@ -126,7 +126,7 @@ and are therefore in the public domain.
 
 \section changes-for Change log
 
- - <a href="http://geographiclib.sf.net/1.45/Fortran">Version 1.45</a>
+ - <a href="http://geographiclib.sourceforge.net/1.45/Fortran">Version 1.45</a>
    (released 2015-09-30)
    - The solution of the inverse problem now correctly returns NaNs if
      one of the latitudes is a NaN.
@@ -136,7 +136,7 @@ and are therefore in the public domain.
      90&deg;] as NaNs; so the sample programs no longer check for legal
      values of latitude.
 
- - <a href="http://geographiclib.sf.net/1.44/Fortran">Version 1.44</a>
+ - <a href="http://geographiclib.sourceforge.net/1.44/Fortran">Version 1.44</a>
    (released 2015-08-14)
    - Improve accuracy of calculations by evaluating trigonometric
      functions more carefully and replacing the series for the reduced

@@ -9,7 +9,7 @@
  *   J. Geodesy <b>87</b>, 43--55 (2013);
  *   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
  *   10.1007/s00190-012-0578-z</a>;
- *   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+ *   addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
  *   geod-addenda.html</a>.
  * .
  * The principal advantages of these algorithms over previous ones (e.g.,
@@ -96,7 +96,7 @@
  *   [\e d, \e d], for arbitrary \e d.
  *
  * These routines are a simple transcription of the corresponding C++ classes
- * in <a href="http://geographiclib.sf.net"> GeographicLib</a>.  The "class
+ * in <a href="http://geographiclib.sourceforge.net"> GeographicLib</a>.  The "class
  * data" is represented by the structs geod_geodesic, geod_geodesicline,
  * geod_polygon and pointers to these objects are passed as initial arguments
  * to the member functions.  Most of the internal comments have been retained.

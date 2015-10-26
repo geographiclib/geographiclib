@@ -12,7 +12,7 @@
 *!   J. Geodesy <b>87</b>, 43--55 (2013);
 *!   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
 *!   10.1007/s00190-012-0578-z</a>;
-*!   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+*!   addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
 *!   geod-addenda.html</a>.
 *! .
 *! The principal advantages of these algorithms over previous ones
@@ -101,7 +101,7 @@
 *!   &rarr; [\e azi1, \e azi2] + [\e d, \e d], for arbitrary \e d.
 *!
 *! These routines are a simple transcription of the corresponding C++
-*! classes in <a href="http://geographiclib.sf.net"> GeographicLib</a>.
+*! classes in <a href="http://geographiclib.sourceforge.net"> GeographicLib</a>.
 *! Because of the limitations of Fortran 77, the classes have been
 *! replaced by simple subroutines with no attempt to save "state" across
 *! subroutine calls.  Most of the internal comments have been retained.

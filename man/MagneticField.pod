@@ -195,7 +195,7 @@ file.
 
 Instructions for downloading and installing magnetic models are
 available at
-L<http://geographiclib.sf.net/html/magnetic.html#magneticinst>.
+L<http://geographiclib.sourceforge.net/html/magnetic.html#magneticinst>.
 
 =head1 ENVIRONMENT
 
@@ -258,4 +258,4 @@ B<MagneticField> was written by Charles Karney.
 =head1 HISTORY
 
 B<MagneticField> was added to GeographicLib,
-L<http://geographiclib.sf.net>, in version 1.15.
+L<http://geographiclib.sourceforge.net>, in version 1.15.

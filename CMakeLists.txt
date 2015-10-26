@@ -531,7 +531,7 @@ if (WIN32)
   # The Windows binary packager is NSIS.  Set the necessary variables
   # for this.
   set (CPACK_NSIS_CONTACT "charles@karney.com")
-  set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sf.net")
+  set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sourceforge.net")
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
   if (CMAKE_SIZEOF_VOID_P EQUAL 8)
     # Hardcode the prefix for Visual Studio 12
@@ -550,12 +550,12 @@ if (WIN32)
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_NSIS_MENU_LINKS
-    "http://geographiclib.sf.net/${PROJECT_VERSION}/index.html"
+    "http://geographiclib.sourceforge.net/${PROJECT_VERSION}/index.html"
     "Library documentation"
-    "http://geographiclib.sf.net/${PROJECT_VERSION}/utilities.html"
+    "http://geographiclib.sourceforge.net/${PROJECT_VERSION}/utilities.html"
     "Utilities documentation"
-    "http://geographiclib.sf.net" "GeographicLib home page"
-    "https://sf.net/projects/geographiclib/" "Main project page")
+    "http://geographiclib.sourceforge.net" "GeographicLib home page"
+    "https://sourceforge.net/projects/geographiclib/" "Main project page")
   set (CPACK_NSIS_MODIFY_PATH ON)
 elseif (APPLE)
   # Not tested

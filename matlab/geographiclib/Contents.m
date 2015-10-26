@@ -16,7 +16,7 @@
 %   available in the documentation for the GeographicLib, which is
 %   available at
 %
-%       http://geographiclib.sf.net/html
+%       http://geographiclib.sourceforge.net/html
 %
 %   Some common features of these functions:
 %     * Angles (latitude, longitude, azimuth, meridian convergence) are

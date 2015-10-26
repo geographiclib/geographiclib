@@ -160,5 +160,5 @@ B<ConicProj> was written by Charles Karney.
 
 =head1 HISTORY
 
-B<ConicProj> was added to GeographicLib, L<http://geographiclib.sf.net>,
+B<ConicProj> was added to GeographicLib, L<http://geographiclib.sourceforge.net>,
 in version 1.9.

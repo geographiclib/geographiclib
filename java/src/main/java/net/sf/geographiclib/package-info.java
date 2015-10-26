@@ -6,7 +6,7 @@
  * <h2>Abstract</h2>
  * <p>
  * GeographicLib-Java is a Java implementation of the geodesic algorithms from
- * <a href="http://geographiclib.sf.net">GeographicLib</a>.  This is a
+ * <a href="http://geographiclib.sourceforge.net">GeographicLib</a>.  This is a
  * self-contained library which makes it easy to do geodesic computations for
  * an ellipsoid of revolution in a Java program.  It requires Java version 1.2
  * or later.
@@ -19,10 +19,10 @@
  * GeographicLib-Java is part of GeographicLib which available for download at
  * <ul>
  * <li>
- *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.45.tar.gz">
+ *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.45.tar.gz">
  *   GeographicLib-1.45.tar.gz</a>
  * <li>
- *   <a href="https://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.45.zip">
+ *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.45.zip">
  *   GeographicLib-1.45.zip</a>
  * </ul>
  * <p>
@@ -161,8 +161,8 @@
  * The documentation is generated using javadoc when
  * {@code mvn package -P release} is run (the top of the documentation tree is
  * {@code target/apidocs/index.html}).  This is also available on the web at
- * <a href="http://geographiclib.sf.net/html/java/index.html">
- * http://geographiclib.sf.net/html/java/index.html</a>.
+ * <a href="http://geographiclib.sourceforge.net/html/java/index.html">
+ * http://geographiclib.sourceforge.net/html/java/index.html</a>.
  *
  * <h2>External links</h2>
  * <p>
@@ -172,32 +172,32 @@
  *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
  *   Algorithms for geodesics</a>,
  *   J. Geodesy <b>87</b>, 43&ndash;55 (2013)
- *   (<a href="http://geographiclib.sf.net/geod-addenda.html">addenda</a>).
+ *   (<a href="http://geographiclib.sourceforge.net/geod-addenda.html">addenda</a>).
  * <li>
  *   A longer paper on geodesics: C. F. F. Karney,
  *    <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
  *    on an ellipsoid of revolution</a>,
  *    Feb. 2011
  *    (<a href=
- *    "http://geographiclib.sf.net/geod-addenda.html#geod-errata">errata</a>).
+ *    "http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata">errata</a>).
  * <li>
- *   <a href="http://geographiclib.sf.net">The GeographicLib web site</a>.
+ *   <a href="http://geographiclib.sourceforge.net">The GeographicLib web site</a>.
  * <li>
- *   <a href="http://geographiclib.sf.net/html/index.html">The C++ library</a>.
+ *   <a href="http://geographiclib.sourceforge.net/html/index.html">The C++ library</a>.
  * <li>
- *   <a href="http://geographiclib.sf.net/html/C/index.html">The C library</a>.
+ *   <a href="http://geographiclib.sourceforge.net/html/C/index.html">The C library</a>.
  * <li>
- *   <a href="http://geographiclib.sf.net/html/Fortran/index.html">The
+ *   <a href="http://geographiclib.sourceforge.net/html/Fortran/index.html">The
  *   Fortran library</a>.
  * <li>
  *   <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
  *    MATLAB toolbox</a>.
  * <li>
  *   The section in the GeographicLib documentation on geodesics:
- *   <a href="http://geographiclib.sf.net/html/geodesic.html">Geodesics
+ *   <a href="http://geographiclib.sourceforge.net/html/geodesic.html">Geodesics
  *   on an ellipsoid of revolution</a>.
  * <li>
- *   <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">
+ *   <a href="http://geographiclib.sourceforge.net/geodesic-papers/biblio.html">
  *   A geodesic bibliography</a>.
  * <li>
  *   The wikipedia page,
@@ -209,7 +209,7 @@
  * <p>
  * <ul>
  * <li>
- *   <a href="http://geographiclib.sf.net/1.45/java">Version 1.45</a>
+ *   <a href="http://geographiclib.sourceforge.net/1.45/java">Version 1.45</a>
  *   (released 2015-09-30)
  * <ul>
  * <li>
@@ -224,7 +224,7 @@
  *   1998-12).
  * </ul>
  * <li>
- *   <a href="http://geographiclib.sf.net/1.44/java">Version 1.44</a>
+ *   <a href="http://geographiclib.sourceforge.net/1.44/java">Version 1.44</a>
  *   (released 2015-08-14)
  * <ul>
  * <li>
