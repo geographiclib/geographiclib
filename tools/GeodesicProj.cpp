@@ -49,6 +49,7 @@ int main(int argc, char* argv[]) {
       if (arg == "-r")
         reverse = true;
       else if (arg == "-c" || arg == "-z" || arg == "-g") {
+        cassini = azimuthal =  gnomonic = false;
         cassini = arg == "-c";
         azimuthal = arg == "-z";
         gnomonic = arg == "-g";

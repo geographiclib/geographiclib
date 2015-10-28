@@ -79,15 +79,16 @@ and in what sense the geodesic has encircled the ellipsoid.
 
 ### <a name="restrict"></a>Restrictions on the parameters
 
-* Latitudes must lie in [&minus;90&deg;, 90&deg;].  Latitudes outside of
+* Latitudes must lie in [&minus;90&deg;, 90&deg;].  Latitudes outside
   this range are replaced by NaNs.
 * The distance *s12* is unrestricted.  This allows geodesics to wrap
   around the ellipsoid.  Such geodesics are no longer shortest paths.
   However they retain the property that they are the straightest curves
   on the surface.
 * Similarly, the spherical arc length *a12* is unrestricted.
-* Azimuths are unrestricted; internally these are exactly reduced to
-  the range [&minus;180&deg;, 180&deg;).
+* Longitudes and azimuths are unrestricted; internally these are exactly
+  reduced to the range [&minus;180&deg;, 180&deg;); but see also the
+  LONG_UNROLL bit.
 * The equatorial radius *a* and the polar semi-axis *b* must both be
   positive and finite (this implies that &minus;&infin; &lt; *f* &lt; 1).
 * The flattening *f* should satisfy *f* &isin; [&minus;1/50,1/50] in

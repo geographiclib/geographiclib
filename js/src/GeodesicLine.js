@@ -159,10 +159,8 @@
         sig12, ssig12, csig12, B12, AB1, ssig2, csig2, tau12, s, c, serr,
         omg12, lam12, lon12, E, sbet2, cbet2, somg2, comg2, salp2, calp2, dn2,
         B22, AB2, J12, t, B42, salp12, calp12;
-    if (!outmask)
-      outmask = g.STANDARD;
-    else if (outmask == g.LONG_UNROLL)
-      outmask |= g.STANDARD;
+    if (!outmask) outmask = g.STANDARD;
+    else if (outmask === g.LONG_UNROLL) outmask |= g.STANDARD;
     outmask &= this._caps & g.OUT_MASK;
     vals.lat1 = this.lat1; vals.azi1 = this.azi1;
     vals.lon1 = outmask & g.LONG_UNROLL ?

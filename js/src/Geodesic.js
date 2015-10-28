@@ -802,7 +802,7 @@ GeographicLib.PolygonArea = {};
         lengthmask, salp0, calp0, alp12, k2, A4, C4a, B41, B42,
         somg12, domg12, dbet1, dbet2, salp12, calp12;
     if (!outmask) outmask = g.STANDARD;
-    if (outmask == g.LONG_UNROLL) outmask |= g.STANDARD;
+    if (outmask === g.LONG_UNROLL) outmask |= g.STANDARD;
     outmask &= g.OUT_MASK;
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
@@ -1176,10 +1176,8 @@ GeographicLib.PolygonArea = {};
   g.Geodesic.prototype.GenDirect = function (lat1, lon1, azi1,
                                              arcmode, s12_a12, outmask) {
     var line;
-    if (!outmask)
-      outmask = g.STANDARD;
-    else if (outmask == g.LONG_UNROLL)
-      outmask |= g.STANDARD;
+    if (!outmask) outmask = g.STANDARD;
+    else if (outmask === g.LONG_UNROLL) outmask |= g.STANDARD;
     line = new l.GeodesicLine(this, lat1, lon1, azi1,
                               // Automatically supply DISTANCE_IN if necessary
                               outmask | (arcmode ? g.NONE : g.DISTANCE_IN));

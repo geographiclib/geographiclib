@@ -1190,12 +1190,13 @@
    SP-138 (U.S. Naval Oceanographic Office, 1970).[[BR]]
    http://www.dtic.mil/docs/citations/AD0703541
  * G. V. Bagratuni,[[BR]]
-   ''Kurs Sferoidicheskoi Geodezii''
+   ''Kurs Sferoidicheskoi Geodezii [Course in Spheroidal Geodesy]''
    (Moscow, 1962).[[BR]]
-   English translation: ''Course in Spheroidal Geodesy'',
+   https://www.worldcat.org/oclc/37391023 [[BR]]   
+   English translation:
    FTD-MT-64-390 (US Air Force, Feb. 1967).[[BR]]
-   https://www.worldcat.org/oclc/6150611 [[BR]]
    http://www.dtic.mil/docs/citations/AD0650520 [[BR]]
+   https://www.worldcat.org/oclc/6150611 [[BR]]
    clean copy:
    https://dx.doi.org/10.5281/zenodo.32371
  * E. M. Sodano and T. A. Robinson,[[BR]]
@@ -1211,6 +1212,15 @@
    ''Geodesics on an Equipotential Surface of Revolution'',
    Special Report 144, Smithsonian Astrophysical Observatory (1964).[[BR]]
    http://adsabs.harvard.edu/abs/1964SAOSR.144.....K
+ * V. N. Gan'shin,[[BR]]
+   ''Geometriya zemnogo ellipsoida [Geometry of the earth ellipsoid]''
+   (Moscow, 1967).[[BR]]
+   https://www.worldcat.org/oclc/78077777 [[BR]]
+   English translation: by J. M. Willis, ACIC-TC-1473,
+   Aeronautical Chart and Information Center (St. Louis, 1969).[[BR]]
+   https://dx.doi.org/10.5281/zenodo.32854 [[BR]]
+   http://www.dtic.mil/docs/citations/AD0689507 [[BR]]
+   https://www.worldcat.org/oclc/493553
  * E. J. Krakiwsky and D. B. Thomson,[[BR]]
    ''Geodetic position computations'',
    Dept. of Geodesy and Geomatics Engineering, Lecture Notes 39,

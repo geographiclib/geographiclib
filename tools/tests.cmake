@@ -3,6 +3,12 @@
 # First turn on testing
 enable_testing ()
 
+if (DEFINED ENV{GEOGRAPHICLIB_DATA})
+  set (_DATADIR "$ENV{GEOGRAPHICLIB_DATA}")
+else ()
+  set (_DATADIR "${GEOGRAPHICLIB_DATA}")
+endif ()
+
 # The tests consist of calling the various tools with --input-string and
 # matching the output against regular expressions.
 
@@ -452,7 +458,7 @@ add_test (NAME GeodesicProj0 COMMAND GeodesicProj
 set_tests_properties (GeodesicProj0 PROPERTIES PASS_REGULAR_EXPRESSION
   "^-?0\\.0+ [0-9]+\\.[0-9]+ 170\\.0+ ")
 
-if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
+if (EXISTS "${_DATADIR}/geoids/egm96-5.pgm")
   # Check fix for single-cell cache bug found 2010-11-23
   add_test (NAME GeoidEval0 COMMAND GeoidEval
     -n egm96-5 --input-string "0d1 0d1;0d4 0d4")
@@ -460,7 +466,7 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
     "^17\\.1[56]..\n17\\.1[45]..")
 endif ()
 
-if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/wmm2010.wmm)
+if (EXISTS "${_DATADIR}/magnetic/wmm2010.wmm")
   # Test case from WMM2010_Report.pdf, Sec 1.5, pp 14-15:
   # t = 2012.5, lat = -80, lon = 240, h = 100e3
   add_test (NAME MagneticField0 COMMAND MagneticField
@@ -478,7 +484,7 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/wmm2010.wmm)
     " 5535\\.5249148687 14765\\.3703243050 -50625\\.930547879[45] .*\n.* 20\\.4904268023 1\\.0272592716 83\\.5313962281 ")
 endif ()
 
-if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/emm2015.wmm)
+if (EXISTS "${_DATADIR}/magnetic/emm2015.wmm")
   # Tests from EMM2015_TEST_VALUES.txt including cases of linear
   # interpolation and extrapolation.
   add_test (NAME MagneticField3 COMMAND MagneticField
@@ -497,7 +503,7 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/emm2015.wmm)
     "-8\\.73 86\\.82 3128\\.9 3092\\.6 -474\\.7 56338\\.9 56425\\.8\n-0\\.2. 0\\.0. -20\\.7 -22\\.3 -9\\.2 26\\.5 25\\.3")
 endif ()
 
-if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
+if (EXISTS "${_DATADIR}/gravity/egm2008.egm")
   # Verify no overflow at poles with high degree model
   add_test (NAME Gravity0 COMMAND Gravity
     -n egm2008 -p 6 --input-string "90 110 0")
@@ -515,7 +521,7 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
     "7\\.404 -6\\.168 7\\.616")
 endif ()
 
-if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/grs80.egm)
+if (EXISTS "${_DATADIR}/gravity/grs80.egm")
   # Check close to zero gravity in geostationary orbit
   add_test (NAME Gravity3 COMMAND Gravity
     -p 3 -n grs80 --input-string "0 123 35786e3")
