@@ -19,36 +19,16 @@ eastwards, and azimuths measured clockwise from north. For a point at a
 pole, the azimuth is defined by keeping the longitude fixed, writing φ =
 ±(90° − ε), and taking the limit ε → 0+
 
-Example::
-
-    import sys
-    sys.path.append("/usr/local/lib/python/site-packages")
-    from geographiclib.geodesic import Geodesic
-
-    # The geodesic inverse problem
-    Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
-
-    # The geodesic direct problem
-    Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
-
-    # How to obtain several points along a geodesic
-    line = Geodesic.WGS84.Line(40.6, -73.8, 45)
-    line.Position( 5000e3)
-    line.Position(10000e3)
-
-    # Computing the area of a geodesic polygon
-    def p(lat,lon): return {'lat': lat, 'lon': lon}
-
-    Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
-
 .. _dict:
 
 Geodesic dictionary
 -------------------
 
-The results returned by Geodesic.Direct, Geodesic.Inverse,
-GeodesicLine.Position, etc., return a dictionary with some of the
-following 12 fields set:
+The results returned by
+:meth:`Geodesic.Direct <geographiclib.geodesic.Geodesic.Direct>`,
+:meth:`Geodesic.Inverse <geographiclib.geodesic.Geodesic.Inverse>`,
+:meth:`GeodesicLine.Position <geographiclib.geodesicline.GeodesicLine.Position>`,
+etc., return a dictionary with some of the following 12 fields set:
 
 * *lat1* = φ\ :sub:`1`, latitude of point 1 (degrees)
 * *lon1* = λ\ :sub:`1`, longitude of point 1 (degrees)
@@ -78,12 +58,6 @@ specifies what quantities can be returned from the resulting object.
 
 Both *outmask* and *caps* are obtained by or'ing together the following
 values
-
-The *outmask* and *caps* parameters to function specify what
-calculations to do.  These masks do double duty.  They signify to the
-GeodesicLine constructor and to Geodesic.Line what capabilities should
-be included in the GeodesicLine object.  They also specify which results
-to return in the Inverse and Direct routines.
 
 * :data:`~geographiclib.geodesic.Geodesic.EMPTY`, no capabilities, no output
 * :data:`~geographiclib.geodesic.Geodesic.LATITUDE`, compute latitude, *lat2*
@@ -153,4 +127,4 @@ abs(*f*) error
 0.2      300 mm
 ======== =======
 
-Here 1 nm (nanometer) = 10\ :sup:`−9` m (not nautical mile!)
+Here 1 nm = 1 nanometer = 10\ :sup:`−9` m (*not* 1 nautical mile!)

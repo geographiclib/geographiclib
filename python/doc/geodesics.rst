@@ -47,13 +47,13 @@ Traditionally two geodesic problems are considered:
   λ\ :sub:`1`, α\ :sub:`1`, *s*\ :sub:`12`,
   determine φ\ :sub:`2`, λ\ :sub:`2`, and
   α\ :sub:`2`; this is solved by
-  {@link module:GeographicLib/Geodesic.Geodesic#Direct Geodesic.Direct}.
+  :meth:`Geodesic.Direct <geographiclib.geodesic.Geodesic.Direct>`.
 
 * the inverse problem — given φ\ :sub:`1`,
   λ\ :sub:`1`, φ\ :sub:`2`, λ\ :sub:`2`,
   determine *s*\ :sub:`12`, α\ :sub:`1`, and
   α\ :sub:`2`; this is solved by
-  {@link module:GeographicLib/Geodesic.Geodesic#Inverse Geodesic.Inverse}.
+  :meth:`Geodesic.Inverse <geographiclib.geodesic.Geodesic.Inverse>`.
 
 .. _additional:
 

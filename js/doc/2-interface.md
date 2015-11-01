@@ -113,4 +113,4 @@ ellipsoid and different values of the flattening.
   | 0.1    | 1.5 mm
   | 0.2    | 300 mm
 
-Here 1 nm (nanometer) = 10<sup>&minus;9</sup> m (*not* nautical mile!)
+Here 1 nm = 1 nanometer = 10<sup>&minus;9</sup> m (*not* 1 nautical mile!)

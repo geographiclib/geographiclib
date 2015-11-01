@@ -35,6 +35,10 @@ the source, the Fortran library can be found in
 GeographicLib-1.45/legacy/Fortran.  The library consists of the file
 geodesic.for.
 
+Licensed under the
+<a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>; see
+<a href="http://geographiclib.sourceforge.net/html/LICENSE.txt">LICENSE.txt</a>.
+
 \section doc-for Library documentation
 
 The interface to the library is documented via doxygen in the source

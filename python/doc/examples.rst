@@ -4,9 +4,6 @@ Examples
 Initializing
 ------------
 
-The ellipsoid is defined by (these two are equivalent)::
-  geod = Geodesic(6378137, 1/298.257223563)
-
 The following examples all assume that the following commands have been
 carried out:
 
@@ -20,7 +17,7 @@ variables, for example,
   >>> geod.a, 1/geod.f
   (6378137.0, 298.257223563)
 
-If you need to use a different ellipsoid, use,
+If you need to use a different ellipsoid, construct one by, for example
 
   >>> geod = Geodesic(6378388, 1/297) # the international ellipsoid
 

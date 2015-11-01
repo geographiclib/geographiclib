@@ -42,6 +42,10 @@ version 4.9.0, where it is used as the computational backend for
 <a href="https://github.com/OSGeo/proj.4/wiki/Mangeod">geod(1)</a>.
 Instructions for how to use the library via proj.4 are given below.
 
+Licensed under the
+<a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>; see
+<a href="http://geographiclib.sourceforge.net/html/LICENSE.txt">LICENSE.txt</a>.
+
 \section doc-c Library documentation
 
 The interface to the library is documented via doxygen in the header

@@ -10,6 +10,9 @@ Author: Charles F. F. Karney (charles@karney.com)
 
 Version: |version|
 
+Licensed under the MIT/X11 License; see
+`LICENSE.txt <http://geographiclib.sourceforge.net/html/LICENSE.txt>`_.
+
 Intro
 -----
 

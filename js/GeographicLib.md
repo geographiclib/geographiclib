@@ -58,3 +58,6 @@ Two examples of this library in use are
 
 * algorithms + js code: Charles Karney (charles@karney.com)
 * node.js port: Yurij Mikhalevich (0@39.yt)
+
+Licensed under the MIT/X11 License; see
+[LICENSE.txt](http://geographiclib.sourceforge.net/html/LICENSE.txt).
