@@ -1259,7 +1259,7 @@
  * T. Vincenty,[[BR]]
    ''Geodetic inverse solution between antipodal points'',
    unpublished report, DMAAC (Aug. 28, 1975).[[BR]]
-   http://geographiclib.sourceforge.net/geodesic-papers/vincenty75b.pdf
+   https://dx.doi.org/10.5281/zenodo.32999
  * R. H. Rapp,[[BR]]
    ''Geometric geodesy, Part I'',
    Dept. of Geodetic Science and Surveying,
