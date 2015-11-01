@@ -1,4 +1,38 @@
-"""geodesic.py: transcription of GeographicLib::Geodesic class."""
+"""Define the :class:`~geographiclib.geodesic.Geodesic` class
+
+The ellipsoid parameters are defined by the constructor.  The direct and
+inverse geodesic problems are solved by
+
+  * :meth:`~geographiclib.geodesic.Geodesic.Inverse` Solve the inverse
+    geodesic problem
+
+  * :meth:`~geographiclib.geodesic.Geodesic.Direct` Solve the direct
+    geodesic problem
+
+  * :meth:`~geographiclib.geodesic.Geodesic.ArcDirect` Solve the direct
+    geodesic problem in terms of spherical arc length
+
+  * :meth:`~geographiclib.geodesic.Geodesic.Line` Return a
+    :class:`~geographiclib.geodesicline.GeodesicLine` object
+
+  * :meth:`~geographiclib.geodesic.Geodesic.Polygon` Return a
+    :class:`~geographiclib.polygonarea.PolygonArea` object
+
+:Example:
+
+    >>> from geographiclib.geodesic import Geodesic
+    >>> # The geodesic inverse problem
+    ... Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
+    {'lat1': -41.32,
+     'a12': 179.6197069334283,
+     's12': 19959679.26735382,
+     'lat2': 40.96,
+     'azi2': 18.825195123248392,
+     'azi1': 161.06766998615882,
+     'lon1': 174.81,
+     'lon2': -5.5}
+
+"""
 # geodesic.py
 #
 # This is a rather literal translation of the GeographicLib::Geodesic class to
@@ -24,43 +58,7 @@ from geographiclib.constants import Constants
 from geographiclib.geodesiccapability import GeodesicCapability
 
 class Geodesic(object):
-  """Solve geodesic problems.  The following illustrates its use
-
-    import sys
-    sys.path.append("/usr/local/lib/python/site-packages")
-    from geographiclib.geodesic import Geodesic
-
-    # The geodesic inverse problem
-    Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
-
-    # The geodesic direct problem
-    Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
-
-    # How to obtain several points along a geodesic
-    line = Geodesic.WGS84.Line(40.6, -73.8, 45)
-    line.Position( 5000e3)
-    line.Position(10000e3)
-
-    # Computing the area of a geodesic polygon
-    def p(lat,lon): return {'lat': lat, 'lon': lon}
-
-    Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
-
-  Documentation on these routines is available via
-
-    help(Geodesic.__init__)
-    help(Geodesic.Inverse)
-    help(Geodesic.Direct)
-    help(Geodesic.Line)
-    help(line.Position)
-    help(Geodesic.Area)
-
-  All angles (latitudes, longitudes, azimuths, spherical arc lengths)
-  are measured in degrees.  Latitudes must lie in [-90,90].  All lengths
-  (distance, reduced length) are measured in meters.  Areas are measures
-  in square meters.
-
-  """
+  """Solve geodesic problems"""
 
   GEOGRAPHICLIB_GEODESIC_ORDER = 6
   nA1_ = GEOGRAPHICLIB_GEODESIC_ORDER
@@ -94,21 +92,8 @@ class Geodesic(object):
   CAP_MASK = GeodesicCapability.CAP_MASK
   OUT_ALL  = GeodesicCapability.OUT_ALL
   OUT_MASK = GeodesicCapability.OUT_MASK
-  EMPTY         = GeodesicCapability.EMPTY
-  LATITUDE      = GeodesicCapability.LATITUDE
-  LONGITUDE     = GeodesicCapability.LONGITUDE
-  AZIMUTH       = GeodesicCapability.AZIMUTH
-  DISTANCE      = GeodesicCapability.DISTANCE
-  STANDARD      = GeodesicCapability.STANDARD
-  DISTANCE_IN   = GeodesicCapability.DISTANCE_IN
-  REDUCEDLENGTH = GeodesicCapability.REDUCEDLENGTH
-  GEODESICSCALE = GeodesicCapability.GEODESICSCALE
-  AREA          = GeodesicCapability.AREA
-  LONG_UNROLL   = GeodesicCapability.LONG_UNROLL
-  LONG_NOWRAP   = GeodesicCapability.LONG_UNROLL
-  ALL           = GeodesicCapability.ALL
 
-  def SinCosSeries(sinp, sinx, cosx, c):
+  def _SinCosSeries(sinp, sinx, cosx, c):
     """Private: Evaluate a trig series using Clenshaw summation."""
     # Evaluate
     # y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
@@ -132,9 +117,9 @@ class Geodesic(object):
       k -= 1; y0 = ar * y1 - y0 + c[k]
     return ( 2 * sinx * cosx * y0 if sinp # sin(2 * x) * y0
              else cosx * (y0 - y1) )      # cos(x) * (y0 - y1)
-  SinCosSeries = staticmethod(SinCosSeries)
+  _SinCosSeries = staticmethod(_SinCosSeries)
 
-  def Astroid(x, y):
+  def _Astroid(x, y):
     """Private: solve astroid equation."""
     # Solve k^4+2*k^3-(x^2+y^2-1)*k^2-2*y^2*k-y^2 = 0 for positive root k.
     # This solution is adapted from Geocentric::Reverse.
@@ -179,9 +164,9 @@ class Geodesic(object):
       # for y small, positive root is k = abs(y)/sqrt(1-x^2)
       k = 0
     return k
-  Astroid = staticmethod(Astroid)
+  _Astroid = staticmethod(_Astroid)
 
-  def A1m1f(eps):
+  def _A1m1f(eps):
     """Private: return A1-1."""
     coeff = [
       1, 4, 64, 0, 256,
@@ -189,9 +174,9 @@ class Geodesic(object):
     m = Geodesic.nA1_//2
     t = Math.polyval(m, coeff, 0, Math.sq(eps)) / coeff[m + 1]
     return (t + eps) / (1 - eps)
-  A1m1f = staticmethod(A1m1f)
+  _A1m1f = staticmethod(_A1m1f)
 
-  def C1f(eps, c):
+  def _C1f(eps, c):
     """Private: return C1."""
     coeff = [
       -1, 6, -16, 32,
@@ -209,9 +194,9 @@ class Geodesic(object):
       c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
       o += m + 2
       d *= eps
-  C1f = staticmethod(C1f)
+  _C1f = staticmethod(_C1f)
 
-  def C1pf(eps, c):
+  def _C1pf(eps, c):
     """Private: return C1'"""
     coeff = [
       205, -432, 768, 1536,
@@ -229,9 +214,9 @@ class Geodesic(object):
       c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
       o += m + 2
       d *= eps
-  C1pf = staticmethod(C1pf)
+  _C1pf = staticmethod(_C1pf)
 
-  def A2m1f(eps):
+  def _A2m1f(eps):
     """Private: return A2-1"""
     coeff = [
       -11, -28, -192, 0, 256,
@@ -239,9 +224,9 @@ class Geodesic(object):
     m = Geodesic.nA2_//2
     t = Math.polyval(m, coeff, 0, Math.sq(eps)) / coeff[m + 1]
     return (t - eps) / (1 + eps)
-  A2m1f = staticmethod(A2m1f)
+  _A2m1f = staticmethod(_A2m1f)
 
-  def C2f(eps, c):
+  def _C2f(eps, c):
     """Private: return C2"""
     coeff = [
       1, 2, 16, 32,
@@ -259,16 +244,25 @@ class Geodesic(object):
       c[l] = d * Math.polyval(m, coeff, o, eps2) / coeff[o + m + 1]
       o += m + 2
       d *= eps
-  C2f = staticmethod(C2f)
+  _C2f = staticmethod(_C2f)
 
   def __init__(self, a, f):
-    """Construct a Geodesic object for ellipsoid with major radius a and
-    flattening f.
+    """Construct a Geodesic object
+
+    :param a: the equatorial radius of the ellipsoid in meters
+    :param f: the flattening of the ellipsoid
+
+    An exception is thrown if *a* or the polar semi-axis *b* = *a* (1 -
+    *f*) is not a finite positive quantity.
 
     """
 
     self._a = float(a)
     self._f = float(f)
+    self.a = self._a
+    """The equatorial radius"""
+    self.f = self._f
+    """The flattening"""
     self._f1 = 1 - self._f
     self._e2 = self._f * (2 - self._f)
     self._ep2 = self._e2 / Math.sq(self._f1) # e2 / (1 - e2)
@@ -298,11 +292,11 @@ class Geodesic(object):
     self._A3x = list(range(Geodesic.nA3x_))
     self._C3x = list(range(Geodesic.nC3x_))
     self._C4x = list(range(Geodesic.nC4x_))
-    self.A3coeff()
-    self.C3coeff()
-    self.C4coeff()
+    self._A3coeff()
+    self._C3coeff()
+    self._C4coeff()
 
-  def A3coeff(self):
+  def _A3coeff(self):
     """Private: return coefficients for A3"""
     coeff = [
       -3, 128,
@@ -319,7 +313,7 @@ class Geodesic(object):
       k += 1
       o += m + 2
 
-  def C3coeff(self):
+  def _C3coeff(self):
     """Private: return coefficients for C3"""
     coeff = [
       3, 128,
@@ -346,7 +340,7 @@ class Geodesic(object):
         k += 1
         o += m + 2
 
-  def C4coeff(self):
+  def _C4coeff(self):
     """Private: return coefficients for C4"""
     coeff = [
       97, 15015,
@@ -379,12 +373,12 @@ class Geodesic(object):
         k += 1
         o += m + 2
 
-  def A3f(self, eps):
+  def _A3f(self, eps):
     """Private: return A3"""
     # Evaluate A3
     return Math.polyval(Geodesic.nA3_ - 1, self._A3x, 0, eps)
 
-  def C3f(self, eps, c):
+  def _C3f(self, eps, c):
     """Private: return C3"""
     # Evaluate C3
     # Elements c[1] thru c[nC3_ - 1] are set
@@ -396,7 +390,7 @@ class Geodesic(object):
       c[l] = mult * Math.polyval(m, self._C3x, o, eps)
       o += m + 1
 
-  def C4f(self, eps, c):
+  def _C4f(self, eps, c):
     """Private: return C4"""
     # Evaluate C4 coeffs by Horner's method
     # Elements c[0] thru c[nC4_ - 1] are set
@@ -409,7 +403,7 @@ class Geodesic(object):
       mult *= eps
 
   # return s12b, m12b, m0, M12, M21
-  def Lengths(self, eps, sig12,
+  def _Lengths(self, eps, sig12,
               ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2, outmask,
               # Scratch areas of the right size
               C1a, C2a):
@@ -425,29 +419,29 @@ class Geodesic(object):
     s12b = m12b = m0 = M12 = M21 = Math.nan
     if outmask & (Geodesic.DISTANCE | Geodesic.REDUCEDLENGTH |
                   Geodesic.GEODESICSCALE):
-      A1 = Geodesic.A1m1f(eps)
-      Geodesic.C1f(eps, C1a)
+      A1 = Geodesic._A1m1f(eps)
+      Geodesic._C1f(eps, C1a)
       if outmask & (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
-        A2 = Geodesic.A2m1f(eps)
-        Geodesic.C2f(eps, C2a)
+        A2 = Geodesic._A2m1f(eps)
+        Geodesic._C2f(eps, C2a)
         m0x = A1 - A2
         A2 = 1 + A2
       A1 = 1 + A1
     if outmask & Geodesic.DISTANCE:
-      B1 = (Geodesic.SinCosSeries(True, ssig2, csig2, C1a) -
-            Geodesic.SinCosSeries(True, ssig1, csig1, C1a))
+      B1 = (Geodesic._SinCosSeries(True, ssig2, csig2, C1a) -
+            Geodesic._SinCosSeries(True, ssig1, csig1, C1a))
       # Missing a factor of _b
       s12b = A1 * (sig12 + B1)
       if outmask & (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
-        B2 = (Geodesic.SinCosSeries(True, ssig2, csig2, C2a) -
-              Geodesic.SinCosSeries(True, ssig1, csig1, C2a))
+        B2 = (Geodesic._SinCosSeries(True, ssig2, csig2, C2a) -
+              Geodesic._SinCosSeries(True, ssig1, csig1, C2a))
         J12 = m0x * sig12 + (A1 * B1 - A2 * B2)
     elif outmask & (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
       # Assume here that nC1_ >= nC2_
       for l in range(1, Geodesic.nC2_):
         C2a[l] = A1 * C1a[l] - A2 * C2a[l]
-      J12 = m0x * sig12 + (Geodesic.SinCosSeries(True, ssig2, csig2, C2a) -
-                           Geodesic.SinCosSeries(True, ssig1, csig1, C2a))
+      J12 = m0x * sig12 + (Geodesic._SinCosSeries(True, ssig2, csig2, C2a) -
+                           Geodesic._SinCosSeries(True, ssig1, csig1, C2a))
     if outmask & Geodesic.REDUCEDLENGTH:
       m0 = m0x
       # Missing a factor of _b.
@@ -463,7 +457,7 @@ class Geodesic(object):
     return s12b, m12b, m0, M12, M21
 
   # return sig12, salp1, calp1, salp2, calp2, dnm
-  def InverseStart(self, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
+  def _InverseStart(self, sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
                    # Scratch areas of the right size
                    C1a, C2a):
     """Private: Find a starting value for Newton's method."""
@@ -526,7 +520,7 @@ class Geodesic(object):
         # x = dlong, y = dlat
         k2 = Math.sq(sbet1) * self._ep2
         eps = k2 / (2 * (1 + math.sqrt(1 + k2)) + k2)
-        lamscale = self._f * cbet1 * self.A3f(eps) * math.pi
+        lamscale = self._f * cbet1 * self._A3f(eps) * math.pi
         betscale = lamscale * cbet1
         x = (lam12 - math.pi) / lamscale
         y = sbet12a / betscale
@@ -537,7 +531,7 @@ class Geodesic(object):
         # real m12b, m0, dummy
         # In the case of lon12 = 180, this repeats a calculation made in
         # Inverse.
-        dummy, m12b, m0, dummy, dummy = self.Lengths(
+        dummy, m12b, m0, dummy, dummy = self._Lengths(
           self._n, math.pi + bet12a, sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
           cbet1, cbet2, Geodesic.REDUCEDLENGTH, C1a, C2a)
         x = -1 + m12b / (cbet1 * cbet2 * m0 * math.pi)
@@ -588,7 +582,7 @@ class Geodesic(object):
         #    6    56      0
         #
         # Because omg12 is near pi, estimate work with omg12a = pi - omg12
-        k = Geodesic.Astroid(x, y)
+        k = Geodesic._Astroid(x, y)
         omg12a = lamscale * ( -x * k/(1 + k) if self._f >= 0
                               else -y * (1 + k)/k )
         somg12 = math.sin(omg12a); comg12 = -math.cos(omg12a)
@@ -604,7 +598,7 @@ class Geodesic(object):
 
   # return lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
   # domg12, dlam12
-  def Lambda12(self, sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1, diffp,
+  def _Lambda12(self, sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1, diffp,
                # Scratch areas of the right size
                C1a, C2a, C3a):
     """Private: Solve hybrid problem"""
@@ -655,10 +649,10 @@ class Geodesic(object):
     # real B312, h0
     k2 = Math.sq(calp0) * self._ep2
     eps = k2 / (2 * (1 + math.sqrt(1 + k2)) + k2)
-    self.C3f(eps, C3a)
-    B312 = (Geodesic.SinCosSeries(True, ssig2, csig2, C3a) -
-            Geodesic.SinCosSeries(True, ssig1, csig1, C3a))
-    h0 = -self._f * self.A3f(eps)
+    self._C3f(eps, C3a)
+    B312 = (Geodesic._SinCosSeries(True, ssig2, csig2, C3a) -
+            Geodesic._SinCosSeries(True, ssig1, csig1, C3a))
+    h0 = -self._f * self._A3f(eps)
     domg12 = salp0 * h0 * (sig12 + B312)
     lam12 = omg12 + domg12
 
@@ -666,7 +660,7 @@ class Geodesic(object):
       if calp2 == 0:
         dlam12 = - 2 * self._f1 * dn1 / sbet1
       else:
-        dummy, dlam12, dummy, dummy, dummy = self.Lengths(
+        dummy, dlam12, dummy, dummy, dummy = self._Lengths(
           eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
           Geodesic.REDUCEDLENGTH, C1a, C2a)
         dlam12 *= self._f1 / (calp2 * cbet2)
@@ -677,7 +671,7 @@ class Geodesic(object):
             domg12, dlam12)
 
   # return a12, s12, azi1, azi2, m12, M12, M21, S12
-  def GenInverse(self, lat1, lon1, lat2, lon2, outmask):
+  def _GenInverse(self, lat1, lon1, lat2, lon2, outmask):
     """Private: General version of the inverse problem"""
     a12 = s12 = azi1 = azi2 = m12 = M12 = M21 = S12 = Math.nan # return vals
 
@@ -770,7 +764,7 @@ class Geodesic(object):
       sig12 = math.atan2(max(0.0, csig1 * ssig2 - ssig1 * csig2),
                          csig1 * csig2 + ssig1 * ssig2)
 
-      s12x, m12x, dummy, M12, M21 = self.Lengths(
+      s12x, m12x, dummy, M12, M21 = self._Lengths(
         self._n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
         outmask | Geodesic.DISTANCE | Geodesic.REDUCEDLENGTH, C1a, C2a)
 
@@ -813,7 +807,7 @@ class Geodesic(object):
       # meridian and geodesic is neither meridional or equatorial.
 
       # Figure a starting point for Newton's method
-      sig12, salp1, calp1, salp2, calp2, dnm = self.InverseStart(
+      sig12, salp1, calp1, salp2, calp2, dnm = self._InverseStart(
         sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12, C1a, C2a)
 
       if sig12 >= 0:
@@ -848,7 +842,7 @@ class Geodesic(object):
           # the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
           # WGS84 and random input: mean = 2.85, sd = 0.60
           (nlam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-           eps, omg12, dv) = self.Lambda12(
+           eps, omg12, dv) = self._Lambda12(
              sbet1, cbet1, dn1, sbet2, cbet2, dn2,
              salp1, calp1, numit < Geodesic.maxit1_, C1a, C2a, C3a)
           v = nlam12 - lam12
@@ -897,7 +891,7 @@ class Geodesic(object):
                        if (outmask & (Geodesic.REDUCEDLENGTH |
                                       Geodesic.GEODESICSCALE))
                        else Geodesic.EMPTY))
-        s12x, m12x, dummy, M12, M21 = self.Lengths(
+        s12x, m12x, dummy, M12, M21 = self._Lengths(
           eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
           lengthmask, C1a, C2a)
 
@@ -929,9 +923,9 @@ class Geodesic(object):
         ssig1, csig1 = Math.norm(ssig1, csig1)
         ssig2, csig2 = Math.norm(ssig2, csig2)
         C4a = list(range(Geodesic.nC4_))
-        self.C4f(eps, C4a)
-        B41 = Geodesic.SinCosSeries(False, ssig1, csig1, C4a)
-        B42 = Geodesic.SinCosSeries(False, ssig2, csig2, C4a)
+        self._C4f(eps, C4a)
+        B41 = Geodesic._SinCosSeries(False, ssig1, csig1, C4a)
+        B42 = Geodesic._SinCosSeries(False, ssig2, csig2, C4a)
         S12 = A4 * (B42 - B41)
       else:
         # Avoid problems with indeterminate sig1, sig2 on equator
@@ -981,77 +975,40 @@ class Geodesic(object):
     # Returned value in [0, 180]
     return a12, s12, azi1, azi2, m12, M12, M21, S12
 
-  def CheckPosition(lat, lon):
-    """Check that lat and lon are legal and return normalized lon"""
-    if abs(lat) > 90:
-      raise ValueError("latitude " + str(lat) + " not in [-90, 90]")
-    # if not Math.isfinite(lon):
-    #   raise ValueError("longitude " + str(lon) + " not a finite number")
-    return Math.AngNormalize(lon)
-  CheckPosition = staticmethod(CheckPosition)
+  def Inverse(self, lat1, lon1, lat2, lon2,
+              outmask = GeodesicCapability.STANDARD):
+    """Solve the inverse geodesic problem
 
-  def CheckAzimuth(azi):
-    """Check that azi is legal and return normalized value"""
-    # if not Math.isfinite(azi):
-    #   raise ValueError("azimuth " + str(azi) + " not a finite number")
-    return Math.AngNormalize(azi)
-  CheckAzimuth = staticmethod(CheckAzimuth)
+    :param lat1: latitude of the first point in degrees
+    :param lon1: longitude of the first point in degrees
+    :param lat2: latitude of the second point in degrees
+    :param lon2: longitude of the second point in degrees
+    :param outmask: the :ref:`output mask <outmask>`
+    :return: a :ref:`dict`
 
-  def CheckDistance(s):
-    """Check that s is a legal distance"""
-    # if not Math.isfinite(s):
-    #   raise ValueError("distance " + str(s) + " not a finite number")
-  CheckDistance = staticmethod(CheckDistance)
-
-  def Inverse(self, lat1, lon1, lat2, lon2, outmask = STANDARD):
-    """Solve the inverse geodesic problem.  Compute geodesic between (lat1,
-    lon1) and (lat2, lon2).  Return a dictionary with (some) of the
-    following entries:
-
-      lat1 latitude of point 1
-      lon1 longitude of point 1
-      azi1 azimuth of line at point 1
-      lat2 latitude of point 2
-      lon2 longitude of point 2
-      azi2 azimuth of line at point 2
-      s12 distance from 1 to 2
-      a12 arc length on auxiliary sphere from 1 to 2
-      m12 reduced length of geodesic
-      M12 geodesic scale 2 relative to 1
-      M21 geodesic scale 1 relative to 2
-      S12 area between geodesic and equator
-
-    outmask determines which fields get included and if outmask is
-    omitted, then only the basic geodesic fields are computed.  The mask
-    is an or'ed combination of the following values
-
-      Geodesic.AZIMUTH
-      Geodesic.DISTANCE
-      Geodesic.STANDARD (all of the above)
-      Geodesic.REDUCEDLENGTH
-      Geodesic.GEODESICSCALE
-      Geodesic.AREA
-      Geodesic.ALL (all of the above)
-      Geodesic.LONG_UNROLL
-
-    If Geodesic.LONG_UNROLL is set, then lon1 is unchanged and lon2 -
-    lon1 indicates whether the geodesic is east going or west going.
-    Otherwise lon1 and lon2 are both reduced to the range [-180,180).
-
-    The default value of outmask is STANDARD.
+    Compute geodesic between (*lat1*, *lon1*) and (*lat2*, *lon2*).
+    The default value of *outmask* is STANDARD, i.e., the *lat1*,
+    *lon1*, *azi1*, *lat2*, *lon2*, *azi2*, *s12*, *a12* entries are
+    returned.
 
     """
 
-    lon1a = Geodesic.CheckPosition(lat1, lon1)
-    lon2a = Geodesic.CheckPosition(lat2, lon2)
     if outmask & Geodesic.LONG_UNROLL:
-      lon2 = lon1 + Math.AngDiff(lon1a, lon2a)
+      lon2 = lon1 + Math.AngDiff(Math.AngNormalize(lon1),
+                                 Math.AngNormalize(lon2))
     else:
-      lon1 = lon1a; lon2 = lon2a
+      lon1 = Math.AngNormalize(lon1); lon2 = Math.AngNormalize(lon2)
 
-    result = {'lat1': lat1, 'lon1': lon1, 'lat2': lat2, 'lon2': lon2}
-    a12, s12, azi1, azi2, m12, M12, M21, S12 = self.GenInverse(
-      lat1, lon1a, lat2, lon2a, outmask)
+    a12, s12, azi1, azi2, m12, M12, M21, S12 = self._GenInverse(
+      lat1, lon1, lat2, lon2, outmask)
+    result = {'lat1': Math.LatFix(lat1),
+              'lon1': lon1 if outmask & Geodesic.LONG_UNROLL else
+              Math.AngNormalize(lon1),
+              'lat2': Math.LatFix(lat2),
+              'lon2': lon1 + Math.AngDiff(Math.AngNormalize(lon1),
+                                          Math.AngNormalize(lon2))
+              if outmask & Geodesic.LONG_UNROLL else
+              Math.AngNormalize(lon2)}
     outmask &= Geodesic.OUT_MASK
     result['a12'] = a12
     if outmask & Geodesic.DISTANCE: result['s12'] = s12
@@ -1064,66 +1021,41 @@ class Geodesic(object):
     return result
 
   # return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
-  def GenDirect(self, lat1, lon1, azi1, arcmode, s12_a12, outmask):
+  def _GenDirect(self, lat1, lon1, azi1, arcmode, s12_a12, outmask):
     """Private: General version of direct problem"""
     from geographiclib.geodesicline import GeodesicLine
     line = GeodesicLine(
       self, lat1, lon1, azi1,
       # Automatically supply DISTANCE_IN if necessary
       outmask | (Geodesic.EMPTY if arcmode else Geodesic.DISTANCE_IN))
-    return line.GenPosition(arcmode, s12_a12, outmask)
+    return line._GenPosition(arcmode, s12_a12, outmask)
 
-  def Direct(self, lat1, lon1, azi1, s12, outmask = STANDARD):
-    """Solve the direct geodesic problem.  Compute geodesic starting at
-    (lat1, lon1) with azimuth azi1 and length s12.  Return a dictionary
-    with (some) of the following entries:
+  def Direct(self, lat1, lon1, azi1, s12,
+             outmask = GeodesicCapability.STANDARD):
+    """Solve the direct geodesic problem
 
-      lat1 latitude of point 1
-      lon1 longitude of point 1
-      azi1 azimuth of line at point 1
-      lat2 latitude of point 2
-      lon2 longitude of point 2
-      azi2 azimuth of line at point 2
-      s12 distance from 1 to 2
-      a12 arc length on auxiliary sphere from 1 to 2
-      m12 reduced length of geodesic
-      M12 geodesic scale 2 relative to 1
-      M21 geodesic scale 1 relative to 2
-      S12 area between geodesic and equator
+    :param lat1: latitude of the first point in degrees
+    :param lon1: longitude of the first point in degrees
+    :param azi1: azimuth at the first point in degrees
+    :param s12: the distance from the first point to the second in
+      meters
+    :param outmask: the :ref:`output mask <outmask>`
+    :return: a :ref:`dict`
 
-    outmask determines which fields get included and if outmask is
-    omitted, then only the basic geodesic fields are computed.  The mask
-    is an or'ed combination of the following values
-
-      Geodesic.LATITUDE
-      Geodesic.LONGITUDE
-      Geodesic.AZIMUTH
-      Geodesic.STANDARD (all of the above)
-      Geodesic.REDUCEDLENGTH
-      Geodesic.GEODESICSCALE
-      Geodesic.AREA
-      Geodesic.ALL (all of the above)
-      Geodesic.LONG_UNROLL
-
-    The LONG_UNROLL bit unrolls the longitudes (instead of reducing them
-    to the range [-180,180)); the quantity lon2 - lon1 then indicates
-    how many times and in what sense the geodesic encircles the
-    ellipsoid.
-
-    The default value of outmask is STANDARD.
+    Compute geodesic starting at (*lat1*, *lon1*) with azimuth *azi1*
+    and length *s12*.  The default value of *outmask* is STANDARD, i.e.,
+    the *lat1*, *lon1*, *azi1*, *lat2*, *lon2*, *azi2*, *s12*, *a12*
+    entries are returned.
 
     """
 
-    if outmask & Geodesic.LONG_UNROLL:
-      Geodesic.CheckPosition(lat1, lon1)
-    else:
-      lon1 = Geodesic.CheckPosition(lat1, lon1)
-    azi1 = Geodesic.CheckAzimuth(azi1)
-    Geodesic.CheckDistance(s12)
-
-    result = {'lat1': lat1, 'lon1': lon1, 'azi1': azi1, 's12': s12}
-    a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenDirect(
+    a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self._GenDirect(
       lat1, lon1, azi1, False, s12, outmask)
+    result = {'lat1': Math.LatFix(lat1),
+              'lon1': lon1 if outmask & Geodesic.LONG_UNROLL else
+              Math.AngNormalize(lon1),
+              'azi1': Math.AngNormalize(azi1),
+              's12': s12}
     outmask &= Geodesic.OUT_MASK
     result['a12'] = a12
     if outmask & Geodesic.LATITUDE: result['lat2'] = lat2
@@ -1135,55 +1067,32 @@ class Geodesic(object):
     if outmask & Geodesic.AREA: result['S12'] = S12
     return result
 
-  def ArcDirect(self, lat1, lon1, azi1, a12, outmask = STANDARD):
-    """Solve the direct geodesic problem.  Compute geodesic starting at
-    (lat1, lon1) with azimuth azi1 and spherical arc length a12.  Return
-    a dictionary with (some) of the following entries:
+  def ArcDirect(self, lat1, lon1, azi1, a12,
+                outmask = GeodesicCapability.STANDARD):
+    """Solve the direct geodesic problem in terms of spherical arc length
 
-      lat1 latitude of point 1
-      lon1 longitude of point 1
-      azi1 azimuth of line at point 1
-      lat2 latitude of point 2
-      lon2 longitude of point 2
-      azi2 azimuth of line at point 2
-      s12 distance from 1 to 2
-      a12 arc length on auxiliary sphere from 1 to 2
-      m12 reduced length of geodesic
-      M12 geodesic scale 2 relative to 1
-      M21 geodesic scale 1 relative to 2
-      S12 area between geodesic and equator
+    :param lat1: latitude of the first point in degrees
+    :param lon1: longitude of the first point in degrees
+    :param azi1: azimuth at the first point in degrees
+    :param a12: spherical arc length from the first point to the second
+      in degrees
+    :param outmask: the :ref:`output mask <outmask>`
+    :return: a :ref:`dict`
 
-    outmask determines which fields get included and if outmask is
-    omitted, then only the basic geodesic fields are computed.  The
-    LONG_UNROLL bit unrolls the longitudes (instead of reducing them to
-    the range [-180,180)).  The mask is an or'ed combination of the
-    following values
-
-      Geodesic.LATITUDE
-      Geodesic.LONGITUDE
-      Geodesic.AZIMUTH
-      Geodesic.DISTANCE
-      Geodesic.STANDARD (all of the above)
-      Geodesic.REDUCEDLENGTH
-      Geodesic.GEODESICSCALE
-      Geodesic.AREA
-      Geodesic.ALL (all of the above)
-      Geodesic.LONG_UNROLL
-
-    The default value of outmask is STANDARD.
+    Compute geodesic starting at (*lat1*, *lon1*) with azimuth *azi1*
+    and arc length *a12*.  The default value of *outmask* is STANDARD,
+    i.e., the *lat1*, *lon1*, *azi1*, *lat2*, *lon2*, *azi2*, *s12*,
+    *a12* entries are returned.
 
     """
 
-    if outmask & Geodesic.LONG_UNROLL:
-      Geodesic.CheckPosition(lat1, lon1)
-    else:
-      lon1 = Geodesic.CheckPosition(lat1, lon1)
-    azi1 = Geodesic.CheckAzimuth(azi1)
-    Geodesic.CheckDistance(a12)
-
-    result = {'lat1': lat1, 'lon1': lon1, 'azi1': azi1, 'a12': a12}
-    a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenDirect(
+    a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self._GenDirect(
       lat1, lon1, azi1, True, a12, outmask)
+    result = {'lat1': Math.LatFix(lat1),
+              'lon1': lon1 if outmask & Geodesic.LONG_UNROLL else
+              Math.AngNormalize(lon1),
+              'azi1': Math.AngNormalize(azi1),
+              'a12': a12}
     outmask &= Geodesic.OUT_MASK
     if outmask & Geodesic.DISTANCE: result['s12'] = s12
     if outmask & Geodesic.LATITUDE: result['lat2'] = lat2
@@ -1195,56 +1104,74 @@ class Geodesic(object):
     if outmask & Geodesic.AREA: result['S12'] = S12
     return result
 
-  def Line(self, lat1, lon1, azi1, caps = ALL):
-    """Return a GeodesicLine object to compute points along a geodesic
-    starting at lat1, lon1, with azimuth azi1.  caps is an or'ed
-    combination of bit the following values indicating the capabilities
-    of the returned object
+  def Line(self, lat1, lon1, azi1,
+           caps = GeodesicCapability.STANDARD | GeodesicCapability.DISTANCE_IN):
+    """Return a GeodesicLine object
 
-      Geodesic.LATITUDE
-      Geodesic.LONGITUDE
-      Geodesic.AZIMUTH
-      Geodesic.DISTANCE
-      Geodesic.STANDARD (all of the above)
-      Geodesic.REDUCEDLENGTH
-      Geodesic.GEODESICSCALE
-      Geodesic.AREA
-      Geodesic.DISTANCE_IN
-      Geodesic.ALL (all of the above)
+    :param lat1: latitude of the first point in degrees
+    :param lon1: longitude of the first point in degrees
+    :param azi1: azimuth at the first point in degrees
+    :param caps: the :ref:`capabilities <outmask>`
+    :return: a :class:`~geographiclib.geodesicline.GeodesicLine`
 
-    The default value of caps is ALL.
+    This allows points along a geodesic starting at (*lat1*, *lon1*),
+    with azimuth *azi1* to be found.  The default value of *caps* is
+    STANDARD | DISTANCE_IN, allowing direct geodesic problem to be
+    solved.
+
+    :Example:
+
+     >>> import template
+     >>> a = template.MainClass1()
+     >>> a.function1(1,1,1)
 
     """
 
     from geographiclib.geodesicline import GeodesicLine
-    lon1 = Geodesic.CheckPosition(lat1, lon1)
-    azi1 = Geodesic.CheckAzimuth(azi1)
     return GeodesicLine(
       self, lat1, lon1, azi1,
       # Automatically supply DISTANCE_IN
       caps | Geodesic.DISTANCE_IN)
 
-  def Area(self, points, polyline = False):
-    """Compute the area of a geodesic polygon given by points, an array of
-    dictionaries with entries lat and lon.  Return a dictionary with
-    entries
+  def Polygon(self, polyline = False):
+    """Return a PolygonArea object
 
-      number the number of verices
-      perimeter the perimeter
-      area the area (counter-clockwise traversal positive)
-
-    There is no need to "close" the polygon.  If polyline is set to
-    True, then the points define a polyline instead of a polygon, the
-    length is returned as the perimeter, and the area is not returned.
+    :param polyline: if True then the object describes a polyline
+      instead of a polygon
+    :return: a :class:`~geographiclib.polygonarea.PolygonArea`
 
     """
 
     from geographiclib.polygonarea import PolygonArea
-    for p in points:
-      Geodesic.CheckPosition(p['lat'], p['lon'])
-    num, perimeter, area = PolygonArea.Area(self, points, polyline)
-    result = {'number': num, 'perimeter': perimeter}
-    if not polyline: result['area'] = area
-    return result
+    return PolygonArea(self, polyline)
+
+  EMPTY         = GeodesicCapability.EMPTY
+  """No capabilities, no output."""
+  LATITUDE      = GeodesicCapability.LATITUDE
+  """Calculate latitude *lat2*."""
+  LONGITUDE     = GeodesicCapability.LONGITUDE
+  """Calculate longitude *lon2*."""
+  AZIMUTH       = GeodesicCapability.AZIMUTH
+  """Calculate azimuths *azi1* and *azi2*."""
+  DISTANCE      = GeodesicCapability.DISTANCE
+  """Calculate distance *s12*."""
+  STANDARD      = GeodesicCapability.STANDARD
+  """All of the above."""
+  DISTANCE_IN   = GeodesicCapability.DISTANCE_IN
+  """Allow distance *s12* to be used as input in the direct geodesic
+  problem."""
+  REDUCEDLENGTH = GeodesicCapability.REDUCEDLENGTH
+  """Calculate reduced length *m12*."""
+  GEODESICSCALE = GeodesicCapability.GEODESICSCALE
+  """Calculate geodesic scales *M12* and *M21*."""
+  AREA          = GeodesicCapability.AREA
+  """Calculate area *S12*."""
+  ALL           = GeodesicCapability.ALL
+  """All of the above."""
+  LONG_UNROLL   = GeodesicCapability.LONG_UNROLL
+  """Unroll longitudes, rather than reducing them to the reducing them to
+  the range [-180d,180d)."""
+  LONG_NOWRAP   = GeodesicCapability.LONG_UNROLL
 
 Geodesic.WGS84 = Geodesic(Constants.WGS84_a, Constants.WGS84_f)
+"""Instantiation for the WGS84 ellipsoid"""

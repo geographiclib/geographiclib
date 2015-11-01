@@ -48,7 +48,8 @@ length *a12*.  The optional output mask parameter, *outmask*, can be
 used to tailor which quantities to calculate.  In addition, when a
 {@link module:GeographicLib/GeodesicLine.GeodesicLine GeodesicLine} is
 constructed it can be provided with the optional capabilities parameter,
-*caps*.
+*caps*, which specifies what quantities can be returned from the
+resulting object.
 
 Both *outmask* and *caps* are obtained by or'ing together the following
 values
@@ -69,13 +70,16 @@ Geodesic.DISTANCE_IN is a capability provided to the
 {@link module:GeographicLib/GeodesicLine.GeodesicLine GeodesicLine}
 constructor.  It allows the position on the line to specified in terms
 of distance.  (Without this, the position can only be specified in terms
-of the arc length.)
+of the arc length.)  This only makes sense in the *caps* parameter.
 
 Geodesic.LONG_UNROLL controls the treatment of longitude.  If it is not
 set then the *lon1* and *lon2* fields are both reduced to the range
 [&minus;180&deg;, 180&deg;).  If it is set, then *lon1* is as given in
 the function call and (*lon2* &minus; *lon1*) determines how many times
-and in what sense the geodesic has encircled the ellipsoid.
+and in what sense the geodesic has encircled the ellipsoid.  This only
+makes sense in the *outmask* parameter.
+
+Note that *a12* is always included in the result.
 
 ### <a name="restrict"></a>Restrictions on the parameters
 

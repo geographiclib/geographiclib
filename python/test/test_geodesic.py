@@ -347,14 +347,12 @@ class GeodSolveTest(unittest.TestCase):
 
 class PlanimeterTest(unittest.TestCase):
 
-    from geographiclib.polygonarea import PolygonArea
-    polygon = PolygonArea(Geodesic.WGS84)
-    polyline = PolygonArea(Geodesic.WGS84, True)
+    polygon = Geodesic.WGS84.Polygon(False)
+    polyline = Geodesic.WGS84.Polygon(True)
 
     def Planimeter(points):
         PlanimeterTest.polygon.Clear()
         for p in points:
-            Geodesic.CheckPosition(p[0], p[1])
             PlanimeterTest.polygon.AddPoint(p[0], p[1])
         return PlanimeterTest.polygon.Compute(False, True)
     Planimeter = staticmethod(Planimeter)
@@ -362,7 +360,6 @@ class PlanimeterTest(unittest.TestCase):
     def PolyLength(points):
         PlanimeterTest.polyline.Clear()
         for p in points:
-            Geodesic.CheckPosition(p[0], p[1])
             PlanimeterTest.polyline.AddPoint(p[0], p[1])
         return PlanimeterTest.polyline.Compute(False, True)
     PolyLength = staticmethod(PolyLength)

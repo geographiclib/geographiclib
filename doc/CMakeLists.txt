@@ -56,6 +56,11 @@ if (DOXYGEN_FOUND)
   else ()
     set (JSDOC_CMD "echo")
   endif ()
+  if (SPHINX)
+    set (SPHINX_CMD "${SPHINX}")
+  else ()
+    set (SPINX_CMD "echo")
+  endif ()
   add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/html/index.html
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxyfile
       ${CMAKE_CURRENT_BINARY_DIR}/doxyfile-c
@@ -76,6 +81,8 @@ if (DOXYGEN_FOUND)
       -c ${PROJECT_SOURCE_DIR}/js/conf.json
       -R ${PROJECT_SOURCE_DIR}/js/GeographicLib.md
       ${PROJECT_SOURCE_DIR}/js/src > jsdoc.log
+    COMMAND ${SPHINX_CMD} -b html -d python-doctree
+      ${PROJECT_SOURCE_DIR}/python/doc html/python > pythondoc.log
     COMMENT "Generating html documentation tree")
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
     DESTINATION ${INSTALL_DOC_DIR})

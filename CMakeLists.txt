@@ -410,7 +410,10 @@ if (GEOGRAPHICLIB_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
   # Version 1.8.7 or later needed for &hellip;
   find_package (Doxygen 1.8.7)
+  # For JavaScript documentation
   find_program (JSDOC jsdoc)
+  # For Python documentation
+  find_program (SPHINX sphinx-build)
 endif ()
 
 # The man pages are written as pod files and converted to nroff format,

@@ -151,10 +151,14 @@
    *   counter-clockwise) traversal counts as a positive area.
    * @param {bool} sign if true then return a signed result for the area if the
    *   polygon is traversed in the "wrong" direction instead of returning the
+   *   area for the rest of the earth.
    * @returns {object} r where r.number is the number of vertices, r.perimeter
    *   is the perimeter (meters), and r.area (only returned if polyline is
    *   false) is the area (meters<sup>2</sup>).
-   * @description More points can be added to the polygon after this call.
+   * @description If the object is a polygon (and not a polygon), the perimeter
+   *   includes the length of a final edge connecting the current point to the
+   *   initial point.  If the object is a polyline, then area is nan.  More
+   *   points can be added to the polygon after this call.
    */
   p.PolygonArea.prototype.Compute = function(reverse, sign) {
     var vals = {number: this.num}, t, tempsum, crossings;

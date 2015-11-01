@@ -250,7 +250,7 @@ cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH ..
 make -j$NUMCPUS all
 make -j$NUMCPUS test
 cd ..
-mvn -Dcmake.project.bin.directory=$TEMP/mvn install
+# mvn -Dcmake.project.bin.directory=$TEMP/mvn install
 
 cd $TEMP/gita/geographiclib/tests/sandbox
 mkdir BUILD
@@ -269,31 +269,6 @@ cp -p $TEMP/gita/geographiclib/geodesic.png .
 cp -p $TEMP/gita/geographiclib/matlab/geographiclib-blurb.txt .
 VERSION=$VERSION DATE=$DATE ROOT=$TEMP/matlab \
        sh $DEVELSOURCE/tests/matlab-toolbox-config.sh
-
-cd $TEMP
-mkdir python-test
-cp -pr $TEMP/instc/lib/python/site-packages python-test
-cat > tester.py <<EOF
-import sys
-sys.path.append("$TEMP/python-test/site-packages")
-from geographiclib.geodesic import Geodesic
-print(Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50,
-                             Geodesic.ALL | Geodesic.LONG_UNROLL))
-# The geodesic direct problem
-print(Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3,
-                            Geodesic.ALL | Geodesic.LONG_UNROLL))
-# How to obtain several points along a geodesic
-line = Geodesic.WGS84.Line(40.6, -73.8, 45)
-print(line.Position( 5000e3))
-print(line.Position(10000e3))
-print(line.Position(10000e3, Geodesic.ALL | Geodesic.LONG_UNROLL))
-# Computing the area of a geodesic polygon
-def p(lat,lon): return {'lat': lat, 'lon': lon}
-
-print(Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)]))
-EOF
-python2 tester.py
-python3 tester.py
 
 cp -pr $TEMP/relc/GeographicLib-$VERSION/legacy $TEMP/
 for l in C Fortran; do

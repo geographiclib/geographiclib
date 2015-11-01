@@ -1,4 +1,18 @@
-"""geodesicline.py: transcription of GeographicLib::GeodesicLine class."""
+"""Define the :class:`~geographiclib.geodesicline.GeodesicLine` class
+
+The constructor defines the starting point of the line.  Points on the
+line are given by
+
+  * :meth:`~geographiclib.geodesicline.GeodesicLine.Position` position
+    given in terms of distance
+
+  * :meth:`~geographiclib.geodesicline.GeodesicLine.ArcPosition` position
+    given in terms of spherical arc length
+
+The object can also be constructed by
+:meth:`Geodesic.Line <geographiclib.geodesic.Geodesic.Line>`
+
+"""
 # geodesicline.py
 #
 # This is a rather literal translation of the GeographicLib::GeodesicLine class
@@ -25,25 +39,20 @@ from geographiclib.geodesiccapability import GeodesicCapability
 class GeodesicLine(object):
   """Points on a geodesic path"""
 
-  def __init__(self, geod, lat1, lon1, azi1, caps = GeodesicCapability.ALL):
-    """Construct a GeodesicLine object describing a geodesic line
-    starting at (lat1, lon1) with azimuth azi1.  geod is a Geodesic
-    object (which embodies the ellipsoid parameters).  caps is caps is
-    an or'ed combination of bit the following values indicating the
-    capabilities of the returned object
+  def __init__(self, geod, lat1, lon1, azi1,
+               caps = GeodesicCapability.STANDARD |
+               GeodesicCapability.DISTANCE_IN):
+    """Construct a GeodesicLine object
 
-      Geodesic.LATITUDE
-      Geodesic.LONGITUDE
-      Geodesic.AZIMUTH
-      Geodesic.DISTANCE
-      Geodesic.STANDARD (all of the above)
-      Geodesic.REDUCEDLENGTH
-      Geodesic.GEODESICSCALE
-      Geodesic.AREA
-      Geodesic.DISTANCE_IN
-      Geodesic.ALL (all of the above)
+    :param geod: a :class:`~geographiclib.geodesic.Geodesic` object
+    :param lat1: latitude of the first point in degrees
+    :param lon1: longitude of the first point in degrees
+    :param azi1: azimuth at the first point in degrees
+    :param caps: the :ref:`capabilities <outmask>`
 
-    The default value of caps is ALL.
+    This creates an object allowing points along a geodesic starting at
+    (*lat1*, *lon1*), with azimuth *azi1* to be found.  The default
+    value of *caps* is STANDARD | DISTANCE_IN.
 
     """
 
@@ -94,46 +103,46 @@ class GeodesicLine(object):
     eps = self._k2 / (2 * (1 + math.sqrt(1 + self._k2)) + self._k2)
 
     if self._caps & Geodesic.CAP_C1:
-      self._A1m1 = Geodesic.A1m1f(eps)
+      self._A1m1 = Geodesic._A1m1f(eps)
       self._C1a = list(range(Geodesic.nC1_ + 1))
-      Geodesic.C1f(eps, self._C1a)
-      self._B11 = Geodesic.SinCosSeries(
+      Geodesic._C1f(eps, self._C1a)
+      self._B11 = Geodesic._SinCosSeries(
         True, self._ssig1, self._csig1, self._C1a)
       s = math.sin(self._B11); c = math.cos(self._B11)
       # tau1 = sig1 + B11
       self._stau1 = self._ssig1 * c + self._csig1 * s
       self._ctau1 = self._csig1 * c - self._ssig1 * s
       # Not necessary because C1pa reverts C1a
-      #    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa)
+      #    _B11 = -_SinCosSeries(true, _stau1, _ctau1, _C1pa)
 
     if self._caps & Geodesic.CAP_C1p:
       self._C1pa = list(range(Geodesic.nC1p_ + 1))
-      Geodesic.C1pf(eps, self._C1pa)
+      Geodesic._C1pf(eps, self._C1pa)
 
     if self._caps & Geodesic.CAP_C2:
-      self._A2m1 = Geodesic.A2m1f(eps)
+      self._A2m1 = Geodesic._A2m1f(eps)
       self._C2a = list(range(Geodesic.nC2_ + 1))
-      Geodesic.C2f(eps, self._C2a)
-      self._B21 = Geodesic.SinCosSeries(
+      Geodesic._C2f(eps, self._C2a)
+      self._B21 = Geodesic._SinCosSeries(
         True, self._ssig1, self._csig1, self._C2a)
 
     if self._caps & Geodesic.CAP_C3:
       self._C3a = list(range(Geodesic.nC3_))
-      geod.C3f(eps, self._C3a)
-      self._A3c = -self._f * self._salp0 * geod.A3f(eps)
-      self._B31 = Geodesic.SinCosSeries(
+      geod._C3f(eps, self._C3a)
+      self._A3c = -self._f * self._salp0 * geod._A3f(eps)
+      self._B31 = Geodesic._SinCosSeries(
         True, self._ssig1, self._csig1, self._C3a)
 
     if self._caps & Geodesic.CAP_C4:
       self._C4a = list(range(Geodesic.nC4_))
-      geod.C4f(eps, self._C4a)
+      geod._C4f(eps, self._C4a)
       # Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
       self._A4 = Math.sq(self._a) * self._calp0 * self._salp0 * geod._e2
-      self._B41 = Geodesic.SinCosSeries(
+      self._B41 = Geodesic._SinCosSeries(
         False, self._ssig1, self._csig1, self._C4a)
 
   # return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
-  def GenPosition(self, arcmode, s12_a12, outmask):
+  def _GenPosition(self, arcmode, s12_a12, outmask):
     """Private: General solution of position along geodesic"""
     from geographiclib.geodesic import Geodesic
     a12 = lat2 = lon2 = azi2 = s12 = m12 = M12 = M21 = S12 = Math.nan
@@ -154,7 +163,7 @@ class GeodesicLine(object):
       tau12 = s12_a12 / (self._b * (1 + self._A1m1))
       s = math.sin(tau12); c = math.cos(tau12)
       # tau2 = tau1 + tau12
-      B12 = - Geodesic.SinCosSeries(True,
+      B12 = - Geodesic._SinCosSeries(True,
                                     self._stau1 * c + self._ctau1 * s,
                                     self._ctau1 * c - self._stau1 * s,
                                     self._C1pa)
@@ -184,7 +193,7 @@ class GeodesicLine(object):
         #      1/5   157e6 3.8e9 280e6
         ssig2 = self._ssig1 * csig12 + self._csig1 * ssig12
         csig2 = self._csig1 * csig12 - self._ssig1 * ssig12
-        B12 = Geodesic.SinCosSeries(True, ssig2, csig2, self._C1a)
+        B12 = Geodesic._SinCosSeries(True, ssig2, csig2, self._C1a)
         serr = ((1 + self._A1m1) * (sig12 + (B12 - self._B11)) -
                 s12_a12 / self._b)
         sig12 = sig12 - serr / math.sqrt(1 + self._k2 * Math.sq(ssig2))
@@ -200,7 +209,7 @@ class GeodesicLine(object):
     if outmask & (
       Geodesic.DISTANCE | Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
       if arcmode or abs(self._f) > 0.01:
-        B12 = Geodesic.SinCosSeries(True, ssig2, csig2, self._C1a)
+        B12 = Geodesic._SinCosSeries(True, ssig2, csig2, self._C1a)
       AB1 = (1 + self._A1m1) * (B12 - self._B11)
     # sin(bet2) = cos(alp0) * sin(sig2)
     sbet2 = self._calp0 * ssig2
@@ -229,7 +238,7 @@ class GeodesicLine(object):
                else math.atan2(somg2 * self._comg1 - comg2 * self._somg1,
                                comg2 * self._comg1 + somg2 * self._somg1))
       lam12 = omg12 + self._A3c * (
-        sig12 + (Geodesic.SinCosSeries(True, ssig2, csig2, self._C3a)
+        sig12 + (Geodesic._SinCosSeries(True, ssig2, csig2, self._C3a)
                  - self._B31))
       lon12 = math.degrees(lam12)
       lon2 = (self._lon1 + lon12 if outmask & Geodesic.LONG_UNROLL else
@@ -244,7 +253,7 @@ class GeodesicLine(object):
       azi2 = Math.atan2d(salp2, calp2)
 
     if outmask & (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):
-      B22 = Geodesic.SinCosSeries(True, ssig2, csig2, self._C2a)
+      B22 = Geodesic._SinCosSeries(True, ssig2, csig2, self._C2a)
       AB2 = (1 + self._A2m1) * (B22 - self._B21)
       J12 = (self._A1m1 - self._A2m1) * sig12 + (AB1 - AB2)
       if outmask & Geodesic.REDUCEDLENGTH:
@@ -260,7 +269,7 @@ class GeodesicLine(object):
         M21 = csig12 - (t * self._ssig1 - self._csig1 * J12) * ssig2 / dn2
 
     if outmask & Geodesic.AREA:
-      B42 = Geodesic.SinCosSeries(False, ssig2, csig2, self._C4a)
+      B42 = Geodesic._SinCosSeries(False, ssig2, csig2, self._C4a)
       # real salp12, calp12
       if self._calp0 == 0 or self._salp0 == 0:
         # alp12 = alp2 - alp1, used in atan2 so no need to normalize
@@ -293,50 +302,26 @@ class GeodesicLine(object):
     return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
 
   def Position(self, s12, outmask = GeodesicCapability.STANDARD):
-    """Return the point a distance s12 along the geodesic line.  Return a
-    dictionary with (some) of the following entries:
+    """Find the position on the line given *s12*
 
-      lat1 latitude of point 1
-      lon1 longitude of point 1
-      azi1 azimuth of line at point 1
-      lat2 latitude of point 2
-      lon2 longitude of point 2
-      azi2 azimuth of line at point 2
-      s12 distance from 1 to 2
-      a12 arc length on auxiliary sphere from 1 to 2
-      m12 reduced length of geodesic
-      M12 geodesic scale 2 relative to 1
-      M21 geodesic scale 1 relative to 2
-      S12 area between geodesic and equator
+    :param s12: the distance from the first point to the second in
+      meters
+    :param outmask: the :ref:`output mask <outmask>`
+    :return: a :ref:`dict`
 
-    outmask determines which fields get included and if outmask is
-    omitted, then only the basic geodesic fields are computed.  The
-    LONG_UNROLL bit unrolls the longitudes (instead of reducing them to
-    the range [-180,180)), so that lon2 - lon1 indicates how many times
-    and in what sense the geodesic encircles the ellipsoid.  The mask is
-    an or'ed combination of the following values
-
-      Geodesic.LATITUDE
-      Geodesic.LONGITUDE
-      Geodesic.AZIMUTH
-      Geodesic.STANDARD (all of the above)
-      Geodesic.REDUCEDLENGTH
-      Geodesic.GEODESICSCALE
-      Geodesic.AREA
-      Geodesic.ALL (all of the above)
-      Geodesic.LONG_UNROLL
-
-    The default value of outmask is STANDARD.
+    The default value of *outmask* is STANDARD, i.e., the *lat1*,
+    *lon1*, *azi1*, *lat2*, *lon2*, *azi2*, *s12*, *a12* entries are
+    returned.  The :class:`~geographiclib.geodesicline.GeodesicLine`
+    object must have been constructed with the DISTANCE_IN capability.
 
     """
 
     from geographiclib.geodesic import Geodesic
-    Geodesic.CheckDistance(s12)
     result = {'lat1': self._lat1,
               'lon1': self._lon1 if outmask & Geodesic.LONG_UNROLL else
               Math.AngNormalize(self._lon1),
               'azi1': self._azi1, 's12': s12}
-    a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenPosition(
+    a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self._GenPosition(
       False, s12, outmask)
     outmask &= Geodesic.OUT_MASK
     result['a12'] = a12
@@ -350,50 +335,25 @@ class GeodesicLine(object):
     return result
 
   def ArcPosition(self, a12, outmask = GeodesicCapability.STANDARD):
-    """Return the point a spherical arc length a12 along the geodesic line.
-    Return a dictionary with (some) of the following entries:
+    """Find the position on the line given *a12*
 
-      lat1 latitude of point 1
-      lon1 longitude of point 1
-      azi1 azimuth of line at point 1
-      lat2 latitude of point 2
-      lon2 longitude of point 2
-      azi2 azimuth of line at point 2
-      s12 distance from 1 to 2
-      a12 arc length on auxiliary sphere from 1 to 2
-      m12 reduced length of geodesic
-      M12 geodesic scale 2 relative to 1
-      M21 geodesic scale 1 relative to 2
-      S12 area between geodesic and equator
+    :param a12: spherical arc length from the first point to the second
+      in degrees
+    :param outmask: the :ref:`output mask <outmask>`
+    :return: a :ref:`dict`
 
-    outmask determines which fields get included and if outmask is
-    omitted, then only the basic geodesic fields are computed.  The
-    LONG_UNROLL bit unrolls the longitudes (instead of reducing them to
-    the range [-180,180)).  The mask is an or'ed combination of the
-    following values
-
-      Geodesic.LATITUDE
-      Geodesic.LONGITUDE
-      Geodesic.AZIMUTH
-      Geodesic.DISTANCE
-      Geodesic.STANDARD (all of the above)
-      Geodesic.REDUCEDLENGTH
-      Geodesic.GEODESICSCALE
-      Geodesic.AREA
-      Geodesic.ALL (all of the above)
-      Geodesic.LONG_UNROLL
-
-    The default value of outmask is STANDARD.
+    The default value of *outmask* is STANDARD, i.e., the *lat1*,
+    *lon1*, *azi1*, *lat2*, *lon2*, *azi2*, *s12*, *a12* entries are
+    returned.
 
     """
 
     from geographiclib.geodesic import Geodesic
-    Geodesic.CheckDistance(a12)
     result = {'lat1': self._lat1,
               'lon1': self._lon1 if outmask & Geodesic.LONG_UNROLL else
               Math.AngNormalize(self._lon1),
               'azi1': self._azi1, 'a12': a12}
-    a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenPosition(
+    a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self._GenPosition(
       True, a12, outmask)
     outmask &= Geodesic.OUT_MASK
     if outmask & Geodesic.DISTANCE: result['s12'] = s12
