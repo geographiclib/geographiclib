@@ -14,18 +14,18 @@
 
 from distutils.core import setup
 
-setup(name="geographiclib",
-      version="1.46",
-      description=
+setup(name = "geographiclib",
+      version = "1.46",
+      description =
         "A translation of the GeographicLib::Geodesic class to Python",
-      author="Charles Karney",
-      author_email="charles@karney.com",
-      url="http://geographiclib.sourceforge.net/",
-      packages=["geographiclib"],
-      data_files=[],
-      license="MIT",
-      keywords="gis geographical earth distance geodesic",
-      classifiers=[
+      author = "Charles Karney",
+      author_email = "charles@karney.com",
+      url = "http://geographiclib.sourceforge.net/",
+      packages = ["geographiclib", "geographiclib/test"],
+      data_files = [],
+      license = "MIT",
+      keywords = "gis geographical earth distance geodesic",
+      classifiers = [
           "Development Status :: 5 - Production/Stable",
           "Intended Audience :: Developers",
           "Intended Audience :: Science/Research",

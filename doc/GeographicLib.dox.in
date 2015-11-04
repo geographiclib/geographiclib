@@ -6194,6 +6194,9 @@ Here we give the complete matrix of relations between all six latitudes;
 there are 30 (=&nbsp;6&nbsp;&times;&nbsp;5) such relations.  The
 expansions are in terms of the third flattening <i>n</i> =
 (<i>a</i>&nbsp;&minus;&nbsp;<i>b</i>)/(<i>a</i>&nbsp;+&nbsp;<i>b</i>).
+(Similar results have been obtained by Sebasti&aacute;n Orihuela,
+<a href="https://sites.google.com/site/geodesiafich/funciones_latitud.pdf">
+<i>Funciones de Latitud</i></a>, 2013.)
 This results in expansions in which half the coefficients vanish for all
 relations between &phi;, &beta;, &theta;, and &mu;.  In addition, the
 expansions converge for <i>b</i>/<i>a</i> &isin; (0,&nbsp;&infin;).

@@ -1,6 +1,6 @@
 Options Indexes
 IndexOptions DescriptionWidth=*
-IndexIgnore HEADER.html FOOTER.html helmert80-en.pdf helmert84-en.pdf
+IndexIgnore HEADER.html FOOTER.html bagratuni67.pdf helmert80-en.html helmert80-en.pdf helmert84-en.html helmert84-en.pdf transams-V6.pdf vincenty75b.pdf
 ReadmeName FOOTER.html
 AddDescription "A geodesic bibliography" biblio.html
 AddDescription "Bernoulli (1728), missing figures from Google scan" bernoulli28-fig.pdf
@@ -64,7 +64,6 @@ AddDescription "Roy. Astron. Soc. 39, 1872 (<a href=https://books.google.com/boo
 AddDescription "Todhunter, Figure of Earth 1, 1873 (<a href=https://books.google.com/books?id=6GMSAAAAIAAJ>id=6GMSAAAAIAAJ</a>)" todhunter73a.pdf
 AddDescription "Todhunter, Figure of Earth 2, 1873 (<a href=https://books.google.com/books?id=xmMSAAAAIAAJ>id=xmMSAAAAIAAJ</a>)" todhunter73b.pdf
 AddDescription "Todhuner, Spherical Trig., 1886 (<a href=https://books.google.com/books?id=aVgNAQAAMAAJ>id=aVgNAQAAMAAJ</a>)" todhunter86.pdf
-AddDescription "Trans. AMS 6, 1905 (<a href=https://books.google.com/books?id=o0MLAAAAYAAJ>id=o0MLAAAAYAAJ</a>)" transams-V6.pdf
 AddDescription "Weierstrass 1, 1894 (<a href=https://books.google.com/books?id=9O4GAAAAYAAJ>id=9O4GAAAAYAAJ</a>)" weierstrass-V1.pdf
 AddDescription "Z. f. Vermess. 4, 1875 (<a href=https://books.google.com/books?id=wpJIAAAAMAAJ>id=wpJIAAAAMAAJ</a>)" zvermess-V4.pdf
 AddDescription "Z. f. Vermess. 6, 1877 (<a href=https://books.google.com/books?id=WKxIAAAAMAAJ>id=WKxIAAAAMAAJ</a>)" zvermess-V6.pdf

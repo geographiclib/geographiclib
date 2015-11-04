@@ -114,8 +114,8 @@ make doc distrib-npm
 )
 (
     cd ../python
-    python2 -m unittest test.test_geodesic
-    python3 -m unittest test.test_geodesic
+    python2 -m unittest geographiclib.test.test_geodesic
+    python3 -m unittest geographiclib.test.test_geodesic
 )
 (
     cd ../matlab/geographiclib

@@ -39,7 +39,6 @@ import geographiclib.accumulator
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
 ]
 

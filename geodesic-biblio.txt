@@ -1171,8 +1171,8 @@
    ''Sur les lignes géodésiques des surfaces convexes
    [Geodesics lines on convex surfaces]'',
    Trans. AMS '''6'''(3), 237--274 (1905).[[BR]]
-   https://books.google.com/books?id=o0MLAAAAYAAJ&pg=PA237 (PDF transams-V6.pdf)
-   [[BR]] https://dx.doi.org/10.2307/1986219
+   https://dx.doi.org/10.2307/1986219 [[BR]]
+   https://www.jstor.org/stable/1986219
  * J. Frischauf,[[BR]]
    ''Zur Berechnung sphäroidischer Dreiecke [Calculating spheroidal
    triangles]'',
@@ -1255,7 +1255,8 @@
    Survey Review '''23''' (misprinted as '''22''') (176), 88--93 (1975);
    Addendum: Survey Review '''23'''(180), 294 (1976).[[BR]]
    http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf [[BR]]
-   https://dx.doi.org/10.1179/sre.1975.23.176.88
+   https://dx.doi.org/10.1179/sre.1975.23.176.88 [[BR]]
+   https://dx.doi.org/10.1179/sre.1976.23.180.293
  * T. Vincenty,[[BR]]
    ''Geodetic inverse solution between antipodal points'',
    unpublished report, DMAAC (Aug. 28, 1975).[[BR]]
