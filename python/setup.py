@@ -12,8 +12,10 @@
 # The initial version of this file was provided by
 # Andrew MacIntyre <Andrew.MacIntyre@acma.gov.au>.
 
-from distutils.core import setup, Command
+from distutils.core import setup
 from distutils.cmd import Command
+from sphinx.setup_command import BuildDoc
+
 
 class TestCommand(Command):
     user_options = []
@@ -34,25 +36,12 @@ class TestCommand(Command):
                                           ]))
 
 
-class SphinxCommand(Command):
-    user_options = []
+name = "geographiclib"
+version = "1.46"
+release = "1.46.0"
 
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        import sys, subprocess
-        raise SystemExit(subprocess.call(['sphinx-build',
-                                          '-b', 'html',
-                                          '-d', 'build/python-doctree',
-                                          'doc', 'build/html',
-                                          ]))
-
-setup(name = "geographiclib",
-      version = "1.46",
+setup(name = name,
+      version = version,
       description =
         "A translation of the GeographicLib::Geodesic class to Python",
       author = "Charles Karney",
@@ -72,8 +61,25 @@ setup(name = "geographiclib",
           "Topic :: Scientific/Engineering :: GIS",
           "Topic :: Software Development :: Libraries :: Python Modules",
       ],
+
       cmdclass={
           'test': TestCommand,
-          'build_sphinx': SphinxCommand
-      }
+          'build_sphinx': BuildDoc,
+          'build_sphinx_latex': BuildDoc,
+      },
+
+      command_options={
+          # these are optional and override conf.py settings
+          'build_sphinx': {
+              'project': ('setup.py', name),
+              'version': ('setup.py', version),
+              'release': ('setup.py', release),
+          },
+          'build_sphinx_latex': {
+              'project': ('setup.py', name),
+              'version': ('setup.py', version),
+              'release': ('setup.py', release),
+          }
+      },
+
       )
