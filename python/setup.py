@@ -12,7 +12,44 @@
 # The initial version of this file was provided by
 # Andrew MacIntyre <Andrew.MacIntyre@acma.gov.au>.
 
-from distutils.core import setup
+from distutils.core import setup, Command
+from distutils.cmd import Command
+
+class TestCommand(Command):
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import sys, subprocess
+        raise SystemExit(subprocess.call([sys.executable,
+                                          '-m',
+                                          'unittest',
+                                          '-v',
+                                          'test.test_geodesic'
+                                          ]))
+
+
+class SphinxCommand(Command):
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import sys, subprocess
+        raise SystemExit(subprocess.call(['sphinx-build',
+                                          '-b', 'html',
+                                          '-d', 'build/python-doctree',
+                                          'doc', 'build/html',
+                                          ]))
 
 setup(name = "geographiclib",
       version = "1.46",
@@ -35,4 +72,8 @@ setup(name = "geographiclib",
           "Topic :: Scientific/Engineering :: GIS",
           "Topic :: Software Development :: Libraries :: Python Modules",
       ],
-)
+      cmdclass={
+          'test': TestCommand,
+          'build_sphinx': SphinxCommand
+      }
+      )
