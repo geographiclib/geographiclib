@@ -1119,12 +1119,6 @@ class Geodesic(object):
     STANDARD | DISTANCE_IN, allowing direct geodesic problem to be
     solved.
 
-    :Example:
-
-     >>> import template
-     >>> a = template.MainClass1()
-     >>> a.function1(1,1,1)
-
     """
 
     from geographiclib.geodesicline import GeodesicLine

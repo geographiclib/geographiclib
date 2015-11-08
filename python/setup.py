@@ -14,31 +14,24 @@
 
 from distutils.core import setup
 from distutils.cmd import Command
-from sphinx.setup_command import BuildDoc
-
 
 class TestCommand(Command):
     user_options = []
-
     def initialize_options(self):
         pass
-
     def finalize_options(self):
         pass
-
     def run(self):
         import sys, subprocess
         raise SystemExit(subprocess.call([sys.executable,
                                           '-m',
                                           'unittest',
                                           '-v',
-                                          'test.test_geodesic'
+                                          'geographiclib.test.test_geodesic'
                                           ]))
-
 
 name = "geographiclib"
 version = "1.46"
-release = "1.46.0"
 
 setup(name = name,
       version = version,
@@ -61,25 +54,7 @@ setup(name = name,
           "Topic :: Scientific/Engineering :: GIS",
           "Topic :: Software Development :: Libraries :: Python Modules",
       ],
-
       cmdclass={
           'test': TestCommand,
-          'build_sphinx': BuildDoc,
-          'build_sphinx_latex': BuildDoc,
       },
-
-      command_options={
-          # these are optional and override conf.py settings
-          'build_sphinx': {
-              'project': ('setup.py', name),
-              'version': ('setup.py', version),
-              'release': ('setup.py', release),
-          },
-          'build_sphinx_latex': {
-              'project': ('setup.py', name),
-              'version': ('setup.py', version),
-              'release': ('setup.py', release),
-          }
-      },
-
-      )
+)
