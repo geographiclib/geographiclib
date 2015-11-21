@@ -16,6 +16,14 @@ PYTHON_FILES = \
 TEST_FILES = \
 	$(srcdir)/$(PACKAGE)/test/__init__.py \
 	$(srcdir)/$(PACKAGE)/test/test_geodesic.py
+DOC_FILES = \
+	$(srcdir)/doc/conf.py \
+	$(srcdir)/doc/code.rst \
+	$(srcdir)/doc/examples.rst \
+	$(srcdir)/doc/geodesics.rst \
+	$(srcdir)/doc/index.rst \
+	$(srcdir)/doc/interface.rst
+
 
 pythondir=$(libdir)/python/site-packages/$(PACKAGE)
 
@@ -32,5 +40,5 @@ install:
 clean-local:
 	rm -rf *.pyc $(PACKAGE)/*.pyc
 
-EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES) setup.py \
-	MANIFEST.in README.txt
+EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES) \
+	$(TEST_FILES) $(DOC_FILES) setup.py MANIFEST.in README.txt
