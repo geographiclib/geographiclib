@@ -5,7 +5,7 @@ GeoConvert -- convert geographic coordinates
 =head1 SYNOPSIS
 
 B<GeoConvert> [ B<-g> | B<-d> | B<-:> | B<-u> | B<-m> | B<-c> ]
-[ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ]
+[ B<-z> I<zone> | B<-s> | B<-t> | B<-S> | B<-T> ] [ B<-n> ]
 [ B<-w> ] [ B<-p> I<prec> ] [ B<-l> | B<-a> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
@@ -105,6 +105,13 @@ use the standard UPS and UTM zones.
 =item B<-t>
 
 similar to B<-s> but forces UPS regions to the closest UTM zone.
+
+=item B<-S> or B<-T>
+
+behave the same as B<-s> and B<-t>, respectively, until the first legal
+conversion is performed.  For subsequent points, the zone and hemisphere
+of that conversion are used.  This enables a sequence of points to be
+converted into UTM or UPS using a consistent coordinate system.
 
 =item B<-n>
 
