@@ -5,8 +5,8 @@ GeoConvert -- convert geographic coordinates
 =head1 SYNOPSIS
 
 B<GeoConvert> [ B<-g> | B<-d> | B<-:> | B<-u> | B<-m> | B<-c> ]
-[ B<-z> I<zone> | B<-s> | B<-t> | B<-S> | B<-T> ] [ B<-n> ]
-[ B<-w> ] [ B<-p> I<prec> ] [ B<-l> | B<-a> ]
+[ B<-z> I<zone> | B<-s> | B<-t> | B<-S> | B<-T> ]
+[ B<-n> ] [ B<-w> ] [ B<-p> I<prec> ] [ B<-l> | B<-a> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]

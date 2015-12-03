@@ -146,10 +146,11 @@
    ''Traité de Mécanique Céleste'', Vol. 2 (Duprat, Paris, 1798/1799),
    Book 3, Chap. 5; reprinted in
    ''Oeuvres complètes de Laplace'', Vol. 2 (Imprim. Royale, 1843),
-   pp. 127--180 (early use of ''geodesic line'' in French).[[BR]]
+   pp. 127--180.[[BR]]
    https://books.google.com/books?id=qZQAAAAAMAAJ&pg=RA1-PA127 [[BR]]
-     Nous désignerons cette ligne sous le nom de ''ligne géodésique'' [We
-     will call this line the ''geodesic line''].
+   Early use of ''geodesic line'' in French:
+     Nous désignerons cette ligne sous le nom de ''ligne géodésique''
+     [We will call this line the ''geodesic line''].
    Translation with commentary: ''Celestial Mechanics'' by N. Bowditch, Vol. 2
    (Boston, 1832), pp. 358--491.[[BR]]
    http://geographiclib.sourceforge.net/geodesic-papers/laplace99a.pdf
@@ -198,7 +199,14 @@
    ''Über die kürzeste Linie auf dem Sphäroide
    [The shortest line on the spheroid]'',
    Monat. Corr. Zach '''11''', 7--23 (Gotha, 1805).[[BR]]
-   https://books.google.com/books?id=454AAAAAMAAJ&pg=PA5
+   https://books.google.com/books?id=454AAAAAMAAJ&pg=PA5 [[BR]]
+   Early use of ''geodesic line'' in German (noted by Jordan, Vol. 3,
+   Chap. 6, Sec. 68, p. 374):
+     Man weiss, dass die geodätisch gerade Linie LM die Eigenschaft hat,
+     dass sie die kürzeste ist, die man zwischen den zwey Puncten L und
+     M ziehen kann [We know that the geodesic straight line LM has the
+     property that it is the shortest that can be drawn between the two
+     points L and M].
  * J. G. Soldner,[[BR]]
    ''Theorie der Landesvermessung (1810)
    [Theory of Surveying]'',
@@ -245,9 +253,9 @@
    https://books.google.com/books?id=D2UEAAAAYAAJ&pg=RA1-PA3
  * C. Hutton,[[BR]]
    ''A Course of Mathematics in Three Volumes Composed for the Use of
-   the Royal Military Academy'', Vol. 3 (London, 1811), p 115 (early use
-   of ''geodesic line'' in English).[[BR]]
+   the Royal Military Academy'', Vol. 3 (London, 1811), p 115.[[BR]]
    https://books.google.com/books?id=BtM2AAAAMAAJ&pg=PA115 [[BR]]
+   Early use of ''geodesic line'' in English:
      A line traced in the manner we have now been describing, or deduced from
      trigonometrical measures, by the means we have indicated, is called
      a ''geodetic'' or ''geodesic line:'' it has the property of being
@@ -1028,9 +1036,12 @@
    https://books.google.com/books?id=7YNNAAAAYAAJ&pg=238 (PDF zvermess-V13.pdf)
  * W. Jordan,[[BR]]
    ''Handbuch der Vermessungskunde [Handbook of Surveying]'',
-   Vol. 3 (4th edition, Metzler, Stuggart, 1896), Chaps. 6 & 9.[[BR]]
+   Vol. 3 (4th edition, Metzler, Stuggart, 1896), Chaps. 6--10.[[BR]]
    https://books.google.com/books?id=4KgRAAAAYAAJ&pg=PA361 (PDF jordan4-V3.pdf)
-   [[BR]] https://books.google.com/books?id=4KgRAAAAYAAJ&pg=PA518
+   [[BR]]English translation (of 8th edition, 1941):
+   ''Jordan's Handbook of Geodesy'', by Martha W. Carta (Army Map
+   Service, 1962), Vol. 3, Part 2, Chaps. 1--5.[[BR]]
+   https://www.worldcat.org/oclc/34429043
  * J. H. L. Krüger,[[BR]]
    ''Die geodätische Linie des Sphäroids und Untersuchung darüber, wann
    dieselbe aufhört, kürzeste Linie zu sein [The geodesic line on a
