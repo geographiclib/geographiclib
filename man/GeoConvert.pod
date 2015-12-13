@@ -88,9 +88,9 @@ output MGRS.
 
 =item B<-c>
 
-output meridian convergence and scale for the corresponding UTM or
-UPS projection.  Convergence is the bearing of grid north given as
-degrees clockwise from true north.
+output meridian convergence and scale for the corresponding UTM or UPS
+projection.  The meridian convergence is the bearing of grid north given
+as degrees clockwise from true north.
 
 =item B<-z>
 

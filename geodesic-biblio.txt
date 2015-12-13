@@ -1039,9 +1039,10 @@
    Vol. 3 (4th edition, Metzler, Stuggart, 1896), Chaps. 6--10.[[BR]]
    https://books.google.com/books?id=4KgRAAAAYAAJ&pg=PA361 (PDF jordan4-V3.pdf)
    [[BR]]English translation (of 8th edition, 1941):
-   ''Jordan's Handbook of Geodesy'', by Martha W. Carta (Army Map
-   Service, 1962), Vol. 3, Part 2, Chaps. 1--5.[[BR]]
-   https://www.worldcat.org/oclc/34429043
+   ''Jordan's Handbook of Geodesy'', by M. W. Carta (Army Map
+   Service, 1962), Vol. 3, 2nd half, Chaps. 1--5.[[BR]]
+   https://www.worldcat.org/oclc/34429043 [[BR]]
+   https://dx.doi.org/10.5281/zenodo.35316
  * J. H. L. Krüger,[[BR]]
    ''Die geodätische Linie des Sphäroids und Untersuchung darüber, wann
    dieselbe aufhört, kürzeste Linie zu sein [The geodesic line on a
