@@ -63,7 +63,9 @@
    https://books.google.com/books?id=dA1bAAAAQAAJ [[BR]]
    alt: http://eulerarchive.maa.org/pages/E065.html [[BR]]
    figures: http://eulerarchive.maa.org/docs/originals/E065h
-   pp. 15, 17, 19, 21, 23.
+   pp. 15, 17, 19, 21, 23. [[BR]]
+   German translation: by A. Aycock and A. Diener.[[BR]]
+   http://eulerarchive.maa.org/docs/translations/E065de.pdf
  * L. Euler,[[BR]]
    ''Principes de la trigonométrie sphérique tirés de la méthode des
    plus grands et plus petits [Principles of spherical trigonometry
@@ -89,14 +91,16 @@
    https://books.google.com/books?id=QIIfAAAAYAAJ&pg=PA258 [[BR]]
    figures: https://books.google.com/books?id=QIIfAAAAYAAJ&pg=PA362-IA1 [[BR]]
    alt: http://eulerarchive.maa.org/pages/E215.html [[BR]]
-   Partial English translation: by J. Lodder.[[BR]]
-   http://eulerarchive.maa.org/docs/translations/E333.pdf
+   Draft English translation: by G. Heine.[[BR]]
+   http://eulerarchive.maa.org/docs/translations/E215en.pdf
  * L. Euler,[[BR]]
    ''Recherches sur la courbure des surfaces [The curvature of surfaces]'',
    Mém. de l'Acad. Roy. des Sciences de Berlin '''16''',
    119--143 (1760, publ. 1767).[[BR]]
-   https://books.google.com/books&pg=PA119 [[BR]]
-   figures: http://eulerarchive.maa.org/pages/E333.html
+   https://books.google.com/books?id=IanNh6WO1-AC&pg=PA119 [[BR]]
+   figures: http://eulerarchive.maa.org/pages/E333.html [[BR]]
+   Partial English translation: by J. Lodder.[[BR]]
+   http://eulerarchive.maa.org/docs/translations/E333.pdf
  * J. L. Lagrange,[[BR]]
    ''Nouvelle méthode pour résoudre les équations littérales par le moyen
    des séries [New method for solving explicit equations by means of a
