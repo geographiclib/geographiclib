@@ -303,11 +303,9 @@ namespace GeographicLib {
     }
   }
 
-  Math::real Geoid::height(real lat, real lon, bool gradp,
-                           real& gradn, real& grade) const {
+  Math::real Geoid::height(real lat, real lon) const {
     lat = Math::LatFix(lat);
     if (Math::isnan(lat) || Math::isnan(lon)) {
-      if (gradp) gradn = grade = Math::NaN();
       return Math::NaN();
     }
     lon = Math::AngNormalize(lon);
@@ -370,20 +368,6 @@ namespace GeographicLib {
         b = (1 - fx) * v10 + fx * v11,
         c = (1 - fy) * a + fy * b,
         h = _offset + _scale * c;
-      if (gradp) {
-        real cosphi, sinphi;
-        Math::sincosd(lat, sinphi, cosphi);
-        real n = 1/sqrt(1 - _e2 * Math::sq(sinphi));
-        gradn = ((1 - fx) * (v00 - v10) + fx * (v01 - v11)) *
-          _rlatres / (_degree * _a * (1 - _e2) * n * n * n);
-        grade = (cosphi > _eps ?
-                 ((1 - fy) * (v01 - v00) + fy * (v11 - v10)) /   cosphi :
-                 (sinphi > 0 ? v11 - v10 : v01 - v00) *
-                 _rlatres / _degree ) *
-          _rlonres / (_degree * _a * n);
-        gradn *= _scale;
-        grade *= _scale;
-      }
       if (!_threadsafe) {
         _ix = ix;
         _iy = iy;
@@ -398,22 +382,6 @@ namespace GeographicLib {
         fy * (t[2] + fx * (t[4] + fx * t[7]) +
              fy * (t[5] + fx * t[8] + fy * t[9]));
       h = _offset + _scale * h;
-      if (gradp) {
-        // Avoid 0/0 at the poles by backing off 1/100 of a cell size
-        lat = min(lat,  90 - 1/(100 * _rlatres));
-        lat = max(lat, -90 + 1/(100 * _rlatres));
-        fy = (90 - lat) * _rlatres;
-        fy -= int(fy);
-        real cosphi, sinphi;
-        Math::sincosd(lat, sinphi, cosphi);
-        real n = 1/sqrt(1 - _e2 * Math::sq(sinphi));
-        gradn = t[2] + fx * (t[4] + fx * t[7]) +
-          fy * (2 * t[5] + fx * 2 * t[8] + 3 * fy * t[9]);
-        grade = t[1] + fx * (2 * t[3] + fx * 3 * t[6]) +
-          fy * (t[4] + fx * 2 * t[7] + fy * t[8]);
-        gradn *= - _rlatres / (_degree * _a * (1 - _e2) * n * n * n) * _scale;
-        grade *= _rlonres / (_degree * _a * n * cosphi) * _scale;
-      }
       if (!_threadsafe) {
         _ix = ix;
         _iy = iy;

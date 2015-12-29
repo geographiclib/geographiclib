@@ -7003,6 +7003,36 @@ git repository for GeographicLib</a>.
    - Add sphinx documentation for python package.
    - Add -S and -T options to
      <a href="GeoConvert.1.html">GeoConvert(1)</a>.
+   - INCOMPATIBLE CHANGE: Swap order \e coslon and \e sinlon arguments
+     in CircularEngine class.
+   - INCOMPATIBLE CHANGE: Remove gradient code from GeoidEval.
+   - TODO INCOMPATIBLE CHANGE: Remove reciprocal flattening functions;
+     stop treating flattening &gt; 1 as reciprocal flattening.
+   - TODO INCOMPATIBLE CHANGE: make -w a toggle for all utility programs.
+   - More accurate treatment of inverse geodesic problem when \e lam12
+     is close to 180&deg;.
+   - Changes to GeodesicLine (TODO: GeodesicLineExact) class:
+     - hold distance \e s13 and arc length \e a13 to a reference point
+       3; by default these quantities are NaNs;
+     - GeodesicLine::SetDistance (and GeodesicLine::SetArc) specify the
+       distance (and arc length) to point 3;
+     - GeodesicLine::Distance (and GeodesicLine::Arc) return the
+       distance (and arc length) to point 3;
+     - new methods Geodesic::InverseLine and Geodesic::DirectLine return
+       a GeodesicLine with the reference point 3 defined as point 2 of
+       the corresponding geodesic calculation;
+     - Geodesic::InverseLine allows the specification of an initial
+       azimuth which is slightly west of due south.
+   - Changes to <a href="GeodSolve.1.html">GeodSolve</a> utility:
+     - INCOMPATIBLE CHANGE: the -a option now "toggles" arc mode;
+     - INCOMPATIBLE CHANGE: the -w option now "toggles" longitude first mode;
+     - the -I and -D options now specify geodesic line calculation via
+       the standard inverse or direct geodesic problems;
+     - the -F flag (in conjunction with the -I or -D flags) specify the
+       distances read on standard input are fractions of \e s13 or \e
+       a13.
+   - TODO INCOMPATIBLE CHANGE: remove Matlab wrapper code; remove
+     unsupported Visual Studio project and solution files.
 
  - <a href="http://geographiclib.sourceforge.net/1.45">Version 1.45</a>
    (released 2015-09-30)

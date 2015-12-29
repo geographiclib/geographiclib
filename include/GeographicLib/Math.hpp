@@ -483,7 +483,8 @@ namespace GeographicLib {
     { using std::abs; return abs(x) > 90 ? NaN<T>() : x; }
 
     /**
-     * The exact of two angles reduced to (&minus;180&deg;, 180&deg;]
+     * The exact difference of two angles reduced to
+     * (&minus;180&deg;, 180&deg;].
      *
      * @tparam T the type of the arguments and returned value.
      * @param[in] x the first angle in degrees.
