@@ -222,8 +222,8 @@ namespace GeographicLib {
 
     if (outmask & LONGITUDE) {
       // tan(omg2) = sin(alp0) * tan(sig2)
-      real somg2 = _salp0 * ssig2, comg2 = csig2;  // No need to normalize
-      int E = _salp0 < 0 ? -1 : 1;                 // east-going?
+      real somg2 = _salp0 * ssig2, comg2 = csig2,  // No need to normalize
+        E = Math::copysign(real(1), _salp0);       // east-going?
       // omg12 = omg2 - omg1
       real omg12 = outmask & LONG_UNROLL
         ? E * (sig12
@@ -271,13 +271,6 @@ namespace GeographicLib {
         // alp12 = alp2 - alp1, used in atan2 so no need to normalize
         salp12 = salp2 * _calp1 - calp2 * _salp1;
         calp12 = calp2 * _calp1 + salp2 * _salp1;
-        // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
-        // salp12 = -0 and alp12 = -180.  However this depends on the sign being
-        // attached to 0 correctly.  The following ensures the correct behavior.
-        if (salp12 == 0 && calp12 < 0) {
-          salp12 = tiny_ * _calp1;
-          calp12 = -1;
-        }
       } else {
         // tan(alp) = tan(alp0) * sec(sig)
         // tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)

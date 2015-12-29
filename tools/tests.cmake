@@ -329,6 +329,18 @@ set_tests_properties (GeodSolve59 GeodSolve60
   PROPERTIES PASS_REGULAR_EXPRESSION
   "0\\.0000000000000[34] 179\\.9999999999999[5-7] 18345191\\.17433271[2-6]")
 
+# Check for bug in east-going check in GeodesicLine (needed to check for
+# sign of 0) and sign error in area calculation due to a bogus override
+# of the code for alp12.  Found/fixed on 2015-12-19.
+add_test (NAME GeodSolve61 COMMAND GeodSolve
+  -I 30 -0.000000000000000001 -31 180 -f -u -p 0 --input-string "1e7;2e7")
+if (0)
+  add_test (NAME GeodSolve62 COMMAND GeodSolve
+    -I 30 -0.000000000000000001 -31 180 -f -u -p 0 --input-string "1e7;2e7" -E)
+endif ()
+set_tests_properties (GeodSolve61 PROPERTIES PASS_REGULAR_EXPRESSION
+  "30\\.00000 -0\\.00000 -180\\.00000 -60\\.23169 -0\\.00000 -180\\.00000 10000000 90\\.06544 6363636 -0\\.0012834 0\\.0013749 0[\r\n]+30\\.00000 -0\\.00000 -180\\.00000 -30\\.03547 -180\\.00000 -0\\.00000 20000000 179\\.96459 54342 -1\\.0045592 -0\\.9954339 127516405431022")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")

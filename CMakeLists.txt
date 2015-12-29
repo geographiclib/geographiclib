@@ -278,7 +278,8 @@ int main() {
              std::atanh(0.8) + std::cbrt(8.0) +
              std::fma(1.0, 2.0, 3.0) + std::remquo(100.0, 90.0, &q) +
              std::remainder(100.0, 90.0)) +
-             std::isfinite(4.0) + std::isnan(0.0);
+             std::isfinite(4.0) + std::isnan(0.0) +
+             std::copysign(1.0, -0.0);
 }\n" CXX11_MATH)
 if (CXX11_MATH)
   add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)

@@ -778,6 +778,27 @@ namespace GeographicLib {
     template<typename T> static T tauf(T taup, T es);
 
     /**
+     * Copy the sign.
+     *
+     * @tparam T the type of the argument.
+     * @param[in] x
+     * @param[in] y
+     * @return value with the magnitude of \e x and with the sign of \e y.
+     **********************************************************************/
+    template<typename T> static inline T copysign(T x, T y) {
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::copysign; return copysign(x, y);
+#else
+      using std::abs; using std::atan2;
+      // This doesn't handle the case y = NaN.
+      return abs(x) *
+        (y > 0 ? 1 :
+         (y < 0 ? -1 :
+          (atan2(y, T(-1)) < 0 ? -1 : 1)));
+#endif
+    }
+
+    /**
      * Test for finiteness.
      *
      * @tparam T the type of the argument.
