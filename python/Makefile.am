@@ -24,7 +24,6 @@ DOC_FILES = \
 	$(srcdir)/doc/index.rst \
 	$(srcdir)/doc/interface.rst
 
-
 pythondir=$(libdir)/python/site-packages/$(PACKAGE)
 
 install:

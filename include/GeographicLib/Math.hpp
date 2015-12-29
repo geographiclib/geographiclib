@@ -912,6 +912,9 @@ namespace GeographicLib {
     static inline real fma(real x, real y, real z)
     { return fmaq(__float128(x), __float128(y), __float128(z)); }
 
+    static inline real copysign(real x, real y)
+    { return boost::math::copysign(x, y); }
+
     static inline bool isnan(real x) { return boost::math::isnan(x); }
 
     static inline bool isfinite(real x) { return boost::math::isfinite(x); }

@@ -162,7 +162,7 @@ add_test (NAME GeodSolve13 COMMAND GeodSolve
 set_tests_properties (GeodSolve12 GeodSolve13 PROPERTIES PASS_REGULAR_EXPRESSION
   "120\\.27.* 105\\.15.* 266\\.7")
 
-if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
+if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4) # quadmath bug fixed in boost 1.60?
   # mpfr (nan == 0 is true) and boost-quadmath (nan > 0 is true) have
   # bugs in handling nans, so skip this test.  Problems reported on
   # 2015-03-31, https://svn.boost.org/trac/boost/ticket/11159.  MFPR C++
@@ -311,14 +311,18 @@ set_tests_properties (GeodSolve51 GeodSolve52
 set_tests_properties (GeodSolve53 GeodSolve54
   PROPERTIES PASS_REGULAR_EXPRESSION "0\\.00000 -180\\.00000 20027270")
 
-# Check fix for nan + point on equator or pole not returning all nans in
-# Geodesic::Inverse, found 2015-09-23.
-add_test (NAME GeodSolve55 COMMAND GeodSolve -i --input-string "nan 0 0 90")
-add_test (NAME GeodSolve56 COMMAND GeodSolve -i --input-string "nan 0 0 90" -E)
-add_test (NAME GeodSolve57 COMMAND GeodSolve -i --input-string "nan 0 90 9")
-add_test (NAME GeodSolve58 COMMAND GeodSolve -i --input-string "nan 0 90 9" -E)
-set_tests_properties (GeodSolve55 GeodSolve56 GeodSolve57 GeodSolve58
-  PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
+if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4) # quadmath bug fixed in boost 1.60?
+  # Check fix for nan + point on equator or pole not returning all nans in
+  # Geodesic::Inverse, found 2015-09-23.
+  add_test (NAME GeodSolve55 COMMAND GeodSolve -i --input-string "nan 0 0 90")
+  add_test (NAME GeodSolve56 COMMAND GeodSolve
+    -i --input-string "nan 0 0 90" -E)
+  add_test (NAME GeodSolve57 COMMAND GeodSolve -i --input-string "nan 0 90 9")
+  add_test (NAME GeodSolve58 COMMAND GeodSolve
+    -i --input-string "nan 0 90 9" -E)
+  set_tests_properties (GeodSolve55 GeodSolve56 GeodSolve57 GeodSolve58
+    PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
+endif ()
 
 # Check for points close with longitudes close to 180 deg apart.
 add_test (NAME GeodSolve59 COMMAND GeodSolve
