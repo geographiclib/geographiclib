@@ -4,8 +4,10 @@ GeodSolve -- perform geodesic calculations
 
 =head1 SYNOPSIS
 
-B<GeodSolve> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi1> ] [ B<-a> ]
-[ B<-e> I<a> I<f> ] B<-u> ]
+B<GeodSolve>
+[ B<-i> | B<-l> I<lat1> I<lon1> I<azi1> |
+B<-D> I<lat1> I<lon1> I<azi1> I<s13> | B<-I> I<lat1> I<lon1> I<lat3> I<lon3> ]
+[ B<-a> ] [ B<-e> I<a> I<f> ] [ B<-u> ] [ B<-F> ]
 [ B<-d> | B<-:> ] [ B<-w> ] [ B<-b> ] [ B<-f> ] [ B<-p> I<prec> ] [ B<-E> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
@@ -32,16 +34,18 @@ on standard output.  This is the direct geodesic calculation.
 
 =item 2.
 
-Command line arguments B<-l> I<lat1> I<lon1> I<azi1> specify a geodesic
-line.  B<GeodSolve> then accepts a sequence of I<s12> values (one per
-line) on standard input and prints I<lat2> I<lon2> I<azi2> for each.
-This generates a sequence of points on a single geodesic.
-
-=item 3.
-
 With the B<-i> command line argument, B<GeodSolve> performs the inverse
 geodesic calculation.  It reads lines containing I<lat1> I<lon1> I<lat2>
 I<lon2> and prints the corresponding values of I<azi1> I<azi2> I<s12>.
+
+=item 3.
+
+Command line arguments B<-l> I<lat1> I<lon1> I<azi1> specify a geodesic
+line.  B<GeodSolve> then accepts a sequence of I<s12> values (one per
+line) on standard input and prints I<lat2> I<lon2> I<azi2> for each.
+This generates a sequence of points on a single geodesic.  Command line
+arguments B<-D> and B<-I> work similarly with the geodesic line defined
+in terms of direct or inverse geodesic calculation.
 
 =back
 
@@ -51,19 +55,35 @@ I<lon2> and prints the corresponding values of I<azi1> I<azi2> I<s12>.
 
 =item B<-i>
 
-perform an inverse geodesic calculation (see 3 above).
+perform an inverse geodesic calculation (see 2 above).
 
 =item B<-l>
 
-line mode (see 2 above); generate a sequence of points along the
+line mode (see 3 above); generate a sequence of points along the
 geodesic specified by I<lat1> I<lon1> I<azi1>.  The B<-w> flag can be
 used to swap the default order of the 2 geographic coordinates, provided
 that it appears before B<-l>.
 
+=item B<-D> I<lat1> I<lon1> I<azi1> I<s13>
+
+line mode (see 3 above); generate a sequence of points along the
+geodesic specified by I<lat1> I<lon1> I<azi1> I<s13>.  The B<-w> flag
+can be used to swap the default order of the 2 geographic coordinates,
+provided that it appears before B<-D>.  Similarly the B<-a> can be uses
+to change the interpretation of I<s13> to I<a13>.
+
+=item B<-I> I<lat1> I<lon1> I<lat3> I<lon3>
+
+line mode (see 3 above); generate a sequence of points along the
+geodesic specified by I<lat1> I<lon1> I<lat3> I<lon3>.  The B<-w> flag
+can be used to swap the default order of the 2 geographic coordinates,
+provided that it appears before B<-I>.
+
 =item B<-a>
 
-arc mode; on input I<and> output I<s12> is replaced by I<a12> the arc
-length (in degrees) on the auxiliary sphere.  See L</AUXILIARY SPHERE>.
+toggle the arc mode flag (it starts off); if this flag is on, then on
+input I<and> output I<s12> is replaced by I<a12> the arc length (in
+degrees) on the auxiliary sphere.  See L</AUXILIARY SPHERE>.
 
 =item B<-e>
 
@@ -81,6 +101,14 @@ I<lon2> is "unrolled" so that I<lon2> - I<lon1> indicates how often and
 in what sense the geodesic has encircled the earth.  Use the B<-f>
 option, to get both longitudes printed.
 
+=item B<-F>
+
+fractional mode.  This only has any effect with the B<-D> and B<-I>
+options.  In this case, the values read on standard input are
+interpreted as fractional distances to point 3, i.e., I<s12>/I<s13>.  If
+arc mode is in effect, then values are fractional arc length, i.e.,
+I<a12>/I<a13>.
+
 =item B<-d>
 
 output angles as degrees, minutes, seconds instead of decimal degrees.
@@ -92,6 +120,7 @@ delimiters.
 
 =item B<-w>
 
+toggle the longitude first flag (it starts off); if the flag is on, then
 on input and output, longitude precedes latitude (except that, on input,
 this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
 I<W>).

@@ -125,17 +125,41 @@ namespace GeographicLib {
                                  real& lat2, real& lon2, real& azi2,
                                  real& s12, real& m12, real& M12, real& M21,
                                  real& S12) const {
-    return GeodesicLine(*this, lat1, lon1, azi1,
-                        // Automatically supply DISTANCE_IN if necessary
-                        outmask | (arcmode ? NONE : DISTANCE_IN))
+    // Automatically supply DISTANCE_IN if necessary
+    if (!arcmode) outmask |= DISTANCE_IN;
+    return GeodesicLine(*this, lat1, lon1, azi1, outmask)
       .                         // Note the dot!
       GenPosition(arcmode, s12_a12, outmask,
                   lat2, lon2, azi2, s12, m12, M12, M21, S12);
   }
 
+  GeodesicLine Geodesic::GenDirectLine(real lat1, real lon1, real azi1,
+                                       bool arcmode, real s12_a12,
+                                       unsigned caps) const {
+    azi1 = Math::AngNormalize(azi1);
+    real salp1, calp1;
+    // Guard against underflow in salp0.  Also -0 is converted to +0.
+    Math::sincosd(Math::AngRound(azi1), salp1, calp1);
+    // Automatically supply DISTANCE_IN if necessary
+    if (!arcmode) caps |= DISTANCE_IN;
+    return GeodesicLine(*this, lat1, lon1, azi1, salp1, calp1,
+                        caps, arcmode, s12_a12);
+  }
+
+    GeodesicLine Geodesic::DirectLine(real lat1, real lon1, real azi1, real s12,
+                                      unsigned caps) const {
+      return GenDirectLine(lat1, lon1, azi1, false, s12, caps);
+    }
+
+  GeodesicLine Geodesic::ArcDirectLine(real lat1, real lon1, real azi1,
+                                       real a12, unsigned caps) const {
+    return GenDirectLine(lat1, lon1, azi1, true, a12, caps);
+  }
+
   Math::real Geodesic::GenInverse(real lat1, real lon1, real lat2, real lon2,
-                                  unsigned outmask,
-                                  real& s12, real& azi1, real& azi2,
+                                  unsigned outmask, real& s12,
+                                  real& salp1, real& calp1,
+                                  real& salp2, real& calp2,
                                   real& m12, real& M12, real& M21, real& S12)
     const {
     outmask &= OUT_MASK;
@@ -214,8 +238,7 @@ namespace GeographicLib {
       dn1 = sqrt(1 + _ep2 * Math::sq(sbet1)),
       dn2 = sqrt(1 + _ep2 * Math::sq(sbet2));
 
-    // initial values to suppress warning
-    real a12, sig12, calp1, salp1, calp2 = 0, salp2 = 0;
+    real a12, sig12;
     // index zero element of this array is unused
     real Ca[nC_];
 
@@ -262,6 +285,7 @@ namespace GeographicLib {
         meridian = false;
     }
 
+    // somg12 > 1 marks that it needs to be calculated
     real omg12 = 0, somg12 = 2, comg12;
     if (!meridian &&
         sbet1 == 0 &&   // and sbet2 == 0
@@ -458,13 +482,37 @@ namespace GeographicLib {
     salp1 *= swapp * lonsign; calp1 *= swapp * latsign;
     salp2 *= swapp * lonsign; calp2 *= swapp * latsign;
 
+    // Returned value in [0, 180]
+    return a12;
+  }
+
+  Math::real Geodesic::GenInverse(real lat1, real lon1, real lat2, real lon2,
+                                  unsigned outmask,
+                                  real& s12, real& azi1, real& azi2,
+                                  real& m12, real& M12, real& M21, real& S12)
+    const {
+    outmask &= OUT_MASK;
+    real salp1, calp1, salp2, calp2,
+      a12 =  GenInverse(lat1, lon1, lat2, lon2,
+                        outmask, s12, salp1, calp1, salp2, calp2,
+                        m12, M12, M21, S12);
     if (outmask & AZIMUTH) {
       azi1 = Math::atan2d(salp1, calp1);
       azi2 = Math::atan2d(salp2, calp2);
     }
-
-    // Returned value in [0, 180]
     return a12;
+  }
+
+  GeodesicLine Geodesic::InverseLine(real lat1, real lon1, real lat2, real lon2,
+                                     unsigned caps) const {
+    real t, salp1, calp1, salp2, calp2,
+      a12 =  GenInverse(lat1, lon1, lat2, lon2,
+                        0u, t, salp1, calp1, salp2, calp2,
+                        t, t, t, t),
+      azi1 = Math::atan2d(salp1, calp1);
+    // Ensure that a12 can be converted to a distance
+    if (caps & (OUT_MASK & DISTANCE_IN)) caps |= DISTANCE;
+    return GeodesicLine(*this, lat1, lon1, azi1, salp1, calp1, caps, true, a12);
   }
 
   void Geodesic::Lengths(real eps, real sig12,
@@ -821,7 +869,7 @@ namespace GeographicLib {
     C3f(eps, Ca);
     B312 = (SinCosSeries(true, ssig2, csig2, Ca, nC3_-1) -
             SinCosSeries(true, ssig1, csig1, Ca, nC3_-1));
-    lam12 = eta -_f * A3f(eps) * salp0 * (sig12 + B312);
+    lam12 = eta - _f * A3f(eps) * salp0 * (sig12 + B312);
 
     if (diffp) {
       if (calp2 == 0)
