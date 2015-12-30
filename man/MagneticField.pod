@@ -83,7 +83,8 @@ toggle whether to report the rates of change of the field.
 
 =item B<-w>
 
-on input and output, longitude precedes latitude (except that on input
+toggle the longitude first flag (it starts off); if the flag is on, then
+on input and output, longitude precedes latitude (except that, on input,
 this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
 I<W>).
 

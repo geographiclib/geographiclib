@@ -1395,14 +1395,6 @@ These functions are <b>DEPRECATED</b>.  Here is a function listing
     - geocentricreverse      - Wrapper for geocent_inv
     - localcartesianforward  - Wrapper for loccart_fwd
     - localcartesianreverse  - Wrapper for loccart_inv
-  - Deprecated
-    - geographiclibinterface - Compile interface code (DEPRECATED)
-  .
-The last routine can be used to compile the obsolete interface code
-(which is still provided as C++ code in the same directory).  Doing this
-will switch MATLAB from using the native MATLAB routines to the compiled
-interface.  However, the native code is easier to deploy and is about as
-fast; so the compiled interface will be removed at some point in 2016.
 
 \section maxima Maxima routines
 
@@ -7006,9 +6998,16 @@ git repository for GeographicLib</a>.
    - INCOMPATIBLE CHANGE: Swap order \e coslon and \e sinlon arguments
      in CircularEngine class.
    - INCOMPATIBLE CHANGE: Remove gradient code from GeoidEval.
-   - TODO INCOMPATIBLE CHANGE: Remove reciprocal flattening functions;
+   - INCOMPATIBLE CHANGE: Remove deprecated functions and constants
+     Constants::WGS84_r, DMS::Decode(string), DMS::DecodeFraction,
+     EllipticFunction:m, EllipticFunction:m1, Math::extradigits,
+     Math::AngNormalize2, PolygonArea::TestCompute, the LONG_NOWRAP
+     alias for LONG_UNROLL in Geodesic, Rhumb and related classes, ,the
+     full/schmidt aliases for FULL/SCHMIDT in SphericalEngine and
+     related classes.
+   - INCOMPATIBLE CHANGE: Remove reciprocal flattening functions;
      stop treating flattening &gt; 1 as reciprocal flattening.
-   - TODO INCOMPATIBLE CHANGE: make -w a toggle for all utility programs.
+   - INCOMPATIBLE CHANGE: make -w a toggle for all utility programs.
    - More accurate treatment of inverse geodesic problem when \e lam12
      is close to 180&deg;.
    - Changes to GeodesicLine (TODO: GeodesicLineExact) class:
@@ -7031,8 +7030,8 @@ git repository for GeographicLib</a>.
      - the -F flag (in conjunction with the -I or -D flags) specify the
        distances read on standard input are fractions of \e s13 or \e
        a13.
-   - TODO INCOMPATIBLE CHANGE: remove Matlab wrapper code; remove
-     unsupported Visual Studio project and solution files.
+   - INCOMPATIBLE CHANGE: remove Matlab wrapper code; remove
+     deprecated Visual Studio 2005 project and solution files.
 
  - <a href="http://geographiclib.sourceforge.net/1.45">Version 1.45</a>
    (released 2015-09-30)

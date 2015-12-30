@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
       else if (arg == "--haetomsl")
         heightmult = Geoid::ELLIPSOIDTOGEOID;
       else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-z") {
         if (++m == argc) return usage(1, true);
         std::string zone = argv[m];

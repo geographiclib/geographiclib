@@ -190,20 +190,6 @@ namespace GeographicLib {
         digits10() - std::numeric_limits<double>::digits10 : 0;
     }
 
-#if GEOGRAPHICLIB_PRECISION <= 3
-    /**
-     * Number of additional decimal digits of precision of real relative to
-     * double (0 for float).
-     *
-     * <b>DEPRECATED</b>: use extra_digits() instead
-     **********************************************************************/
-    static const int extradigits =
-      std::numeric_limits<real>::digits10 >
-      std::numeric_limits<double>::digits10 ?
-      std::numeric_limits<real>::digits10 -
-      std::numeric_limits<double>::digits10 : 0;
-#endif
-
     /**
      * true if the machine is big-endian.
      **********************************************************************/
@@ -458,18 +444,6 @@ namespace GeographicLib {
       return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
 #endif
     }
-
-    /**
-     * Normalize an arbitrary angle.
-     *
-     * @tparam T the type of the argument and returned value.
-     * @param[in] x the angle in degrees.
-     * @return the angle reduced to the range [&minus;180&deg;, 180&deg;).
-     *
-     * <b>DEPRECATED</b>: use AngNormalize instead.
-     **********************************************************************/
-    template<typename T> static inline T AngNormalize2(T x)
-    { return AngNormalize<T>(x); }
 
     /**
      * Normalize a latitude.

@@ -75,6 +75,7 @@ before B<-c>.  See L</CACHE>.
 
 =item B<-w>
 
+toggle the longitude first flag (it starts off); if the flag is on, then
 when reading geographic coordinates, longitude precedes latitude (this
 can be overridden by a hemisphere designator, I<N>, I<S>, I<E>, I<W>).
 

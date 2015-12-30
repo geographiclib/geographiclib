@@ -173,9 +173,6 @@ namespace GeographicLib {
        * @hideinitializer
        **********************************************************************/
       LONG_UNROLL   = Geodesic::LONG_UNROLL,
-      /// \cond SKIP
-      LONG_NOWRAP   = LONG_UNROLL,
-      /// \endcond
       /**
        * All capabilities, calculate everything.  (LONG_UNROLL is not
        * included in this mask.)
@@ -650,15 +647,6 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const
     { return Init() ? _f : Math::NaN(); }
-
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the ellipsoid.
-     **********************************************************************/
-    Math::real InverseFlattening() const
-    { return Init() ? 1/_f : Math::NaN(); }
-    /// \endcond
 
     /**
      * @return \e caps the computational capabilities that this object was

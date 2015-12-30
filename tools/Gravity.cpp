@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
           return 1;
         }
       } else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {

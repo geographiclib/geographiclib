@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-r")
         rate = !rate;
       else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {

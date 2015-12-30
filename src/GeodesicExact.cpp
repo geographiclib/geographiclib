@@ -54,7 +54,7 @@ namespace GeographicLib {
     , tolb_(tol0_ * tol2_)      // Check on bisection interval
     , xthresh_(1000 * tol2_)
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
+    , _f(f)
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
     , _ep2(_e2 / Math::sq(_f1)) // e2 / (1 - e2)

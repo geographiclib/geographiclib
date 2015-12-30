@@ -129,14 +129,6 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const { return _f; }
 
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the ellipsoid.
-     **********************************************************************/
-    Math::real InverseFlattening() const { return 1/_f; }
-    /// \endcond
-
     /**
      * The central scale for the projection.  This is the value of \e k0 used
      * in the constructor and is the scale at the pole unless overridden by

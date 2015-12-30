@@ -315,9 +315,6 @@ namespace GeographicLib {
        * @hideinitializer
        **********************************************************************/
       LONG_UNROLL   = 1U<<15,
-      /// \cond SKIP
-      LONG_NOWRAP   = LONG_UNROLL,
-      /// \endcond
       /**
        * All capabilities, calculate everything.  (LONG_UNROLL is not
        * included in this mask.)
@@ -950,14 +947,6 @@ namespace GeographicLib {
      *   value used in the constructor.
      **********************************************************************/
     Math::real Flattening() const { return _f; }
-
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the ellipsoid.
-     **********************************************************************/
-    Math::real InverseFlattening() const { return 1/_f; }
-    /// \endcond
 
     /**
      * @return total area of ellipsoid in meters<sup>2</sup>.  The area of a

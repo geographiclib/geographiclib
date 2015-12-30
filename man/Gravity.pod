@@ -96,7 +96,8 @@ heights are being computed (the B<-H> option), then I<h> must be zero.
 
 =item B<-w>
 
-on input and output, longitude precedes latitude (except that on input
+toggle the longitude first flag (it starts off); if the flag is on, then
+on input and output, longitude precedes latitude (except that, on input,
 this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
 I<W>).
 

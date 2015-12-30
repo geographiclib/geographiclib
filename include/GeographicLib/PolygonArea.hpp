@@ -228,17 +228,6 @@ namespace GeographicLib {
     unsigned TestEdge(real azi, real s, bool reverse, bool sign,
                       real& perimeter, real& area) const;
 
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * The old name for PolygonAreaT::TestPoint.
-     **********************************************************************/
-    unsigned TestCompute(real lat, real lon, bool reverse, bool sign,
-                         real& perimeter, real& area) const {
-      return TestPoint(lat, lon, reverse, sign, perimeter, area);
-    }
-    /// \endcond
-
     /** \name Inspector functions
      **********************************************************************/
     ///@{

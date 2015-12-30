@@ -440,15 +440,6 @@ namespace GeographicLib {
     Math::real Flattening() const { return Constants::WGS84_f(); }
     ///@}
 
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the WGS84 ellipsoid.
-     **********************************************************************/
-    Math::real InverseFlattening() const
-    { return 1/Constants::WGS84_f(); }
-    /// \endcond
-
     /**
      * @return the default path for geoid data files.
      *
