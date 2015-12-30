@@ -6995,21 +6995,34 @@ git repository for GeographicLib</a>.
    - Add sphinx documentation for python package.
    - Add -S and -T options to
      <a href="GeoConvert.1.html">GeoConvert(1)</a>.
-   - INCOMPATIBLE CHANGE: Swap order \e coslon and \e sinlon arguments
-     in CircularEngine class.
-   - INCOMPATIBLE CHANGE: Remove gradient code from GeoidEval.
-   - INCOMPATIBLE CHANGE: Remove deprecated functions and constants
-     Constants::WGS84_r, DMS::Decode(string), DMS::DecodeFraction,
-     EllipticFunction:m, EllipticFunction:m1, Math::extradigits,
-     Math::AngNormalize2, PolygonArea::TestCompute, the LONG_NOWRAP
-     alias for LONG_UNROLL in Geodesic, Rhumb and related classes, ,the
-     full/schmidt aliases for FULL/SCHMIDT in SphericalEngine and
-     related classes.
-   - INCOMPATIBLE CHANGE: Remove reciprocal flattening functions;
-     stop treating flattening &gt; 1 as reciprocal flattening.
-   - INCOMPATIBLE CHANGE: make -w a toggle for all utility programs.
-   - More accurate treatment of inverse geodesic problem when \e lam12
-     is close to 180&deg;.
+   - Remove deprecated functionality:
+     - remove gradient code from GeoidEval;
+     - remove reciprocal flattening functions, InverseFlattening in many
+       classes and Constants::WGS84_r(); stop treating flattening &gt; 1
+       as the reciprocal flattening in constructors;
+     - remove DMS::Decode(string), DMS::DecodeFraction,
+       EllipticFunction:m, EllipticFunction:m1, Math::extradigits,
+       Math::AngNormalize2, PolygonArea::TestCompute;
+     - stop treating LONG_NOWRAP as an alias for LONG_UNROLL in
+       Geodesic (and related classes) and Rhumb;
+     - stop trearting full/schmidt as aliases for FULL/SCHMIDT in
+       SphericalEngine (and related classes);
+     - remove Matlab C++ wrapper code;
+     - remove deprecated Visual Studio 2005 project and solution files.
+   - TODO, a = better handling of lam12 close to 180, b = new
+     GeodesicLine functionality, c = remove LONG_NOWRAP alias:
+     - C++: abc
+     - C++ exact: ac
+     - C:
+     - Fortran: (b = not applicable)
+     - Java:
+     - Python:
+     - JavaScript:
+     - Matlab: (b = not applicable)
+     - Maxima: ?
+   - Add overloaded version of Math::AngDiff which returns the error in
+     the difference.  This allows a more accurate treatment of inverse
+     geodesic problem when \e lon12 is close to 180&deg;.
    - Changes to GeodesicLine (TODO: GeodesicLineExact) class:
      - hold distance \e s13 and arc length \e a13 to a reference point
        3; by default these quantities are NaNs;
@@ -7030,10 +7043,14 @@ git repository for GeographicLib</a>.
      - the -F flag (in conjunction with the -I or -D flags) specify the
        distances read on standard input are fractions of \e s13 or \e
        a13.
-   - INCOMPATIBLE CHANGE: remove Matlab wrapper code; remove
-     deprecated Visual Studio 2005 project and solution files.
    - TODO: Improve documentation for standalone components to describe
      their relation to tne whole.
+   - Rename -l flag for <a href="GeodSolve.1.html">GeodSolve</a> and
+     <a href="GeodSolve.1.html">RhumbSolve</a> to -L (-l is is retained
+     for backward compatibility but is deprecated).
+   - INCOMPATIBLE CHANGE: make -w a toggle for all utility programs.
+   - INCOMPATIBLE CHANGE: Swap order \e coslon and \e sinlon arguments
+     in CircularEngine class.
 
  - <a href="http://geographiclib.sourceforge.net/1.45">Version 1.45</a>
    (released 2015-09-30)

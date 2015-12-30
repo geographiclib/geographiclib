@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
         arcmode = !arcmode;
       else if (arg == "-F")
         fraction = true;
-      else if (arg == "-l") {
+      else if (arg == "-L" || arg == "-l") { // -l is DEPRECATED
         inverse = false;
         linecalc = LINE;
         if (m + 3 >= argc) return usage(1, true);
@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
           azi1 = DMS::DecodeAzimuth(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {
-          std::cerr << "Error decoding arguments of -l: " << e.what() << "\n";
+          std::cerr << "Error decoding arguments of -L: " << e.what() << "\n";
           return 1;
         }
         m += 3;
@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
           arcmodeline = arcmode;
         }
         catch (const std::exception& e) {
-          std::cerr << "Error decoding arguments of -l: " << e.what() << "\n";
+          std::cerr << "Error decoding arguments of -D: " << e.what() << "\n";
           return 1;
         }
         m += 4;

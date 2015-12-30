@@ -189,9 +189,9 @@ add_test (NAME GeodSolve17 COMMAND GeodSolve
 add_test (NAME GeodSolve18 COMMAND GeodSolve
   -u --input-string "40 -75 -10 2e7" -E)
 add_test (NAME GeodSolve19 COMMAND GeodSolve
-  -u -l 40 -75 -10 --input-string "2e7")
+  -u -L 40 -75 -10 --input-string "2e7")
 add_test (NAME GeodSolve20 COMMAND GeodSolve
-  -u -l 40 -75 -10 --input-string "2e7" -E)
+  -u -L 40 -75 -10 --input-string "2e7" -E)
 set_tests_properties (GeodSolve17 GeodSolve18 GeodSolve19 GeodSolve20
   PROPERTIES PASS_REGULAR_EXPRESSION "-39\\.[0-9]* -254\\.[0-9]* -170\\.[0-9]*")
 add_test (NAME GeodSolve21 COMMAND GeodSolve
@@ -199,9 +199,9 @@ add_test (NAME GeodSolve21 COMMAND GeodSolve
 add_test (NAME GeodSolve22 COMMAND GeodSolve
   --input-string "40 -75 -10 2e7" -E)
 add_test (NAME GeodSolve23 COMMAND GeodSolve
-  -l 40 -75 -10 --input-string "2e7")
+  -L 40 -75 -10 --input-string "2e7")
 add_test (NAME GeodSolve24 COMMAND GeodSolve
-  -l 40 -75 -10 --input-string "2e7" -E)
+  -L 40 -75 -10 --input-string "2e7" -E)
 set_tests_properties (GeodSolve21 GeodSolve22 GeodSolve23 GeodSolve24
   PROPERTIES PASS_REGULAR_EXPRESSION "-39\\.[0-9]* 105\\.[0-9]* -170\\.[0-9]*")
 

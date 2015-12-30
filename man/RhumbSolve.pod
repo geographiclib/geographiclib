@@ -4,7 +4,7 @@ RhumbSolve -- perform rhumb line calculations
 
 =head1 SYNOPSIS
 
-B<RhumbSolve> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi12> ]
+B<RhumbSolve> [ B<-i> | B<-L> I<lat1> I<lon1> I<azi12> ]
 [ B<-e> I<a> I<f> ]
 [ B<-d> | B<-:> ] [ B<-w> ] [ B<-p> I<prec> ] [ B<-s> ]
 [ B<--comment-delimiter> I<commentdelim> ]
@@ -43,18 +43,18 @@ standard output.  This is the direct calculation.
 
 =item 2.
 
-Command line arguments B<-l> I<lat1> I<lon1> I<azi12> specify a rhumb
-line.  B<RhumbSolve> then accepts a sequence of I<s12> values (one per
-line) on standard input and prints I<lat2> I<lon2> I<S12> for each.
-This generates a sequence of points on a rhumb line.
-
-=item 3.
-
 With the B<-i> command line argument, B<RhumbSolve> performs the inverse
 calculation.  It reads lines containing I<lat1> I<lon1> I<lat2> I<lon2>
 and prints the values of I<azi12> I<s12> I<S12> for the corresponding
 shortest rhumb lines.  If the end points are on opposite meridians,
 there are two shortest rhumb lines and the east-going one is chosen.
+
+=item 3.
+
+Command line arguments B<-L> I<lat1> I<lon1> I<azi12> specify a rhumb
+line.  B<RhumbSolve> then accepts a sequence of I<s12> values (one per
+line) on standard input and prints I<lat2> I<lon2> I<S12> for each.
+This generates a sequence of points on a rhumb line.
 
 =back
 
@@ -64,14 +64,14 @@ there are two shortest rhumb lines and the east-going one is chosen.
 
 =item B<-i>
 
-perform an inverse calculation (see 3 above).
+perform an inverse calculation (see 2 above).
 
-=item B<-l>
+=item B<-L>
 
-line mode (see 2 above); generate a sequence of points along the rhumb
+line mode (see 3 above); generate a sequence of points along the rhumb
 line specified by I<lat1> I<lon1> I<azi12>.  The B<-w> flag can be used
 to swap the default order of the 2 geographic coordinates, provided that
-it appears before B<-l>.
+it appears before B<-L>.
 
 =item B<-e>
 
@@ -218,7 +218,7 @@ considerably longer than the geodesic given by GeodSolve(1).
 Waypoints on the route at intervals of 2000km:
 
    for ((i = 0; i <= 20; i += 2)); do echo ${i}000000;done |
-   RhumbSolve -l 40:38:23N 073:46:44W 103:34:58.2 -: -p 0
+   RhumbSolve -L 40:38:23N 073:46:44W 103:34:58.2 -: -p 0
 
    40:38:23.0N 073:46:44.0W
    36:24:30.3N 051:28:26.4W

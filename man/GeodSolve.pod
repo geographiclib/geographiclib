@@ -5,7 +5,7 @@ GeodSolve -- perform geodesic calculations
 =head1 SYNOPSIS
 
 B<GeodSolve>
-[ B<-i> | B<-l> I<lat1> I<lon1> I<azi1> |
+[ B<-i> | B<-L> I<lat1> I<lon1> I<azi1> |
 B<-D> I<lat1> I<lon1> I<azi1> I<s13> | B<-I> I<lat1> I<lon1> I<lat3> I<lon3> ]
 [ B<-a> ] [ B<-e> I<a> I<f> ] [ B<-u> ] [ B<-F> ]
 [ B<-d> | B<-:> ] [ B<-w> ] [ B<-b> ] [ B<-f> ] [ B<-p> I<prec> ] [ B<-E> ]
@@ -40,7 +40,7 @@ I<lon2> and prints the corresponding values of I<azi1> I<azi2> I<s12>.
 
 =item 3.
 
-Command line arguments B<-l> I<lat1> I<lon1> I<azi1> specify a geodesic
+Command line arguments B<-L> I<lat1> I<lon1> I<azi1> specify a geodesic
 line.  B<GeodSolve> then accepts a sequence of I<s12> values (one per
 line) on standard input and prints I<lat2> I<lon2> I<azi2> for each.
 This generates a sequence of points on a single geodesic.  Command line
@@ -57,12 +57,12 @@ in terms of a direct or inverse geodesic calculation, respectively.
 
 perform an inverse geodesic calculation (see 2 above).
 
-=item B<-l>
+=item B<-L>
 
 line mode (see 3 above); generate a sequence of points along the
 geodesic specified by I<lat1> I<lon1> I<azi1>.  The B<-w> flag can be
 used to swap the default order of the 2 geographic coordinates, provided
-that it appears before B<-l>.
+that it appears before B<-L>.
 
 =item B<-D> I<lat1> I<lon1> I<azi1> I<s13>
 
@@ -356,7 +356,7 @@ Route from JFK Airport to Singapore Changi Airport:
 Waypoints on the route at intervals of 2000km:
 
    for ((i = 0; i <= 16; i += 2)); do echo ${i}000000;done |
-   GeodSolve -l 40:38:23N 073:46:44W 003:18:29.9 -: -p 0
+   GeodSolve -L 40:38:23N 073:46:44W 003:18:29.9 -: -p 0
 
    40:38:23.0N 073:46:44.0W 003:18:29.9
    58:34:45.1N 071:49:36.7W 004:48:48.8
