@@ -7013,13 +7013,13 @@ git repository for GeographicLib</a>.
      GeodesicLine functionality, c = remove LONG_NOWRAP alias:
      - C++: abc
      - C++ exact: ac
-     - C:
-     - Fortran: (b = not applicable)
-     - Java:
-     - Python:
-     - JavaScript:
-     - Matlab: (b = not applicable)
-     - Maxima: ?
+     - C: c
+     - Fortran: (bc = not applicable)
+     - Java: c
+     - Python: c
+     - JavaScript: (c = not necessary)
+     - Matlab: (bc = not applicable)
+     - Maxima: (bc = not necessary)
    - Add overloaded version of Math::AngDiff which returns the error in
      the difference.  This allows a more accurate treatment of inverse
      geodesic problem when \e lon12 is close to 180&deg;.

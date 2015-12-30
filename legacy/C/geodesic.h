@@ -782,10 +782,7 @@ extern "C" {
   enum geod_flags {
     GEOD_NOFLAGS      = 0U,     /**< No flags */
     GEOD_ARCMODE      = 1U<<0,  /**< Position given in terms of arc distance */
-    GEOD_LONG_UNROLL  = 1U<<15, /**< Unroll the longitude */
-    /**< @cond SKIP */
-    GEOD_LONG_NOWRAP  = GEOD_LONG_UNROLL /* For backward compatibility only */
-    /**< @endcond */
+    GEOD_LONG_UNROLL  = 1U<<15  /**< Unroll the longitude */
   };
 
 #if defined(__cplusplus)

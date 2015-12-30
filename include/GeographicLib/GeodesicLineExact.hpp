@@ -119,8 +119,7 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = GeodesicExact::AREA,
       /**
-       * Unroll \e lon2 in the direct calculation.  (This flag used to be
-       * called LONG_NOWRAP.)
+       * Unroll \e lon2 in the direct calculation.
        * @hideinitializer
        **********************************************************************/
       LONG_UNROLL = GeodesicExact::LONG_UNROLL,
