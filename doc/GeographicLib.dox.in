@@ -7032,6 +7032,8 @@ git repository for GeographicLib</a>.
        a13.
    - INCOMPATIBLE CHANGE: remove Matlab wrapper code; remove
      deprecated Visual Studio 2005 project and solution files.
+   - TODO: Improve documentation for standalone components to describe
+     their relation to tne whole.
 
  - <a href="http://geographiclib.sourceforge.net/1.45">Version 1.45</a>
    (released 2015-09-30)
