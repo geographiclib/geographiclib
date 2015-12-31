@@ -146,10 +146,10 @@ namespace GeographicLib {
                         caps, arcmode, s12_a12);
   }
 
-    GeodesicLine Geodesic::DirectLine(real lat1, real lon1, real azi1, real s12,
-                                      unsigned caps) const {
-      return GenDirectLine(lat1, lon1, azi1, false, s12, caps);
-    }
+  GeodesicLine Geodesic::DirectLine(real lat1, real lon1, real azi1, real s12,
+                                    unsigned caps) const {
+    return GenDirectLine(lat1, lon1, azi1, false, s12, caps);
+  }
 
   GeodesicLine Geodesic::ArcDirectLine(real lat1, real lon1, real azi1,
                                        real a12, unsigned caps) const {

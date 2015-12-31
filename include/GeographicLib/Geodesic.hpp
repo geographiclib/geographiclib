@@ -905,7 +905,7 @@ namespace GeographicLib {
 
     /**
      * Define a GeodesicLine in terms of the direct geodesic problem specified
-     * in terms of arc length.
+     * in terms of either distance or arc length.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).

@@ -271,6 +271,13 @@ namespace GeographicLib {
         // alp12 = alp2 - alp1, used in atan2 so no need to normalize
         salp12 = salp2 * _calp1 - calp2 * _salp1;
         calp12 = calp2 * _calp1 + salp2 * _salp1;
+        // We used to include here some patch up code that purported to deal
+        // with nearly meridional geodesics properly.  However, this turned out
+        // to be wrong once _salp1 = -0 was allowed (via
+        // Geodesic::InverseLine).  In fact, the calculation of {s,c}alp12
+        // was already correct (following the IEEE rules for handling signed
+        // zeros).  So the patch up code was unnecessary (as well as
+        // dangerous).
       } else {
         // tan(alp) = tan(alp0) * sec(sig)
         // tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)

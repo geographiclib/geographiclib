@@ -7009,10 +7009,10 @@ git repository for GeographicLib</a>.
        SphericalEngine (and related classes);
      - remove Matlab C++ wrapper code;
      - remove deprecated Visual Studio 2005 project and solution files.
-   - TODO, a = better handling of lam12 close to 180, b = new
-     GeodesicLine functionality, c = remove LONG_NOWRAP alias:
+   - TODO, a = better handling of lam12 close to 180, b = reference
+     point 3 for GeodesicLine, c = remove LONG_NOWRAP alias:
      - C++: abc
-     - C++ exact: ac
+     - C++ exact: abc
      - C: c
      - Fortran: (bc = not applicable)
      - Java: c

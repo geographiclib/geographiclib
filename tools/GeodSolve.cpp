@@ -256,8 +256,16 @@ int main(int argc, char* argv[]) {
     GeodesicLine      ls;
     GeodesicLineExact le;
     if (linecalc) {
+      if (linecalc == LINE) fraction = false;
       if (exact) {
-        le = geode.Line(lat1, lon1, azi1, outmask);
+        le = linecalc == DIRECT ?
+          geode.GenDirectLine(lat1, lon1, azi1, arcmodeline, s12, outmask) :
+          linecalc == INVERSE ?
+          geode.InverseLine(lat1, lon1, lat2, lon2, outmask) :
+          // linecalc == LINE
+          geode.Line(lat1, lon1, azi1, outmask);
+        mult = fraction ? le.GenDistance(arcmode) : 1;
+        if (linecalc == INVERSE) azi1 = le.Azimuth();
       } else {
         ls = linecalc == DIRECT ?
           geods.GenDirectLine(lat1, lon1, azi1, arcmodeline, s12, outmask) :
@@ -265,7 +273,6 @@ int main(int argc, char* argv[]) {
           geods.InverseLine(lat1, lon1, lat2, lon2, outmask) :
           // linecalc == LINE
           geods.Line(lat1, lon1, azi1, outmask);
-        if (linecalc == LINE) fraction = false;
         mult = fraction ? ls.GenDistance(arcmode) : 1;
         if (linecalc == INVERSE) azi1 = ls.Azimuth();
       }

@@ -557,7 +557,7 @@ namespace GeographicLib {
      * @param[in] s13 the distance between point 1 and point 3 (meters); it
      *   can be negative.
      *
-     * GeodesicLine object must have been constructed with \e caps |=
+     * The GeodesicLine object must have been constructed with \e caps |=
      * GeodesicLine::DISTANCE_IN.
      **********************************************************************/
     void SetDistance(real s13);

@@ -44,9 +44,19 @@ namespace GeographicLib {
       _salp1, _calp1, _ssig1, _csig1, _dn1, _stau1, _ctau1,
       _somg1, _comg1, _cchi1,
       _A4, _B41, _E0, _D0, _H0, _E1, _D1, _H1;
+    real _a13, _s13;
     real _C4a[nC4_];            // all the elements of _C4a are used
     EllipticFunction _E;
     unsigned _caps;
+
+    void LineInit(const GeodesicExact& g,
+                  real lat1, real lon1,
+                  real azi1, real salp1, real calp1,
+                  unsigned caps);
+    GeodesicLineExact(const GeodesicExact& g,
+                      real lat1, real lon1,
+                      real azi1, real salp1, real calp1,
+                      unsigned caps, bool arcmode, real s13_a13);
 
     enum captype {
       CAP_NONE = GeodesicExact::CAP_NONE,
@@ -300,7 +310,6 @@ namespace GeographicLib {
                          REDUCEDLENGTH | GEODESICSCALE,
                          lat2, lon2, azi2, t, m12, M12, M21, t);
     }
-
     ///@}
 
     /** \name Position in terms of arc length
@@ -491,8 +500,36 @@ namespace GeographicLib {
                            real& lat2, real& lon2, real& azi2,
                            real& s12, real& m12, real& M12, real& M21,
                            real& S12) const;
-
     ///@}
+
+    /** \name Setting point 3
+     **********************************************************************/
+    ///@{
+
+    /**
+     * @param[in] arcmode boolean flag determining the meaning of the second
+     *   parameter; if arcmode is false, then the GeodesicLineExact object must
+     *   have been constructed with \e caps |= GeodesicLineExact::DISTANCE_IN.
+     * @param[in] s13_a13 if \e arcmode is false, this is the distance between
+     *   point 1 and point 3 (meters); otherwise it is the arc length between
+     *   point 1 and point 3 (degrees); it can be negative.
+     **********************************************************************/
+    void GenSetDistance(bool arcmode, real s13_a13);
+
+    /**
+     * @param[in] s13 the distance between point 1 and point 3 (meters); it
+     *   can be negative.
+     *
+     * The GeodesicLineExact object must have been constructed with \e caps |=
+     * GeodesicLineExact::DISTANCE_IN.
+     **********************************************************************/
+    void SetDistance(real s13);
+
+    /**
+     * @param[in] a13 the arc length between point 1 and point 3 (degrees); it
+     *   can be negative.
+     **********************************************************************/
+    void SetArc(real a13);
 
     /** \name Inspector functions
      **********************************************************************/
@@ -522,15 +559,31 @@ namespace GeographicLib {
     { return Init() ? _azi1 : Math::NaN(); }
 
     /**
+     * The sine and cosine of \e azi1.
+     *
+     * @param[out] sazi1 the sine of \e azi1.
+     * @param[out] cazi1 the cosine of \e azi1.
+     **********************************************************************/
+    void Azimuth(real& sazi1, real& cazi1) const
+    { if (Init()) { sazi1 = _salp1; cazi1 = _calp1; } }
+
+    /**
      * @return \e azi0 the azimuth (degrees) of the geodesic line as it crosses
      *   the equator in a northward direction.
      *
      * The result lies in [&minus;90&deg;, 90&deg;].
      **********************************************************************/
-    Math::real EquatorialAzimuth() const {
-      using std::atan2;
-      return Init() ? Math::atan2d(_salp0, _calp0) : Math::NaN();
-    }
+    Math::real EquatorialAzimuth() const
+    { return Init() ? Math::atan2d(_salp0, _calp0) : Math::NaN(); }
+
+    /**
+     * The sine and cosine of \e azi0.
+     *
+     * @param[out] sazi0 the sine of \e azi0.
+     * @param[out] cazi0 the cosine of \e azi0.
+     **********************************************************************/
+    void EquatorialAzimuth(real& sazi0, real& cazi0) const
+    { if (Init()) { sazi0 = _salp0; cazi0 = _calp0; } }
 
     /**
      * @return \e a1 the arc length (degrees) between the northward equatorial
@@ -565,6 +618,8 @@ namespace GeographicLib {
     unsigned Capabilities() const { return _caps; }
 
     /**
+     * Test what capabilities are available.
+     *
      * @param[in] testcaps a set of bitor'ed GeodesicLineExact::mask values.
      * @return true if the GeodesicLineExact object has all these capabilities.
      **********************************************************************/
@@ -572,6 +627,26 @@ namespace GeographicLib {
       testcaps &= OUT_ALL;
       return (_caps & testcaps) == testcaps;
     }
+
+    /**
+     * The distance or arc length to point 3.
+     *
+     * @param[in] arcmode boolean flag determining the meaning of returned
+     *   value.
+     * @return \e s13 if \e arcmode is false; \e a13 if \e arcmode is true.
+     **********************************************************************/
+    Math::real GenDistance(bool arcmode) const
+    { return Init() ? (arcmode ? _a13 : _s13) : Math::NaN(); }
+
+    /**
+     * @return \e s13, the distance to point 3 (meters).
+     **********************************************************************/
+    Math::real Distance() const { return GenDistance(false); }
+
+    /**
+     * @return \e a13, the arc length to point 3 (degrees).
+     **********************************************************************/
+    Math::real Arc() const { return GenDistance(true); }
     ///@}
 
   };
