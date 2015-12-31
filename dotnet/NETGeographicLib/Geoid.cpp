@@ -93,25 +93,6 @@ double Geoid::Height(double lat, double lon)
 }
 
 //*****************************************************************************
-double Geoid::Height(double lat, double lon,
-    [System::Runtime::InteropServices::Out] double% gradn,
-    [System::Runtime::InteropServices::Out] double% grade)
-{
-    try
-    {
-        double lgradn, lgrade;
-        double out = m_pGeoid->operator()( lat, lon, lgradn, lgrade );
-        gradn = lgradn;
-        grade = lgrade;
-        return out;
-    }
-    catch ( const std::exception& err )
-    {
-        throw gcnew GeographicErr( err.what() );
-    }
-}
-
-//*****************************************************************************
 double Geoid::ConvertHeight(double lat, double lon, double h,
                             ConvertFlag d)
 {

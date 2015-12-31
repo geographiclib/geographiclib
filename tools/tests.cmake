@@ -162,11 +162,12 @@ add_test (NAME GeodSolve13 COMMAND GeodSolve
 set_tests_properties (GeodSolve12 GeodSolve13 PROPERTIES PASS_REGULAR_EXPRESSION
   "120\\.27.* 105\\.15.* 266\\.7")
 
-if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4) # quadmath bug fixed in boost 1.60?
+if (NOT (GEOGRAPHICLIB_PRECISION EQUAL 4 AND Boost_VERSION LESS 106000))
   # mpfr (nan == 0 is true) and boost-quadmath (nan > 0 is true) have
   # bugs in handling nans, so skip this test.  Problems reported on
-  # 2015-03-31, https://svn.boost.org/trac/boost/ticket/11159.  MFPR C++
-  # version 3.6.2 fixes its nan problem.
+  # 2015-03-31, https://svn.boost.org/trac/boost/ticket/11159 (this
+  # might be fixed in Boost 1.60)..  MFPR C++ version 3.6.2 fixes its
+  # nan problem.
   #
   # Check fix for inverse ignoring lon12 = nan
   add_test (NAME GeodSolve14 COMMAND GeodSolve -i --input-string "0 0 1 nan")
@@ -311,7 +312,7 @@ set_tests_properties (GeodSolve51 GeodSolve52
 set_tests_properties (GeodSolve53 GeodSolve54
   PROPERTIES PASS_REGULAR_EXPRESSION "0\\.00000 -180\\.00000 20027270")
 
-if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4) # quadmath bug fixed in boost 1.60?
+if (NOT (GEOGRAPHICLIB_PRECISION EQUAL 4 AND Boost_VERSION LESS 106000))
   # Check fix for nan + point on equator or pole not returning all nans in
   # Geodesic::Inverse, found 2015-09-23.
   add_test (NAME GeodSolve55 COMMAND GeodSolve -i --input-string "nan 0 0 90")

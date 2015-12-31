@@ -7013,6 +7013,7 @@ git repository for GeographicLib</a>.
      point 3 for GeodesicLine, c = remove LONG_NOWRAP alias:
      - C++: abc
      - C++ exact: abc
+     - C#: ac
      - C: c
      - Fortran: (bc = not applicable)
      - Java: c
