@@ -1,4 +1,4 @@
-function d = AngDiff(x, y)
+function [d, e] = AngDiff(x, y)
 %ANGDIFF  Compute angle difference accurately
 %
 %   d = ANGDIFF(x, y) computes y - x, reduces the result to (-180,180] and
@@ -8,5 +8,5 @@ function d = AngDiff(x, y)
   [d, t] = sumx(AngNormalize(x), AngNormalize(-y));
   d = - AngNormalize(d);
   d(d == 180 & t < 0) = -180;
-  d = d - t;
+  [d, e] = sumx(d, -t);
 end

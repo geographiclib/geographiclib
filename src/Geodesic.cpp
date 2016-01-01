@@ -665,14 +665,14 @@ namespace GeographicLib {
 #endif
     bool shortline = cbet12 >= 0 && sbet12 < real(0.5) &&
       cbet2 * lam12 < real(0.5);
-    real omg12 = lam12, somg12, comg12;
+    real somg12, comg12;
     if (shortline) {
       real sbetm2 = Math::sq(sbet1 + sbet2);
       // sin((bet1+bet2)/2)^2
       // =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
       sbetm2 /= sbetm2 + Math::sq(cbet1 + cbet2);
       dnm = sqrt(1 + _ep2 * sbetm2);
-      omg12 /= _f1 * dnm;
+      real omg12 = lam12 / (_f1 * dnm);
       somg12 = sin(omg12); comg12 = cos(omg12);
     } else {
       somg12 = slam12; comg12 = clam12;
@@ -808,7 +808,7 @@ namespace GeographicLib {
                                 real& sig12,
                                 real& ssig1, real& csig1,
                                 real& ssig2, real& csig2,
-                                real& eps,  real& somg12, real& comg12,
+                                real& eps, real& somg12, real& comg12,
                                 bool diffp, real& dlam12,
                                 // Scratch area of the right size
                                 real Ca[]) const {
@@ -859,7 +859,7 @@ namespace GeographicLib {
 
     // omg12 = omg2 - omg1, limit to [0, pi]
     somg12 = max(real(0), comg1 * somg2 - somg1 * comg2);
-    comg12 = comg1 * comg2 + somg1 * somg2;
+    comg12 =              comg1 * comg2 + somg1 * somg2;
     // eta = omg12 - lam120
     real eta = atan2(somg12 * clam120 - comg12 * slam120,
                      comg12 * clam120 + somg12 * slam120);

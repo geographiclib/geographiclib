@@ -677,14 +677,14 @@ namespace GeographicLib {
 #endif
     bool shortline = cbet12 >= 0 && sbet12 < real(0.5) &&
       cbet2 * lam12 < real(0.5);
-    real omg12 = lam12, somg12, comg12;
+    real somg12, comg12;
     if (shortline) {
       real sbetm2 = Math::sq(sbet1 + sbet2);
       // sin((bet1+bet2)/2)^2
       // =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
       sbetm2 /= sbetm2 + Math::sq(cbet1 + cbet2);
       dnm = sqrt(1 + _ep2 * sbetm2);
-      omg12 /= _f1 * dnm;
+      real omg12 = lam12 / (_f1 * dnm);
       somg12 = sin(omg12); comg12 = cos(omg12);
     } else {
       somg12 = slam12; comg12 = clam12;
@@ -876,7 +876,7 @@ namespace GeographicLib {
 
     // omg12 = omg2 - omg1, limit to [0, pi]
     somg12 = max(real(0), comg1 * somg2 - somg1 * comg2);
-    comg12 = comg1 * comg2 + somg1 * somg2;
+    comg12 =              comg1 * comg2 + somg1 * somg2;
     real k2 = Math::sq(calp0) * _ep2;
     E.Reset(-k2, -_ep2, 1 + k2, 1 + _ep2);
     // chi12 = chi2 - chi1, limit to [0, pi]

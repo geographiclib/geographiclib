@@ -24,6 +24,7 @@ function geographiclib_test
   i = GeodSolve28; if i, n=n+1; fprintf('GeodSolve28 fail: %d\n', i); end
   i = GeodSolve33; if i, n=n+1; fprintf('GeodSolve33 fail: %d\n', i); end
   i = GeodSolve55; if i, n=n+1; fprintf('GeodSolve55 fail: %d\n', i); end
+  i = GeodSolve59; if i, n=n+1; fprintf('GeodSolve59 fail: %d\n', i); end
   i = Planimeter0; if i, n=n+1; fprintf('Planimeter0 fail: %d\n', i); end
   i = Planimeter5; if i, n=n+1; fprintf('Planimeter5 fail: %d\n', i); end
   i = Planimeter6; if i, n=n+1; fprintf('Planimeter6 fail: %d\n', i); end
@@ -399,6 +400,15 @@ function n = GeodSolve55
   n = n + assertNaN(azi1);
   n = n + assertNaN(azi2);
   n = n + assertNaN(s12);
+end
+
+function n = GeodSolve59
+% Check for points close with longitudes close to 180 deg apart.
+  n = 0;
+  [s12, azi1, azi2] = geoddistance(5, 0.00000000000001, 10, 180);
+  n = n + assertEquals(azi1, 0.000000000000035, 0.000000000000015);
+  n = n + assertEquals(azi2, 179.99999999999996, 0.000000000000015);
+  n = n + assertEquals(s12, 18345191.174332714, 0.00000025);
 end
 
 function n = Planimeter0
