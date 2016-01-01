@@ -332,6 +332,7 @@ add_test (NAME GeodSolve60 COMMAND GeodSolve
   -i -p 9 --input-string "5 0.00000000000001 10 180" -E)
 set_tests_properties (GeodSolve59 GeodSolve60
   PROPERTIES PASS_REGULAR_EXPRESSION
+  # Correct values: 0.000000000000037 179.999999999999963 18345191.1743327133
   "0\\.0000000000000[34] 179\\.9999999999999[5-7] 18345191\\.17433271[2-6]")
 
 # Check for bug in east-going check in GeodesicLine (needed to check for

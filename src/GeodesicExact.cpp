@@ -181,9 +181,9 @@ namespace GeographicLib {
     real
       lam12 = lon12 * Math::degree(),
       slam12, clam12;
-    lon12s = (180 - lon12) - lon12s;
+    lon12s = Math::AngRound((180 - lon12) - lon12s);
     if (lon12 > 90) {
-      Math::sincosd(Math::AngRound(lon12s), slam12, clam12);
+      Math::sincosd(lon12s, slam12, clam12);
       clam12 = -clam12;
     } else
       Math::sincosd(lon12, slam12, clam12);

@@ -558,9 +558,9 @@
      +    lat1x, lat2x, salp0, calp0, k2, eps,
      +    salp1, calp1, ssig1, csig1, cbet1, sbet1, dbet1, dn1,
      +    salp2, calp2, ssig2, csig2, sbet2, cbet2, dbet2, dn2,
-     +    slam12, clam12, salp12, calp12, omg12, lam12, lon12,
+     +    slam12, clam12, salp12, calp12, omg12, lam12, lon12, lon12s,
      +    salp1a, calp1a, salp1b, calp1b,
-     +    dalp1, sdalp1, cdalp1, nsalp1, alp12, somg12, domg12,
+     +    dalp1, sdalp1, cdalp1, nsalp1, alp12, somg12, comg12, domg12,
      +    sig12, v, dv, dnm, dummy,
      +    A4, B41, B42, s12x, m12x, a12x
 
@@ -608,7 +608,7 @@
 * in [-180, 180] but -180 is only for west-going geodesics.  180 is for
 * east-going and meridional geodesics.
 * If very close to being on the same half-meridian, then make it so.
-      lon12 = AngRnd(AngDif(lon1, lon2))
+      lon12 = AngRnd(AngDif(lon1, lon2, lon12s))
 * Make longitude difference positive.
       if (lon12 .ge. 0) then
         lonsgn = 1
@@ -616,6 +616,16 @@
         lonsgn = -1
       end if
       lon12 = lon12 * lonsgn
+      lon12s = lon12s * lonsgn
+      lam12 = lon12 * degree
+      lon12s = AngRnd((180 - lon12) - lon12s)
+      if (lon12 .gt. 90) then
+        call sncsdx(lon12s, slam12, clam12)
+        clam12 = -clam12
+      else
+        call sncsdx(lon12, slam12, clam12)
+      end if
+
 * If really close to the equator, treat as on equator.
       lat1x = AngRnd(LatFix(lat1))
       lat2x = AngRnd(LatFix(lat2))
@@ -680,9 +690,6 @@
       dn1 = sqrt(1 + ep2 * sbet1**2)
       dn2 = sqrt(1 + ep2 * sbet2**2)
 
-      lam12 = lon12 * degree
-      call sncsdx(lon12, slam12, clam12)
-
 * Suppress bogus warnings about unitialized variables
       a12x = 0
       merid = lat1x .eq. -90 .or. slam12 .eq. 0
@@ -734,9 +741,11 @@
         end if
       end if
 
-* Mimic the way Lambda12 works with calp1 = 0
+      omg12 = 0
+* somg12 > 1 marks that it needs to be calculated
+      somg12 = 2
       if (.not. merid .and. sbet1 .eq. 0 .and.
-     +    (f .le. 0 .or. lam12 .le. pi - f * pi)) then
+     +    (f .le. 0 .or. lon12s .ge. f * 180)) then
 
 * Geodesic runs along equator
         calp1 = 0
@@ -758,7 +767,7 @@
 
 * Figure a starting point for Newton's method
         sig12 = InvSta(sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
-     +      f, A3x, salp1, calp1, salp2, calp2, dnm, Ca)
+     +      slam12, clam12, f, A3x, salp1, calp1, salp2, calp2, dnm, Ca)
 
         if (sig12 .ge. 0) then
 * Short lines (InvSta sets salp2, calp2, dnm)
@@ -795,16 +804,14 @@
 * the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
 * WGS84 and random input: mean = 2.85, sd = 0.60
             v = Lam12f(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-     +          salp1, calp1, f, A3x, C3x, salp2, calp2, sig12,
-     +          ssig1, csig1, ssig2, csig2,
-     +          eps, omg12, numit .lt. maxit1, dv,
-     +          Ca) - lam12
-* 2 * tol0 is approximately 1 ulp for a number in [0, pi].
+     +          salp1, calp1, slam12, clam12, f, A3x, C3x, salp2, calp2,
+     +          sig12, ssig1, csig1, ssig2, csig2,
+     +          eps, somg12, comg12, numit .lt. maxit1, dv, Ca)
 * Reversed test to allow escape with NaNs
             if (tripn) then
               dummy = 8
             else
-              dummy = 2
+              dummy = 1
             end if
             if (tripb .or. .not. (abs(v) .ge. dummy * tol0))
      +          go to 20
@@ -856,7 +863,6 @@
           m12x = m12x * b
           s12x = s12x * b
           a12x = sig12 / degree
-          omg12 = lam12 - omg12
         end if
       end if
 
@@ -889,13 +895,19 @@
           SS12 = 0
         end if
 
-        if (.not. merid .and. omg12 .lt. 0.75d0 * pi
+        if (somg12 .gt. 1) then
+          somg12 = sin(omg12)
+          comg12 = cos(omg12)
+        else
+          call norm2(somg12, comg12)
+        end if
+
+        if (.not. merid .and. comg12 .ge. 0.7071d0
      +      .and. sbet2 - sbet1 .lt. 1.75d0) then
 * Use tan(Gamma/2) = tan(omg12/2)
 * * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
 * with tan(x/2) = sin(x)/(1+cos(x))
-          somg12 = sin(omg12)
-          domg12 = 1 + cos(omg12)
+          domg12 = 1 + comg12
           dbet1 = 1 + cbet1
           dbet2 = 1 + cbet2
           alp12 = 2 * atan2(somg12 * (sbet1 * dbet2 + sbet2 * dbet1),
@@ -1238,15 +1250,15 @@
       end
 
       double precision function InvSta(sbet1, cbet1, dn1,
-     +    sbet2, cbet2, dn2, lam12, f, A3x,
+     +    sbet2, cbet2, dn2, lam12, slam12, clam12, f, A3x,
      +    salp1, calp1, salp2, calp2, dnm,
      +    Ca)
 * Return a starting point for Newton's method in salp1 and calp1
 * (function value is -1).  If Newton's method doesn't need to be used,
 * return also salp2, calp2, and dnm and function value is sig12.
 * input
-      double precision sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
-     +    f, A3x(*)
+      double precision sbet1, cbet1, dn1, sbet2, cbet2, dn2,
+     +    lam12, slam12, clam12, f, A3x(*)
 * output
       double precision salp1, calp1, salp2, calp2, dnm
 * temporary
@@ -1257,7 +1269,7 @@
       double precision f1, e2, ep2, n, etol2, k2, eps, sig12,
      +    sbet12, cbet12, sbt12a, omg12, somg12, comg12, ssig12, csig12,
      +    x, y, lamscl, betscl, cbt12a, bt12a, m12b, m0, dummy,
-     +    k, omg12a, sbetm2
+     +    k, omg12a, sbetm2, lam12x
 
       double precision dblmin, dbleps, pi, degree, tiny,
      +    tol0, tol1, tol2, tolb, xthrsh
@@ -1293,17 +1305,19 @@
       shortp = cbet12 .ge. 0 .and. sbet12 .lt. 0.5d0 .and.
      +    cbet2 * lam12 .lt. 0.5d0
 
-      omg12 = lam12
       if (shortp) then
         sbetm2 = (sbet1 + sbet2)**2
 * sin((bet1+bet2)/2)^2
 *  =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
         sbetm2 = sbetm2 / (sbetm2 + (cbet1 + cbet2)**2)
         dnm = sqrt(1 + ep2 * sbetm2)
-        omg12 = omg12 / (f1 * dnm)
+        omg12 = lam12 / (f1 * dnm)
+        somg12 = sin(omg12)
+        comg12 = cos(omg12)
+      else
+        somg12 = slam12
+        comg12 = clam12
       end if
-      somg12 = sin(omg12)
-      comg12 = cos(omg12)
 
       salp1 = cbet2 * somg12
       if (comg12 .ge. 0) then
@@ -1332,6 +1346,8 @@
 * Nothing to do, zeroth order spherical approximation is OK
         continue
       else
+* lam12 - pi
+        lam12x = atan2(-slam12, -clam12)
 * Scale lam12 and bet2 to x, y coordinate system where antipodal point
 * is at origin and singular point is at y = 0, x = -1.
         if (f .ge. 0) then
@@ -1340,7 +1356,7 @@
           eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
           lamscl = f * cbet1 * A3f(eps, A3x) * pi
           betscl = lamscl * cbet1
-          x = (lam12 - pi) / lamscl
+          x = lam12x / lamscl
           y = sbt12a / betscl
         else
 * f < 0: x = dlat, y = dlong
@@ -1358,7 +1374,7 @@
             betscl = -f * cbet1**2 * pi
           end if
           lamscl = betscl / cbet1
-          y = (lam12 - pi) / lamscl
+          y = lam12x / lamscl
         end if
 
         if (y .gt. -tol1 .and. x .gt. -1 - xthrsh) then
@@ -1437,16 +1453,16 @@
       end
 
       double precision function Lam12f(sbet1, cbet1, dn1,
-     +    sbet2, cbet2, dn2, salp1, calp1, f, A3x, C3x, salp2, calp2,
-     +    sig12, ssig1, csig1, ssig2, csig2, eps, domg12, diffp, dlam12,
-     +    Ca)
+     +    sbet2, cbet2, dn2, salp1, calp1, slm120, clm120, f, A3x, C3x,
+     +    salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
+     +    somg12, comg12, diffp, dlam12, Ca)
 * input
       double precision sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-     +    salp1, calp1, f, A3x(*), C3x(*)
+     +    salp1, calp1, slm120, clm120, f, A3x(*), C3x(*)
       logical diffp
 * output
       double precision salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-     +    eps, domg12
+     +    eps, somg12, comg12
 * optional output
       double precision dlam12
 * temporary
@@ -1458,7 +1474,7 @@
       double precision hypotx, A3f, TrgSum
 
       double precision f1, e2, ep2, salp0, calp0,
-     +    somg1, comg1, somg2, comg2, omg12, lam12, B312, h0, k2, dummy
+     +    somg1, comg1, somg2, comg2, lam12, eta, B312, k2, dummy
 
       double precision dblmin, dbleps, pi, degree, tiny,
      +    tol0, tol1, tol2, tolb, xthrsh
@@ -1525,16 +1541,17 @@
      +    csig1 * csig2 + ssig1 * ssig2)
 
 * omg12 = omg2 - omg1, limit to [0, pi]
-      omg12 = atan2(0d0 + max(0d0, comg1 * somg2 - somg1 * comg2),
-     +    comg1 * comg2 + somg1 * somg2)
+      somg12 = 0d0 + max(0d0, comg1 * somg2 - somg1 * comg2)
+      comg12 =                comg1 * comg2 + somg1 * somg2
+* eta = omg12 - lam120
+      eta = atan2(somg12 * clm120 - comg12 * slm120,
+     +    comg12 * clm120 + somg12 * slm120);
       k2 = calp0**2 * ep2
       eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
       call C3f(eps, C3x, Ca)
       B312 = (TrgSum(.true., ssig2, csig2, Ca, nC3-1) -
      +    TrgSum(.true., ssig1, csig1, Ca, nC3-1))
-      h0 = -f * A3f(eps, A3x)
-      domg12 = salp0 * h0 * (sig12 + B312)
-      lam12 = omg12 + domg12
+      lam12 = eta - f * A3f(eps, A3x) * salp0 * (sig12 + B312)
 
       if (diffp) then
         if (calp2 .eq. 0) then
@@ -1918,20 +1935,22 @@
       return
       end
 
-      double precision function AngDif(x, y)
+      double precision function AngDif(x, y, e)
 * Compute y - x.  x and y must both lie in [-180, 180].  The result is
 * equivalent to computing the difference exactly, reducing it to (-180,
 * 180] and rounding the result.  Note that this prescription allows -180
 * to be returned (e.g., if x is tiny and negative and y = 180).
 * input
       double precision x, y
+* output
+      double precision e
 
       double precision d, t, sumx, AngNm
       d = - AngNm(sumx(AngNm(x), AngNm(-y), t))
       if (d .eq. 180 .and. t .lt. 0) then
         d = -180
       end if
-      AngDif = d - t
+      AngDif = sumx(d, -t, e)
 
       return
       end
@@ -2072,10 +2091,10 @@
 * input
       double precision lon1, lon2
 
-      double precision lon1x, lon2x, lon12, AngNm, AngDif
+      double precision lon1x, lon2x, lon12, AngNm, AngDif, e
       lon1x = AngNm(lon1)
       lon2x = AngNm(lon2)
-      lon12 = AngDif(lon1x, lon2x)
+      lon12 = AngDif(lon1x, lon2x, e)
       trnsit = 0
       if (lon1x .lt. 0 .and. lon2x .ge. 0 .and. lon12 .gt. 0) then
         trnsit = 1

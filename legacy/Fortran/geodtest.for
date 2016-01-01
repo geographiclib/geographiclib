@@ -767,6 +767,27 @@
       return
       end
 
+      integer function tstg59()
+* Check for points close with longitudes close to 180 deg apart.
+      double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
+      double precision a, f
+      integer r, assert, omask
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+      omask = 0
+      r = 0
+      call invers(a, f, 5d0, 0.00000000000001d0, 10d0, 180d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 0.000000000000035d0, 1.5d-14);
+      r = r + assert(azi2, 179.99999999999996d0, 1.5d-14);
+      r = r + assert(s12, 18345191.174332713d0, 2.5d-9);
+      tstg59 = r
+      return
+      end
+
       integer function tstp0()
 * Check fix for pole-encircling bug found 2011-03-16
       double precision lata(4), lona(4)
@@ -912,7 +933,7 @@
       integer tstinv, tstdir, tstarc,
      +    tstg0, tstg1, tstg2, tstg5, tstg6, tstg9, tstg10, tstg11,
      +    tstg12, tstg14, tstg15, tstg17, tstg26, tstg28, tstg33,
-     +    tstg55, tstp0, tstp5, tstp6, tstp12, tstp13
+     +    tstg55, tstg59, tstp0, tstp5, tstp6, tstp12, tstp13
 
       n = 0
       i = tstinv()
@@ -1009,6 +1030,11 @@
       if (i .gt. 0) then
         n = n + 1
         print *, 'tstg55 fail:', i
+      end if
+      i = tstg59()
+      if (i .gt. 0) then
+        n = n + 1
+        print *, 'tstg59 fail:', i
       end if
       i = tstp0()
       if (i .gt. 0) then

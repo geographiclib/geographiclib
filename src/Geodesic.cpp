@@ -174,9 +174,9 @@ namespace GeographicLib {
     real
       lam12 = lon12 * Math::degree(),
       slam12, clam12;
-    lon12s = (180 - lon12) - lon12s;
+    lon12s = Math::AngRound((180 - lon12) - lon12s);
     if (lon12 > 90) {
-      Math::sincosd(Math::AngRound(lon12s), slam12, clam12);
+      Math::sincosd(lon12s, slam12, clam12);
       clam12 = -clam12;
     } else
       Math::sincosd(lon12, slam12, clam12);
@@ -400,7 +400,6 @@ namespace GeographicLib {
         m12x *= _b;
         s12x *= _b;
         a12 = sig12 / Math::degree();
-        omg12 = lam12 - omg12;
       }
     }
 
@@ -442,8 +441,9 @@ namespace GeographicLib {
         Math::norm(somg12, comg12);
 
       if (!meridian &&
-          omg12 < real(0.75) * Math::pi() && // Long difference not too big
-          sbet2 - sbet1 < real(1.75)) {      // Lat difference not too big
+          // omg12 < 3/4 * pi
+          comg12 > -real(0.7071) &&     // Long difference not too big
+          sbet2 - sbet1 < real(1.75)) { // Lat difference not too big
         // Use tan(Gamma/2) = tan(omg12/2)
         // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
         // with tan(x/2) = sin(x)/(1+cos(x))

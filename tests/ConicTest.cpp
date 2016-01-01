@@ -111,8 +111,8 @@ int main(int argc, char* argv[]) {
     } else if (arg == "-e") {
       if (m + 2 >= argc) return usage(1);
       try {
-        a = DMS::Decode(string(argv[m + 1]));
-        f = DMS::DecodeFraction(string(argv[m + 2]));
+        a = Utility::num<real>(string(argv[m + 1]));
+        f = Utility::fract<real>(string(argv[m + 2]));
       }
       catch (const exception& e) {
         cerr << "Error decoding arguments of -e: " << e.what() << "\n";

@@ -102,7 +102,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   lon12 = AngRound(lon12);
   lonsign = 2 * (lon12 >= 0) - 1;
   lon12 = lonsign .* lon12; lon12s = lonsign .* lon12s;
-  lon12s = (180 -lon12) - lon12s;
+  lon12s = AngRound((180 -lon12) - lon12s);
   lam12 = lon12 * degree; slam12 = Z; clam12 = Z;
   l = lon12 > 90;
   [slam12( l), clam12( l)] = sincosdx(lon12s(l)); clam12(l) = -clam12(l);
@@ -255,7 +255,6 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 
       m12(g) = m12(g) * b;
       s12(g) = s12(g) * b;
-      omg12(g) = lam12(g) - omg12(g);
     end
   end
 
@@ -282,7 +281,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
     [somg12, comg12] = norm2(somg12, comg12);
     somg12(l) = sin(omg12(l)); comg12(l) = cos(omg12(l));
 
-    l = ~m & omg12 < 0.75 * pi & sbet2 - sbet1 < 1.75;
+    l = ~m & comg12 > -0.7071 & sbet2 - sbet1 < 1.75;
     alp12 = Z;
     domg12 = 1 + comg12(l);
     dbet1 = 1 + cbet1(l); dbet2 = 1 + cbet2(l);

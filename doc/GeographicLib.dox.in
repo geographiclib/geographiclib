@@ -7011,15 +7011,15 @@ git repository for GeographicLib</a>.
      - remove deprecated Visual Studio 2005 project and solution files.
    - TODO, a = better handling of lam12 close to 180, b = reference
      point 3 for GeodesicLine, c = remove LONG_NOWRAP alias:
-     - C++: abc
-     - C++ exact: abc
+     - DONE: C++: abc
+     - DONE: C++ exact: abc
+     - DONE: Matlab: a (bc = not applicable)
+     - DONE: Fortran: a (bc = not applicable)
      - C#: ac
      - C: c
-     - Fortran: (bc = not applicable)
      - Java: c
      - Python: c
      - JavaScript: (c = not necessary)
-     - Matlab: a (bc = not applicable)
      - Maxima: (c = not applicable)
    - Add overloaded version of Math::AngDiff which returns the error in
      the difference.  This allows a more accurate treatment of inverse

@@ -192,9 +192,7 @@ namespace GeographicLib {
           (Geodesic30<real>::SinCosSeries(true, ssig2, csig2, _C3a, nC3_-1)
            - _B31));
       lon12 = lam12 / Math::degree<real>();
-      // Use Math::AngNormalize2 because longitude might have wrapped multiple
-      // times.
-      lon12 = Math::AngNormalize2(lon12);
+      lon12 = Math::AngNormalize(lon12);
       lon2 = Math::AngNormalize(_lon1 + lon12);
     }
 
