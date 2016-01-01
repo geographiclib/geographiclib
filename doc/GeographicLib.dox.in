@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 201y-mm-dd
+\date 2016-mm-dd
 
 \section abstract Abstract
 
@@ -6983,7 +6983,7 @@ of the
 git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
-   (released 201y-mm-dd)
+   (released 2016-mm-dd)
    - A reminder: because of the JavaScript changes introduced in version
      1.45, you should remove the following installation directories from
      your system:
@@ -7017,7 +7017,7 @@ git repository for GeographicLib</a>.
      - DONE: Fortran: a (bc = not applicable)
      - C#: ac
      - C: ac
-     - Java: c
+     - Java: ac
      - Python: c
      - JavaScript: (c = not necessary)
      - Maxima: (c = not applicable)

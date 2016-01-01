@@ -18,7 +18,7 @@
  *
  * See the comments in geodesic.h for documentation.
  *
- * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  */
@@ -916,8 +916,8 @@ real geod_geninverse(const struct geod_geodesic* g,
 
     if (!meridian &&
         /* omg12 < 3/4 * pi */
-        comg12 > -(real)(0.7071) &&     /* Long difference too big */
-        sbet2 - sbet1 < (real)(1.75)) { /* Lat difference too big */
+        comg12 > -(real)(0.7071) &&     /* Long difference not too big */
+        sbet2 - sbet1 < (real)(1.75)) { /* Lat difference not too big */
       /* Use tan(Gamma/2) = tan(omg12/2)
        * * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
        * with tan(x/2) = sin(x)/(1+cos(x)) */

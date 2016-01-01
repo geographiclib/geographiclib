@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in C
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.45
+\version 1.46
 
 \section abstract-c Abstract
 
@@ -27,13 +27,13 @@ about any C compiler.
 \section download-c Downloading the source
 
 The C library is part of %GeographicLib which available for download at
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.45.tar.gz">
-  GeographicLib-1.45.tar.gz</a>
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.45.zip">
-  GeographicLib-1.45.zip</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.46.tar.gz">
+  GeographicLib-1.46.tar.gz</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.46.zip">
+  GeographicLib-1.46.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
-the source, the C library can be found in GeographicLib-1.45/legacy/C.
+the source, the C library can be found in GeographicLib-1.46/legacy/C.
 The library consists of two files geodesic.c and geodesic.h.
 
 The library is also included as part of
@@ -143,6 +143,11 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
   Geodesics on an ellipsoid</a>.
 
 \section changes-c Change log
+
+ - <a href="http://geographiclib.sourceforge.net/1.46/C">Version 1.46</a>
+   (released 2016-mm-dd)
+   - More accurate inverse solution when longitude difference is close
+     to 180.
 
  - <a href="http://geographiclib.sourceforge.net/1.45/C">Version 1.45</a>
    (released 2015-09-30)

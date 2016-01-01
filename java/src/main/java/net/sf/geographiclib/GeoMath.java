@@ -205,13 +205,13 @@ public class GeoMath {
    * prescription allows &minus;180&deg; to be returned (e.g., if <i>x</i> is
    * tiny and negative and <i>y</i> = 180&deg;).
    **********************************************************************/
-  public static double AngDiff(double x, double y) {
+  public static Pair AngDiff(double x, double y) {
     double d, t;
     {
       Pair r = sum(AngNormalize(x), AngNormalize(-y));
       d = - AngNormalize(r.first); t = r.second;
     }
-    return (d == 180 && t < 0 ? -180 : d) - t;
+    return sum(d == 180 && t < 0 ? -180 : d, -t);
   }
 
   /**
@@ -245,18 +245,18 @@ public class GeoMath {
     return new Pair(sinx, cosx);
   }
 
-    /**
-     * Evaluate the atan2 function with the result in degrees
-     *
-     * @param y
-     * @param x
-     * @return atan2(<i>y</i>, <i>x</i>) in degrees.
-     *
-     * The result is in the range [&minus;180&deg; 180&deg;).  N.B.,
-     * atan2d(&plusmn;0, &minus;1) = &minus;180&deg;; atan2d(+&epsilon;,
-     * &minus;1) = +180&deg;, for &epsilon; positive and tiny;
-     * atan2d(&plusmn;0, 1) = &plusmn;0&deg;.
-     **********************************************************************/
+  /**
+   * Evaluate the atan2 function with the result in degrees
+   *
+   * @param y the sine of the angle
+   * @param x the cosine of the angle
+   * @return atan2(<i>y</i>, <i>x</i>) in degrees.
+   *
+   * The result is in the range [&minus;180&deg; 180&deg;).  N.B.,
+   * atan2d(&plusmn;0, &minus;1) = &minus;180&deg;; atan2d(+&epsilon;,
+   * &minus;1) = +180&deg;, for &epsilon; positive and tiny;
+   * atan2d(&plusmn;0, 1) = &plusmn;0&deg;.
+   **********************************************************************/
   public static double atan2d(double y, double x) {
     // In order to minimize round-off errors, this function rearranges the
     // arguments so that result of atan2 is in the range [-pi/4, pi/4] before

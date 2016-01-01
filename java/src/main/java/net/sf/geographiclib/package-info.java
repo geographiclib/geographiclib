@@ -1,7 +1,7 @@
 /**
  * <h1>Geodesic routines from GeographicLib implemented in Java</h1>
  * @author Charles F. F. Karney (charles@karney.com)
- * @version 1.45
+ * @version 1.46
  *
  * <h2>Abstract</h2>
  * <p>
@@ -19,15 +19,15 @@
  * GeographicLib-Java is part of GeographicLib which available for download at
  * <ul>
  * <li>
- *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.45.tar.gz">
- *   GeographicLib-1.45.tar.gz</a>
+ *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.46.tar.gz">
+ *   GeographicLib-1.46.tar.gz</a>
  * <li>
- *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.45.zip">
- *   GeographicLib-1.45.zip</a>
+ *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.46.zip">
+ *   GeographicLib-1.46.zip</a>
  * </ul>
  * <p>
  * as either a compressed tar file (tar.gz) or a zip file.  After unpacking
- * the source, the Java library can be found in GeographicLib-1.45/java.  (This
+ * the source, the Java library can be found in GeographicLib-1.46/java.  (This
  * library is completely independent from the rest of GeodegraphicLib.)  The
  * library consists of the files in the src/main/java/net/sf/geographiclib
  * subdirectory.
@@ -40,7 +40,7 @@
  *   <dependency>
  *     <groupId>net.sf.geographiclib</groupId>
  *     <artifactId>GeographicLib-Java</artifactId>
- *     <version>1.45</version>
+ *     <version>1.46</version>
  *   </dependency> }</pre>
  * in your {@code pom.xml}.
  *
@@ -105,9 +105,9 @@
  * some additional packages to your local repository.)  Then compile and run
  * Inverse.java with <pre>
  * cd inverse/src/main/java
- * javac -cp .:../../../../target/GeographicLib-Java-1.45.jar Inverse.java
+ * javac -cp .:../../../../target/GeographicLib-Java-1.46.jar Inverse.java
  * echo -30 0 29.5 179.5 |
- *   java -cp .:../../../../target/GeographicLib-Java-1.45.jar Inverse </pre>
+ *   java -cp .:../../../../target/GeographicLib-Java-1.46.jar Inverse </pre>
  *
  * <h3>Using maven to build and run {@code Inverse.java}</h3>
  * The sample code includes a {@code pom.xml} which specifies
@@ -121,7 +121,6 @@
  * echo -30 0 29.5 179.5 | mvn -q exec:java </pre>
  *
  * <h2>Using the library</h2>
- * <p>
  * <ul>
  * <li>
  *   Put <pre>
@@ -165,7 +164,6 @@
  * http://geographiclib.sourceforge.net/html/java/index.html</a>.
  *
  * <h2>External links</h2>
- * <p>
  * <ul>
  * <li>
  *   These algorithms are derived in C. F. F. Karney,
@@ -206,8 +204,16 @@
  * </ul>
  *
  * <h2>Change log</h2>
- * <p>
  * <ul>
+ * <li>
+ *   <a href="http://geographiclib.sourceforge.net/1.46/java">Version 1.46</a>
+ *   (released 2016-mm-dd)
+ * <ul>
+ * <li>
+ *   More accurate inverse solution when longitude difference is close to 180.
+ * <li>
+ *   GeoMath.AngDiff now returns a Pair.
+ * </ul>
  * <li>
  *   <a href="http://geographiclib.sourceforge.net/1.45/java">Version 1.45</a>
  *   (released 2015-09-30)

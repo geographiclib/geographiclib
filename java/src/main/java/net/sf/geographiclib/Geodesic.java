@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.Geodesic class
  *
- * Copyright (c) Charles Karney (2013-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -534,7 +534,11 @@ public class Geodesic {
     // If really close to the equator, treat as on equator.
     lat1 = GeoMath.AngRound(lat1);
     lat2 = GeoMath.AngRound(lat2);
-    double lon12 = GeoMath.AngDiff(lon1, lon2);
+    double lon12, lon12s;
+    {
+        Pair p = GeoMath.AngDiff(lon1, lon2);
+        lon12 = p.first; lon12s = p.second;
+    }
     if ((outmask & GeodesicMask.LONG_UNROLL) != 0) {
       r.lon1 = lon1; r.lon2 = lon1 + lon12;
     } else {
@@ -544,7 +548,15 @@ public class Geodesic {
     lon12 = GeoMath.AngRound(lon12);
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
-    lon12 *= lonsign;
+    lon12 *= lonsign; lon12s *= lonsign;
+    lon12s = GeoMath.AngRound((180 - lon12) - lon12s);
+    double
+      lam12 = Math.toRadians(lon12), slam12, clam12;
+    {
+      Pair p = GeoMath.sincosd(lon12 > 90 ? lon12s : lon12);
+      slam12 = p.first; clam12 = (lon12 > 90 ? -1 : 1) * p.second;
+    }
+
     // Swap points so that point with higher (abs) latitude is point 1
     // If one latitude is a nan, then it becomes lat1.
     int swapp = Math.abs(lat1) < Math.abs(lat2) ? -1 : 1;
@@ -602,10 +614,6 @@ public class Geodesic {
       dn1 = Math.sqrt(1 + _ep2 * GeoMath.sq(sbet1)),
       dn2 = Math.sqrt(1 + _ep2 * GeoMath.sq(sbet2));
 
-    double
-      lam12 = Math.toRadians(lon12), slam12, clam12;
-    { Pair p = GeoMath.sincosd(lon12); slam12 = p.first; clam12 = p.second; }
-
     double a12, sig12, calp1, salp1, calp2, salp2;
     a12 = sig12 = calp1 = salp1 = calp2 = salp2 = Double.NaN;
     // index zero elements of these arrays are unused
@@ -660,11 +668,11 @@ public class Geodesic {
         meridian = false;
     }
 
-    double omg12 = Double.NaN;
+    double omg12 = Double.NaN, somg12 = 2, comg12 = Double.NaN;
     if (!meridian &&
         sbet1 == 0 &&   // and sbet2 == 0
         // Mimic the way Lambda12 works with calp1 = 0
-        (_f <= 0 || lam12 <= Math.PI - _f * Math.PI)) {
+        (_f <= 0 || lon12s >= _f * 180)) {
 
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
@@ -685,7 +693,7 @@ public class Geodesic {
       {
         InverseStartV v =
           InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-                       lam12,
+                       lam12, slam12, clam12,
                        C1a, C2a);
         sig12 = v.sig12;
         salp1 = v.salp1; calp1 = v.calp1;
@@ -726,18 +734,18 @@ public class Geodesic {
           {
             Lambda12V w =
               Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
-                       numit < maxit1_, C1a, C2a, C3a);
-            v = w.lam12 - lam12;
+                       slam12, clam12, numit < maxit1_, C1a, C2a, C3a);
+            v = w.lam12;
             salp2 = w.salp2; calp2 = w.calp2;
             sig12 = w.sig12;
             ssig1 = w.ssig1; csig1 = w.csig1;
             ssig2 = w.ssig2; csig2 = w.csig2;
-            eps = w.eps; omg12 = w.domg12;
+            eps = w.eps; comg12 = w.comg12; somg12 = w.somg12;
             dv = w.dlam12;
           }
           // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
           // Reversed test to allow escape with NaNs
-          if (tripb || !(Math.abs(v) >= (tripn ? 8 : 2) * tol0_)) break;
+          if (tripb || !(Math.abs(v) >= (tripn ? 8 : 1) * tol0_)) break;
           // Update bracketing values
           if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b))
             { salp1b = salp1; calp1b = calp1; }
@@ -796,7 +804,6 @@ public class Geodesic {
         m12x *= _b;
         s12x *= _b;
         a12 = Math.toDegrees(sig12);
-        omg12 = lam12 - omg12;
       }
     }
 
@@ -835,15 +842,21 @@ public class Geodesic {
         // Avoid problems with indeterminate sig1, sig2 on equator
         r.S12 = 0;
 
+      if (somg12 > 1) {
+        somg12 = Math.sin(omg12); comg12 = Math.cos(omg12);
+      } else {
+        Pair p = GeoMath.norm(somg12, comg12);
+        somg12 = p.first; comg12 = p.second;
+      }
+
       if (!meridian &&
-          omg12 < 0.75 * Math.PI && // Long difference too big
-          sbet2 - sbet1 < 1.75) {            // Lat difference too big
+          comg12 > -0.7071 &&     // Long difference not too big
+          sbet2 - sbet1 < 1.75) { // Lat difference not too big
         // Use tan(Gamma/2) = tan(omg12/2)
         // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
         // with tan(x/2) = sin(x)/(1+cos(x))
         double
-          somg12 = Math.sin(omg12), domg12 = 1 + Math.cos(omg12),
-          dbet1 = 1 + cbet1, dbet2 = 1 + cbet2;
+          domg12 = 1 + comg12, dbet1 = 1 + cbet1, dbet2 = 1 + cbet2;
         alp12 = 2 * Math.atan2( somg12 * ( sbet1 * dbet2 + sbet2 * dbet1 ),
                            domg12 * ( sbet1 * sbet2 + dbet1 * dbet2 ) );
       } else {
@@ -1159,7 +1172,7 @@ public class Geodesic {
 
   private InverseStartV InverseStart(double sbet1, double cbet1, double dn1,
                                      double sbet2, double cbet2, double dn2,
-                                     double lam12,
+                                     double lam12, double slam12, double clam12,
                                      // Scratch areas of the right size
                                      double C1a[], double C2a[]) {
     // Return a starting point for Newton's method in salp1 and calp1 (function
@@ -1176,16 +1189,18 @@ public class Geodesic {
     double sbet12a = sbet2 * cbet1 + cbet2 * sbet1;
     boolean shortline = cbet12 >= 0 && sbet12 < 0.5 &&
       cbet2 * lam12 < 0.5;
-    double omg12 = lam12;
+    double somg12, comg12;
     if (shortline) {
       double sbetm2 = GeoMath.sq(sbet1 + sbet2);
       // sin((bet1+bet2)/2)^2
       // =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
       sbetm2 /= sbetm2 + GeoMath.sq(cbet1 + cbet2);
       w.dnm = Math.sqrt(1 + _ep2 * sbetm2);
-      omg12 /= _f1 * w.dnm;
+      double omg12 = lam12 / (_f1 * w.dnm);
+      somg12 = Math.sin(omg12); comg12 = Math.cos(omg12);
+    } else {
+      somg12 = slam12; comg12 = clam12;
     }
-    double somg12 = Math.sin(omg12), comg12 = Math.cos(omg12);
 
     w.salp1 = cbet2 * somg12;
     w.calp1 = comg12 >= 0 ?
@@ -1217,6 +1232,7 @@ public class Geodesic {
       // 56.320923501171 0 -56.320923501171 179.664747671772880215
       // which otherwise fails with g++ 4.4.4 x86 -O3
       double x;
+      double lam12x = Math.atan2(-slam12, -clam12); // lam12 - pi
       if (_f >= 0) {            // In fact f == 0 does not get here
         // x = dlong, y = dlat
         {
@@ -1227,7 +1243,7 @@ public class Geodesic {
         }
         betscale = lamscale * cbet1;
 
-        x = (lam12 - Math.PI) / lamscale;
+        x = lam12x / lamscale;
         y = sbet12a / betscale;
       } else {                  // _f < 0
         // x = dlat, y = dlong
@@ -1247,7 +1263,7 @@ public class Geodesic {
         betscale = x < -0.01 ? sbet12a / x :
           -_f * GeoMath.sq(cbet1) * Math.PI;
         lamscale = betscale / cbet1;
-        y = (lam12 - Math.PI) / lamscale;
+        y = lam12x / lamscale;
       }
 
       if (y > -tol1_ && x > -1 - xthresh_) {
@@ -1315,16 +1331,17 @@ public class Geodesic {
 
   private class Lambda12V {
     private double lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-      eps, domg12, dlam12;
+      eps, somg12, comg12, dlam12;
     private Lambda12V() {
       lam12 = salp2 = calp2 = sig12 = ssig1 = csig1 = ssig2 = csig2
-        = eps = domg12 = dlam12 = Double.NaN;
+        = eps = somg12 = comg12 = dlam12 = Double.NaN;
     }
   }
 
   private Lambda12V Lambda12(double sbet1, double cbet1, double dn1,
                              double sbet2, double cbet2, double dn2,
                              double salp1, double calp1,
+                             double slam120, double clam120,
                              boolean diffp,
                              // Scratch areas of the right size
                              double C1a[], double C2a[], double C3a[]) {
@@ -1343,7 +1360,7 @@ public class Geodesic {
       salp0 = salp1 * cbet1,
       calp0 = GeoMath.hypot(calp1, salp1 * sbet1); // calp0 > 0
 
-    double somg1, comg1, somg2, comg2, omg12;
+    double somg1, comg1, somg2, comg2;
     // tan(bet1) = tan(sig1) * cos(alp1)
     // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
     w.ssig1 = sbet1; somg1 = salp0 * sbet1;
@@ -1380,17 +1397,18 @@ public class Geodesic {
                   w.csig1 * w.csig2 + w.ssig1 * w.ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
-    omg12 = Math.atan2(Math.max(0.0, comg1 * somg2 - somg1 * comg2),
-                  comg1 * comg2 + somg1 * somg2);
-    double B312, h0;
+    w.somg12 = Math.max(0.0, comg1 * somg2 - somg1 * comg2);
+    w.comg12 =               comg1 * comg2 + somg1 * somg2;
+    // eta = omg12 - lam120
+    double eta = Math.atan2(w.somg12 * clam120 - w.comg12 * slam120,
+                            w.comg12 * clam120 + w.somg12 * slam120);
+    double B312;
     double k2 = GeoMath.sq(calp0) * _ep2;
     w.eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
     C3f(w.eps, C3a);
     B312 = (SinCosSeries(true, w.ssig2, w.csig2, C3a) -
             SinCosSeries(true, w.ssig1, w.csig1, C3a));
-    h0 = -_f * A3f(w.eps);
-    w.domg12 = salp0 * h0 * (w.sig12 + B312);
-    w.lam12 = omg12 + w.domg12;
+    w.lam12 = eta - _f * A3f(w.eps) * salp0 * (w.sig12 + B312);
 
     if (diffp) {
       if (w.calp2 == 0)

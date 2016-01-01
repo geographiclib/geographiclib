@@ -431,6 +431,15 @@ public class GeodesicTest {
   }
 
   @Test
+  public void GeodSolve59() {
+    // Check for points close with longitudes close to 180 deg apart.
+    GeodesicData inv = Geodesic.WGS84.Inverse(5, 0.00000000000001, 10, 180);
+    assertEquals(inv.azi1, 0.000000000000035, 1.5e-14);
+    assertEquals(inv.azi2, 179.99999999999996, 1.5e-14);
+    assertEquals(inv.s12, 18345191.174332713, 4e-9);
+  }
+
+  @Test
   public void Planimeter0() {
     // Check fix for pole-encircling bug found 2011-03-16
     double pa[][] = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};

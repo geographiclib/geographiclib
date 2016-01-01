@@ -113,12 +113,12 @@
 *! restructuring the internals of the Fortran code since this may make
 *! porting fixes from the C++ code more difficult.
 *!
-*! Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and
+*! Copyright (c) Charles Karney (2012-2016) <charles@karney.com> and
 *! licensed under the MIT/X11 License.  For more information, see
 *! http://geographiclib.sourceforge.net/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.45.
+*! <a href="../index.html">GeographicLib</a> 1.46.
 
 *> Solve the direct geodesic problem
 *!
@@ -1042,7 +1042,7 @@
       integer major, minor, patch
 
       major = 1
-      minor = 45
+      minor = 46
       patch = 0
 
       return

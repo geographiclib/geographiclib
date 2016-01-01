@@ -973,6 +973,11 @@
    https://dx.doi.org/10.1002/asna.18790951502 [[BR]]
    https://dx.doi.org/10.1002/asna.18790951602 [[BR]]
    https://dx.doi.org/10.1002/asna.18790951802
+ * T. Craig,[[BR]]
+   ''The motion of a point upon the surface of an ellipsoid'',
+   American J. Math. '''1'''(4), 359--364 (1878).[[BR]]
+   https://dx.doi.org/10.2307/2369380 [[BR]]
+   https://www.jstor.org/stable/2369380
  * M. Sadebeck,[[BR]]
    ''Hilfstafel für die Differenz zwischen dem sphäroidischen und dem
    sphärischen Längenunterschiede zweier Punkte auf der Erdoberfläche

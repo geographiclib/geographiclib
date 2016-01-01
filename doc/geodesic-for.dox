@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in Fortran
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.45
+\version 1.46
 
 \section abstract-for Abstract
 
@@ -25,14 +25,14 @@ compile correctly with just about any Fortran compiler.
 \section download-for Downloading the source
 
 The Fortran library is part of %GeographicLib which available for download at
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.45.tar.gz">
-  GeographicLib-1.45.tar.gz</a>
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.45.zip">
-  GeographicLib-1.45.zip</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.46.tar.gz">
+  GeographicLib-1.46.tar.gz</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.46.zip">
+  GeographicLib-1.46.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the Fortran library can be found in
-GeographicLib-1.45/legacy/Fortran.  The library consists of the file
+GeographicLib-1.46/legacy/Fortran.  The library consists of the file
 geodesic.for.
 
 Licensed under the
@@ -129,6 +129,11 @@ and are therefore in the public domain.
   Geodesics on an ellipsoid</a>.
 
 \section changes-for Change log
+
+ - <a href="http://geographiclib.sourceforge.net/1.46/Fortran">Version 1.46</a>
+   (released 2016-mm-dd)
+   - More accurate inverse solution when longitude difference is close
+     to 180.
 
  - <a href="http://geographiclib.sourceforge.net/1.45/Fortran">Version 1.45</a>
    (released 2015-09-30)

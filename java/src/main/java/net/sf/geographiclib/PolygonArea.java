@@ -72,7 +72,7 @@ public class PolygonArea {
     // Compute lon12 the same way as Geodesic.Inverse.
     lon1 = GeoMath.AngNormalize(lon1);
     lon2 = GeoMath.AngNormalize(lon2);
-    double lon12 = GeoMath.AngDiff(lon1, lon2);
+    double lon12 = GeoMath.AngDiff(lon1, lon2).first;
     int cross =
       lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
       (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
