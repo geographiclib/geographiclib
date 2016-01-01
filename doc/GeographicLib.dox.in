@@ -7016,7 +7016,7 @@ git repository for GeographicLib</a>.
      - DONE: Matlab: a (bc = not applicable)
      - DONE: Fortran: a (bc = not applicable)
      - C#: ac
-     - C: c
+     - C: ac
      - Java: c
      - Python: c
      - JavaScript: (c = not necessary)

@@ -483,6 +483,19 @@ int GeodSolve55() {
   return result;
 }
 
+int GeodSolve59() {
+  /* Check for points close with longitudes close to 180 deg apart. */
+  double azi1, azi2, s12;
+  struct geod_geodesic g;
+  int result = 0;
+  geod_init(&g, wgs84_a, wgs84_f);
+  geod_inverse(&g, 5, 0.00000000000001, 10, 180, &s12, &azi1, &azi2);
+  result += assertEquals(azi1, 0.000000000000035, 1.5e-14);
+  result += assertEquals(azi2, 179.99999999999996, 1.5e-14);
+  result += assertEquals(s12, 18345191.174332713, 2.5e-9);
+  return result;
+}
+
 void planimeter(const struct geod_geodesic* g, double points[][2], int N,
                 double* perimeter, double* area) {
   struct geod_polygon p;
@@ -624,6 +637,7 @@ int main() {
   if ((i = GeodSolve28())) {++n; printf("GeodSolve28 fail: %d\n", i);}
   if ((i = GeodSolve33())) {++n; printf("GeodSolve33 fail: %d\n", i);}
   if ((i = GeodSolve55())) {++n; printf("GeodSolve55 fail: %d\n", i);}
+  if ((i = GeodSolve59())) {++n; printf("GeodSolve59 fail: %d\n", i);}
   if ((i = Planimeter0())) {++n; printf("Planimeter0 fail: %d\n", i);}
   if ((i = Planimeter5())) {++n; printf("Planimeter5 fail: %d\n", i);}
   if ((i = Planimeter6())) {++n; printf("Planimeter6 fail: %d\n", i);}
