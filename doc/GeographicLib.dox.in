@@ -7020,7 +7020,7 @@ git repository for GeographicLib</a>.
      - Java: ac
      - Python: c
      - JavaScript: (c = not necessary)
-     - Maxima: (c = not applicable)
+     - Maxima: a (c = not applicable)
    - Add overloaded version of Math::AngDiff which returns the error in
      the difference.  This allows a more accurate treatment of inverse
      geodesic problem when \e lon12 is close to 180&deg;.
