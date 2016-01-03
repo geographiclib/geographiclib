@@ -440,6 +440,17 @@ public class GeodesicTest {
   }
 
   @Test
+  public void GeodSolve61() {
+    // Make sure small negative azimuths are west-going
+    GeodesicData dir =
+      Geodesic.WGS84.Direct(45, 0, -0.000000000000000003, 1e7,
+                            GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat2, 45.30632, 0.5e-5);
+    assertEquals(dir.lon2, -180, 0.5e-5);
+    assertEquals(dir.azi2, -180, 0.5e-5);
+  }
+
+  @Test
   public void Planimeter0() {
     // Check fix for pole-encircling bug found 2011-03-16
     double pa[][] = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};

@@ -335,14 +335,26 @@ set_tests_properties (GeodSolve59 GeodSolve60
   # Correct values: 0.000000000000037 179.999999999999963 18345191.1743327133
   "0\\.0000000000000[34] 179\\.9999999999999[5-7] 18345191\\.17433271[2-6]")
 
+# Make sure small negative azimuths are west-going
+add_test (NAME GeodSolve61 COMMAND GeodSolve
+  -u -p 0 --input-string "45 0 -0.000000000000000003 1e7")
+add_test (NAME GeodSolve62 COMMAND GeodSolve
+  -u -p 0 -I 45 0 80 -0.000000000000000003 --input-string 1e7)
+add_test (NAME GeodSolve63 COMMAND GeodSolve
+  -u -p 0 --input-string "45 0 -0.000000000000000003 1e7" -E)
+add_test (NAME GeodSolve64 COMMAND GeodSolve
+  -u -p 0 -I 45 0 80 -0.000000000000000003 --input-string 1e7 -E)
+set_tests_properties (GeodSolve61 GeodSolve62 GeodSolve63 GeodSolve64
+  PROPERTIES PASS_REGULAR_EXPRESSION "45\\.30632 -180\\.00000 -180\\.00000")
+
 # Check for bug in east-going check in GeodesicLine (needed to check for
 # sign of 0) and sign error in area calculation due to a bogus override
 # of the code for alp12.  Found/fixed on 2015-12-19.
-add_test (NAME GeodSolve61 COMMAND GeodSolve
+add_test (NAME GeodSolve65 COMMAND GeodSolve
   -I 30 -0.000000000000000001 -31 180 -f -u -p 0 --input-string "1e7;2e7")
-add_test (NAME GeodSolve62 COMMAND GeodSolve
+add_test (NAME GeodSolve66 COMMAND GeodSolve
   -I 30 -0.000000000000000001 -31 180 -f -u -p 0 --input-string "1e7;2e7" -E)
-set_tests_properties (GeodSolve61 GeodSolve62
+set_tests_properties (GeodSolve65 GeodSolve66
   PROPERTIES PASS_REGULAR_EXPRESSION
   "30\\.00000 -0\\.00000 -180\\.00000 -60\\.23169 -0\\.00000 -180\\.00000 10000000 90\\.06544 6363636 -0\\.0012834 0\\.0013749 0[\r\n]+30\\.00000 -0\\.00000 -180\\.00000 -30\\.03547 -180\\.00000 -0\\.00000 20000000 179\\.96459 54342 -1\\.0045592 -0\\.9954339 127516405431022")
 

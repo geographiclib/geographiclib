@@ -7010,17 +7010,19 @@ git repository for GeographicLib</a>.
      - remove Matlab C++ wrapper code;
      - remove deprecated Visual Studio 2005 project and solution files.
    - TODO, a = better handling of lam12 close to 180, b = reference
-     point 3 for GeodesicLine, c = remove LONG_NOWRAP alias:
-     - DONE: C++: abc
-     - DONE: C++ exact: abc
-     - DONE: Matlab: a (bc = not applicable)
-     - DONE: Fortran: a (bc = not applicable)
-     - C#: ac
-     - C: ac
-     - Java: ac
+     point 3 for GeodesicLine, c = remove LONG_NOWRAP alias, d = change
+     treatment of 0 in AngRound + sign of lon12 in geoddistance, e =
+     more accurate computation of lon2 with LONG_UNROLL and inverse:
+     - DONE: C++: abcde
+     - DONE: C++ exact: abcde
+     - DONE: Matlab: ad (bce = not applicable)
+     - DONE: Fortran: ad (bce = not applicable)
+     - C#: acd (e = not applicable)
+     - C: acd (e = not applicable)
+     - Java: acde
      - Python: c
-     - JavaScript: (c = not necessary)
-     - Maxima: a (c = not applicable)
+     - JavaScript: ade (c = not necessary)
+     - Maxima: ad (ce = not applicable)
    - Add overloaded version of Math::AngDiff which returns the error in
      the difference.  This allows a more accurate treatment of inverse
      geodesic problem when \e lon12 is close to 180&deg;.

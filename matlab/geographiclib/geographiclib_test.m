@@ -25,6 +25,7 @@ function geographiclib_test
   i = GeodSolve33; if i, n=n+1; fprintf('GeodSolve33 fail: %d\n', i); end
   i = GeodSolve55; if i, n=n+1; fprintf('GeodSolve55 fail: %d\n', i); end
   i = GeodSolve59; if i, n=n+1; fprintf('GeodSolve59 fail: %d\n', i); end
+  i = GeodSolve61; if i, n=n+1; fprintf('GeodSolve61 fail: %d\n', i); end
   i = Planimeter0; if i, n=n+1; fprintf('Planimeter0 fail: %d\n', i); end
   i = Planimeter5; if i, n=n+1; fprintf('Planimeter5 fail: %d\n', i); end
   i = Planimeter6; if i, n=n+1; fprintf('Planimeter6 fail: %d\n', i); end
@@ -409,6 +410,15 @@ function n = GeodSolve59
   n = n + assertEquals(azi1, 0.000000000000035, 1.5e-14);
   n = n + assertEquals(azi2, 179.99999999999996, 1.5e-14);
   n = n + assertEquals(s12, 18345191.174332713, 2.5e-9);
+end
+
+function n = GeodSolve61
+% Make sure small negative azimuths are west-going
+  n = 0;
+  [lat2, lon2, azi2] = geodreckon(45, 0, 1e7, -0.000000000000000003, 2);
+  n = n + assertEquals(lat2, 45.30632, 0.5e-5);
+  n = n + assertEquals(lon2, -180, 0.5e-5);
+  n = n + assertEquals(azi2, -180, 0.5e-5);
 end
 
 function n = Planimeter0

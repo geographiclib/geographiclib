@@ -408,6 +408,25 @@ describe("GeographicLib", function() {
       assert(isNaN(inv.azi2));
       assert(isNaN(inv.s12));
     });
+
+    it("GeodSolve59", function() {
+      // Check for points close with longitudes close to 180 deg apart.
+      var geod = g.WGS84,
+          inv = geod.Inverse(5, 0.00000000000001, 10, 180);
+      assert.approx(inv.azi1, 0.000000000000035, 1.5e-14);
+      assert.approx(inv.azi2, 179.99999999999996, 1.5e-14);
+      assert.approx(inv.s12, 18345191.174332713, 4e-9);
+    });
+
+    it("GeodSolve61", function() {
+      // Make sure small negative azimuths are west-going
+      var geod = g.WGS84,
+          dir = geod.Direct(45, 0, -0.000000000000000003, 1e7,
+                            g.STANDARD | g.LONG_UNROLL);
+      assert.approx(dir.lat2, 45.30632, 0.5e-5);
+      assert.approx(dir.lon2, -180, 0.5e-5);
+      assert.approx(dir.azi2, -180, 0.5e-5);
+    });
   });
 
   describe("Planimeter", function () {

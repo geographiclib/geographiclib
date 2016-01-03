@@ -215,8 +215,9 @@ AngDiff(x, y) := block([t,d,r:sumx(AngNormalize(x),AngNormalize(-y))],
   sumx(if d = 180b0 and t < 0b0 then -180b0 else d, -t))$
 
 AngRound(x) := block([z:1/16b0, y:abs(x)],
+  if x = 0b0 then return(x),
   y : if y < z then z - (z - y) else y,
-  if x < 0b0 then 0b0-y else y)$
+  if x < 0b0 then -y else y)$
 
 sincosdx(x):=block([r,q:floor(x/90b0 + 0.5),s,c],
   r:(x-q*90b0)*degree,
@@ -570,13 +571,12 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
   in [-180, 180] but -180 is only for west-going geodesics.  180 is for
   east-going and meridional geodesics. */
   lon12 : AngDiff(lon1, lon2), lon12s:lon12[2], lon12:lon12[1],
-  /* If very close to being on the same half-meridian, then make it so. */
-  lon12 : AngRound(lon12),
   /* Make longitude difference positive. */
   lonsign : if lon12 >= 0b0 then 1 else -1,
-  lon12 : lon12 * lonsign, lon12s : lon12s * lonsign,
+  /* If very close to being on the same half-meridian, then make it so. */
+  lon12 : lonsign * AngRound(lon12),
+  lon12s : AngRound((180 - lon12) - lonsign * lon12s),
   lam12 : lon12 * degree,
-  lon12s : AngRound((180 - lon12) - lon12s),
   if lon12 > 90 then block([t:sincosdx(lon12s)], slam12:t[1], clam12:-t[2])
   else block([t:sincosdx(lon12)], slam12:t[1], clam12:t[2]),
   /* If really close to the equator, treat as on equator. */

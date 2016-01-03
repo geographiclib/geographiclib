@@ -99,10 +99,9 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   C3x = C3coeff(n);
 
   [lon12, lon12s] = AngDiff(lon1(:), lon2(:));
-  lon12 = AngRound(lon12);
   lonsign = 2 * (lon12 >= 0) - 1;
-  lon12 = lonsign .* lon12; lon12s = lonsign .* lon12s;
-  lon12s = AngRound((180 -lon12) - lon12s);
+  lon12 = lonsign .* AngRound(lon12);
+  lon12s = AngRound((180 -lon12) - lonsign .* lon12s);
   lam12 = lon12 * degree; slam12 = Z; clam12 = Z;
   l = lon12 > 90;
   [slam12( l), clam12( l)] = sincosdx(lon12s(l)); clam12(l) = -clam12(l);

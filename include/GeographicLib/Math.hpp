@@ -466,7 +466,7 @@ namespace GeographicLib {
      * @param[out] e the error term in degrees.
      * @return \e d, the truncated value of \e y &minus; \e x.
      *
-     * The computes \e z = \e y &minus; \e x exactly, reduced to
+     * This computes \e z = \e y &minus; \e x exactly, reduced to
      * (&minus;180&deg;, 180&deg;]; and then sets \e z = \e d + \e e where \e d
      * is the nearest representable number to \e z and \e e is the truncation
      * error.  If \e d = &minus;180, then \e e &gt; 0; If \e d = 180, then \e e
@@ -518,24 +518,17 @@ namespace GeographicLib {
      * degrees.  (This is about 1000 times more resolution than we get with
      * angles around 90&deg;.)  We use this to avoid having to deal with near
      * singular cases when \e x is non-zero but tiny (e.g.,
-     * 10<sup>&minus;200</sup>).  This also converts -0 to +0.
+     * 10<sup>&minus;200</sup>).  This converts -0 to +0; however tiny negative
+     * numbers get converted to -0.
      **********************************************************************/
     template<typename T> static inline T AngRound(T x) {
       using std::abs;
-      const T z = 1/T(16);
+      static const T z = 1/T(16);
+      if (x == 0) return 0;
       GEOGRAPHICLIB_VOLATILE T y = abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
-#if GEOGRAPHICLIB_PRECISION == 4
-      // With quad precision and x = +/-0, this gives y = -0.  So change test
-      // to x <= 0 here to force +0 to be returned.
-      return x <= 0 ? 0 - y : y;
-#elif GEOGRAPHICLIB_PRECISION == 5
-      // With mpfr, 0 - y is a call to +=(int) which doesn't fix the sign of -0
-      return x < 0 ? T(0) - y : y;
-#else
-      return x < 0 ? 0 - y : y;
-#endif
+      return x < 0 ? -y : y;
     }
 
     /**
@@ -573,10 +566,10 @@ namespace GeographicLib {
       // Possibly could call the gnu extension sincos
       T s = sin(r), c = cos(r);
       switch (unsigned(q) & 3U) {
-      case 0U: sinx =     s; cosx =     c; break;
-      case 1U: sinx =     c; cosx = 0 - s; break;
-      case 2U: sinx = 0 - s; cosx = 0 - c; break;
-      default: sinx = 0 - c; cosx =     s; break; // case 3U
+      case 0U: sinx =        s; cosx =        c; break;
+      case 1U: sinx =        c; cosx = T(0) - s; break;
+      case 2U: sinx = T(0) - s; cosx = T(0) - c; break;
+      default: sinx = T(0) - c; cosx =        s; break; // case 3U
       }
     }
 
@@ -605,7 +598,7 @@ namespace GeographicLib {
       r *= degree();
       unsigned p = unsigned(q);
       r = p & 1U ? cos(r) : sin(r);
-      return p & 2U ? 0 - r : r;
+      return p & 2U ? T(0) - r : r;
     }
 
     /**
@@ -633,7 +626,7 @@ namespace GeographicLib {
       r *= degree();
       unsigned p = unsigned(q + 1);
       r = p & 1U ? cos(r) : sin(r);
-      return p & 2U ? 0 - r : r;
+      return p & 2U ? T(0) - r : r;
     }
 
     /**

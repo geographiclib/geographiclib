@@ -158,13 +158,14 @@ public class GeoMath {
     // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
     // is about 1000 times more resolution than we get with angles around 90
     // degrees.)  We use this to avoid having to deal with near singular
-    // cases when x is non-zero but tiny (e.g., 1.0e-200).  This also converts
-    // -0 to +0.
+    // cases when x is non-zero but tiny (e.g., 1.0e-200).  This converts -0 to
+    // +0; however tiny negative numbers get converted to -0.
     final double z = 1/16.0;
+    if (x == 0) return 0;
     double y = Math.abs(x);
     // The compiler mustn't "simplify" z - (z - y) to y
     y = y < z ? z - (z - y) : y;
-    return x < 0 ? 0 - y : y;
+    return x < 0 ? -y : y;
   }
 
   /**
@@ -192,18 +193,18 @@ public class GeoMath {
   }
 
   /**
-   * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]
+   * The exact difference of two angles reduced to (&minus;180&deg;, 180&deg;].
    * <p>
    * @param x the first angle in degrees.
    * @param y the second angle in degrees.
-   * @return <i>y</i> &minus; <i>x</i>, reduced to the range [&minus;180&deg;,
-   *   180&deg;].
+   * @return Pair(<i>d</i>, <i>e</i>) with <i>d</i> being the rounded
+   *   difference and <i>e</i> being the error.
    * <p>
-   * <i>x</i> and <i>y</i> must both lie in [&minus;180&deg;, 180&deg;].  The
-   * result is equivalent to computing the difference exactly, reducing it to
-   * (&minus;180&deg;, 180&deg;] and rounding the result.  Note that this
-   * prescription allows &minus;180&deg; to be returned (e.g., if <i>x</i> is
-   * tiny and negative and <i>y</i> = 180&deg;).
+   * The computes <i>z</i> = <i>y</i> &minus; <i>x</i> exactly, reduced to
+   * (&minus;180&deg;, 180&deg;]; and then sets <i>z</i> = <i>d</i> + <i>e</i>
+   * where <i>d</i> is the nearest representable number to <i>z</i> and
+   * <i>e</i> is the truncation error.  If <i>d</i> = &minus;180, then <i>e</i>
+   * &gt; 0; If <i>d</i> = 180, then <i>e</i> &le; 0.
    **********************************************************************/
   public static Pair AngDiff(double x, double y) {
     double d, t;

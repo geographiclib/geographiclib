@@ -608,17 +608,16 @@
 * in [-180, 180] but -180 is only for west-going geodesics.  180 is for
 * east-going and meridional geodesics.
 * If very close to being on the same half-meridian, then make it so.
-      lon12 = AngRnd(AngDif(lon1, lon2, lon12s))
+      lon12 = AngDif(lon1, lon2, lon12s)
 * Make longitude difference positive.
       if (lon12 .ge. 0) then
         lonsgn = 1
       else
         lonsgn = -1
       end if
-      lon12 = lon12 * lonsgn
-      lon12s = lon12s * lonsgn
+      lon12 = lonsgn * AngRnd(lon12)
+      lon12s = AngRnd((180 - lon12) - lonsgn * lon12s)
       lam12 = lon12 * degree
-      lon12s = AngRnd((180 - lon12) - lon12s)
       if (lon12 .gt. 90) then
         call sncsdx(lon12s, slam12, clam12)
         clam12 = -clam12
@@ -1939,7 +1938,8 @@
 * Compute y - x.  x and y must both lie in [-180, 180].  The result is
 * equivalent to computing the difference exactly, reducing it to (-180,
 * 180] and rounding the result.  Note that this prescription allows -180
-* to be returned (e.g., if x is tiny and negative and y = 180).
+* to be returned (e.g., if x is tiny and negative and y = 180).  The
+* error in the difference is returned in e
 * input
       double precision x, y
 * output
@@ -1970,7 +1970,8 @@
       y = abs(x)
 * The compiler mustn't "simplify" z - (z - y) to y
       if (y .lt. z) y = z - (z - y)
-      AngRnd = 0 + sign(y, x)
+      AngRnd = sign(y, x)
+      if (x .eq. 0) AngRnd = 0
 
       return
       end
@@ -2155,6 +2156,8 @@
       q = nint(r / 90)
       r = (r - 90 * q) * degree
       s = sin(r)
+* sin(-0) isn't reliably -0, so...
+      if (x .eq. 0) s = x
       c = cos(r)
       q = mod(q + 4, 4)
       if (q .eq. 0) then

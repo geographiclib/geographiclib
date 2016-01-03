@@ -173,15 +173,15 @@ namespace GeographicLib {
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
-    // If very close to being on the same half-meridian, then make it so.
-    real lon12s, lon12 = Math::AngRound(Math::AngDiff(lon1, lon2, lon12s));
+    real lon12s, lon12 = Math::AngDiff(lon1, lon2, lon12s);
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
-    lon12 *= lonsign; lon12s *= lonsign;
+    // If very close to being on the same half-meridian, then make it so.
+    lon12 = lonsign * Math::AngRound(lon12);
+    lon12s = Math::AngRound((180 - lon12) - lonsign * lon12s);
     real
       lam12 = lon12 * Math::degree(),
       slam12, clam12;
-    lon12s = Math::AngRound((180 - lon12) - lon12s);
     if (lon12 > 90) {
       Math::sincosd(lon12s, slam12, clam12);
       clam12 = -clam12;

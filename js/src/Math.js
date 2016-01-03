@@ -198,12 +198,14 @@ GeographicLib.Accumulator = {};
     // reals = 0.7 pm on the earth if x is an angle in degrees.  (This is about
     // 1000 times more resolution than we get with angles around 90 degrees.)
     // We use this to avoid having to deal with near singular cases when x is
-    // non-zero but tiny (e.g., 1.0e-200).  This also converts -0 to +0.
+    // non-zero but tiny (e.g., 1.0e-200).  This converts -0 to +0; however
+    // tiny negative numbers get converted to -0.
+    if (x == 0) return x;
     var z = 1/16,
         y = Math.abs(x);
     // The compiler mustn't "simplify" z - (z - y) to y
     y = y < z ? z - (z - y) : y;
-    return x < 0 ? 0 - y : y;
+    return x < 0 ? -y : y;
   };
 
   /**
@@ -230,19 +232,22 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @summary Difference of two angles reduced to [&minus;180&deg;,
+   * @summary The exact difference of two angles reduced to (&minus;180&deg;,
    *   180&deg;]
    * @param {number} x the first angle in degrees.
    * @param {number} y the second angle in degrees.
-   * @return {number} y &minus; x, reduced to the range [&minus;180&deg;,
-   *   180&deg;].
+   * @return {object} diff the exact difference, y &minus; x.
+   *
+   * This computes z = y &minus; x exactly, reduced to (&minus;180&deg;,
+   * 180&deg;]; and then sets diff.s = d = round(z) and diff.t = e = z &minus;
+   * round(z).  If d = &minus;180, then e &gt; 0; If d = 180, then e &le; 0.
    */
   m.AngDiff = function(x, y) {
     // Compute y - x and reduce to [-180,180] accurately.
     var r = m.sum(m.AngNormalize(x), m.AngNormalize(-y)),
         d = - m.AngNormalize(r.s),
         t = r.t;
-    return (d === 180 && t < 0 ? -180 : d) - t;
+    return m.sum(d === 180 && t < 0 ? -180 : d, -t);
   };
 
   /**

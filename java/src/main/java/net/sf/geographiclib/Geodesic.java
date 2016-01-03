@@ -540,16 +540,15 @@ public class Geodesic {
         lon12 = p.first; lon12s = p.second;
     }
     if ((outmask & GeodesicMask.LONG_UNROLL) != 0) {
-      r.lon1 = lon1; r.lon2 = lon1 + lon12;
+      r.lon1 = lon1; r.lon2 = (lon1 + lon12) + lon12s;
     } else {
       r.lon1 = GeoMath.AngNormalize(lon1); r.lon2 = GeoMath.AngNormalize(lon2);
     }
-    // If very close to being on the same half-meridian, then make it so.
-    lon12 = GeoMath.AngRound(lon12);
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
-    lon12 *= lonsign; lon12s *= lonsign;
-    lon12s = GeoMath.AngRound((180 - lon12) - lon12s);
+    // If very close to being on the same half-meridian, then make it so.
+    lon12 = lonsign * GeoMath.AngRound(lon12);
+    lon12s = GeoMath.AngRound((180 - lon12) - lonsign * lon12s);
     double
       lam12 = Math.toRadians(lon12), slam12, clam12;
     {

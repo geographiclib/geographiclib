@@ -121,6 +121,10 @@ make doc distrib-npm
     cd ../matlab/geographiclib
     octave --no-gui --no-window-system --eval geographiclib_test
 )
+(
+   cd js/geographiclib
+   npm test
+)
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
 mkdir -p $TEMP/js
 cp -p js/*.js js/*.html $TEMP/js/

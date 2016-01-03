@@ -183,10 +183,11 @@ static real AngDiff(real x, real y, real* e) {
 
 static real AngRound(real x) {
   const real z = 1/(real)(16);
+  if (x == 0) return x;
   volatile real y = fabs(x);
   /* The compiler mustn't "simplify" z - (z - y) to y */
   y = y < z ? z - (z - y) : y;
-  return x < 0 ? 0 - y : y;
+  return x < 0 ? -y : y;
 }
 
 static void sincosdx(real x, real* sinx, real* cosx) {
@@ -659,13 +660,13 @@ real geod_geninverse(const struct geod_geodesic* g,
   /* Compute longitude difference (AngDiff does this carefully).  Result is
    * in [-180, 180] but -180 is only for west-going geodesics.  180 is for
    * east-going and meridional geodesics. */
-  /* If very close to being on the same half-meridian, then make it so. */
-  lon12 = AngRound(AngDiff(lon1, lon2, &lon12s));
+  lon12 = AngDiff(lon1, lon2, &lon12s);
   /* Make longitude difference positive. */
   lonsign = lon12 >= 0 ? 1 : -1;
-  lon12 *= lonsign; lon12s *= lonsign;
+  /* If very close to being on the same half-meridian, then make it so. */
+  lon12 = lonsign * AngRound(lon12);
+  lon12s = AngRound((180 - lon12) - lonsign * lon12s);
   lam12 = lon12 * degree;
-  lon12s = AngRound((180 - lon12) - lon12s);
   if (lon12 > 90) {
     sincosdx(lon12s, &slam12, &clam12);
     clam12 = -clam12;

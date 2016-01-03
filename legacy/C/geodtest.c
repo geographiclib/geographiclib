@@ -496,6 +496,21 @@ int GeodSolve59() {
   return result;
 }
 
+int GeodSolve61() {
+  /* Make sure small negative azimuths are west-going */
+  double lat2, lon2, azi2;
+  struct geod_geodesic g;
+  int result = 0;
+  unsigned flags = GEOD_LONG_UNROLL;
+  geod_init(&g, wgs84_a, wgs84_f);
+  geod_gendirect(&g, 45, 0, -0.000000000000000003, flags, 1e7,
+                 &lat2, &lon2, &azi2, 0, 0, 0, 0, 0);
+  result += assertEquals(lat2, 45.30632, 0.5e-5);
+  result += assertEquals(lon2, -180, 0.5e-5);
+  result += assertEquals(azi2, -180, 0.5e-5);
+  return result;
+}
+
 void planimeter(const struct geod_geodesic* g, double points[][2], int N,
                 double* perimeter, double* area) {
   struct geod_polygon p;
@@ -638,6 +653,7 @@ int main() {
   if ((i = GeodSolve33())) {++n; printf("GeodSolve33 fail: %d\n", i);}
   if ((i = GeodSolve55())) {++n; printf("GeodSolve55 fail: %d\n", i);}
   if ((i = GeodSolve59())) {++n; printf("GeodSolve59 fail: %d\n", i);}
+  if ((i = GeodSolve61())) {++n; printf("GeodSolve61 fail: %d\n", i);}
   if ((i = Planimeter0())) {++n; printf("Planimeter0 fail: %d\n", i);}
   if ((i = Planimeter5())) {++n; printf("Planimeter5 fail: %d\n", i);}
   if ((i = Planimeter6())) {++n; printf("Planimeter6 fail: %d\n", i);}
