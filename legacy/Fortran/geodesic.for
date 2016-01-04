@@ -894,7 +894,7 @@
           SS12 = 0
         end if
 
-        if (.not. medid) then
+        if (.not. merid) then
           if (somg12 .gt. 1) then
             somg12 = sin(omg12)
             comg12 = cos(omg12)
