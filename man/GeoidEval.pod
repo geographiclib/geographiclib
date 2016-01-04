@@ -46,12 +46,12 @@ I<h> = I<N> + I<H>, E<nbsp>E<nbsp>I<H> = -I<N> + I<h>.
 
 =over
 
-=item B<-n>
+=item B<-n> I<name>
 
 use geoid I<name> instead of the default C<egm96-5>.  See
 L</GEOIDS>.
 
-=item B<-d>
+=item B<-d> I<dir>
 
 read geoid data from I<dir> instead of the default.  See
 L</GEOIDS>.
@@ -65,7 +65,7 @@ L</INTERPOLATION>.
 
 cache the entire data set in memory.  See L</CACHE>.
 
-=item B<-c>
+=item B<-c> I<south> I<west> I<north> I<east>
 
 cache the data bounded by I<south> I<west> I<north> I<east> in memory.
 The first two arguments specify the SW corner of the cache and the last
@@ -79,7 +79,7 @@ toggle the longitude first flag (it starts off); if the flag is on, then
 when reading geographic coordinates, longitude precedes latitude (this
 can be overridden by a hemisphere designator, I<N>, I<S>, I<E>, I<W>).
 
-=item B<-z>
+=item B<-z> I<zone>
 
 prefix each line of input by I<zone>, e.g., C<38n>.  This should be used
 when the input consists of UTM/UPS eastings and northings.
@@ -104,7 +104,7 @@ input line with the height converted to height above the geoid (MSL).
 print information about the geoid on standard error before processing
 the input.
 
-=item B<--comment-delimiter>
+=item B<--comment-delimiter> I<commentdelim>
 
 set the comment delimiter to I<commentdelim> (e.g., "#" or "//").  If
 set, the input lines will be scanned for this delimiter and, if found,
@@ -124,23 +124,23 @@ print usage, the default geoid path and name, and exit.
 
 print full documentation and exit.
 
-=item B<--input-file>
+=item B<--input-file> I<infile>
 
 read input from the file I<infile> instead of from standard input; a file
 name of "-" stands for standard input.
 
-=item B<--input-string>
+=item B<--input-string> I<instring>
 
 read input from the string I<instring> instead of from standard input.
 All occurrences of the line separator character (default is a semicolon)
 in I<instring> are converted to newlines before the reading begins.
 
-=item B<--line-separator>
+=item B<--line-separator> I<linesep>
 
 set the line separator character to I<linesep>.  By default this is a
 semicolon.
 
-=item B<--output-file>
+=item B<--output-file> I<outfile>
 
 write output to the file I<outfile> instead of to standard output; a
 file name of "-" stands for standard output.

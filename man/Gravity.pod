@@ -38,12 +38,12 @@ reference ellipsoid I<a> = 6378137 m, I<f> = 1/298.257223563, I<omega> =
 
 =over
 
-=item B<-n>
+=item B<-n> I<name>
 
 use gravity field model I<name> instead of the default C<egm96>.  See
 L</MODELS>.
 
-=item B<-d>
+=item B<-d> I<dir>
 
 read gravity models from I<dir> instead of the default.  See
 L</MODELS>.
@@ -87,7 +87,7 @@ compute geoid heights much more quickly by interpolating on a grid of
 precomputed results; however the results from GeoidEval(1) are only
 accurate to a few millimeters.
 
-=item B<-c>
+=item B<-c> I<lat> I<h>
 
 evaluate the field on a circle of latitude given by I<lat> and I<h>
 instead of reading these quantities from the input lines.  In this case,
@@ -101,7 +101,7 @@ on input and output, longitude precedes latitude (except that, on input,
 this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
 I<W>).
 
-=item B<-p>
+=item B<-p> I<prec>
 
 set the output precision to I<prec>.  By default I<prec> is 5 for
 acceleration due to gravity, 3 for the gravity disturbance and anomaly,
@@ -112,7 +112,7 @@ and 4 for the geoid height.
 print information about the gravity model on standard error before
 processing the input.
 
-=item B<--comment-delimiter>
+=item B<--comment-delimiter> I<commentdelim>
 
 set the comment delimiter to I<commentdelim> (e.g., "#" or "//").  If
 set, the input lines will be scanned for this delimiter and, if found,
@@ -132,23 +132,23 @@ print usage, the default gravity path and name, and exit.
 
 print full documentation and exit.
 
-=item B<--input-file>
+=item B<--input-file> I<infile>
 
 read input from the file I<infile> instead of from standard input; a file
 name of "-" stands for standard input.
 
-=item B<--input-string>
+=item B<--input-string> I<instring>
 
 read input from the string I<instring> instead of from standard input.
 All occurrences of the line separator character (default is a semicolon)
 in I<instring> are converted to newlines before the reading begins.
 
-=item B<--line-separator>
+=item B<--line-separator> I<linesep>
 
 set the line separator character to I<linesep>.  By default this is a
 semicolon.
 
-=item B<--output-file>
+=item B<--output-file> I<outfile>
 
 write output to the file I<outfile> instead of to standard output; a
 file name of "-" stands for standard output.

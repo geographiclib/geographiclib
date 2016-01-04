@@ -92,7 +92,7 @@ output meridian convergence and scale for the corresponding UTM or UPS
 projection.  The meridian convergence is the bearing of grid north given
 as degrees clockwise from true north.
 
-=item B<-z>
+=item B<-z> I<zone>
 
 set the zone to I<zone> for output.  Use either 0 E<lt> I<zone> E<lt>=
 60 for a UTM zone or I<zone> = 0 for UPS.  Alternatively use a
@@ -125,7 +125,7 @@ on input and output, longitude precedes latitude (except that, on input,
 this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
 I<W>).
 
-=item B<-p>
+=item B<-p> I<prec>
 
 set the output precision to I<prec> (default 0); I<prec> is the
 precision relative to 1 m.  See L</PRECISION>.
@@ -141,7 +141,7 @@ on output, UTM/UPS uses the abbreviations I<n> and I<s> to designate the
 hemisphere instead of I<north> or I<south>; this is the default
 representation.
 
-=item B<--comment-delimiter>
+=item B<--comment-delimiter> I<commentdelim>
 
 set the comment delimiter to I<commentdelim> (e.g., "#" or "//").  If
 set, the input lines will be scanned for this delimiter and, if found,
@@ -161,23 +161,23 @@ print usage and exit.
 
 print full documentation and exit.
 
-=item B<--input-file>
+=item B<--input-file> I<infile>
 
 read input from the file I<infile> instead of from standard input; a file
 name of "-" stands for standard input.
 
-=item B<--input-string>
+=item B<--input-string> I<instring>
 
 read input from the string I<instring> instead of from standard input.
 All occurrences of the line separator character (default is a semicolon)
 in I<instring> are converted to newlines before the reading begins.
 
-=item B<--line-separator>
+=item B<--line-separator> I<linesep>
 
 set the line separator character to I<linesep>.  By default this is a
 semicolon.
 
-=item B<--output-file>
+=item B<--output-file> I<outfile>
 
 write output to the file I<outfile> instead of to standard output; a
 file name of "-" stands for standard output.
