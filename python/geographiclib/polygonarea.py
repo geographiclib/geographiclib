@@ -57,7 +57,7 @@ class PolygonArea(object):
     # Compute lon12 the same way as Geodesic::Inverse.
     lon1 = Math.AngNormalize(lon1)
     lon2 = Math.AngNormalize(lon2)
-    lon12 = Math.AngDiff(lon1, lon2)
+    lon12, _ = Math.AngDiff(lon1, lon2)
     cross = (1 if lon1 < 0 and lon2 >= 0 and lon12 > 0
              else (-1 if lon2 < 0 and lon1 >= 0 and lon12 < 0 else 0))
     return cross

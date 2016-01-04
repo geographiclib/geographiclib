@@ -894,11 +894,13 @@
           SS12 = 0
         end if
 
-        if (somg12 .gt. 1) then
-          somg12 = sin(omg12)
-          comg12 = cos(omg12)
-        else
-          call norm2(somg12, comg12)
+        if (.not. medid) then
+          if (somg12 .gt. 1) then
+            somg12 = sin(omg12)
+            comg12 = cos(omg12)
+          else
+            call norm2(somg12, comg12)
+          end if
         end if
 
         if (.not. merid .and. comg12 .ge. 0.7071d0

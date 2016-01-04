@@ -345,6 +345,24 @@ class GeodSolveTest(unittest.TestCase):
         self.assertTrue(Math.isnan(inv["azi2"]))
         self.assertTrue(Math.isnan(inv["s12"]))
 
+    def test_GeodSolve59(self):
+        # Check for points close with longitudes close to 180 deg apart.
+        inv = Geodesic.WGS84.Inverse(5, 0.00000000000001, 10, 180)
+        self.assertAlmostEqual(inv["azi1"], 0.000000000000035,
+                               delta = 1.5e-14);
+        self.assertAlmostEqual(inv["azi2"], 179.99999999999996,
+                               delta = 1.5e-14);
+        self.assertAlmostEqual(inv["s12"], 18345191.174332713,
+                               delta = 4e-9);
+
+    def test_GeodSolve61(self):
+        # Make sure small negative azimuths are west-going
+        dir = Geodesic.WGS84.Direct(45, 0, -0.000000000000000003, 1e7,
+                                    Geodesic.STANDARD | Geodesic.LONG_UNROLL)
+        self.assertAlmostEqual(dir["lat2"], 45.30632, delta = 0.5e-5)
+        self.assertAlmostEqual(dir["lon2"], -180, delta = 0.5e-5)
+        self.assertAlmostEqual(dir["azi2"], -180, delta = 0.5e-5)
+
 class PlanimeterTest(unittest.TestCase):
 
     polygon = Geodesic.WGS84.Polygon(False)

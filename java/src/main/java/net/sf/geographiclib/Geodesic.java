@@ -841,11 +841,13 @@ public class Geodesic {
         // Avoid problems with indeterminate sig1, sig2 on equator
         r.S12 = 0;
 
-      if (somg12 > 1) {
-        somg12 = Math.sin(omg12); comg12 = Math.cos(omg12);
-      } else {
-        Pair p = GeoMath.norm(somg12, comg12);
-        somg12 = p.first; comg12 = p.second;
+      if (!meridian) {
+        if (somg12 > 1) {
+          somg12 = Math.sin(omg12); comg12 = Math.cos(omg12);
+        } else {
+          Pair p = GeoMath.norm(somg12, comg12);
+          somg12 = p.first; comg12 = p.second;
+        }
       }
 
       if (!meridian &&

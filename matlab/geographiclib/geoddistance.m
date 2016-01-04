@@ -276,7 +276,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
     S12 = A4 .* (B42 - B41);
     S12(calp0 == 0 | salp0 == 0) = 0;
 
-    l = somg12 > 1;
+    l = ~m & somg12 > 1;
     [somg12, comg12] = norm2(somg12, comg12);
     somg12(l) = sin(omg12(l)); comg12(l) = cos(omg12(l));
 

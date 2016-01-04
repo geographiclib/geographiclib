@@ -774,8 +774,9 @@ geod_geninverse(g, lat1, lon1, lat2, lon2):=block(
       B42 : SinCosSeries(false, ssig2, csig2, Ca),
       S12 : A4 * (B42 - B41))
     else S12 : 0, /* Avoid problems with indeterminate sig1, sig2 on equator */
-    if somg12 > 1 then (somg12 : sin(omg12), comg12 : cos(omg12))
-    else block([t:norm2(somg12, comg12)], somg12:t[1], comg12:t[2]),
+    if not meridian then (
+      if somg12 > 1 then (somg12 : sin(omg12), comg12 : cos(omg12))
+      else block([t:norm2(somg12, comg12)], somg12:t[1], comg12:t[2])),
     if not meridian and
     /* omg12 < 3/4 * pi */
     comg12 > -0.7071b0 and   /* Long difference not too big */

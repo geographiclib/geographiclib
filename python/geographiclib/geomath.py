@@ -114,7 +114,7 @@ class Math(object):
     y = abs(x)
     # The compiler mustn't "simplify" z - (z - y) to y
     if y < z: y = z - (z - y)
-    return 0 - y if x < 0 else y
+    return 0.0 if x == 0 else (-y if x < 0 else y)
   AngRound = staticmethod(AngRound)
 
   def AngNormalize(x):
@@ -136,7 +136,7 @@ class Math(object):
 
     d, t = Math.sum(Math.AngNormalize(x), Math.AngNormalize(-y))
     d = - Math.AngNormalize(d)
-    return (-180 if d == 180 and t < 0 else d) - t
+    return Math.sum(-180 if d == 180 and t < 0 else d, -t)
   AngDiff = staticmethod(AngDiff)
 
   def sincosd(x):

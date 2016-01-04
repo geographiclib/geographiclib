@@ -910,10 +910,12 @@ real geod_geninverse(const struct geod_geodesic* g,
       /* Avoid problems with indeterminate sig1, sig2 on equator */
       S12 = 0;
 
+    if (!meridian) {
       if (somg12 > 1) {
         somg12 = sin(omg12); comg12 = cos(omg12);
       } else
         norm2(&somg12, &comg12);
+    }
 
     if (!meridian &&
         /* omg12 < 3/4 * pi */

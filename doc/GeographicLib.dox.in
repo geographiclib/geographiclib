@@ -7020,7 +7020,7 @@ git repository for GeographicLib</a>.
      - C#: acd (e = not applicable)
      - C: acd (e = not applicable)
      - Java: acde
-     - Python: c
+     - Python: acde
      - JavaScript: ade (c = not necessary)
      - Maxima: ad (ce = not applicable)
    - Add overloaded version of Math::AngDiff which returns the error in
@@ -7054,6 +7054,7 @@ git repository for GeographicLib</a>.
    - INCOMPATIBLE CHANGE: make -w a toggle for all utility programs.
    - INCOMPATIBLE CHANGE: Swap order \e coslon and \e sinlon arguments
      in CircularEngine class.
+   - TODO: document lint procedures ...
 
  - <a href="http://geographiclib.sourceforge.net/1.45">Version 1.45</a>
    (released 2015-09-30)

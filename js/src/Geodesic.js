@@ -1102,10 +1102,12 @@ GeographicLib.PolygonArea = {};
       } else
         // Avoid problems with indeterminate sig1, sig2 on equator
         vals.S12 = 0;
-      if (somg12 > 1) {
-        somg12 = Math.sin(omg12); comg12 = Math.cos(omg12);
-      } else {
-        t = m.hypot(somg12, comg12); somg12 /= t; comg12 /= t;
+      if (!meridian) {
+        if (somg12 > 1) {
+          somg12 = Math.sin(omg12); comg12 = Math.cos(omg12);
+        } else {
+          t = m.hypot(somg12, comg12); somg12 /= t; comg12 /= t;
+        }
       }
       if (!meridian &&
           omg12 > -0.7071 &&      // Long difference not too big
