@@ -3,7 +3,7 @@
  * Transcription of Math.hpp, Constants.hpp, and Accumulator.hpp into
  * JavaScript.
  *
- * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  */
@@ -155,6 +155,16 @@ GeographicLib.Accumulator = {};
   };
 
   /**
+   * @summary Copy the sign.
+   * @param {number} x gives the magitude of the result.
+   * @param {number} y gives the sign of the result.
+   * @returns {number} value with the magnitude of x and with the sign of y.
+   */
+  m.copysign = function(x, y) {
+    return Math.abs(x) * (y < 0 || (y === 0 && 1/y < 0) ? -1 : 1);
+  };
+
+  /**
    * @summary An error-free sum.
    * @param {number} u
    * @param {number} v
@@ -200,7 +210,7 @@ GeographicLib.Accumulator = {};
     // We use this to avoid having to deal with near singular cases when x is
     // non-zero but tiny (e.g., 1.0e-200).  This converts -0 to +0; however
     // tiny negative numbers get converted to -0.
-    if (x == 0) return x;
+    if (x === 0) return x;
     var z = 1/16,
         y = Math.abs(x);
     // The compiler mustn't "simplify" z - (z - y) to y

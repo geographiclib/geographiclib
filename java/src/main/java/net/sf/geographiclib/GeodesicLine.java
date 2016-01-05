@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.GeodesicLine class
  *
- * Copyright (c) Charles Karney (2013-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -452,8 +452,7 @@ public class GeodesicLine {
       r.a12 = Math.toDegrees(sig12);
     }
 
-    double omg12, lam12, lon12;
-    double ssig2, csig2, sbet2, cbet2, somg2, comg2, salp2, calp2;
+    double ssig2, csig2, sbet2, cbet2, salp2, calp2;
     // sig2 = sig1 + sig12
     ssig2 = _ssig1 * csig12 + _csig1 * ssig12;
     csig2 = _csig1 * csig12 - _ssig1 * ssig12;
@@ -479,19 +478,19 @@ public class GeodesicLine {
 
     if ((outmask & GeodesicMask.LONGITUDE) != 0) {
       // tan(omg2) = sin(alp0) * tan(sig2)
-      somg2 = _salp0 * ssig2; comg2 = csig2;  // No need to normalize
-      int E =  _salp0 < 0 ? -1 : 1;           // east or west going?
+      double somg2 = _salp0 * ssig2, comg2 = csig2, // No need to normalize
+        E = GeoMath.copysign(1, _salp0);            // east or west going?
       // omg12 = omg2 - omg1
-      omg12 = ((outmask & GeodesicMask.LONG_UNROLL) != 0)
+      double omg12 = ((outmask & GeodesicMask.LONG_UNROLL) != 0)
         ? E * (sig12
                - (Math.atan2(  ssig2, csig2) - Math.atan2(  _ssig1, _csig1))
                + (Math.atan2(E*somg2, comg2) - Math.atan2(E*_somg1, _comg1)))
         : Math.atan2(somg2 * _comg1 - comg2 * _somg1,
                      comg2 * _comg1 + somg2 * _somg1);
-      lam12 = omg12 + _A3c *
+      double lam12 = omg12 + _A3c *
         ( sig12 + (Geodesic.SinCosSeries(true, ssig2, csig2, _C3a)
                    - _B31));
-      lon12 = Math.toDegrees(lam12);
+      double lon12 = Math.toDegrees(lam12);
       r.lon2 = ((outmask & GeodesicMask.LONG_UNROLL) != 0) ? _lon1 + lon12 :
         GeoMath.AngNormalize(r.lon1 + GeoMath.AngNormalize(lon12));
     }
@@ -528,14 +527,6 @@ public class GeodesicLine {
         // alp12 = alp2 - alp1, used in atan2 so no need to normalize
         salp12 = salp2 * _calp1 - calp2 * _salp1;
         calp12 = calp2 * _calp1 + salp2 * _salp1;
-        // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
-        // salp12 = -0 and alp12 = -180.  However this depends on the sign
-        // being attached to 0 correctly.  The following ensures the correct
-        // behavior.
-        if (salp12 == 0 && calp12 < 0) {
-          salp12 = Geodesic.tiny_ * _calp1;
-          calp12 = -1;
-        }
       } else {
         // tan(alp) = tan(alp0) * sec(sig)
         // tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)

@@ -204,7 +204,7 @@ describe("GeographicLib", function() {
     it("GeodSolve4", function() {
       // Check fix for short line bug found 2010-05-21
       var geod = g.WGS84,
-          inv = geod.Inverse(36.493349428792, 0, 36.49334942879201, .0000008);
+          inv = geod.Inverse(36.493349428792, 0, 36.49334942879201, 0.0000008);
       assert.approx(inv.s12, 0.072, 0.5e-3);
     });
 
@@ -443,7 +443,7 @@ describe("GeographicLib", function() {
         polygon.AddPoint(points[i][0], points[i][1]);
       }
       return polygon.Compute(false, true);
-    }
+    };
 
     PolyLength = function(points) {
       var i;
@@ -452,7 +452,7 @@ describe("GeographicLib", function() {
         polyline.AddPoint(points[i][0], points[i][1]);
       }
       return polyline.Compute(false, true);
-    }
+    };
 
     it("Planimeter0", function() {
       // Check fix for pole-encircling bug found 2011-03-16

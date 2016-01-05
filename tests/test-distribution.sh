@@ -46,10 +46,12 @@ set -e
 # python
 #   python/setup.py
 #   python/geographiclib/__init__.py
+# use: cd python; pychecker geographiclib/*.py
 
 # MATLAB
 #   matlab/geographiclib/Contents.m version + date
 #   matlab/geographiclib-blurb.txt version + date
+# use MATLAB's analyze code
 
 # C
 #   legacy/C/geodesic.h comment + GEODESIC_VERSION_*
@@ -72,6 +74,7 @@ set -e
 #   js/package.json
 #   js/README.md
 #   js/GeographicLib.md
+# use: cd js; jshint src
 
 DATE=`date +%F`
 VERSION=1.46

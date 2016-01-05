@@ -2,7 +2,7 @@
  * \file Math.hpp
  * \brief Header for GeographicLib::Math class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -709,6 +709,24 @@ namespace GeographicLib {
     template<typename T> static T eatanhe(T x, T es);
 
     /**
+     * Copy the sign.
+     *
+     * @tparam T the type of the argument.
+     * @param[in] x gives the magitude of the result.
+     * @param[in] y gives the sign of the result.
+     * @return value with the magnitude of \e x and with the sign of \e y.
+     **********************************************************************/
+    template<typename T> static inline T copysign(T x, T y) {
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::copysign; return copysign(x, y);
+#else
+      using std::abs; using std::atan2;
+      // NaN counts as positive
+      return abs(x) * (y < 0 || (y == 0 && 1/y < 0)  ? -1 : 1);
+#endif
+    }
+
+    /**
      * tan&chi; in terms of tan&phi;
      *
      * @tparam T the type of the argument and the returned value.
@@ -743,27 +761,6 @@ namespace GeographicLib {
      * (preprint <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
      **********************************************************************/
     template<typename T> static T tauf(T taup, T es);
-
-    /**
-     * Copy the sign.
-     *
-     * @tparam T the type of the argument.
-     * @param[in] x
-     * @param[in] y
-     * @return value with the magnitude of \e x and with the sign of \e y.
-     **********************************************************************/
-    template<typename T> static inline T copysign(T x, T y) {
-#if GEOGRAPHICLIB_CXX11_MATH
-      using std::copysign; return copysign(x, y);
-#else
-      using std::abs; using std::atan2;
-      // This doesn't handle the case y = NaN.
-      return abs(x) *
-        (y > 0 ? 1 :
-         (y < 0 ? -1 :
-          (atan2(y, T(-1)) < 0 ? -1 : 1)));
-#endif
-    }
 
     /**
      * Test for finiteness.

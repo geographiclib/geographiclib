@@ -27,7 +27,7 @@ The object can also be constructed by
 #    https://dx.doi.org/10.1007/s00190-012-0578-z
 #    Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 ######################################################################
@@ -227,7 +227,7 @@ class GeodesicLine(object):
     if outmask & Geodesic.LONGITUDE:
       # tan(omg2) = sin(alp0) * tan(sig2)
       somg2 = self._salp0 * ssig2; comg2 = csig2 # No need to normalize
-      E = -1 if self._salp0 < 0 else 1           # East or west going?
+      E = Math.copysign(1, self._salp0)          # East or west going?
       # omg12 = omg2 - omg1
       omg12 = (E * (sig12
                     - (math.atan2(          ssig2,       csig2) -
@@ -275,12 +275,6 @@ class GeodesicLine(object):
         # alp12 = alp2 - alp1, used in atan2 so no need to normalize
         salp12 = salp2 * self._calp1 - calp2 * self._salp1
         calp12 = calp2 * self._calp1 + salp2 * self._salp1
-        # The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
-        # salp12 = -0 and alp12 = -180.  However this depends on the sign being
-        # attached to 0 correctly.  The following ensures the correct behavior.
-        if salp12 == 0 and calp12 < 0:
-          salp12 = Geodesic.tiny_ * self._calp1
-          calp12 = -1
       else:
         # tan(alp) = tan(alp0) * sec(sig)
         # tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)

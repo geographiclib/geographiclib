@@ -7037,7 +7037,8 @@ git repository for GeographicLib</a>.
        a GeodesicLine with the reference point 3 defined as point 2 of
        the corresponding geodesic calculation;
      - Geodesic::InverseLine allows the specification of an initial
-       azimuth which is slightly west of due south.
+       azimuth which is slightly west of due south;
+     - This change necessitated the addition of Math::copysign.
    - Changes to <a href="GeodSolve.1.html">GeodSolve</a> utility:
      - INCOMPATIBLE CHANGE: the -a option now "toggles" arc mode;
      - INCOMPATIBLE CHANGE: the -w option now "toggles" longitude first mode;
@@ -7055,6 +7056,7 @@ git repository for GeographicLib</a>.
    - INCOMPATIBLE CHANGE: Swap order \e coslon and \e sinlon arguments
      in CircularEngine class.
    - TODO: document lint procedures ...
+   - TODO: make Java 1.5 (2004-09) the min version?
 
  - <a href="http://geographiclib.sourceforge.net/1.45">Version 1.45</a>
    (released 2015-09-30)

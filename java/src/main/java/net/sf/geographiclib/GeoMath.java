@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.GeoMath class
  *
- * Copyright (c) Charles Karney (2013-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -91,6 +91,18 @@ public class GeoMath {
     double y = Math.abs(x);     // Enforce odd parity
     y = Math.log1p(2 * y/(1 - y))/2;
     return x < 0 ? -y : y;
+  }
+
+  /**
+   * Copy the sign.  In Java version 1.6 and later, Math.copysign can be used.
+   * <p>
+   * @param x gives the magitude of the result.
+   * @param x gives the sign of the result.
+   * @return value with the magnitude of <i>x</i> and with the sign of
+   *   <i>y</i>.
+   **********************************************************************/
+  public static double copysign(double x, double y) {
+    return Math.abs(x) * (y < 0 || (y == 0 && 1/y < 0) ? -1 : 1);
   }
 
   /**

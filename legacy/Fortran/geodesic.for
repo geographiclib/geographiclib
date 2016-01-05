@@ -448,13 +448,6 @@
 * alp12 = alp2 - alp1, used in atan2 so no need to normalize
           salp12 = salp2 * calp1 - calp2 * salp1
           calp12 = calp2 * calp1 + salp2 * salp1
-* The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
-* salp12 = -0 and alp12 = -180.  However this depends on the sign being
-* attached to 0 correctly.  The following ensures the correct behavior.
-          if (salp12 .eq. 0 .and. calp12 .lt. 0) then
-            salp12 = tiny * calp1
-            calp12 = -1
-          end if
         else
 * tan(alp) = tan(alp0) * sec(sig)
 * tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)

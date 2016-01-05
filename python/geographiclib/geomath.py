@@ -6,7 +6,7 @@
 #
 #    http://geographiclib.sourceforge.net/html/annotated.html
 #
-# Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 ######################################################################
@@ -72,6 +72,15 @@ class Math(object):
     y = Math.log1p(2 * y/(1 - y))/2
     return -y if x < 0 else y
   atanh = staticmethod(atanh)
+
+  def copysign(x, y):
+    """return x with the sign of y (missing from python 2.5.2)"""
+
+    if sys.version_info > (2, 6):
+      return math.copysign(x, y)
+
+    return math.fabs(x) * (-1 if y < 0 or (y == 0 and 1/y < 0) else 1)
+  copysign = staticmethod(copysign)
 
   def norm(x, y):
     """Private: Normalize a two-vector."""

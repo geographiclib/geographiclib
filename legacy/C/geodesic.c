@@ -119,6 +119,10 @@ static real atanhx(real x) {
   return x < 0 ? -y : y;
 }
 
+static real copysignx(real x, real y) {
+  return fabs(x) * (y < 0 || (y == 0 && 1/y < 0) ? -1 : 1);
+}
+
 static real hypotx(real x, real y)
 { return sqrt(x * x + y * y); }
 
@@ -503,7 +507,7 @@ real geod_genposition(const struct geod_geodesicline* l,
     s12 = flags & GEOD_ARCMODE ? l->b * ((1 + l->A1m1) * sig12 + AB1) : s12_a12;
 
   if (outmask & GEOD_LONGITUDE) {
-    int E = l->salp0 < 0 ? -1 : 1; /* east or west going? */
+    real E = copysignx(1, l->salp0); /* east or west going? */
     /* tan(omg2) = sin(alp0) * tan(sig2) */
     somg2 = l->salp0 * ssig2; comg2 = csig2;  /* No need to normalize */
     /* omg12 = omg2 - omg1 */
@@ -552,14 +556,6 @@ real geod_genposition(const struct geod_geodesicline* l,
       /* alp12 = alp2 - alp1, used in atan2 so no need to normalize */
       salp12 = salp2 * l->calp1 - calp2 * l->salp1;
       calp12 = calp2 * l->calp1 + salp2 * l->salp1;
-      /* The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
-       * salp12 = -0 and alp12 = -180.  However this depends on the sign being
-       * attached to 0 correctly.  The following ensures the correct
-       * behavior. */
-      if (salp12 == 0 && calp12 < 0) {
-        salp12 = tiny * l->calp1;
-        calp12 = -1;
-      }
     } else {
       /* tan(alp) = tan(alp0) * sec(sig)
        * tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)

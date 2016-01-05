@@ -249,7 +249,7 @@ public class Geodesic {
    **********************************************************************/
   public Geodesic(double a, double f) {
     _a = a;
-    _f = f <= 1 ? f : 1/f;      // f > 1 behavior is DEPRECATED
+    _f = f;
     _f1 = 1 - _f;
     _e2 = _f * (2 - _f);
     _ep2 = _e2 / GeoMath.sq(_f1); // e2 / (1 - e2)
