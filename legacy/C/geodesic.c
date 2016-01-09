@@ -472,10 +472,9 @@ real geod_genposition(const struct geod_geodesicline* l,
        *      1/20   5376 146e3  10e3
        *      1/10  829e3  22e6 1.5e6
        *      1/5   157e6 3.8e9 280e6 */
-      real
-        ssig2 = l->ssig1 * csig12 + l->csig1 * ssig12,
-        csig2 = l->csig1 * csig12 - l->ssig1 * ssig12,
-        serr;
+      real serr;
+      ssig2 = l->ssig1 * csig12 + l->csig1 * ssig12;
+      csig2 = l->csig1 * csig12 - l->ssig1 * ssig12;
       B12 = SinCosSeries(TRUE, ssig2, csig2, l->C1a, nC1);
       serr = (1 + l->A1m1) * (sig12 + (B12 - l->B11)) - s12_a12 / l->b;
       sig12 = sig12 - serr / sqrt(1 + l->k2 * sq(ssig2));
@@ -643,7 +642,7 @@ real geod_geninverse(const struct geod_geodesic* g,
   real Ca[nC];
   boolx meridian;
   /* somg12 > 1 marks that it needs to be calculated */
-  real omg12 = 0, somg12 = 2, comg12;
+  real omg12 = 0, somg12 = 2, comg12 = 0;
 
   unsigned outmask =
     (ps12 ? GEOD_DISTANCE : 0U) |

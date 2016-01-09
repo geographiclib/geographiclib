@@ -15,6 +15,11 @@
 #include <stdio.h>
 #include <math.h>
 
+#if defined(_MSC_VER)
+// Squelch warnings about assignment within conditional expression
+#  pragma warning (disable: 4706)
+#endif
+
 double wgs84_a = 6378137, wgs84_f = 1/298.257223563; /* WGS84 */
 
 int assertEquals(double x, double y, double d) {

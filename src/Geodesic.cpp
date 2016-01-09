@@ -286,7 +286,7 @@ namespace GeographicLib {
     }
 
     // somg12 > 1 marks that it needs to be calculated
-    real omg12 = 0, somg12 = 2, comg12;
+    real omg12 = 0, somg12 = 2, comg12 = 0;
     if (!meridian &&
         sbet1 == 0 &&   // and sbet2 == 0
         (_f <= 0 || lon12s >= _f * 180)) {
