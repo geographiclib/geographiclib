@@ -1,14 +1,15 @@
-Here is a small example of exposing one capability of the C++ version
-GeographicLib to python.  PyGeographicLib.cpp uses boost-python to wrap
-parts of 2 classes, Constants and Geodesic, so that they can be invoked
-from python.
+This directory contains a small example of exposing one capability of
+the C++ version GeographicLib to python.  PyGeographicLib.cpp uses
+boost-python to wrap parts of 2 classes, Constants and Geodesic, so that
+they can be called from python.
 
 To build and install this interface, do
 
   mkdir BUILD
   cd BUILD
-  cmake -D CMAKE_INSTALL_PREFIX=/home/ckarney/.local ..
-  make && make install
+  cmake -D CMAKE_INSTALL_PREFIX=~/.local ..
+  make
+  make install
 
 This assumes that you have installed GeographicLib somewhere that cmake
 can find it.  If you want just to use the version of GeographicLib that
@@ -16,14 +17,15 @@ you have built in the top-level BUILD directory, include, e.g.,
 
   -D GeographicLib_DIR=../../BUILD
 
-in the invocation of cmake.
+in the invocation of cmake (the directory is relative to the source
+directory, python/wrapper).
 
-"make install" installs PyGeographicLib.so in
+"make install" installs PyGeographicLib in
 
   ~/.local/lib/python2.7/site-packages
 
 which is in the default search path for python 2.7.  To use this in
-python, do
+python, do, e.g.,
 
   $ python
   >>> from PyGeographicLib import Constants, Geodesic
@@ -37,16 +39,21 @@ python, do
 
 Notes:
 
-This precription applies to Linux machines.  Similar steps can be used
-on Windows and MacOSX machines.
+* This prescription applies to Linux machines.  Similar steps can be
+  used on Windows and MacOSX machines.
 
-You will need the packages, boost-python, boost-devel, python, and
-python-devel installed.
+* You will need the packaged boost-python, boost-devel, python, and
+  python-devel installed.
 
-CMakeLists.txt specifies the version of python to look for (version
-2.7).  This must match that used in boost-python.  To check do
+* CMakeLists.txt specifies the version of python to look for (version
+  2.7).  This must match that used in boost-python.  To check do, e.g.,
 
-  ldd /usr/lib64/libboost_python.so
+    ldd /usr/lib64/libboost_python.so
+
+* CmakeLists.txt looks for a shared-library version of GeographicLib.
+  This is the default with cmake build on non-Windows platforms.  On
+  Windows, use the cmake variable GEOGRAPHICLIB_LIB_TYPE to specify
+  building a shared library.
 
 Acknowledgment:
 
