@@ -7018,7 +7018,7 @@ git repository for GeographicLib</a>.
      - DONE: Matlab: ad (bce = not applicable)
      - DONE: Fortran: ad (bce = not applicable)
      - C#: acd (e = not applicable)
-     - C: acd (e = not applicable)
+     - C: abcd (e = not applicable)
      - Java: acde
      - Python: acde
      - JavaScript: ade (c = not necessary)

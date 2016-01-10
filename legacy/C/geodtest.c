@@ -505,6 +505,7 @@ int GeodSolve61() {
   /* Make sure small negative azimuths are west-going */
   double lat2, lon2, azi2;
   struct geod_geodesic g;
+  struct geod_geodesicline l;
   int result = 0;
   unsigned flags = GEOD_LONG_UNROLL;
   geod_init(&g, wgs84_a, wgs84_f);
@@ -513,6 +514,83 @@ int GeodSolve61() {
   result += assertEquals(lat2, 45.30632, 0.5e-5);
   result += assertEquals(lon2, -180, 0.5e-5);
   result += assertEquals(azi2, -180, 0.5e-5);
+  geod_inverseline(&l, &g, 45, 0, 80, -0.000000000000000003, 0);
+  geod_genposition(&l, flags, 1e7, &lat2, &lon2, &azi2, 0, 0, 0, 0, 0);
+  result += assertEquals(lat2, 45.30632, 0.5e-5);
+  result += assertEquals(lon2, -180, 0.5e-5);
+  result += assertEquals(azi2, -180, 0.5e-5);
+  return result;
+}
+
+int GeodSolve65() {
+  /* Check for bug in east-going check in GeodesicLine (needed to check for
+   * sign of 0) and sign error in area calculation due to a bogus override of
+   * the code for alp12.  Found/fixed on 2015-12-19. */
+  double lat2, lon2, azi2, s12, a12, m12, M12, M21, S12;
+  struct geod_geodesic g;
+  struct geod_geodesicline l;
+  int result = 0;
+  unsigned flags = GEOD_LONG_UNROLL, caps = GEOD_ALL;
+  geod_init(&g, wgs84_a, wgs84_f);
+  geod_inverseline(&l, &g, 30, -0.000000000000000001, -31, 180, caps);
+  a12 = geod_genposition(&l, flags, 1e7,
+                         &lat2, &lon2, &azi2, &s12, &m12, &M12, &M21, &S12);
+  result += assertEquals(lat2, -60.23169, 0.5e-5);
+  result += assertEquals(lon2, -0.00000, 0.5e-5);
+  result += assertEquals(azi2, -180.00000, 0.5e-5);
+  result += assertEquals(s12, 10000000, 0.5);
+  result += assertEquals(a12, 90.06544, 0.5e-5);
+  result += assertEquals(m12, 6363636, 0.5);
+  result += assertEquals(M12, -0.0012834, 0.5e-7);
+  result += assertEquals(M21, 0.0013749, 0.5e-7);
+  result += assertEquals(S12, 0, 0.5);
+  a12 = geod_genposition(&l, flags, 2e7,
+                         &lat2, &lon2, &azi2, &s12, &m12, &M12, &M21, &S12);
+  result += assertEquals(lat2, -30.03547, 0.5e-5);
+  result += assertEquals(lon2, -180.00000, 0.5e-5);
+  result += assertEquals(azi2, -0.00000, 0.5e-5);
+  result += assertEquals(s12, 20000000, 0.5);
+  result += assertEquals(a12, 179.96459, 0.5e-5);
+  result += assertEquals(m12, 54342, 0.5);
+  result += assertEquals(M12, -1.0045592, 0.5e-7);
+  result += assertEquals(M21, -0.9954339, 0.5e-7);
+  result += assertEquals(S12, 127516405431022.0, 0.5);
+  return result;
+}
+
+int GeodSolve67() {
+  /* Check for InverseLine if line is slightly west of S and that s13 is
+     correctly set. */
+  double lat2, lon2, azi2;
+  struct geod_geodesic g;
+  struct geod_geodesicline l;
+  int result = 0;
+  unsigned flags = GEOD_LONG_UNROLL;
+  geod_init(&g, wgs84_a, wgs84_f);
+  geod_inverseline(&l, &g, -5, -0.000000000000002, -10, 180, 0);
+  geod_genposition(&l, flags, 2e7, &lat2, &lon2, &azi2, 0, 0, 0, 0, 0);
+  result += assertEquals(lat2, 4.96445, 0.5e-5);
+  result += assertEquals(lon2, -180.00000, 0.5e-5);
+  result += assertEquals(azi2, -0.00000, 0.5e-5);
+  geod_genposition(&l, flags, 0.5 * l.s13, &lat2, &lon2, &azi2, 0, 0, 0, 0, 0);
+  result += assertEquals(lat2, -87.52461, 0.5e-5);
+  result += assertEquals(lon2, -0.00000, 0.5e-5);
+  result += assertEquals(azi2, -180.00000, 0.5e-5);
+  return result;
+}
+
+int GeodSolve71() {
+  /* Check that DirectLine sets s13. */
+  double lat2, lon2, azi2;
+  struct geod_geodesic g;
+  struct geod_geodesicline l;
+  int result = 0;
+  geod_init(&g, wgs84_a, wgs84_f);
+  geod_directline(&l, &g, 1, 2, 45, 1e7, 0);
+  geod_position(&l, 0.5 * l.s13, &lat2, &lon2, &azi2);
+  result += assertEquals(lat2, 30.92625, 0.5e-5);
+  result += assertEquals(lon2, 37.54640, 0.5e-5);
+  result += assertEquals(azi2, 55.43104, 0.5e-5);
   return result;
 }
 
@@ -659,6 +737,9 @@ int main() {
   if ((i = GeodSolve55())) {++n; printf("GeodSolve55 fail: %d\n", i);}
   if ((i = GeodSolve59())) {++n; printf("GeodSolve59 fail: %d\n", i);}
   if ((i = GeodSolve61())) {++n; printf("GeodSolve61 fail: %d\n", i);}
+  if ((i = GeodSolve65())) {++n; printf("GeodSolve65 fail: %d\n", i);}
+  if ((i = GeodSolve67())) {++n; printf("GeodSolve67 fail: %d\n", i);}
+  if ((i = GeodSolve71())) {++n; printf("GeodSolve71 fail: %d\n", i);}
   if ((i = Planimeter0())) {++n; printf("Planimeter0 fail: %d\n", i);}
   if ((i = Planimeter5())) {++n; printf("Planimeter5 fail: %d\n", i);}
   if ((i = Planimeter6())) {++n; printf("Planimeter6 fail: %d\n", i);}

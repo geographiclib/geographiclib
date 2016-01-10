@@ -537,6 +537,7 @@ namespace GeographicLib {
                                                unsigned caps) const {
     real t, salp1, calp1, salp2, calp2,
       a12 =  GenInverse(lat1, lon1, lat2, lon2,
+                        // No need to specify AZIMUTH here
                         0u, t, salp1, calp1, salp2, calp2,
                         t, t, t, t),
       azi1 = Math::atan2d(salp1, calp1);

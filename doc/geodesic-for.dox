@@ -118,6 +118,7 @@ and are therefore in the public domain.
 - <a href="../C/index.html">The C library</a>.
 - <a href="../java/index.html">The Java library</a>.
 - <a href="../js/index.html">The JavaScript library</a>.
+- <a href="../python/index.html">The Python library</a>.
 - Documentation on the C++ classes: GeographicLib::Geodesic,
   GeographicLib::GeodesicLine, GeographicLib::PolygonAreaT.
 - The section in the %GeographicLib documentation on geodesics: \ref

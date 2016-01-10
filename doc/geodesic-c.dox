@@ -49,7 +49,8 @@ Licensed under the
 \section doc-c Library documentation
 
 The interface to the library is documented via doxygen in the header
-file.  To access this, see geodesic.h.
+file, geodesic.h.  See also the documentation on the structures
+geod_geodesic, geod_geodesicline, and geod_polygon.
 
 \section samples-c Sample programs
 
@@ -131,6 +132,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 - <a href="../index.html">The C++ library</a>.
 - <a href="../java/index.html">The Java library</a>.
 - <a href="../js/index.html">The JavaScript library</a>.
+- <a href="../python/index.html">The Python library</a>.
 - <a href="../Fortran/index.html">The Fortran library</a>.
 - Documentation on the C++ classes: GeographicLib::Geodesic,
   GeographicLib::GeodesicLine, GeographicLib::PolygonAreaT.

@@ -507,16 +507,6 @@ namespace GeographicLib {
     ///@{
 
     /**
-     * @param[in] arcmode boolean flag determining the meaning of the second
-     *   parameter; if arcmode is false, then the GeodesicLineExact object must
-     *   have been constructed with \e caps |= GeodesicLineExact::DISTANCE_IN.
-     * @param[in] s13_a13 if \e arcmode is false, this is the distance between
-     *   point 1 and point 3 (meters); otherwise it is the arc length between
-     *   point 1 and point 3 (degrees); it can be negative.
-     **********************************************************************/
-    void GenSetDistance(bool arcmode, real s13_a13);
-
-    /**
      * @param[in] s13 the distance between point 1 and point 3 (meters); it
      *   can be negative.
      *
@@ -530,6 +520,16 @@ namespace GeographicLib {
      *   can be negative.
      **********************************************************************/
     void SetArc(real a13);
+
+    /**
+     * @param[in] arcmode boolean flag determining the meaning of the second
+     *   parameter; if arcmode is false, then the GeodesicLineExact object must
+     *   have been constructed with \e caps |= GeodesicLineExact::DISTANCE_IN.
+     * @param[in] s13_a13 if \e arcmode is false, this is the distance between
+     *   point 1 and point 3 (meters); otherwise it is the arc length between
+     *   point 1 and point 3 (degrees); it can be negative.
+     **********************************************************************/
+    void GenSetDistance(bool arcmode, real s13_a13);
 
     /** \name Inspector functions
      **********************************************************************/

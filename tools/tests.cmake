@@ -358,6 +358,29 @@ set_tests_properties (GeodSolve65 GeodSolve66
   PROPERTIES PASS_REGULAR_EXPRESSION
   "30\\.00000 -0\\.00000 -180\\.00000 -60\\.23169 -0\\.00000 -180\\.00000 10000000 90\\.06544 6363636 -0\\.0012834 0\\.0013749 0[\r\n]+30\\.00000 -0\\.00000 -180\\.00000 -30\\.03547 -180\\.00000 -0\\.00000 20000000 179\\.96459 54342 -1\\.0045592 -0\\.9954339 127516405431022")
 
+# Check for InverseLine if line is slightly west of S and that s13 is
+# correctly set.
+add_test (NAME GeodSolve67 COMMAND GeodSolve
+  -u -p 0 -I -5 -0.000000000000002 -10 180 --input-string 2e7)
+add_test (NAME GeodSolve68 COMMAND GeodSolve
+  -u -p 0 -I -5 -0.000000000000002 -10 180 --input-string 2e7 -E)
+set_tests_properties (GeodSolve67 GeodSolve68
+  PROPERTIES PASS_REGULAR_EXPRESSION "4\\.96445 -180\\.00000 -0\\.00000")
+add_test (NAME GeodSolve69 COMMAND GeodSolve
+  -u -p 0 -I -5 -0.000000000000002 -10 180 --input-string 0.5 -F)
+add_test (NAME GeodSolve70 COMMAND GeodSolve
+  -u -p 0 -I -5 -0.000000000000002 -10 180 --input-string 0.5 -F -E)
+set_tests_properties (GeodSolve69 GeodSolve70
+  PROPERTIES PASS_REGULAR_EXPRESSION "-87\\.52461 -0\\.00000 -180\\.00000")
+
+# Check that DirectLine sets s13.
+add_test (NAME GeodSolve71 COMMAND GeodSolve
+  -D 1 2 45 1e7 -p 0 --input-string 0.5 -F)
+add_test (NAME GeodSolve72 COMMAND GeodSolve
+  -D 1 2 45 1e7 -p 0 --input-string 0.5 -F)
+set_tests_properties (GeodSolve71 GeodSolve72
+  PROPERTIES PASS_REGULAR_EXPRESSION "30\\.92625 37\\.54640 55\\.43104")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")
