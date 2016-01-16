@@ -631,17 +631,19 @@ extern "C" {
                           double* pS12);
 
   /**
-   * Set the distance to point 3.
+   * Specify position of point 3 in terms of distance.
    *
    * @param[inout] l a pointer to the geod_geodesicline object.
    * @param[in] s13 the distance between point 1 and point 3 (meters); it
    *   can be negative.
+   *
+   * This is only useful if the geod_geodesicline object has been constructed
+   * with \e caps |= GEOD_DISTANCE_IN.
    **********************************************************************/
   void geod_setdistance(struct geod_geodesicline* l, double s13);
 
   /**
-   * Set the position of point 3 either in terms of the distance or the arc
-   * length.
+   * Specify position of point 3 in terms of either distance or arc length.
    *
    * @param[inout] l a pointer to the geod_geodesicline object.
    * @param[in] flags either GEOD_NOFLAGS or GEOD_ARCMODE to determining the
@@ -650,6 +652,10 @@ extern "C" {
    *   between point 1 and point 2 (meters); if \e flags = GEOD_ARCMODE, it is
    *   the arc length between point 1 and point 2 (degrees); it can be
    *   negative.
+   *
+   * If flags = GEOD_NOFLAGS, this calls geod_setdistance().  If flags =
+   * GEOD_ARCMODE, the \e s13 is only set if the geod_geodesicline object has
+   * been constructed with \e caps |= GEOD_DISTANCE.
    **********************************************************************/
   void geod_gensetdistance(struct geod_geodesicline* l,
                            unsigned flags, double s13_a13);

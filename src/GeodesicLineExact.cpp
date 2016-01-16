@@ -269,11 +269,15 @@ namespace GeographicLib {
   void GeodesicLineExact::SetDistance(real s13) {
     _s13 = s13;
     real t;
+    // This will set _a13 to NaN if the GeodesicLineExact doesn't have the
+    // DISTANCE_IN capability.
     _a13 = GenPosition(false, _s13, 0u, t, t, t, t, t, t, t, t);
   }
 
   void GeodesicLineExact::SetArc(real a13) {
     _a13 = a13;
+    // In case the GeodesicLineExact doesn't have the DISTANCE capability.
+    _s13 = Math::NaN();
     real t;
     GenPosition(true, _a13, DISTANCE, t, t, t, _s13, t, t, t, t);
   }

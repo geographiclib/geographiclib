@@ -481,8 +481,8 @@ namespace GeographicLib {
      * GeodesicLine::ArcPosition are defined in terms of this function.
      *
      * @param[in] arcmode boolean flag determining the meaning of the second
-     *   parameter; if arcmode is false, then the GeodesicLine object must have
-     *   been constructed with \e caps |= GeodesicLine::DISTANCE_IN.
+     *   parameter; if \e arcmode is false, then the GeodesicLine object must
+     *   have been constructed with \e caps |= GeodesicLine::DISTANCE_IN.
      * @param[in] s12_a12 if \e arcmode is false, this is the distance between
      *   point 1 and point 2 (meters); otherwise it is the arc length between
      *   point 1 and point 2 (degrees); it can be negative.
@@ -544,24 +544,33 @@ namespace GeographicLib {
     ///@{
 
     /**
+     * Specify position of point 3 in terms of distance.
+     *
      * @param[in] s13 the distance between point 1 and point 3 (meters); it
      *   can be negative.
      *
-     * The GeodesicLine object must have been constructed with \e caps |=
-     * GeodesicLine::DISTANCE_IN.
+     * This is only useful if the GeodesicLine object has been constructed
+     * with \e caps |= GeodesicLine::DISTANCE_IN.
      **********************************************************************/
     void SetDistance(real s13);
 
     /**
+     * Specify position of point 3 in terms of arc length.
+     *
      * @param[in] a13 the arc length between point 1 and point 3 (degrees); it
      *   can be negative.
+     *
+     * The distance \e s13 is only set if the GeodesicLine object has been
+     * constructed with \e caps |= GeodesicLine::DISTANCE.
      **********************************************************************/
     void SetArc(real a13);
 
     /**
+     * Specify position of point 3 in terms of either distance or arc length.
+     *
      * @param[in] arcmode boolean flag determining the meaning of the second
-     *   parameter; if arcmode is false, then the GeodesicLine object must have
-     *   been constructed with \e caps |= GeodesicLine::DISTANCE_IN.
+     *   parameter; if \e arcmode is false, then the GeodesicLine object must
+     *   have been constructed with \e caps |= GeodesicLine::DISTANCE_IN.
      * @param[in] s13_a13 if \e arcmode is false, this is the distance between
      *   point 1 and point 3 (meters); otherwise it is the arc length between
      *   point 1 and point 3 (degrees); it can be negative.

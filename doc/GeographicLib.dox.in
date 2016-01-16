@@ -7020,8 +7020,8 @@ git repository for GeographicLib</a>.
      - C#: acd (e = not applicable)
      - C: abcd (e = not applicable)
      - Java: acde
-     - Python: acde
      - JavaScript: ade (c = not necessary)
+     - Python: acde
      - Maxima: ad (ce = not applicable)
    - Add sample of python wrapper.
    - Add overloaded version of Math::AngDiff which returns the error in

@@ -628,7 +628,7 @@ void geod_setdistance(struct geod_geodesicline* l, real s13) {
 }
 
 static void geod_setarc(struct geod_geodesicline* l, real a13) {
-  l->a13 = a13;
+  l->a13 = a13; l->s13 = NaN;
   geod_genposition(l, GEOD_ARCMODE, l->a13, 0, 0, 0, &l->s13, 0, 0, 0, 0);
 }
 

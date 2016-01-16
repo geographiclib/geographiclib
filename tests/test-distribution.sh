@@ -243,7 +243,7 @@ mkdir BUILD
 cd BUILD
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
 make -j$NUMCPUS all
-make -j$NUMCPUS test
+make test
 make -j$NUMCPUS exampleprograms
 make install
 (
@@ -255,7 +255,7 @@ mkdir ../BUILD-system
 cd ../BUILD-system
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH ..
 make -j$NUMCPUS all
-make -j$NUMCPUS test
+make test
 cd ..
 # mvn -Dcmake.project.bin.directory=$TEMP/mvn install
 
@@ -283,7 +283,7 @@ for l in C Fortran; do
 	mkdir $TEMP/legacy/$l/BUILD
 	cd $TEMP/legacy/$l/BUILD
 	cmake ..
-	make -j$NUMCPUS
+	make -j$NUMCPUS all
 	make test
     )
 done
