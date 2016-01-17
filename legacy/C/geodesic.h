@@ -603,11 +603,11 @@ extern "C" {
    * that the quantity \e lon2 &minus; \e lon1 indicates how many times and in
    * what sense the geodesic encircles the ellipsoid.
    *
-   * Example, compute way points between JFK and Singapore Changi Airport
-   * using geod_genposition().  In this example, the points are evenly space in
-   * arc length (and so only approximately equally space in distance).  This is
-   * faster than using geod_position() would be appropriate if drawing the path
-   * on a map.
+   * Example, compute way points between JFK and Singapore Changi Airport using
+   * geod_genposition().  In this example, the points are evenly space in arc
+   * length (and so only approximately equally spaced in distance).  This is
+   * faster than using geod_position() and would be appropriate if drawing the
+   * path on a map.
    @code{.c}
    struct geod_geodesic g;
    struct geod_geodesicline l;

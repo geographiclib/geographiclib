@@ -48,9 +48,11 @@ Licensed under the
 
 \section doc-c Library documentation
 
-The interface to the library is documented via doxygen in the header
-file, geodesic.h.  See also the documentation on the structures
-geod_geodesic, geod_geodesicline, and geod_polygon.
+Here is the
+\link geodesic.h <i>application programming interface</i>\endlink
+for the library (this is just the documentation for the header file,
+geodesic.h).  See also the documentation on the structures geod_geodesic,
+geod_geodesicline, and geod_polygon.
 
 \section samples-c Sample programs
 

@@ -162,7 +162,6 @@ namespace GeographicLib {
                                   real& salp2, real& calp2,
                                   real& m12, real& M12, real& M21, real& S12)
     const {
-    outmask &= OUT_MASK;
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
@@ -508,10 +507,10 @@ namespace GeographicLib {
   GeodesicLine Geodesic::InverseLine(real lat1, real lon1, real lat2, real lon2,
                                      unsigned caps) const {
     real t, salp1, calp1, salp2, calp2,
-      a12 =  GenInverse(lat1, lon1, lat2, lon2,
-                        // No need to specify AZIMUTH here
-                        0u, t, salp1, calp1, salp2, calp2,
-                        t, t, t, t),
+      a12 = GenInverse(lat1, lon1, lat2, lon2,
+                       // No need to specify AZIMUTH here
+                       0u, t, salp1, calp1, salp2, calp2,
+                       t, t, t, t),
       azi1 = Math::atan2d(salp1, calp1);
     // Ensure that a12 can be converted to a distance
     if (caps & (OUT_MASK & DISTANCE_IN)) caps |= DISTANCE;

@@ -69,9 +69,6 @@ package net.sf.geographiclib;
  * 135&deg;. To lowest order in <i>r</i> and the flattening <i>f</i>, the
  * deviation is <i>f</i> (<i>r</i>/2<i>a</i>)<sup>3</sup> <i>r</i>.
  * <p>
- * The conversions all take place using a Geodesic object (by default
- * Geodesic::WGS84). For more information on geodesics see \ref geodesic.
- * <p>
  * <b>CAUTION:</b> The definition of this projection for a sphere is standard.
  * However, there is no standard for how it should be extended to an ellipsoid.
  * The choices are:
@@ -142,7 +139,7 @@ public class Gnomonic {
    * Constructor for Gnomonic.
    * <p>
    * @param earth the {@link Geodesic} object to use for geodesic
-   *   calculations. By default the WGS84 ellipsoid should be used.
+   *   calculations.
    */
   public Gnomonic(Geodesic earth) {
     _earth = earth;

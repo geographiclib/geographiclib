@@ -41,8 +41,10 @@ Licensed under the
 
 \section doc-for Library documentation
 
-The interface to the library is documented via doxygen in the source
-file.  To access this, see geodesic.for.
+Here is the
+\link geodesic.for <i>application programming interface</i>\endlink
+for the library (this is just the documentation for the source file,
+geodesic.for).
 
 \section samples-for Sample programs
 

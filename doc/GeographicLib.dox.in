@@ -7019,7 +7019,7 @@ git repository for GeographicLib</a>.
      - DONE: Fortran: ad (bce = not applicable)
      - C#: acd (e = not applicable)
      - C: abcd (e = not applicable)
-     - Java: acde
+     - Java: abcde
      - JavaScript: ade (c = not necessary)
      - Python: acde
      - Maxima: ad (ce = not applicable)

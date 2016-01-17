@@ -448,6 +448,78 @@ public class GeodesicTest {
     assertEquals(dir.lat2, 45.30632, 0.5e-5);
     assertEquals(dir.lon2, -180, 0.5e-5);
     assertEquals(dir.azi2, -180, 0.5e-5);
+    GeodesicLine line = Geodesic.WGS84.InverseLine(45, 0, 80,
+                                                   -0.000000000000000003);
+    dir = line.Position(1e7);
+    assertEquals(dir.lat2, 45.30632, 0.5e-5);
+    assertEquals(dir.lon2, -180, 0.5e-5);
+    assertEquals(dir.azi2, -180, 0.5e-5);
+  }
+
+  @Test
+  public void GeodSolve65() {
+    // Check for bug in east-going check in GeodesicLine (needed to check for
+    // sign of 0) and sign error in area calculation due to a bogus override
+    // of the code for alp12.  Found/fixed on 2015-12-19.
+    GeodesicLine line = Geodesic.WGS84.InverseLine(30, -0.000000000000000001,
+                                                   -31, 180);
+    GeodesicData dir =
+      line.Position(1e7, GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat1, 30.00000  , 0.5e-5);
+    assertEquals(dir.lon1, -0.00000  , 0.5e-5);
+    assertEquals(dir.azi1, -180.00000, 0.5e-5);
+    assertEquals(dir.lat2, -60.23169 , 0.5e-5);
+    assertEquals(dir.lon2, -0.00000  , 0.5e-5);
+    assertEquals(dir.azi2, -180.00000, 0.5e-5);
+    assertEquals(dir.s12 , 10000000  , 0.5);
+    assertEquals(dir.a12 , 90.06544  , 0.5e-5);
+    assertEquals(dir.m12 , 6363636   , 0.5);
+    assertEquals(dir.M12 , -0.0012834, 0.5e7);
+    assertEquals(dir.M21 , 0.0013749 , 0.5e-7);
+    assertEquals(dir.S12 , 0         , 0.5);
+    dir = line.Position(2e7, GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat1, 30.00000  , 0.5e-5);
+    assertEquals(dir.lon1, -0.00000  , 0.5e-5);
+    assertEquals(dir.azi1, -180.00000, 0.5e-5);
+    assertEquals(dir.lat2, -30.03547 , 0.5e-5);
+    assertEquals(dir.lon2, -180.00000, 0.5e-5);
+    assertEquals(dir.azi2, -0.00000  , 0.5e-5);
+    assertEquals(dir.s12 , 20000000  , 0.5);
+    assertEquals(dir.a12 , 179.96459 , 0.5e-5);
+    assertEquals(dir.m12 , 54342     , 0.5);
+    assertEquals(dir.M12 , -1.0045592, 0.5e7);
+    assertEquals(dir.M21 , -0.9954339, 0.5e-7);
+    assertEquals(dir.S12 , 127516405431022.0, 0.5);
+  }
+
+  @Test
+  public void GeodSolve69() {
+    // Check for InverseLine if line is slightly west of S and that s13 is
+    // correctly set.
+    GeodesicLine line =
+      Geodesic.WGS84.InverseLine(-5, -0.000000000000002, -10, 180);
+    GeodesicData dir =
+      line.Position(2e7, GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat2, 4.96445   , 0.5e-5);
+    assertEquals(dir.lon2, -180.00000, 0.5e-5);
+    assertEquals(dir.azi2, -0.00000  , 0.5e-5);
+    dir = line.Position(0.5 * line.Distance(),
+                        GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat2, -87.52461 , 0.5e-5);
+    assertEquals(dir.lon2, -0.00000  , 0.5e-5);
+    assertEquals(dir.azi2, -180.00000, 0.5e-5);
+  }
+
+  @Test
+  public void GeodSolve71() {
+    // Check that DirectLine sets s13.
+    GeodesicLine line = Geodesic.WGS84.DirectLine(1, 2, 45, 1e7);
+    GeodesicData dir =
+      line.Position(0.5 * line.Distance(),
+                    GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat2, 30.92625, 0.5e-5);
+    assertEquals(dir.lon2, 37.54640, 0.5e-5);
+    assertEquals(dir.azi2, 55.43104, 0.5e-5);
   }
 
   @Test
