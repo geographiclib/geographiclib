@@ -1,7 +1,7 @@
 #
 # Makefile.am
 #
-# Copyright (C) 2011, Charles Karney <charles@karney.com>
+# Copyright (c) Charles Karney (2011-2016) <charles@karney.com>
 
 PACKAGE=geographiclib
 PYTHON_FILES = \
@@ -24,6 +24,11 @@ DOC_FILES = \
 	$(srcdir)/doc/index.rst \
 	$(srcdir)/doc/interface.rst
 
+PYTHON_WRAPPER = \
+	$(srcdir)/wrapper/00README.txt \
+	$(srcdir)/wrapper/CMakeLists.txt \
+	$(srcdir)/wrapper/PyGeographicLib.cpp
+
 pythondir=$(libdir)/python/site-packages/$(PACKAGE)
 
 install:
@@ -40,4 +45,5 @@ clean-local:
 	rm -rf *.pyc $(PACKAGE)/*.pyc
 
 EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES) \
-	$(TEST_FILES) $(DOC_FILES) setup.py MANIFEST.in README.txt
+	$(TEST_FILES) $(DOC_FILES) setup.py MANIFEST.in README.txt \
+	$(PYTHON_WRAPPER)

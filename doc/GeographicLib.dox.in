@@ -7049,7 +7049,7 @@ git repository for GeographicLib</a>.
        distances read on standard input are fractions of \e s13 or \e
        a13.
    - TODO: Improve documentation for standalone components to describe
-     their relation to tne whole.
+     their relation to tne whole.  Make sure LICENSE.txt is on top page.
    - Rename -l flag for <a href="GeodSolve.1.html">GeodSolve</a> and
      <a href="GeodSolve.1.html">RhumbSolve</a> to -L (-l is is retained
      for backward compatibility but is deprecated).
