@@ -109,7 +109,7 @@ cd BUILD
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON ..
 make dist
 cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
-make doc distrib-npm
+make doc
 (
     cd ../java
     mvn -q package -P release

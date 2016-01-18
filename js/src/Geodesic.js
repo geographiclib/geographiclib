@@ -68,6 +68,7 @@ GeographicLib.PolygonArea = {};
   g.CAP_C4   = 1<<4;
 
   g.NONE          = 0;
+  g.ARC           = 1<<6;
   g.LATITUDE      = 1<<7  | CAP_NONE;
   g.LONGITUDE     = 1<<8  | g.CAP_C3;
   g.AZIMUTH       = 1<<9  | CAP_NONE;
@@ -794,6 +795,20 @@ GeographicLib.PolygonArea = {};
    *   2-interface}, "The outmask and caps parameters".
    */
   g.Geodesic.prototype.Inverse = function(lat1, lon1, lat2, lon2, outmask) {
+    var r, vals;
+    if (!outmask) outmask = g.STANDARD;
+    if (outmask === g.LONG_UNROLL) outmask |= g.STANDARD;
+    outmask &= g.OUT_MASK;
+    r = this.InverseInt(lat1, lon1, lat2, lon2, outmask);
+    vals = r.vals;
+    if (outmask & g.AZIMUTH) {
+      vals.azi1 = m.atan2d(r.salp1, r.calp1);
+      vals.azi2 = m.atan2d(r.salp2, r.calp2);
+    }
+    return vals;
+  }
+
+  g.Geodesic.prototype.InverseInt = function(lat1, lon1, lat2, lon2, outmask) {
     var vals = {},
         lon12, lon12s, lonsign, t, swapp, latsign,
         sbet1, cbet1, sbet2, cbet2, s12x, m12x,
@@ -804,9 +819,6 @@ GeographicLib.PolygonArea = {};
         tripn, tripb, v, dv, dalp1, sdalp1, cdalp1, nsalp1,
         lengthmask, salp0, calp0, alp12, k2, A4, C4a, B41, B42,
         somg12, comg12, domg12, dbet1, dbet2, salp12, calp12;
-    if (!outmask) outmask = g.STANDARD;
-    if (outmask === g.LONG_UNROLL) outmask |= g.STANDARD;
-    outmask &= g.OUT_MASK;
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
@@ -1159,13 +1171,9 @@ GeographicLib.PolygonArea = {};
     salp1 *= swapp * lonsign; calp1 *= swapp * latsign;
     salp2 *= swapp * lonsign; calp2 *= swapp * latsign;
 
-    if (outmask & g.AZIMUTH) {
-      vals.azi1 = m.atan2d(salp1, calp1);
-      vals.azi2 = m.atan2d(salp2, calp2);
-    }
-
-    // Returned value in [0, 180]
-    return vals;
+    return {vals: vals,
+            salp1: salp1, calp1: calp1,
+            salp2: salp2, calp2: calp2};
   };
 
   /**
@@ -1246,6 +1254,119 @@ GeographicLib.PolygonArea = {};
   g.Geodesic.prototype.Line = function (lat1, lon1, azi1, caps) {
     return new l.GeodesicLine(this, lat1, lon1, azi1, caps);
   };
+
+  /**
+   * @summary Define a {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} in terms of the direct geodesic problem specified in terms
+   *   of distance.
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} azi1 the azimuth at the first point in degrees.
+   *   degrees.
+   * @param {number} s12 the distance between point 1 and point 2 (meters); it
+   *   can be negative.
+   * @param {bitmask} [caps = STANDARD | DISTANCE_IN] which capabilities to
+   *   include.
+   * @returns {object} the
+   *   {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} object
+   * @description This function sets point 3 of the GeodesicLine to correspond
+   *   to point 2 of the direct geodesic problem.  For details on the caps
+   *   parameter, see {@tutorial 2-interface}, "The outmask and caps
+   *   parameters".
+   */
+  g.Geodesic.prototype.DirectLine = function (lat1, lon1, azi1, s12, caps) {
+    return this.GenDirectLine(lat1, lon1, azi1, false, s12, caps);
+  }
+
+  /**
+   * @summary Define a {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} in terms of the direct geodesic problem specified in terms
+   *   of arc length.
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} azi1 the azimuth at the first point in degrees.
+   *   degrees.
+   * @param {number} a12 the arc length between point 1 and point 2 (degrees);
+   *   it can be negative.
+   * @param {bitmask} [caps = STANDARD | DISTANCE_IN] which capabilities to
+   *   include.
+   * @returns {object} the
+   *   {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} object
+   * @description This function sets point 3 of the GeodesicLine to correspond
+   *   to point 2 of the direct geodesic problem.  For details on the caps
+   *   parameter, see {@tutorial 2-interface}, "The outmask and caps
+   *   parameters".
+   */
+  g.Geodesic.prototype.ArcDirectLine = function (lat1, lon1, azi1, a12, caps) {
+    return this.GenDirectLine(lat1, lon1, azi1, true, a12, caps);
+  }
+
+  /**
+   * @summary Define a {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} in terms of the direct geodesic problem specified in terms
+   *   of either distance or arc length.
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} azi1 the azimuth at the first point in degrees.
+   *   degrees.
+   * @param {bool} arcmode boolean flag determining the meaning of the
+   *   s12_a12.
+   * @param {number} s12_a12 if arcmode is false, this is the distance between
+   *   point 1 and point 2 (meters); otherwise it is the arc length between
+   *   point 1 and point 2 (degrees); it can be negative.
+   * @param {bitmask} [caps = STANDARD | DISTANCE_IN] which capabilities to
+   *   include.
+   * @returns {object} the
+   *   {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} object
+   * @description This function sets point 3 of the GeodesicLine to correspond
+   *   to point 2 of the direct geodesic problem.  For details on the caps
+   *   parameter, see {@tutorial 2-interface}, "The outmask and caps
+   *   parameters".
+   */
+  g.Geodesic.prototype.GenDirectLine = function (lat1, lon1, azi1,
+                                                 arcmode, s12_a12, caps) {
+    var salp1, calp1, t;
+    azi1 = m.AngNormalize(azi1);
+    // Guard against underflow in salp0.  Also -0 is converted to +0.
+    t = m.sincosd(m.AngRound(azi1)); salp1 = t.s; calp1 = t.c;
+    caps = (!caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH)) | g.LONG_UNROLL;
+    // Automatically supply DISTANCE_IN if necessary
+    if (!arcmode) caps |= g.DISTANCE_IN;
+    t = new l.GeodesicLine(this, lat1, lon1, azi1, caps, salp1, calp1);
+    t.GenSetDistance(arcmode, s12_a12);
+    return t;
+  };
+
+  /**
+   * @summary Define a {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} in terms of the inverse geodesic problem.
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} lat2 the latitude of the second point in degrees.
+   * @param {number} lon2 the longitude of the second point in degrees.
+   * @param {bitmask} [caps = STANDARD | DISTANCE_IN] which capabilities to
+   *   include.
+   * @returns {object} the
+   *   {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} object
+   * @description This function sets point 3 of the GeodesicLine to correspond
+   *   to point 2 of the inverse geodesic problem.  For details on the caps
+   *   parameter, see {@tutorial 2-interface}, "The outmask and caps
+   *   parameters".
+   */
+  g.Geodesic.prototype.InverseLine = function (lat1, lon1, lat2, lon2, caps) {
+    var r, t, azi1;
+    r = this.InverseInt(lat1, lon1, lat2, lon2, g.ARC);
+    azi1 = m.atan2d(r.salp1, r.calp1);
+    // Ensure that a12 can be converted to a distance
+    if (caps & (g.OUT_MASK & g.DISTANCE_IN)) caps |= g.DISTANCE;
+    t = new l.GeodesicLine(this, lat1, lon1, azi1, caps, r.salp1, r.calp1);
+    t.SetArc(r.vals.a12)
+    return t;
+  }
 
   /**
    * @summary Create a {@link module:GeographicLib/PolygonArea.PolygonArea

@@ -54,6 +54,7 @@ resulting object.
 Both *outmask* and *caps* are obtained by or'ing together the following
 values
 * Geodesic.NONE, no capabilities, no output;
+* Geodesic.ARC, compute arc length, *a12*; this is always implicitly set;
 * Geodesic.LATITUDE, compute latitude, *lat2*;
 * Geodesic.LONGITUDE, compute longitude, *lon2*;
 * Geodesic.AZIMUTH, compute azimuths, *azi1* and *azi2*;

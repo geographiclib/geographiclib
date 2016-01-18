@@ -112,6 +112,15 @@ file (COPY ${SAMPLES} DESTINATION .)
 
 add_custom_target (javascript ALL DEPENDS ${JS_TARGETS})
 
+# Copy files so that publishing nodejs package can be done with:
+#   npm publish ${CMAKE_CURRENT_BINARY_DIR}/geographiclib
+# To test, do:
+#   cd ${CMAKE_CURRENT_BINARY_DIR}/geographiclib && npm test
+file (COPY ../LICENSE.txt package.json README.md ${JS_TARGETS}
+  DESTINATION geographiclib)
+file (COPY ${JSSCRIPTS} DESTINATION geographiclib/src)
+file (COPY test/geodesictest.js DESTINATION geographiclib/test)
+
 if (COMMON_INSTALL_PATH)
   set (INSTALL_JS_DIR "lib${LIB_SUFFIX}/node_modules/geographiclib")
 else ()
@@ -123,18 +132,3 @@ install (FILES ../LICENSE.txt package.json README.md ${JS_TARGETS}
   DESTINATION ${INSTALL_JS_DIR})
 install (FILES ${JSSCRIPTS} DESTINATION ${INSTALL_JS_DIR}/src)
 install (FILES test/geodesictest.js DESTINATION ${INSTALL_JS_DIR}/test)
-
-if (MAINTAINER)
-  add_custom_target (distrib-npm)
-  add_dependencies (distrib-npm javascript)
-  set (_D ${CMAKE_CURRENT_BINARY_DIR}/geographiclib)
-  add_custom_command (TARGET distrib-npm
-    COMMAND
-    mkdir -p ${_D}/src ${_D}/test &&
-    install -C -m 644 ../LICENSE.txt package.json README.md ${JS_TARGETS}
-    ${_D} &&
-    install -C -m 644 ${JSSCRIPTS} ${_D}/src &&
-    install -C -m 644 test/geodesictest.js ${_D}/test
-    COMMENT "To publish nodejs package, run\nnpm publish ${_D}"
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-endif ()

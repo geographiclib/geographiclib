@@ -7020,7 +7020,7 @@ git repository for GeographicLib</a>.
      - C#: acd (e = not applicable)
      - C: abcd (e = not applicable)
      - Java: abcde
-     - JavaScript: ade (c = not necessary)
+     - JavaScript: abde (c = not necessary)
      - Python: acde
      - Maxima: ad (ce = not applicable)
    - Add sample of python wrapper.
