@@ -70,8 +70,7 @@
     this._b = geod._b;
     this._c2 = geod._c2;
     this._f1 = geod._f1;
-    this.caps = (!caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH)) |
-      g.LONG_UNROLL;
+    this.caps = caps | g.LATITUDE | g.AZIMUTH | g.LONG_UNROLL;
 
     this.lat1 = m.LatFix(lat1);
     this.lon1 = lon1;
@@ -375,9 +374,9 @@
    * @param {bool} arcmode boolean flag determining the meaning of the second
    *   parameter; if arcmode is false, then the GeodesicLine object must have
    *   been constructed with caps |= DISTANCE_IN.
-   * @param {number} s13_a13 if arcmode is false, this is the distance between
-   *   point 1 and point 3 (meters); otherwise it is the arc length between
-   *   point 1 and point 3 (degrees); it can be negative.
+   * @param {number} s13_a13 if arcmode is false, this is the distance from
+   *   point 1 to point 3 (meters); otherwise it is the arc length from
+   *   point 1 to point 3 (degrees); it can be negative.
    **********************************************************************/
   l.GeodesicLine.prototype.GenSetDistance = function(arcmode, s13_a13) {
     if (arcmode)
@@ -388,7 +387,7 @@
 
   /**
    * @summary Specify position of point 3 in terms distance.
-   * @param {number} s13 the distance between point 1 and point 3 (meters); it
+   * @param {number} s13 the distance from point 1 to point 3 (meters); it
    *   can be negative.
    **********************************************************************/
   l.GeodesicLine.prototype.SetDistance = function(s13) {
@@ -400,7 +399,7 @@
 
   /**
    * @summary Specify position of point 3 in terms of arc length.
-   * @param {number} a13 the arc length between point 1 and point 3 (degrees);
+   * @param {number} a13 the arc length from point 1 to point 3 (degrees);
    *   it can be negative.
    **********************************************************************/
   l.GeodesicLine.prototype.SetArc = function(a13) {

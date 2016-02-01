@@ -5,18 +5,43 @@ inverse geodesic problems are solved by
 
   * :meth:`~geographiclib.geodesic.Geodesic.Inverse` Solve the inverse
     geodesic problem
-
   * :meth:`~geographiclib.geodesic.Geodesic.Direct` Solve the direct
     geodesic problem
-
   * :meth:`~geographiclib.geodesic.Geodesic.ArcDirect` Solve the direct
     geodesic problem in terms of spherical arc length
 
-  * :meth:`~geographiclib.geodesic.Geodesic.Line` Return a
-    :class:`~geographiclib.geodesicline.GeodesicLine` object
+:class:`~geographiclib.geodesicline.GeodesicLine` objects can be created
+with
 
-  * :meth:`~geographiclib.geodesic.Geodesic.Polygon` Return a
-    :class:`~geographiclib.polygonarea.PolygonArea` object
+  * :meth:`~geographiclib.geodesic.Geodesic.Line`
+  * :meth:`~geographiclib.geodesic.Geodesic.DirectLine`
+  * :meth:`~geographiclib.geodesic.Geodesic.ArcDirectLine`
+  * :meth:`~geographiclib.geodesic.Geodesic.InverseLine`
+
+:class:`~geographiclib.polygonarea.PolygonArea` objects can be created
+with
+
+  * :meth:`~geographiclib.geodesic.Geodesic.Polygon`
+
+The public attributes for this class are
+
+  * :attr:`~geographiclib.geodesic.Geodesic.a`
+    :attr:`~geographiclib.geodesic.Geodesic.f`
+
+*outmask* and *caps* bit masks are
+
+  * :const:`~geographiclib.geodesic.Geodesic.EMPTY`
+  * :const:`~geographiclib.geodesic.Geodesic.LATITUDE`
+  * :const:`~geographiclib.geodesic.Geodesic.LONGITUDE`
+  * :const:`~geographiclib.geodesic.Geodesic.AZIMUTH`
+  * :const:`~geographiclib.geodesic.Geodesic.DISTANCE`
+  * :const:`~geographiclib.geodesic.Geodesic.STANDARD`
+  * :const:`~geographiclib.geodesic.Geodesic.DISTANCE_IN`
+  * :const:`~geographiclib.geodesic.Geodesic.REDUCEDLENGTH`
+  * :const:`~geographiclib.geodesic.Geodesic.GEODESICSCALE`
+  * :const:`~geographiclib.geodesic.Geodesic.AREA`
+  * :const:`~geographiclib.geodesic.Geodesic.ALL`
+  * :const:`~geographiclib.geodesic.Geodesic.LONG_UNROLL`
 
 :Example:
 
@@ -257,19 +282,17 @@ class Geodesic(object):
 
     """
 
-    self._a = float(a)
-    self._f = float(f)
-    self.a = self._a
-    """The equatorial radius"""
-    self.f = self._f
-    """The flattening"""
-    self._f1 = 1 - self._f
-    self._e2 = self._f * (2 - self._f)
+    self.a = float(a)
+    """The equatorial radius in meters (readonly)"""
+    self.f = float(f)
+    """The flattening (readonly)"""
+    self._f1 = 1 - self.f
+    self._e2 = self.f * (2 - self.f)
     self._ep2 = self._e2 / Math.sq(self._f1) # e2 / (1 - e2)
-    self._n = self._f / ( 2 - self._f)
-    self._b = self._a * self._f1
+    self._n = self.f / ( 2 - self.f)
+    self._b = self.a * self._f1
     # authalic radius squared
-    self._c2 = (Math.sq(self._a) + Math.sq(self._b) *
+    self._c2 = (Math.sq(self.a) + Math.sq(self._b) *
                 (1 if self._e2 == 0 else
                  (Math.atanh(math.sqrt(self._e2)) if self._e2 > 0 else
                   math.atan(math.sqrt(-self._e2))) /
@@ -283,9 +306,9 @@ class Geodesic(object):
     # by a factor of 2.)  Setting this equal to epsilon gives sig12 = etol2.
     # Here 0.1 is a safety factor (error decreased by 100) and max(0.001,
     # abs(f)) stops etol2 getting too large in the nearly spherical case.
-    self._etol2 = 0.1 * Geodesic.tol2_ / math.sqrt( max(0.001, abs(self._f)) *
-                                                    min(1.0, 1-self._f/2) / 2 )
-    if not(Math.isfinite(self._a) and self._a > 0):
+    self._etol2 = 0.1 * Geodesic.tol2_ / math.sqrt( max(0.001, abs(self.f)) *
+                                                    min(1.0, 1-self.f/2) / 2 )
+    if not(Math.isfinite(self.a) and self.a > 0):
       raise ValueError("Major radius is not positive")
     if not(Math.isfinite(self._b) and self._b > 0):
       raise ValueError("Minor radius is not positive")
@@ -519,11 +542,11 @@ class Geodesic(object):
       # which otherwise fails with g++ 4.4.4 x86 -O3
       # volatile real x
       lam12x = math.atan2(-slam12, -clam12)
-      if self._f >= 0:            # In fact f == 0 does not get here
+      if self.f >= 0:            # In fact f == 0 does not get here
         # x = dlong, y = dlat
         k2 = Math.sq(sbet1) * self._ep2
         eps = k2 / (2 * (1 + math.sqrt(1 + k2)) + k2)
-        lamscale = self._f * cbet1 * self._A3f(eps) * math.pi
+        lamscale = self.f * cbet1 * self._A3f(eps) * math.pi
         betscale = lamscale * cbet1
         x = lam12x / lamscale
         y = sbet12a / betscale
@@ -539,13 +562,13 @@ class Geodesic(object):
           cbet1, cbet2, Geodesic.REDUCEDLENGTH, C1a, C2a)
         x = -1 + m12b / (cbet1 * cbet2 * m0 * math.pi)
         betscale = (sbet12a / x if x < -0.01
-                    else -self._f * Math.sq(cbet1) * math.pi)
+                    else -self.f * Math.sq(cbet1) * math.pi)
         lamscale = betscale / cbet1
         y = lam12x / lamscale
 
       if y > -Geodesic.tol1_ and x > -1 - Geodesic.xthresh_:
         # strip near cut
-        if self._f >= 0:
+        if self.f >= 0:
           salp1 = min(1.0, -x); calp1 = - math.sqrt(1 - Math.sq(salp1))
         else:
           calp1 = max((0.0 if x > -Geodesic.tol1_ else -1.0), x)
@@ -586,7 +609,7 @@ class Geodesic(object):
         #
         # Because omg12 is near pi, estimate work with omg12a = pi - omg12
         k = Geodesic._Astroid(x, y)
-        omg12a = lamscale * ( -x * k/(1 + k) if self._f >= 0
+        omg12a = lamscale * ( -x * k/(1 + k) if self.f >= 0
                               else -y * (1 + k)/k )
         somg12 = math.sin(omg12a); comg12 = -math.cos(omg12a)
         # Update spherical estimate of alp1 using omg12 instead of lam12
@@ -660,7 +683,7 @@ class Geodesic(object):
     self._C3f(eps, C3a)
     B312 = (Geodesic._SinCosSeries(True, ssig2, csig2, C3a) -
             Geodesic._SinCosSeries(True, ssig1, csig1, C3a))
-    lam12 = eta - self._f * self._A3f(eps) * salp0 * (sig12 + B312)
+    lam12 = eta - self.f * self._A3f(eps) * salp0 * (sig12 + B312)
 
     if diffp:
       if calp2 == 0:
@@ -676,10 +699,10 @@ class Geodesic(object):
     return (lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
             somg12, comg12, dlam12)
 
-  # return a12, s12, azi1, azi2, m12, M12, M21, S12
+  # return a12, s12, salp1, calp1, salp2, calp2, m12, M12, M21, S12
   def _GenInverse(self, lat1, lon1, lat2, lon2, outmask):
     """Private: General version of the inverse problem"""
-    a12 = s12 = azi1 = azi2 = m12 = M12 = M21 = S12 = Math.nan # return vals
+    a12 = s12 = m12 = M12 = M21 = S12 = Math.nan # return vals
 
     outmask &= Geodesic.OUT_MASK
     # Compute longitude difference (AngDiff does this carefully).  Result is
@@ -764,7 +787,7 @@ class Geodesic(object):
       # a meridian.
 
       calp1 = clam12; salp1 = slam12 # Head to the target longitude
-      calp2 = 1; salp2 = 0           # At the target we're heading north
+      calp2 = 1.0; salp2 = 0.0       # At the target we're heading north
 
       # tan(bet) = tan(sig) * cos(alp)
       ssig1 = sbet1; csig1 = calp1 * cbet1
@@ -787,7 +810,7 @@ class Geodesic(object):
       # not a shortest path.
       if sig12 < 1 or m12x >= 0:
         if sig12 < 3 * Geodesic.tiny_:
-          sig12 = m12x = s12x = 0
+          sig12 = m12x = s12x = 0.0
         m12x *= self._b
         s12x *= self._b
         a12 = math.degrees(sig12)
@@ -797,15 +820,15 @@ class Geodesic(object):
     # end if meridian:
 
     # somg12 > 1 marks that it needs to be calculated
-    somg12 = 2; omg12 = 0
+    somg12 = 2.0; omg12 = 0.0
     if (not meridian and
         sbet1 == 0 and   # and sbet2 == 0
         # Mimic the way Lambda12 works with calp1 = 0
-        (self._f <= 0 or lon12s >= self._f * 180)):
+        (self.f <= 0 or lon12s >= self.f * 180)):
 
       # Geodesic runs along equator
-      calp1 = calp2 = 0; salp1 = salp2 = 1
-      s12x = self._a * lam12
+      calp1 = calp2 = 0.0; salp1 = salp2 = 1.0
+      s12x = self.a * lam12
       sig12 = omg12 = lam12 / self._f1
       m12x = self._b * math.sin(sig12)
       if outmask & Geodesic.GEODESICSCALE:
@@ -846,8 +869,8 @@ class Geodesic(object):
         numit = 0
         tripn = tripb = False
         # Bracketing range
-        salp1a = Geodesic.tiny_; calp1a = 1
-        salp1b = Geodesic.tiny_; calp1b = -1
+        salp1a = Geodesic.tiny_; calp1a = 1.0
+        salp1b = Geodesic.tiny_; calp1b = -1.0
 
         while numit < Geodesic.maxit2_:
           # the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
@@ -912,10 +935,10 @@ class Geodesic(object):
     # end elif not meridian
 
     if outmask & Geodesic.DISTANCE:
-      s12 = 0 + s12x           # Convert -0 to 0
+      s12 = 0.0 + s12x          # Convert -0 to 0
 
     if outmask & Geodesic.REDUCEDLENGTH:
-      m12 = 0 + m12x           # Convert -0 to 0
+      m12 = 0.0 + m12x          # Convert -0 to 0
 
     if outmask & Geodesic.AREA:
       # From Lambda12: sin(alp1) * cos(bet1) = sin(alp0)
@@ -929,7 +952,7 @@ class Geodesic(object):
         k2 = Math.sq(calp0) * self._ep2
         eps = k2 / (2 * (1 + math.sqrt(1 + k2)) + k2)
         # Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
-        A4 = Math.sq(self._a) * calp0 * salp0 * self._e2
+        A4 = Math.sq(self.a) * calp0 * salp0 * self._e2
         ssig1, csig1 = Math.norm(ssig1, csig1)
         ssig2, csig2 = Math.norm(ssig2, csig2)
         C4a = list(range(Geodesic.nC4_))
@@ -939,7 +962,7 @@ class Geodesic(object):
         S12 = A4 * (B42 - B41)
       else:
         # Avoid problems with indeterminate sig1, sig2 on equator
-        S12 = 0
+        S12 = 0.0
 
       if not meridian:
         if somg12 > 1:
@@ -967,12 +990,12 @@ class Geodesic(object):
         # behavior.
         if salp12 == 0 and calp12 < 0:
           salp12 = Geodesic.tiny_ * calp1
-          calp12 = -1
+          calp12 = -1.0
         alp12 = math.atan2(salp12, calp12)
       S12 += self._c2 * alp12
       S12 *= swapp * lonsign * latsign
       # Convert -0 to 0
-      S12 += 0
+      S12 += 0.0
 
     # Convert calp, salp to azimuth accounting for lonsign, swapp, latsign.
     if swapp < 0:
@@ -984,13 +1007,7 @@ class Geodesic(object):
     salp1 *= swapp * lonsign; calp1 *= swapp * latsign
     salp2 *= swapp * lonsign; calp2 *= swapp * latsign
 
-    if outmask & Geodesic.AZIMUTH:
-      # minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi1 = Math.atan2d(salp1, calp1)
-      azi2 = Math.atan2d(salp2, calp2)
-
-    # Returned value in [0, 180]
-    return a12, s12, azi1, azi2, m12, M12, M21, S12
+    return a12, s12, salp1, calp1, salp2, calp2, m12, M12, M21, S12
 
   def Inverse(self, lat1, lon1, lat2, lon2,
               outmask = GeodesicCapability.STANDARD):
@@ -1010,7 +1027,7 @@ class Geodesic(object):
 
     """
 
-    a12, s12, azi1, azi2, m12, M12, M21, S12 = self._GenInverse(
+    a12, s12, salp1,calp1, salp2,calp2, m12, M12, M21, S12 = self._GenInverse(
       lat1, lon1, lat2, lon2, outmask)
     outmask &= Geodesic.OUT_MASK
     if outmask & Geodesic.LONG_UNROLL:
@@ -1026,7 +1043,8 @@ class Geodesic(object):
     result['a12'] = a12
     if outmask & Geodesic.DISTANCE: result['s12'] = s12
     if outmask & Geodesic.AZIMUTH:
-      result['azi1'] = azi1; result['azi2'] = azi2
+      result['azi1'] = Math.atan2d(salp1, calp1)
+      result['azi2'] = Math.atan2d(salp2, calp2)
     if outmask & Geodesic.REDUCEDLENGTH: result['m12'] = m12
     if outmask & Geodesic.GEODESICSCALE:
       result['M12'] = M12; result['M21'] = M21
@@ -1037,10 +1055,9 @@ class Geodesic(object):
   def _GenDirect(self, lat1, lon1, azi1, arcmode, s12_a12, outmask):
     """Private: General version of direct problem"""
     from geographiclib.geodesicline import GeodesicLine
-    line = GeodesicLine(
-      self, lat1, lon1, azi1,
-      # Automatically supply DISTANCE_IN if necessary
-      outmask | (Geodesic.EMPTY if arcmode else Geodesic.DISTANCE_IN))
+    # Automatically supply DISTANCE_IN if necessary
+    if not arcmode: outmask |= Geodesic.DISTANCE_IN
+    line = GeodesicLine(self, lat1, lon1, azi1, outmask)
     return line._GenPosition(arcmode, s12_a12, outmask)
 
   def Direct(self, lat1, lon1, azi1, s12,
@@ -1135,10 +1152,96 @@ class Geodesic(object):
     """
 
     from geographiclib.geodesicline import GeodesicLine
-    return GeodesicLine(
-      self, lat1, lon1, azi1,
-      # Automatically supply DISTANCE_IN
-      caps | Geodesic.DISTANCE_IN)
+    return GeodesicLine(self, lat1, lon1, azi1, caps)
+
+  def _GenDirectLine(self, lat1, lon1, azi1, arcmode, s12_a12,
+                     caps = GeodesicCapability.STANDARD |
+                     GeodesicCapability.DISTANCE_IN):
+    """Private: general form of DirectLine"""
+    from geographiclib.geodesicline import GeodesicLine
+    # Automatically supply DISTANCE_IN if necessary
+    if not arcmode: caps |= Geodesic.DISTANCE_IN
+    line = GeodesicLine(self, lat1, lon1, azi1, caps)
+    if arcmode:
+      line.SetArc(s12_s12)
+    else:
+      line.SetDistance(s12_a12)
+    return line
+
+  def DirectLine(self, lat1, lon1, azi1, s12,
+                 caps = GeodesicCapability.STANDARD |
+                 GeodesicCapability.DISTANCE_IN):
+    """Define a GeodesicLine object in terms of the direct geodesic
+    problem specified in terms of spherical arc length
+
+    :param lat1: latitude of the first point in degrees
+    :param lon1: longitude of the first point in degrees
+    :param azi1: azimuth at the first point in degrees
+    :param s12: the distance from the first point to the second in
+      meters
+    :param caps: the :ref:`capabilities <outmask>`
+    :return: a :class:`~geographiclib.geodesicline.GeodesicLine`
+
+    This function sets point 3 of the GeodesicLine to correspond to
+    point 2 of the direct geodesic problem.  The default value of *caps*
+    is STANDARD | DISTANCE_IN, allowing direct geodesic problem to be
+    solved.
+
+    """
+
+    return self._GenDirectLine(lat1, lon1, azi1, False, s12, caps)
+
+  def ArcDirectLine(self, lat1, lon1, azi1, a12,
+                 caps = GeodesicCapability.STANDARD |
+                 GeodesicCapability.DISTANCE_IN):
+    """Define a GeodesicLine object in terms of the direct geodesic
+    problem specified in terms of spherical arc length
+
+    :param lat1: latitude of the first point in degrees
+    :param lon1: longitude of the first point in degrees
+    :param azi1: azimuth at the first point in degrees
+    :param a12: spherical arc length from the first point to the second
+      in degrees
+    :param caps: the :ref:`capabilities <outmask>`
+    :return: a :class:`~geographiclib.geodesicline.GeodesicLine`
+
+    This function sets point 3 of the GeodesicLine to correspond to
+    point 2 of the direct geodesic problem.  The default value of *caps*
+    is STANDARD | DISTANCE_IN, allowing direct geodesic problem to be
+    solved.
+
+    """
+
+    return self._GenDirectLine(lat1, lon1, azi1, True, a12, caps)
+
+  def InverseLine(self, lat1, lon1, lat2, lon2,
+                  caps = GeodesicCapability.STANDARD |
+                  GeodesicCapability.DISTANCE_IN):
+    """Define a GeodesicLine object in terms of the invese geodesic problem
+
+    :param lat1: latitude of the first point in degrees
+    :param lon1: longitude of the first point in degrees
+    :param lat2: latitude of the second point in degrees
+    :param lon2: longitude of the second point in degrees
+    :param caps: the :ref:`capabilities <outmask>`
+    :return: a :class:`~geographiclib.geodesicline.GeodesicLine`
+
+    This function sets point 3 of the GeodesicLine to correspond to
+    point 2 of the inverse geodesic problem.  The default value of *caps*
+    is STANDARD | DISTANCE_IN, allowing direct geodesic problem to be
+    solved.
+
+    """
+
+    from geographiclib.geodesicline import GeodesicLine
+    a12, _, salp1, calp1, _, _, _, _, _, _ = self._GenInverse(
+      lat1, lon1, lat2, lon2, 0)
+    azi1 = Math.atan2d(salp1, calp1)
+    if caps & (Geodesic.OUT_MASK & Geodesic.DISTANCE_IN):
+      caps |= Geodesic.DISTANCE
+    line = GeodesicLine(self, lat1, lon1, azi1, caps, salp1, calp1)
+    line.SetArc(a12)
+    return line
 
   def Polygon(self, polyline = False):
     """Return a PolygonArea object
@@ -1178,7 +1281,6 @@ class Geodesic(object):
   LONG_UNROLL   = GeodesicCapability.LONG_UNROLL
   """Unroll longitudes, rather than reducing them to the reducing them to
   the range [-180d,180d)."""
-  LONG_NOWRAP   = GeodesicCapability.LONG_UNROLL
 
 Geodesic.WGS84 = Geodesic(Constants.WGS84_a, Constants.WGS84_f)
 """Instantiation for the WGS84 ellipsoid"""

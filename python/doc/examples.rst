@@ -56,13 +56,12 @@ intervals of 1000 km using
 :meth:`GeodesicLine.Position
 <geographiclib.geodesicline.GeodesicLine.Position>`:
 
-  >>> g = geod.Inverse(40.1, 116.6, 37.6, -122.4)
-  >>> l = geod.Line(g['lat1'], g['lon1'], g['azi1'])
-  >>> s12 = g['s12']; ds = 1000e3; n = int(math.ceil(s12 / ds))
+  >>> l = geod.InverseLine(40.1, 116.6, 37.6, -122.4)
+  >>> ds = 1000e3; n = int(math.ceil(l.s13 / ds))
   >>> for i in range(n + 1):
   ...   if i == 0:
   ...     print "distance latitude longitude azimuth"
-  ...   s = min(ds * i, s12)
+  ...   s = min(ds * i, l.s13)
   ...   g = l.Position(s, Geodesic.STANDARD | Geodesic.LONG_UNROLL)
   ...   print "{:.0f} {:.5f} {:.5f} {:.5f}".format(
   ...     g['s12'], g['lat2'], g['lon2'], g['azi2'])
@@ -92,10 +91,9 @@ length with :meth:`GeodesicLine.ArcPosition
 spacing is about 1° of arc which means that the distance between the
 waypoints will be about 60 NM.
 
-  >>> g = geod.Inverse(40.1, 116.6, 37.6, -122.4, Geodesic.AZIMUTH)
-  >>> l = geod.Line(g['lat1'], g['lon1'], g['azi1'],
+  >>> l = geod.InverseLine(40.1, 116.6, 37.6, -122.4,
   ...               Geodesic.LATITUDE | Geodesic.LONGITUDE)
-  >>> a12 = g['a12']; da = 1; n = int(math.ceil(a12 / da)); da = a12 / n
+  >>> da = 1; n = int(math.ceil(l.a13 / da)); da = l.a13 / n
   >>> for i in range(n + 1):
   ...   if i == 0:
   ...     print "latitude longitude"

@@ -234,7 +234,7 @@ extern "C" {
    * @param[in] lat1 latitude of point 1 (degrees).
    * @param[in] lon1 longitude of point 1 (degrees).
    * @param[in] azi1 azimuth at point 1 (degrees).
-   * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+   * @param[in] s12 distance from point 1 to point 2 (meters); it can be
    *   negative.
    * @param[out] plat2 pointer to the latitude of point 2 (degrees).
    * @param[out] plon2 pointer to the longitude of point 2 (degrees).
@@ -278,12 +278,12 @@ extern "C" {
    *   GEOD_ARCMODE determines the meaning of \e s12_a12 and \e flags &
    *   GEOD_LONG_UNROLL "unrolls" \e lon2.
    * @param[in] s12_a12 if \e flags & GEOD_ARCMODE is 0, this is the distance
-   *   between point 1 and point 2 (meters); otherwise it is the arc length
-   *   between point 1 and point 2 (degrees); it can be negative.
+   *   from point 1 to point 2 (meters); otherwise it is the arc length
+   *   from point 1 to point 2 (degrees); it can be negative.
    * @param[out] plat2 pointer to the latitude of point 2 (degrees).
    * @param[out] plon2 pointer to the longitude of point 2 (degrees).
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
-   * @param[out] ps12 pointer to the distance between point 1 and point 2
+   * @param[out] ps12 pointer to the distance from point 1 to point 2
    *   (meters).
    * @param[out] pm12 pointer to the reduced length of geodesic (meters).
    * @param[out] pM12 pointer to the geodesic scale of point 2 relative to
@@ -292,7 +292,7 @@ extern "C" {
    *   point 2 (dimensionless).
    * @param[out] pS12 pointer to the area under the geodesic
    *   (meters<sup>2</sup>).
-   * @return \e a12 arc length of between point 1 and point 2 (degrees).
+   * @return \e a12 arc length from point 1 to point 2 (degrees).
    *
    * \e g must have been initialized with a call to geod_init().  \e lat1
    * should be in the range [&minus;90&deg;, 90&deg;].  The function value \e
@@ -320,7 +320,7 @@ extern "C" {
    * @param[in] lon1 longitude of point 1 (degrees).
    * @param[in] lat2 latitude of point 2 (degrees).
    * @param[in] lon2 longitude of point 2 (degrees).
-   * @param[out] ps12 pointer to the distance between point 1 and point 2
+   * @param[out] ps12 pointer to the distance from point 1 to point 2
    *   (meters).
    * @param[out] pazi1 pointer to the azimuth at point 1 (degrees).
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
@@ -362,7 +362,7 @@ extern "C" {
    * @param[in] lon1 longitude of point 1 (degrees).
    * @param[in] lat2 latitude of point 2 (degrees).
    * @param[in] lon2 longitude of point 2 (degrees).
-   * @param[out] ps12 pointer to the distance between point 1 and point 2
+   * @param[out] ps12 pointer to the distance from point 1 to point 2
    *  (meters).
    * @param[out] pazi1 pointer to the azimuth at point 1 (degrees).
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
@@ -373,7 +373,7 @@ extern "C" {
    *   point 2 (dimensionless).
    * @param[out] pS12 pointer to the area under the geodesic
    *   (meters<sup>2</sup>).
-   * @return \e a12 arc length of between point 1 and point 2 (degrees).
+   * @return \e a12 arc length from point 1 to point 2 (degrees).
    *
    * \e g must have been initialized with a call to geod_init().  \e lat1 and
    * \e lat2 should be in the range [&minus;90&deg;, 90&deg;].  Any of the
@@ -439,7 +439,7 @@ extern "C" {
    * @param[in] lat1 latitude of point 1 (degrees).
    * @param[in] lon1 longitude of point 1 (degrees).
    * @param[in] azi1 azimuth at point 1 (degrees).
-   * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+   * @param[in] s12 distance from point 1 to point 2 (meters); it can be
    *   negative.
    * @param[in] caps bitor'ed combination of geod_mask() values specifying the
    *   capabilities the geod_geodesicline object should possess, i.e., which
@@ -468,8 +468,8 @@ extern "C" {
    * @param[in] flags either GEOD_NOFLAGS or GEOD_ARCMODE to determining the
    *   meaning of the \e s12_a12.
    * @param[in] s12_a12 if \e flags = GEOD_NOFLAGS, this is the distance
-   *   between point 1 and point 2 (meters); if \e flags = GEOD_ARCMODE, it is
-   *   the arc length between point 1 and point 2 (degrees); it can be
+   *   from point 1 to point 2 (meters); if \e flags = GEOD_ARCMODE, it is
+   *   the arc length from point 1 to point 2 (degrees); it can be
    *   negative.
    * @param[in] caps bitor'ed combination of geod_mask() values specifying the
    *   capabilities the geod_geodesicline object should possess, i.e., which
@@ -516,7 +516,7 @@ extern "C" {
    *
    * @param[in] l a pointer to the geod_geodesicline object specifying the
    *   geodesic line.
-   * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+   * @param[in] s12 distance from point 1 to point 2 (meters); it can be
    *   negative.
    * @param[out] plat2 pointer to the latitude of point 2 (degrees).
    * @param[out] plon2 pointer to the longitude of point 2 (degrees); requires
@@ -569,14 +569,14 @@ extern "C" {
    *   GEOD_LONG_UNROLL "unrolls" \e lon2; if \e flags & GEOD_ARCMODE is 0,
    *   then \e l must have been initialized with \e caps |= GEOD_DISTANCE_IN.
    * @param[in] s12_a12 if \e flags & GEOD_ARCMODE is 0, this is the
-   *   distance between point 1 and point 2 (meters); otherwise it is the
-   *   arc length between point 1 and point 2 (degrees); it can be
+   *   distance from point 1 to point 2 (meters); otherwise it is the
+   *   arc length from point 1 to point 2 (degrees); it can be
    *   negative.
    * @param[out] plat2 pointer to the latitude of point 2 (degrees).
    * @param[out] plon2 pointer to the longitude of point 2 (degrees); requires
    *   that \e l was initialized with \e caps |= GEOD_LONGITUDE.
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
-   * @param[out] ps12 pointer to the distance between point 1 and point 2
+   * @param[out] ps12 pointer to the distance from point 1 to point 2
    *   (meters); requires that \e l was initialized with \e caps |=
    *   GEOD_DISTANCE.
    * @param[out] pm12 pointer to the reduced length of geodesic (meters);
@@ -590,7 +590,7 @@ extern "C" {
    * @param[out] pS12 pointer to the area under the geodesic
    *   (meters<sup>2</sup>); requires that \e l was initialized with \e caps |=
    *   GEOD_AREA.
-   * @return \e a12 arc length of between point 1 and point 2 (degrees).
+   * @return \e a12 arc length from point 1 to point 2 (degrees).
    *
    * \e l must have been initialized with a call to geod_lineinit() with \e
    * caps |= GEOD_DISTANCE_IN.  The value \e azi2 returned is in the range
@@ -634,7 +634,7 @@ extern "C" {
    * Specify position of point 3 in terms of distance.
    *
    * @param[inout] l a pointer to the geod_geodesicline object.
-   * @param[in] s13 the distance between point 1 and point 3 (meters); it
+   * @param[in] s13 the distance from point 1 to point 3 (meters); it
    *   can be negative.
    *
    * This is only useful if the geod_geodesicline object has been constructed
@@ -649,8 +649,8 @@ extern "C" {
    * @param[in] flags either GEOD_NOFLAGS or GEOD_ARCMODE to determining the
    *   meaning of the \e s13_a13.
    * @param[in] s13_a13 if \e flags = GEOD_NOFLAGS, this is the distance
-   *   between point 1 and point 2 (meters); if \e flags = GEOD_ARCMODE, it is
-   *   the arc length between point 1 and point 2 (degrees); it can be
+   *   from point 1 to point 3 (meters); if \e flags = GEOD_ARCMODE, it is
+   *   the arc length from point 1 to point 3 (degrees); it can be
    *   negative.
    *
    * If flags = GEOD_NOFLAGS, this calls geod_setdistance().  If flags =

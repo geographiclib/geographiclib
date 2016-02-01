@@ -1196,9 +1196,9 @@ GeographicLib.PolygonArea = {};
     var line;
     if (!outmask) outmask = g.STANDARD;
     else if (outmask === g.LONG_UNROLL) outmask |= g.STANDARD;
-    line = new l.GeodesicLine(this, lat1, lon1, azi1,
                               // Automatically supply DISTANCE_IN if necessary
-                              outmask | (arcmode ? g.NONE : g.DISTANCE_IN));
+    if (!arcmode) outmask |= g.DISTANCE_IN;
+    line = new l.GeodesicLine(this, lat1, lon1, azi1, outmask);
     return line.GenPosition(arcmode, s12_a12, outmask);
   };
 
@@ -1328,14 +1328,10 @@ GeographicLib.PolygonArea = {};
    */
   g.Geodesic.prototype.GenDirectLine = function (lat1, lon1, azi1,
                                                  arcmode, s12_a12, caps) {
-    var salp1, calp1, t;
-    azi1 = m.AngNormalize(azi1);
-    // Guard against underflow in salp0.  Also -0 is converted to +0.
-    t = m.sincosd(m.AngRound(azi1)); salp1 = t.s; calp1 = t.c;
-    caps = (!caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH)) | g.LONG_UNROLL;
+    if (!caps) caps = g.STANDARD | g.DISTANCE_IN;
     // Automatically supply DISTANCE_IN if necessary
     if (!arcmode) caps |= g.DISTANCE_IN;
-    t = new l.GeodesicLine(this, lat1, lon1, azi1, caps, salp1, calp1);
+    t = new l.GeodesicLine(this, lat1, lon1, azi1, caps);
     t.GenSetDistance(arcmode, s12_a12);
     return t;
   };
@@ -1359,6 +1355,7 @@ GeographicLib.PolygonArea = {};
    */
   g.Geodesic.prototype.InverseLine = function (lat1, lon1, lat2, lon2, caps) {
     var r, t, azi1;
+    if (!caps) caps = g.STANDARD | g.DISTANCE_IN;
     r = this.InverseInt(lat1, lon1, lat2, lon2, g.ARC);
     azi1 = m.atan2d(r.salp1, r.calp1);
     // Ensure that a12 can be converted to a distance

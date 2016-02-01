@@ -129,8 +129,8 @@
 *! @param[in] lon1 longitude of point 1 (degrees).
 *! @param[in] azi1 azimuth at point 1 (degrees).
 *! @param[in] s12a12 if \e arcmode is not set, this is the distance
-*!   between point 1 and point 2 (meters); otherwise it is the arc
-*!   length between point 1 and point 2 (degrees); it can be negative.
+*!   from point 1 to point 2 (meters); otherwise it is the arc
+*!   length from point 1 to point 2 (degrees); it can be negative.
 *! @param[in] flags a bitor'ed combination of the \e arcmode and \e
 *!   unroll flags.
 *! @param[out] lat2 latitude of point 2 (degrees).
@@ -139,8 +139,8 @@
 *! @param[in] omask a bitor'ed combination of mask values
 *!   specifying which of the following parameters should be set.
 *! @param[out] a12s12 if \e arcmode is not set, this is the arc length
-*!   between point 1 and point 2 (degrees); otherwise it is the distance
-*!   between point 1 and point 2 (meters).
+*!   from point 1 to point 2 (degrees); otherwise it is the distance
+*!   from point 1 to point 2 (meters).
 *! @param[out] m12 reduced length of geodesic (meters).
 *! @param[out] MM12 geodesic scale of point 2 relative to point 1
 *!   (dimensionless).
@@ -488,12 +488,12 @@
 *! @param[in] lon1 longitude of point 1 (degrees).
 *! @param[in] lat2 latitude of point 2 (degrees).
 *! @param[in] lon2 longitude of point 2 (degrees).
-*! @param[out] s12 distance between point 1 and point 2 (meters).
+*! @param[out] s12 distance from point 1 to point 2 (meters).
 *! @param[out] azi1 azimuth at point 1 (degrees).
 *! @param[out] azi2 (forward) azimuth at point 2 (degrees).
 *! @param[in] omask a bitor'ed combination of mask values
 *!   specifying which of the following parameters should be set.
-*! @param[out] a12 arc length of between point 1 and point 2 (degrees).
+*! @param[out] a12 arc length from point 1 to point 2 (degrees).
 *! @param[out] m12 reduced length of geodesic (meters).
 *! @param[out] MM12 geodesic scale of point 2 relative to point 1
 *!   (dimensionless).

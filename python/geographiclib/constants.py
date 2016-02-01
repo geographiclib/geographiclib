@@ -1,4 +1,4 @@
-"""constants.py: transcription of GeographicLib::Constants class."""
+"""Define the WGS84 ellipsoid"""
 # constants.py
 #
 # This is a translation of the GeographicLib::Constants class to python.  See

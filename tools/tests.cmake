@@ -1,8 +1,6 @@
 # Here are the tests for GeographicLib
 
-# First turn on testing
 enable_testing ()
-
 if (DEFINED ENV{GEOGRAPHICLIB_DATA})
   set (_DATADIR "$ENV{GEOGRAPHICLIB_DATA}")
 else ()

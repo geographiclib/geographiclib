@@ -618,5 +618,5 @@ if (MAINTAINER)
   add_dependencies (dist distrib-all)
 endif ()
 
-# Add a test target; the tests are in tools.
-enable_testing ()
+# The test suite -- split into a separate file because it's rather large.
+include (tools/tests.cmake)

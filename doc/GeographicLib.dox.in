@@ -7021,8 +7021,8 @@ git repository for GeographicLib</a>.
      - C: abcd (e = not applicable)
      - Java: abcde
      - JavaScript: abde (c = not necessary)
-     - Python: acde
-     - Maxima: ad (ce = not applicable)
+     - Python: abcde
+     - Maxima: ad (ce = not applicable, b = not implemented)
    - Add sample of python wrapper.
    - Add overloaded version of Math::AngDiff which returns the error in
      the difference.  This allows a more accurate treatment of inverse

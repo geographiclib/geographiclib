@@ -295,7 +295,7 @@ public class GeodesicLine {
    * Compute the position of point 2 which is a distance <i>s12</i> (meters)
    * from point 1.
    * <p>
-   * @param s12 distance between point 1 and point 2 (meters); it can be
+   * @param s12 distance from point 1 to point 2 (meters); it can be
    *   negative.
    * @return a {@link GeodesicData} object with the following fields:
    *   <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>lat2</i>, <i>lon2</i>,
@@ -315,7 +315,7 @@ public class GeodesicLine {
    * Compute the position of point 2 which is a distance <i>s12</i> (meters)
    * from point 1 and with a subset of the geodesic results returned.
    * <p>
-   * @param s12 distance between point 1 and point 2 (meters); it can be
+   * @param s12 distance from point 1 to point 2 (meters); it can be
    *   negative.
    * @param outmask a bitor'ed combination of {@link GeodesicMask} values
    *   specifying which results should be returned.
@@ -339,7 +339,7 @@ public class GeodesicLine {
    * Compute the position of point 2 which is an arc length <i>a12</i>
    * (degrees) from point 1.
    * <p>
-   * @param a12 arc length between point 1 and point 2 (degrees); it can
+   * @param a12 arc length from point 1 to point 2 (degrees); it can
    *   be negative.
    * @return a {@link GeodesicData} object with the following fields:
    *   <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>lat2</i>, <i>lon2</i>,
@@ -359,7 +359,7 @@ public class GeodesicLine {
    * Compute the position of point 2 which is an arc length <i>a12</i>
    * (degrees) from point 1 and with a subset of the geodesic results returned.
    * <p>
-   * @param a12 arc length between point 1 and point 2 (degrees); it can
+   * @param a12 arc length from point 1 to point 2 (degrees); it can
    *   be negative.
    * @param outmask a bitor'ed combination of {@link GeodesicMask} values
    *   specifying which results should be returned.
@@ -588,7 +588,7 @@ public class GeodesicLine {
   /**
    * Specify position of point 3 in terms of distance.
    *
-   * @param s13 the distance between point 1 and point 3 (meters); it
+   * @param s13 the distance from point 1 to point 3 (meters); it
    *   can be negative.
    *
    * This is only useful if the GeodesicLine object has been constructed
@@ -603,7 +603,7 @@ public class GeodesicLine {
   /**
    * Specify position of point 3 in terms of arc length.
    *
-   * @param a13 the arc length between point 1 and point 3 (degrees); it
+   * @param a13 the arc length from point 1 to point 3 (degrees); it
    *   can be negative.
    *
    * The distance <i>s13</i> is only set if the GeodesicLine object has been
@@ -622,9 +622,9 @@ public class GeodesicLine {
    *   parameter; if <i>arcmode</i> is false, then the GeodesicLine object must
    *   have been constructed with <i>caps</i> |=
    *   {@link GeodesicMask#DISTANCE_IN}.
-   * @param s13_a13 if <i>arcmode</i> is false, this is the distance between
-   *   point 1 and point 3 (meters); otherwise it is the arc length between
-   *   point 1 and point 3 (degrees); it can be negative.
+   * @param s13_a13 if <i>arcmode</i> is false, this is the distance from
+   *   point 1 to point 3 (meters); otherwise it is the arc length from
+   *   point 1 to point 3 (degrees); it can be negative.
    **********************************************************************/
   public void GenSetDistance(boolean arcmode, double s13_a13) {
     if (arcmode)

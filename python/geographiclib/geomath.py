@@ -157,11 +157,11 @@ class Math(object):
     s = math.sin(r); c = math.cos(r)
     q = q % 4
     if q == 1:
-      s, c =   c, 0-s
+      s, c =     c, 0.0-s
     elif q == 2:
-      s, c = 0-s, 0-c
+      s, c = 0.0-s, 0.0-c
     elif q == 3:
-      s, c = 0-c,   s
+      s, c = 0.0-c,     s
     return s, c
   sincosd = staticmethod(sincosd)
 

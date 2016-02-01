@@ -242,7 +242,7 @@ namespace GeographicLib {
      * Compute the position of point 2 which is a distance \e s12 (meters) from
      * point 1.
      *
-     * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+     * @param[in] s12 distance from point 1 to point 2 (meters); it can be
      *   negative.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees); requires that the
@@ -261,7 +261,7 @@ namespace GeographicLib {
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>); requires
      *   that the GeodesicLine object was constructed with \e caps |=
      *   GeodesicLine::AREA.
-     * @return \e a12 arc length of between point 1 and point 2 (degrees).
+     * @return \e a12 arc length from point 1 to point 2 (degrees).
      *
      * The values of \e lon2 and \e azi2 returned are in the range
      * [&minus;180&deg;, 180&deg;).
@@ -357,14 +357,14 @@ namespace GeographicLib {
      * Compute the position of point 2 which is an arc length \e a12 (degrees)
      * from point 1.
      *
-     * @param[in] a12 arc length between point 1 and point 2 (degrees); it can
+     * @param[in] a12 arc length from point 1 to point 2 (degrees); it can
      *   be negative.
      * @param[out] lat2 latitude of point 2 (degrees).
      * @param[out] lon2 longitude of point 2 (degrees); requires that the
      *   GeodesicLine object was constructed with \e caps |=
      *   GeodesicLine::LONGITUDE.
      * @param[out] azi2 (forward) azimuth at point 2 (degrees).
-     * @param[out] s12 distance between point 1 and point 2 (meters); requires
+     * @param[out] s12 distance from point 1 to point 2 (meters); requires
      *   that the GeodesicLine object was constructed with \e caps |=
      *   GeodesicLine::DISTANCE.
      * @param[out] m12 reduced length of geodesic (meters); requires that the
@@ -493,7 +493,7 @@ namespace GeographicLib {
      *   GeodesicLine object was constructed with \e caps |=
      *   GeodesicLine::LONGITUDE.
      * @param[out] azi2 (forward) azimuth at point 2 (degrees).
-     * @param[out] s12 distance between point 1 and point 2 (meters); requires
+     * @param[out] s12 distance from point 1 to point 2 (meters); requires
      *   that the GeodesicLine object was constructed with \e caps |=
      *   GeodesicLine::DISTANCE.
      * @param[out] m12 reduced length of geodesic (meters); requires that the
@@ -508,7 +508,7 @@ namespace GeographicLib {
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>); requires
      *   that the GeodesicLine object was constructed with \e caps |=
      *   GeodesicLine::AREA.
-     * @return \e a12 arc length of between point 1 and point 2 (degrees).
+     * @return \e a12 arc length from point 1 to point 2 (degrees).
      *
      * The GeodesicLine::mask values possible for \e outmask are
      * - \e outmask |= GeodesicLine::LATITUDE for the latitude \e lat2;
@@ -546,7 +546,7 @@ namespace GeographicLib {
     /**
      * Specify position of point 3 in terms of distance.
      *
-     * @param[in] s13 the distance between point 1 and point 3 (meters); it
+     * @param[in] s13 the distance from point 1 to point 3 (meters); it
      *   can be negative.
      *
      * This is only useful if the GeodesicLine object has been constructed
@@ -557,7 +557,7 @@ namespace GeographicLib {
     /**
      * Specify position of point 3 in terms of arc length.
      *
-     * @param[in] a13 the arc length between point 1 and point 3 (degrees); it
+     * @param[in] a13 the arc length from point 1 to point 3 (degrees); it
      *   can be negative.
      *
      * The distance \e s13 is only set if the GeodesicLine object has been
@@ -571,9 +571,9 @@ namespace GeographicLib {
      * @param[in] arcmode boolean flag determining the meaning of the second
      *   parameter; if \e arcmode is false, then the GeodesicLine object must
      *   have been constructed with \e caps |= GeodesicLine::DISTANCE_IN.
-     * @param[in] s13_a13 if \e arcmode is false, this is the distance between
-     *   point 1 and point 3 (meters); otherwise it is the arc length between
-     *   point 1 and point 3 (degrees); it can be negative.
+     * @param[in] s13_a13 if \e arcmode is false, this is the distance from
+     *   point 1 to point 3 (meters); otherwise it is the arc length from
+     *   point 1 to point 3 (degrees); it can be negative.
      **********************************************************************/
     void GenSetDistance(bool arcmode, real s13_a13);
     ///@}

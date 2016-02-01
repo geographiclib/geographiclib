@@ -1,27 +1,28 @@
 """Define the :class:`~geographiclib.polygonarea.PolygonArea` class
 
-The constructor initializes a empty polygon.
+The constructor initializes a empty polygon.  The available methods are
 
   * :meth:`~geographiclib.polygonarea.PolygonArea.Clear` reset the
     polygon
-
   * :meth:`~geographiclib.polygonarea.PolygonArea.AddPoint` add a vertex
     to the polygon
-
   * :meth:`~geographiclib.polygonarea.PolygonArea.AddEdge` add an edge
     to the polygon
-
   * :meth:`~geographiclib.polygonarea.PolygonArea.Compute` compute the
     properties of the polygon
-
   * :meth:`~geographiclib.polygonarea.PolygonArea.TestPoint` compute the
     properties of the polygon with a tentative additional vertex
-
   * :meth:`~geographiclib.polygonarea.PolygonArea.TestEdge` compute the
     properties of the polygon with a tentative additional edge
 
-  * :meth:`~geographiclib.polygonarea.PolygonArea.CurrentPoint` return
-    the current vertex
+The public attributes for this class are
+
+  * :attr:`~geographiclib.polygonarea.PolygonArea.earth`
+    :attr:`~geographiclib.polygonarea.PolygonArea.polyline`
+    :attr:`~geographiclib.polygonarea.PolygonArea.area0`
+    :attr:`~geographiclib.polygonarea.PolygonArea.num`
+    :attr:`~geographiclib.polygonarea.PolygonArea.lat1`
+    :attr:`~geographiclib.polygonarea.PolygonArea.lon1`
 
 """
 # polygonarea.py
@@ -84,24 +85,33 @@ class PolygonArea(object):
     """
 
     from geographiclib.geodesic import Geodesic
-    self._earth = earth
-    self._area0 = 4 * math.pi * earth._c2
-    self._polyline = polyline
+    self.earth = earth
+    """The geodesic object (readonly)"""
+    self.polyline = polyline
+    """Is this a polyline? (readonly)"""
+    self.area0 = 4 * math.pi * earth._c2
+    """The total area of the ellipsoid in meter^2 (readonly)"""
     self._mask = (Geodesic.LATITUDE | Geodesic.LONGITUDE |
                   Geodesic.DISTANCE |
-                  (Geodesic.EMPTY if self._polyline else
+                  (Geodesic.EMPTY if self.polyline else
                    Geodesic.AREA | Geodesic.LONG_UNROLL))
-    if not self._polyline: self._areasum = Accumulator()
+    if not self.polyline: self._areasum = Accumulator()
     self._perimetersum = Accumulator()
+    self.num = 0
+    """The current number of points in the polygon (readonly)"""
+    self.lat1 = Math.nan
+    """The current latitude in degrees (readonly)"""
+    self.lon1 = Math.nan
+    """The current longitude in degrees (readonly)"""
     self.Clear()
 
   def Clear(self):
     """Reset to empty polygon."""
-    self._num = 0
+    self.num = 0
     self._crossings = 0
-    if not self._polyline: self._areasum.Set(0)
+    if not self.polyline: self._areasum.Set(0)
     self._perimetersum.Set(0)
-    self._lat0 = self._lon0 = self._lat1 = self._lon1 = Math.nan
+    self._lat0 = self._lon0 = self.lat1 = self.lon1 = Math.nan
 
   def AddPoint(self, lat, lon):
     """Add the next vertex to the polygon
@@ -112,19 +122,19 @@ class PolygonArea(object):
     This adds an edge from the current vertex to the new vertex.
     """
 
-    if self._num == 0:
-      self._lat0 = self._lat1 = lat
-      self._lon0 = self._lon1 = lon
+    if self.num == 0:
+      self._lat0 = self.lat1 = lat
+      self._lon0 = self.lon1 = lon
     else:
-      _, s12, _, _, _, _, _, S12 = self._earth._GenInverse(
-        self._lat1, self._lon1, lat, lon, self._mask)
+      _, s12, _, _, _, _, _, _, _, S12 = self.earth._GenInverse(
+        self.lat1, self.lon1, lat, lon, self._mask)
       self._perimetersum.Add(s12)
-      if not self._polyline:
+      if not self.polyline:
         self._areasum.Add(S12)
-        self._crossings += PolygonArea._transit(self._lon1, lon)
-      self._lat1 = lat
-      self._lon1 = lon
-    self._num += 1
+        self._crossings += PolygonArea._transit(self.lon1, lon)
+      self.lat1 = lat
+      self.lon1 = lon
+    self.num += 1
 
   def AddEdge(self, azi, s):
     """Add the next edge to the polygon
@@ -137,16 +147,16 @@ class PolygonArea(object):
 
     """
 
-    if self._num != 0:
-      _, lat, lon, _, _, _, _, _, S12 = self._earth._GenDirect(
-        self._lat1, self._lon1, azi, False, s, self._mask)
+    if self.num != 0:
+      _, lat, lon, _, _, _, _, _, S12 = self.earth._GenDirect(
+        self.lat1, self.lon1, azi, False, s, self._mask)
       self._perimetersum.Add(s)
-      if not self._polyline:
+      if not self.polyline:
         self._areasum.Add(S12)
-        self._crossings += PolygonArea._transitdirect(self._lon1, lon)
-      self._lat1 = lat
-      self._lon1 = lon
-      self._num += 1
+        self._crossings += PolygonArea._transitdirect(self.lon1, lon)
+      self.lat1 = lat
+      self.lon1 = lon
+      self.num += 1
 
   # return number, perimeter, area
   def Compute(self, reverse = False, sign = True):
@@ -166,41 +176,41 @@ class PolygonArea(object):
     More points can be added to the polygon after this call.
 
     """
-    if self._polyline: area = Math.nan
-    if self._num < 2:
-      perimeter = 0
-      if not self._polyline: area = 0
-      return self._num, perimeter, area
+    if self.polyline: area = Math.nan
+    if self.num < 2:
+      perimeter = 0.0
+      if not self.polyline: area = 0.0
+      return self.num, perimeter, area
 
-    if self._polyline:
+    if self.polyline:
       perimeter = self._perimetersum.Sum()
-      return self._num, perimeter, area
+      return self.num, perimeter, area
 
-    _, s12, _, _, _, _, _, S12 = self._earth._GenInverse(
-      self._lat1, self._lon1, self._lat0, self._lon0, self._mask)
+    _, s12, _, _, _, _, _, _, _, S12 = self.earth._GenInverse(
+      self.lat1, self.lon1, self._lat0, self._lon0, self._mask)
     perimeter = self._perimetersum.Sum(s12)
     tempsum = Accumulator(self._areasum)
     tempsum.Add(S12)
-    crossings = self._crossings + PolygonArea._transit(self._lon1, self._lon0)
+    crossings = self._crossings + PolygonArea._transit(self.lon1, self._lon0)
     if crossings & 1:
-      tempsum.Add( (1 if tempsum.Sum() < 0 else -1) * self._area0/2 )
+      tempsum.Add( (1 if tempsum.Sum() < 0 else -1) * self.area0/2 )
     # area is with the clockwise sense.  If !reverse convert to
     # counter-clockwise convention.
     if not reverse: tempsum.Negate()
     # If sign put area in (-area0/2, area0/2], else put area in [0, area0)
     if sign:
-      if tempsum.Sum() > self._area0/2:
-        tempsum.Add( -self._area0 )
-      elif tempsum.Sum() <= -self._area0/2:
-        tempsum.Add(  self._area0 )
+      if tempsum.Sum() > self.area0/2:
+        tempsum.Add( -self.area0 )
+      elif tempsum.Sum() <= -self.area0/2:
+        tempsum.Add(  self.area0 )
     else:
-      if tempsum.Sum() >= self._area0:
-        tempsum.Add( -self._area0 )
+      if tempsum.Sum() >= self.area0:
+        tempsum.Add( -self.area0 )
       elif tempsum.Sum() < 0:
-        tempsum.Add(  self._area0 )
+        tempsum.Add(  self.area0 )
 
-    area = 0 + tempsum.Sum()
-    return self._num, perimeter, area
+    area = 0.0 + tempsum.Sum()
+    return self.num, perimeter, area
 
   # return number, perimeter, area
   def TestPoint(self, lat, lon, reverse = False, sign = True):
@@ -216,47 +226,47 @@ class PolygonArea(object):
     :return: a tuple of number, perimeter (meters), area (meters^2)
 
     """
-    if self._polyline: area = Math.nan
-    if self._num == 0:
-      perimeter = 0
-      if not self._polyline: area = 0
+    if self.polyline: area = Math.nan
+    if self.num == 0:
+      perimeter = 0.0
+      if not self.polyline: area = 0.0
       return 1, perimeter, area
 
     perimeter = self._perimetersum.Sum()
-    tempsum = 0 if self._polyline else self._areasum.Sum()
-    crossings = self._crossings; num = self._num + 1
-    for i in ([0] if self._polyline else [0, 1]):
-      _, s12, _, _, _, _, _, S12 = self._earth._GenInverse(
-        self._lat1 if i == 0 else lat, self._lon1 if i == 0 else lon,
+    tempsum = 0.0 if self.polyline else self._areasum.Sum()
+    crossings = self._crossings; num = self.num + 1
+    for i in ([0] if self.polyline else [0, 1]):
+      _, s12, _, _, _, _, _, _, _, S12 = self.earth._GenInverse(
+        self.lat1 if i == 0 else lat, self.lon1 if i == 0 else lon,
         self._lat0 if i != 0 else lat, self._lon0 if i != 0 else lon,
         self._mask)
       perimeter += s12
-      if not self._polyline:
+      if not self.polyline:
         tempsum += S12
-        crossings += PolygonArea._transit(self._lon1 if i == 0 else lon,
+        crossings += PolygonArea._transit(self.lon1 if i == 0 else lon,
                                          self._lon0 if i != 0 else lon)
 
-    if self._polyline:
+    if self.polyline:
       return num, perimeter, area
 
     if crossings & 1:
-      tempsum += (1 if tempsum < 0 else -1) * self._area0/2
+      tempsum += (1 if tempsum < 0 else -1) * self.area0/2
     # area is with the clockwise sense.  If !reverse convert to
     # counter-clockwise convention.
     if not reverse: tempsum *= -1
     # If sign put area in (-area0/2, area0/2], else put area in [0, area0)
     if sign:
-      if tempsum > self._area0/2:
-        tempsum -= self._area0
-      elif tempsum <= -self._area0/2:
-        tempsum += self._area0
+      if tempsum > self.area0/2:
+        tempsum -= self.area0
+      elif tempsum <= -self.area0/2:
+        tempsum += self.area0
     else:
-      if tempsum >= self._area0:
-        tempsum -= self._area0
+      if tempsum >= self.area0:
+        tempsum -= self.area0
       elif tempsum < 0:
-        tempsum += self._area0
+        tempsum += self.area0
 
-    area = 0 + tempsum
+    area = 0.0 + tempsum
     return num, perimeter, area
 
   # return num, perimeter, area
@@ -274,50 +284,41 @@ class PolygonArea(object):
 
     """
 
-    if self._num == 0:               # we don't have a starting point!
+    if self.num == 0:           # we don't have a starting point!
       return 0, Math.nan, Math.nan
-    num = self._num + 1
+    num = self.num + 1
     perimeter = self._perimetersum.Sum() + s
-    if self._polyline:
+    if self.polyline:
       return num, perimeter, Math.nan
 
     tempsum =  self._areasum.Sum()
     crossings = self._crossings
-    _, lat, lon, _, _, _, _, _, S12 = self._earth._GenDirect(
-      self._lat1, self._lon1, azi, False, s, self._mask)
+    _, lat, lon, _, _, _, _, _, S12 = self.earth._GenDirect(
+      self.lat1, self.lon1, azi, False, s, self._mask)
     tempsum += S12
-    crossings += PolygonArea._transitdirect(self._lon1, lon)
-    _, s12, _, _, _, _, _, S12 = self._earth._GenInverse(
+    crossings += PolygonArea._transitdirect(self.lon1, lon)
+    _, s12, _, _, _, _, _, _, _, S12 = self.earth._GenInverse(
       lat, lon, self._lat0, self._lon0, self._mask)
     perimeter += s12
     tempsum += S12
     crossings += PolygonArea._transit(lon, self._lon0)
 
     if crossings & 1:
-      tempsum += (1 if tempsum < 0 else -1) * self._area0/2
+      tempsum += (1 if tempsum < 0 else -1) * self.area0/2
     # area is with the clockwise sense.  If !reverse convert to
     # counter-clockwise convention.
     if not reverse: tempsum *= -1
     # If sign put area in (-area0/2, area0/2], else put area in [0, area0)
     if sign:
-      if tempsum > self._area0/2:
-        tempsum -= self._area0
-      elif tempsum <= -self._area0/2:
-        tempsum += self._area0
+      if tempsum > self.area0/2:
+        tempsum -= self.area0
+      elif tempsum <= -self.area0/2:
+        tempsum += self.area0
     else:
-      if tempsum >= self._area0:
-        tempsum -= self._area0
+      if tempsum >= self.area0:
+        tempsum -= self.area0
       elif tempsum < 0:
-        tempsum += self._area0
+        tempsum += self.area0
 
-    area = 0 + tempsum
+    area = 0.0 + tempsum
     return num, perimeter, area
-
-  def CurrentPoint(self):
-    """Return the current vertex
-
-    :return: the current vertex as a tuple of latitude, longitude
-
-    """
-
-    return self._lat1, self._lon1
