@@ -693,7 +693,7 @@ GeographicLib.PolygonArea = {};
       }
     }
     // Sanity check on starting guess.  Backwards check allows NaN through.
-    if (!(vals.salp1 <= 0)) {
+    if (!(vals.salp1 <= 0.0)) {
       // norm(vals.salp1, vals.calp1);
       t = m.hypot(vals.salp1, vals.calp1); vals.salp1 /= t; vals.calp1 /= t;
     } else {
@@ -806,7 +806,7 @@ GeographicLib.PolygonArea = {};
       vals.azi2 = m.atan2d(r.salp2, r.calp2);
     }
     return vals;
-  }
+  };
 
   g.Geodesic.prototype.InverseInt = function(lat1, lon1, lat2, lon2, outmask) {
     var vals = {},
@@ -1277,7 +1277,7 @@ GeographicLib.PolygonArea = {};
    */
   g.Geodesic.prototype.DirectLine = function (lat1, lon1, azi1, s12, caps) {
     return this.GenDirectLine(lat1, lon1, azi1, false, s12, caps);
-  }
+  };
 
   /**
    * @summary Define a {@link module:GeographicLib/GeodesicLine.GeodesicLine
@@ -1301,7 +1301,7 @@ GeographicLib.PolygonArea = {};
    */
   g.Geodesic.prototype.ArcDirectLine = function (lat1, lon1, azi1, a12, caps) {
     return this.GenDirectLine(lat1, lon1, azi1, true, a12, caps);
-  }
+  };
 
   /**
    * @summary Define a {@link module:GeographicLib/GeodesicLine.GeodesicLine
@@ -1328,6 +1328,7 @@ GeographicLib.PolygonArea = {};
    */
   g.Geodesic.prototype.GenDirectLine = function (lat1, lon1, azi1,
                                                  arcmode, s12_a12, caps) {
+    var t;
     if (!caps) caps = g.STANDARD | g.DISTANCE_IN;
     // Automatically supply DISTANCE_IN if necessary
     if (!arcmode) caps |= g.DISTANCE_IN;
@@ -1361,9 +1362,9 @@ GeographicLib.PolygonArea = {};
     // Ensure that a12 can be converted to a distance
     if (caps & (g.OUT_MASK & g.DISTANCE_IN)) caps |= g.DISTANCE;
     t = new l.GeodesicLine(this, lat1, lon1, azi1, caps, r.salp1, r.calp1);
-    t.SetArc(r.vals.a12)
+    t.SetArc(r.vals.a12);
     return t;
-  }
+  };
 
   /**
    * @summary Create a {@link module:GeographicLib/PolygonArea.PolygonArea

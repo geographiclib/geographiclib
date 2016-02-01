@@ -383,7 +383,7 @@
       this.SetArc(s13_a13);
     else
       this.SetDistance(s13_a13);
-  }
+  };
 
   /**
    * @summary Specify position of point 3 in terms distance.
@@ -395,7 +395,7 @@
     this.s13 = s13;
     r = this.GenPosition(false, this.s13, g.ARC);
     this.a13 = 0 + r.a12;       // the 0+ converts undefined into NaN
-  }
+  };
 
   /**
    * @summary Specify position of point 3 in terms of arc length.
@@ -407,6 +407,6 @@
     this.a13 = a13;
     r = this.GenPosition(true, this.a13, g.DISTANCE);
     this.s13 = 0 + r.s12;       // the 0+ converts undefined into NaN
-  }
+  };
 
 })(GeographicLib.Geodesic, GeographicLib.GeodesicLine, GeographicLib.Math);

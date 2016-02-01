@@ -1163,7 +1163,7 @@ class Geodesic(object):
     if not arcmode: caps |= Geodesic.DISTANCE_IN
     line = GeodesicLine(self, lat1, lon1, azi1, caps)
     if arcmode:
-      line.SetArc(s12_s12)
+      line.SetArc(s12_a12)
     else:
       line.SetDistance(s12_a12)
     return line
