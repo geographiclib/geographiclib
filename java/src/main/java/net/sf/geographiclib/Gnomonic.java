@@ -1,8 +1,8 @@
 /**
  * Implementation of the net.sf.geographiclib.Gnomonic class
  *
- * Copyright (c) BMW Car IT GmbH (2014) <sebastian.mattheis@bmw-carit.de> and
- * licensed under the MIT/X11 License. For more information, see
+ * Copyright (c) BMW Car IT GmbH (2014-2016) <sebastian.mattheis@bmw-carit.de>
+ * and licensed under the MIT/X11 License. For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 package net.sf.geographiclib;

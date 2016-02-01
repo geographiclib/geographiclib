@@ -430,8 +430,11 @@ set_tests_properties (Planimeter12 PROPERTIES PASS_REGULAR_EXPRESSION
 # Check encircling pole twice
 add_test (NAME Planimeter13 COMMAND Planimeter
   --input-string "89 -360; 89 -240; 89 -120; 89 0; 89 120; 89 240")
-set_tests_properties (Planimeter13 PROPERTIES PASS_REGULAR_EXPRESSION
-  "6 1160741\\..* 32415230256\\.")
+# Check -w fix for Planimeter (bug found/fixed 2016-01-19)
+add_test (NAME Planimeter14 COMMAND Planimeter
+  --input-string "-360 89;-240 89;-120 89;0 89;120 89;240 89" -w)
+set_tests_properties (Planimeter13 Planimeter14
+  PROPERTIES PASS_REGULAR_EXPRESSION "6 1160741\\..* 32415230256\\.")
 
 # Check fix for AlbersEqualArea::Reverse bug found 2011-05-01
 add_test (NAME ConicProj0 COMMAND ConicProj
