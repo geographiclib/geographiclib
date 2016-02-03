@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
       const MagneticCircle c(circle ? m.Circle(time, lat, h) :
                              MagneticCircle());
       std::string s, eol, stra, strb;
-      std::istringstream str(s);
+      std::istringstream str;
       while (std::getline(*input, s)) {
         try {
           eol = "\n";

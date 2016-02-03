@@ -159,51 +159,38 @@ done
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
 
-while read ver x64; do
-    gen="Visual Studio $ver"
-    test "$x64" && gen="$gen Win64" || true
-    pkg=vc$ver
-    test "$x64" && pkg="$pkg-x64" || true
-    installer=
-    if test "$ver" -eq 12; then
-	if test "$x64"; then
-	    installer=GeographicLib-$VERSION-win64.exe
-	else
-	    installer=GeographicLib-$VERSION-win32.exe
+for ver in 10 11 12 14; do
+    for arch in win32 x64; do
+	pkg=vc$ver-$arch
+	gen="Visual Studio $ver"
+	installer=
+	if test "$ver" -eq 12; then
+	    installer=GeographicLib-$VERSION-$arch.exe
 	fi
-    fi
-    mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg
-    (
-	echo "#! /bin/sh -exv"
-	echo 'b=geog-`pwd | sed s%.*/%%`'
-	echo 'rm -rf v:/data/scratch/$b u:/pkg-$pkg/GeographicLib-$VERSION/*'
-	echo 'mkdir -p v:/data/scratch/$b'
-	echo 'cd v:/data/scratch/$b'
-	echo 'unset GEOGRAPHICLIB_DATA'
-	echo cmake -G \"$gen\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
-	echo cmake --build . --config Debug   --target ALL_BUILD
-	echo cmake --build . --config Debug   --target RUN_TESTS
-	echo cmake --build . --config Debug   --target INSTALL
-	echo cmake --build . --config Release --target ALL_BUILD
-	echo cmake --build . --config Release --target exampleprograms
-	echo cmake --build . --config Release --target netexamples
-	echo cmake --build . --config Release --target RUN_TESTS
-	echo cmake --build . --config Release --target INSTALL
-	echo cmake --build . --config Release --target PACKAGE
-	test "$installer" &&
-	echo cp "$installer" $WINDEVELSOURCE/ || true
-    ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
-    chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
-done <<EOF
-10
-10 y
-11
-11 y
-12
-12 y
-14
-14 y
-EOF
+	mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg
+	(
+	    echo "#! /bin/sh -exv"
+	    echo 'b=geog-`pwd | sed s%.*/%%`'
+	    echo 'rm -rf v:/data/scratch/$b u:/pkg-$pkg/GeographicLib-$VERSION/*'
+	    echo 'mkdir -p v:/data/scratch/$b'
+	    echo 'cd v:/data/scratch/$b'
+	    echo 'unset GEOGRAPHICLIB_DATA'
+	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+	    echo cmake --build . --config Debug   --target ALL_BUILD
+	    echo cmake --build . --config Debug   --target RUN_TESTS
+	    echo cmake --build . --config Debug   --target INSTALL
+	    echo cmake --build . --config Release --target ALL_BUILD
+	    echo cmake --build . --config Release --target exampleprograms
+	    echo cmake --build . --config Release --target netexamples
+	    echo cmake --build . --config Release --target RUN_TESTS
+	    echo cmake --build . --config Release --target INSTALL
+	    echo cmake --build . --config Release --target PACKAGE
+	    test "$installer" &&
+		echo cp "$installer" $WINDEVELSOURCE/ || true
+	) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
+	chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
+    done
+done
 
 cd $TEMP/gitr/geographiclib
 git checkout release

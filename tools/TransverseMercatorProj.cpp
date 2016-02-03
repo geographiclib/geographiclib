@@ -11,7 +11,6 @@
  **********************************************************************/
 
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -177,7 +176,7 @@ int main(int argc, char* argv[]) {
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     std::string s, eol, stra, strb, strc;
-    std::istringstream str(s);
+    std::istringstream str;
     int retval = 0;
     std::cout << std::fixed;
     while (std::getline(*input, s)) {
