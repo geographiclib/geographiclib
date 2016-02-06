@@ -28,7 +28,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
 %     https://dx.doi.org/10.1007/s00190-012-0578-z
-%     Addenda: http://geographiclib.sf.net/geod-addenda.html
+%     Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
 %
 %   See also GEODDOC, GEODDISTANCE, GEODRECKON, POLYGONAREA,
 %     DEFAULTELLIPSOID.
@@ -62,7 +62,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
   lat2(m1) = lat1(m0); lon2(m1) = lon1(m0);
 
   a = ellipsoid(1);
-  e2 = ellipsoid(2)^2;
+  e2 = real(ellipsoid(2)^2);
   f = e2 / (1 + sqrt(1 - e2));
 
   b = (1 - f) * a;

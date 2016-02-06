@@ -116,16 +116,20 @@ namespace GeographicLib {
     real InverseStart(EllipticFunction& E,
                       real sbet1, real cbet1, real dn1,
                       real sbet2, real cbet2, real dn2,
-                      real lam12,
+                      real lam12, real slam12, real clam12,
                       real& salp1, real& calp1,
                       real& salp2, real& calp2, real& dnm) const;
     real Lambda12(real sbet1, real cbet1, real dn1,
                   real sbet2, real cbet2, real dn2,
-                  real salp1, real calp1,
+                  real salp1, real calp1, real slam120, real clam120,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
                   EllipticFunction& E,
-                  real& omg12, bool diffp, real& dlam12) const;
+                  real& somg12, real& comg12, bool diffp, real& dlam12) const;
+    real GenInverse(real lat1, real lon1, real lat2, real lon2,
+                    unsigned outmask, real& s12,
+                    real& salp1, real& calp1, real& salp2, real& calp2,
+                    real& m12, real& M12, real& M21, real& S12) const;
 
     // These are Maxima generated functions to provide series approximations to
     // the integrals for the area.
@@ -202,14 +206,10 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = 1U<<14 | CAP_C4,
       /**
-       * Unroll \e lon2 in the direct calculation.  (This flag used to be
-       * called LONG_NOWRAP.)
+       * Unroll \e lon2 in the direct calculation.
        * @hideinitializer
        **********************************************************************/
       LONG_UNROLL   = 1U<<15,
-      /// \cond SKIP
-      LONG_NOWRAP   = LONG_UNROLL,
-      /// \endcond
       /**
        * All capabilities, calculate everything.  (LONG_UNROLL is not
        * included in this mask.)
@@ -681,8 +681,7 @@ namespace GeographicLib {
     Math::real GenInverse(real lat1, real lon1, real lat2, real lon2,
                           unsigned outmask,
                           real& s12, real& azi1, real& azi2,
-                          real& m12, real& M12, real& M21, real& S12)
-      const;
+                          real& m12, real& M12, real& M21, real& S12) const;
     ///@}
 
     /** \name Interface to GeodesicLineExact.
@@ -729,6 +728,99 @@ namespace GeographicLib {
     GeodesicLineExact Line(real lat1, real lon1, real azi1, unsigned caps = ALL)
       const;
 
+    /**
+     * Define a GeodesicLineExact in terms of the inverse geodesic problem.
+     *
+     * @param[in] lat1 latitude of point 1 (degrees).
+     * @param[in] lon1 longitude of point 1 (degrees).
+     * @param[in] lat2 latitude of point 2 (degrees).
+     * @param[in] lon2 longitude of point 2 (degrees).
+     * @param[in] caps bitor'ed combination of GeodesicExact::mask values
+     *   specifying the capabilities the GeodesicLineExact object should
+     *   possess, i.e., which quantities can be returned in calls to
+     *   GeodesicLineExact::Position.
+     * @return a GeodesicLineExact object.
+     *
+     * This function sets point 3 of the GeodesicLineExact to correspond to
+     * point 2 of the inverse geodesic problem.
+     *
+     * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;].
+     **********************************************************************/
+    GeodesicLineExact InverseLine(real lat1, real lon1, real lat2, real lon2,
+                                  unsigned caps = ALL) const;
+
+    /**
+     * Define a GeodesicLineExact in terms of the direct geodesic problem
+     * specified in terms of distance.
+     *
+     * @param[in] lat1 latitude of point 1 (degrees).
+     * @param[in] lon1 longitude of point 1 (degrees).
+     * @param[in] azi1 azimuth at point 1 (degrees).
+     * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+     *   negative.
+     * @param[in] caps bitor'ed combination of GeodesicExact::mask values
+     *   specifying the capabilities the GeodesicLineExact object should
+     *   possess, i.e., which quantities can be returned in calls to
+     *   GeodesicLineExact::Position.
+     * @return a GeodesicLineExact object.
+     *
+     * This function sets point 3 of the GeodesicLineExact to correspond to
+     * point 2 of the direct geodesic problem.
+     *
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
+     **********************************************************************/
+    GeodesicLineExact DirectLine(real lat1, real lon1, real azi1, real s12,
+                                 unsigned caps = ALL) const;
+
+    /**
+     * Define a GeodesicLineExact in terms of the direct geodesic problem
+     * specified in terms of arc length.
+     *
+     * @param[in] lat1 latitude of point 1 (degrees).
+     * @param[in] lon1 longitude of point 1 (degrees).
+     * @param[in] azi1 azimuth at point 1 (degrees).
+     * @param[in] a12 arc length between point 1 and point 2 (degrees); it can
+     *   be negative.
+     * @param[in] caps bitor'ed combination of GeodesicExact::mask values
+     *   specifying the capabilities the GeodesicLineExact object should
+     *   possess, i.e., which quantities can be returned in calls to
+     *   GeodesicLineExact::Position.
+     * @return a GeodesicLineExact object.
+     *
+     * This function sets point 3 of the GeodesicLineExact to correspond to
+     * point 2 of the direct geodesic problem.
+     *
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
+     **********************************************************************/
+    GeodesicLineExact ArcDirectLine(real lat1, real lon1, real azi1, real a12,
+                                    unsigned caps = ALL) const;
+
+    /**
+     * Define a GeodesicLineExact in terms of the direct geodesic problem
+     * specified in terms of either distance or arc length.
+     *
+     * @param[in] lat1 latitude of point 1 (degrees).
+     * @param[in] lon1 longitude of point 1 (degrees).
+     * @param[in] azi1 azimuth at point 1 (degrees).
+     * @param[in] arcmode boolean flag determining the meaning of the \e
+     *   s12_a12.
+     * @param[in] s12_a12 if \e arcmode is false, this is the distance between
+     *   point 1 and point 2 (meters); otherwise it is the arc length between
+     *   point 1 and point 2 (degrees); it can be negative.
+     * @param[in] caps bitor'ed combination of GeodesicExact::mask values
+     *   specifying the capabilities the GeodesicLineExact object should
+     *   possess, i.e., which quantities can be returned in calls to
+     *   GeodesicLineExact::Position.
+     * @return a GeodesicLineExact object.
+     *
+     * This function sets point 3 of the GeodesicLineExact to correspond to
+     * point 2 of the direct geodesic problem.
+     *
+     * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
+     **********************************************************************/
+    GeodesicLineExact GenDirectLine(real lat1, real lon1, real azi1,
+                                    bool arcmode, real s12_a12,
+                                    unsigned caps = ALL) const;
     ///@}
 
     /** \name Inspector functions.
@@ -746,14 +838,6 @@ namespace GeographicLib {
      *   value used in the constructor.
      **********************************************************************/
     Math::real Flattening() const { return _f; }
-
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the ellipsoid.
-     **********************************************************************/
-    Math::real InverseFlattening() const { return 1/_f; }
-    /// \endcond
 
     /**
      * @return total area of ellipsoid in meters<sup>2</sup>.  The area of a

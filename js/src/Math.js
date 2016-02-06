@@ -3,7 +3,7 @@
  * Transcription of Math.hpp, Constants.hpp, and Accumulator.hpp into
  * JavaScript.
  *
- * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  */
@@ -38,6 +38,7 @@
  *   {@link module:GeographicLib/Accumulator.Accumulator Accumulator} class)
  *   for summing the contributions to the area of a polygon.
  */
+"use strict";
 var GeographicLib = {};
 GeographicLib.Constants = {};
 GeographicLib.Math = {};
@@ -49,7 +50,6 @@ GeographicLib.Accumulator = {};
    * @description Define constants defining the version and WGS84 parameters.
    */
   c) {
-  "use strict";
 
   /**
    * @constant
@@ -65,12 +65,12 @@ GeographicLib.Accumulator = {};
    * @property {number} minor the minor version number.
    * @property {number} patch the patch number.
    */
-  c.version = { major: 1, minor: 45, patch: 0 };
+  c.version = { major: 1, minor: 46, patch: 0 };
   /**
    * @constant
    * @summary version string
    */
-  c.version_string = "1.45";
+  c.version_string = "1.46";
 })(GeographicLib.Constants);
 
 (function(
@@ -80,7 +80,6 @@ GeographicLib.Accumulator = {};
    *   internal use).
    */
   m) {
-  "use strict";
 
   /**
    * @summary The number of digits of precision in floating-point numbers.
@@ -156,6 +155,16 @@ GeographicLib.Accumulator = {};
   };
 
   /**
+   * @summary Copy the sign.
+   * @param {number} x gives the magitude of the result.
+   * @param {number} y gives the sign of the result.
+   * @returns {number} value with the magnitude of x and with the sign of y.
+   */
+  m.copysign = function(x, y) {
+    return Math.abs(x) * (y < 0 || (y === 0 && 1/y < 0) ? -1 : 1);
+  };
+
+  /**
    * @summary An error-free sum.
    * @param {number} u
    * @param {number} v
@@ -199,12 +208,14 @@ GeographicLib.Accumulator = {};
     // reals = 0.7 pm on the earth if x is an angle in degrees.  (This is about
     // 1000 times more resolution than we get with angles around 90 degrees.)
     // We use this to avoid having to deal with near singular cases when x is
-    // non-zero but tiny (e.g., 1.0e-200).  This also converts -0 to +0.
+    // non-zero but tiny (e.g., 1.0e-200).  This converts -0 to +0; however
+    // tiny negative numbers get converted to -0.
+    if (x === 0) return x;
     var z = 1/16,
         y = Math.abs(x);
     // The compiler mustn't "simplify" z - (z - y) to y
     y = y < z ? z - (z - y) : y;
-    return x < 0 ? 0 - y : y;
+    return x < 0 ? -y : y;
   };
 
   /**
@@ -231,19 +242,22 @@ GeographicLib.Accumulator = {};
   };
 
   /**
-   * @summary Difference of two angles reduced to [&minus;180&deg;,
+   * @summary The exact difference of two angles reduced to (&minus;180&deg;,
    *   180&deg;]
    * @param {number} x the first angle in degrees.
    * @param {number} y the second angle in degrees.
-   * @return {number} y &minus; x, reduced to the range [&minus;180&deg;,
-   *   180&deg;].
+   * @return {object} diff the exact difference, y &minus; x.
+   *
+   * This computes z = y &minus; x exactly, reduced to (&minus;180&deg;,
+   * 180&deg;]; and then sets diff.s = d = round(z) and diff.t = e = z &minus;
+   * round(z).  If d = &minus;180, then e &gt; 0; If d = 180, then e &le; 0.
    */
   m.AngDiff = function(x, y) {
     // Compute y - x and reduce to [-180,180] accurately.
     var r = m.sum(m.AngNormalize(x), m.AngNormalize(-y)),
         d = - m.AngNormalize(r.s),
         t = r.t;
-    return (d == 180 && t < 0 ? -180 : d) - t;
+    return m.sum(d === 180 && t < 0 ? -180 : d, -t);
   };
 
   /**
@@ -312,7 +326,6 @@ GeographicLib.Accumulator = {};
    *   (mainly for internal use).
    */
   a, m) {
-  "use strict";
 
   /**
    * @class

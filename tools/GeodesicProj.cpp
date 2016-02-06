@@ -10,7 +10,6 @@
  **********************************************************************/
 
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -49,6 +48,7 @@ int main(int argc, char* argv[]) {
       if (arg == "-r")
         reverse = true;
       else if (arg == "-c" || arg == "-z" || arg == "-g") {
+        cassini = azimuthal =  gnomonic = false;
         cassini = arg == "-c";
         azimuthal = arg == "-z";
         gnomonic = arg == "-g";
@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
         }
         m += 2;
       } else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {

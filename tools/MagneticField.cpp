@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-r")
         rate = !rate;
       else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
       const MagneticCircle c(circle ? m.Circle(time, lat, h) :
                              MagneticCircle());
       std::string s, eol, stra, strb;
-      std::istringstream str(s);
+      std::istringstream str;
       while (std::getline(*input, s)) {
         try {
           eol = "\n";

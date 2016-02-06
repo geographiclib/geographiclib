@@ -16,8 +16,6 @@
 
 namespace GeographicLib {
 
-  /// \cond SKIP
-
   using namespace std;
 
   template<typename T> T Math::eatanhe(T x, T es)  {
@@ -55,11 +53,11 @@ namespace GeographicLib {
     return tau;
   }
 
+  /// \cond SKIP
   // Instantiate
   template Math::real Math::eatanhe<Math::real>(Math::real, Math::real);
   template Math::real Math::taupf<Math::real>(Math::real, Math::real);
   template Math::real Math::tauf<Math::real>(Math::real, Math::real);
-
   /// \endcond
 
 } // namespace GeographicLib

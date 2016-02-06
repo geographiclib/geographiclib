@@ -33,7 +33,7 @@ function [lat, lon, h, M] = geocent_inv(X, Y, Z, ellipsoid)
   X = X + z; Y = Y + z; Z = Z + z;
 
   a = ellipsoid(1);
-  e2 = ellipsoid(2)^2;
+  e2 = real(ellipsoid(2)^2);
   e2m = 1 - e2;
   e2a = abs(e2);
   e4a = e2^2;

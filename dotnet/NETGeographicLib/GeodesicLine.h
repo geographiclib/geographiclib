@@ -44,7 +44,7 @@ namespace NETGeographicLib
    *   J. Geodesy <b>87</b>, 43--55 (2013);
    *   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
-   *   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+   *   addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
    *   geod-addenda.html</a>.
    * .
    * For more information on geodesics see \ref geodesic.
@@ -135,12 +135,10 @@ namespace NETGeographicLib
           **********************************************************************/
          AREA          = 1U<<14 | unsigned(captype::CAP_C4),
          /**
-          * Unroll \e lon2 in the direct calculation.  (This flag used to be
-          * called LONG_NOWRAP.)
+          * Unroll \e lon2 in the direct calculation.
           * @hideinitializer
           **********************************************************************/
          LONG_UNROLL   = 1U<<15,
-         LONG_NOWRAP   = LONG_UNROLL,
          /**
           * All capabilities, calculate everything.  (LONG_UNROLL is not
           * included in this mask.)

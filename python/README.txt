@@ -9,4 +9,4 @@ GeographicLib.  This contains implementations of the classes
 
 For more information on GeographicLib, see
 
-  http://geographiclib.sf.net
+  http://geographiclib.sourceforge.net

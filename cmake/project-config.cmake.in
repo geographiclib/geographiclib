@@ -40,7 +40,7 @@ else ()
   # current directory.
   get_filename_component (_ROOT "${_DIR}/@PROJECT_ROOT_DIR@" ABSOLUTE)
   set (@PROJECT_NAME@_INCLUDE_DIRS "${_ROOT}/include")
-  set (@PROJECT_NAME@_LIBRARY_DIRS "${_ROOT}/lib")
+  set (@PROJECT_NAME@_LIBRARY_DIRS "${_ROOT}/lib@LIB_SUFFIX@")
   set (@PROJECT_NAME@_BINARY_DIRS "${_ROOT}/bin")
 endif ()
 

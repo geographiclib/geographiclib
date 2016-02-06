@@ -144,7 +144,7 @@ Vincenty (1975) in the following respects:
   Astron. Nachr. **331**(8), 852&ndash;861 (2010),
   translated by C. F. F. Karney and R. E. Deakin.
 * F. R. Helmert,
-  {@link http://geographiclib.sf.net/geodesic-papers/helmert80-en.html
+  {@link https://dx.doi.org/10.5281/zenodo.32050
   Mathematical and Physical Theories of Higher Geodesy, Vol 1},
   (Teubner, Leipzig, 1880), Chaps. 5&ndash;7.
 * T. Vincenty,
@@ -152,15 +152,15 @@ Vincenty (1975) in the following respects:
   Direct and inverse solutions of geodesics on the ellipsoid with
   application of nested equations},
   Survey Review **23**(176), 88&ndash;93 (1975).
-- J. Danielsen,
+* J. Danielsen,
   {@link https://dx.doi.org/10.1179/003962689791474267 The area under
   the geodesic}, Survey Review **30**(232), 61&ndash;66 (1989).
 * C. F. F. Karney,
   {@link https://dx.doi.org/10.1007/s00190-012-0578-z
   Algorithms for geodesics}, J. Geodesy **87**(1) 43&ndash;55 (2013);
-  {@link http://geographiclib.sf.net/geod-addenda.html addenda}.
-- {@link http://geographiclib.sf.net/geodesic-papers/biblio.html
-  An online geodesic bibliography}.
+  {@link http://geographiclib.sourceforge.net/geod-addenda.html addenda}.
+* {@link http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
+  A geodesic bibliography}.
 * The wikipedia page,
   {@link https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid
   Geodesics on an ellipsoid}.

@@ -51,7 +51,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
 %     https://dx.doi.org/10.1007/s00190-012-0578-z
-%     Addenda: http://geographiclib.sf.net/geod-addenda.html
+%     Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
 %
 %   This function duplicates some of the functionality of the RECKON
 %   function in the MATLAB mapping toolbox.  Differences are
@@ -67,7 +67,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %   See also GEODDOC, GEODDISTANCE, GEODAREA, GEODESICDIRECT, GEODESICLINE,
 %     DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2016) <charles@karney.com>.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
@@ -113,7 +113,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   tiny = sqrt(realmin);
 
   a = ellipsoid(1);
-  e2 = ellipsoid(2)^2;
+  e2 = real(ellipsoid(2)^2);
   f = e2 / (1 + sqrt(1 - e2));
   f1 = 1 - f;
   ep2 = e2 / (1 - e2);
@@ -191,7 +191,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   somg2 = salp0 .* ssig2; comg2 = csig2;
   salp2 = salp0; calp2 = calp0 .* csig2;
   if long_unroll
-    E = 1 - 2*(salp0 < 0);
+    E = copysignx(1, salp0);
     omg12 = E .* (sig12 ...
                   - (atan2(   ssig2, csig2) - atan2(   ssig1, csig1)) ...
                   + (atan2(E.*somg2, comg2) - atan2(E.*somg1, comg1)));
@@ -253,8 +253,6 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
     s = calp0 == 0 | salp0 == 0;
     salp12(s) = salp2(s) .* calp1(s) - calp2(s) .* salp1(s);
     calp12(s) = calp2(s) .* calp1(s) + salp2(s) .* salp1(s);
-    s = s & salp12 == 0 & calp12 < 0;
-    salp12(s) = tiny * calp1(s); calp12(s) = -1;
     if e2 ~= 0
       c2 = (a^2 + b^2 * eatanhe(1, e2) / e2) / 2;
     else

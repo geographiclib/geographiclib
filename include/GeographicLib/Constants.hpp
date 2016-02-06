@@ -182,19 +182,6 @@ namespace GeographicLib {
      * A synonym for WGS84_omega<real>().
      **********************************************************************/
     static inline Math::real WGS84_omega() { return WGS84_omega<real>(); }
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return the reciprocal flattening of WGS84 ellipsoid.
-     **********************************************************************/
-    template<typename T> static inline T WGS84_r()
-    { return 1/WGS84_f<T>(); }
-    /**
-     * <b>DEPRECATED</b>
-     * A synonym for WGS84_r<real>().
-     **********************************************************************/
-    static inline Math::real WGS84_r() { return WGS84_r<real>(); }
-    /// \endcond
     /**
      * @tparam T the type of the returned value.
      * @return the equatorial radius of GRS80 ellipsoid, \e a, in m.

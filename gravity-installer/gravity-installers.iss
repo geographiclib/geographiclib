@@ -15,7 +15,7 @@
 #endif
 
 #define Project "GeographicLib"
-#define URL "http://geographiclib.sf.net"
+#define URL "http://geographiclib.sourceforge.net"
 #define Version "1.0"
 
 [Setup]
@@ -24,7 +24,7 @@ AppVerName={#NAME} gravity model
 AppPublisher={#URL}
 AppPublisherURL={#URL}
 AppSupportURL={#URL}/html/gravity.html
-AppUpdatesURL=https://sf.net/projects/geographiclib/files/gravity-distrib
+AppUpdatesURL=https://sourceforge.net/projects/geographiclib/files/gravity-distrib
 DefaultDirName={commonappdata}\{#Project}
 DisableDirPage=no
 DisableProgramGroupPage=true

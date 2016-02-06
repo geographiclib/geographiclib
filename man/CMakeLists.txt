@@ -76,7 +76,7 @@ if (NOT WIN32)
     set (SYSMANPAGES ${SYSMANPAGES} ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT}.8)
     configure_file (script.8.in ${SCRIPT}.8 @ONLY)
   endforeach ()
-endif()
+endif ()
 
 # Add the extra maintainer tasks into the dependency list.  The
 # distrib-man target copies the derived documentation files into the

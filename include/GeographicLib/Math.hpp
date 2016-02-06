@@ -2,7 +2,7 @@
  * \file Math.hpp
  * \brief Header for GeographicLib::Math class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -189,20 +189,6 @@ namespace GeographicLib {
         digits10() > std::numeric_limits<double>::digits10 ?
         digits10() - std::numeric_limits<double>::digits10 : 0;
     }
-
-#if GEOGRAPHICLIB_PRECISION <= 3
-    /**
-     * Number of additional decimal digits of precision of real relative to
-     * double (0 for float).
-     *
-     * <b>DEPRECATED</b>: use extra_digits() instead
-     **********************************************************************/
-    static const int extradigits =
-      std::numeric_limits<real>::digits10 >
-      std::numeric_limits<double>::digits10 ?
-      std::numeric_limits<real>::digits10 -
-      std::numeric_limits<double>::digits10 : 0;
-#endif
 
     /**
      * true if the machine is big-endian.
@@ -460,18 +446,6 @@ namespace GeographicLib {
     }
 
     /**
-     * Normalize an arbitrary angle.
-     *
-     * @tparam T the type of the argument and returned value.
-     * @param[in] x the angle in degrees.
-     * @return the angle reduced to the range [&minus;180&deg;, 180&deg;).
-     *
-     * <b>DEPRECATED</b>: use AngNormalize instead.
-     **********************************************************************/
-    template<typename T> static inline T AngNormalize2(T x)
-    { return AngNormalize<T>(x); }
-
-    /**
      * Normalize a latitude.
      *
      * @tparam T the type of the argument and returned value.
@@ -481,6 +455,39 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static inline T LatFix(T x)
     { using std::abs; return abs(x) > 90 ? NaN<T>() : x; }
+
+    /**
+     * The exact difference of two angles reduced to
+     * (&minus;180&deg;, 180&deg;].
+     *
+     * @tparam T the type of the arguments and returned value.
+     * @param[in] x the first angle in degrees.
+     * @param[in] y the second angle in degrees.
+     * @param[out] e the error term in degrees.
+     * @return \e d, the truncated value of \e y &minus; \e x.
+     *
+     * This computes \e z = \e y &minus; \e x exactly, reduced to
+     * (&minus;180&deg;, 180&deg;]; and then sets \e z = \e d + \e e where \e d
+     * is the nearest representable number to \e z and \e e is the truncation
+     * error.  If \e d = &minus;180, then \e e &gt; 0; If \e d = 180, then \e e
+     * &le; 0.
+     **********************************************************************/
+    template<typename T> static inline T AngDiff(T x, T y, T& e) {
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
+      using std::remainder;
+      T t, d = - AngNormalize(sum(remainder( x, T(360)),
+                                  remainder(-y, T(360)), t));
+#else
+      T t, d = - AngNormalize(sum(AngNormalize(x), AngNormalize(-y), t));
+#endif
+      // Here y - x = d - t (mod 360), exactly, where d is in (-180,180] and
+      // abs(t) <= eps (eps = 2^-45 for doubles).  The only case where the
+      // addition of t takes the result outside the range (-180,180] is d = 180
+      // and t < 0.  The case, d = -180 + eps, t = eps, can't happen, since
+      // sum would have returned the exact result in such a case (i.e., given t
+      // = 0).
+      return sum(d == 180 && t < 0 ? -180 : d, -t, e);
+    }
 
     /**
      * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]
@@ -496,22 +503,8 @@ namespace GeographicLib {
      * this prescription allows &minus;180&deg; to be returned (e.g., if \e x
      * is tiny and negative and \e y = 180&deg;).
      **********************************************************************/
-    template<typename T> static inline T AngDiff(T x, T y) {
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
-      using std::remainder;
-      T t, d = - AngNormalize(sum(remainder( x, T(360)),
-                                  remainder(-y, T(360)), t));
-#else
-      T t, d = - AngNormalize(sum(AngNormalize(x), AngNormalize(-y), t));
-#endif
-      // Here y - x = d - t (mod 360), exactly, where d is in (-180,180] and
-      // abs(t) <= eps (eps = 2^-45 for doubles).  The only case where the
-      // addition of t takes the result outside the range (-180,180] is d = 180
-      // and t < 0.  The case, d = -180 + eps, t = eps, can't happen, since
-      // sum would have returned the exact result in such a case (i.e., given t
-      // = 0).
-      return (d == 180 && t < 0 ? -180 : d) - t;
-    }
+    template<typename T> static inline T AngDiff(T x, T y)
+    { T e; return AngDiff(x, y, e); }
 
     /**
      * Coarsen a value close to zero.
@@ -525,24 +518,17 @@ namespace GeographicLib {
      * degrees.  (This is about 1000 times more resolution than we get with
      * angles around 90&deg;.)  We use this to avoid having to deal with near
      * singular cases when \e x is non-zero but tiny (e.g.,
-     * 10<sup>&minus;200</sup>).  This also converts -0 to +0.
+     * 10<sup>&minus;200</sup>).  This converts -0 to +0; however tiny negative
+     * numbers get converted to -0.
      **********************************************************************/
     template<typename T> static inline T AngRound(T x) {
       using std::abs;
-      const T z = 1/T(16);
+      static const T z = 1/T(16);
+      if (x == 0) return 0;
       GEOGRAPHICLIB_VOLATILE T y = abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
-#if GEOGRAPHICLIB_PRECISION == 4
-      // With quad precision and x = +/-0, this gives y = -0.  So change test
-      // to x <= 0 here to force +0 to be returned.
-      return x <= 0 ? 0 - y : y;
-#elif GEOGRAPHICLIB_PRECISION == 5
-      // With mpfr, 0 - y is a call to +=(int) which doesn't fix the sign of -0
-      return x < 0 ? T(0) - y : y;
-#else
-      return x < 0 ? 0 - y : y;
-#endif
+      return x < 0 ? -y : y;
     }
 
     /**
@@ -566,7 +552,9 @@ namespace GeographicLib {
       // Disable for gcc because of bug in glibc version < 2.22, see
       //   https://sourceware.org/bugzilla/show_bug.cgi?id=17569
       // Once this fix is widely deployed, should insert a runtime test for the
-      // glibc version number.
+      // glibc version number.  For example
+      //   #include <gnu/libc-version.h>
+      //   std::string version(gnu_get_libc_version()); => "2.22"
       using std::remquo;
       r = remquo(x, T(90), &q);
 #else
@@ -579,11 +567,18 @@ namespace GeographicLib {
       r *= degree();
       // Possibly could call the gnu extension sincos
       T s = sin(r), c = cos(r);
+#if defined(_MSC_VER) && _MSC_VER < 1900
+      // Before version 14 (2015), Visual Studio had problems dealing
+      // with -0.0.  Specifically
+      //   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
+      //   VC 12       and 64-bit compile:  sin(-0.0)        -> +0.0
+      if (x == 0) s = x;
+#endif
       switch (unsigned(q) & 3U) {
-      case 0U: sinx =     s; cosx =     c; break;
-      case 1U: sinx =     c; cosx = 0 - s; break;
-      case 2U: sinx = 0 - s; cosx = 0 - c; break;
-      default: sinx = 0 - c; cosx =     s; break; // case 3U
+      case 0U: sinx =        s; cosx =        c; break;
+      case 1U: sinx =        c; cosx = T(0) - s; break;
+      case 2U: sinx = T(0) - s; cosx = T(0) - c; break;
+      default: sinx = T(0) - c; cosx =        s; break; // case 3U
       }
     }
 
@@ -612,7 +607,7 @@ namespace GeographicLib {
       r *= degree();
       unsigned p = unsigned(q);
       r = p & 1U ? cos(r) : sin(r);
-      return p & 2U ? 0 - r : r;
+      return p & 2U ? T(0) - r : r;
     }
 
     /**
@@ -640,7 +635,7 @@ namespace GeographicLib {
       r *= degree();
       unsigned p = unsigned(q + 1);
       r = p & 1U ? cos(r) : sin(r);
-      return p & 2U ? 0 - r : r;
+      return p & 2U ? T(0) - r : r;
     }
 
     /**
@@ -723,6 +718,24 @@ namespace GeographicLib {
     template<typename T> static T eatanhe(T x, T es);
 
     /**
+     * Copy the sign.
+     *
+     * @tparam T the type of the argument.
+     * @param[in] x gives the magitude of the result.
+     * @param[in] y gives the sign of the result.
+     * @return value with the magnitude of \e x and with the sign of \e y.
+     **********************************************************************/
+    template<typename T> static inline T copysign(T x, T y) {
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::copysign; return copysign(x, y);
+#else
+      using std::abs; using std::atan2;
+      // NaN counts as positive
+      return abs(x) * (y < 0 || (y == 0 && 1/y < 0)  ? -1 : 1);
+#endif
+    }
+
+    /**
      * tan&chi; in terms of tan&phi;
      *
      * @tparam T the type of the argument and the returned value.
@@ -770,7 +783,16 @@ namespace GeographicLib {
       using std::isfinite; return isfinite(x);
 #else
       using std::abs;
+#if defined(_MSC_VER)
       return abs(x) <= (std::numeric_limits<T>::max)();
+#else
+      // There's a problem using MPFR C++ 3.6.3 and g++ -std=c++14 (reported on
+      // 2015-05-04) with the parens around std::numeric_limits<T>::max.  Of
+      // course, these parens are only needed to deal with Windows stupidly
+      // defining max as a macro.  So don't insert the parens on non-Windows
+      // platforms.
+      return abs(x) <= std::numeric_limits<T>::max();
+#endif
 #endif
     }
 
@@ -781,9 +803,15 @@ namespace GeographicLib {
      * @return NaN if available, otherwise return the max real of type T.
      **********************************************************************/
     template<typename T> static inline T NaN() {
+#if defined(_MSC_VER)
       return std::numeric_limits<T>::has_quiet_NaN ?
         std::numeric_limits<T>::quiet_NaN() :
         (std::numeric_limits<T>::max)();
+#else
+      return std::numeric_limits<T>::has_quiet_NaN ?
+        std::numeric_limits<T>::quiet_NaN() :
+        std::numeric_limits<T>::max();
+#endif
     }
     /**
      * A synonym for NaN<real>().
@@ -812,9 +840,15 @@ namespace GeographicLib {
      * @return infinity if available, otherwise return the max real.
      **********************************************************************/
     template<typename T> static inline T infinity() {
+#if defined(_MSC_VER)
       return std::numeric_limits<T>::has_infinity ?
         std::numeric_limits<T>::infinity() :
         (std::numeric_limits<T>::max)();
+#else
+      return std::numeric_limits<T>::has_infinity ?
+        std::numeric_limits<T>::infinity() :
+        std::numeric_limits<T>::max();
+#endif
     }
     /**
      * A synonym for infinity<real>().
@@ -871,6 +905,9 @@ namespace GeographicLib {
 
     static inline real fma(real x, real y, real z)
     { return fmaq(__float128(x), __float128(y), __float128(z)); }
+
+    static inline real copysign(real x, real y)
+    { return boost::math::copysign(x, y); }
 
     static inline bool isnan(real x) { return boost::math::isnan(x); }
 

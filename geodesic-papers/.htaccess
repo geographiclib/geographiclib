@@ -1,9 +1,8 @@
 Options Indexes
 IndexOptions DescriptionWidth=*
-IndexIgnore HEADER.html FOOTER.html helmert80-en.pdf helmert84-en.pdf
+IndexIgnore HEADER.html FOOTER.html bagratuni67.pdf helmert80-en.html helmert80-en.pdf helmert84-en.html helmert84-en.pdf transams-V6.pdf vincenty75b.pdf
 ReadmeName FOOTER.html
-AddDescription "An online geodesic bibliography" biblio.html
-AddDescription "Bagratuni, Course in Spheroidal Geodesy (1967)" bagratuni67.pdf
+AddDescription "A geodesic bibliography" biblio.html
 AddDescription "Bernoulli (1728), missing figures from Google scan" bernoulli28-fig.pdf
 AddDescription "Braunmühl (1879), missing figures from Google scan" braunmuehl79-fig.pdf
 AddDescription "Braunmühl (1882), missing figures from Google scan" braunmuehl82-fig.pdf
@@ -11,8 +10,6 @@ AddDescription "du Séjour (1789), missing page from Google scan" dusejour89-add.
 AddDescription "du Séjour (1789), missing figures from Google scan" dusejour89-fig.pdf
 AddDescription "Forsyth (1896b), missing page from Google scan" forsyth96b-add.pdf
 AddDescription "Gauss, Untersuchungen ... Geodäsie (1843, 1846)" gauss43.pdf
-AddDescription "Helmert, Geodäsie 1 (1880), ACIC transl. (1964)" helmert80-en.html
-AddDescription "Helmert, Geodäsie 2 (1884), ACIC transl. (1964)" helmert84-en.html
 AddDescription "Ivory (1826), missing page from Google scan" ivory26-add.pdf
 AddDescription "Krüger, dissertation (1883)" krueger83.pdf
 AddDescription "Laplace, Méc. Cél. 2 (1799), Bowditch transl. (1832)" laplace99a.pdf
@@ -24,7 +21,6 @@ AddDescription "Puissant (1819), missing figures from Google scan" puissant19b-f
 AddDescription "Geodesic papers from Quart. Jour. Roy. Inst. 21 (1826)" quartjour26-extracts.pdf
 AddDescription "Soldner, Theorie der Landesvermessung (1810)" soldner10.pdf
 AddDescription "Thune, Trigonometriam Sphaeroidicam (1815)" thune15.pdf
-AddDescription "Vincenty, antipodal geodesics (1975)" vincenty75b.pdf
 AddDescription "Albrecht, Formeln, 1894 (<a href=https://books.google.com/books?id=muYRAAAAYAAJ>id=muYRAAAAYAAJ</a>)" albrecht94.pdf
 AddDescription "The Analyst 3&ndash;4, 1876&ndash;77 (<a href=https://books.google.com/books?id=eKYEAAAAQAAJ>id=eKYEAAAAQAAJ</a>)" analyst-V3-4.pdf
 AddDescription "Archives néerland. 12, 1877 (<a href=https://books.google.com/books?id=CycYAAAAYAAJ>id=CycYAAAAYAAJ</a>)" archneerd-V12.pdf
@@ -68,7 +64,6 @@ AddDescription "Roy. Astron. Soc. 39, 1872 (<a href=https://books.google.com/boo
 AddDescription "Todhunter, Figure of Earth 1, 1873 (<a href=https://books.google.com/books?id=6GMSAAAAIAAJ>id=6GMSAAAAIAAJ</a>)" todhunter73a.pdf
 AddDescription "Todhunter, Figure of Earth 2, 1873 (<a href=https://books.google.com/books?id=xmMSAAAAIAAJ>id=xmMSAAAAIAAJ</a>)" todhunter73b.pdf
 AddDescription "Todhuner, Spherical Trig., 1886 (<a href=https://books.google.com/books?id=aVgNAQAAMAAJ>id=aVgNAQAAMAAJ</a>)" todhunter86.pdf
-AddDescription "Trans. AMS 6, 1905 (<a href=https://books.google.com/books?id=o0MLAAAAYAAJ>id=o0MLAAAAYAAJ</a>)" transams-V6.pdf
 AddDescription "Weierstrass 1, 1894 (<a href=https://books.google.com/books?id=9O4GAAAAYAAJ>id=9O4GAAAAYAAJ</a>)" weierstrass-V1.pdf
 AddDescription "Z. f. Vermess. 4, 1875 (<a href=https://books.google.com/books?id=wpJIAAAAMAAJ>id=wpJIAAAAMAAJ</a>)" zvermess-V4.pdf
 AddDescription "Z. f. Vermess. 6, 1877 (<a href=https://books.google.com/books?id=WKxIAAAAMAAJ>id=WKxIAAAAMAAJ</a>)" zvermess-V6.pdf

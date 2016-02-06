@@ -25,6 +25,7 @@ class Accumulator(object):
       self._s, self._t = float(y), 0.0
 
   def __init__(self, y = 0.0):
+    """Constructor"""
     self.Set(y)
 
   def Add(self, y):

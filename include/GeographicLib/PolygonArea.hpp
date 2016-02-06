@@ -2,7 +2,7 @@
  * \file PolygonArea.hpp
  * \brief Header for GeographicLib::PolygonAreaT class
  *
- * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -28,16 +28,17 @@ namespace GeographicLib {
    *   J. Geodesy <b>87</b>, 43--55 (2013);
    *   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
-   *   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+   *   addenda:
+   *   <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
    *   geod-addenda.html</a>.
    *
    * This class lets you add vertices and edges one at a time to the polygon.
    * The sequence must start with a vertex and thereafter vertices and edges
    * can be added in any order.  Any vertex after the first creates a new edge
-   * which is the ''shortest'' geodesic from the previous vertex.  In some
+   * which is the \e shortest geodesic from the previous vertex.  In some
    * cases there may be two or many such shortest geodesics and the area is
    * then not uniquely defined.  In this case, either add an intermediate
-   * vertex or add the edge ''as'' an edge (by defining its direction and
+   * vertex or add the edge \e as an edge (by defining its direction and
    * length).
    *
    * The area and perimeter are accumulated at two times the standard floating
@@ -227,17 +228,6 @@ namespace GeographicLib {
      **********************************************************************/
     unsigned TestEdge(real azi, real s, bool reverse, bool sign,
                       real& perimeter, real& area) const;
-
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * The old name for PolygonAreaT::TestPoint.
-     **********************************************************************/
-    unsigned TestCompute(real lat, real lon, bool reverse, bool sign,
-                         real& perimeter, real& area) const {
-      return TestPoint(lat, lon, reverse, sign, perimeter, area);
-    }
-    /// \endcond
 
     /** \name Inspector functions
      **********************************************************************/

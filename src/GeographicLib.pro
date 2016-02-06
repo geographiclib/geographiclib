@@ -1,4 +1,4 @@
-VERSION = 14.2.1
+VERSION = 17.0.0
 
 TEMPLATE = lib
 

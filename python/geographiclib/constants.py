@@ -1,4 +1,4 @@
-"""constants.py: transcription of GeographicLib::Constants class."""
+"""Define the WGS84 ellipsoid"""
 # constants.py
 #
 # This is a translation of the GeographicLib::Constants class to python.  See
@@ -13,10 +13,10 @@
 
 class Constants(object):
   """
-  WGS84 constants:
-    WGS84_a, the equatorial radius in meters
-    WGS84_f, the flattening of the ellipsoid
+  Constants describing the WGS84 ellipsoid
   """
 
   WGS84_a = 6378137.0           # meters
+  """the equatorial radius in meters of the WGS84 ellipsoid in meters"""
   WGS84_f = 1/298.257223563
+  """the flattening of the WGS84 ellipsoid, 1/298.257223563"""

@@ -124,12 +124,10 @@ namespace NETGeographicLib
            **********************************************************************/
           AREA          = 1U<<14 | unsigned(captype::CAP_C4),
           /**
-           * Unroll \e lon2 in the direct calculation.  (This flag used to be
-           * called LONG_NOWRAP.)
+           * Unroll \e lon2 in the direct calculation.
            * @hideinitializer
            **********************************************************************/
           LONG_UNROLL   = 1U<<15,
-          LONG_NOWRAP   = LONG_UNROLL,
           /**
            * All capabilities, calculate everything.  (LONG_UNROLL is not
            * included in this mask.)

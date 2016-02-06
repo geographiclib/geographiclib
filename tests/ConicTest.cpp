@@ -2,7 +2,7 @@
  * \file ConicTest.cpp
  * \brief Command line utility for testing transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -111,8 +111,8 @@ int main(int argc, char* argv[]) {
     } else if (arg == "-e") {
       if (m + 2 >= argc) return usage(1);
       try {
-        a = DMS::Decode(string(argv[m + 1]));
-        f = DMS::DecodeFraction(string(argv[m + 2]));
+        a = Utility::num<real>(string(argv[m + 1]));
+        f = Utility::fract<real>(string(argv[m + 2]));
       }
       catch (const exception& e) {
         cerr << "Error decoding arguments of -e: " << e.what() << "\n";

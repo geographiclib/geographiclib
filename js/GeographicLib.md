@@ -1,11 +1,11 @@
 ## Geodesic routines from GeographicLib
 
-This documentation applies to version 1.45.
+This documentation applies to version 1.46.
 
 ### Installation
 
 This library is a JavaScript implementation of the geodesic routines
-from [GeographicLib](http://geographiclib.sf.net).  This solves the
+from [GeographicLib](http://geographiclib.sourceforge.net).  This solves the
 direct and inverse geodesic problems for an ellipsoid of revolution.
 
 The library can be used in [node](https://nodejs.org) by first
@@ -21,7 +21,7 @@ Alternatively, you can use it in client-side JavaScript, by including in
 your HTML page
 ```html
 <script type="text/javascript"
-        src="http://geographiclib.sf.net/scripts/geographiclib.js">
+        src="http://geographiclib.sourceforge.net/scripts/geographiclib.js">
 </script>
 ```
 Both of these prescriptions define a {@link GeographicLib} namespace.
@@ -45,9 +45,9 @@ console.log("The position is (" +
 // This prints "The position is (32.11195529, -63.95925278)."
 ```
 Two examples of this library in use are
-* [A geodesic calculator](http://geographiclib.sf.net/scripts/geod-calc.html)
+* [A geodesic calculator](http://geographiclib.sourceforge.net/scripts/geod-calc.html)
 * [Displaying geodesics on Google
-  Maps](http://geographiclib.sf.net/scripts/geod-google.html)
+  Maps](http://geographiclib.sourceforge.net/scripts/geod-google.html)
 
 ### More information
 * {@tutorial 1-geodesics}
@@ -58,3 +58,6 @@ Two examples of this library in use are
 
 * algorithms + js code: Charles Karney (charles@karney.com)
 * node.js port: Yurij Mikhalevich (0@39.yt)
+
+Licensed under the MIT/X11 License; see
+[LICENSE.txt](http://geographiclib.sourceforge.net/html/LICENSE.txt).

@@ -13,7 +13,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Math::real CircularEngine::Value(bool gradp, real cl, real sl,
+  Math::real CircularEngine::Value(bool gradp, real sl, real cl,
                                    real& gradx, real& grady, real& gradz)
     const {
     gradp = _gradp && gradp;

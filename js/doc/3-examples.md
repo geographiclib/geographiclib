@@ -51,18 +51,18 @@ redundant white space; this is appropriate for web applications.
 Load geographiclib.min.js with
 ```html
 <script type="text/javascript"
-        src="http://geographiclib.sf.net/scripts/geographiclib.min.js">
+        src="http://geographiclib.sourceforge.net/scripts/geographiclib.min.js">
 </script>
 ```
 This uses the latest version.  If you want use a specific version, load
 with, for example,
 ```html
 <script type="text/javascript"
-        src="http://geographiclib.sf.net/scripts/geographiclib-1.45.min.js">
+        src="http://geographiclib.sourceforge.net/scripts/geographiclib-1.45.min.js">
 </script>
 ```
 Browse
-[http://geographiclib.sf.net/scripts](http://geographiclib.sf.net/scripts)
+[http://geographiclib.sourceforge.net/scripts](http://geographiclib.sourceforge.net/scripts)
 to see what versions are available.
 
 #### Loading geographiclib.min.js with AMD
@@ -159,7 +159,7 @@ GeodesicLine.Position}:
 ```javascript
 var r = geod.Inverse(40.1, 116.6, 37.6, -122.4),
     l = geod.Line(r.lat1, r.lon1, r.azi1),
-    s12 = r.s12; ds = 1000e3, n = Math.ceil(s12 / ds),
+    s12 = r.s12, ds = 1000e3, n = Math.ceil(s12 / ds),
     i, s;
 console.log("distance latitude longitude azimuth");
 for (i = 0; i <= n; ++i) {
@@ -201,7 +201,7 @@ will be about 60 NM.
 var r = geod.Inverse(40.1, 116.6, 37.6, -122.4, Geodesic.AZIMUTH),
     l = geod.Line(r.lat1, r.lon1, r.azi1,
                   Geodesic.LATITUDE | Geodesic.LONGITUDE),
-    a12 = r.a12; da = 1, n = Math.ceil(a12 / da),
+    a12 = r.a12, da = 1, n = Math.ceil(a12 / da),
     i, a;
 da = a12 / n;
 console.log("latitude longitude");
