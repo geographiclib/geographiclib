@@ -158,6 +158,7 @@ for v in 2015 2013 2012 2010; do
 done
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
+cp $TEMP/gita/geographiclib/pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
 
 for ver in 10 11 12 14; do
     for arch in win32 x64; do

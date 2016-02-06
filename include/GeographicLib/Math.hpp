@@ -552,7 +552,9 @@ namespace GeographicLib {
       // Disable for gcc because of bug in glibc version < 2.22, see
       //   https://sourceware.org/bugzilla/show_bug.cgi?id=17569
       // Once this fix is widely deployed, should insert a runtime test for the
-      // glibc version number.
+      // glibc version number.  For example
+      //   #include <gnu/libc-version.h>
+      //   std::string version(gnu_get_libc_version()); => "2.22"
       using std::remquo;
       r = remquo(x, T(90), &q);
 #else
@@ -568,8 +570,8 @@ namespace GeographicLib {
 #if defined(_MSC_VER) && _MSC_VER < 1900
       // Before version 14 (2015), Visual Studio had problems dealing
       // with -0.0.  Specifically
-      //   VS 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
-      //   VS 12       and 64-bit compile:  sin(-0.0)        -> +0.0
+      //   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
+      //   VC 12       and 64-bit compile:  sin(-0.0)        -> +0.0
       if (x == 0) s = x;
 #endif
       switch (unsigned(q) & 3U) {
@@ -781,7 +783,16 @@ namespace GeographicLib {
       using std::isfinite; return isfinite(x);
 #else
       using std::abs;
+#if defined(_MSC_VER)
       return abs(x) <= (std::numeric_limits<T>::max)();
+#else
+      // There's a problem using MPFR C++ 3.6.3 and g++ -std=c++14 (reported on
+      // 2015-05-04) with the parens around std::numeric_limits<T>::max.  Of
+      // course, these parens are only needed to deal with Windows stupidly
+      // defining max as a macro.  So don't insert the parens on non-Windows
+      // platforms.
+      return abs(x) <= std::numeric_limits<T>::max();
+#endif
 #endif
     }
 
@@ -792,9 +803,15 @@ namespace GeographicLib {
      * @return NaN if available, otherwise return the max real of type T.
      **********************************************************************/
     template<typename T> static inline T NaN() {
+#if defined(_MSC_VER)
       return std::numeric_limits<T>::has_quiet_NaN ?
         std::numeric_limits<T>::quiet_NaN() :
         (std::numeric_limits<T>::max)();
+#else
+      return std::numeric_limits<T>::has_quiet_NaN ?
+        std::numeric_limits<T>::quiet_NaN() :
+        std::numeric_limits<T>::max();
+#endif
     }
     /**
      * A synonym for NaN<real>().
@@ -823,9 +840,15 @@ namespace GeographicLib {
      * @return infinity if available, otherwise return the max real.
      **********************************************************************/
     template<typename T> static inline T infinity() {
+#if defined(_MSC_VER)
       return std::numeric_limits<T>::has_infinity ?
         std::numeric_limits<T>::infinity() :
         (std::numeric_limits<T>::max)();
+#else
+      return std::numeric_limits<T>::has_infinity ?
+        std::numeric_limits<T>::infinity() :
+        std::numeric_limits<T>::max();
+#endif
     }
     /**
      * A synonym for infinity<real>().

@@ -247,8 +247,7 @@ else ()
   # the client code is being compiled (and the GeographicLib headers
   # being included), work-alike substitutions are used.
   include (CheckCXXCompilerFlag)
-  # Not yet ready for C++14 (problem with MPFR C++)
-  foreach (_F 11 0x)
+  foreach (_F 1z 14 1y 11 0x)
     set (CXX11_FLAG "-std=c++${_F}")
     set (_T CXX11TEST${_F})
     check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
@@ -277,9 +276,8 @@ int main() {
              std::log1p(2.0) + std::asinh(10.0) +
              std::atanh(0.8) + std::cbrt(8.0) +
              std::fma(1.0, 2.0, 3.0) + std::remquo(100.0, 90.0, &q) +
-             std::remainder(100.0, 90.0)) +
-             std::isfinite(4.0) + std::isnan(0.0) +
-             std::copysign(1.0, -0.0);
+             std::remainder(100.0, 90.0) + std::copysign(1.0, -0.0)) +
+             std::isfinite(4.0) + std::isnan(0.0);
 }\n" CXX11_MATH)
 if (CXX11_MATH)
   add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)
@@ -329,6 +327,10 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
         # Enable Q suffix for quad precision in g++ 4.8 and later
         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fext-numeric-literals")
       endif ()
+      # Boost uses std::auto_ptr which is deprecated in C++11.  Suppress
+      # ensuing warnings.  See also
+      # https://svn.boost.org/trac/boost/ticket/11411
+      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
       # Suppress the warnings that boost can spew out, e.g.,
       #   "typedef 'boost_concept_check905' locally defined but not used"
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs")
