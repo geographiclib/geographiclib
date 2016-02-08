@@ -152,18 +152,17 @@ console.log("The area is " + r.S12.toFixed(1) + " m^2");
 Consider the geodesic between Beijing Airport (40.1N, 116.6E) and San
 Fransisco Airport (37.6N, 122.4W).  Compute waypoints and azimuths at
 intervals of 1000 km using
-{@link module:GeographicLib/Geodesic.Geodesic#Line
-Geodesic.Line} and
+{@link module:GeographicLib/Geodesic.Geodesic#InverseLine
+Geodesic.InverseLine} and
 {@link module:GeographicLib/GeodesicLine.GeodesicLine#Position
 GeodesicLine.Position}:
 ```javascript
-var r = geod.Inverse(40.1, 116.6, 37.6, -122.4),
-    l = geod.Line(r.lat1, r.lon1, r.azi1),
-    s12 = r.s12, ds = 1000e3, n = Math.ceil(s12 / ds),
+var l = geod.InverseLine(40.1, 116.6, 37.6, -122.4),
+    n = Math.ceil(l.s13 / ds),
     i, s;
 console.log("distance latitude longitude azimuth");
 for (i = 0; i <= n; ++i) {
-  s = Math.min(ds * i, s12);
+  s = Math.min(ds * i, l.s13);
   r = l.Position(s, Geodesic.STANDARD | Geodesic.LONG_UNROLL);
   console.log(r.s12.toFixed(0) + " " + r.lat2.toFixed(5) + " " +
               r.lon2.toFixed(5) + " " + r.azi2.toFixed(5));
@@ -198,12 +197,11 @@ GeodesicLine.ArcPosition} instead of the distance.  Here the spacing is
 about 1&deg; of arc which means that the distance between the waypoints
 will be about 60 NM.
 ```javascript
-var r = geod.Inverse(40.1, 116.6, 37.6, -122.4, Geodesic.AZIMUTH),
-    l = geod.Line(r.lat1, r.lon1, r.azi1,
-                  Geodesic.LATITUDE | Geodesic.LONGITUDE),
-    a12 = r.a12, da = 1, n = Math.ceil(a12 / da),
+var l = geod.InverseLine(40.1, 116.6, 37.6, -122.4,
+                         Geodesic.LATITUDE | Geodesic.LONGITUDE),
+    da = 1, n = Math.ceil(l.a13 / da),
     i, a;
-da = a12 / n;
+da = l.a13 / n;
 console.log("latitude longitude");
 for (i = 0; i <= n; ++i) {
   a = da * i;

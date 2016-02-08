@@ -191,6 +191,12 @@ References
   <https://dx.doi.org/10.1007/s00190-012-0578-z>`_,
   J. Geodesy **87**\ (1) 43–55 (2013);
   `addenda <http://geographiclib.sourceforge.net/geod-addenda.html>`_.
+* C. F. F. Karney,
+  `Geodesics on an ellipsoid of revolution
+  <http://arxiv.org/abs/1102.1215v1>`_,
+  Feb. 2011;
+  `errata
+  <http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata>`_.
 * `A geodesic bibliography
   <http://geographiclib.sourceforge.net/geodesic-papers/biblio.html>`_.
 * The wikipedia page,

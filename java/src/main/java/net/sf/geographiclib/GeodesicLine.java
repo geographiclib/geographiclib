@@ -60,30 +60,30 @@ package net.sf.geographiclib;
  *     double
  *       lat1 = 40.640, lon1 = -73.779, // JFK
  *       lat2 =  1.359, lon2 = 103.989; // SIN
- *     GeodesicData g = geod.Inverse(lat1, lon1, lat2, lon2,
- *                  GeodesicMask.DISTANCE | GeodesicMask.AZIMUTH);
- *     GeodesicLine line = new GeodesicLine(geod, lat1, lon1, g.azi1,
- *                  GeodesicMask.DISTANCE_IN | GeodesicMask.LONGITUDE);
- *     double
- *       s12 = g.s12,
- *       a12 = g.a12,
- *       ds0 = 500e3;        // Nominal distance between points = 500 km
- *     int num = (int)(Math.ceil(s12 / ds0)); // The number of intervals
+ *     GeodesicLine line = geod.InverseLine(lat1, lon1, lat2, lon2,
+ *                                          GeodesicMask.DISTANCE_IN |
+ *                                          GeodesicMask.LATITUDE |
+ *                                          GeodesicMask.LONGITUDE);
+ *     double ds0 = 500e3;     // Nominal distance between points = 500 km
+ *     // The number of intervals
+ *     int num = (int)(Math.ceil(line.Distance() / ds0));
  *     {
  *       // Use intervals of equal length
- *       double ds = s12 / num;
+ *       double ds = line.Distance() / num;
  *       for (int i = 0; i <= num; ++i) {
- *         g = line.Position(i * ds,
- *                  GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE);
+ *         GeodesicData g = line.Position(i * ds,
+ *                                        GeodesicMask.LATITUDE |
+ *                                        GeodesicMask.LONGITUDE);
  *         System.out.println(i + " " + g.lat2 + " " + g.lon2);
  *       }
  *     }
  *     {
  *       // Slightly faster, use intervals of equal arc length
- *       double da = a12 / num;
+ *       double da = line.Arc() / num;
  *       for (int i = 0; i <= num; ++i) {
- *         g = line.ArcPosition(i * da,
- *                  GeodesicMask.LATITUDE | GeodesicMask.LONGITUDE);
+ *         GeodesicData g = line.ArcPosition(i * da,
+ *                                           GeodesicMask.LATITUDE |
+ *                                           GeodesicMask.LONGITUDE);
  *         System.out.println(i + " " + g.lat2 + " " + g.lon2);
  *       }
  *     }

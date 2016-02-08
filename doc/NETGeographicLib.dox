@@ -14,6 +14,10 @@
 \version 1.46
 \date 2016-mm-dd
 
+The documentation for other versions is available at
+<tt>http://geographiclib.sourceforge.net/m.nn/NET</tt> for versions numbers
+<tt>m.nn</tt> &ge; 1.33.
+
 \section abstract-net Abstract
 
 %NETGeographicLib is a .NET wrapper for GeographicLib.  It allows

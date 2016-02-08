@@ -8,7 +8,11 @@
 #
 #   python setup.py test
 #
-# To upload the latest version to the python repository run
+# To update the HTML page for this version, run
+#
+#   python setup.py register
+#
+# To upload the latest version to the python repository, run
 #
 #   python setup.py sdist --formats gztar,zip upload
 #
@@ -38,11 +42,11 @@ version = "1.46"
 
 setup(name = name,
       version = version,
-      description =
-        "A translation of the GeographicLib::Geodesic class to Python",
+      description = "The geodesic routines from GeographicLib",
+      long_description = open("README.rst").read(),
       author = "Charles Karney",
       author_email = "charles@karney.com",
-      url = "http://geographiclib.sourceforge.net/",
+      url = "http://geographiclib.sourceforge.net/" + version + "/python",
       packages = ["geographiclib", "geographiclib/test"],
       data_files = [],
       license = "MIT",

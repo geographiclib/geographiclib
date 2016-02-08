@@ -2,6 +2,10 @@
 
 This documentation applies to version 1.46.
 
+The documentation for other versions is available
+at <tt>http://geographiclib.sourceforge.net/m.nn/js</tt> for versions
+numbers <tt>m.nn</tt> &ge; 1.45.
+
 ### Installation
 
 This library is a JavaScript implementation of the geodesic routines
@@ -53,6 +57,46 @@ Two examples of this library in use are
 * {@tutorial 1-geodesics}
 * {@tutorial 2-interface}
 * {@tutorial 3-examples}
+
+### Implementations in various languages
+* {@link http://sourceforge.net/p/geographiclib/code/ci/release/tree/
+    git repository}
+* C++ (complete library):
+  {@link http://geographiclib.sourceforge.net/html
+    documentation},
+  {@link https://sourceforge.net/projects/geographiclib/files/distrib
+    download};
+* C (geodesic routines):
+  {@link http://geographiclib.sourceforge.net/html/C/
+    documentation}, also included with recent versions of
+  {@link https://github.com/OSGeo/proj.4/wiki
+    proj.4};
+* Fortran (geodesic routines):
+  {@link http://geographiclib.sourceforge.net/html/Fortran/
+    documentation};
+* Java (geodesic routines):
+  {@link http://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/
+    maven package},
+  {@link http://geographiclib.sourceforge.net/html/java/
+    documentation};
+* JavaScript (geodesic routines):
+  {@link https://www.npmjs.com/package/geographiclib
+    npm package},
+  {@link http://geographiclib.sourceforge.net/html/js/
+    documentation};
+* Python (geodesic routines):
+  {@link http://pypi.python.org/pypi/geographiclib
+    PyPI package},
+  {@link http://geographiclib.sourceforge.net/html/python/
+    documentation};
+* Matlab/Octave (geodesic and some other routines):
+  {@link http://www.mathworks.com/matlabcentral/fileexchange/50605
+    Matlab central packge},
+  {@link http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m
+    documentation};
+* C# (.NET wrapper for complete C++ library):
+  {@link http://geographiclib.sourceforge.net/html/NET/
+    documentation}.
 
 ### Authors
 

@@ -42,7 +42,7 @@ Notes:
 * This prescription applies to Linux machines.  Similar steps can be
   used on Windows and MacOSX machines.
 
-* You will need the packaged boost-python, boost-devel, python, and
+* You will need the packages boost-python, boost-devel, python, and
   python-devel installed.
 
 * CMakeLists.txt specifies the version of python to look for (version

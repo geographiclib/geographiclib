@@ -3,6 +3,11 @@
  * @author Charles F. F. Karney (charles@karney.com)
  * @version 1.46
  *
+ * <p>
+ * The documentation for other versions is available at
+ * <tt>http://geographiclib.sourceforge.net/m.nn/java</tt> for versions numbers
+ * <tt>m.nn</tt> &ge; 1.31.
+ *
  * <h2>Abstract</h2>
  * <p>
  * GeographicLib-Java is a Java implementation of the geodesic algorithms from
@@ -176,31 +181,76 @@
  *    <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
  *    on an ellipsoid of revolution</a>,
  *    Feb. 2011
- *    (<a href=
- *    "http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata">errata</a>).
+ *    (<a href="http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata">
+ *    errata</a>).
  * <li>
- *   <a href="http://geographiclib.sourceforge.net">The GeographicLib web site</a>.
+ *   <a href="http://geographiclib.sourceforge.net">
+ *   The GeographicLib web site</a>.
  * <li>
- *   <a href="http://geographiclib.sourceforge.net/html/index.html">The C++ library</a>.
+ *   <a href="https://sourceforge.net/projects/geographiclib/">
+ *     Main project page</a>
  * <li>
- *   <a href="http://geographiclib.sourceforge.net/html/C/index.html">The C library</a>.
+ *   <a href="http://sourceforge.net/p/geographiclib/code/ci/release/tree/">
+ *     git repository</a>
  * <li>
- *   <a href="http://geographiclib.sourceforge.net/html/Fortran/index.html">The
- *   Fortran library</a>.
- * <li>
- *   <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
- *    MATLAB toolbox</a>.
+ *   Implementations in various languages:
+ *   <ul>
+ *     <li>
+ *       C++ (complete library):
+ *       <a href="http://geographiclib.sourceforge.net/html">
+ *         documentation</a>,
+ *       <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
+ *         download</a>
+ *     <li>
+ *       C (geodesic routines):
+ *       <a href="http://geographiclib.sourceforge.net/html/C/">
+ *         documentation</a>, also included with recent versions of
+ *       <a href="https://github.com/OSGeo/proj.4/wiki">
+ *         proj.4</a>
+ *     <li>
+ *       Fortran (geodesic routines):
+ *       <a href="http://geographiclib.sourceforge.net/html/Fortran/">
+ *         documentation</a>
+ *     <li>
+ *       Java (geodesic routines):
+ *       <a href="http://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/">
+ *         maven package</a>,
+ *       <a href="http://geographiclib.sourceforge.net/html/java/">
+ *         documentation</a>
+ *     <li>
+ *       JavaScript (geodesic routines):
+ *       <a href="https://www.npmjs.com/package/geographiclib">
+ *         npm package</a>,
+ *       <a href="http://geographiclib.sourceforge.net/html/js/">
+ *         documentation</a>
+ *     <li>
+ *       Python (geodesic routines):
+ *       <a href="http://pypi.python.org/pypi/geographiclib">
+ *         PyPI package</a>,
+ *       <a href="http://geographiclib.sourceforge.net/html/python/">
+ *         documentation</a>
+ *     <li>
+ *       Matlab/Octave (geodesic and some other routines):
+ *       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+ *         Matlab central packge</a>,
+ *       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m">
+ *         documentation</a>
+ *     <li>
+ *       C# (.NET wrapper for complete C++ library):
+ *       <a href="http://geographiclib.sourceforge.net/html/NET/">
+ *         documentation</a>.
+ *   </ul>
  * <li>
  *   The section in the GeographicLib documentation on geodesics:
- *   <a href="http://geographiclib.sourceforge.net/html/geodesic.html">Geodesics
- *   on an ellipsoid of revolution</a>.
+ *   <a href="http://geographiclib.sourceforge.net/html/geodesic.html">
+ *   Geodesics on an ellipsoid of revolution</a>
  * <li>
  *   <a href="http://geographiclib.sourceforge.net/geodesic-papers/biblio.html">
- *   A geodesic bibliography</a>.
+ *   A geodesic bibliography</a>
  * <li>
  *   The wikipedia page,
  *   <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
- *   Geodesics on an ellipsoid</a>.
+ *   Geodesics on an ellipsoid</a>
  * </ul>
  *
  * <h2>Change log</h2>

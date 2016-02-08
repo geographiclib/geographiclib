@@ -46,6 +46,8 @@ set -e
 # python
 #   python/setup.py
 #   python/geographiclib/__init__.py
+#   doc/install.py
+#   README.rst
 # use: cd python; pychecker geographiclib/*.py
 
 # MATLAB

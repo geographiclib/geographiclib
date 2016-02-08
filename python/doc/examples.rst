@@ -19,7 +19,7 @@ variables, for example,
 
 If you need to use a different ellipsoid, construct one by, for example
 
-  >>> geod = Geodesic(6378388, 1/297) # the international ellipsoid
+  >>> geod = Geodesic(6378388, 1/297.0) # the international ellipsoid
 
 Basic geodesic calculations
 ---------------------------

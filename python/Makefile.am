@@ -22,6 +22,7 @@ DOC_FILES = \
 	$(srcdir)/doc/examples.rst \
 	$(srcdir)/doc/geodesics.rst \
 	$(srcdir)/doc/index.rst \
+	$(srcdir)/doc/install.rst \
 	$(srcdir)/doc/interface.rst
 
 PYTHON_WRAPPER = \
@@ -45,5 +46,5 @@ clean-local:
 	rm -rf *.pyc $(PACKAGE)/*.pyc
 
 EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES) \
-	$(TEST_FILES) $(DOC_FILES) setup.py MANIFEST.in README.txt \
+	$(TEST_FILES) $(DOC_FILES) setup.py MANIFEST.in README.rst \
 	$(PYTHON_WRAPPER)

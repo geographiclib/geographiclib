@@ -13,6 +13,10 @@
 \author Charles F. F. Karney (charles@karney.com)
 \version 1.46
 
+The documentation for other versions is available at
+<tt>http://geographiclib.sourceforge.net/m.nn/Fortran</tt> for versions numbers
+<tt>m.nn</tt> &gt; 1.28.
+
 \section abstract-for Abstract
 
 This is a Fortran implementation of the geodesic algorithms from <a
@@ -31,9 +35,9 @@ The Fortran library is part of %GeographicLib which available for download at
   GeographicLib-1.46.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
-the source, the Fortran library can be found in
-GeographicLib-1.46/legacy/Fortran.  The library consists of the file
-geodesic.for.
+the source, the Fortran library can be found in the directory
+<tt>legacy/Fortran</tt>.  The library consists of the file
+geodesic.for.  The Fortran-90 interface is defined in geodesic.inc.
 
 Licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>; see
@@ -115,16 +119,53 @@ and are therefore in the public domain.
    Feb. 2011
    (<a href="http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata">
    errata</a>).
-- <a href="http://geographiclib.sourceforge.net">The GeographicLib web site</a>.
-- <a href="../index.html">The C++ library</a>.
-- <a href="../C/index.html">The C library</a>.
-- <a href="../java/index.html">The Java library</a>.
-- <a href="../js/index.html">The JavaScript library</a>.
-- <a href="../python/index.html">The Python library</a>.
-- Documentation on the C++ classes: GeographicLib::Geodesic,
-  GeographicLib::GeodesicLine, GeographicLib::PolygonAreaT.
-- The section in the %GeographicLib documentation on geodesics: \ref
-  geodesic.
+- <a href="https://sourceforge.net/projects/geographiclib/">
+  Main project page</a>
+- <a href="http://geographiclib.sourceforge.net/">
+  GeographicLib web site</a>
+  - Documentation on the C++ classes: GeographicLib::Geodesic,
+    GeographicLib::GeodesicLine, GeographicLib::PolygonAreaT.
+  - The section in the %GeographicLib documentation on geodesics: \ref
+    geodesic.
+- <a href="http://sourceforge.net/p/geographiclib/code/ci/release/tree/">
+  git repository</a>
+- Implementations in various languages
+  - C++ (complete library):
+    <a href="http://geographiclib.sourceforge.net/html">
+      documentation</a>,
+    <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
+      download</a>;
+  - C (geodesic routines):
+    <a href="http://geographiclib.sourceforge.net/html/C/">
+      documentation</a>, also included with recent versions of
+    <a href="https://github.com/OSGeo/proj.4/wiki">
+      proj.4</a>;
+  - Fortran (geodesic routines):
+    <a href="http://geographiclib.sourceforge.net/html/Fortran/">
+      documentation</a>;
+  - Java (geodesic routines):
+    <a href="http://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/">
+      maven package</a>,
+    <a href="http://geographiclib.sourceforge.net/html/java/">
+      documentation</a>;
+  - JavaScript (geodesic routines):
+    <a href="https://www.npmjs.com/package/geographiclib">
+      npm package</a>,
+    <a href="http://geographiclib.sourceforge.net/html/js/">
+      documentation</a>;
+  - Python (geodesic routines):
+    <a href="http://pypi.python.org/pypi/geographiclib">
+      PyPI package</a>,
+    <a href="http://geographiclib.sourceforge.net/html/python/">
+      documentation</a>;
+  - Matlab/Octave (geodesic and some other routines):
+    <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+      Matlab central packge</a>,
+    <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m">
+      documentation</a>;
+  - C# (.NET wrapper for complete C++ library):
+    <a href="http://geographiclib.sourceforge.net/html/NET/">
+      documentation</a>.
 - <a href="http://geographiclib.sourceforge.net/geodesic-papers/biblio.html">
   A geodesic bibliography</a>.
 - The wikipedia page,
