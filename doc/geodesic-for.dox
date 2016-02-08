@@ -131,40 +131,40 @@ and are therefore in the public domain.
   git repository</a>
 - Implementations in various languages
   - C++ (complete library):
-    <a href="http://geographiclib.sourceforge.net/html">
+    <a href="../index.html">
       documentation</a>,
     <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
       download</a>;
   - C (geodesic routines):
-    <a href="http://geographiclib.sourceforge.net/html/C/">
+    <a href="../C/index.html">
       documentation</a>, also included with recent versions of
     <a href="https://github.com/OSGeo/proj.4/wiki">
       proj.4</a>;
   - Fortran (geodesic routines):
-    <a href="http://geographiclib.sourceforge.net/html/Fortran/">
+    <a href="../Fortran/index.html">
       documentation</a>;
   - Java (geodesic routines):
     <a href="http://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/">
-      maven package</a>,
-    <a href="http://geographiclib.sourceforge.net/html/java/">
+      Maven Central package</a>,
+    <a href="../java/index.html">
       documentation</a>;
   - JavaScript (geodesic routines):
     <a href="https://www.npmjs.com/package/geographiclib">
       npm package</a>,
-    <a href="http://geographiclib.sourceforge.net/html/js/">
+    <a href="../js/index.html">
       documentation</a>;
   - Python (geodesic routines):
     <a href="http://pypi.python.org/pypi/geographiclib">
       PyPI package</a>,
-    <a href="http://geographiclib.sourceforge.net/html/python/">
+    <a href="../python/index.html">
       documentation</a>;
   - Matlab/Octave (geodesic and some other routines):
     <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
-      Matlab central packge</a>,
+      Matlab Central package</a>,
     <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m">
       documentation</a>;
   - C# (.NET wrapper for complete C++ library):
-    <a href="http://geographiclib.sourceforge.net/html/NET/">
+    <a href="../NET/index.html">
       documentation</a>.
 - <a href="http://geographiclib.sourceforge.net/geodesic-papers/biblio.html">
   A geodesic bibliography</a>.

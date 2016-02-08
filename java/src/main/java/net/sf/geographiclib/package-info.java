@@ -197,7 +197,7 @@
  *   <ul>
  *     <li>
  *       C++ (complete library):
- *       <a href="http://geographiclib.sourceforge.net/html">
+ *       <a href="http://geographiclib.sourceforge.net/html/">
  *         documentation</a>,
  *       <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
  *         download</a>
@@ -214,7 +214,7 @@
  *     <li>
  *       Java (geodesic routines):
  *       <a href="http://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/">
- *         maven package</a>,
+ *         Maven Central package</a>,
  *       <a href="http://geographiclib.sourceforge.net/html/java/">
  *         documentation</a>
  *     <li>
@@ -232,7 +232,7 @@
  *     <li>
  *       Matlab/Octave (geodesic and some other routines):
  *       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
- *         Matlab central packge</a>,
+ *         Matlab Central package</a>,
  *       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m">
  *         documentation</a>
  *     <li>

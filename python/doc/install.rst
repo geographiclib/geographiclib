@@ -45,30 +45,30 @@ C++ library in the file ``python/wrapper/PyGeographicLib.cpp``.  The
 file ``00README.txt`` in the same directory provides instructions for
 how to compile this.
 
-GeographicLib in other languages
+GeographicLib in various languages
 --------------------------------
 
 * C++ (complete library):
-  `C++ documentation <http://geographiclib.sourceforge.net/html>`_,
+  `C++ documentation <../index.html>`_,
   `download <https://sourceforge.net/projects/geographiclib/files/distrib>`_
 * C (geodesic routines):
-  `C documentation <http://geographiclib.sourceforge.net/html/C/>`_,
+  `C documentation <../C/index.html>`_,
   also included with recent versions of
   `proj.4 <https://github.com/OSGeo/proj.4/wiki>`_
 * Fortran (geodesic routines):
-  `Fortran documentation <http://geographiclib.sourceforge.net/html/Fortran/>`_
+  `Fortran documentation <../Fortran/index.html>`_
 * Java (geodesic routines):
-  `maven package <http://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/>`_,
-  `Java documentation <http://geographiclib.sourceforge.net/html/java/>`_
+  `Maven Central package <http://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/>`_,
+  `Java documentation <../java/index.html>`_
 * JavaScript (geodesic routines):
   `npm package <https://www.npmjs.com/package/geographiclib>`_,
-  `JavaScript documentation <http://geographiclib.sourceforge.net/html/js/>`_
+  `JavaScript documentation <../js/index.html>`_
 * Python (geodesic routines):
   `PyPI package <http://pypi.python.org/pypi/geographiclib>`_,
-  `Python documentation <http://geographiclib.sourceforge.net/html/python/>`_
+  `Python documentation <../python/index.html>`_
 * Matlab/Octave (geodesic and some other routines):
-  `Matlab central packge <http://www.mathworks.com/matlabcentral/fileexchange/50605>`_,
+  `Matlab Central package <http://www.mathworks.com/matlabcentral/fileexchange/50605>`_,
   `Matlab documentation
   <http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m>`_
 * C# (.NET wrapper for complete C++ library):
-  `documentation <http://geographiclib.sourceforge.net/html/NET/>`_
+  `documentation <../NET/index.html>`_
