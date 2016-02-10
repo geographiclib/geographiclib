@@ -41,34 +41,34 @@ GeographicLib, you can use
 to wrap the functionality you need into python classes.  You'll need to
 install the GeographicLib library and boost and to have the ability to
 compile C++ code.  A sample is given in the source distribution for the
-C++ library in the file ``python/wrapper/PyGeographicLib.cpp``.  The
+C++ library in the file ``wrapper/python/PyGeographicLib.cpp``.  The
 file ``00README.txt`` in the same directory provides instructions for
 how to compile this.
 
 GeographicLib in various languages
---------------------------------
+----------------------------------
 
 * C++ (complete library):
-  `C++ documentation <../index.html>`_,
+  `documentation <../index.html>`__,
   `download <https://sourceforge.net/projects/geographiclib/files/distrib>`_
 * C (geodesic routines):
-  `C documentation <../C/index.html>`_,
+  `documentation <../C/index.html>`__,
   also included with recent versions of
   `proj.4 <https://github.com/OSGeo/proj.4/wiki>`_
 * Fortran (geodesic routines):
-  `Fortran documentation <../Fortran/index.html>`_
+  `documentation <../Fortran/index.html>`__
 * Java (geodesic routines):
   `Maven Central package <http://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/>`_,
-  `Java documentation <../java/index.html>`_
+  `documentation <../java/index.html>`__
 * JavaScript (geodesic routines):
   `npm package <https://www.npmjs.com/package/geographiclib>`_,
-  `JavaScript documentation <../js/index.html>`_
+  `documentation <../js/index.html>`__
 * Python (geodesic routines):
   `PyPI package <http://pypi.python.org/pypi/geographiclib>`_,
-  `Python documentation <../python/index.html>`_
+  `documentation <../python/index.html>`__
 * Matlab/Octave (geodesic and some other routines):
   `Matlab Central package <http://www.mathworks.com/matlabcentral/fileexchange/50605>`_,
-  `Matlab documentation
-  <http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m>`_
+  `documentation
+  <http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m>`__
 * C# (.NET wrapper for complete C++ library):
-  `documentation <../NET/index.html>`_
+  `documentation <../NET/index.html>`__

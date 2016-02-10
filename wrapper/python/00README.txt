@@ -1,7 +1,6 @@
 This directory contains a small example of exposing one capability of
 the C++ version GeographicLib to python.  PyGeographicLib.cpp uses
-boost-python to wrap parts of 2 classes, Constants and Geodesic, so that
-they can be called from python.
+boost-python to wrap the Geoid class so that it is accessible in python.
 
 To build and install this interface, do
 
@@ -18,7 +17,7 @@ you have built in the top-level BUILD directory, include, e.g.,
   -D GeographicLib_DIR=../../BUILD
 
 in the invocation of cmake (the directory is relative to the source
-directory, python/wrapper).
+directory, wrapper/python).
 
 "make install" installs PyGeographicLib in
 
@@ -28,16 +27,16 @@ which is in the default search path for python 2.7.  To use this in
 python, do, e.g.,
 
   $ python
-  >>> from PyGeographicLib import Constants, Geodesic
-  >>> geod = Geodesic(Constants.WGS84_a(), Constants.WGS84_f())
-  >>> geod.Inverse(40.63972, -73.77889, 1.35917, 103.98944)
-  (3.3083172599825987, 177.48589836536408, 15347627.52149483,
-   138.05222403153218, 4302458.117647906,
-   -0.7373981702672949, -0.7435561002478325,
-   123377685741829.42)
-  >>> help(Geodesic.Inverse)
+  >>> from PyGeographicLib import Geoid
+  >>> geoid = Geoid("egm2008-1")
+  >>> geoid.EllipsoidHeight(42, -75, 20)
+  -10.671887499999997
+  >>> help(Geoid.EllipsoidHeight)
 
 Notes:
+
+* The geoid data (egm2008-1) should be installed somewhere that
+  GeographicLib knows about.
 
 * This prescription applies to Linux machines.  Similar steps can be
   used on Windows and MacOSX machines.

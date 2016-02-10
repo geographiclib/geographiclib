@@ -7061,6 +7061,7 @@ git repository for GeographicLib</a>.
      - Python: abcde
      - Maxima: ad (ce = not applicable, b = not implemented)
    - Add sample of python wrapper.
+   - Add sample of C wrapper https://isocpp.org/wiki/faq/mixing-c-and-cpp
    - Add overloaded version of Math::AngDiff which returns the error in
      the difference.  This allows a more accurate treatment of inverse
      geodesic problem when \e lon12 is close to 180&deg;.

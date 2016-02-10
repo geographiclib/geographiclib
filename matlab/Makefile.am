@@ -87,10 +87,6 @@ MATLAB_LEGACY = \
 	$(srcdir)/geographiclib-legacy/utmupsforward.m \
 	$(srcdir)/geographiclib-legacy/utmupsreverse.m
 
-MATLAB_WRAPPER = \
-	$(srcdir)/wrapper/geodesicinverse.m \
-	$(srcdir)/wrapper/geographiclibinterface.m
-
 MATLAB_ALL = $(MATLAB_FILES) $(MATLAB_PRIVATE)
 
 matlabdir=$(DESTDIR)$(datadir)/matlab
@@ -105,5 +101,4 @@ install:
 clean-local:
 	rm -rf *.mex* *.oct
 
-EXTRA_DIST = Makefile.mk CMakeLists.txt $(MATLAB_ALL) $(MATLAB_LEGACY) \
-	$(MATLAB_WRAPPER)
+EXTRA_DIST = Makefile.mk CMakeLists.txt $(MATLAB_ALL) $(MATLAB_LEGACY)

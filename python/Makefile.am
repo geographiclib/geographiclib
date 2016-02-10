@@ -25,11 +25,6 @@ DOC_FILES = \
 	$(srcdir)/doc/install.rst \
 	$(srcdir)/doc/interface.rst
 
-PYTHON_WRAPPER = \
-	$(srcdir)/wrapper/00README.txt \
-	$(srcdir)/wrapper/CMakeLists.txt \
-	$(srcdir)/wrapper/PyGeographicLib.cpp
-
 pythondir=$(libdir)/python/site-packages/$(PACKAGE)
 
 install:
@@ -46,5 +41,4 @@ clean-local:
 	rm -rf *.pyc $(PACKAGE)/*.pyc
 
 EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES) \
-	$(TEST_FILES) $(DOC_FILES) setup.py MANIFEST.in README.rst \
-	$(PYTHON_WRAPPER)
+	$(TEST_FILES) $(DOC_FILES) setup.py MANIFEST.in README.rst
