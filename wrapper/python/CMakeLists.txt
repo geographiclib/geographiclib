@@ -14,20 +14,6 @@ if (MSVC)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-  # check for C++11 support.
-  include (CheckCXXCompilerFlag)
-  foreach (_F 11 0x)
-    set (CXX11_FLAG "-std=c++${_F}")
-    set (_T CXX11TEST${_F})
-    check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
-    if (${_T})
-      break ()
-    endif ()
-    unset (CXX11_FLAG)
-  endforeach ()
-  if (CXX11_FLAG)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
-  endif ()
 endif ()
 
 # The version of python that boost-python uses.  Also used for the
@@ -44,9 +30,23 @@ find_package (GeographicLib REQUIRED COMPONENTS SHARED)
 
 include_directories (${GeographicLib_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
-set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 add_library (${PROJECT_NAME} MODULE ${PROJECT_NAME}.cpp)
+
+get_target_property (GEOGRAPHICLIB_LIB_TYPE ${GeographicLib_LIBRARIES} TYPE)
+if (GEOGRAPHICLIB_LIB_TYPE STREQUAL "SHARED_LIBRARY")
+  if (WIN32)
+    add_custom_command (TARGET ${PROJECT_NAME} POST_BUILD
+      COMMAND
+        ${CMAKE_COMMAND} -E
+        copy $<TARGET_FILE:${GeographicLib_LIBRARIES}> ${CMAKE_CFG_INTDIR}
+      COMMENT "Installing shared library in build tree")
+  else ()
+    # Set the run time path for shared libraries for non-Windows machines.
+    set_target_properties (${PROJECT_NAME}
+      PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
+  endif ()
+endif ()
 
 # Don't include the "lib" prefix on the output name
 set_target_properties (${PROJECT_NAME} PROPERTIES PREFIX "")

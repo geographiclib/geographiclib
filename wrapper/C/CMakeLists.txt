@@ -17,20 +17,6 @@ if (MSVC)
 else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
-  # check for C++11 support.
-  include (CheckCXXCompilerFlag)
-  foreach (_F 1z 14 1y 11 0x)
-    set (CXX11_FLAG "-std=c++${_F}")
-    set (_T CXX11TEST${_F})
-    check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
-    if (${_T})
-      break ()
-    endif ()
-    unset (CXX11_FLAG)
-  endforeach ()
-  if (CXX11_FLAG)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
-  endif ()
 endif ()
 
 find_package (GeographicLib REQUIRED COMPONENTS SHARED)
@@ -46,9 +32,10 @@ if (GEOGRAPHICLIB_LIB_TYPE STREQUAL "SHARED_LIBRARY")
       COMMAND
         ${CMAKE_COMMAND} -E
         copy $<TARGET_FILE:${GeographicLib_LIBRARIES}> ${CMAKE_CFG_INTDIR}
-      COMMENT "Installing shared libraries in build tree")
+      COMMENT "Installing shared library in build tree")
   else ()
     # Set the run time path for shared libraries for non-Windows machines.
-    set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+    set_target_properties (${PROJECT_NAME}
+      PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
   endif ()
 endif ()
