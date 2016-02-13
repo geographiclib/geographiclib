@@ -153,11 +153,7 @@ namespace Projections
                 Geoid g = new Geoid(m_fileName, m_path, false, false);
                 g.CacheArea(20.0, -30.0, 30.0, -20.0);
                 g.CacheAll();
-                double gradx, grady;
-                double h1 = g.Height(32.0, -60.0, out gradx, out grady);
                 double h2 = g.Height(32.0, -60.0);
-                if (h1 != h2)
-                    throw new Exception("Error in Geoid.Height");
                 g.ConvertHeight(32.0, -60.0, 100.0, Geoid.ConvertFlag.ELLIPSOIDTOGEOID);
                 MessageBox.Show("No errors detected", "OK", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
