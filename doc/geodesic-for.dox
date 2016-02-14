@@ -177,7 +177,7 @@ and are therefore in the public domain.
  - <a href="http://geographiclib.sourceforge.net/1.46/Fortran">Version 1.46</a>
    (released 2016-mm-dd)
    - More accurate inverse solution when longitude difference is close
-     to 180.
+     to 180&deg;.
 
  - <a href="http://geographiclib.sourceforge.net/1.45/Fortran">Version 1.45</a>
    (released 2015-09-30)

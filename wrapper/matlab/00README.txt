@@ -11,7 +11,7 @@ GeographicLib's capabilities.
 
 In order to make use of this facility, it is necessary to write some
 interface code.  The files in this directory provide a sample of such
-interface code.  This example solve the inverse geodesic problem for
+interface code.  This example solves the inverse geodesic problem for
 ellipsoids with arbitrary flattening.  (The code geoddistance.m does
 this as native Matlab code; but it is limited to ellipsoids with a
 smaller flattening.)

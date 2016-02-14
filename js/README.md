@@ -4,6 +4,9 @@ This library is a JavaScript implementation of the geodesic routines
 from [GeographicLib](http://geographiclib.sourceforge.net).  This solves the
 direct and inverse geodesic problems for an ellipsoid of revolution.
 
+Licensed under the MIT/X11 License; see
+[LICENSE.txt](http://geographiclib.sourceforge.net/html/LICENSE.txt).
+
 ## Installation
 
 ```bash

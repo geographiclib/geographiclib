@@ -95,6 +95,19 @@ GeographicLib in various languages
 * C# (.NET wrapper for complete C++ library):
   `documentation <../NET/index.html>`__
 
+Change log
+----------
+
+* Version 1.46 (released 2016-mm-dd)
+
+  * Add Geodesic.DirectLine, Geodesic.ArcDirectLine,
+    Geodesic.InverseLine, GeodesicLine.SetDistance, GeodesicLine.SetArc,
+    GeodesicLine.s13, GeodesicLine.a13.
+  * More accurate inverse solution when longitude difference is close to
+    180°.
+  * Remove unnecessary functions, CheckPosition, CheckAzimuth,
+    CheckDistance.
+
 Indices and tables
 ==================
 

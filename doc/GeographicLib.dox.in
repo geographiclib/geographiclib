@@ -559,14 +559,6 @@ If cmake complains that sh mustn't be in your path, invoke cmake with
   sed 's/:$//' )" \
   cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX=C:/pkg-mingw/GeographicLib ..
 \endverbatim
-If cmake is not available, there is a simple project file that compiles
-the GeographicLib library <i>only</i> with the Qt compiler: \verbatim
-  cd src
-  qmake GeographicLib.pro # configure the project
-  make                    # build the library \endverbatim
-The library will be in the src directory (or the src/release or
-src/debug directory under Windows).  The headers are in
-include/GeographicLib.
 
 \section maintainer Maintainer tasks
 
@@ -6930,7 +6922,8 @@ git repository for GeographicLib</a>.
        being ignored;
      - in the Java package, the wrong longitude was being returned with
        direct geodesic calculation with a negative distance when
-       starting point was at a pole;
+       starting point was at a pole (this bug was introduced in version
+       1.44);
      - in the JavaScript package, PolygonArea.TestEdge contained a
        misspelling of a variable name and other typos (problem found by
        threepointone).
@@ -6955,6 +6948,8 @@ git repository for GeographicLib</a>.
        Geodesic (and related classes) and Rhumb;
      - stop treating full/schmidt as aliases for FULL/SCHMIDT in
        SphericalEngine (and related classes);
+     - remove qmake project file src/GeographicLib.pro because QtCreator
+       can handle cmake projects now;
      - remove deprecated Visual Studio 2005 project and solution files.
    - Changes to GeodesicLine and GeodesicLineExact classes; these
      changes (1) simplify the process of computing waypoints on a
@@ -6975,8 +6970,8 @@ git repository for GeographicLib</a>.
      - these changes are also included in the C, Java, JavaScript, and
        Python packages.
    - Other changes to the geodesic routines:
-     - more accurate solution of the inverse problem when the points are
-       on nearly opposite meridians (also in C, Fortran, Java,
+     - more accurate solution of the inverse problem when longitude
+       difference is close to 180&deg; (also in C, Fortran, Java,
        JavaScript, Python, MATLAB, and Maxima packages);
      - more accurate calculation of lon2 in the inverse calculation with
        LONG_UNROLL (also in Java, JavaScript, Python packages).

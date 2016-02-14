@@ -37,7 +37,6 @@ set -e
 #   NEWS
 #   configure.ac (AC_INIT, GEOGRAPHICLIB_VERSION_* LT_*)
 #   tests/test-distribution.sh
-#   src/GeographicLib.pro lib version
 #   doc/GeographicLib.dox.in
 #   doc/NETGeographicLib.dox
 
@@ -46,7 +45,7 @@ set -e
 # python
 #   python/setup.py
 #   python/geographiclib/__init__.py
-#   doc/install.py
+#   doc/index.py
 #   README.rst
 # use: cd python; pychecker geographiclib/*.py
 
@@ -349,9 +348,6 @@ libversion=`find $TEMP/instc/lib -type f \
 sed 's/libGeographic\.so\.//'`
 test -f $TEMP/instb/lib/libGeographic.so.$libversion ||
 echo autoconf/cmake library so mismatch
-grep "^ *VERSION *= *$libversion *\$" \
-    $TEMP/gitb/geographiclib/src/GeographicLib.pro > /dev/null ||
-echo autoconf/Qt library so mismatch
 
 CONFIG_FILE=$TEMP/gitr/geographiclib/configure
 CONFIG_MAJOR=`grep ^GEOGRAPHICLIB_VERSION_MAJOR= $CONFIG_FILE | cut -f2 -d=`

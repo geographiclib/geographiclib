@@ -6,6 +6,9 @@ The documentation for other versions is available
 at <tt>http://geographiclib.sourceforge.net/m.nn/js</tt> for versions
 numbers <tt>m.nn</tt> &ge; 1.45.
 
+Licensed under the MIT/X11 License; see
+[LICENSE.txt](http://geographiclib.sourceforge.net/html/LICENSE.txt).
+
 ### Installation
 
 This library is a JavaScript implementation of the geodesic routines
@@ -104,10 +107,18 @@ Two examples of this library in use are
   {@link http://geographiclib.sourceforge.net/html/NET/index.html
     documentation}.
 
+### Change log
+
+* Version 1.46 (released 2016-mm-dd)
+  * Fix bugs in PolygonArea.TestEdge (problem found by threepointone).
+  * Add Geodesic.DirectLine, Geodesic.ArcDirectLine,
+    Geodesic.GenDirectLine, Geodesic.InverseLine,
+    GeodesicLine.SetDistance, GeodesicLine.SetArc,
+    GeodesicLine.GenSetDistance, GeodesicLine.s13, GeodesicLine.a13.
+  * More accurate inverse solution when longitude difference is close to
+    180&deg;.
+
 ### Authors
 
 * algorithms + js code: Charles Karney (charles@karney.com)
 * node.js port: Yurij Mikhalevich (0@39.yt)
-
-Licensed under the MIT/X11 License; see
-[LICENSE.txt](http://geographiclib.sourceforge.net/html/LICENSE.txt).
