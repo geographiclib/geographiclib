@@ -427,7 +427,7 @@ function n = GeodSolve73
 % This only affected the Java implementation.  It was introduced in Java
 % version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
   n = 0;
-  [lat2, lon2, azi2] = geodreckon(90, 10, 180, -1e6);
+  [lat2, lon2, azi2] = geodreckon(90, 10, -1e6, 180);
   n = n + assertEquals(lat2, 81.04623, 0.5e-5);
   n = n + assertEquals(lon2, -170, 0.5e-5);
   n = n + assertEquals(azi2, 0, 0.5e-5);

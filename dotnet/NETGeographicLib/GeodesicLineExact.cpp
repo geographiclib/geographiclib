@@ -47,16 +47,16 @@ GeodesicLineExact::GeodesicLineExact(GeodesicExact^ g, double lat1,
 
 //*****************************************************************************
 GeodesicLineExact::GeodesicLineExact(
-	const GeographicLib::GeodesicLineExact& gle)
+    const GeographicLib::GeodesicLineExact& gle)
 {
-	try
-	{
-		m_pGeodesicLineExact = new GeographicLib::GeodesicLineExact(gle);
-	}
-	catch (std::bad_alloc)
-	{
-		throw gcnew GeographicErr(BADALLOC);
-	}
+    try
+    {
+        m_pGeodesicLineExact = new GeographicLib::GeodesicLineExact(gle);
+    }
+    catch (std::bad_alloc)
+    {
+        throw gcnew GeographicErr(BADALLOC);
+    }
 }
 
 //*****************************************************************************
@@ -390,19 +390,19 @@ void GeodesicLineExact::GenSetDistance(bool arcmode, double s13_a13)
 //*****************************************************************************
 void GeodesicLineExact::AzimuthSinCos(double% sazi1, double% cazi1)
 {
-	double x1, x2;
-	m_pGeodesicLineExact->Azimuth(x1, x2);
-	sazi1 = x1;
-	cazi1 = x2;
+    double x1, x2;
+    m_pGeodesicLineExact->Azimuth(x1, x2);
+    sazi1 = x1;
+    cazi1 = x2;
 }
 
 //*****************************************************************************
 void GeodesicLineExact::EquatorialAzimuthSinCos(double% sazi0, double% cazi0)
 {
-	double x1, x2;
-	m_pGeodesicLineExact->EquatorialAzimuth(x1, x2);
-	sazi0 = x1;
-	cazi0 = x2;
+    double x1, x2;
+    m_pGeodesicLineExact->EquatorialAzimuth(x1, x2);
+    sazi0 = x1;
+    cazi0 = x2;
 }
 
 //*****************************************************************************

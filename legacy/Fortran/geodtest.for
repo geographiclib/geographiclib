@@ -829,7 +829,7 @@
       call direct(a, f, 90d0, 10d0, 180d0, -1d6,
      +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
       r = r + assert(lat2, 81.04623d0, 0.5d-5)
-      r = r + assert(lon2, -179d0, 0.5d-5)
+      r = r + assert(lon2, -170d0, 0.5d-5)
       r = r + assert(azi2, 0d0, 0.5d-5)
 
       tstg73 = r

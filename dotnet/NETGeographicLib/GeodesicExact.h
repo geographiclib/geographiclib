@@ -743,7 +743,7 @@ namespace NETGeographicLib
         **********************************************************************/
         GeodesicLineExact^ GenDirectLine(double lat1, double lon1, double azi1,
             bool arcmode, double s12_a12, NETGeographicLib::Mask caps);
-		///@}
+        ///@}
 
         /** \name Inspector functions.
          **********************************************************************/

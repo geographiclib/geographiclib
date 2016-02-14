@@ -193,12 +193,12 @@ namespace NETGeographicLib
                           NETGeographicLib::Mask caps);
 
         /**
-        * This constructor accepts a reference to an unmanaged 
+        * This constructor accepts a reference to an unmanaged
         * GeodesicLineExact.
         * FOR INTERNAL USE ONLY.
         **********************************************************************/
-		GeodesicLineExact(const GeographicLib::GeodesicLineExact& gle);
-		///@}
+        GeodesicLineExact(const GeographicLib::GeodesicLineExact& gle);
+        ///@}
 
         /**
          * The destructor calls the finalizer
@@ -488,9 +488,9 @@ namespace NETGeographicLib
 
         ///@}
 
-		/** \name Setting point 3
-		**********************************************************************/
-		///@{
+        /** \name Setting point 3
+        **********************************************************************/
+        ///@{
 
         /**
         * Specify position of point 3 in terms of distance.
@@ -534,7 +534,7 @@ namespace NETGeographicLib
         *   value.
         * @return \e s13 if \e arcmode is false; \e a13 if \e arcmode is true.
         **********************************************************************/
-		double GenDistance(bool arcmode);
+        double GenDistance(bool arcmode);
         ///@}
 
         /** \name Trigonometric accessor functions
@@ -547,7 +547,7 @@ namespace NETGeographicLib
         * @param[out] cazi1 the cosine of \e azi1.
         **********************************************************************/
         void AzimuthSinCos(
-            [System::Runtime::InteropServices::Out] double% sazi1, 
+            [System::Runtime::InteropServices::Out] double% sazi1,
             [System::Runtime::InteropServices::Out] double% cazi1);
 
         /**
@@ -556,11 +556,10 @@ namespace NETGeographicLib
         * @param[out] sazi0 the sine of \e azi0.
         * @param[out] cazi0 the cosine of \e azi0.
         **********************************************************************/
-		void EquatorialAzimuthSinCos(
-			[System::Runtime::InteropServices::Out] double% sazi0,
-			[System::Runtime::InteropServices::Out] double% cazi0);
+        void EquatorialAzimuthSinCos(
+            [System::Runtime::InteropServices::Out] double% sazi0,
+            [System::Runtime::InteropServices::Out] double% cazi0);
         ///@}
-
 
         /** \name Inspector functions
          **********************************************************************/

@@ -16,7 +16,7 @@ To build and install this interface, do
   cd BUILD
   cmake ..
   make
-  
+
 This assumes that you have installed GeographicLib somewhere that cmake
 can find it.  If you want just to use the version of GeographicLib that
 you have built in the top-level BUILD directory, include, e.g.,
@@ -27,7 +27,7 @@ in the invocation of cmake (the directory is relative to the source
 directory, wrapper/C).  To convert 20m above the geoid at 42N 75W to a
 height above the ellipsoid, use
 
-$ echo 42 -75 20 | ./geoidtest 
+$ echo 42 -75 20 | ./geoidtest
 -10.672
 
 Notes:

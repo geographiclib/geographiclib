@@ -68,8 +68,8 @@ namespace NETGeographicLib
    * unsigned.  The Capabilities function returns a  NETGeographicLib::Mask
    * rather than an unsigned.
    *
-   * The overloaded Azimuth and EquatorialAzimuth functions that return  
-   * the sin and cosine terms have been renamed AzimuthSinCos and 
+   * The overloaded Azimuth and EquatorialAzimuth functions that return
+   * the sin and cosine terms have been renamed AzimuthSinCos and
    * EquatorialAzimuthSinCos, repectively.
    **********************************************************************/
     public ref class GeodesicLine
@@ -80,7 +80,7 @@ namespace NETGeographicLib
 
         // The finalizer frees the unmanaged memory when this object is destroyed.
         !GeodesicLine(void);
-	public:
+    public:
 
         /**
          * Bit masks for what calculations to do.  They signify to the
@@ -203,10 +203,10 @@ namespace NETGeographicLib
 
         /**
         * A constructoe that accepts a reference to an unmanages GeodesicLin.
-		* FOR INTERNAL USE ONLY 
+        * FOR INTERNAL USE ONLY
         **********************************************************************/
         GeodesicLine(const GeographicLib::GeodesicLine& gl);
-		///@}
+        ///@}
 
         /**
          * The destructor calls the finalizer.
@@ -496,7 +496,7 @@ namespace NETGeographicLib
 
         ///@}
 
-		/** \name Setting point 3
+        /** \name Setting point 3
         **********************************************************************/
         ///@{
 
@@ -538,24 +538,24 @@ namespace NETGeographicLib
        /** \name Trigonometric accessor functions
         **********************************************************************/
         ///@{
-		/**
-		* The sine and cosine of \e azi1.
-		*
-		* @param[out] sazi1 the sine of \e azi1.
-		* @param[out] cazi1 the cosine of \e azi1.
-		**********************************************************************/
-		void AzimuthSinCos([System::Runtime::InteropServices::Out] double% sazi1,
-			[System::Runtime::InteropServices::Out] double% cazi1);
+        /**
+        * The sine and cosine of \e azi1.
+        *
+        * @param[out] sazi1 the sine of \e azi1.
+        * @param[out] cazi1 the cosine of \e azi1.
+        **********************************************************************/
+        void AzimuthSinCos([System::Runtime::InteropServices::Out] double% sazi1,
+            [System::Runtime::InteropServices::Out] double% cazi1);
 
-		/**
-		* The sine and cosine of \e azi0.
-		*
-		* @param[out] sazi0 the sine of \e azi0.
-		* @param[out] cazi0 the cosine of \e azi0.
-		**********************************************************************/
-		void EquatorialAzimuthSinCos(
-			[System::Runtime::InteropServices::Out] double% sazi0,
-			[System::Runtime::InteropServices::Out] double% cazi0);
+        /**
+        * The sine and cosine of \e azi0.
+        *
+        * @param[out] sazi0 the sine of \e azi0.
+        * @param[out] cazi0 the cosine of \e azi0.
+        **********************************************************************/
+        void EquatorialAzimuthSinCos(
+            [System::Runtime::InteropServices::Out] double% sazi0,
+            [System::Runtime::InteropServices::Out] double% cazi0);
 
         /**
         * The distance or arc length to point 3.
@@ -564,8 +564,8 @@ namespace NETGeographicLib
         *   value.
         * @return \e s13 if \e arcmode is false; \e a13 if \e arcmode is true.
         **********************************************************************/
-		double GenDistance(bool arcmode);
-		///@}
+        double GenDistance(bool arcmode);
+        ///@}
 
         /** \name Inspector functions
          **********************************************************************/
@@ -618,7 +618,7 @@ namespace NETGeographicLib
         /**
         * @return \e a13, the arc length to point 3 (degrees).
         **********************************************************************/
-		property double Arc { double get(); }
+        property double Arc { double get(); }
 
         /**
          * @return \e caps the computational capabilities that this object was

@@ -479,15 +479,15 @@ GeodesicLineExact^ GeodesicExact::Line(double lat1, double lon1, double azi1,
 
 //*****************************************************************************
 GeodesicLineExact^ GeodesicExact::InverseLine(double lat1, double lon1,
-	double lat2, double lon2, NETGeographicLib::Mask caps)
+    double lat2, double lon2, NETGeographicLib::Mask caps)
 {
-	return gcnew GeodesicLineExact(m_pGeodesicExact->InverseLine(
+    return gcnew GeodesicLineExact(m_pGeodesicExact->InverseLine(
         lat1, lon1, lat2, lon2, static_cast<unsigned>(caps)));
 }
 
 //*****************************************************************************
 GeodesicLineExact^ GeodesicExact::DirectLine(double lat1, double lon1,
-	double azi1, double s12, NETGeographicLib::Mask caps)
+    double azi1, double s12, NETGeographicLib::Mask caps)
 {
     return gcnew GeodesicLineExact(m_pGeodesicExact->DirectLine(
         lat1, lon1, azi1, s12, static_cast<unsigned>(caps)));
@@ -495,7 +495,7 @@ GeodesicLineExact^ GeodesicExact::DirectLine(double lat1, double lon1,
 
 //*****************************************************************************
 GeodesicLineExact^ GeodesicExact::ArcDirectLine(double lat1, double lon1,
-	double azi1, double a12, NETGeographicLib::Mask caps)
+    double azi1, double a12, NETGeographicLib::Mask caps)
 {
     return gcnew GeodesicLineExact(m_pGeodesicExact->ArcDirectLine(
         lat1, lon1, azi1, a12, static_cast<unsigned>(caps)));
@@ -503,10 +503,10 @@ GeodesicLineExact^ GeodesicExact::ArcDirectLine(double lat1, double lon1,
 
 //*****************************************************************************
 GeodesicLineExact^ GeodesicExact::GenDirectLine(double lat1, double lon1,
-	double azi1, bool arcmode, double s12_a12, NETGeographicLib::Mask caps)
+    double azi1, bool arcmode, double s12_a12, NETGeographicLib::Mask caps)
 {
-	return gcnew GeodesicLineExact(m_pGeodesicExact->GenDirectLine(
-		lat1, lon1, azi1, arcmode, s12_a12, static_cast<unsigned>(caps)));
+    return gcnew GeodesicLineExact(m_pGeodesicExact->GenDirectLine(
+        lat1, lon1, azi1, arcmode, s12_a12, static_cast<unsigned>(caps)));
 }
 
 //*****************************************************************************

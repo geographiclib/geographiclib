@@ -742,7 +742,7 @@ namespace NETGeographicLib
         *
         * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;].
         **********************************************************************/
-        GeodesicLine^ InverseLine(double lat1, double lon1, double lat2, 
+        GeodesicLine^ InverseLine(double lat1, double lon1, double lat2,
             double lon2, NETGeographicLib::Mask caps);
 
         /**
@@ -765,7 +765,7 @@ namespace NETGeographicLib
         *
         * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
         **********************************************************************/
-        GeodesicLine^ DirectLine(double lat1, double lon1, double azi1, 
+        GeodesicLine^ DirectLine(double lat1, double lon1, double azi1,
             double s12, NETGeographicLib::Mask caps);
 
         /**
@@ -788,7 +788,7 @@ namespace NETGeographicLib
         *
         * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
         **********************************************************************/
-        GeodesicLine^ ArcDirectLine(double lat1, double lon1, double azi1, 
+        GeodesicLine^ ArcDirectLine(double lat1, double lon1, double azi1,
             double a12, NETGeographicLib::Mask caps);
 
         /**
@@ -816,8 +816,8 @@ namespace NETGeographicLib
         **********************************************************************/
         GeodesicLine^ GenDirectLine(double lat1, double lon1, double azi1,
             bool arcmode, double s12_a12,
-			NETGeographicLib::Mask caps);
-		///@}
+            NETGeographicLib::Mask caps);
+        ///@}
 
         /** \name Inspector functions.
          **********************************************************************/
