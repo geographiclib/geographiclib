@@ -594,6 +594,22 @@ int GeodSolve71() {
   return result;
 }
 
+int GeodSolve73() {
+  /* Check for backwards from the pole bug reported by Anon on 2016-02-13.
+   * This only affected the Java implementation.  It was introduced in Java
+   * version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17. */
+  double lat2, lon2, azi2;
+  struct geod_geodesic g;
+  int result = 0;
+  geod_init(&g, wgs84_a, wgs84_f);
+  geod_direct(&g, 90, 10, 180, -1e6,
+              &lat2, &lon2, &azi2);
+  result += assertEquals(lat2, 81.04623, 0.5e-5);
+  result += assertEquals(lon2, -170, 0.5e-5);
+  result += assertEquals(azi2, 0, 0.5e-5);
+  return result;
+}
+
 void planimeter(const struct geod_geodesic* g, double points[][2], int N,
                 double* perimeter, double* area) {
   struct geod_polygon p;
@@ -740,6 +756,7 @@ int main() {
   if ((i = GeodSolve65())) {++n; printf("GeodSolve65 fail: %d\n", i);}
   if ((i = GeodSolve67())) {++n; printf("GeodSolve67 fail: %d\n", i);}
   if ((i = GeodSolve71())) {++n; printf("GeodSolve71 fail: %d\n", i);}
+  if ((i = GeodSolve73())) {++n; printf("GeodSolve73 fail: %d\n", i);}
   if ((i = Planimeter0())) {++n; printf("Planimeter0 fail: %d\n", i);}
   if ((i = Planimeter5())) {++n; printf("Planimeter5 fail: %d\n", i);}
   if ((i = Planimeter6())) {++n; printf("Planimeter6 fail: %d\n", i);}

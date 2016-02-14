@@ -26,6 +26,7 @@ function geographiclib_test
   i = GeodSolve55; if i, n=n+1; fprintf('GeodSolve55 fail: %d\n', i); end
   i = GeodSolve59; if i, n=n+1; fprintf('GeodSolve59 fail: %d\n', i); end
   i = GeodSolve61; if i, n=n+1; fprintf('GeodSolve61 fail: %d\n', i); end
+  i = GeodSolve73; if i, n=n+1; fprintf('GeodSolve73 fail: %d\n', i); end
   i = Planimeter0; if i, n=n+1; fprintf('Planimeter0 fail: %d\n', i); end
   i = Planimeter5; if i, n=n+1; fprintf('Planimeter5 fail: %d\n', i); end
   i = Planimeter6; if i, n=n+1; fprintf('Planimeter6 fail: %d\n', i); end
@@ -419,6 +420,17 @@ function n = GeodSolve61
   n = n + assertEquals(lat2, 45.30632, 0.5e-5);
   n = n + assertEquals(lon2, -180, 0.5e-5);
   n = n + assertEquals(azi2, -180, 0.5e-5);
+end
+
+function n = GeodSolve73
+% Check for backwards from the pole bug reported by Anon on 2016-02-13.
+% This only affected the Java implementation.  It was introduced in Java
+% version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+  n = 0;
+  [lat2, lon2, azi2] = geodreckon(90, 10, 180, -1e6);
+  n = n + assertEquals(lat2, 81.04623, 0.5e-5);
+  n = n + assertEquals(lon2, -170, 0.5e-5);
+  n = n + assertEquals(azi2, 0, 0.5e-5);
 end
 
 function n = Planimeter0

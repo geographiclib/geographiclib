@@ -7,6 +7,11 @@
  * The documentation for other versions is available at
  * <tt>http://geographiclib.sourceforge.net/m.nn/java</tt> for versions numbers
  * <tt>m.nn</tt> &ge; 1.31.
+ * <p>
+ * Licensed under the
+ * <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>; see
+ * <a href="http://geographiclib.sourceforge.net/html/LICENSE.txt">
+ * LICENSE.txt</a>.
  *
  * <h2>Abstract</h2>
  * <p>

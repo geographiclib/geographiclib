@@ -1,6 +1,15 @@
-This directory contains a small example of exposing one capability of
-the C++ version GeographicLib to python.  PyGeographicLib.cpp uses
-boost-python to wrap the Geoid class so that it is accessible in python.
+The geodesic routines in GeographicLib have been implemented as a native
+Python library.  See
+
+  http://geographiclib.sourceforge.net/html/python/
+
+It is also possible to call the C++ version of GeographicLib directly
+from Python and this directory contains a small example,
+PyGeographicLib.cpp, which uses boost-python and the Geoid class to
+convert heights above the geoid to heights above the ellipsoid.  More
+information on calling boost-python, see
+
+  http://www.boost.org/doc/libs/release/libs/python
 
 To build and install this interface, do
 
@@ -23,8 +32,8 @@ directory, wrapper/python).
 
   ~/.local/lib/python2.7/site-packages
 
-which is in the default search path for python 2.7.  To use this in
-python, do, e.g.,
+which is in the default search path for python 2.7.  To convert 20m
+above the geoid at 42N 75W to a height above the ellipsoid, do
 
   $ python
   >>> from PyGeographicLib import Geoid

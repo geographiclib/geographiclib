@@ -1,7 +1,26 @@
-Invoking the compiler from Matlab or Octave (Tested with Linux, Mac OSX,
-and Windows):
+The Matlab Central Package
 
-Start Matlab or Octave and run, e.g.,
+  http://www.mathworks.com/matlabcentral/fileexchange/50605
+
+provide a native Matlab/Octave implementation of a subset of
+GeographicLib.
+
+It is also possible to call the C++ GeographicLib library directly from
+Matlab and Octave.  This gives you access to the full range of
+GeographicLib's capabilities.
+
+In order to make use of this facility, it is necessary to write some
+interface code.  The files in this directory provide a sample of such
+interface code.  This example solve the inverse geodesic problem for
+ellipsoids with arbitrary flattening.  (The code geoddistance.m does
+this as native Matlab code; but it is limited to ellipsoids with a
+smaller flattening.)
+
+For full details on how to write the interface code, see
+
+  http://www.mathworks.com/help/matlab/write-cc-mex-files.html
+
+To compile the interface code, start Matlab or Octave and run, e.g.,
 
   mex -setup
   help geographiclibinterface
@@ -21,9 +40,9 @@ Matlab R2014b, the setup command is
 These routines just offer a simple interface to the corresponding C++
 class. Use the help function to get documentation,
 
-  help geodesicdirect
+  help geodesicinverse
 
 Unfortunately, the help function does not work for compiled functions in
 Octave; in this case, just list the .m file, e.g.,
 
-  type geodesicdirect
+  type geodesicinverse.m

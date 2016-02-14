@@ -15,7 +15,7 @@
 
 The documentation for other versions is available at
 <tt>http://geographiclib.sourceforge.net/m.nn/Fortran</tt> for versions numbers
-<tt>m.nn</tt> &gt; 1.28.
+<tt>m.nn</tt> &ge; 1.28.
 
 \section abstract-for Abstract
 

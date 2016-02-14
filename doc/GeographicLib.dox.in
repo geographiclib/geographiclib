@@ -1160,6 +1160,9 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 </center>
 
+Various subsets of GeographicLib have been implemented in other
+languages.  In some cases, these are available as independent packages.
+Here is a summary:
 - C (geodesic routines):
   <a href="C/index.html">
     documentation</a>, also included with recent versions of
@@ -1183,46 +1186,56 @@ Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
     PyPI package</a>,
   <a href="python/index.html">
     documentation</a>;
-- Matlab/Octave (geodesic and some other routines):
+- MATLAB/Octave (geodesic and some other routines):
   <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
-    Matlab Central package</a>,
+    MATLAB Central package</a>,
   <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m">
     documentation</a>;
 - C# (.NET wrapper for C++ library):
   <a href="NET/index.html">
     documentation</a>.
 
-Implementations of subsets of GeographicLib are available in other languages
+Some more details are available in the following sections
 - \ref c-fortran
 - \ref java.
 - \ref javascript.
 - \ref python.
 - \ref matlab.
-- \ref maxima.
 - \ref dotnet.
+- \ref maxima.
 
 \section c-fortran C and Fortran implementation
 
-The directories <code>legacy/C</code> and <code>legacy/Fortran</code>
-contain implementations of Geodesic, GeodesicLine, and PolygonAreaT in C
-and Fortran respectively.  These are intended for use in old codes
+This includes the geodesic capabilities of GeographicLib.  The source
+code is in the directories <code>legacy/C</code> and
+<code>legacy/Fortran</code>.  These are intended for use in old codes
 written in these languages and should work any reasonably modern
 compiler.  These implementations are entirely self-contained and do not
 depend on the rest of GeographicLib.  Sample main programs to solve the
 direct and inverse geodesic problems and to compute polygonal areas are
 provided.
 
+The C library is also included as part of
+<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a> starting with
+version 4.9.0, where it is used as the computational backend for
+<a href="https://github.com/OSGeo/proj.4/wiki/Mangeod">geod(1)</a>.
+
 For documentation, see
  - <a href="C/index.html">C library for geodesics</a>,
  - <a href="Fortran/index.html">Fortran library for geodesics</a>.
 
+It is also possible to call the C++ version of GeographicLib directly
+from C and the directory <code>wrapper/C</code> contains a small
+example, which converts heights above the geoid to heights above the
+ellipsoid.
+
 \section java Java implementation
 
-The directory <code>java</code> contains implementations of Geodesic,
-GeodesicLine, and PolygonAreaT in Java.  This implementation is entirely
-self-contained and does not depend on the rest of GeographicLib.  Sample
-main programs to solve the direct and inverse geodesic problems and to
-compute polygonal areas are provided.
+This includes the geodesic capabilities of GeographicLib.  The source
+code is in the directory <code>java</code>.  This implementation is
+entirely self-contained and does not depend on the rest of
+GeographicLib.  Sample main programs to solve the direct and inverse
+geodesic problems and to compute polygonal areas are provided.
 
 This package is available on Maven Central; so if you're using Apache
 Maven as your build system, you can use this package by including the
@@ -1230,7 +1243,7 @@ dependency \verbatim
   <dependency>
     <groupId>net.sf.geographiclib</groupId>
     <artifactId>GeographicLib-Java</artifactId>
-    <version>1.45</version>
+    <version>1.46</version>
   </dependency>
   \endverbatim
 in your <code>pom.xml</code>.
@@ -1240,34 +1253,15 @@ For documentation, see
 
 \section javascript JavaScript implementation
 
-The directory js/src contains the classes
-- Math
-- Accumulator
-- Geodesic
-- GeodesicLine
-- PolygonAreaT
-- DMS
-.
-translated into JavaScript.  When GeographicLib is built the JavaScript
-source files are concatenated and compressed into a single file
-<code>geographiclib.min.js</code>.  This can be included into your
-document with \code
-<script type="text/javascript"
-        src="http://geographiclib.sourceforge.net/scripts/geographiclib.min.js">
-</script> \endcode
-This file gives you the latest version of the library.  If you need to
-use a specific version of this file, include a version number as in
-\code
-<script type="text/javascript"
-        src="http://geographiclib.sourceforge.net/scripts/geographiclib-1.45.min.js">
-</script> \endcode
-You can visit http://geographiclib.sourceforge.net/scripts/ to see which versions
-are available.
+This includes the geodesic capabilities of GeographicLib.  The source
+code is in the directory <code>js</code>.  This implementation is
+entirely self-contained and does not depend on the rest of
+GeographicLib.
 
-Starting with version 1.45, this package is available as an
-<a href="https://nodejs.org">node</a> package that can be installed with
-<a href="https://www.npmjs.com">npm</a> (thanks to Yurij Mikhalevich for
-help with this work).  To install this as a node package, use \verbatim
+The library is available as an
+<a href="https://www.npmjs.com/package/geographiclib">
+   npm package</a>.
+To install this package, use \verbatim
   npm install geographiclib \endverbatim
 
 For documentation, see
@@ -1277,160 +1271,78 @@ Examples of using this interface are
 - a <a href="../scripts/geod-calc.html">geodesic calculator</a> showing
   the solution of direct and inverse geodesic problem, finding
   intermediate points on a geodesic line, and computing the area of a
-  geodesic polygon.
+  geodesic polygon;
 - <a href="../scripts/geod-google.html">displaying geodesics in Google
   Maps</a> which shows the geodesic, the geodesic circle, and various
   geodesic envelopes.
 
 \section python Python implementation
 
-A Python implementation of the geodesic routines from GeographicLib
-are provided in the python/geographiclib directory (which is installed
-as PREFIX/lib/python/site-packages/geographiclib, if
-COMMON_INSTALL_PATH is ON, and as PREFIX/python/geographiclib,
-otherwise).  This contains implementations of the classes
-- Math
-- Accumulator
-- Geodesic
-- GeodesicLine
-- PolygonAreaT
+This includes the geodesic capabilities of GeographicLib.  The source
+code is in the directory <code>python</code>.  This implementation is
+entirely self-contained and does not depend on the rest of
+GeographicLib.
 
-You can install the Python interface independent of the rest of
-GeographicLib using pip \verbatim
+The library is available as an
+<a href="http://pypi.python.org/pypi/geographiclib">
+   PyPI package</a>.
+To install this package, use \verbatim
   pip install geographiclib \endverbatim
-This requires root privileges and you might first need to install the
-python-pip package.
-
-Alternatively download
-- <a href="http://pypi.python.org/pypi/geographiclib">
-  http://pypi.python.org/pypi/geographiclib</a>
-.
-and unpack the .tar.gz or .zip file.  You can "install" these routines,
-so that they are in python's default path with, for example \verbatim
-  cd geographiclib-1.16
-  python setup.py install
-\endverbatim
-(this will require root privileges).  Or else you can set the path
-within Python using \code{.py}
->>> import sys
->>> sys.path.append("/usr/local/lib/python/site-packages")
-\endcode
 
 For documentation, see
  - <a href="python/index.html">Python library for geodesics</a>.
 
+It is also possible to call the C++ version of GeographicLib directly
+from Python and the directory <code>wrapper/python</code> contains a
+small example, which converts heights above the geoid to heights above
+the ellipsoid.
+
 \section matlab MATLAB and Octave implementations
 
-The <code>matlab/geographiclib</code> directory contains MATLAB and
-Octave implementations of some of the functions of GeographicLib.  To
-use these, start MATLAB or Octave and run one of (for example):
-\verbatim
-   addpath /usr/local/share/matlab/geographiclib
-   addpath C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib
-   \endverbatim
-A summary of the routines is obtained by \verbatim
-   help geographiclib \endverbatim
-These MATLAB functions is also available from the MATLAB File Exchange
-site as the
-<a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
-GeographicLib toolbox</a>, package 50605.
-
-The functions fall into the following groups
- - Geodesics
-   - geoddistance     - Distance between points on an ellipsoid
-   - geodreckon       - Point at specified azimuth, range on an ellipsoid
-   - geodarea         - Surface area of polygon on an ellipsoid
- - Projections
-   - tranmerc_fwd     - Forward transverse Mercator projection
-   - tranmerc_inv     - Inverse transverse Mercator projection
-   - polarst_fwd      - Forward polar stereographic projection
-   - polarst_inv      - Inverse polar stereographic projection
-   - eqdazim_fwd      - Forward azimuthal equidistant projection
-   - eqdazim_inv      - Inverse azimuthal equidistant projection
-   - cassini_fwd      - Forward Cassini-Soldner projection
-   - cassini_inv      - Inverse Cassini-Soldner projection
-   - gnomonic_fwd     - Forward ellipsoidal gnomonic projection
-   - gnomonic_inv     - Inverse ellipsoidal gnomonic projection
- - Grid systems
-   - utmups_fwd       - Convert to UTM/UPS system
-   - utmups_inv       - Convert from UTM/UPS system
-   - mgrs_fwd         - Convert UTM/UPS coordinates to MGRS
-   - mgrs_inv         - Convert MGRS to UTM/UPS coordinates
- - Geoid lookup
-   - geoid_height     - Compute the height of the geoid
-   - geoid_load       - Load a geoid model
- - Great ellipses
-   - gedistance       - Great ellipse distance between points on an ellipsoid
-   - gereckon         - Point along great ellipse at specified azimuth and range
- - Geometric transformations
-   - geocent_fwd      - Conversion from geographic to geocentric coordinates
-   - geocent_inv      - Conversion from geocentric to geographic coordinates
-   - loccart_fwd      - Convert geographic to local cartesian coordinates
-   - loccart_inv      - Convert local cartesian to geographic coordinates
- - Utility
-   - defaultellipsoid - Return the WGS84 ellipsoid
-   - ecc2flat         - Convert eccentricity to flattening
-   - flat2ecc         - Convert flattening to eccentricity
- - Documentation
-   - geoddoc          - Geodesics on an ellipsoid of revolution
-   - projdoc          - Geodesic projections for an ellipsoid
-   - gedoc            - Great ellipses on an ellipsoid of revolution
- .
-These functions reimplement the C++ routines from GeographicLib in
-MATLAB code (but note that routines for great ellipses are <i>only</i>
-available as MATLAB code).  Because these functions are all vectorized,
-their performance is comparable to the C++ routines.  The minimum
-version numbers required are
+The includes the geodesic capabilities of GeographicLib and
+implementations of the TransverseMercator, PolarStereographic,
+AzimuthalEquidistant, CassiniSoldner, Gnomonic, UTMUPS, MGRS, Geocentric,
+and LocalCartesian classes.  In addition, it includes solutions of the
+direct, inverse, and area problems for \ref greatellipse.  Because these
+functions are all vectorized, their performance is comparable to the C++
+routines.  The minimum version numbers required are
  - MATLAB, version 7.9, 2009b,
  - Octave, version 3.4, Feb. 2011.
  .
 In addition, in order to use the geoid routines, Octave needs to have
 been built with a version of GraphicsMagick which supports 16-bit
-images.
+images.  The source code is in the directory
+<code>matlab/geographiclib</code>.  This implementation is entirely
+self-contained and does not depend on the rest of GeographicLib.
 
-Previously, some of these routines were packaged as three separate
-packages
- - <a href="http://www.mathworks.com/matlabcentral/fileexchange/39108">
-   Geodesics on an ellipsoid of revolution</a>,
-   MATLAB File Exchange package 39108.
- - Geodesic projections for an ellipsoid,
- - Great ellipses.
- .
-These packages have now all been incorporated into the
+The library is available as an MATLAB Central package,
 <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
-GeographicLib toolbox</a>.
+    GeographicLib toolbox</a>.
+
+A summary of the routines is obtained by \verbatim
+   help geographiclib \endverbatim
 
 Prior to version 1.42, GeographicLib was distributed with some MATLAB
 functionality offered via compiled interface code.  This has now been
-replaced by native MATLAB wrapper functions which call the functions in
-the <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
-GeographicLib toolbox</a>.  To use these wrapper functions, run one of:
-\verbatim
-   addpath /usr/local/share/matlab/geographiclib-legacy
-   addpath C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@/matlab/geographiclib-legacy
-   \endverbatim
-The <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
-GeographicLib toolbox</a> <i>must</i> also be in your MATLAB path.  A
-summary of the routines is obtained by \verbatim
+replaced by native MATLAB wrapper functions in
+<code>matlab/geographiclib-legacy</code>; these depend on the
+<a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+GeographicLib toolbox</a>.
+A summary of the routines is obtained by \verbatim
    help geographiclib-legacy \endverbatim
-These functions are <b>DEPRECATED</b>.  Here is a function listing
-  - Geodesics
-    - geodesicdirect         - Wrapper for geodreckon
-    - geodesicinverse        - Wrapper for geoddistance
-    - geodesicline           - Another wrapper for geodreckon
-    - polygonarea            - Wrapper for geodarea
-  - Grid systems
-    - utmupsforward          - Wrapper for utmups_fwd
-    - utmupsreverse          - Wrapper for utmups_inv
-    - mgrsforward            - Wrapper for mgrs_fwd
-    - mgrsreverse            - Wrapper for mgrs_inv
-  - Geoid lookup
-    - geoidheight            - Wrapper for geoid_height
-  - Geometric transformations
-    - geocentricforward      - Wrapper for geocent_fwd
-    - geocentricreverse      - Wrapper for geocent_inv
-    - localcartesianforward  - Wrapper for loccart_fwd
-    - localcartesianreverse  - Wrapper for loccart_inv
+
+It is also possible to call the C++ version of GeographicLib directly
+from MATLAB or Octave and the directory <code>wrapper/matlab</code>
+contains a small example, which solves the inverse geodesic problem for
+ellipsoids with arbitrary flattening.  (This example is taken from the
+MATLAB interface code which was provided prior to version 1.42.)
+
+\section dotnet .NET wrapper
+
+This is a comprehensive wrapper library, written and maintained by Scott
+Heiman, which exposes all of the functionality of GeographicLib to the
+.NET family of languages.  For documentation, see
+ - <a href="NET/index.html">NETGeographicLib .NET wrapper library</a>.
 
 \section maxima Maxima routines
 
@@ -1446,13 +1358,6 @@ bigfloat arithmetic together with series extended to high order or
 solutions in terms of elliptic integrals (<a href="ellint.mac">
 ellint.mac</a>).  These files contain brief instructions on how to use
 them.
-
-\section dotnet .NET wrapper
-
-This is a comprehensive wrapper library, written and maintained by Scott
-Heiman, which exposes all of the functionality of GeographicLib to the
-.NET family of languages.  For documentation, see
- - <a href="NET/index.html">NETGeographicLib .NET wrapper library</a>.
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -7020,20 +6925,21 @@ git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
    (released 2016-mm-dd)
-   - A reminder: because of the JavaScript changes introduced in version
-     1.45, you should remove the following installation directories from
-     your system:
-     - Windows: ${CMAKE_INSTALL_PREFIX}/doc/scripts
-     - Others: ${CMAKE_INSTALL_PREFIX}/share/doc/GeographicLib/scripts
-   - Binary installers for Windows now use Visual Studio 12 2013.
-   - JavaScript package: some code clean up.
-   - Remove top-level pom.xml from release (it was specific to SRI).
-   - Add sphinx documentation for python package.
-   - Add -S and -T options to
-     <a href="GeoConvert.1.html">GeoConvert(1)</a>.
+   - Fix BUG where -w flag to <a href="Planimeter.1.html">Planimeter(1)</a>
+     was being misinterpreted.
+   - Fix BUG in Java direct calculation when starting point is at a
+     pole.
+   - INCOMPATIBLE CHANGES:
+     - make the -w flag (to swap the default order of latitude and
+       longitude) a toggle for all \ref utilities;
+     - the -a option to <a href="GeodSolve.1.html">GeodSolve(1)</a> now
+       toggles (instead of sets) arc mode;
+     - swap order \e coslon and \e sinlon arguments in CircularEngine
+       class.
    - Remove deprecated functionality:
-     - remove gradient code from the Geoid class and
-       <a href="GeoidEval.1.html">GeoidEval(1)</a>;
+     - remove gradient calculation from the Geoid class and
+       <a href="GeoidEval.1.html">GeoidEval(1)</a> (this was inaccurate
+       and of dubious utility);
      - remove reciprocal flattening functions, InverseFlattening in many
        classes and Constants::WGS84_r(); stop treating flattening &gt; 1
        as the reciprocal flattening in constructors;
@@ -7042,32 +6948,18 @@ git repository for GeographicLib</a>.
        Math::AngNormalize2, PolygonArea::TestCompute;
      - stop treating LONG_NOWRAP as an alias for LONG_UNROLL in
        Geodesic (and related classes) and Rhumb;
-     - stop trearting full/schmidt as aliases for FULL/SCHMIDT in
+     - stop treating full/schmidt as aliases for FULL/SCHMIDT in
        SphericalEngine (and related classes);
-     - replace Matlab C++ wrapper code by just a sample;
      - remove deprecated Visual Studio 2005 project and solution files.
-   - TODO, a = better handling of lam12 close to 180, b = reference
-     point 3 for GeodesicLine, c = remove LONG_NOWRAP alias, d = change
-     treatment of 0 in AngRound + sign of lon12 in geoddistance, e =
-     more accurate computation of lon2 with LONG_UNROLL and inverse:
-     - DONE: C++: abcde
-     - DONE: C++ exact: abcde
-     - DONE: Matlab: ad (bce = not applicable)
-     - DONE: Fortran: ad (bce = not applicable)
-     - C#: acd (e = not applicable)
-     - C: abcd (e = not applicable)
-     - Java: abcde
-     - JavaScript: abde (c = not necessary)
-     - Python: abcde
-     - Maxima: ad (ce = not applicable, b = not implemented)
-   - Add sample of python wrapper.
-   - Add sample of C wrapper https://isocpp.org/wiki/faq/mixing-c-and-cpp
-   - Add overloaded version of Math::AngDiff which returns the error in
-     the difference.  This allows a more accurate treatment of inverse
-     geodesic problem when \e lon12 is close to 180&deg;.
-   - Changes to GeodesicLine and GeodesicLineExact classes:
-     - hold distance \e s13 and arc length \e a13 to a reference point
-       3; by default these quantities are NaNs;
+   - Changes to GeodesicLine and GeodesicLineExact classes; these
+     changes (1) simplify the process of computing waypoints on a
+     geodesic given two endpoints and (2) allow a GeodesicLine to be
+     defined which is consistent with the solution of the inverse
+     problem (in particular Geodesic::InverseLine the specification of
+     south-going lines which pass the poles in a westerly direction by
+     setting sin &alpha;<sub>1</sub> = &minus;0):
+     - the class stores the distance \e s13 and arc length \e a13 to a
+       reference point 3; by default these quantities are NaNs;
      - GeodesicLine::SetDistance (and GeodesicLine::SetArc) specify the
        distance (and arc length) to point 3;
      - GeodesicLine::Distance (and GeodesicLine::Arc) return the
@@ -7075,31 +6967,47 @@ git repository for GeographicLib</a>.
      - new methods Geodesic::InverseLine and Geodesic::DirectLine return
        a GeodesicLine with the reference point 3 defined as point 2 of
        the corresponding geodesic calculation;
-     - Geodesic::InverseLine allows the specification of an initial
-       azimuth which is slightly west of due south;
-     - This change necessitated the addition of Math::copysign.
-   - Changes to <a href="GeodSolve.1.html">GeodSolve</a> utility:
-     - INCOMPATIBLE CHANGE: the -a option now "toggles" arc mode;
-     - INCOMPATIBLE CHANGE: the -w option now "toggles" longitude first mode;
+     - these changes are also included in the C, Java, JavaScript, and
+       Python packages.
+   - Other changes to the geodesic routines:
+     - more accurate solution of the inverse problem when the points are
+       on nearly opposite meridians (also in C, Fortran, Java,
+       JavaScript, Python, MATLAB, and Maxima packages);
+     - more accurate calculation of lon2 in the inverse calculation with
+       LONG_UNROLL (also in Java, JavaScript, Python packages).
+   - Changes to <a href="GeodSolve.1.html">GeodSolve(1)</a> utility:
      - the -I and -D options now specify geodesic line calculation via
        the standard inverse or direct geodesic problems;
-     - the -F flag (in conjunction with the -I or -D flags) specify the
+     - rename -l flag to -L to parallel the new -I and -D flags (-l is
+       is retained for backward compatibility but is deprecated), and
+       similarly for <a href="GeodSolve.1.html">RhumbSolve(1)</a>;
+     - the -F flag (in conjunction with the -I or -D flags) specifies that
        distances read on standard input are fractions of \e s13 or \e
-       a13.
-   - TODO: Improve documentation for standalone components to describe
-     their relation to tne whole.  Make sure LICENSE.txt is on top page.
-   - Rename -l flag for <a href="GeodSolve.1.html">GeodSolve</a> and
-     <a href="GeodSolve.1.html">RhumbSolve</a> to -L (-l is is retained
-     for backward compatibility but is deprecated).
-   - INCOMPATIBLE CHANGE: make -w a toggle for all utility programs.
-   - INCOMPATIBLE CHANGE: Swap order \e coslon and \e sinlon arguments
-     in CircularEngine class.
-   - TODO: document lint procedures ...
-   - TODO: make Java 1.5 (2004-09) the min version?
-   - TODO: update GeodesicLine examples.
-   - TODO: documentation on matlab/python wrappers.
-   - Fix BUG where -w flag to <a href="Planimeter.1.html">Planimeter</a>
-     was being misinterpreted.
+       a13;
+     - the -a option now toggles arc mode (noted above);
+     - the -w option now toggles longitude first mode (noted above).
+   - Changes to Math class:
+     - Math::copysign added;
+     - add overloaded version of Math::AngDiff which returns the error
+       in the difference.  This allows a more accurate treatment of
+       inverse geodesic problem when \e lon12 is close to 180&deg;;
+     - Math::AngRound now converts tiny negative numbers to &minus;0
+       (instead of +0), however &minus;0 is still converted to +0.
+   - Add -S and -T options to
+     <a href="GeoConvert.1.html">GeoConvert(1)</a>.
+   - Add <a href="http://www.sphinx-doc.org/en/stable/">Sphinx</a>
+     documentation for Python package.
+   - Samples of wrapping the C++ library, so it's accessible in other
+     languages, are given in <code>wrapper/C</code>,
+     <code>wrapper/python</code>, and <code>wrapper/matlab</code>.
+   - Some code clean up for the JavaScript packge.
+   - Binary installers for Windows now use Visual Studio 12 2013.
+   - Remove top-level pom.xml from release (it was specific to SRI).
+   - A reminder: because of the JavaScript changes introduced in version
+     1.45, you should remove the following installation directories from
+     your system:
+     - Windows: ${CMAKE_INSTALL_PREFIX}/doc/scripts
+     - Others: ${CMAKE_INSTALL_PREFIX}/share/doc/GeographicLib/scripts
 
  - <a href="http://geographiclib.sourceforge.net/1.45">Version 1.45</a>
    (released 2015-09-30)
@@ -7118,7 +7026,7 @@ git repository for GeographicLib</a>.
      - make install now installs the node package in
        <code>lib/node_modules/geographiclib</code>;
      - add unit tests using mocha;
-     - add documentation via JSDoc;
+     - add documentation via <a href="http://usejsdoc.org">JSDoc</a>;
      - fix bug Geodesic.GenInverse (this bug, introduced in version
        1.44, resulted in the wrong azimuth being reported for points at
        the pole).

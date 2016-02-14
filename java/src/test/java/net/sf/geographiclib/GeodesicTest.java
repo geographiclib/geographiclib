@@ -523,6 +523,17 @@ public class GeodesicTest {
   }
 
   @Test
+  public void GeodSolve73() {
+    // Check for backwards from the pole bug reported by Anon on 2016-02-13.
+    // This only affected the Java implementation.  It was introduced in Java
+    // version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+    GeodesicData dir = Geodesic.WGS84.Direct(90, 10, 180, -1e6);
+    assertEquals(dir.lat2, 81.04623, 0.5e-5);
+    assertEquals(dir.lon2, -170, 0.5e-5);
+    assertEquals(dir.azi2, 0, 0.5e-5);
+  }
+
+  @Test
   public void Planimeter0() {
     // Check fix for pole-encircling bug found 2011-03-16
     double pa[][] = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};

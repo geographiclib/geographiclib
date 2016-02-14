@@ -21,6 +21,12 @@ $ npm install geographiclib
 $ node
 > var GeographicLib = require("geographiclib");
 ```
+The npm package includes a test suite.  Run this by
+```bash
+$ cd node_modules/geograliblib
+$ npm test
+```
+
 Alternatively, you can use it in client-side JavaScript, by including in
 your HTML page
 ```html

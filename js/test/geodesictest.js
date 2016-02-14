@@ -494,6 +494,17 @@ describe("GeographicLib", function() {
       assert.approx(dir.azi2, 55.43104, 0.5e-5);
     });
 
+    it("GeodSolve73", function() {
+      // Check for backwards from the pole bug reported by Anon on 2016-02-13.
+      // This only affected the Java implementation.  It was introduced in Java
+      // version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+      var geod = g.WGS84,
+          dir = geod.Direct(90, 10, 180, -1e6);
+      assert.approx(dir.lat2, 81.04623, 0.5e-5);
+      assert.approx(dir.lon2, -170, 0.5e-5);
+      assert.approx(dir.azi2, 0, 0.5e-5);
+    });
+
   });
 
   describe("Planimeter", function () {

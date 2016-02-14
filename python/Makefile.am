@@ -22,7 +22,6 @@ DOC_FILES = \
 	$(srcdir)/doc/examples.rst \
 	$(srcdir)/doc/geodesics.rst \
 	$(srcdir)/doc/index.rst \
-	$(srcdir)/doc/install.rst \
 	$(srcdir)/doc/interface.rst
 
 pythondir=$(libdir)/python/site-packages/$(PACKAGE)

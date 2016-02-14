@@ -413,12 +413,22 @@ class GeodSolveTest(unittest.TestCase):
     self.assertAlmostEqual(dir["azi2"], -180.00000, delta = 0.5e-5)
 
   def test_GeodSolve71(self):
+    # Check that DirectLine sets s13.
     line = Geodesic.WGS84.DirectLine(1, 2, 45, 1e7)
     dir = line.Position(0.5 * line.s13,
                         Geodesic.STANDARD | Geodesic.LONG_UNROLL)
     self.assertAlmostEqual(dir["lat2"], 30.92625, delta = 0.5e-5)
     self.assertAlmostEqual(dir["lon2"], 37.54640, delta = 0.5e-5)
     self.assertAlmostEqual(dir["azi2"], 55.43104, delta = 0.5e-5)
+
+  def test_GeodSolve73(self):
+    # Check for backwards from the pole bug reported by Anon on 2016-02-13.
+    # This only affected the Java implementation.  It was introduced in Java
+    # version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+    dir = Geodesic.WGS84.Direct(90, 10, 180, -1e6)
+    self.assertAlmostEqual(dir["lat2"], 81.04623, delta = 0.5e-5)
+    self.assertAlmostEqual(dir["lon2"], -170, delta = 0.5e-5)
+    self.assertAlmostEqual(dir["azi2"], 0, delta = 0.5e-5)
 
 class PlanimeterTest(unittest.TestCase):
 

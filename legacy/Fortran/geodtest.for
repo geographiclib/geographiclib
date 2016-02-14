@@ -811,6 +811,31 @@
       return
       end
 
+      integer function tstg73()
+* Check for backwards from the pole bug reported by Anon on 2016-02-13.
+* This only affected the Java implementation.  It was introduced in Java
+* version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+      double precision lat2, lon2, azi2, a12, m12, MM12, MM21, SS12
+      double precision a, f
+      integer r, assert, omask, flags
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+      omask = 0
+      flags = 0
+      r = 0
+      call direct(a, f, 90d0, 10d0, 180d0, -1d6,
+     +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(lat2, 81.04623d0, 0.5d-5)
+      r = r + assert(lon2, -179d0, 0.5d-5)
+      r = r + assert(azi2, 0d0, 0.5d-5)
+
+      tstg73 = r
+      return
+      end
+
       integer function tstp0()
 * Check fix for pole-encircling bug found 2011-03-16
       double precision lata(4), lona(4)
@@ -956,7 +981,8 @@
       integer tstinv, tstdir, tstarc,
      +    tstg0, tstg1, tstg2, tstg5, tstg6, tstg9, tstg10, tstg11,
      +    tstg12, tstg14, tstg15, tstg17, tstg26, tstg28, tstg33,
-     +    tstg55, tstg59, tstg61, tstp0, tstp5, tstp6, tstp12, tstp13
+     +    tstg55, tstg59, tstg61, tstg73,
+     +    tstp0, tstp5, tstp6, tstp12, tstp13
 
       n = 0
       i = tstinv()
@@ -1063,6 +1089,11 @@
       if (i .gt. 0) then
         n = n + 1
         print *, 'tstg61 fail:', i
+      end if
+      i = tstg73()
+      if (i .gt. 0) then
+        n = n + 1
+        print *, 'tstg73 fail:', i
       end if
       i = tstp0()
       if (i .gt. 0) then
