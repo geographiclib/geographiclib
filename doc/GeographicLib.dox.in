@@ -6925,10 +6925,15 @@ git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
    (released 2016-mm-dd)
-   - Fix BUG where -w flag to <a href="Planimeter.1.html">Planimeter(1)</a>
-     was being misinterpreted.
-   - Fix BUG in Java direct calculation when starting point is at a
-     pole.
+   - The following BUGS have been fixed:
+     - the -w flag to <a href="Planimeter.1.html">Planimeter(1)</a> was
+       being ignored;
+     - in the Java package, the wrong longitude was being returned with
+       direct geodesic calculation with a negative distance when
+       starting point was at a pole;
+     - in the JavaScript package, PolygonArea.TestEdge contained a
+       misspelling of a variable name and other typos (problem found by
+       threepointone).
    - INCOMPATIBLE CHANGES:
      - make the -w flag (to swap the default order of latitude and
        longitude) a toggle for all \ref utilities;
@@ -7000,7 +7005,6 @@ git repository for GeographicLib</a>.
    - Samples of wrapping the C++ library, so it's accessible in other
      languages, are given in <code>wrapper/C</code>,
      <code>wrapper/python</code>, and <code>wrapper/matlab</code>.
-   - Some code clean up for the JavaScript packge.
    - Binary installers for Windows now use Visual Studio 12 2013.
    - Remove top-level pom.xml from release (it was specific to SRI).
    - A reminder: because of the JavaScript changes introduced in version

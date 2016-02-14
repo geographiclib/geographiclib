@@ -68,32 +68,32 @@ Two examples of this library in use are
 * {@link http://sourceforge.net/p/geographiclib/code/ci/release/tree/
     git repository}
 * C++ (complete library):
-  {@link ../index.html
+  {@link http://geographiclib.sourceforge.net/html/index.html
     documentation},
   {@link https://sourceforge.net/projects/geographiclib/files/distrib
     download};
 * C (geodesic routines):
-  {@link ../C/index.html
+  {@link http://geographiclib.sourceforge.net/html/C/index.html
     documentation}, also included with recent versions of
   {@link https://github.com/OSGeo/proj.4/wiki
     proj.4};
 * Fortran (geodesic routines):
-  {@link ../Fortran/index.html
+  {@link http://geographiclib.sourceforge.net/html/Fortran/index.html
     documentation};
 * Java (geodesic routines):
   {@link http://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/
     Maven Central package},
-  {@link ../java/index.html
+  {@link http://geographiclib.sourceforge.net/html/java/index.html
     documentation};
 * JavaScript (geodesic routines):
   {@link https://www.npmjs.com/package/geographiclib
     npm package},
-  {@link ../js/index.html
+  {@link http://geographiclib.sourceforge.net/html/js/index.html
     documentation};
 * Python (geodesic routines):
   {@link http://pypi.python.org/pypi/geographiclib
     PyPI package},
-  {@link ../python/index.html
+  {@link http://geographiclib.sourceforge.net/html/python/index.html
     documentation};
 * Matlab/Octave (geodesic and some other routines):
   {@link http://www.mathworks.com/matlabcentral/fileexchange/50605
@@ -101,7 +101,7 @@ Two examples of this library in use are
   {@link http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m
     documentation};
 * C# (.NET wrapper for complete C++ library):
-  {@link ../NET/index.html
+  {@link http://geographiclib.sourceforge.net/html/NET/index.html
     documentation}.
 
 ### Authors

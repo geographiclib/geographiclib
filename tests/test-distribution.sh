@@ -436,6 +436,8 @@ mvn clean deploy -P release
 npm publish $TEMP/gita/geographiclib/BUILD/js/geographiclib
 make -C $DEVELSOURCE -f makefile-admin distrib-js
 make -C $DEVELSOURCE -f makefile-admin install-js
+# also update devel branch of node-geographiclib from
+$TEMP/gita/geographiclib/BUILD/js/geographiclib
 
 # matlab toolbox
 chmod 644 $DEVELSOURCE/geographiclib_toolbox_$VERSION.*
