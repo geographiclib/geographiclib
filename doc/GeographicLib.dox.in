@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2016-mm-dd
+\date 2016-02-15
 
 The documentation for other versions is available at
 <tt>http://geographiclib.sourceforge.net/m.nn/</tt> for versions numbers
@@ -6916,7 +6916,7 @@ of the
 git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
-   (released 2016-mm-dd)
+   (released 2016-02-15)
    - The following BUGS have been fixed:
      - the -w flag to <a href="Planimeter.1.html">Planimeter(1)</a> was
        being ignored;

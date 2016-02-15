@@ -109,7 +109,7 @@ Two examples of this library in use are
 
 ### Change log
 
-* Version 1.46 (released 2016-mm-dd)
+* Version 1.46 (released 2016-02-15)
   * Fix bugs in PolygonArea.TestEdge (problem found by threepointone).
   * Add Geodesic.DirectLine, Geodesic.ArcDirectLine,
     Geodesic.GenDirectLine, Geodesic.InverseLine,

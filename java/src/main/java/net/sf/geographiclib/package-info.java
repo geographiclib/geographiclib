@@ -262,7 +262,7 @@
  * <ul>
  * <li>
  *   <a href="http://geographiclib.sourceforge.net/1.46/java">Version 1.46</a>
- *   (released 2016-mm-dd)
+ *   (released 2016-02-15)
  * <ul>
  * <li>
  *   Fix bug where the wrong longitude was being returned with direct geodesic

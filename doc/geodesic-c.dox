@@ -191,7 +191,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 \section changes-c Change log
 
  - <a href="http://geographiclib.sourceforge.net/1.46/C">Version 1.46</a>
-   (released 2016-mm-dd)
+   (released 2016-02-15)
    - Add s13 and a13 to the geod_geodesicline struct.
    - Add geod_directline, geod_gendirectline, and geod_inverseline.
    - More accurate inverse solution when longitude difference is close

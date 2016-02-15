@@ -98,7 +98,7 @@ GeographicLib in various languages
 Change log
 ----------
 
-* Version 1.46 (released 2016-mm-dd)
+* Version 1.46 (released 2016-02-15)
 
   * Add Geodesic.DirectLine, Geodesic.ArcDirectLine,
     Geodesic.InverseLine, GeodesicLine.SetDistance, GeodesicLine.SetArc,
