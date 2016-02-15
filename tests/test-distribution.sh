@@ -166,9 +166,7 @@ for ver in 10 11 12 14; do
 	pkg=vc$ver-$arch
 	gen="Visual Studio $ver"
 	installer=
-	if test "$ver" -eq 12; then
-	    installer=GeographicLib-$VERSION-$arch.exe
-	fi
+	test "$ver" = 12 && installer=y
 	mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg
 	(
 	    echo "#! /bin/sh -exv"
@@ -188,7 +186,7 @@ for ver in 10 11 12 14; do
 	    echo cmake --build . --config Release --target INSTALL
 	    echo cmake --build . --config Release --target PACKAGE
 	    test "$installer" &&
-		echo cp "$installer" $WINDEVELSOURCE/ || true
+		echo cp GeographicLib-$VERSION-*.exe $WINDEVELSOURCE/ || true
 	) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
 	chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
     done
