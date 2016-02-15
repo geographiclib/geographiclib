@@ -223,31 +223,6 @@ namespace GeographicLib {
     static Math::real Decode(real d, real m = 0, real s = 0)
     { return d + (m + s / 60) / 60; }
 
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b> (use Utility::num, instead).
-     * Convert a string to a real number.
-     *
-     * @param[in] str string input.
-     * @exception GeographicErr if \e str is malformed.
-     * @return decoded number.
-     **********************************************************************/
-    static Math::real Decode(const std::string& str)
-    { return Utility::num<real>(str); }
-
-    /**
-     * <b>DEPRECATED</b> (use Utility::fract, instead).
-     * Convert a string to a real number treating the case where the string is
-     * a simple fraction.
-     *
-     * @param[in] str string input.
-     * @exception GeographicErr if \e str is malformed.
-     * @return decoded number.
-     **********************************************************************/
-    static Math::real DecodeFraction(const std::string& str)
-    { return Utility::fract<real>(str); }
-    /// \endcond
-
     /**
      * Convert a pair of strings to latitude and longitude.
      *

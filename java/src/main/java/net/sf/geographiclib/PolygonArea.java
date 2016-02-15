@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.PolygonArea class
  *
- * Copyright (c) Charles Karney (2013-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -18,7 +18,7 @@ package net.sf.geographiclib;
  *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
  *   Algorithms for geodesics</a>,
  *   J. Geodesy <b>87</b>, 43&ndash;55 (2013)
- *   (<a href="http://geographiclib.sf.net/geod-addenda.html">addenda</a>).
+ *   (<a href="http://geographiclib.sourceforge.net/geod-addenda.html">addenda</a>).
  * </ul>
  * <p>
  * This class lets you add vertices one at a time to the polygon.  The area
@@ -72,7 +72,7 @@ public class PolygonArea {
     // Compute lon12 the same way as Geodesic.Inverse.
     lon1 = GeoMath.AngNormalize(lon1);
     lon2 = GeoMath.AngNormalize(lon2);
-    double lon12 = GeoMath.AngDiff(lon1, lon2);
+    double lon12 = GeoMath.AngDiff(lon1, lon2).first;
     int cross =
       lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
       (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);

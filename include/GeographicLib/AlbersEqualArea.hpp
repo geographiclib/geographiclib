@@ -269,14 +269,6 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const { return _f; }
 
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the ellipsoid.
-     **********************************************************************/
-    Math::real InverseFlattening() const { return 1/_f; }
-    /// \endcond
-
     /**
      * @return latitude of the origin for the projection (degrees).
      *

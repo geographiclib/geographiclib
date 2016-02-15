@@ -168,22 +168,6 @@ namespace GeographicLib {
     Math::real alphap2() const { return _alphap2; }
     ///@}
 
-    /// \cond SKIP
-    /**
-     * @return the square of the modulus <i>k</i><sup>2</sup>.
-     *
-     * <b>DEPRECATED</b>, use k2() instead.
-     **********************************************************************/
-    Math::real m() const { return _k2; }
-    /**
-     * @return the square of the complementary modulus <i>k'</i><sup>2</sup> =
-     *   1 &minus; <i>k</i><sup>2</sup>.
-     *
-     * <b>DEPRECATED</b>, use kp2() instead.
-     **********************************************************************/
-    Math::real m1() const { return _kp2; }
-    /// \endcond
-
     /** \name Complete elliptic integrals.
      **********************************************************************/
     ///@{

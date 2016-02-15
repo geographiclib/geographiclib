@@ -2,7 +2,7 @@
  * \file GeodSolve.cpp
  * \brief Command line utility for geodesic calculations
  *
- * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -10,7 +10,6 @@
  **********************************************************************/
 
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -70,15 +69,18 @@ real ReadDistance(const std::string& s, bool arcmode) {
 int main(int argc, char* argv[]) {
   try {
     using namespace GeographicLib;
+    enum { NONE = 0, LINE, DIRECT, INVERSE };
     Utility::set_digits();
-    bool linecalc = false, inverse = false, arcmode = false,
+    bool inverse = false, arcmode = false,
       dms = false, full = false, exact = false, unroll = false,
-      longfirst = false, azi2back = false;
+      longfirst = false, azi2back = false, fraction = false,
+      arcmodeline = false;
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
-    real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12, M12, M21, S12;
-    int prec = 3;
+    real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12, M12, M21, S12,
+      mult = 1;
+    int linecalc = NONE, prec = 3;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
 
@@ -86,12 +88,14 @@ int main(int argc, char* argv[]) {
       std::string arg(argv[m]);
       if (arg == "-i") {
         inverse = true;
-        linecalc = false;
+        linecalc = NONE;
       } else if (arg == "-a")
-        arcmode = true;
-      else if (arg == "-l") {
+        arcmode = !arcmode;
+      else if (arg == "-F")
+        fraction = true;
+      else if (arg == "-L" || arg == "-l") { // -l is DEPRECATED
         inverse = false;
-        linecalc = true;
+        linecalc = LINE;
         if (m + 3 >= argc) return usage(1, true);
         try {
           DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
@@ -99,10 +103,41 @@ int main(int argc, char* argv[]) {
           azi1 = DMS::DecodeAzimuth(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {
-          std::cerr << "Error decoding arguments of -l: " << e.what() << "\n";
+          std::cerr << "Error decoding arguments of -L: " << e.what() << "\n";
           return 1;
         }
         m += 3;
+      } else if (arg == "-D") {
+        inverse = false;
+        linecalc = DIRECT;
+        if (m + 4 >= argc) return usage(1, true);
+        try {
+          DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
+                            lat1, lon1, longfirst);
+          azi1 = DMS::DecodeAzimuth(std::string(argv[m + 3]));
+          s12 = ReadDistance(std::string(argv[m + 4]), arcmode);
+          arcmodeline = arcmode;
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding arguments of -D: " << e.what() << "\n";
+          return 1;
+        }
+        m += 4;
+      } else if (arg == "-I") {
+        inverse = false;
+        linecalc = INVERSE;
+        if (m + 4 >= argc) return usage(1, true);
+        try {
+          DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
+                            lat1, lon1, longfirst);
+          DMS::DecodeLatLon(std::string(argv[m + 3]), std::string(argv[m + 4]),
+                            lat2, lon2, longfirst);
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding arguments of -I: " << e.what() << "\n";
+          return 1;
+        }
+        m += 4;
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
@@ -123,7 +158,7 @@ int main(int argc, char* argv[]) {
         dms = true;
         dmssep = ':';
       } else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-b")
         azi2back = true;
       else if (arg == "-f")
@@ -220,10 +255,26 @@ int main(int argc, char* argv[]) {
     GeodesicLine      ls;
     GeodesicLineExact le;
     if (linecalc) {
-      if (exact)
-        le = geode.Line(lat1, lon1, azi1, outmask);
-      else
-        ls = geods.Line(lat1, lon1, azi1, outmask);
+      if (linecalc == LINE) fraction = false;
+      if (exact) {
+        le = linecalc == DIRECT ?
+          geode.GenDirectLine(lat1, lon1, azi1, arcmodeline, s12, outmask) :
+          linecalc == INVERSE ?
+          geode.InverseLine(lat1, lon1, lat2, lon2, outmask) :
+          // linecalc == LINE
+          geode.Line(lat1, lon1, azi1, outmask);
+        mult = fraction ? le.GenDistance(arcmode) : 1;
+        if (linecalc == INVERSE) azi1 = le.Azimuth();
+      } else {
+        ls = linecalc == DIRECT ?
+          geods.GenDirectLine(lat1, lon1, azi1, arcmodeline, s12, outmask) :
+          linecalc == INVERSE ?
+          geods.InverseLine(lat1, lon1, lat2, lon2, outmask) :
+          // linecalc == LINE
+          geods.Line(lat1, lon1, azi1, outmask);
+        mult = fraction ? ls.GenDistance(arcmode) : 1;
+        if (linecalc == INVERSE) azi1 = ls.Azimuth();
+      }
     }
 
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
@@ -256,9 +307,11 @@ int main(int argc, char* argv[]) {
             geods.GenInverse(lat1, lon1, lat2, lon2, outmask,
                              s12, azi1, azi2, m12, M12, M21, S12);
           if (full) {
-            if (unroll)
-              lon2 = lon1 + Math::AngDiff(lon1, lon2);
-            else {
+            if (unroll) {
+              real e;
+              lon2 = lon1 + Math::AngDiff(lon1, lon2, e);
+              lon2 += e;
+            } else {
               lon1 = Math::AngNormalize(lon1);
               lon2 = Math::AngNormalize(lon2);
             }
@@ -285,7 +338,8 @@ int main(int argc, char* argv[]) {
               throw GeographicErr("Incomplete input: " + s);
             if (str >> strc)
               throw GeographicErr("Extraneous input: " + strc);
-            s12 = ReadDistance(ss12, arcmode);
+            // In fraction mode input is read as a distance
+            s12 = ReadDistance(ss12, !fraction && arcmode) * mult;
             a12 = exact ?
               le.GenPosition(arcmode, s12, outmask,
                              lat2, lon2, azi2, s12, m12, M12, M21, S12) :

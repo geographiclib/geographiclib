@@ -1,7 +1,11 @@
 # Here are the tests for GeographicLib
 
-# First turn on testing
 enable_testing ()
+if (DEFINED ENV{GEOGRAPHICLIB_DATA})
+  set (_DATADIR "$ENV{GEOGRAPHICLIB_DATA}")
+else ()
+  set (_DATADIR "${GEOGRAPHICLIB_DATA}")
+endif ()
 
 # The tests consist of calling the various tools with --input-string and
 # matching the output against regular expressions.
@@ -33,10 +37,13 @@ add_test (NAME GeoConvert5 COMMAND GeoConvert --input-string "5d. 0")
 set_tests_properties (GeoConvert5 PROPERTIES WILL_FAIL ON)
 if (NOT (MSVC AND MSVC_VERSION MATCHES "1[78].."))
   # Check fix for DMS::Decode double rounding bug fixed on 2012-11-15
-  # This test is known to fail for VS 11 and 12 bug reported 2013-01-10
+  # This test is known to fail for VC 11 and 12 bug reported 2013-01-10
   # http://connect.microsoft.com/VisualStudio/feedback/details/776287
   # OK to skip this test for these compilers because this is a question
-  # of accuracy of the least significant bit.  The bug is fixed in VS 14.
+  # of accuracy of the least significant bit.  The bug is fixed in VC 14.
+  #
+  # N.B. 179.99999999999998578 = 180 - 0.50032 * 0.5^45 which (as a
+  # double) rounds to 180 - 0.5^45 = 179.9999999999999716
   add_test (NAME GeoConvert6 COMMAND GeoConvert -p 9
     --input-string "0 179.99999999999998578")
   set_tests_properties (GeoConvert6 PROPERTIES PASS_REGULAR_EXPRESSION
@@ -156,11 +163,12 @@ add_test (NAME GeodSolve13 COMMAND GeodSolve
 set_tests_properties (GeodSolve12 GeodSolve13 PROPERTIES PASS_REGULAR_EXPRESSION
   "120\\.27.* 105\\.15.* 266\\.7")
 
-if (NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
+if (NOT (GEOGRAPHICLIB_PRECISION EQUAL 4 AND Boost_VERSION LESS 106000))
   # mpfr (nan == 0 is true) and boost-quadmath (nan > 0 is true) have
   # bugs in handling nans, so skip this test.  Problems reported on
-  # 2015-03-31, https://svn.boost.org/trac/boost/ticket/11159.  MFPR C++
-  # version 3.6.2 fixes its nan problem.
+  # 2015-03-31, https://svn.boost.org/trac/boost/ticket/11159 (this
+  # might be fixed in Boost 1.60)..  MFPR C++ version 3.6.2 fixes its
+  # nan problem.
   #
   # Check fix for inverse ignoring lon12 = nan
   add_test (NAME GeodSolve14 COMMAND GeodSolve -i --input-string "0 0 1 nan")
@@ -183,9 +191,9 @@ add_test (NAME GeodSolve17 COMMAND GeodSolve
 add_test (NAME GeodSolve18 COMMAND GeodSolve
   -u --input-string "40 -75 -10 2e7" -E)
 add_test (NAME GeodSolve19 COMMAND GeodSolve
-  -u -l 40 -75 -10 --input-string "2e7")
+  -u -L 40 -75 -10 --input-string "2e7")
 add_test (NAME GeodSolve20 COMMAND GeodSolve
-  -u -l 40 -75 -10 --input-string "2e7" -E)
+  -u -L 40 -75 -10 --input-string "2e7" -E)
 set_tests_properties (GeodSolve17 GeodSolve18 GeodSolve19 GeodSolve20
   PROPERTIES PASS_REGULAR_EXPRESSION "-39\\.[0-9]* -254\\.[0-9]* -170\\.[0-9]*")
 add_test (NAME GeodSolve21 COMMAND GeodSolve
@@ -193,9 +201,9 @@ add_test (NAME GeodSolve21 COMMAND GeodSolve
 add_test (NAME GeodSolve22 COMMAND GeodSolve
   --input-string "40 -75 -10 2e7" -E)
 add_test (NAME GeodSolve23 COMMAND GeodSolve
-  -l 40 -75 -10 --input-string "2e7")
+  -L 40 -75 -10 --input-string "2e7")
 add_test (NAME GeodSolve24 COMMAND GeodSolve
-  -l 40 -75 -10 --input-string "2e7" -E)
+  -L 40 -75 -10 --input-string "2e7" -E)
 set_tests_properties (GeodSolve21 GeodSolve22 GeodSolve23 GeodSolve24
   PROPERTIES PASS_REGULAR_EXPRESSION "-39\\.[0-9]* 105\\.[0-9]* -170\\.[0-9]*")
 
@@ -305,14 +313,82 @@ set_tests_properties (GeodSolve51 GeodSolve52
 set_tests_properties (GeodSolve53 GeodSolve54
   PROPERTIES PASS_REGULAR_EXPRESSION "0\\.00000 -180\\.00000 20027270")
 
-# Check fix for nan + point on equator or pole not returning all nans in
-# Geodesic::Inverse, found 2015-09-23.
-add_test (NAME GeodSolve55 COMMAND GeodSolve -i --input-string "nan 0 0 90")
-add_test (NAME GeodSolve56 COMMAND GeodSolve -i --input-string "nan 0 0 90" -E)
-add_test (NAME GeodSolve57 COMMAND GeodSolve -i --input-string "nan 0 90 9")
-add_test (NAME GeodSolve58 COMMAND GeodSolve -i --input-string "nan 0 90 9" -E)
-set_tests_properties (GeodSolve55 GeodSolve56 GeodSolve57 GeodSolve58
-  PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
+if (NOT (GEOGRAPHICLIB_PRECISION EQUAL 4 AND Boost_VERSION LESS 106000))
+  # Check fix for nan + point on equator or pole not returning all nans in
+  # Geodesic::Inverse, found 2015-09-23.
+  add_test (NAME GeodSolve55 COMMAND GeodSolve -i --input-string "nan 0 0 90")
+  add_test (NAME GeodSolve56 COMMAND GeodSolve
+    -i --input-string "nan 0 0 90" -E)
+  add_test (NAME GeodSolve57 COMMAND GeodSolve -i --input-string "nan 0 90 9")
+  add_test (NAME GeodSolve58 COMMAND GeodSolve
+    -i --input-string "nan 0 90 9" -E)
+  set_tests_properties (GeodSolve55 GeodSolve56 GeodSolve57 GeodSolve58
+    PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
+endif ()
+
+# Check for points close with longitudes close to 180 deg apart.
+add_test (NAME GeodSolve59 COMMAND GeodSolve
+  -i -p 9 --input-string "5 0.00000000000001 10 180")
+add_test (NAME GeodSolve60 COMMAND GeodSolve
+  -i -p 9 --input-string "5 0.00000000000001 10 180" -E)
+set_tests_properties (GeodSolve59 GeodSolve60
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  # Correct values: 0.000000000000037 179.999999999999963 18345191.1743327133
+  "0\\.0000000000000[34] 179\\.9999999999999[5-7] 18345191\\.17433271[2-6]")
+
+# Make sure small negative azimuths are west-going
+add_test (NAME GeodSolve61 COMMAND GeodSolve
+  -u -p 0 --input-string "45 0 -0.000000000000000003 1e7")
+add_test (NAME GeodSolve62 COMMAND GeodSolve
+  -u -p 0 -I 45 0 80 -0.000000000000000003 --input-string 1e7)
+add_test (NAME GeodSolve63 COMMAND GeodSolve
+  -u -p 0 --input-string "45 0 -0.000000000000000003 1e7" -E)
+add_test (NAME GeodSolve64 COMMAND GeodSolve
+  -u -p 0 -I 45 0 80 -0.000000000000000003 --input-string 1e7 -E)
+set_tests_properties (GeodSolve61 GeodSolve62 GeodSolve63 GeodSolve64
+  PROPERTIES PASS_REGULAR_EXPRESSION "45\\.30632 -180\\.00000 -180\\.00000")
+
+# Check for bug in east-going check in GeodesicLine (needed to check for
+# sign of 0) and sign error in area calculation due to a bogus override
+# of the code for alp12.  Found/fixed on 2015-12-19.
+add_test (NAME GeodSolve65 COMMAND GeodSolve
+  -I 30 -0.000000000000000001 -31 180 -f -u -p 0 --input-string "1e7;2e7")
+add_test (NAME GeodSolve66 COMMAND GeodSolve
+  -I 30 -0.000000000000000001 -31 180 -f -u -p 0 --input-string "1e7;2e7" -E)
+set_tests_properties (GeodSolve65 GeodSolve66
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "30\\.00000 -0\\.00000 -180\\.00000 -60\\.23169 -0\\.00000 -180\\.00000 10000000 90\\.06544 6363636 -0\\.0012834 0\\.0013749 0[\r\n]+30\\.00000 -0\\.00000 -180\\.00000 -30\\.03547 -180\\.00000 -0\\.00000 20000000 179\\.96459 54342 -1\\.0045592 -0\\.9954339 127516405431022")
+
+# Check for InverseLine if line is slightly west of S and that s13 is
+# correctly set.
+add_test (NAME GeodSolve67 COMMAND GeodSolve
+  -u -p 0 -I -5 -0.000000000000002 -10 180 --input-string 2e7)
+add_test (NAME GeodSolve68 COMMAND GeodSolve
+  -u -p 0 -I -5 -0.000000000000002 -10 180 --input-string 2e7 -E)
+set_tests_properties (GeodSolve67 GeodSolve68
+  PROPERTIES PASS_REGULAR_EXPRESSION "4\\.96445 -180\\.00000 -0\\.00000")
+add_test (NAME GeodSolve69 COMMAND GeodSolve
+  -u -p 0 -I -5 -0.000000000000002 -10 180 --input-string 0.5 -F)
+add_test (NAME GeodSolve70 COMMAND GeodSolve
+  -u -p 0 -I -5 -0.000000000000002 -10 180 --input-string 0.5 -F -E)
+set_tests_properties (GeodSolve69 GeodSolve70
+  PROPERTIES PASS_REGULAR_EXPRESSION "-87\\.52461 -0\\.00000 -180\\.00000")
+
+# Check that DirectLine sets s13.
+add_test (NAME GeodSolve71 COMMAND GeodSolve
+  -D 1 2 45 1e7 -p 0 --input-string 0.5 -F)
+add_test (NAME GeodSolve72 COMMAND GeodSolve
+  -D 1 2 45 1e7 -p 0 --input-string 0.5 -F)
+set_tests_properties (GeodSolve71 GeodSolve72
+  PROPERTIES PASS_REGULAR_EXPRESSION "30\\.92625 37\\.54640 55\\.43104")
+
+# Check for backwards from the pole bug reported by Anon on 2016-02-13.
+# This only affected the Java implementation.  It was introduced in Java
+# version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+add_test (NAME GeodSolve73 COMMAND GeodSolve
+  -p 0 --input-string "90 10 180 -1e6")
+set_tests_properties (GeodSolve73
+  PROPERTIES PASS_REGULAR_EXPRESSION "81\\.04623 -170\\.00000 0\\.00000")
 
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
@@ -365,8 +441,11 @@ set_tests_properties (Planimeter12 PROPERTIES PASS_REGULAR_EXPRESSION
 # Check encircling pole twice
 add_test (NAME Planimeter13 COMMAND Planimeter
   --input-string "89 -360; 89 -240; 89 -120; 89 0; 89 120; 89 240")
-set_tests_properties (Planimeter13 PROPERTIES PASS_REGULAR_EXPRESSION
-  "6 1160741\\..* 32415230256\\.")
+# Check -w fix for Planimeter (bug found/fixed 2016-01-19)
+add_test (NAME Planimeter14 COMMAND Planimeter
+  --input-string "-360 89;-240 89;-120 89;0 89;120 89;240 89" -w)
+set_tests_properties (Planimeter13 Planimeter14
+  PROPERTIES PASS_REGULAR_EXPRESSION "6 1160741\\..* 32415230256\\.")
 
 # Check fix for AlbersEqualArea::Reverse bug found 2011-05-01
 add_test (NAME ConicProj0 COMMAND ConicProj
@@ -443,7 +522,7 @@ add_test (NAME GeodesicProj0 COMMAND GeodesicProj
 set_tests_properties (GeodesicProj0 PROPERTIES PASS_REGULAR_EXPRESSION
   "^-?0\\.0+ [0-9]+\\.[0-9]+ 170\\.0+ ")
 
-if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
+if (EXISTS "${_DATADIR}/geoids/egm96-5.pgm")
   # Check fix for single-cell cache bug found 2010-11-23
   add_test (NAME GeoidEval0 COMMAND GeoidEval
     -n egm96-5 --input-string "0d1 0d1;0d4 0d4")
@@ -451,7 +530,7 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
     "^17\\.1[56]..\n17\\.1[45]..")
 endif ()
 
-if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/wmm2010.wmm)
+if (EXISTS "${_DATADIR}/magnetic/wmm2010.wmm")
   # Test case from WMM2010_Report.pdf, Sec 1.5, pp 14-15:
   # t = 2012.5, lat = -80, lon = 240, h = 100e3
   add_test (NAME MagneticField0 COMMAND MagneticField
@@ -469,7 +548,7 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/wmm2010.wmm)
     " 5535\\.5249148687 14765\\.3703243050 -50625\\.930547879[45] .*\n.* 20\\.4904268023 1\\.0272592716 83\\.5313962281 ")
 endif ()
 
-if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/emm2015.wmm)
+if (EXISTS "${_DATADIR}/magnetic/emm2015.wmm")
   # Tests from EMM2015_TEST_VALUES.txt including cases of linear
   # interpolation and extrapolation.
   add_test (NAME MagneticField3 COMMAND MagneticField
@@ -488,7 +567,7 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/emm2015.wmm)
     "-8\\.73 86\\.82 3128\\.9 3092\\.6 -474\\.7 56338\\.9 56425\\.8\n-0\\.2. 0\\.0. -20\\.7 -22\\.3 -9\\.2 26\\.5 25\\.3")
 endif ()
 
-if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
+if (EXISTS "${_DATADIR}/gravity/egm2008.egm")
   # Verify no overflow at poles with high degree model
   add_test (NAME Gravity0 COMMAND Gravity
     -n egm2008 -p 6 --input-string "90 110 0")
@@ -506,7 +585,7 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
     "7\\.404 -6\\.168 7\\.616")
 endif ()
 
-if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/grs80.egm)
+if (EXISTS "${_DATADIR}/gravity/grs80.egm")
   # Check close to zero gravity in geostationary orbit
   add_test (NAME Gravity3 COMMAND Gravity
     -p 3 -n grs80 --input-string "0 123 35786e3")

@@ -11,8 +11,12 @@
 /**
 \mainpage NETGeographicLib library
 \author Scott Heiman (mrmtdew2@outlook.com)
-\version 1.44
-\date 2015-08-01
+\version 1.46
+\date 2016-02-15
+
+The documentation for other versions is available at
+<tt>http://geographiclib.sourceforge.net/m.nn/NET</tt> for versions numbers
+<tt>m.nn</tt> &ge; 1.33.
 
 \section abstract-net Abstract
 
@@ -33,7 +37,7 @@ versions of Microsoft Visual Studio.
 
 NETGeographicLib has been tested with C#, Managed C++, and Visual Basic.
 Sample code snippets can be found in
-\<install folder\>/GeographicLib-1.40/dotnet/examples.
+\<install folder\>/GeographicLib-1.46/dotnet/examples.
 
 \section differences Differences between NETGeographicLib and GeographicLib
 
@@ -139,7 +143,7 @@ to any Visual Basic source that uses NETGeographicLib classes.
 
 A C# sample application is provided that demonstrates NETGeographicLib classes.
 The source code for the sample application is located in
-\<install folder\>/GeographicLib-1.40/dotnet/Projections.  The sample
+\<install folder\>/GeographicLib-1.46/dotnet/Projections.  The sample
 application creates a tabbed dialog.  Each tab provides data entry fields that
 allow the user to exercise one or more NETGeographicLib classes.
 

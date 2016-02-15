@@ -8,7 +8,7 @@
 # geographiclib-config.cmake for the build tree
 set (PROJECT_ROOT_DIR "${PROJECT_BINARY_DIR}")
 set (PROJECT_INCLUDE_DIRS
-  "${PROJECT_BINARY_DIR}/include" "${PROJECT_SOURCE_DIR}/include" )
+  "${PROJECT_BINARY_DIR}/include" "${PROJECT_SOURCE_DIR}/include")
 configure_file (project-config.cmake.in
   "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config.cmake" @ONLY)
 configure_file (project-config-version.cmake.in

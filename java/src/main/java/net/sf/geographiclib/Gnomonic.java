@@ -1,8 +1,8 @@
 /**
  * Implementation of the net.sf.geographiclib.Gnomonic class
  *
- * Copyright (c) BMW Car IT GmbH (2014) <sebastian.mattheis@bmw-carit.de> and
- * licensed under the MIT/X11 License. For more information, see
+ * Copyright (c) BMW Car IT GmbH (2014-2016) <sebastian.mattheis@bmw-carit.de>
+ * and licensed under the MIT/X11 License. For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 package net.sf.geographiclib;
@@ -23,7 +23,7 @@ package net.sf.geographiclib;
  * Algorithms for geodesics</a>, J. Geodesy <b>87</b>, 43&ndash;55 (2013);
  * DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
  * 10.1007/s00190-012-0578-z</a>; addenda:
- * <a href="http://geographiclib.sf.net/geod-addenda.html">
+ * <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
  * geod-addenda.html</a>.
  * </li>
  * </ul>
@@ -68,9 +68,6 @@ package net.sf.geographiclib;
  * when their azimuths from the center are &plusmn; 45&deg; or &plusmn;
  * 135&deg;. To lowest order in <i>r</i> and the flattening <i>f</i>, the
  * deviation is <i>f</i> (<i>r</i>/2<i>a</i>)<sup>3</sup> <i>r</i>.
- * <p>
- * The conversions all take place using a Geodesic object (by default
- * Geodesic::WGS84). For more information on geodesics see \ref geodesic.
  * <p>
  * <b>CAUTION:</b> The definition of this projection for a sphere is standard.
  * However, there is no standard for how it should be extended to an ellipsoid.
@@ -142,7 +139,7 @@ public class Gnomonic {
    * Constructor for Gnomonic.
    * <p>
    * @param earth the {@link Geodesic} object to use for geodesic
-   *   calculations. By default the WGS84 ellipsoid should be used.
+   *   calculations.
    */
   public Gnomonic(Geodesic earth) {
     _earth = earth;

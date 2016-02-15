@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 45)
+set (PROJECT_VERSION_MINOR 46)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -42,8 +42,8 @@ endif ()
 
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
-set (LIBVERSION_API 14)
-set (LIBVERSION_BUILD 14.2.1)
+set (LIBVERSION_API 17)
+set (LIBVERSION_BUILD 17.0.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -247,8 +247,7 @@ else ()
   # the client code is being compiled (and the GeographicLib headers
   # being included), work-alike substitutions are used.
   include (CheckCXXCompilerFlag)
-  # Not yet ready for C++14 (problem with MPFR C++)
-  foreach (_F 11 0x)
+  foreach (_F 1z 14 1y 11 0x)
     set (CXX11_FLAG "-std=c++${_F}")
     set (_T CXX11TEST${_F})
     check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
@@ -277,7 +276,7 @@ int main() {
              std::log1p(2.0) + std::asinh(10.0) +
              std::atanh(0.8) + std::cbrt(8.0) +
              std::fma(1.0, 2.0, 3.0) + std::remquo(100.0, 90.0, &q) +
-             std::remainder(100.0, 90.0)) +
+             std::remainder(100.0, 90.0) + std::copysign(1.0, -0.0)) +
              std::isfinite(4.0) + std::isnan(0.0);
 }\n" CXX11_MATH)
 if (CXX11_MATH)
@@ -328,6 +327,10 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
         # Enable Q suffix for quad precision in g++ 4.8 and later
         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fext-numeric-literals")
       endif ()
+      # Boost uses std::auto_ptr which is deprecated in C++11.  Suppress
+      # ensuing warnings.  See also
+      # https://svn.boost.org/trac/boost/ticket/11411
+      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
       # Suppress the warnings that boost can spew out, e.g.,
       #   "typedef 'boost_concept_check905' locally defined but not used"
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs")
@@ -403,14 +406,17 @@ endif ()
 configure_file (
   include/GeographicLib/Config.h.in
   include/GeographicLib/Config.h
-  @ONLY )
+  @ONLY)
 
 # The documentation depends on doxygen.
 if (GEOGRAPHICLIB_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
   # Version 1.8.7 or later needed for &hellip;
   find_package (Doxygen 1.8.7)
+  # For JavaScript documentation
   find_program (JSDOC jsdoc)
+  # For Python documentation
+  find_program (SPHINX sphinx-build)
 endif ()
 
 # The man pages are written as pod files and converted to nroff format,
@@ -517,10 +523,10 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/BUILD"
   "${PROJECT_SOURCE_DIR}/(tests|testdata|cgi-bin|.*\\\\.cache)/"
   "${PROJECT_SOURCE_DIR}/(distrib|.*-distrib|.*-installer|geodesic-papers)/"
-  "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(html|kmz|pdf)\$"
+  "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(xml|html|css|kmz|pdf)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
-  "${PROJECT_SOURCE_DIR}/(geodesic-biblio.txt|makefile-admin|[^/]*\\\\.png)\$"
-  "${PROJECT_SOURCE_DIR}/matlab/.*blurb.txt\$" )
+  "${PROJECT_SOURCE_DIR}/(robots.txt|geodesic-biblio.txt|makefile-admin|[^/]*\\\\.png)\$"
+  "${PROJECT_SOURCE_DIR}/matlab/.*blurb.txt\$")
 set (CPACK_SOURCE_GENERATOR TGZ)
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
@@ -531,18 +537,18 @@ if (WIN32)
   # The Windows binary packager is NSIS.  Set the necessary variables
   # for this.
   set (CPACK_NSIS_CONTACT "charles@karney.com")
-  set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sf.net")
+  set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sourceforge.net")
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
   if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    # Hardcode the prefix for Visual Studio 11
-    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc11-x64")
+    # Hardcode the prefix for Visual Studio 12
+    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc12-x64")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
     set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} x64 ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
       "${PROJECT_NAME}-x64-${PROJECT_VERSION}")
   else ()
-    # Hardcode the prefix for Visual Studio 11
-    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc11")
+    # Hardcode the prefix for Visual Studio 12
+    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc12")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
     set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
@@ -550,12 +556,12 @@ if (WIN32)
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_NSIS_MENU_LINKS
-    "http://geographiclib.sf.net/${PROJECT_VERSION}/index.html"
+    "http://geographiclib.sourceforge.net/${PROJECT_VERSION}/index.html"
     "Library documentation"
-    "http://geographiclib.sf.net/${PROJECT_VERSION}/utilities.html"
+    "http://geographiclib.sourceforge.net/${PROJECT_VERSION}/utilities.html"
     "Utilities documentation"
-    "http://geographiclib.sf.net" "GeographicLib home page"
-    "https://sf.net/projects/geographiclib/" "Main project page")
+    "http://geographiclib.sourceforge.net" "GeographicLib home page"
+    "https://sourceforge.net/projects/geographiclib/" "Main project page")
   set (CPACK_NSIS_MODIFY_PATH ON)
 elseif (APPLE)
   # Not tested
@@ -614,5 +620,5 @@ if (MAINTAINER)
   add_dependencies (dist distrib-all)
 endif ()
 
-# Add a test target; the tests are in tools.
-enable_testing ()
+# The test suite -- split into a separate file because it's rather large.
+include (tools/tests.cmake)

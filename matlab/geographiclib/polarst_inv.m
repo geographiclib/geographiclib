@@ -38,7 +38,7 @@ function [lat, lon, gam, k] = polarst_inv(isnorth, x, y, ellipsoid)
   end
 
   a = ellipsoid(1);
-  e2 = ellipsoid(2)^2;
+  e2 = real(ellipsoid(2)^2);
   e2m = 1 - e2;
   c = sqrt(e2m) * exp(eatanhe(1, e2));
 

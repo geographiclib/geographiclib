@@ -414,14 +414,6 @@ namespace GeographicLib {
     { return Constants::WGS84_f(); }
     ///@}
 
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the WGS84 ellipsoid.
-     **********************************************************************/
-    static Math::real InverseFlattening()
-    { return 1/Constants::WGS84_f(); }
-    /// \endcond
   };
 
 } // namespace GeographicLib

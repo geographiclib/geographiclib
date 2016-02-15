@@ -2,7 +2,7 @@
  * \file RhumbSolve.cpp
  * \brief Command line utility for rhumb line calculations
  *
- * Copyright (c) Charles Karney (2014-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -10,7 +10,6 @@
  **********************************************************************/
 
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -66,7 +65,7 @@ int main(int argc, char* argv[]) {
       if (arg == "-i") {
         inverse = true;
         linecalc = false;
-      } else if (arg == "-l") {
+      } else if (arg == "-L" || arg == "-l") { // -l is DEPRECATED
         inverse = false;
         linecalc = true;
         if (m + 3 >= argc) return usage(1, true);
@@ -76,7 +75,7 @@ int main(int argc, char* argv[]) {
           azi12 = DMS::DecodeAzimuth(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {
-          std::cerr << "Error decoding arguments of -l: " << e.what() << "\n";
+          std::cerr << "Error decoding arguments of -L: " << e.what() << "\n";
           return 1;
         }
         m += 3;
@@ -99,7 +98,7 @@ int main(int argc, char* argv[]) {
         dms = true;
         dmssep = ':';
       } else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {

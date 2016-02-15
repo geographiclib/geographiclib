@@ -32,9 +32,8 @@ GeographicLib.DMS = {};
    *     - SECOND.
    */
   d) {
-  "use strict";
 
-  var lookup, zerofill, InternalDecode, NumMatch,
+  var lookup, zerofill, internalDecode, numMatch,
       hemispheres_ = "SNWE",
       signs_ = "-+",
       digits_ = "0123456789",
@@ -101,7 +100,7 @@ GeographicLib.DMS = {};
       if (mi < 0) mi = end; else mi += pa;
       if (pi < 0) pi = end; else pi += pa;
       pb = Math.min(mi, pi);
-      vals = InternalDecode(dmsa.substr(p, pb - p));
+      vals = internalDecode(dmsa.substr(p, pb - p));
       v += vals.val; ind2 = vals.ind;
       if (ind1 == d.NONE)
         ind1 = ind2;
@@ -114,7 +113,7 @@ GeographicLib.DMS = {};
     return {val: v, ind: ind1};
   };
 
-  InternalDecode = function(dmsa) {
+  internalDecode = function(dmsa) {
     var vals = {}, errormsg = "",
         sign, beg, end, ind1, k,
         ipieces, fpieces, npiece,
@@ -279,7 +278,7 @@ GeographicLib.DMS = {};
           ( fpieces[1] ? (60*fpieces[0] + fpieces[1]) / 60 : fpieces[0] ) );
       return vals;
     } while (false);
-    vals.val = NumMatch(dmsa);
+    vals.val = numMatch(dmsa);
     if (vals.val === 0)
       throw new Error(errormsg);
     else
@@ -287,7 +286,7 @@ GeographicLib.DMS = {};
     return vals;
   };
 
-  NumMatch = function(s) {
+  numMatch = function(s) {
     var t, sign, p0, p1;
     if (s.length < 3)
       return 0;
