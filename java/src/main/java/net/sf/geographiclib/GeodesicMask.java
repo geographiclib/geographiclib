@@ -86,8 +86,4 @@ public class GeodesicMask {
    * Unroll <i>lon2</i>.
    **********************************************************************/
   public static final int LONG_UNROLL   = 1<<15;
-  /**
-   * For backward compatibility only; use LONG_UNROLL instead.
-   **********************************************************************/
-  public static final int LONG_NOWRAP   = LONG_UNROLL;
 }

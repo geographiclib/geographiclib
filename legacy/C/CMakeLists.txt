@@ -1,6 +1,6 @@
-cmake_minimum_required (VERSION 2.8.4)
+project (GeographicLib-C C)
 
-project (GeographicLib-legacy-C C)
+cmake_minimum_required (VERSION 2.8.4)
 
 # Set a default build type for single-configuration cmake generators if
 # no build type is set.
@@ -9,7 +9,7 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif ()
 
 # Make the compiler more picky.
-if (WIN32)
+if (MSCV)
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
 else ()
   set (CMAKE_C_FLAGS
@@ -23,7 +23,7 @@ set (TOOLS direct inverse planimeter geodtest)
 
 foreach (TOOL ${TOOLS})
   add_executable (${TOOL} ${TOOL}.c geodesic.c geodesic.h)
-  if (NOT WIN32)
+  if (NOT MSVC)
     target_link_libraries (${TOOL} m)
   endif ()
 endforeach ()

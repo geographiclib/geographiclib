@@ -103,4 +103,4 @@ geographiclib_data=$(datadir)/GeographicLib
 
 DEFS=-DGEOGRAPHICLIB_DATA=\"$(geographiclib_data)\" @DEFS@
 
-EXTRA_DIST = Makefile.mk CMakeLists.txt GeographicLib.pro
+EXTRA_DIST = Makefile.mk CMakeLists.txt

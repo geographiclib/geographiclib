@@ -2,7 +2,7 @@
  * \file ConicProj.cpp
  * \brief Command line utility for conical projections
  *
- * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -10,7 +10,6 @@
  **********************************************************************/
 
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -98,8 +97,8 @@ int main(int argc, char* argv[]) {
         }
         m += 2;
       } else if (arg == "-w")
-        longfirst = true;
-       else if (arg == "-p") {
+        longfirst = !longfirst;
+      else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
           prec = Utility::num<int>(std::string(argv[m]));

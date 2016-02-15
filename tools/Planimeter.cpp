@@ -2,7 +2,7 @@
  * \file Planimeter.cpp
  * \brief Command line utility for measuring the area of geodesic polygons
  *
- * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
         }
         m += 2;
       } else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
@@ -174,7 +174,7 @@ int main(int argc, char* argv[]) {
       bool endpoly = s.empty();
       if (!endpoly) {
         try {
-          p.Reset(s, longfirst);
+          p.Reset(s, true, longfirst);
           if (Math::isnan(p.Latitude()) || Math::isnan(p.Longitude()))
             endpoly = true;
         }

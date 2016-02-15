@@ -57,7 +57,7 @@ namespace GeographicLib {
     , tol2_(real(0.1) * tol_)
     , taytol_(pow(tol_, real(0.6)))
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
+    , _f(f)
     , _k0(k0)
     , _mu(_f * (2 - _f))        // e^2
     , _mv(1 - _mu)              // 1 - e^2

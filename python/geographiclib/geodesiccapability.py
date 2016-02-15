@@ -38,5 +38,4 @@ class GeodesicCapability(object):
   GEODESICSCALE = 1 << 13 | CAP_C1 | CAP_C2
   AREA          = 1 << 14 | CAP_C4
   LONG_UNROLL   = 1 << 15
-  LONG_NOWRAP   = LONG_UNROLL       # For backwards compatibility only
   ALL           = OUT_ALL | CAP_ALL # Does not include LONG_UNROLL

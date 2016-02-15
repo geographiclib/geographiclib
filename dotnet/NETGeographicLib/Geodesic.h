@@ -145,7 +145,7 @@ namespace NETGeographicLib
    *   J. Geodesy <b>87</b>, 43--55 (2013);
    *   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
-   *   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+   *   addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
    *   geod-addenda.html</a>.
    * .
    * For more information on geodesics see \ref geodesic.
@@ -235,12 +235,10 @@ namespace NETGeographicLib
           **********************************************************************/
          AREA          = 1U<<14 | unsigned(captype::CAP_C4),
          /**
-          * Unroll \e lon2 in the direct calculation.  (This flag used to be
-          * called LONG_NOWRAP.)
+          * Unroll \e lon2 in the direct calculation.
           * @hideinitializer
           **********************************************************************/
          LONG_UNROLL   = 1U<<15,
-         LONG_NOWRAP   = LONG_UNROLL,
          /**
           * All capabilities, calculate everything.  (LONG_UNROLL is not
           * included in this mask.)
@@ -726,6 +724,99 @@ namespace NETGeographicLib
         GeodesicLine^ Line(double lat1, double lon1, double azi1,
                            NETGeographicLib::Mask caps );
 
+        /**
+        * Define a GeodesicLine in terms of the inverse geodesic problem.
+        *
+        * @param[in] lat1 latitude of point 1 (degrees).
+        * @param[in] lon1 longitude of point 1 (degrees).
+        * @param[in] lat2 latitude of point 2 (degrees).
+        * @param[in] lon2 longitude of point 2 (degrees).
+        * @param[in] caps bitor'ed combination of Geodesic::mask values
+        *   specifying the capabilities the GeodesicLine object should possess,
+        *   i.e., which quantities can be returned in calls to
+        *   GeodesicLine::Position.
+        * @return a GeodesicLine object.
+        *
+        * This function sets point 3 of the GeodesicLine to correspond to point 2
+        * of the inverse geodesic problem.
+        *
+        * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;].
+        **********************************************************************/
+        GeodesicLine^ InverseLine(double lat1, double lon1, double lat2,
+            double lon2, NETGeographicLib::Mask caps);
+
+        /**
+        * Define a GeodesicLine in terms of the direct geodesic problem specified
+        * in terms of distance.
+        *
+        * @param[in] lat1 latitude of point 1 (degrees).
+        * @param[in] lon1 longitude of point 1 (degrees).
+        * @param[in] azi1 azimuth at point 1 (degrees).
+        * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+        *   negative.
+        * @param[in] caps bitor'ed combination of Geodesic::mask values
+        *   specifying the capabilities the GeodesicLine object should possess,
+        *   i.e., which quantities can be returned in calls to
+        *   GeodesicLine::Position.
+        * @return a GeodesicLine object.
+        *
+        * This function sets point 3 of the GeodesicLine to correspond to point 2
+        * of the direct geodesic problem.
+        *
+        * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
+        **********************************************************************/
+        GeodesicLine^ DirectLine(double lat1, double lon1, double azi1,
+            double s12, NETGeographicLib::Mask caps);
+
+        /**
+        * Define a GeodesicLine in terms of the direct geodesic problem specified
+        * in terms of arc length.
+        *
+        * @param[in] lat1 latitude of point 1 (degrees).
+        * @param[in] lon1 longitude of point 1 (degrees).
+        * @param[in] azi1 azimuth at point 1 (degrees).
+        * @param[in] a12 arc length between point 1 and point 2 (degrees); it can
+        *   be negative.
+        * @param[in] caps bitor'ed combination of Geodesic::mask values
+        *   specifying the capabilities the GeodesicLine object should possess,
+        *   i.e., which quantities can be returned in calls to
+        *   GeodesicLine::Position.
+        * @return a GeodesicLine object.
+        *
+        * This function sets point 3 of the GeodesicLine to correspond to point 2
+        * of the direct geodesic problem.
+        *
+        * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
+        **********************************************************************/
+        GeodesicLine^ ArcDirectLine(double lat1, double lon1, double azi1,
+            double a12, NETGeographicLib::Mask caps);
+
+        /**
+        * Define a GeodesicLine in terms of the direct geodesic problem specified
+        * in terms of either distance or arc length.
+        *
+        * @param[in] lat1 latitude of point 1 (degrees).
+        * @param[in] lon1 longitude of point 1 (degrees).
+        * @param[in] azi1 azimuth at point 1 (degrees).
+        * @param[in] arcmode boolean flag determining the meaning of the \e
+        *   s12_a12.
+        * @param[in] s12_a12 if \e arcmode is false, this is the distance between
+        *   point 1 and point 2 (meters); otherwise it is the arc length between
+        *   point 1 and point 2 (degrees); it can be negative.
+        * @param[in] caps bitor'ed combination of Geodesic::mask values
+        *   specifying the capabilities the GeodesicLine object should possess,
+        *   i.e., which quantities can be returned in calls to
+        *   GeodesicLine::Position.
+        * @return a GeodesicLine object.
+        *
+        * This function sets point 3 of the GeodesicLine to correspond to point 2
+        * of the direct geodesic problem.
+        *
+        * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
+        **********************************************************************/
+        GeodesicLine^ GenDirectLine(double lat1, double lon1, double azi1,
+            bool arcmode, double s12_a12,
+            NETGeographicLib::Mask caps);
         ///@}
 
         /** \name Inspector functions.

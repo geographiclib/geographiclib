@@ -537,14 +537,6 @@ namespace GeographicLib {
     Math::real Flattening() const { return UTMUPS::Flattening(); }
     ///@}
 
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the ellipsoid.
-     **********************************************************************/
-    Math::real InverseFlattening() const
-    { return UTMUPS::InverseFlattening(); }
-    /// \endcond
   };
 
 } // namespace GeographicLib

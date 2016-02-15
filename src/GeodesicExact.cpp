@@ -2,7 +2,7 @@
  * \file GeodesicExact.cpp
  * \brief Implementation for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -54,7 +54,7 @@ namespace GeographicLib {
     , tolb_(tol0_ * tol2_)      // Check on bisection interval
     , xthresh_(1000 * tol2_)
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
+    , _f(f)
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
     , _ep2(_e2 / Math::sq(_f1)) // e2 / (1 - e2)
@@ -128,29 +128,65 @@ namespace GeographicLib {
                                       real& s12, real& m12,
                                       real& M12, real& M21,
                                       real& S12) const {
-    return GeodesicLineExact(*this, lat1, lon1, azi1,
-                        // Automatically supply DISTANCE_IN if necessary
-                        outmask | (arcmode ? NONE : DISTANCE_IN))
+    // Automatically supply DISTANCE_IN if necessary
+    if (!arcmode) outmask |= DISTANCE_IN;
+    return GeodesicLineExact(*this, lat1, lon1, azi1, outmask)
       .                         // Note the dot!
       GenPosition(arcmode, s12_a12, outmask,
                   lat2, lon2, azi2, s12, m12, M12, M21, S12);
   }
 
+  GeodesicLineExact GeodesicExact::GenDirectLine(real lat1, real lon1,
+                                                 real azi1,
+                                                 bool arcmode, real s12_a12,
+                                                 unsigned caps) const {
+    azi1 = Math::AngNormalize(azi1);
+    real salp1, calp1;
+    // Guard against underflow in salp0.  Also -0 is converted to +0.
+    Math::sincosd(Math::AngRound(azi1), salp1, calp1);
+    // Automatically supply DISTANCE_IN if necessary
+    if (!arcmode) caps |= DISTANCE_IN;
+    return GeodesicLineExact(*this, lat1, lon1, azi1, salp1, calp1,
+                             caps, arcmode, s12_a12);
+  }
+
+  GeodesicLineExact GeodesicExact::DirectLine(real lat1, real lon1,
+                                              real azi1, real s12,
+                                              unsigned caps) const {
+    return GenDirectLine(lat1, lon1, azi1, false, s12, caps);
+  }
+
+  GeodesicLineExact GeodesicExact::ArcDirectLine(real lat1, real lon1,
+                                                 real azi1, real a12,
+                                                 unsigned caps) const {
+    return GenDirectLine(lat1, lon1, azi1, true, a12, caps);
+  }
+
   Math::real GeodesicExact::GenInverse(real lat1, real lon1,
                                        real lat2, real lon2,
-                                       unsigned outmask,
-                                       real& s12, real& azi1, real& azi2,
+                                       unsigned outmask, real& s12,
+                                       real& salp1, real& calp1,
+                                       real& salp2, real& calp2,
                                        real& m12, real& M12, real& M21,
                                        real& S12) const {
-    outmask &= OUT_ALL;
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
-    // If very close to being on the same half-meridian, then make it so.
-    real lon12 = Math::AngRound(Math::AngDiff(lon1, lon2));
+    real lon12s, lon12 = Math::AngDiff(lon1, lon2, lon12s);
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
-    lon12 *= lonsign;
+    // If very close to being on the same half-meridian, then make it so.
+    lon12 = lonsign * Math::AngRound(lon12);
+    lon12s = Math::AngRound((180 - lon12) - lonsign * lon12s);
+    real
+      lam12 = lon12 * Math::degree(),
+      slam12, clam12;
+    if (lon12 > 90) {
+      Math::sincosd(lon12s, slam12, clam12);
+      clam12 = -clam12;
+    } else
+      Math::sincosd(lon12, slam12, clam12);
+
     // If really close to the equator, treat as on equator.
     lat1 = Math::AngRound(Math::LatFix(lat1));
     lat2 = Math::AngRound(Math::LatFix(lat2));
@@ -213,12 +249,7 @@ namespace GeographicLib {
       dn2 = (_f >= 0 ? sqrt(1 + _ep2 * Math::sq(sbet2)) :
              sqrt(1 - _e2 * Math::sq(cbet2)) / _f1);
 
-    real
-      lam12 = lon12 * Math::degree(), slam12, clam12;
-    Math::sincosd(lon12, slam12, clam12);
-
-    // initial values to suppress warning
-    real a12, sig12, calp1, salp1, calp2 = 0, salp2 = 0;
+    real a12, sig12;
 
     bool meridian = lat1 == -90 || slam12 == 0;
 
@@ -263,11 +294,11 @@ namespace GeographicLib {
         meridian = false;
     }
 
-    real omg12 = 0;             // initial value to suppress warning
+    // somg12 > 1 marks that it needs to be calculated
+    real omg12 = 0, somg12 = 2, comg12 = 0;
     if (!meridian &&
         sbet1 == 0 &&   // and sbet2 == 0
-        // Mimic the way Lambda12 works with calp1 = 0
-        (_f <= 0 || lam12 <= Math::pi() - _f * Math::pi())) {
+        (_f <= 0 || lon12s >= _f * 180)) {
 
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
@@ -286,7 +317,7 @@ namespace GeographicLib {
       // Figure a starting point for Newton's method
       real dnm;
       sig12 = InverseStart(E, sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-                           lam12,
+                           lam12, slam12, clam12,
                            salp1, calp1, salp2, calp2, dnm);
 
       if (sig12 >= 0) {
@@ -342,11 +373,11 @@ namespace GeographicLib {
           //     7   19024 6.19 3.30
           real dv;
           real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
+                            slam12, clam12,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                            E, omg12, numit < maxit1_, dv) - lam12;
-          // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
+                            E, somg12, comg12, numit < maxit1_, dv);
           // Reversed test to allow escape with NaNs
-          if (tripb || !(abs(v) >= (tripn ? 8 : 2) * tol0_)) break;
+          if (tripb || !(abs(v) >= (tripn ? 8 : 1) * tol0_)) break;
           // Update bracketing values
           if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b))
             { salp1b = salp1; calp1b = calp1; }
@@ -428,15 +459,21 @@ namespace GeographicLib {
         // Avoid problems with indeterminate sig1, sig2 on equator
         S12 = 0;
 
+      if (!meridian) {
+        if (somg12 > 1) {
+          somg12 = sin(omg12); comg12 = cos(omg12);
+        } else
+          Math::norm(somg12, comg12);
+      }
+
       if (!meridian &&
-          omg12 < real(0.75) * Math::pi() && // Long difference too big
-          sbet2 - sbet1 < real(1.75)) {            // Lat difference too big
+          // omg12 < 3/4 * pi
+          comg12 > -real(0.7071) &&     // Long difference not too big
+          sbet2 - sbet1 < real(1.75)) { // Lat difference not too big
         // Use tan(Gamma/2) = tan(omg12/2)
         // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
         // with tan(x/2) = sin(x)/(1+cos(x))
-        real
-          somg12 = sin(omg12), domg12 = 1 + cos(omg12),
-          dbet1 = 1 + cbet1, dbet2 = 1 + cbet2;
+        real domg12 = 1 + comg12, dbet1 = 1 + cbet1, dbet2 = 1 + cbet2;
         alp12 = 2 * atan2( somg12 * ( sbet1 * dbet2 + sbet2 * dbet1 ),
                            domg12 * ( sbet1 * sbet2 + dbet1 * dbet2 ) );
       } else {
@@ -471,13 +508,42 @@ namespace GeographicLib {
     salp1 *= swapp * lonsign; calp1 *= swapp * latsign;
     salp2 *= swapp * lonsign; calp2 *= swapp * latsign;
 
+    // Returned value in [0, 180]
+    return a12;
+  }
+
+  Math::real GeodesicExact::GenInverse(real lat1, real lon1,
+                                       real lat2, real lon2,
+                                       unsigned outmask,
+                                       real& s12, real& azi1, real& azi2,
+                                       real& m12, real& M12, real& M21,
+                                       real& S12)
+    const {
+    outmask &= OUT_MASK;
+    real salp1, calp1, salp2, calp2,
+      a12 =  GenInverse(lat1, lon1, lat2, lon2,
+                        outmask, s12, salp1, calp1, salp2, calp2,
+                        m12, M12, M21, S12);
     if (outmask & AZIMUTH) {
       azi1 = Math::atan2d(salp1, calp1);
       azi2 = Math::atan2d(salp2, calp2);
     }
-
-    // Returned value in [0, 180]
     return a12;
+  }
+
+  GeodesicLineExact GeodesicExact::InverseLine(real lat1, real lon1,
+                                               real lat2, real lon2,
+                                               unsigned caps) const {
+    real t, salp1, calp1, salp2, calp2,
+      a12 = GenInverse(lat1, lon1, lat2, lon2,
+                       // No need to specify AZIMUTH here
+                       0u, t, salp1, calp1, salp2, calp2,
+                       t, t, t, t),
+      azi1 = Math::atan2d(salp1, calp1);
+    // Ensure that a12 can be converted to a distance
+    if (caps & (OUT_MASK & DISTANCE_IN)) caps |= DISTANCE;
+    return GeodesicLineExact(*this, lat1, lon1, azi1, salp1, calp1, caps,
+                             true, a12);
   }
 
   void GeodesicExact::Lengths(const EllipticFunction& E,
@@ -579,7 +645,7 @@ namespace GeographicLib {
   Math::real GeodesicExact::InverseStart(EllipticFunction& E,
                                          real sbet1, real cbet1, real dn1,
                                          real sbet2, real cbet2, real dn2,
-                                         real lam12,
+                                         real lam12, real slam12, real clam12,
                                          real& salp1, real& calp1,
                                          // Only updated if return val >= 0
                                          real& salp2, real& calp2,
@@ -613,16 +679,18 @@ namespace GeographicLib {
 #endif
     bool shortline = cbet12 >= 0 && sbet12 < real(0.5) &&
       cbet2 * lam12 < real(0.5);
-    real omg12 = lam12;
+    real somg12, comg12;
     if (shortline) {
       real sbetm2 = Math::sq(sbet1 + sbet2);
       // sin((bet1+bet2)/2)^2
       // =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
       sbetm2 /= sbetm2 + Math::sq(cbet1 + cbet2);
       dnm = sqrt(1 + _ep2 * sbetm2);
-      omg12 /= _f1 * dnm;
+      real omg12 = lam12 / (_f1 * dnm);
+      somg12 = sin(omg12); comg12 = cos(omg12);
+    } else {
+      somg12 = slam12; comg12 = clam12;
     }
-    real somg12 = sin(omg12), comg12 = cos(omg12);
 
     salp1 = cbet2 * somg12;
     calp1 = comg12 >= 0 ?
@@ -653,6 +721,7 @@ namespace GeographicLib {
       // 56.320923501171 0 -56.320923501171 179.664747671772880215
       // which otherwise fails with g++ 4.4.4 x86 -O3
       GEOGRAPHICLIB_VOLATILE real x;
+      real lam12x = atan2(-slam12, -clam12); // lam12 - pi
       if (_f >= 0) {            // In fact f == 0 does not get here
         // x = dlong, y = dlat
         {
@@ -662,7 +731,7 @@ namespace GeographicLib {
         }
         betscale = lamscale * cbet1;
 
-        x = (lam12 - Math::pi()) / lamscale;
+        x = lam12x / lamscale;
         y = sbet12a / betscale;
       } else {                  // _f < 0
         // x = dlat, y = dlong
@@ -679,7 +748,7 @@ namespace GeographicLib {
         betscale = x < -real(0.01) ? sbet12a / x :
           -_f * Math::sq(cbet1) * Math::pi();
         lamscale = betscale / cbet1;
-        y = (lam12 - Math::pi()) / lamscale;
+        y = lam12x / lamscale;
       }
 
       if (y > -tol1_ && x > -1 - xthresh_) {
@@ -747,12 +816,13 @@ namespace GeographicLib {
   Math::real GeodesicExact::Lambda12(real sbet1, real cbet1, real dn1,
                                      real sbet2, real cbet2, real dn2,
                                      real salp1, real calp1,
+                                     real slam120, real clam120,
                                      real& salp2, real& calp2,
                                      real& sig12,
                                      real& ssig1, real& csig1,
                                      real& ssig2, real& csig2,
                                      EllipticFunction& E,
-                                     real& omg12,
+                                     real& somg12, real& comg12,
                                      bool diffp, real& dlam12) const
     {
 
@@ -807,13 +877,19 @@ namespace GeographicLib {
                   csig1 * csig2 + ssig1 * ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
-    omg12 = atan2(max(real(0), comg1 * somg2 - somg1 * comg2),
-                  comg1 * comg2 + somg1 * somg2);
+    somg12 = max(real(0), comg1 * somg2 - somg1 * comg2);
+    comg12 =              comg1 * comg2 + somg1 * somg2;
     real k2 = Math::sq(calp0) * _ep2;
     E.Reset(-k2, -_ep2, 1 + k2, 1 + _ep2);
-    real chi12 = atan2(max(real(0), cchi1 * somg2 - somg1 * cchi2),
-                       cchi1 * cchi2 + somg1 * somg2);
-    lam12 = chi12 -
+    // chi12 = chi2 - chi1, limit to [0, pi]
+    real
+      schi12 = max(real(0), cchi1 * somg2 - somg1 * cchi2),
+      cchi12 = cchi1 * cchi2 + somg1 * somg2;
+    // eta = chi12 - lam120
+    real eta = atan2(schi12 * clam120 - cchi12 * slam120,
+                     cchi12 * clam120 + schi12 * slam120);
+
+    lam12 = eta -
       _e2/_f1 * salp0 * E.H() / (Math::pi() / 2) *
       (sig12 + (E.deltaH(ssig2, csig2, dn2) - E.deltaH(ssig1, csig1, dn1)));
 

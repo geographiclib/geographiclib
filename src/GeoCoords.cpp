@@ -50,7 +50,7 @@ namespace GeographicLib {
                             + " (ex: 38n, 09s, n)");
       UTMUPS::DecodeZone(sa[zoneind], _zone, _northp);
       for (unsigned i = 0; i < 2; ++i)
-        (i ? _northing : _easting) = DMS::Decode(sa[coordind + i]);
+        (i ? _northing : _easting) = Utility::num<real>(sa[coordind + i]);
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
                       _lat, _long, _gamma, _k);
       FixHemisphere();

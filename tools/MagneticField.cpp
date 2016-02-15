@@ -2,7 +2,7 @@
  * \file MagneticField.cpp
  * \brief Command line utility for evaluating magnetic fields
  *
- * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-r")
         rate = !rate;
       else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
       const MagneticCircle c(circle ? m.Circle(time, lat, h) :
                              MagneticCircle());
       std::string s, eol, stra, strb;
-      std::istringstream str(s);
+      std::istringstream str;
       while (std::getline(*input, s)) {
         try {
           eol = "\n";

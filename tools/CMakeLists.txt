@@ -56,6 +56,3 @@ if (NOT WIN32)
   endforeach ()
   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
 endif ()
-
-# The test suite -- split into a separate file because it's rather large.
-include (tests.cmake)

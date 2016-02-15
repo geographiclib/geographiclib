@@ -6,7 +6,7 @@
 #
 #    http://geographiclib.sourceforge.net/html/annotated.html
 #
-# Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 ######################################################################
@@ -73,6 +73,15 @@ class Math(object):
     return -y if x < 0 else y
   atanh = staticmethod(atanh)
 
+  def copysign(x, y):
+    """return x with the sign of y (missing from python 2.5.2)"""
+
+    if sys.version_info > (2, 6):
+      return math.copysign(x, y)
+
+    return math.fabs(x) * (-1 if y < 0 or (y == 0 and 1/y < 0) else 1)
+  copysign = staticmethod(copysign)
+
   def norm(x, y):
     """Private: Normalize a two-vector."""
     r = math.hypot(x, y)
@@ -114,7 +123,7 @@ class Math(object):
     y = abs(x)
     # The compiler mustn't "simplify" z - (z - y) to y
     if y < z: y = z - (z - y)
-    return 0 - y if x < 0 else y
+    return 0.0 if x == 0 else (-y if x < 0 else y)
   AngRound = staticmethod(AngRound)
 
   def AngNormalize(x):
@@ -136,7 +145,7 @@ class Math(object):
 
     d, t = Math.sum(Math.AngNormalize(x), Math.AngNormalize(-y))
     d = - Math.AngNormalize(d)
-    return (-180 if d == 180 and t < 0 else d) - t
+    return Math.sum(-180 if d == 180 and t < 0 else d, -t)
   AngDiff = staticmethod(AngDiff)
 
   def sincosd(x):
@@ -148,11 +157,11 @@ class Math(object):
     s = math.sin(r); c = math.cos(r)
     q = q % 4
     if q == 1:
-      s, c =   c, 0-s
+      s, c =     c, 0.0-s
     elif q == 2:
-      s, c = 0-s, 0-c
+      s, c = 0.0-s, 0.0-c
     elif q == 3:
-      s, c = 0-c,   s
+      s, c = 0.0-c,     s
     return s, c
   sincosd = staticmethod(sincosd)
 

@@ -344,14 +344,6 @@ namespace GeographicLib {
      **********************************************************************/
     static void Check();
 
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the WGS84 ellipsoid.
-     **********************************************************************/
-    static Math::real InverseFlattening()
-    { return UTMUPS::InverseFlattening(); }
-    /// \endcond
   };
 
 } // namespace GeographicLib

@@ -5,8 +5,8 @@ GeoConvert -- convert geographic coordinates
 =head1 SYNOPSIS
 
 B<GeoConvert> [ B<-g> | B<-d> | B<-:> | B<-u> | B<-m> | B<-c> ]
-[ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ]
-[ B<-w> ] [ B<-p> I<prec> ] [ B<-l> | B<-a> ]
+[ B<-z> I<zone> | B<-s> | B<-t> | B<-S> | B<-T> ]
+[ B<-n> ] [ B<-w> ] [ B<-p> I<prec> ] [ B<-l> | B<-a> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -88,11 +88,11 @@ output MGRS.
 
 =item B<-c>
 
-output meridian convergence and scale for the corresponding UTM or
-UPS projection.  Convergence is the bearing of grid north given as
-degrees clockwise from true north.
+output meridian convergence and scale for the corresponding UTM or UPS
+projection.  The meridian convergence is the bearing of grid north given
+as degrees clockwise from true north.
 
-=item B<-z>
+=item B<-z> I<zone>
 
 set the zone to I<zone> for output.  Use either 0 E<lt> I<zone> E<lt>=
 60 for a UTM zone or I<zone> = 0 for UPS.  Alternatively use a
@@ -106,6 +106,13 @@ use the standard UPS and UTM zones.
 
 similar to B<-s> but forces UPS regions to the closest UTM zone.
 
+=item B<-S> or B<-T>
+
+behave the same as B<-s> and B<-t>, respectively, until the first legal
+conversion is performed.  For subsequent points, the zone and hemisphere
+of that conversion are used.  This enables a sequence of points to be
+converted into UTM or UPS using a consistent coordinate system.
+
 =item B<-n>
 
 on input, MGRS coordinates refer to the south-west corner of the MGRS
@@ -113,11 +120,12 @@ square instead of the center; see L</MGRS>.
 
 =item B<-w>
 
+toggle the longitude first flag (it starts off); if the flag is on, then
 on input and output, longitude precedes latitude (except that, on input,
 this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
 I<W>).
 
-=item B<-p>
+=item B<-p> I<prec>
 
 set the output precision to I<prec> (default 0); I<prec> is the
 precision relative to 1 m.  See L</PRECISION>.
@@ -133,7 +141,7 @@ on output, UTM/UPS uses the abbreviations I<n> and I<s> to designate the
 hemisphere instead of I<north> or I<south>; this is the default
 representation.
 
-=item B<--comment-delimiter>
+=item B<--comment-delimiter> I<commentdelim>
 
 set the comment delimiter to I<commentdelim> (e.g., "#" or "//").  If
 set, the input lines will be scanned for this delimiter and, if found,
@@ -153,23 +161,23 @@ print usage and exit.
 
 print full documentation and exit.
 
-=item B<--input-file>
+=item B<--input-file> I<infile>
 
 read input from the file I<infile> instead of from standard input; a file
 name of "-" stands for standard input.
 
-=item B<--input-string>
+=item B<--input-string> I<instring>
 
 read input from the string I<instring> instead of from standard input.
 All occurrences of the line separator character (default is a semicolon)
 in I<instring> are converted to newlines before the reading begins.
 
-=item B<--line-separator>
+=item B<--line-separator> I<linesep>
 
 set the line separator character to I<linesep>.  By default this is a
 semicolon.
 
-=item B<--output-file>
+=item B<--output-file> I<outfile>
 
 write output to the file I<outfile> instead of to standard output; a
 file name of "-" stands for standard output.
@@ -408,4 +416,4 @@ B<GeoConvert> was written by Charles Karney.
 =head1 HISTORY
 
 B<GeoConvert> was added to GeographicLib,
-L<http://geographiclib.sf.net>, in 2009-01.
+L<http://geographiclib.sourceforge.net>, in 2009-01.

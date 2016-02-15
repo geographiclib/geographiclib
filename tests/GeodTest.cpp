@@ -115,7 +115,8 @@ template<class test>
 void GeodError(const test& tgeod,
                Math::real lat1, Math::real lon1, Math::real azi1,
                Math::real lat2, Math::real lon2, Math::real azi2,
-               Math::real s12, Math::real /*a12*/, Math::real m12, Math::real S12,
+               Math::real s12, Math::real /*a12*/,
+               Math::real m12, Math::real S12,
                vector<Math::real>& err) {
   Math::real tlat1, tlon1, tazi1, tlat2, tlon2, tazi2, ts12, tm12a, tm12b,
     tM12, tM21, tS12a, tS12b /*, ta12*/;

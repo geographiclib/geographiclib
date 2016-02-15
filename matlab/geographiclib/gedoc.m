@@ -5,21 +5,21 @@ function gedoc
 %   problems for great ellipses on the surface of an ellipsoid of
 %   revolution.  For more information, see
 %
-%     http://geographiclib.sf.net/html/greatellipse.html
+%     http://geographiclib.sourceforge.net/html/greatellipse.html
 %
 %   Great ellipses are sometimes proposed as alternatives to computing
 %   ellipsoidal geodesics.  However geodesic calculations are easy to
 %   perform using geoddistance and geodreckon, and these should normally be
 %   used instead of gedistance and gereckon.  For a discussion, see
 %
-%     http://geographiclib.sf.net/html/greatellipse.html#gevsgeodesic
+%     http://geographiclib.sourceforge.net/html/greatellipse.html#gevsgeodesic
 %
 %   The method involves stretching the ellipse along the axis until it
 %   becomes a sphere, solving the corresponding great circle problem on the
 %   sphere and mapping the results back to the ellipsoid.  For details,
 %   see
 %
-%     http://geographiclib.sf.net/html/greatellipse.html#geformulation
+%     http://geographiclib.sourceforge.net/html/greatellipse.html#geformulation
 %
 %   Consider two points on the ellipsoid at (lat1, lon1) and (lat2, lon2).
 %   The plane containing these points and the center of the ellipsoid

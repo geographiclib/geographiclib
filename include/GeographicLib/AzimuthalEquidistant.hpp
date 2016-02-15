@@ -132,14 +132,6 @@ namespace GeographicLib {
     Math::real Flattening() const { return _earth.Flattening(); }
     ///@}
 
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the ellipsoid.
-     **********************************************************************/
-    Math::real InverseFlattening() const
-    { return _earth.InverseFlattening(); }
-    /// \endcond
   };
 
 } // namespace GeographicLib

@@ -1,3 +1,6 @@
+GeographicLib toolbox
+Version 1.46 2016-02-15
+
 This toolbox provides native MATLAB implementations of a subset of the
 C++ library, GeographicLib.  Key components of this toolbox are
 
@@ -29,16 +32,16 @@ sharing of code (via a common private directory).
 
 Extensive documentation on the C++ library is available at
 
-  http://geographiclib.sf.net/html
+  http://geographiclib.sourceforge.net/html
 
 Geoid lookup requires the installation of one or more geoid models.
 Instructions for this are given in
 
-  http://geographiclib.sf.net/html/geoid.html#geoidinst
+  http://geographiclib.sourceforge.net/html/geoid.html#geoidinst
 
 A change log for this package is available at
 
-  http://geographiclib.sf.net/html/changes.html
+  http://geographiclib.sourceforge.net/html/changes.html
 
 A problem with the way MATLAB Central packages toolboxes causes the
 "Robust Control Toolbox" to be listed as a required product. This is

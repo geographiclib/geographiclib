@@ -218,14 +218,10 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = 1U<<14,
       /**
-       * Unroll \e lon2 in the direct calculation.  (This flag used to be
-       * called LONG_NOWRAP.)
+       * Unroll \e lon2 in the direct calculation.
        * @hideinitializer
        **********************************************************************/
       LONG_UNROLL   = 1U<<15,
-      /// \cond SKIP
-      LONG_NOWRAP   = LONG_UNROLL,
-      /// \endcond
       /**
        * Calculate everything.  (LONG_UNROLL is not included in this mask.)
        * @hideinitializer
@@ -484,14 +480,10 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = Rhumb::AREA,
       /**
-       * Unroll \e lon2 in the direct calculation.  (This flag used to be
-       * called LONG_NOWRAP.)
+       * Unroll \e lon2 in the direct calculation.
        * @hideinitializer
        **********************************************************************/
       LONG_UNROLL   = Rhumb::LONG_UNROLL,
-      /// \cond SKIP
-      LONG_NOWRAP   = LONG_UNROLL,
-      /// \endcond
       /**
        * Calculate everything.  (LONG_UNROLL is not included in this mask.)
        * @hideinitializer

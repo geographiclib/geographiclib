@@ -15,7 +15,7 @@ namespace GeographicLib {
 
   Geocentric::Geocentric(real a, real f)
     : _a(a)
-    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
+    , _f(f)
     , _e2(_f * (2 - _f))
     , _e2m(Math::sq(1 - _f))    // 1 - _e2
     , _e2a(abs(_e2))

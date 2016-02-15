@@ -47,7 +47,7 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
   Z = zeros(prod(S),1);
 
   a = ellipsoid(1);
-  e2 = ellipsoid(2)^2;
+  e2 = real(ellipsoid(2)^2);
   f = e2 / (1 + sqrt(1 - e2));
   f1 = 1 - f;
 

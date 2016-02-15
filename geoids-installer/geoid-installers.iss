@@ -15,7 +15,7 @@
 #endif
 
 #define Project "GeographicLib"
-#define URL "http://geographiclib.sf.net"
+#define URL "http://geographiclib.sourceforge.net"
 #define Version "1.0"
 
 [Setup]
@@ -24,7 +24,7 @@ AppVerName={#NAME} geoid data
 AppPublisher={#URL}
 AppPublisherURL={#URL}
 AppSupportURL={#URL}/html/geoid.html
-AppUpdatesURL=https://sf.net/projects/geographiclib/files/geoids-distrib
+AppUpdatesURL=https://sourceforge.net/projects/geographiclib/files/geoids-distrib
 DefaultDirName={commonappdata}\{#Project}
 DisableDirPage=no
 DisableProgramGroupPage=true

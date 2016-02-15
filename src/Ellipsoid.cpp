@@ -16,7 +16,7 @@ namespace GeographicLib {
   Ellipsoid::Ellipsoid(real a, real f)
     : stol_(real(0.01) * sqrt(numeric_limits<real>::epsilon()))
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
+    , _f(f)
     , _f1(1 - _f)
     , _f12(Math::sq(_f1))
     , _e2(_f * (2 - _f))

@@ -4,7 +4,104 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.45.
+The current version of the library is 1.46.
+
+Changes between 1.46 (released 2016-02-15) and 1.45 versions:
+
+  * The following BUGS have been fixed:
+    + the -w flag to Planimeter(1) was being ignored;
+    + in the Java package, the wrong longitude was being returned with
+      direct geodesic calculation with a negative distance when starting
+      point was at a pole (this bug was introduced in version 1.44);
+    + in the JavaScript package, PolygonArea.TestEdge contained a
+      misspelling of a variable name and other typos (problem found by
+      threepointone).
+
+  * INCOMPATIBLE CHANGES:
+    + make the -w flag (to swap the default order of latitude and
+      longitude) a toggle for all utility programs;
+    + the -a option to GeodSolve(1) now toggles (instead of sets) arc
+      mode;
+    + swap order coslon and sinlon arguments in CircularEngine class.
+
+  * Remove deprecated functionality:
+    + remove gradient calculation from the Geoid class and GeoidEval(1)
+      (this was inaccurate and of dubious utility);
+    + remove reciprocal flattening functions, InverseFlattening in many
+      classes and Constants::WGS84_r(); stop treating flattening > 1 as
+      the reciprocal flattening in constructors;
+    + remove DMS::Decode(string), DMS::DecodeFraction,
+      EllipticFunction:m, EllipticFunction:m1, Math::extradigits,
+      Math::AngNormalize2, PolygonArea::TestCompute;
+    + stop treating LONG_NOWRAP as an alias for LONG_UNROLL in Geodesic
+      (and related classes) and Rhumb;
+    + stop treating full/schmidt as aliases for FULL/SCHMIDT in
+      SphericalEngine (and related classes);
+    + remove qmake project file src/GeographicLib.pro because QtCreator
+      can handle cmake projects now;
+    + remove deprecated Visual Studio 2005 project and solution files.
+
+  * Changes to GeodesicLine and GeodesicLineExact classes; these changes
+    (1) simplify the process of computing waypoints on a geodesic given
+    two endpoints and (2) allow a GeodesicLine to be defined which is
+    consistent with the solution of the inverse problem (in particular
+    Geodesic::InverseLine the specification of south-going lines which
+    pass the poles in a westerly direction by setting sin alpha_1 = -0):
+    + the class stores the distance s13 and arc length a13 to a
+      reference point 3; by default these quantities are NaNs;
+    + GeodesicLine::SetDistance (and GeodesicLine::SetArc) specify the
+      distance (and arc length) to point 3;
+    + GeodesicLine::Distance (and GeodesicLine::Arc) return the distance
+      (and arc length) to point 3;
+    + new methods Geodesic::InverseLine and Geodesic::DirectLine return
+      a GeodesicLine with the reference point 3 defined as point 2 of
+      the corresponding geodesic calculation;
+    + these changes are also included in the C, Java, JavaScript, and
+      Python packages.
+
+  * Other changes to the geodesic routines:
+    + more accurate solution of the inverse problem when longitude
+      difference is close to 180deg (also in C, Fortran, Java,
+      JavaScript, Python, MATLAB, and Maxima packages);
+    + more accurate calculation of lon2 in the inverse calculation with
+      LONG_UNROLL (also in Java, JavaScript, Python packages).
+
+  * Changes to GeodSolve(1) utility:
+    + the -I and -D options now specify geodesic line calculation via
+      the standard inverse or direct geodesic problems;
+    + rename -l flag to -L to parallel the new -I and -D flags (-l is is
+      retained for backward compatibility but is deprecated), and
+      similarly for RhumbSolve(1);
+    + the -F flag (in conjunction with the -I or -D flags) specifies
+      that distances read on standard input are fractions of s13 or a13;
+    + the -a option now toggles arc mode (noted above);
+    + the -w option now toggles longitude first mode (noted above).
+
+  * Changes to Math class:
+    + Math::copysign added;
+    + add overloaded version of Math::AngDiff which returns the error in
+      the difference.  This allows a more accurate treatment of inverse
+      geodesic problem when lon12 is close to 180deg;
+    + Math::AngRound now converts tiny negative numbers to -0 (instead
+      of +0), however -0 is still converted to +0.
+
+  * Add -S and -T options to GeoConvert(1).
+
+  * Add Sphinx documentation for Python package.
+
+  * Samples of wrapping the C++ library, so it's accessible in other
+    languages, are given in wrapper/C, wrapper/python, and
+    wrapper/matlab.
+
+  * Binary installers for Windows now use Visual Studio 12 2013.
+
+  * Remove top-level pom.xml from release (it was specific to SRI).
+
+  * A reminder: because of the JavaScript changes introduced in version
+    1.45, you should remove the following installation directories from
+    your system:
+    + Windows: ${CMAKE_INSTALL_PREFIX}/doc/scripts
+    + Others: ${CMAKE_INSTALL_PREFIX}/share/doc/GeographicLib/scripts
 
 Changes between 1.45 (released 2015-09-30) and 1.44 versions:
 

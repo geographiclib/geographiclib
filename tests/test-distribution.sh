@@ -37,7 +37,6 @@ set -e
 #   NEWS
 #   configure.ac (AC_INIT, GEOGRAPHICLIB_VERSION_* LT_*)
 #   tests/test-distribution.sh
-#   src/GeographicLib.pro lib version
 #   doc/GeographicLib.dox.in
 #   doc/NETGeographicLib.dox
 
@@ -46,9 +45,14 @@ set -e
 # python
 #   python/setup.py
 #   python/geographiclib/__init__.py
+#   doc/index.py
+#   README.rst
+# use: cd python; pychecker geographiclib/*.py
 
 # MATLAB
 #   matlab/geographiclib/Contents.m version + date
+#   matlab/geographiclib-blurb.txt version + date
+# use MATLAB's analyze code
 
 # C
 #   legacy/C/geodesic.h comment + GEODESIC_VERSION_*
@@ -71,9 +75,10 @@ set -e
 #   js/package.json
 #   js/README.md
 #   js/GeographicLib.md
+# use: cd js; jshint src
 
 DATE=`date +%F`
-VERSION=1.45
+VERSION=1.46
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then
@@ -105,7 +110,7 @@ cd BUILD
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON ..
 make dist
 cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
-make doc distrib-npm
+make doc
 (
     cd ../java
     mvn -q package -P release
@@ -113,12 +118,16 @@ make doc distrib-npm
 )
 (
     cd ../python
-    python2 -m unittest test.test_geodesic
-    python3 -m unittest test.test_geodesic
+    python2 -m unittest geographiclib.test.test_geodesic
+    python3 -m unittest geographiclib.test.test_geodesic
 )
 (
     cd ../matlab/geographiclib
-    octave --eval geographiclib_test
+    octave --no-gui --no-window-system --eval geographiclib_test
+)
+(
+   cd js/geographiclib
+   npm test
 )
 rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
 mkdir -p $TEMP/js
@@ -141,7 +150,7 @@ unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
 #! /bin/sh -exv
 unset GEOGRAPHICLIB_DATA
-for v in 2013 2012 2010; do
+for v in 2015 2013 2012 2010; do
   for a in 64 32; do
     rm -rf v:/data/scratch/geog-mvn-$v-$a
     mvn -Dcmake.compiler=vc$v -Dcmake.arch=$a \
@@ -150,51 +159,40 @@ for v in 2013 2012 2010; do
 done
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
+cp $TEMP/gita/geographiclib/pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
 
-while read ver x64; do
-    gen="Visual Studio $ver"
-    test "$x64" && gen="$gen Win64" || true
-    pkg=vc$ver
-    test "$x64" && pkg="$pkg-x64" || true
-    installer=
-    if test "$ver" -eq 11; then
-	if test "$x64"; then
-	    installer=GeographicLib-$VERSION-win64.exe
-	else
-	    installer=GeographicLib-$VERSION-win32.exe
+for ver in 10 11 12 14; do
+    for arch in win32 x64; do
+	pkg=vc$ver-$arch
+	gen="Visual Studio $ver"
+	installer=
+	if test "$ver" -eq 12; then
+	    installer=GeographicLib-$VERSION-$arch.exe
 	fi
-    fi
-    cmake=cmake
-    test "$ver" -eq 14 && cmake=cmake3 || true
-    mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg
-    (
-	echo "#! /bin/sh -exv"
-	echo 'b=geog-`pwd | sed s%.*/%%`'
-	echo 'rm -rf v:/data/scratch/$b u:/pkg-$pkg/GeographicLib-$VERSION/*'
-	echo 'mkdir -p v:/data/scratch/$b'
-	echo 'cd v:/data/scratch/$b'
-	echo 'unset GEOGRAPHICLIB_DATA'
-	echo $cmake -G \"$gen\" -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
-	echo $cmake --build . --config Debug   --target ALL_BUILD
-	echo $cmake --build . --config Debug   --target RUN_TESTS
-	echo $cmake --build . --config Debug   --target INSTALL
-	echo $cmake --build . --config Release --target ALL_BUILD
-	echo $cmake --build . --config Release --target exampleprograms
-	echo $cmake --build . --config Release --target netexamples
-	echo $cmake --build . --config Release --target RUN_TESTS
-	echo $cmake --build . --config Release --target INSTALL
-	echo $cmake --build . --config Release --target PACKAGE
-	test "$installer" &&
-	echo cp "$installer" $WINDEVELSOURCE/ || true
-    ) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
-    chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
-done <<EOF
-10 y
-11
-11 y
-12 y
-14 y
-EOF
+	mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg
+	(
+	    echo "#! /bin/sh -exv"
+	    echo 'b=geog-`pwd | sed s%.*/%%`'
+	    echo 'rm -rf v:/data/scratch/$b u:/pkg-$pkg/GeographicLib-$VERSION/*'
+	    echo 'mkdir -p v:/data/scratch/$b'
+	    echo 'cd v:/data/scratch/$b'
+	    echo 'unset GEOGRAPHICLIB_DATA'
+	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+	    echo cmake --build . --config Debug   --target ALL_BUILD
+	    echo cmake --build . --config Debug   --target RUN_TESTS
+	    echo cmake --build . --config Debug   --target INSTALL
+	    echo cmake --build . --config Release --target ALL_BUILD
+	    echo cmake --build . --config Release --target exampleprograms
+	    echo cmake --build . --config Release --target netexamples
+	    echo cmake --build . --config Release --target RUN_TESTS
+	    echo cmake --build . --config Release --target INSTALL
+	    echo cmake --build . --config Release --target PACKAGE
+	    test "$installer" &&
+		echo cp "$installer" $WINDEVELSOURCE/ || true
+	) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
+	chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
+    done
+done
 
 cd $TEMP/gitr/geographiclib
 git checkout release
@@ -234,7 +232,7 @@ mkdir BUILD
 cd BUILD
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
 make -j$NUMCPUS all
-make -j$NUMCPUS test
+make test
 make -j$NUMCPUS exampleprograms
 make install
 (
@@ -246,9 +244,9 @@ mkdir ../BUILD-system
 cd ../BUILD-system
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH ..
 make -j$NUMCPUS all
-make -j$NUMCPUS test
+make test
 cd ..
-mvn -Dcmake.project.bin.directory=$TEMP/mvn install
+# mvn -Dcmake.project.bin.directory=$TEMP/mvn install
 
 cd $TEMP/gita/geographiclib/tests/sandbox
 mkdir BUILD
@@ -268,38 +266,13 @@ cp -p $TEMP/gita/geographiclib/matlab/geographiclib-blurb.txt .
 VERSION=$VERSION DATE=$DATE ROOT=$TEMP/matlab \
        sh $DEVELSOURCE/tests/matlab-toolbox-config.sh
 
-cd $TEMP
-mkdir python-test
-cp -pr $TEMP/instc/lib/python/site-packages python-test
-cat > tester.py <<EOF
-import sys
-sys.path.append("$TEMP/python-test/site-packages")
-from geographiclib.geodesic import Geodesic
-print(Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50,
-                             Geodesic.ALL | Geodesic.LONG_UNROLL))
-# The geodesic direct problem
-print(Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3,
-                            Geodesic.ALL | Geodesic.LONG_UNROLL))
-# How to obtain several points along a geodesic
-line = Geodesic.WGS84.Line(40.6, -73.8, 45)
-print(line.Position( 5000e3))
-print(line.Position(10000e3))
-print(line.Position(10000e3, Geodesic.ALL | Geodesic.LONG_UNROLL))
-# Computing the area of a geodesic polygon
-def p(lat,lon): return {'lat': lat, 'lon': lon}
-
-print(Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)]))
-EOF
-python2 tester.py
-python3 tester.py
-
 cp -pr $TEMP/relc/GeographicLib-$VERSION/legacy $TEMP/
 for l in C Fortran; do
     (
 	mkdir $TEMP/legacy/$l/BUILD
 	cd $TEMP/legacy/$l/BUILD
 	cmake ..
-	make -j$NUMCPUS
+	make -j$NUMCPUS all
 	make test
     )
 done
@@ -340,7 +313,7 @@ int main() {
     // These are the constants for Pennsylvania South, EPSG:3364
     // http://www.spatialreference.org/ref/epsg/3364/
     a = Constants::WGS84_a(),   // major radius
-    r = 298.257222101,          // inverse flattening (GRS80)
+    f = 1/298.257222101,        // inverse flattening (GRS80)
     lat1 = DMS::Decode(40,58),  // standard parallel 1
     lat2 = DMS::Decode(39,56),  // standard parallel 2
     k1 = 1,                     // scale on std parallels
@@ -348,7 +321,7 @@ int main() {
     lon0 = -DMS::Decode(77,45), // longitude of origin
     fe = 600000,                // false easting
     fn = 0;                     // false northing
-  LambertConformalConic PASouth(a, r, lat1, lat2, k1);
+  LambertConformalConic PASouth(a, f, lat1, lat2, k1);
   double x0, y0;
   PASouth.Forward(lon0, lat0, lon0, x0, y0); // Transform origin point
   x0 -= fe; y0 -= fn;           // Combine result with false origin
@@ -375,9 +348,6 @@ libversion=`find $TEMP/instc/lib -type f \
 sed 's/libGeographic\.so\.//'`
 test -f $TEMP/instb/lib/libGeographic.so.$libversion ||
 echo autoconf/cmake library so mismatch
-grep "^ *VERSION *= *$libversion *\$" \
-    $TEMP/gitb/geographiclib/src/GeographicLib.pro > /dev/null ||
-echo autoconf/Qt library so mismatch
 
 CONFIG_FILE=$TEMP/gitr/geographiclib/configure
 CONFIG_MAJOR=`grep ^GEOGRAPHICLIB_VERSION_MAJOR= $CONFIG_FILE | cut -f2 -d=`
@@ -462,6 +432,8 @@ mvn clean deploy -P release
 npm publish $TEMP/gita/geographiclib/BUILD/js/geographiclib
 make -C $DEVELSOURCE -f makefile-admin distrib-js
 make -C $DEVELSOURCE -f makefile-admin install-js
+# also update devel branch of node-geographiclib from
+$TEMP/gita/geographiclib/BUILD/js/geographiclib
 
 # matlab toolbox
 chmod 644 $DEVELSOURCE/geographiclib_toolbox_$VERSION.*
