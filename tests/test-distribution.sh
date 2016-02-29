@@ -78,7 +78,7 @@ set -e
 # use: cd js; jshint src
 
 DATE=`date +%F`
-VERSION=1.46
+VERSION=1.47
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then

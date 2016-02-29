@@ -112,7 +112,7 @@
  * http://geographiclib.sourceforge.net/
  *
  * This library was distributed with
- * <a href="../index.html">GeographicLib</a> 1.46.
+ * <a href="../index.html">GeographicLib</a> 1.47.
  **********************************************************************/
 
 #if !defined(GEODESIC_H)
@@ -127,12 +127,12 @@
  * The minor version of the geodesic library.  (This tracks the version of
  * GeographicLib.)
  **********************************************************************/
-#define GEODESIC_VERSION_MINOR 46
+#define GEODESIC_VERSION_MINOR 47
 /**
  * The patch level of the geodesic library.  (This tracks the version of
  * GeographicLib.)
  **********************************************************************/
-#define GEODESIC_VERSION_PATCH 1
+#define GEODESIC_VERSION_PATCH 0
 
 /**
  * Pack the version components into a single integer.  Users should not rely on

@@ -38,7 +38,7 @@ class TestCommand(Command):
                                           ]))
 
 name = "geographiclib"
-version = "1.46.3"
+version = "1.47"
 
 setup(name = name,
       version = version,
@@ -46,7 +46,7 @@ setup(name = name,
       long_description = open("README.rst").read(),
       author = "Charles Karney",
       author_email = "charles@karney.com",
-      url = "http://geographiclib.sourceforge.net/" + "1.46" + "/python",
+      url = "http://geographiclib.sourceforge.net/" + version + "/python",
       packages = ["geographiclib", "geographiclib/test"],
       data_files = [],
       license = "MIT",

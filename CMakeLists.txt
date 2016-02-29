@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 46)
+set (PROJECT_VERSION_MINOR 47)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -43,7 +43,7 @@ endif ()
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 17)
-set (LIBVERSION_BUILD 17.0.0)
+set (LIBVERSION_BUILD 17.0.1)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -247,7 +247,9 @@ else ()
   # the client code is being compiled (and the GeographicLib headers
   # being included), work-alike substitutions are used.
   include (CheckCXXCompilerFlag)
-  foreach (_F 1z 14 1y 11 0x)
+  # The only "deprecated" flag included here is "0x" to activate C++11
+  # with old versions of g++.  We'll add "17" when it's available.
+  foreach (_F 14 11 0x)
     set (CXX11_FLAG "-std=c++${_F}")
     set (_T CXX11TEST${_F})
     check_cxx_compiler_flag (${CXX11_FLAG} ${_T})

@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2016-02-15
+\date 2016-mm-dd
 
 The documentation for other versions is available at
 <tt>http://geographiclib.sourceforge.net/m.nn/</tt> for versions numbers
@@ -138,9 +138,10 @@ The goals of GeographicLib are:
 
 Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
-and the utilities have been tested with g++ 4.4 under Linux, with g++
-4.2 under Mac OS X, and with MS Visual Studio 9 (2008), 10 (2010), 11
-(2012), and 12 (2013) compiled for 32 bit and 64 bit.
+and the utilities have been tested with g++ 5.3.1 under Linux, with
+Apple LLVM 7.0.2 under Mac OS X, and with MS Visual Studio 10 (2010), 11
+(2012), 12 (2013), and 14 (2015) compiled for 32 bit and 64 bit on
+Windows.
 
 MATLAB, JavaScript, and Python interfaces are provided to portions of
 GeographicLib; see \ref other.
@@ -226,7 +227,7 @@ make software maintenance simpler
   directory for compiling the code.  In the description here the
   directories are called BUILD and are located in the top-level of the
   source tree.  You might want to use a suffix to denote the type of
-  build, e.g., BUILD-vc9 for Visual Studio 9, or BUILD-shared for a
+  build, e.g., BUILD-vc11 for Visual Studio 11, or BUILD-shared for a
   build which creates a shared library.  The advantages of out-of-source
   builds are:
   - You don't mess up the source tree, so it's easy to "clean up".
@@ -281,9 +282,9 @@ Here are the steps to compile and install GeographicLib:
 - Run cmake, pointing it to the source directory (..).  On Linux, Unix,
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
-  For Windows, the command is typically one of \verbatim
+  For Windows, the command is typically something like \verbatim
   cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-@PROJECT_VERSION@ ..
-  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-@PROJECT_VERSION@ ..
+  cmake -G "Visual Studio 11 Win64" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc11/GeographicLib-@PROJECT_VERSION@ ..
 \endverbatim
   The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
   settings given above are recommended to ensure that packages that use
@@ -371,7 +372,7 @@ Here are the steps to compile and install GeographicLib:
     double.
 - Build and install the software.  In non-IDE environments, run
   \verbatim
-  make         # compile the library and the examples
+  make         # compile the library and utilities
   make test    # run some tests
   make install # as root, if CMAKE_INSTALL_PREFIX is a system directory
 \endverbatim
@@ -6914,6 +6915,13 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
+
+ - <a href="http://geographiclib.sourceforge.net/1.47">Version 1.47</a>
+   (released 2016-mm-dd)
+     - Fix the order of declarations in C library, incorporating the
+       patches in version 1.46.1.
+     - Fix the packaging of the python library, incorporating the
+       patches in version 1.46.3.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
    (released 2016-02-15)
