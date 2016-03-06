@@ -1451,11 +1451,11 @@
    http://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no2511952.pdf
  * P. D. Thomas,[[BR]]
    ''Mathematical models for navigation systems'',
-   TR-182 (U.S. Naval Oceanographic Office, 1965).[[BR]]
+   TR-182 (US Naval Oceanographic Office, 1965).[[BR]]
    http://www.dtic.mil/docs/citations/AD0627893
  * P. D. Thomas,[[BR]]
    ''Spheroidal geodesics, reference systems, and local geometry'',
-   SP-138 (U.S. Naval Oceanographic Office, 1970).[[BR]]
+   SP-138 (US Naval Oceanographic Office, 1970).[[BR]]
    http://www.dtic.mil/docs/citations/AD0703541
  * T. Harada,[[BR]]
    ''Formula for calculating latitude of a point when meridian length
