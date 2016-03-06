@@ -52,13 +52,16 @@ sed -e 's/\*/<li>/' -e 's/  *\[\[BR\]\]/ <br>/' -e 's/\[\[BR\]\]/<br>/' \
     -e 's/\([0-9]\)--\([0-9]\)/\1\&ndash;\2/g' \
     -e 's/É/\&Eacute;/g' \
     -e 's/é/\&eacute;/g' \
+    -e 's/á/\&aacute;/g' \
     -e 's/à/\&agrave;/g' \
     -e 's/è/\&egrave;/g' \
+    -e 's/ê/\&ecirc;/g' \
     -e 's/ù/\&ugrave;/g' \
     -e 's/ç/\&ccedil;/g' \
     -e 's/ä/\&auml;/g' \
     -e 's/Ü/\&Uuml;/g' \
     -e 's/ï/\&iuml;/g' \
+    -e 's/í/\&iacute;/g' \
     -e 's/ö/\&ouml;/g' \
     -e 's/ü/\&uuml;/g' \
     -e 's/ß/\&szlig;/g' | awk '
