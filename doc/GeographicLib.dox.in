@@ -209,7 +209,8 @@ Then pick one of the first five options below:
   Visual Studio 2008 and 2010 under Windows.
 - \ref binaryinst.  Use this installation method if you only need to use
   the \ref utilities supplied with GeographicLib.  (This method also
-  installs the header files and the library for use by Visual Studio 10.)
+  installs the header files and the library for use by Visual Studio 12
+  2013.)
 - \ref qt.  How to compile GeographicLib so that it can be used by Qt
   programs.
 - \ref maintainer.  This describes addition tasks of interest only to
@@ -284,7 +285,7 @@ Here are the steps to compile and install GeographicLib:
   cmake .. \endverbatim
   For Windows, the command is typically something like \verbatim
   cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-@PROJECT_VERSION@ ..
-  cmake -G "Visual Studio 11 Win64" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc11/GeographicLib-@PROJECT_VERSION@ ..
+  cmake -G "Visual Studio 11 Win64" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc11-x64/GeographicLib-@PROJECT_VERSION@ ..
 \endverbatim
   The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
   settings given above are recommended to ensure that packages that use
@@ -314,12 +315,8 @@ Here are the steps to compile and install GeographicLib:
     on non-Windows systems, <code>C:/Program Files/GeographicLib</code>
     on Windows systems) specifies where the library will be installed.
     For windows systems, it is recommended to use a prefix which
-    includes the compiler version, as shown above (and also, possibly,
-    whether this is a 64-bit build, e.g., <code>cmake
-    -G "Visual Studio 10 Win64"
-    -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@
-    ..</code>).  If you just want to try the library to see if it suits
-    your needs, pick, for example,
+    includes the compiler version, as shown above.  If you just want to
+    try the library to see if it suits your needs, pick, for example,
     <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
@@ -491,7 +488,7 @@ Binary installers are available for some platforms
 
 Use this method if you only need to use the GeographicLib utilities.
 The header files and static and shared versions of library are also
-provided; these can only be used by Visual Studio 11 2012 (in either
+provided; these can only be used by Visual Studio 12 2013 (in either
 release or debug mode).  However, if you plan to use the library, it may
 be advisable to build it with the compiler you are using for your own
 code using either \ref cmake or \ref windows.
@@ -504,8 +501,8 @@ GeographicLib-@PROJECT_VERSION@-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc10\\GeographicLib-@PROJECT_VERSION@ or
-   C:\\pkg-vc10-x64\\GeographicLib-@PROJECT_VERSION@,
+   C:\\pkg-vc12\\GeographicLib-@PROJECT_VERSION@ or
+   C:\\pkg-vc12-x64\\GeographicLib-@PROJECT_VERSION@,
  - select the start menu folder,
  - and install.
  .
@@ -513,13 +510,11 @@ GeographicLib-@PROJECT_VERSION@-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc11/GeographicLib-@PROJECT_VERSION@/bin where the
+will include C:/pkg-vc12/GeographicLib-@PROJECT_VERSION@/bin where the
 utilities are installed.  The headers and library are installed in the
-include/GeographicLib and lib folders.  The MATLAB interface is
-installed in the matlab folder.  Add this to your path in MATLAB to
-access this interface.  The libraries were built using using Visual
-Studio 11 2012 in release and debug modes.  The utilities were linked
-against the release-mode shared library.
+include/GeographicLib and lib folders.  The libraries were built using
+using Visual Studio 12 2013 in release and debug modes.  The utilities
+were linked against the release-mode shared library.
 
 <a href="NET/index.html">NETGeographicLib</a> library dlls (release and
 debug) are included with the binary installers; these are linked against
@@ -6922,6 +6917,8 @@ git repository for GeographicLib</a>.
        patches in version 1.46.1.
      - Fix the packaging of the python library, incorporating the
        patches in version 1.46.3.
+     - Fix documentation and default install location for Windows binary
+       installers.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
    (released 2016-02-15)
