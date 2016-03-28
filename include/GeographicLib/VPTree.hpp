@@ -73,16 +73,16 @@ namespace GeographicLib {
    * - The leaf nodes can contain a bucket of points (instead of just a vantage
    *   point).
    *
-   * @tparam distt the type used for measuring distances; it can be a real or
+   * @tparam real the type used for measuring distances; it can be a real or
    *   signed integer type.
    * @tparam position the type for specifying points.
-   * @tparam distanceop the type for a function object which takes takes two
-   *   positions as arguments and returns the distance (of type distt).
+   * @tparam distance the type for a function object which takes takes two
+   *   positions as arguments and returns the distance (of type \e real).
    *
    * Example of use:
    * \include example-VPTree.cpp
    **********************************************************************/
-  template <typename distt, typename position, class distanceop>
+  template <typename real, typename position, class distance>
   class VPTree {
     static const unsigned bucketsize = 4;
     static const unsigned marker = unsigned(-1);
@@ -93,31 +93,30 @@ namespace GeographicLib {
     /**
      * Constructor for VPTree
      *
-     * @param[in] items a vector of points to include in the tree; VPTree
+     * @param[in] pts a vector of points to include in the tree; VPTree
      *   retains a const reference to this vector.
-     * @param[in] distance the distance function object; VPTree retains a
+     * @param[in] dist the distance function object; VPTree retains a
      *   const reference to this object.
      *
-     * The distances computed by \e distance must satisfy the standard metric
+     * The distances computed by \e dist must satisfy the standard metric
      * conditions.  If not, the results are undefined.
      *
-     * <b>CAUTION</b>: Do not alter \e items after the VPTree has been
+     * <b>CAUTION</b>: Do not alter \e pts after the VPTree has been
      * constructed.
      **********************************************************************/
-    VPTree(const std::vector<position>& items,
-           const distanceop& distance)
-      : _items(items)
-      , _distance(distance)
+    VPTree(const std::vector<position>& pts, const distance& dist)
+      : _pts(pts)
+      , _dist(dist)
     {
-      static_assert(std::numeric_limits<distt>::is_signed,
-                    "distt must be a signed type");
+      static_assert(std::numeric_limits<real>::is_signed,
+                    "real must be a signed type");
       _mc = 0; _sc = 0;
       _c0 = 0; _c1 = 0; _k = 0;
       _cmin = std::numeric_limits<unsigned>::max(); _cmax = 0;
       // the pair contains distance+id
-      std::vector<std::pair<distt, unsigned>> ids(_items.size());
+      std::vector<std::pair<real, unsigned>> ids(_pts.size());
       for (unsigned k = unsigned(ids.size()); k--;)
-        ids[k] = std::make_pair(distt(0), k);
+        ids[k] = std::make_pair(real(0), k);
       _root = init(ids, 0, unsigned(ids.size()), unsigned(ids.size() / 2));
     }
 
@@ -128,7 +127,7 @@ namespace GeographicLib {
      * @param[out] ind a vector of indices to the closest points found.
      * @param[in] k the number of points to search for (default = 1).
      * @param[in] maxdist only return points with distances of \e maxdist or
-     *   less from \e query (default is the maximum distt).
+     *   less from \e query (default is the maximum \e real).
      * @param[in] mindist only return points with distances of more than
      *   \e mindist from \e query (default = &minus;1).
      * @param[in] exhaustive if true (the default) perform an exhaustive
@@ -143,23 +142,24 @@ namespace GeographicLib {
      *   results with distances greater or equal to \e dk &minus; \e tol.  If
      *   less than \e k results are found, then the search is exact.
      *
-     * The distance results are in (\e mindist, \e maxdist].  If these
-     * parameters have their default values, then the bounds have no effect.
+     * The distances to the returned points are in (\e mindist, \e maxdist].
+     * If these parameters have their default values, then the bounds have no
+     * effect.
      **********************************************************************/
     void search(const position& query,
                 std::vector<unsigned>& ind,
                 unsigned k = 1,
-                distt maxdist = std::numeric_limits<distt>::max(),
-                distt mindist = distt(-1),
+                real maxdist = std::numeric_limits<real>::max(),
+                real mindist = -1,
                 bool exhaustive = true,
-                distt tol = distt(0)) const {
-      std::priority_queue<std::pair<distt, unsigned>> results;
+                real tol = 0) const {
+      std::priority_queue<std::pair<real, unsigned>> results;
       if (maxdist > mindist) {
         struct task {
           Node* n;                // the node
-          distt d;                // how far query is outside boundary of node
-          // 0 if on boundary or inside
-          task(Node* n, distt d) : n(n), d(d) {}
+          real d;                 // how far query is outside boundary of node
+          // -1 if on boundary or inside
+          task(Node* n, real d) : n(n), d(d) {}
           bool operator<(const task& o) const {
             // sort in reverse order to process smallest d first
             return d > o.d;
@@ -167,24 +167,24 @@ namespace GeographicLib {
         };
 
         // distance to the kth closest point so far
-        distt tau = maxdist;
+        real tau = maxdist;
         std::priority_queue<task> todo;
-        todo.push(task(_root.get(), 0));
+        todo.push(task(_root.get(), -1));
         unsigned c = 0;
         while (!todo.empty()) {
           Node* current = todo.top().n;
           if (!current) continue;
-          distt d = todo.top().d;
+          real d = todo.top().d;
           todo.pop();
-          distt tau1 = tau - tol;
+          real tau1 = tau - tol;
           // compare tau and d again since tau may have become smaller.
           if (!(tau1 >= d)) continue;
-          distt dist = 0;   // to suppress warning about uninitialized variable
+          real dist = 0;   // to suppress warning about uninitialized variable
           bool exitflag = false, leaf = current->index == marker;
           for (unsigned i = 0; i < (leaf ? bucketsize : 1); ++i) {
             unsigned index = leaf ? current->leaves[i] : current->index;
             if (index == marker) break;
-            dist = _distance(_items[index], query);
+            dist = _dist(_pts[index], query);
             ++c;
 
             if (dist > mindist && dist <= tau) {
@@ -216,7 +216,7 @@ namespace GeographicLib {
               d = dist - current->data.inu;
               if (tau1 >= d) todo.push(task(current->inside.get(), d));
             } else
-              todo.push(task(current->inside.get(), distt(0)));
+              todo.push(task(current->inside.get(), -1));
           }
           if (current->outside) {
             if (dist < current->data.outl) {
@@ -226,7 +226,7 @@ namespace GeographicLib {
               d = dist - current->data.outu;
               if (tau1 >= d) todo.push(task(current->outside.get(), d));
             } else
-              todo.push(task(current->outside.get(), distt(0)));
+              todo.push(task(current->outside.get(), -1));
           }
         }
         ++_k;
@@ -250,16 +250,16 @@ namespace GeographicLib {
     /**
      * @return the total number of points.
      **********************************************************************/
-    unsigned numpoints() const { return _items.size(); }
+    unsigned numpoints() const { return _pts.size(); }
     /**
      * @return a reference to the vector of points.
      **********************************************************************/
-    const std::vector<position>& points() const { return _items; }
+    const std::vector<position>& points() const { return _pts; }
     /**
      * @param[in] i the index of the point.
      * @return a reference to the <i>i</i>'th point.
      **********************************************************************/
-    const position& point(unsigned i) const { return _items[i]; }
+    const position& point(unsigned i) const { return _pts[i]; }
 
     /**
      * Report acculumated statistics on the searches so far.
@@ -268,7 +268,7 @@ namespace GeographicLib {
      * @return a reference to the stream
      **********************************************************************/
     std::ostream& report(std::ostream& os) const {
-      os << "set size " << _items.size() << "\n"
+      os << "set size " << _pts.size() << "\n"
          << "setup cost " << _c0 << "\n"
          << "searches " << _k << "\n"
          << "search cost (total mean sd min max) "
@@ -280,14 +280,14 @@ namespace GeographicLib {
     }
 
   private:
-    const std::vector<position>& _items;
-    const distanceop& _distance;
+    const std::vector<position>& _pts;
+    const distance& _dist;
     mutable double _mc, _sc;
     mutable unsigned _c0, _c1, _k, _cmin, _cmax;
     struct Node {
       unsigned index;
       struct bounds {
-        distt inl, inu, outl, outu;  // bounds on inner/outer distances
+        real inl, inu, outl, outu;  // bounds on inner/outer distances
       };
       union {
         bounds data;
@@ -303,7 +303,7 @@ namespace GeographicLib {
     };
     std::unique_ptr<Node> _root;
 
-    std::unique_ptr<Node> init(std::vector<std::pair<distt, unsigned>>& ids,
+    std::unique_ptr<Node> init(std::vector<std::pair<real, unsigned>>& ids,
                                unsigned l, unsigned u, unsigned vp) {
       if (u == l) {
         return std::unique_ptr<Node>();
@@ -320,8 +320,7 @@ namespace GeographicLib {
         unsigned m = (u + l + 1) / 2;
 
         for (unsigned k = l + 1; k < u; ++k) {
-          ids[k].first = _distance(_items[ids[l].second],
-                                   _items[ids[k].second]);
+          ids[k].first = _dist(_pts[ids[l].second], _pts[ids[k].second]);
           ++_c0;
         }
         // partitian around the median distance
