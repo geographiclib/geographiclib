@@ -11,15 +11,18 @@
 using namespace std;
 using namespace GeographicLib;
 
+// A structure to hold a geographic coordinate.  This could include additional
+// information such as a place name.
 struct pos {
   double lat, lon;
   pos(double lat = 0, double lon = 0) : lat(lat), lon(lon) {}
 };
 
+// A class to compute the distance between 2 positions.
 class DistanceCalculator {
 private:
   const Geodesic& _geod;
-  // copy constructor nd assignment not allowed
+  // copy constructor and assignment not allowed
   DistanceCalculator(const DistanceCalculator&);
   DistanceCalculator& operator=(const DistanceCalculator&);
 public:

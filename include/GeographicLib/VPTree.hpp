@@ -43,8 +43,8 @@ namespace GeographicLib {
    *   metric spaces</a>, Proc. 4th ACM-SIAM Symposium on Discrete Algorithms,
    *   (SIAM, 1993). pp. 311&ndash;321.
    *
-   * Given a set of points in some space and a distance function d satisfying
-   * the metric conditions:
+   * Given a set of points in some space and a distance function \e d
+   * satisfying the metric conditions:
    * \f[
    * \begin{align}
    *  d(x,y) &\ge 0,\\
@@ -98,6 +98,9 @@ namespace GeographicLib {
      * @param[in] distance the distance function object; VPTree retains a
      *   const reference to this object.
      *
+     * The distances computed by \e distance must satisfy the standard metric
+     * conditions.  If not, the results are undefined.
+     *
      * <b>CAUTION</b>: Do not alter \e items after the VPTree has been
      * constructed.
      **********************************************************************/
@@ -115,8 +118,7 @@ namespace GeographicLib {
       std::vector<std::pair<distt, unsigned>> ids(_items.size());
       for (unsigned k = unsigned(ids.size()); k--;)
         ids[k] = std::make_pair(distt(0), k);
-      _root = buildFromPoints(ids, 0,
-                              unsigned(ids.size()), unsigned(ids.size() / 2));
+      _root = init(ids, 0, unsigned(ids.size()), unsigned(ids.size() / 2));
     }
 
     /**
@@ -171,12 +173,12 @@ namespace GeographicLib {
         unsigned c = 0;
         while (!todo.empty()) {
           Node* current = todo.top().n;
+          if (!current) continue;
           distt d = todo.top().d;
           todo.pop();
           distt tau1 = tau - tol;
-          if (!current ||
-              // compare tau and d again since tau may have become smaller.
-              !(tau1 >= d)) continue;
+          // compare tau and d again since tau may have become smaller.
+          if (!(tau1 >= d)) continue;
           distt dist = 0;   // to suppress warning about uninitialized variable
           bool exitflag = false, leaf = current->index == marker;
           for (unsigned i = 0; i < (leaf ? bucketsize : 1); ++i) {
@@ -301,57 +303,51 @@ namespace GeographicLib {
     };
     std::unique_ptr<Node> _root;
 
-    std::unique_ptr<Node> buildFromPoints
-    (std::vector<std::pair<distt, unsigned>>& ids,
-     unsigned lower, unsigned upper, unsigned vp) {
-      if (upper == lower) {
+    std::unique_ptr<Node> init(std::vector<std::pair<distt, unsigned>>& ids,
+                               unsigned l, unsigned u, unsigned vp) {
+      if (u == l) {
         return std::unique_ptr<Node>();
       }
 
       std::unique_ptr<Node> node(new Node());
 
-      if (upper - lower > (bucketsize == 0 ? 1 : bucketsize)) {
+      if (u - l > (bucketsize == 0 ? 1 : bucketsize)) {
 
         // choose a vantage point and move it to the start
         unsigned i = vp;
-        std::swap(ids[lower], ids[i]);
+        std::swap(ids[l], ids[i]);
 
-        unsigned median = (upper + lower + 1) / 2;
+        unsigned m = (u + l + 1) / 2;
 
-        for (unsigned k = lower + 1; k < upper; ++k) {
-          ids[k].first = _distance(_items[ids[lower].second],
+        for (unsigned k = l + 1; k < u; ++k) {
+          ids[k].first = _distance(_items[ids[l].second],
                                    _items[ids[k].second]);
           ++_c0;
         }
         // partitian around the median distance
-        std::nth_element(ids.begin() + lower + 1,
-                         ids.begin() + median,
-                         ids.begin() + upper);
-        node->index = ids[lower].second;
-        if (median > lower + 1) { // node->inside is possibly empty
-          auto t = std::minmax_element(ids.begin() + lower + 1,
-                                       ids.begin() + median);
+        std::nth_element(ids.begin() + l + 1, ids.begin() + m, ids.begin() + u);
+        node->index = ids[l].second;
+        if (m > l + 1) { // node->inside is possibly empty
+          auto t = std::minmax_element(ids.begin() + l + 1, ids.begin() + m);
           node->data.inl = t.first->first;
           node->data.inu = t.second->first;
           // Use point with max distance as vantage point; this point act as a
           // "corner" point and leads to a good partition.
-          node->inside = buildFromPoints(ids, lower + 1, median,
-                                         unsigned(t.second - ids.begin()));
+          node->inside = init(ids, l + 1, m, unsigned(t.second - ids.begin()));
         }
-        auto t = std::max_element(ids.begin() + median, ids.begin() + upper);
-        node->data.outl = ids[median].first;
+        auto t = std::max_element(ids.begin() + m, ids.begin() + u);
+        node->data.outl = ids[m].first;
         node->data.outu = t->first;
         // Use point with max distance as vantage point here too
-        node->outside = buildFromPoints(ids, median, upper,
-                                        unsigned(t - ids.begin()));
+        node->outside = init(ids, m, u, unsigned(t - ids.begin()));
       } else {
         if (bucketsize == 0)
-          node->index = ids[lower].second;
+          node->index = ids[l].second;
         else {
           node->index = marker;
-          for (unsigned i = lower; i < upper; ++i)
-            node->leaves[i-lower] = ids[i].second;
-          for (unsigned k = upper - lower; k < bucketsize; ++k)
+          for (unsigned i = l; i < u; ++i)
+            node->leaves[i-l] = ids[i].second;
+          for (unsigned k = u - l; k < bucketsize; ++k)
             node->leaves[k] = marker;
         }
       }
