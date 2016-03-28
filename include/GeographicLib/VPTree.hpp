@@ -19,10 +19,18 @@
 #include <iostream>
 #include <memory>               // for unique_ptr
 
+#if defined(_MSC_VER)
+// Squelch warnings about constant conditional expressions
+#  pragma warning (push)
+#  pragma warning (disable: 4127)
+#endif
+
 namespace GeographicLib {
 
   /**
    * \brief Vantage-point tree
+   *
+   * <b>WARNING</b>: this needs C++11
    *
    * This class implements the vantage-point tree described by
    * - J. K. Uhlmann,
@@ -77,7 +85,9 @@ namespace GeographicLib {
   template <typename distt, typename position, class distanceop>
   class VPTree {
     static const unsigned bucketsize = 4;
-    static const unsigned marker = std::numeric_limits<unsigned>::max();
+    static const unsigned marker = unsigned(-1);
+    VPTree(const VPTree&);            // copy constructor not allowed
+    VPTree& operator=(const VPTree&); // copy assignment not allowed
   public:
 
     /**
@@ -103,9 +113,10 @@ namespace GeographicLib {
       _cmin = std::numeric_limits<unsigned>::max(); _cmax = 0;
       // the pair contains distance+id
       std::vector<std::pair<distt, unsigned>> ids(_items.size());
-      for (unsigned k = ids.size(); k--;)
+      for (unsigned k = unsigned(ids.size()); k--;)
         ids[k] = std::make_pair(distt(0), k);
-      _root = buildFromPoints(ids, 0, ids.size(), ids.size() / 2);
+      _root = buildFromPoints(ids, 0,
+                              unsigned(ids.size()), unsigned(ids.size() / 2));
     }
 
     /**
@@ -166,7 +177,7 @@ namespace GeographicLib {
           if (!current ||
               // compare tau and d again since tau may have become smaller.
               !(tau1 >= d)) continue;
-          distt dist;
+          distt dist = 0;   // to suppress warning about uninitialized variable
           bool exitflag = false, leaf = current->index == marker;
           for (unsigned i = 0; i < (leaf ? bucketsize : 1); ++i) {
             unsigned index = leaf ? current->leaves[i] : current->index;
@@ -227,7 +238,7 @@ namespace GeographicLib {
 
       ind.resize(results.size());
 
-      for (unsigned i = ind.size(); i--;) {
+      for (unsigned i = unsigned(ind.size()); i--;) {
         ind[i] =results.top().second;
         results.pop();
       }
@@ -325,13 +336,14 @@ namespace GeographicLib {
           // Use point with max distance as vantage point; this point act as a
           // "corner" point and leads to a good partition.
           node->inside = buildFromPoints(ids, lower + 1, median,
-                                         t.second - ids.begin());
+                                         unsigned(t.second - ids.begin()));
         }
         auto t = std::max_element(ids.begin() + median, ids.begin() + upper);
         node->data.outl = ids[median].first;
         node->data.outu = t->first;
         // Use point with max distance as vantage point here too
-        node->outside = buildFromPoints(ids, median, upper, t - ids.begin());
+        node->outside = buildFromPoints(ids, median, upper,
+                                        unsigned(t - ids.begin()));
       } else {
         if (bucketsize == 0)
           node->index = ids[lower].second;
@@ -349,5 +361,9 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
+
+#if defined(_MSC_VER)
+#  pragma warning (pop)
+#endif
 
 #endif  // GEOGRAPHICLIB_VPTREE_HPP

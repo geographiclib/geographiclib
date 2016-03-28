@@ -1,4 +1,5 @@
 // Example of using the GeographicLib::VPTree class
+// WARNING: this needs C++11
 
 #include <vector>
 #include <iostream>
@@ -18,6 +19,9 @@ struct pos {
 class DistanceCalculator {
 private:
   const Geodesic& _geod;
+  // copy constructor nd assignment not allowed
+  DistanceCalculator(const DistanceCalculator&);
+  DistanceCalculator& operator=(const DistanceCalculator&);
 public:
   DistanceCalculator(const Geodesic& geod)
     : _geod(geod) {}
