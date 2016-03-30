@@ -1,8 +1,11 @@
 // Example of using the GeographicLib::VPTree class
-// WARNING: this needs C++11
+
+#include <iostream>
+
+// WARNING: this example requires C++11
+#if __cplusplus >= 201103 || (defined(_MSC_VER) && _MSC_VER >= 1700)
 
 #include <vector>
-#include <iostream>
 #include <random>
 #include <cmath>
 #include <GeographicLib/VPTree.hpp>
@@ -41,23 +44,24 @@ public:
 int main() {
   mt19937 rng;
   uniform_real_distribution<double> uni(-1,1);
+  // Define a distance function object
+  DistanceCalculator distance(Geodesic::WGS84());
+  rng.seed(0);
   vector<pos> pts;
-  unsigned num = 10000;
+  int num = 10000;
   // Sample the points
-  for (unsigned i = 0; i < num; ++i) {
+  for (int i = 0; i < num; ++i) {
     double lat = asin(uni(rng)) / Math::degree(),
       lon = 180 * uni(rng);
     pts.push_back(pos(lat,lon));
   }
-  // Define a distance function object
-  DistanceCalculator distance(Geodesic::WGS84());
   // Set up the VP tree
   VPTree<double, pos, DistanceCalculator> posset(pts, distance);
-  vector<unsigned> ind;
-  unsigned cnt = 0;
+  vector<int> ind;
+  int cnt = 0;
   cout << "Points more than 350km from their neighbors\n"
-            << "latitude longitude distance\n";
-  for (unsigned i = 0; i < pts.size(); ++i) {
+       << "latitude longitude distance\n";
+  for (int i = 0; i < pts.size(); ++i) {
     // Call search with distance limits = (0, 350e3].  Set exhaustive = false
     // so that the search ends as some as a neighbor is found.
     posset.search(pts[i], ind, 1, 350e3, 0, false);
@@ -66,10 +70,18 @@ int main() {
       // with exhaustive = true (the default).
       posset.search(pts[i], ind, 1, numeric_limits<double>::max(), 0);
       cout << pts[i].lat << " " << pts[i].lon << " "
-                << distance(pts[i], pts[ind[0]]) << "\n";
+           << distance(pts[i], pts[ind[0]]) << "\n";
       ++cnt;
     }
   }
-  cout << "Number of points = " << cnt << "\n";
   posset.report(cout);
 }
+
+#else
+
+int main() {
+  std::cerr("This example requires C++11!\n");
+  return 1;
+}
+
+#endif

@@ -141,6 +141,8 @@ namespace GeographicLib {
      *   \e mindist from \e query (default = &minus;1).
      * @param[in] exhaustive whether to do an exhaustive search (default true).
      * @param[in] tol the tolerance on the results (default 0).
+     * @return the distance to the closest point found (-1 if no points are
+     *   found).
      *
      * The indices returned in \e ind are sorted by distance.
      *
@@ -169,8 +171,8 @@ namespace GeographicLib {
      * \e pts may contain coincident points (i.e., the distance between them
      * vanishes).  These are treated as distinct.
      **********************************************************************/
-    void search(const position& query,
-                std::vector<unsigned>& ind,
+    real search(const position& query,
+                std::vector<int>& ind,
                 unsigned k = 1,
                 real maxdist = std::numeric_limits<real>::max(),
                 real mindist = -1,
@@ -253,19 +255,22 @@ namespace GeographicLib {
         if (c < _cmin) _cmin = c;
       }
 
+      real d = -1;
       ind.resize(results.size());
 
-      for (unsigned i = unsigned(ind.size()); i--;) {
-        ind[i] =results.top().second;
+      for (int i = int(ind.size()); i--;) {
+        ind[i] = int(results.top().second);
+        if (i == 0) d = results.top().first;
         results.pop();
       }
+      return d;
 
     }
 
     /**
      * @return the total number of points.
      **********************************************************************/
-    unsigned numpoints() const { return _pts.size(); }
+    int numpoints() const { return int(_pts.size()); }
     /**
      * @return a reference to the vector of points.
      **********************************************************************/
