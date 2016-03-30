@@ -130,21 +130,28 @@ namespace GeographicLib {
      *   less from \e query (default is the maximum \e real).
      * @param[in] mindist only return points with distances of more than
      *   \e mindist from \e query (default = &minus;1).
-     * @param[in] exhaustive if true (the default) perform an exhaustive
-     *   search.  If false, exit as soon as \e k results satisfying the
-     *   distance criteria are found.  If less than \e k results are returned
-     *   then the search was exhaustive even if \e exhaustive = false.
-     * @param[in] tol If 0 (the default), then do an exact search.  If
-     *   positive, do an approximate search; in this case the results are to be
-     *   interpreted as follows: if the <i>k</i>'th distance is \e dk, then all
-     *   results with distances less than or equal \e dk &minus; \e tol are
-     *   correct; all others are suspect &mdash; there may be other closer
-     *   results with distances greater or equal to \e dk &minus; \e tol.  If
-     *   less than \e k results are found, then the search is exact.
+     * @param[in] exhaustive whether to do an exhaustive search (default true).
+     * @param[in] tol the tolerance on the results (default 0).
      *
-     * The distances to the returned points are in (\e mindist, \e maxdist].
-     * If these parameters have their default values, then the bounds have no
-     * effect.
+     * The indices returned in \e ind are sorted by distance.
+     *
+     * With \e exhaustive = true and \e tol = 0 (their default values), this
+     * finds the indices of \e k closest neighbors to \e query whose distances
+     * to \e query in (\e mindist, \e maxdist].  If these parameters have their
+     * default values, then the bounds have no effect.  If \e query is one of
+     * the points in the tree, then set \e mindist = 0 to prevent this point
+     * from being returned.
+     *
+     * If \e exhaustive = false, exit as soon as \e k results satisfying the
+     * distance criteria are found.  If less than \e k results are returned
+     * then the search was exhaustive even if \e exhaustive = false.
+     *
+     * If \e tol is positive, do an approximate search; in this case the
+     * results are to be interpreted as follows: if the <i>k</i>'th distance is
+     * \e dk, then all results with distances less than or equal \e dk &minus;
+     * \e tol are correct; all others are suspect &mdash; there may be other
+     * closer results with distances greater or equal to \e dk &minus; \e tol.
+     * If less than \e k results are found, then the search is exact.
      **********************************************************************/
     void search(const position& query,
                 std::vector<unsigned>& ind,
@@ -208,25 +215,17 @@ namespace GeographicLib {
 
           if (current->index == marker) continue;
           tau1 = tau - tol;
-          if (current->inside) {
-            if (dist < current->data.inl) {
-              d = current->data.inl - dist;
-              if (tau1 >= d) todo.push(task(current->inside.get(), d));
-            } else if (dist > current->data.inu) {
-              d = dist - current->data.inu;
-              if (tau1 >= d) todo.push(task(current->inside.get(), d));
-            } else
-              todo.push(task(current->inside.get(), -1));
-          }
-          if (current->outside) {
-            if (dist < current->data.outl) {
-              d = current->data.outl - dist;
-              if (tau1 >= d) todo.push(task(current->outside.get(), d));
-            } else if (dist > current->data.outu) {
-              d = dist - current->data.outu;
-              if (tau1 >= d) todo.push(task(current->outside.get(), d));
-            } else
-              todo.push(task(current->outside.get(), -1));
+          for (unsigned n = 0; n < 2; ++n) {
+            if (current->child[n] && dist + current->data.upper[n] >= mindist) {
+              if (dist < current->data.lower[n]) {
+                d = current->data.lower[n] - dist;
+                if (tau1 >= d) todo.push(task(current->child[n].get(), d));
+              } else if (dist > current->data.upper[n]) {
+                d = dist - current->data.upper[n];
+                if (tau1 >= d) todo.push(task(current->child[n].get(), d));
+              } else
+                todo.push(task(current->child[n].get(), -1));
+            }
           }
         }
         ++_k;
@@ -287,14 +286,13 @@ namespace GeographicLib {
     struct Node {
       unsigned index;
       struct bounds {
-        real inl, inu, outl, outu;  // bounds on inner/outer distances
+        real lower[2], upper[2];  // bounds on inner/outer distances
       };
       union {
         bounds data;
         unsigned leaves[bucketsize];
       };
-      std::unique_ptr<Node> inside;
-      std::unique_ptr<Node> outside;
+      std::unique_ptr<Node> child[2];
 
       Node()
         : index(0)
@@ -326,19 +324,20 @@ namespace GeographicLib {
         // partitian around the median distance
         std::nth_element(ids.begin() + l + 1, ids.begin() + m, ids.begin() + u);
         node->index = ids[l].second;
-        if (m > l + 1) { // node->inside is possibly empty
+        if (m > l + 1) { // node->child[0] is possibly empty
           auto t = std::minmax_element(ids.begin() + l + 1, ids.begin() + m);
-          node->data.inl = t.first->first;
-          node->data.inu = t.second->first;
+          node->data.lower[0] = t.first->first;
+          node->data.upper[0] = t.second->first;
           // Use point with max distance as vantage point; this point act as a
           // "corner" point and leads to a good partition.
-          node->inside = init(ids, l + 1, m, unsigned(t.second - ids.begin()));
+          node->child[0] = init(ids, l + 1, m,
+                                unsigned(t.second - ids.begin()));
         }
         auto t = std::max_element(ids.begin() + m, ids.begin() + u);
-        node->data.outl = ids[m].first;
-        node->data.outu = t->first;
+        node->data.lower[1] = ids[m].first;
+        node->data.upper[1] = t->first;
         // Use point with max distance as vantage point here too
-        node->outside = init(ids, m, u, unsigned(t - ids.begin()));
+        node->child[1] = init(ids, m, u, unsigned(t - ids.begin()));
       } else {
         if (bucketsize == 0)
           node->index = ids[l].second;
