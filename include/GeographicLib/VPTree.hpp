@@ -10,6 +10,10 @@
 #if !defined(GEOGRAPHICLIB_VPTREE_HPP)
 #define GEOGRAPHICLIB_VPTREE_HPP 1
 
+#if !(__cplusplus >= 201103 || (defined(_MSC_VER) && _MSC_VER >= 1700))
+#error "VPTree requires C++11"
+#endif
+
 #include <algorithm>            // for nth_element, minmax_element
 #include <vector>
 #include <queue>                // for priority_queue
@@ -30,7 +34,7 @@ namespace GeographicLib {
   /**
    * \brief Vantage-point tree
    *
-   * <b>WARNING</b>: this needs C++11
+   * <b>WARNING</b>: this requires C++11
    *
    * This class implements the vantage-point tree described by
    * - J. K. Uhlmann,
@@ -53,7 +57,11 @@ namespace GeographicLib {
    *  d(x,z) &\ge d(x,y) + d(y,z),
    * \end{align}
    * \f]
-   * the VP tree provides an efficient way of determining nearest neighbors.
+   * the vantage-point (VP) tree provides an efficient way of determining
+   * nearest neighbors.  Typically the cost of constructing a VP tree of \e N
+   * points is \e N log \e N, while the cost of a query is log \e N.  Thus a VP
+   * tree should be used in situations where \e N is large and at least log \e
+   * N queries are to be made.
    *
    * - This implementation includes Yianilos' upper and lower bounds for the
    *   inside and outside sets.  This helps limit the number of searches
@@ -70,7 +78,7 @@ namespace GeographicLib {
    *   vantage points.  This information is already available from the
    *   computation of the upper and lower bounds of the children.  This choice
    *   seems to lead to a reasonably optimized tree.
-   * - The leaf nodes can contain a bucket of points (instead of just a vantage
+   * - The leaf nodes contain a bucket of points (instead of just a vantage
    *   point).
    *
    * @tparam real the type used for measuring distances; it can be a real or
@@ -99,10 +107,11 @@ namespace GeographicLib {
      *   const reference to this object.
      *
      * The distances computed by \e dist must satisfy the standard metric
-     * conditions.  If not, the results are undefined.
+     * conditions.  If not, the results are undefined.  Neither the data in \e
+     * pts nor the query points should contain NaNs because such data violates
+     * the metric conditions.
      *
-     * <b>CAUTION</b>: Do not alter \e pts after the VPTree has been
-     * constructed.
+     * <b>CAUTION</b>: Do not alter \e pts during the lifetime of the VPTree.
      **********************************************************************/
     VPTree(const std::vector<position>& pts, const distance& dist)
       : _pts(pts)
@@ -137,10 +146,10 @@ namespace GeographicLib {
      *
      * With \e exhaustive = true and \e tol = 0 (their default values), this
      * finds the indices of \e k closest neighbors to \e query whose distances
-     * to \e query in (\e mindist, \e maxdist].  If these parameters have their
-     * default values, then the bounds have no effect.  If \e query is one of
-     * the points in the tree, then set \e mindist = 0 to prevent this point
-     * from being returned.
+     * to \e query are in (\e mindist, \e maxdist].  If these parameters have
+     * their default values, then the bounds have no effect.  If \e query is
+     * one of the points in the tree, then set \e mindist = 0 to prevent this
+     * point from being returned.
      *
      * If \e exhaustive = false, exit as soon as \e k results satisfying the
      * distance criteria are found.  If less than \e k results are returned
@@ -152,6 +161,13 @@ namespace GeographicLib {
      * \e tol are correct; all others are suspect &mdash; there may be other
      * closer results with distances greater or equal to \e dk &minus; \e tol.
      * If less than \e k results are found, then the search is exact.
+     *
+     * \e mindist should be used to exclude a "small" neighborhood of the query
+     * point (relative to the average spacing of the data).  If \e mindist is
+     * large, the efficiency of the search deteriorates.
+     *
+     * \e pts may contain coincident points (i.e., the distance between them
+     * vanishes).  These are treated as distinct.
      **********************************************************************/
     void search(const position& query,
                 std::vector<unsigned>& ind,
@@ -261,7 +277,7 @@ namespace GeographicLib {
     const position& point(unsigned i) const { return _pts[i]; }
 
     /**
-     * Report acculumated statistics on the searches so far.
+     * Report accumulated statistics on the searches so far.
      *
      * @param[in,out] os the stream to write to
      * @return a reference to the stream
