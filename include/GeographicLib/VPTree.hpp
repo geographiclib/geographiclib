@@ -132,8 +132,6 @@ namespace GeographicLib {
       for (int k = int(ids.size()); k--;)
         ids[k] = std::make_pair(real(0), k);
       init(ids, 0, int(ids.size()), int(ids.size() / 2));
-      std::cout << sizeof(Node) << " " << _tree.size() * sizeof(Node) /
-        double(_pts.size() * sizeof(position)) << "\n";
     }
 
     /**
@@ -416,7 +414,6 @@ namespace GeographicLib {
       _tree.push_back(node);
       return int(_tree.size()) - 1;
     }
-  public:
   };
 
 } // namespace GeographicLib
