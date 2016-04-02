@@ -2,11 +2,8 @@
 
 #include <iostream>
 
-// WARNING: this example requires C++11
-#if __cplusplus >= 201103 || (defined(_MSC_VER) && _MSC_VER >= 1700)
-
 #include <vector>
-#include <random>
+#include <cstdlib>
 #include <cmath>
 #include <GeographicLib/VPTree.hpp>
 #include <GeographicLib/Geodesic.hpp>
@@ -20,6 +17,14 @@ struct pos {
   double lat, lon;
   pos(double lat = 0, double lon = 0) : lat(lat), lon(lon) {}
 };
+
+pos randompos() {
+    double r = 2 * (rand() + 0.5) / (double(RAND_MAX) + 1) - 1;
+    double lat = asin(r) / Math::degree();
+    r = 2 * (rand() + 0.5) / (double(RAND_MAX) + 1) - 1;
+    double lon = 180 * r;
+    return pos(lat, lon);
+}
 
 // A class to compute the distance between 2 positions.
 class DistanceCalculator {
@@ -42,26 +47,20 @@ public:
 // 350 km from all the others.
 
 int main() {
-  mt19937 rng;
-  uniform_real_distribution<double> uni(-1,1);
   // Define a distance function object
   DistanceCalculator distance(Geodesic::WGS84());
-  rng.seed(0);
+  srand(0);
   vector<pos> pts;
   int num = 10000;
   // Sample the points
-  for (int i = 0; i < num; ++i) {
-    double lat = asin(uni(rng)) / Math::degree(),
-      lon = 180 * uni(rng);
-    pts.push_back(pos(lat,lon));
-  }
+  for (int i = 0; i < num; ++i) pts.push_back(randompos());
   // Set up the VP tree
   VPTree<double, pos, DistanceCalculator> posset(pts, distance);
   vector<int> ind;
   int cnt = 0;
   cout << "Points more than 350km from their neighbors\n"
        << "latitude longitude distance\n";
-  for (int i = 0; i < pts.size(); ++i) {
+  for (int i = 0; i < num; ++i) {
     // Call search with distance limits = (0, 350e3].  Set exhaustive = false
     // so that the search ends as some as a neighbor is found.
     posset.search(pts[i], ind, 1, 350e3, 0, false);
@@ -76,12 +75,3 @@ int main() {
   }
   posset.report(cout);
 }
-
-#else
-
-int main() {
-  std::cerr("This example requires C++11!\n");
-  return 1;
-}
-
-#endif

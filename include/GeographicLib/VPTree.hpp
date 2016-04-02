@@ -10,18 +10,24 @@
 #if !defined(GEOGRAPHICLIB_VPTREE_HPP)
 #define GEOGRAPHICLIB_VPTREE_HPP 1
 
-#if !(__cplusplus >= 201103 || (defined(_MSC_VER) && _MSC_VER >= 1700))
-#error "VPTree requires C++11"
-#endif
-
-#include <algorithm>            // for nth_element, minmax_element
+#include <algorithm>            // for nth_element, max_element, etc.
 #include <vector>
 #include <queue>                // for priority_queue
 #include <utility>              // for swap + pair
 #include <limits>
 #include <cmath>
 #include <iostream>
-#include <memory>               // for unique_ptr
+#include <GeographicLib/Constants.hpp> // Only for GEOGRAPHICLIB_STATIC_ASSERT
+
+// Not ready for boost serialization yet
+#define HAVE_BOOST_SERIALIZATION 0
+#if HAVE_BOOST_SERIALIZATION
+#include <boost/serialization/nvp.hpp>
+#include <boost/serialization/split_member.hpp>
+#include <boost/serialization/array.hpp>
+#include <boost/archive/xml_iarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
+#endif
 
 #if defined(_MSC_VER)
 // Squelch warnings about constant conditional expressions
@@ -33,8 +39,6 @@ namespace GeographicLib {
 
   /**
    * \brief Vantage-point tree
-   *
-   * <b>WARNING</b>: this requires C++11
    *
    * This class implements the vantage-point tree described by
    * - J. K. Uhlmann,
@@ -92,8 +96,7 @@ namespace GeographicLib {
    **********************************************************************/
   template <typename real, typename position, class distance>
   class VPTree {
-    static const unsigned bucketsize = 4;
-    static const unsigned marker = unsigned(-1);
+    static const int bucketsize = 10;
     VPTree(const VPTree&);            // copy constructor not allowed
     VPTree& operator=(const VPTree&); // copy assignment not allowed
   public:
@@ -117,16 +120,20 @@ namespace GeographicLib {
       : _pts(pts)
       , _dist(dist)
     {
-      static_assert(std::numeric_limits<real>::is_signed,
-                    "real must be a signed type");
+      GEOGRAPHICLIB_STATIC_ASSERT(std::numeric_limits<real>::is_signed,
+                                  "real must be a signed type");
+      GEOGRAPHICLIB_STATIC_ASSERT(bucketsize >= 0 && bucketsize <= 10,
+                                  "bad bucketsize");
       _mc = 0; _sc = 0;
       _c0 = 0; _c1 = 0; _k = 0;
-      _cmin = std::numeric_limits<unsigned>::max(); _cmax = 0;
+      _cmin = std::numeric_limits<int>::max(); _cmax = 0;
       // the pair contains distance+id
-      std::vector<std::pair<real, unsigned>> ids(_pts.size());
-      for (unsigned k = unsigned(ids.size()); k--;)
+      std::vector<item> ids(_pts.size());
+      for (int k = int(ids.size()); k--;)
         ids[k] = std::make_pair(real(0), k);
-      _root = init(ids, 0, unsigned(ids.size()), unsigned(ids.size() / 2));
+      init(ids, 0, int(ids.size()), int(ids.size() / 2));
+      std::cout << sizeof(Node) << " " << _tree.size() * sizeof(Node) /
+        double(_pts.size() * sizeof(position)) << "\n";
     }
 
     /**
@@ -173,49 +180,41 @@ namespace GeographicLib {
      **********************************************************************/
     real search(const position& query,
                 std::vector<int>& ind,
-                unsigned k = 1,
+                int k = 1,
                 real maxdist = std::numeric_limits<real>::max(),
                 real mindist = -1,
                 bool exhaustive = true,
                 real tol = 0) const {
-      std::priority_queue<std::pair<real, unsigned>> results;
-      if (maxdist > mindist) {
-        struct task {
-          Node* n;                // the node
-          real d;                 // how far query is outside boundary of node
-          // -1 if on boundary or inside
-          task(Node* n, real d) : n(n), d(d) {}
-          bool operator<(const task& o) const {
-            // sort in reverse order to process smallest d first
-            return d > o.d;
-          }
-        };
-
+      std::priority_queue<item> results;
+      if (k > 0 && maxdist > mindist) {
         // distance to the kth closest point so far
         real tau = maxdist;
-        std::priority_queue<task> todo;
-        todo.push(task(_root.get(), -1));
-        unsigned c = 0;
+        // first is negative of how far query is outside boundary of node
+        // +1 if on boundary or inside
+        // second is node index
+        std::priority_queue<item> todo;
+        todo.push(std::make_pair(real(1), int(_tree.size()) - 1));
+        int c = 0;
         while (!todo.empty()) {
-          Node* current = todo.top().n;
-          if (!current) continue;
-          real d = todo.top().d;
+          int n = todo.top().second;
+          real d = -todo.top().first;
           todo.pop();
           real tau1 = tau - tol;
           // compare tau and d again since tau may have become smaller.
-          if (!(tau1 >= d)) continue;
+          if (!(n >= 0 && tau1 >= d)) continue;
+          const Node& current = _tree[n];
           real dist = 0;   // to suppress warning about uninitialized variable
-          bool exitflag = false, leaf = current->index == marker;
-          for (unsigned i = 0; i < (leaf ? bucketsize : 1); ++i) {
-            unsigned index = leaf ? current->leaves[i] : current->index;
-            if (index == marker) break;
+          bool exitflag = false, leaf = current.index < 0;
+          for (int i = 0; i < (leaf ? bucketsize : 1); ++i) {
+            int index = leaf ? current.leaves[i] : current.index;
+            if (index < 0) break;
             dist = _dist(_pts[index], query);
             ++c;
 
             if (dist > mindist && dist <= tau) {
-              if (results.size() == k) results.pop();
+              if (int(results.size()) == k) results.pop();
               results.push(std::make_pair(dist, index));
-              if (results.size() == k) {
+              if (int(results.size()) == k) {
                 if (exhaustive)
                   tau = results.top().first;
                 else {
@@ -231,18 +230,21 @@ namespace GeographicLib {
           }
           if (exitflag) break;
 
-          if (current->index == marker) continue;
+          if (current.index < 0) continue;
           tau1 = tau - tol;
-          for (unsigned n = 0; n < 2; ++n) {
-            if (current->child[n] && dist + current->data.upper[n] >= mindist) {
-              if (dist < current->data.lower[n]) {
-                d = current->data.lower[n] - dist;
-                if (tau1 >= d) todo.push(task(current->child[n].get(), d));
-              } else if (dist > current->data.upper[n]) {
-                d = dist - current->data.upper[n];
-                if (tau1 >= d) todo.push(task(current->child[n].get(), d));
+          for (int n = 0; n < 2; ++n) {
+            if (current.data.child[n] >= 0 &&
+                dist + current.data.upper[n] >= mindist) {
+              if (dist < current.data.lower[n]) {
+                d = current.data.lower[n] - dist;
+                if (tau1 >= d)
+                  todo.push(std::make_pair(-d, current.data.child[n]));
+              } else if (dist > current.data.upper[n]) {
+                d = dist - current.data.upper[n];
+                if (tau1 >= d)
+                  todo.push(std::make_pair(-d, current.data.child[n]));
               } else
-                todo.push(task(current->child[n].get(), -1));
+                todo.push(std::make_pair(real(1), current.data.child[n]));
             }
           }
         }
@@ -278,8 +280,11 @@ namespace GeographicLib {
     /**
      * @param[in] i the index of the point.
      * @return a reference to the <i>i</i>'th point.
+     *
+     * \e i must lie in the range [0, numpoints()).  No checking is done on the
+     * value of \e i.
      **********************************************************************/
-    const position& point(unsigned i) const { return _pts[i]; }
+    const position& point(int i) const { return _pts[i]; }
 
     /**
      * Report accumulated statistics on the searches so far.
@@ -293,86 +298,125 @@ namespace GeographicLib {
          << "searches " << _k << "\n"
          << "search cost (total mean sd min max) "
          << _c1 << " "
-         << unsigned(std::floor(_mc + 0.5)) << " "
-         << unsigned(std::floor(std::sqrt(_sc / (_k - 1)) + 0.5)) << " "
+         << int(std::floor(_mc + 0.5)) << " "
+         << int(std::floor(std::sqrt(_sc / (_k - 1)) + 0.5)) << " "
          << _cmin << " " << _cmax << "\n";
       return os;
     }
 
   private:
+    // Package up a real and an int.  We will want to sort on the real so put
+    // it first.
+    typedef std::pair<real, int> item;
     const std::vector<position>& _pts;
     const distance& _dist;
     mutable double _mc, _sc;
-    mutable unsigned _c0, _c1, _k, _cmin, _cmax;
-    struct Node {
-      unsigned index;
+    mutable int _c0, _c1, _k, _cmin, _cmax;
+
+    class Node {
+    public:
       struct bounds {
         real lower[2], upper[2];  // bounds on inner/outer distances
+        int child[2];
       };
       union {
         bounds data;
-        unsigned leaves[bucketsize];
+        int leaves[bucketsize];
       };
-      std::unique_ptr<Node> child[2];
+      int index;
 
       Node()
-        : index(0)
-      {}
-
-    };
-    std::unique_ptr<Node> _root;
-
-    std::unique_ptr<Node> init(std::vector<std::pair<real, unsigned>>& ids,
-                               unsigned l, unsigned u, unsigned vp) {
-      if (u == l) {
-        return std::unique_ptr<Node>();
+        : index(-1)
+      {
+        for (int i = 0; i < 2; ++i) {
+          data.lower[i] = data.upper[i] = 0;
+          data.child[i] = -1;
+        }
       }
+    private:
+#if HAVE_BOOST_SERIALIZATION
+      friend class boost::serialization::access;
+      template<class Archive> void save(Archive& ar, const unsigned int) const {
+        ar & boost::serialization::make_nvp("index" , index );
+        if (index < 0)
+          ar & boost::serialization::make_nvp("leaves", leaves);
+        else
+          ar & boost::serialization::make_nvp("lower", data.lower)
+            & boost::serialization::make_nvp("upper", data.upper)
+            & boost::serialization::make_nvp("child", data.child);
+      }
+      template<class Archive> void load(Archive& ar, const unsigned int) {
+        ar & boost::serialization::make_nvp("index" , index );
+        if (index < 0)
+          ar & boost::serialization::make_nvp("leaves", leaves);
+        else
+          ar & boost::serialization::make_nvp("lower", data.lower)
+            & boost::serialization::make_nvp("upper", data.upper)
+            & boost::serialization::make_nvp("child", data.child);
+      }
+      template<class Archive>
+      void serialize(Archive &ar, const unsigned int file_version)
+      { boost::serialization::split_member(ar, *this, file_version); }
+#endif
+    };
 
-      std::unique_ptr<Node> node(new Node());
+    std::vector<Node> _tree;
+    int init(std::vector<item>& ids, int l, int u, int vp) {
+
+      if (u == l)
+        return -1;
+      Node node;
 
       if (u - l > (bucketsize == 0 ? 1 : bucketsize)) {
 
         // choose a vantage point and move it to the start
-        unsigned i = vp;
+        int i = vp;
         std::swap(ids[l], ids[i]);
 
-        unsigned m = (u + l + 1) / 2;
+        int m = (u + l + 1) / 2;
 
-        for (unsigned k = l + 1; k < u; ++k) {
+        for (int k = l + 1; k < u; ++k) {
           ids[k].first = _dist(_pts[ids[l].second], _pts[ids[k].second]);
           ++_c0;
         }
         // partitian around the median distance
         std::nth_element(ids.begin() + l + 1, ids.begin() + m, ids.begin() + u);
-        node->index = ids[l].second;
-        if (m > l + 1) { // node->child[0] is possibly empty
-          auto t = std::minmax_element(ids.begin() + l + 1, ids.begin() + m);
-          node->data.lower[0] = t.first->first;
-          node->data.upper[0] = t.second->first;
+        node.index = ids[l].second;
+        if (m > l + 1) { // node.child[0] is possibly empty
+          typename std::vector<item>::iterator
+            t = std::min_element(ids.begin() + l + 1, ids.begin() + m);
+          node.data.lower[0] = t->first;
+          t = std::max_element(ids.begin() + l + 1, ids.begin() + m);
+          node.data.upper[0] = t->first;
           // Use point with max distance as vantage point; this point act as a
           // "corner" point and leads to a good partition.
-          node->child[0] = init(ids, l + 1, m,
-                                unsigned(t.second - ids.begin()));
+          node.data.child[0] = init(ids, l + 1, m, int(t - ids.begin()));
         }
-        auto t = std::max_element(ids.begin() + m, ids.begin() + u);
-        node->data.lower[1] = ids[m].first;
-        node->data.upper[1] = t->first;
+        typename std::vector<item>::iterator
+          t = std::max_element(ids.begin() + m, ids.begin() + u);
+        node.data.lower[1] = ids[m].first;
+        node.data.upper[1] = t->first;
         // Use point with max distance as vantage point here too
-        node->child[1] = init(ids, m, u, unsigned(t - ids.begin()));
+        node.data.child[1] = init(ids, m, u, int(t - ids.begin()));
       } else {
         if (bucketsize == 0)
-          node->index = ids[l].second;
+          node.index = ids[l].second;
         else {
-          node->index = marker;
-          for (unsigned i = l; i < u; ++i)
-            node->leaves[i-l] = ids[i].second;
-          for (unsigned k = u - l; k < bucketsize; ++k)
-            node->leaves[k] = marker;
+          node.index = -1;
+          // Sort the bucket entries so that the tree is independent of the
+          // implementation of nth_element.
+          std::sort(ids.begin() + l, ids.begin() + u);
+          for (int i = l; i < u; ++i)
+            node.leaves[i-l] = ids[i].second;
+          for (int i = u - l; i < bucketsize; ++i)
+            node.leaves[i] = -1;
         }
       }
 
-      return node;
+      _tree.push_back(node);
+      return int(_tree.size()) - 1;
     }
+  public:
   };
 
 } // namespace GeographicLib
