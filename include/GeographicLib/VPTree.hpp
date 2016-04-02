@@ -232,19 +232,19 @@ namespace GeographicLib {
 
           if (current.index < 0) continue;
           tau1 = tau - tol;
-          for (int n = 0; n < 2; ++n) {
-            if (current.data.child[n] >= 0 &&
-                dist + current.data.upper[n] >= mindist) {
-              if (dist < current.data.lower[n]) {
-                d = current.data.lower[n] - dist;
+          for (int l = 0; l < 2; ++l) {
+            if (current.data.child[l] >= 0 &&
+                dist + current.data.upper[l] >= mindist) {
+              if (dist < current.data.lower[l]) {
+                d = current.data.lower[l] - dist;
                 if (tau1 >= d)
-                  todo.push(std::make_pair(-d, current.data.child[n]));
-              } else if (dist > current.data.upper[n]) {
-                d = dist - current.data.upper[n];
+                  todo.push(std::make_pair(-d, current.data.child[l]));
+              } else if (dist > current.data.upper[l]) {
+                d = dist - current.data.upper[l];
                 if (tau1 >= d)
-                  todo.push(std::make_pair(-d, current.data.child[n]));
+                  todo.push(std::make_pair(-d, current.data.child[l]));
               } else
-                todo.push(std::make_pair(real(1), current.data.child[n]));
+                todo.push(std::make_pair(real(1), current.data.child[l]));
             }
           }
         }
