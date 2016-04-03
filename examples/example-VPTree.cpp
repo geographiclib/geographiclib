@@ -68,13 +68,18 @@ int main() {
     {
       std::ofstream f("vptree.xml");
       boost::archive::xml_oarchive oa(f); // set up an xml archive
-      oa << posset;                       // save tree to xml file vptree.xml
+      posset.savetree(oa);
     }
 #endif
-    posset.save(ofs, true);
+    posset.strsave(ofs, true);
   }
-  ifstream ifs("vptree.bin", std::ios::binary);
-  VPTree<double, pos, DistanceCalculator> posset(pts, distance, ifs, true);
+  {
+    ifstream ifs("vptree.bin", std::ios::binary);
+    VPTree<double, pos, DistanceCalculator> posset(pts, distance, ifs, true);
+  }
+  ifstream f("vptree.xml");
+  boost::archive::xml_iarchive ia(f);
+  VPTree<double, pos, DistanceCalculator> posset(pts, distance, ia);
   vector<int> ind;
   int cnt = 0;
   cout << "Points more than 350km from their neighbors\n"

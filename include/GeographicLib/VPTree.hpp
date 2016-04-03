@@ -28,6 +28,7 @@
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/split_member.hpp>
 #include <boost/serialization/array.hpp>
+#include <boost/serialization/vector.hpp>
 #endif
 
 #if defined(_MSC_VER)
@@ -164,7 +165,21 @@ namespace GeographicLib {
       _mc = 0; _sc = 0;
       _c0 = 0; _c1 = 0; _k = 0;
       _cmin = std::numeric_limits<int>::max(); _cmax = 0;
-      load(is, bin);
+      strload(is, bin);
+    }
+
+    template<class Archive>
+    VPTree(const std::vector<position>& pts, const distance& dist,
+           Archive& ar)
+      : _pts(pts)
+      , _dist(dist)
+    {
+      if (_pts.size() > size_t(std::numeric_limits<int>::max()))
+        throw GeographicLib::GeographicErr("pts array too big");
+      _mc = 0; _sc = 0;
+      _c0 = 0; _c1 = 0; _k = 0;
+      _cmin = std::numeric_limits<int>::max(); _cmax = 0;
+      loadtree(ar);
     }
 
     /**
@@ -341,7 +356,7 @@ namespace GeographicLib {
      * @param[in] bin whether the data stream is binary or not (default true).
      * @return a reference to the stream.
      **********************************************************************/
-    std::ostream& save(std::ostream& os, bool bin = true) const {
+    std::ostream& strsave(std::ostream& os, bool bin = true) const {
       if (bin) {
         int buf[3];
         buf[0] = bucketsize;
@@ -394,7 +409,7 @@ namespace GeographicLib {
      * @param[in] bin whether the data stream is binary or not (default true).
      * @return a reference to the stream
      **********************************************************************/
-    std::istream& load(std::istream& is, bool bin = true) {
+    std::istream& strload(std::istream& is, bool bin = true) {
       int bucketsize1, ptssize, treesize;
       if (bin) {
         is.read(reinterpret_cast<char *>(&bucketsize1), sizeof(int));
@@ -515,7 +530,7 @@ namespace GeographicLib {
 #if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
       friend class boost::serialization::access;
       template<class Archive> void save(Archive& ar, const unsigned int) const {
-        ar & boost::serialization::make_nvp("index" , index);
+        ar & boost::serialization::make_nvp("index", index);
         if (index < 0)
           ar & boost::serialization::make_nvp("leaves", leaves);
         else
@@ -524,7 +539,7 @@ namespace GeographicLib {
             & boost::serialization::make_nvp("child", data.child);
       }
       template<class Archive> void load(Archive& ar, const unsigned int) {
-        ar & boost::serialization::make_nvp("index" , index);
+        ar & boost::serialization::make_nvp("index", index);
         if (index < 0)
           ar & boost::serialization::make_nvp("leaves", leaves);
         else
@@ -533,25 +548,20 @@ namespace GeographicLib {
             & boost::serialization::make_nvp("child", data.child);
       }
       template<class Archive>
-      void serialize(Archive &ar, const unsigned int file_version)
+      void serialize(Archive& ar, const unsigned int file_version)
       { boost::serialization::split_member(ar, *this, file_version); }
 #endif
     };
 #if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
     friend class boost::serialization::access;
-    template<class Archive> void save(Archive& ar, const unsigned int) const {
-      ar & boost::serialization::make_nvp("bucketsize" , bucketsize)
-        & boost::serialization::make_nvp("ptssize" , _pts.size())
-        & boost::serialization::make_nvp("ptssize" , _tree);
+  public:
+    template<class Archive> void savetree(Archive& ar) const {
+      ar & boost::serialization::make_nvp("tree", _tree);
     }
-    template<class Archive> void load(Archive& ar, const unsigned int) {
-      ar & boost::serialization::make_nvp("bucketsize" , bucketsize)
-        & boost::serialization::make_nvp("ptssize" , _pts.size())
-        & boost::serialization::make_nvp("ptssize" , _tree);
+  private:
+    template<class Archive> void loadtree(Archive& ar) {
+      ar & boost::serialization::make_nvp("tree", _tree);
     }
-    template<class Archive>
-    void serialize(Archive &ar, const unsigned int file_version)
-    { boost::serialization::split_member(ar, *this, file_version); }
 #endif
 
     std::vector<Node> _tree;
