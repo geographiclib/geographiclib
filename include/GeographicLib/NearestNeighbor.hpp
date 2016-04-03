@@ -1,14 +1,14 @@
 /**
- * \file VPTree.hpp
- * \brief Header for GeographicLib::VPTree class
+ * \file NearestNeighbor.hpp
+ * \brief Header for GeographicLib::NearestNeighbor class
  *
  * Copyright (c) Charles Karney (2016) <charles@karney.com> and licensed under
  * the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-#if !defined(GEOGRAPHICLIB_VPTREE_HPP)
-#define GEOGRAPHICLIB_VPTREE_HPP 1
+#if !defined(GEOGRAPHICLIB_NEARESTNEIGHBOR_HPP)
+#define GEOGRAPHICLIB_NEARESTNEIGHBOR_HPP 1
 
 #include <algorithm>            // for nth_element, max_element, etc.
 #include <vector>
@@ -94,97 +94,75 @@ namespace GeographicLib {
    *   positions as arguments and returns the distance (of type \e real).
    *
    * Example of use:
-   * \include example-VPTree.cpp
+   * \include example-NearestNeighbor.cpp
    **********************************************************************/
   template <typename real, typename position, class distance>
-  class VPTree {
+  class NearestNeighbor {
     static const int bucketsize = 10;
-    VPTree(const VPTree&);            // copy constructor not allowed
-    VPTree& operator=(const VPTree&); // copy assignment not allowed
   public:
 
     /**
-     * Constructor for VPTree
+     * Default constructor for NearestNeighbor
+     **********************************************************************/
+    NearestNeighbor() : _numpoints(0) {}
+
+    /**
+     * Constructor for NearestNeighbor
      *
-     * @param[in] pts a vector of points to include in the tree; VPTree
-     *   retains a const reference to this vector.
-     * @param[in] dist the distance function object; VPTree retains a
-     *   const reference to this object.
+     * @param[in] pts a vector of points to include in the tree.
+     * @param[in] dist the distance function object.
      *
      * The distances computed by \e dist must satisfy the standard metric
      * conditions.  If not, the results are undefined.  Neither the data in \e
      * pts nor the query points should contain NaNs because such data violates
      * the metric conditions.
      *
-     * <b>CAUTION</b>: Do not alter \e pts during the lifetime of the VPTree.
+     * <b>CAUTION</b>: The same arguments \e pts and \e dist must be provided
+     * to the Search function.
      **********************************************************************/
-    VPTree(const std::vector<position>& pts, const distance& dist)
-      : _pts(pts)
-      , _dist(dist)
-    {
+    NearestNeighbor(const std::vector<position>& pts, const distance& dist) {
+      Initialize(pts, dist);
+    }
+
+    /**
+     * Initialize or re-initialize NearestNeighbor
+     *
+     * @param[in] pts a vector of points to include in the tree.
+     * @param[in] dist the distance function object.
+     *
+     * The distances computed by \e dist must satisfy the standard metric
+     * conditions.  If not, the results are undefined.  Neither the data in \e
+     * pts nor the query points should contain NaNs because such data violates
+     * the metric conditions.
+     *
+     * <b>CAUTION</b>: The same arguments \e pts and \e dist must be provided
+     * to the Search function.
+     **********************************************************************/
+    void Initialize(const std::vector<position>& pts, const distance& dist) {
       GEOGRAPHICLIB_STATIC_ASSERT(std::numeric_limits<real>::is_signed,
                                   "real must be a signed type");
       GEOGRAPHICLIB_STATIC_ASSERT(bucketsize >= 0 && bucketsize <= 10,
                                   "bad bucketsize");
-      if (_pts.size() > size_t(std::numeric_limits<int>::max()))
+      if (pts.size() > size_t(std::numeric_limits<int>::max()))
         throw GeographicLib::GeographicErr("pts array too big");
       _mc = 0; _sc = 0;
       _c0 = 0; _c1 = 0; _k = 0;
       _cmin = std::numeric_limits<int>::max(); _cmax = 0;
       // the pair contains distance+id
-      std::vector<item> ids(_pts.size());
+      std::vector<item> ids(pts.size());
       for (int k = int(ids.size()); k--;)
         ids[k] = std::make_pair(real(0), k);
-      init(ids, 0, int(ids.size()), int(ids.size() / 2));
+      std::vector<Node> tree;
+      init(pts, dist, tree, ids, 0, int(ids.size()), int(ids.size() / 2));
+      _tree.swap(tree);
+      _numpoints = int(pts.size());
     }
 
     /**
-     * Constructor for VPTree reading from saved tree.
+     * Search the NearestNeighbor
      *
-     * @param[in] pts a vector of points to include in the tree; VPTree
-     *   retains a const reference to this vector.
-     * @param[in] dist the distance function object; VPTree retains a
-     *   const reference to this object.
-     * @param[in,out] is the stream to read from.
-     * @param[in] bin whether the data stream is binary or not (default true).
-     *
-     * This version of the constructor reads the actual VP tree from an input
-     * stream \e is.  This must contain data written by the save method used
-     * with the \e same set of points \e pts and the \e same distance function
-     * \e dist.  A minimal set of consistency checks are performed on the data.
-     *
-     * <b>CAUTION</b>: Do not alter \e pts during the lifetime of the VPTree.
-     **********************************************************************/
-    VPTree(const std::vector<position>& pts, const distance& dist,
-           std::istream& is, bool bin = true)
-      : _pts(pts)
-      , _dist(dist)
-    {
-      if (_pts.size() > size_t(std::numeric_limits<int>::max()))
-        throw GeographicLib::GeographicErr("pts array too big");
-      _mc = 0; _sc = 0;
-      _c0 = 0; _c1 = 0; _k = 0;
-      _cmin = std::numeric_limits<int>::max(); _cmax = 0;
-      strload(is, bin);
-    }
-
-    template<class Archive>
-    VPTree(const std::vector<position>& pts, const distance& dist,
-           Archive& ar)
-      : _pts(pts)
-      , _dist(dist)
-    {
-      if (_pts.size() > size_t(std::numeric_limits<int>::max()))
-        throw GeographicLib::GeographicErr("pts array too big");
-      _mc = 0; _sc = 0;
-      _c0 = 0; _c1 = 0; _k = 0;
-      _cmin = std::numeric_limits<int>::max(); _cmax = 0;
-      loadtree(ar);
-    }
-
-    /**
-     * Search the VPTree
-     *
+     * @param[in] pts the vector of points used for initialization.
+     * @param[in] dist the distance function object used for initialization.
      * @param[in] query the query point.
      * @param[out] ind a vector of indices to the closest points found.
      * @param[in] k the number of points to search for (default = 1).
@@ -224,7 +202,8 @@ namespace GeographicLib {
      * \e pts may contain coincident points (i.e., the distance between them
      * vanishes).  These are treated as distinct.
      **********************************************************************/
-    real search(const position& query,
+    real Search(const std::vector<position>& pts, const distance& dist,
+                const position& query,
                 std::vector<int>& ind,
                 int k = 1,
                 real maxdist = std::numeric_limits<real>::max(),
@@ -232,7 +211,7 @@ namespace GeographicLib {
                 bool exhaustive = true,
                 real tol = 0) const {
       std::priority_queue<item> results;
-      if (k > 0 && maxdist > mindist) {
+      if (_numpoints > 0 && k > 0 && maxdist > mindist) {
         // distance to the kth closest point so far
         real tau = maxdist;
         // first is negative of how far query is outside boundary of node
@@ -249,17 +228,17 @@ namespace GeographicLib {
           // compare tau and d again since tau may have become smaller.
           if (!(n >= 0 && tau1 >= d)) continue;
           const Node& current = _tree[n];
-          real dist = 0;   // to suppress warning about uninitialized variable
+          real dst = 0;   // to suppress warning about uninitialized variable
           bool exitflag = false, leaf = current.index < 0;
           for (int i = 0; i < (leaf ? bucketsize : 1); ++i) {
             int index = leaf ? current.leaves[i] : current.index;
             if (index < 0) break;
-            dist = _dist(_pts[index], query);
+            dst = dist(pts[index], query);
             ++c;
 
-            if (dist > mindist && dist <= tau) {
+            if (dst > mindist && dst <= tau) {
               if (int(results.size()) == k) results.pop();
-              results.push(std::make_pair(dist, index));
+              results.push(std::make_pair(dst, index));
               if (int(results.size()) == k) {
                 if (exhaustive)
                   tau = results.top().first;
@@ -280,13 +259,13 @@ namespace GeographicLib {
           tau1 = tau - tol;
           for (int l = 0; l < 2; ++l) {
             if (current.data.child[l] >= 0 &&
-                dist + current.data.upper[l] >= mindist) {
-              if (dist < current.data.lower[l]) {
-                d = current.data.lower[l] - dist;
+                dst + current.data.upper[l] >= mindist) {
+              if (dst < current.data.lower[l]) {
+                d = current.data.lower[l] - dst;
                 if (tau1 >= d)
                   todo.push(std::make_pair(-d, current.data.child[l]));
-              } else if (dist > current.data.upper[l]) {
-                d = dist - current.data.upper[l];
+              } else if (dst > current.data.upper[l]) {
+                d = dst - current.data.upper[l];
                 if (tau1 >= d)
                   todo.push(std::make_pair(-d, current.data.child[l]));
               } else
@@ -301,6 +280,8 @@ namespace GeographicLib {
         _sc += (c - omc) * (c - _mc);
         if (c > _cmax) _cmax = c;
         if (c < _cmin) _cmin = c;
+        if (c == 0)
+          std::cerr << "HERE\n";
       }
 
       real d = -1;
@@ -318,19 +299,7 @@ namespace GeographicLib {
     /**
      * @return the total number of points.
      **********************************************************************/
-    int numpoints() const { return int(_pts.size()); }
-    /**
-     * @return a reference to the vector of points.
-     **********************************************************************/
-    const std::vector<position>& points() const { return _pts; }
-    /**
-     * @param[in] i the index of the point.
-     * @return a reference to the <i>i</i>'th point.
-     *
-     * \e i must lie in the range [0, numpoints()).  No checking is done on the
-     * value of \e i.
-     **********************************************************************/
-    const position& point(int i) const { return _pts[i]; }
+    int numpoints() const { return _numpoints; }
 
     /**
      * Report accumulated statistics on the searches so far.
@@ -339,7 +308,7 @@ namespace GeographicLib {
      * @return a reference to the stream.
      **********************************************************************/
     std::ostream& report(std::ostream& os) const {
-      os << "set size " << _pts.size() << "\n"
+      os << "set size " << _numpoints << "\n"
          << "setup cost " << _c0 << "\n"
          << "searches " << _k << "\n"
          << "search cost (total mean sd min max) "
@@ -356,11 +325,11 @@ namespace GeographicLib {
      * @param[in] bin whether the data stream is binary or not (default true).
      * @return a reference to the stream.
      **********************************************************************/
-    std::ostream& strsave(std::ostream& os, bool bin = true) const {
+    std::ostream& Save(std::ostream& os, bool bin = true) const {
       if (bin) {
         int buf[3];
         buf[0] = bucketsize;
-        buf[1] = int(_pts.size());
+        buf[1] = _numpoints;
         buf[2] = int(_tree.size());
         os.write(reinterpret_cast<const char *>(buf), 3 * sizeof(int));
         for (int i = 0; i < int(_tree.size()); ++i) {
@@ -384,7 +353,7 @@ namespace GeographicLib {
           // Ensure enough precision for type real.  If real is actually a
           // signed integer type, full precision is used anyway.
           << std::setprecision(std::numeric_limits<real>::digits10 + 2)
-          << bucketsize << " " << _pts.size() << " " << _tree.size();
+          << bucketsize << " " << _numpoints << " " << _tree.size();
         for (int i = 0; i < int(_tree.size()); ++i) {
           const Node& node = _tree[i];
           ostring << "\n" << node.index;
@@ -408,20 +377,23 @@ namespace GeographicLib {
      * @param[in,out] is the stream to read from
      * @param[in] bin whether the data stream is binary or not (default true).
      * @return a reference to the stream
+     *
+     * <b>CAUTION</b>: The same arguments \e pts and \e dist used for
+     * initialization must be provided to the Search function.
      **********************************************************************/
-    std::istream& strload(std::istream& is, bool bin = true) {
-      int bucketsize1, ptssize, treesize;
+    std::istream& Load(std::istream& is, bool bin = true) {
+      int bucketsize1, numpoints, treesize;
       if (bin) {
         is.read(reinterpret_cast<char *>(&bucketsize1), sizeof(int));
-        is.read(reinterpret_cast<char *>(&ptssize), sizeof(int));
+        is.read(reinterpret_cast<char *>(&numpoints), sizeof(int));
         is.read(reinterpret_cast<char *>(&treesize), sizeof(int));
-        if (!(bucketsize1 == bucketsize && ptssize == int(_pts.size()) &&
-              0 <= treesize && treesize <= ptssize))
+        if (!(bucketsize1 == bucketsize &&
+              0 <= treesize && treesize <= numpoints))
           throw GeographicLib::GeographicErr("Bad header");
       } else {
-        if (!((is >> bucketsize1 >> ptssize >> treesize) &&
-              bucketsize1 == bucketsize && ptssize == int(_pts.size()) &&
-              0 <= treesize && treesize <= ptssize))
+        if (!((is >> bucketsize1 >> numpoints >> treesize) &&
+              bucketsize1 == bucketsize &&
+              0 <= treesize && treesize <= numpoints))
           throw GeographicLib::GeographicErr("Bad header");
       }
       std::vector<Node> tree;
@@ -430,8 +402,6 @@ namespace GeographicLib {
         Node node;
         if (bin) {
           is.read(reinterpret_cast<char *>(&node.index), sizeof(int));
-          if (!(-1 <= node.index && node.index << ptssize))
-            throw GeographicLib::GeographicErr("Bad index");
           if (node.index >= 0) {
             is.read(reinterpret_cast<char *>(node.data.lower),
                     2 * sizeof(real));
@@ -439,61 +409,35 @@ namespace GeographicLib {
                     2 * sizeof(real));
             is.read(reinterpret_cast<char *>(node.data.child),
                     2 * sizeof(int));
-            if (!( -1 <= node.data.child[0] && node.data.child[0] < treesize &&
-                   -1 <= node.data.child[1] && node.data.child[1] < treesize &&
-                   0 <= node.data.lower[0] &&
-                   node.data.lower[0] <= node.data.upper[0] &&
-                   node.data.upper[0] <= node.data.lower[1] &&
-                   node.data.lower[1] <= node.data.upper[1] ))
-              throw GeographicLib::GeographicErr("Bad node data");
-          } else {
+          } else
             is.read(reinterpret_cast<char *>(node.leaves),
                     bucketsize * sizeof(int));
-            // Must be at least one valid leaf followed by a sequence end
-            // markers (-1).
-            bool start = true;
-            for (int l = 0; l < bucketsize; ++l) {
-              if (!( (start ?
-                      ((l == 0 ? 0 : -1) <= node.leaves[l] &&
-                       node.leaves[l] < ptssize) :
-                      node.leaves[l] == -1) ))
-                throw GeographicLib::GeographicErr("Bad leaf data");
-              start = node.leaves[l] >= 0;
-            }
-          } 
         } else {
-          if (!((is >> node.index) &&
-                -1 <= node.index && node.index << ptssize))
+          if (!(is >> node.index))
             throw GeographicLib::GeographicErr("Bad index");
           if (node.index >= 0) {
             for (int l = 0; l < 2; ++l) {
-              if (!( (is >> node.data.lower[l] >> node.data.upper[l]
-                      >> node.data.child[l]) &&
-                     -1 <= node.data.child[l] &&
-                     node.data.child[l] < treesize &&
-                     0 <= node.data.lower[l] &&
-                     node.data.lower[l] <= node.data.upper[l] &&
-                     (l == 0 || node.data.upper[l-1] <= node.data.lower[l]) ))
+              if (!(is >> node.data.lower[l] >> node.data.upper[l]
+                    >> node.data.child[l]))
                 throw GeographicLib::GeographicErr("Bad node data");
             }
           } else {
             // Must be at least one valid leaf followed by a sequence end
             // markers (-1).
-            bool start = true;
             for (int l = 0; l < bucketsize; ++l) {
-              if (!( (is >> node.leaves[l]) &&
-                     (start ?
-                      ((l == 0 ? 0 : -1) <= node.leaves[l] &&
-                       node.leaves[l] < ptssize) :
-                      node.leaves[l] == -1) ))
+              if (!(is >> node.leaves[l]))
                 throw GeographicLib::GeographicErr("Bad leaf data");
-              start = node.leaves[l] >= 0;
             }
           }
         }
+        node.Check(numpoints, treesize);
         tree.push_back(node);
       }
       _tree.swap(tree);
+      _numpoints = numpoints;
+      _mc = 0; _sc = 0;
+      _c0 = 0; _c1 = 0; _k = 0;
+      _cmin = std::numeric_limits<int>::max(); _cmax = 0;
       return is;
     }
 
@@ -501,8 +445,6 @@ namespace GeographicLib {
     // Package up a real and an int.  We will want to sort on the real so put
     // it first.
     typedef std::pair<real, int> item;
-    const std::vector<position>& _pts;
-    const distance& _dist;
     mutable double _mc, _sc;
     mutable int _c0, _c1, _k, _cmin, _cmax;
 
@@ -524,6 +466,31 @@ namespace GeographicLib {
         for (int i = 0; i < 2; ++i) {
           data.lower[i] = data.upper[i] = 0;
           data.child[i] = -1;
+        }
+      }
+
+      // Sanity check on a Node
+      void Check(int numpoints, int treesize) const {
+        if (!(-1 <= index && index << numpoints))
+          throw GeographicLib::GeographicErr("Bad index");
+        if (index >= 0) {
+          if (!( -1 <= data.child[0] && data.child[0] < treesize &&
+                 -1 <= data.child[1] && data.child[1] < treesize &&
+                 0 <= data.lower[0] && data.lower[0] <= data.upper[0] &&
+                 data.upper[0] <= data.lower[1] &&
+                 data.lower[1] <= data.upper[1] ))
+            throw GeographicLib::GeographicErr("Bad node data");
+        } else {
+          // Must be at least one valid leaf followed by a sequence end
+          // markers (-1).
+          bool start = true;
+          for (int l = 0; l < bucketsize; ++l) {
+            if (!( (start ?
+                    ((l == 0 ? 0 : -1) <= leaves[l] && leaves[l] < numpoints) :
+                    leaves[l] == -1) ))
+              throw GeographicLib::GeographicErr("Bad leaf data");
+            start = leaves[l] >= 0;
+          }
         }
       }
 
@@ -554,18 +521,31 @@ namespace GeographicLib {
     };
 #if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
     friend class boost::serialization::access;
-  public:
-    template<class Archive> void savetree(Archive& ar) const {
-      ar & boost::serialization::make_nvp("tree", _tree);
+    template<class Archive> void save(Archive& ar, const unsigned) const {
+      ar & boost::serialization::make_nvp("numpoints", _numpoints)
+        & boost::serialization::make_nvp("tree", _tree);
     }
-  private:
-    template<class Archive> void loadtree(Archive& ar) {
-      ar & boost::serialization::make_nvp("tree", _tree);
+    template<class Archive> void load(Archive& ar, const unsigned) {
+      ar & boost::serialization::make_nvp("numpoints", _numpoints)
+        & boost::serialization::make_nvp("tree", _tree);
+      if (!(0 <= int(_tree.size()) && int(_tree.size()) <= _numpoints))
+        throw GeographicLib::GeographicErr("Bad header");
+      int numpoints = _numpoints, treesize = int(_tree.size());
+      for (int i = 0; i < treesize; ++i) _tree[i].Check();
+      _mc = 0; _sc = 0;
+      _c0 = 0; _c1 = 0; _k = 0;
+      _cmin = std::numeric_limits<int>::max(); _cmax = 0;
     }
+    template<class Archive>
+    void serialize(Archive& ar, const unsigned int file_version)
+    { boost::serialization::split_member(ar, *this, file_version); }
 #endif
 
+    int _numpoints;
     std::vector<Node> _tree;
-    int init(std::vector<item>& ids, int l, int u, int vp) {
+    int init(const std::vector<position>& pts, const distance& dist,
+             std::vector<Node>& tree, std::vector<item>& ids,
+             int l, int u, int vp) {
 
       if (u == l)
         return -1;
@@ -580,7 +560,7 @@ namespace GeographicLib {
         int m = (u + l + 1) / 2;
 
         for (int k = l + 1; k < u; ++k) {
-          ids[k].first = _dist(_pts[ids[l].second], _pts[ids[k].second]);
+          ids[k].first = dist(pts[ids[l].second], pts[ids[k].second]);
           ++_c0;
         }
         // partitian around the median distance
@@ -594,14 +574,16 @@ namespace GeographicLib {
           node.data.upper[0] = t->first;
           // Use point with max distance as vantage point; this point act as a
           // "corner" point and leads to a good partition.
-          node.data.child[0] = init(ids, l + 1, m, int(t - ids.begin()));
+          node.data.child[0] = init(pts, dist, tree, ids,
+                                    l + 1, m, int(t - ids.begin()));
         }
         typename std::vector<item>::iterator
           t = std::max_element(ids.begin() + m, ids.begin() + u);
         node.data.lower[1] = ids[m].first;
         node.data.upper[1] = t->first;
         // Use point with max distance as vantage point here too
-        node.data.child[1] = init(ids, m, u, int(t - ids.begin()));
+        node.data.child[1] = init(pts, dist, tree, ids,
+                                  m, u, int(t - ids.begin()));
       } else {
         if (bucketsize == 0)
           node.index = ids[l].second;
@@ -617,8 +599,8 @@ namespace GeographicLib {
         }
       }
 
-      _tree.push_back(node);
-      return int(_tree.size()) - 1;
+      tree.push_back(node);
+      return int(tree.size()) - 1;
     }
   };
 
@@ -628,4 +610,4 @@ namespace GeographicLib {
 #  pragma warning (pop)
 #endif
 
-#endif  // GEOGRAPHICLIB_VPTREE_HPP
+#endif  // GEOGRAPHICLIB_NEARESTNEIGHBOR_HPP

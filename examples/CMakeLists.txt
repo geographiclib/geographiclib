@@ -33,7 +33,7 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
 endforeach ()
 
 if (Boost_FOUND)
-  target_link_libraries (example-VPTree ${Boost_LIBRARIES})
+  target_link_libraries (example-NearestNeighbor ${Boost_LIBRARIES})
 endif ()
 
 find_package (OpenMP QUIET)
