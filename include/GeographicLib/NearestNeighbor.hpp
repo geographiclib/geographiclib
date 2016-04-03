@@ -531,7 +531,7 @@ namespace GeographicLib {
       if (!(0 <= int(_tree.size()) && int(_tree.size()) <= _numpoints))
         throw GeographicLib::GeographicErr("Bad header");
       int numpoints = _numpoints, treesize = int(_tree.size());
-      for (int i = 0; i < treesize; ++i) _tree[i].Check();
+      for (int i = 0; i < treesize; ++i) _tree[i].Check(numpoints, treesize);
       _mc = 0; _sc = 0;
       _c0 = 0; _c1 = 0; _k = 0;
       _cmin = std::numeric_limits<int>::max(); _cmax = 0;

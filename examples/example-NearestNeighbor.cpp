@@ -67,13 +67,13 @@ int main() {
     GeodesicNeighbor posset(pts, distance);
 #if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
     {
-      std::ofstream f("vptree.xml");
+      ofstream f("vptree.xml");
       boost::archive::xml_oarchive oa(f); // set up an xml archive
       oa << BOOST_SERIALIZATION_NVP(posset);
     }
 #endif
     {
-      ofstream ofs("vptree.bin", std::ios::binary);
+      ofstream ofs("vptree.bin", ios::binary);
       posset.Save(ofs, true);
     }
   }
@@ -86,7 +86,7 @@ int main() {
   }
 #else
   {
-    ifstream ifs("vptree.bin", std::ios::binary);
+    ifstream ifs("vptree.bin", ios::binary);
     posset.Load(ifs);
   }
 #endif
@@ -131,9 +131,9 @@ int main() {
       if (ind.size() == 2) continue;
       setb.Search(ptsb, distance, ptsa[i], ind, 2, d1, false);
       if (ind.size() == 2) continue;
-      std::cout << i << " " << j << "\n";
+      cout << i << " " << j << "\n";
     }
-    seta.report(std::cout);
-    setb.report(std::cout);
+    seta.report(cout);
+    setb.report(cout);
   }
 }
