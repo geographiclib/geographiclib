@@ -13,7 +13,7 @@ set (EXAMPLE_SOURCES ${EXAMPLE_SOURCES}
 
 find_package (Boost COMPONENTS serialization)
 if (Boost_FOUND)
-  add_definitions (-DGEOGRAPHICIB_HAVE_BOOST_SERIALIZATION=1)
+  add_definitions (-DGEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION=1)
   message (STATUS "${Boost_LIBRARIES} ${Boost_INCLUDE_DIRS}")
   include_directories (${Boost_INCLUDE_DIRS})
 endif ()

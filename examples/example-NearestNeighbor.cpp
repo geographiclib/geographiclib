@@ -8,7 +8,7 @@
 #include <fstream>
 #include <GeographicLib/NearestNeighbor.hpp>
 #include <GeographicLib/Geodesic.hpp>
-#if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
+#if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 #endif
@@ -65,7 +65,7 @@ int main() {
   {
     // Set up the VP tree
     GeodesicNeighbor posset(pts, distance);
-#if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
+#if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
     {
       ofstream f("vptree.xml");
       boost::archive::xml_oarchive oa(f); // set up an xml archive
@@ -78,7 +78,7 @@ int main() {
     }
   }
   GeodesicNeighbor posset;
-#if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
+#if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
   {
     ifstream f("vptree.xml");
     boost::archive::xml_iarchive ia(f);
@@ -108,7 +108,7 @@ int main() {
       ++cnt;
     }
   }
-  posset.report(cout);
+  posset.Report(cout);
   }
   if (1) {
     srand(1);
@@ -133,7 +133,7 @@ int main() {
       if (ind.size() == 2) continue;
       cout << i << " " << j << "\n";
     }
-    seta.report(cout);
-    setb.report(cout);
+    seta.Report(cout);
+    setb.Report(cout);
   }
 }

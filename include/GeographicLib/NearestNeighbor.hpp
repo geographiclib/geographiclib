@@ -21,10 +21,10 @@
 #include <iomanip>
 #include <GeographicLib/Constants.hpp> // Only for GEOGRAPHICLIB_STATIC_ASSERT
 
-#if !defined(GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION)
-#define GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION 0
+#if !defined(GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION)
+#define GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION 0
 #endif
-#if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
+#if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/split_member.hpp>
 #include <boost/serialization/array.hpp>
@@ -37,12 +37,14 @@
 #  pragma warning (disable: 4127)
 #endif
 
+#define GEOGRAPHICLIB_NEARESTNEIGHBOR_VERSION 1
 namespace GeographicLib {
 
   /**
-   * \brief Vantage-point tree
+   * \brief Nearest-neighbor calculations
    *
-   * This class implements the vantage-point tree described by
+   * This class implements nearest-neighbor calculations using the
+   * vantage-point tree described by
    * - J. K. Uhlmann,
    *   <a href="doi:10.1016/0020-0190(91)90074-r">
    *   Satisfying general proximity/similarity queries with metric trees</a>,
@@ -98,24 +100,30 @@ namespace GeographicLib {
    **********************************************************************/
   template <typename real, typename position, class distance>
   class NearestNeighbor {
+    static const int version = GEOGRAPHICLIB_NEARESTNEIGHBOR_VERSION;
     static const int bucketsize = 10;
   public:
 
     /**
      * Default constructor for NearestNeighbor
+     *
+     * This is equivalent to specifying an empty set of points.
      **********************************************************************/
     NearestNeighbor() : _numpoints(0) {}
 
     /**
      * Constructor for NearestNeighbor
      *
-     * @param[in] pts a vector of points to include in the tree.
+     * @param[in] pts a vector of points to include in the set.
      * @param[in] dist the distance function object.
      *
      * The distances computed by \e dist must satisfy the standard metric
      * conditions.  If not, the results are undefined.  Neither the data in \e
      * pts nor the query points should contain NaNs because such data violates
      * the metric conditions.
+     *
+     * \e pts may contain coincident points (i.e., the distance between them
+     * vanishes).  These are treated as distinct.
      *
      * <b>CAUTION</b>: The same arguments \e pts and \e dist must be provided
      * to the Search function.
@@ -134,6 +142,9 @@ namespace GeographicLib {
      * conditions.  If not, the results are undefined.  Neither the data in \e
      * pts nor the query points should contain NaNs because such data violates
      * the metric conditions.
+     *
+     * \e pts may contain coincident points (i.e., the distance between them
+     * vanishes).  These are treated as distinct.
      *
      * <b>CAUTION</b>: The same arguments \e pts and \e dist must be provided
      * to the Search function.
@@ -175,7 +186,7 @@ namespace GeographicLib {
      * @return the distance to the closest point found (-1 if no points are
      *   found).
      *
-     * The indices returned in \e ind are sorted by distance.
+     * The indices returned in \e ind are sorted by distance from \e query.
      *
      * With \e exhaustive = true and \e tol = 0 (their default values), this
      * finds the indices of \e k closest neighbors to \e query whose distances
@@ -199,8 +210,8 @@ namespace GeographicLib {
      * point (relative to the average spacing of the data).  If \e mindist is
      * large, the efficiency of the search deteriorates.
      *
-     * \e pts may contain coincident points (i.e., the distance between them
-     * vanishes).  These are treated as distinct.
+     * <b>CAUTION</b>: The arguments \e pts and \e dist must be identical to
+     * those used to initialize the NearestNeighborñ.
      **********************************************************************/
     real Search(const std::vector<position>& pts, const distance& dist,
                 const position& query,
@@ -297,9 +308,9 @@ namespace GeographicLib {
     }
 
     /**
-     * @return the total number of points.
+     * @return the total number of points in the set.
      **********************************************************************/
-    int numpoints() const { return _numpoints; }
+    int NumPoints() const { return _numpoints; }
 
     /**
      * Report accumulated statistics on the searches so far.
@@ -307,7 +318,7 @@ namespace GeographicLib {
      * @param[in,out] os the stream to write to.
      * @return a reference to the stream.
      **********************************************************************/
-    std::ostream& report(std::ostream& os) const {
+    std::ostream& Report(std::ostream& os) const {
       os << "set size " << _numpoints << "\n"
          << "setup cost " << _c0 << "\n"
          << "searches " << _k << "\n"
@@ -319,19 +330,25 @@ namespace GeographicLib {
       return os;
     }
     /**
-     * Write the VP tree.
+     * Write the object to an I/O stream.
      *
      * @param[in,out] os the stream to write to.
      * @param[in] bin whether the data stream is binary or not (default true).
      * @return a reference to the stream.
+     *
+     * <b>NOTE</b>: <a href="http://www.boost.org/libs/serialization/doc">
+     * Boost serialization</a> can also be used to save and restore a
+     * NearestNeighbor object.  This requires that
+     * GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION macro be defined.
      **********************************************************************/
     std::ostream& Save(std::ostream& os, bool bin = true) const {
       if (bin) {
-        int buf[3];
-        buf[0] = bucketsize;
-        buf[1] = _numpoints;
-        buf[2] = int(_tree.size());
-        os.write(reinterpret_cast<const char *>(buf), 3 * sizeof(int));
+        int buf[4];
+        buf[0] = version;
+        buf[1] = bucketsize;
+        buf[2] = _numpoints;
+        buf[3] = int(_tree.size());
+        os.write(reinterpret_cast<const char *>(buf), 4 * sizeof(int));
         for (int i = 0; i < int(_tree.size()); ++i) {
           const Node& node = _tree[i];
           os.write(reinterpret_cast<const char *>(&node.index), sizeof(int));
@@ -353,7 +370,8 @@ namespace GeographicLib {
           // Ensure enough precision for type real.  If real is actually a
           // signed integer type, full precision is used anyway.
           << std::setprecision(std::numeric_limits<real>::digits10 + 2)
-          << bucketsize << " " << _numpoints << " " << _tree.size();
+          << version << " " << bucketsize << " " << _numpoints << " "
+          << _tree.size();
         for (int i = 0; i < int(_tree.size()); ++i) {
           const Node& node = _tree[i];
           ostring << "\n" << node.index;
@@ -372,27 +390,33 @@ namespace GeographicLib {
     }
 
     /**
-     * Read the VP tree.
+     * Read the object from an I/O stream.
      *
      * @param[in,out] is the stream to read from
      * @param[in] bin whether the data stream is binary or not (default true).
      * @return a reference to the stream
      *
+     * <b>NOTE</b>: <a href="http://www.boost.org/libs/serialization/doc">
+     * Boost serialization</a> can also be used to save and restore a
+     * NearestNeighbor object.  This requires that
+     * GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION macro be defined.
+     *
      * <b>CAUTION</b>: The same arguments \e pts and \e dist used for
      * initialization must be provided to the Search function.
      **********************************************************************/
     std::istream& Load(std::istream& is, bool bin = true) {
-      int bucketsize1, numpoints, treesize;
+      int version1, bucketsize1, numpoints, treesize;
       if (bin) {
+        is.read(reinterpret_cast<char *>(&version1), sizeof(int));
         is.read(reinterpret_cast<char *>(&bucketsize1), sizeof(int));
         is.read(reinterpret_cast<char *>(&numpoints), sizeof(int));
         is.read(reinterpret_cast<char *>(&treesize), sizeof(int));
-        if (!(bucketsize1 == bucketsize &&
+        if (!(version1 == version && bucketsize1 == bucketsize &&
               0 <= treesize && treesize <= numpoints))
           throw GeographicLib::GeographicErr("Bad header");
       } else {
-        if (!((is >> bucketsize1 >> numpoints >> treesize) &&
-              bucketsize1 == bucketsize &&
+        if (!((is >> version1 >> bucketsize1 >> numpoints >> treesize) &&
+              version1 == version && bucketsize1 == bucketsize &&
               0 <= treesize && treesize <= numpoints))
           throw GeographicLib::GeographicErr("Bad header");
       }
@@ -494,7 +518,7 @@ namespace GeographicLib {
         }
       }
 
-#if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
+#if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
       friend class boost::serialization::access;
       template<class Archive> void save(Archive& ar, const unsigned int) const {
         ar & boost::serialization::make_nvp("index", index);
@@ -519,19 +543,26 @@ namespace GeographicLib {
       { boost::serialization::split_member(ar, *this, file_version); }
 #endif
     };
-#if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
+#if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
+    BOOST_CLASS_VERSION(Node, GEOGRAPHICLIB_NEARESTNEIGHBOR_VERSION)
     friend class boost::serialization::access;
     template<class Archive> void save(Archive& ar, const unsigned) const {
-      ar & boost::serialization::make_nvp("numpoints", _numpoints)
+      ar & boost::serialization::make_nvp("bucketsize", bucketsize)
+        & boost::serialization::make_nvp("numpoints", _numpoints)
         & boost::serialization::make_nvp("tree", _tree);
     }
-    template<class Archive> void load(Archive& ar, const unsigned) {
-      ar & boost::serialization::make_nvp("numpoints", _numpoints)
+    template<class Archive> void load(Archive& ar, const unsigned version1) {
+      int bucketsize1;
+      if (version1 != int(version))
+        throw GeographicLib::GeographicErr("Incompatible version");
+      ar & boost::serialization::make_nvp("bucketsize", bucketsize1)
+        & boost::serialization::make_nvp("numpoints", _numpoints)
         & boost::serialization::make_nvp("tree", _tree);
-      if (!(0 <= int(_tree.size()) && int(_tree.size()) <= _numpoints))
+      if (!(bucketsize1 == bucketsize &&
+            0 <= int(_tree.size()) && int(_tree.size()) <= _numpoints))
         throw GeographicLib::GeographicErr("Bad header");
-      int numpoints = _numpoints, treesize = int(_tree.size());
-      for (int i = 0; i < treesize; ++i) _tree[i].Check(numpoints, treesize);
+      for (int i = 0; i < treesize; ++i)
+        _tree[i].Check(_numpoints, int(_tree.size()));
       _mc = 0; _sc = 0;
       _c0 = 0; _c1 = 0; _k = 0;
       _cmin = std::numeric_limits<int>::max(); _cmax = 0;
@@ -604,6 +635,9 @@ namespace GeographicLib {
     }
   };
 
+#if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
+  BOOST_CLASS_VERSION(NearestNeighbor, GEOGRAPHICLIB_NEARESTNEIGHBOR_VERSION)
+#endif
 } // namespace GeographicLib
 
 #if defined(_MSC_VER)
