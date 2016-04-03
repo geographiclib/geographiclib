@@ -17,16 +17,17 @@
 #include <limits>
 #include <cmath>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 #include <GeographicLib/Constants.hpp> // Only for GEOGRAPHICLIB_STATIC_ASSERT
 
-// Not ready for boost serialization yet
-#define HAVE_BOOST_SERIALIZATION 0
-#if HAVE_BOOST_SERIALIZATION
+#if !defined(GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION)
+#define GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION 0
+#endif
+#if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/split_member.hpp>
 #include <boost/serialization/array.hpp>
-#include <boost/archive/xml_iarchive.hpp>
-#include <boost/archive/xml_oarchive.hpp>
 #endif
 
 #if defined(_MSC_VER)
@@ -124,6 +125,8 @@ namespace GeographicLib {
                                   "real must be a signed type");
       GEOGRAPHICLIB_STATIC_ASSERT(bucketsize >= 0 && bucketsize <= 10,
                                   "bad bucketsize");
+      if (_pts.size() > size_t(std::numeric_limits<int>::max()))
+        throw GeographicLib::GeographicErr("pts array too big");
       _mc = 0; _sc = 0;
       _c0 = 0; _c1 = 0; _k = 0;
       _cmin = std::numeric_limits<int>::max(); _cmax = 0;
@@ -132,6 +135,36 @@ namespace GeographicLib {
       for (int k = int(ids.size()); k--;)
         ids[k] = std::make_pair(real(0), k);
       init(ids, 0, int(ids.size()), int(ids.size() / 2));
+    }
+
+    /**
+     * Constructor for VPTree reading from saved tree.
+     *
+     * @param[in] pts a vector of points to include in the tree; VPTree
+     *   retains a const reference to this vector.
+     * @param[in] dist the distance function object; VPTree retains a
+     *   const reference to this object.
+     * @param[in,out] is the stream to read from.
+     * @param[in] bin whether the data stream is binary or not (default true).
+     *
+     * This version of the constructor reads the actual VP tree from an input
+     * stream \e is.  This must contain data written by the save method used
+     * with the \e same set of points \e pts and the \e same distance function
+     * \e dist.  A minimal set of consistency checks are performed on the data.
+     *
+     * <b>CAUTION</b>: Do not alter \e pts during the lifetime of the VPTree.
+     **********************************************************************/
+    VPTree(const std::vector<position>& pts, const distance& dist,
+           std::istream& is, bool bin = true)
+      : _pts(pts)
+      , _dist(dist)
+    {
+      if (_pts.size() > size_t(std::numeric_limits<int>::max()))
+        throw GeographicLib::GeographicErr("pts array too big");
+      _mc = 0; _sc = 0;
+      _c0 = 0; _c1 = 0; _k = 0;
+      _cmin = std::numeric_limits<int>::max(); _cmax = 0;
+      load(is, bin);
     }
 
     /**
@@ -287,8 +320,8 @@ namespace GeographicLib {
     /**
      * Report accumulated statistics on the searches so far.
      *
-     * @param[in,out] os the stream to write to
-     * @return a reference to the stream
+     * @param[in,out] os the stream to write to.
+     * @return a reference to the stream.
      **********************************************************************/
     std::ostream& report(std::ostream& os) const {
       os << "set size " << _pts.size() << "\n"
@@ -300,6 +333,153 @@ namespace GeographicLib {
          << int(std::floor(std::sqrt(_sc / (_k - 1)) + 0.5)) << " "
          << _cmin << " " << _cmax << "\n";
       return os;
+    }
+    /**
+     * Write the VP tree.
+     *
+     * @param[in,out] os the stream to write to.
+     * @param[in] bin whether the data stream is binary or not (default true).
+     * @return a reference to the stream.
+     **********************************************************************/
+    std::ostream& save(std::ostream& os, bool bin = true) const {
+      if (bin) {
+        int buf[3];
+        buf[0] = bucketsize;
+        buf[1] = int(_pts.size());
+        buf[2] = int(_tree.size());
+        os.write(reinterpret_cast<const char *>(buf), 3 * sizeof(int));
+        for (int i = 0; i < int(_tree.size()); ++i) {
+          const Node& node = _tree[i];
+          os.write(reinterpret_cast<const char *>(&node.index), sizeof(int));
+          if (node.index >= 0) {
+            os.write(reinterpret_cast<const char *>(node.data.lower),
+                     2 * sizeof(real));
+            os.write(reinterpret_cast<const char *>(node.data.upper),
+                     2 * sizeof(real));
+            os.write(reinterpret_cast<const char *>(node.data.child),
+                     2 * sizeof(int));
+          } else {
+            os.write(reinterpret_cast<const char *>(node.leaves),
+                     bucketsize * sizeof(int));
+          }
+        }
+      } else {
+        std::stringstream ostring;
+        ostring
+          // Ensure enough precision for type real.  If real is actually a
+          // signed integer type, full precision is used anyway.
+          << std::setprecision(std::numeric_limits<real>::digits10 + 2)
+          << bucketsize << " " << _pts.size() << " " << _tree.size();
+        for (int i = 0; i < int(_tree.size()); ++i) {
+          const Node& node = _tree[i];
+          ostring << "\n" << node.index;
+          if (node.index >= 0) {
+            for (int l = 0; l < 2; ++l)
+              ostring << " " << node.data.lower[l] << " " << node.data.upper[l]
+                      << " " << node.data.child[l];
+          } else {
+            for (int l = 0; l < bucketsize; ++l)
+              ostring << " " << node.leaves[l];
+          }
+        }
+        os << ostring.str();
+      }
+      return os;
+    }
+
+    /**
+     * Read the VP tree.
+     *
+     * @param[in,out] is the stream to read from
+     * @param[in] bin whether the data stream is binary or not (default true).
+     * @return a reference to the stream
+     **********************************************************************/
+    std::istream& load(std::istream& is, bool bin = true) {
+      int bucketsize1, ptssize, treesize;
+      if (bin) {
+        is.read(reinterpret_cast<char *>(&bucketsize1), sizeof(int));
+        is.read(reinterpret_cast<char *>(&ptssize), sizeof(int));
+        is.read(reinterpret_cast<char *>(&treesize), sizeof(int));
+        if (!(bucketsize1 == bucketsize && ptssize == int(_pts.size()) &&
+              0 <= treesize && treesize <= ptssize))
+          throw GeographicLib::GeographicErr("Bad header");
+      } else {
+        if (!((is >> bucketsize1 >> ptssize >> treesize) &&
+              bucketsize1 == bucketsize && ptssize == int(_pts.size()) &&
+              0 <= treesize && treesize <= ptssize))
+          throw GeographicLib::GeographicErr("Bad header");
+      }
+      std::vector<Node> tree;
+      tree.reserve(treesize);
+      for (int i = 0; i < treesize; ++i) {
+        Node node;
+        if (bin) {
+          is.read(reinterpret_cast<char *>(&node.index), sizeof(int));
+          if (!(-1 <= node.index && node.index << ptssize))
+            throw GeographicLib::GeographicErr("Bad index");
+          if (node.index >= 0) {
+            is.read(reinterpret_cast<char *>(node.data.lower),
+                    2 * sizeof(real));
+            is.read(reinterpret_cast<char *>(node.data.upper),
+                    2 * sizeof(real));
+            is.read(reinterpret_cast<char *>(node.data.child),
+                    2 * sizeof(int));
+            if (!( -1 <= node.data.child[0] && node.data.child[0] < treesize &&
+                   -1 <= node.data.child[1] && node.data.child[1] < treesize &&
+                   0 <= node.data.lower[0] &&
+                   node.data.lower[0] <= node.data.upper[0] &&
+                   node.data.upper[0] <= node.data.lower[1] &&
+                   node.data.lower[1] <= node.data.upper[1] ))
+              throw GeographicLib::GeographicErr("Bad node data");
+          } else {
+            is.read(reinterpret_cast<char *>(node.leaves),
+                    bucketsize * sizeof(int));
+            // Must be at least one valid leaf followed by a sequence end
+            // markers (-1).
+            bool start = true;
+            for (int l = 0; l < bucketsize; ++l) {
+              if (!( (start ?
+                      ((l == 0 ? 0 : -1) <= node.leaves[l] &&
+                       node.leaves[l] < ptssize) :
+                      node.leaves[l] == -1) ))
+                throw GeographicLib::GeographicErr("Bad leaf data");
+              start = node.leaves[l] >= 0;
+            }
+          } 
+        } else {
+          if (!((is >> node.index) &&
+                -1 <= node.index && node.index << ptssize))
+            throw GeographicLib::GeographicErr("Bad index");
+          if (node.index >= 0) {
+            for (int l = 0; l < 2; ++l) {
+              if (!( (is >> node.data.lower[l] >> node.data.upper[l]
+                      >> node.data.child[l]) &&
+                     -1 <= node.data.child[l] &&
+                     node.data.child[l] < treesize &&
+                     0 <= node.data.lower[l] &&
+                     node.data.lower[l] <= node.data.upper[l] &&
+                     (l == 0 || node.data.upper[l-1] <= node.data.lower[l]) ))
+                throw GeographicLib::GeographicErr("Bad node data");
+            }
+          } else {
+            // Must be at least one valid leaf followed by a sequence end
+            // markers (-1).
+            bool start = true;
+            for (int l = 0; l < bucketsize; ++l) {
+              if (!( (is >> node.leaves[l]) &&
+                     (start ?
+                      ((l == 0 ? 0 : -1) <= node.leaves[l] &&
+                       node.leaves[l] < ptssize) :
+                      node.leaves[l] == -1) ))
+                throw GeographicLib::GeographicErr("Bad leaf data");
+              start = node.leaves[l] >= 0;
+            }
+          }
+        }
+        tree.push_back(node);
+      }
+      _tree.swap(tree);
+      return is;
     }
 
   private:
@@ -331,11 +511,11 @@ namespace GeographicLib {
           data.child[i] = -1;
         }
       }
-    private:
-#if HAVE_BOOST_SERIALIZATION
+
+#if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
       friend class boost::serialization::access;
       template<class Archive> void save(Archive& ar, const unsigned int) const {
-        ar & boost::serialization::make_nvp("index" , index );
+        ar & boost::serialization::make_nvp("index" , index);
         if (index < 0)
           ar & boost::serialization::make_nvp("leaves", leaves);
         else
@@ -344,7 +524,7 @@ namespace GeographicLib {
             & boost::serialization::make_nvp("child", data.child);
       }
       template<class Archive> void load(Archive& ar, const unsigned int) {
-        ar & boost::serialization::make_nvp("index" , index );
+        ar & boost::serialization::make_nvp("index" , index);
         if (index < 0)
           ar & boost::serialization::make_nvp("leaves", leaves);
         else
@@ -357,6 +537,22 @@ namespace GeographicLib {
       { boost::serialization::split_member(ar, *this, file_version); }
 #endif
     };
+#if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
+    friend class boost::serialization::access;
+    template<class Archive> void save(Archive& ar, const unsigned int) const {
+      ar & boost::serialization::make_nvp("bucketsize" , bucketsize)
+        & boost::serialization::make_nvp("ptssize" , _pts.size())
+        & boost::serialization::make_nvp("ptssize" , _tree);
+    }
+    template<class Archive> void load(Archive& ar, const unsigned int) {
+      ar & boost::serialization::make_nvp("bucketsize" , bucketsize)
+        & boost::serialization::make_nvp("ptssize" , _pts.size())
+        & boost::serialization::make_nvp("ptssize" , _tree);
+    }
+    template<class Archive>
+    void serialize(Archive &ar, const unsigned int file_version)
+    { boost::serialization::split_member(ar, *this, file_version); }
+#endif
 
     std::vector<Node> _tree;
     int init(std::vector<item>& ids, int l, int u, int vp) {

@@ -5,8 +5,13 @@
 #include <vector>
 #include <cstdlib>
 #include <cmath>
+#include <fstream>
 #include <GeographicLib/VPTree.hpp>
 #include <GeographicLib/Geodesic.hpp>
+#if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
+#include <boost/archive/xml_iarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
+#endif
 
 using namespace std;
 using namespace GeographicLib;
@@ -49,13 +54,27 @@ public:
 int main() {
   // Define a distance function object
   DistanceCalculator distance(Geodesic::WGS84());
-  srand(0);
+  if (1) {
+    srand(0);
   vector<pos> pts;
   int num = 10000;
   // Sample the points
   for (int i = 0; i < num; ++i) pts.push_back(randompos());
-  // Set up the VP tree
-  VPTree<double, pos, DistanceCalculator> posset(pts, distance);
+  {
+    // Set up the VP tree
+    VPTree<double, pos, DistanceCalculator> posset(pts, distance);
+    ofstream ofs("vptree.bin", std::ios::binary);
+#if GEOGRAPHICIB_HAVE_BOOST_SERIALIZATION
+    {
+      std::ofstream f("vptree.xml");
+      boost::archive::xml_oarchive oa(f); // set up an xml archive
+      oa << posset;                       // save tree to xml file vptree.xml
+    }
+#endif
+    posset.save(ofs, true);
+  }
+  ifstream ifs("vptree.bin", std::ios::binary);
+  VPTree<double, pos, DistanceCalculator> posset(pts, distance, ifs, true);
   vector<int> ind;
   int cnt = 0;
   cout << "Points more than 350km from their neighbors\n"
@@ -74,4 +93,31 @@ int main() {
     }
   }
   posset.report(cout);
+  }
+  if (0) {
+    srand(1);
+    vector<pos> ptsa, ptsb;
+    int numa = 10000, numb = 5000;
+    // Sample the points
+    for (int i = 0; i < numa; ++i) ptsa.push_back(randompos());
+    for (int i = 0; i < numb; ++i) ptsb.push_back(randompos());
+    VPTree<double, pos, DistanceCalculator> seta(ptsa, distance);
+    VPTree<double, pos, DistanceCalculator> setb(ptsb, distance);
+    vector<int> ind;
+    double d0 = 10e3, d1 = 100e3;
+    for (int j = 0; j < numb; ++j) {
+      double d = seta.search(ptsb[j], ind, 1, d0);
+      if (ind.size() != 1) continue;
+      int i = ind[0];
+      setb.search(ptsa[i], ind, 1, d);
+      if (ind[0] != j) continue;
+      seta.search(ptsb[j], ind, 2, d1, false);
+      if (ind.size() == 2) continue;
+      setb.search(ptsa[i], ind, 2, d1, false);
+      if (ind.size() == 2) continue;
+      std::cout << i << " " << j << "\n";
+    }
+    seta.report(std::cout);
+    setb.report(std::cout);
+  }
 }

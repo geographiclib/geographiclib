@@ -11,6 +11,12 @@ endif ()
 set (EXAMPLE_SOURCES ${EXAMPLE_SOURCES}
   GeoidToGTX.cpp make-egmcof.cpp JacobiConformal.cpp)
 
+if (0)
+  find_package (Boost COMPONENTS serialization)
+  message (STATUS "${Boost_LIBRARIES} ${Boost_INCLUDE_DIRS}")
+  include_directories (${Boost_INCLUDE_DIRS})
+endif ()
+
 set (EXAMPLES)
 add_definitions (${PROJECT_DEFINITIONS})
 
@@ -24,6 +30,10 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   target_link_libraries (${EXAMPLE} ${PROJECT_LIBRARIES}
     ${QUAD_LIBRARIES} ${MPFR_LIBRARIES})
 endforeach ()
+
+if (0)
+  target_link_libraries (example-VPTree ${Boost_LIBRARIES})
+endif ()
 
 find_package (OpenMP QUIET)
 
