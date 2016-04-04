@@ -56,40 +56,39 @@ typedef NearestNeighbor<double, pos, DistanceCalculator> GeodesicNeighbor;
 int main() {
   // Define a distance function object
   DistanceCalculator distance(Geodesic::WGS84());
-  if (1) {
-    srand(0);
+  srand(0);
   vector<pos> pts;
   int num = 10000;
   // Sample the points
   for (int i = 0; i < num; ++i) pts.push_back(randompos());
   {
-    // Set up the VP tree
+    // Illustrate saving and restoring the GeodesicNeighbor
+    // construct it
     GeodesicNeighbor posset(pts, distance);
+    // and save it
 #if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
-    {
-      ofstream f("vptree.xml");
-      boost::archive::xml_oarchive oa(f); // set up an xml archive
-      oa << BOOST_SERIALIZATION_NVP(posset);
-    }
+    ofstream f("vptree.xml");
+    boost::archive::xml_oarchive oa(f);
+    oa << BOOST_SERIALIZATION_NVP(posset);
+#else
+    ofstream ofs("vptree.bin", ios::binary);
+    posset.Save(ofs, true);
 #endif
-    {
-      ofstream ofs("vptree.bin", ios::binary);
-      posset.Save(ofs, true);
-    }
   }
+  // Construct an empty GeodesicNeighbor
   GeodesicNeighbor posset;
-#if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
+  // restore it from the file
   {
+#if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
     ifstream f("vptree.xml");
     boost::archive::xml_iarchive ia(f);
     ia >> BOOST_SERIALIZATION_NVP(posset);
-  }
 #else
-  {
     ifstream ifs("vptree.bin", ios::binary);
     posset.Load(ifs);
-  }
 #endif
+  }
+  // Now use it
   vector<int> ind;
   int cnt = 0;
   cout << "Points more than 350km from their neighbors\n"
@@ -109,31 +108,4 @@ int main() {
     }
   }
   posset.Report(cout);
-  }
-  if (1) {
-    srand(1);
-    vector<pos> ptsa, ptsb;
-    int numa = 10000, numb = 5000;
-    // Sample the points
-    for (int i = 0; i < numa; ++i) ptsa.push_back(randompos());
-    for (int i = 0; i < numb; ++i) ptsb.push_back(randompos());
-    GeodesicNeighbor seta(ptsa, distance);
-    GeodesicNeighbor setb(ptsb, distance);
-    vector<int> ind;
-    double d0 = 10e3, d1 = 100e3;
-    for (int j = 0; j < numb; ++j) {
-      double d = seta.Search(ptsa, distance, ptsb[j], ind, 1, d0);
-      if (ind.size() != 1) continue;
-      int i = ind[0];
-      setb.Search(ptsb, distance, ptsa[i], ind, 1, d);
-      if (ind[0] != j) continue;
-      seta.Search(ptsa, distance, ptsb[j], ind, 2, d1, false);
-      if (ind.size() == 2) continue;
-      setb.Search(ptsb, distance, ptsa[i], ind, 2, d1, false);
-      if (ind.size() == 2) continue;
-      cout << i << " " << j << "\n";
-    }
-    seta.Report(cout);
-    setb.Report(cout);
-  }
 }
