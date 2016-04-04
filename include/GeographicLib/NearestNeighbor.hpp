@@ -38,7 +38,6 @@
 #  pragma warning (disable: 4127)
 #endif
 
-#define GEOGRAPHICLIB_NEARESTNEIGHBOR_VERSION 1
 namespace GeographicLib {
 
   /**
@@ -101,7 +100,8 @@ namespace GeographicLib {
    **********************************************************************/
   template <typename real, typename position, class distance>
   class NearestNeighbor {
-    static const int version = GEOGRAPHICLIB_NEARESTNEIGHBOR_VERSION;
+    // For tracking changes to the I/O format
+    static const int version = 1;
     static const int maxbucket = 10;
   public:
 
@@ -561,25 +561,26 @@ namespace GeographicLib {
 #endif
     };
 #if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
-    BOOST_CLASS_VERSION(Node, GEOGRAPHICLIB_NEARESTNEIGHBOR_VERSION)
     friend class boost::serialization::access;
     template<class Archive> void save(Archive& ar, const unsigned) const {
-      ar & boost::serialization::make_nvp("bucket", _bucket)
+      ar & boost::serialization::make_nvp("version", version)
+        & boost::serialization::make_nvp("bucket", _bucket)
         & boost::serialization::make_nvp("numpoints", _numpoints)
         & boost::serialization::make_nvp("tree", _tree);
     }
-    template<class Archive> void load(Archive& ar, const unsigned version1) {
-      int bucket, numpoints;
-      std::vector<Node> tree;
-      if (version1 != int(version))
+    template<class Archive> void load(Archive& ar, const unsigned) {
+      int version1, bucket, numpoints;
+      ar & boost::serialization::make_nvp("version", version1);
+      if (version1 != version)
         throw GeographicLib::GeographicErr("Incompatible version");
+      std::vector<Node> tree;
       ar & boost::serialization::make_nvp("bucket", bucket)
         & boost::serialization::make_nvp("numpoints", numpoints)
         & boost::serialization::make_nvp("tree", tree);
       if (!(0 <= bucket && bucket <= maxbucket &&
             0 <= int(tree.size()) && int(tree.size()) <= numpoints))
         throw GeographicLib::GeographicErr("Bad header");
-      for (int i = 0; i < treesize; ++i)
+      for (int i = 0; i < int(tree.size()); ++i)
         tree[i].Check(numpoints, int(tree.size()), bucket);
       _tree.swap(tree);
       _numpoints = numpoints;
@@ -656,11 +657,9 @@ namespace GeographicLib {
       tree.push_back(node);
       return int(tree.size()) - 1;
     }
+
   };
 
-#if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
-  BOOST_CLASS_VERSION(NearestNeighbor, GEOGRAPHICLIB_NEARESTNEIGHBOR_VERSION)
-#endif
 } // namespace GeographicLib
 
 #if defined(_MSC_VER)
