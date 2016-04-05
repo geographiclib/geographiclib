@@ -167,9 +167,8 @@ namespace GeographicLib {
      *
      * See also the documentation on the constructor.
      *
-     * If an exception is thrown, the state of the NearestNeighbor is unchanged
-     * (except that the counter used by Report() for the setup cost might have
-     * been altered).
+     * If an exception is thrown, the state of the NearestNeighbor is
+     * unchanged.
      **********************************************************************/
     void Initialize(const std::vector<position>& pts, const distance& dist,
                     int bucket = 4) {
@@ -180,19 +179,20 @@ namespace GeographicLib {
           ("bucket must lie in [0, 2 + 4*sizeof(real)/sizeof(int)]");
       if (pts.size() > size_t(std::numeric_limits<int>::max()))
         throw GeographicLib::GeographicErr("pts array too big");
-      _c0 = 0;
       // the pair contains distance+id
       std::vector<item> ids(pts.size());
       for (int k = int(ids.size()); k--;)
         ids[k] = std::make_pair(real(0), k);
+      int c0 = 0;
       std::vector<Node> tree;
-      init(pts, dist, bucket, tree, ids, 0, int(ids.size()), int(ids.size()/2));
+      init(pts, dist, bucket, tree, ids, c0,
+           0, int(ids.size()), int(ids.size()/2));
       _tree.swap(tree);
       _numpoints = int(pts.size());
       _bucket = bucket;
-      _mc = 0; _sc = 0;
-      _c1 = 0; _k = 0;
-      _cmin = std::numeric_limits<int>::max(); _cmax = 0;
+      _mc = _sc = 0;
+      _c0 = c0; _c1 = _k = _cmax = 0;
+      _cmin = std::numeric_limits<int>::max();
     }
 
     /**
@@ -340,21 +340,6 @@ namespace GeographicLib {
     int NumPoints() const { return _numpoints; }
 
     /**
-     * Report accumulated statistics on the searches so far.
-     *
-     * @param[in,out] os the stream to write to.
-     **********************************************************************/
-    void Report(std::ostream& os) const {
-      os << "set size " << _numpoints << "\n"
-         << "setup cost " << _c0 << "\n"
-         << "searches " << _k << "\n"
-         << "search cost (total mean sd min max) "
-         << _c1 << " "
-         << int(std::floor(_mc + 0.5)) << " "
-         << int(std::floor(std::sqrt(_sc / (_k - 1)) + 0.5)) << " "
-         << _cmin << " " << _cmax << "\n";
-    }
-    /**
      * Write the object to an I/O stream.
      *
      * @param[in,out] os the stream to write to.
@@ -362,7 +347,9 @@ namespace GeographicLib {
      * @exception std::bad_alloc if memory for the string representation of the
      *   object can't be allocated.
      *
-     * The format of the binary saves is \e not portable.
+     * The counters tracking the statistics of searches are not saved; however
+     * the initializtion cost is saved.  The format of the binary saves is \e
+     * not portable.
      *
      * <b>NOTE</b>: <a href="http://www.boost.org/libs/serialization/doc">
      * Boost serialization</a> can also be used to save and restore a
@@ -373,13 +360,14 @@ namespace GeographicLib {
       int realspec = std::numeric_limits<real>::digits *
         (std::numeric_limits<real>::is_integer ? -1 : 1);
       if (bin) {
-        int buf[5];
+        int buf[6];
         buf[0] = version;
         buf[1] = realspec;
         buf[2] = _bucket;
         buf[3] = _numpoints;
         buf[4] = int(_tree.size());
-        os.write(reinterpret_cast<const char *>(buf), 5 * sizeof(int));
+        buf[5] = _c0;
+        os.write(reinterpret_cast<const char *>(buf), 6 * sizeof(int));
         for (int i = 0; i < int(_tree.size()); ++i) {
           const Node& node = _tree[i];
           os.write(reinterpret_cast<const char *>(&node.index), sizeof(int));
@@ -402,7 +390,7 @@ namespace GeographicLib {
           // max_digits10 can be used instead.
         ostring.precision(std::numeric_limits<real>::digits10 + 2);
         ostring << version << " " << realspec << " " << _bucket << " "
-                << _numpoints << " " << _tree.size();
+                << _numpoints << " " << _tree.size() << " " << _c0;
         for (int i = 0; i < int(_tree.size()); ++i) {
           const Node& node = _tree[i];
           ostring << "\n" << node.index;
@@ -426,7 +414,8 @@ namespace GeographicLib {
      * @param[in] bin if true (the default) load in binary mode.
      * @exception GeographicErr if the state read from \e is is illegal.
      *
-     * Binary data must have been saved on a machine with the same
+     * The counters tracking the statistics of searches are reset by this
+     * operation.  Binary data must have been saved on a machine with the same
      * architecture.  If an exception is thrown, the state of the
      * NearestNeighbor is unchanged.
      *
@@ -439,15 +428,17 @@ namespace GeographicLib {
      * initialization must be provided to the Search() function.
      **********************************************************************/
     void Load(std::istream& is, bool bin = true) {
-      int version1, realspec, bucket, numpoints, treesize;
+      int version1, realspec, bucket, numpoints, treesize, c0;
       if (bin) {
         is.read(reinterpret_cast<char *>(&version1), sizeof(int));
         is.read(reinterpret_cast<char *>(&realspec), sizeof(int));
         is.read(reinterpret_cast<char *>(&bucket), sizeof(int));
         is.read(reinterpret_cast<char *>(&numpoints), sizeof(int));
         is.read(reinterpret_cast<char *>(&treesize), sizeof(int));
+        is.read(reinterpret_cast<char *>(&c0), sizeof(int));
       } else {
-        if (!( is >> version1 >> realspec >> bucket >> numpoints >> treesize ))
+        if (!( is >> version1 >> realspec >> bucket >> numpoints >> treesize
+               >> c0 ))
           throw GeographicLib::GeographicErr("Bad header");
       }
       if (!( version1 == version ))
@@ -504,18 +495,38 @@ namespace GeographicLib {
       _tree.swap(tree);
       _numpoints = numpoints;
       _bucket = bucket;
-      _mc = 0; _sc = 0;
-      _c0 = 0; _c1 = 0; _k = 0;
-      _cmin = std::numeric_limits<int>::max(); _cmax = 0;
+      _mc = _sc = 0;
+      _c0 = c0; _c1 = _k = _cmax = 0;
+      _cmin = std::numeric_limits<int>::max();
     }
 
+    /**
+     * Report accumulated statistics on the searches so far.
+     *
+     * @param[in,out] os the stream to write to.
+     *
+     * The data reported are:
+     * - the set size;
+     * - the cost of initialization;
+     * - the number of searches;
+     * - statistics on the cost of the searches.
+     * .
+     * Here "cost" measures the number of distance calculations needed.
+     **********************************************************************/
+    void Report(std::ostream& os) const {
+      os << "set size " << _numpoints << "\n"
+         << "setup cost " << _c0 << "\n"
+         << "searches " << _k << "\n"
+         << "search cost (total mean sd min max) "
+         << _c1 << " "
+         << int(std::floor(_mc + 0.5)) << " "
+         << int(std::floor(std::sqrt(_sc / (_k - 1)) + 0.5)) << " "
+         << _cmin << " " << _cmax << "\n";
+    }
   private:
     // Package up a real and an int.  We will want to sort on the real so put
     // it first.
     typedef std::pair<real, int> item;
-    mutable double _mc, _sc;
-    mutable int _c0, _c1, _k, _cmin, _cmax;
-
     class Node {
     public:
       struct bounds {
@@ -601,10 +612,11 @@ namespace GeographicLib {
         & boost::serialization::make_nvp("realspec", realspec)
         & boost::serialization::make_nvp("bucket", _bucket)
         & boost::serialization::make_nvp("numpoints", _numpoints)
+        & boost::serialization::make_nvp("cost", _c0)
         & boost::serialization::make_nvp("tree", _tree);
     }
     template<class Archive> void load(Archive& ar, const unsigned) {
-      int version1, realspec, bucket, numpoints;
+      int version1, realspec, bucket, numpoints, c0;
       ar & boost::serialization::make_nvp("version", version1);
       if (version1 != version)
         throw GeographicLib::GeographicErr("Incompatible version");
@@ -617,6 +629,7 @@ namespace GeographicLib {
       if (!( 0 <= bucket && bucket <= maxbucket ))
         throw GeographicLib::GeographicErr("Bad bucket size");
       ar & boost::serialization::make_nvp("numpoints", numpoints)
+        & boost::serialization::make_nvp("cost", c0)
         & boost::serialization::make_nvp("tree", tree);
       if (!( 0 <= int(tree.size()) && int(tree.size()) <= numpoints ))
         throw GeographicLib::GeographicErr("Bad number of points or tree size");
@@ -625,19 +638,22 @@ namespace GeographicLib {
       _tree.swap(tree);
       _numpoints = numpoints;
       _bucket = bucket;
-      _mc = 0; _sc = 0;
-      _c0 = 0; _c1 = 0; _k = 0;
-      _cmin = std::numeric_limits<int>::max(); _cmax = 0;
+      _mc = _sc = 0;
+      _c0 = c0; _c1 = _k = _cmax = 0;
+      _cmin = std::numeric_limits<int>::max();
     }
     template<class Archive>
     void serialize(Archive& ar, const unsigned int file_version)
     { boost::serialization::split_member(ar, *this, file_version); }
 #endif
 
-    int _numpoints, _bucket;
+    int _numpoints, _bucket, _c0;
     std::vector<Node> _tree;
+    mutable double _mc, _sc;
+    mutable int _c1, _k, _cmin, _cmax;
+
     int init(const std::vector<position>& pts, const distance& dist, int bucket,
-             std::vector<Node>& tree, std::vector<item>& ids,
+             std::vector<Node>& tree, std::vector<item>& ids, int& c0,
              int l, int u, int vp) {
 
       if (u == l)
@@ -654,7 +670,7 @@ namespace GeographicLib {
 
         for (int k = l + 1; k < u; ++k) {
           ids[k].first = dist(pts[ids[l].second], pts[ids[k].second]);
-          ++_c0;
+          ++c0;
         }
         // partitian around the median distance
         std::nth_element(ids.begin() + l + 1, ids.begin() + m, ids.begin() + u);
@@ -667,7 +683,7 @@ namespace GeographicLib {
           node.data.upper[0] = t->first;
           // Use point with max distance as vantage point; this point act as a
           // "corner" point and leads to a good partition.
-          node.data.child[0] = init(pts, dist, bucket, tree, ids,
+          node.data.child[0] = init(pts, dist, bucket, tree, ids, c0,
                                     l + 1, m, int(t - ids.begin()));
         }
         typename std::vector<item>::iterator
@@ -675,7 +691,7 @@ namespace GeographicLib {
         node.data.lower[1] = ids[m].first;
         node.data.upper[1] = t->first;
         // Use point with max distance as vantage point here too
-        node.data.child[1] = init(pts, dist, bucket, tree, ids,
+        node.data.child[1] = init(pts, dist, bucket, tree, ids, c0,
                                   m, u, int(t - ids.begin()));
       } else {
         if (bucket == 0)
