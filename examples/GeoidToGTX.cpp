@@ -108,5 +108,4 @@ int main(int argc, char* argv[]) {
     cerr << "Caught unknown exception\n";
     return 1;
   }
-  return 0;
 }
