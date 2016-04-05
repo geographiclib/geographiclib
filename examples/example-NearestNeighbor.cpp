@@ -85,7 +85,7 @@ int main() {
     ia >> BOOST_SERIALIZATION_NVP(posset);
 #else
     ifstream ifs("vptree.bin", ios::binary);
-    posset.Load(ifs);
+    posset.Load(ifs, true);
 #endif
   }
   // Now use it
