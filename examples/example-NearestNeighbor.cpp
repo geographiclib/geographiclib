@@ -25,20 +25,18 @@ struct pos {
 };
 
 pos randompos() {
-    double r = 2 * (rand() + 0.5) / (double(RAND_MAX) + 1) - 1;
-    double lat = asin(r) / Math::degree();
-    r = 2 * (rand() + 0.5) / (double(RAND_MAX) + 1) - 1;
-    double lon = 180 * r;
-    return pos(lat, lon);
+  double r, lat, lon;
+  r = 2 * (rand() + 0.5) / (RAND_MAX + 1.0) - 1;
+  lat = asin(r) / Math::degree();
+  r = 2 * (rand() + 0.5) / (RAND_MAX + 1.0) - 1;
+  lon = 180 * r;
+  return pos(lat, lon);
 }
 
 // A class to compute the distance between 2 positions.
 class DistanceCalculator {
 private:
-  const Geodesic& _geod;
-  // copy constructor and assignment not allowed
-  DistanceCalculator(const DistanceCalculator&);
-  DistanceCalculator& operator=(const DistanceCalculator&);
+  const Geodesic _geod;
 public:
   DistanceCalculator(const Geodesic& geod)
     : _geod(geod) {}
