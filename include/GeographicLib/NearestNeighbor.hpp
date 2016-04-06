@@ -238,7 +238,9 @@ namespace GeographicLib {
      * large, the efficiency of the search deteriorates.
      *
      * <b>CAUTION</b>: The arguments \e pts and \e dist must be identical to
-     * those used to initialize the NearestNeighbor.
+     * those used to initialize the NearestNeighbor; if not, the behavior of
+     * this function is undefined (however, if the size of \e pts is wrong,
+     * this function exits with no results returned).
      **********************************************************************/
     real Search(const std::vector<position>& pts, const distance& dist,
                 const position& query,
@@ -249,7 +251,8 @@ namespace GeographicLib {
                 bool exhaustive = true,
                 real tol = 0) const {
       std::priority_queue<item> results;
-      if (_numpoints > 0 && k > 0 && maxdist > mindist) {
+      if (_numpoints > 0 && _numpoints == int(pts.size()) &&
+          k > 0 && maxdist > mindist) {
         // distance to the kth closest point so far
         real tau = maxdist;
         // first is negative of how far query is outside boundary of node
