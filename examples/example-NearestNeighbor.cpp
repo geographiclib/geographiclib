@@ -1,5 +1,5 @@
 // Example of using the GeographicLib::NearestNeighbor class.  WARNING: this
-// creates files, vptree.xml or vptree.bin, in the current directory.
+// creates a file, vptree.xml or vptree.bin, in the current directory.
 
 #include <iostream>
 
@@ -9,7 +9,9 @@
 #include <fstream>
 #include <GeographicLib/NearestNeighbor.hpp>
 #include <GeographicLib/Geodesic.hpp>
+
 #if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
+// If Boost serialization is available, use it.
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 #endif
