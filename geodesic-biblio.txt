@@ -847,6 +847,7 @@
    ''Über geodätischen Linien [Geodesic lines]'',
    Z. Math. Phys. '''26''', 254--269 (1881).[[BR]]
    https://books.google.com/books?id=X9g4AAAAIAAJ&pg=PA264
+   (PDF zmathphys-V26.pdf)
  * L. Aoust,[[BR]]
    ''Sur une forme de l'équation de la ligne géodésique ellipsoïdale et de
    ses usages pour trouver les propriétés communes aux lignes ellipsoïdales
@@ -866,8 +867,9 @@
    ''Über geodätische Bogenstücke von algebraischer Längendifferenz auf
    dem Ellipsoid [Geodesic arcs of algebraic longitude difference on the
    ellipsoid]'',
-   Math. Ann. '''20''', 185--186 (1862).[[BR]]
-   https://books.google.com/books?id=7rEKAAAAYAAJ&pg=PA185
+   Math. Ann. '''20'''(2), 185--186 (1862).[[BR]]
+   https://books.google.com/books?id=YQkPAAAAIAAJ&pg=PA185 (PDF mathann-V20.pdf)
+   [[[BR]] https://dx.doi.org/10.1007/BF01446520
  * A. Allégret,[[BR]]
    ''Essai sur le Calcul des Quaternions de M. W. Hamilton
    [Essay on Hamilton's Quaternions]]'' (Leiber, Paris, 1862), Sec. 3.[[BR]]
@@ -1002,7 +1004,8 @@
    Mem. Roy. Astron. Soc. '''39''', 31--53 & plate 2 (1872),
    in ''The Collected Mathematical Papers of Arthur Cayley'',
    Vol. 7 (Cambridge Univ. Press, 1894), paper 478, pp. 493--510.[[BR]]
-   https://books.google.com/books?id=S4znAAAAMAAJ&pg=PA31 (PDF royastron-V39.pdf)
+   https://books.google.com/books?id=S4znAAAAMAAJ&pg=PA31
+   (PDF royastron-V39.pdf)
    [[BR]]
    https://books.google.com/books?id=4XGIOoCMYYAC&pg=PA493 (PDF cayley-V7.pdf)
  * A. Cayley,[[BR]]
@@ -1050,13 +1053,13 @@
    Hauptaufgabe der sphärischen Geodäsie [A simple derivation of the
    Gaussian formulas for the solving a principal problem in spherical
    geodesy]'',
-   Z. f. Vermes. '''4''', 153--156 (1875).[[BR]]
+   Z. f. Vermess. '''4''', 153--156 (1875).[[BR]]
    https://books.google.com/books?id=wpJIAAAAMAAJ&pg=153 (PDF zvermess-V4.pdf)
  * F. R. Helmert,[[BR]]
    ''Einfache Ableitung eines bekannten Satzes für die Krümmung des
    Rotationsellipsoids [A simple derivation of the known formula for the
    curvature of an ellipsoid of revolution]'',
-   Z. f. Vermes. '''6'''(1), 26--28 (1877).[[BR]]
+   Z. f. Vermess. '''6'''(1), 26--28 (1877).[[BR]]
    https://books.google.com/books?id=WKxIAAAAMAAJ&pg=PA26 (PDF zvermess-V6.pdf)
  * F. R. Helmert,[[BR]]
    ''Die geodätische Übertragung geographischer Coordinaten
@@ -1068,7 +1071,7 @@
    ''Nochmals der Fundamentalsatz für die geodätische Linie auf
    Umdrehungsflächen [Revisiting the fundamental theorem for the geodesic
    line on surfaces of revolution]'',
-   Z. f. Vermes. '''9'''(8), 338--339 (1880).[[BR]]
+   Z. f. Vermess. '''9'''(8), 338--339 (1880).[[BR]]
    https://books.google.com/books?id=r5RIAAAAMAAJ&pg=PA338 (PDF zvermess-V9.pdf)
  * F. R. Helmert,[[BR]]
    ''Die Mathematischen und Physikalischen Theorieen der Höheren
@@ -1084,24 +1087,26 @@
    Dreiecks auf ein sphärisches mit denselben Seiten [Development of the
    first terms for the reduction of a spheroidal triangle to a spherical
    one with the same sides],''
-   Z. f. Vermes. '''18'''(9), 257--268 (1889).[[BR]]
+   Z. f. Vermess. '''18'''(9), 257--268 (1889).[[BR]]
    https://books.google.com/books?id=L5xIAAAAMAAJ&pg=257 (PDF zvermess-V18.pdf)
  * M. Levy,[[BR]]
    ''Sur les intégrales rationnelles du problème des lignes géodésiques
    [On the rational integrals of geodesic lines]'',
    Comptes Rendus '''85''', 1065--1068 (1877).[[BR]]
    https://books.google.com/books?id=H9JEAQAAMAAJ&pg=PA1065
+   (PDF comprendus-V85.pdf)
  * K. Schwering,[[BR]]
    ''Neue geometrische Darstellung der geodätischen Linie auf dem
    Rotationsellipsoid [New geometric representation of the geodesic on an
    ellipsoid of revolution]'',
    Z. Math. Phys. '''24''', 405--407 (1879).[[BR]]
    https://books.google.com/books?id=bNk4AAAAIAAJ&pg=PA405
+   (PDF zmathphys-V24.pdf)
  * C. Wiener,[[BR]]
    ''Zusatz zu der elementaren Begründung des Fundamentalsatzes über die
    geodätische Linie auf einer Umdrehungsfläche von Professor Jordan
    [Addendum to Jordan's paper]'',
-   Z. f. Vermes. '''9'''(8), 337--338 (1880).[[BR]]
+   Z. f. Vermess. '''9'''(8), 337--338 (1880).[[BR]]
    https://books.google.com/books?id=r5RIAAAAMAAJ&pg=PA337 (PDF zvermess-V9.pdf)
  * F. J. van den Berg,[[BR]]
    ''Sur les écarts de la ligne géodésique et des sections planes normales
@@ -1178,22 +1183,23 @@
    given surface]'',
    Abhand. König. Bay. Akad. der Wiss. '''14'''(3), 93--110 (1883).[[BR]]
    https://books.google.com/books?id=1qRGAQAAMAAJ&pg=RA2-PA91
+   (PDF bayerisch-V14.pdf)
  * H. Bruns,[[BR]]
    ''Bemerkung über die geodätische Linie [A remark about the geodesic
    line]'',
-   Z. f. Vermes. '''10'''(7), 298--301 (1881).[[BR]]
+   Z. f. Vermess. '''10'''(7), 298--301 (1881).[[BR]]
    https://books.google.com/books?id=spZIAAAAMAAJ&pg=298 (PDF zvermess-V10.pdf)
  * J. Lüroth,[[BR]]
    ''Notiz über die Rectification eines Ellipsenbogens
    [The rectification of an elliptical arc],''
-   Z. f. Vermes. '''10'''(5), 225--226 (1881).[[BR]]
+   Z. f. Vermess. '''10'''(5), 225--226 (1881).[[BR]]
    https://books.google.com/books?id=spZIAAAAMAAJ&pg=PA225
    (PDF zvermess-V10.pdf)
  * J. Lüroth,[[BR]]
    ''Eine Gleichung zwischen den Längen, Breiten und Azimuten dreier
    Erdorte [An equation between the longitudes, latitudes, and azimuths
    for three points on the earth]'',
-   Z. f. Vermes. '''15'''(21), 529--535 (1886).[[BR]]
+   Z. f. Vermess. '''15'''(21), 529--535 (1886).[[BR]]
    https://books.google.com/books?id=m5hIAAAAMAAJ&pg=529 (PDF zvermess-V15.pdf)
  * C. T. Albrecht,[[BR]]
    ''Über die Umkehrung der Bessel'schen Methode der sphäroidischen Übertragung
@@ -1220,30 +1226,30 @@
    der Bessel'schen Methode ausgeglichenen Triangulirung [The average error
    in angle measurments with Bessel's method of balanced triangulation]'',
    Astron. Nachr. '''89'''(2114), 27--30 (1877).[[BR]]
-   https://books.google.com/books?id=46MEAAAAQAAJ&pg=PA6 [[BR]]
    http://adsabs.harvard.edu/abs/1877AN.....89...27J [[BR]]
    https://dx.doi.org/10.1002/asna.18770890204
  * W. Jordan,[[BR]]
    ''Elementare Begründung des Fundamentalsatzes über die geodätische Linie
    auf einer Umdrehungsfläche [Elementary derivation of the fundamental
    theorem for the geodesic line on a surface of revolution]'',
-   Z. f. Vermes. '''9'''(7), 297--298 (1880).[[BR]]
+   Z. f. Vermess. '''9'''(7), 297--298 (1880).[[BR]]
    https://books.google.com/books?id=r5RIAAAAMAAJ&pg=PA297 (PDF zvermess-V9.pdf)
  * W. Jordan,[[BR]]
    ''Bemerkungen zur Rectification eines Meridianbogens
    [Comment on the rectification of an elliptical arc],''
-   Z. f. Vermes. '''11'''(23), 622--625 (1882).[[BR]]
+   Z. f. Vermess. '''11'''(23), 622--625 (1882).[[BR]]
    https://books.google.com/books?id=fK9IAAAAMAAJ&pg=PA622
+   (PDF zvermess-V11.pdf)
  * W. Jordan,[[BR]]
    ''Neue Auflösung der geodätischen Hauptaufgabe und ihrer Umkehrung [A
    new solution for the principal geodesic problem and its inverse]'',
-   Z. f. Vermes. '''12'''(3), 65--82 (1883).[[BR]]
+   Z. f. Vermess. '''12'''(3), 65--82 (1883).[[BR]]
    https://books.google.com/books?id=QrBIAAAAMAAJ&pg=PA65 (PDF zvermess-V12.pdf)
  * W. Jordan,[[BR]]
    ''Elementare Begründung der Beziehungen zwischen der Linie und den
    Normalschnitten [Elementary derivation of the relationship between the
    line and the normal sections]'',
-   Z. f. Vermes. '''13'''(10), 238--241 (1884).[[BR]]
+   Z. f. Vermess. '''13'''(10), 238--241 (1884).[[BR]]
    https://books.google.com/books?id=7YNNAAAAYAAJ&pg=238 (PDF zvermess-V13.pdf)
  * W. Jordan,[[BR]]
    ''Handbuch der Vermessungskunde [Handbook of Surveying]'',
@@ -1258,12 +1264,14 @@
    ''Untersuchungen über geodätischen Curben
    [On geodesic curves]'',
    Math. Ann. '''20'''(3), 357--454 (1882).[[BR]]
-   https://books.google.com/books?id=7rEKAAAAYAAJ&pg=PA357
+   https://books.google.com/books?id=YQkPAAAAIAAJ&pg=PA357 (PDF mathann-V20.pdf)
+   [[[BR]] https://dx.doi.org/10.1007/BF01443601
  * A. Brill,[[BR]]
    ''Zur Theorie der geodätischen Linie und des geodätischen Dreiecks
    [The theory of geodesic lines and geodesic trangles]'',
    Abhand. König. Bay. Akad. der Wiss. '''14'''(2), 111--140 (1883).[[BR]]
    https://books.google.com/books?id=1qRGAQAAMAAJ&pg=PA110-IA1
+   (PDF bayerisch-V14.pdf)
  * J. H. L. Krüger,[[BR]]
    ''Die geodätische Linie des Sphäroids und Untersuchung darüber, wann
    dieselbe aufhört, kürzeste Linie zu sein [The geodesic line on a
@@ -1298,7 +1306,6 @@
    ''Die Ausgleichung grosser geodätischer Dreiecke [The adjustment of
    large geodesic triangles]'',
    Astron. Nachr. '''107'''(2549--2550), 65--84 (1883).[[BR]]
-   https://books.google.com/books?id=PNI7AQAAMAAJ&pg=PA66 [[BR]]
    http://adsabs.harvard.edu/abs/1883AN....107...65H [[BR]]
    https://dx.doi.org/10.1002/asna.18841070501
  * P. Frost,[[BR]]
@@ -1310,11 +1317,13 @@
    [The curvature of the projection of a geodesic]'',
    Ann. l'École Poly. Delft '''2''', 179--230 (1886).[[BR]]
    https://books.google.com/books?id=Rw1HAQAAMAAJ&pg=RA1-PA179
+   (PDF anndelft-V1-3.pdf)
  * H. Resal,[[BR]]
    ''Note sur la courbure des lignes géodésiques d'une surface de
    révolution [On the curvature of geodesics on a surface of revolution]'',
    Nouv. Ann. de Math. (Ser. 3) '''6''', 57--60 (1887).[[BR]]
    https://books.google.com/books?id=QNw_AQAAMAAJ&pg=PA57
+   (PDF nouvannmath-V6.pdf)
  * G. H. Halphen,[[BR]]
    ''Traité des Fonctions Elliptiques et de leurs Applications
    [A Treatise on Elliptic Functions and their Applications]'',
@@ -1326,6 +1335,7 @@
    make a conjugate system]'',
    Sitz. König. Akad. der Wiss. München '''18''', 95--102 (1888).[[BR]]
    https://books.google.com/books?id=5zoEAAAAIAAJ&pg=RA1-PA95
+   (PDF sitzmuenchen-V17-18.pdf)
  * J. Knoblauch,[[BR]]
    ''Einleitung in die allgemeine Theorie der krummen Flächen
    [Introduction to the general theory of curved surfaces]''
@@ -1363,8 +1373,9 @@
  * M. F. Khandrikov,[[BR]]
    ''Odno iz resheniy osnovnogo voprosa geodezii [One solution to the
    fundamental problem of geodesy]'',
-   Matematicheskiy sbornik '''17'''(3), 575--586 (1894).[[BR]]
+   Matematicheskiy sbornik '''17'''(3), 575--586 (1893).[[BR]]
    https://books.google.com/books?id=34_xAAAAMAAJ&pg=PA575
+   (PDF matsbornik-V17.pdf)
  * A. R. Forsyth,[[BR]]
    ''Geodesics on quadrics, not of revolution'',
    Proc. London Math. Soc. '''27''', 250--280 (1896).[[BR]]
@@ -1387,7 +1398,7 @@
  * A. Klingatsch,[[BR]]
    ''Zur Identität der kürzesten mit der geodätischen Linie [On the
    indentity of the shortest line with the geodesic]'',
-   Z. f. Vermes. '''26'''(21), 614--615 (1897).[[BR]]
+   Z. f. Vermess. '''26'''(21), 614--615 (1897).[[BR]]
    https://books.google.com/books?id=YJVIAAAAMAAJ&pg=614 (PDF zvermess-V26.pdf)
  * J. S. Hadamard,[[BR]]
    ''Sur certaines propriétés des trajectoires en Dynamique
@@ -1421,7 +1432,7 @@
    ''Vorlesungen über Differentialgeometrie'',
    by M. Lukat,
    (Teubner, Leipzig 1899), Chap. 6.[[BR]]
-   https://books.google.com/books?id=Xa4LAAAAYAAJ&pg=PA146
+   https://books.google.com/books?id=Xa4LAAAAYAAJ&pg=PA146 (PDF bianchi99.pdf)
  * J. H. Poincaré,[[BR]]
    ''Sur les lignes géodésiques des surfaces convexes
    [Geodesics lines on convex surfaces]'',
@@ -1431,7 +1442,7 @@
  * J. Frischauf,[[BR]]
    ''Zur Berechnung sphäroidischer Dreiecke [Calculating spheroidal
    triangles]'',
-   Z. f. Vermes. '''37'''(20), 534--539 (1908).[[BR]]
+   Z. f. Vermess. '''37'''(20), 534--539 (1908).[[BR]]
    https://books.google.com/books?id=EKJIAAAAMAAJ&pg=534 (PDF zvermess-V37.pdf)
  * L. P. Eisenhart,[[BR]]
    ''A Treatise on the Differential Geometry of Curves and Surfaces''

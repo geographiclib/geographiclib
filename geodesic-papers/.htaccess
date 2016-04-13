@@ -20,12 +20,15 @@ AddDescription "Puissant (1819), missing pages from Google scan" puissant19b-add
 AddDescription "Puissant (1819), missing figures from Google scan" puissant19b-fig.pdf
 AddDescription "Soldner, Theorie der Landesvermessung (1810)" soldner10.pdf
 AddDescription "Thune, Trigonometriam Sphaeroidicam (1815)" thune15.pdf
+AddDescription "Abh. Bayerischen Akad. 14, 1883 (<a href=https://books.google.com/books?id=1qRGAQAAMAAJ>id=1qRGAQAAMAAJ</a>)" bayerisch-V14.pdf
 AddDescription "Albrecht, Formeln, 1894 (<a href=https://books.google.com/books?id=muYRAAAAYAAJ>id=muYRAAAAYAAJ</a>)" albrecht94.pdf
 AddDescription "The Analyst 3&ndash;4, 1876&ndash;77 (<a href=https://books.google.com/books?id=eKYEAAAAQAAJ>id=eKYEAAAAQAAJ</a>)" analyst-V3-4.pdf
+AddDescription "Ann. l'École Polytechique Delft 1&ndash;3, 1885&ndash;1888 (<a href=https://books.google.com/books?id=Rw1HAQAAMAAJ>id=Rw1HAQAAMAAJ</a>)" anndelft-V1-3.pdf
 AddDescription "Archives néerland. 12, 1877 (<a href=https://books.google.com/books?id=CycYAAAAYAAJ>id=CycYAAAAYAAJ</a>)" archneerd-V12.pdf
 AddDescription "Beltrami 1, 1901 (<a href=https://books.google.com/books?id=c48vHvLN--kC>id=c48vHvLN--kC</a>)" beltrami-V1.pdf
 AddDescription "Bessel 3, 1876 (<a href=https://books.google.com/books?id=vX4EAAAAYAAJ>id=vX4EAAAAYAAJ</a>)" bessel-V3.pdf
-AddDescription "Bianci, Geometria, 1902 (<a href=https://books.google.com/books?id=U7ALAAAAYAAJ>id=U7ALAAAAYAAJ</a>)" bianchi02.pdf
+AddDescription "Bianci, Differentialgeometrie, 1899 (<a href=https://books.google.com/books?id=Xa4LAAAAYAAJ>id=Xa4LAAAAYAAJ</a>)" bianchi99.pdf
+AddDescription "Bianci, Geometria Differenziale, 1902 (<a href=https://books.google.com/books?id=U7ALAAAAYAAJ>id=U7ALAAAAYAAJ</a>)" bianchi02.pdf
 AddDescription "Börsch, Literatur, 1889 (<a href=https://books.google.com/books?id=AZUZAAAAMAAJ>id=AZUZAAAAMAAJ</a>)" boersch89.pdf
 AddDescription "Cayley 7, 1894 (<a href=https://books.google.com/books?id=4XGIOoCMYYAC>id=4XGIOoCMYYAC</a>)" cayley-V7.pdf
 AddDescription "Cayley 8, 1895 (<a href=https://books.google.com/books?id=4gWd3fZi4zIC>id=4gWd3fZi4zIC</a>)" cayley-V8.pdf
@@ -33,6 +36,7 @@ AddDescription "Christoffel 1, 1910 (<a href=https://books.google.com/books?id=9
 AddDescription "Clarke, Geodesy, 1880 (<a href=https://books.google.com/books?id=lfIoAAAAYAAJ>id=lfIoAAAAYAAJ</a>)" clarke80.pdf
 AddDescription "Comptes Rendus 76, 1873 (<a href=https://books.google.com/books?id=lqJDAQAAIAAJ>id=lqJDAQAAIAAJ</a>)" comprendus-V76.pdf
 AddDescription "Comptes Rendus 80, 1875 (<a href=https://books.google.com/books?id=vE9EAQAAIAAJ>id=vE9EAQAAIAAJ</a>)" comprendus-V80.pdf
+AddDescription "Comptes Rendus 85, 1877 (<a href=https://books.google.com/books?id=H9JEAQAAMAAJ>id=H9JEAQAAMAAJ</a>)" comprendus-V85.pdf
 AddDescription "J. Crelle 86, 1879 (<a href=https://books.google.com/books?id=85HxAAAAMAAJ>id=85HxAAAAMAAJ</a>)" crelle-V86.pdf
 AddDescription "J. Crelle 91, 1881 (<a href=https://books.google.com/books?id=vQYPAAAAIAAJ>id=vQYPAAAAIAAJ</a>)" crelle-V91.pdf
 AddDescription "Darboux, Surfaces 2, 1889 (<a href=https://books.google.com/books?id=_apXAAAAYAAJ>id=_apXAAAAYAAJ</a>)" darboux89.pdf
@@ -53,21 +57,27 @@ AddDescription "Jacobi 7, 1891 (<a href=https://books.google.com/books?id=_09tAA
 AddDescription "Jordan 3, 1896 (<a href=https://books.google.com/books?id=4KgRAAAAYAAJ>id=4KgRAAAAYAAJ</a>)" jordan4-V3.pdf
 AddDescription "Knoblauch, Flächen, 1888 (<a href=https://books.google.com/books?id=zPdMAAAAMAAJ>id=zPdMAAAAMAAJ</a>)" knoblauch88.pdf
 AddDescription "Lambert, Maps, 1772 (<a href=https://books.google.com/books?id=o_s_MR3NUD4C>id=o_s_MR3NUD4C</a>)" lambert72.pdf
-AddDescription "Londom Math. Soc. 27, 1896 (<a href=https://books.google.com/books?id=vUOcAAAAMAAJ>id=vUOcAAAAMAAJ</a>)" londonmathsoc-V27.pdf
+AddDescription "London Math. Soc. 27, 1896 (<a href=https://books.google.com/books?id=vUOcAAAAMAAJ>id=vUOcAAAAMAAJ</a>)" londonmathsoc-V27.pdf
+AddDescription "Mat. sbornik 17, 1893 (<a href=https://books.google.com/books?id=34_xAAAAMAAJ>id=34_xAAAAMAAJ</a>)" matsbornik-V17.pdf
 AddDescription "Math. Ann. 14, 1879 (<a href=https://books.google.com/books?id=CwgPAAAAIAAJ>id=CwgPAAAAIAAJ</a>)" mathann-V14.pdf
 AddDescription "Math. Ann. 20, 1882 (<a href=https://books.google.com/books?id=YQkPAAAAIAAJ>id=YQkPAAAAIAAJ</a>)" mathann-V20.pdf
 AddDescription "Messenger Math. 25, 1896 (<a href=https://books.google.com/books?id=YsAKAAAAIAAJ>id=YsAKAAAAIAAJ</a>)" messmath-V25.pdf
+AddDescription "Nouv. Ann. de Math. 6, 1887 (<a href=https://books.google.com/books?id=QNw_AQAAMAAJ>id=QNw_AQAAMAAJ</a>)" nouvannmath-V6.pdf
 AddDescription "Ostwald's Klass. 55, 1894 (<a href=https://books.google.com/books?id=O4AOAAAAYAAJ>id=O4AOAAAAYAAJ</a>)" ostwald-N55.pdf
 AddDescription "Phil. Soc. Wash. 4&ndash;6, 1881&ndash;84 (<a href=https://books.google.com/books?id=z6kWAAAAQAAJ>id=z6kWAAAAQAAJ</a>)" philsocwash-V4-6.pdf
 AddDescription "Roy. Astron. Soc. 39, 1872 (<a href=https://books.google.com/books?id=S4znAAAAMAAJ>id=S4znAAAAMAAJ</a>)" royastron-V39.pdf
+AddDescription "Sitz. König. Akad. der Wiss. München 17&ndash;18, 1887&ndash;1888 (<a href=https://books.google.com/books?id=5zoEAAAAIAAJ>id=5zoEAAAAIAAJ</a>)" sitzmuenchen-V17-18.pdf
 AddDescription "Todhunter, Figure of Earth 1, 1873 (<a href=https://books.google.com/books?id=6GMSAAAAIAAJ>id=6GMSAAAAIAAJ</a>)" todhunter73a.pdf
 AddDescription "Todhunter, Figure of Earth 2, 1873 (<a href=https://books.google.com/books?id=xmMSAAAAIAAJ>id=xmMSAAAAIAAJ</a>)" todhunter73b.pdf
-AddDescription "Todhuner, Spherical Trig., 1886 (<a href=https://books.google.com/books?id=aVgNAQAAMAAJ>id=aVgNAQAAMAAJ</a>)" todhunter86.pdf
+AddDescription "Todhunter, Spherical Trig., 1886 (<a href=https://books.google.com/books?id=aVgNAQAAMAAJ>id=aVgNAQAAMAAJ</a>)" todhunter86.pdf
 AddDescription "Weierstrass 1, 1894 (<a href=https://books.google.com/books?id=9O4GAAAAYAAJ>id=9O4GAAAAYAAJ</a>)" weierstrass-V1.pdf
+AddDescription "Z. Math. Phys. 24, 1879 (<a href=https://books.google.com/books?id=bNk4AAAAIAAJ>id=bNk4AAAAIAAJ</a>)" zmathphys-V24.pdf
+AddDescription "Z. Math. Phys. 26, 1881 (<a href=https://books.google.com/books?id=X9g4AAAAIAAJ>id=X9g4AAAAIAAJ</a>)" zmathphys-V26.pdf
 AddDescription "Z. f. Vermess. 4, 1875 (<a href=https://books.google.com/books?id=wpJIAAAAMAAJ>id=wpJIAAAAMAAJ</a>)" zvermess-V4.pdf
 AddDescription "Z. f. Vermess. 6, 1877 (<a href=https://books.google.com/books?id=WKxIAAAAMAAJ>id=WKxIAAAAMAAJ</a>)" zvermess-V6.pdf
 AddDescription "Z. f. Vermess. 9, 1880 (<a href=https://books.google.com/books?id=r5RIAAAAMAAJ>id=r5RIAAAAMAAJ</a>)" zvermess-V9.pdf
 AddDescription "Z. f. Vermess. 10, 1881 (<a href=https://books.google.com/books?id=spZIAAAAMAAJ>id=spZIAAAAMAAJ</a>)" zvermess-V10.pdf
+AddDescription "Z. f. Vermess. 11, 1882 (<a href=https://books.google.com/books?id=fK9IAAAAMAAJ>id=fK9IAAAAMAAJ</a>)" zvermess-V11.pdf
 AddDescription "Z. f. Vermess. 12, 1883 (<a href=https://books.google.com/books?id=QrBIAAAAMAAJ>id=QrBIAAAAMAAJ</a>)" zvermess-V12.pdf
 AddDescription "Z. f. Vermess. 13, 1884 (<a href=https://books.google.com/books?id=7YNNAAAAYAAJ>id=7YNNAAAAYAAJ</a>)" zvermess-V13.pdf
 AddDescription "Z. f. Vermess. 15, 1886 (<a href=https://books.google.com/books?id=m5hIAAAAMAAJ>id=m5hIAAAAMAAJ</a>)" zvermess-V15.pdf
