@@ -14,6 +14,7 @@
 #include <vector>
 #include <queue>                // for priority_queue
 #include <utility>              // for swap + pair
+#include <cstring>
 #include <limits>
 #include <cmath>
 #include <iostream>
@@ -364,6 +365,8 @@ namespace GeographicLib {
       int realspec = std::numeric_limits<real>::digits *
         (std::numeric_limits<real>::is_integer ? -1 : 1);
       if (bin) {
+        char id[] = "NearestNeighbor_";
+        os.write(id, 16);
         int buf[6];
         buf[0] = version;
         buf[1] = realspec;
@@ -434,6 +437,11 @@ namespace GeographicLib {
     void Load(std::istream& is, bool bin = true) {
       int version1, realspec, bucket, numpoints, treesize, cost;
       if (bin) {
+        char id[17];
+        is.read(id, 16);
+        id[16] = '\0';
+        if (!(std::strcmp(id, "NearestNeighbor_") == 0))
+          throw GeographicLib::GeographicErr("Bad ID");
         is.read(reinterpret_cast<char *>(&version1), sizeof(int));
         is.read(reinterpret_cast<char *>(&realspec), sizeof(int));
         is.read(reinterpret_cast<char *>(&bucket), sizeof(int));
@@ -505,28 +513,37 @@ namespace GeographicLib {
     }
 
     /**
-     * Report accumulated statistics on the searches so far.
+     * The accumulated statistics on the searches so far.
      *
-     * @param[in,out] os the stream to write to.
+     * @param[out] setupcost the cost of initializing the NearestNeighbor.
+     * @param[out] numsearches the number of calls to Search().
+     * @param[out] searchcost the total cost of the calls to Search().
+     * @param[out] mincost the minimum cost of a Search().
+     * @param[out] maxcost the maxima cost of a Search().
+     * @param[out] mean the mean cost of a Search().
+     * @param[out] sd the standard deviation in the cost of a Search().
      *
-     * The data reported are:
-     * - the set size;
-     * - the cost of initialization;
-     * - the number of searches;
-     * - statistics on the cost of the searches.
-     * .
-     * Here "cost" measures the number of distance calculations needed.
+     * Here "cost" measures the number of distance calculations needed.  Note
+     * that the accumulation of statistics is \e not thread safe.
      **********************************************************************/
-    void Report(std::ostream& os) const {
-      os << "set size " << _numpoints << "\n"
-         << "setup cost " << _cost << "\n"
-         << "searches " << _k << "\n"
-         << "search cost (total mean sd min max) "
-         << _c1 << " "
-         << int(std::floor(_mc + 0.5)) << " "
-         << int(std::floor(std::sqrt(_sc / (_k - 1)) + 0.5)) << " "
-         << _cmin << " " << _cmax << "\n";
+    void Statistics(int& setupcost, int& numsearches, int& searchcost,
+                    int& mincost, int& maxcost,
+                    double& mean, double& sd) const {
+      setupcost = _cost; numsearches = _k; searchcost = _c1;
+      mincost = _cmin; maxcost = _cmax;
+      mean = _mc; sd = std::sqrt(_sc / (_k - 1));
     }
+
+    /**
+     * Reset the counters for the accumulated statistics on the searches so
+     * far.
+     **********************************************************************/
+    void ResetStatistics() const {
+      _mc = _sc = 0;
+      _c1 = _k = _cmax = 0;
+      _cmin = std::numeric_limits<int>::max();
+    }
+
   private:
     // Package up a real and an int.  We will want to sort on the real so put
     // it first.

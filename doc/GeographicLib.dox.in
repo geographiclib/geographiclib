@@ -4602,8 +4602,7 @@ standard construction in the limit of an ellipsoid of revolution.
 \section jacobi-implementation An implementation of the projection
 
 The JacobiConformal class provides an implementation of the Jacobi
-conformal projection is given here.  <b>NOTE:</b> This is just sample
-code.  It is not part of GeographicLib itself.
+conformal projection is given here.
 
 <center>
 Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
@@ -6919,6 +6918,9 @@ git repository for GeographicLib</a>.
        patches in version 1.46.3.
      - Fix documentation and default install location for Windows binary
        installers.
+     - Fix clang compiler warnings in GeodesicExactC4.cpp.
+     - Add NearestNeighbor class.
+     - Incorporate JacobiConformal class into the library.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
    (released 2016-02-15)

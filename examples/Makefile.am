@@ -28,12 +28,14 @@ EXAMPLE_FILES = \
 	example-Gnomonic.cpp \
 	example-GravityCircle.cpp \
 	example-GravityModel.cpp \
+	example-JacobiConformal.cpp \
 	example-LambertConformalConic.cpp \
 	example-LocalCartesian.cpp \
 	example-MGRS.cpp \
 	example-MagneticCircle.cpp \
 	example-MagneticModel.cpp \
 	example-Math.cpp \
+	example-NearestNeighbor.cpp \
 	example-NormalGravity.cpp \
 	example-OSGB.cpp \
 	example-PolarStereographic.cpp \
@@ -49,7 +51,6 @@ EXAMPLE_FILES = \
 	example-UTMUPS.cpp \
 	example-Utility.cpp \
 	GeoidToGTX.cpp \
-	JacobiConformal.cpp JacobiConformal.hpp \
 	make-egmcof.cpp
 
 EXTRA_DIST = CMakeLists.txt $(EXAMPLE_FILES)

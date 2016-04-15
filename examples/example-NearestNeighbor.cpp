@@ -10,6 +10,9 @@
 #include <GeographicLib/NearestNeighbor.hpp>
 #include <GeographicLib/Geodesic.hpp>
 
+#undef GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
+#define GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION 0
+
 #if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
 // If Boost serialization is available, use it.
 #include <boost/archive/xml_iarchive.hpp>
@@ -97,23 +100,33 @@ int main() {
     // Now use it
     vector<int> ind;
     int cnt = 0;
-    cout << "Points more than 350km from their neighbors\n"
+    double thresh = 325000;
+    cout << "Points more than " << thresh/1000 << "km from their neighbors\n"
          << "latitude longitude distance\n";
     for (int i = 0; i < num; ++i) {
-      // Call search with distance limits = (0, 350e3].  Set exhaustive = false
+      // Call search with distance limits = (0, thresh].  Set exhaustive = false
       // so that the search ends as some as a neighbor is found.
-      posset.Search(pts, distance, pts[i], ind, 1, 350e3, 0, false);
+      posset.Search(pts, distance, pts[i], ind, 1, thresh, 0, false);
       if (ind.size() == 0) {
-        // If no neighbors in (0, 350e3], search again with no upper limit and
+        // If no neighbors in (0, thresh], search again with no upper limit and
         // with exhaustive = true (the default).
-        posset.Search(pts, distance, pts[i], ind, 1,
-                      numeric_limits<double>::max(), 0);
-        cout << pts[i].lat << " " << pts[i].lon << " "
-             << distance(pts[i], pts[ind[0]]) << "\n";
+        double d = posset.Search(pts, distance, pts[i], ind, 1,
+                                 numeric_limits<double>::max(), 0);
+        cout << pts[i].lat << " " << pts[i].lon << " " << d << "\n";
         ++cnt;
       }
     }
-    posset.Report(cout);
+    int setupcost, numsearches, searchcost, mincost, maxcost;
+    double mean, sd;
+    posset.Statistics(setupcost, numsearches, searchcost, mincost, maxcost,
+                      mean, sd);
+    int totcost = setupcost + searchcost, exhaustivecost = num * (num - 1) / 2;
+    cout
+      << "Number of distance calculations = " << totcost << "\n"
+      << "With an exhaustive search = " << exhaustivecost << "\n"
+      << "Ratio = " << double(totcost) / exhaustivecost << "\n"
+      << "Efficiency improvement = "
+      << 100 * (1 - double(totcost) / exhaustivecost) << "%\n";
   }
   catch (const exception& e) {
     cerr << "Caught exception: " << e.what() << "\n";

@@ -69,12 +69,14 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		../include/GeographicLib/Gnomonic.hpp \
 		../include/GeographicLib/GravityCircle.hpp \
 		../include/GeographicLib/GravityModel.hpp \
+		../include/GeographicLib/JacobiConformal.hpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
 		../include/GeographicLib/LocalCartesian.hpp \
 		../include/GeographicLib/MGRS.hpp \
 		../include/GeographicLib/MagneticCircle.hpp \
 		../include/GeographicLib/MagneticModel.hpp \
 		../include/GeographicLib/Math.hpp \
+		../include/GeographicLib/NearestNeighbor.hpp \
 		../include/GeographicLib/NormalGravity.hpp \
 		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \
