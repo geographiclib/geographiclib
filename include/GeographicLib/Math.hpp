@@ -440,8 +440,14 @@ namespace GeographicLib {
       x = remainder(x, T(360)); return x != 180 ? x : -180;
 #else
       using std::fmod;
-      x = fmod(x, T(360));
-      return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
+      T y = fmod(x, T(360));
+#if defined(_MSC_VER) && _MSC_VER < 1900
+      // Before version 14 (2015), Visual Studio had problems dealing
+      // with -0.0.  Specifically
+      //   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
+      if (x == 0) y = x;
+#endif
+      return y < -180 ? y + 360 : (y < 180 ? y : y - 360);
 #endif
     }
 
@@ -541,6 +547,8 @@ namespace GeographicLib {
      *
      * The results obey exactly the elementary properties of the trigonometric
      * functions, e.g., sin 9&deg; = cos 81&deg; = &minus; sin 123456789&deg;.
+     * If x = &minus;0, then \e sinx = &minus;0; this is the only case where
+     * &minus;0 is returned.
      **********************************************************************/
     template<typename T> static inline void sincosd(T x, T& sinx, T& cosx) {
       // In order to minimize round-off errors, this function exactly reduces
@@ -575,11 +583,13 @@ namespace GeographicLib {
       if (x == 0) s = x;
 #endif
       switch (unsigned(q) & 3U) {
-      case 0U: sinx =        s; cosx =        c; break;
-      case 1U: sinx =        c; cosx = T(0) - s; break;
-      case 2U: sinx = T(0) - s; cosx = T(0) - c; break;
-      default: sinx = T(0) - c; cosx =        s; break; // case 3U
+      case 0U: sinx =  s; cosx =  c; break;
+      case 1U: sinx =  c; cosx = -s; break;
+      case 2U: sinx = -s; cosx = -c; break;
+      default: sinx = -c; cosx =  s; break; // case 3U
       }
+      // Set sign of 0 results.  -0 only produced for sin(-0)
+      if (x) { sinx += T(0); cosx += T(0); }
     }
 
     /**
@@ -607,7 +617,9 @@ namespace GeographicLib {
       r *= degree();
       unsigned p = unsigned(q);
       r = p & 1U ? cos(r) : sin(r);
-      return p & 2U ? T(0) - r : r;
+      if (p & 2U) r = -r;
+      if (x) r += T(0);
+      return r;
     }
 
     /**
@@ -635,7 +647,8 @@ namespace GeographicLib {
       r *= degree();
       unsigned p = unsigned(q + 1);
       r = p & 1U ? cos(r) : sin(r);
-      return p & 2U ? T(0) - r : r;
+      if (p & 2U) r = -r;
+      return T(0) + r;
     }
 
     /**
@@ -666,7 +679,7 @@ namespace GeographicLib {
      * The result is in the range [&minus;180&deg; 180&deg;).  N.B.,
      * atan2d(&plusmn;0, &minus;1) = &minus;180&deg;; atan2d(+&epsilon;,
      * &minus;1) = +180&deg;, for &epsilon; positive and tiny;
-     * atan2d(&plusmn;0, 1) = &plusmn;0&deg;.
+     * atan2d(&plusmn;0, +1) = &plusmn;0&deg;.
      **********************************************************************/
     template<typename T> static inline T atan2d(T y, T x) {
       // In order to minimize round-off errors, this function rearranges the

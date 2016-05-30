@@ -53,7 +53,6 @@ namespace GeographicLib {
   TransverseMercatorExact::TransverseMercatorExact(real a, real f, real k0,
                                                    bool extendp)
     : tol_(numeric_limits<real>::epsilon())
-    , tol1_(real(0.1) * sqrt(tol_))
     , tol2_(real(0.1) * tol_)
     , taytol_(pow(tol_, real(0.6)))
     , _a(a)

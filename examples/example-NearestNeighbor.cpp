@@ -7,11 +7,15 @@
 #include <cstdlib>              // For srand, rand
 #include <cmath>                // For asin
 #include <fstream>
+#include <string>
+#include <sstream>
+#include <algorithm>            // For sort
 #include <GeographicLib/NearestNeighbor.hpp>
 #include <GeographicLib/Geodesic.hpp>
 
-#undef GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
+#if !defined(GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION)
 #define GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION 0
+#endif
 
 #if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
 // If Boost serialization is available, use it.
@@ -22,11 +26,13 @@
 using namespace std;
 using namespace GeographicLib;
 
-// A structure to hold a geographic coordinate.  This could include additional
-// information such as a place name.
+// A structure to hold a geographic coordinate.  Also included is a field for a
+// "name".  This is unused in this example.
 struct pos {
   double lat, lon;
-  pos(double lat = 0, double lon = 0) : lat(lat), lon(lon) {}
+  string name;
+  pos(double lat = 0, double lon = 0, const string& name = "")
+    : lat(lat), lon(lon), name(name) {}
 };
 
 pos randompos() {

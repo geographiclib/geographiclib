@@ -80,7 +80,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     static const int numit_ = 10;
-    real tol_, tol1_, tol2_, taytol_;
+    real tol_, tol2_, taytol_;
     real _a, _f, _k0, _mu, _mv, _e;
     bool _extendp;
     EllipticFunction _Eu, _Ev;

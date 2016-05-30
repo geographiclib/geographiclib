@@ -37,9 +37,10 @@ the geodesic capabilities in JavaScript, check out the
 the script for displaying
 <a href="../scripts/geod-google.html">geodesics in Google Maps</a>
 
-This library is <i>not</i> a general purpose projection library; use
-<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a> for that.  On
-the other hand, it does provide the core functionality offered by
+This library is <i>not</i> a general purpose projection library nor does
+it perform datum conversions; instead use
+<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a>.  On the other
+hand, it does provide the core functionality offered by
 <a href="http://earth-info.nima.mil/GandG/geotrans/">GEOTRANS</a>.
 
 \section download Download
@@ -275,7 +276,7 @@ Here are the steps to compile and install GeographicLib:
 - Unpack the source, running one of \verbatim
   tar xfpz GeographicLib-@PROJECT_VERSION@.tar.gz
   unzip -q GeographicLib-@PROJECT_VERSION@.zip \endverbatim
-  then enter the directory created with one of \verbatim
+  then enter the directory created with \verbatim
   cd GeographicLib-@PROJECT_VERSION@ \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
@@ -6918,9 +6919,12 @@ git repository for GeographicLib</a>.
        patches in version 1.46.3.
      - Fix documentation and default install location for Windows binary
        installers.
-     - Fix clang compiler warnings in GeodesicExactC4.cpp.
+     - Fix clang compiler warnings in GeodesicExactC4 and
+       TransverseMercator.
      - Add NearestNeighbor class.
      - Incorporate JacobiConformal class into the library.
+     - EllipticFunction: various fixes.
+     - TODO: add pkg-config.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
    (released 2016-02-15)

@@ -211,8 +211,8 @@ namespace GeographicLib {
      *   \e mindist from \e query (default = &minus;1).
      * @param[in] exhaustive whether to do an exhaustive search (default true).
      * @param[in] tol the tolerance on the results (default 0).
-     * @return the distance to the closest point found (-1 if no points are
-     *   found).
+     * @return the distance to the closest point found (&minus;1 if no points
+     *   are found).
      *
      * The indices returned in \e ind are sorted by distance from \e query
      * (closest first).
@@ -629,7 +629,10 @@ namespace GeographicLib {
     template<class Archive> void save(Archive& ar, const unsigned) const {
       int realspec = std::numeric_limits<real>::digits *
         (std::numeric_limits<real>::is_integer ? -1 : 1);
-      ar & boost::serialization::make_nvp("version", version)
+      // Need to use version1, otherwise load error in debug mode on Linux:
+      // undefined reference to GeographicLib::NearestNeighbor<...>::version.
+      int version1 = version;
+      ar & boost::serialization::make_nvp("version", version1)
         & boost::serialization::make_nvp("realspec", realspec)
         & boost::serialization::make_nvp("bucket", _bucket)
         & boost::serialization::make_nvp("numpoints", _numpoints)
