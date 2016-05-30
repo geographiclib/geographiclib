@@ -242,7 +242,7 @@ namespace GeographicLib {
      *
      * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
      * No false easting or northing is added.  The value of \e lon returned is
-     * in the range [&minus;180&deg;, 180&deg;).  The error in the projection
+     * in the range [&minus;180&deg;, 180&deg;].  The error in the projection
      * is less than about 10 nm (10 nanometers), true distance, and the errors
      * in the meridian convergence and scale are consistent with this.
      **********************************************************************/

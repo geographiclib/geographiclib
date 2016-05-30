@@ -154,7 +154,7 @@ namespace GeographicLib {
      * @param[out] h height of point above the ellipsoid (meters).
      *
      * The value of \e lon returned is in the range [&minus;180&deg;,
-     * 180&deg;).
+     * 180&deg;].
      **********************************************************************/
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h)
       const {

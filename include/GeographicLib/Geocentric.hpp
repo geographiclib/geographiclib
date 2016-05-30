@@ -189,7 +189,7 @@ namespace GeographicLib {
      * returned.  The value of \e h returned satisfies \e h &ge; &minus; \e a
      * (1 &minus; <i>e</i><sup>2</sup>) / sqrt(1 &minus; <i>e</i><sup>2</sup>
      * sin<sup>2</sup>\e lat).  The value of \e lon returned is in the range
-     * [&minus;180&deg;, 180&deg;).
+     * [&minus;180&deg;, 180&deg;].
      **********************************************************************/
     void Reverse(real X, real Y, real Z, real& lat, real& lon, real& h)
       const {

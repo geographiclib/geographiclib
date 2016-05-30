@@ -6924,6 +6924,11 @@ git repository for GeographicLib</a>.
      - Add NearestNeighbor class.
      - Incorporate JacobiConformal class into the library.
      - EllipticFunction: various fixes.
+     - Math:sincosd, Math::sind, Math::cosd only return &minus;0 for the
+       case sin(&minus;0).
+     - Math::atan2d and Math::AngNormalize return results in
+       (&minus;180&deg;, 180&deg;].  This may affect the longitudes and
+       azimuth returned by several other functions.
      - TODO: add pkg-config.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>

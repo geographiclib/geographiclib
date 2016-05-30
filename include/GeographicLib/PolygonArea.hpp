@@ -80,9 +80,11 @@ namespace GeographicLib {
       lon1 = Math::AngNormalize(lon1);
       lon2 = Math::AngNormalize(lon2);
       real lon12 = Math::AngDiff(lon1, lon2);
+      // Treat 0 as negative in these tests.  This balances +/- 180 being
+      // treated as positive, i.e., +180.
       int cross =
-        lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
-        (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
+        lon1 <= 0 && lon2 > 0 && lon12 > 0 ? 1 :
+        (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
       return cross;
     }
     // an alternate version of transit to deal with longitudes in the direct
@@ -252,7 +254,7 @@ namespace GeographicLib {
      * @param[out] lon the longitude of the point (degrees).
      *
      * If no points have been added, then NaNs are returned.  Otherwise, \e lon
-     * will be in the range [&minus;180&deg;, 180&deg;).
+     * will be in the range [&minus;180&deg;, 180&deg;].
      **********************************************************************/
     void CurrentPoint(real& lat, real& lon) const
     { lat = _lat1; lon = _lon1; }

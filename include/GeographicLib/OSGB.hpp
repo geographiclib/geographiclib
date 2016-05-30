@@ -96,7 +96,7 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * The value of \e lon returned is in the range [&minus;180&deg;,
-     * 180&deg;).
+     * 180&deg;].
      **********************************************************************/
 
     static void Reverse(real x, real y,

@@ -264,7 +264,7 @@ namespace GeographicLib {
      * @return \e a12 arc length from point 1 to point 2 (degrees).
      *
      * The values of \e lon2 and \e azi2 returned are in the range
-     * [&minus;180&deg;, 180&deg;).
+     * [&minus;180&deg;, 180&deg;].
      *
      * The GeodesicLine object \e must have been constructed with \e caps |=
      * GeodesicLine::DISTANCE_IN; otherwise Math::NaN() is returned and no
@@ -381,7 +381,7 @@ namespace GeographicLib {
      *   GeodesicLine::AREA.
      *
      * The values of \e lon2 and \e azi2 returned are in the range
-     * [&minus;180&deg;, 180&deg;).
+     * [&minus;180&deg;, 180&deg;].
      *
      * Requesting a value which the GeodesicLine object is not capable of
      * computing is not an error; the corresponding argument will not be
@@ -522,7 +522,7 @@ namespace GeographicLib {
      * - \e outmask |= GeodesicLine::AREA for the area \e S12;
      * - \e outmask |= GeodesicLine::ALL for all of the above;
      * - \e outmask |= GeodesicLine::LONG_UNROLL to unroll \e lon2 instead of
-     *   reducing it into the range [&minus;180&deg;, 180&deg;).
+     *   reducing it into the range [&minus;180&deg;, 180&deg;].
      * .
      * Requesting a value which the GeodesicLine object is not capable of
      * computing is not an error; the corresponding argument will not be

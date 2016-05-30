@@ -362,7 +362,7 @@ namespace GeographicLib {
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].  The values of
      * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
-     * 180&deg;).
+     * 180&deg;].
      *
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
@@ -475,7 +475,7 @@ namespace GeographicLib {
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].  The values of
      * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
-     * 180&deg;).
+     * 180&deg;].
      *
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
@@ -613,7 +613,7 @@ namespace GeographicLib {
      * - \e outmask |= Geodesic::AREA for the area \e S12;
      * - \e outmask |= Geodesic::ALL for all of the above;
      * - \e outmask |= Geodesic::LONG_UNROLL to unroll \e lon2 instead of
-     *   wrapping it into the range [&minus;180&deg;, 180&deg;).
+     *   wrapping it into the range [&minus;180&deg;, 180&deg;].
      * .
      * The function value \e a12 is always computed and returned and this
      * equals \e s12_a12 is \e arcmode is true.  If \e outmask includes
@@ -655,7 +655,7 @@ namespace GeographicLib {
      *
      * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;].
      * The values of \e azi1 and \e azi2 returned are in the range
-     * [&minus;180&deg;, 180&deg;).
+     * [&minus;180&deg;, 180&deg;].
      *
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),

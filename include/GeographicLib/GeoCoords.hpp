@@ -151,7 +151,7 @@ namespace GeographicLib {
      * that -1:30-0:0:15 is parsed as (-1:30) + (-0:0:15) = &minus;(1+30/60)
      * &minus; (15/3600).  Latitudes must be in the range [&minus;90&deg;,
      * 90&deg;].  Internally longitudes are reduced to the range
-     * [&minus;180&deg;, 180&deg;).
+     * [&minus;180&deg;, 180&deg;].
      *
      * <b>UTM/UPS parsing</b>: For UTM zones (&minus;80&deg; &le; Lat <
      * 84&deg;), the zone designator is made up of a zone number (for 1 to 60)

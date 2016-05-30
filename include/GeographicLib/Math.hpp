@@ -430,14 +430,14 @@ namespace GeographicLib {
      *
      * @tparam T the type of the argument and returned value.
      * @param[in] x the angle in degrees.
-     * @return the angle reduced to the range [&minus;180&deg;, 180&deg;).
+     * @return the angle reduced to the range([&minus;180&deg;, 180&deg;].
      *
      * The range of \e x is unrestricted.
      **********************************************************************/
     template<typename T> static inline T AngNormalize(T x) {
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
       using std::remainder;
-      x = remainder(x, T(360)); return x != 180 ? x : -180;
+      x = remainder(x, T(360)); return x != -180 ? x : 180;
 #else
       using std::fmod;
       T y = fmod(x, T(360));
@@ -447,7 +447,7 @@ namespace GeographicLib {
       //   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
       if (x == 0) y = x;
 #endif
-      return y < -180 ? y + 360 : (y < 180 ? y : y - 360);
+      return y <= -180 ? y + 360 : (y <= 180 ? y : y - 360);
 #endif
     }
 
@@ -481,18 +481,18 @@ namespace GeographicLib {
     template<typename T> static inline T AngDiff(T x, T y, T& e) {
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
       using std::remainder;
-      T t, d = - AngNormalize(sum(remainder( x, T(360)),
-                                  remainder(-y, T(360)), t));
+      T t, d = AngNormalize(sum(remainder(-x, T(360)),
+                                remainder( y, T(360)), t));
 #else
-      T t, d = - AngNormalize(sum(AngNormalize(x), AngNormalize(-y), t));
+      T t, d = AngNormalize(sum(AngNormalize(-x), AngNormalize(y), t));
 #endif
-      // Here y - x = d - t (mod 360), exactly, where d is in (-180,180] and
+      // Here y - x = d + t (mod 360), exactly, where d is in (-180,180] and
       // abs(t) <= eps (eps = 2^-45 for doubles).  The only case where the
       // addition of t takes the result outside the range (-180,180] is d = 180
-      // and t < 0.  The case, d = -180 + eps, t = eps, can't happen, since
+      // and t > 0.  The case, d = -180 + eps, t = -eps, can't happen, since
       // sum would have returned the exact result in such a case (i.e., given t
       // = 0).
-      return sum(d == 180 && t < 0 ? -180 : d, -t, e);
+      return sum(d == 180 && t > 0 ? -180 : d, t, e);
     }
 
     /**
@@ -676,9 +676,9 @@ namespace GeographicLib {
      * @param[in] x
      * @return atan2(<i>y</i>, <i>x</i>) in degrees.
      *
-     * The result is in the range [&minus;180&deg; 180&deg;).  N.B.,
-     * atan2d(&plusmn;0, &minus;1) = &minus;180&deg;; atan2d(+&epsilon;,
-     * &minus;1) = +180&deg;, for &epsilon; positive and tiny;
+     * The result is in the range (&minus;180&deg; 180&deg;].  N.B.,
+     * atan2d(&plusmn;0, &minus;1) = +180&deg;; atan2d(&minus;&epsilon;,
+     * &minus;1) = &minus;180&deg;, for &epsilon; positive and tiny;
      * atan2d(&plusmn;0, +1) = &plusmn;0&deg;.
      **********************************************************************/
     template<typename T> static inline T atan2d(T y, T x) {
@@ -699,7 +699,7 @@ namespace GeographicLib {
         //   case 0: ang = 0 + ang; break;
         //
         // and handle mpfr as in AngRound.
-      case 1: ang = (y > 0 ? 180 : -180) - ang; break;
+      case 1: ang = (y >= 0 ? 180 : -180) - ang; break;
       case 2: ang =  90 - ang; break;
       case 3: ang = -90 + ang; break;
       }

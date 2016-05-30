@@ -270,7 +270,7 @@ namespace GeographicLib {
      * @exception GeographicErr if \e azistr is malformed.
      * @exception GeographicErr if \e azistr includes a N/S designator.
      * @return azimuth (degrees) reduced to the range [&minus;180&deg;,
-     *   180&deg;).
+     *   180&deg;].
      *
      * A hemisphere designator E/W can be used; the result is multiplied by
      * &minus;1 if W is present.

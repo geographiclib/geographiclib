@@ -227,7 +227,7 @@ namespace GeographicLib {
      *
      * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No
      * false easting or northing is added.  The value of \e lon returned is in
-     * the range [&minus;180&deg;, 180&deg;).  The value of \e lat returned is
+     * the range [&minus;180&deg;, 180&deg;].  The value of \e lat returned is
      * in the range [&minus;90&deg;, 90&deg;].  If the input point is outside
      * the legal projected space the nearest pole is returned.
      **********************************************************************/

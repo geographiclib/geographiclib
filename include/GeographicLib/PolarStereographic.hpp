@@ -91,7 +91,7 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added.  The value of \e lon returned is
-     * in the range [&minus;180&deg;, 180&deg;).
+     * in the range [&minus;180&deg;, 180&deg;].
      **********************************************************************/
     void Reverse(bool northp, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const;
