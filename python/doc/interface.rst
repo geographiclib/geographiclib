@@ -106,7 +106,7 @@ Restrictions on the parameters
 * Longitudes and azimuths are unrestricted; internally these are
   exactly reduced to the range [−180°, 180°); but see also the
   LONG_UNROLL bit.
-* The equatorial radius a and the polar semi-axis b must both be
+* The equatorial radius *a* and the polar semi-axis *b* must both be
   positive and finite (this implies that −∞ < *f* < 1).
 * The flattening *f* should satisfy *f* ∈ [−1/50,1/50] in order to retain
   full accuracy. This condition holds for most applications in geodesy.

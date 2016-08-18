@@ -47,9 +47,9 @@ pos randompos() {
 // A class to compute the distance between 2 positions.
 class DistanceCalculator {
 private:
-  const Geodesic _geod;
+  Geodesic _geod;
 public:
-  DistanceCalculator(const Geodesic& geod)
+  explicit DistanceCalculator(const Geodesic& geod)
     : _geod(geod) {}
   double operator() (const pos& a, const pos& b) const {
     double s12;

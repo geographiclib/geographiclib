@@ -316,9 +316,9 @@ namespace GeographicLib {
     }
 
     /**
-     * Convert a string to an object of type T.
+     * Convert a string to a number of type T.
      *
-     * @tparam T the type of the return value.
+     * @tparam T the type of the return value (this should be numeric).
      * @param[in] s the string to be converted.
      * @exception GeographicErr is \e s is not readable as a T.
      * @return object of type T
@@ -358,7 +358,8 @@ namespace GeographicLib {
     /**
      * Match "nan" and "inf" (and variants thereof) in a string.
      *
-     * @tparam T the type of the return value.
+     * @tparam T the type of the return value (this should be a floating point
+     *   type).
      * @param[in] s the string to be matched.
      * @return appropriate special value (&plusmn;&infin;, nan) or 0 if none is
      *   found.

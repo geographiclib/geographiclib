@@ -6929,7 +6929,16 @@ git repository for GeographicLib</a>.
      - Math::atan2d and Math::AngNormalize return results in
        (&minus;180&deg;, 180&deg;].  This may affect the longitudes and
        azimuth returned by several other functions.
+     - Java package: Restrict junit dependency to testing scope (thanks
+       to Mick Killianey).
      - TODO: add pkg-config.
+     - TODO: fix FindGeographicLib.cmake to try different parent
+       directories.
+     - TODO: fix dotnet/ManagedCPP/CMakeLists.txt to work with debug
+       builds.
+     - TODO: use doxygen's note, remark, warning, attention, see
+       commands.
+     - TODO: use $<TARGET_PDB_FILE:tgt> (cmake version >= 3.1).
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
    (released 2016-02-15)

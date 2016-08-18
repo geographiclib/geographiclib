@@ -249,6 +249,8 @@ else ()
   include (CheckCXXCompilerFlag)
   # The only "deprecated" flag included here is "0x" to activate C++11
   # with old versions of g++.  We'll add "17" when it's available.
+  # Note: C++11 (actually gnu++14) support is turned on by default in
+  # g++ 6.1 and later.
   foreach (_F 14 11 0x)
     set (CXX11_FLAG "-std=c++${_F}")
     set (_T CXX11TEST${_F})

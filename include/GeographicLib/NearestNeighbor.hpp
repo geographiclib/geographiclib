@@ -323,8 +323,6 @@ namespace GeographicLib {
         _sc += (c - omc) * (c - _mc);
         if (c > _cmax) _cmax = c;
         if (c < _cmin) _cmin = c;
-        if (c == 0)
-          std::cerr << "HERE\n";
       }
 
       real d = -1;
