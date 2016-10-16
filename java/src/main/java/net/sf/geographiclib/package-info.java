@@ -106,6 +106,10 @@
  * cd inverse/src/main/java
  * javac -cp .:../../../../src/main/java Inverse.java
  * echo -30 0 29.5 179.5 | java -cp .:../../../../src/main/java Inverse </pre>
+ * On Windows, change this to <pre>
+ * cd inverse\src\main\java
+ * javac -cp .;../../../../src/main/java Inverse.java
+ * echo -30 0 29.5 179.5 | java -cp .;../../../../src/main/java Inverse </pre>
  *
  * <h3>Using maven to package GeographicLib</h3>
  * Use <a href="http://maven.apache.org/">maven</a> to create a jar file by

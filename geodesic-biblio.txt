@@ -200,7 +200,7 @@
    Vol. 1 (Courcier, Paris, 1811), pp. 178--182.[[BR]]
    https://books.google.com/books?id=riIOAAAAQAAJ&pg=PA178 [[BR]]
    figures:
-   http://www.archive.org/stream/exercicescalculi01legerich#page/389
+   https://archive.org/stream/exercicescalculi01legerich#page/389
  * A. M. Legendre,[[BR]]
    ''Traité des Fonctions Elliptiques et des Intégrales Eulériennes
    [Treatise on Elliptic Functions and Eulerian Integrals]'',
@@ -1350,7 +1350,7 @@
    (US Coast and Geodetic Survey, 1889).[[BR]]
    https://books.google.com/books?id=K38hAAAAMAAJ (PDF gore89.pdf) [[BR]]
    1903 edition:
-   http://www.archive.org/stream/bibliographyofge00gorerich#page/431
+   https://archive.org/stream/bibliographyofge00gorerich#page/431
  * J. H. Gore,[[BR]]
    ''Elements of Geodesy''
    (3rd edition, Wiley, 1893), Chap. 1.[[BR]]
@@ -1394,7 +1394,7 @@
  * A. R. Forsyth,[[BR]]
    ''Lectures on the Differential Geometry of Curves and Surfaces'',
    (Cambridge Univ. Press, 1912), Chap. 5.[[BR]]
-   http://archive.org/details/cu31924060289141
+   https://archive.org/details/cu31924060289141
  * A. Klingatsch,[[BR]]
    ''Zur Identität der kürzesten mit der geodätischen Linie [On the
    indentity of the shortest line with the geodesic]'',

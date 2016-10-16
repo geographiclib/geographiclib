@@ -6922,7 +6922,9 @@ git repository for GeographicLib</a>.
      - Fix clang compiler warnings in GeodesicExactC4 and
        TransverseMercator.
      - Add NearestNeighbor class.
-     - Incorporate JacobiConformal class into the library.
+     - Update Java doc: : -> ; in classpath on Windows.
+     - Incorporate JacobiConformal class into the library.  TODO: No,
+       this is a bad idea.
      - EllipticFunction: various fixes.
      - Math:sincosd, Math::sind, Math::cosd only return &minus;0 for the
        case sin(&minus;0).
@@ -6931,14 +6933,33 @@ git repository for GeographicLib</a>.
        azimuth returned by several other functions.
      - Java package: Restrict junit dependency to testing scope (thanks
        to Mick Killianey).
+     - Check into apparent loss of accuracy for Poland area with v1.46
+       (also with -Q option).
+     - TODO: get rid of PACKAGE_PATH and INSTALL_PATH nonsense.
      - TODO: add pkg-config.
+     - TODO: document -A arch option for cmake.
+     - TODO: remove reference to MATLAB/Octave interface in
+       "Installation on Windows" section.
+     - TODO: Emphasize the win32/win64 binary installer requires
+       compiled with Win32/x64 configuration; also the need to match
+       Visual Studio versions.
      - TODO: fix FindGeographicLib.cmake to try different parent
-       directories.
+       directories.  See
+       https://sourceforge.net/p/geographiclib/discussion/1026621/thread/fbe35c9a/
      - TODO: fix dotnet/ManagedCPP/CMakeLists.txt to work with debug
        builds.
      - TODO: use doxygen's note, remark, warning, attention, see
        commands.
      - TODO: use $<TARGET_PDB_FILE:tgt> (cmake version >= 3.1).
+     - TODO: specialize Utility::num<bool> to accept
+       false,f,nil,no,n,off,"" and true,t,yes,y,on.  First read as a
+       bool (which allows various spellings of 0 and 1), then as a
+       string.
+     - TODO: Generalize NormalGravity to allow f or J2 to be negative
+       (if this is feasible).
+     - TODO: Warn not to evaluate gravity potentials/gradients inside
+       ellipsoid.
+     - TODO: Give units for potentials in gravity classes.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
    (released 2016-02-15)

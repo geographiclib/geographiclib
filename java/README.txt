@@ -18,4 +18,9 @@ programs using, for example,
   javac -cp .:../../../../src/main/java Inverse.java
   echo -30 0 29.5 179.5 | java -cp .:../../../../src/main/java Inverse
 
+On Windows, change this to
+  cd inverse\src\main\java
+  javac -cp .;../../../../src/main/java Inverse.java
+  echo -30 0 29.5 179.5 | java -cp .;../../../../src/main/java Inverse
+
 Building with maven is also supported (see the documentation).
