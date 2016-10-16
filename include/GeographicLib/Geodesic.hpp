@@ -227,7 +227,7 @@ namespace GeographicLib {
                   real salp1, real calp1, real slam120, real clam120,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
-                  real& eps, real& somg12, real& comg12,
+                  real& eps, real& domg12,
                   bool diffp, real& dlam12, real Ca[]) const;
     real GenInverse(real lat1, real lon1, real lat2, real lon2,
                     unsigned outmask, real& s12,

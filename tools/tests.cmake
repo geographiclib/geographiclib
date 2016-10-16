@@ -390,6 +390,17 @@ add_test (NAME GeodSolve73 COMMAND GeodSolve
 set_tests_properties (GeodSolve73
   PROPERTIES PASS_REGULAR_EXPRESSION "81\\.04623 -170\\.00000 0\\.00000")
 
+# Check fix for inaccurate areas, bug introduced in v1.46, fixed
+# 2015-10-16.
+add_test (NAME GeodSolve74 COMMAND GeodSolve
+  -i -p 10 -f --input-string "54.1589 15.3872 54.1591 15.3877")
+add_test (NAME GeodSolve75 COMMAND GeodSolve
+  -i -p 10 -f --input-string "54.1589 15.3872 54.1591 15.3877" -E)
+set_tests_properties (GeodSolve74 GeodSolve75
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  # Exact area is 286698586.30197
+  "54.* 15.* 55\\.72311035.* 54.* 15.* 55\\.72351567.* 39\\.52768638.* 0\\.00035549.* 39\\.52768638.* 0\\.99999999.* 0\\.99999999.* 286698586\\.(29[89]|30[0-4])")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")

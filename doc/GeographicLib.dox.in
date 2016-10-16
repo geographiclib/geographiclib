@@ -6933,8 +6933,9 @@ git repository for GeographicLib</a>.
        azimuth returned by several other functions.
      - Java package: Restrict junit dependency to testing scope (thanks
        to Mick Killianey).
-     - Check into apparent loss of accuracy for Poland area with v1.46
-       (also with -Q option).
+     - Improve accuracy of area calculation (fixing a flaw introduced in
+       version 1.46).  TODO: fix also C, Fortran, Java, JavaScript,
+       Python, MATLAB, and Maxima packages.
      - TODO: get rid of PACKAGE_PATH and INSTALL_PATH nonsense.
      - TODO: add pkg-config.
      - TODO: document -A arch option for cmake.
