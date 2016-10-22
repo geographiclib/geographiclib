@@ -719,6 +719,7 @@ In order to use GeographicLib from C++ code, you will need to
   - <code>GeographicLib_STATIC_DEFINITIONS</code> = -DGEOGRAPHICLIB_SHARED_LIB=0
   - <code>GeographicLib_LIBRARY_DIRS</code>
   - <code>GeographicLib_BINARY_DIRS</code>
+  - <code>GEOGRAPHICLIB_DATA</code> = value of this compile-time parameter
   .
   Either of <code>GeographicLib_SHARED_LIBRARIES</code> or
   <code>GeographicLib_STATIC_LIBRARIES</code> may be empty, if that version
@@ -6923,6 +6924,7 @@ git repository for GeographicLib</a>.
        TransverseMercator.
      - Add NearestNeighbor class.
      - Update Java doc: : -> ; in classpath on Windows.
+     - cmake config file defines GEOGRAPHICLIB_DATA
      - Incorporate JacobiConformal class into the library.  TODO: No,
        this is a bad idea.
      - EllipticFunction: various fixes.
