@@ -46,7 +46,6 @@ MODULES = Accumulator \
 	UTMUPS \
 	Utility
 EXTRAHEADERS = Constants \
-	JacobiConformal \
 	NearestNeighbor \
 	SphericalHarmonic \
 	SphericalHarmonic1 \

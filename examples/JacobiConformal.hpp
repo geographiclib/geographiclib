@@ -2,6 +2,9 @@
  * \file JacobiConformal.hpp
  * \brief Header for GeographicLib::JacobiConformal class
  *
+ * <b>NOTE:</b> This is just sample code.  It is not part of GeographicLib
+ * itself.
+ *
  * Copyright (c) Charles Karney (2014-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
@@ -12,6 +15,9 @@
 namespace GeographicLib {
   /**
    * \brief Jacobi's conformal projection of a triaxial ellipsoid
+   *
+   * <b>NOTE:</b> This is just sample code.  It is not part of GeographicLib
+   * itself.
    *
    * This is a conformal projection of the ellipsoid to a plane in which
    * the grid lines are straight; see Jacobi,

@@ -4604,7 +4604,8 @@ standard construction in the limit of an ellipsoid of revolution.
 \section jacobi-implementation An implementation of the projection
 
 The JacobiConformal class provides an implementation of the Jacobi
-conformal projection is given here.
+conformal projection is given here.  <b>NOTE:</b> This is just sample
+code.  It is not part of GeographicLib itself.
 
 <center>
 Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
@@ -6925,8 +6926,6 @@ git repository for GeographicLib</a>.
      - Add NearestNeighbor class.
      - Update Java doc: : -> ; in classpath on Windows.
      - cmake config file defines GEOGRAPHICLIB_DATA
-     - Incorporate JacobiConformal class into the library.  TODO: No,
-       this is a bad idea.
      - EllipticFunction: various fixes.
      - Math:sincosd, Math::sind, Math::cosd only return &minus;0 for the
        case sin(&minus;0).

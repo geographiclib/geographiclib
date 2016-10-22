@@ -69,7 +69,6 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		../include/GeographicLib/Gnomonic.hpp \
 		../include/GeographicLib/GravityCircle.hpp \
 		../include/GeographicLib/GravityModel.hpp \
-		../include/GeographicLib/JacobiConformal.hpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
 		../include/GeographicLib/LocalCartesian.hpp \
 		../include/GeographicLib/MGRS.hpp \

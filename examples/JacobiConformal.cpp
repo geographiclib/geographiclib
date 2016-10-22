@@ -3,13 +3,14 @@
 #include <iostream>
 #include <iomanip>
 #include <GeographicLib/Utility.hpp>
-#include <GeographicLib/JacobiConformal.hpp>
+#include "JacobiConformal.hpp"
 
 using namespace std;
 using namespace GeographicLib;
 
 int main() {
   try {
+    Utility::set_digits();
     // These parameters were derived from the EGM2008 geoid; see 2011-07-04
     // E-mail to PROJ.4 list, "Analyzing the bumps in the EGM2008 geoid".  The
     // longitude of the major axis is -15.  These are close to the values given
@@ -21,7 +22,7 @@ int main() {
     //    a/(a-c) = 297.7738 +/- 0.0003
     //    a/(a-b) = 91449 +/- 60
     // which gives: a = 6378171.36, b = 6378101.61, c = 6356751.84
-    double a = 6378137+35, b = 6378137-35, c = 6356752;
+    Math::real a = 6378137+35, b = 6378137-35, c = 6356752;
     JacobiConformal jc(a, b, c, a-b, b-c);
     cout  << fixed << setprecision(1)
           << "Ellipsoid parameters: a = "
@@ -30,7 +31,7 @@ int main() {
           << "Quadrants: x = " << jc.x() << ", y = " << jc.y() << "\n";
     cout << "Coordinates (angle x y) in degrees:\n";
     for (int i = 0; i <= 90; i += 5) {
-      double omg = i, bet = i;
+      Math::real omg = i, bet = i;
       cout << i << " " << jc.x(omg) << " " << jc.y(bet) << "\n";
     }
   }

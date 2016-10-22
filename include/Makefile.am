@@ -25,7 +25,6 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/Gnomonic.hpp \
 			GeographicLib/GravityCircle.hpp \
 			GeographicLib/GravityModel.hpp \
-			GeographicLib/JacobiConformal.hpp \
 			GeographicLib/LambertConformalConic.hpp \
 			GeographicLib/LocalCartesian.hpp \
 			GeographicLib/MGRS.hpp \
