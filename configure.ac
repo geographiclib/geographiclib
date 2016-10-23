@@ -99,4 +99,10 @@ python/Makefile
 cmake/Makefile
 examples/Makefile
 ])
+
+PKG_PROG_PKG_CONFIG
+PKG_INSTALLDIR
+
+AC_CONFIG_FILES([cmake/geographiclib.pc:cmake/project.pc.in])
+
 AC_OUTPUT

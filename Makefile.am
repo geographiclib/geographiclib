@@ -13,6 +13,10 @@ EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL README.md \
 	Makefile.mk CMakeLists.txt windows maxima doc legacy java js dotnet \
 	wrapper
 
+# Install the pkg-config file; the directory is set using
+# PKG_INSTALLDIR in configure.ac.
+pkgconfig_DATA = cmake/geographiclib.pc
+
 dist-hook:
 	rm -rf $(distdir)/doc/html $(distdir)/doc/manpages \
 		$(distdir)/doc/GeographicLib.dox
