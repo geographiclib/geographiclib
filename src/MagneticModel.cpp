@@ -96,7 +96,7 @@ namespace GeographicLib {
     string::size_type n = line.find_first_of(spaces, 5);
     if (n != string::npos)
       n -= 5;
-    string version = line.substr(5, n);
+    string version(line, 5, n);
     if (!(version == "1" || version == "2"))
       throw GeographicErr("Unknown version in " + _filename + ": " + version);
     string key, val;

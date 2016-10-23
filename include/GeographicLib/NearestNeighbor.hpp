@@ -145,7 +145,7 @@ namespace GeographicLib {
      * larger \e bucket decreases the size of the NearestNeigbor object which
      * scales as pts.size() / max(1, bucket) and reduces the number of distance
      * calculations to construct the object by log2(bucket) * pts.size().
-     * However each search then requires about log2(bucket) additional distance
+     * However each search then requires about bucket additional distance
      * calculations.
      *
      * <b>CAUTION</b>: The same arguments \e pts and \e dist must be provided
@@ -517,7 +517,7 @@ namespace GeographicLib {
      * @param[out] numsearches the number of calls to Search().
      * @param[out] searchcost the total cost of the calls to Search().
      * @param[out] mincost the minimum cost of a Search().
-     * @param[out] maxcost the maxima cost of a Search().
+     * @param[out] maxcost the maximum cost of a Search().
      * @param[out] mean the mean cost of a Search().
      * @param[out] sd the standard deviation in the cost of a Search().
      *

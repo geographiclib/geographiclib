@@ -232,7 +232,7 @@ namespace GeographicLib {
       throw GeographicErr("More than 2 digits use to specify zone "
                           + Utility::str(zone1));
 
-    string hemi = zonestr.substr(q - c);
+    string hemi(zonestr, q - c);
     transform(hemi.begin(), hemi.end(), hemi.begin(), (int(*)(int))tolower);
     if (q == c && (hemi == "inv" || hemi == "invalid")) {
       zone = INVALID;

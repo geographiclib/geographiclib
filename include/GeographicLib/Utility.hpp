@@ -316,26 +316,44 @@ namespace GeographicLib {
     }
 
     /**
-     * Convert a string to a number of type T.
+     * Trim the white space from the beginning and end of a string.
      *
-     * @tparam T the type of the return value (this should be numeric).
-     * @param[in] s the string to be converted.
-     * @exception GeographicErr is \e s is not readable as a T.
-     * @return object of type T
-     *
-     * White space at the beginning and end of \e s is ignored.
+     * @param[in] s the string to be trimmed
+     * @return the trimmed string
      **********************************************************************/
-    template<typename T> static T num(const std::string& s) {
-      T x;
-      std::string errmsg;
-      std::string::size_type
+    static std::string trim(const std::string& s) {
+      unsigned
         beg = 0,
         end = unsigned(s.size());
       while (beg < end && isspace(s[beg]))
         ++beg;
       while (beg < end && isspace(s[end - 1]))
         --end;
-      std::string t = s.substr(beg, end-beg);
+      return std::string(s, beg, end-beg);
+    }
+
+    /**
+     * Convert a string to a number of type T.
+     *
+     * @tparam T the type of the return value (this should be numeric).
+     * @param[in] s the string to be converted.
+     * @exception GeographicErr is \e s is not readable as a T.
+     * @return object of type T.
+     *
+     * White space at the beginning and end of \e s is ignored.
+     *
+     * If the type T is bool, then \e s should either be string a representing
+     * 0 (false) or 1 (true) or one of the strings
+     * - "false", "f", "nil", "no", "n", "off", or "" meaning false,
+     * - "true", "t", "yes", "y", or "on" meaning true;
+     * .
+     * case is ignored.
+     **********************************************************************/
+    template<typename T> static T num(const std::string& s) {
+      // If T is bool, then the specialization num<bool>() defined below is
+      // used.
+      T x;
+      std::string errmsg, t(trim(s));
       do {                     // Executed once (provides the ability to break)
         std::istringstream is(t);
         if (!(is >> x)) {
@@ -603,6 +621,43 @@ namespace GeographicLib {
     static int set_digits(int ndigits = 0);
 
   };
+
+  /**
+   * The specialization of Utility::num<T>() for bools.
+   **********************************************************************/
+  template<> inline bool Utility::num<bool>(const std::string& s) {
+    std::string t(trim(s));
+    if (t.empty()) return false;
+    bool x;
+    std::istringstream is(t);
+    if (is >> x) {
+      int pos = int(is.tellg()); // Returns -1 at end of string?
+      if (!(pos < 0 || pos == int(t.size())))
+        throw GeographicErr("Extra text " + t.substr(pos) +
+                            " at end of " + t);
+      return x;
+    }
+    std::transform(t.begin(), t.end(), t.begin(), (int(*)(int))tolower);
+    switch (t[0]) {             // already checked that t isn't empty
+    case 'f':
+      if (t == "f" || t == "false") return false;
+      break;
+    case 'n':
+      if (t == "n" || t == "nil" || t == "no") return false;
+      break;
+    case 'o':
+      if (t == "off") return false;
+      else if (t == "on") return true;
+      break;
+    case 't':
+      if (t == "t" || t == "true") return true;
+      break;
+    case 'y':
+      if (t == "y" || t == "yes") return true;
+      break;
+    }
+    throw GeographicErr("Cannot decode " + t + " as a bool");
+  }
 
 } // namespace GeographicLib
 

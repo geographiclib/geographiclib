@@ -66,46 +66,7 @@ else ()
   option (COMMON_INSTALL_PATH "Use a common installation path for packages" ON)
 endif ()
 
-# The use of PACKAGE_PATH and INSTALL_PATH is now DEPRECATED.
-# (2) PACKAGE_PATH and INSTALL_PATH govern the find_package search
-# path and the installation directory.  (find_package is not used by
-# GeographicLib since it doesn't depend on other packages.  However
-# PACKAGE_PATH is used here for uniformity with other packages which
-# adopt the same conventions.)
-#
-# If PACKAGE_PATH is defined, it is prepended to CMAKE_PREFIX_PATH.
-#
-# If INSTALL_PATH is not specified but PACKAGE_PATH is, then
-# INSTALL_PATH is set to
-#   ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON;
-#   ${PACKAGE_PATH}/${PROJECT_NAME}-${PROJECT_VERSION}, otherwise.
-#
-# If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
-# INSTALL_PATH.
-#
-# Typically, only PACKAGE_PATH needs to be specified, e.g.,
-# cmake -D PACKAGE_PATH=/opt .. (on Linux)
-#   => CMAKE_PREFIX_PATH=/opt   CMAKE_INSTALL_PREFIX=/opt
-# cmake -D PACKAGE_PATH=C:/pkg .. (on Windows)
-#   => CMAKE_PREFIX_PATH=C:/pkg CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.22
-
-if (PACKAGE_PATH)
-  set (CMAKE_PREFIX_PATH ${PACKAGE_PATH} ${CMAKE_PREFIX_PATH})
-  message (STATUS "CMAKE_PREFIX_PATH set to ${CMAKE_PREFIX_PATH}")
-endif ()
-
-if (NOT INSTALL_PATH AND PACKAGE_PATH)
-  if (COMMON_INSTALL_PATH)
-    set (INSTALL_PATH ${PACKAGE_PATH} CACHE PATH "Installation directory" FORCE)
-  else ()
-    set (INSTALL_PATH ${PACKAGE_PATH}/${PROJECT_NAME}-${PROJECT_VERSION}
-      CACHE PATH "Installation directory" FORCE)
-  endif ()
-endif ()
-if (INSTALL_PATH)
-  file (TO_CMAKE_PATH ${INSTALL_PATH} CMAKE_INSTALL_PREFIX)
-  message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
-endif ()
+# (2) PACKAGE_PATH and INSTALL_PATH have now been removed
 
 # (3) Where to look for data files.  Various classes look in the geoids,
 # gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
