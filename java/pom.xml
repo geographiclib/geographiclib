@@ -8,7 +8,7 @@
 
   <groupId>net.sf.geographiclib</groupId>
   <artifactId>GeographicLib-Java</artifactId>
-  <version>1.46</version>
+  <version>1.47-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
