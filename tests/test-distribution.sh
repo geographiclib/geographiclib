@@ -385,14 +385,14 @@ cd $TEMP/relx/GeographicLib-$VERSION
     echo Files with no newline at end:
     find . -type f |
 	egrep -v '\.png|\.pdf' |
-	while read f;do
+	while read f; do
 	    n=`tail -1 $f | wc -l`; test $n -eq 0 && echo $f || true
 	done
     echo
     echo Files with extra newlines at end:
     find . -type f |
 	egrep -v '/configure|/ltmain.sh|\.png|\.pdf|\.1\.html' |
-	while read f;do
+	while read f; do
 	    n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
 	done
     echo

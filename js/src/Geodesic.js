@@ -642,7 +642,7 @@ GeographicLib.PolygonArea = {};
         // strip near cut
         if (this.f >= 0) {
           vals.salp1 = Math.min(1, -x);
-          vals.calp1 = - Math.sqrt(1 - m.sq(vals.salp1));
+          vals.calp1 = -Math.sqrt(1 - m.sq(vals.salp1));
         } else {
           vals.calp1 = Math.max(x > -tol1_ ? 0 : -1, x);
           vals.salp1 = Math.sqrt(1 - m.sq(vals.calp1));
@@ -769,7 +769,7 @@ GeographicLib.PolygonArea = {};
       salp0 * (vals.sig12 + B312);
     if (diffp) {
       if (vals.calp2 === 0)
-        vals.dlam12 = - 2 * this._f1 * dn1 / sbet1;
+        vals.dlam12 = -2 * this._f1 * dn1 / sbet1;
       else {
         nvals = this.Lengths(vals.eps, vals.sig12,
                              vals.ssig1, vals.csig1, dn1,
@@ -1028,7 +1028,7 @@ GeographicLib.PolygonArea = {};
             break;
           // Update bracketing values
           if (v > 0 && (numit < maxit1_ || calp1/salp1 > calp1b/salp1b)) {
-              salp1b = salp1; calp1b = calp1;
+            salp1b = salp1; calp1b = calp1;
           } else if (v < 0 &&
                      (numit < maxit1_ || calp1/salp1 < calp1a/salp1a)) {
             salp1a = salp1; calp1a = calp1;
@@ -1124,9 +1124,9 @@ GeographicLib.PolygonArea = {};
       if (!meridian &&
           omg12 > -0.7071 &&      // Long difference not too big
           sbet2 - sbet1 < 1.75) { // Lat difference not too big
-          // Use tan(Gamma/2) = tan(omg12/2)
-          // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
-          // with tan(x/2) = sin(x)/(1+cos(x))
+        // Use tan(Gamma/2) = tan(omg12/2)
+        // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
+        // with tan(x/2) = sin(x)/(1+cos(x))
         domg12 = 1 + comg12; dbet1 = 1 + cbet1; dbet2 = 1 + cbet2;
         alp12 = 2 * Math.atan2( somg12 * (sbet1*dbet2 + sbet2*dbet1),
                                 domg12 * (sbet1*sbet2 + dbet1*dbet2) );
@@ -1191,12 +1191,12 @@ GeographicLib.PolygonArea = {};
    *   parameter, see {@tutorial 2-interface}, "The outmask and caps
    *   parameters".
    */
-  g.Geodesic.prototype.GenDirect = function (lat1, lon1, azi1,
-                                             arcmode, s12_a12, outmask) {
+  g.Geodesic.prototype.GenDirect = function(lat1, lon1, azi1,
+                                            arcmode, s12_a12, outmask) {
     var line;
     if (!outmask) outmask = g.STANDARD;
     else if (outmask === g.LONG_UNROLL) outmask |= g.STANDARD;
-                              // Automatically supply DISTANCE_IN if necessary
+    // Automatically supply DISTANCE_IN if necessary
     if (!arcmode) outmask |= g.DISTANCE_IN;
     line = new l.GeodesicLine(this, lat1, lon1, azi1, outmask);
     return line.GenPosition(arcmode, s12_a12, outmask);
@@ -1215,7 +1215,7 @@ GeographicLib.PolygonArea = {};
    *   always set.  For details on the outmask parameter, see {@tutorial
    *   2-interface}, "The outmask and caps parameters".
    */
-  g.Geodesic.prototype.Direct = function (lat1, lon1, azi1, s12, outmask) {
+  g.Geodesic.prototype.Direct = function(lat1, lon1, azi1, s12, outmask) {
     return this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
   };
 
@@ -1232,7 +1232,7 @@ GeographicLib.PolygonArea = {};
    *   always set.  For details on the outmask parameter, see {@tutorial
    *   2-interface}, "The outmask and caps parameters".
    */
-  g.Geodesic.prototype.ArcDirect = function (lat1, lon1, azi1, a12, outmask) {
+  g.Geodesic.prototype.ArcDirect = function(lat1, lon1, azi1, a12, outmask) {
     return this.GenDirect(lat1, lon1, azi1, true, a12, outmask);
   };
 
@@ -1251,7 +1251,7 @@ GeographicLib.PolygonArea = {};
    * @description For details on the caps parameter, see {@tutorial
    *   2-interface}, "The outmask and caps parameters".
    */
-  g.Geodesic.prototype.Line = function (lat1, lon1, azi1, caps) {
+  g.Geodesic.prototype.Line = function(lat1, lon1, azi1, caps) {
     return new l.GeodesicLine(this, lat1, lon1, azi1, caps);
   };
 
@@ -1275,7 +1275,7 @@ GeographicLib.PolygonArea = {};
    *   parameter, see {@tutorial 2-interface}, "The outmask and caps
    *   parameters".
    */
-  g.Geodesic.prototype.DirectLine = function (lat1, lon1, azi1, s12, caps) {
+  g.Geodesic.prototype.DirectLine = function(lat1, lon1, azi1, s12, caps) {
     return this.GenDirectLine(lat1, lon1, azi1, false, s12, caps);
   };
 
@@ -1299,7 +1299,7 @@ GeographicLib.PolygonArea = {};
    *   parameter, see {@tutorial 2-interface}, "The outmask and caps
    *   parameters".
    */
-  g.Geodesic.prototype.ArcDirectLine = function (lat1, lon1, azi1, a12, caps) {
+  g.Geodesic.prototype.ArcDirectLine = function(lat1, lon1, azi1, a12, caps) {
     return this.GenDirectLine(lat1, lon1, azi1, true, a12, caps);
   };
 
@@ -1326,8 +1326,8 @@ GeographicLib.PolygonArea = {};
    *   parameter, see {@tutorial 2-interface}, "The outmask and caps
    *   parameters".
    */
-  g.Geodesic.prototype.GenDirectLine = function (lat1, lon1, azi1,
-                                                 arcmode, s12_a12, caps) {
+  g.Geodesic.prototype.GenDirectLine = function(lat1, lon1, azi1,
+                                                arcmode, s12_a12, caps) {
     var t;
     if (!caps) caps = g.STANDARD | g.DISTANCE_IN;
     // Automatically supply DISTANCE_IN if necessary
@@ -1354,7 +1354,7 @@ GeographicLib.PolygonArea = {};
    *   parameter, see {@tutorial 2-interface}, "The outmask and caps
    *   parameters".
    */
-  g.Geodesic.prototype.InverseLine = function (lat1, lon1, lat2, lon2, caps) {
+  g.Geodesic.prototype.InverseLine = function(lat1, lon1, lat2, lon2, caps) {
     var r, t, azi1;
     if (!caps) caps = g.STANDARD | g.DISTANCE_IN;
     r = this.InverseInt(lat1, lon1, lat2, lon2, g.ARC);
@@ -1375,7 +1375,7 @@ GeographicLib.PolygonArea = {};
    *   {@link module:GeographicLib/PolygonArea.PolygonArea
    *   PolygonArea} object
    */
-  g.Geodesic.prototype.Polygon = function (polyline) {
+  g.Geodesic.prototype.Polygon = function(polyline) {
     return new p.PolygonArea(this, polyline);
   };
 

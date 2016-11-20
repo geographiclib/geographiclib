@@ -290,7 +290,7 @@ GeographicLib.DMS = {};
     var t, sign, p0, p1;
     if (s.length < 3)
       return 0;
-    t = s.toUpperCase().replace(/0+$/,"");
+    t = s.toUpperCase().replace(/0+$/, "");
     sign = t.charAt(0) === '-' ? -1 : 1;
     p0 = t.charAt(0) === '-' || t.charAt(0) === '+' ? 1 : 0;
     p1 = t.length - 1;

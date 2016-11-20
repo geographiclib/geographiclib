@@ -255,7 +255,7 @@ GeographicLib.Accumulator = {};
   m.AngDiff = function(x, y) {
     // Compute y - x and reduce to [-180,180] accurately.
     var r = m.sum(m.AngNormalize(x), m.AngNormalize(-y)),
-        d = - m.AngNormalize(r.s),
+        d = -m.AngNormalize(r.s),
         t = r.t;
     return m.sum(d === 180 && t < 0 ? -180 : d, -t);
   };
@@ -278,10 +278,10 @@ GeographicLib.Accumulator = {};
     // Possibly could call the gnu extension sincos
     s = Math.sin(r); c = Math.cos(r);
     switch (q & 3) {
-    case  0: sinx =     s; cosx =     c; break;
-    case  1: sinx =     c; cosx = 0 - s; break;
-    case  2: sinx = 0 - s; cosx = 0 - c; break;
-    default: sinx = 0 - c; cosx =     s; break; // case 3
+      case 0:  sinx =     s; cosx =     c; break;
+      case 1:  sinx =     c; cosx = 0 - s; break;
+      case 2:  sinx = 0 - s; cosx = 0 - c; break;
+      default: sinx = 0 - c; cosx =     s; break; // case 3
     }
     return {s: sinx, c: cosx};
   };
@@ -310,9 +310,9 @@ GeographicLib.Accumulator = {};
       //   case 0: ang = 0 + ang; break;
       //
       // and handle mpfr as in AngRound.
-    case 1: ang = (y > 0 ? 180 : -180) - ang; break;
-    case 2: ang =  90 - ang; break;
-    case 3: ang = -90 + ang; break;
+      case 1: ang = (y > 0 ? 180 : -180) - ang; break;
+      case 2: ang =  90 - ang; break;
+      case 3: ang = -90 + ang; break;
     }
     return ang;
   };
