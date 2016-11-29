@@ -52,6 +52,7 @@ set (@PROJECT_NAME@_SHARED_DEFINITIONS @PROJECT_SHARED_DEFINITIONS@)
 set (@PROJECT_NAME@_STATIC_DEFINITIONS @PROJECT_STATIC_DEFINITIONS@)
 # Read in the exported definition of the library
 include ("${_DIR}/@PROJECT_NAME_LOWER@-targets.cmake")
+include ("${_DIR}/@PROJECT_NAME_LOWER@-namespace-targets.cmake")
 
 unset (_ROOT)
 unset (_DIR)
