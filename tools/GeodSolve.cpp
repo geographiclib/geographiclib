@@ -66,7 +66,7 @@ real ReadDistance(const std::string& s, bool arcmode) {
   return arcmode ? DMS::DecodeAngle(s) : Utility::num<real>(s);
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
     enum { NONE = 0, LINE, DIRECT, INVERSE };

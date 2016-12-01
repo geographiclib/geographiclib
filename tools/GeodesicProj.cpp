@@ -28,7 +28,7 @@
 
 #include "GeodesicProj.usage"
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;

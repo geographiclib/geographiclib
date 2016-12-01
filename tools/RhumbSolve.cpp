@@ -47,7 +47,7 @@ std::string AzimuthString(real azi, int prec, bool dms, char dmssep) {
     DMS::Encode(azi, prec + 5, DMS::NUMBER);
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* const argv[]) {
   try {
     Utility::set_digits();
     bool linecalc = false, inverse = false, dms = false, exact = true,
