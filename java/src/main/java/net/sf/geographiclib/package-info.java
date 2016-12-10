@@ -187,7 +187,7 @@
  *   (<a href="http://geographiclib.sourceforge.net/geod-addenda.html">addenda</a>).
  * <li>
  *   A longer paper on geodesics: C. F. F. Karney,
- *    <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
+ *    <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
  *    on an ellipsoid of revolution</a>,
  *    Feb. 2011
  *    (<a href="http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata">

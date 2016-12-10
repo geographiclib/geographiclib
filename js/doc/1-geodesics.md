@@ -139,7 +139,7 @@ Vincenty (1975) in the following respects:
 ### <a name="references"></a>References
 
 * F. W. Bessel,
-  {@link http://arxiv.org/abs/0908.1824 The calculation of longitude and
+  {@link https://arxiv.org/abs/0908.1824 The calculation of longitude and
   latitude from geodesic measurements (1825)},
   Astron. Nachr. **331**(8), 852&ndash;861 (2010),
   translated by C. F. F. Karney and R. E. Deakin.
@@ -160,7 +160,7 @@ Vincenty (1975) in the following respects:
   Algorithms for geodesics}, J. Geodesy **87**(1) 43&ndash;55 (2013);
   {@link http://geographiclib.sourceforge.net/geod-addenda.html addenda}.
 * C. F. F. Karney,
-  {@http://arxiv.org/abs/1102.1215v1
+  {@https://arxiv.org/abs/1102.1215v1
   Geodesics on an ellipsoid of revolution},
   Feb. 2011;
   {@link http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata

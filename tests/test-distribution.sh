@@ -84,7 +84,7 @@ TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then
     DEVELSOURCE=$HOME/geographiclib
     WINDEVELSOURCE=/u/geographiclib
-    WINDOWSBUILD=/var/tmp
+    WINDOWSBUILD=/u/temp
 else
     DEVELSOURCE=/u/geographiclib
     WINDEVELSOURCE=/u/geographiclib

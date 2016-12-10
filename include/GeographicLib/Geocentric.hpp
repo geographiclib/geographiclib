@@ -37,11 +37,11 @@ namespace GeographicLib {
    * results for all finite inputs (even if \e h is infinite).  The changes are
    * described in Appendix B of
    * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
+   *   <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
    *   on an ellipsoid of revolution</a>,
    *   Feb. 2011;
    *   preprint
-   *   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
+   *   <a href="https://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
    * .
    * Vermeille similarly updated his method in
    * - H. Vermeille,

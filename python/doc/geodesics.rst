@@ -170,7 +170,7 @@ References
 
 * F. W. Bessel,
   `The calculation of longitude and latitude from geodesic measurements (1825)
-  <http://arxiv.org/abs/0908.1824>`_,
+  <https://arxiv.org/abs/0908.1824>`_,
   Astron. Nachr. **331**\ (8), 852–861 (2010),
   translated by C. F. F. Karney and R. E. Deakin.
 * F. R. Helmert,
@@ -193,7 +193,7 @@ References
   `addenda <http://geographiclib.sourceforge.net/geod-addenda.html>`_.
 * C. F. F. Karney,
   `Geodesics on an ellipsoid of revolution
-  <http://arxiv.org/abs/1102.1215v1>`_,
+  <https://arxiv.org/abs/1102.1215v1>`_,
   Feb. 2011;
   `errata
   <http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata>`_.

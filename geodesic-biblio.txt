@@ -356,7 +356,7 @@
    Astron. Nachr. '''4'''(86), 241--254 + tables (1825).[[BR]]
    http://adsabs.harvard.edu/abs/1825AN......4..241B [[BR]]
    https://dx.doi.org/10.1002/asna.18260041601 [[BR]]
-   With corrections: http://arxiv.org/abs/0908.1823 [[BR]]
+   With corrections: https://arxiv.org/abs/0908.1823 [[BR]]
    Partial English translation:
    ''Calculation of geographical longitudes and latitudes on a spheroid'',
    Quart. Jour. Roy. Inst. '''21'''(41), 138--152 (1826).[[BR]]
@@ -364,7 +364,7 @@
    Modern English translation: by C. F. F. Karney and R. E. Deakin,
    Astron. Nachr. '''331'''(8), 852--861 (2010).[[BR]]
    https://dx.doi.org/10.1002/asna.201011352 [[BR]]
-   preprint: http://arxiv.org/abs/0908.1824
+   preprint: https://arxiv.org/abs/0908.1824
  * F. W. Bessel,[[BR]]
    ''Über den Einfluss der Unregelmässigkeiten der Figur der Erde auf
    geodätische Arbeiten und ihre Vergleichung mit den astronomischen
@@ -1552,13 +1552,13 @@
  * C. F. F. Karney,[[BR]]
    ''Geodesics on an ellipsoid of revolution''
    (Feb. 2011).[[BR]]
-   http://arxiv.org/abs/1102.1215 [[BR]]
+   https://arxiv.org/abs/1102.1215 [[BR]]
    Errata: http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata
  * C. F. F. Karney,[[BR]]
    ''Algorithms for geodesics'',
    J. Geodesy '''87'''(1), 43--55 (2013).[[BR]]
    https://dx.doi.org/10.1007/s00190-012-0578-z [[BR]]
-   http://arxiv.org/abs/1109.4448 [[BR]]
+   https://arxiv.org/abs/1109.4448 [[BR]]
    Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
  * C. M. Rollins,[[BR]]
    ''An integral for geodesic length'',
@@ -1592,3 +1592,8 @@
    ellipsoid'',
    J. Geodetic Science '''3'''(3), 240--249 (2013).[[BR]]
    https://dx.doi.org/10.2478/jogs-2013-0028
+ * G. Panou and R. Korakitis,[[BR]]
+   ''Geodesic equations and their numerical solutions in geodetic and
+   Cartesian coordinates on an oblate spheroid''
+   (Nov. 2016).[[BR]
+   https://arxiv.org/abs/1612.01357

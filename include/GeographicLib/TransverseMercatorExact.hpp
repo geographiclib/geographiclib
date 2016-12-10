@@ -32,7 +32,7 @@ namespace GeographicLib {
    *    Transverse Mercator with an accuracy of a few nanometers,</a>
    *    J. Geodesy 85(8), 475--485 (Aug. 2011);
    *    preprint
-   *    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
+   *    <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
    *
    * Lee gives the correct results for forward and reverse transformations
    * subject to the branch cut rules (see the description of the \e extendp
@@ -41,7 +41,7 @@ namespace GeographicLib {
    * The error in the convergence is 2 &times; 10<sup>&minus;15</sup>&quot;,
    * the relative error in the scale is 7 &times; 10<sup>&minus;12</sup>%%.
    * See Sec. 3 of
-   * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details.
+   * <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details.
    * The method is "exact" in the sense that the errors are close to the
    * round-off limit and that no changes are needed in the algorithms for them
    * to be used with reals of a higher precision.  Thus the errors using long
@@ -153,7 +153,7 @@ namespace GeographicLib {
      *     a) in (&minus;&infin;, 0]
      * .
      * See Sec. 5 of
-     * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for a full
+     * <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for a full
      * discussion of the treatment of the branch cut.
      *
      * The method will work for all ellipsoids used in terrestrial geodesy.

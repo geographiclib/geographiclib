@@ -762,7 +762,7 @@ namespace GeographicLib {
      * <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
      * Transverse Mercator with an accuracy of a few nanometers,</a>
      * J. Geodesy 85(8), 475--485 (Aug. 2011)
-     * (preprint <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
+     * (preprint <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
      **********************************************************************/
     template<typename T> static T taupf(T tau, T es);
 
@@ -780,7 +780,7 @@ namespace GeographicLib {
      * <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
      * Transverse Mercator with an accuracy of a few nanometers,</a>
      * J. Geodesy 85(8), 475--485 (Aug. 2011)
-     * (preprint <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
+     * (preprint <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
      **********************************************************************/
     template<typename T> static T tauf(T taup, T es);
 

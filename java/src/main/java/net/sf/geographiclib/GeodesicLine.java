@@ -33,7 +33,7 @@ package net.sf.geographiclib;
  * <p>
  * The calculations are accurate to better than 15 nm (15 nanometers).  See
  * Sec. 9 of
- * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
+ * <a href="https://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
  * details.  The algorithms used by this class are based on series expansions
  * using the flattening <i>f</i> as a small parameter.  These are only accurate
  * for |<i>f</i>| &lt; 0.02; however reasonably accurate results will be

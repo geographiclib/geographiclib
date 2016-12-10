@@ -200,7 +200,8 @@ namespace GeographicLib {
      *   (m s<sup>&minus;2</sup>).
      * @param[out] gz the upward component of the acceleration
      *   (m s<sup>&minus;2</sup>); this is usually negative.
-     * @return \e W the sum of the gravitational and centrifugal potentials.
+     * @return \e W the sum of the gravitational and centrifugal potentials
+     *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      *
      * The function includes the effects of the earth's rotation.
      **********************************************************************/
@@ -220,7 +221,8 @@ namespace GeographicLib {
      *   (m s<sup>&minus;2</sup>).
      * @param[out] deltaz the upward component of the disturbance vector
      *   (m s<sup>&minus;2</sup>).
-     * @return \e T the corresponding disturbing potential.
+     * @return \e T the corresponding disturbing potential
+     *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real Disturbance(real lat, real lon, real h,
                            real& deltax, real& deltay, real& deltaz)
