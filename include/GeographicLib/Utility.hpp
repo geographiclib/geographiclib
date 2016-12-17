@@ -610,7 +610,7 @@ namespace GeographicLib {
      *   256 (i.e., about 77 decimal digits).
      * @return the resulting number of bits of precision.
      *
-     * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.  The
+     * This only has an effect when GEOGRAPHICLIB_PRECISION = 5.  The
      * precision should only be set once and before calls to any other
      * GeographicLib functions.  (Several functions, for example Math::pi(),
      * cache the return value in a static local variable.  The precision needs

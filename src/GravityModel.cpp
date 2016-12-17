@@ -189,7 +189,10 @@ namespace GeographicLib {
       throw GeographicErr("Height offset must be finite");
     if (int(_id.size()) != idlength_)
       throw GeographicErr("Invalid ID");
-    _earth = NormalGravity(a, GM, omega, f, J2);
+    if (Math::isfinite(f) && Math::isfinite(J2))
+      throw GeographicErr("Cannot specify both f and J2");
+    _earth = NormalGravity(a, GM, omega,
+                           Math::isfinite(f) ? f : J2, Math::isfinite(f));
   }
 
   Math::real GravityModel::InternalT(real X, real Y, real Z,

@@ -71,12 +71,14 @@ namespace GeographicLib {
     Geocentric _earth;
     // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-y/7+y^2/9-y^3/11...
     static real atan5(real x);
+    static real atan7series(real x);
     // (atan(y)-(y-y^3/3+y^5/5))/y^7 (y = sqrt(x)) = -1/7+x/9-x^2/11+x^3/13...
     static real atan7(real x);
     static real qf(real ep2);
     static real dq(real ep2);
     static real qpf(real ep2);
     real Jn(int n) const;
+    void Initialize(real a, real GM, real omega, real f_J2, bool geometricp);
   public:
 
     /** \name Setting up the normal gravity
@@ -84,6 +86,38 @@ namespace GeographicLib {
     ///@{
     /**
      * Constructor for the normal gravity.
+     *
+     * @param[in] a equatorial radius (meters).
+     * @param[in] GM mass constant of the ellipsoid
+     *   (meters<sup>3</sup>/seconds<sup>2</sup>); this is the product of \e G
+     *   the gravitational constant and \e M the mass of the earth (usually
+     *   including the mass of the earth's atmosphere).
+     * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
+     * @param[in] f_J2 either the flattening of the ellipsoid \e f or the
+     *   the dynamical form factor \e J2.
+     * @param[out] geometricp if true, then \e f_J2 denotes the flattening,
+     *   else it denotes the dynamical form factor \e J2.
+     * @exception if \e a is not positive or the other constants are
+     *   inconsistent (see below).
+     *
+     * If \e omega is non-zero, then exactly one of \e f and \e J2 should be
+     * positive and this will be used to define the ellipsoid.  The shape of
+     * the ellipsoid can be given in one of two ways:
+     * - geometrically, the ellipsoid is defined by the flattening \e f = (\e a
+     *   &minus; \e b) / \e a, where \e a and \e b are the equatorial radius
+     *   and the polar semi-axis.
+     * - physically, the ellipsoid is defined by the dynamical form factor
+     *   <i>J</i><sub>2</sub> = (\e C &minus; \e A) / <i>Ma</i><sup>2</sup>,
+     *   where \e A and \e C are the equatorial and polar moments of inertia
+     *   and \e M is the mass of the earth.
+     * .
+     * If \e omega, \e f, and \e J2 are all zero, then the ellipsoid becomes a
+     * sphere.
+     **********************************************************************/
+    NormalGravity(real a, real GM, real omega, real f_J2,
+                  bool geometricp = true);
+    /**
+     * \deprecated{Constructor for the normal gravity.}
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] GM mass constant of the ellipsoid
@@ -110,6 +144,7 @@ namespace GeographicLib {
      * If \e omega, \e f, and \e J2 are all zero, then the ellipsoid becomes a
      * sphere.
      **********************************************************************/
+    GEOGRAPHICLIB_DEPRECATED
     NormalGravity(real a, real GM, real omega, real f, real J2);
 
     /**
@@ -147,7 +182,8 @@ namespace GeographicLib {
      *   (m s<sup>&minus;2</sup>).
      * @param[out] gammaz the upward component of the acceleration
      *   (m s<sup>&minus;2</sup>); this is usually negative.
-     * @return \e U the corresponding normal potential.
+     * @return \e U the corresponding normal potential
+     *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      *
      * Due to the axial symmetry of the ellipsoid, the result is independent of
      * the value of the longitude and the easterly component of the

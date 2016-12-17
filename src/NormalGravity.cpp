@@ -7,6 +7,7 @@
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
+#include <iostream>
 #include <GeographicLib/NormalGravity.hpp>
 
 #if defined(_MSC_VER)
@@ -18,59 +19,72 @@ namespace GeographicLib {
 
   using namespace std;
 
-  NormalGravity::NormalGravity(real a, real GM, real omega, real f, real J2)
-    : _a(a)
-    , _GM(GM)
-    , _omega(omega)
-    , _f(f)
-    , _J2(J2)
-    , _omega2(Math::sq(_omega))
-    , _aomega2(Math::sq(_omega * _a))
-    {
-      if (!(Math::isfinite(_a) && _a > 0))
-        throw GeographicErr("Major radius is not positive");
-      if (!(Math::isfinite(_GM) && _GM > 0))
-        throw GeographicErr("Gravitational constant is not positive");
-      if (!(_omega == 0 && _f == 0 && _J2 == 0)) {
-        bool flatp = _f > 0 && Math::isfinite(_f);
-        if (_J2 > 0 && Math::isfinite(_J2) && flatp)
-          throw GeographicErr("Cannot specify both f and J2");
-        if (!(_J2 > 0 && Math::isfinite(_J2)) && !flatp)
-          throw GeographicErr("Must specify one of f and J2");
-        if (!(Math::isfinite(_omega) && _omega != 0))
-          throw GeographicErr("Angular velocity is not non-zero");
-        if (flatp)
-          _J2 = FlatteningToJ2(_a, _GM, _omega, _f);
-        else
-          _f = J2ToFlattening(_a, _GM, _omega, _J2);
-      } // else we have a sphere: omega = f = J2 = 0
-      _e2 = _f * (2 - _f);
-      _ep2 = _e2 / (1 - _e2);
-      _q0 = qf(_ep2);
-      _earth = Geocentric(_a, _f);
-      _b = _a * (1 - _f);
-      _E = _a * sqrt(_e2);      // H+M, Eq 2-54
-      // H+M, Eq 2-61
-      _U0 = _GM / (_E ? _E / atan(sqrt(_ep2)) : _b) + _aomega2 / 3;
-      // The approximate ratio of the centrifugal acceleration (at the equator)
-      // to gravity.
-      _m = _aomega2 * _b / _GM; // H+M, Eq 2-70
-      real
-        Q = _m * (_q0 ? sqrt(_ep2) * qpf(_ep2) / (3 * _q0) : 1),
-        G = (1 - _m - Q / 2);
-      _gammae = _GM / (_a * _b) * G;       // H+M, Eq 2-73
-      _gammap = _GM / (_a * _a) * (1 + Q); // H+M, Eq 2-74
-      // k = b * gammap / (a * gammae) - 1
-      _k = (_m + 3 * Q / 2 - _e2 * (1 + Q)) / G;
-      // f* = (gammap - gammae) / gammae
-      _fstar = (_m + 3 * Q / 2 - _f * (1 + Q)) / G;
-    }
+  void NormalGravity::Initialize(real a, real GM, real omega, real f_J2,
+                                 bool geometricp) {
+    _a = a;
+    if (!(Math::isfinite(_a) && _a > 0))
+      throw GeographicErr("Major radius is not positive");
+    _GM = GM;
+    if (!Math::isfinite(_GM))
+      throw GeographicErr("Gravitational constant is not finite");
+    _omega = omega;
+    _omega2 = Math::sq(_omega);
+    _aomega2 = Math::sq(_omega * _a);
+    if (!(Math::isfinite(_omega2) && Math::isfinite(_aomega2)))
+      throw GeographicErr("Rotation velocity is not finite");
+    _f = geometricp ? f_J2 : J2ToFlattening(_a, _GM, _omega, f_J2);
+    _b = _a * (1 - _f);
+    if (!(Math::isfinite(_b) && _b > 0))
+      throw GeographicErr("Minor radius is not positive");
+    _J2 = geometricp ? FlatteningToJ2(_a, _GM, _omega, f_J2) : f_J2;
+    _e2 = _f * (2 - _f);
+    _ep2 = _e2 / (1 - _e2);
+    _q0 = qf(_ep2);
+    _earth = Geocentric(_a, _f);
+    _E = _a * sqrt(_e2);      // H+M, Eq 2-54
+    // H+M, Eq 2-61
+    _U0 = _GM / (_E ? _E / atan(sqrt(_ep2)) : _b) + _aomega2 / 3;
+    // The approximate ratio of the centrifugal acceleration (at the equator)
+    // to gravity.
+    _m = _aomega2 * _b / _GM; // H+M, Eq 2-70
+    real
+      Q = _m * (_q0 ? sqrt(_ep2) * qpf(_ep2) / (3 * _q0) : 1),
+      G = (1 - _m - Q / 2);
+    _gammae = _GM / (_a * _b) * G;       // H+M, Eq 2-73
+    _gammap = _GM / (_a * _a) * (1 + Q); // H+M, Eq 2-74
+    // k = b * gammap / (a * gammae) - 1
+    _k = (_m + 3 * Q / 2 - _e2 * (1 + Q)) / G;
+    // f* = (gammap - gammae) / gammae
+    _fstar = (_m + 3 * Q / 2 - _f * (1 + Q)) / G;
+  }
+
+  NormalGravity::NormalGravity(real a, real GM, real omega, real f_J2,
+                               bool geometricp) {
+    Initialize(a, GM, omega, f_J2, geometricp);
+  }
+
+  NormalGravity::NormalGravity(real a, real GM, real omega, real f, real J2) {
+    if (!(Math::isfinite(GM) && GM > 0))
+      throw GeographicErr("Gravitational constant is not positive");
+    bool geometricp;
+    if (!(omega == 0 && f == 0 && J2 == 0)) {
+      geometricp = f > 0 && Math::isfinite(f);
+      if (J2 > 0 && Math::isfinite(J2) && geometricp)
+        throw GeographicErr("Cannot specify both f and J2");
+      if (!(J2 > 0 && Math::isfinite(J2)) && !geometricp)
+        throw GeographicErr("Must specify one of f and J2");
+      if (!(Math::isfinite(omega) && omega != 0))
+        throw GeographicErr("Angular velocity is not non-zero");
+    } else
+      geometricp = true;
+    Initialize(a, GM, omega, geometricp ? f : J2, geometricp);
+  }
 
   const NormalGravity& NormalGravity::WGS84() {
     static const NormalGravity wgs84(Constants::WGS84_a(),
                                      Constants::WGS84_GM(),
                                      Constants::WGS84_omega(),
-                                     Constants::WGS84_f(), 0);
+                                     Constants::WGS84_f(), true);
     return wgs84;
   }
 
@@ -78,27 +92,36 @@ namespace GeographicLib {
     static const NormalGravity grs80(Constants::GRS80_a(),
                                      Constants::GRS80_GM(),
                                      Constants::GRS80_omega(),
-                                     0, Constants::GRS80_J2());
+                                     Constants::GRS80_J2(), false);
     return grs80;
+  }
+
+  Math::real NormalGravity::atan7series(real x) {
+    // compute -sum( (-x)^n/(2*n+7), n, 0, inf)
+    //   = -1/7 + x/9 - x^2/11 + x^3/13 ...
+    //   = (atan(sqrt(x))/sqrt(x)-(1-x/3+x^2/5)) / x^3 (x > 0)
+    //   = (atanh(sqrt(-x))/sqrt(-x)-(1-x/3+x^2/5)) / x^3 (x < 0)
+    // require abs(x) < 1/2, but better to restrict calls to abs(x) < 1/4
+    int e;
+    frexp(x, &e);
+    e = max(-e, 1);             // Here's where abs(x) < 1/2 is assumed
+    int n = (Math::digits() + 3 + e - 1) / e;
+    Math::real v = 0;
+    while (n >= 0) {
+      v = - x * v - 1/Math::real(2*n + 7);
+      --n;
+    }
+    return v;
   }
 
   // (atan(y)-(y-y^3/3+y^5/5))/y^7 (y = sqrt(x)) = -1/7+x/9-x^2/11+x^3/13...
   Math::real NormalGravity::atan7(real x) {
-    if (abs(x) >= real(0.5)) {
-      real y = sqrt(abs(x)), x2 = Math::sq(x);
-      return ((x > 0 ? atan(y) : Math::atanh(y))- y * (1 - x / 3 + x2 / 5)) /
-        (x * x2 * y);
-    } else {
-      real xn = -1, q = 0;
-      for (int n = 7; ; n += 2) {
-        real qn = q + xn / n;
-        if (qn == q)
-          break;
-        q = qn;
-        xn *= -x;
-      }
-      return q;
-    }
+    if (!(abs(x) < real(0.25))) { // Backwards test to allow NaNs through
+      real y = sqrt(abs(x));
+      return ((x < 0 ? Math::atanh(y) : atan(y)) / y -
+              (x * (3 * x - 5) + 15) / 15) / (x * x * x);
+    } else
+      return atan7series(x);
   }
 
   // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-x/7+x^2/9-x^3/11...
@@ -180,7 +203,7 @@ namespace GeographicLib {
       ep2 = Math::sq(ep),
       q = _q0 ? qf(ep2) / _q0 : pow(_a / u, 3),
       qp = qpf(ep2) / _q0,
-      // H+M, Eqs 2-62 + 6-9, but omitting last (rotational) term .
+      // H+M, Eqs 2-62 + 6-9, but omitting last (rotational) term.
       Vres = (_GM / (_E ? _E / atan(_E / u) : u)
               + _aomega2 * q * (Math::sq(sbet) - 1/real(3)) / 2),
       // H+M, Eq 6-10

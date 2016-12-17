@@ -186,10 +186,10 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
 
 GeographicLib has been developed under Linux with the g++ compiler
-(versions 4.0 and later) and under Windows with Visual Studio 2010,
-2012, and 2013.  Earlier versions were tested also under Visual Studio
-2005 and 2008 and under Darwin and Solaris.  It should compile on a wide
-range of other systems.  First download either
+(versions 4.0 and later), under Mac OS X with Xcode (version 8.2), and
+under Windows with Visual Studio 2010 and later.  Earlier versions were
+tested also under Visual Studio 2005 and 2008 and under Solaris.  It
+should compile on a wide range of other systems.  First download either
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.tar.gz">
 GeographicLib-@PROJECT_VERSION@.tar.gz</a> or
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.zip">
@@ -1955,6 +1955,7 @@ Go to
  - \ref gravitygeoid
  - \ref gravityatmos
  - \ref gravityparallel
+ - \ref normalgravity
 
 \section gravityinst Installing the gravity models
 
@@ -2406,6 +2407,32 @@ optimizations, the computation would have taken about 200 days!)
 cmake will add in support for OpenMP for
 <code>examples/GeoidToGTX.cpp</code>, if it is available.
 
+\section normalgravity Normal gravity
+
+Normal gravity refers to the exact (classical) solution of an idealised
+system consisting of an ellipsoid of revolution with the following
+properties:
+ - \e M the mass interior to the ellipsoid,
+ - \e a the equatorial radius,
+ - \e b the polar semi-axis,
+ - &omega; the rotation rate about the polar axis.
+ .
+The distribution of the mass \e M within the ellipsoid is such that the
+surface of the ellipsoid is at a constant gravitational potential where
+the gravitional potential is the sum of the mass term and the centifugal
+term due to the rotation.  The resulting gravitional field exterior to
+the ellipsoid is called <i>normal gravity</i> and was found by
+Somigliana (1929).  References:
+ - C. Somigliana, Teoria generale del campo gravitazionale dell'ellissoide
+   di rotazione, Mem. Soc. Astron. Ital, <b>4</b>, 541--599 (1929).
+ - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
+   Francisco, 1967), Secs. 1-19, 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).
+ - B. Hofmann-Wellenhof, H. Moritz, Physical Geodesy (Second edition,
+   Springer, 2006) https://dx.doi.org/10.1007/978-3-211-33545-1
+ - H. Moritz, Geodetic Reference System 1980, J. Geodesy 54(3), 395--405
+   (1980) https://dx.doi.org/10.1007/BF02521480
+ - H. Moritz, The Figure of the Earth (Wichmann, 1990).
+
 <center>
 Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
 </center>
@@ -2802,7 +2829,7 @@ References:
    of longitude and latitude from geodesic measurements (1825)</a>,
    Astron. Nachr. 331(8), 852--861 (2010);
    translated by C. F. F. Karney and R. E. Deakin; preprint:
-   <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
+   <a href="https://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - F. R. Helmert,
    <a href="https://dx.doi.org/10.5281/zenodo.32050">
    Mathematical and Physical Theories of Higher Geodesy, Part 1 (1880)</a>,
@@ -3262,10 +3289,10 @@ GeodesicExact and GeodesicLineExact solve the geodesic problem using
 elliptic integrals.  The formulation of geodesic in terms of incomplete
 elliptic integrals is given in
  - C. F. F. Karney,
-   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
+   <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
    on an ellipsoid of revolution</a>,
    Feb. 2011; preprint
-   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
+   <a href="https://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
  .
 It is most convenient to use the form derived for a prolate ellipsoid in
 Appendix D.  For an oblate ellipsoid this results in elliptic integrals
@@ -3753,7 +3780,7 @@ Go to
     measuring distances on the earth using a triaxial ellipsoid, you
     should also be worrying about the shape of the geoid, which
     essentially makes the geodesic problem a hopeless mess; see, for
-    example, <a href="http://arxiv.org/abs/1112.3231"> Waters
+    example, <a href="https://arxiv.org/abs/1112.3231"> Waters
     (2011)</a>.
  -# There is nothing new in this section.  It is just an exercise in
     exploring Jacobi's solution.  My interest here is in generating long
@@ -4657,7 +4684,7 @@ References:
    of longitude and latitude from geodesic measurements (1825)</a>,
    Astron. Nachr. 331(8), 852--861 (2010);
    translated by C. F. F. Karney and R. E. Deakin; preprint:
-   <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
+   <a href="https://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - V.A. Botnev, S.M. Ustinov,
    <a href="http://ntv.spbstu.ru/fulltext/T3.198.2014_05.PDF">
    Metody resheniya pryamoy i obratnoy geodezicheskikh zadach s vysokoy
@@ -4692,7 +4719,7 @@ References:
    addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
-   <a href="http://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
+   <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
    <a href="http://geographiclib.sourceforge.net/tm.html"> tm.html</a>.
  - C. F. F. Karney,
@@ -5606,7 +5633,7 @@ References:
    addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
-   <a href="http://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
+   <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
    <a href="http://geographiclib.sourceforge.net/tm.html"> tm.html</a>.
  .
@@ -5851,7 +5878,7 @@ This section gives color versions of the figures in
    addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
-   <a href="http://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
+   <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
    <a href="http://geographiclib.sourceforge.net/tm.html"> tm.html</a>.
 
@@ -5968,10 +5995,10 @@ restriction and to improve the numerical accuracy.  Now the method is
 accurate for all inputs (even if \e h is infinite).  The changes are
 described in Appendix B of
  - C. F. F. Karney,
-   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
+   <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
    on an ellipsoid of revolution</a>,
    Feb. 2011; preprint
-   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
+   <a href="https://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
  .
 Vermeille similarly updated his method in
  - H. Vermeille,
@@ -6657,10 +6684,11 @@ Here's what you should know:
    Calling this function after other GeographicLib routines will lead to
    inconsistent results (because the precision of some constants like
    Math::pi() is set when the functions are first called).
- - All the \ref utilities call Utility::set_digits().  This causes the
-   precision (in bits) to be determined by the
-   <code>GEOGRAPHICLIB_DIGITS</code> environment variable.  If this is
-   not defined the precision is set to 256 bits.
+ - All the \ref utilities call Utility::set_digits() (with no
+   arguments).  This causes the precision (in bits) to be determined by
+   the <code>GEOGRAPHICLIB_DIGITS</code> environment variable.  If this
+   is not defined the precision is set to 256 bits (about 77 decimal
+   digits).
  - The accuracy of most calculations should increase as the precision
    increases (and typically only a few bits of accuracy should be lost).
    We can distinguish 4 sources of error:
@@ -6709,11 +6737,7 @@ Here's what you should know:
      operator is required;
    - quad precision is only available on Linux;
    - mpfr has been mostly tested on Linux (but it works on Windows with
-     Visual Studio 12 and MacOS too);
-   - because the boost library (used for quad precision) interprets fixed +
-     setprecision(0) to mean "print all the digits you've got" instead
-     of "print the nearest integer", some of the formatted output is
-     wrong with <code>GEOGRAPHICLIB_PRECISION=4.</code>
+     Visual Studio 12 and MacOS too).
 
 The following steps needed to be taken
 
@@ -6943,13 +6967,21 @@ git repository for GeographicLib</a>.
        builds.
      - TODO: use doxygen's note, remark, warning, attention, see
        commands.
-     - TODO: use $<TARGET_PDB_FILE:tgt> (cmake version >= 3.1).
+     - Use $<TARGET_PDB_FILE:tgt> (cmake version >= 3.1).
+     - Use NAMESPACE for exported targets.
+     - TODO: document CMake's GeographicLib_CONSIDERED_VERSIONS.
+     - geographiclib-config.cmake exports GEOGRAPHICLIB_PRECISION and
+       GeographicLib_HIGHPREC_LIBRARIES.
      - Add Utility::trim() and a specialization for Utility::num<bool>()
+     - TODO: Add Utility::value<T>() and make Utility::num<T>()
+       (DEPRECATED) call this.
      - TODO: Generalize NormalGravity to allow f or J2 to be negative
        (if this is feasible).
      - TODO: Warn not to evaluate gravity potentials/gradients inside
        ellipsoid.
      - TODO: Give units for potentials in gravity classes.
+     - TODO: Fix google example to use DirectLine and InverseLine.
+     - Tell the compiler about deprecated functions.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
    (released 2016-02-15)
@@ -8179,7 +8211,7 @@ git repository for GeographicLib</a>.
    - Increase accuracy of scale calculation in TransverseMercator and
      TransverseMercatorExact.
    - Code and documentation changes for consistency with
-     <a  href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>
+     <a  href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>
 
  - <a href="http://geographiclib.sourceforge.net/1.0">Version 1.0</a>
    (released 2010-01-07)
