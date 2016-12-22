@@ -67,16 +67,20 @@ namespace GeographicLib {
     typedef Math::real real;
     friend class GravityModel;
     real _a, _GM, _omega, _f, _J2, _omega2, _aomega2;
-    real _e2, _ep2, _b, _E, _U0, _gammae, _gammap, _q0, _m, _k, _fstar;
+    real _e2, _ep2, _b, _E, _U0, _gammae, _gammap, _Q0, _k, _fstar;
     Geocentric _earth;
+    static real atan5series(real z2);
+    static real atan7series(real z2);
     // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-y/7+y^2/9-y^3/11...
-    static real atan5(real x);
-    static real atan7series(real x);
+    static real atan5(real z2);
     // (atan(y)-(y-y^3/3+y^5/5))/y^7 (y = sqrt(x)) = -1/7+x/9-x^2/11+x^3/13...
-    static real atan7(real x);
-    static real qf(real ep2);
-    static real dq(real ep2);
-    static real qpf(real ep2);
+    static real atan7(real z2);
+    //    static real qf(real ep2);
+    static real Qf(real z2);
+    static real dq(real z2);
+    //    static real qpf(real ep2);
+    static real Gf(real z2);
+    static real QG3f(real z2);
     real Jn(int n) const;
     void Initialize(real a, real GM, real omega, real f_J2, bool geometricp);
   public:
@@ -144,7 +148,7 @@ namespace GeographicLib {
      * If \e omega, \e f, and \e J2 are all zero, then the ellipsoid becomes a
      * sphere.
      **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED
+    GEOGRAPHICLIB_DEPRECATED("Use new NormalGravity constructor")
     NormalGravity(real a, real GM, real omega, real f, real J2);
 
     /**
