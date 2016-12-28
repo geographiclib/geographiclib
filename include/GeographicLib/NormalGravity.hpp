@@ -63,24 +63,22 @@ namespace GeographicLib {
 
   class GEOGRAPHICLIB_EXPORT NormalGravity {
   private:
-    static const int maxit_ = 10;
+    static const int maxit_ = 20;
     typedef Math::real real;
     friend class GravityModel;
     real _a, _GM, _omega, _f, _J2, _omega2, _aomega2;
     real _e2, _ep2, _b, _E, _U0, _gammae, _gammap, _Q0, _k, _fstar;
     Geocentric _earth;
-    static real atan5series(real z2);
-    static real atan7series(real z2);
-    // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-y/7+y^2/9-y^3/11...
-    static real atan5(real z2);
-    // (atan(y)-(y-y^3/3+y^5/5))/y^7 (y = sqrt(x)) = -1/7+x/9-x^2/11+x^3/13...
-    static real atan7(real z2);
-    //    static real qf(real ep2);
-    static real Qf(real z2);
-    static real dq(real z2);
-    //    static real qpf(real ep2);
-    static real Gf(real z2);
-    static real QG3f(real z2);
+    static real atanzz(real x) {
+      using std::sqrt; using std::abs; using std::atan;
+      real z = sqrt(abs(x));
+      return z != 0 ? (!(x < 0) ? atan(z) : Math::atanh(z)) / z : 1;
+    }
+    static real atan7series(real x);
+    static real atan5series(real x);
+    static real Qf(real x);
+    static real Gf(real x);
+    static real QG3f(real x);
     real Jn(int n) const;
     void Initialize(real a, real GM, real omega, real f_J2, bool geometricp);
   public:
@@ -99,24 +97,24 @@ namespace GeographicLib {
      * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
      * @param[in] f_J2 either the flattening of the ellipsoid \e f or the
      *   the dynamical form factor \e J2.
-     * @param[out] geometricp if true, then \e f_J2 denotes the flattening,
-     *   else it denotes the dynamical form factor \e J2.
-     * @exception if \e a is not positive or the other constants are
-     *   inconsistent (see below).
+     * @param[out] geometricp if true (the default), then \e f_J2 denotes the
+     *   flattening, else it denotes the dynamical form factor \e J2.
+     * @exception if \e a is not positive or if the other parameters do not
+     *   obey the restrictions given below.
      *
-     * If \e omega is non-zero, then exactly one of \e f and \e J2 should be
-     * positive and this will be used to define the ellipsoid.  The shape of
-     * the ellipsoid can be given in one of two ways:
-     * - geometrically, the ellipsoid is defined by the flattening \e f = (\e a
-     *   &minus; \e b) / \e a, where \e a and \e b are the equatorial radius
-     *   and the polar semi-axis.
-     * - physically, the ellipsoid is defined by the dynamical form factor
-     *   <i>J</i><sub>2</sub> = (\e C &minus; \e A) / <i>Ma</i><sup>2</sup>,
-     *   where \e A and \e C are the equatorial and polar moments of inertia
-     *   and \e M is the mass of the earth.
-     * .
-     * If \e omega, \e f, and \e J2 are all zero, then the ellipsoid becomes a
-     * sphere.
+     * The shape of the ellipsoid can be given in one of two ways:
+     * - geometrically (\e geomtricp = true), the ellipsoid is defined by the
+     *   flattening \e f = (\e a &minus; \e b) / \e a, where \e a and \e b are
+     *   the equatorial radius and the polar semi-axis.  The parameters should
+     *   obey \e a &gt; 0, \e f &lt; 1.  There are no restrictions on \e GM or
+     *   \e omega, in particular, \e GM need not be positive.
+     * - physically (\e geometricp = false), the ellipsoid is defined by the
+     *   dynamical form factor <i>J</i><sub>2</sub> = (\e C &minus; \e A) /
+     *   <i>Ma</i><sup>2</sup>, where \e A and \e C are the equatorial and
+     *   polar moments of inertia and \e M is the mass of the earth.  The
+     *   parameters should obey \e a &gt; 0, \e GM &gt; 0 and \e J2 &lt; 1/3
+     *   &minus; <i>omega</i><sup>2</sup><i>a</i><sup>3</sup>/<i>GM</i>
+     *   8/(45&pi;).  There is no restriction on \e omega.
      **********************************************************************/
     NormalGravity(real a, real GM, real omega, real f_J2,
                   bool geometricp = true);
@@ -371,6 +369,12 @@ namespace GeographicLib {
      * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
      * @param[in] J2 the dynamical form factor.
      * @return \e f the flattening of the ellipsoid.
+     *
+     * This routine requires \e a &gt; 0, \e GM &gt; 0, \e J2 &lt; 1/3 &minus;
+     * <i>omega</i><sup>2</sup><i>a</i><sup>3</sup>/<i>GM</i> 8/(45&pi;).  A
+     * NaN is returned if these conditions do not hold.  The restriction to
+     * positive \e GM is made because for negative \e GM two solutions are
+     * possible.
      **********************************************************************/
     static Math::real J2ToFlattening(real a, real GM, real omega, real J2);
 
@@ -385,6 +389,9 @@ namespace GeographicLib {
      * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
      * @param[in] f the flattening of the ellipsoid.
      * @return \e J2 the dynamical form factor.
+     *
+     * This routine requires \e a &gt; 0, \e GM &ne; 0, \e f &lt; 1.  The
+     * values of these parameters are not checked.
      **********************************************************************/
     static Math::real FlatteningToJ2(real a, real GM, real omega, real f);
   };

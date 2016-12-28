@@ -94,113 +94,67 @@ namespace GeographicLib {
     return grs80;
   }
 
-  /*
-  Math::real NormalGravity::atan5series(real x) {
-    // compute sum( (-x)^n/(2*n+5), n, 0, inf)
-    //   = 1/5 - x/7 + x^2/9 - x^3/11
-    //   = (atan(sqrt(x))/sqrt(x)-(1-x/3)) / x^2 (x > 0)
-    //   = (atanh(sqrt(-x))/sqrt(-x)-(1-x/3)) / x^2 (x < 0)
-    // require abs(x) < 1/2, but better to restrict calls to abs(x) < 1/4
-    int e;
-    frexp(x, &e);
-    e = max(-e, 1);             // Here's where abs(x) < 1/2 is assumed
-    int n = (Math::digits() + 3 + e - 1) / e;
-    Math::real v = 0;
-    while (n >= 0) {
-      v = - x * v + 1/Math::real(2*n + 5);
-      --n;
-    }
-    return v;
-  }
-  */
   Math::real NormalGravity::atan7series(real x) {
     // compute -sum( (-x)^n/(2*n+7), n, 0, inf)
     //   = -1/7 + x/9 - x^2/11 + x^3/13 ...
     //   = (atan(sqrt(x))/sqrt(x)-(1-x/3+x^2/5)) / x^3 (x > 0)
     //   = (atanh(sqrt(-x))/sqrt(-x)-(1-x/3+x^2/5)) / x^3 (x < 0)
     // require abs(x) < 1/2, but better to restrict calls to abs(x) < 1/4
+    static const real lg2eps_ =
+      -log(numeric_limits<real>::epsilon() / 2) / log(real(2));
     int e;
     frexp(x, &e);
     e = max(-e, 1);             // Here's where abs(x) < 1/2 is assumed
-    int n = (Math::digits() + 3 + e - 1) / e;
+    // x = [0.5,1) * 2^(-e)
+    // estimate n s.t. x^n/n < 1/7 * epsilon/2
+    // a stronger condition is x^n < epsilon/2
+    // taking log2 of both sides, a stronger condition is n*(-e) < -lg2eps;
+    // or n*e > lg2eps or n > ceiling(lg2eps/e)
+    int n = int(ceil(lg2eps_ / e));
     Math::real v = 0;
-    while (n >= 0) {
+    while (n--)                 // iterating from n-1 down to 0
       v = - x * v - 1/Math::real(2*n + 7);
-      --n;
-    }
     return v;
   }
 
-  // (atan(y)-(y-y^3/3+y^5/5))/y^7 (y = sqrt(x)) = -1/7+x/9-x^2/11+x^3/13...
-  Math::real NormalGravity::atan7(real x) {
-    if (!(abs(x) < real(0.25))) { // Backwards test to allow NaNs through
-      real y = sqrt(abs(x));
-      return ((x < 0 ? Math::atanh(y) : atan(y)) / y -
-              (x * (3 * x - 5) + 15) / 15) / (x * x * x);
-    } else
-      return atan7series(x);
+  Math::real NormalGravity::atan5series(real x) {
+    // Compute Taylor series approximations to
+    //   (atan(z)-(z-z^3/3))/z^5,
+    // z = sqrt(x)
+    // require abs(x) < 1/2, but better to restrict calls to abs(x) < 1/4
+    return 1/real(5) + x * atan7series(x);
   }
 
-  // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-x/7+x^2/9-x^3/11...
-  Math::real NormalGravity::atan5(real x)
-  { return 1/real(5) + x * atan7(x); }
-
-  /*
-  Math::real NormalGravity::qf(real ep2) {
-    // Compute
-    //
-    //   ((1 + 3/e'^2) * atan(e') - 3/e')/2
-    //
-    // See H+M, Eq 2-57, with E/u = e'.  This suffers from two levels of
-    // cancelation.  The e'^-1 and e'^1 terms drop out, so that the leading
-    // term is O(e'^3).  Substitute atan(e') = e' - e'^3/3 + e'^5*atan5(e'^2)
-    return sqrt(ep2) * ep2 * Qf(ep2);
-  }
-  */
   Math::real NormalGravity::Qf(real x) {
     // Compute
     //   Q(z) = (((1 + 3/z^2) * atan(z) - 3/z)/2) / z^3
     //        = q(z)/z^3 with q(z) defined by H+M, Eq 2-57 with z = E/u
     //   z = sqrt(x)
-    return (3 * (3 + x) * atan5(x) - 1) / 6;
+    return !(4 * abs(x) < 1) ?  // Backwards test to allow NaNs through
+      ((1 + 3/x) * atanzz(x) - 3/x) / (2 * x) :
+      (3 * (3 + x) * atan5series(x) - 1) / 6;
   }
-
-  /*
-  Math::real NormalGravity::dq(real x) {
-    // Compute d qf(x) / d x and substitute
-    // atan(e') = e' - e'^3/3 + e'^5*atan5(e'^2)
-    return sqrt(x) * Gf(x) / (2 * (1 + x));
-  }
-  */
-  /*
-  Math::real NormalGravity::qpf(real ep2) {
-    // Compute
-    //
-    //   3*(1 + 1/e'^2) * (1 - atan(e')/e') - 1
-    //
-    // See H+M, Eq 2-67, with E/u = e'.  This suffers from two levels of
-    // cancelation.  The e'^-2 and e'^0 terms drop out, so that the leading
-    // term is O(e'^2).
-    return ep2 * Gf(ep2);
-  }
-  */
 
   Math::real NormalGravity::Gf(real x) {
     // z = sqrt(x)
     // Compute
     //   G(z) = (3*Q(z)+z*diff(Q(z),z))*(1+z^2)
-    //        = (3*(1 + 1/z^2) * (1 - atan(z)/z) - 1) / z^2
+    //        = (3 * (1 + 1/z^2) * (1 - atan(z)/z) - 1) / z^2
     //        = q'(z)/z^2, with q'(z) defined by H+M, Eq 2-67, with z = E/u
-    return 1 - 3 * (1 + x) * atan5(x);
+    return !(4 * abs(x) < 1) ?  // Backwards test to allow NaNs through
+      (3 * (1 + 1/x) * (1 - atanzz(x)) - 1) / x :
+      1 - 3 * (1 + x) * atan5series(x);
   }
 
   Math::real NormalGravity::QG3f(real x) {
     // z = sqrt(x)
     // (Q(z) - G(z)/3) / z^2
     //   = - (1+z^2)/(3*z) * d(Q(z))/dz - Q(z)
-    //   = ((9*z^2+15)*atan(z)-4*z^3-15*z)/(6*z^7)
-    //   = ((15*z^2+25)*atan7+3)/10
-    return ((15 * x + 25) * atan7(x) + 3)/10;
+    //   = ((15+9*z^2)*atan(z)-4*z^3-15*z)/(6*z^7)
+    //   = ((25+15*z^2)*atan7+3)/10
+    return !(4 * abs(x) < 1) ? // Backwards test to allow NaNs through
+      ((9 + 15/x) * atanzz(x) - 4 - 15/x) / (6 * Math::sq(x)) :
+      ((25 + 15*x) * atan7series(x) + 3)/10;
   }
 
   Math::real NormalGravity::Jn(int n) const {
@@ -300,27 +254,37 @@ namespace GeographicLib {
 
   Math::real NormalGravity::J2ToFlattening(real a, real GM,
                                            real omega, real J2) {
-    if (!(Math::isfinite(GM) && GM >= 0))
-      return Math::NaN();
     // Solve
     //   f = e^2 * (1 -  K * e/q0) - 3 * J2 = 0
     // for e^2 using Newton's method
+    static const real maxe_ = 1 - numeric_limits<real>::epsilon();
+    static const real eps2_ = sqrt(numeric_limits<real>::epsilon()) / 100;
     real
       K = 2 * Math::sq(a * omega) * a / (15 * GM),
-      e2 = 3 * J2;              // See Moritz (1980), p 398.
+      J0 = (1 - 4 * K / Math::pi()) / 3;
+    if (!(GM > 0 && Math::isfinite(K) && K >= 0))
+      return Math::NaN();
+    if (!(Math::isfinite(J2) && J2 <= J0)) return Math::NaN();
+    if (J2 == J0) return 1;
+    // Solve e2 - f1 * f2 * K / Q0 - 3 * J2 = 0 for J2 close to J0;
+    // subst e2 = ep2/(1+ep2), f2 = 1/(1+ep2), f1 = 1/sqrt(1+ep2), J2 = J0-dJ2,
+    // Q0 = pi/(4*z^3) - 2/z^4 + (3*pi)/(4*z^5), z = sqrt(ep2), and balance two
+    // leading terms to give
+    real
+      ep2 = max(Math::sq(32 * K / (3 * Math::sq(Math::pi()) * (J0 - J2))),
+                -maxe_),
+      e2 = min(ep2 / (1 + ep2), maxe_);
     for (int j = 0; j < maxit_ || GEOGRAPHICLIB_PANIC; ++j) {
-      real e2a = e2,
-        ep2 = e2 / (1 - e2),
-        f1 = sqrt(1 - e2),
+      real
+        e2a = e2, ep2a = ep2,
+        f2 = 1 - e2,            // (1 - f)^2
+        f1 = sqrt(f2),          // (1 - f)
         Q0 = Qf(ep2),
-        //        dq0 = dq(ep2) / Math::sq(1 - e2),
-        h = (e2 - f1 * (1 - e2) * K / Q0) - 3 * J2,
-        dh = 1 - 3 * f1 * K * QG3f(ep2) / (2 * Math::sq(Q0)),
-        // (3 * Q(z) - G(z)) / z^2  = ((9*z^2+15)*atan(z)-4*z^3-15*z)/(2*z^7)
-        // = (15*atan7*(3*z^2+5)+9)/10
-        de2 = - h / dh;
-      e2 = e2a + de2;
-      if (e2 == e2a)
+        h = e2 - f1 * f2 * K / Q0 - 3 * J2,
+        dh = 1 - 3 * f1 * K * QG3f(ep2) / (2 * Math::sq(Q0));
+      e2 = min(e2a - h / dh, maxe_);
+      ep2 = max(e2 / (1 - e2), -maxe_);
+      if (abs(h) < eps2_ || e2 == e2a || ep2 == ep2a)
         break;
     }
     return e2 / (1 + sqrt(1 - e2));
