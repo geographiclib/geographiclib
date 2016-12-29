@@ -22,7 +22,7 @@ namespace GeographicLib {
                                  bool geometricp) {
     _a = a;
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     _GM = GM;
     if (!Math::isfinite(_GM))
       throw GeographicErr("Gravitational constant is not finite");
@@ -34,7 +34,7 @@ namespace GeographicLib {
     _f = geometricp ? f_J2 : J2ToFlattening(_a, _GM, _omega, f_J2);
     _b = _a * (1 - _f);
     if (!(Math::isfinite(_b) && _b > 0))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
     _J2 = geometricp ? FlatteningToJ2(_a, _GM, _omega, f_J2) : f_J2;
     _e2 = _f * (2 - _f);
     _ep2 = _e2 / (1 - _e2);
