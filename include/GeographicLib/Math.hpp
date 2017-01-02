@@ -737,12 +737,15 @@ namespace GeographicLib {
      * @param[in] x gives the magitude of the result.
      * @param[in] y gives the sign of the result.
      * @return value with the magnitude of \e x and with the sign of \e y.
+     *
+     * This routine correctly handles the case \e y = &minus;0, returning
+     * &minus|<i>x</i>|.
      **********************************************************************/
     template<typename T> static inline T copysign(T x, T y) {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::copysign; return copysign(x, y);
 #else
-      using std::abs; using std::atan2;
+      using std::abs;
       // NaN counts as positive
       return abs(x) * (y < 0 || (y == 0 && 1/y < 0)  ? -1 : 1);
 #endif

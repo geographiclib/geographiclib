@@ -69,16 +69,24 @@ namespace GeographicLib {
     real _a, _GM, _omega, _f, _J2, _omega2, _aomega2;
     real _e2, _ep2, _b, _E, _U0, _gammae, _gammap, _Q0, _k, _fstar;
     Geocentric _earth;
-    static real atanzz(real x) {
-      using std::sqrt; using std::abs; using std::atan;
+    static real atanzz(real x, bool alt) {
+      // This routine obeys the identity
+      //   atanzz(x, alt) = atanzz(-x/(1+x), !alt)
+      //
+      // Require x >= -1.  Best to call with alt, s.t. x >= 0; this results in
+      // a call to atan, instead of asin, or to asinh, instead of atanh.
+      using std::sqrt; using std::abs; using std::atan; using std::asin;
       real z = sqrt(abs(x));
-      return z != 0 ? (!(x < 0) ? atan(z) : Math::atanh(z)) / z : 1;
+      return x == 0 ? 1 :
+        (alt ?
+         (!(x < 0) ? Math::asinh(z) : asin(z)) / sqrt(abs(x) / (1 + x)) :
+         (!(x < 0) ? atan(z) : Math::atanh(z)) / z);
     }
     static real atan7series(real x);
     static real atan5series(real x);
-    static real Qf(real x);
-    static real Gf(real x);
-    static real QG3f(real x);
+    static real Qf(real x, bool alt);
+    static real Gf(real x, bool alt);
+    static real QG3f(real x, bool alt);
     real Jn(int n) const;
     void Initialize(real a, real GM, real omega, real f_J2, bool geometricp);
   public:
