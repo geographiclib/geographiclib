@@ -221,7 +221,7 @@ int main(int argc, const char* const argv[]) {
               // End of i'th token
               pb = s.find_first_of(spaces, pa);
               (i == 2 ? height : (i == 0 ? easting : northing)) =
-                Utility::num<real>(s.substr(pa, (pb == std::string::npos ?
+                Utility::val<real>(s.substr(pa, (pb == std::string::npos ?
                                                  pb : pb - pa)));
             }
             p.Reset(zonenum, northp, easting, northing);
@@ -239,7 +239,7 @@ int main(int argc, const char* const argv[]) {
               std::string::size_type pa = s.find_last_of(spaces, pb);
               if (pa == std::string::npos || pb == std::string::npos)
                 throw GeographicErr("Incomplete input: " + s);
-              height = Utility::num<real>(s.substr(pa + 1, pb - pa));
+              height = Utility::val<real>(s.substr(pa + 1, pb - pa));
               s = s.substr(0, pa + 1);
             }
             p.Reset(s, true, longfirst);

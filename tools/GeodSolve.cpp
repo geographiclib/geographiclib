@@ -63,7 +63,7 @@ std::string DistanceStrings(real s12, real a12,
 
 real ReadDistance(const std::string& s, bool arcmode) {
   using namespace GeographicLib;
-  return arcmode ? DMS::DecodeAngle(s) : Utility::num<real>(s);
+  return arcmode ? DMS::DecodeAngle(s) : Utility::val<real>(s);
 }
 
 int main(int argc, const char* const argv[]) {
@@ -141,7 +141,7 @@ int main(int argc, const char* const argv[]) {
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
-          a = Utility::num<real>(std::string(argv[m + 1]));
+          a = Utility::val<real>(std::string(argv[m + 1]));
           f = Utility::fract<real>(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
@@ -166,7 +166,7 @@ int main(int argc, const char* const argv[]) {
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
-          prec = Utility::num<int>(std::string(argv[m]));
+          prec = Utility::val<int>(std::string(argv[m]));
         }
         catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";

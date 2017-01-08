@@ -6960,7 +6960,7 @@ git repository for GeographicLib</a>.
      - Add pkg-config support for cmake and autoconf builds.
      - TODO: document -A arch option for cmake.
      - TODO: Emphasize the win32/win64 binary installer requires
-       compiled with Win32/x64 configuration; also the need to match
+       compiling with Win32/x64 configuration; also the need to match
        Visual Studio versions.
      - Fix to FindGeographicLib.cmake to make it work on Debian systems.
      - TODO: fix dotnet/ManagedCPP/CMakeLists.txt to work with debug
@@ -6972,9 +6972,8 @@ git repository for GeographicLib</a>.
      - TODO: document CMake's GeographicLib_CONSIDERED_VERSIONS.
      - geographiclib-config.cmake exports GEOGRAPHICLIB_PRECISION and
        GeographicLib_HIGHPREC_LIBRARIES.
-     - Add Utility::trim() and a specialization for Utility::num<bool>()
-     - TODO: Add Utility::value<T>() and make Utility::num<T>()
-       (DEPRECATED) call this.
+     - Add Utility::trim() and Utility::val<T>(); Utility::num<T>() is now
+       DEPRECATED.
      - TODO: Generalize NormalGravity to allow f or J2 to be negative
        (if this is feasible).
      - TODO: Warn not to evaluate gravity potentials/gradients inside

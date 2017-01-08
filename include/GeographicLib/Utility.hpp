@@ -188,27 +188,27 @@ namespace GeographicLib {
       const char* digits = "0123456789";
       std::string::size_type p1 = s.find_first_not_of(digits);
       if (p1 == std::string::npos)
-        y1 = num<int>(s);
+        y1 = val<int>(s);
       else if (s[p1] != '-')
         throw GeographicErr("Delimiter not hyphen in date " + s);
       else if (p1 == 0)
         throw GeographicErr("Empty year field in date " + s);
       else {
-        y1 = num<int>(s.substr(0, p1));
+        y1 = val<int>(s.substr(0, p1));
         if (++p1 == s.size())
           throw GeographicErr("Empty month field in date " + s);
         std::string::size_type p2 = s.find_first_not_of(digits, p1);
         if (p2 == std::string::npos)
-          m1 = num<int>(s.substr(p1));
+          m1 = val<int>(s.substr(p1));
         else if (s[p2] != '-')
           throw GeographicErr("Delimiter not hyphen in date " + s);
         else if (p2 == p1)
           throw GeographicErr("Empty month field in date " + s);
         else {
-          m1 = num<int>(s.substr(p1, p2 - p1));
+          m1 = val<int>(s.substr(p1, p2 - p1));
           if (++p2 == s.size())
             throw GeographicErr("Empty day field in date " + s);
-          d1 = num<int>(s.substr(p2));
+          d1 = val<int>(s.substr(p2));
         }
       }
       y = y1; m = m1; d = d1;
@@ -251,10 +251,9 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static T fractionalyear(const std::string& s) {
       try {
-        return num<T>(s);
+        return val<T>(s);
       }
-      catch (const std::exception&) {
-      }
+      catch (const std::exception&) {}
       int y, m, d;
       date(s, y, m, d);
       int t = day(y, m, d, true);
@@ -333,24 +332,31 @@ namespace GeographicLib {
     }
 
     /**
-     * Convert a string to a number of type T.
+     * Convert a string to type T.
      *
-     * @tparam T the type of the return value (this should be numeric).
+     * @tparam T the type of the return value.
      * @param[in] s the string to be converted.
      * @exception GeographicErr is \e s is not readable as a T.
      * @return object of type T.
      *
      * White space at the beginning and end of \e s is ignored.
      *
-     * If the type T is bool, then \e s should either be string a representing
-     * 0 (false) or 1 (true) or one of the strings
+     * Special handling is provided for some types.
+     *
+     * If T is a floating point type, then inf and nan are recognized.
+     *
+     * If T is bool, then \e s should either be string a representing 0 (false)
+     * or 1 (true) or one of the strings
      * - "false", "f", "nil", "no", "n", "off", or "" meaning false,
      * - "true", "t", "yes", "y", or "on" meaning true;
      * .
      * case is ignored.
+     *
+     * If T is std::string, then \e s is returned (with the white space at the
+     * beginning and end removed).
      **********************************************************************/
-    template<typename T> static T num(const std::string& s) {
-      // If T is bool, then the specialization num<bool>() defined below is
+    template<typename T> static T val(const std::string& s) {
+      // If T is bool, then the specialization val<bool>() defined below is
       // used.
       T x;
       std::string errmsg, t(trim(s));
@@ -371,6 +377,15 @@ namespace GeographicLib {
       if (x == 0)
         throw GeographicErr(errmsg);
       return x;
+    }
+    /**
+     * \deprecated An old name for val<T>(s).
+     **********************************************************************/
+    //
+    template<typename T>
+      GEOGRAPHICLIB_DEPRECATED("Use new Utility::val<T>(s)")
+      static T num(const std::string& s) {
+      return val<T>(s);
     }
 
     /**
@@ -424,9 +439,9 @@ namespace GeographicLib {
       std::string::size_type delim = s.find('/');
       return
         !(delim != std::string::npos && delim >= 1 && delim + 2 <= s.size()) ?
-        num<T>(s) :
+        val<T>(s) :
         // delim in [1, size() - 2]
-        num<T>(s.substr(0, delim)) / num<T>(s.substr(delim + 1));
+        val<T>(s.substr(0, delim)) / val<T>(s.substr(delim + 1));
     }
 
     /**
@@ -623,9 +638,15 @@ namespace GeographicLib {
   };
 
   /**
-   * The specialization of Utility::num<T>() for bools.
+   * The specialization of Utility::val<T>() for strings.
    **********************************************************************/
-  template<> inline bool Utility::num<bool>(const std::string& s) {
+  template<> inline std::string Utility::val<std::string>(const std::string& s)
+  { return trim(s); }
+
+  /**
+   * The specialization of Utility::val<T>() for bools.
+   **********************************************************************/
+  template<> inline bool Utility::val<bool>(const std::string& s) {
     std::string t(trim(s));
     if (t.empty()) return false;
     bool x;

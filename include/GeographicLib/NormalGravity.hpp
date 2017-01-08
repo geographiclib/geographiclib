@@ -28,9 +28,13 @@ namespace GeographicLib {
    * There is a closed solution to this problem which is implemented here.
    * Series "approximations" are only used to evaluate certain combinations of
    * elementary functions where use of the closed expression results in a loss
-   * of accuracy for small arguments due to cancellation of the two leading
-   * terms.  However these series include sufficient terms to give full machine
+   * of accuracy for small arguments due to cancellation of the leading terms.
+   * However these series include sufficient terms to give full machine
    * precision.
+   *
+   * Although the formulation used in this class applies to ellipsoids with
+   * arbitrary flattening, in practice, its use should be limited to about
+   * <i>b</i>/\e a &isin; [0.01, 100] or \e f &isin; [-99, 0.99].
    *
    * Definitions:
    * - <i>V</i><sub>0</sub>, the gravitational contribution to the normal
@@ -56,6 +60,8 @@ namespace GeographicLib {
    *   Springer, 2006) https://dx.doi.org/10.1007/978-3-211-33545-1
    * - H. Moritz, Geodetic Reference System 1980, J. Geodesy 54(3), 395-405
    *   (1980) https://dx.doi.org/10.1007/BF02521480
+   *
+   * For more information on normal gravity see \ref normalgravity.
    *
    * Example of use:
    * \include example-NormalGravity.cpp
@@ -127,7 +133,7 @@ namespace GeographicLib {
     NormalGravity(real a, real GM, real omega, real f_J2,
                   bool geometricp = true);
     /**
-     * \deprecated{Constructor for the normal gravity.}
+     * \deprecated Old constructor for the normal gravity.
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] GM mass constant of the ellipsoid

@@ -111,26 +111,26 @@ namespace GeographicLib {
       else if (key == "ReleaseDate")
         _date = val;
       else if (key == "Radius")
-        _a = Utility::num<real>(val);
+        _a = Utility::val<real>(val);
       else if (key == "Type") {
         if (!(val == "Linear" || val == "linear"))
           throw GeographicErr("Only linear models are supported");
       } else if (key == "Epoch")
-        _t0 = Utility::num<real>(val);
+        _t0 = Utility::val<real>(val);
       else if (key == "DeltaEpoch")
-        _dt0 = Utility::num<real>(val);
+        _dt0 = Utility::val<real>(val);
       else if (key == "NumModels")
-        _Nmodels = Utility::num<int>(val);
+        _Nmodels = Utility::val<int>(val);
       else if (key == "NumConstants")
-        _Nconstants = Utility::num<int>(val);
+        _Nconstants = Utility::val<int>(val);
       else if (key == "MinTime")
-        _tmin = Utility::num<real>(val);
+        _tmin = Utility::val<real>(val);
       else if (key == "MaxTime")
-        _tmax = Utility::num<real>(val);
+        _tmax = Utility::val<real>(val);
       else if (key == "MinHeight")
-        _hmin = Utility::num<real>(val);
+        _hmin = Utility::val<real>(val);
       else if (key == "MaxHeight")
-        _hmax = Utility::num<real>(val);
+        _hmax = Utility::val<real>(val);
       else if (key == "Normalization") {
         if (val == "FULL" || val == "Full" || val == "full")
           _norm = SphericalHarmonic::FULL;

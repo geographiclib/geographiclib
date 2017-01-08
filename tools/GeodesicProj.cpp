@@ -66,7 +66,7 @@ int main(int argc, const char* const argv[]) {
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
-          a = Utility::num<real>(std::string(argv[m + 1]));
+          a = Utility::val<real>(std::string(argv[m + 1]));
           f = Utility::fract<real>(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
@@ -79,7 +79,7 @@ int main(int argc, const char* const argv[]) {
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
-          prec = Utility::num<int>(std::string(argv[m]));
+          prec = Utility::val<int>(std::string(argv[m]));
         }
         catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
@@ -183,8 +183,8 @@ int main(int argc, const char* const argv[]) {
         if (!(str >> stra >> strb))
           throw GeographicErr("Incomplete input: " + s);
         if (reverse) {
-          x = Utility::num<real>(stra);
-          y = Utility::num<real>(strb);
+          x = Utility::val<real>(stra);
+          y = Utility::val<real>(strb);
         } else
           DMS::DecodeLatLon(stra, strb, lat, lon, longfirst);
         if (str >> strc)

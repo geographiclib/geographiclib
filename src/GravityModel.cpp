@@ -145,15 +145,15 @@ namespace GeographicLib {
       else if (key == "ReleaseDate")
         _date = val;
       else if (key == "ModelRadius")
-        _amodel = Utility::num<real>(val);
+        _amodel = Utility::val<real>(val);
       else if (key == "ModelMass")
-        _GMmodel = Utility::num<real>(val);
+        _GMmodel = Utility::val<real>(val);
       else if (key == "AngularVelocity")
-        omega = Utility::num<real>(val);
+        omega = Utility::val<real>(val);
       else if (key == "ReferenceRadius")
-        a = Utility::num<real>(val);
+        a = Utility::val<real>(val);
       else if (key == "ReferenceMass")
-        GM = Utility::num<real>(val);
+        GM = Utility::val<real>(val);
       else if (key == "Flattening")
         f = Utility::fract<real>(val);
       else if (key == "DynamicalFormFactor")

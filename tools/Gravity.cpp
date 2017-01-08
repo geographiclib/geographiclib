@@ -72,7 +72,7 @@ int main(int argc, const char* const argv[]) {
             throw GeographicErr("Bad hemisphere letter on latitude");
           if (!(abs(lat) <= 90))
             throw GeographicErr("Latitude not in [-90d, 90d]");
-          h = Utility::num<real>(std::string(argv[++m]));
+          h = Utility::val<real>(std::string(argv[++m]));
           circle = true;
         }
         catch (const std::exception& e) {
@@ -85,7 +85,7 @@ int main(int argc, const char* const argv[]) {
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
-          prec = Utility::num<int>(std::string(argv[m]));
+          prec = Utility::val<int>(std::string(argv[m]));
         }
         catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
