@@ -268,7 +268,7 @@ namespace GeographicLib {
 
       // sig12 = sig2 - sig1
       sig12 = atan2(max(real(0), csig1 * ssig2 - ssig1 * csig2),
-                    csig1 * csig2 + ssig1 * ssig2);
+                                 csig1 * csig2 + ssig1 * ssig2);
       {
         real dummy;
         Lengths(E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
@@ -879,7 +879,7 @@ namespace GeographicLib {
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = atan2(max(real(0), csig1 * ssig2 - ssig1 * csig2),
-                  csig1 * csig2 + ssig1 * ssig2);
+                               csig1 * csig2 + ssig1 * ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
     somg12 = max(real(0), comg1 * somg2 - somg1 * comg2);
@@ -889,7 +889,7 @@ namespace GeographicLib {
     // chi12 = chi2 - chi1, limit to [0, pi]
     real
       schi12 = max(real(0), cchi1 * somg2 - somg1 * cchi2),
-      cchi12 = cchi1 * cchi2 + somg1 * somg2;
+      cchi12 =              cchi1 * cchi2 + somg1 * somg2;
     // eta = chi12 - lam120
     real eta = atan2(schi12 * clam120 - cchi12 * slam120,
                      cchi12 * clam120 + schi12 * slam120);

@@ -258,7 +258,7 @@ namespace GeographicLib {
 
       // sig12 = sig2 - sig1
       sig12 = atan2(max(real(0), csig1 * ssig2 - ssig1 * csig2),
-                    csig1 * csig2 + ssig1 * ssig2);
+                                 csig1 * csig2 + ssig1 * ssig2);
       {
         real dummy;
         Lengths(_n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
@@ -440,10 +440,8 @@ namespace GeographicLib {
         // Avoid problems with indeterminate sig1, sig2 on equator
         S12 = 0;
 
-      if (!meridian) {
-        if (somg12 > 1) {
-          somg12 = sin(omg12); comg12 = cos(omg12);
-        }
+      if (!meridian && somg12 > 1) {
+        somg12 = sin(omg12); comg12 = cos(omg12);
       }
 
       if (!meridian &&
@@ -862,7 +860,7 @@ namespace GeographicLib {
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = atan2(max(real(0), csig1 * ssig2 - ssig1 * csig2),
-                  csig1 * csig2 + ssig1 * ssig2);
+                               csig1 * csig2 + ssig1 * ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
     somg12 = max(real(0), comg1 * somg2 - somg1 * comg2);

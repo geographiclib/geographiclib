@@ -709,7 +709,7 @@ GeographicLib.PolygonArea = {};
                                            diffp, C1a, C2a, C3a) {
     var vals = {},
         t, salp0, calp0,
-        somg1, comg1, somg2, comg2, B312, eta, k2, nvals;
+        somg1, comg1, somg2, comg2, somg12, comg12, B312, eta, k2, nvals;
     if (sbet1 === 0 && calp1 === 0)
       // Break degeneracy of equatorial line.  This case has already been
       // handled.
@@ -751,22 +751,23 @@ GeographicLib.PolygonArea = {};
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     vals.sig12 = Math.atan2(Math.max(0, vals.csig1 * vals.ssig2 -
-                                     vals.ssig1 * vals.csig2),
-                            vals.csig1 * vals.csig2 + vals.ssig1 * vals.ssig2);
+                                        vals.ssig1 * vals.csig2),
+                                        vals.csig1 * vals.csig2 +
+                                        vals.ssig1 * vals.ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
-    vals.somg12 = Math.max(0, comg1 * somg2 - somg1 * comg2);
-    vals.comg12 =             comg1 * comg2 + somg1 * somg2;
+    somg12 = Math.max(0, comg1 * somg2 - somg1 * comg2);
+    comg12 =             comg1 * comg2 + somg1 * somg2;
     // eta = omg12 - lam120
-    eta = Math.atan2(vals.somg12 * clam120 - vals.comg12 * slam120,
-                     vals.comg12 * clam120 + vals.somg12 * slam120);
+    eta = Math.atan2(somg12 * clam120 - comg12 * slam120,
+                     comg12 * clam120 + somg12 * slam120);
     k2 = m.sq(calp0) * this._ep2;
     vals.eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
     this.C3f(vals.eps, C3a);
     B312 = (g.SinCosSeries(true, vals.ssig2, vals.csig2, C3a) -
             g.SinCosSeries(true, vals.ssig1, vals.csig1, C3a));
-    vals.lam12 = eta - this.f * this.A3f(vals.eps) *
-      salp0 * (vals.sig12 + B312);
+    vals.domg12 =  -this.f * this.A3f(vals.eps) * salp0 * (vals.sig12 + B312);
+    vals.lam12 = eta + vals.domg12;
     if (diffp) {
       if (vals.calp2 === 0)
         vals.dlam12 = -2 * this._f1 * dn1 / sbet1;
@@ -818,7 +819,7 @@ GeographicLib.PolygonArea = {};
         numit, salp1a, calp1a, salp1b, calp1b,
         tripn, tripb, v, dv, dalp1, sdalp1, cdalp1, nsalp1,
         lengthmask, salp0, calp0, alp12, k2, A4, C4a, B41, B42,
-        somg12, comg12, domg12, dbet1, dbet2, salp12, calp12;
+        somg12, comg12, domg12, dbet1, dbet2, salp12, calp12, sdomg12, cdomg12;
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
@@ -918,7 +919,7 @@ GeographicLib.PolygonArea = {};
 
       // sig12 = sig2 - sig1
       sig12 = Math.atan2(Math.max(0, csig1 * ssig2 - ssig1 * csig2),
-                         csig1 * csig2 + ssig1 * ssig2);
+                                     csig1 * csig2 + ssig1 * ssig2);
       nvals = this.Lengths(this._n, sig12,
                            ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
                            outmask | g.DISTANCE | g.REDUCEDLENGTH,
@@ -1018,8 +1019,7 @@ GeographicLib.PolygonArea = {};
           ssig2 = nvals.ssig2;
           csig2 = nvals.csig2;
           eps = nvals.eps;
-          somg12 = nvals.somg12;
-          comg12 = nvals.comg12;
+          domg12 = nvals.domg12;
           dv = nvals.dlam12;
 
           // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
@@ -1081,6 +1081,12 @@ GeographicLib.PolygonArea = {};
         m12x *= this._b;
         s12x *= this._b;
         vals.a12 = sig12 / m.degree;
+        if (outmask & g.AREA) {
+          // omg12 = lam12 - domg12
+          sdomg12 = Math.sin(domg12); cdomg12 = Math.cos(domg12);
+          somg12 = slam12 * cdomg12 - clam12 * sdomg12;
+          comg12 = clam12 * cdomg12 + slam12 * sdomg12;
+        }
       }
     }
 
@@ -1114,15 +1120,11 @@ GeographicLib.PolygonArea = {};
       } else
         // Avoid problems with indeterminate sig1, sig2 on equator
         vals.S12 = 0;
-      if (!meridian) {
-        if (somg12 > 1) {
-          somg12 = Math.sin(omg12); comg12 = Math.cos(omg12);
-        } else {
-          t = m.hypot(somg12, comg12); somg12 /= t; comg12 /= t;
-        }
+      if (!meridian && somg12 > 1) {
+        somg12 = Math.sin(omg12); comg12 = Math.cos(omg12);
       }
       if (!meridian &&
-          omg12 > -0.7071 &&      // Long difference not too big
+          comg12 > -0.7071 &&      // Long difference not too big
           sbet2 - sbet1 < 1.75) { // Lat difference not too big
         // Use tan(Gamma/2) = tan(omg12/2)
         // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))

@@ -555,7 +555,7 @@
      +    salp1a, calp1a, salp1b, calp1b,
      +    dalp1, sdalp1, cdalp1, nsalp1, alp12, somg12, comg12, domg12,
      +    sig12, v, dv, dnm, dummy,
-     +    A4, B41, B42, s12x, m12x, a12x
+     +    A4, B41, B42, s12x, m12x, a12x, sdomg12, cdomg12
 
       double precision dblmin, dbleps, pi, degree, tiny,
      +    tol0, tol1, tol2, tolb, xthrsh
@@ -706,7 +706,7 @@
 
 * sig12 = sig2 - sig1
         sig12 = atan2(0d0 + max(0d0, csig1 * ssig2 - ssig1 * csig2),
-     +      csig1 * csig2 + ssig1 * ssig2)
+     +                               csig1 * csig2 + ssig1 * ssig2)
         call Lengs(n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
      +      cbet1, cbet2, lmask,
      +      s12x, m12x, dummy, MM12, MM21, ep2, Ca)
@@ -736,6 +736,7 @@
       omg12 = 0
 * somg12 > 1 marks that it needs to be calculated
       somg12 = 2
+      comg12 = 0
       if (.not. merid .and. sbet1 .eq. 0 .and.
      +    (f .le. 0 .or. lon12s .ge. f * 180)) then
 
@@ -798,7 +799,7 @@
             v = Lam12f(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
      +          salp1, calp1, slam12, clam12, f, A3x, C3x, salp2, calp2,
      +          sig12, ssig1, csig1, ssig2, csig2,
-     +          eps, somg12, comg12, numit .lt. maxit1, dv, Ca)
+     +          eps, domg12, numit .lt. maxit1, dv, Ca)
 * Reversed test to allow escape with NaNs
             if (tripn) then
               dummy = 8
@@ -855,6 +856,12 @@
           m12x = m12x * b
           s12x = s12x * b
           a12x = sig12 / degree
+          if (areap) then
+            sdomg12 = sin(domg12)
+            cdomg12 = cos(domg12)
+            somg12 = slam12 * cdomg12 - clam12 * sdomg12
+            comg12 = clam12 * cdomg12 + slam12 * sdomg12
+          end if
         end if
       end if
 
@@ -887,13 +894,9 @@
           SS12 = 0
         end if
 
-        if (.not. merid) then
-          if (somg12 .gt. 1) then
-            somg12 = sin(omg12)
-            comg12 = cos(omg12)
-          else
-            call norm2(somg12, comg12)
-          end if
+        if (.not. merid .and. somg12 .gt. 1) then
+          somg12 = sin(omg12)
+          comg12 = cos(omg12)
         end if
 
         if (.not. merid .and. comg12 .ge. 0.7071d0
@@ -1072,7 +1075,7 @@
 * is used.  The larger value is used here to avoid complaints about a
 * IEEE_UNDERFLOW_FLAG IEEE_DENORMAL signal.  This is triggered when
 * invers is called with points at opposite poles.
-      tiny = 0.5d0**((1022+2)/3)
+      tiny = 0.5d0**((1022+1)/3)
       tol0 = dbleps
 * Increase multiplier in defn of tol1 from 100 to 200 to fix inverse
 * case 52.784459512564 0 -52.784459512563990912 179.634407464943777557
@@ -1449,14 +1452,14 @@
       double precision function Lam12f(sbet1, cbet1, dn1,
      +    sbet2, cbet2, dn2, salp1, calp1, slm120, clm120, f, A3x, C3x,
      +    salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
-     +    somg12, comg12, diffp, dlam12, Ca)
+     +    domg12, diffp, dlam12, Ca)
 * input
       double precision sbet1, cbet1, dn1, sbet2, cbet2, dn2,
      +    salp1, calp1, slm120, clm120, f, A3x(*), C3x(*)
       logical diffp
 * output
       double precision salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-     +    eps, somg12, comg12
+     +    eps, domg12
 * optional output
       double precision dlam12
 * temporary
@@ -1468,7 +1471,8 @@
       double precision hypotx, A3f, TrgSum
 
       double precision f1, e2, ep2, salp0, calp0,
-     +    somg1, comg1, somg2, comg2, lam12, eta, B312, k2, dummy
+     +    somg1, comg1, somg2, comg2, somg12, comg12,
+     +    lam12, eta, B312, k2, dummy
 
       double precision dblmin, dbleps, pi, degree, tiny,
      +    tol0, tol1, tol2, tolb, xthrsh
@@ -1532,7 +1536,7 @@
 
 * sig12 = sig2 - sig1, limit to [0, pi]
       sig12 = atan2(0d0 + max(0d0, csig1 * ssig2 - ssig1 * csig2),
-     +    csig1 * csig2 + ssig1 * ssig2)
+     +                             csig1 * csig2 + ssig1 * ssig2)
 
 * omg12 = omg2 - omg1, limit to [0, pi]
       somg12 = 0d0 + max(0d0, comg1 * somg2 - somg1 * comg2)
@@ -1545,7 +1549,8 @@
       call C3f(eps, C3x, Ca)
       B312 = (TrgSum(.true., ssig2, csig2, Ca, nC3-1) -
      +    TrgSum(.true., ssig1, csig1, Ca, nC3-1))
-      lam12 = eta - f * A3f(eps, A3x) * salp0 * (sig12 + B312)
+      domg12 = -f * A3f(eps, A3x) * salp0 * (sig12 + B312)
+      lam12 = eta + domg12
 
       if (diffp) then
         if (calp2 .eq. 0) then

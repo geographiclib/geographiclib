@@ -381,9 +381,8 @@ namespace GeographicLib {
     /**
      * \deprecated An old name for val<T>(s).
      **********************************************************************/
-    //
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use new Utility::val<T>(s)")
+      // GEOGRAPHICLIB_DEPRECATED("Use new Utility::val<T>(s)")
       static T num(const std::string& s) {
       return val<T>(s);
     }

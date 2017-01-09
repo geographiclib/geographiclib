@@ -6954,8 +6954,9 @@ git repository for GeographicLib</a>.
      - Java package: Restrict junit dependency to testing scope (thanks
        to Mick Killianey).
      - Improve accuracy of area calculation (fixing a flaw introduced in
-       version 1.46).  TODO: fix also C, Fortran, Java, JavaScript,
-       Python, MATLAB, and Maxima packages.
+       version 1.46); fix applied in Geodesic, GeodesicExact, and the
+       implementations in C, Fortran, Java, JavaScript, Python, MATLAB,
+       and Maxima.
      - Remove support of PACKAGE_PATH and INSTALL_PATH in cmake configuration.
      - Add pkg-config support for cmake and autoconf builds.
      - TODO: document -A arch option for cmake.

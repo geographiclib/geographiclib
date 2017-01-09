@@ -52,7 +52,7 @@ int main(int argc, const char* const argv[]) {
     int ndigits = Utility::set_digits();
     string model(argv[1]);
     // Number of intervals per degree
-    int ndeg = Utility::num<int>(string(argv[2]));
+    int ndeg = Utility::val<int>(string(argv[2]));
     string filename(argv[3]);
     GravityModel g(model);
     int
