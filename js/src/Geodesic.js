@@ -317,9 +317,9 @@ GeographicLib.PolygonArea = {};
       Math.sqrt( Math.max(0.001, Math.abs(this.f)) *
                  Math.min(1.0, 1 - this.f/2) / 2 );
     if (!(isFinite(this.a) && this.a > 0))
-      throw new Error("Major radius is not positive");
+      throw new Error("Equatorial radius is not positive");
     if (!(isFinite(this._b) && this._b > 0))
-      throw new Error("Minor radius is not positive");
+      throw new Error("Polar semi-axis is not positive");
     this._A3x = new Array(nA3x_);
     this._C3x = new Array(nC3x_);
     this._C4x = new Array(nC4x_);

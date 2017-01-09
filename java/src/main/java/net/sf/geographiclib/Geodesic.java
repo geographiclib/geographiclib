@@ -155,7 +155,7 @@ package net.sf.geographiclib;
  * for |<i>f</i>| &lt; 0.02; however reasonably accurate results will be
  * obtained for |<i>f</i>| &lt; 0.2.  Here is a table of the approximate
  * maximum error (expressed as a distance) for an ellipsoid with the same
- * major radius as the WGS84 ellipsoid and different values of the
+ * equatorial radius as the WGS84 ellipsoid and different values of the
  * flattening.<pre>
  *     |f|      error
  *     0.01     25 nm
@@ -274,9 +274,9 @@ public class Geodesic {
               Math.sqrt( Math.max(0.001, Math.abs(_f)) *
                          Math.min(1.0, 1 - _f/2) / 2 );
     if (!(GeoMath.isfinite(_a) && _a > 0))
-      throw new GeographicErr("Major radius is not positive");
+      throw new GeographicErr("Equatorial radius is not positive");
     if (!(GeoMath.isfinite(_b) && _b > 0))
-      throw new GeographicErr("Minor radius is not positive");
+      throw new GeographicErr("Polar semi-axis is not positive");
     _A3x = new double[nA3x_];
     _C3x = new double[nC3x_];
     _C4x = new double[nC4x_];

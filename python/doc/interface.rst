@@ -113,8 +113,8 @@ Restrictions on the parameters
 
 Reasonably accurate results can be obtained for −0.2 ≤ *f* ≤ 0.2. Here
 is a table of the approximate maximum error (expressed as a distance)
-for an ellipsoid with the same major radius as the WGS84 ellipsoid and
-different values of the flattening.
+for an ellipsoid with the same equatorial radius as the WGS84 ellipsoid
+and different values of the flattening.
 
 ======== =======
 abs(*f*) error

@@ -77,7 +77,7 @@ function gedoc
 %   Larger values of e can be used with a corresponding drop in accuracy.
 %   The following table gives the approximate maximum error in gedistance
 %   and gereckon (expressed as a distance) for an ellipsoid with the same
-%   major radius as the WGS84 ellipsoid and different values of the
+%   equatorial radius as the WGS84 ellipsoid and different values of the
 %   flattening (nm means nanometer and um means micrometer).
 %
 %        |f|     error

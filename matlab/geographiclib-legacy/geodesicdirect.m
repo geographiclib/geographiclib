@@ -25,7 +25,7 @@ function [latlong, aux] = geodesicdirect(geodesic, a, f)
 %       geodesic scale 2 to 1 = aux(:,4)
 %       area under geodesic = aux(:,5) in meters^2
 %
-%   a = major radius (meters)
+%   a = equatorial radius (meters)
 %   f = flattening (0 means a sphere)
 %   If a and f are omitted, the WGS84 values are used.
 %

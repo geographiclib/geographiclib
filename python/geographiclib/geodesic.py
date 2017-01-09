@@ -309,9 +309,9 @@ class Geodesic(object):
     self._etol2 = 0.1 * Geodesic.tol2_ / math.sqrt( max(0.001, abs(self.f)) *
                                                     min(1.0, 1-self.f/2) / 2 )
     if not(Math.isfinite(self.a) and self.a > 0):
-      raise ValueError("Major radius is not positive")
+      raise ValueError("Equatorial radius is not positive")
     if not(Math.isfinite(self._b) and self._b > 0):
-      raise ValueError("Minor radius is not positive")
+      raise ValueError("Polar semi-axis is not positive")
     self._A3x = list(range(Geodesic.nA3x_))
     self._C3x = list(range(Geodesic.nC3x_))
     self._C4x = list(range(Geodesic.nC4x_))

@@ -2098,8 +2098,8 @@ keywords
  - keywords that affect the field calculation, namely:
    - <b>ModelRadius</b> (required), the normalizing radius for the model
      in meters.
-   - <b>ReferenceRadius</b> (required), the major radius \e a for the
-     reference ellipsoid meters.
+   - <b>ReferenceRadius</b> (required), the equatorial radius \e a for
+     the reference ellipsoid meters.
    - <b>ModelMass</b> (required), the mass constant \e GM for the model
      in meters<sup>3</sup>/seconds<sup>2</sup>.
    - <b>ReferenceMass</b> (required), the mass constant \e GM for the
@@ -2132,8 +2132,8 @@ keywords
    (because it can be measured precisely) is the same for the gravity
    model and the reference ellipsoid.  <b>ModelRadius</b> is merely a
    scaling parameter for the gravity model and there's no requirement
-   that it be close to the major radius of the earth (although that's
-   typically how it is chosen).  <b>ModelMass</b> and
+   that it be close to the equatorial radius of the earth (although
+   that's typically how it is chosen).  <b>ModelMass</b> and
    <b>ReferenceMass</b> need not be the same and, indeed, they are
    slightly difference for egm2008.  As a result the disturbing
    potential \e T has a 1/\e r dependence at large distances.

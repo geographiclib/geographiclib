@@ -102,8 +102,8 @@ function geoddoc
 %    Larger values of e can be used with a corresponding drop in accuracy.
 %    The following table gives the approximate maximum error in
 %    geoddistance and geodreckon (expressed as a distance) for an ellipsoid
-%    with the same major radius as the WGS84 ellipsoid and different values
-%    of the flattening (nm means nanometer and um means micrometer).
+%    with the same equatorial radius as the WGS84 ellipsoid and different
+%    values of the flattening (nm means nanometer and um means micrometer).
 %
 %         |f|     error
 %         0.01    25 nm

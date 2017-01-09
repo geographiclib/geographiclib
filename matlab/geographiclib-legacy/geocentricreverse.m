@@ -23,7 +23,7 @@ function [geodetic, rot] = geocentricreverse(geocentric, a, f)
 %           transforms the vector to local cartesian coordinates
 %           (east, north, up).
 %
-%   a = major radius (meters)
+%   a = equatorial radius (meters)
 %   f = flattening (0 means a sphere)
 %   If a and f are omitted, the WGS84 values are used.
 %

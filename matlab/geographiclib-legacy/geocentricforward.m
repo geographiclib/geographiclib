@@ -22,6 +22,10 @@ function [geocentric, rot] = geocentricforward(geodetic, a, f)
 %           a unit vector in local cartesian coordinates (east, north, up)
 %           by M transforms the vector to geocentric coordinates.
 %
+%   a = equatorial radius (meters)
+%   f = flattening (0 means a sphere)
+%   If a and f are omitted, the WGS84 values are used.
+%
 %   See also GEOCENT_FWD.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.

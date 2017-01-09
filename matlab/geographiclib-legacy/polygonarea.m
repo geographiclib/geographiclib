@@ -15,7 +15,7 @@ function [area, perimeter] = polygonarea(latlong, a, f)
 %   area is the area in meters^2
 %   perimeter is the perimeter in meters
 %
-%   a = major radius (meters)
+%   a = equatorial radius (meters)
 %   f = flattening (0 means a sphere)
 %   If a and f are omitted, the WGS84 values are used.
 %
