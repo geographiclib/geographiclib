@@ -114,7 +114,7 @@ function gedoc
 %   See also GEDISTANCE, GERECKON, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
 %     GEODDISTANCE, GEODRECKON.
 
-% Copyright (c) Charles Karney (2014-2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2014-2017) <charles@karney.com>.
 
   help gedoc
 end

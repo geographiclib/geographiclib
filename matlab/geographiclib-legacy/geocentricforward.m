@@ -28,7 +28,7 @@ function [geocentric, rot] = geocentricforward(geodetic, a, f)
 %
 %   See also GEOCENT_FWD.
 
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2017) <charles@karney.com>.
 
   if (nargin < 2)
     ellipsoid = defaultellipsoid;

@@ -2,7 +2,7 @@
  * \file NormalGravity.cpp
  * \brief Implementation for GeographicLib::NormalGravity class
  *
- * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/

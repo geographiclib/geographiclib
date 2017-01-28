@@ -166,7 +166,7 @@ function geoddoc
 %     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
 %     GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, POLYGONAREA.
 
-% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 
   help geoddoc
 end

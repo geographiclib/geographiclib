@@ -31,7 +31,7 @@ function [geodesic, aux] = geodesicinverse(latlong, a, f)
 %
 %   See also GEODDISTANCE.
 
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2017) <charles@karney.com>.
 
   if (nargin < 2)
     ellipsoid = defaultellipsoid;

@@ -29,7 +29,7 @@ function [geodetic, rot] = geocentricreverse(geocentric, a, f)
 %
 %   See also GEOCENT_INV.
 
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2017) <charles@karney.com>.
 
   if (nargin < 2)
     ellipsoid = defaultellipsoid;
