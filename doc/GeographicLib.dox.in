@@ -285,9 +285,8 @@ Here are the steps to compile and install GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically something like \verbatim
-  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-@PROJECT_VERSION@ ..
-  cmake -G "Visual Studio 11 Win64" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc11-x64/GeographicLib-@PROJECT_VERSION@ ..
-\endverbatim
+  cmake -G "Visual Studio 11" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-@PROJECT_VERSION@ ..
+  cmake -G "Visual Studio 12" -A x64 -D CMAKE_INSTALL_PREFIX=C:/pkg-vc11-x64/GeographicLib-@PROJECT_VERSION@ ..\endverbatim
   The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
   settings given above are recommended to ensure that packages that use
   GeographicLib use the version compiled with the right compiler.
@@ -498,7 +497,7 @@ GeographicLib-@PROJECT_VERSION@-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc12\\GeographicLib-@PROJECT_VERSION@ or
+   C:\\pkg-vc12-win32\\GeographicLib-@PROJECT_VERSION@ or
    C:\\pkg-vc12-x64\\GeographicLib-@PROJECT_VERSION@,
  - select the start menu folder,
  - and install.
@@ -507,11 +506,11 @@ GeographicLib-@PROJECT_VERSION@-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc12/GeographicLib-@PROJECT_VERSION@/bin where the
-utilities are installed.  The headers and library are installed in the
-include/GeographicLib and lib folders.  The libraries were built using
-using Visual Studio 12 2013 in release and debug modes.  The utilities
-were linked against the release-mode shared library.
+will include C:/pkg-vc12-{win32,x64}/GeographicLib-@PROJECT_VERSION@/bin
+where the utilities are installed.  The headers and library are
+installed in the include/GeographicLib and lib folders.  The libraries
+were built using using Visual Studio 12 2013 in release and debug modes.
+The utilities were linked against the release-mode shared library.
 
 <a href="NET/index.html">NETGeographicLib</a> library dlls (release and
 debug) are included with the binary installers; these are linked against
@@ -600,7 +599,7 @@ Release and Debug versions of the library and finally build PACKAGE in
 Release mode.  This will get the release and debug versions of the
 library included in the package.  For example, the 64-bit binary
 installer is created with \verbatim
-  cmake -G "Visual Studio 10 Win64" \
+  cmake -G "Visual Studio 12" -A x64 \
     -D GEOGRAPHICLIB_LIB_TYPE=BOTH \
     -D PACKAGE_DEBUG_LIBS=ON \
     -D BUILD_NETGEOGRAPHICLIB=ON \
@@ -657,13 +656,15 @@ In order to use GeographicLib from C++ code, you will need to
   - configure your package, e.g., with \verbatim
     mkdir BUILD
     cd BUILD
-    cmake -G "Visual Studio 10" \
-      -D CMAKE_PREFIX_PATH=C:/pkg-vc10 \
-      -D CMAKE_PREFIX_PATH=C:/pkg-vc10/testgeographic \
+    cmake -G "Visual Studio 12" -A x64 \
+      -D CMAKE_PREFIX_PATH=C:/pkg-vc10-x64 \
+      -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/testgeographic \
       .. \endverbatim
     Note that you almost always want to configure and build your code
     somewhere other than the source directory (in this case, we use the
-    BUILD subdirectory).
+    BUILD subdirectory).  Also, on Windows, make sure that the version
+    of Visual Sudio (12 in the example above) architecture (x64 in the
+    example above) matches that used to build GeographicLib.
   - build your package.  On Linux and MacOS this usually involves just
     running make.  On Windows, you can load the solution file created by
     cmake into Visual Studio; alternatively, you can get cmake to run
@@ -702,6 +703,12 @@ In order to use GeographicLib from C++ code, you will need to
   to somewhere in your <code>CMAKE_MODULE_PATH</code> in order for
   find_package to work.  However, this method has not been thoroughly
   tested.)
+
+  If GeographicLib is not found, check the values of
+  <code>GeographicLib_CONSIDERED_CONFIGS</code> and
+  <code>GeographicLib_CONSIDERED_VERSIONS</code>; these list the
+  configuration files and corresponding versions which were considered
+  by find_package.
 
   If GeographicLib is found, then the following cmake variables are set:
   - <code>GeographicLib_FOUND</code> = 1
@@ -2417,12 +2424,20 @@ properties:
  - \e b the polar semi-axis,
  - &omega; the rotation rate about the polar axis.
  .
+(N.B. The mass always appears in the combination \e GM, with units
+m<sup>3</sup>/s<sup>2</sup>, where \e G is the gravtitational constant.)
 The distribution of the mass \e M within the ellipsoid is such that the
 surface of the ellipsoid is at a constant gravitational potential where
-the gravitional potential is the sum of the mass term and the centifugal
-term due to the rotation.  The resulting gravitional field exterior to
-the ellipsoid is called <i>normal gravity</i> and was found by
-Somigliana (1929).  References:
+the gravitional potential is the sum of the potential due to the
+gravitional attraction and the centrifugal potention due to the
+rotation.  The resulting gravitional field exterior to the ellipsoid is
+called <i>normal gravity</i> and was found by Somigliana (1929).
+Because the potential is constant on the ellipsoid it is sometimes
+referred to as the <i>level ellipsoid</i>.
+
+
+
+References:
  - C. Somigliana, Teoria generale del campo gravitazionale dell'ellissoide
    di rotazione, Mem. Soc. Astron. Ital, <b>4</b>, 541--599 (1929).
  - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
@@ -2432,6 +2447,79 @@ Somigliana (1929).  References:
  - H. Moritz, Geodetic Reference System 1980, J. Geodesy 54(3), 395--405
    (1980) https://dx.doi.org/10.1007/BF02521480
  - H. Moritz, The Figure of the Earth (Wichmann, 1990).
+
+Two set of formulas are presented: those of Heiskanen and Moritz (1967)
+which are applicable to an oblate ellipsoid and a second set where the
+variables are distinguished with primes which apply to a prolate
+ellipsoid.  The primes are omitted from those variables which are the
+same in the two cases.
+
+Cylindrical coordinates \f$ R,Z \f$ are expressed in terms of
+ellipsoidal coordinates
+
+The ellipsoidal coordinate system is
+\f[
+\begin{align}
+  R &= \sqrt{u^2 + E^2} \cos\beta = u' \cos\beta,\\
+  Z &= u \sin\beta = \sqrt{u'^2 + E'^2} \sin\beta,
+\end{align}
+\f]
+where
+\f[
+\begin{align}
+  E^2 &= a^2 - b^2, \qquad u^2 = u'^2 + E'^2,\\
+  E'^2 &= b^2 - a^2, \qquad u'^2 = u^2 + E^2.
+\end{align}
+\f]
+The surface \f$ u = 0 \f$ (resp. \f$ u' = 0 \f$) corresponds to the
+focal disc of radius \f$ E \f$ (resp. focal rod of length \f$ 2E' \f$).
+The level ellipsoid is given by \f$ u = b \f$ (resp. \f$ u' = a \f$).
+
+Introduce the functions
+\f[
+\begin{align}
+  Q(z) &= \frac1{2z^3}
+    \biggl[\biggl(1 + \frac3{z^2}\biggr)\tan^{-1}z - \frac3z\biggr],\\
+  Q'(z') &= \frac{(1+z'^2)^{3/2}}{2z'^3}
+    \biggl[\biggl(2 + \frac3{z'^2}\biggr)\sinh^{-1}z' -
+      \frac{3\sqrt{1+z'^2}}{z'}\biggr].
+\end{align}
+\f]
+
+The function arguments are \f$ z = E/u \f$
+(resp. \f$ z' = E'/u' \f$) and the unprimed and primed quantities are
+related by
+\f[ Q'(z') = Q(z),
+\qquad z'^2 = -\frac{z^2}{1 + z^2},
+\qquad z^2 = -\frac{z'^2}{1 + z'^2}. \f]
+The function \f$ q(u) \f$ used by Heiskanen and Moritz is given by
+\f[ q(u) = \frac{E^3}{u^3}Q\biggl(\frac Eu\biggr). \f]
+The functions \f$ Q(z) \f$ and \f$ Q'(z') \f$ are more convenient for
+use in numerical codes because they are finite at the origin, \f$ Q(0)
+= Q'(0) = \frac2{15} \f$.
+
+The normal potential is the sum of three components, a mass term, a
+quadrupole term and a centrifugal term,
+\f[ U = U_m + U_q + U_r. \f]
+The mass term is
+\f[ U_m = \frac {GM}E \tan^{-1}\frac Eu
+        = \frac {GM}{E'} \sinh^{-1}\frac{E'}{u'}; \f]
+the quadrupole term is
+\f[
+\begin{align}
+ U_q &= \frac{\omega^2}2 \frac{a^2 b^3}{u^3} \frac{Q(E/u)}{Q(E/b)}
+        \biggl(\sin^2\beta-\frac13\biggr)\\
+     &= \frac{\omega^2}2 \frac{a^2 b^3}{(u'^2+E'^2)^{3/2}}
+        \frac{Q'(E'/u')}{Q'(E'/a)}
+        \biggl(\sin^2\beta-\frac13\biggr);
+\end{align}
+\f]
+finally, the rotational term is
+\f[
+U_r = \frac{\omega^2}2 R^2
+    = \frac{\omega^2}2 (u^2 + E^2) \cos^2\beta
+    = \frac{\omega^2}2 u'^2 \cos^2\beta.
+\f]
 
 <center>
 Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
@@ -6959,28 +7047,22 @@ git repository for GeographicLib</a>.
        and Maxima.
      - Remove support of PACKAGE_PATH and INSTALL_PATH in cmake configuration.
      - Add pkg-config support for cmake and autoconf builds.
-     - TODO: document -A arch option for cmake.
-     - TODO: Emphasize the win32/win64 binary installer requires
-       compiling with Win32/x64 configuration; also the need to match
-       Visual Studio versions.
      - Fix to FindGeographicLib.cmake to make it work on Debian systems.
-     - TODO: fix dotnet/ManagedCPP/CMakeLists.txt to work with debug
+     - CHECK: fix dotnet/examples/ManagedCPP/CMakeLists.txt to work with debug
        builds.
      - TODO: use doxygen's note, remark, warning, attention, see
        commands.
      - Use $<TARGET_PDB_FILE:tgt> (cmake version >= 3.1).
      - Use NAMESPACE for exported targets.
-     - TODO: document CMake's GeographicLib_CONSIDERED_VERSIONS.
      - geographiclib-config.cmake exports GEOGRAPHICLIB_PRECISION and
        GeographicLib_HIGHPREC_LIBRARIES.
      - Add Utility::trim() and Utility::val<T>(); Utility::num<T>() is now
        DEPRECATED.
-     - TODO: Generalize NormalGravity to allow f or J2 to be negative
+     - Generalize NormalGravity to allow f or J2 to be negative
        (if this is feasible).
      - TODO: Warn not to evaluate gravity potentials/gradients inside
        ellipsoid.
-     - TODO: Give units for potentials in gravity classes.
-     - TODO: Fix google example to use DirectLine and InverseLine.
+     - Fix google example to use DirectLine and InverseLine.
      - Tell the compiler about deprecated functions.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>

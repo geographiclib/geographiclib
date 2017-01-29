@@ -13,11 +13,9 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   add_executable (${EXAMPLE} EXCLUDE_FROM_ALL ${EXAMPLE_SOURCE})
   add_dependencies (${EXAMPLE} ${NETGEOGRAPHICLIB_LIBRARIES})
   set_target_properties (${EXAMPLE} PROPERTIES COMPILE_FLAGS "/clr")
-  # This is set up for Release builds only.  Change
-  # Release/NETGeographic.dll to Debug/NETGeographic_d.dll for Debug
-  # builds.
   set_target_properties (${EXAMPLE} PROPERTIES VS_DOTNET_REFERENCES
-    "${PROJECT_BINARY_DIR}/bin/Release/NETGeographic.dll")
+    "$<$<CONFIG:Debug>:${PROJECT_BINARY_DIR}/bin/Debug/NETGeographic_${CMAKE_DEBUG_POSTFIX}.dll>"
+    "$<$<CONFIG:Release>:${PROJECT_BINARY_DIR}/bin/Release/NETGeographic.dll>")
 endforeach ()
 
 string (REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")

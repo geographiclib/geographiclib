@@ -21,9 +21,19 @@ namespace GeographicLib {
    * "Normal" gravity refers to an idealization of the earth which is modeled
    * as an rotating ellipsoid.  The eccentricity of the ellipsoid, the rotation
    * speed, and the distribution of mass within the ellipsoid are such that the
-   * surface of the ellipsoid is a surface of constant potential (gravitational
-   * plus centrifugal).  The acceleration due to gravity is therefore
-   * perpendicular to the surface of the ellipsoid.
+   * ellipsoid is a "level ellipoid", a surface of constant potential
+   * (gravitational plus centrifugal).  The acceleration due to gravity is
+   * therefore perpendicular to the surface of the ellipsoid.
+   *
+   * Because the distribution of mass within the ellipsoid is unspecified, only
+   * the potential exterior to the ellipsoid is well defined.  In this class,
+   * the mass is assumed to be to concentrated on a "focal disc" of radius,
+   * (<i>a</i><sup>2</sup> &minus; <i>b</i><sup>2</sup>)<sup>1/2</sup>, where
+   * \e a is the equatorial radius of the ellipsoid and \e b is its polar
+   * semi-axis.  In the case of an oblate ellipsoid, the mass is concentrated
+   * on a "focal rod" of length 2(<i>b</i><sup>2</sup> &minus;
+   * <i>a</i><sup>2</sup>)<sup>1/2</sup>.  As a result the potential well
+   * defined everywhere.
    *
    * There is a closed solution to this problem which is implemented here.
    * Series "approximations" are only used to evaluate certain combinations of
@@ -34,7 +44,7 @@ namespace GeographicLib {
    *
    * Although the formulation used in this class applies to ellipsoids with
    * arbitrary flattening, in practice, its use should be limited to about
-   * <i>b</i>/\e a &isin; [0.01, 100] or \e f &isin; [-99, 0.99].
+   * <i>b</i>/\e a &isin; [0.01, 100] or \e f &isin; [&minus;99, 0.99].
    *
    * Definitions:
    * - <i>V</i><sub>0</sub>, the gravitational contribution to the normal
