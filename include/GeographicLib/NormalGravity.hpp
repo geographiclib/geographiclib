@@ -50,8 +50,7 @@ namespace GeographicLib {
    * - <i>V</i><sub>0</sub>, the gravitational contribution to the normal
    *   potential;
    * - &Phi;, the rotational contribution to the normal potential;
-   * - \e U = <i>V</i><sub>0</sub> + &Phi;, the total
-   *   potential;
+   * - \e U = <i>V</i><sub>0</sub> + &Phi;, the total potential;
    * - <b>&Gamma;</b> = &nabla;<i>V</i><sub>0</sub>, the acceleration due to
    *   mass of the earth;
    * - <b>f</b> = &nabla;&Phi;, the centrifugal acceleration;
@@ -244,18 +243,17 @@ namespace GeographicLib {
                  real& gammaX, real& gammaY, real& gammaZ) const;
 
     /**
-     * Evaluate the components of the acceleration due to gravity alone in
-     * geocentric coordinates.
+     * Evaluate the components of the acceleration due to the gravitational
+     * force in geocentric coordinates.
      *
      * @param[in] X geocentric coordinate of point (meters).
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[in] Z geocentric coordinate of point (meters).
-     * @param[out] GammaX the \e X component of the acceleration due to gravity
-     *   (m s<sup>&minus;2</sup>).
-     * @param[out] GammaY the \e Y component of the acceleration due to gravity
-     *   (m s<sup>&minus;2</sup>).
-     * @param[out] GammaZ the \e Z component of the acceleration due to gravity
-     *   (m s<sup>&minus;2</sup>).
+     * @param[out] GammaX the \e X component of the acceleration due to the
+     *   gravitational force (m s<sup>&minus;2</sup>).
+     * @param[out] GammaY the \e Y component of the acceleration due to the
+     * @param[out] GammaZ the \e Z component of the acceleration due to the
+     *   gravitational force (m s<sup>&minus;2</sup>).
      * @return <i>V</i><sub>0</sub> the gravitational potential
      *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      *
