@@ -136,7 +136,7 @@ namespace GeographicLib {
      *   <i>Ma</i><sup>2</sup>, where \e A and \e C are the equatorial and
      *   polar moments of inertia and \e M is the mass of the earth.  The
      *   parameters should obey \e a &gt; 0, \e GM &gt; 0 and \e J2 &lt; 1/3
-     *   &minus; <i>omega</i><sup>2</sup><i>a</i><sup>3</sup>/<i>GM</i>
+     *   &minus; (<i>omega</i><sup>2</sup><i>a</i><sup>3</sup>/<i>GM</i>)
      *   8/(45&pi;).  There is no restriction on \e omega.
      **********************************************************************/
     NormalGravity(real a, real GM, real omega, real f_J2,
