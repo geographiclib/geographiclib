@@ -94,7 +94,11 @@
 // deprecated.  Code inspired by Apache Subversion's svn_types.h file (via
 // MPFR).
 #if defined(__GNUC__)
-#  define GEOGRAPHICLIB_DEPRECATED(msg) __attribute__((deprecated(msg)))
+#  if __GNUC__ > 4
+#    define GEOGRAPHICLIB_DEPRECATED(msg) __attribute__((deprecated(msg)))
+#  else
+#    define GEOGRAPHICLIB_DEPRECATED(msg) __attribute__((deprecated))
+#  endif
 #elif defined(_MSC_VER) && _MSC_VER >= 1300
 #  define GEOGRAPHICLIB_DEPRECATED(msg) __declspec(deprecated(msg))
 #else
