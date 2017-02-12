@@ -170,12 +170,12 @@ namespace GeographicLib {
      * - <i>ILLEGAL</i> (the exception thrown explains the problem)
      *   - 70:01:15W+0:0:15N, W70:01:15+W0:0:15
      *
-     * <b>WARNING:</b> "Exponential" notation is not recognized.  Thus
+     * \warning The "exponential" notation is not recognized.  Thus
      * <code>7.0E1</code> is illegal, while <code>7.0E+1</code> is parsed as
      * <code>(7.0E) + (+1)</code>, yielding the same result as
      * <code>8.0E</code>.
      *
-     * <b>NOTE:</b> At present, all the string handling in the C++
+     * \note At present, all the string handling in the C++
      * implementation %GeographicLib is with 8-bit characters.  The support for
      * unicode symbols for degrees, minutes, and seconds is therefore via the
      * <a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a> encoding.  (The

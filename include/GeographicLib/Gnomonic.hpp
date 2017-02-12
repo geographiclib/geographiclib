@@ -68,7 +68,7 @@ namespace GeographicLib {
    * The conversions all take place using a Geodesic object (by default
    * Geodesic::WGS84()).  For more information on geodesics see \ref geodesic.
    *
-   * <b>CAUTION:</b> The definition of this projection for a sphere is
+   * \warning The definition of this projection for a sphere is
    * standard.  However, there is no standard for how it should be extended to
    * an ellipsoid.  The choices are:
    * - Declare that the projection is undefined for an ellipsoid.

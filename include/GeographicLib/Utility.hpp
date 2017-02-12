@@ -429,7 +429,7 @@ namespace GeographicLib {
      * @exception GeographicErr is \e s is not readable as a fraction of type T.
      * @return object of type T
      *
-     * <b>NOTE</b>: The msys shell under Windows converts arguments which look
+     * \note The msys shell under Windows converts arguments which look
      * like pathnames into their Windows equivalents.  As a result the argument
      * "-1/300" gets mangled into something unrecognizable.  A workaround is to
      * use a floating point number in the numerator, i.e., "-1.0/300".

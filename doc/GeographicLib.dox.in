@@ -753,7 +753,7 @@ In order to use GeographicLib from C++ code, you will need to
   - Tell the compiler where to find the header files.  With g++ and with
     /usr/local specified as the installation directory,
     this is accomplished with \verbatim
-    g++ -c -g -O3 -funroll-loops -I/usr/local/include testprogram.cpp
+    g++ -c -g -O3 -I/usr/local/include testprogram.cpp
     \endverbatim
     With Visual Studio, specify the include directory in the IDE via,
     e.g.,
@@ -797,6 +797,16 @@ In order to use GeographicLib from C++ code, you will need to
     that Geographic.dll or Geographic_d.dll is in the same directory as
     your executable or else include the directory containing the dll in
     your <code>PATH</code>.
+  - You can also use the pkg-config utility to specify compile and link
+    flags.  This requires that pkg-config be installed and that it's
+    configured to search, e.g., /usr/local/lib/pgkconfig; if not, define
+    the environment variable <code>PKG_CONFIG_PATH</code> to include
+    this directory.  The compile and link steps under Linux would
+    typically be
+    \verbatim
+    g++ -c -g -O3 `pkg-config --cflags geographiclib` testprogram.cpp
+    g++ -g -o testprogram testprogram.o `pkg-config --libs geographiclib`
+    \endverbatim
 
 Here is a very simple test code, which uses the Geodesic
 class:
@@ -7057,6 +7067,10 @@ Here's what you should know:
  - Because only a tiny number of people will be interested in using this
    facility:
    - the cmake support for the required libraries is rudimentary;
+   - however geographiclib-config.cmake does export
+     <code>GEOGRAPHICLIB_PRECISION</code> and
+     <code>GEOGRAPHICLIB_HIGHPREC_LIBRARIES</code>, the libraries
+     providing the support for high-precision arithmetic;
    - support for the C++11 mathematical functions and the explicit cast
      operator is required;
    - quad precision is only available on Linux;
@@ -7259,48 +7273,46 @@ git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sourceforge.net/1.47">Version 1.47</a>
    (released 2016-mm-dd)
-     - Fix the order of declarations in C library, incorporating the
-       patches in version 1.46.1.
-     - Fix the packaging of the python library, incorporating the
-       patches in version 1.46.3.
-     - Fix documentation and default install location for Windows binary
-       installers.
-     - Fix clang compiler warnings in GeodesicExactC4 and
-       TransverseMercator.
      - Add NearestNeighbor class.
-     - cmake config file defines GEOGRAPHICLIB_DATA
-     - EllipticFunction: various fixes.
-     - Math::sincosd, Math::sind, Math::cosd only return &minus;0 for the
-       case sin(&minus;0).
-     - Math::atan2d and Math::AngNormalize return results in
-       (&minus;180&deg;, 180&deg;].  This may affect the longitudes and
-       azimuth returned by several other functions.
-     - Java package: Restrict junit dependency to testing scope (thanks
-       to Mick Killianey).
      - Improve accuracy of area calculation (fixing a flaw introduced in
        version 1.46); fix applied in Geodesic, GeodesicExact, and the
        implementations in C, Fortran, Java, JavaScript, Python, MATLAB,
        and Maxima.
-     - Remove support of PACKAGE_PATH and INSTALL_PATH in cmake configuration.
-     - Add pkg-config support for cmake and autoconf builds.
-     - Fix to FindGeographicLib.cmake to make it work on Debian systems.
-     - CHECK: fix dotnet/examples/ManagedCPP/CMakeLists.txt to work with debug
-       builds.
-     - TODO: Document GeoConvert -p -6 makes sense for -m.
-     - TODO: use doxygen's note, remark, warning, attention, see
-       commands.
-     - Use $<TARGET_PDB_FILE:tgt> (cmake version >= 3.1).
-     - Use NAMESPACE for exported targets.
-     - geographiclib-config.cmake exports GEOGRAPHICLIB_PRECISION and
-       GeographicLib_HIGHPREC_LIBRARIES.
+     - Generalize NormalGravity to allow oblate and prolate ellipsoids.
+       As a consequence a new form of constructor,
+       NormalGravity::NormalGravity has been introduced and the old form
+       is now deprecated (and because the signatures of the two
+       constructors are similar, the compiler will warn about the use of
+       the old one).
+     - Changes in Math class:
+       - Math::sincosd, Math::sind, Math::cosd only return &minus;0 for
+         the case sin(&minus;0);
+       - Math::atan2d and Math::AngNormalize return results in
+         (&minus;180&deg;, 180&deg;]; this may affect the longitudes and
+         azimuth returned by several other functions.
      - Add Utility::trim() and Utility::val<T>(); Utility::num<T>() is now
        DEPRECATED.
-     - Generalize NormalGravity to allow f or J2 to be negative
-       (if this is feasible).
-     - TODO: Warn not to evaluate gravity potentials/gradients inside
-       ellipsoid.
-     - Fix google example to use DirectLine and InverseLine.
-     - Tell the compiler about deprecated functions.
+     - Changes in cmake support:
+       - remove support of PACKAGE_PATH and INSTALL_PATH in cmake
+         configuration;
+       - fix to FindGeographicLib.cmake to make it work on Debian systems;
+       - use $<TARGET_PDB_FILE:tgt> (cmake version >= 3.1);
+       - use NAMESPACE for exported targets;
+       - geographiclib-config.cmake exports GEOGRAPHICLIB_DATA,
+         GEOGRAPHICLIB_PRECISION, and GeographicLib_HIGHPREC_LIBRARIES.
+     - Add pkg-config support for cmake and autoconf builds.
+     - Minor fixes:
+       - fix the order of declarations in C library, incorporating the
+         patches in version 1.46.1;
+       - fix the packaging of the python library, incorporating the
+         patches in version 1.46.3;
+       - restrict junit dependency in the Java package to testing scope
+         (thanks to Mick Killianey).
+       - various behind-the-scenes fixes to EllipticFunction;
+       - fix documentation and default install location for Windows binary
+         installers;
+       - fix clang compiler warnings in GeodesicExactC4 and
+         TransverseMercator.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
    (released 2016-02-15)

@@ -148,7 +148,7 @@ namespace GeographicLib {
      * However each search then requires about bucket additional distance
      * calculations.
      *
-     * <b>CAUTION</b>: The same arguments \e pts and \e dist must be provided
+     * \warning The same arguments \e pts and \e dist must be provided
      * to the Search() function.
      **********************************************************************/
     NearestNeighbor(const std::vector<position>& pts, const distance& dist,
@@ -239,7 +239,7 @@ namespace GeographicLib {
      * point (relative to the average spacing of the data).  If \e mindist is
      * large, the efficiency of the search deteriorates.
      *
-     * <b>CAUTION</b>: The arguments \e pts and \e dist must be identical to
+     * \warning The arguments \e pts and \e dist must be identical to
      * those used to initialize the NearestNeighbor; if not, the behavior of
      * this function is undefined (however, if the size of \e pts is wrong,
      * this function exits with no results returned).
@@ -354,7 +354,7 @@ namespace GeographicLib {
      * the initializtion cost is saved.  The format of the binary saves is \e
      * not portable.
      *
-     * <b>NOTE</b>: <a href="http://www.boost.org/libs/serialization/doc">
+     * \note <a href="http://www.boost.org/libs/serialization/doc">
      * Boost serialization</a> can also be used to save and restore a
      * NearestNeighbor object.  This requires that the
      * GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION macro be defined.
@@ -424,12 +424,12 @@ namespace GeographicLib {
      * architecture.  If an exception is thrown, the state of the
      * NearestNeighbor is unchanged.
      *
-     * <b>NOTE</b>: <a href="http://www.boost.org/libs/serialization/doc">
+     * \note <a href="http://www.boost.org/libs/serialization/doc">
      * Boost serialization</a> can also be used to save and restore a
      * NearestNeighbor object.  This requires that the
      * GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION macro be defined.
      *
-     * <b>CAUTION</b>: The same arguments \e pts and \e dist used for
+     * \warning The same arguments \e pts and \e dist used for
      * initialization must be provided to the Search() function.
      **********************************************************************/
     void Load(std::istream& is, bool bin = true) {

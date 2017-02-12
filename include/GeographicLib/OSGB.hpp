@@ -33,7 +33,7 @@ namespace GeographicLib {
    * - <a href="http://www.ordnancesurvey.co.uk/docs/support/national-grid.pdf">
    *   Guide to the National Grid</a>
    *
-   * \b WARNING: the latitudes and longitudes for the Ordnance Survey grid
+   * \warning the latitudes and longitudes for the Ordnance Survey grid
    * system do not use the WGS84 datum.  Do not use the values returned by this
    * class in the UTMUPS, MGRS, or Geoid classes without first converting the
    * datum (and vice versa).

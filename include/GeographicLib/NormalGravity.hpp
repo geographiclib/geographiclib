@@ -32,7 +32,7 @@ namespace GeographicLib {
    * \e a is the equatorial radius of the ellipsoid and \e b is its polar
    * semi-axis.  In the case of an oblate ellipsoid, the mass is concentrated
    * on a "focal rod" of length 2(<i>b</i><sup>2</sup> &minus;
-   * <i>a</i><sup>2</sup>)<sup>1/2</sup>.  As a result the potential well
+   * <i>a</i><sup>2</sup>)<sup>1/2</sup>.  As a result the potential is well
    * defined everywhere.
    *
    * There is a closed solution to this problem which is implemented here.
