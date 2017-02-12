@@ -175,7 +175,7 @@ References
   translated by C. F. F. Karney and R. E. Deakin.
 * F. R. Helmert,
   `Mathematical and Physical Theories of Higher Geodesy, Vol 1
-  <https://dx.doi.org/10.5281/zenodo.32050>`_,
+  <https://doi.org/10.5281/zenodo.32050>`_,
   (Teubner, Leipzig, 1880), Chaps. 5–7.
 * T. Vincenty,
   `Direct and inverse solutions of geodesics on the ellipsoid with
@@ -184,11 +184,11 @@ References
   Survey Review **23**\ (176), 88–93 (1975).
 * J. Danielsen,
   `The area under the geodesic
-  <https://dx.doi.org/10.1179/003962689791474267>`_,
+  <https://doi.org/10.1179/003962689791474267>`_,
   Survey Review **30**\ (232), 61–66 (1989).
 * C. F. F. Karney,
   `Algorithms for geodesics
-  <https://dx.doi.org/10.1007/s00190-012-0578-z>`_,
+  <https://doi.org/10.1007/s00190-012-0578-z>`_,
   J. Geodesy **87**\ (1) 43–55 (2013);
   `addenda <http://geographiclib.sourceforge.net/geod-addenda.html>`_.
 * C. F. F. Karney,

@@ -43,14 +43,14 @@ namespace NETGeographicLib
    *
    * The computation of the elliptic integrals uses the algorithms given in
    * - B. C. Carlson,
-   *   <a href="https://dx.doi.org/10.1007/BF02198293"> Computation of real or
+   *   <a href="https://doi.org/10.1007/BF02198293"> Computation of real or
    *   complex elliptic integrals</a>, Numerical Algorithms 10, 13--26 (1995)
    * .
    * with the additional optimizations given in http://dlmf.nist.gov/19.36.i.
    * The computation of the Jacobi elliptic functions uses the algorithm given
    * in
    * - R. Bulirsch,
-   *   <a href="https://dx.doi.org/10.1007/BF01397975"> Numerical Calculation of
+   *   <a href="https://doi.org/10.1007/BF01397975"> Numerical Calculation of
    *   Elliptic Integrals and Elliptic Functions</a>, Numericshe Mathematik 7,
    *   78--90 (1965).
    * .

@@ -51,8 +51,8 @@ public class GeoMath {
     double a = Math.max(x, y), b = Math.min(x, y) / (a != 0 ? a : 1);
     return a * Math.sqrt(1 + b * b);
     // For an alternative method see
-    // C. Moler and D. Morrision (1983) https://dx.doi.org/10.1147/rd.276.0577
-    // and A. A. Dubrulle (1983) https://dx.doi.org/10.1147/rd.276.0582
+    // C. Moler and D. Morrision (1983) https://doi.org/10.1147/rd.276.0577
+    // and A. A. Dubrulle (1983) https://doi.org/10.1147/rd.276.0582
   }
 
   /**
@@ -60,7 +60,7 @@ public class GeoMath {
    * later, Math.log1p can be used.
    * <p>
    * This is taken from D. Goldberg,
-   * <a href="https://dx.doi.org/10.1145/103162.103163">What every computer
+   * <a href="https://doi.org/10.1145/103162.103163">What every computer
    * scientist should know about floating-point arithmetic</a> (1991),
    * Theorem 4.  See also, N. J. Higham, Accuracy and Stability of Numerical
    * Algorithms, 2nd Edition (SIAM, 2002), Answer to Problem 1.5, p 528.

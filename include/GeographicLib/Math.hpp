@@ -250,8 +250,8 @@ namespace GeographicLib {
       y /= (x ? x : 1);
       return x * sqrt(1 + y * y);
       // For an alternative (square-root free) method see
-      // C. Moler and D. Morrision (1983) https://dx.doi.org/10.1147/rd.276.0577
-      // and A. A. Dubrulle (1983) https://dx.doi.org/10.1147/rd.276.0582
+      // C. Moler and D. Morrision (1983) https://doi.org/10.1147/rd.276.0577
+      // and A. A. Dubrulle (1983) https://doi.org/10.1147/rd.276.0582
 #endif
     }
 
@@ -762,7 +762,7 @@ namespace GeographicLib {
      *
      * See Eqs. (7--9) of
      * C. F. F. Karney,
-     * <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
+     * <a href="https://doi.org/10.1007/s00190-011-0445-3">
      * Transverse Mercator with an accuracy of a few nanometers,</a>
      * J. Geodesy 85(8), 475--485 (Aug. 2011)
      * (preprint <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
@@ -780,7 +780,7 @@ namespace GeographicLib {
      *
      * See Eqs. (19--21) of
      * C. F. F. Karney,
-     * <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
+     * <a href="https://doi.org/10.1007/s00190-011-0445-3">
      * Transverse Mercator with an accuracy of a few nanometers,</a>
      * J. Geodesy 85(8), 475--485 (Aug. 2011)
      * (preprint <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).

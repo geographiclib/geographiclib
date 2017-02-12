@@ -541,7 +541,7 @@ namespace GeographicLib {
     phi -= _eps * sin(2 * phi) / 2;
     // For kp2 close to zero use asin(x/_Ec) or
     // J. P. Boyd, Applied Math. and Computation 218, 7005-7013 (2012)
-    // https://dx.doi.org/10.1016/j.amc.2011.12.021
+    // https://doi.org/10.1016/j.amc.2011.12.021
     for (int i = 0; i < num_ || GEOGRAPHICLIB_PANIC; ++i) {
       real
         sn = sin(phi),

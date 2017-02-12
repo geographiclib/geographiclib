@@ -86,7 +86,7 @@ namespace GeographicLib {
     //   W. M. Kahan and R. J. Fateman,
     //   Symbolic computation of divided differences,
     //   SIGSAM Bull. 33(3), 7-28 (1999)
-    //   https://dx.doi.org/10.1145/334714.334716
+    //   https://doi.org/10.1145/334714.334716
     //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
 
     static inline real Dlog(real x, real y) {

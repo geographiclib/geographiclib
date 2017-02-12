@@ -66,9 +66,9 @@ namespace GeographicLib {
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
    *   Francisco, 1967), Secs. 1-19, 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).
    * - B. Hofmann-Wellenhof, H. Moritz, Physical Geodesy (Second edition,
-   *   Springer, 2006) https://dx.doi.org/10.1007/978-3-211-33545-1
+   *   Springer, 2006) https://doi.org/10.1007/978-3-211-33545-1
    * - H. Moritz, Geodetic Reference System 1980, J. Geodesy 54(3), 395-405
-   *   (1980) https://dx.doi.org/10.1007/BF02521480
+   *   (1980) https://doi.org/10.1007/BF02521480
    *
    * For more information on normal gravity see \ref normalgravity.
    *

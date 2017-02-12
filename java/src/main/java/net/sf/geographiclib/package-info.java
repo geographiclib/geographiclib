@@ -181,7 +181,7 @@
  * <ul>
  * <li>
  *   These algorithms are derived in C. F. F. Karney,
- *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+ *   <a href="https://doi.org/10.1007/s00190-012-0578-z">
  *   Algorithms for geodesics</a>,
  *   J. Geodesy <b>87</b>, 43&ndash;55 (2013)
  *   (<a href="http://geographiclib.sourceforge.net/geod-addenda.html">addenda</a>).
