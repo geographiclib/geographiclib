@@ -191,9 +191,11 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 \section changes-c Change log
 
  - <a href="http://geographiclib.sourceforge.net/1.47/C">Version 1.47</a>
-   (released 2016-mm-dd)
+   (released 2017-02-15)
    - Fix the order of declarations, incorporating the patches in version
      1.46.1.
+   - Improve accuracy of area calculation (fixing a flaw introduced in
+     version 1.46).
 
  - <a href="http://geographiclib.sourceforge.net/1.46/C">Version 1.46</a>
    (released 2016-02-15)

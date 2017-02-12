@@ -98,9 +98,11 @@ GeographicLib in various languages
 Change log
 ----------
 
-* Version 1.47 (released 2016-mm-dd)
+* Version 1.47 (released 2017-02-15)
 
   * Fix the packaging, incorporating the patches in version 1.46.3.
+  * Improve accuracy of area calculation (fixing a flaw introduced in
+    version 1.46)
 
 * Version 1.46 (released 2016-02-15)
 

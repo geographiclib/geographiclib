@@ -175,7 +175,9 @@ and are therefore in the public domain.
 \section changes-for Change log
 
  - <a href="http://geographiclib.sourceforge.net/1.47/Fortran">Version 1.47</a>
-   (released 2016-mm-dd)
+   (released 2017-02-15)
+   - Improve accuracy of area calculation (fixing a flaw introduced in
+     version 1.46).
 
  - <a href="http://geographiclib.sourceforge.net/1.46/Fortran">Version 1.46</a>
    (released 2016-02-15)

@@ -109,7 +109,9 @@ Two examples of this library in use are
 
 ### Change log
 
-* Version 1.47 (released 2016-mm-dd)
+* Version 1.47 (released 2017-02-15)
+  * Improve accuracy of area calculation (fixing a flaw introduced in
+    version 1.46).
 
 * Version 1.46 (released 2016-02-15)
   * Fix bugs in PolygonArea.TestEdge (problem found by threepointone).
