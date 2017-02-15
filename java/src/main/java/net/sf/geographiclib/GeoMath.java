@@ -97,7 +97,7 @@ public class GeoMath {
    * Copy the sign.  In Java version 1.6 and later, Math.copysign can be used.
    * <p>
    * @param x gives the magitude of the result.
-   * @param x gives the sign of the result.
+   * @param y gives the sign of the result.
    * @return value with the magnitude of <i>x</i> and with the sign of
    *   <i>y</i>.
    **********************************************************************/
