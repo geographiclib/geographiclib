@@ -1035,6 +1035,10 @@ elliptic integrals (computed by EllipticFunction).  These classes should
 be used if the absolute value of the flattening exceeds 0.02.  The -E
 option to <a href="GeodSolve.1.html">GeodSolve</a> uses these classes.
 
+NearestNeighbor is a header-only classes for finding the nearest
+neighbor of a collection of points where the distance function obeys the
+triangle inequality, such as the geodesic distance.
+
 Geocentric and LocalCartesian convert between
 geodetic and geocentric or a local cartesian system.  The constructor for
 specifies the ellipsoid and the forward and reverse projections are
@@ -1063,7 +1067,8 @@ GravityModel::Circle to return a GravityCircle object whose member
 functions performs the calculations efficiently.  (This is particularly
 important for high degree models such as EGM2008.)  These classes
 requires installation of data files for the various gravity models; see
-\ref gravityinst for details.
+\ref gravityinst for details.  NormalGravity computes the gravity of the
+so-called level ellipsoid.
 
 MagneticModel evaluates the earth's magnetic field using a particular
 magnetic model.  The field is provided by the operator() member
@@ -1935,6 +1940,15 @@ idealized rotating ellipsoidal body.  This is implemented with the
 NormalGravity class and some notes on are provided in section \ref
 normalgravity
 
+Go to
+ - \ref gravityinst
+ - \ref gravityformat
+ - \ref gravitynga
+ - \ref gravitygeoid
+ - \ref gravityatmos
+ - \ref gravityparallel
+ - \ref normalgravity
+
 The supported models are
  - <b>egm84</b>, the
    <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">
@@ -1968,15 +1982,6 @@ sharing EGM_Geoid_CalculatorClass from his Geo library with me.  His
 implementation was the first I could easily understand and he and I
 together worked through some of the issues with overflow and underflow
 the occur while performing high-degree spherical harmonic sums.
-
-Go to
- - \ref gravityinst
- - \ref gravityformat
- - \ref gravitynga
- - \ref gravitygeoid
- - \ref gravityatmos
- - \ref gravityparallel
- - \ref normalgravity
 
 \section gravityinst Installing the gravity models
 
@@ -2430,9 +2435,9 @@ cmake will add in support for OpenMP for
 
 \section normalgravity Normal gravity
 
-Normal gravity refers to the exact (classical) solution of an idealised
-system consisting of an ellipsoid of revolution with the following
-properties:
+The NormalGravity class computes "normal gravity" which refers to the
+exact (classical) solution of an idealised system consisting of an
+ellipsoid of revolution with the following properties:
  - \e M the mass interior to the ellipsoid,
  - \e a the equatorial radius,
  - \e b the polar semi-axis,
@@ -5583,10 +5588,10 @@ ellipses.  This is discussed in more detail in \ref gevsgeodesic.
 Solutions of the great ellipse problems implemented for MATLAB and
 Octave are provided by
  - gedoc: briefly describe the routines
- - gereckon: solve the direct great circle problem
- - gedistance: solve the inverse great circle problem
+ - gereckon: solve the direct great ellipse problem
+ - gedistance: solve the inverse great ellipse problem
  .
-At this time, there are no C++ support in GeographicLib for great
+At this time, there is C++ support in GeographicLib for great
 ellipses.
 
 References:
