@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.Geodesic class
  *
- * Copyright (c) Charles Karney (2013-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -149,13 +149,13 @@ package net.sf.geographiclib;
  * <p>
  * The calculations are accurate to better than 15 nm (15 nanometers) for the
  * WGS84 ellipsoid.  See Sec. 9 of
- * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
+ * <a href="https://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
  * details.  The algorithms used by this class are based on series expansions
  * using the flattening <i>f</i> as a small parameter.  These are only accurate
  * for |<i>f</i>| &lt; 0.02; however reasonably accurate results will be
  * obtained for |<i>f</i>| &lt; 0.2.  Here is a table of the approximate
  * maximum error (expressed as a distance) for an ellipsoid with the same
- * major radius as the WGS84 ellipsoid and different values of the
+ * equatorial radius as the WGS84 ellipsoid and different values of the
  * flattening.<pre>
  *     |f|      error
  *     0.01     25 nm
@@ -167,7 +167,7 @@ package net.sf.geographiclib;
  * The algorithms are described in
  * <ul>
  * <li>C. F. F. Karney,
- *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+ *   <a href="https://doi.org/10.1007/s00190-012-0578-z">
  *   Algorithms for geodesics</a>,
  *   J. Geodesy <b>87</b>, 43&ndash;55 (2013)
  *   (<a href="http://geographiclib.sourceforge.net/geod-addenda.html">addenda</a>).
@@ -274,9 +274,9 @@ public class Geodesic {
               Math.sqrt( Math.max(0.001, Math.abs(_f)) *
                          Math.min(1.0, 1 - _f/2) / 2 );
     if (!(GeoMath.isfinite(_a) && _a > 0))
-      throw new GeographicErr("Major radius is not positive");
+      throw new GeographicErr("Equatorial radius is not positive");
     if (!(GeoMath.isfinite(_b) && _b > 0))
-      throw new GeographicErr("Minor radius is not positive");
+      throw new GeographicErr("Polar semi-axis is not positive");
     _A3x = new double[nA3x_];
     _C3x = new double[nC3x_];
     _C4x = new double[nC4x_];
@@ -737,7 +737,7 @@ public class Geodesic {
 
       // sig12 = sig2 - sig1
       sig12 = Math.atan2(Math.max(0.0, csig1 * ssig2 - ssig1 * csig2),
-                    csig1 * csig2 + ssig1 * ssig2);
+                                       csig1 * csig2 + ssig1 * ssig2);
       {
         LengthsV v =
           Lengths(_n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
@@ -821,8 +821,8 @@ public class Geodesic {
         // value of alp1 is then further from the solution) or if the new
         // estimate of alp1 lies outside (0,pi); in this case, the new starting
         // guess is taken to be (alp1a + alp1b) / 2.
-        double ssig1, csig1, ssig2, csig2, eps;
-        ssig1 = csig1 = ssig2 = csig2 = eps = Double.NaN;
+        double ssig1, csig1, ssig2, csig2, eps, domg12;
+        ssig1 = csig1 = ssig2 = csig2 = eps = domg12 = Double.NaN;
         int numit = 0;
         // Bracketing range
         double salp1a = tiny_, calp1a = 1, salp1b = tiny_, calp1b = -1;
@@ -839,7 +839,7 @@ public class Geodesic {
             sig12 = w.sig12;
             ssig1 = w.ssig1; csig1 = w.csig1;
             ssig2 = w.ssig2; csig2 = w.csig2;
-            eps = w.eps; comg12 = w.comg12; somg12 = w.somg12;
+            eps = w.eps; domg12 = w.domg12;
             dv = w.dlam12;
           }
           // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
@@ -903,6 +903,12 @@ public class Geodesic {
         m12x *= _b;
         s12x *= _b;
         a12 = Math.toDegrees(sig12);
+        if ((outmask & GeodesicMask.AREA) != 0) {
+          // omg12 = lam12 - domg12
+          double sdomg12 = Math.sin(domg12), cdomg12 = Math.cos(domg12);
+          somg12 = slam12 * cdomg12 - clam12 * sdomg12;
+          comg12 = clam12 * cdomg12 + slam12 * sdomg12;
+        }
       }
     }
 
@@ -941,13 +947,8 @@ public class Geodesic {
         // Avoid problems with indeterminate sig1, sig2 on equator
         r.S12 = 0;
 
-      if (!meridian) {
-        if (somg12 > 1) {
-          somg12 = Math.sin(omg12); comg12 = Math.cos(omg12);
-        } else {
-          Pair p = GeoMath.norm(somg12, comg12);
-          somg12 = p.first; comg12 = p.second;
-        }
+      if (!meridian && somg12 > 1) {
+        somg12 = Math.sin(omg12); comg12 = Math.cos(omg12);
       }
 
       if (!meridian &&
@@ -1540,10 +1541,10 @@ public class Geodesic {
 
   private class Lambda12V {
     private double lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-      eps, somg12, comg12, dlam12;
+      eps, domg12, dlam12;
     private Lambda12V() {
       lam12 = salp2 = calp2 = sig12 = ssig1 = csig1 = ssig2 = csig2
-        = eps = somg12 = comg12 = dlam12 = Double.NaN;
+        = eps = domg12 = dlam12 = Double.NaN;
     }
   }
 
@@ -1569,7 +1570,7 @@ public class Geodesic {
       salp0 = salp1 * cbet1,
       calp0 = GeoMath.hypot(calp1, salp1 * sbet1); // calp0 > 0
 
-    double somg1, comg1, somg2, comg2;
+    double somg1, comg1, somg2, comg2, somg12, comg12;
     // tan(bet1) = tan(sig1) * cos(alp1)
     // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
     w.ssig1 = sbet1; somg1 = salp0 * sbet1;
@@ -1603,21 +1604,22 @@ public class Geodesic {
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     w.sig12 = Math.atan2(Math.max(0.0, w.csig1 * w.ssig2 - w.ssig1 * w.csig2),
-                  w.csig1 * w.csig2 + w.ssig1 * w.ssig2);
+                                       w.csig1 * w.csig2 + w.ssig1 * w.ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
-    w.somg12 = Math.max(0.0, comg1 * somg2 - somg1 * comg2);
-    w.comg12 =               comg1 * comg2 + somg1 * somg2;
+    somg12 = Math.max(0.0, comg1 * somg2 - somg1 * comg2);
+    comg12 =               comg1 * comg2 + somg1 * somg2;
     // eta = omg12 - lam120
-    double eta = Math.atan2(w.somg12 * clam120 - w.comg12 * slam120,
-                            w.comg12 * clam120 + w.somg12 * slam120);
+    double eta = Math.atan2(somg12 * clam120 - comg12 * slam120,
+                            comg12 * clam120 + somg12 * slam120);
     double B312;
     double k2 = GeoMath.sq(calp0) * _ep2;
     w.eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
     C3f(w.eps, C3a);
     B312 = (SinCosSeries(true, w.ssig2, w.csig2, C3a) -
             SinCosSeries(true, w.ssig1, w.csig1, C3a));
-    w.lam12 = eta - _f * A3f(w.eps) * salp0 * (w.sig12 + B312);
+    w.domg12 = -_f * A3f(w.eps) * salp0 * (w.sig12 + B312);
+    w.lam12 = eta + w.domg12;
 
     if (diffp) {
       if (w.calp2 == 0)

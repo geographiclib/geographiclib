@@ -2,7 +2,7 @@
  * \file Geodesic.hpp
  * \brief Header for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -132,7 +132,7 @@ namespace GeographicLib {
    *
    * The calculations are accurate to better than 15 nm (15 nanometers) for the
    * WGS84 ellipsoid.  See Sec. 9 of
-   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
+   * <a href="https://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
    * details.  The algorithms used by this class are based on series expansions
    * using the flattening \e f as a small parameter.  These are only accurate
    * for |<i>f</i>| &lt; 0.02; however reasonably accurate results will be
@@ -151,10 +151,10 @@ namespace GeographicLib {
    *
    * The algorithms are described in
    * - C. F. F. Karney,
-   *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   Algorithms for geodesics</a>,
    *   J. Geodesy <b>87</b>, 43--55 (2013);
-   *   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
    *   addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
    *   geod-addenda.html</a>.
@@ -227,7 +227,7 @@ namespace GeographicLib {
                   real salp1, real calp1, real slam120, real clam120,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
-                  real& eps, real& somg12, real& comg12,
+                  real& eps, real& domg12,
                   bool diffp, real& dlam12, real Ca[]) const;
     real GenInverse(real lat1, real lon1, real lat2, real lon2,
                     unsigned outmask, real& s12,
@@ -362,7 +362,7 @@ namespace GeographicLib {
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].  The values of
      * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
-     * 180&deg;).
+     * 180&deg;].
      *
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
@@ -475,7 +475,7 @@ namespace GeographicLib {
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].  The values of
      * \e lon2 and \e azi2 returned are in the range [&minus;180&deg;,
-     * 180&deg;).
+     * 180&deg;].
      *
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
@@ -613,7 +613,7 @@ namespace GeographicLib {
      * - \e outmask |= Geodesic::AREA for the area \e S12;
      * - \e outmask |= Geodesic::ALL for all of the above;
      * - \e outmask |= Geodesic::LONG_UNROLL to unroll \e lon2 instead of
-     *   wrapping it into the range [&minus;180&deg;, 180&deg;).
+     *   wrapping it into the range [&minus;180&deg;, 180&deg;].
      * .
      * The function value \e a12 is always computed and returned and this
      * equals \e s12_a12 is \e arcmode is true.  If \e outmask includes
@@ -655,7 +655,7 @@ namespace GeographicLib {
      *
      * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;].
      * The values of \e azi1 and \e azi2 returned are in the range
-     * [&minus;180&deg;, 180&deg;).
+     * [&minus;180&deg;, 180&deg;].
      *
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),

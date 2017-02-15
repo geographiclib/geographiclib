@@ -45,8 +45,8 @@ set -e
 # python
 #   python/setup.py
 #   python/geographiclib/__init__.py
-#   doc/index.py
-#   README.rst
+#   python/doc/index.rst
+#   python/README.rst
 # use: cd python; pychecker geographiclib/*.py
 
 # MATLAB
@@ -78,13 +78,13 @@ set -e
 # use: cd js; jshint src
 
 DATE=`date +%F`
-VERSION=1.46
+VERSION=1.47
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then
     DEVELSOURCE=$HOME/geographiclib
     WINDEVELSOURCE=/u/geographiclib
-    WINDOWSBUILD=/var/tmp
+    WINDOWSBUILD=/u/temp
 else
     DEVELSOURCE=/u/geographiclib
     WINDEVELSOURCE=/u/geographiclib
@@ -385,14 +385,14 @@ cd $TEMP/relx/GeographicLib-$VERSION
     echo Files with no newline at end:
     find . -type f |
 	egrep -v '\.png|\.pdf' |
-	while read f;do
+	while read f; do
 	    n=`tail -1 $f | wc -l`; test $n -eq 0 && echo $f || true
 	done
     echo
     echo Files with extra newlines at end:
     find . -type f |
 	egrep -v '/configure|/ltmain.sh|\.png|\.pdf|\.1\.html' |
-	while read f;do
+	while read f; do
 	    n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
 	done
     echo

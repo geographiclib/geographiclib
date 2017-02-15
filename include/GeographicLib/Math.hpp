@@ -2,7 +2,7 @@
  * \file Math.hpp
  * \brief Header for GeographicLib::Math class
  *
- * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -156,7 +156,7 @@ namespace GeographicLib {
      * @param[in] ndigits the number of bits of precision.
      * @return the resulting number of bits of precision.
      *
-     * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.  See also
+     * This only has an effect when GEOGRAPHICLIB_PRECISION = 5.  See also
      * Utility::set_digits for caveats about when this routine should be
      * called.
      **********************************************************************/
@@ -250,8 +250,8 @@ namespace GeographicLib {
       y /= (x ? x : 1);
       return x * sqrt(1 + y * y);
       // For an alternative (square-root free) method see
-      // C. Moler and D. Morrision (1983) https://dx.doi.org/10.1147/rd.276.0577
-      // and A. A. Dubrulle (1983) https://dx.doi.org/10.1147/rd.276.0582
+      // C. Moler and D. Morrision (1983) https://doi.org/10.1147/rd.276.0577
+      // and A. A. Dubrulle (1983) https://doi.org/10.1147/rd.276.0582
 #endif
     }
 
@@ -430,18 +430,24 @@ namespace GeographicLib {
      *
      * @tparam T the type of the argument and returned value.
      * @param[in] x the angle in degrees.
-     * @return the angle reduced to the range [&minus;180&deg;, 180&deg;).
+     * @return the angle reduced to the range([&minus;180&deg;, 180&deg;].
      *
      * The range of \e x is unrestricted.
      **********************************************************************/
     template<typename T> static inline T AngNormalize(T x) {
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
       using std::remainder;
-      x = remainder(x, T(360)); return x != 180 ? x : -180;
+      x = remainder(x, T(360)); return x != -180 ? x : 180;
 #else
       using std::fmod;
-      x = fmod(x, T(360));
-      return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
+      T y = fmod(x, T(360));
+#if defined(_MSC_VER) && _MSC_VER < 1900
+      // Before version 14 (2015), Visual Studio had problems dealing
+      // with -0.0.  Specifically
+      //   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
+      if (x == 0) y = x;
+#endif
+      return y <= -180 ? y + 360 : (y <= 180 ? y : y - 360);
 #endif
     }
 
@@ -475,18 +481,18 @@ namespace GeographicLib {
     template<typename T> static inline T AngDiff(T x, T y, T& e) {
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
       using std::remainder;
-      T t, d = - AngNormalize(sum(remainder( x, T(360)),
-                                  remainder(-y, T(360)), t));
+      T t, d = AngNormalize(sum(remainder(-x, T(360)),
+                                remainder( y, T(360)), t));
 #else
-      T t, d = - AngNormalize(sum(AngNormalize(x), AngNormalize(-y), t));
+      T t, d = AngNormalize(sum(AngNormalize(-x), AngNormalize(y), t));
 #endif
-      // Here y - x = d - t (mod 360), exactly, where d is in (-180,180] and
+      // Here y - x = d + t (mod 360), exactly, where d is in (-180,180] and
       // abs(t) <= eps (eps = 2^-45 for doubles).  The only case where the
       // addition of t takes the result outside the range (-180,180] is d = 180
-      // and t < 0.  The case, d = -180 + eps, t = eps, can't happen, since
+      // and t > 0.  The case, d = -180 + eps, t = -eps, can't happen, since
       // sum would have returned the exact result in such a case (i.e., given t
       // = 0).
-      return sum(d == 180 && t < 0 ? -180 : d, -t, e);
+      return sum(d == 180 && t > 0 ? -180 : d, t, e);
     }
 
     /**
@@ -541,6 +547,8 @@ namespace GeographicLib {
      *
      * The results obey exactly the elementary properties of the trigonometric
      * functions, e.g., sin 9&deg; = cos 81&deg; = &minus; sin 123456789&deg;.
+     * If x = &minus;0, then \e sinx = &minus;0; this is the only case where
+     * &minus;0 is returned.
      **********************************************************************/
     template<typename T> static inline void sincosd(T x, T& sinx, T& cosx) {
       // In order to minimize round-off errors, this function exactly reduces
@@ -575,11 +583,13 @@ namespace GeographicLib {
       if (x == 0) s = x;
 #endif
       switch (unsigned(q) & 3U) {
-      case 0U: sinx =        s; cosx =        c; break;
-      case 1U: sinx =        c; cosx = T(0) - s; break;
-      case 2U: sinx = T(0) - s; cosx = T(0) - c; break;
-      default: sinx = T(0) - c; cosx =        s; break; // case 3U
+      case 0U: sinx =  s; cosx =  c; break;
+      case 1U: sinx =  c; cosx = -s; break;
+      case 2U: sinx = -s; cosx = -c; break;
+      default: sinx = -c; cosx =  s; break; // case 3U
       }
+      // Set sign of 0 results.  -0 only produced for sin(-0)
+      if (x) { sinx += T(0); cosx += T(0); }
     }
 
     /**
@@ -607,7 +617,9 @@ namespace GeographicLib {
       r *= degree();
       unsigned p = unsigned(q);
       r = p & 1U ? cos(r) : sin(r);
-      return p & 2U ? T(0) - r : r;
+      if (p & 2U) r = -r;
+      if (x) r += T(0);
+      return r;
     }
 
     /**
@@ -635,7 +647,8 @@ namespace GeographicLib {
       r *= degree();
       unsigned p = unsigned(q + 1);
       r = p & 1U ? cos(r) : sin(r);
-      return p & 2U ? T(0) - r : r;
+      if (p & 2U) r = -r;
+      return T(0) + r;
     }
 
     /**
@@ -663,10 +676,10 @@ namespace GeographicLib {
      * @param[in] x
      * @return atan2(<i>y</i>, <i>x</i>) in degrees.
      *
-     * The result is in the range [&minus;180&deg; 180&deg;).  N.B.,
-     * atan2d(&plusmn;0, &minus;1) = &minus;180&deg;; atan2d(+&epsilon;,
-     * &minus;1) = +180&deg;, for &epsilon; positive and tiny;
-     * atan2d(&plusmn;0, 1) = &plusmn;0&deg;.
+     * The result is in the range (&minus;180&deg; 180&deg;].  N.B.,
+     * atan2d(&plusmn;0, &minus;1) = +180&deg;; atan2d(&minus;&epsilon;,
+     * &minus;1) = &minus;180&deg;, for &epsilon; positive and tiny;
+     * atan2d(&plusmn;0, +1) = &plusmn;0&deg;.
      **********************************************************************/
     template<typename T> static inline T atan2d(T y, T x) {
       // In order to minimize round-off errors, this function rearranges the
@@ -686,7 +699,7 @@ namespace GeographicLib {
         //   case 0: ang = 0 + ang; break;
         //
         // and handle mpfr as in AngRound.
-      case 1: ang = (y > 0 ? 180 : -180) - ang; break;
+      case 1: ang = (y >= 0 ? 180 : -180) - ang; break;
       case 2: ang =  90 - ang; break;
       case 3: ang = -90 + ang; break;
       }
@@ -724,12 +737,15 @@ namespace GeographicLib {
      * @param[in] x gives the magitude of the result.
      * @param[in] y gives the sign of the result.
      * @return value with the magnitude of \e x and with the sign of \e y.
+     *
+     * This routine correctly handles the case \e y = &minus;0, returning
+     * &minus|<i>x</i>|.
      **********************************************************************/
     template<typename T> static inline T copysign(T x, T y) {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::copysign; return copysign(x, y);
 #else
-      using std::abs; using std::atan2;
+      using std::abs;
       // NaN counts as positive
       return abs(x) * (y < 0 || (y == 0 && 1/y < 0)  ? -1 : 1);
 #endif
@@ -746,10 +762,10 @@ namespace GeographicLib {
      *
      * See Eqs. (7--9) of
      * C. F. F. Karney,
-     * <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
+     * <a href="https://doi.org/10.1007/s00190-011-0445-3">
      * Transverse Mercator with an accuracy of a few nanometers,</a>
      * J. Geodesy 85(8), 475--485 (Aug. 2011)
-     * (preprint <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
+     * (preprint <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
      **********************************************************************/
     template<typename T> static T taupf(T tau, T es);
 
@@ -764,10 +780,10 @@ namespace GeographicLib {
      *
      * See Eqs. (19--21) of
      * C. F. F. Karney,
-     * <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
+     * <a href="https://doi.org/10.1007/s00190-011-0445-3">
      * Transverse Mercator with an accuracy of a few nanometers,</a>
      * J. Geodesy 85(8), 475--485 (Aug. 2011)
-     * (preprint <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
+     * (preprint <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
      **********************************************************************/
     template<typename T> static T tauf(T taup, T es);
 

@@ -275,7 +275,7 @@ following lines will be converted.
 
 Using the (default) series solution, GeodSolve is accurate to about 15
 nm (15 nanometers) for the WGS84 ellipsoid.  The approximate maximum
-error (expressed as a distance) for an ellipsoid with the same major
+error (expressed as a distance) for an ellipsoid with the same equatorial
 radius as the WGS84 ellipsoid and different values of the flattening is
 
    |f|     error
@@ -380,7 +380,7 @@ L<http://geographiclib.sourceforge.net/cgi-bin/GeodSolve>.
 
 The algorithms are described in C. F. F. Karney,
 I<Algorithms for geodesics>, J. Geodesy 87, 43-55 (2013); DOI:
-L<https://dx.doi.org/10.1007/s00190-012-0578-z>;
+L<https://doi.org/10.1007/s00190-012-0578-z>;
 addenda: L<http://geographiclib.sourceforge.net/geod-addenda.html>.
 
 The Wikipedia page, Geodesics on an ellipsoid,

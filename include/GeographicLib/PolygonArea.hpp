@@ -23,10 +23,10 @@ namespace GeographicLib {
    * This computes the area of a polygon whose edges are geodesics using the
    * method given in Section 6 of
    * - C. F. F. Karney,
-   *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   Algorithms for geodesics</a>,
    *   J. Geodesy <b>87</b>, 43--55 (2013);
-   *   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
    *   addenda:
    *   <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
@@ -80,9 +80,11 @@ namespace GeographicLib {
       lon1 = Math::AngNormalize(lon1);
       lon2 = Math::AngNormalize(lon2);
       real lon12 = Math::AngDiff(lon1, lon2);
+      // Treat 0 as negative in these tests.  This balances +/- 180 being
+      // treated as positive, i.e., +180.
       int cross =
-        lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
-        (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
+        lon1 <= 0 && lon2 > 0 && lon12 > 0 ? 1 :
+        (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
       return cross;
     }
     // an alternate version of transit to deal with longitudes in the direct
@@ -252,7 +254,7 @@ namespace GeographicLib {
      * @param[out] lon the longitude of the point (degrees).
      *
      * If no points have been added, then NaNs are returned.  Otherwise, \e lon
-     * will be in the range [&minus;180&deg;, 180&deg;).
+     * will be in the range [&minus;180&deg;, 180&deg;].
      **********************************************************************/
     void CurrentPoint(real& lat, real& lon) const
     { lat = _lat1; lon = _lon1; }

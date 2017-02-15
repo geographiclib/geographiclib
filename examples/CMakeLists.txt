@@ -5,6 +5,11 @@
 if (GEOGRAPHICLIB_PRECISION EQUAL 2)
   # These examples all assume real = double
   file (GLOB EXAMPLE_SOURCES example-*.cpp)
+  find_package (Boost COMPONENTS serialization)
+  if (Boost_FOUND)
+    add_definitions (-DGEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION=1)
+    include_directories (${Boost_INCLUDE_DIRS})
+  endif ()
 else ()
   set (EXAMPLE_SOURCES)
 endif ()
@@ -24,6 +29,10 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   target_link_libraries (${EXAMPLE} ${PROJECT_LIBRARIES}
     ${QUAD_LIBRARIES} ${MPFR_LIBRARIES})
 endforeach ()
+
+if (Boost_FOUND AND GEOGRAPHICLIB_PRECISION EQUAL 2)
+  target_link_libraries (example-NearestNeighbor ${Boost_LIBRARIES})
+endif ()
 
 find_package (OpenMP QUIET)
 

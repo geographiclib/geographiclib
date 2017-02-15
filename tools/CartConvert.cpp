@@ -2,7 +2,7 @@
  * \file CartConvert.cpp
  * \brief Command line utility for geodetic to cartesian coordinate conversions
  *
- * Copyright (c) Charles Karney (2009-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -26,7 +26,7 @@
 
 #include "CartConvert.usage"
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
         try {
           DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
                             lat0, lon0, longfirst);
-          h0 = Utility::num<real>(std::string(argv[m + 3]));
+          h0 = Utility::val<real>(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -l: " << e.what() << "\n";
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
-          a = Utility::num<real>(std::string(argv[m + 1]));
+          a = Utility::val<real>(std::string(argv[m + 1]));
           f = Utility::fract<real>(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
-          prec = Utility::num<int>(std::string(argv[m]));
+          prec = Utility::val<int>(std::string(argv[m]));
         }
         catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
@@ -168,12 +168,12 @@ int main(int argc, char* argv[]) {
         if (!(str >> stra >> strb >> strc))
           throw GeographicErr("Incomplete input: " + s);
         if (reverse) {
-          x = Utility::num<real>(stra);
-          y = Utility::num<real>(strb);
-          z = Utility::num<real>(strc);
+          x = Utility::val<real>(stra);
+          y = Utility::val<real>(strb);
+          z = Utility::val<real>(strc);
         } else {
           DMS::DecodeLatLon(stra, strb, lat, lon, longfirst);
-          h = Utility::num<real>(strc);
+          h = Utility::val<real>(strc);
         }
         if (str >> strd)
           throw GeographicErr("Extraneous input: " + strd);

@@ -26,7 +26,7 @@ function projdoc
 %
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
-%     https://dx.doi.org/10.1007/s00190-012-0578-z
+%     https://doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
 %
 %   The parameters of the ellipsoid are specified by the optional ellipsoid

@@ -2,8 +2,8 @@
  * \file GravityModel.hpp
  * \brief Header for GeographicLib::GravityModel class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -200,7 +200,8 @@ namespace GeographicLib {
      *   (m s<sup>&minus;2</sup>).
      * @param[out] gz the upward component of the acceleration
      *   (m s<sup>&minus;2</sup>); this is usually negative.
-     * @return \e W the sum of the gravitational and centrifugal potentials.
+     * @return \e W the sum of the gravitational and centrifugal potentials
+     *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      *
      * The function includes the effects of the earth's rotation.
      **********************************************************************/
@@ -220,7 +221,8 @@ namespace GeographicLib {
      *   (m s<sup>&minus;2</sup>).
      * @param[out] deltaz the upward component of the disturbance vector
      *   (m s<sup>&minus;2</sup>).
-     * @return \e T the corresponding disturbing potential.
+     * @return \e T the corresponding disturbing potential
+     *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real Disturbance(real lat, real lon, real h,
                            real& deltax, real& deltay, real& deltaz)
@@ -281,7 +283,7 @@ namespace GeographicLib {
      * @return \e W = \e V + &Phi; the sum of the gravitational and
      *   centrifugal potentials (m<sup>2</sup> s<sup>&minus;2</sup>).
      *
-     * This calls NormalGravity::U for  ReferenceEllipsoid().
+     * This calls NormalGravity::U for ReferenceEllipsoid().
      **********************************************************************/
     Math::real W(real X, real Y, real Z,
                  real& gX, real& gY, real& gZ) const;
@@ -356,7 +358,7 @@ namespace GeographicLib {
      *   normal gravitational and centrifugal potentials
      *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      *
-     * This calls NormalGravity::U for  ReferenceEllipsoid().
+     * This calls NormalGravity::U for ReferenceEllipsoid().
      **********************************************************************/
     Math::real U(real X, real Y, real Z,
                  real& gammaX, real& gammaY, real& gammaZ) const
@@ -374,7 +376,7 @@ namespace GeographicLib {
      * @return &Phi; the centrifugal potential (m<sup>2</sup>
      * s<sup>&minus;2</sup>).
      *
-     * This calls NormalGravity::Phi for  ReferenceEllipsoid().
+     * This calls NormalGravity::Phi for ReferenceEllipsoid().
      **********************************************************************/
     Math::real Phi(real X, real Y, real& fX, real& fY) const
     { return _earth.Phi(X, Y, fX, fY); }

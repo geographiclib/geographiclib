@@ -26,7 +26,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
-%     https://dx.doi.org/10.1007/s00190-012-0578-z
+%     https://doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
 %
 %   This function duplicates some of the functionality of the distance
@@ -42,7 +42,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %   See also GEODDOC, GEODRECKON, GEODAREA, GEODESICINVERSE,
 %     DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012-2016) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
@@ -133,7 +133,8 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 
   sig12 = Z; ssig1 = Z; csig1 = Z; ssig2 = Z; csig2 = Z;
   calp1 = Z; salp1 = Z; calp2 = Z; salp2 = Z;
-  s12 = Z; m12 = Z; M12 = Z; M21 = Z; omg12 = Z; somg12 = 2+Z; comg12 = Z;
+  s12 = Z; m12 = Z; M12 = Z; M21 = Z;
+  omg12 = Z; somg12 = 2+Z; comg12 = Z; domg12 = Z;
 
   m = lat1 == -90 | slam12 == 0;
 
@@ -199,8 +200,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
         numit(g) = k;
         [v(g), dv(g), ...
          salp2(g), calp2(g), sig12(g), ...
-         ssig1(g), csig1(g), ssig2(g), csig2(g), epsi(g), ...
-         somg12(g), comg12(g)] = ...
+         ssig1(g), csig1(g), ssig2(g), csig2(g), epsi(g), domg12(g)] = ...
             Lambda12(sbet1(g), cbet1(g), dn1(g), ...
                      sbet2(g), cbet2(g), dn2(g), ...
                      salp1(g), calp1(g), slam12(g), clam12(g), f, A3x, C3x);
@@ -254,6 +254,11 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 
       m12(g) = m12(g) * b;
       s12(g) = s12(g) * b;
+      if areap
+        sdomg12 = sin(domg12(g)); cdomg12 = cos(domg12(g));
+        somg12(g) = slam12(g) .* cdomg12 - clam12(g) .* sdomg12;
+        comg12(g) = clam12(g) .* cdomg12 + slam12(g) .* sdomg12;
+      end
     end
   end
 
@@ -277,7 +282,6 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
     S12(calp0 == 0 | salp0 == 0) = 0;
 
     l = ~m & somg12 > 1;
-    [somg12, comg12] = norm2(somg12, comg12);
     somg12(l) = sin(omg12(l)); comg12(l) = cos(omg12(l));
 
     l = ~m & comg12 > -0.7071 & sbet2 - sbet1 < 1.75;
@@ -467,7 +471,7 @@ end
 
 function [lam12, dlam12, ...
           salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, epsi, ...
-          somg12, comg12] = ...
+          domg12] = ...
     Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1, ...
              slam120, clam120, f, A3x, C3x)
 %LAMBDA12  Solve the hybrid problem
@@ -508,7 +512,8 @@ function [lam12, dlam12, ...
   Ca = C3f(epsi, C3x);
   B312 = SinCosSeries(true, ssig2, csig2, Ca) - ...
          SinCosSeries(true, ssig1, csig1, Ca);
-  lam12 = eta - f * A3f(epsi, A3x) .* salp0 .* (sig12 + B312);
+  domg12 = -f * A3f(epsi, A3x) .* salp0 .* (sig12 + B312);
+  lam12 = eta + domg12;
 
   [~, dlam12] = ...
       Lengths(epsi, sig12, ...

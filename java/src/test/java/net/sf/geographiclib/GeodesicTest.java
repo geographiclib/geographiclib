@@ -534,6 +534,23 @@ public class GeodesicTest {
   }
 
   @Test
+  public void GeodSolve74() {
+    // Check fix for inaccurate areas, bug introduced in v1.46, fixed
+    // 2015-10-16.
+    GeodesicData inv = Geodesic.WGS84.Inverse(54.1589, 15.3872,
+                                              54.1591, 15.3877,
+                                              GeodesicMask.ALL);
+    assertEquals(inv.azi1, 55.723110355, 5e-9);
+    assertEquals(inv.azi2, 55.723515675, 5e-9);
+    assertEquals(inv.s12,  39.527686385, 5e-9);
+    assertEquals(inv.a12,   0.000355495, 5e-9);
+    assertEquals(inv.m12,  39.527686385, 5e-9);
+    assertEquals(inv.M12,   0.999999995, 5e-9);
+    assertEquals(inv.M21,   0.999999995, 5e-9);
+    assertEquals(inv.S12, 286698586.30197, 5e-4);
+  }
+
+  @Test
   public void Planimeter0() {
     // Check fix for pole-encircling bug found 2011-03-16
     double pa[][] = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};

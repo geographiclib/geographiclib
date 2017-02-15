@@ -2,7 +2,7 @@
  * \file Gnomonic.hpp
  * \brief Header for GeographicLib::Gnomonic class
  *
- * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -22,10 +22,10 @@ namespace GeographicLib {
    * %Gnomonic projection centered at an arbitrary position \e C on the
    * ellipsoid.  This projection is derived in Section 8 of
    * - C. F. F. Karney,
-   *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   Algorithms for geodesics</a>,
    *   J. Geodesy <b>87</b>, 43--55 (2013);
-   *   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
    *   addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
    *   geod-addenda.html</a>.
@@ -68,7 +68,7 @@ namespace GeographicLib {
    * The conversions all take place using a Geodesic object (by default
    * Geodesic::WGS84()).  For more information on geodesics see \ref geodesic.
    *
-   * <b>CAUTION:</b> The definition of this projection for a sphere is
+   * \warning The definition of this projection for a sphere is
    * standard.  However, there is no standard for how it should be extended to
    * an ellipsoid.  The choices are:
    * - Declare that the projection is undefined for an ellipsoid.
@@ -153,7 +153,7 @@ namespace GeographicLib {
      *
      * \e lat0 should be in the range [&minus;90&deg;, 90&deg;].  \e lat will
      * be in the range [&minus;90&deg;, 90&deg;] and \e lon will be in the
-     * range [&minus;180&deg;, 180&deg;).  The scale of the projection is
+     * range [&minus;180&deg;, 180&deg;].  The scale of the projection is
      * 1/<i>rk</i><sup>2</sup> in the "radial" direction, \e azi clockwise from
      * true north, and is 1/\e rk in the direction perpendicular to this.  Even
      * though all inputs should return a valid \e lat and \e lon, it's possible

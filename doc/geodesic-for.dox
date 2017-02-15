@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in Fortran
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.46
+\version 1.47
 
 The documentation for other versions is available at
 <tt>http://geographiclib.sourceforge.net/m.nn/Fortran</tt> for versions numbers
@@ -29,10 +29,10 @@ compile correctly with just about any Fortran compiler.
 \section download-for Downloading the source
 
 The Fortran library is part of %GeographicLib which available for download at
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.46.tar.gz">
-  GeographicLib-1.46.tar.gz</a>
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.46.zip">
-  GeographicLib-1.46.zip</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.47.tar.gz">
+  GeographicLib-1.47.tar.gz</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.47.zip">
+  GeographicLib-1.47.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the Fortran library can be found in the directory
@@ -109,12 +109,12 @@ and are therefore in the public domain.
 \section external-for External links
 
 - These algorithms are derived in C. F. F. Karney,
-  <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+  <a href="https://doi.org/10.1007/s00190-012-0578-z">
   Algorithms for geodesics</a>,
   J. Geodesy <b>87</b>, 43--55 (2013)
   (<a href="http://geographiclib.sourceforge.net/geod-addenda.html"> addenda</a>).
 - A longer paper on geodesics: C. F. F. Karney,
-   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
+   <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
    on an ellipsoid of revolution</a>,
    Feb. 2011
    (<a href="http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata">
@@ -173,6 +173,11 @@ and are therefore in the public domain.
   Geodesics on an ellipsoid</a>.
 
 \section changes-for Change log
+
+ - <a href="http://geographiclib.sourceforge.net/1.47/Fortran">Version 1.47</a>
+   (released 2017-02-15)
+   - Improve accuracy of area calculation (fixing a flaw introduced in
+     version 1.46).
 
  - <a href="http://geographiclib.sourceforge.net/1.46/Fortran">Version 1.46</a>
    (released 2016-02-15)

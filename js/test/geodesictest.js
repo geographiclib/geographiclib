@@ -505,6 +505,21 @@ describe("GeographicLib", function() {
       assert.approx(dir.azi2, 0, 0.5e-5);
     });
 
+    it("GeodSolve74", function() {
+      // Check fix for inaccurate areas, bug introduced in v1.46, fixed
+      // 2015-10-16.
+      var geod = g.WGS84,
+          inv = geod.Inverse(54.1589, 15.3872, 54.1591, 15.3877, g.ALL);
+      assert.approx(inv.azi1, 55.723110355, 5e-9);
+      assert.approx(inv.azi2, 55.723515675, 5e-9);
+      assert.approx(inv.s12,  39.527686385, 5e-9);
+      assert.approx(inv.a12,   0.000355495, 5e-9);
+      assert.approx(inv.m12,  39.527686385, 5e-9);
+      assert.approx(inv.M12,   0.999999995, 5e-9);
+      assert.approx(inv.M21,   0.999999995, 5e-9);
+      assert.approx(inv.S12, 286698586.30197, 5e-4);
+    });
+
   });
 
   describe("Planimeter", function () {

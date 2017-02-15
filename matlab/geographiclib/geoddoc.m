@@ -7,7 +7,7 @@ function geoddoc
 %
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
-%     https://dx.doi.org/10.1007/s00190-012-0578-z
+%     https://doi.org/10.1007/s00190-012-0578-z
 %     Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
 %
 %   which, in turn, is based on the classic solution of the geodesic
@@ -102,8 +102,8 @@ function geoddoc
 %    Larger values of e can be used with a corresponding drop in accuracy.
 %    The following table gives the approximate maximum error in
 %    geoddistance and geodreckon (expressed as a distance) for an ellipsoid
-%    with the same major radius as the WGS84 ellipsoid and different values
-%    of the flattening (nm means nanometer and um means micrometer).
+%    with the same equatorial radius as the WGS84 ellipsoid and different
+%    values of the flattening (nm means nanometer and um means micrometer).
 %
 %         |f|     error
 %         0.01    25 nm
@@ -166,7 +166,7 @@ function geoddoc
 %     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
 %     GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, POLYGONAREA.
 
-% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 
   help geoddoc
 end

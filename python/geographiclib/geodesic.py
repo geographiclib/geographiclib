@@ -69,10 +69,10 @@ The public attributes for this class are
 #
 #    Charles F. F. Karney,
 #    Algorithms for geodesics, J. Geodesy 87, 43-55 (2013),
-#    https://dx.doi.org/10.1007/s00190-012-0578-z
+#    https://doi.org/10.1007/s00190-012-0578-z
 #    Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 ######################################################################
@@ -309,9 +309,9 @@ class Geodesic(object):
     self._etol2 = 0.1 * Geodesic.tol2_ / math.sqrt( max(0.001, abs(self.f)) *
                                                     min(1.0, 1-self.f/2) / 2 )
     if not(Math.isfinite(self.a) and self.a > 0):
-      raise ValueError("Major radius is not positive")
+      raise ValueError("Equatorial radius is not positive")
     if not(Math.isfinite(self._b) and self._b > 0):
-      raise ValueError("Minor radius is not positive")
+      raise ValueError("Polar semi-axis is not positive")
     self._A3x = list(range(Geodesic.nA3x_))
     self._C3x = list(range(Geodesic.nC3x_))
     self._C4x = list(range(Geodesic.nC4x_))
@@ -427,9 +427,9 @@ class Geodesic(object):
 
   # return s12b, m12b, m0, M12, M21
   def _Lengths(self, eps, sig12,
-              ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2, outmask,
-              # Scratch areas of the right size
-              C1a, C2a):
+               ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2, outmask,
+               # Scratch areas of the right size
+               C1a, C2a):
     """Private: return a bunch of lengths"""
     # Return s12b, m12b, m0, M12, M21, where
     # m12b = (reduced length)/_b; s12b = distance/_b,
@@ -482,8 +482,8 @@ class Geodesic(object):
   # return sig12, salp1, calp1, salp2, calp2, dnm
   def _InverseStart(self, sbet1, cbet1, dn1, sbet2, cbet2, dn2,
                     lam12, slam12, clam12,
-                   # Scratch areas of the right size
-                   C1a, C2a):
+                    # Scratch areas of the right size
+                    C1a, C2a):
     """Private: Find a starting value for Newton's method."""
     # Return a starting point for Newton's method in salp1 and calp1 (function
     # value is -1).  If Newton's method doesn't need to be used, return also
@@ -623,11 +623,11 @@ class Geodesic(object):
     return sig12, salp1, calp1, salp2, calp2, dnm
 
   # return lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
-  # somg12, comg12, dlam12
+  # domg12, dlam12
   def _Lambda12(self, sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                 slam120, clam120, diffp,
-               # Scratch areas of the right size
-               C1a, C2a, C3a):
+                # Scratch areas of the right size
+                C1a, C2a, C3a):
     """Private: Solve hybrid problem"""
     if sbet1 == 0 and calp1 == 0:
       # Break degeneracy of equatorial line.  This case has already been
@@ -668,7 +668,7 @@ class Geodesic(object):
 
     # sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = math.atan2(max(0.0, csig1 * ssig2 - ssig1 * csig2),
-                       csig1 * csig2 + ssig1 * ssig2)
+                                csig1 * csig2 + ssig1 * ssig2)
 
     # omg12 = omg2 - omg1, limit to [0, pi]
     somg12 = max(0.0, comg1 * somg2 - somg1 * comg2)
@@ -683,7 +683,8 @@ class Geodesic(object):
     self._C3f(eps, C3a)
     B312 = (Geodesic._SinCosSeries(True, ssig2, csig2, C3a) -
             Geodesic._SinCosSeries(True, ssig1, csig1, C3a))
-    lam12 = eta - self.f * self._A3f(eps) * salp0 * (sig12 + B312)
+    domg12 =  -self.f * self._A3f(eps) * salp0 * (sig12 + B312)
+    lam12 = eta + domg12
 
     if diffp:
       if calp2 == 0:
@@ -697,7 +698,7 @@ class Geodesic(object):
       dlam12 = Math.nan
 
     return (lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
-            somg12, comg12, dlam12)
+            domg12, dlam12)
 
   # return a12, s12, salp1, calp1, salp2, calp2, m12, M12, M21, S12
   def _GenInverse(self, lat1, lon1, lat2, lon2, outmask):
@@ -795,7 +796,7 @@ class Geodesic(object):
 
       # sig12 = sig2 - sig1
       sig12 = math.atan2(max(0.0, csig1 * ssig2 - ssig1 * csig2),
-                         csig1 * csig2 + ssig1 * ssig2)
+                                  csig1 * csig2 + ssig1 * ssig2)
 
       s12x, m12x, dummy, M12, M21 = self._Lengths(
         self._n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
@@ -820,7 +821,7 @@ class Geodesic(object):
     # end if meridian:
 
     # somg12 > 1 marks that it needs to be calculated
-    somg12 = 2.0; omg12 = 0.0
+    somg12 = 2.0; comg12 = 0.0; omg12 = 0.0
     if (not meridian and
         sbet1 == 0 and   # and sbet2 == 0
         # Mimic the way Lambda12 works with calp1 = 0
@@ -876,7 +877,7 @@ class Geodesic(object):
           # the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
           # WGS84 and random input: mean = 2.85, sd = 0.60
           (v, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-           eps, somg12, comg12, dv) = self._Lambda12(
+           eps, domg12, dv) = self._Lambda12(
              sbet1, cbet1, dn1, sbet2, cbet2, dn2,
              salp1, calp1, slam12, clam12, numit < Geodesic.maxit1_,
              C1a, C2a, C3a)
@@ -932,6 +933,12 @@ class Geodesic(object):
         m12x *= self._b
         s12x *= self._b
         a12 = math.degrees(sig12)
+        if outmask & Geodesic.AREA:
+          # omg12 = lam12 - domg12
+          sdomg12 = math.sin(domg12); cdomg12 = math.cos(domg12)
+          somg12 = slam12 * cdomg12 - clam12 * sdomg12
+          comg12 = clam12 * cdomg12 + slam12 * sdomg12
+
     # end elif not meridian
 
     if outmask & Geodesic.DISTANCE:
@@ -964,11 +971,8 @@ class Geodesic(object):
         # Avoid problems with indeterminate sig1, sig2 on equator
         S12 = 0.0
 
-      if not meridian:
-        if somg12 > 1:
-          somg12 = math.sin(omg12); comg12 = math.cos(omg12)
-        else:
-          somg12, comg12 = Math.norm(somg12, comg12)
+      if not meridian and somg12 > 1:
+        somg12 = math.sin(omg12); comg12 = math.cos(omg12)
 
       if (not meridian and
           # omg12 < 3/4 * pi

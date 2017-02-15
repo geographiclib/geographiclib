@@ -4,7 +4,56 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.46.
+The current version of the library is 1.47.
+
+Changes between 1.47 (released 2017-02-15) and 1.46 versions:
+
+  * Add NearestNeighbor class.
+
+  * Improve accuracy of area calculation (fixing a flaw introduced in
+    version 1.46); fix applied in Geodesic, GeodesicExact, and the
+    implementations in C, Fortran, Java, JavaScript, Python, MATLAB, and
+    Maxima.
+
+  * Generalize NormalGravity to allow oblate and prolate ellipsoids.  As
+    a consequence a new form of constructor has been introduced and the
+    old form is now deprecated (and because the signatures of the two
+    constructors are similar, the compiler will warn about the use of
+    the old one).
+
+  * Changes in Math class:
+    + Math::sincosd, Math::sind, Math::cosd only return -0 for the case
+      sin(-0);
+    + Math::atan2d and Math::AngNormalize return results in (-180deg,
+      180deg]; this may affect the longitudes and azimuth returned by
+      several other functions.
+
+  * Add Utility::trim() and Utility::val<T>(); Utility::num<T>() is now
+    DEPRECATED.
+
+  * Changes in cmake support:
+    + remove support of PACKAGE_PATH and INSTALL_PATH in cmake
+      configuration;
+    + fix to FindGeographicLib.cmake to make it work on Debian systems;
+    + use $<TARGET_PDB_FILE:tgt> (cmake version >= 3.1);
+    + use NAMESPACE for exported targets;
+    + geographiclib-config.cmake exports GEOGRAPHICLIB_DATA,
+      GEOGRAPHICLIB_PRECISION, and GeographicLib_HIGHPREC_LIBRARIES.
+
+  * Add pkg-config support for cmake and autoconf builds.
+
+  * Minor fixes:
+    + fix the order of declarations in C library, incorporating the
+      patches in version 1.46.1;
+    + fix the packaging of the python library, incorporating the patches
+      in version 1.46.3;
+    + restrict junit dependency in the Java package to testing scope
+      (thanks to Mick Killianey);
+    + various behind-the-scenes fixes to EllipticFunction;
+    + fix documentation and default install location for Windows binary
+      installers;
+    + fix clang compiler warnings in GeodesicExactC4 and
+      TransverseMercator.
 
 Changes between 1.46 (released 2016-02-15) and 1.45 versions:
 

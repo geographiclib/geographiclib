@@ -8,12 +8,12 @@
   <parent>
     <groupId>com.sri.vt.majic</groupId>
     <artifactId>majic-parent</artifactId>
-    <version>0.2.7</version>
+    <version>0.2.9</version>
   </parent>
 
   <groupId>com.sri.vt</groupId>
   <artifactId>geographiclib</artifactId>
-  <version>1.46-SNAPSHOT</version>
+  <version>1.47-SNAPSHOT</version>
   <packaging>majic-cmake</packaging>
   <name>GeographicLib</name>
 

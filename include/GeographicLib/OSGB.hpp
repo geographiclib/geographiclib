@@ -2,7 +2,7 @@
  * \file OSGB.hpp
  * \brief Header for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -33,7 +33,7 @@ namespace GeographicLib {
    * - <a href="http://www.ordnancesurvey.co.uk/docs/support/national-grid.pdf">
    *   Guide to the National Grid</a>
    *
-   * \b WARNING: the latitudes and longitudes for the Ordnance Survey grid
+   * \warning the latitudes and longitudes for the Ordnance Survey grid
    * system do not use the WGS84 datum.  Do not use the values returned by this
    * class in the UTMUPS, MGRS, or Geoid classes without first converting the
    * datum (and vice versa).
@@ -96,7 +96,7 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * The value of \e lon returned is in the range [&minus;180&deg;,
-     * 180&deg;).
+     * 180&deg;].
      **********************************************************************/
 
     static void Reverse(real x, real y,

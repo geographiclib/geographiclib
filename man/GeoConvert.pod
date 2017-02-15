@@ -187,17 +187,18 @@ file name of "-" stands for standard output.
 =head1 PRECISION
 
 I<prec> gives precision of the output with I<prec> = 0 giving 1 m
-precision, I<prec> = 3 giving 1 mm precision, etc.  I<prec> is the number
-of digits after the decimal point for UTM/UPS.  The number of digits per
-coordinate for MGRS is 5 + I<prec>.  For decimal degrees, the number of
-digits after the decimal point is 5 + I<prec>.  For DMS (degree, minute,
-seconds) output, the number of digits after the decimal point in the
-seconds components is 1 + I<prec>; if this is negative then use minutes
-(I<prec> = -2 or -3) or degrees (I<prec> E<lt>= -4) as the least significant
-component.  Print convergence, resp. scale, with 5 + I<prec>, resp. 7 +
-I<prec>, digits after the decimal point.  The minimum value of I<prec> is
--5 and the maximum is 9 for UTM/UPS, 9 for decimal degrees, 10 for DMS,
-6 for MGRS, and 8 for convergence and scale.
+precision, I<prec> = 3 giving 1 mm precision, etc.  I<prec> is the
+number of digits after the decimal point for UTM/UPS.  For MGRS, The
+number of digits per coordinate is 5 + I<prec>; <prec> = -6 results in
+just the grid zone.  For decimal degrees, the number of digits after the
+decimal point is 5 + I<prec>.  For DMS (degree, minute, seconds) output,
+the number of digits after the decimal point in the seconds components
+is 1 + I<prec>; if this is negative then use minutes (I<prec> = -2 or
+-3) or degrees (I<prec> E<lt>= -4) as the least significant component.
+Print convergence, resp. scale, with 5 + I<prec>, resp. 7 + I<prec>,
+digits after the decimal point.  The minimum value of I<prec> is -5 (-6
+for MGRS) and the maximum is 9 for UTM/UPS, 9 for decimal degrees, 10
+for DMS, 6 for MGRS, and 8 for convergence and scale.
 
 =head1 GEOGRAPHIC COORDINATES
 
@@ -406,8 +407,8 @@ L<http://geographiclib.sourceforge.net/cgi-bin/GeoConvert>.
 The algorithms for the transverse Mercator projection are described in
 C. F. F. Karney, I<Transverse Mercator with an accuracy of a few
 nanometers>, J. Geodesy B<85>(8), 475-485 (Aug. 2011); DOI
-L<https://dx.doi.org/10.1007/s00190-011-0445-3>; preprint
-L<http://arxiv.org/abs/1002.1417>.
+L<https://doi.org/10.1007/s00190-011-0445-3>; preprint
+L<https://arxiv.org/abs/1002.1417>.
 
 =head1 AUTHOR
 

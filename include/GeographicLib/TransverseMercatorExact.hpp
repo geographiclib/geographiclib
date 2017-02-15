@@ -2,7 +2,7 @@
  * \file TransverseMercatorExact.hpp
  * \brief Header for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -20,7 +20,7 @@ namespace GeographicLib {
    *
    * Implementation of the Transverse Mercator Projection given in
    *  - L. P. Lee,
-   *    <a href="https://dx.doi.org/10.3138/X687-1574-4325-WM62"> Conformal
+   *    <a href="https://doi.org/10.3138/X687-1574-4325-WM62"> Conformal
    *    Projections Based On Jacobian Elliptic Functions</a>, Part V of
    *    Conformal Projections Based on Elliptic Functions,
    *    (B. V. Gutsell, Toronto, 1976), 128pp.,
@@ -28,11 +28,11 @@ namespace GeographicLib {
    *    (also appeared as:
    *    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
    *  - C. F. F. Karney,
-   *    <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
+   *    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    *    Transverse Mercator with an accuracy of a few nanometers,</a>
    *    J. Geodesy 85(8), 475--485 (Aug. 2011);
    *    preprint
-   *    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
+   *    <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
    *
    * Lee gives the correct results for forward and reverse transformations
    * subject to the branch cut rules (see the description of the \e extendp
@@ -41,7 +41,7 @@ namespace GeographicLib {
    * The error in the convergence is 2 &times; 10<sup>&minus;15</sup>&quot;,
    * the relative error in the scale is 7 &times; 10<sup>&minus;12</sup>%%.
    * See Sec. 3 of
-   * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details.
+   * <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details.
    * The method is "exact" in the sense that the errors are close to the
    * round-off limit and that no changes are needed in the algorithms for them
    * to be used with reals of a higher precision.  Thus the errors using long
@@ -80,7 +80,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     static const int numit_ = 10;
-    real tol_, tol1_, tol2_, taytol_;
+    real tol_, tol2_, taytol_;
     real _a, _f, _k0, _mu, _mv, _e;
     bool _extendp;
     EllipticFunction _Eu, _Ev;
@@ -153,7 +153,7 @@ namespace GeographicLib {
      *     a) in (&minus;&infin;, 0]
      * .
      * See Sec. 5 of
-     * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for a full
+     * <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for a full
      * discussion of the treatment of the branch cut.
      *
      * The method will work for all ellipsoids used in terrestrial geodesy.
@@ -194,7 +194,7 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added.  The value of \e lon returned is
-     * in the range [&minus;180&deg;, 180&deg;).
+     * in the range [&minus;180&deg;, 180&deg;].
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const;

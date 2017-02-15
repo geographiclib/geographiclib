@@ -9,7 +9,7 @@
  *
  *    Charles F. F. Karney,
  *    Algorithms for geodesics, J. Geodesy 87, 43-55 (2013);
- *    https://dx.doi.org/10.1007/s00190-012-0578-z
+ *    https://doi.org/10.1007/s00190-012-0578-z
  *    Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
  *
  * Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
@@ -202,10 +202,10 @@
       s = Math.sin(tau12);
       c = Math.cos(tau12);
       // tau2 = tau1 + tau12
-      B12 = - g.SinCosSeries(true,
-                             this._stau1 * c + this._ctau1 * s,
-                             this._ctau1 * c - this._stau1 * s,
-                             this._C1pa);
+      B12 = -g.SinCosSeries(true,
+                            this._stau1 * c + this._ctau1 * s,
+                            this._ctau1 * c - this._stau1 * s,
+                            this._C1pa);
       sig12 = tau12 - (B12 - this._B11);
       ssig12 = Math.sin(sig12); csig12 = Math.cos(sig12);
       if (Math.abs(this.f) > 0.01) {

@@ -2,7 +2,7 @@
  * \file Rhumb.hpp
  * \brief Header for GeographicLib::Rhumb and GeographicLib::RhumbLine classes
  *
- * Copyright (c) Charles Karney (2014-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -86,7 +86,7 @@ namespace GeographicLib {
     //   W. M. Kahan and R. J. Fateman,
     //   Symbolic computation of divided differences,
     //   SIGSAM Bull. 33(3), 7-28 (1999)
-    //   https://dx.doi.org/10.1145/334714.334716
+    //   https://doi.org/10.1145/334714.334716
     //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
 
     static inline real Dlog(real x, real y) {
@@ -258,7 +258,7 @@ namespace GeographicLib {
      * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].  The value of
-     * \e lon2 returned is in the range [&minus;180&deg;, 180&deg;).
+     * \e lon2 returned is in the range [&minus;180&deg;, 180&deg;].
      *
      * If point 1 is a pole, the cosine of its latitude is taken to be
      * 1/&epsilon;<sup>2</sup> (where &epsilon; is 2<sup>-52</sup>).  This
@@ -303,7 +303,7 @@ namespace GeographicLib {
      * - \e outmask |= Rhumb::AREA for the area \e S12;
      * - \e outmask |= Rhumb::ALL for all of the above;
      * - \e outmask |= Rhumb::LONG_UNROLL to unroll \e lon2 instead of wrapping
-     *   it into the range [&minus;180&deg;, 180&deg;).
+     *   it into the range [&minus;180&deg;, 180&deg;].
      * .
      * With the Rhumb::LONG_UNROLL bit set, the quantity \e lon2 &minus;
      * \e lon1 indicates how many times and in what sense the rhumb line
@@ -327,7 +327,7 @@ namespace GeographicLib {
      * meridians, there are two shortest rhumb lines and the east-going one is
      * chosen.  \e lat1 and \e lat2 should be in the range [&minus;90&deg;,
      * 90&deg;].  The value of \e azi12 returned is in the range
-     * [&minus;180&deg;, 180&deg;).
+     * [&minus;180&deg;, 180&deg;].
      *
      * If either point is a pole, the cosine of its latitude is taken to be
      * 1/&epsilon;<sup>2</sup> (where &epsilon; is 2<sup>-52</sup>).  This
@@ -502,7 +502,7 @@ namespace GeographicLib {
      * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
      *
      * The value of \e lon2 returned is in the range [&minus;180&deg;,
-     * 180&deg;).
+     * 180&deg;].
      *
      * If \e s12 is large enough that the rhumb line crosses a pole, the
      * longitude of point 2 is indeterminate (a NaN is returned for \e lon2 and
@@ -539,7 +539,7 @@ namespace GeographicLib {
      * - \e outmask |= RhumbLine::AREA for the area \e S12;
      * - \e outmask |= RhumbLine::ALL for all of the above;
      * - \e outmask |= RhumbLine::LONG_UNROLL to unroll \e lon2 instead of
-     *   wrapping it into the range [&minus;180&deg;, 180&deg;).
+     *   wrapping it into the range [&minus;180&deg;, 180&deg;].
      * .
      * With the RhumbLine::LONG_UNROLL bit set, the quantity \e lon2 &minus; \e
      * lon1 indicates how many times and in what sense the rhumb line encircles

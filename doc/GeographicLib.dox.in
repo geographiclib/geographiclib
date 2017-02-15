@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2016-02-15
+\date 2017-02-15
 
 The documentation for other versions is available at
 <tt>http://geographiclib.sourceforge.net/m.nn/</tt> for versions numbers
@@ -37,9 +37,10 @@ the geodesic capabilities in JavaScript, check out the
 the script for displaying
 <a href="../scripts/geod-google.html">geodesics in Google Maps</a>
 
-This library is <i>not</i> a general purpose projection library; use
-<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a> for that.  On
-the other hand, it does provide the core functionality offered by
+This library is <i>not</i> a general purpose projection library nor does
+it perform datum conversions; instead use
+<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a>.  On the other
+hand, it does provide the core functionality offered by
 <a href="http://earth-info.nima.mil/GandG/geotrans/">GEOTRANS</a>.
 
 \section download Download
@@ -138,9 +139,10 @@ The goals of GeographicLib are:
 
 Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
-and the utilities have been tested with g++ 4.4 under Linux, with g++
-4.2 under Mac OS X, and with MS Visual Studio 9 (2008), 10 (2010), 11
-(2012), and 12 (2013) compiled for 32 bit and 64 bit.
+and the utilities have been tested with g++ 5.3.1 under Linux, with
+Apple LLVM 7.0.2 under Mac OS X, and with MS Visual Studio 10 (2010), 11
+(2012), 12 (2013), and 14 (2015) compiled for 32 bit and 64 bit on
+Windows.
 
 MATLAB, JavaScript, and Python interfaces are provided to portions of
 GeographicLib; see \ref other.
@@ -184,10 +186,10 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
 
 GeographicLib has been developed under Linux with the g++ compiler
-(versions 4.0 and later) and under Windows with Visual Studio 2010,
-2012, and 2013.  Earlier versions were tested also under Visual Studio
-2005 and 2008 and under Darwin and Solaris.  It should compile on a wide
-range of other systems.  First download either
+(versions 4.0 and later), under Mac OS X with Xcode (version 8.2), and
+under Windows with Visual Studio 2010 and later.  Earlier versions were
+tested also under Visual Studio 2005 and 2008 and under Solaris.  It
+should compile on a wide range of other systems.  First download either
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.tar.gz">
 GeographicLib-@PROJECT_VERSION@.tar.gz</a> or
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.zip">
@@ -208,7 +210,8 @@ Then pick one of the first five options below:
   Visual Studio 2008 and 2010 under Windows.
 - \ref binaryinst.  Use this installation method if you only need to use
   the \ref utilities supplied with GeographicLib.  (This method also
-  installs the header files and the library for use by Visual Studio 10.)
+  installs the header files and the library for use by Visual Studio 12
+  2013.)
 - \ref qt.  How to compile GeographicLib so that it can be used by Qt
   programs.
 - \ref maintainer.  This describes addition tasks of interest only to
@@ -226,7 +229,7 @@ make software maintenance simpler
   directory for compiling the code.  In the description here the
   directories are called BUILD and are located in the top-level of the
   source tree.  You might want to use a suffix to denote the type of
-  build, e.g., BUILD-vc9 for Visual Studio 9, or BUILD-shared for a
+  build, e.g., BUILD-vc11 for Visual Studio 11, or BUILD-shared for a
   build which creates a shared library.  The advantages of out-of-source
   builds are:
   - You don't mess up the source tree, so it's easy to "clean up".
@@ -273,7 +276,7 @@ Here are the steps to compile and install GeographicLib:
 - Unpack the source, running one of \verbatim
   tar xfpz GeographicLib-@PROJECT_VERSION@.tar.gz
   unzip -q GeographicLib-@PROJECT_VERSION@.zip \endverbatim
-  then enter the directory created with one of \verbatim
+  then enter the directory created with \verbatim
   cd GeographicLib-@PROJECT_VERSION@ \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
@@ -281,10 +284,9 @@ Here are the steps to compile and install GeographicLib:
 - Run cmake, pointing it to the source directory (..).  On Linux, Unix,
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
-  For Windows, the command is typically one of \verbatim
-  cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-@PROJECT_VERSION@ ..
-  cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib-@PROJECT_VERSION@ ..
-\endverbatim
+  For Windows, the command is typically something like \verbatim
+  cmake -G "Visual Studio 11" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-@PROJECT_VERSION@ ..
+  cmake -G "Visual Studio 12" -A x64 -D CMAKE_INSTALL_PREFIX=C:/pkg-vc11-x64/GeographicLib-@PROJECT_VERSION@ ..\endverbatim
   The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
   settings given above are recommended to ensure that packages that use
   GeographicLib use the version compiled with the right compiler.
@@ -313,12 +315,8 @@ Here are the steps to compile and install GeographicLib:
     on non-Windows systems, <code>C:/Program Files/GeographicLib</code>
     on Windows systems) specifies where the library will be installed.
     For windows systems, it is recommended to use a prefix which
-    includes the compiler version, as shown above (and also, possibly,
-    whether this is a 64-bit build, e.g., <code>cmake
-    -G "Visual Studio 10 Win64"
-    -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/GeographicLib-@PROJECT_VERSION@
-    ..</code>).  If you just want to try the library to see if it suits
-    your needs, pick, for example,
+    includes the compiler version, as shown above.  If you just want to
+    try the library to see if it suits your needs, pick, for example,
     <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
@@ -371,7 +369,7 @@ Here are the steps to compile and install GeographicLib:
     double.
 - Build and install the software.  In non-IDE environments, run
   \verbatim
-  make         # compile the library and the examples
+  make         # compile the library and utilities
   make test    # run some tests
   make install # as root, if CMAKE_INSTALL_PREFIX is a system directory
 \endverbatim
@@ -470,14 +468,10 @@ Studio, use cmake to create the necessary solution file, see \ref cmake.
   Visual Studio Express 2010, replace -vc10 by -vc10x).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
-- Copy the library windows/Release/GeographicLib.lib and the
-  headers in include/GeographicLib somewhere convenient.  The
-  headers should remain in a directory named GeographicLib.  If you
-  expect to use the MATLAB/Octave interface, copy *.m from the matlab
-  directory to a directory in your matlab/octave path, see \ref matlab
-  for instructions on compiling the interface.  For documentation, open
-  <a href="index.html">doc/html/index.html</a> in a web
-  browser.
+- Copy the library windows/Release/GeographicLib.lib and the headers in
+  include/GeographicLib somewhere convenient.  The headers should remain
+  in a directory named GeographicLib.  For documentation, open
+  <a href="index.html">doc/html/index.html</a> in a web browser.
 
 The Visual Studio 10 solution also contains projects to build
 <a href="NET/index.html">NETGeographicLib</a> and the C# example project.
@@ -490,7 +484,7 @@ Binary installers are available for some platforms
 
 Use this method if you only need to use the GeographicLib utilities.
 The header files and static and shared versions of library are also
-provided; these can only be used by Visual Studio 11 2012 (in either
+provided; these can only be used by Visual Studio 12 2013 (in either
 release or debug mode).  However, if you plan to use the library, it may
 be advisable to build it with the compiler you are using for your own
 code using either \ref cmake or \ref windows.
@@ -503,8 +497,8 @@ GeographicLib-@PROJECT_VERSION@-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc10\\GeographicLib-@PROJECT_VERSION@ or
-   C:\\pkg-vc10-x64\\GeographicLib-@PROJECT_VERSION@,
+   C:\\pkg-vc12-win32\\GeographicLib-@PROJECT_VERSION@ or
+   C:\\pkg-vc12-x64\\GeographicLib-@PROJECT_VERSION@,
  - select the start menu folder,
  - and install.
  .
@@ -512,13 +506,11 @@ GeographicLib-@PROJECT_VERSION@-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc11/GeographicLib-@PROJECT_VERSION@/bin where the
-utilities are installed.  The headers and library are installed in the
-include/GeographicLib and lib folders.  The MATLAB interface is
-installed in the matlab folder.  Add this to your path in MATLAB to
-access this interface.  The libraries were built using using Visual
-Studio 11 2012 in release and debug modes.  The utilities were linked
-against the release-mode shared library.
+will include C:/pkg-vc12-{win32,x64}/GeographicLib-@PROJECT_VERSION@/bin
+where the utilities are installed.  The headers and library are
+installed in the include/GeographicLib and lib folders.  The libraries
+were built using using Visual Studio 12 2013 in release and debug modes.
+The utilities were linked against the release-mode shared library.
 
 <a href="NET/index.html">NETGeographicLib</a> library dlls (release and
 debug) are included with the binary installers; these are linked against
@@ -607,7 +599,7 @@ Release and Debug versions of the library and finally build PACKAGE in
 Release mode.  This will get the release and debug versions of the
 library included in the package.  For example, the 64-bit binary
 installer is created with \verbatim
-  cmake -G "Visual Studio 10 Win64" \
+  cmake -G "Visual Studio 12" -A x64 \
     -D GEOGRAPHICLIB_LIB_TYPE=BOTH \
     -D PACKAGE_DEBUG_LIBS=ON \
     -D BUILD_NETGEOGRAPHICLIB=ON \
@@ -664,13 +656,15 @@ In order to use GeographicLib from C++ code, you will need to
   - configure your package, e.g., with \verbatim
     mkdir BUILD
     cd BUILD
-    cmake -G "Visual Studio 10" \
-      -D CMAKE_PREFIX_PATH=C:/pkg-vc10 \
-      -D CMAKE_PREFIX_PATH=C:/pkg-vc10/testgeographic \
+    cmake -G "Visual Studio 12" -A x64 \
+      -D CMAKE_PREFIX_PATH=C:/pkg-vc10-x64 \
+      -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/testgeographic \
       .. \endverbatim
     Note that you almost always want to configure and build your code
     somewhere other than the source directory (in this case, we use the
-    BUILD subdirectory).
+    BUILD subdirectory).  Also, on Windows, make sure that the version
+    of Visual Sudio (12 in the example above) architecture (x64 in the
+    example above) matches that used to build GeographicLib.
   - build your package.  On Linux and MacOS this usually involves just
     running make.  On Windows, you can load the solution file created by
     cmake into Visual Studio; alternatively, you can get cmake to run
@@ -710,6 +704,12 @@ In order to use GeographicLib from C++ code, you will need to
   find_package to work.  However, this method has not been thoroughly
   tested.)
 
+  If GeographicLib is not found, check the values of
+  <code>GeographicLib_CONSIDERED_CONFIGS</code> and
+  <code>GeographicLib_CONSIDERED_VERSIONS</code>; these list the
+  configuration files and corresponding versions which were considered
+  by find_package.
+
   If GeographicLib is found, then the following cmake variables are set:
   - <code>GeographicLib_FOUND</code> = 1
   - <code>GeographicLib_VERSION</code> = @PROJECT_VERSION@
@@ -722,6 +722,7 @@ In order to use GeographicLib from C++ code, you will need to
   - <code>GeographicLib_STATIC_DEFINITIONS</code> = -DGEOGRAPHICLIB_SHARED_LIB=0
   - <code>GeographicLib_LIBRARY_DIRS</code>
   - <code>GeographicLib_BINARY_DIRS</code>
+  - <code>GEOGRAPHICLIB_DATA</code> = value of this compile-time parameter
   .
   Either of <code>GeographicLib_SHARED_LIBRARIES</code> or
   <code>GeographicLib_STATIC_LIBRARIES</code> may be empty, if that version
@@ -752,7 +753,7 @@ In order to use GeographicLib from C++ code, you will need to
   - Tell the compiler where to find the header files.  With g++ and with
     /usr/local specified as the installation directory,
     this is accomplished with \verbatim
-    g++ -c -g -O3 -funroll-loops -I/usr/local/include testprogram.cpp
+    g++ -c -g -O3 -I/usr/local/include testprogram.cpp
     \endverbatim
     With Visual Studio, specify the include directory in the IDE via,
     e.g.,
@@ -796,6 +797,16 @@ In order to use GeographicLib from C++ code, you will need to
     that Geographic.dll or Geographic_d.dll is in the same directory as
     your executable or else include the directory containing the dll in
     your <code>PATH</code>.
+  - You can also use the pkg-config utility to specify compile and link
+    flags.  This requires that pkg-config be installed and that it's
+    configured to search, e.g., /usr/local/lib/pgkconfig; if not, define
+    the environment variable <code>PKG_CONFIG_PATH</code> to include
+    this directory.  The compile and link steps under Linux would
+    typically be
+    \verbatim
+    g++ -c -g -O3 `pkg-config --cflags geographiclib` testprogram.cpp
+    g++ -g -o testprogram testprogram.o `pkg-config --libs geographiclib`
+    \endverbatim
 
 Here is a very simple test code, which uses the Geodesic
 class:
@@ -1024,6 +1035,10 @@ elliptic integrals (computed by EllipticFunction).  These classes should
 be used if the absolute value of the flattening exceeds 0.02.  The -E
 option to <a href="GeodSolve.1.html">GeodSolve</a> uses these classes.
 
+NearestNeighbor is a header-only classes for finding the nearest
+neighbor of a collection of points where the distance function obeys the
+triangle inequality, such as the geodesic distance.
+
 Geocentric and LocalCartesian convert between
 geodetic and geocentric or a local cartesian system.  The constructor for
 specifies the ellipsoid and the forward and reverse projections are
@@ -1052,7 +1067,8 @@ GravityModel::Circle to return a GravityCircle object whose member
 functions performs the calculations efficiently.  (This is particularly
 important for high degree models such as EGM2008.)  These classes
 requires installation of data files for the various gravity models; see
-\ref gravityinst for details.
+\ref gravityinst for details.  NormalGravity computes the gravity of the
+so-called level ellipsoid.
 
 MagneticModel evaluates the earth's magnetic field using a particular
 magnetic model.  The field is provided by the operator() member
@@ -1918,7 +1934,20 @@ GravityCircle classes and with the
 <a href="Gravity.1.html">Gravity</a> utility.  These models expand the
 gravitational potential of the earth as sum of spherical harmonics.  The
 models also specify a reference ellipsoid, relative to which geoid
-heights and gravity disturbances are measured.
+heights and gravity disturbances are measured.  Underlying all these
+models is <i>normal gravity</i> which is the exact solution for an
+idealized rotating ellipsoidal body.  This is implemented with the
+NormalGravity class and some notes on are provided in section \ref
+normalgravity
+
+Go to
+ - \ref gravityinst
+ - \ref gravityformat
+ - \ref gravitynga
+ - \ref gravitygeoid
+ - \ref gravityatmos
+ - \ref gravityparallel
+ - \ref normalgravity
 
 The supported models are
  - <b>egm84</b>, the
@@ -1953,14 +1982,6 @@ sharing EGM_Geoid_CalculatorClass from his Geo library with me.  His
 implementation was the first I could easily understand and he and I
 together worked through some of the issues with overflow and underflow
 the occur while performing high-degree spherical harmonic sums.
-
-Go to
- - \ref gravityinst
- - \ref gravityformat
- - \ref gravitynga
- - \ref gravitygeoid
- - \ref gravityatmos
- - \ref gravityparallel
 
 \section gravityinst Installing the gravity models
 
@@ -2103,8 +2124,8 @@ keywords
  - keywords that affect the field calculation, namely:
    - <b>ModelRadius</b> (required), the normalizing radius for the model
      in meters.
-   - <b>ReferenceRadius</b> (required), the major radius \e a for the
-     reference ellipsoid meters.
+   - <b>ReferenceRadius</b> (required), the equatorial radius \e a for
+     the reference ellipsoid meters.
    - <b>ModelMass</b> (required), the mass constant \e GM for the model
      in meters<sup>3</sup>/seconds<sup>2</sup>.
    - <b>ReferenceMass</b> (required), the mass constant \e GM for the
@@ -2137,8 +2158,8 @@ keywords
    (because it can be measured precisely) is the same for the gravity
    model and the reference ellipsoid.  <b>ModelRadius</b> is merely a
    scaling parameter for the gravity model and there's no requirement
-   that it be close to the major radius of the earth (although that's
-   typically how it is chosen).  <b>ModelMass</b> and
+   that it be close to the equatorial radius of the earth (although
+   that's typically how it is chosen).  <b>ModelMass</b> and
    <b>ReferenceMass</b> need not be the same and, indeed, they are
    slightly difference for egm2008.  As a result the disturbing
    potential \e T has a 1/\e r dependence at large distances.
@@ -2411,6 +2432,345 @@ optimizations, the computation would have taken about 200 days!)
 
 cmake will add in support for OpenMP for
 <code>examples/GeoidToGTX.cpp</code>, if it is available.
+
+\section normalgravity Normal gravity
+
+The NormalGravity class computes "normal gravity" which refers to the
+exact (classical) solution of an idealised system consisting of an
+ellipsoid of revolution with the following properties:
+ - \e M the mass interior to the ellipsoid,
+ - \e a the equatorial radius,
+ - \e b the polar semi-axis,
+ - &omega; the rotation rate about the polar axis.
+ .
+(N.B. The mass always appears in the combination \e GM, with units
+m<sup>3</sup>/s<sup>2</sup>, where \e G is the gravtitational constant.)
+The distribution of the mass \e M within the ellipsoid is such that the
+surface of the ellipsoid is at a constant normal potential where the
+normal potential is the sum of the gravitational potential (due to the
+gravitional attraction) and the centrifugal potention (due to the
+rotation).  The resulting field exterior to the ellipsoid is called
+<i>normal gravity</i> and was found by Somigliana (1929).  Because the
+potential is constant on the ellipsoid it is sometimes referred to as
+the <i>level ellipsoid</i>.
+
+References:
+ - C. Somigliana, Teoria generale del campo gravitazionale dell'ellissoide
+   di rotazione, Mem. Soc. Astron. Ital, <b>4</b>, 541--599 (1929).
+ - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
+   Francisco, 1967), Secs. 1-19, 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).
+ - B. Hofmann-Wellenhof, H. Moritz, Physical Geodesy (Second edition,
+   Springer, 2006). https://doi.org/10.1007/978-3-211-33545-1
+ - H. Moritz, Geodetic Reference System 1980, J. Geodesy 54(3), 395--405
+   (1980). https://doi.org/10.1007/BF02521480
+ - H. Moritz, The Figure of the Earth (Wichmann, 1990).
+ - M. Chasles, Solution nouvelle du probl&egrave;me de l’attraction d’un
+   ellipso&iuml;de h&eacute;t&eacute;rog&egrave;ne sur un point
+   exterieur, Jour. Liouville 5, 465--488 (1840), Note 2.
+   http://sites.mathdoc.fr/JMPA/PDF/JMPA_1840_1_5_A41_0.pdf
+
+\subsection normalgravcoords Ellipsoidal coordinates
+
+Two set of formulas are presented: those of Heiskanen and Moritz (1967)
+which are applicable to an oblate ellipsoid and a second set where the
+variables are distinguished with primes which apply to a prolate
+ellipsoid.  The primes are omitted from those variables which are the
+same in the two cases.  In the text, the parenthetical "resp." clauses
+apply to prolate ellipsoids.
+
+Cylindrical coordinates \f$ R,Z \f$ are expressed in terms of
+ellipsoidal coordinates
+\f[
+\begin{align}
+  R &= \sqrt{u^2 + E^2} \cos\beta = u' \cos\beta,\\
+  Z &= u \sin\beta = \sqrt{u'^2 + E'^2} \sin\beta,
+\end{align}
+\f]
+where
+\f[
+\begin{align}
+  E^2 = a^2 - b^2,&{} \qquad u^2 = u'^2 + E'^2,\\
+  E'^2 = b^2 - a^2,&{} \qquad u'^2 = u^2 + E^2.
+\end{align}
+\f]
+Surfaces of constant \f$ u \f$ (or \f$ u' \f$) are confocal ellipsoids.
+The surface \f$ u = 0 \f$ (resp. \f$ u' = 0 \f$) corresponds to the
+focal disc of diameter \f$ 2E \f$ (resp. focal rod of length
+\f$ 2E' \f$).  The level ellipsoid is given by \f$ u = b \f$
+(resp. \f$ u' = a \f$).  On the level ellipsoid, \f$ \beta \f$ is the
+familiar parametric latitude.
+
+In writing the potential and the gravity, it is useful to introduce the
+functions
+\f[
+\begin{align}
+  Q(z) &= \frac1{2z^3}
+    \biggl[\biggl(1 + \frac3{z^2}\biggr)\tan^{-1}z - \frac3z\biggr],\\
+  Q'(z') &= \frac{(1+z'^2)^{3/2}}{2z'^3}
+    \biggl[\biggl(2 + \frac3{z'^2}\biggr)\sinh^{-1}z' -
+      \frac{3\sqrt{1+z'^2}}{z'}\biggr],\\
+  G(z) &= \biggl(3Q(z)+z\frac{dQ(z)}{dz}\biggr)(1+z^2)\\
+       &= \frac1{z^4}\biggl[3(1+z^2)
+         \biggl(1-\frac{\tan^{-1}z}z\biggr)-z^2\biggr],\\
+  G'(z') &= \frac{3Q'(z')}{1+z'^2}+z'\frac{dQ'(z')}{dz'}\\
+         &= \frac{1+z'^2}{z'^4}
+           \biggl[3\biggl(1-\frac{\sqrt{1+z'^2}\sinh^{-1}z'}{z'}\biggr)
+           +z'^2\biggr].
+\end{align}
+\f]
+The function arguments are \f$ z = E/u \f$
+(resp. \f$ z' = E'/u' \f$) and the unprimed and primed quantities are
+related by
+\f[
+\begin{align}
+Q'(z') = Q(z),&{} \qquad G'(z') = G(z),\\
+z'^2 = -\frac{z^2}{1 + z^2},&{} \qquad z^2 = -\frac{z'^2}{1 + z'^2}.
+\end{align}
+\f]
+The functions \f$ q(u) \f$ and \f$ q'(u) \f$ used by Heiskanen and
+Moritz are given by
+\f[
+  q(u) = \frac{E^3}{u^3}Q\biggl(\frac Eu\biggr),\qquad
+  q'(u) = \frac{E^2}{u^2}G\biggl(\frac Eu\biggr).
+\f]
+The functions \f$ Q(z) \f$, \f$ Q'(z') \f$, \f$ G(z) \f$, and
+\f$ G'(z') \f$ are more convenient for use in numerical codes because
+they are finite in the spherical limit \f$ E \rightarrow 0 \f$, i.e.,
+\f$ Q(0) = Q'(0) = \frac2{15} \f$, and \f$ G(0) = G'(0) = \frac25 \f$.
+
+\subsection normalgravpot The normal potential
+
+The normal potential is the sum of three components, a mass term, a
+quadrupole term and a centrifugal term,
+\f[ U = U_m + U_q + U_r. \f]
+The mass term is
+\f[ U_m = \frac {GM}E \tan^{-1}\frac Eu
+        = \frac {GM}{E'} \sinh^{-1}\frac{E'}{u'}; \f]
+the quadrupole term is
+\f[
+\begin{align}
+ U_q &= \frac{\omega^2}2 \frac{a^2 b^3}{u^3} \frac{Q(E/u)}{Q(E/b)}
+        \biggl(\sin^2\beta-\frac13\biggr)\\
+     &= \frac{\omega^2}2 \frac{a^2 b^3}{(u'^2+E'^2)^{3/2}}
+        \frac{Q'(E'/u')}{Q'(E'/a)}
+        \biggl(\sin^2\beta-\frac13\biggr);
+\end{align}
+\f]
+finally, the rotational term is
+\f[
+U_r = \frac{\omega^2}2 R^2
+    = \frac{\omega^2}2 (u^2 + E^2) \cos^2\beta
+    = \frac{\omega^2}2 u'^2 \cos^2\beta.
+\f]
+
+\f$ U_m \f$ and \f$ U_q \f$ are both gravitational potentials (due to
+mass within the ellipsoid).  The total mass contributing to \f$ U_m \f$
+is \f$ M \f$; the total mass contributing to \f$ U_q \f$ vanishes (far
+from the ellipsoid, the \f$ U_q \f$ decays inversely as the cube of the
+distance).
+
+\f$ U_m \f$ and \f$ U_q + U_r \f$ are separately both constant on the
+level ellipsoid.  \f$ U_m \f$ is the normal potential for a massive
+non-rotating ellipsoid.  \f$ U_q + U_r \f$ is the potential for a
+massless rotating ellipsoid.  Combining all the terms, \f$ U \f$ is the
+normal potential for a massive rotating ellipsoid.
+
+\subsection normalgravmass The mass distribution
+
+Typically, the normal potential, \f$ U \f$, is only of interest for
+outside the ellipsoid \f$ u \ge b \f$ (resp. \f$ u' \ge a \f$).  In
+planetary applications a open problem is finding a mass distribution
+which is in hydrostatic equilibrium (the mass density is non-negative
+and a non-decreasing function of the potential interior to the
+ellipsoid).
+
+However it is possible to give singular mass distributions consistent
+with the normal potential.
+
+For a non-rotating body, the potential \f$ U = U_m \f$ is generated by a
+sandwiching the mass \f$ M \f$ uniformly between the level ellipsoid
+with semi-axes \f$ a \f$ and \f$ b \f$ and a close <i>similar</i>
+ellipsoid with semi-axes \f$ (1-\epsilon)a \f$ and
+\f$ (1-\epsilon)b \f$.  Chasles (1840) extends a theorem of Newton to
+show that the field interior to such an ellipsoidal shell vanishes.
+Thus the potential on the ellipsoid is constant, i.e., it is indeed a
+level ellipsoid.  This result also holds for a non-rotating triaxial
+ellipsoid.
+
+Observing that \f$ U_m \f$ and \f$ U_q \f$ as defined above obey
+\f$ \nabla^2 U_m = \nabla^2 U_q = 0 \f$ everywhere for \f$ u > 0 \f$
+(resp. \f$ u' > 0 \f$), we see that these potentials correspond to
+masses concentrated at \f$ u = 0 \f$ (resp. \f$ u' = 0 \f$).
+
+In the oblate case, \f$ U_m \f$ is generated by a massive disc at
+\f$ Z = 0 \f$, \f$ R < E \f$, with mass density (mass per unit area) \f$
+\rho_m \f$ and moments of inertia about the equatorial (resp. polar)
+axis of \f$ A_m \f$ (resp. \f$ C_m \f$) given by
+\f[
+\begin{align}
+\rho_m &= \frac M{2\pi E\sqrt{E^2 - R^2}},\\
+A_m &= \frac {ME^2}3, \\
+C_m &= \frac {2ME^2}3, \\
+C_m-A_m &= \frac {ME^2}3.
+\end{align}
+\f]
+This mass distribution is the same as that produced by projecting a
+uniform spheric shell of mass \f$ M \f$ and radius \f$ E \f$ onto the
+equatorial plane.
+
+In the prolate case, \f$ U_m \f$ is generated by a massive rod at \f$ R
+= 0 \f$, \f$ Z < E' \f$ and now the mass density \f$ \rho'_m \f$ has
+units mass per unit length,
+\f[
+\begin{align}
+\rho'_m &= \frac M{2E'},\\
+A_m &= \frac {ME'^2}3, \\
+C_m &= 0, \\
+C_m-A_m &= -\frac {ME'^2}3.
+\end{align}
+\f]
+This mass distribution is the same as that produced by projecting a
+uniform spheric shell of mass \f$ M \f$ and radius \f$ E' \f$ onto the
+polar axis.
+
+Similarly, \f$ U_q \f$ is generated in the oblate case by
+\f[
+\begin{align}
+\rho_q &= \frac{a^2 b^3 \omega^2}G
+   \frac{2E^2 - 3R^2}{6\pi E^5 \sqrt{E^2 - R^2} Q(E/b)}, \\
+A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45 Q(E/b)}, \\
+C_q &= -\frac{a^2 b^3 \omega^2}G \frac4{45 Q(E/b)}, \\
+C_q-A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45 Q(E/b)}.
+\end{align}
+\f]
+The corresponding results for a prolate ellipsoid are
+\f[
+\begin{align}
+\rho_q' &= \frac{a^2 b^3 \omega^2}G
+   \frac{3Z^2 - E'^2}{12 E'^5 Q'(E'/a)}, \\
+A_q &= \frac{a^2 b^3 \omega^2}G \frac2{45 Q'(E'/a)}, \\
+C_q &= 0, \\
+C_q-A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45 Q'(E'/a)}.
+\end{align}
+\f]
+
+Summing up the mass and quadrupole terms, we have
+\f[
+\begin{align}
+A &= A_m + A_q, \\
+C &= C_m + C_q, \\
+J_2 & = \frac{C - A}{Ma^2},
+\end{align}
+\f]
+where \f$ J_2 \f$ is the <i>dynamical form factor</i>.
+
+\subsection normalgravsurg The surface gravity
+
+Each term in the potential contributes to the gravity on the surface of
+the ellipsoid
+\f[
+\gamma = \gamma_m + \gamma_q + \gamma_r;
+\f]
+These are the components of gravity normal to the ellipsoid and, by
+convention, \f$ \gamma \f$ is positive downwards.  The tangential
+components of the total gravity and that due to \f$ U_m \f$ vanish.
+Those tangential components of the gravity due to \f$ U_q \f$ and \f$
+U_r \f$ cancel one another.
+
+The gravity \f$ \gamma \f$ has the following dependence on latitude
+\f[
+\begin{align}
+\gamma &= \frac{b\gamma_a\cos^2\beta + a\gamma_b\sin^2\beta}
+               {\sqrt{b^2\cos^2\beta + a^2\sin^2\beta}}\\
+       &= \frac{a\gamma_a\cos^2\phi + b\gamma_b\sin^2\phi}
+               {\sqrt{a^2\cos^2\phi + b^2\sin^2\phi}},
+\end{align}
+\f]
+and the individual components, \f$ \gamma_m \f$, \f$ \gamma_q \f$, and
+\f$ \gamma_r \f$, have the same dependence on latitude.  The equatorial
+and polar gravities are
+\f[
+\begin{align}
+\gamma_a &= \gamma_{ma} + \gamma_{qa} + \gamma_{ra},\\
+\gamma_b &= \gamma_{mb} + \gamma_{qb} + \gamma_{rb},
+\end{align}
+\f]
+where
+\f[
+\begin{align}
+\gamma_{ma} &= \frac{GM}{ab},\qquad \gamma_{mb} = \frac{GM}{a^2},\\
+\gamma_{qa} &= -\frac{\omega^2 a}6 \frac{G(E/b)}{Q(E/b)}
+             = -\frac{\omega^2 a}6 \frac{G'(E'/a)}{Q'(E'/a)},\\
+\gamma_{qb} &= -\frac{\omega^2 b}3 \frac{G(E/b)}{Q(E/b)}
+             = -\frac{\omega^2 b}3 \frac{G'(E'/a)}{Q'(E'/a)},\\
+\gamma_{ra} &= -\omega^2 a,\qquad \gamma_{rb} = 0.
+\end{align}
+\f]
+
+\subsection normalgravmean The mean gravity
+
+Performing an average of the surface gravity over the area of the
+ellipsoid gives
+\f[
+\langle \gamma \rangle = \frac {4\pi a^2 b}A
+  \biggl(\frac{2\gamma_a}{3a} + \frac{\gamma_b}{3b}\biggr),
+\f]
+where \f$ A \f$ is the area of the ellipsoid
+\f[
+\begin{align}
+ A &= 2\pi\biggl( a^2 + ab\frac{\sinh^{-1}(E/b)}{E/b} \biggr)\\
+   &= 2\pi\biggl( a^2 + b^2\frac{\tan^{-1}(E'/a)}{E'/a} \biggr).
+\end{align}
+\f]
+
+The contributions to the mean gravity are
+\f[
+\begin{align}
+\langle \gamma_m \rangle &= \frac{4\pi}A GM, \\
+\langle \gamma_q \rangle &= 0 \quad \text{(as expected)}, \\
+\langle \gamma_r \rangle &= -\frac{4\pi}A \frac{2\omega^2 a^2b}3,\\
+\end{align}
+\f]
+resulting in
+\f[
+\langle \gamma \rangle = \frac{4\pi}A
+    \biggl(GM - \frac{2\omega^2 a^2b}3\biggr).
+\f]
+
+\subsection normalgrav Possible values of the dynamical form factor
+
+The solution for the normal gravity is well defined for arbitrary
+\f$ M \f$, \f$ \omega \f$, \f$ a > 0\f$, and \f$ f < 1 \f$.  (Note that
+arbitrary oblate and prolate ellipsoids are possible, although
+hydrostatic equilibrium would not result in a prolate ellipsoid.)
+However, if is much easier to measure the dynamical form factor
+\f$ J_2 \f$ (from the motion of artificial satellites) than the
+flattening \f$ f \f$.  (Note too that \f$ GM \f$ is also typically
+measured from from satellite or astronomical observations and so it
+includes the mass of the atmosphere.)
+
+So a question for the software developer is: given values of \f$ M > 0\f$,
+\f$ \omega \f$, and \f$ a > 0 \f$, what are the allowed values of
+\f$ J_2 \f$?  We restrict the question to \f$ M > 0 \f$.  The
+(unphysical) case \f$ M = 0 \f$ is problematic because \f$ M \f$ appears
+in the denominator in the definition of \f$ J_2 \f$.  In the (also
+unphysical) case \f$ M < 0 \f$, a given \f$ J_2 \f$ can result from two
+distinct values of \f$ f \f$.
+
+Holding \f$ M > 0\f$, \f$ \omega \f$, and \f$ a > 0 \f$ fixed and
+varying \f$ f \f$ from \f$ -\infty \f$ to \f$ 1 \f$, we find that
+\f$ J_2 \f$ monotonically increases from \f$ -\infty \f$ to
+\f[
+\frac13 - \frac8{45\pi} \frac{\omega^2 a^3}{GM}.
+\f]
+Thus any value of \f$ J_2 \f$ less that this value is permissible (but
+some of these values may be unphysical).  In obtaining this limiting
+value, we used the result
+\f$ Q(z \rightarrow \infty) \rightarrow \pi/(4 z^3) \f$.  The value
+\f[
+J_2 = -\frac13 \frac{\omega^2 a^3}{GM}
+\f]
+results in a sphere (\f$ f = 0 \f$).
 
 <center>
 Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
@@ -2804,26 +3164,26 @@ For some background information on geodesics on triaxial ellipsoids, see
 
 References:
  - F. W. Bessel,
-   <a href="https://dx.doi.org/10.1002/asna.201011352">The calculation
+   <a href="https://doi.org/10.1002/asna.201011352">The calculation
    of longitude and latitude from geodesic measurements (1825)</a>,
    Astron. Nachr. 331(8), 852--861 (2010);
    translated by C. F. F. Karney and R. E. Deakin; preprint:
-   <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
+   <a href="https://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - F. R. Helmert,
-   <a href="https://dx.doi.org/10.5281/zenodo.32050">
+   <a href="https://doi.org/10.5281/zenodo.32050">
    Mathematical and Physical Theories of Higher Geodesy, Part 1 (1880)</a>,
    Aeronautical Chart and Information Center (St. Louis, 1964),
    Chaps. 5--7.
  - J. Danielsen,
    The area under the geodesic,
    Survey Review 30(232), 61--66 (1989).
-   DOI: <a href="https://dx.doi.org/10.1179/003962689791474267">
+   DOI: <a href="https://doi.org/10.1179/003962689791474267">
    10.1179/003962689791474267</a>
  - C. F. F. Karney,
-   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   <a href="https://doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
    J. Geodesy 87(1), 43--55 (2013);
-   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
    addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
    geod-addenda.html</a>;
@@ -2841,7 +3201,7 @@ A test set a geodesics is available at
  - <a href="https://sourceforge.net/projects/geographiclib/files/testdata/GeodTest.dat.gz">
    GeodTest.dat.gz</a>
  - C. F. F. Karney, <i>Test set for geodesics</i> (2010), <br>
-   DOI: <a href="https://dx.doi.org/10.5281/zenodo.32156">
+   DOI: <a href="https://doi.org/10.5281/zenodo.32156">
    10.5281/zenodo.32156</a>.
  .
 This is about 39 MB (compressed).  This consists of a set of geodesics
@@ -3191,7 +3551,7 @@ C3[9] = + 2431/1179648 * eps^9;
 \endverbatim
 
 The formula for area between the geodesic and the equator is given in
-Sec. 6 of <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+Sec. 6 of <a href="https://doi.org/10.1007/s00190-012-0578-z">
 Algorithms for geodesics</a> in terms of \e S,
 \f[
 S = c^2 \alpha + e^2 a^2 \cos\alpha_0 \sin\alpha_0 I_4(\sigma)
@@ -3268,10 +3628,10 @@ GeodesicExact and GeodesicLineExact solve the geodesic problem using
 elliptic integrals.  The formulation of geodesic in terms of incomplete
 elliptic integrals is given in
  - C. F. F. Karney,
-   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
+   <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
    on an ellipsoid of revolution</a>,
    Feb. 2011; preprint
-   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
+   <a href="https://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
  .
 It is most convenient to use the form derived for a prolate ellipsoid in
 Appendix D.  For an oblate ellipsoid this results in elliptic integrals
@@ -3759,7 +4119,7 @@ Go to
     measuring distances on the earth using a triaxial ellipsoid, you
     should also be worrying about the shape of the geoid, which
     essentially makes the geodesic problem a hopeless mess; see, for
-    example, <a href="http://arxiv.org/abs/1112.3231"> Waters
+    example, <a href="https://arxiv.org/abs/1112.3231"> Waters
     (2011)</a>.
  -# There is nothing new in this section.  It is just an exercise in
     exploring Jacobi's solution.  My interest here is in generating long
@@ -3807,10 +4167,10 @@ Go to
  -# If you only want to learn about geodesics on a biaxial ellipsoid (an
     ellipsoid of revolution), then see \ref geodesic or the paper
     - C. F. F. Karney,
-      <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+      <a href="https://doi.org/10.1007/s00190-012-0578-z">
       Algorithms for geodesics</a>,
       J. Geodesy 87(1), 43--55 (2013);
-      DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+      DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
       10.1007/s00190-012-0578-z</a>;
       addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
       geod-addenda.html</a>.
@@ -4180,7 +4540,7 @@ differential equation with periodic coefficients.  In fact it's a
 special case of Hill's equation which can be treated using Floquet
 theory, see <a href="http://dlmf.nist.gov/28.29">DLMF, &sect;28.29</a>.
 Using the notation of &sect;3 of
-<a href="https://dx.doi.org/10.1007/s00190-012-0578-z"> Algorithms for
+<a href="https://doi.org/10.1007/s00190-012-0578-z"> Algorithms for
 geodesics</a>, the stability is determined by computing the reduced
 length \f$m_{12}\f$ and the geodesic scales \f$M_{12}, M_{21}\f$ over
 half the perimeter of the ellipse and determining the eigenvalues
@@ -4221,7 +4581,7 @@ single point \f$(\beta_1, \omega_1)\f$.
  - Otherwise, the first envelope of the geodesics is a 4-pointed
    astroid.  The cusps of the astroid lie on either \f$\beta = -
    \beta_1\f$ or \f$\omega = \omega_1 + \pi\f$; see
-   <a href="https://dx.doi.org/10.1080/10586458.2003.10504515"> Sinclair
+   <a href="https://doi.org/10.1080/10586458.2003.10504515"> Sinclair
    (2003)</a>.
  - All geodesics intersect (or, in the case of \f$\alpha_1 = 0\f$ or
    \f$\pi\f$, touch) the line \f$\omega = \omega_1 + \pi\f$.
@@ -4255,7 +4615,7 @@ ellipsoid.)  Consider now terminating the geodesics from \f$(\beta_1,
 These properties show that the inverse problem can be solved using
 techniques similar to those employed for an ellipsoid of revolution (see
 &sect;4 of
-<a href="https://dx.doi.org/10.1007/s00190-012-0578-z"> Algorithms for
+<a href="https://doi.org/10.1007/s00190-012-0578-z"> Algorithms for
 geodesics</a>).
  - If the points are opposite umbilical points, an arbitrary
    \f$\alpha_1\f$ may be chosen.
@@ -4402,7 +4762,7 @@ EllipticFunction::Pi(real phi) const.
 
 Nyrtsov, et al.,
  - M. V. Nyrtsov, M. E. Flies, M. M. Borisov, P. J. Stooke,
-   <a href="https://dx.doi.org/10.1007/978-3-642-32618-9_17">
+   <a href="https://doi.org/10.1007/978-3-642-32618-9_17">
    Jacobi conformal projection of the triaxial ellipsoid: new projection
    for mapping of small celestial bodies,</a> in
    <i>Cartography from Pole to Pole</i>
@@ -4655,15 +5015,15 @@ Go to
 
 References:
  - G. G. Bennett,
-   <a href="https://dx.doi.org/10.1017/S0373463300013151">
+   <a href="https://doi.org/10.1017/S0373463300013151">
    Practical Rhumb Line Calculations on the Spheroid</a>
    J. Navigation 49(1), 112--119 (1996).
  - F. W. Bessel,
-   <a href="https://dx.doi.org/10.1002/asna.201011352">The calculation
+   <a href="https://doi.org/10.1002/asna.201011352">The calculation
    of longitude and latitude from geodesic measurements (1825)</a>,
    Astron. Nachr. 331(8), 852--861 (2010);
    translated by C. F. F. Karney and R. E. Deakin; preprint:
-   <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
+   <a href="https://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - V.A. Botnev, S.M. Ustinov,
    <a href="http://ntv.spbstu.ru/fulltext/T3.198.2014_05.PDF">
    Metody resheniya pryamoy i obratnoy geodezicheskikh zadach s vysokoy
@@ -4672,7 +5032,7 @@ References:
    solving with high precision), St. Petersburg State Polytechnical
    University Journal 3(198), 49--58 (2014).
  - K. C. Carlton-Wippern
-   <a href="https://dx.doi.org/10.1017/S0373463300010791">
+   <a href="https://doi.org/10.1017/S0373463300010791">
    On Loxodromic Navigation</a>,
    J. Navigation 45(2), 292--297 (1992).
  - K. E. Engsager and K. Poder,
@@ -4681,7 +5041,7 @@ References:
    transverse Mercator mapping (almost)</a>,
    Proc. XXIII Intl. Cartographic Conf. (ICC2007), Moscow (2007).
  - F. R. Helmert,
-   <a href="https://dx.doi.org/10.5281/zenodo.32050">
+   <a href="https://doi.org/10.5281/zenodo.32050">
    Mathematical and Physical Theories of Higher Geodesy, Part 1 (1880)</a>,
    Aeronautical Chart and Information Center (St. Louis, 1964),
    Chaps. 5--7.
@@ -4689,30 +5049,30 @@ References:
    <a href="http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf">
    Symbolic computation of divided differences</a>,
    SIGSAM Bull. 33(3), 7--28 (1999)
-   DOI: <a href="https://dx.doi.org/10.1145/334714.334716">
+   DOI: <a href="https://doi.org/10.1145/334714.334716">
    10.1145/334714.334716</a>.
  - C. F. F. Karney,
-   <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
+   <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
    addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
-   <a href="http://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
+   <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
    <a href="http://geographiclib.sourceforge.net/tm.html"> tm.html</a>.
  - C. F. F. Karney,
-   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   <a href="https://doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
    J. Geodesy 87(1), 43--55 (2013);
-   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
    addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
    geod-addenda.html</a>;
    resource page:
    <a href="http://geographiclib.sourceforge.net/geod.html"> geod.html</a>.
  - L. Kr&uuml;ger,
-   <a href="https://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+   <a href="https://doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
    the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
    New Series 52, 172 pp. (1912).
@@ -4720,11 +5080,11 @@ References:
    <a href="http://www.mercator99.webspace.virginmedia.com/">
    The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5.
  - W. M. Smart
-   <a href="https://dx.doi.org/10.1093/mnras/106.2.124">
+   <a href="https://doi.org/10.1093/mnras/106.2.124">
    On a Problem in Navigation</a>
    MNRAS 106(2), 124--127 (1946).
  - J. E. D. Williams
-   <a href="https://dx.doi.org/10.1017/S0373463300045549">
+   <a href="https://doi.org/10.1017/S0373463300045549">
    Loxodromic Distances on the Terrestrial Spheroid Journal</a>,
    J. Navigation 3(2), 133--140 (1950)
 
@@ -5228,10 +5588,10 @@ ellipses.  This is discussed in more detail in \ref gevsgeodesic.
 Solutions of the great ellipse problems implemented for MATLAB and
 Octave are provided by
  - gedoc: briefly describe the routines
- - gereckon: solve the direct great circle problem
- - gedistance: solve the inverse great circle problem
+ - gereckon: solve the direct great ellipse problem
+ - gedistance: solve the inverse great ellipse problem
  .
-At this time, there are no C++ support in GeographicLib for great
+At this time, there is C++ support in GeographicLib for great
 ellipses.
 
 References:
@@ -5240,34 +5600,34 @@ References:
    Mathematical Models for Navigation Systems</a>,
    TR-182 (U.S. Naval Oceanographic Office, 1965).
  - B. R. Bowring,
-   <a href="https://dx.doi.org/10.1007/BF02521760">
+   <a href="https://doi.org/10.1007/BF02521760">
    The direct and inverse solutions for the great elliptic line on the
    reference ellipsoid</a>, Bull. Geod. 58, 101--108 (1984).
  - M. A. Earle,
    A vector solution for navigation on a great ellipse,
    J. Navigation 53(3), 473--481 (2000).
  - M. A. Earle,
-   <a href="https://dx.doi.org/10.1017/S037346330800475X">
+   <a href="https://doi.org/10.1017/S037346330800475X">
    Vector solutions for azimuth</a>,
    J. Navigation 61(3), 537--545 (2008).
  - C. F. F. Karney,
-   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   <a href="https://doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>, J. Geodesy 87(1), 43--55 (2013);
    addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
    geod-addenda.html</a>.
  - A. Pallikaris & G. Latsas,
-   <a href="https://dx.doi.org/1017/S0373463309005323">
+   <a href="https://doi.org/1017/S0373463309005323">
    New algorithm for great elliptic sailing (GES)</a>,
    J. Navigation 62(3), 493--507 (2009).
  - A. Pallikaris, L. Tsoulos, & D. Paradissis,
    New meridian arc formulas for sailing calculations in navigational
    GIS, International Hydrographic Review, 24--34 (May 2009).
  - L. E. Sj&ouml;berg,
-   <a href="https://dx.doi.org/10.2478/v10156-011-0040-9">
+   <a href="https://doi.org/10.2478/v10156-011-0040-9">
    Solutions to the direct and inverse navigation problems on the great
    ellipse</a>, J. Geodetic Science 2(3), 200--205 (2012).
  - R. Williams,
-   <a href="https://dx.doi.org/10.1017/S0373463300013333">
+   <a href="https://doi.org/10.1017/S0373463300013333">
    The Great Ellipse on the Surface of the Spheroid</a>,
    J. Navigation 49(2), 229--234 (1996).
  - T. Vincenty,
@@ -5348,9 +5708,9 @@ the ellipsoid.
 
 The area between the segment of a great ellipse and the equator can be
 found by very similar methods to those used for geodesic areas; see
-<a href="https://dx.doi.org/10.1179/003962689791474267"> Danielsen
+<a href="https://doi.org/10.1179/003962689791474267"> Danielsen
 (1989)</a>.  The notation here is similar to that employed by
-<a href="https://dx.doi.org/10.1007/s00190-012-0578-z"> Karney
+<a href="https://doi.org/10.1007/s00190-012-0578-z"> Karney
 (2013)</a>.
 \f[
 \begin{align}
@@ -5592,7 +5952,7 @@ Go to
 
 References:
  - L. Kr&uuml;ger,
-   <a href="https://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+   <a href="https://doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
    the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
    New Series 52, 172 pp. (1912).
@@ -5603,16 +5963,16 @@ References:
    (Also appeared as:
    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
    Part V, pp. 67--101,
-   <a href="https://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
+   <a href="https://doi.org/10.3138/X687-1574-4325-WM62">Conformal
    Projections Based On Jacobian Elliptic Functions</a>.
  - C. F. F. Karney,
-   <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
+   <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
    addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
-   <a href="http://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
+   <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
    <a href="http://geographiclib.sourceforge.net/tm.html"> tm.html</a>.
  .
@@ -5631,7 +5991,7 @@ A test set for the transverse Mercator projection is available at
    TMcoords.dat.gz</a>
  - C. F. F. Karney, <i>Test data for the transverse Mercator projection</i>
    (2009),  <br>
-   DOI: <a href="https://dx.doi.org/10.5281/zenodo.32470">
+   DOI: <a href="https://doi.org/10.5281/zenodo.32470">
    10.5281/zenodo.32470</a>.
  .
 This is about 17 MB (compressed).  This test set consists of a set of
@@ -5851,13 +6211,13 @@ Further instructions are included at the top of the file.
 
 This section gives color versions of the figures in
  - C. F. F. Karney,
-   <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
+   <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
    addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
-   <a href="http://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
+   <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
    <a href="http://geographiclib.sourceforge.net/tm.html"> tm.html</a>.
 
@@ -5964,7 +6324,7 @@ Back to \ref transversemercator.  Forward to \ref auxlat.  Up to
 
 The implementation of Geocentric::Reverse is adapted from
  - H. Vermeille,
-   <a href="https://dx.doi.org/10.1007/s00190-002-0273-6">
+   <a href="https://doi.org/10.1007/s00190-002-0273-6">
    Direct transformation from geocentric coordinates to geodetic
    coordinates</a>, J. Geodesy 76, 451--454 (2002).
 
@@ -5974,14 +6334,14 @@ restriction and to improve the numerical accuracy.  Now the method is
 accurate for all inputs (even if \e h is infinite).  The changes are
 described in Appendix B of
  - C. F. F. Karney,
-   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
+   <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
    on an ellipsoid of revolution</a>,
    Feb. 2011; preprint
-   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
+   <a href="https://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
  .
 Vermeille similarly updated his method in
  - H. Vermeille,
-   <a href="https://dx.doi.org/10.1007/s00190-010-0419-x">
+   <a href="https://doi.org/10.1007/s00190-010-0419-x">
    An analytical method to transform geocentric into
    geodetic coordinates</a>, J. Geodesy 85, 105--117 (2011).
 
@@ -6058,12 +6418,12 @@ inaccurate results due to underflow; in the other hand, the case of the
 sphere, \e f = 0, is treated specially and gives accurate results.
 
 Other comparable methods are K. M. Borkowski,
-<a href="https://dx.doi.org/10.1007/BF00643807"> Transformation
+<a href="https://doi.org/10.1007/BF00643807"> Transformation
 of geocentric to geodetic coordinates without approximations</a>,
 Astrophys. Space Sci. 139, 1--4 (1987)
-(<a href="https://dx.doi.org/10.1007/BF00656995"> erratum</a>)
+(<a href="https://doi.org/10.1007/BF00656995"> erratum</a>)
 and T. Fukushima,
-<a href="https://dx.doi.org/10.1007/s001900050271"> Fast transform from
+<a href="https://doi.org/10.1007/s001900050271"> Fast transform from
 geocentric to geodetic coordinates</a>, J. Geodesy 73, 603--610 (1999).
 However the choice of independent variables in these methods leads
 to a loss of accuracy for points near the equatorial plane.
@@ -6648,7 +7008,7 @@ Here's what you should know:
    arbitrary precision via mpfr::mpreal; this requires:
    - <a href="http://www.mpfr.org"> MPFR</a>, version 3.0 or later,
    - <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
-     (version 3.6.2 or later),
+     (version 3.6.5, dated 2016-12-19, or later),
    - a compiler which supports the explicit cast operator (e.g., g++ 4.5
      or later, Visual Studio 12 2013 or later).
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
@@ -6663,10 +7023,11 @@ Here's what you should know:
    Calling this function after other GeographicLib routines will lead to
    inconsistent results (because the precision of some constants like
    Math::pi() is set when the functions are first called).
- - All the \ref utilities call Utility::set_digits().  This causes the
-   precision (in bits) to be determined by the
-   <code>GEOGRAPHICLIB_DIGITS</code> environment variable.  If this is
-   not defined the precision is set to 256 bits.
+ - All the \ref utilities call Utility::set_digits() (with no
+   arguments).  This causes the precision (in bits) to be determined by
+   the <code>GEOGRAPHICLIB_DIGITS</code> environment variable.  If this
+   is not defined the precision is set to 256 bits (about 77 decimal
+   digits).
  - The accuracy of most calculations should increase as the precision
    increases (and typically only a few bits of accuracy should be lost).
    We can distinguish 4 sources of error:
@@ -6711,15 +7072,15 @@ Here's what you should know:
  - Because only a tiny number of people will be interested in using this
    facility:
    - the cmake support for the required libraries is rudimentary;
+   - however geographiclib-config.cmake does export
+     <code>GEOGRAPHICLIB_PRECISION</code> and
+     <code>GEOGRAPHICLIB_HIGHPREC_LIBRARIES</code>, the libraries
+     providing the support for high-precision arithmetic;
    - support for the C++11 mathematical functions and the explicit cast
      operator is required;
    - quad precision is only available on Linux;
    - mpfr has been mostly tested on Linux (but it works on Windows with
-     Visual Studio 12 and MacOS too);
-   - because the boost library (used for quad precision) interprets fixed +
-     setprecision(0) to mean "print all the digits you've got" instead
-     of "print the nearest integer", some of the formatted output is
-     wrong with <code>GEOGRAPHICLIB_PRECISION=4.</code>
+     Visual Studio 12 and MacOS too).
 
 The following steps needed to be taken
 
@@ -6914,6 +7275,49 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
+
+ - <a href="http://geographiclib.sourceforge.net/1.47">Version 1.47</a>
+   (released 2017-02-15)
+     - Add NearestNeighbor class.
+     - Improve accuracy of area calculation (fixing a flaw introduced in
+       version 1.46); fix applied in Geodesic, GeodesicExact, and the
+       implementations in C, Fortran, Java, JavaScript, Python, MATLAB,
+       and Maxima.
+     - Generalize NormalGravity to allow oblate and prolate ellipsoids.
+       As a consequence a new form of constructor,
+       NormalGravity::NormalGravity, has been introduced and the old
+       form is now deprecated (and because the signatures of the two
+       constructors are similar, the compiler will warn about the use of
+       the old one).
+     - Changes in Math class:
+       - Math::sincosd, Math::sind, Math::cosd only return &minus;0 for
+         the case sin(&minus;0);
+       - Math::atan2d and Math::AngNormalize return results in
+         (&minus;180&deg;, 180&deg;]; this may affect the longitudes and
+         azimuth returned by several other functions.
+     - Add Utility::trim() and Utility::val<T>(); Utility::num<T>() is now
+       DEPRECATED.
+     - Changes in cmake support:
+       - remove support of PACKAGE_PATH and INSTALL_PATH in cmake
+         configuration;
+       - fix to FindGeographicLib.cmake to make it work on Debian systems;
+       - use $<TARGET_PDB_FILE:tgt> (cmake version >= 3.1);
+       - use NAMESPACE for exported targets;
+       - geographiclib-config.cmake exports GEOGRAPHICLIB_DATA,
+         GEOGRAPHICLIB_PRECISION, and GeographicLib_HIGHPREC_LIBRARIES.
+     - Add pkg-config support for cmake and autoconf builds.
+     - Minor fixes:
+       - fix the order of declarations in C library, incorporating the
+         patches in version 1.46.1;
+       - fix the packaging of the python library, incorporating the
+         patches in version 1.46.3;
+       - restrict junit dependency in the Java package to testing scope
+         (thanks to Mick Killianey);
+       - various behind-the-scenes fixes to EllipticFunction;
+       - fix documentation and default install location for Windows binary
+         installers;
+       - fix clang compiler warnings in GeodesicExactC4 and
+         TransverseMercator.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
    (released 2016-02-15)
@@ -8143,7 +8547,7 @@ git repository for GeographicLib</a>.
    - Increase accuracy of scale calculation in TransverseMercator and
      TransverseMercatorExact.
    - Code and documentation changes for consistency with
-     <a  href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>
+     <a  href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>
 
  - <a href="http://geographiclib.sourceforge.net/1.0">Version 1.0</a>
    (released 2010-01-07)
