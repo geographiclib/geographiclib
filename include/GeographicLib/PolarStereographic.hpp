@@ -2,7 +2,7 @@
  * \file PolarStereographic.hpp
  * \brief Header for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -91,7 +91,7 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added.  The value of \e lon returned is
-     * in the range [&minus;180&deg;, 180&deg;).
+     * in the range [&minus;180&deg;, 180&deg;].
      **********************************************************************/
     void Reverse(bool northp, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const;

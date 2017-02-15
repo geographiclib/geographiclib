@@ -430,6 +430,20 @@ class GeodSolveTest(unittest.TestCase):
     self.assertAlmostEqual(dir["lon2"], -170, delta = 0.5e-5)
     self.assertAlmostEqual(dir["azi2"], 0, delta = 0.5e-5)
 
+  def test_GeodSolve74(self):
+    # Check fix for inaccurate areas, bug introduced in v1.46, fixed
+    # 2015-10-16.
+    inv = Geodesic.WGS84.Inverse(54.1589, 15.3872, 54.1591, 15.3877,
+                                 Geodesic.ALL)
+    self.assertAlmostEqual(inv["azi1"], 55.723110355, delta = 5e-9);
+    self.assertAlmostEqual(inv["azi2"], 55.723515675, delta = 5e-9);
+    self.assertAlmostEqual(inv["s12"],  39.527686385, delta = 5e-9);
+    self.assertAlmostEqual(inv["a12"],   0.000355495, delta = 5e-9);
+    self.assertAlmostEqual(inv["m12"],  39.527686385, delta = 5e-9);
+    self.assertAlmostEqual(inv["M12"],   0.999999995, delta = 5e-9);
+    self.assertAlmostEqual(inv["M21"],   0.999999995, delta = 5e-9);
+    self.assertAlmostEqual(inv["S12"], 286698586.30197, delta = 5e-4);
+
 class PlanimeterTest(unittest.TestCase):
 
   polygon = Geodesic.WGS84.Polygon(False)

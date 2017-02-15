@@ -307,6 +307,9 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PKG_CONFIG = @PKG_CONFIG@
+PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
+PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 POD2HTML = @POD2HTML@
 POD2MAN = @POD2MAN@
 RANLIB = @RANLIB@
@@ -357,6 +360,7 @@ mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
+pkgconfigdir = @pkgconfigdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
@@ -443,6 +447,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		../include/GeographicLib/MagneticCircle.hpp \
 		../include/GeographicLib/MagneticModel.hpp \
 		../include/GeographicLib/Math.hpp \
+		../include/GeographicLib/NearestNeighbor.hpp \
 		../include/GeographicLib/NormalGravity.hpp \
 		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \

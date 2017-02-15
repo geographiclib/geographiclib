@@ -3,7 +3,7 @@
 *!
 *! Run these tests by configuring with cmake and running "make test".
 *!
-*! Copyright (c) Charles Karney (2015-2016) <charles@karney.com> and
+*! Copyright (c) Charles Karney (2015-2017) <charles@karney.com> and
 *! licensed under the MIT/X11 License.  For more information, see
 *! http://geographiclib.sourceforge.net/
 
@@ -181,7 +181,7 @@
 * WGS84 values
       a = 6378137d0
       f = 1/298.257223563d0
-      omask = 1+2+4+8
+      omask = 1 + 2 + 4 + 8
       r = 0
 
       do i = 1,20
@@ -227,7 +227,7 @@
 * WGS84 values
       a = 6378137d0
       f = 1/298.257223563d0
-      omask = 1+2+4+8
+      omask = 1 + 2 + 4 + 8
       flags = 2
       r = 0
 
@@ -274,8 +274,8 @@
 * WGS84 values
       a = 6378137d0
       f = 1/298.257223563d0
-      omask = 1+2+4+8
-      flags = 1+2
+      omask = 1 + 2 + 4 + 8
+      flags = 1 + 2
       r = 0
 
       do i = 1,20
@@ -836,6 +836,33 @@
       return
       end
 
+      integer function tstg74()
+* Check fix for inaccurate areas, bug introduced in v1.46, fixed
+* 2015-10-16.
+      double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
+      double precision a, f
+      integer r, assert, omask
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+      omask = 1 + 2 + 4 + 8
+      r = 0
+      call invers(a, f, 54.1589d0, 15.3872d0, 54.1591d0, 15.3877d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 55.723110355d0, 5d-9);
+      r = r + assert(azi2, 55.723515675d0, 5d-9);
+      r = r + assert(s12,  39.527686385d0, 5d-9);
+      r = r + assert(a12,   0.000355495d0, 5d-9);
+      r = r + assert(m12,  39.527686385d0, 5d-9);
+      r = r + assert(MM12,  0.999999995d0, 5d-9);
+      r = r + assert(MM21,  0.999999995d0, 5d-9);
+      r = r + assert(SS12, 286698586.30197d0, 5d-4);
+      tstg74 = r
+      return
+      end
+
       integer function tstp0()
 * Check fix for pole-encircling bug found 2011-03-16
       double precision lata(4), lona(4)
@@ -981,7 +1008,7 @@
       integer tstinv, tstdir, tstarc,
      +    tstg0, tstg1, tstg2, tstg5, tstg6, tstg9, tstg10, tstg11,
      +    tstg12, tstg14, tstg15, tstg17, tstg26, tstg28, tstg33,
-     +    tstg55, tstg59, tstg61, tstg73,
+     +    tstg55, tstg59, tstg61, tstg73, tstg74,
      +    tstp0, tstp5, tstp6, tstp12, tstp13
 
       n = 0
@@ -1094,6 +1121,11 @@
       if (i .gt. 0) then
         n = n + 1
         print *, 'tstg73 fail:', i
+      end if
+      i = tstg74()
+      if (i .gt. 0) then
+        n = n + 1
+        print *, 'tstg74 fail:', i
       end if
       i = tstp0()
       if (i .gt. 0) then

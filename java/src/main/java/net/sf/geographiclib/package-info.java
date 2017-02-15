@@ -1,7 +1,7 @@
 /**
  * <h1>Geodesic routines from GeographicLib implemented in Java</h1>
  * @author Charles F. F. Karney (charles@karney.com)
- * @version 1.46
+ * @version 1.47
  *
  * <p>
  * The documentation for other versions is available at
@@ -29,15 +29,15 @@
  * GeographicLib-Java is part of GeographicLib which available for download at
  * <ul>
  * <li>
- *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.46.tar.gz">
- *   GeographicLib-1.46.tar.gz</a>
+ *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.47.tar.gz">
+ *   GeographicLib-1.47.tar.gz</a>
  * <li>
- *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.46.zip">
- *   GeographicLib-1.46.zip</a>
+ *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.47.zip">
+ *   GeographicLib-1.47.zip</a>
  * </ul>
  * <p>
  * as either a compressed tar file (tar.gz) or a zip file.  After unpacking
- * the source, the Java library can be found in GeographicLib-1.46/java.  (This
+ * the source, the Java library can be found in GeographicLib-1.47/java.  (This
  * library is completely independent from the rest of GeodegraphicLib.)  The
  * library consists of the files in the src/main/java/net/sf/geographiclib
  * subdirectory.
@@ -50,7 +50,7 @@
  *   <dependency>
  *     <groupId>net.sf.geographiclib</groupId>
  *     <artifactId>GeographicLib-Java</artifactId>
- *     <version>1.46</version>
+ *     <version>1.47</version>
  *   </dependency> }</pre>
  * in your {@code pom.xml}.
  *
@@ -106,6 +106,10 @@
  * cd inverse/src/main/java
  * javac -cp .:../../../../src/main/java Inverse.java
  * echo -30 0 29.5 179.5 | java -cp .:../../../../src/main/java Inverse </pre>
+ * On Windows, change this to <pre>
+ * cd inverse\src\main\java
+ * javac -cp .;../../../../src/main/java Inverse.java
+ * echo -30 0 29.5 179.5 | java -cp .;../../../../src/main/java Inverse </pre>
  *
  * <h3>Using maven to package GeographicLib</h3>
  * Use <a href="http://maven.apache.org/">maven</a> to create a jar file by
@@ -115,9 +119,9 @@
  * some additional packages to your local repository.)  Then compile and run
  * Inverse.java with <pre>
  * cd inverse/src/main/java
- * javac -cp .:../../../../target/GeographicLib-Java-1.46.jar Inverse.java
+ * javac -cp .:../../../../target/GeographicLib-Java-1.47.jar Inverse.java
  * echo -30 0 29.5 179.5 |
- *   java -cp .:../../../../target/GeographicLib-Java-1.46.jar Inverse </pre>
+ *   java -cp .:../../../../target/GeographicLib-Java-1.47.jar Inverse </pre>
  *
  * <h3>Using maven to build and run {@code Inverse.java}</h3>
  * The sample code includes a {@code pom.xml} which specifies
@@ -177,13 +181,13 @@
  * <ul>
  * <li>
  *   These algorithms are derived in C. F. F. Karney,
- *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+ *   <a href="https://doi.org/10.1007/s00190-012-0578-z">
  *   Algorithms for geodesics</a>,
  *   J. Geodesy <b>87</b>, 43&ndash;55 (2013)
  *   (<a href="http://geographiclib.sourceforge.net/geod-addenda.html">addenda</a>).
  * <li>
  *   A longer paper on geodesics: C. F. F. Karney,
- *    <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
+ *    <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
  *    on an ellipsoid of revolution</a>,
  *    Feb. 2011
  *    (<a href="http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata">
@@ -260,6 +264,14 @@
  *
  * <h2>Change log</h2>
  * <ul>
+ * <li>
+ *   <a href="http://geographiclib.sourceforge.net/1.47/java">Version 1.47</a>
+ *   (released 2017-02-15)
+ * <ul>
+ * <li>
+ *   Improve accuracy of area calculation (fixing a flaw introduced in
+ *   version 1.46).
+ * </ul>
  * <li>
  *   <a href="http://geographiclib.sourceforge.net/1.46/java">Version 1.46</a>
  *   (released 2016-02-15)

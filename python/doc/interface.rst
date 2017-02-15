@@ -106,15 +106,15 @@ Restrictions on the parameters
 * Longitudes and azimuths are unrestricted; internally these are
   exactly reduced to the range [−180°, 180°); but see also the
   LONG_UNROLL bit.
-* The equatorial radius a and the polar semi-axis b must both be
+* The equatorial radius *a* and the polar semi-axis *b* must both be
   positive and finite (this implies that −∞ < *f* < 1).
 * The flattening *f* should satisfy *f* ∈ [−1/50,1/50] in order to retain
   full accuracy. This condition holds for most applications in geodesy.
 
 Reasonably accurate results can be obtained for −0.2 ≤ *f* ≤ 0.2. Here
 is a table of the approximate maximum error (expressed as a distance)
-for an ellipsoid with the same major radius as the WGS84 ellipsoid and
-different values of the flattening.
+for an ellipsoid with the same equatorial radius as the WGS84 ellipsoid
+and different values of the flattening.
 
 ======== =======
 abs(*f*) error

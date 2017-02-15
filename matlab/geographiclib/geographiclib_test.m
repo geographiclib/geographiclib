@@ -27,6 +27,7 @@ function geographiclib_test
   i = GeodSolve59; if i, n=n+1; fprintf('GeodSolve59 fail: %d\n', i); end
   i = GeodSolve61; if i, n=n+1; fprintf('GeodSolve61 fail: %d\n', i); end
   i = GeodSolve73; if i, n=n+1; fprintf('GeodSolve73 fail: %d\n', i); end
+  i = GeodSolve74; if i, n=n+1; fprintf('GeodSolve74 fail: %d\n', i); end
   i = Planimeter0; if i, n=n+1; fprintf('Planimeter0 fail: %d\n', i); end
   i = Planimeter5; if i, n=n+1; fprintf('Planimeter5 fail: %d\n', i); end
   i = Planimeter6; if i, n=n+1; fprintf('Planimeter6 fail: %d\n', i); end
@@ -431,6 +432,22 @@ function n = GeodSolve73
   n = n + assertEquals(lat2, 81.04623, 0.5e-5);
   n = n + assertEquals(lon2, -170, 0.5e-5);
   n = n + assertEquals(azi2, 0, 0.5e-5);
+end
+
+function n = GeodSolve74
+% Check fix for inaccurate areas, bug introduced in v1.46, fixed
+% 2015-10-16.
+  n = 0;
+  [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
+      geoddistance(54.1589, 15.3872, 54.1591, 15.3877);
+  n = n + assertEquals(azi1, 55.723110355, 5e-9);
+  n = n + assertEquals(azi2, 55.723515675, 5e-9);
+  n = n + assertEquals(s12,  39.527686385, 5e-9);
+  n = n + assertEquals(a12,   0.000355495, 5e-9);
+  n = n + assertEquals(m12,  39.527686385, 5e-9);
+  n = n + assertEquals(M12,   0.999999995, 5e-9);
+  n = n + assertEquals(M21,   0.999999995, 5e-9);
+  n = n + assertEquals(S12, 286698586.30197, 5e-4);
 end
 
 function n = Planimeter0

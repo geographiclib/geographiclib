@@ -2,7 +2,7 @@
  * \file GeodSolve.cpp
  * \brief Command line utility for geodesic calculations
  *
- * Copyright (c) Charles Karney (2009-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -63,10 +63,10 @@ std::string DistanceStrings(real s12, real a12,
 
 real ReadDistance(const std::string& s, bool arcmode) {
   using namespace GeographicLib;
-  return arcmode ? DMS::DecodeAngle(s) : Utility::num<real>(s);
+  return arcmode ? DMS::DecodeAngle(s) : Utility::val<real>(s);
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
     enum { NONE = 0, LINE, DIRECT, INVERSE };
@@ -141,7 +141,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
-          a = Utility::num<real>(std::string(argv[m + 1]));
+          a = Utility::val<real>(std::string(argv[m + 1]));
           f = Utility::fract<real>(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
@@ -166,7 +166,7 @@ int main(int argc, char* argv[]) {
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
-          prec = Utility::num<int>(std::string(argv[m]));
+          prec = Utility::val<int>(std::string(argv[m]));
         }
         catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";

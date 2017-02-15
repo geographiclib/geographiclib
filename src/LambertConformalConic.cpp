@@ -2,7 +2,7 @@
  * \file LambertConformalConic.cpp
  * \brief Implementation for GeographicLib::LambertConformalConic class
  *
- * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -25,9 +25,9 @@ namespace GeographicLib {
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
   {
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     if (!(Math::isfinite(_f) && _f < 1))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
     if (!(Math::isfinite(k0) && k0 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
@@ -50,9 +50,9 @@ namespace GeographicLib {
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
   {
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     if (!(Math::isfinite(_f) && _f < 1))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
     if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat1) <= 90))
@@ -79,9 +79,9 @@ namespace GeographicLib {
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
   {
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     if (!(Math::isfinite(_f) && _f < 1))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
     if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(coslat1 >= 0))

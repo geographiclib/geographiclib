@@ -2,7 +2,7 @@
  * \file GeoCoords.hpp
  * \brief Header for GeographicLib::GeoCoords class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -151,7 +151,7 @@ namespace GeographicLib {
      * that -1:30-0:0:15 is parsed as (-1:30) + (-0:0:15) = &minus;(1+30/60)
      * &minus; (15/3600).  Latitudes must be in the range [&minus;90&deg;,
      * 90&deg;].  Internally longitudes are reduced to the range
-     * [&minus;180&deg;, 180&deg;).
+     * [&minus;180&deg;, 180&deg;].
      *
      * <b>UTM/UPS parsing</b>: For UTM zones (&minus;80&deg; &le; Lat <
      * 84&deg;), the zone designator is made up of a zone number (for 1 to 60)
@@ -431,7 +431,8 @@ namespace GeographicLib {
      * coordinate at precision &minus;2 (100m) is 38SMB441847 and not
      * 38SMB442848.  \e prec specifies the precision of the MGRS string as
      * follows:
-     * - prec = &minus;5 (min), 100km
+     * - prec = &minus;6 (min), only the grid zone is returned, e.g., 38S
+     * - prec = &minus;5, 100km, e.g., 38SMB
      * - prec = &minus;4, 10km
      * - prec = &minus;3, 1km
      * - prec = &minus;2, 100m

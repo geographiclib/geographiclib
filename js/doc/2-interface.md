@@ -102,7 +102,7 @@ Note that *a12* is always included in the result.
 
 Reasonably accurate results can be obtained for &minus;0.2 &le; *f* &le;
 0.2.  Here is a table of the approximate maximum error (expressed as a
-distance) for an ellipsoid with the same major radius as the WGS84
+distance) for an ellipsoid with the same equatorial radius as the WGS84
 ellipsoid and different values of the flattening.
 
   | abs(f) | error

@@ -2,7 +2,7 @@
  * \file Geocentric.cpp
  * \brief Implementation for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -23,9 +23,9 @@ namespace GeographicLib {
     , _maxrad(2 * _a / numeric_limits<real>::epsilon())
   {
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     if (!(Math::isfinite(_f) && _f < 1))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
   }
 
   const Geocentric& Geocentric::WGS84() {

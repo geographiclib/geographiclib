@@ -134,7 +134,7 @@ terminate; following lines will be converted.
 
 The algorithm for converting geocentric to geodetic coordinates is given
 in Appendix B of C. F. F. Karney, I<Geodesics on an ellipsoid of
-revolution>, Feb. 2011; preprint L<http://arxiv.org/abs/1102.1215>.
+revolution>, Feb. 2011; preprint L<https://arxiv.org/abs/1102.1215>.
 
 =head1 AUTHOR
 

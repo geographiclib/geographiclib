@@ -2,7 +2,7 @@
  * \file LambertConformalConic.hpp
  * \brief Header for GeographicLib::LambertConformalConic class
  *
- * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -69,7 +69,7 @@ namespace GeographicLib {
     //   W. M. Kahan and R. J. Fateman,
     //   Symbolic computation of divided differences,
     //   SIGSAM Bull. 33(3), 7-28 (1999)
-    //   https://dx.doi.org/10.1145/334714.334716
+    //   https://doi.org/10.1145/334714.334716
     //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
     //
     // General rules
@@ -242,7 +242,7 @@ namespace GeographicLib {
      *
      * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
      * No false easting or northing is added.  The value of \e lon returned is
-     * in the range [&minus;180&deg;, 180&deg;).  The error in the projection
+     * in the range [&minus;180&deg;, 180&deg;].  The error in the projection
      * is less than about 10 nm (10 nanometers), true distance, and the errors
      * in the meridian convergence and scale are consistent with this.
      **********************************************************************/

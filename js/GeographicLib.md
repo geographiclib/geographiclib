@@ -1,6 +1,6 @@
 ## Geodesic routines from GeographicLib
 
-This documentation applies to version 1.46.
+This documentation applies to version 1.47.
 
 The documentation for other versions is available
 at <tt>http://geographiclib.sourceforge.net/m.nn/js</tt> for versions
@@ -108,6 +108,10 @@ Two examples of this library in use are
     documentation}.
 
 ### Change log
+
+* Version 1.47 (released 2017-02-15)
+  * Improve accuracy of area calculation (fixing a flaw introduced in
+    version 1.46).
 
 * Version 1.46 (released 2016-02-15)
   * Fix bugs in PolygonArea.TestEdge (problem found by threepointone).

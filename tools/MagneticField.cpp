@@ -2,7 +2,7 @@
  * \file MagneticField.cpp
  * \brief Command line utility for evaluating magnetic fields
  *
- * Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -25,7 +25,7 @@
 
 #include "MagneticField.usage"
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
             throw GeographicErr("Bad hemisphere letter on latitude");
           if (!(abs(lat) <= 90))
             throw GeographicErr("Latitude not in [-90d, 90d]");
-          h = Utility::num<real>(std::string(argv[++m]));
+          h = Utility::val<real>(std::string(argv[++m]));
           timeset = false;
           circle = true;
         }
@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
-          prec = Utility::num<int>(std::string(argv[m]));
+          prec = Utility::val<int>(std::string(argv[m]));
         }
         catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
@@ -96,7 +96,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-T") {
         if (++m == argc) return usage(1, true);
         try {
-          tguard = Utility::num<real>(std::string(argv[m]));
+          tguard = Utility::val<real>(std::string(argv[m]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding argument of " << arg << ": "
@@ -106,7 +106,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-H") {
         if (++m == argc) return usage(1, true);
         try {
-          hguard = Utility::num<real>(std::string(argv[m]));
+          hguard = Utility::val<real>(std::string(argv[m]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding argument of " << arg << ": "

@@ -205,7 +205,7 @@
 
 <h1 id="PRECISION">PRECISION</h1>
 
-<p><i>prec</i> gives precision of the output with <i>prec</i> = 0 giving 1 m precision, <i>prec</i> = 3 giving 1 mm precision, etc. <i>prec</i> is the number of digits after the decimal point for UTM/UPS. The number of digits per coordinate for MGRS is 5 + <i>prec</i>. For decimal degrees, the number of digits after the decimal point is 5 + <i>prec</i>. For DMS (degree, minute, seconds) output, the number of digits after the decimal point in the seconds components is 1 + <i>prec</i>; if this is negative then use minutes (<i>prec</i> = -2 or -3) or degrees (<i>prec</i> &lt;= -4) as the least significant component. Print convergence, resp. scale, with 5 + <i>prec</i>, resp. 7 + <i>prec</i>, digits after the decimal point. The minimum value of <i>prec</i> is -5 and the maximum is 9 for UTM/UPS, 9 for decimal degrees, 10 for DMS, 6 for MGRS, and 8 for convergence and scale.</p>
+<p><i>prec</i> gives precision of the output with <i>prec</i> = 0 giving 1 m precision, <i>prec</i> = 3 giving 1 mm precision, etc. <i>prec</i> is the number of digits after the decimal point for UTM/UPS. For MGRS, The number of digits per coordinate is 5 + <i>prec</i>; &lt;prec&gt; = -6 results in just the grid zone. For decimal degrees, the number of digits after the decimal point is 5 + <i>prec</i>. For DMS (degree, minute, seconds) output, the number of digits after the decimal point in the seconds components is 1 + <i>prec</i>; if this is negative then use minutes (<i>prec</i> = -2 or -3) or degrees (<i>prec</i> &lt;= -4) as the least significant component. Print convergence, resp. scale, with 5 + <i>prec</i>, resp. 7 + <i>prec</i>, digits after the decimal point. The minimum value of <i>prec</i> is -5 (-6 for MGRS) and the maximum is 9 for UTM/UPS, 9 for decimal degrees, 10 for DMS, 6 for MGRS, and 8 for convergence and scale.</p>
 
 <h1 id="GEOGRAPHIC-COORDINATES">GEOGRAPHIC COORDINATES</h1>
 
@@ -361,7 +361,7 @@
 
 <p>An online version of this utility is availbable at <a href="http://geographiclib.sourceforge.net/cgi-bin/GeoConvert">http://geographiclib.sourceforge.net/cgi-bin/GeoConvert</a>.</p>
 
-<p>The algorithms for the transverse Mercator projection are described in C. F. F. Karney, <i>Transverse Mercator with an accuracy of a few nanometers</i>, J. Geodesy <b>85</b>(8), 475-485 (Aug. 2011); DOI <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">https://dx.doi.org/10.1007/s00190-011-0445-3</a>; preprint <a href="http://arxiv.org/abs/1002.1417">http://arxiv.org/abs/1002.1417</a>.</p>
+<p>The algorithms for the transverse Mercator projection are described in C. F. F. Karney, <i>Transverse Mercator with an accuracy of a few nanometers</i>, J. Geodesy <b>85</b>(8), 475-485 (Aug. 2011); DOI <a href="https://doi.org/10.1007/s00190-011-0445-3">https://doi.org/10.1007/s00190-011-0445-3</a>; preprint <a href="https://arxiv.org/abs/1002.1417">https://arxiv.org/abs/1002.1417</a>.</p>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 

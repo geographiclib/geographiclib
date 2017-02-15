@@ -51,28 +51,23 @@ var geod = GeographicLib.Geodesic.WGS84,
   };
 
   /*
-   * split a geodesic line into k equal pieces which are no longer than about
-   * ds12 (but k cannot exceed maxk, default 20), and returns an array of
-   * length k + 1 of objects with fields lat, lon, azi.
+   * split a geodesic line into k approximately equal pieces which are no
+   * longer than about ds12 (but k cannot exceed maxk, default 20), and returns
+   * an array of length k + 1 of objects with fields lat, lon, azi.
    */
   g.Geodesic.prototype.InversePath =
     function(lat1, lon1, lat2, lon2, ds12, maxk) {
-      var t = this.Inverse(lat1, lon1, lat2, lon2),
-          k, points, line, da12, vals, i;
+      var line = this.InverseLine(lat1, lon1, lat2, lon2, g.STANDARD),
+          k, points, da12, vals, i;
       if (!maxk) maxk = 20;
       if (!(ds12 > 0))
         throw new Error("ds12 must be a positive number");
-      k = Math.max(1, Math.min(maxk, Math.ceil(t.s12/ds12)));
+      k = Math.max(1, Math.min(maxk, Math.ceil(line.s13 / ds12)));
       points = new Array(k + 1);
-      points[0] = {lat: t.lat1, lon: t.lon1, azi: t.azi1};
-      points[k] = {lat: t.lat2, lon: t.lon2, azi: t.azi2};
-      if (k > 1) {
-        line = this.Line(t.lat1, t.lon1, t.azi1, g.STANDARD);
-        da12 = t.a12/k;
-        for (i = 1; i < k; ++i) {
-          vals = line.ArcPosition(i * da12);
-          points[i] = {lat: vals.lat2, lon: vals.lon2, azi: vals.azi2};
-        }
+      da12 = line.a13 / k;
+      for (i = 0; i <= k; ++i) {
+        vals = line.ArcPosition(i * da12);
+        points[i] = {lat: vals.lat2, lon: vals.lon2, azi: vals.azi2};
       }
       return points;
     };
@@ -235,22 +230,21 @@ function GeodesicArea(input, polyline) {
       This page illustrates the geodesic routines available in
       JavaScript package
       <a href="https://www.npmjs.com/package/geographiclib">
-	geographiclib</a>, which is documented
-      <a href="http://geographiclib.sourceforge.net/html/js/">
-	here</a>.
+	geographiclib, the geodesic routines in GeographicLib</a>
+      (<a href="http://geographiclib.sourceforge.net/html/js/">documentation</a>).
       The algorithms are considerably more accurate than Vincenty's
       method, and offer more functionality (an inverse method which
       never fails to converge, differential properties of the geodesic,
       and the area under a geodesic).  The algorithms are derived in
       <blockquote>
 	Charles F. F. Karney,<br>
-	<a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+	<a href="https://doi.org/10.1007/s00190-012-0578-z">
 	  <i>Algorithms for geodesics</i></a>,<br>
 	J. Geodesy <b>87</b>(1), 43&ndash;55 (Jan. 2013);<br>
 	DOI:
-	<a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+	<a href="https://doi.org/10.1007/s00190-012-0578-z">
 	  10.1007/s00190-012-0578-z</a>
-	(<a href="https://dx.doi.org/10.1007/s00190-012-0578-z">pdf</a>);
+	(<a href="https://doi.org/10.1007/s00190-012-0578-z">pdf</a>);
 	addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
 	  geod-addenda.html</a>.
       </blockquote>

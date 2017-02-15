@@ -41,7 +41,7 @@ namespace GeographicLib {
    *
    * The calculations are accurate to better than 15 nm (15 nanometers).  See
    * Sec. 9 of
-   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
+   * <a href="https://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
    * details.  The algorithms used by this class are based on series expansions
    * using the flattening \e f as a small parameter.  These are only accurate
    * for |<i>f</i>| &lt; 0.02; however reasonably accurate results will be
@@ -50,10 +50,10 @@ namespace GeographicLib {
    *
    * The algorithms are described in
    * - C. F. F. Karney,
-   *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   Algorithms for geodesics</a>,
    *   J. Geodesy <b>87</b>, 43--55 (2013);
-   *   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
    *   addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
    *   geod-addenda.html</a>.
@@ -264,7 +264,7 @@ namespace GeographicLib {
      * @return \e a12 arc length from point 1 to point 2 (degrees).
      *
      * The values of \e lon2 and \e azi2 returned are in the range
-     * [&minus;180&deg;, 180&deg;).
+     * [&minus;180&deg;, 180&deg;].
      *
      * The GeodesicLine object \e must have been constructed with \e caps |=
      * GeodesicLine::DISTANCE_IN; otherwise Math::NaN() is returned and no
@@ -381,7 +381,7 @@ namespace GeographicLib {
      *   GeodesicLine::AREA.
      *
      * The values of \e lon2 and \e azi2 returned are in the range
-     * [&minus;180&deg;, 180&deg;).
+     * [&minus;180&deg;, 180&deg;].
      *
      * Requesting a value which the GeodesicLine object is not capable of
      * computing is not an error; the corresponding argument will not be
@@ -522,7 +522,7 @@ namespace GeographicLib {
      * - \e outmask |= GeodesicLine::AREA for the area \e S12;
      * - \e outmask |= GeodesicLine::ALL for all of the above;
      * - \e outmask |= GeodesicLine::LONG_UNROLL to unroll \e lon2 instead of
-     *   reducing it into the range [&minus;180&deg;, 180&deg;).
+     *   reducing it into the range [&minus;180&deg;, 180&deg;].
      * .
      * Requesting a value which the GeodesicLine object is not capable of
      * computing is not an error; the corresponding argument will not be

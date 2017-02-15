@@ -9,7 +9,7 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif ()
 
 # Make the compiler more picky.
-if (MSCV)
+if (MSVC)
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
 else ()
   set (CMAKE_C_FLAGS

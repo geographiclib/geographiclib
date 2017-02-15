@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    CartConvert --help\n"
 "or visit:\n"
-"    http://geographiclib.sourceforge.net/1.46/CartConvert.1.html\n";
+"    http://geographiclib.sourceforge.net/1.47/CartConvert.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -121,7 +121,7 @@ int usage(int retval, bool brief) {
 "SEE ALSO\n"
 "       The algorithm for converting geocentric to geodetic coordinates is\n"
 "       given in Appendix B of C. F. F. Karney, Geodesics on an ellipsoid of\n"
-"       revolution, Feb. 2011; preprint <http://arxiv.org/abs/1102.1215>.\n"
+"       revolution, Feb. 2011; preprint <https://arxiv.org/abs/1102.1215>.\n"
 "\n"
 "AUTHOR\n"
 "       CartConvert was written by Charles Karney.\n"

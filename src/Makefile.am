@@ -75,6 +75,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		../include/GeographicLib/MagneticCircle.hpp \
 		../include/GeographicLib/MagneticModel.hpp \
 		../include/GeographicLib/Math.hpp \
+		../include/GeographicLib/NearestNeighbor.hpp \
 		../include/GeographicLib/NormalGravity.hpp \
 		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \

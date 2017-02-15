@@ -2,7 +2,7 @@
  * \file MagneticModel.cpp
  * \brief Implementation for GeographicLib::MagneticModel class
  *
- * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -96,7 +96,7 @@ namespace GeographicLib {
     string::size_type n = line.find_first_of(spaces, 5);
     if (n != string::npos)
       n -= 5;
-    string version = line.substr(5, n);
+    string version(line, 5, n);
     if (!(version == "1" || version == "2"))
       throw GeographicErr("Unknown version in " + _filename + ": " + version);
     string key, val;
@@ -111,26 +111,26 @@ namespace GeographicLib {
       else if (key == "ReleaseDate")
         _date = val;
       else if (key == "Radius")
-        _a = Utility::num<real>(val);
+        _a = Utility::val<real>(val);
       else if (key == "Type") {
         if (!(val == "Linear" || val == "linear"))
           throw GeographicErr("Only linear models are supported");
       } else if (key == "Epoch")
-        _t0 = Utility::num<real>(val);
+        _t0 = Utility::val<real>(val);
       else if (key == "DeltaEpoch")
-        _dt0 = Utility::num<real>(val);
+        _dt0 = Utility::val<real>(val);
       else if (key == "NumModels")
-        _Nmodels = Utility::num<int>(val);
+        _Nmodels = Utility::val<int>(val);
       else if (key == "NumConstants")
-        _Nconstants = Utility::num<int>(val);
+        _Nconstants = Utility::val<int>(val);
       else if (key == "MinTime")
-        _tmin = Utility::num<real>(val);
+        _tmin = Utility::val<real>(val);
       else if (key == "MaxTime")
-        _tmax = Utility::num<real>(val);
+        _tmax = Utility::val<real>(val);
       else if (key == "MinHeight")
-        _hmin = Utility::num<real>(val);
+        _hmin = Utility::val<real>(val);
       else if (key == "MaxHeight")
-        _hmax = Utility::num<real>(val);
+        _hmax = Utility::val<real>(val);
       else if (key == "Normalization") {
         if (val == "FULL" || val == "Full" || val == "full")
           _norm = SphericalHarmonic::FULL;

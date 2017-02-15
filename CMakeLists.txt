@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 46)
+set (PROJECT_VERSION_MINOR 47)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -43,7 +43,7 @@ endif ()
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 17)
-set (LIBVERSION_BUILD 17.0.0)
+set (LIBVERSION_BUILD 17.1.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -66,46 +66,7 @@ else ()
   option (COMMON_INSTALL_PATH "Use a common installation path for packages" ON)
 endif ()
 
-# The use of PACKAGE_PATH and INSTALL_PATH is now DEPRECATED.
-# (2) PACKAGE_PATH and INSTALL_PATH govern the find_package search
-# path and the installation directory.  (find_package is not used by
-# GeographicLib since it doesn't depend on other packages.  However
-# PACKAGE_PATH is used here for uniformity with other packages which
-# adopt the same conventions.)
-#
-# If PACKAGE_PATH is defined, it is prepended to CMAKE_PREFIX_PATH.
-#
-# If INSTALL_PATH is not specified but PACKAGE_PATH is, then
-# INSTALL_PATH is set to
-#   ${PACKAGE_PATH}, if COMMON_INSTALL_PATH is ON;
-#   ${PACKAGE_PATH}/${PROJECT_NAME}-${PROJECT_VERSION}, otherwise.
-#
-# If INSTALL_PATH is now defined, then set CMAKE_INSTALL_PREFIX to
-# INSTALL_PATH.
-#
-# Typically, only PACKAGE_PATH needs to be specified, e.g.,
-# cmake -D PACKAGE_PATH=/opt .. (on Linux)
-#   => CMAKE_PREFIX_PATH=/opt   CMAKE_INSTALL_PREFIX=/opt
-# cmake -D PACKAGE_PATH=C:/pkg .. (on Windows)
-#   => CMAKE_PREFIX_PATH=C:/pkg CMAKE_INSTALL_PREFIX=C:/pkg/GeographicLib-1.22
-
-if (PACKAGE_PATH)
-  set (CMAKE_PREFIX_PATH ${PACKAGE_PATH} ${CMAKE_PREFIX_PATH})
-  message (STATUS "CMAKE_PREFIX_PATH set to ${CMAKE_PREFIX_PATH}")
-endif ()
-
-if (NOT INSTALL_PATH AND PACKAGE_PATH)
-  if (COMMON_INSTALL_PATH)
-    set (INSTALL_PATH ${PACKAGE_PATH} CACHE PATH "Installation directory" FORCE)
-  else ()
-    set (INSTALL_PATH ${PACKAGE_PATH}/${PROJECT_NAME}-${PROJECT_VERSION}
-      CACHE PATH "Installation directory" FORCE)
-  endif ()
-endif ()
-if (INSTALL_PATH)
-  file (TO_CMAKE_PATH ${INSTALL_PATH} CMAKE_INSTALL_PREFIX)
-  message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
-endif ()
+# (2) PACKAGE_PATH and INSTALL_PATH have now been removed
 
 # (3) Where to look for data files.  Various classes look in the geoids,
 # gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
@@ -247,7 +208,11 @@ else ()
   # the client code is being compiled (and the GeographicLib headers
   # being included), work-alike substitutions are used.
   include (CheckCXXCompilerFlag)
-  foreach (_F 1z 14 1y 11 0x)
+  # The only "deprecated" flag included here is "0x" to activate C++11
+  # with old versions of g++.  We'll add "17" when it's available.
+  # Note: C++11 (actually gnu++14) support is turned on by default in
+  # g++ 6.1 and later.
+  foreach (_F 14 11 0x)
     set (CXX11_FLAG "-std=c++${_F}")
     set (_T CXX11TEST${_F})
     check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
@@ -306,6 +271,7 @@ endif ()
 # first because that's where Config.h will be
 include_directories ("${PROJECT_BINARY_DIR}/include" include)
 
+set (HIGHPREC_LIBRARIES)
 if (GEOGRAPHICLIB_PRECISION EQUAL 1)
   message (WARNING "Compiling with floats which results in poor accuracy")
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 2)
@@ -322,7 +288,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
     find_package (Boost 1.54)
     if (Boost_FOUND)
       include_directories ("${Boost_INCLUDE_DIRS}")
-      set (QUAD_LIBRARIES quadmath)
+      set (HIGHPREC_LIBRARIES quadmath)
       if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8)
         # Enable Q suffix for quad precision in g++ 4.8 and later
         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fext-numeric-literals")
@@ -336,7 +302,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs")
     endif ()
   endif ()
-  if (NOT QUAD_LIBRARIES)
+  if (NOT HIGHPREC_LIBRARIES)
     message (WARNING "Cannot support quad precision, switching to double")
     set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
@@ -371,7 +337,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
         # Studio (specifically version 12).
         link_directories (mpfr_mpir_x86_x64_msvc2010/mpfr/dll/${_ARCH}/Release
           mpfr_mpir_x86_x64_msvc2010/mpir/dll/${_ARCH}/Release)
-        set (MPFR_LIBRARIES mpfr mpir)
+        set (HIGHPREC_LIBRARIES mpfr mpir)
         # Suppress the myriad of "conditional expression is constant"
         # warnings
         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4127")
@@ -384,11 +350,11 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
       # g++ before 4.5 doesn't work (no explicit cast operator)
       if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
             CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.5))
-        set (MPFR_LIBRARIES mpfr gmp)
+        set (HIGHPREC_LIBRARIES mpfr gmp)
       endif ()
     endif ()
   endif ()
-  if (NOT MPFR_LIBRARIES)
+  if (NOT HIGHPREC_LIBRARIES)
     message (WARNING "Cannot support mpfr, switching to double")
     set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
@@ -540,19 +506,19 @@ if (WIN32)
   set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sourceforge.net")
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
   if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    # Hardcode the prefix for Visual Studio 12
+    # Hardcode the prefix for Visual Studio 12 2013
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc12-x64")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
     set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} x64 ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
       "${PROJECT_NAME}-x64-${PROJECT_VERSION}")
   else ()
-    # Hardcode the prefix for Visual Studio 12
-    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc12")
+    # Hardcode the prefix for Visual Studio 12 2013
+    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc12-win32")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
-    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} ${PROJECT_VERSION}")
+    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} win32 ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
-      "${PROJECT_NAME}-${PROJECT_VERSION}")
+      "${PROJECT_NAME}-win32-${PROJECT_VERSION}")
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_NSIS_MENU_LINKS

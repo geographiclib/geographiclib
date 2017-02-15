@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeodSolve --help\n"
 "or visit:\n"
-"    http://geographiclib.sourceforge.net/1.46/GeodSolve.1.html\n";
+"    http://geographiclib.sourceforge.net/1.47/GeodSolve.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -225,8 +225,9 @@ int usage(int retval, bool brief) {
 "ACCURACY\n"
 "       Using the (default) series solution, GeodSolve is accurate to about 15\n"
 "       nm (15 nanometers) for the WGS84 ellipsoid.  The approximate maximum\n"
-"       error (expressed as a distance) for an ellipsoid with the same major\n"
-"       radius as the WGS84 ellipsoid and different values of the flattening is\n"
+"       error (expressed as a distance) for an ellipsoid with the same\n"
+"       equatorial radius as the WGS84 ellipsoid and different values of the\n"
+"       flattening is\n"
 "\n"
 "          |f|     error\n"
 "          0.01    25 nm\n"
@@ -318,7 +319,7 @@ int usage(int retval, bool brief) {
 "\n"
 "       The algorithms are described in C. F. F. Karney, Algorithms for\n"
 "       geodesics, J. Geodesy 87, 43-55 (2013); DOI:\n"
-"       <https://dx.doi.org/10.1007/s00190-012-0578-z>; addenda:\n"
+"       <https://doi.org/10.1007/s00190-012-0578-z>; addenda:\n"
 "       <http://geographiclib.sourceforge.net/geod-addenda.html>.\n"
 "\n"
 "       The Wikipedia page, Geodesics on an ellipsoid,\n"

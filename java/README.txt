@@ -3,7 +3,7 @@ This is a Java implementation of the geodesic algorithms described in
   C. F. F. Karney,
   Algorithms for geodesics,
   J. Geodesy 87, 43-55 (2013);
-  https://dx.doi.org/10.1007/s00190-012-0578-z
+  https://doi.org/10.1007/s00190-012-0578-z
   Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
 
 For documentation, see
@@ -17,5 +17,10 @@ programs using, for example,
   cd inverse/src/main/java
   javac -cp .:../../../../src/main/java Inverse.java
   echo -30 0 29.5 179.5 | java -cp .:../../../../src/main/java Inverse
+
+On Windows, change this to
+  cd inverse\src\main\java
+  javac -cp .;../../../../src/main/java Inverse.java
+  echo -30 0 29.5 179.5 | java -cp .;../../../../src/main/java Inverse
 
 Building with maven is also supported (see the documentation).

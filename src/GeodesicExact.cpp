@@ -2,7 +2,7 @@
  * \file GeodesicExact.cpp
  * \brief Implementation for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -84,9 +84,9 @@ namespace GeographicLib {
              sqrt( max(real(0.001), abs(_f)) * min(real(1), 1 - _f/2) / 2 ))
   {
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     if (!(Math::isfinite(_b) && _b > 0))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
     C4coeff();
   }
 
@@ -268,7 +268,7 @@ namespace GeographicLib {
 
       // sig12 = sig2 - sig1
       sig12 = atan2(max(real(0), csig1 * ssig2 - ssig1 * csig2),
-                    csig1 * csig2 + ssig1 * ssig2);
+                                 csig1 * csig2 + ssig1 * ssig2);
       {
         real dummy;
         Lengths(E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
@@ -343,7 +343,7 @@ namespace GeographicLib {
         // guess is taken to be (alp1a + alp1b) / 2.
         //
         // initial values to suppress warnings (if loop is executed 0 times)
-        real ssig1 = 0, csig1 = 0, ssig2 = 0, csig2 = 0;
+        real ssig1 = 0, csig1 = 0, ssig2 = 0, csig2 = 0, domg12 = 0;
         unsigned numit = 0;
         // Bracketing range
         real salp1a = tiny_, calp1a = 1, salp1b = tiny_, calp1b = -1;
@@ -375,7 +375,7 @@ namespace GeographicLib {
           real v = Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1,
                             slam12, clam12,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                            E, somg12, comg12, numit < maxit1_, dv);
+                            E, domg12, numit < maxit1_, dv);
           // Reversed test to allow escape with NaNs
           if (tripb || !(abs(v) >= (tripn ? 8 : 1) * tol0_)) break;
           // Update bracketing values
@@ -423,6 +423,12 @@ namespace GeographicLib {
         m12x *= _b;
         s12x *= _b;
         a12 = sig12 / Math::degree();
+        if (outmask & AREA) {
+          // omg12 = lam12 - domg12
+          real sdomg12 = sin(domg12), cdomg12 = cos(domg12);
+          somg12 = slam12 * cdomg12 - clam12 * sdomg12;
+          comg12 = clam12 * cdomg12 + slam12 * sdomg12;
+        }
       }
     }
 
@@ -462,8 +468,7 @@ namespace GeographicLib {
       if (!meridian) {
         if (somg12 > 1) {
           somg12 = sin(omg12); comg12 = cos(omg12);
-        } else
-          Math::norm(somg12, comg12);
+        }
       }
 
       if (!meridian &&
@@ -822,7 +827,7 @@ namespace GeographicLib {
                                      real& ssig1, real& csig1,
                                      real& ssig2, real& csig2,
                                      EllipticFunction& E,
-                                     real& somg12, real& comg12,
+                                     real& domg12,
                                      bool diffp, real& dlam12) const
     {
 
@@ -836,7 +841,7 @@ namespace GeographicLib {
       salp0 = salp1 * cbet1,
       calp0 = Math::hypot(calp1, salp1 * sbet1); // calp0 > 0
 
-    real somg1, comg1, somg2, comg2, cchi1, cchi2, lam12;
+    real somg1, comg1, somg2, comg2, somg12, comg12, cchi1, cchi2, lam12;
     // tan(bet1) = tan(sig1) * cos(alp1)
     // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
     ssig1 = sbet1; somg1 = salp0 * sbet1;
@@ -874,7 +879,7 @@ namespace GeographicLib {
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = atan2(max(real(0), csig1 * ssig2 - ssig1 * csig2),
-                  csig1 * csig2 + ssig1 * ssig2);
+                               csig1 * csig2 + ssig1 * ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
     somg12 = max(real(0), comg1 * somg2 - somg1 * comg2);
@@ -884,15 +889,16 @@ namespace GeographicLib {
     // chi12 = chi2 - chi1, limit to [0, pi]
     real
       schi12 = max(real(0), cchi1 * somg2 - somg1 * cchi2),
-      cchi12 = cchi1 * cchi2 + somg1 * somg2;
+      cchi12 =              cchi1 * cchi2 + somg1 * somg2;
     // eta = chi12 - lam120
     real eta = atan2(schi12 * clam120 - cchi12 * slam120,
                      cchi12 * clam120 + schi12 * slam120);
-
-    lam12 = eta -
-      _e2/_f1 * salp0 * E.H() / (Math::pi() / 2) *
+    real deta12 = -_e2/_f1 * salp0 * E.H() / (Math::pi() / 2) *
       (sig12 + (E.deltaH(ssig2, csig2, dn2) - E.deltaH(ssig1, csig1, dn1)));
-
+    lam12 = eta + deta12;
+    // domg12 = deta12 + chi12 - omg12
+    domg12 = deta12 + atan2(schi12 * comg12 - cchi12 * somg12,
+                            cchi12 * comg12 + schi12 * somg12);
     if (diffp) {
       if (calp2 == 0)
         dlam12 = - 2 * _f1 * dn1 / sbet1;

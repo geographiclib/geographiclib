@@ -2,12 +2,12 @@
  * \file TransverseMercatorExact.cpp
  * \brief Implementation for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * The relevant section of Lee's paper is part V, pp 67--101,
- * <a href="https://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
+ * <a href="https://doi.org/10.3138/X687-1574-4325-WM62">Conformal
  * Projections Based On Jacobian Elliptic Functions</a>.
  *
  * The method entails using the Thompson Transverse Mercator as an
@@ -53,7 +53,6 @@ namespace GeographicLib {
   TransverseMercatorExact::TransverseMercatorExact(real a, real f, real k0,
                                                    bool extendp)
     : tol_(numeric_limits<real>::epsilon())
-    , tol1_(real(0.1) * sqrt(tol_))
     , tol2_(real(0.1) * tol_)
     , taytol_(pow(tol_, real(0.6)))
     , _a(a)
@@ -67,11 +66,11 @@ namespace GeographicLib {
     , _Ev(_mv)
   {
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     if (!(_f > 0))
       throw GeographicErr("Flattening is not positive");
     if (!(_f < 1))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
     if (!(Math::isfinite(_k0) && _k0 > 0))
       throw GeographicErr("Scale is not positive");
   }

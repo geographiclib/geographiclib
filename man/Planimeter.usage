@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    Planimeter --help\n"
 "or visit:\n"
-"    http://geographiclib.sourceforge.net/1.46/Planimeter.1.html\n";
+"    http://geographiclib.sourceforge.net/1.47/Planimeter.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -183,7 +183,7 @@ int usage(int retval, bool brief) {
 "\n"
 "       The algorithm for the area of geodesic polygon is given in Section 6 of\n"
 "       C. F. F. Karney, Algorithms for geodesics, J. Geodesy 87, 43-55 (2013);\n"
-"       DOI <https://dx.doi.org/10.1007/s00190-012-0578-z>; addenda:\n"
+"       DOI <https://doi.org/10.1007/s00190-012-0578-z>; addenda:\n"
 "       <http://geographiclib.sourceforge.net/geod-addenda.html>.\n"
 "\n"
 "AUTHOR\n"

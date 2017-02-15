@@ -2,7 +2,7 @@
  * \file UTMUPS.cpp
  * \brief Implementation for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -232,7 +232,7 @@ namespace GeographicLib {
       throw GeographicErr("More than 2 digits use to specify zone "
                           + Utility::str(zone1));
 
-    string hemi = zonestr.substr(q - c);
+    string hemi(zonestr, q - c);
     transform(hemi.begin(), hemi.end(), hemi.begin(), (int(*)(int))tolower);
     if (q == c && (hemi == "inv" || hemi == "invalid")) {
       zone = INVALID;
