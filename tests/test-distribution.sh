@@ -420,7 +420,7 @@ sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 
 # python release
 cd $TEMP/gita/geographiclib/python
-python setup.py sdist --formats gztar,zip upload
+python setup.py sdist --formats gztar upload
 
 # java release
 cd $TEMP/gita/geographiclib/java
@@ -430,7 +430,7 @@ mvn clean deploy -P release
 npm publish $TEMP/gita/geographiclib/BUILD/js/geographiclib
 make -C $DEVELSOURCE -f makefile-admin distrib-js
 make -C $DEVELSOURCE -f makefile-admin install-js
-# also update devel branch of node-geographiclib from
+# also update devel branch of node-geographiclib from ??
 $TEMP/gita/geographiclib/BUILD/js/geographiclib
 
 # matlab toolbox

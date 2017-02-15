@@ -14,8 +14,10 @@ run ()
     fi
 }
 
+mv m4/pkg.m4 ./
 rm -rf autom4ate.cache m4
 mkdir m4
+mv pkg.m4 m4/
 run aclocal
 run autoheader
 LIBTOOLIZE=libtoolize
