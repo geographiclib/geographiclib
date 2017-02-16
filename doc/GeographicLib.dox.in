@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2017-02-15
+\date 2017-mm-dd
 
 The documentation for other versions is available at
 <tt>http://geographiclib.sourceforge.net/m.nn/</tt> for versions numbers
@@ -7275,6 +7275,9 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
+
+ - <a href="http://geographiclib.sourceforge.net/1.48">Version 1.48</a>
+   (released 2017-mm-dd)
 
  - <a href="http://geographiclib.sourceforge.net/1.47">Version 1.47</a>
    (released 2017-02-15)

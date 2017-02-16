@@ -1595,5 +1595,5 @@
  * G. Panou and R. Korakitis,[[BR]]
    ''Geodesic equations and their numerical solutions in geodetic and
    Cartesian coordinates on an oblate spheroid''
-   (Nov. 2016).[[BR]
+   (Nov. 2016).[[BR]]
    https://arxiv.org/abs/1612.01357
