@@ -159,6 +159,13 @@ set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3 4 5)
 option (PACKAGE_DEBUG_LIBS
   "Include debug versions of library in binary package" OFF)
 
+# (9) Try to link against boost when building the examples.  The
+# NearestNeighbor example optionally uses the Boost library.  Set to ON,
+# if you want to exercise this functionality.  Default is OFF, so that
+# cmake configuration isn't slowed down looking for Boost.
+option (USE_BOOST_FOR_EXAMPLES
+  "Look for Boost library when compiling examples" OFF)
+
 set (LIBNAME Geographic)
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)
   # For multi-config systems and for Visual Studio, the debug version of

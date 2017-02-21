@@ -102,6 +102,10 @@ namespace GeographicLib {
    * The \e real type must support numeric_limits queries (specifically:
    * is_signed, is_integer, max(), digits, and digits10).
    *
+   * \note <a href="http://www.boost.org/libs/serialization/doc">
+   * Boost serialization</a> can be used to save and restore a
+   * NearestNeighbor object.  This is illustrated in the example.
+   *
    * Example of use:
    * \include example-NearestNeighbor.cpp
    **********************************************************************/

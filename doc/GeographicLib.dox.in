@@ -141,8 +141,8 @@ Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
 and the utilities have been tested with g++ 5.3.1 under Linux, with
 Apple LLVM 7.0.2 under Mac OS X, and with MS Visual Studio 10 (2010), 11
-(2012), 12 (2013), and 14 (2015) compiled for 32 bit and 64 bit on
-Windows.
+(2012), 12 (2013), 14 (2015), and 15 (2017) compiled for 32 bit and 64
+bit on Windows.
 
 MATLAB, JavaScript, and Python interfaces are provided to portions of
 GeographicLib; see \ref other.
@@ -367,6 +367,9 @@ Here are the steps to compile and install GeographicLib:
     and that's the recommended configuration.  In particular you should
     avoid "installing" the library with a precision different from
     double.
+  - <code>USE_BOOST_FOR_EXAMPLES</code> (default: OFF).  If set to OK,
+    then the Boost library is searched for in order to build the
+    NearestNeighbor example.
 - Build and install the software.  In non-IDE environments, run
   \verbatim
   make         # compile the library and utilities
@@ -7278,49 +7281,53 @@ git repository for GeographicLib</a>.
 
  - <a href="http://geographiclib.sourceforge.net/1.48">Version 1.48</a>
    (released 2017-mm-dd)
+   - Fix compiler warnings with Visual Studio 2017.
+   - Changes in cmake support:
+     - by default don't search for Boost libraries for building
+       examples.
 
  - <a href="http://geographiclib.sourceforge.net/1.47">Version 1.47</a>
    (released 2017-02-15)
-     - Add NearestNeighbor class.
-     - Improve accuracy of area calculation (fixing a flaw introduced in
-       version 1.46); fix applied in Geodesic, GeodesicExact, and the
-       implementations in C, Fortran, Java, JavaScript, Python, MATLAB,
-       and Maxima.
-     - Generalize NormalGravity to allow oblate and prolate ellipsoids.
-       As a consequence a new form of constructor,
-       NormalGravity::NormalGravity, has been introduced and the old
-       form is now deprecated (and because the signatures of the two
-       constructors are similar, the compiler will warn about the use of
-       the old one).
-     - Changes in Math class:
-       - Math::sincosd, Math::sind, Math::cosd only return &minus;0 for
-         the case sin(&minus;0);
-       - Math::atan2d and Math::AngNormalize return results in
-         (&minus;180&deg;, 180&deg;]; this may affect the longitudes and
-         azimuth returned by several other functions.
-     - Add Utility::trim() and Utility::val<T>(); Utility::num<T>() is now
-       DEPRECATED.
-     - Changes in cmake support:
-       - remove support of PACKAGE_PATH and INSTALL_PATH in cmake
-         configuration;
-       - fix to FindGeographicLib.cmake to make it work on Debian systems;
-       - use $<TARGET_PDB_FILE:tgt> (cmake version >= 3.1);
-       - use NAMESPACE for exported targets;
-       - geographiclib-config.cmake exports GEOGRAPHICLIB_DATA,
-         GEOGRAPHICLIB_PRECISION, and GeographicLib_HIGHPREC_LIBRARIES.
-     - Add pkg-config support for cmake and autoconf builds.
-     - Minor fixes:
-       - fix the order of declarations in C library, incorporating the
-         patches in version 1.46.1;
-       - fix the packaging of the python library, incorporating the
-         patches in version 1.46.3;
-       - restrict junit dependency in the Java package to testing scope
-         (thanks to Mick Killianey);
-       - various behind-the-scenes fixes to EllipticFunction;
-       - fix documentation and default install location for Windows binary
-         installers;
-       - fix clang compiler warnings in GeodesicExactC4 and
-         TransverseMercator.
+   - Add NearestNeighbor class.
+   - Improve accuracy of area calculation (fixing a flaw introduced in
+     version 1.46); fix applied in Geodesic, GeodesicExact, and the
+     implementations in C, Fortran, Java, JavaScript, Python, MATLAB,
+     and Maxima.
+   - Generalize NormalGravity to allow oblate and prolate ellipsoids.
+     As a consequence a new form of constructor,
+     NormalGravity::NormalGravity, has been introduced and the old
+     form is now deprecated (and because the signatures of the two
+     constructors are similar, the compiler will warn about the use of
+     the old one).
+   - Changes in Math class:
+     - Math::sincosd, Math::sind, Math::cosd only return &minus;0 for
+       the case sin(&minus;0);
+     - Math::atan2d and Math::AngNormalize return results in
+       (&minus;180&deg;, 180&deg;]; this may affect the longitudes and
+       azimuth returned by several other functions.
+   - Add Utility::trim() and Utility::val<T>(); Utility::num<T>() is now
+     DEPRECATED.
+   - Changes in cmake support:
+     - remove support of PACKAGE_PATH and INSTALL_PATH in cmake
+       configuration;
+     - fix to FindGeographicLib.cmake to make it work on Debian systems;
+     - use $<TARGET_PDB_FILE:tgt> (cmake version >= 3.1);
+     - use NAMESPACE for exported targets;
+     - geographiclib-config.cmake exports GEOGRAPHICLIB_DATA,
+       GEOGRAPHICLIB_PRECISION, and GeographicLib_HIGHPREC_LIBRARIES.
+   - Add pkg-config support for cmake and autoconf builds.
+   - Minor fixes:
+     - fix the order of declarations in C library, incorporating the
+       patches in version 1.46.1;
+     - fix the packaging of the python library, incorporating the
+       patches in version 1.46.3;
+     - restrict junit dependency in the Java package to testing scope
+       (thanks to Mick Killianey);
+     - various behind-the-scenes fixes to EllipticFunction;
+     - fix documentation and default install location for Windows binary
+       installers;
+     - fix clang compiler warnings in GeodesicExactC4 and
+       TransverseMercator.
 
  - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
    (released 2016-02-15)

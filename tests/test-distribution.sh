@@ -161,7 +161,7 @@ EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
 cp $TEMP/gita/geographiclib/pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
 
-for ver in 10 11 12 14; do
+for ver in 10 11 12 14 15; do
     for arch in win32 x64; do
 	pkg=vc$ver-$arch
 	gen="Visual Studio $ver"
@@ -228,7 +228,7 @@ find . -type f | sort -u > ../files.b
 cd $TEMP/relc/GeographicLib-$VERSION
 mkdir BUILD
 cd BUILD
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
 make -j$NUMCPUS all
 make test
 make -j$NUMCPUS exampleprograms
