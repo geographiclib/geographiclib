@@ -1487,7 +1487,7 @@ real A3f(const struct geod_geodesic* g, real eps) {
 
 void C3f(const struct geod_geodesic* g, real eps, real c[]) {
   /* Evaluate C3 coeffs
-   * Elements c[1] thru c[nC3 - 1] are set */
+   * Elements c[1] through c[nC3 - 1] are set */
   real mult = 1;
   int o = 0, l;
   for (l = 1; l < nC3; ++l) {   /* l is index of C3[l] */
@@ -1500,7 +1500,7 @@ void C3f(const struct geod_geodesic* g, real eps, real c[]) {
 
 void C4f(const struct geod_geodesic* g, real eps, real c[]) {
   /* Evaluate C4 coeffs
-   * Elements c[0] thru c[nC4 - 1] are set */
+   * Elements c[0] through c[nC4 - 1] are set */
   real mult = 1;
   int o = 0, l;
   for (l = 0; l < nC4; ++l) {   /* l is index of C4[l] */
@@ -1813,7 +1813,7 @@ void geod_polygon_addpoint(const struct geod_geodesic* g,
     p->lat0 = p->lat = lat;
     p->lon0 = p->lon = lon;
   } else {
-    real s12, S12;
+    real s12, S12 = 0;       /* Initialize S12 to stop Visual Studio warning */
     geod_geninverse(g, p->lat, p->lon, lat, lon,
                     &s12, 0, 0, 0, 0, 0, p->polyline ? 0 : &S12);
     accadd(p->P, s12);
@@ -1830,7 +1830,7 @@ void geod_polygon_addedge(const struct geod_geodesic* g,
                           struct geod_polygon* p,
                           real azi, real s) {
   if (p->num) {                 /* Do nothing is num is zero */
-    real lat, lon, S12;
+    real lat, lon, S12 = 0;  /* Initialize S12 to stop Visual Studio warning */
     geod_gendirect(g, p->lat, p->lon, azi, GEOD_LONG_UNROLL, s,
                    &lat, &lon, 0,
                    0, 0, 0, 0, p->polyline ? 0 : &S12);
@@ -1905,7 +1905,7 @@ unsigned geod_polygon_testpoint(const struct geod_geodesic* g,
   tempsum = p->polyline ? 0 : p->A[0];
   crossings = p->crossings;
   for (i = 0; i < (p->polyline ? 1 : 2); ++i) {
-    real s12, S12;
+    real s12, S12 = 0;       /* Initialize S12 to stop Visual Studio warning */
     geod_geninverse(g,
                     i == 0 ? p->lat  : lat, i == 0 ? p->lon  : lon,
                     i != 0 ? p->lat0 : lat, i != 0 ? p->lon0 : lon,

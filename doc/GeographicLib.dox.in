@@ -5080,8 +5080,10 @@ References:
    the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
    New Series 52, 172 pp. (1912).
  - P. Osborne,
-   <a href="http://www.mercator99.webspace.virginmedia.com/">
-   The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5.
+   <a href="https://doi.org/10.5281/zenodo.35392">
+   The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5;
+   DOI: <a href="https://doi.org/10.5281/zenodo.35392">
+   10.5281/zenodo.35392</a>.
  - W. M. Smart
    <a href="https://doi.org/10.1093/mnras/106.2.124">
    On a Problem in Navigation</a>
