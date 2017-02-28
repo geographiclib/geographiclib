@@ -68,7 +68,7 @@ Two examples of this library in use are
 * {@tutorial 3-examples}
 
 ### Implementations in various languages
-* {@link http://sourceforge.net/p/geographiclib/code/ci/release/tree/
+* {@link https://sourceforge.net/p/geographiclib/code/ci/release/tree/
     git repository}
 * C++ (complete library):
   {@link https://geographiclib.sourceforge.io/html/index.html

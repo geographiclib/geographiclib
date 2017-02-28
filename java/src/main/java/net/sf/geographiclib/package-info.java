@@ -199,7 +199,7 @@
  *   <a href="https://sourceforge.net/projects/geographiclib/">
  *     Main project page</a>
  * <li>
- *   <a href="http://sourceforge.net/p/geographiclib/code/ci/release/tree/">
+ *   <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
  *     git repository</a>
  * <li>
  *   Implementations in various languages:

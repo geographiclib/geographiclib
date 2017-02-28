@@ -34,7 +34,7 @@
       <email>charles@karney.com</email>
       <organization></organization>
       <organizationUrl>
-        http://sourceforge.net/u/karney/profile/
+        https://sourceforge.net/u/karney/profile/
       </organizationUrl>
     </developer>
   </developers>
@@ -160,10 +160,10 @@
       scm:git://git.code.sourceforge.net/p/geographiclib/code
     </connection>
     <developerConnection>
-      scm:git:http://git.code.sourceforge.net/p/geographiclib/code
+      scm:git:https://git.code.sourceforge.net/p/geographiclib/code
     </developerConnection>
     <url>
-      http://sourceforge.net/p/geographiclib/code/ci/master/tree/
+      https://sourceforge.net/p/geographiclib/code/ci/master/tree/
     </url>
   </scm>
 

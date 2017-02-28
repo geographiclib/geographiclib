@@ -127,7 +127,7 @@ and are therefore in the public domain.
     GeographicLib::GeodesicLine, GeographicLib::PolygonAreaT.
   - The section in the %GeographicLib documentation on geodesics: \ref
     geodesic.
-- <a href="http://sourceforge.net/p/geographiclib/code/ci/release/tree/">
+- <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
   git repository</a>
 - Implementations in various languages
   - C++ (complete library):

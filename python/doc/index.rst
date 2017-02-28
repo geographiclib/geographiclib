@@ -31,7 +31,7 @@ Installation
 
 The full `Geographic <https://geographiclib.sourceforge.io>`_ package
 can be downloaded from
-`sourceforge <http://sourceforge.net/projects/geographiclib/files/distrib>`_.
+`sourceforge <https://sourceforge.net/projects/geographiclib/files/distrib>`_.
 However the python implementation is available as a stand-alone package.
 To install this, run
 

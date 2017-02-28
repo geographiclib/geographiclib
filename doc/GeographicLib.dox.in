@@ -8404,9 +8404,7 @@ git repository for GeographicLib</a>.
    - Add <a href="ConicProj.1.html"> ConicProj</a>.
    - Reverse the initial sense of the -s option for
      <a href="Planimeter.1.html"> Planimeter</a>.
-   - Migrate source from subversion to
-     <a href="http://geographiclib.git.sourceforge.net/git/gitweb-index.cgi">
-     git</a>.
+   - Migrate source from subversion to git.
 
  - <a href="https://geographiclib.sourceforge.io/1.8">Version 1.8</a>
    (released 2011-02-22)

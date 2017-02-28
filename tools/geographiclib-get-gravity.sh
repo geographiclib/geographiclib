@@ -151,7 +151,7 @@ while read file; do
     fi
     echo download $file.tar.bz2 ...
     echo $file >> $TEMP/download
-    URL="http://downloads.sourceforge.net/project/geographiclib/$SUBDIR-distrib/$file.tar.bz2?use_mirror=autoselect"
+    URL="https://downloads.sourceforge.net/project/geographiclib/$SUBDIR-distrib/$file.tar.bz2?use_mirror=autoselect"
     ARCHIVE=$TEMP/$file.tar.bz2
     wget -O$ARCHIVE $URL
     echo unpack $file.tar.bz2 ...
