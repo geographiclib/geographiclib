@@ -3,7 +3,7 @@ A library for geographic projections.
 Written by Charles Karney <charles@karney.com> and licensed under
 the MIT/X11 License.  For more information, see
 
-    http://geographiclib.sourceforge.net/
+    https://geographiclib.sourceforge.io/
 
 Files
 

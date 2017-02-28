@@ -3,7 +3,7 @@
  *
  * Copyright (c) BMW Car IT GmbH (2014-2016) <sebastian.mattheis@bmw-carit.de>
  * and licensed under the MIT/X11 License. For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 package net.sf.geographiclib;
 
@@ -23,7 +23,7 @@ package net.sf.geographiclib;
  * Algorithms for geodesics</a>, J. Geodesy <b>87</b>, 43&ndash;55 (2013);
  * DOI: <a href="http://doi.org/10.1007/s00190-012-0578-z">
  * 10.1007/s00190-012-0578-z</a>; addenda:
- * <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
+ * <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
  * geod-addenda.html</a>.
  * </li>
  * </ul>

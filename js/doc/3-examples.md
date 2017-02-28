@@ -51,18 +51,18 @@ redundant white space; this is appropriate for web applications.
 Load geographiclib.min.js with
 ```html
 <script type="text/javascript"
-        src="http://geographiclib.sourceforge.net/scripts/geographiclib.min.js">
+        src="https://geographiclib.sourceforge.io/scripts/geographiclib.min.js">
 </script>
 ```
 This uses the latest version.  If you want use a specific version, load
 with, for example,
 ```html
 <script type="text/javascript"
-        src="http://geographiclib.sourceforge.net/scripts/geographiclib-1.45.min.js">
+        src="https://geographiclib.sourceforge.io/scripts/geographiclib-1.45.min.js">
 </script>
 ```
 Browse
-[http://geographiclib.sourceforge.net/scripts](http://geographiclib.sourceforge.net/scripts)
+[https://geographiclib.sourceforge.io/scripts](https://geographiclib.sourceforge.io/scripts)
 to see what versions are available.
 
 #### Loading geographiclib.min.js with AMD

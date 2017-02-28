@@ -10,4 +10,4 @@ which one to install, start with
 
 For more information, see
 
- http://geographiclib.sourceforge.net/html/geoid.html#geoidinst
+ https://geographiclib.sourceforge.io/html/geoid.html#geoidinst

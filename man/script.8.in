@@ -4,7 +4,7 @@
 .SH DESCRIPTION
 .B @SCRIPT@
 downloads and installs the @DATA@ datasets used by GeographicLib,
-<http://geographiclib.sourceforge.net>.  For documentation, supply the
+<https://geographiclib.sourceforge.io>.  For documentation, supply the
 .B \-h
 option:
 .PP

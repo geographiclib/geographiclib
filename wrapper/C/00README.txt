@@ -1,7 +1,7 @@
 The geodesic routines in GeographicLib have been implemented as a native
 C library.  See
 
-  http://geographiclib.sourceforge.net/html/C/
+  https://geographiclib.sourceforge.io/html/C/
 
 It is also possible to call the C++ version of GeographicLib directly
 from C and this directory contains a small example, which convert

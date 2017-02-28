@@ -4,7 +4,7 @@
 #
 # Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
-# http://geographiclib.sourceforge.net/
+# https://geographiclib.sourceforge.io/
 
 DEFAULTDIR="@GEOGRAPHICLIB_DATA@"
 SUBDIR=gravity
@@ -53,7 +53,7 @@ will be saved.  -h prints this help.
 
 For more information on the $NAME datasets, visit
 
-  http://geographiclib.sourceforge.net/html/$NAME.html
+  https://geographiclib.sourceforge.io/html/$NAME.html
 
 EOF
 }

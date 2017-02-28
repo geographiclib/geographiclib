@@ -7,7 +7,7 @@
  *
  * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  */
 
 GeographicLib.DMS = {};
@@ -61,7 +61,7 @@ GeographicLib.DMS = {};
    * @description The interpretation of the string is given in the
    *   documentation of the corresponding function, Decode(string&, flag&)
    *   in the {@link
-   *   http://geographiclib.sourceforge.net/html/classGeographicLib_1_1DMS.html
+   *   https://geographiclib.sourceforge.io/html/classGeographicLib_1_1DMS.html
    *   C++ DMS class}
    * @param {string} dms the string.
    * @returns {object} r where r.val is the decoded value (degrees) and r.ind

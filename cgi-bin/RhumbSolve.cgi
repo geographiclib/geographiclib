@@ -5,7 +5,7 @@
 #
 # Copyright (c) Charles Karney (2014) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
-# http://geographiclib.sourceforge.net/
+# https://geographiclib.sourceforge.io/
 
 . ./utils.sh
 DEFAULTRADIUS=6378137
@@ -123,7 +123,7 @@ cat <<EOF
   <body>
     <h3>
       Online rhumb line calculations using the
-      <a href="http://geographiclib.sourceforge.net/html/RhumbSolve.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/RhumbSolve.1.html">
 	 RhumbSolve</a> utility
     </h3>
     <form action="/cgi-bin/RhumbSolve" method="get">
@@ -257,7 +257,7 @@ cat <<EOF
     </form>
     <hr>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/RhumbSolve.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/RhumbSolve.1.html">
         RhumbSolve (version $VERSION)</a>
       performs rhumb line calculations for an arbitrary ellipsoid of
       revolution.  The path with a constant heading between two points
@@ -268,7 +268,7 @@ cat <<EOF
       length.  <b>NOTE:</b> the rhumb line is <em>not</em> the shortest
       path between two points; that is the geodesic and it is calculated
       by
-      <a href="http://geographiclib.sourceforge.net/cgi-bin/GeodSolve">
+      <a href="https://geographiclib.sourceforge.io/cgi-bin/GeodSolve">
 	GeodSolve</a>.
     </p>
     <p>
@@ -316,15 +316,15 @@ cat <<EOF
       number) for <em>lon2</em> and <em>S12</em> in this case.
     </p>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/RhumbSolve.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/RhumbSolve.1.html">
         RhumbSolve</a>,
       which is a simple wrapper of the
-      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Rhumb.html">
+      <a href="https://geographiclib.sourceforge.io/html/classGeographicLib_1_1Rhumb.html">
         GeographicLib::Rhumb</a> class, is one of the utilities provided
-      with <a href="http://geographiclib.sourceforge.net/">
+      with <a href="https://geographiclib.sourceforge.io/">
       GeographicLib</a>.  See also the section of the GeographicLib
       documentation on
-      <a href="http://geographiclib.sourceforge.net/html/rhumb.html">
+      <a href="https://geographiclib.sourceforge.io/html/rhumb.html">
 	Rhumb lines</a> and the Wikipedia page,
       <a href="https://en.wikipedia.org/wiki/Rhumb_line">
 	Rhumb line</a>.
@@ -333,7 +333,7 @@ cat <<EOF
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
       (2014-12-05)</address>
-    <a href="http://geographiclib.sourceforge.net">
+    <a href="https://geographiclib.sourceforge.io">
       GeographicLib home page
     </a>
   </body>

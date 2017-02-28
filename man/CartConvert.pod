@@ -143,5 +143,5 @@ B<CartConvert> was written by Charles Karney.
 =head1 HISTORY
 
 B<CartConvert> was added to GeographicLib,
-L<http://geographiclib.sourceforge.net>, in 2009-02.  Prior to 2009-03 it was
+L<https://geographiclib.sourceforge.io>, in 2009-02.  Prior to 2009-03 it was
 called ECEFConvert.

@@ -14,13 +14,13 @@
  *   Algorithms for geodesics,
  *   J. Geodesy <b>87</b>, 43--55 (2013);
  *   https://doi.org/10.1007/s00190-012-0578-z
- *   Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
+ *   Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
  *
  * See the comments in geodesic.h for documentation.
  *
  * Copyright (c) Charles Karney (2012-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  */
 
 #include "geodesic.h"

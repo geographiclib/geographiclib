@@ -4,8 +4,8 @@ GeographicLib
 A C++ library for geographic projections.  The web site for the package
 is
 
-> http://geographiclib.sf.net
+> https://geographiclib.sourceforge.io
 
 The API for the library is documented at
 
-> http://geographiclib.sf.net/html
+> https://geographiclib.sourceforge.io/html

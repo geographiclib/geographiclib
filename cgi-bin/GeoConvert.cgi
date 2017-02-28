@@ -5,7 +5,7 @@
 #
 # Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
-# http://geographiclib.sourceforge.net/
+# https://geographiclib.sourceforge.io/
 
 . ./utils.sh
 OPTION=`lookupkey "$QUERY_STRING" option`
@@ -75,7 +75,7 @@ cat <<EOF
   <body>
     <h3>
       Online geographic coordinate conversions using the
-      <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/GeoConvert.1.html">
 	GeoConvert</a> utility
     </h3>
     <form action="/cgi-bin/GeoConvert" method="get">
@@ -165,7 +165,7 @@ cat <<EOF
     </form>
     <hr>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/GeoConvert.1.html">
         GeoConvert (version $VERSION)</a>
       converts between geographic (latitude and longitude) coordinates,
       <a href="https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">
@@ -216,13 +216,13 @@ cat <<EOF
       </ul>
     </p>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/GeoConvert.1.html">
         GeoConvert</a>,
       which is a simple wrapper of the
-      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1GeoCoords.html">
+      <a href="https://geographiclib.sourceforge.io/html/classGeographicLib_1_1GeoCoords.html">
         GeographicLib::GeoCoords</a> class,
       is one of the utilities provided
-      with <a href="http://geographiclib.sourceforge.net/">
+      with <a href="https://geographiclib.sourceforge.io/">
         GeographicLib</a>.
       This web interface illustrates a subset of its capabilities.  If
       you wish to use GeoConvert directly,
@@ -234,7 +234,7 @@ cat <<EOF
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
       (2015-05-18)</address>
-    <a href="http://geographiclib.sourceforge.net">
+    <a href="https://geographiclib.sourceforge.io">
       GeographicLib home
     </a>
   </body>

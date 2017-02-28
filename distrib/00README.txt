@@ -6,4 +6,4 @@ compiled with Visual Studio 12 2013).
 
 For installation instructions, see
 
- http://geographiclib.sourceforge.net/html/install.html
+ https://geographiclib.sourceforge.io/html/install.html

@@ -149,7 +149,7 @@ terminate; following lines will be converted.
 The ellipsoidal gnomonic projection is derived in Section 8 of
 C. F. F. Karney, I<Algorithms for geodesics>, J. Geodesy 87, 43-55 (2013); DOI
 L<https://doi.org/10.1007/s00190-012-0578-z>;
-addenda: L<http://geographiclib.sourceforge.net/geod-addenda.html>.
+addenda: L<https://geographiclib.sourceforge.io/geod-addenda.html>.
 
 =head1 AUTHOR
 
@@ -158,5 +158,5 @@ B<GeodesicProj> was written by Charles Karney.
 =head1 HISTORY
 
 B<GeodesicProj> was added to GeographicLib,
-L<http://geographiclib.sourceforge.net>, in 2009-08.  Prior to version 1.9 it was
+L<https://geographiclib.sourceforge.io>, in 2009-08.  Prior to version 1.9 it was
 called EquidistantTest.

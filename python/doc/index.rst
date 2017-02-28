@@ -11,17 +11,17 @@ Author: Charles F. F. Karney (charles@karney.com)
 Version: |version|
 
 The documentation for other versions is available at
-``http://geographiclib.sourceforge.net/m.nn/python/`` for versions numbers
+``https://geographiclib.sourceforge.io/m.nn/python/`` for versions numbers
 ``m.nn`` ≥ 1.46.
 
 Licensed under the MIT/X11 License; see
-`LICENSE.txt <http://geographiclib.sourceforge.net/html/LICENSE.txt>`_.
+`LICENSE.txt <https://geographiclib.sourceforge.io/html/LICENSE.txt>`_.
 
 Introduction
 ============
 
 This is a python implementation of the geodesic routines in
-`GeographicLib <http://geographiclib.sourceforge.net>`_.
+`GeographicLib <https://geographiclib.sourceforge.io>`_.
 
 Although it is maintained in conjunction with the larger C++ library,
 this python package can be used independently.
@@ -29,7 +29,7 @@ this python package can be used independently.
 Installation
 ------------
 
-The full `Geographic <http://geographiclib.sourceforge.net>`_ package
+The full `Geographic <https://geographiclib.sourceforge.io>`_ package
 can be downloaded from
 `sourceforge <http://sourceforge.net/projects/geographiclib/files/distrib>`_.
 However the python implementation is available as a stand-alone package.

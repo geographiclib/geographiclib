@@ -4,7 +4,7 @@
 #
 # Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
-# http://geographiclib.sourceforge.net/
+# https://geographiclib.sourceforge.io/
 
 cat <<EOF
 Content-type: text/html
@@ -13,7 +13,7 @@ Content-type: text/html
   <head>
     <title>Online geodesic calculator</title>
     <meta HTTP-EQUIV="Refresh"
-	  CONTENT="5; URL=http://geographiclib.sourceforge.net/cgi-bin/GeodSolve">
+	  CONTENT="5; URL=https://geographiclib.sourceforge.io/cgi-bin/GeodSolve">
   </head>
   <body topmargin=10 leftmargin=10>
     <h3>
@@ -21,8 +21,8 @@ Content-type: text/html
 	<em>
 	  The Geod calculator has been renamed GeodSolve which is available at
 	  <center>
-	    <a href="http://geographiclib.sourceforge.net/cgi-bin/GeodSolve">
-	      http://geographiclib.sourceforge.net/cgi-bin/GeodSolve</a>.
+	    <a href="https://geographiclib.sourceforge.io/cgi-bin/GeodSolve">
+	      https://geographiclib.sourceforge.io/cgi-bin/GeodSolve</a>.
 	  </center>
 	  <br>
 	  You will be redirected there.  Click on the link to go there

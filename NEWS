@@ -2,7 +2,7 @@ A reverse chronological list of changes to GeographicLib
 
 For more information, see
 
-    http://geographiclib.sourceforge.net/
+    https://geographiclib.sourceforge.io/
 
 The current version of the library is 1.47.
 
@@ -286,7 +286,7 @@ Changes between 1.44 (released 2015-08-14) and 1.43 versions:
       o version number included as comment in packed script
         geographiclib.js;
       o geod-calc.html and geod-google.html report the version number;
-      o http://geographiclib.sourceforge.net/scripts/ gives access to
+      o https://geographiclib.sourceforge.io/scripts/ gives access to
         earlier versions of geographiclib.js as geographiclib-m.nn.js;
     + Fortran: add geover subroutine to return version numbers;
     + Maxima: geodesic.mac defines geod_version;
@@ -474,7 +474,7 @@ Changes between 1.40 (released 2014-12-18) and 1.39 versions:
     position (latitude and longitude = NaN), instead of the north pole.
 
   * Add an online version of RhumbSolve at
-    http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve.
+    https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve.
 
   * Additions to the documentation:
     + documentation on  Jacobi's conformal projection;
@@ -1465,7 +1465,7 @@ Changes between 2009-11 and 2009-10 versions:
 
 Changes between 2009-10 and 2009-09 versions:
 
-  * Change web site to http://geographiclib.sourceforge.net
+  * Change web site to https://geographiclib.sourceforge.io
 
   * Several house-cleaning changes:
     + Change from the a flat directory structure to a more easily

@@ -26,7 +26,7 @@
     easy to do geodesic computations for an ellipsoid of revolution in
     a Java program. It requires Java version 1.1 or later.
   </description>
-  <url>http://geographiclib.sourceforge.net</url>
+  <url>https://geographiclib.sourceforge.io</url>
 
   <developers>
     <developer>

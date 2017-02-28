@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 // Constants.hpp includes Math.hpp.  Place this include outside Math.hpp's
