@@ -1423,6 +1423,11 @@
    applications]''
    (Teubner, Leipzig 1900), Chap. 5, Sec. 3, pp. 293--305.[[BR]]
    https://books.google.com/books?id=bSsLAAAAYAAJ&pg=PA293 (PDF fricke00.pdf)
+ * L. Crawford,[[BR]]
+   ''The general equation of a geodesic on a surface of revolution
+   applied to the sphere'',
+   Proc. Edinburgh Math. Soc. '''19''', 57--61 (1900).[[BR]]
+   https://doi.org/10.1017/S0013091500032624
  * L. Bianchi,[[BR]]
    ''Lezioni di Geometria Differenziale
    [Lessons in Differential Geometry]'', Vol. 1
@@ -1527,6 +1532,10 @@
    ''Geodetic inverse solution between antipodal points'',
    unpublished report, DMAAC (Aug. 28, 1975).[[BR]]
    https://doi.org/10.5281/zenodo.32999
+ * R. Bourbon,[[BR]]
+   ''Geodesic line on the surface of a spheroid'',
+   J.  Navigation '''43'''(1), 132--135 (1990).[[BR]]
+   https://doi.org/10.1017/S0373463300013886
  * R. H. Rapp,[[BR]]
    ''Geometric geodesy, Part I'',
    Dept. of Geodetic Science and Surveying,
@@ -1597,3 +1606,10 @@
    Cartesian coordinates on an oblate spheroid''
    (Nov. 2016).[[BR]]
    https://arxiv.org/abs/1612.01357
+ * W.-K. Tseng,[[BR]]
+   ''An algorithm for the inverse solution of geodesic sailing without
+   auxiliary sphere'',
+   J. Navigation '''67'''(5), 825--844 (2014).[[BR]]
+   https://doi.org/10.1017/S0373463314000228 [[BR]]
+   Publisher's Notice:  https://doi.org/10.1017/S0373463314000745 [[BR]]
+   Erratum: https://doi.org/10.1017/S0373463314000733
