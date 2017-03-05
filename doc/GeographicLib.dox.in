@@ -367,9 +367,12 @@ Here are the steps to compile and install GeographicLib:
     and that's the recommended configuration.  In particular you should
     avoid "installing" the library with a precision different from
     double.
-  - <code>USE_BOOST_FOR_EXAMPLES</code> (default: OFF).  If set to OK,
+  - <code>USE_BOOST_FOR_EXAMPLES</code> (default: OFF).  If set to ON,
     then the Boost library is searched for in order to build the
     NearestNeighbor example.
+  - <code>APPLE_MULTIPLE_ARCHITECTURES</code> (default: OFF).  If set to
+    ON, build for i386 and x86_64 and Mac OS X systems.  Otherwise,
+    build for the default architecture.
 - Build and install the software.  In non-IDE environments, run
   \verbatim
   make         # compile the library and utilities
@@ -7285,8 +7288,10 @@ git repository for GeographicLib</a>.
    (released 2017-mm-dd)
    - Fix compiler warnings with Visual Studio 2017.
    - Changes in cmake support:
-     - by default don't search for Boost libraries for building
-       examples.
+     - add USE_BOOST_FOR_EXAMPLES option (default OFF), if ON search for
+       Boost libraries for building examples;
+     - add APPLE_MULTIPLE_ARCHITECTURES option (default OFF), if ON
+       build for i386 and x86_64 on Mac OS X systems.
 
  - <a href="https://geographiclib.sourceforge.io/1.47">Version 1.47</a>
    (released 2017-02-15)

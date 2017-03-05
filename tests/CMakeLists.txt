@@ -17,6 +17,13 @@ if (CXX11_RANDOM)
   set (TESTPROGRAMS ${TESTPROGRAMS} GeodShort NormalTest)
 endif ()
 
+if (Boost_FOUND)
+  set (TESTPROGRAMS ${TESTPROGRAMS} LevelEllipsoid)
+  include_directories ("${Boost_INCLUDE_DIRS}")
+  # Suppress warnings from Boost library
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter -Wno-unused-variable -Wno-unused-local-typedef")
+endif ()
+
 # Loop over all the tools, specifying the source and library.
 add_custom_target (testprograms)
 foreach (TESTPROGRAM ${TESTPROGRAMS})

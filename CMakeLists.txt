@@ -166,6 +166,12 @@ option (PACKAGE_DEBUG_LIBS
 option (USE_BOOST_FOR_EXAMPLES
   "Look for Boost library when compiling examples" OFF)
 
+# (10) On Mac OS X, build multiple architectures?  Set to ON to build
+# i386 and x86_64.  Default is OFF, meaning build for default
+# architecture.
+option (APPLE_MULTIPLE_ARCHITECTURES
+  "Build multiple architectures for Apple systems" OFF)
+
 set (LIBNAME Geographic)
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)
   # For multi-config systems and for Visual Studio, the debug version of
@@ -278,6 +284,15 @@ endif ()
 # first because that's where Config.h will be
 include_directories ("${PROJECT_BINARY_DIR}/include" include)
 
+if (USE_BOOST_FOR_EXAMPLES)
+  # quad precision numbers appeared in Boost 1.54.
+  find_package (Boost 1.54 COMPONENTS serialization)
+elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
+  if (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND CXX11_MATH)
+    find_package (Boost 1.54)
+  endif ()
+endif ()
+
 set (HIGHPREC_LIBRARIES)
 if (GEOGRAPHICLIB_PRECISION EQUAL 1)
   message (WARNING "Compiling with floats which results in poor accuracy")
@@ -291,8 +306,6 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND CXX11_MATH)
-    # quad precision numbers appeared in Boost 1.54.
-    find_package (Boost 1.54)
     if (Boost_FOUND)
       include_directories ("${Boost_INCLUDE_DIRS}")
       set (HIGHPREC_LIBRARIES quadmath)
@@ -367,7 +380,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
   endif ()
 endif ()
 
-if (APPLE AND GEOGRAPHICLIB_PRECISION EQUAL 2)
+if (APPLE AND APPLE_MULTIPLE_ARCHITECTURES)
   if (CMAKE_SYSTEM_PROCESSOR MATCHES "i.86" OR
       CMAKE_SYSTEM_PROCESSOR MATCHES "amd64" OR
       CMAKE_SYSTEM_PROCESSOR MATCHES "x86")
