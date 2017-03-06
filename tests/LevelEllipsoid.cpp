@@ -209,6 +209,7 @@ int main() {
   using std::sqrt;
   real a = 1, GM = 1, omega = 3/Math::real(10), f = 2/Math::real(10);
   real gX, gY, gZ, b = (1 - f) * a, E = a * sqrt(f * (2 - f));
+  real thresh = 0.5e-3;
   NormalGravity grav(a, GM, omega, f, true);
   real xmax = 3, ymax = 2;
   PointTest box(0, xmax, 0, ymax);
@@ -226,6 +227,8 @@ int main() {
   int ndiv = 20;
   real del = (U0 - Unull) / 20;
   std::cout << std::setprecision(6);
+  std::cout << "a=" << a << "; b=" << b << "; Rnull=" << Xnull
+            << "; xmax=" << xmax << "; ymax=" << ymax << ";\n";
   std::cout << "q={}; p={}; qa={}; pa={};\n";
   std::vector<point> points;
   point p0;
@@ -246,7 +249,7 @@ int main() {
       GravityInt sys(grav, 2u);
       GravityFollow::follow(sys, p0, real(0), 1/real(100), points, box);
     }
-    LineSimplifier::Simplify(points, 1e-3);
+    LineSimplifier::Simplify(points, thresh);
     std::cout << "q{" << ++k << "}=[\n";
     dump(points);
     std::cout << "];\n";
@@ -259,7 +262,7 @@ int main() {
     points.push_back(p0);
     GravityInt sys(grav, 2u);
     GravityFollow::follow(sys, p0, real(0), 1/real(100), points, box);
-    LineSimplifier::Simplify(points, 1e-3);
+    LineSimplifier::Simplify(points, thresh);
     std::cout << "q{" << ++k << "}=[\n";
     dump(points);
     std::cout << "];\n";
@@ -275,7 +278,7 @@ int main() {
     if (!box(p0)) break;
     GravityInt sys(grav, 2u);
     GravityFollow::follow(sys, p0, real(0), 1/real(100), points, box);
-    LineSimplifier::Simplify(points, 1e-3);
+    LineSimplifier::Simplify(points, thresh);
     std::cout << "q{" << ++k << "}=[\n";
     dump(points);
     std::cout << "];\n";
@@ -297,7 +300,7 @@ int main() {
       GravityInt sys(grav, 0u);
       GravityFollow::follow(sys, p0, real(0), 1/real(100), points, box);
     }
-    LineSimplifier::Simplify(points, 1e-3);
+    LineSimplifier::Simplify(points, thresh);
     std::cout << "qa{" << ++k << "}=[\n";
     dump(points);
     std::cout << "];\n";
@@ -312,7 +315,7 @@ int main() {
       points.push_back(p0);
       GravityInt sysa(grav, 3u);
       GravityFollow::follow(sysa, p0, real(0), 1/real(100), points, box);
-      LineSimplifier::Simplify(points, 1e-3);
+      LineSimplifier::Simplify(points, thresh);
       std::cout << "p{" << ++k << "}=[\n";
       dump(points);
       std::cout << "];\n";
@@ -325,7 +328,7 @@ int main() {
       points.push_back(p0);
       GravityInt sysa(grav, 1u);
       GravityFollow::follow(sysa, p0, real(0), 1/real(100), points, box);
-      LineSimplifier::Simplify(points, 1e-3);
+      LineSimplifier::Simplify(points, thresh);
       std::cout << "p{" << ++k << "}=[\n";
       dump(points);
       std::cout << "];\n";
@@ -341,7 +344,7 @@ int main() {
       points.push_back(p0);
       GravityInt sysa(grav, 1u);
       GravityFollow::follow(sysa, p0, real(0), 1/real(100), points, box);
-      LineSimplifier::Simplify(points, 1e-3);
+      LineSimplifier::Simplify(points, thresh);
       std::cout << "p{" << ++k << "}=[\n";
       dump(points);
       std::cout << "];\n";
@@ -357,7 +360,7 @@ int main() {
     points.push_back(p0);
     GravityInt sysa(grav, 3u);
     GravityFollow::follow(sysa, p0, real(0), 1/real(100), points, box);
-    LineSimplifier::Simplify(points, 1e-3);
+    LineSimplifier::Simplify(points, thresh);
     std::cout << "p{" << ++k << "}=[\n";
     dump(points);
     std::cout << "];\n";
@@ -372,7 +375,7 @@ int main() {
     points.push_back(p0);
     GravityInt sysa(grav, 1u);
     GravityFollow::follow(sysa, p0, real(0), 1/real(100), points, box);
-    LineSimplifier::Simplify(points, 1e-3);
+    LineSimplifier::Simplify(points, thresh);
     std::cout << "p{" << ++k << "}=[\n";
     dump(points);
     std::cout << "];\n";
@@ -388,47 +391,10 @@ int main() {
       points.push_back(p0);
       GravityInt sysa(grav, 3u);
       GravityFollow::follow(sysa, p0, real(0), 1/real(100), points, box);
-      LineSimplifier::Simplify(points, 1e-3);
+      LineSimplifier::Simplify(points, thresh);
       std::cout << "pa{" << ++k << "}=[\n";
       dump(points);
       std::cout << "];\n";
     }
   }
-  std::cout <<
-    "doinside=1;\n"
-    "red=[179,27,27]/255;\n"
-    "white=[1,1,1];\n"
-    "black=[0,0,0];\n"
-    "blue=[0,19,56]/100;\n"
-    "green=[9,45,27]/100;\n"
-    "thick=2;\n"
-    "hold off\n"
-    "nq=size(q,2);\n"
-    "for i=1:nq;\n"
-    "  plot(q{i}(:,1),q{i}(:,2), 'Color', green);\n"
-    "  if i == 1, hold on; end\n"
-    "end\n"
-    "np=size(p,2);\n"
-    "for i=1:np\n"
-    "  color = blue;\n"
-    "  if (i == 1), color = red; end\n"
-    "  plot(p{i}(:,1),p{i}(:,2), 'Color', color);\n"
-    "end\n"
-    "if doinside\n"
-    "  nq=size(qa,2);\n"
-    "  for i=1:nq;\n"
-    "    plot(qa{i}(:,1),qa{i}(:,2), 'Color', green);\n"
-    "  end\n"
-    "  np=size(pa,2);\n"
-    "  for i=1:np\n"
-    "    plot(pa{i}(:,1),pa{i}(:,2), 'Color', blue);\n"
-    "  end\n"
-    "  plot([0, 0.6], [0, 0], 'Color', black, 'LineWidth', thick);\n"
-    "else\n"
-    "  fill([p{1}(:,1);0],[p{1}(:,2);0],[0.8,0.8,0.8]);\n"
-    "end\n"
-    "% axis equal;\n"
-    "xlabel('R'); ylabel('Z');\n"
-    "axis([0,3,0,2]);\n"
-    "hold off\n";
 }

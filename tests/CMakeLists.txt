@@ -20,8 +20,13 @@ endif ()
 if (Boost_FOUND)
   set (TESTPROGRAMS ${TESTPROGRAMS} LevelEllipsoid)
   include_directories ("${Boost_INCLUDE_DIRS}")
-  # Suppress warnings from Boost library
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter -Wno-unused-variable -Wno-unused-local-typedef")
+  if (APPLE)
+    # Suppress warnings from Boost library
+    # warnings with Mac OS X and boost 1.63
+    # no warnings with Linux and boost 1.60
+    set (CMAKE_CXX_FLAGS
+      "${CMAKE_CXX_FLAGS} -Wno-unused-parameter -Wno-unused-variable -Wno-unused-local-typedef")
+  endif ()
 endif ()
 
 # Loop over all the tools, specifying the source and library.
