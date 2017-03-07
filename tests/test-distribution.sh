@@ -171,7 +171,7 @@ for ver in 10 11 12 14 15; do
 	(
 	    echo "#! /bin/sh -exv"
 	    echo 'b=geog-`pwd | sed s%.*/%%`'
-	    echo 'rm -rf v:/data/scratch/$b u:/pkg-$pkg/GeographicLib-$VERSION/*'
+	    echo rm -rf v:/data/scratch/\$b u:/pkg-$pkg/GeographicLib-$VERSION/\*
 	    echo 'mkdir -p v:/data/scratch/$b'
 	    echo 'cd v:/data/scratch/$b'
 	    echo 'unset GEOGRAPHICLIB_DATA'

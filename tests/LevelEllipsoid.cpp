@@ -136,7 +136,7 @@ public:
     ode::result_of::make_dense_output
       < ode::runge_kutta_dopri5
         < point > >::type integrator = 
-      ode::make_dense_output(1.0e-6, 0*1.0e-8,
+      ode::make_dense_output(1.0e-8, 0*1.0e-8,
                              ode::runge_kutta_dopri5< point >() );
     integrator.initialize(p0, t0, 1e-2);
     integrator.do_step(sys);

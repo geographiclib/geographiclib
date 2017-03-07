@@ -2582,12 +2582,16 @@ massless rotating ellipsoid.  Combining all the terms, \f$ U \f$ is the
 normal potential for a massive rotating ellipsoid.
 
 The figure shows normal gravity for the case \f$ GM = 1 \f$,
-\f$ a = 1 \f$, \f$ b = 0.8 \f$, \f$ \omega = 0.5 \f$.  The level
+\f$ a = 1 \f$, \f$ b = 0.8 \f$, \f$ \omega = 0.3 \f$.  The level
 ellipsoid is shown in red.  Contours of constant gravity potential are
-shown in blue.  Streamlines for the gravity are shown in green.  The
-normal gravity is continued into the level ellipsoid under the
-assumption that the mass is concentrated on the focal disc, shown in
-black.
+shown in blue; the contour spacing is constant outside the ellipsoid and
+equal to 1/20 of the difference between the potentials on the ellipsoid
+and at the geostationary point (''R'' = 2.2536, ''Z'' = 0); inside the
+ellipsoid the contour spacing is 5 times greater.  The green lines are
+stream lines for the gravity; these are spaced at intervals of 10&deg;
+in parametric latitude on the surface of the ellipsoid.  The normal
+gravity is continued into the level ellipsoid under the assumption that
+the mass is concentrated on the focal disc, shown in black.
 
 \image html normal-gravity-potential-1.svg "Normal gravity"
 
