@@ -28,7 +28,7 @@ namespace NETGeographicLib
    * labeled &phi;, longitude &lambda; (with &lambda;<sub>12</sub> =
    * &lambda;<sub>2</sub> &minus; &lambda;<sub>1</sub>), and azimuth &alpha;.
    *
-   * <img src="http://upload.wikimedia.org/wikipedia/commons/c/cb/Geodesic_problem_on_an_ellipsoid.svg" width=250 alt="spheroidal triangle">
+   * <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Geodesic_problem_on_an_ellipsoid.svg" width=250 alt="spheroidal triangle">
    *
    * Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2, \e
    * lon2, and \e azi2.  This is the \e direct geodesic problem and its

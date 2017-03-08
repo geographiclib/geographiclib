@@ -22,7 +22,7 @@ azimuths &alpha;<sub>1</sub> and &alpha;<sub>2</sub> at the two end
 points.  In this figure, we have &lambda;<sub>12</sub> =
 &lambda;<sub>2</sub> &minus; &lambda;<sub>1</sub>.
 <center>
-<img src="http://upload.wikimedia.org/wikipedia/commons/c/cb/Geodesic_problem_on_an_ellipsoid.svg" width="250">
+<img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Geodesic_problem_on_an_ellipsoid.svg" width="250">
 </center>
 A geodesic can be extended indefinitely by requiring that any
 sufficiently small segment is a shortest path; geodesics are also the

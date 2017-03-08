@@ -32,7 +32,7 @@ points.  In this figure, we have λ\ :sub:`12` =
     .. raw:: html
 
        <center>
-         <img src="http://upload.wikimedia.org/wikipedia/commons/c/cb/Geodesic_problem_on_an_ellipsoid.svg"
+         <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Geodesic_problem_on_an_ellipsoid.svg"
               alt="Figure from wikipedia"
               width="250">
        </center>
