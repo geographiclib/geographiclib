@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in Fortran
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.47
+\version 1.48
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/Fortran</tt> for versions numbers
@@ -29,10 +29,10 @@ compile correctly with just about any Fortran compiler.
 \section download-for Downloading the source
 
 The Fortran library is part of %GeographicLib which available for download at
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.47.tar.gz">
-  GeographicLib-1.47.tar.gz</a>
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.47.zip">
-  GeographicLib-1.47.zip</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.48.tar.gz">
+  GeographicLib-1.48.tar.gz</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.48.zip">
+  GeographicLib-1.48.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the Fortran library can be found in the directory
@@ -173,6 +173,12 @@ and are therefore in the public domain.
   Geodesics on an ellipsoid</a>.
 
 \section changes-for Change log
+
+ - <a href="https://geographiclib.sourceforge.io/1.48/Fortran">Version 1.48</a>
+   (released 2017-mm-dd)
+   - Change default range for longitude and azimuth to
+     (&minus;180&deg;, 180&deg;] (instead of
+     [&minus;180&deg;, 180&deg;)).
 
  - <a href="https://geographiclib.sourceforge.io/1.47/Fortran">Version 1.47</a>
    (released 2017-02-15)

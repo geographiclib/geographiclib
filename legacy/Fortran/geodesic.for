@@ -118,7 +118,7 @@
 *! https://geographiclib.sourceforge.io/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.47.
+*! <a href="../index.html">GeographicLib</a> 1.48.
 
 *> Solve the direct geodesic problem
 *!
@@ -156,7 +156,7 @@
 *! If \e arcmode is not set, \e s12a12 is \e s12 and \e a12s12 is \e
 *! a12; otherwise, \e s12a12 is \e a12 and \e a12s12 is \e s12.  It \e
 *! unroll is not set, the value \e lon2 returned is in the range
-*! [&minus;180&deg;, 180&deg;); if unroll is set, the longitude variable
+*! [&minus;180&deg;, 180&deg;]; if unroll is set, the longitude variable
 *! is "unrolled" so that \e lon2 &minus; \e lon1 indicates how many
 *! times and in what sense the geodesic encircles the ellipsoid.
 *!
@@ -168,7 +168,7 @@
 *! - 8 return \e SS12
 *!
 *! \e lat1 should be in the range [&minus;90&deg;, 90&deg;].  The value
-*! \e azi2 returned is in the range [&minus;180&deg;, 180&deg;).
+*! \e azi2 returned is in the range [&minus;180&deg;, 180&deg;].
 *!
 *! If either point is at a pole, the azimuth is defined by keeping the
 *! longitude fixed, writing \e lat = \e lat = &plusmn;(90&deg; &minus;
@@ -510,7 +510,7 @@
 *!
 *! \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;].
 *! The values of \e azi1 and \e azi2 returned are in the range
-*! [&minus;180&deg;, 180&deg;).
+*! [&minus;180&deg;, 180&deg;].
 *!
 *! If either point is at a pole, the azimuth is defined by keeping the
 *! longitude fixed, writing \e lat = &plusmn;(90&deg; &minus;
@@ -1039,7 +1039,7 @@
       integer major, minor, patch
 
       major = 1
-      minor = 47
+      minor = 48
       patch = 0
 
       return
@@ -1913,9 +1913,9 @@
       double precision x
 
       AngNm = mod(x, 360d0)
-      if (AngNm .lt. -180) then
+      if (AngNm .le. -180) then
         AngNm = AngNm + 360
-      else if (AngNm .ge. 180) then
+      else if (AngNm .gt. 180) then
         AngNm = AngNm - 360
       end if
 
@@ -1946,11 +1946,11 @@
       double precision e
 
       double precision d, t, sumx, AngNm
-      d = - AngNm(sumx(AngNm(x), AngNm(-y), t))
-      if (d .eq. 180 .and. t .lt. 0) then
+      d = AngNm(sumx(AngNm(-x), AngNm(y), t))
+      if (d .eq. 180 .and. t .gt. 0) then
         d = -180
       end if
-      AngDif = sumx(d, -t, e)
+      AngDif = sumx(d, t, e)
 
       return
       end
@@ -2097,9 +2097,9 @@
       lon2x = AngNm(lon2)
       lon12 = AngDif(lon1x, lon2x, e)
       trnsit = 0
-      if (lon1x .lt. 0 .and. lon2x .ge. 0 .and. lon12 .gt. 0) then
+      if (lon1x .le. 0 .and. lon2x .gt. 0 .and. lon12 .gt. 0) then
         trnsit = 1
-      else if (lon2x .lt. 0 .and. lon1x .ge. 0 .and. lon12 .lt. 0) then
+      else if (lon2x .le. 0 .and. lon1x .gt. 0 .and. lon12 .lt. 0) then
         trnsit = -1
       end if
 
@@ -2161,18 +2161,23 @@
       c = cos(r)
       q = mod(q + 4, 4)
       if (q .eq. 0) then
-        sinx =     s
-        cosx =     c
+        sinx =  s
+        cosx =  c
       else if (q .eq. 1) then
-        sinx =     c
-        cosx = 0 - s
+        sinx =  c
+        cosx = -s
       else if (q .eq. 2) then
-        sinx = 0 - s
-        cosx = 0 - c
+        sinx = -s
+        cosx = -c
       else
 * q.eq.3
-        sinx = 0 - c
-        cosx =     s
+        sinx = -c
+        cosx =  s
+      end if
+
+      if (x .ne. 0) then
+        sinx = 0d0 + sinx
+        cosx = 0d0 + cosx
       end if
 
       return
@@ -2206,7 +2211,7 @@
       end if
       atn2dx = atan2(yy, xx) / degree
       if (q .eq. 1) then
-        if (yy .gt. 0) then
+        if (yy .ge. 0) then
           atn2dx =  180 - atn2dx
         else
           atn2dx = -180 - atn2dx

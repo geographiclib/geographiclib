@@ -747,7 +747,7 @@ namespace GeographicLib {
 #else
       using std::abs;
       // NaN counts as positive
-      return abs(x) * (y < 0 || (y == 0 && 1/y < 0)  ? -1 : 1);
+      return abs(x) * (y < 0 || (y == 0 && 1/y < 0) ? -1 : 1);
 #endif
     }
 
