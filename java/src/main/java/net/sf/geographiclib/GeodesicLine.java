@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.GeodesicLine class
  *
- * Copyright (c) Charles Karney (2013-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -303,7 +303,7 @@ public class GeodesicLine {
    *   missing if the GeodesicLine did not include the relevant capability.
    * <p>
    * The values of <i>lon2</i> and <i>azi2</i> returned are in the range
-   * [&minus;180&deg;, 180&deg;).
+   * [&minus;180&deg;, 180&deg;].
    * <p>
    * The GeodesicLine object <i>must</i> have been constructed with <i>caps</i>
    * |= {@link GeodesicMask#DISTANCE_IN}; otherwise no parameters are set.
@@ -325,7 +325,7 @@ public class GeodesicLine {
    * |= {@link GeodesicMask#DISTANCE_IN}; otherwise no parameters are set.
    * Requesting a value which the GeodesicLine object is not capable of
    * computing is not an error (no parameters will be set).  The value of
-   * <i>lon2</i> returned is normally in the range [&minus;180&deg;, 180&deg;);
+   * <i>lon2</i> returned is normally in the range [&minus;180&deg;, 180&deg;];
    * however if the <i>outmask</i> includes the
    * {@link GeodesicMask#LONG_UNROLL} flag, the longitude is "unrolled" so that
    * the quantity <i>lon2</i> &minus; <i>lon1</i> indicates how many times and
@@ -347,7 +347,7 @@ public class GeodesicLine {
    *   missing if the GeodesicLine did not include the relevant capability.
    * <p>
    * The values of <i>lon2</i> and <i>azi2</i> returned are in the range
-   * [&minus;180&deg;, 180&deg;).
+   * [&minus;180&deg;, 180&deg;].
    * <p>
    * The GeodesicLine object <i>must</i> have been constructed with <i>caps</i>
    * |= {@link GeodesicMask#DISTANCE_IN}; otherwise no parameters are set.
@@ -368,7 +368,7 @@ public class GeodesicLine {
    * <p>
    * Requesting a value which the GeodesicLine object is not capable of
    * computing is not an error (no parameters will be set).  The value of
-   * <i>lon2</i> returned is in the range [&minus;180&deg;, 180&deg;), unless
+   * <i>lon2</i> returned is in the range [&minus;180&deg;, 180&deg;], unless
    * the <i>outmask</i> includes the {@link GeodesicMask#LONG_UNROLL} flag.
    **********************************************************************/
   public GeodesicData ArcPosition(double a12, int outmask) {
@@ -414,7 +414,7 @@ public class GeodesicLine {
    *   <i>outmask</i> |= {@link GeodesicMask#ALL} for all of the above;
    * <li>
    *   <i>outmask</i> |= {@link GeodesicMask#LONG_UNROLL} to unroll <i>lon2</i>
-   *   (instead of reducing it to the range [&minus;180&deg;, 180&deg;)).
+   *   (instead of reducing it to the range [&minus;180&deg;, 180&deg;]).
    * </ul>
    * <p>
    * Requesting a value which the GeodesicLine object is not capable of

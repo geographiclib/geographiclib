@@ -7304,7 +7304,7 @@ git repository for GeographicLib</a>.
    - TODO: Apply C++ changes to make (-180,180] the default range:
      C DONE
      Fortran DONE
-     Java
+     Java DONE
      JavaScript
      Python
      MATLAB DONE

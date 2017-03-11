@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.Gnomonic class
  *
- * Copyright (c) BMW Car IT GmbH (2014-2016) <sebastian.mattheis@bmw-carit.de>
+ * Copyright (c) BMW Car IT GmbH (2014-2017) <sebastian.mattheis@bmw-carit.de>
  * and licensed under the MIT/X11 License. For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -19,9 +19,9 @@ package net.sf.geographiclib;
  * ellipsoid. This projection is derived in Section 8 of
  * <ul>
  * <li>
- * C. F. F. Karney, <a href="http://doi.org/10.1007/s00190-012-0578-z">
+ * C. F. F. Karney, <a href="https://doi.org/10.1007/s00190-012-0578-z">
  * Algorithms for geodesics</a>, J. Geodesy <b>87</b>, 43&ndash;55 (2013);
- * DOI: <a href="http://doi.org/10.1007/s00190-012-0578-z">
+ * DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
  * 10.1007/s00190-012-0578-z</a>; addenda:
  * <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
  * geod-addenda.html</a>.
@@ -202,7 +202,7 @@ public class Gnomonic {
    * <i>lat0</i> should be in the range [&minus;90&deg;, 90&deg;] and
    * <i>lon0</i> should be in the range [&minus;540&deg;, 540&deg;).
    * <i>lat</i> will be in the range [&minus;90&deg;, 90&deg;] and <i>lon</i>
-   * will be in the range [&minus;180&deg;, 180&deg;). The scale of the
+   * will be in the range [&minus;180&deg;, 180&deg;]. The scale of the
    * projection is 1/<i>rk<sup>2</sup></i> in the "radial" direction,
    * <i>azi</i> clockwise from true north, and is 1/<i>rk</i> in the direction
    * perpendicular to this. Even though all inputs should return a valid

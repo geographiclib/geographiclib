@@ -301,7 +301,7 @@ public class Geodesic {
    * <p>
    * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;].  The values
    * of <i>lon2</i> and <i>azi2</i> returned are in the range [&minus;180&deg;,
-   * 180&deg;).
+   * 180&deg;].
    * <p>
    * If either point is at a pole, the azimuth is defined by keeping the
    * longitude fixed, writing <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;),
@@ -331,7 +331,7 @@ public class Geodesic {
    * <p>
    * <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, <i>s12</i>, and <i>a12</i> are
    * always included in the returned result.  The value of <i>lon2</i> returned
-   * is in the range [&minus;180&deg;, 180&deg;), unless the <i>outmask</i>
+   * is in the range [&minus;180&deg;, 180&deg;], unless the <i>outmask</i>
    * includes the {@link GeodesicMask#LONG_UNROLL} flag.
    **********************************************************************/
   public GeodesicData Direct(double lat1, double lon1,
@@ -354,7 +354,7 @@ public class Geodesic {
    * <p>
    * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;].  The values
    * of <i>lon2</i> and <i>azi2</i> returned are in the range [&minus;180&deg;,
-   * 180&deg;).
+   * 180&deg;].
    * <p>
    * If either point is at a pole, the azimuth is defined by keeping the
    * longitude fixed, writing <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;),
@@ -385,7 +385,7 @@ public class Geodesic {
    * <p>
    * <i>lat1</i>, <i>lon1</i>, <i>azi1</i>, and <i>a12</i> are always included
    * in the returned result.  The value of <i>lon2</i> returned is in the range
-   * [&minus;180&deg;, 180&deg;), unless the <i>outmask</i> includes the {@link
+   * [&minus;180&deg;, 180&deg;], unless the <i>outmask</i> includes the {@link
    * GeodesicMask#LONG_UNROLL} flag.
    **********************************************************************/
   public GeodesicData ArcDirect(double lat1, double lon1,
@@ -439,7 +439,7 @@ public class Geodesic {
    *   <i>lon1</i> is unchanged and <i>lon2</i> &minus; <i>lon1</i> indicates
    *   how many times and in what sense the geodesic encircles the ellipsoid.
    *   Otherwise <i>lon1</i> and <i>lon2</i> are both reduced to the range
-   *   [&minus;180&deg;, 180&deg;).
+   *   [&minus;180&deg;, 180&deg;].
    * </ul>
    * <p>
    * The function value <i>a12</i> is always computed and returned and this
@@ -600,7 +600,7 @@ public class Geodesic {
    * <p>
    * <i>lat1</i> and <i>lat2</i> should be in the range [&minus;90&deg;,
    * 90&deg;].  The values of <i>azi1</i> and <i>azi2</i> returned are in the
-   * range [&minus;180&deg;, 180&deg;).
+   * range [&minus;180&deg;, 180&deg;].
    * <p>
    * If either point is at a pole, the azimuth is defined by keeping the
    * longitude fixed, writing <i>lat</i> = &plusmn;(90&deg; &minus; &epsilon;),
@@ -1036,7 +1036,7 @@ public class Geodesic {
    *   <i>lon1</i> is unchanged and <i>lon2</i> &minus; <i>lon1</i> indicates
    *   whether the geodesic is east going or west going.  Otherwise <i>lon1</i>
    *   and <i>lon2</i> are both reduced to the range [&minus;180&deg;,
-   *   180&deg;).
+   *   180&deg;].
    * </ul>
    * <p>
    * <i>lat1</i>, <i>lon1</i>, <i>lat2</i>, <i>lon2</i>, and <i>a12</i> are

@@ -1,7 +1,7 @@
 /**
  * <h1>Geodesic routines from GeographicLib implemented in Java</h1>
  * @author Charles F. F. Karney (charles@karney.com)
- * @version 1.47
+ * @version 1.48
  *
  * <p>
  * The documentation for other versions is available at
@@ -29,15 +29,15 @@
  * GeographicLib-Java is part of GeographicLib which available for download at
  * <ul>
  * <li>
- *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.47.tar.gz">
- *   GeographicLib-1.47.tar.gz</a>
+ *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.48.tar.gz">
+ *   GeographicLib-1.48.tar.gz</a>
  * <li>
- *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.47.zip">
- *   GeographicLib-1.47.zip</a>
+ *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.48.zip">
+ *   GeographicLib-1.48.zip</a>
  * </ul>
  * <p>
  * as either a compressed tar file (tar.gz) or a zip file.  After unpacking
- * the source, the Java library can be found in GeographicLib-1.47/java.  (This
+ * the source, the Java library can be found in GeographicLib-1.48/java.  (This
  * library is completely independent from the rest of GeodegraphicLib.)  The
  * library consists of the files in the src/main/java/net/sf/geographiclib
  * subdirectory.
@@ -50,7 +50,7 @@
  *   <dependency>
  *     <groupId>net.sf.geographiclib</groupId>
  *     <artifactId>GeographicLib-Java</artifactId>
- *     <version>1.47</version>
+ *     <version>1.48</version>
  *   </dependency> }</pre>
  * in your {@code pom.xml}.
  *
@@ -119,9 +119,9 @@
  * some additional packages to your local repository.)  Then compile and run
  * Inverse.java with <pre>
  * cd inverse/src/main/java
- * javac -cp .:../../../../target/GeographicLib-Java-1.47.jar Inverse.java
+ * javac -cp .:../../../../target/GeographicLib-Java-1.48.jar Inverse.java
  * echo -30 0 29.5 179.5 |
- *   java -cp .:../../../../target/GeographicLib-Java-1.47.jar Inverse </pre>
+ *   java -cp .:../../../../target/GeographicLib-Java-1.48.jar Inverse </pre>
  *
  * <h3>Using maven to build and run {@code Inverse.java}</h3>
  * The sample code includes a {@code pom.xml} which specifies
@@ -264,6 +264,14 @@
  *
  * <h2>Change log</h2>
  * <ul>
+ * <li>
+ *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.48</a>
+ *   (released 2017-mm-dd)
+ * <ul>
+ * <li>
+ *   Change default range for longitude and azimuth to
+ *   (&minus;180&deg;, 180&deg;] (instead of [&minus;180&deg;, 180&deg;)).
+ * </ul>
  * <li>
  *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.47</a>
  *   (released 2017-02-15)

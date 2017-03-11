@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.PolygonArea class
  *
- * Copyright (c) Charles Karney (2013-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -74,8 +74,8 @@ public class PolygonArea {
     lon2 = GeoMath.AngNormalize(lon2);
     double lon12 = GeoMath.AngDiff(lon1, lon2).first;
     int cross =
-      lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
-      (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
+      lon1 <= 0 && lon2 > 0 && lon12 > 0 ? 1 :
+      (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
     return cross;
   }
   // an alternate version of transit to deal with longitudes in the direct
@@ -383,7 +383,7 @@ public class PolygonArea {
    * @return Pair(<i>lat</i>, <i>lon</i>), the current latitude and longitude.
    * <p>
    * If no points have been added, then Double.NaN is returned.  Otherwise,
-   * <i>lon</i> will be in the range [&minus;180&deg;, 180&deg;).
+   * <i>lon</i> will be in the range [&minus;180&deg;, 180&deg;].
    **********************************************************************/
   public Pair CurrentPoint() { return new Pair(_lat1, _lon1); }
 }
