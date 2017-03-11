@@ -7308,7 +7308,7 @@ git repository for GeographicLib</a>.
      JavaScript
      Python
      MATLAB DONE
-     Maxima
+     Maxima DONE
    - Changes in cmake support:
      - add USE_BOOST_FOR_EXAMPLES option (default OFF), if ON search for
        Boost libraries for building examples;

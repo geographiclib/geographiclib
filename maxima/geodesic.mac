@@ -101,7 +101,7 @@ documented at
 */
 
 /* The corresponding version of GeographicLib */
-geod_version:[1,47,0]$
+geod_version:[1,48,0]$
 
 /* Load series created by geod.mac (NEED TO UNCOMMENT THE LAST LINE OF
 geod.mac TO GENERATE THIS FILE). */
@@ -197,11 +197,11 @@ swapx(x, y):=[y,x]$
 norm2(x, y):=block([r : hypotx(x, y)], [x/r, y/r])$
 
 AngNormalize(x):=block([y:x-360b0*floor(x/360b0+0.5)],
-  if y < -180b0 then y+360b0 else if y < 180b0 then y else y-360b0)$
+  if y <= -180b0 then y+360b0 else if y <= 180b0 then y else y-360b0)$
 
-AngDiff(x, y) := block([t,d,r:sumx(AngNormalize(x),AngNormalize(-y))],
-  d:-AngNormalize(r[1]), t:r[2],
-  sumx(if d = 180b0 and t < 0b0 then -180b0 else d, -t))$
+AngDiff(x, y) := block([t,d,r:sumx(AngNormalize(-x),AngNormalize(y))],
+  d:AngNormalize(r[1]), t:r[2],
+  sumx(if d = 180b0 and t > 0b0 then -180b0 else d, t))$
 
 AngRound(x) := block([z:1/16b0, y:abs(x)],
   if x = 0b0 then return(x),
@@ -212,10 +212,13 @@ sincosdx(x):=block([r,q:floor(x/90b0 + 0.5),s,c],
   r:(x-q*90b0)*degree,
   s:sin(r), c:cos(r),
   q:mod(q,4),
-  if     q = 0 then [  s,   c]
-  elseif q = 1 then [  c, 0-s]
-  elseif q = 2 then [0-s, 0-c]
-  else              [0-c,   s])$
+  r:
+  if     q = 0 then [ s,  c]
+  elseif q = 1 then [ c, -s]
+  elseif q = 2 then [-s, -c]
+  else              [-c,  s],
+  if x # 0b0 then r:0b0+r,
+  r)$
 
 atan2dx(y,x):=block([q,xx,yy,ang],
   if abs(y) > abs(x)
@@ -225,7 +228,7 @@ atan2dx(y,x):=block([q,xx,yy,ang],
   then (xx:-xx, q:q+1),
   ang:atan2(yy, xx) / degree,
   if     q = 0 then ang
-  elseif q = 1 then (if y > 0b0 then 180b0 else -180b0) - ang
+  elseif q = 1 then (if y >= 0b0 then 180b0 else -180b0) - ang
   elseif q = 2 then  90 - ang
   else              -90 + ang)$
 
@@ -1162,8 +1165,8 @@ transit(lon1, lon2):=block([lon12],
   lon1 : AngNormalize(lon1),
   lon2 : AngNormalize(lon2),
   lon12 : AngDiff(lon1, lon2)[1],
-  if lon1 < 0b0 and lon2 >= 0b0 and lon12 > 0b0 then 1 else
-  (if lon2 < 0b0 and lon1 >= 0b0 and lon12 < 0b0 then -1 else 0))$
+  if lon1 <= 0b0 and lon2 > 0b0 and lon12 > 0b0 then 1 else
+  (if lon2 <= 0b0 and lon1 > 0b0 and lon12 < 0b0 then -1 else 0))$
 
 /* Return [P, A, mins, maxs] */
 geod_polygonarea(g, points) := block([n:length(points), crossings : 0,
