@@ -7301,6 +7301,14 @@ git repository for GeographicLib</a>.
  - <a href="https://geographiclib.sourceforge.io/1.48">Version 1.48</a>
    (released 2017-mm-dd)
    - Fix compiler warnings with Visual Studio 2017.
+   - TODO: Apply C++ changes to make (-180,180] the default range:
+     C DONE
+     Fortran
+     Java
+     JavaScript
+     Python
+     MATLAB
+     Maxima
    - Changes in cmake support:
      - add USE_BOOST_FOR_EXAMPLES option (default OFF), if ON search for
        Boost libraries for building examples;

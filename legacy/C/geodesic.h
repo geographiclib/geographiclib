@@ -242,7 +242,7 @@ extern "C" {
    *
    * \e g must have been initialized with a call to geod_init().  \e lat1
    * should be in the range [&minus;90&deg;, 90&deg;].  The values of \e lon2
-   * and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;).  Any of
+   * and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;].  Any of
    * the "return" arguments \e plat2, etc., may be replaced by 0, if you do not
    * need some quantities computed.
    *
@@ -327,7 +327,7 @@ extern "C" {
    *
    * \e g must have been initialized with a call to geod_init().  \e lat1 and
    * \e lat2 should be in the range [&minus;90&deg;, 90&deg;].  The values of
-   * \e azi1 and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;).
+   * \e azi1 and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;].
    * Any of the "return" arguments, \e ps12, etc., may be replaced by 0, if you
    * do not need some quantities computed.
    *
@@ -525,7 +525,7 @@ extern "C" {
    *
    * \e l must have been initialized with a call, e.g., to geod_lineinit(),
    * with \e caps |= GEOD_DISTANCE_IN.  The values of \e lon2 and \e azi2
-   * returned are in the range [&minus;180&deg;, 180&deg;).  Any of the
+   * returned are in the range [&minus;180&deg;, 180&deg;].  Any of the
    * "return" arguments \e plat2, etc., may be replaced by 0, if you do not
    * need some quantities computed.
    *
@@ -594,7 +594,7 @@ extern "C" {
    *
    * \e l must have been initialized with a call to geod_lineinit() with \e
    * caps |= GEOD_DISTANCE_IN.  The value \e azi2 returned is in the range
-   * [&minus;180&deg;, 180&deg;).  Any of the "return" arguments \e plat2,
+   * [&minus;180&deg;, 180&deg;].  Any of the "return" arguments \e plat2,
    * etc., may be replaced by 0, if you do not need some quantities
    * computed.  Requesting a value which \e l is not capable of computing
    * is not an error; the corresponding argument will not be altered.
