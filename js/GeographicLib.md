@@ -1,6 +1,6 @@
 ## Geodesic routines from GeographicLib
 
-This documentation applies to version 1.47.
+This documentation applies to version 1.48.
 
 The documentation for other versions is available
 at <tt>https://geographiclib.sourceforge.io/m.nn/js</tt> for versions
@@ -108,6 +108,10 @@ Two examples of this library in use are
     documentation}.
 
 ### Change log
+
+* Version 1.48 (released 2017-mm-dd)
+  * Change default range for longitude and azimuth to
+    (&minus;180&deg;, 180&deg;] (instead of [&minus;180&deg;, 180&deg;)).
 
 * Version 1.47 (released 2017-02-15)
   * Improve accuracy of area calculation (fixing a flaw introduced in

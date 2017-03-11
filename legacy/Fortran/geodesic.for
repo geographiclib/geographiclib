@@ -424,7 +424,6 @@
         lon2 = AngNm(AngNm(lon1) + AngNm(lon12))
       end if
       lat2 = atn2dx(sbet2, f1 * cbet2)
-* minus signs give range [-180, 180). 0- converts -0 to +0.
       azi2 = atn2dx(salp2, calp2)
 
       if (redlp .or. scalp) then
@@ -941,7 +940,6 @@
       salp2 = salp2 * swapp * lonsgn
       calp2 = calp2 * swapp * latsgn
 
-* minus signs give range [-180, 180). 0- converts -0 to +0.
       azi1 = atn2dx(salp1, calp1)
       azi2 = atn2dx(salp2, calp2)
 

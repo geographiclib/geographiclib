@@ -37,7 +37,7 @@ GeodesicLine.Position}, etc., return an object with
   (meters<sup>2</sup>)
 
 The input parameters together with *a12* are always included in the
-object.  Azimuths are reduced to the range [&minus;180&deg;, 180&deg;).
+object.  Azimuths are reduced to the range [&minus;180&deg;, 180&deg;].
 See {@tutorial 1-geodesics} for the definitions of these quantities.
 
 ### <a name="outmask"></a>The *outmask* and *caps* parameters
@@ -75,7 +75,7 @@ of the arc length.)  This only makes sense in the *caps* parameter.
 
 Geodesic.LONG_UNROLL controls the treatment of longitude.  If it is not
 set then the *lon1* and *lon2* fields are both reduced to the range
-[&minus;180&deg;, 180&deg;).  If it is set, then *lon1* is as given in
+[&minus;180&deg;, 180&deg;].  If it is set, then *lon1* is as given in
 the function call and (*lon2* &minus; *lon1*) determines how many times
 and in what sense the geodesic has encircled the ellipsoid.  This only
 makes sense in the *outmask* parameter.
@@ -92,7 +92,7 @@ Note that *a12* is always included in the result.
   on the surface.
 * Similarly, the spherical arc length *a12* is unrestricted.
 * Longitudes and azimuths are unrestricted; internally these are exactly
-  reduced to the range [&minus;180&deg;, 180&deg;); but see also the
+  reduced to the range [&minus;180&deg;, 180&deg;]; but see also the
   LONG_UNROLL bit.
 * The equatorial radius *a* and the polar semi-axis *b* must both be
   positive and finite (this implies that &minus;&infin; &lt; *f* &lt; 1).

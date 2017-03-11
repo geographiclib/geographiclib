@@ -7302,14 +7302,10 @@ git repository for GeographicLib</a>.
    (released 2017-mm-dd)
    - Fix compiler warnings with Visual Studio 2017.
    - Fix compiler warning for C library.
-   - TODO: Apply C++ changes to make (-180,180] the default range:
-     C DONE
-     Fortran DONE
-     Java DONE
-     JavaScript
-     Python DONE
-     MATLAB DONE
-     Maxima DONE
+   - Make (&minus;180&deg;, 180&deg;] the default range for longitude
+     and azimuth (instead of [&minus;180&deg;, 180&deg;)).  This was
+     already the case for the C++ library.  Now the change has been made
+     to the other packages.
    - Changes in cmake support:
      - add USE_BOOST_FOR_EXAMPLES option (default OFF), if ON search for
        Boost libraries for building examples;

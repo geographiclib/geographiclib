@@ -12,7 +12,7 @@
  *    https://doi.org/10.1007/s00190-012-0578-z
  *    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
  *
- * Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  */
@@ -37,8 +37,8 @@
     lon1 = m.AngNormalize(lon1);
     lon2 = m.AngNormalize(lon2);
     lon12 = m.AngDiff(lon1, lon2).s;
-    cross = lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
-      (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
+    cross = lon1 <= 0 && lon2 > 0 && lon12 > 0 ? 1 :
+      (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
     return cross;
   };
 

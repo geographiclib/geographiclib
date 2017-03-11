@@ -490,7 +490,6 @@ geod_genposition(l, arcmode,  s12_a12):=block(
   /* Don't normalize lon2... */
   lon2 : l[l_lon1] + lon12,
   lat2 : atan2dx(sbet2, l[l_f1] * cbet2),
-  /* minus signs give range [-180, 180). 0- converts -0 to +0. */
   azi2 : atan2dx(salp2, calp2),
   block([B22, AB2, J12],
     if exact then J12 : l[l_k2] * l[l_D0] *
