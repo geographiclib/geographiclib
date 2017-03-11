@@ -163,8 +163,7 @@ function geoddoc
 %       polygon.
 %
 %   See also GEODDISTANCE, GEODRECKON, GEODAREA,
-%     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
-%     GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, POLYGONAREA.
+%     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 

@@ -39,8 +39,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %     * The algorithm converges for all pairs of input points.
 %     * Additional properties of the geodesic are calcuated.
 %
-%   See also GEODDOC, GEODRECKON, GEODAREA, GEODESICINVERSE,
-%     DEFAULTELLIPSOID.
+%   See also GEODDOC, GEODRECKON, GEODAREA, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 %

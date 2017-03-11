@@ -31,7 +31,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %   returned in the final output variable a12_s12 (in meters).
 %
 %   If long_unroll is unset (the default), then the value lon2 is in the
-%   range [-180,180).  If long_unroll is set, the longitude is "unrolled"
+%   range [-180,180].  If long_unroll is set, the longitude is "unrolled"
 %   so that the quantity lon2 - lon1 indicates how many times and in what
 %   sense the geodesic encircles the ellipsoid.
 %
@@ -64,10 +64,9 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %       points on a single geodesic.
 %     * Additional properties of the geodesic are calcuated.
 %
-%   See also GEODDOC, GEODDISTANCE, GEODAREA, GEODESICDIRECT, GEODESICLINE,
-%     DEFAULTELLIPSOID.
+%   See also GEODDOC, GEODDISTANCE, GEODAREA, DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012-2016) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional

@@ -226,7 +226,7 @@ function n = GeodSolve5
   n = n + assertEquals(lat2, 90, 0.5e-5);
   if lon2 < 0
     n = n + assertEquals(lon2, -150, 0.5e-5);
-    n = n + assertEquals(azi2, -180, 0.5e-5);
+    n = n + assertEquals(abs(azi2), 180, 0.5e-5);
   else
     n = n + assertEquals(lon2, 30, 0.5e-5);
     n = n + assertEquals(azi2, 0, 0.5e-5);
@@ -349,11 +349,11 @@ function n = GeodSolve33
   n = n + assertEquals(s12, 19980862, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 0, 180);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 20003931, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 1, 180);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 19893357, 0.5);
   ell = ellipsoid(6.4e6, 0);
   [s12, azi1, azi2] = geoddistance(0, 0, 0, 179, ell);
@@ -362,11 +362,11 @@ function n = GeodSolve33
   n = n + assertEquals(s12, 19994492, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 0, 180, ell);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 20106193, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 1, 180, ell);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 19994492, 0.5);
   ell = ellipsoid(6.4e6, -1/300.0);
   [s12, azi1, azi2] = geoddistance(0, 0, 0, 179, ell);
@@ -383,7 +383,7 @@ function n = GeodSolve33
   n = n + assertEquals(s12, 20082617, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 1, 180, ell);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 20027270, 0.5);
   % Check also octave-specific versions of this problem.
   % In 1.44 this returned [-2.0004e+07, -2.0004e+07, 0.0000e+00, 0.0000e+00]
@@ -420,7 +420,7 @@ function n = GeodSolve61
   [lat2, lon2, azi2] = geodreckon(45, 0, 1e7, -0.000000000000000003, 2);
   n = n + assertEquals(lat2, 45.30632, 0.5e-5);
   n = n + assertEquals(lon2, -180, 0.5e-5);
-  n = n + assertEquals(azi2, -180, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180, 0.5e-5);
 end
 
 function n = GeodSolve73
