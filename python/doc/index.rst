@@ -45,8 +45,8 @@ and install it with
 
 .. code-block:: sh
 
-  tar xpfz geographiclib-1.47.tar.gz
-  cd geographiclib-1.47
+  tar xpfz geographiclib-1.48.tar.gz
+  cd geographiclib-1.48
   python setup.py install
 
 It's a good idea to run the unit tests to verify that the installation
@@ -97,6 +97,11 @@ GeographicLib in various languages
 
 Change log
 ----------
+
+* Version 1.48 (released 2017-mm-dd)
+
+  * Change default range for longitude and azimuth to (−180°, 180°]
+    (instead of [−180°, 180°)).
 
 * Version 1.47 (released 2017-02-15)
 

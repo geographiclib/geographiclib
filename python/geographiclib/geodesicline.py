@@ -293,7 +293,6 @@ class GeodesicLine(object):
       lat2 = Math.atan2d(sbet2, self._f1 * cbet2)
 
     if outmask & Geodesic.AZIMUTH:
-      # minus signs give range [-180, 180). 0- converts -0 to +0.
       azi2 = Math.atan2d(salp2, calp2)
 
     if outmask & (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):

@@ -7301,12 +7301,13 @@ git repository for GeographicLib</a>.
  - <a href="https://geographiclib.sourceforge.io/1.48">Version 1.48</a>
    (released 2017-mm-dd)
    - Fix compiler warnings with Visual Studio 2017.
+   - Fix compiler warning for C library.
    - TODO: Apply C++ changes to make (-180,180] the default range:
      C DONE
      Fortran DONE
      Java DONE
      JavaScript
-     Python
+     Python DONE
      MATLAB DONE
      Maxima DONE
    - Changes in cmake support:

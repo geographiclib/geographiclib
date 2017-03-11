@@ -6,7 +6,7 @@
 #
 #    https://geographiclib.sourceforge.io/html/annotated.html
 #
-# Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 ######################################################################
@@ -127,11 +127,11 @@ class Math(object):
   AngRound = staticmethod(AngRound)
 
   def AngNormalize(x):
-    """reduce angle to [-180,180)"""
+    """reduce angle to (-180,180]"""
 
     x = math.fmod(x, 360)
-    return (x + 360 if x < -180 else
-            (x if x < 180 else x - 360))
+    return (x + 360 if x <= -180 else
+            (x if x <= 180 else x - 360))
   AngNormalize = staticmethod(AngNormalize)
 
   def LatFix(x):
@@ -143,9 +143,9 @@ class Math(object):
   def AngDiff(x, y):
     """compute y - x and reduce to [-180,180] accurately"""
 
-    d, t = Math.sum(Math.AngNormalize(x), Math.AngNormalize(-y))
-    d = - Math.AngNormalize(d)
-    return Math.sum(-180 if d == 180 and t < 0 else d, -t)
+    d, t = Math.sum(Math.AngNormalize(-x), Math.AngNormalize(y))
+    d = Math.AngNormalize(d)
+    return Math.sum(-180 if d == 180 and t > 0 else d, t)
   AngDiff = staticmethod(AngDiff)
 
   def sincosd(x):
@@ -157,11 +157,13 @@ class Math(object):
     s = math.sin(r); c = math.cos(r)
     q = q % 4
     if q == 1:
-      s, c =     c, 0.0-s
+      s, c =  c, -s
     elif q == 2:
-      s, c = 0.0-s, 0.0-c
+      s, c = -s, -c
     elif q == 3:
-      s, c = 0.0-c,     s
+      s, c = -c,  s
+    if x != 0:
+      s, c = 0.0+s, 0.0+c
     return s, c
   sincosd = staticmethod(sincosd)
 
@@ -176,7 +178,7 @@ class Math(object):
       q += 1; x = -x
     ang = math.degrees(math.atan2(y, x))
     if q == 1:
-      ang = (180 if y > 0 else -180) - ang
+      ang = (180 if y >= 0 else -180) - ang
     elif q == 2:
       ang =  90 - ang
     elif q == 3:

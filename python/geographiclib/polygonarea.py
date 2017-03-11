@@ -39,7 +39,7 @@ The public attributes for this class are
 #    https://doi.org/10.1007/s00190-012-0578-z
 #    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 ######################################################################
@@ -59,8 +59,8 @@ class PolygonArea(object):
     lon1 = Math.AngNormalize(lon1)
     lon2 = Math.AngNormalize(lon2)
     lon12, _ = Math.AngDiff(lon1, lon2)
-    cross = (1 if lon1 < 0 and lon2 >= 0 and lon12 > 0
-             else (-1 if lon2 < 0 and lon1 >= 0 and lon12 < 0 else 0))
+    cross = (1 if lon1 <= 0 and lon2 > 0 and lon12 > 0
+             else (-1 if lon2 <= 0 and lon1 > 0 and lon12 < 0 else 0))
     return cross
   _transit = staticmethod(_transit)
 

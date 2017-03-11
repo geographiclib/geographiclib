@@ -38,7 +38,7 @@ class TestCommand(Command):
                                           ]))
 
 name = "geographiclib"
-version = "1.47"
+version = "1.48"
 
 setup(name = name,
       version = version,
