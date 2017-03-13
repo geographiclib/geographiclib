@@ -129,9 +129,13 @@ class Math(object):
   def AngNormalize(x):
     """reduce angle to (-180,180]"""
 
-    x = math.fmod(x, 360)
-    return (x + 360 if x <= -180 else
-            (x if x <= 180 else x - 360))
+    y = math.fmod(x, 360)
+    # On Windows 32-bit with python 2.7, math.fmod(-0.0, 360) = +0.0
+    # This fixes this bug.  See also Math::AngNormalize in the C++ library.
+    # sincosd has a similar fix.
+    y = x if x == 0 else y
+    return (y + 360 if y <= -180 else
+            (y if y <= 180 else y - 360))
   AngNormalize = staticmethod(AngNormalize)
 
   def LatFix(x):
@@ -162,8 +166,11 @@ class Math(object):
       s, c = -s, -c
     elif q == 3:
       s, c = -c,  s
-    if x != 0:
-      s, c = 0.0+s, 0.0+c
+    # Remove the minus sign on -0.0 except for sin(-0.0).
+    # On Windows 32-bit with python 2.7, math.fmod(-0.0, 360) = +0.0
+    # (x, c) here fixes this bug.  See also Math::sincosd in the C++ library.
+    # AngNormalize has a similar fix.
+    s, c = (x, c) if x == 0 else (0.0+s, 0.0+c)
     return s, c
   sincosd = staticmethod(sincosd)
 

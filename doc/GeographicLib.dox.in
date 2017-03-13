@@ -7302,6 +7302,7 @@ git repository for GeographicLib</a>.
    (released 2017-mm-dd)
    - Fix compiler warnings with Visual Studio 2017.
    - Fix compiler warning for C library.
+   - Workaround bug in fmod for python 2.7 on 32-bit Windows machines.
    - Make (&minus;180&deg;, 180&deg;] the default range for longitude
      and azimuth (instead of [&minus;180&deg;, 180&deg;)).  This was
      already the case for the C++ library.  Now the change has been made
