@@ -7305,8 +7305,9 @@ git repository for GeographicLib</a>.
    - Workaround bug in fmod for python 2.7 on 32-bit Windows machines.
    - Make (&minus;180&deg;, 180&deg;] the default range for longitude
      and azimuth (instead of [&minus;180&deg;, 180&deg;)).  This was
-     already the case for the C++ library.  Now the change has been made
-     to the other packages.
+     already the case for the C++ library; now the change has been made
+     to the other implementations (C, Fortran, Java, JavaScript, Python,
+     MATLAB, and Maxima).
    - Changes in cmake support:
      - add USE_BOOST_FOR_EXAMPLES option (default OFF), if ON search for
        Boost libraries for building examples;

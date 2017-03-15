@@ -1589,9 +1589,10 @@
  * L. E. Sjöberg,[[BR]]
    ''Solutions to the ellipsoidal Clairaut constant and the inverse geodetic
    problem by numerical integration'',
-   J. Geodetic Science '''2'''(3), 162--171 (2012).[[BR]]
+   J. Geodetic Science '''2'''(3), 162--171 (2012);[[BR]]
+   Errata: J. Geodetic Science '''3'''(2), 110 (2013).[[BR]]
    https://doi.org/10.2478/v10156-011-0037-4 [[BR]]
-   Errata: https://doi.org/10.2478/jogs-2013-0014
+   https://doi.org/10.2478/jogs-2013-0014
  * G. Panou, D. Delikaraoglou, and R. Korakitis,[[BR]]
    ''Solving the geodesics on the ellipsoid as a boundary value problem'',
    J. Geodetic Science '''3'''(1), 40--47 (2013).[[BR]]
@@ -1609,7 +1610,9 @@
  * W.-K. Tseng,[[BR]]
    ''An algorithm for the inverse solution of geodesic sailing without
    auxiliary sphere'',
-   J. Navigation '''67'''(5), 825--844 (2014).[[BR]]
+   J. Navigation '''67'''(5), 825--844 (2014);[[BR]]
+   Publisher's notice: J. Navigation '''68'''(1), 215--216 (2015);[[BR]]
+   Errata: J. Navigation '''68'''(1), 217--218 (2015).[[BR]]
    https://doi.org/10.1017/S0373463314000228 [[BR]]
-   Publisher's Notice:  https://doi.org/10.1017/S0373463314000745 [[BR]]
-   Erratum: https://doi.org/10.1017/S0373463314000733
+   https://doi.org/10.1017/S0373463314000745 [[BR]]
+   https://doi.org/10.1017/S0373463314000733

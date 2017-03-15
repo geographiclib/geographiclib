@@ -221,7 +221,7 @@ while read c desc; do
     echo "<input type='radio' name='unroll' value='$c' id='$c' $CHECKED>"
     echo "$desc</label></td>"
 done <<EOF
-r reduce to [&minus;180&deg;,180&deg;)
+r reduce to [&minus;180&deg;,180&deg;]
 u unroll
 EOF
 cat <<EOF

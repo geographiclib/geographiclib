@@ -138,7 +138,7 @@ namespace GeographicLib {
    * for |<i>f</i>| &lt; 0.02; however reasonably accurate results will be
    * obtained for |<i>f</i>| &lt; 0.2.  Here is a table of the approximate
    * maximum error (expressed as a distance) for an ellipsoid with the same
-   * major radius as the WGS84 ellipsoid and different values of the
+   * equatorial radius as the WGS84 ellipsoid and different values of the
    * flattening.<pre>
    *     |f|      error
    *     0.01     25 nm
