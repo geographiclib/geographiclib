@@ -1041,9 +1041,9 @@ elliptic integrals (computed by EllipticFunction).  These classes should
 be used if the absolute value of the flattening exceeds 0.02.  The -E
 option to <a href="GeodSolve.1.html">GeodSolve</a> uses these classes.
 
-NearestNeighbor is a header-only classes for finding the nearest
-neighbor of a collection of points where the distance function obeys the
-triangle inequality, such as the geodesic distance.
+NearestNeighbor is a header-only class for finding the nearest neighbor
+of a collection of points where the distance function obeys the triangle
+inequality.  The geodesic distance obeys this condition.
 
 Geocentric and LocalCartesian convert between
 geodetic and geocentric or a local cartesian system.  The constructor for
@@ -2586,12 +2586,13 @@ The figure shows normal gravity for the case \f$ GM = 1 \f$,
 ellipsoid is shown in red.  Contours of constant gravity potential are
 shown in blue; the contour spacing is constant outside the ellipsoid and
 equal to 1/20 of the difference between the potentials on the ellipsoid
-and at the geostationary point (''R'' = 2.2536, ''Z'' = 0); inside the
-ellipsoid the contour spacing is 5 times greater.  The green lines are
-stream lines for the gravity; these are spaced at intervals of 10&deg;
-in parametric latitude on the surface of the ellipsoid.  The normal
-gravity is continued into the level ellipsoid under the assumption that
-the mass is concentrated on the focal disc, shown in black.
+and at the geostationary point (\f$ R = 2.2536 \f$, \f$ Z = 0 \f$);
+inside the ellipsoid the contour spacing is 5 times greater.  The green
+lines are stream lines for the gravity; these are spaced at intervals of
+10&deg; in parametric latitude on the surface of the ellipsoid.  The
+normal gravity is continued into the level ellipsoid under the
+assumption that the mass is concentrated on the focal disc, shown in
+black.
 
 \image html normal-gravity-potential-1.svg "Normal gravity"
 
@@ -7300,19 +7301,23 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.48">Version 1.48</a>
    (released 2017-mm-dd)
-   - Fix compiler warnings with Visual Studio 2017.
-   - Fix compiler warning for C library.
-   - Workaround bug in fmod for python 2.7 on 32-bit Windows machines.
-   - Make (&minus;180&deg;, 180&deg;] the default range for longitude
-     and azimuth (instead of [&minus;180&deg;, 180&deg;)).  This was
-     already the case for the C++ library; now the change has been made
-     to the other implementations (C, Fortran, Java, JavaScript, Python,
-     MATLAB, and Maxima).
+   - The URL for GeographicLib is now
+     https://geographiclib.sourceforge.io (instead of
+     http://geographiclib.sourceforge.net).
+   - The default range for longitude and azimuth is now
+     (&minus;180&deg;, 180&deg;], instead of [&minus;180&deg;,
+     180&deg;).  This was already the case for the C++ library; now the
+     change has been made to the other implementations (C, Fortran,
+     Java, JavaScript, Python, MATLAB, and Maxima).
+   - Workaround bug in math.fmod for Python 2.7 on 32-bit Windows
+     machines.
    - Changes in cmake support:
      - add USE_BOOST_FOR_EXAMPLES option (default OFF), if ON search for
        Boost libraries for building examples;
      - add APPLE_MULTIPLE_ARCHITECTURES option (default OFF), if ON
-       build for i386 and x86_64 on Mac OS X systems.
+       build for both i386 and x86_64 on Mac OS X systems.
+   - Fix compiler warnings with Visual Studio 2017 and for the C
+     library.
 
  - <a href="https://geographiclib.sourceforge.io/1.47">Version 1.47</a>
    (released 2017-02-15)
@@ -7324,7 +7329,7 @@ git repository for GeographicLib</a>.
    - Generalize NormalGravity to allow oblate and prolate ellipsoids.
      As a consequence a new form of constructor,
      NormalGravity::NormalGravity, has been introduced and the old
-     form is now deprecated (and because the signatures of the two
+     form is now <b>deprecated</b> (and because the signatures of the two
      constructors are similar, the compiler will warn about the use of
      the old one).
    - Changes in Math class:
@@ -7334,12 +7339,12 @@ git repository for GeographicLib</a>.
        (&minus;180&deg;, 180&deg;]; this may affect the longitudes and
        azimuth returned by several other functions.
    - Add Utility::trim() and Utility::val<T>(); Utility::num<T>() is now
-     DEPRECATED.
+     <b>deprecated</b>.
    - Changes in cmake support:
      - remove support of PACKAGE_PATH and INSTALL_PATH in cmake
        configuration;
      - fix to FindGeographicLib.cmake to make it work on Debian systems;
-     - use $<TARGET_PDB_FILE:tgt> (cmake version >= 3.1);
+     - use $<TARGET_PDB_FILE:tgt> (cmake version &ge; 3.1);
      - use NAMESPACE for exported targets;
      - geographiclib-config.cmake exports GEOGRAPHICLIB_DATA,
        GEOGRAPHICLIB_PRECISION, and GeographicLib_HIGHPREC_LIBRARIES.
@@ -7347,7 +7352,7 @@ git repository for GeographicLib</a>.
    - Minor fixes:
      - fix the order of declarations in C library, incorporating the
        patches in version 1.46.1;
-     - fix the packaging of the python library, incorporating the
+     - fix the packaging of the Python library, incorporating the
        patches in version 1.46.3;
      - restrict junit dependency in the Java package to testing scope
        (thanks to Mick Killianey);
@@ -7421,8 +7426,8 @@ git repository for GeographicLib</a>.
      - the -I and -D options now specify geodesic line calculation via
        the standard inverse or direct geodesic problems;
      - rename -l flag to -L to parallel the new -I and -D flags (-l is
-       is retained for backward compatibility but is deprecated), and
-       similarly for <a href="GeodSolve.1.html">RhumbSolve(1)</a>;
+       is retained for backward compatibility but is <b>deprecated</b>),
+       and similarly for <a href="GeodSolve.1.html">RhumbSolve(1)</a>;
      - the -F flag (in conjunction with the -I or -D flags) specifies that
        distances read on standard input are fractions of \e s13 or \e
        a13;
@@ -7564,7 +7569,7 @@ git repository for GeographicLib</a>.
        geographic coordinates;
      - document limitations of the series used for TransverseMercator;
      - hide the documentation of the computation of the gradient of the
-       geoid height (now deprecated) in the Geoid class;
+       geoid height (now <b>deprecated</b>) in the Geoid class;
      - warn about the possible misinterpretation of 7.0E+1 by
        DMS::Decode;
      - \e swaplatlong optional argument of DMS::DecodeLatLon and
@@ -7687,7 +7692,7 @@ git repository for GeographicLib</a>.
    - MATLAB changes:
      - provide native MATLAB implementations for compiled interface
        functions, see \ref matlab;
-     - the compiled MATLAB interface is now deprecated and so the
+     - the compiled MATLAB interface is now <b>deprecated</b> and so the
        MATLAB_COMPILER option in the cmake build has been removed;
      - reorganize directories, so that
        - matlab/geographiclib contains the native matlab code;
@@ -7712,7 +7717,7 @@ git repository for GeographicLib</a>.
      in versions 1.40 and 1.41).
    - Mark the computation of the gradient of the geoid height in the
      Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a>
-     utility as deprecated.
+     utility as <b>deprecated</b>.
    - Work around the boost-quadmath bug with setprecision(0).
    - Deprecate use of Visual Studio 2005 "-vc8" project files in the
      windows directory.

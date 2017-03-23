@@ -46,7 +46,7 @@ namespace GeographicLib {
    * This class implements nearest-neighbor calculations using the
    * vantage-point tree described by
    * - J. K. Uhlmann,
-   *   <a href="doi:10.1016/0020-0190(91)90074-r">
+   *   <a href="https://doi.org/10.1016/0020-0190(91)90074-r">
    *   Satisfying general proximity/similarity queries with metric trees</a>,
    *   Information Processing Letters 40 175&ndash;179 (1991).
    * - P. N. Yianilos,
@@ -56,7 +56,7 @@ namespace GeographicLib {
    *   (SIAM, 1993). pp. 311&ndash;321.
    *
    * Given a set of points in some space and a distance function \e d
-   * satisfying the metric conditions:
+   * satisfying the metric conditions,
    * \f[
    * \begin{align}
    *  d(x,y) &\ge 0,\\
@@ -66,11 +66,13 @@ namespace GeographicLib {
    * \end{align}
    * \f]
    * the vantage-point (VP) tree provides an efficient way of determining
-   * nearest neighbors.  Typically the cost of constructing a VP tree of \e N
-   * points is \e N log \e N, while the cost of a query is log \e N.  Thus a VP
-   * tree should be used in situations where \e N is large and at least log \e
-   * N queries are to be made.  The condition, \e N is large, means that
-   * \f$ N \gg 2^D \f$, where \e D is the dimensionality of the space.
+   * nearest neighbors.  The geodesic distance (implemented by the Geodesic
+   * class) satisfies these metric conditions.  Typically the cost of
+   * constructing a VP tree of \e N points is \e N log \e N, while the cost of
+   * a query is log \e N.  Thus a VP tree should be used in situations where \e
+   * N is large and at least log \e N queries are to be made.  The condition,
+   * \e N is large, means that \f$ N \gg 2^D \f$, where \e D is the
+   * dimensionality of the space.
    *
    * - This implementation includes Yianilos' upper and lower bounds for the
    *   inside and outside sets.  This helps limit the number of searches
@@ -97,8 +99,15 @@ namespace GeographicLib {
    *   signed integer type.
    * @tparam position the type for specifying points.
    * @tparam distance the type for a function object which takes takes two
-   *   positions as arguments and returns the distance (of type \e real).
+   *   \e position arguments and returns the distance (of type \e real).
    *
+   * This is a "header-only" implementation and, as such, depends in a minimal
+   * way on the rest of GeographicLib (the only dependency is through the use
+   * of GEOGRAPHICLIB_STATIC_ASSERT and GeographicLib::GeographicErr for
+   * handling run-time and compile-time exceptions).  Therefore, it is easy to
+   * extract this class from the rest of GeographicLib and use it as a
+   * stand-alone facility.
+
    * The \e real type must support numeric_limits queries (specifically:
    * is_signed, is_integer, max(), digits, and digits10).
    *
