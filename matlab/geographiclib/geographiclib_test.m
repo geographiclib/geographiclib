@@ -33,6 +33,7 @@ function geographiclib_test
   i = Planimeter6; if i, n=n+1; fprintf('Planimeter6 fail: %d\n', i); end
   i = Planimeter12; if i, n=n+1; fprintf('Planimeter12 fail: %d\n', i); end
   i = Planimeter13; if i, n=n+1; fprintf('Planimeter13 fail: %d\n', i); end
+  i = geodreckon0; if i, n=n+1; fprintf('geodreckon0 fail: %d\n', i); end
   i = gedistance0; if i, n=n+1; fprintf('gedistance0 fail: %d\n', i); end
   i = tranmerc0; if i, n=n+1; fprintf('tranmerc0 fail: %d\n', i); end
   i = mgrs0; if i, n=n+1; fprintf('mgrs0 fail: %d\n', i); end
@@ -523,6 +524,17 @@ function n = Planimeter13
   [area, perimeter] = geodarea(points(:,1), points(:,2));
   n = n + assertEquals(perimeter, 1160741, 1);
   n = n + assertEquals(area, 32415230256.0, 1);
+end
+
+function n = geodreckon0
+% Check mixed array size bugs
+  n = 0;
+  % lat1 is an array, azi1 is a scalar: 2015-08-10
+  [~, ~, ~, S12] = geodreckon([10 20], 0, 0, 0);
+  if length(S12) ~= 2, n = n+1; end
+  % scalar args except s12 is empty: 2017-03-26
+  [~, ~, ~, S12]=geodreckon(10, 0, [], 0);
+  if ~isempty(S12), n = n+1; end
 end
 
 function n = gedistance0

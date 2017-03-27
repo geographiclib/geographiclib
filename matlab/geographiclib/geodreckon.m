@@ -247,11 +247,14 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
                    ssig12 .* (csig1 .* ssig12 ./ (1 + csig12) + ssig1), ...
                    csig12 <= 0);
     calp12 = salp0.^2 + calp0.^2 .* csig1 .* csig2;
-    % Enlarge salp1, calp1 is case lat1 is an array and azi1 is a scalar
-    s = zeros(size(salp0)); salp1 = salp1 + s; calp1 = calp1 + s;
-    s = calp0 == 0 | salp0 == 0;
-    salp12(s) = salp2(s) .* calp1(s) - calp2(s) .* salp1(s);
-    calp12(s) = calp2(s) .* calp1(s) + salp2(s) .* salp1(s);
+    % Deal with geodreckon(10, 0, [], 0) which has calp2 = []
+    if ~isempty(Z)
+      % Enlarge salp1, calp1 is case lat1 is an array and azi1 is a scalar
+      s = zeros(size(salp0)); salp1 = salp1 + s; calp1 = calp1 + s;
+      s = calp0 == 0 | salp0 == 0;
+      salp12(s) = salp2(s) .* calp1(s) - calp2(s) .* salp1(s);
+      calp12(s) = calp2(s) .* calp1(s) + salp2(s) .* salp1(s);
+    end
     if e2 ~= 0
       c2 = (a^2 + b^2 * eatanhe(1, e2) / e2) / 2;
     else

@@ -9,7 +9,8 @@ FIGURES = \
 	$(srcdir)/thompson-tm-graticule-a.png \
 	$(srcdir)/gauss-krueger-error.png \
 	$(srcdir)/meridian-measures.png \
-	$(srcdir)/normal-gravity-potential-1.svg
+	$(srcdir)/normal-gravity-potential-1.svg \
+	$(srcdir)/vptree.gif
 
 HPPFILES = \
 	$(top_srcdir)/include/GeographicLib/Accumulator.hpp \

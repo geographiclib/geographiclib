@@ -7304,6 +7304,9 @@ git repository for GeographicLib</a>.
    - The URL for GeographicLib is now
      https://geographiclib.sourceforge.io (instead of
      http://geographiclib.sourceforge.net).
+   - Fix BUG in reading NearestNeighbor objects from a stream.
+   - Fix BUG in MATLAB function geodreckon in calculating the area when
+     distance argument is empty.
    - The default range for longitude and azimuth is now
      (&minus;180&deg;, 180&deg;], instead of [&minus;180&deg;,
      180&deg;).  This was already the case for the C++ library; now the

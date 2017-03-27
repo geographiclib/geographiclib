@@ -92,6 +92,8 @@ namespace GeographicLib {
    * - The leaf nodes can contain a bucket of points (instead of just a vantage
    *   point).
    *
+   * \image html vptree.gif "Vantage-point tree"
+   *
    * This class is templated so that it can handle arbitrary metric spaces as
    * follows:
    *
@@ -582,7 +584,7 @@ namespace GeographicLib {
 
       // Sanity check on a Node
       void Check(int numpoints, int treesize, int bucket) const {
-        if (!( -1 <= index && index << numpoints ))
+        if (!( -1 <= index && index < numpoints ))
           throw GeographicLib::GeographicErr("Bad index");
         if (index >= 0) {
           if (!( -1 <= data.child[0] && data.child[0] < treesize &&
@@ -708,7 +710,7 @@ namespace GeographicLib {
           ids[k].first = dist(pts[ids[l].second], pts[ids[k].second]);
           ++cost;
         }
-        // partitian around the median distance
+        // partition around the median distance
         std::nth_element(ids.begin() + l + 1, ids.begin() + m, ids.begin() + u);
         node.index = ids[l].second;
         if (m > l + 1) {        // node.child[0] is possibly empty

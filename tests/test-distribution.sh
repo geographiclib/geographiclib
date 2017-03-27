@@ -361,14 +361,14 @@ test "$CONFIG_VERSIONA" = "$VERSION" || echo autoconf version string mismatch
 cd $TEMP/relx/GeographicLib-$VERSION
 (
     echo Files with trailing spaces:
-    find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.pdf' |
+    find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.gif|\.pdf' |
 	while read f; do
 	    tr -d '\r' < $f | grep ' $' > /dev/null && echo $f || true
 	done
     echo
     echo Files with tabs:
     find . -type f |
-	egrep -v '[Mm]akefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
+	egrep -v '[Mm]akefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.gif|\.pdf|\.xml' |
 	egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
 	egrep -v 'js/samples/geod-.*\.html' |
 	xargs grep -l  '	' || true
@@ -376,7 +376,7 @@ cd $TEMP/relx/GeographicLib-$VERSION
     echo Files with multiple newlines:
     find . -type f |
 	egrep -v \
-	   '/Makefile\.in|\.1\.html|\.png|\.pdf|/ltmain|/config|\.m4|Settings' |
+	   '/Makefile\.in|\.1\.html|\.png|\.gif|\.pdf|/ltmain|/config|\.m4|Settings' |
 	egrep -v '(Resources|Settings)\.Designer\.cs' |
 	while read f; do
 	    tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
@@ -384,14 +384,14 @@ cd $TEMP/relx/GeographicLib-$VERSION
     echo
     echo Files with no newline at end:
     find . -type f |
-	egrep -v '\.png|\.pdf' |
+	egrep -v '\.png|\.gif|\.pdf' |
 	while read f; do
 	    n=`tail -1 $f | wc -l`; test $n -eq 0 && echo $f || true
 	done
     echo
     echo Files with extra newlines at end:
     find . -type f |
-	egrep -v '/configure|/ltmain.sh|\.png|\.pdf|\.1\.html' |
+	egrep -v '/configure|/ltmain.sh|\.png|\.gif|\.pdf|\.1\.html' |
 	while read f; do
 	    n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
 	done

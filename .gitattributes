@@ -25,6 +25,7 @@ NEWS text
 *.tex text
 *.txt text
 *.xml text
+*.svg text
 *.md text
 *.json text
 [Mm]akefile* eol=lf
@@ -34,6 +35,7 @@ NEWS text
 *.eps -text
 *.pdf -text
 *.png -text
+*.gif -text
 *.sln eol=crlf
 *.vcproj eol=crlf
 *.vcxproj eol=crlf

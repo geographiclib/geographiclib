@@ -42,8 +42,3 @@ Instructions for this are given in
 A change log for this package is available at
 
   https://geographiclib.sourceforge.io/html/changes.html
-
-A problem with the way MATLAB Central packages toolboxes causes the
-"Robust Control Toolbox" to be listed as a required product. This is
-wrong; this package has no dependencies other than MATLAB (version 7.9
-or later) or Octave (version 3.4 or later).
