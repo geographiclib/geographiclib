@@ -533,8 +533,11 @@ function n = geodreckon0
   [~, ~, ~, S12] = geodreckon([10 20], 0, 0, 0);
   if length(S12) ~= 2, n = n+1; end
   % scalar args except s12 is empty: 2017-03-26
-  [~, ~, ~, S12]=geodreckon(10, 0, [], 0);
+  [~, ~, ~, S12] = geodreckon(10, 0, [], 0);
   if ~isempty(S12), n = n+1; end
+  % atan2dx needs to accommodate scalar + array arguments: 2017-03-27
+  lat2 = geodreckon(3, 4, [1, 2], 90);
+  if length(lat2) ~= 2, n = n+1; end
 end
 
 function n = gedistance0

@@ -2,8 +2,8 @@ function z = atan2dx(y, x)
 %ATAN2DX  Compute 2 argument arctangent with result in degrees
 %
 %   z = ATAN2DX(y, x) compute atan2(y, x) with result in degrees in
-%   (-180,180] and quadrant symmetries enforced.  x and y must be the same
-%   shape.
+%   (-180,180] and quadrant symmetries enforced.  x and y must have
+%   compatible shapes.
 
   persistent octavep
   if isempty(octavep)
@@ -13,7 +13,9 @@ function z = atan2dx(y, x)
     % MATLAB implements symmetries already
     z = atan2d(y, x);
   else
-    q1 = abs(y) > abs(x); t = y(q1); y(q1) = x(q1); x(q1) = t;
+    q1 = abs(y) > abs(x); q2 = ones(size(q1));
+    x = q2 .* x; y = q2 .* y;           % expand x, y if necessary
+    t = y(q1); y(q1) = x(q1); x(q1) = t;
     q2 = x < 0; x(q2) = -x(q2);
     q = 2 * q1 + q2;
     z = atan2(y, x) * (180 / pi);       % z in [-45, 45]
