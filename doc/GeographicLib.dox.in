@@ -81,6 +81,7 @@ For more information on GeographicLib, see
  - \ref gravity
  - \ref magnetic
  - \ref geodesic
+ - \ref nearest
  - \ref triaxial
  - \ref jacobi
  - \ref rhumb
@@ -177,6 +178,7 @@ report any you find to charles@karney.com.
 <center>
 Forward to \ref install.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page install Installing GeographicLib
@@ -624,6 +626,7 @@ for distribution as \verbatim
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page start Getting started
@@ -883,6 +886,7 @@ corresponding Wikipedia articles:
 <center>
 Back to \ref install.  Forward to \ref utilities.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page utilities Utility programs
@@ -961,6 +965,7 @@ Online versions of four of these utilities are provided:
 <center>
 Back to \ref start.  Forward to \ref organization.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page organization Code organization
@@ -1041,8 +1046,8 @@ elliptic integrals (computed by EllipticFunction).  These classes should
 be used if the absolute value of the flattening exceeds 0.02.  The -E
 option to <a href="GeodSolve.1.html">GeodSolve</a> uses these classes.
 
-NearestNeighbor is a header-only class for finding the nearest neighbor
-of a collection of points where the distance function obeys the triangle
+NearestNeighbor is a header-only class for efficiently \ref nearest of a
+collection of points where the distance function obeys the triangle
 inequality.  The geodesic distance obeys this condition.
 
 Geocentric and LocalCartesian convert between
@@ -1166,6 +1171,7 @@ with, e.g.,
 <center>
 Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page other Implementations in other languages
@@ -1376,6 +1382,7 @@ them.
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page geoid Geoid height
@@ -1926,6 +1933,7 @@ requires a <code>SAVE</code> statement in subroutine
 <center>
 Back to \ref other.  Forward to \ref gravity.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page gravity Gravity models
@@ -2796,6 +2804,7 @@ results in a sphere (\f$ f = 0 \f$).
 <center>
 Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page magnetic Magnetic models
@@ -3144,12 +3153,13 @@ ID              IGRF11-A
 <center>
 Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page geodesic Geodesics on an ellipsoid of revolution
 
 <center>
-Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
+Back to \ref magnetic.  Forward to \ref nearest.  Up to \ref contents.
 </center>
 
 Geodesic and GeodesicLine provide accurate
@@ -4105,14 +4115,106 @@ as part of the general solution and, as much as possible, we allow all
 geodesics to be computed by the general method.
 
 <center>
-Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
+Back to \ref magnetic.  Forward to \ref nearest.  Up to \ref contents.
 </center>
+
+**********************************************************************/
+/**
+\page nearest Finding nearest neighbors
+
+<center>
+Back to \ref geodesic.  Forward to \ref  triaxial.  Up to \ref contents.
+</center>
+
+The problem of finding the maritime boundary defined by the "median
+line" is discussed in Section 14 of
+ - C. F. F. Karney,
+   <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
+   on an ellipsoid of revolution</a>,
+   Feb. 2011; preprint
+   <a href="https://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
+ .
+Figure 14 shows the median line which is equidistant from Britain and
+mainland Europe.  Determining the median line involves finding, for any
+given \e P, the closest points on the coast of Britain and on the coast
+of mainland Europe.  The operation of finding the closest in a set of
+points is usually referred to as the <i>nearest neighbor</i> problem and
+the NearestNeighbor class implements an efficient algorithm for solving
+it.
+
+NearestNeighbor class implements nearest-neighbor calculations using the
+vantage-point tree described by
+- J. K. Uhlmann,
+  <a href="https://doi.org/10.1016/0020-0190(91)90074-r">
+  Satisfying general proximity/similarity queries with metric trees</a>,
+  Information Processing Letters 40 175&ndash;179 (1991).
+- P. N. Yianilos,
+  <a href="http://pnylab.com/pny/papers/vptree/vptree/">
+  Data structures and algorithms for nearest neighbor search in general
+  metric spaces</a>, Proc. 4th ACM-SIAM Symposium on Discrete Algorithms,
+  (SIAM, 1993). pp. 311&ndash;321.
+
+Given a set of points in some space and a distance function \e d
+satisfying the metric conditions,
+\f[
+\begin{align}
+ d(x,y) &\ge 0,\\
+ d(x,y) &= 0, \ \text{iff $x = y$},\\
+ d(x,y) &= d(y,x),\\
+ d(x,z) &\ge d(x,y) + d(y,z),
+\end{align}
+\f]
+the vantage-point (VP) tree provides an efficient way of determining
+nearest neighbors.  The geodesic distance (implemented by the Geodesic
+class) satisfies these metric conditions.  Typically the cost of
+constructing a VP tree of \e N points is \e N log \e N, while the cost of
+a query is log \e N.  Thus a VP tree should be used in situations where \e
+N is large and at least log \e N queries are to be made.  The condition,
+\e N is large, means that \f$ N \gg 2^D \f$, where \e D is the
+dimensionality of the space.
+
+- This implementation includes Yianilos' upper and lower bounds for the
+  inside and outside sets.  This helps limit the number of searches
+  (compared to just using the median distance).
+- Rather than do a depth-first or breath-first search on the tree, the
+  nodes to be processed are put on a priority queue with the nodes most
+  likely to contain close points processed first.  Frequently, this allows
+  nodes lower down on the priority queue to be skipped.
+- This technique also allows non-exhaustive searchs to be performed (to
+  answer questions such as "are there any points within 1km of the query
+  point?).
+- When building the tree, the first vantage point is (arbitrarily)
+  chosen as the middle element of the set.  Thereafter, the points
+  furthest from the parent vantage point in both the inside and outside
+  sets are selected as the children's vantage points.  This information
+  is already available from the computation of the upper and lower
+  bounds of the children.  This choice seems to lead to a reasonably
+  optimized tree.
+- The leaf nodes can contain a bucket of points (instead of just a vantage
+  point).
+- Coincident points are allowed in the set; these are treated as distinct
+  points.
+
+The figure below shows the construction of the VP tree for the points
+making up the coastlines of Britain and Ireland (about 5000 points shown
+in blue).  The boundaries between the inside and outside sets are shown
+as green circular arcs (arcs of geodesic circles).  At each stage, the
+newly added vantage points are shown as red dots and the vantage points
+for the next stage are shown as red plus signs.  The data is shown in
+the Cassini-Soldner projection with a central meridian of 5&deg;W.
+
+\image html vptree.gif "Vantage-point tree"
+
+<center>
+Back to \ref geodesic.  Forward to \ref triaxial.  Up to \ref contents.
+</center>
+
 **********************************************************************/
 /**
 \page triaxial Geodesics on a triaxial ellipsoid
 
 <center>
-Back to \ref geodesic.  Forward to \ref jacobi.  Up to \ref contents.
+Back to \ref nearest.  Forward to \ref jacobi.  Up to \ref contents.
 </center>
 
 Jacobi (1839) showed that the problem of geodesics on a triaxial
@@ -4685,15 +4787,15 @@ The shortest path found by this method is unique unless:
 This material is now on its own page; see \ref jacobi.
 
 <center>
-Back to \ref geodesic.  Forward to \ref jacobi.  Up to \ref contents.
+Back to \ref nearest.  Forward to \ref jacobi.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page jacobi Jacobi's conformal projection
 
 <center>
-Back to \ref triaxial.  Forward to \ref rhumb.  Up to
-\ref contents.
+Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
 </center>
 
 In addition to solving the geodesic problem for the triaxial ellipsoid,
@@ -4993,13 +5095,13 @@ code.  It is not part of GeographicLib itself.
 <center>
 Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page rhumb Rhumb lines
 
 <center>
-Back to \ref jacobi.  Forward to \ref greatellipse.  Up to
-\ref contents.
+Back to \ref jacobi.  Forward to \ref greatellipse.  Up to \ref contents.
 </center>
 
 The Rhumb and RhumbLine classes together with the
@@ -5589,16 +5691,15 @@ unchanged.  The result for the sum is
 \f]
 
 <center>
-Back to \ref jacobi.  Forward to \ref greatellipse.  Up to
-\ref contents.
+Back to \ref jacobi.  Forward to \ref greatellipse.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page greatellipse Great Ellipses
 
 <center>
-Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
-\ref contents.
+Back to \ref rhumb.  Forward to \ref transversemercator.  Up to \ref contents.
 </center>
 
 Great ellipses are sometimes proposed (Williams, 1996; Pallikaris &
@@ -5952,9 +6053,9 @@ time of closest approach, median lines, tri-points, etc.) are all
 amenable to simple and fast solutions in terms of geodesics.
 
 <center>
-Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
-\ref contents.
+Back to \ref rhumb.  Forward to \ref transversemercator.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page transversemercator Transverse Mercator projection
@@ -6336,13 +6437,13 @@ reflection symmetry on all the four sides of Fig. 3(c).
 <center>
 Back to \ref greatellipse.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page geocentric Geocentric coordinates
 
 <center>
-Back to \ref transversemercator.  Forward to \ref auxlat.  Up to
-\ref contents.
+Back to \ref transversemercator.  Forward to \ref auxlat.  Up to \ref contents.
 </center>
 
 The implementation of Geocentric::Reverse is adapted from
@@ -6452,17 +6553,15 @@ However the choice of independent variables in these methods leads
 to a loss of accuracy for points near the equatorial plane.
 
 <center>
-Back to \ref transversemercator.  Forward to \ref auxlat.  Up to
-\ref contents.
-
+Back to \ref transversemercator.  Forward to \ref auxlat.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page auxlat Auxiliary latitudes
 
 <center>
-Back to \ref geocentric.  Forward to \ref highprec.  Up to
-\ref contents.
+Back to \ref geocentric.  Forward to \ref highprec.  Up to \ref contents.
 </center>
 
 Six latitudes are used by GeographicLib:
@@ -6997,10 +7096,9 @@ data: the 5th line for &phi;&nbsp;&minus;&nbsp;&theta; is <tt>[32/5, 0,
 </small></tt>
 
 <center>
-Back to \ref geocentric.  Forward to \ref highprec.  Up to
-\ref contents.
-
+Back to \ref geocentric.  Forward to \ref highprec.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page highprec Support for high precision arithmetic
@@ -7269,8 +7367,8 @@ The following steps needed to be taken
 
 <center>
 Back to \ref auxlat.  Forward to \ref changes.  Up to \ref contents.
-
 </center>
+
 **********************************************************************/
 /**
 \page changes Change log
@@ -7304,7 +7402,14 @@ git repository for GeographicLib</a>.
    - The URL for GeographicLib is now
      https://geographiclib.sourceforge.io (instead of
      http://geographiclib.sourceforge.net).
-   - Fix BUG in reading NearestNeighbor objects from a stream.
+   - Changes to NearestNeighbor:
+     - fix BUG in reading a NearestNeighbor object from a stream which
+       sometimes incorrectly caused a "Bad index" exception to be
+       thrown;
+     - add NearestNeighbor::operator<<, NearestNeighbor::operator>>,
+       NearestNeighbor::swap;
+     - add documentation in the section, \ref nearest.
+   - Add figure to \ref normalgravity documentation.
    - Fix BUGS in MATLAB function geodreckon with mixed scalar and array
      arguments.
    - The default range for longitude and azimuth is now
