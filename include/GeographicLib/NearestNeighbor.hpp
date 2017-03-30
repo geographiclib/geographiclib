@@ -63,6 +63,15 @@ namespace GeographicLib {
    *   pos_t&) const</code>, which returns the geodesic distance between two
    *   points.
    *
+   * \note The distance measure must satisfy the triangle inequality, \f$
+   * d(a,c) \le d(a,b) + d(b,c) \f$ for all points \e a, \e b, \e c.  The
+   * geodesic distance (given by Geodesic::Inverse) does, while the great
+   * ellipse distance and the rhumb line distance <i>do not</i>.  If you use
+   * the ordinary Euclidean distance, i.e., \f$ \sqrt{(x_a-x_b)^2 +
+   * (y_a-y_b)^2} \f$ for two dimensions, don't be tempted to leave out the
+   * square root in the interests of "efficiency"; the squared distance does
+   * not satisfy the triangle inequality!
+   *
    * This is a "header-only" implementation and, as such, depends in a minimal
    * way on the rest of GeographicLib (the only dependency is through the use
    * of GEOGRAPHICLIB_STATIC_ASSERT and GeographicLib::GeographicErr for
@@ -233,6 +242,10 @@ namespace GeographicLib {
      * \e mindist should be used to exclude a "small" neighborhood of the query
      * point (relative to the average spacing of the data).  If \e mindist is
      * large, the efficiency of the search deteriorates.
+     *
+     * \note Only the shortest distance is returned (as as the function value).
+     * The distances to other points (indexed by <i>ind</i><sub><i>j</i></sub>
+     * for \e j > 0) can be found by invoking \e dist again.
      *
      * \warning The arguments \e pts and \e dist must be identical to
      * those used to initialize the NearestNeighbor; if not, the behavior of

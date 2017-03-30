@@ -272,7 +272,7 @@ cmake.  Building under cmake depends on whether it is targeting an IDE
 (interactive development environment) or generating Unix-style
 makefiles.  The instructions below have been tested with makefiles and
 g++ on Linux and with the Visual Studio IDE on Windows.  It is known to
-work also for Visual Studio 12 Express (2013).
+work also for Visual Studio 2017 Build Tools.
 
 Here are the steps to compile and install GeographicLib:
 - Unpack the source, running one of \verbatim
@@ -389,8 +389,9 @@ Here are the steps to compile and install GeographicLib:
   GeographicLib.sln, pick the build type (e.g., Release), and select
   "Build Solution".  If this succeeds, select "RUN_TESTS" to build;
   finally, select "INSTALL" to install (RUN_TESTS and INSTALL are in
-  the CMakePredefinedTargets folder).  Alternatively, you run the
-  Visual Studio compiler from the command line with \verbatim
+  the CMakePredefinedTargets folder).  Alternatively (for example, if
+  you are using the Visual Studio 2017 Build Tools), you run the Visual
+  Studio compiler from the command line with \verbatim
   cmake --build . --config Release --target ALL_BUILD
   cmake --build . --config Release --target RUN_TESTS
   cmake --build . --config Release --target INSTALL \endverbatim
@@ -4142,8 +4143,8 @@ points is usually referred to as the <i>nearest neighbor</i> problem and
 the NearestNeighbor class implements an efficient algorithm for solving
 it.
 
-NearestNeighbor class implements nearest-neighbor calculations using the
-vantage-point tree described by
+The NearestNeighbor class implements nearest-neighbor calculations using
+the vantage-point tree described by
 - J. K. Uhlmann,
   <a href="https://doi.org/10.1016/0020-0190(91)90074-r">
   Satisfying general proximity/similarity queries with metric trees</a>,
@@ -4154,24 +4155,26 @@ vantage-point tree described by
   metric spaces</a>, Proc. 4th ACM-SIAM Symposium on Discrete Algorithms,
   (SIAM, 1993). pp. 311&ndash;321.
 
-Given a set of points in some space and a distance function \e d
-satisfying the metric conditions,
+Given a set of points \e x, \e y, \e z, &hellip;, in some space and a
+distance function \e d satisfying the metric conditions,
 \f[
 \begin{align}
  d(x,y) &\ge 0,\\
  d(x,y) &= 0, \ \text{iff $x = y$},\\
  d(x,y) &= d(y,x),\\
- d(x,z) &\ge d(x,y) + d(y,z),
+ d(x,z) &\le d(x,y) + d(y,z),
 \end{align}
 \f]
 the vantage-point (VP) tree provides an efficient way of determining
 nearest neighbors.  The geodesic distance (implemented by the Geodesic
-class) satisfies these metric conditions.  Typically the cost of
-constructing a VP tree of \e N points is \e N log \e N, while the cost of
-a query is log \e N.  Thus a VP tree should be used in situations where \e
-N is large and at least log \e N queries are to be made.  The condition,
-\e N is large, means that \f$ N \gg 2^D \f$, where \e D is the
-dimensionality of the space.
+class) satisfies these metric conditions, while the great ellipse
+distance and the rhumb line distance <i>do not</i> (they do not satisfy
+the last condition, the triangle inequality).  Typically the cost of
+constructing a VP tree of \e N points is \e N log \e N, while the cost
+of a query is log \e N.  Thus a VP tree should be used in situations
+where \e N is large and at least log \e N queries are to be made.  The
+condition, \e N is large, means that \f$ N \gg 2^D \f$, where \e D is
+the dimensionality of the space.
 
 - This implementation includes Yianilos' upper and lower bounds for the
   inside and outside sets.  This helps limit the number of searches
@@ -4197,11 +4200,14 @@ dimensionality of the space.
 
 The figure below shows the construction of the VP tree for the points
 making up the coastlines of Britain and Ireland (about 5000 points shown
-in blue).  The boundaries between the inside and outside sets are shown
-as green circular arcs (arcs of geodesic circles).  At each stage, the
-newly added vantage points are shown as red dots and the vantage points
-for the next stage are shown as red plus signs.  The data is shown in
-the Cassini-Soldner projection with a central meridian of 5&deg;W.
+in blue).  The set of points is recursively split into 2 approximately
+equal "inside" and "outside" subsets based on the distance from a
+"vantage point".  The boundaries between the inside and outside sets are
+shown as green circular arcs (arcs of geodesic circles).  At each stage,
+the newly added vantage points are shown as red dots and the vantage
+points for the next stage are shown as red plus signs.  The data is
+shown in the Cassini-Soldner projection with a central meridian of
+5&deg;W.
 
 \image html vptree.gif "Vantage-point tree"
 
@@ -7399,7 +7405,7 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.48">Version 1.48</a>
    (released 2017-mm-dd)
-   - The URL for GeographicLib is now
+   - The "official" URL for GeographicLib is now
      https://geographiclib.sourceforge.io (instead of
      http://geographiclib.sourceforge.net).
    - Changes to NearestNeighbor:
