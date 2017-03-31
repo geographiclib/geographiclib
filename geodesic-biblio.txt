@@ -71,7 +71,7 @@
    https://books.google.com/books?id=dA1bAAAAQAAJ [[BR]]
    alt: http://eulerarchive.maa.org/pages/E065.html [[BR]]
    figures: http://eulerarchive.maa.org/docs/originals/E065h
-   pp. 15, 17, 19, 21, 23. [[BR]]
+   pp. 15, 17, 19, 21, 23.[[BR]]
    German translation: by A. Aycock and A. Diener.[[BR]]
    http://eulerarchive.maa.org/docs/translations/E065de.pdf
  * L. Euler,[[BR]]
@@ -1552,11 +1552,20 @@
    of K. Borre & W. G. Strang, ''Algorithms for Global Positioning''
    (Wellesley-Cambridge Press, 2012) [[BR]]
    http://old.gps.aau.dk/downloads/notes.pdf
+ * R. Sinclair,[[BR]]
+   ''On the last geometric statement of Jacobi'',
+   Experimental Math. '''12'''(4), 477--485 (2003).[[BR]]
+   https://projecteuclid.org/euclid.em/1087568023 [[BR]]
+   https://doi.org/10.1080/10586458.2003.10504515
+ * R. J. Mathar,[[BR]]
+   ''Geodetic line at constant altitude above the ellipsoid''
+   (May 2008).[[BR]]
+   https://arxiv.org/abs/0711.0642
  * C. F. F. Karney,[[BR]]
-   ''GeographicLib, version 2009-03'' (Mar. 1, 2009). [[BR]]
+   ''GeographicLib, version 2009-03'' (Mar. 2009).[[BR]]
    https://doi.org/10.5281/zenodo.32463
  * C. F. F. Karney,[[BR]]
-   ''Test set for geodesics'' (2010). [[BR]]
+   ''Test set for geodesics'' (2010).[[BR]]
    https://doi.org/10.5281/zenodo.32156
  * C. F. F. Karney,[[BR]]
    ''Geodesics on an ellipsoid of revolution''
@@ -1580,6 +1589,14 @@
    J. Korean Soc. Surveying, Geodesy, Photogrammetry and Cartography
    '''29'''(4), 329--341 (2011).[[BR]]
    https://doi.org/10.7848/ksgpc.2011.29.4.329
+ * A. S. Lenart,[[BR]]
+   ''Solutions of Direct Geodetic Problem in Navigational Applications'',
+   TransNav '''5'''(4), 527--532 (2011).[[BR]]
+   http://www.transnav.eu/Article_Solutions_of_Direct_Geodetic_Lenart,20,324.html
+ * A. S. Lenart,[[BR]]
+   ''Solutions of Inverse Geodetic Problem in Navigational Applications'',
+   TransNav '''7'''(2), 253--257 (2013).[[BR]]
+   https://doi.org/10.12716/1001.07.02.13
  * L. E. Sjöberg and M. Shirazian,[[BR]]
    ''Solving the direct and inverse geodetic problems on the ellipsoid
    by numerical integration'',

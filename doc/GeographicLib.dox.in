@@ -2609,7 +2609,7 @@ black.
 
 Typically, the normal potential, \f$ U \f$, is only of interest for
 outside the ellipsoid \f$ u \ge b \f$ (alt. \f$ u' \ge a \f$).  In
-planetary applications a open problem is finding a mass distribution
+planetary applications, an open problem is finding a mass distribution
 which is in hydrostatic equilibrium (the mass density is non-negative
 and a non-decreasing function of the potential interior to the
 ellipsoid).
