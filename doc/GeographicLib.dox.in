@@ -79,6 +79,7 @@ For more information on GeographicLib, see
  - \ref other
  - \ref geoid
  - \ref gravity
+ - \ref normalgravity
  - \ref magnetic
  - \ref geodesic
  - \ref nearest
@@ -1940,15 +1941,14 @@ Back to \ref other.  Forward to \ref gravity.  Up to \ref contents.
 \page gravity Gravity models
 
 <center>
-Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
+Back to \ref geoid.  Forward to \ref normalgravity.  Up to \ref contents.
 </center>
 
-GeographicLib can compute the earth's gravitational field with an
-earth gravity model using the GravityModel and
-GravityCircle classes and with the
-<a href="Gravity.1.html">Gravity</a> utility.  These models expand the
-gravitational potential of the earth as sum of spherical harmonics.  The
-models also specify a reference ellipsoid, relative to which geoid
+GeographicLib can compute the earth's gravitational field with an earth
+gravity model using the GravityModel and GravityCircle classes and with
+the <a href="Gravity.1.html">Gravity</a> utility.  These models expand
+the gravitational potential of the earth as sum of spherical harmonics.
+The models also specify a reference ellipsoid, relative to which geoid
 heights and gravity disturbances are measured.  Underlying all these
 models is <i>normal gravity</i> which is the exact solution for an
 idealized rotating ellipsoidal body.  This is implemented with the
@@ -1962,7 +1962,7 @@ Go to
  - \ref gravitygeoid
  - \ref gravityatmos
  - \ref gravityparallel
- - \ref normalgravity
+ - \ref normalgravity (now on its own page)
 
 The supported models are
  - <b>egm84</b>, the
@@ -2448,7 +2448,17 @@ optimizations, the computation would have taken about 200 days!)
 cmake will add in support for OpenMP for
 <code>examples/GeoidToGTX.cpp</code>, if it is available.
 
-\section normalgravity Normal gravity
+<center>
+Back to \ref geoid.  Forward to \ref normalgravity.  Up to \ref contents.
+</center>
+
+**********************************************************************/
+/**
+\page normalgravity Normal gravity
+
+<center>
+Back to \ref gravity.  Forward to \ref magnetic.  Up to \ref contents.
+</center>
 
 The NormalGravity class computes "normal gravity" which refers to the
 exact (classical) solution of an idealised system consisting of an
@@ -2469,6 +2479,14 @@ rotation).  The resulting field exterior to the ellipsoid is called
 potential is constant on the ellipsoid it is sometimes referred to as
 the <i>level ellipsoid</i>.
 
+Go to
+ - \ref normalgravcoords
+ - \ref normalgravpot
+ - \ref normalgravmass
+ - \ref normalgravsurf
+ - \ref normalgravmean
+ - \ref normalgravj2
+
 References:
  - C. Somigliana, Teoria generale del campo gravitazionale dell'ellissoide
    di rotazione, Mem. Soc. Astron. Ital, <b>4</b>, 541--599 (1929).
@@ -2484,7 +2502,7 @@ References:
    exterieur, Jour. Liouville 5, 465--488 (1840), Note 2.
    http://sites.mathdoc.fr/JMPA/PDF/JMPA_1840_1_5_A41_0.pdf
 
-\subsection normalgravcoords Ellipsoidal coordinates
+\section normalgravcoords Ellipsoidal coordinates
 
 Two set of formulas are presented: those of Heiskanen and Moritz (1967)
 which are applicable to an oblate ellipsoid and a second set where the
@@ -2553,7 +2571,7 @@ The functions \f$ Q(z) \f$, \f$ Q'(z') \f$, \f$ H(z) \f$, and
 they are finite in the spherical limit \f$ E \rightarrow 0 \f$, i.e.,
 \f$ Q(0) = Q'(0) = \frac2{15} \f$, and \f$ H(0) = H'(0) = \frac25 \f$.
 
-\subsection normalgravpot The normal potential
+\section normalgravpot The normal potential
 
 The normal potential is the sum of three components, a mass term, a
 quadrupole term and a centrifugal term,
@@ -2605,7 +2623,7 @@ black.
 
 \image html normal-gravity-potential-1.svg "Normal gravity"
 
-\subsection normalgravmass The mass distribution
+\section normalgravmass The mass distribution
 
 Typically, the normal potential, \f$ U \f$, is only of interest for
 outside the ellipsoid \f$ u \ge b \f$ (alt. \f$ u' \ge a \f$).  In
@@ -2694,7 +2712,7 @@ J_2 & = \frac{C - A}{Ma^2},
 \f]
 where \f$ J_2 \f$ is the <i>dynamical form factor</i>.
 
-\subsection normalgravsurg The surface gravity
+\section normalgravsurf The surface gravity
 
 Each term in the potential contributes to the gravity on the surface of
 the ellipsoid
@@ -2737,7 +2755,7 @@ where
 \end{align}
 \f]
 
-\subsection normalgravmean The mean gravity
+\section normalgravmean The mean gravity
 
 Performing an average of the surface gravity over the area of the
 ellipsoid gives
@@ -2767,7 +2785,7 @@ resulting in
     \biggl(GM - \frac{2\omega^2 a^2b}3\biggr).
 \f]
 
-\subsection normalgrav Possible values of the dynamical form factor
+\section normalgravj2 Possible values of the dynamical form factor
 
 The solution for the normal gravity is well defined for arbitrary
 \f$ M \f$, \f$ \omega \f$, \f$ a > 0\f$, and \f$ f < 1 \f$.  (Note that
@@ -2803,7 +2821,7 @@ J_2 = -\frac13 \frac{\omega^2 a^3}{GM}
 results in a sphere (\f$ f = 0 \f$).
 
 <center>
-Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
+Back to \ref gravity.  Forward to \ref magnetic.  Up to \ref contents.
 </center>
 
 **********************************************************************/
@@ -2811,7 +2829,7 @@ Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
 \page magnetic Magnetic models
 
 <center>
-Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
+Back to \ref normalgravity.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
 GeographicLib can compute the earth's magnetic field by a magnetic
@@ -3152,7 +3170,7 @@ ID              IGRF11-A
 \endverbatim
 
 <center>
-Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
+Back to \ref normalgravity.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
 **********************************************************************/
@@ -7415,7 +7433,8 @@ git repository for GeographicLib</a>.
      - add NearestNeighbor::operator<<, NearestNeighbor::operator>>,
        NearestNeighbor::swap;
      - add documentation in the section, \ref nearest.
-   - Add figure to \ref normalgravity documentation.
+   - \ref normalgravity documentation is now on its own page and now has
+     an illustrative figure.
    - Fix BUGS in MATLAB function geodreckon with mixed scalar and array
      arguments.
    - The default range for longitude and azimuth is now
