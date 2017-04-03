@@ -7431,8 +7431,9 @@ git repository for GeographicLib</a>.
        sometimes incorrectly caused a "Bad index" exception to be
        thrown;
      - add NearestNeighbor::operator<<, NearestNeighbor::operator>>,
-       NearestNeighbor::swap;
-     - add documentation in the section, \ref nearest.
+       NearestNeighbor::swap, std::swap(GeographicLib::NearestNeighbor&,
+       GeographicLib::NearestNeighbor&);
+     - add documentation page, \ref nearest.
    - \ref normalgravity documentation is now on its own page and now has
      an illustrative figure.
    - Fix BUGS in MATLAB function geodreckon with mixed scalar and array

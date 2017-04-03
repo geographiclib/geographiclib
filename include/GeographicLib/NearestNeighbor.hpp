@@ -139,7 +139,7 @@ namespace GeographicLib {
      * vanishes); these are treated as distinct.
      *
      * The choice of \e bucket is a tradeoff between space and efficiency.  A
-     * larger \e bucket decreases the size of the NearestNeigbor object which
+     * larger \e bucket decreases the size of the NearestNeighbor object which
      * scales as pts.size() / max(1, bucket) and reduces the number of distance
      * calculations to construct the object by log2(bucket) * pts.size().
      * However each search then requires about bucket additional distance
@@ -398,10 +398,10 @@ namespace GeographicLib {
         }
       } else {
         std::stringstream ostring;
-          // Ensure enough precision for type dist_t.  If dist_t is actually a
-          // signed integer type, full precision is used anyway.  With C++11,
-          // max_digits10 can be used instead.
-        ostring.precision(std::numeric_limits<dist_t>::digits10 + 2);
+          // Ensure enough precision for type dist_t.  With C++11, max_digits10
+          // can be used instead.
+        if (!std::numeric_limits<dist_t>::is_integer)
+          ostring.precision(std::numeric_limits<dist_t>::digits10 + 2);
         ostring << version << " " << realspec << " " << _bucket << " "
                 << _numpoints << " " << _tree.size() << " " << _cost;
         for (int i = 0; i < int(_tree.size()); ++i) {
@@ -542,7 +542,7 @@ namespace GeographicLib {
     { t.Load(is, false); return is; }
 
     /**
-     * Swap with another NearestNeigbor object.
+     * Swap with another NearestNeighbor object.
      *
      * @param[in,out] t the NearestNeighbor object to swap with.
      **********************************************************************/
@@ -799,8 +799,8 @@ namespace std {
    * @tparam pos_t the type for specifying the positions of points.
    * @tparam distfun_t the type for a function object which calculates distances
    *   between points.
-   * @param[in,out] a the first NearestNeigbor to swap.
-   * @param[in,out] b the second NearestNeigbor to swap.
+   * @param[in,out] a the first GeographicLib::NearestNeighbor to swap.
+   * @param[in,out] b the second GeographicLib::NearestNeighbor to swap.
    **********************************************************************/
   template <typename dist_t, typename pos_t, class distfun_t>
   void swap(GeographicLib::NearestNeighbor<dist_t, pos_t, distfun_t>& a,
