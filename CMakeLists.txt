@@ -216,26 +216,30 @@ if (MSVC)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MP")
 else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-  # check for C++11 support.  This flag is *not* propagated to clients
-  # that use GeographicLib.  However, this is of no consequence.  When
-  # the client code is being compiled (and the GeographicLib headers
-  # being included), work-alike substitutions are used.
-  include (CheckCXXCompilerFlag)
-  # The only "deprecated" flag included here is "0x" to activate C++11
-  # with old versions of g++.  We'll add "17" when it's available.
-  # Note: C++11 (actually gnu++14) support is turned on by default in
-  # g++ 6.1 and later.
-  foreach (_F 14 11 0x)
-    set (CXX11_FLAG "-std=c++${_F}")
-    set (_T CXX11TEST${_F})
-    check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
-    if (${_T})
-      break ()
+  # g++ 6.0 defaults to -std=gnu++14
+  if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
+        NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0))
+    # check for C++11 support.  This flag is *not* propagated to clients
+    # that use GeographicLib.  However, this is of no consequence.  When
+    # the client code is being compiled (and the GeographicLib headers
+    # being included), work-alike substitutions are used.
+    include (CheckCXXCompilerFlag)
+    # The only "deprecated" flag included here is "0x" to activate C++11
+    # with old versions of g++.  We'll add "17" when it's available.
+    # Note: C++11 (actually gnu++14) support is turned on by default in
+    # g++ 6.1 and later.
+    foreach (_F 14 11 0x)
+      set (CXX11_FLAG "-std=c++${_F}")
+      set (_T CXX11TEST${_F})
+      check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
+      if (${_T})
+        break ()
+      endif ()
+      unset (CXX11_FLAG)
+    endforeach ()
+    if (CXX11_FLAG)
+      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
     endif ()
-    unset (CXX11_FLAG)
-  endforeach ()
-  if (CXX11_FLAG)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
   endif ()
 endif ()
 

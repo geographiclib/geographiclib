@@ -4218,14 +4218,13 @@ the dimensionality of the space.
 
 The figure below shows the construction of the VP tree for the points
 making up the coastlines of Britain and Ireland (about 5000 points shown
-in blue).  The set of points is recursively split into 2 approximately
-equal "inside" and "outside" subsets based on the distance from a
-"vantage point".  The boundaries between the inside and outside sets are
-shown as green circular arcs (arcs of geodesic circles).  At each stage,
-the newly added vantage points are shown as red dots and the vantage
-points for the next stage are shown as red plus signs.  The data is
-shown in the Cassini-Soldner projection with a central meridian of
-5&deg;W.
+in blue).  The set of points is recursively split into 2 equal "inside"
+and "outside" subsets based on the distance from a "vantage point".  The
+boundaries between the inside and outside sets are shown as green
+circular arcs (arcs of geodesic circles).  At each stage, the newly
+added vantage points are shown as red dots and the vantage points for
+the next stage are shown as red plus signs.  The data is shown in the
+Cassini-Soldner projection with a central meridian of 5&deg;W.
 
 \image html vptree.gif "Vantage-point tree"
 
@@ -7436,20 +7435,21 @@ git repository for GeographicLib</a>.
      - add documentation page, \ref nearest.
    - \ref normalgravity documentation is now on its own page and now has
      an illustrative figure.
-   - Fix BUGS in MATLAB function geodreckon with mixed scalar and array
-     arguments.
    - The default range for longitude and azimuth is now
      (&minus;180&deg;, 180&deg;], instead of [&minus;180&deg;,
      180&deg;).  This was already the case for the C++ library; now the
      change has been made to the other implementations (C, Fortran,
      Java, JavaScript, Python, MATLAB, and Maxima).
+   - Fix BUGS in MATLAB function geodreckon with mixed scalar and array
+     arguments.
    - Workaround bug in math.fmod for Python 2.7 on 32-bit Windows
      machines.
    - Changes in cmake support:
      - add USE_BOOST_FOR_EXAMPLES option (default OFF), if ON search for
        Boost libraries for building examples;
      - add APPLE_MULTIPLE_ARCHITECTURES option (default OFF), if ON
-       build for both i386 and x86_64 on Mac OS X systems.
+       build for both i386 and x86_64 on Mac OS X systems;
+     - don't add flag for C++11 for g++ 6.0 (since it's not needed).
    - Fix compiler warnings with Visual Studio 2017 and for the C
      library.
 
