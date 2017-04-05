@@ -427,7 +427,7 @@ cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
 
 # javascript release
-npm publish $TEMP/gita/geographiclib/BUILD/js/geographiclib
+cd $TEMP/gita/geographiclib/BUILD/js && npm publish geographiclib
 make -C $DEVELSOURCE -f makefile-admin distrib-js
 make -C $DEVELSOURCE -f makefile-admin install-js
 # also update devel branch of node-geographiclib from ??
