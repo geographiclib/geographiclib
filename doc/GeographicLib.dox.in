@@ -6608,19 +6608,25 @@ Six latitudes are used by GeographicLib:
 The last five of these are called <i>auxiliary latitudes</i>.  These
 quantities are all defined in the
 <a href="https://en.wikipedia.org/wiki/Latitude#Auxiliary_latitudes">
-Wikipedia article on latitudes</a>.  (In addition there's the isometric
-latitude, &psi; = gd<sup>&minus;1</sup>&chi; =
-sinh<sup>&minus;1</sup>&nbsp;tan&chi;; this is not an angle-like
-variable and we don't consider it further here because conversions
-between &psi; and &chi; are straightforward.)  The relations between
-&phi;, &beta;, and &theta; are all simple elementary functions.  The
-latitudes &chi; and &xi; can be expressed as elementary functions of
-&phi;; however, these functions can only be inverted iteratively.  The
-rectifying latitude &mu; as a function of &phi; (or &beta;) involves the
-incomplete elliptic integral of the second kind (which is not an
-elementary function) and this needs to be inverted iteratively.  The
-Ellipsoid class evaluates all the auxiliary latitudes (and the
-corresponding inverse relations) in terms of their basic definitions.
+Wikipedia article on latitudes</a>.
+
+In addition there's the isometric latitude, &psi;, defined by &psi; =
+gd<sup>&minus;1</sup>&chi; = sinh<sup>&minus;1</sup>&nbsp;tan&chi; and
+&chi; = gd&psi; = tan<sup>&minus;1</sup>&nbsp;sinh&psi;.  This is not an
+angle-like variable (for example, it diverges at the poles) and so we
+don't treat it further here.  However conversions between &psi; and any
+of the auxiliary latitudes is easily accomplished via an intermediate
+conversion to &chi;.
+
+The relations between &phi;, &beta;, and &theta; are all simple
+elementary functions.  The latitudes &chi; and &xi; can be expressed as
+elementary functions of &phi;; however, these functions can only be
+inverted iteratively.  The rectifying latitude &mu; as a function of
+&phi; (or &beta;) involves the incomplete elliptic integral of the
+second kind (which is not an elementary function) and this needs to be
+inverted iteratively.  The Ellipsoid class evaluates all the auxiliary
+latitudes (and the corresponding inverse relations) in terms of their
+basic definitions.
 
 An alternative method of evaluating these auxiliary latitudes is in
 terms of trigonometric series.  This offers some advantages:
@@ -6633,24 +6639,27 @@ terms of trigonometric series.  This offers some advantages:
 
 Here we give the complete matrix of relations between all six latitudes;
 there are 30 (=&nbsp;6&nbsp;&times;&nbsp;5) such relations.  These
-expansions complete the work of
+expansions complement the work of
 - O. S. Adams,
   <a href="http://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no671921.pdf">
   Latitude developments connected with geodesy and cartography</a>,
   Spec. Pub. 67 (US Coast and Geodetic Survey, 1921).
+- P. Osborne,
+  <a href="https://dx.doi.org/10.5281/zenodo.35392">
+  The Mercator Projections</a> (2013), Chap. 5.
+- S. Orihuela,
+  <a href="https://sites.google.com/site/geodesiafich/funciones_latitud.pdf">
+  Funciones de Latitud</a> (2013).
 .
 Here, the expansions are in terms of the third flattening <i>n</i> =
 (<i>a</i>&nbsp;&minus;&nbsp;<i>b</i>)/(<i>a</i>&nbsp;+&nbsp;<i>b</i>).
-Similar results have been obtained by Sebasti&aacute;n Orihuela,
-<a href="https://sites.google.com/site/geodesiafich/funciones_latitud.pdf">
-<i>Funciones de Latitud</i></a>, 2013.  This choice of expansion
-parameter results in expansions in which half the coefficients vanish
-for all relations between &phi;, &beta;, &theta;, and &mu;.  In
-addition, the expansions converge for <i>b</i>/<i>a</i> &isin;
-(0,&nbsp;&infin;).  These expansions were obtained with the the maxima
-code, <a href="auxlat.mac">auxlat.mac</a>.
+This choice of expansion parameter results in expansions in which half
+the coefficients vanish for all relations between &phi;, &beta;,
+&theta;, and &mu;.  In addition, the expansions converge for
+<i>b</i>/<i>a</i> &isin; (0,&nbsp;&infin;).  These expansions were
+obtained with the the maxima code, <a href="auxlat.mac">auxlat.mac</a>.
 
-Adams (1921) uses the eccentricity squared \e e<sup>2</sup> as the
+Adams (1921) uses the eccentricity squared <i>e</i><sup>2</sup> as the
 expansion parameter, but the resulting series only converge for
 <i>b</i>/<i>a</i> &isin; (0,&nbsp;&radic;2).  In addition, it is shown
 in \ref auxlaterror, that the errors when the series are truncated are
@@ -7147,9 +7156,12 @@ data: the 5th line for &phi;&nbsp;&minus;&nbsp;&theta; is <tt>[32/5, 0,
 
 Here's a table of the truncation errors.  The error is defined by
 finding the maximum absolute difference between the truncated series and
-the exact expression.  It is given in "units in the last place" where 1
-ulp = 2<sup>&minus;53</sup> radian which is a measure of the round-off
-error for double precision.
+the exact expression.  It is given in "units in the last place (ulp)"
+where 1 ulp = 2<sup>&minus;53</sup> radian = 6.4 &times;
+10<sup>&minus;15</sup> degree = 2.3 &times; 10<sup>&minus;11</sup>
+arcsecond which is a measure of the round-off error for double
+precision.  The truncation errors are given accurate to 2 significant
+figures.
 
 <center>
 <table>
@@ -7161,70 +7173,70 @@ error for double precision.
 <tr>
 <th> <i>n</i> series <th> <i>e</i><sup>2</sup> series
 <th> <i>n</i> series <th> <i>e</i><sup>2</sup> series
-<tr><td>  &beta; &minus; &phi;   <td><tt><center> 0.0060&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;2.1&nbsp; </center></tt><td><tt><center> 2500 </center></tt>
-<tr><td>   &phi; &minus; &beta;  <td><tt><center> 0.0060&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;2.1&nbsp; </center></tt><td><tt><center> 2500 </center></tt>
-<tr><td> &theta; &minus; &phi;   <td><tt><center> 2.9&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 82&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;370&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 7000 </center></tt>
-<tr><td>   &phi; &minus; &theta; <td><tt><center> 2.9&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 82&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;370&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 7000 </center></tt>
-<tr><td> &theta; &minus; &beta;  <td><tt><center> 0.0060&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;2.1&nbsp; </center></tt><td><tt><center> 2500 </center></tt>
-<tr><td>  &beta; &minus; &theta; <td><tt><center> 0.0060&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;2.1&nbsp; </center></tt><td><tt><center> 2500 </center></tt>
-<tr><td>    &mu; &minus; &phi;   <td><tt><center> 0.037&nbsp;&nbsp; </center></tt><td><tt><center> 41&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;11&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 3600 </center></tt>
-<tr><td>   &phi; &minus; &mu;    <td><tt><center> 0.98&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 59&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;140&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 5100 </center></tt>
-<tr><td>    &mu; &minus; &beta;  <td><tt><center> 0.00069 </center></tt><td><tt><center> &nbsp;5.8&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;0.15 </center></tt><td><tt><center> &nbsp;580 </center></tt>
-<tr><td>  &beta; &minus; &mu;    <td><tt><center> 0.13&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 12&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;21&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 1100 </center></tt>
-<tr><td>    &mu; &minus; &theta; <td><tt><center> 0.24&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 30&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;41&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 2400 </center></tt>
-<tr><td> &theta; &minus; &mu;    <td><tt><center> 0.099&nbsp;&nbsp; </center></tt><td><tt><center> 23&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;14&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 2000 </center></tt>
-<tr><td>   &chi; &minus; &phi;   <td><tt><center> 0.78&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 43&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;130&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 3900 </center></tt>
-<tr><td>   &phi; &minus; &chi;   <td><tt><center> 9.0&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 71&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 1100&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 6200 </center></tt>
-<tr><td>   &chi; &minus; &beta;  <td><tt><center> 0.018&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;3.7&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;6.4&nbsp; </center></tt><td><tt><center> &nbsp;380 </center></tt>
-<tr><td>  &beta; &minus; &chi;   <td><tt><center> 1.7&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 16&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;210&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 1400 </center></tt>
-<tr><td>   &chi; &minus; &theta; <td><tt><center> 0.18&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 31&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;34&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 2600 </center></tt>
-<tr><td> &theta; &minus; &chi;   <td><tt><center> 0.87&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 23&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;110&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 1900 </center></tt>
-<tr><td>   &chi; &minus; &mu;    <td><tt><center> 0.022&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.56 </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;6.5&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;54 </center></tt>
-<tr><td>    &mu; &minus; &chi;   <td><tt><center> 0.31&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;1.2&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;52&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;120 </center></tt>
-<tr><td>    &xi; &minus; &phi;   <td><tt><center> 0.015&nbsp;&nbsp; </center></tt><td><tt><center> 39&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;5.3&nbsp; </center></tt><td><tt><center> 3400 </center></tt>
-<tr><td>   &phi; &minus; &xi;    <td><tt><center> 0.34&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 53&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;67&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 4500 </center></tt>
-<tr><td>    &xi; &minus; &beta;  <td><tt><center> 0.00042 </center></tt><td><tt><center> &nbsp;6.3&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;0.23 </center></tt><td><tt><center> &nbsp;610 </center></tt>
-<tr><td>  &beta; &minus; &xi;    <td><tt><center> 0.040&nbsp;&nbsp; </center></tt><td><tt><center> 10&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;8.9&nbsp; </center></tt><td><tt><center> &nbsp;920 </center></tt>
-<tr><td>    &xi; &minus; &theta; <td><tt><center> 0.28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;46&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 2300 </center></tt>
-<tr><td> &theta; &minus; &xi;    <td><tt><center> 0.040&nbsp;&nbsp; </center></tt><td><tt><center> 23&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;6.4&nbsp; </center></tt><td><tt><center> 2000 </center></tt>
-<tr><td>    &xi; &minus; &mu;    <td><tt><center> 0.015&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.79 </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;3.5&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;89 </center></tt>
-<tr><td>    &mu; &minus; &xi;    <td><tt><center> 0.0043&nbsp; </center></tt><td><tt><center> &nbsp;0.54 </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;1.1&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;63 </center></tt>
-<tr><td>    &xi; &minus; &chi;   <td><tt><center> 0.60&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;1.9&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;90&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;220 </center></tt>
-<tr><td>   &chi; &minus; &xi;    <td><tt><center> 0.023&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.53 </center></tt><td><tt><center> &nbsp;&nbsp;&nbsp;4.8&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;55 </center></tt>
+<tr><td>  &beta; &minus; &phi;   <td><tt><center> 0.0060&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.035&nbsp; </center></tt><td><tt><center> &nbsp;41&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &phi; &minus; &beta;  <td><tt><center> 0.0060&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.035&nbsp; </center></tt><td><tt><center> &nbsp;41&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td> &theta; &minus; &phi;   <td><tt><center> 2.9&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 82&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;6.0&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 120&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &phi; &minus; &theta; <td><tt><center> 2.9&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 82&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;6.0&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 120&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td> &theta; &minus; &beta;  <td><tt><center> 0.0060&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.035&nbsp; </center></tt><td><tt><center> &nbsp;41&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>  &beta; &minus; &theta; <td><tt><center> 0.0060&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.035&nbsp; </center></tt><td><tt><center> &nbsp;41&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>    &mu; &minus; &phi;   <td><tt><center> 0.037&nbsp;&nbsp; </center></tt><td><tt><center> 41&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.18&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;60&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &phi; &minus; &mu;    <td><tt><center> 0.98&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 59&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;2.3&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;84&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>    &mu; &minus; &beta;  <td><tt><center> 0.00069 </center></tt><td><tt><center> &nbsp;5.8&nbsp; </center></tt><td><tt><center> &nbsp;0.0024 </center></tt><td><tt><center> &nbsp;&nbsp;9.6&nbsp; </center></tt>
+<tr><td>  &beta; &minus; &mu;    <td><tt><center> 0.13&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 12&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.35&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;19&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>    &mu; &minus; &theta; <td><tt><center> 0.24&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 30&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.67&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;40&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td> &theta; &minus; &mu;    <td><tt><center> 0.099&nbsp;&nbsp; </center></tt><td><tt><center> 23&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.23&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;33&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &chi; &minus; &phi;   <td><tt><center> 0.78&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 43&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;2.1&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;64&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &phi; &minus; &chi;   <td><tt><center> 9.0&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 71&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 100&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &chi; &minus; &beta;  <td><tt><center> 0.018&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;3.7&nbsp; </center></tt><td><tt><center> &nbsp;0.11&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;6.4&nbsp; </center></tt>
+<tr><td>  &beta; &minus; &chi;   <td><tt><center> 1.7&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 16&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;3.4&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;24&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &chi; &minus; &theta; <td><tt><center> 0.18&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 31&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.56&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;43&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td> &theta; &minus; &chi;   <td><tt><center> 0.87&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 23&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;1.9&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;32&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &chi; &minus; &mu;    <td><tt><center> 0.022&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.56 </center></tt><td><tt><center> &nbsp;0.11&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;0.91 </center></tt>
+<tr><td>    &mu; &minus; &chi;   <td><tt><center> 0.31&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;1.2&nbsp; </center></tt><td><tt><center> &nbsp;0.86&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;2.0&nbsp; </center></tt>
+<tr><td>    &xi; &minus; &phi;   <td><tt><center> 0.015&nbsp;&nbsp; </center></tt><td><tt><center> 39&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.086&nbsp; </center></tt><td><tt><center> &nbsp;57&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &phi; &minus; &xi;    <td><tt><center> 0.34&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 53&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;1.1&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;75&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>    &xi; &minus; &beta;  <td><tt><center> 0.00042 </center></tt><td><tt><center> &nbsp;6.3&nbsp; </center></tt><td><tt><center> &nbsp;0.0039 </center></tt><td><tt><center> &nbsp;10&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>  &beta; &minus; &xi;    <td><tt><center> 0.040&nbsp;&nbsp; </center></tt><td><tt><center> 10&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.15&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;15&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>    &xi; &minus; &theta; <td><tt><center> 0.28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.75&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;38&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td> &theta; &minus; &xi;    <td><tt><center> 0.040&nbsp;&nbsp; </center></tt><td><tt><center> 23&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.11&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;33&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>    &xi; &minus; &mu;    <td><tt><center> 0.015&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.79 </center></tt><td><tt><center> &nbsp;0.058&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;1.5&nbsp; </center></tt>
+<tr><td>    &mu; &minus; &xi;    <td><tt><center> 0.0043&nbsp; </center></tt><td><tt><center> &nbsp;0.54 </center></tt><td><tt><center> &nbsp;0.018&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;1.1&nbsp; </center></tt>
+<tr><td>    &xi; &minus; &chi;   <td><tt><center> 0.60&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;1.9&nbsp; </center></tt><td><tt><center> &nbsp;1.5&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;3.6&nbsp; </center></tt>
+<tr><td>   &chi; &minus; &xi;    <td><tt><center> 0.023&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.53 </center></tt><td><tt><center> &nbsp;0.079&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;0.92 </center></tt>
 </table>
 </center>
 
 \if SKIP
- 0  beta phi  ,0.0060!,28!!!,!!!2.1!,2500
- 1   phi beta ,0.0060!,28!!!,!!!2.1!,2500
- 2 theta phi  ,2.9!!!!,82!!!,!370!!!,7000
- 3   phi theta,2.9!!!!,82!!!,!370!!!,7000
- 4 theta beta ,0.0060!,28!!!,!!!2.1!,2500
- 5  beta theta,0.0060!,28!!!,!!!2.1!,2500
- 6    mu phi  ,0.037!!,41!!!,!!11!!!,3600
- 7   phi mu   ,0.98!!!,59!!!,!140!!!,5100
- 8    mu beta ,0.00069,!5.8!,!!!0.15,!580
- 9  beta mu   ,0.13!!!,12!!!,!!21!!!,1100
-10    mu theta,0.24!!!,30!!!,!!41!!!,2400
-11 theta mu   ,0.099!!,23!!!,!!14!!!,2000
-12   chi phi  ,0.78!!!,43!!!,!130!!!,3900
-13   phi chi  ,9.0!!!!,71!!!,1100!!!,6200
-14   chi beta ,0.018!!,!3.7!,!!!6.4!,!380
-15  beta chi  ,1.7!!!!,16!!!,!210!!!,1400
-16   chi theta,0.18!!!,31!!!,!!34!!!,2600
-17 theta chi  ,0.87!!!,23!!!,!110!!!,1900
-18   chi mu   ,0.022!!,!0.56,!!!6.5!,!!54
-19    mu chi  ,0.31!!!,!1.2!,!!52!!!,!120
-20    xi phi  ,0.015!!,39!!!,!!!5.3!,3400
-21   phi xi   ,0.34!!!,53!!!,!!67!!!,4500
-22    xi beta ,0.00042,!6.3!,!!!0.23,!610
-23  beta xi   ,0.040!!,10!!!,!!!8.9!,!920
-24    xi theta,0.28!!!,28!!!,!!46!!!,2300
-25 theta xi   ,0.040!!,23!!!,!!!6.4!,2000
-26    xi mu   ,0.015!!,!0.79,!!!3.5!,!!89
-27    mu xi   ,0.0043!,!0.54,!!!1.1!,!!63
-28    xi chi  ,0.60!!!,!1.9!,!!90!!!,!220
-29   chi xi   ,0.023!!,!0.53,!!!4.8!,!!55
+ 0  beta phi  ,0.0060!,28!!!,!0.035!,!41!!!
+ 1   phi beta ,0.0060!,28!!!,!0.035!,!41!!!
+ 2 theta phi  ,2.9!!!!,82!!!,!6.0!!!,120!!!
+ 3   phi theta,2.9!!!!,82!!!,!6.0!!!,120!!!
+ 4 theta beta ,0.0060!,28!!!,!0.035!,!41!!!
+ 5  beta theta,0.0060!,28!!!,!0.035!,!41!!!
+ 6    mu phi  ,0.037!!,41!!!,!0.18!!,!60!!!
+ 7   phi mu   ,0.98!!!,59!!!,!2.3!!!,!84!!!
+ 8    mu beta ,0.00069,!5.8!,!0.0024,!!9.6!
+ 9  beta mu   ,0.13!!!,12!!!,!0.35!!,!19!!!
+10    mu theta,0.24!!!,30!!!,!0.67!!,!40!!!
+11 theta mu   ,0.099!!,23!!!,!0.23!!,!33!!!
+12   chi phi  ,0.78!!!,43!!!,!2.1!!!,!64!!!
+13   phi chi  ,9.0!!!!,71!!!,17!!!!!,100!!!
+14   chi beta ,0.018!!,!3.7!,!0.11!!,!!6.4!
+15  beta chi  ,1.7!!!!,16!!!,!3.4!!!,!24!!!
+16   chi theta,0.18!!!,31!!!,!0.56!!,!43!!!
+17 theta chi  ,0.87!!!,23!!!,!1.9!!!,!32!!!
+18   chi mu   ,0.022!!,!0.56,!0.11!!,!!0.91
+19    mu chi  ,0.31!!!,!1.2!,!0.86!!,!!2.0!
+20    xi phi  ,0.015!!,39!!!,!0.086!,!57!!!
+21   phi xi   ,0.34!!!,53!!!,!1.1!!!,!75!!!
+22    xi beta ,0.00042,!6.3!,!0.0039,!10!!!
+23  beta xi   ,0.040!!,10!!!,!0.15!!,!15!!!
+24    xi theta,0.28!!!,28!!!,!0.75!!,!38!!!
+25 theta xi   ,0.040!!,23!!!,!0.11!!,!33!!!
+26    xi mu   ,0.015!!,!0.79,!0.058!,!!1.5!
+27    mu xi   ,0.0043!,!0.54,!0.018!,!!1.1!
+28    xi chi  ,0.60!!!,!1.9!,!1.5!!!,!!3.6!
+29   chi xi   ,0.023!!,!0.53,!0.079!,!!0.92
 \endif
 
 The 2nd and 3rd columns show the results for the SRMmax ellipsoid, \e f
@@ -7233,17 +7245,20 @@ The 2nd and 3rd columns show the results for the SRMmax ellipsoid, \e f
 1/297, retaining 5th order terms in the series expansion.  The 2nd and
 4th columns give the errors for the series expansions in terms of \e n
 given in this section (appropriately truncated).  The 3rd and 5th
-columns give the errors when the series are reexpanded in terms of \e
-e<sup>2</sup> = 4\e n/(1 + \e n)<sup>2</sup> and truncated.
+columns give the errors when the series are reexpanded in terms of
+<i>e</i><sup>2</sup> = 4\e n/(1 + \e n)<sup>2</sup> and truncated
+retaining the <i>e</i><sup>12</sup> and <i>e</i><sup>10</sup> terms
+respectively.
 
 Some observations:
-- For production, use the 6th order series in \e n.  For \e f = 1/150,
-  the resulting errors are close to the round-off limit.  The errors in
-  the 6th order series scale as \e f<sup>7</sup>; so the errors with \e
-  f = 1/297 are about 120 times smaller.
-- It's a bad idea to use the 5th order series in \e n; for \e f = 1/297,
-  this results in errors significantly larger than round-off.
-- In all cases, the expansions in terms of \e e<sup>2</sup> are
+- For production use, the 6th order series in \e n are recommended.  For
+  \e f = 1/150, the resulting errors are close to the round-off limit.
+  The errors in the 6th order series scale as <i>f</i><sup>7</sup>; so
+  the errors with \e f = 1/297 are about 120 times smaller.
+- It's inadvisable to use the 5th order series in \e n; this order is
+  barely acceptable for \e f = 1/297 and the errors grow as
+  <i>f</i><sup>6</sup> as \e f is increased.
+- In all cases, the expansions in terms of <i>e</i><sup>2</sup> are
   considerably less accurate than the corresponding series in \e n.
 - For every series converting between &phi; and any of &theta;, &mu;,
   &chi;, or &xi;, the series where &beta; is substituted for &phi; is
@@ -7559,6 +7574,11 @@ git repository for GeographicLib</a>.
    - The "official" URL for GeographicLib is now
      https://geographiclib.sourceforge.io (instead of
      http://geographiclib.sourceforge.net).
+   - The default range for longitude and azimuth is now
+     (&minus;180&deg;, 180&deg;], instead of [&minus;180&deg;,
+     180&deg;).  This was already the case for the C++ library; now the
+     change has been made to the other implementations (C, Fortran,
+     Java, JavaScript, Python, MATLAB, and Maxima).
    - Changes to NearestNeighbor:
      - fix BUG in reading a NearestNeighbor object from a stream which
        sometimes incorrectly caused a "Bad index" exception to be
@@ -7566,14 +7586,12 @@ git repository for GeographicLib</a>.
      - add NearestNeighbor::operator<<, NearestNeighbor::operator>>,
        NearestNeighbor::swap, std::swap(GeographicLib::NearestNeighbor&,
        GeographicLib::NearestNeighbor&);
-     - add documentation page, \ref nearest.
-   - \ref normalgravity documentation is now on its own page and now has
-     an illustrative figure.
-   - The default range for longitude and azimuth is now
-     (&minus;180&deg;, 180&deg;], instead of [&minus;180&deg;,
-     180&deg;).  This was already the case for the C++ library; now the
-     change has been made to the other implementations (C, Fortran,
-     Java, JavaScript, Python, MATLAB, and Maxima).
+   - Additions to the documentation:
+     - add documentation on \ref nearest;
+     - \ref normalgravity documentation is now on its own page and now
+       has an illustrative figure;
+     - document the \ref auxlaterror in the series for auxiliary
+       latitudes.
    - Fix BUGS in MATLAB function geodreckon with mixed scalar and array
      arguments.
    - Workaround bug in math.fmod for Python 2.7 on 32-bit Windows

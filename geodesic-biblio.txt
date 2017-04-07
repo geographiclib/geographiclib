@@ -1373,7 +1373,8 @@
  * M. F. Khandrikov,[[BR]]
    ''Odno iz resheniy osnovnogo voprosa geodezii [One solution to the
    fundamental problem of geodesy]'',
-   Matematicheskiy sbornik '''17'''(3), 575--586 (1893).[[BR]]
+   Matematicheskiy sbornik '''17'''(3), 575--586 (1894).[[BR]]
+   http://mi.mathnet.ru/msb7284 [[BR]]
    https://books.google.com/books?id=34_xAAAAMAAJ&pg=PA575
    (PDF matsbornik-V17.pdf)
  * A. R. Forsyth,[[BR]]
