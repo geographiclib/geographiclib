@@ -595,6 +595,7 @@ namespace GeographicLib {
     // Package up a dist_t and an int.  We will want to sort on the dist_t so
     // put it first.
     typedef std::pair<dist_t, int> item;
+    // \cond SKIP
     class Node {
     public:
       struct bounds {
@@ -671,6 +672,7 @@ namespace GeographicLib {
       { boost::serialization::split_member(ar, *this, file_version); }
 #endif
     };
+    // \endcond
 #if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
     friend class boost::serialization::access;
     template<class Archive> void save(Archive& ar, const unsigned) const {
