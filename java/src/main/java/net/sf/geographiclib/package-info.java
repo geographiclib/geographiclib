@@ -266,7 +266,7 @@
  * <ul>
  * <li>
  *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.48</a>
- *   (released 2017-mm-dd)
+ *   (released 2017-04-09)
  * <ul>
  * <li>
  *   Change default range for longitude and azimuth to

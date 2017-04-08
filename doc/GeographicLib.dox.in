@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2017-mm-dd
+\date 2017-04-09
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -5626,7 +5626,7 @@ desire for speed.
 \section dividedclenshaw Clenshaw evaluation of differenced sums
 
 The use of
-<a href="https://en.wikipedia.org/wiki/Clenshaw_algorithm#Geodetic_applications">
+<a href="https://en.wikipedia.org/wiki/Clenshaw_algorithm#Meridian_arc_length_on_the_ellipsoid">
 Clenshaw summation</a> for summing series of the form,
 \f[
 g(x) = \sum_{k=1}^N c_k \sin kx,
@@ -6632,8 +6632,9 @@ An alternative method of evaluating these auxiliary latitudes is in
 terms of trigonometric series.  This offers some advantages:
 - these series give a uniform way of expressing any latitude in terms of
   any other latitude;
-- the evaluation may be faster, particularly if Clenshaw summation is
-  used;
+- the evaluation may be faster, particularly if
+  <a href="https://en.wikipedia.org/wiki/Clenshaw_algorithm#Meridian_arc_length_on_the_ellipsoid">
+  Clenshaw summation</a> is used;
 - provided that the flattening is sufficiently small, the result may be
   more accurate.
 
@@ -7154,14 +7155,27 @@ data: the 5th line for &phi;&nbsp;&minus;&nbsp;&theta; is <tt>[32/5, 0,
 
 \section auxlaterror Truncation errors
 
-Here's a table of the truncation errors.  The error is defined by
-finding the maximum absolute difference between the truncated series and
-the exact expression.  It is given in "units in the last place (ulp)"
-where 1 ulp = 2<sup>&minus;53</sup> radian = 6.4 &times;
-10<sup>&minus;15</sup> degree = 2.3 &times; 10<sup>&minus;11</sup>
-arcsecond which is a measure of the round-off error for double
-precision.  The truncation errors are given accurate to 2 significant
-figures.
+There are two sources of error when using these series.  The truncation
+error arises from retaing terms up to a certain order in \e n; it is the
+absolute difference between the value of the truncated series compared
+with the exact latitude (evaluated with exact arithmetic).  In addition,
+using standard double-precision arithmetic entails accumulating
+round-off errors so that at the end of a complex calculation a few of
+the trailing bits of the result are wrong.
+
+Here's a table of the truncation errors.  The errors are given in "units
+in the last place (ulp)" where 1 ulp = 2<sup>&minus;53</sup> radian =
+6.4 &times; 10<sup>&minus;15</sup> degree = 2.3 &times;
+10<sup>&minus;11</sup> arcsecond which is a measure of the round-off
+error for double precision.  Here is some rough guidance on how to
+interpret these errors:
+- if the truncation error is less than 1 ulp, then round-off errors
+  dominate;
+- if the truncation error is greater than 8 ulp, then truncation errors
+  dominate;
+- otherwise, round-off and truncation errors are comparable.
+.
+The truncation errors are given accurate to 2 significant figures.
 
 <center>
 <table>
@@ -7570,7 +7584,7 @@ of the
 git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.48">Version 1.48</a>
-   (released 2017-mm-dd)
+   (released 2017-04-09)
    - The "official" URL for GeographicLib is now
      https://geographiclib.sourceforge.io (instead of
      http://geographiclib.sourceforge.net).

@@ -98,7 +98,7 @@ GeographicLib in various languages
 Change log
 ----------
 
-* Version 1.48 (released 2017-mm-dd)
+* Version 1.48 (released 2017-04-09)
 
   * Change default range for longitude and azimuth to (−180°, 180°]
     (instead of [−180°, 180°)).

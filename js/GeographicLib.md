@@ -109,7 +109,7 @@ Two examples of this library in use are
 
 ### Change log
 
-* Version 1.48 (released 2017-mm-dd)
+* Version 1.48 (released 2017-04-09)
   * Change default range for longitude and azimuth to
     (&minus;180&deg;, 180&deg;] (instead of [&minus;180&deg;, 180&deg;)).
 

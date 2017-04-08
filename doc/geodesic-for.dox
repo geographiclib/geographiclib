@@ -175,7 +175,7 @@ and are therefore in the public domain.
 \section changes-for Change log
 
  - <a href="https://geographiclib.sourceforge.io/1.48/Fortran">Version 1.48</a>
-   (released 2017-mm-dd)
+   (released 2017-04-09)
    - Change default range for longitude and azimuth to
      (&minus;180&deg;, 180&deg;] (instead of
      [&minus;180&deg;, 180&deg;)).

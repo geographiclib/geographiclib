@@ -191,7 +191,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 \section changes-c Change log
 
  - <a href="https://geographiclib.sourceforge.io/1.48/C">Version 1.48</a>
-   (released 2017-mm-dd)
+   (released 2017-04-09)
    - Fix warnings messages from some compilers.
    - Change default range for longitude and azimuth to
      (&minus;180&deg;, 180&deg;] (instead of
