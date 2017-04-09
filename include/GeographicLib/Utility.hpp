@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_UTILITY_HPP)
@@ -401,9 +401,9 @@ namespace GeographicLib {
     template<typename T> static T nummatch(const std::string& s) {
       if (s.length() < 3)
         return 0;
-      std::string t;
-      t.resize(s.length());
-      std::transform(s.begin(), s.end(), t.begin(), (int(*)(int))std::toupper);
+      std::string t(s);
+      for (std::string::iterator p = t.begin(); p != t.end(); ++p)
+        *p = char(std::toupper(*p));
       for (size_t i = s.length(); i--;)
         t[i] = char(std::toupper(s[i]));
       int sign = t[0] == '-' ? -1 : 1;
@@ -657,7 +657,8 @@ namespace GeographicLib {
                             " at end of " + t);
       return x;
     }
-    std::transform(t.begin(), t.end(), t.begin(), (int(*)(int))tolower);
+    for (std::string::iterator p = t.begin(); p != t.end(); ++p)
+      *p = char(std::tolower(*p));
     switch (t[0]) {             // already checked that t isn't empty
     case 'f':
       if (t == "f" || t == "false") return false;

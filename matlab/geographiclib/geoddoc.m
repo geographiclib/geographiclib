@@ -8,14 +8,14 @@ function geoddoc
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
 %     https://doi.org/10.1007/s00190-012-0578-z
-%     Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
+%     Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 %
 %   which, in turn, is based on the classic solution of the geodesic
 %   problems pioneered by Legendre (1806), Bessel (1825), and Helmert
 %   (1880).  Links for these and other original papers on geodesics are
 %   given in
 %
-%     http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
+%     https://geographiclib.sourceforge.io/geodesic-papers/biblio.html
 %
 %   The shortest path between two points on the ellipsoid at (lat1, lon1)
 %   and (lat2, lon2) is called the geodesic.  Its length is s12 and the
@@ -163,8 +163,7 @@ function geoddoc
 %       polygon.
 %
 %   See also GEODDISTANCE, GEODRECKON, GEODAREA,
-%     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
-%     GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, POLYGONAREA.
+%     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 

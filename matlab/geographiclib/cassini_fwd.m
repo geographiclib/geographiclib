@@ -58,7 +58,7 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
   x = s12;
   azi = AngNormalize(azi2);
   [~, ~, ~, ~, ~, ~, rk] = ...
-      geodreckon(lat, dlon, -sig12, azi, ellipsoid, true);
+      geodreckon(lat, dlon, -sig12, azi, ellipsoid, 1);
   [sbet, cbet] = sincosdx(lat);
   [sbet, cbet] = norm2((1-f) * sbet, cbet);
   [sbet0, cbet0] = sincosdx(lat0);
@@ -75,5 +75,5 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
   sbet01 = sbet1 .* cbet0 - cbet1 .* sbet0;
   cbet01 = cbet1 .* cbet0 + sbet1 .* sbet0;
   sig01 = atan2(sbet01, cbet01) / degree;
-  [~, ~, ~, ~, ~, ~, ~, y] = geodreckon(lat0, 0, sig01, 0, ellipsoid, true);
+  [~, ~, ~, ~, ~, ~, ~, y] = geodreckon(lat0, 0, sig01, 0, ellipsoid, 1);
 end

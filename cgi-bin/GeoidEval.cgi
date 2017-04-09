@@ -5,7 +5,7 @@
 #
 # Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
-# http://geographiclib.sourceforge.net/
+# https://geographiclib.sourceforge.io/
 
 . ./utils.sh
 OPTION=`lookupkey "$QUERY_STRING" option`
@@ -71,7 +71,7 @@ cat <<EOF
   <body>
     <h3>
       Online geoid calculations using the
-      <a href="http://geographiclib.sourceforge.net/html/GeoidEval.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/GeoidEval.1.html">
 	GeoidEval</a> utility
     </h3>
     <form action="/cgi-bin/GeoidEval" method="get">
@@ -98,7 +98,7 @@ cat <<EOF
     </form>
     <hr>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/GeoidEval.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/GeoidEval.1.html">
         GeoidEval (version $VERSION)</a>
       computes the height of the geoid above the WGS84 ellipsoid
       using interpolation in a grid of values for the earth
@@ -119,7 +119,7 @@ cat <<EOF
         3:0:34W 16:46:33N</pre>
       The coordinates can also be given in UTM, UPS, or MGRS coordinates (see
       the documentation on the
-      <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/GeoConvert.1.html">
 	GeoConvert</a> utility).
     </p>
     <p>
@@ -134,20 +134,20 @@ cat <<EOF
       </blockquote>
     </p>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/GeoidEval.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/GeoidEval.1.html">
         GeoidEval</a>,
       which is a simple wrapper of the
-      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Geoid.html">
+      <a href="https://geographiclib.sourceforge.io/html/classGeographicLib_1_1Geoid.html">
         GeographicLib::Geoid</a> class,
       is one of the utilities provided
-      with <a href="http://geographiclib.sourceforge.net/">
+      with <a href="https://geographiclib.sourceforge.io/">
         GeographicLib</a>.
       This web interface illustrates a subset of its capabilities.  If
       you wish to use GeoidEval directly,
       <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
         download</a>
       and compile GeographicLib.  A description of the methods is given
-      <a href="http://geographiclib.sourceforge.net/html/geoid.html">
+      <a href="https://geographiclib.sourceforge.io/html/geoid.html">
         here</a>.
     </p>
     <p>
@@ -156,7 +156,7 @@ cat <<EOF
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
       (2014-11-06)</address>
-    <a href="http://geographiclib.sourceforge.net">
+    <a href="https://geographiclib.sourceforge.io">
       GeographicLib home
     </a>
   </body>

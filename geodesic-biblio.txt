@@ -26,7 +26,7 @@
    108--128.[[BR]]
    https://books.google.com/books?id=Yw1bAAAAQAAJ&pg=PA108 [[BR]]
    figures:
-   http://geographiclib.sourceforge.net/geodesic-papers/bernoulli28-fig.pdf
+   https://geographiclib.sourceforge.io/geodesic-papers/bernoulli28-fig.pdf
  * L. Godin,[[BR]]
    ''Méthode pratique de tracer sur terre un parallele par un degré de
    latitude donné [A practical method of drawing a given circle of
@@ -71,7 +71,7 @@
    https://books.google.com/books?id=dA1bAAAAQAAJ [[BR]]
    alt: http://eulerarchive.maa.org/pages/E065.html [[BR]]
    figures: http://eulerarchive.maa.org/docs/originals/E065h
-   pp. 15, 17, 19, 21, 23. [[BR]]
+   pp. 15, 17, 19, 21, 23.[[BR]]
    German translation: by A. Aycock and A. Diener.[[BR]]
    http://eulerarchive.maa.org/docs/translations/E065de.pdf
  * L. Euler,[[BR]]
@@ -133,7 +133,7 @@
    Vol. 2 (Valade, Paris, 1789), Book 1, Chaps. 1--3.[[BR]]
    https://books.google.com/books?id=tnHOAAAAMAAJ&pg=PA3 [[BR]]
    figures:
-   http://geographiclib.sourceforge.net/geodesic-papers/dusejour89-fig.pdf
+   https://geographiclib.sourceforge.io/geodesic-papers/dusejour89-fig.pdf
  * T. Valperga di Caluso,[[BR]]
    ''De la navigation sur le spheroïde elliptique,
    ses loxodromies et son plus court chemin
@@ -154,7 +154,7 @@
    in ''Application de l'Analyse à la Géometrie''
    (5th edition, Bachelier, Paris, 1850), pp. 139--160.[[BR]]
    https://books.google.com/books?id=Nf5zhlffjd0C&pg=PA139 [[BR]]
-   figures: http://geographiclib.sourceforge.net/geodesic-papers/monge50-fig.pdf
+   figures: https://geographiclib.sourceforge.io/geodesic-papers/monge50-fig.pdf
  * P. S. Laplace,[[BR]]
    ''Traité de Mécanique Céleste'', Vol. 2 (Duprat, Paris, 1798/1799),
    Book 3, Chap. 5; reprinted in
@@ -166,7 +166,7 @@
      [We will call this line the ''geodesic line''].
    Translation with commentary: ''Celestial Mechanics'' by N. Bowditch, Vol. 2
    (Boston, 1832), pp. 358--491.[[BR]]
-   http://geographiclib.sourceforge.net/geodesic-papers/laplace99a.pdf
+   https://geographiclib.sourceforge.io/geodesic-papers/laplace99a.pdf
  * J. B. J. Delambre and A. M. Legendre,[[BR]]
    ''Méthodes analytiques pour la Détermination d'un arc du Méridien
    [Analytical methods for determination an arc of the meridian]''
@@ -207,7 +207,7 @@
    Vol. 1 (Huzard-Courcier, Paris, 1825), pp. 360--364.[[BR]]
    https://books.google.com/books?id=vaAKAAAAYAAJ&pg=PA360 [[BR]]
    figures:
-   http://geographiclib.sourceforge.net/geodesic-papers/legendre25-fig.pdf
+   https://geographiclib.sourceforge.io/geodesic-papers/legendre25-fig.pdf
  * J. G. Soldner,[[BR]]
    ''Über die kürzeste Linie auf dem Sphäroide
    [The shortest line on the spheroid]'',
@@ -225,7 +225,7 @@
    [Theory of Surveying]'',
    edited by J. Frischauf, Ostwald's Klass. ex. Wiss., No. 184
    (Engelmann, Leipzig, 1911), Part 1.[[BR]]
-   http://geographiclib.sourceforge.net/geodesic-papers/soldner10.pdf
+   https://geographiclib.sourceforge.io/geodesic-papers/soldner10.pdf
  * B. Oriani,[[BR]]
    ''Auszug aus einem Schreiben des Astronomen Oriani
    [Excerpt from a paper by Oriani]'',
@@ -283,7 +283,7 @@
    ''Tentamen circa trigonometriam sphaeroidicam
    [Essay on spheroidal trigonometry]''
    (Schultz, Copenhagen, 1815)[[BR]]
-   http://geographiclib.sourceforge.net/geodesic-papers/thune15.pdf [[BR]]
+   https://geographiclib.sourceforge.io/geodesic-papers/thune15.pdf [[BR]]
    https://books.google.com/books?id=AoU_AAAAcAAJ
  * L. Puissant,[[BR]]
    ''Traité de Géodésie ou Exposition des Méthodes Trigonométriques et
@@ -291,9 +291,9 @@
    Vol. 2 (2nd edition, Courcier, Paris, 1819), Book 6, Chap. 1.[[BR]]
    https://books.google.com/books?id=PZEAAAAAMAAJ&pg=PA212 [[BR]]
    unreadable pages:
-   http://geographiclib.sourceforge.net/geodesic-papers/puissant19b-add.pdf
+   https://geographiclib.sourceforge.io/geodesic-papers/puissant19b-add.pdf
    [[BR]]figures:
-   http://geographiclib.sourceforge.net/geodesic-papers/puissant19b-fig.pdf
+   https://geographiclib.sourceforge.io/geodesic-papers/puissant19b-fig.pdf
  * L. Puissant,[[BR]]
    ''Moyen d'évaluer rigoureusement la longueur d'une ligne géodésique
    [The rigorous calculation of the length of a geodesic]'',
@@ -496,7 +496,7 @@
    (Engelmann, Leipzig, 1910).[[BR]]
    http://gdz.sub.uni-goettingen.de/dms/load/img/?IDDOC=39018 [[BR]]
    http://gdz.sub.uni-goettingen.de/dms/load/img/?IDDOC=39036 [[BR]]
-   http://geographiclib.sourceforge.net/geodesic-papers/gauss43.pdf
+   https://geographiclib.sourceforge.io/geodesic-papers/gauss43.pdf
  * C. F. Gauss,[[BR]]
    ''Erdellipsoid und geodätischen linie
    [Geodesic lines on an ellipsoidal earth]'',
@@ -568,7 +568,7 @@
    English translation: by K. Balagangadharan (Hindustan Book Agency, 2009)
    [[BR]] https://www.worldcat.org/oclc/440645889 [[BR]]
    https://books.google.com/books?id=s9o0QwAACAAJ [[BR]]
-   Errata: http://geographiclib.sourceforge.net/jacobi-errata.html
+   Errata: https://geographiclib.sourceforge.io/jacobi-errata.html
  * C. G. J. Jacobi,[[BR]]
    ''Über die Curve, welche alle von einem Punkte ausgehenden geodätischen
    Linien eines Rotationsellipsoides berührt [The envelope of geodesic
@@ -1166,7 +1166,7 @@
    https://books.google.com/books?id=CwgPAAAAIAAJ&pg=PA557 (PDF mathann-V14.pdf)
    [[[BR]] https://doi.org/10.1007/BF01445142 [[BR]]
    figures:
-   http://geographiclib.sourceforge.net/geodesic-papers/braunmuehl79-fig.pdf
+   https://geographiclib.sourceforge.io/geodesic-papers/braunmuehl79-fig.pdf
  * A. v. Braunmühl,[[BR]]
    ''Geodätische Linien und ihre Enveloppen auf dreiaxigen Flächen
    zweiten Grades [Geodesic lines and their envelopes on
@@ -1175,7 +1175,7 @@
    https://books.google.com/books?id=YQkPAAAAIAAJ&pg=PA557 (PDF mathann-V20.pdf)
    [[BR]] https://doi.org/10.1007/BF01540145 [[BR]]
    figures:
-   http://geographiclib.sourceforge.net/geodesic-papers/braunmuehl82-fig.pdf
+   https://geographiclib.sourceforge.io/geodesic-papers/braunmuehl82-fig.pdf
  * A. v. Braunmühl,[[BR]]
    ''Über die reducirte Länge eines geodätischen Bogens und die Bildung
    jener Flächen deren Normalen eine gegebene Fläche berühren [The reduced
@@ -1278,7 +1278,7 @@
    spheroid and an investigation on the properties when it ceases being
    the shortest path]'',
    Inaugural-Dissertation, Univ. Tübingen (Schade, Berlin, 1883).[[BR]]
-   http://geographiclib.sourceforge.net/geodesic-papers/krueger83.pdf
+   https://geographiclib.sourceforge.io/geodesic-papers/krueger83.pdf
  * J. H. L. Krüger,[[BR]]
    ''Konforme Abbildung des Erdellipsoids in der Ebene
    [Conformal mapping of the ellipsoidal earth to the plane]'',
@@ -1373,7 +1373,8 @@
  * M. F. Khandrikov,[[BR]]
    ''Odno iz resheniy osnovnogo voprosa geodezii [One solution to the
    fundamental problem of geodesy]'',
-   Matematicheskiy sbornik '''17'''(3), 575--586 (1893).[[BR]]
+   Matematicheskiy sbornik '''17'''(3), 575--586 (1894).[[BR]]
+   http://mi.mathnet.ru/msb7284 [[BR]]
    https://books.google.com/books?id=34_xAAAAMAAJ&pg=PA575
    (PDF matsbornik-V17.pdf)
  * A. R. Forsyth,[[BR]]
@@ -1390,7 +1391,7 @@
    (PDF messmath-V25.pdf) [[BR]]
    https://books.google.com/books?id=YsAKAAAAIAAJ&pg=PA161 [[BR]]
    unreadable page:
-   http://geographiclib.sourceforge.net/geodesic-papers/forsyth96b-add.pdf
+   https://geographiclib.sourceforge.io/geodesic-papers/forsyth96b-add.pdf
  * A. R. Forsyth,[[BR]]
    ''Lectures on the Differential Geometry of Curves and Surfaces'',
    (Cambridge Univ. Press, 1912), Chap. 5.[[BR]]
@@ -1423,6 +1424,11 @@
    applications]''
    (Teubner, Leipzig 1900), Chap. 5, Sec. 3, pp. 293--305.[[BR]]
    https://books.google.com/books?id=bSsLAAAAYAAJ&pg=PA293 (PDF fricke00.pdf)
+ * L. Crawford,[[BR]]
+   ''The general equation of a geodesic on a surface of revolution
+   applied to the sphere'',
+   Proc. Edinburgh Math. Soc. '''19''', 57--61 (1900).[[BR]]
+   https://doi.org/10.1017/S0013091500032624
  * L. Bianchi,[[BR]]
    ''Lezioni di Geometria Differenziale
    [Lessons in Differential Geometry]'', Vol. 1
@@ -1527,6 +1533,10 @@
    ''Geodetic inverse solution between antipodal points'',
    unpublished report, DMAAC (Aug. 28, 1975).[[BR]]
    https://doi.org/10.5281/zenodo.32999
+ * R. Bourbon,[[BR]]
+   ''Geodesic line on the surface of a spheroid'',
+   J.  Navigation '''43'''(1), 132--135 (1990).[[BR]]
+   https://doi.org/10.1017/S0373463300013886
  * R. H. Rapp,[[BR]]
    ''Geometric geodesy, Part I'',
    Dept. of Geodetic Science and Surveying,
@@ -1543,23 +1553,32 @@
    of K. Borre & W. G. Strang, ''Algorithms for Global Positioning''
    (Wellesley-Cambridge Press, 2012) [[BR]]
    http://old.gps.aau.dk/downloads/notes.pdf
+ * R. Sinclair,[[BR]]
+   ''On the last geometric statement of Jacobi'',
+   Experimental Math. '''12'''(4), 477--485 (2003).[[BR]]
+   https://projecteuclid.org/euclid.em/1087568023 [[BR]]
+   https://doi.org/10.1080/10586458.2003.10504515
+ * R. J. Mathar,[[BR]]
+   ''Geodetic line at constant altitude above the ellipsoid''
+   (May 2008).[[BR]]
+   https://arxiv.org/abs/0711.0642
  * C. F. F. Karney,[[BR]]
-   ''GeographicLib, version 2009-03'' (Mar. 1, 2009). [[BR]]
+   ''GeographicLib, version 2009-03'' (Mar. 2009).[[BR]]
    https://doi.org/10.5281/zenodo.32463
  * C. F. F. Karney,[[BR]]
-   ''Test set for geodesics'' (2010). [[BR]]
+   ''Test set for geodesics'' (2010).[[BR]]
    https://doi.org/10.5281/zenodo.32156
  * C. F. F. Karney,[[BR]]
    ''Geodesics on an ellipsoid of revolution''
    (Feb. 2011).[[BR]]
    https://arxiv.org/abs/1102.1215 [[BR]]
-   Errata: http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata
+   Errata: https://geographiclib.sourceforge.io/geod-addenda.html#geod-errata
  * C. F. F. Karney,[[BR]]
    ''Algorithms for geodesics'',
    J. Geodesy '''87'''(1), 43--55 (2013).[[BR]]
    https://doi.org/10.1007/s00190-012-0578-z [[BR]]
    https://arxiv.org/abs/1109.4448 [[BR]]
-   Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
+   Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
  * C. M. Rollins,[[BR]]
    ''An integral for geodesic length'',
    Survey Review '''42'''(315), 20--26 (2010).[[BR]]
@@ -1571,6 +1590,14 @@
    J. Korean Soc. Surveying, Geodesy, Photogrammetry and Cartography
    '''29'''(4), 329--341 (2011).[[BR]]
    https://doi.org/10.7848/ksgpc.2011.29.4.329
+ * A. S. Lenart,[[BR]]
+   ''Solutions of Direct Geodetic Problem in Navigational Applications'',
+   TransNav '''5'''(4), 527--532 (2011).[[BR]]
+   http://www.transnav.eu/Article_Solutions_of_Direct_Geodetic_Lenart,20,324.html
+ * A. S. Lenart,[[BR]]
+   ''Solutions of Inverse Geodetic Problem in Navigational Applications'',
+   TransNav '''7'''(2), 253--257 (2013).[[BR]]
+   https://doi.org/10.12716/1001.07.02.13
  * L. E. Sjöberg and M. Shirazian,[[BR]]
    ''Solving the direct and inverse geodetic problems on the ellipsoid
    by numerical integration'',
@@ -1580,9 +1607,10 @@
  * L. E. Sjöberg,[[BR]]
    ''Solutions to the ellipsoidal Clairaut constant and the inverse geodetic
    problem by numerical integration'',
-   J. Geodetic Science '''2'''(3), 162--171 (2012).[[BR]]
+   J. Geodetic Science '''2'''(3), 162--171 (2012);[[BR]]
+   Errata: J. Geodetic Science '''3'''(2), 110 (2013).[[BR]]
    https://doi.org/10.2478/v10156-011-0037-4 [[BR]]
-   Errata: https://doi.org/10.2478/jogs-2013-0014
+   https://doi.org/10.2478/jogs-2013-0014
  * G. Panou, D. Delikaraoglou, and R. Korakitis,[[BR]]
    ''Solving the geodesics on the ellipsoid as a boundary value problem'',
    J. Geodetic Science '''3'''(1), 40--47 (2013).[[BR]]
@@ -1595,5 +1623,14 @@
  * G. Panou and R. Korakitis,[[BR]]
    ''Geodesic equations and their numerical solutions in geodetic and
    Cartesian coordinates on an oblate spheroid''
-   (Nov. 2016).[[BR]
+   (Nov. 2016).[[BR]]
    https://arxiv.org/abs/1612.01357
+ * W.-K. Tseng,[[BR]]
+   ''An algorithm for the inverse solution of geodesic sailing without
+   auxiliary sphere'',
+   J. Navigation '''67'''(5), 825--844 (2014);[[BR]]
+   Publisher's notice: J. Navigation '''68'''(1), 215--216 (2015);[[BR]]
+   Errata: J. Navigation '''68'''(1), 217--218 (2015).[[BR]]
+   https://doi.org/10.1017/S0373463314000228 [[BR]]
+   https://doi.org/10.1017/S0373463314000745 [[BR]]
+   https://doi.org/10.1017/S0373463314000733

@@ -166,6 +166,6 @@ this paper.
 =head1 HISTORY
 
 B<TransverseMercatorProj> was added to GeographicLib,
-L<http://geographiclib.sourceforge.net>, in 2009-01.  Prior to version 1.9 it was
+L<https://geographiclib.sourceforge.io>, in 2009-01.  Prior to version 1.9 it was
 called TransverseMercatorTest (and its interface was slightly
 different).

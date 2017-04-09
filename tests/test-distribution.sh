@@ -78,7 +78,7 @@ set -e
 # use: cd js; jshint src
 
 DATE=`date +%F`
-VERSION=1.47
+VERSION=1.48
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then
@@ -118,8 +118,8 @@ make doc
 )
 (
     cd ../python
-    python2 -m unittest geographiclib.test.test_geodesic
-    python3 -m unittest geographiclib.test.test_geodesic
+    python2 -m unittest -v geographiclib.test.test_geodesic
+    python3 -m unittest -v geographiclib.test.test_geodesic
 )
 (
     cd ../matlab/geographiclib
@@ -161,7 +161,7 @@ EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
 cp $TEMP/gita/geographiclib/pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
 
-for ver in 10 11 12 14; do
+for ver in 10 11 12 14 15; do
     for arch in win32 x64; do
 	pkg=vc$ver-$arch
 	gen="Visual Studio $ver"
@@ -171,7 +171,7 @@ for ver in 10 11 12 14; do
 	(
 	    echo "#! /bin/sh -exv"
 	    echo 'b=geog-`pwd | sed s%.*/%%`'
-	    echo 'rm -rf v:/data/scratch/$b u:/pkg-$pkg/GeographicLib-$VERSION/*'
+	    echo rm -rf v:/data/scratch/\$b u:/pkg-$pkg/GeographicLib-$VERSION/\*
 	    echo 'mkdir -p v:/data/scratch/$b'
 	    echo 'cd v:/data/scratch/$b'
 	    echo 'unset GEOGRAPHICLIB_DATA'
@@ -228,7 +228,7 @@ find . -type f | sort -u > ../files.b
 cd $TEMP/relc/GeographicLib-$VERSION
 mkdir BUILD
 cd BUILD
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
 make -j$NUMCPUS all
 make test
 make -j$NUMCPUS exampleprograms
@@ -361,14 +361,14 @@ test "$CONFIG_VERSIONA" = "$VERSION" || echo autoconf version string mismatch
 cd $TEMP/relx/GeographicLib-$VERSION
 (
     echo Files with trailing spaces:
-    find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.pdf' |
+    find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.gif|\.pdf' |
 	while read f; do
 	    tr -d '\r' < $f | grep ' $' > /dev/null && echo $f || true
 	done
     echo
     echo Files with tabs:
     find . -type f |
-	egrep -v '[Mm]akefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.pdf|\.xml' |
+	egrep -v '[Mm]akefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.gif|\.pdf|\.xml' |
 	egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
 	egrep -v 'js/samples/geod-.*\.html' |
 	xargs grep -l  '	' || true
@@ -376,7 +376,7 @@ cd $TEMP/relx/GeographicLib-$VERSION
     echo Files with multiple newlines:
     find . -type f |
 	egrep -v \
-	   '/Makefile\.in|\.1\.html|\.png|\.pdf|/ltmain|/config|\.m4|Settings' |
+	   '/Makefile\.in|\.1\.html|\.png|\.gif|\.pdf|/ltmain|/config|\.m4|Settings' |
 	egrep -v '(Resources|Settings)\.Designer\.cs' |
 	while read f; do
 	    tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
@@ -384,14 +384,14 @@ cd $TEMP/relx/GeographicLib-$VERSION
     echo
     echo Files with no newline at end:
     find . -type f |
-	egrep -v '\.png|\.pdf' |
+	egrep -v '\.png|\.gif|\.pdf' |
 	while read f; do
 	    n=`tail -1 $f | wc -l`; test $n -eq 0 && echo $f || true
 	done
     echo
     echo Files with extra newlines at end:
     find . -type f |
-	egrep -v '/configure|/ltmain.sh|\.png|\.pdf|\.1\.html' |
+	egrep -v '/configure|/ltmain.sh|\.png|\.gif|\.pdf|\.1\.html' |
 	while read f; do
 	    n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
 	done
@@ -427,7 +427,7 @@ cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
 
 # javascript release
-npm publish $TEMP/gita/geographiclib/BUILD/js/geographiclib
+cd $TEMP/gita/geographiclib/BUILD/js && npm publish geographiclib
 make -C $DEVELSOURCE -f makefile-admin distrib-js
 make -C $DEVELSOURCE -f makefile-admin install-js
 # also update devel branch of node-geographiclib from ??

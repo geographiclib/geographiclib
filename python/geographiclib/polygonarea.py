@@ -30,18 +30,18 @@ The public attributes for this class are
 # This is a rather literal translation of the GeographicLib::PolygonArea class
 # to python.  See the documentation for the C++ class for more information at
 #
-#    http://geographiclib.sourceforge.net/html/annotated.html
+#    https://geographiclib.sourceforge.io/html/annotated.html
 #
 # The algorithms are derived in
 #
 #    Charles F. F. Karney,
 #    Algorithms for geodesics, J. Geodesy 87, 43-55 (2013),
 #    https://doi.org/10.1007/s00190-012-0578-z
-#    Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
+#    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
-# http://geographiclib.sourceforge.net/
+# https://geographiclib.sourceforge.io/
 ######################################################################
 
 import math
@@ -59,8 +59,8 @@ class PolygonArea(object):
     lon1 = Math.AngNormalize(lon1)
     lon2 = Math.AngNormalize(lon2)
     lon12, _ = Math.AngDiff(lon1, lon2)
-    cross = (1 if lon1 < 0 and lon2 >= 0 and lon12 > 0
-             else (-1 if lon2 < 0 and lon1 >= 0 and lon12 < 0 else 0))
+    cross = (1 if lon1 <= 0 and lon2 > 0 and lon12 > 0
+             else (-1 if lon2 <= 0 and lon1 > 0 and lon12 < 0 else 0))
     return cross
   _transit = staticmethod(_transit)
 

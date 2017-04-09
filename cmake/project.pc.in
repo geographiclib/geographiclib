@@ -7,7 +7,7 @@ bindir=@bindir@
 Name: @PACKAGE_NAME@
 Description: A library for geographic projections
 Version: @PACKAGE_VERSION@
-URL: http://geographiclib.sourceforge.net
+URL: https://geographiclib.sourceforge.io
 
 Requires:
 Libs: -L${libdir} -lGeographic

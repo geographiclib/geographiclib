@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
@@ -58,6 +58,7 @@
 //   1700     vc11  (2012)
 //   1800     vc12  (2013)
 //   1900     vc14  (2015)
+//   1910+    vc15  (2017)
 #    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 1
 #  else
 #    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 0

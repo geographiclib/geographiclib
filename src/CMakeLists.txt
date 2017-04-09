@@ -6,7 +6,6 @@ file (GLOB HEADERS
   ${PROJECT_BINARY_DIR}/include/GeographicLib/Config.h
   ../include/GeographicLib/[A-Za-z]*.hpp)
 
-add_definitions (-DGEOGRAPHICLIB_DATA="${GEOGRAPHICLIB_DATA}")
 # Define the library and specify whether it is shared or not.
 if (GEOGRAPHICLIB_SHARED_LIB)
   add_library (${PROJECT_SHARED_LIBRARIES} SHARED ${SOURCES} ${HEADERS})
@@ -98,7 +97,6 @@ endif ()
 
 if (MSVC AND GEOGRAPHICLIB_SHARED_LIB)
   if (NOT CMAKE_VERSION VERSION_LESS 3.1)
-    message (STATUS "Using TARGET_PDB_FILE")
     install (FILES $<TARGET_PDB_FILE:${PROJECT_SHARED_LIBRARIES}>
       DESTINATION bin OPTIONAL)
   else ()

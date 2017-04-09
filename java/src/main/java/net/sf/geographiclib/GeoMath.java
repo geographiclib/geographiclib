@@ -1,9 +1,9 @@
 /**
  * Implementation of the net.sf.geographiclib.GeoMath class
  *
- * Copyright (c) Charles Karney (2013-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 package net.sf.geographiclib;
 
@@ -190,7 +190,7 @@ public class GeoMath {
    **********************************************************************/
   public static double AngNormalize(double x) {
     x = x % 360.0;
-    return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
+    return x <= -180 ? x + 360 : (x <= 180 ? x : x - 360);
   }
 
   /**
@@ -221,10 +221,10 @@ public class GeoMath {
   public static Pair AngDiff(double x, double y) {
     double d, t;
     {
-      Pair r = sum(AngNormalize(x), AngNormalize(-y));
-      d = - AngNormalize(r.first); t = r.second;
+      Pair r = sum(AngNormalize(-x), AngNormalize(y));
+      d = AngNormalize(r.first); t = r.second;
     }
-    return sum(d == 180 && t < 0 ? -180 : d, -t);
+    return sum(d == 180 && t > 0 ? -180 : d, t);
   }
 
   /**
@@ -250,11 +250,12 @@ public class GeoMath {
     double s = Math.sin(r), c = Math.cos(r);
     double sinx, cosx;
     switch (q & 3) {
-    case  0: sinx =     s; cosx =     c; break;
-    case  1: sinx =     c; cosx = 0 - s; break;
-    case  2: sinx = 0 - s; cosx = 0 - c; break;
-    default: sinx = 0 - c; cosx =     s; break; // case 3
+    case  0: sinx =  s; cosx =  c; break;
+    case  1: sinx =  c; cosx = -s; break;
+    case  2: sinx = -s; cosx = -c; break;
+    default: sinx = -c; cosx =  s; break; // case 3
     }
+    if (x != 0) { sinx += 0.0; cosx += 0.0; }
     return new Pair(sinx, cosx);
   }
 
@@ -265,9 +266,9 @@ public class GeoMath {
    * @param x the cosine of the angle
    * @return atan2(<i>y</i>, <i>x</i>) in degrees.
    *
-   * The result is in the range [&minus;180&deg; 180&deg;).  N.B.,
-   * atan2d(&plusmn;0, &minus;1) = &minus;180&deg;; atan2d(+&epsilon;,
-   * &minus;1) = +180&deg;, for &epsilon; positive and tiny;
+   * The result is in the range (&minus;180&deg; 180&deg;].  N.B.,
+   * atan2d(&plusmn;0, &minus;1) = +180&deg;; atan2d(&minus;&epsilon;,
+   * &minus;1) = &minus;180&deg;, for &epsilon; positive and tiny;
    * atan2d(&plusmn;0, 1) = &plusmn;0&deg;.
    **********************************************************************/
   public static double atan2d(double y, double x) {
@@ -287,7 +288,7 @@ public class GeoMath {
       //   case 0: ang = 0 + ang; break;
       //
       // and handle mpfr as in AngRound.
-    case 1: ang = (y > 0 ? 180 : -180) - ang; break;
+    case 1: ang = (y >= 0 ? 180 : -180) - ang; break;
     case 2: ang =  90 - ang; break;
     case 3: ang = -90 + ang; break;
     }

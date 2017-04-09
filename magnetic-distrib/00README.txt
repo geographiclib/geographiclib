@@ -10,4 +10,4 @@ which one to install, start with
 
 For more information, see
 
- http://geographiclib.sourceforge.net/html/magnetic.html#magneticinst
+ https://geographiclib.sourceforge.io/html/magnetic.html#magneticinst

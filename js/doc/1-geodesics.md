@@ -22,7 +22,7 @@ azimuths &alpha;<sub>1</sub> and &alpha;<sub>2</sub> at the two end
 points.  In this figure, we have &lambda;<sub>12</sub> =
 &lambda;<sub>2</sub> &minus; &lambda;<sub>1</sub>.
 <center>
-<img src="http://upload.wikimedia.org/wikipedia/commons/c/cb/Geodesic_problem_on_an_ellipsoid.svg" width="250">
+<img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Geodesic_problem_on_an_ellipsoid.svg" width="250">
 </center>
 A geodesic can be extended indefinitely by requiring that any
 sufficiently small segment is a shortest path; geodesics are also the
@@ -158,14 +158,14 @@ Vincenty (1975) in the following respects:
 * C. F. F. Karney,
   {@link https://doi.org/10.1007/s00190-012-0578-z
   Algorithms for geodesics}, J. Geodesy **87**(1) 43&ndash;55 (2013);
-  {@link http://geographiclib.sourceforge.net/geod-addenda.html addenda}.
+  {@link https://geographiclib.sourceforge.io/geod-addenda.html addenda}.
 * C. F. F. Karney,
   {@https://arxiv.org/abs/1102.1215v1
   Geodesics on an ellipsoid of revolution},
   Feb. 2011;
-  {@link http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata
+  {@link https://geographiclib.sourceforge.io/geod-addenda.html#geod-errata
   errata}.
-* {@link http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
+* {@link https://geographiclib.sourceforge.io/geodesic-papers/biblio.html
   A geodesic bibliography}.
 * The wikipedia page,
   {@link https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid

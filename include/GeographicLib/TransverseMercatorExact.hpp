@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
@@ -59,7 +59,7 @@ namespace GeographicLib {
    * taken to be the equator.  See the documentation on TransverseMercator for
    * how to include a false easting, false northing, or a latitude of origin.
    *
-   * See <a href="http://geographiclib.sourceforge.net/tm-grid.kmz"
+   * See <a href="https://geographiclib.sourceforge.io/tm-grid.kmz"
    * type="application/vnd.google-earth.kmz"> tm-grid.kmz</a>, for an
    * illustration of the transverse Mercator grid in Google Earth.
    *

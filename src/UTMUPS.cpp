@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/UTMUPS.hpp>
@@ -233,7 +233,8 @@ namespace GeographicLib {
                           + Utility::str(zone1));
 
     string hemi(zonestr, q - c);
-    transform(hemi.begin(), hemi.end(), hemi.begin(), (int(*)(int))tolower);
+    for (std::string::iterator p = hemi.begin(); p != hemi.end(); ++p)
+      *p = char(std::tolower(*p));
     if (q == c && (hemi == "inv" || hemi == "invalid")) {
       zone = INVALID;
       northp = false;

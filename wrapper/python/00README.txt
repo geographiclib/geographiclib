@@ -1,7 +1,7 @@
 The geodesic routines in GeographicLib have been implemented as a native
 Python library.  See
 
-  http://geographiclib.sourceforge.net/html/python/
+  https://geographiclib.sourceforge.io/html/python/
 
 It is also possible to call the C++ version of GeographicLib directly
 from Python and this directory contains a small example,

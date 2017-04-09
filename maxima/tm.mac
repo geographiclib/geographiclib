@@ -4,7 +4,7 @@ Arbitrary precision Transverse Mercator Projection
 
 Copyright (c) Charles Karney (2009-2017) <charles@karney.com> and
 licensed under the MIT/X11 License.  For more information, see
-http://geographiclib.sourceforge.net/
+https://geographiclib.sourceforge.io/
 
 Reference:
 
@@ -13,7 +13,7 @@ Reference:
    J. Geodesy 85(8), 475-485 (Aug. 2011).
    DOI 10.1007/s00190-011-0445-3
    preprint https://arxiv.org/abs/1002.1417
-   resource page http://geographiclib.sourceforge.net/tm.html
+   resource page https://geographiclib.sourceforge.io/tm.html
 
 The parameters for the transformation are set by
 

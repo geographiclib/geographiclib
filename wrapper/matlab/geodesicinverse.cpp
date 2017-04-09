@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2010-2013) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 // Compile in Matlab with
@@ -69,7 +69,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   else if (nrhs > 3)
     mexErrMsgTxt("More than three input arguments specified.");
   else if (nrhs == 2)
-    mexErrMsgTxt("Must specify flattening with the major radius.");
+    mexErrMsgTxt("Must specify flattening with the equatorial radius.");
   else if (nlhs > 2)
     mexErrMsgTxt("More than two output arguments specified.");
 
@@ -83,7 +83,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (nrhs == 3) {
     if (!( mxIsDouble(prhs[1]) && !mxIsComplex(prhs[1]) &&
            mxGetNumberOfElements(prhs[1]) == 1 ))
-      mexErrMsgTxt("Major radius is not a real scalar.");
+      mexErrMsgTxt("Equatorial radius is not a real scalar.");
     a = mxGetScalar(prhs[1]);
     if (!( mxIsDouble(prhs[2]) && !mxIsComplex(prhs[2]) &&
            mxGetNumberOfElements(prhs[2]) == 1 ))

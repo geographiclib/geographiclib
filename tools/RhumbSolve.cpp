@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2014-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  *
  * See the <a href="RhumbSolve.1.html">man page</a> for usage information.
  **********************************************************************/

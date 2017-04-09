@@ -5,7 +5,7 @@
 *!
 *! Copyright (c) Charles Karney (2015-2017) <charles@karney.com> and
 *! licensed under the MIT/X11 License.  For more information, see
-*! http://geographiclib.sourceforge.net/
+*! https://geographiclib.sourceforge.io/
 
 *> @cond SKIP
 
@@ -424,7 +424,7 @@
      +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
       if (lon2 .lt. 0) then
         r = r + assert(lon2, -150d0, 0.5d-5)
-        r = r + assert(azi2, -180d0, 0.5d-5)
+        r = r + assert(abs(azi2), 180d0, 0.5d-5)
       else
         r = r + assert(lon2, 30d0, 0.5d-5)
         r = r + assert(azi2, 0d0, 0.5d-5)
@@ -689,12 +689,12 @@
       call invers(a, f, 0d0, 0d0, 0d0, 180d0,
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
       r = r + assert(azi1, 0.00000d0, 0.5d-5)
-      r = r + assert(azi2, -180.00000d0, 0.5d-5)
+      r = r + assert(abs(azi2), 180.00000d0, 0.5d-5)
       r = r + assert(s12, 20003931d0, 0.5d0)
       call invers(a, f, 0d0, 0d0, 1d0, 180d0,
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
       r = r + assert(azi1, 0.00000d0, 0.5d-5)
-      r = r + assert(azi2, -180.00000d0, 0.5d-5)
+      r = r + assert(abs(azi2), 180.00000d0, 0.5d-5)
       r = r + assert(s12, 19893357d0, 0.5d0)
       a = 6.4d6
       f = 0
@@ -706,12 +706,12 @@
       call invers(a, f, 0d0, 0d0, 0d0, 180d0,
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
       r = r + assert(azi1, 0.00000d0, 0.5d-5)
-      r = r + assert(azi2, -180.00000d0, 0.5d-5)
+      r = r + assert(abs(azi2), 180.00000d0, 0.5d-5)
       r = r + assert(s12, 20106193d0, 0.5d0)
       call invers(a, f, 0d0, 0d0, 1d0, 180d0,
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
       r = r + assert(azi1, 0.00000d0, 0.5d-5)
-      r = r + assert(azi2, -180.00000d0, 0.5d-5)
+      r = r + assert(abs(azi2), 180.00000d0, 0.5d-5)
       r = r + assert(s12, 19994492d0, 0.5d0)
       a = 6.4d6
       f = -1/300.0d0
@@ -733,7 +733,7 @@
       call invers(a, f, 0d0, 0d0, 1d0, 180d0,
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
       r = r + assert(azi1, 0.00000d0, 0.5d-5)
-      r = r + assert(azi2, -180.00000d0, 0.5d-5)
+      r = r + assert(abs(azi2), 180.00000d0, 0.5d-5)
       r = r + assert(s12, 20027270d0, 0.5d0)
 
       tstg33 = r
@@ -805,7 +805,7 @@
      +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
       r = r + assert(lat2, 45.30632d0, 0.5d-5)
       r = r + assert(lon2, -180d0, 0.5d-5)
-      r = r + assert(azi2, -180d0, 0.5d-5)
+      r = r + assert(abs(azi2), 180d0, 0.5d-5)
 
       tstg61 = r
       return

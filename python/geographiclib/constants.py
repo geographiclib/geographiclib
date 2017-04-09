@@ -4,11 +4,11 @@
 # This is a translation of the GeographicLib::Constants class to python.  See
 # the documentation for the C++ class for more information at
 #
-#    http://geographiclib.sourceforge.net/html/annotated.html
+#    https://geographiclib.sourceforge.io/html/annotated.html
 #
 # Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
-# http://geographiclib.sourceforge.net/
+# https://geographiclib.sourceforge.io/
 ######################################################################
 
 class Constants(object):

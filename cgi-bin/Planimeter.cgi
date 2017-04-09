@@ -5,7 +5,7 @@
 #
 # Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
-# http://geographiclib.sourceforge.net/
+# https://geographiclib.sourceforge.io/
 
 . ./utils.sh
 OPTION=`lookupkey "$QUERY_STRING" option`
@@ -83,7 +83,7 @@ cat <<EOF
   <body>
     <h3>
       Online geodesic polygon calculations using the
-      <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/Planimeter.1.html">
 	 Planimeter</a> utility
     </h3>
     <form action="/cgi-bin/Planimeter" method="get">
@@ -150,7 +150,7 @@ cat <<EOF
     <hr>
     <p>
       In polygon mode,
-      <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/Planimeter.1.html">
         Planimeter (version $VERSION)</a>
       calculates the perimeter and area of a polygon whose edges are
       either geodesics or rhumb lines on the WGS84 ellipsoid.
@@ -159,7 +159,7 @@ cat <<EOF
       supported for the area computation.  There is no need to close the
       polygon.  Polygons may include one or both poles.  In polyline
       mode,
-      <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/Planimeter.1.html">
         Planimeter</a>
       calculates the length of the geodesic path joining the points.
     </p>
@@ -173,7 +173,7 @@ cat <<EOF
         3:0:34W 16:46:33N</pre>
       The coordinates can also be given in UTM, UPS, or MGRS coordinates (see
       the documentation on the
-      <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/GeoConvert.1.html">
 	GeoConvert</a>
       utility).  A blank line or a coordinate which cannot be understood
       causes the reading of vertices to be stopped.
@@ -184,13 +184,13 @@ cat <<EOF
       0.1&nbsp;m<sup>2</sup> per vertex.
     </p>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
+      <a href="https://geographiclib.sourceforge.io/html/Planimeter.1.html">
         Planimeter</a>,
       which is a simple wrapper of the
-      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1PolygonAreaT.html">
+      <a href="https://geographiclib.sourceforge.io/html/classGeographicLib_1_1PolygonAreaT.html">
         GeographicLib::PolygonAreaT</a> class,
       is one of the utilities provided
-      with <a href="http://geographiclib.sourceforge.net/">
+      with <a href="https://geographiclib.sourceforge.io/">
         GeographicLib</a>.
       Geodesic areas can also be computed using JavaScript; see the
       <a href="../scripts/geod-calc.html">JavaScript geodesic
@@ -205,14 +205,14 @@ cat <<EOF
       J. Geodesy <b>87</b>, 43&ndash;55 (2013); DOI:
       <a href="https://doi.org/10.1007/s00190-012-0578-z">
 	10.1007/s00190-012-0578-z</a>;
-      addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
+      addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
 	geod-addenda.html</a>.
     </p>
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
       (2015-02-24)</address>
-    <a href="http://geographiclib.sourceforge.net">
+    <a href="https://geographiclib.sourceforge.io">
       GeographicLib home
     </a>
   </body>

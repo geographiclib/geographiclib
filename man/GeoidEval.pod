@@ -176,7 +176,7 @@ option.  The B<-h> option prints the default geoid path and name.  Use
 the B<-v> option to ascertain the full path name of the data file.
 
 Instructions for downloading and installing geoid data are available at
-L<http://geographiclib.sourceforge.net/html/geoid.html#geoidinst>.
+L<https://geographiclib.sourceforge.io/html/geoid.html#geoidinst>.
 
 B<NOTE>: all the geoids above apply to the WGS84 ellipsoid (I<a> =
 6378137 m, I<f> = 1/298.257223563) only.
@@ -309,7 +309,7 @@ Convert a point in UTM zone 18n from MSL to HAE
 GeoConvert(1), Gravity(1), geographiclib-get-geoids(8).
 
 An online version of this utility is availbable at
-L<http://geographiclib.sourceforge.net/cgi-bin/GeoidEval>.
+L<https://geographiclib.sourceforge.io/cgi-bin/GeoidEval>.
 
 =head1 AUTHOR
 
@@ -317,5 +317,5 @@ B<GeoidEval> was written by Charles Karney.
 
 =head1 HISTORY
 
-B<GeoidEval> was added to GeographicLib, L<http://geographiclib.sourceforge.net>,
+B<GeoidEval> was added to GeographicLib, L<https://geographiclib.sourceforge.io>,
 in 2009-09.

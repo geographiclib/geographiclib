@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 47)
+set (PROJECT_VERSION_MINOR 48)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -43,7 +43,7 @@ endif ()
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 17)
-set (LIBVERSION_BUILD 17.1.0)
+set (LIBVERSION_BUILD 17.1.1)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -159,6 +159,19 @@ set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3 4 5)
 option (PACKAGE_DEBUG_LIBS
   "Include debug versions of library in binary package" OFF)
 
+# (9) Try to link against boost when building the examples.  The
+# NearestNeighbor example optionally uses the Boost library.  Set to ON,
+# if you want to exercise this functionality.  Default is OFF, so that
+# cmake configuration isn't slowed down looking for Boost.
+option (USE_BOOST_FOR_EXAMPLES
+  "Look for Boost library when compiling examples" OFF)
+
+# (10) On Mac OS X, build multiple architectures?  Set to ON to build
+# i386 and x86_64.  Default is OFF, meaning build for default
+# architecture.
+option (APPLE_MULTIPLE_ARCHITECTURES
+  "Build multiple architectures for Apple systems" OFF)
+
 set (LIBNAME Geographic)
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)
   # For multi-config systems and for Visual Studio, the debug version of
@@ -203,26 +216,30 @@ if (MSVC)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MP")
 else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-  # check for C++11 support.  This flag is *not* propagated to clients
-  # that use GeographicLib.  However, this is of no consequence.  When
-  # the client code is being compiled (and the GeographicLib headers
-  # being included), work-alike substitutions are used.
-  include (CheckCXXCompilerFlag)
-  # The only "deprecated" flag included here is "0x" to activate C++11
-  # with old versions of g++.  We'll add "17" when it's available.
-  # Note: C++11 (actually gnu++14) support is turned on by default in
-  # g++ 6.1 and later.
-  foreach (_F 14 11 0x)
-    set (CXX11_FLAG "-std=c++${_F}")
-    set (_T CXX11TEST${_F})
-    check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
-    if (${_T})
-      break ()
+  # g++ 6.0 defaults to -std=gnu++14
+  if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
+        NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0))
+    # check for C++11 support.  This flag is *not* propagated to clients
+    # that use GeographicLib.  However, this is of no consequence.  When
+    # the client code is being compiled (and the GeographicLib headers
+    # being included), work-alike substitutions are used.
+    include (CheckCXXCompilerFlag)
+    # The only "deprecated" flag included here is "0x" to activate C++11
+    # with old versions of g++.  We'll add "17" when it's available.
+    # Note: C++11 (actually gnu++14) support is turned on by default in
+    # g++ 6.1 and later.
+    foreach (_F 14 11 0x)
+      set (CXX11_FLAG "-std=c++${_F}")
+      set (_T CXX11TEST${_F})
+      check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
+      if (${_T})
+        break ()
+      endif ()
+      unset (CXX11_FLAG)
+    endforeach ()
+    if (CXX11_FLAG)
+      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
     endif ()
-    unset (CXX11_FLAG)
-  endforeach ()
-  if (CXX11_FLAG)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
   endif ()
 endif ()
 
@@ -271,6 +288,15 @@ endif ()
 # first because that's where Config.h will be
 include_directories ("${PROJECT_BINARY_DIR}/include" include)
 
+if (USE_BOOST_FOR_EXAMPLES)
+  # quad precision numbers appeared in Boost 1.54.
+  find_package (Boost 1.54 COMPONENTS serialization)
+elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
+  if (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND CXX11_MATH)
+    find_package (Boost 1.54)
+  endif ()
+endif ()
+
 set (HIGHPREC_LIBRARIES)
 if (GEOGRAPHICLIB_PRECISION EQUAL 1)
   message (WARNING "Compiling with floats which results in poor accuracy")
@@ -284,8 +310,6 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND CXX11_MATH)
-    # quad precision numbers appeared in Boost 1.54.
-    find_package (Boost 1.54)
     if (Boost_FOUND)
       include_directories ("${Boost_INCLUDE_DIRS}")
       set (HIGHPREC_LIBRARIES quadmath)
@@ -308,7 +332,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
   if (CXX11_MATH)
-    # Install MPFR C++ version 3.6.2 or later from
+    # Install MPFR C++ version 3.6.5 (2016-12-19) or later from
     # http://www.holoborodko.com/pavel/mpfr and install mpreal.h in the
     # include directory.  NOTE: MPFR C++ is covered by the GPL; be sure
     # to abide by the terms of this license.
@@ -360,7 +384,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
   endif ()
 endif ()
 
-if (APPLE AND GEOGRAPHICLIB_PRECISION EQUAL 2)
+if (APPLE AND APPLE_MULTIPLE_ARCHITECTURES)
   if (CMAKE_SYSTEM_PROCESSOR MATCHES "i.86" OR
       CMAKE_SYSTEM_PROCESSOR MATCHES "amd64" OR
       CMAKE_SYSTEM_PROCESSOR MATCHES "x86")
@@ -503,7 +527,7 @@ if (WIN32)
   # The Windows binary packager is NSIS.  Set the necessary variables
   # for this.
   set (CPACK_NSIS_CONTACT "charles@karney.com")
-  set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sourceforge.net")
+  set (CPACK_NSIS_URL_INFO_ABOUT "https://geographiclib.sourceforge.io")
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
   if (CMAKE_SIZEOF_VOID_P EQUAL 8)
     # Hardcode the prefix for Visual Studio 12 2013
@@ -522,11 +546,11 @@ if (WIN32)
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_NSIS_MENU_LINKS
-    "http://geographiclib.sourceforge.net/${PROJECT_VERSION}/index.html"
+    "https://geographiclib.sourceforge.io/${PROJECT_VERSION}/index.html"
     "Library documentation"
-    "http://geographiclib.sourceforge.net/${PROJECT_VERSION}/utilities.html"
+    "https://geographiclib.sourceforge.io/${PROJECT_VERSION}/utilities.html"
     "Utilities documentation"
-    "http://geographiclib.sourceforge.net" "GeographicLib home page"
+    "https://geographiclib.sourceforge.io" "GeographicLib home page"
     "https://sourceforge.net/projects/geographiclib/" "Main project page")
   set (CPACK_NSIS_MODIFY_PATH ON)
 elseif (APPLE)

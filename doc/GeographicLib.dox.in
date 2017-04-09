@@ -5,17 +5,17 @@
  *
  * Written by Charles Karney <charles@karney.com> and licensed under the
  * MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 namespace GeographicLib {
 /**
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2017-02-15
+\date 2017-04-09
 
 The documentation for other versions is available at
-<tt>http://geographiclib.sourceforge.net/m.nn/</tt> for versions numbers
+<tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
 <tt>m.nn</tt> &ge; 1.0.
 
 \section abstract Abstract
@@ -68,7 +68,7 @@ GeographicLib is licensed under the
 see <a href="LICENSE.txt">LICENSE.txt</a> for the terms.
 
 For more information on GeographicLib, see
-- http://geographiclib.sourceforge.net/.
+- https://geographiclib.sourceforge.io/.
 
 \section contents Contents
  - \ref intro
@@ -79,8 +79,10 @@ For more information on GeographicLib, see
  - \ref other
  - \ref geoid
  - \ref gravity
+ - \ref normalgravity
  - \ref magnetic
  - \ref geodesic
+ - \ref nearest
  - \ref triaxial
  - \ref jacobi
  - \ref rhumb
@@ -141,8 +143,8 @@ Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
 and the utilities have been tested with g++ 5.3.1 under Linux, with
 Apple LLVM 7.0.2 under Mac OS X, and with MS Visual Studio 10 (2010), 11
-(2012), 12 (2013), and 14 (2015) compiled for 32 bit and 64 bit on
-Windows.
+(2012), 12 (2013), 14 (2015), and 15 (2017) compiled for 32 bit and 64
+bit on Windows.
 
 MATLAB, JavaScript, and Python interfaces are provided to portions of
 GeographicLib; see \ref other.
@@ -177,6 +179,7 @@ report any you find to charles@karney.com.
 <center>
 Forward to \ref install.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page install Installing GeographicLib
@@ -270,7 +273,7 @@ cmake.  Building under cmake depends on whether it is targeting an IDE
 (interactive development environment) or generating Unix-style
 makefiles.  The instructions below have been tested with makefiles and
 g++ on Linux and with the Visual Studio IDE on Windows.  It is known to
-work also for Visual Studio 12 Express (2013).
+work also for Visual Studio 2017 Build Tools.
 
 Here are the steps to compile and install GeographicLib:
 - Unpack the source, running one of \verbatim
@@ -367,6 +370,12 @@ Here are the steps to compile and install GeographicLib:
     and that's the recommended configuration.  In particular you should
     avoid "installing" the library with a precision different from
     double.
+  - <code>USE_BOOST_FOR_EXAMPLES</code> (default: OFF).  If set to ON,
+    then the Boost library is searched for in order to build the
+    NearestNeighbor example.
+  - <code>APPLE_MULTIPLE_ARCHITECTURES</code> (default: OFF).  If set to
+    ON, build for i386 and x86_64 and Mac OS X systems.  Otherwise,
+    build for the default architecture.
 - Build and install the software.  In non-IDE environments, run
   \verbatim
   make         # compile the library and utilities
@@ -381,8 +390,9 @@ Here are the steps to compile and install GeographicLib:
   GeographicLib.sln, pick the build type (e.g., Release), and select
   "Build Solution".  If this succeeds, select "RUN_TESTS" to build;
   finally, select "INSTALL" to install (RUN_TESTS and INSTALL are in
-  the CMakePredefinedTargets folder).  Alternatively, you run the
-  Visual Studio compiler from the command line with \verbatim
+  the CMakePredefinedTargets folder).  Alternatively (for example, if
+  you are using the Visual Studio 2017 Build Tools), you run the Visual
+  Studio compiler from the command line with \verbatim
   cmake --build . --config Release --target ALL_BUILD
   cmake --build . --config Release --target RUN_TESTS
   cmake --build . --config Release --target INSTALL \endverbatim
@@ -618,6 +628,7 @@ for distribution as \verbatim
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page start Getting started
@@ -877,6 +888,7 @@ corresponding Wikipedia articles:
 <center>
 Back to \ref install.  Forward to \ref utilities.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page utilities Utility programs
@@ -946,15 +958,16 @@ e.g.,
  - echo 38SMB4488 | GeoConvert -d
 
 Online versions of four of these utilities are provided:
- - <a href="http://geographiclib.sourceforge.net/cgi-bin/GeoConvert">GeoConvert</a>
- - <a href="http://geographiclib.sourceforge.net/cgi-bin/GeodSolve">GeodSolve</a>
- - <a href="http://geographiclib.sourceforge.net/cgi-bin/Planimeter">Planimeter</a>
- - <a href="http://geographiclib.sourceforge.net/cgi-bin/GeoidEval">GeoidEval</a>
- - <a href="http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve">RhumbSolve</a>
+ - <a href="https://geographiclib.sourceforge.io/cgi-bin/GeoConvert">GeoConvert</a>
+ - <a href="https://geographiclib.sourceforge.io/cgi-bin/GeodSolve">GeodSolve</a>
+ - <a href="https://geographiclib.sourceforge.io/cgi-bin/Planimeter">Planimeter</a>
+ - <a href="https://geographiclib.sourceforge.io/cgi-bin/GeoidEval">GeoidEval</a>
+ - <a href="https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve">RhumbSolve</a>
 
 <center>
 Back to \ref start.  Forward to \ref organization.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page organization Code organization
@@ -1035,9 +1048,9 @@ elliptic integrals (computed by EllipticFunction).  These classes should
 be used if the absolute value of the flattening exceeds 0.02.  The -E
 option to <a href="GeodSolve.1.html">GeodSolve</a> uses these classes.
 
-NearestNeighbor is a header-only classes for finding the nearest
-neighbor of a collection of points where the distance function obeys the
-triangle inequality, such as the geodesic distance.
+NearestNeighbor is a header-only class for efficiently \ref nearest of a
+collection of points where the distance function obeys the triangle
+inequality.  The geodesic distance obeys this condition.
 
 Geocentric and LocalCartesian convert between
 geodetic and geocentric or a local cartesian system.  The constructor for
@@ -1092,6 +1105,11 @@ important definition is Math::real which is the type used for real
 numbers.  This allows the library to be easily switched to using floats,
 doubles, or long doubles.  However all the testing has been with real
 set to double and the library should be installed in this way.
+
+GeographicLib uniformly represents all angle-like variables (latitude,
+longitude, azimuth) in terms of degrees.  To convert from degrees to
+radians, multiple the quantity by Math::degree().  To convert from
+radians to degrees , divide the quantity by Math::degree().
 
 In general, the constructors for the classes in GeographicLib check
 their arguments and throw GeographicErr exceptions with a
@@ -1160,6 +1178,7 @@ with, e.g.,
 <center>
 Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page other Implementations in other languages
@@ -1370,6 +1389,7 @@ them.
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page geoid Geoid height
@@ -1920,20 +1940,20 @@ requires a <code>SAVE</code> statement in subroutine
 <center>
 Back to \ref other.  Forward to \ref gravity.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page gravity Gravity models
 
 <center>
-Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
+Back to \ref geoid.  Forward to \ref normalgravity.  Up to \ref contents.
 </center>
 
-GeographicLib can compute the earth's gravitational field with an
-earth gravity model using the GravityModel and
-GravityCircle classes and with the
-<a href="Gravity.1.html">Gravity</a> utility.  These models expand the
-gravitational potential of the earth as sum of spherical harmonics.  The
-models also specify a reference ellipsoid, relative to which geoid
+GeographicLib can compute the earth's gravitational field with an earth
+gravity model using the GravityModel and GravityCircle classes and with
+the <a href="Gravity.1.html">Gravity</a> utility.  These models expand
+the gravitational potential of the earth as sum of spherical harmonics.
+The models also specify a reference ellipsoid, relative to which geoid
 heights and gravity disturbances are measured.  Underlying all these
 models is <i>normal gravity</i> which is the exact solution for an
 idealized rotating ellipsoidal body.  This is implemented with the
@@ -1947,7 +1967,7 @@ Go to
  - \ref gravitygeoid
  - \ref gravityatmos
  - \ref gravityparallel
- - \ref normalgravity
+ - \ref normalgravity (now on its own page)
 
 The supported models are
  - <b>egm84</b>, the
@@ -2219,7 +2239,7 @@ As an illustration, here is egm2008.egm:
 EGMF-1
 # An Earth Gravity Model (Format 1) file.  For documentation on the
 # format of this file see
-# http://geographiclib.sourceforge.net/html/gravity.html#gravityformat
+# https://geographiclib.sourceforge.io/html/gravity.html#gravityformat
 Name            egm2008
 Publisher       National Geospatial Intelligence Agency
 Description     Earth Gravity Model 2008
@@ -2433,7 +2453,17 @@ optimizations, the computation would have taken about 200 days!)
 cmake will add in support for OpenMP for
 <code>examples/GeoidToGTX.cpp</code>, if it is available.
 
-\section normalgravity Normal gravity
+<center>
+Back to \ref geoid.  Forward to \ref normalgravity.  Up to \ref contents.
+</center>
+
+**********************************************************************/
+/**
+\page normalgravity Normal gravity
+
+<center>
+Back to \ref gravity.  Forward to \ref magnetic.  Up to \ref contents.
+</center>
 
 The NormalGravity class computes "normal gravity" which refers to the
 exact (classical) solution of an idealised system consisting of an
@@ -2448,11 +2478,19 @@ m<sup>3</sup>/s<sup>2</sup>, where \e G is the gravtitational constant.)
 The distribution of the mass \e M within the ellipsoid is such that the
 surface of the ellipsoid is at a constant normal potential where the
 normal potential is the sum of the gravitational potential (due to the
-gravitional attraction) and the centrifugal potention (due to the
+gravitational attraction) and the centrifugal potential (due to the
 rotation).  The resulting field exterior to the ellipsoid is called
 <i>normal gravity</i> and was found by Somigliana (1929).  Because the
 potential is constant on the ellipsoid it is sometimes referred to as
 the <i>level ellipsoid</i>.
+
+Go to
+ - \ref normalgravcoords
+ - \ref normalgravpot
+ - \ref normalgravmass
+ - \ref normalgravsurf
+ - \ref normalgravmean
+ - \ref normalgravj2
 
 References:
  - C. Somigliana, Teoria generale del campo gravitazionale dell'ellissoide
@@ -2469,13 +2507,13 @@ References:
    exterieur, Jour. Liouville 5, 465--488 (1840), Note 2.
    http://sites.mathdoc.fr/JMPA/PDF/JMPA_1840_1_5_A41_0.pdf
 
-\subsection normalgravcoords Ellipsoidal coordinates
+\section normalgravcoords Ellipsoidal coordinates
 
 Two set of formulas are presented: those of Heiskanen and Moritz (1967)
 which are applicable to an oblate ellipsoid and a second set where the
 variables are distinguished with primes which apply to a prolate
 ellipsoid.  The primes are omitted from those variables which are the
-same in the two cases.  In the text, the parenthetical "resp." clauses
+same in the two cases.  In the text, the parenthetical "alt." clauses
 apply to prolate ellipsoids.
 
 Cylindrical coordinates \f$ R,Z \f$ are expressed in terms of
@@ -2494,10 +2532,10 @@ where
 \end{align}
 \f]
 Surfaces of constant \f$ u \f$ (or \f$ u' \f$) are confocal ellipsoids.
-The surface \f$ u = 0 \f$ (resp. \f$ u' = 0 \f$) corresponds to the
-focal disc of diameter \f$ 2E \f$ (resp. focal rod of length
+The surface \f$ u = 0 \f$ (alt. \f$ u' = 0 \f$) corresponds to the
+focal disc of diameter \f$ 2E \f$ (alt. focal rod of length
 \f$ 2E' \f$).  The level ellipsoid is given by \f$ u = b \f$
-(resp. \f$ u' = a \f$).  On the level ellipsoid, \f$ \beta \f$ is the
+(alt. \f$ u' = a \f$).  On the level ellipsoid, \f$ \beta \f$ is the
 familiar parametric latitude.
 
 In writing the potential and the gravity, it is useful to introduce the
@@ -2509,21 +2547,21 @@ functions
   Q'(z') &= \frac{(1+z'^2)^{3/2}}{2z'^3}
     \biggl[\biggl(2 + \frac3{z'^2}\biggr)\sinh^{-1}z' -
       \frac{3\sqrt{1+z'^2}}{z'}\biggr],\\
-  G(z) &= \biggl(3Q(z)+z\frac{dQ(z)}{dz}\biggr)(1+z^2)\\
+  H(z) &= \biggl(3Q(z)+z\frac{dQ(z)}{dz}\biggr)(1+z^2)\\
        &= \frac1{z^4}\biggl[3(1+z^2)
          \biggl(1-\frac{\tan^{-1}z}z\biggr)-z^2\biggr],\\
-  G'(z') &= \frac{3Q'(z')}{1+z'^2}+z'\frac{dQ'(z')}{dz'}\\
+  H'(z') &= \frac{3Q'(z')}{1+z'^2}+z'\frac{dQ'(z')}{dz'}\\
          &= \frac{1+z'^2}{z'^4}
            \biggl[3\biggl(1-\frac{\sqrt{1+z'^2}\sinh^{-1}z'}{z'}\biggr)
            +z'^2\biggr].
 \end{align}
 \f]
 The function arguments are \f$ z = E/u \f$
-(resp. \f$ z' = E'/u' \f$) and the unprimed and primed quantities are
+(alt. \f$ z' = E'/u' \f$) and the unprimed and primed quantities are
 related by
 \f[
 \begin{align}
-Q'(z') = Q(z),&{} \qquad G'(z') = G(z),\\
+Q'(z') = Q(z),&{} \qquad H'(z') = H(z),\\
 z'^2 = -\frac{z^2}{1 + z^2},&{} \qquad z^2 = -\frac{z'^2}{1 + z'^2}.
 \end{align}
 \f]
@@ -2531,14 +2569,14 @@ The functions \f$ q(u) \f$ and \f$ q'(u) \f$ used by Heiskanen and
 Moritz are given by
 \f[
   q(u) = \frac{E^3}{u^3}Q\biggl(\frac Eu\biggr),\qquad
-  q'(u) = \frac{E^2}{u^2}G\biggl(\frac Eu\biggr).
+  q'(u) = \frac{E^2}{u^2}H\biggl(\frac Eu\biggr).
 \f]
-The functions \f$ Q(z) \f$, \f$ Q'(z') \f$, \f$ G(z) \f$, and
-\f$ G'(z') \f$ are more convenient for use in numerical codes because
+The functions \f$ Q(z) \f$, \f$ Q'(z') \f$, \f$ H(z) \f$, and
+\f$ H'(z') \f$ are more convenient for use in numerical codes because
 they are finite in the spherical limit \f$ E \rightarrow 0 \f$, i.e.,
-\f$ Q(0) = Q'(0) = \frac2{15} \f$, and \f$ G(0) = G'(0) = \frac25 \f$.
+\f$ Q(0) = Q'(0) = \frac2{15} \f$, and \f$ H(0) = H'(0) = \frac25 \f$.
 
-\subsection normalgravpot The normal potential
+\section normalgravpot The normal potential
 
 The normal potential is the sum of three components, a mass term, a
 quadrupole term and a centrifugal term,
@@ -2575,11 +2613,26 @@ non-rotating ellipsoid.  \f$ U_q + U_r \f$ is the potential for a
 massless rotating ellipsoid.  Combining all the terms, \f$ U \f$ is the
 normal potential for a massive rotating ellipsoid.
 
-\subsection normalgravmass The mass distribution
+The figure shows normal gravity for the case \f$ GM = 1 \f$,
+\f$ a = 1 \f$, \f$ b = 0.8 \f$, \f$ \omega = 0.3 \f$.  The level
+ellipsoid is shown in red.  Contours of constant gravity potential are
+shown in blue; the contour spacing is constant outside the ellipsoid and
+equal to 1/20 of the difference between the potentials on the ellipsoid
+and at the geostationary point (\f$ R = 2.2536 \f$, \f$ Z = 0 \f$);
+inside the ellipsoid the contour spacing is 5 times greater.  The green
+lines are stream lines for the gravity; these are spaced at intervals of
+10&deg; in parametric latitude on the surface of the ellipsoid.  The
+normal gravity is continued into the level ellipsoid under the
+assumption that the mass is concentrated on the focal disc, shown in
+black.
+
+\image html normal-gravity-potential-1.svg "Normal gravity"
+
+\section normalgravmass The mass distribution
 
 Typically, the normal potential, \f$ U \f$, is only of interest for
-outside the ellipsoid \f$ u \ge b \f$ (resp. \f$ u' \ge a \f$).  In
-planetary applications a open problem is finding a mass distribution
+outside the ellipsoid \f$ u \ge b \f$ (alt. \f$ u' \ge a \f$).  In
+planetary applications, an open problem is finding a mass distribution
 which is in hydrostatic equilibrium (the mass density is non-negative
 and a non-decreasing function of the potential interior to the
 ellipsoid).
@@ -2599,8 +2652,8 @@ ellipsoid.
 
 Observing that \f$ U_m \f$ and \f$ U_q \f$ as defined above obey
 \f$ \nabla^2 U_m = \nabla^2 U_q = 0 \f$ everywhere for \f$ u > 0 \f$
-(resp. \f$ u' > 0 \f$), we see that these potentials correspond to
-masses concentrated at \f$ u = 0 \f$ (resp. \f$ u' = 0 \f$).
+(alt. \f$ u' > 0 \f$), we see that these potentials correspond to
+masses concentrated at \f$ u = 0 \f$ (alt. \f$ u' = 0 \f$).
 
 In the oblate case, \f$ U_m \f$ is generated by a massive disc at
 \f$ Z = 0 \f$, \f$ R < E \f$, with mass density (mass per unit area) \f$
@@ -2664,7 +2717,7 @@ J_2 & = \frac{C - A}{Ma^2},
 \f]
 where \f$ J_2 \f$ is the <i>dynamical form factor</i>.
 
-\subsection normalgravsurg The surface gravity
+\section normalgravsurf The surface gravity
 
 Each term in the potential contributes to the gravity on the surface of
 the ellipsoid
@@ -2699,15 +2752,15 @@ where
 \f[
 \begin{align}
 \gamma_{ma} &= \frac{GM}{ab},\qquad \gamma_{mb} = \frac{GM}{a^2},\\
-\gamma_{qa} &= -\frac{\omega^2 a}6 \frac{G(E/b)}{Q(E/b)}
-             = -\frac{\omega^2 a}6 \frac{G'(E'/a)}{Q'(E'/a)},\\
-\gamma_{qb} &= -\frac{\omega^2 b}3 \frac{G(E/b)}{Q(E/b)}
-             = -\frac{\omega^2 b}3 \frac{G'(E'/a)}{Q'(E'/a)},\\
+\gamma_{qa} &= -\frac{\omega^2 a}6 \frac{H(E/b)}{Q(E/b)}
+             = -\frac{\omega^2 a}6 \frac{H'(E'/a)}{Q'(E'/a)},\\
+\gamma_{qb} &= -\frac{\omega^2 b}3 \frac{H(E/b)}{Q(E/b)}
+             = -\frac{\omega^2 b}3 \frac{H'(E'/a)}{Q'(E'/a)},\\
 \gamma_{ra} &= -\omega^2 a,\qquad \gamma_{rb} = 0.
 \end{align}
 \f]
 
-\subsection normalgravmean The mean gravity
+\section normalgravmean The mean gravity
 
 Performing an average of the surface gravity over the area of the
 ellipsoid gives
@@ -2737,7 +2790,7 @@ resulting in
     \biggl(GM - \frac{2\omega^2 a^2b}3\biggr).
 \f]
 
-\subsection normalgrav Possible values of the dynamical form factor
+\section normalgravj2 Possible values of the dynamical form factor
 
 The solution for the normal gravity is well defined for arbitrary
 \f$ M \f$, \f$ \omega \f$, \f$ a > 0\f$, and \f$ f < 1 \f$.  (Note that
@@ -2773,14 +2826,15 @@ J_2 = -\frac13 \frac{\omega^2 a^3}{GM}
 results in a sphere (\f$ f = 0 \f$).
 
 <center>
-Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
+Back to \ref gravity.  Forward to \ref magnetic.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page magnetic Magnetic models
 
 <center>
-Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
+Back to \ref normalgravity.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
 GeographicLib can compute the earth's magnetic field by a magnetic
@@ -3096,7 +3150,7 @@ As an illustration, here is igrf11.wmm:
 WMMF-1
 # A World Magnetic Model (Format 1) file.  For documentation on the
 # format of this file see
-# http://geographiclib.sourceforge.net/html/magnetic.html#magneticformat
+# https://geographiclib.sourceforge.io/html/magnetic.html#magneticformat
 Name            igrf11
 Description     International Geomagnetic Reference Field 11th Generation
 URL             http://ngdc.noaa.gov/IAGA/vmod/igrf.html
@@ -3121,14 +3175,15 @@ ID              IGRF11-A
 \endverbatim
 
 <center>
-Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
+Back to \ref normalgravity.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page geodesic Geodesics on an ellipsoid of revolution
 
 <center>
-Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
+Back to \ref magnetic.  Forward to \ref nearest.  Up to \ref contents.
 </center>
 
 Geodesic and GeodesicLine provide accurate
@@ -3185,12 +3240,12 @@ References:
    J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
-   addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    geod-addenda.html</a>;
    resource page:
-   <a href="http://geographiclib.sourceforge.net/geod.html"> geod.html</a>.
+   <a href="https://geographiclib.sourceforge.io/geod.html"> geod.html</a>.
  - A collection of some papers on geodesics is available at
-   http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
+   https://geographiclib.sourceforge.io/geodesic-papers/biblio.html
  - The wikipedia page,
    <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
    Geodesics on an ellipsoid</a>.
@@ -4084,14 +4139,110 @@ as part of the general solution and, as much as possible, we allow all
 geodesics to be computed by the general method.
 
 <center>
-Back to \ref magnetic.  Forward to \ref triaxial.  Up to \ref contents.
+Back to \ref magnetic.  Forward to \ref nearest.  Up to \ref contents.
 </center>
+
+**********************************************************************/
+/**
+\page nearest Finding nearest neighbors
+
+<center>
+Back to \ref geodesic.  Forward to \ref  triaxial.  Up to \ref contents.
+</center>
+
+The problem of finding the maritime boundary defined by the "median
+line" is discussed in Section 14 of
+ - C. F. F. Karney,
+   <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
+   on an ellipsoid of revolution</a>,
+   Feb. 2011; preprint
+   <a href="https://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
+ .
+Figure 14 shows the median line which is equidistant from Britain and
+mainland Europe.  Determining the median line involves finding, for any
+given \e P, the closest points on the coast of Britain and on the coast
+of mainland Europe.  The operation of finding the closest in a set of
+points is usually referred to as the <i>nearest neighbor</i> problem and
+the NearestNeighbor class implements an efficient algorithm for solving
+it.
+
+The NearestNeighbor class implements nearest-neighbor calculations using
+the vantage-point tree described by
+- J. K. Uhlmann,
+  <a href="https://doi.org/10.1016/0020-0190(91)90074-r">
+  Satisfying general proximity/similarity queries with metric trees</a>,
+  Information Processing Letters 40 175&ndash;179 (1991).
+- P. N. Yianilos,
+  <a href="http://pnylab.com/pny/papers/vptree/vptree/">
+  Data structures and algorithms for nearest neighbor search in general
+  metric spaces</a>, Proc. 4th ACM-SIAM Symposium on Discrete Algorithms,
+  (SIAM, 1993). pp. 311&ndash;321.
+
+Given a set of points \e x, \e y, \e z, &hellip;, in some space and a
+distance function \e d satisfying the metric conditions,
+\f[
+\begin{align}
+ d(x,y) &\ge 0,\\
+ d(x,y) &= 0, \ \text{iff $x = y$},\\
+ d(x,y) &= d(y,x),\\
+ d(x,z) &\le d(x,y) + d(y,z),
+\end{align}
+\f]
+the vantage-point (VP) tree provides an efficient way of determining
+nearest neighbors.  The geodesic distance (implemented by the Geodesic
+class) satisfies these metric conditions, while the great ellipse
+distance and the rhumb line distance <i>do not</i> (they do not satisfy
+the last condition, the triangle inequality).  Typically the cost of
+constructing a VP tree of \e N points is \e N log \e N, while the cost
+of a query is log \e N.  Thus a VP tree should be used in situations
+where \e N is large and at least log \e N queries are to be made.  The
+condition, \e N is large, means that \f$ N \gg 2^D \f$, where \e D is
+the dimensionality of the space.
+
+- This implementation includes Yianilos' upper and lower bounds for the
+  inside and outside sets.  This helps limit the number of searches
+  (compared to just using the median distance).
+- Rather than do a depth-first or breath-first search on the tree, the
+  nodes to be processed are put on a priority queue with the nodes most
+  likely to contain close points processed first.  Frequently, this allows
+  nodes lower down on the priority queue to be skipped.
+- This technique also allows non-exhaustive searchs to be performed (to
+  answer questions such as "are there any points within 1km of the query
+  point?).
+- When building the tree, the first vantage point is (arbitrarily)
+  chosen as the middle element of the set.  Thereafter, the points
+  furthest from the parent vantage point in both the inside and outside
+  sets are selected as the children's vantage points.  This information
+  is already available from the computation of the upper and lower
+  bounds of the children.  This choice seems to lead to a reasonably
+  optimized tree.
+- The leaf nodes can contain a bucket of points (instead of just a vantage
+  point).
+- Coincident points are allowed in the set; these are treated as distinct
+  points.
+
+The figure below shows the construction of the VP tree for the points
+making up the coastlines of Britain and Ireland (about 5000 points shown
+in blue).  The set of points is recursively split into 2 equal "inside"
+and "outside" subsets based on the distance from a "vantage point".  The
+boundaries between the inside and outside sets are shown as green
+circular arcs (arcs of geodesic circles).  At each stage, the newly
+added vantage points are shown as red dots and the vantage points for
+the next stage are shown as red plus signs.  The data is shown in the
+Cassini-Soldner projection with a central meridian of 5&deg;W.
+
+\image html vptree.gif "Vantage-point tree"
+
+<center>
+Back to \ref geodesic.  Forward to \ref triaxial.  Up to \ref contents.
+</center>
+
 **********************************************************************/
 /**
 \page triaxial Geodesics on a triaxial ellipsoid
 
 <center>
-Back to \ref geodesic.  Forward to \ref jacobi.  Up to \ref contents.
+Back to \ref nearest.  Forward to \ref jacobi.  Up to \ref contents.
 </center>
 
 Jacobi (1839) showed that the problem of geodesics on a triaxial
@@ -4152,7 +4303,7 @@ Go to
     <a href="http://hp41programs.yolasite.com/geod3axial.php"> here</a>.
  -# I do not give full citations of the papers here.  You can find these
     in the
-    <a href="http://geographiclib.sourceforge.net/geodesic-papers/biblio.html">
+    <a href="https://geographiclib.sourceforge.io/geodesic-papers/biblio.html">
     Geodesic Bibliography</a>; this includes links to online
     versions of the papers.
  -# An alternative to exploring geodesics using Jacobi's solution is to
@@ -4172,7 +4323,7 @@ Go to
       J. Geodesy 87(1), 43--55 (2013);
       DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
       10.1007/s00190-012-0578-z</a>;
-      addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
+      addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
       geod-addenda.html</a>.
 
 \section triaxial-coords Triaxial coordinate systems
@@ -4664,15 +4815,15 @@ The shortest path found by this method is unique unless:
 This material is now on its own page; see \ref jacobi.
 
 <center>
-Back to \ref geodesic.  Forward to \ref jacobi.  Up to \ref contents.
+Back to \ref nearest.  Forward to \ref jacobi.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page jacobi Jacobi's conformal projection
 
 <center>
-Back to \ref triaxial.  Forward to \ref rhumb.  Up to
-\ref contents.
+Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
 </center>
 
 In addition to solving the geodesic problem for the triaxial ellipsoid,
@@ -4682,7 +4833,7 @@ of ellipsoid.  He covers this in greater detail in
 <i>Vorlesungen &uuml;ber Dynamik</i>, &sect;28</a>, which is now
 available in an <a href="https://www.worldcat.org/oclc/440645889">
 English translation: Lectures on Dynamics</a>
-(<a href="http://geographiclib.sourceforge.net/jacobi-errata.html">
+(<a href="https://geographiclib.sourceforge.io/jacobi-errata.html">
 errata</a>).
 
 \section jacobi-conformal Conformal projection
@@ -4972,13 +5123,13 @@ code.  It is not part of GeographicLib itself.
 <center>
 Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page rhumb Rhumb lines
 
 <center>
-Back to \ref jacobi.  Forward to \ref greatellipse.  Up to
-\ref contents.
+Back to \ref jacobi.  Forward to \ref greatellipse.  Up to \ref contents.
 </center>
 
 The Rhumb and RhumbLine classes together with the
@@ -5055,30 +5206,32 @@ References:
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
    <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
-   <a href="http://geographiclib.sourceforge.net/tm.html"> tm.html</a>.
+   <a href="https://geographiclib.sourceforge.io/tm.html"> tm.html</a>.
  - C. F. F. Karney,
    <a href="https://doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
    J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
-   addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    geod-addenda.html</a>;
    resource page:
-   <a href="http://geographiclib.sourceforge.net/geod.html"> geod.html</a>.
+   <a href="https://geographiclib.sourceforge.io/geod.html"> geod.html</a>.
  - L. Kr&uuml;ger,
    <a href="https://doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
    the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
    New Series 52, 172 pp. (1912).
  - P. Osborne,
-   <a href="http://www.mercator99.webspace.virginmedia.com/">
-   The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5.
+   <a href="https://doi.org/10.5281/zenodo.35392">
+   The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5;
+   DOI: <a href="https://doi.org/10.5281/zenodo.35392">
+   10.5281/zenodo.35392</a>.
  - W. M. Smart
    <a href="https://doi.org/10.1093/mnras/106.2.124">
    On a Problem in Navigation</a>
@@ -5473,7 +5626,7 @@ desire for speed.
 \section dividedclenshaw Clenshaw evaluation of differenced sums
 
 The use of
-<a href="https://en.wikipedia.org/wiki/Clenshaw_algorithm#Geodetic_applications">
+<a href="https://en.wikipedia.org/wiki/Clenshaw_algorithm#Meridian_arc_length_on_the_ellipsoid">
 Clenshaw summation</a> for summing series of the form,
 \f[
 g(x) = \sum_{k=1}^N c_k \sin kx,
@@ -5566,16 +5719,15 @@ unchanged.  The result for the sum is
 \f]
 
 <center>
-Back to \ref jacobi.  Forward to \ref greatellipse.  Up to
-\ref contents.
+Back to \ref jacobi.  Forward to \ref greatellipse.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page greatellipse Great Ellipses
 
 <center>
-Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
-\ref contents.
+Back to \ref rhumb.  Forward to \ref transversemercator.  Up to \ref contents.
 </center>
 
 Great ellipses are sometimes proposed (Williams, 1996; Pallikaris &
@@ -5613,7 +5765,7 @@ References:
  - C. F. F. Karney,
    <a href="https://doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>, J. Geodesy 87(1), 43--55 (2013);
-   addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    geod-addenda.html</a>.
  - A. Pallikaris & G. Latsas,
    <a href="https://doi.org/1017/S0373463309005323">
@@ -5929,9 +6081,9 @@ time of closest approach, median lines, tri-points, etc.) are all
 amenable to simple and fast solutions in terms of geodesics.
 
 <center>
-Back to \ref rhumb.  Forward to \ref transversemercator.  Up to
-\ref contents.
+Back to \ref rhumb.  Forward to \ref transversemercator.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page transversemercator Transverse Mercator projection
@@ -5969,18 +6121,18 @@ References:
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
    <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
-   <a href="http://geographiclib.sourceforge.net/tm.html"> tm.html</a>.
+   <a href="https://geographiclib.sourceforge.io/tm.html"> tm.html</a>.
  .
 The algorithm for TransverseMercator is based on
 Kr&uuml;ger (1912); that for TransverseMercatorExact is
 based on Lee (1976).
 
-See <a href="http://geographiclib.sourceforge.net/tm-grid.kmz"
+See <a href="https://geographiclib.sourceforge.io/tm-grid.kmz"
 type="application/vnd.google-earth.kmz"> tm-grid.kmz</a>, for an
 illustration of the exact transverse Mercator grid in Google Earth.
 
@@ -6214,18 +6366,18 @@ This section gives color versions of the figures in
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   addenda: <a href="http://geographiclib.sourceforge.net/tm-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
    <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
-   <a href="http://geographiclib.sourceforge.net/tm.html"> tm.html</a>.
+   <a href="https://geographiclib.sourceforge.io/tm.html"> tm.html</a>.
 
 \b NOTE:
 The numbering of the figures matches that in the paper cited above.  The
 figures in this section are relatively small in order to allow them to
 be displayed quickly.  Vector versions of these figures are available in
-<a href="http://geographiclib.sourceforge.net/tm-figs.pdf"
+<a href="https://geographiclib.sourceforge.io/tm-figs.pdf"
 type="application/pdf"> tm-figs.pdf</a>.  This allows you to magnify the
 figures to show the details more clearly.
 
@@ -6313,13 +6465,13 @@ reflection symmetry on all the four sides of Fig. 3(c).
 <center>
 Back to \ref greatellipse.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page geocentric Geocentric coordinates
 
 <center>
-Back to \ref transversemercator.  Forward to \ref auxlat.  Up to
-\ref contents.
+Back to \ref transversemercator.  Forward to \ref auxlat.  Up to \ref contents.
 </center>
 
 The implementation of Geocentric::Reverse is adapted from
@@ -6429,18 +6581,21 @@ However the choice of independent variables in these methods leads
 to a loss of accuracy for points near the equatorial plane.
 
 <center>
-Back to \ref transversemercator.  Forward to \ref auxlat.  Up to
-\ref contents.
-
+Back to \ref transversemercator.  Forward to \ref auxlat.  Up to \ref contents.
 </center>
+
 **********************************************************************/
 /**
 \page auxlat Auxiliary latitudes
 
 <center>
-Back to \ref geocentric.  Forward to \ref highprec.  Up to
-\ref contents.
+Back to \ref geocentric.  Forward to \ref highprec.  Up to \ref contents.
 </center>
+
+Go to
+ - \ref auxlatformula
+ - \ref auxlattable
+ - \ref auxlaterror
 
 Six latitudes are used by GeographicLib:
 - &phi;, the (geographic) latitude;
@@ -6453,42 +6608,65 @@ Six latitudes are used by GeographicLib:
 The last five of these are called <i>auxiliary latitudes</i>.  These
 quantities are all defined in the
 <a href="https://en.wikipedia.org/wiki/Latitude#Auxiliary_latitudes">
-Wikipedia article on latitudes</a>.  (In addition there's the isometric
-latitude, &psi; = sinh<sup>&minus;1</sup>&nbsp;tan&chi;; but this is not
-an angle-like variable and we don't consider it further here.)  The
-relations between &phi;, &beta;, and &theta; are all simple elementary
-functions.  The latitudes &chi; and &xi; can be expressed as elementary
-functions of &phi;; however, these functions can only be inverted
-iteratively.  The rectifying latitude &mu; as a function of &phi; (or
-&beta;) involves the incomplete elliptic integral of the second kind
-(which is not an elementary function) and this needs to be inverted
-iteratively.  The Ellipsoid class evaluates all the auxiliary latitudes
-(and the corresponding inverse relations) in terms of their basic
-definitions.
+Wikipedia article on latitudes</a>.
+
+In addition there's the isometric latitude, &psi;, defined by &psi; =
+gd<sup>&minus;1</sup>&chi; = sinh<sup>&minus;1</sup>&nbsp;tan&chi; and
+&chi; = gd&psi; = tan<sup>&minus;1</sup>&nbsp;sinh&psi;.  This is not an
+angle-like variable (for example, it diverges at the poles) and so we
+don't treat it further here.  However conversions between &psi; and any
+of the auxiliary latitudes is easily accomplished via an intermediate
+conversion to &chi;.
+
+The relations between &phi;, &beta;, and &theta; are all simple
+elementary functions.  The latitudes &chi; and &xi; can be expressed as
+elementary functions of &phi;; however, these functions can only be
+inverted iteratively.  The rectifying latitude &mu; as a function of
+&phi; (or &beta;) involves the incomplete elliptic integral of the
+second kind (which is not an elementary function) and this needs to be
+inverted iteratively.  The Ellipsoid class evaluates all the auxiliary
+latitudes (and the corresponding inverse relations) in terms of their
+basic definitions.
 
 An alternative method of evaluating these auxiliary latitudes is in
 terms of trigonometric series.  This offers some advantages:
 - these series give a uniform way of expressing any latitude in terms of
   any other latitude;
-- the evaluation may be faster, particularly if Clenshaw summation is
-  used;
+- the evaluation may be faster, particularly if
+  <a href="https://en.wikipedia.org/wiki/Clenshaw_algorithm#Meridian_arc_length_on_the_ellipsoid">
+  Clenshaw summation</a> is used;
 - provided that the flattening is sufficiently small, the result may be
   more accurate.
 
 Here we give the complete matrix of relations between all six latitudes;
-there are 30 (=&nbsp;6&nbsp;&times;&nbsp;5) such relations.  The
-expansions are in terms of the third flattening <i>n</i> =
+there are 30 (=&nbsp;6&nbsp;&times;&nbsp;5) such relations.  These
+expansions complement the work of
+- O. S. Adams,
+  <a href="http://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no671921.pdf">
+  Latitude developments connected with geodesy and cartography</a>,
+  Spec. Pub. 67 (US Coast and Geodetic Survey, 1921).
+- P. Osborne,
+  <a href="https://dx.doi.org/10.5281/zenodo.35392">
+  The Mercator Projections</a> (2013), Chap. 5.
+- S. Orihuela,
+  <a href="https://sites.google.com/site/geodesiafich/funciones_latitud.pdf">
+  Funciones de Latitud</a> (2013).
+.
+Here, the expansions are in terms of the third flattening <i>n</i> =
 (<i>a</i>&nbsp;&minus;&nbsp;<i>b</i>)/(<i>a</i>&nbsp;+&nbsp;<i>b</i>).
-(Similar results have been obtained by Sebasti&aacute;n Orihuela,
-<a href="https://sites.google.com/site/geodesiafich/funciones_latitud.pdf">
-<i>Funciones de Latitud</i></a>, 2013.)
-This results in expansions in which half the coefficients vanish for all
-relations between &phi;, &beta;, &theta;, and &mu;.  In addition, the
-expansions converge for <i>b</i>/<i>a</i> &isin; (0,&nbsp;&infin;).
-(Some authors use the eccentricity as the expansion parameter, but the
-resulting series only converge for <i>b</i>/<i>a</i> &isin;
-(0,&nbsp;&radic;2).)  These expansions were obtained with the the maxima
-code, <a href="auxlat.mac">auxlat.mac</a>.
+This choice of expansion parameter results in expansions in which half
+the coefficients vanish for all relations between &phi;, &beta;,
+&theta;, and &mu;.  In addition, the expansions converge for
+<i>b</i>/<i>a</i> &isin; (0,&nbsp;&infin;).  These expansions were
+obtained with the the maxima code, <a href="auxlat.mac">auxlat.mac</a>.
+
+Adams (1921) uses the eccentricity squared <i>e</i><sup>2</sup> as the
+expansion parameter, but the resulting series only converge for
+<i>b</i>/<i>a</i> &isin; (0,&nbsp;&radic;2).  In addition, it is shown
+in \ref auxlaterror, that the errors when the series are truncated are
+much worse than for the corresponding series in \e n.
+
+\section auxlatformula Series approximations for conversions
 
 Here are the relations between &phi;, &beta;, &theta;, and &mu; carried
 out to 4th order in <i>n</i>:
@@ -6665,6 +6843,8 @@ to 3rd order in <i>n</i>:
 -\ldots\\
 \end{align}
 \f]
+
+\section auxlattable Series approximations in tabular form
 
 Finally, this is a listing of all the coefficients for the expansions
 carried out to 8th order in <i>n</i>.  Here's how to interpret this
@@ -6973,11 +7153,138 @@ data: the 5th line for &phi;&nbsp;&minus;&nbsp;&theta; is <tt>[32/5, 0,
 &nbsp;&nbsp;&nbsp;[-14744861191/651283132500]<br>
 </small></tt>
 
-<center>
-Back to \ref geocentric.  Forward to \ref highprec.  Up to
-\ref contents.
+\section auxlaterror Truncation errors
 
+There are two sources of error when using these series.  The truncation
+error arises from retaing terms up to a certain order in \e n; it is the
+absolute difference between the value of the truncated series compared
+with the exact latitude (evaluated with exact arithmetic).  In addition,
+using standard double-precision arithmetic entails accumulating
+round-off errors so that at the end of a complex calculation a few of
+the trailing bits of the result are wrong.
+
+Here's a table of the truncation errors.  The errors are given in "units
+in the last place (ulp)" where 1 ulp = 2<sup>&minus;53</sup> radian =
+6.4 &times; 10<sup>&minus;15</sup> degree = 2.3 &times;
+10<sup>&minus;11</sup> arcsecond which is a measure of the round-off
+error for double precision.  Here is some rough guidance on how to
+interpret these errors:
+- if the truncation error is less than 1 ulp, then round-off errors
+  dominate;
+- if the truncation error is greater than 8 ulp, then truncation errors
+  dominate;
+- otherwise, round-off and truncation errors are comparable.
+.
+The truncation errors are given accurate to 2 significant figures.
+
+<center>
+<table>
+<caption>Auxiliary latitude truncation errors (ulp)</caption>
+<tr>
+<th rowspan="2"> expression
+<th colspan="2"> [<i>f</i> = 1/150, order = 6]
+<th colspan="2"> [<i>f</i> = 1/297, order = 5]
+<tr>
+<th> <i>n</i> series <th> <i>e</i><sup>2</sup> series
+<th> <i>n</i> series <th> <i>e</i><sup>2</sup> series
+<tr><td>  &beta; &minus; &phi;   <td><tt><center> 0.0060&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.035&nbsp; </center></tt><td><tt><center> &nbsp;41&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &phi; &minus; &beta;  <td><tt><center> 0.0060&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.035&nbsp; </center></tt><td><tt><center> &nbsp;41&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td> &theta; &minus; &phi;   <td><tt><center> 2.9&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 82&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;6.0&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 120&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &phi; &minus; &theta; <td><tt><center> 2.9&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 82&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;6.0&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 120&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td> &theta; &minus; &beta;  <td><tt><center> 0.0060&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.035&nbsp; </center></tt><td><tt><center> &nbsp;41&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>  &beta; &minus; &theta; <td><tt><center> 0.0060&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.035&nbsp; </center></tt><td><tt><center> &nbsp;41&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>    &mu; &minus; &phi;   <td><tt><center> 0.037&nbsp;&nbsp; </center></tt><td><tt><center> 41&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.18&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;60&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &phi; &minus; &mu;    <td><tt><center> 0.98&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 59&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;2.3&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;84&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>    &mu; &minus; &beta;  <td><tt><center> 0.00069 </center></tt><td><tt><center> &nbsp;5.8&nbsp; </center></tt><td><tt><center> &nbsp;0.0024 </center></tt><td><tt><center> &nbsp;&nbsp;9.6&nbsp; </center></tt>
+<tr><td>  &beta; &minus; &mu;    <td><tt><center> 0.13&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 12&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.35&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;19&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>    &mu; &minus; &theta; <td><tt><center> 0.24&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 30&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.67&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;40&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td> &theta; &minus; &mu;    <td><tt><center> 0.099&nbsp;&nbsp; </center></tt><td><tt><center> 23&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.23&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;33&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &chi; &minus; &phi;   <td><tt><center> 0.78&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 43&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;2.1&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;64&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &phi; &minus; &chi;   <td><tt><center> 9.0&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 71&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 100&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &chi; &minus; &beta;  <td><tt><center> 0.018&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;3.7&nbsp; </center></tt><td><tt><center> &nbsp;0.11&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;6.4&nbsp; </center></tt>
+<tr><td>  &beta; &minus; &chi;   <td><tt><center> 1.7&nbsp;&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 16&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;3.4&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;24&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &chi; &minus; &theta; <td><tt><center> 0.18&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 31&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.56&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;43&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td> &theta; &minus; &chi;   <td><tt><center> 0.87&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 23&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;1.9&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;32&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &chi; &minus; &mu;    <td><tt><center> 0.022&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.56 </center></tt><td><tt><center> &nbsp;0.11&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;0.91 </center></tt>
+<tr><td>    &mu; &minus; &chi;   <td><tt><center> 0.31&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;1.2&nbsp; </center></tt><td><tt><center> &nbsp;0.86&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;2.0&nbsp; </center></tt>
+<tr><td>    &xi; &minus; &phi;   <td><tt><center> 0.015&nbsp;&nbsp; </center></tt><td><tt><center> 39&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.086&nbsp; </center></tt><td><tt><center> &nbsp;57&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>   &phi; &minus; &xi;    <td><tt><center> 0.34&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 53&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;1.1&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;75&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>    &xi; &minus; &beta;  <td><tt><center> 0.00042 </center></tt><td><tt><center> &nbsp;6.3&nbsp; </center></tt><td><tt><center> &nbsp;0.0039 </center></tt><td><tt><center> &nbsp;10&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>  &beta; &minus; &xi;    <td><tt><center> 0.040&nbsp;&nbsp; </center></tt><td><tt><center> 10&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.15&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;15&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>    &xi; &minus; &theta; <td><tt><center> 0.28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> 28&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.75&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;38&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td> &theta; &minus; &xi;    <td><tt><center> 0.040&nbsp;&nbsp; </center></tt><td><tt><center> 23&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.11&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;33&nbsp;&nbsp;&nbsp; </center></tt>
+<tr><td>    &xi; &minus; &mu;    <td><tt><center> 0.015&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.79 </center></tt><td><tt><center> &nbsp;0.058&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;1.5&nbsp; </center></tt>
+<tr><td>    &mu; &minus; &xi;    <td><tt><center> 0.0043&nbsp; </center></tt><td><tt><center> &nbsp;0.54 </center></tt><td><tt><center> &nbsp;0.018&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;1.1&nbsp; </center></tt>
+<tr><td>    &xi; &minus; &chi;   <td><tt><center> 0.60&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;1.9&nbsp; </center></tt><td><tt><center> &nbsp;1.5&nbsp;&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;3.6&nbsp; </center></tt>
+<tr><td>   &chi; &minus; &xi;    <td><tt><center> 0.023&nbsp;&nbsp; </center></tt><td><tt><center> &nbsp;0.53 </center></tt><td><tt><center> &nbsp;0.079&nbsp; </center></tt><td><tt><center> &nbsp;&nbsp;0.92 </center></tt>
+</table>
 </center>
+
+\if SKIP
+ 0  beta phi  ,0.0060!,28!!!,!0.035!,!41!!!
+ 1   phi beta ,0.0060!,28!!!,!0.035!,!41!!!
+ 2 theta phi  ,2.9!!!!,82!!!,!6.0!!!,120!!!
+ 3   phi theta,2.9!!!!,82!!!,!6.0!!!,120!!!
+ 4 theta beta ,0.0060!,28!!!,!0.035!,!41!!!
+ 5  beta theta,0.0060!,28!!!,!0.035!,!41!!!
+ 6    mu phi  ,0.037!!,41!!!,!0.18!!,!60!!!
+ 7   phi mu   ,0.98!!!,59!!!,!2.3!!!,!84!!!
+ 8    mu beta ,0.00069,!5.8!,!0.0024,!!9.6!
+ 9  beta mu   ,0.13!!!,12!!!,!0.35!!,!19!!!
+10    mu theta,0.24!!!,30!!!,!0.67!!,!40!!!
+11 theta mu   ,0.099!!,23!!!,!0.23!!,!33!!!
+12   chi phi  ,0.78!!!,43!!!,!2.1!!!,!64!!!
+13   phi chi  ,9.0!!!!,71!!!,17!!!!!,100!!!
+14   chi beta ,0.018!!,!3.7!,!0.11!!,!!6.4!
+15  beta chi  ,1.7!!!!,16!!!,!3.4!!!,!24!!!
+16   chi theta,0.18!!!,31!!!,!0.56!!,!43!!!
+17 theta chi  ,0.87!!!,23!!!,!1.9!!!,!32!!!
+18   chi mu   ,0.022!!,!0.56,!0.11!!,!!0.91
+19    mu chi  ,0.31!!!,!1.2!,!0.86!!,!!2.0!
+20    xi phi  ,0.015!!,39!!!,!0.086!,!57!!!
+21   phi xi   ,0.34!!!,53!!!,!1.1!!!,!75!!!
+22    xi beta ,0.00042,!6.3!,!0.0039,!10!!!
+23  beta xi   ,0.040!!,10!!!,!0.15!!,!15!!!
+24    xi theta,0.28!!!,28!!!,!0.75!!,!38!!!
+25 theta xi   ,0.040!!,23!!!,!0.11!!,!33!!!
+26    xi mu   ,0.015!!,!0.79,!0.058!,!!1.5!
+27    mu xi   ,0.0043!,!0.54,!0.018!,!!1.1!
+28    xi chi  ,0.60!!!,!1.9!,!1.5!!!,!!3.6!
+29   chi xi   ,0.023!!,!0.53,!0.079!,!!0.92
+\endif
+
+The 2nd and 3rd columns show the results for the SRMmax ellipsoid, \e f
+= 1/150, retaining 6th order terms in the series expansion.  The 4th and
+5th columns show the results for the International ellipsoid, \e f =
+1/297, retaining 5th order terms in the series expansion.  The 2nd and
+4th columns give the errors for the series expansions in terms of \e n
+given in this section (appropriately truncated).  The 3rd and 5th
+columns give the errors when the series are reexpanded in terms of
+<i>e</i><sup>2</sup> = 4\e n/(1 + \e n)<sup>2</sup> and truncated
+retaining the <i>e</i><sup>12</sup> and <i>e</i><sup>10</sup> terms
+respectively.
+
+Some observations:
+- For production use, the 6th order series in \e n are recommended.  For
+  \e f = 1/150, the resulting errors are close to the round-off limit.
+  The errors in the 6th order series scale as <i>f</i><sup>7</sup>; so
+  the errors with \e f = 1/297 are about 120 times smaller.
+- It's inadvisable to use the 5th order series in \e n; this order is
+  barely acceptable for \e f = 1/297 and the errors grow as
+  <i>f</i><sup>6</sup> as \e f is increased.
+- In all cases, the expansions in terms of <i>e</i><sup>2</sup> are
+  considerably less accurate than the corresponding series in \e n.
+- For every series converting between &phi; and any of &theta;, &mu;,
+  &chi;, or &xi;, the series where &beta; is substituted for &phi; is
+  more accurate.  Considering that the transformation between &phi; and
+  &beta; is so simple, tan&beta; = (1 - \e f) tan&phi;, it sometimes
+  makes sense to use &beta; internally as the basic measure of latitude.
+  (This is the case with geodesic calculations.)
+
+<center>
+Back to \ref geocentric.  Forward to \ref highprec.  Up to \ref contents.
+</center>
+
 **********************************************************************/
 /**
 \page highprec Support for high precision arithmetic
@@ -7246,8 +7553,8 @@ The following steps needed to be taken
 
 <center>
 Back to \ref auxlat.  Forward to \ref changes.  Up to \ref contents.
-
 </center>
+
 **********************************************************************/
 /**
 \page changes Change log
@@ -7276,50 +7583,86 @@ of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
 
- - <a href="http://geographiclib.sourceforge.net/1.47">Version 1.47</a>
-   (released 2017-02-15)
-     - Add NearestNeighbor class.
-     - Improve accuracy of area calculation (fixing a flaw introduced in
-       version 1.46); fix applied in Geodesic, GeodesicExact, and the
-       implementations in C, Fortran, Java, JavaScript, Python, MATLAB,
-       and Maxima.
-     - Generalize NormalGravity to allow oblate and prolate ellipsoids.
-       As a consequence a new form of constructor,
-       NormalGravity::NormalGravity, has been introduced and the old
-       form is now deprecated (and because the signatures of the two
-       constructors are similar, the compiler will warn about the use of
-       the old one).
-     - Changes in Math class:
-       - Math::sincosd, Math::sind, Math::cosd only return &minus;0 for
-         the case sin(&minus;0);
-       - Math::atan2d and Math::AngNormalize return results in
-         (&minus;180&deg;, 180&deg;]; this may affect the longitudes and
-         azimuth returned by several other functions.
-     - Add Utility::trim() and Utility::val<T>(); Utility::num<T>() is now
-       DEPRECATED.
-     - Changes in cmake support:
-       - remove support of PACKAGE_PATH and INSTALL_PATH in cmake
-         configuration;
-       - fix to FindGeographicLib.cmake to make it work on Debian systems;
-       - use $<TARGET_PDB_FILE:tgt> (cmake version >= 3.1);
-       - use NAMESPACE for exported targets;
-       - geographiclib-config.cmake exports GEOGRAPHICLIB_DATA,
-         GEOGRAPHICLIB_PRECISION, and GeographicLib_HIGHPREC_LIBRARIES.
-     - Add pkg-config support for cmake and autoconf builds.
-     - Minor fixes:
-       - fix the order of declarations in C library, incorporating the
-         patches in version 1.46.1;
-       - fix the packaging of the python library, incorporating the
-         patches in version 1.46.3;
-       - restrict junit dependency in the Java package to testing scope
-         (thanks to Mick Killianey);
-       - various behind-the-scenes fixes to EllipticFunction;
-       - fix documentation and default install location for Windows binary
-         installers;
-       - fix clang compiler warnings in GeodesicExactC4 and
-         TransverseMercator.
+ - <a href="https://geographiclib.sourceforge.io/1.48">Version 1.48</a>
+   (released 2017-04-09)
+   - The "official" URL for GeographicLib is now
+     https://geographiclib.sourceforge.io (instead of
+     http://geographiclib.sourceforge.net).
+   - The default range for longitude and azimuth is now
+     (&minus;180&deg;, 180&deg;], instead of [&minus;180&deg;,
+     180&deg;).  This was already the case for the C++ library; now the
+     change has been made to the other implementations (C, Fortran,
+     Java, JavaScript, Python, MATLAB, and Maxima).
+   - Changes to NearestNeighbor:
+     - fix BUG in reading a NearestNeighbor object from a stream which
+       sometimes incorrectly caused a "Bad index" exception to be
+       thrown;
+     - add NearestNeighbor::operator<<, NearestNeighbor::operator>>,
+       NearestNeighbor::swap, std::swap(GeographicLib::NearestNeighbor&,
+       GeographicLib::NearestNeighbor&);
+   - Additions to the documentation:
+     - add documentation on \ref nearest;
+     - \ref normalgravity documentation is now on its own page and now
+       has an illustrative figure;
+     - document the \ref auxlaterror in the series for auxiliary
+       latitudes.
+   - Fix BUGS in MATLAB function geodreckon with mixed scalar and array
+     arguments.
+   - Workaround bug in math.fmod for Python 2.7 on 32-bit Windows
+     machines.
+   - Changes in cmake support:
+     - add USE_BOOST_FOR_EXAMPLES option (default OFF), if ON search for
+       Boost libraries for building examples;
+     - add APPLE_MULTIPLE_ARCHITECTURES option (default OFF), if ON
+       build for both i386 and x86_64 on Mac OS X systems;
+     - don't add flag for C++11 for g++ 6.0 (since it's not needed).
+   - Fix compiler warnings with Visual Studio 2017 and for the C
+     library.
 
- - <a href="http://geographiclib.sourceforge.net/1.46">Version 1.46</a>
+ - <a href="https://geographiclib.sourceforge.io/1.47">Version 1.47</a>
+   (released 2017-02-15)
+   - Add NearestNeighbor class.
+   - Improve accuracy of area calculation (fixing a flaw introduced in
+     version 1.46); fix applied in Geodesic, GeodesicExact, and the
+     implementations in C, Fortran, Java, JavaScript, Python, MATLAB,
+     and Maxima.
+   - Generalize NormalGravity to allow oblate and prolate ellipsoids.
+     As a consequence a new form of constructor,
+     NormalGravity::NormalGravity, has been introduced and the old
+     form is now <b>deprecated</b> (and because the signatures of the two
+     constructors are similar, the compiler will warn about the use of
+     the old one).
+   - Changes in Math class:
+     - Math::sincosd, Math::sind, Math::cosd only return &minus;0 for
+       the case sin(&minus;0);
+     - Math::atan2d and Math::AngNormalize return results in
+       (&minus;180&deg;, 180&deg;]; this may affect the longitudes and
+       azimuth returned by several other functions.
+   - Add Utility::trim() and Utility::val<T>(); Utility::num<T>() is now
+     <b>deprecated</b>.
+   - Changes in cmake support:
+     - remove support of PACKAGE_PATH and INSTALL_PATH in cmake
+       configuration;
+     - fix to FindGeographicLib.cmake to make it work on Debian systems;
+     - use $<TARGET_PDB_FILE:tgt> (cmake version &ge; 3.1);
+     - use NAMESPACE for exported targets;
+     - geographiclib-config.cmake exports GEOGRAPHICLIB_DATA,
+       GEOGRAPHICLIB_PRECISION, and GeographicLib_HIGHPREC_LIBRARIES.
+   - Add pkg-config support for cmake and autoconf builds.
+   - Minor fixes:
+     - fix the order of declarations in C library, incorporating the
+       patches in version 1.46.1;
+     - fix the packaging of the Python library, incorporating the
+       patches in version 1.46.3;
+     - restrict junit dependency in the Java package to testing scope
+       (thanks to Mick Killianey);
+     - various behind-the-scenes fixes to EllipticFunction;
+     - fix documentation and default install location for Windows binary
+       installers;
+     - fix clang compiler warnings in GeodesicExactC4 and
+       TransverseMercator.
+
+ - <a href="https://geographiclib.sourceforge.io/1.46">Version 1.46</a>
    (released 2016-02-15)
    - The following BUGS have been fixed:
      - the -w flag to <a href="Planimeter.1.html">Planimeter(1)</a> was
@@ -7383,8 +7726,8 @@ git repository for GeographicLib</a>.
      - the -I and -D options now specify geodesic line calculation via
        the standard inverse or direct geodesic problems;
      - rename -l flag to -L to parallel the new -I and -D flags (-l is
-       is retained for backward compatibility but is deprecated), and
-       similarly for <a href="GeodSolve.1.html">RhumbSolve(1)</a>;
+       is retained for backward compatibility but is <b>deprecated</b>),
+       and similarly for <a href="GeodSolve.1.html">RhumbSolve(1)</a>;
      - the -F flag (in conjunction with the -I or -D flags) specifies that
        distances read on standard input are fractions of \e s13 or \e
        a13;
@@ -7412,7 +7755,7 @@ git repository for GeographicLib</a>.
      - Windows: ${CMAKE_INSTALL_PREFIX}/doc/scripts
      - Others: ${CMAKE_INSTALL_PREFIX}/share/doc/GeographicLib/scripts
 
- - <a href="http://geographiclib.sourceforge.net/1.45">Version 1.45</a>
+ - <a href="https://geographiclib.sourceforge.io/1.45">Version 1.45</a>
    (released 2015-09-30)
    - Fix BUG in solution of inverse geodesic caused by misbehavior of
      some versions of Visual Studio on Windows (fmod(&minus;0.0, 360.0)
@@ -7468,7 +7811,7 @@ git repository for GeographicLib</a>.
      - turn illegal latitudes into NaNs for Fortran library;
      - add test suites for the C and Fortran libraries.
 
- - <a href="http://geographiclib.sourceforge.net/1.44">Version 1.44</a>
+ - <a href="https://geographiclib.sourceforge.io/1.44">Version 1.44</a>
    (released 2015-08-14)
    - Various changes to improve accuracy, e.g., by minimizing round-off
      errors:
@@ -7526,7 +7869,7 @@ git repository for GeographicLib</a>.
        geographic coordinates;
      - document limitations of the series used for TransverseMercator;
      - hide the documentation of the computation of the gradient of the
-       geoid height (now deprecated) in the Geoid class;
+       geoid height (now <b>deprecated</b>) in the Geoid class;
      - warn about the possible misinterpretation of 7.0E+1 by
        DMS::Decode;
      - \e swaplatlong optional argument of DMS::DecodeLatLon and
@@ -7542,7 +7885,7 @@ git repository for GeographicLib</a>.
        - <a href="../scripts/geod-calc.html">geod-calc.html</a> and
          <a href="../scripts/geod-google.html">geod-google.html</a>
          report the version number;
-       - http://geographiclib.sourceforge.net/scripts/ gives access to
+       - https://geographiclib.sourceforge.io/scripts/ gives access to
          earlier versions of geographiclib.js as
          geographiclib-<i>m.nn</i>.js;
      - Fortran: add geover subroutine to return version numbers;
@@ -7566,7 +7909,7 @@ git repository for GeographicLib</a>.
    - Geohash uses "invalid" instead of "nan" when the latitude or
      longitude is a nan.
 
- - <a href="http://geographiclib.sourceforge.net/1.43">Version 1.43</a>
+ - <a href="https://geographiclib.sourceforge.io/1.43">Version 1.43</a>
    (released 2015-05-23)
    - Add the Enhanced Magnetic Model 2015, emm2015.  This is valid for
      2000 thru the end of 2019.  This required some changes in the
@@ -7599,7 +7942,7 @@ git repository for GeographicLib</a>.
        similarly sets <code>lon1</code> and <code>lon2</code> in output
        dictionary respecting the LONG_UNROLL flag.
      - The online version of
-       <a href="http://geographiclib.sourceforge.net/cgi-bin/GeodSolve">GeodSolve</a>
+       <a href="https://geographiclib.sourceforge.io/cgi-bin/GeodSolve">GeodSolve</a>
        now offers an option to unroll the longitude.
      - To support these changes DMS::DecodeLatLon no longer reduces the
        longitude to the range [&minus;180&deg;, 180&deg;) and
@@ -7632,7 +7975,7 @@ git repository for GeographicLib</a>.
      - ${CMAKE_INSTALL_PREFIX}/share/cmake/GeographicLib*
      - ${CMAKE_INSTALL_PREFIX}/libexec/GeographicLib/matlab
 
- - <a href="http://geographiclib.sourceforge.net/1.42">Version 1.42</a>
+ - <a href="https://geographiclib.sourceforge.io/1.42">Version 1.42</a>
    (released 2015-04-28)
    - DMS::Decode allows a single addition or subtraction operation,
      e.g., 70W+0:0:15.  This affects the GeoCoords class and the
@@ -7649,7 +7992,7 @@ git repository for GeographicLib</a>.
    - MATLAB changes:
      - provide native MATLAB implementations for compiled interface
        functions, see \ref matlab;
-     - the compiled MATLAB interface is now deprecated and so the
+     - the compiled MATLAB interface is now <b>deprecated</b> and so the
        MATLAB_COMPILER option in the cmake build has been removed;
      - reorganize directories, so that
        - matlab/geographiclib contains the native matlab code;
@@ -7674,12 +8017,12 @@ git repository for GeographicLib</a>.
      in versions 1.40 and 1.41).
    - Mark the computation of the gradient of the geoid height in the
      Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a>
-     utility as deprecated.
+     utility as <b>deprecated</b>.
    - Work around the boost-quadmath bug with setprecision(0).
    - Deprecate use of Visual Studio 2005 "-vc8" project files in the
      windows directory.
 
- - <a href="http://geographiclib.sourceforge.net/1.41">Version 1.41</a>
+ - <a href="https://geographiclib.sourceforge.io/1.41">Version 1.41</a>
    (released 2015-03-09)
    - Fix bug in Rhumb::Inverse (with \e exact = true) and related
      functions which causes the wrong distance to be reported if one of
@@ -7691,7 +8034,7 @@ git repository for GeographicLib</a>.
    - Split information about \ref jacobi to a separate section and
      include more material.
 
- - <a href="http://geographiclib.sourceforge.net/1.40">Version 1.40</a>
+ - <a href="https://geographiclib.sourceforge.io/1.40">Version 1.40</a>
    (released 2014-12-18)
    - Add the World Magnetic Model 2015, wmm2015.  This is now the
      default magnetic model for
@@ -7711,7 +8054,7 @@ git repository for GeographicLib</a>.
    - Default constructor for GeoCoords corresponds to an undefined
      position (latitude and longitude = NaN), instead of the north pole.
    - Add an online version of <a href="RhumbSolve.1.html">RhumbSolve</a>
-     at http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve.
+     at https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve.
    - Additions to the documentation:
      - documentation on \ref triaxial-conformal;
      - a page on \ref auxlat (actually, this was added in version 1.39);
@@ -7720,7 +8063,7 @@ git repository for GeographicLib</a>.
    - The MATLAB function, geographiclibinterface, which compiles the
      wrapper routines for MATLAB now works with MATLAB on a Mac.
 
- - <a href="http://geographiclib.sourceforge.net/1.39">Version 1.39</a>
+ - <a href="https://geographiclib.sourceforge.io/1.39">Version 1.39</a>
    (released 2014-11-11)
    - GeographicLib usually normalizes longitudes to the range
      [&minus;180&deg;, 180&deg;).  However, when solving the direct
@@ -7772,7 +8115,7 @@ git repository for GeographicLib</a>.
      <a href="MagneticField.1.html">MagneticField</a> utility accepts
      the string "now" as a legal time (meaning today).
 
- - <a href="http://geographiclib.sourceforge.net/1.38">Version 1.38</a>
+ - <a href="https://geographiclib.sourceforge.io/1.38">Version 1.38</a>
    (released 2014-10-02)
    - On MacOSX, the installed package is relocatable (for cmake version
      2.8.12 and later).
@@ -7786,7 +8129,7 @@ git repository for GeographicLib</a>.
      greatellipse.
    - Provide man pages for geographiclib-get-{geoids,gravity,magnetic}.
 
- - <a href="http://geographiclib.sourceforge.net/1.37">Version 1.37</a>
+ - <a href="https://geographiclib.sourceforge.io/1.37">Version 1.37</a>
    (released 2014-08-08)
    - Add \ref highprec.
    - <b>INCOMPATIBLE CHANGE</b>: the static instantiations of various
@@ -7863,7 +8206,7 @@ git repository for GeographicLib</a>.
        <code>GEOGRAPHICLIB_VERSION_NUM</code>;
      - add solution and project files for Visual Studio Express 2010.
 
- - <a href="http://geographiclib.sourceforge.net/1.36">Version 1.36</a>
+ - <a href="https://geographiclib.sourceforge.io/1.36">Version 1.36</a>
    (released 2014-05-13)
    - Changes to comply with NGA's prohibition of the use of the
      upper-case letters N/S to designate the hemisphere when displaying
@@ -7901,7 +8244,7 @@ git repository for GeographicLib</a>.
    - Add missing std:: qualifications to copy in LocalCartesion and
      Geocentric headers (bug found by Clemens).
 
- - <a href="http://geographiclib.sourceforge.net/1.35">Version 1.35</a>
+ - <a href="https://geographiclib.sourceforge.io/1.35">Version 1.35</a>
    (released 2014-03-13)
    - Fix blunder in UTMUPS::EncodeEPSG (found by Ben
      Adler).
@@ -7921,7 +8264,7 @@ git repository for GeographicLib</a>.
      - this release includes a file, pom.xml, which is used by an
        experimental build system (based on maven) at SRI.
 
- - <a href="http://geographiclib.sourceforge.net/1.34">Version 1.34</a>
+ - <a href="https://geographiclib.sourceforge.io/1.34">Version 1.34</a>
    (released 2013-12-11)
    - Many changes in cmake support:
      - minimum version of cmake needed increased to 2.8.4 (which was
@@ -7955,7 +8298,7 @@ git repository for GeographicLib</a>.
      with <a href="GeodSolve.1.html">GeodSolve</a> (introduced in
      version 1.30).
 
- - <a href="http://geographiclib.sourceforge.net/1.33">Version 1.33</a>
+ - <a href="https://geographiclib.sourceforge.io/1.33">Version 1.33</a>
    (released 2013-10-08)
    - Add <a href="NET/index.html">NETGeographic .NET wrapper library</a>
      (courtesy of Scott Heiman).
@@ -7965,13 +8308,13 @@ git repository for GeographicLib</a>.
      is first called.
    - Fix bug in autoconf builds under MacOS.
 
- - <a href="http://geographiclib.sourceforge.net/1.32">Version 1.32</a>
+ - <a href="https://geographiclib.sourceforge.io/1.32">Version 1.32</a>
    (released 2013-07-12)
    - Generalize C interface for polygon areas to allow vertices to be
      specified incrementally.
    - Fix way flags for C++11 support are determined.
 
- - <a href="http://geographiclib.sourceforge.net/1.31">Version 1.31</a>
+ - <a href="https://geographiclib.sourceforge.io/1.31">Version 1.31</a>
    (released 2013-07-01)
    - Changes breaking binary compatibility (source compatibility is
      maintained):
@@ -8021,7 +8364,7 @@ git repository for GeographicLib</a>.
    - Fixes to the way the MATLAB interface routines are built (thanks to
      Phil Miller and Chris F.).
 
- - <a href="http://geographiclib.sourceforge.net/1.30">Version 1.30</a>
+ - <a href="https://geographiclib.sourceforge.io/1.30">Version 1.30</a>
    (released 2013-02-27)
    - Changes to geodesic routines:
      - FIX BUG in fail-safe mechanisms in Geodesic::Inverse;
@@ -8030,13 +8373,13 @@ git repository for GeographicLib</a>.
      - allow addition of polygon edges in PolygonArea;
      - add full Maxima implementation of geodesic algorithms.
 
- - <a href="http://geographiclib.sourceforge.net/1.29">Version 1.29</a>
+ - <a href="https://geographiclib.sourceforge.io/1.29">Version 1.29</a>
    (released 2013-01-16)
    - Changes to allow compilation with libc++ (courtesy of Kal Conley).
    - Add description of \ref triaxial to documentation.
    - Update journal reference for "Algorithms for geodesics".
 
- - <a href="http://geographiclib.sourceforge.net/1.28">Version 1.28</a>
+ - <a href="https://geographiclib.sourceforge.io/1.28">Version 1.28</a>
    (released 2012-12-11)
    - Changes to geodesic routines:
      - compute longitude difference exactly;
@@ -8049,7 +8392,7 @@ git repository for GeographicLib</a>.
      - include polygon area routine in C and Fortran implementations;
      - add doxygen documentation for C and Fortran libraries.
 
- - <a href="http://geographiclib.sourceforge.net/1.27">Version 1.27</a>
+ - <a href="https://geographiclib.sourceforge.io/1.27">Version 1.27</a>
    (released 2012-11-29)
    - Changes to geodesic routines:
      - add native MATLAB implementations: geoddistance.m, geodreckon.m,
@@ -8065,13 +8408,13 @@ git repository for GeographicLib</a>.
    - On MacOSX platforms with the cmake configuration, universal
      binaries are built.
 
- - <a href="http://geographiclib.sourceforge.net/1.26">Version 1.26</a>
+ - <a href="https://geographiclib.sourceforge.io/1.26">Version 1.26</a>
    (released 2012-10-22)
    - Replace the series used for geodesic areas by one with better
      convergence (this only makes an appreciable difference if
      |<i>f</i>| &gt; 1/150).
 
- - <a href="http://geographiclib.sourceforge.net/1.25">Version 1.25</a>
+ - <a href="https://geographiclib.sourceforge.io/1.25">Version 1.25</a>
    (released 2012-10-16)
    - Changes to geodesic calculations:
      - restart Newton's method in Geodesic::Inverse when it goes awry;
@@ -8098,7 +8441,7 @@ git repository for GeographicLib</a>.
        vulnerability; see
        http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-3386
 
- - <a href="http://geographiclib.sourceforge.net/1.24">Version 1.24</a>
+ - <a href="https://geographiclib.sourceforge.io/1.24">Version 1.24</a>
    (released 2012-09-22)
    - Allow the specification of the hemisphere in UTM coordinates in
      order to provide continuity across the equator:
@@ -8116,7 +8459,7 @@ git repository for GeographicLib</a>.
    - Document restrictions on \e f in \ref intro.
    - Fix Python interface to work with version 2.6.x.
 
- - <a href="http://geographiclib.sourceforge.net/1.23">Version 1.23</a>
+ - <a href="https://geographiclib.sourceforge.io/1.23">Version 1.23</a>
    (released 2012-07-17)
    - Documentation changes:
      - remove html documentation from distribution and use web links if
@@ -8139,7 +8482,7 @@ git repository for GeographicLib</a>.
      (incorrect results were returned if the tangent latitude was
      negative).
 
- - <a href="http://geographiclib.sourceforge.net/1.22">Version 1.22</a>
+ - <a href="https://geographiclib.sourceforge.io/1.22">Version 1.22</a>
    (released 2012-05-27)
    - Add Geohash and Ellipsoid classes.
    - FIX BUG in AlbersEqualArea for very prolate
@@ -8157,7 +8500,7 @@ git repository for GeographicLib</a>.
        CMAKE_INSTALL_PREFIX;
      - add a cmake configuration for build tree.
 
- - <a href="http://geographiclib.sourceforge.net/1.21">Version 1.21</a>
+ - <a href="https://geographiclib.sourceforge.io/1.21">Version 1.21</a>
    (released 2012-04-25)
    - Support colon-separated DMS output:
      - DMS::Encode and
@@ -8176,7 +8519,7 @@ git repository for GeographicLib</a>.
      - allow the MATLAB compiler to be specified with the
        MATLAB_COMPILER option.
 
- - <a href="http://geographiclib.sourceforge.net/1.20">Version 1.20</a>
+ - <a href="https://geographiclib.sourceforge.io/1.20">Version 1.20</a>
    (released 2012-03-23)
    - cmake tweaks:
      - improve find_package's matching of compiler versions;
@@ -8187,7 +8530,7 @@ git repository for GeographicLib</a>.
      checking by Visual Studio.
    - Fix transcription BUG is Geodesic.js.
 
- - <a href="http://geographiclib.sourceforge.net/1.19">Version 1.19</a>
+ - <a href="https://geographiclib.sourceforge.io/1.19">Version 1.19</a>
    (released 2012-03-13)
    - Slight improvement in Geodesic::Inverse for very
      short lines.
@@ -8197,14 +8540,14 @@ git repository for GeographicLib</a>.
    - Add installer for 64-bit Windows; the compiled MATLAB interface is
      supplied with the Windows 64-bit installer only.
 
- - <a href="http://geographiclib.sourceforge.net/1.18">Version 1.18</a>
+ - <a href="https://geographiclib.sourceforge.io/1.18">Version 1.18</a>
    (released 2012-02-18)
    - Improve documentation on configuration with cmake.
    - cmake's find_package ensures that the compiler versions match on Windows.
    - Improve documentation on compiling MATLAB interface.
    - Binary installer for Windows installs under C:/pkg-vc10 by default.
 
- - <a href="http://geographiclib.sourceforge.net/1.17">Version 1.17</a>
+ - <a href="https://geographiclib.sourceforge.io/1.17">Version 1.17</a>
    (released 2012-01-21)
    - Work around optimization BUG in Geodesic::Inverse
      with g++ version 4.4.0 (mingw).
@@ -8213,7 +8556,7 @@ git repository for GeographicLib</a>.
    - Add simple examples of usage for each class.
    - Add internal documentation to the cmake configuration files.
 
- - <a href="http://geographiclib.sourceforge.net/1.16">Version 1.16</a>
+ - <a href="https://geographiclib.sourceforge.io/1.16">Version 1.16</a>
    (released 2011-12-07)
    - Add calculation of the earth's gravitational field:
      - add NormalGravity GravityModel and
@@ -8247,7 +8590,7 @@ git repository for GeographicLib</a>.
      - default height to zero in
        <a href="MagneticField.1.html">MagneticField</a>.
 
- - <a href="http://geographiclib.sourceforge.net/1.15">Version 1.15</a>
+ - <a href="https://geographiclib.sourceforge.io/1.15">Version 1.15</a>
    (released 2011-11-08)
    - Add calculation of the earth's magnetic field:
      - add MagneticModel and MagneticCircle
@@ -8270,7 +8613,7 @@ git repository for GeographicLib</a>.
      install setup.py for non-Windows systems.
    - Include Doxygen tag file in distribution as doc/html/Geographic.tag.
 
- - <a href="http://geographiclib.sourceforge.net/1.14">Version 1.14</a>
+ - <a href="https://geographiclib.sourceforge.io/1.14">Version 1.14</a>
    (released 2011-09-30)
    - Ensure that geographiclib-config.cmake is relocatable.
    - Allow more unicode symbols to be used in DMS::Decode.
@@ -8285,7 +8628,7 @@ git repository for GeographicLib</a>.
    - Supply a minimal Qt qmake project file for library
      src/Geographic.pro.
 
- - <a href="http://geographiclib.sourceforge.net/1.13">Version 1.13</a>
+ - <a href="https://geographiclib.sourceforge.io/1.13">Version 1.13</a>
    (released 2011-08-13)
    - Changes to I/O:
      - allow : (colon) to be used as a DMS separator in
@@ -8314,7 +8657,7 @@ git repository for GeographicLib</a>.
        geographiclib-config.cmake;
      - better support for building a shared library under Windows.
 
- - <a href="http://geographiclib.sourceforge.net/1.12">Version 1.12</a>
+ - <a href="https://geographiclib.sourceforge.io/1.12">Version 1.12</a>
    (released 2011-07-21)
    - Change license to MIT/X11.
    - Add PolygonArea class and equivalent MATLAB function.
@@ -8326,7 +8669,7 @@ git repository for GeographicLib</a>.
    - A couple of code changes to enable compilation with Visual
      Studio 2003.
 
- - <a href="http://geographiclib.sourceforge.net/1.11">Version 1.11</a>
+ - <a href="https://geographiclib.sourceforge.io/1.11">Version 1.11</a>
    (released 2011-06-27)
    - Changes to <a href="Planimeter.1.html">Planimeter</a>:
      - add -l flag to <a href="Planimeter.1.html">Planimeter</a> for polyline
@@ -8353,7 +8696,7 @@ git repository for GeographicLib</a>.
      - InverseFlattening() has been deprecated (and now returns inf for a
        sphere, instead of 0).
 
- - <a href="http://geographiclib.sourceforge.net/1.10">Version 1.10</a>
+ - <a href="https://geographiclib.sourceforge.io/1.10">Version 1.10</a>
    (released 2011-06-11)
    - Improvements to MATLAB/Octave interface:
      - add {geocentric,localcartesian}{forward,reverse};
@@ -8366,7 +8709,7 @@ git repository for GeographicLib</a>.
      - cmake installed in man/man1 instead of share/man/man1;
      - cmake did not set the rpath on the tools.
 
- - <a href="http://geographiclib.sourceforge.net/1.9">Version 1.9</a>
+ - <a href="https://geographiclib.sourceforge.io/1.9">Version 1.9</a>
    (released 2011-05-28)
    - FIX BUG in area returned by
      <a href="Planimeter.1.html">Planimeter</a> for pole encircling polygons.
@@ -8392,11 +8735,9 @@ git repository for GeographicLib</a>.
    - Add <a href="ConicProj.1.html"> ConicProj</a>.
    - Reverse the initial sense of the -s option for
      <a href="Planimeter.1.html"> Planimeter</a>.
-   - Migrate source from subversion to
-     <a href="http://geographiclib.git.sourceforge.net/git/gitweb-index.cgi">
-     git</a>.
+   - Migrate source from subversion to git.
 
- - <a href="http://geographiclib.sourceforge.net/1.8">Version 1.8</a>
+ - <a href="https://geographiclib.sourceforge.io/1.8">Version 1.8</a>
    (released 2011-02-22)
    - Optionally return rotation matrix from Geocentric and
      LocalCartesian.
@@ -8416,7 +8757,7 @@ git repository for GeographicLib</a>.
    - Remove documentation that duplicates papers on transverse Mercator
      and geodesics.
 
- - <a href="http://geographiclib.sourceforge.net/1.7">Version 1.7</a>
+ - <a href="https://geographiclib.sourceforge.io/1.7">Version 1.7</a>
    (released 2010-12-21)
    - FIX BUG in scale returned by LambertConformalConic::Reverse.
    - Add AlbersEqualArea projection.
@@ -8427,12 +8768,12 @@ git repository for GeographicLib</a>.
    - Add solution/project files for Visual Studio 2010 (32-bit only).
    - Use C++11 static_assert and math functions, if available.
 
- - <a href="http://geographiclib.sourceforge.net/1.6">Version 1.6</a>
+ - <a href="https://geographiclib.sourceforge.io/1.6">Version 1.6</a>
    (released 2010-11-23)
    - FIX BUG introduced in Geoid in version 1.5 (found by
      Dave Edwards).
 
- - <a href="http://geographiclib.sourceforge.net/1.5">Version 1.5</a>
+ - <a href="https://geographiclib.sourceforge.io/1.5">Version 1.5</a>
    (released 2010-11-19)
    - Improve area calculations for small polygons.
    - Add -s and -r flags to <a href="Planimeter.1.html">Planimeter</a>.
@@ -8458,7 +8799,7 @@ git repository for GeographicLib</a>.
      - fixes to compile under cygwin;
      - tweak expression used to find latitude from conformal latitude.
 
- - <a href="http://geographiclib.sourceforge.net/1.4">Version 1.4</a>
+ - <a href="https://geographiclib.sourceforge.io/1.4">Version 1.4</a>
    (released 2010-09-12)
    - Changes to Geodesic and GeodesicLine:
      - FIX BUG in Geodesic::Inverse with prolate ellipsoids;
@@ -8489,7 +8830,7 @@ git repository for GeographicLib</a>.
      classes which don't return the convergence (or azimuth) and scale.
    - Document function parameters and return values consistently.
 
- - <a href="http://geographiclib.sourceforge.net/1.3">Version 1.3</a>
+ - <a href="https://geographiclib.sourceforge.io/1.3">Version 1.3</a>
    (released 2010-07-21)
    - Add Gnomonic, the ellipsoid generalization of the
      gnomonic projection.
@@ -8509,7 +8850,7 @@ git repository for GeographicLib</a>.
    - Update references to Geotrans in MGRS documentation.
    - Speed up tmseries.mac.
 
- - <a href="http://geographiclib.sourceforge.net/1.2">Version 1.2</a>
+ - <a href="https://geographiclib.sourceforge.io/1.2">Version 1.2</a>
    (released 2010-05-21)
    - FIX BUGS in Geodesic,
      - wrong azimuth returned by Direct if point 2 is on a pole;
@@ -8541,7 +8882,7 @@ git repository for GeographicLib</a>.
      - <a href="CartConvert.1.html">CartConvert</a> allows the ellipsoid
        to be specified with -e.
 
- - <a href="http://geographiclib.sourceforge.net/1.1">Version 1.1</a>
+ - <a href="https://geographiclib.sourceforge.io/1.1">Version 1.1</a>
    (released 2010-02-09)
    - FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).
    - Increase accuracy of scale calculation in TransverseMercator and
@@ -8549,7 +8890,7 @@ git repository for GeographicLib</a>.
    - Code and documentation changes for consistency with
      <a  href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>
 
- - <a href="http://geographiclib.sourceforge.net/1.0">Version 1.0</a>
+ - <a href="https://geographiclib.sourceforge.io/1.0">Version 1.0</a>
    (released 2010-01-07)
    - Add autoconf configuration files.
    - BUG FIX: Improve initial guess for Newton's method in
@@ -8573,7 +8914,7 @@ git repository for GeographicLib</a>.
        cached area without disk reads;
      - Add inspector functions to query the extent of the cache.
 
- - <a href="http://geographiclib.sourceforge.net/2009-11">Version 2009-11</a>
+ - <a href="https://geographiclib.sourceforge.io/2009-11">Version 2009-11</a>
    (released 2009-11-03)
    - Allow specification of "closest UTM zone" in UTMUPS
      and <a href="GeoConvert.1.html">GeoConvert</a> (via -t option).
@@ -8588,9 +8929,9 @@ git repository for GeographicLib</a>.
      - Improve accuracy of inverse hyperbolic functions.
      - Fix the way Math functions handle different precisions.
 
- - <a href="http://geographiclib.sourceforge.net/2009-10">Version 2009-10</a>
+ - <a href="https://geographiclib.sourceforge.io/2009-10">Version 2009-10</a>
    (released 2009-10-18)
-  - Change web site to http://geographiclib.sourceforge.net
+  - Change web site to https://geographiclib.sourceforge.io
   - Several house-cleaning changes:
     - Change from the a flat directory structure to a more easily
       maintained one.
@@ -8610,12 +8951,12 @@ git repository for GeographicLib</a>.
       northings.
     - Add 64-bit targets in Visual Studio project files.
 
- - <a href="http://geographiclib.sourceforge.net/2009-09">Version 2009-09</a>
+ - <a href="https://geographiclib.sourceforge.io/2009-09">Version 2009-09</a>
    (released 2009-09-01)
    - Add Geoid and
      <a href="GeoidEval.1.html">GeoidEval</a> utility.
 
- - <a href="http://geographiclib.sourceforge.net/2009-08">Version 2009-08</a>
+ - <a href="https://geographiclib.sourceforge.io/2009-08">Version 2009-08</a>
    (released 2009-08-14)
    - Add CassiniSoldner class and
      <a href="GeodesicProj.1.html">EquidistantTest</a> utility.
@@ -8625,17 +8966,17 @@ git repository for GeographicLib</a>.
      of the azimuthal scale instead of the reduced length.
    - Add -n option to <a href="GeoConvert.1.html">GeoConvert</a>.
 
- - <a href="http://geographiclib.sourceforge.net/2009-07">Version 2009-07</a>
+ - <a href="https://geographiclib.sourceforge.io/2009-07">Version 2009-07</a>
    (released 2009-07-16)
    - Speed up the series inversion code in tmseries.mac and geod.mac.
    - Reference Borkowski in section on \ref geocentric.
 
- - <a href="http://geographiclib.sourceforge.net/2009-06">Version 2009-06</a>
+ - <a href="https://geographiclib.sourceforge.io/2009-06">Version 2009-06</a>
    (released 2009-06-01)
    - Add routines to decode and encode zone+hemisphere to UTMUPS.
    - Clean up code in Geodesic.
 
- - <a href="http://geographiclib.sourceforge.net/2009-05">Version 2009-05</a>
+ - <a href="https://geographiclib.sourceforge.io/2009-05">Version 2009-05</a>
    (released 2009-05-01)
    - Improvements to Geodesic:
      - more economical series expansions,
@@ -8651,7 +8992,7 @@ git repository for GeographicLib</a>.
      carefully.
    - Remove reference to defunct Constants.cpp from GeographicLib.vcproj.
 
- - <a href="http://geographiclib.sourceforge.net/2009-04">Version 2009-04</a>
+ - <a href="https://geographiclib.sourceforge.io/2009-04">Version 2009-04</a>
    (released 2009-04-01)
    - Use compile-time constants to select the order of series in
      TransverseMercator.
@@ -8669,7 +9010,7 @@ git repository for GeographicLib</a>.
      - add -a, -e, -b options to the <a href="GeodSolve.1.html">Geod</a>
        utility.
 
- - <a href="http://geographiclib.sourceforge.net/2009-03">Version 2009-03</a>
+ - <a href="https://geographiclib.sourceforge.io/2009-03">Version 2009-03</a>
    (released 2009-03-01)
    - Add Geodesic and the
      <a href="GeodSolve.1.html">Geod</a> utility.
@@ -8681,7 +9022,7 @@ git repository for GeographicLib</a>.
      to <a href="CartConvert.1.html">CartConvert</a>.
    - Use inline functions to define constant doubles in Constants.hpp.
 
- - <a href="http://geographiclib.sourceforge.net/2009-02">Version 2009-02</a>
+ - <a href="https://geographiclib.sourceforge.io/2009-02">Version 2009-02</a>
    (released 2009-01-30)
    - Fix documentation of constructors (flattening &rarr; inverse
      flattening).
@@ -8690,7 +9031,7 @@ git repository for GeographicLib</a>.
      and the ECEFConvert utility.
    - Gather the documentation on the \ref utilities onto one page.
 
- - <a href="http://geographiclib.sourceforge.net/2009-01">Version 2009-01</a>
+ - <a href="https://geographiclib.sourceforge.io/2009-01">Version 2009-01</a>
    (released 2009-01-12)
    - First proper release of library.
    - More robust TransverseMercatorExact:

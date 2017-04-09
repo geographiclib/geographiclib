@@ -3,9 +3,9 @@
  * Transcription of Math.hpp, Constants.hpp, and Accumulator.hpp into
  * JavaScript.
  *
- * Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  */
 
 /**
@@ -65,12 +65,12 @@ GeographicLib.Accumulator = {};
    * @property {number} minor the minor version number.
    * @property {number} patch the patch number.
    */
-  c.version = { major: 1, minor: 47, patch: 0 };
+  c.version = { major: 1, minor: 48, patch: 0 };
   /**
    * @constant
    * @summary version string
    */
-  c.version_string = "1.47";
+  c.version_string = "1.48";
 })(GeographicLib.Constants);
 
 (function(
@@ -221,13 +221,13 @@ GeographicLib.Accumulator = {};
   /**
    * @summary Normalize an angle.
    * @param {number} x the angle in degrees.
-   * @returns {number} the angle reduced to the range [&minus;180&deg;,
-   *   180&deg;).
+   * @returns {number} the angle reduced to the range (&minus;180&deg;,
+   *   180&deg;].
    */
   m.AngNormalize = function(x) {
     // Place angle in [-180, 180).
     x = x % 360;
-    return x < -180 ? x + 360 : (x < 180 ? x : x - 360);
+    return x <= -180 ? x + 360 : (x <= 180 ? x : x - 360);
   };
 
   /**
@@ -254,10 +254,10 @@ GeographicLib.Accumulator = {};
    */
   m.AngDiff = function(x, y) {
     // Compute y - x and reduce to [-180,180] accurately.
-    var r = m.sum(m.AngNormalize(x), m.AngNormalize(-y)),
-        d = -m.AngNormalize(r.s),
+    var r = m.sum(m.AngNormalize(-x), m.AngNormalize(y)),
+        d = m.AngNormalize(r.s),
         t = r.t;
-    return m.sum(d === 180 && t < 0 ? -180 : d, -t);
+    return m.sum(d === 180 && t > 0 ? -180 : d, t);
   };
 
   /**
@@ -278,11 +278,12 @@ GeographicLib.Accumulator = {};
     // Possibly could call the gnu extension sincos
     s = Math.sin(r); c = Math.cos(r);
     switch (q & 3) {
-      case 0:  sinx =     s; cosx =     c; break;
-      case 1:  sinx =     c; cosx = 0 - s; break;
-      case 2:  sinx = 0 - s; cosx = 0 - c; break;
-      default: sinx = 0 - c; cosx =     s; break; // case 3
+      case 0:  sinx =  s; cosx =  c; break;
+      case 1:  sinx =  c; cosx = -s; break;
+      case 2:  sinx = -s; cosx = -c; break;
+      default: sinx = -c; cosx =  s; break; // case 3
     }
+    if (x) { sinx += 0; cosx += 0; }
     return {s: sinx, c: cosx};
   };
 
@@ -290,8 +291,8 @@ GeographicLib.Accumulator = {};
    * @summary Evaluate the atan2 function with the result in degrees
    * @param {number} y
    * @param {number} x
-   * @returns atan2(y, x) in degrees, in the range [&minus;180&deg;
-   *   180&deg;).
+   * @returns atan2(y, x) in degrees, in the range (&minus;180&deg;
+   *   180&deg;].
    */
   m.atan2d = function(y, x) {
     // In order to minimize round-off errors, this function rearranges the
@@ -310,7 +311,7 @@ GeographicLib.Accumulator = {};
       //   case 0: ang = 0 + ang; break;
       //
       // and handle mpfr as in AngRound.
-      case 1: ang = (y > 0 ? 180 : -180) - ang; break;
+      case 1: ang = (y >= 0 ? 180 : -180) - ang; break;
       case 2: ang =  90 - ang; break;
       case 3: ang = -90 + ang; break;
     }

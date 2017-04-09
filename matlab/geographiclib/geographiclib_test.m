@@ -33,6 +33,7 @@ function geographiclib_test
   i = Planimeter6; if i, n=n+1; fprintf('Planimeter6 fail: %d\n', i); end
   i = Planimeter12; if i, n=n+1; fprintf('Planimeter12 fail: %d\n', i); end
   i = Planimeter13; if i, n=n+1; fprintf('Planimeter13 fail: %d\n', i); end
+  i = geodreckon0; if i, n=n+1; fprintf('geodreckon0 fail: %d\n', i); end
   i = gedistance0; if i, n=n+1; fprintf('gedistance0 fail: %d\n', i); end
   i = tranmerc0; if i, n=n+1; fprintf('tranmerc0 fail: %d\n', i); end
   i = mgrs0; if i, n=n+1; fprintf('mgrs0 fail: %d\n', i); end
@@ -226,7 +227,7 @@ function n = GeodSolve5
   n = n + assertEquals(lat2, 90, 0.5e-5);
   if lon2 < 0
     n = n + assertEquals(lon2, -150, 0.5e-5);
-    n = n + assertEquals(azi2, -180, 0.5e-5);
+    n = n + assertEquals(abs(azi2), 180, 0.5e-5);
   else
     n = n + assertEquals(lon2, 30, 0.5e-5);
     n = n + assertEquals(azi2, 0, 0.5e-5);
@@ -349,11 +350,11 @@ function n = GeodSolve33
   n = n + assertEquals(s12, 19980862, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 0, 180);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 20003931, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 1, 180);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 19893357, 0.5);
   ell = ellipsoid(6.4e6, 0);
   [s12, azi1, azi2] = geoddistance(0, 0, 0, 179, ell);
@@ -362,11 +363,11 @@ function n = GeodSolve33
   n = n + assertEquals(s12, 19994492, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 0, 180, ell);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 20106193, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 1, 180, ell);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 19994492, 0.5);
   ell = ellipsoid(6.4e6, -1/300.0);
   [s12, azi1, azi2] = geoddistance(0, 0, 0, 179, ell);
@@ -383,7 +384,7 @@ function n = GeodSolve33
   n = n + assertEquals(s12, 20082617, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 1, 180, ell);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 20027270, 0.5);
   % Check also octave-specific versions of this problem.
   % In 1.44 this returned [-2.0004e+07, -2.0004e+07, 0.0000e+00, 0.0000e+00]
@@ -420,7 +421,7 @@ function n = GeodSolve61
   [lat2, lon2, azi2] = geodreckon(45, 0, 1e7, -0.000000000000000003, 2);
   n = n + assertEquals(lat2, 45.30632, 0.5e-5);
   n = n + assertEquals(lon2, -180, 0.5e-5);
-  n = n + assertEquals(azi2, -180, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180, 0.5e-5);
 end
 
 function n = GeodSolve73
@@ -523,6 +524,20 @@ function n = Planimeter13
   [area, perimeter] = geodarea(points(:,1), points(:,2));
   n = n + assertEquals(perimeter, 1160741, 1);
   n = n + assertEquals(area, 32415230256.0, 1);
+end
+
+function n = geodreckon0
+% Check mixed array size bugs
+  n = 0;
+  % lat1 is an array, azi1 is a scalar: 2015-08-10
+  [~, ~, ~, S12] = geodreckon([10 20], 0, 0, 0);
+  if length(S12) ~= 2, n = n+1; end
+  % scalar args except s12 is empty: 2017-03-26
+  [~, ~, ~, S12] = geodreckon(10, 0, [], 0);
+  if ~isempty(S12), n = n+1; end
+  % atan2dx needs to accommodate scalar + array arguments: 2017-03-27
+  lat2 = geodreckon(3, 4, [1, 2], 90);
+  if length(lat2) ~= 2, n = n+1; end
 end
 
 function n = gedistance0

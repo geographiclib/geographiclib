@@ -2,9 +2,48 @@ A reverse chronological list of changes to GeographicLib
 
 For more information, see
 
-    http://geographiclib.sourceforge.net/
+    https://geographiclib.sourceforge.io/
 
-The current version of the library is 1.47.
+The current version of the library is 1.48.
+
+Changes between 1.48 (released 2017-04-09) and 1.47 versions:
+
+  * The "official" URL for GeographicLib is now
+    https://geographiclib.sourceforge.io (instead of
+    http://geographiclib.sourceforge.net).
+
+  * The default range for longitude and azimuth is now (-180d, 180d],
+    instead of [-180d, 180d).  This was already the case for the C++
+    library; now the change has been made to the other implementations
+    (C, Fortran, Java, JavaScript, Python, MATLAB, and Maxima).
+
+  * Changes to NearestNeighbor:
+    + fix BUG in reading a NearestNeighbor object from a stream which
+      sometimes incorrectly caused a "Bad index" exception to be thrown;
+    + add operator<<, operator>>, swap,
+      std::swap(NearestNeighbor&, NearestNeighbor&);
+
+  * Additions to the documentation:
+    + add documentation on finding nearest neighbors;
+    + normal gravity documentation is now on its own page and now has an
+      illustrative figure;
+    + document the truncation error in the series for auxiliary
+      latitudes.
+
+  * Fix BUGS in MATLAB function geodreckon with mixed scalar and array
+    arguments.
+
+  * Workaround bug in math.fmod for Python 2.7 on 32-bit Windows
+    machines.
+
+  * Changes in cmake support:
+    + add USE_BOOST_FOR_EXAMPLES option (default OFF), if ON search for
+      Boost libraries for building examples;
+    + add APPLE_MULTIPLE_ARCHITECTURES option (default OFF), if ON build
+      for both i386 and x86_64 on Mac OS X systems;
+    + don't add flag for C++11 for g++ 6.0 (since it's not needed).
+
+  * Fix compiler warnings with Visual Studio 2017 and for the C library.
 
 Changes between 1.47 (released 2017-02-15) and 1.46 versions:
 
@@ -286,7 +325,7 @@ Changes between 1.44 (released 2015-08-14) and 1.43 versions:
       o version number included as comment in packed script
         geographiclib.js;
       o geod-calc.html and geod-google.html report the version number;
-      o http://geographiclib.sourceforge.net/scripts/ gives access to
+      o https://geographiclib.sourceforge.io/scripts/ gives access to
         earlier versions of geographiclib.js as geographiclib-m.nn.js;
     + Fortran: add geover subroutine to return version numbers;
     + Maxima: geodesic.mac defines geod_version;
@@ -474,7 +513,7 @@ Changes between 1.40 (released 2014-12-18) and 1.39 versions:
     position (latitude and longitude = NaN), instead of the north pole.
 
   * Add an online version of RhumbSolve at
-    http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve.
+    https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve.
 
   * Additions to the documentation:
     + documentation on  Jacobi's conformal projection;
@@ -1465,7 +1504,7 @@ Changes between 2009-11 and 2009-10 versions:
 
 Changes between 2009-10 and 2009-09 versions:
 
-  * Change web site to http://geographiclib.sourceforge.net
+  * Change web site to https://geographiclib.sourceforge.io
 
   * Several house-cleaning changes:
     + Change from the a flat directory structure to a more easily

@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
  * the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  *
  * The general sum is\verbatim
  V(r, theta, lambda) = sum(n = 0..N) sum(m = 0..n)

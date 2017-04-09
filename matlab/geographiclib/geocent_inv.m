@@ -141,7 +141,6 @@ function [lat, lon, h, M] = geocent_inv(X, Y, Z, ellipsoid)
     cphi(far) = R(far) ./ H;
   end
   lat = atan2dx(sphi, cphi);
-  % Negative signs return lon in [-180, 180).  0- converts -0 to +0.
   lon = atan2dx(slam, clam);
   if nargout > 3
     M = GeoRotation(sphi, cphi, slam, clam);
